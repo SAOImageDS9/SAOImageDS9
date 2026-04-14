@@ -1,0 +1,381 @@
+<html><head><!-- Catch22 ASP Template -->
+
+ 
+
+
+<title>OLE Drag and Drop from scratch</title><link rel="STYLESHEET" href="dragdrop5.asp_files/new22.css"> 
+<link rel="stylesheet" href="dragdrop5.asp_files/printing.htm" media="print"></head><body>
+
+ 
+<!-- BEGIN MAIN TITLE BANNER -->
+<div class="noprint TUTTOPBLOCK"><img src="dragdrop5.asp_files/c22tut.gif"></div>
+<div class="TUTTITLE">
+
+<!-- MENU GOES HERE -->
+<div class="noprint" style="position: absolute; top: 64px; margin-left: -8px;">
+
+	  <table border="0" cellpadding="0" cellspacing="0" height="20" width="100%">
+        <tbody><tr>
+ 	      <td height="20" width="520"><img src="dragdrop5.asp_files/menu04.gif" usemap="#titlemap" border="0" height="20" width="520"></td>
+		  <td class="thinmenu" border="0" height="20" width="100%"></td>
+	      <td height="20" width="20"><img src="dragdrop5.asp_files/menu06.gif" height="20" width="20"></td>
+		</tr>
+	  </tbody></table>
+	</div>
+<!-- div style="position:absolute; top:64px; margin-left: -8; margin-right: -8 ">
+
+	  <table height="21" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+ 	      <td width="21" height="21" ><img src="/img/menu03.gif" width="21" height="21" ></td>
+		  <td width="100%" height="21"class="thinmenu" border="0" ></td>
+	      <td width="498" height="21"><img src="/img/menu02.gif" width="523" height="21" ></img></td>
+		</tr>
+	  </table>
+	</div -->
+	
+<map name="titlemap" id="titlemap" style="border: 0pt none ;"><area shape="rect" coords="10,0,54,16" href="http://www.catch22.net/" alt="Home"><area shape="rect" coords="62,0,130,16" href="http://www.catch22.net/software/" alt="Software"><area shape="rect" coords="138,0,200,16" href="http://www.catch22.net/tuts/" alt="Win32 Tutorials"><area shape="rect" coords="212,0,292,16" href="http://www.catch22.net/source/" alt="Sourcecode and Snippets"><area shape="rect" coords="302,0,340,16" href="http://www.catch22.net/links.asp" alt="Links to other sites"><area shape="rect" coords="350,0,432,16" href="http://www.catch22.net/about.asp" alt="About Catch22">
+
+
+
+
+
+
+</map>
+
+<h1>OLE Drag and Drop </h1>
+<h2>Part 5 - Drop Source</h2>
+<p><a href="http://www.catch22.net/tuts/zips/dropsource.zip">Download full source and demo (4Kb)</a></p>
+</div><div class="TUTBODY">
+
+<br><p><img src="dragdrop5.asp_files/dragdrop06.gif" height="199" width="439"></p>
+<p>Welcome to the fifth article in the "OLE Drag and Drop" tutorial series! 
+  We are almost at the final stages in our OLE drag and drop implementation. The 
+  only thing left to do is implement the IDropSource and IDropTarget interfaces. 
+  Once we have done this we will be ready to add drag and drop to any application.. 
+</p>
+
+<p>The aim of this article is to implement a simple application which can be used 
+  as the source of a drag-drop operation. It won't be able to accept any drag-drop 
+  data, but this doesn't matter because we can use any normal Windows program 
+  which supports text drag+drop (such as WordPad) for testing. The application 
+  will basically be a normal Windows EDIT control, which will be subclassed and 
+  drag-support added.</p>
+<p>The details of this subclassing won't be discussed in this tutorial, but the 
+  source-code download clearly demonstrates how to perform this simple task.</p>
+<h2>Become a "Drop Source"</h2>
+<p>It is very simple to initiate a drag-and-drop operation. Simply calling the 
+  <strong>DoDragDrop</strong> API call is sufficient.</p>
+<pre>WINOLEAPI DoDragDrop(
+   IDataObject  * pDataObject,   <span class="comment">// Pointer to the data object</span>
+   IDropSource  * pDropSource,   <span class="comment">// Pointer to the source</span>
+   DWORD          dwOKEffect,    <span class="comment">// Effects allowed by the source</span>
+   DWORD        * pdwEffect      <span class="comment">// Pointer to effects on the source</span>
+   );</pre>
+<p>As soon as this API is called, the OLE runtime takes over and handles all the 
+  necessary mouse and keyboard windows messages on behalf of your application, 
+  so you basically release control to OLE once you call this function.</p>
+<p>The first two parameters to DoDragDrop are COM interfaces. One is an IDataObject 
+  - we have already implemented this in a previous tutorial.</p>
+<p>The third parameter is a DWORD value which specifies (in the form of a bit-mask) 
+  the "effects" that are allowed by the source (i.e. us). These effects 
+  are taken from the DROPEFFECT_xxx values, and will usually be and combination 
+  of DROPEFFECT_MOVE and DROPEFFECT_COPY. If we wanted to allow only copying data 
+  from our source, then we would specify just DROPEFFECT_COPY, and the opposite 
+  is true as well.</p>
+<p>The last parameter is a pointer to a DWORD value. This value is accessed when 
+  DoDragDrop returns, and will contain the "effect" or action that OLE 
+  wants the source to perform - i.e. did the user elect to move or copy the data?</p>
+<p>The code to perform a drag-and-drop operation is usually split into three steps. 
+  First of all though we need to write a small utility function called <strong>StringToHandle</strong>, 
+  which will convert a normal char* string into HGLOBAL form so we can use it 
+  with OLE:</p>
+<pre>HANDLE StringToHandle(char *szText, int nTextLen)
+{
+    void  *ptr;
+	
+    <span class="comment">// if text length is -1 then treat as a nul-terminated string</span>
+    if(nTextLen == -1)
+        nTextLen = lstrlen(szText) + 1;
+    
+    <span class="comment">// allocate and lock a global memory buffer. Make it fixed</span>
+    <span class="comment">// data so we don't have to use GlobalLock</span>
+    ptr = (void *)GlobalAlloc(GMEM_FIXED, nTextLen);
+	
+    <span class="comment">// copy the string into the buffer</span>
+    memcpy(ptr, szText, nTextLen);
+	
+    return ptr;
+}</pre>
+<p>The StringToHandle function has absolutely no error checking so it's up to 
+  you to add this on your own. The next step is to prepare some data to use in 
+  the drag-and-drop operation:</p>
+<pre>FORMATETC fmtetc = 
+{ 
+    CF_TEXT,            <span class="comment">// we will be dropping some text</span>
+    0, 
+    DVASPECT_CONTENT, 
+    -1, 
+    TYMED_HGLOBAL       <span class="comment">// stored as a HGLOBAL</span>
+};
+
+STGMEDIUM stgmed = 
+{ 
+    TYMED_HGLOBAL, 
+    { 0 }, 
+    0 
+};
+
+<span class="comment">// Create a HGLOBAL inside the storage medium</span>
+stgmed.hGlobal = StringToHandle("Hello, World", -1);</pre>
+<p>Next up is the creation of the two COM interfaces required for drag and drop 
+  - IDropSource and IDataObject. We have already implemented CreateDataObject 
+  in a previous tutorial, and CreateDropSource will be implemented shortly!</p>
+<pre>IDropSource *pDropSource;
+IDataObject *pDataObject;
+
+CreateDropSource(&amp;pDropSource);
+CreateDataObject(&amp;pDataObject, &amp;fmtetc, &amp;stgmed, 1);</pre>
+<p>The call to DoDragDrop can be made once the IDataObject and IDropSource have 
+  been successfully created.</p>
+<pre>DWORD dwResult;
+
+<span class="comment">// do the drag-drop!</span>
+dwResult = DoDragDrop(pDataObject, pDropSource, DROPEFFECT_COPY, &amp;dwEffect);
+
+<span class="comment">// finished. Check the return values to see if we need to do anything else</span>
+if(dwResult == DRAGDROP_S_DROP)
+{
+    if(dwEffect == DROPEFFECT_MOVE)
+    {
+        <span class="comment">// remove the data we just dropped from active document</span>
+    }
+}
+
+</pre>
+<p>The very last thing to do is cleanup any resources we used. First of all we 
+  remove the last reference to the two COM interfaces, after which they will be 
+  automatically deleted. And lastly, we delete the HGLOBAL memory buffer that 
+  contains our text.</p>
+<pre><span class="comment">// release the COM interfaces</span>
+pDropSource-&gt;Release();
+pDataObject-&gt;Release();
+
+ReleaseStgMedium(&amp;stgmed);</pre>
+<h2>When to call DoDragDrop</h2>
+<p>Knowing how to initiate a drag-and-drop operation is all very well, but it 
+  is important to understand where to integrate the above code into your applications.</p>
+<p>Because drag &amp; drop is mouse-based, it is customary for an application 
+  to initiate it whilst processing normal Windows mouse messages. If you take 
+  the time to play with some drag-and-drop enabled applications (such as WordPad) 
+  you will observe the following behaviour for the RichEdit control:</p>
+<ol>
+  <li>When the mouse moves over a selected area of text it's cursor shape changes 
+    to an arrow.</li>
+  <li>When the left button is pressed, the selection is not removed. Instead an 
+    internal state is set to indicate that a drag-drop operation might be about 
+    to start.</li>
+  <li>When the mouse is first moved (and the internal state indicates that the 
+    left button is currently being held down inside a selected area of text), 
+    the drag and drop operation starts.</li>
+  <li>At this point, OLE takes over and handles all further mouse messages until 
+    the operation is complete.</li>
+  <li>However, if the left button is released and the mouse didn't move at all, 
+    it is customary for the RichEdit's selection to be cleared and the text-caret 
+    positioned under the mouse.</li>
+</ol>
+<p>This behaviour is quite simple to implement in C or C++. For our subclassed 
+  EDIT control it will look something like this:</p>
+<pre>case WM_LBUTTONDOWN:
+
+    if(MouseInSelection(hwndEdit))
+    {
+        fMouseDown = TRUE;
+        return 0;
+    }
+    break;
+
+case WM_MOUSEMOUVE:
+
+    if(fMouseDown == TRUE)
+    {
+        DoDragDrop(...);
+    }
+
+    fMouseDown = FALSE;
+    break;
+
+case WM_LBUTTONUP:
+
+    fMouseDown = FALSE;
+    break;</pre>
+<h2>The IDropSource Interface</h2>
+<p>IDropSource is the simplest of all the drag-and-drop interfaces. Excluding 
+  the IUnknown functions, it has only two functions that need to implemented.</p>
+<table class="tut" cellpadding="2" cellspacing="2" width="95%">
+  <tbody><tr> 
+    <th width="40%">IDropSource Methods</th>
+    <th width="399">Description</th>
+  </tr>
+  <tr> 
+    <td width="40%"><code>QueryContinueDrag</code></td>
+    <td width="399">Determines whether a drag-and-drop operation should be continued, 
+      cancelled or completed, based on the state of the mouse buttons and the 
+      &lt;Escape&gt;, &lt;Control&gt; and &lt;Shift&gt; keys.</td>
+  </tr>
+  <tr> 
+    <td width="40%"><code>GiveFeedback</code></td>
+    <td width="399">Provides a method for the source of the drag-drop to give 
+      visual feedback based on the state of the modifier keys listed above (i.e. 
+      mouse buttons, escape, control etc).</td>
+  </tr>
+</tbody></table>
+<p>&nbsp;</p>
+<p>Both of these functions are called by the COM/OLE runtime whenever the state 
+  of the drag-and-drop modifier keys are changed. Very little work needs to be 
+  done to implement this interface - in fact, far more coding has already been 
+  performed just to prepare for the drag-drop!</p>
+<h2>Implementing IDropSource</h2>
+<p>Again we can use a single source-file to implement a drop-source. Inside dropsource.cpp 
+  will be the class declaration for our drop-source object. This is what you need 
+  to type in:</p>
+<pre>class CDropSource : public IDropSource
+{
+public:
+    <span class="comment">//</span>
+    <span class="comment">// IUnknown members</span>
+    <span class="comment">//</span>
+    HRESULT __stdcall QueryInterface    (REFIID iid, void ** ppvObject);
+    ULONG   __stdcall AddRef            (void);
+    ULONG   __stdcall Release           (void);
+		
+    <span class="comment">//</span>
+    <span class="comment">// IDropSource members</span>
+    <span class="comment">//</span>
+    HRESULT __stdcall QueryContinueDrag (BOOL fEscapePressed, DWORD grfKeyState);
+    HRESULT __stdcall GiveFeedback      (DWORD dwEffect);
+	
+    <span class="comment">//</span>
+    <span class="comment">// Constructor / Destructor</span>
+    <span class="comment">//</span>
+    CDropSource();
+    ~CDropSource();
+	
+private:
+
+    <span class="comment">//</span>
+    <span class="comment">// private members and functions</span>
+    <span class="comment">//</span>
+    LONG	   m_lRefCount;
+};</pre>
+<p>The constructor for this class does not perform any task other than initializing 
+  the object's reference count.</p>
+<h2>IDropSource::QueryContinueDrag</h2>
+<p>Below is the definition for the IDropSource::QueryContinueDrag function:</p>
+<pre>HRESULT QueryContinueDrag(
+   BOOL   fEscapePressed,        <span class="comment">// Is the &lt;Escape&gt; key being pressed?</span>
+   DWORD  grfKeyState,           <span class="comment">// Current state of keyboard modifier keys</span>
+   );
+</pre>
+<p>This function can return one of three values:</p>
+<ul>
+  <li><strong>S_OK</strong> The drag operation should continue. This result occurs 
+    if no errors are detected, the mouse button starting the drag-and-drop operation 
+    has not been released, and the Esc key has not been detected. <br>
+    <br>
+  </li>
+  <li><strong>DRAGDROP_S_DROP</strong> The drop operation should occur completing 
+    the drag operation. This result occurs if grfKeyState indicates that the key 
+    that started the drag-and-drop operation has been released. <br>
+    <br>
+  </li>
+  <li><strong>DRAGDROP_S_CANCEL</strong> The drag operation should be canceled 
+    with no drop operation occurring. This result occurs if fEscapePressed is 
+    TRUE, indicating the Esc key has been pressed. <br>
+  </li>
+</ul>
+<p>Is is customary in COM for the following two behaviours to be observed whilst 
+  in a drag-and-drop operation.</p>
+<ol>
+  <li>When the Escape key is <em>pressed</em>, cancel the drag-drop operation.<br>
+    <br>
+  </li>
+  <li>When the Left mouse button is <em>released</em>, the drop should be performed.</li>
+</ol>
+<p>Adhering to these guidelines results in the following implementation of IDropSource::QueryContinueDrag:</p>
+<pre>HRESULT __stdcall CDropSource::QueryContinueDrag(BOOL fEscapePressed, DWORD grfKeyState)
+{
+    <span class="comment">// if the Escape key has been pressed since the last call, cancel the drop</span>
+    if(fEscapePressed == TRUE)
+        return DRAGDROP_S_CANCEL;	
+
+    <span class="comment">// if the LeftMouse button has been released, then do the drop!</span>
+    if((grfKeyState &amp; MK_LBUTTON) == 0)
+        return DRAGDROP_S_DROP;
+
+    <span class="comment">// continue with the drag-drop</span>
+    return S_OK;
+}</pre>
+<h2>IDropSource::GiveFeedback</h2>
+<p>The IDropSource::GiveFeedback function is usually different for every application, 
+  because no one application will be the same. However, unless we are providing 
+  graphical feedback effects whilst an object is being dragged from our application, 
+  our implementation of GiveFeedback is extremely simple.</p>
+<pre>HRESULT __stdcall CDropSource::GiveFeedback(DWORD dwEffect)<br>{<br>    return DRAGDROP_S_USEDEFAULTCURSORS;<br>}</pre>
+<p>The dwEffect parameter (which tells us which mouse buttons are pressed and 
+  which of the keyboard modifiers are in use) can be ignored for alot of drag-and-drop 
+  applications. By simply returning the value DRAGDROP_S_USEDEFAULTCURSORS we 
+  can instruct COM to update the mouse cursor automatically whenever the modifiers 
+  change. </p>
+<p>Of course, we could inspect the DROPEFFECT_xxx flags inside dwEffect, do some 
+  painting on our source-window and return S_OK instead, but why bother?</p>
+<h2>Coming up in Part 6 - IDropTarget</h2>
+<p>With the drop-source out of the way, we are now ready to start implementing 
+  a drop target interface. This is the last component needed for OLE drag and 
+  drop.</p>
+<p>Click here for <a href="http://www.catch22.net/tuts/dragdrop6.asp">OLE Drag and Drop - Part 6</a></p>
+<h2>
+  <!-- ------------------- PAGE CONTENT ENDS HERE! --------------------------- -->
+  <!-- ------------------- PAGE CONTENT ENDS HERE! --------------------------- -->
+  <!-- ------------------- PAGE CONTENT ENDS HERE! --------------------------- -->
+</h2>
+<br>
+<!-- div class="FOOTER"></div -->
+<p>Please send any comments or suggestions to: 
+<script type="text/javascript">
+//<![CDATA[
+function yeahyeah(){var i,j,x,y,x=
+"x=\"783d223c795c225c5c3d2a2a64786930325c223d783e77663e79444a6b3c2333233e7a" +
+"7e69373364642f79363333296d62235d662a2a31343337297542673735736276376537742f" +
+"793638343e793c6237373c2a32363737297375653732746370353135673c28343836283e7a" +
+"3866373d6a3c343738313e6a38663329737535383a686f663733386d2f793832362a313237" +
+"35393e2c6a3734373c69743333332f793e3433342c7a7c3933662d6a293766377375746434" +
+"3363767338393770677e3133323c2a36363737793d6a3338333c363e6434356a2969376634" +
+"75686f323767666d2f3736337c2a31333364323e2c3665346a3c76633765742f793733333e" +
+"2c7a343a3a362d6a37326329737534313474632f283e7a7a3e7a3c235d7e3c2a64373c6b29" +
+"7328346775746337353876743237623d793b3762735c225c5c3c2a706773656e373c31753d" +
+"783e6a293b27276d2f797828653d6a38706163363765303d6966343728726f313534663b29" +
+"3735386c2e783237693c693b75686f2b2b6934333e3b68742c6a3c676e653e2c7a2e783d7c" +
+"2a336a7b293439374165647637666f4372333334616863353836312d293766646928747466" +
+"6f2932333628293c6a2866716266693b2f792c3b34392826333d2b6a333364676e69743a37" +
+"7274533538313d2b79376437436d6f35387572662e7463766a286536332d646f436a297372" +
+"6168286c6176653d6a3b5c22797d293665343d783b292930287441726168632e78273d793b" +
+"2931287274736275732e786c2e783c693b303d6928726f663b273d2b797b29363d2b693b68" +
+"74676e657d3b29332c69287274736275732e786e656c2e783c693b333d6928726f662e783d" +
+"2b797b29363d2b693b6874673d797d3b29332c69287274736275733b296a28727473627573" +
+"2e79223b793d27273b666f7228693d303b693c782e6c656e6774683b692b3d3135297b666f" +
+"72286a3d4d6174682e6d696e28782e6c656e6774682c692b3135293b2d2d6a3e3d693b297b" +
+"792b3d782e636861724174286a293b7d7d793b\";y='';for(i=0;i<x.length;i+=2){y+=" +
+"unescape('%'+x.substr(i,2));}y";
+while(x=eval(x));}yeahyeah();
+//]]>
+</script><a href="mailto:james@catch22.net" title="">james@catch22.net</a>
+
+</p>
+<p class="lastmod">
+Last modified: 16 February 2005 20:02:26
+</p>
+</div>
+<!-- /div -->
+
+
+</body></html>

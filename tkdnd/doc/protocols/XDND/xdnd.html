@@ -1,0 +1,965 @@
+<html><head><title>XDND: Drag-and-Drop Protocol for the X Window System</title></head>
+
+<body alink="#ff0000" bgcolor="#f8f8f8" link="#0000e9" text="#000000" vlink="#000090">
+<font face="verdana,arial,helvetica">
+
+</font><h1><font face="verdana,arial,helvetica"> Drag-and-Drop Protocol for the X Window System </font></h1>
+
+<font face="verdana,arial,helvetica"><img src="xdnd_files/line" alt="--------" height="6" width="520">
+
+</font><h3><font face="verdana,arial,helvetica"> Introduction </font></h3>
+
+<font face="verdana,arial,helvetica">Today, Drag-and-Drop (DND) is
+considered a requirement for commercial-quality applications. On most
+operating systems, support for DND is built-in, so everybody uses it
+and all programs can communicate with each other.
+</font><p>
+<font face="verdana,arial,helvetica">On X, however, there is no
+standard, so various groups have developed their own protocols, with
+the result that programs written for one protocol cannot talk to
+programs written for a different protocol. Clearly this does not
+satisfy the fundamental requirement that DND allow the user to drag
+data from any program to any other program.
+</font></p><p>
+<font face="verdana,arial,helvetica">What is required is a single
+protocol that everybody can use so all programs can exchange data via
+DND. (The X Selection mechanism insures that everybody can exchange
+data via the clipboard.)
+</font></p><p>
+<font face="verdana,arial,helvetica">The basic requirements for such a
+protocol are that it provide visual feedback to the user during the
+drag and that it allow the target to choose whatever data format it
+prefers from among all the formats that the source can provide. In
+addition, it must be efficient so that the visual feedback does not lag
+behind the user's actions, and it must be safe from deadlock, race
+conditions, and other hazards inherent in asynchronous systems.
+</font></p><p>
+<font face="verdana,arial,helvetica"><b> Current version: 5 </b>
+<br>
+Last <a href="#ChangeLog">updated</a> on April 5, 2003
+
+</font></p><p>
+<font face="verdana,arial,helvetica"><b><a href="http://www.newplanetsoftware.com/xdnd/other_protocols.html">Comparison to other DND protocols</a></b>
+
+</font></p><p>
+<font face="verdana,arial,helvetica"><b><a href="http://www.newplanetsoftware.com/xdnd/supporters.html">Supporters of the XDND protocol</a></b>
+
+</font></p><p>
+<font face="verdana,arial,helvetica"><a href="http://www.newplanetsoftware.com/jx/protocols.php">Other related protocols</a>
+
+</font></p><p>
+</p><hr>
+
+<h3><font face="verdana,arial,helvetica"> Definitions </font></h3>
+
+<p>
+<font face="verdana,arial,helvetica">The <b>source</b> is the window that will supply the data.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">The <b>target</b> is the window that the cursor is on top of and which will receive the drop if the mouse is released.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">You should be familiar with the <b>X Selection</b> mechanism described in the Xlib manuals: Volume 0, Appendix L and Volume 1, Chapter 10.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">All data types and actions are referred to by their corresponding <b>X Atoms</b>.  The atom names of the data types are the corresponding <a href="ftp://ftp.isi.edu/in-notes/iana/assignments/media-types/">MIME types</a>, in all lower case. (RFC's for MIME:
+<a href="http://www.cis.ohio-state.edu/htbin/rfc/rfc2045.html">2045</a>,
+<a href="http://www.cis.ohio-state.edu/htbin/rfc/rfc2046.html">2046</a>,
+<a href="http://www.cis.ohio-state.edu/htbin/rfc/rfc2047.html">2047</a>,
+<a href="http://www.cis.ohio-state.edu/htbin/rfc/rfc2048.html">2048</a>,
+<a href="http://www.cis.ohio-state.edu/htbin/rfc/rfc2049.html">2049</a>)
+
+</font></p><p>
+<font face="verdana,arial,helvetica">All constants mentioned in this
+document are the string names of X atoms, capitalized as shown. This
+avoids the need for hard-coded values, which would require a global
+registry.
+</font></p><p>
+</p><hr>
+
+<h3><font face="verdana,arial,helvetica"> Example walk-through </font></h3>
+
+<font face="verdana,arial,helvetica"><b>Note</b>: Parenthesized numbers in bold-face are the number of packets sent to or from the server.
+
+</font><p>
+<font face="verdana,arial,helvetica"><b>Step 0:</b>
+
+</font></p><p>
+<font face="verdana,arial,helvetica">Windows announce that they support the XDND protocol by creating a window property XdndAware.
+
+</font></p><p>
+<font face="verdana,arial,helvetica"><b>Step 1:</b>
+
+</font></p><p>
+<font face="verdana,arial,helvetica">When a drag begins, the source takes ownership of XdndSelection.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">When the mouse enters a window that supports XDND (search for window property: <b>avg 8</b>), the source sends a ClientMessage of type XdndEnter (<b>2</b>) which contains the protocol version to use and the data types supported by the source.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">An <a href="http://www.newplanetsoftware.com/xdnd/drop_no_xdnd.html">extension</a> has been developed to allow dropping on other windows.
+
+</font></p><p>
+<font face="verdana,arial,helvetica"><b>Step 2:</b>
+
+</font></p><p>
+<font face="verdana,arial,helvetica">The target receives XdndEnter.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">The ClientMessage only has space
+for three data types, so if the source supports more than this, the
+target must retrieve the property XdndTypeList from the source window
+in order to get the list of available types. (<b>2</b>)
+
+</font></p><p>
+<font face="verdana,arial,helvetica"><b>Step 3:</b>
+
+</font></p><p>
+<font face="verdana,arial,helvetica">The source sends a ClientMessage of type XdndPosition. (<b>2</b>)  This tells the target the position of the mouse and the action that the user requested.
+
+</font></p><p>
+<font face="verdana,arial,helvetica"><b>Step 4:</b>
+
+</font></p><p>
+<font face="verdana,arial,helvetica">The target receives XdndPosition.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">The target window must determine which widget the mouse is in and ask it whether or not it will
+accept the drop.  For efficiency, the target window should keep track of whether or not the
+widget will accept the drop and only ask again if the action changes or the mouse enters a
+different part of the widget.  Once the widget has said that it will accept the drop and as long as the
+action remains the same and the mouse remains in the same part, the widget gets all the XdndPosition messages
+so that it can re-draw itself to show the user where the data will be inserted, if appropriate.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">To determine whether or not it can accept the drop, the target widget consults the list of
+types from the XdndEnter message and the requested action from the XdndPosition message.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">If it cannot perform the requested
+action, it can return either XdndActionCopy or XdndActionPrivate. If
+neither of these are possible, then it should refuse the drop.
+</font></p><p>
+<font face="verdana,arial,helvetica">If it needs to look at the data itself, it calls <tt>XConvertSelection()</tt> for XdndSelection, the data type that it is interested in, and the given time stamp. (<b>7</b>)  It can do this more than once, if necessary.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">If it can accept the drop, it
+should hilight its border to notify the user. If it retrieved the data,
+it should cache it so it does not need to be retrieved again when the
+actual drop occurs.
+</font></p><p>
+<font face="verdana,arial,helvetica"><b>Step 5:</b>
+
+</font></p><p>
+<font face="verdana,arial,helvetica">The target sends a ClientMessage of type XdndStatus. (<b>2</b>)
+This tells the source whether or not it will accept the drop, and, if
+so, what action will be taken. It also includes a rectangle that means
+"don't send another XdndPosition message until the mouse moves out of
+here".
+</font></p><p>
+<font face="verdana,arial,helvetica"><b>Step 6:</b>
+
+</font></p><p>
+<font face="verdana,arial,helvetica">The source receives XdndStatus. It
+can use the action to change the cursor to indicate whether or not the
+user's requested action will be performed.
+</font></p><p>
+<font face="verdana,arial,helvetica">When the mouse moves out of the given rectangle, go to <b>Step 3</b>.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">XdndPosition messages are normally
+triggered by MotionNotify events. However, if the mouse moves while the
+source is waiting for an XdndStatus message, the source has to cache
+the new mouse position and generate another XdndPosition message as
+soon as it receives the XdndStatus message. (This will be necessary
+when the server-target connection is much slower than the server-source
+connection.)
+</font></p><p>
+<font face="verdana,arial,helvetica"><b>Step 7:</b>
+
+</font></p><p>
+<font face="verdana,arial,helvetica">If the mouse leaves the window, the source sends a ClientMessage of type XdndLeave. (<b>2</b>)
+
+</font></p><p>
+<font face="verdana,arial,helvetica">If the mouse button is released in
+the window, the source waits for the last XdndStatus message (if
+necessary) and then sends a ClientMessage of type XdndLeave or
+XdndDrop, depending on the "accept" flag in the last XdndStatus. (<b>2</b>)
+
+</font></p><p>
+<font face="verdana,arial,helvetica">If the source never received any XdndStatus messages at all, it should send XdndLeave without waiting.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">If the source doesn't receive the
+expected XdndStatus within a reasonable amount of time, it should send
+XdndLeave. While waiting for XdndStatus, the source can block, but it
+must at least process SelectionRequest events so the target can examine
+the data.
+</font></p><p>
+<font face="verdana,arial,helvetica"><b>Step 8:</b>
+
+</font></p><p>
+<font face="verdana,arial,helvetica">If the target receives XdndLeave, it frees any cached data and forgets the whole incident.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">If the target receives XdndDrop and will accept it, it first uses <tt>XConvertSelection()</tt> to retrieve the data using the given time stamp (if it doesn't already have it cached). (<b>7</b>)
+It then uses the data in conjunction with the last action and mouse
+position that was acknowledged via XdndStatus. (Over a slow network,
+this makes the drop location consistent with the visual feedback given
+to the user.) Once it is finished, it sends XdndFinished.
+</font></p><p>
+<font face="verdana,arial,helvetica">If the target receives XdndDrop and will not accept it, it sends XdndFinished and then treats it as XdndLeave.
+
+</font></p><p>
+</p><hr>
+
+<h3><font face="verdana,arial,helvetica"> Theory </font></h3>
+
+<p>
+<font face="verdana,arial,helvetica">Every part of this protocol serves a purpose:
+
+</font></p><h4><font face="verdana,arial,helvetica"> XdndAware </font></h4>
+
+<p>
+<font face="verdana,arial,helvetica">In order for the user to be able
+to transfer data from any application to any other application via DND,
+every application that supports XDND version N must also support <em>all</em> previous versions (3 to N-1).  The XdndAware property provides the highest version number supported by the target (N<sub>t</sub>).  If the source supports versions up to N<sub>s</sub>, then the version that will actually be used is min(N<sub>s</sub>,N<sub>t</sub>).  This is the version sent in the XdndEnter message.  It is important to note that XdndAware allows this to be calculated <em>before</em> any messages are actually sent.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">The property can also act as an
+extra filter, because it can contain a list of types accepted by the
+target, as explained in the Technical Details section.
+</font></p><p>
+<font face="verdana,arial,helvetica">It is also critical for scrolling
+(see Notes section below) and for coexisting with other DND protocols
+(since one can try something else if XdndAware is not present) and is
+useful for debugging since it lets one check the target's XDND version,
+after which one can <em>expect</em> to receive an XdndStatus message.
+
+</font></p><h4><font face="verdana,arial,helvetica"> X Selection </font></h4>
+
+<p>
+<font face="verdana,arial,helvetica">By using <tt>XConvertSelection()</tt>,
+one can use the same data conversion code for both the Clipboard and
+Drag-and-Drop. This is an especially large saving if the target
+requests the type "MULTIPLE" or if the source is forced to send the
+data incrementally (type "INCR"). It also makes checking the data
+independent of the main sequence of messages, so XdndStatus correctly
+reports "yes" or "no" the first time.
+</font></p><p>
+<font face="verdana,arial,helvetica">By using XdndSelection, the dropped data doesn't interfere with the clipboard data stored in XA_PRIMARY.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">Using <tt>XConvertSelection()</tt>
+does have the problem that the user can begin dragging something else
+before the data transfer is complete. However, the X clipboard has the
+same problem, so this doesn't impose any additional constraints on the
+user, and it can be avoided as explained below in the discussion of the
+XdndFinished message.
+</font></p><h4><font face="verdana,arial,helvetica"> Actions </font></h4>
+
+<p>
+<font face="verdana,arial,helvetica">Specifying the action separately
+from the data type allows one to avoid defining N×M atoms for N data
+types and M actions. Since the user must have full control of what will
+happen, exactly one action is specified by the source. This is passed
+in the XdndPosition message to allow it to change during the drag.
+(e.g. if the user presses or releases modifier keys) The action
+accepted by the target is passed back in the XdndStatus message to
+allow the source to provide feedback in the cursor.
+</font></p><p>
+<font face="verdana,arial,helvetica">The special action XdndActionAsk tells the target that it should ask the user what to do <em>after</em>
+the drop occurs. This allows one to implement the effect obtained by
+right-dragging in Windows95®, where the file manager asks the user
+whether to move, copy, create a link, or <em>cancel</em>. The list of
+actions is retrieved from the XdndActionList property, and the
+description of each action that is shown to the user is retrieved from
+the XdndActionDescription property, both on the source window. Note
+that the user should be asked before retrieving the data and thus also
+before sending XdndFinished.
+</font></p><p>
+<font face="verdana,arial,helvetica">The special action
+XdndActionPrivate tells the source that the target will do something
+that the source doesn't understand and that won't require anything from
+the source other than a copy of the data.
+</font></p><h4><font face="verdana,arial,helvetica"> Messages </font></h4>
+
+<p>
+<font face="verdana,arial,helvetica">The <b>XdndEnter</b> message
+initiates the session and gives the target a chance to set up local
+variables such as the transformation from root window coordinates to
+target window coordinates. It also provides a list of supported data
+types so the target doesn't have to call <tt>XConvertSelection()</tt> for XdndSelection, TARGETS.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">The <b>XdndPosition</b> message
+provides mouse locations so that the target does not have to query the
+X server in order to redraw itself properly. There is no other reliable
+way for the target to get the mouse location because X will force the
+cursor to be grabbed by the source window, so only the source window
+will be receiving events. The target needs the mouse location because
+it has to update itself to show where the data will be inserted. This
+is especially important in text editors, spreadsheets, and file
+managers.
+</font></p><p>
+<font face="verdana,arial,helvetica">The time stamp in the XdndPosition message must be passed to <tt>XConvertSelection()</tt> to insure that the correct data is received.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">The <b>XdndStatus</b> message
+provides feedback to the source (e.g. it might want to change the
+cursor) and insures that XdndPosition messages do not pile up when the
+network connection is slow.
+</font></p><p>
+<font face="verdana,arial,helvetica">The <b>XdndLeave</b> message cancels the session.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">The <b>XdndDrop</b> message tells the target to proceed with the drop.  The time stamp must be passed to <tt>XConvertSelection()</tt> to insure that the correct data is received.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">The <b>XdndFinished</b> message
+tells the source that the target is done and no longer needs the data.
+This allows the source to implement any one of three different
+behaviors:
+</font></p><ul>
+<li><font face="verdana,arial,helvetica"> Block until the message is
+received. In this case, the source must be prepared to time out in case
+the target malfunctions and must reject outdated requests.
+</font><p>
+</p></li><li><font face="verdana,arial,helvetica"> Don't block and
+reject outdated requests by comparing the time when the selection was
+last acquired with the timestamp in the selection request. (which comes
+from the XdndDrop message)
+</font><p>
+</p></li><li><font face="verdana,arial,helvetica"> Don't block and keep
+a history of previous data. This can be very difficult to implement,
+but it is clearly the ideal behavior from the user's perspective
+because it allows him to drop something and then continue working with
+the assurance that the target will get the data regardless of how slow
+the network connections are.
+</font><p>
+<font face="verdana,arial,helvetica">When the source receives
+XdndFinished, it can remove the item from its history, thereby keeping
+it from getting too large. The source must also be prepared to throw
+out extremely old data in case a target malfunctions.
+</font></p></li></ul>
+
+<h4><font face="verdana,arial,helvetica"> Protecting against malfunctioning programs </font></h4>
+
+<p>
+<font face="verdana,arial,helvetica">If the version number in the XdndEnter message is higher than what the target can support, the target should ignore the source.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">While the source and target are
+receiving XDND messages from each other, they should ignore all XDND
+messages from other windows.
+</font></p><p>
+<font face="verdana,arial,helvetica">If either application crashes
+while DND is active, the other application must avoid crashing on a
+BadWindow error. The only safe way to do this is to actually catch the
+error by installing an error handler with <tt>XSetErrorHandler()</tt>.
+In addition, the target must also listen for DestroyNotify events so
+that it doesn't wait forever for another XdndPosition if the source
+crashes between receiving XdndStatus and sending XdndPosition.
+</font></p><ul>
+<li><font face="verdana,arial,helvetica"> If the target crashes, the
+source will automatically receive another EnterNotify event, as if the
+mouse had moved. Any XdndPosition in the network will generate a
+BadWindow error.
+</font><p>
+</p></li><li><font face="verdana,arial,helvetica"> If the source crashes, the target should treat it like XdndLeave.
+</font></li></ul>
+
+<font face="verdana,arial,helvetica">As discussed above, the source must be careful to avoid locking up if the target does not send XdndFinished.
+
+</font><p>
+</p><hr>
+
+<h3><font face="verdana,arial,helvetica"> Notes </font></h3>
+
+<p>
+<font face="verdana,arial,helvetica">When the source and target are the
+same, the drop should be hysteretic within a region around the source
+window. (e.g. a 50 pixel border) The target remains the source as long
+as the mouse doesn't move into another widget that is willing to accept
+the drop. This makes it much easier for the user to drop the data on an
+invisible part of the source because dragging the mouse out onto the
+root window or a stray xterm will cause the source to scroll. The
+XdndAware property makes hysteresis possible because the root window,
+stray xterms, and especially the window border created by the window
+manager are ignored.
+</font></p><p>
+<font face="verdana,arial,helvetica">We are collecting <a href="http://www.newplanetsoftware.com/xdnd/examples.html">examples</a> to show DND might work in various cases.  <a href="http://www.newplanetsoftware.com/xdnd/examples.html">Dragging text</a> is straightforward since there are several well-known formats, including text/plain and <a href="http://www.cis.ohio-state.edu/htbin/rfc/rfc1896.html">text/enriched</a>.  <a href="http://www.newplanetsoftware.com/xdnd/dragging_files.html">Dragging files</a> is at least equally important.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">We have also developed extensions that allow dropping on the <a href="http://www.newplanetsoftware.com/xdnd/drop_on_root.html">root window</a> and on <a href="http://www.newplanetsoftware.com/xdnd/drop_no_xdnd.html">windows that do not support XDND</a>.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">XdndActionLink only makes sense
+within a single program or between cooperating programs because the
+target must obtain not only the data, but also the location of the
+data. In all other cases, the target should respond with XdndActionCopy
+or XdndActionPrivate in the XdndStatus message.
+</font></p><p>
+<font face="verdana,arial,helvetica">On the other hand, XdndActionAsk
+makes equally good sense between unrelated programs and cooperating
+programs. However, when the source and target are unrelated, the target
+may choose to provide a list of actions that it can perform on its own
+after retrieving the data instead of asking the source for a list of
+actions.
+</font></p><p>
+<font face="verdana,arial,helvetica">Remember also that you must
+debounce the mouse drag. If the user moves the mouse by only a couple
+of pixels while clicking to select something, then it is far more
+likely that the user is a bit clumsy than that the user intends to
+start a drag. A threshold of 3 pixels is typical.
+<font size="-1">
+</font></font></p><p>
+<font face="verdana,arial,helvetica"><font size="-1"><i>Getting up on my soap box...</i>
+</font></font></p><p>
+<font face="verdana,arial,helvetica"><font size="-1">In my opinion, programs should <em>not</em>
+change the cursor during the drag because this provides the user with
+the most consistent picture. The user is always dragging the same data,
+regardless of whether or not the current target will accept it. It is
+the target that should change to show whether or not it will accept the
+drop.
+</font></font></p><p>
+<font face="verdana,arial,helvetica"><font size="-1">However, if you want to be Microsoft compliant, you have to change the cursor.  As usual, Microsoft got it backwards...
+</font></font></p><p>
+<font face="verdana,arial,helvetica"><font size="-1">As a side note, on page 253 of his book, <cite>About Face</cite>, Alan Cooper agrees wholeheartedly.
+</font></font></p><p>
+<font face="verdana,arial,helvetica"><font size="-1">The single
+exception that I endorse is adding a small symbol to the cursor to show
+that the requested action will be performed, instead of
+XdndActionPrivate. For an example, refer to the page on <a href="http://www.newplanetsoftware.com/xdnd/dragging_files.html">dragging files</a>.
+</font>
+
+</font></p><p>
+</p><hr>
+
+<h3><font face="verdana,arial,helvetica"> Optimizations </font></h3>
+
+<p>
+<font face="verdana,arial,helvetica">When the source and target windows
+are part of the same application, sending X Client Messages is a waste
+of time and bandwidth, especially if the program and server are on
+different machines. Implementations should therefore detect the special
+cases of "source = target" and "source and target in same application"
+and handle them via function calls.
+</font></p><p>
+<font face="verdana,arial,helvetica">To avoid calling <tt>XConvertSelection()</tt> in the above cases:
+
+</font></p><ul>
+<li><font face="verdana,arial,helvetica"> There is no need to examine the data when "source = target" because the source must know what it is dragging.
+
+</font><p>
+</p></li><li><font face="verdana,arial,helvetica"> If the actual call to <tt>XConvertSelection()</tt>
+is hidden behind an interface, then when the source and target are in
+the same application, the interface can simulate the call without going
+to the server.
+</font></li></ul>
+
+<p>
+<font face="verdana,arial,helvetica">Targets do not have to retrieve
+XdndTypeList from the source window if they find what they are looking
+for in the three types listed in the XdndEnter message.
+</font></p><p>
+<font face="verdana,arial,helvetica">It is pointless to send XdndPosition messages when the mouse is stationary.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">To avoid unnecessary messages from
+the source to the server, one should only change the cursor when the
+target or status (acceptance and action) changes.
+</font></p><p>
+<font face="verdana,arial,helvetica">Unfortunately, one cannot avoid calling <tt>XTranslateCoordinates()</tt> continuously, because of overlapping windows.
+
+</font></p><p>
+</p><hr>
+
+<h3><font face="verdana,arial,helvetica"> Technical details </font></h3>
+
+<font face="verdana,arial,helvetica"><b> Current version: 4 </b>
+
+</font><p>
+<font face="verdana,arial,helvetica">All constants mentioned below are
+the string names of X atoms, capitalized as shown. This avoids the need
+for hard-coded values, which would require a global registry.
+</font></p><p>
+</p><hr>
+
+<h3><font face="verdana,arial,helvetica"> Atoms and Properties </font></h3>
+
+<p><font face="verdana,arial,helvetica"><b> XdndAware </b>
+
+</font></p><p>
+<font face="verdana,arial,helvetica">This window property must be of
+type XA_ATOM and must contain the highest version number of the
+protocol supported by the target. (Version numbers start at zero. The
+maximum version number is <tt>0xFF</tt> because there is only one byte
+allocated for it in the XdndEnter message. At one new version every
+three months, which is very rapid turnover, this will last 64 years.)
+</font></p><p>
+<font face="verdana,arial,helvetica">The property must be set on each
+top-level X window that contains widgets that can accept drops. (new in
+version 3) The property should not be set on subwindows. The target
+must dispatch the messages to the appropriate widget. Since window
+managers often insert extra layers of windows, this requires searching
+down the subwindow tree using <tt>XTranslateCoordinates()</tt>.
+
+<!--
+
+<p>
+If each widget uses a separate X window, the data types that the widget accepts can be appended to the property data following the version number.  This acts as an extra filter:  If there is a list of types and there is no overlap between the source and target lists, then the window can be ignored.  (The flag in the XdndStatus message is the final answer if there is overlap in the lists or if there are no types in the XdndAware property.)
+
+-->
+
+</font></p><p><font face="verdana,arial,helvetica"><b> XdndSelection </b>
+
+</font></p><p>
+<font face="verdana,arial,helvetica">This is the name of the X
+Selection that is used when the target wants to examine the data during
+the drag phase and when it wants to retrieve the data after a drop.
+</font></p><p><font face="verdana,arial,helvetica"><b> <a href="ftp://ftp.isi.edu/in-notes/iana/assignments/media-types/">Data types</a> </b>
+
+</font></p><p>
+<font face="verdana,arial,helvetica">All data types are referred to by their corresponding X Atoms.  The atom names are the corresponding <a href="ftp://ftp.isi.edu/in-notes/iana/assignments/media-types/">MIME types</a>, in all lower case. (RFC's for MIME:
+<a href="http://www.cis.ohio-state.edu/htbin/rfc/rfc2045.html">2045</a>,
+<a href="http://www.cis.ohio-state.edu/htbin/rfc/rfc2046.html">2046</a>,
+<a href="http://www.cis.ohio-state.edu/htbin/rfc/rfc2047.html">2047</a>,
+<a href="http://www.cis.ohio-state.edu/htbin/rfc/rfc2048.html">2048</a>,
+<a href="http://www.cis.ohio-state.edu/htbin/rfc/rfc2049.html">2049</a>)
+
+</font></p><p>
+<font face="verdana,arial,helvetica">For text, the charset attribute can be appended to the MIME type.
+(e.g. Japanese =&gt; text/plain;charset=ISO-2022-JP)  If the charset attribute is not
+specified, it is assumed to be ISO-8859-1.  (new in version 4)
+
+</font></p><p>
+<font face="verdana,arial,helvetica">Note that any data type may be transferred via the INCR protocol.
+
+</font></p><p><font face="verdana,arial,helvetica"><b> XdndTypeList </b>
+
+</font></p><p>
+<font face="verdana,arial,helvetica">If the source supports more than 3
+data types, this window property must be set on the source window, must
+be of type XA_ATOM, and must contain a list of all the supported data
+types.
+</font></p><p>
+<font face="verdana,arial,helvetica"><b> Actions </b> (new in version 2)
+
+</font></p><p>
+<font face="verdana,arial,helvetica">All actions are referred to by their corresponding X Atoms.  The predefined actions are
+
+</font></p><ul>
+<li><font face="verdana,arial,helvetica"> XdndActionCopy
+</font></li><li><font face="verdana,arial,helvetica"> XdndActionMove
+</font></li><li><font face="verdana,arial,helvetica"> XdndActionLink
+</font></li><li><font face="verdana,arial,helvetica"> XdndActionAsk
+</font></li><li><font face="verdana,arial,helvetica"> XdndActionPrivate
+</font></li></ul>
+
+<font face="verdana,arial,helvetica">The XdndAction prefix is reserved
+for future expansion, but any other name can be used for other actions
+as long as both the source and the target recognize it and agree on
+what it means. The predefined atom <tt>None</tt> is not allowed as an action.
+</font><p>
+<font face="verdana,arial,helvetica">The default is XdndActionCopy, and this is assumed to be the action when using version 0 or 1.
+</font></p><p>
+<font face="verdana,arial,helvetica">In general, XdndActionMove is
+implemented by first requesting the data and then the special target
+DELETE defined in the X Selection protocol. (File managers will
+obviously just use <tt>mv</tt> or its equivalent.)  DELETE should be sent before XdndFinished.
+</font></p><p>
+<font face="verdana,arial,helvetica">Refer to the Theory and Notes sections for more information.
+
+</font></p><p><font face="verdana,arial,helvetica"><b> XdndActionList </b> (new in version 2)
+
+</font></p><p>
+<font face="verdana,arial,helvetica">If the source sends XdndActionAsk,
+this window property must be set on the source window, must be of type
+XA_ATOM, and must contain a list of all the supported actions. The
+first one should be the default so the user doesn't have to change the
+selection in the radio group too often.
+</font></p><p><font face="verdana,arial,helvetica"><b> XdndActionDescription </b> (new in version 2)
+
+</font></p><p>
+<font face="verdana,arial,helvetica">If the source sends XdndActionAsk,
+this window property must be set on the source window, must be of type
+XA_STRING, and must contain a list of ASCII strings separated by <tt>NULL</tt>'s
+that the target should display when describing the choices to the user.
+These strings must be in the same order as the atoms in the
+XdndActionList property.
+</font></p><p>
+<font face="verdana,arial,helvetica">The option to cancel the operation
+must always be provided in the dialog displayed to the user, via a
+Cancel button, but should not be included in XdndActionList.
+</font></p><p><font face="verdana,arial,helvetica"><b> XdndProxy </b> (new in version 4)
+
+</font></p><p>
+<font face="verdana,arial,helvetica">If this window property exists, it must be of type XA_WINDOW and must contain
+the ID of the proxy window that should be checked for XdndAware and that should receive
+all the client messages, etc.  In order for the proxy window to behave correctly,
+the appropriate field of the client messages, <tt>window</tt> or <tt>data.l[0]</tt>,
+must contain the ID of the window in which the mouse is located, not the proxy
+window that is receiving the messages.  The only place where the proxy window should be
+used is when checking XdndAware and in the calls to <tt>XSendEvent()</tt>.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">The proxy window must have the XdndProxy property
+set to point to itself.  If it doesn't or if the proxy window doesn't exist at all, one should
+ignore XdndProxy on the assumption that it is left over after a crash.
+
+</font></p><p>
+</p><hr>
+
+<h3><font face="verdana,arial,helvetica"> Client Messages </font></h3>
+
+<font face="verdana,arial,helvetica"><b>Note</b>:  All unused flags <em>must</em> be set to zero in every message.  This allows one to define new flags without incrementing the version number.
+
+</font><p><font face="verdana,arial,helvetica"><b> XdndEnter </b>
+
+</font></p><p>
+<font face="verdana,arial,helvetica">Sent from source to target when the mouse enters a window that supports XDND.
+
+</font></p><ul>
+
+<li>
+<font face="verdana,arial,helvetica"><tt>data.l[0]</tt> contains the XID of the source window.
+
+</font><p></p></li><li>
+<font face="verdana,arial,helvetica"><tt>data.l[1]</tt>:
+  </font><ul>
+<font face="verdana,arial,helvetica">  <li> Bit 0 is set if the source supports more than three data types.
+  </li><li> The high byte contains the protocol version to use (minimum of the source's and target's highest supported versions).
+  </li><li> The rest of the bits are reserved for future use.
+  </li></font></ul>
+
+<p></p></li><li>
+<font face="verdana,arial,helvetica"><tt>data.l[2,3,4]</tt> contain the first three types that the source supports.  Unused slots are set to <tt>None</tt>.  The ordering is arbitrary since, in general, the source cannot know what the target prefers.
+
+</font><p>
+<font face="verdana,arial,helvetica">If the Source supports more than three data types, bit 0 of <tt>data.l[1]</tt>
+is set. This tells the Target to check the property XdndTypeList on the
+Source window for the list of available types. This property should
+contain <em>all</em> the available types.
+
+</font></p></li></ul>
+
+<p><font face="verdana,arial,helvetica"><b> XdndPosition </b>
+
+</font></p><p>
+<font face="verdana,arial,helvetica">Sent from source to target to provide mouse location.
+
+</font></p><ul>
+
+<li>
+<font face="verdana,arial,helvetica"><tt>data.l[0]</tt> contains the XID of the source window.
+
+</font></li><li>
+<font face="verdana,arial,helvetica"><tt>data.l[1]</tt> is reserved for future use (flags).
+
+</font></li><li>
+<font face="verdana,arial,helvetica"><tt>data.l[2]</tt> contains the coordinates of the mouse position relative to the root window.
+  </font><ul>
+<font face="verdana,arial,helvetica">  <li> <tt>data.l[2] = (x &lt;&lt; 16) | y;</tt>
+  </li></font></ul>
+
+</li><li>
+<font face="verdana,arial,helvetica"><tt>data.l[3]</tt> contains the time stamp for retrieving the data. (new in version 1)
+
+</font></li><li>
+<font face="verdana,arial,helvetica"><tt>data.l[4]</tt> contains the action requested by the user. (new in version 2)
+
+</font></li></ul>
+
+<p><font face="verdana,arial,helvetica"><b> XdndStatus </b>
+
+</font></p><p>
+<font face="verdana,arial,helvetica">Sent from target to source to
+provide feedback on whether or not the drop will be accepted, and, if
+so, what action will be taken.
+</font></p><ul>
+
+<li>
+<font face="verdana,arial,helvetica"><tt>data.l[0]</tt> contains the XID of the target window.
+<br>
+(This is required so XdndStatus messages that arrive after XdndLeave is sent will be ignored.)
+
+</font><p></p></li><li>
+<font face="verdana,arial,helvetica"><tt>data.l[1]</tt>:
+  </font><ul>
+<font face="verdana,arial,helvetica">  <li> Bit 0 is set if the current target will accept the drop.
+  </li><li> Bit 1 is set if the target wants XdndPosition messages while the mouse moves inside the rectangle in <tt>data.l[2,3]</tt>.
+  </li><li> The rest of the bits are reserved for future use.
+  </li></font></ul>
+
+<p></p></li><li>
+<font face="verdana,arial,helvetica"><tt>data.l[2,3]</tt> contains a
+rectangle in root coordinates that means "don't send another
+XdndPosition message until the mouse moves out of here". It is legal to
+specify an empty rectangle. This means "send another message when the
+mouse moves". Even if the rectangle is not empty, it is legal for the
+source to send XdndPosition messages while in the rectangle. The
+rectangle is stored in the standard <b>Xlib</b> format of (x,y,w,h):
+  </font><ul>
+<font face="verdana,arial,helvetica">  <li> <tt>data.l[2] = (x &lt;&lt; 16) | y;</tt>
+  </li><li> <tt>data.l[3] = (w &lt;&lt; 16) | h;</tt>
+  </li></font></ul>
+
+<p></p></li><li>
+<font face="verdana,arial,helvetica"><tt>data.l[4]</tt> contains the
+action accepted by the target. This is normally only allowed to be
+either the action specified in the XdndPosition message,
+XdndActionCopy, or XdndActionPrivate. <tt>None</tt> should be sent if the drop will not be accepted. (new in version 2)
+
+</font></li></ul>
+
+<p><font face="verdana,arial,helvetica"><b> XdndLeave </b>
+
+</font></p><p>
+<font face="verdana,arial,helvetica">Sent from source to target to cancel the drop.
+
+</font></p><ul>
+
+<li>
+<font face="verdana,arial,helvetica"><tt>data.l[0]</tt> contains the XID of the source window.
+
+</font></li><li>
+<font face="verdana,arial,helvetica"><tt>data.l[1]</tt> is reserved for future use (flags).
+
+</font></li></ul>
+
+<p><font face="verdana,arial,helvetica"><b> XdndDrop </b>
+
+</font></p><p>
+<font face="verdana,arial,helvetica">Sent from source to target to complete the drop.
+
+</font></p><ul>
+
+<li>
+<font face="verdana,arial,helvetica"><tt>data.l[0]</tt> contains the XID of the source window.
+
+</font></li><li>
+<font face="verdana,arial,helvetica"><tt>data.l[1]</tt> is reserved for future use (flags).
+
+</font></li><li>
+<font face="verdana,arial,helvetica"><tt>data.l[2]</tt> contains the time stamp for retrieving the data. (new in version 1)
+
+</font></li></ul>
+
+<p><font face="verdana,arial,helvetica"><b> XdndFinished </b> (new in version 2)
+
+</font></p><p>
+<font face="verdana,arial,helvetica">Sent from target to source to indicate that the source can toss the data because the target no longer needs access to it.
+
+</font></p><ul>
+
+<li>
+<font face="verdana,arial,helvetica"><tt>data.l[0]</tt> contains the XID of the target window.
+
+</font><p></p></li><li>
+<font face="verdana,arial,helvetica"><tt>data.l[1]</tt>:
+  </font><ul>
+<font face="verdana,arial,helvetica">  <li> Bit 0 is set if the current target accepted the drop and successfully performed the accepted drop action. (new in version 5) <br>
+		<font size="-1">(If
+the version being used by the source is less than 5, then the program
+should proceed as if the bit were set, regardless of its actual value.)</font>
+  </li><li> The rest of the bits are reserved for future use.
+  </li></font></ul>
+
+<p></p></li><li>
+<font face="verdana,arial,helvetica"><tt>data.l[2]</tt> contains the action performed by the target.  <tt>None</tt> should be sent if the current target rejected the drop, i.e., when bit 0 of <tt>data.l[1]</tt> is zero.  (new in version 5)
+</font><p>
+<font face="verdana,arial,helvetica"><font size="-1">
+(<b>Note</b>:  Performing an action other than the one that was accepted with the last XdndStatus message is <em>strongly</em> discouraged because the user expects the action to match the visual feedback that was given based on the XdndStatus messages!)
+</font>
+
+</font></p></li></ul>
+
+<p>
+</p><hr>
+
+<h3><font face="verdana,arial,helvetica"> Sample implementation </font></h3>
+
+<p>
+<font face="verdana,arial,helvetica">If you are interested in
+supporting this protocol, but daunted by having to start from scratch,
+you can obtain sample C++ code via <a href="http://www.newplanetsoftware.com/ftp/xdnd/">anonymous ftp</a>.  This code may be used under any license.
+
+</font></p><p>
+<font face="verdana,arial,helvetica"><a href="http://www.obsidian.co.za/psheer/">Paul Sheer</a> has implemented XDND v2 in C as a generic library.  The files are <a href="ftp://lava.obsidian.co.za/pub/unix/cooledit/xdnd.c"><tt>xdnd.c</tt></a> and <a href="ftp://lava.obsidian.co.za/pub/unix/cooledit/xdnd.h"><tt>xdnd.h</tt></a>
+
+</font></p><p>
+<font face="verdana,arial,helvetica">If you use a different language, please consider donating your code for others to look at.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">We also have a <a href="http://www.newplanetsoftware.com/ftp/xdnd/">binary</a> that you can use to test interoperability between a correct implementation and your implementation.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">While implementing this protocol, you may find it very useful to use the programs <tt>xlsatoms</tt> to list all the atoms that the server knows about, <tt>xprop</tt> to list all the properties on a particular window, and <tt>xscope</tt> to study the timing of events.
+
+</font></p><p>
+<font face="verdana,arial,helvetica">Even if you implement XDND from
+scratch, we would appreciate it if your distribution included some sort
+of documentation that states clearly that you are supporting this
+protocol and provides a reference to this web page. This will help get
+the snowball rolling. The more programs that support the same protocol,
+the more useful Drag-and-Drop will be for the users. If you <a href="http://www.newplanetsoftware.com/form/contact.php?target=xdnd">tell us</a> that you support the protocol, we will also add you to the <a href="http://www.newplanetsoftware.com/xdnd/supporters.html">list of supporters</a>.
+
+</font></p><p>
+</p><hr>
+
+<font face="verdana,arial,helvetica"><a name="ChangeLog">
+
+</a></font><h3><font face="verdana,arial,helvetica"><a name="ChangeLog"> Changes from previous versions </a></font></h3>
+
+<p>
+<font face="verdana,arial,helvetica"><a name="ChangeLog">December 25, 2002:
+</a></font></p><blockquote>
+<font face="verdana,arial,helvetica"><a name="ChangeLog">Version 5 adds
+additional information to the XdndFinished message in order to allow
+the Java DND API to be implemented on top of XDND. (Thanks to Danila A.
+Sinopalnikov for working out the details.)
+</a></font></blockquote>
+
+<p>
+<font face="verdana,arial,helvetica"><a name="ChangeLog">August 31, 2002:
+</a></font></p><blockquote>
+<font face="verdana,arial,helvetica"><a name="ChangeLog">Added requirement to </a><a href="http://www.newplanetsoftware.com/xdnd/dragging_files.html">File Dragging protocol</a>.  The user name must be provided via the new text/x-xdnd-username data type.
+</font></blockquote>
+
+<p>
+<font face="verdana,arial,helvetica">November 21, 2000:
+</font></p><blockquote>
+<font face="verdana,arial,helvetica">Thanks to Daniel Biddle for pointing out that the <a href="http://www.isi.edu/in-notes/iana/assignments/character-sets">MIME types</a> should be specified in the format ISO-8859-1, not iso8859-1.
+</font></blockquote>
+
+<p>
+<font face="verdana,arial,helvetica">October 26, 2000:
+</font></p><blockquote>
+<font face="verdana,arial,helvetica">Minor modifications to actions required by <a href="http://www.newplanetsoftware.com/xdnd/dragging_files.html">File Dragging protocol</a>.
+</font></blockquote>
+
+<p>
+<font face="verdana,arial,helvetica">February 22, 2000:
+</font></p><blockquote>
+<font face="verdana,arial,helvetica">Added additional notes about why the host name must always be included when <a href="http://www.newplanetsoftware.com/xdnd/dragging_files.html">dragging files</a>.
+</font></blockquote>
+
+<p>
+<font face="verdana,arial,helvetica">June 7, 1999:
+</font></p><blockquote>
+<font face="verdana,arial,helvetica">Version 4 adds XdndProxy window property to support the new protocol for <a href="http://www.newplanetsoftware.com/xdnd/drop_on_root.html">dropping on the root window</a>.
+</font><p>
+<font face="verdana,arial,helvetica">Rewrote the protocol for <a href="http://www.newplanetsoftware.com/xdnd/drop_on_root.html">dropping on the root window</a> to conform to the latest implementations.
+</font></p><p>
+<font face="verdana,arial,helvetica">Added note in Technical Details section about how to specify the character set for text.
+</font></p><p>
+<font face="verdana,arial,helvetica">Created <a href="http://www.newplanetsoftware.com/xds/">Direct Save</a> (XDS) protocol layered on top of XDND.
+</font></p></blockquote>
+
+<p>
+<font face="verdana,arial,helvetica">December 1, 1998:
+</font></p><blockquote>
+<font face="verdana,arial,helvetica">Rewrote the protocol for <a href="http://www.newplanetsoftware.com/xdnd/drop_on_root.html">dropping on the root window</a> to conform to the latest implementations.
+</font></blockquote>
+
+<p>
+<font face="verdana,arial,helvetica">September 19, 1998:
+</font></p><blockquote>
+<font face="verdana,arial,helvetica">The <a href="http://www.newplanetsoftware.com/xdnd/dragging_files.html">File Dragging protocol</a> now uses the well established <a href="ftp://ftp.isi.edu/in-notes/iana/assignments/media-types/text/uri-list">text/uri-list</a> instead of url/url.
+</font><p>
+<font face="verdana,arial,helvetica">Added note to Optimization section about caching the window stack.
+</font></p></blockquote>
+
+<p>
+<font face="verdana,arial,helvetica">September 7, 1998:
+</font></p><blockquote>
+<font face="verdana,arial,helvetica">Version 3 changes the way XdndAware is handled.  To reduce the number of <tt>XTranslateCoordinates()</tt>
+calls to the X server and to make life easier for programs that use
+multiple X windows per widget, XdndAware must now be placed on the
+top-level X window, not on subwindows. This change is unfortunately
+incompatible with previous versions. However, since there are still
+relatively few programs that have been released with XDND support, the
+specification has simply been adjusted so XDND compliance only requires
+supporting version 3 and up. (This will never happen again!)
+</font><p>
+<font face="verdana,arial,helvetica">In addition, Jeroen van der Zijp has invented an <a href="http://www.newplanetsoftware.com/xdnd/drop_no_xdnd.html">extension</a> that allows dropping onto windows that do not support XDND, and Arnt Gulbrandsen has developed a way to <a href="http://www.newplanetsoftware.com/xdnd/drop_on_root.html">drop on the root window</a>.
+</font></p></blockquote>
+
+<p>
+<font face="verdana,arial,helvetica">August 17, 1998:
+</font></p><blockquote>
+<font face="verdana,arial,helvetica">Version 2 adds the following features:
+</font><ul>
+<li><font face="verdana,arial,helvetica"> The concept of an action.  Previously, only <b>copy</b> was supported.  Now, the source can specify any action, and the target can either accept it or fall back on <b>copy</b> or <b>private</b>.
+The predefined actions are XdndActionCopy (the default),
+XdndActionMove, XdndActionLink, XdndActionAsk, and XdndActionPrivate. <b>Ask</b>
+tells the target to get a list of acceptable actions from the source's
+XdndActionList and XdndActionDescription window properties and then ask
+the user which one to perform.
+</font><p>
+</p></li><li><font face="verdana,arial,helvetica"> The target is
+required to send XdndFinished. (Yes, I caved in :) However, if the
+source blocks, it must be prepared to time out in case the target is
+malfunctioning. Ideally, the source will not need to block because it
+will keep a history of past selections. The timestamp in XdndDrop
+allows the source to safely avoid both blocking and keeping a history
+by simply rejecting outdated requests.
+</font><p>
+<font face="verdana,arial,helvetica">Part of the reason for adding
+XdndFinished is that this allows XDND to be used with higher level
+API's (e.g. JavaBeans) that require notification of the end of the
+operation.
+</font></p></li></ul>
+<font face="verdana,arial,helvetica">With these new features, the <a href="http://www.newplanetsoftware.com/xdnd/dragging_files.html">File Dragging protocol</a> becomes much simpler.
+</font><p>
+<font face="verdana,arial,helvetica">Added page of <a href="http://www.newplanetsoftware.com/xdnd/supporters.html">supporters</a>.
+</font></p></blockquote>
+
+<p>
+<font face="verdana,arial,helvetica">February 25, 1998:
+</font></p><blockquote>
+<font face="verdana,arial,helvetica">Added <a href="http://www.newplanetsoftware.com/xdnd/examples.html">examples</a> of how XDND fits into the larger picture of cooperating applications.
+</font></blockquote>
+
+<p>
+<font face="verdana,arial,helvetica">February 24, 1998:
+</font></p><blockquote>
+<font face="verdana,arial,helvetica">Added trashcan discussion to the <a href="http://www.newplanetsoftware.com/xdnd/dragging_files.html">File Dragging protocol</a>.
+</font></blockquote>
+
+<p>
+<font face="verdana,arial,helvetica">February 2, 1998:
+</font></p><blockquote>
+<font face="verdana,arial,helvetica">Version 0 has a hole. If the user
+begins a second drag from the same source before the data has been
+transferred to the first target (over a really slow network,
+obviously), then the first target may get the wrong data. Thanks to
+Donal K. Fellows for pointing this out.
+</font><p>
+<font face="verdana,arial,helvetica">Version 1 fixes this by adding a
+time stamp to XdndPosition and XdndDrop which must be used when
+requesting the data. This way, if the user quickly begins a second
+drag, the first target will at least get no data instead of the wrong
+data.
+</font></p><p>
+<font face="verdana,arial,helvetica">Please refer to the Theory section
+for a more complete discussion and the reasons why this was not fixed
+by adding a "drop finished" message.
+</font></p></blockquote>
+
+<p>
+<font face="verdana,arial,helvetica">January 28, 1998:
+</font></p><blockquote>
+<font face="verdana,arial,helvetica">Added <a href="http://www.newplanetsoftware.com/xdnd/other_protocols.html">comparison</a> to <a href="http://www.gnome.org/devel/arch/dnd.shtml">Xde</a>.
+</font></blockquote>
+
+<p>
+</p><hr>
+
+<h3><font face="verdana,arial,helvetica"> Acknowledgements </font></h3>
+
+<p>
+<font face="verdana,arial,helvetica">This protocol was developed by <a href="http://www.newplanetsoftware.com/form/contact.php?target=xdnd">John Lindal</a> at <a href="http://www.newplanetsoftware.com/">New Planet Software</a>, with help from Glenn Bach and lots of feedback from Arnt Gulbrandsen at <a href="http://www.troll.no/">Troll Tech</a> and Owen Taylor of <a href="http://www.gtk.org/">GTK+</a> and input from Elliot Lee at <a href="http://www.redhat.com/">Red Hat Software</a>.
+
+</font></p></body></html>

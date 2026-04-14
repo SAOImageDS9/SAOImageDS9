@@ -1,0 +1,300 @@
+# version format
+version: 2.9.{build}
+
+branches:
+  only:
+    - master
+
+environment:
+  # these variables are common to all jobs
+  TCL_VERSION: 8.6
+
+image:
+  - Ubuntu
+  - Visual Studio 2022
+  - macos-sonoma
+#  - macOS
+
+platform:
+  - x86
+  - x64
+
+configuration:
+  - Release
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - platform: x86
+      configuration: Release
+  exclude:
+    - platform: x86
+      image: macOS
+    - platform: x86
+      image: macos-sonoma
+
+for:
+  
+# ======================================
+#      Windows
+# ======================================
+
+-
+  matrix:
+    only:
+    - image: Visual Studio 2022
+
+  init:
+    - cmd: echo "Init for Windows"
+    - cmd: set BUILD_FILENAME_TAG="-windows-tcl%TCL_VERSION%-%PLATFORM%"
+
+
+  install:
+    - cmd: set TKDND_HOME=%cd%
+    - cmd: set /p TKDND_VERSION=<VERSION
+    - cmd: echo %TKDND_VERSION%
+    # Install Tcl/Tk
+    - cmd: set IRONTCL_VERSION="8.6.7"
+    - cmd: if %platform%==x86 set DOWNLOAD_PLATFORM=win32
+    - cmd: if %platform%==x64 set DOWNLOAD_PLATFORM=amd64
+    - cmd: appveyor DownloadFile https://www.irontcl.com/downloads/irontcl-%DOWNLOAD_PLATFORM%-%IRONTCL_VERSION%.zip
+    - cmd: cmake -E tar xf irontcl-%DOWNLOAD_PLATFORM%-%IRONTCL_VERSION%.zip
+    - cmd: set TCL_ROOT=%cd%\IronTcl
+    - cmd: set PATH=%cd%\IronTcl\bin;%PATH%
+    - cmd: set TCL_TCLSH=%cd%\IronTcl\bin\tclsh86t.exe
+    - cmd: set TK_WISH=%cd%\IronTcl\bin\wish86t.exe
+    # Generate solution...
+    - cmd: set CMAKE_GENERATOR="Visual Studio 17 2022"
+    - cmd: if %platform%==x86 set CMAKE_ARCHITECTURE="Win32"
+    - cmd: if %platform%==x64 set CMAKE_ARCHITECTURE="x64"
+    - cmd: cmake -E make_directory "build"
+    - cmd: cd build && cmake -G %CMAKE_GENERATOR% -A %CMAKE_ARCHITECTURE% -DTCL_TCLSH=%TCL_TCLSH% -DTK_WISH=%TK_WISH% -DCMAKE_INSTALL_PREFIX=runtime ..
+  
+  build:
+    project: build\tkdnd.sln      # path to Visual Studio solution or project
+  
+  before_build:
+    - cmd: if %platform%==x86 set TKDND_PLATFORM=Win32
+    - cmd: if %platform%==x86 set MSYS2_ARCH=i686
+    - cmd: if %platform%==x86 set MSYSTEM=MINGW32
+    - cmd: if %platform%==x64 set TKDND_PLATFORM=x64
+    - cmd: if %platform%==x64 set MSYS2_ARCH=x86_64
+    - cmd: if %platform%==x64 set MSYSTEM=MINGW64
+  
+  build_script:
+    - cmd: msbuild tkdnd.sln /p:Platform=%TKDND_PLATFORM% /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+    - cmd: msbuild INSTALL.vcxproj /p:Platform=%TKDND_PLATFORM% /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+    ## MSYS2
+    - PATH C:\msys64\%MSYSTEM%\bin;C:\msys64\usr\bin;C:\msys64\bin;%PATH%
+    - cd %TKDND_HOME%
+    - bash '%APPVEYOR_BUILD_FOLDER%\appveyor_build_msys2.sh'
+    - cd %TKDND_HOME%\build
+  
+  after_build:
+    - cmd: echo %cd%
+    - cmd: cd runtime && 7z a -tzip tkdnd-%TKDND_VERSION%%BUILD_FILENAME_TAG%.zip *
+  
+  artifacts:
+    - path: '\build\runtime\*.zip'
+      type: zip
+      name: tkdnd-%TKDND_VERSION%%BUILD_FILENAME_TAG%.zip
+  
+  # https://github.com/forexample/github-binary-release
+  # git tag tkdnd-release-test-v2.9.2
+  # git push --tags
+  #
+  # Delete tag:
+  # git push --delete origin tkdnd-release-test-v2.9.1
+  # git tag -d tkdnd-release-test-v2.9.1
+  deploy:
+    provider: GitHub
+    auth_token:
+      secure: "BzeJXdX4roGf2NZw9H9ClTKKzVP3H/nAdtBV/U2qh6CbSZYL+8BnRiUGmihyOL8J"
+    tag: $(APPVEYOR_REPO_TAG_NAME)
+    # release: $(APPVEYOR_REPO_TAG_NAME)-%platform%-v$(appveyor_build_version)
+    # release: $(APPVEYOR_REPO_TAG_NAME)-windows-v$(appveyor_build_version)
+    release: $(APPVEYOR_REPO_TAG_NAME)
+    description: 'TkDND binaries'
+    artifact: tkdnd-%TKDND_VERSION%%BUILD_FILENAME_TAG%.zip
+    draft: false
+    prerelease: false
+    on:
+      branch: master                 # release from master branch only
+      APPVEYOR_REPO_TAG: true        # deploy on tag push only
+
+  test: off
+
+# ======================================
+#      Linux
+# ======================================
+
+-
+  matrix:
+    only:
+      - image: Ubuntu
+
+  init:
+    - echo "Init for Linux"
+    - echo `pwd`
+    - if [[ "$PLATFORM" == "x86" ]]; then export PLATFORM_CPU_ARCH="i686"  ; fi
+    - if [[ "$PLATFORM" == "x64" ]]; then export PLATFORM_CPU_ARCH="x86_64"; fi
+    - export CONFIGURE_ARGS=""
+    - export TKDND_HOME=`pwd`
+
+  install:
+    - export TCL_VERSION=`echo 'puts [info tclversion]' | tclsh`
+    - export BUILD_FILENAME_TAG="-linux-tcl${TCL_VERSION}-${PLATFORM_CPU_ARCH}"
+    - cd ${TKDND_HOME}
+    - export TKDND_VERSION=`cat ${TKDND_HOME}/VERSION`
+    - echo ${TKDND_VERSION}
+    - export TKDND_RUNTIME=${TKDND_HOME}/cmake/runtime
+    - export FILE_TO_UPLOAD=${TKDND_HOME}/tkdnd-${TKDND_VERSION}${BUILD_FILENAME_TAG}.tgz
+    - echo ${FILE_TO_UPLOAD}
+
+  build_script:
+    - echo "Build for Linux"
+    - cd ${TKDND_HOME}
+    - ./configure --prefix=${TKDND_RUNTIME} --exec-prefix=${TKDND_RUNTIME} ${CONFIGURE_ARGS} && make && make test
+    - make install
+
+  after_build:
+    - echo `pwd`
+    - cd ${TKDND_RUNTIME}/lib && tar -czvf ${FILE_TO_UPLOAD} tkdnd${TKDND_VERSION}
+    - cd ${TKDND_HOME}
+    - echo ${FILE_TO_UPLOAD}
+
+  artifacts:
+    - path: '*.tgz'
+      type: tgz
+      name: tkdnd-${TKDND_VERSION}${BUILD_FILENAME_TAG}.tgz
+  
+  # https://github.com/forexample/github-binary-release
+  # git tag tkdnd-release-test-v2.9.2
+  # git push --tags
+  #
+  # Delete tag:
+  # git push --delete origin tkdnd-release-test-v2.9.1
+  # git tag -d tkdnd-release-test-v2.9.1
+  deploy:
+    provider: GitHub
+    auth_token:
+      secure: "BzeJXdX4roGf2NZw9H9ClTKKzVP3H/nAdtBV/U2qh6CbSZYL+8BnRiUGmihyOL8J"
+    tag: $(APPVEYOR_REPO_TAG_NAME)
+    # release: $(APPVEYOR_REPO_TAG_NAME)-%platform%-v$(appveyor_build_version)
+    # release: $(APPVEYOR_REPO_TAG_NAME)-windows-v$(appveyor_build_version)
+    release: $(APPVEYOR_REPO_TAG_NAME)
+    description: 'TkDND binaries'
+    artifact: tkdnd-${TKDND_VERSION}${BUILD_FILENAME_TAG}.tgz
+    draft: false
+    prerelease: false
+    on:
+      branch: master                 # release from master branch only
+      APPVEYOR_REPO_TAG: true        # deploy on tag push only
+
+  test: off
+
+# ======================================
+#      macOS
+# ======================================
+
+-
+  matrix:
+    only:
+      - image: macOS
+      - image: macos-sonoma
+
+  init:
+    - echo "Init for macOS"
+    - if [[ "$PLATFORM" == "x86" ]]; then export PLATFORM_CPU_ARCH="i686"  ; fi
+    - if [[ "$PLATFORM" == "x64" ]]; then export PLATFORM_CPU_ARCH="x86_64"; fi
+    - export PLATFORM_CPU_ARCH=`uname -m`
+    - export PLATFORM_OS_VERSION=`sw_vers -productVersion`
+    - export PLATFORM_OS=$(cat '/System/Library/CoreServices/Setup Assistant.app/Contents/Resources/en.lproj/OSXSoftwareLicense.rtf' |grep 'SOFTWARE LICENSE AGREEMENT FOR ' | awk -F ' FOR ' '{print $2}' | awk -F 'OS X |macOS ' '{print $2}' | tr '[:upper:]' '[:lower:]' | awk -F '\' '{print $1}')
+    - export PLATFORM_MACHINE=`machine`
+    - export CONFIGURE_ARGS=""
+    - export TKDND_HOME=`pwd`
+    - echo "${PLATFORM_CPU_ARCH} ${PLATFORM_OS_VERSION} ${PLATFORM_MACHINE}"
+
+  install:
+    - export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1
+    - export HOMEBREW_NO_INSTALL_UPGRADE=1
+    - brew install gnu-tar
+    - brew install tcl-tk@9
+    - export TCL_VERSION=`echo 'puts [info tclversion]' | tclsh`
+    - export BUILD_FILENAME_TAG="-macOS-tcl${TCL_VERSION}-${PLATFORM_CPU_ARCH}-${PLATFORM}-${PLATFORM_OS_VERSION}"
+    - export BUILD_FILENAME_TAG_ARM="-macOS-tcl${TCL_VERSION}-arm64-${PLATFORM}-${PLATFORM_OS_VERSION}"
+    - cd ${TKDND_HOME}
+    - export TKDND_VERSION=`cat ${TKDND_HOME}/VERSION`
+    - echo ${TKDND_VERSION}
+    - export TKDND_RUNTIME=${TKDND_HOME}/cmake/runtime
+    - export FILE_TO_UPLOAD=${TKDND_HOME}/tkdnd-${TKDND_VERSION}${BUILD_FILENAME_TAG}.tgz
+    - echo ${FILE_TO_UPLOAD}
+    - export FILE_TO_UPLOAD_ARM=${TKDND_HOME}/tkdnd-${TKDND_VERSION}${BUILD_FILENAME_TAG_ARM}.tgz
+    - echo ${FILE_TO_UPLOAD_ARM}
+
+
+  build_script:
+    - echo "Build for macOS"
+    - cd ${TKDND_HOME}
+    - ./configure --prefix=${TKDND_RUNTIME} --exec-prefix=${TKDND_RUNTIME} ${CONFIGURE_ARGS} && make && make test
+    - make install
+    - cd ${TKDND_RUNTIME}/lib && tar -czvf ${FILE_TO_UPLOAD} tkdnd${TKDND_VERSION} && rm -rf tkdnd${TKDND_VERSION}
+    - cd ${TKDND_HOME} && make clean && make distclean
+
+    ## Cross-compile for ARM...
+    - cd ${TKDND_HOME}
+#    - export OLD_HOME=${HOME}
+#    - export HOME=${TKDND_HOME}
+#    - bash macosx/wrongbrew.sh install tcl-tk@9
+#    - export HOME=${OLD_HOME}
+    ## Re-install ARM Tcl/Tk...
+    - brew fetch --force --bottle-tag=arm64_${PLATFORM_OS} tcl-tk@9
+    - brew reinstall $(brew --cache --bottle-tag=arm64_${PLATFORM_OS} tcl-tk@9)
+    - export CC="clang -arch arm64"
+    - export CFLAGS=
+    - export CXX="clang++ -arch arm64"
+    - export CXXFLAGS=
+    - export CONFIGURE_ARGS="--host=aarch64 --target=aarch64"
+    - ./configure --prefix=${TKDND_RUNTIME} --exec-prefix=${TKDND_RUNTIME} ${CONFIGURE_ARGS} && make
+    - make install
+    - cd ${TKDND_RUNTIME}/lib && tar -czvf ${FILE_TO_UPLOAD_ARM} tkdnd${TKDND_VERSION} && rm -rf tkdnd${TKDND_VERSION}
+    - cd ${TKDND_HOME} && make clean && make distclean
+
+  after_build:
+    - cd ${TKDND_HOME}
+    - echo ${FILE_TO_UPLOAD}
+    - echo ${FILE_TO_UPLOAD_ARM}
+
+  artifacts:
+    - path: '*.tgz'
+      type: tgz
+      name: tkdnd-${TKDND_VERSION}${BUILD_FILENAME_TAG}.tgz
+
+    - path: '*.tgz'
+      type: tgz
+      name: tkdnd-${TKDND_VERSION}${BUILD_FILENAME_TAG_ARM}.tgz
+  
+  # https://github.com/forexample/github-binary-release
+  # git tag tkdnd-release-test-v2.9.2
+  # git push --tags
+  #
+  # Delete tag:
+  # git push --delete origin tkdnd-release-test-v2.9.1
+  # git tag -d tkdnd-release-test-v2.9.1
+  deploy:
+    provider: GitHub
+    auth_token:
+      secure: "BzeJXdX4roGf2NZw9H9ClTKKzVP3H/nAdtBV/U2qh6CbSZYL+8BnRiUGmihyOL8J"
+    tag: $(APPVEYOR_REPO_TAG_NAME)
+    # release: $(APPVEYOR_REPO_TAG_NAME)-%platform%-v$(appveyor_build_version)
+    # release: $(APPVEYOR_REPO_TAG_NAME)-windows-v$(appveyor_build_version)
+    release: $(APPVEYOR_REPO_TAG_NAME)
+    description: 'TkDND binaries'
+    artifact: tkdnd-${TKDND_VERSION}${BUILD_FILENAME_TAG}.tgz
+    draft: false
+    prerelease: false
+    on:
+      branch: master                 # release from master branch only
+      APPVEYOR_REPO_TAG: true        # deploy on tag push only
+
+  test: off

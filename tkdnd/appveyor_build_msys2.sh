@@ -1,0 +1,128 @@
+#!/usr/bin/env bash
+
+# Exit early if any command fails
+#set -e
+
+pacman -Ss tcllib
+
+PKG_PREFIX="mingw-w64-$MSYS2_ARCH"
+
+pacman --noconfirm -S --needed \
+       ${PKG_PREFIX}-tcl \
+       ${PKG_PREFIX}-tk \
+       ${PKG_PREFIX}-tcllib
+
+echo `pwd`
+
+## Do we have a tk_Config.sh?
+# tk_config="$TCL_ROOT/lib/tkConfig.sh"
+# if [ -f "$tk_config" ]; then
+#     echo "$tk_config exists."
+# else
+#     echo "$tk_config does not exist."
+# cat <<EOT >> $tk_config
+# # tkConfig.sh --
+# #
+# # This shell script (for sh) is generated automatically by Tk's
+# # configure script.  It will create shell variables for most of
+# # the configuration options discovered by the configure script.
+# # This script is intended to be included by the configure scripts
+# # for Tk extensions so that they don't have to figure this all
+# # out for themselves.  This file does not duplicate information
+# # already provided by tclConfig.sh, so you may need to use that
+# # file in addition to this one.
+# #
+# # The information in this file is specific to a single platform.
+#
+# TK_DLL_FILE="tk86t.dll"
+#
+# # Tk's version number.
+# TK_VERSION='8.6'
+# TK_MAJOR_VERSION='8'
+# TK_MINOR_VERSION='6'
+# TK_PATCH_LEVEL='8.6.7'
+#
+# # -D flags for use with the C compiler.
+# TK_DEFS='-DPACKAGE_NAME=\"\" -DPACKAGE_TARNAME=\"\" -DPACKAGE_VERSION=\"\" -DPACKAGE_STRING=\"\" -DPACKAGE_BUGREPORT=\"\" -Dinline=__inline -DSTDC_HEADERS=1 -DTCL_THREADS=1 -DUSE_THREAD_ALLOC=1 -DHAVE_SYS_TYPES_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_STDLIB_H=1 -DHAVE_STRING_H=1 -DHAVE_MEMORY_H=1 -DMODULE_SCOPE=extern -DNO_STRTOI64=1 -DHAVE_UXTHEME_H=1 -DNDEBUG=1 -DTCL_CFG_OPTIMIZED=1 '
+#
+# # Flag, 1: we built a shared lib, 0 we didn't
+# TK_SHARED_BUILD=1
+#
+# # This indicates if Tk was build with debugging symbols
+# TK_DBGX=t
+#
+# # The name of the Tk library (may be either a .a file or a shared library):
+# TK_LIB_FILE='tk86t.lib'
+#
+# # Additional libraries to use when linking Tk.
+# TK_LIBS='netapi32.lib kernel32.lib user32.lib advapi32.lib ws2_32.lib gdi32.lib comdlg32.lib imm32.lib comctl32.lib shell32.lib uuid.lib'
+#
+# # Top-level directory in which Tcl's platform-independent files are
+# # installed.
+# TK_PREFIX=''
+#
+# # Top-level directory in which Tcl's platform-specific files (e.g.
+# # executables) are installed.
+# TK_EXEC_PREFIX=''
+#
+# # -l flag to pass to the linker to pick up the Tcl library
+# TK_LIB_FLAG=''
+#
+# # String to pass to linker to pick up the Tk library from its
+# # build directory.
+# TK_BUILD_LIB_SPEC='-ltk86'
+#
+# # String to pass to linker to pick up the Tk library from its
+# # installed directory.
+# TK_LIB_SPEC='-ltk86'
+#
+# # Location of the top-level source directory from which Tk was built.
+# # This is the directory that contains a README file as well as
+# # subdirectories such as generic, unix, etc.  If Tk was compiled in a
+# # different place than the directory containing the source files, this
+# # points to the location of the sources, not the location where Tk was
+# # compiled.
+# TK_SRC_DIR='C:\dev\Tk'
+#
+# # Needed if you want to make a 'fat' shared library library
+# # containing tk objects or link a different wish.
+# TK_CC_SEARCH_FLAGS=''
+# TK_LD_SEARCH_FLAGS=''
+#
+# # The name of the Tk stub library (.a):
+# TK_STUB_LIB_FILE='tkstub86.lib'
+#
+# # -l flag to pass to the linker to pick up the Tk stub library
+# TK_STUB_LIB_FLAG='-ltkstub86'
+#
+# # String to pass to linker to pick up the Tk stub library from its
+# # build directory.
+# TK_BUILD_STUB_LIB_SPEC='-ltkstub86'
+#
+# # String to pass to linker to pick up the Tk stub library from its
+# # installed directory.
+# TK_STUB_LIB_SPEC='-ltkstub86'
+#
+# # Path to the Tk stub library in the build directory.
+# TK_BUILD_STUB_LIB_PATH=''
+#
+# # Path to the Tk stub library in the install directory.
+# TK_STUB_LIB_PATH='tkstub86.lib'
+# EOT
+# fi
+
+ls -laF build/runtime/tkdnd${TKDND_VERSION}/
+
+# bash configure
+# ${TCL_TCLSH} tcl-conf
+tclsh tcl-conf
+
+# bash configure \
+#   --prefix="$TKDND_HOME/cmake/runtime/MSYS2" \
+#   --exec-prefix="$TKDND_HOME/cmake/runtime/MSYS2"
+
+make
+make install
+
+ls *tkdnd*
+ls -laF cmake/runtime/lib/tkdnd${TKDND_VERSION}/

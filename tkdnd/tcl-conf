@@ -1,0 +1,177 @@
+#!/bin/sh
+# The next line is executed by /bin/sh, but not tcl \
+exec tclsh "$0" ${1+"$@"}
+
+set srcdir [file dirname [file normalize [info script]]]
+
+puts "TkDND sources: $srcdir"
+
+set libpath     [file dirname [file normalize [info library]]]
+set root        [file dirname $libpath]
+set tcl_includepath $root/include
+set tk_includepath  $root/include
+set tcl_libpath $libpath
+set tk_libpath  $libpath
+set tk_includepath_int $tk_includepath
+catch {file delete -force config.cache}
+
+# puts "ROOT: $root"
+
+catch {
+  switch -nocase -- $::tcl_platform(os) {
+    darwin {
+      set sdk {}
+      catch {
+        set sdk [exec xcodebuild -version -sdk macosx Path]
+      }
+      foreach dir [list \
+         $root/include \
+         $root/Headers \
+         [string map {Tcl Tk} $root]/Headers \
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Tcl.framework/Versions/Current \
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Tcl.framework/Versions/Current/Headers \
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Tk.framework/Versions/Current \
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Tk.framework/Versions/Current/Headers \
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Tk.framework/Versions/Current/Headers/tk-private \
+         $sdk/System/Library/Frameworks/Tcl.framework/Versions/Current \
+         $sdk/System/Library/Frameworks/Tcl.framework/Versions/Current/Headers \
+         $sdk/System/Library/Frameworks/Tk.framework/Versions/Current \
+         $sdk/System/Library/Frameworks/Tk.framework/Versions/Current/Headers \
+         $sdk/System/Library/Frameworks/Tk.framework/Versions/Current/Headers/tk-private \
+         /System/Library/Frameworks/Tcl.framework \
+         /System/Library/Frameworks/Tk.framework \
+      ] {
+        if {[file exists $dir/tclConfig.sh]}     {set tcl_libpath         $dir}
+        if {[file exists $dir/tkConfig.sh]}      {set tk_libpath          $dir}
+        if {[file exists $dir/lib/tclConfig.sh]} {set tcl_libpath         $dir/lib}
+        if {[file exists $dir/lib/tkConfig.sh]}  {set tk_libpath          $dir/lib}
+        if {[file exists $dir/tcl.h]}            {set tcl_includepath     $dir}
+        if {[file exists $dir/tk.h]}             {set tk_includepath      $dir}
+        if {[file exists $dir/tkInt.h]}          {set tk_includepath_int  $dir}
+      }
+    }
+  }
+}
+
+set bits --disable-64bit
+catch {
+  switch $::tcl_platform(machine) {
+    x86_64  -
+    amd64   {set bits --enable-64bit}
+    default {set bits --disable-64bit}
+  }
+}
+
+
+## Do we have Tcllib's fileutil?
+if {[catch {package require fileutil}]} {
+  puts "Tcllib's package \"fileutil\" not found! Simulating..."
+  ## From: http://wiki.tcl.tk/2042
+  proc rglob { dirpath patterns } {
+    set rlist {}
+    foreach fpath [glob -nocomplain -types f -directory ${dirpath} \
+                                             {*}${patterns}] {
+      lappend rlist ${fpath}
+    }
+    foreach dir [glob -nocomplain -types d -directory ${dirpath} *] {
+      lappend rlist {*}[rglob ${dir} ${patterns}]
+    }
+    return ${rlist}
+  };# rglob
+  proc find_file {path filename {exit_at_fail true}} {
+    set found [rglob $path $filename]
+    if {![llength $found]} {
+      puts stderr "Cannot find file \"$filename\" within directory (and\
+      sub-directories) \"$path\"."
+      if {$exit_at_fail} {exit 1} else {
+        error "Cannot find file \"$filename\" within directory (and\
+               sub-directories) \"$path\"."
+      }
+    }
+    lindex $found 0
+  };# find_file
+} else {
+  puts "Tcllib's package \"fileutil\" found!"
+  proc find_file {path filename {exit_at_fail true}} {
+    set found [fileutil::findByPattern $path -glob -- $filename]
+    if {![llength $found]} {
+      puts stderr "Cannot find file \"$filename\" within directory (and\
+      sub-directories) \"$path\"."
+      if {$exit_at_fail} {exit 2} else {
+        error "Cannot find file \"$filename\" within directory (and\
+               sub-directories) \"$path\"."
+      }
+    }
+    lindex $found 0
+  };# find_file
+}
+puts {}
+
+## Ensure we can find tclConfig.sh & tkConfig.sh
+if {![file exists $tcl_libpath/tclConfig.sh]} {
+  ## Ok, we are missing the configuration file. Can we find it?
+  set tcl_libpath [file dirname [find_file $root tclConfig.sh]]
+}
+puts "Found \"tclConfig.sh\" in \"$tcl_libpath\"."
+
+if {![file exists $tk_libpath/tkConfig.sh]} {
+  ## Ok, we are missing the configuration file. Can we find it?
+  if {[catch {file dirname [find_file $root tkConfig.sh false]} tk_libpath]} {
+    set tk_libpath $tcl_libpath
+    puts "Not Found \"tkConfig.sh\": using \"$tk_libpath\" as Tk library path."
+  } else {
+    puts "Found \"tkConfig.sh\"  in \"$tk_libpath\"."
+  }
+}
+
+## Ensure we can find tclConfig.sh & tkConfig.sh
+if {![file exists $tcl_includepath/tcl.h]} {
+  ## Ok, we are missing the configuration file. Can we find it?
+  set tcl_includepath [file dirname [find_file $root tcl.h]]
+}
+puts "Found \"tcl.h\" in \"$tcl_includepath\"."
+
+if {![file exists $tk_includepath/tk.h]} {
+  ## Ok, we are missing the configuration file. Can we find it?
+  set tk_includepath [file dirname [find_file $root tk.h]]
+}
+puts "Found \"tk.h\"  in \"$tk_includepath\"."
+
+puts {}
+
+if {$tk_includepath_int ne $tk_includepath} {
+  puts "+++ Running 'bash configure -srcdir=$srcdir\n\
+      \                 --prefix=$srcdir/cmake/runtime\n\
+      \                 --exec-prefix=$srcdir/cmake/runtime\n\
+      \                 --with-tcl=$tcl_libpath\n\
+      \                 --with-tk=$tk_libpath\n\
+      \                 --with-tclinclude=$tcl_includepath\n\
+      \                 --with-tkinclude=$tk_includepath\n\
+      \                 PKG_INCLUDES=-I\"$tk_includepath_int\"\n\
+      \                 $bits'\n\
+      \            in directory [pwd]..."
+  catch {exec bash configure -srcdir=$srcdir --prefix=$srcdir/cmake/runtime \
+            --exec-prefix=$srcdir/cmake/runtime \
+            --with-tcl=$tcl_libpath --with-tk=$tk_libpath \
+            --with-tclinclude=$tcl_includepath \
+            --with-tkinclude=$tk_includepath \
+            PKG_INCLUDES=-I"$tk_includepath_int" \
+            $bits >@stdout 2>@stderr}
+} else {
+  puts "+++ Running 'bash configure -srcdir=$srcdir\n\
+      \                 --prefix=$srcdir/cmake/runtime\n\
+      \                 --exec-prefix=$srcdir/cmake/runtime\n\
+      \                 --with-tcl=$tcl_libpath\n\
+      \                 --with-tk=$tk_libpath\n\
+      \                 --with-tclinclude=$tcl_includepath\n\
+      \                 --with-tkinclude=$tk_includepath\n\
+      \                 $bits'\n\
+      \            in directory [pwd]..."
+  catch {exec bash configure -srcdir=$srcdir --prefix=$srcdir/cmake/runtime \
+            --exec-prefix=$srcdir/cmake/runtime \
+            --with-tcl=$tcl_libpath --with-tk=$tk_libpath \
+            --with-tclinclude=$tcl_includepath \
+            --with-tkinclude=$tk_includepath \
+            $bits >@stdout 2>@stderr}
+}
+exit 0

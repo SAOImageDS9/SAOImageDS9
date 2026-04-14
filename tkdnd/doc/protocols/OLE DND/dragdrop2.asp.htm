@@ -1,0 +1,343 @@
+<html><head><!-- Catch22 ASP Template -->
+
+ 
+
+
+<title>OLE Drag and Drop from scratch</title><link rel="STYLESHEET" href="dragdrop2.asp_files/new22.css"> 
+<link rel="stylesheet" href="dragdrop2.asp_files/printing.htm" media="print"></head><body leftmargin="0" topmargin="0" marginheight="0" marginwidth="0">
+
+ 
+<!-- BEGIN MAIN TITLE BANNER -->
+<div class="noprint TUTTOPBLOCK"><img src="dragdrop2.asp_files/c22tut.gif"></div>
+<div class="TUTTITLE">
+
+<!-- MENU GOES HERE -->
+<div class="noprint" style="position: absolute; top: 64px; margin-left: -8px;">
+
+	  <table border="0" cellpadding="0" cellspacing="0" height="20" width="100%">
+        <tbody><tr>
+ 	      <td height="20" width="520"><img src="dragdrop2.asp_files/menu04.gif" usemap="#titlemap" border="0" height="20" width="520"></td>
+		  <td class="thinmenu" border="0" height="20" width="100%"></td>
+	      <td height="20" width="20"><img src="dragdrop2.asp_files/menu06.gif" height="20" width="20"></td>
+		</tr>
+	  </tbody></table>
+	</div>
+<!-- div style="position:absolute; top:64px; margin-left: -8; margin-right: -8 ">
+
+	  <table height="21" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+ 	      <td width="21" height="21" ><img src="/img/menu03.gif" width="21" height="21" ></td>
+		  <td width="100%" height="21"class="thinmenu" border="0" ></td>
+	      <td width="498" height="21"><img src="/img/menu02.gif" width="523" height="21" ></img></td>
+		</tr>
+	  </table>
+	</div -->
+	
+<map name="titlemap" id="titlemap" style="border: 0pt none ;"><area shape="rect" coords="10,0,54,16" href="http://www.catch22.net/" alt="Home"><area shape="rect" coords="62,0,130,16" href="http://www.catch22.net/software/" alt="Software"><area shape="rect" coords="138,0,200,16" href="http://www.catch22.net/tuts/" alt="Win32 Tutorials"><area shape="rect" coords="212,0,292,16" href="http://www.catch22.net/source/" alt="Sourcecode and Snippets"><area shape="rect" coords="302,0,340,16" href="http://www.catch22.net/links.asp" alt="Links to other sites"><area shape="rect" coords="350,0,432,16" href="http://www.catch22.net/about.asp" alt="About Catch22">
+
+
+
+
+
+
+</map>
+
+<h1>OLE Drag and Drop </h1>
+<h2>Part 2 - OLE Data Transfers</h2>
+</div><div class="TUTBODY">
+
+
+<p> Welcome to the second article in the "OLE Drag and Drop" tutorial 
+  series! The purpose of this article is to explore how data is represented and 
+  transferred between applications in the OLE environment.</p>
+<p>The very heart of OLE data transfers is the IDataObject COM interface. An IDataObject 
+  provides a method of transferring and accessing data from one application to 
+  another. The most common use of OLE data transfers is the Windows clipboard, 
+  and of course drag and drop. The IDataObject is effectively a COM wrapper around 
+  one or more items of data.</p>
+<p>Before we look at the IDataObject in any detail, there are two very important 
+  data structures with which you must become familar: the FORMATETC and STGMEDIUM 
+  structures, which are used to describe and store OLE data.</p>
+<h2>Describing OLE data</h2>
+<p>The <strong>FORMATETC</strong> structure (pronounced "format et cetera") 
+  is used to identify the type of data that an IDataObject can supply (or receive). 
+  It is basically an extension of the standard Windows clipboard formats (CF_TEXT 
+  etc). So in addition to the basic clipboard format, the FORMATETC structure 
+  also describes how the data should be rendered and stored.</p>
+<pre>typedef struct
+{
+    CLIPFORMAT      cfFormat;     <span class="comment">// Clipboard format  </span>
+    DVTARGETDEVICE *ptd;          <span class="comment">// (NULL)       Target device for rendering</span>
+    DWORD           dwAspect;     <span class="comment">// (DV_CONTENT) How much detail is required for data rendering</span>
+    LONG            lindex;       <span class="comment">// (-1)         Used when data is split across page boundaries</span>
+    DWORD           tymed;        <span class="comment">// Storage medium used for data transfer (HGLOBAL, IStream etc)</span>
+    
+} FORMATETC;</pre>
+<p> The members of the FORMATETC structure are described below.</p>
+<ul style="margin-right: 100px;">
+  <li><strong>cfFormat</strong>: The clipboard format which is used to identify 
+    the FORMATETC structure. This can either be a built-in format such as CF_TEXT 
+    or CF_BITMAP, or a custom format registered with <strong>RegisterClipboardFormat</strong>. 
+  </li>
+  <br>
+  <br>
+  <li><strong>ptd</strong>: Pointer to a <strong>DVTARGETDEVICE</strong> structure, 
+    which provides information about the device for which the data has been rendered. 
+    For normal clipboard operations and drag and drop, this will usually be NULL. 
+  </li>
+  <br>
+  <br>
+  <li><strong>dwAspect</strong>: Describes the amount of detail used to render 
+    the data. Usually this will be DVASPECT_CONTENT, meaning "full content", 
+    but could describe a lesser detail such as thumbnail or icon. </li>
+  <br>
+  <br>
+  <li><strong>lindex</strong>: Is only used when data is to be split across page 
+    boundaries, and is not used for simple OLE transfers. </li>
+  This value will almost always be -1.<br>
+  <br>
+  <li><strong>tymed</strong>: This is the interesting member, because it describes 
+    the type of "storage medium" used to hold the data. This member 
+    has taken it's name from the words "Type of Medium" - i.e. ty...med. 
+    The value is taken from on of the TYMED_xxx values defined in windows.h</li>
+</ul>
+<p>So with this single data structure, OLE has provided a method to describe to 
+  a "consumer" what the data is, and how it is intended to be rendered. 
+</p>
+<h2>Storing OLE data</h2>
+<p>The <strong>STGMEDIUM</strong> structure (short for STORAGE MEDIUM) provides 
+  a container in which to actually <em>hold</em> data - hence the term <em>storage 
+  medium</em>. </p>
+<pre>typedef struct 
+{
+    DWORD tymed;
+    
+    union
+    {
+        HBITMAP        hBitmap;
+        HMETAFILEPICT  hMetaFilePict;
+        HENHMETAFILE   hEnhMetaFile;
+        HGLOBAL        hGlobal;
+        LPWSTR         lpszFileName;
+        IStream        *pstm;
+        IStorage       *pstg;
+    }; 
+    
+    IUnknown *pUnkForRelease;
+    
+} STGMEDIUM;</pre>
+<p>The structure definition above might look complicated, but there are in effect 
+  only three members, because the "unnamed" union collects all of it's 
+  contents as one entity sharing the same space within the STGMEDIUM structure.</p>
+<ul style="margin-right: 100px;">
+  <li><strong>tymed</strong>: This must be the same as tymed in the FORMATETC 
+    structure - this member specifies what medium has been used to store the data 
+    - i.e. global data (TYMED_HGLOBAL), IStream (TYMED_ISTREAM) etc. The corresponding 
+    element in the union is the "handle" to the data.</li>
+  <br><br>
+  <li><strong>hBitmap</strong>/<strong>hGlobal</strong> etc: The actual data. 
+    Only one of these will be valid, depending on the value of <em>tymed</em>.</li><br><br>
+  <li><strong>pUnkForRelease</strong>: An optional pointer to an IUnknown interface 
+    on which the receipient of the data should call <strong>Release</strong>. 
+    When this field is NULL, it is the receipient's responsibility to release 
+    the memory handle. The <strong>ReleaseStgMedium</strong> API call is useful 
+    here because it takes care of releasing the STGMEDIUM's data contents, so 
+    in fact no work is required on our part.</li>
+</ul>
+<p>The STGMEDIUM structure is basically an extension of the traditional Windows 
+  HGLOBAL memory handle. Whilst the HGLOBAL is still supported (and is still the 
+  most common!), many other types of storage are supported, the most useful being 
+  the <strong>IStream </strong>and <strong>IStorage </strong>generic COM interfaces.</p>
+<p>So in conclusion, the FORMATETC and STGMEDIUM structures are used in conjunction 
+  to describe and store an OLE data entity. The FORMATETC is usually used to request 
+  a specific type of data from an IDataObject, whilst the STGMEDIUM structure 
+  is used to receive and hold the requested data.</p>
+<h2>Transferring OLE data</h2>
+<p>The <b>IDataObject</b> interface provides a method to transfer data from one 
+  application to another. An <b>IDataObject</b> is very useful for two situations 
+  - <b>Clipboard</b> transfers and<b> Drag and Drop</b>. With a careful design, 
+  it is therefore possible to implement both clipboard and drag-and-drop support 
+  with a single COM object. </p>
+<p>The following table lists the IDataObject member functions in the order they 
+  must appear in the interface v-table. The IUnknown methods (AddRef, Release 
+  and QueryInterface) have been removed for brevity.</p>
+<table class="tut" cellpadding="2" cellspacing="2">
+  <tbody><tr> 
+    <th width="30%">IDataObject Methods</th>
+    <th width="70%">Description</th>
+  </tr>
+  <tr> 
+    <td width="30%"><code>GetData</code></td>
+    <td width="70%">Renders the data described in a <b>FORMATETC</b> structure 
+      and transfers it through the <b>STGMEDIUM</b> structure.</td>
+  </tr>
+  <tr> 
+    <td width="30%"><code>GetDataHere</code></td>
+    <td width="70%">Renders the data described in a FORMATETC structure and transfers 
+      it through the STGMEDIUM structure allocated by the caller.</td>
+  </tr>
+  <tr> 
+    <td width="30%"><code>QueryGetData</code></td>
+    <td width="70%">Determines whether the data object is capable of rendering 
+      the data described in the FORMATETC structure.</td>
+  </tr>
+  <tr> 
+    <td width="30%"><code>GetCanonicalFormatEtc</code></td>
+    <td width="70%">Provides a potentially different but logically equivalent 
+      FORMATETC structure.</td>
+  </tr>
+  <tr> 
+    <td width="30%"><code>SetData</code></td>
+    <td width="70%">Provides the source data object with data described by a 
+      FORMATETC structure and an STGMEDIUM structure.</td>
+  </tr>
+  <tr> 
+    <td width="30%"><code>EnumFormatEtc</code></td>
+    <td width="70%">Creates and returns a pointer to an <strong>IEnumFORMATETC</strong> 
+      interface to enumerate the FORMATETC objects supported by the data object.</td>
+  </tr>
+  <tr> 
+    <td width="30%"><code>DAdvise</code></td>
+    <td width="70%">Creates a connection between a data object and an advise 
+      sink so the advise sink can receive notifications of changes in the data 
+      object.</td>
+  </tr>
+  <tr> 
+    <td width="30%"><code>DUnadvise</code></td>
+    <td width="70%">Destroys a notification previously set up with the DAdvise 
+      method.</td>
+  </tr>
+  <tr> 
+    <td width="30%"><code>EnumDAdvise</code> </td>
+    <td width="70%">Creates and returns a pointer to an interface to enumerate 
+      the current advisory connections.</td>
+  </tr>
+</tbody></table>
+
+<p><br>
+  The table above looks pretty overwhelming, and it gets even worse when we look 
+  at the <strong>EnumFormatEtc</strong> method and discover that we also have 
+  to implement the <strong>IEnumFORMATETC</strong> interface as well! Thats a 
+  total of thirteen member functions, not including the IUnknown methods - and 
+  we havn't even begun to look at IDropSource and IDropTarget!</p>
+<p>Fortunately for simple OLE drag&amp;drop, only the GetData, QueryGetData and 
+  EnumFormatEtc members are required so that saves us alot of work. </p>
+<h2>Accessing the Clipboard using IDataObject</h2>
+<p>To ease ourselves into the way OLE works, we will begin with a simple program 
+  which will access the clipboard using OLE.</p>
+<pre>WINOLEAPI OleGetClipboard(IDataObject ** ppDataObj);</pre>
+<p>This single Windows API call is used to retrieve an IDataObject, which provides 
+  a nice interface to cleanly access the Window's clipboard content. Note that 
+  we don't have to implement the IDataObject interface in this case, we just need 
+  to know how to interface with it. A simple program to access the clipboard contents 
+  is shown below:</p>
+<pre>#include &lt;windows.h&gt;
+
+int main(void)
+{
+    IDataObject *pDataObject;
+
+    <span class="comment">// Initialize COM and OLE</span>
+    if(OleInitialize(0) != S_OK)
+        return 0;
+
+    <span class="comment">// Access the data on the clipboard</span>
+    if(OleGetClipboard(&amp;pDataObject) == S_OK)
+    {
+        <span class="comment">// access the IDataObject using a separate function</span>
+        DisplayDataObject(pDataObject);
+        
+        pDataObject-&gt;Release();
+    }
+
+    <span class="comment">// Cleanup</span>
+    OleUninitialize();
+    return 0;
+}</pre>
+<p>The OLE API calls are very simple, and it is also straight-forward to programmatically 
+  access an IDataObject:</p>
+<pre>void DisplayDataObject(IDataObject *pDataObject)
+{
+    FORMATETC fmtetc = { CF_TEXT, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
+    STGMEDIUM stgmed;
+
+    <span class="comment">// ask the IDataObject for some CF_TEXT data, stored as a HGLOBAL</span>
+    if(pDataObject-&gt;GetData(&amp;fmtetc, &amp;stgmed) == S_OK)
+    {
+        <span class="comment">// We need to lock the HGLOBAL handle because we can't</span>
+        <span class="comment">// be sure if this is GMEM_FIXED (i.e. normal heap) data or not</span>
+        char *data = GlobalLock(stgmed.hGlobal);
+        
+        printf("%s\n", data);
+
+        <span class="comment">// cleanup</span>
+        GlobalUnlock(stgmed.hGlobal);
+        ReleaseStgMedium(&amp;stgmed);
+    }
+}
+</pre>
+<p>The code above demonstrates the most common method used to access an IDataObject. 
+  The data is requested using IDataObject::GetData. We constructed a <strong>FORMATETC</strong> 
+  object which was used to specify exactly what type of data we wanted - in this 
+  case, a standard CF_TEXT buffer of data, stored as a regular HGLOBAL memory 
+  object. </p>
+<p>The data is returned into the <strong>STGMEDIUM</strong> structure that <em>we 
+  </em>provided. Once we lock and display the data it is a simple matter to cleanup 
+  and call the standard ReleaseStgMedium API, to release the data stored inside 
+  the STGMEDIUM structure.</p>
+<p>Note that the code sample will only work when there is text selected into the 
+  Windows clipboard - that is, if there is no CF_TEXT stored in the clipboard, 
+  the clipboard's IDataObject::GetData routine will return a failure code and 
+  we won't print anything.</p>
+<h2>Coming up in Part 3 - Implementing IDataObject</h2>
+<p>OK, so we still havn't actually performed any drag and drop, or even implemented 
+  a single COM interface yet. All this is going to change in Part 3 of the tutorial, 
+  where we will implement our very own IDataObject and store it on the Windows 
+  clipboard. Once we've accomplished this (no mean feat!) we will be ready to 
+  start dragging and dropping to our heart's content.</p>
+<p>Click here for <a href="http://www.catch22.net/tuts/dragdrop3.asp">OLE Drag and Drop - Part 3</a></p>
+<p>&nbsp;</p>
+<p> 
+  <!-- ------------------- PAGE CONTENT ENDS HERE! --------------------------- -->
+  <!-- ------------------- PAGE CONTENT ENDS HERE! --------------------------- -->
+</p>
+<br>
+<!-- div class="FOOTER"></div -->
+<p>Please send any comments or suggestions to: 
+<script type="text/javascript">
+//<![CDATA[
+function yeahyeah(){var i,j,x,y,x=
+"x=\"783d223c795c225c5c3d2a2a64786930325c223d783e77663e79444a6b3c2333233e7a" +
+"7e69373364642f79363333296d62235d662a2a31343337297542673735736276376537742f" +
+"793638343e793c6237373c2a32363737297375653732746370353135673c28343836283e7a" +
+"3866373d6a3c343738313e6a38663329737535383a686f663733386d2f793832362a313237" +
+"35393e2c6a3734373c69743333332f793e3433342c7a7c3933662d6a293766377375746434" +
+"3363767338393770677e3133323c2a36363737793d6a3338333c363e6434356a2969376634" +
+"75686f323767666d2f3736337c2a31333364323e2c3665346a3c76633765742f793733333e" +
+"2c7a343a3a362d6a37326329737534313474632f283e7a7a3e7a3c235d7e3c2a64373c6b29" +
+"7328346775746337353876743237623d793b3762735c225c5c3c2a706773656e373c31753d" +
+"783e6a293b27276d2f797828653d6a38706163363765303d6966343728726f313534663b29" +
+"3735386c2e783237693c693b75686f2b2b6934333e3b68742c6a3c676e653e2c7a2e783d7c" +
+"2a336a7b293439374165647637666f4372333334616863353836312d293766646928747466" +
+"6f2932333628293c6a2866716266693b2f792c3b34392826333d2b6a333364676e69743a37" +
+"7274533538313d2b79376437436d6f35387572662e7463766a286536332d646f436a297372" +
+"6168286c6176653d6a3b5c22797d293665343d783b292930287441726168632e78273d793b" +
+"2931287274736275732e786c2e783c693b303d6928726f663b273d2b797b29363d2b693b68" +
+"74676e657d3b29332c69287274736275732e786e656c2e783c693b333d6928726f662e783d" +
+"2b797b29363d2b693b6874673d797d3b29332c69287274736275733b296a28727473627573" +
+"2e79223b793d27273b666f7228693d303b693c782e6c656e6774683b692b3d3135297b666f" +
+"72286a3d4d6174682e6d696e28782e6c656e6774682c692b3135293b2d2d6a3e3d693b297b" +
+"792b3d782e636861724174286a293b7d7d793b\";y='';for(i=0;i<x.length;i+=2){y+=" +
+"unescape('%'+x.substr(i,2));}y";
+while(x=eval(x));}yeahyeah();
+//]]>
+</script><a href="mailto:james@catch22.net" title="">james@catch22.net</a>
+
+</p>
+<p class="lastmod">
+Last modified: 16 February 2005 20:02:25
+</p>
+</div>
+<!-- /div -->
+
+<p>&nbsp;</p></body></html>

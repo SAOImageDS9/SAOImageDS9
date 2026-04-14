@@ -1,0 +1,58 @@
+language: cpp
+matrix:
+  include:
+  - os: linux
+    dist: xenial
+    sudo: false
+    name: X11 shared library
+    addons:
+      apt:
+        packages:
+        - libxcursor-dev
+        - libxcursor1
+    env:
+      - CONFIGURE_ARGS=""
+      - BUILD_FILENAME_TAG="-${TRAVIS_OS_NAME}-${TRAVIS_CPU_ARCH}"
+  - os: osx
+    osx_image: xcode9.4
+    sudo: false
+    name: Cocoa shared library (macOS 10.13)
+    env:
+      - CONFIGURE_ARGS="--with-tcl=/System/Library/Frameworks/Tcl.framework --with-tk=/System/Library/Frameworks/Tk.framework"
+      - BUILD_FILENAME_TAG="-${TRAVIS_OS_NAME}-${TRAVIS_CPU_ARCH}-${TRAVIS_OSX_IMAGE}-HighSierra-10.13"
+  - os: osx
+    osx_image: xcode14.2
+    sudo: false
+    name: Cocoa shared library (macOS 12.6)
+    env:
+      - CONFIGURE_ARGS=""
+      - BUILD_FILENAME_TAG="-${TRAVIS_OS_NAME}-${TRAVIS_CPU_ARCH}-${TRAVIS_OSX_IMAGE}-Monterey-12.6-Homebrew"
+      - HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1
+    addons:
+      homebrew:
+        packages:
+        - tcl-tk
+script:
+- export TKDND_VERSION=`cat VERSION`
+- export TKDND_HOME=`pwd`
+- export TKDND_RUNTIME=${TKDND_HOME}/cmake/runtime
+- export FILE_TO_UPLOAD=${TKDND_HOME}/tkdnd-${TKDND_VERSION}${BUILD_FILENAME_TAG}.tgz
+- echo ${FILE_TO_UPLOAD}
+- ./configure --prefix=${TKDND_RUNTIME} --exec-prefix=${TKDND_RUNTIME} ${CONFIGURE_ARGS} && make && make test
+- make install
+before_deploy:
+- make install
+- export FILE_TO_UPLOAD=${TKDND_HOME}/tkdnd-${TKDND_VERSION}${BUILD_FILENAME_TAG}.tgz
+- cd ${TKDND_RUNTIME}/lib && tar -czvf ${FILE_TO_UPLOAD} tkdnd${TKDND_VERSION}
+- cd ${TKDND_HOME}
+- echo ${FILE_TO_UPLOAD}
+deploy:
+  provider: releases
+  api_key:
+    secure: mmiC2u89FxftrJRP5Yu/CcErQpKJSwqvrNEV4O7SClaMIXl8SgTvhILIkZHWQv0Qn6BbJwYni0MBdR2EDx2gLEDfzinNwStkhZ8A+uqSmpluuqJqCzKH8RzxsPReOOOuf2gkd4yN8gcECuMYvlnKglZ2Tfw/CkgjH6LApypsIvjZ+WAbjFDGJtOr+62T0y+II8C5oO17X+0L5FYLuXRNwOQXrQgi5NxUk/0wQmlDiAa+NZ+PGXYbjk2gW0hmmII8GnXw+s5XiR0ANiSG6ityn2w5hbd2/DBsG3lQ+ioyL0Gj2XDBv4l6Y1mKV8HeQLl7zxdeWOXdcCv3C9hZXi60YwPIm2MayAK3VSKv+k/0HvNoneSDbEq4TPMNblXTJDG6xOusrv3K3bFxgbt2lk8fKf3rtHT5mtdb+3BhB3vNWqqgBYKDtwviePX/Y8EyZ5XD1z3VmDWbmayGBCs/iBCtjfXqkz1EUvOXf9e/crjh/E8D4UTjopowWVMkTMEbXtdB32Xt/UanabGxWcrE+MnwAe/EkZKJ4gbZ0/cI7ysEtwOFqNjIGufplBB0X3XegCExlxKIsV9Cw3zVbo1Ei0gbaOM3BcESDonVa98OQBRIL/G4qJdVDrQ2IHBgeRTz3akVYlIp7NvBMPIyx+K0c1O6j084PvGZfuz5n2o4As819Nk=
+  file: "${FILE_TO_UPLOAD}"
+  on:
+    repo: petasis/tkdnd
+    tags: true
+  skip_cleanup: 'true'
+  overwrite: 'true'

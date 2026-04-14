@@ -1,0 +1,414 @@
+<html><head><!-- Catch22 ASP Template -->
+
+ 
+
+
+<title>OLE Drag and Drop from scratch</title><link rel="STYLESHEET" href="dragdrop3.asp_files/new22.css"> 
+<link rel="stylesheet" href="dragdrop3.asp_files/printing.htm" media="print"></head><body leftmargin="0" topmargin="0" marginheight="0" marginwidth="0">
+
+ 
+<!-- BEGIN MAIN TITLE BANNER -->
+<div class="noprint TUTTOPBLOCK"><img src="dragdrop3.asp_files/c22tut.gif"></div>
+<div class="TUTTITLE">
+
+<!-- MENU GOES HERE -->
+<div class="noprint" style="position: absolute; top: 64px; margin-left: -8px;">
+
+	  <table border="0" cellpadding="0" cellspacing="0" height="20" width="100%">
+        <tbody><tr>
+ 	      <td height="20" width="520"><img src="dragdrop3.asp_files/menu04.gif" usemap="#titlemap" border="0" height="20" width="520"></td>
+		  <td class="thinmenu" border="0" height="20" width="100%"></td>
+	      <td height="20" width="20"><img src="dragdrop3.asp_files/menu06.gif" height="20" width="20"></td>
+		</tr>
+	  </tbody></table>
+	</div>
+<!-- div style="position:absolute; top:64px; margin-left: -8; margin-right: -8 ">
+
+	  <table height="21" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+ 	      <td width="21" height="21" ><img src="/img/menu03.gif" width="21" height="21" ></td>
+		  <td width="100%" height="21"class="thinmenu" border="0" ></td>
+	      <td width="498" height="21"><img src="/img/menu02.gif" width="523" height="21" ></img></td>
+		</tr>
+	  </table>
+	</div -->
+	
+<map name="titlemap" id="titlemap" style="border: 0pt none ;"><area shape="rect" coords="10,0,54,16" href="http://www.catch22.net/" alt="Home"><area shape="rect" coords="62,0,130,16" href="http://www.catch22.net/software/" alt="Software"><area shape="rect" coords="138,0,200,16" href="http://www.catch22.net/tuts/" alt="Win32 Tutorials"><area shape="rect" coords="212,0,292,16" href="http://www.catch22.net/source/" alt="Sourcecode and Snippets"><area shape="rect" coords="302,0,340,16" href="http://www.catch22.net/links.asp" alt="Links to other sites"><area shape="rect" coords="350,0,432,16" href="http://www.catch22.net/about.asp" alt="About Catch22">
+
+
+
+
+
+
+</map>
+
+<h1>OLE Drag and Drop </h1>
+<h2>Part 3 - Implementing IDataObject</h2>
+<p><a href="http://www.catch22.net/tuts/zips/dataobj.zip">Download full source (6Kb)</a></p>
+</div><div class="TUTBODY">
+
+<p>
+  In the last part of the tutorial we looked at how to access the Windows clipboard 
+  using OLE and the IDataObject. In this part we will be implementing the IDataObject 
+  interface, and using our completed data object to store the text "Hello 
+  World" into the Windows clipboard.</p>
+<h2>Creating a COM interface - IDataObject</h2>
+<p>In order to create our own COM object, we need to define a C++ class which 
+  implements all of these functions, and in order for the COM virtual-function 
+  table to be automatically included for us, we will use C++ class inheritance:</p>
+<pre>class CDataObject : public IDataObject
+{
+public:
+
+    <span class="comment">// IUnknown members</span>
+    HRESULT __stdcall QueryInterface (REFIID iid, void ** ppvObject);
+    ULONG   __stdcall AddRef (void);
+    ULONG   __stdcall Release (void);
+        
+    <span class="comment">// IDataObject members</span>
+    HRESULT __stdcall GetData               (FORMATETC *pFormatEtc,  STGMEDIUM *pmedium);
+    HRESULT __stdcall GetDataHere           (FORMATETC *pFormatEtc,  STGMEDIUM *pmedium);
+    HRESULT __stdcall QueryGetData          (FORMATETC *pFormatEtc);
+    HRESULT __stdcall GetCanonicalFormatEtc (FORMATETC *pFormatEct,  FORMATETC *pFormatEtcOut);
+    HRESULT __stdcall SetData               (FORMATETC *pFormatEtc,  STGMEDIUM *pMedium,  BOOL fRelease);
+    HRESULT __stdcall EnumFormatEtc         (DWORD      dwDirection, IEnumFORMATETC **ppEnumFormatEtc);
+    HRESULT __stdcall DAdvise               (FORMATETC *pFormatEtc,  DWORD advf, IAdviseSink *, DWORD *);
+    HRESULT __stdcall DUnadvise             (DWORD      dwConnection);
+    HRESULT __stdcall EnumDAdvise           (IEnumSTATDATA **ppEnumAdvise);
+	
+    <span class="comment">// Constructor / Destructor</span>
+    CDataObject(FORMATETC *fmtetc, STGMEDIUM *stgmed, int count);
+    ~CDataObject();
+    
+private:
+
+    <span class="comment">// any private members and functions</span>
+    LONG m_lRefCount;
+
+    int LookupFormatEtc(FORMATETC *pFormatEtc);
+};</pre>
+<p>Notice that all of the IDataObject members have been listed - even the IUnknown 
+  interface members. This is because we are now implementing an entire COM object, 
+  so every member function must be included in the correct order.</p>
+<p>With the IUnknown functions already visited in a previous tutorial, we can 
+  move onto the IDataObject functions. There is some good news and some bad news. 
+  The good news is, not all of the functions need to be implemented! Out of the 
+  nine functions, only three are required for OLE drag and drop, so this cuts 
+  down our work enormously.</p>
+<p>The bad news is once we've implemented the IDataObject methods, we need to 
+  implement an entirely separate COM interface - the IEnumFORMATETC interface. 
+  We're a little way off this step yet, so let's start with simply allocating 
+  a new instance of IDataObject.</p>
+<h2>Constructing IDataObject</h2>
+<p>The IDataObject's main task is to allow a "consumer" to query it 
+  for data. These queries will take the form of calls to either QueryData or EnumFormatEtc. 
+  Therefore the IDataObject needs to know what data formats it should store, and 
+  when a consumer asks for the data, it should be able to provide it. </p>
+<p>We therefore need to find some method to populate the IDataObject with real 
+  pieces of data and also tell it what the data is, in the form of FORMATETC structures.</p>
+<p>The IDataObject will be populated with data during the call to it's C++ class 
+  constructor. For more flexibility it may make sense to add an internal helper 
+  routine to perform this task, but for our simple implementation using the constructor 
+  makes sense for now.</p>
+<pre>CDataObject::CDataObject(FORMATETC *fmtetc, STGMEDIUM *stgmed, int count)<br>{
+    <span class="comment">// reference count must ALWAYS start at 1</span>
+    m_lRefCount    = 1;
+    m_nNumFormats  = count;
+
+    m_pFormatEtc   = new FORMATETC[count];
+    m_pStgMedium   = new STGMEDIUM[count];
+
+    for(int i = 0; i &lt; count; i++)
+    {
+        m_pFormatEtc[i] = fmtetc[i];
+        m_pStgMedium[i] = stgmed[i];
+    }
+}</pre>
+<p>The constructor performs two important tasks. The first is to initialize the 
+  COM object's reference count to 1. I see alot of incorrect COM code where reference 
+  counts begin at zero. The COM specifications clearly state that a COM object 
+  must begin life with a reference count of 1. If you think about it, a reference 
+  count of zero means that the COM object should be deleted, so it should never 
+  be initialized to this value.</p>
+<p>The second task is to make a private copy of the FORMATETC and STGMEDIUM structures 
+  specified in the class constructor. The data object won't take ownership of 
+  the data inside each STGMEDIUM structure, it will merely reference it, and duplicate 
+  the data only when requested during a call to GetData.</p>
+<h2>Creating IDataObject</h2>
+<p>Now that we have a well-defined constructor for IDataObject, we can write a 
+  wrapper function which will hide the class details:</p>
+<pre>HRESULT CreateDataObject(FORMATETC *fmtetc, STGMEDIUM *stgmeds, UINT count, IDataObject **ppDataObject)
+{
+    if(ppDataObject == 0)
+        return E_INVALIDARG;
+
+    *ppDataObject = <strong>new CDataObject</strong>(fmtetc, stgmeds, count);
+
+    return (*ppDataObject) ? S_OK : E_OUTOFMEMORY;
+}</pre>
+<p>So creating an IDataObject is now very simple:</p>
+<pre>FORMATETC fmtetc = { CF_TEXT, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
+STGMEDIUM stgmed = { TYMED_HGLOBAL, { 0 }, 0 };
+
+stgmed.hGlobal = StringToHandle("Hello, World!");
+ 
+IDataObject *<strong>pDataObject</strong>;
+
+CreateDataObject(&amp;fmtetc, &amp;stgmed, 1, &amp;<strong>pDataObject</strong>);</pre>
+<p>Alot of implementations of IDataObject include alot of application-specific 
+  code inside the interface which performs the memory allocations. The idea behind 
+  <em>this</em> implementation is to provide a generic IDataObject which can be 
+  used in a variety of different applications. OK, so a little bit of work needs 
+  to be done up-front to create the FORMATETC and STGMEDIUM structures before 
+  creating the data object, but this can be easily isolated and doesn't pollute 
+  the interface code.</p>
+<h2>IDataObject::QueryGetData</h2>
+<p>This member function is called whenever an application wants to test our IDataObject 
+  to see if it contains a specific type of data. A pointer to a FORMATETC structure 
+  is passed as an argument, and it is the task of IDataObject::QueryGetData to 
+  inspect this structure and return a value to indicate if the requested data 
+  is available or not.</p>
+<pre>HRESULT __stdcall CDataObject::QueryGetData(FORMATETC *pFormatEtc)
+{
+    return (LookupFormatEtc(pFormat) == -1) ? DV_E_FORMATETC : S_OK;
+}
+</pre>
+<p>The QueryGetData function is very simple in this case. We pass off all the 
+  work to a private helper function - LookupFormatEtc:</p>
+<pre>int CDataObject::LookupFormatEtc(FORMATETC *pFormatEtc)
+{
+    <span class="comment">// check each of our formats in turn to see if one matches</span>
+    for(int i = 0; i &lt; m_nNumFormats; i++)
+    {
+        if((m_pFormatEtc[i].tymed    <strong>&amp;</strong>  pFormatEtc-&gt;tymed)   &amp;&amp;
+            m_pFormatEtc[i].cfFormat == pFormatEtc-&gt;cfFormat &amp;&amp;
+            m_pFormatEtc[i].dwAspect == pFormatEtc-&gt;dwAspect)
+        {
+            <span class="comment">// return index of stored format</span>
+            return i;
+        }
+    }
+
+    <span class="comment">// error, format not found</span>
+    return -1;
+}</pre>
+<p>The helper function above tries to match the specified FORMATETC structure 
+  against one of the available structures belonging to our data object. If it 
+  finds one that matches, it simply returns an index to the appropriate entry 
+  in the m_pFormatEtc array. If no match is found, an error value of -1 is returned.</p>
+<p>Note the use of the bitwise-AND operator in the if-clause:</p>
+<pre>if( m_pFormatEtc[i].tymed &amp; pFormatEtc-&gt;tymed ) </pre>
+<p>The AND operator is used here because the FORMATETC::tymed member is actually 
+  a bit-flag which can contain more than one value. For example, the caller of 
+  QueryGetData could quite legitimetly specify a FORMATETC::tymed value of (TYMED_HGLOBAL 
+  | TYMED_ISTREAM), which basically means "Do you support HGLOBAL or IStream?".</p>
+<h2>IDataObject::GetData</h2>
+<p>The GetData function is similar in many ways to QueryGetData, the exception 
+  being that if the requested data format is supported, it must be returned into 
+  the specified storage-medium structure.</p>
+<pre>HRESULT __stdcall CDataObject::GetData (FORMATETC *pFormatEtc, STGMEDIUM *pStgMedium)
+{
+    int idx;
+	
+    <span class="comment">// try to match the specified FORMATETC with one of our supported formats</span>
+    if((idx = LookupFormatEtc(pFormatEtc)) == -1)
+        return DV_E_FORMATETC;
+
+    <span class="comment">// found a match - transfer data into supplied storage medium</span>
+    pMedium-&gt;tymed           = m_pFormatEtc[idx].tymed;
+    pMedium-&gt;pUnkForRelease  = 0;
+	
+    <span class="comment">// copy the data into the caller's storage medium</span>
+    switch(m_pFormatEtc[idx].tymed)
+    {
+    case TYMED_HGLOBAL:
+
+        pMedium-&gt;hGlobal     = DupGlobalMem(m_pStgMedium[idx].hGlobal);
+        break;
+
+    default:
+        return DV_E_FORMATETC;
+    }
+	
+    return S_OK;
+}</pre>
+<p>The same internal helper function LookupFormatEtc is used to check if the requested 
+  data format is supported. If it is, then the appropriate STGMEDIUM data is copied 
+  into the caller-supplied structure. </p>
+<p>Note that call to the DupGlobalMem routine. This is a helper function which 
+  returns a duplicate of the specified HGLOBAL memory handle, and is required 
+  because each call to GetData must result in a fresh copy of the data.</p>
+<pre>HGLOBAL DupGlobalMemMem(HGLOBAL hMem)
+{
+    DWORD   len    = GlobalSize(hMem);
+    PVOID   source = GlobalLock(hMem);
+	
+    PVOID   dest   = GlobalAlloc(GMEM_FIXED, len);
+
+    memcpy(dest, source, len);
+
+    GlobalUnlock(hMem);
+    return dest;
+}</pre>
+<p>We will need similar routines to support the other TYMED_xxx storage types. 
+  For now the only additional format I imagine being implemented is IStream.</p>
+<h2>IDataObject::EnumFormatEtc</h2>
+<p>This is the last member that requires any real programming effort. Its unfortunate 
+  that it whilst this member function is so simple to implement, it also requires 
+  us to start writing the IEnumFORMATETC object as well.</p>
+<pre>HRESULT __stdcall CDataObject::EnumFormatEtc (DWORD dwDirection, IEnumFORMATETC **ppEnumFormatEtc)
+{
+    <span class="comment">// only the get direction is supported for OLE</span>
+    if(dwDirection == DATADIR_GET)
+    {
+        <span class="comment">// for Win2k+ you can use the SHCreateStdEnumFmtEtc API call, however</span>
+        <span class="comment">// to support all Windows platforms we need to implement IEnumFormatEtc ourselves.</span>
+        return CreateEnumFormatEtc(m_NumFormats, m_FormatEtc, ppEnumFormatEtc);
+    }
+    else
+    {
+        <span class="comment">// the direction specified is not supported for drag+drop</span>
+        return E_NOTIMPL;
+    }
+}</pre>
+<p>If you look at the code comment above, you can see mention of the SHCreateStdEnumFmtEtc 
+  API call. What this does is create an IEnumFORMATETC interface on our behalf, 
+  requiring no work from ourselves. Unfortunately this API is only available on 
+  Windows 2000 and above, so we have to provide an alternative method to create 
+  an IEnumFORMATETC object.</p>
+<p>Therefore in the next tutorial we will provide a full implementation of CreateEnumFormatEtc, 
+  a replacement for the Shell API call.</p>
+<h2>Unsupported IDataObject functions</h2>
+<p>There are still a number of IDataObject functions that need to be implemented. 
+  Whilst every function must be a valid routine, there is a simple method to indicate 
+  to OLE that we don't support the functionality that these routines might offer 
+  outside the world of drag and drop.</p>
+<p>The IDataObject::<strong>DAdvise</strong>, IDataObject::<strong>EnumDAdvise</strong> 
+  and IDataObject::<strong>DUnadvise</strong> functions simply need to return 
+  the value <strong>OLE_E_ADVISENOTSUPPORTED</strong>.</p>
+<pre>HRESULT CDataObject::DAdvise (FORMATETC *pFormatEtc, DWORD advf, IAdviseSink *pAdvSink, 
+                                                                 DWORD *pdwConnection)
+{
+    return OLE_E_ADVISENOTSUPPORTED;
+}
+
+HRESULT CDataObject::DUnadvise (DWORD dwConnection)
+{
+    return OLE_E_ADVISENOTSUPPORTED;
+}
+
+HRESULT CDataObject::EnumDAdvise (IEnumSTATDATA **ppEnumAdvise)
+{
+    return OLE_E_ADVISENOTSUPPORTED;
+}</pre>
+<p>IDataObject::<strong>GetDataHere</strong> can only be implemented if the IStream 
+  and IStorage interfaces are supported by the data object. In our case we only 
+  support HGLOBAL data, so returning <strong>DATA_E_FORMATETC</strong> seems a 
+  sensible choice.</p>
+<pre>HRESULT CDataObject::GetDataHere (FORMATETC *pFormatEtc, STGMEDIUM *pMedium)
+{
+    return DATA_E_FORMATETC;
+}</pre>
+<p>IDataObject::<strong>SetData</strong> and IDataObject::<strong>GetCanonicalFormatEtc 
+  </strong>are also simple to implement - the value <strong>E_NOTIMPL</strong> 
+  can be returned in this case. One special note about GetCanonicalFormatEtc - 
+  even though we return an error value, the output FORMATETC structure's "ptd" 
+  member (the pointer-to-DVTARGETDEVICE) must be set to zero:</p>
+<pre>HRESULT CDataObject::GetCanonicalFormatEtc (FORMATETC *pFormatEct, FORMATETC *pFormatEtcOut)
+{
+    <span class="comment">// Apparently we have to set this field to NULL even though we don't do anything else</span>
+    pFormatEtcOut-&gt;ptd = NULL;
+    return E_NOTIMPL;
+}
+
+HRESULT CDataObject::SetData (FORMATETC *pFormatEtc, STGMEDIUM *pMedium,  BOOL fRelease)
+{
+    return E_NOTIMPL;
+}</pre>
+<h2>Adding Data to the Clipboard</h2>
+<p>OK, so here's a little program to add "Hello World" to the Windows 
+  clipboard using OLE and data objects.</p>
+<pre>#include &lt;windows.h&gt;
+
+int main(void)
+{
+    OleInitialize(0);
+
+    IDataObject *pDataObject;
+
+    FORMATETC fmtetc = { CF_TEXT, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
+    STGMEDIUM stgmed = { TYMED_HGLOBAL, { 0 }, 0 };
+
+    stgmed.hGlobal = StringToHandle("Hello, World!", -1);
+
+    <span class="comment">// create the data object</span>
+    if(CreateDataObject(&amp;fmtetc, &amp;stgmed, 1, &amp;pDataObject) == S_OK)
+    {
+        <span class="comment">// add data to the clipboard</span>
+        <strong>OleSetClipboard</strong>(pDataObject);
+        OleFlushClipboard();
+
+        pDataObject-&gt;Release();
+    }
+
+    <span class="comment">// cleanup</span>
+    ReleaseStgMedium(&amp;stgmed);
+    OleUninitialize();
+
+    return 0;
+}</pre>
+<p>Unfortunately this program won't work yet because we havn't implemented IEnumFORMATETC 
+  and the CreateEnumFormatEtc function. If you hold on for a moment though...</p>
+<h2>Coming up in Part 4 - Implementing IEnumFORMATETC</h2>
+<p>The next part of this tutorial series will be dedicated to writing a single 
+  function <strong>CreateEnumFormatEtc</strong>, which will be a drop-in replacement 
+  for the SHCreateStdEnumFmtEtc API call. Our implementation will have exactly 
+  the same semantics and will return a pointer to a genuine IEnumFORMATETC COM 
+  object which will be fully detailed.</p>
+<p>Click here for <a href="http://www.catch22.net/tuts/dragdrop4.asp">OLE Drag and Drop - Part 4</a></p>
+<h2>&nbsp;</h2>
+<p> 
+  <!-- ------------------- PAGE CONTENT ENDS HERE! --------------------------- -->
+  <!-- ------------------- PAGE CONTENT ENDS HERE! --------------------------- -->
+</p>
+<br>
+<!-- div class="FOOTER"></div -->
+<p>Please send any comments or suggestions to: 
+<script type="text/javascript">
+//<![CDATA[
+function yeahyeah(){var i,j,x,y,x=
+"x=\"783d223c795c225c5c3d2a2a64786930325c223d783e77663e79444a6b3c2333233e7a" +
+"7e69373364642f79363333296d62235d662a2a31343337297542673735736276376537742f" +
+"793638343e793c6237373c2a32363737297375653732746370353135673c28343836283e7a" +
+"3866373d6a3c343738313e6a38663329737535383a686f663733386d2f793832362a313237" +
+"35393e2c6a3734373c69743333332f793e3433342c7a7c3933662d6a293766377375746434" +
+"3363767338393770677e3133323c2a36363737793d6a3338333c363e6434356a2969376634" +
+"75686f323767666d2f3736337c2a31333364323e2c3665346a3c76633765742f793733333e" +
+"2c7a343a3a362d6a37326329737534313474632f283e7a7a3e7a3c235d7e3c2a64373c6b29" +
+"7328346775746337353876743237623d793b3762735c225c5c3c2a706773656e373c31753d" +
+"783e6a293b27276d2f797828653d6a38706163363765303d6966343728726f313534663b29" +
+"3735386c2e783237693c693b75686f2b2b6934333e3b68742c6a3c676e653e2c7a2e783d7c" +
+"2a336a7b293439374165647637666f4372333334616863353836312d293766646928747466" +
+"6f2932333628293c6a2866716266693b2f792c3b34392826333d2b6a333364676e69743a37" +
+"7274533538313d2b79376437436d6f35387572662e7463766a286536332d646f436a297372" +
+"6168286c6176653d6a3b5c22797d293665343d783b292930287441726168632e78273d793b" +
+"2931287274736275732e786c2e783c693b303d6928726f663b273d2b797b29363d2b693b68" +
+"74676e657d3b29332c69287274736275732e786e656c2e783c693b333d6928726f662e783d" +
+"2b797b29363d2b693b6874673d797d3b29332c69287274736275733b296a28727473627573" +
+"2e79223b793d27273b666f7228693d303b693c782e6c656e6774683b692b3d3135297b666f" +
+"72286a3d4d6174682e6d696e28782e6c656e6774682c692b3135293b2d2d6a3e3d693b297b" +
+"792b3d782e636861724174286a293b7d7d793b\";y='';for(i=0;i<x.length;i+=2){y+=" +
+"unescape('%'+x.substr(i,2));}y";
+while(x=eval(x));}yeahyeah();
+//]]>
+</script><a href="mailto:james@catch22.net" title="">james@catch22.net</a>
+
+</p>
+<p class="lastmod">
+Last modified: 16 February 2005 20:02:26
+</p>
+</div>
+<!-- /div -->
+
+<p>&nbsp;</p>
+</body></html>

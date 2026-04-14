@@ -1,0 +1,57 @@
+#------------------------------------------------------------- -*- makefile -*-
+#
+# Makefile for tkdnd
+#
+# Basic build, test and install (assuming Tcl/Tk installed in c:/tcl)
+#   nmake /f makefile.vc INSTALLDIR=c:\tcl
+#   nmake /f makefile.vc INSTALLDIR=c:\tcl test
+#   nmake /f makefile.vc INSTALLDIR=c:\tcl install
+#
+# IMPORTANT: by default, this links dynamically to the C and C++ runtimes.
+# To link statically, pass "nomsvcrt" as part of the OPTS argument. E.g.
+#   nmake /f makefile.vc INSTALLDIR=c:\tcl OPTS=pdbs,nomsvcrt
+#
+# For other build options (debug, static etc.),
+# See TIP 477 (https://core.tcl.tk/tips/doc/trunk/tip/477.md) for
+# detailed documentation.
+#
+# See the file "LICENSE" for information on usage and redistribution
+# of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+#
+PROJECT = tkdnd
+PROJECT_REQUIRES_TK = 1
+
+!if [echo DOTVERSION = \> versions.vc] \
+   || [type ..\VERSION >> versions.vc]
+!error *** Could not figure out extension version. Please define DOTVERSION in parent makefile before including rules.vc.
+!endif
+
+!include versions.vc
+
+!include "rules-ext.vc"
+
+PRJ_OBJS = \
+    $(TMP_DIR)\TkDND_OleDND.obj \
+	$(TMP_DIR)\TkDND_Cursors.obj
+
+TKDND_HEADERS = \
+    $(WIN_DIR)\OleDND.h \
+    $(GENERICDIR)\TkDND_Cursors.h
+
+PRJ_DEFINES = -D_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES=1 \
+    -D_CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES_COUNT=1 \
+    -D_CRT_SECURE_NO_WARNINGS \
+	-D_UNICODE -DUNICODE
+
+PRJ_LIBS = ole32.lib shell32.lib
+
+!include "$(_RULESDIR)\targets.vc"
+
+pkgindex: default-pkgindex-tea
+
+$(TMP_DIR)\TkDND_OleDND.obj: $(WIN_DIR)\TkDND_OleDND.cpp $(TKDND_HEADERS)
+	$(CCPKGCMD) $(WIN_DIR)\TkDND_OleDND.cpp
+
+$(TMP_DIR)\TkDND_Cursors.obj: $(TKDND_HEADERS)
+
+

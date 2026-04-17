@@ -122,7 +122,7 @@ tkwinclean :
 
 #--------------------------distclean
 
-.PHONY	: tcldistclean tkdistclean 
+.PHONY	: tcldistclean tkdistclean
 .PHONY	: osdistclean tkwindistclean
 
 tcldistclean :
@@ -148,6 +148,5 @@ tkwindistclean :
 
 dist	:
 	$(RM) -f dist/$(DS9APP)\ Install.*
-	/cygdrive/c/Program\ Files\ \(x86\)/WinZip/wzzip -p -r dist/$(DS9APP)\ Install.zip bin/SAOImageDS9
-	/cygdrive/c/Program\ Files\ \(x86\)/WinZip\ Self-Extractor/WINZIPSE.EXE  dist/$(DS9APP)\ Install.zip -d "C:\SAOImageDS9" -i ds9/win/ds9.ico -le -overwrite -runasuser -c cscript install.vbs
+	/cygdrive/c/Program\ Files\ \(x86\)/Inno\ Setup\ 6/ISCC ./ds9.iss
 

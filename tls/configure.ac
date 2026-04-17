@@ -196,7 +196,7 @@ TEA_PROG_TCLSH
 # Setup a *Config.sh.in configuration file.
 #--------------------------------------------------------------------
 
-#TEA_EXPORT_CONFIG([tls])
+TEA_EXPORT_CONFIG([tls])
 #AC_SUBST(SAMPLE_VAR)
 
 #--------------------------------------------------------------------
@@ -206,7 +206,7 @@ TEA_PROG_TCLSH
 #--------------------------------------------------------------------
 
 AC_CONFIG_FILES([Makefile pkgIndex.tcl])
-#AC_CONFIG_FILES([tlsConfig.sh])
+AC_CONFIG_FILES([tlsConfig.sh])
 
 #--------------------------------------------------------------------
 # Finally, substitute all of the various values into the files

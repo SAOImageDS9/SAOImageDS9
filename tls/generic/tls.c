@@ -3283,7 +3283,7 @@ Tls_Free(
 #endif
 
 int
-BuildInfoCommand(
+XBuildInfoCommand(
     Tcl_Interp* interp)		/* Tcl interpreter */
 {
     Tcl_CmdInfo info;
@@ -3471,7 +3471,7 @@ DLLEXPORT int Tls_Init(
     Tcl_CreateObjCommand(interp, "::tls::unstack", UnimportObjCmd, (ClientData) NULL, (Tcl_CmdDeleteProc *) NULL);
     Tcl_CreateObjCommand(interp, "::tls::version", VersionObjCmd, (ClientData) NULL, (Tcl_CmdDeleteProc *) NULL);
 
-    BuildInfoCommand(interp);
+    XBuildInfoCommand(interp);
 
     if (interp && Tcl_Eval(interp, tlsTclInitScript) != TCL_OK) {
 	return TCL_ERROR;

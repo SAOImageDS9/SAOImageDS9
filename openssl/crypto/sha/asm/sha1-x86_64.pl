@@ -1,10 +1,17 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2006-2025 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 #
 # ====================================================================
-# Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
+# Written by Andy Polyakov, @dot-asm, initially for use in the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
-# details see http://www.openssl.org/~appro/cryptogams/.
+# details see https://github.com/dot-asm/cryptogams/.
 # ====================================================================
 #
 # sha1_block procedure for x86_64.
@@ -73,17 +80,23 @@
 # Sandy Bridge	7.70		6.10/+26%	4.99/+54%
 # Ivy Bridge	6.06		4.67/+30%	4.60/+32%
 # Haswell	5.45		4.15/+31%	3.57/+53%
+# Skylake	5.18		4.06/+28%	3.54/+46%
 # Bulldozer	9.11		5.95/+53%
+# Ryzen		4.75		3.80/+24%	1.93/+150%(**)
 # VIA Nano	9.32		7.15/+30%
 # Atom		10.3		9.17/+12%
 # Silvermont	13.1(*)		9.37/+40%
+# Knights L	13.2(*)		9.68/+36%	8.30/+59%
+# Goldmont	8.13		6.42/+27%	1.70/+380%(**)
 #
 # (*)	obviously suboptimal result, nothing was done about it,
 #	because SSSE3 code is compiled unconditionally;
+# (**)	SHAEXT result
 
-$flavour = shift;
-$output  = shift;
-if ($flavour =~ /\./) { $output = $flavour; undef $flavour; }
+# $output is the last argument if it looks like a file (it has an extension)
+# $flavour is the first argument if it doesn't look like a file
+$output = $#ARGV >= 0 && $ARGV[$#ARGV] =~ m|\.\w+$| ? pop : undef;
+$flavour = $#ARGV >= 0 && $ARGV[0] !~ m|\.| ? shift : undef;
 
 $win64=0; $win64=1 if ($flavour =~ /[nm]asm|mingw64/ || $output =~ /\.asm$/);
 
@@ -107,14 +120,15 @@ if (!$avx && $win64 && ($flavour =~ /masm/ || $ENV{ASM} =~ /ml64/) &&
 	$avx = ($1>=10) + ($1>=11);
 }
 
-if (!$avx && `$ENV{CC} -v 2>&1` =~ /((?:^clang|LLVM) version|.*based on LLVM) ([2-9]\.[0-9]+)/) {
+if (!$avx && `$ENV{CC} -v 2>&1` =~ /((?:clang|LLVM) version|.*based on LLVM) ([0-9]+\.[0-9]+)/) {
 	$avx = ($2>=3.0) + ($2>3.0);
 }
 
 $shaext=1;	### set to zero if compiling for 1.0.1
 $avx=1		if (!$shaext && $avx);
 
-open OUT,"| \"$^X\" $xlate $flavour $output";
+open OUT,"| \"$^X\" \"$xlate\" $flavour \"$output\""
+    or die "can't call $xlate: $!";
 *STDOUT=*OUT;
 
 $ctx="%rdi";	# 1st arg
@@ -247,6 +261,7 @@ $code.=<<___;
 .type	sha1_block_data_order,\@function,3
 .align	16
 sha1_block_data_order:
+.cfi_startproc
 	mov	OPENSSL_ia32cap_P+0(%rip),%r9d
 	mov	OPENSSL_ia32cap_P+4(%rip),%r8d
 	mov	OPENSSL_ia32cap_P+8(%rip),%r10d
@@ -254,7 +269,7 @@ sha1_block_data_order:
 	jz	.Lialu
 ___
 $code.=<<___ if ($shaext);
-	test	\$`1<<29`,%r10d		# check SHA bit	
+	test	\$`1<<29`,%r10d		# check SHA bit
 	jnz	_shaext_shortcut
 ___
 $code.=<<___ if ($avx>1);
@@ -275,17 +290,24 @@ $code.=<<___;
 .align	16
 .Lialu:
 	mov	%rsp,%rax
+.cfi_def_cfa_register	%rax
 	push	%rbx
+.cfi_push	%rbx
 	push	%rbp
+.cfi_push	%rbp
 	push	%r12
+.cfi_push	%r12
 	push	%r13
+.cfi_push	%r13
 	push	%r14
+.cfi_push	%r14
 	mov	%rdi,$ctx	# reassigned argument
 	sub	\$`8+16*4`,%rsp
 	mov	%rsi,$inp	# reassigned argument
 	and	\$-64,%rsp
 	mov	%rdx,$num	# reassigned argument
 	mov	%rax,`16*4`(%rsp)
+.cfi_cfa_expression	%rsp+64,deref,+8
 .Lprologue:
 
 	mov	0($ctx),$A
@@ -319,14 +341,22 @@ $code.=<<___;
 	jnz	.Lloop
 
 	mov	`16*4`(%rsp),%rsi
+.cfi_def_cfa	%rsi,8
 	mov	-40(%rsi),%r14
+.cfi_restore	%r14
 	mov	-32(%rsi),%r13
+.cfi_restore	%r13
 	mov	-24(%rsi),%r12
+.cfi_restore	%r12
 	mov	-16(%rsi),%rbp
+.cfi_restore	%rbp
 	mov	-8(%rsi),%rbx
+.cfi_restore	%rbx
 	lea	(%rsi),%rsp
+.cfi_def_cfa_register	%rsp
 .Lepilogue:
 	ret
+.cfi_endproc
 .size	sha1_block_data_order,.-sha1_block_data_order
 ___
 if ($shaext) {{{
@@ -342,6 +372,7 @@ $code.=<<___;
 .align	32
 sha1_block_data_order_shaext:
 _shaext_shortcut:
+.cfi_startproc
 ___
 $code.=<<___ if ($win64);
 	lea	`-8-4*16`(%rsp),%rsp
@@ -440,6 +471,7 @@ $code.=<<___ if ($win64);
 ___
 $code.=<<___;
 	ret
+.cfi_endproc
 .size	sha1_block_data_order_shaext,.-sha1_block_data_order_shaext
 ___
 }}}
@@ -452,7 +484,8 @@ my @V=($A,$B,$C,$D,$E)=("%eax","%ebx","%ecx","%edx","%ebp");	# size optimization
 my @T=("%esi","%edi");
 my $j=0;
 my $rx=0;
-my $K_XX_XX="%r11";
+my $K_XX_XX="%r14";
+my $fp="%r11";
 
 my $_rol=sub { &rol(@_) };
 my $_ror=sub { &ror(@_) };
@@ -473,25 +506,31 @@ $code.=<<___;
 .align	16
 sha1_block_data_order_ssse3:
 _ssse3_shortcut:
-	mov	%rsp,%rax
+.cfi_startproc
+	mov	%rsp,$fp	# frame pointer
+.cfi_def_cfa_register	$fp
 	push	%rbx
+.cfi_push	%rbx
 	push	%rbp
+.cfi_push	%rbp
 	push	%r12
+.cfi_push	%r12
 	push	%r13		# redundant, done to share Win64 SE handler
+.cfi_push	%r13
 	push	%r14
+.cfi_push	%r14
 	lea	`-64-($win64?6*16:0)`(%rsp),%rsp
 ___
 $code.=<<___ if ($win64);
-	movaps	%xmm6,-40-6*16(%rax)
-	movaps	%xmm7,-40-5*16(%rax)
-	movaps	%xmm8,-40-4*16(%rax)
-	movaps	%xmm9,-40-3*16(%rax)
-	movaps	%xmm10,-40-2*16(%rax)
-	movaps	%xmm11,-40-1*16(%rax)
+	movaps	%xmm6,-40-6*16($fp)
+	movaps	%xmm7,-40-5*16($fp)
+	movaps	%xmm8,-40-4*16($fp)
+	movaps	%xmm9,-40-3*16($fp)
+	movaps	%xmm10,-40-2*16($fp)
+	movaps	%xmm11,-40-1*16($fp)
 .Lprologue_ssse3:
 ___
 $code.=<<___;
-	mov	%rax,%r14	# original %rsp
 	and	\$-64,%rsp
 	mov	%rdi,$ctx	# reassigned argument
 	mov	%rsi,$inp	# reassigned argument
@@ -541,7 +580,7 @@ sub AUTOLOAD()		# thunk [simplified] 32-bit style perlasm
     $code .= "\t$opcode\t".join(',',$arg,reverse @_)."\n";
 }
 
-sub Xupdate_ssse3_16_31()		# recall that $Xi starts wtih 4
+sub Xupdate_ssse3_16_31()		# recall that $Xi starts with 4
 { use integer;
   my $body = shift;
   my @insns = (&$body,&$body,&$body,&$body);	# 40 instructions
@@ -898,23 +937,29 @@ $code.=<<___;
 	mov	$E,16($ctx)
 ___
 $code.=<<___ if ($win64);
-	movaps	-40-6*16(%r14),%xmm6
-	movaps	-40-5*16(%r14),%xmm7
-	movaps	-40-4*16(%r14),%xmm8
-	movaps	-40-3*16(%r14),%xmm9
-	movaps	-40-2*16(%r14),%xmm10
-	movaps	-40-1*16(%r14),%xmm11
+	movaps	-40-6*16($fp),%xmm6
+	movaps	-40-5*16($fp),%xmm7
+	movaps	-40-4*16($fp),%xmm8
+	movaps	-40-3*16($fp),%xmm9
+	movaps	-40-2*16($fp),%xmm10
+	movaps	-40-1*16($fp),%xmm11
 ___
 $code.=<<___;
-	lea	(%r14),%rsi
-	mov	-40(%rsi),%r14
-	mov	-32(%rsi),%r13
-	mov	-24(%rsi),%r12
-	mov	-16(%rsi),%rbp
-	mov	-8(%rsi),%rbx
-	lea	(%rsi),%rsp
+	mov	-40($fp),%r14
+.cfi_restore	%r14
+	mov	-32($fp),%r13
+.cfi_restore	%r13
+	mov	-24($fp),%r12
+.cfi_restore	%r12
+	mov	-16($fp),%rbp
+.cfi_restore	%rbp
+	mov	-8($fp),%rbx
+.cfi_restore	%rbx
+	lea	($fp),%rsp
+.cfi_def_cfa_register	%rsp
 .Lepilogue_ssse3:
 	ret
+.cfi_endproc
 .size	sha1_block_data_order_ssse3,.-sha1_block_data_order_ssse3
 ___
 
@@ -935,26 +980,32 @@ $code.=<<___;
 .align	16
 sha1_block_data_order_avx:
 _avx_shortcut:
-	mov	%rsp,%rax
+.cfi_startproc
+	mov	%rsp,$fp
+.cfi_def_cfa_register	$fp
 	push	%rbx
+.cfi_push	%rbx
 	push	%rbp
+.cfi_push	%rbp
 	push	%r12
+.cfi_push	%r12
 	push	%r13		# redundant, done to share Win64 SE handler
+.cfi_push	%r13
 	push	%r14
+.cfi_push	%r14
 	lea	`-64-($win64?6*16:0)`(%rsp),%rsp
 	vzeroupper
 ___
 $code.=<<___ if ($win64);
-	vmovaps	%xmm6,-40-6*16(%rax)
-	vmovaps	%xmm7,-40-5*16(%rax)
-	vmovaps	%xmm8,-40-4*16(%rax)
-	vmovaps	%xmm9,-40-3*16(%rax)
-	vmovaps	%xmm10,-40-2*16(%rax)
-	vmovaps	%xmm11,-40-1*16(%rax)
+	vmovaps	%xmm6,-40-6*16($fp)
+	vmovaps	%xmm7,-40-5*16($fp)
+	vmovaps	%xmm8,-40-4*16($fp)
+	vmovaps	%xmm9,-40-3*16($fp)
+	vmovaps	%xmm10,-40-2*16($fp)
+	vmovaps	%xmm11,-40-1*16($fp)
 .Lprologue_avx:
 ___
 $code.=<<___;
-	mov	%rax,%r14	# original %rsp
 	and	\$-64,%rsp
 	mov	%rdi,$ctx	# reassigned argument
 	mov	%rsi,$inp	# reassigned argument
@@ -994,7 +1045,7 @@ $code.=<<___;
 	jmp	.Loop_avx
 ___
 
-sub Xupdate_avx_16_31()		# recall that $Xi starts wtih 4
+sub Xupdate_avx_16_31()		# recall that $Xi starts with 4
 { use integer;
   my $body = shift;
   my @insns = (&$body,&$body,&$body,&$body);	# 40 instructions
@@ -1262,23 +1313,29 @@ $code.=<<___;
 	mov	$E,16($ctx)
 ___
 $code.=<<___ if ($win64);
-	movaps	-40-6*16(%r14),%xmm6
-	movaps	-40-5*16(%r14),%xmm7
-	movaps	-40-4*16(%r14),%xmm8
-	movaps	-40-3*16(%r14),%xmm9
-	movaps	-40-2*16(%r14),%xmm10
-	movaps	-40-1*16(%r14),%xmm11
+	movaps	-40-6*16($fp),%xmm6
+	movaps	-40-5*16($fp),%xmm7
+	movaps	-40-4*16($fp),%xmm8
+	movaps	-40-3*16($fp),%xmm9
+	movaps	-40-2*16($fp),%xmm10
+	movaps	-40-1*16($fp),%xmm11
 ___
 $code.=<<___;
-	lea	(%r14),%rsi
-	mov	-40(%rsi),%r14
-	mov	-32(%rsi),%r13
-	mov	-24(%rsi),%r12
-	mov	-16(%rsi),%rbp
-	mov	-8(%rsi),%rbx
-	lea	(%rsi),%rsp
+	mov	-40($fp),%r14
+.cfi_restore	%r14
+	mov	-32($fp),%r13
+.cfi_restore	%r13
+	mov	-24($fp),%r12
+.cfi_restore	%r12
+	mov	-16($fp),%rbp
+.cfi_restore	%rbp
+	mov	-8($fp),%rbx
+.cfi_restore	%rbx
+	lea	($fp),%rsp
+.cfi_def_cfa_register	%rsp
 .Lepilogue_avx:
 	ret
+.cfi_endproc
 .size	sha1_block_data_order_avx,.-sha1_block_data_order_avx
 ___
 
@@ -1302,26 +1359,32 @@ $code.=<<___;
 .align	16
 sha1_block_data_order_avx2:
 _avx2_shortcut:
-	mov	%rsp,%rax
+.cfi_startproc
+	mov	%rsp,$fp
+.cfi_def_cfa_register	$fp
 	push	%rbx
+.cfi_push	%rbx
 	push	%rbp
+.cfi_push	%rbp
 	push	%r12
+.cfi_push	%r12
 	push	%r13
+.cfi_push	%r13
 	push	%r14
+.cfi_push	%r14
 	vzeroupper
 ___
 $code.=<<___ if ($win64);
 	lea	-6*16(%rsp),%rsp
-	vmovaps	%xmm6,-40-6*16(%rax)
-	vmovaps	%xmm7,-40-5*16(%rax)
-	vmovaps	%xmm8,-40-4*16(%rax)
-	vmovaps	%xmm9,-40-3*16(%rax)
-	vmovaps	%xmm10,-40-2*16(%rax)
-	vmovaps	%xmm11,-40-1*16(%rax)
+	vmovaps	%xmm6,-40-6*16($fp)
+	vmovaps	%xmm7,-40-5*16($fp)
+	vmovaps	%xmm8,-40-4*16($fp)
+	vmovaps	%xmm9,-40-3*16($fp)
+	vmovaps	%xmm10,-40-2*16($fp)
+	vmovaps	%xmm11,-40-1*16($fp)
 .Lprologue_avx2:
 ___
 $code.=<<___;
-	mov	%rax,%r14		# original %rsp
 	mov	%rdi,$ctx		# reassigned argument
 	mov	%rsi,$inp		# reassigned argument
 	mov	%rdx,$num		# reassigned argument
@@ -1466,7 +1529,7 @@ sub bodyx_40_59 () {	# 10 instructions, 3 cycles critical path
 	)
 }
 
-sub Xupdate_avx2_16_31()		# recall that $Xi starts wtih 4
+sub Xupdate_avx2_16_31()		# recall that $Xi starts with 4
 { use integer;
   my $body = shift;
   my @insns = (&$body,&$body,&$body,&$body,&$body);	# 35 instructions
@@ -1741,28 +1804,35 @@ $code.=<<___;
 	vzeroupper
 ___
 $code.=<<___ if ($win64);
-	movaps	-40-6*16(%r14),%xmm6
-	movaps	-40-5*16(%r14),%xmm7
-	movaps	-40-4*16(%r14),%xmm8
-	movaps	-40-3*16(%r14),%xmm9
-	movaps	-40-2*16(%r14),%xmm10
-	movaps	-40-1*16(%r14),%xmm11
+	movaps	-40-6*16($fp),%xmm6
+	movaps	-40-5*16($fp),%xmm7
+	movaps	-40-4*16($fp),%xmm8
+	movaps	-40-3*16($fp),%xmm9
+	movaps	-40-2*16($fp),%xmm10
+	movaps	-40-1*16($fp),%xmm11
 ___
 $code.=<<___;
-	lea	(%r14),%rsi
-	mov	-40(%rsi),%r14
-	mov	-32(%rsi),%r13
-	mov	-24(%rsi),%r12
-	mov	-16(%rsi),%rbp
-	mov	-8(%rsi),%rbx
-	lea	(%rsi),%rsp
+	mov	-40($fp),%r14
+.cfi_restore	%r14
+	mov	-32($fp),%r13
+.cfi_restore	%r13
+	mov	-24($fp),%r12
+.cfi_restore	%r12
+	mov	-16($fp),%rbp
+.cfi_restore	%rbp
+	mov	-8($fp),%rbx
+.cfi_restore	%rbx
+	lea	($fp),%rsp
+.cfi_def_cfa_register	%rsp
 .Lepilogue_avx2:
 	ret
+.cfi_endproc
 .size	sha1_block_data_order_avx2,.-sha1_block_data_order_avx2
 ___
 }
 }
 $code.=<<___;
+.section .rodata align=64
 .align	64
 K_XX_XX:
 .long	0x5a827999,0x5a827999,0x5a827999,0x5a827999	# K_00_19
@@ -1776,10 +1846,11 @@ K_XX_XX:
 .long	0x00010203,0x04050607,0x08090a0b,0x0c0d0e0f	# pbswap mask
 .long	0x00010203,0x04050607,0x08090a0b,0x0c0d0e0f	# pbswap mask
 .byte	0xf,0xe,0xd,0xc,0xb,0xa,0x9,0x8,0x7,0x6,0x5,0x4,0x3,0x2,0x1,0x0
+.previous
 ___
 }}}
 $code.=<<___;
-.asciz	"SHA1 block transform for x86_64, CRYPTOGAMS by <appro\@openssl.org>"
+.asciz	"SHA1 block transform for x86_64, CRYPTOGAMS by <https://github.com/dot-asm>"
 .align	64
 ___
 
@@ -1898,14 +1969,12 @@ ssse3_handler:
 	cmp	%r10,%rbx		# context->Rip<prologue label
 	jb	.Lcommon_seh_tail
 
-	mov	152($context),%rax	# pull context->Rsp
+	mov	208($context),%rax	# pull context->R11
 
 	mov	4(%r11),%r10d		# HandlerData[1]
 	lea	(%rsi,%r10),%r10	# epilogue label
 	cmp	%r10,%rbx		# context->Rip>=epilogue label
 	jae	.Lcommon_seh_tail
-
-	mov	232($context),%rax	# pull context->R14
 
 	lea	-40-6*16(%rax),%rsi
 	lea	512($context),%rdi	# &context.Xmm6
@@ -1919,9 +1988,9 @@ ssse3_handler:
 	mov	-40(%rax),%r14
 	mov	%rbx,144($context)	# restore context->Rbx
 	mov	%rbp,160($context)	# restore context->Rbp
-	mov	%r12,216($context)	# restore cotnext->R12
-	mov	%r13,224($context)	# restore cotnext->R13
-	mov	%r14,232($context)	# restore cotnext->R14
+	mov	%r12,216($context)	# restore context->R12
+	mov	%r13,224($context)	# restore context->R13
+	mov	%r14,232($context)	# restore context->R14
 
 .Lcommon_seh_tail:
 	mov	8(%rax),%rdi
@@ -2064,4 +2133,4 @@ foreach (split("\n",$code)) {
 
 	print $_,"\n";
 }
-close STDOUT;
+close STDOUT or die "error closing STDOUT: $!";

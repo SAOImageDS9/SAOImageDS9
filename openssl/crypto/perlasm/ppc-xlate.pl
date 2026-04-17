@@ -1,46 +1,75 @@
-#!/usr/bin/env perl
-
-# PowerPC assembler distiller by <appro>.
+#! /usr/bin/env perl
+# Copyright 2006-2022 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
 
 my $flavour = shift;
 my $output = shift;
 open STDOUT,">$output" || die "can't open $output: $!";
 
 my %GLOBALS;
+my %TYPES;
 my $dotinlocallabels=($flavour=~/linux/)?1:0;
 
 ################################################################
 # directives which need special treatment on different platforms
 ################################################################
+my $type = sub {
+    my ($dir,$name,$type) = @_;
+
+    $TYPES{$name} = $type;
+    if ($flavour =~ /linux/) {
+	$name =~ s|^\.||;
+	".type	$name,$type";
+    } else {
+	"";
+    }
+};
 my $globl = sub {
     my $junk = shift;
     my $name = shift;
     my $global = \$GLOBALS{$name};
+    my $type = \$TYPES{$name};
     my $ret;
 
-    $name =~ s|^[\.\_]||;
- 
+    $name =~ s|^\.||;
+
     SWITCH: for ($flavour) {
-	/aix/		&& do { $name = ".$name";
+	/aix/		&& do { if (!$$type) {
+				    $$type = "\@function";
+				}
+				if ($$type =~ /function/) {
+				    $name = ".$name";
+				}
 				last;
 			      };
 	/osx/		&& do { $name = "_$name";
 				last;
 			      };
-	/linux.*(32|64le)/
-			&& do {	$ret .= ".globl	$name\n";
-				$ret .= ".type	$name,\@function";
+	/linux.*(32|64(le|v2))/
+			&& do {	$ret .= ".globl	$name";
+				if (!$$type) {
+				    $ret .= "\n.type	$name,\@function";
+				    $$type = "\@function";
+				}
 				last;
 			      };
-	/linux.*64/	&& do {	$ret .= ".globl	$name\n";
-				$ret .= ".type	$name,\@function\n";
-				$ret .= ".section	\".opd\",\"aw\"\n";
-				$ret .= ".align	3\n";
-				$ret .= "$name:\n";
-				$ret .= ".quad	.$name,.TOC.\@tocbase,0\n";
-				$ret .= ".previous\n";
-
-				$name = ".$name";
+	/linux.*64/	&& do {	$ret .= ".globl	$name";
+				if (!$$type) {
+				    $ret .= "\n.type	$name,\@function";
+				    $$type = "\@function";
+				}
+				if ($$type =~ /function/) {
+				    $ret .= "\n.section	\".opd\",\"aw\"";
+				    $ret .= "\n.align	3";
+				    $ret .= "\n$name:";
+				    $ret .= "\n.quad	.$name,.TOC.\@tocbase,0";
+				    $ret .= "\n.previous";
+				    $name = ".$name";
+				}
 				last;
 			      };
     }
@@ -51,7 +80,11 @@ my $globl = sub {
 };
 my $text = sub {
     my $ret = ($flavour =~ /aix/) ? ".csect\t.text[PR],7" : ".text";
-    $ret = ".abiversion	2\n".$ret	if ($flavour =~ /linux.*64le/);
+    $ret = ".abiversion	2\n".$ret	if ($flavour =~ /linux.*64(le|v2)/);
+    $ret;
+};
+my $p2align = sub {
+    my $ret = ($flavour =~ /aix64-as/) ? "" : ".p2align $line";
     $ret;
 };
 my $machine = sub {
@@ -66,9 +99,13 @@ my $machine = sub {
 my $size = sub {
     if ($flavour =~ /linux/)
     {	shift;
-	my $name = shift; $name =~ s|^[\.\_]||;
-	my $ret  = ".size	$name,.-".($flavour=~/64$/?".":"").$name;
-	$ret .= "\n.size	.$name,.-.$name" if ($flavour=~/64$/);
+	my $name = shift;
+	my $real = $GLOBALS{$name} ? \$GLOBALS{$name} : \$name;
+	my $ret  = ".size	$$real,.-$$real";
+	$name =~ s|^\.||;
+	if ($$real ne $name) {
+	    $ret .= "\n.size	$name,.-$$real";
+	}
 	$ret;
     }
     else
@@ -101,6 +138,72 @@ my $quad = sub {
     }
     join("\n",@ret);
 };
+
+################################################################
+# vector register number hacking
+################################################################
+
+# It is convenient to be able to set a variable like:
+#   my $foo = "v33";
+# and use this in different contexts where:
+# * a VSR (Vector-Scaler Register) number (i.e. "v33") is required
+# * a VR (Vector Register) number (i.e. "v1") is required
+# Map VSR numbering to VR number for certain vector instructions.
+
+# vs<N> -> v<N-32> if N > 32
+sub vsr2vr1 {
+    my $in = shift;
+    my ($prefix, $reg) = ($in =~ m/(\D*)(\d+)/);
+
+    my $n = int($reg);
+    if ($n >= 32) {
+	    $n -= 32;
+    }
+
+    return "${prefix}${n}";
+}
+# As above for first $num register args, returns list
+sub _vsr2vr {
+    my $num = shift;
+    my @rest = @_;
+    my @subst = splice(@rest, 0, $num);
+
+    @subst = map { vsr2vr1($_); } @subst;
+
+    return (@subst, @rest);
+}
+# As above but 1st arg ($f) is extracted and reinserted after
+# processing so that it can be ignored by a code generation function
+# that consumes the result
+sub vsr2vr_args {
+    my $num = shift;
+    my $f = shift;
+
+    my @out = _vsr2vr($num, @_);
+
+    return ($f, @out);
+}
+# As above but 1st arg is mnemonic, return formatted instruction
+sub vsr2vr {
+    my $mnemonic = shift;
+    my $num = shift;
+    my $f = shift;
+
+    my @out = _vsr2vr($num, @_);
+
+    "	${mnemonic}${f}	" . join(",", @out);
+}
+
+# ISA 2.03
+my $vsel	= sub { vsr2vr("vsel",		4, @_); };
+my $vsl		= sub { vsr2vr("vsl",		3, @_); };
+my $vspltisb	= sub { vsr2vr("vspltisb",	1, @_); };
+my $vspltisw	= sub { vsr2vr("vspltisw",	1, @_); };
+my $vsr		= sub { vsr2vr("vsr",		3, @_); };
+my $vsro	= sub { vsr2vr("vsro",		3, @_); };
+
+# ISA 3.0
+my $lxsd	= sub { vsr2vr("lxsd",		1, @_); };
 
 ################################################################
 # simplified mnemonics not handled by at least one assembler
@@ -153,7 +256,7 @@ my $vmr = sub {
 
 # Some ABIs specify vrsave, special-purpose register #256, as reserved
 # for system use.
-my $no_vrsave = ($flavour =~ /aix|linux64le/);
+my $no_vrsave = ($flavour =~ /aix|linux64(le|v2)/);
 my $mtspr = sub {
     my ($f,$idx,$ra) = @_;
     if ($idx == 256 && $no_vrsave) {
@@ -183,12 +286,36 @@ my $lvdx_u	= sub {	vsxmem_op(@_, 588); };	# lxsdx
 my $stvdx_u	= sub {	vsxmem_op(@_, 716); };	# stxsdx
 my $lvx_4w	= sub { vsxmem_op(@_, 780); };	# lxvw4x
 my $stvx_4w	= sub { vsxmem_op(@_, 908); };	# stxvw4x
+my $lvx_splt	= sub { vsxmem_op(@_, 332); };	# lxvdsx
+# VSX instruction[s] masqueraded as made-up AltiVec/VMX
+my $vpermdi	= sub {				# xxpermdi
+    my ($f, $vrt, $vra, $vrb, $dm) = @_;
+    $dm = oct($dm) if ($dm =~ /^0/);
+    "	.long	".sprintf "0x%X",(60<<26)|($vrt<<21)|($vra<<16)|($vrb<<11)|($dm<<8)|(10<<3)|7;
+};
+my $vxxlor	= sub {				# xxlor
+    my ($f, $vrt, $vra, $vrb) = @_;
+    "	.long	".sprintf "0x%X",(60<<26)|($vrt<<21)|($vra<<16)|($vrb<<11)|(146<<3)|6;
+};
+my $vxxlorc	= sub {				# xxlor
+    my ($f, $vrt, $vra, $vrb) = @_;
+    "	.long	".sprintf "0x%X",(60<<26)|($vrt<<21)|($vra<<16)|($vrb<<11)|(146<<3)|1;
+};
 
 # PowerISA 2.07 stuff
 sub vcrypto_op {
-    my ($f, $vrt, $vra, $vrb, $op) = @_;
+    my ($f, $vrt, $vra, $vrb, $op) = vsr2vr_args(3, @_);
     "	.long	".sprintf "0x%X",(4<<26)|($vrt<<21)|($vra<<16)|($vrb<<11)|$op;
 }
+sub vfour {
+    my ($f, $vrt, $vra, $vrb, $vrc, $op) = @_;
+    "	.long	".sprintf "0x%X",(4<<26)|($vrt<<21)|($vra<<16)|($vrb<<11)|($vrc<<6)|$op;
+};
+sub vfour_vsr {
+    my ($f, $vrt, $vra, $vrb, $vrc, $op) = vsr2vr_args(4, @_);
+    "	.long	".sprintf "0x%X",(4<<26)|($vrt<<21)|($vra<<16)|($vrb<<11)|($vrc<<6)|$op;
+};
+
 my $vcipher	= sub { vcrypto_op(@_, 1288); };
 my $vcipherlast	= sub { vcrypto_op(@_, 1289); };
 my $vncipher	= sub { vcrypto_op(@_, 1352); };
@@ -200,22 +327,82 @@ my $vpmsumb	= sub { vcrypto_op(@_, 1032); };
 my $vpmsumd	= sub { vcrypto_op(@_, 1224); };
 my $vpmsubh	= sub { vcrypto_op(@_, 1096); };
 my $vpmsumw	= sub { vcrypto_op(@_, 1160); };
+# These are not really crypto, but vcrypto_op template works
 my $vaddudm	= sub { vcrypto_op(@_, 192);  };
+my $vadduqm	= sub { vcrypto_op(@_, 256);  };
+my $vmuleuw	= sub { vcrypto_op(@_, 648);  };
+my $vmulouw	= sub { vcrypto_op(@_, 136);  };
+my $vrld	= sub { vcrypto_op(@_, 196);  };
+my $vsld	= sub { vcrypto_op(@_, 1476); };
+my $vsrd	= sub { vcrypto_op(@_, 1732); };
+my $vsubudm	= sub { vcrypto_op(@_, 1216); };
+my $vaddcuq	= sub { vcrypto_op(@_, 320);  };
+my $vaddeuqm	= sub { vfour_vsr(@_,60); };
+my $vaddecuq	= sub { vfour_vsr(@_,61); };
+my $vmrgew	= sub { vfour_vsr(@_,0,1932); };
+my $vmrgow	= sub { vfour_vsr(@_,0,1676); };
 
 my $mtsle	= sub {
     my ($f, $arg) = @_;
     "	.long	".sprintf "0x%X",(31<<26)|($arg<<21)|(147*2);
 };
 
+# VSX instructions masqueraded as AltiVec/VMX
+my $mtvrd	= sub {
+    my ($f, $vrt, $ra) = @_;
+    "	.long	".sprintf "0x%X",(31<<26)|($vrt<<21)|($ra<<16)|(179<<1)|1;
+};
+my $mtvrwz	= sub {
+    my ($f, $vrt, $ra) = @_;
+    "	.long	".sprintf "0x%X",(31<<26)|($vrt<<21)|($ra<<16)|(243<<1)|1;
+};
+my $lvwzx_u	= sub { vsxmem_op(@_, 12); };	# lxsiwzx
+my $stvwx_u	= sub { vsxmem_op(@_, 140); };	# stxsiwx
+
+# PowerISA 3.0 stuff
+my $maddhdu	= sub { vfour(@_,49); };
+my $maddld	= sub { vfour(@_,51); };
+my $darn = sub {
+    my ($f, $rt, $l) = @_;
+    "	.long	".sprintf "0x%X",(31<<26)|($rt<<21)|($l<<16)|(755<<1);
+};
+my $iseleq = sub {
+    my ($f, $rt, $ra, $rb) = @_;
+    "	.long	".sprintf "0x%X",(31<<26)|($rt<<21)|($ra<<16)|($rb<<11)|(2<<6)|30;
+};
+# VSX instruction[s] masqueraded as made-up AltiVec/VMX
+my $vspltib	= sub {				# xxspltib
+    my ($f, $vrt, $imm8) = @_;
+    $imm8 = oct($imm8) if ($imm8 =~ /^0/);
+    $imm8 &= 0xff;
+    "	.long	".sprintf "0x%X",(60<<26)|($vrt<<21)|($imm8<<11)|(360<<1)|1;
+};
+
+# PowerISA 3.0B stuff
+my $addex = sub {
+    my ($f, $rt, $ra, $rb, $cy) = @_;	# only cy==0 is specified in 3.0B
+    "	.long	".sprintf "0x%X",(31<<26)|($rt<<21)|($ra<<16)|($rb<<11)|($cy<<9)|(170<<1);
+};
+my $vmsumudm	= sub { vfour_vsr(@_, 35); };
+
+# PowerISA 3.1 stuff
+my $brd = sub {
+    my ($f, $ra, $rs) = @_;
+    "  .long   ".sprintf "0x%X",(31<<26)|($rs<<21)|($ra<<16)|(187<<1);
+};
+my $vsrq	= sub { vcrypto_op(@_, 517); };
+
+
+
 while($line=<>) {
 
     $line =~ s|[#!;].*$||;	# get rid of asm-style comments...
     $line =~ s|/\*.*\*/||;	# ... and C-style comments...
-    $line =~ s|^\s+||;		# ... and skip white spaces in beginning...
+    $line =~ s|^\s+||;		# ... and skip whitespaces in beginning...
     $line =~ s|\s+$||;		# ... and at the end
 
     {
-	$line =~ s|\b\.L(\w+)|L$1|g;	# common denominator for Locallabel
+	$line =~ s|\.L(\w+)|L$1|g;	# common denominator for Locallabel
 	$line =~ s|\bL(\w+)|\.L$1|g	if ($dotinlocallabels);
     }
 
@@ -223,8 +410,13 @@ while($line=<>) {
 	$line =~ s|(^[\.\w]+)\:\s*||;
 	my $label = $1;
 	if ($label) {
-	    printf "%s:",($GLOBALS{$label} or $label);
-	    printf "\n.localentry\t$GLOBALS{$label},0"	if ($GLOBALS{$label} && $flavour =~ /linux.*64le/);
+	    my $xlated = ($GLOBALS{$label} or $label);
+	    print "$xlated:";
+	    if ($flavour =~ /linux.*64(le|v2)/) {
+		if ($TYPES{$label} =~ /function/) {
+		    printf "\n.localentry	%s,0\n",$xlated;
+		}
+	    }
 	}
     }
 
@@ -235,7 +427,7 @@ while($line=<>) {
 	my $f = $3;
 	my $opcode = eval("\$$mnemonic");
 	$line =~ s/\b(c?[rf]|v|vs)([0-9]+)\b/$2/g if ($c ne "." and $flavour !~ /osx/);
-	if (ref($opcode) eq 'CODE') { $line = &$opcode($f,split(',',$line)); }
+	if (ref($opcode) eq 'CODE') { $line = &$opcode($f,split(/,\s*/,$line)); }
 	elsif ($mnemonic)           { $line = $c.$mnemonic.$f."\t".$line; }
     }
 
@@ -243,4 +435,4 @@ while($line=<>) {
     print "\n";
 }
 
-close STDOUT;
+close STDOUT or die "error closing STDOUT: $!";

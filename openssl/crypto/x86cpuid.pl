@@ -1,10 +1,18 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2004-2026 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
 
 $0 =~ m/(.*[\/\\])[^\/\\]+$/; $dir=$1;
 push(@INC, "${dir}perlasm", "perlasm");
 require "x86asm.pl";
 
-&asm_init($ARGV[0],"x86cpuid");
+$output = pop and open STDOUT,">$output";
+
+&asm_init($ARGV[0]);
 
 for (@ARGV) { $sse2=1 if (/-DOPENSSL_IA32_SSE2/); }
 
@@ -79,7 +87,7 @@ for (@ARGV) { $sse2=1 if (/-DOPENSSL_IA32_SSE2/); }
 	&ja	(&label("generic"));
 	&and	("edx",0xefffffff);	# clear hyper-threading bit
 	&jmp	(&label("generic"));
-	
+
 &set_label("intel");
 	&cmp	("edi",4);
 	&mov	("esi",-1);
@@ -100,7 +108,7 @@ for (@ARGV) { $sse2=1 if (/-DOPENSSL_IA32_SSE2/); }
 	&cmp	("ebp",0);
 	&jne	(&label("notintel"));
 	&or	("edx",1<<30);		# set reserved bit#30 on Intel CPUs
-	&and	(&HB("eax"),15);	# familiy ID
+	&and	(&HB("eax"),15);	# family ID
 	&cmp	(&HB("eax"),15);	# P4?
 	&jne	(&label("notintel"));
 	&or	("edx",1<<20);		# set reserved bit#20 to engage RC4_CHAR
@@ -129,7 +137,28 @@ for (@ARGV) { $sse2=1 if (/-DOPENSSL_IA32_SSE2/); }
 	&mov	("eax",7);
 	&xor	("ecx","ecx");
 	&cpuid	();
-	&mov	(&DWP(8,"edi"),"ebx");	# save extended feature flag
+	&mov	(&DWP(8,"edi"),"ebx");	# save cpuid(EAX=0x7, ECX=0x0).EBX to OPENSSL_ia32cap_P[2]
+	&mov	(&DWP(12,"edi"),"ecx");	# save cpuid(EAX=0x7, ECX=0x0).ECX to OPENSSL_ia32cap_P[3]
+	&mov	(&DWP(16,"edi"),"edx");	# save cpuid(EAX=0x7, ECX=0x0).EDX to OPENSSL_ia32cap_P[4]
+	&cmp	("eax",1);				# Do we have cpuid(EAX=0x7, ECX=0x1)?
+	&jb	(&label("no_extended_info"));
+	&mov	("eax",7);
+	&mov	("ecx",1);
+	&cpuid	();						# cpuid(EAX=0x7, ECX=0x1)
+	&mov	(&DWP(20,"edi"),"eax");	# save cpuid(EAX=0x7, ECX=0x1).EAX to OPENSSL_ia32cap_P[5]
+	&mov	(&DWP(24,"edi"),"edx");	# save cpuid(EAX=0x7, ECX=0x1).EDX to OPENSSL_ia32cap_P[6]
+	&mov	(&DWP(28,"edi"),"ebx");	# save cpuid(EAX=0x7, ECX=0x1).EBX to OPENSSL_ia32cap_P[7]
+	&mov	(&DWP(32,"edi"),"ecx");	# save cpuid(EAX=0x7, ECX=0x1).ECX to OPENSSL_ia32cap_P[8]
+
+	&and	("edx",0x80000);		# Mask cpuid(EAX=0x7, ECX=0x1).EDX bit 19 to detect AVX10 support
+	&cmp	("edx",0x0);
+	&je (&label("no_extended_info"));
+
+	&mov	("eax",0x24);			# Have AVX10 Support, query for details
+	&mov	("ecx",0x0);
+	&cpuid	();						# cpuid(EAX=0x24, ECX=0x0) AVX10 Leaf
+	&mov	(&DWP(36,"edi"),"ebx");	# save cpuid(EAX=0x24, ECX=0x0).EBX to OPENSSL_ia32cap_P[9]
+
 &set_label("no_extended_info");
 
 	&bt	("ebp",27);		# check OSXSAVE bit
@@ -146,6 +175,9 @@ for (@ARGV) { $sse2=1 if (/-DOPENSSL_IA32_SSE2/); }
 	&and	("esi",0xfeffffff);	# clear FXSR
 &set_label("clear_avx");
 	&and	("ebp",0xefffe7ff);	# clear AVX, FMA and AMD XOP bits
+	&and	(&DWP(20,"edi"),0xff7fffff);	# ~(1<<23) clear AVXIFMA,
+											# which is VEX-encoded
+											# and requires YMM state support
 	&and	(&DWP(8,"edi"),0xffffffdf);	# clear AVX2
 &set_label("done");
 	&mov	("eax","esi");
@@ -236,34 +268,6 @@ for (@ARGV) { $sse2=1 if (/-DOPENSSL_IA32_SSE2/); }
 	&ret	();
 &function_end_B("OPENSSL_far_spin");
 
-&function_begin_B("OPENSSL_wipe_cpu","EXTRN\t_OPENSSL_ia32cap_P:DWORD");
-	&xor	("eax","eax");
-	&xor	("edx","edx");
-	&picmeup("ecx","OPENSSL_ia32cap_P");
-	&mov	("ecx",&DWP(0,"ecx"));
-	&bt	(&DWP(0,"ecx"),1);
-	&jnc	(&label("no_x87"));
-	if ($sse2) {
-		&and	("ecx",1<<26|1<<24);	# check SSE2 and FXSR bits
-		&cmp	("ecx",1<<26|1<<24);
-		&jne	(&label("no_sse2"));
-		&pxor	("xmm0","xmm0");
-		&pxor	("xmm1","xmm1");
-		&pxor	("xmm2","xmm2");
-		&pxor	("xmm3","xmm3");
-		&pxor	("xmm4","xmm4");
-		&pxor	("xmm5","xmm5");
-		&pxor	("xmm6","xmm6");
-		&pxor	("xmm7","xmm7");
-	&set_label("no_sse2");
-	}
-	# just a bunch of fldz to zap the fp/mm bank followed by finit...
-	&data_word(0xeed9eed9,0xeed9eed9,0xeed9eed9,0xeed9eed9,0x90e3db9b);
-&set_label("no_x87");
-	&lea	("eax",&DWP(4,"esp"));
-	&ret	();
-&function_end_B("OPENSSL_wipe_cpu");
-
 &function_begin_B("OPENSSL_atomic_add");
 	&mov	("edx",&DWP(4,"esp"));	# fetch the pointer, 1st arg
 	&mov	("ecx",&DWP(8,"esp"));	# fetch the increment, 2nd arg
@@ -273,51 +277,12 @@ for (@ARGV) { $sse2=1 if (/-DOPENSSL_IA32_SSE2/); }
 &set_label("spin");
 	&lea	("ebx",&DWP(0,"eax","ecx"));
 	&nop	();
-	&data_word(0x1ab10ff0);	# lock;	cmpxchg	%ebx,(%edx)	# %eax is envolved and is always reloaded
+	&data_word(0x1ab10ff0);	# lock;	cmpxchg	%ebx,(%edx)	# %eax is involved and is always reloaded
 	&jne	(&label("spin"));
 	&mov	("eax","ebx");	# OpenSSL expects the new value
 	&pop	("ebx");
 	&ret	();
 &function_end_B("OPENSSL_atomic_add");
-
-# This function can become handy under Win32 in situations when
-# we don't know which calling convention, __stdcall or __cdecl(*),
-# indirect callee is using. In C it can be deployed as
-#
-#ifdef OPENSSL_CPUID_OBJ
-#	type OPENSSL_indirect_call(void *f,...);
-#	...
-#	OPENSSL_indirect_call(func,[up to $max arguments]);
-#endif
-#
-# (*)	it's designed to work even for __fastcall if number of
-#	arguments is 1 or 2!
-&function_begin_B("OPENSSL_indirect_call");
-	{
-	my ($max,$i)=(7,);	# $max has to be chosen as 4*n-1
-				# in order to preserve eventual
-				# stack alignment
-	&push	("ebp");
-	&mov	("ebp","esp");
-	&sub	("esp",$max*4);
-	&mov	("ecx",&DWP(12,"ebp"));
-	&mov	(&DWP(0,"esp"),"ecx");
-	&mov	("edx",&DWP(16,"ebp"));
-	&mov	(&DWP(4,"esp"),"edx");
-	for($i=2;$i<$max;$i++)
-		{
-		# Some copies will be redundant/bogus...
-		&mov	("eax",&DWP(12+$i*4,"ebp"));
-		&mov	(&DWP(0+$i*4,"esp"),"eax");
-		}
-	&call_ptr	(&DWP(8,"ebp"));# make the call...
-	&mov	("esp","ebp");	# ... and just restore the stack pointer
-				# without paying attention to what we called,
-				# (__cdecl *func) or (__stdcall *one).
-	&pop	("ebp");
-	&ret	();
-	}
-&function_end_B("OPENSSL_indirect_call");
 
 &function_begin_B("OPENSSL_cleanse");
 	&mov	("edx",&wparam(0));
@@ -353,29 +318,180 @@ for (@ARGV) { $sse2=1 if (/-DOPENSSL_IA32_SSE2/); }
 	&ret	();
 &function_end_B("OPENSSL_cleanse");
 
-&function_begin_B("OPENSSL_ia32_rdrand");
-	&mov	("ecx",8);
+&function_begin_B("CRYPTO_memcmp");
+	&push	("esi");
+	&push	("edi");
+	&mov	("esi",&wparam(0));
+	&mov	("edi",&wparam(1));
+	&mov	("ecx",&wparam(2));
+	&xor	("eax","eax");
+	&xor	("edx","edx");
+	&cmp	("ecx",0);
+	&je	(&label("no_data"));
 &set_label("loop");
-	&rdrand	("eax");
-	&jc	(&label("break"));
-	&loop	(&label("loop"));
-&set_label("break");
-	&cmp	("eax",0);
-	&cmove	("eax","ecx");
+	&mov	("dl",&BP(0,"esi"));
+	&lea	("esi",&DWP(1,"esi"));
+	&xor	("dl",&BP(0,"edi"));
+	&lea	("edi",&DWP(1,"edi"));
+	&or	("al","dl");
+	&dec	("ecx");
+	&jnz	(&label("loop"));
+	&neg	("eax");
+	&shr	("eax",31);
+&set_label("no_data");
+	&pop	("edi");
+	&pop	("esi");
 	&ret	();
-&function_end_B("OPENSSL_ia32_rdrand");
+&function_end_B("CRYPTO_memcmp");
+{
+my $lasttick = "esi";
+my $lastdiff = "ebx";
+my $out = "edi";
+my $cnt = "ecx";
+my $max = "ebp";
 
-&function_begin_B("OPENSSL_ia32_rdseed");
+&function_begin("OPENSSL_instrument_bus");
+    &mov	("eax",0);
+    if ($sse2) {
+	&picmeup("edx","OPENSSL_ia32cap_P");
+	&bt	(&DWP(0,"edx"),4);
+	&jnc	(&label("nogo"));	# no TSC
+	&bt	(&DWP(0,"edx"),19);
+	&jnc	(&label("nogo"));	# no CLFLUSH
+
+	&mov	($out,&wparam(0));	# load arguments
+	&mov	($cnt,&wparam(1));
+
+	# collect 1st tick
+	&rdtsc	();
+	&mov	($lasttick,"eax");	# lasttick = tick
+	&mov	($lastdiff,0);		# lastdiff = 0
+	&clflush(&DWP(0,$out));
+	&data_byte(0xf0);		# lock
+	&add	(&DWP(0,$out),$lastdiff);
+	&jmp	(&label("loop"));
+
+&set_label("loop",16);
+	&rdtsc	();
+	&mov	("edx","eax");		# put aside tick (yes, I neglect edx)
+	&sub	("eax",$lasttick);	# diff
+	&mov	($lasttick,"edx");	# lasttick = tick
+	&mov	($lastdiff,"eax");	# lastdiff = diff
+	&clflush(&DWP(0,$out));
+	&data_byte(0xf0);		# lock
+	&add	(&DWP(0,$out),"eax");	# accumulate diff
+	&lea	($out,&DWP(4,$out));	# ++$out
+	&sub	($cnt,1);		# --$cnt
+	&jnz	(&label("loop"));
+
+	&mov	("eax",&wparam(1));
+&set_label("nogo");
+    }
+&function_end("OPENSSL_instrument_bus");
+
+&function_begin("OPENSSL_instrument_bus2");
+    &mov	("eax",0);
+    if ($sse2) {
+	&picmeup("edx","OPENSSL_ia32cap_P");
+	&bt	(&DWP(0,"edx"),4);
+	&jnc	(&label("nogo"));	# no TSC
+	&bt	(&DWP(0,"edx"),19);
+	&jnc	(&label("nogo"));	# no CLFLUSH
+
+	&mov	($out,&wparam(0));	# load arguments
+	&mov	($cnt,&wparam(1));
+	&mov	($max,&wparam(2));
+
+	&rdtsc	();			# collect 1st tick
+	&mov	($lasttick,"eax");	# lasttick = tick
+	&mov	($lastdiff,0);		# lastdiff = 0
+
+	&clflush(&DWP(0,$out));
+	&data_byte(0xf0);		# lock
+	&add	(&DWP(0,$out),$lastdiff);
+
+	&rdtsc	();			# collect 1st diff
+	&mov	("edx","eax");		# put aside tick (yes, I neglect edx)
+	&sub	("eax",$lasttick);	# diff
+	&mov	($lasttick,"edx");	# lasttick = tick
+	&mov	($lastdiff,"eax");	# lastdiff = diff
+	&jmp	(&label("loop2"));
+
+&set_label("loop2",16);
+	&clflush(&DWP(0,$out));
+	&data_byte(0xf0);		# lock
+	&add	(&DWP(0,$out),"eax");	# accumulate diff
+
+	&sub	($max,1);
+	&jz	(&label("done2"));
+
+	&rdtsc	();
+	&mov	("edx","eax");		# put aside tick (yes, I neglect edx)
+	&sub	("eax",$lasttick);	# diff
+	&mov	($lasttick,"edx");	# lasttick = tick
+	&cmp	("eax",$lastdiff);
+	&mov	($lastdiff,"eax");	# lastdiff = diff
+	&mov	("edx",0);
+	&setne	("dl");
+	&sub	($cnt,"edx");		# conditional --$cnt
+	&lea	($out,&DWP(0,$out,"edx",4));	# conditional ++$out
+	&jnz	(&label("loop2"));
+
+&set_label("done2");
+	&mov	("eax",&wparam(1));
+	&sub	("eax",$cnt);
+&set_label("nogo");
+    }
+&function_end("OPENSSL_instrument_bus2");
+}
+
+sub gen_random {
+my $rdop = shift;
+&function_begin_B("OPENSSL_ia32_${rdop}_bytes");
+	&push	("edi");
+	&push	("ebx");
+	&xor	("eax","eax");		# return value
+	&mov	("edi",&wparam(0));
+	&mov	("ebx",&wparam(1));
+
+	&cmp	("ebx",0);
+	&je	(&label("done"));
+
 	&mov	("ecx",8);
 &set_label("loop");
-	&rdseed	("eax");
+	&${rdop}("edx");
 	&jc	(&label("break"));
 	&loop	(&label("loop"));
-&set_label("break");
-	&cmp	("eax",0);
-	&cmove	("eax","ecx");
+	&jmp	(&label("done"));
+
+&set_label("break",16);
+	&cmp	("ebx",4);
+	&jb	(&label("tail"));
+	&mov	(&DWP(0,"edi"),"edx");
+	&lea	("edi",&DWP(4,"edi"));
+	&add	("eax",4);
+	&sub	("ebx",4);
+	&jz	(&label("done"));
+	&mov	("ecx",8);
+	&jmp	(&label("loop"));
+
+&set_label("tail",16);
+	&mov	(&BP(0,"edi"),"dl");
+	&lea	("edi",&DWP(1,"edi"));
+	&inc	("eax");
+	&shr	("edx",8);
+	&dec	("ebx");
+	&jnz	(&label("tail"));
+
+&set_label("done");
+	&xor	("edx","edx");		# Clear random value from registers
+	&pop	("ebx");
+	&pop	("edi");
 	&ret	();
-&function_end_B("OPENSSL_ia32_rdseed");
+&function_end_B("OPENSSL_ia32_${rdop}_bytes");
+}
+&gen_random("rdrand");
+&gen_random("rdseed");
 
 &initseg("OPENSSL_cpuid_setup");
 
@@ -383,3 +499,5 @@ for (@ARGV) { $sse2=1 if (/-DOPENSSL_IA32_SSE2/); }
 &hidden("OPENSSL_ia32cap_P");
 
 &asm_finish();
+
+close STDOUT or die "error closing STDOUT: $!";

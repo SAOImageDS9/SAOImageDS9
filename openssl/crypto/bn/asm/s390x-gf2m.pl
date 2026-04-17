@@ -1,10 +1,17 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2011-2025 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 #
 # ====================================================================
-# Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
+# Written by Andy Polyakov, @dot-asm, initially for use in the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
-# details see http://www.openssl.org/~appro/cryptogams/.
+# details see https://github.com/dot-asm/cryptogams/.
 # ====================================================================
 #
 # May 2011
@@ -13,7 +20,7 @@
 # in bn_gf2m.c. It's kind of low-hanging mechanical port from C for
 # the time being... gcc 4.3 appeared to generate poor code, therefore
 # the effort. And indeed, the module delivers 55%-90%(*) improvement
-# on haviest ECDSA verify and ECDH benchmarks for 163- and 571-bit
+# on heaviest ECDSA verify and ECDH benchmarks for 163- and 571-bit
 # key lengths on z990, 30%-55%(*) - on z10, and 70%-110%(*) - on z196.
 # This is for 64-bit build. In 32-bit "highgprs" case improvement is
 # even higher, for example on z990 it was measured 80%-150%. ECDSA
@@ -25,7 +32,10 @@
 #	so that improvement coefficients can vary from one specific
 #	setup to another.
 
-$flavour = shift;
+# $output is the last argument if it looks like a file (it has an extension)
+# $flavour is the first argument if it doesn't look like a file
+$output = $#ARGV >= 0 && $ARGV[$#ARGV] =~ m|\.\w+$| ? pop : undef;
+$flavour = $#ARGV >= 0 && $ARGV[0] !~ m|\.| ? shift : undef;
 
 if ($flavour =~ /3[12]/) {
         $SIZE_T=4;
@@ -35,8 +45,7 @@ if ($flavour =~ /3[12]/) {
         $g="g";
 }
 
-while (($output=shift) && ($output!~/^\w[\w\-]*\.\w+$/)) {}
-open STDOUT,">$output";
+$output and open STDOUT,">$output";
 
 $stdframe=16*$SIZE_T+4*8;
 
@@ -191,7 +200,7 @@ $code.=<<___;
 	xgr	$hi,@r[1]
 	xgr	$lo,@r[0]
 	xgr	$hi,@r[2]
-	xgr	$lo,@r[3]	
+	xgr	$lo,@r[3]
 	xgr	$hi,@r[3]
 	xgr	$lo,$hi
 	stg	$hi,16($rp)
@@ -213,9 +222,9 @@ $code.=<<___;
 	lm${g}	%r6,%r15,`$stdframe+128+6*$SIZE_T`($sp)
 	br	$ra
 .size	bn_GF2m_mul_2x2,.-bn_GF2m_mul_2x2
-.string	"GF(2^m) Multiplication for s390x, CRYPTOGAMS by <appro\@openssl.org>"
+.string	"GF(2^m) Multiplication for s390x, CRYPTOGAMS by <https://github.com/dot-asm>"
 ___
 
 $code =~ s/\`([^\`]*)\`/eval($1)/gem;
 print $code;
-close STDOUT;
+close STDOUT or die "error closing STDOUT: $!";

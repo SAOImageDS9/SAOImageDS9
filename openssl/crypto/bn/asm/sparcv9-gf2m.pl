@@ -1,10 +1,17 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2012-2025 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 #
 # ====================================================================
-# Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
+# Written by Andy Polyakov, @dot-asm, initially for use in the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
-# details see http://www.openssl.org/~appro/cryptogams/.
+# details see https://github.com/dot-asm/cryptogams/.
 # ====================================================================
 #
 # October 2012
@@ -18,6 +25,8 @@
 # ~100-230% faster than gcc-generated code and ~35-90% faster than
 # the pure SPARCv9 code path.
 
+$output = pop and open STDOUT,">$output";
+
 $locals=16*8;
 
 $tab="%l0";
@@ -29,7 +38,10 @@ $tab="%l0";
 ($lo,$hi,$b)=("%g1",$a8,"%o7"); $a=$lo;
 
 $code.=<<___;
-#include <sparc_arch.h>
+#ifndef __ASSEMBLER__
+# define __ASSEMBLER__ 1
+#endif
+#include "crypto/sparc_arch.h"
 
 #ifdef __arch64__
 .register	%g2,#scratch
@@ -181,10 +193,10 @@ $code.=<<___;
 	restore
 .type	bn_GF2m_mul_2x2,#function
 .size	bn_GF2m_mul_2x2,.-bn_GF2m_mul_2x2
-.asciz	"GF(2^m) Multiplication for SPARCv9, CRYPTOGAMS by <appro\@openssl.org>"
+.asciz	"GF(2^m) Multiplication for SPARCv9, CRYPTOGAMS by <https://github.com/dot-asm>"
 .align	4
 ___
 
 $code =~ s/\`([^\`]*)\`/eval($1)/gem;
 print $code;
-close STDOUT;
+close STDOUT or die "error closing STDOUT: $!";

@@ -1,66 +1,17 @@
-/* ====================================================================
- * Copyright (c) 2006 The OpenSSL Project.  All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. All advertising materials mentioning features or use of this
- *    software must display the following acknowledgment:
- *    "This product includes software developed by the OpenSSL Project
- *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"
- *
- * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to
- *    endorse or promote products derived from this software without
- *    prior written permission. For written permission, please contact
- *    licensing@OpenSSL.org.
- *
- * 5. Products derived from this software may not be called "OpenSSL"
- *    nor may "OpenSSL" appear in their names without prior written
- *    permission of the OpenSSL Project.
- *
- * 6. Redistributions of any form whatsoever must retain the following
- *    acknowledgment:
- *    "This product includes software developed by the OpenSSL Project
- *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"
- *
- * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY
- * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR
- * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE.
- * ====================================================================
- *
- * This product includes cryptographic software written by Eric Young
- * (eay@cryptsoft.com).  This product includes software written by Tim
- * Hudson (tjh@cryptsoft.com).
- *
- */
-
-#include "eng_int.h"
-#include <openssl/evp.h>
-
 /*
- * If this symbol is defined then ENGINE_get_pkey_meth_engine(), the function
- * that is used by EVP to hook in pkey_meth code and cache defaults (etc),
- * will display brief debugging summaries to stderr with the 'nid'.
+ * Copyright 2006-2021 The OpenSSL Project Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License 2.0 (the "License").  You may not use
+ * this file except in compliance with the License.  You can obtain a copy
+ * in the file LICENSE in the source distribution or at
+ * https://www.openssl.org/source/license.html
  */
-/* #define ENGINE_PKEY_METH_DEBUG */
+
+/* We need to use some  deprecated APIs */
+#include "internal/deprecated.h"
+
+#include "eng_local.h"
+#include <openssl/evp.h>
 
 static ENGINE_TABLE *pkey_meth_table = NULL;
 
@@ -81,13 +32,13 @@ int ENGINE_register_pkey_meths(ENGINE *e)
         int num_nids = e->pkey_meths(e, NULL, &nids, 0);
         if (num_nids > 0)
             return engine_table_register(&pkey_meth_table,
-                                         engine_unregister_all_pkey_meths, e,
-                                         nids, num_nids, 0);
+                engine_unregister_all_pkey_meths, e,
+                nids, num_nids, 0);
     }
     return 1;
 }
 
-void ENGINE_register_all_pkey_meths()
+void ENGINE_register_all_pkey_meths(void)
 {
     ENGINE *e;
 
@@ -102,8 +53,8 @@ int ENGINE_set_default_pkey_meths(ENGINE *e)
         int num_nids = e->pkey_meths(e, NULL, &nids, 0);
         if (num_nids > 0)
             return engine_table_register(&pkey_meth_table,
-                                         engine_unregister_all_pkey_meths, e,
-                                         nids, num_nids, 1);
+                engine_unregister_all_pkey_meths, e,
+                nids, num_nids, 1);
     }
     return 1;
 }
@@ -115,7 +66,8 @@ int ENGINE_set_default_pkey_meths(ENGINE *e)
  */
 ENGINE *ENGINE_get_pkey_meth_engine(int nid)
 {
-    return engine_table_select(&pkey_meth_table, nid);
+    return ossl_engine_table_select(&pkey_meth_table, nid,
+        OPENSSL_FILE, OPENSSL_LINE);
 }
 
 /* Obtains a pkey_meth implementation from an ENGINE functional reference */
@@ -124,8 +76,7 @@ const EVP_PKEY_METHOD *ENGINE_get_pkey_meth(ENGINE *e, int nid)
     EVP_PKEY_METHOD *ret;
     ENGINE_PKEY_METHS_PTR fn = ENGINE_get_pkey_meths(e);
     if (!fn || !fn(e, &ret, NULL, nid)) {
-        ENGINEerr(ENGINE_F_ENGINE_GET_PKEY_METH,
-                  ENGINE_R_UNIMPLEMENTED_PUBLIC_KEY_METHOD);
+        ERR_raise(ERR_LIB_ENGINE, ENGINE_R_UNIMPLEMENTED_PUBLIC_KEY_METHOD);
         return NULL;
     }
     return ret;

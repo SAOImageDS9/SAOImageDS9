@@ -1,10 +1,17 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 1998-2025 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 
 # ====================================================================
-# [Re]written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
+# [Re]written by Andy Polyakov <https://github.com/dot-asm> for the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
-# details see http://www.openssl.org/~appro/cryptogams/.
+# details see https://github.com/dot-asm/cryptogams/.
 # ====================================================================
 
 # At some point it became apparent that the original SSLeay RC4
@@ -25,8 +32,6 @@
 #	performance on the same Opteron machine.
 # (**)	This number requires compressed key schedule set up by
 #	RC4_set_key [see commentary below for further details].
-#
-#					<appro@fy.chalmers.se>
 
 # May 2011
 #
@@ -43,6 +48,9 @@
 # Westmere	5.1/+94%(**)
 # Sandy Bridge	5.0/+8%
 # Atom		12.6/+6%
+# VIA Nano	6.4/+9%
+# Ivy Bridge	4.9/±0%
+# Bulldozer	4.9/+15%
 #
 # (*)	PIII can actually deliver 6.6 cycles per byte with MMX code,
 #	but this specific code performs poorly on Core2. And vice
@@ -60,7 +68,9 @@ $0 =~ m/(.*[\/\\])[^\/\\]+$/; $dir=$1;
 push(@INC,"${dir}","${dir}../../perlasm");
 require "x86asm.pl";
 
-&asm_init($ARGV[0],"rc4-586.pl",$x86only = $ARGV[$#ARGV] eq "386");
+$output = pop and open STDOUT,">$output";
+
+&asm_init($ARGV[0],$x86only = $ARGV[$#ARGV] eq "386");
 
 $xx="eax";
 $yy="ebx";
@@ -123,7 +133,7 @@ if ($alt=0) {
 	push	(@XX,shift(@XX))			if ($i>=0);
   }
 } else {
-  # Using pinsrw here improves performane on Intel CPUs by 2-3%, but
+  # Using pinsrw here improves performance on Intel CPUs by 2-3%, but
   # brings down AMD by 7%...
   $RC4_loop_mmx = sub {
     my $i=shift;
@@ -144,7 +154,7 @@ if ($alt=0) {
 	&movd	($i>0?"mm1":"mm2",&DWP(0,$dat,$ty,4));
 
 	# (*)	This is the key to Core2 and Westmere performance.
-	#	Whithout movz out-of-order execution logic confuses
+	#	Without movz out-of-order execution logic confuses
 	#	itself and fails to reorder loads and stores. Problem
 	#	appears to be fixed in Sandy Bridge...
   }
@@ -304,7 +314,7 @@ $ido="ecx";
 $idx="edx";
 
 # void RC4_set_key(RC4_KEY *key,int len,const unsigned char *data);
-&function_begin("private_RC4_set_key");
+&function_begin("RC4_set_key");
 	&mov	($out,&wparam(0));		# load key
 	&mov	($idi,&wparam(1));		# load len
 	&mov	($inp,&wparam(2));		# load data
@@ -382,7 +392,7 @@ $idx="edx";
 	&xor	("eax","eax");
 	&mov	(&DWP(-8,$out),"eax");		# key->x=0;
 	&mov	(&DWP(-4,$out),"eax");		# key->y=0;
-&function_end("private_RC4_set_key");
+&function_end("RC4_set_key");
 
 # const char *RC4_options(void);
 &function_begin_B("RC4_options");
@@ -406,9 +416,10 @@ $idx="edx";
 &asciz	("rc4(4x,int)");
 &asciz	("rc4(1x,char)");
 &asciz	("rc4(8x,mmx)");
-&asciz	("RC4 for x86, CRYPTOGAMS by <appro\@openssl.org>");
+&asciz	("RC4 for x86, CRYPTOGAMS by <https://github.com/dot-asm>");
 &align	(64);
 &function_end_B("RC4_options");
 
 &asm_finish();
 
+close STDOUT or die "error closing STDOUT: $!";

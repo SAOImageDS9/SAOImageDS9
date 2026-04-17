@@ -1,162 +1,223 @@
-/* ====================================================================
- * Copyright (c) 2004 The OpenSSL Project.  All rights reserved.
+/*
+ * Copyright 2004-2025 The OpenSSL Project Authors. All Rights Reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. All advertising materials mentioning features or use of this
- *    software must display the following acknowledgment:
- *    "This product includes software developed by the OpenSSL Project
- *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"
- *
- * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to
- *    endorse or promote products derived from this software without
- *    prior written permission. For written permission, please contact
- *    openssl-core@openssl.org.
- *
- * 5. Products derived from this software may not be called "OpenSSL"
- *    nor may "OpenSSL" appear in their names without prior written
- *    permission of the OpenSSL Project.
- *
- * 6. Redistributions of any form whatsoever must retain the following
- *    acknowledgment:
- *    "This product includes software developed by the OpenSSL Project
- *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"
- *
- * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY
- * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR
- * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * Licensed under the Apache License 2.0 (the "License").  You may not use
+ * this file except in compliance with the License.  You can obtain a copy
+ * in the file LICENSE in the source distribution or at
+ * https://www.openssl.org/source/license.html
  */
 
 #include <string.h>
 
 #include "apps.h"
+#include "progs.h"
 #include <openssl/bn.h>
 
-#undef PROG
-#define PROG prime_main
+/* Consistent with RSA modulus size limit and the size of plausible individual primes */
+#define BUFSIZE 4098
 
-int MAIN(int, char **);
+typedef enum OPTION_choice {
+    OPT_COMMON,
+    OPT_HEX,
+    OPT_GENERATE,
+    OPT_BITS,
+    OPT_SAFE,
+    OPT_CHECKS,
+    OPT_PROV_ENUM,
+    OPT_IN_FILE
+} OPTION_CHOICE;
 
-int MAIN(int argc, char **argv)
+static int check_num(const char *s, const int is_hex)
 {
-    int hex = 0;
-    int checks = 20;
-    int generate = 0;
-    int bits = 0;
-    int safe = 0;
+    int i;
+    /*
+     * It would make sense to use ossl_isxdigit and ossl_isdigit here,
+     * but ossl_ctype_check is a local symbol in libcrypto.so.
+     */
+    if (is_hex) {
+        for (i = 0; ('0' <= s[i] && s[i] <= '9')
+            || ('A' <= s[i] && s[i] <= 'F')
+            || ('a' <= s[i] && s[i] <= 'f');
+            i++)
+            ;
+    } else {
+        for (i = 0; '0' <= s[i] && s[i] <= '9'; i++)
+            ;
+    }
+    return s[i] == 0;
+}
+
+static void process_num(const char *s, const int is_hex)
+{
+    int r;
     BIGNUM *bn = NULL;
-    BIO *bio_out;
 
-    apps_startup();
+    r = check_num(s, is_hex);
 
-    if (bio_err == NULL)
-        if ((bio_err = BIO_new(BIO_s_file())) != NULL)
-            BIO_set_fp(bio_err, stderr, BIO_NOCLOSE | BIO_FP_TEXT);
+    if (r)
+        r = is_hex ? BN_hex2bn(&bn, s) : BN_dec2bn(&bn, s);
 
-    --argc;
-    ++argv;
-    while (argc >= 1 && **argv == '-') {
-        if (!strcmp(*argv, "-hex"))
+    if (!r) {
+        BIO_printf(bio_err, "Failed to process value (%s)\n", s);
+        BN_free(bn);
+        return;
+    }
+
+    BN_print(bio_out, bn);
+    r = BN_check_prime(bn, NULL, NULL);
+    BN_free(bn);
+    if (r < 0) {
+        BIO_printf(bio_err, "Error checking prime\n");
+        return;
+    }
+
+    BIO_printf(bio_out, " (%s) %s prime\n", s, r == 1 ? "is" : "is not");
+}
+
+const OPTIONS prime_options[] = {
+    { OPT_HELP_STR, 1, '-', "Usage: %s [options] [number...]\n" },
+
+    OPT_SECTION("General"),
+    { "help", OPT_HELP, '-', "Display this summary" },
+    { "bits", OPT_BITS, 'p', "Size of number in bits" },
+    { "checks", OPT_CHECKS, 'p', "Number of checks" },
+    { "hex", OPT_HEX, '-',
+        "Enables hex format for output from prime generation or input to primality checking" },
+    { "in", OPT_IN_FILE, '-', "Provide file names containing numbers for primality checking" },
+
+    OPT_SECTION("Output"),
+    { "generate", OPT_GENERATE, '-', "Generate a prime" },
+    { "safe", OPT_SAFE, '-',
+        "When used with -generate, generate a safe prime" },
+
+    OPT_PROV_OPTIONS,
+
+    OPT_PARAMETERS(),
+    { "number", 0, 0, "Number(s) to check for primality if not generating" },
+    { NULL }
+};
+
+int prime_main(int argc, char **argv)
+{
+    BIGNUM *bn = NULL;
+    int hex = 0, generate = 0, bits = 0, safe = 0, ret = 1, in_file = 0;
+    char *prog;
+    OPTION_CHOICE o;
+    char file_read_buf[BUFSIZE] = { 0 };
+    BIO *in = NULL;
+
+    prog = opt_init(argc, argv, prime_options);
+    while ((o = opt_next()) != OPT_EOF) {
+        switch (o) {
+        case OPT_EOF:
+        case OPT_ERR:
+        opthelp:
+            BIO_printf(bio_err, "%s: Use -help for summary.\n", prog);
+            goto end;
+        case OPT_HELP:
+            opt_help(prime_options);
+            ret = 0;
+            goto end;
+        case OPT_HEX:
             hex = 1;
-        else if (!strcmp(*argv, "-generate"))
+            break;
+        case OPT_GENERATE:
             generate = 1;
-        else if (!strcmp(*argv, "-bits"))
-            if (--argc < 1)
-                goto bad;
-            else
-                bits = atoi(*++argv);
-        else if (!strcmp(*argv, "-safe"))
+            break;
+        case OPT_BITS:
+            bits = atoi(opt_arg());
+            break;
+        case OPT_SAFE:
             safe = 1;
-        else if (!strcmp(*argv, "-checks"))
-            if (--argc < 1)
-                goto bad;
-            else
-                checks = atoi(*++argv);
-        else {
-            BIO_printf(bio_err, "Unknown option '%s'\n", *argv);
-            goto bad;
+            break;
+        case OPT_CHECKS:
+            /* ignore parameter and argument */
+            opt_arg();
+            break;
+        case OPT_PROV_CASES:
+            if (!opt_provider(o))
+                goto end;
+            break;
+        case OPT_IN_FILE:
+            in_file = 1;
+            break;
         }
-        --argc;
-        ++argv;
     }
 
-    if (argv[0] == NULL && !generate) {
-        BIO_printf(bio_err, "No prime specified\n");
-        goto bad;
-    }
-
-    if ((bio_out = BIO_new(BIO_s_file())) != NULL) {
-        BIO_set_fp(bio_out, stdout, BIO_NOCLOSE);
-#ifdef OPENSSL_SYS_VMS
-        {
-            BIO *tmpbio = BIO_new(BIO_f_linebuffer());
-            bio_out = BIO_push(tmpbio, bio_out);
-        }
-#endif
+    /* Optional arguments are numbers to check. */
+    if (generate && !opt_check_rest_arg(NULL))
+        goto opthelp;
+    argc = opt_num_rest();
+    argv = opt_rest();
+    if (!generate && argc == 0) {
+        BIO_printf(bio_err, "Missing number (s) to check\n");
+        goto opthelp;
     }
 
     if (generate) {
         char *s;
 
         if (!bits) {
-            BIO_printf(bio_err, "Specifiy the number of bits.\n");
-            return 1;
+            BIO_printf(bio_err, "Specify the number of bits.\n");
+            goto end;
         }
         bn = BN_new();
-        BN_generate_prime_ex(bn, bits, safe, NULL, NULL, NULL);
+        if (bn == NULL) {
+            BIO_printf(bio_err, "Out of memory.\n");
+            goto end;
+        }
+        if (!BN_generate_prime_ex(bn, bits, safe, NULL, NULL, NULL)) {
+            BIO_printf(bio_err, "Failed to generate prime.\n");
+            goto end;
+        }
         s = hex ? BN_bn2hex(bn) : BN_bn2dec(bn);
+        if (s == NULL) {
+            BIO_printf(bio_err, "Out of memory.\n");
+            goto end;
+        }
         BIO_printf(bio_out, "%s\n", s);
         OPENSSL_free(s);
     } else {
-        int r;
+        for (; *argv; argv++) {
+            int bytes_read = 0;
 
-        if (hex)
-            r = BN_hex2bn(&bn, argv[0]);
-        else
-            r = BN_dec2bn(&bn, argv[0]);
+            if (!in_file) {
+                process_num(argv[0], hex);
+            } else {
+                in = bio_open_default_quiet(argv[0], 'r', 0);
+                if (in == NULL) {
+                    BIO_printf(bio_err, "Error opening file %s\n", argv[0]);
+                    continue;
+                }
 
-        if(!r) {
-            BIO_printf(bio_err, "Failed to process value (%s)\n", argv[0]);
-            goto end;
+                while ((bytes_read = BIO_get_line(in, file_read_buf, BUFSIZE)) > 0) {
+                    size_t valid_digits_length;
+
+                    /* Number is too long. Discard remainder of the line */
+                    if (bytes_read == BUFSIZE - 1 && file_read_buf[BUFSIZE - 2] != '\n') {
+                        BIO_printf(bio_err, "Value in %s is over the maximum size (%d digits)\n",
+                            argv[0], BUFSIZE - 2);
+                        while (BIO_get_line(in, file_read_buf, BUFSIZE) == BUFSIZE - 1)
+                            ;
+                        continue;
+                    }
+
+                    valid_digits_length = strspn(file_read_buf, "1234567890abcdefABCDEF");
+                    file_read_buf[valid_digits_length] = '\0';
+
+                    process_num(file_read_buf, hex);
+                }
+
+                if (bytes_read < 0)
+                    BIO_printf(bio_err, "Read error in %s\n", argv[0]);
+
+                BIO_free(in);
+            }
         }
-
-        BN_print(bio_out, bn);
-        BIO_printf(bio_out, " is %sprime\n",
-                   BN_is_prime_ex(bn, checks, NULL, NULL) ? "" : "not ");
     }
 
- end:
+    ret = 0;
+end:
     BN_free(bn);
-    BIO_free_all(bio_out);
-
-    return 0;
-
- bad:
-    BIO_printf(bio_err, "options are\n");
-    BIO_printf(bio_err, "%-14s hex\n", "-hex");
-    BIO_printf(bio_err, "%-14s number of checks\n", "-checks <n>");
-    BIO_printf(bio_err, "%-14s generate prime\n", "-generate");
-    BIO_printf(bio_err, "%-14s number of bits\n", "-bits <n>");
-    BIO_printf(bio_err, "%-14s safe prime\n", "-safe");
-    return 1;
+    return ret;
 }

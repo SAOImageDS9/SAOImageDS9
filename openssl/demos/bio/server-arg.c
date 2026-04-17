@@ -1,5 +1,11 @@
-/* NOCW */
-/* demos/bio/server-arg.c */
+/*
+ * Copyright 2013-2025 The OpenSSL Project Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License 2.0 (the "License").  You may not use
+ * this file except in compliance with the License.  You can obtain a copy
+ * in the file LICENSE in the source distribution or at
+ * https://www.openssl.org/source/license.html
+ */
 
 /*
  * A minimal program to serve an SSL connection. It uses blocking. It use the
@@ -8,28 +14,26 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 #include <signal.h>
+#include <stdlib.h>
 #include <openssl/err.h>
 #include <openssl/ssl.h>
 
 int main(int argc, char *argv[])
 {
     char *port = "*:4433";
-    BIO *ssl_bio, *tmp;
+    BIO *ssl_bio = NULL;
+    BIO *tmp;
     SSL_CTX *ctx;
     SSL_CONF_CTX *cctx;
     char buf[512];
     BIO *in = NULL;
-    int ret = 1, i;
+    int ret = EXIT_FAILURE, i;
     char **args = argv + 1;
     int nargs = argc - 1;
 
-    SSL_load_error_strings();
-
-    /* Add ciphers and message digests */
-    OpenSSL_add_ssl_algorithms();
-
-    ctx = SSL_CTX_new(SSLv23_server_method());
+    ctx = SSL_CTX_new(TLS_server_method());
 
     cctx = SSL_CONF_CTX_new();
     SSL_CONF_CTX_set_flags(cctx, SSL_CONF_FLAG_SERVER);
@@ -52,7 +56,7 @@ int main(int argc, char *argv[])
         if (rv > 0)
             continue;
         /* Otherwise application specific argument processing */
-        if (!strcmp(*args, "-port")) {
+        if (strcmp(*args, "-port") == 0) {
             port = args[1];
             if (port == NULL) {
                 fprintf(stderr, "Missing -port argument\n");
@@ -72,7 +76,7 @@ int main(int argc, char *argv[])
         ERR_print_errors_fp(stderr);
         goto err;
     }
-#if 0
+#ifdef ITERATE_CERTS
     /*
      * Demo of how to iterate over all certificates in an SSL_CTX structure.
      */
@@ -83,7 +87,7 @@ int main(int argc, char *argv[])
         while (rv) {
             X509 *x = SSL_CTX_get0_certificate(ctx);
             X509_NAME_print_ex_fp(stdout, X509_get_subject_name(x), 0,
-                                  XN_FLAG_ONELINE);
+                XN_FLAG_ONELINE);
             printf("\n");
             rv = SSL_CTX_set_current_cert(ctx, SSL_CERT_SET_NEXT);
         }
@@ -102,8 +106,9 @@ int main(int argc, char *argv[])
      * Basically it means the SSL BIO will be automatically setup
      */
     BIO_set_accept_bios(in, ssl_bio);
+    ssl_bio = NULL;
 
- again:
+again:
     /*
      * The first call will setup the accept socket, and the second will get a
      * socket.  In this loop, the first actual accept will occur in the
@@ -132,13 +137,11 @@ int main(int argc, char *argv[])
         fflush(stdout);
     }
 
-    ret = 0;
- err:
-    if (ret) {
+    ret = EXIT_SUCCESS;
+err:
+    if (ret != EXIT_SUCCESS)
         ERR_print_errors_fp(stderr);
-    }
-    if (in != NULL)
-        BIO_free(in);
-    exit(ret);
-    return (!ret);
+    BIO_free(in);
+    BIO_free_all(ssl_bio);
+    return ret;
 }

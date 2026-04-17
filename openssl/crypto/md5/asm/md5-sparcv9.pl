@@ -1,12 +1,19 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2012-2025 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 
 # ====================================================================
-# Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
+# Written by Andy Polyakov, @dot-asm, initially for use in the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
-# details see http://www.openssl.org/~appro/cryptogams/.
+# details see https://github.com/dot-asm/cryptogams/.
 #
-# Hardware SPARC T4 support by David S. Miller <davem@davemloft.net>.
+# Hardware SPARC T4 support by David S. Miller.
 # ====================================================================
 
 # MD5 for SPARCv9, 6.9 cycles per byte on UltraSPARC, >40% faster than
@@ -17,8 +24,10 @@
 # single-process result on 8-core processor, or ~11GBps per 2.85GHz
 # socket.
 
-$output=shift;
-open STDOUT,">$output";
+# $output is the last argument if it looks like a file (it has an extension)
+$output = $#ARGV >= 0 && $ARGV[$#ARGV] =~ m|\.\w+$| ? pop : undef;
+
+$output and open STDOUT,">$output";
 
 use integer;
 
@@ -194,7 +203,10 @@ ___
 }
 
 $code.=<<___;
-#include "sparc_arch.h"
+#ifndef __ASSEMBLER__
+# define __ASSEMBLER__ 1
+#endif
+#include "crypto/sparc_arch.h"
 
 #ifdef __arch64__
 .register	%g2,#scratch
@@ -207,9 +219,9 @@ $code.=<<___;
 SPARC_PIC_THUNK(%g1)
 #endif
 
-.globl	md5_block_asm_data_order
+.globl	ossl_md5_block_asm_data_order
 .align	32
-md5_block_asm_data_order:
+ossl_md5_block_asm_data_order:
 	SPARC_LOAD_ADDRESS_LEAF(OPENSSL_sparcv9cap_P,%g1,%g5)
 	ld	[%g1+4],%g1		! OPENSSL_sparcv9cap_P[1]
 
@@ -235,7 +247,7 @@ md5_block_asm_data_order:
 	ldd	[%o1 + 0x20], %f16
 	ldd	[%o1 + 0x28], %f18
 	ldd	[%o1 + 0x30], %f20
-	subcc	%o2, 1, %o2		! done yet? 
+	subcc	%o2, 1, %o2		! done yet?
 	ldd	[%o1 + 0x38], %f22
 	add	%o1, 0x40, %o1
 	prefetch [%o1 + 63], 20
@@ -362,16 +374,16 @@ $code.=<<___;
 	wr	%g0,$saved_asi,%asi
 	ret
 	restore
-.type	md5_block_asm_data_order,#function
-.size	md5_block_asm_data_order,(.-md5_block_asm_data_order)
+.type	ossl_md5_block_asm_data_order,#function
+.size	ossl_md5_block_asm_data_order,(.-ossl_md5_block_asm_data_order)
 
-.asciz	"MD5 block transform for SPARCv9, CRYPTOGAMS by <appro\@openssl.org>"
+.asciz	"MD5 block transform for SPARCv9, CRYPTOGAMS by <https://github.com/dot-asm>"
 .align	4
 ___
 
 # Purpose of these subroutines is to explicitly encode VIS instructions,
 # so that one can compile the module without having to specify VIS
-# extentions on compiler command line, e.g. -xarch=v9 vs. -xarch=v9a.
+# extensions on compiler command line, e.g. -xarch=v9 vs. -xarch=v9a.
 # Idea is to reserve for option to produce "universal" binary and let
 # programmer detect if current CPU is VIS capable at run-time.
 sub unvis {
@@ -427,4 +439,4 @@ foreach (split("\n",$code)) {
 	print $_,"\n";
 }
 
-close STDOUT;
+close STDOUT or die "error closing STDOUT: $!";

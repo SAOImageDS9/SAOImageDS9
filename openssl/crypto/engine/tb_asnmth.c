@@ -1,60 +1,19 @@
-/* ====================================================================
- * Copyright (c) 2006-2018 The OpenSSL Project.  All rights reserved.
+/*
+ * Copyright 2006-2025 The OpenSSL Project Authors. All Rights Reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. All advertising materials mentioning features or use of this
- *    software must display the following acknowledgment:
- *    "This product includes software developed by the OpenSSL Project
- *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"
- *
- * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to
- *    endorse or promote products derived from this software without
- *    prior written permission. For written permission, please contact
- *    licensing@OpenSSL.org.
- *
- * 5. Products derived from this software may not be called "OpenSSL"
- *    nor may "OpenSSL" appear in their names without prior written
- *    permission of the OpenSSL Project.
- *
- * 6. Redistributions of any form whatsoever must retain the following
- *    acknowledgment:
- *    "This product includes software developed by the OpenSSL Project
- *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"
- *
- * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY
- * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR
- * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE.
- * ====================================================================
- *
- * This product includes cryptographic software written by Eric Young
- * (eay@cryptsoft.com).  This product includes software written by Tim
- * Hudson (tjh@cryptsoft.com).
- *
+ * Licensed under the Apache License 2.0 (the "License").  You may not use
+ * this file except in compliance with the License.  You can obtain a copy
+ * in the file LICENSE in the source distribution or at
+ * https://www.openssl.org/source/license.html
  */
 
-#include "eng_int.h"
-#include "asn1_locl.h"
+/* We need to use some engine deprecated APIs */
+#define OPENSSL_SUPPRESS_DEPRECATED
+
+#include "internal/e_os.h"
+#include "eng_local.h"
 #include <openssl/evp.h>
+#include "crypto/asn1.h"
 
 /*
  * If this symbol is defined then ENGINE_get_pkey_asn1_meth_engine(), the
@@ -83,8 +42,8 @@ int ENGINE_register_pkey_asn1_meths(ENGINE *e)
         int num_nids = e->pkey_asn1_meths(e, NULL, &nids, 0);
         if (num_nids > 0)
             return engine_table_register(&pkey_asn1_meth_table,
-                                         engine_unregister_all_pkey_asn1_meths,
-                                         e, nids, num_nids, 0);
+                engine_unregister_all_pkey_asn1_meths,
+                e, nids, num_nids, 0);
     }
     return 1;
 }
@@ -104,8 +63,8 @@ int ENGINE_set_default_pkey_asn1_meths(ENGINE *e)
         int num_nids = e->pkey_asn1_meths(e, NULL, &nids, 0);
         if (num_nids > 0)
             return engine_table_register(&pkey_asn1_meth_table,
-                                         engine_unregister_all_pkey_asn1_meths,
-                                         e, nids, num_nids, 1);
+                engine_unregister_all_pkey_asn1_meths,
+                e, nids, num_nids, 1);
     }
     return 1;
 }
@@ -117,7 +76,8 @@ int ENGINE_set_default_pkey_asn1_meths(ENGINE *e)
  */
 ENGINE *ENGINE_get_pkey_asn1_meth_engine(int nid)
 {
-    return engine_table_select(&pkey_asn1_meth_table, nid);
+    return ossl_engine_table_select(&pkey_asn1_meth_table, nid,
+        OPENSSL_FILE, OPENSSL_LINE);
 }
 
 /*
@@ -129,8 +89,7 @@ const EVP_PKEY_ASN1_METHOD *ENGINE_get_pkey_asn1_meth(ENGINE *e, int nid)
     EVP_PKEY_ASN1_METHOD *ret;
     ENGINE_PKEY_ASN1_METHS_PTR fn = ENGINE_get_pkey_asn1_meths(e);
     if (!fn || !fn(e, &ret, NULL, nid)) {
-        ENGINEerr(ENGINE_F_ENGINE_GET_PKEY_ASN1_METH,
-                  ENGINE_R_UNIMPLEMENTED_PUBLIC_KEY_METHOD);
+        ERR_raise(ERR_LIB_ENGINE, ENGINE_R_UNIMPLEMENTED_PUBLIC_KEY_METHOD);
         return NULL;
     }
     return ret;
@@ -178,8 +137,8 @@ void engine_pkey_asn1_meths_free(ENGINE *e)
  */
 
 const EVP_PKEY_ASN1_METHOD *ENGINE_get_pkey_asn1_meth_str(ENGINE *e,
-                                                          const char *str,
-                                                          int len)
+    const char *str,
+    int len)
 {
     int i, nidcount;
     const int *nids;
@@ -187,12 +146,13 @@ const EVP_PKEY_ASN1_METHOD *ENGINE_get_pkey_asn1_meth_str(ENGINE *e,
     if (!e->pkey_asn1_meths)
         return NULL;
     if (len == -1)
-        len = strlen(str);
+        len = (int)strlen(str);
     nidcount = e->pkey_asn1_meths(e, NULL, &nids, 0);
     for (i = 0; i < nidcount; i++) {
         e->pkey_asn1_meths(e, &ameth, NULL, nids[i]);
-        if (((int)strlen(ameth->pem_str) == len) &&
-            !strncasecmp(ameth->pem_str, str, len))
+        if (ameth != NULL
+            && ((int)strlen(ameth->pem_str) == len)
+            && OPENSSL_strncasecmp(ameth->pem_str, str, len) == 0)
             return ameth;
     }
     return NULL;
@@ -215,8 +175,9 @@ static void look_str_cb(int nid, STACK_OF(ENGINE) *sk, ENGINE *def, void *arg)
         ENGINE *e = sk_ENGINE_value(sk, i);
         EVP_PKEY_ASN1_METHOD *ameth;
         e->pkey_asn1_meths(e, &ameth, NULL, nid);
-        if (ameth != NULL && ((int)strlen(ameth->pem_str) == lk->len) &&
-            !strncasecmp(ameth->pem_str, lk->str, lk->len)) {
+        if (ameth != NULL
+            && ((int)strlen(ameth->pem_str) == lk->len)
+            && OPENSSL_strncasecmp(ameth->pem_str, lk->str, lk->len) == 0) {
             lk->e = e;
             lk->ameth = ameth;
             return;
@@ -225,22 +186,36 @@ static void look_str_cb(int nid, STACK_OF(ENGINE) *sk, ENGINE *def, void *arg)
 }
 
 const EVP_PKEY_ASN1_METHOD *ENGINE_pkey_asn1_find_str(ENGINE **pe,
-                                                      const char *str,
-                                                      int len)
+    const char *str,
+    int len)
 {
     ENGINE_FIND_STR fstr;
     fstr.e = NULL;
     fstr.ameth = NULL;
     fstr.str = str;
     fstr.len = len;
-    CRYPTO_w_lock(CRYPTO_LOCK_ENGINE);
+
+    if (!RUN_ONCE(&engine_lock_init, do_engine_lock_init)) {
+        /* Maybe this should be raised in do_engine_lock_init() */
+        ERR_raise(ERR_LIB_ENGINE, ERR_R_CRYPTO_LIB);
+        return NULL;
+    }
+
+    if (!CRYPTO_THREAD_read_lock(global_engine_lock))
+        return NULL;
     engine_table_doall(pkey_asn1_meth_table, look_str_cb, &fstr);
     /* If found obtain a structural reference to engine */
-    if (fstr.e) {
-        fstr.e->struct_ref++;
-        engine_ref_debug(fstr.e, 0, 1)
+    if (fstr.e != NULL) {
+        int ref;
+
+        if (!CRYPTO_UP_REF(&fstr.e->struct_ref, &ref)) {
+            CRYPTO_THREAD_unlock(global_engine_lock);
+            ERR_raise(ERR_LIB_ENGINE, ERR_R_CRYPTO_LIB);
+            return NULL;
+        }
+        ENGINE_REF_PRINT(fstr.e, 0, 1);
     }
     *pe = fstr.e;
-    CRYPTO_w_unlock(CRYPTO_LOCK_ENGINE);
+    CRYPTO_THREAD_unlock(global_engine_lock);
     return fstr.ameth;
 }

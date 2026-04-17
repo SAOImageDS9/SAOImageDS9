@@ -1,3 +1,10 @@
+! Copyright 2005-2026 The OpenSSL Project Authors. All Rights Reserved.
+!
+! Licensed under the Apache License 2.0 (the "License").  You may not use
+! this file except in compliance with the License.  You can obtain a copy
+! in the file LICENSE in the source distribution or at
+! https://www.openssl.org/source/license.html
+
 #if defined(__SUNPRO_C) && defined(__sparcv9)
 # define ABI64  /* They've said -xarch=v9 at command line */
 #elif defined(__GNUC__) && defined(__arch64__)
@@ -15,156 +22,6 @@
 #endif
 
 .text
-.align	32
-.global	OPENSSL_wipe_cpu
-.type	OPENSSL_wipe_cpu,#function
-! Keep in mind that this does not excuse us from wiping the stack!
-! This routine wipes registers, but not the backing store [which
-! resides on the stack, toward lower addresses]. To facilitate for
-! stack wiping I return pointer to the top of stack of the *caller*.
-OPENSSL_wipe_cpu:
-	save	%sp,FRAME,%sp
-	nop
-#ifdef __sun
-#include <sys/trap.h>
-	ta	ST_CLEAN_WINDOWS
-#else
-	call	.walk.reg.wins
-#endif
-	nop
-	call	.PIC.zero.up
-	mov	.zero-(.-4),%o0
-	ld	[%o0],%f0
-	ld	[%o0],%f1
-
-	subcc	%g0,1,%o0
-	! Following is V9 "rd %ccr,%o0" instruction. However! V8
-	! specification says that it ("rd %asr2,%o0" in V8 terms) does
-	! not cause illegal_instruction trap. It therefore can be used
-	! to determine if the CPU the code is executing on is V8- or
-	! V9-compliant, as V9 returns a distinct value of 0x99,
-	! "negative" and "borrow" bits set in both %icc and %xcc.
-	.word	0x91408000	!rd	%ccr,%o0
-	cmp	%o0,0x99
-	bne	.v8
-	nop
-			! Even though we do not use %fp register bank,
-			! we wipe it as memcpy might have used it...
-			.word	0xbfa00040	!fmovd	%f0,%f62
-			.word	0xbba00040	!...
-			.word	0xb7a00040
-			.word	0xb3a00040
-			.word	0xafa00040
-			.word	0xaba00040
-			.word	0xa7a00040
-			.word	0xa3a00040
-			.word	0x9fa00040
-			.word	0x9ba00040
-			.word	0x97a00040
-			.word	0x93a00040
-			.word	0x8fa00040
-			.word	0x8ba00040
-			.word	0x87a00040
-			.word	0x83a00040	!fmovd	%f0,%f32
-.v8:			fmovs	%f1,%f31
-	clr	%o0
-			fmovs	%f0,%f30
-	clr	%o1
-			fmovs	%f1,%f29
-	clr	%o2
-			fmovs	%f0,%f28
-	clr	%o3
-			fmovs	%f1,%f27
-	clr	%o4
-			fmovs	%f0,%f26
-	clr	%o5
-			fmovs	%f1,%f25
-	clr	%o7
-			fmovs	%f0,%f24
-	clr	%l0
-			fmovs	%f1,%f23
-	clr	%l1
-			fmovs	%f0,%f22
-	clr	%l2
-			fmovs	%f1,%f21
-	clr	%l3
-			fmovs	%f0,%f20
-	clr	%l4
-			fmovs	%f1,%f19
-	clr	%l5
-			fmovs	%f0,%f18
-	clr	%l6
-			fmovs	%f1,%f17
-	clr	%l7
-			fmovs	%f0,%f16
-	clr	%i0
-			fmovs	%f1,%f15
-	clr	%i1
-			fmovs	%f0,%f14
-	clr	%i2
-			fmovs	%f1,%f13
-	clr	%i3
-			fmovs	%f0,%f12
-	clr	%i4
-			fmovs	%f1,%f11
-	clr	%i5
-			fmovs	%f0,%f10
-	clr	%g1
-			fmovs	%f1,%f9
-	clr	%g2
-			fmovs	%f0,%f8
-	clr	%g3
-			fmovs	%f1,%f7
-	clr	%g4
-			fmovs	%f0,%f6
-	clr	%g5
-			fmovs	%f1,%f5
-			fmovs	%f0,%f4
-			fmovs	%f1,%f3
-			fmovs	%f0,%f2
-
-	add	%fp,BIAS,%i0	! return pointer to caller´s top of stack
-
-	ret
-	restore
-
-.zero:	.long	0x0,0x0
-.PIC.zero.up:
-	retl
-	add	%o0,%o7,%o0
-#ifdef DEBUG
-.global	walk_reg_wins
-.type	walk_reg_wins,#function
-walk_reg_wins:
-#endif
-.walk.reg.wins:
-	save	%sp,FRAME,%sp
-	cmp	%i7,%o7
-	be	2f
-	clr	%o0
-	cmp	%o7,0	! compiler never cleans %o7...
-	be	1f	! could have been a leaf function...
-	clr	%o1
-	call	.walk.reg.wins
-	nop
-1:	clr	%o2
-	clr	%o3
-	clr	%o4
-	clr	%o5
-	clr	%o7
-	clr	%l0
-	clr	%l1
-	clr	%l2
-	clr	%l3
-	clr	%l4
-	clr	%l5
-	clr	%l6
-	clr	%l7
-	add	%o0,1,%i0	! used for debugging
-2:	ret
-	restore
-.size	OPENSSL_wipe_cpu,.-OPENSSL_wipe_cpu
-
 .global	OPENSSL_atomic_add
 .type	OPENSSL_atomic_add,#function
 .align	32
@@ -287,7 +144,7 @@ _sparcv9_vis1_instrument:
 	sub	%o3,%o2,%o2
 	sub	%o4,%o3,%o3
 
-	! find minumum value
+	! find minimum value
 	cmp	%o0,%o1
 	.word	0x38680002	!bgu,a	%xcc,.+8
 	mov	%o1,%o0
@@ -344,6 +201,14 @@ _sparcv9_random:
 	.word	0x91b002a0	!random	%o0
 .type	_sparcv9_random,#function
 .size	_sparcv9_random,.-_sparcv9_vis3_probe
+
+.global	_sparcv9_fjaesx_probe
+.align	8
+_sparcv9_fjaesx_probe:
+	.word	0x81b09206	!faesencx %f2,%f6,%f0
+	retl
+	nop
+.size	_sparcv9_fjaesx_probe,.-_sparcv9_fjaesx_probe
 
 .global	OPENSSL_cleanse
 .align	32
@@ -428,8 +293,41 @@ OPENSSL_cleanse:
 .type	OPENSSL_cleanse,#function
 .size	OPENSSL_cleanse,.-OPENSSL_cleanse
 
+.global	CRYPTO_memcmp
+.align	16
+CRYPTO_memcmp:
+	cmp	%o2,0
+#ifdef ABI64
+	beq,pn	%xcc,.Lno_data
+#else
+	beq	.Lno_data
+#endif
+	xor	%g1,%g1,%g1
+	nop
+
+.Loop_cmp:
+	ldub	[%o0],%o3
+	add	%o0,1,%o0
+	ldub	[%o1],%o4
+	add	%o1,1,%o1
+	subcc	%o2,1,%o2
+	xor	%o3,%o4,%o4
+#ifdef ABI64
+	bnz	%xcc,.Loop_cmp
+#else
+	bnz	.Loop_cmp
+#endif
+	or	%o4,%g1,%g1
+
+	sub	%g0,%g1,%g1
+	srl	%g1,31,%g1
+.Lno_data:
+	retl
+	mov	%g1,%o0
+.type	CRYPTO_memcmp,#function
+.size	CRYPTO_memcmp,.-CRYPTO_memcmp
+
 .global	_sparcv9_vis1_instrument_bus
-.weak	_sparcv9_vis1_instrument_bus
 .align	8
 _sparcv9_vis1_instrument_bus:
 	mov	%o1,%o3					! save cnt
@@ -468,7 +366,6 @@ _sparcv9_vis1_instrument_bus:
 .size	_sparcv9_vis1_instrument_bus,.-_sparcv9_vis1_instrument_bus
 
 .global	_sparcv9_vis1_instrument_bus2
-.weak	_sparcv9_vis1_instrument_bus2
 .align	8
 _sparcv9_vis1_instrument_bus2:
 	mov	%o1,%o3					! save cnt

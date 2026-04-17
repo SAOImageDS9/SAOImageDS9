@@ -1,127 +1,71 @@
-/* dso_vms.c */
 /*
- * Written by Richard Levitte (richard@levitte.org) for the OpenSSL project
- * 2000.
- */
-/* ====================================================================
- * Copyright (c) 2000 The OpenSSL Project.  All rights reserved.
+ * Copyright 2000-2021 The OpenSSL Project Authors. All Rights Reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. All advertising materials mentioning features or use of this
- *    software must display the following acknowledgment:
- *    "This product includes software developed by the OpenSSL Project
- *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"
- *
- * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to
- *    endorse or promote products derived from this software without
- *    prior written permission. For written permission, please contact
- *    licensing@OpenSSL.org.
- *
- * 5. Products derived from this software may not be called "OpenSSL"
- *    nor may "OpenSSL" appear in their names without prior written
- *    permission of the OpenSSL Project.
- *
- * 6. Redistributions of any form whatsoever must retain the following
- *    acknowledgment:
- *    "This product includes software developed by the OpenSSL Project
- *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"
- *
- * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY
- * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR
- * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE.
- * ====================================================================
- *
- * This product includes cryptographic software written by Eric Young
- * (eay@cryptsoft.com).  This product includes software written by Tim
- * Hudson (tjh@cryptsoft.com).
- *
+ * Licensed under the Apache License 2.0 (the "License").  You may not use
+ * this file except in compliance with the License.  You can obtain a copy
+ * in the file LICENSE in the source distribution or at
+ * https://www.openssl.org/source/license.html
  */
 
-#include <stdio.h>
-#include <string.h>
+#include "dso_local.h"
+
+#ifdef OPENSSL_SYS_VMS
+
+#pragma message disable DOLLARID
 #include <errno.h>
-#include "cryptlib.h"
-#include <openssl/dso.h>
-
-#ifndef OPENSSL_SYS_VMS
-DSO_METHOD *DSO_METHOD_vms(void)
-{
-    return NULL;
-}
-#else
-
-# pragma message disable DOLLARID
-# include <rms.h>
-# include <lib$routines.h>
-# include <stsdef.h>
-# include <descrip.h>
-# include <starlet.h>
-# include "vms_rms.h"
+#include <rms.h>
+#include <lib$routines.h>
+#include <libfisdef.h>
+#include <stsdef.h>
+#include <descrip.h>
+#include <starlet.h>
+#include "../vms_rms.h"
 
 /* Some compiler options may mask the declaration of "_malloc32". */
-# if __INITIAL_POINTER_SIZE && defined _ANSI_C_SOURCE
-#  if __INITIAL_POINTER_SIZE == 64
-#   pragma pointer_size save
-#   pragma pointer_size 32
+#define DSO_MALLOC OPENSSL_malloc
+#if __INITIAL_POINTER_SIZE && defined _ANSI_C_SOURCE
+#if __INITIAL_POINTER_SIZE == 64
+#pragma pointer_size save
+#pragma pointer_size 32
 void *_malloc32(__size_t);
-#   pragma pointer_size restore
-#  endif                        /* __INITIAL_POINTER_SIZE == 64 */
-# endif                         /* __INITIAL_POINTER_SIZE && defined
-                                 * _ANSI_C_SOURCE */
+static void *dso_malloc(__size_t num, const char *file, int line)
+{
+    void *ret = _malloc32(num);
+    if (ret == NULL && (file != NULL || line != 0)) {
+        ERR_new();
+        ERR_set_debug(file, line, NULL);
+        ERR_set_error(ERR_LIB_DSO, ERR_R_MALLOC_FAILURE, NULL);
+    }
+    return ret;
+}
+#undef DSO_MALLOC
+#define DSO_MALLOC(num) dso_malloc((num), OPENSSL_FILE, OPENSSL_LINE)
+#pragma pointer_size restore
+#endif /* __INITIAL_POINTER_SIZE == 64 [else] */
+#endif /* __INITIAL_POINTER_SIZE && defined \
+        * _ANSI_C_SOURCE */
 
-# pragma message disable DOLLARID
+#pragma message disable DOLLARID
 
 static int vms_load(DSO *dso);
 static int vms_unload(DSO *dso);
-static void *vms_bind_var(DSO *dso, const char *symname);
 static DSO_FUNC_TYPE vms_bind_func(DSO *dso, const char *symname);
-# if 0
-static int vms_unbind_var(DSO *dso, char *symname, void *symptr);
-static int vms_unbind_func(DSO *dso, char *symname, DSO_FUNC_TYPE symptr);
-static int vms_init(DSO *dso);
-static int vms_finish(DSO *dso);
-static long vms_ctrl(DSO *dso, int cmd, long larg, void *parg);
-# endif
 static char *vms_name_converter(DSO *dso, const char *filename);
 static char *vms_merger(DSO *dso, const char *filespec1,
-                        const char *filespec2);
+    const char *filespec2);
 
 static DSO_METHOD dso_meth_vms = {
     "OpenSSL 'VMS' shared library method",
     vms_load,
-    NULL,                       /* unload */
-    vms_bind_var,
+    NULL, /* unload */
     vms_bind_func,
-/* For now, "unbind" doesn't exist */
-# if 0
-    NULL,                       /* unbind_var */
-    NULL,                       /* unbind_func */
-# endif
-    NULL,                       /* ctrl */
+    NULL, /* ctrl */
     vms_name_converter,
     vms_merger,
-    NULL,                       /* init */
-    NULL                        /* finish */
+    NULL, /* init */
+    NULL, /* finish */
+    NULL, /* pathbyaddr */
+    NULL /* globallookup */
 };
 
 /*
@@ -145,9 +89,9 @@ typedef struct dso_internal_st {
     char imagename[NAMX_MAXRSS + 1];
 } DSO_VMS_INTERNAL;
 
-DSO_METHOD *DSO_METHOD_vms(void)
+DSO_METHOD *DSO_METHOD_openssl(void)
 {
-    return (&dso_meth_vms);
+    return &dso_meth_vms;
 }
 
 static int vms_load(DSO *dso)
@@ -157,25 +101,28 @@ static int vms_load(DSO *dso)
     char *filename = DSO_convert_filename(dso, NULL);
 
 /* Ensure 32-bit pointer for "p", and appropriate malloc() function. */
-# if __INITIAL_POINTER_SIZE == 64
-#  define DSO_MALLOC _malloc32
-#  pragma pointer_size save
-#  pragma pointer_size 32
-# else                          /* __INITIAL_POINTER_SIZE == 64 */
-#  define DSO_MALLOC OPENSSL_malloc
-# endif                         /* __INITIAL_POINTER_SIZE == 64 [else] */
+#if __INITIAL_POINTER_SIZE && defined _ANSI_C_SOURCE
+#if __INITIAL_POINTER_SIZE == 64
+#pragma pointer_size save
+#pragma pointer_size 32
+#endif /* __INITIAL_POINTER_SIZE == 64 */
+#endif /* __INITIAL_POINTER_SIZE && defined \
+        * _ANSI_C_SOURCE */
 
     DSO_VMS_INTERNAL *p = NULL;
 
-# if __INITIAL_POINTER_SIZE == 64
-#  pragma pointer_size restore
-# endif                         /* __INITIAL_POINTER_SIZE == 64 */
+#if __INITIAL_POINTER_SIZE && defined _ANSI_C_SOURCE
+#if __INITIAL_POINTER_SIZE == 64
+#pragma pointer_size restore
+#endif /* __INITIAL_POINTER_SIZE == 64 */
+#endif /* __INITIAL_POINTER_SIZE && defined \
+        * _ANSI_C_SOURCE */
 
-    const char *sp1, *sp2;      /* Search result */
-    const char *ext = NULL;	/* possible extension to add */
+    const char *sp1, *sp2; /* Search result */
+    const char *ext = NULL; /* possible extension to add */
 
     if (filename == NULL) {
-        DSOerr(DSO_F_VMS_LOAD, DSO_R_NO_FILENAME);
+        ERR_raise(ERR_LIB_DSO, DSO_R_NO_FILENAME);
         goto err;
     }
 
@@ -211,7 +158,7 @@ static int vms_load(DSO *dso)
     if (sp1 == NULL)
         sp1 = filename;
     else
-        sp1++;                  /* The byte after the found character */
+        sp1++; /* The byte after the found character */
     /* Now, let's see if there's a type, and save the position in sp2 */
     sp2 = strchr(sp1, '.');
     /*
@@ -238,15 +185,13 @@ static int vms_load(DSO *dso)
     /* Check that we won't get buffer overflows */
     if (sp2 - sp1 > FILENAME_MAX
         || (sp1 - filename) + strlen(sp2) > FILENAME_MAX) {
-        DSOerr(DSO_F_VMS_LOAD, DSO_R_FILENAME_TOO_BIG);
+        ERR_raise(ERR_LIB_DSO, DSO_R_FILENAME_TOO_BIG);
         goto err;
     }
 
-    p = DSO_MALLOC(sizeof(DSO_VMS_INTERNAL));
-    if (p == NULL) {
-        DSOerr(DSO_F_VMS_LOAD, ERR_R_MALLOC_FAILURE);
+    p = DSO_MALLOC(sizeof(*p));
+    if (p == NULL)
         goto err;
-    }
 
     strncpy(p->filename, sp1, sp2 - sp1);
     p->filename[sp2 - sp1] = '\0';
@@ -270,20 +215,18 @@ static int vms_load(DSO *dso)
     p->imagename_dsc.dsc$a_pointer = p->imagename;
 
     if (!sk_void_push(dso->meth_data, (char *)p)) {
-        DSOerr(DSO_F_VMS_LOAD, DSO_R_STACK_ERROR);
+        ERR_raise(ERR_LIB_DSO, DSO_R_STACK_ERROR);
         goto err;
     }
 
     /* Success (for now, we lie.  We actually do not know...) */
     dso->loaded_filename = filename;
-    return (1);
- err:
+    return 1;
+err:
     /* Cleanup! */
-    if (p != NULL)
-        OPENSSL_free(p);
-    if (filename != NULL)
-        OPENSSL_free(filename);
-    return (0);
+    OPENSSL_free(p);
+    OPENSSL_free(filename);
+    return 0;
 }
 
 /*
@@ -295,19 +238,19 @@ static int vms_unload(DSO *dso)
 {
     DSO_VMS_INTERNAL *p;
     if (dso == NULL) {
-        DSOerr(DSO_F_VMS_UNLOAD, ERR_R_PASSED_NULL_PARAMETER);
-        return (0);
+        ERR_raise(ERR_LIB_DSO, ERR_R_PASSED_NULL_PARAMETER);
+        return 0;
     }
     if (sk_void_num(dso->meth_data) < 1)
-        return (1);
+        return 1;
     p = (DSO_VMS_INTERNAL *)sk_void_pop(dso->meth_data);
     if (p == NULL) {
-        DSOerr(DSO_F_VMS_UNLOAD, DSO_R_NULL_HANDLE);
-        return (0);
+        ERR_raise(ERR_LIB_DSO, DSO_R_NULL_HANDLE);
+        return 0;
     }
     /* Cleanup */
     OPENSSL_free(p);
-    return (1);
+    return 1;
 }
 
 /*
@@ -315,8 +258,8 @@ static int vms_unload(DSO *dso)
  * handler works (it makes this function return
  */
 static int do_find_symbol(DSO_VMS_INTERNAL *ptr,
-                          struct dsc$descriptor_s *symname_dsc, void **sym,
-                          unsigned long flags)
+    struct dsc$descriptor_s *symname_dsc, void **sym,
+    unsigned long flags)
 {
     /*
      * Make sure that signals are caught and returned instead of aborting the
@@ -327,48 +270,45 @@ static int do_find_symbol(DSO_VMS_INTERNAL *ptr,
 
     if (ptr->imagename_dsc.dsc$w_length)
         return lib$find_image_symbol(&ptr->filename_dsc,
-                                     symname_dsc, sym,
-                                     &ptr->imagename_dsc, flags);
+            symname_dsc, sym,
+            &ptr->imagename_dsc, flags);
     else
         return lib$find_image_symbol(&ptr->filename_dsc,
-                                     symname_dsc, sym, 0, flags);
+            symname_dsc, sym, 0, flags);
 }
 
+#ifndef LIB$M_FIS_MIXEDCASE
+#define LIB$M_FIS_MIXEDCASE (1 << 4);
+#endif
 void vms_bind_sym(DSO *dso, const char *symname, void **sym)
 {
     DSO_VMS_INTERNAL *ptr;
-    int status;
-# if 0
-    int flags = (1 << 4);       /* LIB$M_FIS_MIXEDCASE, but this symbol isn't
-                                 * defined in VMS older than 7.0 or so */
-# else
-    int flags = 0;
-# endif
+    int status = 0;
     struct dsc$descriptor_s symname_dsc;
 
 /* Arrange 32-bit pointer to (copied) string storage, if needed. */
-# if __INITIAL_POINTER_SIZE == 64
-#  define SYMNAME symname_32p
-#  pragma pointer_size save
-#  pragma pointer_size 32
+#if __INITIAL_POINTER_SIZE == 64
+#define SYMNAME symname_32p
+#pragma pointer_size save
+#pragma pointer_size 32
     char *symname_32p;
-#  pragma pointer_size restore
+#pragma pointer_size restore
     char symname_32[NAMX_MAXRSS + 1];
-# else                          /* __INITIAL_POINTER_SIZE == 64 */
-#  define SYMNAME ((char *) symname)
-# endif                         /* __INITIAL_POINTER_SIZE == 64 [else] */
+#else /* __INITIAL_POINTER_SIZE == 64 */
+#define SYMNAME ((char *)symname)
+#endif /* __INITIAL_POINTER_SIZE == 64 [else] */
 
     *sym = NULL;
 
     if ((dso == NULL) || (symname == NULL)) {
-        DSOerr(DSO_F_VMS_BIND_SYM, ERR_R_PASSED_NULL_PARAMETER);
+        ERR_raise(ERR_LIB_DSO, ERR_R_PASSED_NULL_PARAMETER);
         return;
     }
-# if __INITIAL_POINTER_SIZE == 64
+#if __INITIAL_POINTER_SIZE == 64
     /* Copy the symbol name to storage with a 32-bit pointer. */
     symname_32p = symname_32;
     strcpy(symname_32p, symname);
-# endif                         /* __INITIAL_POINTER_SIZE == 64 [else] */
+#endif /* __INITIAL_POINTER_SIZE == 64 [else] */
 
     symname_dsc.dsc$w_length = strlen(SYMNAME);
     symname_dsc.dsc$b_dtype = DSC$K_DTYPE_T;
@@ -376,20 +316,20 @@ void vms_bind_sym(DSO *dso, const char *symname, void **sym)
     symname_dsc.dsc$a_pointer = SYMNAME;
 
     if (sk_void_num(dso->meth_data) < 1) {
-        DSOerr(DSO_F_VMS_BIND_SYM, DSO_R_STACK_ERROR);
+        ERR_raise(ERR_LIB_DSO, DSO_R_STACK_ERROR);
         return;
     }
     ptr = (DSO_VMS_INTERNAL *)sk_void_value(dso->meth_data,
-                                            sk_void_num(dso->meth_data) - 1);
+        sk_void_num(dso->meth_data) - 1);
     if (ptr == NULL) {
-        DSOerr(DSO_F_VMS_BIND_SYM, DSO_R_NULL_HANDLE);
+        ERR_raise(ERR_LIB_DSO, DSO_R_NULL_HANDLE);
         return;
     }
 
-    if (dso->flags & DSO_FLAG_UPCASE_SYMBOL)
-        flags = 0;
+    status = do_find_symbol(ptr, &symname_dsc, sym, LIB$M_FIS_MIXEDCASE);
 
-    status = do_find_symbol(ptr, &symname_dsc, sym, flags);
+    if (!$VMS_STATUS_SUCCESS(status))
+        status = do_find_symbol(ptr, &symname_dsc, sym, 0);
 
     if (!$VMS_STATUS_SUCCESS(status)) {
         unsigned short length;
@@ -410,28 +350,19 @@ void vms_bind_sym(DSO *dso, const char *symname, void **sym)
         else {
             errstring[length] = '\0';
 
-            DSOerr(DSO_F_VMS_BIND_SYM, DSO_R_SYM_FAILURE);
             if (ptr->imagename_dsc.dsc$w_length)
-                ERR_add_error_data(9,
-                                   "Symbol ", symname,
-                                   " in ", ptr->filename,
-                                   " (", ptr->imagename, ")",
-                                   ": ", errstring);
+                ERR_raise_data(ERR_LIB_DSO, DSO_R_SYM_FAILURE,
+                    "Symbol %s in %s (%s): %s",
+                    symname, ptr->filename, ptr->imagename,
+                    errstring);
             else
-                ERR_add_error_data(6,
-                                   "Symbol ", symname,
-                                   " in ", ptr->filename, ": ", errstring);
+                ERR_raise_data(ERR_LIB_DSO, DSO_R_SYM_FAILURE,
+                    "Symbol %s in %s: %s",
+                    symname, ptr->filename, errstring);
         }
         return;
     }
     return;
-}
-
-static void *vms_bind_var(DSO *dso, const char *symname)
-{
-    void *sym = 0;
-    vms_bind_sym(dso, symname, &sym);
-    return sym;
 }
 
 static DSO_FUNC_TYPE vms_bind_func(DSO *dso, const char *symname)
@@ -442,7 +373,7 @@ static DSO_FUNC_TYPE vms_bind_func(DSO *dso, const char *symname)
 }
 
 static char *vms_merger(DSO *dso, const char *filespec1,
-                        const char *filespec2)
+    const char *filespec2)
 {
     int status;
     int filespec1len, filespec2len;
@@ -452,20 +383,20 @@ static char *vms_merger(DSO *dso, const char *filespec1,
     char *merged;
 
 /* Arrange 32-bit pointer to (copied) string storage, if needed. */
-# if __INITIAL_POINTER_SIZE == 64
-#  define FILESPEC1 filespec1_32p;
-#  define FILESPEC2 filespec2_32p;
-#  pragma pointer_size save
-#  pragma pointer_size 32
+#if __INITIAL_POINTER_SIZE == 64
+#define FILESPEC1 filespec1_32p;
+#define FILESPEC2 filespec2_32p;
+#pragma pointer_size save
+#pragma pointer_size 32
     char *filespec1_32p;
     char *filespec2_32p;
-#  pragma pointer_size restore
+#pragma pointer_size restore
     char filespec1_32[NAMX_MAXRSS + 1];
     char filespec2_32[NAMX_MAXRSS + 1];
-# else                          /* __INITIAL_POINTER_SIZE == 64 */
-#  define FILESPEC1 ((char *) filespec1)
-#  define FILESPEC2 ((char *) filespec2)
-# endif                         /* __INITIAL_POINTER_SIZE == 64 [else] */
+#else /* __INITIAL_POINTER_SIZE == 64 */
+#define FILESPEC1 ((char *)filespec1)
+#define FILESPEC2 ((char *)filespec2)
+#endif /* __INITIAL_POINTER_SIZE == 64 [else] */
 
     if (!filespec1)
         filespec1 = "";
@@ -474,13 +405,13 @@ static char *vms_merger(DSO *dso, const char *filespec1,
     filespec1len = strlen(filespec1);
     filespec2len = strlen(filespec2);
 
-# if __INITIAL_POINTER_SIZE == 64
+#if __INITIAL_POINTER_SIZE == 64
     /* Copy the file names to storage with a 32-bit pointer. */
     filespec1_32p = filespec1_32;
     filespec2_32p = filespec2_32;
     strcpy(filespec1_32p, filespec1);
     strcpy(filespec2_32p, filespec2);
-# endif                         /* __INITIAL_POINTER_SIZE == 64 [else] */
+#endif /* __INITIAL_POINTER_SIZE == 64 [else] */
 
     fab = cc$rms_fab;
     nam = CC_RMS_NAMX;
@@ -491,7 +422,7 @@ static char *vms_merger(DSO *dso, const char *filespec1,
     FAB_OR_NAML(fab, nam).FAB_OR_NAML_DNS = filespec2len;
     NAMX_DNA_FNA_SET(fab)
 
-        nam.NAMX_ESA = esa;
+    nam.NAMX_ESA = esa;
     nam.NAMX_ESS = NAMX_MAXRSS;
     nam.NAMX_NOP = NAM$M_SYNCHK | NAM$M_PWD;
     SET_NAMX_NO_SHORT_UPCASE(nam);
@@ -517,31 +448,54 @@ static char *vms_merger(DSO *dso, const char *filespec1,
         else {
             errstring[length] = '\0';
 
-            DSOerr(DSO_F_VMS_MERGER, DSO_R_FAILURE);
-            ERR_add_error_data(7,
-                               "filespec \"", filespec1, "\", ",
-                               "defaults \"", filespec2, "\": ", errstring);
+            ERR_raise_data(ERR_LIB_DSO, DSO_R_FAILURE,
+                "filespec \"%s\", default \"%s\": %s",
+                filespec1, filespec2, errstring);
         }
-        return (NULL);
+        return NULL;
     }
 
     merged = OPENSSL_malloc(nam.NAMX_ESL + 1);
-    if (!merged)
-        goto malloc_err;
+    if (merged == NULL)
+        return NULL;
     strncpy(merged, nam.NAMX_ESA, nam.NAMX_ESL);
     merged[nam.NAMX_ESL] = '\0';
-    return (merged);
- malloc_err:
-    DSOerr(DSO_F_VMS_MERGER, ERR_R_MALLOC_FAILURE);
+    return merged;
 }
 
 static char *vms_name_converter(DSO *dso, const char *filename)
 {
-    int len = strlen(filename);
-    char *not_translated = OPENSSL_malloc(len + 1);
-    if (not_translated)
-        strcpy(not_translated, filename);
-    return (not_translated);
+    char *translated;
+    int len, transform;
+    const char *p;
+
+    len = strlen(filename);
+
+    p = strchr(filename, ':');
+    if (p != NULL) {
+        transform = 0;
+    } else {
+        p = filename;
+        transform = (strrchr(p, '>') == NULL && strrchr(p, ']') == NULL);
+    }
+
+    if (transform) {
+        int rsize = len + sizeof(DSO_EXTENSION);
+
+        if ((translated = OPENSSL_malloc(rsize)) != NULL) {
+            p = strrchr(filename, ';');
+            if (p != NULL)
+                len = p - filename;
+            strncpy(translated, filename, len);
+            translated[len] = '\0';
+            strcat(translated, DSO_EXTENSION);
+            if (p != NULL)
+                strcat(translated, p);
+        }
+    } else {
+        translated = OPENSSL_strdup(filename);
+    }
+    return translated;
 }
 
-#endif                          /* OPENSSL_SYS_VMS */
+#endif /* OPENSSL_SYS_VMS */

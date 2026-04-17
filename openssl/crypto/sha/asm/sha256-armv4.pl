@@ -1,10 +1,17 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2007-2025 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 
 # ====================================================================
-# Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
+# Written by Andy Polyakov, @dot-asm, initially for use in the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
-# details see http://www.openssl.org/~appro/cryptogams/.
+# details see https://github.com/dot-asm/cryptogams/.
 #
 # Permission to use under GPL terms is granted.
 # ====================================================================
@@ -37,8 +44,22 @@
 #
 # Add ARMv8 code path performing at 2.0 cpb on Apple A7.
 
-while (($output=shift) && ($output!~/^\w[\w\-]*\.\w+$/)) {}
-open STDOUT,">$output";
+# $output is the last argument if it looks like a file (it has an extension)
+# $flavour is the first argument if it doesn't look like a file
+$output = $#ARGV >= 0 && $ARGV[$#ARGV] =~ m|\.\w+$| ? pop : undef;
+$flavour = $#ARGV >= 0 && $ARGV[0] !~ m|\.| ? shift : undef;
+
+if ($flavour && $flavour ne "void") {
+    $0 =~ m/(.*[\/\\])[^\/\\]+$/; $dir=$1;
+    ( $xlate="${dir}arm-xlate.pl" and -f $xlate ) or
+    ( $xlate="${dir}../../perlasm/arm-xlate.pl" and -f $xlate) or
+    die "can't locate arm-xlate.pl";
+
+    open STDOUT,"| \"$^X\" $xlate $flavour \"$output\""
+        or die "can't call $xlate: $!";
+} else {
+    $output and open STDOUT,">$output";
+}
 
 $ctx="r0";	$t0="r0";
 $inp="r1";	$t4="r1";
@@ -73,7 +94,9 @@ $code.=<<___ if ($i<16);
 	eor	$t0,$e,$e,ror#`$Sigma1[1]-$Sigma1[0]`
 	add	$a,$a,$t2			@ h+=Maj(a,b,c) from the past
 	eor	$t0,$t0,$e,ror#`$Sigma1[2]-$Sigma1[0]`	@ Sigma1(e)
+# ifndef __ARMEB__
 	rev	$t1,$t1
+# endif
 #else
 	@ ldrb	$t1,[$inp,#3]			@ $i
 	add	$a,$a,$t2			@ h+=Maj(a,b,c) from the past
@@ -160,17 +183,14 @@ $code=<<___;
 # define __ARM_MAX_ARCH__ 7
 #endif
 
-.text
-#if __ARM_ARCH__<7
-.code	32
-#else
+#if defined(__thumb2__)
 .syntax unified
-# ifdef __thumb2__
 .thumb
-# else
+#else
 .code   32
-# endif
 #endif
+
+.text
 
 .type	K256,%object
 .align	5
@@ -195,21 +215,31 @@ K256:
 .word	0				@ terminator
 #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
 .LOPENSSL_armcap:
-.word	OPENSSL_armcap_P-sha256_block_data_order
+# ifdef	_WIN32
+.word	OPENSSL_armcap_P
+# else
+.word	OPENSSL_armcap_P-.Lsha256_block_data_order
+# endif
 #endif
 .align	5
 
 .global	sha256_block_data_order
 .type	sha256_block_data_order,%function
 sha256_block_data_order:
-#if __ARM_ARCH__<7
+.Lsha256_block_data_order:
+#if __ARM_ARCH__<7 && !defined(__thumb2__)
 	sub	r3,pc,#8		@ sha256_block_data_order
 #else
-	adr	r3,.
+	adr	r3,.Lsha256_block_data_order
 #endif
 #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
 	ldr	r12,.LOPENSSL_armcap
+# if !defined(_WIN32)
 	ldr	r12,[r3,r12]		@ OPENSSL_armcap_P
+# endif
+# if defined(__APPLE__) || defined(_WIN32)
+	ldr	r12,[r12]
+# endif
 	tst	r12,#ARMV8_SHA256
 	bne	.LARMv8
 	tst	r12,#ARMV7_NEON
@@ -233,7 +263,7 @@ for($i=0;$i<16;$i++)	{ &BODY_00_15($i,@V); unshift(@V,pop(@V)); }
 $code.=".Lrounds_16_xx:\n";
 for (;$i<32;$i++)	{ &BODY_16_XX($i,@V); unshift(@V,pop(@V)); }
 $code.=<<___;
-#if __ARM_ARCH__>=7
+#ifdef	__thumb2__
 	ite	eq			@ Thumb2 thing, sanity check in ARM
 #endif
 	ldreq	$t3,[sp,#16*4]		@ pull ctx
@@ -454,7 +484,8 @@ $code.=<<___;
 
 .global	sha256_block_data_order_neon
 .type	sha256_block_data_order_neon,%function
-.align	4
+.align	5
+.skip	16
 sha256_block_data_order_neon:
 .LNEON:
 	stmdb	sp!,{r4-r12,lr}
@@ -576,14 +607,15 @@ my ($ABCD,$EFGH,$abcd)=map("q$_",(0..2));
 my @MSG=map("q$_",(8..11));
 my ($W0,$W1,$ABCD_SAVE,$EFGH_SAVE)=map("q$_",(12..15));
 my $Ktbl="r3";
+my $_byte = ($flavour =~ /win/ ? "DCB" : ".byte");
 
 $code.=<<___;
 #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
 
-# ifdef __thumb2__
-#  define INST(a,b,c,d)	.byte	c,d|0xc,a,b
+# if defined(__thumb2__)
+#  define INST(a,b,c,d)	$_byte	c,d|0xc,a,b
 # else
-#  define INST(a,b,c,d)	.byte	a,b,c,d
+#  define INST(a,b,c,d)	$_byte	a,b,c,d
 # endif
 
 .type	sha256_block_data_order_armv8,%function
@@ -591,14 +623,11 @@ $code.=<<___;
 sha256_block_data_order_armv8:
 .LARMv8:
 	vld1.32	{$ABCD,$EFGH},[$ctx]
-# ifdef __thumb2__
-	adr	$Ktbl,.LARMv8
-	sub	$Ktbl,$Ktbl,#.LARMv8-K256
-# else
-	adrl	$Ktbl,K256
-# endif
+	sub	$Ktbl,$Ktbl,#256+32
 	add	$len,$inp,$len,lsl#6	@ len to point at the end of inp
+	b	.Loop_v8
 
+.align	4
 .Loop_v8:
 	vld1.8		{@MSG[0]-@MSG[1]},[$inp]!
 	vld1.8		{@MSG[2]-@MSG[3]},[$inp]!
@@ -661,10 +690,11 @@ $code.=<<___;
 ___
 }}}
 $code.=<<___;
-.asciz  "SHA256 block transform for ARMv4/NEON/ARMv8, CRYPTOGAMS by <appro\@openssl.org>"
+.asciz  "SHA256 block transform for ARMv4/NEON/ARMv8, CRYPTOGAMS by <https://github.com/dot-asm>"
 .align	2
 #if __ARM_MAX_ARCH__>=7 && !defined(__KERNEL__)
-.comm   OPENSSL_armcap_P,4,4
+.extern   OPENSSL_armcap_P
+.hidden   OPENSSL_armcap_P
 #endif
 ___
 
@@ -710,4 +740,4 @@ foreach (split($/,$code)) {
 	print $_,"\n";
 }
 
-close STDOUT; # enforce flush
+close STDOUT or die "error closing STDOUT: $!"; # enforce flush

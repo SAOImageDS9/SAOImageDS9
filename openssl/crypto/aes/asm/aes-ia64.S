@@ -1,7 +1,14 @@
+// Copyright 2004-2025 The OpenSSL Project Authors. All Rights Reserved.
+//
+// Licensed under the Apache License 2.0 (the "License").  You may not use
+// this file except in compliance with the License.  You can obtain a copy
+// in the file LICENSE in the source distribution or at
+// https://www.openssl.org/source/license.html
+//
 // ====================================================================
-// Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
+// Written by Andy Polyakov, @dot-asm, initially for use in the OpenSSL
 // project. Rights for redistribution and usage in source and binary
-// forms are granted according to the OpenSSL license.
+// forms are granted according to the License.
 // ====================================================================
 //
 // What's wrong with compiler generated code? Compiler never uses
@@ -10,7 +17,7 @@
 // 'and' which in turn can be assigned to M-port [there're double as
 // much M-ports as there're I-ports on Itanium 2]. By sacrificing few
 // registers for small constants (255, 24 and 16) to be used with
-// 'shr' and 'and' instructions I can achieve better ILP, Intruction
+// 'shr' and 'and' instructions I can achieve better ILP, Instruction
 // Level Parallelism, and performance. This code outperforms GCC 3.3
 // generated code by over factor of 2 (two), GCC 3.4 - by 70% and
 // HP C - by 40%. Measured best-case scenario, i.e. aligned
@@ -26,7 +33,7 @@
 // 64 bytes line size and L2 - 128 bytes...
 
 .ident	"aes-ia64.S, version 1.2"
-.ident	"IA-64 ISA artwork by Andy Polyakov <appro@fy.chalmers.se>"
+.ident	"IA-64 ISA artwork by Andy Polyakov <https://github.com/dot-asm>"
 .explicit
 .text
 

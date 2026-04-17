@@ -1,10 +1,17 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2010-2025 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 
 # ====================================================================
-# Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
+# Written by Andy Polyakov, @dot-asm, initially for use in the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
-# details see http://www.openssl.org/~appro/cryptogams/.
+# details see https://github.com/dot-asm/cryptogams/.
 # ====================================================================
 #
 # March 2010
@@ -32,7 +39,7 @@
 # Itanium performance should remain the same as the "256B" version,
 # i.e. ~8.5 cycles.
 
-$output=shift and (open STDOUT,">$output" or die "can't open $output: $!");
+$output=pop and (open STDOUT,">$output" or die "can't open $output: $!");
 
 if ($^O eq "hpux") {
     $ADDP="addp4";
@@ -149,7 +156,7 @@ $code.=<<___;
 ___
 
 ######################################################################
-# "528B" (well, "512B" actualy) streamed GHASH
+# "528B" (well, "512B" actually) streamed GHASH
 #
 $Xip="in0";
 $Htbl="in1";
@@ -453,11 +460,11 @@ rem_8bit:
 	data1	0xB5,0xE0, 0xB4,0x22, 0xB6,0x64, 0xB7,0xA6, 0xB2,0xE8, 0xB3,0x2A, 0xB1,0x6C, 0xB0,0xAE
 	data1	0xBB,0xF0, 0xBA,0x32, 0xB8,0x74, 0xB9,0xB6, 0xBC,0xF8, 0xBD,0x3A, 0xBF,0x7C, 0xBE,0xBE
 .size	rem_8bit#,512
-stringz	"GHASH for IA64, CRYPTOGAMS by <appro\@openssl.org>"
+stringz	"GHASH for IA64, CRYPTOGAMS by <https://github.com/dot-asm>"
 ___
 
 $code =~ s/mux1(\s+)\S+\@rev/nop.i$1 0x0/gm      if ($big_endian);
 $code =~ s/\`([^\`]*)\`/eval $1/gem;
 
 print $code;
-close STDOUT;
+close STDOUT or die "error closing STDOUT: $!";

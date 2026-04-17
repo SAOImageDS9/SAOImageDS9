@@ -1,10 +1,17 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2006-2025 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 #
 # ====================================================================
-# Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
+# Written by Andy Polyakov, @dot-asm, initially for use in the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
-# details see http://www.openssl.org/~appro/cryptogams/.
+# details see https://github.com/dot-asm/cryptogams/.
 # ====================================================================
 #
 # On 21264 RSA sign performance improves by 70/35/20/15 percent for
@@ -14,6 +21,8 @@
 # code provides approximately the same performance per GHz as AMD64.
 # I.e. if you compare 1GHz 21264 and 2GHz Opteron, you'll observe ~2x
 # difference.
+
+$output=pop and open STDOUT,">$output";
 
 # int bn_mul_mont(
 $rp="a0";	# BN_ULONG *rp,
@@ -310,9 +319,9 @@ bn_mul_mont:
 	lda	sp,48(sp)
 	ret	(ra)
 .end	bn_mul_mont
-.ascii	"Montgomery Multiplication for Alpha, CRYPTOGAMS by <appro\@openssl.org>"
+.ascii	"Montgomery Multiplication for Alpha, CRYPTOGAMS by <https://github.com/dot-asm>"
 .align	2
 ___
 
 print $code;
-close STDOUT;
+close STDOUT or die "error closing STDOUT: $!";

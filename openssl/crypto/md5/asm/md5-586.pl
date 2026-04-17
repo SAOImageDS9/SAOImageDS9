@@ -1,4 +1,11 @@
-#!/usr/local/bin/perl
+#! /usr/bin/env perl
+# Copyright 1995-2020 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 
 # Normal is the
 # md5_block_x86(MD5_CTX *c, ULONG *X);
@@ -11,7 +18,12 @@ $0 =~ m/(.*[\/\\])[^\/\\]+$/; $dir=$1;
 push(@INC,"${dir}","${dir}../../perlasm");
 require "x86asm.pl";
 
-&asm_init($ARGV[0],$0);
+# $output is the last argument if it looks like a file (it has an extension)
+$output = $#ARGV >= 0 && $ARGV[$#ARGV] =~ m|\.\w+$| ? pop : undef;
+
+$output and open STDOUT,">$output";
+
+&asm_init($ARGV[0]);
 
 $A="eax";
 $B="ebx";
@@ -30,8 +42,10 @@ $X="esi";
  0, 7, 14, 5, 12, 3, 10, 1, 8, 15, 6, 13, 4, 11, 2, 9,	# R3
  );
 
-&md5_block("md5_block_asm_data_order");
+&md5_block("ossl_md5_block_asm_data_order");
 &asm_finish();
+
+close STDOUT or die "error closing STDOUT: $!";
 
 sub Np
 	{
@@ -45,7 +59,7 @@ sub R0
 	local($pos,$a,$b,$c,$d,$K,$ki,$s,$t)=@_;
 
 	&mov($tmp1,$C)  if $pos < 0;
-	&mov($tmp2,&DWP($xo[$ki]*4,$K,"",0)) if $pos < 0; # very first one 
+	&mov($tmp2,&DWP($xo[$ki]*4,$K,"",0)) if $pos < 0; # very first one
 
 	# body proper
 
@@ -56,14 +70,14 @@ sub R0
 	&lea($a,&DWP($t,$a,$tmp2,1));
 
 	&xor($tmp1,$d); # F function - part 4
+	&mov($tmp2,&DWP($xo[$ki+1]*4,$K,"",0)) if ($pos != 2);
 
 	&add($a,$tmp1);
-	&mov($tmp1,&Np($c)) if $pos < 1;	# next tmp1 for R0
-	&mov($tmp1,&Np($c)) if $pos == 1;	# next tmp1 for R1
 
 	&rotl($a,$s);
 
-	&mov($tmp2,&DWP($xo[$ki+1]*4,$K,"",0)) if ($pos != 2);
+	&mov($tmp1,&Np($c)) if $pos < 1;	# next tmp1 for R0
+	&mov($tmp1,&Np($c)) if $pos == 1;	# next tmp1 for R1
 
 	&add($a,$b);
 	}
@@ -74,13 +88,12 @@ sub R1
 
 	&comment("R1 $ki");
 
-	&lea($a,&DWP($t,$a,$tmp2,1));
-
 	&xor($tmp1,$b); # G function - part 2
 	&and($tmp1,$d); # G function - part 3
+	&lea($a,&DWP($t,$a,$tmp2,1));
 
-	&mov($tmp2,&DWP($xo[$ki+1]*4,$K,"",0)) if ($pos != 2);
 	&xor($tmp1,$c);			# G function - part 4
+	&mov($tmp2,&DWP($xo[$ki+1]*4,$K,"",0)) if ($pos != 2);
 
 	&add($a,$tmp1);
 	&mov($tmp1,&Np($c)) if $pos < 1;	# G function - part 1
@@ -108,10 +121,10 @@ if (($n & 1) == 0)
 	&lea($a,&DWP($t,$a,$tmp2,1));
 
 	&add($a,$tmp1);
+	&mov($tmp2,&DWP($xo[$ki+1]*4,$K,"",0));
 
 	&rotl($a,$s);
 
-	&mov($tmp2,&DWP($xo[$ki+1]*4,$K,"",0));
 	&mov($tmp1,&Np($c));
 	}
 else
@@ -120,10 +133,10 @@ else
 	# make sure to do 'D' first, not 'B', else we clash with
 	# the last add from the previous round.
 
-	&lea($a,&DWP($t,$a,$tmp2,1));
-
 	&add($b,$c);			# MOVED FORWARD
 	&xor($tmp1,$d); # H function - part 2
+
+	&lea($a,&DWP($t,$a,$tmp2,1));
 
 	&xor($tmp1,$b); # H function - part 3
 	&mov($tmp2,&DWP($xo[$ki+1]*4,$K,"",0)) if ($pos != 2);

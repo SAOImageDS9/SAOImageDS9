@@ -1,10 +1,17 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2010-2025 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 
 # ====================================================================
-# Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
+# Written by Andy Polyakov, @dot-asm, initially for use in the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
-# details see http://www.openssl.org/~appro/cryptogams/.
+# details see https://github.com/dot-asm/cryptogams/.
 # ====================================================================
 
 # March 2010
@@ -46,13 +53,10 @@
 # saturates at ~15.5x single-process result on 8-core processor,
 # or ~20.5GBps per 2.85GHz socket.
 
-$bits=32;
-for (@ARGV)     { $bits=64 if (/\-m64/ || /\-xarch\=v9/); }
-if ($bits==64)  { $bias=2047; $frame=192; }
-else            { $bias=0;    $frame=112; }
+$output=pop and open STDOUT,">$output";
 
-$output=shift;
-open STDOUT,">$output";
+$frame="STACK_FRAME";
+$bias="STACK_BIAS";
 
 $Zhi="%o0";	# 64-bit values
 $Zlo="%o1";
@@ -75,11 +79,17 @@ $Htbl="%i1";
 $inp="%i2";
 $len="%i3";
 
-$code.=<<___ if ($bits==64);
+$code.=<<___;
+#ifndef __ASSEMBLER__
+# define __ASSEMBLER__ 1
+#endif
+#include "crypto/sparc_arch.h"
+
+#ifdef  __arch64__
 .register	%g2,#scratch
 .register	%g3,#scratch
-___
-$code.=<<___;
+#endif
+
 .section	".text",#alloc,#execinstr
 
 .align	64
@@ -183,7 +193,7 @@ gcm_ghash_4bit:
 
 	add	$inp,16,$inp
 	cmp	$inp,$len
-	be,pn	`$bits==64?"%xcc":"%icc"`,.Ldone
+	be,pn	SIZE_T_CC,.Ldone
 	and	$Zlo,0xf,$remi
 
 	ldx	[$Htblo+$nhi],$Tlo
@@ -525,14 +535,14 @@ gcm_ghash_vis3:
 ___
 }}}
 $code.=<<___;
-.asciz	"GHASH for SPARCv9/VIS3, CRYPTOGAMS by <appro\@openssl.org>"
+.asciz	"GHASH for SPARCv9/VIS3, CRYPTOGAMS by <https://github.com/dot-asm>"
 .align	4
 ___
 
 
 # Purpose of these subroutines is to explicitly encode VIS instructions,
 # so that one can compile the module without having to specify VIS
-# extentions on compiler command line, e.g. -xarch=v9 vs. -xarch=v9a.
+# extensions on compiler command line, e.g. -xarch=v9 vs. -xarch=v9a.
 # Idea is to reserve for option to produce "universal" binary and let
 # programmer detect if current CPU is VIS capable at run-time.
 sub unvis3 {
@@ -570,4 +580,4 @@ foreach (split("\n",$code)) {
 	print $_,"\n";
 }
 
-close STDOUT;
+close STDOUT or die "error closing STDOUT: $!";

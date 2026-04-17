@@ -1,22 +1,37 @@
-CC=cc
-CFLAGS= -g -I../../include
-LIBS= -L../.. ../../libssl.a ../../libcrypto.a -ldl
-EXAMPLES=saccept sconnect client-arg client-conf
+#
+# To run the demos when linked with a shared library (default) ensure that
+# libcrypto and libssl are on the library path. For example:
+#
+#    LD_LIBRARY_PATH=../.. ./server-arg
 
-all: $(EXAMPLES) 
+TESTS = client-arg \
+        client-conf \
+        saccept \
+        sconnect \
+        server-arg \
+        server-cmod \
+        server-conf
 
-saccept: saccept.o
-	$(CC) -o saccept saccept.o $(LIBS)
+CFLAGS  = -I../../include -g -Wall
+LDFLAGS = -L../..
+LDLIBS  = -lssl -lcrypto
 
-sconnect: sconnect.o
-	$(CC) -o sconnect sconnect.o $(LIBS)
+all: $(TESTS)
 
 client-arg: client-arg.o
-	$(CC) -o client-arg client-arg.o $(LIBS)
-
 client-conf: client-conf.o
-	$(CC) -o client-conf client-conf.o $(LIBS)
+saccept: saccept.o
+sconnect: sconnect.o
+server-arg: server-arg.o
+server-cmod: server-cmod.o
+server-conf: server-conf.o
 
-clean:	
-	rm -f $(EXAMPLES) *.o
+$(TESTS):
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $< $(LDLIBS)
 
+clean:
+	$(RM) $(TESTS) *.o
+
+test: all
+	@echo "\nBIO tests:"
+	@echo "skipped"

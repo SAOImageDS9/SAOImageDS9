@@ -1,8 +1,15 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2013-2021 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 
 # ====================================================================
-# Written by David S. Miller <davem@devemloft.net> and Andy Polyakov
-# <appro@openssl.org>. The module is licensed under 2-clause BSD
+# Written by David S. Miller and Andy Polyakov.
+# The module is licensed under 2-clause BSD
 # license. March 2013. All rights reserved.
 # ====================================================================
 
@@ -27,14 +34,19 @@ $0 =~ m/(.*[\/\\])[^\/\\]+$/; $dir=$1;
 push(@INC,"${dir}","${dir}../../perlasm");
 require "sparcv9_modes.pl";
 
-&asm_init(@ARGV);
-
-$code.=<<___ if ($::abibits==64);
-.register       %g2,#scratch
-.register       %g3,#scratch
-___
+$output=pop and open STDOUT,">$output";
 
 $code.=<<___;
+#ifndef __ASSEMBLER__
+# define __ASSEMBLER__ 1
+#endif
+#include "crypto/sparc_arch.h"
+
+#ifdef	__arch64__
+.register       %g2,#scratch
+.register       %g3,#scratch
+#endif
+
 .text
 ___
 
@@ -614,4 +626,4 @@ ___
 
 &emit_assembler();
 
-close STDOUT;
+close STDOUT or die "error closing STDOUT: $!";

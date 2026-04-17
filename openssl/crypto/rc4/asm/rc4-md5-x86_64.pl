@@ -1,10 +1,17 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2011-2025 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 #
 # ====================================================================
-# Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
+# Written by Andy Polyakov, @dot-asm, initially for use in the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
-# details see http://www.openssl.org/~appro/cryptogams/.
+# details see https://github.com/dot-asm/cryptogams/.
 # ====================================================================
 
 # June 2011
@@ -20,7 +27,7 @@
 # minimize register usage, which was used as "main thread" with RC4
 # weaved into it, one RC4 round per one MD5 round. In addition to the
 # stiched subroutine the script can generate standalone replacement
-# md5_block_asm_data_order and RC4. Below are performance numbers in
+# ossl_md5_block_asm_data_order and RC4. Below are performance numbers in
 # cycles per processed byte, less is better, for these the standalone
 # subroutines, sum of them, and stitched one:
 #
@@ -29,20 +36,27 @@
 # Core2		6.5	5.8	12.3	7.7	+60%
 # Westmere	4.3	5.2	9.5	7.0	+36%
 # Sandy Bridge	4.2	5.5	9.7	6.8	+43%
+# Ivy Bridge	4.1	5.2	9.3	6.0	+54%
+# Haswell	4.0	5.0	9.0	5.7	+60%
+# Skylake	6.3(**)	5.0	11.3	5.3	+110%
 # Atom		9.3	6.5	15.8	11.1	+42%
+# VIA Nano	6.3	5.4	11.7	8.6	+37%
+# Bulldozer	4.5	5.4	9.9	7.7	+29%
 #
 # (*)	rc4-x86_64.pl delivers 5.3 on Opteron, so real improvement
 #	is +53%...
+# (**)	unidentified anomaly;
 
 my ($rc4,$md5)=(1,1);	# what to generate?
 my $D="#" if (!$md5);	# if set to "#", MD5 is stitched into RC4(),
 			# but its result is discarded. Idea here is
 			# to be able to use 'openssl speed rc4' for
-			# benchmarking the stitched subroutine... 
+			# benchmarking the stitched subroutine...
 
-my $flavour = shift;
-my $output  = shift;
-if ($flavour =~ /\./) { $output = $flavour; undef $flavour; }
+# $output is the last argument if it looks like a file (it has an extension)
+# $flavour is the first argument if it doesn't look like a file
+my $output = $#ARGV >= 0 && $ARGV[$#ARGV] =~ m|\.\w+$| ? pop : undef;
+my $flavour = $#ARGV >= 0 && $ARGV[0] !~ m|\.| ? shift : undef;
 
 my $win64=0; $win64=1 if ($flavour =~ /[nm]asm|mingw64/ || $output =~ /\.asm$/);
 
@@ -51,7 +65,8 @@ $0 =~ m/(.*[\/\\])[^\/\\]+$/; my $dir=$1; my $xlate;
 ( $xlate="${dir}../../perlasm/x86_64-xlate.pl" and -f $xlate) or
 die "can't locate x86_64-xlate.pl";
 
-open OUT,"| \"$^X\" $xlate $flavour $output";
+open OUT,"| \"$^X\" \"$xlate\" $flavour \"$output\""
+    or die "can't call $xlate: $!";
 *STDOUT=*OUT;
 
 my ($dat,$in0,$out,$ctx,$inp,$len, $func,$nargs);
@@ -61,7 +76,7 @@ if ($rc4 && !$md5) {
   $func="RC4";				$nargs=4;
 } elsif ($md5 && !$rc4) {
   ($ctx,$inp,$len) = ("%rdi","%rsi","%rdx");
-  $func="md5_block_asm_data_order";	$nargs=3;
+  $func="ossl_md5_block_asm_data_order";	$nargs=3;
 } else {
   ($dat,$in0,$out,$ctx,$inp,$len) = ("%rdi","%rsi","%rdx","%rcx","%r8","%r9");
   $func="rc4_md5_enc";			$nargs=6;
@@ -111,15 +126,23 @@ $code.=<<___;
 .globl	$func
 .type	$func,\@function,$nargs
 $func:
+.cfi_startproc
 	cmp	\$0,$len
 	je	.Labort
 	push	%rbx
+.cfi_push	%rbx
 	push	%rbp
+.cfi_push	%rbp
 	push	%r12
+.cfi_push	%r12
 	push	%r13
+.cfi_push	%r13
 	push	%r14
+.cfi_push	%r14
 	push	%r15
+.cfi_push	%r15
 	sub	\$40,%rsp
+.cfi_adjust_cfa_offset	40
 .Lbody:
 ___
 if ($rc4) {
@@ -406,7 +429,7 @@ $code.=<<___ if ($rc4 && (!$md5 || $D));
 	and	\$63,$len		# remaining bytes
 	jnz	.Loop1
 	jmp	.Ldone
-	
+
 .align	16
 .Loop1:
 	add	$TX[0]#b,$YY#b
@@ -431,15 +454,23 @@ $code.=<<___;
 #rc4#	movl	$YY#d,-4($dat)
 
 	mov	40(%rsp),%r15
+.cfi_restore	%r15
 	mov	48(%rsp),%r14
+.cfi_restore	%r14
 	mov	56(%rsp),%r13
+.cfi_restore	%r13
 	mov	64(%rsp),%r12
+.cfi_restore	%r12
 	mov	72(%rsp),%rbp
+.cfi_restore	%rbp
 	mov	80(%rsp),%rbx
+.cfi_restore	%rbx
 	lea	88(%rsp),%rsp
+.cfi_adjust_cfa_offset	-88
 .Lepilogue:
 .Labort:
 	ret
+.cfi_endproc
 .size $func,.-$func
 ___
 
@@ -455,6 +486,7 @@ $code.=<<___;
 .type	RC4_set_key,\@function,3
 .align	16
 RC4_set_key:
+.cfi_startproc
 	lea	8($dat),$dat
 	lea	($inp,$len),$inp
 	neg	$len
@@ -490,6 +522,7 @@ RC4_set_key:
 	mov	%eax,-8($dat)
 	mov	%eax,-4($dat)
 	ret
+.cfi_endproc
 .size	RC4_set_key,.-RC4_set_key
 
 .globl	RC4_options
@@ -629,4 +662,4 @@ $code =~ s/#rc4#//gm	if ($rc4);
 
 print $code;
 
-close STDOUT;
+close STDOUT or die "error closing STDOUT: $!";

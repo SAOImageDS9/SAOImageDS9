@@ -1,3 +1,12 @@
+/*
+ * Copyright 2008-2023 The OpenSSL Project Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License 2.0 (the "License").  You may not use
+ * this file except in compliance with the License.  You can obtain a copy
+ * in the file LICENSE in the source distribution or at
+ * https://www.openssl.org/source/license.html
+ */
+
 /* Simple S/MIME signing example */
 #include <openssl/pem.h>
 #include <openssl/cms.h>
@@ -9,7 +18,7 @@ int main(int argc, char **argv)
     X509 *scert = NULL;
     EVP_PKEY *skey = NULL;
     CMS_ContentInfo *cms = NULL;
-    int ret = 1;
+    int ret = EXIT_FAILURE;
 
     /*
      * For simple S/MIME signing use CMS_DETACHED. On OpenSSL 1.0.0 only: for
@@ -29,7 +38,8 @@ int main(int argc, char **argv)
 
     scert = PEM_read_bio_X509(tbio, NULL, 0, NULL);
 
-    BIO_reset(tbio);
+    if (BIO_reset(tbio) < 0)
+        goto err;
 
     skey = PEM_read_bio_PrivateKey(tbio, NULL, 0, NULL);
 
@@ -53,36 +63,27 @@ int main(int argc, char **argv)
     if (!out)
         goto err;
 
-    if (!(flags & CMS_STREAM))
-        BIO_reset(in);
+    if (!(flags & CMS_STREAM)) {
+        if (BIO_reset(in) < 0)
+            goto err;
+    }
 
     /* Write out S/MIME message */
     if (!SMIME_write_CMS(out, cms, in, flags))
         goto err;
 
-    ret = 0;
-
- err:
-
-    if (ret) {
+    ret = EXIT_SUCCESS;
+err:
+    if (ret != EXIT_SUCCESS) {
         fprintf(stderr, "Error Signing Data\n");
         ERR_print_errors_fp(stderr);
     }
 
-    if (cms)
-        CMS_ContentInfo_free(cms);
-    if (scert)
-        X509_free(scert);
-    if (skey)
-        EVP_PKEY_free(skey);
-
-    if (in)
-        BIO_free(in);
-    if (out)
-        BIO_free(out);
-    if (tbio)
-        BIO_free(tbio);
-
+    CMS_ContentInfo_free(cms);
+    X509_free(scert);
+    EVP_PKEY_free(skey);
+    BIO_free(in);
+    BIO_free(out);
+    BIO_free(tbio);
     return ret;
-
 }

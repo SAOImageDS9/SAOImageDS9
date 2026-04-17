@@ -186,7 +186,7 @@ AC_DEFUN([TCLTLS_SSL_OPENSSL], [
 			if test "${TEA_PLATFORM}" == 'unix'; then
 				LIBEXT='.a'
 			else
-				LIBEXT='.lib'
+				LIBEXT='.a'
 			fi
 		fi
 
@@ -263,7 +263,7 @@ AC_DEFUN([TCLTLS_SSL_OPENSSL], [
 			if test "${TEA_PLATFORM}" == 'unix'; then
 				LIBEXT='.a'
 			else
-				LIBEXT='.lib'
+				LIBEXT='.a'
 			fi
 			TCLTLS_SSL_LIBS="$SSL_LIBS_PATH -lssl${LIBEXT} -lcrypto${LIBEXT}"
 		else

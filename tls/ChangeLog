@@ -1,3 +1,10 @@
+TclTLS 1.7.22
+==========
+
+Release Date: Mon Oct 12 15:40:16 CDT 2020
+
+https://tcltls.rkeene.org/
+
 2015-05-01  Andreas Kupries  <andreask@activestate.com>
 
 	* configure.in: Bump to version 1.6.5.
@@ -25,7 +32,7 @@
 
 	* tls.c (MiscObjCmd): Fixed non-static string array used in call
 	  of Tcl_GetIndexFromObj(). Memory smash waiting to happen. Thanks
-	  to Brian Griffin for alerting us all to the problem. 
+	  to Brian Griffin for alerting us all to the problem.
 
 2012-06-01  Andreas Kupries  <andreask@activestate.com>
 
@@ -35,7 +42,7 @@
 	* configure.in: Bump to version 1.6.2.
 	* win/makefile.vc:
 	* configure: regen with ac-2.59
-	
+
 2010-08-11  Jeff Hobbs  <jeffh@ActiveState.com>
 
 	*** TLS 1.6.1 TAGGED ***
@@ -103,7 +110,7 @@
 
 2007-06-22  Jeff Hobbs  <jeffh@ActiveState.com>
 
-	* tlsIO.c (TlsInputProc, TlsOutputProc, TlsWatchProc): 
+	* tlsIO.c (TlsInputProc, TlsOutputProc, TlsWatchProc):
 	* tls.c (VerifyCallback): add an state flag in the verify callback
 	that prevents possibly recursion (on 'update'). [Bug 1652380]
 
@@ -115,7 +122,7 @@
 
 2007-02-28  Pat Thoyts  <patthoyts@users.sourceforge.net>
 
-	* win/makefile.vc: Rebase the DLL sensibly. Additional libs for 
+	* win/makefile.vc: Rebase the DLL sensibly. Additional libs for
 	static link of openssl.
 	* tls.tcl: bug #1579837 - TIP 278 bug (possibly) - fixed.
 
@@ -137,7 +144,7 @@
 2004-12-22  Pat Thoyts  <patthoyts@users.sourceforge.net>
 
 	* configure.in:     Incremented minor version to 1.5.1
-	* configure:        
+	* configure:
 
 2004-12-17  Pat Thoyts  <patthoyts@users.sourceforge.net>
 
@@ -145,7 +152,7 @@
 	* win/rules.vc:     sampleextension).
 	* win/nmakehlp.c:
 	* win/tls.rc        Added Windows resource file.
-	
+
 	* tls.tcl:          From patch #948155, added support for
 	                    alternate socket commands.
 	* tls.c:            Quieten some MSVC warnings. Prefer ckalloc
@@ -182,7 +189,7 @@
 2004-03-17  Dan Razzell <research@starfishsystems.ca>
 
 	* tlsX509.c:	Add support for long serial numbers per RFC 3280.
-			Format is now hexadecimal. 
+			Format is now hexadecimal.
 			[Request #915313]
 			Correctly convert certificate Distinguished Names
 			to Tcl string representation.  Eliminates use of
@@ -233,7 +240,7 @@
 	* tests/keytest1.tcl: to expose more low-level SSL commands
 	* tests/keytest2.tcl:
 
-2003-05-15  Dan Razzell	<research@starfishsystems.ca> 
+2003-05-15  Dan Razzell	<research@starfishsystems.ca>
 
 	* tls.tcl:
 	* tlsInt.h:
@@ -372,7 +379,7 @@
 	* tests/all.tcl: added catch around ::tcltest::normalizePath
 	because it doesn't exist in pre-8.3 tcltest.
 
-	* tests/simpleClient.tcl: 
+	* tests/simpleClient.tcl:
 	* tests/simpleServer.tcl: added simple client/server test scripts
 	that use test certs and can do simple stress tests.
 
@@ -475,7 +482,7 @@
 
 	* Makefile.in: Fixed broken test target.
 
-	* tlsInt.h: 
+	* tlsInt.h:
 	* tls.c: Cleaned up declarations of Tls_Clean to avoid errors on
 	Windows (lint).
 

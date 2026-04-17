@@ -1,0 +1,38 @@
+# Group,Name,Constraints,Setup,Body,Cleanup,Match,Result,Output,Error Output,Return Codes
+command,package prefer latest,,,,,,,,,
+command,package require tls,,,,,,,,,
+,,,,,,,,,,
+command,# Constraints,,,,,,,,,
+command,set dir [file join [pwd] [file dirname [info script]]],,,,,,,,,
+command,source [file join $dir common.tcl],,,,,,,,,
+,,,,,,,,,,
+command,# Helper functions,,,,,,,,,
+command,set ::cafile [file join $dir certs cacert.pem],,,,,,,,,
+command,set ::env(SSL_CERT_FILE) $::cafile,,,,,,,,,
+command,"proc connect {url} {
+    set port 443
+    lassign [split $url "":""] url port
+    if {$port eq """"} {
+	set port 443
+    }
+    set ch [tls::socket -autoservername 1 -require 1 -cafile $::cafile $url $port]
+    if {[catch {tls::handshake $ch} err]} {
+	close $ch
+	return -code error $err
+    } else {
+	close $ch
+    }
+}",,,,,,,,,
+,,,,,,,,,,
+command,# clienttest.ssllabs.com Tests,,,,,,,,,
+SSLLabs,CVE-2020-0601 (CurveBall) Vulnerability,win OpenSSL1.1.1,,connect www.ssllabs.com:10446,,,"handshake failed: certificate verify failed due to ""self signed certificate in certificate chain""",,,1
+SSLLabs,CVE-2020-0601 (CurveBall) Vulnerability,win !OpenSSL1.1.1,,connect www.ssllabs.com:10446,,,"handshake failed: certificate verify failed due to ""self-signed certificate in certificate chain""",,,1
+SSLLabs,CVE-2020-0601 (CurveBall) Vulnerability,mac,,connect www.ssllabs.com:10446,,,"handshake failed: certificate verify failed due to ""self-signed certificate in certificate chain""",,,1
+SSLLabs,CVE-2020-0601 (CurveBall) Vulnerability,unix !mac,,connect www.ssllabs.com:10446,,,"handshake failed: decode error due to ""unable to get local issuer certificate""",,,1
+SSLLabs,Logjam Vulnerability,win OpenSSL3.0,,connect www.ssllabs.com:10445,,,"handshake failed: certificate verify failed due to ""unable to get local issuer certificate""",,,1
+SSLLabs,Logjam Vulnerability,unix OpenSSL3.0,,connect www.ssllabs.com:10445,,,handshake failed: dh key too small,,,1
+SSLLabs,Logjam Vulnerability,win OpenSSL3.2,,connect www.ssllabs.com:10445,,,handshake failed: unknown security bits,,,1
+SSLLabs,Logjam Vulnerability,unix !mac OpenSSL3.2,,connect www.ssllabs.com:10445,,,handshake failed: unknown security bits,,,1
+SSLLabs,Logjam Vulnerability,mac OpenSSL3.2,,connect www.ssllabs.com:10445,,,"handshake failed: unknown security bits",,,1
+SSLLabs,FREAK Vulnerability,,,connect www.ssllabs.com:10444,,,handshake failed: unsupported protocol,,,1
+SSLLabs,POODLE Vulnerability,,,connect www.ssllabs.com:10443,,,handshake failed: unsupported protocol,,,1

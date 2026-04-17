@@ -1,0 +1,1022 @@
+[comment {-*- tcl -*- doctools manpage}]
+[comment {To convert this to another documentation format use the dtplite
+          script from tcllib: dtplite -o tls.n nroff tls.man
+                              dtplite -o tls.html html tls.man
+}]
+[manpage_begin tls n 2.0b2]
+[category tls]
+[copyright {1999 Matt Newman}]
+[copyright {2004 Starfish Systems}]
+[copyright {2024 Brian O'Hagan}]
+[keywords tls I/O "IP Address" OpenSSL SSL TCP TLS "asynchronous I/O" bind certificate channel connection "domain name" host "https" "network address" network socket TclTLS]
+[moddesc {Tcl TLS extension}]
+[see_also http socket [uri https://www.openssl.org/ OpenSSL]]
+[titledesc {binding to the OpenSSL library for encrypted socket and I/O channel communications}]
+[require Tcl 8.5-]
+[require tls 2.0b2]
+[description]
+
+This extension provides TCL script access to Secure Socket Layer (SSL)
+communications using the Transport Layer Security (TLS) protocol. It provides a
+generic binding to [uri "https://www.openssl.org/" OpenSSL], utilizing the
+[syscmd Tcl_StackChannel] API in TCL 8.4 or later. These sockets behave exactly
+the same as channels created using the built-in [syscmd socket] command, but
+provide additional options for controlling the SSL/TLS session.
+
+[section Compatibility]
+This extension is compatible with OpenSSL 1.1.1 or later. It requires Tcl
+version 8.5 or later and will work with Tcl 9.0.
+
+[section Commands]
+
+The following are the commands provided by the TcLTLS package. See
+[sectref Examples] for example usage and the [file demos] directory for
+more example usage.
+
+[list_begin definitions]
+
+[call [cmd tls::init] [opt [arg -option]] [opt [arg value]] [opt [arg "-option value ..."]]]
+
+Optional function to set the default options used by [cmd tls::socket]. If you
+call [cmd tls::import] directly, the values set by this command have no effect.
+This command supports all of the same options as the [cmd tls::socket] command,
+though you should limit your options to only the TLS related ones.
+
+[call [cmd tls::socket] [opt [arg -option]] [opt [arg value]] [opt [arg "-option value ..."]] [arg host] [arg port]]
+
+This is a helper function that utilizes the underlying commands [syscmd socket]
+and [cmd tls::import] to create the connection. It behaves the same as the
+native TCL [syscmd socket] command, but also supports the [cmd tls::import]
+command options with one additional option. It returns the channel handle id
+for the new socket. Additional options are:
+
+[list_begin options]
+
+[opt_def -autoservername [arg bool]]
+If [const true], automatically set the [option -servername] argument to the
+[emph host] argument. Prior to TclTLS 2.0, the default is [const false].
+Starting in TclTLS 2.0, the default is [const true] unless [option -servername]
+is also specified.
+
+[list_end]
+
+[call [cmd tls::socket] [option -server] [arg command] [opt [arg -option]] [opt [arg value]] [opt [arg "-option value ..."]] [arg port]]
+
+Same as previous command, but instead creates a server socket for clients to
+connect to just like the Tcl [syscmd "socket -server"] command. It returns the
+channel handle id for the new socket.
+
+[call [cmd tls::import] [arg channel] [opt [arg -option]] [opt [arg value]] [opt [arg "-option value ..."]]]
+
+[call [cmd tls::starttls] [arg channel] [opt [arg -option]] [opt [arg value]] [opt [arg "-option value ..."]]]
+
+Start TLS encryption on TCL channel [arg channel] via a stacked channel. It
+need not be a socket, but must provide bi-directional flow. Also sets session
+parameters for SSL handshake. Valid options are:
+
+[list_begin options]
+
+[opt_def -alpn [arg list]]
+List of protocols to offer during Application-Layer Protocol Negotiation
+(ALPN). For example: [const h2] and [const http/1.1], but not [const h3] or
+[const quic]. This option is new for TclTLS 1.8.
+
+[opt_def -cadir [arg directory]]
+Specifies the directory where the Certificate Authority (CA) certificates are
+stored. The default is platform specific and can be set at compile time. The
+default location can be overridden by the [var SSL_CERT_DIR] environment
+variable. See [sectref "Certificate Validation"] for more details.
+
+[opt_def -cafile [arg filename]]
+Specifies the file with the Certificate Authority (CA) certificates to use in
+[const PEM] file format. The default is [file cert.pem], in the OpenSSL
+directory. The default file can be overridden by the [var SSL_CERT_FILE] environment
+variable. See [sectref "Certificate Validation"] for more details.
+
+[opt_def -castore [arg URI]]
+Specifies the Uniform Resource Identifier (URI) for the Certificate Authority
+(CA) store, which may be a single container or a catalog of containers.
+Starting with OpenSSL 3.2 on MS Windows, set to "[const "org.openssl.winstore://"]"
+to use the built-in MS Windows Certificate Store.
+See [sectref "Certificate Validation"] for more details.
+This option is new for TclTLS 1.8.
+
+[opt_def -certfile [arg filename]]
+Specifies the name of the file with the certificate to use in PEM format
+as the local (client or server) certificate. It also contains the public key.
+
+[opt_def -cert [arg string]]
+Specifies the certificate to use as a DER encoded string (X.509 DER).
+
+[opt_def -cipher [arg string]]
+Specifies the list of ciphers to use for TLS 1.2 and earlier connections.
+String is a colon "[const :]" separated list of ciphers.
+Ciphers can be combined using the "[const +]" character.
+Prefixes can be used to permanently remove "[const !]", delete "[const -]", or
+move to the end "[const +]" a specified cipher.
+Keywords [const @STRENGTH] (sort by algorithm key length),
+[const @SECLEVEL=][emph n] (set security level to n), and
+[const DEFAULT] (use default cipher list, at start only) can also be specified.
+See the [uri "https://docs.openssl.org/master/man1/openssl-ciphers/#options" OpenSSL]
+documentation for the full list of valid values.
+
+[opt_def -ciphersuites [arg string]]
+Specifies the list of cipher suites to use for TLS 1.3 as a colon
+"[const :]" separated list of cipher suite names. See the
+[uri "https://docs.openssl.org/master/man1/openssl-ciphers/#options" OpenSSL]
+documentation for the full list of valid values.
+This option is new for TclTLS 1.8.
+
+[opt_def -command [arg callback]]
+Specifies the callback command to be invoked at several points during the
+handshake to pass errors, tracing information, and protocol messages.
+See [sectref "Callback Options"] for more info.
+
+[opt_def -dhparams [arg filename]]
+Specifies the Diffie-Hellman (DH) parameters file.
+
+[opt_def -keyfile [arg filename]]
+Specifies the private key file. The default is to use the file
+specified by the [option -certfile] option.
+
+[opt_def -key [arg string]]
+Specifies the private key to use as a DER encoded string (PKCS#1 DER).
+
+[opt_def -model [arg channel]]
+Force this channel to share the same [term SSL_CTX] structure as the
+specified [arg channel], and therefore share config, callbacks, etc.
+
+[opt_def -password [arg callback]]
+Specifies the callback command to invoke when OpenSSL needs to obtain a
+password. This is typically used to unlock the private key of a certificate.
+The callback should return a password string. This option has changed for
+TclTLS 1.8. See [sectref "Callback Options"] for more info.
+
+[opt_def -post_handshake [arg bool]]
+Allow post-handshake session ticket updates. This option is new for TclTLS 1.8.
+
+[opt_def -request [arg bool]]
+Request a certificate from the peer during the SSL handshake. This is needed
+to do Certificate Validation. Starting in TclTLS 1.8, the default is
+[const true] for client connections. Starting in TclTLS 2.0, if set to
+[const false] and [option -require] is [const true], then this will be
+overridden to [const true].
+See [sectref "Certificate Validation"] for more details.
+
+[opt_def -require [arg bool]]
+Require a valid certificate from the peer during the SSL handshake. If this is
+set to true, then [option -request] must also be set to true and a either
+[option -cadir], [option -cafile], [option -castore], or a platform default
+must be provided in order to validate against. The default in TclTLS 1.8 and
+earlier versions is [const false] since not all platforms have certificates to
+validate against in a form compatible with OpenSSL. Starting in TclTLS 2.0,
+the default is [const true] for client connections.
+See [sectref "Certificate Validation"] for more details.
+
+[opt_def -security_level [arg integer]]
+Specifies the security level (value from 0 to 5). The security level affects
+the allowed cipher suite encryption algorithms, supported ECC curves,
+supported signature algorithms, DH parameter sizes, certificate key sizes
+and signature algorithms. The default is 1 prior to OpenSSL 3.2 and 2
+thereafter. Level 3 and higher disable support for session tickets and
+only accept cipher suites that provide forward secrecy.
+This option is new for TclTLS 1.8.
+
+[opt_def -server [arg bool]]
+Specifies whether to act as a server and respond with a server handshake when a
+client connects and provides a client handshake. The default is [const false].
+
+[opt_def -servername [arg hostname]]
+Specify the peer's hostname. This is used to set the TLS Server Name Indication
+(SNI) extension. Set this to the expected servername in the server's certificate
+or one of the Subject Alternate Names (SAN). Starting in TclTLS 2.0, this will
+default to the host from the [cmd tls::socket] command.
+
+[opt_def -session_id [arg binary_string]]
+Specifies the session id to resume a session. Not supported yet.
+This option is new for TclTLS 1.8.
+
+[opt_def -ssl2 [arg bool]]
+Enable use of SSL v2.The default is [const false].
+OpenSSL 1.1+ no longer supports SSL v2, so this may not have any effect.
+See the [cmd tls::protocols] command for supported protocols.
+
+[opt_def -ssl3 [arg bool]]
+Enable use of SSL v3. The default is [const false]. Starting in TclTLS 1.8,
+use of SSL v3 if only available via a compile time option.
+See the [cmd tls::protocols] command for supported protocols.
+
+[opt_def -tls1 [arg bool]]
+Enable use of TLS v1. Starting in TclTLS 2.0, the default is [const false].
+Note: TLS 1.0 needs SHA1 to operate, which is only available in security level
+0 for Open SSL 3.0+. See the [option -security_level] option.
+
+[opt_def -tls1.1 [arg bool]]
+Enable use of TLS v1.1. Starting in TclTLS 2.0, the default is [const false].
+Note: TLS 1.1 needs SHA1 to operate, which is only available in security level
+0 for Open SSL 3.0+. See the [option -security_level] option.
+
+[opt_def -tls1.2 [arg bool]]
+Enable use of TLS v1.2. The default is [const true].
+
+[opt_def -tls1.3 [arg bool]]
+Enable use of TLS v1.3. The default is [const true]. This is only available
+starting with OpenSSL 1.1.1 and TclTLS 1.7.
+
+[opt_def -validatecommand [arg callback]]
+Specifies the callback command to invoke to validate the peer certificates
+and other config info during the protocol negotiation phase. This can be used
+by TCL scripts to perform their own Certificate Validation to supplement the
+default validation provided by OpenSSL. The script must return a boolean true
+to continue the negotiation. See [sectref "Callback Options"] for more info.
+This option is new for TclTLS 1.8.
+
+[list_end]
+
+[call [cmd tls::handshake] [arg channel]]
+
+Forces the TLS negotiation handshake to take place immediately, and returns 0
+if handshake is still in progress (non-blocking), or 1 if the handshake was
+successful. If the handshake failed, an error will be returned.
+
+[call [cmd tls::shutdown] [arg channel]]
+
+[call [cmd tls::unimport] [arg channel]]
+
+[call [cmd tls::unstack] [arg channel]]
+
+This terminates the SSL/TLS session by sending the "close_notify" message and
+removes the top level stacked channel from [arg channel], but it does not close
+the socket. It is the compliment to [cmd tls::import] by ending encryption of
+a TCL channel. An error is thrown if TLS is not the top stacked channel type.
+
+[call [cmd tls::status] [opt [option -local]] [arg channel]]
+
+Returns the current status of an SSL channel. The result is a list of key-value
+pairs describing the SSL, certificate, and certificate verification status. If
+the SSL handshake has not yet completed, an empty list is returned. If the
+[option -local] option is specified, then the local certificate is used.
+Returned values include:
+
+[para]
+
+SSL Status
+
+[list_begin definitions]
+
+[def "[var alpn] [arg protocol]"]
+The protocol selected after Application-Layer Protocol Negotiation (ALPN).
+This value is new for TclTLS 1.8.
+
+[def "[var cipher] [arg cipher]"]
+The current cipher in use for the session.
+
+[def "[var peername] [arg name]"]
+The peername from the certificate.
+This value is new for TclTLS 1.8.
+
+[def "[var protocol] [arg version]"]
+The protocol version used for the connection: SSL2, SSL3, TLS1, TLS1.1, TLS1.2,
+TLS1.3, or unknown. This value is new for TclTLS 1.8.
+
+[def "[var sbits] [arg n]"]
+The number of bits used for the session key.
+
+[def "[var signatureHashAlgorithm] [arg algorithm]"]
+The signature hash algorithm.
+This value is new for TclTLS 1.8.
+
+[def "[var signatureType] [arg type]"]
+The signature type value.
+This value is new for TclTLS 1.8.
+
+[def "[var verifyDepth] [arg n]"]
+Maximum depth for the certificate chain verification. Default is -1, to check all.
+This value is new for TclTLS 1.8.
+
+[def "[var verifyMode] [arg list]"]
+List of certificate verification modes.
+This value is new for TclTLS 1.8.
+
+[def "[var verifyResult] [arg result]"]
+Certificate verification result.
+This value is new for TclTLS 1.8.
+
+[def "[var ca_names] [arg list]"]
+List of the Certificate Authorities used to create the certificate.
+This value is new for TclTLS 1.8.
+
+[list_end]
+
+Certificate Status
+
+[list_begin definitions]
+
+[def "[var all] [arg string]"]
+Dump of all certificate info.
+This value is new for TclTLS 1.8.
+
+[def "[var version] [arg value]"]
+The certificate version.
+
+[def "[var serialNumber] [arg string]"]
+The serial number of the certificate as a hex string.
+This value was changed from serial in TclTLS 1.8.
+
+[def "[var signature] [arg algorithm]"]
+Cipher algorithm used for certificate signature.
+This value is new for TclTLS 1.8.
+
+[def "[var issuer] [arg string]"]
+The distinguished name (DN) of the certificate issuer.
+
+[def "[var notBefore] [arg date]"]
+The beginning date of the certificate validity.
+
+[def "[var notAfter] [arg date]"]
+The expiration date of the certificate validity.
+
+[def "[var subject] [arg string]"]
+The distinguished name (DN) of the certificate subject. Fields include: Common
+Name (CN), Organization (O), Locality or City (L), State or Province (S), and
+Country Name (C).
+
+[def "[var issuerUniqueID] [arg string]"]
+The issuer unique id.
+This value is new for TclTLS 1.8.
+
+[def "[var subjectUniqueID] [arg string]"]
+The subject unique id.
+This value is new for TclTLS 1.8.
+
+[def "[var num_extensions] [arg n]"]
+Number of certificate extensions.
+This value is new for TclTLS 1.8.
+
+[def "[var extensions] [arg list]"]
+List of certificate extension names.
+This value is new for TclTLS 1.8.
+
+[def "[var authorityKeyIdentifier] [arg string]"]
+Authority Key Identifier (AKI) of the Issuing CA certificate that signed the
+SSL certificate as a hex string. This value matches the SKI value of the
+Intermediate CA certificate.
+This value is new for TclTLS 1.8.
+
+[def "[var subjectKeyIdentifier] [arg string]"]
+Subject Key Identifier (SKI) hash of the public key inside the certificate as a
+hex string. Used to identify certificates that contain a particular public key.
+This value is new for TclTLS 1.8.
+
+[def "[var subjectAltName] [arg list]"]
+List of all of the Subject Alternative Names (SAN) including domain names, sub
+domains, and IP addresses that are secured by the certificate.
+This value is new for TclTLS 1.8.
+
+[def "[var ocsp] [arg list]"]
+List of all Online Certificate Status Protocol (OCSP) URLs that can be used to
+check the validity of this certificate.
+This value is new for TclTLS 1.8.
+
+[def "[var certificate] [arg cert]"]
+The PEM encoded certificate.
+
+[def "[var signatureAlgorithm] [arg algorithm]"]
+Cipher algorithm used for the certificate signature.
+This value is new for TclTLS 1.8.
+
+[def "[var signatureValue] [arg string]"]
+Certificate signature as a hex string.
+This value is new for TclTLS 1.8.
+
+[def "[var signatureDigest] [arg version]"]
+Certificate signing digest as a hex string.
+This value is new for TclTLS 1.8.
+
+[def "[var publicKeyAlgorithm] [arg algorithm]"]
+Certificate signature public key algorithm.
+This value is new for TclTLS 1.8.
+
+[def "[var publicKey] [arg string]"]
+Certificate signature public key as a hex string.
+This value is new for TclTLS 1.8.
+
+[def "[var bits] [arg n]"]
+Number of bits used for certificate signature key.
+This value is new for TclTLS 1.8.
+
+[def "[var self_signed] [arg boolean]"]
+Whether the certificate signature is self signed.
+This value is new for TclTLS 1.8.
+
+[def "[var sha1_hash] [arg hash]"]
+The SHA1 hash of the certificate as a hex string.
+This value is new for TclTLS 1.8.
+
+[def "[var sha256_hash] [arg hash]"]
+The SHA256 hash of the certificate as a hex string.
+This value is new for TclTLS 1.8.
+
+[list_end]
+
+[call [cmd tls::connection] [arg channel]]
+
+Returns the current connection status of an SSL channel. The result is a list
+of key-value pairs describing the connection.
+This command is new for TclTLS 1.8. Returned values include:
+
+[para]
+
+SSL Status
+
+[list_begin definitions]
+
+[def "[var state] [arg state]"]
+State of the connection.
+
+[def "[var servername] [arg name]"]
+The name of the connected to server.
+
+[def "[var protocol] [arg version]"]
+The protocol version used for the connection: SSL2, SSL3, TLS1, TLS1.1, TLS1.2, TLS1.3, or unknown.
+
+[def "[var renegotiation_allowed] [arg boolean]"]
+Whether protocol renegotiation is supported or not.
+
+[def "[var security_level] [arg level]"]
+The security level used for selection of ciphers, key size, etc.
+
+[def "[var session_reused] [arg boolean]"]
+Whether the session has been reused or not.
+
+[def "[var is_server] [arg boolean]"]
+Whether the connection is configured as a server (1) or client (0).
+
+[def "[var compression] [arg mode]"]
+Compression method.
+
+[def "[var expansion] [arg mode]"]
+Expansion method.
+
+[def "[var caList] [arg list]"]
+List of Certificate Authorities (CA) for X.509 certificate.
+
+[list_end]
+
+Cipher Info
+
+[list_begin definitions]
+
+[def "[var cipher] [arg cipher]"]
+The current cipher in use for the connection.
+
+[def "[var standard_name] [arg name]"]
+The standard RFC name of cipher.
+
+[def "[var algorithm_bits] [arg n]"]
+The number of processed bits used for cipher.
+
+[def "[var secret_bits] [arg n]"]
+The number of secret bits used for cipher.
+
+[def "[var min_version] [arg version]"]
+The minimum protocol version for cipher.
+
+[def "[var cipher_is_aead] [arg boolean]"]
+Whether the cipher is Authenticated Encryption with Associated Data (AEAD).
+
+[def "[var cipher_id] [arg id]"]
+The OpenSSL cipher id.
+
+[def "[var description] [arg string]"]
+A text description of the cipher.
+
+[def "[var handshake_digest] [arg boolean]"]
+Digest used during handshake.
+
+[list_end]
+
+Session Info
+
+[list_begin definitions]
+
+[def "[var alpn] [arg protocol]"]
+The protocol selected after Application-Layer Protocol Negotiation (ALPN).
+
+[def "[var resumable] [arg boolean]"]
+Whether the session can be resumed or not.
+
+[def "[var start_time] [arg seconds]"]
+Time since session started in seconds since epoch.
+
+[def "[var timeout] [arg seconds]"]
+Max duration of session in seconds before time-out.
+
+[def "[var lifetime] [arg seconds]"]
+Session ticket lifetime hint in seconds.
+
+[def "[var session_id] [arg binary_string]"]
+Unique session id for use in resuming the session.
+
+[def "[var session_ticket] [arg binary_string]"]
+Unique session ticket for use in resuming the session.
+
+[def "[var ticket_app_data] [arg binary_string]"]
+Unique session ticket application data.
+
+[def "[var master_key] [arg binary_string]"]
+Unique session master key.
+
+[def "[var session_cache_mode] [arg mode]"]
+Server cache mode (client, server, or both).
+
+[list_end]
+
+[call [cmd tls::ciphers] [opt [arg protocol]] [opt [arg verbose]] [opt [arg supported]]]
+
+Without any options, it returns a list of all symmetric ciphers for use with the
+[arg -cipher] option. With [arg protocol], only the ciphers supported for that
+protocol are returned. See the [cmd tls::protocols] command for the supported
+protocols. If [arg verbose] is specified as true then a verbose, human readable
+list is returned with additional information on the cipher. If [arg supported]
+is specified as true, then only the ciphers supported for protocol will be listed.
+The [arg supported] arg is new for TclTLS 1.8.
+
+[call [cmd tls::protocols]]
+
+Returns a list of the supported SSL/TLS protocols. Valid values are:
+[const ssl2], [const ssl3], [const tls1], [const tls1.1], [const tls1.2], and
+[const tls1.3]. Exact list depends on OpenSSL version and compile time flags.
+This command is new for TclTLS 1.8.
+
+[call [cmd tls::version]]
+
+Returns the OpenSSL version string.
+
+[list_end]
+
+
+[section "Certificate Validation"]
+
+[subsection "PKI and Certificates"]
+
+Using the Public Key Infrastructure (PKI), each user creates a private key that
+only they know about and a public key they can exchange with others for use in
+encrypting and decrypting data. The process is the sender encrypts their data
+using their private key and the receiver's public key. The data is then sent
+to the receiver. In a similar manner, the receiver uses their private key and
+the sender's public key to decrypt the data. This provides data integrity, to
+ensure the data can't be viewed or altered during transport. See the
+[option -key] and [option -keyfile] options for how to specify the private key.
+Also see the [option -password] option for how to provide the password.
+[para]
+In order to provide authentication, i.e. ensuring someone is who they say they
+are, the public key and user identification info is stored in a X.509
+certificate and that certificate is authenticated (i.e. signed) by a Certificate
+Authority (CA). Users can then exchange these certificates during the TLS
+initialization process and check them against the root CA certificates to ensure
+they are valid. This is handled by OpenSSL via the [option -request] and
+[option -require] options. See the [option -cadir], [option -cadir], and
+[option -castore] options for how to specify where to find the CA certificates.
+Optionally, in a future release, they can also be checked against the Certificate
+Revocation List (CRL) of revoked certificates. Certificates can also be
+self-signed, but they are by default not trusted unless you add them to your
+certificate store.
+[para]
+Typically when visiting web sites, only the client needs to check the server's
+certificate to ensure it is valid. The server doesn't need to check the client
+certificate unless you need to authenticate with them to login, etc. See the
+[option -cert] and [option -certfile] options if you need to provide a certificate.
+
+
+[subsection "Summary of command line options"]
+
+The following options are used for peer certificate validation:
+
+[list_begin options]
+
+[opt_def -cadir [arg directory]]
+Specifies the directory where the Certificate Authority (CA) certificates are
+stored. The default is platform specific, but is usually [file /etc/ssl/certs] on
+Linux/Unix systems. The default location can be overridden by the
+[var SSL_CERT_DIR] environment variable.
+
+[opt_def -cafile [arg filename]]
+Specifies the file with the Certificate Authority (CA) certificates to use in
+[const PEM] file format. The default is [file cert.pem], in the OpenSSL
+directory. On Linux/Unix systems, this is usually [file /etc/ssl/ca-bundle.pem].
+The default file can be overridden by the [var SSL_CERT_FILE] environment
+variable.
+
+[opt_def -castore [arg URI]]
+Specifies the Uniform Resource Identifier (URI) for the Certificate Authority
+(CA) store, which may be a single container or a catalog of containers.
+Starting with OpenSSL 3.2 on MS Windows, set to "[const "org.openssl.winstore://"]"
+to use the built-in MS Windows Certificate Store. Starting in TclTLS 2.0, this
+is the default if [option -cadir], [option -cadir], and [option -castore] are
+not specified. This store only supports root certificate stores.
+
+[opt_def -request [arg bool]]
+Request a certificate from the peer during the SSL handshake. This is needed
+to do Certificate Validation. Starting in TclTLS 1.8, the default is
+[const true] for client connections. Starting in TclTLS 2.0, if set to
+[const false] and [option -require] is [const true], then this will be
+overridden to [const true]. In addition, the client can manually inspect and
+accept or reject each certificate using the [option -validatecommand] option.
+
+[opt_def -require [arg bool]]
+Require a valid certificate from the peer during the SSL handshake. If this is
+set to true, then [option -request] must also be set to true and a either
+[option -cadir], [option -cafile], [option -castore], or a platform default
+must be provided in order to validate against. The default in TclTLS 1.8 and
+earlier versions is [const false] since not all platforms have certificates to
+validate against in a form compatible with OpenSSL. Starting in TclTLS 2.0,
+the default is [const true] for client connections.
+
+[list_end]
+
+[subsection "When are command line options needed?"]
+
+In TclTLS 1.8 and earlier versions, certificate validation is
+[emph NOT] enabled by default. This limitation is due to the lack of a common
+cross platform database of Certificate Authority (CA) provided certificates to
+validate against. Many Linux systems natively support OpenSSL and thus have
+these certificates installed as part of the OS, but MacOS and MS Windows do not.
+Staring in TclTLS 2.0, the default for client connections has been changed to
+require certificate validation by default. In order to use the [option -require]
+option, one of the following must be true:
+
+[list_begin itemized]
+
+[item]
+On Linux and Unix systems with OpenSSL already installed or if the CA
+certificates are available in PEM format, and if they are stored in the
+standard locations, or if the [var SSL_CERT_DIR] or [var SSL_CERT_FILE]
+environment variables are set, then [option -cadir], [option -cadir],
+and [option -castore] aren't needed.
+
+[item]
+If OpenSSL is not installed in the default location, or when using Mac OS
+or MS Windows and OpenSSL is installed, the [var SSL_CERT_DIR] and/or
+[var SSL_CERT_FILE] environment variables or the one of the [option -cadir],
+[option -cadir], or [option -castore] options must be defined.
+
+[item]
+On MS Windows, starting in OpenSSL 3.2, it is now possible to access the
+built-in Windows Certificate Store from OpenSSL. This can be utilized by
+setting the [option -castore] option to "[const org.openssl.winstore://]".
+In TclTLS 2.0, this is the default value if [option -cadir],
+[option -cadir], and [option -castore] are not specified.
+
+[item]
+If OpenSSL is not installed or the CA certificates are not available in PEM
+format, the CA certificates must be downloaded and installed with the user
+software. The CURL team makes them available at
+[uri "https://curl.se/docs/caextract.html" "CA certificates extracted
+from Mozilla"] in the [file cacert.pem] file. You must then either set the
+[var SSL_CERT_DIR] and/or [var SSL_CERT_FILE] environment variables or the
+[option -cadir] or [option -cafile] options to the CA cert file's install
+location. It is your responsibility to keep this file up to date.
+
+[list_end]
+
+[section "Callback Options"]
+
+As previously described, each channel can be given their own callbacks
+to handle intermediate processing by the OpenSSL library, using the
+[option -command], [option -password], and [option -validate_command] options
+passed to either of [cmd tls::socket] or [cmd tls::import].
+Unlike previous versions of TclTLS, only if the callback generates an error,
+will the [syscmd bgerror] command be invoked with the error information.
+
+[subsection "Values for Command Callback"]
+
+The callback for the [option -command] option is invoked at several points during the
+OpenSSL handshake and during routine operations. See below for the possible
+arguments passed to the callback script. Values returned from the callback are
+ignored.
+
+[list_begin options]
+
+[opt_def error [arg "channelId message"]]
+This form of callback is invoked whenever an error occurs during the initial
+connection, handshake, or I/O operations. The [arg message] argument can be
+from the Tcl_ErrnoMsg, OpenSSL function [fun ERR_reason_error_string()],
+or a custom message. This callback is new for TclTLS 1.8.
+
+[opt_def info [arg "channelId major minor message type"]]
+This form of callback is invoked by the OpenSSL function
+[fun SSL_set_info_callback()] during the initial connection and handshake
+operations. The arguments are:
+
+[list_begin definitions]
+
+[def [arg major]]
+Major category for error. Valid enums are: [const handshake], [const alert],
+[const connect], [const accept].
+
+[def [arg minor]]
+Minor category for error. Valid enums are: [const start], [const done], [const read],
+[const write], [const loop], [const exit].
+
+[def [arg message]]
+Descriptive message string which may be generated either by
+[fun SSL_state_string_long()] or [fun SSL_alert_desc_string_long()],
+depending on the context.
+
+[def [arg type]]
+For alerts, the possible values are: [const warning],
+[const fatal], and [const unknown]. For others, [const info] is used.
+This argument is new for TclTLS 1.8.
+
+[list_end]
+
+[opt_def message [arg "channelId direction version content_type message"]]
+This form of callback is invoked by the OpenSSL function
+[fun SSL_set_msg_callback()] whenever a message is sent or received during the
+initial connection, handshake, or I/O operations. It is only available when
+OpenSSL is complied with the [const enable-ssl-trace] option. This callback is
+new for TclTLS 1.8. The arguments are:
+
+[list_begin definitions]
+
+[def [arg direction]]
+Direction is either [const Sent] or [const Received].
+
+[def [arg version]]
+Version is the protocol version.
+
+[def [arg content_type]]
+Content type is the message content type.
+
+[def [arg message]]
+Message is more info from the [const SSL_trace] API.
+
+[list_end]
+
+[opt_def session [arg "channelId session_id session_ticket lifetime"]]
+This form of callback is invoked by the OpenSSL function
+[fun SSL_CTX_sess_set_new_cb()] whenever a new session id is sent by the
+server during the initial connection and handshake and also during the session
+if the [option -post_handshake] option is set to true. This callback is new for
+TclTLS 1.8. The arguments are:
+
+[list_begin definitions]
+
+[def [arg session_id]]
+Session Id is the current session identifier
+
+[def [arg session_ticket]]
+Ticket is the session ticket info
+
+[def [arg lifetime]]
+Lifetime is the ticket lifetime in seconds.
+
+[list_end]
+
+[opt_def verify [arg "channelId depth cert status error"]]
+This callback was moved to [option -validatecommand] in TclTLS 1.8.
+
+[list_end]
+
+[subsection "Values for Password Callback"]
+
+The callback for the [option -password] option is invoked by TclTLS whenever OpenSSL needs
+to obtain a password. See below for the possible arguments passed to the
+callback script. The user provided password is expected to be returned by the
+callback.
+
+[list_begin options]
+
+[opt_def password [arg "rwflag size"]]
+Invoked when loading or storing an encrypted PEM certificate. The arguments are:
+
+[list_begin definitions]
+
+[def [arg rwflag]]
+The read/write flag is 0 for reading/decryption or 1 for writing/encryption.
+The latter can be used to determine when to prompt the user to confirm.
+This argument is new for TclTLS 1.8.
+
+[def [arg size]]
+The size is the maximum length of the password in bytes.
+This argument is new for TclTLS 1.8.
+
+[list_end]
+
+[list_end]
+
+[subsection "Values for Validate Command Callback"]
+
+The callback for the [option -validatecommand] option is invoked during the handshake
+process in order for the application to validate the provided value(s). See
+below for the possible arguments passed to the callback script. If not
+specified, OpenSSL will accept all valid certificates and extensions. To reject
+the value and abort the connection, the callback should return 0. To accept the
+value and continue the connection, it should return 1. To reject the value, but
+continue the connection, it should return 2. This callback is new for TclTLS 1.8.
+
+[list_begin options]
+
+[opt_def alpn [arg "channelId protocol match"]]
+For servers, this form of callback is invoked when the client ALPN extension is
+received. If [arg match] is true, then [arg protocol] is the first
+[option -alpn] protocol option in common to both the client and server.
+If not, the first client specified protocol is used. This callback is called
+after the Hello and SNI callbacks.
+
+[opt_def hello [arg "channelId servername session_id"]]
+For servers, this form of callback is invoked during client hello message
+processing. The purpose is so the server can select the appropriate certificate
+to present to the client, and to make other configuration adjustments relevant
+to that server name and its configuration. It is called before the SNI and ALPN
+callbacks.
+
+[opt_def sni [arg "channelId servername"]]
+For servers, this form of callback is invoked when the Server Name Indication
+(SNI) extension is received. The [arg servername] argument is the client
+provided server name specified in the [option -servername] option. The
+purpose is so when a server supports multiple names, the right certificate
+can be used. It is called after the Hello callback but before the ALPN
+callback.
+
+[opt_def verify [arg "channelId depth cert status error"]]
+This form of callback is invoked by OpenSSL when a new certificate is received
+from the peer. It allows the client to check the certificate verification
+results and choose whether to continue or not. It is called for each
+certificate in the certificate chain. This callback was moved from
+[option -command] in TclTLS 1.8. The arguments are:
+
+[list_begin definitions]
+
+[def [arg depth]]
+The depth is the integer depth of the certificate in the certificate chain,
+where 0 is the peer certificate and higher values going up to the Certificate
+Authority (CA).
+
+[def [arg cert]]
+The cert argument is a list of key-value pairs similar to those returned by
+[cmd tls::status].
+
+[def [arg status]]
+The status argument is the boolean validity of the current certificate where 0
+is invalid and 1 is valid.
+
+[def [arg error]]
+The error argument is the error message, if any, generated by
+[fun X509_STORE_CTX_get_error()].
+
+[list_end]
+
+[list_end]
+
+Reference implementations of these callbacks are provided in [file tls.tcl]
+as [cmd tls::callback], [cmd tls::password], and [cmd tls::validate_command]
+respectively. Note that these are only [emph sample] implementations. In a more
+realistic deployment you would specify your own callback scripts on each TLS
+channel using the [option -command], [option -password], and
+[option -validate_command] options.
+
+[para]
+
+The default behavior when the [option -command] and [option -validate_command]
+options are not specified, is for TclTLS to process the associated library
+callbacks internally. The default behavior when the [option -password] option
+is not specified is for TclTLS to process the associated library callbacks by
+attempting to call [cmd tls::password]. The difference between these two
+behaviors is a consequence of maintaining compatibility with earlier
+implementations.
+
+[para]
+
+[emph "The use of the reference callbacks [cmd tls::callback], [cmd tls::password],
+and [cmd tls::validate_command] is not recommended. They may be removed from future releases."]
+
+[section Debug]
+
+For most debugging needs, the [option -callback] option can be used to provide
+sufficient insight and information on the TLS handshake and progress. If
+further troubleshooting insight is needed, the compile time option
+[option --enable-debug] can be used to get detailed execution flow status.
+
+[para]
+
+TLS key logging can be enabled by setting the environment variable
+[var SSLKEYLOGFILE] to the name of the file to log to. Then whenever TLS key
+material is generated or received it will be logged to the file. This is useful
+for logging key data for network logging tools to use to decrypt the data.
+
+[para]
+
+The [var tls::debug] variable provides some additional control over the
+debug logging in the [cmd tls::callback], [cmd tls::password], and
+[cmd tls::validate_command] default handlers in [file tls.tcl].
+The default value is 0 with higher values producing more diagnostic output,
+and will also force the verify method in [cmd tls::callback] to accept the
+certificate, even if it is invalid when the [option -validatecommand]
+option is set to [cmd tls::validate_command].
+
+[para]
+
+[emph "The use of the variable [var tls::debug] is not recommended.
+It may be removed from future releases."]
+
+[section "Examples"]
+
+The following are example scripts to download a webpage and file using the
+http package. See [sectref "Certificate Validation"] for when the
+[option -cadir], [option -cafile], and [option -castore] options are also
+needed. See the [file demos] directory for more example scripts.
+
+[para]
+
+Example #1: Download a web page
+
+[example {
+
+package require http
+package require tls
+
+set url "https://www.tcl.tk/"
+http::register https 443 [list ::tls::socket -autoservername 1 -require 1]
+
+# Get URL
+set token [http::geturl $url]
+
+# Check for error
+if {[http::status $token] ne "ok"} {
+    puts [format "Error %s" [http::status $token]]
+}
+
+# Save web page to file
+set ch [open example.html wb]
+puts $ch [http::data $token]
+close $ch
+
+# Cleanup
+::http::cleanup $token
+}]
+
+Example #2: Download a file
+
+[example {
+
+package require http
+package require tls
+
+set url "https://wiki.tcl-lang.org/sitemap.xml"
+http::register https 443 [list ::tls::socket -autoservername 1 -require 1]
+
+# Open output file
+set filename [file tail $url]
+set ch [open $filename wb]
+
+# Get file
+set token [::http::geturl $url -blocksize 65536 -channel $ch]
+
+# Check for error
+if {[http::status $token] ne "ok"} {
+    puts [format "Error %s" [http::status $token]]
+}
+
+# Cleanup
+close $ch
+::http::cleanup $token
+}]
+
+[section "Special Considerations"]
+
+The capabilities of this package can vary enormously based upon how the
+linked to OpenSSL library was configured and built. New versions may obsolete
+older protocol versions, add or remove ciphers, change default values, etc.
+Use the [cmd tls::protocols] command to obtain the supported
+protocol versions.
+
+[section "Error Messages"]
+
+Some OpsnSSl error messages have cryptic meanings. This is a list of messages
+along with their true meaning.
+
+[list_begin definitions]
+
+[def [arg "handshake failed: certificate verify failed due to \"unable to get local issuer certificate\""]]
+The certificates in the CA file or certificate store either do not have one or
+more issuers of the certificates you are validating or they have expired.
+Usually this means you need an updated CAcert file.
+
+[def [arg "packet length too long"]]
+Client has tried to connect to a HTTP server on the plain-text port instead of
+the SSL/TLS port.
+
+[def [arg "unexpected eof while reading"]]
+The peer has closed the connection without sending the "close notify" shutdown
+alert. Some servers will terminate the connection after the file or webpage has
+been sent without sending the "close notify" message. In this case, it should
+not result in a loss of data.
+
+[def [arg "wrong version number"]]
+Client has tried to connect to a non-HTTP server on a non-TLS (i.e. plain text) port.
+
+[list_end]
+
+[manpage_end]

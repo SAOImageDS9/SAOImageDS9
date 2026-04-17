@@ -4,14 +4,11 @@ dnl	generate the file "configure", which is run during Tcl installation
 dnl	to configure the system for the local environment.
 
 #-----------------------------------------------------------------------
-# Sample configure.ac for Tcl Extensions.  The only places you should
-# need to modify this file are marked by the string __CHANGE__
+# This is the configure.ac for the TclTLS extension.  The only places you
+# should need to modify this file are marked by the string __CHANGE__.
 #-----------------------------------------------------------------------
 
 #-----------------------------------------------------------------------
-# __CHANGE__
-# Set your package name and version numbers here.
-#
 # This initializes the environment with PACKAGE_NAME and PACKAGE_VERSION
 # set as provided.  These will also be added as -D defs in your Makefile
 # so you can encode the package version directly into the source files.
@@ -19,7 +16,7 @@ dnl	to configure the system for the local environment.
 # so that we create the export library with the dll.
 #-----------------------------------------------------------------------
 
-AC_INIT([tls], [1.6.7])
+AC_INIT([tls],[2.0])
 
 #--------------------------------------------------------------------
 # Call TEA_INIT as the first TEA_ macro to set up initial vars.
@@ -27,7 +24,7 @@ AC_INIT([tls], [1.6.7])
 # as well as PKG_LIB_FILE and PKG_STUB_LIB_FILE.
 #--------------------------------------------------------------------
 
-TEA_INIT()
+TEA_INIT
 
 AC_CONFIG_AUX_DIR(tclconfig)
 
@@ -62,7 +59,6 @@ TEA_PREFIX
 TEA_SETUP_COMPILER
 
 #-----------------------------------------------------------------------
-# __CHANGE__
 # Specify the C source files to compile in TEA_ADD_SOURCES,
 # public headers that need to be installed in TEA_ADD_HEADERS,
 # stub library C source files to compile in TEA_ADD_STUB_SOURCES,
@@ -71,17 +67,15 @@ TEA_SETUP_COMPILER
 # and PKG_TCL_SOURCES.
 #-----------------------------------------------------------------------
 
-TEA_ADD_SOURCES([tls.c tlsIO.c tlsBIO.c tlsX509.c fixstrtod.c])
-TEA_ADD_HEADERS([tls.h])
+TEA_ADD_SOURCES([tls.c tlsBIO.c tlsIO.c tlsX509.c])
+TEA_ADD_HEADERS([generic/tls.h])
 TEA_ADD_INCLUDES([])
 TEA_ADD_LIBS([])
 TEA_ADD_CFLAGS([])
 TEA_ADD_STUB_SOURCES([])
-TEA_ADD_TCL_SOURCES([tls.tcl])
+TEA_ADD_TCL_SOURCES([library/tls.tcl license.terms README.txt])
 
 #--------------------------------------------------------------------
-# __CHANGE__
-#
 # You can add more files to clean if your extension creates any extra
 # files by extending CLEANFILES.
 # Add pkgIndex.tcl if it is generated in the Makefile instead of ./configure
@@ -91,21 +85,16 @@ TEA_ADD_TCL_SOURCES([tls.tcl])
 # TEA_ADD_* any platform specific compiler/build info here.
 #--------------------------------------------------------------------
 
-#CLEANFILES="$CLEANFILES pkgIndex.tcl"
+TEA_ADD_CLEANFILES([pkgIndex.tcl generic/tls.tcl.h tlsUuid.h])
+
 if test "${TEA_PLATFORM}" = "windows" ; then
-    # Ensure no empty if clauses
-    :
-    #TEA_ADD_SOURCES([win/winFile.c])
-    #TEA_ADD_INCLUDES([-I\"$(${CYGPATH} ${srcdir}/win)\"])
+    TEA_ADD_CLEANFILES([*.lib *.dll *.exp *.ilk *.pdb vc*.pch])
 else
-    # Ensure no empty else clauses
-    :
-    #TEA_ADD_SOURCES([unix/unixFile.c])
-    #TEA_ADD_LIBS([-lsuperfly])
+    TEA_ADD_CLEANFILES([*.so])
 fi
+AC_SUBST(CLEANFILES)
 
 #--------------------------------------------------------------------
-# __CHANGE__
 # Choose which headers you need.  Extension authors should try very
 # hard to only rely on the Tcl public header files.  Internal headers
 # contain private data structures and are subject to change without
@@ -149,24 +138,14 @@ TEA_CONFIG_CFLAGS
 TEA_ENABLE_SYMBOLS
 
 #--------------------------------------------------------------------
-# If the variable OPENSSL is set, we will build with the OpenSSL
-# libraries.  If it is not set, then we will use RSA BSAFE SSL-C
-# libraries instead of the default OpenSSL libaries.
+# Everyone should be linking against the Tcl stub library.  If you
+# can't for some reason, remove this definition.  If you aren't using
+# stubs, you also need to modify the SHLIB_LD_LIBS setting below to
+# link against the non-stubbed Tcl library.  Add Tk too if necessary.
 #--------------------------------------------------------------------
 
-OPENSSL="1"
-
-TLS_CHECK_SSL
-
-#--------------------------------------------------------------------
-# Determine if we should use the patented encryption code
-#--------------------------------------------------------------------
-
-AC_ARG_ENABLE(patents, [  --enable-patents        Use patented code.  Default is enabled], PATENTS=${enableval}, PATENTS=yes)  
-
-if test ${PATENTS} = no; then
-    AC_DEFINE([NO_PATENTS])
-fi
+AC_DEFINE(USE_TCL_STUBS)
+#AC_DEFINE(USE_TK_STUBS)
 
 #--------------------------------------------------------------------
 # This macro generates a line to use when building a library.  It
@@ -177,6 +156,13 @@ fi
 TEA_MAKE_LIB
 
 #--------------------------------------------------------------------
+# This marco includes the TCL TLS specific functions to set the
+# OpenSSL or LibreSSL config.
+#--------------------------------------------------------------------
+
+TCLTLS_SSL_OPENSSL
+
+#--------------------------------------------------------------------
 # Shared libraries and static libraries have different names.
 # Also, windows libraries and unix libraries have different names.
 # For the OpenSSL version, I chose to use the same library names that
@@ -185,24 +171,14 @@ TEA_MAKE_LIB
 
 if test "${TEA_PLATFORM}" = "windows" ; then
     if test "$GCC" = "yes"; then
-	TEA_ADD_LIBS([-L${SSL_LIB_DIR_NATIVE}])
-    else
-	TEA_ADD_LIBS([-libpath:${SSL_LIB_DIR_NATIVE}])
-    fi
-    if test -n "${OPENSSL}"; then
-        TEA_ADD_LIBS([ssleay32.lib libeay32.lib])
-    else
-        TEA_ADD_LIBS([sslc32.lib])
+	TEA_ADD_CFLAGS([${TCLTLS_SSL_CFLAGS} -Wno-deprecated-declarations])
+	TEA_ADD_INCLUDES([${TCLTLS_SSL_INCLUDES}])
+	TEA_ADD_LIBS([${TCLTLS_SSL_LIBS} ws2_32.lib Crypt32.lib])
     fi
 else
-    # Subst runtime dir here, use -R and -L where necessary. [Bug 1742859]
-    LIB_RUNTIME_DIR=${SSL_LIB_DIR}
-    eval "LD_SEARCH_FLAGS=\"${LD_SEARCH_FLAGS}\""
-    if test -n "${OPENSSL}"; then
-	TEA_ADD_LIBS([${LD_SEARCH_FLAGS} -L${SSL_LIB_DIR} -lssl -lcrypto ${GCCPATH} ${GCCLIB}])
-    else
-	TEA_ADD_LIBS([${LD_SEARCH_FLAGS} -L${SSL_LIB_DIR} -lsslc])
-    fi
+	TEA_ADD_CFLAGS([${TCLTLS_SSL_CFLAGS} -Wno-deprecated-declarations])
+	TEA_ADD_INCLUDES([${TCLTLS_SSL_INCLUDES}])
+	TEA_ADD_LIBS([${TCLTLS_SSL_LIBS}])
 fi
 
 #--------------------------------------------------------------------
@@ -220,7 +196,7 @@ TEA_PROG_TCLSH
 # Setup a *Config.sh.in configuration file.
 #--------------------------------------------------------------------
 
-TEA_EXPORT_CONFIG([tls])
+#TEA_EXPORT_CONFIG([tls])
 #AC_SUBST(SAMPLE_VAR)
 
 #--------------------------------------------------------------------
@@ -230,11 +206,11 @@ TEA_EXPORT_CONFIG([tls])
 #--------------------------------------------------------------------
 
 AC_CONFIG_FILES([Makefile pkgIndex.tcl])
-AC_CONFIG_FILES([tlsConfig.sh])
+#AC_CONFIG_FILES([tlsConfig.sh])
 
 #--------------------------------------------------------------------
 # Finally, substitute all of the various values into the files
 # specified with AC_CONFIG_FILES.
 #--------------------------------------------------------------------
 
-AC_OUTPUT()
+AC_OUTPUT

@@ -1,11 +1,10 @@
 /*
  *  Copyright (C) 1997-2000 Matt Newman <matt@novadigm.com>
  *
- *  $Header: /cvsroot/tls/tls/tclOpts.h,v 1.2 2000/01/20 01:49:31 aborr Exp $
- *
- * Stylized option processing - requires consitent
+ * Stylized option processing - requires consistent
  * external vars: opt, idx, objc, objv
  */
+
 #ifndef _TCL_OPTS_H
 #define _TCL_OPTS_H
 
@@ -28,7 +27,7 @@
 
 #define OPTSTR(option, var)			\
     OPT_PROLOG(option)				\
-    var = Tcl_GetStringFromObj(objv[idx], NULL);\
+    var = Tcl_GetString(objv[idx]);\
     OPT_POSTLOG()
 
 #define OPTINT(option, var)			\
@@ -45,6 +44,11 @@
 	    &(var)) != TCL_OK) {		\
 	    return TCL_ERROR;			\
     }						\
+    OPT_POSTLOG()
+
+#define OPTBYTE(option, var, lvar)		\
+    OPT_PROLOG(option)				\
+    var = Tcl_GetByteArrayFromObj(objv[idx], &(lvar));\
     OPT_POSTLOG()
 
 #define OPTBAD(type, list)			\

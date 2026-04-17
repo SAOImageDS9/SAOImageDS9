@@ -1,0 +1,62 @@
+# Group,Name,Constraints,Setup,Body,Cleanup,Match,Result,Output,Error Output,Return Codes
+command,package prefer latest,,,,,,,,,
+command,package require tls,,,,,,,,,
+command,,,,,,,,,,
+command,# Make sure path includes location of OpenSSL executable,,,,,,,,,
+command,"if {[info exists ::env(OPENSSL)]} {set ::env(path) [string cat [file join $::env(OPENSSL) bin "";""] $::env(path)]}",,,,,,,,,
+command,,,,,,,,,,
+command,# Constraints,,,,,,,,,
+command,set protocols [list ssl2 ssl3 tls1 tls1.1 tls1.2 tls1.3],,,,,,,,,
+command,foreach protocol $protocols {::tcltest::testConstraint $protocol 0},,,,,,,,,
+command,foreach protocol [::tls::protocols] {::tcltest::testConstraint $protocol 1},,,,,,,,,
+command,"::tcltest::testConstraint OpenSSL [string match ""OpenSSL*"" [::tls::version]]",,,,,,,,,
+,,,,,,,,,,
+command,# Helper functions,,,,,,,,,
+command,"proc lcompare {list1 list2} {
+    set m """"
+    set u """"
+    foreach i $list1 {
+        if {$i ni $list2} {
+            lappend m $i
+        }
+    }
+    foreach i $list2 {
+        if {$i ni $list1} {
+            lappend u $i
+        }
+    }
+    return [list ""missing"" $m ""unexpected"" $u]
+}
+",,,,,,,,,
+command,proc exec_get {delim args} {return [split [exec openssl {*}$args] $delim]},,,,,,,,,
+,,,,,,,,,,
+command,# Test protocols,,,,,,,,,
+Protocols,All,,,lcompare $protocols [::tls::protocols],,,missing {ssl2 ssl3} unexpected {},,,
+,,,,,,,,,,
+command,# Test ciphers,,,,,,,,,
+Ciphers By Protocol,SSL2,ssl2,,"lcompare [exec_get "":"" ciphers -ssl2] [::tls::ciphers ssl2]",,,missing {} unexpected {},,,
+Ciphers By Protocol,SSL3,ssl3,,"lcompare [exec_get "":"" ciphers -ssl3] [::tls::ciphers ssl3]",,,missing {} unexpected {},,,
+Ciphers By Protocol,TLS1.0,tls1,,"lcompare [exec_get "":"" ciphers -tls1] [::tls::ciphers tls1]",,,missing {} unexpected {},,,
+Ciphers By Protocol,TLS1.1,tls1.1,,"lcompare [exec_get "":"" ciphers -tls1_1] [::tls::ciphers tls1.1]",,,missing {} unexpected {},,,
+Ciphers By Protocol,TLS1.2,tls1.2,,"lcompare [exec_get "":"" ciphers -tls1_2] [::tls::ciphers tls1.2]",,,missing {} unexpected {},,,
+Ciphers By Protocol,TLS1.3,tls1.3,,"lcompare [exec_get "":"" ciphers -tls1_3] [::tls::ciphers tls1.3]",,,missing {} unexpected {},,,
+,,,,,,,,,,
+command,# Test cipher descriptions,,,,,,,,,
+Ciphers With Descriptions,SSL2,ssl2,,"lcompare [exec_get ""\r\n"" ciphers -ssl2 -v] [split [string trim [::tls::ciphers ssl2 1]] \n]",,,missing {} unexpected {},,,
+Ciphers With Descriptions,SSL3,ssl3,,"lcompare [exec_get ""\r\n"" ciphers -ssl3 -v] [split [string trim [::tls::ciphers ssl3 1]] \n]",,,missing {} unexpected {},,,
+Ciphers With Descriptions,TLS1.0,tls1 OpenSSL1.1.1,,"lcompare [exec_get ""\r\n"" ciphers -tls1 -v] [split [string trim [::tls::ciphers tls1 1]] \n]",,,missing {} unexpected {},,,
+Ciphers With Descriptions,TLS1.1,tls1.1 OpenSSL1.1.1,,"lcompare [exec_get ""\r\n"" ciphers -tls1_1 -v] [split [string trim [::tls::ciphers tls1.1 1]] \n]",,,missing {} unexpected {},,,
+Ciphers With Descriptions,TLS1.2,tls1.2 OpenSSL1.1.1,,"lcompare [exec_get ""\r\n"" ciphers -tls1_2 -v] [split [string trim [::tls::ciphers tls1.2 1]] \n]",,,missing {} unexpected {},,,
+Ciphers With Descriptions,TLS1.3,tls1.3 OpenSSL1.1.1,,"lcompare [exec_get ""\r\n"" ciphers -tls1_3 -v] [split [string trim [::tls::ciphers tls1.3 1]] \n]",,,missing {} unexpected {},,,
+,,,,,,,,,,
+command,# Test protocol specific ciphers,,,,,,,,,
+Ciphers Protocol Specific,SSL2,ssl2,,"lcompare [exec_get "":"" ciphers -ssl2 -s] [::tls::ciphers ssl2 0 1]",,,missing {} unexpected {},,,
+Ciphers Protocol Specific,SSL3,ssl3,,"lcompare [exec_get "":"" ciphers -ssl3 -s] [::tls::ciphers ssl3 0 1]",,,missing {} unexpected {},,,
+Ciphers Protocol Specific,TLS1.0,tls1 OpenSSL1.1.1,,"lcompare [exec_get "":"" ciphers -tls1 -s] [::tls::ciphers tls1 0 1]",,,missing {} unexpected {},,,
+Ciphers Protocol Specific,TLS1.1,tls1.1 OpenSSL1.1.1,,"lcompare [exec_get "":"" ciphers -tls1_1 -s] [::tls::ciphers tls1.1 0 1]",,,missing {} unexpected {},,,
+Ciphers Protocol Specific,TLS1.2,tls1.2 OpenSSL1.1.1,,"lcompare [exec_get "":"" ciphers -tls1_2 -s] [::tls::ciphers tls1.2 0 1]",,,missing {} unexpected {},,,
+Ciphers Protocol Specific,TLS1.3,tls1.3 OpenSSL1.1.1,,"lcompare [exec_get "":"" ciphers -tls1_3 -s] [::tls::ciphers tls1.3 0 1]",,,missing {} unexpected {},,,
+,,,,,,,,,,
+command,# Test version,,,,,,,,,
+Version,All,,,::tls::version,,glob,*,,,
+Version,OpenSSL,OpenSSL,,::tls::version,,glob,OpenSSL*,,,

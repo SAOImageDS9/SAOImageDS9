@@ -1,3 +1,5 @@
+#!/usr/bin/env tclsh
+#
 # This file contains Tcl code to implement a remote server that can be
 # used during testing of Tcl socket code. This server is used by some
 # of the tests in socket.test.
@@ -9,12 +11,12 @@
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 #
-# RCS: @(#) $Id: remote.tcl,v 1.6 2004/02/11 22:41:25 razzell Exp $
 
 # load tls package
+package prefer latest
 package require tls
 
-# Initialize message delimitor
+# Initialize message delimiter
 
 # Initialize command array
 catch {unset command}
@@ -44,30 +46,33 @@ proc __doCommands__ {l s} {
 	close $fd
     }
     set callerSocket $s
-    if {[catch {uplevel #0 $l} msg]} {
-    	if {0} {
+    set ::errorInfo ""
+    if {[catch {uplevel "#0" $l} msg]} {
+	if {0} {
 	    set fd [open remoteServer.log a]
 	    puts $fd "error: $msg"
 	    close $fd
 	}
-	list error $msg
+	set code error
     } else {
-	list success $msg
+	set code success
     }
+    #return [list $code $::errorInfo $msg]
+    return [list $code $msg]
 }
 
 proc __readAndExecute__ {s} {
     global command VERBOSE
 
     set l [gets $s]
-    if {[string compare $l "--Marker--Marker--Marker--"] == 0} {
+    if {$l eq "--Marker--Marker--Marker--"} {
 	if {[info exists command($s)]} {
 	    puts $s [list error incomplete_command]
 	}
 	puts $s "--Marker--Marker--Marker--"
 	return
     }
-    if {[string compare $l ""] == 0} {
+    if {$l eq ""} {
 	if {[eof $s]} {
 	    if {$VERBOSE} {
 		puts "Server closing $s, eof from client"
@@ -97,13 +102,13 @@ proc __accept__ {s a p} {
 	puts "Server accepts new connection from $a:$p on $s"
     }
     tls::handshake $s
-    fileevent $s readable [list __readAndExecute__ $s]
     fconfigure $s -buffering line -translation crlf
+    fileevent $s readable [list __readAndExecute__ $s]
 }
 
 set serverIsSilent 0
 for {set i 0} {$i < $argc} {incr i} {
-    if {[string compare -serverIsSilent [lindex $argv $i]] == 0} {
+    if {[lindex $argv $i] eq "-serverIsSilent"} {
 	set serverIsSilent 1
 	break
     }
@@ -115,9 +120,9 @@ if {![info exists serverPort]} {
 }
 if {![info exists serverPort]} {
     for {set i 0} {$i < $argc} {incr i} {
-	if {[string compare -port [lindex $argv $i]] == 0} {
-	    if {$i < [expr $argc - 1]} {
-		set serverPort [lindex $argv [expr $i + 1]]
+	if {[lindex $argv $i] eq "-port"} {
+	    if {$i < $argc - 1} {
+		set serverPort [lindex $argv [expr {$i + 1}]]
 	    }
 	    break
 	}
@@ -134,9 +139,9 @@ if {![info exists serverAddress]} {
 }
 if {![info exists serverAddress]} {
     for {set i 0} {$i < $argc} {incr i} {
-	if {[string compare -address [lindex $argv $i]] == 0} {
-	    if {$i < [expr $argc - 1]} {
-		set serverAddress [lindex $argv [expr $i + 1]]
+	if {[lindex $argv $i] eq "-address"} {
+	    if {$i < $argc - 1} {
+		set serverAddress [lindex $argv [expr {$i + 1}]]
 	    }
 	    break
 	}
@@ -176,10 +181,11 @@ set serverCert	[file join $certsDir server.pem]
 set caCert	[file join $certsDir cacert.pem]
 set serverKey	[file join $certsDir server.key]
 if {[catch {set serverSocket \
-	[tls::socket -myaddr $serverAddress -server __accept__ \
+	[tls::socket -require 0 -myaddr $serverAddress -server __accept__ \
 	-cafile $caCert -certfile $serverCert -keyfile $serverKey \
 	$serverPort]} msg]} {
     puts "Server on $serverAddress:$serverPort cannot start: $msg"
 } else {
+    puts ready
     vwait __server_wait_variable__
 }

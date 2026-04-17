@@ -1,168 +1,69 @@
+# generated automatically by aclocal 1.16.5 -*- Autoconf -*-
+
+# Copyright (C) 1996-2021 Free Software Foundation, Inc.
+
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+m4_ifndef([AC_CONFIG_MACRO_DIRS], [m4_defun([_AM_CONFIG_MACRO_DIRS], [])m4_defun([AC_CONFIG_MACRO_DIRS], [_AM_CONFIG_MACRO_DIRS($@)])])
+# ===========================================================================
+#  https://www.gnu.org/software/autoconf-archive/ax_check_compile_flag.html
+# ===========================================================================
 #
-# Include the TEA standard macro set
+# SYNOPSIS
 #
-
-builtin(include,tclconfig/tcl.m4)
-
+#   AX_CHECK_COMPILE_FLAG(FLAG, [ACTION-SUCCESS], [ACTION-FAILURE], [EXTRA-FLAGS], [INPUT])
 #
-# Add here whatever m4 macros you want to define for your package
+# DESCRIPTION
 #
-#------------------------------------------------------------------------
-# TLS_SSL_DIR --
+#   Check whether the given FLAG works with the current language's compiler
+#   or gives an error.  (Warnings, however, are ignored)
 #
-#	Locate the installed ssl files
+#   ACTION-SUCCESS/ACTION-FAILURE are shell commands to execute on
+#   success/failure.
 #
-# Arguments:
-#	None.
+#   If EXTRA-FLAGS is defined, it is added to the current language's default
+#   flags (e.g. CFLAGS) when the check is done.  The check is thus made with
+#   the flags: "CFLAGS EXTRA-FLAGS FLAG".  This can for example be used to
+#   force the compiler to issue an error when a bad flag is given.
 #
-# Requires:
-#	CYGPATH must be set
+#   INPUT gives an alternative input source to AC_COMPILE_IFELSE.
 #
-# Results:
+#   NOTE: Implementation based on AX_CFLAGS_GCC_OPTION. Please keep this
+#   macro in sync with AX_CHECK_{PREPROC,LINK}_FLAG.
 #
-#	Adds a --with-ssl-dir switch to configure.
-#	Result is cached.
+# LICENSE
 #
-#	Substs the following vars:
-#		SSL_DIR
-#------------------------------------------------------------------------
+#   Copyright (c) 2008 Guido U. Draheim <guidod@gmx.de>
+#   Copyright (c) 2011 Maarten Bosmans <mkbosmans@gmail.com>
+#
+#   Copying and distribution of this file, with or without modification, are
+#   permitted in any medium without royalty provided the copyright notice
+#   and this notice are preserved.  This file is offered as-is, without any
+#   warranty.
 
-AC_DEFUN(TLS_CHECK_SSL, [
+#serial 6
 
-    #--------------------------------------------------------------------
-    # If the variable OPENSSL is set, we will build with the OpenSSL
-    # libraries.  If it is not set, then we will use RSA BSAFE SSL-C
-    # libraries instead of the default OpenSSL libaries.
-    #--------------------------------------------------------------------
+AC_DEFUN([AX_CHECK_COMPILE_FLAG],
+[AC_PREREQ(2.64)dnl for _AC_LANG_PREFIX and AS_VAR_IF
+AS_VAR_PUSHDEF([CACHEVAR],[ax_cv_check_[]_AC_LANG_ABBREV[]flags_$4_$1])dnl
+AC_CACHE_CHECK([whether _AC_LANG compiler accepts $1], CACHEVAR, [
+  ax_check_save_flags=$[]_AC_LANG_PREFIX[]FLAGS
+  _AC_LANG_PREFIX[]FLAGS="$[]_AC_LANG_PREFIX[]FLAGS $4 $1"
+  AC_COMPILE_IFELSE([m4_default([$5],[AC_LANG_PROGRAM()])],
+    [AS_VAR_SET(CACHEVAR,[yes])],
+    [AS_VAR_SET(CACHEVAR,[no])])
+  _AC_LANG_PREFIX[]FLAGS=$ax_check_save_flags])
+AS_VAR_IF(CACHEVAR,yes,
+  [m4_default([$2], :)],
+  [m4_default([$3], :)])
+AS_VAR_POPDEF([CACHEVAR])dnl
+])dnl AX_CHECK_COMPILE_FLAGS
 
-    AC_ARG_ENABLE(bsafe, [  --enable-bsafe          Use RSA BSAFE SSL-C libs.  Default is to use OpenSSL libs], OPENSSL="", OPENSSL="1")
-
-    #--------------------------------------------------------------------
-    # Establish the location of the root directory for OpenSSL.
-    # If we're not using OpenSSL, set the root for BSAFE SSL-C.
-    # If we're using BSAFE, define the BSAFE compiler flag.
-    # The "FLAT_INC" flag is used in the BSAFE ssl.h header file and
-    # doesn't seem to be referenced anywhere else.
-    #--------------------------------------------------------------------
-    if test -n "${OPENSSL}"; then
-	SSL_DIR='/usr /usr/local'
-	AC_DEFINE(NO_IDEA)
-	AC_DEFINE(NO_RC5)
-    else
-	SSL_DIR='/usr/sslc /usr/local/sslc'
-	AC_DEFINE(BSAFE)
-	AC_DEFINE(FLAT_INC)
-    fi
-    
-    AC_MSG_CHECKING([for SSL directory])
-
-    AC_ARG_WITH(ssl-dir, [  --with-ssl-dir=DIR      SSL root directory], with_ssldir=${withval})
-
-    AC_CACHE_VAL(ac_cv_c_ssldir, [
-	# Use the value from --with-ssl-dir, if it was given
-	if test x"${with_ssldir}" != x ; then
-	    if test -d "${with_ssldir}" ; then
-		ac_cv_c_ssldir=${with_ssldir}
-	    else
-		AC_MSG_ERROR([${with_ssldir} is not a valid directory])
-	    fi
-	else
-	    list="`ls -d ${SSL_DIR} 2>/dev/null`"
-	    for i in $list ; do
-		if test -d "$i" ; then
-		    ac_cv_c_ssldir=$i
-		    break
-		fi
-	    done
-	fi
-    ])
-
-    # Print a message based on how we determined the include path
-
-    if test x"${ac_cv_c_ssldir}" = x ; then
-	AC_MSG_ERROR([Could not find SSL directory.
-Please specify its location with --with-ssl-dir])
-    else
-	SSL_DIR=${ac_cv_c_ssldir}
-	AC_MSG_RESULT([${SSL_DIR}])
-    fi
-
-
-    #--------------------------------------------------------------------
-    # The OpenSSL and BSAFE SSL-C directory structures differ.
-    #--------------------------------------------------------------------
-
-    if test -n "${OPENSSL}"; then
-	SSL_LIB_DIR=${SSL_DIR}/lib
-	SSL_INCLUDE_DIR=${SSL_DIR}/include
-	if test ! -f "${SSL_INCLUDE_DIR}/openssl/opensslv.h"; then
-	    AC_MSG_ERROR([bad ssl-dir: cannot find openssl/opensslv.h under ${SSL_INCLUDE_DIR}])
-	fi
-    else
-	#--------------------------------------------------------------------
-	# If we're using RSA BSAFE SSL-C, we need to establish what platform
-	# we're running on before we can figure out some paths.
-	# This step isn't necessary if we're using OpenSSL.
-	#--------------------------------------------------------------------
-
-	if test -z "${OPENSSL}"; then
-	    AC_MSG_CHECKING([host type])
-	    case "`uname -s`" in
-		*win32* | *WIN32* | *CYGWIN_NT*|*CYGWIN_98*|*CYGWIN_95*)
-		    PLATFORM=WIN32
-		    ;;
-		*SunOS*)
-		    PLATFORM=SOLARIS
-		    ;;
-		HP-UX)
-		    PLATFORM=HPUX
-		    ;;
-		*)
-		    PLATFORM=LINUX
-		    ;;
-	    esac
-	    AC_MSG_RESULT(${PLATFORM})
-	fi
-	SSL_LIB_DIR=${SSL_DIR}/${PLATFORM}/library/lib
-	SSL_INCLUDE_DIR=${SSL_DIR}/${PLATFORM}/library/include
-	if test ! -f "${SSL_INCLUDE_DIR}/crypto.h"; then
-	    AC_MSG_ERROR([bad ssl-dir: cannot find crypto.h under ${SSL_INCLUDE_DIR}])
-	fi
-    fi
-
-    AC_SUBST(SSL_DIR)
-    AC_SUBST(SSL_LIB_DIR)
-    AC_SUBST(SSL_INCLUDE_DIR)
-
-    SSL_INCLUDE_DIR_NATIVE=\"`${CYGPATH} ${SSL_INCLUDE_DIR}`\"
-    SSL_LIB_DIR_NATIVE=\"`${CYGPATH} ${SSL_LIB_DIR}`\"
-    AC_SUBST(SSL_INCLUDE_DIR_NATIVE)
-    AC_SUBST(SSL_LIB_DIR_NATIVE)
-
-    #--------------------------------------------------------------------
-    # If OpenSSL was built with gcc then there may be some symbols that need
-    # resolving before we can load it into tclsh (__udivd3i on solaris.
-    # Let the user specify if we need to add libgcc to the link line to
-    # resolve these symbols.
-    #
-    # This doesn't seem to be necessary if the RSA BSAFE SSL-C libraries
-    # are used instead of OpenSSL.
-    #--------------------------------------------------------------------
-    
-    if test -n "${OPENSSL}"; then
-	AC_MSG_CHECKING(if libgcc is needed to resolve openssl symbols)
-
-	AC_ARG_WITH(gcclib, [  --with-gcclib           link with libgcc to resolve symbols in a gcc-built openssl library], GCCLIB="-lgcc", GCCLIB="")
-
-	if test "x${GCCLIB}" = "x" ; then
-	    AC_MSG_RESULT(no)
-	else
-	    AC_MSG_RESULT(yes)
-	    AC_MSG_CHECKING(for gcc library location)
-	    GCCPATH=`${CC} -print-libgcc-file-name | sed -e 's#[^/]*$##'`
-	    GCCPATH="-L${GCCPATH}"
-	    AC_MSG_RESULT(${GCCPATH})
-	fi
-    fi
-
-])
+m4_include([acinclude.m4])

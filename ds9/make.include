@@ -49,7 +49,7 @@ $(LIBDIR)/icons : $(prefix)/ds9/icons
 
 #--------------------------tls
 
-$(LIBDIR)/tls	: $(prefix)/tls/tls.tcl
+$(LIBDIR)/tls	: $(prefix)/tls/library/tls.tcl
 	mkdir -p "$@"
 	cp -prf $? "$@"
 # must do it this way for win

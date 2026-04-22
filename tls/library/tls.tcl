@@ -3,6 +3,10 @@
 #
 # Copyright (C) 1997-2000 Matt Newman <matt@novadigm.com>
 #
+
+package provide Tls 2.0
+
+
 namespace eval tls {
     variable logcmd tclLog
     variable debug 0
@@ -267,7 +271,7 @@ proc tls::socket {args} {
 	}
 
 	# Use host as SNI server name without -autoservername and -servername args
-	if {![info exists argsArray(-autoservername)] && 
+	if {![info exists argsArray(-autoservername)] &&
 		![info exists argsArray(-servername)]} {
 	    set argsArray(-servername) $host
 	    lappend iopts -servername $host

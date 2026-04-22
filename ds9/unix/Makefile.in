@@ -146,7 +146,8 @@ PREQS	= \
 	$(LIBDIR)/tooltip \
 	$(LIBDIR)/awthemes \
 	$(LIBDIR)/ttkthemes \
-	$(LIBDIR)/scidthemes
+	$(LIBDIR)/scidthemes \
+	$(LIBDIR)/ssl
 
 #--------------------------main
 
@@ -194,7 +195,7 @@ ds9base	: $(OBJS) $(LLIBS)
 	$(CXX) $(CFLAGS) -o $@ \
 	$(OBJS) \
 	$(LLIBS) \
-	-L $(prefix)/openssl -lssl -lcrypto \
+	-L$(prefix)/openssl -lssl -lcrypto \
 	$(LIBS) \
 	$(TK_LIBS)
 
@@ -208,7 +209,7 @@ tkAppInit.o : tkAppInit.c
 tkAppInit.c : $(prefix)/tk$(TCL_VERSION)/unix/tkAppInit.c
 	cp $? .
 
-$(APPDIR) : 
+$(APPDIR) :
 	mkdir -p $@
 
 $(LIBDIR)/tcl$(TCL_VERSION) :
@@ -236,6 +237,11 @@ $(LIBDIR)/ttkthemes: $(prefix)/ttkthemes/ttkthemes/themes
 
 $(LIBDIR)/scidthemes: $(prefix)/scidthemes
 	cp -prf $? "$@"
+
+# --------------------------- ssl
+$(LIBDIR)/ssl: $(prefix)/openssl
+	mkdir "$@"
+	cp -pvf $(prefix)/certifi/certifi/cacert.pem "$@"
 
 #--------------------------clean
 

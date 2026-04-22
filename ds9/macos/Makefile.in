@@ -145,7 +145,8 @@ PREQS	= \
 	$(LIBDIR)/textutil \
 	$(LIBDIR)/math \
 	$(LIBDIR)/tooltip \
-	$(LIBDIR)/xpans
+	$(LIBDIR)/xpans \
+	$(LIBDIR)/ssl
 
 #--------------------------main
 
@@ -218,6 +219,12 @@ $(TKDIR)/Resources : $(TKSRC)/Resources
 
 $(LIBDIR)/xpans	: $(bindir)/xpans
 	cp -p $? "$@"
+
+# --------------------------- ssl
+$(LIBDIR)/ssl: $(prefix)/openssl
+	mkdir "$@"
+	cp -pvf $(prefix)/certifi/certifi/cacert.pem "$@"
+
 
 #--------------------------clean
 

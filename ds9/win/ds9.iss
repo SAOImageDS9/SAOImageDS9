@@ -38,7 +38,7 @@ PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
 OutputDir=C:\Users\kglot\OneDrive\Desktop\New folder
 OutputBaseFilename=ds9
-SetupIconFile=C:\SAOImageDS9\ds9.ico
+SetupIconFile=..\ds9\win\ds9.ico
 SolidCompression=yes
 WizardStyle=modern
 
@@ -49,31 +49,32 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\SAOImageDS9\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\SAOImageDS9\*dll"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\awthemes\*"; DestDir: "{app}\awthemes\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\base64\*"; DestDir: "{app}\base64\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\cmaps\*"; DestDir: "{app}\cmaps\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\doc\*"; DestDir: "{app}\doc\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\ftp\*"; DestDir: "{app}\ftp\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\icons\*"; DestDir: "{app}\icons\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\library\*"; DestDir: "{app}\library\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\log\*"; DestDir: "{app}\log\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\math\*"; DestDir: "{app}\math\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\msgs\*"; DestDir: "{app}\msgs\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\scidthemes\*"; DestDir: "{app}\scidthemes\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\tcc\*"; DestDir: "{app}\tcc\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\tcl8\*"; DestDir: "{app}\tcl8\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\tcl8.6\*"; DestDir: "{app}\tcl8.6"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\template\*"; DestDir: "{app}\template\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\textutil\*"; DestDir: "{app}\textutil\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\tk8.6\*"; DestDir: "{app}\tk8.6\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\tkblt\*"; DestDir: "{app}\tkblt\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\tkcon\*"; DestDir: "{app}\tkcon\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\tls\*"; DestDir: "{app}\tls\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\tooltip\*"; DestDir: "{app}\tooltip\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\ttkthemes\*"; DestDir: "{app}\ttkthemes\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "C:\SAOImageDS9\xpans.exe"; DestDir: "{app}"; 
+Source: "SAOImageDS9\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "SAOImageDS9\*dll"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\awthemes\*"; DestDir: "{app}\awthemes\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\base64\*"; DestDir: "{app}\base64\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\cmaps\*"; DestDir: "{app}\cmaps\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\doc\*"; DestDir: "{app}\doc\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\ftp\*"; DestDir: "{app}\ftp\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\icons\*"; DestDir: "{app}\icons\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\library\*"; DestDir: "{app}\library\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\log\*"; DestDir: "{app}\log\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\math\*"; DestDir: "{app}\math\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\msgs\*"; DestDir: "{app}\msgs\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\scidthemes\*"; DestDir: "{app}\scidthemes\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\tcc\*"; DestDir: "{app}\tcc\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\tcl8\*"; DestDir: "{app}\tcl8\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\tcl8.6\*"; DestDir: "{app}\tcl8.6"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\template\*"; DestDir: "{app}\template\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\textutil\*"; DestDir: "{app}\textutil\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\tk8.6\*"; DestDir: "{app}\tk8.6\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\tkblt\*"; DestDir: "{app}\tkblt\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\tkcon\*"; DestDir: "{app}\tkcon\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\tls\*"; DestDir: "{app}\tls\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\tooltip\*"; DestDir: "{app}\tooltip\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\ttkthemes\*"; DestDir: "{app}\ttkthemes\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\ssl\*"; DestDir: "{app}\ssl\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "SAOImageDS9\xpans.exe"; DestDir: "{app}";
 
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files

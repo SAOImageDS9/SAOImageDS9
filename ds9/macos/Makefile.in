@@ -156,7 +156,8 @@ PREQS	= \
 	$(LIBDIR)/pdf4tcl \
 	$(LIBDIR)/tooltip \
 	$(LIBDIR)/xpans \
-	$(LIBDIR)/ssl
+	$(LIBDIR)/ssl \
+	$(LIBDIR)/tkdnd
 
 #--------------------------main
 

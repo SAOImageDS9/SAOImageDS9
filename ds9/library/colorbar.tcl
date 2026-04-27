@@ -388,7 +388,7 @@ proc CreateColorbarBase {frame} {
     # now init new colorbar to prev values
     # must come after all cmaps have been defined
     $which colorbar $sav
-    
+
     # enable events
     BindEventsColorbar $which
 
@@ -408,7 +408,7 @@ proc CreateColorbarRGB {frame} {
 	hsv -
 	hls {set sav [colorbarrgb get colorbar]}
     }
-    
+
     set which ${frame}cb
 
     $ds9(canvas) create colorbarrgb$ds9(visual)$ds9(depth) \
@@ -455,7 +455,7 @@ proc CreateColorbarHSV {frame} {
 	rgb -
 	hls {set sav [colorbarhsv get colorbar]}
     }
-    
+
     set which ${frame}cb
 
     $ds9(canvas) create colorbarhsv$ds9(visual)$ds9(depth) \
@@ -502,7 +502,7 @@ proc CreateColorbarHLS {frame} {
 	rgb -
 	hsv {set sav [colorbarhls get colorbar]}
     }
-    
+
     set which ${frame}cb
 
     $ds9(canvas) create colorbarhls$ds9(visual)$ds9(depth) \
@@ -608,7 +608,7 @@ proc BindEventsColorbar {which} {
 
 proc UnBindEventsColorbar {which} {
     global ds9
-    
+
     global debug
     if {$debug(tcl,events)} {
 	puts stderr "UnBindEventsColorbar $which"
@@ -655,7 +655,7 @@ proc ResetColormap {} {
 
 proc LoadColormap {} {
     global icolorbar
-    
+
     LoadColormapFile [OpenFileDialog colorbarfbox $icolorbar(top)]
 }
 
@@ -730,7 +730,7 @@ proc SaveColormap {} {
 
 proc SaveColormapFile {fn} {
     global current
-    
+
     if {$fn == {}} {
 	return
     }
@@ -767,7 +767,7 @@ proc SaveContrastBias {} {
     if {$fn == {}} {
 	return
     }
-    
+
     if {![catch {set ch [open $fn w]}]} {
 	puts $ch "$dcolorbar(contrast) $dcolorbar(bias)"
 	close $ch
@@ -785,7 +785,7 @@ proc ColorbarEnter {frame x y} {
     set cb ${frame}cb
 
     # check to see if this event was generated while processing other events
-    if {$ds9(b1) || $ds9(sb1) || $ds9(cb1) || 
+    if {$ds9(b1) || $ds9(sb1) || $ds9(cb1) ||
 	$ds9(csb1) || $ds9(b2) || $ds9(b3)} {
 	return
     }
@@ -969,7 +969,7 @@ proc ColorbarMotion1 {frame x y} {
     set cb ${frame}cb
 
     # abort if we are here by accident (such as a double click)
-    if {($ds9(b1) == 0) && ($ds9(sb1) == 0) && 
+    if {($ds9(b1) == 0) && ($ds9(sb1) == 0) &&
 	($ds9(cb1) == 0) && ($ds9(csb1) == 0)} {
 	return
     }
@@ -1002,7 +1002,7 @@ proc ColorbarRelease1 {frame x y} {
     set cb ${frame}cb
 
     # abort if we are here by accident (such as a double click)
-    if {($ds9(b1) == 0) && ($ds9(sb1) == 0) && 
+    if {($ds9(b1) == 0) && ($ds9(sb1) == 0) &&
 	($ds9(cb1) == 0) && ($ds9(csb1) == 0)} {
 	return
     }
@@ -1108,7 +1108,7 @@ proc ColorbarRelease3 {frame x y} {
     }
 
     $frame colormap end
-    
+
     LockColor $frame
     UpdateColorDialog
 }
@@ -1155,7 +1155,7 @@ proc MatchColor {which} {
 
 proc LockColorCurrent {} {
     global current
-    
+
     if {$current(frame) != {}} {
 	LockColor $current(frame)
     }
@@ -1229,7 +1229,7 @@ proc UpdateColormapLevelMosaic {which x y sys} {
 	return
     }
 
-    if {($current(frame) == $which) && 
+    if {($current(frame) == $which) &&
 	($scale(scope) == "local") &&
 	[$which has fits mosaic]} {
 
@@ -1260,7 +1260,7 @@ proc TicksDialog {} {
 
 proc OpenColorTag {} {
     global icolorbar
-    
+
     LoadColorTag [OpenFileDialog colortagfbox $icolorbar(top)]
 }
 
@@ -1340,7 +1340,7 @@ proc ColorTagDialog {frame x y} {
     # Buttons
     set f [ttk::frame $w.buttons]
     ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed2(ok) 1} \
-	-default active 
+	-default active
     ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed2(ok) 0}
     pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
 
@@ -1400,9 +1400,8 @@ proc ColormapDialog {} {
     $mb.file add command -label [msgcat::mc {Apply}] \
 	-command ApplyColormap
     $mb.file add separator
-# url is correct, no https available
     $mb.file add command -label [msgcat::mc {Download Colormap}] \
-	-command {HV cpt CPT-CITY http://seaviewsensing.com/pub/cpt-city}
+	-command {HV cpt CPT-CITY https://phillips.shef.ac.uk/pub/cpt-city/}
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Load Contrast/Bias}]\
 	-command LoadContrastBias
@@ -1478,7 +1477,7 @@ proc ColormapDialog {} {
 
     # Param
     set f [ttk::frame $w.param]
- 
+
     slider $f.cslider 0. 10. [msgcat::mc {Contrast}] \
 	dcolorbar(contrast) [list AdjustColormap]
     slider $f.bslider 0. 1. [msgcat::mc {Bias}] \
@@ -1499,7 +1498,7 @@ proc ColormapDialog {} {
 	-command ApplyColormap
     ttk::button $f.close -text [msgcat::mc {Close}] \
 	-command ColormapDestroyDialog
-    pack $f.apply $f.close -side left -expand true -padx 2 -pady 4 
+    pack $f.apply $f.close -side left -expand true -padx 2 -pady 4
 
     # Fini
     ttk::separator $w.sep -orient horizontal
@@ -1666,7 +1665,7 @@ proc UpdateColorDialogCmaps {state} {
 proc LayoutColorbarAdjust {} {
     global ds9
     global colorbar
-    
+
     if {$colorbar(numerics)} {
 	set font [$ds9(canvas) itemcget colorbar -font]
 	set fontsize [$ds9(canvas) itemcget colorbar -fontsize]
@@ -1802,7 +1801,7 @@ proc ColorbarUpdateView {} {
     # update all colorbars
     foreach ff $ds9(frames) {
 	set cb ${ff}cb
-	
+
 	$cb configure \
 	    -size $colorbar(size) \
 	    -ticks $colorbar(ticks) \
@@ -1904,7 +1903,7 @@ proc CmapCmd {item} {
 }
 
 proc CmapValueCmd {c b} {
-    global current 
+    global current
 
     if {$current(frame) != {}} {
 	EvalLockColorbarCurrent [list $current(colorbar) adjust $c $b]

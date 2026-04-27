@@ -8,11 +8,11 @@ proc AnalysisMainMenu {} {
     global ds9
     global graph
 
-    # WARNING: this is a variable length menu. 
+    # WARNING: this is a variable length menu.
     # Be sure to update ds9(menu,size,analysis)
     ThemeMenu $ds9(mb).analysis
     $ds9(mb).analysis add command -label [msgcat::mc {Pixel Table}] \
-	-command PixelTableDialog 
+	-command PixelTableDialog
     $ds9(mb).analysis add command -label [msgcat::mc {Name Resolution}] \
 	-command NRESDialog
     $ds9(mb).analysis add separator
@@ -96,8 +96,8 @@ proc AnalysisMainMenu {} {
 	-variable block(factor) -value {32 32} -command ChangeBlock
 
     ThemeMenu $ds9(mb).analysis.image
-    $ds9(mb).analysis.image add command \
-	-label {DSS (SAO)} -command SAODialog
+    #~ $ds9(mb).analysis.image add command \
+	#~ -label {DSS (SAO)} -command SAODialog
     $ds9(mb).analysis.image add command \
 	-label {DSS (ESO)} -command ESODialog
     $ds9(mb).analysis.image add command \
@@ -288,7 +288,7 @@ proc PrefsDialogButtonbarAnalysis {f} {
     global pbuttons
 
     ttk::menubutton $f -text [msgcat::mc {Buttonbar}] -menu $f.menu
-    
+
     set m $f.menu
     ThemeMenu $m
     $m add checkbutton -label [msgcat::mc {Contours}] \

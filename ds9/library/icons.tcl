@@ -77,10 +77,11 @@ proc IconDarkModeCheck { } {
 
     set cur_theme [ttk::style theme use]
 
-    switch $cur_theme {
+    switch -regexp -- $cur_theme {
         awblack -
         awbreezedark -
-        awdark { set ds9(icons,ui) $ds9(root)/icons/ui_dark }
+        awdark -
+        sciddark* { set ds9(icons,ui) $ds9(root)/icons/ui_dark }
         default {set ds9(icons,ui) $ds9(root)/icons/ui}
     }
 

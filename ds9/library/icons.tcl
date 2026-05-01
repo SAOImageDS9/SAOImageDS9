@@ -23,6 +23,8 @@ proc ConfigureIcons {} {
     ConfigureIconsLeft
     ConfigureIconsTop
     ConfigureIconsBottom
+
+    ConfigureIconsPanner
 }
 
 proc IconButtonToggleCmd {varname id cmd} {

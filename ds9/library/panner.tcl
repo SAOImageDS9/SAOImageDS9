@@ -34,15 +34,15 @@ proc CreatePanner {} {
 
     set ds9(panner,align) \
 	[ttk::button $ds9(panner).align -takefocus 0 \
-	     -command [list IconMenuButtonCmd current rotate 0 ChangeRotate] \
-	     -image [image create photo -file "$ds9(icons,ui)/north_up.png"]]
+	     -command [list IconMenuButtonCmd current rotate 0 ChangeRotate]]
     tooltip::tooltip $ds9(panner).align [msgcat::mc {Align North Up}]
 
     set ds9(panner,center) \
 	[ttk::button $ds9(panner).center -takefocus 0 \
-	     -command CenterCurrentFrame \
-	     -image [image create photo -file "$ds9(icons,ui)/center.png"]]
+	     -command CenterCurrentFrame ]
     tooltip::tooltip $ds9(panner).center [msgcat::mc {Pan to Center}]
+
+    ConfigureIconsPanner
 
     pack $ds9(panner,canvas) -side top
     pack $ds9(panner,align) -side left
@@ -56,6 +56,18 @@ proc CreatePanner {} {
 	aqua {}
     }
 }
+
+proc ConfigureIconsPanner {} {
+    global ds9
+
+    $ds9(panner).align configure \
+        -image [image create photo -file "$ds9(icons,ui)/north_up.png"]
+    $ds9(panner).center configure \
+        -image [image create photo -file "$ds9(icons,ui)/center.png"]
+
+}
+
+
 
 proc ThemeConfigPanner {w} {
     $w configure -bg [ThemeTreeBackground]
@@ -83,7 +95,7 @@ proc InitPanner {} {
     bind $ds9(panner,canvas) <Shift-Tab> [list PrevFrame]
 
     switch $ds9(wm) {
-	x11 {bind $ds9(panner,canvas) <ISO_Left_Tab> [list PrevFrame]} 
+	x11 {bind $ds9(panner,canvas) <ISO_Left_Tab> [list PrevFrame]}
 	aqua -
 	win32 {}
     }
@@ -110,7 +122,7 @@ proc BindEventsPanner {} {
 	win32 {
 	    $ds9(panner,canvas) bind panner <ButtonRelease-2> \
 		[list Release2Panner %x %y]
-	} 
+	}
 	aqua {
 	    $ds9(panner,canvas) bind panner <ButtonRelease-3> \
 		[list Release2Panner %x %y]
@@ -135,7 +147,7 @@ proc UnBindEventsPanner {} {
 
     switch $ds9(wm) {
 	x11 -
-	win32 {$ds9(panner,canvas) bind panner <ButtonRelease-2> {}} 
+	win32 {$ds9(panner,canvas) bind panner <ButtonRelease-2> {}}
 	aqua {$ds9(panner,canvas) bind panner <ButtonRelease-3> {}}
     }
 

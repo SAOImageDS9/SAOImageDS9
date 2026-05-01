@@ -1,4 +1,4 @@
-#  Copyright (C) 1999-2022
+#  Copyright (C) 1999-2022,2026
 #  Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 #  For conditions of distribution and use, see copyright notice in "copyright"
 
@@ -6,7 +6,7 @@ package provide DS9 1.0
 
 proc CreateIconsLeft {} {
     global ds9
-    
+
     set ds9(icons,left) [ttk::frame $ds9(main).iconsleft]
     set ds9(icons,left,sep) \
 	[ttk::separator $ds9(main).iconsleftsep -orient vertical]
@@ -20,7 +20,66 @@ proc CreateIconsLeft {} {
     CreateIconsLeftMarkerComposite
 }
 
+proc ConfigureIconsLeft {} {
+
+    ConfigureIconsLeftMode
+    ConfigureIconsLeftMarkerShape
+    ConfigureIconsLeftMarkerInfo
+#    ConfigureIconsLeftMarkerColor
+    ConfigureIconsLeftMarkerLineWidth
+    ConfigureIconsLeftMarkerSrc
+    ConfigureIconsLeftMarkerComposite
+}
+
+
 proc CreateIconsLeftMode {} {
+    global ds9
+    global icons
+    global current
+
+    set mb $ds9(icons,left)
+
+    ttk::menubutton $mb.mode -menu $mb.mode.m -direction right -takefocus 0
+    tooltip::tooltip $mb.mode [msgcat::mc {Edit Mode}]
+
+    ThemeMenu $mb.mode.m
+    $mb.mode.m configure -tearoff 0
+    DMIconMenuButton $mb.mode [msgcat::mc {None}] \
+	current mode none ChangeMode
+    DMIconMenuButton $mb.mode [msgcat::mc {Region}] \
+	current mode region ChangeMode
+    DMIconMenuButton $mb.mode [msgcat::mc {Crosshair}] \
+	current mode crosshair ChangeMode
+    DMIconMenuButton $mb.mode [msgcat::mc {Colorbar}] \
+	current mode colorbar ChangeMode
+    DMIconMenuButton $mb.mode [msgcat::mc {Pan}] \
+	current mode pan ChangeMode
+    DMIconMenuButton $mb.mode [msgcat::mc {Zoom}] \
+	current mode zoom ChangeMode
+    DMIconMenuButton $mb.mode [msgcat::mc {Rotate}] \
+	current mode rotate ChangeMode
+    DMIconMenuButton $mb.mode [msgcat::mc {Crop}] \
+	current mode crop ChangeMode
+    DMIconMenuButton $mb.mode [msgcat::mc {Catalog}] \
+	current mode catalog ChangeMode
+    DMIconMenuButton $mb.mode [msgcat::mc {Footprint}] \
+	current mode footprint ChangeMode
+    DMIconMenuButton $mb.mode [msgcat::mc {Examine}] \
+	current mode examine ChangeMode
+    DMIconMenuButton $mb.mode [msgcat::mc {3d}] \
+	current mode 3d ChangeMode
+    DMIconMenuButton $mb.mode [msgcat::mc {Illustrate}] \
+	current mode illustrate ChangeMode
+
+    ConfigureIconsLeftMode
+
+    trace add variable current(mode) write [list IconMenuButtonCB $mb.mode]
+    IconMenuButtonCB $mb.mode current mode write
+
+    pack $mb.mode -side top -fill x
+}
+
+proc ConfigureIconsLeftMode {} {
     global ds9
     global icons
     global current
@@ -56,49 +115,56 @@ proc CreateIconsLeftMode {} {
     # special case
     set icons(currentmode,default) $icons(currentmode,examine)
 
-    ttk::menubutton $mb.mode -menu $mb.mode.m -direction right -takefocus 0
-#	-image $icons(currentmode,$current(mode))
-    tooltip::tooltip $mb.mode [msgcat::mc {Edit Mode}]
+    $mb.mode.m entryconfig 0 -image $icons(currentmode,none)
+    $mb.mode.m entryconfig 1 -image $icons(currentmode,region)
+    $mb.mode.m entryconfig 2 -image $icons(currentmode,crosshair)
+    $mb.mode.m entryconfig 3 -image $icons(currentmode,colorbar)
+    $mb.mode.m entryconfig 4 -image $icons(currentmode,pan)
+    $mb.mode.m entryconfig 5 -image $icons(currentmode,zoom)
+    $mb.mode.m entryconfig 6 -image $icons(currentmode,rotate)
+    $mb.mode.m entryconfig 7 -image $icons(currentmode,crop)
+    $mb.mode.m entryconfig 8 -image $icons(currentmode,catalog)
+    $mb.mode.m entryconfig 9 -image $icons(currentmode,footprint)
+    $mb.mode.m entryconfig 10 -image $icons(currentmode,examine)
+    $mb.mode.m entryconfig 11 -image $icons(currentmode,3d)
+    $mb.mode.m entryconfig 12 -image $icons(currentmode,illustrate)
 
-    ThemeMenu $mb.mode.m
-    $mb.mode.m configure -tearoff 0
-    IconMenuButton $mb.mode [msgcat::mc {None}] \
-	current mode none ChangeMode
-    IconMenuButton $mb.mode [msgcat::mc {Region}] \
-	current mode region ChangeMode
-    IconMenuButton $mb.mode [msgcat::mc {Crosshair}] \
-	current mode crosshair ChangeMode
-    IconMenuButton $mb.mode [msgcat::mc {Colorbar}] \
-	current mode colorbar ChangeMode
-    IconMenuButton $mb.mode [msgcat::mc {Pan}] \
-	current mode pan ChangeMode
-    IconMenuButton $mb.mode [msgcat::mc {Zoom}] \
-	current mode zoom ChangeMode
-    IconMenuButton $mb.mode [msgcat::mc {Rotate}] \
-	current mode rotate ChangeMode
-    IconMenuButton $mb.mode [msgcat::mc {Crop}] \
-	current mode crop ChangeMode
-    IconMenuButton $mb.mode [msgcat::mc {Catalog}] \
-	current mode catalog ChangeMode
-    IconMenuButton $mb.mode [msgcat::mc {Footprint}] \
-	current mode footprint ChangeMode
-    IconMenuButton $mb.mode [msgcat::mc {Examine}] \
-	current mode examine ChangeMode
-    IconMenuButton $mb.mode [msgcat::mc {3d}] \
-	current mode 3d ChangeMode
-    IconMenuButton $mb.mode [msgcat::mc {Illustrate}] \
-	current mode illustrate ChangeMode
+    $mb.mode configure -image $icons(currentmode,$current(mode))
 
-    trace add variable current(mode) write [list IconMenuButtonCB $mb.mode]
-    IconMenuButtonCB $mb.mode current mode write
-
-    pack $mb.mode -side top -fill x
 }
+
 
 proc CreateIconsLeftMarkerShape {} {
     global ds9
     global icons
     global marker
+
+    set mb $ds9(icons,left)
+
+    ttk::menubutton $mb.shape -menu $mb.shape.m -direction right -takefocus 0
+    tooltip::tooltip $mb.shape [msgcat::mc {Region Shape}]
+
+    ThemeMenu $mb.shape.m
+    $mb.shape.m configure -tearoff 0
+    DMIconMenuButton $mb.shape [msgcat::mc {Circle}] marker shape circle {}
+    DMIconMenuButton $mb.shape [msgcat::mc {Annulus}] marker shape annulus {}
+    DMIconMenuButton $mb.shape [msgcat::mc {Ellipse}] marker shape ellipse {}
+    DMIconMenuButton $mb.shape [msgcat::mc {Box}] marker shape box {}
+    DMIconMenuButton $mb.shape [msgcat::mc {Polygon}] marker shape polygon {}
+    DMIconMenuButton $mb.shape [msgcat::mc {Text}] marker shape text {}
+
+    ConfigureIconsLeftMarkerShape
+
+    trace add variable marker(shape) write [list IconMenuButtonCB $mb.shape]
+    IconMenuButtonCB $mb.shape marker shape write
+
+    pack $mb.shape -side top -fill x
+}
+
+
+proc ConfigureIconsLeftMarkerShape {} {
+    global ds9
+    global icons
 
     set mb $ds9(icons,left)
 
@@ -118,50 +184,60 @@ proc CreateIconsLeftMarkerShape {} {
     set icons(markershape,default) \
 	[image create photo -file "$ds9(icons,ui)/region_other.png"]
 
-    set mb.shape $mb.shape
+    $mb.shape.m entryconfig 0 -image $icons(markershape,circle)
+    $mb.shape.m entryconfig 1 -image $icons(markershape,annulus)
+    $mb.shape.m entryconfig 2 -image $icons(markershape,ellipse)
+    $mb.shape.m entryconfig 3 -image $icons(markershape,box)
+    $mb.shape.m entryconfig 4 -image $icons(markershape,polygon)
+    $mb.shape.m entryconfig 5 -image $icons(markershape,text)
 
-    ttk::menubutton $mb.shape -menu $mb.shape.m -direction right -takefocus 0
-#	-image $icons(markershape,$marker(shape))
-    tooltip::tooltip $mb.shape [msgcat::mc {Region Shape}]
 
-    ThemeMenu $mb.shape.m
-    $mb.shape.m configure -tearoff 0
-    IconMenuButton $mb.shape [msgcat::mc {Circle}] marker shape circle {}
-    IconMenuButton $mb.shape [msgcat::mc {Annulus}] marker shape annulus {}
-    IconMenuButton $mb.shape [msgcat::mc {Ellipse}] marker shape ellipse {}
-    IconMenuButton $mb.shape [msgcat::mc {Box}] marker shape box {}
-    IconMenuButton $mb.shape [msgcat::mc {Polygon}] marker shape polygon {}
-    IconMenuButton $mb.shape [msgcat::mc {Text}] marker shape text {}
-
-    trace add variable marker(shape) write [list IconMenuButtonCB $mb.shape]
-    IconMenuButtonCB $mb.shape marker shape write
-
-    pack $mb.shape -side top -fill x
 }
+
 
 proc CreateIconsLeftMarkerInfo {} {
     global ds9
 
     set mb $ds9(icons,left)
 
-    ttk::button $mb.info -takefocus 0 -command MarkerInfo \
-	-image [image create photo -file "$ds9(icons,ui)/region_info.png"]
+    ttk::button $mb.info -takefocus 0 -command MarkerInfo
     tooltip::tooltip $mb.info [msgcat::mc {Get Region Info}]
 
-    ttk::button $mb.list -takefocus 0 -command MarkerListAll \
-	-image [image create photo -file "$ds9(icons,ui)/region_list.png"]
+    ttk::button $mb.list -takefocus 0 -command MarkerListAll
     tooltip::tooltip $mb.list [msgcat::mc {List Region}]
 
-    ttk::button $mb.open -takefocus 0 -command MarkerLoad \
-	-image [image create photo -file "$ds9(icons,ui)/region_open.png"]
+    ttk::button $mb.open -takefocus 0 -command MarkerLoad
     tooltip::tooltip $mb.open [msgcat::mc {Open Region File}]
 
-    ttk::button $mb.save -takefocus 0 -command MarkerSaveAll \
-	-image [image create photo -file "$ds9(icons,ui)/region_save.png"]
+    ttk::button $mb.save -takefocus 0 -command MarkerSaveAll
     tooltip::tooltip $mb.save [msgcat::mc {Save Region File}]
+
+    ConfigureIconsLeftMarkerInfo
 
     pack $mb.info $mb.list $mb.open $mb.save -side top -fill x
 }
+
+
+proc ConfigureIconsLeftMarkerInfo {} {
+    global ds9
+
+    set mb $ds9(icons,left)
+
+    $mb.info configure \
+	-image [image create photo -file "$ds9(icons,ui)/region_info.png"]
+
+    $mb.list configure \
+	-image [image create photo -file "$ds9(icons,ui)/region_list.png"]
+
+    $mb.open configure \
+	-image [image create photo -file "$ds9(icons,ui)/region_open.png"]
+
+    $mb.save configure \
+	-image [image create photo -file "$ds9(icons,ui)/region_save.png"]
+}
+
+
+
 
 proc CreateIconsLeftMarkerColor {} {
     global ds9
@@ -196,7 +272,7 @@ proc CreateIconsLeftMarkerColor {} {
 
     foreach clr $clrs {
 	set icons(markercolor,$clr) \
-	    [image create photo -file "$ds9(icons,ui)/colors/$clr.png"]
+	    [image create photo -file "$ds9(icons,colors)/$clr.png"]
     }
     # special case
     set icons(markercolor,default) $icons(markercolor,black)
@@ -204,7 +280,7 @@ proc CreateIconsLeftMarkerColor {} {
     set mb.color $mb.color
 
     ttk::menubutton $mb.color -menu $mb.color.m -direction right -takefocus 0
-#	-image $icons(markercolor,$marker(color)) 
+#	-image $icons(markercolor,$marker(color))
     tooltip::tooltip $mb.color [msgcat::mc {Region Color}]
 
     ThemeMenu $mb.color.m
@@ -218,7 +294,7 @@ proc CreateIconsLeftMarkerColor {} {
         }
 
 	IconMenuButton $mb.color {} marker color [lindex $clrs $ii] MarkerColor
-	$mb.color.m entryconfigure $ii -columnbreak $newcol -hidemargin 1 
+	$mb.color.m entryconfigure $ii -columnbreak $newcol -hidemargin 1
     }
 
     trace add variable marker(color) write [list IconMenuButtonCB $mb.color]
@@ -234,6 +310,31 @@ proc CreateIconsLeftMarkerLineWidth {} {
 
     set mb $ds9(icons,left)
 
+    ttk::menubutton $mb.width -menu $mb.width.m -direction right -takefocus 0
+    tooltip::tooltip $mb.width [msgcat::mc {Region Line Width}]
+
+    ThemeMenu $mb.width.m
+    $mb.width.m configure -tearoff 0
+    DMIconMenuButton $mb.width 1 marker width 1 MarkerWidth
+    DMIconMenuButton $mb.width 2 marker width 2 MarkerWidth
+    DMIconMenuButton $mb.width 3 marker width 3 MarkerWidth
+    DMIconMenuButton $mb.width 4 marker width 4 MarkerWidth
+
+    ConfigureIconsLeftMarkerLineWidth
+
+    trace add variable marker(width) write [list IconMenuButtonCB $mb.width]
+    IconMenuButtonCB $mb.width marker width write
+
+    pack $mb.width -side top -fill x
+}
+
+
+proc ConfigureIconsLeftMarkerLineWidth {} {
+    global ds9
+    global icons
+
+    set mb $ds9(icons,left)
+
     set icons(markerwidth,1) \
 	[image create photo -file "$ds9(icons,ui)/lw1.png"]
     set icons(markerwidth,2) \
@@ -245,21 +346,14 @@ proc CreateIconsLeftMarkerLineWidth {} {
     # special case
     set icons(markerwidth,default) $icons(markerwidth,1)
 
-    ttk::menubutton $mb.width -menu $mb.width.m -direction right -takefocus 0
-#	-image $icons(markerwidth,$marker(width)) 
-    tooltip::tooltip $mb.width [msgcat::mc {Region Line Width}]
+    $mb.width.m entryconfig 0 -image $icons(markerwidth,1)
+    $mb.width.m entryconfig 1 -image $icons(markerwidth,2)
+    $mb.width.m entryconfig 2 -image $icons(markerwidth,3)
+    $mb.width.m entryconfig 3 -image $icons(markerwidth,4)
 
-    ThemeMenu $mb.width.m
-    $mb.width.m configure -tearoff 0
-    IconMenuButton $mb.width 1 marker width 1 MarkerWidth
-    IconMenuButton $mb.width 2 marker width 2 MarkerWidth
-    IconMenuButton $mb.width 3 marker width 3 MarkerWidth
-    IconMenuButton $mb.width 4 marker width 4 MarkerWidth
+    $mb.width configure -image $icons(markerwidth,default)
 
-    trace add variable marker(width) write [list IconMenuButtonCB $mb.width]
-    IconMenuButtonCB $mb.width marker width write
 
-    pack $mb.width -side top -fill x
 }
 
 proc CreateIconsLeftMarkerSrc {} {
@@ -269,43 +363,75 @@ proc CreateIconsLeftMarkerSrc {} {
 
     ttk::button $mb.src -takefocus 0 \
 	-command \
-	[list IconButtonToggleCmd marker source [list MarkerProp source]] \
-	-image [image create photo -file "$ds9(icons,ui)/srcbkg.png"]
+	[list IconButtonToggleCmd marker source [list MarkerProp source]]
     tooltip::tooltip $mb.src [msgcat::mc {Toggle Source/Background}]
 
     ttk::button $mb.include -takefocus 0 \
 	-command \
-	[list IconButtonToggleCmd marker include [list MarkerProp include]] \
-	-image [image create photo -file "$ds9(icons,ui)/incexl.png"]
+	[list IconButtonToggleCmd marker include [list MarkerProp include]]
     tooltip::tooltip $mb.include [msgcat::mc {Toggle Include/Exclude}]
 
-    ttk::button $mb.back -takefocus 0 -command MarkerBack \
-	-image [image create photo -file "$ds9(icons,ui)/back.png"]
+    ttk::button $mb.back -takefocus 0 -command MarkerBack
     tooltip::tooltip $mb.back [msgcat::mc {Send to Back}]
 
-    ttk::button $mb.front -takefocus 0 -command MarkerFront \
-	-image [image create photo -file "$ds9(icons,ui)/front.png"]
+    ttk::button $mb.front -takefocus 0 -command MarkerFront
     tooltip::tooltip $mb.front [msgcat::mc {Bring to Front}]
+
+    ConfigureIconsLeftMarkerSrc
 
     pack $mb.src $mb.include $mb.back $mb.front -side top -fill x
 }
+
+
+proc ConfigureIconsLeftMarkerSrc {} {
+    global ds9
+
+    set mb $ds9(icons,left)
+
+    $mb.src configure \
+	-image [image create photo -file "$ds9(icons,ui)/srcbkg.png"]
+
+    $mb.include configure \
+	-image [image create photo -file "$ds9(icons,ui)/incexl.png"]
+
+    $mb.back configure \
+	-image [image create photo -file "$ds9(icons,ui)/back.png"]
+
+    $mb.front configure \
+	-image [image create photo -file "$ds9(icons,ui)/front.png"]
+}
+
+
 
 proc CreateIconsLeftMarkerComposite {} {
     global ds9
 
     set mb $ds9(icons,left)
 
-    ttk::button $mb.composite -takefocus 0 -command CompositeCreate \
-	-image [image create photo -file "$ds9(icons,ui)/region_compose.png"]
+    ttk::button $mb.composite -takefocus 0 -command CompositeCreate
     tooltip::tooltip $mb.composite [msgcat::mc {Create Composite Region}]
 
-    ttk::button $mb.dissolve -takefocus 0 -command CompositeDelete \
-	-image [image create photo -file "$ds9(icons,ui)/region_dissolve.png"]
+    ttk::button $mb.dissolve -takefocus 0 -command CompositeDelete
     tooltip::tooltip $mb.dissolve [msgcat::mc {Dissolve Composite Region}]
 
-    ttk::button $mb.group -takefocus 0 -command GroupCreate \
-	-image [image create photo -file "$ds9(icons,ui)/region_group.png"]
+    ttk::button $mb.group -takefocus 0 -command GroupCreate
     tooltip::tooltip $mb.group [msgcat::mc {Tag New Region Group}]
 
+    ConfigureIconsLeftMarkerComposite
+
     pack $mb.composite $mb.dissolve $mb.group -side top -fill x
+}
+
+proc ConfigureIconsLeftMarkerComposite {} {
+    global ds9
+    set mb $ds9(icons,left)
+
+    $mb.composite configure \
+	-image [image create photo -file "$ds9(icons,ui)/region_compose.png"]
+
+    $mb.dissolve configure \
+	-image [image create photo -file "$ds9(icons,ui)/region_dissolve.png"]
+
+    $mb.group configure \
+	-image [image create photo -file "$ds9(icons,ui)/region_group.png"]
 }

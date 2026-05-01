@@ -155,9 +155,9 @@ proc CreateIconsTopScale {} {
 
     ThemeMenu $mb.scale.m
     $mb.scale.m configure -tearoff 0
-    DMIconMenuButton $mb.scale [msgcat::mc {Log}] scale type log ChangeScale
-    DMIconMenuButton $mb.scale [msgcat::mc {Linear}] scale type linear ChangeScale
-    DMIconMenuButton $mb.scale [msgcat::mc {Power}] scale type pow ChangeScale
+    IconMenuButton $mb.scale [msgcat::mc {Log}] scale type log ChangeScale
+    IconMenuButton $mb.scale [msgcat::mc {Linear}] scale type linear ChangeScale
+    IconMenuButton $mb.scale [msgcat::mc {Power}] scale type pow ChangeScale
 
     ConfigureIconsTopScale
 

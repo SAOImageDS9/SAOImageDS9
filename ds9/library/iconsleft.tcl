@@ -44,31 +44,31 @@ proc CreateIconsLeftMode {} {
 
     ThemeMenu $mb.mode.m
     $mb.mode.m configure -tearoff 0
-    DMIconMenuButton $mb.mode [msgcat::mc {None}] \
+    IconMenuButton $mb.mode [msgcat::mc {None}] \
 	current mode none ChangeMode
-    DMIconMenuButton $mb.mode [msgcat::mc {Region}] \
+    IconMenuButton $mb.mode [msgcat::mc {Region}] \
 	current mode region ChangeMode
-    DMIconMenuButton $mb.mode [msgcat::mc {Crosshair}] \
+    IconMenuButton $mb.mode [msgcat::mc {Crosshair}] \
 	current mode crosshair ChangeMode
-    DMIconMenuButton $mb.mode [msgcat::mc {Colorbar}] \
+    IconMenuButton $mb.mode [msgcat::mc {Colorbar}] \
 	current mode colorbar ChangeMode
-    DMIconMenuButton $mb.mode [msgcat::mc {Pan}] \
+    IconMenuButton $mb.mode [msgcat::mc {Pan}] \
 	current mode pan ChangeMode
-    DMIconMenuButton $mb.mode [msgcat::mc {Zoom}] \
+    IconMenuButton $mb.mode [msgcat::mc {Zoom}] \
 	current mode zoom ChangeMode
-    DMIconMenuButton $mb.mode [msgcat::mc {Rotate}] \
+    IconMenuButton $mb.mode [msgcat::mc {Rotate}] \
 	current mode rotate ChangeMode
-    DMIconMenuButton $mb.mode [msgcat::mc {Crop}] \
+    IconMenuButton $mb.mode [msgcat::mc {Crop}] \
 	current mode crop ChangeMode
-    DMIconMenuButton $mb.mode [msgcat::mc {Catalog}] \
+    IconMenuButton $mb.mode [msgcat::mc {Catalog}] \
 	current mode catalog ChangeMode
-    DMIconMenuButton $mb.mode [msgcat::mc {Footprint}] \
+    IconMenuButton $mb.mode [msgcat::mc {Footprint}] \
 	current mode footprint ChangeMode
-    DMIconMenuButton $mb.mode [msgcat::mc {Examine}] \
+    IconMenuButton $mb.mode [msgcat::mc {Examine}] \
 	current mode examine ChangeMode
-    DMIconMenuButton $mb.mode [msgcat::mc {3d}] \
+    IconMenuButton $mb.mode [msgcat::mc {3d}] \
 	current mode 3d ChangeMode
-    DMIconMenuButton $mb.mode [msgcat::mc {Illustrate}] \
+    IconMenuButton $mb.mode [msgcat::mc {Illustrate}] \
 	current mode illustrate ChangeMode
 
     ConfigureIconsLeftMode
@@ -146,12 +146,12 @@ proc CreateIconsLeftMarkerShape {} {
 
     ThemeMenu $mb.shape.m
     $mb.shape.m configure -tearoff 0
-    DMIconMenuButton $mb.shape [msgcat::mc {Circle}] marker shape circle {}
-    DMIconMenuButton $mb.shape [msgcat::mc {Annulus}] marker shape annulus {}
-    DMIconMenuButton $mb.shape [msgcat::mc {Ellipse}] marker shape ellipse {}
-    DMIconMenuButton $mb.shape [msgcat::mc {Box}] marker shape box {}
-    DMIconMenuButton $mb.shape [msgcat::mc {Polygon}] marker shape polygon {}
-    DMIconMenuButton $mb.shape [msgcat::mc {Text}] marker shape text {}
+    IconMenuButton $mb.shape [msgcat::mc {Circle}] marker shape circle {}
+    IconMenuButton $mb.shape [msgcat::mc {Annulus}] marker shape annulus {}
+    IconMenuButton $mb.shape [msgcat::mc {Ellipse}] marker shape ellipse {}
+    IconMenuButton $mb.shape [msgcat::mc {Box}] marker shape box {}
+    IconMenuButton $mb.shape [msgcat::mc {Polygon}] marker shape polygon {}
+    IconMenuButton $mb.shape [msgcat::mc {Text}] marker shape text {}
 
     ConfigureIconsLeftMarkerShape
 
@@ -315,10 +315,10 @@ proc CreateIconsLeftMarkerLineWidth {} {
 
     ThemeMenu $mb.width.m
     $mb.width.m configure -tearoff 0
-    DMIconMenuButton $mb.width 1 marker width 1 MarkerWidth
-    DMIconMenuButton $mb.width 2 marker width 2 MarkerWidth
-    DMIconMenuButton $mb.width 3 marker width 3 MarkerWidth
-    DMIconMenuButton $mb.width 4 marker width 4 MarkerWidth
+    IconMenuButton $mb.width 1 marker width 1 MarkerWidth
+    IconMenuButton $mb.width 2 marker width 2 MarkerWidth
+    IconMenuButton $mb.width 3 marker width 3 MarkerWidth
+    IconMenuButton $mb.width 4 marker width 4 MarkerWidth
 
     ConfigureIconsLeftMarkerLineWidth
 

@@ -46,27 +46,8 @@ proc IconMenuButton {mb txt varname id value cmd} {
 	$mb.m add command -compound left \
 	    -command [list IconMenuButtonCmd $varname $id $value $cmd]
     }
-
-    if { [info exists $icons(${varname}${id},$value) ] } {
-        $mb.m configure -image $icons(${varname}${id},$value)
-    }
-
 }
 
-proc DMIconMenuButton {mb txt varname id value cmd} {
-    global icons
-
-    #~ if {$txt != {}} {
-	#~ $mb.m add command -compound left \
-	    #~ -label $txt \
-	    #~ -command [list IconMenuButtonCmd $varname $id $value $cmd]
-    #~ } else {
-	#~ $mb.m add command -compound left \
-	    #~ -command [list IconMenuButtonCmd $varname $id $value $cmd]
-    #~ }
-
-
-}
 
 proc IconMenuButtonCmd {varname id value cmd} {
     upvar #0 $varname var

@@ -170,13 +170,13 @@ proc CreateIconsBottomFrame {} {
 
     ThemeMenu $mb.layout.m
     $mb.layout.m configure -tearoff 0
-    DMIconMenuButton $mb.layout [msgcat::mc {Single}] \
+    IconMenuButton $mb.layout [msgcat::mc {Single}] \
 	current display single DisplayMode
-    DMIconMenuButton $mb.layout [msgcat::mc {Tile}] \
+    IconMenuButton $mb.layout [msgcat::mc {Tile}] \
 	current display tile DisplayMode
-    DMIconMenuButton $mb.layout [msgcat::mc {Blink}] \
+    IconMenuButton $mb.layout [msgcat::mc {Blink}] \
 	current display blink DisplayMode
-    DMIconMenuButton $mb.layout [msgcat::mc {Fade}] \
+    IconMenuButton $mb.layout [msgcat::mc {Fade}] \
 	current display fade DisplayMode
 
     ConfigureIconsBottomFrame

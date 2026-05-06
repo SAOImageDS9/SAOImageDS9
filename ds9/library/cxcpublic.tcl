@@ -68,7 +68,7 @@ proc CXCPublicObsId {} {
 }
 
 proc CXCPublicConeSearch {} {
-    FPDialog cxcpub {Chandra Public Cone Search} {https://cxcfps.cfa.harvard.edu/cgi-bin/cda/footprint/get_vo_table.pl} {ACIS-S ACIS-I HRC-S HRC-I} cxcpublic apply
+    FPDialog cxcpub {Chandra Public Cone Search} {https://cda.cfa.harvard.edu/fps-dbdal-rest/jax-rs/main/footprints} {ACIS-S ACIS-I HRC-S HRC-I} cxcpublic apply
 }
 
 proc CXCPublicSelectCmd {varname ss rc} {

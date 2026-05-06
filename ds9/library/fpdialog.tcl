@@ -12,7 +12,7 @@ proc FPDialog {varname title url instr format action} {
     global ds9
     global wcs
     global current
-   
+
     global debug
     if {$debug(tcl,fp)} {
 	puts stderr "FPDialog $varname:$title:$url:$instr:$format:$action"
@@ -50,16 +50,19 @@ proc FPDialog {varname title url instr format action} {
 	    set var(proc,reg) FPRegCXC
 	    set var(colid) ObsId
 	    set var(colreg) stcs
+        set var(get_or_post) GET
 	}
 	hla {
 	    set var(proc,reg) FPRegHLA
 	    set var(colid) PropID
 	    set var(colreg) regionSTCS
+        set var(get_or_post) POST
 	}
 	cxcpublic {
 	    set var(proc,reg) FPRegCXC
 	    set var(colid) ObsId
 	    set var(colreg) stcs
+        set var(get_or_post) GET
 	}
     }
 
@@ -106,7 +109,7 @@ proc FPDialog {varname title url instr format action} {
     set mb $var(mb)
 
     set tt $title
-    
+
     Toplevel $w $mb 7 $tt "FPDestroy $varname"
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
@@ -241,7 +244,7 @@ proc FPDialog {varname title url instr format action} {
 	-variable ${varname}(sort,dir) -value "-decreasing" \
 	-command [list TBLTable $varname]
 
-    ttk::label $f.ftitle -text [msgcat::mc {Found}] 
+    ttk::label $f.ftitle -text [msgcat::mc {Found}]
     set var(found) [ttk::label $f.found \
 			-width 14 -relief groove -anchor w]
 
@@ -446,15 +449,15 @@ proc FPVOT {varname} {
     }
 
     if {$instr != {}} {
-	set query [http::formatQuery pos "$xx,$yy" size $rr inst "$instr"]
+	set query [http::formatQuery POS "$xx,$yy" SIZE $rr INST "$instr"]
     } elseif {$var(instr) != {}} {
 	$var(proc,error) $varname [msgcat::mc {Please specify instruments}]
 	return
     } else {
-	set query [http::formatQuery pos "$xx,$yy" size $rr]
+	set query [http::formatQuery POS "$xx,$yy" SIZE $rr]
     }
 
-    FPLoad $varname $var(url) $query
+    FPLoad $varname $var(url) $query $var(get_or_post)
 }
 
 proc FPDestroy {varname} {
@@ -493,7 +496,7 @@ proc FPDestroy {varname} {
 		HVDestroy $var(hv)
 	    }
 	}
-    }	    
+    }
 
     if {[info exists $var(tbldb)]} {
 	unset $var(tbldb)
@@ -501,7 +504,7 @@ proc FPDestroy {varname} {
     if {[info exists $var(catdb)]} {
 	unset $var(catdb)
     }
-    
+
     set ii [lsearch $ifp(fps) $varname]
     if {$ii>=0} {
 	set ifp(fps) [lreplace $ifp(fps) $ii $ii]

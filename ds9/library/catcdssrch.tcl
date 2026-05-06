@@ -33,8 +33,8 @@ proc CATCDSSrchLoad {varname url query} {
 	unset $var(catdb)
     }
 
-    TBLGetURL $varname $url $query
-    return 
+    TBLGetURL $varname $url $query POST
+    return
 }
 
 proc CATCDSSrchExec {varname} {
@@ -248,7 +248,7 @@ proc CATCDSSrchVOTElemStartCB {t name attlist args} {
 	    set r $T(Nrows)
 	    set T($r,1) $fname
 	    set T($r,2) {}
-	    
+
 	    set T(tree,prev) $name
 	}
     }

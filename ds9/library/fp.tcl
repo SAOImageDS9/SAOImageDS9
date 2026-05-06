@@ -22,7 +22,7 @@ proc FPDef {} {
     set ifp(def) { \
 		       {{Chandra (NASA/CXC)} \
 			    fpcxc \
-			    {https://cxcfps.cfa.harvard.edu/cgi-bin/cda/footprint/get_vo_table.pl} \
+			    {https://cda.cfa.harvard.edu/fps-dbdal-rest/jax-rs/main/footprints} \
 			    {ACIS-S ACIS-I HRC-S HRC-I} \
 			    cxc \
 			} \
@@ -50,13 +50,13 @@ proc FPAnalysisMenu {mb} {
     }
 }
 
-proc FPLoad {varname url query} {
+proc FPLoad {varname url query get_or_post} {
     upvar #0 $varname var
     global $varname
 
     global debug
     if {$debug(tcl,fp)} {
-	puts stderr "FPLoad $varname $url?$query"
+	puts stderr "FPLoad $varname $get_or_post $url?$query"
     }
 
     # clear previous db
@@ -65,7 +65,7 @@ proc FPLoad {varname url query} {
 	unset $var(catdb)
     }
 
-    TBLGetURL $varname $url $query
+    TBLGetURL $varname $url $query $get_or_post
 }
 
 proc FPExec {varname} {
@@ -252,7 +252,7 @@ proc FPRegCXC {varname src dest} {
 	} else {
 	    append regs " || ; $catsrc($ii,$regCol)"
 	}
-	
+
 	regsub -all -nocase {j2000} $regs {} regs
 	regsub -all -nocase {icrs} $regs {} regs
 	set catdest($kk,$regCol) $regs
@@ -335,7 +335,7 @@ proc FPRegHLA {varname src dest} {
 	set regs [string trim $regs {|;}]
 	set catdest($ii,$regCol) $regs
     }
-    set catdest(Nrows) $catsrc(Nrows) 
+    set catdest(Nrows) $catsrc(Nrows)
 
     return 1
 }
@@ -357,7 +357,7 @@ proc FPGenerate {varname} {
 
     ARStatus $varname [msgcat::mc {Plotting Regions}]
 
-    # delete any previous 
+    # delete any previous
     if {[info commands $var(frame)] != {}} {
 	if {[$var(frame) has fits]} {
 	    $var(frame) marker footprint $varname delete

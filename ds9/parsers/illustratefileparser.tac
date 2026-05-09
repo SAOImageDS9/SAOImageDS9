@@ -102,7 +102,7 @@ globalProperty : COLOR_ eq STRING_ {set illustratefile::globalColor $3}
  | FONTSIZE_ eq INT_ {set illustratefile::globalFontSize $3}
  | FONTWEIGHT_ eq fontWeight {set illustratefile::globalFontWeight $3}
  | FONTSLANT_ eq fontSlant {set illustratefile::globalFontSlant $3}
- | ARROW_ '=' INT_ INT_
+ | ARROW_ eq INT_ INT_
  {set illustratefile::globalLine1 $3; set illustratefile::globalLine2 $4;}
  | ANGLE_ eq numeric {set illustratefile::globalAngle $3}
  | JUSTIFY_ eq justify {set illustratefile::globalJustify $3}
@@ -121,7 +121,7 @@ localProperty : COLOR_ eq STRING_ {set illustratefile::localColor $3}
  | FONTSIZE_ eq INT_ {set illustratefile::localFontSize $3}
  | FONTWEIGHT_ eq fontWeight {set illustratefile::localFontWeight $3}
  | FONTSLANT_ eq fontSlant {set illustratefile::localFontSlant $3}
- | ARROW_ '=' INT_ INT_
+ | ARROW_ eq INT_ INT_
  {set illustratefile::localLine1 $3; set illustratefile::localLine2 $4;}
  | ANGLE_ eq numeric {set illustratefile::localAngle $3}
  | JUSTIFY_ eq justify {set illustratefile::localJustify $3}

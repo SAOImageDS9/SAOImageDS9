@@ -69,7 +69,7 @@ proc IllustrateMoveFront {} {
 	    }
 	}
     }
-    
+
     # now sort out the handles
     foreach id [$ds9(canvas) find withtag {graphic}] {
 	# handles/nodes
@@ -94,7 +94,7 @@ proc IllustrateMoveBack {} {
 	    }
 	}
     }
-    
+
     # now sort out the handles
     foreach id [$ds9(canvas) find withtag {graphic}] {
 	# handles/nodes
@@ -139,7 +139,7 @@ proc IllustrateDeleteAll {} {
 proc IllustrateSelectAll {} {
     global ds9
     global iillustrate
-    
+
     set iillustrate(selection) {}
     foreach id [$ds9(canvas) find withtag {graphic}] {
 	IllustrateAddToSelection $id
@@ -149,7 +149,7 @@ proc IllustrateSelectAll {} {
 proc IllustrateSelectNone {} {
     global ds9
     global iillustrate
-    
+
     # handles
     foreach id [$ds9(canvas) find withtag {handle}] {
 	$ds9(canvas) itemconfigure $id -state hidden
@@ -251,7 +251,7 @@ proc IllustrateCut {} {
 
 proc IllustrateMenuCopy {} {
     global iillustrate
-    
+
     set iillustrate(clipboard) {}
     foreach gr $iillustrate(selection) {
 	foreach {id color fill width dash} $gr {
@@ -304,7 +304,7 @@ proc IllustrateLoadFn {fn} {
 
 proc IllustrateListHeader {} {
     set rr {}
-    append rr "# Illustrate file format: DS9 version 1.0\n"
+    append rr "# Illustrate file format: DS9 version 1.1\n"
     append rr "global color = cyan fill = no width = 1 dash = no\n"
     append rr "global font = helvetica fontsize = 12 fontweight = normal fontslant = roman"
 }
@@ -312,7 +312,7 @@ proc IllustrateListHeader {} {
 proc IllustrateSaveSelect {} {
     IllustrateSaveSelectFn [SaveFileDialog illustratefbox]
 }
-    
+
 proc IllustrateSaveSelectFn {fn} {
     global iillustrate
 
@@ -341,7 +341,7 @@ proc IllustrateSaveAll {} {
 
 proc IllustrateSaveAllFn {fn} {
     global ds9
-    
+
     if {$fn == {}} {
 	return
     }
@@ -378,12 +378,12 @@ proc IllustrateListSelect {} {
 
 proc IllustrateListAll {} {
     global ds9
-    
+
     set rr "[IllustrateListHeader]\n"
     foreach id [$ds9(canvas) find withtag {graphic}] {
 	append rr "[IllustrateList $id]\n"
     }
-    
+
     SimpleTextDialog illustratetxt [msgcat::mc {Illustrate}] \
 	80 20 insert top $rr
 }

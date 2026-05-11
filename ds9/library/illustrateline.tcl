@@ -45,7 +45,7 @@ proc IllustrateLineDefault {id} {
 
 proc IllustrateLineDup {param} {
     global ds9
-    
+
     foreach {coords color width dash arrow ph} $param {
 	set id [$ds9(canvas) create line \
 		    $coords \
@@ -72,7 +72,7 @@ proc IllustrateLineSaveSelection {id} {
 
 proc IllustrateLineCopy {id} {
     global ds9
-    
+
     set coords [$ds9(canvas) coords $id]
     set color [$ds9(canvas) itemcget $id -fill]
     set width [$ds9(canvas) itemcget $id -width]
@@ -114,7 +114,7 @@ proc IllustrateLineList {id} {
     } else {
 	set dash 0
     }
-    
+
     set rr "line $coords"
 
     if {$color != {cyan} || $width != 1 || $dash || $arrow != {none}} {
@@ -124,7 +124,7 @@ proc IllustrateLineList {id} {
 	    append rr " color = $color"
 	}
 	if {$width != 1} {
-	    append rr " width = $width)"
+	    append rr " width = $width"
 	}
 	if {$dash} {
 	    append rr " dash = yes"
@@ -190,7 +190,7 @@ proc IllustrateLineUpdateHandle {id} {
 proc IllustrateLineEdit {id xx yy} {
     global ds9
     global iillustrate
-    
+
     foreach {x1 y1 x2 y2} [$ds9(canvas) coords $id] {}
     switch $iillustrate(handle) {
 	1 {$ds9(canvas) coords $id $xx $yy $x2 $y2}
@@ -200,7 +200,7 @@ proc IllustrateLineEdit {id xx yy} {
 
 proc IllustrateLineAntsOn {id} {
     global ds9
-    
+
     $ds9(canvas) itemconfigure $id \
 	-fill white \
 	-width 1 \
@@ -310,7 +310,7 @@ proc IllustrateLineDialog {id} {
     ttk::separator $var(top).sep -orient horizontal
     pack $var(top).buttons $var(top).sep -side bottom -fill x
     pack $var(top).param -side top -fill both -expand true
-    
+
     # init
     IllustrateLineEditCB $var(id)
     IllustrateLineColorCB $var(id)
@@ -328,7 +328,7 @@ proc IllustrateLineColorVar {varname} {
 
 proc IllustrateLineColor {id color} {
     global ds9
-    
+
     $ds9(canvas) itemconfigure $id \
 	-fill $color
 
@@ -343,7 +343,7 @@ proc IllustrateLineApply {varname} {
     global $varname
 
     global ds9
-    
+
     if {$var(x1) != {} && $var(y1) != {} &&
 	$var(x2) != {} && $var(y2) != {}} {
 	IllustrateSaveUndo edit $var(id)
@@ -360,7 +360,7 @@ proc IllustrateLineArrow {varname} {
     global $varname
 
     global ds9
-    
+
     if {$var(arrow,left) && !$var(arrow,right)} {
 	set arrow first
     } elseif {!$var(arrow,left) && $var(arrow,right)} {

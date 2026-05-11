@@ -55,13 +55,13 @@ command : VERSION_ {puts "DS9 Illustrate File 1.0"}
 
 shape : CIRCLE_ bp numeric sp numeric sp numeric ep comment
  {IllustrateCircleCreate $3 $5 $7 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash}
- | ELLIPSE_ bp numeric sp numeric sp numeric sp numeric bp comment
+ | ELLIPSE_ bp numeric sp numeric sp numeric sp numeric ep comment
  {IllustrateEllipseCreate $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash}
- | BOX_ bp numeric sp numeric sp numeric sp numeric bp comment
+ | BOX_ bp numeric sp numeric sp numeric sp numeric ep comment
  {IllustrateBoxCreate $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash}
- | POLYGON_ bp coords bp comment
+ | POLYGON_ bp coords ep comment
  {IllustratePolygonCreate $illustratefile::coords $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash}
- | LINE_ bp numeric sp numeric sp numeric sp numeric bp comment
+ | LINE_ bp numeric sp numeric sp numeric sp numeric ep comment
  {IllustrateLineCreate $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localWidth $illustratefile::localDash $illustratefile::localLine1 $illustratefile::localLine2}
  | TEXT_ bp numeric sp numeric sp STRING_ ep comment
  {IllustrateTextCreate $3 $5 $7 $illustratefile::localColor $illustratefile::localFont $illustratefile::localFontSize $illustratefile::localFontWeight $illustratefile::localFontSlant $illustratefile::localAngle $illustratefile::localJustify} comment
@@ -101,8 +101,6 @@ globalProperty : COLOR_ eq STRING_ {set illustratefile::globalColor $3}
  | FONTSIZE_ eq INT_ {set illustratefile::globalFontSize $3}
  | FONTWEIGHT_ eq fontWeight {set illustratefile::globalFontWeight $3}
  | FONTSLANT_ eq fontSlant {set illustratefile::globalFontSlant $3}
- | LINE_ eq INT_ INT_
- {set illustratefile::globalLine1 $3; set illustratefile::globalLine2 $4;}
  | ANGLE_ eq numeric {set illustratefile::globalAngle $3}
  | JUSTIFY_ eq justify {set illustratefile::globalJustify $3}
  ;
@@ -133,7 +131,7 @@ sp :
 bp :
  | '('
  ;
- 
+
 ep :
  | ')'
  ;
@@ -141,7 +139,7 @@ ep :
 eq :
  | '='
  ;
- 
+
 justify : LEFT_ {set _ left}
  | CENTER_ {set _ center}
  | RIGHT_ {set _ right}

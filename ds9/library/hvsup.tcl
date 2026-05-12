@@ -184,7 +184,7 @@ proc HVProcessURLFile {varname url query rr} {
     global $varname
 
     upvar $rr r
-    
+
     global ds9
 
     global debug
@@ -214,7 +214,7 @@ proc HVProcessURLFTP {varname url query rr} {
     global $varname
 
     upvar $rr r
-    
+
     global ds9
 
     global debug
@@ -276,7 +276,7 @@ proc HVProcessURLHTTP {varname url query rr sync} {
     global $varname
 
     upvar $rr r
-    
+
     global ds9
 
     global debug
@@ -536,7 +536,12 @@ proc HVParseMeta {varname} {
 		    default {}
 		}
 	    }
-
+            content-disposition {
+                # The regex looks for filename=" and captures everything until the closing "
+                if {[regexp {filename="([^\"]+)"} $value -> filename]} {
+                  set var(filename) $filename
+                }
+            }
 	    refresh {
 		set f [split $value \;]
 		set var(refresh,time) [lindex $f 0]
@@ -575,7 +580,7 @@ proc HVParseMeta {varname} {
 			    no-transform {}
 			    only-if-cached {}
 			    cache-extension {}
-			    
+
 			    must-revalidate {}
 			    proxy-revalidate {}
 			}
@@ -663,7 +668,15 @@ proc HVLoadFile {varname path} {
 	}
     }
 
-    switch -- [string tolower [file extension $path]] {
+    set fn [file extension $path]
+    if { [info exists var(filename)] } {
+        if {$var(filename) ne ""} {
+          set fn [file extension $var(filename)]
+        }
+    }
+    set extn [string tolower $fn]
+
+    switch -- $extn {
 	.html -
 	.htm {set var(mime) "text/html"}
 	.gif {set var(mime) "image/gif"}
@@ -892,11 +905,11 @@ proc HVParseSingle {varname} {
 	"text/html" -
 	"text/plain" -
 	"application/octet-stream" {
-	    # it never fails, someone can't get there mime types correct. 
+	    # it never fails, someone can't get there mime types correct.
 	    # Override the mime type based on path
 
 	    ParseURL $var(url) r
-	    set path [file tail $r(path)]  
+	    set path [file tail $r(path)]
 
 	    # set content-encoding
 	    switch -- [file extension $path] {
@@ -918,8 +931,16 @@ proc HVParseSingle {varname} {
 		}
 	    }
 
+            set fn [file extension $path]
+            if {[info exists var(filename)]} {
+                if {$var(filename) ne ""} {
+                    set fn [file extension $var(filename)]
+                }
+            }
+            set extn [string tolower $fn]
+
 	    # set Content-Type
-	    switch -- [file extension $path] {
+            switch -- $extn {
 		.html -
 		.htm {set var(mime) "text/html"}
 		.gif {set var(mime) "image/gif"}
@@ -1250,8 +1271,14 @@ proc HVParseColormap {varname} {
 
     set fn [HVParseMimeParam $varname "name"]
     if {$fn == {}} {
-	ParseURL $var(url) r
-	set fn [file tail $r(path)]
+        ParseURL $var(url) r
+        set fn [file tail $r(path)]
+    }
+
+    if { [info exists var(filename)] } {
+        if {$var(filename) ne ""} {
+          set fn $var(filename)
+        }
     }
 
     if {![catch {file rename -force $var(fn) $ds9(tmpdir)/$fn}]} {
@@ -1434,7 +1461,7 @@ proc HVUpdateDialog {varname} {
     set id $var(index)
     set id [incr id -1]
     if {[info exists ${varname}(index,$id)]} {
-	$var(mb).view entryconfig [msgcat::mc {Back}] -state normal    
+	$var(mb).view entryconfig [msgcat::mc {Back}] -state normal
     } else {
 	$var(mb).view entryconfig [msgcat::mc {Back}] -state disabled
     }
@@ -1442,7 +1469,7 @@ proc HVUpdateDialog {varname} {
     set id $var(index)
     set id [incr id 1]
     if {[info exists ${varname}(index,$id)]} {
-	$var(mb).view entryconfig [msgcat::mc {Forward}] -state normal    
+	$var(mb).view entryconfig [msgcat::mc {Forward}] -state normal
     } else {
 	$var(mb).view entryconfig [msgcat::mc {Forward}] -state disabled
     }
@@ -1617,6 +1644,7 @@ proc HVSetResult {varname code mime} {
     set var(cache,images) 1
     set var(expire) 0
     set var(encoding) {}
+    set var(filename) {}
     set var(transfer) {}
     set var(refresh,time) 0
     set var(refresh,url) {}
@@ -1830,7 +1858,7 @@ proc HVImageURL {varname url width height} {
 		    200 -
 		    203 -
 		    503 {set ii 0}
-		
+
 		    201 -
 		    300 -
 		    301 -
@@ -1976,7 +2004,7 @@ proc HVFontCB {varname sz args} {
 	    italic {set slant italic}
 	}
     }
-    
+
     switch -- $sz {
 	0 {incr size -3}
 	1 {incr size -2}

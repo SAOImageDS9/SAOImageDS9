@@ -124,7 +124,7 @@ proc EvalLock {var which cmd} {
 
 proc EvalLockColorbarCurrent {cmd} {
     global current
-    
+
     EvalLockColorbar $current(frame) $cmd
 }
 
@@ -203,7 +203,7 @@ proc UpdateDS9 {} {
     UpdateColorMenu
     UpdateRegionMenu
     # wcs(system) set here
-    UpdateWCSMenu 
+    UpdateWCSMenu
     UpdateIllustrateMenu
     UpdateAnalysisMenu
     UpdateAnalysisButtonbar
@@ -238,7 +238,7 @@ proc UpdateDS9 {} {
 
     RefreshInfoBox $current(frame)
     UpdateColormapLevel
-    
+
     if {$debug(tcl,update)} {
 	puts stderr "UpdateDS9 end\n"
     }
@@ -583,7 +583,7 @@ proc ProcessSend {proc id sock fn ext rr} {
 
 proc SourceInitFileDir {ext} {
     global ds9
-    
+
     foreach pp {{.} {}} {
 	set fn $pp$ds9(app)$ext
 	set ff [file join [GetEnvHome] $fn]
@@ -609,7 +609,7 @@ proc SourceInitFile {fn} {
 		if {![ValidReadOnly [lindex $pp 3]] ||
 		    ![ValidReadOnly [lindex $pp 4]]} {
 		    set msg "[msgcat::mc {Invalid file permissions detected}]: $fn [msgcat::mc {Please change the file's permission to disable other users write access. Use anyway?}]"
-		    
+
 		    if {[tk_messageBox -type yesno -icon question -message $msg] != {yes}} {
 			# failed to execute
 			return 0
@@ -665,7 +665,7 @@ proc LanguageToName {which} {
 proc SetLanguage {ll} {
     global ds9
     global pds9
-    
+
     set pds9(language,name) [LanguageToName $ll]
 
     set x 0
@@ -695,12 +695,12 @@ proc SetLanguage {ll} {
     }
 }
 
-proc InitTempDir {} { 
+proc InitTempDir {} {
     global ds9
     global env
 
     # check environment vars first
-    #   windows is very picky as to file name format 
+    #   windows is very picky as to file name format
     if {[info exists env(TEMP)]} {
 	set ds9(tmpdir) [file normalize [file nativename $env(TEMP)]]
     } elseif {[info exists env(TMP)]} {
@@ -945,16 +945,16 @@ proc AboutBoxDefault {} {
     set f [ttk::frame $w.param]
     canvas $f.c -background white -height 300 -width 550
     pack $f.c -fill both -expand true
-    
+
     set ed(sun) [image create photo -file $ds9(root)/doc/sun.png]
-    
+
     $f.c create image 0 0 -image $ed(sun) -anchor nw
     $f.c create text 120 12 -text $help(about) -anchor nw -width 450
 
     # Buttons
     set f [ttk::frame $w.buttons]
     ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
-	-default active 
+	-default active
     pack $f.ok -padx 2 -pady 2
 
     bind $w <Return> {set ed(ok) 1}
@@ -993,7 +993,7 @@ proc QuitDS9 {} {
     if {[info exists samphub]} {
 	catch {SAMPHubStop}
     }
-    
+
     # close IIS ports
     catch {IISClose}
 
@@ -1032,13 +1032,13 @@ proc OpenSource {} {
 
 proc OpenConsole {} {
     global ds9
-    
+
     if {[winfo exists ".tkcon"]} {
 	tkcon show
     } else {
 	set ::tkcon::OPT(exec) {}
 	set ::tkcon::OPT(font) [font actual TkFixedFont]
-	
+
 	tkcon::Init
 
 	switch $ds9(wm) {
@@ -1373,7 +1373,7 @@ proc ProxyHTTP {} {
     set auth {}
     if {$phttp(proxy) && $phttp(auth)} {
 	set auth [list "Proxy-Authorization" [concat "Basic" [base64::encode $phttp(auth,user):$phttp(auth,passwd)]]]
-    } 
+    }
 
     return $auth
 }
@@ -1429,7 +1429,7 @@ proc FixSpec {sysname skyname formatname defsys defsky defformat} {
 	    set sky $sys
 	    set sys wcs
 	}
-	
+
 	default {
 	    set format $sky
 	    set sky $sys
@@ -1469,7 +1469,7 @@ proc FixSpec {sysname skyname formatname defsys defsky defformat} {
 proc MacOSPhotoFix {top xx yy} {
     global ds9
     global tcl_platform
-    
+
     switch $ds9(wm) {
 	x11 {
 	    if {$tcl_platform(os) == {Darwin}} {
@@ -1482,7 +1482,7 @@ proc MacOSPhotoFix {top xx yy} {
 	aqua {macos sc yes}
 	win32 {}
     }
-    
+
     return {}
 }
 
@@ -1691,7 +1691,7 @@ proc DataSendCmd {sys sky xx yy ww hh strip} {
     global current
 
     if {$current(frame) == {}} {
-	return
+        error "No current frame."
     }
 
     $current(frame) get data $sys $sky $xx $yy $ww $hh rr

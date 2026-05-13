@@ -21,7 +21,7 @@ void Base::axesOrderCmd(int order)
   // if same do nothing
   if (order == currentContext->axesOrder())
     return;
-  
+
   currentContext->setAxesOrder(order);
   if (currentContext->fits) {
     if (!preserveMarkers) {
@@ -83,7 +83,7 @@ void Base::binCmd(const Vector& b, const Vector& vv,
   }
 }
 
-void Base::binCmd(const Vector& b, const char* x, const char* y, 
+void Base::binCmd(const Vector& b, const char* x, const char* y,
 		       const char* filter)
 {
   currentContext->setBinToFactor(b);
@@ -100,7 +100,7 @@ void Base::binCmd(const Vector& b, const char* x, const char* y,
   }
 }
 
-void Base::binCmd(const Vector& b, int d, const Vector& lim, 
+void Base::binCmd(const Vector& b, int d, const Vector& lim,
 		       const Vector& vv,
 		       const char* x, const char* y, const char* z,
 		       const char* filter)
@@ -415,7 +415,7 @@ void Base::cropCmd()
 }
 
 // used for Backup
-void Base::cropCmd(const Vector& aa, const Vector& bb, 
+void Base::cropCmd(const Vector& aa, const Vector& bb,
 		   Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
   // params in DATA coords 0-n
@@ -443,9 +443,9 @@ void Base::cropCmd(const Vector& aa, const Vector& bb,
   updateMarkerCBs(&footprintMarkers);
 }
 
-void Base::cropCenterCmd(const Vector& vv, 
-			 Coord::CoordSystem sys, Coord::SkyFrame sky, 
-			 const Vector& wh, 
+void Base::cropCenterCmd(const Vector& vv,
+			 Coord::CoordSystem sys, Coord::SkyFrame sky,
+			 const Vector& wh,
 			 Coord::CoordSystem dsys, Coord::DistFormat dist)
 {
   // params in DATA coords 0-n
@@ -582,7 +582,7 @@ void Base::crop3dCmd(double z0, double z1, Coord::CoordSystem sys,
 
   // extend to edge from center
   currentContext->setCrop3dParams(min[2]-.5,max[2]+.5);
-  
+
   // set current slice if needed
   // setSlice() IMAGE (ranges 1-n)
   // context->slice() IMAGE (ranges 1-n)
@@ -593,7 +593,7 @@ void Base::crop3dCmd(double z0, double z1, Coord::CoordSystem sys,
     setSlice(2,max[2]+.5);
 
   currentContext->setSecMode(FrScale::CROPSEC);
-  
+
   currentContext->updateClip();
   updateColorScale();
   update(MATRIX);
@@ -653,8 +653,8 @@ void Base::colorScaleLogCmd(double exp)
 }
 
 void Base::contourCreateCmd(const char* color, int width, int dash,
-			    FVContour::Method method, int numlevel, 
-			    int smooth, 
+			    FVContour::Method method, int numlevel,
+			    int smooth,
 			    FrScale::ColorScaleType colorScaleType,
 			    float expo,
 			    FrScale::ClipMode clipMode, float autocut,
@@ -664,12 +664,12 @@ void Base::contourCreateCmd(const char* color, int width, int dash,
   if (DebugPerf)
     cerr << "Base::contourCreate()" << endl;
 
-  currentContext->contourCreateFV(color, width, dash, 
+  currentContext->contourCreateFV(color, width, dash,
 				  method, numlevel,
-				  smooth, 
-				  colorScaleType, 
+				  smooth,
+				  colorScaleType,
 				  expo,
-				  clipMode, autocut, 
+				  clipMode, autocut,
 				  clipScope,
 				  low, high, level);
   update(PIXMAP);
@@ -695,7 +695,7 @@ void Base::contourLoadCmd(const char* fn)
   update(PIXMAP);
 }
 
-void Base::contourLoadCmd(const char* fn, const char* color, 
+void Base::contourLoadCmd(const char* fn, const char* color,
 			  int width, int dash)
 {
   ifstream str(fn);
@@ -704,8 +704,8 @@ void Base::contourLoadCmd(const char* fn, const char* color,
   update(PIXMAP);
 }
 
-void Base::contourLoadCmd(const char* fn, 
-			  Coord::CoordSystem sys, Coord::SkyFrame sky, 
+void Base::contourLoadCmd(const char* fn,
+			  Coord::CoordSystem sys, Coord::SkyFrame sky,
 			  const char* color, int width, int dash)
 {
   ifstream str(fn);
@@ -741,7 +741,7 @@ void Base::contourPasteCmd(const char* var)
   update(PIXMAP);
 }
 
-void Base::contourPasteCmd(const char* var, const char* color, 
+void Base::contourPasteCmd(const char* var, const char* color,
 			   int width, int dash)
 {
   const char* ccmd = Tcl_GetVar(interp, var, TCL_LEAVE_ERR_MSG);
@@ -777,7 +777,7 @@ void Base::contourSaveCmd(const char* fn, Coord::CoordSystem sys,
     currentContext->contourListFV(str, sys, sky);
 }
 
-void Base::contourSaveAuxCmd(const char* fn, Coord::CoordSystem sys, 
+void Base::contourSaveAuxCmd(const char* fn, Coord::CoordSystem sys,
 			     Coord::SkyFrame sky)
 {
   ofstream str(fn);
@@ -838,11 +838,11 @@ void Base::getBinColsCmd()
 {
   if (currentContext->fits && currentContext->fits->isHist()) {
     if (currentContext->binDepth()>1)
-      Tcl_AppendResult(interp, currentContext->fits->getHistX(), " ", 
+      Tcl_AppendResult(interp, currentContext->fits->getHistX(), " ",
 		       currentContext->fits->getHistY(), " ",
 		       currentContext->fits->getHistZ(), NULL);
     else
-      Tcl_AppendResult(interp, currentContext->fits->getHistX(), " ", 
+      Tcl_AppendResult(interp, currentContext->fits->getHistX(), " ",
 		       currentContext->fits->getHistY(), NULL);
   }
   else
@@ -1070,15 +1070,15 @@ void Base::getColorMapLevelCmd(int count)
     getColorMapLevelCmd(count, currentContext->cfits->low(),
 			currentContext->cfits->high(),
 			currentContext->colorScaleType(),
-			currentContext->expo());		
+			currentContext->expo());
   else
-    getColorMapLevelCmd(count, currentContext->low(), 
+    getColorMapLevelCmd(count, currentContext->low(),
 			currentContext->high(),
 			currentContext->colorScaleType(),
-			currentContext->expo());		
+			currentContext->expo());
 }
 
-void Base::getColorMapLevelCmd(int count, const Vector& vv, 
+void Base::getColorMapLevelCmd(int count, const Vector& vv,
 			       Coord::InternalSystem ref)
 {
   if (currentContext->cfits) {
@@ -1090,7 +1090,7 @@ void Base::getColorMapLevelCmd(int count, const Vector& vv,
     }
   }
 
-  getColorMapLevelCmd(count, currentContext->low(), 
+  getColorMapLevelCmd(count, currentContext->low(),
 		      currentContext->high(),
 		      currentContext->colorScaleType(),
 		      currentContext->expo());
@@ -1133,7 +1133,7 @@ void Base::getColorMapLevelCmd(int count, double ll, double hh,
     inverseScale = new SinhInverseScale(count, ll, hh);
     break;
   case FrScale::HISTEQUSCALE:
-    inverseScale = new HistEquInverseScale(count, ll, hh, 
+    inverseScale = new HistEquInverseScale(count, ll, hh,
 				    currentContext->histequ(),
 				    HISTEQUSIZE);
     break;
@@ -1186,7 +1186,7 @@ void Base::getColorScaleCmd()
 }
 
 void Base::getColorScaleLevelCmd(int count, double ll, double hh,
-				 FrScale::ColorScaleType scaleType, 
+				 FrScale::ColorScaleType scaleType,
 				 float expo)
 {
   InverseScale* scale;
@@ -1213,7 +1213,7 @@ void Base::getColorScaleLevelCmd(int count, double ll, double hh,
     scale = new SinhInverseScale(count, ll, hh);
     break;
   case FrScale::HISTEQUSCALE:
-    scale = new HistEquInverseScale(count, ll, hh, 
+    scale = new HistEquInverseScale(count, ll, hh,
 				    currentContext->histequ(),
 				    HISTEQUSIZE);
     break;
@@ -1225,7 +1225,7 @@ void Base::getColorScaleLevelCmd(int count, double ll, double hh,
   ostringstream str;
   str << *scale << ends;
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
- 
+
   delete scale;
 }
 
@@ -1253,7 +1253,7 @@ void Base::getContourClipCmd()
 {
   FrScale* fr = currentContext->fvcontour().frScale();
   ostringstream str;
-  str << fr->low() << ' ' 
+  str << fr->low() << ' '
       << fr->high() << ends;
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
@@ -1363,7 +1363,7 @@ void Base::getContourScaleCmd()
   case FrScale::IISSCALE:
     Tcl_AppendResult(interp, "linear", NULL);
     break;
-  } 
+  }
 }
 
 void Base::getContourScaleLogCmd()
@@ -1374,7 +1374,7 @@ void Base::getContourScaleLogCmd()
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
-void Base::getCoordCmd(const Vector& vv, Coord::CoordSystem out, 
+void Base::getCoordCmd(const Vector& vv, Coord::CoordSystem out,
 		       Coord::SkyFrame sky, Coord::SkyFormat format)
 {
   if (FitsImage* ptr=isInCFits(vv,Coord::CANVAS,NULL))
@@ -1383,7 +1383,7 @@ void Base::getCoordCmd(const Vector& vv, Coord::CoordSystem out,
     Tcl_AppendResult(interp, "0 0", NULL);
 }
 
-// used for Backup 
+// used for Backup
 void Base::getCropCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
 		      Coord::SkyFormat format)
 {
@@ -1401,7 +1401,7 @@ void Base::getCropCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
   printFromRef(ptr, ur*ptr->dataToRef, sys, sky, format);
 }
 
-void Base::getCropCenterCmd(Coord::CoordSystem sys, Coord::SkyFrame sky, 
+void Base::getCropCenterCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
 			    Coord::SkyFormat format, Coord::CoordSystem dcoord,
 			    Coord::DistFormat dist)
 {
@@ -1452,7 +1452,7 @@ void Base::getCrosshairCmd(Coord::InternalSystem sys)
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
-void Base::getCrosshairCmd(Coord::CoordSystem sys, Coord::SkyFrame sky, 
+void Base::getCrosshairCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
 			   Coord::SkyFormat format)
 {
   if (currentContext->cfits)
@@ -1471,7 +1471,7 @@ void Base::getCrosshairStatusCmd()
 
 void Base::getDATASECCmd()
 {
-  if (currentContext->datasec()) 
+  if (currentContext->datasec())
     Tcl_AppendResult(interp, "1", NULL);
   else
     Tcl_AppendResult(interp, "0", NULL);
@@ -1482,8 +1482,9 @@ void Base::getDataValuesCmd(const Vector& vv, Coord::InternalSystem ref,
 {
   Vector rr;
   FitsImage* ptr = isInCFits(vv, ref, &rr);
-  if (!ptr)
+  if (!ptr) {
     return;
+  }
 
   Vector ll = rr - Vector((((Vector&)ss)[0]-1)/2,(((Vector&)ss)[1]-1)/2);
 
@@ -1491,10 +1492,10 @@ void Base::getDataValuesCmd(const Vector& vv, Coord::InternalSystem ref,
   for (int jj=0; jj<((Vector&)ss)[1]; jj++) {
     for (int ii=0; ii<((Vector&)ss)[0]; ii++) {
       Vector dd = (ll+Vector(ii,jj)) * ptr->refToData;
-      FitsBound* params = 
+      FitsBound* params =
 	ptr->getDataParams(currentContext->secMode());
 
-      if (dd[0]>=params->xmin && dd[0]<params->xmax && 
+      if (dd[0]>=params->xmin && dd[0]<params->xmax &&
 	  dd[1]>=params->ymin && dd[1]<params->ymax)
 	Tcl_AppendResult(interp, (char*)ptr->getValue(dd), " ", NULL);
     }
@@ -1502,8 +1503,8 @@ void Base::getDataValuesCmd(const Vector& vv, Coord::InternalSystem ref,
   CLEARSIGBUS
 }
 
-void Base::getDataValuesCmd(int which, const Vector& vv, 
-			    Coord::CoordSystem sys, Coord::SkyFrame sky, 
+void Base::getDataValuesCmd(int which, const Vector& vv,
+			    Coord::CoordSystem sys, Coord::SkyFrame sky,
 			    const Vector& dd, char* var)
 {
   // clear an previous values
@@ -1517,6 +1518,7 @@ void Base::getDataValuesCmd(int which, const Vector& vv,
 
   if (!base) {
     Tcl_SetVar(interp,var,"",0);
+    Tcl_AppendResult(interp, " no data loaded into frame.", NULL);
     result = TCL_ERROR;
     return;
   }
@@ -1538,10 +1540,10 @@ void Base::getDataValuesCmd(int which, const Vector& vv,
       FitsImage* ptr = currentContext->fits;
       while (ptr) {
 	Vector ss = rr * ptr->refToData;
-	FitsBound* params = 
+	FitsBound* params =
 	  ptr->getDataParams(currentContext->secMode());
 
-	if (ss[0]>=params->xmin && ss[0]<params->xmax && 
+	if (ss[0]>=params->xmin && ss[0]<params->xmax &&
 	    ss[1]>=params->ymin && ss[1]<params->ymax) {
 	  Tcl_SetVar2(interp,var,str.str().c_str(),(char*)ptr->getValue(ss),0);
 	  found = 1;
@@ -1562,13 +1564,13 @@ void Base::getFitsNAxesCmd()
   printInteger(currentContext->naxes());
 }
 
-void Base::getFitsCenterCmd(Coord::CoordSystem sys, Coord::SkyFrame sky, 
+void Base::getFitsCenterCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
 			    Coord::SkyFormat format)
 {
   if (keyContext && keyContext->fits)
-    printFromRef(keyContext->fits, 
+    printFromRef(keyContext->fits,
 		 imageCenter(keyContext->secMode())*
-		 keyContext->fits->imageToRef, 
+		 keyContext->fits->imageToRef,
 		 sys, sky, format);
   else
     Tcl_AppendResult(interp, "0 0", NULL);
@@ -1603,7 +1605,7 @@ void Base::getFitsExtCmd(const Vector& vv, Coord::InternalSystem ref)
     ostringstream str;
     str << ptr->ext() << ends;
     Tcl_AppendResult(interp, str.str().c_str(), NULL);
-  } 
+  }
   else
     Tcl_AppendResult(interp, "", NULL);
 }
@@ -1682,7 +1684,7 @@ void Base::getFitsFileNameCmd(int which, FileNameType type)
     Tcl_AppendResult(interp, "", NULL);
 }
 
-void Base::getFitsFileNameCmd(const Vector& vv, Coord::InternalSystem ref, 
+void Base::getFitsFileNameCmd(const Vector& vv, Coord::InternalSystem ref,
 			      FileNameType type)
 {
   if (FitsImage* ptr=isInCFits(vv,ref,NULL))
@@ -1875,14 +1877,14 @@ void Base::getHistogramCmd(char* xName, char* yName, int num)
   currentContext->bltHist(xName, yName, num);
 }
 
-void Base::getHorzCutCmd(char* xx, char* yy, const Vector& vv, 
-			 Coord::InternalSystem ref, 
+void Base::getHorzCutCmd(char* xx, char* yy, const Vector& vv,
+			 Coord::InternalSystem ref,
 			 int thick, Base::CutMethod method)
 {
   bltCut(xx, yy, Coord::XX, mapToRef(vv,ref), thick, method);
 }
 
-void Base::getHorzCutCmd(char* xx, char* yy, const Vector& vv, 
+void Base::getHorzCutCmd(char* xx, char* yy, const Vector& vv,
 			 Coord::CoordSystem sys, Coord::SkyFrame sky,
 			 int thick, Base::CutMethod method)
 {
@@ -2035,7 +2037,7 @@ void Base::getPixelTableCmd(const Vector& vv, Coord::InternalSystem ref,
 
     str << jj << ',' << ii+1 << ends;
 
-    if (ur[0]>=params->xmin && ll[0]<params->xmax && 
+    if (ur[0]>=params->xmin && ll[0]<params->xmax &&
 	ur[1]>=params->ymin && ll[1]<params->ymax) {
       Vector pt = ((ll+Vector(ii,jj)) * Translate(.5, .5)).round();
       if (pt[0]>params->xmin && pt[0]<=params->xmax) {
@@ -2055,7 +2057,7 @@ void Base::getPixelTableCmd(const Vector& vv, Coord::InternalSystem ref,
     ostringstream str;
     str << hh-jj << ',' << ii << ends;
 
-    if (ur[0]>=params->xmin && ll[0]<params->xmax && 
+    if (ur[0]>=params->xmin && ll[0]<params->xmax &&
 	ur[1]>=params->ymin && ll[1]<params->ymax) {
       Vector pt = ((ll+Vector(ii,jj)) * Translate(.5, .5)).round();
       if (pt[1]>params->ymin && pt[1]<=params->ymax) {
@@ -2076,10 +2078,10 @@ void Base::getPixelTableCmd(const Vector& vv, Coord::InternalSystem ref,
   for (jj=0; jj<hh; jj++) {
     for (ii=0; ii<ww; ii++) {
       Vector pt = ll+Vector(ii,jj);
-      ostringstream str;      
+      ostringstream str;
       str << hh-jj << ',' << ii+1 << ends;
 
-      if (pt[0]>=params->xmin && pt[0]<params->xmax && 
+      if (pt[0]>=params->xmin && pt[0]<params->xmax &&
 	  pt[1]>=params->ymin && pt[1]<params->ymax)
 	Tcl_SetVar2(interp,var,str.str().c_str(),(char*)ptr->getValue(pt),0);
       else
@@ -2159,7 +2161,7 @@ void Base::getValueCmd(const Vector& vv, Coord::InternalSystem sys)
 }
 
 void Base::getVertCutCmd(char* xx, char* yy, const Vector& vv,
-			 Coord::InternalSystem ref, 
+			 Coord::InternalSystem ref,
 			 int thick, Base::CutMethod method)
 {
   bltCut(xx, yy, Coord::YY, mapToRef(vv,ref), thick, method);
@@ -2203,7 +2205,7 @@ void Base::getWCSAlignPointerCmd()
     fitsimageptr_ = NULL;
   fitsimageparentptr_ =this;
 
-  Tcl_AppendResult(interp, (wcsAlign_ ? "1" : "0"), " ", 
+  Tcl_AppendResult(interp, (wcsAlign_ ? "1" : "0"), " ",
 		   coord.coordSystemStr(wcsSystem_), " ",
 		   coord.skyFrameStr(wcsSkyFrame_), NULL);
 }
@@ -2524,7 +2526,7 @@ void Base::magnifierCmd(char* nm, int ww, int hh)
     }
 
     if (!magnifierXImage) {
-      if (!(magnifierXImage = XGetImage(display, magnifierPixmap, 0, 0, 
+      if (!(magnifierXImage = XGetImage(display, magnifierPixmap, 0, 0,
 					magnifierWidth, magnifierHeight,
 					AllPlanes, ZPixmap))){
 	internalError("Unable to Create Magnifier XImage");
@@ -2569,8 +2571,8 @@ void Base::matchCmd(const char* xxname1, const char* yyname1,
 {
   if (keyContext && keyContext->fits)
     keyContext->fits->match(xxname1, yyname1, sys1, sky1,
-			    xxname2, yyname2, sys2, sky2, 
-			    rad, sys, dist, 
+			    xxname2, yyname2, sys2, sky2,
+			    rad, sys, dist,
 			    rrname);
 }
 
@@ -2626,7 +2628,7 @@ void Base::pannerCmd(char* n, int w, int h)
   pannerXImage = NULL;
 
   if (pannerWidth > 0 && pannerHeight > 0) {
-    if (!(pannerPixmap = Tk_GetPixmap(display, Tk_WindowId(tkwin), 
+    if (!(pannerPixmap = Tk_GetPixmap(display, Tk_WindowId(tkwin),
 				      pannerWidth, pannerHeight, depth))) {
       internalError("Unable to Create Panner Pixmap");
       return;
@@ -2644,7 +2646,7 @@ void Base::pannerCmd(char* n, int w, int h)
   update(MATRIX);
 }
 
-void Base::precCmd(int linear, int deg, int hms, int dms, 
+void Base::precCmd(int linear, int deg, int hms, int dms,
 		   int lenlinear, int lendeg, int arcmin, int arcsec,
 		   int angle)
 {
@@ -2662,7 +2664,7 @@ void Base::precCmd(int linear, int deg, int hms, int dms,
 }
 
 // backward compatibility
-void Base::precCmd(int linear, int deg, int hms, int dms, 
+void Base::precCmd(int linear, int deg, int hms, int dms,
 		   int arcmin, int arcsec)
 {
   precLinear_ = linear;
@@ -2874,7 +2876,7 @@ void Base::saveNRRDSocketCmd(int ss, FitsFile::ArchType endian)
     saveNRRD(str, endian);
 }
 
-void Base::saveENVIFileCmd(const char* hdr, const char* fn, 
+void Base::saveENVIFileCmd(const char* hdr, const char* fn,
 			   FitsFile::ArchType endian)
 {
   ofstream str(hdr);
@@ -2893,13 +2895,13 @@ void Base::sliceCmd(double dd, Coord::CoordSystem sys)
 {
   if (!currentContext->fits)
     return;
-  
+
   FitsImage* ptr = currentContext->fits;
   Vector3d cc = Vector3d(ptr->center(),1) * Translate3d(-.5, -.5, -.5);
   Vector3d wcc = ptr->mapFromRef(cc,sys,Coord::ICRS);
   Vector3d oo = ptr->mapToRef(Vector3d(wcc[0],wcc[1],dd),sys,Coord::ICRS);
   Vector3d out = oo * Translate3d(.5, .5, .5);
-  
+
   // IMAGE (ranges 1-n)
   // be sure to round properly
   setSlice(2,int(out[2]+.5));
@@ -3001,7 +3003,7 @@ void Base::warpToCmd(const Vector& vv)
   warpTo(rr);
 }
 
-void Base::wcsCmd(Coord::CoordSystem sys, Coord::SkyFrame sky, 
+void Base::wcsCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
 		  Coord::SkyFormat format)
 {
   wcsSystem_ = sys;
@@ -3114,7 +3116,7 @@ void Base::wcsAppendTxtCmd(int which, const char* txt)
 
 void Base::wcsResetCmd(int which)
 {
-  if (!currentContext->cfits) 
+  if (!currentContext->cfits)
     return;
 
   FitsImage* rr = findAllFits(which);

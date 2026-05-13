@@ -110,7 +110,6 @@ array set viewsend::table {
   61:0,target 51
   0:268,target 12
   45:0,target 37
-  37:0,target 68
   14:0 reduce
   29:0,target 29
   30:0,target 30
@@ -270,7 +269,7 @@ array set viewsend::table {
   74:0,target 58
   53:317,target 71
   0:272,target 16
-  66:0,target 69
+  66:0,target 68
   7:0 reduce
   58:0,target 65
   52:313,target 55
@@ -327,7 +326,6 @@ array set viewsend::table {
   0:284,target 28
   0:263,target 7
   16:0 reduce
-  37:0 reduce
   0:313,target 55
   58:0 reduce
   0:282,target 26
@@ -337,7 +335,7 @@ array set viewsend::table {
   13:0 reduce
   2:0,target 2
   34:0 reduce
-  67:0,target 70
+  67:0,target 69
   0:311,target 53
   60:0,target 67
   59:0,target 66
@@ -421,7 +419,6 @@ array set viewsend::rules {
   5,l 321
   27,l 321
   48,l 322
-  70,l 326
   69,l 326
   2,l 320
   24,l 321
@@ -446,7 +443,6 @@ array set viewsend::rules {
   3,dc 1
   41,dc 1
   55,dc 1
-  70,dc 1
   69,dc 1
   18,dc 1
   33,dc 1
@@ -459,7 +455,7 @@ array set viewsend::rules {
   40,dc 1
   39,dc 1
   54,dc 1
-  68,dc 0
+  68,dc 1
   17,dc 1
   32,dc 1
   8,dc 1
@@ -526,7 +522,6 @@ array set viewsend::rules {
   21,line 135
   17,line 131
   14,line 128
-  70,line 202
   69,line 201
   11,line 125
   66,line 196
@@ -592,7 +587,7 @@ array set viewsend::lr1_table {
   14,trans {}
   36 {{53 0 1}}
   33,trans {}
-  37 {{42 0 1} {68 0 0} {69 0 0} {70 0 0}}
+  37 {{42 0 1} {68 0 0} {69 0 0}}
   52,trans {{313 55} {314 56} {315 57} {323 69}}
   38 {{43 0 1}}
   71,trans {}
@@ -650,11 +645,11 @@ array set viewsend::lr1_table {
   59,trans {}
   64 {{54 0 1}}
   65 {{55 0 1}}
-  66 {{69 0 1}}
+  66 {{68 0 1}}
   26,trans {}
   8,trans {}
   45,trans {}
-  67 {{70 0 1}}
+  67 {{69 0 1}}
   64,trans {}
   68 {{42 0 2}}
   70 {{62 0 1}}
@@ -815,7 +810,7 @@ array set viewsend::token_id_table {
   307,t 0
   297,t 0
   262,line 13
-  327,line 203
+  327,line 202
   0,t 0
   0 {$}
   262,title WCSA
@@ -1168,7 +1163,7 @@ proc viewsend::yyparse {} {
                     40 { ProcessSendCmdYesNo view colorbar }
                     41 { ProcessSendCmdYesNo colorbar numerics }
                     43 { ProcessSendCmdYesNo view graph,horz }
-                    44 { ProcessSendCmdYesNo view graph,graph }
+                    44 { ProcessSendCmdYesNo view graph,vert }
                     45 { ProcessSendCmdYesNo view info,filename }
                     46 { ProcessSendCmdYesNo view info,object }
                     47 { ProcessSendCmdYesNo view info,keyword }
@@ -1187,8 +1182,8 @@ proc viewsend::yyparse {} {
                     65 { ProcessSendCmdYesNo hsv hue }
                     66 { ProcessSendCmdYesNo hsv saturation }
                     67 { ProcessSendCmdYesNo hsv value }
-                    69 { ProcessSendCmdYesNo view graph,horz }
-                    70 { ProcessSendCmdYesNo view graph,vert }
+                    68 { ProcessSendCmdYesNo view graph,horz }
+                    69 { ProcessSendCmdYesNo view graph,vert }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

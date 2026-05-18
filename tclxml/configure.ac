@@ -171,83 +171,17 @@ TEA_PROG_TCLSH
 # Load libxml2 configuration
 #--------------------------------------------------------------------
 
-AC_MSG_CHECKING([for xml2-config script])
-
-AC_ARG_WITH(xml2-config,
-    [  --with-xml2-config      the xml2-config configuration script],
-    with_xml2_config=${withval})
-
-LIBXML2_CONFIG=
-if test "x${with_xml2_config}" = "x" ; then
-    for c in \
-	${prefix}/bin/xml2-config \
-	/usr/bin/xml2-config \
-	/usr/local/bin/xml2-config
-    do
-	if test -x "$c" ; then
-	    LIBXML2_CONFIG="$c"
-	    break
-	fi
-    done
-else
-    LIBXML2_CONFIG="${with_xml2_config}"
-fi
-if test "x$LIBXML2_CONFIG" = "x" ; then
-    AC_MSG_ERROR([unable to find xml2-config])
-else
-    AC_MSG_RESULT([${LIBXML2_CONFIG}])
-    XML2_CFLAGS=`${LIBXML2_CONFIG} --cflags`
-    XML2_LIBS="`${LIBXML2_CONFIG} --libs`"
-fi
-
-AC_SUBST(XML2_CFLAGS)
-AC_SUBST(XML2_LIBS)
+PKG_CHECK_MODULES( [XML2], [
+  libxml-2.0
+])
 
 #--------------------------------------------------------------------
 # Load libxslt configuration
 #--------------------------------------------------------------------
 
-AC_MSG_CHECKING([for xslt-config script])
-
-AC_ARG_WITH(xslt-config,
-    [  --with-xslt-config      the xslt-config configuration script],
-    with_xslt_config=${withval})
-
-LIBXSLT_CONFIG=
-if test "x${with_xslt_config}" = "x" ; then
-    if test "x${with_xml2_config}" = "x" ; then
-	:
-    else
-	if test -x "`dirname ${with_xml2_config}`/xslt-config" ; then
-	    LIBXSLT_CONFIG="`dirname ${with_xml2_config}`/xslt-config"
-	fi
-    fi
-else
-    LIBXSLT_CONFIG="${with_xslt_config}"
-fi
-if test "x${LIBXSLT_CONFIG}" = "x" ; then
-    for c in \
-	/Library/Frameworks/libxslt.framework/Resources/Scripts/xslt-config \
-	${prefix}/bin/xslt-config \
-	/usr/bin/xslt-config \
-	/usr/local/bin/xslt-config
-    do
-	if test -x "$c" ; then
-	    LIBXSLT_CONFIG="$c"
-	    break
-	fi
-    done
-fi
-if test "x$LIBXSLT_CONFIG" = "x" ; then
-    AC_MSG_ERROR([unable to find xslt-config script])
-else
-    AC_MSG_RESULT([${LIBXSLT_CONFIG}])
-    XSLT_CFLAGS=`${LIBXSLT_CONFIG} --cflags`
-    XSLT_LIBS="`${LIBXSLT_CONFIG} --libs` -lexslt"
-fi
-
-AC_SUBST(XSLT_CFLAGS)
-AC_SUBST(XSLT_LIBS)
+PKG_CHECK_MODULES( [XSLT], [
+  libxslt
+])
 
 #--------------------------------------------------------------------
 # See if we want to statically link the libxml2 and libxslt

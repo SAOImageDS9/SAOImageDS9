@@ -651,6 +651,7 @@ XML2_CFLAGS
 PKG_CONFIG_LIBDIR
 PKG_CONFIG_PATH
 PKG_CONFIG
+xmlprog
 TCLSH_PROG
 VC_MANIFEST_EMBED_EXE
 VC_MANIFEST_EMBED_DLL
@@ -16002,6 +16003,122 @@ printf "%s\n" "${TCLSH_PROG}" >&6; }
 # Load libxml2 configuration
 #--------------------------------------------------------------------
 
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking Checking for libxml2" >&5
+printf %s "checking Checking for libxml2... " >&6; }
+
+if test -n "$ac_tool_prefix"; then
+  # Extract the first word of "${ac_tool_prefix}xml2-config", so it can be a program name with args.
+set dummy ${ac_tool_prefix}xml2-config; ac_word=$2
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+printf %s "checking for $ac_word... " >&6; }
+if test ${ac_cv_path_xmlprog+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  case $xmlprog in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_xmlprog="$xmlprog" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  case $as_dir in #(((
+    '') as_dir=./ ;;
+    */) ;;
+    *) as_dir=$as_dir/ ;;
+  esac
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir$ac_word$ac_exec_ext"; then
+    ac_cv_path_xmlprog="$as_dir$ac_word$ac_exec_ext"
+    printf "%s\n" "$as_me:${as_lineno-$LINENO}: found $as_dir$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+xmlprog=$ac_cv_path_xmlprog
+if test -n "$xmlprog"; then
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $xmlprog" >&5
+printf "%s\n" "$xmlprog" >&6; }
+else
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+fi
+
+
+fi
+if test -z "$ac_cv_path_xmlprog"; then
+  ac_pt_xmlprog=$xmlprog
+  # Extract the first word of "xml2-config", so it can be a program name with args.
+set dummy xml2-config; ac_word=$2
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+printf %s "checking for $ac_word... " >&6; }
+if test ${ac_cv_path_ac_pt_xmlprog+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  case $ac_pt_xmlprog in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_ac_pt_xmlprog="$ac_pt_xmlprog" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  case $as_dir in #(((
+    '') as_dir=./ ;;
+    */) ;;
+    *) as_dir=$as_dir/ ;;
+  esac
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir$ac_word$ac_exec_ext"; then
+    ac_cv_path_ac_pt_xmlprog="$as_dir$ac_word$ac_exec_ext"
+    printf "%s\n" "$as_me:${as_lineno-$LINENO}: found $as_dir$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+ac_pt_xmlprog=$ac_cv_path_ac_pt_xmlprog
+if test -n "$ac_pt_xmlprog"; then
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ac_pt_xmlprog" >&5
+printf "%s\n" "$ac_pt_xmlprog" >&6; }
+else
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+fi
+
+  if test "x$ac_pt_xmlprog" = x; then
+    xmlprog="none "
+  else
+    case $cross_compiling:$ac_tool_warned in
+yes:)
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
+printf "%s\n" "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
+ac_tool_warned=yes ;;
+esac
+    xmlprog=$ac_pt_xmlprog
+  fi
+else
+  xmlprog="$ac_cv_path_xmlprog"
+fi
+
+if test $xmlprog = "none"
+then
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: Could not locate xml2-config, trying pkg-config" >&5
+printf "%s\n" "Could not locate xml2-config, trying pkg-config" >&6; }
+
 
 
 
@@ -16134,29 +16251,19 @@ printf "%s\n" "no" >&6; }
 fi
 
 pkg_failed=no
-{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for
-  libxml-2.0
-" >&5
-printf %s "checking for
-  libxml-2.0
-... " >&6; }
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for libxml-2.0" >&5
+printf %s "checking for libxml-2.0... " >&6; }
 
 if test -n "$XML2_CFLAGS"; then
     pkg_cv_XML2_CFLAGS="$XML2_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"
-  libxml-2.0
-\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "
-  libxml-2.0
-") 2>&5
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libxml-2.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libxml-2.0") 2>&5
   ac_status=$?
   printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_XML2_CFLAGS=`$PKG_CONFIG --cflags "
-  libxml-2.0
-" 2>/dev/null`
+  pkg_cv_XML2_CFLAGS=`$PKG_CONFIG --cflags "libxml-2.0" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -16168,18 +16275,12 @@ if test -n "$XML2_LIBS"; then
     pkg_cv_XML2_LIBS="$XML2_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"
-  libxml-2.0
-\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "
-  libxml-2.0
-") 2>&5
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libxml-2.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libxml-2.0") 2>&5
   ac_status=$?
   printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_XML2_LIBS=`$PKG_CONFIG --libs "
-  libxml-2.0
-" 2>/dev/null`
+  pkg_cv_XML2_LIBS=`$PKG_CONFIG --libs "libxml-2.0" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -16200,20 +16301,14 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-                XML2_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "
-  libxml-2.0
-" 2>&1`
+                XML2_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "libxml-2.0" 2>&1`
         else
-                XML2_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "
-  libxml-2.0
-" 2>&1`
+                XML2_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "libxml-2.0" 2>&1`
         fi
         # Put the nasty error message in config.log where it belongs
         echo "$XML2_PKG_ERRORS" >&5
 
-        as_fn_error $? "Package requirements (
-  libxml-2.0
-) were not met:
+        as_fn_error $? "Package requirements (libxml-2.0) were not met:
 
 $XML2_PKG_ERRORS
 
@@ -16245,6 +16340,16 @@ else
 printf "%s\n" "yes" >&6; }
 
 fi
+else
+    { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: Using xml2-config: $xmlprog" >&5
+printf "%s\n" "Using xml2-config: $xmlprog" >&6; }
+    XML2_CFLAGS=`${xmlprog} --cflags`
+    XML2_LIBS="`${xmlprog} --libs`"
+
+
+fi
+
+
 
 #--------------------------------------------------------------------
 # Setup a *Config.sh.in configuration file.

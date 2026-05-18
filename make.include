@@ -126,6 +126,7 @@ ds9/$(OS)/Makefile :
 	cd ds9/$(OS); \
 	./configure \
 	$(WITHTK) \
+  	--with-xml2-config=$(XML2CONFIG) \
 	$(PREFIX) \
 	$(STD) \
 	$(CACHE)
@@ -174,6 +175,8 @@ tclxml/Makefile :
 	cd tclxml; \
 	./configure \
 	$(WITHTCL) \
+  	--with-xml2-config=$(XML2CONFIG) \
+  	--with-xslt-config=$(XSLTCONFIG) \
 	$(PREFIX) \
 	$(STD) \
 	$(CACHE)
@@ -357,6 +360,7 @@ tksao/Makefile :
 	cd tksao; \
 	./configure \
 	$(WITHTK) \
+  	--with-xml2-config=$(XML2CONFIG) \
 	$(PREFIX) \
 	$(STD) \
 	$(CACHE)
@@ -691,8 +695,8 @@ xpaclean :
 .PHONY	: dirsdistclean ds9distclean localdistclean
 .PHONY	: openssldistclean
 .PHONY	: tclxmldistclean tclxmlrpcdistclean tlsdistclean
-.PHONY	: tkbltdistclean tclfitsydistclean tkcondistclean tkhtml1distclean
-.PHONY	: tkimgdistclean tkmpegdistclean tksvgdistclean tkagifdistclean
+.PHONY	: tkbltdistclean tclfitsydistclean tkcondistclean tkhtml1distclean 
+.PHONY	: tkimgdistclean tkmpegdistclean tksvgdistclean tkagifdistclean 
 .PHONY	: tktabledistclean xpadistclean
 .PHONY	: vectordistclean fitsydistclean
 .PHONY	: astdistclean funtoolsdistclean
@@ -724,10 +728,10 @@ localdistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(RM) -f core *~ *#
-	$(RM) -f config.log config.status config.cache Makefile
+	$(RM) -f config.log config.status config.cache Makefile 
 	$(RM) -f tk8.6/unix/Credits.html
 	$(RM) -f tk8.6/macosx/Credits.html
-
+	
 openssldistclean :
 	@echo ""
 	@echo "*** $@ ***"
@@ -783,12 +787,12 @@ tkhtml1distclean:
 	$(MAKE) -C tkhtml1 distclean
 	$(RM) -f tkhtml1/tkhtml1Config.sh
 
-tkimgdistclean:
+tkimgdistclean: 
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tkimg distclean
-	find tkimg -name "pkgIndex.tcl" -exec rm {} \;
-	find tkimg -name "*Config.sh" -exec rm {} \;
+	find tkimg -name "pkgIndex.tcl" -exec rm {} \;		
+	find tkimg -name "*Config.sh" -exec rm {} \;		
 	$(RM) -fr $(TKIMGTMPFILES)
 
 tkmpegdistclean:

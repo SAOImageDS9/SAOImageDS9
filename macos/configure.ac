@@ -75,6 +75,8 @@ AC_SUBST(ARCH)
 prefix=$ac_pwd
 exec_prefix=$ac_pwd
 
+XML2CONFIG=`which xml2-config`
+XSLTCONFIG=`which xslt-config`
 CORES=`sysctl -n "hw.ncpu"`
 
 case `arch` in
@@ -85,7 +87,9 @@ case `arch` in
 	SSLCONFIG="./Configure darwin64-arm64-cc"
     ;;
 esac
-
+	
+AC_SUBST(XML2CONFIG)
+AC_SUBST(XSLTCONFIG)
 AC_SUBST(SSLCONFIG)
 AC_SUBST(CORES)
 

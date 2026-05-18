@@ -171,17 +171,39 @@ TEA_PROG_TCLSH
 # Load libxml2 configuration
 #--------------------------------------------------------------------
 
-PKG_CHECK_MODULES( [XML2], [
-  libxml-2.0
-])
+AC_MSG_CHECKING([Checking for libxml2])
+
+AC_PATH_TOOL([xmlprog], [xml2-config], [none] )
+if test $xmlprog = "none"
+then
+    AC_MSG_RESULT([Could not locate xml2-config, trying pkg-config])
+    PKG_CHECK_MODULES( [XML2], [libxml-2.0])
+else
+    AC_MSG_RESULT([Using xml2-config: $xmlprog])
+    XML2_CFLAGS=`${xmlprog} --cflags`
+    XML2_LIBS="`${xmlprog} --libs`"
+    AC_SUBST(XML2_CFLAGS)
+    AC_SUBST(XML2_LIBS)
+fi
 
 #--------------------------------------------------------------------
 # Load libxslt configuration
 #--------------------------------------------------------------------
 
-PKG_CHECK_MODULES( [XSLT], [
-  libxslt
-])
+AC_MSG_CHECKING([Checking for libxslt])
+
+AC_PATH_TOOL([xsltprog], [xslt-config], [none] )
+if test $xsltprog = "none"
+then
+    AC_MSG_RESULT([Could not locate xslt-config, trying pkg-config])
+    PKG_CHECK_MODULES( [XSLT], [libxml-2.0])
+else
+    AC_MSG_RESULT([Using xslt-config: $xmlprog])
+    XSLT_CFLAGS=`${xsltprog} --cflags`
+    XSLT_LIBS="`${xsltprog} --libs`"
+    AC_SUBST(XSLT_CFLAGS)
+    AC_SUBST(XSLT_LIBS)
+fi
 
 #--------------------------------------------------------------------
 # See if we want to statically link the libxml2 and libxslt

@@ -357,10 +357,21 @@ TEA_PROG_WISH
 #--------------------------------------------------------------------
 # Load libxml2 configuration
 #--------------------------------------------------------------------
+AC_MSG_CHECKING([Checking for libxml2])
 
-PKG_CHECK_MODULES( [XML2], [
-  libxml-2.0
-])
+AC_PATH_TOOL([xmlprog], [xml2-config], [none] )
+if test $xmlprog = "none"
+then
+    AC_MSG_RESULT([Could not locate xml2-config, trying pkg-config])
+    PKG_CHECK_MODULES( [XML2], [libxml-2.0])
+else
+    AC_MSG_RESULT([Using xml2-config: $xmlprog])
+    XML2_CFLAGS=`${xmlprog} --cflags`
+    XML2_LIBS="`${xmlprog} --libs`"
+    AC_SUBST(XML2_CFLAGS)
+    AC_SUBST(XML2_LIBS)
+fi
+
 
 #--------------------------------------------------------------------
 # Setup a *Config.sh.in configuration file.

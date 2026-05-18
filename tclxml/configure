@@ -791,6 +791,8 @@ enable_64bit
 enable_64bit_vis
 enable_rpath
 enable_symbols
+with_xml2_config
+with_xslt_config
 with_xml_static
 '
       ac_precious_vars='build_alias
@@ -1443,6 +1445,8 @@ Optional Packages:
                           (tclConfig.sh)
   --with-tcl8             Compile for Tcl8 in Tcl9 environment
   --with-tclinclude       directory containing the public Tcl header files
+  --with-xml2-config      the xml2-config configuration script
+  --with-xslt-config      the xslt-config configuration script
   --with-xml-static       statically link the XML libraries
 
 Some influential environment variables:
@@ -8925,6 +8929,37 @@ printf "%s\n" "${TCLSH_PROG}" >&6; }
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking Checking for libxml2" >&5
 printf %s "checking Checking for libxml2... " >&6; }
 
+
+# Check whether --with-xml2-config was given.
+if test ${with_xml2_config+y}
+then :
+  withval=$with_xml2_config; with_xml2_config=${withval}
+fi
+
+
+dir=`$as_dirname -- "$withval" ||
+$as_expr X"$withval" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \
+	 X"$withval" : 'X\(//\)[^/]' \| \
+	 X"$withval" : 'X\(//\)$' \| \
+	 X"$withval" : 'X\(/\)' \| . 2>/dev/null ||
+printf "%s\n" X"$withval" |
+    sed '/^X\(.*[^/]\)\/\/*[^/][^/]*\/*$/{
+	    s//\1/
+	    q
+	  }
+	  /^X\(\/\/\)[^/].*/{
+	    s//\1/
+	    q
+	  }
+	  /^X\(\/\/\)$/{
+	    s//\1/
+	    q
+	  }
+	  /^X\(\/\).*/{
+	    s//\1/
+	    q
+	  }
+	  s/.*/./; q'`
 if test -n "$ac_tool_prefix"; then
   # Extract the first word of "${ac_tool_prefix}xml2-config", so it can be a program name with args.
 set dummy ${ac_tool_prefix}xml2-config; ac_word=$2
@@ -8940,7 +8975,7 @@ else $as_nop
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
+for as_dir in $dir
 do
   IFS=$as_save_IFS
   case $as_dir in #(((
@@ -8988,7 +9023,7 @@ else $as_nop
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
+for as_dir in $dir
 do
   IFS=$as_save_IFS
   case $as_dir in #(((
@@ -9019,7 +9054,7 @@ printf "%s\n" "no" >&6; }
 fi
 
   if test "x$ac_pt_xmlprog" = x; then
-    xmlprog="none "
+    xmlprog="none"
   else
     case $cross_compiling:$ac_tool_warned in
 yes:)
@@ -9274,6 +9309,37 @@ fi
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking Checking for libxslt" >&5
 printf %s "checking Checking for libxslt... " >&6; }
 
+
+# Check whether --with-xslt-config was given.
+if test ${with_xslt_config+y}
+then :
+  withval=$with_xslt_config; with_xslt_config=${withval}
+fi
+
+
+dir=`$as_dirname -- "$withval" ||
+$as_expr X"$withval" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \
+	 X"$withval" : 'X\(//\)[^/]' \| \
+	 X"$withval" : 'X\(//\)$' \| \
+	 X"$withval" : 'X\(/\)' \| . 2>/dev/null ||
+printf "%s\n" X"$withval" |
+    sed '/^X\(.*[^/]\)\/\/*[^/][^/]*\/*$/{
+	    s//\1/
+	    q
+	  }
+	  /^X\(\/\/\)[^/].*/{
+	    s//\1/
+	    q
+	  }
+	  /^X\(\/\/\)$/{
+	    s//\1/
+	    q
+	  }
+	  /^X\(\/\).*/{
+	    s//\1/
+	    q
+	  }
+	  s/.*/./; q'`
 if test -n "$ac_tool_prefix"; then
   # Extract the first word of "${ac_tool_prefix}xslt-config", so it can be a program name with args.
 set dummy ${ac_tool_prefix}xslt-config; ac_word=$2
@@ -9289,7 +9355,7 @@ else $as_nop
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
+for as_dir in $dir
 do
   IFS=$as_save_IFS
   case $as_dir in #(((
@@ -9337,7 +9403,7 @@ else $as_nop
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
+for as_dir in $dir
 do
   IFS=$as_save_IFS
   case $as_dir in #(((
@@ -9368,7 +9434,7 @@ printf "%s\n" "no" >&6; }
 fi
 
   if test "x$ac_pt_xsltprog" = x; then
-    xsltprog="none "
+    xsltprog="none"
   else
     case $cross_compiling:$ac_tool_warned in
 yes:)

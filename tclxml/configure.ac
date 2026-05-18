@@ -173,7 +173,12 @@ TEA_PROG_TCLSH
 
 AC_MSG_CHECKING([Checking for libxml2])
 
-AC_PATH_TOOL([xmlprog], [xml2-config], [none] )
+AC_ARG_WITH(xml2-config,
+    [  --with-xml2-config      the xml2-config configuration script],
+    with_xml2_config=${withval})
+
+dir=`AS_DIRNAME(["$withval"])`
+AC_PATH_TOOL([xmlprog], [xml2-config], [none], [$dir] )
 if test $xmlprog = "none"
 then
     AC_MSG_RESULT([Could not locate xml2-config, trying pkg-config])
@@ -192,7 +197,12 @@ fi
 
 AC_MSG_CHECKING([Checking for libxslt])
 
-AC_PATH_TOOL([xsltprog], [xslt-config], [none] )
+AC_ARG_WITH(xslt-config,
+    [  --with-xslt-config      the xslt-config configuration script],
+    with_xslt_config=${withval})
+
+dir=`AS_DIRNAME(["$withval"])`
+AC_PATH_TOOL([xsltprog], [xslt-config], [none], [$dir] )
 if test $xsltprog = "none"
 then
     AC_MSG_RESULT([Could not locate xslt-config, trying pkg-config])

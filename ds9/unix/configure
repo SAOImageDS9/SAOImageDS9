@@ -995,6 +995,7 @@ enable_64bit
 enable_64bit_vis
 enable_rpath
 enable_symbols
+with_xml2_config
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1677,6 +1678,7 @@ Optional Packages:
   --with-tclinclude       directory containing the public Tcl header files
   --with-tkinclude        directory containing the public Tk header files
   --with-x                use the X Window System
+  --with-xml2-config      the xml2-config configuration script
 
 Some influential environment variables:
   CC          C compiler command
@@ -16006,6 +16008,37 @@ printf "%s\n" "${TCLSH_PROG}" >&6; }
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking Checking for libxml2" >&5
 printf %s "checking Checking for libxml2... " >&6; }
 
+
+# Check whether --with-xml2-config was given.
+if test ${with_xml2_config+y}
+then :
+  withval=$with_xml2_config; with_xml2_config=${withval}
+fi
+
+
+dir=`$as_dirname -- "$withval" ||
+$as_expr X"$withval" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \
+	 X"$withval" : 'X\(//\)[^/]' \| \
+	 X"$withval" : 'X\(//\)$' \| \
+	 X"$withval" : 'X\(/\)' \| . 2>/dev/null ||
+printf "%s\n" X"$withval" |
+    sed '/^X\(.*[^/]\)\/\/*[^/][^/]*\/*$/{
+	    s//\1/
+	    q
+	  }
+	  /^X\(\/\/\)[^/].*/{
+	    s//\1/
+	    q
+	  }
+	  /^X\(\/\/\)$/{
+	    s//\1/
+	    q
+	  }
+	  /^X\(\/\).*/{
+	    s//\1/
+	    q
+	  }
+	  s/.*/./; q'`
 if test -n "$ac_tool_prefix"; then
   # Extract the first word of "${ac_tool_prefix}xml2-config", so it can be a program name with args.
 set dummy ${ac_tool_prefix}xml2-config; ac_word=$2
@@ -16021,7 +16054,7 @@ else $as_nop
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
+for as_dir in $dir
 do
   IFS=$as_save_IFS
   case $as_dir in #(((
@@ -16069,7 +16102,7 @@ else $as_nop
   ;;
   *)
   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
+for as_dir in $dir
 do
   IFS=$as_save_IFS
   case $as_dir in #(((
@@ -16100,7 +16133,7 @@ printf "%s\n" "no" >&6; }
 fi
 
   if test "x$ac_pt_xmlprog" = x; then
-    xmlprog="none "
+    xmlprog="none"
   else
     case $cross_compiling:$ac_tool_warned in
 yes:)

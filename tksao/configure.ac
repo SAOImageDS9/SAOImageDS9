@@ -359,7 +359,12 @@ TEA_PROG_WISH
 #--------------------------------------------------------------------
 AC_MSG_CHECKING([Checking for libxml2])
 
-AC_PATH_TOOL([xmlprog], [xml2-config], [none] )
+AC_ARG_WITH(xml2-config,
+    [  --with-xml2-config      the xml2-config configuration script],
+    with_xml2_config=${withval})
+
+dir=`AS_DIRNAME(["$withval"])`
+AC_PATH_TOOL([xmlprog], [xml2-config], [none], [$dir] )
 if test $xmlprog = "none"
 then
     AC_MSG_RESULT([Could not locate xml2-config, trying pkg-config])

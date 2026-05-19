@@ -86,12 +86,8 @@ case $with_arch in
 	TARGET=x86_64-w64-mingw32
 	;;
 esac
-XML2CONFIG=/usr/$TARGET/sys-root/mingw/bin/xml2-config
-XSLTCONFIG=/usr/$TARGET/sys-root/mingw/bin/xslt-config
 CORES=`grep -c ^processor /proc/cpuinfo`
 
-AC_SUBST(XML2CONFIG)
-AC_SUBST(XSLTCONFIG)
 AC_SUBST(ENABLE64BIT)
 AC_SUBST(TARGET)
 AC_SUBST(CORES)

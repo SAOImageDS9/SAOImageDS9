@@ -13,8 +13,6 @@ OS		= @OS@
 ARCH		= @ARCH@
 EXEEXT		= @EXEEXT@
 JOBS		= @CORES@
-XML2CONFIG	= @XML2CONFIG@
-XSLTCONFIG	= @XSLTCONFIG@
 
 ENABLE64BIT	= @ENABLE64BIT@
 TARGET		= @TARGET@
@@ -122,7 +120,7 @@ tkwinclean :
 
 #--------------------------distclean
 
-.PHONY	: tcldistclean tkdistclean 
+.PHONY	: tcldistclean tkdistclean
 .PHONY	: osdistclean tkwindistclean
 
 tcldistclean :

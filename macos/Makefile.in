@@ -13,8 +13,6 @@ OS		= @OS@
 ARCH		= @ARCH@
 SSLCONFIG	= @SSLCONFIG@
 JOBS		= @CORES@
-XML2CONFIG	= @XML2CONFIG@
-XSLTCONFIG	= @XSLTCONFIG@
 
 include ./make.include
 
@@ -172,7 +170,7 @@ tkmacosxclean :
 #--------------------------distclean
 
 .PHONY	: tcldistclean tkdistclean
-.PHONY	: osdistclean tclsignaldistclean tkmacosxdistclean 
+.PHONY	: osdistclean tclsignaldistclean tkmacosxdistclean
 
 tcldistclean :
 	@echo ""
@@ -228,5 +226,5 @@ dist	:
 	ln -s /Applications dist/$(DS9APP)/.
 	cp -r ds9/macos/README dist/$(DS9APP)/.
 	cp -rp bin/SAOImageDS9.app dist/$(DS9APP)/.
-	hdiutil create -srcfolder dist/$(DS9APP) dist/$(DS9APP) 
+	hdiutil create -srcfolder dist/$(DS9APP) dist/$(DS9APP)
 	rm -rf dist/$(DS9APP)

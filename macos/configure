@@ -647,8 +647,6 @@ ac_header_c_list=
 ac_subst_vars='LTLIBOBJS
 CORES
 SSLCONFIG
-XSLTCONFIG
-XML2CONFIG
 ARCH
 OS
 LDFLAGS_DEFAULT
@@ -7538,8 +7536,6 @@ ARCH=$with_arch
 prefix=$ac_pwd
 exec_prefix=$ac_pwd
 
-XML2CONFIG=`which xml2-config`
-XSLTCONFIG=`which xslt-config`
 CORES=`sysctl -n "hw.ncpu"`
 
 case `arch` in
@@ -7550,8 +7546,6 @@ case `arch` in
 	SSLCONFIG="./Configure darwin64-arm64-cc"
     ;;
 esac
-
-
 
 
 

@@ -58,6 +58,7 @@ proc CATDef {} {
 		       {{Carlsberg Meridian 14} catcmc cds {I/304}}\
 		       {{GAIA DR1} catgaia1 cds {I/337/gaia}} \
 		       {{GAIA DR2} catgaia cds {I/345/gaia2}} \
+		       {{GAIA DR3} catgaia3 cds {I/350}} \
 		       {{GSC 2.2} catgsc2 cds {I/271/out}} \
 		       {{GSC 2.3} catgsc cds {I/305/out}} \
 		       {{NOMAD} catnomad cds {I/297/out}} \
@@ -79,6 +80,7 @@ proc CATDef {} {
 		       {- {High Energy} hea} \
 		       {{Chandra Source 1.1} catcsc11 cds {IX/45/csc11}}
 		       {{Chandra Source 2.0} catcsc20 cds {IX/57/csc2master}}
+		       {{Chandra Source 2.1} catcsc21 cds {IX/70}}
 		       {{Chandra Source Current} catcsc cxc {Current Release}}
 		       {{XMM-Newton 4XMM-DR13 Source} catxmm cds {IX/69}} \
 		       {{Second ROSAT PSPC} catrosat cds {IX/30}} \
@@ -264,7 +266,7 @@ proc CATGenerate {varname} {
 
     ARStatus $varname [msgcat::mc {Plotting Regions}]
 
-    # delete any previous 
+    # delete any previous
     if {[info commands $var(frame)] != {}} {
 	if {[$var(frame) has fits]} {
 	    $var(frame) marker catalog $varname delete
@@ -458,7 +460,7 @@ proc CATGenerateUpdate {varname row} {
     if {![$var(frame) has fits]} {
 	return
     }
-    
+
     set id [$var(frame) get marker catalog "\{${varname}.${row}\}" id]
     set sel [$var(frame) get marker catalog $id select]
     set hh [$var(frame) get marker catalog $id highlite]
@@ -525,7 +527,7 @@ proc CATAnalysisMenu {mb} {
 
 proc CATServerMenu {varname} {
     global icat
-    
+
     upvar #0 $varname var
     global $varname
 
@@ -665,7 +667,7 @@ proc CATConfigCols {varname} {
 	    # default
 	    set var(colx) [starbase_colname $var(catdb) 1]
 	    set var(coly) [starbase_colname $var(catdb) 2]
-	    
+
 	    return
 	}
 	default {
@@ -1084,7 +1086,7 @@ proc CatalogCmdSAMPSend {name} {
 	Error [msgcat::mc {SAMP: not connected}]
 	return
     }
-    
+
     foreach arg [SAMPGetAppsVOTable] {
 	foreach {key val} $arg {
 	    if {[string tolower $val] == $name} {

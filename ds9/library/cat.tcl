@@ -56,37 +56,31 @@ proc CATDef {} {
 		       {{AC 2000.2} catac cds {I/275/ac2002}} \
 		       {{ASCC-2.5} catascss cds {I/280A/ascc01}} \
 		       {{Carlsberg Meridian 14} catcmc cds {I/304}}\
-		       {{GAIA DR1} catgaia1 cds {I/337/gaia}} \
-		       {{GAIA DR2} catgaia cds {I/345/gaia2}} \
 		       {{GAIA DR3} catgaia3 cds {I/350}} \
-		       {{GSC 2.2} catgsc2 cds {I/271/out}} \
 		       {{GSC 2.3} catgsc cds {I/305/out}} \
 		       {{NOMAD} catnomad cds {I/297/out}} \
-		       {{PPMX} catppmx cds {I/312}} \
 		       {{SAO J2000} catsao cds {I/131A/sao}} \
-		       {{SDSS Release 7} catsdss7 cds {II/294}} \
-		       {{SDSS Release 9} catsdss9 cds {V/139}} \
 		       {{SDSS Release 12} catsdss cds {V/147}} \
-		       {{Tycho-2} cattycho cds {I/259/tyc2}} \
-		       {{USNO-A2.0} catua2 cds {I/252/out}} \
 		       {{USNO-B1.0} catub1 cds {I/284/out}} \
-		       {{USNO UCAC2} catucac2 cds {I/289/out}} \
-		       {{USNO UCAC4} catucac4 cds {I/322A}} \
 		       {{USNO UCAC5} catucac cds {I/340}} \
 		       {{USNO URAT1} caturat1 cds {I/329}} \
+               {{Pan-STARRS DR2} catpanstarrs cds {II/389/ps1_dr2}} \
+		       {- {Ultra-violet} uv} \
+		       {{GALEX} catgalex cds {II/335/galex_ais}}\
 		       {- {Infrared} ir} \
 		       {{2MASS Point Sources} cat2mass cds {II/246/out}}\
-		       {{IRAS Point Sources} catiras cds {II/125/main}}\
+               {{AllWISE} catallwise cds {II/328/allwise}} \
 		       {- {High Energy} hea} \
-		       {{Chandra Source 1.1} catcsc11 cds {IX/45/csc11}}
-		       {{Chandra Source 2.0} catcsc20 cds {IX/57/csc2master}}
-		       {{Chandra Source 2.1} catcsc21 cds {IX/70}}
-		       {{Chandra Source Current} catcsc cxc {Current Release}}
+		       {{Chandra Source 2.1} catcsc21 cds {IX/70}} \
+		       {{Chandra Source Current} catcsc cxc {Current Release}} \
 		       {{XMM-Newton 4XMM-DR13 Source} catxmm cds {IX/69}} \
-		       {{Second ROSAT PSPC} catrosat cds {IX/30}} \
+		       {{2RXS} catrosat cds {J/A+A/588/A103}} \
+               {{eROSITA eRASS1} caterosita cds {J/A+A/682/A34}} \
+               {{Swift-BAT} catswiftbat cds {J/ApJS/235/4}} \
 		       {- {Radio} radio} \
 		       {{FIRST Survey} catfirst cds {VIII/71/first}} \
 		       {{NVSS} catnvss cds {VIII/65/nvss}} \
+               {{VLSS} catvlss cds {VII/79A}} \
 		       {- {Observation Logs} log} \
 		       {{Chandra Archive} catchandralog cds {B/chandra/chandra}} \
 		       {{CFHT Exposures} catcfhtlog cds {B/cfht/chfht}} \

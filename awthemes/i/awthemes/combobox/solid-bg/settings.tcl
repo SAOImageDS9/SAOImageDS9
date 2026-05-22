@@ -1,2 +1,2 @@
-set vars(combobox.image.sticky) ns
-set vars(combobox.image.border) {0 2}
+set colors(combobox.image.sticky) {}
+set colors(combobox.image.border) {0 2}

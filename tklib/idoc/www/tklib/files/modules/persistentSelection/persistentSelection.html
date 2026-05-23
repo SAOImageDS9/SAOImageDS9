@@ -1,0 +1,276 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>persistentSelection - Enhanced PRIMARY selection</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'persistentSelection.man' by tcllib/doctools with format 'html'
+   -->
+<!-- persistentSelection.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">persistentSelection(n) 1.0 tklib &quot;Enhanced PRIMARY selection&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>persistentSelection - Enhanced PRIMARY selection</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">COMMANDS</a></li>
+<li class="doctools_section"><a href="#section3">USAGE</a>
+<ul>
+<li class="doctools_subsection"><a href="#subsection1">Script requirements</a></li>
+<li class="doctools_subsection"><a href="#subsection2">Widget requirements</a></li>
+<li class="doctools_subsection"><a href="#subsection3">Text widgets</a></li>
+<li class="doctools_subsection"><a href="#subsection4">Entry, spinbox, ttk::entry, ttk::spinbox, and ttk::combobox widgets</a></li>
+<li class="doctools_subsection"><a href="#subsection5">Listbox widgets</a></li>
+</ul>
+</li>
+<li class="doctools_section"><a href="#section4">TO DO</a></li>
+<li class="doctools_section"><a href="#section5">BUGS</a></li>
+<li class="doctools_section"><a href="#section6">EXAMPLES</a></li>
+<li class="doctools_section"><a href="#see-also">See Also</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_requirements">
+<li>package require <b class="pkgname">Tcl 8.5</b></li>
+<li>package require <b class="pkgname">Tk 8.5</b></li>
+<li>package require <b class="pkgname">persistentSelection <span class="opt">?1.0?</span></b></li>
+</ul>
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">persistentSelection::fixText</b></a></li>
+<li><a href="#2"><b class="cmd">persistentSelection::getClassicPrimarySel</b> <span class="opt">?<i class="arg">displayOf</i>?</span> <span class="opt">?<i class="arg">withOthers</i>?</span></a></li>
+<li><a href="#3"><b class="cmd">persistentSelection::getPrimarySel</b> <span class="opt">?<i class="arg">displayOf</i>?</span></a></li>
+<li><a href="#4"><b class="cmd">persistentSelection::report</b> <i class="arg">type</i> <i class="arg">pathName</i></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>Consider a <b class="package"><a href="../../../../index.html#tk">Tk</a></b> widget that sets its <b class="option">-exportselection</b> option to boolean <b class="const">true</b>, thereby exporting its selection.  When the selection in the widget is canceled, by default <b class="package"><a href="../../../../index.html#tk">Tk</a></b> also cancels the <b class="const">PRIMARY</b> selection.  In this situation, an attempt to read the <b class="const">PRIMARY</b> selection, e.g. by a <b class="const">&lt;&lt;PasteSelection&gt;&gt;</b> event, will fail.</p>
+<p>The <b class="package">persistentSelection</b> package offers more convenient behavior.  It will sustain as the <b class="const">PRIMARY</b> selection the last non-empty value set by any <b class="package"><a href="../../../../index.html#tk">Tk</a></b> widget that it monitors, as long as the <b class="const">PRIMARY</b> selection is not claimed by another process, or by a widget that it does not monitor.</p>
+<p>The <b class="package">persistentSelection</b> package works by binding to the <b class="const">&lt;&lt;Selection&gt;&gt;</b> event on the widgets of interest, and using this binding to monitor any change of the selection in the widget.  Its commands are confined to the namespace <b class="namespace">::persistentSelection</b>.</p>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">COMMANDS</a></h2>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">persistentSelection::fixText</b></a></dt>
+<dd><p>Call this command once to resolve problems with <b class="syscmd"><b class="widget">text</b></b> widgets that use the default <b class="const">Text</b> bindtag (rather than <b class="const">Ntext</b>).  See <span class="sectref"><a href="#subsection3">Text widgets</a></span> for an explanation.</p>
+<p>The command adjusts some <b class="const">Text</b> bindings to generate <b class="const">&lt;&lt;Selection&gt;&gt;</b> events; and it re-orders calls to the <b class="syscmd"><b class="widget">text</b></b> widget <b class="cmd">tag</b> command in the private command <b class="cmd">::tk::TextSelectTo</b>, so that this command cooperates better with <b class="package">persistentSelection</b>.</p>
+<p>These adjustments are needed only to older versions of <b class="package"><a href="../../../../index.html#tk">Tk</a></b>.  The command <b class="cmd">persistentSelection::fixText</b> has no effect on sufficiently recent releases.  It can safely be called for any version of <b class="package"><a href="../../../../index.html#tk">Tk</a></b>.</p></dd>
+<dt><a name="2"><b class="cmd">persistentSelection::getClassicPrimarySel</b> <span class="opt">?<i class="arg">displayOf</i>?</span> <span class="opt">?<i class="arg">withOthers</i>?</span></a></dt>
+<dd><ul class="doctools_itemized">
+<li><p><i class="arg">displayOf</i> - a <b class="package"><a href="../../../../index.html#tk">Tk</a></b> window path on the display to be interrogated (optional, default {<b class="const">.</b>})</p></li>
+<li><p><i class="arg">withOthers</i> - whether to return the <b class="const">PRIMARY</b> selection if it is owned by another process or interpreter (optional, boolean, default <b class="const">false</b>)</p></li>
+</ul>
+<p>A command to return the classic (non-persistent) form of the <b class="const">PRIMARY</b> selection.  If the selection does not exist, or is sustained only by <b class="package">persistentSelection</b>, the command returns the empty string.</p></dd>
+<dt><a name="3"><b class="cmd">persistentSelection::getPrimarySel</b> <span class="opt">?<i class="arg">displayOf</i>?</span></a></dt>
+<dd><ul class="doctools_itemized">
+<li><p><i class="arg">displayOf</i> - a <b class="package"><a href="../../../../index.html#tk">Tk</a></b> window on the display to be interrogated (optional, default {<b class="const">.</b>})</p></li>
+</ul>
+<p>A command to return the value of the <b class="const">PRIMARY</b> selection.  If the selection does not exist, the command returns the empty string.  The usual <b class="package"><a href="../../../../index.html#tk">Tk</a></b> commands are perfectly valid, but they raise an error if the selection does not exist.</p></dd>
+<dt><a name="4"><b class="cmd">persistentSelection::report</b> <i class="arg">type</i> <i class="arg">pathName</i></a></dt>
+<dd><ul class="doctools_itemized">
+<li><p><i class="arg">type</i> - (value <b class="const">text</b> or <b class="const">entry</b>) classification of the widget whose selection has changed</p></li>
+<li><p><i class="arg">pathName</i> - the <b class="package"><a href="../../../../index.html#tk">Tk</a></b> window path of the widget whose selection has changed</p></li>
+</ul>
+<p>To make package <b class="package">persistentSelection</b> monitor a widget, this command must be bound to the <b class="const">&lt;&lt;Selection&gt;&gt;</b> event on that widget.  The command records changes in the widget's selection, and uses the information to sustain a non-empty <b class="const">PRIMARY</b> selection on each display.</p></dd>
+</dl>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">USAGE</a></h2>
+<div id="subsection1" class="doctools_subsection"><h3><a name="subsection1">Script requirements</a></h3>
+<p>For each widget that will be monitored by <b class="package">persistentSelection</b>, the command <b class="cmd">persistentSelection::report</b> must be bound to event <b class="const">&lt;&lt;Selection&gt;&gt;</b> in one of the widget's binding tags.</p>
+<p>For example, the developer may wish to use <b class="package">persistentSelection</b> with every <b class="syscmd"><b class="widget">text</b></b> and <b class="syscmd"><b class="widget">entryPlus</b></b> widget in an application: this can be achieved by adding the <b class="const">&lt;&lt;Selection&gt;&gt;</b> binding to the <b class="const">Text</b> and <b class="const">EntryPlus</b> bindtags.  See <span class="sectref"><a href="#section6">EXAMPLES</a></span>.</p>
+<p>If <b class="package">persistentSelection</b> is not required for all widgets of a particular class, the binding can be added to per-widget bindtags.  See <span class="sectref"><a href="#section6">EXAMPLES</a></span>.</p>
+</div>
+<div id="subsection2" class="doctools_subsection"><h3><a name="subsection2">Widget requirements</a></h3>
+<p>To be capable of being monitored by <b class="package">persistentSelection</b>, a widget must satisfy three conditions:</p>
+<ul class="doctools_itemized">
+<li><p>It must have an <b class="option">-exportselection</b> option that allows it to export its selection to the <b class="const">PRIMARY</b> selection.</p></li>
+<li><p>It must generate a <b class="const">&lt;&lt;Selection&gt;&gt;</b> event whenever its selection changes.</p></li>
+<li><p>its bindings to other events should be suitable - specifically, in versions of <b class="package"><a href="../../../../index.html#tk">Tk</a></b> older than <b class="const">8.6.6</b>, a GUI event that extends or reduces the selection from one non-empty value to another should not use an intermediate state that has an empty selection, because this confuses <b class="package">persistentStore</b>.</p></li>
+</ul>
+<p>The <b class="package"><a href="../../../../index.html#tk">Tk</a></b> and <b class="const">Ttk</b> widgets that can export their selection are <b class="syscmd"><b class="widget">text</b></b>, <b class="syscmd"><b class="widget">entry</b></b>, <b class="syscmd"><b class="widget">listbox</b></b>, <b class="syscmd"><b class="widget">spinbox</b></b>, <b class="syscmd"><b class="widget">ttk::entry</b></b>, <b class="syscmd"><b class="widget">ttk::spinbox</b></b>, and <b class="syscmd"><b class="widget">ttk::combobox</b></b>.</p>
+</div>
+<div id="subsection3" class="doctools_subsection"><h3><a name="subsection3">Text widgets</a></h3>
+<p>In versions of <b class="package"><a href="../../../../index.html#tk">Tk</a></b> older than <b class="const">8.6.9</b>, the <b class="syscmd"><b class="widget">text</b></b> widget does not generate <b class="const">&lt;&lt;Selection&gt;&gt;</b> events in a few &quot;corner cases&quot; in which its selection changes.  These omissions can be corrected by changes to the <b class="const">Text</b> bindings, in order to satisfy the second condition of <span class="sectref"><a href="#subsection2">Widget requirements</a></span>.</p>
+<p>In addition, versions of <b class="package"><a href="../../../../index.html#tk">Tk</a></b> older than <b class="const">8.6.6</b> process selection events slightly differently from newer versions, and in combination with the <b class="const">Text</b> bindings this confuses <b class="package">persistentStore</b>.  If an upgrade to the current version of <b class="const">Tcl/Tk</b> is not feasible, this problem can be resolved by making a slight modification to the widget bindings, in order to satisfy the third condition of <span class="sectref"><a href="#subsection2">Widget requirements</a></span>.</p>
+<p>Either the script should call the command <b class="cmd">persistentSelection::fixText</b> to adjust the <b class="const">Text</b> bindings and the commands that they call; or the widget can use the <b class="const">Ntext</b> binding tag (for <b class="package"><a href="../ntext/ntext.html">ntext</a></b> version 1.0 or above) instead of the default <b class="const">Text</b> bindtag.</p>
+<p>In either case, the argument <i class="arg">type</i> supplied to command <b class="cmd">persistentSelection::report</b> should have the value <b class="const">text</b>.</p>
+</div>
+<div id="subsection4" class="doctools_subsection"><h3><a name="subsection4">Entry, spinbox, ttk::entry, ttk::spinbox, and ttk::combobox widgets</a></h3>
+<p>The <b class="syscmd"><b class="widget">entry</b></b>, <b class="syscmd"><b class="widget">spinbox</b></b>, <b class="syscmd"><b class="widget">ttk::entry</b></b>, <b class="syscmd"><b class="widget">ttk::spinbox</b></b>, and <b class="syscmd"><b class="widget">ttk::combobox</b></b> widgets do not generate a <b class="const">&lt;&lt;Selection&gt;&gt;</b> event when their selection changes, and therefore require modification.</p>
+<p>The package <b class="package"><a href="../widgetPlus/widgetPlus.html">widgetPlus</a></b> provides <b class="package"><a href="../../../../index.html#snit">snit</a></b> wrappers <b class="syscmd"><b class="widget">widgetPlus::entryPlus</b></b>, <b class="syscmd"><b class="widget">widgetPlus::spinboxPlus</b></b>, <b class="syscmd"><b class="widget">widgetPlus::ttkEntryPlus</b></b>, <b class="syscmd"><b class="widget">widgetPlus::ttkSpinboxPlus</b></b>, and <b class="syscmd"><b class="widget">widgetPlus::ttkComboboxPlus</b></b> respectively.  Each <b class="package"><a href="../widgetPlus/widgetPlus.html">widgetPlus</a></b> widget generates the required <b class="const">&lt;&lt;Selection&gt;&gt;</b> events.</p>
+<p>In all these cases, the argument <i class="arg">type</i> supplied to command <b class="cmd">persistentSelection::report</b> should have the value <b class="const">entry</b>.  This argument determines how <b class="package">persistentSelection</b> will inspect the widget's selection, and the commands that do so are the same for all these widgets.</p>
+</div>
+<div id="subsection5" class="doctools_subsection"><h3><a name="subsection5">Listbox widgets</a></h3>
+<p>A similar wrapper has not been created for the <b class="syscmd"><b class="widget">listbox</b></b> widget, which has the complication of permitting multiple selections.</p>
+</div>
+</div>
+<div id="section4" class="doctools_section"><h2><a name="section4">TO DO</a></h2>
+<ul class="doctools_itemized">
+<li><p>Test on a system with multiple displays.</p></li>
+</ul>
+</div>
+<div id="section5" class="doctools_section"><h2><a name="section5">BUGS</a></h2>
+<p>This version of <b class="package">persistentSelection</b> is intended to be compatible with all releases of <b class="package"><a href="../../../../index.html#tk">Tk</a></b> 8.5- and 8.6, and with the branches <em>core-8-5-branch</em>, <em>core-8-6-branch</em>, <em>revised_text</em>, and <em>trunk</em> in the source code repository for <b class="package"><a href="../../../../index.html#tk">Tk</a></b>.  Any incompatibility with any of these versions, for any <b class="package"><a href="../../../../index.html#tk">Tk</a></b> windowing system, should be reported as a bug. Please report such in the category <em>persistentSelection</em> of the <a href="http://core.tcl.tk/tklib/reportlist">Tklib Trackers</a>.</p>
+</div>
+<div id="section6" class="doctools_section"><h2><a name="section6">EXAMPLES</a></h2>
+<p>Each example uses <b class="package">persistentSelection</b> to retain the last non-empty value of the selection in certain widgets.  Each example also includes the creation of sample widgets.</p>
+<p>Monitor all <b class="syscmd"><b class="widget">entryPlus</b></b> widgets.</p>
+<pre class="doctools_example">
+package require widgetPlus
+widgetPlus::entryPlus .ep
+pack .ep
+package require persistentSelection
+bind EntryPlus &lt;&lt;Selection&gt;&gt; {::persistentSelection::report entry %W}
+</pre>
+<p>Monitor all <b class="syscmd"><b class="widget">text</b></b> widgets that use the default <b class="const">Text</b> bindings.</p>
+<pre class="doctools_example">
+text .t
+pack .t
+package require persistentSelection
+::persistentSelection::fixText
+bind Text &lt;&lt;Selection&gt;&gt; {::persistentSelection::report text %W}
+</pre>
+<p>Monitor all <b class="syscmd"><b class="widget">text</b></b> widgets that use the default <b class="const">Text</b> bindings, and all <b class="syscmd"><b class="widget">entryPlus</b></b> widgets.</p>
+<pre class="doctools_example">
+text .t
+pack .t
+package require widgetPlus
+widgetPlus::entryPlus .ep
+pack .ep
+package require persistentSelection
+::persistentSelection::fixText
+bind Text &lt;&lt;Selection&gt;&gt; {::persistentSelection::report text %W}
+bind EntryPlus &lt;&lt;Selection&gt;&gt; {::persistentSelection::report entry %W}
+</pre>
+<p>Monitor all <b class="syscmd"><b class="widget">text</b></b> widgets that use <b class="const">Ntext</b> bindings.</p>
+<pre class="doctools_example">
+text .t
+pack .t
+package require ntext
+bindtags .t {.t Ntext . all}
+package require persistentSelection
+bind Ntext &lt;&lt;Selection&gt;&gt; {::persistentSelection::report text %W}
+</pre>
+<p>Monitor a single <b class="syscmd"><b class="widget">entryPlus</b></b> widget <b class="const">.ep</b></p>
+<pre class="doctools_example">
+package require widgetPlus
+widgetPlus::entryPlus .ep
+pack .ep
+package require persistentSelection
+bind .ep &lt;&lt;Selection&gt;&gt; {::persistentSelection::report entry %W}
+</pre>
+<p>Monitor a single <b class="syscmd"><b class="widget">text</b></b> widget <b class="const">.t</b></p>
+<pre class="doctools_example">
+text .t
+pack .t
+package require persistentSelection
+bind .t &lt;&lt;Selection&gt;&gt; {::persistentSelection::report text %W}
+</pre>
+</div>
+<div id="see-also" class="doctools_section"><h2><a name="see-also">See Also</a></h2>
+<p><a href="../../../../index.html#bindtags">bindtags</a>, <a href="../ntext/ntext.html">ntext</a>, <a href="../../../../index.html#text">text</a>, <a href="../widgetPlus/widgetPlus.html">widgetPlus</a></p>
+</div>
+</div></body></html>

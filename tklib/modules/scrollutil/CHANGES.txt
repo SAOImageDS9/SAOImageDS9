@@ -1,0 +1,684 @@
+What is new in Scrollutil 2.4?
+------------------------------
+
+1. Made sure that the Migration Tool for Tcl 9 by Ashok Nadkarni won't
+   output any warnings or notes (thanks to Andreas Kupries for his
+   valuable input).
+
+2. Minor improvements in the handling of the "closetab" style element.
+
+3. Improved the handling of out-of-bounds tab indices in the "tab"
+   subcommand of the plainnotebook widget.
+
+4. Improvements in the themepatch package, especially regarding the
+   "default" theme.
+
+5. Eliminated a potential error message caused by the handling of
+   <TouchpadScroll> events (thanks to Paul Obermeier for his bug
+   report).
+
+What was new in Scrollutil 2.3.1?
+---------------------------------
+
+1. Reverted the implementation of the "scrollutil::getscrollarea"
+   command to its version contained in Scrollutil 2.2, thus eliminating
+   two potentially critical bugs introduced in Scrollutil 2.3 (thanks to
+   Nicolas Bats and Paul Obermeier for their bug reports).
+
+What was new in Scrollutil 2.3?
+-------------------------------
+
+1. Several improvements in the implementation of the scrollarea widget.
+   For example, made sure that mapping or unmapping the horizontal
+   scrollbar as a result of resizing the toplevel window no longer
+   causes the toplevel to get higher.
+
+2. Made sure that the handling of the <TouchpadScroll> event won't
+   pollute the global namespace (thanks to Rolf Ade for drawing my
+   attention to this issue).
+
+3. Added the demo script ScrolledCanvas.tcl; improvements in several
+   other demo scripts.
+
+4. Fixed a bug that under some circumstances caused the dynamic
+   horizontal scrollbar of a newly created scrollarea widget to get
+   mapped for a short time, even though the embedded widget's "xview"
+   command returned the list {0 1}.
+
+5. Restored the support for Tcl/Tk 8.4, which was broken due to the use
+   of package version numbers with a trailing "-" (thanks to Samuel
+   Brown for his bug report).
+
+What was new in Scrollutil 2.2?
+-------------------------------
+
+1. Improved the performance of the photo image creation in the
+   themepatch code and the demo scripts, by explicitly specifying the
+   "-format" option.
+
+2. Adapted the scaleutil package to the recent improvements in the
+   "classic" theme by Emiliano Gavilan.
+
+What was new in Scrollutil 2.1?
+-------------------------------
+
+1. The scrollableframe within a scrollednotebook widget is now packed
+   with a horizontal and vertical padding of 0 when both arrow buttons
+   are in unmanaged state.
+
+2. Fixed a typo in the mega-widget utility file mwutil.tcl, introduced
+   in the previous release (thanks to Harald Oehlmann for his bug
+   report).
+
+What was new in Scrollutil 2.0?
+-------------------------------
+
+1. Dropped the support for Tk versions earlier than 8.4.  This has made
+   the code simpler and easier to maintain.
+
+2. Extended the handling of the virtual event <<ThemeChanged>>, and
+   added bindings for the virtual events <<LightAqua>> and <<DarkAqua>>.
+
+3. Improved the compatibility with Tcl 9 and Tk 8.7/9.  For example,
+   added support for the new <TouchpadScroll> event, introduced in Tk
+   8.7 and 9 (thanks to Nicolas Bats for his valuable feedback).
+
+4. Minimized the number of artifacts caused by intermixed <MouseWheel>
+   and <Shift-MouseWheel> events triggered by two-finger gestures over a
+   (ttk::)scrollbar or ttk::notebook widget in the absence of
+   <TouchpadScroll> events (i.e., on X11 or with Tk versions earlier
+   than 8.7/9 on Windows or macOS Aqua). 
+
+What was new in Scrollutil 1.19?
+--------------------------------
+
+1. If SVG is supported, i.e., if the Tk version is at least 8.7 or the
+   tksvg package can be loaded into the interpreter, then the new
+   variable "scrollutil::svgfmt" is set to a Tcl list that you can pass
+   to the commands that create or manipulate SVG images as the value of
+   their "-format" option to make sure that your images will be properly
+   scaled (see the new section "More on scrollutil::svgfmt" in
+   Scrollutil Programmer's Guide for details).
+
+2. The scrollednotebook widget now provides the "style" subcommand
+   (which for Tk themed widgets was introduced in Tk 8.7a4) for all
+   supported Tk versions (just like the plainnotebook widget).
+
+3. For Tcl versions 8.4 and later replaced the deprecated "trace
+   variable" invocations with "trace add variable".
+
+4. Improvements in the themepatch package, especially regarding the
+   "default" theme.
+
+5. Extended the reference manual for the scrollednotebook widget.
+
+6. In the presence of SVG support the demo scripts "*NotebookDemo.tcl"
+   and "PagesManDemo.tcl" now use SVG images created with the aid of the
+   variable "scrollutil::svgfmt".
+
+7. Worked around a long-standing known issue on macOS related to
+   suspended event processing during a resize operation (thanks to
+   Nicolas Bats for his bug report).
+
+What was new in Scrollutil 1.18?
+--------------------------------
+
+1.  Added the "adjustsize" subcommand to the scrollednotebook,
+    plainnotebook, and pagesman widgets (thanks to Harald Oehlmann for
+    his proposal).
+
+2.  The "add" and "insert" plainnotebook subcommands now return the path
+    name of the widget used for the tab corresponding to the window
+    specified as subcommand argument.
+
+3.  If the Tk version is at least 8.7 or the tksvg extension can be
+    loaded into the interpreter, then all the images used by the
+    scrollednotebook and plainnotebook widgets are now created as SVG
+    images that will scale automatically according to the display's real
+    scaling percentage, which can be greater than 200 (the maximum value
+    returned by the procedure scaleutil::scalingPercentage).  This comes
+    in handy especially when running Androwish on a tablet or
+    smartphone.
+
+4.  The scaleutil package now scales more styling options of the
+    ttk::treeview widget and some styling options of a series of widgets
+    of the "winnative" theme, too.
+
+5.  The scaleutil package now supports also the case that on Xfce the
+    DPI value was set in the "Fonts" tab of the "Appearance" dialog or
+    (on Linux Lite 5+) via the "HiDPI Settings" dialog, or on MATE it
+    was set via the "Font Rendering Details" dialog.
+
+6.  The scaleutil package now takes into account that current MATE
+    versions scale the font DPI for HiDPI displays.
+
+7.  Extended the themepatch package by support for patching and
+    unpatching the "alt" theme and by adding the "themepatch::ispatched"
+    command.
+
+8.  If the Tk version is at least 8.7 or the tksvg extension can be
+    loaded into the interpreter, then the "themepatch::patch" command
+    now uses fully scaling-aware SVG images for drawing the indicators
+    of the ttk::checkbutton and ttk::radiobutton widgets (again, this
+    will be a benefit especially for Androwish).
+
+9.  Corrected the definition of the "-height" option for the
+    scrollednotebook widget to be in sync with that for ttk::notebook.
+
+10. Fixed a few bugs related to the comparison of package versions.
+
+11. Several improvements in the demo scripts.
+
+What was new in Scrollutil 1.17?
+--------------------------------
+
+1. Added the "notebookpath" subcommand to the scrollednotebook widget
+   and described how it can be used in connection with setting a tab-
+   specific tooltip.
+
+2. Added the "attrib", "hasattrib", and "unsetattrib" subcommands to the
+   scrollarea, scrollsync, scrollableframe, scrollednotebook,
+   plainnotebook, and pagesman widgets.
+
+3. Added the "tabattrib", "hastabattrib", and "unsettabattrib"
+   subcommands to the scrollednotebook and plainnotebook widgets.
+
+4. Added the "pageattrib", "haspageattrib", and "unsetpageattrib"
+   subcommands to the pagesman widget.
+
+5. The demo scripts "ScrolledNotebookDemo.tcl", "PlainNotebookDemo.tcl",
+   and "PagesManDemo.tcl" now demonstrate the usage of the new
+   "tabattrib", "hastabattrib", and "unsettabattrib" scrollednotebook
+   and plainnotebook subcommands.
+
+6. Renamed the clampatch package to themepatch and extended it by
+   support for patching and unpatching the "default" theme.
+
+7. Made the look and behavior of the ttk::checkbutton and
+   ttk::radiobutton widgets of the "clam" theme patched via
+   "themepatch::patch clam" more fancy.
+
+8. Several improvements in the demo scripts and documentation.
+
+What was new in Scrollutil 1.16?
+--------------------------------
+
+1. Added the "autofillx" and "autofilly" scrollableframe subcommands,
+   which enable you to make sure that the content frame will fill the
+   widget's entire inner width and height respectively, by dynamically
+   setting/clearing the -fitcontentwidth or -fitcontentheight option.
+
+2. The ttk::notebook contained in a scrollednotebook widget now
+   automatically fills the entire width of the scrollednotebook,
+   regardless of the number of tabs (thanks to Harald Oehlmann for his
+   improvement proposal and testing).  This is implemented with the aid
+   of the new "autofillx" subcommand of the scrollableframe contained in
+   the scrollednotebook widget.
+
+3. Significantly improved the look and behavior of the ttk::checkbutton
+   and ttk::radiobutton widgets of the "clam" theme patched with the
+   "clampatch::patchClamTheme" command.
+
+4. Eliminated three potential endless loops in the implementation of the
+   scrollednotebook widget and fixed a few bugs related to the arrow
+   buttons (thanks to Harald Oehlmann for his bug reports and
+   discussions on these subjects).
+
+5. Several improvements in the description of the scrollableframe and
+   scrollednotebook widgets.
+
+What was new in Scrollutil 1.15?
+--------------------------------
+
+1. The plainnotebook widget now supports the navigation between the
+   selectable tabs via the mouse wheel (thanks to Harald Oehlmann for
+   his TIP 591 and proposal), as well as with the keys "Down", "Up",
+   "Control-Tab", and "Control-Shift-Tab".
+
+2. The scrollednotebook widget now provides two arrow buttons placed on
+   demand in the top-left and top-right or bottom-left and bottom-right
+   corners (depending on the notebook's style), used for scrolling the
+   tab row (thanks to Harald Oehlmann for his proposal).
+
+3. The scrollednotebook widget now correctly interprets the x coordinate
+   within an index of the form "@x,y" or passed to the "identify" 
+   subcommand as being relative to the scrollednotebook widget (rather
+   than the ttk::notebook contained in the latter).
+
+4. Corrected a typo in the implementation of the
+   scrollutil::addMouseWheelSupport command.
+
+5. Made the detection of the desktop environment when calculating the
+   scaling percentage corresponding to the display's DPI scaling level
+   on X11 more reliable (thanks to Florian Pigorsch for his bug report).
+
+6. Numerous further improvements in the code, the demo script
+   "PagesManDemo.tcl", and the helper script "styleUtil.tcl", which is
+   source'd in all demo scripts.
+
+What was new in Scrollutil 1.14?
+--------------------------------
+
+1. Improvements in the scaleutil package, related to setting the default
+   height of the ttk::treeview rows to a value based on the font's
+   metrics (see the section "More on scrollutil::scalingpct" in
+   Scrollutil Programmer's Guide for details); several extensions.
+
+2. Pressing and later releasing the left mouse button over the
+   "closetab" element of a ttk:notebook tab now generates a
+   <<CloseTabRequested>> virtual event, whose handling by closing the
+   tab via the notebook's "forget" subcommand if appropriate lies in
+   the responsibility of the application (thanks to Alexandru Dadalau
+   for his proposal) (POTENTIAL INCOMPATIBILITY!).
+
+3. The title label as well as the tabs created with the "addlabel" and
+   "insertlabel" plainnotebook subcommands now have their own styles
+   "PnbTitle.TLabel" and "PnbLabel.TLabel" (thanks to Harald Oehlmann
+   for his proposal).
+
+4. Added the plainnotebook "titlepath" subcommand, which returns the
+   path name of the widget's title label.
+
+5. The Scrollutil distribution now includes the new clampatch package,
+   whose "clampatch::patchClamTheme" command makes the ttk::button
+   widgets as well as the ttk::treeview and tablelist headers of the
+   "clam" theme smaller and significantly improves the look and behavior
+   of its ttk::checkbutton and ttk::radiobutton widgets.  The script
+   "styleUtil.tcl", which is source'd in all demo scripts, now invokes
+   this procedure.
+
+6. Fixed a bug related to changing the value of the "-xscrollbarmode" or
+   "-yscrollbarmode" scrollarea option from "none" to "static" or
+   "dynamic" (thanks to Bo Berggren for his bug report and valuable
+   contribution).
+
+7. Several improvements in the demo scripts.  For example, they now
+   retrieve the current theme via "[ttk::style theme use]" when possible
+   rather than relying on the value of the variable "ttk::currentTheme"
+   (which is set by the procedure "ttk::setTheme" only).
+
+8. Improvements in the code and documentation, especially in Scrollutil
+   Programmer's Guide and the description of the plainnotebook widget
+   (thanks to Harald Oehlmann for his feedback).
+
+What was new in Scrollutil 1.13?
+--------------------------------
+
+1. Added code that handles the virtual event <<NoManagedChild>>, sent by
+   Tk 8.7a3 and later to the content frame of a scrollableframe when its
+   last widget managed via pack or grid becomes unmanaged (thanks to
+   Harald Oehlmann for his TIP 518).
+
+2. The scaleutil package (which is bundled with Scrollutil) now works
+   "as is" with undroidwish and AndroWish, too.  In addition, as
+   described in section "More on scrollutil::scalingpct" of Scrollutil
+   Programmer's Guide, it is now possible to prevent this package from
+   changing Tk's scaling factor when calculating the scaling percentage
+   corresponding to the display's DPI scaling level on X11 (thanks to
+   Christian Werner for his proposal and discussions on these topics).
+
+3. Fixed a bug in the scaleutil package, related to setting the default
+   height of the ttk::treeview rows for one of the themes provided by
+   the awthemes package (thanks to Harald Oehlmann for his bug report).
+
+4. Improved the demo scripts "*FrmDemo*.tcl" and "*NotebookDemo.tcl" by
+   configuring their scrollable widget container(s) and notebook widget,
+   respectively (e.g., setting the widget's width) from within an
+   "after 50" script rather than preceding this step by an invocation of
+   "update idletasks".
+
+What was new in Scrollutil 1.12?
+--------------------------------
+
+1. The "scrollutil::adaptWheelEventHandling" command now accepts as
+   optional first argument the "-ignorefocus" switch, which specifies
+   that the mouse wheel events are to be handled by the widget under
+   the pointer (only), ragardless of whether that widget has the focus
+   or not (thanks to Alexandru Dadalau for his proposal).
+
+2. Added the "insert", "pagecget", "pageconfigure", and "window"
+   pagesman subcommands.
+
+3. If the window passed to the pagesman "add" subcommand is already
+   managed by the pagesman widget, then the subcommand now uses its
+   optional arguments to update the options of the corresponding page.
+   The same holds true for the new "insert" subcommand.
+
+4. Significantly extended the code responsible for initializing the
+   variable "scrollutil::scalingpct".  See the section "More on
+   scrollutil::scalingpct" in Scrollutil Programmer's Guide for details.
+
+5. Made sure that the above-mentioned code will work as expected also
+   with future Tk versions containing the changes made recently in the
+   library file "ttk/fonts.tcl".
+
+6. Fixed a bug related to the handling of the <Destroy> event for the
+   widget embedded into a scrollarea (thanks to Alexandru Dadalau for
+   his bug report).
+
+7. Several updates and improvements in the demo scripts.
+
+What was new in Scrollutil 1.11?
+--------------------------------
+
+1. Added the "-setfocus" scrollarea configuration option, which controls
+   whether clicking one of the scrollbars should set the focus to the
+   widget embedded into the scrollarea (thanks to Alexandru Dadalau for
+   discussions on a related subject).
+
+2. Added the "-forgetcommand", "-leavecommand", and "-movabletabs"
+   scrollednotebook configuration options.
+
+3. Added the plainnotebook widget, which extends a ttk::notebook having
+   an arbitrary number of pages with invisible tabs by a ttk::frame to
+   its left or right containing, among others, a scrollableframe whose
+   content frame is the parent of a series of widgets that play the role
+   of vertically laid-out notebook tabs.  The above-mentioned options
+   are supported by this widget, too, and its "-closabletabs" option
+   controls whether the tabs can be closed with the mouse.
+
+4. Added the pagesman widget, which provides the basic functionality of
+   a pages manager.  By using it with plainnotebook widgets as pages, it
+   is quite easy to write applications in which the user can descend
+   from a plainnotebook to another one with a single mouse click and
+   switch back in the same way to the original one.  Everything needed
+   for this navigation is provided by appropriate options and
+   subcommands of the plainnotebook widget.
+
+5. The demo script "ScrolledNotebookDemo.tcl" now makes use of the
+   "-forgetcommand" and "-leavecommand" scrollednotebook options.
+
+6. Added two new demo scripts using the plainnotebook and pagesman
+   widgets, together with their "-forgetcommand" and "-leavecommand"
+   options.  The plainnotebook widgets of these scripts have closable
+   and (per default) movable tabs.
+
+7. Corrected the required tile version from 0.6 to 0.8.
+
+8. Fixed a bug related to the supported scaling percentages on Windows
+   (thanks to Manfred Schwarz for his bug report).
+
+What was new in Scrollutil 1.10?
+--------------------------------
+
+1. Added the (scalable) "closetab" style element, which can be added to
+   and removed from the tabs of a ttk::notebook style (like "TNotebook"
+   or "My.TNotebook") by using the new "scrollutil::addclosetab" and
+   "scrollutil::removeclosetab" commands.  As a result, the tabs of any
+   ttk::notebook or scrollednotebook widget can be made closable by the
+   user by passing the ttk::notebook style given by its "-style" option
+   to the "scrollutil::addclosetab" command.
+
+2. The state of the "closetab" element of a ttk::notebook or
+   scrollednotebook tab can be queried and switched between "normal" and
+   "disabled" with the aid of the new "scrollutil::closetabstate"
+   command.
+
+3. Added the "closetabstate" scrollednotebook widget subcommand, which
+   is a convenient shortcut for the "scrollutil::closetabstate"
+   command.
+
+4. Each notebook tab of the demo scripts "ScrolledNotebookDemo.tcl" and
+   "TtkNotebookDemo.tcl" now contains, besides a text, also an image and
+   the "closetab" element.
+
+5. On X11, the initialization code now only corrects the sizes of the
+   standard fonts and sets the scaling factor if the display's scaling
+   percentage is greater than 100.  In addition, the scaling factor is
+   no longer changed if the scaling percentage was derived from it
+   (thanks to Erik Leunissen and Harald Oehlmann for their bug reports).
+
+6. Numerous further improvements in the code, demo scripts, and
+   documentation.
+
+What was new in Scrollutil 1.9?
+-------------------------------
+
+1. The "autosize" scrollableframe subcommand now sets the widget's
+   width and/or height with a delay of 100 ms, rather than invoking
+   "update idletasks" (thanks to Harald Oehlmann for his proposal).
+
+2. Added the "xview <units>" and "yview <units>" scrollableframe
+   subcommands.
+
+3. Added the scrollednotebook widget, which is based on a ttk::notebook
+   within a scrollableframe and supports an arbitrary number of
+   unsqueezed tabs.  It also implements the navigation between the tabs
+   of a ttk::notebook or scrollednotebook widget via the mouse wheel
+   (thanks to Harald Oehlmann for his TIP 591), as well as the support
+   for moving the tabs with the mouse.
+
+4. Added two demo scripts for the comparison of the new scrollednotebook
+   widget with a ttk::notebook.
+
+5. Fixed two typos in the implementation of the horizontal scrolling
+   with the mouse wheel on X11 via "scrollutil::addMouseWheelSupport".
+
+6. Fixed a bug related to font scaling on X11 (thanks to Ulrich Seidl
+   for his bug report).
+
+7. Fixed a bug related to the scrollbar mode "static" of the scrollarea
+   widget (thanks to Nicolas Bats for his bug report).
+
+8. Further improvements in the code, demo scripts, and documentation.
+
+What was new in Scrollutil 1.8?
+-------------------------------
+
+1. Added support for the platform-independent handling of mouse wheel
+   events (TIP 474), introduced in Tk 8.7a4 (as of January 9, 2021).
+
+2. Added the "autosize" scrollableframe subcommand and used in the demo
+   scripts "SuScrollableFrmDemo*.tcl" (thanks to Harald Oehlmann for his
+   proposal).
+
+3. Changed the default width and height of the scrollableframe widget
+   to 10c and 7c, respectively (thanks to Alexandru Dadalau and Harald
+   Oehlmann for discussions on this subject).
+
+4. Included the same version 2.18 of the mega-widget utility package
+   mwutil and the same version 1.2 of the scaling utility package
+   scaleutil as in the most recent Tablelist release 6.12.
+
+5. Extended the description of the scaling support on Xfce (including
+   version 4.16, which adds fractional scaling), MATE, and Cinnamon.
+
+6. Fixed a regression related to font scaling on X11 if the display's
+   DPI scaling level is greater than 100 %, introduced in the previous
+   release.
+
+7. Several improvements in the demo scripts and documentation.
+
+What was new in Scrollutil 1.7?
+-------------------------------
+
+1. Added the "-autohidescrollbars" scrollarea configuration option
+   (thanks to Alexandru Dadalau for his proposal and testing).
+
+2. Set the recommended maximum for the value of the "-lockinterval"
+   scrollarea option to 300 (see the manual fore details).
+
+3. The scrollableframe widget is now automatically registered for
+   scrolling with the mouse wheel at creation time.  The demo scripts
+   "SuScrollableFrmDemo*.tcl" have been adapted accordingly.
+
+4. Added the "seerect" scrollableframe subcommand.
+
+5. Added the command "scrollutil::disableScrollingByWheel".
+
+6. With Tk 8.6.10 or later, the demo-scripts now fully support the Dark
+   Mode appearance on Mac OS 10.14 (Mojave) and later.  For the demo
+   scripts using tablelist widgets this is true if the Tablelist version
+   is 6.11 or later (for an optimal user experience it is recommended to
+   use Tk 8.6.11 or later).  Similarly, the full Dark Mode support for
+   mentry widgets requires Mentry version 3.11 or later.
+
+7. Reworked the invocations of "package vcompare", taking into account
+   that Tcl versions earlier than 8.5 did not support the letters "a"
+   and "b" in version numbers (thanks to Mike Walsh for his bug report).
+
+8. Several further improvements in the code,  demo scripts, and
+   documentation (thanks to Harald Oehlmann for his feedback regarding
+   the manual).
+
+What was new in Scrollutil 1.6?
+-------------------------------
+
+1. Included the implementation of TIP 563, meaning that the mouse wheel
+   now will scroll a horizontal or vertical Tk core or tile scrollbar
+   widget regardless of whether the "Shift" key is down or not (thanks
+   to Harald Oehlmann for his proposal and TIP implementation).
+
+2. Added the read-only public variable "scrollutil::scalingpct", which
+   is set at application start time to 100, 125, 150, 175, or 200,
+   correspondig to the display's DPI scaling level.  See the new section
+   "More on scrollutil::scalingpct" in Scrollutil Programmer's Guide for
+   details.
+
+3. The procedure responsible for the initialization of the variable
+   "scrollutil::scalingpct" also scales: (a) the default width of the Tk
+   core scrollbars on X11; (b) for the built-in themes "alt", "clam",
+   "classic", and "default", the default width of the ttk::scrollbar
+   widget, as well as the arrows of the ttk::combobox and ttk::spinbox
+   widgets; (c) for the "alt" and "clam" themes, the arrow of the
+   ttk::menubutton widget; (d) for the "clam", "classic", and "default"
+   themes, the indicators of the ttk::checkbutton and ttk::radiobutton
+   widgets.
+
+4. Made sure that in the "vista" and "xpnative" themes the indicators of
+   the ttk::checkbutton and ttk::radiobutton widgets will be properly
+   scaled, regardless of the Tk release being used (a long-standing bug
+   in the implementation of these widgets was fixed in May 2020).
+
+5. Made the demo-scripts scaling-aware.
+
+6. Several further improvements in the demo scripts and documentation.
+
+What was new in Scrollutil 1.5?
+-------------------------------
+
+1. On Windows and X11, Scrollutil now automatically creates mouse wheel
+   event class bindings for the Tk core scrollbar widget, which are
+   missing on these platforms when using a Tk version earlier than 8.6.
+
+2. Added a demo script showing how the scrollarea widget circumvents the
+   potential shimmering effect in connection with text widgets.
+
+3. Improved the handling of the case that the scrollbar lock prevented a
+   scrollbar of a scrollarea widget from being unmapped (thanks to Paul
+   Obermeier for his bug report).
+
+4. Several improvements in the demo scripts and documentation.
+
+What was new in Scrollutil 1.4?
+-------------------------------
+
+1. Added the commands "scrollutil::getscrollarea" and
+   "scrollutil::getscrollsync", designed to query the scrollarea and
+   scrollsync, respectively containing a given widget.
+
+2. Added the command "scrollutil::addMouseWheelSupport", which can be
+   used, e.g., to add mouse wheel support to canvas widgets (thanks to
+   Julian H J Loaring for his proposal) and to restore the "old-school"
+   mouse wheel event handling for text widgets, which performs scrolling
+   by lines and characters rather than pixels.
+
+3. Scrollutil now automatically creates mouse wheel event class bindings
+   for the ttk::scrollbar widget (thanks to Harald Oehlmann for his
+   proposal and discussions on this subject).
+
+4. If a widget that is embedded into a scrollarea is passed to
+   "scrollutil::adaptWheelEventHandling", then this command gets
+   automatically invoked for the scrollbars of that scrollarea, too.
+
+5. Added the missing pieces of code related to the bindings for
+   horizontal scrolling with the aid of mouse buttons 6 and 7 in Tk
+   8.7.a3 or later on X11.
+
+6. Several improvements in the demo scripts and documentation.
+
+What was new in Scrollutil 1.3?
+-------------------------------
+
+1. The scrollarea widget of the Scrollutil_tile package now uses
+   ttk::scrollbar widgets on Mac OS X, too, provided that the Tk release
+   is 8.6.10 or later.
+
+2. Improvements related to the scrollsync widget.
+
+3. Added the "scan" scrollableframe subcommand, along with mouse event
+   bindings invoking the latter.
+
+4. Significantly improved the handling of the "-width", "-height",
+   "-borderwidth", and "-highlightthickness" scrollableframe options.
+   The reference manual now explicitly mentions that the "-width" and
+   "-height" options set the widget's *inner* dimensions, excluding the
+   border and highlight rectangle (if any).
+
+5. The mouse wheel event handling now supports nested scrollable widget
+   containers.
+   
+6. When computing the number of units for "(x|y)view scroll" within the
+   bindings for mouse wheel events, the rounding now works the same for
+   both positive and negative delta values, just like in Tk 8.6.10 and
+   later.
+   
+7. For Tk 8.7.a3 and above on X11, the mouse wheel event handling now
+   includes bindings for horizontal scrolling with the aid of the
+   (virtual) mouse buttons 6 and 7, which correspond to left/right
+   tilting the scroll wheel of a mouse having one or two additional
+   (thumb) buttons.
+
+8. Numerous improvements in the demo scripts and documentation.
+
+What was new in Scrollutil 1.2?
+-------------------------------
+
+1. Added the scrollableframe widget, designed as a lightweight,
+   theme-able, and full-featured replacement for BWidget ScrollableFrame
+   and iwidgets::scrolledframe (thanks to Harald Oehlmann for his
+   proposal).
+
+2. Added two demo scripts for the new scrollableframe widget.
+
+3. Significant improvements related to the scrollarea and scrollsync
+   widgets (thanks to Paul Obermeier for his valuable feedback and
+   testing).
+
+4. Scrollutil no longer creates aliases in the "::tk" namespace for Tk
+   commands for which that namespace already contains a command of the
+   same name.
+
+5. Numerous further improvements in the code, demo scripts, and
+   documentation.
+
+What was new in Scrollutil 1.1?
+-------------------------------
+
+1. Added the scrollsync widget, designed for scrolling several widgets
+   simultaneously (thanks to Paul Obermeier for his proposal and
+   testing).
+
+2. Added two demo scripts for the new scrollsync widget.
+
+3. The scrollarea widget now supports the "-takefocus" standard option
+   (thanks to Harald Oehlmann for his proposal).
+
+4. The scrollarea "setwidget" subcommand now returns the path name of
+   the previously embedded widget.
+
+5. The mouse wheel event handling now restricts the search for the
+   registered scrollable widget container that is an ascendant of the
+   widget under the pointer to the widget containers within the same
+   toplevel (thanks to Harald Oehlmann for his valuable feedback).
+
+6. Several further improvements in the code, demo scripts, and
+   documentation.
+
+What was new in Scrollutil 1.0?
+-------------------------------
+
+This is the first release.  Thanks to Michael Niehren for discussions on
+mouse wheel event handling in scrollable widget containers, as well as
+to Paul Obermeier and Thomas Grausgruber for testing the scrollarea
+widget.

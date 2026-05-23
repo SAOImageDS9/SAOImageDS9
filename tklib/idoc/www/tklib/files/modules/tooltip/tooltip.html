@@ -1,0 +1,302 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tooltip - Tooltip management</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'tooltip.man' by tcllib/doctools with format 'html'
+   -->
+<!-- Copyright &amp;copy; 1996-2008, Jeffrey Hobbs   -- Copyright &amp;copy; 2024 Emmanuel Frecon
+   -->
+<!-- tooltip.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">tooltip(n) 2.0.1 tklib &quot;Tooltip management&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>tooltip - Tooltip management</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">COMMANDS</a></li>
+<li class="doctools_section"><a href="#section3">EXAMPLE</a></li>
+<li class="doctools_section"><a href="#section4">Migration from Version 1</a></li>
+<li class="doctools_section"><a href="#section5">Bugs, Ideas, Feedback</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+<li class="doctools_section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_requirements">
+<li>package require <b class="pkgname">Tcl 8.5</b></li>
+<li>package require <b class="pkgname">tooltip <span class="opt">?2.0.1?</span></b></li>
+</ul>
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">::tooltip::tooltip</b> <i class="arg">command</i> <span class="opt">?<i class="arg">options</i>?</span></a></li>
+<li><a href="#2"><b class="cmd">::tooltip::tooltip</b> <i class="arg">pathName</i> <span class="opt">?<i class="arg">option value</i>...?</span> <span class="opt">?<b class="const">--</b>?</span> <i class="arg">message</i></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>This package provides tooltips, i.e., small text messages that can be displayed
+when the mouse hovers over a widget, menu item, canvas item, listbox item,
+ttk::treeview item or column heading, ttk::notebook tab, or text widget tag.</p>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">COMMANDS</a></h2>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">::tooltip::tooltip</b> <i class="arg">command</i> <span class="opt">?<i class="arg">options</i>?</span></a></dt>
+<dd><p>Manage the tooltip package using the following subcommands.</p>
+<dl class="doctools_options">
+<dt><b class="option">clear</b> <span class="opt">?<i class="arg">pattern</i>?</span></dt>
+<dd><p>Prevents the specified widgets from showing tooltips. <i class="arg">pattern</i>
+is a glob pattern and defaults to matching all widgets.</p></dd>
+<dt><b class="option">configure</b> <span class="opt">?<i class="arg">option</i> <span class="opt">?<i class="arg">value option value</i> ...?</span>?</span></dt>
+<dd><p>Queries or modifies the configuration options of the tooltip. The supported
+options are <b class="option">-backgroud</b>, <b class="option">-foreground</b> and <b class="option">-font</b>. If no
+<i class="arg">option</i> is specified, returns a dictionary of the option values. If one
+<i class="arg">option</i> is specified with no value, returns the value of that option.
+Otherwise, sets the given <i class="arg">option</i>s to the corresponding <i class="arg">value</i>s.</p></dd>
+<dt><b class="option">delay</b> <span class="opt">?<i class="arg">millisecs</i>?</span></dt>
+<dd><p>Query or set the hover delay. This is the interval that the pointer must remain
+over the widget before the tooltip is displayed. The delay is specified in
+milliseconds and must be greater than or equal to 50 ms.
+With no argument the current delay is returned.</p></dd>
+<dt><b class="option">fade</b> <span class="opt">?<i class="arg">boolean</i>?</span></dt>
+<dd><p>Enable or disable fading of the tooltip.  The fading is enabled by default on
+Win32 and Aqua.  The tooltip will fade away on Leave events instead
+disappearing.</p></dd>
+<dt><b class="option">disable</b></dt>
+<dd></dd>
+<dt><b class="option">off</b></dt>
+<dd><p>Disable all tooltips</p></dd>
+<dt><b class="option">enable</b></dt>
+<dd></dd>
+<dt><b class="option">on</b></dt>
+<dd><p>Enables tooltips for defined widgets.</p></dd>
+</dl></dd>
+<dt><a name="2"><b class="cmd">::tooltip::tooltip</b> <i class="arg">pathName</i> <span class="opt">?<i class="arg">option value</i>...?</span> <span class="opt">?<b class="const">--</b>?</span> <i class="arg">message</i></a></dt>
+<dd><p>This command arranges for widget <i class="arg">pathName</i> to display a tooltip with a
+<i class="arg">message</i>.</p>
+<p>If the specified widget is a <b class="cmd"><a href="../../../../index.html#menu">menu</a></b>, <b class="cmd"><a href="../../../../index.html#canvas">canvas</a></b>, <b class="cmd"><a href="../../../../index.html#listbox">listbox</a></b>,
+<b class="cmd">ttk::treeview</b>, <b class="cmd">ttk::notebook</b> or <b class="cmd"><a href="../../../../index.html#text">text</a></b> widget then additional
+options are used to tie the tooltip to specific menu, canvas or listbox items,
+ttk::treeview items or column headings, ttk::notebook tabs, or text widget tags.</p>
+<dl class="doctools_options">
+<dt><b class="option">-heading</b> <i class="arg">columnId</i></dt>
+<dd><p>This option is used to set a tooltip for a ttk::treeview column heading.
+The column does not need to already exist. You should not use the same
+identifiers for columns and items in a widget for which you are using tooltips
+as their tooltips will be mixed. The widget must be a ttk::treeview widget.</p></dd>
+<dt><b class="option">-image</b> <i class="arg">image</i></dt>
+<dd><p>The specified (photo) image will be displayed to the left of the primary
+tooltip <i class="arg">message</i>.</p></dd>
+<dt><b class="option">-index</b> <i class="arg">index</i></dt>
+<dd><p>This option is used to set a tooltip on a menu item. The index may be
+either the entry index or the entry label. The widget must be a menu
+widget but the entries do not have to exist when the tooltip is set.</p></dd>
+<dt><b class="option">-info</b> <i class="arg">info</i></dt>
+<dd><p>The specified <i class="arg">info</i> text will be displayed as additional information
+below the primary tooltip <i class="arg">message</i>.</p></dd>
+<dt><b class="option">-items</b> <i class="arg">items</i></dt>
+<dd><p>This option is used to set a tooltip for canvas, listbox or ttk::treview items.
+For the canvas widget, the item must already be present in the canvas and will
+be found with a <b class="cmd">find withtag</b> lookup.
+For listbox and ttk::treview widgets the item(s) may be created later but the
+programmer is responsible for managing the link between the listbox or
+ttk::treview item index and the corresponding tooltip. If the listbox or
+ttk::treview items are re-ordered, the tooltips will need amending.</p>
+<p>If the widget is not a canvas, listbox or ttk::treview then an error is raised.</p></dd>
+<dt><b class="option">-tab</b> <i class="arg">tabId</i></dt>
+<dd><p>The <b class="option">-tab</b> option can be used to set a tooltip for a ttk::notebook tab.
+The tab should already be present when this command is called, or an error will
+be returned. The widget must be a ttk::notebook widget.</p></dd>
+<dt><b class="option">-tag</b> <i class="arg">name</i></dt>
+<dd><p>The <b class="option">-tag</b> option can be used to set a tooltip for a text widget tag.
+The tag should already be present when this command is called, or an error will
+be returned. The widget must be a text widget.</p></dd>
+<dt><b class="option">--</b></dt>
+<dd><p>The <b class="option">--</b> option marks the end of options.
+The argument following this one will be treated as <i class="arg">message</i> even if it
+starts with a <b class="const">-</b>.</p></dd>
+</dl></dd>
+</dl>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">EXAMPLE</a></h2>
+<pre class="doctools_example">
+# Demonstrate widget tooltip
+package require tooltip
+pack [label .l -text &quot;label&quot;]
+tooltip::tooltip .l &quot;This is a label widget&quot;
+</pre>
+<pre class="doctools_example">
+# Demonstrate menu tooltip
+package require tooltip
+. configure -menu [menu .menu]
+.menu add cascade -label Test -menu [menu .menu.test -tearoff 0]
+.menu.test add command -label Tooltip
+tooltip::tooltip .menu.test -index 0 &quot;This is a menu tooltip&quot;
+</pre>
+<pre class="doctools_example">
+# Demonstrate canvas item tooltip
+package require tooltip
+pack [canvas .c]
+set item [.c create rectangle 10 10 80 80 -fill red]
+tooltip::tooltip .c -item $item &quot;Canvas item tooltip&quot;
+</pre>
+<pre class="doctools_example">
+# Demonstrate listbox item tooltip
+package require tooltip
+pack [listbox .lb]
+.lb insert 0 &quot;item one&quot;
+tooltip::tooltip .lb -item 0 &quot;Listbox item tooltip&quot;
+</pre>
+<pre class="doctools_example">
+# Demonstrate ttk::notebook tab tooltip
+package require tooltip
+pack [ttk::notebook .nb]
+.nb add [frame .nb.f1 -height 50] -text &quot;First tab&quot;
+.nb add [frame .nb.f2 -height 50] -text &quot;Second tab&quot;
+tooltip::tooltip .nb -tab 0 &quot;Tooltip for the 1st notebook tab&quot;
+tooltip::tooltip .nb -tab 1 &quot;Tooltip for the 2nd notebook tab&quot;
+</pre>
+<pre class="doctools_example">
+# Demonstrate text tag tooltip
+package require tooltip
+pack [text .txt]
+.txt tag configure TIP-1 -underline 1
+tooltip::tooltip .txt -tag TIP-1 &quot;tooltip one text&quot;
+.txt insert end &quot;An example of a &quot; {} &quot;tooltip&quot; TIP-1 &quot; tag.\n&quot; {}
+</pre>
+</div>
+<div id="section4" class="doctools_section"><h2><a name="section4">Migration from Version 1</a></h2>
+<p>Version 1.3 to 1.7 called <b class="cmd">msgcat::mc</b> before a tooltip was shown,
+using the tooltip namespace.
+<b class="cmd">msgcat::mc</b> requires the caller environment.
+Due to that, version 1.8 recorded the caller namespace and used this
+in the call.
+In version 2.0, any <b class="cmd">msgcat::mc</b> support was removed.
+The options <b class="option">-namespace</b>, <b class="option">-msgargs</b> and <b class="option">-infoargs</b>
+were removed.
+Starting with TCL 8.7, <b class="cmd">msgcat::mc</b> supports oo classes and oo methods.
+But the oo caller environment is not present when the <b class="cmd">msgcat::mc</b> was
+invoked on tooltip display, resulting in runtime errors.
+It was concluded as bad design to call <b class="cmd">msgcat::mc</b> late.
+The caller should reinstall the tooltips on eventual message change.</p>
+</div>
+<div id="section5" class="doctools_section"><h2><a name="section5">Bugs, Ideas, Feedback</a></h2>
+<p>This document, and the package it describes, will undoubtedly contain
+bugs and other problems.
+Please report such in the category <em>tooltip</em> of the
+<a href="http://core.tcl.tk/tklib/reportlist">Tklib Trackers</a>.
+Please also report any ideas for enhancements you may have for either
+package and/or documentation.</p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../../../index.html#balloon">balloon</a>, <a href="../../../../index.html#help">help</a>, <a href="../../../../index.html#hover">hover</a>, <a href="../../../../index.html#tooltip">tooltip</a></p>
+</div>
+<div id="copyright" class="doctools_section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 1996-2008, Jeffrey Hobbs<br>
+Copyright &copy; 2024 Emmanuel Frecon</p>
+</div>
+</div></body></html>

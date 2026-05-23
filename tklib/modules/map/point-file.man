@@ -1,0 +1,28 @@
+[comment {-*- tcl -*- doctools manpage}]
+[vset VERSION 0.1]
+[manpage_begin map::point::file n [vset VERSION]]
+[category {Map Display and Supporting Utilities}][keywords map]
+[keywords {file, geo/point}]
+[keywords {geo/point, file}]
+[moddesc   {Map display support}]
+[titledesc {Reading/writing tklib geo/point files}]
+[require Tcl 8.6-]
+[require debug]
+[require debug::caller]
+[require map::slippy 0.8]
+[require snit]
+[require map::point::file [opt [vset VERSION]]]
+[description]
+
+This package provides read/write functions for Tklib [term geo/point] files.
+
+[section API]
+
+[list_begin definitions]
+[list_end]
+
+[section EXAMPLE]
+
+[vset CATEGORY map]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]

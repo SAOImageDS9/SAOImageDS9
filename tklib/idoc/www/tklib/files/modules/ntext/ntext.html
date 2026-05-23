@@ -1,0 +1,268 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ntext - Alternative Bindings for the Text Widget</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'ntext.man' by tcllib/doctools with format 'html'
+   -->
+<!-- ntext.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">ntext(n) 1.0 tklib &quot;Alternative Bindings for the Text Widget&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>ntext - Alternative Bindings for the Text Widget</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">COMMANDS</a></li>
+<li class="doctools_section"><a href="#section3">CONFIGURATION OPTIONS</a></li>
+<li class="doctools_section"><a href="#section4">BUGS</a></li>
+<li class="doctools_section"><a href="#section5">EXAMPLE</a></li>
+<li class="doctools_section"><a href="#see-also">See Also</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_requirements">
+<li>package require <b class="pkgname">Tcl 8.5-</b></li>
+<li>package require <b class="pkgname">Tk 8.5-</b></li>
+<li>package require <b class="pkgname">ntext <span class="opt">?1.0?</span></b></li>
+</ul>
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">::ntext::new_textCopy</b> <i class="arg">pathName</i></a></li>
+<li><a href="#2"><b class="cmd">::ntext::new_textCut</b> <i class="arg">pathName</i></a></li>
+<li><a href="#3"><b class="cmd">::ntext::new_textPaste</b> <i class="arg">pathName</i></a></li>
+<li><a href="#4"><b class="cmd">::ntext::syncIndentColor</b> <i class="arg">pathName</i></a></li>
+<li><a href="#5"><b class="cmd">::ntext::syncTabColor</b> <i class="arg">pathName</i></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>The purpose of the <b class="package">ntext</b> package is to make the text widget behave more like other text-editing applications. It makes the text widget more useful for implementing a text editor, and makes it behave in a way that will be more familiar to most users.</p>
+<p>The package provides a binding tag named <em>Ntext</em> for use by text widgets in place of the default <em>Text</em> binding tag.</p>
+<p>Package <b class="package">ntext</b> 's functions and variables are contained entirely in the <b class="variable">::ntext</b> namespace; its other code is contained in the binding tag <em>Ntext</em>.  <b class="package">ntext</b> has no exports to the global or other namespaces, and no new widget commands.  It uses modified copies of the <b class="package"><a href="../../../../index.html#tk">Tk</a></b> code, leaving the original code, and the <em>Text</em> binding tag, unchanged.</p>
+<p>The differences between the <em>Ntext</em> binding tag and the default <em>Text</em> binding tag are in three categories:</p>
+<ul class="doctools_itemized">
+<li><p>Some <em>Text</em> bindings behave differently from most text-editing applications.  <em>Ntext</em> gives these bindings more familiar behaviour.  For details see <i class="term"><a href="ntextBindings.html">ntextBindings</a></i>.</p></li>
+<li><p>When a logical line with leading whitespace is word-wrapped onto more than one display line, the wrapped display lines begin further to the left than the first display line, which can make the text layout untidy and difficult to read.  <em>Ntext</em> can indent the wrapped lines to match the leading whitespace of the first display line (this facility is switched off by default).  For details see <i class="term"><a href="ntextIndent.html">ntextIndent</a></i>.</p></li>
+<li><p>When the user navigates or selects text, <b class="const">Tcl/Tk</b> sometimes needs to detect word boundaries.  <em>Ntext</em> provides improved rules for word boundary detection.  For details see <i class="term"><a href="ntextWordBreak.html">ntextWordBreak</a></i>.</p></li>
+</ul>
+<p>The remainder of this page describes the basic use and configuration of all three aspects of <em>Ntext</em>.  For more detailed information on the different facilities of <em>Ntext</em>, see the pages <i class="term"><a href="ntextBindings.html">ntextBindings</a></i>, <i class="term"><a href="ntextIndent.html">ntextIndent</a></i>, and <i class="term"><a href="ntextWordBreak.html">ntextWordBreak</a></i>.</p>
+<p>See Section <span class="sectref"><a href="#section5">EXAMPLE</a></span> for how to apply the <em>Ntext</em> binding tag in place of the <em>Text</em> binding tag.</p>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">COMMANDS</a></h2>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">::ntext::new_textCopy</b> <i class="arg">pathName</i></a></dt>
+<dd><p>Replacement for ::tk_textCopy.</p></dd>
+<dt><a name="2"><b class="cmd">::ntext::new_textCut</b> <i class="arg">pathName</i></a></dt>
+<dd><p>Replacement for ::tk_textCut that also maintains <em>Ntext</em> indentation (see <i class="term"><a href="ntextIndent.html">ntextIndent</a></i>).</p></dd>
+<dt><a name="3"><b class="cmd">::ntext::new_textPaste</b> <i class="arg">pathName</i></a></dt>
+<dd><p>Replacement for ::tk_textPaste that also maintains <em>Ntext</em> indentation (see <i class="term"><a href="ntextIndent.html">ntextIndent</a></i>).</p></dd>
+<dt><a name="4"><b class="cmd">::ntext::syncIndentColor</b> <i class="arg">pathName</i></a></dt>
+<dd><p>Command to apply the current value of the variable <b class="variable">::ntext::indentColor</b> to existing lines in a text widget.  This command is useful if a text widget has been created, text has been inserted in the widget, <em>and then</em> the value of <b class="variable">::ntext::indentColor</b> is changed (see <i class="term"><a href="ntextIndent.html">ntextIndent</a></i>).</p></dd>
+<dt><a name="5"><b class="cmd">::ntext::syncTabColor</b> <i class="arg">pathName</i></a></dt>
+<dd><p>Command to apply the current values of the variables <b class="variable">::ntext::tabColor</b> and <b class="variable">::ntext::tabSelColor</b> to tab spaces in a text widget.  This command is useful if a text widget has been created, text has been inserted in the widget, <em>and then</em> the value of <b class="variable">::ntext::tabColor</b> or <b class="variable">::ntext::tabSelColor</b> is changed.</p></dd>
+</dl>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">CONFIGURATION OPTIONS</a></h2>
+<p><em>Ntext</em> provides alternatives to a number of behaviours of the classic <em>Text</em> binding tag.  Where there is an option, the <em>Ntext</em> behaviour (except for display-line indentation) is switched on by default.</p>
+<p>The behaviour of <em>Ntext</em> may be configured application-wide by setting the values of a number of namespace variables:</p>
+<p><b class="variable">::ntext::classicAnchor</b></p>
+<ul class="doctools_itemized">
+<li><p><b class="const">0</b> - (default value) selects <em>Ntext</em> behaviour, i.e. the anchor point is fixed</p></li>
+<li><p><b class="const">1</b> - selects classic <em>Text</em> behaviour, i.e. the anchor point is variable</p></li>
+<li><p>For more information see <i class="term"><a href="ntextBindings.html">ntextBindings</a></i></p></li>
+</ul>
+<p><b class="variable">::ntext::classicExtras</b></p>
+<ul class="doctools_itemized">
+<li><p><b class="const">0</b> - (default value) selects <em>Ntext</em> behaviour, i.e. several traditional <em>Text</em> bindings are de-activated</p></li>
+<li><p><b class="const">1</b> - selects classic <em>Text</em> behaviour, i.e. all <em>Text</em> bindings are activated</p></li>
+<li><p>For more information see <i class="term"><a href="ntextBindings.html">ntextBindings</a></i></p></li>
+</ul>
+<p><b class="variable">::ntext::classicMouseSelect</b></p>
+<ul class="doctools_itemized">
+<li><p><b class="const">0</b> - (default value) selects <em>Ntext</em> behaviour, i.e. the anchor point for mouse selection operations is moved by keyboard navigation</p></li>
+<li><p><b class="const">1</b> - selects classic <em>Text</em> behaviour</p></li>
+<li><p>For more information see <i class="term"><a href="ntextBindings.html">ntextBindings</a></i></p></li>
+</ul>
+<p><b class="variable">::ntext::classicParagraphs</b></p>
+<ul class="doctools_itemized">
+<li><p><b class="const">0</b> - (default value) on macOS Aqua, certain keyboard bindings are made to behave in the same way as the Mac application TextEdit.  The bindings involve vertical scrolling of the screen and are &lt;?Shift-?Option-(Up|Down)&gt;.</p></li>
+<li><p><b class="const">1</b> - on macOS Aqua, certain keyboard bindings are made to behave in the same way as classic <em>Text</em>, ignoring the conventions of Aqua.  The bindings involve vertical scrolling of the screen and are &lt;?Shift-?Option-(Up|Down)&gt;.</p></li>
+<li><p>For more information see <i class="term"><a href="ntextBindings.html">ntextBindings</a></i></p></li>
+</ul>
+<p><b class="variable">::ntext::classicSelection</b></p>
+<ul class="doctools_itemized">
+<li><p><b class="const">0</b> - (default value on macOS Aqua) selects Mac-like behaviour, i.e. when a navigation keystroke cancels a selection, the insert mark first moves to the end of the selection determined by the navigation direction of the keystroke, and then the keystroke is applied.</p></li>
+<li><p><b class="const">1</b> - (default value except on macOS Aqua) selects PC-like behaviour (the same as classic <em>Text</em>), i.e. when a navigation keystroke cancels a selection, the insert mark is not moved before the keystroke is applied.</p></li>
+<li><p>For more information see <i class="term"><a href="ntextBindings.html">ntextBindings</a></i></p></li>
+</ul>
+<p><b class="variable">::ntext::classicWordBreak</b></p>
+<ul class="doctools_itemized">
+<li><p><b class="const">0</b> - (default value) selects <em>Ntext</em> behaviour, i.e. platform-independent, two classes of word characters and one class of non-word characters.</p></li>
+<li><p><b class="const">1</b> - selects classic <em>Text</em> behaviour, i.e. platform-dependent, one class of word characters and one class of non-word characters</p></li>
+<li><p>After changing this value, the matching patterns should be recalculated.  See <i class="term"><a href="ntextWordBreak.html">ntextWordBreak</a></i> for details and advanced configuration options.</p></li>
+</ul>
+<p><b class="variable">::ntext::classicWrap</b></p>
+<ul class="doctools_itemized">
+<li><p><b class="const">0</b> - selects <em>Ntext</em> behaviour, i.e. display lines of text widgets in <i class="arg">-wrap</i> <i class="arg">word</i> mode are indented to match the initial whitespace of the first display line of a logical line.  If the widget already holds text when this value is set, a function call may be necessary.  See <i class="term"><a href="ntextIndent.html">ntextIndent</a></i> for detailed instructions on the use of <em>Ntext</em> 's indentation.</p></li>
+<li><p><b class="const">1</b> - (default value) selects classic <em>Text</em> behaviour, i.e. no indentation</p></li>
+<li><p>For more information see <i class="term"><a href="ntextIndent.html">ntextIndent</a></i></p></li>
+</ul>
+<p><b class="variable">::ntext::indentColor</b></p>
+<ul class="doctools_itemized">
+<li><p><b class="const">{}</b> - if the value is the empty string, then the indent of wrapped display lines has the same color as the widget background.</p></li>
+<li><p><em>color</em> - a valid <b class="package"><a href="../../../../index.html#tk">Tk</a></b> color to use for the indent of wrapped display lines (default value <em>#d9d9d9</em>).</p>
+<p>Coloring is implemented with the text widget tag option <i class="arg">-lmargincolor</i>, which is available from <b class="package"><a href="../../../../index.html#tk">Tk</a></b> 8.6.6 onwards.  <em>Ntext</em> indent coloring has no effect in earlier versions of <b class="package"><a href="../../../../index.html#tk">Tk</a></b>.</p>
+<p>The value of <b class="variable">::ntext::indentColor</b> will often be set at startup.  If the value is changed when text widgets already exist and contain text, those widgets can be updated by calling command <b class="cmd">::ntext::syncIndentColor</b>.</p></li>
+<li><p>For more information see <i class="term"><a href="ntextIndent.html">ntextIndent</a></i></p></li>
+</ul>
+<p><b class="variable">::ntext::overwrite</b></p>
+<ul class="doctools_itemized">
+<li><p><b class="const">0</b> - (initial value) text typed at the keyboard is inserted into the widget</p></li>
+<li><p><b class="const">1</b> - text typed at the keyboard overwrites text already in the widget</p></li>
+<li><p>The value is toggled by the <em>Insert</em> key (except on macOS Aqua where there is no such key).</p></li>
+<li><p>For more information see <i class="term"><a href="ntextBindings.html">ntextBindings</a></i></p></li>
+</ul>
+<p><b class="variable">::ntext::tabColor</b></p>
+<ul class="doctools_itemized">
+<li><p><b class="const">{}</b> - if the value is the empty string, then the tab spaces have the same color as the widget background.</p></li>
+<li><p><em>color</em> - a valid <b class="package"><a href="../../../../index.html#tk">Tk</a></b> color to use for tab spaces (default value <em>#ffffaa</em>).</p>
+<p>The value of <b class="variable">::ntext::tabColor</b> will often be set at startup. If the value is changed when text widgets already exist and contain text, those widgets can be updated by calling command <b class="cmd">::ntext::syncTabColor</b>.</p></li>
+</ul>
+<p><b class="variable">::ntext::tabSelColor</b></p>
+<ul class="doctools_itemized">
+<li><p><b class="const">{}</b> - if the value is the empty string, then the color of tab spaces in the selection defaults to the same color as unselected tabs (see <b class="variable">::ntext::tabColor</b>), and <em>not</em> to the widget <i class="arg">-selectbackground</i> color.</p></li>
+<li><p><em>color</em> - a valid <b class="package"><a href="../../../../index.html#tk">Tk</a></b> color to use for tab spaces in the selection (default value <em>#418bd4</em>).</p>
+<p>The value of <b class="variable">::ntext::tabSelColor</b> will often be set at startup. If the value is changed when text widgets already exist and contain text, those widgets can be updated by calling command <b class="cmd">::ntext::syncTabColor</b>.</p></li>
+</ul>
+<p><b class="variable">::ntext::useBlockCursor</b></p>
+<ul class="doctools_itemized">
+<li><p><b class="const">0</b> - the block cursor will not be used.  When the widget is in <em>overwrite</em> mode (see <b class="const">::ntext::overwrite</b>), the ordinary cursor will change color instead.</p></li>
+<li><p><b class="const">1</b> - the block cursor will be used when the widget is in <em>overwrite</em> mode (see <b class="const">::ntext::overwrite</b>).</p></li>
+<li><p>The default value depends on the version of <b class="const">Tk</b>.  In versions of <b class="const">Tk</b> earlier than <b class="const">8.5.12</b>, the sizing of the block cursor had a bug, and <b class="variable">::ntext::useBlockCursor</b> defaults to <b class="const">0</b>.  From <b class="const">8.5.12</b> onwards the bug is fixed, and <b class="variable">::ntext::useBlockCursor</b> defaults to <b class="const">1</b>.</p></li>
+<li><p>For more information see <i class="term"><a href="ntextBindings.html">ntextBindings</a></i></p></li>
+</ul>
+</div>
+<div id="section4" class="doctools_section"><h2><a name="section4">BUGS</a></h2>
+<p>This version of <b class="package">ntext</b> is intended to be compatible with all releases of <b class="package"><a href="../../../../index.html#tk">Tk</a></b> 8.5, 8.6, and 8.7, and with the branches <em>core-8-5-branch</em>, <em>core-8-6-branch</em>, and <em>trunk</em> in the source code repository for <b class="package"><a href="../../../../index.html#tk">Tk</a></b>.  Any incompatibility with any of these versions, for any <b class="package"><a href="../../../../index.html#tk">Tk</a></b> windowing system, should be reported as a bug. Please report such in the category <em>ntext</em> of the <a href="https://core.tcl-lang.org/tklib/reportlist">Tklib Trackers</a>.</p>
+</div>
+<div id="section5" class="doctools_section"><h2><a name="section5">EXAMPLE</a></h2>
+<p>To create a text widget .t and use the <em>Ntext</em> bindings:</p>
+<pre class="doctools_example">
+package require ntext
+text .t
+bindtags .t {.t Ntext . all}
+</pre>
+<p>See <b class="cmd"><a href="../../../../index.html#bindtags">bindtags</a></b> for more information.</p>
+</div>
+<div id="see-also" class="doctools_section"><h2><a name="see-also">See Also</a></h2>
+<p><a href="../../../../index.html#bindtags">bindtags</a>, <a href="ntextBindings.html">ntextBindings</a>, <a href="ntextIndent.html">ntextIndent</a>, <a href="ntextWordBreak.html">ntextWordBreak</a>, <a href="../../../../index.html#re_syntax">re_syntax</a>, <a href="../../../../index.html#regexp">regexp</a>, <a href="../../../../index.html#text">text</a></p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../../../index.html#bindtags">bindtags</a>, <a href="../../../../index.html#re_syntax">re_syntax</a>, <a href="../../../../index.html#regexp">regexp</a>, <a href="../../../../index.html#text">text</a></p>
+</div>
+</div></body></html>

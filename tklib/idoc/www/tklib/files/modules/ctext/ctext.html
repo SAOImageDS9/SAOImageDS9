@@ -1,0 +1,362 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ctext - Ctext a text widget with highlighting support</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'ctext.man' by tcllib/doctools with format 'html'
+   -->
+<!-- Copyright &amp;copy; George Peter Staplin &amp;lt;GeorgePS@XMission.com&amp;gt;
+   -->
+<!-- ctext.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">ctext(n) 3.3 tklib &quot;Ctext a text widget with highlighting support&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>ctext - Ctext a text widget with highlighting support</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">COMMANDS</a></li>
+<li class="doctools_section"><a href="#section3">HIGHLIGHTING</a></li>
+<li class="doctools_section"><a href="#section4">WIDGET COMMANDS</a></li>
+<li class="doctools_section"><a href="#section5">WIDGET OPTIONS</a></li>
+<li class="doctools_section"><a href="#section6">EXAMPLE</a></li>
+<li class="doctools_section"><a href="#section7">THANKS</a></li>
+<li class="doctools_section"><a href="#section8">Bugs, Ideas, Feedback</a></li>
+<li class="doctools_section"><a href="#see-also">See Also</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+<li class="doctools_section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_requirements">
+<li>package require <b class="pkgname">Tk</b></li>
+<li>package require <b class="pkgname">ctext <span class="opt">?3.3?</span></b></li>
+</ul>
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">ctext</b> <i class="arg">pathName</i> <span class="opt">?<i class="arg">options</i>?</span></a></li>
+<li><a href="#2"><b class="cmd">::ctext::addHighlightClass</b> <i class="arg">pathName</i> <i class="arg">class</i> <i class="arg">color</i> <i class="arg">keywordlist</i></a></li>
+<li><a href="#3"><b class="cmd">::ctext::addHighlightClassWithOnlyCharStart</b> <i class="arg">pathName</i> <i class="arg">class</i> <i class="arg">color</i> <i class="arg">char</i></a></li>
+<li><a href="#4"><b class="cmd">::ctext::addHighlightClassForSpecialChars</b> <i class="arg">pathName</i> <i class="arg">class</i> <i class="arg">color</i> <i class="arg">charstring</i></a></li>
+<li><a href="#5"><b class="cmd">::ctext::addHighlightClassForRegexp</b> <i class="arg">pathName</i> <i class="arg">class</i> <i class="arg">color</i> <i class="arg">pattern</i></a></li>
+<li><a href="#6"><b class="cmd">::ctext::clearHighlightClasses</b> <i class="arg">pathName</i></a></li>
+<li><a href="#7"><b class="cmd">::ctext::getHighlightClasses</b> <i class="arg">pathName</i></a></li>
+<li><a href="#8"><b class="cmd">::ctext::deleteHighlightClass</b> <i class="arg">pathName</i> <i class="arg">class</i></a></li>
+<li><a href="#9"><b class="cmd">::ctext::enableComments</b> <i class="arg">enable</i></a></li>
+<li><a href="#10"><b class="cmd">::ctext::disableComments</b> <i class="arg">enable</i></a></li>
+<li><a href="#11"><i class="arg">pathName</i> <b class="method">highlight</b> <i class="arg">startIndex</i> <i class="arg">endIndex</i></a></li>
+<li><a href="#12"><i class="arg">pathName</i> <b class="method">fastdelete</b> <i class="arg">index1</i> <span class="opt">?<i class="arg">index2</i>?</span></a></li>
+<li><a href="#13"><i class="arg">pathName</i> <b class="method">fastinsert</b></a></li>
+<li><a href="#14"><i class="arg">pathName</i> <b class="method">copy</b></a></li>
+<li><a href="#15"><i class="arg">pathName</i> <b class="method">cut</b></a></li>
+<li><a href="#16"><i class="arg">pathName</i> <b class="method">paste</b></a></li>
+<li><a href="#17"><i class="arg">pathName</i> <b class="method">append</b></a></li>
+<li><a href="#18"><i class="arg">pathName</i> <b class="method">configure</b> <i class="arg">option</i> <i class="arg">value</i> <span class="opt">?...?</span></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>The <b class="package">ctext</b> package provides the ctext widget which
+is an enhanced text widget with support for configurable syntax
+highlighting and some extra commands.</p>
+<p>Ctext overloads the text widget and provides
+new commands, named <b class="method">highlight</b>, <b class="method">copy</b>, <b class="method">paste</b>,<b class="method">cut</b>,
+<b class="method">append</b>, and <b class="method">edit</b>.  It also provides several
+commands that allow you to define classes.
+Each class corresponds to a tag in the widget.</p>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">COMMANDS</a></h2>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">ctext</b> <i class="arg">pathName</i> <span class="opt">?<i class="arg">options</i>?</span></a></dt>
+<dd><p>Creates and configures a ctext widget.</p></dd>
+</dl>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">HIGHLIGHTING</a></h2>
+<p>Highlighting is controlled with text widget tags, that are called highlight classes.
+The <i class="arg">class</i> is a tag name and can be configured like any text widget tag.
+Four types of highlight classes are supported. All highlight classes are automatically used
+by the <b class="method">highlight</b> method of the widget.</p>
+<dl class="doctools_definitions">
+<dt><a name="2"><b class="cmd">::ctext::addHighlightClass</b> <i class="arg">pathName</i> <i class="arg">class</i> <i class="arg">color</i> <i class="arg">keywordlist</i></a></dt>
+<dd><p>Add a highlighting class <i class="arg">class</i> to the ctext widget <i class="arg">pathName</i>.
+The highlighting will be done with the color <i class="arg">color</i>. All words in the <i class="arg">keywordlist</i> will be
+highlighted.</p>
+<pre class="doctools_example">
+	# highlight some tcl keywords
+	::ctext::addHighlightClass .t tclkeywords red [list set info interp uplevel upvar]
+ </pre>
+</dd>
+<dt><a name="3"><b class="cmd">::ctext::addHighlightClassWithOnlyCharStart</b> <i class="arg">pathName</i> <i class="arg">class</i> <i class="arg">color</i> <i class="arg">char</i></a></dt>
+<dd><p>Add a highlighting class <i class="arg">class</i> to the ctext widget <i class="arg">pathName</i>.
+The highlighting will be done with the color <i class="arg">color</i>. All words starting with <i class="arg">char</i> will be
+highlighted.</p>
+<pre class="doctools_example">
+	::ctext::addHighlightClassWithOnlyCharStart .t vars blue \$
+ </pre>
+</dd>
+<dt><a name="4"><b class="cmd">::ctext::addHighlightClassForSpecialChars</b> <i class="arg">pathName</i> <i class="arg">class</i> <i class="arg">color</i> <i class="arg">charstring</i></a></dt>
+<dd><p>Add a highlighting class <i class="arg">class</i> to the ctext widget <i class="arg">pathName</i>.
+The highlighting will be done with the color <i class="arg">color</i>. All chars in <i class="arg">charstring</i> will be
+highlighted.</p></dd>
+<dt><a name="5"><b class="cmd">::ctext::addHighlightClassForRegexp</b> <i class="arg">pathName</i> <i class="arg">class</i> <i class="arg">color</i> <i class="arg">pattern</i></a></dt>
+<dd><p>Add a highlighting class <i class="arg">class</i> to the ctext widget <i class="arg">pathName</i>.
+The highlighting will be done with the color <i class="arg">color</i>. All text parts matching the regexp <i class="arg">pattern</i>
+will be highlighted.</p></dd>
+<dt><a name="6"><b class="cmd">::ctext::clearHighlightClasses</b> <i class="arg">pathName</i></a></dt>
+<dd><p>Remove all highlight classes from the widget <i class="arg">pathName</i>.</p></dd>
+<dt><a name="7"><b class="cmd">::ctext::getHighlightClasses</b> <i class="arg">pathName</i></a></dt>
+<dd><p>List all highlight classes for the widget <i class="arg">pathName</i>.</p></dd>
+<dt><a name="8"><b class="cmd">::ctext::deleteHighlightClass</b> <i class="arg">pathName</i> <i class="arg">class</i></a></dt>
+<dd><p>Delete the highlight class <i class="arg">class</i> from the widget <i class="arg">pathName</i></p></dd>
+<dt><a name="9"><b class="cmd">::ctext::enableComments</b> <i class="arg">enable</i></a></dt>
+<dd><p>Enable C comment highlighting. The <i class="arg">class</i> for c-style comments is <b class="const">_cComment</b>.
+The C comment highlighting is disabled by default.</p></dd>
+<dt><a name="10"><b class="cmd">::ctext::disableComments</b> <i class="arg">enable</i></a></dt>
+<dd><p>Disable C comment highlighting.</p></dd>
+</dl>
+</div>
+<div id="section4" class="doctools_section"><h2><a name="section4">WIDGET COMMANDS</a></h2>
+<p>Each ctext widget created with the above command supports the following
+commands and options in addition to the standard text widget commands and
+options.</p>
+<dl class="doctools_definitions">
+<dt><a name="11"><i class="arg">pathName</i> <b class="method">highlight</b> <i class="arg">startIndex</i> <i class="arg">endIndex</i></a></dt>
+<dd><p>Highlight the text between <i class="arg">startIndex</i> and <i class="arg">endIndex</i>.</p></dd>
+<dt><a name="12"><i class="arg">pathName</i> <b class="method">fastdelete</b> <i class="arg">index1</i> <span class="opt">?<i class="arg">index2</i>?</span></a></dt>
+<dd><p>Delete text range without updating the highlighting. Arguments
+are identical to the <i class="arg">pathName</i> <b class="method">delete</b> command inherited from
+the standard text widget.</p></dd>
+<dt><a name="13"><i class="arg">pathName</i> <b class="method">fastinsert</b></a></dt>
+<dd><p>Insert text without updating the highlighting. Arguments
+are identical to the <i class="arg">pathName</i> <b class="method">insert</b> command inherited from
+the standard text widget.</p></dd>
+<dt><a name="14"><i class="arg">pathName</i> <b class="method">copy</b></a></dt>
+<dd><p>Call <b class="cmd">tk_textCopy</b> for the ctext instance.</p></dd>
+<dt><a name="15"><i class="arg">pathName</i> <b class="method">cut</b></a></dt>
+<dd><p>Call <b class="cmd">tk_textCut</b> for the ctext instance.</p></dd>
+<dt><a name="16"><i class="arg">pathName</i> <b class="method">paste</b></a></dt>
+<dd><p>Call <b class="cmd">tk_textPaste</b> for the ctext instance.</p></dd>
+<dt><a name="17"><i class="arg">pathName</i> <b class="method">append</b></a></dt>
+<dd><p>Append the current selection to the clipboard.</p></dd>
+<dt><a name="18"><i class="arg">pathName</i> <b class="method">configure</b> <i class="arg">option</i> <i class="arg">value</i> <span class="opt">?...?</span></a></dt>
+<dd><p>Set the options for the ctext widget. Each option name must be followed
+the new value.</p></dd>
+</dl>
+</div>
+<div id="section5" class="doctools_section"><h2><a name="section5">WIDGET OPTIONS</a></h2>
+<dl class="doctools_tkoptions">
+<dt>Command-Line Switch:	<b class="option">-linemap</b><br>
+Database Name:	<b class="optdbname"></b><br>
+Database Class:	<b class="optdbclass"></b><br>
+</dt>
+<dd><p>Creates (-linemap 1) or deletes (-linemap 0) a line number list on the
+left of the widget. The default is to have a linemap displayed.</p></dd>
+<dt>Command-Line Switch:	<b class="option">-linemapfg</b><br>
+Database Name:	<b class="optdbname"></b><br>
+Database Class:	<b class="optdbclass"></b><br>
+</dt>
+<dd><p>Changes the foreground of the linemap.
+The default is the same color as the main text
+widget.</p></dd>
+<dt>Command-Line Switch:	<b class="option">-linemapbg</b><br>
+Database Name:	<b class="optdbname"></b><br>
+Database Class:	<b class="optdbclass"></b><br>
+</dt>
+<dd><p>Changes the background of the linemap.
+The default is the same color as the main text
+widget.</p></dd>
+<dt>Command-Line Switch:	<b class="option">-linemap_select_fg</b><br>
+Database Name:	<b class="optdbname"></b><br>
+Database Class:	<b class="optdbclass"></b><br>
+</dt>
+<dd><p>Changes the selected
+line foreground.  The default is black.</p></dd>
+<dt>Command-Line Switch:	<b class="option">-linemap_select_bg</b><br>
+Database Name:	<b class="optdbname"></b><br>
+Database Class:	<b class="optdbclass"></b><br>
+</dt>
+<dd><p>Changes the selected line
+background.  The default is yellow.</p></dd>
+<dt>Command-Line Switch:	<b class="option">-linemap_mark_command</b><br>
+Database Name:	<b class="optdbname"></b><br>
+Database Class:	<b class="optdbclass"></b><br>
+</dt>
+<dd><p>Calls a procedure or command
+with the <i class="arg">pathName</i> of the ctext window, the <i class="arg">type</i> which is
+either <b class="const">marked</b> or <b class="const">unmarked</b>, and finally the line
+number selected.
+The proc prototype is:</p>
+<pre class="doctools_example">
+proc linemark_cmd {win type line}.
+</pre>
+<p>See also
+ctext_test_interactive.tcl</p></dd>
+<dt>Command-Line Switch:	<b class="option">-highlight</b><br>
+Database Name:	<b class="optdbname"></b><br>
+Database Class:	<b class="optdbclass"></b><br>
+</dt>
+<dd><p>Takes a boolean value which defines
+whether or not to highlight text which is inserted
+or deleted.  The default is 1.</p></dd>
+<dt>Command-Line Switch:	<b class="option">-linemap_markable</b><br>
+Database Name:	<b class="optdbname"></b><br>
+Database Class:	<b class="optdbclass"></b><br>
+</dt>
+<dd><p>Takes a boolean value which
+specifies whether or not lines in the linemap
+are markable with the mouse.  The default is 1.</p></dd>
+</dl>
+</div>
+<div id="section6" class="doctools_section"><h2><a name="section6">EXAMPLE</a></h2>
+<pre class="doctools_example">
+	package require Tk
+	package require ctext
+	proc main {} {
+	pack [frame .f] -fill both -expand 1
+	pack [scrollbar .f.s -command {.f.t yview}] -side right -fill y
+	pack [ctext .f.t -bg black -fg white -insertbackground yellow  -yscrollcommand {.f.s set}] -fill both -expand 1
+	ctext::addHighlightClass .f.t widgets purple  [list ctext button label text frame toplevel  scrollbar checkbutton canvas listbox menu menubar menubutton  radiobutton scale entry message tk_chooseDir tk_getSaveFile  tk_getOpenFile tk_chooseColor tk_optionMenu]
+	ctext::addHighlightClass .f.t flags orange  [list -text -command -yscrollcommand  -xscrollcommand -background -foreground -fg -bg  -highlightbackground -y -x -highlightcolor -relief -width  -height -wrap -font -fill -side -outline -style -insertwidth  -textvariable -activebackground -activeforeground -insertbackground  -anchor -orient -troughcolor -nonewline -expand -type -message  -title -offset -in -after -yscroll -xscroll -forward -regexp -count  -exact -padx -ipadx -filetypes -all -from -to -label -value -variable  -regexp -backwards -forwards -bd -pady -ipady -state -row -column  -cursor -highlightcolors -linemap -menu -tearoff -displayof -cursor  -underline -tags -tag]
+	ctext::addHighlightClass .f.t stackControl red  {proc uplevel namespace while for foreach if else}
+	ctext::addHighlightClassWithOnlyCharStart .f.t vars mediumspringgreen &quot;\$&quot;
+	ctext::addHighlightClass .f.t variable_funcs gold {set global variable unset}
+	ctext::addHighlightClassForSpecialChars .f.t brackets green {[]{}}
+	ctext::addHighlightClassForRegexp .f.t paths lightblue {\.[a-zA-Z0-9\_\-]+}
+	ctext::addHighlightClassForRegexp .f.t comments khaki {#[^\n\r]*}
+	.f.t fastinsert end [info body main]
+	pack [frame .f1] -fill x
+	.f.t highlight 1.0 end
+	pack [button .f1.exit -text Exit -command exit] -side left
+	pack [entry .e] -side bottom -fill x
+	.e insert end &quot;ctext::deleteHighlightClass .f.t &quot;
+	bind .e &lt;Return&gt; {eval [.e get]}
+	}
+	main
+</pre>
+<p>Further examples are in the source package for ctext.</p>
+</div>
+<div id="section7" class="doctools_section"><h2><a name="section7">THANKS</a></h2>
+<p>Kevin Kenny, Neil Madden, Jeffrey Hobbs, Richard Suchenwirth,
+Johan Bengtsson, Mac Cody, G&uuml;nther, Andreas Sievers, and Michael Schlenker.</p>
+</div>
+<div id="section8" class="doctools_section"><h2><a name="section8">Bugs, Ideas, Feedback</a></h2>
+<p>This document, and the package it describes, will undoubtedly contain
+bugs and other problems.
+Please report such in the category <em>ctext</em> of the
+<a href="http://core.tcl.tk/tklib/reportlist">Tklib Trackers</a>.
+Please also report any ideas for enhancements you may have for either
+package and/or documentation.</p>
+</div>
+<div id="see-also" class="doctools_section"><h2><a name="see-also">See Also</a></h2>
+<p><a href="../../../../index.html#re_syntax">re_syntax</a>, <a href="../../../../index.html#text">text</a></p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../../../index.html#syntax_highlighting">syntax highlighting</a>, <a href="../../../../index.html#text">text</a>, <a href="../../../../index.html#widget">widget</a></p>
+</div>
+<div id="copyright" class="doctools_section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; George Peter Staplin &lt;GeorgePS@XMission.com&gt;</p>
+</div>
+</div></body></html>

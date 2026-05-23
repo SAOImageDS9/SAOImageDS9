@@ -1,0 +1,31 @@
+[comment {-*- tcl -*- doctools manpage}]
+[vset VERSION 0.1]
+[manpage_begin map::track::display n [vset VERSION]]
+[category {Map Display and Supporting Utilities}][keywords map]
+[keywords {track display, tabular}]
+[keywords {tabular, track display}]
+[moddesc   {Map display support}]
+[titledesc {Widget to display a single track definition}]
+[require Tcl 8.6-]
+[require Tk  8.6-]
+[require debug]
+[require debug::caller]
+[require map::slippy 0.8]
+[require scrollutil]
+[require snit]
+[require tablelist]
+[require map::track::display [opt [vset VERSION]]]
+[description]
+
+This package provides a widget to show the information of a single [term geo/track] definition.
+
+[section API]
+
+[list_begin definitions]
+[list_end]
+
+[section EXAMPLE]
+
+[vset CATEGORY map]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]

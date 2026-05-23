@@ -1,0 +1,206 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>canvas::highlight - Variations on a canvas</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'canvas_highlight.man' by tcllib/doctools with format 'html'
+   -->
+<!-- canvas::highlight.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">canvas::highlight(n) 0.1 tklib &quot;Variations on a canvas&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>canvas::highlight - Manage the highlighting of canvas items or item groups</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">API</a>
+<ul>
+<li class="doctools_subsection"><a href="#subsection1">Highlight callback</a></li>
+</ul>
+</li>
+<li class="doctools_section"><a href="#section3">Bugs, Ideas, Feedback</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_requirements">
+<li>package require <b class="pkgname">Tcl 8.5</b></li>
+<li>package require <b class="pkgname">Tk 8.5</b></li>
+<li>package require <b class="pkgname">canvas::highlight <span class="opt">?0.1?</span></b></li>
+</ul>
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">::canvas::highlight</b> <b class="method">on</b> <i class="arg">canvas</i> <i class="arg">tagOrId</i> <i class="arg">cmd</i></a></li>
+<li><a href="#2"><b class="cmd">::canvas::highlight</b> <b class="method">off</b> <i class="arg">canvas</i> <i class="arg">tagOrId</i></a></li>
+<li><a href="#3"><b class="cmd">{*}cmd</b> <b class="method">on</b> <i class="arg">canvas</i> <i class="arg">item</i></a></li>
+<li><a href="#4"><b class="cmd">{*}cmd</b> <b class="method">off</b> <i class="arg">canvas</i> <i class="arg">clientdata</i></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>This package provides utility commands for setting up and tearing down
+of highlights for canvas items or item groups, the latter identified
+by a tag.</p>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">API</a></h2>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">::canvas::highlight</b> <b class="method">on</b> <i class="arg">canvas</i> <i class="arg">tagOrId</i> <i class="arg">cmd</i></a></dt>
+<dd><p>This command sets up a general highlight, with the items of canvas
+<i class="arg">canvas</i> to highlight in this manner identified by <i class="arg">tagOrId</i>
+and the <i class="arg">cmd</i> prefix providing the implementation, i.e. the how to
+perform the highlight.</p>
+<p>The signature of the command prefix is described later, in
+section <span class="sectref"><a href="#subsection1">Highlight callback</a></span>.</p>
+<p>The result of the command is the empty string.</p>
+<p>Limitations:</p>
+<ol class="doctools_enumerated">
+<li><p>When a highlight is active no other highlight can be activated.
+       This means that nested highlights are not possible.</p></li>
+<li><p>The system may break if a highlight is removed from within its
+       highlight callback.</p></li>
+</ol></dd>
+<dt><a name="2"><b class="cmd">::canvas::highlight</b> <b class="method">off</b> <i class="arg">canvas</i> <i class="arg">tagOrId</i></a></dt>
+<dd><p>This command removes any highlight set on the items of canvas
+<i class="arg">canvas</i> identified by <i class="arg">tagOrId</i>.</p>
+<p>The result of the command is the empty string.</p></dd>
+</dl>
+<div id="subsection1" class="doctools_subsection"><h3><a name="subsection1">Highlight callback</a></h3>
+<p>The highlight callback is a command prefix invoked in the following
+two ways:</p>
+<dl class="doctools_definitions">
+<dt><a name="3"><b class="cmd">{*}cmd</b> <b class="method">on</b> <i class="arg">canvas</i> <i class="arg">item</i></a></dt>
+<dd><p>This form is invoked when the mouse has entered (one of) the item(s)
+the highlight was set up for. The callback now has to perform any
+reconfiguration necessary to highlight the item (group).</p>
+<p>The result of the command can be anything. It is stored by the
+system as client information and passed unchanged to the un-highlight
+callback for its use. In this manner the highlight callback is able to
+maintain custom state from highlighting to un-highlighting.</p>
+<p>Note that the callback does not have to maintain state, nor
+does it have to actually reconfigure the item (group). In the latter
+case the callback simply serves as easy enter/leave notification.</p></dd>
+<dt><a name="4"><b class="cmd">{*}cmd</b> <b class="method">off</b> <i class="arg">canvas</i> <i class="arg">clientdata</i></a></dt>
+<dd><p>This form is invoked when the mouse has left (one of) the item(s) of
+the currently active the highlight. The callback now has to perform
+any reconfiguration necessary to un-highlight the item (group).</p>
+<p>The result of the command must be a boolean value with the
+usual value to be <b class="const">true</b>. By returning <b class="const">false</b> instead the
+callback can veto the removal of the highlight.</p></dd>
+</dl>
+</div>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">Bugs, Ideas, Feedback</a></h2>
+<p>This document, and the package it describes, will undoubtedly contain
+bugs and other problems.
+Please report such in the category <em>canvas</em> of the
+<a href="http://core.tcl.tk/tklib/reportlist">Tklib Trackers</a>.
+Please also report any ideas for enhancements you may have for either
+package and/or documentation.</p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../../../index.html#canvas">canvas</a>, <a href="../../../../index.html#enter_callback">enter callback</a>, <a href="../../../../index.html#highlighting">highlighting</a>, <a href="../../../../index.html#leave_callback">leave callback</a></p>
+</div>
+</div></body></html>

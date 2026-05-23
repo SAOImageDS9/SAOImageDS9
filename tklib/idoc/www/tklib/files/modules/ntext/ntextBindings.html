@@ -1,0 +1,224 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ntextBindings - Alternative Bindings for the Text Widget</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'ntextBindings.man' by tcllib/doctools with format 'html'
+   -->
+<!-- ntextBindings.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">ntextBindings(n) 1.0 tklib &quot;Alternative Bindings for the Text Widget&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>ntextBindings - Alternative Bindings for the Text Widget</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">CONFIGURATION OPTIONS</a></li>
+<li class="doctools_section"><a href="#section3">INTERNALS</a></li>
+<li class="doctools_section"><a href="#section4">BUGS</a></li>
+<li class="doctools_section"><a href="#section5">EXAMPLE</a></li>
+<li class="doctools_section"><a href="#see-also">See Also</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_requirements">
+<li>package require <b class="pkgname">Tcl 8.5-</b></li>
+<li>package require <b class="pkgname">Tk 8.5-</b></li>
+<li>package require <b class="pkgname">ntext <span class="opt">?1.0?</span></b></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>The <b class="package"><a href="ntext.html">ntext</a></b> package provides a binding tag named <em>Ntext</em> for use by text widgets in place of the default <em>Text</em> binding tag.</p>
+<p>The <em>Text</em> binding tag provides around one hundred bindings to the text widget (the exact number is platform-dependent).  A few of these behave in a way that is different from most contemporary text-editing applications.  <em>Ntext</em> aims to provide more familiar behaviour.</p>
+<p>Features of the <em>Ntext</em> bindings that differ from the default <em>Text</em> bindings:</p>
+<ul class="doctools_itemized">
+<li><p>Clicking near the end of a (logical) line moves the cursor to the end of that line <em>(not the start of the next line)</em>.  If the widget is in <i class="arg">-wrap</i> <i class="arg">word</i> mode, the same rule applies to display lines.</p></li>
+<li><p>Double-clicking or dragging near the end of a (logical) line will highlight/select characters from the end of that line <em>(not the next line, or the region at the end of the line where there are no characters)</em>.  If the widget is in <i class="arg">-wrap</i> <i class="arg">word</i> mode, the same rule applies to display lines.</p></li>
+<li><p>On windowing systems other than macOS Aqua, the <em>Home</em> key implements &quot;Smart Home&quot; (successive keypresses move the cursor to the start of the display line, then to the first non-whitespace character at the start of the logical line, then toggles between the beginning and end of leading whitespace); the <em>End</em> key implements &quot;Smart End&quot; (which is similar to &quot;Smart Home&quot;).  On macOS Aqua, this functionality is provided by the operations &lt;Command-Left&gt; and &lt;Command-Right&gt;.</p></li>
+<li><p>When a selection exists, a &quot;Paste&quot; operation (e.g. &lt;Control-v&gt;) overwrites the selection (as most editors do), and does so on all platforms.</p></li>
+<li><p>On windowing systems other than macOS Aqua, the <em>Insert</em> key toggles between &quot;Insert&quot; and &quot;Overwrite&quot; modes for keyboard input.  <em>(In contrast, the Text binding tag uses</em> Insert <em>as a method to paste the &quot;primary selection&quot;, a task that can be accomplished instead by mouse middle-click.)</em></p></li>
+<li><p>The <em>Escape</em> key clears the selection.</p></li>
+<li><p>On the macOS Aqua windowing system, <em>Ntext</em> follows Aqua conventions for keyboard navigation.  Certain bindings related to vertical scrolling can be forced to behave in the same way as for the Windows and X11 windowing systems, by setting <b class="variable">::ntext::classicParagraphs</b> to <b class="const">1</b> (see Section <span class="sectref"><a href="#section2">CONFIGURATION OPTIONS</a></span>).</p></li>
+<li><p>On the macOS Aqua windowing system, <em>Ntext</em> follows Aqua conventions for placement of the insert mark when keyboard navigation cancels a selection.  This behavior can be switched off by setting <b class="variable">::ntext::classicSelection</b> to <b class="const">1</b> (see Section <span class="sectref"><a href="#section2">CONFIGURATION OPTIONS</a></span>).</p></li>
+<li><p>Selecting with &lt;Shift-Button1&gt; selects from the previous position of the insertion cursor. <em>(In the Text binding tag, the selection anchor may be the position of the previous mouse click.)</em></p></li>
+<li><p>&lt;Shift-Button1&gt; operations do not alter the selection anchor. <em>(In the Text binding tag, they do.)</em></p></li>
+<li><p>By default, the <em>Ntext</em> binding tag does not provide several of the Control-key bindings supplied by the <em>Text</em> binding tag.  Modern keyboards offer alternatives, such as cursor keys for navigation; modern applications often use the Control-key bindings for other purposes (e.g. &lt;Control-p&gt; for &quot;print&quot;).</p></li>
+</ul>
+<p>In the last three cases, the behavior of <em>Text</em> is often useful, so <em>Ntext</em> gives you the option of retaining it, by setting variables defined in the ::ntext namespace to 1 (instead of their default 0).  Explaining these features in more detail:</p>
+<ul class="doctools_itemized">
+<li><p>If the mouse is clicked at position A, then the keyboard is used to move the cursor to B, then shift is held down, and the mouse is clicked at C: the <em>Text</em> binding tag gives a selection from A to C; the <em>Ntext</em> gives a selection from B to C.  If you want <em>Ntext</em> to behave like <em>Text</em> in this respect, set <b class="variable">::ntext::classicMouseSelect</b> to 1.</p></li>
+<li><p>The <em>Text</em> binding tag allows successive &lt;Shift-Button-1&gt; events to change both ends of the selection, by moving the selection anchor to the end of the selection furthest from the mouse click.  Instead, the <em>Ntext</em> binding tag fixes the anchor, and multiple Shift-Button-1 events can only move the non-anchored end of the selection.  If you want <em>Ntext</em> to behave like <em>Text</em> in this respect, set <b class="variable">::ntext::classicAnchor</b> to 1.  In both <em>Text</em> and <em>Ntext</em>, keyboard navigation with the Shift key held down alters the selection and keeps the selection anchor fixed.</p></li>
+<li><p>The following &quot;extra&quot; <em>Text</em> bindings are switched off by default, but can be activated in <em>Ntext</em> by setting <b class="variable">::ntext::classicExtras</b> to 1: &lt;Control-a&gt;, &lt;Control-b&gt;, &lt;Control-d&gt;, &lt;Control-e&gt;, &lt;Control-f&gt;, &lt;Control-h&gt;, &lt;Control-i&gt;, &lt;Control-k&gt;, &lt;Control-n&gt;, &lt;Control-o&gt;, &lt;Control-p&gt;, &lt;Control-t&gt;, &lt;Control-space&gt;, &lt;Control-Shift-space&gt;.</p></li>
+</ul>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">CONFIGURATION OPTIONS</a></h2>
+<p><em>Ntext</em> provides alternatives to a number of behaviours of the classic <em>Text</em> binding tag.  Where there is an option, the <em>Ntext</em> behaviour is switched on by default, except for display-line indentation which is discussed on a separate page at <i class="term"><a href="ntextIndent.html">ntextIndent</a></i>.</p>
+<p>The behaviour of <em>Ntext</em> may be configured application-wide by setting the values of a number of namespace variables:</p>
+<p><b class="variable">::ntext::classicAnchor</b></p>
+<ul class="doctools_itemized">
+<li><p><b class="const">0</b> - (default value) selects <em>Ntext</em> behaviour, i.e. the anchor point is fixed</p></li>
+<li><p><b class="const">1</b> - selects classic <em>Text</em> behaviour, i.e. the anchor point is variable</p></li>
+</ul>
+<p><b class="variable">::ntext::classicExtras</b></p>
+<ul class="doctools_itemized">
+<li><p><b class="const">0</b> - (default value) selects <em>Ntext</em> behaviour, i.e. several &quot;extra&quot; <em>Text</em> bindings are de-activated</p></li>
+<li><p><b class="const">1</b> - selects classic <em>Text</em> behaviour, i.e. the &quot;extra&quot; <em>Text</em> bindings are activated</p></li>
+</ul>
+<p><b class="variable">::ntext::classicMouseSelect</b></p>
+<ul class="doctools_itemized">
+<li><p><b class="const">0</b> - (default value) selects <em>Ntext</em> behaviour, i.e. the anchor point for mouse selection operations is moved by keyboard navigation</p></li>
+<li><p><b class="const">1</b> - selects classic <em>Text</em> behaviour</p></li>
+</ul>
+<p><b class="variable">::ntext::classicParagraphs</b></p>
+<ul class="doctools_itemized">
+<li><p><b class="const">0</b> - (default value) on macOS Aqua, certain keyboard bindings are made to behave in the same way as the Mac application TextEdit.  The bindings involve vertical scrolling of the screen and are &lt;?Shift-?Option-(Up|Down)&gt;.</p></li>
+<li><p><b class="const">1</b> - on macOS Aqua, certain keyboard bindings are made to behave in the same way as for the Windows and X11 windowing systems and the classic <em>Text</em>, ignoring the conventions of Aqua.  The bindings involve vertical scrolling of the screen and are &lt;?Shift-?Option-(Up|Down)&gt;.</p></li>
+</ul>
+<p><b class="variable">::ntext::classicSelection</b></p>
+<ul class="doctools_itemized">
+<li><p><b class="const">0</b> - (default value on macOS Aqua) selects Mac-like behaviour, i.e. when a navigation keystroke cancels a selection, the insert mark first moves to the end of the selection determined by the navigation direction of the keystroke, and then the keystroke is applied.</p></li>
+<li><p><b class="const">1</b> - (default value except on macOS Aqua) selects PC-like behaviour (the same as classic <em>Text</em>), i.e. when a navigation keystroke cancels a selection, the insert mark is not moved before the keystroke is applied.</p></li>
+</ul>
+<p><b class="variable">::ntext::overwrite</b></p>
+<ul class="doctools_itemized">
+<li><p><b class="const">0</b> - (initial value) text typed at the keyboard is inserted into the widget</p></li>
+<li><p><b class="const">1</b> - text typed at the keyboard overwrites text already in the widget</p></li>
+<li><p>The value is toggled by the <em>Insert</em> key.</p></li>
+</ul>
+<p><b class="variable">::ntext::useBlockCursor</b></p>
+<ul class="doctools_itemized">
+<li><p><b class="const">0</b> - the block cursor will not be used.  When the widget is in <em>overwrite</em> mode (see <b class="const">::ntext::overwrite</b>), the ordinary cursor will change color instead.</p></li>
+<li><p><b class="const">1</b> - the block cursor will be used when the widget is in <em>overwrite</em> mode (see <b class="const">::ntext::overwrite</b>).</p></li>
+<li><p>The default value depends on the version of <b class="const">Tk</b>.  In versions of <b class="const">Tk</b> earlier than <b class="const">8.5.12</b>, the sizing of the block cursor had a bug, and <b class="variable">::ntext::useBlockCursor</b> defaults to <b class="const">0</b>.  From <b class="const">8.5.12</b> onwards the bug is fixed, and <b class="variable">::ntext::useBlockCursor</b> defaults to <b class="const">1</b>.</p></li>
+</ul>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">INTERNALS</a></h2>
+<p>In order to remain independent of the version of <b class="package"><a href="../../../../index.html#tk">Tk</a></b> (8.5 or 8.6), <b class="package"><a href="ntext.html">ntext</a></b> defines its own virtual events.  These new virtual events are used only in the <em>Ntext</em> binding tag, and therefore do not interfere with the real or virtual events used in other code.</p>
+<p>These events include &lt;&lt;NtextCut&gt;&gt;, &lt;&lt;NtextCopy&gt;&gt;, &lt;&lt;NtextPaste&gt;&gt; which are used in place of &lt;&lt;Cut&gt;&gt;, &lt;&lt;Copy&gt;&gt;, &lt;&lt;Paste&gt;&gt; respectively.</p>
+<p>The definition of the virtual event &lt;&lt;NtextCut&gt;&gt; (etc) is similar to that of &lt;&lt;Cut&gt;&gt; (etc) in <b class="package"><a href="../../../../index.html#tk">Tk</a></b> 8.6.</p>
+</div>
+<div id="section4" class="doctools_section"><h2><a name="section4">BUGS</a></h2>
+<p>This version of <b class="package"><a href="ntext.html">ntext</a></b> is intended to be compatible with all releases of <b class="package"><a href="../../../../index.html#tk">Tk</a></b> 8.5, 8.6, and 8.7, and with the branches <em>core-8-5-branch</em>, <em>core-8-6-branch</em>, and <em>trunk</em> in the source code repository for <b class="package"><a href="../../../../index.html#tk">Tk</a></b>.  Any incompatibility with any of these versions, for any <b class="package"><a href="../../../../index.html#tk">Tk</a></b> windowing system, should be reported as a bug. Please report such in the category <em>ntext</em> of the <a href="https://core.tcl-lang.org/tklib/reportlist">Tklib Trackers</a>.</p>
+</div>
+<div id="section5" class="doctools_section"><h2><a name="section5">EXAMPLE</a></h2>
+<p>To use <em>Ntext</em> but keep classic <em>Text</em> 's variable-anchor feature:</p>
+<pre class="doctools_example">
+package require ntext
+text .t
+set ::ntext::classicAnchor 1
+bindtags .t {.t Ntext . all}
+</pre>
+</div>
+<div id="see-also" class="doctools_section"><h2><a name="see-also">See Also</a></h2>
+<p><a href="../../../../index.html#bindtags">bindtags</a>, <a href="ntext.html">ntext</a>, <a href="ntextIndent.html">ntextIndent</a>, <a href="../../../../index.html#text">text</a></p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../../../index.html#bindtags">bindtags</a>, <a href="../../../../index.html#text">text</a></p>
+</div>
+</div></body></html>

@@ -1,0 +1,30 @@
+[comment {-*- tcl -*- doctools manpage}]
+[vset VERSION 0.1]
+[manpage_begin map::track::store::fs n [vset VERSION]]
+[category {Map Display and Supporting Utilities}][keywords map]
+[keywords {filesystem store, geo/track}]
+[keywords {geo/track, filesystem store}]
+[keywords {store, geo/track, filesystem}]
+[moddesc   {Map display support}]
+[titledesc {Filesystem-based store of geo/track definitions}]
+[require Tcl 8.6-]
+[require debug]
+[require debug::caller]
+[require map::slippy 0.8]
+[require snit]
+[require map::track::store::fs [opt [vset VERSION]]]
+[description]
+
+This package provides a store loading [term geo/track] definitions from a directory in the
+filesystem.
+
+[section API]
+
+[list_begin definitions]
+[list_end]
+
+[section EXAMPLE]
+
+[vset CATEGORY map]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]

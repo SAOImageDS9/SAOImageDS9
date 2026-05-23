@@ -1,0 +1,40 @@
+[comment {-*- tcl -*- doctools manpage}]
+[vset VERSION 0.1]
+[manpage_begin map::display n [vset VERSION]]
+[category {Map Display and Supporting Utilities}][keywords map]
+[keywords {map display} {display, map}]
+[moddesc   {Map display support}]
+[titledesc {Map Display Widget}]
+[require Tcl 8.6-]
+[require Tk  8.6-]
+[require canvas::sqmap]
+[require canvas::zoom]
+[require crosshair]
+[require debug]
+[require debug::caller]
+[require snit]
+[require widget::scrolledwindow]
+[require map::display [opt [vset VERSION]]]
+[description]
+
+This package provides a map display widget with basic behaviour (Drag, Center, Zoom +/-).
+
+The map tiles are fetched from a configurable provider like [package map::provider::osm]
+or anything API compatible.
+
+The widget is extensible with attachable engines providing additional behaviours, like the
+display of geo/* resources, and/or editing of geo/* resources.
+
+[section API]
+
+[list_begin definitions]
+[list_end]
+
+[section EXAMPLE]
+
+[vset CATEGORY map]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]
+
+
+

@@ -1,0 +1,624 @@
+'\"
+'\" Generated from file 'widgetPlus\&.man' by tcllib/doctools with format 'nroff'
+'\"
+.TH "widgetPlus" n 1\&.0 tklib "Enhanced Entry, Spinbox, and Combobox Widgets with Undo/Redo and other useful features"
+.\" The -*- nroff -*- definitions below are for supplemental macros used
+.\" in Tcl/Tk manual entries.
+.\"
+.\" .AP type name in/out ?indent?
+.\"	Start paragraph describing an argument to a library procedure.
+.\"	type is type of argument (int, etc.), in/out is either "in", "out",
+.\"	or "in/out" to describe whether procedure reads or modifies arg,
+.\"	and indent is equivalent to second arg of .IP (shouldn't ever be
+.\"	needed;  use .AS below instead)
+.\"
+.\" .AS ?type? ?name?
+.\"	Give maximum sizes of arguments for setting tab stops.  Type and
+.\"	name are examples of largest possible arguments that will be passed
+.\"	to .AP later.  If args are omitted, default tab stops are used.
+.\"
+.\" .BS
+.\"	Start box enclosure.  From here until next .BE, everything will be
+.\"	enclosed in one large box.
+.\"
+.\" .BE
+.\"	End of box enclosure.
+.\"
+.\" .CS
+.\"	Begin code excerpt.
+.\"
+.\" .CE
+.\"	End code excerpt.
+.\"
+.\" .VS ?version? ?br?
+.\"	Begin vertical sidebar, for use in marking newly-changed parts
+.\"	of man pages.  The first argument is ignored and used for recording
+.\"	the version when the .VS was added, so that the sidebars can be
+.\"	found and removed when they reach a certain age.  If another argument
+.\"	is present, then a line break is forced before starting the sidebar.
+.\"
+.\" .VE
+.\"	End of vertical sidebar.
+.\"
+.\" .DS
+.\"	Begin an indented unfilled display.
+.\"
+.\" .DE
+.\"	End of indented unfilled display.
+.\"
+.\" .SO ?manpage?
+.\"	Start of list of standard options for a Tk widget. The manpage
+.\"	argument defines where to look up the standard options; if
+.\"	omitted, defaults to "options". The options follow on successive
+.\"	lines, in three columns separated by tabs.
+.\"
+.\" .SE
+.\"	End of list of standard options for a Tk widget.
+.\"
+.\" .OP cmdName dbName dbClass
+.\"	Start of description of a specific option.  cmdName gives the
+.\"	option's name as specified in the class command, dbName gives
+.\"	the option's name in the option database, and dbClass gives
+.\"	the option's class in the option database.
+.\"
+.\" .UL arg1 arg2
+.\"	Print arg1 underlined, then print arg2 normally.
+.\"
+.\" .QW arg1 ?arg2?
+.\"	Print arg1 in quotes, then arg2 normally (for trailing punctuation).
+.\"
+.\" .PQ arg1 ?arg2?
+.\"	Print an open parenthesis, arg1 in quotes, then arg2 normally
+.\"	(for trailing punctuation) and then a closing parenthesis.
+.\"
+.\"	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+.if t .wh -1.3i ^B
+.nr ^l \n(.l
+.ad b
+.\"	# Start an argument description
+.de AP
+.ie !"\\$4"" .TP \\$4
+.el \{\
+.   ie !"\\$2"" .TP \\n()Cu
+.   el          .TP 15
+.\}
+.ta \\n()Au \\n()Bu
+.ie !"\\$3"" \{\
+\&\\$1 \\fI\\$2\\fP (\\$3)
+.\".b
+.\}
+.el \{\
+.br
+.ie !"\\$2"" \{\
+\&\\$1	\\fI\\$2\\fP
+.\}
+.el \{\
+\&\\fI\\$1\\fP
+.\}
+.\}
+..
+.\"	# define tabbing values for .AP
+.de AS
+.nr )A 10n
+.if !"\\$1"" .nr )A \\w'\\$1'u+3n
+.nr )B \\n()Au+15n
+.\"
+.if !"\\$2"" .nr )B \\w'\\$2'u+\\n()Au+3n
+.nr )C \\n()Bu+\\w'(in/out)'u+2n
+..
+.AS Tcl_Interp Tcl_CreateInterp in/out
+.\"	# BS - start boxed text
+.\"	# ^y = starting y location
+.\"	# ^b = 1
+.de BS
+.br
+.mk ^y
+.nr ^b 1u
+.if n .nf
+.if n .ti 0
+.if n \l'\\n(.lu\(ul'
+.if n .fi
+..
+.\"	# BE - end boxed text (draw box now)
+.de BE
+.nf
+.ti 0
+.mk ^t
+.ie n \l'\\n(^lu\(ul'
+.el \{\
+.\"	Draw four-sided box normally, but don't draw top of
+.\"	box if the box started on an earlier page.
+.ie !\\n(^b-1 \{\
+\h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.el \}\
+\h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.\}
+.fi
+.br
+.nr ^b 0
+..
+.\"	# VS - start vertical sidebar
+.\"	# ^Y = starting y location
+.\"	# ^v = 1 (for troff;  for nroff this doesn't matter)
+.de VS
+.if !"\\$2"" .br
+.mk ^Y
+.ie n 'mc \s12\(br\s0
+.el .nr ^v 1u
+..
+.\"	# VE - end of vertical sidebar
+.de VE
+.ie n 'mc
+.el \{\
+.ev 2
+.nf
+.ti 0
+.mk ^t
+\h'|\\n(^lu+3n'\L'|\\n(^Yu-1v\(bv'\v'\\n(^tu+1v-\\n(^Yu'\h'-|\\n(^lu+3n'
+.sp -1
+.fi
+.ev
+.\}
+.nr ^v 0
+..
+.\"	# Special macro to handle page bottom:  finish off current
+.\"	# box/sidebar if in box/sidebar mode, then invoked standard
+.\"	# page bottom macro.
+.de ^B
+.ev 2
+'ti 0
+'nf
+.mk ^t
+.if \\n(^b \{\
+.\"	Draw three-sided box if this is the box's first page,
+.\"	draw two sides but no top otherwise.
+.ie !\\n(^b-1 \h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.el \h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.\}
+.if \\n(^v \{\
+.nr ^x \\n(^tu+1v-\\n(^Yu
+\kx\h'-\\nxu'\h'|\\n(^lu+3n'\ky\L'-\\n(^xu'\v'\\n(^xu'\h'|0u'\c
+.\}
+.bp
+'fi
+.ev
+.if \\n(^b \{\
+.mk ^y
+.nr ^b 2
+.\}
+.if \\n(^v \{\
+.mk ^Y
+.\}
+..
+.\"	# DS - begin display
+.de DS
+.RS
+.nf
+.sp
+..
+.\"	# DE - end display
+.de DE
+.fi
+.RE
+.sp
+..
+.\"	# SO - start of list of standard options
+.de SO
+'ie '\\$1'' .ds So \\fBoptions\\fR
+'el .ds So \\fB\\$1\\fR
+.SH "STANDARD OPTIONS"
+.LP
+.nf
+.ta 5.5c 11c
+.ft B
+..
+.\"	# SE - end of list of standard options
+.de SE
+.fi
+.ft R
+.LP
+See the \\*(So manual entry for details on the standard options.
+..
+.\"	# OP - start of full description for a single option
+.de OP
+.LP
+.nf
+.ta 4c
+Command-Line Name:	\\fB\\$1\\fR
+Database Name:	\\fB\\$2\\fR
+Database Class:	\\fB\\$3\\fR
+.fi
+.IP
+..
+.\"	# CS - begin code excerpt
+.de CS
+.RS
+.nf
+.ta .25i .5i .75i 1i
+..
+.\"	# CE - end code excerpt
+.de CE
+.fi
+.RE
+..
+.\"	# UL - underline word
+.de UL
+\\$1\l'|0\(ul'\\$2
+..
+.\"	# QW - apply quotation marks to word
+.de QW
+.ie '\\*(lq'"' ``\\$1''\\$2
+.\"" fix emacs highlighting
+.el \\*(lq\\$1\\*(rq\\$2
+..
+.\"	# PQ - apply parens and quotation marks to word
+.de PQ
+.ie '\\*(lq'"' (``\\$1''\\$2)\\$3
+.\"" fix emacs highlighting
+.el (\\*(lq\\$1\\*(rq\\$2)\\$3
+..
+.\"	# QR - quoted range
+.de QR
+.ie '\\*(lq'"' ``\\$1''\\-``\\$2''\\$3
+.\"" fix emacs highlighting
+.el \\*(lq\\$1\\*(rq\\-\\*(lq\\$2\\*(rq\\$3
+..
+.\"	# MT - "empty" string
+.de MT
+.QW ""
+..
+.BS
+.SH NAME
+widgetPlus \- Enhanced Entry, Spinbox, and Combobox Widgets with Undo/Redo and other useful features
+.SH SYNOPSIS
+package require \fBTcl 8\&.5\fR
+.sp
+package require \fBTk 8\&.5\fR
+.sp
+package require \fBsnit\fR
+.sp
+package require \fBwidgetPlus ?1\&.0?\fR
+.sp
+\fBwidgetPlus::entryPlus\fR ?\fIcreate\fR? \fIpathName\fR
+.sp
+\fBwidgetPlus::spinboxPlus\fR ?\fIcreate\fR? \fIpathName\fR
+.sp
+\fBwidgetPlus::ttkEntryPlus\fR ?\fIcreate\fR? \fIpathName\fR
+.sp
+\fBwidgetPlus::ttkSpinboxPlus\fR ?\fIcreate\fR? \fIpathName\fR
+.sp
+\fBwidgetPlus::ttkComboboxPlus\fR ?\fIcreate\fR? \fIpathName\fR
+.sp
+\fBwidgetPlus::EnableBWidget\fR
+.sp
+\fIpathName\fR \fBedit\fR ?\fIarg arg \&.\&.\&.\fR?
+.sp
+\fIpathName\fR \fBedit canredo\fR
+.sp
+\fIpathName\fR \fBedit canundo\fR
+.sp
+\fIpathName\fR \fBedit modified\fR ?\fIboolean\fR?
+.sp
+\fIpathName\fR \fBedit redo\fR
+.sp
+\fIpathName\fR \fBedit reset\fR
+.sp
+\fIpathName\fR \fBedit separator\fR
+.sp
+\fIpathName\fR \fBedit undo\fR
+.sp
+.BE
+.SH DESCRIPTION
+The \fBwidgetPlus\fR package adds new features to the widgets \fB\fBentry\fR\fR, \fB\fBspinbox\fR\fR, \fB\fBttk::entry\fR\fR, \fB\fBttk::spinbox\fR\fR, and \fB\fBttk::combobox\fR\fR\&.
+.PP
+The new features are Undo and Redo operations, a \fB<<Selection>>\fR event, and for the \fBTk\fR (unthemed) widgets an \fB-inactiveselectbackground\fR option, and some minor fixes to bindings\&.  The new facilities closely follow those of the \fB\fBtext\fR\fR widget\&.
+.PP
+The revised \fB\fBentry\fR\fR, \fB\fBspinbox\fR\fR, \fB\fBttk::entry\fR\fR, \fB\fBttk::spinbox\fR\fR, and \fB\fBttk::combobox\fR\fR widgets are created by the commands \fBwidgetPlus::entryPlus\fR, \fBwidgetPlus::spinboxPlus\fR, \fBwidgetPlus::ttkEntryPlus\fR, \fBwidgetPlus::ttkSpinboxPlus\fR, and \fBwidgetPlus::ttkComboboxPlus\fR respectively\&.
+.PP
+For example, the \fBwidgetPlus::entryPlus\fR widget is implemented as a \fISnit\fR \fBsnit::widgetadaptor\fR that wraps a \fBTk\fR \fB\fBentry\fR\fR widget\&.  Its \fBwinfo class\fR is \fBEntry\fR, and it uses a binding tag \fBEntryPlus\fR that replaces the \fBEntry\fR binding tag\&.  The other widgets are implemented in a similar way\&.
+.PP
+The package uses the namespace \fB::widgetPlus\fR, which exports (only) the five commands defined below that begin with a lower-case letter (\fBEnableBWidget\fR is not exported)\&.  These commands can be imported into the global namespace, and for simplicity, descriptive text in this manual will henceforth omit the namespace qualifier\&.
+.CS
+
+
+namespace import ::widgetPlus::*
+
+.CE
+.SH "WIDGET OPTIONS"
+In addition to the usual options of the \fB\fBentry\fR\fR, \fB\fBspinbox\fR\fR, \fB\fBttk::entry\fR\fR, \fB\fBttk::spinbox\fR\fR, and \fB\fBttk::combobox\fR\fR widgets, the wrappers \fB\fBentryPlus\fR\fR, \fB\fBspinboxPlus\fR\fR, \fB\fBttkEntryPlus\fR\fR, \fB\fBttkSpinboxPlus\fR\fR, and \fB\fBttkComboboxPlus\fR\fR provide the options below\&.
+.LP
+.nf
+.ta 6c
+Command-Line Switch:	\fB\fB-inactiveselectbackground\fR\fR
+Database Name:	\fBinactiveSelectBackground\fR
+Database Class:	\fBForeground\fR
+
+.fi
+.IP
+Specifies the color to use for the selection when the window does not have the input \fBfocus\fR\&. If empty, \fB{}\fR, then no selection is shown when the window does not have the \fBfocus\fR\&.  The \fB-inactiveselectbackground\fR option has no effect on the \fBTtk\fR (themed) widgets \fB\fBttkEntryPlus\fR\fR, \fB\fBttkSpinboxPlus\fR\fR, and \fB\fBttkComboboxPlus\fR\fR\&.
+.LP
+.nf
+.ta 6c
+Command-Line Switch:	\fB\fB-maxundo\fR\fR
+Database Name:	\fBmaxUndo\fR
+Database Class:	\fBMaxUndo\fR
+
+.fi
+.IP
+Specifies the maximum number of compound undo actions on the \fIundo stack\fR\&. A zero or a negative value imply an unlimited \fIundo stack\fR\&.
+.LP
+.nf
+.ta 6c
+Command-Line Switch:	\fB\fB-undo\fR\fR
+Database Name:	\fBundo\fR
+Database Class:	\fBUndo\fR
+
+.fi
+.IP
+Specifies a \fIboolean\fR that says whether the undo mechanism is active or not\&.
+.PP
+.SH COMMANDS
+.TP
+\fBwidgetPlus::entryPlus\fR ?\fIcreate\fR? \fIpathName\fR
+Create an \fB\fBentryPlus\fR\fR widget; or convert an existing \fBentry\fR widget into an \fB\fBentryPlus\fR\fR\&.
+.TP
+\fBwidgetPlus::spinboxPlus\fR ?\fIcreate\fR? \fIpathName\fR
+Create a \fB\fBspinboxPlus\fR\fR widget; or convert an existing \fBspinbox\fR widget into a \fB\fBspinboxPlus\fR\fR\&.
+.TP
+\fBwidgetPlus::ttkEntryPlus\fR ?\fIcreate\fR? \fIpathName\fR
+Create a \fB\fBttkEntryPlus\fR\fR widget; or convert an existing \fBttk::entry\fR widget into a \fB\fBttkEntryPlus\fR\fR\&.
+.TP
+\fBwidgetPlus::ttkSpinboxPlus\fR ?\fIcreate\fR? \fIpathName\fR
+Create a \fB\fBttkSpinboxPlus\fR\fR widget; or convert an existing \fBttk::spinbox\fR widget into a \fB\fBttkSpinboxPlus\fR\fR\&.
+.TP
+\fBwidgetPlus::ttkComboboxPlus\fR ?\fIcreate\fR? \fIpathName\fR
+Create a \fB\fBttkComboboxPlus\fR\fR widget; or convert an existing \fBttk::combobox\fR widget into a \fB\fBttkComboboxPlus\fR\fR\&.
+.TP
+\fBwidgetPlus::EnableBWidget\fR
+Enable \fBwidgetPlus\fR to modify \fBBWidget\fR \fB\fBEntry\fR\fR widgets and their compounds (such as the \fBBWidget\fR \fB\fBComboBox\fR\fR)\&.  The command creates a bindtag \fBBwEntryPlus\fR to replace the default bindtag \fBBwEntry\fR\&.  This operation is not performed when the package is loaded because it requires \fBBWidget\fR to be loaded first\&.  This command is not exported from namespace \fB::widgetPlus\fR\&.
+.PP
+.SH "WIDGET COMMANDS"
+In addition to the usual commands of the \fB\fBentry\fR\fR, \fB\fBspinbox\fR\fR, \fB\fBttk::entry\fR\fR, \fB\fBttk::spinbox\fR\fR, and \fB\fBttk::combobox\fR\fR widgets, the wrappers \fB\fBentryPlus\fR\fR, \fB\fBttkEntryPlus\fR\fR, \fB\fBspinboxPlus\fR\fR, \fB\fBttkSpinboxPlus\fR\fR, and \fB\fBttkComboboxPlus\fR\fR provide:
+.TP
+\fIpathName\fR \fBedit\fR ?\fIarg arg \&.\&.\&.\fR?
+This command controls the undo mechanism and the \fImodified flag\fR\&. The exact behavior of the command depends on the option argument that follows the edit argument\&. The following forms of the command are currently supported:
+.TP
+\fIpathName\fR \fBedit canredo\fR
+Returns a \fIboolean\fR \fBtrue\fR if redo is possible, i\&.e\&. when the \fIredo stack\fR is not empty\&. Otherwise returns \fBfalse\fR\&.
+.TP
+\fIpathName\fR \fBedit canundo\fR
+Returns a \fIboolean\fR \fBtrue\fR if undo is possible, i\&.e\&. when the \fIundo stack\fR is not empty\&. Otherwise returns \fBfalse\fR\&.
+.TP
+\fIpathName\fR \fBedit modified\fR ?\fIboolean\fR?
+If \fIboolean\fR is not specified, returns the \fImodified flag\fR of the widget\&. The \fBinsert\fR, \fBdelete\fR, \fBedit undo\fR and \fBedit redo\fR commands, or (by using this command) the user, can set or clear the \fImodified flag\fR\&. If \fIboolean\fR is specified, sets the \fImodified flag\fR of the widget to \fIboolean\fR\&.
+.TP
+\fIpathName\fR \fBedit redo\fR
+When the \fB-undo\fR option is \fBtrue\fR, reapplies the last undone edits provided no other edits were done since then\&. Generates an error when the \fIredo stack\fR is empty\&. Does nothing when the \fB-undo\fR option is \fBfalse\fR\&.
+.TP
+\fIpathName\fR \fBedit reset\fR
+Clears the \fIundo stack\fR and \fIredo stack\fR\&.
+.TP
+\fIpathName\fR \fBedit separator\fR
+Included for completeness, but has no effect\&.
+.sp
+(N\&.B\&. An implicit separator is added to the \fIundo stack\fR for each call to a widget command (e\&.g\&. \fBinsert\fR or \fBdelete\fR) that changes the widget contents\&.  These therefore separate the addition or removal of individual characters by typing, except that \fIcut\fR or \fIpaste\fR operations are discrete\&.)
+.TP
+\fIpathName\fR \fBedit undo\fR
+Undoes the last edit action when the \fB-undo\fR option is \fBtrue\fR\&. An edit action is defined as a single \fBinsert\fR or \fBdelete\fR command that is recorded on the \fIundo stack\fR\&. Generates an error when the \fIundo stack\fR is empty\&. Does nothing when the \fB-undo\fR option is \fBfalse\fR\&.
+.PP
+.SH BINDINGS
+.SS "CLASS BINDINGS"
+The class binding tag for different widgets has these default values:
+.IP \(bu
+\fB\fBentry\fR\fR           uses \fBEntry\fR
+.IP \(bu
+\fB\fBspinbox\fR\fR         uses \fBSpinbox\fR
+.IP \(bu
+\fB\fBttk::entry\fR\fR      uses \fBTEntry\fR
+.IP \(bu
+\fB\fBttk::spinbox\fR\fR    uses \fBTSpinbox\fR
+.IP \(bu
+\fB\fBttk::combobox\fR\fR   uses \fBTCombobox\fR
+.IP \(bu
+\fB\fBentryPlus\fR\fR       uses \fBEntryPlus\fR
+.IP \(bu
+\fB\fBspinboxPlus\fR\fR     uses \fBSpinboxPlus\fR
+.IP \(bu
+\fB\fBttkEntryPlus\fR\fR    uses \fBTEntryPlus\fR
+.IP \(bu
+\fB\fBttkSpinboxPlus\fR\fR  uses \fBTSpinboxPlus\fR
+.IP \(bu
+\fB\fBttkComboboxPlus\fR\fR uses \fBTComboboxPlus\fR
+.PP
+.SS "UNDO AND REDO"
+The \fB<<Undo>>\fR and \fB<<Redo>>\fR virtual events are mapped to these keyboard events:
+.IP \(bu
+On X11 systems (Linux®, BSD®, Solaris®, etc):
+.RS
+.IP \(bu
+\fB<<Undo>>\fR is mapped to \fB<Control-z>\fR
+.RE
+.RS
+.IP \(bu
+\fB<<Redo>>\fR is mapped to \fB<Control-Shift-z>\fR
+.RE
+.IP \(bu
+On Windows® systems:
+.RS
+.IP \(bu
+\fB<<Undo>>\fR is mapped to \fB<Control-z>\fR
+.RE
+.RS
+.IP \(bu
+\fB<<Redo>>\fR is mapped to \fB<Control-y>\fR
+.RE
+.IP \(bu
+On Aqua® systems (i\&.e\&. Apple® macOS® or OS X®):
+.RS
+.IP \(bu
+\fB<<Undo>>\fR is mapped to \fB<Command-z>\fR
+.RE
+.RS
+.IP \(bu
+\fB<<Redo>>\fR is mapped to \fB<Command-Shift-z>\fR
+.RE
+.PP
+.SS ENTRYPLUS
+The \fBEntryPlus\fR bindings are based on those of the \fBEntry\fR bindtag, with these changes:
+.IP \(bu
+New bindings to \fB<<Undo>>\fR and \fB<<Redo>>\fR\&.
+.IP \(bu
+An adjustment to the \fB<<Paste>>\fR binding, so that it behaves the same way on X11 as on other windowing systems (i\&.e\&. it deletes the existing selection, if any exists)\&.
+.IP \(bu
+The removal of the antiquated \fB<Insert>\fR binding\&.
+.IP \(bu
+New bindings to \fB<FocusIn>\fR and \fB<FocusOut>\fR, to facilitate the implementation of the \fB-inactiveselectbackground\fR option\&.
+.PP
+.SS SPINBOXPLUS
+The \fBSpinboxPlus\fR bindings are based on those of the \fBSpinbox\fR bindtag, with the same changes as are made when converting \fBEntry\fR to \fBEntryPlus\fR\&.
+.SS TENTRYPLUS
+The \fBTEntryPlus\fR bindings are based on those of the \fBTEntry\fR bindtag, with these changes:
+.IP \(bu
+New bindings to \fB<<Undo>>\fR and \fB<<Redo>>\fR\&.
+.PP
+.SS TSPINBOXPLUS
+The \fBTSpinboxPlus\fR bindings are based on those of the \fBTSpinbox\fR bindtag, with these changes:
+.IP \(bu
+New bindings to \fB<<Undo>>\fR and \fB<<Redo>>\fR\&.
+.PP
+.SS TCOMBOBOXPLUS
+The \fBTComboboxPlus\fR bindings are based on those of the \fBTCombobox\fR bindtag, with these changes:
+.IP \(bu
+New bindings to \fB<<Undo>>\fR and \fB<<Redo>>\fR\&.
+.PP
+.SH "VIRTUAL EVENT <<SELECTION>>"
+Each \fBwidgetPlus\fR widget generates a virtual event \fB<<Selection>>\fR whenever the value of its selection changes\&.  This allows other \fBTcl\fR code, for example the package \fBpersistentSelection\fR, to monitor the selection in these widgets\&.
+.SH "USE WITH MEGAWIDGETS"
+When an \fB\fBentry\fR\fR, \fB\fBspinbox\fR\fR, \fB\fBttk::entry\fR\fR, \fB\fBttk::spinbox\fR\fR, or \fB\fBttk::combobox\fR\fR is a component of a megawidget, it is often possible to apply \fBwidgetPlus\fR to that component without modifying the megawidget code\&.
+.SS "COMBOBOX (BY BRYAN OAKLEY)"
+A \fB\fBcombobox\fR\fR with path \fB$w\fR includes an \fB\fBentry\fR\fR widget \fB$w\&.entry\fR, which uses the \fBEntry\fR binding tag\&.  Thus \fBwidgetPlus\fR can be applied to the \fB\fBcombobox\fR\fR after creation, using the command (see \fBEXAMPLES\fR)
+.CS
+
+
+entryPlus $w\&.entry -undo 1 -maxundo 0
+
+.CE
+.SS "COMBOBOX (BWIDGET)"
+A \fBBWidget\fR \fBComboBox\fR with path \fB$w\fR includes an \fB\fBentry\fR\fR widget \fB$w\&.e\fR, which uses the \fBBwEntry\fR binding tag in place of the default tag \fBEntry\fR\&.
+.PP
+Package \fBwidgetPlus\fR provides a replacement bindtag \fBBwEntryPlus\fR, but this is not computed when the package is loaded because it requires \fBBWidget\fR to be loaded first\&.  The command \fB::widgetPlus::EnableBWidget\fR must be called to provide \fBBwEntryPlus\fR, and then the \fBBWidget\fR \fBComboBox\fR can be modified (see \fBEXAMPLES\fR)
+.CS
+
+
+::widgetPlus::EnableBWidget
+entryPlus $w\&.e -undo 1 -maxundo 0
+
+.CE
+.SH "TO DO"
+.IP \(bu
+Undo and Redo do not sync the value of the \fImodified flag\fR - they always set the value to \fIboolean\fR \fBtrue\fR\&.
+.IP \(bu
+Undo and Redo do not sync the position of the insertion cursor\&.
+.IP \(bu
+The \fB<<Modified>>\fR event is not generated\&.
+.IP \(bu
+Undo/Redo separators, and the \fB-autoseparators\fR option, as found in the \fB\fBtext\fR\fR widget, are not implemented\&. An implicit separator is added for each call to a widget command (e\&.g\&. \fBinsert\fR or \fBdelete\fR) that changes the widget contents\&.  The \fBedit separator\fR command has no effect\&.  Separator functionality would be less useful for widgets such as \fB\fBentryPlus\fR\fR than it is for a \fB\fBtext\fR\fR widget\&.
+.IP \(bu
+Add an \fIoverwrite\fR mode, toggled by \fB<Insert>\fR on non-macOS® systems\&.
+.PP
+.SH BUGS
+This version of \fBwidgetPlus\fR is intended to be compatible with all releases of \fBTk\fR 8\&.5 and 8\&.6, and with the branches \fIcore-8-5-branch\fR, \fIcore-8-6-branch\fR, and \fItrunk\fR in the source code repository for \fBTk\fR\&.  Any incompatibility with any of these versions, for any \fBTk\fR windowing system, should be reported as a bug\&. Please report such in the category \fIwidgetPlus\fR of the \fITklib Trackers\fR [http://core\&.tcl\&.tk/tklib/reportlist]\&.
+.SH EXAMPLES
+To create and map an \fB\fBentryPlus\fR\fR widget \&.ep with an unlimited Undo/Redo stack:
+.CS
+
+
+package require widgetPlus
+widgetPlus::entryPlus \&.ep -undo 1 -maxundo 0
+pack \&.ep
+
+.CE
+The same but using \fBnamespace import\fR:
+.CS
+
+
+package require widgetPlus
+namespace import widgetPlus::*
+entryPlus \&.ep -undo 1 -maxundo 0
+pack \&.ep
+
+.CE
+To convert an existing \fB\fBentry\fR\fR widget \&.ee into an \fB\fBentryPlus\fR\fR with an unlimited Undo/Redo stack:
+.CS
+
+
+entry \&.ee
+
+    \&.
+    \&.
+    \&.
+
+package require widgetPlus
+widgetPlus::entryPlus \&.ee -undo 1 -maxundo 0
+
+.CE
+The same but using \fBnamespace import\fR:
+.CS
+
+
+entry \&.ee
+
+    \&.
+    \&.
+    \&.
+
+package require widgetPlus
+namespace import widgetPlus::*
+entryPlus \&.ee -undo 1 -maxundo 0
+
+.CE
+Apply \fBwidgetPlus\fR to a Bryan Oakley \fB\fBcombobox\fR\fR:
+.CS
+
+
+package require combobox
+combobox::combobox \&.cb
+
+    \&.
+    \&.
+    \&.
+
+package require widgetPlus
+namespace import widgetPlus::*
+entryPlus \&.cb\&.entry -undo 1 -maxundo 0
+
+.CE
+Apply \fBwidgetPlus\fR to a \fBBWidget\fR \fB\fBComboBox\fR\fR\&.  The command \fB::widgetPlus::EnableBWidget\fR must be called first\&.
+.CS
+
+
+package require BWidget
+ComboBox \&.cb
+
+    \&.
+    \&.
+    \&.
+
+package require widgetPlus
+::widgetPlus::EnableBWidget
+namespace import widgetPlus::*
+
+entryPlus \&.cb\&.e -undo 1 -maxundo 0
+
+.CE
+.SH "BUGS, IDEAS, FEEDBACK"
+This document, and the package it describes, will undoubtedly contain
+bugs and other problems\&.
+Please report such in the category \fIwidgetPlus\fR of the
+\fITklib Trackers\fR [http://core\&.tcl\&.tk/tklib/reportlist]\&.
+Please also report any ideas for enhancements you may have for either
+package and/or documentation\&.
+.SH "SEE ALSO"
+BWidget, ComboBox, Entry, entry, persistentSelection, spinbox, text, ttk::combobox, ttk::entry, ttk::spinbox

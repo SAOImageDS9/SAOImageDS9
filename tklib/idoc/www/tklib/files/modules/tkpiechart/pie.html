@@ -1,0 +1,245 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pie - tkpiechart pie class</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'pie.man' by tcllib/doctools with format 'html'
+   -->
+<!-- Copyright &amp;copy; 1995-2004 Jean-Luc Fontaine &amp;lt;jfontain@free.fr&amp;gt;
+   -->
+<!-- pie.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">pie(n) 6.6 tklib &quot;tkpiechart pie class&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>pie - 2D or 3D pie chart object in a canvas</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">OVERVIEW</a></li>
+<li class="doctools_section"><a href="#section3">OPTIONS</a></li>
+<li class="doctools_section"><a href="#section4">MEMBER PROCEDURES</a></li>
+<li class="doctools_section"><a href="#section5">TAGS</a></li>
+<li class="doctools_section"><a href="#section6">SIZES</a></li>
+<li class="doctools_section"><a href="#section7">LIMITATIONS</a></li>
+<li class="doctools_section"><a href="#section8">Bugs, Ideas, Feedback</a></li>
+<li class="doctools_section"><a href="#see-also">See Also</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+<li class="doctools_section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_requirements">
+<li>package require <b class="pkgname">stooop 4.1</b></li>
+<li>package require <b class="pkgname">switched 2.2</b></li>
+<li>package require <b class="pkgname">tkpiechart 6.6</b></li>
+</ul>
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">stooop::new</b> <b class="class">pie</b> <i class="arg">canvas</i> <i class="arg">x</i> <i class="arg">y</i> <span class="opt">?options?</span></a></li>
+<li><a href="#2"><b class="cmd">switched::configure</b> <i class="arg">pieObject</i> <span class="opt">?options?</span></a></li>
+<li><a href="#3"><b class="cmd">switched::cget</b> <i class="arg">pieObject</i> <i class="arg">option</i></a></li>
+<li><a href="#4"><b class="cmd">stooop::delete</b> <i class="arg">pieObject</i></a></li>
+<li><a href="#5">pie::newSlice <i class="arg">pieObject</i> <span class="opt">?labelText?</span></a></li>
+<li><a href="#6">pie::deleteSlice <i class="arg">pieObject</i> <i class="arg">sliceObject</i></a></li>
+<li><a href="#7">pie::sizeSlice <i class="arg">pieObject</i> <i class="arg">sliceObject</i> <i class="arg">unitShare</i> <span class="opt">?displayedValue?</span></a></li>
+<li><a href="#8">pie::labelSlice <i class="arg">pieObject</i> <i class="arg">sliceObject</i> <i class="arg">string</i></a></li>
+<li><a href="#9">pie::selectedSlices <i class="arg">pieObject</i></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>A pie object is used to visualize a set of values, usually as shares of a total. Each value is represented by a colored slice, which may have a 2 dimensional or 3 dimensional look. Each slice is associated with a label displaying the data name, and a numerical field showing the percentage taken by the slice. The labels are placed by the chosen labeler object (<b class="option">-labeler</b> option). Each label color matches its related slice.</p>
+<p>A pie chart is made of Tk canvas items, found in <b class="class">pieBoxLabeler</b>, <b class="class">piePeripheralLabeler</b> and <b class="class">canvasLabel</b> objects, that compose the pie object. The pie constructor creates the pie itself and its background slice within the parent canvas. Once the pie object exists, slices can be created and resized. At the time the pie is created, the parent Tk <b class="syscmd"><a href="../../../../index.html#canvas">canvas</a></b> widget must exist.</p>
+<p>Slice colors are automatically generated, using a default color list for all pies, unless another list is used (using the <b class="option">-colors</b> option). When a 3D look is used, the slice edge is darker than its top while using the same color tone.</p>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">stooop::new</b> <b class="class">pie</b> <i class="arg">canvas</i> <i class="arg">x</i> <i class="arg">y</i> <span class="opt">?options?</span></a></dt>
+<dd><p>Creates a pie object in the specified Tk canvas. The upper left corner of the pie is placed at the specified coordinates in the canvas. The pie object identifier is returned (referred to as <em>pieObject</em> in this document).</p></dd>
+<dt><a name="2"><b class="cmd">switched::configure</b> <i class="arg">pieObject</i> <span class="opt">?options?</span></a></dt>
+<dd><p>Configures a pie object or returns all the options with their current values if no options are passed as parameters.</p></dd>
+<dt><a name="3"><b class="cmd">switched::cget</b> <i class="arg">pieObject</i> <i class="arg">option</i></a></dt>
+<dd><p>Returns an option value for the specified pie object.</p></dd>
+<dt><a name="4"><b class="cmd">stooop::delete</b> <i class="arg">pieObject</i></a></dt>
+<dd><p>Deletes the specified pie object.</p></dd>
+</dl>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">OVERVIEW</a></h2>
+<p>The pie class is part of the tkpiechart extension that allows the programmer to create and dynamically update 2D or 3D pie charts in a Tcl/Tk application. The tkpiechart package is written in Tcl only, using object oriented techniques thanks to the stooop package, included in tcllib.</p>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">OPTIONS</a></h2>
+<dl class="doctools_options">
+<dt><b class="option">-autoupdate</b> boolean</dt>
+<dd><p>Boolean value specifying whether all the slices and their labels are redrawn when a slice size is changed. On by default. Turn it off and invoke <b class="method">pie::update</b> if you change many slices at once and want to improve performance.</p></dd>
+<dt><b class="option">-background</b> color</dt>
+<dd><p>Slices may or may not fill up the 100% of the pie. The unoccupied part of the pie is a slice that takes 100% of the pie. It is by default transparent with a black border. The color of this background slice may be set by the user using color names as in the <b class="option">-background</b> standard option (see the Tk <b class="syscmd">options</b> manual page for more details). When the pie has a 3D look, the background of a slice edge is darker than the top and uses the same color tone.</p></dd>
+<dt><b class="option">-colors</b> list</dt>
+<dd><p>Specifies a list of colors for slices. In this case, the slice colors will successively be drawn from the list in the list order, cycling through if there are more slices than colors in the list. Colors are specified in the same format as the <b class="option">-background</b> option.</p></dd>
+<dt><b class="option">-height</b> value</dt>
+<dd><p>Specifies the total height for the pie, including the room taken by the labeler labels. The pie slices are resized when labels are added or deleted (when adding or deleting slices) so that the total height remains constant. This value may be specified in any of the forms described in the <b class="syscmd"><a href="../../../../index.html#canvas">canvas</a></b> <em>COORDINATES</em> manual section.</p></dd>
+<dt><b class="option">-labeler</b> object</dt>
+<dd><p>Specifies a placer object for the slice labels, so that, for example, slice values may be placed next to them. If not specified, the <em>pieBoxLabeler</em> (see corresponding manual) is used, the other option being the <em>piePeripheralLabeler</em> class. Each labeler has a specific behavior which may be set via its options. The labeler object is automatically deleted when the pie object is itself deleted. The labeler cannot be changed once the pie is created.</p></dd>
+<dt><b class="option">-selectable</b> boolean</dt>
+<dd><p>Boolean value specifying whether slices are selectable or not. Acceptable values are those defined by the Tcl language itself for boolean values. If selectable, slices can be selected with the first mouse button, by clicking on either the slice or its label. Selection can be extended by using the classical <em>control</em> or <em>shift</em> clicks. The list of currently selected slices can be retrieved at any time using the <b class="method">selectedSlices</b> pie class member procedure.</p></dd>
+<dt><b class="option">-title</b> text</dt>
+<dd><p>Title text to be placed above the pie.</p></dd>
+<dt><b class="option">-titlefont</b> value</dt>
+<dd><p>Font for the title text.</p></dd>
+<dt><b class="option">-titleoffset</b> value</dt>
+<dd><p>Distance between the bottom of the title text and the top of the pie slices. This value may be specified in any of the forms described in the sizes section below.</p></dd>
+<dt><b class="option">-thickness</b> value</dt>
+<dd><p>The thickness is set to 0 by default, giving the pie a simple 2D shape, much faster to display. A positive thickness value will give the pie a 3D look with matched darker colors for the slices edges. These values may be specified in any of the forms described in the <em>SIZES</em> section below.</p></dd>
+<dt><b class="option">-width</b> value</dt>
+<dd><p>Specifies the total width for the pie, including the room taken by the labeler labels. The pie slices are resized when labels are added or deleted (when adding or deleting slices) so that the total width remains constant. This value may be specified in any of the forms described in the <b class="syscmd"><a href="../../../../index.html#canvas">canvas</a></b> <em>COORDINATES</em> manual section.</p></dd>
+</dl>
+</div>
+<div id="section4" class="doctools_section"><h2><a name="section4">MEMBER PROCEDURES</a></h2>
+<dl class="doctools_definitions">
+<dt><a name="5">pie::newSlice <i class="arg">pieObject</i> <span class="opt">?labelText?</span></a></dt>
+<dd><p>Creates a slice. A unique object identifier is returned (referred to as <em>sliceObject</em> in this document). The slice color is automatically allocated and the slice label placed using the specified labeler (using the <b class="option">-labeler</b> option). The slice itself is placed after (clockwise) the existing slices. The slice object identifier will be used for sizing and resizing the slice.</p>
+<p>If the label text is not specified, it will be set to <em>&quot;slice n&quot;</em>, <em>n</em> being the number of the slice in the order of creation (first slice is number 1).</p></dd>
+<dt><a name="6">pie::deleteSlice <i class="arg">pieObject</i> <i class="arg">sliceObject</i></a></dt>
+<dd><p>Deletes a slice. The following slices (clockwise) if any are then moved to compensate for the empty space left by the deleted slice.</p></dd>
+<dt><a name="7">pie::sizeSlice <i class="arg">pieObject</i> <i class="arg">sliceObject</i> <i class="arg">unitShare</i> <span class="opt">?displayedValue?</span></a></dt>
+<dd><p>Sizes or resizes a slice. The slice is then automatically recalculated so it occupies the proper share of the whole pie. The <i class="arg">unitShare</i> parameter is a floating point number expressed in share (between 0 and 1) of the whole pie. The following slices (clockwise) are moved to accommodate the new slice size. The slice size value next to the slice label is also updated with the new share value or <i class="arg">displayedValue</i> if specified.</p></dd>
+<dt><a name="8">pie::labelSlice <i class="arg">pieObject</i> <i class="arg">sliceObject</i> <i class="arg">string</i></a></dt>
+<dd><p>Updates a slice label. Can be invoked at any time.</p></dd>
+<dt><a name="9">pie::selectedSlices <i class="arg">pieObject</i></a></dt>
+<dd><p>Returns a list of currently selected slice objects.</p></dd>
+</dl>
+</div>
+<div id="section5" class="doctools_section"><h2><a name="section5">TAGS</a></h2>
+<p>The whole pie, the pie graphics (all slices), and each slice have the following specific tags:</p>
+<ul class="doctools_itemized">
+  
+<li><p><b class="variable">pie(pieObject)</b></p></li>
+<li><p><b class="variable">pieSlices(pieObject)</b></p></li>
+<li><p><b class="variable">slice(sliceObject)</b></p></li>
+</ul>
+<p>For example, the whole pie can be moved using the <b class="syscmd"><a href="../../../../index.html#canvas">canvas</a></b> <b class="cmd"><a href="../../../../index.html#move">move</a></b> command on the pie tag, or bindings on slices can be set using the slice tags (see the <b class="syscmd"><a href="../../../../index.html#canvas">canvas</a></b> manual page <em>ITEM IDS AND TAGS</em> section for more information).</p>
+</div>
+<div id="section6" class="doctools_section"><h2><a name="section6">SIZES</a></h2>
+<p>All sizes related to pies are stored as floating point numbers. The coordinates and sizes are specified in screen units, which are floating point numbers optionally followed by one of several letters as specified in the <b class="syscmd"><a href="../../../../index.html#canvas">canvas</a></b> <em>COORDINATES</em> manual section.</p>
+</div>
+<div id="section7" class="doctools_section"><h2><a name="section7">LIMITATIONS</a></h2>
+<p>If the number of slices is too big, identical colors will be used for some of the slices. You may set your own colors in this case.</p>
+</div>
+<div id="section8" class="doctools_section"><h2><a name="section8">Bugs, Ideas, Feedback</a></h2>
+<p>This document, and the package it describes, will undoubtedly contain
+bugs and other problems.
+Please report such in the category <em>tkpiechart</em> of the
+<a href="http://core.tcl.tk/tklib/reportlist">Tklib Trackers</a>.
+Please also report any ideas for enhancements you may have for either
+package and/or documentation.</p>
+</div>
+<div id="see-also" class="doctools_section"><h2><a name="see-also">See Also</a></h2>
+<p><a href="canvaslabel.html">canvasLabel</a>, <a href="pieboxlabeler.html">pieBoxLabeler</a>, <a href="pieperipherallabeler.html">piePeripheralLabeler</a></p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../../../index.html#canvas">canvas</a>, <a href="../../../../index.html#labeler">labeler</a>, <a href="../../../../index.html#pie">pie</a>, <a href="../../../../index.html#slice">slice</a></p>
+</div>
+<div id="copyright" class="doctools_section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 1995-2004 Jean-Luc Fontaine &lt;jfontain@free.fr&gt;</p>
+</div>
+</div></body></html>

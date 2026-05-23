@@ -1,0 +1,127 @@
+# -*- tcl -*-
+# This file is a Tcl script to test entry widgets in Tk.  It is
+# organized in the standard fashion for Tcl tests.
+#
+# Copyright (c) 1994 The Regents of the University of California.
+# Copyright (c) 1994-1997 Sun Microsystems, Inc.
+# Copyright (c) 1998-1999 by Scriptics Corporation.
+# All rights reserved.
+
+::tcltest::testConstraint tk 1
+
+package require widgetPlus
+namespace import ::widgetPlus::entryPlus
+
+# ------------------------------------------------------------
+# Tests for entryPlus, in addition to those in file
+# entryPlus.test which is copied with mods from Tk entry.test.
+# ------------------------------------------------------------
+
+package require Tk
+package require tcltest 2.2
+namespace import -force tcltest::*
+catch { tcltest::configure {*}$::argv }
+loadTestedCommands
+
+# ------------------------------------------------------------
+# First test the entry widget when changing its -textvariable.
+# Cf. entry.test 5.* and 22.*
+# ------------------------------------------------------------
+
+test entry-25.1 {entry set textvar} -setup {
+    entry .e
+} -body {
+    .e insert end {Some Text}
+    .e configure -textvariable ::foo
+    set ::foo
+} -cleanup {
+    destroy .e
+    unset ::foo
+} -result {Some Text}
+
+test entry-25.2 {entry unset textvar} -setup {
+    set ::foo {Some Text}
+    entry .e -textvariable ::foo
+} -body {
+    unset ::foo
+    .e get
+} -cleanup {
+    destroy .e
+} -result {Some Text}
+
+test entry-25.3 {entry replace textvar set} -setup {
+    set ::foo {Some Text}
+    entry .e -textvariable ::foo
+} -body {
+    set ::bar {Replacement}
+    .e configure -textvariable ::bar
+    set ::bar
+} -cleanup {
+    destroy .e
+    unset ::foo ::bar
+} -result {Replacement}
+
+test entry-25.4 {entry replace textvar unset} -setup {
+    set ::foo {Some Text}
+    entry .e -textvariable ::foo
+} -body {
+    unset -nocomplain ::bar
+    .e configure -textvariable ::bar
+    set ::bar
+} -cleanup {
+    destroy .e
+    unset ::foo ::bar
+} -result {Some Text}
+
+
+# ------------------------------------------------------------
+# Now test that entryPlus does the same as entry.
+# ------------------------------------------------------------
+
+test entry-35.1 {entryPlus set textvar} -setup {
+    entryPlus .e
+} -body {
+    .e insert end {Some Text}
+    .e configure -textvariable ::foo
+    set ::foo
+} -cleanup {
+    destroy .e
+    unset ::foo
+} -result {Some Text}
+
+test entry-35.2 {entryPlus unset textvar} -setup {
+    set ::foo {Some Text}
+    entryPlus .e -textvariable ::foo
+} -body {
+    unset ::foo
+    .e get
+} -cleanup {
+    destroy .e
+} -result {Some Text}
+
+test entry-35.3 {entryPlus replace textvar set} -setup {
+    set ::foo {Some Text}
+    entryPlus .e -textvariable ::foo
+} -body {
+    set ::bar {Replacement}
+    .e configure -textvariable ::bar
+    set ::bar
+} -cleanup {
+    destroy .e
+    unset ::foo ::bar
+} -result {Replacement}
+
+test entry-35.4 {entryPlus replace textvar unset} -setup {
+    set ::foo {Some Text}
+    entryPlus .e -textvariable ::foo
+} -body {
+    unset -nocomplain ::bar
+    .e configure -textvariable ::bar
+    set ::bar
+} -cleanup {
+    destroy .e
+    unset ::foo ::bar
+} -result {Some Text}
+
+cleanupTests
+return

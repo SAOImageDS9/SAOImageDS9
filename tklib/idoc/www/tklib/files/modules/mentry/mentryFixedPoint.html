@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Multi-Entry Widgets for Real Numbers in Fixed-Point Format</title>
+
+  <meta name="Author" content="Csaba Nemethi">
+  <meta name="Keywords" content="mentry, widget, real number">
+
+  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+</head>
+
+<body>
+  <div>
+    <h1>Multi-Entry Widgets for Real Numbers<br>
+    in Fixed-Point Format</h1>
+
+    <h2>For Mentry Version 4.3</h2>
+
+    <h3>by</h3>
+
+    <h2>Csaba Nemethi</h2>
+
+    <address>
+      <a href="mailto:csaba.nemethi@t-online.de">csaba.nemethi@t-online.de</a>
+    </address>
+  </div>
+
+  <hr>
+
+  <h2 id="contents">Contents</h2>
+
+  <ul>
+    <li><a href="#fixedPointMentry">The
+    <code><b>mentry::fixedPointMentry</b></code> Command</a></li>
+
+    <li><a href="#putReal">The <code><b>mentry::putReal</b></code>
+    Command</a></li>
+
+    <li><a href="#getReal">The <code><b>mentry::getReal</b></code>
+    Command</a></li>
+  </ul>
+
+  <div>
+    <p><a href="index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="fixedPointMentry">The <code><b>mentry::fixedPointMentry</b></code>
+  Command</h2>
+
+  <dl>
+    <dt><b>NAME</b></dt>
+
+    <dd><code>mentry::fixedPointMentry</code> &ndash; Create and manipulate
+    mentry widgets for real numbers in fixed-point format</dd>
+
+    <dt class="tm"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>mentry::fixedPointMentry</b> <i>pathName count1 count2</i> ?<b>-comma</b>? ?<i>options</i>?
+</pre>
+    </dd>
+
+    <dt><b>DESCRIPTION</b></dt>
+
+    <dd>This command creates a new mentry widget <code><i>pathName</i></code>
+    for displaying and editing real numbers in fixed-point format, with
+    <code><i>count1</i></code> characters before and <code><i>count2</i></code>
+    digits after the decimal point.&nbsp; Both <code><i>count1</i></code> and
+    <code><i>count2</i></code> must be positive integers.&nbsp; The mentry will
+    have two entry components, separated by a label displaying a
+    <code><b>"."</b></code> character by default; the optional
+    <code><b>-comma</b></code> switch changes the label text to
+    <code><b>","</b></code>.&nbsp; The supported <code><i>options</i></code>
+    are the same as in the case of the <code><b><a href=
+    "mentryWidget.html">mentry::mentry</a></b></code> command.</dd>
+
+    <dd class="tm">The command sets the <code><b>type</b></code> attribute of
+    the widget to the value <code>"FixedPoint"</code> and returns the name of
+    the newly created widget.</dd>
+
+    <dt class="tm"><b>KEYWORDS</b></dt>
+
+    <dd>mentry, widget, real number</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="putReal">The <code><b>mentry::putReal</b></code> Command</h2>
+
+  <dl>
+    <dt><b>NAME</b></dt>
+
+    <dd><code>mentry::putReal</code> &ndash; Output a real number to a mentry
+    of type <code>"FixedPoint"</code></dd>
+
+    <dt class="tm"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>mentry::putReal</b> <i>number</i> <i>pathName</i>
+</pre>
+    </dd>
+
+    <dt><b>DESCRIPTION</b></dt>
+
+    <dd>This command outputs the real number <code><i>number</i></code> to the
+    mentry widget <code><i>pathName</i></code>, which must have been created
+    with the <code><b><a href=
+    "#fixedPointMentry">mentry::fixedPointMentry</a></b></code> command (this
+    is checked by examining the widget's <code><b>type</b></code> attribute,
+    which must have the value <code>"FixedPoint"</code>).</dd>
+
+    <dd class="tm">The command generates an error if the number does not fit
+    into the widget because it has too many characters before the decimal
+    point.</dd>
+
+    <dt class="tm"><b>KEYWORDS</b></dt>
+
+    <dd>mentry, widget, real number</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="getReal">The <code><b>mentry::getReal</b></code> Command</h2>
+
+  <dl>
+    <dt><b>NAME</b></dt>
+
+    <dd><code>mentry::getReal</code> &ndash; Get a real number from a mentry of
+    type <code>"FixedPoint"</code></dd>
+
+    <dt class="tm"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>mentry::getReal</b> <i>pathName</i>
+</pre>
+    </dd>
+
+    <dt><b>DESCRIPTION</b></dt>
+
+    <dd>This command returns the number contained in the mentry widget
+    <code><i>pathName</i></code>, which must have been created with the
+    <code><b><a href=
+    "#fixedPointMentry">mentry::fixedPointMentry</a></b></code> command (this
+    is checked by examining the widget's <code><b>type</b></code> attribute,
+    which must have the value <code>"FixedPoint"</code>).</dd>
+
+    <dd class="tm">If both entry components of the widget are empty, the
+    command sets the focus to the first entry component, generates an error,
+    and returns the string <code>"EMPTY"</code>.</dd>
+
+    <dt class="tm"><b>KEYWORDS</b></dt>
+
+    <dd>mentry, widget, real number</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+</body>
+</html>

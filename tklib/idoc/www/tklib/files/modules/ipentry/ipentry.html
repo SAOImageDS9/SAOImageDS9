@@ -1,0 +1,294 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ipentry - An IP address entry widget</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'ipentry.man' by tcllib/doctools with format 'html'
+   -->
+<!-- ipentry.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">ipentry(n) 0.3.2 tklib &quot;An IP address entry widget&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>ipentry - An IP address entry widget</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">Widget options</a></li>
+<li class="doctools_section"><a href="#section3">Bugs, Ideas, Feedback</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+<li class="doctools_section"><a href="#category">Category</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_requirements">
+<li>package require <b class="pkgname">Tcl 8.4</b></li>
+<li>package require <b class="pkgname">Tk 8.4</b></li>
+<li>package require <b class="pkgname">ipentry <span class="opt">?0.3.2?</span></b></li>
+</ul>
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">::ipentry::ipentry</b> <i class="arg">pathName</i> <span class="opt">?<i class="arg">option</i> <i class="arg">value</i>...?</span></a></li>
+<li><a href="#2"><b class="cmd">::ipentry::ipentry6</b> <i class="arg">pathName</i> <span class="opt">?<i class="arg">option</i> <i class="arg">value</i>...?</span></a></li>
+<li><a href="#3"><i class="arg">pathName</i> <b class="method">complete</b></a></li>
+<li><a href="#4"><i class="arg">pathName</i> <b class="method">get</b></a></li>
+<li><a href="#5"><i class="arg">pathName</i> <b class="method">insert</b> <i class="arg">iplist</i></a></li>
+<li><a href="#6"><i class="arg">pathName</i> <b class="method">icursor</b> <i class="arg">index</i></a></li>
+<li><a href="#7"><i class="arg">pathName</i> <b class="method">configure</b> <i class="arg">option</i> <i class="arg">value</i>...</a></li>
+<li><a href="#8"><i class="arg">pathName</i> <b class="method">cget</b> <i class="arg">option</i></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>This package provides a widget for the entering of a IP address.</p>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">::ipentry::ipentry</b> <i class="arg">pathName</i> <span class="opt">?<i class="arg">option</i> <i class="arg">value</i>...?</span></a></dt>
+<dd><p>Creates a new IPv4 ipentry widget and configures it with the given options and
+their values.</p></dd>
+<dt><a name="2"><b class="cmd">::ipentry::ipentry6</b> <i class="arg">pathName</i> <span class="opt">?<i class="arg">option</i> <i class="arg">value</i>...?</span></a></dt>
+<dd><p>Creates a new ipentry widget for the entry of an IPv6 address. All options
+are the same as the IPv4 widget.</p></dd>
+</dl>
+<p>Each widget created with the command above supports the following methods:</p>
+<dl class="doctools_definitions">
+<dt><a name="3"><i class="arg">pathName</i> <b class="method">complete</b></a></dt>
+<dd><p>Returns a boolean value. True indicates that the entry contains a
+complete IP address, meaning all fields have a value. In some cases
+IPv6 address are valid when fields are missing. You will need to do your
+own validation to detect this.</p></dd>
+<dt><a name="4"><i class="arg">pathName</i> <b class="method">get</b></a></dt>
+<dd><p>Returns the contents of the entry as a list consisting of 4 or 8 elements.</p></dd>
+<dt><a name="5"><i class="arg">pathName</i> <b class="method">insert</b> <i class="arg">iplist</i></a></dt>
+<dd><p>IPv4
+Takes a list of 4 elements and inserts one into each quad of the entry, in order.
+All values in the list must be empty or integers. Values outside the range 0 to 255
+are modified to be within the range.
+IPv6
+Takes a list of 8 elements and inserts one into each quad of the entry, in order.
+All values in the list must be empty or 1 to 4 hex digits.</p></dd>
+<dt><a name="6"><i class="arg">pathName</i> <b class="method">icursor</b> <i class="arg">index</i></a></dt>
+<dd><p>Sets the position of the widgets insertion cursor. Only integer values between
+0 and 15 are valid for ipentry and 0 to 31 for ipentry6.
+Setting the icursor will only have an effect if the widget
+already has the input focus.</p></dd>
+<dt><a name="7"><i class="arg">pathName</i> <b class="method">configure</b> <i class="arg">option</i> <i class="arg">value</i>...</a></dt>
+<dd><p>Modifies the configuration of the widget. For options and
+their meaning see the widget options section.</p></dd>
+<dt><a name="8"><i class="arg">pathName</i> <b class="method">cget</b> <i class="arg">option</i></a></dt>
+<dd><p>Returns information about the current configuration of the widget, for
+the specified option. For options and their meaning see the widget
+options section.</p></dd>
+</dl>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">Widget options</a></h2>
+<dl class="doctools_tkoptions">
+<dt>Command-Line Switch:	<b class="option">-textvariable</b><br>
+Database Name:	<b class="optdbname">textvariable</b><br>
+Database Class:	<b class="optdbclass">Variable</b><br>
+</dt>
+<dd><p>The name of a variable which holds the value of the IP address.
+The value must be a string of the form NNN.NNN.NNN.NNN for IPv4 or
+HHHH:HHHH:HHHH:HHHH:HHHH:HHHH:HHHH:HHHH for IPv6 where H is a hex digit.
+The variable will be modified to represent a valid IP address if it is not
+already.</p></dd>
+<dt>Command-Line Switch:	<b class="option">-state</b><br>
+Database Name:	<b class="optdbname">state</b><br>
+Database Class:	<b class="optdbclass">State</b><br>
+</dt>
+<dd><p>Specifies one of three states for the entry: <b class="const">normal</b>,
+<b class="const">disabled</b>, or <b class="const">readonly</b>.</p></dd>
+<dt>Command-Line Switch:	<b class="option">-font</b><br>
+Database Name:	<b class="optdbname">font</b><br>
+Database Class:	<b class="optdbclass">Font</b><br>
+</dt>
+<dd></dd>
+<dt>Command-Line Switch:	<b class="option">-bd</b><br>
+Database Name:	<b class="optdbname">borderWidth</b><br>
+Database Class:	<b class="optdbclass">BorderWidth</b><br>
+</dt>
+<dd></dd>
+<dt>Command-Line Switch:	<b class="option">-fg</b><br>
+Database Name:	<b class="optdbname">foreground</b><br>
+Database Class:	<b class="optdbclass">Foreground</b><br>
+</dt>
+<dd></dd>
+<dt>Command-Line Switch:	<b class="option">-bg</b><br>
+Database Name:	<b class="optdbname">background</b><br>
+Database Class:	<b class="optdbclass">Background</b><br>
+</dt>
+<dd></dd>
+<dt>Command-Line Switch:	<b class="option">-relief</b><br>
+Database Name:	<b class="optdbname">relief</b><br>
+Database Class:	<b class="optdbclass">Relief</b><br>
+</dt>
+<dd></dd>
+<dt>Command-Line Switch:	<b class="option">-highlightthickness</b><br>
+Database Name:	<b class="optdbname">highlightThickness</b><br>
+Database Class:	<b class="optdbclass">HighlightThickness</b><br>
+</dt>
+<dd></dd>
+<dt>Command-Line Switch:	<b class="option">-highlightcolor</b><br>
+Database Name:	<b class="optdbname">highlightColor</b><br>
+Database Class:	<b class="optdbclass">HighlightColor</b><br>
+</dt>
+<dd></dd>
+<dt>Command-Line Switch:	<b class="option">-highlightbackground</b><br>
+Database Name:	<b class="optdbname">highlightBackground</b><br>
+Database Class:	<b class="optdbclass">HighlightBackground</b><br>
+</dt>
+<dd></dd>
+<dt>Command-Line Switch:	<b class="option">-selectbackground</b><br>
+Database Name:	<b class="optdbname">selectBackground</b><br>
+Database Class:	<b class="optdbclass">Background</b><br>
+</dt>
+<dd></dd>
+<dt>Command-Line Switch:	<b class="option">-selectforeground</b><br>
+Database Name:	<b class="optdbname">selectForeground</b><br>
+Database Class:	<b class="optdbclass">Foreground</b><br>
+</dt>
+<dd></dd>
+<dt>Command-Line Switch:	<b class="option">-selectborderwidth</b><br>
+Database Name:	<b class="optdbname">selectBorderWidth</b><br>
+Database Class:	<b class="optdbclass">BorderWidth</b><br>
+</dt>
+<dd></dd>
+<dt>Command-Line Switch:	<b class="option">-disabledbackground</b><br>
+Database Name:	<b class="optdbname">disabledBackground</b><br>
+Database Class:	<b class="optdbclass">DisabledBackground</b><br>
+</dt>
+<dd></dd>
+<dt>Command-Line Switch:	<b class="option">-disabledforeground</b><br>
+Database Name:	<b class="optdbname">disabledForeground</b><br>
+Database Class:	<b class="optdbclass">DisabledForeground</b><br>
+</dt>
+<dd></dd>
+<dt>Command-Line Switch:	<b class="option">-readonlybackground</b><br>
+Database Name:	<b class="optdbname">readonlyBackground</b><br>
+Database Class:	<b class="optdbclass">ReadonlyBackground</b><br>
+</dt>
+<dd></dd>
+<dt>Command-Line Switch:	<b class="option">-insertbackground</b><br>
+Database Name:	<b class="optdbname">insertBackground</b><br>
+Database Class:	<b class="optdbclass">Background</b><br>
+</dt>
+<dd><p>Standard widget options. See <b class="cmd">options</b> for a description of their
+meanings and values.</p></dd>
+</dl>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">Bugs, Ideas, Feedback</a></h2>
+<p>This document, and the package it describes, will undoubtedly contain
+bugs and other problems.
+Please report such in the category <em>ipentry</em> of the
+<a href="http://core.tcl.tk/tklib/reportlist">Tklib Trackers</a>.
+Please also report any ideas for enhancements you may have for either
+package and/or documentation.</p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../../../index.html#entry">entry</a>, <a href="../../../../index.html#ip_address">ip address</a>, <a href="../../../../index.html#network">network</a></p>
+</div>
+<div id="category" class="doctools_section"><h2><a name="category">Category</a></h2>
+<p>Widget</p>
+</div>
+</div></body></html>

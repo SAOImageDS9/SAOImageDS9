@@ -1,0 +1,193 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>history - Provides a history for Entry widgets</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'tklib_history.man' by tcllib/doctools with format 'html'
+   -->
+<!-- history.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">history(n) 0.3 tklib &quot;Provides a history for Entry widgets&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>history - Provides a history for Entry widgets</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">Bugs, Ideas, Feedback</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_requirements">
+<li>package require <b class="pkgname">Tcl 8.4</b></li>
+<li>package require <b class="pkgname">Tk 8.4</b></li>
+<li>package require <b class="pkgname">history <span class="opt">?0.3?</span></b></li>
+</ul>
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">::history::init</b> <i class="arg">pathName</i> <span class="opt">?length?</span></a></li>
+<li><a href="#2"><b class="cmd">::history::remove</b> <i class="arg">pathName</i></a></li>
+<li><a href="#3"><b class="cmd">::history::add</b> <i class="arg">pathName</i> <i class="arg">text</i></a></li>
+<li><a href="#4"><b class="cmd">::history::get</b> <i class="arg">pathName</i></a></li>
+<li><a href="#5"><b class="cmd">::history::clear</b> <i class="arg">pathName</i></a></li>
+<li><a href="#6"><b class="cmd">::history::configure</b> <i class="arg">pathName</i> <i class="arg">option</i> <span class="opt">?value?</span></a></li>
+<li><a href="#7">bell</a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>This package provides a convenient history mechanism for Entry widgets.
+The history may be accessed with the up and down arrow keys.</p>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">::history::init</b> <i class="arg">pathName</i> <span class="opt">?length?</span></a></dt>
+<dd><p>Arranges to remember the history of the named Entry widget. An optional length
+determines the number of history entries to keep. This may be changed later
+with <b class="cmd">::history::configure</b>. History entries must be added with the
+<b class="cmd">::history::add</b> command before they can be seen.</p></dd>
+<dt><a name="2"><b class="cmd">::history::remove</b> <i class="arg">pathName</i></a></dt>
+<dd><p>Forgets all history entries for the Entry <i class="arg">pathName</i> and removes the history
+bindings.</p></dd>
+<dt><a name="3"><b class="cmd">::history::add</b> <i class="arg">pathName</i> <i class="arg">text</i></a></dt>
+<dd><p>This command is used to add history entries to an Entry that has previously had
+<b class="cmd">::history::init</b> called on it. This command should be called from your Entry
+handler with the contents of the entry (or whatever you wish to add to the history).</p></dd>
+<dt><a name="4"><b class="cmd">::history::get</b> <i class="arg">pathName</i></a></dt>
+<dd><p>This command returns a list containing the history entries for the Entry <i class="arg">pathName</i></p></dd>
+<dt><a name="5"><b class="cmd">::history::clear</b> <i class="arg">pathName</i></a></dt>
+<dd><p>This command clears the history list for the named Entry.</p></dd>
+<dt><a name="6"><b class="cmd">::history::configure</b> <i class="arg">pathName</i> <i class="arg">option</i> <span class="opt">?value?</span></a></dt>
+<dd><p>This command queries or sets configuration options. Currently the options recognized
+are <i class="arg">length</i> and <i class="arg">alert</i>. Setting the length determines the number of history entries to keep for
+the named Entry. Alert specifies the command to run when the user reaches the end of the history, it defaults to</p></dd>
+<dt><a name="7">bell</a></dt>
+<dd><p>. Although configure requires a <i class="arg">pathName</i> argument, the setting for alert is global and the path is ignored.</p></dd>
+</dl>
+<pre class="doctools_example">
+entry .e
+bind .e &lt;Return&gt; [list ProcessEntry %W]
+::history::init .e
+pack .e
+proc ProcessEntry {w} {
+    set text [$w get]
+    if {$text == &quot;&quot;} { return }
+    ::history::add $w $text
+    puts $text
+    $w delete 0 end
+}
+</pre>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">Bugs, Ideas, Feedback</a></h2>
+<p>This document, and the package it describes, will undoubtedly contain
+bugs and other problems.
+Please report such in the category <em>entry::history</em> of the
+<a href="http://core.tcl.tk/tklib/reportlist">Tklib Trackers</a>.
+Please also report any ideas for enhancements you may have for either
+package and/or documentation.</p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../../../index.html#entry">entry</a>, <a href="../../../../index.html#history">history</a></p>
+</div>
+</div></body></html>

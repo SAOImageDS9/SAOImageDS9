@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mentry Programmer's Guide</title>
+
+  <meta name="Author" content="Csaba Nemethi">
+  <meta name="Keywords" content="mentry, widget, entry, label">
+
+  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+</head>
+
+<body>
+  <div>
+    <h1>Mentry Programmer's Guide</h1>
+
+    <h2>For Mentry Version 4.3</h2>
+
+    <h3>by</h3>
+
+    <h2>Csaba Nemethi</h2>
+
+    <address>
+      <a href="mailto:csaba.nemethi@t-online.de">csaba.nemethi@t-online.de</a>
+    </address>
+  </div>
+
+  <hr>
+
+  <h2 id="contents">Contents</h2>
+
+  <h4><a href="#overview">Overview</a></h4>
+
+  <ul>
+    <li><a href="#ov_what">What Is Mentry?</a></li>
+
+    <li><a href="#ov_get">How to Get It?</a></li>
+
+    <li><a href="#ov_install">How to Install It?</a></li>
+
+    <li><a href="#ov_use">How to Use It?</a></li>
+
+    <li><a href="#ov_tile">More on Mentry_tile</a></li>
+  </ul>
+
+  <h4><a href="#examples">Examples</a></h4>
+
+  <ul>
+    <li><a href="#ex_phoneNumber">A mentry Widget for Phone Numbers</a></li>
+
+    <li><a href="#ex_ethernetAddr">A mentry Widget for Ethernet
+    Addresses</a></li>
+
+    <li><a href="#ex_dateTime">Using mentry Widgets for Date and Time</a></li>
+
+    <li><a href="#ex_tile">Tile-Based Demo Scripts</a></li>
+  </ul>
+
+  <div>
+    <p><a href="index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="overview">Overview</h2>
+
+  <h3 id="ov_what">What Is Mentry?</h3>
+
+  <p>Mentry is a library package for Tcl/Tk versions 8.4 or higher, written in
+  pure Tcl/Tk code.&nbsp; It contains:</p>
+
+  <ul>
+    <li>the implementation of the <a href="mentryWidget.html">multi-entry
+    mega-widget <b>mentry</b></a>, including a general utility module for
+    mega-widgets;</li>
+
+    <li>procedures that facilitate the use of multi-entry widgets for
+    displaying and editing <a href="mentryDateTime.html">date and time</a> in a
+    great variety of formats, <a href="mentryFixedPoint.html">real numbers in
+    fixed-point format</a>, as well as <a href="mentryIPAddr.html">IP(v4)
+    addresses</a> and <a href="mentryIPv6Addr.html">IPv6 addresses</a>;</li>
+
+    <li>two richly commented demo scripts containing the typical steps needed
+    to create and handle a mentry widget for a particular purpose;</li>
+
+    <li>two demo scripts that show how to use the date- and time-related
+    procedures;</li>
+
+    <li>tile-based counterparts of the above-mentioned demo scripts;</li>
+
+    <li>this tutorial;</li>
+
+    <li>reference pages in HTML format.</li>
+  </ul>
+
+  <p>A multi-entry widget consists of any number of entry widgets separated by
+  labels, all embedded in a frame.&nbsp; Appropriately chosen configuration
+  options make this conglomerate look like one single entry containing
+  preinserted text pieces having invariant positions within the widget.&nbsp;
+  The initial width of an entry component also determines the maximal number of
+  characters that can be inserted into it; when reaching this limit in an entry
+  having the input focus, the latter is set automatically to the next enabled
+  entry component.&nbsp; The same action is triggered by typing a character
+  contained in the label following the current entry, if the latter is
+  non-empty.</p>
+
+  <p>Within a mentry widget, the <code>Left</code>, <code>Right</code>,
+  <code>Home</code>, <code>End</code>, and <code>BackSpace</code> keys work
+  across entry boundaries, while <code>Control-Left</code> and
+  <code>Control-Right</code> play the same role as <code>Tab</code> and
+  <code>Shift-Tab</code> in the case of ordinary entries.</p>
+
+  <p>Some of the above features are implemented with the aid of the widget
+  callback package Wcb, written in pure Tcl/Tk code as well.&nbsp; <b>The
+  Mentry package requires version 3.1 or higher of Wcb</b>, whose download
+  location is</p>
+
+  <blockquote>
+    <address>
+      <a href="https://www.nemethi.de">https://www.nemethi.de</a>
+    </address>
+  </blockquote>
+
+  <p id="ov_example">It is very easy to create a multi-entry widget.&nbsp; For
+  example, the command</p>
+
+  <blockquote>
+    <pre>
+mentry::mentry .me -body {3 - 3 - 4}
+</pre>
+  </blockquote>
+
+  <p>will create a mentry widget consisting of two entries of width 3 and one
+  of width 4, separated by <code>"-"</code> characters.&nbsp; With the
+  command</p>
+
+  <blockquote>
+    <pre>
+foreach w [.me entries] {
+    wcb::cbappend $w before insert wcb::checkStrForNum
+}
+</pre>
+  </blockquote>
+
+  <p>you can make sure that the three entries will only accept numeric input,
+  thus providing a comfortable and safe user interface for editing 10-digit
+  phone numbers.</p>
+
+  <h3 id="ov_get">How to Get It?</h3>
+
+  <p>Mentry is available for free download from the same URL as Wcb.&nbsp; The
+  distribution file is <code>mentry4.3.1.tar.gz</code> for UNIX and
+  <code>mentry4_3_1.zip</code> for Windows.&nbsp; These files contain the same
+  information, except for the additional carriage return character preceding
+  the linefeed at the end of each line in the text files for Windows.</p>
+
+  <p>Mentry is also included in tklib, which has the address</p>
+
+  <blockquote>
+    <address>
+      <a href="https://core.tcl.tk/tklib">https://core.tcl.tk/tklib</a>
+    </address>
+  </blockquote>
+
+  <h3 id="ov_install">How to Install It?</h3>
+
+  <p>Install the package as a subdirectory of one of the directories given by
+  the <code>auto_path</code> variable.&nbsp; For example, you can install it as
+  a directory at the same level as the Tcl and Tk script libraries.&nbsp; The
+  locations of these library directories are given by the
+  <code>tcl_library</code> and <code>tk_library</code> variables,
+  respectively.</p>
+
+  <p>To install Mentry <i>on UNIX</i>, <code>cd</code> to the desired directory
+  and unpack the distribution file <code>mentry4.3.1.tar.gz</code>:</p>
+
+  <blockquote>
+    <pre>
+gunzip -c mentry4.3.1.tar.gz | tar -xf -
+</pre>
+  </blockquote>
+
+  <p>On most UNIX systems this can be replaced with</p>
+
+  <blockquote>
+    <pre>
+tar -zxf mentry4.3.1.tar.gz
+</pre>
+  </blockquote>
+
+  <p>Both commands will create a directory named <code>mentry4.3.1</code>, with
+  the subdirectories <code>demos</code>, <code>doc</code>, and
+  <code>scripts</code>.</p>
+
+  <p><i>On Windows</i>, use WinZip or some other program capable of unpacking
+  the distribution file <code>mentry4_3_1.zip</code> into the directory
+  <code>mentry4.3.1</code>, with the subdirectories <code>demos</code>,
+  <code>doc</code>, and <code>scripts</code>.</p>
+
+  <p>The file <code>mentryThemes.tcl</code> in the <code>scripts</code>
+  directory is only needed for applications using the package Mentry_tile (see
+  next section).</p>
+
+  <p>Notice that in tklib the Mentry <code>demos</code> directory is replaced
+  with the subdirectory <code>mentry</code> of the <code>examples</code>
+  directory.&nbsp; Please take this into account when reading the <a href=
+  "#examples">examples</a> below.</p>
+
+  <h3 id="ov_use">How to Use It?</h3>
+
+  <p>The Mentry distribution provides two packages, called <b>Mentry</b> and
+  <b>Mentry_tile</b>.&nbsp; The main difference between the two is that
+  Mentry_tile enables the tile-based, theme-specific appearance of mentry
+  widgets; this package requires tile 0.6 or higher.&nbsp; It is not possible
+  to use both packages in one and the same application, because both are
+  implemented in the same <code>mentry</code> namespace and provide identical
+  commands.</p>
+
+  <p>To be able to access the commands and variables defined in the package
+  Mentry, your scripts must contain one of the lines</p>
+
+  <blockquote>
+    <pre>
+package require mentry ?<i>version</i>?
+package require Mentry ?<i>version</i>?
+</pre>
+  </blockquote>
+
+  <p>You can use either one of the two statements above because the file
+  <code>mentry.tcl</code> contains both lines</p>
+
+  <blockquote>
+    <pre>
+package provide mentry ...
+package provide Mentry ...
+</pre>
+  </blockquote>
+
+  <p>Likewise, to be able to access the commands and variables defined in the
+  package Mentry_tile, your scripts must contain one of the lines</p>
+
+  <blockquote>
+    <pre>
+package require mentry_tile ?<i>version</i>?
+package require Mentry_tile ?<i>version</i>?
+</pre>
+  </blockquote>
+
+  <p>Again, you can use either one of the two statements above because the file
+  <code>mentry_tile.tcl</code> contains both lines</p>
+
+  <blockquote>
+    <pre>
+package provide mentry_tile ...
+package provide Mentry_tile ...
+</pre>
+  </blockquote>
+
+  <p>You are free to remove one of the above lines from <code>mentry.tcl</code>
+  and <code>mentry_tile.tcl</code>, respectively, if you want to prevent the
+  corresponding packages from making themselves known under two different names
+  each.&nbsp; Of course, by doing so you restrict the argument of&nbsp;
+  <code>package require</code>&nbsp; to a single name per package.</p>
+
+  <p>Since the packages Mentry and Mentry_tile are implemented in the
+  <code>mentry</code> namespace, you must either invoke the</p>
+
+  <blockquote>
+    <pre>
+namespace import mentry::<i>pattern</i> ?mentry::<i>pattern ...</i>?
+</pre>
+  </blockquote>
+
+  <p>command to import the <i>procedures</i> you need, or use qualified names
+  like <code>mentry::mentry</code>.&nbsp; In the examples below we have chosen
+  the latter approach.</p>
+
+  <p>To access Mentry <i>variables</i>, you <i>must</i> use qualified
+  names.&nbsp; There are only three Mentry variables (and one more when using
+  Mentry_tile) that are designed to be accessed outside the namespace
+  <code>mentry</code>:</p>
+
+  <ul>
+    <li>The variable <code>mentry::version</code> holds the current version
+    number of the Mentry package.</li>
+
+    <li>The variable <code>mentry::library</code> holds the location of the
+    Mentry installation directory.</li>
+
+    <li>The read-only variable <code>mentry::usingTile</code> has the value
+    <code>0</code> in the package Mentry and the value <code>1</code> in
+    Mentry_tile.</li>
+
+    <li>In Mentry_tile the array <code>mentry::themeDefaults</code> holds the
+    theme-specific default values of a series of Mentry configuration
+    options.</li>
+  </ul>
+
+  <h3 id="ov_tile">More on Mentry_tile</h3>
+
+  <p>As mentioned above, a mentry widget consists of entry and label widgets,
+  embedded in a frame.&nbsp; While in the Mentry package all of these
+  components are Tk widgets, the Mentry_tile package uses both Tk frame, tile
+  entry, and Tk label widgets.&nbsp; Due to several incompatibilities between
+  Tk and tile, it is currently not possible to replace all Tk widgets making up
+  a mentry with their tile counterparts.&nbsp; Actually, the entry components
+  of a tile-based mentry are embedded into Tk frame widgets, which in turn,
+  together with the labels, are packed into a specially constructed tile entry
+  rather than a frame.&nbsp; This somewhat complicated layout is needed because
+  in several themes it is not possible to draw flat, borderless tile enty
+  widgets.</p>
+
+  <p>From the above it follows that <b>the package Mentry_tile will only work
+  as expected if the Tk <code>frame</code> and <code>label</code> commands
+  haven't been overridden by using&nbsp; <code>namespace import -force
+  ttk::*</code>&nbsp; at global scope</b>.&nbsp; While earlier tile releases
+  suggested using this command at global scope for the really adventurous, in
+  newer tile versions this is considered a Really Bad Idea, causing many things
+  to break.&nbsp; Instead, <b>you should explicitly invoke
+  <code>ttk::frame</code>, <code>ttk::label</code>, etc. whenever you want to
+  use a tile widget</b>.</p>
+
+  <p>Another restriction to be taken into account is due to the fact that in
+  earlier tile versions the&nbsp; <code>(ttk::)style theme use</code>&nbsp;
+  command could only be used to set the current theme, but not to retrieve
+  it.&nbsp; For this reason, if the package Mentry_tile cannot get the current
+  theme with the aid of&nbsp; <code>ttk::style theme use</code>&nbsp; then it
+  makes use of the variable <code>ttk::currentTheme</code> or
+  <code>tile::currentTheme</code> (depending on the tile version), which is set
+  by the <code>ttk::setTheme</code> or <code>tile::setTheme</code>
+  command.&nbsp; From this it follows that <b>if the tile version being used
+  doesn't support the&nbsp; <code>ttk::style theme use</code>&nbsp; command
+  without an argument then the tile-based mentry widgets will only have the
+  expected appearance if the platform-specific default theme is either left
+  unchanged or replaced with another theme by invoking the library procedure
+  <code>ttk::setTheme</code> or <code>tile::setTheme</code>, depending on the
+  tile version</b>.&nbsp; (See also the <code><a href=
+  "mentryThemes.html#setTheme">mentry::setTheme</a></code> command.)</p>
+
+  <p>After these cautions concerning the use of tile, the rest of this section
+  describes the differences between the packages Mentry and Mentry_tile.</p>
+
+  <p>The Mentry_tile package checks whether the required Tk and tile versions
+  are present, by executing the commands</p>
+
+  <blockquote>
+    <pre>
+package require Tk 8.4-
+if {$::tk_version &lt; 8.5 || [regexp {^8\.5a[1-5]$} $::tk_patchLevel]} {
+    package require tile 0.6-
+}
+</pre>
+  </blockquote>
+
+  <p>The second command above reflects the fact that, beginning with Tk 8.5a6,
+  tile is integrated into the Tk core and therefore it should only be loaded
+  explicitly when using an earlier Tk version.</p>
+
+  <p>Apart from this and the <code>_tile</code> suffix in the&nbsp;
+  <code>package require</code>&nbsp; command, the only difference (from the
+  programmer's point of view) between the packages Mentry and Mentry_tile is
+  related to the supported configuration options:&nbsp; The following Tk
+  (entry) widget options, present in the Mentry package, are not supported by
+  Mentry_tile, because they are not available for tile (entry) widgets:
+  <code>-borderwidth</code>, <code>-disabledbackground</code>,
+  <code>-disabledforeground</code>, <code>-highlightbackground</code>,
+  <code>-highlightcolor</code>, <code>-highlightthickness</code>,
+  <code>-insertbackground</code>, <code>-insertborderwidth</code>,
+  <code>-insertofftime</code>, <code>-insertontime</code>,
+  <code>-insertwidth</code>, <code>-readonlybackground</code>,
+  <code>-relief</code>, <code>-selectbackground</code>,
+  <code>-selectborderwidth</code>, and <code>-selectforeground</code>.</p>
+
+  <p>Notice that the <code>-background</code> option doesn't work as expected
+  if the current theme is <code>Arc</code>, <code>plastik</code>,
+  <code>tileqt</code>, <code>vista</code>, or <code>xpnative</code>, because
+  these themes silently ignore any attempt to change the background color of a
+  tile entry widget.</p>
+
+  <p>Finally, take into account that, when using the <code>tileqt</code> theme,
+  the version number of the <code>tile::theme::tileqt</code> package must be
+  0.4 or higher, and <code>tileqt</code> itself won't work with tile versions
+  earlier than 0.7.</p>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="examples">Examples</h2>
+
+  <h3 id="ex_phoneNumber">A mentry Widget for Phone Numbers</h3>
+
+  <p>Let's resume the <a href="#ov_example">example</a> mentioned in the
+  Overview in a bit more systematical manner.&nbsp; First, we will write a
+  procedure for creating a mentry widget that allows to display and edit
+  10-digit phone numbers and accepts any configuration options supported by the
+  <code><a href="mentryWidget.html">mentry::mentry</a></code> command:</p>
+
+  <blockquote>
+    <pre>
+<span class="cmt">#------------------------------------------------------------------------------
+# phoneNumberMentry
+#
+# Creates a new mentry widget win that allows to display and edit 10-digit
+# phone numbers.  Sets the type attribute of the widget to PhoneNumber and
+# returns the name of the newly created widget.
+#------------------------------------------------------------------------------</span>
+proc phoneNumberMentry {win args} {
+    <span class="cmt">#
+    # Create a mentry widget consisting of two entries of width 3 and one of
+    # width 4, separated by "-" characters, and set its type to PhoneNumber
+    #</span>
+    eval [list mentry::mentry $win] $args
+    $win configure -body {3 - 3 - 4}
+    $win attrib type PhoneNumber
+
+    <span class="cmt">#
+    # Allow only decimal digits in all entry components; use
+    # wcb::cbappend (or wcb::cbprepend) instead of wcb::callback
+    # in order to keep the wcb::checkEntryLen callback,
+    # registered by mentry::mentry for all entry components
+    #</span>
+    for {set n 0} {$n &lt; 3} {incr n} {
+        set w [$win entrypath $n]
+        wcb::cbappend $w before insert wcb::checkStrForNum
+        $win adjustentry $n "0123456789"
+        bindtags $w [linsert [bindtags $w] 1 MentryPhoneNumber]
+    }
+
+    return $win
+}
+</pre>
+  </blockquote>
+
+  <p>The first argument <code>win</code> is the name of the widget, and the
+  keyword <code>args</code> represents a list of configuration options and
+  their values, just like in the case of the standard Tk widgets.&nbsp; The
+  value&nbsp; <code>{3 - 3 - 4}</code>&nbsp; of the <code><a href=
+  "mentryWidget.html#body">-body</a></code> option specifies that the mentry
+  should consist of two entries of width 3 and one of width 4, separated by
+  labels displaying the <code>"-"</code> character.</p>
+
+  <p>Each mentry widget may have any number of private <b>attributes</b>, which
+  can be set and retrieved with the aid of the <code><a href=
+  "mentryWidget.html#attrib">attrib</a></code> subcommand of the Tcl procedure
+  corresponding to the widget.&nbsp; We use this subcommand to define the
+  <code>type</code> attribute of the newly created widget and set it to the
+  value <code>"PhoneNumber"</code>.&nbsp; Although this is not strictly
+  necessary, it will enable us to distinguish a phone number mentry from other
+  multi-entry widgets.</p>
+
+  <p>The <code>mentry::mentry</code> command registers the <code><a href=
+  "wcbRef.html#entrycb">wcb::checkEntryLen</a></code> callback with each entry
+  component of the mentry widget to restrict the number of characters that can
+  be inserted into it to the initial width specified in the <code>-body</code>
+  option.&nbsp; Besides this constraint, we want our entries to accept only
+  decimal digits, therefore we use the <code><a href=
+  "wcbRef.html#cbappend">wcb::cbappend</a></code> command to <i>add</i> the
+  procedure <code><a href="wcbRef.html#entrycb">wcb::checkStrForNum</a></code>
+  to the callback list of each entry component.&nbsp; By invoking
+  <code><a href="wcbRef.html#callback">wcb::callback</a></code> instead of
+  <code>wcb::cbappend</code> (or <code><a href=
+  "wcbRef.html#cbprepend">wcb::cbprepend</a></code>), we would <i>replace</i>
+  the callback list with the one consisting of the single element
+  <code>wcb::checkStrForNum</code>.</p>
+
+  <p>Now we know that each entry component of the mentry widget will only
+  accept a limited number of decimal digits.&nbsp; But are the widths of the
+  entries large enough to hold the maximal number of 3 or 4 decimal digits,
+  respectively?&nbsp; In the case of a fixed-width font the answer is
+  definitely "yes", and the same holds true for most proportionally-spaced
+  fonts.&nbsp; There are, however, fonts in which not all decimal digits have
+  the same width.&nbsp; For this reason, we invoke the <code><a href=
+  "mentryWidget.html#adjustentry">adjustentry</a></code> subcommand for each
+  entry component, passing to it as last argument a string consisting of the
+  allowed characters, which in this example are the decimal digits.&nbsp; This
+  subcommand will increase the entry widget's width if needed, to make it just
+  large enough for texts of the component-specific maximal length, consisting
+  of characters specified by that string.</p>
+
+  <p>Our second procedure outputs a phone number to a mentry widget having a
+  <code>type</code> attribute value of <code>"PhoneNumber"</code>:</p>
+
+  <blockquote>
+    <pre>
+<span class="cmt">#------------------------------------------------------------------------------
+# putPhoneNumber
+#
+# Outputs the phone number num to the mentry widget win of type PhoneNumber.
+# The phone number must be a string of length 10, consisting of decimal digits.
+#------------------------------------------------------------------------------</span>
+proc putPhoneNumber {num win} {
+    <span class="cmt">#
+    # Check the syntax of num
+    #</span>
+    if {[string length $num] != 10 || ![regexp {^[0-9]*$} $num]} {
+        return -code error "expected 10 decimal digits but got \"$num\""
+    } 
+
+    <span class="cmt">#
+    # Check the widget and display the properly formatted phone number
+    #</span>
+    checkIfPhoneNumberMentry $win
+    $win put 0 [string range $num 0 2] [string range $num 3 5] \
+               [string range $num 6 9]
+}
+</pre>
+  </blockquote>
+
+  <p>We use the <code><a href="mentryWidget.html#put">put</a></code> subcommand
+  of the Tcl procedure corresponding to the mentry widget to display the three
+  substrings of the given phone number in the corresponding entries, starting
+  with the entry whose index is specified as the first argument following the
+  word <code>put</code>.</p>
+
+  <p>Next, we need a procedure that returns the phone number contained in a
+  mentry widget having a <code>type</code> attribute value of
+  <code>"PhoneNumber"</code>:</p>
+
+  <blockquote>
+    <pre>
+<span class="cmt">#------------------------------------------------------------------------------
+# getPhoneNumber
+#
+# Returns the phone number contained in the mentry widget win of type
+# PhoneNumber.
+#------------------------------------------------------------------------------</span>
+proc getPhoneNumber win {
+    <span class="cmt">#
+    # Check the widget
+    #</span>
+    checkIfPhoneNumberMentry $win
+
+    <span class="cmt">#
+    # Generate an error if any entry component is empty or incomplete
+    #</span>
+    for {set n 0} {$n &lt; 3} {incr n} {
+        if {[$win isempty $n]} {
+            focus [$win entrypath $n]
+            return -code error EMPTY
+        }
+        if {![$win isfull $n]} {
+            focus [$win entrypath $n]
+            return -code error INCOMPL
+        }
+    }
+
+    <span class="cmt">#
+    # Return the phone number built from the
+    # values contained in the entry components
+    #</span>
+    $win getarray strs
+    return $strs(0)$strs(1)$strs(2)
+}
+</pre>
+  </blockquote>
+
+  <p>The procedure runs over the indices of the entry components of the given
+  mentry widget and invokes the <code><a href=
+  "mentryWidget.html#isempty">isempty</a></code> and <code><a href=
+  "mentryWidget.html#isfull">isfull</a></code> subcommands of the Tcl command
+  corresponding to the given mentry widget.&nbsp; If one of the entries is
+  found to be empty or incomplete, the procedure gets its path name by calling
+  the <code><a href="mentryWidget.html#entrypath">entrypath</a></code>
+  subcommand, sets the focus to that entry, raises an error, and returns the
+  value <code>"EMPTY"</code> or <code>"INCOMPL"</code>, respectively.&nbsp; The
+  application invoking this procedure should then display an appropriate error
+  message corresponding to the return value.</p>
+
+  <p>Notice that the number <code>3</code> in the <code>for</code> loop above
+  is nothing else than&nbsp; <code>[$win <a href=
+  "mentryWidget.html#entrycount">entrycount</a>]</code>.&nbsp; Also, it would
+  be sufficient to check whether all entry components are full, because an
+  empty entry is at the same time incomplete.&nbsp; The preliminary check
+  whether an entry is empty is just made for the user's convenience.</p>
+
+  <p>To build the phone number from the values contained in the entry
+  components, we use a temporary array variable and invoke the <code><a href=
+  "mentryWidget.html#getarray">getarray</a></code> subcommand, which copies the
+  contents of the entries to the corresponding array elements.</p>
+
+  <p>The last two procedures presented above contain an invocation of the
+  command <code>checkIfPhoneNumberMentry</code>, which is implemented as
+  folows:</p>
+
+  <blockquote>
+    <pre>
+<span class="cmt">#------------------------------------------------------------------------------
+# checkIfPhoneNumberMentry
+#
+# Generates an error if win is not a mentry widget of type PhoneNumber.
+#------------------------------------------------------------------------------</span>
+proc checkIfPhoneNumberMentry win {
+    if {![winfo exists $win]} {
+        return -code error "bad window path name \"$win\""
+    }
+
+    if {[winfo class $win] ne "Mentry" ||
+        [$win attrib type] ne "PhoneNumber"} {
+        return -code error \
+               "window \"$win\" is not a mentry widget for phone numbers"
+    }
+}
+</pre>
+  </blockquote>
+
+  <p>This procedure retrieves the value of the <code>type</code> attribute of
+  its argument to check whether the latter denotes a mentry widget for phone
+  numbers (recall that this attribute was set to the value
+  <code>"PhoneNumber"</code> in the procedure
+  <code>phoneNumberMentry</code>).</p>
+
+  <p>Finally, recall that in the procedure <code>phoneNumberMentry</code>, we
+  inserted the binding tag <code>MentryPhoneNumber</code> into the list of
+  binding tags of the mentry's entry components, just after their path
+  names.&nbsp; The binding script for this tag shown in the code below handles
+  <code>&lt;&lt;Paste&gt;&gt;</code> (<code>&lt;Control-v&gt;</code> or
+  <code>&lt;Command-v&gt;</code>) events in these entry widgets by pasting the
+  current contents of the clipboard into the mentry, provided that it is a
+  valid 10-digit phone number:</p>
+
+  <blockquote>
+    <pre>
+bind MentryPhoneNumber <<Paste>> { pastePhoneNumber %W }
+
+<span class="cmt">#------------------------------------------------------------------------------
+# pastePhoneNumber
+#
+# Handles <<Paste>> events in the entry component w of a mentry widget for
+# 10-digit phone numbers by pasting the current contents of the clipboard into
+# the mentry if it is a valid 10-digit phone number.
+#------------------------------------------------------------------------------</span>
+proc pastePhoneNumber w {
+    set res [catch {::tk::GetSelection $w CLIPBOARD} num]
+    if {$res == 0} {
+        set win [winfo parent $w]
+        catch { putPhoneNumber $num $win }
+    }
+
+    return -code break ""
+}
+</pre>
+  </blockquote>
+
+  <p>The five procedures discussed above are implemented in the file
+  <code>phonenumber.tcl</code>, contained in the <code>demos</code>
+  directory.&nbsp; This script also puts them together to build a small
+  application displaying the following figure:</p>
+
+  <blockquote>
+    <img src="phonenumber.png" alt="Phone Number" width="281" height="253">
+  </blockquote>
+
+  <p>Here is the relevant code fragment:</p>
+
+  <blockquote>
+    <pre>
+package require mentry
+
+set title "Phone Number"
+wm title . $title
+
+<span class="cmt">#
+# Add some entries to the Tk option database
+#</span>
+source [file join [file dirname [info script]] option.tcl]
+
+. . .
+
+<span class="cmt">#
+# Frame .f with a mentry displaying a phone number
+#</span>
+frame .f
+label .f.l -text "A mentry widget for phone numbers:"
+phoneNumberMentry .f.me
+pack .f.l .f.me
+
+<span class="cmt">#
+# Message strings corresponding to the values
+# returned by getPhoneNumber on failure
+#</span>
+array set msgs {
+    EMPTY       "Field value missing"
+    INCOMPL     "Incomplete field value"
+}
+
+<span class="cmt">#
+# Button .get invoking the procedure getPhoneNumber
+#</span>
+button .get -text "Get from mentry" -command {
+    if {[catch {
+        set num ""
+        set num [getPhoneNumber .f.me]
+    } result] != 0} {
+        bell
+        tk_messageBox -icon error -message $msgs($result) \
+                      -title $title -type ok
+    }
+}
+
+<span class="cmt">#
+# Label .num displaying the result of getPhoneNumber
+#</span>
+label .num -textvariable num
+
+. . .
+
+putPhoneNumber 1234567890 .f.me
+focus [.f.me entrypath 0]
+</pre>
+  </blockquote>
+
+  <h3 id="ex_ethernetAddr">A mentry Widget for Ethernet Addresses</h3>
+
+  <p>Ethernet addresses are usuallly written in the form
+  <code>"XX:XX:XX:XX:XX:XX"</code>, where each <code>"X"</code> is a
+  hexadecimal digit.&nbsp; The file <code>ethernetaddr.tcl</code> in the
+  <code>demos</code> directory contains the steps needed to create and use a
+  multi-entry widget for displaying and editing Ethernet addresses.&nbsp; It
+  implements the procedures <code>ethernetAddrMentry</code>,
+  <code>putEthernetAddr</code>, and <code>getEthernetAddr</code>; the last two
+  invoke the helper procedure <code>checkIfEthernetAddrMentry</code>, while the
+  first one is implemented as follows:</p>
+
+  <blockquote>
+    <pre>
+<span class="cmt">#------------------------------------------------------------------------------
+# ethernetAddrMentry
+#   
+# Creates a new mentry widget win that allows to display and edit Ethernet
+# addresses.  Sets the type attribute of the widget to EthernetAddr and returns
+# the name of the newly created widget.
+#------------------------------------------------------------------------------</span>
+proc ethernetAddrMentry {win args} {
+    <span class="cmt">#
+    # Create a mentry widget consisting of 6 entries of width
+    # 2, separated by colons, and set its type to EthernetAddr
+    #</span>
+    eval [list mentry::mentry $win] $args
+    $win configure -body {2 : 2 : 2 : 2 : 2 : 2}
+    $win attrib type EthernetAddr
+
+    <span class="cmt">#
+    # Install automatic uppercase conversion and allow only hexadecimal
+    # digits in all entry components; use wcb::cbappend (or wcb::cbprepend)
+    # instead of wcb::callback in order to keep the wcb::checkEntryLen
+    # callback, registered by mentry::mentry for all entry components
+    #</span>
+    for {set n 0} {$n &lt; 6} {incr n} {
+        set w [$win entrypath $n]
+        wcb::cbappend $w before insert wcb::convStrToUpper \
+                      {wcb::checkStrForRegExp {^[0-9A-F]*$}}
+        $win adjustentry $n "0123456789ABCDEF"
+        bindtags $w [linsert [bindtags $w] 1 MentryEthernetAddr]
+    }
+    
+    return $win
+}
+</pre>
+  </blockquote>
+
+  <p>Notice again the invocation of the <code><a href=
+  "mentryWidget.html#adjustentry">adjustentry</a></code> subcommand of the Tcl
+  command associated with the mentry widget, for each of its entry
+  components.&nbsp; This is necessary, because in the case of a
+  proportionally-spaced font the characters <code>A</code> - <code>F</code>
+  need more room than the digits <code>0</code> - <code>9</code> (and it is not
+  even guaranteed that the latters have the same width).</p>
+
+  <p>The procedure <code>putEthernetAddr</code> expects as its first argument a
+  string of the form <code>"XX:XX:XX:XX:XX:XX"</code>, where each
+  <code>"XX"</code> must be a hexadecimal string in the range <code>0</code> -
+  <code>255</code>:</p>
+
+  <blockquote>
+    <pre>
+<span class="cmt">#------------------------------------------------------------------------------
+# putEthernetAddr
+#
+# Outputs the Ethernet address addr to the mentry widget win of type
+# EthernetAddr.  The address must be a string of the form XX:XX:XX:XX:XX:XX,
+# where each XX must be a hexadecimal string in the range 0 - 255.  Leading
+# zeros are allowed (but not required), hence the components may have more (but
+# also less) than two characters; the procedure displays them with exactly two
+# digits.
+#------------------------------------------------------------------------------</span>
+proc putEthernetAddr {addr win} {
+    set errorMsg "expected an Ethernet address but got \"$addr\""
+
+    <span class="cmt">#
+    # Check the syntax of addr
+    #</span>
+    set lst [split $addr :]
+    if {[llength $lst] != 6} {
+        return -code error $errorMsg
+    }
+
+    <span class="cmt">#
+    # Try to convert the 6 components of addr to hexadecimal
+    # strings and check whether they are in the range 0 - 255
+    #</span>
+    for {set n 0} {$n &lt; 6} {incr n} {
+        set val 0x[lindex $lst $n]
+        if {[catch {format "%02X" $val} str$n] != 0 || $val &lt; 0 || $val &gt; 255} {
+            return -code error $errorMsg
+        }
+    }
+
+    <span class="cmt">#
+    # Check the widget and display the properly formatted Ethernet address
+    #</span>
+    checkIfEthernetAddrMentry $win
+    $win put 0 $str0 $str1 $str2 $str3 $str4 $str5
+}
+</pre>
+  </blockquote>
+
+  <p>The procedure <code>getEthernetAddr</code> raises an error if any entry
+  component of the given mentry widget is empty.&nbsp; It accepts also entry
+  strings of length one, but in the return value all components will have
+  exactly two digits:</p>
+
+  <blockquote>
+    <pre>
+<span class="cmt">#------------------------------------------------------------------------------
+# getEthernetAddr
+#
+# Returns the Ethernet address contained in the mentry widget win of type
+# EthernetAddr.
+#------------------------------------------------------------------------------</span>
+proc getEthernetAddr win {
+    <span class="cmt">#
+    # Check the widget
+    #</span>
+    checkIfEthernetAddrMentry $win
+
+    <span class="cmt">#
+    # Generate an error if any entry component is empty
+    #</span>
+    for {set n 0} {$n &lt; 6} {incr n} {
+        if {[$win isempty $n]} {
+            focus [$win entrypath $n]
+            return -code error EMPTY
+        }
+    }
+
+    <span class="cmt">#
+    # Return the properly formatted Ethernet address built
+    # from the values contained in the entry components
+    #</span>
+    $win getarray strs
+    return [format "%02X:%02X:%02X:%02X:%02X:%02X" \
+            0x$strs(0) 0x$strs(1) 0x$strs(2) 0x$strs(3) 0x$strs(4) 0x$strs(5)]
+}
+</pre>
+  </blockquote>
+
+  <p>We will not show the rest of the code here, because it is very similar to
+  the one presented in the preceding section.&nbsp; The mentry widget for
+  Ethernet addresses looks like in the following figure:</p>
+
+  <blockquote>
+    <img src="ethernetaddr.png" alt="Ethernet Address" width="303"
+    height="272">
+  </blockquote>
+
+  <h3 id="ex_dateTime">Using mentry Widgets for Date and Time</h3>
+
+  <p>Multi-entry widgets can be used to display and edit date and time in a
+  great variety of formats.&nbsp; The Mentry package contains ready-to-use
+  commands for this purpose:</p>
+
+  <ul>
+    <li>The procedure <code><a href=
+    "mentryDateTime.html#dateMentry">mentry::dateMentry</a></code> creates a
+    new mentry widget for displaying and editing a date according to the format
+    passed to the command as a three-character string consisting of the field
+    descriptor characters <code>"d"</code>, <code>"m"</code>, and
+    <code>"y"</code> or <code>"Y"</code>, known from the&nbsp; <code>clock
+    format</code>&nbsp; command.&nbsp; Another argument expected by the
+    procedure is the string (usually a single character) to be displayed in the
+    labels separating the three components of the date.</li>
+
+    <li class="tm">Similarly, the procedure <code><a href=
+    "mentryDateTime.html#timeMentry">mentry::timeMentry</a></code> creates a
+    new mentry widget for displaying and editing a time according to the format
+    passed to the command as a two- or three-character string consisting of the
+    following field descriptor characters of the&nbsp; <code>clock
+    format</code>&nbsp; command: <code>"H"</code> or <code>"I"</code>, followed
+    by <code>"M"</code>, and optionally the letter <code>"S"</code>.&nbsp; An
+    <code>"H"</code> as first character specifies the time format
+    <code>"%H:%M"</code> or <code>"%H:%M:%S"</code> (i.e., with the hour
+    between <code>0</code> and <code>23</code>), while the letter
+    <code>"I"</code> stands for&nbsp; <code>"%I:%M %p"</code>&nbsp; or&nbsp;
+    <code>"%I:%M:%S %p"</code>&nbsp; (i.e., with AM/PM indicator).&nbsp; The
+    procedure expects the separator string (which is usually the
+    <code>":"</code> character) as another command-line argument.</li>
+
+    <li class="tm">Finally, the procedure <code><a href=
+    "mentryDateTime.html#dateTimeMentry">mentry::dateTimeentry</a></code>
+    creates a new mentry widget for displaying and editing a date & time
+    according to the format passed to the command as a 5- or 6-character
+    string, with the first three characters consisting of the letters
+    <code>"d"</code>, <code>"m"</code>, and <code>"y"</code> or
+    <code>"Y"</code>, followed by two or three further field descriptor
+    characters of the&nbsp; <code>clock format</code>&nbsp; command, which must
+    be: <code>"H"</code> or <code>"I"</code>, then <code>"M"</code>, and
+    optionally the letter <code>"S"</code>.&nbsp; The procedure expects two
+    more arguments, specifying the separators to be used in the date and time
+    parts of the mentry widget, respectively.</li>
+  </ul>
+
+  <p>Before describing the other date- and time-related commands provided by
+  the Mentry package, let's see how the first two of the above are invoked in
+  the file <code>datetime1.tcl</code>, located in the <code>demos</code>
+  directory:</p>
+
+  <blockquote>
+    <pre>
+package require mentry
+
+set title "Date & Time"
+wm title . $title 
+
+<span class="cmt">#
+# Add some entries to the Tk option database
+#</span>
+source [file join [file dirname [info script]] option.tcl]
+    
+<span class="cmt">#   
+# Date and time formats supported by this demo
+# script and the corresponding field separators
+#</span>
+array set dateFmts {0 mdy  1 dmy  2 Ymd}
+array set dateSeps {0 /    1 .    2 -  }
+array set timeFmts {0 IMS  1 HMS}
+array set timeSeps {0 :    1 :  }
+
+<span class="cmt">#
+# Choose the date & time formats; don't use the %p field descriptor
+# for displaying the AM/PM indicator, because it doesn't
+# work on UNIX if Tcl/Tk is used in a non-default locale
+#</span>
+wm withdraw .
+set clockVal [clock seconds]
+if {[clock format $clockVal -format "%H"] &lt; 12} {
+    set meridian AM
+} else {
+    set meridian PM
+}
+set dateIdx [tk_dialog .choice $title "Please choose a date format" {} -1 \
+                       [clock format $clockVal -format "%m/%d/%y"] \ 
+                       [clock format $clockVal -format "%d.%m.%y"] \ 
+                       [clock format $clockVal -format "%Y-%m-%d"]]
+set timeIdx [tk_dialog .choice $title "Please choose a time format" {} -1 \
+                       [clock format $clockVal -format "%I:%M:%S $meridian"] \
+                       [clock format $clockVal -format "%H:%M:%S"]]
+wm deiconify .
+
+<span class="cmt">#   
+# Frame .f with mentries displaying the date & time
+#</span>   
+frame .f
+label .f.lDate -text "Date: "
+mentry::dateMentry .f.date $dateFmts($dateIdx) $dateSeps($dateIdx) \ 
+                   -justify center
+frame .f.gap -width 10
+label .f.lTime -text "Time: "
+mentry::timeMentry .f.time $timeFmts($timeIdx) $timeSeps($timeIdx) \
+                   -justify center
+pack .f.lDate .f.date .f.gap .f.lTime .f.time -side left
+</pre>
+  </blockquote>
+
+  <p>Before displaying the main window, the script lets the user choose one out
+  of three date and one out of two time formats.&nbsp; The corresponding
+  command-line arguments passed to <code>mentry::dateMentry</code> and
+  <code>mentry::timeMentry</code> are taken from the arrays
+  <code>dateFmts</code>, <code>dateSeps</code>, <code>timeFmts</code>, and
+  <code>timeSeps</code>.</p>
+
+  <p>The following figure corresponds to the choices&nbsp; <code>dateIdx =
+  2</code>&nbsp; and&nbsp; <code>timeIdx = 1</code>:</p>
+
+  <blockquote>
+    <img src="datetime1.png" alt="Date & Time" width="285" height="230">
+  </blockquote>
+
+  <p>The demo script <code>datetime2.tcl</code> displays both the date and time
+  in the same mentry widget, with the aid of the third command described
+  above:</p>
+
+  <blockquote>
+    <pre>
+<span class="cmt">#
+# Frame .f with a mentry displaying the date & time
+#</span>
+frame .f
+label .f.l -text "Date & time: "
+mentry::dateTimeMentry .f.me $dateFmts($dateIdx)$timeFmts($timeIdx) \
+                       $dateSeps($dateIdx) $timeSeps($timeIdx) \
+                       -justify center
+pack .f.l .f.me
+</pre>
+  </blockquote>
+
+  <blockquote>
+    <img src="datetime2.png" alt="Date & Time" width="278" height="230">
+  </blockquote>
+
+  <p>The Mentry package exports two further commands for date, time, and date &
+  time mentries:</p>
+
+  <ul>
+    <li>The procedure <code><a href=
+    "mentryDateTime.html#putClockVal">mentry::putClockVal</a></code> outputs
+    the date, time, or date & time corresponding to an integer clock value
+    specified as its first argument to a date, time, or date & time mentry
+    widget, passed to it as the second parameter.&nbsp; Like the
+    &nbsp;<code>clock format</code>&nbsp; command, the procedure accepts the
+    optional argument pair&nbsp; <code>-gmt <i>boolean</i></code>.</li>
+
+    <li class="tm">The procedure <code><a href=
+    "mentryDateTime.html#getClockVal">mentry::getClockVal</a></code> returns
+    the clock value corresponding to the date, time, or date & time contained
+    in the date, time, or date & time mentry specified as its first
+    argument.&nbsp; Like the &nbsp;<code>clock scan</code>&nbsp; command, the
+    procedure accepts the optional argument pairs&nbsp; <code>-base
+    <i>clockValue</i></code>&nbsp; and&nbsp; <code>-gmt
+    <i>boolean</i></code>.&nbsp; On failure, the procedure sets the focus to
+    the first erronous entry component, generates an error, and returns one of
+    the values contained in the following code fragment taken from the scripts
+    <code>datetime1.tcl</code> and <code>datetime2.tcl</code>:
+
+      <blockquote>
+        <pre>
+<span class="cmt">#
+# Message strings corresponding to the values
+# returned by mentry::getClockVal on failure
+#</span>
+array set msgs {
+    EMPTY       "Field value missing"
+    BAD         "Invalid field value"
+    BAD_DATE    "Invalid date"
+    BAD_YEAR    "Unsupported year"
+}
+</pre>
+      </blockquote>
+
+      <p>The string <code>"EMPTY"</code> is returned if any entry component
+      (except the one containing the seconds) was found to be empty.&nbsp; The
+      value <code>"BAD"</code> means a day, month, or hour value of
+      <code>0</code> (the hour must not be <code>0</code> if the AM/PM
+      indicator is present).&nbsp; The string <code>"BAD_DATE"</code> is
+      returned when the &lt;year, month, day&gt; triple is invalid (note that
+      the procedure is aware of leap years).&nbsp; Finally, even if this triple
+      is valid, the conversion (made with the aid of the&nbsp; <code>clock
+      scan</code>&nbsp; command) can fail because of an unsupported year value
+      (e.g., between <code>38</code> and <code>70</code>); in this case the
+      string <code>"BAD_YEAR"</code> is returned.</p>
+    </li>
+  </ul>
+
+  <p>The demo script <code>datetime1.tcl</code> invokes the last two commands
+  as follows:</p>
+
+  <blockquote>
+    <pre>
+<span class="cmt">#
+# Button .get invoking the procedure mentry::getClockVal
+#</span>
+button .get -text "Get from mentries" -command {
+    if {[catch {
+        set dateTime ""
+        set base [mentry::getClockVal .f.date]
+        set clockVal [mentry::getClockVal .f.time -base $base]
+        set dateTime [clock format $clockVal -format "%c"]
+    } result] != 0} {
+        bell
+        tk_messageBox -icon error -message $msgs($result) \
+                      -title $title -type ok
+    }
+}
+
+<span class="cmt">#
+# Label .dateTime displaying the result of mentry::getClockVal
+#</span>
+label .dateTime -textvariable dateTime
+
+. . .
+
+set clockVal [clock seconds]
+mentry::putClockVal $clockVal .f.date
+mentry::putClockVal $clockVal .f.time
+focus [.f.date entrypath 0]
+</pre>
+  </blockquote>
+
+  <p>To obtain the clock value from the mentry widgets <code>.f.date</code> and
+  <code>.f.time</code>, we first pass the name of the date mentry to the
+  command <code>mentry::getClockVal</code> and then use the result as the value
+  of the <code>-base</code> option when passing the name of the time mentry to
+  the same procedure.</p>
+
+  <p>The demo script <code>datetime2.tcl</code> is simpler:</p>
+
+  <blockquote>
+    <pre>
+<span class="cmt">#
+# Button .get invoking the procedure mentry::getClockVal
+#</span>
+button .get -text "Get from mentry" -command {
+    if {[catch {
+        set dateTime ""
+        set clockVal [mentry::getClockVal .f.me]
+        set dateTime [clock format $clockVal -format "%c"]
+    } result] != 0} {
+        bell
+        tk_messageBox -icon error -message $msgs($result) \
+                      -title $title -type ok
+    }
+}
+
+<span class="cmt">#
+# Label .dateTime displaying the result of mentry::getClockVal
+#</span>
+label .dateTime -textvariable dateTime
+
+. . .
+
+set clockVal [clock seconds]
+mentry::putClockVal $clockVal .f.me
+focus [.f.me entrypath 0]
+</pre>
+  </blockquote>
+
+  <h3 id="ex_tile">Tile-Based Demo Scripts</h3>
+
+  <p>The Mentry distribution contains also tile-based counterparts of the demo
+  scripts discussed above.&nbsp; As described in the <a href="#ov_tile">More on
+  Mentry_tile</a> section of this tutorial, it is quite easy to port an
+  application using the Mentry package to one based on Mentry_tile.&nbsp; For
+  example, let's see how to transform the demo script
+  <code>phonenumber.tcl</code> into a tile-based one, called
+  <code>phonenumber_tile.tcl</code>.&nbsp; The changes are shown below in
+  <span class="red">red</span> color:</p>
+
+  <blockquote>
+    <pre>
+package require mentry<span class="red">_tile</span>
+
+set title "Phone Number"
+wm title . $title
+
+<span class="cmt">#
+# Add some entries to the Tk option database
+#</span>
+source [file join [file dirname [info script]] option<span class="red">_tile</span>.tcl]
+
+. . .
+
+proc pastePhoneNumber w {
+
+    . . .
+
+    if {$res == 0} {
+        set win <span class="red">[winfo parent</span> [winfo parent $w]<span class="red">]</span>
+        . . .
+    }
+}
+
+. . .
+
+<span class="red">#
+# Improve the window's appearance by using a tile
+# frame as a container for the other widgets
+#
+ttk::frame .base</span>
+
+<span class="cmt">#
+# Frame <span class="red">.base</span>.f with a mentry displaying a phone number
+#</span>
+<span class="red">ttk::</span>frame .base.f
+<span class="red">ttk::</span>label .base.f.l -text "A mentry widget for phone numbers:"
+phoneNumberMentry <span class="red">.base</span>.f.me
+pack <span class="red">.base</span>.f.l <span class="red">.base</span>.f.me
+
+<span class="cmt">#
+# Message strings corresponding to the values
+# returned by getPhoneNumber on failure
+#</span>
+array set msgs {
+    EMPTY       "Field value missing"
+    INCOMPL     "Incomplete field value"
+}
+
+<span class="cmt">#
+# Button <span class="red">.base</span>.get invoking the procedure getPhoneNumber
+#</span>
+<span class="red">ttk</span>::button <span class="red">.base</span>.get -text "Get from mentry" -command {
+    if {[catch {
+        set num ""
+        set num [getPhoneNumber <span class="red">.base</span>.f.me]
+    } result] != 0} {
+        bell
+        tk_messageBox -icon error -message $msgs($result) \
+                      -title $title -type ok
+    }
+}
+
+<span class="cmt">#
+# Label <span class="red">.base</span>.num displaying the result of getPhoneNumber
+#</span>
+<span class="red">ttk::</span>label <span class="red">.base</span>.num -textvariable num
+
+. . .
+
+putPhoneNumber 1234567890 <span class="red">.base</span>.f.me
+focus [<span class="red">.base</span>.f.me entrypath 0]
+</pre>
+  </blockquote>
+
+  <p>That's all!&nbsp; The resulting window has a nice theme-specific
+  appearance:</p>
+
+  <blockquote>
+    <img src="phonenumber_tile.png" alt="Phone Number" width="279"
+    height="243">
+  </blockquote>
+
+  <p>The only Mentry-specific changes in the code above consist of the use of
+  the <code>_tile</code> suffix in <code>mentry_tile</code> and a second
+  invocation of&nbsp; <code>winfo parent</code>&nbsp; in the procedure
+  <code>pastePhoneNumber</code> (for technical reasons, the entry components of
+  a tile-based mentry widget are <i>grand</i>children of the mentry).</p>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+</body>
+</html>

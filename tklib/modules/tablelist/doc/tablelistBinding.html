@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Commands Related to Binding Scripts</title>
+
+  <meta name="Author" content="Csaba Nemethi">
+  <meta name="Keywords" content="tablelist, binding script">
+
+  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+</head>
+
+<body>
+  <div>
+    <h1>Commands Related to Binding Scripts</h1>
+
+    <h2>For Tablelist Version 7.4</h2>
+
+    <h3>by</h3>
+
+    <h2>Csaba Nemethi</h2>
+
+    <address>
+      <a href="mailto:csaba.nemethi@t-online.de">csaba.nemethi@t-online.de</a>
+    </address>
+  </div>
+
+  <hr>
+
+  <h2 id="contents">Contents</h2>
+
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+
+    <li><a href="#convEventFields">The
+    <code><b>tablelist::convEventFields</b></code> Command</a></li>
+
+    <li><a href="#getTablelistPath">The
+    <code><b>tablelist::getTablelistPath</b></code> Command</a></li>
+
+    <li><a href="#getTablelistColumn">The
+    <code><b>tablelist::getTablelistColumn</b></code> Command</a></li>
+
+    <li><a href="#delaySashPosUpdates">The
+    <code><b>tablelist::delaySashPosUpdates</b></code> Command</a></li>
+  </ul>
+
+  <div>
+    <p><a href="index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="overview">Overview</h2>
+
+  <p>The first three commands described in this reference page are designed to
+  be used in binding scripts associated with the binding tags whose names are
+  returned by the <code><b><a href=
+  "tablelistWidget.html#bodytag">bodytag</a></b></code> and <code><b><a href=
+  "tablelistWidget.html#labeltag">labeltag</a></b></code> subcommands of the
+  Tcl command associated with a tablelist widget.&nbsp; The first two of these
+  commands are also used in the default binding scripts associated with the
+  binding tag <code><b>TablelistBody</b></code>.&nbsp; For details and examples
+  see the sections <a href="tablelistWidget.html#body_bindings">DEFAULT AND
+  INDIVIDUAL BINDINGS FOR THE TABLELIST BODY</a> and <a href=
+  "tablelistWidget.html#label_bindings">DEFAULT AND INDIVIDUAL BINDINGS FOR THE
+  HEADER LABELS</a>.</p>
+
+  <p>The last command is related to the default binding scripts for Tk core
+  panedwindow and ttk::panedwindow widgets.&nbsp; It can be used to control the
+  frequency of the sash position updates, which might be necessary to eliminate
+  some artifacts caused by dragging a sash if one or more of the panes contains
+  a tablelist widget with embedded images.</p>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="convEventFields">The <code><b>tablelist::convEventFields</b></code>
+  Command</h2>
+
+  <dl>
+    <dt><b>NAME</b></dt>
+
+    <dd><code>tablelist::convEventFields</code> &ndash; Convert event fields
+    relative to a descendant of a tablelist widget</dd>
+
+    <dt class="tm"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>tablelist::convEventFields</b> <i>descendantPathName</i> <i>x</i> <i>y</i>
+</pre>
+    </dd>
+
+    <dt><b>DESCRIPTION</b></dt>
+
+    <dd>This command gets the path name of a tablelist widget and the x and y
+    coordinates relative to the latter from the path name
+    <code><i>descendantPathName</i></code> of one of its descendants and from
+    the x and y coordinates <code><i>x</i></code>, <code><i>y</i></code>
+    relative to this descendant.&nbsp; The command returns these values as the
+    components of a list consisting of three elements.</dd>
+
+    <dd class="tm">
+      In a binding script, the descendant widget corresponds to the event field
+      <code><b>%W</b></code>, which can be the tablelist's body, one of the
+      separator frames, a label widget displaying an embedded image, or (a
+      descendant of) an embedded window.&nbsp; It can also be a header label or
+      a Tk core or tile checkbutton embedded into a header label, or a sort
+      arrow.&nbsp; Likewise, the
+      arguments <code><i>x</i></code> and <code><i>y</i></code> correspond to
+      the event fields <code><b>%x</b></code> and <code><b>%y</b></code>.&nbsp;
+      The three elements of the list returned by the command are usually
+      assigned to the help variables <code><b>tablelist::W</b></code>,
+      <code><b>tablelist::x</b></code>, and <code><b>tablelist::y</b></code>,
+      by using the statement
+
+      <blockquote>
+        <pre>
+foreach {tablelist::W tablelist::x tablelist::y} \
+    [<span class="red">tablelist::convEventFields</span> %W %x %y] {}
+</pre>
+      </blockquote>
+    </dd>
+
+    <dt><b>KEYWORDS</b></dt>
+
+    <dd>tablelist, event fields, binding script</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="getTablelistPath">The <code><b>tablelist::getTablelistPath</b></code>
+  Command</h2>
+
+  <dl>
+    <dt><b>NAME</b></dt>
+
+    <dd><code>tablelist::getTablelistPath</code> &ndash; Get the path name of a
+    tablelist widget from the path name of one of its descendants</dd>
+
+    <dt class="tm"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>tablelist::getTablelistPath</b> <i>descendantPathName</i>
+</pre>
+    </dd>
+
+    <dt><b>DESCRIPTION</b></dt>
+
+    <dd>This command gets the path name of a tablelist widget from the path
+    name <code><i>descendantPathName</i></code> of one of its descendants.</dd>
+
+    <dd class="tm">In a binding script, the descendant widget corresponds to
+    the event field <code><b>%W</b></code>, which can be the tablelist's body,
+    one of the separator frames, a label widget displaying an embedded image,
+    or (a descendant of) an embedded window.&nbsp; It can also be a header
+    label or a Tk core or tile checkbutton embedded into a header label, or a
+    sort arrow.&nbsp; The return value is often assigned to the help variable
+    <code><b>tablelist::W</b></code>.</dd>
+
+    <dt class="tm"><b>KEYWORDS</b></dt>
+
+    <dd>tablelist, path name, binding script</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="getTablelistColumn">The
+  <code><b>tablelist::getTablelistColumn</b></code> Command</h2>
+
+  <dl>
+    <dt><b>NAME</b></dt>
+
+    <dd><code>tablelist::getTablelistColumn</code> &ndash; Get the column
+    number from the path name of a tablelist header label</dd>
+
+    <dt class="tm"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>tablelist::getTablelistColumn</b> <i>headerLabelPathName</i>
+</pre>
+    </dd>
+
+    <dt><b>DESCRIPTION</b></dt>
+
+    <dd>This command gets the column number from the path name
+    <code><i>headerLabelPathName</i></code> of a tablelist header label or of
+    a Tk core or tile checkbutton embedded into a header label, or of a sort
+    arrow.&nbsp; Returns the column number on success and <code>-1</code> on
+    failure.</dd>
+
+    <dd class="tm">In a binding script, the argument corresponds to the event
+    field <code><b>%W</b></code>.&nbsp; The return value is often assigned to
+    the help variable <code><b>tablelist::col</b></code>.</dd>
+
+    <dt class="tm"><b>KEYWORDS</b></dt>
+
+    <dd>tablelist, path name, binding script</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="delaySashPosUpdates">The
+  <code><b>tablelist::delaySashPosUpdates</b></code> Command</h2>
+
+  <dl>
+    <dt><b>NAME</b></dt>
+
+    <dd><code>tablelist::delaySashPosUpdates</code> &ndash; Set a delay for the
+    panedwindow sash position updates</dd>
+
+    <dt class="tm"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>tablelist::delaySashPosUpdates</b> <i>panedwindowPathName</i> <i>ms</i>
+</pre>
+    </dd>
+
+    <dt><b>DESCRIPTION</b></dt>
+
+    <dd>This command sets a delay for the updates of the sash position caused
+    by dragging a sash of the panedwindow widget specified by the first
+    argument, which must be the path name of a Tk core panedwindow or
+    ttk::panedwindow widget.&nbsp; <code><i>ms</i></code> must be an integer
+    giving the delay in milliseconds.&nbsp; If this number is nonnegative then
+    the sash position updates via&nbsp <code><b>sash place ...</b></code>&nbsp;
+    (for a Tk core panedwindow widget) or&nbsp; <code><b>sashpos
+    ...</b></code>&nbsp; (for a ttk::panedwindow widget) will be scheduled for
+    execution <code><i>ms</i></code> milliseconds later, in such a way that,
+    until the time for an already scheduled update expires, new drag events
+    won't schedule new update operations (only their data will be
+    remembered).&nbsp; This will reduce the frequency of the sash position
+    updates caused by dragging a sash of the specified widget, depending on the
+    value of <code><i>ms</i></code>.&nbsp; If this number is negative then any
+    dragging of a sash of the specified widget will immediately trigger an
+    update of the sash position, as implemented in the default binding scripts
+    for Tk core panedwindow and ttk::panedwindow widgets.</dd>
+
+    <dd class="tm">This command can be used to control the frequency of the
+    sash position updates for a given panedwindow widget, which might be
+    necessary to eliminate some artifacts caused by dragging a sash if one or
+    more of the panes contains a tablelist widget with embedded images.&nbsp;
+    The value of <code><i>ms</i></code> (typically a number between 10 and 100)
+    is application- and platform-specific (on Windows and Mac OS X/11+ you will
+    need a higher value than on X11).</dd>
+
+    <dt class="tm"><b>KEYWORDS</b></dt>
+
+    <dd>panedwindow, tablelist, path name, binding script</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>The mentry::mentry Command</title>
+
+  <meta name="Author" content="Csaba Nemethi">
+  <meta name="Keywords" content="mentry, widget, entry, label">
+
+  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+</head>
+
+<body>
+  <div>
+    <h1>The <code><b>mentry::mentry</b></code> Command</h1>
+
+    <h2>For Mentry Version 4.3</h2>
+
+    <h3>by</h3>
+
+    <h2>Csaba Nemethi</h2>
+
+    <address>
+      <a href="mailto:csaba.nemethi@t-online.de">csaba.nemethi@t-online.de</a>
+    </address>
+  </div>
+
+  <hr>
+
+  <h2 id="contents">Contents</h2>
+
+  <ul>
+    <li><a href="#quick_ref">Quick Reference</a></li>
+
+    <li><a href="#detailed_ref">Detailed Reference</a></li>
+  </ul>
+
+  <div>
+    <p><a href="index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="quick_ref">Quick Reference</h2>
+
+  <dl>
+    <dt><a href="#name">NAME</a></dt>
+
+    <dd><code>mentry::mentry</code> &ndash; Create and manipulate multi-entry
+    widgets</dd>
+
+    <dt class="tm"><a href="#synopsis">SYNOPSIS</a></dt>
+
+    <dd>
+      <pre>
+<b>mentry::mentry</b> <i>pathName</i> ?<i>options</i>?
+</pre>
+    </dd>
+
+    <dt><a href="#description">DESCRIPTION</a></dt>
+
+    <dt class="tm"><a href="#std_options">STANDARD OPTIONS</a></dt>
+
+    <dd>
+      <pre>
+<b>-borderwidth          -highlightcolor      -relief
+-highlightbackground  -highlightthickness</b>
+</pre>
+    </dd>
+
+    <dt><a href="#child_options">OPTIONS FOR ALL ENTRY AND LABEL
+    COMPONENTS</a></dt>
+
+    <dd>
+      <pre>
+<b>-background  -cursor  -font  -foreground</b>
+</pre>
+    </dd>
+
+    <dt><a href="#entry_options">OPTIONS FOR ALL ENTRY COMPONENTS</a></dt>
+
+    <dd>
+      <pre>
+<b>-exportselection    -insertwidth        -selectforeground
+-insertbackground   -invalidcommand     -show
+-insertborderwidth  -justify            -state
+-insertofftime      -selectbackground   -validate
+-insertontime       -selectborderwidth  -validatecommand</b>
+</pre>
+    </dd>
+
+    <dt><a href="#widget_options">WIDGET-SPECIFIC OPTIONS</a></dt>
+
+    <dd><code><b><a href="#body">-body</a></b> {<i>width</i> ?<i>text</i>
+    <i>width</i> <i>text</i> ...?}</code></dd>
+
+    <dd><code><b><a href="#disabledbackground">-disabledbackground</a></b>
+    <i>color</i></code></dd>
+
+    <dd><code><b><a href="#disabledforeground">-disabledforeground</a></b>
+    <i>color</i></code></dd>
+
+    <dd><code><b><a href="#readonlybackground">-readonlybackground</a></b>
+    <i>color</i></code></dd>
+
+    <dd><code><b><a href="#takefocus">-takefocus</a></b>
+    <b>0</b>|<b>1</b>|<b>""</b>|<i>command</i></code></dd>
+
+    <dd><code><b><a href="#textvariable">-textvariable</a></b>
+    <i>array</i></code></dd>
+
+    <dt class="tm"><a href="#indices">INDICES</a></dt>
+
+    <dd>
+      <pre>
+<i>number</i>  <b>end</b>
+</pre>
+    </dd>
+
+    <dt class="tm"><a href="#widget_command">WIDGET COMMAND</a></dt>
+
+    <dd><code><i>pathName</i> <b><a href="#adjustentry">adjustentry</a></b>
+    <i>index</i> <i>string1</i> ?<i>string2</i>?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#attrib">attrib</a></b> ?<i>name</i>?
+    ?<i>value</i> <i>name</i> <i>value</i> ...?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#cget">cget</a></b>
+    <i>option</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#clear">clear</a></b> <i>first</i>
+    ?<i>last</i>?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#configure">configure</a></b>
+    ?<i>option</i>? ?<i>value</i> <i>option</i> <i>value</i> ...?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#entries">entries</a></b></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href=
+    "#entrycount">entrycount</a></b></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#entrylimit">entrylimit</a></b>
+    <i>index</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#entrypath">entrypath</a></b>
+    <i>index</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#getarray">getarray</a></b>
+    <i>array</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#getlist">getlist</a></b></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href=
+    "#getstring">getstring</a></b></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#hasattrib">hasattrib</a></b>
+    <i>name</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#isempty">isempty</a></b>
+    ?<i>index</i>?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#isfull">isfull</a></b>
+    ?<i>index</i>?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href=
+    "#labelcount">labelcount</a></b></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#labelpath">labelpath</a></b>
+    <i>index</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#labels">labels</a></b></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#put">put</a></b> <i>startIndex</i>
+    ?<i>string</i> <i>string</i> ...?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href=
+    "#setentryextrawidth">setentryextrawidth</a></b> <i>index</i>
+    <i>amount</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#setentryfont">setentryfont</a></b>
+    <i>index</i> <i>font</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#setentrywidth">setentrywidth</a></b>
+    <i>index</i> <i>width</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#unsetattrib">unsetattrib</a></b>
+    <i>name</i></code></dd>
+
+    <dt class="tm"><a href="#bindings">DEFAULT BINDINGS</a></dt>
+
+    <dt class="tm"><a href="#keywords">KEYWORDS</a></dt>
+
+    <dd>mentry, widget, entry, label</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="detailed_ref">Detailed Reference</h2>
+
+  <dl>
+    <dt id="name"><b>NAME</b></dt>
+
+    <dd><code>mentry::mentry</code> &ndash; Create and manipulate multi-entry
+    widgets</dd>
+
+    <dt class="tm" id="synopsis"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>mentry::mentry</b> <i>pathName</i> ?<i>options</i>?
+</pre>
+    </dd>
+
+    <dt id="description"><b>DESCRIPTION</b></dt>
+
+    <dd>The <code><b>mentry::mentry</b></code> command creates a new window
+    named <code><i>pathName</i></code> and of the class
+    <code><b>Mentry</b></code>, and makes it into a <b>mentry</b> widget.&nbsp;
+    Additional options, described below, may be specified on the command line
+    or in the option database to configure aspects of the mentry such as its
+    colors, font, and components.&nbsp; The <code><b>mentry::mentry</b></code>
+    command returns its <code><i>pathName</i></code> argument.&nbsp; At the
+    time this command is invoked, there must not exist a window named
+    <code><i>pathName</i></code>, but <code><i>pathName</i></code>'s parent
+    must exist.</dd>
+
+    <dd class="tm">The word <i>mentry</i> is an abbreviation of
+    <i>multi-entry</i>.&nbsp; A mentry is a mega-widget consisting of any
+    number of entries separated by labels, all embedded in a frame.&nbsp; Due
+    to appropriately chosen configuration options for the entries and labels, a
+    mentry widget looks like one single entry containing preinserted text
+    pieces that cannot be moved, changed, or deleted by the user.</dd>
+
+    <dd class="tm">In the Mentry package both the entry and label components
+    are direct children of the mentry widget.&nbsp; In the Mentry_tile package
+    only the labels are direct children, while the entry components are
+    grandchildren of the mentry (for technical reasons, the entry components of
+    a tile-based mentry widget are embedded in frame widgets, which in turn are
+    children of the mentry).</dd>
+
+    <dd class="tm">The initial width of each entry component (specified by the
+    <code><b><a href="#body">-body</a></b></code> configuration option) also
+    determines the maximal number of characters that can be inserted into
+    it.&nbsp; This is achieved with the aid of the <code><b><a href=
+    "wcbRef.html#callback">wcb::callback</a></b></code> command, by registering
+    the <code><b><a href=
+    "wcbRef.html#entrycb">wcb::checkEntryLen</a></b></code>
+    before-<code><b>insert</b></code> callback with the entry component.&nbsp;
+    In order to keep this callback, additional
+    before-<code><b>insert</b></code> callbacks (if needed) should only be
+    registered with the <code><b><a href=
+    "wcbRef.html#cbappend">wcb::cbappend</a></b></code> and <code><b><a href=
+    "wcbRef.html#cbprepend">wcb::cbprepend</a></b></code> commands.&nbsp; When
+    reaching this limit in an entry having the input focus, the latter is set
+    automatically to the next enabled entry component, the contents of that
+    widget is selected, and the insertion cursor is set to its end.&nbsp; This
+    is made sure by defining an appropriate after-<code><b>insert</b></code>
+    callback, which must be kept to be the last such callback for the
+    entry.&nbsp; For this reason, additional after-<code><b>insert</b></code>
+    callbacks (if needed) should only be registered with the
+    <code><b>wcb::cbprepend</b></code> command.&nbsp; The same command should
+    be used exclusively to define after-<code><b>motion</b></code> callbacks
+    (if needed), because <code><b>mentry::mentry</b></code> registers one that
+    must be the last after-<code><b>motion</b></code> callback for each entry
+    component.</dd>
+
+    <dd class="tm">Each mentry widget may have any number of <b>attributes</b>,
+    which can be used in commands that create or manipulate mentry widgets for
+    particular purposes.&nbsp; For example, each date mentry created by the
+    <code><b><a href=
+    "mentryDateTime.html#dateMentry">mentry::dateMentry</a></b></code> command
+    has a <code><b>type</b></code> attribute having the value
+    <code>"Date"</code> and a <code><b>format</b></code> attribute specifying
+    the meanings of its components.&nbsp; The values of these attributes are
+    queried and used in the bodies of the procedures <code><b><a href=
+    "mentryDateTime.html#putClockVal">mentry::putClockVal</a></b></code> and
+    <code><b><a href=
+    "mentryDateTime.html#getClockVal">mentry::getClockVal</a></b></code>.</dd>
+
+    <dt class="tm" id="std_options"><b>STANDARD OPTIONS</b></dt>
+
+    <dd>
+      <pre>
+<b>-borderwidth          -highlightcolor      -relief
+-highlightbackground  -highlightthickness</b>
+</pre>
+    </dd>
+
+    <dd>See the <b>options</b> manual entry for details on the standard Tk
+    widget options.&nbsp; These options are only supported by the Mentry
+    package, but not by Mentry_tile.</dd>
+
+    <dt class="tm" id="child_options"><b>OPTIONS FOR ALL ENTRY AND LABEL
+    COMPONENTS</b></dt>
+
+    <dd>
+      <pre>
+<b>-background  -cursor  -font  -foreground</b>
+</pre>
+    </dd>
+
+    <dd>These options (described in the <b>options</b> manual entry) specify
+    the values of the options of the same names for all entry and label
+    components of the given multi-entry widget.&nbsp; These values may be
+    changed for an individual component by using the
+    <code><b>configure</b></code> subcommand of the Tcl command corresponding
+    to that component.&nbsp; However, applying this method to change the font
+    of an entry of a tile-based mentry widget might break the latter's
+    appearance (this has tile-related technical reasons).&nbsp; To avoid this
+    problem, it is recommended to use the <code><b><a href=
+    "#setentryfont">setentryfont</a></b></code> subcommand of the Tcl command
+    associated with the mentry widget for changing the value of the
+    <code><b>-font</b></code> option of one of its entry components.</dd>
+
+    <dd class="tm">When using the package Mentry_tile, these options have
+    theme-specific default values.&nbsp; The common abbreviations
+    <code><b>-bg</b></code> (for <code><b>-background</b></code>) and
+    <code><b>-fg</b></code> (for <code><b>-foreground</b></code>) are supported
+    for both classical and tile-based mentry widgets.</dd>
+
+    <dd class="tm"><b>REMARK:</b>&nbsp; Please take into account that for some
+    themes (like <code><b>Arc</b></code>, <code><b>plastik</b></code>,
+    <code><b>tileqt</b></code>, <code><b>vista</b></code>, and
+    <code><b>xpnative</b></code>), the <code><b>-background</b></code> option
+    will be ignored for the entry components of a tile-based mentry
+    widget.&nbsp; The same holds true for the <code>aqua</code> theme in dark
+    mode and with some Tk versions in the light appearance, too.</dd>
+
+    <dt class="tm" id="entry_options"><b>OPTIONS FOR ALL ENTRY
+    COMPONENTS</b></dt>
+
+    <dd>
+      <pre>
+<b>-exportselection    -insertwidth        -selectforeground
+-insertbackground   -invalidcommand     -show
+-insertborderwidth  -justify            -state
+-insertofftime      -selectbackground   -validate
+-insertontime       -selectborderwidth  -validatecommand</b>
+</pre>
+    </dd>
+
+    <dd>These options specify the values of the options of the same names for
+    all entry components of the given multi-entry widget.&nbsp; These values
+    may be changed for an individual entry component by using the
+    <code><b>configure</b></code> subcommand of the Tcl command corresponding
+    to that entry.&nbsp; The options <code><b>-insertbackground</b></code>,
+    <code><b>-insertborderwidth</b></code>, <code><b>-insertofftime</b></code>,
+    <code><b>-insertontime</b></code>, <code><b>-insertwidth</b></code>,
+    <code><b>-selectbackground</b></code>,
+    <code><b>-selectborderwidth</b></code>, and
+    <code><b>-selectforeground</b></code> are only supported by the Mentry
+    package, but not by Mentry_tile.&nbsp; The common abbreviations
+    <code><b>-invcmd</b></code> (for <code><b>-invalidcommand</b></code>) and
+    <code><b>-vcmd</b></code> (for <code><b>-validatecommand</b></code>) are
+    supported for both classical and tile-based mentry widgets.</dd>
+
+    <dt class="tm" id="widget_options"><b>WIDGET-SPECIFIC OPTIONS</b></dt>
+
+    <dd class="tm" id="body">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-body</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;body</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;Body</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>Specifies the initial widths of the entry components of the given
+        multi-entry widget, as well as the texts to be displayed in the labels
+        separating the entries.&nbsp; The value of this option is viewed as a
+        list.&nbsp; Each odd-numbered element is interpreted as the value of
+        the <code><b>-width</b></code> configuration option of an entry
+        component, while each even-numbered element represents the value of the
+        <code><b>-text</b></code> configuration option of a label child.&nbsp;
+        That is, each entry width must be followed by a label text, except for
+        the last one, for which a corresponding label text is optional.&nbsp;
+        The order of the list elements determines the creation order of the
+        components; these will be packed in a row, without any horizontal
+        padding.&nbsp; The initial width of each entry also determines the
+        number of characters that can be inserted into it; this maximal length
+        remains unchanged even if the entry's width is set to a new value later
+        on.</p>
+
+        <p>The width of an entry component and the text displayed in a label
+        may be changed by using the <code><b>configure</b></code> subcommand of
+        the Tcl command corresponding to that component.&nbsp; However,
+        applying this method to change the width of of an entry of a tile-based
+        mentry widget might break the latter's appearance (this has
+        tile-related technical reasons).&nbsp; To avoid this problem, it is
+        recommended to use the <code><b><a href=
+        "#setentrywidth">setentrywidth</a></b></code> subcommand of the Tcl
+        command associated with the mentry widget for changing the value of the
+        <code><b>-width</b></code> option of one of its entry components.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="disabledbackground">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-disabledbackground</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;disabledBackground</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;DisabledBackground</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>This option specifies the background color to use for all entry and
+        label components of the given multi-entry widget when it is
+        disabled.&nbsp; If the value of this option is an empty string then the
+        normal background color is used.&nbsp; This option is only supported by
+        the Mentry package, but not by Mentry_tile.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="disabledforeground">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-disabledforeground</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;disabledForeground</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;DisabledForeground</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>This option specifies the foreground color to use for all entry and
+        label components of the given multi-entry widget when it is
+        disabled.&nbsp; If the value of this option is an empty string then the
+        normal foreground color is used.&nbsp; This option is only supported by
+        the Mentry package, but not by Mentry_tile.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="readonlybackground">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-readonlybackground</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;readonlyBackground</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;ReadonlyBackground</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>This option specifies the background color to use for all entry and
+        label components of the given multi-entry widget when it is
+        readonly.&nbsp; If the value of this option is an empty string then the
+        normal background color is used.&nbsp; This option is only supported by
+        the Mentry package, but not by Mentry_tile.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="takefocus">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-takefocus</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;takeFocus</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;TakeFocus</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>This option determines whether the widget accepts the focus during
+        keyboard traversal.&nbsp; It is almost identical to the standard option
+        of the same name (see the <b>options</b> manual entry for
+        details).&nbsp; The only difference is that not the widget itself but
+        its first enabled entry component will receive the focus during keyboard
+        traversal with the standard keys (<code>Tab</code> and
+        <code>Shift-Tab</code>).&nbsp; See the <a href="#bindings">DEFAULT
+        BINDINGS</a> section below for information on how to move the focus
+        from one entry component to another one using the keyboard.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="textvariable">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-textvariable</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;textvariable</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;Variable</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>If the value of this option is not an empty string then it must be
+        an array.&nbsp; In this case, for each entry component of the given
+        multi-entry widget the value of the array element with the index of the
+        entry as element name specifies the value of the
+        <code><b>-textvariable</b></code> option for that entry.&nbsp; The
+        entry indices start with <code>0</code>.&nbsp; For example,
+        specifying&nbsp; <code>-textvariable arr</code>&nbsp; for a multi-entry
+        widget having two entry components is equivalent to specifying&nbsp;
+        <code>-textvariable arr(0)</code>&nbsp; for the first and&nbsp;
+        <code>-textvariable arr(1)</code>&nbsp; for the second entry of that
+        widget.</p>
+      </blockquote>
+    </dd>
+
+    <dt id="indices"><b>INDICES</b></dt>
+
+    <dd>Some of the widget commands for mentries take an index as
+    argument.&nbsp; An index specifies a particular entry or label component of
+    the mentry, in any of the following ways:</dd>
+
+    <dd class="tm">
+      <table border="0" cellpadding="6" cellspacing="0">
+        <tr valign="top">
+          <td><code><i>number&nbsp;&nbsp;</i></code></td>
+          <td>Specifies the component as a numerical index, where
+          <code>0</code> corresponds to the first entry or label
+          component.</td>
+        </tr>
+
+        <tr valign="top">
+          <td><code><b>end</b></code></td>
+          <td>Indicates the last entry or label component of the mentry.</td>
+        </tr>
+      </table>
+    </dd>
+
+    <dd class="tm">The word <code><b>end</b></code> can be abbreviated as
+    <code><b>en</b></code> or <code><b>e</b></code>.&nbsp; Out-of-range indices
+    are automatically rounded to the nearest legal value.</dd>
+
+    <dt class="tm" id="widget_command"><b>WIDGET COMMAND</b></dt>
+
+    <dd>
+      The <code><b>mentry::mentry</b></code> command creates a new Tcl command
+      whose name is <code><i>pathName</i></code>.&nbsp; This command may be
+      used to invoke various operations on the widget.&nbsp; It has the
+      following general form:
+
+      <blockquote>
+        <pre>
+<i>pathName</i> <i>option</i> ?<i>arg</i> <i>arg</i> ...?
+</pre>
+      </blockquote>
+    </dd>
+
+    <dd><code><i>option</i></code> and the <code><i>arg</i></code>s determine
+    the exact behavior of the command.&nbsp; The following commands are
+    possible for mentry widgets:</dd>
+
+    <dd>
+      <dl>
+        <dt class="tm" id="adjustentry"><code><i>pathName</i>
+        <b>adjustentry</b> <i>index</i> <i>string1</i>
+        ?<i>string2</i>?</code></dt>
+
+        <dd>Increases the width in pixels of the entry component identified by
+        <code><i>index</i></code> if needed, to make it just large enough for
+        texts of the entry-specific maximal length, consisting of characters
+        contained in the <code><i>string1</i></code> argument, excepting at
+        most one character, which may be contained in the optional
+        <code><i>string2</i></code> argument.&nbsp; Returns an empty
+        string.</dd>
+
+        <dd class="tm">For example, when constructing a mentry widget whose
+        components will accept up to two uppercase hexadecimal digits only, by
+        passing the string <code>"0123456789ABCDEF"</code> to this subcommand
+        you can make sure that the entry components will have optimal widths,
+        just large enough to display not only the decimal digits, but also up
+        to two letters in the range <code>A</code> - <code>F</code> (which need
+        more room than the decimal digits when using a proportionally-spaced
+        font).&nbsp; It is recommended to invoke this subcommand even if the
+        allowed characters are restricted to the digits <code>0</code> -
+        <code>9</code> only, because in some fonts not all decimal digits have
+        the same width.</dd>
+
+        <dd class="tm">An example for the case where both string arguments are
+        used is a mentry widget for (signed) real numbers in fixed-point
+        format.&nbsp; For its first entry component (displaying the integer
+        part of a real number), this subcommand should be invoked with
+        <code>"0123456789"</code> as its <code><i>string1</i></code> argument
+        and <code>"+-"</code> as its <code><i>string2</i></code> argument,
+        being that the entry's first character can be not only a decimal digit
+        but also the sign <code>"+"</code> or <code>"-"</code>.&nbsp; (Note
+	that in most proportional fonts, the width of the <code>"+"</code>
+	character is larger than that of <code>"0"</code>.)</dd>
+
+        <dt class="tm" id="attrib"><code><i>pathName</i> <b>attrib</b>
+        ?<i>name</i>? ?<i>value</i> <i>name</i> <i>value</i> ...?</code></dt>
+
+        <dd>Queries or modifies the attributes of the widget.&nbsp; If no
+        <code><i>name</i></code> is specified, the command returns a list of
+        pairs, each of which contains the name and the value of an attribute
+        for <code><i>pathName</i></code>.&nbsp; If <code><i>name</i></code> is
+        specified with no <code><i>value</i></code>, then the command returns
+        the value of the one named attribute, or an empty string if no
+        corresponding value exists (you can use the <code><b><a href=
+        "#hasattrib">hasattrib</a></b></code> subcommand to distinguish this
+        case from the one that the value of an <i>existing</i> attribute is an
+        empty string).&nbsp; If one or more
+        <code><i>name</i></code>-<code><i>value</i></code> pairs are specified,
+        then the command sets the given widget attribute(s) to the given
+        value(s); in this case the return value is an empty string.&nbsp;
+        <code><i>name</i></code> may be an arbitrary string.</dd>
+
+        <dt class="tm" id="cget"><code><i>pathName</i> <b>cget</b>
+        <i>option</i></code></dt>
+
+        <dd>Returns the current value of the configuration option given by
+        <code><i>option</i></code>, which may have any of the values accepted
+        by the <code><b>mentry::mentry</b></code> command.</dd>
+
+        <dt class="tm" id="clear"><code><i>pathName</i> <b>clear</b>
+        <i>first</i> ?<i>last</i>?</code></dt>
+
+        <dd>Erases the contents of one or more entry components of the
+        widget.&nbsp; <code><i>first</i></code> and <code><i>last</i></code>
+        are indices specifying the first and last entries in the range to
+        clear.&nbsp; If <code><i>last</i></code> is not specified then it
+        defaults to <code><i>first</i></code>, i.e., a single entry is
+        cleared.&nbsp; The return value is an empty string.</dd>
+
+        <dt class="tm" id="configure"><code><i>pathName</i> <b>configure</b>
+        ?<i>option</i>? ?<i>value</i> <i>option</i> <i>value</i>
+        ...?</code></dt>
+
+        <dd>Queries or modifies the configuration options of the widget.&nbsp;
+        If no <code><i>option</i></code> is specified, the command returns a
+        list describing all of the available options for
+        <code><i>pathName</i></code> (see <code><b>Tk_ConfigureInfo</b></code>
+        for information on the format of this list).&nbsp; If
+        <code><i>option</i></code> is specified with no
+        <code><i>value</i></code>, then the command returns a list describing
+        the one named option (this list will be identical to the corresponding
+        sublist of the value returned if no <code><i>option</i></code> is
+        specified).&nbsp; If one or more
+        <code><i>option</i></code>-<code><i>value</i></code> pairs are
+        specified, then the command modifies the given widget option(s) to have
+        the given value(s); in this case the return value is an empty
+        string.&nbsp; <code><i>option</i></code> may have any of the values
+        accepted by the <code><b>mentry::mentry</b></code> command.</dd>
+
+        <dt class="tm" id="entries"><code><i>pathName</i>
+        <b>entries</b></code></dt>
+
+        <dd>Returns a list containing the path names of all entry components of
+        the widget.</dd>
+
+        <dt class="tm" id="entrycount"><code><i>pathName</i>
+        <b>entrycount</b></code></dt>
+
+        <dd>Returns the number of all entry components of the widget.</dd>
+
+        <dt class="tm" id="entrylimit"><code><i>pathName</i> <b>entrylimit</b>
+        <i>index</i></code></dt>
+
+        <dd>Returns the number of characters that can be inserted into the
+        entry component identfied by <code><i>index</i></code>.</dd>
+
+        <dt class="tm" id="entrypath"><code><i>pathName</i> <b>entrypath</b>
+        <i>index</i></code></dt>
+
+        <dd>Returns the path name of the entry component identfied by
+        <code><i>index</i></code>.</dd>
+
+        <dt class="tm" id="getarray"><code><i>pathName</i> <b>getarray</b>
+        <i>array</i></code></dt>
+
+        <dd>For each entry component of the widget, the command assigns the
+        string contained in the entry to the element of
+        <code><i>array</i></code> having the index of the entry as element
+        name.&nbsp; The entry indices start with <code>0</code>.&nbsp; The
+        return value is an empty string.</dd>
+
+        <dt class="tm" id="getlist"><code><i>pathName</i>
+        <b>getlist</b></code></dt>
+
+        <dd>Returns a list containing the strings of all entry components of
+        the widget.</dd>
+
+        <dt class="tm" id="getstring"><code><i>pathName</i>
+        <b>getstring</b></code></dt>
+
+        <dd>Returns a string built by concatenating the strings contained in
+        the entry components of the widget with the texts displayed in the
+        labels separating the entries, in the creation order of the components,
+        as given by the <code><b><a href="#body">-body</a></b></code>
+        configuration option.&nbsp; That is, the string of the first entry is
+        followed by the text of the first label, which in turn is followed by
+        the string of the second entry, and so on.</dd>
+
+        <dt class="tm" id="hasattrib"><code><i>pathName</i> <b>hasattrib</b>
+        <i>name</i></code></dt>
+
+        <dd>Returns <code>1</code> if the attribute <code><i>name</i></code>
+        exists and <code>0</code> otherwise.</dd>
+
+        <dt class="tm" id="isempty"><code><i>pathName</i> <b>isempty</b>
+        ?<i>index</i>?</code></dt>
+
+        <dd>If <code><i>index</i></code> is specified then the command returns
+        the value <code>1</code> if the string contained in the entry component
+        identfied by <code><i>index</i></code> is empty and <code>0</code>
+        otherwise.&nbsp; If this optional argument is not present then the
+        command returns the value <code>1</code> if the strings contained in
+        the entry components of the widget are all empty and <code>0</code>
+        otherwise.</dd>
+
+        <dt class="tm" id="isfull"><code><i>pathName</i> <b>isfull</b>
+        ?<i>index</i>?</code></dt>
+
+        <dd>If <code><i>index</i></code> is specified then the command returns
+        the value <code>1</code> if the length of the string contained in the
+        entry component identfied by <code><i>index</i></code> equals the
+        number of characters that can be inserted into the entry and
+        <code>0</code> otherwise.&nbsp; If this optional argument is not
+        present then the command returns the value <code>1</code> if the
+        lengths of the strings contained in the entry components of the widget
+        all equal the numbers of characters that can be inserted into the
+        respective entries (i.e., if all entry components are full) and
+        <code>0</code> otherwise.</dd>
+
+        <dt class="tm" id="labelcount"><code><i>pathName</i>
+        <b>labelcount</b></code></dt>
+
+        <dd>Returns the number of all label children of the widget.</dd>
+
+        <dt class="tm" id="labelpath"><code><i>pathName</i> <b>labelpath</b>
+        <i>index</i></code></dt>
+
+        <dd>Returns the path name of the label child identfied by
+        <code><i>index</i></code>.</dd>
+
+        <dt class="tm" id="labels"><code><i>pathName</i>
+        <b>labels</b></code></dt>
+
+        <dd>Returns a list containing the path names of all label children of
+        the widget.</dd>
+
+        <dt class="tm" id="put"><code><i>pathName</i> <b>put</b>
+        <i>startIndex</i> ?<i>string</i> <i>string</i> ...?</code></dt>
+
+        <dd>Replaces the texts of the entry components whose indices are greater
+        than or equal to <code><i>startIndex</i></code> with the corresponding
+        <code><i>string</i></code> arguments by using the
+        <code><b>delete</b></code> and <code><b>insert</b></code> operations,
+        until either the entries or the <code><i>string</i></code>s are
+        consumed.&nbsp; If one of these subcommands gets canceled by some
+        before-callback in any entry component then the command restores the
+        original contents of all affected entries and returns the value
+        <code>0</code>, otherwise it returns <code>1</code>.&nbsp; In both
+        cases, the command keeps the position of the insertion cursor in all
+        entry components.</dd>
+
+        <dt class="tm" id="setentryextrawidth"><code><i>pathName</i>
+        <b>setentryextrawidth</b> <i>index</i> <i>amount</i></code></dt>
+
+        <dd>Specifies additonal width to provide for the entry component
+        identified by <code><i>index</i></code>.&nbsp;
+        <code><i>amount</i></code> may have any of the standard forms for
+        screen distances (e.g., a number of pixels).&nbsp; The return value is
+        an empty string.</dd>
+
+        <dd class="tm">Notice that changing the width of an entry component has
+        no impact on the number of characters that can be inserted into it,
+        which remains set to the corresponding component of the value of the
+        mentry's <code><b><a href="#body">-body</a></b></code> option.</dd>
+
+        <dt class="tm" id="setentryfont"><code><i>pathName</i>
+        <b>setentryfont</b> <i>index</i> <i>font</i></code></dt>
+
+        <dd>Sets the font of the entry component identified by
+        <code><i>index</i></code> to the value given by
+        <code><i>font</i></code>.&nbsp; This is done by invoking the
+        <code><b>configure</b></code> subcommand of the Tcl command
+        corresponding to the entry.&nbsp; When using the package Mentry_tile,
+        this command also performs some additional steps necessary for updating
+        the appearance of the tile-based mentry widget.&nbsp; The return value
+        is an empty string.</dd>
+
+        <dt class="tm" id="setentrywidth"><code><i>pathName</i>
+        <b>setentrywidth</b> <i>index</i> <i>width</i></code></dt>
+
+        <dd>Sets the width of the entry component identified by
+        <code><i>index</i></code> to the number of characters given by
+        <code><i>width</i></code>.&nbsp; This is done by invoking the
+        <code><b>configure</b></code> subcommand of the Tcl command
+        corresponding to the entry.&nbsp; When using the package Mentry_tile,
+        this command also performs some additional steps necessary for updating
+        the appearance of the tile-based mentry widget.&nbsp; The return value
+        is an empty string.</dd>
+
+        <dd class="tm">Notice that changing the width of an entry component has
+        no impact on the number of characters that can be inserted into it,
+        which remains set to the corresponding component of the value of the
+        mentry's <code><b><a href="#body">-body</a></b></code> option.</dd>
+
+        <dt class="tm" id="unsetattrib"><code><i>pathName</i>
+        <b>unsetattrib</b> <i>name</i></code></dt>
+
+        <dd>Unsets the attribute <code><i>name</i></code>.&nbsp; Returns an
+        empty string.</dd>
+      </dl>
+    </dd>
+
+    <dt class="tm" id="bindings"><b>DEFAULT BINDINGS</b></dt>
+
+    <dd>The <code><b>mentry::mentry</b></code> command partially redefines the
+    bindings of the components of the mentry widget it creates:</dd>
+
+    <dd>
+      <ol>
+        <li class="tm">Clicking mouse button 1 in a label child positions the
+        insertion cursor to the end of the last enabled entry preceding the
+        label, sets the input focus to that entry, and clears any selection in
+        it.</li>
+
+        <li class="tm">If in a non-empty entry component a character is typed
+        that is contained in the label following that entry (if any), then the
+        focus is moved to the next enabled entry component, the contents of
+        that entry are selected, and the insertion cursor is set to its
+        end.</li>
+
+        <li class="tm">At the beginning of an entry component that is not the
+        first enabled entry within the widget, the <code>Left</code> key clears
+        the selection in that entry, moves the focus to the previous enabled
+        entry component, and sets the insertion cursor to the end of that
+        widget.&nbsp; Similarly, at the end of an entry component that is not
+        the last enabled entry within the widget, the <code>Right</code> key
+        clears the selection in that entry, moves the focus to the next enabled
+        entry component, and sets the insertion cursor to the beginning of that
+        widget.&nbsp; If <code><b>tk_strictMotif</b></code> is false then
+        <code>Control-b</code> and <code>Control-f</code> behave the same as
+        <code>Left</code> and <code>Right</code>, respectively.</li>
+
+        <li class="tm">In an entry component that is not the first enabled
+        entry within the widget, <code>Control-Left</code> moves the focus to
+        the previous enabled entry component, selects the contents of that
+        widget, and sets the insertion cursor to its end; if there is no
+        enabled entry component to the left of the current one then
+        <code>Control-Left</code> moves the insertion cursor to the beginning
+        of the current entry and clears the selection in that widget.&nbsp;
+        Similarly, in an entry component that is not the last enabled entry
+        within the widget, <code>Control-Right</code> moves the focus to the
+        next enabled entry component, selects the contents of that widget, and
+        sets the insertion cursor to its end; if there is no enabled entry
+        component to the right of the current one then
+        <code>Control-Right</code> moves the insertion cursor to the end of the
+        current entry and clears the selection in that widget.&nbsp; If
+        <code><b>tk_strictMotif</b></code> is false then <code>Meta-b</code>
+        and <code>Meta-f</code> behave the same as <code>Control-Left</code>
+        and <code>Control-Right</code>,
+        respectively.</li>
+
+        <li class="tm">The <code>Home</code> key clears the selection in the
+        current entry widget, moves the focus to the first enabled entry
+        component, and sets the insertion cursor to the beginning of that
+        widget.&nbsp; Similarly, the <code>End</code> key clears the selection
+        in the current entry widget, moves the focus to the last enabled entry
+        component, and sets the insertion cursor to the end of that
+        widget.&nbsp; If <code><b>tk_strictMotif</b></code> is false then
+        <code>Control-a</code> and <code>Control-e</code> behave the same as
+        <code>Home</code> and <code>End</code>, respectively.</li>
+
+        <li class="tm"><code>Shift-Home</code> moves the focus to the first
+        enabled entry component, sets the insertion cursor to the beginning of
+        that widget, and either extends the selection to that position, or
+        clears the selection in the current entry and selects the contents of
+        the new widget, depending upon whether the current entry is the first
+        enabled entry component or not.&nbsp; Similarly, <code>Shift-End</code>
+        moves the focus to the last enabled entry component, sets the insertion
+        cursor to the end of that widget, and either extends the selection to
+        that position, or clears the selection in the current entry and selects
+        the contents of the new widget, depending upon whether the current
+        entry is the last enabled entry component or not.</li>
+
+        <li class="tm">The <code>BackSpace</code> key deletes the selection if
+        there is one in the current entry.&nbsp; Otherwise, it deletes either
+        the character to the left of the insertion cursor in the current entry,
+        or the last character of the previous enabled entry component.&nbsp;
+        The latter takes place at the beginning of an entry component that is
+        not the first enabled entry within the widget; in this case, the
+        <code>BackSpace</code> key also moves the focus to the previous enabled
+        entry component and sets the insertion cursor to its end.&nbsp; If
+        <code><b>tk_strictMotif</b></code> is false then <code>Control-h</code>
+        behaves the same as <code>BackSpace</code>.</li>
+
+        <li class="tm">If <code><b>tk_strictMotif</b></code> is false then
+        <code>Meta-d</code> deletes all characters to the right of the
+        insertion cursor within the current entry, while
+        <code>Meta-BackSpace</code> and <code>Meta-Delete</code> delete either
+        all characters to the left of the insertion cursor in the current
+        entry, or the contents of the previous enabled entry component.&nbsp;
+        The latter takes place at the beginning of an entry component that is
+        not the first enabled entry within the widget; in this case,
+        <code>Meta-BackSpace</code> and <code>Meta-Delete</code> also clear the
+        selection in the current entry widget and move the focus to the
+        previous enabled entry component.</li>
+      </ol>
+    </dd>
+
+    <dt class="tm" id="keywords"><b>KEYWORDS</b></dt>
+
+    <dd>mentry, widget, entry, label</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+</body>
+</html>

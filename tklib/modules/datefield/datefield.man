@@ -1,0 +1,80 @@
+[comment {-*- tcl -*- doctools manpage}]
+[manpage_begin datefield n 0.3]
+[see_also clock(n)]
+[see_also entry(n)]
+[keywords clock]
+[keywords date]
+[keywords dateentry]
+[keywords entry]
+[keywords widget]
+[copyright {Keith Vetter <keith@ebook.gemstar.com>}]
+[copyright {Thomas Wunderlich <tcl.tk@blindenfreizeiten.de>}]
+[moddesc {Tk datefield widget}]
+[titledesc {Tk datefield widget}]
+[category Widget]
+[require Tk]
+[require datefield [opt 0.3]]
+[description]
+
+The [package datefield] package provides the datefield widget which
+is an enhanced text entry widget for the purpose of date entry. There
+are three valid formats for the dates which can be entered:
+[list_begin enumerated]
+[enum] English form MM/DD/YYYY using [arg {-format "%m/%d/%Y"}] (default)
+[enum] German form DD.MM.YYYY using [arg {-format "%d.%m.%Y"}]
+[enum] ISO form YYYY-MM-DD using [arg {-format "%Y-%m-%d"}]
+[list_end]
+
+[para]
+
+The datefield widget is, in fact, just an entry widget with
+specialized bindings. This means all the command and options for an
+entry widget apply equally here.
+
+[section COMMANDS]
+
+[list_begin definitions]
+[call [cmd ::datefield::datefield] [arg widgetpath] [opt [arg options]]]
+
+Creates and configures a date field widget.
+
+[list_end]
+
+[section OPTIONS]
+
+[list_begin definitions]
+[call [arg -format]]
+
+One of "%m/%d/%Y" (English, default if option left), "%d.%m.%Y" (German),
+or "%Y-%m-%d" (ISO).
+
+[list_end]
+
+[para]
+
+See the [cmd entry] manual entry for details on all remaining/available
+options.
+
+[section EXAMPLE]
+[example {
+ package require datefield
+
+ wm title . "Datefield example"
+ proc DayOfWeek {args} {
+     set now [clock scan $::myDate]
+     set ::myDate2 [clock format $now -format %A]
+ }
+ trace variable myDate w DayOfWeek
+
+ ::datefield::datefield .df -textvariable myDate -format "%m/%d/%Y"
+ label .l1 -text "Enter a date:"   -anchor e
+ label .l2 -text "That date is a:" -anchor e
+ label .l3 -textvariable myDate2 -relief sunken -width 12
+
+ grid .l1 .df -sticky ew
+ grid .l2 .l3 -sticky ew
+ focus .df
+}]
+[vset CATEGORY datefield]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]

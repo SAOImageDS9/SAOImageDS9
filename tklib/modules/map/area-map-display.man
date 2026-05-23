@@ -1,0 +1,33 @@
+[comment {-*- tcl -*- doctools manpage}]
+[vset VERSION 0.1]
+[manpage_begin map::area::map-display n [vset VERSION]]
+[category {Map Display and Supporting Utilities}][keywords map]
+[keywords {addon, area display, map display}]
+[keywords {area display, map display, addon}]
+[keywords {map display, addon, area display}]
+[moddesc   {Map display support}]
+[titledesc {Map Action Engine - Layer to display area definitions}]
+[require Tcl 8.6-]
+[require Tk  8.6-]
+[require canvas::edit::polyline]
+[require debug]
+[require debug::caller]
+[require map::slippy 0.8]
+[require snit]
+[require map::area::map-display [opt [vset VERSION]]]
+[description]
+
+This package provides a [package map::display] attachment extending the map's behaviour.
+This attachment shows a set of [term geo/area] definitions.
+It ensures that only the visible areas use canvas resources (items).
+
+[section API]
+
+[list_begin definitions]
+[list_end]
+
+[section EXAMPLE]
+
+[vset CATEGORY map]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]

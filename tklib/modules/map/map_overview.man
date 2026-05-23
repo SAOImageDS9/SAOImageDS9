@@ -1,0 +1,98 @@
+[comment {-*- tcl -*- doctools manpage}]
+[vset VERSION 0.1]
+[manpage_begin map_overview n [vset VERSION]]
+[category {Map Display and Supporting Utilities}][keywords map]
+[moddesc   {Map display support}]
+[titledesc {Overview of the packages in the Map module}]
+[description]
+
+[list_begin definitions]
+[def Storage]
+
+[list_begin definitions]
+[def File]
+Definitions of simple file formats to hold various geo/* resources, and the ability to read/write
+these files.
+
+[list_begin itemized]
+[item] [package map::area::file]
+[item] [package map::box::file]
+[item] [package map::point::file]
+[item] [package map::track::file]
+[list_end][comment -----------------------storage/file]
+
+[def Disk]
+On-disk stores for various geo/* resources. Exist as basic examples to start with, and as API
+demonstrators. In the original project these packages were factored out of [syscmd sqlite] was used
+as a store. This store is however entwined too much with that project to be factored.
+
+[list_begin itemized]
+[item] [package map::area::store::fs]
+[item] [package map::box::store::fs]
+[item] [package map::point::store::fs]
+[item] [package map::track::store::fs]
+[list_end][comment -----------------------storage/disk]
+
+[def Memory]
+In-memory stores caching geo/* data and adding derived attributes. The bridge between the actual
+on-disk stores and the various widgets and behaviours.
+
+[list_begin itemized]
+[item] [package map::area::store::memory] 
+[item] [package map::box::store::memory]  
+[item] [package map::point::store::memory]
+[item] [package map::track::store::memory]
+[list_end][comment -----------------------storage/memory]
+[list_end][comment -----------------------storage]
+
+[def Widgets]
+To show maps, singular geo resources, and tables of many geo resources of the same kind.
+
+[list_begin definitions]
+[def Map] [package map::display]
+
+[def {Geo Resource Tables}]
+[list_begin itemized]
+[item] [package map::area::table-display]
+[item] [package map::box::table-display]
+[item] [package map::point::table-display]
+[item] [package map::track::table-display]
+[list_end][comment -----------------------widgets/resource/table]
+
+[def {Geo Resource Display}]
+[list_begin itemized]
+[item] [package map::area::display]
+[item] [package map::box::display]
+[item] [package map::track::display]
+[list_end][comment -----------------------widgets/resource/singular]
+[list_end][comment -----------------------widgets]
+
+[def Behaviours]
+
+Engines attachable to [package map::display] to add custom behaviours to the shown map.  The two
+classes of engines are for displaying overlays for specific geo resources, and the editing/entry of
+specific single geo resources.
+
+[list_begin definitions]
+[def Display]
+[list_begin itemized]
+[item] [package map::area::map-display]
+[item] [package map::box::map-display] 
+[item] [package map::point::map-display]
+[item] [package map::track::map-display]
+[list_end][comment --------------------------behaviours/display]
+
+[def Editing]
+[list_begin itemized]
+[item] [package map::box::entry]
+[item] [package map::mark] 
+[item] [package map::track::entry]
+[list_end][comment --------------------------behaviours/editing]
+[list_end][comment --------------------------behaviours]
+
+[def Support] [package map::provider::osm]
+[list_end]
+
+[vset CATEGORY map]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]

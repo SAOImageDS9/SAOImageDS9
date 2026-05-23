@@ -1,0 +1,43 @@
+[comment {-*- tcl -*- doctools manpage}]
+[vset VERSION 0.1]
+[manpage_begin map::area::store::memory n [vset VERSION]]
+[category {Map Display and Supporting Utilities}][keywords map]
+[keywords {center, geo/area}]
+[keywords {diameter, geo/area}]
+[keywords {geo/area pixels, zoom}]
+[keywords {geo/area, center}]
+[keywords {geo/area, diameter}]
+[keywords {geo/area, memory store}]
+[keywords {geo/area, perimeter length}]
+[keywords {length, geo/area, perimeter}]
+[keywords {memory store, geo/area}]
+[keywords {perimeter length, geo/area}]
+[keywords {pixels, zoom, geo/area}]
+[keywords {store, geo/area, memory}]
+[keywords {zoom, geo/area pixels}]
+[moddesc   {Map display support}]
+[titledesc {In-memory store for geo/area definitions}]
+[require Tcl 8.6-]
+[require debug]
+[require debug::caller]
+[require map::slippy 0.8]
+[require snit]
+[require map::area::store::memory [opt [vset VERSION]]]
+[description]
+
+This package provides an in-memory store for [term geo/area] definitions, with memoized calculation
+of extended attributes.
+
+[para] The base data is pulled from a backing store. A [package map::area::store::fs] or anything
+API-compatible to it.
+
+[section API]
+
+[list_begin definitions]
+[list_end]
+
+[section EXAMPLE]
+
+[vset CATEGORY map]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]

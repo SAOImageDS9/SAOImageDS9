@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd figures
+tclsh ../../../apps/diagram-viewer show *.dia
+exit

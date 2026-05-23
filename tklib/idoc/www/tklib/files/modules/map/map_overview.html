@@ -1,0 +1,212 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>map_overview - Map display support</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'map_overview.man' by tcllib/doctools with format 'html'
+   -->
+<!-- map_overview.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">map_overview(n) 0.1 tklib &quot;Map display support&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>map_overview - Overview of the packages in the Map module</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">Bugs, Ideas, Feedback</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+<li class="doctools_section"><a href="#category">Category</a></li>
+</ul>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<dl class="doctools_definitions">
+<dt>Storage</dt>
+<dd><dl class="doctools_definitions">
+<dt>File</dt>
+<dd><p>Definitions of simple file formats to hold various geo/* resources, and the ability to read/write
+these files.</p>
+<ul class="doctools_itemized">
+<li><p><b class="package"><a href="area-file.html">map::area::file</a></b></p></li>
+<li><p><b class="package"><a href="box-file.html">map::box::file</a></b></p></li>
+<li><p><b class="package"><a href="point-file.html">map::point::file</a></b></p></li>
+<li><p><b class="package"><a href="track-file.html">map::track::file</a></b></p></li>
+</ul></dd>
+<dt>Disk</dt>
+<dd><p>On-disk stores for various geo/* resources. Exist as basic examples to start with, and as API
+demonstrators. In the original project these packages were factored out of <b class="syscmd">sqlite</b> was used
+as a store. This store is however entwined too much with that project to be factored.</p>
+<ul class="doctools_itemized">
+<li><p><b class="package"><a href="area-store-fs.html">map::area::store::fs</a></b></p></li>
+<li><p><b class="package"><a href="box-store-fs.html">map::box::store::fs</a></b></p></li>
+<li><p><b class="package"><a href="point-store-fs.html">map::point::store::fs</a></b></p></li>
+<li><p><b class="package"><a href="track-store-fs.html">map::track::store::fs</a></b></p></li>
+</ul></dd>
+<dt>Memory</dt>
+<dd><p>In-memory stores caching geo/* data and adding derived attributes. The bridge between the actual
+on-disk stores and the various widgets and behaviours.</p>
+<ul class="doctools_itemized">
+<li><p><b class="package"><a href="area-store-mem.html">map::area::store::memory</a></b></p></li>
+<li><p><b class="package"><a href="box-store-mem.html">map::box::store::memory</a></b></p></li>
+<li><p><b class="package"><a href="point-store-mem.html">map::point::store::memory</a></b></p></li>
+<li><p><b class="package"><a href="track-store-mem.html">map::track::store::memory</a></b></p></li>
+</ul></dd>
+</dl></dd>
+<dt>Widgets</dt>
+<dd><p>To show maps, singular geo resources, and tables of many geo resources of the same kind.</p>
+<dl class="doctools_definitions">
+<dt>Map</dt>
+<dd><p><b class="package"><a href="display.html">map::display</a></b></p></dd>
+<dt>Geo Resource Tables</dt>
+<dd><ul class="doctools_itemized">
+<li><p><b class="package"><a href="area-table-display.html">map::area::table-display</a></b></p></li>
+<li><p><b class="package"><a href="box-table-display.html">map::box::table-display</a></b></p></li>
+<li><p><b class="package"><a href="point-table-display.html">map::point::table-display</a></b></p></li>
+<li><p><b class="package"><a href="track-table-display.html">map::track::table-display</a></b></p></li>
+</ul></dd>
+<dt>Geo Resource Display</dt>
+<dd><ul class="doctools_itemized">
+<li><p><b class="package"><a href="area-display.html">map::area::display</a></b></p></li>
+<li><p><b class="package"><a href="box-display.html">map::box::display</a></b></p></li>
+<li><p><b class="package"><a href="track-display.html">map::track::display</a></b></p></li>
+</ul></dd>
+</dl></dd>
+<dt>Behaviours</dt>
+<dd><p>Engines attachable to <b class="package"><a href="display.html">map::display</a></b> to add custom behaviours to the shown map.  The two
+classes of engines are for displaying overlays for specific geo resources, and the editing/entry of
+specific single geo resources.</p>
+<dl class="doctools_definitions">
+<dt>Display</dt>
+<dd><ul class="doctools_itemized">
+<li><p><b class="package"><a href="area-map-display.html">map::area::map-display</a></b></p></li>
+<li><p><b class="package"><a href="box-map-display.html">map::box::map-display</a></b></p></li>
+<li><p><b class="package"><a href="point-map-display.html">map::point::map-display</a></b></p></li>
+<li><p><b class="package"><a href="track-map-display.html">map::track::map-display</a></b></p></li>
+</ul></dd>
+<dt>Editing</dt>
+<dd><ul class="doctools_itemized">
+<li><p><b class="package"><a href="box-entry.html">map::box::entry</a></b></p></li>
+<li><p><b class="package"><a href="mark.html">map::mark</a></b></p></li>
+<li><p><b class="package"><a href="track-entry.html">map::track::entry</a></b></p></li>
+</ul></dd>
+</dl></dd>
+<dt>Support</dt>
+<dd><p><b class="package"><a href="provider-osm.html">map::provider::osm</a></b></p></dd>
+</dl>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">Bugs, Ideas, Feedback</a></h2>
+<p>This document, and the package it describes, will undoubtedly contain
+bugs and other problems.
+Please report such in the category <em>map</em> of the
+<a href="http://core.tcl.tk/tklib/reportlist">Tklib Trackers</a>.
+Please also report any ideas for enhancements you may have for either
+package and/or documentation.</p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../../../index.html#map">map</a></p>
+</div>
+<div id="category" class="doctools_section"><h2><a name="category">Category</a></h2>
+<p>Map Display and Supporting Utilities</p>
+</div>
+</div></body></html>

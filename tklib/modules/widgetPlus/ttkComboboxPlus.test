@@ -1,0 +1,167 @@
+#
+# ttk::combobox widget tests
+#
+
+package require Tk
+package require tcltest 2.2
+namespace import -force tcltest::*
+loadTestedCommands
+
+# x11 and win32 need "wm deiconify ." only for a few tests and this is done in
+# the individual tests.
+# The original tests are from Tk which does not "wm withdraw .", but for some
+# reason the tklib test setup does.
+# FIXME "x11" (SDL) is untested.
+# FIXME aqua is untested.
+
+package require widgetPlus
+namespace import ::widgetPlus::ttkComboboxPlus
+testConstraint notAqua [expr {[tk windowingsystem] ne "aqua" }]
+testConstraint TkAbove8.6 [expr {[package vsatisfies [package provide Tk] 8.7-]}]
+
+# ------------------------------------------------------------------------------
+# This file is copied from Tk trunk (8.7) checkin 127ff912ed,
+# file ttk/combobox.test, with addition of the four lines
+# above, application of "s/ttk::combobox/ttkComboboxPlus/g" to widget
+# constructors in the code, but not to commands ttk::combobox::* (and not to
+# comments, results, test names or other metadata), and further editing of
+# failing tests as described below.
+#
+# The purpose is to check that "ttkComboboxPlus" does not break any features of
+# "ttk::combobox", including important matters such as validation.
+#
+# 1 test requires the widgets to be mapped for the test to pass with
+# Tcl/Tk 8.7 (mapping is not required for Tcl 9.0 with Tk 8.7).  The
+# corresponding tests in Tk have the same requirement.  The -setup and
+# -cleanup sections for these tests have been modified accordingly.
+#
+# With these revisions, all tests pass.
+#
+# Adapting the tests for use with Tcl/Tk 8.6.
+# 2 tests are for new features of Tk 8.7 - these are given the constraint
+# TkAbove8.6 which is computed above.  In some other tests, the error message
+# differs between Tk 8.6 and 8.7.  In these cases, the expected test result is
+# computed using the Tk version.
+# ------------------------------------------------------------------------------
+
+test combobox-1.0 "Combobox tests -- setup" -body {
+    ttkComboboxPlus .cb
+} -result .cb
+
+test combobox-1.1 "Bad -values list" -body {
+    .cb configure -values "bad \{list"
+} -result "unmatched open brace in list" -returnCodes error
+
+test combobox-1.end "Combobox tests -- cleanup" -body {
+    destroy .cb
+}
+
+test combobox-2.0 "current command" -body {
+    ttkComboboxPlus .cb -values [list a b c d e a]
+    expr {[.cb current]<0}
+} -result 1
+
+test combobox-2.1 "current -- set index" -body {
+    .cb current 5
+    .cb get
+} -result a
+
+test combobox-2.2 "current -- change -values" -body {
+    .cb configure -values [list c b a d e]
+    .cb current
+} -result 2
+
+test combobox-2.3 "current -- change value" -body {
+    .cb set "b"
+    .cb current
+} -result 1
+
+test combobox-2.4 "current -- value not in list" -body {
+    .cb set "z"
+    expr {[.cb current]<0}
+} -result 1
+
+test combobox-2.5 "current -- set to end index" -body {
+    .cb configure -values [list a b c d e thelastone]
+    .cb current end
+    .cb get
+} -result thelastone
+
+test combobox-2.6 "current -- set to unknown index" -body {
+    .cb configure -values [list a b c d e]
+    .cb current notanindex
+} -returnCodes error -result [expr {[package vsatisfies [package present Tk] 8.7-]
+    ? {bad index "notanindex"}
+    : {Incorrect index notanindex} }]
+
+test combobox-2.7 {current -- set to 0 index when empty [bug 924835c36d]} -body {
+    .cb configure -values {}
+    .cb current 0
+} -returnCodes error -result [expr {[package vsatisfies [package present Tk] 8.7-]
+    ? {index "0" out of range}
+    : {Index 0 out of range} }]
+
+test combobox-2.8 "current -- set to end index in an empty combobox" -body {
+    .cb configure -values {}
+    .cb current end
+} -returnCodes error -result {index "end" out of range}
+
+test combobox-2.end "Cleanup" -body { destroy .cb }
+
+test combobox-3 "Read postoffset value dynamically from current style" -setup {
+    set st [wm state .]
+    wm deiconify .
+} -body {
+    ttkComboboxPlus .cb -values [list a b c] -style "DerivedStyle.TCombobox"
+    pack .cb -expand true -fill both
+    update idletasks
+    ttk::style configure DerivedStyle.TCombobox -postoffset [list 25 0 0 0]
+    if {[tk windowingsystem] == "aqua"} {
+	after 500 {
+	    pressbutton [expr {[winfo rootx .cb] + 25}] [expr {[winfo rooty .cb] + 25}]
+	}
+    }
+    ttk::combobox::Post .cb
+    expr {[winfo rootx .cb.popdown] - [winfo rootx .cb]}
+} -cleanup {
+    destroy .cb
+    wm state . $st
+    unset st
+} -result 25
+
+test combobox-1890211 "ComboboxSelected event after listbox unposted" \
+    -constraints {notAqua} -body {
+    # whitebox test...
+    pack [ttkComboboxPlus .cb -values [list a b c]]
+    update idletasks
+    set result [list]
+    bind .cb <<ComboboxSelected>> {
+	lappend result Event [winfo ismapped .cb.popdown] [.cb get]
+    }
+    lappend result Start 0 [.cb get]
+    ttk::combobox::Post .cb
+    lappend result Post [winfo ismapped .cb.popdown] [.cb get]
+    .cb.popdown.f.l selection clear 0 end; .cb.popdown.f.l selection set 1
+    ttk::combobox::LBSelected .cb.popdown.f.l
+    lappend result Select [winfo ismapped .cb.popdown] [.cb get]
+    update
+    set result
+} -result [list Start 0 {} Post 1 {} Select 0 b Event 0 b] -cleanup {
+    destroy .cb
+}
+
+test combobox-4.1 "style command" -constraints TkAbove8.6 -body {
+    ttkComboboxPlus .w
+    list [.w cget -style] [.w style] [winfo class .w]
+} -cleanup {
+    destroy .w
+} -result {{} TCombobox TCombobox}
+test combobox-4.2 "style command" -constraints TkAbove8.6 -body {
+    ttk::style configure customStyle.TCombobox
+    ttkComboboxPlus .w -style customStyle.TCombobox
+    list [.w cget -style] [.w style] [winfo class .w]
+} -cleanup {
+    destroy .w
+} -result {customStyle.TCombobox customStyle.TCombobox TCombobox}
+
+tcltest::cleanupTests

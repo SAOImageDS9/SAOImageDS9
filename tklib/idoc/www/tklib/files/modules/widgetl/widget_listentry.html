@@ -1,0 +1,390 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>widget_listentry - widget::listentry widget</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'widget_listentry.man' by tcllib/doctools with format 'html'
+   -->
+<!-- widget_listentry.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">widget_listentry(n) 0.1.2 tklib &quot;widget::listentry widget&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>widget_listentry - widget::listentry widget</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">Class API</a></li>
+<li class="doctools_section"><a href="#section3">Instance API</a></li>
+<li class="doctools_section"><a href="#section4">Widget Options</a>
+<ul>
+<li class="doctools_subsection"><a href="#subsection1">Widget Construction-Time Only Options</a></li>
+<li class="doctools_subsection"><a href="#subsection2">Widget General Options</a></li>
+</ul>
+</li>
+<li class="doctools_section"><a href="#section5">Example</a></li>
+<li class="doctools_section"><a href="#section6">Bugs, Ideas, Feedback</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_requirements">
+<li>package require <b class="pkgname">Tcl 8.5</b></li>
+<li>package require <b class="pkgname">Tk 8.5</b></li>
+<li>package require <b class="pkgname">widget::listentry <span class="opt">?0.1.2?</span></b></li>
+<li>package require <b class="pkgname">widget::validator <span class="opt">?0.1?</span></b></li>
+<li>package require <b class="pkgname">widget::scrolledwindow</b></li>
+<li>package require <b class="pkgname">snit</b></li>
+<li>package require <b class="pkgname">tooltip</b></li>
+<li>package require <b class="pkgname">img::png</b></li>
+<li>package require <b class="pkgname">msgcat</b></li>
+</ul>
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">widget::listentry</b> <i class="arg">pathname</i> <span class="opt">?options?</span></a></li>
+<li><a href="#2"><b class="cmd">widgetCmd</b> <b class="method">destroy</b></a></li>
+<li><a href="#3"><b class="cmd">widgetCmd</b> <b class="method">configure</b></a></li>
+<li><a href="#4"><b class="cmd">widgetCmd</b> <b class="method">configure</b> <i class="arg">option</i> <i class="arg">value</i> ...</a></li>
+<li><a href="#5"><b class="cmd">widgetCmd</b> <b class="method">configure</b> <i class="arg">option</i></a></li>
+<li><a href="#6"><b class="cmd">widgetCmd</b> <b class="method">cget</b> <i class="arg">option</i></a></li>
+<li><a href="#7"><i class="arg">{*}cmdprefix</i> <b class="method">get</b></a></li>
+<li><a href="#8"><i class="arg">{*}cmdprefix</i> <b class="method">set</b> <i class="arg">values</i></a></li>
+<li><a href="#9"><i class="arg">{*}cmdprefix</i> <i class="arg">text</i> <i class="arg">errvar</i></a></li>
+<li><a href="#10"><i class="arg">{*}cmdprefix</i> <i class="arg">text</i></a></li>
+<li><a href="#11"><i class="arg">{*}cmdprefix</i> <i class="arg">cookievar</i></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>This package provides a megawidget for the interactive entry of
+ordered and unordered lists.
+For a simpler and more restricted megawidget please see the
+package <b class="package">widget::listsimple</b>.</p>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">Class API</a></h2>
+<p>The widget class supports a single command, for the creation of widgets.</p>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">widget::listentry</b> <i class="arg">pathname</i> <span class="opt">?options?</span></a></dt>
+<dd><p>This command creates and configures new instances of the widget.</p>
+<p>For details on the available options please see section
+<span class="sectref"><a href="#section4">Widget Options</a></span>.</p>
+<p>The result of the command is the pathname of the new widget.</p></dd>
+</dl>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">Instance API</a></h2>
+<p>All widget instances supported the following methods.</p>
+<dl class="doctools_definitions">
+<dt><a name="2"><b class="cmd">widgetCmd</b> <b class="method">destroy</b></a></dt>
+<dd><p>This method destroys the widget.
+Any further access to the widget will generate errors.</p>
+<p>The result of the command is the empty string.</p></dd>
+<dt><a name="3"><b class="cmd">widgetCmd</b> <b class="method">configure</b></a></dt>
+<dd><p>This method comes in three variants. This variant here returns a list
+containing the current configuration of the widget, i.e. the values
+for all options.</p>
+<p>For details on the available options please see section
+<span class="sectref"><a href="#section4">Widget Options</a></span>.</p></dd>
+<dt><a name="4"><b class="cmd">widgetCmd</b> <b class="method">configure</b> <i class="arg">option</i> <i class="arg">value</i> ...</a></dt>
+<dd><p>This method comes in three variants. This variant here reconfigures
+the widget, setting the specified options to the given values.</p>
+<p><em>Note</em> that it is not possible to change the
+construction-time only options.</p>
+<p>For details on the available options please see section
+<span class="sectref"><a href="#subsection2">Widget General Options</a></span>.</p>
+<p>The result of the command is the empty string.</p></dd>
+<dt><a name="5"><b class="cmd">widgetCmd</b> <b class="method">configure</b> <i class="arg">option</i></a></dt>
+<dd><p>This method comes in three variants. This variant here is an alias
+for the method <b class="method">cget</b> below and identical to it.</p></dd>
+<dt><a name="6"><b class="cmd">widgetCmd</b> <b class="method">cget</b> <i class="arg">option</i></a></dt>
+<dd><p>This method returns the current value of the specified <i class="arg">option</i>.</p>
+<p>For details on the available options please see section
+<span class="sectref"><a href="#section4">Widget Options</a></span>.</p></dd>
+</dl>
+</div>
+<div id="section4" class="doctools_section"><h2><a name="section4">Widget Options</a></h2>
+<p>This section explains all the options available to instances of
+<b class="class">widget::listentry</b>. Please note that a few of the options
+can be set only at instance construction time. The majority of the
+options can however be set both during construction- and runtime.</p>
+<div id="subsection1" class="doctools_subsection"><h3><a name="subsection1">Widget Construction-Time Only Options</a></h3>
+<dl class="doctools_options">
+<dt><b class="option">-ordered</b> boolean</dt>
+<dd><p>This options tells the new widget instance whether the list it manages
+is ordered or not. If it is ordered the widget will show buttons with
+which the selected entries can be moved around, editing the order.</p>
+<p>The default is <b class="const">false</b>, indicating an unordered list.</p></dd>
+<dt><b class="option">-allow-duplicates</b> boolean</dt>
+<dd><p>This options tells the new widget instance whether we are allowed to
+add a string to the list multiple times, or not.</p>
+<p>The default is <b class="const">false</b>, indicating that duplicates are not
+allowed.</p></dd>
+<dt><b class="option">-values</b> cmdprefix</dt>
+<dd><p>This option specifies a callback for the management of a predefined
+list of strings a user may enter.</p>
+<p>If specified the widget will use a combobox instead of a plain
+entry field and fill its list during widget construction using the data
+delivered by this callback.
+The callback will be further invoked whenever a new value is entered
+into the main list, to save the extended list of predefined values.</p>
+<p>The signature of this callback is</p>
+<dl class="doctools_definitions">
+<dt><a name="7"><i class="arg">{*}cmdprefix</i> <b class="method">get</b></a></dt>
+<dd><p>In this form the callback is expected to return a list of strings.
+The strings are loaded into the list of the internal combobox for
+quick access by the user.</p>
+<p>It will be invoked once, during widget construction, to load the
+list of predefined strings a user may enter.</p></dd>
+<dt><a name="8"><i class="arg">{*}cmdprefix</i> <b class="method">set</b> <i class="arg">values</i></a></dt>
+<dd><p>In this form the callback is given a list of new strings and
+expected to save them somewhere for future use.</p>
+<p>The return value of the callback is ignored.</p>
+<p>This form is invoked whenever the user entered a new string
+into the main list. The order of strings in <i class="arg">values</i> represents
+the order used to show them in the combobox's list.</p></dd>
+</dl></dd>
+<dt><b class="option">-validate</b> cmdprefix</dt>
+<dd><p>This option specifies a callback which is invoked after every change of
+the contents of the internal entry field. The signature of this callback is</p>
+<dl class="doctools_definitions">
+<dt><a name="9"><i class="arg">{*}cmdprefix</i> <i class="arg">text</i> <i class="arg">errvar</i></a></dt>
+<dd><p>where <i class="arg">text</i> is the string to validate, and <i class="arg">errvar</i> the name of
+a variable the callback can store an error message into when it detects
+invalid data.</p>
+<p>The widget expects that the callback returns a boolean value, where
+<b class="const">true</b> indicates that <i class="arg">text</i> is valid.</p></dd>
+</dl>
+<p>The default validation, when no callback was specified, will treat the
+empty string as invalid, and everything else as valid.</p>
+<p><em>Please note</em> that the widget will prevent the entry of
+duplicate values into the main list, regardless of the validity of the
+input otherwise. This is in keeping with that this widget is meant for
+the entry of unordered lists, essentially a set of strings.</p></dd>
+<dt><b class="option">-transform</b> cmdprefix</dt>
+<dd><p>This option specifies a callback which is invoked whenever a newly
+entered element is moved from the entry field to the main list, or the
+entry field is validated, as part of a check for duplicates, if such are
+not allowed. The callback is given the text in the entry field and has
+to return the text which is actually added to, or checked against the list.</p>
+<p>The use case for this callback is essentially
+<i class="term">input normalization</i>. The most simple case of such would be, for
+example the use of</p>
+<pre class="doctools_example">string tolower</pre>
+<p>to impose a standard letter
+case on the data. More complex example can be thought of, like rewriting
+of multiple syntaxes of input to a canonical form.
+The signature of this callback is</p>
+<dl class="doctools_definitions">
+<dt><a name="10"><i class="arg">{*}cmdprefix</i> <i class="arg">text</i></a></dt>
+<dd><p>where <i class="arg">text</i> is the string to transform.</p>
+<p>The widget expects that the callback returns the transformed string.</p></dd>
+</dl>
+<p>The default is to not transform the entered strings.</p></dd>
+<dt><b class="option">-browse</b> cmdprefix</dt>
+<dd><p>If this option is specified the widget will display a &quot;Search&quot; button
+and invoke the callback provided by the option whenever the user clicks
+on that button.
+The signature of the callback is</p>
+<dl class="doctools_definitions">
+<dt><a name="11"><i class="arg">{*}cmdprefix</i> <i class="arg">cookievar</i></a></dt>
+<dd><p>where the cookie variable provides access to context information the
+callback may wish to preserve between invokations. The initial value
+stored in the variable is the empty string. After that it is whatever
+the callback wishes to store.</p>
+<p>The widget expects that the callback returns a list of strings,
+which are then added to the list, modulo validity and duplicate checks.</p></dd>
+</dl>
+<p>By default there is no browse callback and no button shown.</p></dd>
+</dl>
+</div>
+<div id="subsection2" class="doctools_subsection"><h3><a name="subsection2">Widget General Options</a></h3>
+<dl class="doctools_options">
+<dt><b class="option">-listvariable</b> varname</dt>
+<dd><p>This option specifies the variable holding the list to be manipulated by
+the widget. Any changes to the list outside of the widget are automatically
+imported into the widget. Similarly, all changes made to the list by the
+widget are automatically exported to this variable.</p></dd>
+<dt><b class="option">-state</b> normal|disabled</dt>
+<dd><p>This option specifies the status of the widget, <b class="const">normal</b> (= active),
+or <b class="const">disabled</b>. A disabled widget can not be edited.</p>
+<p>The default is <b class="const">normal</b>.</p></dd>
+<dt><b class="option">-height</b> integer</dt>
+<dd><p>This option specifies the height of the internal listbox, in lines.</p>
+<p>The default is <b class="const">20</b>.</p></dd>
+<dt><b class="option">-skin-add</b> string</dt>
+<dd></dd>
+<dt><b class="option">-skin-remove</b> string</dt>
+<dd></dd>
+<dt><b class="option">-skin-up</b> string</dt>
+<dd></dd>
+<dt><b class="option">-skin-down</b> string</dt>
+<dd></dd>
+<dt><b class="option">-skin-browse</b> string</dt>
+<dd></dd>
+<dt><b class="option">-skin-tip-add</b> string</dt>
+<dd></dd>
+<dt><b class="option">-skin-tip-remove</b> string</dt>
+<dd></dd>
+<dt><b class="option">-skin-tip-up</b> string</dt>
+<dd></dd>
+<dt><b class="option">-skin-tip-down</b> string</dt>
+<dd></dd>
+<dt><b class="option">-skin-tip-browse</b> string</dt>
+<dd></dd>
+<dt><b class="option">-skin-tip-main</b> string</dt>
+<dd></dd>
+<dt><b class="option">-skin-tip-entry</b> string</dt>
+<dd></dd>
+<dt><b class="option">-skin-tip-list</b> string</dt>
+<dd></dd>
+<dt><b class="option">-skin-tip-empty</b> string</dt>
+<dd></dd>
+<dt><b class="option">-skin-tip-duplicate</b> string</dt>
+<dd></dd>
+<dt><b class="option">-skin-tip-add-none</b> string</dt>
+<dd></dd>
+<dt><b class="option">-skin-tip-remove-none</b> string</dt>
+<dd></dd>
+<dt><b class="option">-skin-img-add</b> image</dt>
+<dd></dd>
+<dt><b class="option">-skin-img-remove</b> image</dt>
+<dd></dd>
+<dt><b class="option">-skin-img-up</b> string</dt>
+<dd></dd>
+<dt><b class="option">-skin-img-down</b> string</dt>
+<dd></dd>
+<dt><b class="option">-skin-img-browse</b> string</dt>
+<dd></dd>
+<dt><b class="option">-skin-invalid-color</b> color</dt>
+<dd><p>These options all modify the appearance of the widget, i.e. its skin.</p>
+<p>All options taking a string argument influence the various labels
+shown, with the <b class="option">-skin-tip-*</b> options influencing the tooltips
+shown on hovering the over various parts in particular.</p>
+<p>All the strings are run through <b class="package">msgcat</b> first, enabling
+text localization through message catalogs. The default values are keys
+into the message catalogs which are part of the package itself.</p>
+<p>The options taking images modify the images shown on the buttons
+for adding and removing elements of the list. They default to the PNG
+images distributed with the package itself.</p>
+<p>The single option taking a color value modifies the color used to
+highlight invalid data entered into the internal entry field of the
+widget. This option defaults to <b class="const">yellow</b>.</p></dd>
+</dl>
+</div>
+</div>
+<div id="section5" class="doctools_section"><h2><a name="section5">Example</a></h2>
+<pre class="doctools_example"></pre>
+</div>
+<div id="section6" class="doctools_section"><h2><a name="section6">Bugs, Ideas, Feedback</a></h2>
+<p>This document, and the package it describes, will undoubtedly contain
+bugs and other problems.
+Please report such in the category <em>widget::listentry</em> of the
+<a href="http://core.tcl.tk/tklib/reportlist">Tklib Trackers</a>.
+Please also report any ideas for enhancements you may have for either
+package and/or documentation.</p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../../../index.html#data_entry_lists">data entry lists</a>, <a href="../../../../index.html#data_entry_ordered_list">data entry ordered list</a>, <a href="../../../../index.html#data_entry_set_of_strings">data entry set of strings</a>, <a href="../../../../index.html#data_entry_unordered_list">data entry unordered list</a>, <a href="../../../../index.html#list_entry_panel">list entry panel</a>, <a href="../../../../index.html#set_entry_panel">set entry panel</a>, <a href="../../../../index.html#widget">widget</a></p>
+</div>
+</div></body></html>

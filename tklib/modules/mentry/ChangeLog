@@ -1,0 +1,514 @@
+2024-11-29  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Mentry 4.3.1.
+
+2024-10.19  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:           Bumped the version number to 4.3.1.
+	* COPYRIGHT.txt:
+	* README.txt:
+	* doc/mentry.html:
+
+	* CHANGES.txt: Updated to reflect the changes.
+
+	* scripts/*.tcl: Made sure that the Migration Tool for Tcl 9 won't
+	  output any warnings or notes.
+
+2024-09-04  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Mentry 4.3.
+
+2024-08-20  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 4.3; restored the support
+	* COPYRIGHT.txt: for Tcl/Tk 8.4; updated the copyright information.
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl: Made sure that the handling of the <TouchpadScroll>
+	  event won't polluate the global namespace.
+
+	* scripts/mwutil/*.tcl: Restored the support for Tcl/Tk 8.4.
+
+	* doc/*.png: Updated the screenshots.
+
+	* doc/wcbRef.html: Updated to the version included in Wcb 4.1.
+
+2024-05-15  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Mentry 4.2.
+
+2024-05-14  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:              Adapted the default value of the
+	* scripts/mentryThemes.tcl: "-selectborderwidth" option in Mentry_tile
+	  to recent changes in the "default" and "classic" themes.
+
+2024-05-12  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 4.2.
+	* COPYRIGHT.txt:
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/mentryThemes.tcl: Adapted to the recent improvements in the
+	  "classic" theme by Emiliano Gavilan.
+
+2024-03-05  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Mentry 4.1.
+
+2024-02-11  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 4.1.
+	* COPYRIGHT.txt:
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/mentryWidget.tcl: Fixed a long-standing bug due to which
+	  under some circumstances the default values of several configuration
+	  options became theme-specific even if the mentry package rather than
+	  mentry_tile was being used.
+
+	* scripts/tclIndex: Newly generated.
+
+	* scripts/mwutil/*.tcl: Fixed a typo in the file mwutil.tcl, introduced
+	  in the previous release.
+
+2023-12-27  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Mentry 4.0.
+
+2023-12-07  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:   Added support for the new <TouchpadScroll> event.
+	* scripts/*.tcl:
+	* doc/*.html:
+
+2023-10-07  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 4.0; dropped the support
+	* COPYRIGHT.txt: for Tk versions earlier than 8.4.
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl: Dropped the support for Tk versions earlier than 8.4;
+	  adapted to the changes made in the Entry and TEntry bindings in Tk
+	  8.7; added explicit support for the themes "black", "breeze",
+	  "breeze-dark", "sun-valley-light", and "sun-valley-dark".
+
+	* scripts/tclIndex: Newly generated.
+
+	* scripts/mwutil/*.tcl:        Dropped the support for Tk versions
+	* ../../examples/mentry/*.tcl: earlier than 8.4.
+
+	* doc/wcbRef.html: Updated to the version included in Wcb 4.0.
+
+2023-07-03  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Mentry 3.18.
+
+2023-06-29  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* mentryCommon.tcl: For Tcl versions 8.4 and later replaced the
+	  deprecated "trace variable" invocation with "trace add variable";
+	  bumped the version number to 3.18.
+
+	* *.tcl:         Bumped the version number to 3.18.
+	* COPYRIGHT.txt:
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+2023-03-20  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Mentry 3.17.
+
+2023-03-18  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* scripts/mwutil/mwutil.tcl: Procedure getAncestorByClass significantly
+	  enhanced.
+
+2023-03-16  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* mentryCommon.tcl: Fixed a bug related to the comparison of package
+	  versions; bumped the version number to 3.17; updated the copyright
+	  information.
+
+	* *.tcl:         Bumped the version number to 3.17; updated the
+	* COPYRIGHT.txt: copyright information.
+	* README.txt:
+
+	* doc/mentryThemes.html: Added the hint that with current Mentry_tile
+	  versions there is no need for invocations of the
+	  mentry::setThemeDefaults command in application code.
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/mwutil/*.tcl: Updated the mwutil package to version 2.20,
+	  like in Tablelist6.21.
+
+	* scripts/*.tcl:               Updated the copyright information.
+	* ../../examples/mentry/*.tcl:
+
+2022-08-12  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Mentry 3.16.
+
+2022-08-04  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 3.16.
+	* COPYRIGHT.txt:
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* doc/wcbRef.html: Updated to the version included in Wcb 3.8.
+
+2022-03-22  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Mentry 3.15.
+
+2022-03-13  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 3.15; updated the
+	* COPYRIGHT.txt: copyright information.
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl:        Fixed a bug related to the handling of the
+	* scripts/mwutil/*.tcl: <<ThemeChanged>> event when the package Mentry
+	  rather than Mentry_tile was loaded into the interpreter; updated the
+	  copyright information.
+
+	* scripts/tclIndex: Newly generated.
+
+	* ../../examples/mentry/*.tcl: Updated the copyright information.
+
+2021-09-02  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Mentry 3.14.
+
+2021-08-25  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 3.14.
+	* COPYRIGHT.txt:
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl: Extended the "adjustentry" subcommand by an optional
+	  second string argument and used this extended form in the
+	  implementation of the "mentry::fixedPointMentry" command; added
+	  binding for <<TkWorldChanged>> with %d set to "FontChanged" (see TIP
+	  608); added bindings that handle <<Paste>> events in the entry
+	  components of the mentry widgets of types "IPAddr" and "IPv6Addr.
+
+	* scripts/tclIndex: Newly generated.
+
+	* ../../examples/mentry/phonenumber(_tile).tcl:  Added bindings that
+	* ../../examples/mentry/ethernetaddr(_tile).tcl: handle <<Paste>>
+	  events in the entry components of the mentry widgets of types
+	  "EthernetAddr" and "PhoneNumber".
+
+2021-04-14  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Mentry 3.13.
+
+2021-04-10  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 3.13.
+	* COPYRIGHT.txt:
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/mentryThemes.tcl: Reworked the awthemes support and extended
+	* scripts/mentryWidget.tcl: it by support for the "awbreezedark" theme.
+
+	* scripts/tclIndex: Newly generated.
+
+	* scripts/mwutil/*.tcl: Updated the mwutil package to version 2.19,
+	  like in Tablelist6.13.
+
+2021-02-03  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Mentry 3.12.
+
+2021-02-01  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 3.12; updated the
+	* COPYRIGHT.txt: copyright information.
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl:        Added support for the platform-independent
+	* scripts/mwutil/*.tcl: handling of mouse wheel events (TIP 474);
+	  updated the mwutil package to version 2.18, like in Tablelist6.12;
+	  updated the copyright information.
+
+	* ../../examples/mentry/*.tcl: Updated the copyright information.
+
+2020-12-03 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* scripts/mentryThemes.tcl: Added support for awthemes 10.0.
+	* scripts/mentryWidget.tcl:
+
+	* scripts/tclIndex: Newly generated.
+
+2020-12-01 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* README.txt:      Corrected: "http" -> "https".
+	* doc/mentry.html:
+
+2020-11-06 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* scripts/mentryDateTime.tcl: Improved the mouse wheel event handling.
+	* scripts/mentryIPAddr.tcl:
+	* scripts/mentryIPv6Addr.tcl:
+
+2020-10-20 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* scripts/mentryThemes.tcl: Layout improvements for several themes.
+	* scripts/mentryWidget.tcl:
+
+2020-10-17 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:              Improvements and updates related to
+	* scripts/mentryThemes.tcl: awthemes 9.4.
+
+	* scripts/tclIndex: Newly generated.
+
+2020-10-14 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:              Added support for all the themes provided
+	* scripts/mentryThemes.tcl: by the awthemes package.
+	* scripts/mentryWidget.tcl:
+
+	* scripts/tclIndex: Newly generated.
+
+2020-10-09 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:              Added support for the "awdark" theme; many
+	* scripts/mentryThemes.tcl: improvements for Mentry_tile.
+	* scripts/mentryWidget.tcl:
+
+	* scripts/tclIndex: Newly generated.
+
+2020-10-03 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:               Dropped the requirement that changing the
+	* scripts/mwutil/mwutil.tcl: theme be done using the "ttk::setTheme"
+	* doc/mentry.html:           command, which was necessary for older
+	* doc/mentryThemes.html:     tile versions.
+
+2020-09-24 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* scripts/mwutil/mwutil.tcl: Restored the getScrollInfo2 command.
+
+2020-09-20 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* doc/wcbRef.html: Updated to the version included in Wcb 3.7.
+
+	* ../../examples/mentry/option.tcl: Improvement related to font
+	  scalabilty.
+
+2020-09-08 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 3.11; updated the
+	* COPYRIGHT.txt: copyright information.
+	* README.txt:
+
+	* mentryCommon.tcl: Replaces the former mentryPublic.tcl; bumped the
+	  version number to 3.11; updated the copyright information.
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl: Adapted the "aqua" theme support to Tk releases 8.6.10
+	  and 8.6.11, including the support for the Dark Mode appearance;
+	  handling the virtual events <<LightAqua>> and <<DarkAqua>> by
+	  updating the overall appearance of the mentry widgets; added the
+	  virtual event <<MentryThemeDefaultsChanged>> and sent to the main
+	  window when handling the virtual events <<ThemeChanged>>,
+	  <<LightAqua>>, and <<DarkAqua>>; reworked the invocations of "package
+	  vcompare", taking into account that Tcl versions earlier than 8.5 did
+	  not support the letters "a" and "b" in version numbers; updated the
+	  copyright information.
+
+	* scripts/mwutil:              Moved mwutil.tcl to the new subdirectory
+	* scripts/mwutil/mwutil.tcl:   mwutil and made it to a package; updated
+	* scripts/mwutil/pkgIndex.tcl: to version 2.17, like in Tablelist 6.11.
+
+	* scripts/tclIndex: Newly generated.
+
+	* doc/stylesheet.css: Updated.
+
+	* doc/*.png: Updated the screenshots.
+
+	* ../../examples/mentry/*.tcl: Made the demo-scripts scaling-aware;
+	  with Tk 8.6.10 or later, they now fully support the Dark Mode
+	  appearance on Mac OS 10.14 and later; updated the copyright
+	  information.
+
+2020-02-09  0.7  <andreas_kupries@users.sourceforge.net>
+
+	*
+	* Released and tagged Tklib 0.7 ========================
+	* 
+
+2019-10-21  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* pkgIndex.tcl:    Bumped the version number to 3.10.
+	* mentry.tcl:
+	* mentry_tile.tcl:
+	* COPYRIGHT.txt:
+	* README.txt:
+
+	* mentryPublic.tcl: Bumped the version number to 3.10; no longer
+	  creating aliases in the "::tk" namespace for Tk commands for which
+	  that namespace already contains a command of the same name.
+
+	* CHANGES.txt: Updated to reflect the changes.
+
+	* scripts/mwutil.tcl: Updated to the same version 2.15 as in Tablelist
+	  release 6.7.
+
+	* scripts/tclIndex: Newly generated.
+
+	* doc/stylesheet.css: Updated.
+
+	* doc/*.html: Bumped the version number to 3.10; various improvements.
+
+2019-05-01  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt: Slightly extended.
+
+2019-05-01  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* doc/mentry.html:         Minor improvements.
+	* doc/mentryDateTime.html:
+
+2019-04-23  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 3.9; updated the
+	* COPYRIGHT.txt: copyright information.
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+
+	* doc/*.html: Bumped the version number to 3.9.
+
+	* scripts/*.tcl: Included the same version of "mwutil.tcl" as in
+	  Tablelist release 6.5; corrected two typos related to the "hasattrib"
+	  and "unsetattrib" subcommands; updated the copyright information.
+
+	* scripts/tclIndex: Newly generated.
+
+	* ../../examples/mentry/*.tcl: Updated the copyright information.
+
+2018-10-08  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl: Bumped the version number to 3.8; adapted to some changes in
+	  future Tcl and Tk releases (TIP 278, independent Tcl and Tk versions);
+	  updated the copyright information.
+
+	* COPYRIGHT.txt: Bumped the version number to 3.8.
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* doc/*.png: Updated the screenshots.
+
+	* scripts/*.tcl: Added support for the themes "aquativo", "Arc", and
+	  "clearlooks"; updated the support for several other themes; included
+	  the same version of "mwutil.tcl" as in Tablelist release 6.3; several
+	  code improvements and minor bug fixes; updated the copyright
+	  information.
+
+	* scripts/tclIndex: Newly generated.
+
+	* ../../examples/mentry/*.tcl: Various updates.
+
+2014-02-16  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 3.7; updated the
+	* COPYRIGHT.txt: copyright information.
+	* README.txt:
+
+	* scripts/*.tcl: Minor performance improvements; included the same
+	  version of "mwutil.tcl" as in Tablelist release 5.11; restored the
+	  support for Tcl/Tk 8.0, by cleaning up the use of the "clock" command
+	  and that of the <MouseWheel> event; improved the package loading
+	  mechanism.
+
+	* CHANGES.txt: Updated to reflect the changes.
+
+	* doc/*.html: Bumped the version number to 3.7; numerous improvements.
+
+	* doc/stylesheet.css: Added stylesheet file.
+
+	* ../../examples/*.tcl: Updated the copyright information.
+
+2013-03-25  Andreas Kupries  <andreas_kupries@users.sourceforge.net>
+
+	*
+	* Released and tagged Tklib 0.6 ========================
+	* 
+
+2012-03-10  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 3.6; updated the
+	* COPYRIGHT.txt: copyright information.
+	* README.txt:
+
+	* scripts/*.tcl: Improved the impleementation of the "-background"
+	  option in Mentry_tile; made sure to use the theme-specific disabled
+	  foreground color in Mentry_tile; extended the support for the
+	  "tileqt" theme to work on KDE 4, too; guarded against scripts that
+	  start by destroying all children of the root window; updated the
+	  copyright information.
+
+	* CHANGES.txt: Updated to reflect the changes; minor improvements.
+	* doc/*.html:
+
+	* ../../examples/*.tcl: Updated the copyright information.
+
+2011-08-22  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:                Eliminated the deprecated free-form scan
+	* scripts/mentryDateTime.tcl: from the implementation of the
+	  "mentry::getClockVal" command for Tcl versions 8.5 and above.
+
+2011-08-19  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:           Bumped the version number to 3.5.
+	* *.txt:
+	* doc/mentry.html:
+
+	* scripts/mentryWidget.tcl: Fixed a minor bug related to the handling
+	  of <Button-1> events.
+
+	* scripts/mwutil.tcl: Updated to the same version as in Tablelist 5.3.
+
+2010-12-07  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Added mentry to tklib.

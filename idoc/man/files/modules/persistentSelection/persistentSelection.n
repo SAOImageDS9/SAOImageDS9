@@ -1,0 +1,456 @@
+'\"
+'\" Generated from file 'persistentSelection\&.man' by tcllib/doctools with format 'nroff'
+'\"
+.TH "persistentSelection" n 1\&.0 tklib "Enhanced PRIMARY selection"
+.\" The -*- nroff -*- definitions below are for supplemental macros used
+.\" in Tcl/Tk manual entries.
+.\"
+.\" .AP type name in/out ?indent?
+.\"	Start paragraph describing an argument to a library procedure.
+.\"	type is type of argument (int, etc.), in/out is either "in", "out",
+.\"	or "in/out" to describe whether procedure reads or modifies arg,
+.\"	and indent is equivalent to second arg of .IP (shouldn't ever be
+.\"	needed;  use .AS below instead)
+.\"
+.\" .AS ?type? ?name?
+.\"	Give maximum sizes of arguments for setting tab stops.  Type and
+.\"	name are examples of largest possible arguments that will be passed
+.\"	to .AP later.  If args are omitted, default tab stops are used.
+.\"
+.\" .BS
+.\"	Start box enclosure.  From here until next .BE, everything will be
+.\"	enclosed in one large box.
+.\"
+.\" .BE
+.\"	End of box enclosure.
+.\"
+.\" .CS
+.\"	Begin code excerpt.
+.\"
+.\" .CE
+.\"	End code excerpt.
+.\"
+.\" .VS ?version? ?br?
+.\"	Begin vertical sidebar, for use in marking newly-changed parts
+.\"	of man pages.  The first argument is ignored and used for recording
+.\"	the version when the .VS was added, so that the sidebars can be
+.\"	found and removed when they reach a certain age.  If another argument
+.\"	is present, then a line break is forced before starting the sidebar.
+.\"
+.\" .VE
+.\"	End of vertical sidebar.
+.\"
+.\" .DS
+.\"	Begin an indented unfilled display.
+.\"
+.\" .DE
+.\"	End of indented unfilled display.
+.\"
+.\" .SO ?manpage?
+.\"	Start of list of standard options for a Tk widget. The manpage
+.\"	argument defines where to look up the standard options; if
+.\"	omitted, defaults to "options". The options follow on successive
+.\"	lines, in three columns separated by tabs.
+.\"
+.\" .SE
+.\"	End of list of standard options for a Tk widget.
+.\"
+.\" .OP cmdName dbName dbClass
+.\"	Start of description of a specific option.  cmdName gives the
+.\"	option's name as specified in the class command, dbName gives
+.\"	the option's name in the option database, and dbClass gives
+.\"	the option's class in the option database.
+.\"
+.\" .UL arg1 arg2
+.\"	Print arg1 underlined, then print arg2 normally.
+.\"
+.\" .QW arg1 ?arg2?
+.\"	Print arg1 in quotes, then arg2 normally (for trailing punctuation).
+.\"
+.\" .PQ arg1 ?arg2?
+.\"	Print an open parenthesis, arg1 in quotes, then arg2 normally
+.\"	(for trailing punctuation) and then a closing parenthesis.
+.\"
+.\"	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+.if t .wh -1.3i ^B
+.nr ^l \n(.l
+.ad b
+.\"	# Start an argument description
+.de AP
+.ie !"\\$4"" .TP \\$4
+.el \{\
+.   ie !"\\$2"" .TP \\n()Cu
+.   el          .TP 15
+.\}
+.ta \\n()Au \\n()Bu
+.ie !"\\$3"" \{\
+\&\\$1 \\fI\\$2\\fP (\\$3)
+.\".b
+.\}
+.el \{\
+.br
+.ie !"\\$2"" \{\
+\&\\$1	\\fI\\$2\\fP
+.\}
+.el \{\
+\&\\fI\\$1\\fP
+.\}
+.\}
+..
+.\"	# define tabbing values for .AP
+.de AS
+.nr )A 10n
+.if !"\\$1"" .nr )A \\w'\\$1'u+3n
+.nr )B \\n()Au+15n
+.\"
+.if !"\\$2"" .nr )B \\w'\\$2'u+\\n()Au+3n
+.nr )C \\n()Bu+\\w'(in/out)'u+2n
+..
+.AS Tcl_Interp Tcl_CreateInterp in/out
+.\"	# BS - start boxed text
+.\"	# ^y = starting y location
+.\"	# ^b = 1
+.de BS
+.br
+.mk ^y
+.nr ^b 1u
+.if n .nf
+.if n .ti 0
+.if n \l'\\n(.lu\(ul'
+.if n .fi
+..
+.\"	# BE - end boxed text (draw box now)
+.de BE
+.nf
+.ti 0
+.mk ^t
+.ie n \l'\\n(^lu\(ul'
+.el \{\
+.\"	Draw four-sided box normally, but don't draw top of
+.\"	box if the box started on an earlier page.
+.ie !\\n(^b-1 \{\
+\h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.el \}\
+\h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.\}
+.fi
+.br
+.nr ^b 0
+..
+.\"	# VS - start vertical sidebar
+.\"	# ^Y = starting y location
+.\"	# ^v = 1 (for troff;  for nroff this doesn't matter)
+.de VS
+.if !"\\$2"" .br
+.mk ^Y
+.ie n 'mc \s12\(br\s0
+.el .nr ^v 1u
+..
+.\"	# VE - end of vertical sidebar
+.de VE
+.ie n 'mc
+.el \{\
+.ev 2
+.nf
+.ti 0
+.mk ^t
+\h'|\\n(^lu+3n'\L'|\\n(^Yu-1v\(bv'\v'\\n(^tu+1v-\\n(^Yu'\h'-|\\n(^lu+3n'
+.sp -1
+.fi
+.ev
+.\}
+.nr ^v 0
+..
+.\"	# Special macro to handle page bottom:  finish off current
+.\"	# box/sidebar if in box/sidebar mode, then invoked standard
+.\"	# page bottom macro.
+.de ^B
+.ev 2
+'ti 0
+'nf
+.mk ^t
+.if \\n(^b \{\
+.\"	Draw three-sided box if this is the box's first page,
+.\"	draw two sides but no top otherwise.
+.ie !\\n(^b-1 \h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.el \h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.\}
+.if \\n(^v \{\
+.nr ^x \\n(^tu+1v-\\n(^Yu
+\kx\h'-\\nxu'\h'|\\n(^lu+3n'\ky\L'-\\n(^xu'\v'\\n(^xu'\h'|0u'\c
+.\}
+.bp
+'fi
+.ev
+.if \\n(^b \{\
+.mk ^y
+.nr ^b 2
+.\}
+.if \\n(^v \{\
+.mk ^Y
+.\}
+..
+.\"	# DS - begin display
+.de DS
+.RS
+.nf
+.sp
+..
+.\"	# DE - end display
+.de DE
+.fi
+.RE
+.sp
+..
+.\"	# SO - start of list of standard options
+.de SO
+'ie '\\$1'' .ds So \\fBoptions\\fR
+'el .ds So \\fB\\$1\\fR
+.SH "STANDARD OPTIONS"
+.LP
+.nf
+.ta 5.5c 11c
+.ft B
+..
+.\"	# SE - end of list of standard options
+.de SE
+.fi
+.ft R
+.LP
+See the \\*(So manual entry for details on the standard options.
+..
+.\"	# OP - start of full description for a single option
+.de OP
+.LP
+.nf
+.ta 4c
+Command-Line Name:	\\fB\\$1\\fR
+Database Name:	\\fB\\$2\\fR
+Database Class:	\\fB\\$3\\fR
+.fi
+.IP
+..
+.\"	# CS - begin code excerpt
+.de CS
+.RS
+.nf
+.ta .25i .5i .75i 1i
+..
+.\"	# CE - end code excerpt
+.de CE
+.fi
+.RE
+..
+.\"	# UL - underline word
+.de UL
+\\$1\l'|0\(ul'\\$2
+..
+.\"	# QW - apply quotation marks to word
+.de QW
+.ie '\\*(lq'"' ``\\$1''\\$2
+.\"" fix emacs highlighting
+.el \\*(lq\\$1\\*(rq\\$2
+..
+.\"	# PQ - apply parens and quotation marks to word
+.de PQ
+.ie '\\*(lq'"' (``\\$1''\\$2)\\$3
+.\"" fix emacs highlighting
+.el (\\*(lq\\$1\\*(rq\\$2)\\$3
+..
+.\"	# QR - quoted range
+.de QR
+.ie '\\*(lq'"' ``\\$1''\\-``\\$2''\\$3
+.\"" fix emacs highlighting
+.el \\*(lq\\$1\\*(rq\\-\\*(lq\\$2\\*(rq\\$3
+..
+.\"	# MT - "empty" string
+.de MT
+.QW ""
+..
+.BS
+.SH NAME
+persistentSelection \- Enhanced PRIMARY selection
+.SH SYNOPSIS
+package require \fBTcl 8\&.5\fR
+.sp
+package require \fBTk 8\&.5\fR
+.sp
+package require \fBpersistentSelection ?1\&.0?\fR
+.sp
+\fBpersistentSelection::fixText\fR
+.sp
+\fBpersistentSelection::getClassicPrimarySel\fR ?\fIdisplayOf\fR? ?\fIwithOthers\fR?
+.sp
+\fBpersistentSelection::getPrimarySel\fR ?\fIdisplayOf\fR?
+.sp
+\fBpersistentSelection::report\fR \fItype\fR \fIpathName\fR
+.sp
+.BE
+.SH DESCRIPTION
+Consider a \fBTk\fR widget that sets its \fB-exportselection\fR option to boolean \fBtrue\fR, thereby exporting its selection\&.  When the selection in the widget is canceled, by default \fBTk\fR also cancels the \fBPRIMARY\fR selection\&.  In this situation, an attempt to read the \fBPRIMARY\fR selection, e\&.g\&. by a \fB<<PasteSelection>>\fR event, will fail\&.
+.PP
+The \fBpersistentSelection\fR package offers more convenient behavior\&.  It will sustain as the \fBPRIMARY\fR selection the last non-empty value set by any \fBTk\fR widget that it monitors, as long as the \fBPRIMARY\fR selection is not claimed by another process, or by a widget that it does not monitor\&.
+.PP
+The \fBpersistentSelection\fR package works by binding to the \fB<<Selection>>\fR event on the widgets of interest, and using this binding to monitor any change of the selection in the widget\&.  Its commands are confined to the namespace \fB::persistentSelection\fR\&.
+.SH COMMANDS
+.TP
+\fBpersistentSelection::fixText\fR
+Call this command once to resolve problems with \fB\fBtext\fR\fR widgets that use the default \fBText\fR bindtag (rather than \fBNtext\fR)\&.  See \fBText widgets\fR for an explanation\&.
+.sp
+The command adjusts some \fBText\fR bindings to generate \fB<<Selection>>\fR events; and it re-orders calls to the \fB\fBtext\fR\fR widget \fBtag\fR command in the private command \fB::tk::TextSelectTo\fR, so that this command cooperates better with \fBpersistentSelection\fR\&.
+.sp
+These adjustments are needed only to older versions of \fBTk\fR\&.  The command \fBpersistentSelection::fixText\fR has no effect on sufficiently recent releases\&.  It can safely be called for any version of \fBTk\fR\&.
+.TP
+\fBpersistentSelection::getClassicPrimarySel\fR ?\fIdisplayOf\fR? ?\fIwithOthers\fR?
+.RS
+.IP \(bu
+\fIdisplayOf\fR - a \fBTk\fR window path on the display to be interrogated (optional, default {\fB\&.\fR})
+.IP \(bu
+\fIwithOthers\fR - whether to return the \fBPRIMARY\fR selection if it is owned by another process or interpreter (optional, boolean, default \fBfalse\fR)
+.RE
+.IP
+A command to return the classic (non-persistent) form of the \fBPRIMARY\fR selection\&.  If the selection does not exist, or is sustained only by \fBpersistentSelection\fR, the command returns the empty string\&.
+.TP
+\fBpersistentSelection::getPrimarySel\fR ?\fIdisplayOf\fR?
+.RS
+.IP \(bu
+\fIdisplayOf\fR - a \fBTk\fR window on the display to be interrogated (optional, default {\fB\&.\fR})
+.RE
+.IP
+A command to return the value of the \fBPRIMARY\fR selection\&.  If the selection does not exist, the command returns the empty string\&.  The usual \fBTk\fR commands are perfectly valid, but they raise an error if the selection does not exist\&.
+.TP
+\fBpersistentSelection::report\fR \fItype\fR \fIpathName\fR
+.RS
+.IP \(bu
+\fItype\fR - (value \fBtext\fR or \fBentry\fR) classification of the widget whose selection has changed
+.IP \(bu
+\fIpathName\fR - the \fBTk\fR window path of the widget whose selection has changed
+.RE
+.IP
+To make package \fBpersistentSelection\fR monitor a widget, this command must be bound to the \fB<<Selection>>\fR event on that widget\&.  The command records changes in the widget's selection, and uses the information to sustain a non-empty \fBPRIMARY\fR selection on each display\&.
+.PP
+.SH USAGE
+.SS "SCRIPT REQUIREMENTS"
+For each widget that will be monitored by \fBpersistentSelection\fR, the command \fBpersistentSelection::report\fR must be bound to event \fB<<Selection>>\fR in one of the widget's binding tags\&.
+.PP
+For example, the developer may wish to use \fBpersistentSelection\fR with every \fB\fBtext\fR\fR and \fB\fBentryPlus\fR\fR widget in an application: this can be achieved by adding the \fB<<Selection>>\fR binding to the \fBText\fR and \fBEntryPlus\fR bindtags\&.  See \fBEXAMPLES\fR\&.
+.PP
+If \fBpersistentSelection\fR is not required for all widgets of a particular class, the binding can be added to per-widget bindtags\&.  See \fBEXAMPLES\fR\&.
+.SS "WIDGET REQUIREMENTS"
+To be capable of being monitored by \fBpersistentSelection\fR, a widget must satisfy three conditions:
+.IP \(bu
+It must have an \fB-exportselection\fR option that allows it to export its selection to the \fBPRIMARY\fR selection\&.
+.IP \(bu
+It must generate a \fB<<Selection>>\fR event whenever its selection changes\&.
+.IP \(bu
+its bindings to other events should be suitable - specifically, in versions of \fBTk\fR older than \fB8\&.6\&.6\fR, a GUI event that extends or reduces the selection from one non-empty value to another should not use an intermediate state that has an empty selection, because this confuses \fBpersistentStore\fR\&.
+.PP
+.PP
+The \fBTk\fR and \fBTtk\fR widgets that can export their selection are \fB\fBtext\fR\fR, \fB\fBentry\fR\fR, \fB\fBlistbox\fR\fR, \fB\fBspinbox\fR\fR, \fB\fBttk::entry\fR\fR, \fB\fBttk::spinbox\fR\fR, and \fB\fBttk::combobox\fR\fR\&.
+.SS "TEXT WIDGETS"
+In versions of \fBTk\fR older than \fB8\&.6\&.9\fR, the \fB\fBtext\fR\fR widget does not generate \fB<<Selection>>\fR events in a few "corner cases" in which its selection changes\&.  These omissions can be corrected by changes to the \fBText\fR bindings, in order to satisfy the second condition of \fBWidget requirements\fR\&.
+.PP
+In addition, versions of \fBTk\fR older than \fB8\&.6\&.6\fR process selection events slightly differently from newer versions, and in combination with the \fBText\fR bindings this confuses \fBpersistentStore\fR\&.  If an upgrade to the current version of \fBTcl/Tk\fR is not feasible, this problem can be resolved by making a slight modification to the widget bindings, in order to satisfy the third condition of \fBWidget requirements\fR\&.
+.PP
+Either the script should call the command \fBpersistentSelection::fixText\fR to adjust the \fBText\fR bindings and the commands that they call; or the widget can use the \fBNtext\fR binding tag (for \fBntext\fR version 1\&.0 or above) instead of the default \fBText\fR bindtag\&.
+.PP
+In either case, the argument \fItype\fR supplied to command \fBpersistentSelection::report\fR should have the value \fBtext\fR\&.
+.SS "ENTRY, SPINBOX, TTK::ENTRY, TTK::SPINBOX, AND TTK::COMBOBOX WIDGETS"
+The \fB\fBentry\fR\fR, \fB\fBspinbox\fR\fR, \fB\fBttk::entry\fR\fR, \fB\fBttk::spinbox\fR\fR, and \fB\fBttk::combobox\fR\fR widgets do not generate a \fB<<Selection>>\fR event when their selection changes, and therefore require modification\&.
+.PP
+The package \fBwidgetPlus\fR provides \fBsnit\fR wrappers \fB\fBwidgetPlus::entryPlus\fR\fR, \fB\fBwidgetPlus::spinboxPlus\fR\fR, \fB\fBwidgetPlus::ttkEntryPlus\fR\fR, \fB\fBwidgetPlus::ttkSpinboxPlus\fR\fR, and \fB\fBwidgetPlus::ttkComboboxPlus\fR\fR respectively\&.  Each \fBwidgetPlus\fR widget generates the required \fB<<Selection>>\fR events\&.
+.PP
+In all these cases, the argument \fItype\fR supplied to command \fBpersistentSelection::report\fR should have the value \fBentry\fR\&.  This argument determines how \fBpersistentSelection\fR will inspect the widget's selection, and the commands that do so are the same for all these widgets\&.
+.SS "LISTBOX WIDGETS"
+A similar wrapper has not been created for the \fB\fBlistbox\fR\fR widget, which has the complication of permitting multiple selections\&.
+.SH "TO DO"
+.IP \(bu
+Test on a system with multiple displays\&.
+.PP
+.SH BUGS
+This version of \fBpersistentSelection\fR is intended to be compatible with all releases of \fBTk\fR 8\&.5- and 8\&.6, and with the branches \fIcore-8-5-branch\fR, \fIcore-8-6-branch\fR, \fIrevised_text\fR, and \fItrunk\fR in the source code repository for \fBTk\fR\&.  Any incompatibility with any of these versions, for any \fBTk\fR windowing system, should be reported as a bug\&. Please report such in the category \fIpersistentSelection\fR of the \fITklib Trackers\fR [http://core\&.tcl\&.tk/tklib/reportlist]\&.
+.SH EXAMPLES
+Each example uses \fBpersistentSelection\fR to retain the last non-empty value of the selection in certain widgets\&.  Each example also includes the creation of sample widgets\&.
+.PP
+Monitor all \fB\fBentryPlus\fR\fR widgets\&.
+.CS
+
+
+package require widgetPlus
+widgetPlus::entryPlus \&.ep
+pack \&.ep
+
+package require persistentSelection
+bind EntryPlus <<Selection>> {::persistentSelection::report entry %W}
+
+.CE
+Monitor all \fB\fBtext\fR\fR widgets that use the default \fBText\fR bindings\&.
+.CS
+
+
+text \&.t
+pack \&.t
+
+package require persistentSelection
+::persistentSelection::fixText
+bind Text <<Selection>> {::persistentSelection::report text %W}
+
+.CE
+Monitor all \fB\fBtext\fR\fR widgets that use the default \fBText\fR bindings, and all \fB\fBentryPlus\fR\fR widgets\&.
+.CS
+
+
+text \&.t
+pack \&.t
+
+package require widgetPlus
+widgetPlus::entryPlus \&.ep
+pack \&.ep
+
+package require persistentSelection
+::persistentSelection::fixText
+bind Text <<Selection>> {::persistentSelection::report text %W}
+bind EntryPlus <<Selection>> {::persistentSelection::report entry %W}
+
+.CE
+Monitor all \fB\fBtext\fR\fR widgets that use \fBNtext\fR bindings\&.
+.CS
+
+
+text \&.t
+pack \&.t
+
+package require ntext
+bindtags \&.t {\&.t Ntext \&. all}
+
+package require persistentSelection
+bind Ntext <<Selection>> {::persistentSelection::report text %W}
+
+.CE
+Monitor a single \fB\fBentryPlus\fR\fR widget \fB\&.ep\fR
+.CS
+
+
+package require widgetPlus
+widgetPlus::entryPlus \&.ep
+pack \&.ep
+
+package require persistentSelection
+bind \&.ep <<Selection>> {::persistentSelection::report entry %W}
+
+.CE
+Monitor a single \fB\fBtext\fR\fR widget \fB\&.t\fR
+.CS
+
+
+text \&.t
+pack \&.t
+
+package require persistentSelection
+bind \&.t <<Selection>> {::persistentSelection::report text %W}
+
+.CE
+.SH "SEE ALSO"
+bindtags, ntext, text, widgetPlus

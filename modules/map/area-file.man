@@ -1,0 +1,28 @@
+[comment {-*- tcl -*- doctools manpage}]
+[vset VERSION 0.1]
+[manpage_begin  map::area::file n [vset VERSION]]
+[category {Map Display and Supporting Utilities}][keywords map]
+[keywords {file, geo/area}]
+[keywords {geo/area, file}]
+[moddesc   {Map display support}]
+[titledesc {Reading/writing tklib geo/area files}]
+[require Tcl 8.6-]
+[require debug]
+[require debug::caller]
+[require map::slippy 0.8]
+[require snit]
+[require  map::area::file [opt [vset VERSION]]]
+[description]
+
+This package provides read/write functions for Tklib [term geo/area] files.
+
+[section API]
+
+[list_begin definitions]
+[list_end]
+
+[section EXAMPLE]
+
+[vset CATEGORY map]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]

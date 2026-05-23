@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>The scrollutil::plainnotebook Command</title>
+
+  <meta name="Author" content="Csaba Nemethi">
+  <meta name="Keywords" content="plainnotebook, widget, notebook, closebtn">
+
+  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+</head>
+
+<body>
+  <div>
+    <h1>The <code><b>scrollutil::plainnotebook</b></code> Command</h1>
+
+    <h2>For Scrollutil Version 2.4</h2>
+
+    <h3>by</h3>
+
+    <h2>Csaba Nemethi</h2>
+
+    <address>
+      <a href="mailto:csaba.nemethi@t-online.de">csaba.nemethi@t-online.de</a>
+    </address>
+  </div>
+
+  <hr>
+
+  <h2 id="contents">Contents</h2>
+
+  <ul>
+    <li><a href="#quick_ref">Quick Reference</a></li>
+
+    <li><a href="#detailed_ref">Detailed Reference</a></li>
+  </ul>
+
+  <div>
+    <p><a href="index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="quick_ref">Quick Reference</h2>
+
+  <dl>
+    <dt><a href="#name">NAME</a></dt>
+
+    <dd><code>scrollutil::plainnotebook</code> &ndash; Create and manipulate
+    plainnotebook widgets</dd>
+
+    <dt class="tm"><a href="#synopsis">SYNOPSIS</a></dt>
+
+    <dd>
+      <pre>
+package require scrollutil_tile
+<b>scrollutil::plainnotebook</b> <i>pathName</i> ?<i>options</i>?
+</pre>
+    </dd>
+
+    <dt><a href="#description">DESCRIPTION</a></dt>
+
+    <dt class="tm"><a href="#std_options">STANDARD OPTIONS</a></dt>
+
+    <dd>
+      <pre>
+<b>-cursor</b>
+</pre>
+    </dd>
+
+    <dt><a href="#widget_options">WIDGET-SPECIFIC OPTIONS</a></dt>
+
+    <dd><code><b><a href="#caller">-caller</a></b> <i>pageIndex</i></code></dd>
+
+    <dd><code><b><a href="#closabletabs">-closabletabs</a></b>
+    <i>boolean</i></code></dd>
+
+    <dd><code><b><a href="#forgetcommand">-forgetcommand</a></b>
+    <i>command</i></code></dd>
+
+    <dd><code><b><a href="#height">-height</a></b>
+    <i>screenDistance</i></code></dd>
+
+    <dd><code><b><a href="#leavecommand">-leavecommand</a></b>
+    <i>command</i></code></dd>
+
+    <dd><code><b><a href="#movabletabs">-movabletabs</a></b>
+    <i>boolean</i></code></dd>
+
+    <dd><code><b><a href="#side">-side</a></b>
+    <b>left</b>|<b>right</b></code></dd>
+
+    <dd><code><b><a href="#takefocus">-takefocus</a></b>
+    <b>0</b>|<b>1</b>|<b>""</b>|<i>command</i></code></dd>
+
+    <dd><code><b><a href="#title">-title</a></b> <i>text</i></code></dd>
+
+    <dd><code><b><a href="#width">-width</a></b>
+    <i>screenDistance</i></code></dd>
+
+    <dt class="tm"><a href="#tab_options">TAB OPTIONS</a></dt>
+
+    <dt class="tm"><a href="#tab_ids">TAB IDENTIFIERS</a></dt>
+
+    <dt class="tm"><a href="#widget_command">WIDGET COMMAND</a></dt>
+
+    <dd><code><i>pathName</i> <b><a href="#add">add</a></b>
+    <i>window</i> ?<i>options</i>?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#addbutton">addbutton</a></b>
+    <i>pageIndex</i> <i>text</i> ?<i>image</i>?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#addlabel">addlabel</a></b>
+    <i>text</i> ?<i>image</i>?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href=
+    "#addseparator">addseparator</a></b></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href=
+    "#adjustsize">adjustsize</a></b></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#attrib">attrib</a></b> ?<i>name</i>
+    ?<i>value</i> <i>name</i> <i>value</i> ...??</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#cget">cget</a></b>
+    <i>option</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href=
+    "#closablestate">closablestate</a></b> <i>tabId</i>
+    ?<i>boolean</i>?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#configure">configure</a></b>
+    ?<i>option</i> ?<i>value</i> <i>option</i> <i>value</i> ...??</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#forget">forget</a></b>
+    <i>tabId</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#hasattrib">hasattrib</a></b>
+    <i>name</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#hastabattrib">hastabattrib</a></b>
+    <i>tabId</i> <i>name</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#hide">hide</a></b>
+    <i>tabId</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#index">index</a></b>
+    <i>tabId</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#insert">insert</a></b>
+    <i>pos</i> <i>window</i> ?<i>options</i>?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#insertbutton">insertbutton</a></b>
+    <i>pos</i> <i>pageIndex</i> <i>text</i> ?<i>image</i>?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#insertlabel">insertlabel</a></b>
+    <i>pos</i> <i>text</i> ?<i>image</i>?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href=
+    "#insertseparator">insertseparator</a></b> <i>pos</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#instate">instate</a></b>
+    <i>stateSpec</i> ?<i>script</i>?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#see">see</a></b>
+    <i>tabId</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#select">select</a></b>
+    ?<i>tabId</i>?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#state">state</a></b>
+    ?<i>stateSpec</i>?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#style">style</a></b></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#tab">tab</a></b>
+    <i>tabId</i> ?<i>option</i> ?<i>value</i> <i>option</i> <i>value</i>
+    ...??</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#tabattrib">tabattrib</a></b>
+    <i>tabId</i> ?<i>name</i> ?<i>value</i> <i>name</i> <i>value</i>
+    ...??</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#tabpath">tabpath</a></b>
+    <i>tabId</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#tabs">tabs</a></b></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href=
+    "#titlepath">titlepath</a></b></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#unsetattrib">unsetattrib</a></b>
+    <i>name</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href=
+    "#unsettabattrib">unsettabattrib</a></b> <i>tabId</i>
+    <i>name</i></code></dd>
+
+    <dt class="tm"><a href="#kbd_traversal">KEYBOARD TRAVERSAL</a></dt>
+
+    <dt class="tm"><a href="#virtual_events">VIRTUAL EVENTS</a></dt>
+
+    <dt class="tm"><a href="#bindings">FURTHER BINDINGS</a></dt>
+
+    <dt class="tm"><a href="#keywords">KEYWORDS</a></dt>
+
+    <dd>plainnotebook, widget, notebook, closebtn</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="detailed_ref">Detailed Reference</h2>
+
+  <dl>
+    <dt id="name"><b>NAME</b></dt>
+
+    <dd><code>scrollutil::plainnotebook</code> &ndash; Create and manipulate
+    plainnotebook widgets</dd>
+
+    <dt class="tm" id="synopsis"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+package require scrollutil_tile
+<b>scrollutil::plainnotebook</b> <i>pathName</i> ?<i>options</i>?
+</pre>
+    </dd>
+
+    <dd>Note that the <code><b>scrollutil::plainnotebook</b></code> command is
+    provided by the Scrollutil_tile package, but not by Scrollutil.</dd>
+
+    <dt class="tm" id="description"><b>DESCRIPTION</b></dt>
+
+    <dd>The <code><b>scrollutil::plainnotebook</b></code> command creates a new
+    window named <code><i>pathName</i></code> and of the class
+    <code><b>Plainnotebook</b></code>, and makes it into a <b>plainnotebook</b>
+    widget.&nbsp; Additional options, described below, may be specified on the
+    command line or in the option database to configure aspects of the
+    plainnotebook widget such as its width, height, and side.&nbsp; The
+    <code><b>scrollutil::plainnotebook</b></code> command returns its
+    <code><i>pathName</i></code> argument.&nbsp; At the time this command is
+    invoked, there must not exist a window named <code><i>pathName</i></code>,
+    but <code><i>pathName</i></code>'s parent must exist.</dd>
+
+    <dd class="tm">A plainnotebook is a mega-widget that extends a
+    ttk::notebook having an arbitrary number of pages with invisible tabs by a
+    ttk::frame to its left or right containing, among others, a <a href=
+    "scrollableframe.html">scrollableframe</a> whose content frame is the
+    parent of a series of widgets that play the role of vertically laid-out
+    notebook tabs.&nbsp; Currently not visible "tabs" can be brought into view
+    by navigating with the mouse wheel, touchpad, or keyboard, and by scrolling
+    with the vertical scrollbar of the <a href="scrollarea.html">scrollarea</a>
+    containing the scrollableframe.&nbsp; An individual "tab" can be made
+    visible programmatically with the aid of the <code><b><a href=
+    "#see">see</a></b></code> subcommand.&nbsp; Unlike a ttk::notebook widget
+    with vertically aligned tabs, which in most themes has a suboptimal look
+    and whose <code><b>-height</b></code> option is quite often overridden by
+    the total height of the tabs, the plainnotebook widget respects the value
+    of its <code><b><a href="#height">-height</a></b></code> option, regardless
+    of the space required by the "tabs".</dd>
+
+    <dd class="tm">In the rest of this document, the widgets that play the role
+    of vertically laid-out notebook tabs, will be called <b>tabs</b>
+    themselves.</dd>
+
+    <dd class="tm">The upper part of the frame to the left or right of the
+    ttk::notebook component contains a toolbutton and a ttk::label widget,
+    called <b>ascend button</b> and <b>title label</b>, respectively.&nbsp;
+    Their visibility is controlled by the <code><b><a href=
+    "#caller">-caller</a></b></code> and <code><b><a href=
+    "#title">-title</a></b></code> widget options.&nbsp; The ascend button
+    displays an image whose shape resembles that of a &lt; character.</dd>
+
+    <dd class="tm">The API of the plainnotebook widget is quite similar
+    to that of ttk::notebook.&nbsp; Apart from a few additional,
+    plainnotebook-specific subcommands and the missing
+    <code><b>identify</b></code> subcommand, the Tcl command associated with a
+    plainnotebook widget provides the same subcommands as the one associated
+    with a ttk::notebook.&nbsp; Note that the API doesn't provide any command
+    for retrieving the path name of the ttk::notebook widget contained in a
+    plainnotebook, because there is no need to access that widget
+    directly.&nbsp; Moreover, using its options or subcommands instead of those
+    of the plainnotebook widget will more often than not result in an
+    unpredictable behavior.</dd>
+
+    <dd class="tm">Notice also that only the tabs created with the
+    <code><b><a href="#add">add</a></b></code> and <code><b><a href=
+    "#insert">insert</a></b></code> subcommands are selectable.&nbsp; The ones
+    created with the plainnotebook-specific subcommands <code><b><a href=
+    "#addbutton">addbutton</a></b></code> and <code><b><a href=
+    "#insertbutton">insertbutton</a></b></code> are designed for descending to
+    another plainnotebook widget, while the ones created via <code><b><a href=
+    "#addlabel">addlabel</a></b></code>, <code><b><a href=
+    "#addseparator">addseparator</a></b></code>, <code><b><a href=
+    "#insertlabel">insertlabel</a></b></code>, and <code><b><a href=
+    "#insertseparator">insertseparator</a></b></code> can be used as titles and
+    delimiters of tab groups.</dd>
+
+    <dt class="tm" id="std_options"><b>STANDARD OPTIONS</b></dt>
+
+    <dd>
+      <pre>
+<b>-cursor</b>
+</pre>
+    </dd>
+
+    <dd>See the <b>ttk_widget</b> manual entry for details on the above
+    standard option.&nbsp; Its default value is an empty string.</dd>
+
+    <dt class="tm" id="widget_options"><b>WIDGET-SPECIFIC OPTIONS</b></dt>
+
+    <dd id="caller">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-caller</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;caller</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;Caller</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>The value of this option must be an integer.&nbsp; If it is
+        nonnegative then the widget's parent must be a <a href=
+        "pagesman.html">pagesman</a> widget.&nbsp; In this case the value is
+        viewed as the numerical index of an already existing page of the parent
+        pagesman widget, and the plainnotebook's ascend button will select that
+        page, which is assumed to be the "caller" of the current plainnotebook
+        widget, meaning that the current plainnotebook was previously selected
+        from within that page.&nbsp; For example, if the option's value is
+        <code>0</code> then pressing and later releasing the left mouse button
+        over the ascend button will ascend back to the pagesman page of index
+        <code>0</code>, which is assumed to be the page from which the user
+        previously descended to the current one.&nbsp; The default is
+        <code>-1</code>.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="closabletabs">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-closabletabs</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;closableTabs</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;ClosableTabs</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>Specifies a boolean value that determines whether the tabs created
+        with the <code><b><a href="#add">add</a></b></code> and
+        <code><b><a href="#insert">insert</a></b></code> subcommands (only)
+        will contain the <code><b>closebtn</b></code> element.&nbsp; This style
+        element is automatically created by the Scrollutil_tile package and is
+        quite similar to the <code><b><a href=
+        "scrollednotebook.html#closetab">closetab</a></b></code> element.&nbsp;
+        See the <a href="#bindings">FURTHER BINDINGS</a> section below for
+        details on closing the tabs with the aid of the
+        <code><b>closebtn</b></code> element.&nbsp; The default is
+        <code>0</code>.&nbsp; This option can be overridden for individual tabs
+        with the aid of the <code><b><a href=
+        "#closablestate">closablestate</a></b></code> subcommand.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="forgetcommand">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-forgetcommand</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;forgetCommand</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;ForgetCommand</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>Specifies a command to be invoked when attempting to remove a tab
+        and unmanage the associated window with the aid of the
+        <code><b><a href="#forget">forget</a></b></code> subcommand.&nbsp; If
+        the option's value is a nonempty string then it is concatenated with
+        the path name of the plainnotebook widget and that of the window to be
+        unmanaged, and the resulting script, which must return a boolean, is
+        evaluated in the global scope.&nbsp; If the return value of this script
+        is false then the <code><b>forget</b></code> subcommand is aborted,
+        i.e., the tab is not removed and the associated window is not
+        unmanaged.&nbsp; The default is an empty string.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="height">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-height</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;height</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;Height</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>If present and greater than zero, specifies the desired height of
+        the pane area in any of the forms acceptable to
+        <code><b>Tk_GetPixels</b></code>.&nbsp; Otherwise, the maximum
+        requested height of all panes is used.&nbsp; The default is
+        <code>0</code>.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="leavecommand">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-leavecommand</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;leaveCommand</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;LeaveCommand</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>Specifies a command to be invoked when attempting to leave the
+        currently selected window by selecting a different one.&nbsp; If the
+        option's value is a nonempty string then it is concatenated with the
+        path name of the plainnotebook widget and that of the currently
+        selected window, and the resulting script, which must return a boolean,
+        is evaluated in the global scope.&nbsp; If the return value of this
+        script is false then the operation of selecting a different window is
+        aborted.&nbsp; The default is an empty string.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="movabletabs">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-movabletabs</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;movableTabs</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;MovableTabs</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>Specifies a boolean value that determines whether the tabs can be
+        moved with the mouse.&nbsp; See the <a href="#bindings">FURTHER
+        BINDINGS</a> section below for details.&nbsp; The default is
+        <code>1</code>.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="side">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-side</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;side</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;Side</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>Specifies on which side (<code><b>left</b></code> or
+        <code><b>right</b></code>) of the widget to show the ttk::frame
+        containing the tabs, the ascend button, and the title label.&nbsp; The
+        default is <code><b>left</b></code>.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="takefocus">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-takefocus</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;takeFocus</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;TakeFocus</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>This option determines whether the plainnotebook widget accepts the
+        focus during keyboard traversal.&nbsp; It is almost identical to the
+        standard option of the same name (see the <b>options</b> manual entry
+        for details).&nbsp; The only difference is that not the plainnotebook
+        widget itself but the scrollableframe contained in it will receive the
+        focus during keyboard traversal with the standard keys
+        (<code>Tab</code> and <code>Shift-Tab</code>).&nbsp; The default is
+        <code>"ttk::takefocus"</code> (just like for ttk::notebook and several
+        other Tk themed widgets).</p>
+      </blockquote>
+    </dd>
+
+    <dd id="title">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-title</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;title</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;Title</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>Specifies the text to be displayed in the plainnotebook's title
+        label, which is a ttk::label widget of the style
+        <code>PnbTitle.TLabel</code>.&nbsp; The font used for this style is
+        derived from <code><b>TkDefaultFont</b></code> by increasing the
+        latter's size by a factor of 1.2.&nbsp; To set a different font, use
+        the <code><b>ttk::style</b></code> command or retrieve the path name
+        of this widget with the <code><b><a href=
+        "#titlepath">titlepath</a></b></code> subcommand and then invoke&nbsp;
+        <code>... <b>configure -font</b> ...</code>.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="width">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-width</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;width</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;Width</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>If present and greater than zero, specifies the desired width of the
+        pane area in any of the forms acceptable to
+        <code><b>Tk_GetPixels</b></code>.&nbsp; Otherwise, the maximum
+        requested width of all panes is used.&nbsp; The default is
+        <code>0</code>.</p>
+      </blockquote>
+    </dd>
+
+    <dt id="tab_options"><b>TAB OPTIONS</b></dt>
+
+    <dd>See the <b>ttk_notebook</b> manual entry.</dd>
+
+    <dt class="tm" id="tab_ids"><b>TAB IDENTIFIERS</b></dt>
+
+    <dd>See the <b>ttk_notebook</b> manual entry.&nbsp; Note that in positional
+    specifications of the form <code>"@<i>x</i>,<i>y</i></code>",
+    the coordinates are expected to be relative to the plainnotebook
+    window.</dd>
+
+    <dt class="tm" id="widget_command"><b>WIDGET COMMAND</b></dt>
+
+    <dd>
+      The <code><b>scrollutil::plainnotebook</b></code> command creates a new
+      Tcl command whose name is <code><i>pathName</i></code>.&nbsp; This
+      command may be used to invoke various operations on the widget.&nbsp; It
+      has the following general form:
+
+      <blockquote>
+        <pre>
+<i>pathName</i> <i>option</i> ?<i>arg</i> <i>arg</i> ...?
+</pre>
+      </blockquote>
+    </dd>
+
+    <dd><code><i>option</i></code> and the <code><i>arg</i></code>s determine
+    the exact behavior of the command.&nbsp; The following commands are
+    possible for plainnotebook widgets:</dd>
+
+    <dd>
+      <dl>
+        <dt class="tm" id="add"><code><i>pathName</i> <b>add</b> <i>window</i>
+        ?<i>options</i>?</code></dt>
+
+        <dd>See the <b>ttk_notebook</b> manual entry.&nbsp; As mentioned there,
+        if <code><i>window</i></code> is currently managed by the notebook but
+        hidden, the subcommand restores it to its previous position.&nbsp; This
+        holds equally true for the non-selectable (dummy) windows associated
+        with the tabs created with the <code><b><a href=
+        "#addbutton">addbutton</a></b></code>, <code><b><a href=
+        "#addlabel">addlabel</a></b></code>, <code><b><a href=
+        "#addseparator">addseparator</a></b></code>, <code><b><a href=
+        "#insertbutton">insertbutton</a></b></code>, <code><b><a href=
+        "#insertlabel">insertlabel</a></b></code>, and <code><b><a href=
+        "#insertseparator">insertseparator</a></b></code> subcommands.&nbsp; If
+        <code><i>window</i></code> is not yet managed by the notebook then the
+        corresponding tab will be a ttk::radiobutton widget of a toolbutton
+        style (<code>Page.Toolbutton</code> or
+        <code>ClosablePage.Toolbutton</code>, depending on the value of the
+        <code><b><a href="#closabletabs">-closabletabs</a></b></code>
+        option).&nbsp; The return value is the path name of the widget used for
+        the tab corresponding to <code><i>window</i></code> (a ttk::radiobutton
+        or ttk::button, both using a toolbutton style, or a ttk::label, or a
+        ttk::separator).</dd>
+
+        <dt class="tm" id="addbutton"><code><i>pathName</i> <b>addbutton</b>
+        <i>pageIndex</i> <i>text</i> ?<i>image</i>?</code></dt>
+
+        <dd>Adds a new tab implemented as a ttk::button widget of a toolbutton
+        style (<code>Desc.Toolbutton</code>) that displays, besides the
+        specified <code><i>text</i></code> and optional
+        <code><i>image</i></code>, the <code><b>descend</b></code> element,
+        whose shape resembles that of a &gt; character.&nbsp; This style
+        element is automatically created by the Scrollutil_tile package.&nbsp;
+        Its size depends on the display's scaling percentage, while its
+        foreground color is theme-specific and is updated whenever the theme
+        changes.&nbsp; The return value is the path name of the above-mentioned
+        ttk::button widget.</dd>
+
+        <dd class="tm">For this subcommand to work, the widget's parent must be
+        a <a href="pagesman.html">pagesman</a> widget.&nbsp;
+        <code><i>pageIndex</i></code>, which must be a nonnegative integer,
+        specifies the numerical index of a page within the pagesman widget that
+        will be selected when invoking the toolbutton.&nbsp; It is not expected
+        that at the time this subcommand is invoked, the page identified by
+        <code><i>pageIndex</i></code> already exists; it may be created and
+        added to the pagesman widget later.</dd>
+
+        <dd class="tm">This subcommand, together with the <code><b><a href=
+        "#caller">-caller</a></b></code> option, makes it easy to to write
+        applications in which the user can descend from a plainnotebook to
+        another one within a common pagesman parent with a single mouse click
+        and switch back in the same way to the original one.&nbsp; For example,
+        if the two plainnotebook widgets have the page indices <code>0</code>
+        and <code>1</code> then all you need is to pass the page index
+        <code>1</code> to the first plainnotebook's
+        <code><b>addbutton</b></code> subcommand and set the
+        <code><b>-caller</b></code> option of the second one to the page index
+        <code>0</code>.</dd>
+
+        <dt class="tm" id="addlabel"><code><i>pathName</i> <b>addlabel</b>
+        <i>text</i> ?<i>image</i>?</code></dt>
+
+        <dd>Adds a new tab implemented as a ttk::label widget of the style
+        <code>PnbLabel.TLabel</code> that displays the specified
+        <code><i>text</i></code> and optional <code><i>image</i></code>, and is
+        typically used as a title of a group of tabs.&nbsp; The font used for
+        this style is derived from <code><b>TkDefaultFont</b></code> by
+        increasing the latter's size by a factor of 1.2 and can be changed with
+        the <code><b>ttk::style</b></code> command.&nbsp; The return value
+        is the path name of the above-mentioned ttk::label widget; you can use
+        it, e.g., to override the style's font for this particular label
+        via&nbsp; <code>... <b>configure -font</b> ...</code>.</dd>
+
+        <dt class="tm" id="addseparator"><code><i>pathName</i>
+        <b>addseparator</b></code></dt>
+
+        <dd>Adds a new tab implemented as a horizontal ttk::separator widget,
+        which is typically used as a delimiter of a group of tabs.&nbsp; The
+        return value is the path name of the above-mentioned ttk::separator
+        widget.</dd>
+
+        <dt class="tm" id="adjustsize"><code><i>pathName</i>
+        <b>adjustsize</b></code></dt>
+
+        <dd>Sets the plainnotebook's <code><b><a href=
+        "#height">-height</a></b></code> option to the maximum requested height
+        of all panes and its <code><b><a href="#width">-width</a></b></code>
+        option to the maximum requested width of all panes.</dd>
+
+        <dd class="tm"><b>REMARK:</b>&nbsp; If the plainnotebook's
+        <code><b>-height</b></code> and <code><b>-width</b></code> options have
+        their default value <code>0</code> then in many cases there is no need
+        for invocations of this subcommand, since the widget will automatically
+        attempt to adapt its size to the maximum requested size of its
+        panes.</dd>
+
+        <dt class="tm" id="attrib"><code><i>pathName</i> <b>attrib</b>
+        ?<i>name</i> ?<i>value</i> <i>name</i> <i>value</i> ...??</code></dt>
+
+        <dd>Queries or modifies the attributes of the widget.&nbsp; If no
+        <code><i>name</i></code> is specified, the command returns a list of
+        pairs, each of which contains the name and the value of an attribute
+        for <code><i>pathName</i></code>.&nbsp; If <code><i>name</i></code> is
+        specified with no <code><i>value</i></code>, then the command returns
+        the value of the one named attribute, or an empty string if no
+        corresponding value exists (you can use the <code><b><a href=
+        "#hasattrib">hasattrib</a></b></code> subcommand to distinguish this
+        case from the one that the value of an <i>existing</i> attribute is an
+        empty string).&nbsp; If one or more
+        <code><i>name</i></code>-<code><i>value</i></code> pairs are specified,
+        then the command sets the given widget attribute(s) to the given
+        value(s); in this case the return value is an empty string.&nbsp; Each
+        <code><i>name</i></code> may be an arbitrary string.</dd>
+
+        <dt class="tm" id="cget"><code><i>pathName</i> <b>cget</b>
+        <i>option</i></code></dt>
+
+        <dd>Returns the current value of the configuration option given by
+        <code><i>option</i></code>, which may have any of the values accepted
+        by the <code><b>scrollutil::plainnotebook</b></code> command.</dd>
+
+        <dt class="tm" id="closablestate"><code><i>pathName</i>
+        <b>closablestate</b> <i>tabId</i> ?<i>boolean</i>?</code></dt>
+
+        <dd>Sets or queries the presence of the <code><b>closebtn</b></code>
+        element in the tab specified by <code><i>tabId</i></code>.&nbsp; The
+        optional argument is only supported for tabs created via
+        <code><b><a href="#add">add</a></b></code> or <code><b><a href=
+        "#insert">insert</a></b></code>.&nbsp; This subcommand overrides the
+        <code><b><a href="#closabletabs">-closabletabs</a></b></code>
+        option for the specified tab.</dd>
+
+        <dt class="tm" id="configure"><code><i>pathName</i> <b>configure</b>
+        ?<i>option</i> ?<i>value</i> <i>option</i> <i>value</i>
+        ...??</code></dt>
+
+        <dd>Queries or modifies the configuration options of the widget.&nbsp;
+        If no <code><i>option</i></code> is specified, the command returns a
+        list describing all of the available options for
+        <code><i>pathName</i></code> (see <code><b>Tk_ConfigureInfo</b></code>
+        for information on the format of this list).&nbsp; If
+        <code><i>option</i></code> is specified with no
+        <code><i>value</i></code>, then the command returns a list describing
+        the one named option (this list will be identical to the corresponding
+        sublist of the value returned if no <code><i>option</i></code> is
+        specified).&nbsp; If one or more
+        <code><i>option</i></code>-<code><i>value</i></code> pairs are
+        specified, then the command modifies the given widget option(s) to have
+        the given value(s); in this case the return value is an empty
+        string.&nbsp; <code><i>option</i></code> may have any of the values
+        accepted by the <code><b>scrollutil::plainnotebook</b></code>
+        command.</dd>
+
+        <dt class="tm" id="forget"><code><i>pathName</i> <b>forget</b>
+        <i>tabId</i></code></dt>
+
+        <dd>See the <b>ttk_notebook</b> manual entry.</dd>
+
+        <dt class="tm" id="hasattrib"><code><i>pathName</i> <b>hasattrib</b>
+        <i>name</i></code></dt>
+
+        <dd>Returns <code>1</code> if the attribute <code><i>name</i></code>
+        exists and <code>0</code> otherwise.</dd>
+
+        <dt class="tm" id="hastabattrib"><code><i>pathName</i>
+        <b>hastabattrib</b> <i>tabId</i> <i>name</i></code></dt>
+
+        <dd>Returns <code>1</code> if the attribute <code><i>name</i></code>
+        for the tab given by <code><i>tabId</i></code> exists and
+        <code>0</code> otherwise.</dd>
+
+        <dt class="tm" id="hide"><code><i>pathName</i> <b>hide</b>
+        <i>tabId</i></code></dt>
+
+        <dd>See the <b>ttk_notebook</b> manual entry.</dd>
+
+        <dt class="tm" id="index"><code><i>pathName</i> <b>index</b>
+        <i>tabId</i></code></dt>
+
+        <dd>See the <b>ttk_notebook</b> manual entry.</dd>
+
+        <dt class="tm" id="insert"><code><i>pathName</i> <b>insert</b>
+        <i>pos</i> <i>window</i> ?<i>options</i>?</code></dt>
+
+        <dd>See the <b>ttk_notebook</b> manual entry.&nbsp; As mentioned there,
+        if <code><i>window</i></code> is already managed by the notebook, the
+        subcommand moves it to the specified position.&nbsp; This holds equally
+        true for the non-selectable (dummy) windows associated with the tabs
+        created with the <code><b><a href=
+        "#addbutton">addbutton</a></b></code>, <code><b><a href=
+        "#addlabel">addlabel</a></b></code>, <code><b><a href=
+        "#addseparator">addseparator</a></b></code>, <code><b><a href=
+        "#insertbutton">insertbutton</a></b></code>, <code><b><a href=
+        "#insertlabel">insertlabel</a></b></code>, and <code><b><a href=
+        "#insertseparator">insertseparator</a></b></code> subcommands.&nbsp; If
+        <code><i>window</i></code> is not yet managed by the notebook then the
+        corresponding tab will be a ttk::radiobutton widget of a toolbutton
+        style (<code>Page.Toolbutton</code> or
+        <code>ClosablePage.Toolbutton</code>, depending on the value of the
+        <code><b><a href="#closabletabs">-closabletabs</a></b></code>
+        option).&nbsp; The return value is the path name of the widget used for
+        the tab corresponding to <code><i>window</i></code> (a ttk::radiobutton
+        or ttk::button, both using a toolbutton style, or a ttk::label, or a
+        ttk::separator).</dd>
+
+        <dt class="tm" id="insertbutton"><code><i>pathName</i>
+        <b>insertbutton</b> <i>pos</i> <i>pageIndex</i> <i>text</i>
+        ?<i>image</i>?</code></dt>
+
+        <dd>Inserts a new tab implemented as a ttk::button widget of a
+        toolbutton style (<code>Desc.Toolbutton</code>) that displays, besides
+        the specified <code><i>text</i></code> and optional
+        <code><i>image</i></code>, the <code><b>descend</b></code> element, at
+        the specified position.&nbsp; The details are quite similar to the ones
+        regarding the <code><b><a href="#addbutton">addbutton</a></b></code>
+        subcommand.</dd>
+
+        <dt class="tm" id="insertlabel"><code><i>pathName</i>
+        <b>insertlabel</b> <i>pos</i> <i>text</i> ?<i>image</i>?</code></dt>
+
+        <dd>Inserts a new tab implemented as a ttk::label widget of the style
+        <code>PnbLabel.TLabel</code> that displays the specified
+        <code><i>text</i></code> and optional <code><i>image</i></code>, at the
+        specified position.&nbsp; The details are quite similar to the ones
+        regarding the <code><b><a href="#addlabel">addlabel</a></b></code>
+        subcommand.</dd>
+
+        <dt class="tm" id="insertseparator"><code><i>pathName</i>
+        <b>insertseparator</b> <i>pos</i></code></dt>
+
+        <dd>Inserts a new tab implemented as a horizontal ttk::separator
+        widget, at the specified position.&nbsp; The details are quite similar
+        to the ones regarding the <code><b><a href=
+        "#addseparator">addseparator</a></b></code> subcommand.</dd>
+
+        <dt class="tm" id="instate"><code><i>pathName</i> <b>instate</b>
+        <i>stateSpec</i> ?<i>script</i>?</code></dt>
+
+        <dd>See the <b>ttk_widget</b> manual entry.</dd>
+
+        <dt class="tm" id="see"><code><i>pathName</i> <b>see</b>
+        <i>tabId</i></code></dt>
+
+        <dd>This subcommand adjusts the view in the plainnotebook's window so
+        that the tab given by <code><i>tabId</i></code> becomes visible in
+        it.&nbsp; Note that when a tab gets selected, this command is
+        automatically invoked for it, in order to make that tab visible.</dd>
+
+        <dt class="tm" id="select"><code><i>pathName</i> <b>select</b>
+        ?<i>tabId</i>?</code></dt>
+
+        <dd>See the <b>ttk_notebook</b> manual entry.</dd>
+
+        <dt class="tm" id="state"><code><i>pathName</i> <b>state</b>
+        ?<i>stateSpec</i>?</code></dt>
+
+        <dd>See the <b>ttk_widget</b> manual entry.</dd>
+
+        <dt class="tm" id="style"><code><i>pathName</i>
+        <b>style</b></code></dt>
+
+        <dd>Returns the style used by the widget:
+        <code>"Plainnotebook.TNotebook"</code>.&nbsp; For Tk themed widgets
+        this subcommand was introduced in Tk 8.7a4, but the plainnotebook
+        widget provides it for all supported Tk versions.</dd>
+
+        <dt class="tm" id="tab"><code><i>pathName</i> <b>tab</b> <i>tabId</i>
+        ?<i>option</i> ?<i>value</i> <i>option</i> <i>value</i>
+        ...??</code></dt>
+
+        <dd>See the <b>ttk_notebook</b> manual entry.</dd>
+
+        <dt class="tm" id="tabattrib"><code><i>pathName</i> <b>tabattrib</b>
+        <i>tabId</i> ?<i>name</i> ?<i>value</i> <i>name</i> <i>value</i>
+        ...??</code></dt>
+
+        <dd>Queries or modifies the attributes of the tab given by
+        <code><i>tabId</i></code>.&nbsp; If no <code><i>name</i></code> is
+        specified, the command returns a list of pairs, each of which contains
+        the name and the value of an attribute for the tab.&nbsp; If
+        <code><i>name</i></code> is specified with no
+        <code><i>value</i></code>, then the command returns the value of the
+        one named tab attribute, or an empty string if no corresponding value
+        exists (you can use the <code><b><a href=
+        "#hastabattrib">hastabattrib</a></b></code> subcommand to distinguish
+        this case from the one that the value of an <i>existing</i> tab
+        attribute is an empty string).&nbsp; If one or more
+        <code><i>name</i></code>-<code><i>value</i></code> pairs are specified,
+        then the command sets the given tab attribute(s) to the given
+        value(s); in this case the return value is an empty string.&nbsp; Each
+        <code><i>name</i></code> may be an arbitrary string.</dd>
+
+        <dt class="tm" id="tabpath"><code><i>pathName</i> <b>tabpath</b>
+        <i>tabId</i></code></dt>
+
+        <dd>Returns the path name of the widget used for the specified
+        tab.&nbsp; This widget can be a ttk::radiobutton or ttk::button, both
+        using a toolbutton style, or a ttk::label, or a ttk::separator.</dd>
+
+        <dt class="tm" id="tabs"><code><i>pathName</i> <b>tabs</b></code></dt>
+
+        <dd>See the <b>ttk_notebook</b> manual entry.</dd>
+
+        <dt class="tm" id="titlepath"><code><i>pathName</i>
+        <b>titlepath</b></code></dt>
+
+        <dd>Returns the path name of the plainnotebook's title label, which is
+        a ttk::label widget of the style <code>PnbTitle.TLabel</code>.</dd>
+
+        <dt class="tm" id="unsetattrib"><code><i>pathName</i>
+        <b>unsetattrib</b> <i>name</i></code></dt>
+
+        <dd>Unsets the attribute <code><i>name</i></code>.&nbsp; Returns an
+        empty string.</dd>
+
+        <dt class="tm" id="unsettabattrib"><code><i>pathName</i>
+        <b>unsettabattrib</b> <i>tabId</i> <i>name</i></code></dt>
+
+        <dd>Unsets the attribute <code><i>name</i></code> for the tab given by
+        <code><i>tabId</i></code>.&nbsp; Returns an empty string.</dd>
+      </dl>
+    </dd>
+
+    <dt class="tm" id="kbd_traversal"><b>KEYBOARD TRAVERSAL</b></dt>
+
+    <dd>See the <b>ttk_notebook</b> manual entry.</dd>
+
+    <dt class="tm" id="virtual_events"><b>VIRTUAL EVENTS</b></dt>
+
+    <dd>As described in the <b>ttk_notebook</b> manual entry, after a new tab
+    of a ttk::notebook is selected (programmatically or interactively), the
+    widget generates a <code><b>&lt;&lt;NotebookTabChanged&gt;&gt;</b></code>
+    virtual event.&nbsp; This holds true for plainnotebook widgets, too.</dd>
+
+    <dd class="tm">
+      The Scrollutil_tile package defines the virtual event
+      <code><b>&lt;&lt;Button3&gt;&gt;</b></code> as
+      <code><b>&lt;Button-3&gt;</b></code> for all windowing systems and
+      additionally as <code><b>&lt;Control-Button-1&gt;</b></code> for Mac OS
+      X/11+.&nbsp; If this event occurs over a tab of a plainnotebook whose
+      <code><b>disabled</b></code> widget state flag is not set, and the Tk
+      version is 8.5a2 or later, then the widget generates
+      a <code><b>&lt;&lt;MenuItemsRequested&gt;&gt;</b></code> virtual event,
+      by invoking &nbsp; <code><b> event generate</b></code>&nbsp; with the
+      <code><b>-data</b></code> option set to a list consisting of the path
+      name of an empty pop-up menu and the numerical index of the tab in
+      question.&nbsp; (The support for this option was introduced in Tk
+      8.5a2.)&nbsp; If the application creates a binding for this virtual
+      event, the binding script can access the user data as the value of the
+      <code><b>%d</b></code> field, with the goal to populate the menu with
+      application-specific entries.&nbsp; Note that the pop-up menu is posted
+      with a delay of 100 ms, to make sure that it will appear readily
+      populated by the application.
+
+      <p>The following example provides a pop-up menu item for closing the tabs
+      of a plainnotebook widget <code>$nb</code>:</p>
+
+      <blockquote>
+        <pre>
+bind $nb <span class="red">&lt;&lt;MenuItemsRequested&gt;&gt;</span> { populateMenu %W %d }
+
+proc populateMenu {nb data} {
+    <span class="red">foreach {menu tabIdx} $data {}</span>
+    $menu add command -label "Close Tab" -command [list $nb forget $tabIdx]
+}
+</pre>
+      </blockquote>
+    </dd>
+
+    <dd>See the next section for the description of the virtual events
+    <code><b>&lt;&lt;NotebookTabMoved&gt;&gt;</b></code> and
+    <code><b>&lt;&lt;NotebookTabClosed&gt;&gt;</b></code>.</dd>
+
+    <dt class="tm" id="bindings"><b>FURTHER BINDINGS</b></dt>
+
+    <dd>The Scrollutil_tile package creates the following additional bindings
+    for the plainnotebook widgets:</dd>
+
+    <dd>
+      <ol>
+        <li class="tm"><b>Navigation between the selectable tabs of a
+        plainnotebook widget via the mouse wheel or touchpad:</b>&nbsp; Recall
+        that the selectable tabs are the ones created with the
+        <code><b><a href="#add">add</a></b></code> and <code><b><a href=
+        "#insert">insert</a></b></code> subcommands.&nbsp; A mouse wheel tick
+        or a two-finger gesture on the touchpad selects the selectable tab of
+        state <code><b>normal</b></code> cyclically following/preceding the
+        currently selected one.&nbsp; (Note that the same effect can also be
+        achieved with the keys <code>Down</code>, <code>Up</code>,
+        <code>Control-Tab</code>, and <code>Control-Shift-Tab</code>.)&nbsp; On
+        the windowing system <code><b>aqua</b></code>, if the
+        <code>Option</code> key is down while the mouse wheel is being rotated
+        then a wheel tick selects the 10'th selectable tab of state
+        <code><b>normal</b></code> cyclically following/preceding the currently
+        selected one (modulo the number of selectable tabs).&nbsp; The same
+        holds true on the windowing systems <code><b>x11</b></code> and
+        <code><b>win32</b></code> if the Tk version is 8.7a4 or later and the
+        mouse wheel is rotated with the <code>Alt</code> key down.</li>
+
+        <li class="tm"><b>Moving the tabs of a plainnotebook widget with the
+        mouse</b>:&nbsp; If mouse button 1 is pressed over a tab but outside
+        the <code><b><a href="#closabletabs">closebtn</a></b></code> element
+        (if any) and then dragged outside that tab then, provided that the
+        value of the widget's <code><b><a href=
+        "#movabletabs">-movabletabs</a></b></code> option is true, the mouse
+        cursor takes on the shape of an up/down arrow, indicating that the tab
+        in question is being moved to another position.&nbsp; This operation
+        ends when mouse button 1 is released, and can be canceled by pressing
+        the <code>Escape</code> key.&nbsp; In both cases, the mouse cursor is
+        reset to its original value, specified by the
+        <code><b>-cursor</b></code> configuration option.&nbsp; After releasing
+        mouse button 1, the source tab is moved to the position previously
+        pointed to by the arrow (provided that the action was not canceled via
+        <code>Escape</code>).&nbsp; If the Tk version is 8.5a2 or later then
+        after moving the tab to its new position, the widget generates a
+        <code><b>&lt;&lt;NotebookTabMoved&gt;&gt;</b></code> virtual event, by
+        invoking&nbsp; <code><b>event generate</b></code>&nbsp; with the
+        <code><b>-data</b></code> option set to a list consisting of the path
+        name of the widget contained in the source pane and the numerical index
+        of the target tab position.&nbsp; (The support for this option was
+        introduced in Tk 8.5a2.)</li>
+
+        <li class="tm"><b>Closing a tab of a plainnotebook widget with the aid
+        of the <code>closebtn</code> element</b>:&nbsp; If mouse button 1 is
+        pressed over the <code><b>closebtn</b></code> element (if any) of a tab
+        and later released over the same element then, provided that the value
+        of the tab's <code><b>-state</b></code> option is
+        <code><b>normal</b></code>, the tab is closed by means of the widget's
+        <code><b>forget</b></code> subcommand.&nbsp; Recall that this operation
+        can get canceled by the command specified as the value of the
+        <code><b><a href="#forgetcommand">-forgetcommand</a></b></code> option;
+        if this was not the case and the Tk version is 8.5a2 or later then,
+        after closing the tab, the widget generates a
+        <code><b>&lt;&lt;NotebookTabClosed&gt;&gt;</b></code> virtual event, by
+        invoking&nbsp; <code><b>event generate</b></code>&nbsp; with the
+        <code><b>-data</b></code> option set to the path name of the widget
+        contained in that tab's pane.</li>
+      </ol>
+    </dd>
+
+    <dd class="tm">If the widget's <code><b>disabled</b></code> state flag is
+    set then none of the above actions occur: the tabs are completely
+    insensitive.</dd>
+
+    <dt class="tm" id="keywords"><b>KEYWORDS</b></dt>
+
+    <dd>plainnotebook, widget, notebook, closebtn</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,2503 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Scrollutil Programmer's Guide</title>
+
+  <meta name="Author" content="Csaba Nemethi">
+  <meta name="Keywords" content=
+  "scrollarea, scrollsync, mouse wheel event, binding, event handling, scrolling, scrollable widget container, focus">
+
+  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+</head>
+
+<body>
+  <div>
+    <h1>Scrollutil Programmer's Guide</h1>
+
+    <h2>For Scrollutil Version 2.4</h2>
+
+    <h3>by</h3>
+
+    <h2>Csaba Nemethi</h2>
+
+    <address>
+      <a href="mailto:csaba.nemethi@t-online.de">csaba.nemethi@t-online.de</a>
+    </address>
+  </div>
+
+  <hr>
+
+  <h2 id="contents">Contents</h2>
+
+  <h4><a href="#overview">Overview</a></h4>
+
+  <ul>
+    <li><a href="#ov_what">What Is Scrollutil?</a></li>
+
+    <li><a href="#ov_get">How to Get It?</a></li>
+
+    <li><a href="#ov_install">How to Install It?</a></li>
+
+    <li><a href="#ov_use">How to Use It?</a></li>
+
+    <li><a href="#ov_scalingpct">More on
+    <code>scrollutil::scalingpct</code></a></li>
+
+    <li><a href="#ov_svgfmt">More on <code>scrollutil::svgfmt</code></a></li>
+  </ul>
+
+  <h4><a href="#examples">Examples</a></h4>
+
+  <ul>
+    <li><a href="#ex_styleUtil">The Helper Script
+    <code>styleUtil.tcl</code></a></li>
+
+    <li><a href="#ex_ScrolledTablelist">A Scrolled tablelist Widget</a></li>
+
+    <li><a href="#ex_ScrolledText">A Scrolled text Widget</a></li>
+
+    <li><a href="#ex_ScrolledCanvas">A Scrolled canvas Widget</a></li>
+
+    <li><a href="#ex_SyncListboxes">Synchronizing Two listbox Widgets</a></li>
+
+    <li><a href="#ex_SyncTablelists">Synchronizing Three tablelist
+    Widgets</a></li>
+
+    <li><a href="#ex_SuScrollableFrameDemo1">A Script Using a
+    scrollutil::scrollableframe Widget</a></li>
+
+    <li><a href="#ex_BwScrollableFrameDemo1">A Script Using a BWidget
+    ScrollableFrame Widget</a></li>
+
+    <li><a href="#ex_ScrolledFrameDemo1">A Script Using an
+    iwidgets::scrolledframe Widget</a></li>
+
+    <li><a href="#ex_SuScrollableFrameDemo2">A Script Using Two
+    scrollutil::scrollableframe Widgets</a></li>
+
+    <li><a href="#ex_BwScrollableFrameDemo2">A Script Using Two BWidget
+    ScrollableFrame Widgets</a></li>
+
+    <li><a href="#ex_ScrolledFrameDemo2">A Script Using Two
+    iwidgets::scrolledframe Widgets</a></li>
+
+    <li><a href="#ex_ScrolledNotebookDemo">A scrollutil::scrollednotebook
+    Demo</a></li>
+
+    <li><a href="#ex_PlainNotebookDemo">A scrollutil::plainnotebook
+    Demo</a></li>
+
+    <li><a href="#ex_PagesManDemo">A scrollutil::pagesman Demo</a></li>
+  </ul>
+
+  <div>
+    <p><a href="index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="overview">Overview</h2>
+
+  <h3 id="ov_what">What Is Scrollutil?</h3>
+
+  <p>Scrollutil is a library package for Tcl/Tk versions 8.4 or higher, written
+  in pure Tcl/Tk code.&nbsp; It contains:</p>
+
+  <ul>
+    <li>the implementation of the <b><a href=
+    "scrollarea.html">scrollarea</a></b>, <b><a href=
+    "scrollsync.html">scrollsync</a></b>, <b><a href=
+    "scrollableframe.html">scrollableframe</a></b>, <b><a href=
+    "scrollednotebook.html">scrollednotebook</a></b>, <b><a href=
+    "plainnotebook.html">plainnotebook</a></b>, and <b><a href=
+    "pagesman.html">pagesman</a></b> mega-widgets, including a
+    general utility module for mega-widgets.&nbsp; The scrollednotebook and
+    plainnotebook widgets require tile 0.8 or higher;</li>
+
+    <li>the command <code><b><a href=
+    "wheelEvent.html#add">scrollutil::addMouseWheelSupport</a></b></code>,
+    which creates mouse wheel event bindings for a given binding tag;</li>
+
+    <li>commands for <i>user-friendly</i> mouse wheel event handling in
+    <b>scrollable widget containers</b> like scrollutil::scrollableframe,
+    BWidget ScrollableFrame, and iwidgets::scrolledframe.&nbsp; These commands
+    require Tcl/Tk versions 8.4 or higher on X11 and Mac OS X/11+ and Tk 8.6b2
+    or later on Windows;</li>
+
+    <li>demo scripts illustrating the use of the Scrollutil package in
+    connection with various scrollable widgets and the above-mentioned
+    scrollable widget containers;</li>
+
+    <li>demo scripts illustrating the use of the scrollednotebook,
+    plainnotebook, and pagesman widgets;</li>
+
+    <li>this tutorial;</li>
+
+    <li>reference pages in HTML format.</li>
+  </ul>
+
+  <p><b>The scrollutil::scrollarea mega-widget</b> greatly simplifies the
+  creation of arbitrary scrolled widgets.&nbsp; It consists of a scrollable
+  widget and two scrollbars connected with that widget.&nbsp; The display mode
+  of each scrollbar can be <code>static</code>, <code>dynamic</code>, or
+  <code>none</code>.&nbsp; This scrolled window implementation also supports
+  the widgets that are scrollable in one direction only (e.g., entry and
+  ttk::entry) and respects the header component and title columns of <a href=
+  "https://www.nemethi.de/tablelist/">tablelist</a> widgets (this is freely
+  configurable).</p>
+
+  <p>The scrollutil::scrollarea widget is similar to BWidget ScrolledWindow and
+  its snit-based equivalent widget::scrolledwindow, contributed by Jeffrey
+  Hobbs and contained in tklib.&nbsp; The snit-based <a href=
+  "http://web.tiscali.it/irrational/tcl/scrodget-2.1/">scrodget</a> package by
+  Aldo Buratti and its TclOO-based equivalent <a href=
+  "https://wiki.tcl-lang.org/page/A+Scrolled+Widget+implemented+with+TclOO">scrolledwidget</a>
+  contributed by Johann Oberdorfer are further scrolled window implementations.
+  However, <i>full</i> tablelist support is only provided by the scrollarea
+  widget, which is free from external dependencies like BWidget, snit, or (for
+  Tcl 8.5) TclOO.&nbsp; It is also free from the <a href=
+  "https://wiki.tcl-lang.org/page/Scroll+bars+that+appear+only+when+needed">shimmering
+  problem in connection with text widgets</a>, which the above-mentioned
+  scrolled window implementations either share with the autoscroll package
+  (contained in tklib) or circumvent in a suboptimal way.</p>
+
+  <p><b>The scrollutil::scrollsync mega-widget</b> is designed for scrolling
+  several widgets simultaneously.&nbsp; Whenever the horizontal/vertical
+  position of the view in the window of one of its widgets changes, the view in
+  the windows of all the other widgets is automatically adjusted accordingly,
+  thus making sure that the view's position in these windows is kept in
+  sync.&nbsp; This mega-widget is horizontally and vertically scrollable, hence
+  it can be embedded into a scrollutil::scrollarea widget via the latter's
+  <code>setwidget</code> subcommand.</p>
+
+  <p><b>The scrollutil::scrollableframe mega-widget</b> is a scrollable widget
+  container.&nbsp; It contains a content frame, whose dimensions are typically
+  larger than those of the widget itself.&nbsp; Arbitrary regions of this frame
+  can be brought into view by scrolling, and the widget also provides a command
+  for making individual widgets contained in the content frame visible in the
+  scrollableframe window.</p>
+
+  <p>The scrollutil::scrollableframe widget is similar to BWidget
+  ScrollableFrame and iwidgets::scrolledframe.&nbsp; However, unlike these
+  widgets, which use a canvas for scrolling the content frame, it adjusts the
+  view with the aid of the <code>place</code> geometry manager, just like the
+  <code>scrolledframe::scrolledframe</code> command of the Scrolledframe
+  package by Maurice Bredelet (ulis) and its optimized and enhanced version
+  contributed by Keith Nash.&nbsp; For details on these commands see the wiki
+  page</p>
+
+  <blockquote>
+    <address>
+      <a href=
+      "https://wiki.tcl-lang.org/page/A+scrolled+frame">https://wiki.tcl-lang.org/page/A+scrolled+frame</a>
+    </address>
+  </blockquote>
+
+  <p>The canvas-free approach is more lightweight and integrates better in
+  applications that use tile widgets.</p>
+
+  <p><b>The scrollutil::scrollednotebook mega-widget</b> contains a
+  ttk::notebook within a scrollableframe and supports an arbitrary number of
+  unsqueezed tabs.&nbsp; Currently not visible tabs can be brought into view by
+  navigating with the mouse wheel, touchpad, or keyboard, and by scrolling with
+  the aid of the two arrow buttons placed on demand in the top-left and
+  top-right or bottom-left and bottom-right corners (depending on the
+  notebook's style).&nbsp; The widget also provides a command for making
+  individual tabs visible in the scrollednotebook window.&nbsp; Unlike the
+  ttk::notebook widget, whose <code>-width</code> option is quite often
+  overriden by the total width of the tabs, the scrollednotebook widget
+  respects the value of its <code>-width</code> option, regardless of the space
+  required by the tabs.</p>
+
+  <p><b>The scrollutil::plainnotebook mega-widget</b> extends a ttk::notebook
+  having an arbitrary number of pages with invisible tabs by a ttk::frame to
+  its left or right containing, among others, a scrollableframe whose content
+  frame is the parent of a series of widgets that play the role of vertically
+  laid-out notebook tabs.&nbsp; Currently not visible "tabs" can be brought
+  into view by navigating with the mouse wheel, touchpad, or keyboard, and by
+  scrolling with the vertical scrollbar of the scrollarea containing the
+  scrollableframe.&nbsp; The widget also provides a command for making
+  individual "tabs" visible in the plainnotebook window.&nbsp; Unlike a
+  ttk::notebook widget with vertically aligned tabs, which in most themes has a
+  suboptimal look and whose <code>-height</code> option is quite often
+  overriden by the total height of the tabs, the plainnotebook widget respects
+  the value of its <code>-height</code> option, regardless of the space
+  required by the "tabs".</p>
+
+  <p><b>The scrollutil::pagesman mega-widget</b> provides the basic
+  functionality of a pages manager, meaning that it manages a list of windows,
+  called <b>pages</b>, of which only one is visible at a time.&nbsp; By using
+  it with plainnotebook widgets as pages, it is quite easy to write
+  applications in which the user can descend from a plainnotebook to another
+  one with a single mouse click and switch back in the same way to the original
+  one.&nbsp; Everything needed for this navigation is provided by appropriate
+  options and subcommands of the plainnotebook widget.</p>
+
+  <p>From the point of view of <b>the commands related to mouse wheel and
+  <code>&lt;TouchpadScroll&gt;</code> event handling</b> provided by the
+  Scrollutil package, the scrollability of a widget or widget container window
+  means that the associated Tcl command supports the&nbsp; <code>xview scroll
+  <i>number</i> units</code>&nbsp; and&nbsp; <code>yview scroll <i>number</i>
+  units</code>&nbsp; subcommands.&nbsp; The reason for requiring at least Tk
+  version 8.6b2 on Windows for the commands related to scrollable widget
+  containers is that in earlier Tk versions on this platform the mouse wheel
+  events were sent to the widget having the focus rather than to the one under
+  the pointer.</p>
+
+  <p>To make use of the user-friendly mouse wheel and
+  <code>&lt;TouchpadScroll&gt;</code> event handling via the Scrollutil
+  package, follow the steps below:</p>
+
+  <ul>
+    <li>Create mouse wheel and <code>&lt;TouchpadScroll&gt;</code> event
+    bindings for the binding tag <code>"all"</code> or for the toplevel widgets
+    (including <code>"."</code>) having scrollable widget containers, by
+    invoking the <code><a href=
+    "wheelEvent.html#create">scrollutil::createWheelEventBindings</a></code>
+    command.&nbsp; In addition, register your scrollable widget containers for
+    scrolling via these bindings with the aid of the <code><a href=
+    "wheelEvent.html#enable">scrollutil::enableScrollingByWheel</a></code>
+    command.&nbsp; Note that for the scrollutil::scrollableframe widget this
+    command is automatically invoked at creation time.&nbsp; The
+    above-mentioned bindings handle the mouse wheel and
+    <code>&lt;TouchpadScroll&gt;</code> events by scrolling the (innermost)
+    registered scrollable widget container that is an ascendant of the widget
+    under the pointer and is contained in the latter's toplevel.</li>
+
+    <li class="tm">Invoke the <code><a href=
+    "wheelEvent.html#adapt">scrollutil::adaptWheelEventHandling</a></code>
+    command for those widgets contained in registered scrollable widget
+    containers that have mouse wheel or <code>&lt;TouchpadScroll&gt;</code>
+    event (class) bindings.&nbsp; This step eliminates the annoying and often
+    dangerous double-handling effect, by modifying the mouse wheel and
+    <code>&lt;TouchpadScroll&gt;</code> event handling as follows:&nbsp; If the
+    focus is on the widget under the pointer then the above-mentioned events
+    will be handled by the (class bindings of the) widget only, otherwise by
+    the bindings created with the
+    <code>scrollutil::createWheelEventBindings</code> command.&nbsp; Without
+    this step the mouse wheel and <code>&lt;TouchpadScroll&gt;</code> events
+    would scroll both the listbox, text, ttk::treeview, or tablelist widget
+    under the pointer <i>and</i> the widget container to whose descendants the
+    latter belongs, or they would select the next/previous value in the
+    ttk::combobox or ttk::spinbox under the pointer <i>in addition to</i>
+    scrolling the widget container.&nbsp; Note that this command accepts as
+    optional argument the <code>-ignorefocus</code> switch, which specifies
+    that the above-mentioned events are to be handled by the widget under the
+    pointer (only), ragardless of whether that widget has the focus or
+    not.</li>
+
+    <li class="tm">For some widgets it can be desirable to make the focus check
+    within this modified event handling less restrictive.&nbsp; For example, if
+    the widget under the pointer is an entry component of a <a href=
+    "https://www.nemethi.de/mentry/">mentry</a> of type <code>"Date"</code>,
+    <code>"Time"</code>, <code>"DateTime"</code>, <code>"IPAddr"</code>, or
+    <code>"IPv6Addr"</code> and the focus is on any of its siblings, then the
+    mouse wheel and <code>&lt;TouchpadScroll&gt;</code> events sent to this
+    entry should be handled by the entry widget itself rather than scrolling
+    the widget container that is an ascendant of the mentry.&nbsp; The
+    <code><a href=
+    "wheelEvent.html#setFocusCkWin">scrollutil::setFocusCheckWindow</a></code>
+    command covers exactly cases like this.</li>
+  </ul>
+
+  <p>The mouse wheel and <code>&lt;TouchpadScroll&gt;</code> event handling
+  with the aid of the Scrollutil package was also tested to work with the
+  <code>scrolledframe::scrolledframe</code> command of the Scrolledframe
+  package by Maurice Bredelet (ulis) and its optimized and enhanced version
+  contributed by Keith Nash, as well as with the <code>sframe</code> command
+  implemented by Paul Walton.&nbsp; For details on these commands (which
+  provide further implementations of scrollable widget containers) see the
+  above-mentioned wiki page.</p>
+
+  <h3 id="ov_get">How to Get It?</h3>
+
+  <p>Scrollutil is available for free download from the Web page</p>
+
+  <blockquote>
+    <address>
+      <a href="https://www.nemethi.de">https://www.nemethi.de</a>
+    </address>
+  </blockquote>
+
+  <p>The distribution file is <code>scrollutil2.4.tar.gz</code> for UNIX and
+  <code>scrollutil2_4.zip</code> for Windows.&nbsp; These files contain the
+  same information, except for the additional carriage return character
+  preceding the linefeed at the end of each line in the text files for
+  Windows.</p>
+
+  <p>Scrollutil is also included in tklib, which has the address</p>
+
+  <blockquote>
+    <address>
+      <a href="https://core.tcl.tk/tklib">https://core.tcl.tk/tklib</a>
+    </address>
+  </blockquote>
+
+  <h3 id="ov_install">How to Install It?</h3>
+
+  <p>Install the package as a subdirectory of one of the directories given by
+  the <code>auto_path</code> variable.&nbsp; For example, you can install it as
+  a directory at the same level as the Tcl and Tk script libraries.&nbsp; The
+  locations of these library directories are given by the
+  <code>tcl_library</code> and <code>tk_library</code> variables,
+  respectively.</p>
+
+  <p>To install Scrollutil <i>on UNIX</i>, <code>cd</code> to the desired
+  directory and unpack the distribution file
+  <code>scrollutil2.4.tar.gz</code>:</p>
+
+  <blockquote>
+    <pre>
+gunzip -c scrollutil2.4.tar.gz | tar -xf -
+</pre>
+  </blockquote>
+
+  <p>On most UNIX systems this can be replaced with</p>
+
+  <blockquote>
+    <pre>
+tar -zxf scrollutil2.4.tar.gz
+</pre>
+  </blockquote>
+
+  <p>Both commands will create a directory named <code>scrollutil2.4</code>,
+  with the subdirectories <code>demos</code>, <code>doc</code>, and
+  <code>scripts</code>.</p>
+
+  <p><i>On Windows</i>, use WinZip or some other program capable of unpacking
+  the distribution file <code>scrollutil2_4.zip</code> into the directory
+  <code>scrollutil2.4</code>, with the subdirectories <code>demos</code>,
+  <code>doc</code>, and <code>scripts</code>.</p>
+
+  <p>Notice that in tklib the Scrollutil <code>demos</code> directory is
+  replaced with the subdirectory <code>scrollutil</code> of the
+  <code>examples</code> directory.&nbsp; Please take this into account when
+  reading the <a href="#examples">examples</a> below.</p>
+
+  <h3 id="ov_use">How to Use It?</h3>
+
+  <p>The Scrollutil distribution provides two packages, called
+  <b>Scrollutil</b> and <b>Scrollutil_tile</b>.&nbsp; The main difference
+  between the two is that Scrollutil_tile enables the tile-based,
+  theme-specific appearance of scrollarea, scrollsync, and scrollableframe
+  widgets, and provides the themed scrollednotebook and plainnotebook widgets;
+  this package requires tile 0.8 or higher.&nbsp; It is not possible to use
+  both packages in one and the same application, because both are implemented
+  in the same <code>scrollutil</code> namespace and provide identical commands
+  (except for the commands <code>scrollutil::scrollednotebook</code>,
+  <code>scrollutil::plainnotebook</code>, <code>scrollutil::addclosetab</code>,
+  <code>scrollutil::removeclosetab</code>, and
+  <code>scrollutil::closetabstate</code>, which are provided by the
+  Scrollutil_tile package only).</p>
+
+  <p>To be able to access the commands and variables defined in the package
+  Scrollutil, your scripts must contain one of the lines</p>
+
+  <blockquote>
+    <pre>
+package require scrollutil ?<i>version</i>?
+package require Scrollutil ?<i>version</i>?
+</pre>
+  </blockquote>
+
+  <p>You can use either one of the two statements above because the file
+  <code>scrollutil.tcl</code> contains both lines</p>
+
+  <blockquote>
+    <pre>
+package provide scrollutil ...
+package provide Scrollutil ...
+</pre>
+  </blockquote>
+
+  <p>Likewise, to be able to access the commands and variables defined in the
+  package Scrollutil_tile, your scripts must contain one of the lines</p>
+
+  <blockquote>
+    <pre>
+package require scrollutil_tile ?<i>version</i>?
+package require Scrollutil_tile ?<i>version</i>?
+</pre>
+  </blockquote>
+
+  <p>Again, you can use either one of the two statements above because the file
+  <code>scrollutil_tile.tcl</code> contains both lines</p>
+
+  <blockquote>
+    <pre>
+package provide scrollutil_tile ...
+package provide Scrollutil_tile ...
+</pre>
+  </blockquote>
+
+  <p>You are free to remove one of these two lines from
+  <code>scrollutil.tcl</code> and <code>scrollutil_tile.tcl</code>,
+  respectively, if you want to prevent the corresponding packages from making
+  themselves known under two different names each.&nbsp; Of course, by doing so
+  you restrict the argument of&nbsp; <code>package require</code>&nbsp; to a
+  single name.</p>
+
+  <p>Since the packages Scrollutil and Scrollutil_tile are implemented in the
+  <code>scrollutil</code> namespace, you must either invoke the</p>
+
+  <blockquote>
+    <pre>
+namespace import scrollutil::<i>pattern</i> ?scrollutil::<i>pattern ...</i>?
+</pre>
+  </blockquote>
+
+  <p>command to import the <i>procedures</i> you need, or use qualified names
+  like <code>scrollutil::scrollarea</code>.&nbsp; In the <a href=
+  "#examples">examples</a> below we have chosen the latter approach.</p>
+
+  <p>To access Scrollutil <i>variables</i>, you <i>must</i> use qualified
+  names.&nbsp; There are only 5 Scrollutil variables that are designed to be
+  accessed outside the namespace <code>scrollutil</code>:</p>
+
+  <ul>
+    <li>The variable <code>scrollutil::version</code> holds the current version
+    number of the Scrollutil package.</li>
+
+    <li>The variable <code>scrollutil::library</code> holds the location of the
+    Scrollutil installation directory.</li>
+
+    <li>The read-only variable <code>scrollutil::scalingpct</code> is set when
+    loading the package Scrollutil or Scrollutil_tile via&nbsp; <code>package
+    require</code>&nbsp; to the scaling percentage corresponding to the
+    display's DPI scaling level.&nbsp; Scrollutil adapts, among others, the
+    default width of the Tk core scrollbars on X11 and that of the
+    ttk::scrollbar widget for the built-in themes <code>alt</code>,
+    <code>clam</code>, <code>classic</code>, and <code>default</code> to the
+    value of this variable.&nbsp; The currently supported values are
+    <code>100</code>, <code>125</code>, <code>150</code>, <code>175</code>, and
+    <code>200</code>.&nbsp; You can use this variable, e.g., if you want to
+    create images of different sizes, depending on the DPI scaling level.&nbsp;
+    For example, if your application uses images of size 16 x 16 on an unscaled
+    display and <code>scrollutil::scalingpct</code> has the value
+    <code>150</code>, then the image size for this display should be
+    24 x 24.</li>
+
+    <li>If the Tk version is either at least 8.7 (with built-in SVG support),
+    or 8.6 and the tksvg extension can be loaded into the interpreter, then the
+    variable <code>scrollutil::svgfmt</code> is set to a Tcl list that you can
+    pass to the commands that create or manipulate SVG images as the value of
+    their <code>-format</code> option to make sure that your images will be
+    properly scaled.</li>
+
+    <li>The read-only variable <code>scrollutil::usingTile</code> has the value
+    <code>0</code> in the package Scrollutil and the value <code>1</code> in
+    Scrollutil_tile.</li>
+  </ul>
+
+  <p>The Scrollutil_tile package checks whether the required Tk and tile
+  versions are present, by executing the commands</p>
+
+  <blockquote>
+    <pre>
+package require Tk 8.4-
+if {$::tk_version &lt; 8.5 || [regexp {^8\.5a[1-5]$} $::tk_patchLevel]} {
+    package require tile 0.8-
+}
+</pre>
+  </blockquote>
+
+  <p>The second command above reflects the fact that, beginning with Tk 8.5a6,
+  tile is integrated into the Tk core and therefore it should only be loaded
+  explicitly when using an earlier Tk version.</p>
+
+  <h3 id="ov_scalingpct">More on <code>scrollutil::scalingpct</code></h3>
+
+  <p>The Scrollutil code sets the variable <code>scrollutil::scalingpct</code>
+  to the value returned by the public procedure
+  <code>scaleutil::scalingPercentage</code> of the scaleutil package, which is
+  bundled with Scrollutil.&nbsp; The way this value is computed depends on the
+  windowing system:</p>
+
+  <p><i>On Windows and Mac OS X/11+</i> the scaling percentage is computed
+  from&nbsp; <code>[tk scaling]</code>.&nbsp; Note that on Mac OS X/11+ the
+  result is always <code>100</code>, regardless of the display's scaling
+  level.&nbsp; On this system the desktop engine automatically scales
+  everything as needed.</p>
+
+  <p><i>On X11</i>, computing the scaling percentage from&nbsp; <code>[tk
+  scaling]</code>&nbsp; is done as fallback method only, because the
+  implementation of display scaling is highly dependent on the desktop
+  environment and it mostly manipulates system resources that are resident
+  outside of Xlib, which Tk is based on.&nbsp; (Traditional X applications like
+  <code>bitmap</code> and <code>xmag</code> are also affected by this.)&nbsp;
+  With the partial exception of Xfce and MATE (see below), the procedure
+  computes the scaling percentage from the value of the X resource
+  <code>Xft.dpi</code>, by executing the <code>xrdb</code> application.&nbsp;
+  On GNOME-based systems where <code>xrdb</code> is not installed per default
+  (e.g., Solus GNOME and Solus Budgie), it uses the <code>xrandr</code>
+  application and the file <code>~/.config/monitors.xml</code> instead.</p>
+
+  <ul>
+    <li class="tm">On <i>Xfce</i>, the display scaling mode, called
+    <i>window scaling</i>, can be "1x" or "2x" and can be selected in the
+    <i>Appearance</i> dialog.&nbsp; Xfce versions 4.16 and later also support
+    fractional scaling, whose parameters can be configured in the
+    <i>Display</i> dialog.&nbsp; If the "2x" mode was selected then the scaling
+    percentage will be set by the procedure
+    <code>scaleutil::scalingPercentage</code> to <code>200</code>, otherwise it
+    will be computed from the value of the font DPI, given by the X resource
+    <code>Xft.dpi</code>.&nbsp; The value of the font DPI can be set in the
+    <i>Fonts</i> tab of the <i>Appearance</i> dialog or (on Linux Lite 5+) via
+    the <i>HiDPI Settings</i> dialog.</li>
+
+    <li class="tm">On MATE</i>, the display scaling mode, called <i>window
+    scaling factor</i>, can be "Auto-detect", "Regular", or "HiDPI", and can be
+    selected in the <i>MATE Tweak</i> dialog.&nbsp; The same effect can be
+    achieved by using the <i>Monitor Preferences</i> dialog and selecting one
+    of the possible scaling values "auto detect", "100%", and "200%".&nbsp; If
+    needed, the procedure <code>scaleutil::scalingPercentage</code>
+    auto-detects which one of the "Regular" ("100%") and "HiDPI" ("200%") modes
+    corresponds to the preset "Auto-detect" ("auto detect") mode.&nbsp; If the
+    "HiDPI" ("200%") mode was selected by the user or auto-detected by the
+    procedure, then the scaling percentage will be set to <code>200</code>,
+    otherwise it will be computed from the value of the font DPI, given by the
+    X resource <code>Xft.dpi</code>.&nbsp; The value of the font DPI can be set
+    via the <i>Font Rendering Details</i> dialog, which in turn can be opened
+    from within the <i>Fonts</i> tab of the <i>Appearance Preferences</i>
+    dialog.</li>
+
+    <li class="tm">In case of <i>GNOME on Xorg, Budgie, and Cinnamon versions
+    earlier than 4.6</i>, the display scaling can be either 100 % or 200 %, and
+    the procedure sets the scaling percentage accordingly to <code>100</code>
+    or <code>200</code>.&nbsp; In newer GNOME and Budgie versions on Ubuntu one
+    can enable the <code>x11-randr-fractional-scaling</code> as experimental
+    feature, which adds (at least) 125 %, 150 %, and 175 % to the list of
+    supported scaling percentages.&nbsp; Note that, due to the way this
+    fractional scaling is implemented, the value returned by
+    <code>scaleutil::scalingPercentage</code> will be <code>200</code>,
+    regardless of the selected display scaling.&nbsp; Cinnamon versions 4.6 and
+    later also support fractional scaling; if activated then the scaling
+    percentage returned by the procedure will be <code>200</code>, regardless
+    of the selected display scaling.</li>
+
+    <li class="tm"><i>GNOME on Wayland</i> traditionally supports the display
+    scaling values 100 % and 200 %, and the scaling percentage will be set
+    accordingly to <code>100</code> or <code>200</code>.&nbsp; In newer GNOME
+    versions one can enable the experimental feature
+    <code>scale-monitor-framebuffer</code>, which adds (at least) 125 %, 150 %,
+    and 175 % to the list of supported scaling percentages.&nbsp; With this
+    feature enabled, the value returned by
+    <code>scaleutil::scalingPercentage</code> will be <code>100</code> for all
+    scaling levels, due to the fact that in this case, instead of window
+    contents, monitor framebuffers will be scaled in a logical pixel coordinate
+    space.</li>
+
+    <li class="tm"><i>KDE Plasma on Xorg</i> provides fractional scaling
+    support.&nbsp; On this desktop, the procedure will return <code>100</code>,
+    <code>125</code>, <code>150</code>, <code>175</code>, or <code>200</code>,
+    depending on the display's scaling level.</li>
+
+    <li class="tm"><i>KDE Plasma on Wayland</i> supports fractional scaling,
+    too.&nbsp; In this case, the value returned by the procedure will always be
+    <code>100</code>, regardless of the display's scaling level.</li>
+  </ul>
+
+  <p>On GNOME and Budgie, the display scaling can be set in the <i>Displays</i>
+  page of the <i>Settings</i> dialog, but the value of the X resource
+  <code>Xft.dpi</code>, which is used by the procedure
+  <code>scaleutil::scalingPercentage</code>, can also be manipulated by setting
+  the scaling factor of the fonts via the <i>Tweaks</i> application.&nbsp;
+  Likewise, on Cinnamon the display scaling can be set in the <i>Display</i>
+  page of the <i>System Settings</i> dialog, but the value of the X resource
+  <code>Xft.dpi</code> can also be manipulated by setting the text scaling
+  factor via the <i>Font Selection</i> page of the <i>System Settings</i>
+  dialog.&nbsp; Finally, on KDE Plasma the display scaling can be set in the
+  <i>Display Configuration</i> page of the <i>System Settings</i> dialog, but
+  the value of the font DPI, given by the X resource <code>Xft.dpi</code> can
+  also be set via the <i>Fonts</i> page of the <i>System Settings</i>
+  dialog.</p>
+
+  <p>Besides computing the scaling percentage, the procedure
+  <code>scaleutil::scalingPercentage</code> performs a series of additional
+  tasks.&nbsp; Among others, it changes the default height of the ttk::treeview
+  rows from the hard-coded value of 20 pixels to a more reasonable one, based
+  on the metrics of the font used by the <code>Treeview</code> style (usually
+  <code>TkDefaultFont</code>), and makes sure that this step will be repeated
+  whenever the virtual event <code>&lt;&lt;ThemeChanged&gt;&gt;</code> is
+  received (e.g., because the value of the <code>Treeview</code> style's
+  <code>-font</code> option has changed), or the virtual event
+  <code>&lt;&lt;TkWorldChanged&gt;&gt;</code> with the <code>user_data</code>
+  field (<code>%d</code>) set to <code>FontChanged</code> is received.&nbsp; If
+  the Tk version is later than 8.6.11 or 8.7a5, this virtual event is sent by
+  the Tk engine to all widgets when a font is changed, for example, by
+  invoking&nbsp; <code>font configure</code>&nbsp; (see <a href=
+  "https://core.tcl-lang.org/tips/doc/trunk/tip/608.md">TIP 608</a>).</p>
+
+  <p>The additional steps described in the rest of this section are only
+  performed if the scaling percentage is greater than <code>100</code>.</p>
+
+  <p>On X11, the procedure synchronizes the scaling factor used by Tk to
+  convert between physical units and pixels with the scaling percentage, by
+  passing a value derived from the latter to the&nbsp; <code>tk
+  scaling</code>&nbsp; command.&nbsp; While in the vast majority of
+  applications this is the desired and recommended behavior, there might be
+  cases where you want to suppress this step because your application might
+  have its own logic for determining the value of Tk's scaling factor.&nbsp;
+  You can achieve this by inserting the line</p>
+
+  <blockquote>
+    <pre>
+namespace eval ::scaleutil { set keepTkScaling 1 }
+</pre>
+  </blockquote>
+
+  <p>before loading Scrollutil or Scrollutil_tile via&nbsp; <code>package
+  require</code>.</p>
+
+  <p>The procedure <code>scaleutil::scalingPercentage</code> also corrects the
+  sizes of the standard fonts if needed.&nbsp; These fonts
+  (<code>TkDefaultFont</code>, <code>TkTextFont</code>, etc.) are defined in
+  the file <code>$tk_library/ttk/fonts.tcl</code>.&nbsp; For quite a long time,
+  the font sizes for X11 given in this file were sizes in pixels, which was not
+  suitable for use on HiDPI displays.&nbsp; This caused several Linux
+  distributions to bundle patched versions of this file, in which the sizes in
+  pixels are replaced with sizes in points.&nbsp; The same fix was committed in
+  February 2020 into the Tk core repository and is now contained in Tk 8.7a5
+  and later.&nbsp; To make sure that, regardless of the Tk version, the font
+  sizes will suit the display's scaling level, the procedure examines this
+  library file and, if the latter contains sizes in pixels, then it sets the
+  <code>-size</code> option of the standard fonts to corresponding sizes in
+  points (without altering the file).&nbsp; In addition, for the "2x" mode on
+  Xfce, the procedure doubles the sizes (in points) of the standard fonts (the
+  way display scaling works on that desktop makes this necessary).</p>
+
+  <p>The procedure also scales:</p>
+
+  <ul>
+    <li class="tm">the default parameters of the Tk core panedwindow sash;</li>
+
+    <li class="tm">the default size of the Tk core scale widget and its
+    slider;</li>
+
+    <li class="tm">the default width of the Tk core scrollbars on X11;</li>
+
+    <li class="tm">the default length of the ttk::scale and ttk::progressbar
+    widgets;</li>
+
+    <li class="tm">for the built-in themes <code>alt</code> and
+    <code>default</code>, some styling options of the ttk::scrollbar,
+    ttk::scale, ttk::progressbar, ttk::combobox, ttk::spinbox, ttk::button,
+    toolbutton, ttk::menubutton, ttk::checkbutton, ttk::radiobutton,
+    ttk::notebook, and ttk::treeview widgets;</li>
+
+    <li class="tm">for the built-in theme <code>clam</code>, some styling
+    options of the ttk::scrollbar, ttk::scale, ttk::progressbar, ttk::combobox,
+    ttk::spinbox, ttk::button, toolbutton, ttk::menubutton, ttk::checkbutton,
+    ttk::radiobutton, ttk::notebook, ttk::panedwindow, ttk::treeview, and
+    ttk::labelframe widgets;</li>
+
+    <li class="tm">for the built-in theme <code>classic</code>, some styling
+    options of the ttk::scrollbar, ttk::scale, ttk::progressbar, ttk::combobox,
+    ttk::spinbox, ttk::button, toolbutton, ttk::menubutton, ttk::checkbutton,
+    ttk::radiobutton, ttk::notebook, ttk::panedwindow, and ttk::treeview
+    widgets;</li>
+
+    <li class="tm">for the built-in theme <code>vista</code>, some styling
+    options of the ttk::combobox, ttk::button, toolbutton, ttk::menubutton,
+    ttk::checkbutton, ttk::radiobutton, ttk::notebook, and ttk::treeview
+    widgets;</li>
+
+    <li class="tm">for the built-in theme <code>winnative</code>, some styling
+    options of the ttk::scale, ttk::progressbar, ttk::combobox, ttk::spinbox,
+    toolbutton, ttk::menubutton, ttk::checkbutton, ttk::radiobutton, 
+    ttk::notebook, and ttk::treeview widgets;</li>
+
+    <li class="tm">for the built-in theme <code>xpnative</code>, some styling
+    options of the ttk::combobox, ttk::spinbox, ttk::button, toolbutton,
+    ttk::menubutton, ttk::checkbutton, ttk::radiobutton, ttk::notebook, and
+    ttk::treeview widgets.</li>
+  </ul>
+
+  <p>In addition, the procedure <code>scaleutil::scalingPercentage</code> makes
+  sure that in the <code>vista</code> and <code>xpnative</code> themes the
+  indicators of the ttk::checkbutton and ttk::radiobutton widgets will appear
+  properly scaled, regardless of the Tk release being used.&nbsp; (A
+  long-standing bug in the implementation of these widgets was fixed in May
+  2020 and is now contained in both Tk 8.6.11 and later and 8.7a5 and later,
+  but the procedure provides an automatic workaround for the Tk versions that
+  are still affected by this bug.)</p>
+
+  <p>Note that in Tk versions earlier than 8.7b1/9, the Tk core checkbutton and
+  radiobutton widgets, as well as the indicators of the ttk::checkbutton and
+  ttk::radiobutton widgets of the <code>alt</code> and <code>winnative</code>
+  themes are not scalable (they scale automatically in Tk 8.7b1/9 and
+  later).&nbsp; The same holds true for the ttk::sizegrip widget in the
+  built-in themes.</p>
+
+  <h3 id="ov_svgfmt">More on <code>scrollutil::svgfmt</code></h3>
+
+  <p>Before returning one of the scaling percentage values <code>100</code>,
+  <code>125</code>, <code>150</code>, <code>175</code>, and <code>200</code>,
+  the procedure <code>scaleutil::scalingPercentage</code> saves the display's
+  <i>real</i> scaling percentage in the variable
+  <code>::scaleutil::scalingPct</code>.&nbsp; This value, which is restricted
+  to multiples of <code>25</code>, can be greater than <code>200</code>,
+  especially when running Androwish on a tablet or smartphone.</p>
+
+  <p>If the Tk version is either at least 8.7 (with built-in SVG support), or
+  8.6 and the tksvg package can be loaded into the interpreter, then Scrollutil
+  additionally sets the variable <code>scrollutil::svgfmt</code> to</p>
+
+  <blockquote>
+    <pre>
+[list svg -scale [expr {$::scaleutil::scalingPct / 100.0}]]
+</pre>
+  </blockquote>
+
+  <p>Typical values are&nbsp; <code>{svg -scale 1.0}</code>,&nbsp; <code>{svg
+  -scale 1.25}</code>,&nbsp; <code>{svg -scale 2.0}</code>,&nbsp; etc.</p>
+
+  <p>It is recommended to pass the value of the variable
+  <code>scrollutil::svgfmt</code> to the commands&nbsp; <code>image create
+  photo</code>,&nbsp; <code><i>imageName</i> configure</code>,&nbsp; 
+  <code><i>imageName</i> put</code>,&nbsp; and <code><i>imageName</i> 
+  read</code>&nbsp; as the value of their <code>-format</code> option when 
+  creating or manipulating SVG images, to make sure that their sizes will 
+  correspond to the display's <i>real</i> scaling percentage.</p>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="examples">Examples</h2>
+
+  <h3 id="ex_styleUtil">The Helper Script <code>styleUtil.tcl</code></h3>
+
+  <p>All the examples in the <code>demos</code> directory use tile (ttk)
+  widgets and contain the lines</p>
+
+  <blockquote>
+    <pre>
+set dir [file dirname [info script]]
+source [file join $dir styleUtil.tcl]
+</pre>
+  </blockquote>
+
+  <p>The script <code>styleUtil.tcl</code> starts with a comment related to the
+  <code><a href=
+  "scrollarea.html#autohidescrollbars">-autohidescrollbars</a></code> and
+  <code><a href="scrollarea.html#setfocus">-setfocus</a></code> scrollarea
+  configuration options:</p>
+
+  <blockquote>
+    <pre>
+<span class="cmt">#
+# To set the "-autohidescrollbars" or "-setfocus" option of all scrollarea
+# widgets in all demo scripts to true, uncomment the corresponding line below:
+#
+# option add *Scrollarea.autoHideScrollbars 1
+# option add *Scrollarea.setFocus           1</span>
+</pre>
+  </blockquote>
+
+  <p>You are free to follow this hint or to run the demo scripts with the
+  default&nbsp; <code>-autohidescrollbars 0</code>&nbsp; and&nbsp;
+  <code>-setfocus 0</code>&nbsp; scrollarea settings.</p>
+
+  <p>The script patches a few ttk widget styles and defines the style
+  <code>Small.Toolbutton</code>.</p>
+
+  <p>The patch for the style <code>TCombobox</code> makes sure that the
+  (readonly) ttk::combobox widgets of the themes <code>alt</code>,
+  <code>clam</code>, <code>classic</code>, and <code>default</code> will show
+  whether they have the focus.&nbsp; This basic requirement, which makes the
+  keyboard navigation more user-friendly, is already fulfilled by the themes
+  <code>vista</code>, <code>xpnative</code>, and <code>aqua</code>.</p>
+
+  <p>The ttk::button widgets of the style <code>Small.Toolbutton</code> created
+  by the procedure <code>styleutil::createToolbutton</code>, implemented in
+  this helper script, will appear raised when they have the focus.&nbsp; Again,
+  this makes the keyboard navigation more user-friendly.</p>
+
+  <p>Yet another procedure provided by this script is
+  <code>styleutil::getCurrentTheme</code>, which returns the name of the
+  current theme by invoking the&nbsp; <code>ttk::style theme use</code>&nbsp;
+  command.&nbsp; If an old tile version is being used which doesn't yet support
+  this method then the procedure returns the value of the variable
+  <code>::ttk::currentTheme</code> (which is set by the
+  <code>ttk::setTheme</code> command only).&nbsp; This procedure is used by
+  nearly all demo scripts included in the Scrollutil distribution.</p>
+
+  <p>The script also patches the <code>clam</code> theme, by invoking the
+  public procedure <code>themepatch::patch</code> of the themepatch package,
+  which is bundled with Scrollutil (but, contrary to the scaleutil package, is
+  not used by the Scrollutil code and therefore it needs to be loaded
+  explicitly via&nbsp; <code>package require themepatch</code>):</p>
+
+  <blockquote>
+    <pre>
+package require scrollutil_tile
+
+. . .
+
+<span class="cmt">#
+# Patch the clam theme's styles TButton, TMenubutton,
+# Heading, TCheckbutton, and TRadiobutton
+#</span>
+package require themepatch
+themepatch::patch clam
+</pre>
+  </blockquote>
+
+  <p>On X11, the script sets the theme to this patched variant of the
+  <code>clam</code> theme, which has smaller ttk::button widgets as well as
+  ttk::treeview and tablelist headers, and its scalable ttk::checkbutton and
+  ttk::radiobutton widgets have a significantly improved look and behavior.</p>
+
+  <h3 id="ex_ScrolledTablelist">A Scrolled tablelist Widget</h3>
+
+  <p>This example shows how you can greatly simplify the creation of a scrolled
+  tablelist by using a <a href="scrollarea.html">scrollarea</a> widget.</p>
+
+  <p>The script <code>ScrolledTablelist1.tcl</code> in the <code>demos</code>
+  directory creates a horizontally and vertically scrolled tablelist widget
+  having two header rows and one title column, and manages the two scrollbars
+  in such a way that the vertical scrollbar appears below the tablelist's
+  header and the horizontal one starts to the right of the widget's title
+  column area:</p>
+
+  <blockquote>
+    <img src="ScrolledTablelist.png" alt="ScrolledTablelist" width="495"
+    height="402">
+  </blockquote>
+
+  <p>The script achieves these requirements using traditional scrollbar
+  management, which is shown below in <span class="red">red</span> color:</p>
+
+  <blockquote>
+    <pre>
+package require Tk 8.5-
+package require tablelist_tile 6.3-
+set dir [file dirname [info script]]
+source [file join $dir styleUtil.tcl]
+
+wm title . "Scrolled Tablelist"
+
+<span class="cmt">#
+# Create the tablelist and the scrollbars as children
+# of a frame having -borderwidth 1 and -relief sunken
+#</span>
+set f   [ttk::frame .f]
+set frm [ttk::frame $f.frm <span class="red">-borderwidth 1 -relief sunken</span>]
+set tbl $frm.tbl
+<span class="red">set vsb $frm.vsb
+set hsb $frm.hsb</span>
+tablelist::tablelist $tbl ... <span class="red">-borderwidth 0</span> \
+<span class="red">    -xscrollcommand [list $hsb set] -yscrollcommand [list $vsb set]</span>
+. . .
+<span class="red">ttk::scrollbar $vsb -orient vertical   -command [list $tbl yview]
+ttk::scrollbar $hsb -orient horizontal -command [list $tbl xview]</span>
+
+. . .
+
+<span class="cmt">#
+# Manage the widgets within the frame
+#</span>
+<span class="red">grid $tbl -row 0 -rowspan 2 -column 0 -columnspan 2 -sticky news
+if {[tk windowingsystem] eq "win32"} {
+    grid $vsb -row 0 -rowspan 2 -column 2 -sticky ns
+} else {
+    grid [$tbl cornerpath] -row 0 -column 2 -sticky ew
+    grid $vsb              -row 1 -column 2 -sticky ns
+}
+grid [$tbl cornerpath -sw] -row 2 -column 0 -sticky ns
+grid $hsb                  -row 2 -column 1 -sticky ew
+grid rowconfigure    $frm 1 -weight 1
+grid columnconfigure $frm 1 -weight 1</span>
+
+. . .
+
+<span class="cmt">#
+# Manage the frame
+#</span>
+pack $frm -expand yes -fill both -padx 7p -pady 7p
+pack $f   -expand yes -fill both
+</pre>
+  </blockquote>
+
+  <p>The script <code>ScrolledTablelist2.tcl</code> in the <code>demos</code>
+  directory replaces the rather technical code above with just a few lines
+  (shown below in <span class="red">red</span> color), by embedding the
+  tablelist into a scrollarea widget.&nbsp; It requires Tablelist version 6.5,
+  which is needed so the <code><a href=
+  "scrollarea.html#respectheader">-respectheader</a></code> and <code><a href=
+  "scrollarea.html#respecttitlecolumns">-respecttitlecolumns</a></code>
+  scrollarea options can work as expected (for earlier Tablelist versions these
+  options are silently ignored).&nbsp; As a further benefit, the scrollbars
+  created with this method will have the default display mode
+  <code>dynamic</code>.</p>
+
+  <blockquote>
+    <pre>
+package require Tk 8.5-
+package require tablelist_tile 6.5-
+<span class="red">package require scrollutil_tile</span>
+set dir [file dirname [info script]]
+source [file join $dir styleUtil.tcl]
+
+wm title . "Scrolled Tablelist"
+
+<span class="cmt">#
+# Create the tablelist within a scrollarea
+#</span>
+set f  [ttk::frame .f]
+<span class="red">set sa [scrollutil::scrollarea $f.sa]</span>
+set tbl $sa.tbl
+tablelist::tablelist $tbl ...
+. . .
+<span class="red">$sa setwidget $tbl</span>
+
+. . .
+
+<span class="cmt">#
+# Manage the scrollarea
+#</span>
+pack $sa -expand yes -fill both -padx 7p -pady 7p
+pack $f  -expand yes -fill both
+</pre>
+  </blockquote>
+
+  <h3 id="ex_ScrolledText">A Scrolled text Widget</h3>
+
+  <p>The script <code>ScrolledText.tcl</code> in the <code>demos</code>
+  directory shows how the <a href="scrollarea.html">scrollarea</a> widget
+  circumvents the potential shimmering effect in connection with text
+  widgets.</p>
+
+  <blockquote>
+    <img src="ScrolledText.png" alt="ScrolledText" width="457" height="374">
+  </blockquote>
+
+  <p>Here is the relevant code, in which the lines related to the scrollarea
+  widget are shown in <span class="red">red</span> color:</p>
+
+  <blockquote>
+    <pre>
+<span class="red">package require scrollutil_tile</span>
+set dir [file dirname [info script]]
+source [file join $dir styleUtil.tcl]
+
+wm title . "Scrolled Text"
+
+<span class="cmt">#
+# Create a text widget within a scrollarea
+#</span>
+set f  [ttk::frame .f]
+<span class="red">set sa [scrollutil::scrollarea $f.sa -lockinterval 10]</span>
+set txt [text $sa.txt -font TkFixedFont -width 49 -height 12 \
+         -spacing1 1.5p -spacing3 1.5p -wrap none]
+<span class="red">$sa setwidget $txt</span>
+
+<span class="cmt">#
+# Populate the text widget and set the background color of line #25 to red
+#</span>
+for {set i 1} {$i &lt;= 30} {incr i} {
+    set j [expr {2*$i}]
+    $txt insert end [string repeat x $j]\n
+}
+$txt delete 30.end
+$txt tag configure bgRed -background red
+$txt tag add bgRed 25.0 25.end
+
+. . .
+
+<span class="cmt">#
+# Manage the scrollarea
+#</span>
+pack $sa -expand yes -fill both -padx 7p -pady 7p
+pack $f  -expand yes -fill both
+
+<span class="cmt">#
+# Adjust the vertical view in the text window
+# so that line #25 becomes the bottom line
+#</span>
+tkwait visibility $txt
+after 100 [list $txt yview 14.0]
+</pre>
+  </blockquote>
+
+  <p>The script creates a text widget <code>$txt</code> embedded into a
+  scrollarea, populates it with 30 lines, and adjusts the vertical view in the
+  text window so that line #25 becomes the bottom line.&nbsp; This line has 50
+  characters, hence it doesn't fit completely into the window, whose width is
+  49 characters.&nbsp; Consequently, the command&nbsp; <code>$txt
+  xview</code>&nbsp; will return the list&nbsp; <code>{0.0 0.98}</code>,&nbsp;
+  hence the scrollarea's horizontal scrollbar will be mapped and will obscure
+  most part of the bottom line.&nbsp; Since this line has <code>red</code>
+  background, it is easy to see how much of it sticks out above the upper edge
+  of the scrollbar.</p>
+
+  <p>Let's analyze what happens if the text widget's height is decreased by
+  dragging the main window's upper or lower edge, just until the red pixels get
+  obscured by the horizontal scrollbar.&nbsp; After performing this action,
+  line #25 is completely out of view and the new bottom line is line #24, which
+  has 48 characters, hence the command&nbsp; <code>$txt xview</code>&nbsp; will
+  return&nbsp; <code>{0.0 1.0}</code>.&nbsp; Normally, this would cause the
+  horizontal scrollbar to be unmapped.&nbsp; However, that would make line #25
+  to the bottom line, thus causing the horizontal scrollbar to be mapped
+  again.&nbsp; This time the scrollbar would completely obscure this line,
+  which would result in line #24 to become the bottom line, which would cause
+  the scrollbar to be unmapped again, and so on.&nbsp; In other words, the
+  horizontal scrollbar would get mapped and unmapped in an endless loop, giving
+  rise to an annoying flickering effect.&nbsp; The built-in locking mechanism
+  of the scrollarea widget guards against such potential endless loops.&nbsp;
+  To make sure that the locking will work as expected, we have set the
+  <code><a href="scrollarea.html#lockinterval">-lockinterval</a></code>
+  scrollarea option to <code>10</code> (recall that the default value is
+  <code>1</code>).</p>
+
+  <h3 id="ex_ScrolledCanvas">A Scrolled canvas Widget</h3>
+
+  <p>The script <code>ScrolledCanvas.tcl</code> in the <code>demos</code>
+  directory shows how to use the Scrollutil package for adding scrollbars as
+  well as mouse wheel and <code>&lt;TouchpadScroll&gt;</code> event support to
+  a canvas widget.</p>
+
+  <blockquote>
+    <img src="ScrolledCanvas.png" alt="ScrolledCanvas" width="383"
+    height="359">
+  </blockquote>
+
+  <p>Here is the relevant code, in which the lines related to the Scrollutil
+  package are shown in <span class="red">red</span> color:</p>
+
+  <blockquote>
+    <pre>
+<span class="red">package require scrollutil_tile</span>
+set dir [file dirname [info script]]
+source [file join $dir styleUtil.tcl]
+
+wm title . "Scrolled Canvas"
+
+set scaleFactor [expr {$scaleutil::scalingPct / 100.0}]
+set width  [expr {10 * 32 * $scaleFactor}]
+set height [expr { 7 * 32 * $scaleFactor}]
+set scrlIncr [expr {16 * $scaleFactor}]
+
+<span class="cmt">#
+# Create a canvas widget within a scrollarea
+#</span>
+set f  [ttk::frame .f]
+<span class="red">set sa [scrollutil::scrollarea $f.sa]</span>
+set c  [canvas $sa.c -background white -width $width -height $height \
+        -xscrollincrement $scrlIncr -yscrollincrement $scrlIncr]
+bind $c &lt;Configure&gt; { setScrollRegion %W %w %h }
+<span class="red">scrollutil::addMouseWheelSupport $c
+$sa setwidget $c</span>
+
+<span class="cmt">#
+# Populate the canvas and then rescale the coordinates
+# of all of the items by a factor of $scaleFactor
+#</span>
+for {set col 0; set x 32} {$col < 20} {incr col; incr x 96} {
+    for {set row 0; set y 32} {$row < 20} {incr row; incr y 96} {
+        $c create rectangle $x $y [expr {$x+63}] [expr {$y+63}] -fill gray95
+        $c create text [expr {$x+32}] [expr {$y+32}] -text "Box\n$row,$col" \
+            -anchor center -justify center
+    }
+}
+$c scale all 0 0 $scaleFactor $scaleFactor
+
+proc setScrollRegion {canv width height} {
+    set pixels [expr {(20*96 + 32) * $::scaleFactor}]
+    set rightX $pixels
+    set lowerY $pixels
+    if {$rightX < $width}  { set rightX $width }
+    if {$lowerY < $height} { set lowerY $height }
+    $canv configure -scrollregion [list 0 0 $rightX $lowerY]
+}
+
+. . .
+
+<span class="cmt">#
+# Manage the scrollarea
+#</span>
+pack $sa -expand yes -fill both -padx 7p -pady 7p
+pack $f  -expand yes -fill both
+</pre>
+  </blockquote>
+
+  <p>The script creates a canvas widget, populates it with 400
+  <code>rectangle</code> and <code>text</code> items, and adds mouse wheel and
+  <code>&lt;TouchpadScroll&gt;</code> event support to it by passing its name
+  to the <code><a href=
+  "wheelEvent.html#add">scrollutil::addMouseWheelSupport</a></code>
+  command.&nbsp; Note that in the canvas we work with pixels rather than
+  points, but make the GUI fully scaling-aware with the aid of a variable
+  <code>scaleFactor</code>, whose value (<code>1.0</code>, <code>1.25</code>,
+  <code>1.5</code>, etc.) is derived from that of the variable
+  <code>scaleutil::scalingPct</code>.</p>
+
+  <h3 id="ex_SyncListboxes">Synchronizing Two listbox Widgets</h3>
+
+  <p>The script <code>SyncListboxes.tcl</code> in the <code>demos</code>
+  directory creates two listboxes within a <a href=
+  "scrollsync.html">scrollsync</a> widget, which in turn is embedded into a
+  <a href="scrollarea.html">scrollarea</a>.</p>
+
+  <blockquote>
+    <img src="SyncListboxes.png" alt="SyncListboxes" width="327" height="362">
+  </blockquote>
+
+  <p>Here is the relevant code, in which the lines related to the scrollarea
+  and scrollsync widgets are shown in <span class="red">red</span> color:</p>
+
+  <blockquote>
+    <pre>
+<span class="red">package require scrollutil_tile</span>
+set dir [file dirname [info script]]
+source [file join $dir styleUtil.tcl]
+
+wm title . "European Countries"
+
+. . .
+
+set f  [ttk::frame .f]
+
+. . .
+
+<span class="cmt">#
+# Create a scrollsync widget within a scrollarea
+#</span>
+<span class="red">set sa [scrollutil::scrollarea $f.sa]
+set ss [scrollutil::scrollsync $sa.ss]
+$sa setwidget $ss</span>
+
+<span class="cmt">#
+# Populate the scrollsync widget with two listboxes
+#</span>
+
+. . .
+
+set lb1 [listbox $ss.lb1 -activestyle none -highlightthickness 0 -width 16]
+set lb2 [listbox $ss.lb2 -activestyle none -highlightthickness 0 -width 16]
+<span class="red">$ss setwidgets [list $lb1 $lb2]</span>
+
+. . .
+
+grid $lb1 $lb2 -sticky news -padx {0 1.5p}
+grid rowconfigure    $ss 0 -weight 1
+grid columnconfigure $ss 0 -weight 1
+grid columnconfigure $ss 1 -weight 1
+
+. . .
+
+pack $sa -side top -expand yes -fill both -padx 7p -pady {1.5p 7p}
+pack $f  -expand yes -fill both
+
+. . .
+</pre>
+  </blockquote>
+
+  <h3 id="ex_SyncTablelists">Synchronizing Three tablelist Widgets</h3>
+
+  <p>The script <code>SyncTablelists.tcl</code> in the <code>demos</code>
+  directory creates three tablelists within a <a href=
+  "scrollsync.html">scrollsync</a> widget, which in turn is embedded into a
+  <a href="scrollarea.html">scrollarea</a>.</p>
+
+  <blockquote>
+    <img src="SyncTablelists.png" alt="SyncTablelists" width="555" height=
+    "387">
+  </blockquote>
+
+  <p>The relevant code is similar to the one shown in the <a href=
+  "#ex_SyncListboxes">previous example</a>:</p>
+
+  <blockquote>
+    <pre>
+package require tablelist_tile
+<span class="red">package require scrollutil_tile</span>
+set dir [file dirname [info script]]
+source [file join $dir styleUtil.tcl]
+
+wm title . "Synchronized Tablelists"
+
+. . .
+
+set f  [ttk::frame .f]
+
+. . .
+
+<span class="cmt">#
+# Create a scrollsync widget within a scrollarea
+#</span>
+<span class="red">set sa [scrollutil::scrollarea $f.sa]
+set ss [scrollutil::scrollsync $sa.ss]
+$sa setwidget $ss</span>
+
+<span class="cmt">#
+# Populate the scrollsync widget with three tablelists
+#</span>
+
+tablelist::setThemeDefaults
+if {$tablelist::themeDefaults(-stripebackground) eq ""} {
+    option add *Tablelist.background            white
+    option add *Tablelist.stripeBackground      #f0f0f0
+}
+
+for {set n 1; set colWidth 40} {$n &lt;= 3} {incr n; incr colWidth 20} {
+    set tbl [tablelist::tablelist $ss.tbl$n \
+             -columns [list 0 "Column 0" left  $colWidth "Column 1" left]]
+    set tbl$n $tbl
+
+    for {set i 0} {$i &lt; 40} {incr i} {
+        $tbl insert end [list "cell $i,0" "cell $i,1"]
+    }
+}
+<span class="red">$ss setwidgets [list $tbl1 $tbl2 $tbl3]</span>
+
+grid $tbl1 $tbl2 $tbl3 -sticky news -padx {0 1.5p}
+grid rowconfigure    $ss 0 -weight 1
+grid columnconfigure $ss 0 -weight 1
+grid columnconfigure $ss 1 -weight 1
+grid columnconfigure $ss 2 -weight 1
+
+. . .
+
+pack $sa -side top -expand yes -fill both -padx 7p -pady {1.5p 7p}
+pack $f  -expand yes -fill both
+
+. . .
+</pre>
+  </blockquote>
+
+  <p>The option database settings above for the <code>-background</code> and
+  <code>-stripebackground</code> tablelist configuration options are not
+  present in case of the <code>aqua</code> theme, because for this theme the
+  default values of these options are not only <code>aqua</code>-specific, but
+  in addition on Mac OS 10.14 (Mojave) and later they also depend on the
+  current system appearance (Light Mode or Dark Mode).</p>
+
+  <p>Notice that column #1 of the three tablelist widgets is 40, 60, and 80
+  characters wide, respectively.&nbsp; For this reason, when scrolling
+  horizontally to the right, the left table's view will reach its horizontal
+  end position first, then that of the midde table, and as last one the view of
+  the right table.</p>
+
+  <h3 id="ex_SuScrollableFrameDemo1">A Script Using a
+  scrollutil::scrollableframe Widget</h3>
+
+  <p>The script <code>SuScrollableFrmDemo1.tcl</code> in the <code>demos</code>
+  directory creates a <a href=
+  "scrollableframe.html">scrollutil::scrollableframe</a> widget embedded into a
+  <a href="scrollarea.html">scrollarea</a> and creates mouse wheel and
+  <code>&lt;TouchpadScroll&gt;</code> event bindings for the binding tag
+  <code>"all"</code> with the aid of the <code><a href=
+  "wheelEvent.html#create">scrollutil::createWheelEventBindings</a></code>
+  command.&nbsp; Recall that the scrollableframe was automatically registered
+  for scrolling by these bindings at creation time, hence there is no need to
+  invoke the <code><a href=
+  "wheelEvent.html#enable">scrollutil::enableScrollingByWheel</a></code>
+  command for it again.&nbsp; After that, the script populates the content
+  frame of the scrollableframe with ttk::label widgets displaying the names of
+  the European countries, ttk::combobox widgets for selecting the corresponding
+  capital cities, and ttk::button widgets of the style
+  <code>Small.Toolbutton</code> (created by using the procedure
+  <code>styleutil::createToolbutton</code>, implemented in the file
+  <code><a href="#ex_styleUtil">styleUtil.tcl</a></code>) for the less patient
+  users, displaying the text "Resolve".</p>
+
+  <blockquote>
+    <img src="ScrollableFrmDemo1.png" alt="ScrollableFrmDemo1" width="419"
+    height="414">
+  </blockquote>
+
+  <p>Here is the relevant code:</p>
+
+  <blockquote>
+    <pre>
+<span class="red">package require scrollutil_tile</span>
+set dir [file dirname [info script]]
+source [file join $dir styleUtil.tcl]
+
+wm title . "European Capitals Quiz"
+
+<span class="cmt">#
+# Create a scrollableframe within a scrollarea
+#</span>
+set f  [ttk::frame .f]
+<span class="red">set sa [scrollutil::scrollarea $f.sa]
+set sf [scrollutil::scrollableframe $sa.sf]
+$sa setwidget $sf</span>
+
+<span class="cmt">#
+# Create mouse wheel event bindings for the binding tag "all"
+#</span>
+<span class="red">scrollutil::createWheelEventBindings all</span>
+
+<span class="cmt">#
+# Get the content frame and populate it
+#</span>
+
+<span class="red">set cf [$sf contentframe]</span>
+
+set countryList {
+    Albania Andorra Austria Belarus Belgium "Bosnia and Herzegovina" Bulgaria
+    . . .
+}
+set capitalList {
+    Tirana "Andorra la Vella" Vienna Minsk Brussels Sarajevo Sofia
+    . . .
+}
+
+. . .
+
+set capitalList [lsort $capitalList]
+
+. . .
+
+set row 0
+foreach country $countryList {
+    . . .
+
+    set w [ttk::combobox $cf.cb$row -state readonly -width 14 \
+           -values $capitalList]
+    . . .
+
+    <span class="cmt">#
+    # Make the keyboard navigation more user-friendly
+    #</span>
+    bind $w &lt;&lt;TraverseIn&gt;&gt; [list <span class="red">$sf see %W</span>]
+
+    <span class="cmt">#
+    # Adapt the handling of the mouse wheel events for the ttk::combobox widget
+    #</span>
+    <span class="red">scrollutil::adaptWheelEventHandling $w</span>
+
+    . . .
+
+    incr row
+}
+
+. . .
+</pre>
+  </blockquote>
+
+  <p>We make the keyboard navigation more user-friendly with the aid of the
+  <code><a href="scrollableframe.html#see">see</a></code> subcommand of the
+  scrollableframe widget when handling the
+  <code>&lt;&lt;TraverseIn&gt;&gt;</code> virtual event for the ttk::combobox
+  and (not shown above) ttk::button widgets.&nbsp; In addition, we invoke the
+  <code><a href=
+  "wheelEvent.html#adapt">scrollutil::adaptWheelEventHandling</a></code>
+  command for every ttk::combobox widget, which is needed for a user-friendly
+  event handling, being that this widget has built-in bindings for the mouse
+  wheel and <code>&lt;TouchpadScroll&gt;</code> events.&nbsp; Due to this
+  command, these events over one of the ttk::combobox widgets will only select
+  the next/previous capital city if the widget has the focus, otherwise they
+  will scroll the scrollableframe.</p>
+
+  <p>With this script you can also test the scanning in the
+  scrollableframe:&nbsp; If you press mouse button 1 over a free space of the
+  scrollableframe window then the cursor will take on the shape of a pointing
+  hand, and by draggging the mouse, the content frame will drag at high speed
+  through the window, in the direction the mouse moves.</p>
+
+  <h3 id="ex_BwScrollableFrameDemo1">A Script Using a BWidget ScrollableFrame
+  Widget</h3>
+
+  <p>The script <code>BwScrollableFrmDemo1.tcl</code> in the <code>demos</code>
+  directory creates a BWidget ScrollableFrame embedded into a <a href=
+  "scrollarea.html">scrollarea</a> widget, creates mouse wheel and
+  <code>&lt;TouchpadScroll&gt;</code> event bindings for the binding tag
+  <code>"all"</code> with the aid of the <code><a href=
+  "wheelEvent.html#create">scrollutil::createWheelEventBindings</a></code>
+  command, and invokes the <code><a href=
+  "wheelEvent.html#enable">scrollutil::enableScrollingByWheel</a></code>
+  command for this ScrollableFrame, thus registering the latter for scrolling
+  by these bindings.&nbsp; After that it populates the content frame of the
+  ScrollableFrame with the same widgets as
+  <code>SuScrollableFrmDemo1.tcl</code> in the <a href=
+  "#ex_SuScrollableFrameDemo1">previous example</a>.</p>
+
+  <p>Here is the relevant code:</p>
+
+  <blockquote>
+    <pre>
+package require BWidget
+Widget::theme yes
+<span class="red">package require scrollutil_tile</span>
+set dir [file dirname [info script]]
+source [file join $dir styleUtil.tcl]
+
+wm title . "European Capitals Quiz"
+
+<span class="cmt">#
+# Create a ScrollableFrame within a scrollarea
+#</span>
+set f  [ttk::frame .f]
+<span class="red">set sa [scrollutil::scrollarea $f.sa]</span>
+set sf [ScrollableFrame $sa.sf]
+<span class="red">$sa setwidget $sf</span>
+
+. . .
+
+<span class="cmt">#
+# Create mouse wheel event bindings for the binding tag "all" and
+# register the ScrollableFrame for scrolling by these bindings
+#</span>
+<span class="red">scrollutil::createWheelEventBindings all
+scrollutil::enableScrollingByWheel $sf</span>
+
+<span class="cmt">#
+# Get the content frame and populate it
+#</span>
+
+set cf [$sf getframe]
+
+set countryList {
+    Albania Andorra Austria Belarus Belgium "Bosnia and Herzegovina" Bulgaria
+    . . .
+}
+set capitalList {
+    Tirana "Andorra la Vella" Vienna Minsk Brussels Sarajevo Sofia
+    . . .
+}
+
+. . .
+
+set capitalList [lsort $capitalList]
+
+. . .
+
+set row 0
+foreach country $countryList {
+    . . .
+
+    set w [ttk::combobox $cf.cb$row -state readonly -width 14 \
+           -values $capitalList]
+    . . .
+
+    <span class="cmt">#
+    # Make the keyboard navigation more user-friendly
+    #</span>
+    bind $w &lt;&lt;TraverseIn&gt;&gt; [list $sf see %W]
+
+    <span class="cmt">#
+    # Adapt the handling of the mouse wheel events for the ttk::combobox widget
+    #</span>
+    <span class="red">scrollutil::adaptWheelEventHandling $w</span>
+
+    . . .
+
+    incr row
+}
+
+. . .
+</pre>
+  </blockquote>
+
+  <h3 id="ex_ScrolledFrameDemo1">A Script Using an iwidgets::scrolledframe
+  Widget</h3>
+
+  <p>The script <code>ScrolledFrmDemo1.tcl</code> in the <code>demos</code>
+  directory creates an iwidgets::scrolledframe widget, creates mouse wheel and
+  <code>&lt;TouchpadScroll&gt;</code> event bindings for the binding tag
+  <code>"all"</code> with the aid of the <code><a href=
+  "wheelEvent.html#create">scrollutil::createWheelEventBindings</a></code>
+  command, and invokes the <code><a href=
+  "wheelEvent.html#enable">scrollutil::enableScrollingByWheel</a></code>
+  command for this scrolledframe, thus registering the latter for scrolling by
+  these bindings.&nbsp; After that it populates the content frame of the
+  scrolledframe with the same widgets as <code>SuScrollableFrmDemo1.tcl</code>
+  and <code>BwScrollableFrmDemo1.tcl</code> in the two previous examples.</p>
+
+  <p>Here is the relevant code:</p>
+
+  <blockquote>
+    <pre>
+if {[catch {package require iwidgets} result1] != 0 &&
+    [catch {package require Iwidgets} result2] != 0} {
+    error "$result1; $result2"
+}
+set dir [file dirname [info script]]
+source [file join $dir scrolledwidgetPatch.itk] ;<span class=
+"cmt"># adds ttk::scrollbar widgets</span>
+<span class="red">package require scrollutil_tile</span>
+source [file join $dir styleUtil.tcl]
+
+wm title . "European Capitals Quiz"
+
+. . .
+
+<span class="cmt">#
+# Create a scrolledframe
+#</span>
+set f  [ttk::frame .f]
+set sf [iwidgets::scrolledframe $f.sf -borderwidth 1 -relief sunken \
+        -scrollmargin 0]
+. . .
+
+<span class="cmt">#
+# Create mouse wheel event bindings for the binding tag "all"
+# and register the scrolledframe for scrolling by these bindings
+#</span>
+<span class="red">scrollutil::createWheelEventBindings all
+scrollutil::enableScrollingByWheel $sf</span>
+
+<span class="cmt">#
+# Get the content frame and populate it
+#</span>
+
+set cf [$sf childsite]
+. . .
+
+<i>&lt;exactly as in the two previous examples, except the stuff related to keyboard navigation&gt;</i>
+
+. . .
+</pre>
+  </blockquote>
+
+  <p>The code related to keyboard navigation is not present in this example,
+  because the iwidgets::scrolledframe widget doesn't provide a <code>see</code>
+  subcommand.</p>
+
+  <h3 id="ex_SuScrollableFrameDemo2">A Script Using Two
+  scrollutil::scrollableframe Widgets</h3>
+
+  <p>The script <code>SuScrollableFrmDemo2.tcl</code> in the <code>demos</code>
+  directory creates a <a href=
+  "scrollableframe.html">scrollutil::scrollableframe</a> widget embedded into a
+  <a href="scrollarea.html">scrollarea</a> and then <code>source</code>s the
+  script <code>SuScrollableFrmContent.tcl</code>, which populates the content
+  frame of the scrollableframe with the following widgets:</p>
+
+  <ul>
+    <li>a series of ttk::label widgets;</li>
+
+    <li>a scrolled text widget <code>$txt</code> within a scrollarea;</li>
+
+    <li>a scrolled listbox widget <code>$lb</code> within a scrollarea;</li>
+
+    <li>a ttk::combobox widget <code>$cb</code>;</li>
+
+    <li>a ttk::spinbox widget <code>$sb</code>;</li>
+
+    <li>a ttk::entry widget <code>$e</code>;</li>
+
+    <li>a ttk::separator widget;</li>
+
+    <li>a mentry widget <code>$me</code> of type <code>"Date"</code>;</li>
+
+    <li>a scrolled tablelist widget <code>$tbl</code> within a scrollarea;</li>
+
+    <li>a scrolled ttk::treeview widget <code>$tv</code> within a
+    scrollarea.</li>
+  </ul>
+
+  <p>With the exception of ttk::label, ttk::entry, and ttk::separator, all
+  these widgets have bult-in mouse wheel and
+  <code>&lt;TouchpadScroll&gt;</code> event bindings.</p>
+
+  <blockquote>
+    <img src="ScrollableFrmDemo2.png" alt="ScrollableFrmDemo2" width="684"
+    height="577">
+  </blockquote>
+
+  <p>Here is the relevant code:</p>
+
+  <blockquote>
+    <pre>
+package require Tk 8.5.9-                       ;<span class=
+"cmt"># for ttk::spinbox</span>
+package require mentry_tile 3.2-                ;<span class=
+"cmt"># for mouse wheel support</span>
+package require tablelist_tile 6.5-             ;<span class=
+"cmt"># for -(x|y)mousewheelwindow</span>
+                                                ;<span class=
+ "cmt"># and scrollutil::scrollarea</span>
+<span class="red">package require scrollutil_tile</span>
+set dir [file dirname [info script]]
+source [file join $dir styleUtil.tcl]
+
+wm title . "Scrollutil Demo"
+
+<span class="cmt">#
+# Create a scrollableframe within a scrollarea
+#</span>
+set tf [ttk::frame .tf]
+<span class="red">set sa [scrollutil::scrollarea $tf.sa]
+set sf [scrollutil::scrollableframe $sa.sf]
+$sa setwidget $sf</span>
+
+<span class="cmt">#
+# Get the content frame and populate it
+#</span>
+<span class="red">set cf [$sf contentframe]</span>
+source [file join $dir SuScrollableFrmContent.tcl]
+
+<span class="cmt">#
+# Make the keyboard navigation more user-friendly
+#</span>
+foreach w [list $cb $sb $e $me] {
+    bind $w &lt;&lt;TraverseIn&gt;&gt; [list <span class="red">$sf see %W</span>]
+}
+foreach w [list $txt $lb $tbl $tv] {
+    bind $w &lt;&lt;TraverseIn&gt;&gt; [list seeScrollarea $sf %W]
+}
+proc seeScrollarea {sf w} { <span class="red">$sf see [scrollutil::getscrollarea $w]</span> }
+</pre>
+  </blockquote>
+
+  <p>Whenever the <code>&lt;&lt;TraverseIn&gt;&gt;</code> virtual event is sent
+  to one of the four widgets created within scrollareas, we query the path name
+  of the corresponding scrollarea via <code><a href=
+  "scrollarea.html#getscrollarea">scrollutil::getscrollarea</a></code> and
+  bring that scrollarea (including the scrollbars and the border) into view
+  rather than just the widget in question.&nbsp; While <i>in this script</i> we
+  could have used&nbsp; <code>[winfo parent]</code>&nbsp; instead, the command
+  <code>scrollutil::getscrollarea</code> is the recommended one, being that it
+  works also for widgets that are no children of the corresponding
+  scrollareas.</p>
+
+  <p>Here is the additional stuff related to the mouse wheel and
+  <code>&lt;TouchpadScroll&gt;</code> events, using the Scrollutil commands
+  described in the <a href="#ov_what">What Is Scrollutil?</a> section:</p>
+
+  <blockquote>
+    <pre>
+<span class="cmt">#
+# Create mouse wheel event bindings for the binding tag "all"
+#</span>
+<span class="red">scrollutil::createWheelEventBindings all</span>
+
+<span class="cmt">#
+# Adapt the handling of the mouse wheel events for the text, listbox,
+# ttk::combobox, ttk::spinbox, tablelist, and ttk::treeview widgets, as
+# well as for the entry components of the mentry widget of type "Date"
+#</span>
+set entryList [$me entries]
+<span class="red">scrollutil::adaptWheelEventHandling $txt $lb $cb $sb $tbl $tv {*}$entryList</span>
+
+<span class="cmt">#
+# For the entry components of the mentry widget
+# set the "focus check window" to the mentry
+#</span>
+<span class="red">scrollutil::setFocusCheckWindow {*}$entryList $me</span>
+</pre>
+  </blockquote>
+
+  <p>Notice that we have passed, among others, the tablelist widget to the
+  <code><a href=
+  "wheelEvent.html#adapt">scrollutil::adaptWheelEventHandling</a></code>
+  command.&nbsp; This will only work for Tablelist versions 6.4 and later,
+  because the command handles tablelist widgets by setting their
+  <code>-xmousewheelwindow</code> and <code>-ymousewheelwindow</code> options
+  to the path name of the containing toplevel window, and these options were
+  introduced in Tablelist version 6.4.&nbsp; (For earlier Tablelist versions
+  the command silently ignores any tablelist widget passed to it as
+  argument.)</p>
+
+  <p>As already mentioned, in the file <code>SuScrollableFrmContent.tcl</code>
+  the scrolled text, listbox, tablelist, and ttk::treeview widgets are created
+  within <a href="scrollarea.html">scrollarea</a> widgets:</p>
+
+  <blockquote>
+    <pre>
+<span class="red">set _sa [scrollutil::scrollarea ...]</span>
+set txt [text $_sa.txt -font TkFixedFont -width 73]
+<span class="red">scrollutil::addMouseWheelSupport $txt
+$_sa setwidget $txt</span>
+grid $_sa ...
+
+. . .
+
+<span class="red">set _sa [scrollutil::scrollarea ...]</span>
+set lb [listbox $_sa.lb -width 0]
+<span class="red">$_sa setwidget $lb</span>
+grid $_sa ...
+
+. . .
+
+<span class="red">set _sa [scrollutil::scrollarea ...]</span>
+set tbl [tablelist::tablelist $_sa.tbl ...]
+. . .
+<span class="red">$_sa setwidget $tbl</span>
+grid $_sa ...
+
+. . .
+
+<span class="red">set _sa [scrollutil::scrollarea ... -borderwidth 0]</span>
+set tv [ttk::treeview $_sa.tv ...]
+. . .
+<span class="red">$_sa setwidget $tv</span>
+grid $_sa ...
+</pre>
+  </blockquote>
+
+  <p>In the case of the text, listbox, and tablelist widgets we use scrollarea
+  widgets with their default&nbsp; <code>-borderwidth 1 -relief
+  sunken</code>&nbsp; settings, which will cause the <code><a href=
+  "scrollarea.html#setwidget">setwidget</a></code> subcommand of the associated
+  Tcl commands to set the <code>-borderwidth</code> option of the text,
+  listbox, and tablelist widgets to <code>0</code>.&nbsp; On the other hand,
+  for the ttk::treeview we use a scrollarea widget with&nbsp;
+  <code>-borderwidth 0</code>,&nbsp; because the ttk::treeview has a border of
+  width <code>1</code> and doesn't support the <code>-borderwidth</code>
+  configuration option.</p>
+
+  <p>For our text widget we prefer a mouse wheel and
+  <code>&lt;TouchpadScroll&gt;</code> event handling that scrolls the widget by
+  lines rather than pixels, as done by the <code>Text</code> class bindings in
+  Tk 8.5 and later; we achieve this by passing the path name <code>$txt</code>
+  to the <code><a href=
+  "wheelEvent.html#add">scrollutil::addMouseWheelSupport</a></code>
+  command.</p>
+
+  <p>The file <code>SuScrollableFrmContent.tcl</code> implements just a minimal
+  interaction between five of the already mentioned widgets within the content
+  frame:&nbsp; By selecting a Tablelist release from the ttk::combobox
+  <code>$cb</code>, the ttk::spinbox <code>$sb</code> is set to the
+  corresponding number of changes, the comment associated with that release is
+  inserted into the ttk::entry <code>$e</code>, and the corresponding items of
+  the tablelist <code>$tbl</code> and ttk::treeview <code>$tv</code> are
+  selected and brought into view.</p>
+
+  <p>The file <code>SuScrollableFrmContent.tcl</code> contains also the
+  implementation of the procedure <code>configTablelist</code>, associated with
+  the "Configure Tablelist Widget" button as the value of its
+  <code>-command</code> option.&nbsp; This procedure opens a toplevel window
+  that contains a <a href=
+  "scrollableframe.html">scrollutil::scrollableframe</a> widget created
+  with the&nbsp; <code><a href=
+  "scrollableframe.html#fitcontentwidth">-fitcontentwidth</a> yes</code>&nbsp;
+  setting within a <a href="scrollarea.html">scrollarea</a>.&nbsp; After that
+  it populates the content frame of the scrollableframe with ttk::label,
+  ttk::combobox, ttk::spinbox, ttk::entry, and ttk::checkbutton widgets used to
+  display and edit the configuration options of the tablelist widget.&nbsp; The
+  procedure handles the <code>&lt;&lt;TraverseIn&gt;&gt;</code> virtual event
+  sent to one of these widgets with the aid of the scrollableframe's
+  <code><a href="scrollableframe.html#see">see</a></code> subcommand.&nbsp;
+  Whenever a ttk::combobox or ttk::spinbox is created, the <code><a href=
+  "wheelEvent.html#adapt">scrollutil::adaptWheelEventHandling</a></code>
+  command is invoked for it, being that these widgets have built-in bindings
+  for the mouse wheel and <code>&lt;TouchpadScroll&gt;</code> events.</p>
+
+  <p>The widgets populating the content frame are managed using
+  <code>grid</code>.&nbsp; In case of the ttk::entry widgets we invoke
+  <code>grid</code> with&nbsp; <code>-sticky we</code>.&nbsp; Due to this and
+  the&nbsp; <code>-fitcontentwidth yes</code>&nbsp; scrollableframe setting,
+  the ttk::entry widgets will stretch or shrink whenever the width of the
+  scrollableframe changes as a result of resizing the toplevel window.</p>
+
+  <blockquote>
+    <img src="TablelistConfig.png" alt="TablelistConfig" width="431"
+    height="414">
+  </blockquote>
+
+  <h3 id="ex_BwScrollableFrameDemo2">A Script Using Two BWidget ScrollableFrame
+  Widgets</h3>
+
+  <p>The script <code>BwScrollableFrmDemo2.tcl</code> in the <code>demos</code>
+  directory creates a BWidget ScrollableFrame embedded into a <a href=
+  "scrollarea.html">scrollarea</a> widget and then <code>source</code>s the
+  script <code>BwScrollableFrmContent.tcl</code>, which populates the content
+  frame of the ScrollableFrame with the same widgets as
+  <code>SuScrollableFrmContent.tcl</code> in the <a href=
+  "#ex_SuScrollableFrameDemo2">previous example</a>.</p>
+
+  <p>Here is the relevant code:</p>
+
+  <blockquote>
+    <pre>
+package require Tk 8.5.9-                       ;<span class=
+"cmt"># for ttk::spinbox</span>
+package require BWidget
+Widget::theme yes
+package require mentry_tile 3.2-                ;<span class=
+"cmt"># for mouse wheel support</span>
+package require tablelist_tile 6.5-             ;<span class=
+"cmt"># for -(x|y)mousewheelwindow</span>
+                                                ;<span class=
+ "cmt"># and scrollutil::scrollarea</span>
+<span class="red">package require scrollutil_tile</span>
+set dir [file dirname [info script]]
+source [file join $dir styleUtil.tcl]
+
+wm title . "Scrollutil Demo"
+
+<span class="cmt">#
+# Create a ScrollableFrame within a scrollarea
+#</span>
+set tf [ttk::frame .tf]
+<span class="red">set sa [scrollutil::scrollarea $tf.sa]</span>
+set sf [ScrollableFrame $sa.sf]
+<span class="red">$sa setwidget $sf</span>
+
+. . .
+
+<span class="cmt">#
+# Get the content frame and populate it
+#</span>
+set cf [$sf getframe]
+source [file join $dir BwScrollableFrmContent.tcl]
+
+<span class="cmt">#
+# Make the keyboard navigation more user-friendly
+#</span>
+foreach w [list $cb $sb $e $me] {
+    bind $w &lt;&lt;TraverseIn&gt;&gt; [list $sf see %W]
+}
+foreach w [list $txt $lb $tbl $tv] {
+    bind $w &lt;&lt;TraverseIn&gt;&gt; [list seeScrollarea $sf %W]
+}
+proc seeScrollarea {sf w} { $sf see [<span class="red">scrollutil::getscrollarea $w</span>] }
+</pre>
+  </blockquote>
+
+  <p>The additional stuff related to the mouse wheel and
+  <code>&lt;TouchpadScroll&gt;</code> events contains the same Scrollutil
+  command invocations as the one in the previous example, except that in
+  addition it registers the ScrollableFrame for scrolling with the mouse wheel
+  and touchpad:</p>
+
+  <blockquote>
+    <pre>
+<span class="cmt">#
+# Create mouse wheel event bindings for the binding tag "all" and
+# register the ScrollableFrame for scrolling by these bindings
+#</span>
+<span class="red">scrollutil::createWheelEventBindings all
+scrollutil::enableScrollingByWheel $sf</span>
+
+. . .
+</pre>
+  </blockquote>
+
+  <p>The file <code>BwScrollableFrmContent.tcl</code> contains also the
+  implementation of the procedure <code>configTablelist</code>, associated with
+  the "Configure Tablelist Widget" button as the value of its
+  <code>-command</code> option.&nbsp; This procedure opens a toplevel window
+  that contains a BWidget ScrollableFrame created with the&nbsp;
+  <code>-constrainedwidth yes</code>&nbsp; setting within a <a href=
+  "scrollarea.html">scrollarea</a> widget and invokes the <code><a href=
+  "wheelEvent.html#enable">scrollutil::enableScrollingByWheel</a></code>
+  command for this ScrollableFrame, thus registering the latter for scrolling
+  by the already created mouse wheel and <code>&lt;TouchpadScroll&gt;</code>
+  event bindings for the binding tag <code>"all"</code>.&nbsp; After that it
+  populates the content frame of the ScrollableFrame with ttk::label,
+  ttk::combobox, ttk::spinbox, ttk::entry, and ttk::checkbutton widgets used to
+  display and edit the configuration options of the tablelist widget.&nbsp; The
+  procedure handles the <code>&lt;&lt;TraverseIn&gt;&gt;</code> virtual event
+  sent to one of these widgets with the aid of the ScrollableFrame's
+  <code>see</code> subcommand.&nbsp; Whenever a ttk::combobox or ttk::spinbox
+  is created, the <code><a href=
+  "wheelEvent.html#adapt">scrollutil::adaptWheelEventHandling</a></code>
+  command is invoked for it, being that these widgets have built-in bindings
+  for the mouse wheel and <code>&lt;TouchpadScroll&gt;</code>
+  events.</p>
+
+  <p>Again, all this is nearly identical to what we did in the previous
+  example.</p>
+
+  <h3 id="ex_ScrolledFrameDemo2">A Script Using Two iwidgets::scrolledframe
+  Widgets</h3>
+
+  <p>The script <code>ScrolledFrmDemo2.tcl</code> in the <code>demos</code>
+  directory creates an iwidgets::scrolledframe widget and then
+  <code>source</code>s the file <code>ScrolledFrmContent.tcl</code>, which
+  populates the content frame of the scrolledframe with the same widgets as
+  <code>SuScrollableFrmContent.tcl</code> and
+  <code>BwScrollableFrmContent.tcl</code> in the two previous examples.</p>
+
+  <p>Here is the relevant code:</p>
+
+  <blockquote>
+    <pre>
+package require Tk 8.5.9-                       ;<span class=
+"cmt"># for ttk::spinbox</span>
+if {[catch {package require iwidgets} result1] != 0 &&
+    [catch {package require Iwidgets} result2] != 0} {
+    error "$result1; $result2"
+}
+set dir [file dirname [info script]]
+source [file join $dir scrolledwidgetPatch.itk] ;<span class=
+"cmt"># adds ttk::scrollbar widgets</span>
+package require mentry_tile 3.2-                ;<span class=
+"cmt"># for mouse wheel support</span>
+package require tablelist_tile 6.5-             ;<span class=
+"cmt"># for -(x|y)mousewheelwindow</span>
+                                                ;<span class=
+"cmt"># and scrollutil::scrollarea</span>
+<span class="red">package require scrollutil_tile</span>
+source [file join $dir styleUtil.tcl]
+
+wm title . "Scrollutil Demo"
+
+. . .
+
+<span class="cmt">#
+# Create a scrolledframe
+#</span>
+set tf [ttk::frame .tf]
+set sf [iwidgets::scrolledframe $tf.sf -borderwidth 1 -relief sunken \
+        -scrollmargin 0]
+. . .
+
+<span class="cmt">#
+# Get the content frame and populate it
+#</span>
+set cf [$sf childsite]
+. . .
+source [file join $dir ScrolledFrmContent.tcl]
+</pre>
+  </blockquote>
+
+  <p>The additional stuff related to the mouse wheel and
+  <code>&lt;TouchpadScroll&gt;</code> events contains the same Scrollutil
+  command invocations as the one in the previous example.</p>
+
+  <p>The file <code>ScrolledFrmContent.tcl</code> contains also the
+  implementation of the procedure <code>configTablelist</code>, associated with
+  the "Configure Tablelist Widget" button as the value of its
+  <code>-command</code> option.&nbsp; This procedure opens a toplevel window
+  that contains an iwidgets::scrolledframe widget with a manually implemented
+  equivalent of the&nbsp; <code><a href=
+  "scrollableframe.html#fitcontentwidth">-fitcontentwidth</a> yes</code>&nbsp;
+  <a href="scrollableframe.html">scrollutil::scrollableframe</a> and&nbsp;
+  <code>-constrainedwidth yes</code>&nbsp; BWidget ScrollableFrame settings and
+  invokes the <code><a href=
+  "wheelEvent.html#enable">scrollutil::enableScrollingByWheel</a></code>
+  command for this scrolledframe, thus registering the latter for scrolling by
+  the already created mouse wheel and
+  <code>&lt;TouchpadScroll&gt;</code> event bindings for the binding tag
+  <code>"all"</code>.&nbsp; After that it populates the content frame of the
+  scrolledframe with ttk::label, ttk::combobox, ttk::spinbox, ttk::entry, and
+  ttk::checkbutton widgets used to display and edit the configuration options
+  of the tablelist widget.&nbsp; Whenever a ttk::combobox or ttk::spinbox is
+  created, the <code><a href=
+  "wheelEvent.html#adapt">scrollutil::adaptWheelEventHandling</a></code>
+  command is invoked for it, being that these widgets have built-in bindings
+  for the mouse wheel and <code>&lt;TouchpadScroll&gt;</code>
+  events.</p>
+
+  <p>Again, all this is nearly identical to what we did in the two previous
+  examples.</p>
+
+  <h3 id="ex_ScrolledNotebookDemo">A scrollutil::scrollednotebook Demo</h3>
+
+  <p>The script <code>ScrolledNotebookDemo.tcl</code> in the <code>demos</code>
+  directory creates a <a href=
+  "scrollednotebook.html">scrollutil::scrollednotebook</a> widget and populates
+  it with panes containing <a href="scrollarea.html">scrollarea</a>s that wrap
+  text widgets displaying the contents of the Ttk library files.&nbsp; After
+  that it sets the width of the scrollednotebook to a value computed from the
+  requested width of the scrollarea widgets and the padding applied to the
+  panes, and provides pop-up menu items for left/right moving and closing the
+  tabs.</p>
+
+  <blockquote>
+    <img src="ScrolledNotebookDemo.png" alt="ScrolledNotebookDemo" width="735"
+    height="585">
+  </blockquote>
+
+  <p>Here is the relevant code:</p>
+
+  <blockquote>
+    <pre>
+<span class="red">package require scrollutil_tile</span>
+set dir [file dirname [info script]]
+source [file join $dir styleUtil.tcl]
+
+wm title . "Ttk Library Scripts"
+
+<span class="red">scrollutil::addclosetab My.TNotebook</span>
+
+<span class="cmt">#
+# Create an image corresponding to the display's DPI scaling level
+#</span>
+if {$tk_version >= 8.7 || [catch {package require tksvg}] == 0} {
+    set fmt $scrollutil::svgfmt
+    image create photo fileImg -file [file join $dir file.svg] -format $fmt
+} else {
+    set pct $scrollutil::scalingpct
+    image create photo fileImg -file [file join $dir file$pct.gif] -format gif
+}
+
+<span class="cmt">#
+# Create a scrollednotebook widget having closable (and, per default,
+# movable) tabs and populate it with panes that contain scrolled
+# text widgets displaying the contents of the Ttk library files
+#</span>
+set f  [ttk::frame .f]
+<span class="red">set nb [scrollutil::scrollednotebook $f.nb -style My.TNotebook \
+        -forgetcommand condCopySel -leavecommand saveSel]</span>
+set currentTheme [styleutil::getCurrentTheme]
+set panePadding [expr {$currentTheme eq "aqua" ? 0 : "7p"}]
+cd [expr {[info exists ttk::library] ? $ttk::library : $tile::library}]
+foreach fileName [lsort [glob *.tcl]] {
+    set baseName [string range $fileName 0 end-4]
+    <span class="red">set sa [scrollutil::scrollarea $nb.sa_$baseName -lockinterval 10]</span>
+    if {$currentTheme eq "vista"} {
+        <span class="red">$sa configure -relief solid</span>
+    }
+    set txt [text $sa.txt -font TkFixedFont -takefocus 1 -wrap none]
+    catch {$txt configure -tabstyle wordprocessor}      ;<span class="cmt"># for Tk 8.5 and later</span>
+    <span class="red">scrollutil::addMouseWheelSupport $txt</span>       ;<span class="cmt"># old-school wheel support</span>
+    <span class="red">$sa setwidget $txt</span>
+
+    set chan [open $fileName]
+    $txt insert end [read -nonewline $chan]
+    close $chan
+    $txt configure -state disabled
+    bind $txt &lt;Button-1&gt; { focus %W }   ;<span class="cmt"># for Tk versions &lt; 8.6.11/8.7a4</span>
+
+    <span class="red">$nb add $sa -text $fileName -image fileImg -compound left \
+                -padding $panePadding</span>
+}
+
+proc condCopySel {nb widget} {
+    set txt $widget.txt
+    if {[llength [$txt tag nextrange sel 1.0 end]] == 0} {
+        return 1
+    }
+
+    set btn [tk_messageBox -title "Copy Selection?" -icon question \
+             -message "Do you want to copy the selection to the clipboard?" \
+             -type yesnocancel]
+    switch $btn {
+        yes     { tk_textCopy $txt; return 1 }
+        no      { return 1 }
+        cancel  { return 0 }
+    }
+}
+
+proc saveSel {nb widget} {
+    set selRange [$widget.txt tag nextrange sel 1.0 end]
+    if {[llength $selRange] == 0} {
+        <span class="red">$nb unsettabattrib $widget "selRange"</span>
+    } else {
+        <span class="red">$nb tabattrib $widget "selRange" $selRange</span>
+    }
+
+    return 1
+}
+
+<span class="cmt">#
+# Create bindings for moving and closing the tabs interactively,
+# as well as for the virtual event &lt;&lt;NotebookTabChanged&gt;&gt;
+#</span>
+<span class="red">bind $nb &lt;&lt;MenuItemsRequested&gt;&gt; { populateMenu %W %d }
+bind $nb &lt;&lt;NotebookTabChanged&gt;&gt; { restoreSel %W }</span>
+
+proc populateMenu {nb data} {
+    <span class="red">foreach {menu tabIdx} $data {}
+    set tabCount [$nb index end]</span>
+    set prevIdx [expr {($tabIdx - 1) % $tabCount}]
+    set nextIdx [expr {($tabIdx + 1) % $tabCount}]
+    <span class="red">set widget [lindex [$nb tabs] $tabIdx]</span>
+
+    $menu add command -label "Move Tab Left"  -command \
+        <span class="red">[list $nb insert $prevIdx $widget]</span>
+    $menu add command -label "Move Tab Right" -command \
+        <span class="red">[list $nb insert $nextIdx $widget]</span>
+    $menu add separator
+    $menu add command -label "Close Tab" -command \
+        <span class="red">[list $nb forget $tabIdx]</span>
+}
+
+proc restoreSel nb {
+    <span class="red">set widget [$nb select]</span>
+    if {$widget ne "" && <span class="red">[$nb hastabattrib $widget "selRange"]</span>} {
+        set txt $widget.txt
+        $txt tag remove sel 1.0 end
+        $txt tag add sel {*}<span class="red">[$nb tabattrib $widget "selRange"]</span>
+    }
+}
+
+. . .
+
+<span class="cmt">#
+# Set the scrollednotebook's -height and -width options to the
+# maximum requested height and width of all panes, respectively
+#</span>
+after 150 [list resizeNb $nb]
+
+proc resizeNb nb {
+    update idletasks    ;<span class="cmt"># makes sure that the vertical scrollbars are mapped</span>
+    $nb adjustsize
+}
+</pre>
+  </blockquote>
+
+  <p>We add the <code><a href=
+  "scrollednotebook.html#closetab">closetab</a></code> element to the tabs of
+  the <code>My.TNotebook</code> style with the aid of the <code><a href=
+  "scrollednotebook.html#addclosetab">scrollutil::addclosetab</a></code>
+  command, and create a scrollednotebook widget of this style.&nbsp; Note that,
+  while in this example we could have used the default ttk::notebook style
+  <code>TNotebook</code> instead, working with different ttk::notebook styles
+  is necessary in applications having both notebooks with the
+  <code>closetab</code> element in their tabs and notebooks without this
+  element.</p>
+
+  <p>If the Tk version is at least 8.7 or the tksvg package can be loaded into
+  the interpreter, then the image <code>fileImg</code> is created from the file
+  <code>file.svg</code>, using the public variable
+  <code>scrollutil::svgfmt</code>.&nbsp; Otherwise it is created from files
+  whose names contain the display's DPI scaling percentage, given by the public
+  variable <code>scrollutil::scalingpct</code>.&nbsp; The file
+  <code>file100.gif</code> contains an image of size 16 x 16, the file
+  <code>file125.gif</code> contains an image of size 20 x 20, the file
+  <code>file150.gif</code> contains an image of size 24 x 24, and so on.&nbsp;
+  In the first case a single <code>file.svg</code> file is needed and the image
+  will be scaled automatically, according to the display's real scaling
+  percentage, which can be greater than the maximum value <code>200</code> of
+  the variable <code>scrollutil::scalingpct</code>.&nbsp; This benefit comes in
+  handy especially when running Androwish on a tablet or smartphone.&nbsp; In
+  the second case a total number of 5 <code>file*.gif</code> (or
+  <code>file*.png</code>) files are needed to make sure that the size of the
+  image will correspond to the value of the variable
+  <code>scrollutil::scalingpct</code>.</p>
+
+  <p>Note that the state of the text widgets is set to <code>disabled</code>,
+  but the user can select a text range and then copy the selection into the
+  clipboard via <code>Control-c</code> (<code>Command-c</code> on Mac OS
+  X/11+).&nbsp; When attempting to close a tab, the path name of the
+  corresponding scrollarea widget is automatically passed to the
+  <code>condCopySel</code> procedure, which was specified as the value of the
+  <code><a href="scrollednotebook.html#forgetcommand">-forgetcommand</a></code>
+  option.&nbsp; This procedure checks the text widget child of the scrollarea
+  for the existence of a selection and enables the user to make sure that the
+  selection will be copied to the clipboard before closing the tab, or to
+  cancel the attempted operation on it.&nbsp; In a real-world application, the
+  procedure specified as the value of the above-mentioned option would
+  typically ask the user whether to save the changes before closing the tab, or
+  to cancel the attempted operation on it.</p>
+
+  <p>When attempting to leave the currently selected window by selecting a
+  different one, the path name of the scrollarea widget is automatically passed
+  to the <code>saveSel</code> procedure, which was specified as the value of
+  the <code><a href=
+  "scrollednotebook.html#leavecommand">-leavecommand</a></code> option.&nbsp;
+  This procedure saves the two-element list of text indices delimiting the
+  selection in the text widget child of the scrollarea as the value of the
+  <code>"selRange"</code> tab attribute, with the aid of the <code><a href=
+  "scrollednotebook.html#tabattrib">tabattrib</a></code> subcommand, or resets
+  that tab attribute via <code><a href=
+  "scrollednotebook.html#unsettabattrib">unsettabattrib</a></code> if the text
+  widget has no selection.&nbsp; Later, when this tab is selected again, the
+  <code>restoreSel</code> procedure, bound to the virtual event <code><a href=
+  "scrollednotebook.html#virtual_events">&lt;&lt;NotebookTabChanged&gt;&gt;</a></code>,
+  checks the existence of the <code>"selRange"</code> tab attribute with the
+  aid of the <code><a href=
+  "scrollednotebook.html#hastabattrib">hastabattrib</a></code> subcommand and
+  restores the text widget selection specified by the value of this tab
+  attribute, retrieved with the aid of the <code>tabattrib</code>
+  subcommand.&nbsp; We chose this approach for saving and restoring the text
+  selection instead of creating the text widgets with&nbsp;
+  <code>-exportselection 0</code>&nbsp; in order to demostrate the usage of
+  the subcommands related to tab attributes.</p>
+
+  <p>We also make use of the virtual event <code><a href=
+  "scrollednotebook.html#virtual_events">&lt;&lt;MenuItemsRequested&gt;&gt;</a></code>
+  to populate the pop-up menu shown when the user clicks a tab with mouse
+  button 3.</p>
+
+  <p>When running the script, the scrollednotebook widget appears with the
+  configured width and tabs displaying the unstripped file names.&nbsp; For
+  comparison:&nbsp; The very similar script <code>TtkNotebookDemo.tcl</code> in
+  the <code>demos</code> directory creates a ttk::notebook widget and populates
+  it in the same way as the script <code>ScrolledNotebookDemo.tcl</code>
+  discussed above.&nbsp; Although the script also sets the notebook's
+  <code>-width</code> option to a value corresponding to the requested width of
+  the scrollarea widgets and the padding applied to the panes, the
+  ttk::notebook appears with an exorbitantly large width and (on most displays)
+  with squeezed tabs.&nbsp; If you resize it to a reasonable width, its tabs
+  become so small that their texts are no longer readable.</p>
+
+  <h3 id="ex_PlainNotebookDemo">A scrollutil::plainnotebook Demo</h3>
+
+  <p>The script <code>PlainNotebookDemo.tcl</code> in the <code>demos</code>
+  directory creates a <a href=
+  "plainnotebook.html">scrollutil::plainnotebook</a> widget and populates
+  it with panes containing <a href="scrollarea.html">scrollarea</a>s that wrap
+  text widgets displaying the contents of the Ttk library files.&nbsp; After
+  that it provides pop-up menu items for moving the tabs upward/downward and
+  closing them.</p>
+
+  <blockquote>
+    <img src="PlainNotebookDemo.png" alt="PlainNotebookDemo" width="902"
+    height="654">
+  </blockquote>
+
+  <p>The relevant code is nearly identical to the one shown in the <a href=
+  "#ex_ScrolledNotebookDemo">previous example</a>, except that here we make the
+  tabs closable by using the <code><a href=
+  "plainnotebook.html#closabletabs">-closabletabs</a></code> plainnotebook
+  option and the widget's width is set automatically to fit that of its
+  panes:</p>
+
+  <blockquote>
+    <pre>
+<span class="red">package require scrollutil_tile</span>
+set dir [file dirname [info script]]
+source [file join $dir styleUtil.tcl]
+
+wm title . "Ttk Library Scripts"
+
+<span class="cmt">#
+# Create an image corresponding to the display's DPI scaling level
+#</span>
+. . .
+
+<span class="cmt">#
+# Create a plainnotebook widget having closable (and, per default,
+# movable) tabs and populate it with panes that contain scrolled
+# text widgets displaying the contents of the Ttk library files
+#</span>
+set f  [ttk::frame .f]
+<span class="red">set nb [scrollutil::plainnotebook $f.nb -closabletabs 1 \
+        -forgetcommand condCopySel -leavecommand saveSel]</span>
+. . .
+
+proc condCopySel {nb widget} {
+    . . .
+}
+
+proc saveSel {nb widget} {
+    . . .
+}
+
+<span class="cmt">#
+# Create bindings for moving and closing the tabs interactively,
+# as well as for the virtual event <<NotebookTabChanged>>
+#</span>
+<span class="red">bind $nb &lt;&lt;MenuItemsRequested&gt;&gt; { populateMenu %W %d }
+bind $nb &lt;&lt;NotebookTabChanged&gt;&gt; { restoreSel %W }</span>
+
+proc populateMenu {nb data} {
+    . . .
+}
+
+proc restoreSel nb {
+    . . .
+}
+
+. . .
+</pre>
+  </blockquote>
+
+  <h3 id="ex_PagesManDemo">A scrollutil::pagesman Demo</h3>
+
+  <p>The script <code>PagesManDemo.tcl</code> in the <code>demos</code>
+  directory demonstrates the use of the <a href=
+  "pagesman.html">scrollutil::pagesman</a> widget having <a href=
+  "plainnotebook.html">scrollutil::plainnotebook</a> widgets as pages.&nbsp; It
+  creates a pagesman widget and adds four plainnotebook children as pages to
+  it.&nbsp; The panes of the first page display the contents of the Tk library
+  files, to be found in the directory <code>$tk_library</code>.&nbsp; The panes
+  of the three other pages display the contents of the GIF image files, message
+  catalogs, and Ttk scripts, situated in the subdirectories
+  <code>images</code>, <code>msgs</code>, and (for Tk 8.5a5 and later)
+  <code>ttk</code>, respectively.</p>
+
+  <blockquote>
+    <img src="PagesManDemo.png" alt="PagesManDemo" width="904" height="654">
+  </blockquote>
+
+  <p>The user can switch from the first page to the three other ones with the
+  aid of the three toolbuttons displaying a folder image and the <code><a href=
+  "plainnotebook.html#addbutton">descend</a></code> style element.&nbsp; To
+  switch back, he or she has to use the <code><a href=
+  "plainnotebook.html#description">ascend</a></code> toolbutton, shown in the
+  top-left corner of the respective plainnotebook widget.</p>
+
+  <blockquote>
+    <img src="PagesManDemoImages.png" alt="PagesManDemoImages" width="904"
+    height="654">
+  </blockquote>
+
+  <p>Here is the relevant code:</p>
+
+  <blockquote>
+    <pre>
+<span class="red">package require scrollutil_tile</span>
+set dir [file dirname [info script]]
+source [file join $dir styleUtil.tcl]
+
+wm title . "Tk Library Files"
+
+<span class="cmt">#
+# Create two images corresponding to the display's DPI scaling level
+#</span>
+if {$tk_version >= 8.7 || [catch {package require tksvg}] == 0} {
+    set fmt $scrollutil::svgfmt
+    image create photo fileImg   -file [file join $dir file.svg]   -format $fmt
+    image create photo folderImg -file [file join $dir folder.svg] -format $fmt
+} else {
+    set pct $scrollutil::scalingpct
+    image create photo fileImg   -file [file join $dir file$pct.gif]   \
+        -format gif
+    image create photo folderImg -file [file join $dir folder$pct.gif] \
+        -format gif
+}
+
+<span class="cmt">#
+# Populates a given plainnotebook widget with panes that display the contents
+# of the files of the specified suffix within the current working directory
+#</span>
+proc populateNotebook {nb sfx} {
+    set currentTheme [styleutil::getCurrentTheme]
+    set panePadding [expr {$currentTheme eq "aqua" ? 0 : "7p"}]
+    foreach fileName [lsort -dictionary [glob *.$sfx]] {
+        set baseName [string range $fileName 0 end-4]
+        <span class="red">set sa [scrollutil::scrollarea $nb.sa_$baseName]</span>
+        if {$sfx eq "gif"} {
+            set canv [canvas $sa.canv -background #c0c0c0]
+            set img [image create photo -file $fileName -format gif]
+            $canv create image 15p 15p -anchor nw -image $img
+            bind $canv &lt;Configure&gt; [list setScrollRegion %W %w %h $img]
+            <span class="red">scrollutil::addMouseWheelSupport $canv
+            $sa setwidget $canv</span>
+        } else {
+            <span class="red">$sa configure -lockinterval 10</span>
+            . . .
+        }
+        <span class="red">$nb add $sa -text $fileName -image fileImg -compound left \
+                    -padding $panePadding</span>
+    }
+}
+
+<span class="cmt">#
+# Create a pagesman widget
+#</span>
+set f [ttk::frame .f]
+<span class="red">set pm [scrollutil::pagesman $f.pm -leavecommand pmLeaveCmd]</span>
+
+<span class="cmt">#
+# Add option database entries for the -closabletabs,
+# -forgetcommand, and -leavecommand plainnotebook options
+#</span>
+<span class="red">option add *Plainnotebook.closableTabs  1
+option add *Plainnotebook.forgetCommand condCopySel
+option add *Plainnotebook.leaveCommand  saveSel</span>
+
+<span class="cmt">#
+# Create a plainnotebook child displaying the contents of the Tk library files
+#</span>
+<span class="red">set nbTk [scrollutil::plainnotebook $pm.nbTk]
+$pm add $nbTk
+$nbTk addbutton 1 "Image Files"      folderImg
+$nbTk addbutton 2 "Message Catalogs" folderImg
+$nbTk addbutton 3 "Ttk Scripts"      folderImg
+$nbTk addseparator
+$nbTk addlabel "Tk Scripts"</span>
+cd $tk_library
+populateNotebook $nbTk "tcl"
+
+<span class="cmt">#
+# Create a plainnotebook child displaying the images for the Tcl (Powered) Logo
+#</span>
+<span class="red">set nbImgs [scrollutil::plainnotebook $pm.nbImgs -caller 0 -title "Image Files"]
+$pm add $nbImgs</span>
+cd $tk_library/images
+populateNotebook $nbImgs "gif"
+
+<span class="cmt">#
+# Create a plainnotebook child displaying the contents of the message catalogs
+#</span>
+<span class="red">set nbMsgs [scrollutil::plainnotebook $pm.nbMsgs -caller 0 -title \
+            "Message\nCatalogs"]
+$pm add $nbMsgs</span>
+cd $tk_library/msgs
+populateNotebook $nbMsgs "msg"
+
+<span class="cmt">#
+# Create a plainnotebook child displaying the contents of the Ttk library files
+#</span>
+<span class="red">set nbTtk [scrollutil::plainnotebook $pm.nbTtk -caller 0 -title "Ttk Scripts"]
+$pm add $nbTtk</span>
+<span class="cmt">### cd $tk_library/ttk          ;# works for Tk versions 8.5a5 and later only</span>
+cd [expr {[info exists ttk::library] ? $ttk::library : $tile::library}]
+populateNotebook $nbTtk "tcl"
+
+proc setScrollRegion {canv canvWidth canvHeight img} {
+    <span class="cmt">#
+    # Use a margin of 15p around the image
+    #</span>
+    set pixels [expr {30 * [tk scaling]}]
+    set rightX [expr {[image width  $img] + $pixels}]
+    set lowerY [expr {[image height $img] + $pixels}]
+    if {$rightX &lt; $canvWidth}  { set rightX $canvWidth }
+    if {$lowerY &lt; $canvHeight} { set lowerY $canvHeight }
+    $canv configure -scrollregion [list 0 0 $rightX $lowerY]
+}
+
+proc pmLeaveCmd {pm nb} {
+    <span class="red">set widget [$nb select]</span>
+    if {$widget eq ""} {
+        return 1
+    } else {
+        return [saveSel $nb $widget]
+    }
+}
+
+proc condCopySel {nb widget} {
+    global nbImgs
+    if {$nb eq $nbImgs || [winfo class $widget] ne "Scrollarea"} {
+        return 1
+    }
+
+    . . .
+}
+
+proc saveSel {nb widget} {
+    global nbImgs
+    if {$nb eq $nbImgs || [winfo class $widget] ne "Scrollarea"} {
+        return 1
+    }
+
+    . . .
+}
+
+
+<span class="cmt">#
+# For each plainnotebook create bindings for moving and closing its tabs
+# interactively, as well as for the virtual event &lt;&lt;NotebookTabChanged&gt;&gt;
+#</span>
+<span class="red">foreach nb [$pm pages] {
+    bind $nb &lt;&lt;MenuItemsRequested&gt;&gt; { populateMenu %W %d }
+    bind $nb &lt;&lt;NotebookTabChanged&gt;&gt; { restoreSel %W }
+}</span>
+
+proc populateMenu {nb data} {
+    . . .
+}
+
+proc restoreSel nb {
+    . . .
+}
+
+. . .
+</pre>
+  </blockquote>
+
+  <p>The four pages of the pagesman widget, created by using the latter's
+  <code><a href="pagesman.html#add">add</a></code> subcommand, will have the
+  numerical indices <code>0</code>, ..., <code>3</code>.&nbsp; We pass the page
+  indices <code>1</code>, <code>2</code>, and <code>3</code> to the first
+  plainnotebook's <code><a href=
+  "plainnotebook.html#addbutton">addbutton</a></code> subcommand, with which we
+  create the three toolbuttons used to descend from this page to the other
+  ones.&nbsp; When we create the three other plainnotebook widgets, we set
+  their <code><a href="plainnotebook.html#caller">-caller</a></code> option to
+  <code>0</code>, which will make their ascend toolbutton visible and will make
+  sure that invoking this button will switch back to the first
+  plainnotebook.</p>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+</body>
+</html>

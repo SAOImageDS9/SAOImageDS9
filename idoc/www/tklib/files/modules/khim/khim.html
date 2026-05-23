@@ -1,0 +1,275 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>khim - Kevin's Hacky Input Method</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'khim.man' by tcllib/doctools with format 'html'
+   -->
+<!-- khim.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">khim(n) 1.0.3 tklib &quot;Kevin's Hacky Input Method&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>khim - Provides key bindings for entering international characters on a keyboard that does not support them</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">PROCEDURES</a></li>
+<li class="doctools_section"><a href="#section3">LOCALISATION</a></li>
+<li class="doctools_section"><a href="#section4">ACKNOWLEDGMENTS</a></li>
+<li class="doctools_section"><a href="#section5">Bugs, Ideas, Feedback</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_requirements">
+<li>package require <b class="pkgname">Tcl</b></li>
+<li>package require <b class="pkgname">khim <span class="opt">?1.0.3?</span></b></li>
+</ul>
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">::khim::getOptions</b> <i class="arg">path</i></a></li>
+<li><a href="#2"><b class="cmd">::khim::getConfig</b></a></li>
+<li><a href="#3"><b class="cmd">::khim::setConfig</b> <i class="arg">version</i> <i class="arg">enabled</i> <i class="arg">compose</i> <i class="arg">map</i></a></li>
+<li><a href="#4"><b class="cmd">::khim::showHelp</b> <i class="arg">path</i></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>This package provides a set of key bindings to allow
+a user to enter arbitrary characters on a keyboard that
+does not support them.  It works by designating some seldom-used key
+of the keyboard as a &quot;Compose&quot; key (this key is distinct from any key
+so labeled, and is often &quot;Pause,&quot; &quot;F12&quot; or &quot;L2&quot;), and having the
+&quot;Compose&quot; key, followed by a two-key sequence, have the effect of
+inserting some character in a widget.
+In addition, the &quot;Compose&quot; key, when struck twice in succession,
+brings up a dialog containing a Unicode character map, allowing
+arbitrary characters to be inserted.</p>
+<p>The vast bulk of the package's functionality is implemented in a
+single bindtag, <b class="const">KHIM</b>.  An application can request that any
+text or entry widget use the package to allow for entry of arbitrary
+characters by placing this binding tag ahead of the <b class="const">Text</b> or
+<b class="const">Entry</b> binding tag for the widget:</p>
+<pre class="doctools_example">
+text .t -width 80 -height 24
+bindtags .t {.t KHIM Text . all}
+</pre>
+<p>Note that the <b class="const">KHIM</b> tag must precede the <b class="const">Text</b> or
+<b class="const">Entry</b> class binding, or the package will not function
+correctly.</p>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">PROCEDURES</a></h2>
+<p>In addition to commands supporting the KHIM binding tag, the following
+commands are exported from the package:</p>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">::khim::getOptions</b> <i class="arg">path</i></a></dt>
+<dd><p>Posts a top-level modal dialog with the path name <i class="arg">path</i> that
+prompts the user for KHIM options.  The user is allowed to reconfigure
+the key sequences for the &quot;Compose&quot; key, change the choice of key to
+use for the &quot;Compose&quot; function, and enable/disable the KHIM key
+bindings entirely.</p></dd>
+<dt><a name="2"><b class="cmd">::khim::getConfig</b></a></dt>
+<dd><p>Returns a Tcl script that restores the current configuration of KHIM:
+the enabled/disabled state, the choice of &quot;Compose&quot; key, and the key
+sequences that may be composed.  This script is designed to be
+saved to a configuration file for use in a subsequent invocation of
+the same application:</p>
+<pre class="doctools_example">
+# Save KHIM configuration
+set f [open ~/.khimrc w]
+puts $f [::khim::getConfig]
+close $f
+# Restore KHIM configuration
+source ~/.khimrc
+</pre>
+</dd>
+<dt><a name="3"><b class="cmd">::khim::setConfig</b> <i class="arg">version</i> <i class="arg">enabled</i> <i class="arg">compose</i> <i class="arg">map</i></a></dt>
+<dd><p>Restores an earlier saved configuration.  Few, if any, applications
+will call this command in any other way than to evaluate it as
+returned from <b class="cmd">::khim::getConfig</b>.</p></dd>
+<dt><a name="4"><b class="cmd">::khim::showHelp</b> <i class="arg">path</i></a></dt>
+<dd><p>Displays a top-level dialog giving user-level help for KHIM; the
+dialog will have the path name <i class="arg">path</i>.</p></dd>
+</dl>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">LOCALISATION</a></h2>
+<p>Programmers who wish to make KHIM available in a non-English-speaking
+locale may do so by providing a <b class="const">.msg</b> file with the appropriate
+localised text.  The catalog requires the following messages:</p>
+<dl class="doctools_definitions">
+<dt><b class="const">Apply</b></dt>
+<dd><p>Text that will appear on the &quot;Apply&quot; button in the dialog that sets
+KHIM options.</p></dd>
+<dt><b class="const">Cancel</b></dt>
+<dd><p>Text that will appear on the &quot;Cancel&quot; button in several dialogs.</p></dd>
+<dt><b class="const">Change</b></dt>
+<dd><p>Text that will appear on the &quot;Change&quot; button, which alters the binding
+of a pair of composed characters (creating or replacing as
+appropriate).</p></dd>
+<dt><b class="const">Character</b></dt>
+<dd><p>Text that will appear on the label of the entry widget that accepts a
+character resulting from a composed sequence.</p></dd>
+<dt><b class="const">{Compose Key}</b></dt>
+<dd><p>Window title for a dialog that prompts the user to strike the key that
+will be used for the &quot;Compose&quot; key.</p></dd>
+<dt><b class="const">{Compose key:}</b></dt>
+<dd><p>Label that identifies a component showing the &quot;Compose&quot; key choice in
+the KHIM options dialog.</p></dd>
+<dt><b class="const">{Composed sequence must be two characters long}</b></dt>
+<dd><p>Error message that is displayed if the user attempts to define a
+&quot;Compose&quot; sequence that is shorter or longer than two characters.</p></dd>
+<dt><b class="const">Delete</b></dt>
+<dd><p>Text for a button that deletes a &quot;Compose&quot; sequence.</p></dd>
+<dt><b class="const">Help...</b></dt>
+<dd><p>Text for a button that displays the KHIM user help dialog.</p></dd>
+<dt><b class="const">HELPTEXT</b></dt>
+<dd><p>Complete text for the user-level help for KHIM.  Refer to
+&quot;<b class="file">en.msg</b>&quot; for the English-language version of the help.</p></dd>
+<dt><b class="const">{Input key sequence}</b></dt>
+<dd><p>Text for a label of the entry widget that prompts the user for a
+two-character sequence to use with the &quot;Compose&quot; key.</p></dd>
+<dt><b class="const">{Insert Character}</b></dt>
+<dd><p>Window title of the dialog box that displays a Unicode character map
+and prompts the user to select a character to insert.</p></dd>
+<dt><b class="const">{Key sequences}</b></dt>
+<dd><p>Text for a label at the head of a listbox showing the composed
+sequences that are currently bound.</p></dd>
+<dt><b class="const">{KHIM Controls}</b></dt>
+<dd><p>Window title for the dialog box that prompts for KHIM settings.</p></dd>
+<dt><b class="const">{KHIM Help}</b></dt>
+<dd><p>Window title for the window that display help text for KHIM.</p></dd>
+<dt><b class="const">OK</b></dt>
+<dd><p>Label for the OK button on several dialogs.</p></dd>
+<dt><b class="const">Select code page:</b></dt>
+<dd><p>Label for a spinbox that prompts the user for a Unicode code page number.</p></dd>
+<dt><b class="const">SELECT COMPOSE KEY</b></dt>
+<dd><p>A message, which should be composed in short lines, prompting the user
+to press the key that will become the &quot;Compose&quot; key in KHIM.</p></dd>
+<dt><b class="const">Unicode...</b></dt>
+<dd><p>Text for a button that brings up the character map to select the
+character to which a composed sequence binds.</p></dd>
+<dt><b class="const">{Use KHIM}</b></dt>
+<dd><p>Text for a checkbutton that asks whether the user wishes to use KHIM
+to manage composed key sequences.</p></dd>
+</dl>
+</div>
+<div id="section4" class="doctools_section"><h2><a name="section4">ACKNOWLEDGMENTS</a></h2>
+<p>KHIM was originally inspired by the key bindings that Brent Welch
+developed for the 'sedit' editor used in the 'exmh' mail user agent.
+The code for KHIM is entirely separate from that for 'sedit'.</p>
+</div>
+<div id="section5" class="doctools_section"><h2><a name="section5">Bugs, Ideas, Feedback</a></h2>
+<p>This document, and the package it describes, will undoubtedly contain
+bugs and other problems.
+Please report such in the category <em>khim</em> of the
+<a href="http://core.tcl.tk/tklib/reportlist">Tklib Trackers</a>.
+Please also report any ideas for enhancements you may have for either
+package and/or documentation.</p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../../../index.html#character">character</a>, <a href="../../../../index.html#i18n">i18n</a>, <a href="../../../../index.html#input">input</a>, <a href="../../../../index.html#international">international</a>, <a href="../../../../index.html#method">method</a></p>
+</div>
+</div></body></html>

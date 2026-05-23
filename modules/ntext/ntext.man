@@ -1,0 +1,225 @@
+[comment {-*- tcl -*- ntext manpage}]
+[manpage_begin ntext n 1.0]
+[moddesc   {Alternative Bindings for the Text Widget}]
+[titledesc {Alternative Bindings for the Text Widget}]
+[require Tcl 8.5-]
+[require Tk 8.5-]
+[require ntext [opt 1.0]]
+[description]
+
+The purpose of the [package ntext] package is to make the text widget behave more like other text-editing applications. It makes the text widget more useful for implementing a text editor, and makes it behave in a way that will be more familiar to most users.
+[para]
+
+The package provides a binding tag named [emph Ntext] for use by text widgets in place of the default [emph Text] binding tag.
+[para]
+
+Package [package ntext] 's functions and variables are contained entirely in the [var ::ntext] namespace; its other code is contained in the binding tag [emph Ntext].  [package ntext] has no exports to the global or other namespaces, and no new widget commands.  It uses modified copies of the [package Tk] code, leaving the original code, and the [emph Text] binding tag, unchanged.
+
+[comment {use emph instead of term, because term creates a hyperlink, and ntext, Ntext and Text occur in almost every sentence: the page would be covered with the same hyperlinks many times}]
+[para]
+
+The differences between the [emph Ntext] binding tag and the default [emph Text] binding tag are in three categories:
+
+[list_begin itemized]
+
+[item] Some [emph Text] bindings behave differently from most text-editing applications.  [emph Ntext] gives these bindings more familiar behaviour.  For details see [term ntextBindings].
+
+[item] When a logical line with leading whitespace is word-wrapped onto more than one display line, the wrapped display lines begin further to the left than the first display line, which can make the text layout untidy and difficult to read.  [emph Ntext] can indent the wrapped lines to match the leading whitespace of the first display line (this facility is switched off by default).  For details see [term ntextIndent].
+
+[item] When the user navigates or selects text, [const Tcl/Tk] sometimes needs to detect word boundaries.  [emph Ntext] provides improved rules for word boundary detection.  For details see [term ntextWordBreak].
+
+[list_end]
+
+The remainder of this page describes the basic use and configuration of all three aspects of [emph Ntext].  For more detailed information on the different facilities of [emph Ntext], see the pages [term ntextBindings], [term ntextIndent], and [term ntextWordBreak].
+
+[para]
+
+See Section [sectref EXAMPLE] for how to apply the [emph Ntext] binding tag in place of the [emph Text] binding tag.
+
+[section COMMANDS]
+
+[list_begin definitions]
+
+[call [cmd ::ntext::new_textCopy] [arg pathName]]
+
+Replacement for ::tk_textCopy.
+
+[call [cmd ::ntext::new_textCut] [arg pathName]]
+
+Replacement for ::tk_textCut that also maintains [emph Ntext] indentation (see [term ntextIndent]).
+
+[call [cmd ::ntext::new_textPaste] [arg pathName]]
+
+Replacement for ::tk_textPaste that also maintains [emph Ntext] indentation (see [term ntextIndent]).
+
+[call [cmd ::ntext::syncIndentColor] [arg pathName]]
+
+Command to apply the current value of the variable [var ::ntext::indentColor] to existing lines in a text widget.  This command is useful if a text widget has been created, text has been inserted in the widget, [emph {and then}] the value of [var ::ntext::indentColor] is changed (see [term ntextIndent]).
+
+[call [cmd ::ntext::syncTabColor] [arg pathName]]
+
+Command to apply the current values of the variables [var ::ntext::tabColor] and [var ::ntext::tabSelColor] to tab spaces in a text widget.  This command is useful if a text widget has been created, text has been inserted in the widget, [emph {and then}] the value of [var ::ntext::tabColor] or [var ::ntext::tabSelColor] is changed.
+[para]
+
+[list_end]
+
+[section {CONFIGURATION OPTIONS}]
+
+[emph Ntext] provides alternatives to a number of behaviours of the classic [emph Text] binding tag.  Where there is an option, the [emph Ntext] behaviour (except for display-line indentation) is switched on by default.
+
+[para]
+
+
+The behaviour of [emph Ntext] may be configured application-wide by setting the values of a number of namespace variables:
+[para]
+[var ::ntext::classicAnchor]
+[list_begin itemized]
+[item]
+   [const 0] - (default value) selects [emph Ntext] behaviour, i.e. the anchor point is fixed
+[item]
+   [const 1] - selects classic [emph Text] behaviour, i.e. the anchor point is variable
+[item]
+   For more information see [term ntextBindings]
+[list_end]
+[para]
+[var ::ntext::classicExtras]
+[list_begin itemized]
+[item]
+   [const 0] - (default value) selects [emph Ntext] behaviour, i.e. several traditional [emph Text] bindings are de-activated
+[item]
+   [const 1] - selects classic [emph Text] behaviour, i.e. all [emph Text] bindings are activated
+[item]
+   For more information see [term ntextBindings]
+[list_end]
+[para]
+[var ::ntext::classicMouseSelect]
+[list_begin itemized]
+[item]
+   [const 0] - (default value) selects [emph Ntext] behaviour, i.e. the anchor point for mouse selection operations is moved by keyboard navigation
+[item]
+   [const 1] - selects classic [emph Text] behaviour
+[item]
+   For more information see [term ntextBindings]
+[list_end]
+
+[para]
+[var ::ntext::classicParagraphs]
+[list_begin itemized]
+[item]
+   [const 0] - (default value) on macOS Aqua, certain keyboard bindings are made to behave in the same way as the Mac application TextEdit.  The bindings involve vertical scrolling of the screen and are <?Shift-?Option-(Up|Down)>.
+[item]
+   [const 1] - on macOS Aqua, certain keyboard bindings are made to behave in the same way as classic [emph Text], ignoring the conventions of Aqua.  The bindings involve vertical scrolling of the screen and are <?Shift-?Option-(Up|Down)>.
+[item]
+   For more information see [term ntextBindings]
+[list_end]
+
+[para]
+[var ::ntext::classicSelection]
+[list_begin itemized]
+[item]
+   [const 0] - (default value on macOS Aqua) selects Mac-like behaviour, i.e. when a navigation keystroke cancels a selection, the insert mark first moves to the end of the selection determined by the navigation direction of the keystroke, and then the keystroke is applied.
+[item]
+   [const 1] - (default value except on macOS Aqua) selects PC-like behaviour (the same as classic [emph Text]), i.e. when a navigation keystroke cancels a selection, the insert mark is not moved before the keystroke is applied.
+[item]
+   For more information see [term ntextBindings]
+[list_end]
+[para]
+[var ::ntext::classicWordBreak]
+[list_begin itemized]
+[item]
+   [const 0] - (default value) selects [emph Ntext] behaviour, i.e. platform-independent, two classes of word characters and one class of non-word characters.
+[item]
+   [const 1] - selects classic [emph Text] behaviour, i.e. platform-dependent, one class of word characters and one class of non-word characters
+[item]
+   After changing this value, the matching patterns should be recalculated.  See [term ntextWordBreak] for details and advanced configuration options.
+[list_end]
+[para]
+[var ::ntext::classicWrap]
+[list_begin itemized]
+[item]
+   [const 0] - selects [emph Ntext] behaviour, i.e. display lines of text widgets in [arg -wrap] [arg word] mode are indented to match the initial whitespace of the first display line of a logical line.  If the widget already holds text when this value is set, a function call may be necessary.  See [term ntextIndent] for detailed instructions on the use of [emph Ntext] 's indentation.
+[item]
+   [const 1] - (default value) selects classic [emph Text] behaviour, i.e. no indentation
+[item]
+   For more information see [term ntextIndent]
+[list_end]
+[para]
+[var ::ntext::indentColor]
+[list_begin itemized]
+[item]
+   [const {{}}] - if the value is the empty string, then the indent of wrapped display lines has the same color as the widget background.
+[item]
+   [emph color] - a valid [package Tk] color to use for the indent of wrapped display lines (default value [emph #d9d9d9]).
+[para]
+   Coloring is implemented with the text widget tag option [arg -lmargincolor], which is available from [package Tk] 8.6.6 onwards.  [emph Ntext] indent coloring has no effect in earlier versions of [package Tk].
+[para]
+   The value of [var ::ntext::indentColor] will often be set at startup.  If the value is changed when text widgets already exist and contain text, those widgets can be updated by calling command [cmd ::ntext::syncIndentColor].
+[item]
+   For more information see [term ntextIndent]
+[list_end]
+[para]
+[var ::ntext::overwrite]
+[list_begin itemized]
+[item]
+   [const 0] - (initial value) text typed at the keyboard is inserted into the widget
+[item]
+   [const 1] - text typed at the keyboard overwrites text already in the widget
+[item]
+   The value is toggled by the [emph Insert] key (except on macOS Aqua where there is no such key).
+[item]
+   For more information see [term ntextBindings]
+[list_end]
+
+[para]
+[var ::ntext::tabColor]
+[list_begin itemized]
+[item]
+   [const {{}}] - if the value is the empty string, then the tab spaces have the same color as the widget background.
+[item]
+   [emph color] - a valid [package Tk] color to use for tab spaces (default value [emph #ffffaa]).
+[para]
+  The value of [var ::ntext::tabColor] will often be set at startup. If the value is changed when text widgets already exist and contain text, those widgets can be updated by calling command [cmd ::ntext::syncTabColor].
+[list_end]
+
+[para]
+[var ::ntext::tabSelColor]
+[list_begin itemized]
+[item]
+   [const {{}}] - if the value is the empty string, then the color of tab spaces in the selection defaults to the same color as unselected tabs (see [var ::ntext::tabColor]), and [emph not] to the widget [arg -selectbackground] color.
+[item]
+   [emph color] - a valid [package Tk] color to use for tab spaces in the selection (default value [emph #418bd4]).
+[para]
+  The value of [var ::ntext::tabSelColor] will often be set at startup. If the value is changed when text widgets already exist and contain text, those widgets can be updated by calling command [cmd ::ntext::syncTabColor].
+[list_end]
+
+[para]
+[var ::ntext::useBlockCursor]
+[list_begin itemized]
+[item]
+   [const 0] - the block cursor will not be used.  When the widget is in [emph overwrite] mode (see [const ::ntext::overwrite]), the ordinary cursor will change color instead.
+[item]
+   [const 1] - the block cursor will be used when the widget is in [emph overwrite] mode (see [const ::ntext::overwrite]).
+[item]
+   The default value depends on the version of [const Tk].  In versions of [const Tk] earlier than [const 8.5.12], the sizing of the block cursor had a bug, and [var ::ntext::useBlockCursor] defaults to [const 0].  From [const 8.5.12] onwards the bug is fixed, and [var ::ntext::useBlockCursor] defaults to [const 1].
+[item]
+   For more information see [term ntextBindings]
+[list_end]
+
+[section BUGS]
+
+This version of [package ntext] is intended to be compatible with all releases of [package Tk] 8.5, 8.6, and 8.7, and with the branches [emph core-8-5-branch], [emph core-8-6-branch], and [emph trunk] in the source code repository for [package Tk].  Any incompatibility with any of these versions, for any [package Tk] windowing system, should be reported as a bug. Please report such in the category [emph ntext] of the [uri https://core.tcl-lang.org/tklib/reportlist {Tklib Trackers}].
+
+[section EXAMPLE]
+
+To create a text widget .t and use the [emph Ntext] bindings:
+[example {
+package require ntext
+text .t
+bindtags .t {.t Ntext . all}
+}]
+
+See [cmd bindtags] for more information.
+[see_also ntextWordBreak ntextIndent ntextBindings]
+[see_also text bindtags regexp re_syntax]
+[keywords text bindtags regexp re_syntax]
+[manpage_end]

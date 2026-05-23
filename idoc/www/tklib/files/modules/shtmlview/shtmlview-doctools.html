@@ -1,0 +1,199 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>shtmlview_doctools - Basic HTML and Markdown viewer widget</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'shtmlview-doctools.man' by tcllib/doctools with format 'html'
+   -->
+<!-- Copyright &amp;copy; 2022, Detlef Groth &amp;lt;detlef(at)dgroth(dot)de&amp;gt;
+   -->
+<!-- shtmlview_doctools.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">shtmlview_doctools(n) 0.1 tklib &quot;Basic HTML and Markdown viewer widget&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>shtmlview_doctools - shtmlview extension adding support for doctools markup</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">CHANGELOG</a></li>
+<li class="doctools_section"><a href="#section3">Bugs, Ideas, Feedback</a></li>
+<li class="doctools_section"><a href="#section4">Code Copyright</a></li>
+<li class="doctools_section"><a href="#see-also">See Also</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+<li class="doctools_section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_requirements">
+<li>package require <b class="pkgname">dtplite</b></li>
+<li>package require <b class="pkgname">shtmlview::shtmlview</b></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>The <b class="package">shtmlview::doctools</b> package extends
+<b class="package">shtmlview::shtmlview</b> widgets with support for rendering of
+<i class="term"><a href="../../../../index.html#doctools">doctools</a></i>-formatted documents.</p>
+<p>Simply loading the package registers the support.</p>
+<p>The package does not export any kind of command, class, etc.</p>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">CHANGELOG</a></h2>
+<dl class="doctools_definitions">
+<dt>2022-04-07 version 0.1</dt>
+<dd><ul class="doctools_itemized">
+<li><p>Initial implementation</p></li>
+</ul></dd>
+</dl>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">Bugs, Ideas, Feedback</a></h2>
+<p>This document, and the package it describes, will undoubtedly contain
+bugs and other problems. Please report such to the author of this
+package. Please also report any ideas for enhancements you may have
+for either package and/or documentation.</p>
+</div>
+<div id="section4" class="doctools_section"><h2><a name="section4">Code Copyright</a></h2>
+<p>BSD License type:</p>
+<p>Sun Microsystems, Inc.
+The following terms apply to all files associated with the software
+unless explicitly disclaimed in individual files.</p>
+<p>The authors hereby grant permission to use, copy, modify, distribute,
+and license this software and its documentation for any purpose,
+provided that existing copyright notices are retained in all copies
+and that this notice is included verbatim in any distributions.
+No written agreement, license, or royalty fee is required for any of
+the authorized uses.
+Modifications to this software may be copyrighted by their authors and
+need not follow the licensing terms described here, provided that the
+new terms are clearly indicated on the first page of each file where
+they apply.</p>
+<p>In no event shall the authors or distributors be liable to any party
+for direct, indirect, special, incidental, or consequential damages
+arising out of the use of this software, its documentation, or any
+derivatives thereof, even if the authors have been advised of the
+possibility of such damage.</p>
+<p>The authors and distributors specifically disclaim any warranties,
+including, but not limited to, the implied warranties of
+merchantability, fitness for a particular purpose, and
+non-infringement.
+This software is provided on an &quot;as is&quot; basis, and the authors and
+distributors have no obligation to provide maintenance, support,
+updates, enhancements, or modifications.</p>
+<p>RESTRICTED RIGHTS: Use, duplication or disclosure by the government is
+subject to the restrictions as set forth in subparagraph (c) (1) (ii)
+of the Rights in Technical Data and Computer Software Clause as DFARS
+252.227-7013 and FAR 52.227-19.</p>
+</div>
+<div id="see-also" class="doctools_section"><h2><a name="see-also">See Also</a></h2>
+<p><a href="../../../../index.html#doctools">doctools</a>, <a href="shtmlview.html">shtmlview</a></p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../../../index.html#doctools">doctools</a>, <a href="../../../../index.html#html">html</a></p>
+</div>
+<div id="copyright" class="doctools_section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2022, Detlef Groth &lt;detlef(at)dgroth(dot)de&gt;</p>
+</div>
+</div></body></html>

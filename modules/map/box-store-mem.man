@@ -1,0 +1,43 @@
+[comment {-*- tcl -*- doctools manpage}]
+[vset VERSION 0.1]
+[manpage_begin map::box::store::memory n [vset VERSION]]
+[category {Map Display and Supporting Utilities}][keywords map]
+[keywords {center, geo/box}]
+[keywords {diameter, geo/box}]
+[keywords {geo/box pixels, zoom}]
+[keywords {geo/box, center}]
+[keywords {geo/box, diameter}]
+[keywords {geo/box, memory store}]
+[keywords {geo/box, perimeter length}]
+[keywords {length, geo/box, perimeter}]
+[keywords {memory store, geo/box}]
+[keywords {perimeter length, geo/box}]
+[keywords {pixels, zoom, geo/box}]
+[keywords {store, geo/box, memory}]
+[keywords {zoom, geo/box pixels}]
+[moddesc   {Map display support}]
+[titledesc {In-memory store for geo/box definitions}]
+[require Tcl 8.6-]
+[require debug]
+[require debug::caller]
+[require map::slippy 0.8]
+[require snit]
+[require map::box::store::memory [opt [vset VERSION]]]
+[description]
+
+This package provides an in-memory store for [term geo/box] definitions, with memoized calculation
+of extended attributes.
+
+[para] The base data is pulled from a backing store. A [package map::box::store::fs] or anything
+API-compatible to it.
+
+[section API]
+
+[list_begin definitions]
+[list_end]
+
+[section EXAMPLE]
+
+[vset CATEGORY map]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]

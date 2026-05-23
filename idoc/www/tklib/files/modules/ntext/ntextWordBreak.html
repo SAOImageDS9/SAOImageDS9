@@ -1,0 +1,223 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ntextWordBreak - ntext Word Boundary Detection for the Text Widget</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'ntextWordBreak.man' by tcllib/doctools with format 'html'
+   -->
+<!-- ntextWordBreak.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">ntextWordBreak(n) 1.0 tklib &quot;ntext Word Boundary Detection for the Text Widget&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>ntextWordBreak - ntext Word Boundary Detection for the Text Widget</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">CONFIGURATION OPTIONS</a></li>
+<li class="doctools_section"><a href="#section3">Advanced Use</a></li>
+<li class="doctools_section"><a href="#section4">Variables (Advanced Use)</a></li>
+<li class="doctools_section"><a href="#section5">Functions (Advanced Use)</a></li>
+<li class="doctools_section"><a href="#section6">FUNCTIONS</a></li>
+<li class="doctools_section"><a href="#section7">WORD BOUNDARY MATCHING</a></li>
+<li class="doctools_section"><a href="#section8">BUGS</a></li>
+<li class="doctools_section"><a href="#section9">EXAMPLE</a></li>
+<li class="doctools_section"><a href="#see-also">See Also</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_requirements">
+<li>package require <b class="pkgname">Tcl 8.5-</b></li>
+<li>package require <b class="pkgname">Tk 8.5-</b></li>
+<li>package require <b class="pkgname">ntext <span class="opt">?1.0?</span></b></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>The <b class="package"><a href="ntext.html">ntext</a></b> package provides a binding tag named <em>Ntext</em> for use by text widgets in place of the default <em>Text</em> binding tag.</p>
+<p>Navigation and selection in a text widget require the detection of words and their boundaries.  The word boundary detection facilities provided by Tcl/Tk through the <em>Text</em> binding tag are limited because they define only one class of &quot;word&quot; characters and one class of &quot;non-word&quot; characters.  The <em>Ntext</em> binding tag uses more general rules for word boundary detection, that define <em>two</em> classes of &quot;word&quot; characters and one class of &quot;non-word&quot; characters.</p>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">CONFIGURATION OPTIONS</a></h2>
+<p>The behaviour of <em>Ntext</em> may be configured application-wide by setting the values of a number of namespace variables.  One of these is relevant to word boundary detection:</p>
+<p><b class="variable">::ntext::classicWordBreak</b></p>
+<ul class="doctools_itemized">
+<li><p><b class="const">0</b> - (default value) selects <em>Ntext</em> behaviour, i.e. platform-independent, two classes of word characters and one class of non-word characters.</p></li>
+<li><p><b class="const">1</b> - selects classic <em>Text</em> behaviour, i.e. platform-dependent, one class of word characters and one class of non-word characters</p></li>
+<li><p>After changing this value, <em>Ntext</em> 's regexp matching patterns should be recalculated.  See <span class="sectref"><a href="#section6">FUNCTIONS</a></span> for details and advanced configuration options.</p></li>
+</ul>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">Advanced Use</a></h2>
+</div>
+<div id="section4" class="doctools_section"><h2><a name="section4">Variables (Advanced Use)</a></h2>
+<p><b class="variable">::ntext::tcl_match_wordBreakAfter</b></p>
+<p><b class="variable">::ntext::tcl_match_wordBreakBefore</b></p>
+<p><b class="variable">::ntext::tcl_match_endOfWord</b></p>
+<p><b class="variable">::ntext::tcl_match_startOfNextWord</b></p>
+<p><b class="variable">::ntext::tcl_match_startOfPreviousWord</b></p>
+<p>These variables hold the regexp patterns that are used by <em>Ntext</em> to search for word boundaries.  If they are changed, subsequent searches are immediately altered.  In many situations, it it unnecessary to alter the values of these variables directly: instead call one of the functions <b class="function">::ntext::initializeMatchPatterns</b>, <b class="function">::ntext::createMatchPatterns</b>.</p>
+<p>In the <em>Text</em> binding tag one can change the search rules by changing the values of the global variables <b class="variable">tcl_wordchars</b> and <b class="variable">tcl_nonwordchars</b>.  The equivalent operation in the <em>Ntext</em> binding tag is to call <b class="function">::ntext::createMatchPatterns</b> with appropriate arguments.</p>
+</div>
+<div id="section5" class="doctools_section"><h2><a name="section5">Functions (Advanced Use)</a></h2>
+<p>If a simple regexp search should prove insufficient, the following functions (analogous to the Tcl/Tk core's <b class="function">tcl_wordBreakAfter</b> etc) may be replaced by the developer:</p>
+<p><b class="function">ntext::new_wordBreakAfter</b></p>
+<p><b class="function">ntext::new_wordBreakBefore</b></p>
+<p><b class="function">ntext::new_endOfWord</b></p>
+<p><b class="function">ntext::new_startOfNextWord</b></p>
+<p><b class="function">ntext::new_startOfPreviousWord</b></p>
+</div>
+<div id="section6" class="doctools_section"><h2><a name="section6">FUNCTIONS</a></h2>
+<p>Each function calculates the five regexp search patterns that define the word boundary searches.  These values are stored in the namespace variables listed above.</p>
+<p><b class="function">::ntext::initializeMatchPatterns</b></p>
+<ul class="doctools_itemized">
+<li><p>This function is called when <em>Ntext</em> is first used, and needs to be called again only if the script changes the value of either <b class="variable">::ntext::classicWordBreak</b> or <b class="variable">::tcl_platform(platform)</b>.  The function is called with no arguments.  It is useful when the desired search patterns are the default patterns for either the <em>Ntext</em> or <em>Text</em> binding tag, and so are implicitly specified by the values of <b class="variable">::ntext::classicWordBreak</b> and <b class="variable">::tcl_platform(platform)</b> alone.</p></li>
+</ul>
+<p><b class="function">::ntext::createMatchPatterns</b> <i class="arg">new_nonwordchars</i> <i class="arg">new_word1chars</i> <span class="opt">?new_word2chars?</span></p>
+<ul class="doctools_itemized">
+<li><p>This function is useful in a wider range of situations than <b class="function">::ntext::initializeMatchPatterns</b>.  It calculates the regexp search patterns for any case with one class of &quot;non-word&quot; characters and one or two classes of &quot;word&quot; characters.</p>
+<p>Each argument should be a regexp expression defining a class of characters.  An argument will usually be a bracket expression, but might alternatively be a class-shorthand escape, or a single character.  The third argument may be omitted, or supplied as the empty string, in which case it is unused.</p>
+<p>The first argument is interpreted as the class of non-word characters; the second argument (and the third, if present) are classes of word characters.  The classes should include all possible characters and will normally be mutually exclusive: it is often convenient to define one class as the negation of the other two.</p></li>
+</ul>
+</div>
+<div id="section7" class="doctools_section"><h2><a name="section7">WORD BOUNDARY MATCHING</a></h2>
+<p>The problem of word boundary selection is a vexed one, because text is used to represent a universe of different types of information, and there are no simple rules that are useful for all data types or for all purposes.</p>
+<p><em>Ntext</em> attempts to improve on the facilities available in classic <em>Text</em> by providing facilities for more complex definitions of words (with three classes of characters instead of two).</p>
+<p><em>What is a word?  Why two classes of word?</em></p>
+<p>When using the modified cursor keys &lt;Control-Left&gt; and &lt;Control-Right&gt; to navigate through a <em>Ntext</em> widget, the cursor is placed at the start of a word.  A word is defined as a sequence of one or more characters from only one of the two defined &quot;word&quot; classes; it may be preceded by a character from the other &quot;word&quot; class or from the &quot;non-word&quot; class.</p>
+<p>The double-click of mouse button 1 selects a word of text, where in this case a &quot;word&quot; may be as defined above, or alternatively may be a sequence of one or more characters from the &quot;non-word&quot; class of characters.</p>
+<p>Traditionally Tcl has defined only one word class and one non-word class: on Windows, the non-word class is whitespace, and so alphanumerics and punctuation belong to the same class.  On other platforms, punctuation is bundled with whitespace as &quot;non-word&quot; characters.  In either case, the navigation and selection of text are unnecessarily coarse-grained, and sometimes give unhelpful results.</p>
+<p>The use of three classes of characters might make selection too fine-grained; but in this case, holding down the <em>Shift</em> key and double-clicking another word is an excellent way to select a longer range of text (a useful binding that Tcl/Tk has long provided but which is missing in other systems).</p>
+<p>As well as its defaults, <em>Ntext</em> permits the developer to define their own classes of characters, or to revert to the classic <em>Text</em> definitions, or to specify their own regexp matching patterns.</p>
+</div>
+<div id="section8" class="doctools_section"><h2><a name="section8">BUGS</a></h2>
+<p>This version of <b class="package"><a href="ntext.html">ntext</a></b> is intended to be compatible with all releases of <b class="package"><a href="../../../../index.html#tk">Tk</a></b> 8.5, 8.6, and 8.7, and with the branches <em>core-8-5-branch</em>, <em>core-8-6-branch</em>, and <em>trunk</em> in the source code repository for <b class="package"><a href="../../../../index.html#tk">Tk</a></b>.  Any incompatibility with any of these versions, for any <b class="package"><a href="../../../../index.html#tk">Tk</a></b> windowing system, should be reported as a bug. Please report such in the category <em>ntext</em> of the <a href="https://core.tcl-lang.org/tklib/reportlist">Tklib Trackers</a>.</p>
+</div>
+<div id="section9" class="doctools_section"><h2><a name="section9">EXAMPLE</a></h2>
+<p>To use <em>Ntext</em> with Tcl/Tk's usual word-boundary detection rules:</p>
+<pre class="doctools_example">
+package require ntext
+text .t
+bindtags .t {.t Ntext . all}
+set ::ntext::classicWordBreak 1
+::ntext::initializeMatchPatterns
+</pre>
+<p>See bindtags for more information.</p>
+<p>To define a different set of word-boundary detection rules:</p>
+<pre class="doctools_example">
+package require ntext
+text .t
+bindtags .t {.t Ntext . all}
+::ntext::createMatchPatterns  {[[:space:][:cntrl:]]} {[[:punct:]]} {[^[:punct:][:space:][:cntrl:]]}
+</pre>
+<p>See regexp, re_syntax for more information.</p>
+</div>
+<div id="see-also" class="doctools_section"><h2><a name="see-also">See Also</a></h2>
+<p><a href="../../../../index.html#bindtags">bindtags</a>, <a href="ntext.html">ntext</a>, <a href="../../../../index.html#re_syntax">re_syntax</a>, <a href="../../../../index.html#regexp">regexp</a>, <a href="../../../../index.html#text">text</a></p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../../../index.html#bindtags">bindtags</a>, <a href="../../../../index.html#re_syntax">re_syntax</a>, <a href="../../../../index.html#regexp">regexp</a>, <a href="../../../../index.html#text">text</a></p>
+</div>
+</div></body></html>

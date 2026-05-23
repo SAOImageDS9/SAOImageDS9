@@ -1,0 +1,730 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: ; script-src 'self' 'nonce-d717cfb5d902616b7024920ae20346a8494f7832145c90e0' ; style-src 'self' 'unsafe-inline'" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="title" content="Documentation txmixins">
+<meta name="author" content="NN">
+<title>Documentation txmixins</title>
+
+    <style>
+    body {
+        margin-left: 5%; margin-right: 5%;
+        font-family: Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+    }
+pre {
+padding-top:	1ex;
+padding-bottom:	1ex;
+padding-left:	2ex;
+padding-right:	1ex;
+width:		100%;
+color: 		black;
+background: 	#ffefdf;
+border-top:		1px solid black;
+border-bottom:		1px solid black;
+font-family: Monaco, Consolas, "Liberation Mono", Menlo, Courier, monospace;
+
+}
+pre.synopsis {
+    background: #cceeff;
+}
+code {
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+h1,h2, h3,h4 {
+    font-family:	sans-serif;
+    background: 	transparent;
+}
+h1 {
+    font-size: 120%;
+}
+h2 {
+    font-size: 110%;
+}
+h3, h4 {
+    font-size: 100%
+}
+div.title h1 {
+    font-family:	sans-serif;
+    font-size:	120%;
+    background: 	transparent;
+    text-align:	center;
+    color: black;
+}
+div.author h3, div.date h3 {
+    font-family:	sans-serif;
+    font-size:	110%;
+    background: 	transparent;
+    text-align:	center;
+    color: black ;
+}
+h2 {
+margin-top: 	1em;
+font-family:	sans-serif;
+font-size:	110%;
+color:		#005A9C;
+background: 	transparent;
+text-align:		left;
+}
+
+h3 {
+margin-top: 	1em;
+font-family:	sans-serif;
+font-size:	100%;
+color:		#005A9C;
+background: 	transparent;
+text-align:		left;
+}
+</style>
+
+</head>
+<body>
+
+<p><a href="dgw.html">dgw</a> - 
+<a href="basegui.html">basegui</a> - 
+<a href="combobox.html">combobox</a> - 
+<a href="drawcanvas.html">drawcanvas</a> - 
+<a href="hyperhelp.html">hyperhelp</a> - 
+<a href="sbuttonbar.html">sbuttonbar</a> - 
+<a href="seditor.html">seditor</a> - 
+<a href="sfilebrowser.html">sfilebrowser</a> - 
+<a href="sfinddialog.html">sfinddialog</a> - 
+<a href="sqlview.html">sqlview</a> - 
+<a href="statusbar.html">statusbar</a> - 
+<a href="tablelist.html">tablelist</a> - 
+<a href="tlistbox.html">tlistbox</a> - 
+<a href="tvmixins.html">tvmixins</a> - 
+<a href="txmixins.html">txmixins</a></p>
+
+<h1>dgw::txmixins 0.2.0</h1>
+
+<h3>Detlef Groth, Schwielowsee, Germany</h3>
+
+<h3>2021-10-24</h3>
+
+<h2>NAME</h2>
+
+<p><strong>dgw::txmixins</strong> - implementations of extensions for the <em>text</em> 
+        widget which can be added dynamically using chaining of commands 
+        at widget creation or using the <em>dgw::txmixin</em> command after widget 
+        creation.</p>
+
+<h2><a name='toc'></a>TABLE OF CONTENTS</h2>
+
+<ul>
+<li><a href="#synopsis">SYNOPSIS</a></li>
+<li><a href="#description">DESCRIPTION</a></li>
+<li><a href="#commands">WIDGET COMMANDS</a>
+<ul>
+<li><a href="#txmixin">dgw::txmixin</a> - method to add one mixin widgetadaptor to text widget after widget creation</li>
+<li><a href="#txlipsum">dgw::txlipsum</a> - method to generate simple lipsum text</li></ul>
+
+</li>
+<li><a href="#adapters">WIDGET ADAPTORS</a>
+<ul>
+<li><a href="#txautorep">dgw::txautorep</a> - adapter to generate short abbreviations snippets invoked after closing parenthesis</li>
+<li><a href="#txblocksel">dgw::txblocksel</a> - adaptor rectangular text selection in the text widget</li>
+<li><a href="#txfileproc">dgw::txfileproc</a> - adaptor which implements the typical file commands for the text widget, fileOpen, fileSave etc.</li>
+<li><a href="#txfold">dgw::txfold</a> - adaptor for a folding text editor</li>
+<li><a href="#txhighlight">dgw::txhighlight</a> - adaptor for text widget supporting syntax highlighting</li>
+<li><a href="#txindent">dgw::txindent</a> - adaptor to keep indentation of previous line</li>
+<li><a href="#txpopup">dgw::txpopup</a> - adaptor for typical right click popup implementation</li>
+<li><a href="#txrotext">dgw::txrotext</a> - adaptor for a read only text widget</li></ul>
+
+</li>
+<li><a href="#example">EXAMPLE</a></li>
+<li><a href="#install">INSTALLATION</a></li>
+<li><a href="#demo">DEMO</a></li>
+<li><a href="#docu">DOCUMENTATION</a></li>
+<li><a href="#see">SEE ALSO</a></li>
+<li><a href="#changes">CHANGES</a></li>
+<li><a href="#todo">TODO</a></li>
+<li><a href="#authors">AUTHORS</a></li>
+<li><a href="#copyright">COPYRIGHT</a></li>
+<li><a href="#license">LICENSE</a>
+ </li></ul>
+
+<h2><a name='synopsis'>SYNOPSIS</a></h2>
+
+<pre class='synopsis'><code>package require Tk
+package require snit
+package require dgw::txmixins
+::dgw::txmixin pathName widgetAdaptor ?options?
+::dgw::txfold [tk::text pathName ?options?] ?options?
+set txt [tk::text pathName ?options?]
+dgw::txmixin $txt dgw::txfold ?options?
+</code></pre>
+
+<h2><a name='description'>DESCRIPTION</a></h2>
+
+<p>The package <strong>dgw::txmixins</strong> implements several <em>snit::widgetadaptor</em>s which 
+extend the standard <em>tk::text</em> widget with different functionalities.
+Different adaptors can be chained together to add the required functionalities. 
+Furthermore at any later time point using the <em>dgw::txmixin</em> command other adaptors can be installed on the widget.</p>
+
+<h2><a name='commands'>WIDGET COMMANDS</a></h2>
+
+<p><a name="txmixin"><strong>dgw::txmixin</strong></a> <em>pathName mixinWidget ?-option value ...?</em></p>
+
+<p>Adds the properties and methods of a snit::widgetadaptor specified with <em>mixinWidget</em> 
+to the exising widget created before with the given <em>pathName</em> and configures the widget 
+using the given <em>options</em>.</p>
+
+<p>Example:</p>
+
+<blockquote>
+<pre class='code'><code># demo: mixin
+# standard text widget
+set text [tk::text .txt]
+pack $text -side top -fill both -expand true
+dgw::txmixin $text dgw::txfold
+# fill the widget
+$text insert end &quot;\n## Hint\n\nPress F2 or F3 and see what happend!&quot;
+for {set i 1} {$i &lt; 4} {incr i} { 
+    $text insert end &quot;## Header $i\n\n&quot;
+    $text insert end [dgw::lispum 3]
+}</code></pre>
+</blockquote>
+
+<p><a name="txlipsum"><strong>dgw::txlipsum</strong></a> <em>dgw::txlipsum n</em></p>
+
+<p>Returns <em>n</em> paragraphs of simple lipsum text.</p>
+
+<p>Example:</p>
+
+<blockquote>
+<pre class='code'><code># demo: txlipsum
+tk::text .txt
+.txt insert end &quot;[dgw::txlipsum 5]&quot;
+.txt configure -borderwidth 10 -relief flat 
+pack .txt -side top -fill both -expand yes -padx 5 -pady 5</code></pre>
+</blockquote>
+
+<h2><a name='adapters'>WIDGET ADAPTERS</a></h2>
+
+<p><a name="txautorep"><strong>dgw::txautorep</strong></a> <em>[tk::text pathName] ?-option value ...?</em></p>
+
+<p>Creates and configures the <em>dgw::txautorep</em>  widget using the Tk window id <em>pathName</em> and 
+the given <em>options</em>. All options are delegated to the standard text widget. 
+Based on code in the Wiki page https://wiki.tcl-lang.org/page/autoreplace started by Richard Suchenwirth in 2008.</p>
+
+<p>The following option is available:</p>
+
+<blockquote>
+<ul>
+<li><em>-automap</em> <em>list</em>  - list of abbreviations and their replacement, the abbreviations must end with a closing 
+parenthesis such as [list DG) {Detlef Groth}].</li></ul>
+
+
+</blockquote>
+
+<p>Example:</p>
+
+<blockquote>
+<pre class='code'><code># demo: txautorep
+dgw::txautorep [tk::text .txt] -automap [list (TM) \u2122 (C) \
+     \u00A9 (R) \u00AE (K) \u2654 D) {D Groth} \
+     (DG) {Detlef Groth, University of Potsdam}]
+.txt insert end &quot;type a few abbreviations like (TM), (C), (R) or (K) ...&quot;
+pack .txt -side top -fill both -expand yes</code></pre>
+</blockquote>
+
+<p>TODO: Take abbreviations from file</p>
+
+<p><a name="txblocksel"><strong>dgw::txblocksel</strong></a> <em>[tk::text pathName] ?-option value ...?</em></p>
+
+<p>Creates and configures the <em>dgw::txblocksel</em>  widget using the Tk window id <em>pathName</em> and 
+  the given <em>options</em>. The text widget supports the block selection of text using 
+  The Control-key together with left mouse down and movement for selecting the text.</p>
+
+<p>So the steps are:</p>
+
+<ul>
+<li>Control-ButtonPress-1 to activate block selection</li>
+<li>Control-Button1-Motion to modify (increase/decrease) the selection</li>
+<li>Control-x to cut selection, Control-c to copy selection to clipboard
+</li></ul>
+
+<p>The widget adaptor code is just an adaption from the Wiki code written by Martin Eder here:
+<a href="https://wiki.tcl-lang.org/page/Simple+Block+Selection+for+Text+Widget">Simple Block Selection for Text Widget</a>.</p>
+
+<p>The widget adaptor currently has no options and public methods which should be used. 
+The code is however a good example on how to port namespace based widget code into
+a snit widgetadaptor using snit procedures only.</p>
+
+<p>Example:</p>
+
+<blockquote>
+<pre class='code'><code># demo: txblocksel
+dgw::txblocksel [tk::text .txt -undo true]
+.txt insert end &quot;\nHint:\n\n* Press Ctrl-Button-1 and then, by holding move the mouse\n&quot;
+.txt insert end &quot;to the bottom right.\n* For copy and paste use Control-c and Control-v.&quot;
+.txt tag configure hint -foreground #1166ff
+.txt tag add hint 1.0 6.end
+.txt insert end &quot;\n\nBlock selection!\n\n&quot;
+foreach col [list A B C] { 
+   .txt insert end &quot;# Header $col\n\nSome text\n\n&quot;
+   .txt insert end [dgw::txlipsum 2]
+   .txt insert end &quot;\n\n&quot;
+}
+.txt configure -borderwidth 10 -relief flat 
+pack .txt -side top -fill both -expand yes -padx 5 -pady 5</code></pre>
+</blockquote>
+
+<p><a name="txfileproc"><strong>dgw::txfileproc</strong></a> <em>[tk::text pathName] ?-option value ...?</em></p>
+
+<p>Creates and configures the <em>dgw::txfileproc</em>  widget using the Tk window id <em>pathName</em> and 
+  the given <em>options</em>. The text widget supports the typical file actions, so fileNew, fileOpen, fileSave, fileSaveAs and fileExit with checks 
+  for file modifications. It comes with a set of default bindings which can be disabled quite easily, see below for an example.</p>
+
+<p>The following options are available:</p>
+
+<blockquote>
+<ul>
+<li><em>-openkey</em> <em>sequence</em> - the key sequence to open the file open dialog, can be inactivated by supplying an empty string, default: <em>Control-o</em></li>
+<li><em>-savekey</em> <em>sequence</em> - the key sequence to save the current file or the file save as dialog if there is currently no file opened, can be inactivated by supplying an empty string, default: <em>Control-s</em></li>
+<li><em>-newkey</em>  <em>sequence</em> - the key sequence to create an empty new file with checking for modified text, can be inactivated by supplying an empty string, default: <em>Control-n</em></li>
+<li><em>-quitkey</em> <em>sequence</em> - the key sequence to close the application with checking for modified text, can be inactivated by supplying an empty string, default: &quot;Control-q&quot;</li>
+<li><em>-filecallback</em> <em>proc</em> - a callback to be executed if a file action like fileSave etc is performed, the Tcl procedure must take two arguments, first the action, second the filename, see below for an example, default: empty string, so no callback.</li>
+<li><em>-filetypes</em> <em>list</em> - the filetypes to be used for the file dialogs, defaults to Text (*.txt), Tcl  (*.tcl, *.tm), Markdown (*.md, *.rmd) and any (*.*) files.</li>
+<li><em>-initdir</em> <em>directory</em> - the initial starting dir for the first file dialog, subsequent file dialogs will use the directory for the last opened files.</li></ul>
+
+
+</blockquote>
+
+<p>The following public methods are available:</p>
+
+<blockquote>
+<ul>
+<li><em>getFile</em> - get the currently loaded file, if no file is loaded yet returns *new*</li>
+<li><em>fileNew</em> - creates a new empty file named *new*</li>
+<li><em>fileSave</em> - saves the currently opened file, if it is a new file, fileSaveAs will be called</li>
+<li><em>fileSaveAs</em> - calls the file save dialog to save the current text in a new file</li>
+<li><em>fileOpen ?filename?</em> - will open the given filename or if no filename is given opens the file dialog to select a file.</li>
+<li><em>fileExit</em> - checks for text modifications and will then quit the application</li>
+<li><em>fileRecent</em> - returns the last recent opened files with the last file as first element</li></ul>
+
+
+</blockquote>
+
+<p>The following events are implemented by this widget adaptor:</p>
+
+<blockquote>
+<ul>
+<li>&lt;&lt;FileChanged>> if a new file is opened or the save-as option is called.</li>
+<li>&lt;&lt;FileSaved>> if the current file is saved</li></ul>
+
+
+</blockquote>
+
+<p>Example:</p>
+
+<blockquote>
+<pre class='code'><code># demo: txfileproc
+dgw::txfileproc [tk::text .txt -undo true] -openkey &quot;&quot; ;# disable Control-o rebind it below
+.txt insert end &quot;\nHint\n\nPress ctrl-o, control-n, control-s\n and see the&quot;
+.txt insert end &quot;standard file dialogs!\n\n&quot;
+foreach col [list A B C] { 
+   .txt insert  end &quot;# Header $col\n\nSome text\n\n&quot;
+   .txt insert end [dgw::txlipsum 2]
+   .txt insert end &quot;\n\n&quot;
+}
+.txt configure -borderwidth 10 -relief flat 
+.txt configure -filecallback callback
+pack .txt -side top -fill both -expand yes -padx 5 -pady 5
+pack [label .label -text &quot;&quot;] -side top -fill x -expand false -padx 5 -pady 5
+bind .txt &lt;Enter&gt; { focus -force .txt }
+bind .txt &lt;Control-k&gt;&lt;Control-x&gt; [list .txt fileExit]
+bind .txt &lt;Control-k&gt;&lt;Control-o&gt; [list .txt fileOpen]
+dgw::txmixin .txt dgw::txpopup ;# right click popup
+proc callback {type filename} {
+   .label configure -text &quot;Done: $type with [file tail $filename]&quot;
+   puts [.txt fileRecent]
+}
+proc eventMessage {w} {
+   puts &quot;currentFile [$w getFile]&quot;
+}
+bind .txt &lt;&lt;FileChanged&gt;&gt; [list eventMessage %W]
+</code></pre>
+</blockquote>
+
+<p><a name="txfold"><strong>dgw::txfold</strong></a> <em>[tk::text pathName] ?-option value ...?</em></p>
+
+<p>Creates and configures the <em>dgw::txfold</em>  widget using the Tk window id <em>pathName</em> and 
+  the given <em>options</em>. The widgets supports text folding based on linestart regular expressions usually which allows fast navigation of larger
+  documents by hiding and showing larger chunks of text within the folding marks.</p>
+
+<p>The following options are available:</p>
+
+<blockquote>
+<ul>
+<li><em>-foldkey</em> <em>sequence</em>  - the key sequence fold or unfold regions where the insert cursor is within, default: F2</li>
+<li><em>-foldallkey</em> <em>sequence</em> - the key sequence to fold/unfold the complete text, default: F3</li>
+<li><em>-foldstart</em> <em>regex</em> - the start folding marker, default is Markdown header folding using the '#' at the beginning, default: &quot;^#&quot;</li>
+<li><em>-foldend</em> <em>regex</em> - the end fold marker, where the folding ends, if the end marker is the same as the start marker folding is ended in the line before the end line, otherwise on the end line, default: &quot;^#&quot;</li></ul>
+
+
+</blockquote>
+
+<p>The following widget tags are created and can be modified at runtime:</p>
+
+<blockquote>
+<ul>
+<li><em>fold</em> - the folding line which remains visible, usually the background should be configured only, default is <code>#ffbbaa</code> a light salmon like color</li>
+<li><em>folded</em> - the hidden (-elide true) part which is invisible, usually not required to change it, as it is hidden</li></ul>
+
+
+</blockquote>
+
+<p>Example:</p>
+
+<blockquote>
+<pre class='code'><code># demo: txfold
+dgw::txfold [tk::text .txt]
+foreach col [list A B C] { 
+   .txt insert  end &quot;# Header $col\n\nSome text\n\n&quot;
+}
+.txt insert end &quot;Place the cursor on the header lines and press F2\n&quot;
+.txt insert end &quot;or press F3 to fold or unfold the complete text.\n&quot;
+.txt tag configure fold -background #cceeff
+.txt configure -borderwidth 10 -relief flat
+pack .txt -side top -fill both -expand yes
+# next line would fold by double click (although I like F2 more ...)
+# .txt configure -foldkey Double-1 
+bind .txt &lt;Enter&gt; { focus -force .txt }</code></pre>
+</blockquote>
+
+<p>TODO: add Tcl fold example</p>
+
+<p><a name="txhighlight"><strong>dgw::txhighlight</strong></a> <em>[tk::text pathName] ?-option value ...?</em></p>
+
+<p>Creates and configures the <em>dgw::txhighlight</em>  widget using the Tk window id <em>pathName</em> and 
+  the given <em>options</em>. The widgets supports text highlighting for different file
+  types by providing tag names and regular expressions.</p>
+
+<p>The following options are available:</p>
+
+<blockquote>
+<ul>
+<li><em>-highlightcommand</em>  <em>proc</em> - a possible command to be used for hilighting, default: empty string, i.e. none</li>
+<li><em>-highlights</em> <em>list</em> - a nested list with highlights first element file type, second tag, third regular expression</li></ul>
+
+
+</blockquote>
+
+<p>The following widget tags are created and can be used for highlighting and can be as well
+as well configured by the user to change the appearance</p>
+
+<blockquote>
+<ul>
+<li><em>header, comment, highlight, keyword, operator, string, package, class, method, proc</em></li></ul>
+
+
+</blockquote>
+
+<p>Example:</p>
+
+<pre><code># demo: txhighlight
+package require dgw::txmixins
+text .top -borderwidth 5 -relief flat -font &quot;Helvetica 14&quot;
+dgw::txmixin .top dgw::txhighlight
+.top configure   -highlights {{md header ^#.+}    
+                 {md comment ^&gt;.+} 
+                 {md keyword _{1,2}[^_]+_{1,2}}  
+                 {md string {&quot;[^&quot;]+&quot;}}}
+pack .top -side top -fill both -expand true ;#&quot;  
+# TODO: txfileproc .top configure -filetypes {{Markdown Files}  {.md}}
+
+# configure for Markdown highlight
+.top configure   -highlights {{md header ^#.+}    
+                 {md comment ^&gt;.+} 
+                 {md keyword _{1,2}[^_]+_{1,2}}  
+                 {md string {&quot;[^&quot;]+&quot;}}}
+.top configure -mode md
+# create sample Markdown text and insert it
+.top insert end &quot;# Header example\n&quot;
+.top insert end &quot;_keyword_ example\n&quot;
+.top insert end &quot;Some not highlighted text\n&quot;
+.top insert end &quot;&gt; some markdown quote text\n&quot;
+.top insert end &quot;## Subheader\n&quot;
+.top insert end &quot;Some more standard text with two \&quot;strings\&quot; which are \&quot;inside!\&quot;&quot; 
+.top insert end &quot;\n\n## Tcl\n\nTcl be with you!\n\n## EOF\n\nThe End\n&quot;
+.top insert 3.0 &quot;\nSome text\nSome more text&quot;
+update
+after 2000
+update
+after 2000
+# switch to SQL highlight which is embedded per default
+.top delete 1.0 end
+.top configure -mode sql
+.top insert end &quot;select * from temp limit 10;\n -- a comment in SQL\n drop table temp;\n&quot;
+</code></pre>
+
+<p><a name="txindent"><strong>dgw::txindent</strong></a> <em>[tk::text pathName] ?-option value ...?</em></p>
+
+<p>Creates and configures the <em>dgw::txindent</em>  widget using the Tk window id <em>pathName</em> and 
+the given <em>options</em>. All options are delegated to the standard text widget. 
+The widget indents every new line based on the initial indention of the previous line.
+Based on code in the Wiki page <a href="https://wiki.tcl-lang.org/page/auto-indent">https://wiki.tcl-lang.org/page/auto-indent</a> started by Richard Suchenwirth.</p>
+
+<p>Example:</p>
+
+<blockquote>
+<pre class='code'><code># demo: txindent
+dgw::txindent [tk::text .txt]
+foreach col [list A B C] { 
+   .txt insert  end &quot;# Header $col\n\nSome text\n\n&quot;
+}
+.txt insert end &quot;  * item 1\n  * item 2 (press return here)&quot;
+pack .txt -side top -fill both -expand yes</code></pre>
+</blockquote>
+
+<p><a name="txpopup"><strong>dgw::txpopup</strong></a> <em>[tk::text pathName] ?-option value ...?</em></p>
+
+<p>Creates and configures the <em>dgw::txpopup</em>  widget using the Tk window id <em>pathName</em> and 
+  the given <em>options</em>. The text widget supports the typical right click popup operations
+  for the text widget like undo/redo, copy, paste, delete etc.
+  It comes with a set of default bindings which can be disabled quite easily, 
+  see below for an example.</p>
+
+<p>The following options are available:</p>
+
+<blockquote>
+<ul>
+<li><em>-redokey</em> <em>sequence</em> - the key sequence to redo an operation, default: <em>Control-y</em></li>
+<li><em>-popupkey</em> <em>sequence</em> - the key sequence to open the popup, usually right mouse click, so default: <em>Button-3</em></li>
+<li><em>-toolcommand</em>  <em>procname</em> - the name of a procedure which is called when the tool command is exectued, default emtpy string, none</li></ul>
+
+
+</blockquote>
+
+<p>The following public method is available:</p>
+
+<blockquote>
+<ul>
+<li><em>menu</em> - show the popup menu, usually the right mouse click, but the user can create additional popup keys.</li></ul>
+
+
+</blockquote>
+
+<p>Example:</p>
+
+<blockquote>
+<pre class='code'><code># demo: txpopup
+dgw::txpopup [tk::text .txt -undo true]
+.txt insert end &quot;\nHint\n\nPress right mouse click\n and see the&quot;
+.txt insert end &quot;popup menu with context dependent active or inactive entries!\n\n&quot;
+foreach col [list A B C] { 
+   .txt insert  end &quot;# Header $col\n\nSome text\n\n&quot;
+   .txt insert end [dgw::txlipsum 2]
+   .txt insert end &quot;\n\n&quot;
+}
+dgw::txmixin .txt dgw::txblocksel ;# just another mixin
+.txt configure -borderwidth 10 -relief flat 
+pack .txt -side top -fill both -expand yes -padx 5 -pady 5
+bind .txt &lt;Enter&gt; { focus -force .txt }</code></pre>
+</blockquote>
+
+<p><a name="txrotext"><strong>dgw::txrotext</strong></a> <em>[tk::text pathName] ?-option value ...?</em></p>
+
+<p>Creates and configures the <em>dgw::txrotext</em>  widget using the Tk window id <em>pathName</em> and 
+the given <em>options</em>. All options are delegated to the standard text widget. 
+This creates a readonly text widget.
+Based on code from the snitfaq by  William H. Duquette.</p>
+
+<p>Methods: instead of <em>insert</em> and <em>delete</em> you have to use the methods <em>ins</em> and <em>del</em></p>
+
+<p>Example:</p>
+
+<blockquote>
+<pre class='code'><code># demo: txrotext
+dgw::txrotext [tk::text .txt]
+foreach col [list A B C] { 
+   .txt ins  end &quot;# Header $col\n\nSome text\n\n&quot;
+}
+pack .txt -side top -fill both -expand yes</code></pre><h2><a name='example'>EXAMPLE</a></h2>
+</blockquote>
+
+<p>In the examples below we create a foldable text widget which can fold Markdown headers.
+Just press the button F2 and F3 to fold or unfold regions or the complete text.
+Thereafter a demonstration on how to use the <em>dgw::txmixin</em> command which simplifies the addition of 
+new behaviors to our <em>tk::text</em> in a stepwise manner. 
+The latter approach is as well nice to extend existing widgets in a more controlled manner 
+avoiding restarts of applications during developing the widget.</p>
+
+<pre><code>package require dgw::txmixins
+# standard text widget
+set f [ttk::frame .f]
+set text [tk::text .f.txt -borderwidth 5 -relief flat]
+pack $text -side left -fill both -expand true 
+dgw::txmixin $text dgw::txfold
+# fill the widget
+for {set i 0} {$i &lt; 5} {incr i} { 
+    $text insert end &quot;## Header $i\n\n&quot;
+    for {set j 0} {$j &lt; 2} {incr j} {
+      $text insert end &quot;Lorem ipsum dolor sit amet, consetetur sadipscing elitr,\n&quot;
+      $text insert end &quot;sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,\n&quot; 
+      $text insert end &quot;sed diam voluptua. \nAt vero eos et accusam et justo duo dolores et ea rebum.\n&quot;
+      $text insert end &quot;Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.\n\n&quot; 
+    }
+}
+set tcltxt [tk::text .f.tcl -borderwidth 5 -relief flat]
+dgw::txmixin $tcltxt dgw::txfold -foldstart &quot;^\[A-Za-z\].+\{&quot; -foldend &quot;^\}&quot;
+$tcltxt tag configure fold -background #aaccff
+$tcltxt insert end &quot;package require Tk\nproc test {} {\n    puts Hi\n}\n\nsnit::widget wid {\n\n}\n&quot;
+pack $tcltxt -side left -fill both -expand true
+pack $f -side top -fill both -expand yes
+set f2 [ttk::frame .f2]
+dgw::txrotext [tk::text $f2.rotxt]
+foreach col [list A B C] { 
+   $f2.rotxt ins  end &quot;# Header $col\n\nSome text\n\n&quot;
+}
+pack $f2.rotxt -side left -fill both -expand yes
+dgw::txindent [tk::text $f2.intxt]
+dgw::txmixin $f2.intxt dgw::txfold
+$f2.intxt insert end &quot;# Header 1\n\n* item\n    * subitem 1\n    * subitem2&quot;
+$f2.intxt insert end &quot;# Header 2\n\n* item\n    * subitem 1\n    * subitem2&quot;
+$f2.intxt insert 5.0 &quot;\n&quot; ;  $f2.intxt tag add line 5.0 6.0 ; 
+$f2.intxt tag configure line -background black -font &quot;Arial 1&quot; 
+pack $f2.intxt -side left -fill both -expand yes
+pack $f2 -side top -fill both -expand yes
+</code></pre>
+
+<h2><a name='install'>INSTALLATION</a></h2>
+
+<p>Installation is easy you can install and use the <strong>dgw::txmixins</strong> package if you have a working install of:</p>
+
+<ul>
+<li>the snit package  which can be found in <a href="https://core.tcl-lang.org/tcllib">tcllib - https://core.tcl-lang.org/tcllib</a>
+</li></ul>
+
+<p>For installation you copy the complete <em>dgw</em> folder into a path 
+of your <em>auto_path</em> list of Tcl or you append the <em>auto_path</em> list with the parent dir of the <em>dgw</em> directory.
+Alternatively you can install the package as a Tcl module by creating a file dgw/txmixins-0.2.0.tm in your Tcl module path.</p>
+
+<p>Only if you you like to extract the HTML documentation and run the examples, 
+you need the complete dgw package and for the HTML generation the tcllib Markdown package.</p>
+
+<h2><a name='demo'>DEMO</a></h2>
+
+<p>Example code for this package in the <em>EXAMPLE</em> section can  be executed, 
+if you have the complete dgw package installed, by running this file using 
+the following command line:</p>
+
+<pre><code>$ wish txmixins.tcl --demo
+</code></pre>
+
+<p>Specific code examples outside of the EXAMPLE section can be executed using 
+the string after the <em>demo:</em> prefix string in the code block for the individual code adaptors such as:</p>
+
+<pre><code>$ wish txmixins.tcl --demo txfold
+</code></pre>
+
+<p>The example code used for the demo in the EXAMPLE section can be seen in the terminal by using the following command line:</p>
+
+<pre><code>$ tclsh txmixins.tcl --code
+</code></pre>
+
+<h2><a name='docu'>DOCUMENTATION</a></h2>
+
+<p>The script contains embedded the documentation in Markdown format. If you have
+the complete dgw package installed you can extract the Markdown documentation.
+For this you should use the following command line:</p>
+
+<pre><code>$ tclsh txmixins.tcl --markdown
+</code></pre>
+
+<p>This will extract the embedded manual pages in standard Markdown format. You can as well use this markdown output directly to create html pages for the documentation by using the <em>--html</em> flag.</p>
+
+<pre><code>$ tclsh txmixins.tcl --html
+</code></pre>
+
+<p>If the tcllib Markdown package is installed, this will directly create a HTML page <code>txmixins.html</code> 
+which contains the formatted documentation.</p>
+
+<p>Github-Markdown can be extracted by using the <em>--man</em> switch:</p>
+
+<pre><code>$ tclsh txmixins.tcl --man
+</code></pre>
+
+<p>The output of this command can be used to feed a Markdown processor for conversion into a 
+html, docx or pdf document. If you have pandoc installed for instance, you could execute the following commands:</p>
+
+<pre><code>tclsh ../txmixins.tcl --man &gt; txmixins.md
+pandoc -i txmixins.md -s -o txmixins.html
+pandoc -i txmixins.md -s -o txmixins.tex
+pdflatex txmixins.tex
+</code></pre>
+
+<h2><a name='see'>SEE ALSO</a></h2>
+
+<ul>
+<li><a href="https://chiselapp.com/user/dgroth/repository/tclcode/index">dgw package homepage</a> - various useful widgets</li>
+<li><a href="https://www.tcl.tk/man/tcl8.6/TkCmd/ttk_treeview.htm">tk::text widget manual</a> standard manual page for the ttk::treeview widget
+
+ </li></ul>
+
+<h2><a name='changes'>CHANGES</a></h2>
+
+<ul>
+<li>2021-08-12 - version 0.1 initial starting the widget.</li>
+<li>2021-08-19 
+<ul>
+<li>completing docu</li>
+<li>finalize txfold</li>
+<li>adding txrotext, txindent, txautorep</li></ul>
+
+</li>
+<li>2021-09-29 - version 0.2.0
+<ul>
+<li>txfileproc - file procedures, fileOpen, fileNew, ... fileExit</li>
+<li>txpopup - right click popup</li>
+<li>txblocksel - block selection </li>
+<li>txlipsum - lispum code generator</li>
+<li>txhighlight - syntax highlighter
+</li></ul>
+
+</li></ul>
+
+<h2><a name='todo'>TODO</a></h2>
+
+<ul>
+<li>Syntax hilighter (done)</li>
+<li>switch folding by switching file</li>
+<li>File watch: https://wiki.tcl-lang.org/page/File+watch (done)</li>
+<li>Block selection: https://wiki.tcl-lang.org/page/Simple+Block+Selection+for+Text+Widget (done)</li>
+<li>Text sorting: https://wiki.tcl-lang.org/page/Simple+Text+Widget+Sort</li>
+<li>Logic notation https://wiki.tcl-lang.org/page/A+little+logic+notation+editor</li>
+<li>Drag and drop of text: https://wiki.tcl-lang.org/page/Text+Drag+%2DDrag+and+Drop+for+Text+Widget+Selections</li>
+<li>text line coloring https://wiki.tcl-lang.org/page/text+line+coloring</li>
+<li>table display https://wiki.tcl-lang.org/page/Displaying+tables</li>
+<li>time stamp https://wiki.tcl-lang.org/page/Time%2Dstamp</li>
+<li>balloon help https://wiki.tcl-lang.org/page/Balloon+Help%2C+Generalised</li>
+<li>sub and superscripts https://wiki.tcl-lang.org/page/Super+and+Subscripts+in+a+text+widget
+</li></ul>
+
+<h2><a name='authors'>AUTHORS</a></h2>
+
+<p>The <strong>dgw::txmixins</strong> widget adaptors were written by Detlef Groth, Schwielowsee, Germany based on code mentioned at the specific adaptor documentation.</p>
+
+<h2><a name='copyright'>Copyright</a></h2>
+
+<p>Copyright (c) 2021  Dr. Detlef Groth, E-mail: detlef(at)dgroth(dot)de</p>
+
+<h2><a name='license'>LICENSE</a></h2>
+
+<p>dgw::txmixins package, version 0.2.0.</p>
+
+<p>Copyright (c) 2019-2021  Dr. Detlef Groth, E-mail: detlef(at)dgroth(dot)de</p>
+
+<p>This library is free software; you can use, modify, and redistribute it
+for any purpose, provided that existing copyright notices are retained
+in all copies and that this notice is included verbatim in any
+distributions.</p>
+
+<p>This software is distributed WITHOUT ANY WARRANTY; without even the
+implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</p>
+
+</body>
+</html>

@@ -1,0 +1,619 @@
+'\"
+'\" Generated from file 'canvas_epoints\&.man' by tcllib/doctools with format 'nroff'
+'\"
+.TH "canvas::edit::points" n 0\&.3 tklib "Variations on a canvas"
+.\" The -*- nroff -*- definitions below are for supplemental macros used
+.\" in Tcl/Tk manual entries.
+.\"
+.\" .AP type name in/out ?indent?
+.\"	Start paragraph describing an argument to a library procedure.
+.\"	type is type of argument (int, etc.), in/out is either "in", "out",
+.\"	or "in/out" to describe whether procedure reads or modifies arg,
+.\"	and indent is equivalent to second arg of .IP (shouldn't ever be
+.\"	needed;  use .AS below instead)
+.\"
+.\" .AS ?type? ?name?
+.\"	Give maximum sizes of arguments for setting tab stops.  Type and
+.\"	name are examples of largest possible arguments that will be passed
+.\"	to .AP later.  If args are omitted, default tab stops are used.
+.\"
+.\" .BS
+.\"	Start box enclosure.  From here until next .BE, everything will be
+.\"	enclosed in one large box.
+.\"
+.\" .BE
+.\"	End of box enclosure.
+.\"
+.\" .CS
+.\"	Begin code excerpt.
+.\"
+.\" .CE
+.\"	End code excerpt.
+.\"
+.\" .VS ?version? ?br?
+.\"	Begin vertical sidebar, for use in marking newly-changed parts
+.\"	of man pages.  The first argument is ignored and used for recording
+.\"	the version when the .VS was added, so that the sidebars can be
+.\"	found and removed when they reach a certain age.  If another argument
+.\"	is present, then a line break is forced before starting the sidebar.
+.\"
+.\" .VE
+.\"	End of vertical sidebar.
+.\"
+.\" .DS
+.\"	Begin an indented unfilled display.
+.\"
+.\" .DE
+.\"	End of indented unfilled display.
+.\"
+.\" .SO ?manpage?
+.\"	Start of list of standard options for a Tk widget. The manpage
+.\"	argument defines where to look up the standard options; if
+.\"	omitted, defaults to "options". The options follow on successive
+.\"	lines, in three columns separated by tabs.
+.\"
+.\" .SE
+.\"	End of list of standard options for a Tk widget.
+.\"
+.\" .OP cmdName dbName dbClass
+.\"	Start of description of a specific option.  cmdName gives the
+.\"	option's name as specified in the class command, dbName gives
+.\"	the option's name in the option database, and dbClass gives
+.\"	the option's class in the option database.
+.\"
+.\" .UL arg1 arg2
+.\"	Print arg1 underlined, then print arg2 normally.
+.\"
+.\" .QW arg1 ?arg2?
+.\"	Print arg1 in quotes, then arg2 normally (for trailing punctuation).
+.\"
+.\" .PQ arg1 ?arg2?
+.\"	Print an open parenthesis, arg1 in quotes, then arg2 normally
+.\"	(for trailing punctuation) and then a closing parenthesis.
+.\"
+.\"	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+.if t .wh -1.3i ^B
+.nr ^l \n(.l
+.ad b
+.\"	# Start an argument description
+.de AP
+.ie !"\\$4"" .TP \\$4
+.el \{\
+.   ie !"\\$2"" .TP \\n()Cu
+.   el          .TP 15
+.\}
+.ta \\n()Au \\n()Bu
+.ie !"\\$3"" \{\
+\&\\$1 \\fI\\$2\\fP (\\$3)
+.\".b
+.\}
+.el \{\
+.br
+.ie !"\\$2"" \{\
+\&\\$1	\\fI\\$2\\fP
+.\}
+.el \{\
+\&\\fI\\$1\\fP
+.\}
+.\}
+..
+.\"	# define tabbing values for .AP
+.de AS
+.nr )A 10n
+.if !"\\$1"" .nr )A \\w'\\$1'u+3n
+.nr )B \\n()Au+15n
+.\"
+.if !"\\$2"" .nr )B \\w'\\$2'u+\\n()Au+3n
+.nr )C \\n()Bu+\\w'(in/out)'u+2n
+..
+.AS Tcl_Interp Tcl_CreateInterp in/out
+.\"	# BS - start boxed text
+.\"	# ^y = starting y location
+.\"	# ^b = 1
+.de BS
+.br
+.mk ^y
+.nr ^b 1u
+.if n .nf
+.if n .ti 0
+.if n \l'\\n(.lu\(ul'
+.if n .fi
+..
+.\"	# BE - end boxed text (draw box now)
+.de BE
+.nf
+.ti 0
+.mk ^t
+.ie n \l'\\n(^lu\(ul'
+.el \{\
+.\"	Draw four-sided box normally, but don't draw top of
+.\"	box if the box started on an earlier page.
+.ie !\\n(^b-1 \{\
+\h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.el \}\
+\h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.\}
+.fi
+.br
+.nr ^b 0
+..
+.\"	# VS - start vertical sidebar
+.\"	# ^Y = starting y location
+.\"	# ^v = 1 (for troff;  for nroff this doesn't matter)
+.de VS
+.if !"\\$2"" .br
+.mk ^Y
+.ie n 'mc \s12\(br\s0
+.el .nr ^v 1u
+..
+.\"	# VE - end of vertical sidebar
+.de VE
+.ie n 'mc
+.el \{\
+.ev 2
+.nf
+.ti 0
+.mk ^t
+\h'|\\n(^lu+3n'\L'|\\n(^Yu-1v\(bv'\v'\\n(^tu+1v-\\n(^Yu'\h'-|\\n(^lu+3n'
+.sp -1
+.fi
+.ev
+.\}
+.nr ^v 0
+..
+.\"	# Special macro to handle page bottom:  finish off current
+.\"	# box/sidebar if in box/sidebar mode, then invoked standard
+.\"	# page bottom macro.
+.de ^B
+.ev 2
+'ti 0
+'nf
+.mk ^t
+.if \\n(^b \{\
+.\"	Draw three-sided box if this is the box's first page,
+.\"	draw two sides but no top otherwise.
+.ie !\\n(^b-1 \h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.el \h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.\}
+.if \\n(^v \{\
+.nr ^x \\n(^tu+1v-\\n(^Yu
+\kx\h'-\\nxu'\h'|\\n(^lu+3n'\ky\L'-\\n(^xu'\v'\\n(^xu'\h'|0u'\c
+.\}
+.bp
+'fi
+.ev
+.if \\n(^b \{\
+.mk ^y
+.nr ^b 2
+.\}
+.if \\n(^v \{\
+.mk ^Y
+.\}
+..
+.\"	# DS - begin display
+.de DS
+.RS
+.nf
+.sp
+..
+.\"	# DE - end display
+.de DE
+.fi
+.RE
+.sp
+..
+.\"	# SO - start of list of standard options
+.de SO
+'ie '\\$1'' .ds So \\fBoptions\\fR
+'el .ds So \\fB\\$1\\fR
+.SH "STANDARD OPTIONS"
+.LP
+.nf
+.ta 5.5c 11c
+.ft B
+..
+.\"	# SE - end of list of standard options
+.de SE
+.fi
+.ft R
+.LP
+See the \\*(So manual entry for details on the standard options.
+..
+.\"	# OP - start of full description for a single option
+.de OP
+.LP
+.nf
+.ta 4c
+Command-Line Name:	\\fB\\$1\\fR
+Database Name:	\\fB\\$2\\fR
+Database Class:	\\fB\\$3\\fR
+.fi
+.IP
+..
+.\"	# CS - begin code excerpt
+.de CS
+.RS
+.nf
+.ta .25i .5i .75i 1i
+..
+.\"	# CE - end code excerpt
+.de CE
+.fi
+.RE
+..
+.\"	# UL - underline word
+.de UL
+\\$1\l'|0\(ul'\\$2
+..
+.\"	# QW - apply quotation marks to word
+.de QW
+.ie '\\*(lq'"' ``\\$1''\\$2
+.\"" fix emacs highlighting
+.el \\*(lq\\$1\\*(rq\\$2
+..
+.\"	# PQ - apply parens and quotation marks to word
+.de PQ
+.ie '\\*(lq'"' (``\\$1''\\$2)\\$3
+.\"" fix emacs highlighting
+.el (\\*(lq\\$1\\*(rq\\$2)\\$3
+..
+.\"	# QR - quoted range
+.de QR
+.ie '\\*(lq'"' ``\\$1''\\-``\\$2''\\$3
+.\"" fix emacs highlighting
+.el \\*(lq\\$1\\*(rq\\-\\*(lq\\$2\\*(rq\\$3
+..
+.\"	# MT - "empty" string
+.de MT
+.QW ""
+..
+.BS
+.SH NAME
+canvas::edit::points \- Editing a cloud of points on a canvas
+.SH SYNOPSIS
+package require \fBTcl 8\&.5\fR
+.sp
+package require \fBTk 8\&.5\fR
+.sp
+package require \fBcanvas::edit::points ?0\&.3?\fR
+.sp
+\fB::canvas::edit\fR \fBpoints\fR \fIobjectName\fR \fIcanvas\fR \fIoptions\fR\&.\&.\&.
+.sp
+\fBobjectName\fR \fBdestroy\fR
+.sp
+\fBobjectName\fR \fBenable\fR
+.sp
+\fBobjectName\fR \fBdisable\fR
+.sp
+\fBobjectName\fR \fBactive\fR
+.sp
+\fBobjectName\fR \fBadd\fR \fIx\fR \fIy\fR
+.sp
+\fBobjectName\fR \fBclear\fR
+.sp
+\fBactiveCmd\fR \fIeditorObj\fR \fIid\fR
+.sp
+\fBcreateCmd\fR \fIcanvas\fR \fIx\fR \fIy\fR
+.sp
+\fBdataCmd\fR \fBadd\fR \fIeditorObj\fR \fIid\fR \fIx\fR \fIy\fR
+.sp
+\fBdataCmd\fR \fBremove\fR \fIeditorObj\fR \fIid\fR
+.sp
+\fBdataCmd\fR \fBmove start\fR \fIeditorObj\fR \fIid\fR
+.sp
+\fBdataCmd\fR \fBmove delta\fR \fIeditorObj\fR \fIid\fR \fIx\fR \fIy\fR \fIdx\fR \fIdy\fR
+.sp
+\fBdataCmd\fR \fBmove done\fR \fIeditorObj\fR \fIid\fR
+.sp
+.BE
+.SH DESCRIPTION
+This package provides a class whose instances handle editing a cloud of point markers on a
+canvas\&. Instances can be configured with regard to the visual appearance of markers\&. Note that
+instances do not store the edited points themselves, but delegate this to a configurable object\&.
+.SH INTERACTION
+.PP
+The default bindings enable the creation, removal and dragging of point (markers) using the
+mouse buttons 1, 2, and 3\&. Specifically:
+.IP [1]
+Clicking anywhere with button 1 adds a new point\&.
+.IP [2]
+Clicking on a point with button 2 removes that point\&.
+.IP [3]
+Clicking on a point with button 3 starts a drag operation ending with the release of the
+button\&.
+.PP
+.PP
+The option \fB-drag-point\fR can be used to change the button used to initiate drag
+operations\&. Note that the option value may not only contain the button number, but also modifier
+prefix separated from the button by a dash "\fB-\fR"\&.
+The recognized modifiers are \fBControl\fR, \fBShift\fR, and \fBAlt\fR\&.
+.PP
+The option \fB-add-remove-point\fR can be used to change the button used to add/remove
+points\&. This works because removal is an item binding, while adding is canvas global\&. The option
+recognizes the same syntax for button as \fB-drag-point\fR\&.
+.PP
+In the standard configuration the canvas item representing a point is a circle configured
+using the appearance options \fB-color\fR, \fB-hilit-color\fR, and \fB-radius\fR\&. Their
+defaults are \fBSkyblue2\fR, \fBred\fR, and \fB3\fR, repsectively\&.
+.PP
+The option \fB-kind\fR can be used to slightly customize the canvas item to any kind
+accepting the item options \fB-width\fR, \fB-outline\fR, \fB-fill\fR, and
+\fB-activefill\fR\&.
+.PP
+For more extensive customization its is necessary to configure a creation callback using
+option \fB-create-cmd\fR\&. The callback takes the canvas and x\&. y coordinates as arguments, in
+this order, and is expected to return a list of the canvas items representing the point\&.
+.PP
+Note the plural\&. With the callback it is possible to visualize a point using a group of
+items\&.
+.PP
+Further note that when the callback return an empty list no point is created\&. In other words,
+the callback can also be used to perform checks if a point at the given location is desirable, or
+not\&. This can be combined with the default creation behaviour as the option can be queried, and its
+default value is the callback for the default behaviour\&.
+.PP
+Keeping with the callback for a bit, the option \fB-active-cmd\fR sets a callback invoked
+whenever the mouse is over one of the created points, i\&.e\&. active\&. This can be used to drive derived
+displays\&. For example highlighting the point's entry in a table or other widget\&.
+.PP
+The last option of importance is \fB-tag\fR\&. Its value is the name of the canvas tag used
+to mark all the items owned, i\&.e\&. created and managed by an\&. The default is \fBPOINT\fR\&.
+.PP
+When attaching multiple instances of this behaviour to the same canvas each instance has to
+be configured with a unique tag, to prevent them from interfering with each other\&.
+.SH "CLASS API"
+.TP
+\fB::canvas::edit\fR \fBpoints\fR \fIobjectName\fR \fIcanvas\fR \fIoptions\fR\&.\&.\&.
+This, the class command, creates and configures a new instance of a
+point cloud editor, named \fIobjectName\fR\&. The instance will be
+connected to the specified \fIcanvas\fR widget\&.
+.sp
+The result of the command is the fully qualified name of the
+instance command\&.
+.sp
+The options accepted here, and their values, are explained in
+the section \fBOptions\fR\&.
+.PP
+.SH "INSTANCE API"
+Instances of the point cloud editors provide the following API:
+.TP
+\fBobjectName\fR \fBdestroy\fR
+This method destroys the point cloud editor and releases all its
+internal resources\&.
+.sp
+Note that this operation does not destroy the items of the
+point markers the editor managed on the attached canvas, nor the
+canvas itself\&.
+.sp
+The result of the method is an empty string\&.
+.TP
+\fBobjectName\fR \fBenable\fR
+This method activates editing of the point cloud on the canvas\&. This
+is the default after instance creation\&. A call is ignored if the
+editor is already active\&.
+.sp
+The result of the method is an empty string\&.
+.sp
+The complementary method is \fBdisable\fR\&. The interogatory
+method for the current state is \fBactive\fR\&.
+.TP
+\fBobjectName\fR \fBdisable\fR
+This method disables editing of the point cloud on the canvas\&. A call
+is ignored if the editor is already disabled\&.
+.sp
+The result of the method is an empty string\&.
+.sp
+The complementary method is \fBenable\fR\&. The interogatory
+method for the current state is \fBactive\fR\&.
+.TP
+\fBobjectName\fR \fBactive\fR
+This method queries the editor state\&.
+.sp
+The result of the method is a boolean value, \fBtrue\fR if
+the editor is active, and \fBfalse\fR otherwise, i\&.e\&. disabled\&.
+.sp
+The methods to change the state are \fBenable\fR and
+\fBdisable\fR\&.
+.TP
+\fBobjectName\fR \fBadd\fR \fIx\fR \fIy\fR
+This method programmatically creates a point at the specified location\&.
+.sp
+The result of the method is an empty string\&.
+.sp
+Note that this method goes through the whole set of callbacks
+invoked when the user interactively creates a point, i\&.e\&.
+\fB-create-cmd\fR, and, more importantly, \fB-data-cmd\fR\&.
+.sp
+This is the method through which to load pre-existing points
+into an editor instance\&.
+.TP
+\fBobjectName\fR \fBclear\fR
+This method programmatically removes all points from the editor\&.
+.sp
+The result of the method is an empty string\&.
+.sp
+Note that this method goes through the same callback invoked
+when the user interactively removes a point, i\&.e\&. \fB-data-cmd\fR\&.
+.PP
+.SH OPTIONS
+The class command accepts the following options
+.TP
+\fB-active-cmd\fR \fIcommand-prefix\fR
+The value of this option is a command prefix the editor will invoke
+when the mouse enters or leaves a point managed by the instance\&.
+.sp
+If not specified it defaults to an empty command which does nothing\&.
+.sp
+The signature of this command prefix is
+.RS
+.TP
+\fBactiveCmd\fR \fIeditorObj\fR \fIid\fR
+.sp
+The \fIid\fR identifies the point within the editor\&.
+.sp
+An empty \fIid\fR indicates that the last entered point was left\&.
+.sp
+The result of this method is ignored\&.
+.RE
+.TP
+\fB-add-remove-point\fR \fIeventspec\fR
+The value of this option is an event specification (without bracketing angles) declaring which event
+will trigger adding and removing a point\&.
+.sp
+This option can only be set at construction time\&.
+.sp
+The default setup uses different events for adding and removing points, \fBButtonPress-1\fR
+and \fBButtonPress-2\fR respectively\&.
+.sp
+When using this option the same event is used for both operations\&. This is no problem because
+adding is bound as canvas-global event while removal is bound to the relevant canvas items\&.
+.TP
+\fB-color\fR \fIcolorspec\fR
+The value of this option is the fill color for the default item created when adding a point, and no
+\fB-create-cmd\fR is specified\&.
+.sp
+The default value is \fBSkyBlue2\fR\&.
+.TP
+\fB-create-cmd\fR \fIcommand-prefix\fR
+The value of this option is a command prefix the editor will invoke
+when it has to create a new point\&.
+.sp
+While this option can be set after construction, it is recommended to use this feature only
+as a means of inserting custom processing to be done at creation time which remembers and calls the
+previous value of the option\&.
+.sp
+If not specified it defaults to a command which will create a
+black-bordered blue circle of radius 3 centered on the location of the
+new point\&.
+.sp
+The signature of this command prefix is
+.RS
+.TP
+\fBcreateCmd\fR \fIcanvas\fR \fIx\fR \fIy\fR
+The result of the command prefix \fImust\fR be a list of the canvas
+items it created to represent the marker\&. Note here that the visual
+representation of a "point" may consist of multiple canvas items in an
+arbitrary shape\&.
+.sp
+The returned list of items is allowed to be empty, and such is
+taken as signal that the callback vetoed the creation of the point\&.
+.RE
+.TP
+\fB-data-cmd\fR \fIcommand-prefix\fR
+The value of this option is a command prefix the editor will invoke
+when a point was edited in some way\&. This is how the editor delegates
+the actual storage of point information to an outside object\&.
+.sp
+This option can only be set at construction time\&.
+.sp
+If not specified it defaults to an empty string and is ignored
+by the editor, i\&.e\&. not invoked\&.
+.sp
+The signatures of this command prefix are
+.RS
+.TP
+\fBdataCmd\fR \fBadd\fR \fIeditorObj\fR \fIid\fR \fIx\fR \fIy\fR
+This callback is invoked when a new point was added to the instance,
+either interactively, or programmatically\&.
+See instance method \fBadd\fR for the latter\&.
+.sp
+The \fIid\fR identifies the point within the editor and will be
+used by the two other callbacks to specify which point to modify\&.
+.sp
+The last two arguments \fIx\fR and \fIy\fR specify the location
+of the new point in canvas coordinates\&.
+.sp
+The result of this method is ignored\&.
+.TP
+\fBdataCmd\fR \fBremove\fR \fIeditorObj\fR \fIid\fR
+This callback is invoked when a point removed from the editor
+instance\&.
+.sp
+The \fIid\fR identifies the removed point within the editor\&.
+.sp
+The result of this method is ignored\&.
+.TP
+\fBdataCmd\fR \fBmove start\fR \fIeditorObj\fR \fIid\fR
+This callback is invoked when the movement of a point in the editor
+instance has started\&.
+.sp
+The \fIid\fR identifies the point within the editor about to be
+moved\&.
+.sp
+The result of this method is ignored\&.
+.TP
+\fBdataCmd\fR \fBmove delta\fR \fIeditorObj\fR \fIid\fR \fIx\fR \fIy\fR \fIdx\fR \fIdy\fR
+This callback is invoked when the point moved in the editor instance\&.
+.sp
+The \fIid\fR identifies the moved point within the editor, and
+the remaining arguments \fIx\fR, \fIy\fR, \fIdx\fR, and \fIdy\fR
+provide the new absolute location of the point, and full delta to the
+original location\&.
+.sp
+At the time of the calls the system is \fInot\fR committed to
+the move yet\&. Only after method \fBmove done\fR was invoked and
+has accepted or rejected the last position will the editor update its
+internal data structures, either committing to the new location, or
+rolling the move back to the original one\&.
+.sp
+Given this the location data provided here should be saved only
+in temporary storage until then\&.
+.sp
+The result of this method is ignored\&.
+.TP
+\fBdataCmd\fR \fBmove done\fR \fIeditorObj\fR \fIid\fR
+This callback is invoked when the movement of a point in the editor
+instance is complete\&.
+.sp
+The \fIid\fR identifies the moved point within the editor\&.
+.sp
+The result of this method must be a boolean value\&. If the
+method returns \fBfalse\fR the move is vetoed and rollbed back\&.
+.RE
+.TP
+\fB-drag-point\fR \fIeventspec\fR
+The value of this option is an event specification (without bracketing angles) declaring which event
+will trigger a drag action on points\&.
+.sp
+This option can only be set at construction time\&.
+.sp
+The default specification is \fBButtonPress-3\fR\&.
+.TP
+\fB-hilit-color\fR \fIcolorspec\fR
+The value of this option is the highlight color for the default item created when adding a point,
+and no \fB-highlight-cmd\fR is specified\&.
+.sp
+The default value is \fBred\fR\&.
+.TP
+\fB-kind\fR \fIname\fR
+The value of this option is the canvas item type for the default item created when adding a point,
+and no \fB-create-cmd\fR is specified\&.
+Only item types specified through a bounding box are suitable\&.
+.sp
+The default value is \fBoval\fR\&.
+.TP
+\fB-radius\fR \fIint\fR
+The value of this option is the radius for the default item created when adding a point,
+and no \fB-create-cmd\fR is specified\&.
+.sp
+The default value is \fB3\fR\&.
+.TP
+\fB-tag\fR \fIstring\fR
+The value of this option is the name of the canvas tag with which to
+identify all items of all points managed by the editor\&.
+.sp
+This option can only be set at construction time\&.
+.sp
+If not specified it defaults to \fBPOINT\fR
+.PP
+.SH "BUGS, IDEAS, FEEDBACK"
+This document, and the package it describes, will undoubtedly contain
+bugs and other problems\&.
+Please report such in the category \fIcanvas\fR of the
+\fITklib Trackers\fR [http://core\&.tcl\&.tk/tklib/reportlist]\&.
+Please also report any ideas for enhancements you may have for either
+package and/or documentation\&.
+.SH KEYWORDS
+canvas, editing, point cloud, points

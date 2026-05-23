@@ -1,0 +1,44 @@
+[comment {-*- tcl -*- doctools manpage}]
+[vset VERSION 0.1]
+[manpage_begin map::track::store::memory n [vset VERSION]]
+[category {Map Display and Supporting Utilities}][keywords map]
+[keywords {center, geo/track}]
+[keywords {diameter, geo/track}]
+[keywords {geo/track pixels, zoom}]
+[keywords {geo/track, center}]
+[keywords {geo/track, diameter}]
+[keywords {geo/track, memory store}]
+[keywords {geo/track, perimeter length}]
+[keywords {length, geo/track, perimeter}]
+[keywords {memory store, geo/track}]
+[keywords {perimeter length, geo/track}]
+[keywords {pixels, zoom, geo/track}]
+[keywords {store, geo/track, memory}]
+[keywords {zoom, geo/track pixels}]
+[moddesc   {Map display support}]
+[titledesc {In-memory store for geo/track definitions}]
+[require Tcl 8.6-]
+[require {Tcl 8.6-}]
+[require debug]
+[require debug::caller]
+[require map::slippy 0.8]
+[require snit]
+[require map::track::store::memory [opt [vset VERSION]]]
+[description]
+
+This package provides an in-memory store for [term geo/track] definitions, with memoized calculation
+of extended attributes.
+
+[para] The base data is pulled from a backing store. A [package map::track::store::fs] or anything
+API-compatible to it.
+
+[section API]
+
+[list_begin definitions]
+[list_end]
+
+[section EXAMPLE]
+
+[vset CATEGORY map]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]

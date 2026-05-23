@@ -1,0 +1,123 @@
+[comment {-*- tcl -*- doctools manpage}]
+[vset VERSION 0.98]
+[manpage_begin widget_dateentry n [vset VERSION]]
+[keywords date]
+[keywords dateentry]
+[keywords megawidget]
+[keywords snit]
+[keywords widget]
+[moddesc   {Various megawidgets}]
+[titledesc {Date Entry Megawidget}]
+[category Widget]
+[require Tcl 8.4]
+[require Tk 8.4]
+[require widget [opt 3.0]]
+[require widget::dateentry [opt [vset VERSION]]]
+[description]
+
+This package provides a dateentry megawidget (snidget).
+It is based on an ttk::entry. All widget commands of the ttk::entry
+are available for the dateentry.
+
+[para]
+
+[list_begin definitions]
+
+[call [cmd widget::dateentry] [arg pathname] [opt options]]
+
+[list_end]
+
+[section "WIDGET OPTIONS"]
+
+[para]
+[list_begin options]
+
+[opt_def -command]
+
+A command prefix to evaluate when a date was selected.
+
+The command prefix is executed in the global namespace and given two
+arguments, the raw date in seconds, and the formatted date, as per
+option [option -dateformat].
+
+[opt_def -dateformat]
+
+The format of the date that is entered or returned. Default: %m/%d/%Y.
+
+[opt_def -firstday]
+
+See the [package widget::calendar] man page.
+
+[opt_def -font]
+
+Select the font used in the widget. It defaults to Helvetica 9.
+
+[opt_def -highlightcolor]
+
+See the [package widget::calendar] man page.
+See the calendar man page.
+
+[opt_def -language]
+
+See the [package widget::calendar] man page.
+
+[opt_def -shadecolor]
+
+See the [package widget::calendar] man page.
+
+[opt_def -showpast]
+
+See the [package widget::calendar] man page.
+
+[opt_def -textvariable]
+
+Specifies the name of a variable whose value is linked to the entry widget's contents.
+Whenever the variable changes value, the widget's contents are updated, and vice versa.
+
+[list_end]
+
+[section "WIDGET COMMAND"]
+
+[list_begin definitions]
+
+[call [arg pathname] [cmd get]]
+
+Returns the selected date.
+
+[call [arg pathname] [cmd set] [arg date]]
+
+Programmatically sets a new date. Expects that the date is in the same format
+as configured by option [option -dateformat].
+
+[para] The same effect can also be achieved by setting a linked
+[option -textvariable].
+
+[list_end]
+
+
+
+[section "DEFAULT BINDINGS"]
+
+On creation of the dateentry widget the following bindings are installed.
+For navigation within the calendar, see its manpage.
+[list_begin itemized]
+[item]
+Button-1 - Accept and select the date and close the calendar window.
+[item]
+Return, space - Accept the selected date and close the calendar window
+[item]
+Escape - Close calendar window
+[item]
+Control-space - Show calendar window
+[list_end]
+
+[section EXAMPLE]
+
+[example {
+    package require widget::dateentry; # or widget::all
+    set t [widget::dateentry .de]
+    pack $t -fill x -expand 1
+}]
+[vset CATEGORY widget::dateentry]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]

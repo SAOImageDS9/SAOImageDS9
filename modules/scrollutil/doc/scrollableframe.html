@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>The scrollutil::scrollableframe Command</title>
+
+  <meta name="Author" content="Csaba Nemethi">
+  <meta name="Keywords" content="scrollableframe, widget, frame, scrollable">
+
+  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+</head>
+
+<body>
+  <div>
+    <h1>The <code><b>scrollutil::scrollableframe</b></code> Command</h1>
+
+    <h2>For Scrollutil Version 2.4</h2>
+
+    <h3>by</h3>
+
+    <h2>Csaba Nemethi</h2>
+
+    <address>
+      <a href="mailto:csaba.nemethi@t-online.de">csaba.nemethi@t-online.de</a>
+    </address>
+  </div>
+
+  <hr>
+
+  <h2 id="contents">Contents</h2>
+
+  <ul>
+    <li><a href="#quick_ref">Quick Reference</a></li>
+
+    <li><a href="#detailed_ref">Detailed Reference</a></li>
+
+    <li><a href="#comparison">Comparison with BWidget ScrollableFrame and
+    iwidgets::scrolledframe</a></li>
+  </ul>
+
+  <div>
+    <p><a href="index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="quick_ref">Quick Reference</h2>
+
+  <dl>
+    <dt><a href="#name">NAME</a></dt>
+
+    <dd><code>scrollutil::scrollableframe</code> &ndash; Create and manipulate
+    scrollableframe widgets</dd>
+
+    <dt class="tm"><a href="#synopsis">SYNOPSIS</a></dt>
+
+    <dd>
+      <pre>
+<b>scrollutil::scrollableframe</b> <i>pathName</i> ?<i>options</i>?
+</pre>
+    </dd>
+
+    <dt><a href="#description">DESCRIPTION</a></dt>
+
+    <dt class="tm"><a href="#std_options">STANDARD OPTIONS</a></dt>
+
+    <dd>
+      <pre>
+<b>-background   -highlightbackground  -relief
+-borderwidth  -highlightcolor       -xscrollcommand
+-cursor       -highlightthickness   -yscrollcommand</b>
+</pre>
+    </dd>
+
+    <dt><a href="#widget_options">WIDGET-SPECIFIC OPTIONS</a></dt>
+
+    <dd><code><b><a href="#contentheight">-contentheight</a></b>
+    <i>screenDistance</i></code></dd>
+
+    <dd><code><b><a href="#contentwidth">-contentwidth</a></b>
+    <i>screenDistance</i></code></dd>
+
+    <dd><code><b><a href="#fitcontentheight">-fitcontentheight</a></b>
+    <i>boolean</i></code></dd>
+
+    <dd><code><b><a href="#fitcontentwidth">-fitcontentwidth</a></b>
+    <i>boolean</i></code></dd>
+
+    <dd><code><b><a href="#height">-height</a></b>
+    <i>screenDistance</i></code></dd>
+
+    <dd><code><b><a href="#takefocus">-takefocus</a></b>
+    <b>0</b>|<b>1</b>|<b>""</b>|<i>command</i></code></dd>
+
+    <dd><code><b><a href="#width">-width</a></b>
+    <i>screenDistance</i></code></dd>
+
+    <dd><code><b><a href="#xscrollincrement">-xscrollincrement</a></b>
+    <i>screenDistance</i></code></dd>
+
+    <dd><code><b><a href="#yscrollincrement">-yscrollincrement</a></b>
+    <i>screenDistance</i></code></dd>
+
+    <dt class="tm"><a href="#widget_command">WIDGET COMMAND</a></dt>
+
+    <dd><code><i>pathName</i> <b><a href="#attrib">attrib</a></b> ?<i>name</i>
+    ?<i>value</i> <i>name</i> <i>value</i> ...??</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#autofillx">autofillx</a></b>
+    ?<i>boolean</i>?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#autofilly">autofilly</a></b>
+    ?<i>boolean</i>?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#autosize">autosize</a></b>
+    ?<b>w</b>|<b>h</b>|<b>wh</b>?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#cget">cget</a></b>
+    <i>option</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#configure">configure</a></b>
+    ?<i>option</i> ?<i>value</i> <i>option</i> <i>value</i> ...??</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href=
+    "#contentframe">contentframe</a></b></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#hasattrib">hasattrib</a></b>
+    <i>name</i></code></dd>
+
+    <dd>
+      <code><i>pathName</i> <b><a href="#scan">scan</a></b> <i>option
+      args</i></code>
+
+      <dl>
+        <dd><code><i>pathName</i> <b>scan mark</b> <i>x y</i></code></dd>
+
+        <dd><code><i>pathName</i> <b>scan dragto</b> <i>x y</i>
+        ?<i>gain</i>?</code> </dd>
+      </dl>
+    </dd>
+
+    <dd><code><i>pathName</i> <b><a href="#see">see</a></b> <i>widget</i>
+    ?<b>nw</b>|<b>ne</b>|<b>sw</b>|<b>se</b>?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#seerect">seerect</a></b> <i>x1</i>
+    <i>y1</i> <i>x2</i> <i>y2</i>
+    ?<b>nw</b>|<b>ne</b>|<b>sw</b>|<b>se</b>?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#unsetattrib">unsetattrib</a></b>
+    <i>name</i></code></dd>
+
+    <dd>
+      <code><i>pathName</i> <b><a href="#xview">xview</a></b>
+      ?<i>args</i>?</code>
+
+      <dl>
+        <dd><code><i>pathName</i> <b>xview</b></code></dd>
+
+        <dd><code><i>pathName</i> <b>xview</b> <i>units</i></code></dd>
+
+        <dd><code><i>pathName</i> <b>xview moveto</b>
+        <i>fraction</i></code></dd>
+
+        <dd><code><i>pathName</i> <b>xview scroll</b> <i>number</i>
+        <b>units</b>|<b>pages</b></code></dd>
+      </dl>
+    </dd>
+
+    <dd>
+      <code><i>pathName</i> <b><a href="#yview">yview</a></b>
+      ?<i>args</i>?</code>
+
+      <dl>
+        <dd><code><i>pathName</i> <b>yview</b></code></dd>
+
+        <dd><code><i>pathName</i> <b>yview</b> <i>units</i></code></dd>
+
+        <dd><code><i>pathName</i> <b>yview moveto</b>
+        <i>fraction</i></code></dd>
+
+        <dd><code><i>pathName</i> <b>yview scroll</b> <i>number</i>
+        <b>units</b>|<b>pages</b></code></dd>
+      </dl>
+    </dd>
+
+    <dt class="tm"><a href="#bindings">BINDINGS</a></dt>
+
+    <dt class="tm"><a href="#keywords">KEYWORDS</a></dt>
+
+    <dd>scrollableframe, widget, frame, scrollable</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="detailed_ref">Detailed Reference</h2>
+
+  <dl>
+    <dt id="name"><b>NAME</b></dt>
+
+    <dd><code>scrollutil::scrollableframe</code> &ndash; Create and manipulate
+    scrollableframe widgets</dd>
+
+    <dt class="tm" id="synopsis"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>scrollutil::scrollableframe</b> <i>pathName</i> ?<i>options</i>?
+</pre>
+    </dd>
+
+    <dt id="description"><b>DESCRIPTION</b></dt>
+
+    <dd>The <code><b>scrollutil::scrollableframe</b></code> command creates a
+    new window named <code><i>pathName</i></code> and of the class
+    <code><b>Scrollableframe</b></code>, and makes it into a
+    <b>scrollableframe</b> widget.&nbsp; Additional options, described below,
+    may be specified on the command line or in the option database to configure
+    aspects of the scrollableframe widget such as its width, height, and
+    scrolling increments.&nbsp; The
+    <code><b>scrollutil::scrollableframe</b></code> command returns its
+    <code><i>pathName</i></code> argument.&nbsp; At the time this command is
+    invoked, there must not exist a window named <code><i>pathName</i></code>,
+    but <code><i>pathName</i></code>'s parent must exist.</dd>
+
+    <dd class="tm">A scrollableframe is a mega-widget containing a <b>content
+    frame</b>, whose dimensions may be larger than those of the widget
+    itself.&nbsp; Arbitrary regions of this frame can be brought into view by
+    scrolling, being that the scrollableframe widget supports the
+    <code><b>-xscrollcommand</b></code> and <code><b>-yscrollcommand</b></code>
+    configuration options and the associated Tcl command has the
+    <code><b><a href="#xview">xview</a></b></code> and <code><b><a href=
+    "#yview">yview</a></b></code> subcommands.&nbsp; The content frame may
+    contain any number of arbitrary widgets.&nbsp; In other words, the
+    <code><b>scrollutil::scrollableframe</b></code> command implements a
+    <b>scrollable widget container</b>.</dd>
+
+    <dd class="tm">In the Scrollutil package both the scrollableframe widget
+    and its content frame are implemented as Tk core frames, while in
+    Scrollutil_tile they are ttk::frame widgets.&nbsp; The content frame can be
+    accessed by means of the <code><b><a href=
+    "#contentframe">contentframe</a></b></code> subcommand.&nbsp; Individual
+    widgets contained in it can be made visible in the scrollableframe window
+    with the aid of the <code><b><a href="#see">see</a></b></code>
+    subcommand.&nbsp; In addition to scrolling, scrollableframe widgets also
+    support scanning, with the aid of appropriate mouse event bindings that
+    invoke the <code><b><a href="#scan">scan</a></b></code> subcommand.</dd>
+
+    <dd class="tm">
+      A scrollableframe widget is typically created within a <a href=
+      "scrollarea.html">scrollarea</a>, like in the following example:
+
+      <blockquote>
+        <pre>
+set sa [<a href="scrollarea.html#synopsis">scrollutil::scrollarea</a> ...]
+set sf [<a href="#synopsis">scrollutil::scrollableframe</a> $sa.sf ...]
+$sa <a href="scrollarea.html#setwidget">setwidget</a> $sf
+
+set cf [$sf <a href="#contentframe">contentframe</a>]
+<i>&lt;populate the content frame&gt;</i>
+
+$sf <a href="#autosize">autosize</a> w
+update idletasks
+$sf <a href="#configure">configure</a> <a href="#height">-height</a> ... <a href="#yscrollincrement">-yscrollincrement</a> ...
+
+pack $sa -expand yes -fill both
+</pre>
+      </blockquote>
+    </dd>
+
+    <dd><b>REMARK:</b>&nbsp; After creating the scrollableframe widget, the
+    <code><b>scrollutil::scrollableframe</b></code> command automatically
+    registers it for scrolling with the mouse wheel or touchpad, by passing its
+    path name to the <code><b><a href=
+    "wheelEvent.html#enable">scrollutil::enableScrollingByWheel</a></b></code>
+    command.</dd>
+
+    <dt class="tm" id="std_options"><b>STANDARD OPTIONS</b></dt>
+
+    <dd>
+      <pre>
+<b>-background   -highlightbackground  -relief
+-borderwidth  -highlightcolor       -xscrollcommand
+-cursor       -highlightthickness   -yscrollcommand</b>
+</pre>
+    </dd>
+
+    <dd>See the <b>options</b> manual entry for details on the standard Tk
+    widget options.&nbsp; The <code><b>-background</b></code>,
+    <code><b>-highlightbackground</b></code>,
+    <code><b>-highlightcolor</b></code>, and
+    <code><b>-highlightthickness</b></code> options are only supported by the
+    Scrollutil package, but not by Scrollutil_tile.&nbsp; They have the same
+    default values as the options of the same names for Tk frame widgets.&nbsp;
+    The default values of the remaining standard options are:</dd>
+
+    <dd>
+      <pre>
+<b>-borderwidth</b> 0 <b>-cursor</b> "" <b>-relief flat</b> <b>-xscrollcommand</b> "" <b>-yscrollcommand</b> ""
+</pre>
+    </dd>
+
+    <dt id="widget_options"><b>WIDGET-SPECIFIC OPTIONS</b></dt>
+
+    <dd id="contentheight">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-contentheight</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;contentHeight</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;ContentHeight</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>Specifies the desired height for the content frame in any of the
+        forms acceptable to <code><b>Tk_GetPixels</b></code>.&nbsp; If the
+        option's value is less than or equal to zero then the content frame's
+        height is made just large enough to hold all its children.&nbsp; This
+        option is only relevant if the value of the <code><b><a href=
+        "#fitcontentheight">-fitcontentheight</a></b></code> option is false;
+        otherwise the content frame will have the same height as the
+        scrollableframe window (excluding the latter's border and highlight
+        rectangle, if any), regardless of the value of the
+        <code><b>-contentheight</b></code> option.&nbsp; The default is
+        <code>0</code>, which is suitable for the vast majority of
+        applications.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="contentwidth">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-contentwidth</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;contentWidth</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;ContentWidth</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>Specifies the desired width for the content frame in any of the
+        forms acceptable to <code><b>Tk_GetPixels</b></code>.&nbsp; If the
+        option's value is less than or equal to zero then the content frame's
+        width is made just large enough to hold all its children.&nbsp; This
+        option is only relevant if the value of the <code><b><a href=
+        "#fitcontentwidth">-fitcontentwidth</a></b></code> option is false;
+        otherwise the content frame will have the same width as the
+        scrollableframe window (excluding the latter's border and highlight
+        rectangle, if any), regardless of the value of the
+        <code><b>-contentwidth</b></code> option.&nbsp; The default is
+        <code>0</code>, which is suitable for the vast majority of
+        applications.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="fitcontentheight">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-fitcontentheight</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;fitContentHeight</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;FitContentHeight</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>Specifies a boolean value indicating whether or not the content
+        frame should have the same height as the scrollableframe window
+        (excluding the latter's border and highlight rectangle, if any).&nbsp;
+        If true then the content frame's height will be kept in sync with that
+        of the widget and the value of the <code><b><a href=
+        "#contentheight">-contentheight</a></b></code> option will be
+        ignored.&nbsp; The default is <code>0</code>.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="fitcontentwidth">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-fitcontentwidth</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;fitContentWidth</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;FitContentWidth</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>Specifies a boolean value indicating whether or not the content
+        frame should have the same width as the scrollableframe window
+        (excluding the latter's border and highlight rectangle, if any).&nbsp;
+        If true then the content frame's width will be kept in sync with that
+        of the widget and the value of the <code><b><a href=
+        "#contentwidth">-contentwidth</a></b></code> option will be
+        ignored.&nbsp; The default is <code>0</code>.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="height">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-height</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;height</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;Height</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>Specifies the desired height for the scrollableframe widget in any
+        of the forms acceptable to <code><b>Tk_GetPixels</b></code>.&nbsp;
+        Note that this sets the <i>inner</i> height, excluding the border and
+        highlight rectangle (if any) drawn around the outside of the
+        widget.&nbsp; The default is <code>7c</code>, which should be
+        overridden with a suitable application-specific value.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="takefocus">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-takefocus</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;takeFocus</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;TakeFocus</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>This option determines whether the scrollableframe widget accepts
+        the focus during keyboard traversal.&nbsp; It is almost identical to
+        the standard option of the same name (see the <b>options</b> manual
+        entry for details).&nbsp; The only difference is that not the
+        scrollableframe widget itself but its content frame will receive the
+        focus during keyboard traversal with the standard keys
+        (<code>Tab</code> and <code>Shift-Tab</code>).&nbsp; The default is
+        <code>0</code>, being that a scrollableframe widget is esentially a
+        frame used as a view for its content frame component.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="width">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-width</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;width</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;Width</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>Specifies the desired width for the scrollableframe widget in any
+        of the forms acceptable to <code><b>Tk_GetPixels</b></code>.&nbsp;
+        Note that this sets the <i>inner</i> width, excluding the border and
+        highlight rectangle (if any) drawn around the outside of the
+        widget.&nbsp; The default is <code>10c</code>, which should be
+        overridden with a suitable application-specific value.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="xscrollincrement">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-xscrollincrement</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;xScrollIncrement</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;ScrollIncrement</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>Specifies an increment for horizontal scrolling, in any of the forms
+        acceptable to <code><b>Tk_GetPixels</b></code>.&nbsp; If the value of
+        this option is greater than zero then the horizontal view in the window
+        will be constrained so that the x coordinate within the content frame
+        at the left edge of the window is always an even multiple of
+        <code><b>xScrollIncrement</b></code>; furthermore, the units for
+        horizontal scrolling (see the <code><b><a href=
+        "#xview">xview</a></b></code> subcommad) will also be
+        <code><b>xScrollIncrement</b></code>.&nbsp; If the value is less than
+        or equal to zero then the horizontal scrolling is unconstrained.&nbsp;
+        The default is <code>0</code>.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="yscrollincrement">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-yscrollincrement</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;yScrollIncrement</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;ScrollIncrement</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>Specifies an increment for vertical scrolling, in any of the forms
+        acceptable to <code><b>Tk_GetPixels</b></code>.&nbsp; If the value of
+        this option is greater than zero then the vertical view in the window
+        will be constrained so that the y coordinate within the content frame
+        at the top edge of the window is always an even multiple of
+        <code><b>yScrollIncrement</b></code>; furthermore, the units for
+        vertical scrolling (see the <code><b><a href=
+        "#yview">yview</a></b></code> subcommad) will also be
+        <code><b>yScrollIncrement</b></code>.&nbsp; If the value is less than
+        or equal to zero then the vertical scrolling is unconstrained.&nbsp;
+        The default is <code>0</code>.</p>
+      </blockquote>
+    </dd>
+
+    <dt id="widget_command"><b>WIDGET COMMAND</b></dt>
+
+    <dd>
+      The <code><b>scrollutil::scrollableframe</b></code> command creates a new
+      Tcl command whose name is <code><i>pathName</i></code>.&nbsp; This
+      command may be used to invoke various operations on the widget.&nbsp; It
+      has the following general form:
+
+      <blockquote>
+        <pre>
+<i>pathName</i> <i>option</i> ?<i>arg</i> <i>arg</i> ...?
+</pre>
+      </blockquote>
+    </dd>
+
+    <dd><code><i>option</i></code> and the <code><i>arg</i></code>s determine
+    the exact behavior of the command.&nbsp; The following commands are
+    possible for scrollableframe widgets:</dd>
+
+    <dd>
+      <dl>
+        <dt class="tm" id="attrib"><code><i>pathName</i> <b>attrib</b>
+        ?<i>name</i> ?<i>value</i> <i>name</i> <i>value</i> ...??</code></dt>
+
+        <dd>Queries or modifies the attributes of the widget.&nbsp; If no
+        <code><i>name</i></code> is specified, the command returns a list of
+        pairs, each of which contains the name and the value of an attribute
+        for <code><i>pathName</i></code>.&nbsp; If <code><i>name</i></code> is
+        specified with no <code><i>value</i></code>, then the command returns
+        the value of the one named attribute, or an empty string if no
+        corresponding value exists (you can use the <code><b><a href=
+        "#hasattrib">hasattrib</a></b></code> subcommand to distinguish this
+        case from the one that the value of an <i>existing</i> attribute is an
+        empty string).&nbsp; If one or more
+        <code><i>name</i></code>-<code><i>value</i></code> pairs are specified,
+        then the command sets the given widget attribute(s) to the given
+        value(s); in this case the return value is an empty string.&nbsp; Each
+        <code><i>name</i></code> may be an arbitrary string.</dd>
+
+        <dt class="tm" id="autofillx"><code><i>pathName</i> <b>autofillx</b>
+        ?<i>boolean</i>?</code></dt>
+
+        <dd>Controls or queries whether the content frame will fill the
+        widget's entire inner width.&nbsp; If the optional boolean argument is
+        true then the command sets the <code><b><a href=
+        "#fitcontentwidth">-fitcontentwidth</a></b></code> option to true if
+        the content frame's requested width is less than the scrollableframe's
+        inner width and to false otherwise.&nbsp; Moreover, the command makes
+        sure that this action will be repeated whenever the content frame's
+        requested width or the scrollableframe's inner width changes.&nbsp; If
+        the optional argument is false then the command clears the flag that
+        controls this dynamic action.&nbsp; In both cases, the return value is
+        an empty string.&nbsp; Without the optional argument the command
+        returns the current value of the above-mentioned flag.</dd>
+
+        <dt class="tm" id="autofilly"><code><i>pathName</i> <b>autofilly</b>
+        ?<i>boolean</i>?</code></dt>
+
+        <dd>Controls or queries whether the content frame will fill the
+        widget's entire inner height.&nbsp; If the optional boolean argument is
+        true then the command sets the <code><b><a href=
+        "#fitcontentheight">-fitcontentheight</a></b></code> option to true if
+        the content frame's requested height is less than the scrollableframe's
+        inner height and to false otherwise.&nbsp; Moreover, the command makes
+        sure that this action will be repeated whenever the content frame's
+        requested height or the scrollableframe's inner height changes.&nbsp;
+        If the optional argument is false then the command clears the flag that
+        controls this dynamic action.&nbsp; In both cases, the return value is
+        an empty string.&nbsp; Without the optional argument the command
+        returns the current value of the above-mentioned flag.</dd>
+
+        <dt class="tm" id="autosize"><code><i>pathName</i> <b>autosize</b>
+        ?<i>dimensions</i>?</code></dt>
+
+        <dd>This command sets the <code><b><a href=
+        "#width">-width</a></b></code> and/or <code><b><a href=
+        "#height">-height</a></b></code> option of the scrollableframe to the
+        requested width and/or height of its content frame, according to the
+        optional <code><i>dimensions</i></code> argument, whose possible values
+        are <code><b>w</b></code> (width), <code><b>h</b></code> (height), and
+        <code><b>wh</b></code> (width and height).&nbsp; The default is an
+        empty string, meaning that neither the width nor the height is
+        <i>explicitly</i> requested to be set.&nbsp; Note that if the value of
+        the <code><b><a href="#fitcontentwidth">-fitcontentwidth</a></b></code>
+        option is true then the command sets the widget's inner width to the
+        requested width of its content frame, regardless of whether this was
+        <i>explicitly</i> specified or not.&nbsp; Similarly, if the value of
+        the <code><b><a href=
+        "#fitcontentheight">-fitcontentheight</a></b></code> option is true
+        then the command sets the widget's inner height to the requested height
+        of its content frame, even if this was not <i>explicitly</i>
+        specified.</dd>
+
+        <dd class="tm"><b>REMARK:</b>&nbsp; Setting the widget's inner width
+        and/or height on behalf of this subcommand is executed as an&nbsp;
+        <code>"<b>after</b> 100"</code>&nbsp; callback, to make sure that by
+        the time the widget's width and/or height are set, the geometry
+        management calculations in its content frame are finished.</dd>
+
+        <dt class="tm" id="cget"><code><i>pathName</i> <b>cget</b>
+        <i>option</i></code></dt>
+
+        <dd>Returns the current value of the configuration option given by
+        <code><i>option</i></code>, which may have any of the values accepted
+        by the <code><b>scrollutil::scrollableframe</b></code> command.</dd>
+
+        <dt class="tm" id="configure"><code><i>pathName</i> <b>configure</b>
+        ?<i>option</i> ?<i>value</i> <i>option</i> <i>value</i>
+        ...??</code></dt>
+
+        <dd>Queries or modifies the configuration options of the widget.&nbsp;
+        If no <code><i>option</i></code> is specified, the command returns a
+        list describing all of the available options for
+        <code><i>pathName</i></code> (see <code><b>Tk_ConfigureInfo</b></code>
+        for information on the format of this list).&nbsp; If
+        <code><i>option</i></code> is specified with no
+        <code><i>value</i></code>, then the command returns a list describing
+        the one named option (this list will be identical to the corresponding
+        sublist of the value returned if no <code><i>option</i></code> is
+        specified).&nbsp; If one or more
+        <code><i>option</i></code>-<code><i>value</i></code> pairs are
+        specified, then the command modifies the given widget option(s) to have
+        the given value(s); in this case the return value is an empty
+        string.&nbsp; <code><i>option</i></code> may have any of the values
+        accepted by the <code><b>scrollutil::scrollableframe</b></code>
+        command.</dd>
+
+        <dt class="tm" id="contentframe"><code><i>pathName</i>
+        <b>contentframe</b></code></dt>
+
+        <dd>Returns the path name of the widget's content frame.</dd>
+
+        <dt class="tm" id="hasattrib"><code><i>pathName</i> <b>hasattrib</b>
+        <i>name</i></code></dt>
+
+        <dd>Returns <code>1</code> if the attribute <code><i>name</i></code>
+        exists and <code>0</code> otherwise.</dd>
+
+        <dt class="tm" id="scan"><code><i>pathName</i> <b>scan</b> <i>option
+        args</i></code></dt>
+
+        <dd>This command is used to implement scanning on scrollableframe
+        widgets.&nbsp; It has two forms, depending on
+        <code><i>option</i></code>:</dd>
+
+        <dd>
+          <dl>
+            <dt class="tm"><code><i>pathName</i> <b>scan mark</b> <i>x
+            y</i></code></dt>
+
+            <dd>Records <code><i>x</i></code> and <code><i>y</i></code> and the
+            current view in the scrollableframe window; used in conjunction
+            with later&nbsp; <code><b>scan</b> <b>dragto</b></code>&nbsp;
+            commands.&nbsp; Typically this command is associated with a mouse
+            button press in the widget and <code><i>x</i></code> and
+            <code><i>y</i></code> are the coordinates of the mouse.&nbsp; It
+            returns an empty string.</dd>
+
+            <dt class="tm"><code><i>pathName</i> <b>scan dragto</b> <i>x y</i>
+            ?<i>gain</i>?</code></dt>
+
+            <dd>This command computes the difference between its
+            <code><i>x</i></code> and <code><i>y</i></code> arguments (which
+            are typically mouse coordinates) and the <code><i>x</i></code> and
+            <code><i>y</i></code> arguments to the last&nbsp; <code><b>scan</b>
+            <b>mark</b></code>&nbsp; command for the widget.&nbsp; It then
+            adjusts the view by <code><i>gain</i></code> times the difference
+            in coordinates, where <code><i>gain</i></code> defaults to
+            <code>10</code>.&nbsp; This command is typically associated with
+            mouse motion events in the widget, to produce the effect of
+            dragging the content frame at high speed through the window.&nbsp;
+            The return value is an empty string.</dd>
+          </dl>
+        </dd>
+
+        <dt class="tm" id="see"><code><i>pathName</i> <b>see</b> <i>widget</i>
+        ?<i>corner</i>?</code></dt>
+
+        <dd>This command adjusts the view in the scrollableframe's window so
+        that <code><i>widget</i></code> becomes visible in it.&nbsp; The
+        specified widget must be a descendant of the content frame and must
+        have the same toplevel.&nbsp; In addition, it must be managed by some
+        geometry manager (such as <code><b>grid</b></code>,
+        <code><b>pack</b></code>, <code><b>place</b></code>,
+        <code><b>text</b></code>, or <code><b>canvas</b></code>).&nbsp; The
+        optional <code><i>corner</i></code> argument specifies which corner of
+        <code><i>widget</i></code> should become visible if it is too large to
+        fit into the window.&nbsp; The possible values are
+        <code><b>nw</b></code> (north-west), <code><b>ne</b></code>
+        (north-east), <code><b>sw</b></code> (south-west), and
+        <code><b>se</b></code> (south-east).&nbsp; The default corner is
+        <code><b>nw</b></code>.</dd>
+
+        <dd class="tm"><b>REMARK:</b>&nbsp; By using this subcommand you can
+        make the keyboard navigation in the content frame more user-friendly,
+        like in the following example, in which <code>$w</code> is a descendant
+        of the content frame of the scrollableframe widget
+        <code>$sf</code> (it is assumed that <code>$sf</code> doesn't contain
+        <code>%</code> characters):</dd>
+
+        <dd>
+          <blockquote>
+            <pre>
+bind $w &lt;&lt;TraverseIn&gt;&gt; [list $sf <span class="red">see</span> %W]
+</pre>
+          </blockquote>
+        </dd>
+
+        <dd>If the widget <code>$w</code> was embedded into a <a href=
+        "scrollarea.html">scrollarea</a> via the latter's <code><b><a href=
+        "scrollarea.html#setwidget">setwidget</a></b></code> subcommand, and
+        the scrollarea in turn is a descendant of the content frame, then it is
+        more user-friendly to bring the scrollarea into view rather than just
+        the widget:</dd>
+
+        <dd>
+          <blockquote>
+            <pre>
+bind $w &lt;&lt;TraverseIn&gt;&gt; [list seeScrollarea $sf %W]
+
+proc seeScrollarea {sf w} { $sf <span class="red">see</span> [<b><a href=
+"scrollarea.html#getscrollarea">scrollutil::getscrollarea</a></b> $w] }
+</pre>
+          </blockquote>
+        </dd>
+
+        <dt id="seerect"><code><i>pathName</i> <b>seerect</b> <i>x1</i>
+        <i>y1</i> <i>x2</i> <i>y2</i> ?<i>corner</i>?</code></dt>
+
+        <dd>This command adjusts the view in the scrollableframe's window so
+        that the rectangle given by <code><i>x1</i></code>,
+        <code><i>y1</i></code>, <code><i>x2</i></code>, and
+        <code><i>y2</i></code> becomes visible in it.&nbsp; These coordinates
+        are relative to the content frame and specify two diagonally opposite
+        corners of the rectangle (which will include its upper and left edges
+        but not its lower or right edges).&nbsp; The optional
+        <code><i>corner</i></code> argument specifies which corner of the
+        rectangle should become visible if it is too large to fit into the
+        window.&nbsp; The possible values are <code><b>nw</b></code>
+        (north-west), <code><b>ne</b></code> (north-east),
+        <code><b>sw</b></code> (south-west), and <code><b>se</b></code>
+        (south-east).&nbsp; The default corner is <code><b>nw</b></code>.</dd>
+
+        <dt class="tm" id="unsetattrib"><code><i>pathName</i>
+        <b>unsetattrib</b> <i>name</i></code></dt>
+
+        <dd>Unsets the attribute <code><i>name</i></code>.&nbsp; Returns an
+        empty string.</dd>
+
+        <dt class="tm" id="xview"><code><i>pathName</i> <b>xview</b>
+        ?<i>args</i>?</code></dt>
+
+        <dd>This command is used to query and change the horizontal position of
+        the information displayed in the widget's window.&nbsp; It can take any
+        of the following forms:</dd>
+
+        <dd>
+          <dl>
+            <dt class="tm"><code><i>pathName</i> <b>xview</b></code></dt>
+
+            <dd>Returns a list containing two elements.&nbsp; Each element is a
+            real fraction between <code>0</code> and <code>1</code>; together
+            they describe the horizontal span that is visible in the
+            window.&nbsp; For example, if the first element is <code>0.2</code>
+            and the second element is <code>0.6</code> then 20% of the content
+            frame is off-screen to the left, the middle 40% is visible in the
+            window, and 40% of the content frame is off-screen to the
+            right.&nbsp; These are the same values passed to scrollbars via the
+            <code><b>-xscrollcommand</b></code> option.</dd>
+
+            <dt class="tm"><code><i>pathName</i> <b>xview</b>
+            <i>units</i></code></dt>
+
+            <dd>Adjusts the view in the window so that the content frame
+            position given by <code><i>units</i></code> is displayed at the
+            left edge of the window.&nbsp; This argument specifies a number of
+            units of the <code><b><a href=
+            "#xscrollincrement">xScrollIncrement</a></b></code> option if it is
+            greater than zero, or of one-tenth the window's inner width
+            otherwise.</dd>
+
+            <dt class="tm"><code><i>pathName</i> <b>xview moveto</b>
+            <i>fraction</i></code></dt>
+
+            <dd>Adjusts the view in the window so that
+            <code><i>fraction</i></code> of the total width of the content
+            frame is off-screen to the left.&nbsp; <code><i>fraction</i></code>
+            must be a fraction between <code>0</code> and <code>1</code>.</dd>
+
+            <dt class="tm"><code><i>pathName</i> <b>xview scroll</b> <i>number
+            what</i></code></dt>
+
+            <dd>This command shifts the view in the window left or right
+            according to <code><i>number</i></code> and
+            <code><i>what</i></code>.&nbsp; <code><i>number</i></code> must be
+            an integer or a float; if it is a float then it is converted to an
+            integer, rounded away from <code>0</code>.&nbsp;
+            <code><i>what</i></code> must be either <code><b>units</b></code>
+            or <code><b>pages</b></code> or an abbreviation of one of
+            these.&nbsp; If <code><i>what</i></code> is
+            <code><b>units</b></code>, the view adjusts left or right in units
+            of the <code><b><a href=
+            "#xscrollincrement">xScrollIncrement</a></b></code> option if it is
+            greater than zero, or in units of one-tenth the window's inner
+            width otherwise.&nbsp; If <code><i>what</i></code> is
+            <code><b>pages</b></code> then the view adjusts in units of
+            nine-tenths the window's inner width.&nbsp; If
+            <code><i>number</i></code> is negative then information farther to
+            the left becomes visible; if it is positive then information
+            farther to the right becomes visible.</dd>
+          </dl>
+        </dd>
+
+        <dt class="tm" id="yview"><code><i>pathName</i> <b>yview</b>
+        ?<i>args</i>?</code></dt>
+
+        <dd>This command is used to query and change the vertical position of
+        the information displayed in the widget's window.&nbsp; It can take any
+        of the following forms:</dd>
+
+        <dd>
+          <dl>
+            <dt class="tm"><code><i>pathName</i> <b>yview</b></code></dt>
+
+            <dd>Returns a list containing two elements.&nbsp; Each element is a
+            real fraction between <code>0</code> and <code>1</code>; together
+            they describe the vertical span that is visible in the
+            window.&nbsp; For example, if the first element is <code>0.2</code>
+            and the second element is <code>0.6</code> then 20% of the content
+            frame is off-screen to the top, the middle 40% is visible in the
+            window, and 40% of the content frame is off-screen to the
+            bottom.&nbsp; These are the same values passed to scrollbars via
+            the <code><b>-yscrollcommand</b></code> option.</dd>
+
+            <dt class="tm"><code><i>pathName</i> <b>yview</b>
+            <i>units</i></code></dt>
+
+            <dd>Adjusts the view in the window so that the content frame
+            position given by <code><i>units</i></code> is displayed at the
+            top edge of the window.&nbsp; This argument specifies a number of
+            units of the <code><b><a href=
+            "#yscrollincrement">yScrollIncrement</a></b></code> option if it is
+            greater than zero, or of one-tenth the window's inner height
+            otherwise.</dd>
+
+            <dt class="tm"><code><i>pathName</i> <b>yview moveto</b>
+            <i>fraction</i></code></dt>
+
+            <dd>Adjusts the view in the window so that
+            <code><i>fraction</i></code> of the total height of the content
+            frame is off-screen to the top.&nbsp; <code><i>fraction</i></code>
+            must be a fraction between <code>0</code> and <code>1</code>.</dd>
+
+            <dt class="tm"><code><i>pathName</i> <b>yview scroll</b> <i>number
+            what</i></code></dt>
+
+            <dd>This command shifts the view in the window up or down according
+            to <code><i>number</i></code> and <code><i>what</i></code>.&nbsp;
+            <code><i>number</i></code> must be an integer or a float; if it is
+            a float then it is converted to an integer, rounded away from
+            <code>0</code>.&nbsp; <code><i>what</i></code> must be either
+            <code><b>units</b></code> or <code><b>pages</b></code> or an
+            abbreviation of one of these.&nbsp; If <code><i>what</i></code> is
+            <code><b>units</b></code>, the view adjusts up or down in units of
+            the <code><b><a href=
+            "#yscrollincrement">yScrollIncrement</a></b></code> option if it is
+            greater than zero, or in units of one-tenth the window's inner
+            height otherwise.&nbsp; If <code><i>what</i></code> is
+            <code><b>pages</b></code> then the view adjusts in units of
+            nine-tenths the window's inner height.&nbsp; If
+            <code><i>number</i></code> is negative then information farther to
+            the top becomes visible; if it is positive then information farther
+            to the bottom becomes visible.</dd>
+          </dl>
+        </dd>
+      </dl>
+    </dd>
+
+    <dt class="tm" id="bindings"><b>BINDINGS</b></dt>
+
+    <dd>Mouse button 1 may be used for scanning.&nbsp; If it is pressed and
+    dragged over the scrollableframe window, the content frame drags at high
+    speed in the direction the mouse moves.&nbsp; For the duration of the scan
+    the cursor is set to one having the shape of a pointing hand.</dd>
+
+    <dt class="tm" id="keywords"><b>KEYWORDS</b></dt>
+
+    <dd>scrollableframe, widget, frame, scrollable</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="comparison">Comparison with BWidget ScrollableFrame and
+  iwidgets::scrolledframe</h2>
+
+  <p>The scrollutil::scrollableframe widget was designed as a lightweight,
+  theme-able, and full-featured replacement for BWidget ScrollableFrame and
+  iwidgets::scrolledframe.&nbsp; The following table contains a comparison of
+  the options and commands provided by the three widgets:</p>
+
+  <table border="2" cellspacing="0" cellpadding="3">
+    <tr bgcolor="#FFFFE0">
+      <th align="left">scrollutil::scrollableframe</th>
+      <th align="left">BWidget ScrollableFrame</th>
+      <th align="left">iwidgets::scrolledframe</th>
+    </tr>
+
+    <tr>
+      <td><code><b>-background</b></code></td>
+      <td><code><b>-background</b></code></td>
+      <td><code><b>-background</b></code></td>
+    </tr>
+
+    <tr>
+      <td><code><b>-borderwidth</b></code></td>
+      <td bgcolor="#e0e0e0"></td>
+      <td><code><b>-borderwidth</b></code></td>
+    </tr>
+
+    <tr>
+      <td><code><b>-cursor</b></code></td>
+      <td bgcolor="#e0e0e0"></td>
+      <td><code><b>-cursor</b></code></td>
+    </tr>
+
+    <tr>
+      <td><code><b>-contentheight</b></code></td>
+      <td><code><b>-areaheight</b></code></td>
+      <td><code>[<i>pathName</i> <b>component canvas</b>] \<br>
+      <b>itemconfigure frameTag -height</b> ...</code></td>
+    </tr>
+
+    <tr>
+      <td><code><b>-contentwidth</b></code></td>
+      <td><code><b>-areawidth</b></code></td>
+      <td><code>[<i>pathName</i> <b>component canvas</b>] \<br>
+      <b>itemconfigure frameTag -width</b> ...</code></td>
+    </tr>
+
+    <tr>
+      <td><code><b>-fitcontentheight</b></code></td>
+      <td><code><b>-constrainedheight</b></code></td>
+      <td><code><b>bind</b> [<i>pathName</i> <b>component canvas</b>]
+      <b>&lt;Configure&gt;</b> \<br>
+      { <b>%W itemconfigure frameTag -height %h</b> }</code></td>
+    </tr>
+
+    <tr>
+      <td><code><b>-fitcontentwidth</b></code></td>
+      <td><code><b>-constrainedwidth</b></code></td>
+      <td><code><b>bind</b> [<i>pathName</i> <b>component canvas</b>]
+      <b>&lt;Configure&gt;</b> \<br>
+      { <b>%W itemconfigure frameTag -width %w</b> }</code></td>
+    </tr>
+
+    <tr>
+      <td><code><b>-height</b></code>&nbsp; (sets the <i>inner</i> height,
+      excluding<br>
+      the border and highlight rectangle, if any)</td>
+      <td><code><b>-height</b></code>&nbsp; (inner height = total height)</td>
+      <td><code><b>-height</b></code>&nbsp; (sets the <i>total</i> height,
+      including<br>
+      the border and horizontal scrollbar, if any)</td>
+    </tr>
+
+    <tr>
+      <td><code><b>-highlightbackground</b></code></td>
+      <td bgcolor="#e0e0e0"></td>
+      <td bgcolor="#e0e0e0"></td>
+    </tr>
+
+    <tr>
+      <td><code><b>-highlightcolor</b></code></td>
+      <td bgcolor="#e0e0e0"></td>
+      <td bgcolor="#e0e0e0"></td>
+    </tr>
+
+    <tr>
+      <td><code><b>-highlightthickness</b></code></td>
+      <td bgcolor="#e0e0e0"></td>
+      <td bgcolor="#e0e0e0"></td>
+    </tr>
+
+    <tr>
+      <td><code><b>-relief</b></code></td>
+      <td bgcolor="#e0e0e0"></td>
+      <td><code><b>-relief</b></code></td>
+    </tr>
+
+    <tr>
+      <td><code><b>-takefocus</b></code></td>
+      <td bgcolor="#e0e0e0"></td>
+      <td bgcolor="#e0e0e0"></td>
+    </tr>
+
+    <tr>
+      <td><code><b>-width</b></code>&nbsp; (sets the <i>inner</i> width,
+      excluding<br>
+      the border and highlight rectangle, if any)</td>
+      <td><code><b>-width</b></code>&nbsp; (inner width = total width)</td>
+      <td><code><b>-width</b></code>&nbsp; (sets the <i>total</i> width,
+      including<br>
+      the border and vertical scrollbar, if any)</td>
+    </tr>
+
+    <tr>
+      <td><code><b>-xscrollcommand</b></code></td>
+      <td><code><b>-xscrollcommand</b></code></td>
+      <td bgcolor="#e0e0e0"></td>
+    </tr>
+
+    <tr>
+      <td><code><b>-xscrollincrement</b></code></td>
+      <td><code><b>-xscrollincrement</b></code></td>
+      <td><code><b>-xscrollincrement</b></code> for <code>[<i>pathName</i>
+      <b>component canvas</b>]</code></td>
+    </tr>
+
+    <tr>
+      <td><code><b>-yscrollcommand</b></code></td>
+      <td><code><b>-yscrollcommand</b></code></td>
+      <td bgcolor="#e0e0e0"></td>
+    </tr>
+
+    <tr>
+      <td><code><b>-yscrollincrement</b></code></td>
+      <td><code><b>-yscrollincrement</b></code></td>
+      <td><code><b>-yscrollincrement</b></code> for <code>[<i>pathName</i>
+      <b>component canvas</b>]</code></td>
+    </tr>
+
+    <tr bgcolor="#FFFFE0">
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td><code><b>attrib</b></code></td>
+      <td bgcolor="#e0e0e0"></td>
+      <td bgcolor="#e0e0e0"></td>
+    </tr>
+
+    <tr>
+      <td><code><b>autosize</b></code></td>
+      <td bgcolor="#e0e0e0"></td>
+      <td bgcolor="#e0e0e0"></td>
+    </tr>
+
+    <tr>
+      <td><code><b>autofillx</b></code></td>
+      <td bgcolor="#e0e0e0"></td>
+      <td bgcolor="#e0e0e0"></td>
+    </tr>
+
+    <tr>
+      <td><code><b>autofilly</b></code></td>
+      <td bgcolor="#e0e0e0"></td>
+      <td bgcolor="#e0e0e0"></td>
+    </tr>
+
+    <tr>
+      <td><code><b>cget</b></code></td>
+      <td><code><b>cget</b></code></td>
+      <td><code><b>cget</b></code></td>
+    </tr>
+
+    <tr>
+      <td><code><b>configure</b></code></td>
+      <td><code><b>configure</b></code></td>
+      <td><code><b>configure</b></code></td>
+    </tr>
+
+    <tr>
+      <td><code><b>contentframe</b></code></td>
+      <td><code><b>getframe</b></code></td>
+      <td><code><b>childsite</b></code></td>
+    </tr>
+
+    <tr>
+      <td><code><b>hasattrib</b></code></td>
+      <td bgcolor="#e0e0e0"></td>
+      <td bgcolor="#e0e0e0"></td>
+    </tr>
+
+    <tr>
+      <td><code><b>scan</b></code>&nbsp; (with mouse event bindings)</td>
+      <td bgcolor="#e0e0e0"></td>
+      <td bgcolor="#e0e0e0"></td>
+    </tr>
+
+    <tr>
+      <td><code><b>see</b> <i>widget</i>
+      ?<b>nw</b>|<b>ne</b>|<b>sw</b>|<b>se</b>?</code></td>
+      <td><code><b>see</b> <i>widget</i>
+      ?<b>top</b>|<b>bottom</b> ?<b>left</b>|<b>right</b>??</code></td>
+      <td bgcolor="#e0e0e0"></td>
+    </tr>
+
+    <tr>
+      <td><code><b>seerect</b> <i>x1</i> <i>y1</i> <i>x2</i> <i>y2</i>
+      ?<b>nw</b>|<b>ne</b>|<b>sw</b>|<b>se</b>?</code></td>
+      <td bgcolor="#e0e0e0"></td>
+      <td bgcolor="#e0e0e0"></td>
+    </tr>
+
+    <tr>
+      <td><code><b>unsetattrib</b></code></td>
+      <td bgcolor="#e0e0e0"></td>
+      <td bgcolor="#e0e0e0"></td>
+    </tr>
+
+    <tr>
+      <td><code><b>xview</b></code></td>
+      <td><code><b>xview</b></code></td>
+      <td><code><b>xview</b></code></td>
+    </tr>
+
+    <tr>
+      <td><code><b>yview</b></code></td>
+      <td><code><b>yview</b></code></td>
+      <td><code><b>yview</b></code></td>
+    </tr>
+
+    <tr>
+      <td><code><b>xview</b>|<b>yview</b> <i>units</i></code></td>
+      <td bgcolor="#e0e0e0"></td>
+      <td bgcolor="#e0e0e0"></td>
+    </tr>
+
+    <tr>
+      <td><code><b>xview</b>|<b>yview</b> <b>moveto</b> 0|1</code></td>
+      <td><code><b>xview</b>|<b>yview</b> <b>moveto</b> 0|1</code></td>
+      <td><code><b>justify</b>
+      <b>left</b>|<b>right</b>|<b>top</b>|<b>bottom</b></code><br>
+      (shortcut for&nbsp; <code><b>xview</b>|<b>yview</b>
+      <b>moveto</b> 0|1</code>)</td>
+    </tr>
+  </table>
+
+  <p><b>REMARK 1:</b>&nbsp; For the <code><b>see</b></code> command provided by
+  the BWidget ScrollableFrame widget one cannot specify the horizontal side
+  without the vertical one.&nbsp; More annoying is, however, that in the
+  presence of a positive <code><b>-xscrollincrement</b></code> or
+  <code><b>-yscrollincrement</b></code> value, widgets that are small enough to
+  fit into the window are quite often just partially brought into view.&nbsp;
+  In addition, the command works only for direct children of the
+  ScrollableFrame widget's content frame.</p>
+
+  <p><b>REMARK 2:</b>&nbsp; The iwidgets::scrolledframe widget has no
+  equivalents of the scrollutil::scrollableframe options
+  <code><b>-contentheight</b></code>, <code><b>-contentwidth</b></code>,
+  <code><b>-fitcontentheight</b></code>, and
+  <code><b>-fitcontentwidth</b></code>, but these can be emulated (using
+  undocumented internal information!) as shown above.&nbsp; It provides a
+  <code><b>justify</b></code> command, which is, however, just a shortcut
+  for&nbsp; <code><b>xview</b>|<b>yview</b> <b>moveto</b> 0|1</code>.&nbsp;
+  What this widget is really missing, is a <code><b>see</b></code> command for
+  making individual widgets visible in the window (which is important for
+  user-friendly keyboard navigation).</p>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+</body>
+</html>

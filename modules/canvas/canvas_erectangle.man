@@ -1,0 +1,315 @@
+[vset VERSION 0.1]
+[comment {-*- tcl -*- doctools manpage}]
+[manpage_begin canvas::edit::rectangle n [vset VERSION]]
+[keywords canvas]
+[keywords editing]
+[keywords rectangle]
+[moddesc   {Variations on a canvas}]
+[titledesc {Editing a rectangle on a canvas}]
+[require Tcl 8.5]
+[require Tk 8.5]
+[require canvas::edit::points [opt 0.1]]
+[require canvas::edit::rectangle [opt [vset VERSION]]]
+[description]
+
+This package provides a class whose instances handle editing a rectangle on a canvas. Instances can
+be configured with regard to the visual appearance of the markers denoting the rectangle's
+corners. Note that instances do not store the edited rectangle themselves, but delegate this to a
+configurable object.
+
+[section {Interaction}]
+
+[para] The rectangle editor internally uses an instance of package [package canvas::edit::points],
+and inherits all the options and behaviours for it. The color options are additionally applied to
+the rectangle element of this editor
+
+[para] Beyond that it provides an option, [option -rect-config], to customize the rectangle item
+used to render the rectangle through its corners. Note that it cannot overide the inherited color
+options.
+
+[para] During interaction instances execute a state machine where the user creates two points, at
+which point the system completes the rectangle with the missing corners and reports it. At that
+point the system prevents adding more points. Dragging the points is still possible, enabling
+resizing and moving the rectangle. Deleting any corner deletes the entire rectangle, at which point
+the system is again ready for the creation of a new rectangle from two points.
+
+[section {Class API}]
+
+[list_begin definitions]
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd ::canvas::edit] [method rectangle] [arg objectName] [arg canvas] [arg options]...]
+
+This, the class command, creates and configures a new instance of a
+rectangle editor, named [arg objectName]. The instance will be
+connected to the specified [arg canvas] widget.
+
+[para] The result of the command is the fully qualified name of the
+instance command.
+
+[para] The options accepted here, and their values, are explained in
+the section [sectref Options].
+
+[list_end]
+
+[section {Instance API}]
+
+Instances of the rectangle editors provide the following API:
+
+[list_begin definitions]
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd objectName] [method destroy]]
+
+This method destroys the rectangle editor and releases all its
+internal resources.
+
+[para] Note that this operation does not destroy the items the editor
+managed on the attached canvas, nor the canvas itself.
+
+[para] The result of the method is an empty string.
+
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd objectName] [method enable]]
+
+This method activates editing of the rectangle on the canvas. This
+is the default after instance creation. A call is ignored if the
+editor is already active.
+
+[para] The result of the method is an empty string.
+
+[para] The complementary method is [method disable]. The interogatory
+method for the current state is [method active].
+
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd objectName] [method disable]]
+
+This method disables editing of the rectangle on the canvas. A call
+is ignored if the editor is already disabled.
+
+[para] The result of the method is an empty string.
+
+[para] The complementary method is [method enable]. The interogatory
+method for the current state is [method active].
+
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd objectName] [method active]]
+
+This method queries the editor state.
+
+[para] The result of the method is a boolean value, [const true] if
+the editor is active, and [const false] otherwise, i.e. disabled.
+
+[para] The methods to change the state are [method enable] and
+[method disable].
+
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd objectName] [method set] [arg minx] [arg miny] [arg maxx] [arg maxy]]
+
+This method programmatically set the rectangle from the border coordinates.
+This writes over a previous (possibly partial) rectangle.
+
+[para] The result of the method is an empty string.
+
+[para] Note that this method goes through the whole set of callbacks invoked when corners are
+created, i.e.  [option -create-cmd], and, more importantly, [option -data-cmd].
+
+[para] This is the method through which to load a pre-existing rectangle into an editor instance.
+
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd objectName] [method clear]]
+
+This method programmatically removes the rectangle from the editor, making the way free for creating
+a new one.
+
+[para] The result of the method is an empty string.
+
+[para] Note that this method goes through the same callbacks invoked when the user interactively
+removes a corner, i.e. [option -data-cmd].
+
+[list_end]
+
+[section Options]
+
+The class command accepts the following options
+
+[list_begin options]
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -active-cmd [arg command-prefix]]
+
+The value of this option is a command prefix the editor will invoke when the mouse enters or leaves
+the rectangle or a corner managed by the instance.
+
+[para] If not specified it defaults to an empty command which does nothing.
+
+[para] The signature of this command prefix is
+
+[list_begin definitions]
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd activeCmd] [arg editorObj] [arg id]]
+
+[para] The [arg id] identifies the entered object.
+
+[para] An empty [arg id] indicates that the last entered object was left.
+
+[para] The value [const rect] indicates that the rectangle's outline was entered.
+
+[para] Any other value is a code for one of the rectangle's corner, i.e. [const tl], [const tr],
+[const bl], and [const br].
+
+[para] The result of this method is ignored.
+
+[list_end]
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -add-remove-point [arg eventspec]]
+
+The value of this option is an event specification (without bracketing angles) declaring which event
+will trigger adding and removing a point.
+
+[para] This option can only be set at construction time.
+
+[para] The default setup uses different events for adding and removing points, [const ButtonPress-1]
+and [const ButtonPress-2] respectively.
+
+[para] When using this option the same event is used for both operations. This is no problem because
+adding is bound as canvas-global event while removal is bound to the relevant canvas items.
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -color [arg colorspec]]
+
+The value of this option is the fill color for the default item created when adding a point, and no
+[option -create-cmd] is specified.
+
+[para] The default value is [const SkyBlue2].
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -create-cmd [arg command-prefix]]
+
+The value of this option is a command prefix the editor will invoke when it has to create a new
+corner.
+
+[para] While this option can be set after construction, it is recommended to use this feature only
+as a means of inserting custom processing to be done at creation time which remembers and calls the
+previous value of the option.
+
+[para] If not specified it defaults to a command which will create a
+black-bordered blue circle of radius 3 centered on the location of the
+new point.
+
+[para] The signature of this command prefix is
+
+[list_begin definitions]
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd createCmd] [arg canvas] [arg x] [arg y]]
+
+The result of the command prefix [emph must] be a list of the canvas items it created to represent
+the marker. Note here that the visual representation of a "corner" may consist of multiple canvas
+items in an arbitrary shape.
+
+[para] The returned list of items is allowed to be empty, and such is taken as signal that the
+callback vetoed the creation of the corner.
+
+[list_end]
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -data-cmd [arg command-prefix]]
+
+The value of this option is a command prefix the editor will invoke when the rectangle was edited in
+some way (created, modified, deleted). This is how the editor delegates the actual storage of the
+rectangle information to an outside object.
+
+[para] This option can only be set at construction time.
+
+[para] If not specified it defaults to an empty string and is ignored
+by the editor, i.e. not invoked.
+
+[para] The signature of this command prefix is
+
+[list_begin definitions]
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd dataCmd] [arg editorObj] [arg coordinates]]
+
+This callback is invoked when the rectangle was changed either interactively, or programmatically.
+
+See instance method [method set] for the latter.
+
+[para] The [arg editorObj] identifies the instance invoking the callback, whereas [arg coordinates]
+is a list of 4 elements, containing the min x, and y, and the max x and y coordinates of the
+rectangle, in this order.
+
+[para] The result of this method is ignored.
+
+[list_end][comment callback-signatures]
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -drag-point [arg eventspec]]
+
+The value of this option is an event specification (without bracketing angles) declaring which event
+will trigger a drag action on points.
+
+[para] This option can only be set at construction time.
+
+[para] The default specification is [const ButtonPress-3].
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -hilit-color [arg colorspec]]
+
+The value of this option is the highlight color for the default item created when adding a point,
+and no [option -highlight-cmd] is specified.
+
+[para] The default value is [const red].
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -kind [arg name]]
+
+The value of this option is the canvas item type for the default item created when adding a point,
+and no [option -create-cmd] is specified.
+
+Only item types specified through a bounding box are suitable.
+
+[para] The default value is [const oval].
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -radius [arg int]]
+
+The value of this option is the radius for the default item created when adding a point,
+and no [option -create-cmd] is specified.
+
+[para] The default value is [const 3].
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -rect-config [arg list]]
+
+The value of this option is a list of options and their values to be applied to the internal
+rectangle item whenever it is regenerated after changes.
+
+Note that these options [strong cannot] override the principal coloring of the rectangle as applied
+by the main options [option -color] and [option -hilit-color].
+
+[para] If not specified it defaults to the empty list.
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -tag [arg string]]
+
+The value of this option is the name of the canvas tag with which to
+identify all items of all vertices managed by the editor.
+
+[para] This option can only be set at construction time.
+
+[para] If not specified it defaults to [const RECTANGLE]
+
+[list_end][comment options]
+[vset CATEGORY canvas]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]

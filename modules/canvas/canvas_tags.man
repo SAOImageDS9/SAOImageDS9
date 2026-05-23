@@ -1,0 +1,82 @@
+[comment {-*- tcl -*- doctools manpage}]
+[vset VERSION 0.1]
+[manpage_begin canvas::tag n [vset VERSION]]
+[keywords {append tag}]
+[keywords canvas]
+[keywords {insert tag}]
+[keywords {remove tag}]
+[keywords tags]
+[moddesc   {Variations on a canvas}]
+[titledesc {Easier management of the tags on canvas items or item groups}]
+[require Tcl 8.5]
+[require Tk 8.5]
+[require canvas::tag [opt [vset VERSION]]]
+[description]
+
+This package provides utility commands for easier management of the
+tag lists associated with canvas items or item groups.
+
+[para] The problem with the existing canvas API is that a tag list can
+only be set as a whole, making adding and removing of tags from such
+lists relatively complex operations reading the current tag list,
+modifying it, and then writing the changed list back.
+
+[para] The commands provided by this package hide all this complexity
+from the user.
+
+[section API]
+
+[list_begin definitions]
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd ::canvas::tag] [method append] [arg canvas] [arg tagOrId] [arg tag]...]
+
+This command adds the tags [arg tag]... to the tag list for the items
+identified by the [arg tagOrId] in the [arg canvas] widget. The new
+tags are added at the end of the list.
+
+[para] The result of the command is the empty string.
+
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd ::canvas::tag] [method prepend] [arg canvas] [arg tagOrId] [arg tag]...]
+
+This command adds the tags [arg tag]... to the tag list for the items
+identified by the [arg tagOrId] in the [arg canvas] widget. The new
+tags are added at the beginning of the list.
+
+[para] The result of the command is the empty string.
+
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd ::canvas::tag] [method append] [arg canvas] [arg tagOrId] [arg index] [arg tag]...]
+
+This command adds the tags [arg tag]... to the tag list for the items
+identified by the [arg tagOrId] in the [arg canvas] widget. The new
+tags are inserted before the element at [arg index].
+
+[para] [arg index] [const 0] refers to the beginning of the list.
+
+[para] [arg index] [const end] refers to after the end of the list.
+
+[para] The result of the command is the empty string.
+
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd ::canvas::tag] [method remove] [arg canvas] [arg tagOrId] [arg tag]...]
+
+This command removes the named tags [arg tag]... from the tag list for the items
+identified by the [arg tagOrId] in the [arg canvas] widget.
+
+[para] The result of the command is the empty string.
+
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd ::canvas::tag] [method match] [arg canvas] [arg tagOrId] [arg pattern]]
+
+This command finds all tags for the items identified by the
+[arg tagOrId] in the [arg canvas] widget which match the glob
+[arg pattern].
+
+[para] The result of the command is a list of the matching tags. Which
+may be empty.
+
+[list_end]
+[vset CATEGORY canvas]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]

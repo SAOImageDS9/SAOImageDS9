@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>The scrollutil::scrollsync and scrollutil::getscrollsync
+  Commands</title>
+
+  <meta name="Author" content="Csaba Nemethi">
+  <meta name="Keywords" content="scrollsync, widget, scrolling">
+
+  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+</head>
+
+<body>
+  <div>
+    <h1>The <code><b>scrollutil::scrollsync</b></code> and<br>
+    <code><b>scrollutil::getscrollsync</b></code> Commands</h1>
+
+    <h2>For Scrollutil Version 2.4</h2>
+
+    <h3>by</h3>
+
+    <h2>Csaba Nemethi</h2>
+
+    <address>
+      <a href="mailto:csaba.nemethi@t-online.de">csaba.nemethi@t-online.de</a>
+    </address>
+  </div>
+
+  <hr>
+
+  <h2 id="contents">Contents</h2>
+
+  <ul>
+    <li><a href="#quick_ref">The <code><b>scrollutil::scrollsync</b></code>
+    Command &ndash; Quick Reference</a></li>
+
+    <li><a href="#detailed_ref">The <code><b>scrollutil::scrollsync</b></code>
+    Command &ndash; Detailed Reference</a></li>
+
+    <li><a href="#getscrollsync">The
+    <code><b>scrollutil::getscrollsync</b></code> Command</a></li>
+  </ul>
+
+  <div>
+    <p><a href="index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="quick_ref">The <code><b>scrollutil::scrollsync</b></code> Command
+  &ndash; Quick Reference</h2>
+
+  <dl>
+    <dt><a href="#name">NAME</a></dt>
+
+    <dd><code>scrollutil::scrollsync</code> &ndash; Create and manipulate
+    scrollsync widgets</dd>
+
+    <dt class="tm"><a href="#synopsis">SYNOPSIS</a></dt>
+
+    <dd>
+      <pre>
+<b>scrollutil::scrollsync</b> <i>pathName</i> ?<i>options</i>?
+</pre>
+    </dd>
+
+    <dt><a href="#description">DESCRIPTION</a></dt>
+
+    <dt class="tm"><a href="#std_options">STANDARD OPTIONS</a></dt>
+
+    <dd>
+      <pre>
+<b>-background   -highlightbackground  -relief
+-borderwidth  -highlightcolor       -xscrollcommand
+-cursor       -highlightthickness   -yscrollcommand</b>
+</pre>
+    </dd>
+
+    <dt><a href="#widget_options">WIDGET-SPECIFIC OPTIONS</a></dt>
+
+    <dd><code><b><a href="#takefocus">-takefocus</a></b>
+    <b>0</b>|<b>1</b>|<b>""</b>|<i>command</i></code></dd>
+
+    <dt class="tm"><a href="#widget_command">WIDGET COMMAND</a></dt>
+
+    <dd><code><i>pathName</i> <b><a href="#attrib">attrib</a></b> ?<i>name</i>
+    ?<i>value</i> <i>name</i> <i>value</i> ...??</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#cget">cget</a></b>
+    <i>option</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#configure">configure</a></b>
+    ?<i>option</i> ?<i>value</i> <i>option</i> <i>value</i> ...??</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#hasattrib">hasattrib</a></b>
+    <i>name</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#setwidgets">setwidgets</a></b>
+    <i>widgetList</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#unsetattrib">unsetattrib</a></b>
+    <i>name</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#widgets">widgets</a></b></code></dd>
+
+    <dd>
+      <code><i>pathName</i> <b><a href="#xview">xview</a></b>
+      ?<i>args</i>?</code>
+
+      <dl>
+        <dd><code><i>pathName</i> <b>xview</b></code></dd>
+
+        <dd><code><i>pathName</i> <b>xview moveto</b>
+        <i>fraction</i></code></dd>
+
+        <dd><code><i>pathName</i> <b>xview scroll</b> <i>number</i>
+        <b>units</b>|<b>pages</b></code></dd>
+      </dl>
+    </dd>
+
+    <dd>
+      <code><i>pathName</i> <b><a href="#yview">yview</a></b>
+      ?<i>args</i>?</code>
+
+      <dl>
+        <dd><code><i>pathName</i> <b>yview</b></code></dd>
+
+        <dd><code><i>pathName</i> <b>yview moveto</b>
+        <i>fraction</i></code></dd>
+
+        <dd><code><i>pathName</i> <b>yview scroll</b> <i>number</i>
+        <b>units</b>|<b>pages</b></code></dd>
+      </dl>
+    </dd>
+
+    <dt class="tm"><a href="#bindings">BINDINGS</a></dt>
+
+    <dt class="tm"><a href="#keywords">KEYWORDS</a></dt>
+
+    <dd>scrollsync, widget, scrolling</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="detailed_ref">The <code><b>scrollutil::scrollsync</b></code>
+  Command &ndash; Detailed Reference</h2>
+
+  <dl>
+    <dt id="name"><b>NAME</b></dt>
+
+    <dd><code>scrollutil::scrollsync</code> &ndash; Create and manipulate
+    scrollsync widgets</dd>
+
+    <dt class="tm" id="synopsis"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>scrollutil::scrollsync</b> <i>pathName</i> ?<i>options</i>?
+</pre>
+    </dd>
+
+    <dt id="description"><b>DESCRIPTION</b></dt>
+
+    <dd>The <code><b>scrollutil::scrollsync</b></code> command creates a new
+    window named <code><i>pathName</i></code> and of the class
+    <code><b>Scrollsync</b></code>, and makes it into a <b>scrollsync</b>
+    widget.&nbsp; Additional options, described below, may be specified on the
+    command line or in the option database to configure aspects of the
+    scrollsync widget such as its borderwidth and relief.&nbsp; The
+    <code><b>scrollutil::scrollsync</b></code> command returns its
+    <code><i>pathName</i></code> argument.&nbsp; At the time this command is
+    invoked, there must not exist a window named <code><i>pathName</i></code>,
+    but <code><i>pathName</i></code>'s parent must exist.</dd>
+
+    <dd class="tm">A scrollsync is a mega-widget, designed for scrolling
+    several widgets simultaneously.&nbsp; It is both horizontally and
+    vertically scrollable, meaning that it supports the
+    <code><b>-xscrollcommand</b></code> and <code><b>-yscrollcommand</b></code>
+    configuration options and the associated Tcl command has the
+    <code><b><a href="#xview">xview</a></b></code> and <code><b><a href=
+    "#yview">yview</a></b></code> subcommands.&nbsp; Whenever the
+    horizontal/vertical position of the view in the window of one of the
+    horizontally/vertically scrollable widgets contained in the list passed to
+    the <code><b><a href="#setwidgets">setwidgets</a></b></code> subcommand of
+    the associated Tcl command changes, the view in the windows of all the
+    other horizontally/vertically scrollable elements of that list is
+    automatically adjusted accordingly, thus making sure that the view's
+    position in these windows is kept in sync.</dd>
+
+    <dd class="tm">
+      A scrollsync widget is typically created within a <a href=
+      "scrollarea.html">scrollarea</a>, like in the following example:
+
+      <blockquote>
+        <pre>
+set sa [<a href="scrollarea.html#synopsis">scrollutil::scrollarea</a> ...]
+set ss [<a href="#synopsis">scrollutil::scrollsync</a> $sa.ss ...]
+$sa <a href="scrollarea.html#setwidget">setwidget</a> $ss
+
+set lb1 [listbox $ss.lb1 ...]
+set lb2 [listbox $ss.lb2 ...]
+$ss <a href="#setwidgets">setwidgets</a> [list $lb1 $lb2]
+
+grid $lb1 $lb2 -sticky news -padx {0 2}
+grid rowconfigure    $ss 0   -weight 1
+grid columnconfigure $ss all -weight 1
+
+pack $sa -expand yes -fill both
+</pre>
+      </blockquote>
+    </dd>
+
+    <dt id="std_options"><b>STANDARD OPTIONS</b></dt>
+
+    <dd>
+      <pre>
+<b>-background   -highlightbackground  -relief
+-borderwidth  -highlightcolor       -xscrollcommand
+-cursor       -highlightthickness   -yscrollcommand</b>
+</pre>
+    </dd>
+
+    <dd>See the <b>options</b> manual entry for details on the standard Tk
+    widget options.&nbsp; The <code><b>-background</b></code>,
+    <code><b>-highlightbackground</b></code>,
+    <code><b>-highlightcolor</b></code>, and
+    <code><b>-highlightthickness</b></code> options are only supported by the
+    Scrollutil package, but not by Scrollutil_tile.&nbsp; They have the same
+    default values as the options of the same names for Tk frame widgets.&nbsp;
+    The default values of the remaining standard options are:</dd>
+
+    <dd>
+      <pre>
+<b>-borderwidth</b> 0 <b>-cursor</b> "" <b>-relief flat</b> <b>-xscrollcommand</b> "" <b>-yscrollcommand</b> ""
+</pre>
+    </dd>
+
+    <dt id="widget_options"><b>WIDGET-SPECIFIC OPTIONS</b></dt>
+
+    <dd id="takefocus">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-takefocus</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;takeFocus</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;TakeFocus</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>This option determines whether the scrollsync widget accepts the
+        focus during keyboard traversal.&nbsp; It is almost identical to the
+        standard option of the same name (see the <b>options</b> manual entry
+        for details).&nbsp; The only difference is that not the scrollsync
+        widget itself but the first element of the widget list passed to the
+        <code><b><a href="#setwidgets">setwidgets</a></b></code> subcommand of
+        the associated Tcl command will receive the focus during keyboard
+        traversal with the standard keys (<code>Tab</code> and
+        <code>Shift-Tab</code>).&nbsp; The default is <code>0</code>, being
+        that a scrollsync widget is esentially a frame containing the
+        above-mentioned widgets.</p>
+      </blockquote>
+    </dd>
+
+    <dt id="widget_command"><b>WIDGET COMMAND</b></dt>
+
+    <dd>
+      The <code><b>scrollutil::scrollsync</b></code> command creates a new Tcl
+      command whose name is <code><i>pathName</i></code>.&nbsp; This command
+      may be used to invoke various operations on the widget.&nbsp; It has the
+      following general form:
+
+      <blockquote>
+        <pre>
+<i>pathName</i> <i>option</i> ?<i>arg</i> <i>arg</i> ...?
+</pre>
+      </blockquote>
+    </dd>
+
+    <dd><code><i>option</i></code> and the <code><i>arg</i></code>s determine
+    the exact behavior of the command.&nbsp; The following commands are
+    possible for scrollsync widgets:</dd>
+
+    <dd>
+      <dl>
+        <dt class="tm" id="attrib"><code><i>pathName</i> <b>attrib</b>
+        ?<i>name</i> ?<i>value</i> <i>name</i> <i>value</i> ...??</code></dt>
+
+        <dd>Queries or modifies the attributes of the widget.&nbsp; If no
+        <code><i>name</i></code> is specified, the command returns a list of
+        pairs, each of which contains the name and the value of an attribute
+        for <code><i>pathName</i></code>.&nbsp; If <code><i>name</i></code> is
+        specified with no <code><i>value</i></code>, then the command returns
+        the value of the one named attribute, or an empty string if no
+        corresponding value exists (you can use the <code><b><a href=
+        "#hasattrib">hasattrib</a></b></code> subcommand to distinguish this
+        case from the one that the value of an <i>existing</i> attribute is an
+        empty string).&nbsp; If one or more
+        <code><i>name</i></code>-<code><i>value</i></code> pairs are specified,
+        then the command sets the given widget attribute(s) to the given
+        value(s); in this case the return value is an empty string.&nbsp; Each
+        <code><i>name</i></code> may be an arbitrary string.</dd>
+
+        <dt class="tm" id="cget"><code><i>pathName</i> <b>cget</b>
+        <i>option</i></code></dt>
+
+        <dd>Returns the current value of the configuration option given by
+        <code><i>option</i></code>, which may have any of the values accepted
+        by the <code><b>scrollutil::scrollsync</b></code> command.</dd>
+
+        <dt class="tm" id="configure"><code><i>pathName</i> <b>configure</b>
+        ?<i>option</i> ?<i>value</i> <i>option</i> <i>value</i>
+        ...??</code></dt>
+
+        <dd>Queries or modifies the configuration options of the widget.&nbsp;
+        If no <code><i>option</i></code> is specified, the command returns a
+        list describing all of the available options for
+        <code><i>pathName</i></code> (see <code><b>Tk_ConfigureInfo</b></code>
+        for information on the format of this list).&nbsp; If
+        <code><i>option</i></code> is specified with no
+        <code><i>value</i></code>, then the command returns a list describing
+        the one named option (this list will be identical to the corresponding
+        sublist of the value returned if no <code><i>option</i></code> is
+        specified).&nbsp; If one or more
+        <code><i>option</i></code>-<code><i>value</i></code> pairs are
+        specified, then the command modifies the given widget option(s) to have
+        the given value(s); in this case the return value is an empty
+        string.&nbsp; <code><i>option</i></code> may have any of the values
+        accepted by the <code><b>scrollutil::scrollsync</b></code>
+        command.</dd>
+
+        <dt class="tm" id="hasattrib"><code><i>pathName</i> <b>hasattrib</b>
+        <i>name</i></code></dt>
+
+        <dd>Returns <code>1</code> if the attribute <code><i>name</i></code>
+        exists and <code>0</code> otherwise.</dd>
+
+        <dt class="tm" id="setwidgets"><code><i>pathName</i> <b>setwidgets</b>
+        <i>widgetList</i></code></dt>
+
+        <dd>Sets the widgets in whose windows the view's position is to be kept
+        in sync.&nbsp; The <code><i>widgetList</i></code> argument must be a
+        valid list consisting of path names of existing widgets.&nbsp; Whenever
+        the horizontal/vertical position of the view in the window of one of
+        the horizontally/vertically scrollable widgets contained in this list
+        changes, the view in the windows of all the other
+        horizontally/vertically scrollable elements of the list will be
+        automatically adjusted accordingly, thus making sure that the view's
+        position in these windows is kept in sync.&nbsp; The return value is
+        the argument passed to the previous successful invocation of this
+        subcommand, or an empty list if there was no successful
+        <code><b>setwidgets</b></code> invocation before.</dd>
+
+        <dd class="tm"><b>REMARK:</b>&nbsp; When one of the widgets whose path
+        name is contained in <code><i>widgetList</i></code> gets destroyed,
+        that widget is automatically removed from the internal list of widgets
+        in whose windows the view's position is kept in sync.</dd>
+
+        <dt class="tm" id="unsetattrib"><code><i>pathName</i>
+        <b>unsetattrib</b> <i>name</i></code></dt>
+
+        <dd>Unsets the attribute <code><i>name</i></code>.&nbsp; Returns an
+        empty string.</dd>
+
+        <dt class="tm" id="widgets"><code><i>pathName</i>
+        <b>widgets</b></code></dt>
+
+        <dd>Returns the argument passed to the most recent successful
+        invocation of the <code><b><a href=
+        "#setwidgets">setwidgets</a></b></code> subcommand, or an empty list if
+        there was no successful invocation of that subcommand yet.</dd>
+
+        <dt class="tm" id="xview"><code><i>pathName</i> <b>xview</b>
+        ?<i>args</i>?</code></dt>
+
+        <dd><code><i>pathName</i> <b>xview</b></code></dd>
+
+        <dd><code><i>pathName</i> <b>xview moveto</b>
+        <i>fraction</i></code></dd>
+
+        <dd><code><i>pathName</i> <b>xview scroll</b> <i>number</i>
+        <b>units</b>|<b>pages</b></code></dd>
+
+        <dd class="tm">This command passes its arguments to the
+        <code><b>xview</b></code> command of the current <b>master widget for
+        the x axis</b> and returns the result of that command invocation.&nbsp;
+        The master widget for the x axis is the element of the widget list
+        passed to the <code><b><a href="#setwidgets">setwidgets</a></b></code>
+        subcommand having the smallest relative view width among the
+        horizontally scrollable widgets in that list, i.e., the least
+        difference between the last and first elements of the two-element list
+        returned by its <code><b>xview</b></code> command.&nbsp; This master
+        widget can vary during program execution (in case of text widgets it
+        can even change depending on the current vertical view position).</dd>
+
+        <dt class="tm" id="yview"><code><i>pathName</i> <b>yview</b>
+        ?<i>args</i>?</code></dt>
+
+        <dd><code><i>pathName</i> <b>yview</b></code></dd>
+
+        <dd><code><i>pathName</i> <b>yview moveto</b>
+        <i>fraction</i></code></dd>
+
+        <dd><code><i>pathName</i> <b>yview scroll</b> <i>number</i>
+        <b>units</b>|<b>pages</b></code></dd>
+
+        <dd class="tm">This command passes its arguments to the
+        <code><b>yview</b></code> command of the current <b>master widget for
+        the y axis</b> and returns the result of that command invocation.&nbsp;
+        The master widget for the y axis is the element of the widget list
+        passed to the <code><b><a href="#setwidgets">setwidgets</a></b></code>
+        subcommand having the smallest relative view height among the
+        vertically scrollable widgets in that list, i.e., the least difference
+        between the last and first elements of the two-element list returned by
+        its <code><b>yview</b></code> command.&nbsp; This master widget can
+        vary during program execution.</dd>
+      </dl>
+    </dd>
+
+    <dt class="tm" id="bindings"><b>BINDINGS</b></dt>
+
+    <dd>When a new scrollsync widget is created, it has no default event
+    bindings: scrollsync widgets are not intended to be interactive.</dd>
+
+    <dt class="tm" id="keywords"><b>KEYWORDS</b></dt>
+
+    <dd>scrollsync, widget, scrolling</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="getscrollsync">The <code><b>scrollutil::getscrollsync</b></code>
+  Command</h2>
+
+  <dl>
+    <dt><b>NAME</b></dt>
+
+    <dd><code>scrollutil::getscrollsync</code> &ndash; Query the scrollsync
+    containing a given widget</dd>
+
+    <dt class="tm"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>scrollutil::gescrollsync</b> <i>widget</i>
+</pre>
+    </dd>
+
+    <dt><b>DESCRIPTION</b></dt>
+
+    <dd>Returns the path name of the scrollsync into which the widget given by
+    the <code><i>widget</i></code> argument is embedded via the scrollsync's
+    <code><b><a href="#setwidgets">setwidgets</a></b></code> subcommand, or an
+    empty string if there is no such scrollsync widget.</dd>
+
+    <dt class="tm"><b>KEYWORDS</b></dt>
+
+    <dd>scrollsync, widget</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Multi-Entry Widgets for Date and Time</title>
+
+  <meta name="Author" content="Csaba Nemethi">
+  <meta name="Keywords" content="mentry, widget, date, time, clock">
+
+  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+</head>
+
+<body>
+  <div>
+    <h1>Multi-Entry Widgets for Date and Time</h1>
+
+    <h2>For Mentry Version 4.3</h2>
+
+    <h3>by</h3>
+
+    <h2>Csaba Nemethi</h2>
+
+    <address>
+      <a href="mailto:csaba.nemethi@t-online.de">csaba.nemethi@t-online.de</a>
+    </address>
+  </div>
+
+  <hr>
+
+  <h2 id="contents">Contents</h2>
+
+  <ul>
+    <li><a href="#dateMentry">The <code><b>mentry::dateMentry</b></code>
+    Command</a></li>
+
+    <li><a href="#timeMentry">The <code><b>mentry::timeMentry</b></code>
+    Command</a></li>
+
+    <li><a href="#dateTimeMentry">The
+    <code><b>mentry::dateTimeMentry</b></code> Command</a></li>
+
+    <li><a href="#putClockVal">The <code><b>mentry::putClockVal</b></code>
+    Command</a></li>
+
+    <li><a href="#getClockVal">The <code><b>mentry::getClockVal</b></code>
+    Command</a></li>
+  </ul>
+
+  <div>
+    <p><a href="index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="dateMentry">The <code><b>mentry::dateMentry</b></code> Command</h2>
+
+  <dl>
+    <dt><b>NAME</b></dt>
+
+    <dd><code>mentry::dateMentry</code> &ndash; Create and manipulate mentry
+    widgets for date</dd>
+
+    <dt class="tm"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>mentry::dateMentry</b> <i>pathName format separator</i> ?<i>options</i>?
+</pre>
+    </dd>
+
+    <dt><b>DESCRIPTION</b></dt>
+
+    <dd>This command creates a new mentry widget <code><i>pathName</i></code>
+    for displaying and editing a date according to the
+    <code><i>format</i></code> argument, which must be a string of length 3,
+    consisting of the letters <code><b>"d"</b></code> for the day
+    (<code>01</code> - <code>31</code>), <code><b>"m"</b></code> for the month
+    (<code>01</code> - <code>12</code>), and <code><b>"y"</b></code> or
+    <code><b>"Y"</b></code> for the year without century (<code>00</code> -
+    <code>99</code>) or with century (e.g., <code>2008</code>), in an arbitrary
+    order.&nbsp; These field descriptor characters have the same meanings as in
+    the&nbsp; <code><b>clock format</b></code>&nbsp; command.&nbsp; The
+    <code><i>separator</i></code> argument specifies the text to be displayed
+    in the labels separating the three entry components of the mentry widget
+    (the most common values are the <code><b>"/"</b></code>,
+    <code><b>"-"</b></code>, and <code><b>"."</b></code> characters).&nbsp; The
+    supported <code><i>options</i></code> are the same as in the case of the
+    <code><b><a href="mentryWidget.html">mentry::mentry</a></b></code>
+    command.</dd>
+
+    <dd class="tm">The command sets the <code><b>type</b></code> attribute of
+    the widget to the value <code>"Date"</code>, saves the value of
+    <code><i>format</i></code> in its <code><b>format</b></code> attribute, and
+    returns the name of the newly created widget.</dd>
+
+    <dt class="tm"><b>DEFAULT BINDINGS</b></dt>
+
+    <dd>The <code><b>mentry::dateMentry</b></code> command defines four new
+    keyboard bindings for the entry components of the mentry widget it
+    creates:&nbsp; The <code>Up</code> key increments the entry's value by 1 if
+    the latter is less than the allowed maximum for that component.&nbsp;
+    Similarly, the <code>Down</code> key decrements the entry's value by 1 if
+    the latter is greater than the allowed minimum for that component.&nbsp;
+    The <code>Prior</code> key increments the entry's value by at most 10 if
+    the latter is less than the allowed maximum for that component.&nbsp;
+    Similarly, the <code>Next</code> key decrements the entry's value by at
+    most 10 if the latter is greater than the allowed minimum for that
+    component.&nbsp; If the entry is empty then all of these keys insert the
+    component-specific minimum value into the entry.</dd>
+
+    <dd class="tm">The actions performed by the <code>Up</code> and
+    <code>Down</code> keys can also be triggered with the aid of the mouse
+    wheel or a two-finger gesture on the touchpad.&nbsp; In addition, on Mac OS
+    X/11+ Aqua, the actions performed by the <code>Prior</code> and
+    <code>Next</code> keys are also triggered by the
+    <code><b>&lt;Option-MouseWheel&gt;</b></code> event.&nbsp; The same holds
+    true on all windowing systems if the Tk version is 8.7a4 or later, where
+    the <code><b>Option</b></code> modifier is bound to the <code>Option</code>
+    key on Mac OS X/11+ and to the <code>Alt</code> key on Windows and
+    X11.</dd>
+
+    <dt class="tm"><b>KEYWORDS</b></dt>
+
+    <dd>mentry, widget, date</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="timeMentry">The <code><b>mentry::timeMentry</b></code> Command</h2>
+
+  <dl>
+    <dt><b>NAME</b></dt>
+
+    <dd><code>mentry::timeMentry</code> &ndash; Create and manipulate mentry
+    widgets for time</dd>
+
+    <dt class="tm"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>mentry::timeMentry</b> <i>pathName format separator</i> ?<i>options</i>?
+</pre>
+    </dd>
+
+    <dt><b>DESCRIPTION</b></dt>
+
+    <dd>This command creates a new mentry widget <code><i>pathName</i></code>
+    for displaying and editing a time according to the
+    <code><i>format</i></code> argument, which must be a string of length 2 or
+    3, consisting of the following field descriptor characters of the&nbsp;
+    <code><b>clock format</b></code>&nbsp; command: <code><b>"H"</b></code> or
+    <code><b>"I"</b></code>, followed by <code><b>"M"</b></code>, and
+    optionally the letter <code><b>"S"</b></code>.&nbsp; An
+    <code><b>"H"</b></code> as first character specifies the time format
+    <code><b>"%H:%M"</b></code> or <code><b>"%H:%M:%S"</b></code> (i.e., with
+    the hour between <code>0</code> and <code>23</code>), while the letter
+    <code><b>"I"</b></code> stands for&nbsp; <code><b>"%I:%M
+    %p"</b></code>&nbsp; or&nbsp; <code><b>"%I:%M:%S %p"</b></code>&nbsp;
+    (i.e., with AM/PM indicator).&nbsp; The <code><i>separator</i></code>
+    argument specifies the text to be displayed in the labels separating the
+    entry components of the mentry widget (this is usually the
+    <code><b>":"</b></code> character).&nbsp; The <code><i>options</i></code>
+    are the same as in the case of the <code><b><a href=
+    "mentryWidget.html">mentry::mentry</a></b></code> command.</dd>
+
+    <dd class="tm">The command sets the <code><b>type</b></code> attribute of
+    the widget to the value <code>"Time"</code>, saves the value of
+    <code><i>format</i></code> in its <code><b>format</b></code> attribute, and
+    returns the name of the newly created widget.</dd>
+
+    <dt class="tm"><b>DEFAULT BINDINGS</b></dt>
+
+    <dd>The <code><b>mentry::timeMentry</b></code> command defines four new
+    keyboard bindings for the entry components of the mentry widget it
+    creates:&nbsp; The <code>Up</code> key increments the entry's value by 1 if
+    the latter is less than the allowed maximum for that component.&nbsp;
+    Similarly, the <code>Down</code> key decrements the entry's value by 1 if
+    the latter is greater than the allowed minimum for that component.&nbsp;
+    The <code>Prior</code> key increments the entry's value by at most 10 if
+    the latter is less than the allowed maximum for that component.&nbsp;
+    Similarly, the <code>Next</code> key decrements the entry's value by at
+    most 10 if the latter is greater than the allowed minimum for that
+    component.&nbsp; If the entry is empty then all of these keys insert the
+    component-specific minimum value into the entry.</dd>
+
+    <dd class="tm">The actions performed by the <code>Up</code> and
+    <code>Down</code> keys can also be triggered with the aid of the mouse
+    wheel or a two-finger gesture on the touchpad.&nbsp; In addition, on Mac OS
+    X/11+ Aqua, the actions performed by the <code>Prior</code> and
+    <code>Next</code> keys are also triggered by the
+    <code><b>&lt;Option-MouseWheel&gt;</b></code> event.&nbsp; The same holds
+    true on all windowing systems if the Tk version is 8.7a4 or later, where
+    the <code><b>Option</b></code> modifier is bound to the <code>Option</code>
+    key on Mac OS X/11+ and to the <code>Alt</code> key on Windows and
+    X11.</dd>
+
+    <dt class="tm"><b>KEYWORDS</b></dt>
+
+    <dd>mentry, widget, time</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="dateTimeMentry">The <code><b>mentry::dateTimeMentry</b></code>
+  Command</h2>
+
+  <dl>
+    <dt><b>NAME</b></dt>
+
+    <dd><code>mentry::dateTimeMentry</code> &ndash; Create and manipulate
+    mentry widgets for date & time</dd>
+
+    <dt class="tm"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>mentry::dateTimeMentry</b> <i>pathName format dateSeparator timeSeparator</i> ?<i>options</i>?
+</pre>
+    </dd>
+
+    <dt><b>DESCRIPTION</b></dt>
+
+    <dd>This command creates a new mentry widget <code><i>pathName</i></code>
+    for displaying and editing a date & time according to the
+    <code><i>format</i></code> argument, which must be a string of length 5 or
+    6, with the first 3 characters consisting of the letters
+    <code><b>"d"</b></code> for the day (<code>01</code> - <code>31</code>),
+    <code><b>"m"</b></code> for the month (<code>01</code> - <code>12</code>),
+    and <code><b>"y"</b></code> or <code><b>"Y"</b></code> for the year without
+    century (<code>00</code> - <code>99</code>) or with century (e.g.,
+    <code>2008</code>), in an arbitrary order, followed by 2 or 3 further field
+    descriptor characters of the&nbsp;<code><b>clock format</b></code>&nbsp;
+    command, which must be: <code><b>"H"</b></code> or <code><b>"I"</b></code>,
+    then <code><b>"M"</b></code>, and optionally the letter
+    <code><b>"S"</b></code>.&nbsp; An <code><b>"H"</b></code> specifies the
+    time format <code><b>"%H:%M"</b></code> or <code><b>"%H:%M:%S"</b></code>
+    (i.e., with the hour between <code>0</code> and <code>23</code>), while the
+    letter <code><b>"I"</b></code> stands for&nbsp; <code><b>"%I:%M
+    %p"</b></code>&nbsp; or&nbsp; <code><b>"%I:%M:%S %p"</b></code>&nbsp;
+    (i.e., with AM/PM indicator).&nbsp; The <code><i>dateSeparator</i></code>
+    argument specifies the text to be displayed in the labels separating the
+    entry components in the date part of the mentry widget (the most common
+    values are the <code><b>"/"</b></code>, <code><b>"-"</b></code>, and
+    <code><b>"."</b></code> characters).&nbsp; Similarly, the
+    <code><i>timeSeparator</i></code> argument stands for the text to be
+    displayed in the labels separating the entry components in the time part of
+    mentry widget (this is usually the <code><b>":"</b></code>
+    character).&nbsp; The date and time parts in turn are separated from each
+    other by a space character.&nbsp; The supported <code><i>options</i></code>
+    are the same as in the case of the <code><b><a href=
+    "mentryWidget.html">mentry::mentry</a></b></code> command.</dd>
+
+    <dd class="tm">The command sets the <code><b>type</b></code> attribute of
+    the widget to the value <code>"DateTime"</code>, saves the value of
+    <code><i>format</i></code> in its <code><b>format</b></code> attribute, and
+    returns the name of the newly created widget.</dd>
+
+    <dt class="tm"><b>DEFAULT BINDINGS</b></dt>
+
+    <dd>The <code><b>mentry::dateTimeMentry</b></code> command defines four new
+    keyboard bindings for the entry components of the mentry widget it
+    creates:&nbsp; The <code>Up</code> key increments the entry's value by 1 if
+    the latter is less than the allowed maximum for that component.&nbsp;
+    Similarly, the <code>Down</code> key decrements the entry's value by 1 if
+    the latter is greater than the allowed minimum for that component.&nbsp;
+    The <code>Prior</code> key increments the entry's value by at most 10 if
+    the latter is less than the allowed maximum for that component.&nbsp;
+    Similarly, the <code>Next</code> key decrements the entry's value by at
+    most 10 if the latter is greater than the allowed minimum for that
+    component.&nbsp; If the entry is empty then all of these keys insert the
+    component-specific minimum value into the entry.</dd>
+
+    <dd class="tm">The actions performed by the <code>Up</code> and
+    <code>Down</code> keys can also be triggered with the aid of the mouse
+    wheel or a two-finger gesture on the touchpad.&nbsp; In addition, on Mac OS
+    X/11+ Aqua, the actions performed by the <code>Prior</code> and
+    <code>Next</code> keys are also triggered by the
+    <code><b>&lt;Option-MouseWheel&gt;</b></code> event.&nbsp; The same holds
+    true on all windowing systems if the Tk version is 8.7a4 or later, where
+    the <code><b>Option</b></code> modifier is bound to the <code>Option</code>
+    key on Mac OS X/11+ and to the <code>Alt</code> key on Windows and
+    X11.</dd>
+
+    <dt class="tm"><b>KEYWORDS</b></dt>
+
+    <dd>mentry, widget, date, time</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="putClockVal">The <code><b>mentry::putClockVal</b></code> Command</h2>
+
+  <dl>
+    <dt><b>NAME</b></dt>
+
+    <dd><code>mentry::putClockVal</code> &ndash; Output a clock value to a
+    date, time, or date & time mentry</dd>
+
+    <dt class="tm"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>mentry::putClockVal</b> <i>clockValue</i> <i>pathName</i> ?<b>-gmt</b> <i>boolean</i>?
+</pre>
+    </dd>
+
+    <dt><b>DESCRIPTION</b></dt>
+
+    <dd>This command outputs the date, time, or date & time corresponding to
+    the integer <code><i>clockValue</i></code> to the mentry widget
+    <code><i>pathName</i></code>, which must have been created with the
+    <code><b><a href="#dateMentry">mentry::dateMentry</a></b></code>,
+    <code><b><a href="#timeMentry">mentry::timeMentry</a></b></code>, or
+    <code><b><a href="#dateTimeMentry">mentry::dateTimeMentry</a></b></code>
+    command (this is checked by examining the widget's <code><b>type</b></code>
+    attribute, which must have the value <code>"Date"</code>,
+    <code>"Time"</code>, or <code>"DateTime"</code>).</dd>
+
+    <dd class="tm">Like in the case of the&nbsp; <code><b>clock
+    format</b></code>&nbsp; command, the optional argument pair&nbsp;
+    <code><b>-gmt</b> <i>boolean</i></code> specifies whether the clock value
+    is to be formatted as Greenwich Mean Time or according to the local
+    timezone as defined by the operating environment.</dd>
+
+    <dt class="tm"><b>KEYWORDS</b></dt>
+
+    <dd>mentry, widget, date, time, clock</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="getClockVal">The <code><b>mentry::getClockVal</b></code> Command</h2>
+
+  <dl>
+    <dt><b>NAME</b></dt>
+
+    <dd><code>mentry::getClockVal</code> &ndash; Get the clock value from a
+    date, time, or date & time mentry</dd>
+
+    <dt class="tm"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>mentry::getClockVal</b> <i>pathName</i> ?<b>-base</b> <i>clockValue</i>? ?<b>-gmt</b> <i>boolean</i>?
+</pre>
+    </dd>
+
+    <dt><b>DESCRIPTION</b></dt>
+
+    <dd>This command returns the clock value corresponding to the date, time,
+    or date & time contained in the mentry widget <code><i>pathName</i></code>,
+    which must have been created with the <code><b><a href=
+    "#dateMentry">mentry::dateMentry</a></b></code>, <code><b><a href=
+    "#timeMentry">mentry::timeMentry</a></b></code>, or <code><b><a href=
+    "#dateTimeMentry">mentry::dateTimeMentry</a></b></code> command (this is
+    checked by examining the widget's <code><b>type</b></code> attribute, which
+    must have the value <code>"Date"</code>, <code>"Time"</code>, or
+    <code>"DateTime"</code>).</dd>
+
+    <dd class="tm">Like in the case of the&nbsp; <code><b>clock
+    scan</b></code>&nbsp; command, the optional argument pair&nbsp;
+    <code><b>-base</b> <i>clockValue</i></code> specifies that the date
+    contained in <code><i>clockValue</i></code> is to be used when getting the
+    clock value from the given mentry widget, and the optional argument
+    pair&nbsp; <code><b>-gmt</b> <i>boolean</i></code> specifies whether the
+    clock value is to be calculated relative to Greenwich Mean Time or
+    according to the local timezone as defined by the operating
+    environment.</dd>
+
+    <dd class="tm">If an error occurs during the conversion, the command sets
+    the focus to the first erronous entry component, generates an error, and
+    returns one of the values contained in the following table:</dd>
+
+    <dd class="tm">
+      <table border="2" cellspacing="0" cellpadding="3">
+        <tr bgcolor="#FFFFE0">
+          <th align="left" nowrap>Return Value</th>
+
+          <th align="left">Meaning</th>
+        </tr>
+
+        <tr>
+          <td><code>"EMPTY"</code></td>
+
+          <td>Any entry component (except the one containing the seconds) is
+          empty.</td>
+        </tr>
+
+        <tr>
+          <td><code>"BAD"</code></td>
+
+          <td>The value of the day, month, or hour (the latter only if the
+          AM/PM indicator is present) is <code>0</code>.</td>
+        </tr>
+
+        <tr>
+          <td><code>"BAD_DATE"</code></td>
+
+          <td>The &lt;year, month, day&gt; triple is invalid (note that the
+          command is aware of leap years).</td>
+        </tr>
+
+        <tr>
+          <td><code>"BAD_YEAR"</code></td>
+
+          <td>The above triple is valid, but the conversion (made with the aid
+          of the&nbsp; <code><b>clock scan</b></code>&nbsp; command) failed
+          because of an unsupported year value (e.g., between <code>38</code>
+          and <code>70</code>).</td>
+        </tr>
+      </table>
+    </dd>
+
+    <dt class="tm"><b>KEYWORDS</b></dt>
+
+    <dd>mentry, widget, date, time, clock</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+</body>
+</html>

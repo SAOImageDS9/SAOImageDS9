@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Multi-Entry Widgets for IPv6 Addresses</title>
+
+  <meta name="Author" content="Csaba Nemethi">
+  <meta name="Keywords" content="mentry, widget, IPv6 address">
+
+  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+</head>
+
+<body>
+  <div>
+    <h1>Multi-Entry Widgets for IPv6 Addresses</h1>
+
+    <h2>For Mentry Version 4.3</h2>
+
+    <h3>by</h3>
+
+    <h2>Csaba Nemethi</h2>
+
+    <address>
+      <a href="mailto:csaba.nemethi@t-online.de">csaba.nemethi@t-online.de</a>
+    </address>
+  </div>
+
+  <hr>
+
+  <h2 id="contents">Contents</h2>
+
+  <ul>
+    <li><a href="#ipv6AddrMentry">The
+    <code><b>mentry::ipv6AddrMentry</b></code> Command</a></li>
+
+    <li><a href="#putIPv6Addr">The <code><b>mentry::putIPv6Addr</b></code>
+    Command</a></li>
+
+    <li><a href="#getIPv6Addr">The <code><b>mentry::getIPv6Addr</b></code>
+    Command</a></li>
+  </ul>
+
+  <div>
+    <p><a href="index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="ipv6AddrMentry">The <code><b>mentry::ipv6AddrMentry</b></code>
+  Command</h2>
+
+  <dl>
+    <dt><b>NAME</b></dt>
+
+    <dd><code>mentry::ipv6AddrMentry</code> &ndash; Create and manipulate
+    mentry widgets for IPv6 addresses</dd>
+
+    <dt class="tm"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>mentry::ipv6AddrMentry</b> <i>pathName</i> ?<i>options</i>?
+</pre>
+    </dd>
+
+    <dt><b>DESCRIPTION</b></dt>
+
+    <dd>This command creates a new mentry widget <code><i>pathName</i></code>
+    for displaying and editing IPv6 addresses in the standard hexadecimal
+    notation (where the eight groups of one to four hexadecimal digits are
+    separated from each other by o colon).&nbsp; The supported
+    <code><i>options</i></code> are the same as in the case of the
+    <code><b><a href="mentryWidget.html">mentry::mentry</a></b></code>
+    command.</dd>
+
+    <dd class="tm">The command sets the <code><b>type</b></code> attribute of
+    the widget to the value <code>"IPv6Addr"</code> and returns the name of the
+    newly created widget.</dd>
+
+    <dt class="tm"><b>DEFAULT BINDINGS</b></dt>
+
+    <dd>The <code><b>mentry::ipv6AddrMentry</b></code> command defines five new
+    keyboard bindings for the entry components of the mentry widget it
+    creates:&nbsp; The <code>Up</code> key increments the entry's value by 1 if
+    the latter is less than 65535.&nbsp; Similarly, the <code>Down</code> key
+    decrements the entry's value by 1 if the latter is greater than 0.&nbsp;
+    The <code>Prior</code> key increments the entry's value by at most 10 if
+    the latter is less than 65535.&nbsp; Similarly, the <code>Next</code> key
+    decrements the entry's value by at most 10 if the latter is greater than
+    0.&nbsp; If the entry is empty then all of these keys insert the value
+    <code>0</code> into the entry.&nbsp; Finally, <code>Control-v</code>
+    (<code>Command-v</code> on the Mac) pastes the current contents of the
+    clipboad into the mentry, provided that it is a valid IPv6 address.</dd>
+
+    <dd class="tm">The actions performed by the <code>Up</code> and
+    <code>Down</code> keys can also be triggered with the aid of the mouse
+    wheel or a two-finger gesture on the touchpad.&nbsp; In addition, on Mac OS
+    X/11+ Aqua, the actions performed by the <code>Prior</code> and
+    <code>Next</code> keys are also triggered by the
+    <code><b>&lt;Option-MouseWheel&gt;</b></code> event.&nbsp; The same holds
+    true on all windowing systems if the Tk version is 8.7a4 or later, where
+    the <code><b>Option</b></code> modifier is bound to the <code>Option</code>
+    key on Mac OS X/11+ and to the <code>Alt</code> key on Windows and
+    X11.</dd>
+
+    <dt class="tm"><b>KEYWORDS</b></dt>
+
+    <dd>mentry, widget, IPv6 address</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="putIPAddr">The <code><b>mentry::putIPv6Addr</b></code> Command</h2>
+
+  <dl>
+    <dt><b>NAME</b></dt>
+
+    <dd><code>mentry::putIPv6Addr</code> &ndash; Output an IPv6 address to a
+    mentry of type <code>"IPv6Addr"</code></dd>
+
+    <dt class="tm"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>mentry::putIPv6Addr</b> <i>address</i> <i>pathName</i>
+</pre>
+    </dd>
+
+    <dt><b>DESCRIPTION</b></dt>
+
+    <dd>This command outputs the IPv6 address <code><i>address</i></code> to
+    the mentry widget <code><i>pathName</i></code>, which must have been
+    created with the <code><b><a href=
+    "#ipv6AddrMentry">mentry::ipv6AddrMentry</a></b></code> command (this is
+    checked by examining the widget's <code><b>type</b></code> attribute, which
+    must have the value <code>"IPv6Addr"</code>).</dd>
+
+    <dd class="tm">The address is expected to consist of up to eight
+    colon-separated groups of one to four hexadecimal digits each.&nbsp; in
+    case of less than eight groups, the address must include exactly one
+    double-colon (<code>::</code>) (representing consecutive groups of
+    zeros).&nbsp; The command generates an error if the address is
+    invalid.</dd>
+
+    <dt class="tm"><b>KEYWORDS</b></dt>
+
+    <dd>mentry, widget, IPv6 address</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="getIPv6Addr">The <code><b>mentry::getIPv6Addr</b></code> Command</h2>
+
+  <dl>
+    <dt><b>NAME</b></dt>
+
+    <dd><code>mentry::getIPv6Addr</code> &ndash; Get an IPv6 address from a
+    mentry of type <code>"IPv6Addr"</code></dd>
+
+    <dt class="tm"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>mentry::getIPv6Addr</b> <i>pathName</i>
+</pre>
+    </dd>
+
+    <dt><b>DESCRIPTION</b></dt>
+
+    <dd>This command returns the IPv6 address contained in the mentry widget
+    <code><i>pathName</i></code>, which must have been created with the
+    <code><b><a href="#ipv6AddrMentry">mentry::ipv6AddrMentry</a></b></code>
+    command (this is checked by examining the widget's <code><b>type</b></code>
+    attribute, which must have the value <code>"IPv6Addr"</code>).</dd>
+
+    <dd class="tm">If any entry component of the widget is empty, the command
+    sets the focus to the first such entry, generates an error, and returns the
+    string <code>"EMPTY"</code>.</dd>
+
+    <dt class="tm"><b>KEYWORDS</b></dt>
+
+    <dd>mentry, widget, IPv6 address</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+</body>
+</html>

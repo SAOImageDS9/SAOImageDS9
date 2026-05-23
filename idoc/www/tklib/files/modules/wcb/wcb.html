@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Wcb Programmer's Guide</title>
+
+  <meta name="Author" content="Csaba Nemethi">
+  <meta name="Keywords" content=
+  "callback, widget, Tk entry, Ttk entry, BWidget Entry, Tk spinbox, Ttk spinbox, Ttk combobox, listbox, tablelist, Ttk treeview, text, ctext">
+
+  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+</head>
+
+<body>
+  <div align="center">
+    <h1>Wcb Programmer's Guide</h1>
+
+    <h2>For Wcb Version 4.1</h2>
+
+    <h3>by</h3>
+
+    <h2>Csaba Nemethi</h2>
+
+    <address>
+      <a href="mailto:csaba.nemethi@t-online.de">csaba.nemethi@t-online.de</a>
+    </address>
+  </div>
+
+  <hr>
+
+  <h2 id="contents">Contents</h2>
+
+  <h4><a href="#overview">Overview</a></h4>
+
+  <ul>
+    <li><a href="#ov_problems">Some Common Problems</a></li>
+
+    <li><a href="#ov_wcb">The Wcb Package</a></li>
+
+    <li><a href="#ov_get">How to Get It?</a></li>
+
+    <li><a href="#ov_install">How to Install It?</a></li>
+
+    <li><a href="#ov_use">How to Use It?</a></li>
+  </ul>
+
+  <h4><a href="#examples">Examples</a></h4>
+
+  <ul>
+    <li><a href="#ex_entry">Some before-<code>insert</code> Callbacks for entry
+    Widgets</a></li>
+
+    <li><a href="#ex_listbox1">A <code>selset</code> Callback for a listbox
+    Widget</a></li>
+
+    <li><a href="#ex_listbox2">An <code>activate</code> Callback for a listbox
+    Widget</a></li>
+
+    <li><a href="#ex_text">Seven Callbacks for a text Widget</a></li>
+  </ul>
+
+  <div align="center">
+    <p><a href="index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="overview">Overview</h2>
+
+  <h3 id="ov_problems">Some Common Problems</h3>
+
+  <p>Many Tcl/Tk programmers are confronted with questions like the
+  following:</p>
+
+  <ul>
+    <li>How to restrict the set of characters that the user can type or paste
+    into a Tk or Ttk entry, BWidget Entry, Tk or Ttk spinbox, Ttk combobox,
+    text, or ctext widget?</li>
+
+    <li>How to manipulate the user input characters before they are inserted
+    into one of these widgets?&nbsp; In the case of a text or ctext
+    widget:&nbsp; How to change the font, colors, or other attributes of the
+    input characters?</li>
+
+    <li>How to set a limit for the number of characters that can be typed or
+    pasted into a Tk or Ttk entry, BWidget Entry, Tk or Ttk spinbox, or Ttk
+    combobox widget?</li>
+
+    <li>How to protect some parts of the text contained in a Tk or Ttk entry,
+    BWidget Entry, Tk or Ttk spinbox, Ttk combobox, text, or ctext widget from
+    being changed by the user?</li>
+
+    <li>How to define notifications to be triggered automatically after text is
+    inserted into or deleted from one of these widgets?</li>
+
+    <li>How to define some actions to be invoked automatically whenever the
+    insertion cursor in a Tk or Ttk entry, BWidget Entry, Tk or Ttk spinbox,
+    Ttk combobox, text, or ctext widget is moved?</li>
+
+    <li>How to define a command to be called automatically when selecting a
+    listbox element, a tablelist row or cell, a Ttk treeview item, or a range
+    of characters in a text or ctext widget?</li>
+
+    <li>How to protect any or all items/elements of a listbox, tablelist, or
+    Ttk treeview, or a range of characters in a text or ctext widget from being
+    selected?</li>
+  </ul>
+
+  <p>In most books, FAQs, newsgroup articles, and widget sets, you can find
+  <i>individual</i> solutions to some of the above problems by means of widget
+  bindings.&nbsp; This approach is based on adding new binding tags or
+  modifying some of the existing ones, which quite often proves to be
+  incomplete.</p>
+
+  <p>The Tk core addresses just a few of the above problems:&nbsp; In Tk 8.1
+  the <code>&lt;&lt;ListboxSelect&gt;&gt;</code> virtual event for listbox
+  widgets was introduced, Tk versions 8.3 and higher support widget options for
+  entry validation, and the spinbox widget (introduced in Tk 8.4) provides the
+  same validation facility.&nbsp; Finally, Tk versions 8.4 and higher support
+  the <code>disabled</code> state for listbox widgets, as well as the
+  <code>modified</code> flag, the <code>&lt;&lt;Modified&gt;&gt;</code> and
+  <code>&lt;&lt;Selection&gt;&gt;</code> virtual events, and an undo/redo
+  mechanism for text widgets.&nbsp; However, also these improvements are of
+  <i>individual</i> nature.</p>
+
+  <h3 id="ov_wcb">The Wcb Package</h3>
+
+  <p>The <b>W</b>idget <b>c</b>all<b>b</b>ack package Wcb provides a completely
+  different, <i>general</i> solution to the above problems:&nbsp; Based on
+  redefining the Tcl command corresponding to a widget, the main Wcb procedure
+  <code><a href="wcbRef.html#callback">wcb::callback</a></code> enables you to
+  associate arbitrary commands with some Tk entry, Ttk entry, BWidget Entry,
+  Tk spinbox, Ttk spinbox, Ttk combobox, listbox, tablelist, Ttk treeview,
+  text, and ctext widget operations.&nbsp; These commands will be invoked
+  automatically in the global scope whenever the respective widget operation is
+  executed.&nbsp; You can request that these commands be called either before
+  or after executing the respective widget operation, i.e., you can define both
+  <b>before-</b> and <b>after-callbacks</b>.&nbsp; From within a
+  before-callback, you can cancel the respective widget command by invoking the
+  procedure <code><a href="wcbRef.html#cancel">wcb::cancel</a></code>, or
+  modify its arguments by calling <code><a href=
+  "wcbRef.html#extend">wcb::extend</a></code> or <code><a href=
+  "wcbRef.html#replace">wcb::replace</a></code>.</p>
+
+  <p>Besides these (and four other) general-purpose commands, the Wcb package
+  exports four utility procedures for Tk entry, Ttk entry, BWidget Entry, Tk
+  spinbox, Ttk spinbox, and Ttk combobox widgets, as well as some
+  before-<code>insert</code> callbacks for <a href="wcbRef.html#entrycb">Tk
+  entry, Ttk entry, BWidget Entry, Tk spinbox, Ttk spinbox, Ttk combobox</a>,
+  <a href="wcbRef.html#textcb">text, and ctext</a> widgets, which you can use
+  unchanged or modify to suit your needs.&nbsp; To learn how to do this, have a
+  look at the <a href="#examples">Examples</a> section below.</p>
+
+  <p>The Wcb package is implemented in pure Tcl/Tk code, which makes it
+  completely platform-independent and very easy to install.&nbsp; It requires
+  version 8.4 or higher of both Tcl and Tk.</p>
+
+  <h3 id="ov_get">How to Get It?</h3>
+
+  <p>Wcb is available for free download from the Web page</p>
+
+  <blockquote>
+    <address>
+      <a href="https://www.nemethi.de">https://www.nemethi.de</a>
+    </address>
+  </blockquote>
+
+  <p>The distribution file is <code>wcb4.1.1.tar.gz</code> for UNIX and
+  <code>wcb4_1_1.zip</code> for Windows.&nbsp; These files contain the same
+  information, except for the additional carriage return character preceding
+  the linefeed at the end of each line in the text files for Windows.</p>
+
+  <p>Wcb is also included in tklib, which has the address</p>
+
+  <blockquote>
+    <address>
+      <a href="https://core.tcl.tk/tklib">https://core.tcl.tk/tklib</a>
+    </address>
+  </blockquote>
+
+  <h3 id="ov_install">How to Install It?</h3>
+
+  <p>Install the package as a subdirectory of one of the directories given by
+  the <code>auto_path</code> variable.&nbsp; For example, you can install it as
+  a directory at the same level as the Tcl and Tk script libraries.&nbsp; The
+  locations of these library directories are given by the
+  <code>tcl_library</code> and <code>tk_library</code> variables,
+  respectively.</p>
+
+  <p>To install Wcb <i>on UNIX</i>, <code>cd</code> to the desired directory
+  and unpack the distribution file <code>wcb4.1.1.tar.gz</code>:</p>
+
+  <blockquote>
+    <pre>
+gunzip -c wcb4.1.1.tar.gz | tar -xf -
+</pre>
+  </blockquote>
+
+  <p>On most UNIX systems this can be replaced with</p>
+
+  <blockquote>
+    <pre>
+tar -zxf wcb4.1.1.tar.gz
+</pre>
+  </blockquote>
+
+  <p>Both commands will create a directory named <code>wcb4.1.1</code>, with
+  the subdirectories <code>demos</code>, <code>doc</code>, and
+  <code>scripts</code>.</p>
+
+  <p><i>On Windows</i>, use WinZip or some other program capable of unpacking
+  the distribution file <code>wcb4_1_1.zip</code> into the directory
+  <code>wcb4.1.1</code>, with the subdirectories <code>demos</code>,
+  <code>doc</code>, and <code>scripts</code>.</p>
+
+  <p>Notice that in tklib the Wcb <code>demos</code> directory is replaced with
+  the subdirectory <code>wcb</code> of the <code>examples</code>
+  directory.&nbsp; Please take this into account when reading the <a href=
+  "#examples">examples</a> below.</p>
+
+  <h3 id="ov_use">How to Use It?</h3>
+
+  <p>To be able to access the commands and variables defined in the package
+  Wcb, your scripts must contain one of the lines</p>
+
+  <blockquote>
+    <pre>
+package require wcb ?<i>version</i>?
+package require Wcb ?<i>version</i>?
+</pre>
+  </blockquote>
+
+  <p>You can use either one of the two statements above because the file
+  <code>wcb.tcl</code> contains both lines</p>
+
+  <blockquote>
+    <pre>
+package provide wcb ...
+package provide Wcb ...
+</pre>
+  </blockquote>
+
+  <p>You are free to remove one of these two lines from <code>wcb.tcl</code> if
+  you want to prevent the package from making itself known under two different
+  names.&nbsp; Of course, by doing so you restrict the argument of&nbsp;
+  <code>package require</code>&nbsp; to a single name.</p>
+
+  <p>Since the package Wcb is implemented in its own namespace called
+  <code>wcb</code>, you must either invoke the</p>
+
+  <blockquote>
+    <pre>
+namespace import wcb::<i>pattern</i> ?wcb::<i>pattern ...</i>?
+</pre>
+  </blockquote>
+
+  <p>command to import the <i>procedures</i> you need, or use qualified names
+  like <code>wcb::callback</code>.&nbsp; In the examples below we have chosen
+  the latter approach.</p>
+
+  <p>To access Wcb <i>variables</i>, you <i>must</i> use qualified names.&nbsp;
+  There are only two Wcb variables that are designed to be accessed outside the
+  namespace <code>wcb</code>:</p>
+
+  <ul>
+    <li>The variable <code>wcb::version</code> holds the current version number
+    of the Wcb package.</li>
+
+    <li>The variable <code>wcb::library</code> holds the location of the Wcb
+    installation directory.</li>
+  </ul>
+
+  <div align="center">
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="examples">Examples</h2>
+
+  <h3 id="ex_entry">Some before-<code>insert</code> Callbacks for entry
+  Widgets</h3>
+
+  <p>The script <code>entrytest.tcl</code> in the <code>demos</code> directory
+  creates three entry widgets with the constraints shown in the following
+  figure:</p>
+
+  <blockquote>
+    <img src="entrytest.png" alt="entrytest" width="373" height="299">
+  </blockquote>
+
+  <p>For the topmost entry <code>.e1</code> we define two
+  before-<code>insert</code> callbacks contained in the Wcb package:</p>
+
+  <blockquote>
+    <pre>
+wcb::callback .e1 before insert wcb::checkStrForAlnum \
+                                wcb::convStrToUpper
+</pre>
+  </blockquote>
+
+  <p>To force the second entry <code>.e2</code> to accept only integers of
+  maximal length 10, we use again two before-<code>insert</code> callbacks from
+  Wcb:</p>
+
+  <blockquote>
+    <pre>
+wcb::callback .e2 before insert {wcb::checkEntryLen 10} \
+                                 wcb::checkEntryForInt
+</pre>
+  </blockquote>
+
+  <p>And finally, here are the two callbacks for the third entry widget
+  <code>.e3</code>:</p>
+
+  <blockquote>
+    <pre>
+wcb::callback .e3 before insert {wcb::checkEntryLen 10} \
+                                 checkNumber
+
+<span class="cmt">#
+# Callback procedure checkNumber
+#</span>
+proc checkNumber {w idx str} {
+    set newText [wcb::postInsertEntryText $w $idx $str]
+    if {![regexp {^[0-9]*\.?[0-9]?[0-9]?$} $newText]} {
+        wcb::cancel
+    }
+}
+</pre>
+  </blockquote>
+
+  <p>This last example also shows the arguments of the callbacks declared with
+  the <code><a href="wcbRef.html#callback">wcb::callback</a></code>
+  command:&nbsp; Whenever a callback is invoked, the new name of the original
+  Tcl command for the widget (i.e., the name of the proxy command) as well as
+  the arguments of the respective widget operation are automatically appended
+  to it as parameters.&nbsp; Since we defined <code>checkNumber</code> as a
+  before-callback for the <code>insert</code> subcommand, its last three
+  arguments must be: the name of the proxy widget command (<code>w</code>,
+  which in this example is <code>::_.e3</code>), the index (<code>idx</code>),
+  and the string (<code>str</code>) to be inserted just before the character
+  indicated by the index.</p>
+
+  <p>Notice that in the argument list of a Wcb callback, the name of the proxy
+  widget command can be be preceded by any number of additional
+  arguments.&nbsp; The procedure <code><a href=
+  "wcbRef.html#entrycb">wcb::checkEntryLen</a></code> is an example of such a
+  callback.</p>
+
+  <p>The command <code><a href=
+  "wcbRef.html#postInsertEntryText">wcb::postInsertEntryText</a></code> invoked
+  in the procedure <code>checkNumber</code> returns the text that would be
+  contained in the entry widget <code>w</code> after inserting the string
+  <code>str</code> before the character indicated by the index
+  <code>idx</code>.&nbsp; If this text is not (the starting part of) an
+  unsigned real number with at most two digits after the decimal point, then we
+  call the procedure <code><a href="wcbRef.html#cancel">wcb::cancel</a></code>,
+  which aborts the <code>insert</code> command.</p>
+
+  <p>Without the constraint that the content of the third entry must not start
+  with a sign, we could have used the callback procedure <code><a href=
+  "wcbRef.html#entrycb">wcb::checkEntryForFixed</a></code> instead of
+  <code>checkNumber</code>:</p>
+
+  <blockquote>
+    <pre>
+wcb::callback .e3 before insert {wcb::checkEntryLen 10} \
+                                {wcb::checkEntryForFixed 2}
+</pre>
+  </blockquote>
+
+  <h3 id="ex_listbox1">A <code>selset</code> Callback for a listbox Widget</h3>
+
+  <p>In the case of a listbox, you will probably most often want to define a
+  callback for the&nbsp; <code>selection set</code>&nbsp; widget
+  subcommand.&nbsp; In most cases it does not matter whether this is a before-
+  or after-callback.&nbsp; Please note that the <code><a href=
+  "wcbRef.html#callback">wcb::callback</a></code> command expects the
+  abbreviated form <code>selset</code> as parameter.&nbsp; Similarly, you must
+  pass <code>selclear</code> to this command when defining a callback for
+  the&nbsp; <code>selection clear</code>&nbsp; listbox operation.</p>
+
+  <p>In the following example we build a listbox <code>.lb</code> containing
+  the names of the bitmap files in the subdirectory <code>images</code> of the
+  Wcb <code>demos</code> directory.&nbsp; (The directory <code>images</code> is
+  a copy of the subdirectory of the same name of the Tk 8.6 <code>demos</code>
+  directory.)&nbsp; Whenever an item is selected, the callback procedure
+  <code>showBitmap</code> will display the corresponding bitmap in the label
+  <code>.picture</code>.</p>
+
+  <blockquote>
+    <img src="listboxtest1.png" alt="listboxtest1" width="206" height="178">
+  </blockquote>
+
+  <p>Here is the relevant code fragment from the script
+  <code>listboxtest1.tcl</code>, contained in the <code>demos</code>
+  directory:</p>
+
+  <blockquote>
+    <pre>
+set dirName [file join [file dirname [info script]] images]
+
+<span class="cmt">#
+# Frame .spacer and listbox .lb
+#</span>
+frame .spacer -width 7p
+listbox .lb -height 0 -width 0 -background white
+set pattern [file join $dirName *.xbm]
+foreach pathName [lsort [glob $pattern]] {
+    .lb insert end [file tail $pathName]
+}
+
+<span class="cmt">#
+# Label .picture
+#</span>
+label .picture -relief sunken -background white
+
+<span class="cmt">#
+# Define a before-selset callback for .lb
+#</span>
+wcb::callback .lb before selset showBitmap
+
+<span class="cmt">#
+# Callback procedure showBitmap
+#</span>
+proc showBitmap {w first args} {
+    global dirName
+    set pathName [file join $dirName [$w get $first]]
+    .picture configure -bitmap @$pathName
+}
+</pre>
+  </blockquote>
+
+  <p>Recall that the&nbsp; <code>selection set</code>&nbsp; listbox operation
+  takes as arguments one or two indices, which will be passed automatically to
+  the callback as parameters, along with the new name of the original Tcl
+  command associated with the listbox widget (i.e., the name of the proxy
+  command).&nbsp; For this reason, the arguments of the callback procedure
+  <code>showBitmap</code> are: the name of the proxy widget command
+  (<code>w</code>, which in this example is <code>::_.lb</code>), the first
+  index (<code>first</code>), as well as the <code>args</code> keyword
+  representing the empty list or the optional second index passed to the&nbsp;
+  <code>selection set</code>&nbsp; command.</p>
+
+  <h3 id="ex_listbox2">An <code>activate</code> Callback for a listbox
+  Widget</h3>
+
+  <p>The listbox used in the preceding example has the default selection mode
+  <code>browse</code>, hence the before-<code>selset</code> callback
+  <code>showBitmap</code> will be fired every time the mouse is dragged from
+  one element to another, with button 1 down.&nbsp; But what happens if we want
+  to display not only the bitmaps but also the photo images contained in the
+  subdirectory <code>images</code> of the Wcb <code>demos</code>
+  directory?&nbsp; Loading a photo image is a much more complex operation than
+  loading a bitmap, which can have the effect that some images cannot be
+  displayed quickly enough to follow the mouse when browsing with it within the
+  listbox.</p>
+
+  <blockquote>
+    <img src="listboxtest2.png" alt="listboxtest2" width="225" height="274">
+  </blockquote>
+
+  <p>To solve this problem, we can either change the selection mode to have the
+  less common value <code>single</code>, or arrange for the images not to be
+  displayed when browsing with the mouse but when releasing its button 1.&nbsp;
+  The second method can be implemented with the aid of an <code>activate</code>
+  callback, as shown in the following code fragment taken from the script
+  <code>listboxtest2.tcl</code>, contained in the <code>demos</code>
+  directory:</p>
+
+  <blockquote>
+    <pre>
+set dirName [file join [file dirname [info script]] images]
+image create photo photoImage
+
+<span class="cmt">#
+# Frame .spacer and listbox .lb
+#</span>
+frame .spacer -width 7p
+listbox .lb -height 0 -width 0 -background white
+set pattern [file join $dirName *]
+foreach pathName [lsort [glob $pattern]] {
+    .lb insert end [file tail $pathName]
+}
+
+<span class="cmt">#
+# Label .picture
+#</span>
+label .picture -relief sunken -background white
+
+<span class="cmt">#
+# Define a before-activate callback for .lb
+#</span>
+wcb::callback .lb before activate showPicture
+
+<span class="cmt">#
+# Callback procedure showPicture
+#</span>
+proc showPicture {w idx} {
+    set leafName [$w get $idx]
+
+    <span class="cmt">#
+    # When traversing the listbox with the arrow keys, the value
+    # of idx can become -1 or the number of listbox elements,
+    # hence the value of leafName can be an empty string:
+    #</span>
+    if {$leafName eq ""} {
+        return ""
+    }
+
+    global dirName
+    set pathName [file join $dirName $leafName]
+    if {[regexp {^\.(bmp|xbm)$} [file extension $pathName]]} {
+        .picture configure -bitmap @$pathName -image ""
+    } else {
+        .picture configure -bitmap "" -image ""
+        catch {
+            photoImage configure -file $pathName
+            .picture configure -bitmap "" -image photoImage
+        }
+    }
+}
+</pre>
+  </blockquote>
+
+  <h3 id="ex_text">Seven Callbacks for a text Widget</h3>
+
+  <p>The script <code>texttest1.tcl</code> in the <code>demos</code> directory
+  creates the text widget shown in the following figure:</p>
+
+  <blockquote>
+    <img src="texttest1.png" alt="texttest1" width="384" height="312">
+  </blockquote>
+
+  <p>Here is the relevant code fragment:</p>
+
+  <blockquote>
+    <pre>
+<span class="cmt">#
+# Text .txt
+#</span>
+set width 50
+text .txt -width $width -height 12 -setgrid true -wrap none -background white \
+          -font TkFixedFont
+.txt tag configure prog -foreground red
+.txt tag configure user -foreground DarkGreen
+.txt insert end "Everything you type or paste into this window will\n"  prog
+.txt insert end "be displayed in dark green.  You cannot make any\n"    prog
+.txt insert end "changes or selections in this red area, and will\n"    prog
+.txt insert end "not be able to send the message as long as any\n"      prog
+.txt insert end "line contains more than $width characters.\n"          prog
+.txt insert end "--------------------------------------------------\n"  prog
+set limit [.txt index insert]
+
+<span class="cmt">#
+# Label .pos displaying the current cursor position
+#</span>
+label .pos -textvariable pos
+
+<span class="cmt">#
+# Button .send (actually, it does not send anything)
+#</span>
+button .send -text Send -command exit
+
+<span class="cmt">#
+# Define 5 before- and 2 after-callbacks for .txt
+#</span>
+wcb::callback .txt before insert protectRedArea changeColor
+wcb::callback .txt before delete protectRedArea
+wcb::callback .txt before selset protectRedArea
+wcb::callback .txt before motion displayPos
+wcb::callback .txt  after insert "checkLines $width"
+wcb::callback .txt  after delete "checkLines $width"
+
+<span class="cmt">#
+# Callback procedure protectRedArea
+#
+# The parameters following w can be interpreted either as
+# "index string ?tagList string tagList ...?" (for an insert
+# callback), or as "from ?to?" (for a delete callback),
+# or as "from ?to from to ...?" (for a selset callback).
+#</span>
+proc protectRedArea {w idx args} {
+    global limit
+    if {[$w compare $idx &lt; $limit]} {
+        wcb::cancel
+    }
+}
+
+<span class="cmt">#
+# Callback procedure changeColor
+#</span>
+proc changeColor {w args} {
+    wcb::extend user
+}
+
+<span class="cmt">#
+# Callback procedure displayPos
+#</span>
+proc displayPos {w idx} {
+    set index [$w index $idx]
+    scan $index "%d.%d" line column
+    incr column
+
+    global pos
+    set pos [format "Line: %d   Column: %d" $line $column]
+}
+
+<span class="cmt">#
+# Callback procedure checkLines
+#
+# The parameter args can be interpreted both as "index
+# string ?tagList string tagList ...?" (for an insert
+# callback) and as "from ?to?" (for a delete callback).
+#</span>
+proc checkLines {maxCharsPerLine w args} {
+    <span class="cmt">#
+    # Display the new cursor position
+    #</span>
+    displayPos $w insert
+
+    <span class="cmt">#
+    # Disable or enable the .send button
+    #</span>
+    scan [$w index end] "%d" lastLine
+    for {set line 1} {$line &lt; $lastLine} {incr line} {
+        scan [$w index $line.end] "%d.%d" dummy charsInLine
+        if {$charsInLine &gt; $maxCharsPerLine} {
+            .send configure -state disabled
+            return ""
+        }
+    }
+    .send configure -state normal
+}
+
+. . .
+
+displayPos .txt insert
+focus .txt
+</pre>
+  </blockquote>
+
+  <p>The procedure <code>protectRedArea</code> is a before-<code>insert</code>,
+  before-<code>delete</code>, and before-<code>selset</code> callback.&nbsp; It
+  checks whether the attempted change would affect the text area displayed in
+  red; if this is the case, it calls the procedure <code><a href=
+  "wcbRef.html#cancel">wcb::cancel</a></code>, which aborts the
+  <code>insert</code>, <code>delete</code>, or&nbsp; <code>tag add
+  sel</code>&nbsp; command, respectively.</p>
+
+  <p>The before-<code>insert</code> callback <code>changeColor</code> invokes
+  the <code><a href="wcbRef.html#extend">wcb::extend</a></code> command to
+  append the <code>user</code> tag to the argument list of the
+  <code>insert</code> command, thus changing the foreground color of the
+  characters entered by the user to <code>DarkGreen</code>.</p>
+
+  <p>The procedure <code>displayPos</code> displays the line and column
+  corresponding to the index passed to it as its second argument.&nbsp; This
+  index will be the target position of the insertion cursor when the procedure
+  is triggered automatically as a before-<code>motion</code> callback.&nbsp; As
+  seen in the <code>checkLines</code> procedure discussed below, it is also
+  invoked after performing an <code>insert</code> or <code>delete</code>
+  operation; in that case, its second argument will be the new position of the
+  insertion cursor after the execution of <code>insert</code> or
+  <code>delete</code>.&nbsp; In this way, we are able to keep track completely
+  of the position of the insertion cursor.</p>
+
+  <p>It is interesting to see what happens if we register
+  <code>displayPos</code> as an after- instead of before-<code>motion</code>
+  callback.&nbsp; Well, in that case the procedure would have to ignore its
+  second argument and we would have to replace the line</p>
+
+  <blockquote>
+    <pre>
+set index [$w index $idx]
+</pre>
+  </blockquote>
+
+  <p>with</p>
+
+  <blockquote>
+    <pre>
+set index [$w index insert]
+</pre>
+  </blockquote>
+
+  <p>The reason is that the value of the <code>idx</code> argument passed to
+  <code>displayPos</code> can be, for instance, <code>insert+1c</code>, where
+  <code>insert</code> means the position of the insertion cursor <i>before</i>
+  moving it forward by one character.&nbsp; The after-<code>motion</code>
+  callback is, however, triggered <i>after</i> the insertion cursor has been
+  moved, and at that time the <code>insert</code> mark already points to the
+  new cursor position.&nbsp; For this reason,&nbsp; <code>[$w index
+  $idx]</code>&nbsp; is not adequate to retrieve the position of the insertion
+  cursor within an after-<code>motion</code> callback.</p>
+
+  <p>Our last procedure <code>checkLines</code> is both an
+  after-<code>insert</code> and after-<code>delete</code> callback.&nbsp; After
+  calling <code>displayPos</code> to display the new cursor position, it
+  disables or enables the <code>.send</code> button, depending upon whether any
+  line of the text widget contains more than <code>$maxCharsPerLine</code>
+  characters.</p>
+
+  <p>Notice that we could also have defined before-<code>replace</code> and
+  after-<code>replace</code> callbacks for the <code>replace</code> text widget
+  subcommand, introduced in Tk version 8.6.&nbsp; There is, however, no need
+  for it, because the default text widget bindings currently don't make use of
+  this subcommand.</p>
+
+  <p>Instead of just disabling the <code>.send</code> button if any line has
+  more than <code>$maxCharsPerLine</code> characters, we can even prevent the
+  user from entering lines that are longer than allowed.&nbsp; The script
+  <code>texttest2.tcl</code> in the <code>demos</code> directory shows how this
+  can be achieved by combining widget callbacks with the undo mechanism for
+  text widgets.&nbsp; This script creates the text widget shown in the
+  following figure:</p>
+
+  <blockquote>
+    <img src="texttest2.png" alt="texttest2" width="384" height="312">
+  </blockquote>
+
+  <p>Most of the code contained in the script <code>texttest2.tcl</code> is
+  identical to the one in the previous example.&nbsp; The main difference is a
+  new line activating the undo mechanism for the text widget <code>.txt</code>
+  and a new version of the callback procedure <code>checkLines</code>:</p>
+
+  <blockquote>
+    <pre>
+. . .
+
+.txt configure -undo yes
+
+. . .
+
+proc checkLines {maxCharsPerLine w args} {
+    <span class="cmt">#
+    # Undo the last insert or delete action if necessary
+    #</span>
+    scan [$w index end] "%d" lastLine
+    for {set line 1} {$line &lt; $lastLine} {incr line} {
+        scan [$w index $line.end] "%d.%d" dummy charsInLine
+        if {$charsInLine &gt; $maxCharsPerLine} {
+            $w edit undo
+            bell
+            break
+        }
+    }
+
+    <span class="cmt">#
+    # Clear the undo and redo stacks, and display the new cursor position
+    #</span>
+    $w edit reset
+    displayPos $w insert
+}
+
+. . .
+</pre>
+  </blockquote>
+
+  <p>This version of the callback <code>checkLines</code> undoes the last edit
+  action if any text line contains more characters than the allowed
+  maximum.&nbsp; For this reason, we had to move the invocation of the
+  <code>displayPos</code> procedure to the end of the callback, because
+  the&nbsp; <code>edit undo</code>&nbsp; command might change the position of
+  the insertion cursor.</p>
+
+  <p>Note that we could have implemented this example also without making use
+  of the undo mechanism for text widgets, by saving the last accepted contents
+  of the widget, along with the cursor position, and restoring them in case any
+  line gets longer than allowed.</p>
+
+  <div align="center">
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+</body>
+</html>

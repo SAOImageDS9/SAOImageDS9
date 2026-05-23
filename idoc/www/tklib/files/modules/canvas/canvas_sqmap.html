@@ -1,0 +1,244 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>canvas::sqmap - Variations on a canvas</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'canvas_sqmap.man' by tcllib/doctools with format 'html'
+   -->
+<!-- canvas::sqmap.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">canvas::sqmap(n) 0.3.1 tklib &quot;Variations on a canvas&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>canvas::sqmap - Canvas with map background based on square tiles</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">API</a>
+<ul>
+<li class="doctools_subsection"><a href="#subsection1">Options</a></li>
+<li class="doctools_subsection"><a href="#subsection2">Methods</a></li>
+</ul>
+</li>
+<li class="doctools_section"><a href="#section3">Image ownership</a></li>
+<li class="doctools_section"><a href="#section4">Bugs, Ideas, Feedback</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_requirements">
+<li>package require <b class="pkgname">Tcl 8.4</b></li>
+<li>package require <b class="pkgname">Tk 8.4</b></li>
+<li>package require <b class="pkgname">snit</b></li>
+<li>package require <b class="pkgname">uevent::onidle</b></li>
+<li>package require <b class="pkgname">cache::async</b></li>
+<li>package require <b class="pkgname">canvas::sqmap <span class="opt">?0.3.1?</span></b></li>
+</ul>
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">::canvas::sqmap</b> <i class="arg">pathName</i> <span class="opt">?options?</span></a></li>
+<li><a href="#2"><i class="arg">canvasName</i> <b class="method">image set</b> <i class="arg">cell</i> <i class="arg">image</i></a></li>
+<li><a href="#3"><i class="arg">canvasName</i> <b class="method">image unset</b> <i class="arg">cell</i></a></li>
+<li><a href="#4"><i class="arg">canvasName</i> <b class="method">flush</b></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>This package provides an extended canvas widget for the display of
+maps based on a set of square image tiles. The tiles are the
+background of the canvas, with all other canvas items added always
+shown in front of them. The number of tiles shown, tile size, and
+where to get the images to show are all configurable.</p>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">API</a></h2>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">::canvas::sqmap</b> <i class="arg">pathName</i> <span class="opt">?options?</span></a></dt>
+<dd><p>Creates the canvas <i class="arg">pathName</i> and configures it. The new widget
+supports all of the options and methods of a regular canvas, plus the
+options and methods described below.</p>
+<p>The result of the command is <i class="arg">pathName</i>.</p></dd>
+</dl>
+<div id="subsection1" class="doctools_subsection"><h3><a name="subsection1">Options</a></h3>
+<dl class="doctools_options">
+<dt><b class="option">-grid-cell-width</b></dt>
+<dd><p>The value for this option is a non-negative integer. It specifies the
+width of the cells the background is made up of.</p></dd>
+<dt><b class="option">-grid-cell-height</b></dt>
+<dd><p>The value for this option is a non-negative integer. It specifies the
+height of the cells the background is made up of.</p></dd>
+<dt><b class="option">-grid-cell-command</b></dt>
+<dd><p>The value for this option is a command prefix. It is invoked whenever
+the canvas needs the image for a specific cell of the background, with
+two additional arguments, the id of the cell, and a command prefix to
+invoke when the image is ready, or known to not exist.</p>
+<p>The id of the cell is a 2-element list containing the row and column
+number of the cell, in this order. The result command prefix (named
+&quot;$result&quot; in the example below) has to be invoked with either two or
+three arguments, i.e.</p>
+<pre class="doctools_example">
+    $result set   $cellid $image ; # image is known and ready
+    $result unset $cellid        ; # image does not exist
+</pre>
+<p>This option may be left undefined, i.e. the canvas can operate without
+it. In that case the only images shown in grid cells are those
+explicitly set with the method <b class="method">image set</b>, see the next
+section. All other grid cells will simply be empty.</p></dd>
+<dt><b class="option">-viewport-command</b></dt>
+<dd><p>This option specifies a command prefix to invoke when the viewport of
+the canvas is changed, to allow users keep track of where in the
+scroll-region we are at all times. This can be used, for example, to
+drive derivate displays, or to keep items in view by moving them as
+the viewport moves.</p></dd>
+<dt><b class="option">-image-on-load</b></dt>
+<dd><p>The value for this option is an image. If specified the image is shown
+in a cell while the actual image for that cell is getting loaded
+through the callback specified by the <b class="option">-grid-cell-command</b>.</p></dd>
+<dt><b class="option">-image-on-unset</b></dt>
+<dd><p>The value for this option is an image. If specified the image is shown
+in a cell for which the callback specified by the <b class="option">-grid-cell-command</b>
+reported that there is no actual image to be shown.</p></dd>
+</dl>
+</div>
+<div id="subsection2" class="doctools_subsection"><h3><a name="subsection2">Methods</a></h3>
+<dl class="doctools_definitions">
+<dt><a name="2"><i class="arg">canvasName</i> <b class="method">image set</b> <i class="arg">cell</i> <i class="arg">image</i></a></dt>
+<dd><p>Invoking this method places the <i class="arg">image</i> into the specified
+<i class="arg">cell</i> of the background. The cell is given as a 2-element list
+containing row and column number, in this order.</p>
+<p>Note that an image is allowed to be associated with and displayed in
+multiple cells of the canvas.</p></dd>
+<dt><a name="3"><i class="arg">canvasName</i> <b class="method">image unset</b> <i class="arg">cell</i></a></dt>
+<dd><p>Invoking this method declares the specified <i class="arg">cell</i> of the
+background as empty, an existing image shown by this cell will be
+forgotten.  The cell is given as a 2-element list containing row and
+column number, in this order.</p></dd>
+<dt><a name="4"><i class="arg">canvasName</i> <b class="method">flush</b></a></dt>
+<dd><p>Invoking this method forces the canvas to completely reload the images
+for all cells. Do not use this method if the canvas is operated
+without a <b class="option">-grid-cell-command</b>, as in that case the canvas will
+simply forget all images without being able to reload them.</p></dd>
+</dl>
+</div>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">Image ownership</a></h2>
+<p>Note that the canvas <em>does not</em> take ownership of the images it
+shows in the background. In other words, when we say that the canvas
+forgets an image this means only that the association between a grid
+cell and shown image is broken. The image is <em>not</em>
+deleted. Managing the lifecycle of the images shown by the canvas is
+responsibility of the user of the canvas.</p>
+</div>
+<div id="section4" class="doctools_section"><h2><a name="section4">Bugs, Ideas, Feedback</a></h2>
+<p>This document, and the package it describes, will undoubtedly contain
+bugs and other problems.
+Please report such in the category <em>canvas</em> of the
+<a href="http://core.tcl.tk/tklib/reportlist">Tklib Trackers</a>.
+Please also report any ideas for enhancements you may have for either
+package and/or documentation.</p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../../../index.html#canvas">canvas</a>, <a href="../../../../index.html#cell">cell</a>, <a href="../../../../index.html#grid">grid</a>, <a href="../../../../index.html#image">image</a>, <a href="../../../../index.html#map">map</a>, <a href="../../../../index.html#square_map">square map</a>, <a href="../../../../index.html#tile">tile</a></p>
+</div>
+</div></body></html>

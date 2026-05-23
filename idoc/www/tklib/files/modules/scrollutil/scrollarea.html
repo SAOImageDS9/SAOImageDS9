@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>The scrollutil::scrollarea and scrollutil::getscrollarea
+  Commands</title>
+
+  <meta name="Author" content="Csaba Nemethi">
+  <meta name="Keywords" content="scrollarea, widget, scrollbar">
+
+  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+</head>
+
+<body>
+  <div>
+    <h1>The <code><b>scrollutil::scrollarea</b></code> and<br>
+    <code><b>scrollutil::getscrollarea</b></code> Commands</h1>
+
+    <h2>For Scrollutil Version 2.4</h2>
+
+    <h3>by</h3>
+
+    <h2>Csaba Nemethi</h2>
+
+    <address>
+      <a href="mailto:csaba.nemethi@t-online.de">csaba.nemethi@t-online.de</a>
+    </address>
+  </div>
+
+  <hr>
+
+  <h2 id="contents">Contents</h2>
+
+  <ul>
+    <li><a href="#quick_ref">The <code><b>scrollutil::scrollarea</b></code>
+    Command &ndash; Quick Reference</a></li>
+
+    <li><a href="#detailed_ref">The <code><b>scrollutil::scrollarea</b></code>
+    Command &ndash; Detailed Reference</a></li>
+
+    <li><a href="#getscrollarea">The
+    <code><b>scrollutil::getscrollarea</b></code> Command</a></li>
+  </ul>
+
+  <div>
+    <p><a href="index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="quick_ref">The <code><b>scrollutil::scrollarea</b></code> Command
+  &ndash; Quick Reference</h2>
+
+  <dl>
+    <dt><a href="#name">NAME</a></dt>
+
+    <dd><code>scrollutil::scrollarea</code> &ndash; Create and manipulate
+    scrollarea widgets</dd>
+
+    <dt class="tm"><a href="#synopsis">SYNOPSIS</a></dt>
+
+    <dd>
+      <pre>
+<b>scrollutil::scrollarea</b> <i>pathName</i> ?<i>options</i>?
+</pre>
+    </dd>
+
+    <dt><a href="#description">DESCRIPTION</a></dt>
+
+    <dt class="tm"><a href="#std_options">STANDARD OPTIONS</a></dt>
+
+    <dd>
+      <pre>
+<b>-background   -highlightbackground  -relief
+-borderwidth  -highlightcolor
+-cursor       -highlightthickness</b>
+</pre>
+    </dd>
+
+    <dt><a href="#widget_options">WIDGET-SPECIFIC OPTIONS</a></dt>
+
+    <dd><code><b><a href="#autohidescrollbars">-autohidescrollbars</a></b>
+    <i>boolean</i></code></dd>
+
+    <dd><code><b><a href="#lockinterval">-lockinterval</a></b>
+    <i>milliseconds</i></code></dd>
+
+    <dd><code><b><a href="#respectheader">-respectheader</a></b>
+    <i>boolean</i></code></dd>
+
+    <dd><code><b><a href="#respecttitlecolumns">-respecttitlecolumns</a></b>
+    <i>boolean</i></code></dd>
+
+    <dd><code><b><a href="#setfocus">-setfocus</a></b>
+    <i>boolean</i></code></dd>
+
+    <dd><code><b><a href="#takefocus">-takefocus</a></b>
+    <b>0</b>|<b>1</b>|<b>""</b>|<i>command</i></code></dd>
+
+    <dd><code><b><a href="#xscrollbarmode">-xscrollbarmode</a></b>
+    <b>static</b>|<b>dynamic</b>|<b>none</b></code></dd>
+
+    <dd><code><b><a href="#yscrollbarmode">-yscrollbarmode</a></b>
+    <b>static</b>|<b>dynamic</b>|<b>none</b></code></dd>
+
+    <dt class="tm"><a href="#widget_command">WIDGET COMMAND</a></dt>
+
+    <dd><code><i>pathName</i> <b><a href="#attrib">attrib</a></b> ?<i>name</i>
+    ?<i>value</i> <i>name</i> <i>value</i> ...??</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#cget">cget</a></b>
+    <i>option</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#configure">configure</a></b>
+    ?<i>option</i> ?<i>value</i> <i>option</i> <i>value</i> ...??</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#hasattrib">hasattrib</a></b>
+    <i>name</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#setwidget">setwidget</a></b>
+    <i>widget</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#unsetattrib">unsetattrib</a></b>
+    <i>name</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#widget">widget</a></b></code></dd>
+
+    <dt class="tm"><a href="#bindings">BINDINGS</a></dt>
+
+    <dt class="tm"><a href="#keywords">KEYWORDS</a></dt>
+
+    <dd>scrollarea, widget, scrollbar</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="detailed_ref">The <code><b>scrollutil::scrollarea</b></code>
+  Command &ndash; Detailed Reference</h2>
+
+  <dl>
+    <dt id="name"><b>NAME</b></dt>
+
+    <dd><code>scrollutil::scrollarea</code> &ndash; Create and manipulate
+    scrollarea widgets</dd>
+
+    <dt class="tm" id="synopsis"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>scrollutil::scrollarea</b> <i>pathName</i> ?<i>options</i>?
+</pre>
+    </dd>
+
+    <dt id="description"><b>DESCRIPTION</b></dt>
+
+    <dd>The <code><b>scrollutil::scrollarea</b></code> command creates a new
+    window named <code><i>pathName</i></code> and of the class
+    <code><b>Scrollarea</b></code>, and makes it into a <b>scrollarea</b>
+    widget.&nbsp; Additional options, described below, may be specified on the
+    command line or in the option database to configure aspects of the
+    scrollarea such as its borderwidth, relief, and display mode to be used for
+    the scrollbars.&nbsp; The <code><b>scrollutil::scrollarea</b></code>
+    command returns its <code><i>pathName</i></code> argument.&nbsp; At the
+    time this command is invoked, there must not exist a window named
+    <code><i>pathName</i></code>, but <code><i>pathName</i></code>'s parent
+    must exist.</dd>
+
+    <dd class="tm">A scrollarea is a mega-widget consisting of a scrollable
+    widget specified with the aid of the <code><b><a href=
+    "#setwidget">setwidget</a></b></code> subcommand of the associated Tcl
+    command as well as two scrollbars connected with that widget.&nbsp; These
+    components are managed within the scrollarea using
+    <code><b>grid</b></code>.&nbsp; The scrollbars, named
+    <code><b>hsb</b></code> (with&nbsp; <code><b>-orient
+    horizontal</b></code>)&nbsp; and <code><b>vsb</b></code> (with&nbsp;
+    <code><b>-orient vertical</b></code>)&nbsp; are direct children of the
+    scrollarea.&nbsp; The display mode of each scrollbar can be
+    <code><b>static</b></code>, <code><b>dynamic</b></code>, or
+    <code><b>none</b></code> (see the <code><b><a href=
+    "#xscrollbarmode">-xscrollbarmode</a></b></code> and <code><b><a href=
+    "#yscrollbarmode">-yscrollbarmode</a></b></code> configuration
+    options).&nbsp; The <code><b>-takefocus</b></code> option of both
+    scrollbars is set to <code>0</code>.&nbsp; In the Scrollutil_tile package
+    the scrollbars are created as ttk::scrollbar widgets, except on Mac OS
+    X/11+ when using a Tk release earlier than 8.6.10, where the native
+    ttk::scrollbar widget of the <code><b>aqua</b></code> theme didn't yet look
+    as expected.</dd>
+
+    <dd class="tm">If the widget embedded into the scrollarea via
+    <code><b>setwidget</b></code> is a <a href=
+    "https://www.nemethi.de/tablelist/">tablelist</a> and Tablelist version 6.5
+    or later is being used then the scrollarea can also contain siblings of the
+    tablelist widget above the vertical scrollbar and/or to the left of the
+    horizontal one, causing the vertical scrollbar to be displayed below the
+    tablelist's header and/or the horizontal scrollbar to appear to the right
+    of the tablelist's title column area, depending on the values of the
+    <code><b><a href=
+    "#respectheader">-respectheader</a></b></code> and <code><b><a href=
+    "#respecttitlecolumns">-respecttitlecolumns</a></b></code> configuration
+    options.</dd>
+
+    <dd class="tm">
+      The following example shows the typical steps involved in creating a
+      widget within a scrollarea:
+
+      <blockquote>
+        <pre>
+set sa [<a href="scrollarea.html#synopsis">scrollutil::scrollarea</a> ...]
+set lb [listbox $sa.lb ...]
+$sa <a href="scrollarea.html#setwidget">setwidget</a> $lb
+
+pack $sa -expand yes -fill both
+</pre>
+      </blockquote>
+    </dd>
+
+    <dt id="std_options"><b>STANDARD OPTIONS</b></dt>
+
+    <dd>
+      <pre>
+<b>-background   -highlightbackground  -relief
+-borderwidth  -highlightcolor
+-cursor       -highlightthickness</b>
+</pre>
+    </dd>
+
+    <dd>See the <b>options</b> manual entry for details on the standard Tk
+    widget options.&nbsp; The <code><b>-background</b></code>,
+    <code><b>-highlightbackground</b></code>,
+    <code><b>-highlightcolor</b></code>, and
+    <code><b>-highlightthickness</b></code> options are only supported by the
+    Scrollutil package, but not by Scrollutil_tile.&nbsp; They have the same
+    default values as the options of the same names for Tk frame widgets.&nbsp;
+    The default values of the remaining standard options are:</dd>
+
+    <dd>
+      <pre>
+<b>-borderwidth</b> 1 <b>-cursor</b> "" <b>-relief sunken</b>
+</pre>
+    </dd>
+
+    <dd><b>REMARK:</b>&nbsp; When configuring the
+    <code><b>-borderwidth</b></code> or <code><b>-relief</b></code> option, if
+    as a result of this action the scrollarea has a positive
+    <code><b>-borderwidth</b></code> value (e.g., the default <code>1</code>)
+    and a <code><b>-relief</b></code> value other than <code><b>flat</b></code>
+    (e.g., the default <code><b>sunken</b></code>), then the
+    <code><b>-borderwidth</b></code> option of the widget embedded into the
+    scrollarea via the <code><b><a href="#setwidget">setwidget</a></b></code>
+    subcommand of the associated Tcl command will automatically be set to
+    <code>0</code>, provided that the embedded widget supports this
+    option.</dd>
+
+    <dt class="tm" id="widget_options"><b>WIDGET-SPECIFIC OPTIONS</b></dt>
+
+    <dd class="tm" id="autohidescrollbars">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-autohidescrollbars</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;autoHideScrollbars</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;AutoHideScrollbars</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>Specifies a boolean value indicating whether the scrollbars should
+        be obscured if the focus is outside the toplevel window containing the
+        scrollarea or the mouse pointer is outside the scrollarea widget.&nbsp;
+        The default is <code>0</code>.</p>
+
+        <p><b>REMARK 1:</b>&nbsp; The easiest way to override the default value
+        for all scrollarea instances of your application is to insert the
+        line</p>
+
+        <blockquote>
+          <pre>
+option add *Scrollarea.autoHideScrollbars 1
+</pre>
+        </blockquote>
+
+        <p>somewhere at the top of your script (before creating any scrollarea
+        widgets).</p>
+
+        <p><b>REMARK 2:</b>&nbsp; To obscure a scrollbar, Scrollutil just lays
+        a frame over it, thus keeping the area occupied by it reserved (if it
+        was previously mapped).&nbsp; This is different from unmapping a
+        dynamic scrollbar when there is nothing to scroll in the widget
+        embedded into the scrollarea.&nbsp; Obscuring or unobscuring a
+        scrollbar doesn't change its mapped/unmapped state.</p>
+
+        <p><b>REMARK 3:</b>&nbsp; Regardless of the focus and the value of this
+        option, if the mouse pointer is inside the scrollarea and the widget
+        embedded into it via <code><b><a href=
+        "#setwidget">setwidget</a></b></code> gets scrolled (e.g., with the aid
+        of the mouse wheel or touchpad), then the scrollbars will be
+        unobscured.</p>
+      </blockquote>
+    </dd>
+
+    <dd class="tm" id="lockinterval">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-lockinterval</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;lockInterval</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;LockInterval</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>Specifies the time interval in milliseconds for which the scrollbars
+        having the display mode <code><b>dynamic</b></code> (see the
+        <code><b><a href="#xscrollbarmode">-xscrollbarmode</a></b></code> and
+        <code><b><a href="#yscrollbarmode">-yscrollbarmode</a></b></code>
+        options) will be protected from being unmapped after being mapped, in
+        order to avoid any shimmering effects.&nbsp; This is also the time
+        interval for which the dynamic scrollbars will mutually protect each
+        other from being mapped after one of them got mapped.&nbsp; Without
+        this locking mechanism, under some rare circumstances a dynamic
+        scrollbar could get mapped and unmapped in an endless loop, thus giving
+        rise to an annoying and often dangerous flickering effect.&nbsp; The
+        same problem can arise due to a too small
+        <code><b>-lockinterval</b></code> value.&nbsp; The default is
+        <code>1</code>, which works as expected in the vast majority of
+        cases.&nbsp; Should you experience any shimmering in one of your
+        scrollarea widgets, just set this option for that scrollarea to a
+        sufficiently large value (e.g., <code>100</code>).&nbsp; Note, however,
+        that this value should not be greater than <code>300</code>, because,
+        for implementation-specific reasons, a
+        <code><b>-lockinterval</b></code> value greater than <code>300</code>
+        can prevent a dynamic scrollbar that should be hidden from being
+        unmapped, or one that should be shown from being mapped.</p>
+      </blockquote>
+    </dd>
+
+    <dd class="tm" id="respectheader">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-respectheader</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;respectHeader</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;RespectHeader</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>This option is only relevant if the widget embedded into the
+        scrollarea with the aid of the <code><b><a href=
+        "#setwidget">setwidget</a></b></code> subcommand of the associated Tcl
+        command is a <a href="https://www.nemethi.de/tablelist/">tablelist</a>
+        and the Tablelist version being used is 6.5 or later.&nbsp; Its value
+        must be a boolean specifying whether the vertical scrollbar should
+        appear below the tablelist widget's header, thus respecting the native
+        look & feel on Mac OS X/11+ and on many modern Linux systems.&nbsp; The
+        default is <code>1</code> on the windowing systems
+        <code><b>aqua</b></code> and <code><b>x11</b></code>, and
+        <code>0</code> on <code><b>win32</b></code>.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="respecttitlecolumns">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-respecttitlecolumns</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;respectTitleColumns</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;RespectTitleColumns</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>This option is only relevant if the widget embedded into the
+        scrollarea with the aid of the <code><b><a href=
+        "#setwidget">setwidget</a></b></code> subcommand of the associated Tcl
+        command is a <a href="https://www.nemethi.de/tablelist/">tablelist</a>
+        and the Tablelist version being used is 6.5 or later.&nbsp; Its value
+        must be a boolean specifying whether the horizontal scrollbar should
+        start to the right of the tablelist widget's non-scrollable title
+        column area if the value of the <code><b><a href=
+        "https://www.nemethi.de/tablelist/tablelistWidget.html#titlecolumns">-titlecolumns</a></b></code>
+        tablelist option is positive.&nbsp; The default is <code>1</code>.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="setfocus">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-setfocus</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;setFocus</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;SetFocus</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>Specifies a boolean value that determines whether a click with mouse
+        button 1 or 2 on one of the scrollbars should set the focus to the
+        widget embedded into the scrollarea with the aid of the
+        <code><b><a href="#setwidget">setwidget</a></b></code> subcommand if
+        that widget is not in disabled state.&nbsp; The default is
+        <code>0</code>.</p>
+
+        <p><b>REMARK 1:</b>&nbsp; If the option's value is <code>1</code> and
+        the embedded widget is a text or ctext widget then a click with mouse
+        button 1 or 2 on one of the scrollbars will set the focus to that
+        widget regardless of the latter's state, provided that the windowing
+        system is <code><b>win32</b></code> or the Tk version is at least
+        8.6.11 or 8.7a4.&nbsp; This is the same behavior as the one exhibited
+        by the default bindings of these widgets for
+        <code><b>&lt;Button-1&gt;</b></code> events.&nbsp; (In case of a ctext
+        widget <code><i>w</i></code>, the focus is set to the widget's main
+        text widget child <code><i>w</i>.t</code> rather than to the widget
+        itself.)</p>
+
+        <p><b>REMARK 2:</b>&nbsp; If the option's value is <code>1</code> and
+        the embedded widget is a ttk::treeview widget then a click with mouse
+        button 1 or 2 on one of the scrollbars will set the focus to that
+        widget regardless of the latter's state, on all windowing systems and
+        for all Tk versions.&nbsp; Again, this is the same behavior as the one
+        exhibited by the default bindings of this widget for
+        <code><b>&lt;Button-1&gt;</b></code> events.</p>
+
+        <p><b>REMARK 3:</b>&nbsp; The easiest way to override the default value
+        for all scrollarea instances of your application is to insert the
+        line</p>
+
+        <blockquote>
+          <pre>
+option add *Scrollarea.setFocus 1
+</pre>
+        </blockquote>
+
+        <p>somewhere at the top of your script (before creating any scrollarea
+        widgets).</p>
+      </blockquote>
+    </dd>
+
+    <dd id="takefocus">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-takefocus</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;takeFocus</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;TakeFocus</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>This option determines whether the scrollarea accepts the focus
+        during keyboard traversal.&nbsp; It is almost identical to the standard
+        option of the same name (see the <b>options</b> manual entry for
+        details).&nbsp; The only difference is that not the scrollarea itself
+        but the widget embedded into it via the <code><b><a href=
+        "#setwidget">setwidget</a></b></code> subcommand of the associated Tcl
+        command will receive the focus during keyboard traversal with the
+        standard keys (<code>Tab</code> and <code>Shift-Tab</code>).&nbsp; The
+        default is <code>0</code>, being that a scrollarea is esentially a
+        frame containing the above-mentioned widget and two scrollbars.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="xscrollbarmode">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-xscrollbarmode</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;xScrollbarMode</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;ScrollbarMode</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>Specifies the display mode to be used for the horizontal
+        scrollbar.&nbsp; The allowed values are <code><b>static</b></code>,
+        <code><b>dynamic</b></code>, and <code><b>none</b></code>.&nbsp; In
+        <code><b>static</b></code> mode the scrollbar is displayed at all
+        times.&nbsp; In <code><b>dynamic</b></code> mode (which is the default)
+        the scrollbar is mapped and unmapped as needed.&nbsp; The display mode
+        <code><b>none</b></code> disables the scrollbar display.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="yscrollbarmode">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-yscrollbarmode</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;yScrollbarMode</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;ScrollbarMode</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>Specifies the display mode to be used for the vertical
+        scrollbar.&nbsp; The allowed values are <code><b>static</b></code>,
+        <code><b>dynamic</b></code>, and <code><b>none</b></code>.&nbsp; In
+        <code><b>static</b></code> mode the scrollbar is displayed at all
+        times.&nbsp; In <code><b>dynamic</b></code> mode (which is the default)
+        the scrollbar is mapped and unmapped as needed.&nbsp; The display mode
+        <code><b>none</b></code> disables the scrollbar display.</p>
+      </blockquote>
+    </dd>
+
+    <dt class="tm" id="widget_command"><b>WIDGET COMMAND</b></dt>
+
+    <dd>
+      The <code><b>scrollutil::scrollarea</b></code> command creates a new Tcl
+      command whose name is <code><i>pathName</i></code>.&nbsp; This command
+      may be used to invoke various operations on the widget.&nbsp; It has the
+      following general form:
+
+      <blockquote>
+        <pre>
+<i>pathName</i> <i>option</i> ?<i>arg</i> <i>arg</i> ...?
+</pre>
+      </blockquote>
+    </dd>
+
+    <dd><code><i>option</i></code> and the <code><i>arg</i></code>s determine
+    the exact behavior of the command.&nbsp; The following commands are
+    possible for scrollarea widgets:</dd>
+
+    <dd>
+      <dl>
+        <dt class="tm" id="attrib"><code><i>pathName</i> <b>attrib</b>
+        ?<i>name</i> ?<i>value</i> <i>name</i> <i>value</i> ...??</code></dt>
+
+        <dd>Queries or modifies the attributes of the widget.&nbsp; If no
+        <code><i>name</i></code> is specified, the command returns a list of
+        pairs, each of which contains the name and the value of an attribute
+        for <code><i>pathName</i></code>.&nbsp; If <code><i>name</i></code> is
+        specified with no <code><i>value</i></code>, then the command returns
+        the value of the one named attribute, or an empty string if no
+        corresponding value exists (you can use the <code><b><a href=
+        "#hasattrib">hasattrib</a></b></code> subcommand to distinguish this
+        case from the one that the value of an <i>existing</i> attribute is an
+        empty string).&nbsp; If one or more
+        <code><i>name</i></code>-<code><i>value</i></code> pairs are specified,
+        then the command sets the given widget attribute(s) to the given
+        value(s); in this case the return value is an empty string.&nbsp; Each
+        <code><i>name</i></code> may be an arbitrary string.</dd>
+
+        <dt class="tm" id="cget"><code><i>pathName</i> <b>cget</b>
+        <i>option</i></code></dt>
+
+        <dd>Returns the current value of the configuration option given by
+        <code><i>option</i></code>, which may have any of the values accepted
+        by the <code><b>scrollutil::scrollarea</b></code> command.</dd>
+
+        <dt class="tm" id="configure"><code><i>pathName</i> <b>configure</b>
+        ?<i>option</i> ?<i>value</i> <i>option</i> <i>value</i>
+        ...??</code></dt>
+
+        <dd>Queries or modifies the configuration options of the widget.&nbsp;
+        If no <code><i>option</i></code> is specified, the command returns a
+        list describing all of the available options for
+        <code><i>pathName</i></code> (see <code><b>Tk_ConfigureInfo</b></code>
+        for information on the format of this list).&nbsp; If
+        <code><i>option</i></code> is specified with no
+        <code><i>value</i></code>, then the command returns a list describing
+        the one named option (this list will be identical to the corresponding
+        sublist of the value returned if no <code><i>option</i></code> is
+        specified).&nbsp; If one or more
+        <code><i>option</i></code>-<code><i>value</i></code> pairs are
+        specified, then the command modifies the given widget option(s) to have
+        the given value(s); in this case the return value is an empty
+        string.&nbsp; <code><i>option</i></code> may have any of the values
+        accepted by the <code><b>scrollutil::scrollarea</b></code>
+        command.</dd>
+
+        <dt class="tm" id="hasattrib"><code><i>pathName</i> <b>hasattrib</b>
+        <i>name</i></code></dt>
+
+        <dd>Returns <code>1</code> if the attribute <code><i>name</i></code>
+        exists and <code>0</code> otherwise.</dd>
+
+        <dt class="tm" id="setwidget"><code><i>pathName</i> <b>setwidget</b>
+        <i>widget</i></code></dt>
+
+        <dd>The <code><i>widget</i></code> argument must be the path name of an
+        existing widget or an empty string.&nbsp; In the first case, the
+        command manages the widget to fill the top-left part of the scrollarea
+        and connects it with the scrollbars by setting its
+        <code><b>-xscrollcommand</b></code> and
+        <code><b>-yscrollcommand</b></code> options to appropriate wrappers for
+        the <code><b>set</b></code> command of the two scrollbars and setting
+        the <code><b>-command</b></code> option of the scrollbars to&nbsp;
+        <code>[<b>list</b> <i>widget</i> <b>xview</b>]</code>&nbsp; and&nbsp;
+        <code>[<b>list</b> <i>widget</i> <b>yview</b>]</code>,&nbsp;
+        respectively.&nbsp; If <code><i>widget</i></code> is an empty string
+        then the widget passed to the most recent <code><b>setwidget</b></code>
+        invocation (if any) is unmanaged and unconnected from the
+        scrollbars.&nbsp; The return value is the argument passed to the
+        previous successful invocation of this subcommand, or an empty string
+        if there was no successful <code><b>setwidget</b></code> invocation
+        before.</dd>
+
+        <dd class="tm"><b>REMARK 1:</b>&nbsp; If <code><i>widget</i></code> is
+        nonempty and the value of the <code><b><a href=
+        "#xscrollbarmode">-xscrollbarmode</a></b></code> option is different
+        from <code><b>none</b></code> then <code><i>widget</i></code> must be a
+        horizontally scrollable widget, meaning that it must support the
+        <code><b>-xscrollcommand</b></code> configuration option and the
+        associated Tcl command must have the <code><b>xview</b></code>
+        subcommand.&nbsp; Similarly, if <code><i>widget</i></code> is nonempty
+        and the value of the <code><b><a href=
+        "#yscrollbarmode">-yscrollbarmode</a></b></code> option is different
+        from <code><b>none</b></code> then <code><i>widget</i></code> must be a
+        vertically scrollable widget, meaning that it must support the
+        <code><b>-yscrollcommand</b></code> configuration option and the
+        associated Tcl command must have the <code><b>yview</b></code>
+        subcommand.&nbsp; Consequently, if <code><i>widget</i></code> is an
+        entry or ttk::entry then this subcommand will only be successful if the
+        <code><b>-yscrollbarmode</b></code> option was previously set to
+        <code><b>none</b></code>.</dd>
+
+        <dd class="tm"><b>REMARK 2:</b>&nbsp; The widget identified by the
+        <code><i>widget</i></code> argument must be a child of the scrollarea
+        or of one of the latter's ascendants.&nbsp; This minor restriction is
+        imposed by the <code><b>grid</b></code> geometry manager.</dd>
+
+        <dd class="tm"><b>REMARK 3:</b>&nbsp; When the widget whose path name
+        was passed to <code><b>setwidget</b></code> gets destroyed, this
+        subcommand is automatically invoked with an empty string as
+        argument.</dd>
+
+        <dd class="tm"><b>REMARK 4:</b>&nbsp; This subcommand sets the
+        <code><b>-highlightthickness</b></code> option of
+        <code><i>widget</i></code> to <code>0</code> if
+        <code><i>widget</i></code> supports this configuration option.&nbsp; In
+        addition, if the scrollarea has a positive
+        <code><b>-borderwidth</b></code> value (e.g., the default
+        <code>1</code>) and a <code><b>-relief</b></code> value other than
+        <code><b>flat</b></code> (e.g., the default <code><b>sunken</b></code>)
+        then this subcommand sets the <code><b>-borderwidth</b></code> option
+        of <code><i>widget</i></code> to <code>0</code>, provided that
+        <code><i>widget</i></code> supports this option.</dd>
+
+        <dd class="tm"><b>REMARK 5:</b>&nbsp; This subcommand is the only
+        supported way to embed a widget into a scrollarea.&nbsp; Any attempt to
+        embed further widgets, using any geometry manager, will lead to
+        unpredictable results!</dd>
+
+        <dt class="tm" id="unsetattrib"><code><i>pathName</i>
+        <b>unsetattrib</b> <i>name</i></code></dt>
+
+        <dd>Unsets the attribute <code><i>name</i></code>.&nbsp; Returns an
+        empty string.</dd>
+
+        <dt class="tm" id="widget"><code><i>pathName</i>
+        <b>widget</b></code></dt>
+
+        <dd>Returns the argument passed to the most recent successful
+        invocation of the <code><b><a href=
+        "#setwidget">setwidget</a></b></code> subcommand, or an empty string if
+        there was no successful invocation of that subcommand yet.</dd>
+      </dl>
+    </dd>
+
+    <dt class="tm" id="bindings"><b>BINDINGS</b></dt>
+
+    <dd>When a new scrollarea is created, it has no default event bindings:
+    scrollareas are not intended to be interactive.</dd>
+
+    <dt class="tm" id="keywords"><b>KEYWORDS</b></dt>
+
+    <dd>scrollarea, widget, scrollbar</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="getscrollarea">The <code><b>scrollutil::getscrollarea</b></code>
+  Command</h2>
+
+  <dl>
+    <dt><b>NAME</b></dt>
+
+    <dd><code>scrollutil::getscrollarea</code> &ndash; Query the scrollarea
+    containing a given widget</dd>
+
+    <dt class="tm"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>scrollutil::gescrollarea</b> <i>widget</i>
+</pre>
+    </dd>
+
+    <dt><b>DESCRIPTION</b></dt>
+
+    <dd>Returns the path name of the scrollarea into which the widget given by
+    the <code><i>widget</i></code> argument is embedded via the scrollarea's
+    <code><b><a href="#setwidget">setwidget</a></b></code> subcommand, or an
+    empty string if there is no such scrollarea widget.</dd>
+
+    <dt class="tm"><b>KEYWORDS</b></dt>
+
+    <dd>scrollarea, widget</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+</body>
+</html>

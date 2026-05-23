@@ -1,0 +1,214 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>diagram-viewer - Documentation toolbox</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'diagram-viewer.man' by tcllib/doctools with format 'html'
+   -->
+<!-- Copyright &amp;copy; 2010 Andreas Kupries &amp;lt;andreas_kupries@users.sourceforge.net&amp;gt;
+   -->
+<!-- diagram-viewer.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../index.html">Keyword Index</a>
+&#124; <a href="../../../toc0.html">Categories</a>
+&#124; <a href="../../../toc1.html">Modules</a>
+&#124; <a href="../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">diagram-viewer(n) 1.0 tklib &quot;Documentation toolbox&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>diagram-viewer - Lightweight Diagram Processor</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a>
+<ul>
+<li class="doctools_subsection"><a href="#subsection1">USE CASES</a></li>
+<li class="doctools_subsection"><a href="#subsection2">COMMAND LINE</a></li>
+</ul>
+</li>
+<li class="doctools_section"><a href="#section2">BUGS, IDEAS, FEEDBACK</a></li>
+<li class="doctools_section"><a href="#section3">Bugs, Ideas, Feedback</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+<li class="doctools_section"><a href="#category">Category</a></li>
+<li class="doctools_section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">diagram-viewer</b> <b class="method">show</b> <i class="arg">inputfile</i>...</a></li>
+<li><a href="#2"><b class="cmd">diagram-viewer</b> <b class="method">convert</b> <b class="option">-o</b> <i class="arg">output</i> <i class="arg">format</i> <i class="arg">inputfile</i>...</a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>The application described by this document, <b class="syscmd">diagram-viewer</b>, is a
+lightweight processor for tklib diagram files</p>
+<p><b class="syscmd">diagram-viewer</b> is based upon the package <b class="package"><a href="../modules/diagrams/diagram.html">diagram</a></b>.
+See it for examples and language reference.</p>
+<div id="subsection1" class="doctools_subsection"><h3><a name="subsection1">USE CASES</a></h3>
+<p><b class="syscmd">diagram-viewer</b> was written with the following two use cases in
+mind.</p>
+<ol class="doctools_enumerated">
+<li><p>Processing and display of one or more diagram files.</p></li>
+<li><p>Batch conversion of one or more diagram files into raster image files.</p></li>
+</ol>
+</div>
+<div id="subsection2" class="doctools_subsection"><h3><a name="subsection2">COMMAND LINE</a></h3>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">diagram-viewer</b> <b class="method">show</b> <i class="arg">inputfile</i>...</a></dt>
+<dd><p>This is the form for use case [1]. The application opens a gui
+showing the list of input files to the left, allowing the user to
+choose which of them to render to the canvas on the right.</p></dd>
+<dt><a name="2"><b class="cmd">diagram-viewer</b> <b class="method">convert</b> <b class="option">-o</b> <i class="arg">output</i> <i class="arg">format</i> <i class="arg">inputfile</i>...</a></dt>
+<dd><p>This is the form for use case [2]. The application converts
+the input files into raster image of the specified <i class="arg">format</i>.</p>
+<dl class="doctools_arguments">
+<dt>path <i class="arg">output</i> (in)</dt>
+<dd><p>This argument specifies where to write the generated image. It can
+be the path to a file or directory.</p>
+<p>If the <i class="arg">output</i> does not exist then [file dirname $output]
+has to exist and must be a writable directory.</p>
+<p>In case of multiple input files the generated image will be written to
+a file in the directory, and the name of that file will be derived
+from the <i class="arg">inputfile</i>, and <i class="arg">format</i>.</p>
+<p>In case of a single input file the generated image will be written to
+the file.</p></dd>
+<dt>(handle) <i class="arg">format</i> (in)</dt>
+<dd><p>This argument specifies the image format to convert the diagrams into
+when processing the input. The application recognizes all formats
+supported by the <b class="package">Img</b> package, i.e. for which it can load a
+package <b class="package">img::<b class="variable">format</b></b> (together with <b class="package"><a href="../modules/canvas/canvas_snap.html">canvas::snap</a></b>),
+and all formats for which it can load a package
+<b class="package">canvas::<b class="variable">format</b></b>. These are (currently) <b class="const">mvg</b>,
+and <b class="const">pdf</b>.</p></dd>
+<dt>path <i class="arg">inputfile</i> (in)</dt>
+<dd><p>This argument specifies the path to the diagram file to process. It
+has to exist, must be readable, and written in <i class="term"><a href="../../../index.html#diagram">diagram</a></i> format.</p></dd>
+</dl></dd>
+</dl>
+</div>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">BUGS, IDEAS, FEEDBACK</a></h2>
+<p>This document, and the application it describes, will undoubtedly
+contain bugs and other problems.
+Please report such in the category <em>diagram</em> of the
+<a href="http://sourceforge.net/tracker/?group_id=12883">Tcllib SF Trackers</a>.
+Please also report any ideas for enhancements you may have for either
+application and/or documentation.</p>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">Bugs, Ideas, Feedback</a></h2>
+<p>This document, and the package it describes, will undoubtedly contain
+bugs and other problems.
+Please report such in the category <em>diagram</em> of the
+<a href="http://core.tcl.tk/tklib/reportlist">Tklib Trackers</a>.
+Please also report any ideas for enhancements you may have for either
+package and/or documentation.</p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../../index.html#canvas">canvas</a>, <a href="../../../index.html#conversion">conversion</a>, <a href="../../../index.html#diagram">diagram</a>, <a href="../../../index.html#vector">vector</a></p>
+</div>
+<div id="category" class="doctools_section"><h2><a name="category">Category</a></h2>
+<p>Documentation tools</p>
+</div>
+<div id="copyright" class="doctools_section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2010 Andreas Kupries &lt;andreas_kupries@users.sourceforge.net&gt;</p>
+</div>
+</div></body></html>

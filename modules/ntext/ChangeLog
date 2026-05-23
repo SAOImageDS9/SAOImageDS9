@@ -1,0 +1,95 @@
+2023-09-16  Keith Nash  <kjnash@users.sourceforge.net>
+
+	* Adjust the tab-coloring API.
+	* Update docs and examples.
+	* Increase version to 1.0b6
+
+2023-09-14  Keith Nash  <kjnash@users.sourceforge.net>
+
+	* Bugfix - <Button-1> sometimes requires -force to gain focus on
+	  Windows.  Without -force, an embedded window from another process
+	  will not relinquish focus.
+	* Increase version to 1.0b5
+
+2023-09-14  Keith Nash  <kjnash@users.sourceforge.net>
+
+	* Add optional coloring of tabs.
+	* Increase version to 1.0b4
+
+2020-02-09  0.7  <andreas_kupries@users.sourceforge.net>
+
+	*
+	* Released and tagged Tklib 0.7 ========================
+	* 
+
+2018-02-17  Keith Nash  <kjnash@users.sourceforge.net>
+
+	* Bugfix - generate <<Selection>> for Tk < 8.6.9 in the corner case in
+	  which the CLIPBOARD is <<Paste>>d into the PRIMARY selection.
+	* Increase version to 1.0b3
+
+2018-01-26  Keith Nash  <kjnash@users.sourceforge.net>
+
+	* Update to correspond to current tk8.x/text.tcl --
+	  core-8-5-branch 2015-10-04 artifact [6af61544] check-in [55133bde]
+	  core-8-6-branch 2017-09-22 artifact [24e611b8] check-in [ba5ef805]
+	  trunk           2017-10-07 artifact [642cbaf3] check-in [429e2357]
+	  revised_text    2018-01-15 artifact [a76837e9] check-in [74f86687]
+	* Adapt to work with revised_text.
+	* Add revisions made to Tk library/text.tcl since the last release
+	  of ntext.
+	* When indenting word-wrapped lines, use the text widget tag option
+	  -lmargincolor if available (i.e. for Tk 8.6.6 and above). Add command
+	  ::ntext::syncIndentColor and variable ::ntext::indentColor for this
+	  purpose.
+	* Add the option to use the block cursor when in "overwrite" mode.  Make
+	  this the default for Tk 8.5.12 or newer (earlier versions have a bug
+	  in their block cursor).
+	* Generate a <<Selection>> event when the PRIMARY selection changes
+	  as a result of an "insert" or "delete" operation, in older versions of
+	  Tk. (This missing feature is added to the text widget itself in
+	  Tk 8.6.9.)
+	* Add a new example for unusual scrolling cases identified in
+	  revised_text.
+	* Update docs and examples.
+	* Increase version to 1.0b2
+
+2017-03-31  Keith Nash  <kjnash@users.sourceforge.net>
+
+	* Update to correspond to current tk8.x/text.tcl --
+	  core-8-6-branch 2015-10-09 artifact [e9c33ef1] check-in [553899e9]
+	  core-8-5-branch 2015-10-04 artifact [6af61544] check-in [55133bde]
+	  trunk           2016-09-27 artifact [530d3c1b] check-in [6b21cc27]
+	* Don't call private commands from tk8.x/text.tcl (for compatibility
+	  with all versions of Tk 8.5.x, 8.6.x).
+	* Adapt bindings to have Mac-like behaviour on the Mac.
+	* Show correct cursor for insert/overwrite when there are multiple
+	  widgets.
+	* Fix "Smart End" to handle trailing whitespace.
+	* Different behaviour for "Smart Home" in corner case with wrapped
+	  leading whitespace.
+	* Bugfixes for separator boundaries in Undo/Redo.
+	* Bugfixes for extending the selection.
+	* Add a new example for Mac scrolling.
+	* Update docs and examples.
+	* Increase version to 1.0b1
+
+2009-01-21  Andreas Kupries  <andreas_kupries@users.sourceforge.net>
+
+	*
+	* Released and tagged Tklib 0.5 ========================
+	* 
+
+2007-06-21  Jeff Hobbs  <jeffh@ActiveState.com>
+
+	* ntext.tcl, et al: Added to tklib
+
+2007-02-16  Keith Nash  <kjnash@users.sourceforge.net>
+
+	* change package and namespace names from newText to ntext
+	* change bindtag/class name from newText to Ntext
+	* minor changes, mainly bugfixes for Undo/Redo
+
+2007-01-13  Keith Nash  <kjnash@users.sourceforge.net>
+
+	* initial release v0.8 as newText

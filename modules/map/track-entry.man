@@ -1,0 +1,31 @@
+[comment {-*- tcl -*- doctools manpage}]
+[vset VERSION 0.1]
+[manpage_begin map::track::entry n [vset VERSION]]
+[category {Map Display and Supporting Utilities}][keywords map]
+[keywords {addon, track entry, map display}]
+[keywords {track entry, map display, addon}]
+[keywords {map display, addon, track entry}]
+[moddesc   {Map display support}]
+[titledesc {Map Action Engine - Track Entry}]
+[require Tcl 8.6-]
+[require canvas::edit::polyline]
+[require debug]
+[require debug::caller]
+[require snit]
+[require map::slippy 0.8]
+[require map::track::entry [opt [vset VERSION]]]
+[description]
+
+This package provides a [package map::display] attachment extending the map's behaviour.
+This attachment enables the user to enter an open series of points, i.e. a [term geo/track].
+
+[section API]
+
+[list_begin definitions]
+[list_end]
+
+[section EXAMPLE]
+
+[vset CATEGORY map]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]

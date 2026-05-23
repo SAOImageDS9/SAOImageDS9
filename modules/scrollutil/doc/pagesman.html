@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>The scrollutil::pagesman Command</title>
+
+  <meta name="Author" content="Csaba Nemethi">
+  <meta name="Keywords" content="pagesman, pages manager, widget">
+
+  <link rel="stylesheet" type="text/css" href="stylesheet.css">
+</head>
+
+<body>
+  <div>
+    <h1>The <code><b>scrollutil::pagesman</b></code> Command</h1>
+
+    <h2>For Scrollutil Version 2.4</h2>
+
+    <h3>by</h3>
+
+    <h2>Csaba Nemethi</h2>
+
+    <address>
+      <a href="mailto:csaba.nemethi@t-online.de">csaba.nemethi@t-online.de</a>
+    </address>
+  </div>
+
+  <hr>
+
+  <h2 id="contents">Contents</h2>
+
+  <ul>
+    <li><a href="#quick_ref">Quick Reference</a></li>
+
+    <li><a href="#detailed_ref">Detailed Reference</a></li>
+  </ul>
+
+  <div>
+    <p><a href="index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="quick_ref">Quick Reference</h2>
+
+  <dl>
+    <dt><a href="#name">NAME</a></dt>
+
+    <dd><code>scrollutil::pagesman</code> &ndash; Create and manipulate
+    pagesman widgets</dd>
+
+    <dt class="tm"><a href="#synopsis">SYNOPSIS</a></dt>
+
+    <dd>
+      <pre>
+<b>scrollutil::pagesman</b> <i>pathName</i> ?<i>options</i>?
+</pre>
+    </dd>
+
+    <dt><a href="#description">DESCRIPTION</a></dt>
+
+    <dt class="tm"><a href="#std_options">STANDARD OPTIONS</a></dt>
+
+    <dd>
+      <pre>
+<b>-background   -highlightbackground  -relief
+-borderwidth  -highlightcolor
+-cursor       -highlightthickness</b>
+</pre>
+    </dd>
+
+    <dt><a href="#widget_options">WIDGET-SPECIFIC OPTIONS</a></dt>
+
+    <dd><code><b><a href="#forgetcommand">-forgetcommand</a></b>
+    <i>command</i></code></dd>
+
+    <dd><code><b><a href="#height">-height</a></b>
+    <i>screenDistance</i></code></dd>
+
+    <dd><code><b><a href="#leavecommand">-leavecommand</a></b>
+    <i>command</i></code></dd>
+
+    <dd><code><b><a href="#takefocus">-takefocus</a></b>
+    <b>0</b>|<b>1</b>|<b>""</b>|<i>command</i></code></dd>
+
+    <dd><code><b><a href="#width">-width</a></b>
+    <i>screenDistance</i></code></dd>
+
+    <dt class="tm"><a href="#page_options">PAGE CONFIGURATION OPTIONS</a></dt>
+
+    <dd><code><b><a href="#page_padding">-padding</a></b>
+    <i>padding</i></code></dd>
+
+    <dd><code><b><a href="#page_sticky">-sticky</a></b>
+    <i> stickyness</i></code></dd>
+
+    <dt class="tm"><a href="#widget_command">WIDGET COMMAND</a></dt>
+
+    <dd><code><i>pathName</i> <b><a href="#add">add</a></b> <i>window</i>
+    ?<i>option</i> <i>value</i> <i>option</i> <i>value</i> ...?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href=
+    "#adjustsize">adjustsize</a></b></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#attrib">attrib</a></b> ?<i>name</i>
+    ?<i>value</i> <i>name</i> <i>value</i> ...??</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#cget">cget</a></b>
+    <i>option</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#configure">configure</a></b>
+    ?<i>option</i> ?<i>value</i> <i>option</i> <i>value</i> ...??</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#forget">forget</a></b>
+    <i>pageIndex</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#hasattrib">hasattrib</a></b>
+    <i>name</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#haspageattrib">haspageattrib</a></b>
+    <i>pageIndex</i> <i>name</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#index">index</a></b>
+    <i>window</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#insert">insert</a></b>
+    <i>pageIndex</i> <i>window</i> ?<i>option</i> <i>value</i> <i>option</i>
+    <i>value</i> ...?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#pageattrib">pageattrib</a></b>
+    <i>pageIndex</i> ?<i>name</i> ?<i>value</i> <i>name</i> <i>value</i>
+    ...??</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#pagecget">pagecget</a></b>
+    <i>pageIndex</i> <i>option</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#pageconfigure">pageconfigure</a></b>
+    <i>pageIndex</i> ?<i>option</i> ?<i>value</i> <i>option</i>
+    <i>value</i> ...??</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#pages">pages</a></b></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#select">select</a></b>
+    ?<i>pageIndex</i>?</code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#size">size</a></b></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#unsetattrib">unsetattrib</a></b>
+    <i>name</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href=
+    "#unsetpageattrib">unsetpageattrib</a></b> <i>pageIndex</i>
+    <i>name</i></code></dd>
+
+    <dd><code><i>pathName</i> <b><a href="#window">window</a></b>
+    <i>pageIndex</i></code></dd>
+
+    <dt class="tm"><a href="#virtual_events">VIRTUAL EVENTS</a></dt>
+
+    <dt class="tm"><a href="#bindings">BINDINGS</a></dt>
+
+    <dt class="tm"><a href="#keywords">KEYWORDS</a></dt>
+
+    <dd>pagesman, widget</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+
+  <hr>
+
+  <h2 id="detailed_ref">Detailed Reference</h2>
+
+  <dl>
+    <dt id="name"><b>NAME</b></dt>
+
+    <dd><code>scrollutil::pagesman</code> &ndash; Create and manipulate
+    pagesman widgets</dd>
+
+    <dt class="tm" id="synopsis"><b>SYNOPSIS</b></dt>
+
+    <dd>
+      <pre>
+<b>scrollutil::pagesman</b> <i>pathName</i> ?<i>options</i>?
+</pre>
+    </dd>
+
+    <dt class="tm" id="description"><b>DESCRIPTION</b></dt>
+
+    <dd>The <code><b>scrollutil::pagesman</b></code> command creates a new
+    window named <code><i>pathName</i></code> and of the class
+    <code><b>Pagesman</b></code>, and makes it into a <b>pagesman</b>
+    widget.&nbsp; Additional options, described below, may be specified on the
+    command line or in the option database to configure aspects of the
+    pagesman widget such as its width, height, borderwidth, and relief.&nbsp;
+    The <code><b>scrollutil::pagesman</b></code> command returns its
+    <code><i>pathName</i></code> argument.&nbsp; At the time this command is
+    invoked, there must not exist a window named <code><i>pathName</i></code>,
+    but <code><i>pathName</i></code>'s parent must exist.</dd>
+
+    <dd class="tm">A pagesman is a mega-widget that provides the basic
+    functionality of a pages manager, meaning that it manages a list of
+    windows, called <b>pages</b>, of which only one is visible at a time.&nbsp;
+    By using it with <a href="plainnotebook.html">plainnotebook</a> widgets as
+    pages, it is quite easy to write applications in which the user can descend
+    from a plainnotebook to another one with a single mouse click and switch
+    back in the same way to the original one.&nbsp; Everything needed for this
+    navigation is provided by appropriate options and subcommands of the
+    plainnotebook widget.</dd>
+
+    <dt class="tm" id="std_options"><b>STANDARD OPTIONS</b></dt>
+
+    <dd>
+      <pre>
+<b>-background   -highlightbackground  -relief
+-borderwidth  -highlightcolor
+-cursor       -highlightthickness</b>
+</pre>
+    </dd>
+
+    <dd>See the <b>options</b> manual entry for details on the standard Tk
+    widget options.&nbsp; The <code><b>-background</b></code>,
+    <code><b>-highlightbackground</b></code>,
+    <code><b>-highlightcolor</b></code>, and
+    <code><b>-highlightthickness</b></code> options are only supported by the
+    Scrollutil package, but not by Scrollutil_tile.&nbsp; They have the same
+    default values as the options of the same names for Tk frame widgets.&nbsp;
+    The default values of the remaining standard options are:</dd>
+
+    <dd>
+      <pre>
+<b>-borderwidth</b> 0 <b>-cursor</b> "" <b>-relief flat</b>
+</pre>
+    </dd>
+
+    <dt class="tm" id="widget_options"><b>WIDGET-SPECIFIC OPTIONS</b></dt>
+
+    <dd id="forgetcommand">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-forgetcommand</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;forgetCommand</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;ForgetCommand</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>Specifies a command to be invoked when attempting to unmanage a
+        window with the aid of the <code><b><a href=
+        "#forget">forget</a></b></code> subcommand.&nbsp; If the option's value
+        is a nonempty string then it is concatenated with the path name of the
+        pagesman widget and that of the window to be unmanaged, and the
+        resulting script, which must return a boolean, is evaluated in the
+        global scope.&nbsp; If the return value of this script is false then
+        the <code><b>forget</b></code> subcommand is aborted, i.e., the window
+        is not unmanaged.&nbsp; The default is an empty string.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="height">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-height</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;height</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;Height</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>If present and greater than zero, specifies the desired total height
+        for the widget, including the border and highlight rectangle (if any)
+        drawn around the outside of the widget, in any of the forms acceptable
+        to <code><b>Tk_GetPixels</b></code>.&nbsp; Otherwise, the maximum
+        requested height of all pages is used.&nbsp; The default is
+        <code>0</code>.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="leavecommand">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-leavecommand</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;leaveCommand</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;LeaveCommand</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>Specifies a command to be invoked when attempting to leave the
+        currently selected window by selecting a different one with the aid of
+        the <code><b><a href="#select">select</a></b></code> subcommand.&nbsp;
+        If the option's value is a nonempty string then it is concatenated with
+        the path name of the pagesman widget and that of the currently selected
+        window, and the resulting script, which must return a boolean, is
+        evaluated in the global scope.&nbsp; If the return value of this script
+        is false then the operation of selecting a different window is
+        aborted.&nbsp; The default is an empty string.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="takefocus">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-takefocus</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;takeFocus</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;TakeFocus</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>This option determines whether the pagesman widget accepts the focus
+        during keyboard traversal.&nbsp; It is almost identical to the standard
+        option of the same name (see the <b>options</b> manual entry for
+        details).&nbsp; The only difference is that not the pagesman widget
+        itself but the currently selected window (if any) will receive the
+        focus during keyboard traversal with the standard keys
+        (<code>Tab</code> and <code>Shift-Tab</code>).&nbsp; The default is an
+        empty string.</p>
+      </blockquote>
+    </dd>
+
+    <dd id="width">
+      <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>Command-Line Name:&nbsp;</td>
+          <td><code><b>-width</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Name:</td>
+          <td><code><b>&nbsp;width</b></code></td>
+        </tr>
+
+        <tr>
+          <td>Database Class:</td>
+          <td><code><b>&nbsp;Width</b></code></td>
+        </tr>
+      </table>
+
+      <blockquote>
+        <p>If present and greater than zero, specifies the desired total width
+        for the widget, including the border and highlight rectangle (if any)
+        drawn around the outside of the widget, in any of the forms acceptable
+        to <code><b>Tk_GetPixels</b></code>.&nbsp; Otherwise, the maximum
+        requested width of all pages is used.&nbsp; The default is
+        <code>0</code>.</p>
+      </blockquote>
+    </dd>
+
+    <dt id="page_options"><b>PAGE CONFIGURATION OPTIONS</b></dt>
+
+    <dd>The following options are currently supported by the <code><b><a href=
+    "#add">add</a></b></code>, <code><b><a href=
+    "#insert">insert</a></b></code>, <code><b><a href=
+    "#pagecget">pagecget</a></b></code>, and <code><b><a href=
+    "#pageconfigure">pageconfigure</a></b></code> commands:</dd>
+
+    <dd>
+      <dl>
+        <dt class="tm" id="page_padding"><code><b>-padding</b>
+        <i>padding</i></code></dt>
+
+        <dd>Specifies the amount of extra space to add between the widget and
+        this page.&nbsp; <code><i>padding</i></code> must be a list of up to
+        four nonnegative screen distances&nbsp; <code>{<i>left</i> <i>top</i>
+        <i>right</i> <i>bottom</i>}</code>.&nbsp; If fewer than four elements
+        are specified, <code><i>bottom</i></code> defaults to
+        <code><i>top</i></code>, <code><i>right</i></code> defaults to
+        <code><i>left</i></code>, and <code><i>top</i></code> defaults to
+        <code><i>left</i></code>.&nbsp; A padding value specified as an empty
+        list is equivalent to <code>0</code>, which is the default.</dd>
+
+        <dt class="tm" id="page_sticky"><code><b>-sticky</b>
+        <i>stickyness</i></code></dt>
+
+        <dd>Specifies how the page window will be positioned within the
+        widget.&nbsp; <code><i>stickyness</i></code> must be a string
+        containing zero or more of the characters <code><b>n</b></code>,
+        <code><b>s</b></code>, <code><b>e</b></code>, or
+        <code><b>w</b></code>.&nbsp; Each letter refers to a side (north,
+        south, east, or west) that the page window will “stick” to, as per the
+        <code><b>grid</b></code> geometry manager.&nbsp; The default stickyness
+        is <code><b>nsew</b></code>.</dd>
+      </dl>
+    </dd>
+
+    <dt class="tm" id="widget_command"><b>WIDGET COMMAND</b></dt>
+
+    <dd>
+      The <code><b>scrollutil::pagesman</b></code> command creates a new Tcl
+      command whose name is <code><i>pathName</i></code>.&nbsp; This command
+      may be used to invoke various operations on the widget.&nbsp; It has the
+      following general form:
+
+      <blockquote>
+        <pre>
+<i>pathName</i> <i>option</i> ?<i>arg</i> <i>arg</i> ...?
+</pre>
+      </blockquote>
+    </dd>
+
+    <dd><code><i>option</i></code> and the <code><i>arg</i></code>s determine
+    the exact behavior of the command.&nbsp; In the subcommand descriptions
+    below, <code><i>pageIndex</i></code> always denotes a numerical page index,
+    which, with the exception of the <code><b><a href=
+    "#insert">insert</a></b></code> subcommand, must be greater than or equal
+    to zero and less than the number of pages.&nbsp; The following subcommands
+    are possible for pagesman widgets:</dd>
+
+    <dd>
+      <dl>
+        <dt class="tm" id="add"><code><i>pathName</i> <b>add</b> <i>window</i>
+        ?<i>option</i> <i>value</i> <i>option</i> <i>value</i> ...?</code></dt>
+
+        <dd>Adds a new page consisting of the specified window to the pagesman
+        widget.&nbsp; See the <a href="#page_options">PAGE CONFIGURATION
+        OPTIONS</a> section for the list of available options.&nbsp; If
+        <code><i>window</i></code> is already managed by the pagesman widget,
+        then the subcommand uses its optional arguments to update the options
+        of the corresponding page.</dd>
+
+        <dt class="tm" id="adjustsize"><code><i>pathName</i>
+        <b>adjustsize</b></code></dt>
+
+        <dd>Sets the pagesman widget's <code><b><a href=
+        "#height">-height</a></b></code> option to the maximum requested height
+        of all pages and its <code><b><a href="#width">-width</a></b></code>
+        option to the maximum requested width of all pages.</dd>
+
+        <dd class="tm"><b>REMARK:</b>&nbsp; If all pages of the pagesman widget
+        are plainnotebooks whose <code><b>-height</b></code> and
+        <code><b>-width</b></code> options have their default value
+        <code>0</code> then in many cases there is no need to precede an
+        invocation of this subcommand for the pagesman widget by invocations of
+        the subcommand of the same name for its pages, because each
+        plainnotebook will automatically adapt its requested size to the
+        maximum requested size of its panes.&nbsp; For example, a font size
+        change in some panes of some of the pages might make it necessary to
+        invoke this subcommand for the pagesman widget, and at the invocation
+        time its pages will already have their requested sizes automatically
+        adapted to the new font size.</dd>
+
+        <dt class="tm" id="attrib"><code><i>pathName</i> <b>attrib</b>
+        ?<i>name</i> ?<i>value</i> <i>name</i> <i>value</i> ...??</code></dt>
+
+        <dd>Queries or modifies the attributes of the widget.&nbsp; If no
+        <code><i>name</i></code> is specified, the command returns a list of
+        pairs, each of which contains the name and the value of an attribute
+        for <code><i>pathName</i></code>.&nbsp; If <code><i>name</i></code> is
+        specified with no <code><i>value</i></code>, then the command returns
+        the value of the one named attribute, or an empty string if no
+        corresponding value exists (you can use the <code><b><a href=
+        "#hasattrib">hasattrib</a></b></code> subcommand to distinguish this
+        case from the one that the value of an <i>existing</i> attribute is an
+        empty string).&nbsp; If one or more
+        <code><i>name</i></code>-<code><i>value</i></code> pairs are specified,
+        then the command sets the given widget attribute(s) to the given
+        value(s); in this case the return value is an empty string.&nbsp; Each
+        <code><i>name</i></code> may be an arbitrary string.</dd>
+
+        <dt class="tm" id="cget"><code><i>pathName</i> <b>cget</b>
+        <i>option</i></code></dt>
+
+        <dd>Returns the current value of the configuration option given by
+        <code><i>option</i></code>, which may have any of the values accepted
+        by the <code><b>scrollutil::pagesman</b></code> command.</dd>
+
+        <dt class="tm" id="configure"><code><i>pathName</i> <b>configure</b>
+        ?<i>option</i> ?<i>value</i> <i>option</i> <i>value</i>
+        ...??</code></dt>
+
+        <dd>Queries or modifies the configuration options of the widget.&nbsp;
+        If no <code><i>option</i></code> is specified, the command returns a
+        list describing all of the available options for
+        <code><i>pathName</i></code> (see <code><b>Tk_ConfigureInfo</b></code>
+        for information on the format of this list).&nbsp; If
+        <code><i>option</i></code> is specified with no
+        <code><i>value</i></code>, then the command returns a list describing
+        the one named option (this list will be identical to the corresponding
+        sublist of the value returned if no <code><i>option</i></code> is
+        specified).&nbsp; If one or more
+        <code><i>option</i></code>-<code><i>value</i></code> pairs are
+        specified, then the command modifies the given widget option(s) to have
+        the given value(s); in this case the return value is an empty
+        string.&nbsp; <code><i>option</i></code> may have any of the values
+        accepted by the <code><b>scrollutil::pagesman</b></code> command.</dd>
+
+        <dt class="tm" id="forget"><code><i>pathName</i> <b>forget</b>
+        <i>pageIndex</i></code></dt>
+
+        <dd>Unmaps and unmanages the page identified by
+        <code><i>pageIndex</i></code>.&nbsp; The subcommand returns
+        <code>0</code> if it was aborted by the command specified as the value
+        of the <code><b><a href="#forgetcommand">-forgetcommand</a></b></code>
+        option, and <code>1</code> otherwise.</dd>
+
+        <dt class="tm" id="hasattrib"><code><i>pathName</i> <b>hasattrib</b>
+        <i>name</i></code></dt>
+
+        <dd>Returns <code>1</code> if the attribute <code><i>name</i></code>
+        exists and <code>0</code> otherwise.</dd>
+
+        <dt class="tm" id="haspageattrib"><code><i>pathName</i>
+        <b>haspageattrib</b> <i>pageIndex</i> <i>name</i></code></dt>
+
+        <dd>Returns <code>1</code> if the attribute <code><i>name</i></code>
+        for the page given by <code><i>pageIndex</i></code> exists and
+        <code>0</code> otherwise.</dd>
+
+        <dt class="tm" id="index"><code><i>pathName</i> <b>index</b>
+        <i>window</i></code></dt>
+
+        <dd>Returns the numerical index of the page identified by the specified
+        window, which must have been added to the widget with the aid of the
+        <code><b><a href="#add">add</a></b></code> or <code><b><a href=
+        "#insert">insert</a></b></code> subcommand.</dd>
+
+        <dt class="tm" id="insert"><code><i>pathName</i> <b>insert</b>
+        <i>pageIndex</i> <i>window</i> ?<i>option</i> <i>value</i>
+        <i>option</i> <i>value</i> ...?</code></dt>
+
+        <dd>Inserts a new page consisting of the specified window at the
+        position given by <code><i>pageIndex</i></code>.&nbsp; See the
+        <a href="#page_options">PAGE CONFIGURATION OPTIONS</a> section for the
+        list of available options.&nbsp; If <code><i>window</i></code> is
+        already managed by the pagesman widget, then the subcommand moves it to
+        the specified position and uses its optional arguments to update the
+        options of the corresponding page.&nbsp; If
+        <code><i>pageIndex</i></code> is less than or equal to zero then the
+        window is prepended to the list of pages; if it is greater than or
+        equal to the number of pages then the window is appended to the list of
+        pages.</dd>
+
+        <dt class="tm" id="pageattrib"><code><i>pathName</i> <b>pageattrib</b>
+        <i>pageIndex</i> ?<i>name</i> ?<i>value</i> <i>name</i> <i>value</i>
+        ...??</code></dt>
+
+        <dd>Queries or modifies the attributes of the page given by
+        <code><i>pageIndex</i></code>.&nbsp; If no <code><i>name</i></code> is
+        specified, the command returns a list of pairs, each of which contains
+        the name and the value of an attribute for the page.&nbsp; If
+        <code><i>name</i></code> is specified with no
+        <code><i>value</i></code>, then the command returns the value of the
+        one named page attribute, or an empty string if no corresponding value
+        exists (you can use the <code><b><a href=
+        "#haspageattrib">haspageattrib</a></b></code> subcommand to distinguish
+        this case from the one that the value of an <i>existing</i> page
+        attribute is an empty string).&nbsp; If one or more
+        <code><i>name</i></code>-<code><i>value</i></code> pairs are specified,
+        then the command sets the given page attribute(s) to the given
+        value(s); in this case the return value is an empty string.&nbsp; Each
+        <code><i>name</i></code> may be an arbitrary string.</dd>
+
+        <dt class="tm" id="pagecget"><code><i>pathName</i> <b>pagecget</b>
+        <i>pageIndex</i> <i>option</i></code></dt>
+
+        <dd>Returns the current value of the page configuration option given by
+        <code><i>option</i></code> for the page specified by
+        <code><i>pageIndex</i></code>.&nbsp; <code><i>option</i></code> may
+        have any of the values accepted by the <code><b><a href=
+        "#pageconfigure">pageconfigure</a></b></code> command.</dd>
+
+        <dt class="tm" id="pageconfigure"><code><i>pathName</i>
+        <b>pageconfigure</b> <i>pageIndex</i> ?<i>option</i> ?<i>value</i>
+        <i>option</i> <i>value</i> ...??</code></dt>
+
+        <dd>Queries or modifies the configuration options of the page given by
+        <code><i>pageIndex</i></code>.&nbsp; If no <code><i>option</i></code>
+        is specified, the command returns a list describing all of the
+        available options for the page (see
+        <code><b>Tk_ConfigureInfo</b></code> for information on the format of
+        this list).&nbsp; If <code><i>option</i></code> is specified with no
+        <code><i>value</i></code>, then the command returns a list describing
+        the one named option (this list will be identical to the corresponding
+        sublist of the value returned if no <code><i>option</i></code> is
+        specified).&nbsp; If one or more
+        <code><i>option</i></code>-<code><i>value</i></code> pairs are
+        specified, then the command modifies the given page option(s) to have
+        the given value(s); in this case the return value is an empty
+        string.&nbsp; <code><i>option</i></code> may have any of the values
+        described in the <a href="#page_options">PAGE CONFIGURATION OPTIONS</a>
+        section.</dd>
+
+        <dt class="tm" id="pages"><code><i>pathName</i>
+        <b>pages</b></code></dt>
+
+        <dd>Returns the list of all windows managed by the pagesman
+        widget, in the order of their numerical page indices.</dd>
+
+        <dt class="tm" id="select"><code><i>pathName</i> <b>select</b>
+        ?<i>pageIndex</i>?</code></dt>
+
+        <dd>If <code><i>pageIndex</i></code> is omitted, the subcommand returns
+        the path name of the currently selected window.&nbsp; Otherwise it
+        selects the specified page by mapping the corresponding window and
+        unmapping the previously-selected one (if different).&nbsp; In this
+        case, the return value is <code>0</code> if the operation of selecting
+        a different window was aborted by the command specified as the value of
+        the <code><b><a href="#leavecommand">-leavecommand</a></b></code>
+        option, and <code>1</code> otherwise.</dd>
+
+        <dt class="tm" id="size"><code><i>pathName</i> <b>size</b></code></dt>
+
+        <dd>Returns the number of pages, i.e., the number of windows managed by
+        the pagesman widget.</dd>
+
+        <dt class="tm" id="unsetattrib"><code><i>pathName</i>
+        <b>unsetattrib</b> <i>name</i></code></dt>
+
+        <dd>Unsets the attribute <code><i>name</i></code>.&nbsp; Returns an
+        empty string.</dd>
+
+        <dt class="tm" id="unsetpageattrib"><code><i>pathName</i>
+        <b>unsetpageattrib</b> <i>pageIndex</i> <i>name</i></code></dt>
+
+        <dd>Unsets the attribute <code><i>name</i></code> for the page given by
+        <code><i>pageIndex</i></code>.&nbsp; Returns an empty string.</dd>
+
+        <dt class="tm" id="window"><code><i>pathName</i> <b>window</b>
+        <i>pageIndex</i></code></dt>
+
+        <dd>Returns the path name of the page window identified by
+        <code><i>pageIndex</i></code>.</dd>
+      </dl>
+    </dd>
+
+    <dt class="tm" id="virtual_events"><b>VIRTUAL EVENTS</b></dt>
+
+    <dd>After a new page is selected, the widget generates a
+    <code><b>&lt;&lt;PagesmanPageChanged&gt;&gt;</b></code> virtual event.</dd>
+
+    <dt class="tm" id="bindings"><b>BINDINGS</b></dt>
+
+    <dd>When a new pagesman widget is created, it has no default event
+    bindings: pagesman widgets are not intended to be interactive.</dd>
+
+    <dt class="tm" id="keywords"><b>KEYWORDS</b></dt>
+
+    <dd>pagesman, pages manager, widget</dd>
+  </dl>
+
+  <div>
+    <p><a href="#contents">Contents</a>&nbsp;&nbsp;&nbsp;&nbsp; <a href=
+    "index.html">Start page</a></p>
+  </div>
+</body>
+</html>

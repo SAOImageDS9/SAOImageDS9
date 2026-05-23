@@ -1,0 +1,36 @@
+[comment {-*- tcl -*- doctools manpage}]
+[manpage_begin canvas::pdf n 1]
+[keywords canvas]
+[keywords graphics]
+[keywords imagemagick]
+[keywords {portable document format}]
+[keywords pdf]
+[keywords {print screen}]
+[keywords serialization]
+[keywords {vector graphics}]
+[copyright {2014 Andreas Kupries, Arjen Markus}]
+[copyright {2014 Documentation, Andreas Kupries}]
+[moddesc   {Variations on a canvas}]
+[titledesc {Canvas to PDF}]
+[require Tcl 8.5]
+[require Tk 8.5]
+[require canvas::pdf [opt 1]]
+[require pdf4tcl]
+[description]
+
+This package provides a command to convert a canvas' contents to
+Adobe's PDF vector format.
+
+[section API]
+
+[list_begin definitions]
+
+[call [cmd ::canvas::pdf] [arg pathName]]
+
+Dump the contents of the canvas [arg pathName]. The result is a string
+in Adobe's PDF.
+
+[list_end]
+[vset CATEGORY canvas]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]

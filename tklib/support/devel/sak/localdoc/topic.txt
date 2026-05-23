@@ -1,2 +1,0 @@
-localdoc	Generate html & nroff documentation for display
-				from the website, and the installer.

@@ -1,3 +1,0 @@
-Doctools Error in macro at line 4, column 0:
-[file .f.]
---> (FmtError) Manpage error (nodonecmd), "file .f." : Command not allowed after [manpage_end].

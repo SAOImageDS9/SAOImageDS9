@@ -1,3 +1,0 @@
-Doctools Error in macro at line 5, column 0:
-[enum]
---> (FmtError) Manpage error (enumlist), "enum" : Command restricted to usage in enumerated lists.

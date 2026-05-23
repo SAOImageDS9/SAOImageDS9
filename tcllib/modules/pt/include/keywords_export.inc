@@ -1,5 +1,0 @@
-[comment {--- Keywords shared among all the export plugins ---}]
-[keywords [vset NAME]]
-[keywords {export}]
-[keywords {plugin}]
-[keywords {serialization}]

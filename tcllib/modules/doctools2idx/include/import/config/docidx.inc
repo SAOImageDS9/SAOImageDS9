@@ -1,1 +1,0 @@
-[include ../../format/docidx.inc]

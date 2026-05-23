@@ -1,1 +1,0 @@
-[include ../../format/doctoc.inc]

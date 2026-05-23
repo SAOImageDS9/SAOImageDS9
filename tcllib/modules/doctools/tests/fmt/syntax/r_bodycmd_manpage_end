@@ -1,3 +1,0 @@
-Doctools Error in macro at line 5, column 0:
-[manpage_end]
---> (FmtError) Manpage error (bodycmd), "manpage_end" : Command not allowed outside of the body of the manpage.

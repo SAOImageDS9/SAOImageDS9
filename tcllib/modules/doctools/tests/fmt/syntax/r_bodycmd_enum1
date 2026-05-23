@@ -1,3 +1,0 @@
-Doctools Error in macro at line 1, column 0:
-[enum]
---> (FmtError) Manpage error (bodycmd), "enum" : Command not allowed outside of the body of the manpage.

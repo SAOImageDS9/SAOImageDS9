@@ -1,5 +1,0 @@
-[section AUTHORS]
-Sean Woods
-
-[vset CATEGORY network]
-[include ../common-text/feedback.inc]

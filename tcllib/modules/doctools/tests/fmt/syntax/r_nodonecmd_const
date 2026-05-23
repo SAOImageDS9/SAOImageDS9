@@ -1,3 +1,0 @@
-Doctools Error in macro at line 4, column 0:
-[const .c.]
---> (FmtError) Manpage error (nodonecmd), "const .c." : Command not allowed after [manpage_end].

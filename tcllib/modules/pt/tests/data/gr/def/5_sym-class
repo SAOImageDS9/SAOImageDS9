@@ -1,3 +1,0 @@
-PEG a_pe_grammar (N)
-  N <- [axe];
-END;

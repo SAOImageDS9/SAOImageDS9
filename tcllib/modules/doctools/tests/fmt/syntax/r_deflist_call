@@ -1,3 +1,0 @@
-Doctools Error in macro at line 5, column 0:
-[call .command.]
---> (FmtError) Manpage error (deflist), "call .command." : Command restricted to usage in definition lists.

@@ -1,3 +1,0 @@
-Doctools Error in macro at line 1, column 0:
-[description]
---> (FmtError) Manpage error (hdrcmd), "description" : Command not allowed outside of the header section.

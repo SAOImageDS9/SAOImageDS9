@@ -499,7 +499,7 @@ void FitsHPX::buildMOC(FitsFile* fits)
   size_t pSize = (size_t)pWidth_*pHeight_;
   float* dest = new float[pSize];
   for (long long ii=0; ii<pSize; ii++)
-    dest[ii] = NAN;
+    dest[ii] = 0;
 
   initHeader(fits);
 
@@ -512,7 +512,7 @@ void FitsHPX::buildMOC(FitsFile* fits)
     for (int jj = 0; jj<nside; jj++) {
       for (int ifacet = 0; ifacet<nfacet; ifacet++) {
 	for (int ii=0; ii<nside; ii++)
-	  row[ii] = NAN;
+	  row[ii] = 0;
 
 	int facet = FACETS[layout][jfacet][ifacet];
 	int rotn  = FROTAT[layout][jfacet][ifacet];
@@ -568,7 +568,7 @@ void FitsHPX::buildMOC(FitsFile* fits)
 	    }
 
 	    for (float* rowp = row+i1; rowp < row+i2; rowp++)
-	      *rowp = NAN;
+	      *rowp = 0;
 	  }
 	}
 

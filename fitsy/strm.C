@@ -12,6 +12,7 @@
 #include <tcl.h>
 
 #include "strm.h"
+#include "hpx.h"
 #include "util.h"
 
 // FitsStream
@@ -590,15 +591,8 @@ template<class T> void FitsFitsStream<T>::processRelaxImage()
 	delete [] a;
     }
 
-    // else, check for bin table with keyword PIXTYPE = 'HEALPIX '
-    if (this->head_->isBinTable() && this->head_->find("PIXTYPE") &&
-	(!strncmp(this->head_->getString("PIXTYPE"),"HEALPIX",4))) {
-      this->found();
-      return;
-    }
-
-    // else, check for bin table with keyword NSIDE (also HEALPIX)
-    if (this->head_->isBinTable() && this->head_->find("NSIDE")) {
+    // else, check for HEALPIX or MOC binary tables
+    if (FitsHPX::isHPX(this->head_)) {
       this->found();
       return;
     }

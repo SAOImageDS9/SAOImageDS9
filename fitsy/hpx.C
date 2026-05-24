@@ -2,56 +2,284 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-// This source has been modified from the original authored by 
+// This source has been modified from the original authored by
 // Dr. Mark Calabretta as distributed with WCSLIBS under GNU GPL version 3
 // WCSLIB 4.7 - an implementation of the FITS WCS standard.
 // Copyright (C) 1995-2011, Mark Calabretta
 
 #include <ctype.h>
+#include <limits.h>
+#include <string.h>
+
+#include <algorithm>
+#include <vector>
 
 #include "hpx.h"
 #include "util.h"
 
-FitsHPX::FitsHPX(FitsFile* fits, Order oo, CoordSys ss, Layout ll, 
-		 int cc, int qq) 
+// Facet layout, rotation, and blanking tables for the HPX/XPH image layouts.
+static const int NFACET[] = {5, 4, 4};
+
+static const int FACETS[][5][5] = {{{ 6,  9, -1, -1, -1},
+				    { 1,  5,  8, -1, -1},
+				    {-1,  0,  4, 11, -1},
+				    {-1, -1,  3,  7, 10},
+				    {-1, -1, -1,  2,  6}},
+				   {{ 8,  4,  4, 11, -1},
+				    { 5,  0,  3,  7, -1},
+				    { 5,  1,  2,  7, -1},
+				    { 9,  6,  6, 10, -1},
+				    {-1, -1, -1, -1, -1}},
+				   {{ 1,  6,  6,  2, -1},
+				    { 5,  9, 10,  7, -1},
+				    { 5,  8, 11,  7, -1},
+				    { 0,  4,  4,  3, -1},
+				    {-1, -1, -1, -1, -1}}};
+
+static const int FROTAT[][5][5] = {{{ 0,  0,  0,  0,  0},
+				    { 0,  0,  0,  0,  0},
+				    { 0,  0,  0,  0,  0},
+				    { 0,  0,  0,  0,  0},
+				    { 0,  0,  0,  0,  0}},
+				   {{ 3,  3,  0,  0,  0},
+				    { 3,  3,  0,  0,  0},
+				    { 2,  2,  1,  1,  0},
+				    { 2,  2,  1,  1,  0},
+				    { 0,  0,  0,  0,  0}},
+				   {{ 1,  1,  2,  2,  0},
+				    { 1,  1,  2,  2,  0},
+				    { 0,  0,  3,  3,  0},
+				    { 0,  0,  3,  3,  0},
+				    { 0,  0,  0,  0,  0}}};
+
+static const int FHALVE[][5][5] = {{{ 0,  0,  0,  0,  0},
+				    { 0,  0,  0,  0,  0},
+				    { 0,  0,  0,  0,  0},
+				    { 0,  0,  0,  0,  0},
+				    { 0,  0,  0,  0,  0}},
+				   {{ 0,  1, -4,  0,  0},
+				    {-3,  0,  0,  2,  0},
+				    { 4,  0,  0, -1,  0},
+				    { 0, -2,  3,  0,  0},
+				    { 0,  0,  0,  0,  0}},
+				   {{ 0,  1, -4,  0,  0},
+				    {-3,  0,  0,  2,  0},
+				    { 4,  0,  0, -1,  0},
+				    { 0, -2,  3,  0,  0},
+				    { 0,  0,  0,  0,  0}}};
+
+struct MocRange {
+  long long first;
+  long long last;
+  double value;
+};
+
+struct MocCell {
+  int order;
+  long long npix;
+  float value;
+};
+
+static bool mocRangeLess(const MocRange& a, const MocRange& b)
+{
+  return a.first < b.first;
+}
+
+static const MocRange* findMocRange(const vector<MocRange>& ranges,
+				    long long idx)
+{
+  size_t lo = 0;
+  size_t hi = ranges.size();
+  while (lo < hi) {
+    size_t mid = lo + (hi-lo)/2;
+    if (ranges[mid].last <= idx)
+      lo = mid+1;
+    else
+      hi = mid;
+  }
+
+  if (lo < ranges.size() && ranges[lo].first <= idx && idx < ranges[lo].last)
+    return &ranges[lo];
+
+  return NULL;
+}
+
+static int keywordStarts(FitsHead* head, const char* key, const char* value)
+{
+  char* str = head->getString(key);
+  if (!str)
+    return 0;
+
+  char* upper = toUpper(str);
+  int result = !strncmp(upper, value, strlen(value));
+  delete [] upper;
+
+  return result;
+}
+
+static int keywordContains(FitsHead* head, const char* key, const char* value)
+{
+  char* str = head->getString(key);
+  if (!str)
+    return 0;
+
+  char* upper = toUpper(str);
+  int result = strstr(upper, value) ? 1 : 0;
+  delete [] upper;
+
+  return result;
+}
+
+static int uniqOrder(long long uniq)
+{
+  if (uniq < 4)
+    return -1;
+
+  long long nside2 = uniq/4;
+  int order = 0;
+  while (nside2 >= 4) {
+    nside2 >>= 2;
+    order++;
+  }
+
+  return order;
+}
+
+static long long uniqOffset(int order)
+{
+  if (order < 0 || order > 30)
+    return 0;
+
+  return 4LL << (2*order);
+}
+
+static int mocHeaderOrder(FitsHead* head)
+{
+  if (head->find("MOCORD_S"))
+    return head->getInteger("MOCORD_S",-1);
+  if (head->find("MOCORDER"))
+    return head->getInteger("MOCORDER",-1);
+  if (head->find("HPXMOC"))
+    return head->getInteger("HPXMOC",-1);
+
+  return -1;
+}
+
+int FitsHPX::isMOC(FitsHead* head)
+{
+  if (!head || !head->isBinTable())
+    return 0;
+
+  if (!keywordStarts(head, "ORDERING", "NUNIQ"))
+    return 0;
+
+  if (head->find("MOCDIM") && !keywordContains(head, "MOCDIM", "SPACE"))
+    return 0;
+
+  if (head->find("MOCORD_S") || head->find("MOCORDER") ||
+      head->find("HPXMOC"))
+    return 1;
+
+  FitsTableHDU* hdu = (FitsTableHDU*)head->hdu();
+  if (!hdu || !hdu->cols())
+    return 0;
+
+  FitsColumn* col = hdu->find("UNIQ");
+  if (!col)
+    col = hdu->find("NPIX");
+  if (!col)
+    col = hdu->find(0);
+
+  return col && col->isInt();
+}
+
+int FitsHPX::isHPX(FitsHead* head)
+{
+  if (!head || !head->isBinTable())
+    return 0;
+
+  if (head->find("PIXTYPE") && keywordStarts(head, "PIXTYPE", "HEALPIX"))
+    return 1;
+
+  if (head->find("NSIDE"))
+    return 1;
+
+  return isMOC(head);
+}
+
+FitsHPX::FitsHPX(FitsFile* fits, Order oo, CoordSys ss, Layout ll,
+		 int cc, int qq)
   : order_(oo), coord_(ss), layout_(ll), quad_(qq)
 {
   FitsHead* head = fits->head();
   FitsBinTableHDU* hdu = (FitsBinTableHDU*)(head->hdu());
-  col_ = (FitsBinColumn*)hdu->find(cc);
-  if (!col_)
-    return;
+  col_ = NULL;
+  uniqCol_ = NULL;
 
-  int nrow = hdu->rows();
-  int nelem = col_->repeat();
+  if (order_ == NUNIQ) {
+    uniqCol_ = (FitsBinColumn*)hdu->find("UNIQ");
+    if (!uniqCol_)
+      uniqCol_ = (FitsBinColumn*)hdu->find("NPIX");
+    if (!uniqCol_)
+      uniqCol_ = (FitsBinColumn*)hdu->find(0);
 
-  nside_ = head->getInteger("NSIDE",0);
-  long firstpix = head->getInteger("FIRSTPIX",-1);
-  long lastpix = head->getInteger("LASTPIX",-1);
+    if (!uniqCol_ || !uniqCol_->isInt())
+      return;
 
-  if (!nside_) {
-    // Deduce NSIDE
-    if (lastpix >= 0) {
-      // If LASTPIX is present without NSIDE we can only assume it's npix.
-      nside_ = (int)(sqrt((double)((lastpix+1) / 12)) + 0.5);
+    if (cc >= 0) {
+      col_ = (FitsBinColumn*)hdu->find(cc);
+      if (col_ == uniqCol_)
+	col_ = NULL;
     }
-    else if (nrow)
-      nside_ = (int)(sqrt((double)((nrow * nelem) / 12)) + 0.5);
+    else {
+      for (int ii=0; ii<hdu->cols(); ii++) {
+	FitsBinColumn* col = (FitsBinColumn*)hdu->find(ii);
+	if (col && col != uniqCol_ && col->type() != 'A' &&
+	    col->type() != 'L' && col->type() != 'X' &&
+	    col->type() != 'P' && col->type() != 'Q') {
+	  col_ = col;
+	  break;
+	}
+      }
+    }
   }
+  else {
+    col_ = (FitsBinColumn*)hdu->find(cc);
+    if (!col_)
+      return;
 
-  long npix = 12*nside_*nside_;
+    int nrow = hdu->rows();
+    int nelem = col_->repeat();
 
-  if (firstpix < 0) 
-    firstpix = 0;
-  if (lastpix < 0) 
-    lastpix  = npix - 1;
+    nside_ = head->getInteger("NSIDE",0);
+    long firstpix = head->getInteger("FIRSTPIX",-1);
+    long lastpix = head->getInteger("LASTPIX",-1);
+
+    if (!nside_) {
+      // Deduce NSIDE
+      if (lastpix >= 0) {
+	// If LASTPIX is present without NSIDE we can only assume it's npix.
+	nside_ = (int)(sqrt((double)((lastpix+1) / 12)) + 0.5);
+      }
+      else if (nrow)
+	nside_ = (int)(sqrt((double)((nrow * nelem) / 12)) + 0.5);
+    }
+
+    long npix = 12*nside_*nside_;
+
+    if (firstpix < 0)
+      firstpix = 0;
+    if (lastpix < 0)
+      lastpix  = npix - 1;
+  }
 
   build(fits);
 
   if (byteswap_)
     swap();
 
-  valid_ = 1;
+  if (data_ && head_)
+    valid_ = 1;
 }
 
 FitsHPX::~FitsHPX()
@@ -62,80 +290,10 @@ FitsHPX::~FitsHPX()
 
 void FitsHPX::build(FitsFile* fits)
 {
-  // Number of facets on a side of each layout
-  const int NFACET[] = {5, 4, 4};
-
-  // Arrays that define the facet location and rotation for each recognised
-  // layout.  Bear in mind that these appear to be upside-down, i.e. the top
-  // line contains facet numbers for the bottom row of the output image.
-  // Facets numbered -1 are blank.
-
-  // Equatorial (diagonal) facet layout.
-  const int FACETS[][5][5] = {{{ 6,  9, -1, -1, -1},
-                               { 1,  5,  8, -1, -1},
-                               {-1,  0,  4, 11, -1},
-                               {-1, -1,  3,  7, 10},
-                               {-1, -1, -1,  2,  6}},
-                              // North polar (X) facet layout.
-                              {{ 8,  4,  4, 11, -1},
-                               { 5,  0,  3,  7, -1},
-                               { 5,  1,  2,  7, -1},
-                               { 9,  6,  6, 10, -1},
-                               {-1, -1, -1, -1, -1}},
-                              // South polar (X) facet layout.
-                              {{ 1,  6,  6,  2, -1},
-                               { 5,  9, 10,  7, -1},
-                               { 5,  8, 11,  7, -1},
-                               { 0,  4,  4,  3, -1},
-                               {-1, -1, -1, -1, -1}}};
-
-  // All facets of the equatorial layout are rotated by +45 degrees with
-  // respect to the normal orientation, i.e. that with the equator running
-  // horizontally.  The rotation recorded for the polar facets is the number
-  // of additional positive (anti-clockwise) 90 degree turns with respect to
-  // the equatorial layout.
-
-  // Equatorial (diagonal), no facet rotation.
-  const int FROTAT[][5][5] = {{{ 0,  0,  0,  0,  0},
-                               { 0,  0,  0,  0,  0},
-                               { 0,  0,  0,  0,  0},
-                               { 0,  0,  0,  0,  0},
-                               { 0,  0,  0,  0,  0}},
-                              // North polar (X) facet rotation.
-                              {{ 3,  3,  0,  0,  0},
-                               { 3,  3,  0,  0,  0},
-                               { 2,  2,  1,  1,  0},
-                               { 2,  2,  1,  1,  0},
-                               { 0,  0,  0,  0,  0}},
-                              // South polar (X) facet rotation.
-                              {{ 1,  1,  2,  2,  0},
-                               { 1,  1,  2,  2,  0},
-                               { 0,  0,  3,  3,  0},
-                               { 0,  0,  3,  3,  0},
-                               { 0,  0,  0,  0,  0}}};
-
-  // Facet halving codes.  0: the facet is whole (or wholly blank),
-  // 1: blanked bottom-right, 2: top-right, 3: top-left, 4: bottom-left.
-  // Positive values mean that the diagonal is included, otherwise not.
-
-  // Equatorial (diagonal), no facet halving.
-  const int FHALVE[][5][5] = {{{ 0,  0,  0,  0,  0},
-                               { 0,  0,  0,  0,  0},
-                               { 0,  0,  0,  0,  0},
-                               { 0,  0,  0,  0,  0},
-                               { 0,  0,  0,  0,  0}},
-                              // North polar (X) facet halving.
-                              {{ 0,  1, -4,  0,  0},
-                               {-3,  0,  0,  2,  0},
-                               { 4,  0,  0, -1,  0},
-                               { 0, -2,  3,  0,  0},
-                               { 0,  0,  0,  0,  0}},
-                              // South polar (X) facet halving.
-                              {{ 0,  1, -4,  0,  0},
-                               {-3,  0,  0,  2,  0},
-                               { 4,  0,  0, -1,  0},
-                               { 0, -2,  3,  0,  0},
-                               { 0,  0,  0,  0,  0}}};
+  if (order_ == NUNIQ) {
+    buildMOC(fits);
+    return;
+  }
 
   FitsHead* head = fits->head();
   FitsTableHDU* hdu = (FitsTableHDU*)(head->hdu());
@@ -182,11 +340,11 @@ void FitsHPX::build(FitsFile* fits)
           if (facet <= 3) {
             facet += quad_;
             if (facet > 3) facet -= 4;
-          } 
+          }
 	  else if (facet <= 7) {
             facet += quad_;
             if (facet > 7) facet -= 4;
-          } 
+          }
 	  else {
             facet += quad_;
             if (facet > 11) facet -= 4;
@@ -204,6 +362,8 @@ void FitsHPX::build(FitsFile* fits)
 	  case RING:
             RINGidx(nside, facet, rotn, jj, healidx);
 	    break;
+	  case NUNIQ:
+	    break;
 	  }
 
           // Gather data into the output vector.
@@ -217,7 +377,7 @@ void FitsHPX::build(FitsFile* fits)
 	    int bb = healidx[ii] - (aa*repeat);
 	    if (aa<nrow)
 	      row[ii] = col_->value(data+aa*rowlen,bb);
-	    else 
+	    else
 	      row[ii] = 0;
 	  }
 
@@ -235,13 +395,13 @@ void FitsHPX::build(FitsFile* fits)
               // Blank top-right.
               i1 = nside - jj;
               i2 = nside;
-              if (halve < 0) 
+              if (halve < 0)
 		i1--;
             } else if (abs(halve) == 3) {
               // Blank top-left.
               i1 = 0;
               i2 = jj;
-              if (halve < 0) 
+              if (halve < 0)
 		i2++;
             } else {
               // Blank bottom-left.
@@ -259,10 +419,167 @@ void FitsHPX::build(FitsFile* fits)
 	  memcpy(dest+fpixel-1, row, nside*sizeof(float));
         }
 
-	fpixel += nelem;	
+	fpixel += nelem;
       }
     }
   }
+
+  data_ = dest;
+
+  dataSize_ = pSize;
+  dataSkip_ = 0;
+}
+
+void FitsHPX::buildMOC(FitsFile* fits)
+{
+  if (!uniqCol_)
+    return;
+
+  FitsHead* head = fits->head();
+  FitsTableHDU* hdu = (FitsTableHDU*)(head->hdu());
+  int rowlen = hdu->width();
+  int nrow = hdu->rows();
+  char* data = (char*)fits->data();
+
+  vector<MocCell> cells;
+  cells.reserve(nrow);
+
+  int maxorder = mocHeaderOrder(head);
+  for (int row=0; row<nrow; row++) {
+    char* ptr = data + row*rowlen;
+    long long uniq = uniqCol_->integer(ptr,0);
+    int order = uniqOrder(uniq);
+    long long offset = uniqOffset(order);
+    long long npix = uniq - offset;
+
+    if (order < 0 || !offset || npix < 0)
+      continue;
+
+    MocCell cell;
+    cell.order = order;
+    cell.npix = npix;
+    cell.value = col_ ? (float)col_->value(ptr,0) : 1;
+    cells.push_back(cell);
+
+    if (order > maxorder)
+      maxorder = order;
+  }
+
+  if (maxorder < 0 || maxorder > 29)
+    return;
+
+  if (maxorder >= (int)(sizeof(long)*CHAR_BIT))
+    return;
+
+  nside_ = 1L << maxorder;
+  if (nside_ > INT_MAX)
+    return;
+
+  int nside = (int)nside_;
+  int layout = layout_;
+  int nfacet = NFACET[layout];
+  if (nside > INT_MAX/nfacet)
+    return;
+
+  pWidth_ = nfacet*nside;
+  pHeight_ = pWidth_;
+
+  vector<MocRange> ranges;
+  ranges.reserve(cells.size());
+  for (size_t ii=0; ii<cells.size(); ii++) {
+    int shift = 2*(maxorder - cells[ii].order);
+    MocRange range;
+    range.first = cells[ii].npix << shift;
+    range.last = (cells[ii].npix + 1) << shift;
+    range.value = cells[ii].value;
+    ranges.push_back(range);
+  }
+  sort(ranges.begin(), ranges.end(), mocRangeLess);
+
+  size_t pSize = (size_t)pWidth_*pHeight_;
+  float* dest = new float[pSize];
+  for (long long ii=0; ii<pSize; ii++)
+    dest[ii] = NAN;
+
+  initHeader(fits);
+
+  long* healidx = new long[nside];
+  float* row = new float[nside];
+
+  long long fpixel = 1;
+  long long nelem = (long long)nside;
+  for (int jfacet = 0; jfacet<nfacet; jfacet++) {
+    for (int jj = 0; jj<nside; jj++) {
+      for (int ifacet = 0; ifacet<nfacet; ifacet++) {
+	for (int ii=0; ii<nside; ii++)
+	  row[ii] = NAN;
+
+	int facet = FACETS[layout][jfacet][ifacet];
+	int rotn  = FROTAT[layout][jfacet][ifacet];
+	int halve = FHALVE[layout][jfacet][ifacet];
+
+	if (quad_ && facet >= 0) {
+	  if (facet <= 3) {
+	    facet += quad_;
+	    if (facet > 3) facet -= 4;
+	  }
+	  else if (facet <= 7) {
+	    facet += quad_;
+	    if (facet > 7) facet -= 4;
+	  }
+	  else {
+	    facet += quad_;
+	    if (facet > 11) facet -= 4;
+	  }
+	}
+
+	if (facet >= 0) {
+	  NESTidx(nside, facet, rotn, jj, healidx);
+
+	  for (int ii=0; ii<nside; ii++) {
+	    const MocRange* range = findMocRange(ranges, healidx[ii]);
+	    if (range)
+	      row[ii] = range->value;
+	  }
+
+	  if (halve) {
+	    int i1;
+	    int i2;
+	    if (abs(halve) == 1) {
+	      i1 = jj;
+	      i2 = nside;
+	      if (halve > 0)
+		i1++;
+	    } else if (abs(halve) == 2) {
+	      i1 = nside - jj;
+	      i2 = nside;
+	      if (halve < 0)
+		i1--;
+	    } else if (abs(halve) == 3) {
+	      i1 = 0;
+	      i2 = jj;
+	      if (halve < 0)
+		i2++;
+	    } else {
+	      i1 = 0;
+	      i2 = nside - jj;
+	      if (halve > 0)
+		i2--;
+	    }
+
+	    for (float* rowp = row+i1; rowp < row+i2; rowp++)
+	      *rowp = NAN;
+	  }
+	}
+
+	memcpy(dest+fpixel-1, row, nside*sizeof(float));
+	fpixel += nelem;
+      }
+    }
+  }
+
+  delete [] healidx;
+  delete [] row;
 
   data_ = dest;
 
@@ -278,7 +595,7 @@ void FitsHPX::build(FitsFile* fits)
 void FitsHPX::NESTidx(int nside, int facet, int rotn, int jmap, long *healidx)
 {
   // Nested index (0-relative) of the first pixel in this facet.
-  int hh = facet*nside*nside;
+  long hh = (long)facet*nside*nside;
 
   int nside1 = nside - 1;
   long* hp = healidx;
@@ -291,15 +608,15 @@ void FitsHPX::NESTidx(int nside, int facet, int rotn, int jmap, long *healidx)
     if (rotn == 0) {
       ii = nside1 - imap;
       jj = jmap;
-    } 
+    }
     else if (rotn == 1) {
       ii = nside1 - jmap;
       jj = nside1 - imap;
-    } 
+    }
     else if (rotn == 2) {
       ii = imap;
       jj = nside1 - jmap;
-    } 
+    }
     else if (rotn == 3) {
       ii = jmap;
       jj = imap;
@@ -350,22 +667,22 @@ void FitsHPX::RINGidx(int nside, int facet, int rotn, int jmap, long *healidx)
     if (rotn == 0) {
       ii = i0 + nside1 - (jmap + imap);
       jj = j0 + jmap - imap;
-    } 
+    }
     else if (rotn == 1) {
       ii = i0 + imap - jmap;
       jj = j0 + nside1 - (imap + jmap);
-    } 
+    }
     else if (rotn == 2) {
       ii = i0 + (imap + jmap) - nside1;
       jj = j0 + imap - jmap;
-    } 
+    }
     else if (rotn == 3) {
       ii = i0 + jmap - imap;
       jj = j0 + jmap + imap - nside1;
     }
 
     // Convert i for counting pixels
-    if (ii < 0) 
+    if (ii < 0)
       ii += n8side;
     ii++;
 
@@ -386,11 +703,11 @@ void FitsHPX::RINGidx(int nside, int facet, int rotn, int jmap, long *healidx)
         // Pixel number in this polar facet.
         *hp += ii%n2side - (jj - nside) - 1;
       }
-    } 
+    }
     else if (jj >= -nside) {
       // Equatorial regime.
       *hp = npole + n8side * (nside - jj) + ii;
-    } 
+    }
     else {
       // South polar regime.
       *hp = 24 * nside * nside + 1;
@@ -416,7 +733,7 @@ void FitsHPX::RINGidx(int nside, int facet, int rotn, int jmap, long *healidx)
   }
 }
 
-void FitsHPX::initHeader(FitsFile* fits) 
+void FitsHPX::initHeader(FitsFile* fits)
 {
   FitsHead* src = fits->head();
 
@@ -429,7 +746,7 @@ void FitsHPX::initHeader(FitsFile* fits)
     head_->appendString("OBJECT", object, NULL);
 
   // CRPIX1/2
-  float crpix1;
+  double crpix1;
   switch (layout_) {
   case EQUATOR:
     crpix1 = (5 * nside_ + 1) / 2.;
@@ -439,12 +756,12 @@ void FitsHPX::initHeader(FitsFile* fits)
     crpix1 = (4 * nside_ + 1) / 2.;
     break;
   }
-  float crpix2 = crpix1;
+  double crpix2 = crpix1;
   head_->appendReal("CRPIX1", crpix1, 9, "Coordinate reference pixel");
   head_->appendReal("CRPIX2", crpix2, 9, "Coordinate reference pixel");
 
   // PCx_y
-  float cos45 = sqrt(2.0) / 2.0;
+  double cos45 = sqrt(2.0) / 2.0;
   if (layout_ == EQUATOR) {
     head_->appendReal("PC1_1",  cos45, 15, "Transformation matrix element");
     head_->appendReal("PC1_2",  cos45, 15, "Transformation matrix element");
@@ -453,8 +770,8 @@ void FitsHPX::initHeader(FitsFile* fits)
   }
 
   // CDELT1/2
-  float cdelt1 = -90.0 / nside_ / sqrt(2.);
-  float cdelt2 = -cdelt1;
+  double cdelt1 = -90.0 / nside_ / sqrt(2.);
+  double cdelt2 = -cdelt1;
   head_->appendReal("CDELT1", cdelt1, 15, "[deg] Coordinate increment");
   head_->appendReal("CDELT2", cdelt2, 15, "[deg] Coordinate increment");
 
@@ -514,8 +831,8 @@ void FitsHPX::initHeader(FitsFile* fits)
   }
 
   // CRVAL1/CRVAL2
-  float crval1 = 0. + 90.*quad_;
-  float crval2;
+  double crval1 = 0. + 90.*quad_;
+  double crval2;
   switch (layout_) {
   case EQUATOR:
     crval2 = 0.;

@@ -3,6 +3,7 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "mapincr.h"
+#include "hpx.h"
 #include "util.h"
 
 #ifndef __WIN32
@@ -453,15 +454,8 @@ void FitsFitsMapIncr::processRelaxImage()
 	delete [] a;
     }
 
-    // else, check for bin table with keyword PIXTYPE = 'HEALPIX '
-    if (head_->isBinTable() && head_->find("PIXTYPE") &&
-	(!strncmp(head_->getString("PIXTYPE"),"HEALPIX",4))) {
-      found();
-      return;
-    }
-
-    // else, check for bin table with keyword NSIDE (also HEALPIX)
-    if (head_->isBinTable() && head_->find("NSIDE")) {
+    // else, check for HEALPIX or MOC binary tables
+    if (FitsHPX::isHPX(head_)) {
       found();
       return;
     }

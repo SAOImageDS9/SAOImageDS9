@@ -186,7 +186,7 @@ $ds9 'foo.fits[events][pha&gt;5,pi&lt;2]' # load extension 'events' and filter</
 <blockquote><tt>$ export DS9_BINKEY='[bin=rawx,rawy]'<br>
 $ ds9 foo.fits # load FITS bin table, bin on rawx, rawy<br></tt></blockquote>
 <p><b><a name="FITSHEALPIXTable" id="FITSHEALPIXTable"></a>FITS HEALPIX Table<br></b></p>
-At load time, the user may provide just a file name or a file name along with FITS extension name/number, image section specification, and Healpix parameters. DS9 will automatically convert a FITS HEALPIX binary or ascii table into a 2D image for display. FITS extension names and parameters are case insensitive. The users may specify a number of parameters on how to construct the image. Any table with keyword PIXTYPE=HEALPIX or NSIDE=x will be processed as an HEALPIX image. The following FITS keywords will be used if present and not overwritten by a command line option: NSIDE, COORDSYS, ORDER.<br>
+At load time, the user may provide just a file name or a file name along with FITS extension name/number, image section specification, and Healpix parameters. DS9 will automatically convert a FITS HEALPIX binary or ascii table into a 2D image for display. FITS extension names and parameters are case insensitive. The users may specify a number of parameters on how to construct the image. Any table with keyword PIXTYPE=HEALPIX or NSIDE=x will be processed as an HEALPIX image. Space MOC/partial HEALPIX binary tables using ORDERING=NUNIQ and a UNIQ or NPIX index column will also be displayed as HEALPIX images. The following FITS keywords will be used if present and not overwritten by a command line option: NSIDE, COORDSYS, ORDER, MOCORD_S, MOCORDER, HPXMOC.<br>
 <blockquote><tt>Syntax:<br>
 filename<br>
 filename[ext]<br>

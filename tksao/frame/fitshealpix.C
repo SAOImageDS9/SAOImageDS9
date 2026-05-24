@@ -2,8 +2,11 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include <string.h>
+
 #include "fitsimage.h"
 #include "hpx.h"
+#include "util.h"
 
 void FitsImage::initHPX()
 {
@@ -45,10 +48,14 @@ void FitsImage::initHPX()
   else {
     char* str = head->getString("ORDERING");
     if (str) {
-      if (str[0] == 'N')
+      char* upper = toUpper(str);
+      if (!strncmp(upper,"NUNIQ",5))
+	order = FitsHPX::NUNIQ;
+      else if (upper[0] == 'N')
 	order = FitsHPX::NESTED;
-      else if (str[0] == 'R')
+      else if (upper[0] == 'R')
 	order = FitsHPX::RING;
+      delete [] upper;
     }
   }
 
@@ -58,10 +65,10 @@ void FitsImage::initHPX()
     layout = (FitsHPX::Layout)fits_->pHPXLayout();
 
   // Col
-  int col =0;
+  int col = (order == FitsHPX::NUNIQ) ? -1 : 0;
   if (fits_->pHPXColumn() >=0)
     col = fits_->pHPXColumn();
-  if (col<0)
+  if (col<0 && order != FitsHPX::NUNIQ)
     col =0;
 
   // Quad

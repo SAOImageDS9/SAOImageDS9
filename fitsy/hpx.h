@@ -10,7 +10,7 @@
 
 class FitsHPX : public FitsFile {
  public:
-  enum Order {RING, NESTED};
+  enum Order {RING, NESTED, NUNIQ};
   enum CoordSys {UNKNOWN, EQU, GAL, ECL};
   enum Layout {EQUATOR=0, NORTH=1, SOUTH=2};
 
@@ -22,8 +22,10 @@ class FitsHPX : public FitsFile {
   long nside_;
 
   FitsBinColumn* col_;
+  FitsBinColumn* uniqCol_;
 
   void build(FitsFile*);
+  void buildMOC(FitsFile*);
   void initHeader(FitsFile*);
   void swap();
   void NESTidx(int nside, int facet, int rotn, int jmap, long *healidx);
@@ -32,6 +34,9 @@ class FitsHPX : public FitsFile {
  public:
   FitsHPX(FitsFile*, Order, CoordSys, Layout, int, int);
   ~FitsHPX();
+
+  static int isHPX(FitsHead*);
+  static int isMOC(FitsHead*);
 };
 
 #endif

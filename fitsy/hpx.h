@@ -28,8 +28,9 @@ class FitsHPX : public FitsFile {
   void buildMOC(FitsFile*);
   void initHeader(FitsFile*);
   void swap();
-  void NESTidx(int nside, int facet, int rotn, int jmap, long *healidx);
-  void RINGidx(int nside, int facet, int rotn, int jmap, long *healidx);
+  void NESTidx(int nside, int facet, int rotn, int jmap, long long *healidx);
+  void RINGidx(int nside, int facet, int rotn, int jmap, long long *healidx);
+
 
  public:
   FitsHPX(FitsFile*, Order, CoordSys, Layout, int, int);

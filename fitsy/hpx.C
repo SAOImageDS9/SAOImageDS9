@@ -319,7 +319,7 @@ void FitsHPX::build(FitsFile* fits)
   initHeader(fits);
 
   // Allocate arrays
-  long healidx[nside];
+  long long healidx[nside];
   float row[nside];
 
   // Loop vertically facet-by-facet.
@@ -373,10 +373,10 @@ void FitsHPX::build(FitsFile* fits)
 	    *rowp = col_->value(data+*(healp++),0);
 	  */
 	  for (int ii=0; ii<nside_; ii++) {
-	    int aa = healidx[ii]/repeat;
-	    int bb = healidx[ii] - (aa*repeat);
-	    if (aa<nrow)
-	      row[ii] = col_->value(data+aa*rowlen,bb);
+      long long aa = healidx[ii] / repeat;
+      int bb = (int)(healidx[ii] - aa * repeat);
+      if (aa < nrow)
+        row[ii] = col_->value(data + (size_t)aa * (size_t)rowlen, bb);
 	    else
 	      row[ii] = 0;
 	  }
@@ -503,7 +503,7 @@ void FitsHPX::buildMOC(FitsFile* fits)
 
   initHeader(fits);
 
-  long* healidx = new long[nside];
+  long long* healidx = new long long[nside];
   float* row = new float[nside];
 
   long long fpixel = 1;
@@ -592,13 +592,13 @@ void FitsHPX::buildMOC(FitsFile* fits)
 // (45 + rotn * 90) degrees from its natural orientation; imap increases to
 // the right and jmap upwards.
 
-void FitsHPX::NESTidx(int nside, int facet, int rotn, int jmap, long *healidx)
+void FitsHPX::NESTidx(int nside, int facet, int rotn, int jmap, long long *healidx)
 {
   // Nested index (0-relative) of the first pixel in this facet.
-  long hh = (long)facet*nside*nside;
+  long long hh = (long long)facet * (long long)nside * (long long)nside;
 
   int nside1 = nside - 1;
-  long* hp = healidx;
+  long long* hp = healidx;
   for (int imap = 0; imap < nside; imap++, hp++) {
     // (ii,jj) are 0-relative pixel coordinates with origin in the southern
     // corner of the facet; i increases to the north-east and j to the
@@ -623,12 +623,12 @@ void FitsHPX::NESTidx(int nside, int facet, int rotn, int jmap, long *healidx)
     }
 
     *hp = 0;
-    int bit = 1;
+    long long bit = 1LL;
     while (ii || jj) {
       if (ii & 1) *hp |= bit;
-      bit <<= 1;
+      bit <<= 1LL;
       if (jj & 1) *hp |= bit;
-      bit <<= 1;
+      bit <<= 1LL;
       ii >>= 1;
       jj >>= 1;
     }
@@ -641,29 +641,29 @@ void FitsHPX::NESTidx(int nside, int facet, int rotn, int jmap, long *healidx)
 // function computes the double-pixelisation index then converts it to the
 // regular ring index.
 
-void FitsHPX::RINGidx(int nside, int facet, int rotn, int jmap, long *healidx)
+void FitsHPX::RINGidx(int nside, int facet, int rotn, int jmap, long long *healidx)
 {
   const int I0[] = { 1,  3, -3, -1,  0,  2,  4, -2,  1,  3, -3, -1};
   const int J0[] = { 1,  1,  1,  1,  0,  0,  0,  0, -1, -1, -1, -1};
 
-  int n2side = 2 * nside;
-  int n8side = 8 * nside;
+  long long n2side = 2LL * (long long)nside;
+  long long n8side = 8LL * (long long)nside;
 
   // Double-pixelisation index of the last pixel in the north polar cap. */
-  int npole = (n2side - 1) * (n2side - 1) - 1;
+  long long npole = (n2side - 1) * (n2side - 1) - 1;
 
   // Double-pixelisation pixel coordinates of the centre of the facet. */
-  int i0 = nside * I0[facet];
-  int j0 = nside * J0[facet];
+  long long i0 = (long long)nside * (long long)I0[facet];
+  long long j0 = (long long)nside * (long long)J0[facet];
 
   int nside1 = nside - 1;
-  long* hp = healidx;
+  long long* hp = healidx;
   for (int imap = 0; imap < nside; imap++, hp++) {
     // (ii,jj) are 0-relative, double-pixelisation pixel coordinates.  The
     // origin is at the intersection of the equator and prime meridian,
     // i increases to the east (N.B.) and j to the north.
-    int ii =0;
-    int jj =0;
+    long long ii =0;
+    long long jj =0;
     if (rotn == 0) {
       ii = i0 + nside1 - (jmap + imap);
       jj = j0 + jmap - imap;
@@ -692,7 +692,7 @@ void FitsHPX::RINGidx(int nside, int facet, int rotn, int jmap, long *healidx)
         *hp = 0;
       else {
         // Number of pixels in a polar facet with this value of jj.
-        int npj = 2 * (n2side - jj);
+        long long npj = 2LL * (n2side - jj);
 
         // Index of the last pixel in the row above this.
         *hp = (npj - 1) * (npj - 1) - 1;
@@ -714,7 +714,7 @@ void FitsHPX::RINGidx(int nside, int facet, int rotn, int jmap, long *healidx)
 
       if (jj > -n2side) {
         // Number of pixels in a polar facet with this value of jj.
-        int npj = 2 * (jj + n2side);
+        long long npj = 2LL * (jj + n2side);
 
         // Total number of pixels in this row or below it.
         *hp -= (npj + 1) * (npj + 1);
@@ -749,11 +749,11 @@ void FitsHPX::initHeader(FitsFile* fits)
   double crpix1;
   switch (layout_) {
   case EQUATOR:
-    crpix1 = (5 * nside_ + 1) / 2.;
+    crpix1 = (5.0 * nside_ + 1.0) / 2.0;
     break;
   case NORTH:
   case SOUTH:
-    crpix1 = (4 * nside_ + 1) / 2.;
+    crpix1 = (4.0 * nside_ + 1.0) / 2.0;
     break;
   }
   double crpix2 = crpix1;

@@ -40,7 +40,7 @@
 #include yesno.trl
 #include numeric.trl
 
-command : cube 
+command : cube
  | cube {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
  ;
 
@@ -58,7 +58,9 @@ cube : OPEN_
  | AXES_ order
  | ORDER_ order
  | INT_ {CubeCmd $1}
+ | orderAxes {CubeCmd $1}
  | INT_ IMAGE_ {CubeCmd $1}
+ | orderAxes IMAGE_ {CubeCmd $1}
  | numeric wcssys {CubeCmdCoord $1 $2}
  | AXIS_ INT_ {CubeCmdAxis $2}
  ;

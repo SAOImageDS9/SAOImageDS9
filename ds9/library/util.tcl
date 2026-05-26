@@ -1727,7 +1727,7 @@ proc DataSendCmd {sys sky xx yy ww hh strip} {
     global current
 
     if {$current(frame) == {}} {
-	return
+        error "No current frame."
     }
 
     $current(frame) get data $sys $sky $xx $yy $ww $hh rr

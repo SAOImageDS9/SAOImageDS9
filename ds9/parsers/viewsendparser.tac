@@ -63,7 +63,7 @@ viewsend: LAYOUT_ {ProcessSendCmdGet view layout}
 # backward compatibility
  | HORZGRAPH_ {ProcessSendCmdYesNo view graph,horz}
 # backward compatibility
- | VERTGRAPH_ {ProcessSendCmdYesNo view graph,graph}
+ | VERTGRAPH_ {ProcessSendCmdYesNo view graph,vert}
 
  | FILENAME_ {ProcessSendCmdYesNo view info,filename}
  | OBJECT_ {ProcessSendCmdYesNo view info,object}
@@ -81,7 +81,7 @@ viewsend: LAYOUT_ {ProcessSendCmdGet view layout}
  | hsv
 
  | RGB_ rgb
- | HLS_ hls 
+ | HLS_ hls
  | HSV_ hsv
  ;
 
@@ -94,14 +94,13 @@ hls : HUE_ {ProcessSendCmdYesNo hls hue}
  | LIGHTNESS_ {ProcessSendCmdYesNo hls lightness}
  | SATURATION_ {ProcessSendCmdYesNo hls saturation}
  ;
- 
+
 hsv : HUE_ {ProcessSendCmdYesNo hsv hue}
  | SATURATION_ {ProcessSendCmdYesNo hsv saturation}
  | VALUE_ {ProcessSendCmdYesNo hsv value}
  ;
- 
-graph :
- | HORIZONTAL_ {ProcessSendCmdYesNo view graph,horz}
+
+graph : HORIZONTAL_ {ProcessSendCmdYesNo view graph,horz}
  | VERTICAL_ {ProcessSendCmdYesNo view graph,vert}
  ;
 

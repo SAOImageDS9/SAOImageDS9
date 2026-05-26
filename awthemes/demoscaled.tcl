@@ -60,7 +60,9 @@ proc main { } {
   ::themeutils::setThemeColors $theme \
       scale.factor $sf
 
-  catch { package require tksvg }
+  if { [package vcompare 8.6.99 $::tk_version] > 0 } {
+    catch { package require tksvg }
+  }
 
   set calcdpi [expr {round([tk scaling]*72.0)}]
   set scalefactor [expr {$calcdpi/100.0}]
@@ -91,8 +93,19 @@ proc main { } {
     }
   }
 
-  set havetksvg true
-  if { [catch {package present tksvg}] } {
+  set havetksvg false
+  try {
+    set ti [image create photo -data {<svg></svg>} -format svg]
+    image delete $ti
+    set havetksvg true
+  } on error {err res} {
+    lassign [dict get $res -errorcode] a b c d
+    if { $c ne "PHOTO_FORMAT" } {
+      set havetksvg true
+    }
+  }
+
+  if { ! $havetksvg } {
     error "tksvg is required"
   }
 

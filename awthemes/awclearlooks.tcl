@@ -95,9 +95,18 @@ namespace eval ::ttk::theme::awclearlooks {
 
   proc init { } {
     set theme awclearlooks
-    set version 1.3
-    if { ([info exists ::notksvg] && $::notksvg) ||
-        [catch {package present tksvg}] } {
+    set version 1.3.1
+    try {
+      set ti [image create photo -data {<svg></svg>} -format svg]
+      image delete $ti
+      set havetksvg true
+    } on error {err res} {
+      lassign [dict get $res -errorcode] a b c d
+      if { $c ne "PHOTO_FORMAT" } {
+        set havetksvg true
+      }
+    }
+    if { ([info exists ::notksvg] && $::notksvg) || ! $havetksvg } {
       namespace delete ::ttk::theme::${theme}
       error "no tksvg package present: cannot load scalable ${theme} theme"
     }

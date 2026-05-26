@@ -1,4 +1,4 @@
-package require Tk 8.5
+package require Tk 8.5-
 package require Plotchart
 package provide plotanim 0.2
 
@@ -122,7 +122,7 @@ proc ::Plotchart::anim::update {w name args} {
 	}
 
 	set item($w,data,$name) [lrange $args 1 end]
-	
+
 	UpdateCoords $w $name [lrange $item($w,data,$name) 0 end-1]
 }
 
@@ -461,7 +461,7 @@ proc ::Plotchart::anim::translate {w items vector} {
 proc ::Plotchart::anim::morph {w items shift args} {
 	variable item
 	variable ::Plotchart::scaling
-	
+
 	array set options {-scaling coord}
 	array set options $args
 	foreach name $items {
@@ -480,7 +480,7 @@ proc ::Plotchart::anim::morph {w items shift args} {
 		} else {
 			return -code error "unknown -scaling: $options(-scaling)"
 		}
-		
+
 		# how many coords to read:
 		switch -- $item($w,type,$name) {
 			"point" - "dot" - "circle" {set last 1}
@@ -488,7 +488,7 @@ proc ::Plotchart::anim::morph {w items shift args} {
 		}
 		set coords [lrange $item($w,data,$name) 0 $last]
 		set newcoords {}
-		
+
 		switch $item($w,type,$name) {
 			dot - point {
 				return -code error "a $item($w,type,$name) cannot be morphed"
@@ -563,7 +563,7 @@ proc ::Plotchart::anim::animate {w args} {
 	variable item
 	array set options {-body {} -duration 1000 -pause 20}
 	array set options $args
-	
+
 	set stepCount [expr {$options(-duration)/$options(-pause)}]
 	# translate points into coordinates
 	# and reorganize body:
@@ -594,7 +594,7 @@ proc ::Plotchart::anim::animate {w args} {
 			}
 		}
 	}
-	
+
 #	puts "newBody=$newBody ($stepCount steps)"
 	# do the animation:
 	for {set step 1} {$step <= $stepCount} {incr step} {
@@ -603,5 +603,5 @@ proc ::Plotchart::anim::animate {w args} {
 		}
 		pause $w $options(-pause)
 	}
-	
+
 }

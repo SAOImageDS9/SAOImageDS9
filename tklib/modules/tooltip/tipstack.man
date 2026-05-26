@@ -1,0 +1,93 @@
+[comment {-*- tcl -*- doctools manpage}]
+[vset VERSION 1.0.1]
+[manpage_begin tipstack n [vset VERSION]]
+[keywords balloon]
+[keywords help]
+[keywords hover]
+[keywords tipstack]
+[copyright {2003 ActiveState Corp}]
+[moddesc   {Tooltip management}]
+[titledesc {Stacked tooltips}]
+[require Tcl 8.5]
+[require msgcat 1.3]
+[require tooltip [opt 1.7]]
+[require tipstack [opt [vset VERSION]]]
+[description]
+[para]
+
+This package extends the functionality of package [package tooltip].
+
+It provides a dynamic stack of tip texts per widget. This enables dynamic transient changes to the
+tips, for example to temporarily replace a standard explanation of a field with an error message.
+
+[section {COMMANDS}]
+
+[list_begin definitions]
+
+[call [cmd ::tipstack::push] [arg widget] [opt "[option -index] [arg index]"] [arg text]]
+
+Push a new [arg text] to the tooltip for the [arg widget].
+
+In case of a list widget use [example {-index ...}] to address the particular entry to change the
+tooltip for.
+
+[para] The result of the command is the empty string
+
+[call [cmd ::tipstack::pop] [arg widget] [opt "[option -index] [arg index]"]]
+
+Pop the current tooltip for the [arg widget] from the stack and restore the previous text.
+
+This is a no-operation if this would leave an empty stack behind.
+
+In other words, the baseline tooltip text cannot be popped of.
+
+In case of a list widget use [example {-index ...}] to address the particular entry to change the
+tooltip for.
+
+[para] The result of the command is the empty string
+
+[call [cmd ::tipstack::clear] [arg widget] [opt "[option -index] [arg index]"]]
+
+Clear the stack for the [arg widget] and restore back to the baseline.
+
+In case of a list widget use [example {-index ...}] to address the particular entry to change the
+tooltip for.
+
+[para] The result of the command is the empty string
+
+[call [cmd ::tipstack::def] [arg widget] [arg text] ...]
+
+Perform multiple pushes for a number of independent [arg widget]s in a single call.
+
+This command cannot be used for list widgets, as it does not allow the passing of the necessary
+index information.
+
+Use with menus is not possible either.
+
+[para] The result of the command is the empty string
+
+
+[call [cmd ::tipstack::defsub] [arg base] [arg widget] [arg text] ...]
+
+This command is a variant of [cmd ::tipstack::def] where all the widgets to push to are subwidgets
+of the [arg base]. This is good for mega-widgets.
+
+[para] Note that either each [arg widget] has to be specified with a proper leading dot ([const .]),
+or the [arg base] has to be specigfied with a trailing dot.
+
+[para] The result of the command is the empty string
+
+[call [cmd ::tipstack::clearsub] [arg base]]
+
+This command is a variant of [cmd ::tipstack::clear] which clears all child widgets of
+the [arg base] text was pushed to.
+
+Use with menus is not possible.
+
+[para] The result of the command is the empty string
+
+[list_end]
+
+[vset CATEGORY tooltip]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]

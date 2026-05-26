@@ -1,3 +1,21 @@
+2023-09-16  Keith Nash  <kjnash@users.sourceforge.net>
+
+	* Adjust the tab-coloring API.
+	* Update docs and examples.
+	* Increase version to 1.0b6
+
+2023-09-14  Keith Nash  <kjnash@users.sourceforge.net>
+
+	* Bugfix - <Button-1> sometimes requires -force to gain focus on
+	  Windows.  Without -force, an embedded window from another process
+	  will not relinquish focus.
+	* Increase version to 1.0b5
+
+2023-09-14  Keith Nash  <kjnash@users.sourceforge.net>
+
+	* Add optional coloring of tabs.
+	* Increase version to 1.0b4
+
 2020-02-09  0.7  <andreas_kupries@users.sourceforge.net>
 
 	*

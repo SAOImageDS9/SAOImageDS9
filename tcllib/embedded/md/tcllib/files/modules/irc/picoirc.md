@@ -1,7 +1,7 @@
 
 [//000000001]: # (picoirc \- Simple embeddable IRC interface)
 [//000000002]: # (Generated from file 'picoirc\.man' by tcllib/doctools with format 'markdown')
-[//000000003]: # (picoirc\(n\) 0\.5\.2 tcllib "Simple embeddable IRC interface")
+[//000000003]: # (picoirc\(n\) 0\.14\.0 tcllib "Simple embeddable IRC interface")
 
 <hr> [ <a href="../../../../toc.md">Main Table Of Contents</a> &#124; <a
 href="../../../toc.md">Table Of Contents</a> &#124; <a
@@ -34,13 +34,11 @@ picoirc \- Small and simple embeddable IRC client\.
 
 # <a name='synopsis'></a>SYNOPSIS
 
-package require Tcl  
-package require picoirc ?0\.5\.2?  
+package require Tcl 8\.6 9  
+package require picoirc ?0\.14\.0?  
 
-[__::picoirc::connect__ *callback* *nick* *url*](#1)  
+[__::picoirc::connect__ *callback* *nick* ?*password*? *url*](#1)  
 [__::picoirc::post__ *context* *channel* *message*](#2)  
-[__::picoirc::splituri__ *uri*](#3)  
-[__::picoirc::send__ *context* *line*](#4)  
 
 # <a name='description'></a>DESCRIPTION
 
@@ -59,33 +57,42 @@ capability investigate the __[irc](irc\.md)__ package\.
 
 # <a name='section2'></a>COMMANDS
 
-  - <a name='1'></a>__::picoirc::connect__ *callback* *nick* *url*
+  - <a name='1'></a>__::picoirc::connect__ *callback* *nick* ?*password*? *url*
 
-    Create a new irc connection to the server specified by *url* and login
-    using the *nick* as the username\. The *callback* must be as specified in
-    [CALLBACK](#section3)\. Returns a package\-specific variable that is used
-    when calling other commands in this package\.
+    Creates a new irc connection to the server specified by *url* and login
+    using the *nick* as the username and optionally *password*\. If the
+    *url* starts with *ircs://* then a TLS connection is created\. The
+    *callback* must be as specified in [CALLBACK](#section3)\. Returns a
+    package\-specific variable that is used when calling other commands in this
+    package\.
+
+    *Note:* For connecting via TLS the Tcl module *tls* must be already
+    loaded, otherwise an error is raised\.
+
+        # must be loaded for TLS
+        package require tls
+        # default arguments
+        tls::init -autoservername true -command workaround \
+            -require 1 -cadir /etc/ssl/certs -tls1 0 -tls1.1 0
+        # avoid annoying bgerror, errors are already catched internally
+        proc workaround {state args} {
+            if {$state == "verify"} {
+                return [lindex $args 3]
+            }
+        }
 
   - <a name='2'></a>__::picoirc::post__ *context* *channel* *message*
 
-    This should be called to process user input and send it to the server\. A
-    number of commands are recognised when prefixed with a forward\-slash \(/\)\.
-    Such commands are converted to IRC command sequences and then sent\.
-
-  - <a name='3'></a>__::picoirc::splituri__ *uri*
-
-    Splits an IRC scheme uniform resource indicator into its component parts\.
-    Returns a list of server, port and channel\. The default port is 6667 and
-    there is no default channel\.
-
-  - <a name='4'></a>__::picoirc::send__ *context* *line*
-
-    This command is where all raw output to the server is handled\. The default
-    action is to write the *line* to the irc socket\. However, before this
-    happens the callback is called with "debug write"\. This permits the
-    application author to inspect the raw IRC data and if desired to return a
-    break error code to halt further processing\. In this way the application can
-    override the default send via the callback procedure\.
+    This should be called to process user input and send it to the server\. If
+    *message* is multiline then each line will be processed and sent
+    individually\. A number of commands are recognised when prefixed with a
+    forward\-slash \(/\)\. Such commands are converted to IRC command sequences and
+    then sent\. If *channel* is empty then all raw output to the server is
+    handled\. The default action is to write the *message* to the irc socket\.
+    However, before this happens the callback is called with "debug write"\. This
+    permits the application author to inspect the raw IRC data and if desired to
+    return a break error code to halt further processing\. In this way the
+    application can override the default send via the callback procedure\.
 
 # <a name='section3'></a>CALLBACK
 
@@ -118,13 +125,29 @@ to a picoirc procedure\)\. state is one of a number of states as described below
     entire output which can span a number of output lines from the server and
     calls this callback when they have all been received\.
 
+  - __userinfo__ *nick* *info*
+
+    called as a response of WHOIS command\. *nick* is the user the command was
+    targeted for\. *info* is the dictionary containing detailed information
+    about that user: name, host, channels and userinfo\. userinfo typically
+    contains name and version of user's IRC client\.
+
   - __chat__ *target* *nick* *message* *type*
 
     called when a message arrives\. *target* is the identity that the message
     was targetted for\. This can be the logged in nick or a channel name\.
     *nick* is the name of the sender of the message\. *message* is the
     message text\. *type* is set to "ACTION" if the message was sent as a CTCP
-    ACTION
+    ACTION\. *type* is set to "NOTICE" if the message was sent as a NOTICE
+    command, in that case *target* is empty if it matches current user nick or
+    it's "\*", in later case empty *target* means that notice comes from
+    server\.
+
+  - __mode__ *nick* *target* *flags*
+
+    called when mode of user or channel changes\. *nick* is the name of the
+    user who requested a change, can be empty if it's the server\. *target* is
+    the identity that has its mode changed\. *flags* are the changes in mode\.
 
   - __system__ *channel* *message*
 

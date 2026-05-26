@@ -1,5 +1,6 @@
 [comment {-*- tcl -*- doctools manpage}]
-[manpage_begin chatwidget n 1.0.0]
+[vset VERSION 1.1.4]
+[manpage_begin chatwidget n [vset VERSION]]
 [see_also text(n)]
 [keywords chat]
 [keywords chatwidget]
@@ -10,7 +11,7 @@
 [moddesc   {Composite widget for chat applications}]
 [titledesc {Provides a multi-paned view suitable for display of chat room or irc channel information}]
 [require Tk 8.5]
-[require chatwidget [opt 1.0.0]]
+[require chatwidget [opt [vset VERSION]]]
 [description]
 
 This is a composite widget designed to simplify the construction of

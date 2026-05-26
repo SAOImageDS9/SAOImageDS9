@@ -1,0 +1,189 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>piePeripheralLabeler - piePeripheralLabeler class</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'pieperipherallabeler.man' by tcllib/doctools with format 'html'
+   -->
+<!-- Copyright &amp;copy; 1995-2004 Jean-Luc Fontaine &amp;lt;jfontain@free.fr&amp;gt;
+   -->
+<!-- piePeripheralLabeler.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">piePeripheralLabeler(n) 6.6 tklib &quot;piePeripheralLabeler class&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>piePeripheralLabeler - tkpiechart pie peripheral style labeler class</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">OPTIONS</a></li>
+<li class="doctools_section"><a href="#section3">TAGS</a></li>
+<li class="doctools_section"><a href="#section4">Bugs, Ideas, Feedback</a></li>
+<li class="doctools_section"><a href="#see-also">See Also</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+<li class="doctools_section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">stooop::new</b> <b class="class">piePeripheralLabeler</b> <i class="arg">canvas</i> <span class="opt">?options?</span></a></li>
+<li><a href="#2"><b class="cmd">switched::configure</b> <i class="arg">piePeripheralLabelerObject</i> <span class="opt">?options?</span></a></li>
+<li><a href="#3"><b class="cmd">switched::cget</b> <i class="arg">piePeripheralLabelerObject</i> <i class="arg">option</i></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>The pie peripheral style labeler object is used as a slice label placer for a <b class="class">pie</b> object and is passed to the pie constructor via its <b class="option">-labeler</b> option (see the <b class="class">pie</b> class manual).</p>
+<p>The slice description text labels are arranged in 2 columns below the pie graphics, whereas the slice values are placed next to the slice and actually follow the slice as the pie is updated. Each description label text is placed to the right of a rectangle, the background color of which matches its corresponding slice. Each description label is actually a canvasLabel object.</p>
+<p>There is no need to delete a <b class="class">piePeripheralLabeler</b> object as it is automatically handled by the pie class.</p>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">stooop::new</b> <b class="class">piePeripheralLabeler</b> <i class="arg">canvas</i> <span class="opt">?options?</span></a></dt>
+<dd><p>Creates a piePeripheralLabeler object in the specified Tk canvas. The piePeripheralLabeler object identifier is returned (refered to as <em>piePeripheralLabelerObject</em> in this document).</p></dd>
+<dt><a name="2"><b class="cmd">switched::configure</b> <i class="arg">piePeripheralLabelerObject</i> <span class="opt">?options?</span></a></dt>
+<dd><p>Configures a piePeripheralLabeler object or returns all the options with their current values if no options are passed as parameters.</p></dd>
+<dt><a name="3"><b class="cmd">switched::cget</b> <i class="arg">piePeripheralLabelerObject</i> <i class="arg">option</i></a></dt>
+<dd><p>Returns an option value for the specified piePeripheralLabeler object.</p></dd>
+</dl>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">OPTIONS</a></h2>
+<dl class="doctools_options">
+<dt><b class="option">-font</b> value</dt>
+<dd><p>Specifies a font for the slice labels. If not specified, the default font is system dependent.</p></dd>
+<dt><b class="option">-justify</b> value</dt>
+<dd><p>Specifies how to justify labels within their own column. Must be one of <em>left</em>, <em>center</em> or <em>right</em>. Defaults to <em>left</em>. For example, if justification is <em>right</em>, all column labels right edges are aligned.</p></dd>
+<dt><b class="option">-offset</b> value</dt>
+<dd><p>Specifies the distance between the pie graphics and the closest slice label. This value may be specified in any of the forms described in the <b class="syscmd"><a href="../../../../index.html#canvas">canvas</a></b> <em>COORDINATES</em> manual section.</p></dd>
+<dt><b class="option">-smallfont</b></dt>
+<dd><p>Specifies a font for the slice values. It is usually a small font in order to avoid values overlapping when 2 slices are very close to each other. If not specified, the description label font (<b class="option">-font</b> option) is used.</p></dd>
+<dt><b class="option">-widestvaluetext</b></dt>
+<dd><p>Specifies a string of maximum width for slice values (placed around the pie next to the slices), so that enough room is allocated for these value labels when the pie width and height are set. It defaults to 00.0. For example, it could be set to &quot;00.00 %&quot;.</p></dd>
+</dl>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">TAGS</a></h2>
+<p>The labeler has the following specific tag (see the <b class="syscmd"><a href="../../../../index.html#canvas">canvas</a></b> manual page <em>ITEM IDS AND TAGS</em> section for more information):</p>
+<ul class="doctools_itemized">
+  
+<li><p>piePeripheralLabeler(piePeripheralLabelerObject)</p></li>
+</ul>
+</div>
+<div id="section4" class="doctools_section"><h2><a name="section4">Bugs, Ideas, Feedback</a></h2>
+<p>This document, and the package it describes, will undoubtedly contain
+bugs and other problems.
+Please report such in the category <em>tkpiechart</em> of the
+<a href="http://core.tcl.tk/tklib/reportlist">Tklib Trackers</a>.
+Please also report any ideas for enhancements you may have for either
+package and/or documentation.</p>
+</div>
+<div id="see-also" class="doctools_section"><h2><a name="see-also">See Also</a></h2>
+<p><a href="canvaslabel.html">canvasLabel</a>, <a href="pie.html">pie</a>, <a href="pieboxlabeler.html">pieBoxLabeler</a></p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../../../index.html#canvas">canvas</a>, <a href="../../../../index.html#labeler">labeler</a>, <a href="../../../../index.html#pie">pie</a>, <a href="../../../../index.html#slice">slice</a></p>
+</div>
+<div id="copyright" class="doctools_section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 1995-2004 Jean-Luc Fontaine &lt;jfontain@free.fr&gt;</p>
+</div>
+</div></body></html>

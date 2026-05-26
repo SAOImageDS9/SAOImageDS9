@@ -11,7 +11,7 @@
 
 # @mdgen EXCLUDE: ipMoreC.tcl
 
-package require Tcl 8.2;                # tcl minimum version
+package require Tcl 8.5 9;                # tcl minimum version
 
 namespace eval ip {
     namespace export is version normalize equal type contract mask collapse subtract
@@ -71,7 +71,7 @@ proc ::ip::version {ip} {
     }
     return $version
 }
-        
+
 proc ::ip::equal {lhs rhs} {
     foreach {LHS LM} [SplitIp $lhs] break
     foreach {RHS RM} [SplitIp $rhs] break
@@ -303,7 +303,7 @@ proc ::ip::ExpandSubnet {subnet newmask} {
 }
 
 # Returns an IP address prefix.
-# For instance: 
+# For instance:
 #  prefix 192.168.1.4/16 => 192.168.0.0
 #  prefix fec0::4/16     => fec0:0:0:0:0:0:0:0
 #  prefix fec0::4/ffff:: => fec0:0:0:0:0:0:0:0
@@ -315,7 +315,7 @@ proc ::ip::prefix {ip} {
     return [ToString [Mask$version $addr $mask]]
 }
 
-# Return the address type. For IPv4 this is one of private, reserved 
+# Return the address type. For IPv4 this is one of private, reserved
 # or normal
 # For IPv6 it is one of site local, link local, multicast, unicast,
 # unspecified or loopback.
@@ -388,7 +388,8 @@ proc ::ip::IPv6? {ip} {
 proc ::ip::Mask4 {ip {bits {}}} {
     if {[string length $bits] < 1} { set bits 32 }
     binary scan $ip I ipx
-    if {[string is integer $bits]} {
+    ##nagelfar ignore
+    if {[string is integer -strict $bits]} {
         set mask [expr {(0xFFFFFFFF << (32 - $bits)) & 0xFFFFFFFF}]
     } else {
         binary scan [Normalize4 $bits] I mask
@@ -398,8 +399,9 @@ proc ::ip::Mask4 {ip {bits {}}} {
 
 proc ::ip::Mask6 {ip {bits {}}} {
     if {[string length $bits] < 1} { set bits 128 }
-    if {[string is integer $bits]} {
-        set mask [binary format B128 [string repeat 1 $bits]]
+    ##nagelfar ignore
+    if {[string is integer -strict $bits]} {
+        set mask [binary format B128 [string repeat 1 [format %d $bits]]]
     } else {
         binary scan [Normalize6 $bits] I4 mask
     }
@@ -411,7 +413,7 @@ proc ::ip::Mask6 {ip {bits {}}} {
     return [binary format I4 $r]
 }
 
-        
+
 
 # A network address specification is an IPv4 address with an optional bitmask
 # Split an address specification into a IPv4 address and a network bitmask.
@@ -548,7 +550,7 @@ source [file join [file dirname [info script]] ipMore.tcl]
 
 # -------------------------------------------------------------------------
 
-package provide ip 1.4
+package provide ip 1.5.1
 
 # -------------------------------------------------------------------------
 # Local Variables:

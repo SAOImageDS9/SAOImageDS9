@@ -2,10 +2,10 @@
 # Demonstrates how to use a tablelist widget for displaying and editing the
 # configuration options of an arbitrary widget.
 #
-# Copyright (c) 2000-2019  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 2000-2023  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
-package require tablelist_tile 6.8
+package require tablelist_tile
 
 namespace eval demo {
     #
@@ -21,38 +21,52 @@ namespace eval demo {
     # bf		TFrame
     #   b1, b2, b3	  TButton
     #
+    variable currentTheme [tablelist::getCurrentTheme]
+    if {$::tablelist::themeDefaults(-stripebackground) eq "" &&
+	$currentTheme ne "black" && $currentTheme ne "breeze-dark" &&
+	$currentTheme ne "sun-valley-dark"} {
+	option add *DemoTop.tf.tbl.background		white
+	option add *DemoTop.tf.tbl.stripeBackground	#f0f0f0
+    }
     if {[tk windowingsystem] eq "x11"} {
 	option add *DemoTop*Font			TkDefaultFont
-    }
-    tablelist::setThemeDefaults
-    set foreground [winfo rgb . $tablelist::themeDefaults(-foreground)]
-    set selectFg   [winfo rgb . $tablelist::themeDefaults(-selectforeground)]
-    set selectFgEqForeground [expr {$selectFg eq $foreground}]
-    variable currentTheme [tablelist::getCurrentTheme]
-    if {$currentTheme ne "aqua"} {
 	option add *DemoTop*selectBackground \
-		   $tablelist::themeDefaults(-selectbackground)
+		   $::tablelist::themeDefaults(-selectbackground)
 	option add *DemoTop*selectForeground \
-		   $tablelist::themeDefaults(-selectforeground)
-	option add *DemoTop*selectBorderWidth \
-		   $tablelist::themeDefaults(-selectborderwidth)
+		   $::tablelist::themeDefaults(-selectforeground)
     }
-    option add *DemoTop.tf.borderWidth			1
+    option add *DemoTop*selectBorderWidth \
+	       $::tablelist::themeDefaults(-selectborderwidth)
+    variable foreground [winfo rgb . $::tablelist::themeDefaults(-foreground)]
+    variable selectFg \
+	winfo rgb . $::tablelist::themeDefaults(-selectforeground)]
+    variable selectFgEqForeground [expr {$selectFg eq $foreground}]
+    variable isAwTheme \
+	[llength [info commands ::ttk::theme::${currentTheme}::setTextColors]]
+    if {$isAwTheme && ![regexp {^(aw)?(arc|breeze.*)$} $currentTheme]} {
+	option add *DemoTop.tf.borderWidth		2
+    } else {
+	option add *DemoTop.tf.borderWidth		1
+    }
     option add *DemoTop.tf.relief			sunken
     option add *DemoTop.tf.tbl.borderWidth		0
-    option add *DemoTop.tf.tbl.background		white
-    option add *DemoTop.tf.tbl.stripeBackground		#f0f0f0
     option add *DemoTop.tf.tbl.setGrid			yes
-    option add *DemoTop.tf.tbl*Entry.background		white
     option add *DemoTop.bf.TButton.width		10
 }
 
 #
-# Work around the improper appearance of the tile scrollbars in the aqua theme
+# Work around some appearance issues related to the "aqua" theme
 #
-if {$demo::currentTheme eq "aqua" &&
-    [package vcompare $::tk_patchLevel "8.6.10"] < 0} {
-    interp alias {} ttk::scrollbar {} ::scrollbar
+if {$demo::currentTheme eq "aqua"} {
+    if {[catch {winfo rgb . systemTextBackgroundColor}] == 0 &&
+	[catch {winfo rgb . systemTextColor}] == 0} {
+	ttk::style configure TEntry -background systemTextBackgroundColor \
+	    -foreground systemTextColor
+    }
+
+    if {[package vcompare $::tk_patchLevel "8.6.10"] < 0} {
+	interp alias {} ttk::scrollbar {} ::scrollbar
+    }
 }
 
 #------------------------------------------------------------------------------
@@ -102,7 +116,7 @@ proc demo::displayConfig w {
 	$tbl configure -spacing 1
     }
     $tbl columnconfigure 3 -maxwidth 30
-    $tbl columnconfigure 4 -maxwidth 30 -editable yes
+    $tbl columnconfigure 4 -maxwidth 30 -editable yes -editwindow ttk::entry
     ttk::scrollbar $vsb -orient vertical   -command [list $tbl yview]
     ttk::scrollbar $hsb -orient horizontal -command [list $tbl xview]
 
@@ -131,7 +145,7 @@ proc demo::displayConfig w {
     grid $hsb -row 2 -column 0 -sticky ew
     grid rowconfigure    $tf 1 -weight 1
     grid columnconfigure $tf 0 -weight 1
-    pack $b1 $b2 $b3 -side left -expand yes -pady 10
+    pack $b1 $b2 $b3 -side left -expand yes -pady 7p
     pack $bf -side bottom -fill x
     pack $tf -side top -expand yes -fill both
 
@@ -176,10 +190,11 @@ proc demo::putConfig {w tbl} {
 	    #
 	    set default [lindex $configSet 3]
 	    set current [lindex $configSet 4]
-	    if {[string compare $default $current] != 0} {
+	    if {$default ne $current} {
 		foreach col {0 4} {
 		    $tbl cellconfigure end,$col -foreground red
-		    if {$demo::selectFgEqForeground} {
+		    variable selectFgEqForeground
+		    if {$selectFgEqForeground} {
 			$tbl cellconfigure end,$col -selectforeground red
 		    } else {
 			$tbl cellconfigure end,$col -selectforeground yellow
@@ -206,8 +221,8 @@ proc demo::putConfig {w tbl} {
 proc demo::compareAsSet {item1 item2} {
     foreach {opt1 dbName1 dbClass1 default1 current1} $item1 \
 	    {opt2 dbName2 dbClass2 default2 current2} $item2 {
-	set changed1 [expr {[string compare $default1 $current1] != 0}]
-	set changed2 [expr {[string compare $default2 $current2] != 0}]
+	set changed1 [expr {$default1 ne $current1}]
+	set changed2 [expr {$default2 ne $current2}]
 	if {$changed1 == $changed2} {
 	    return [string compare $opt1 $opt2]
 	} elseif {$changed1} {
@@ -247,7 +262,7 @@ proc demo::applyValue {tbl row col text} {
     #
     set text [$w cget $opt]
     set default [$tbl cellcget $row,3 -text]
-    if {[string compare $default $text] == 0} {
+    if {$default eq $text} {
 	foreach col {0 4} {
 	    $tbl cellconfigure $row,$col \
 		 -foreground "" -selectforeground ""
@@ -255,7 +270,8 @@ proc demo::applyValue {tbl row col text} {
     } else {
 	foreach col {0 4} {
 	    $tbl cellconfigure $row,$col -foreground red
-	    if {$demo::selectFgEqForeground} {
+	    variable selectFgEqForeground
+	    if {$selectFgEqForeground} {
 		$tbl cellconfigure $row,$col -selectforeground red
 	    } else {
 		$tbl cellconfigure $row,$col -selectforeground yellow

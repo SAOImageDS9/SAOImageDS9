@@ -95,7 +95,6 @@
         rpmspec  - Generate a RPM spec file for the bundle.
         gentip55 - Generate a TIP55-style DESCRIPTION.txt file.
         yml      - Generate a YAML description file.
-        tap      - Generate TDK .tap description file.
 
         release name sf-user-id
                  - Marks the current state of all files as a new

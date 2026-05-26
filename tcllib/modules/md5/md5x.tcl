@@ -16,7 +16,7 @@
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 # -------------------------------------------------------------------------
 
-package require Tcl 8.2;                # tcl minimum version
+package require Tcl 8.5 9;                # tcl minimum version
 
 namespace eval ::md5 {
     variable  accel
@@ -104,7 +104,7 @@ proc ::md5::MD5Update {token data} {
     }
 
     # Update the state values
-    incr state(n) [string length $data]
+    incr   state(n) [string length $data]
     append state(i) $data
 
     # Calculate the hash for any complete blocks
@@ -162,10 +162,9 @@ proc ::md5::MD5Final {token} {
         incr pad 64
     }
 
-    #puts "P $pad|bits=[expr {8 * $state(n)}]"
-
+    # puts "P $pad|bits=[expr {8 * $state(n)}]"
     append state(i) [binary format a$pad \x80]
-
+    
     # RFC1321:3.2 - Append length in bits as little-endian wide int.
     append state(i) [binary format ii [expr {8 * $state(n)}] 0]
 
@@ -268,7 +267,7 @@ set ::md5::MD5Hash_body {
     variable $token
     upvar 0 $token state
 
-    #puts TR__=[Hex $msg]([string length $msg])
+    # puts TR__=[Hex $msg]([string length $msg])
 
     # RFC1321:3.4 - Process Message in 16-Word Blocks
     binary scan $msg i* blocks
@@ -468,6 +467,9 @@ regsub -all -line \
 
 # RFC 1321:3.4 step 4: inline the set of constant modifiers.
 namespace eval md5 {
+    variable tName
+    variable tVal
+    variable map
     foreach tName {
         T01 T02 T03 T04 T05 T06 T07 T08 T09 T10 
         T11 T12 T13 T14 T15 T16 T17 T18 T19 T20 
@@ -725,7 +727,7 @@ namespace eval ::md5 {
     unset    e
 }
 
-package provide md5 2.0.7
+package provide md5 2.0.9
 
 # -------------------------------------------------------------------------
 # Local Variables:

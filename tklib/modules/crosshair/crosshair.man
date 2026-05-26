@@ -1,5 +1,6 @@
 [comment {-*- tcl -*- doctools manpage}]
-[manpage_begin crosshair n 1.1]
+[vset VERSION 1.2.1]
+[manpage_begin crosshair n [vset VERSION]]
 [keywords canvas]
 [keywords cross-hairs]
 [keywords location]
@@ -12,7 +13,7 @@
 [titledesc {Crosshairs for Tk canvas}]
 [require Tcl [opt 8.4]]
 [require Tk  [opt 8.4]]
-[require crosshair [opt 1.1]]
+[require crosshair [opt [vset VERSION]]]
 
 [description]
 

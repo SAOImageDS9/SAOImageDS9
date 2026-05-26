@@ -28,8 +28,8 @@
 # 80 columns
 # Conventional use of namespace/package names.
 
-package require Tcl 8.5
-package require Tk  8.5
+package require Tcl 8.5-
+package require Tk  8.5-
 
 # ------------------------------------------------------------------------------
 #  Module persistentSelection
@@ -282,7 +282,7 @@ proc ::persistentSelection::report {type w} {
         # In 8.5, <<Selection>> events are not handled one at a time; all the
         # superposed events are unwanted.
         Log "$i AE another event is active, ignore event on $w"
-    } elseif {$::tk_version ne {8.5} && $selOwner eq $Stores($screenName)} {
+    } elseif {$::tk_version ne {8.5-} && $selOwner eq $Stores($screenName)} {
         # In 8.6+, <<Selection>> events are handled one at a time; the unwanted
         # events are distinguished here ...
         Log "$i XX PS owns the selection, ignore event on $w"
@@ -626,7 +626,7 @@ proc ::tk_textCut w {
 	    }
 
 	    $w delete sel.first sel.last
-	
+
 	    if {$oldSeparator} {
 		$w edit separator
 		$w configure -autoseparators 1

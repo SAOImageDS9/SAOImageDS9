@@ -1,0 +1,627 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: ; script-src 'self' 'nonce-d717cfb5d902616b7024920ae20346a8494f7832145c90e0' ; style-src 'self' 'unsafe-inline'" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="title" content="Documentation tvmixins">
+<meta name="author" content="NN">
+<title>Documentation tvmixins</title>
+
+    <style>
+    body {
+        margin-left: 5%; margin-right: 5%;
+        font-family: Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+    }
+pre {
+padding-top:	1ex;
+padding-bottom:	1ex;
+padding-left:	2ex;
+padding-right:	1ex;
+width:		100%;
+color: 		black;
+background: 	#ffefdf;
+border-top:		1px solid black;
+border-bottom:		1px solid black;
+font-family: Monaco, Consolas, "Liberation Mono", Menlo, Courier, monospace;
+
+}
+pre.synopsis {
+    background: #cceeff;
+}
+code {
+    font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+h1,h2, h3,h4 {
+    font-family:	sans-serif;
+    background: 	transparent;
+}
+h1 {
+    font-size: 120%;
+}
+h2 {
+    font-size: 110%;
+}
+h3, h4 {
+    font-size: 100%
+}
+div.title h1 {
+    font-family:	sans-serif;
+    font-size:	120%;
+    background: 	transparent;
+    text-align:	center;
+    color: black;
+}
+div.author h3, div.date h3 {
+    font-family:	sans-serif;
+    font-size:	110%;
+    background: 	transparent;
+    text-align:	center;
+    color: black ;
+}
+h2 {
+margin-top: 	1em;
+font-family:	sans-serif;
+font-size:	110%;
+color:		#005A9C;
+background: 	transparent;
+text-align:		left;
+}
+
+h3 {
+margin-top: 	1em;
+font-family:	sans-serif;
+font-size:	100%;
+color:		#005A9C;
+background: 	transparent;
+text-align:		left;
+}
+</style>
+
+</head>
+<body>
+
+<p><a href="dgw.html">dgw</a> - 
+<a href="basegui.html">basegui</a> - 
+<a href="combobox.html">combobox</a> - 
+<a href="drawcanvas.html">drawcanvas</a> - 
+<a href="hyperhelp.html">hyperhelp</a> - 
+<a href="sbuttonbar.html">sbuttonbar</a> - 
+<a href="seditor.html">seditor</a> - 
+<a href="sfilebrowser.html">sfilebrowser</a> - 
+<a href="sfinddialog.html">sfinddialog</a> - 
+<a href="sqlview.html">sqlview</a> - 
+<a href="statusbar.html">statusbar</a> - 
+<a href="tablelist.html">tablelist</a> - 
+<a href="tlistbox.html">tlistbox</a> - 
+<a href="tvmixins.html">tvmixins</a> - 
+<a href="txmixins.html">txmixins</a></p>
+
+<h1>dgw::tvmixins 0.3</h1>
+
+<h3>Detlef Groth, Schwielowsee, Germany</h3>
+
+<h3>2021-08-21</h3>
+
+<h2>NAME</h2>
+
+<p><strong>dgw::tvmixins</strong> - implementations of extensions for the <em>ttk::treeview</em> 
+        widget which can be added dynamically using chaining of commands 
+        at widget creation or using the <em>dgw::mixin</em> command after widget 
+        creation.</p>
+
+<h2><a name='toc'></a>TABLE OF CONTENTS</h2>
+
+<ul>
+<li><a href="#synopsis">SYNOPSIS</a></li>
+<li><a href="#description">DESCRIPTION</a></li>
+<li><a href="#commands">WIDGET COMMANDS</a>
+<ul>
+<li><a href="#mixin">dgw::mixin</a></li>
+<li><a href="#tvband">dgw::tvband</a></li>
+<li><a href="#tvedit">dgw::tvedit</a></li>
+<li><a href="#tvfilebrowser">dgw::tvfilebrowser</a></li>
+<li><a href="#tvksearch">dgw::tvksearch</a></li>
+<li><a href="#tvsortable">dgw::tvsortable</a></li>
+<li><a href="#tvtooltip">dgw::tvtooltip</a></li>
+<li><a href="#tvtree">dgw::tvtree</a></li></ul>
+
+</li>
+<li><a href="#example">EXAMPLE</a></li>
+<li><a href="#install">INSTALLATION</a></li>
+<li><a href="#demo">DEMO</a></li>
+<li><a href="#docu">DOCUMENTATION</a></li>
+<li><a href="#see">SEE ALSO</a></li>
+<li><a href="#changes">CHANGES</a></li>
+<li><a href="#todo">TODO</a></li>
+<li><a href="#authors">AUTHORS</a></li>
+<li><a href="#copyright">COPYRIGHT</a></li>
+<li><a href="#license">LICENSE</a>
+ </li></ul>
+
+<h2><a name='synopsis'>SYNOPSIS</a></h2>
+
+<pre class='synopsis'><code>package require Tk
+package require snit
+package require dgw::tvmixins
+::dgw::mixin pathName widgetAdaptor ?options?
+::dgw::tvband [ttk::treeview pathName ?options?] ?options?
+::dgw::tvedit [ttk::treeview pathName ?options?] ?options?
+::dgw::tvfilebrowser [ttk::treeview pathName ?options?] ?options?
+::dgw::tvksearch [ttk::treeview pathName ?options?] ?options?
+::dgw::tvsortable [ttk::treeview pathName ?options?] ?options?
+::dgw::tvtooltip [ttk::treeview pathName ?options?] ?options?
+::dgw::tvtree [ttk::treeview pathName ?options?] ?options?
+::dgw::tvfilebrowser [dgw::tvband [dgw::tvsortable [dgw::tvsearch \
+     [ttk::treeview pathName ?options?] ?options?] ?options?] ?options?]
+set tv [ttk::treeview pathName ?options?]
+dgw::mixin $tv dgw::tvband ?options?
+</code></pre>
+
+<h2><a name='description'>DESCRIPTION</a></h2>
+
+<p>The package <strong>dgw::tvmixins</strong> implements several <em>snit::widgetadaptor</em>s which 
+extend the standard <em>ttk::treeview</em> widget with different functionalities.
+Different adaptors can be chained together to add the required functionalities. 
+Furthermore at any later time point using the <em>dgw::mixin</em> command other adaptors can be installed on the widget.</p>
+
+<h2><a name='commands'>WIDGET COMMANDS</a></h2>
+
+<p><a name="mixin"><strong>dgw::mixin</strong></a> <em>pathName mixinWidget ?-option value ...?</em></p>
+
+<p>Adds the properties and methods of a snit::widgetadaptor specified with <em>mixinWidget</em> 
+to the exising widget created before with the given <em>pathName</em> and configures the widget 
+using the given <em>options</em>.</p>
+
+<p>Example:</p>
+
+<blockquote>
+<pre class='code'><code># demo: mixin
+# standard treeview widget
+set tv [ttk::treeview .tv -columns &quot;A B C&quot; -show headings]
+$tv heading A -text A
+$tv heading B -text B
+$tv heading C -text C
+pack $tv -side top -fill both -expand true
+# add  sorting after object creation using the mixin command
+dgw::mixin $tv dgw::tvsortable
+# fill the widget
+for {set i 0} {$i &lt; 20} {incr i} { 
+    $tv insert {} end -values [list [expr {rand()*4}] \
+        [expr {rand()*10}] [expr {rand()*20}]] 
+}
+# add another widget adaptor
+dgw::mixin $tv dgw::tvband
+# configure the new options of this adaptor at a later point
+$tv configure  -bandcolors [list white ivory]</code></pre>
+</blockquote>
+
+<p><a name="tvband"><strong>dgw::tvband</strong></a> <em>[ttk::treeview pathName] ?-option value ...?</em></p>
+
+<p>Creates and configures the <em>dgw::tvband</em>  widget using the Tk window id <em>pathName</em> and the given <em>options</em>. 
+Please note that this adaptor might have performace issues and that the 
+<em>ttk::treeview</em> widget of Tk 8.7 
+probably will have a configure option <em>-striped</em> and <em>-stripedbackgroundcolor</em> which can replace this adaptor.</p>
+
+<p>The following option is available:</p>
+
+<blockquote>
+<ul>
+<li><em>-bandcolors</em> <em>list</em>  - list of the two colors to be displayed alternatively.</li></ul>
+
+
+</blockquote>
+
+<p>Example:</p>
+
+<blockquote>
+<pre class='code'><code># demo: tvband
+dgw::tvband [ttk::treeview .fb -columns [list A B C] -show headings]
+foreach col [list A B C] { .fb heading $col -text $col }
+for {set i 0} {$i &lt; 20} {incr i 1} {
+   .fb insert {} end -values [list  [expr {int(rand()*100)}] \
+                  [expr {int(rand()*1000)}] [expr {int(rand()*1000)}]]
+}
+pack .fb -side top -fill both -expand yes</code></pre>
+</blockquote>
+
+<p><a name="tvedit"><strong>dgw::tvedit</strong></a> <em>[ttk::treeview pathName] ?-option value ...?</em></p>
+
+<p>Creates and configures the <em>dgw::tvedit</em>  widget using the Tk window id <em>pathName</em> and the given <em>options</em>. 
+This widget adaptor allows to do in place edits of the text within the ttk::treeview widget. The code is largly based on the wiki code in <a href="https://wiki.tcl-lang.org/page/Inplace+edit+in+ttk%3A%3Atreeview">Inplace edit in ttk::treeview</a>. Note: Currently only tabular, non hierarchical <em>ttk::treeview</em> widget's can be edited.</p>
+
+<p>The following options are available:</p>
+
+<blockquote>
+<ul>
+<li><p><em>-edittypes</em> <em>list</em>  - list of key values pairs where the key is the colummn name and 
+  the values are pssible data types or lists of available values. The following data types are available</p><ol>
+<li><em>bool</em> provides a boolean value selection of true and false using a check box</li>
+<li><em>int</em> a integer range of values must be given as: <em>int [list start end]</em></li>
+<li><em>list</em> list of possible values must be given with the values such as: <em>list [list A B C D E]</em></li>
+<li>the default if no type is provided for a column name is a text entry with free text edition available
+</li></ol>
+
+</li>
+<li><p><em>-editdefault</em> <em>type</em> the default edit is a entry text field, if you set this to an empty string only columns listed in the <em>-edittypes</em> options can be edited.</p>
+
+</li>
+<li><p><em>-editendcmd</em> <em>commandName</em> the command to be executed after the value was changed. 
+The widget path, the data type, the row id, the old and the new value are added as command arguments. This method can be used to validate the input as well and to perform some actions after the entry was edited.</p></li></ul>
+
+
+</blockquote>
+
+<p>The widget provides the follwing events:</p>
+
+<blockquote>
+<ul>
+<li>&lt;&lt;<em>TreeviewEditEnd</em>>&gt; which is fired if a entry in the <em>ttk::treeview</em> widget
+is changed.  The following event symbols are available: <em>%d</em> a list of the row index and the column name which was changed, <em>%W</em> (widget).</li></ul>
+
+
+</blockquote>
+
+<p>Bindings:</p>
+
+<blockquote>
+<ul>
+<li><em>&lt;KeyPress-F2&gt;</em> - edit current row entries</li>
+<li><em>&lt;KeyPress-Escape&gt;</em> - cancel edits</li>
+<li><em>&lt;KeyPress-Return&gt;</em> - save edit and end current edits</li>
+<li><em>&lt;KeyPress-Tab&gt;</em> - switch to the next edit field</li>
+<li><em>&lt;KeyPress-Shift-Tab&gt;</em> - switch to the previous edit field</li></ul>
+
+
+</blockquote>
+
+<p>Example:</p>
+
+<blockquote>
+<pre class='code'><code># demo: tvedit
+proc editDone {args} {
+      puts &quot;done: $args&quot;
+}
+pack [dgw::tvedit [ttk::treeview .tv -columns {bool int list} -show {headings} \
+   -selectmode extended -yscrollcommand {.sb set}] \
+   -edittypes [list bool bool int [list int 0 100]] \
+   -editdefault &quot;&quot; -editendcmd editDone] -fill both -expand true -side left
+pack [ttk::scrollbar .sb -orient v -command &quot;.tv yview&quot;] -fill y -side left
+.tv insert {} end -values {true 15 {Letter B}}
+.tv insert {} end -values {true 35 {Letter D}}
+for {set i 0} {$i&lt;20} {incr i} {
+     .tv insert {} end -values [list true $i {Letter B}]
+}
+dgw::mixin .tv dgw::tvband</code></pre>
+</blockquote>
+
+<p><a name="tvfilebrowser"><strong>dgw::tvfilebrowser</strong></a> <em>[ttk::treeview pathName] ?-option value ...?</em></p>
+
+<p>Creates and configures the <em>dgw::tvfilebrowser</em>  widget using the Tk window id <em>pathName</em> and the given <em>options</em>.</p>
+
+<p>The following option is available:</p>
+
+<blockquote>
+<ul>
+<li><em>-directory dirName</em> - starting directory for the filebrowser, default current directory.</li>
+<li><em>-browsecmd cmdName</em> - command to be executed if the users double clicks on a row item or presses the Return key. The widgets <em>pathName</em> and the actual row index are appended to the <em>cmdName</em> as arguments, default to empty string.</li>
+<li><em>-fileimage imgName</em> - image to be displayed as filename image left of the filename, default is standard file icon.</li>
+<li><em>-filepattern pattern</em> - the filter for the files to be displayed in the widget, default to &quot;.+&quot; i.e. all files</li></ul>
+
+
+</blockquote>
+
+<p>The following method(s) is(are) available:</p>
+
+<blockquote>
+<ul>
+<li><em>browseDir dirName</em> - the directory to be loaded into the <em>dgw::tvfilebrowser</em> widget.</li></ul>
+
+
+</blockquote>
+
+<p>Example:</p>
+
+<blockquote>
+<pre class='code'><code># demo: tvfilebrowser
+dgw::tvfilebrowser [dgw::tvsortable [dgw::tvksearch [dgw::tvband \
+         [ttk::treeview .fb]]] \
+        -sorttypes [list Name directory Size real Modified dictionary]]
+pack .fb -side top -fill both -expand yes</code></pre>
+</blockquote>
+
+<p><a name="tvksearch"><strong>dgw::tvksearch</strong></a> <em>[ttk::treeview pathName] ?-option value ...?</em></p>
+
+<p>Creates and configures the <em>dgw::tvksearch</em>  widget using the Tk window id <em>pathName</em> and the given <em>options</em>. 
+With this widget you can use the Home and End keys for navigation and further letter
+typing starts searching in the first column shifting focus and display to the current matching entry.</p>
+
+<p>There are currently no options or methods available for this widget.</p>
+
+<p>Example:</p>
+
+<blockquote>
+<pre class='code'><code># demo: tvksearch
+dgw::tvfilebrowser [dgw::tvksearch [ttk::treeview .fb]]
+pack .fb -side top -fill both -expand yes</code></pre>
+</blockquote>
+
+<p><a name="tvsortable"><strong>dgw::tvsortable</strong></a> <em>[ttk::treeview pathName] ?-option value ...?</em></p>
+
+<p>Creates and configures the <em>dgw::tvsortable</em>  widget using the Tk window id <em>pathName</em> and the given <em>options</em>.</p>
+
+<p>The following option is available:</p>
+
+<blockquote>
+<ul>
+<li><em>-sorttypes</em> the options for the <em>lsort</em> command for each of the columns, 
+such as dictionary, ascii, real etc. Default: autocheck for dictionary or real. 
+The values are given as a list of key-value pairs where the key is 
+the column name. In addition to the standard <em>lsort</em> options as well 
+the option <em>directory</em> can be given if the widget contains results of a 
+directory listening with filenames and directory names. 
+In this case the directories are always sorted above the filenames.</li></ul>
+
+
+</blockquote>
+
+<p>The following methods are available:</p>
+
+<blockquote>
+<ul>
+<li><em>sortBy</em> <em>colId decreasing</em> - sort widget by column with the given <em>colId</em> and in decreasing order if true or <em>increasing</em> if false.</li>
+<li><em>reSort</em> redo the last sorting again, useful if the data in the widget where changed either interactively for instance using the <em>tvedit</em> adaptor or programmatically.</li></ul>
+
+
+</blockquote>
+
+<p>The widget further provides the following event:</p>
+
+<ul>
+<li>&lt;&lt;<em>SortEnd</em>>&gt; - with the following symbols <em>%W</em> (widget path) and <em>%d</em> (column id)
+</li></ul>
+
+<p>Example:</p>
+
+<blockquote>
+<pre class='code'><code># demo: tvsortable
+dgw::tvsortable [dgw::tvband [ttk::treeview .fb -columns [list A B C] \
+       -show headings]] -sorttypes [list A real B real C integer]
+foreach col [list A B C] { .fb heading $col -text $col }
+for {set i 0} {$i &lt; 20} {incr i 1} {
+   .fb insert {} end -values [list  [expr {int(rand()*100)}] \
+                  [expr {int(rand()*1000)}] [expr {int(rand()*1000)}]]
+}
+pack .fb -side top -fill both -expand yes</code></pre>
+</blockquote>
+
+<p><a name="tvtooltip"><strong>dgw::tvtooltip</strong></a> <em>[ttk::treeview pathName] ?-option value ...?</em></p>
+
+<p>Creates and configures the <em>dgw::tvtooltip</em>  widget using the Tk window id <em>pathName</em> and the given <em>options</em>.</p>
+
+<p>There are currently no options available.</p>
+
+<p>The widget provides the following events:</p>
+
+<ul>
+<li>&lt;&lt;RowEnter>&gt; with the following symbols: %d the row index, and the standards %W (widget), %x (widgetX), %y (widgetY), %X (rootx), %Y (rootY)</li>
+<li>&lt;&lt;RowLeave>&gt; with the following symbols: %d the row index, and the standards %W (widget), %x (widgetX), %y (widgetY), %X (rootx), %Y (rootY)
+</li></ul>
+
+<p>Example:</p>
+
+<blockquote>
+<pre class='code'><code># demo: tvtooltip
+set fb [dgw::tvtooltip [dgw::tvfilebrowser [ttk::treeview .fp2] \
+         -directory . -fileimage movie \
+         -filepattern {\.(3gp|mp4|avi|mkv|mp3|ogg)$}]]
+pack $fb -side top -fill both -expand yes
+pack [::ttk::label .msg -font &quot;Times 12 bold&quot; -textvariable ::msg -width 20 \
+      -background salmon -borderwidth 2 -relief ridge] \
+      -side top -fill x -expand false -ipadx 5 -ipady 4
+bind $fb &lt;&lt;RowEnter&gt;&gt; { set ::msg &quot;  Entering row %d&quot;}
+bind $fb &lt;&lt;RowLeave&gt;&gt; { set ::msg &quot;  Leaving row %d&quot;}</code></pre>
+</blockquote>
+
+<p><a name="tvtree"><strong>dgw::tvtree</strong></a> <em>[ttk::treeview pathName] ?-option value ...?</em></p>
+
+<p>Creates and configures the <em>dgw::tvtree</em>  widget using the Tk window id <em>pathName</em> and the given <em>options</em>.</p>
+
+<p>There is(are) currently the following option(s) available:</p>
+
+<ul>
+<li><em>-icon</em> - the icon type, which can be currently either book or folder. To provide your own icons you must create two image icons \&lt;name>open16 and \&lt;name>close16. Support for icons of size 22 will be added later.
+</li></ul>
+
+<p>The widget provides the following event:</p>
+
+<ul>
+<li>&lt;&lt;InsertItem>&gt; which is fired if a item is inserted into the <em>tvtree</em> widget, there are the following event symbols available: <em>%d</em> the row index, and the standard <em>%W</em> (widget pathname).
+</li></ul>
+
+<p>Example:</p>
+
+<blockquote>
+<pre class='code'><code># demo: tvtree
+set tree [dgw::tvtree [ttk::treeview .tree \
+     -height 15 -show tree -selectmode browse] \
+     -icon folder]
+foreach txt {first second third} {
+   set id [$tree insert {} end -text &quot; $txt item&quot; -open 1]
+   for {set i [expr {1+int(rand()*5)}]} {$i &gt; 0} {incr i -1} {
+       set child [$tree insert $id 0 -text &quot; child $i&quot;]
+       for {set j [expr {int(rand()*3)}]} {$j &gt; 0} {incr j -1} {
+          $tree insert $child 0 -text &quot; grandchild $i&quot;
+       }
+   }
+}
+pack $tree -side top -fill both -expand true</code></pre>
+</blockquote>
+
+<h2><a name='example'>EXAMPLE</a></h2>
+
+<p>In the examples below we create first a filebrowser widget using all the widget 
+adaptors for demonstration purposes. Therafter comes a tooltip demonstration, a tree demonstration and 
+finally a demonstration on how to use the <em>dgw::mixin</em> command which simplifies the addition of 
+new behaviors to our <em>ttk::treewidget</em> in a stepwise manner. The latter approach is as well nice to extend existing widgets in a more controlled manner avoiding restarts of applications during developing the widget.</p>
+
+<pre><code># wrapper function 
+proc fbrowse {path args} {
+     set fb [dgw::tvtooltip [dgw::tvsortable [dgw::tvksearch \
+        [dgw::tvfilebrowser [dgw::tvband \
+        [ttk::treeview $path]] {*}$args]] \
+         -sorttypes [list Name directory Size real Modified dictionary]]]
+     return $fb
+}
+set pw [ttk::panedwindow .pw -orient horizontal]
+set f0 [ttk::frame $pw.f]
+set f1 [ttk::frame $f0.f]
+set fb [fbrowse $f1.fb]
+pack $fb -side left -fill both -expand yes
+pack [ttk::scrollbar $f1.yscroll -command [list $fb yview]] \
+      -side left -fill y -expand false
+$fb configure -yscrollcommand [list $f1.yscroll set]
+pack $f1 -side top -fill both -expand true
+# demo tvtooltip
+pack [::ttk::label $f0.msg -font &quot;Times 12 bold&quot; -textvariable ::msg -width 20 \
+     -background salmon -borderwidth 2 -relief ridge] \
+     -side top -fill x -expand false -ipadx 5 -ipady 4
+bind $fb &lt;&lt;RowEnter&gt;&gt; { set ::msg &quot;  Entering row %d&quot;}
+bind $fb &lt;&lt;RowLeave&gt;&gt; { set ::msg &quot;  Leaving row %d&quot;}
+
+$pw add $f0
+set tree [dgw::tvtree [ttk::treeview $pw.tree -height 15 -show tree -selectmode browse] -icon folder]
+foreach txt {first second third} {
+   set id [$tree insert {} end -text &quot; $txt item&quot; -open 1]
+   for {set i [expr {1+int(rand()*5)}]} {$i &gt; 0} {incr i -1} {
+       set child [$tree insert $id 0 -text &quot; child $i&quot;]
+       for {set j [expr {int(rand()*3)}]} {$j &gt; 0} {incr j -1} {
+          $tree insert $child 0 -text &quot; grandchild $i&quot;
+       }
+   }
+}
+$pw add $tree
+# another example using mixin syntax
+set tv [ttk::treeview $pw.tv -columns &quot;A B C&quot; -show headings]
+dgw::mixin $tv dgw::tvsortable
+
+$tv heading A -text A
+$tv heading B -text B
+$tv heading C -text C
+$pw add $tv
+for {set i 0} {$i &lt; 20} {incr i} { 
+    $tv insert {} end -values [list [expr {rand()*4}] \
+        [expr {rand()*10}] [expr {rand()*20}]] 
+}
+dgw::mixin $tv dgw::tvband
+$tv configure  -bandcolors [list white ivory]
+pack $pw -side top -fill both -expand true
+</code></pre>
+
+<h2><a name='install'>INSTALLATION</a></h2>
+
+<p>Installation is easy you can install and use the <strong>dgw::tvmixins</strong> package if you have a working install of:</p>
+
+<ul>
+<li>the snit package  which can be found in <a href="https://core.tcl-lang.org/tcllib">tcllib - https://core.tcl-lang.org/tcllib</a>
+</li></ul>
+
+<p>For installation you copy the complete <em>dgw</em> folder into a path 
+of your <em>auto_path</em> list of Tcl or you append the <em>auto_path</em> list with the parent dir of the <em>dgw</em> directory.
+Alternatively you can install the package as a Tcl module by creating a file dgw/tvmixins-0.3.tm in your Tcl module path.</p>
+
+<p>Only if you you like to extract the HTML documentation and run the examples, 
+you need the complete dgw package and for the HTML generation the tcllib Markdown package.</p>
+
+<h2><a name='demo'>DEMO</a></h2>
+
+<p>Example code for this package in the <em>EXAMPLE</em> section can  be executed by running this file using the following command line:</p>
+
+<pre><code>$ wish tvmixins.tcl --demo
+</code></pre>
+
+<p>Specific code examples outside of the EXAMPLE section can be executed using the string after the <em>demo:</em> prefix string in the code block for the individual code adaptors such as:</p>
+
+<pre><code>$ wish tvmixins.tcl --demo tvband
+</code></pre>
+
+<p>The example code used for the demo in the EXAMPLE section can be seen in the terminal by using the following command line:</p>
+
+<pre><code>$ tclsh tvmixins.tcl --code
+</code></pre>
+
+<h2><a name='docu'>DOCUMENTATION</a></h2>
+
+<p>The script contains embedded the documentation in Markdown format. To extract the documentation you should use the following command line:</p>
+
+<pre><code>$ tclsh tvmixins.tcl --markdown
+</code></pre>
+
+<p>This will extract the embedded manual pages in standard Markdown format. You can as well use this markdown output directly to create html pages for the documentation by using the <em>--html</em> flag.</p>
+
+<pre><code>$ tclsh tvmixins.tcl --html
+</code></pre>
+
+<p>If the tcllib Markdown package is installed, this will directly create a HTML page <code>tvmixins.html</code> 
+which contains the formatted documentation.</p>
+
+<p>Github-Markdown can be extracted by using the <em>--man</em> switch:</p>
+
+<pre><code>$ tclsh tvmixins.tcl --man
+</code></pre>
+
+<p>The output of this command can be used to feed a Markdown processor for conversion into a 
+html, docx or pdf document. If you have pandoc installed for instance, you could execute the following commands:</p>
+
+<pre><code>tclsh ../tvmixins.tcl --man &gt; tvmixins.md
+pandoc -i tvmixins.md -s -o tvmixins.html
+pandoc -i tvmixins.md -s -o tvmixins.tex
+pdflatex tvmixins.tex
+</code></pre>
+
+<h2><a name='see'>SEE ALSO</a></h2>
+
+<ul>
+<li><a href="https://chiselapp.com/user/dgroth/repository/tclcode/index">dgw package homepage</a> - various useful widgets</li>
+<li><a href="https://www.tcl.tk/man/tcl8.6/TkCmd/ttk_treeview.htm">ttk::treeview widget manual</a> standard manual page for the ttk::treeview widget
+
+ </li></ul>
+
+<h2><a name='changes'>CHANGES</a></h2>
+
+<ul>
+<li>2020-04-10 - version 0.2 released with adaptors: <em>tvband</em>, <em>tvfilebrowser</em>, <em>tvksearch</em>, <em>tvsortable</em>, <em>tvtooltip</em></li>
+<li>2020-04-14 - version 0.3 released with adaptor <em>tvtree</em>, <em>tvedit' and command </em>dgw::mixin*
+</li></ul>
+
+<h2><a name='todo'>TODO</a></h2>
+
+<ul>
+<li>tests</li>
+<li>github url
+</li></ul>
+
+<h2><a name='authors'>AUTHORS</a></h2>
+
+<p>The <strong>dgw::tvmixins</strong> widget was written by Detlef Groth, Schwielowsee, Germany.</p>
+
+<h2><a name='copyright'>Copyright</a></h2>
+
+<p>Copyright (c) 2020  Dr. Detlef Groth, E-mail: detlef(at)dgroth(dot)de</p>
+
+<h2><a name='license'>LICENSE</a></h2>
+
+<p>dgw::tvmixins package, version 0.3.</p>
+
+<p>Copyright (c) 2019-2021  Dr. Detlef Groth, E-mail: detlef(at)dgroth(dot)de</p>
+
+<p>This library is free software; you can use, modify, and redistribute it
+for any purpose, provided that existing copyright notices are retained
+in all copies and that this notice is included verbatim in any
+distributions.</p>
+
+<p>This software is distributed WITHOUT ANY WARRANTY; without even the
+implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</p>
+
+</body>
+</html>

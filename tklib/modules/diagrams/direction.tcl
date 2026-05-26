@@ -28,7 +28,7 @@
 # # ## ### ##### ######## ############# ######################
 ## Requisites
 
-package require Tcl 8.5 ; # Want the nice things it brings (dicts, {*}, etc.)
+package require Tcl 8.5- ; # Want the nice things it brings (dicts, {*}, etc.)
 package require snit    ; # Object framework.
 
 # # ## ### ##### ######## ############# ######################
@@ -238,10 +238,10 @@ snit::type ::diagram::direction {
 	se        southeast    down-right southeast    \u2198 southeast
 	sw        southwest    down-left  southwest    \u2199 southwest
 
-	upleft    northwest    leftup     northwest	
+	upleft    northwest    leftup     northwest
 	upright   northeast    rightup    northeast
 	downright southeast    rightdown  southeast
-	downleft  southwest    leftdown   southwest	
+	downleft  southwest    leftdown   southwest
     }
 
     ##

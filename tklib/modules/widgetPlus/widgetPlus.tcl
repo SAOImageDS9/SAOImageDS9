@@ -32,8 +32,8 @@
 # TComboboxPlus, and BwEntryPlus.
 # Docs are in "man n widgetPlus".
 
-package require Tcl 8.5
-package require Tk 8.5
+package require Tcl 8.5-
+package require Tk 8.5-
 package require snit
 
 namespace eval ::widgetPlus {
@@ -59,7 +59,7 @@ namespace eval ::widgetPlus {
 #
 # A downside to these simple wrappers is that, while the Snit typemethod
 #    widgetPlus::entryPlus info instances
-# works, it is really an alias to 
+# works, it is really an alias to
 #    widgetPlus::WidgetPlusPrivateCore info instances
 # and so it includes "types" such as widgetPlus::spinboxPlus as well as
 # widgetPlus::entryPlus.

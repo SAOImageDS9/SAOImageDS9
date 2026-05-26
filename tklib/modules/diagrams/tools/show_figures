@@ -1,5 +1,5 @@
 #!/bin/bash
 
 cd figures
-tclsh8.5 ../../../apps/dia show *.dia
+tclsh ../../../apps/diagram-viewer show *.dia
 exit

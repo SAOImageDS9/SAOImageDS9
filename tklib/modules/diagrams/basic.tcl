@@ -11,7 +11,7 @@
 # # ## ### ##### ######## ############# ######################
 ## Requisites
 
-package require Tcl 8.5              ; # Want the nice things it
+package require Tcl 8.5-              ; # Want the nice things it
 				       # brings (dicts, {*}, etc.)
 package require snit                 ; # Object framework.
 package require math::geometry 1.1.2 ; # Vector math (points, line
@@ -32,7 +32,7 @@ snit::type ::diagram::basic {
 	# Basic elements ... First the closed elements (closed curves) ...
 
 	DefE $core box     {textcolor textfont anchor justify stroke style color fillcolor at with width height slant}
-	DefE $core circle  {textcolor textfont anchor justify stroke style color fillcolor at with circle::radius} 
+	DefE $core circle  {textcolor textfont anchor justify stroke style color fillcolor at with circle::radius}
 	DefE $core diamond {textcolor textfont anchor justify stroke style color fillcolor at with diamond::width diamond::height diamond::aspect}
 	DefE $core drum    {textcolor textfont anchor justify stroke style color fillcolor at with width height drum::aspect}
 	DefE $core ellipse {textcolor textfont anchor justify stroke style color fillcolor at with width height}
@@ -150,16 +150,16 @@ snit::type ::diagram::basic {
 	$core new alias \u2787 8th
 	$core new alias \u2788 9th
 	$core new alias \u2789 10th
-	$core new alias \u2776 {1th last}	
-	$core new alias \u2777 {2th last}	
-	$core new alias \u2778 {3th last}	
-	$core new alias \u2779 {4th last}	
-	$core new alias \u277a {5th last}	
-	$core new alias \u277b {6th last}	
-	$core new alias \u277c {7th last}	
-	$core new alias \u277d {8th last}	
-	$core new alias \u277e {9th last}	
-	$core new alias \u277f {10th last}	
+	$core new alias \u2776 {1th last}
+	$core new alias \u2777 {2th last}
+	$core new alias \u2778 {3th last}
+	$core new alias \u2779 {4th last}
+	$core new alias \u277a {5th last}
+	$core new alias \u277b {6th last}
+	$core new alias \u277c {7th last}
+	$core new alias \u277d {8th last}
+	$core new alias \u277e {9th last}
+	$core new alias \u277f {10th last}
 
 	# The hooks are run in the specified order, first to last,
 	# until one takes the element, or the system runs out of of
@@ -961,7 +961,7 @@ snit::type ::diagram::basic {
 	    lassign $a(rect) w n e s
 	    $core draw [subst -nocommands {
 		circle at [$a(center)] radius $a(arc::radius) color black dotted
-		circle at [$a(arc::from)] radius 5 color orange 
+		circle at [$a(arc::from)] radius 5 color orange
 		circle at [$a(center)]    radius 5 color green
 		circle at [$a(arc::to)]   radius 5 color blue
 		line from [$a(arc::from)] then [$a(center)] to [$a(arc::to)] dashed color red
@@ -1212,7 +1212,7 @@ snit::type ::diagram::basic {
     # # ## ### ##### ######## ############# ######################
     ## Type construction (pre-computed tables for ellipsis corners)
 
-    typevariable ouresin 
+    typevariable ouresin
     typevariable ourecos
     typeconstructor {
 	::variable ::math::geometry::torad

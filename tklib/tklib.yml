@@ -1,5 +1,5 @@
 dist_id: tklib
-version: 0.7
+version: 0.8
 language: tcl
 description: |
    This package is intended to be a collection of Tcl packages that provide
@@ -15,4 +15,4 @@ categories:
   - Library/GUI
 license: BSD
 owner_id: AndreasKupries
-wrapped_content: tklib-0.7/
+wrapped_content: tklib-0.8/

@@ -35,10 +35,10 @@ proc ::Plotchart::WidthCanvas {w {useref 1}} {
         set width [winfo width $w]
 
         if { $width < 10 } {
-            set width [$w cget -width]
+            set width [winfo pixels $w [$w cget -width]]
         }
     }
-    incr width -[$w cget -borderwidth]
+    incr width -[winfo pixels $w [$w cget -borderwidth]]
 
     return $width
 }
@@ -65,10 +65,10 @@ proc ::Plotchart::HeightCanvas {w {useref 1}} {
     } else {
         set height [winfo height $w]
         if { $height < 10 } {
-            set height [$w cget -height]
+            set height [winfo pixels $w [$w cget -height]]
         }
     }
-    incr height -[$w cget -borderwidth]
+    incr height -[winfo pixels $w [$w cget -borderwidth]]
     return $height
 }
 
@@ -279,7 +279,7 @@ proc ::Plotchart::MarginsRectangle { w argv {notext 2.0} {text_width 8}} {
     if { $pxmin < $config($w,margin,left) } {
         set pxmin $config($w,margin,left)
     }
-    set pymin [expr {int($char_height*$notext) + [$w cget -borderwidth]}]
+    set pymin [expr {int($char_height*$notext) + [winfo pixels $c [$c cget -borderwidth]]}]
     if { $pymin < $config($w,margin,top) } {
         set pymin $config($w,margin,top)
     }
@@ -297,7 +297,7 @@ proc ::Plotchart::MarginsRectangle { w argv {notext 2.0} {text_width 8}} {
     if {[info exists options(-box)]} {
         foreach {offx offy width height} $options(-box) {break}
         if { $offy == 0 } {
-            set offy [$w cget -borderwidth]
+            set offy [winfo pixels $c [$c cget -borderwidth]]
         }
         set scaling($w,reference) $w
         set scaling($w,refx)      $offx
@@ -307,7 +307,7 @@ proc ::Plotchart::MarginsRectangle { w argv {notext 2.0} {text_width 8}} {
     } elseif {[info exists options(-axesbox)]} {
         foreach {offx offy width height} [DetermineFromAxesBox $options(-axesbox) $pxmin $pymin $margin_right $margin_bottom] {break}
         if { $offy == 0 } {
-            set offy [$w cget -borderwidth]
+            set offy [winfo pixels $c [$c cget -borderwidth]]
         }
         set ref_plot [lindex $options(-axesbox) 0]
         set pos      [string first _ $ref_plot]
@@ -316,7 +316,7 @@ proc ::Plotchart::MarginsRectangle { w argv {notext 2.0} {text_width 8}} {
     } else {
         set scaling($w,reference) $w
         set offx   0
-        set offy   [$w cget -borderwidth]
+        set offy   [winfo pixels $c [$c cget -borderwidth]]
         set width  [WidthCanvas $w]
         set height [HeightCanvas $w]
         set scaling($w,refx)      0
@@ -388,9 +388,15 @@ proc ::Plotchart::MarginsSquare { w {notext 2.0} {text_width 8}} {
     variable config
     variable scaling
 
+    if { [string match {[0-9]*} $w] } {
+        set c [string range $w 2 end]
+    } else {
+        set c $w
+    }
+
     set scaling($w,reference) $w
     set scaling($w,refx)      0
-    set scaling($w,refy)      [$w cget -borderwidth]
+    set scaling($w,refy)      [winfo pixels $c [$c cget -borderwidth]]
     set scaling($w,refwidth)  [WidthCanvas $w]
     set scaling($w,refheight) [HeightCanvas $w]
 
@@ -434,13 +440,20 @@ proc ::Plotchart::MarginsSquare { w {notext 2.0} {text_width 8}} {
 # Arguments:
 #    w           Name of the canvas
 #    args        additional arguments for placement of plot,
-#                currently: '-box', '-reference', and '-units'
+#                currently: '-box', '-reference', '-units',
+#                '-centre'
 # Result:
 #    List of four values giving the pixel coordinates
 #    of the boundary of the piechart
 #
 proc ::Plotchart::MarginsCircle { w args } {
    variable scaling
+
+   if { [string match {[0-9]*} $w] } {
+       set c [string range $w 2 end]
+   } else {
+       set c $w
+   }
 
    array set options $args
    if { [info exists options(-box)] } {
@@ -458,31 +471,34 @@ proc ::Plotchart::MarginsCircle { w args } {
    set pymin 30
    set pxmax [expr {[WidthCanvas $w]  - 80}]
    set pymax [expr {[HeightCanvas $w] - 30}]
-   #set pxmax [expr {[$w cget -width]  - 80}]
-   #set pymax [expr {[$w cget -height] - 30}]
 
    # width (dx) and height (dy) of plot region in pixels:
    if {[info exists options(-units)]} {
-      # refUnitX, refUnitY - size of one world coordinate unit in the piechart,
-      #      given as canvas coords (can also be m,c,i,p units)
-      # Note: the pie is always 2 world coordinate units in diameter
-      #
-      lassign $options(-units) refUnitX refUnitY
-      set wc [string range $w 2 end]
-      set refUnitX [winfo pixels $wc $refUnitX]
-      set refUnitY [winfo pixels $wc $refUnitY]
-      set dx [expr {$refUnitX * 2}]
-      set dy [expr {$refUnitY * 2}]
+       # refUnitX, refUnitY - size of one world coordinate unit in the piechart,
+       #      given as canvas coords (can also be m,c,i,p units)
+       # Note: the pie is always 2 world coordinate units in diameter
+       #
+       lassign $options(-units) refUnitX refUnitY
+       set wc [string range $w 2 end]
+       set refUnitX [winfo pixels $wc $refUnitX]
+       set refUnitY [winfo pixels $wc $refUnitY]
+       set dx [expr {$refUnitX * 2}]
+       set dy [expr {$refUnitY * 2}]
    } else {
-      set dx [expr {$pxmax-$pxmin+1}]
-      set dy [expr {$pymax-$pymin+1}]
-      # make sure, we get a centred circle:
-      if {$dx < $dy} {
-          set dy $dx
-      } else {
-          set dx $dy
-      }
-      set pxmin [expr {($pxmin+$pxmax-$dx)/2}]
+       set dx [expr {$pxmax-$pxmin+1}]
+       set dy [expr {$pymax-$pymin+1}]
+       # make sure, we get a centred circle:
+       if {$dx < $dy} {
+           set dy $dx
+       } else {
+           set dx $dy
+       }
+       set pxmin [expr {($pxmin+$pxmax-$dx)/2}]
+
+       if {[info exists options(-centre)] && $options(-centre)} {
+           set pymin [expr {($pymin+$pymax-$dy)/2}]
+           set pymax [expr {($pymin+$pymax+$dy)/2}]
+       }
    }
 
    # new default coords of plotting region:
@@ -511,14 +527,14 @@ proc ::Plotchart::MarginsCircle { w args } {
         lassign $options(-box) pxmin pymin width height
         if {$height >= $width} {
             # place vertically in the middle of the -box
-            if { $pxmin == 0 } {set pxmin [$w cget -borderwidth]}
+            if { $pxmin == 0 } {set pxmin [winfo pixels $c [$c cget -borderwidth]]}
             set pymin [expr {$pymin + ($height-$width)/2.0}]
-            if { $pymin == 0 } {set pymin [$w cget -borderwidth]}
+            if { $pymin == 0 } {set pymin [winfo pixels $c [$c cget -borderwidth]]}
         } else {
             # place horizontally in the middle of the -box
-            if { $pymin == 0 } {set pymin [$w cget -borderwidth]}
+            if { $pymin == 0 } {set pymin [winfo pixels $c [$c cget -borderwidth]]}
             set pxmin [expr {$pxmin + ($width-$height)/2.0}]
-            if { $pxmin == 0 } {set pxmin [$w cget -borderwidth]}
+            if { $pxmin == 0 } {set pxmin [winfo pixels $c [$c cget -borderwidth]]}
         }
         # only take the smallest dimension to keep the pie a circle:
         if {$width < $height} {set height $width}
@@ -532,12 +548,12 @@ proc ::Plotchart::MarginsCircle { w args } {
         set scaling($w,refheight) [expr {$pymin + $height}]
    } else {
         set scaling($w,refx)      0
-        set scaling($w,refy)      [$w cget -borderwidth]
+        set scaling($w,refy)      [winfo pixels $c [$c cget -borderwidth]]
         set scaling($w,refwidth)  [WidthCanvas $w]
         set scaling($w,refheight) [HeightCanvas $w]
-   }
+    }
 
-   return [list $pxmin $pymin $pxmax $pymax]
+    return [list $pxmin $pymin $pxmax $pymax]
 }
 
 # Margins3DPlot --
@@ -548,39 +564,42 @@ proc ::Plotchart::MarginsCircle { w args } {
 #    List of four values
 #
 proc ::Plotchart::Margins3DPlot { w } {
-   variable scaling
+    variable scaling
 
-   set scaling($w,reference) $w
-   set scaling($w,refx)      0
-   set scaling($w,refy)      [$w cget -borderwidth]
-   set scaling($w,refwidth)  [WidthCanvas $w]
-   set scaling($w,refheight) [HeightCanvas $w]
+    if { [string match {[0-9]*} $w] } {
+        set c [string range $w 2 end]
+    } else {
+        set c $w
+    }
 
-   set yfract 0.33
-   set zfract 0.50
-   if { [info exists scaling($w,yfract)] } {
-      set yfract $scaling($w,yfract)
-   } else {
-      set scaling($w,yfract) $yfract
-   }
-   if { [info exists scaling($w,zfract)] } {
-      set zfract $scaling($w,zfract)
-   } else {
-      set scaling($w,zfract) $zfract
-   }
+    set scaling($w,reference) $w
+    set scaling($w,refx)      0
+    set scaling($w,refy)      [winfo pixels $c [$c cget -borderwidth]]
+    set scaling($w,refwidth)  [WidthCanvas $w]
+    set scaling($w,refheight) [HeightCanvas $w]
 
-   set yzwidth  [expr {(-120+[WidthCanvas $w])/(1.0+$yfract)}]
-   set yzheight [expr {(-60+[HeightCanvas $w])/(1.0+$zfract)}]
-   #set yzwidth  [expr {(-120+[$w cget -width])/(1.0+$yfract)}]
-   #set yzheight [expr {(-60+[$w cget -height])/(1.0+$zfract)}]
+    set yfract 0.33
+    set zfract 0.50
+    if { [info exists scaling($w,yfract)] } {
+        set yfract $scaling($w,yfract)
+    } else {
+        set scaling($w,yfract) $yfract
+    }
+    if { [info exists scaling($w,zfract)] } {
+        set zfract $scaling($w,zfract)
+    } else {
+        set scaling($w,zfract) $zfract
+    }
 
-   set pxmin    [expr {60+$yfract*$yzwidth}]
-   set pxmax    [expr {[WidthCanvas $w] - 60}]
-   #set pxmax    [expr {[$w cget -width] - 60}]
-   set pymin    30
-   set pymax    [expr {30+$yzheight}]
+    set yzwidth  [expr {(-120+[WidthCanvas $w])/(1.0+$yfract)}]
+    set yzheight [expr {(-60+[HeightCanvas $w])/(1.0+$zfract)}]
 
-   return [list $pxmin $pymin $pxmax $pymax]
+    set pxmin    [expr {60+$yfract*$yzwidth}]
+    set pxmax    [expr {[WidthCanvas $w] - 60}]
+    set pymin    30
+    set pymax    [expr {30+$yzheight}]
+
+    return [list $pxmin $pymin $pxmax $pymax]
 }
 
 # MarginsTernary --
@@ -966,11 +985,16 @@ proc ::Plotchart::DrawTitle { w title {position center}} {
     variable scaling
     variable config
 
+    if { [string match {[0-9]*} $w] } {
+        set c [string range $w 2 end]
+    } else {
+        set c $w
+    }
+
     set ref    $scaling($w,reference)
     set offx   $scaling($ref,refx)
     set offy   $scaling($ref,refy)
     set width  [WidthCanvas $w]
-    #set width  [$w cget -width]
     set pymin  $scaling($w,pymin)
 
     switch -- $position {
@@ -989,7 +1013,7 @@ proc ::Plotchart::DrawTitle { w title {position center}} {
     }
 
     $w delete "title_$anchor && $ref"
-    set obj [$w create text $tx [expr {$offy + 3 + [$w cget -borderwidth]}] -text $title \
+    set obj [$w create text $tx [expr {$offy + 3 + [winfo pixels $c [$c cget -borderwidth]]}] -text $title \
                 -tags [list title title_$anchor $ref] -font $config($w,title,font) \
                 -fill $config($w,title,textcolor) -anchor $anchor]
 
@@ -1019,6 +1043,12 @@ proc ::Plotchart::DrawSubtitle { w title } {
     variable scaling
     variable config
 
+    if { [string match {[0-9]*} $w] } {
+        set c [string range $w 2 end]
+    } else {
+        set c $w
+    }
+
     set ref    $scaling($w,reference)
     set offx   $scaling($ref,refx)
     set width  [WidthCanvas $w]
@@ -1031,7 +1061,7 @@ proc ::Plotchart::DrawSubtitle { w title } {
     }
 
     $w delete "subtitle && $ref"
-    set obj [$w create text $tx [expr {$offy + 3 + [$w cget -borderwidth]}] -text $title \
+    set obj [$w create text $tx [expr {$offy + 3 + [winfo pixels $c [$c cget -borderwidth]]}] -text $title \
                 -tags [list subtitle $ref] -font $config($w,subtitle,font) \
                 -fill $config($w,subtitle,textcolor) -anchor n]
 
@@ -2626,14 +2656,16 @@ proc ::Plotchart::DrawTimePeriod { w text time_begin time_end {colour black}} {
    foreach {x1 y1} [coordsToPixel $w $xmin $scaling($w,current)] {break}
    foreach {x2 y2} [coordsToPixel $w $xmax $ybott              ] {break}
 
-   $w create rectangle $x1 $y1 $x2 $y2 -fill $colour \
-       -tags [list $w vertscroll horizscroll below item_[expr {int($scaling($w,current))}]]
+   set items [$w create rectangle $x1 $y1 $x2 $y2 -fill $colour \
+                  -tags [list $w vertscroll horizscroll below item_[expr {int($scaling($w,current))}]]]
 
    ReorderChartItems $w
 
    set scaling($w,current) [expr {$scaling($w,current)-1.0}]
 
    RescaleChart $w
+
+   return $items
 }
 
 # DrawAdditionalPeriod --
@@ -2664,14 +2696,16 @@ proc ::Plotchart::DrawAdditionalPeriod { w time_begin time_end {colour black}} {
    foreach {x1 y1} [coordsToPixel $w $xmin $scaling($w,current)] {break}
    foreach {x2 y2} [coordsToPixel $w $xmax $ybott              ] {break}
 
-   $w create rectangle $x1 $y1 $x2 $y2 -fill $colour \
-       -tags [list $w vertscroll horizscroll below item_[expr {int($scaling($w,current))}]]
+   set items [$w create rectangle $x1 $y1 $x2 $y2 -fill $colour \
+                  -tags [list $w vertscroll horizscroll below item_[expr {int($scaling($w,current))}]]]
 
    ReorderChartItems $w
 
    set scaling($w,current) [expr {$scaling($w,current)-1.0}]
 
    RescaleChart $w
+
+   return $items
 }
 
 # DrawTimeVertLine --
@@ -2698,7 +2732,7 @@ proc ::Plotchart::DrawTimeVertLine { w text time {colour black}} {
    foreach {x y} [coordsToPixel $w $xtime $ytext] {break}
    set y [expr {$y-5}]
 
-   $w create text $x $y -text $text -anchor sw -tags [list $w horizscroll timeline]
+   lappend items [$w create text $x $y -text $text -anchor sw -tags [list $w horizscroll timeline]]
 
    #
    # Draw the line
@@ -2706,9 +2740,11 @@ proc ::Plotchart::DrawTimeVertLine { w text time {colour black}} {
    foreach {x1 y1} [coordsToPixel $w $xtime $scaling($w,ymin)] {break}
    foreach {x2 y2} [coordsToPixel $w $xtime $scaling($w,ymax)] {break}
 
-   $w create line $x1 $y1 $x2 $y2 -fill $colour -tags [list $w horizscroll timeline tline]
+   lappend items [$w create line $x1 $y1 $x2 $y2 -fill $colour -tags [list $w horizscroll timeline tline]]
 
    $w raise topmask
+
+   return $items
 }
 
 # DrawTimeMilestone --
@@ -2733,8 +2769,8 @@ proc ::Plotchart::DrawTimeMilestone { w text time {colour black}} {
    set ytext [expr {$scaling($w,current)+0.5*$scaling($w,dy)}]
    foreach {x y} [coordsToPixel $w $scaling($w,xmin) $ytext] {break}
 
-   $w create text 5 $y -text $text -anchor w \
-       -tags [list vertscroll above item_[expr {int($scaling($w,current))}]]
+   lappend items [$w create text 5 $y -text $text -anchor w \
+                      -tags [list vertscroll above item_[expr {int($scaling($w,current))}]]]
 
    #
    # Draw an upside-down triangle to indicate the time
@@ -2750,14 +2786,16 @@ proc ::Plotchart::DrawTimeMilestone { w text time {colour black}} {
    set x3 [expr {$x1+0.4*($y1-$y2)}]
    set y3 $y2
 
-   $w create polygon $x1 $y1 $x2 $y2 $x3 $y3 -fill $colour \
-       -tags [list $w vertscroll horizscroll below item_[expr {int($scaling($w,current))}]]
+   lappend items [$w create polygon $x1 $y1 $x2 $y2 $x3 $y3 -fill $colour \
+                      -tags [list $w vertscroll horizscroll below item_[expr {int($scaling($w,current))}]]]
 
    ReorderChartItems $w
 
    set scaling($w,current) [expr {$scaling($w,current)-1.0}]
 
    RescaleChart $w
+
+   return $items
 }
 
 # DrawAdditionalMilestone --
@@ -2791,14 +2829,16 @@ proc ::Plotchart::DrawAdditionalMilestone { w time {colour black}} {
    set x3 [expr {$x1+0.4*($y1-$y2)}]
    set y3 $y2
 
-   $w create polygon $x1 $y1 $x2 $y2 $x3 $y3 -fill $colour \
-       -tags [list $w vertscroll horizscroll below item_[expr {int($scaling($w,current))}]]
+   set items [$w create polygon $x1 $y1 $x2 $y2 $x3 $y3 -fill $colour \
+                  -tags [list $w vertscroll horizscroll below item_[expr {int($scaling($w,current))}]]]
 
    ReorderChartItems $w
 
    set scaling($w,current) [expr {$scaling($w,current)-1.0}]
 
    RescaleChart $w
+
+   return $items
 }
 
 # ScaleItems --
@@ -3875,8 +3915,11 @@ proc ::Plotchart::DrawWindRoseData { w data colour } {
     foreach value $data cumulative_radius $data_series($w,cumulative_radius) {
         set radius [expr {$value + $cumulative_radius}]
 
-        foreach {xright ytop}    [polarToPixel $w [expr {$radius*sqrt(2.0)}]  45.0] {break}
-        foreach {xleft  ybottom} [polarToPixel $w [expr {$radius*sqrt(2.0)}] 225.0] {break}
+        foreach {xright ytop}    [PolarToPixelPriv $w [expr {$radius*sqrt(2.0)}]  45.0] {break}
+        foreach {xleft  ybottom} [PolarToPixelPriv $w [expr {$radius*sqrt(2.0)}] 225.0] {break}
+
+        puts "$value -- $xright -- $ytop -- $xleft -- $ybottom - $colour"
+
 
         $w create arc $xleft $ytop $xright $ybottom -style pie -fill $colour \
             -tag [list $w data_$data_series($w,count_data)] -start $start_angle -extent $width_sector
@@ -4082,7 +4125,7 @@ proc ::Plotchart::DrawFunction { w series xargs function args } {
        if { [lindex $args end-1] != "-samples" } {
            return -code error "plotfunc: unknown option - [lindex $args end-1]"
        }
-       if { ! [string is integer [lindex $args end]] } {
+       if { ! [string is integer -strict [lindex $args end]] } {
            return -code error "plotfunc: number of samples must be an integer - is instead \"[lindex $args end]\""
        }
        set number [lindex $args end]
@@ -4563,4 +4606,169 @@ proc ::Plotchart::DeleteData {w} {
     }
 
     $w delete data
+}
+
+# DrawViolin --
+#     Draw a violin plot based on the given set of values
+#
+# Arguments:
+#     w          Name of the canvas (actually the plot)
+#     series     Name of the data series to be used
+#     xcrd       X-coordinate or list of data
+#     ycrd       Y-coordinate or list of data
+#
+# Result:
+#     None
+# Side effects:
+#     A violin plot at the given x- or y-coordinate
+#
+proc ::Plotchart::DrawViolin {w series xcrd ycrd} {
+    variable data_series
+    variable scaling
+
+    #
+    # Check orientation
+    #
+    set type "?"
+    if { [llength $xcrd] > 1 && [llength $ycrd] == 1 } {
+        set type h
+    }
+    if { [llength $xcrd] == 1 && [llength $ycrd] > 1 } {
+        set type v
+    }
+    if { $type == "?" } {
+        return -code error "Use either a list of x values or a list of y values - not both"
+    }
+
+    if { $type == "h" } {
+        set data [lsort -real -increasing $xcrd]
+    } else {
+        set data [lsort -real -increasing $ycrd]
+    }
+    set length [llength $data]
+
+    set extraRange 0.05
+    set maxExtent  25
+    if { [info exists data_series($w,$series,-violinwidth)] } {
+        set maxExtent $data_series($w,$series,-violinwidth)
+    }
+
+    set outlineColour black
+    if { [info exists data_series($w,$series,-colour)] } {
+        set outlineColour $data_series($w,$series,-colour)
+    }
+
+    set fillColour {}
+    if { [info exists data_series($w,$series,-fillcolour)] } {
+        set fillColour $data_series($w,$series,-fillcolour)
+    }
+
+    set numberClasses [expr {min( 10, max( 3, [llength $data]/2) )}]
+
+    #
+    # Determine the extremes - increase the range by a small margin
+    #
+    set minv [lindex $data 0]
+    set maxv [lindex $data end]
+
+    set range [expr {$maxv - $minv}]
+
+    if { $range == 0.0 } {
+        if { $type eq "h" } {
+            lassign [coordsToPixel $w $minv $ycrd] px py
+        } else {
+            lassign [coordsToPixel $w $xcrd $minv] px py
+        }
+        $w create oval [expr {$px-$maxExtent}] [expr {$py-$maxExtent}] [expr {$px+$maxExtent}] [expr {$py+$maxExtent}]
+        return
+    } else {
+        set minv [expr {$minv - $extraRange * $range}]
+        set maxv [expr {$maxv + $extraRange * $range}]
+    }
+
+    set dv [expr {($maxv - $minv) / $numberClasses}]
+
+    #
+    # Determine the distribution
+    #
+    set classCount [lrepeat $numberClasses [expr {0}]]
+
+    foreach value $data {
+        set class [expr {int( ($value-$minv) / $dv)}]
+        lset classCount $class [expr {[lindex $classCount $class] + 1}]
+    }
+
+    set ccoordB [list 0]
+    set vcoordB [list 0]
+    set ccoordE [list]
+    set vcoordE [list]
+
+    set vi       0
+    set maxCount 0
+    foreach class $classCount {
+        if { $maxCount < $class } {
+            set maxCount $class
+        }
+
+        incr vi
+        lappend ccoordB $class
+        lappend vcoordB $vi
+
+        set ccoordE [concat [expr {-$class}] $ccoordE]
+        set vcoordE [concat $vi              $vcoordE]
+    }
+
+    set ccoordB [concat $ccoordB 0              $ccoordE 0]
+    set vcoordB [concat $vcoordB $numberClasses $vcoordE 0]
+
+    set scaleV [expr {$maxExtent / double($maxCount)}]
+
+    set xyCoords [list]
+
+    foreach cc $ccoordB vc $vcoordB {
+        if { $type eq "h" } {
+            set xc [expr {$minv + $vc * $dv}]
+            lassign [coordsToPixel $w $xc $ycrd] px py
+            set py [expr {$py + $scaleV * $cc}]
+        } else {
+            set yc [expr {$minv + $vc * $dv}]
+            lassign [coordsToPixel $w $xcrd $yc] px py
+            set px [expr {$px + $scaleV * $cc}]
+        }
+        lappend xyCoords $px $py
+    }
+
+    $w create polygon $xyCoords -smooth 1 -fill $fillColour -outline $outlineColour
+}
+
+# DrawViolinData --
+#    Draw the data in a boxplot as a violin
+#    where either the x-axis or the y-axis consists of labels
+# Arguments:
+#    w           Name of the canvas
+#    series      Data series
+#    label       Label on the x- or y-axis to put the box on
+#    values      List of values to plot the violin for
+# Result:
+#    None
+# Side effects:
+#    New data drawn in canvas
+#
+proc ::Plotchart::DrawViolinData { w series label values } {
+    variable config
+    variable scaling
+    variable settings
+
+    set index [lsearch $config($w,axisnames) $label]
+    if { $index == -1 } {
+        return "Label $label not found on axis"
+    }
+
+    set coord [expr {$index + 1}]
+
+    if { $settings($w,orientation) eq "vertical" } {
+        DrawViolin $w $series $coord $values
+    } else {
+        DrawViolin $w $series $values $coord
+    }
 }

@@ -1,5 +1,6 @@
+[vset VERSION 0.3.2]
 [comment {-*- tcl -*- doctools manpage}]
-[manpage_begin ipentry n 0.3]
+[manpage_begin ipentry n [vset VERSION]]
 [keywords entry]
 [keywords {ip address}]
 [keywords network]
@@ -8,7 +9,7 @@
 [category Widget]
 [require Tcl 8.4]
 [require Tk 8.4]
-[require ipentry [opt 0.3]]
+[require ipentry [opt [vset VERSION]]]
 [description]
 
 This package provides a widget for the entering of a IP address.

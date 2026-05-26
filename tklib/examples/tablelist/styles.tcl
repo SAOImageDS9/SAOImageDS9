@@ -1,31 +1,24 @@
-#!/usr/bin/env wish
+#! /usr/bin/env tclsh
 
 #==============================================================================
 # Demonstrates some ways of improving the look & feel of a tablelist widget.
 #
-# Copyright (c) 2002-2019  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 2002-2023  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
-package require tablelist 6.8
+package require Tk
+package require tablelist
 
 wm title . "Tablelist Styles"
 
 #
-# Get the current windowing system ("x11", "win32", "classic",
-# or "aqua") and add some entries to the Tk option database
+# Add some entries to the Tk option database
 #
-if {[catch {tk windowingsystem} winSys] != 0} {
-    switch $::tcl_platform(platform) {
-	unix      { set winSys x11 }
-	windows   { set winSys win32 }
-	macintosh { set winSys classic }
-    }
-}
-if {[string compare $winSys "x11"] == 0} {
+if {[tk windowingsystem] eq "x11"} {
     #
     # Create the font TkDefaultFont if not yet present
     #
-    catch {font create TkDefaultFont -family Helvetica -size -12}
+    catch {font create TkDefaultFont -family Helvetica -size 9}
 
     option add *Font			TkDefaultFont
     option add *selectBackground	#5294e2
@@ -87,16 +80,16 @@ for {set n 0} { $n < 8} {incr n} {
 }
 
 button .close -text "Close" -command exit
-frame .bottom -height 10
 
 #
 # Manage the widgets
 #
-grid .f.tbl0 .f.tbl1 -sticky news -padx 5 -pady 5
-grid .f.tbl2 .f.tbl3 -sticky news -padx 5 -pady 5
-grid .f.tbl4 .f.tbl5 -sticky news -padx 5 -pady 5
-grid .f.tbl6 .f.tbl7 -sticky news -padx 5 -pady 5
+set pad {7p 0}
+grid .f.tbl0 .f.tbl1 -sticky news -padx $pad -pady $pad
+grid .f.tbl2 .f.tbl3 -sticky news -padx $pad -pady $pad
+grid .f.tbl4 .f.tbl5 -sticky news -padx $pad -pady $pad
+grid .f.tbl6 .f.tbl7 -sticky news -padx $pad -pady $pad
 grid rowconfigure    .f {0 1 2 3} -weight 1
 grid columnconfigure .f {0 1}     -weight 1
-pack .bottom .close -side bottom
-pack .f -side top -expand yes -fill both -padx 5 -pady 5
+pack .close -side bottom -pady 7p
+pack .f -side top -expand yes -fill both -padx {0 7p}

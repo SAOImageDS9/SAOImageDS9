@@ -2,32 +2,31 @@
 # Demonstrates how to use a tablelist widget for displaying information about
 # children of an arbitrary widget.
 #
-# Copyright (c) 2000-2019  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 2000-2024  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
-package require tablelist_tile 6.8
+package require tablelist_tile
 
 namespace eval demo {
     variable dir [file dirname [info script]]
 
     #
-    # Create two images, needed in the procedure putChildren
+    # Create two images corresponding to the display's DPI scaling level
     #
-    variable leafImg [image create bitmap -file [file join $dir leaf.xbm] \
-		      -background coral -foreground gray50]
-    variable compImg [image create bitmap -file [file join $dir comp.xbm] \
-		      -background yellow -foreground gray50]
+    variable compImg [image create photo]
+    variable leafImg [image create photo]
+    if {$::tk_version >= 8.7 || [catch {package require tksvg}] == 0} {
+	variable fmt $::tablelist::svgfmt
+	$compImg read [file join $dir comp.svg] -format $fmt
+	$leafImg read [file join $dir leaf.svg] -format $fmt
+    } else {
+	variable pct $::tablelist::scalingpct
+	$compImg read [file join $dir comp$pct.gif] -format gif
+	$leafImg read [file join $dir leaf$pct.gif] -format gif
+    }
 }
 
 source [file join $demo::dir config_tile.tcl]
-
-#
-# Work around the improper appearance of the tile scrollbars in the aqua theme
-#
-if {[tablelist::getCurrentTheme] eq "aqua" &&
-    [package vcompare $::tk_patchLevel "8.6.10"] < 0} {
-    interp alias {} ttk::scrollbar {} ::scrollbar
-}
 
 #------------------------------------------------------------------------------
 # demo::displayChildren
@@ -105,6 +104,11 @@ proc demo::displayChildren w {
 		      -command [list demo::putChildrenOfSelWidget $tbl]
     $menu add command -label "Display Config" \
 		      -command [list demo::dispConfigOfSelWidget $tbl]
+    variable isAwTheme
+    if {$isAwTheme} {
+	variable currentTheme
+	ttk::theme::${currentTheme}::setMenuColors $menu
+    }
     set bodyTag [$tbl bodytag]
     bind $bodyTag <Double-1>   [list demo::putChildrenOfSelWidget $tbl]
     bind $bodyTag <<Button3>>  [bind TablelistBody <Button-1>]
@@ -135,7 +139,7 @@ proc demo::displayChildren w {
     }
     grid rowconfigure    $tf 1 -weight 1
     grid columnconfigure $tf 0 -weight 1
-    pack $b1 $b2 $b3 -side left -expand yes -pady 10
+    pack $b1 $b2 $b3 -side left -expand yes -pady 7p
     pack $bf -side bottom -fill x
     pack $tf -side top -expand yes -fill both
 
@@ -163,7 +167,7 @@ proc demo::putChildren {w tbl} {
 		    -message "Bad window path name \"$w\" -- replacing\
 			      it with nearest existent ancestor" \
 		    -type okcancel -default ok -parent [winfo toplevel $tbl]]
-	if {[string compare $choice "ok"] == 0} {
+	if {$choice eq "ok"} {
 	    while {![winfo exists $w]} {
 		set last [string last "." $w]
 		if {$last != 0} {
@@ -199,7 +203,7 @@ proc demo::putChildren {w tbl} {
 	$tbl insert end $item
 
 	#
-	# Insert an image into the first cell of the row
+	# Embed an image into the first cell of the row
 	#
 	if {[llength [winfo children $c]] == 0} {
 	    $tbl cellconfigure end,0 -image $leafImg
@@ -214,7 +218,7 @@ proc demo::putChildren {w tbl} {
     $top.bf.b1 configure -command [list demo::putChildren $w $tbl]
     set b2 $top.bf.b2
     set p [winfo parent $w]
-    if {[string compare $p ""] == 0} {
+    if {$p eq ""} {
 	$b2 configure -state disabled
     } else {
 	$b2 configure -state normal -command [list demo::putChildren $p $tbl]
@@ -252,7 +256,7 @@ proc demo::updateItemsDelayed tbl {
     # Schedule the demo::updateItems command for execution
     # 500 ms later, but only if it is not yet pending
     #
-    if {[string compare [$tbl attrib afterId] ""] == 0} {
+    if {[$tbl attrib afterId] eq ""} {
 	$tbl attrib afterId [after 500 [list demo::updateItems $tbl]]
     }
 }

@@ -1,7 +1,7 @@
 #==============================================================================
 # Contains the implementation of multi-entry widgets for date and time.
 #
-# Copyright (c) 1999-2019  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 1999-2023  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
 #
@@ -31,43 +31,112 @@ namespace eval mentry {
     bind MentryMeridian <Prior>	{ mentry::setMeridian %W "P" }
     bind MentryMeridian <Next>	{ mentry::setMeridian %W "A" }
     variable winSys
-    catch {
-	if {[string compare $winSys "classic"] == 0 ||
-	    [string compare $winSys "aqua"] == 0} {
+    variable uniformWheelSupport
+    if {$uniformWheelSupport} {
+	bind MentryDateTime <MouseWheel> {
+	    mentry::incrDateTimeComp %W \
+		[expr {%D > 0 ? (%D + 119) / 120 : %D / 120}]
+	}
+	bind MentryDateTime <Option-MouseWheel> {
+	    mentry::incrDateTimeComp %W \
+		[expr {%D > 0 ? (%D + 11) / 12 : %D / 12}]
+	}
+	bind MentryDateTime <Shift-MouseWheel> {
+	    # Ignore the event
+	}
+
+	bind MentryMeridian <MouseWheel> {
+	    mentry::setMeridian %W [expr {%D < 0 ? "A" : "P"}]
+	}
+	bind MentryMeridian <Shift-MouseWheel> {
+	    # Ignore the event
+	}
+    } elseif {$winSys eq "aqua"} {
+	catch {
 	    bind MentryDateTime <MouseWheel> {
 		mentry::incrDateTimeComp %W %D
 	    }
 	    bind MentryDateTime <Option-MouseWheel> {
 		mentry::incrDateTimeComp %W [expr {10 * %D}]
 	    }
-	} else {
-	    bind MentryDateTime <MouseWheel> {
-		mentry::incrDateTimeComp %W [expr {%D / 120}]
+	    bind MentryDateTime <Shift-MouseWheel> {
+		# Ignore the event
+	    }
+
+	    bind MentryMeridian <MouseWheel> {
+		mentry::setMeridian %W [expr {%D < 0 ? "A" : "P"}]
+	    }
+	    bind MentryMeridian <Shift-MouseWheel> {
+		# Ignore the event
 	    }
 	}
-	bind MentryMeridian <MouseWheel> {
-	    mentry::setMeridian %W [expr {(%D < 0) ? "A" : "P"}]
+    } else {
+	catch {
+	    bind MentryDateTime <MouseWheel> {
+		mentry::incrDateTimeComp %W \
+		    [expr {%D > 0 ? (%D + 119) / 120 : %D / 120}]
+	    }
+	    bind MentryDateTime <Shift-MouseWheel> {
+		# Ignore the event
+	    }
+
+	    bind MentryMeridian <MouseWheel> {
+		mentry::setMeridian %W [expr {%D < 0 ? "A" : "P"}]
+	    }
+	    bind MentryMeridian <Shift-MouseWheel> {
+		# Ignore the event
+	    }
+	}
+
+	if {$winSys eq "x11"} {
+	    bind MentryDateTime <Button-4> {
+		if {!$tk_strictMotif} {
+		    mentry::incrDateTimeComp %W 1
+		}
+	    }
+	    bind MentryDateTime <Button-5> {
+		if {!$tk_strictMotif} {
+		    mentry::incrDateTimeComp %W -1
+		}
+	    }
+	    bind MentryDateTime <Shift-Button-4> {
+		# Ignore the event
+	    }
+	    bind MentryDateTime <Shift-Button-5> {
+		# Ignore the event
+	    }
+
+	    bind MentryMeridian <Button-4> {
+		if {!$tk_strictMotif} {
+		    mentry::setMeridian %W "P"
+		}
+	    }
+	    bind MentryMeridian <Button-5> {
+		if {!$tk_strictMotif} {
+		    mentry::setMeridian %W "A"
+		}
+	    }
+	    bind MentryMeridian <Shift-Button-4> {
+		# Ignore the event
+	    }
+	    bind MentryMeridian <Shift-Button-5> {
+		# Ignore the event
+	    }
 	}
     }
-    if {[string compare $winSys "x11"] == 0} {
-	bind MentryDateTime <Button-4> {
-	    if {!$tk_strictMotif} {
-		mentry::incrDateTimeComp %W 1
+    variable touchpadScrollSupport
+    if {$touchpadScrollSupport} {
+	bind MentryDateTime <TouchpadScroll> {
+	    lassign [tk::PreciseScrollDeltas %D] mentry::dX mentry::dY
+	    if {$mentry::dY != 0 && [expr {%# %% 12}] == 0} {
+		mentry::incrDateTimeComp %W [expr {$mentry::dY > 0 ? -1 : 1}]
 	    }
 	}
-	bind MentryDateTime <Button-5> {
-	    if {!$tk_strictMotif} {
-		mentry::incrDateTimeComp %W -1
-	    }
-	}
-	bind MentryMeridian <Button-4> {
-	    if {!$tk_strictMotif} {
-		mentry::setMeridian %W "P"
-	    }
-	}
-	bind MentryMeridian <Button-5> {
-	    if {!$tk_strictMotif} {
-		mentry::setMeridian %W "A"
+
+	bind MentryMeridian <TouchpadScroll> {
+	    lassign [tk::PreciseScrollDeltas %D] mentry::dX mentry::dY
+	    if {$mentry::dY != 0 && [expr {%# %% 12}] == 0} {
+		mentry::setMeridian %W [expr {$mentry::dY > 0 ? "A" : "P"}]
 	    }
 	}
     }
@@ -107,9 +176,8 @@ proc mentry::dateMentry {win fmt sep args} {
     for {set n 0} {$n < 3} {incr n} {
 	set lfields($n) [string tolower $fields($n)]
     }
-    if {[string compare $lfields(0) $lfields(1)] == 0 ||
-	[string compare $lfields(0) $lfields(2)] == 0 ||
-	[string compare $lfields(1) $lfields(2)] == 0} {
+    if {$lfields(0) eq $lfields(1) || $lfields(0) eq $lfields(2) ||
+	$lfields(1) eq $lfields(2)} {
 	return -code error \
 	       "bad format \"$fmt\": must have unique components for the\
 		day, month, and year"
@@ -131,10 +199,10 @@ proc mentry::dateMentry {win fmt sep args} {
     #
     variable dateTimeMaxs
     for {set n 0} {$n < 3} {incr n} {
-	::$win adjustentry $n "0123456789"
 	set w [::$win entrypath $n]
 	wcb::cbappend $w before insert \
 		      "wcb::checkEntryForUInt $dateTimeMaxs($fields($n))"
+	::$win adjustentry $n "0123456789"
 	bindtags $w [linsert [bindtags $w] 1 MentryDateTime]
     }
 
@@ -175,7 +243,7 @@ proc mentry::timeMentry {win fmt sep args} {
     if {$len == 3} {
 	lappend body $sep 2
     }
-    if {[string compare $fields(0) "I"] == 0} {
+    if {$fields(0) eq "I"} {
 	lappend body " " 1 M
     }
     ::$win configure -body $body
@@ -188,10 +256,10 @@ proc mentry::timeMentry {win fmt sep args} {
     #
     variable dateTimeMaxs
     for {set n 0} {$n < $len} {incr n} {
-	::$win adjustentry $n "0123456789"
 	set w [::$win entrypath $n]
 	wcb::cbappend $w before insert \
 		      "wcb::checkEntryForUInt $dateTimeMaxs($fields($n))"
+	::$win adjustentry $n "0123456789"
 	bindtags $w [linsert [bindtags $w] 1 MentryDateTime]
     }
 
@@ -202,11 +270,11 @@ proc mentry::timeMentry {win fmt sep args} {
     # MentryMeridian in the list of binding tags of the entry, just
     # after its path name, and make the entry right-justified
     #
-    if {[string compare $fields(0) "I"] == 0} {
-	::$win adjustentry $len "AP"
+    if {$fields(0) eq "I"} {
 	set w [::$win entrypath $len]
 	wcb::cbappend $w before insert \
 		      wcb::convStrToUpper {wcb::checkStrForRegExp {^[AP]$}}
+	::$win adjustentry $len "AP"
 	bindtags $w [linsert [bindtags $w] 1 MentryMeridian]
 	$w configure -justify right
     }
@@ -249,9 +317,8 @@ proc mentry::dateTimeMentry {win fmt dateSep timeSep args} {
     for {set n 0} {$n < 3} {incr n} {
 	set lfields($n) [string tolower $fields($n)]
     }
-    if {[string compare $lfields(0) $lfields(1)] == 0 ||
-	[string compare $lfields(0) $lfields(2)] == 0 ||
-	[string compare $lfields(1) $lfields(2)] == 0} {
+    if {$lfields(0) eq $lfields(1) || $lfields(0) eq $lfields(2) ||
+	$lfields(1) eq $lfields(2)} {
 	return -code error \
 	       "bad format \"$fmt\": must have unique components for the\
 		day, month, and year"
@@ -270,7 +337,7 @@ proc mentry::dateTimeMentry {win fmt dateSep timeSep args} {
     if {$len == 6} {
 	lappend body $timeSep 2
     }
-    if {[string compare $fields(3) "I"] == 0} {
+    if {$fields(3) eq "I"} {
 	lappend body " " 1 M
     }
     ::$win configure -body $body
@@ -283,10 +350,10 @@ proc mentry::dateTimeMentry {win fmt dateSep timeSep args} {
     #
     variable dateTimeMaxs
     for {set n 0} {$n < $len} {incr n} {
-	::$win adjustentry $n "0123456789"
 	set w [::$win entrypath $n]
 	wcb::cbappend $w before insert \
 		      "wcb::checkEntryForUInt $dateTimeMaxs($fields($n))"
+	::$win adjustentry $n "0123456789"
 	bindtags $w [linsert [bindtags $w] 1 MentryDateTime]
     }
 
@@ -297,11 +364,11 @@ proc mentry::dateTimeMentry {win fmt dateSep timeSep args} {
     # MentryMeridian in the list of binding tags of the entry, just
     # after its path name, and make the entry right-justified
     #
-    if {[string compare $fields(3) "I"] == 0} {
-	::$win adjustentry $len "AP"
+    if {$fields(3) eq "I"} {
 	set w [::$win entrypath $len]
 	wcb::cbappend $w before insert \
 		      wcb::convStrToUpper {wcb::checkStrForRegExp {^[AP]$}}
+	::$win adjustentry $len "AP"
 	bindtags $w [linsert [bindtags $w] 1 MentryMeridian]
 	$w configure -justify right
     }
@@ -320,6 +387,7 @@ proc mentry::putClockVal {clockVal win args} {
     #
     # Check whether clockVal is an integer number
     #
+    ##nagelfar ignore
     if {[catch {format "%d" $clockVal} res] != 0} {
 	return -code error $res
     }
@@ -340,7 +408,7 @@ proc mentry::putClockVal {clockVal win args} {
     #
     set useGMT 0
     foreach {opt val} $args {
-	if {[string compare $opt "-gmt"] == 0} {
+	if {$opt eq "-gmt"} {
 	    #
 	    # Get the boolean value specified by val
 	    #
@@ -376,7 +444,7 @@ proc mentry::putClockVal {clockVal win args} {
     # the AM/PM indicator (if present), display the first
     # character of the corresponding time component
     #
-    if {[string compare [string index $fmt $idx] "I"] == 0} {
+    if {[string index $fmt $idx] eq "I"} {
 	if {[clock format $clockVal -format "%H"] < 12} {
 	    ::$win put $len A
 	} else {
@@ -414,15 +482,16 @@ proc mentry::getClockVal {win args} {
 	if {$count == 1} {
 	    mwutil::wrongNumArgs $usage
 	}
-	if {[string compare $opt "-base"] == 0} {
+	if {$opt eq "-base"} {
 	    #
 	    # Check whether val is an integer number
 	    #
+	    ##nagelfar ignore
 	    if {[catch {format "%d" $val} res] != 0} {
 		return -code error $res
 	    }
 	    set base $val
-	} elseif {[string compare $opt "-gmt"] == 0} {
+	} elseif {$opt eq "-gmt"} {
 	    #
 	    # Get the boolean value specified by val
 	    #
@@ -459,10 +528,8 @@ proc mentry::checkIfDateOrTimeMentry win {
     }
 
     set type [::$win attrib type]
-    if {[string compare [winfo class $win] "Mentry"] != 0 ||
-	[string compare $type "Date"] != 0 &&
-	[string compare $type "Time"] != 0 &&
-	[string compare $type "DateTime"] != 0} {
+    if {[winfo class $win] ne "Mentry" ||
+	$type ne "Date" && $type ne "Time" && $type ne "DateTime"} {
 	return -code error \
 	       "window \"$win\" is not a mentry widget\
 	        for date or time, or date & time"
@@ -487,10 +554,11 @@ proc mentry::getClockValFromDateMentry {win base useGMT} {
     for {set n 0} {$n < 3} {incr n} {
 	set w [::$win entrypath $n]
 	set str [$w get]
-	if {[string length $str] == 0} {
+	if {$str eq ""} {
 	    focus $w
 	    return -code error EMPTY
 	}
+	##nagelfar ignore
 	scan $str "%d" vals($n)
 	set field [string index $fmt $n]
 	if {$vals($n) < $dateTimeMins($field)} {
@@ -561,11 +629,11 @@ proc mentry::getClockValFromTimeMentry {win base useGMT} {
     #
     set fmt [::$win attrib format]
     set len [string length $fmt]
-    set meridianFlag [expr {[string compare [string index $fmt 0] "I"] == 0}]
+    set meridianFlag [expr {[string index $fmt 0] eq "I"}]
     for {set n 0} {$n < $len} {incr n} {
 	set w [::$win entrypath $n]
 	set str [$w get]
-	if {[string length $str] == 0} {
+	if {$str eq ""} {
 	    if {$n == 2} {
 		set str 00
 		::$win put $n 00
@@ -575,6 +643,7 @@ proc mentry::getClockValFromTimeMentry {win base useGMT} {
 	    }
 	}
 	if {$n == 0 && $meridianFlag} {
+	    ##nagelfar ignore
 	    scan $str "%d" val
 	    if {$val < 1} {
 		tabToEntry $w
@@ -594,7 +663,7 @@ proc mentry::getClockValFromTimeMentry {win base useGMT} {
     if {$meridianFlag} {
 	set w [::$win entrypath $len]
 	set str [$w get]
-	if {[string length $str] == 0} {
+	if {$str eq ""} {
 	    focus $w
 	    return -code error EMPTY
 	}
@@ -641,10 +710,11 @@ proc mentry::getClockValFromDateTimeMentry {win base useGMT} {
     for {set n 0} {$n < 3} {incr n} {
 	set w [::$win entrypath $n]
 	set str [$w get]
-	if {[string length $str] == 0} {
+	if {$str eq ""} {
 	    focus $w
 	    return -code error EMPTY
 	}
+	##nagelfar ignore
 	scan $str "%d" vals($n)
 	set field [string index $fmt $n]
 	if {$vals($n) < $dateTimeMins($field)} {
@@ -693,11 +763,11 @@ proc mentry::getClockValFromDateTimeMentry {win base useGMT} {
     # or the value of the hour in 12-hour format is zero
     #
     set len [string length $fmt]
-    set meridianFlag [expr {[string compare [string index $fmt 3] "I"] == 0}]
+    set meridianFlag [expr {[string index $fmt 3] eq "I"}]
     for {set n 3} {$n < $len} {incr n} {
 	set w [::$win entrypath $n]
 	set str [$w get]
-	if {[string length $str] == 0} {
+	if {$str eq ""} {
 	    if {$n == 5} {
 		set str 00
 		::$win put $n 00
@@ -707,6 +777,7 @@ proc mentry::getClockValFromDateTimeMentry {win base useGMT} {
 	    }
 	}
 	if {$n == 3 && $meridianFlag} {
+	    ##nagelfar ignore
 	    scan $str "%d" val
 	    if {$val < 1} {
 		tabToEntry $w
@@ -726,7 +797,7 @@ proc mentry::getClockValFromDateTimeMentry {win base useGMT} {
     if {$meridianFlag} {
 	set w [::$win entrypath $len]
 	set str [$w get]
-	if {[string length $str] == 0} {
+	if {$str eq ""} {
 	    focus $w
 	    return -code error EMPTY
 	}
@@ -778,7 +849,7 @@ proc mentry::incrDateTimeComp {w amount} {
     set field [string index [::$win attrib format] $n]
 
     set str [$w get]
-    if {[string length $str] == 0} {
+    if {$str eq ""} {
 	#
 	# Insert the entry's min. value
 	#
@@ -790,6 +861,7 @@ proc mentry::incrDateTimeComp {w amount} {
 	#
 	# Increment the entry's value by the given amount if allowed
 	#
+	##nagelfar ignore
 	scan $str "%d" val
 	if {$amount > 0} {
 	    variable dateTimeMaxs
@@ -829,7 +901,7 @@ proc mentry::incrDateTimeComp {w amount} {
 # value.
 #------------------------------------------------------------------------------
 proc mentry::setMeridian {w str} {
-    if {[string length [$w get]] == 0} {
+    if {[$w get] eq ""} {
 	#
 	# Insert an "A"
 	#

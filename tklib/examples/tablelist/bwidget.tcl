@@ -1,15 +1,15 @@
-#!/usr/bin/env wish
+#! /usr/bin/env tclsh
 
 #==============================================================================
 # Demonstrates the interactive tablelist cell editing with the aid of some
 # widgets from the BWidget package and of the Tk core checkbutton and
 # menubutton widgets.
 #
-# Copyright (c) 2004-2019  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 2004-2024  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
-package require Tk 8.4				;# because of "-compound"
-package require tablelist 6.8
+package require Tk
+package require tablelist
 package require BWidget
 
 wm title . "Serial Line Configuration"
@@ -22,17 +22,17 @@ source [file join $dir option.tcl]
 option add *Tablelist*Entry.background white
 
 #
+# Create the images "checkedImg" and "uncheckedImg", as well as 16 images of
+# names like "img#FF0000", displaying colors identified by names like "red"
+#
+source [file join $dir images.tcl]
+
+#
 # Register some widgets from the BWidget package for interactive cell editing
 #
 tablelist::addBWidgetEntry
 tablelist::addBWidgetSpinBox
 tablelist::addBWidgetComboBox
-
-#
-# Create the images "checkedImg" and "uncheckedImg", as well as 16 images of
-# names like "img#FF0000", displaying colors identified by names like "red"
-#
-source [file join $dir images.tcl]
 
 #
 # Create a tablelist widget with editable columns (except the first one)
@@ -51,15 +51,15 @@ tablelist::tablelist $tbl \
 	      0 "Activation Time" center
 	      0 "Cable Color"	  center} \
     -editstartcommand editStartCmd -editendcommand editEndCmd \
-    -height 0 -width 0
+    -aftercopycommand afterCopyCmd -height 0 -width 0
 if {[$tbl cget -selectborderwidth] == 0} {
     $tbl configure -spacing 1
 }
 $tbl columnconfigure 0 -sortmode integer
 $tbl columnconfigure 1 -name available -editable yes -editwindow checkbutton \
-    -formatcommand emptyStr
+    -formatcommand emptyStr -labelwindow checkbutton
 $tbl columnconfigure 2 -name lineName  -editable yes -editwindow Entry \
-    -sortmode dictionary
+    -allowduplicates 0 -sortmode dictionary
 $tbl columnconfigure 3 -name baudRate  -editable yes -editwindow ComboBox \
     -sortmode integer
 $tbl columnconfigure 4 -name dataBits  -editable yes -editwindow SpinBox
@@ -78,25 +78,17 @@ proc formatDate val { return [clock format $val -format "%Y-%m-%d"] }
 proc formatTime val { return [clock format $val -format "%H:%M:%S"] }
 
 #
-# Populate the tablelist widget; set the activation
-# date & time to 10 minutes past the current clock value
+# Populate the tablelist widget and configure the checkbutton
+# embedded into the header label of the column "available"
 #
-set clock [expr {[clock seconds] + 600}]
-for {set i 0; set n 1} {$i < 16} {set i $n; incr n} {
-    $tbl insert end [list $n [expr {$i < 8}] "Line $n" 9600 8 None 1 XON/XOFF \
-	$clock $clock [lindex $colorNames $i]]
-
-    set availImg [expr {($i < 8) ? "checkedImg" : "uncheckedImg"}]
-    $tbl cellconfigure end,available -image $availImg
-    $tbl cellconfigure end,color -image img[lindex $colorValues $i]
-}
+source [file join $dir serialParams.tcl]
 
 set btn [button .btn -text "Close" -command exit]
 
 #
 # Manage the widgets
 #
-pack $btn -side bottom -pady 10
+pack $btn -side bottom -pady 7p
 pack $tbl -side top -expand yes -fill both
 
 #------------------------------------------------------------------------------
@@ -202,10 +194,12 @@ proc editEndCmd {tbl row col text} {
     switch [$tbl columncget $col -name] {
 	available {
 	    #
-	    # Update the image contained in the cell
+	    # Update the image contained in the cell and the checkbutton
+	    # embedded into the header label of the column "available"
 	    #
 	    set img [expr {$text ? "checkedImg" : "uncheckedImg"}]
 	    $tbl cellconfigure $row,$col -image $img
+	    after idle [list updateCkbtn $tbl $row $col]
 	}
 
 	baudRate {
@@ -222,7 +216,7 @@ proc editEndCmd {tbl row col text} {
 
 	actDate {
 	    #
-	    # Get the activation date in seconds from the last argument 
+	    # Get the activation date in seconds from the last argument
 	    #
 	    if {[catch {clock scan $text} actDate] != 0} {
 		bell
@@ -251,7 +245,7 @@ proc editEndCmd {tbl row col text} {
 
 	actTime {
 	    #
-	    # Get the activation clock value in seconds from the last argument 
+	    # Get the activation clock value in seconds from the last argument
 	    #
 	    set actDate [$tbl cellcget $row,actDate -text]
 	    if {[catch {clock scan $text -base $actDate} actClock] != 0} {

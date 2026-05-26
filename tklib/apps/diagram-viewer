@@ -1,4 +1,4 @@
-#!/usr/bin/env tclsh
+#! /usr/bin/env tclsh
 ## -*- tcl -*-
 
 # @@ Meta Begin
@@ -21,6 +21,7 @@
 # @@ Meta End
 
 # # ## ### ##### ######## ############# #####################
+package require Tk
 package require diagram::application
 if {[catch {
     diagram::application $argv

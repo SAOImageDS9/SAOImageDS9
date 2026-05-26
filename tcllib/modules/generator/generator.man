@@ -1,4 +1,5 @@
-[manpage_begin generator n 0.1]
+[vset VERSION 0.3]
+[manpage_begin generator n [vset VERSION]]
 [keywords {control structure}]
 [keywords coroutine]
 [keywords filter]
@@ -12,8 +13,8 @@
 [keywords scanl]
 [moddesc    {Tcl Generator Commands}]
 [titledesc  {Procedures for creating and using generators.}]
-[require Tcl 8.6]
-[require generator [opt 0.1]]
+[require Tcl "8.6 9"]
+[require generator [opt [vset VERSION]]]
 [description]
 [para]
 

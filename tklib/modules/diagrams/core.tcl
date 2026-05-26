@@ -18,7 +18,7 @@
 # # ## ### ##### ######## ############# ######################
 ## Requisites
 
-package require Tcl 8.5              ; # Want the nice things it
+package require Tcl 8.5-              ; # Want the nice things it
                                        # brings (dicts, {*}, etc.)
 package require snit                 ; # Object framework.
 package require diagram::direction   ; # Database of named directions
@@ -203,7 +203,7 @@ snit::type ::diagram::core {
 	$att new with                                                       default [mymethod Placement]
 	$att new at   type diagram::point transform [mymethod DerefElement] default [mymethod Placement]
 	$att new from type diagram::point transform [mymethod DerefElement] default [mymethod Waypoints]
-	$att new to   type diagram::point transform [mymethod DerefElement] default [mymethod Waypoints]	    
+	$att new to   type diagram::point transform [mymethod DerefElement] default [mymethod Waypoints]
 	$att new then type diagram::point transform [mymethod DerefElement] default [mymethod Waypoints] \
 	    get [mymethod GetPoints] aggregate 1
 
@@ -435,7 +435,7 @@ snit::type ::diagram::core {
 	# args = attributes.
 
 	# attrcmd :: attr-dict -> attr-dict
-	# drawcmd :: canvas -> attr-dict -> 
+	# drawcmd :: canvas -> attr-dict ->
 	#            (attr-dict canvas-item-list corner-dict ?placement-mode ?layout-direction??)
 
 	set newdirection {}

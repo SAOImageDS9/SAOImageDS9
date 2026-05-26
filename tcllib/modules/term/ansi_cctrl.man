@@ -1,5 +1,6 @@
+[vset VERSION 0.3]
 [comment {-*- tcl -*- doctools manpage}]
-[manpage_begin term::ansi::code::ctrl n 0.2]
+[manpage_begin term::ansi::code::ctrl n [vset VERSION]]
 [keywords ansi]
 [keywords {attribute control}]
 [keywords {color control}]
@@ -9,9 +10,9 @@
 [moddesc   {Terminal control}]
 [titledesc {ANSI control sequences}]
 [category  {Terminal control}]
-[require Tcl 8.4]
+[require Tcl "8.5 9"]
 [require term::ansi::code       [opt 0.2]]
-[require term::ansi::code::ctrl [opt 0.2]]
+[require term::ansi::code::ctrl [opt [vset VERSION]]]
 [description]
 
 This package provides symbolic names for the ANSI control

@@ -3,7 +3,7 @@
 # (C) 2009 Andreas Kupries
 
 # @@ Meta Begin
-# Package tcl::chan::events 1
+# Package tcl::chan::events 1.1
 # Meta as::author {Andreas Kupries}
 # Meta as::copyright 2009
 # Meta as::license BSD
@@ -26,8 +26,10 @@
 
 # # ## ### ##### ######## #############
 
-package require Tcl 8.5
-package require TclOO
+package require Tcl 8.5 9
+if {[catch {package require tcl::oo}]} {
+	package require TclOO
+}
 package require tcl::chan::core
 
 # # ## ### ##### ######## #############
@@ -150,5 +152,5 @@ oo::class create ::tcl::chan::events {
 }
 
 # # ## ### #####
-package provide tcl::chan::events 1
+package provide tcl::chan::events 1.1
 return

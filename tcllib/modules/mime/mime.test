@@ -4,7 +4,7 @@
 # built-in commands.  Sourcing this file into Tcl runs the tests and
 # generates output for errors.  No output means no errors were found.
 #
-# Copyright (c) 2000 by Ajuba Solutions
+# Copyright (c) 2000 by Ajuba Solutions, 2023 AK
 # All rights reserved.
 
 # -------------------------------------------------------------------------
@@ -14,7 +14,7 @@ source [file join \
 	devtools testutilities.tcl]
 
 testsNeedTcl     8.5
-testsNeedTcltest 1.0
+testsNeedTcltest 2.0
 
 support {
     # This code loads md5x, i.e. md5 v2. Proper testing should do one
@@ -256,7 +256,7 @@ test mime-4.3 {mime::decode data that might come from an MUA} {
 } "I'm the \" message with some new lines but with some extra space, too."
 
 test mime-4.4 {Test qp_encode with non-US_ASCCI characters.} {
-    set str1 "Test de caractères accentués : â î é ç et quelques contrôles \"\[|\]()\""
+    set str1 "Test de caractÃ¨res accentuÃ©s : Ã¢ Ã® Ã© Ã§ et quelques contrÃ´les \"\[|\]()\""
     mime::qp_encode $str1
 } "Test de caract=E8res accentu=E9s : =E2 =EE =E9 =E7 et quelques contr=F4le=\ns =22=5B=7C=5D()=22"
 
@@ -267,31 +267,66 @@ test mime-4.5 {Test qp_encode with softbreak} {
 } "abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabca=
 bcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabc"
 
+
 test mime-4.6 {Test qp_encode with softbreak} {
     set str1 [string repeat abc 40]
     mime::qp_encode $str1 0 1
 } [string repeat abc 40]
 
 
+test mime-4.7 {Test qp_encode/decode in encoded_word mode} {
+    set enc [mime::qp_encode "jack and jill went up the hill" 1]
+    mime::qp_decode $enc 1
+} "jack and jill went up the hill"
+
+
+test mime-4.8 {Test qp_encode in encoded_word mode with equal signs} {
+    mime::qp_encode "1and1=2" 1
+} "1and1=3D2"
+
+test mime-4.9 {Test qp_encode in encoded_word mode with tabs and spaces} {
+    mime::qp_encode "1 and 1 =\t2" 1
+} "1_and_1_=3D=092"
+
+
+test mime-4.10 {Test qp_encode in encoded_word mode with underscores} {
+    mime::qp_encode "2003_06_30" 1
+} "2003=5F06=5F30"
+
+
+test mime-4.11 {Test qp_encode in encoded_word mode with underscores and spaces} {
+    mime::qp_encode "2003_06_30 is 30 June 2003" 1
+} "2003=5F06=5F30_is_30_June_2003"
+
+
+test mime-4.12 {Test qp_encode in encoded_word mode with question marks} {
+    mime::qp_encode "How long is a piece of string ?" 1
+} "How_long_is_a_piece_of_string_=3F"
+
+
+test mime-4.13 {Test qp_encode in no_softbreak mode} {
+    mime::qp_encode "This is a very long string into which we do not want inserted softbreaks as we want one very long line returned even though that's probably not how we whould be doing it (see RFC2047) but we don't want to break backward compatibility" 0 1
+} "This is a very long string into which we do not want inserted softbreaks as we want one very long line returned even though that's probably not how we whould be doing it (see RFC2047) but we don't want to break backward compatibility"
+
 
 
 test mime-5.1 {Test word_encode with quoted-printable method} {
-    mime::word_encode iso8859-1 quoted-printable "Test de contrôle effectué"
+    mime::word_encode iso8859-1 quoted-printable "Test de contrÃ´le effectuÃ©"
 } "=?ISO-8859-1?Q?Test_de_contr=F4le_effectu=E9?="
 
 test mime-5.2 {Test word_encode with base64 method} {
-    mime::word_encode iso8859-1 base64 "Test de contrôle effectué"
+    mime::word_encode iso8859-1 base64 "Test de contrÃ´le effectuÃ©"
 } "=?ISO-8859-1?B?VGVzdCBkZSBjb250cvRsZSBlZmZlY3R16Q==?="
 
 test mime-5.3 {Test encode+decode with quoted-printable method} {
-    set enc [mime::word_encode iso8859-1 quoted-printable "Test de contrôle effectué"]
+    set enc [mime::word_encode iso8859-1 quoted-printable "Test de contrÃ´le effectuÃ©"]
     mime::word_decode $enc
-} {iso8859-1 quoted-printable {Test de contrôle effectué}}
+} {iso8859-1 quoted-printable {Test de contrÃ´le effectuÃ©}}
 
 test mime-5.4 {Test encode+decode with base64 method} {
-    set enc [mime::word_encode iso8859-1 base64 "Test de contrôle effectué"]
+    set enc [mime::word_encode iso8859-1 base64 "Test de contrÃ´le effectuÃ©"]
     mime::word_decode $enc
-} {iso8859-1 base64 {Test de contrôle effectué}}
+} {iso8859-1 base64 {Test de contrÃ´le effectuÃ©}}
 
 test mime-5.5 {Test decode with lowercase quoted-printable method} {
 	mime::word_decode "=?ISO-8859-1?q?Test_lowercase_q?="
@@ -302,13 +337,13 @@ test mime-5.6 {Test decode with lowercase base64 method} {
 } {iso8859-1 base64 {Test lowercase b}}
 
 test mime-5.7 {Test word_encode with quoted-printable method across encoded word boundaries} {
-    mime::word_encode iso8859-1 quoted-printable "Test de contrôle effectué" -maxlength 31
+    mime::word_encode iso8859-1 quoted-printable "Test de contrÃ´le effectuÃ©" -maxlength 31
 } "=?ISO-8859-1?Q?Test_de_contr?=
  =?ISO-8859-1?Q?=F4le_effectu?=
  =?ISO-8859-1?Q?=E9?="
 
 test mime-5.8 {Test word_encode with quoted-printable method across encoded word boundaries} {
-    mime::word_encode iso8859-1 quoted-printable "Test de contrôle effectué" -maxlength 32
+    mime::word_encode iso8859-1 quoted-printable "Test de contrÃ´le effectuÃ©" -maxlength 32
 } "=?ISO-8859-1?Q?Test_de_contr?=
  =?ISO-8859-1?Q?=F4le_effectu?=
  =?ISO-8859-1?Q?=E9?="
@@ -407,9 +442,9 @@ test mime-5.41 {Test word_encode with maxlength to short for method quoted-print
 } "maxlength 17 too short for chosen charset and encoding"
 
 test mime-5.42 {Test word_encode with maxlength on the limit for quoted_printable and an unquoted character} {
-   catch {mime::word_encode iso8859-1 quoted-printable "_" -maxlength 18} errmsg
+   catch {mime::word_encode iso8859-1 quoted-printable "_" -maxlength 20} errmsg
    set errmsg
-} "=?ISO-8859-1?Q?_?="
+} "=?ISO-8859-1?Q?=5F?="
 
 test mime-5.43 {Test word_encode with maxlength to short for method quoted_printable and a character to be quoted} {
    catch {mime::word_encode iso8859-1 quoted-printable "=" -maxlength 18} errmsg
@@ -433,7 +468,7 @@ test mime-6.1 {Test field_decode (from RFC 2047, part 8)} {
 
 test mime-6.2 {Test field_decode (from RFC 2047, part 8)} {
     mime::field_decode {=?ISO-8859-1?Q?Patrik_F=E4ltstr=F6m?= <paf@nada.kth.se>}
-} {Patrik Fältström <paf@nada.kth.se>}
+} {Patrik FÃ¤ltstrÃ¶m <paf@nada.kth.se>}
 
 test mime-6.3 {Test field_decode (from RFC 2047, part 8)} {
     mime::field_decode {=?ISO-8859-1?B?SWYgeW91IGNhbiByZWFkIHRoaXMgeW8=?=
@@ -469,7 +504,7 @@ foreach {n encoded expected} {
 }
 
 foreach {bug n encoded expected} {
-    764702 1 "(=?utf-8?Q?H=C3=BCrz?=)" "(Hürz)"
+    764702 1 "(=?utf-8?Q?H=C3=BCrz?=)" "(HÃ¼rz)"
 } {
     test mime-7.$n "Test field_decode (from SF Tcllib bug $bug)" {
 	mime::field_decode $encoded
@@ -518,7 +553,7 @@ foreach {n stamp date} {
     5  68248620 {Thu, 28 Feb 2002 21:57:00 +0000}
     6 126218520 {Wed, 31 Dec 2003 20:42:00 +0000}
 } {
-    test mime-10.$n "Test formatting dates (RFC 822)" {
+    test mime-10.$n "Test formatting dates (RFC 822), $date" {
         # To verify that clock scan gets the expected value.
         set stamp_test [expr {[mime::parsedatetime $date clock] - $epoch}]
         # Parse and re-format should get us the original.
@@ -600,12 +635,42 @@ b3RlLU1UQTogNTMuMjQuMjgyLjE1MA==
 
 # -------------------------------------------------------------------------
 
-test mime-12.1 {Fossil ticket 57909d2e1c} -cleanup {
-    mime::finalize $token
-    unset -nocomplain token
+test mime-13.0 {
+    issue a16b1095974e071d
+} {
+    set msg "MIME-Version: 1.0
+Content-Type: text/plain\r
+\r
+so plain
+"
+
+    set tok [mime::initialize -string $msg]
+	mime::getbody $tok
+} "so plain\n"
+
+# -------------------------------------------------------------------------
+
+test mime-14.0 {ticket 5f455d6343} -setup {
+    set part  [mime::initialize \
+		   -canonical application/x-simile \
+		   -header [list "Content-Description" "Run Status"] \
+		   -encoding base64 -string "This is a test"]
+    set whole [mime::initialize -canonical multipart/mixed -parts [list $part]]
+
+    set saved checkmime.msg
+    set stm [open $saved w]
+    mime::copymessage $whole $stm
+    close $stm
+
 } -body {
-    set token [::mime::initialize -file [asset mail-57909d2e1c.txt]]
-} -result {::mime::*} -match glob
+    set stm [open $saved r]
+    set str [read $stm]
+    close $stm
+    set restore [mime::initialize -string $str]
+} -cleanup {
+    mime::finalize $restore
+    unset part whole saved stm str
+} -match glob -result "::mime::*"
 
 # -------------------------------------------------------------------------
 

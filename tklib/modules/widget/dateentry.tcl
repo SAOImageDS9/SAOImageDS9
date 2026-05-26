@@ -16,8 +16,6 @@
 #
 # See the example at the bottom.
 #
-# RCS: @(#) $Id: dateentry.tcl,v 1.7 2011/12/13 21:28:00 haertel Exp $
-#
 
 # Creation and Options - widget::dateentry $path ...
 #  -command        -default {}
@@ -117,11 +115,11 @@ snit::widgetadaptor widget::dateentry {
     delegate option * to hull
     delegate method * to hull
 
-    option -command -default {}
-    option -dateformat -default "%m/%d/%Y" -configuremethod C-passtocalendar
-    option -font -default {Helvetica 9} -configuremethod C-passtocalendar
-    option -textvariable -default {}
-    option -language -default en -configuremethod C-passtocalendar
+    option -command      -default {}
+    option -dateformat   -default "%m/%d/%Y"    -configuremethod C-passtocalendar
+    option -font         -default {Helvetica 9} -configuremethod C-passtocalendar
+    option -textvariable -default {}            -configuremethod C-textvariable
+    option -language     -default en            -configuremethod C-passtocalendar
 
     delegate option -highlightcolor to calendar
     delegate option -shadecolor     to calendar
@@ -131,10 +129,9 @@ snit::widgetadaptor widget::dateentry {
     component dropbox
     component calendar
 
-    variable waitVar
-    variable formattedDate
-    variable rawDate
-    variable startOnMonday 1
+    variable formattedDate	;# Chosen date, formatted, linked to calendar, shown in entry
+    variable rawDate		;# Same, as seconds.
+    variable startOnMonday 1	;# !! Unused
 
     constructor args {
 	::widget::createdateentryLayout
@@ -144,25 +141,35 @@ snit::widgetadaptor widget::dateentry {
 	bindtags $win [linsert [bindtags $win] 1 TDateEntry]
 
 	$self MakeCalendar
-
 	$self configurelist $args
 
-	set now [clock seconds]
-	set x [clock format $now -format "%d/%m%/%Y"]
-	set rawDate [clock scan "$x 00:00:00" -format "%d/%m%/%Y %H:%M:%S"]
+	# Initialize entry to current date, midnight
+	set rawDate       [expr {([clock seconds] / 86400) * 86400}]
 	set formattedDate [clock format $rawDate -format $options(-dateformat)]
 
-	$hull configure -state normal
-	$hull delete 0 end
-	$hull insert end $formattedDate
-	$hull configure -state readonly
+	$self UpdateEntry
     }
 
+    destructor {
+	# Drop link to outer textvariable
+	$self configure -textvariable {}
+    }
+    
     method C-passtocalendar {option value} {
 	set options($option) $value
 	$calendar configure $option $value
     }
 
+    method C-textvariable {option value} {
+	if {$options(-textvariable) ne {}} {
+	    trace remove variable $options(-textvariable) write [mymethod DateSet]
+	}
+	set options($option) $value
+	if {$options(-textvariable) ne {}} {
+	    trace add variable $options(-textvariable) write [mymethod DateSet]
+	}	
+    }
+    
     method MakeCalendar {args} {
 	set dropbox $win.__drop
 	destroy $dropbox
@@ -190,24 +197,37 @@ snit::widgetadaptor widget::dateentry {
 
 	set calendar $dropbox.calendar
 	widget::calendar $calendar \
-	    -textvariable [myvar formattedDate] \
-	    -dateformat $options(-dateformat) \
-	    -font $options(-font) \
-	    -language $options(-language)\
-	    -borderwidth 1 -relief solid \
-            -enablecmdonkey 0 -command [mymethod DateChosen]
+	    -textvariable   [myvar formattedDate] \
+	    -dateformat     $options(-dateformat) \
+	    -font           $options(-font) \
+	    -language       $options(-language)\
+	    -borderwidth    1 \
+	    -relief         solid \
+            -enablecmdonkey 0 \
+	    -command        [mymethod DateChosen]
 
 	bind $calendar <Map> [list focus -force $calendar]
-
 	pack $calendar -expand 1 -fill both
 
 	return $dropbox
     }
 
+    method set {date} {
+	# Run the incoming value through scan to ensure that it has the proper format.
+	set rawDate       [clock scan   $date     -format $options(-dateformat)]
+	set formattedDate [clock format $rawDate  -format $options(-dateformat)]
+	$self UpdateEntry
+	return
+    }
+    
     method post { args } {
+	# TODO TCL 8.5+: `"disabled" in [$self state]`
+	if {[lsearch -exact [$self state] "disabled"] >= 0} {
+	    return
+	}
+	
 	# XXX should we reset date on each display?
 	if {![winfo exists $dropbox]} { $self MakeCalendar }
-	set waitVar 0
 
 	foreach {x y} [$self PostPosition] { break }
 	wm geometry $dropbox "+$x+$y"
@@ -217,19 +237,16 @@ snit::widgetadaptor widget::dateentry {
 	if {[tk windowingsystem] ne "aqua"} {
 	    tkwait visibility $dropbox
 	}
+
 	focus -force $calendar
 	return
-
-	tkwait variable [myvar waitVar]
-
-	$self unpost
     }
 
     method unpost {args} {
-	if {[winfo exists $dropbox]} {
-	    wm withdraw $dropbox
-	    grab release $dropbox ; # just in case
-	}
+	if {![winfo exists $dropbox]} return
+	wm withdraw  $dropbox
+	grab release $dropbox ; # just in case
+	return
     }
 
     method PostPosition {} {
@@ -272,21 +289,44 @@ snit::widgetadaptor widget::dateentry {
     #
     ##
     method DateChosen { args } {
-	upvar 0 $options(-textvariable) date
+	$self UpdateEntry
 
-        set waitVar 1
-	set date $formattedDate
+	# synch raw date - Ensures that chosen format is held to
 	set rawDate [clock scan $formattedDate -format $options(-dateformat)]
-	if { $options(-command) ne "" } {
-	    uplevel \#0 $options(-command) $formattedDate $rawDate
-	}
-        $self unpost
+	
+	# Export to linked variable
+	upvar 0  $options(-textvariable) date
+	set date $formattedDate
 
+	# Export via callback
+	$self CallCommand
+
+        $self unpost
+	return
+    }
+
+    # Handle changes to the contents of the linked -textvariable
+    method DateSet {n1 n2 op} {
+	upvar #0 $options(-textvariable) date
+	# ignore non-changes
+	if {$date eq $formattedDate} return
+	# pass into the system
+	$self set $date
+	return
+    }
+    
+    method CallCommand {} {
+	if {![llength $options(-command)]} return
+	uplevel \#0 $options(-command) [list $formattedDate] $rawDate
+    }
+    
+    method UpdateEntry {} {
 	$hull configure -state normal
 	$hull delete 0 end
 	$hull insert end $formattedDate
 	$hull configure -state readonly
-    }
+	return
+    }    
 }
 
 # Bindings for menu portion.
@@ -308,7 +348,7 @@ bind TDateEntry <ButtonRelease-1> { %W state !pressed }
 bind TDateEntryPopdown <Map> { ttk::globalGrab %W }
 bind TDateEntryPopdown <Unmap> { ttk::releaseGrab %W }
 
-package provide widget::dateentry 0.96
+package provide widget::dateentry 0.98
 
 ##############
 # TEST CODE ##

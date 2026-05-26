@@ -12,7 +12,7 @@ source [file join \
 	[file dirname [file dirname [file join [pwd] [info script]]]] \
 	devtools testutilities.tcl]
 
-testsNeedTcl     8.3
+testsNeedTcl     8.5
 testsNeedTcltest 1.0
 
 testing {
@@ -37,59 +37,6 @@ test profiler-1.0 {profiler::init redirects the proc command} {
     }
 } [list ::profiler::profProc ::_oldProc]
 
-test profiler-2.0 {profiler creates two wrapper proc and real proc} tcl8.3only {
-    do {
-	proc foo {} {
-	    puts "foo!"
-	}
-	list [info commands foo] [info commands fooORIG]
-    }
-} [list foo fooORIG]
-
-test profiler-2.1 {profiler creates procs in correct scope} tcl8.3only {
-    do {
-	namespace eval foo {}
-	proc ::foo::foo {} {
-	    puts "foo!"
-	}
-	list [info commands ::foo::foo] [info commands ::foo::fooORIG]
-    }
-} [list ::foo::foo ::foo::fooORIG]
-
-test profiler-2.2 {profiler creates procs in correct scope} {tcl8.3only} {
-    do {
-	namespace eval foo {
-	    proc foo {} {
-		puts "foo!"
-	    }
-	}
-	list [info commands ::foo::foo] [info commands ::foo::fooORIG]
-    }
-} [list ::foo::foo ::foo::fooORIG]
-
-test profiler-2.3 {profiler creates procs in correct scope} {tcl8.3only} {
-    do {
-	namespace eval foo {
-	    namespace eval bar {}
-	    proc bar::foo {} {
-		puts "foo!"
-	    }
-	}
-	list [info commands ::foo::bar::foo] [info commands ::foo::bar::fooORIG]
-    }
-} [list ::foo::bar::foo ::foo::bar::fooORIG]
-
-test profiler-2.4 {profiler creates procs in correct scope} {tcl8.3only} {
-    do {
-	namespace eval foo {
-	    proc ::foo {} {
-		puts "foo!"
-	    }
-	}
-	list [info commands ::foo] [info commands ::fooORIG]
-    }
-} [list ::foo ::fooORIG]
-
 test profiler-3.1 {profiler wrappers do profiling} {
     array set bar [do {
 	proc ::foo {} {
@@ -110,8 +57,8 @@ test profiler-3.1 {profiler wrappers do profiling} {
 test profiler::leaveHandler::initialize_descendent_time {} {
     # Verify that the profiler tracks descendent time correctly.  We'll make
     # a simple call tree, foo -> bar, then invoke foo, then check the profiler
-    # stats to see that _some_ descendent time has been logged for the call 
-    # to bar.  We won't be able to predict exactly how much time will get 
+    # stats to see that _some_ descendent time has been logged for the call
+    # to bar.  We won't be able to predict exactly how much time will get
     # billed there, but it should be non-zero.
 
     array set stats [lindex [do {
@@ -200,7 +147,7 @@ test profiler-5.2 {profiler respects new-disabled/enabled} {
 	proc ::foo {} {
 	    set foobar 0
 	}
-	#---	
+	#---
 	foo
 	bar
 	profiler::resume
@@ -237,19 +184,6 @@ test profiler-7.1 {sortFunctions} {
     }
 } "unknown statistic \"\": should be calls, compileTime, exclusiveRuntime,\
 nonCompileTime, totalRuntime, avgExclusiveRuntime, or avgRuntime"
-
-test profiler-7.2 {sortFunctions} tcl8.4only {
-    do {
-	proc ::foo {} {
-	    set foobar 0
-	}
-	proc ::bar {} {
-	    set foobar 1
-	}
-	foo; foo; bar;
-	profiler::sortFunctions calls
-    }
-} [list [list ::bar 1] [list ::foo 2]]
 
 test profiler-7.2-85 {sortFunctions} tcl8.5only {
     do {
@@ -392,6 +326,26 @@ test profiler-10.0-tkt-0dd4b31bb8 {result of leave handler} {
 	set trace
     }] \n
 } [viewFile [asset tkt-0dd4b31bb8]]
+
+
+test profiler-11.0-tkt-3603260fff {reset descendants} {
+    do {
+	proc profile_a {} {
+	    for {set f 0} {$f<100} {incr f} {
+		profile_b
+	    }
+	}
+	proc profile_b {} {
+	    for {set f 0} {$f<100000} {incr f} {}
+	}
+
+	profile_a
+	profiler::reset
+	profile_a
+
+	expr {$profiler::totalRuntime(::profile_a) < $profiler::descendantTime(::profile_a)}
+    }
+} 0
 
 # -------------------------------------------------------------------------
 rename do {}

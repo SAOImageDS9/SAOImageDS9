@@ -1,0 +1,243 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>chatwidget - Composite widget for chat applications</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'chatwidget.man' by tcllib/doctools with format 'html'
+   -->
+<!-- chatwidget.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">chatwidget(n) 1.1.4 tklib &quot;Composite widget for chat applications&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>chatwidget - Provides a multi-paned view suitable for display of chat room or irc channel information</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">COMMANDS</a></li>
+<li class="doctools_section"><a href="#section3">WIDGET COMMANDS</a></li>
+<li class="doctools_section"><a href="#section4">EXAMPLE</a></li>
+<li class="doctools_section"><a href="#section5">Bugs, Ideas, Feedback</a></li>
+<li class="doctools_section"><a href="#see-also">See Also</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_requirements">
+<li>package require <b class="pkgname">Tk 8.5</b></li>
+<li>package require <b class="pkgname">chatwidget <span class="opt">?1.1.4?</span></b></li>
+</ul>
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">::chatwidget::chatwidget</b> <i class="arg">path</i> <span class="opt">?<i class="arg">options</i>?</span></a></li>
+<li><a href="#2"><b class="cmd">$widget</b> topic <i class="arg">command</i> <i class="arg">args</i></a></li>
+<li><a href="#3"><b class="cmd">$widget</b> name <i class="arg">nick</i> <i class="arg">args</i></a></li>
+<li><a href="#4"><b class="cmd">$widget</b> message <i class="arg">text</i> <i class="arg">args</i></a></li>
+<li><a href="#5"><b class="cmd">$widget</b> hook <i class="arg">command</i> <i class="arg">args</i></a></li>
+<li><a href="#6"><b class="cmd">$widget</b> names <i class="arg">args</i></a></li>
+<li><a href="#7"><b class="cmd">$widget</b> entry <i class="arg">args</i></a></li>
+<li><a href="#8"><b class="cmd">$widget</b> chat <i class="arg">args</i></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>This is a composite widget designed to simplify the construction of
+chat applications. The widget contains display areas for chat
+messages, user names and topic and an entry area. It automatically
+handles colourization of messages per nick and manages nick
+completion. A system of hooks permit the application author to adjust
+display features. The main chat display area may be split for use
+displaying history or for searching.</p>
+<p>The widget is made up of a number of text widget and panedwindow
+widgets so that the size of each part of the display may be adjusted
+by the user. All the text widgets may be accessed via widget
+passthrough commands if fine adjustment is required. The topic and
+names sections can also be hidden if desired.</p>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">COMMANDS</a></h2>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">::chatwidget::chatwidget</b> <i class="arg">path</i> <span class="opt">?<i class="arg">options</i>?</span></a></dt>
+<dd><p>Create a new chatwidget using the Tk window id <i class="arg">path</i>. Any options
+provided are currently passed directly to the main chat text widget.</p></dd>
+</dl>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">WIDGET COMMANDS</a></h2>
+<dl class="doctools_definitions">
+<dt><a name="2"><b class="cmd">$widget</b> topic <i class="arg">command</i> <i class="arg">args</i></a></dt>
+<dd><p>The chat widget can display a topic string, for instance the topic or
+name given to a multi-user chatroom or irc channel.</p>
+<dl class="doctools_commands">
+<dt><b class="cmd">show</b></dt>
+<dd><p>Enable display of the topic.</p></dd>
+<dt><b class="cmd">hide</b></dt>
+<dd><p>Disable display of the topic</p></dd>
+<dt><b class="cmd">set <i class="arg">topic</i></b></dt>
+<dd><p>Set the topic text to <i class="arg">topic</i>.</p></dd>
+</dl></dd>
+<dt><a name="3"><b class="cmd">$widget</b> name <i class="arg">nick</i> <i class="arg">args</i></a></dt>
+<dd><p>Control the names and tags associated with names.</p>
+<dl class="doctools_commands">
+<dt><b class="cmd">list <span class="opt">?<i class="arg">-full</i>?</span></b></dt>
+<dd><p>Returns a list of all the user names from the names view. If <span class="opt">?-full?</span> is given then the list returned is a list of lists where each
+sublist is made up of the nick followed by any options that have been
+set on this nick entry. This may be used to examine any application
+specific options that may be applied to a nick when using the
+<b class="cmd">add</b> command.</p></dd>
+<dt><b class="cmd">add <i class="arg">nick</i> <span class="opt">?<i class="arg">options</i>?</span></b></dt>
+<dd></dd>
+<dt><b class="cmd">delete <i class="arg">nick</i></b></dt>
+<dd></dd>
+</dl></dd>
+<dt><a name="4"><b class="cmd">$widget</b> message <i class="arg">text</i> <i class="arg">args</i></a></dt>
+<dd><p>Add messages to the display. options are -nick, -time, -type, -mark
+-tags</p></dd>
+<dt><a name="5"><b class="cmd">$widget</b> hook <i class="arg">command</i> <i class="arg">args</i></a></dt>
+<dd><p>Manage hooks. add (message, post names_group, names_nick, chatstate), remove, run</p></dd>
+<dt><a name="6"><b class="cmd">$widget</b> names <i class="arg">args</i></a></dt>
+<dd><p>Passthrough to the name display text widget. See the <b class="cmd"><a href="../../../../index.html#text">text</a></b> widget manual
+for all available commands. The chatwidget provides two additional
+commands <b class="cmd">show</b> and <b class="cmd">hide</b> which are used to control the
+display of this element in the widget.</p></dd>
+<dt><a name="7"><b class="cmd">$widget</b> entry <i class="arg">args</i></a></dt>
+<dd><p>Passthrough to the entry text widget. See the <b class="cmd"><a href="../../../../index.html#text">text</a></b> widget manual
+for all available commands.</p></dd>
+<dt><a name="8"><b class="cmd">$widget</b> chat <i class="arg">args</i></a></dt>
+<dd><p>Passthrough to the chat text widget. See the <b class="cmd"><a href="../../../../index.html#text">text</a></b> widget manual for
+all available commands.</p></dd>
+</dl>
+</div>
+<div id="section4" class="doctools_section"><h2><a name="section4">EXAMPLE</a></h2>
+<pre class="doctools_example">
+chatwidget::chatwidget .chat
+proc speak {w msg} {$w message $msg -nick user}
+.chat hook add post [list speak .chat]
+pack .chat -side top -fill both -expand 1
+.chat topic show
+.chat topic set &quot;Chat widget demo&quot;
+.chat name add &quot;admin&quot; -group admin
+.chat name add &quot;user&quot; -group users -color tomato
+.chat message &quot;Chatwidget ready&quot; -type system
+.chat message &quot;Hello, user&quot; -nick admin
+.chat message &quot;Hello, admin&quot; -nick user
+</pre>
+<p>A more extensive example is available by examining the code for the picoirc
+program in the tclapps repository which ties the tcllib <b class="package">picoirc</b> package to this
+<b class="package">chatwidget</b> package to create a simple irc client.</p>
+</div>
+<div id="section5" class="doctools_section"><h2><a name="section5">Bugs, Ideas, Feedback</a></h2>
+<p>This document, and the package it describes, will undoubtedly contain
+bugs and other problems.
+Please report such in the category <em>chatwidget</em> of the
+<a href="http://core.tcl.tk/tklib/reportlist">Tklib Trackers</a>.
+Please also report any ideas for enhancements you may have for either
+package and/or documentation.</p>
+</div>
+<div id="see-also" class="doctools_section"><h2><a name="see-also">See Also</a></h2>
+<p>text(n)</p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../../../index.html#chat">chat</a>, <a href="../../../../index.html#chatwidget">chatwidget</a>, <a href="../../../../index.html#composite_widget">composite widget</a>, <a href="../../../../index.html#irc">irc</a>, <a href="../../../../index.html#mega_widget">mega-widget</a>, <a href="../../../../index.html#widget">widget</a></p>
+</div>
+</div></body></html>

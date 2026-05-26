@@ -1,7 +1,7 @@
 #==============================================================================
 # Contains the implementation of the tablelist move and movecolumn subcommands.
 #
-# Copyright (c) 2003-2019  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 2003-2023  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
 #------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ proc tablelist::moveRow {win source target} {
 	set targetChildIdx end
     } else {
 	set targetKey [lindex $data(keyList) $target]
-	if {[string compare $data($targetKey-parent) $parentKey] != 0} {
+	if {$data($targetKey-parent) ne $parentKey} {
 	    return -code error \
 		   "cannot move item with index \"$source\" outside its parent"
 	}
@@ -86,8 +86,8 @@ proc tablelist::moveNode {win source targetParentKey targetChildIdx \
     set sourceItem [lindex $data(itemList) $source]
     set sourceKey [lindex $sourceItem end]
     set sourceParentKey $data($sourceKey-parent)
-    if {[string compare $targetParentKey $sourceParentKey] == 0 &&
-	$target == $source && $withDescendants} {
+    if {$targetParentKey eq $sourceParentKey && $target == $source &&
+	$withDescendants} {
 	return ""
     }
 
@@ -138,15 +138,9 @@ proc tablelist::moveNode {win source targetParentKey targetChildIdx \
     if {[string match "*\t*" $dispItem]} {
 	set dispItem [mapTabs $dispItem]
     }
-    variable canElide
     set col 0
     foreach text $dispItem colTags $data(colTagsList) \
 	    {pixels alignment} $data(colList) {
-	if {$data($col-hide) && !$canElide} {
-	    incr col
-	    continue
-	}
-
 	#
 	# Build the list of tags to be applied to the cell
 	#
@@ -209,8 +203,8 @@ proc tablelist::moveNode {win source targetParentKey targetChildIdx \
     #
     set depth [depth $win $targetParentKey]
     if {([info exists data($targetParentKey,$treeCol-indent)] && \
-	 [string compare $data($targetParentKey,$treeCol-indent) \
-	  tablelist_${treeStyle}_collapsedImg$depth] == 0) ||
+	 [string match "*collapsed*" \
+	  $data($targetParentKey,$treeCol-indent)]) ||
 	[info exists data($targetParentKey-elide)] ||
 	[info exists data($targetParentKey-hide)]} {
 	doRowConfig $target1 $win -elide 1
@@ -232,7 +226,7 @@ proc tablelist::moveNode {win source targetParentKey targetChildIdx \
 	if {$targetChildIdx >= $targetBuddyCount} {
 	    lappend data($targetParentKey-childList) $sourceKey
 	} else {
-	    if {[string compare $sourceParentKey $targetParentKey] == 0 &&
+	    if {$sourceParentKey eq $targetParentKey &&
 		$sourceChildIdx < $targetChildIdx} {
 		incr targetChildIdx -1
 	    }
@@ -249,12 +243,15 @@ proc tablelist::moveNode {win source targetParentKey targetChildIdx \
 	if {[llength $data($sourceParentKey-childList)] == 0 &&
 	    [info exists data($sourceParentKey,$treeCol-indent)]} {
 	    collapseSubCmd $win [list $sourceParentKey -partly]
-	    set data($sourceParentKey,$treeCol-indent) [strMap \
+	    set data($sourceParentKey,$treeCol-indent) [string map \
 		{"collapsed" "indented" "expanded" "indented"
 		 "Act" "" "Sel" ""} $data($sourceParentKey,$treeCol-indent)]
 	    if {[winfo exists $w.ind_$sourceParentKey,$treeCol]} {
-		$w.ind_$sourceParentKey,$treeCol configure -image \
-		    $data($sourceParentKey,$treeCol-indent)
+		set idx [string last "g" \
+			 $data($sourceParentKey,$treeCol-indent)]
+		set img [string range $data($sourceParentKey,$treeCol-indent) \
+			 0 $idx]
+		$w.ind_$sourceParentKey,$treeCol configure -image $img
 	    }
 	}
 
@@ -262,13 +259,16 @@ proc tablelist::moveNode {win source targetParentKey targetChildIdx \
 	# Mark the target parent item as expanded if it was just indented
 	#
 	if {[info exists data($targetParentKey,$treeCol-indent)] &&
-	    [string compare $data($targetParentKey,$treeCol-indent) \
-	     tablelist_${treeStyle}_indentedImg$depth] == 0} {
+	    $data($targetParentKey,$treeCol-indent) eq
+	    "tablelist_${treeStyle}_indentedImg$depth"} {
 	    set data($targetParentKey,$treeCol-indent) \
 		tablelist_${treeStyle}_expandedImg$depth
 	    if {[winfo exists $data(body).ind_$targetParentKey,$treeCol]} {
-		$data(body).ind_$targetParentKey,$treeCol configure -image \
-		    $data($targetParentKey,$treeCol-indent)
+		set idx [string last "g" \
+			 $data($targetParentKey,$treeCol-indent)]
+		set img [string range $data($targetParentKey,$treeCol-indent) \
+			 0 $idx]
+		$data(body).ind_$targetParentKey,$treeCol configure -image $img
 	    }
 	}
 
@@ -279,7 +279,7 @@ proc tablelist::moveNode {win source targetParentKey targetChildIdx \
 	    incr depth
 	    variable maxIndentDepths
 	    if {$depth > $maxIndentDepths($treeStyle)} {
-		createTreeImgs $treeStyle $depth
+		setTreeLabelWidths $treeStyle $depth
 		set maxIndentDepths($treeStyle) $depth
 	    }
 	    doCellConfig $target1 $treeCol $win -indent $base$depth
@@ -292,7 +292,7 @@ proc tablelist::moveNode {win source targetParentKey targetChildIdx \
     if {$data(hasListVar) &&
 	[uplevel #0 [list info exists $data(-listvariable)]]} {
 	upvar #0 $data(-listvariable) var
-	trace vdelete var wu $data(listVarTraceCmd)
+	trace remove variable var {write unset} $data(listVarTraceCmd)
 	set var [lreplace $var $source $source]
 	set pureSourceItem [lrange $sourceItem 0 $data(lastCol)]
 	if {$target == $data(itemCount)} {
@@ -300,7 +300,7 @@ proc tablelist::moveNode {win source targetParentKey targetChildIdx \
 	} else {
 	    set var [linsert $var $target1 $pureSourceItem]
 	}
-	trace variable var wu $data(listVarTraceCmd)
+	trace add variable var {write unset} $data(listVarTraceCmd)
     }
 
     #
@@ -363,7 +363,7 @@ proc tablelist::moveNode {win source targetParentKey targetChildIdx \
 		if {$descDepth > $maxIndentDepths($treeStyle)} {
 		    for {set d $descDepth} {$d > $maxIndentDepths($treeStyle)} \
 			{incr d -1} {
-			createTreeImgs $treeStyle $d
+			setTreeLabelWidths $treeStyle $d
 		    }
 		    set maxIndentDepths($treeStyle) $descDepth
 		}
@@ -459,7 +459,7 @@ proc tablelist::moveCol {win source target} {
     # Remove source from the list of stretchable columns
     # if it was explicitly specified as stretchable
     #
-    if {[string compare $data(-stretch) "all"] != 0} {
+    if {$data(-stretch) ne "all"} {
 	set sourceIsStretchable 0
 	set stretchableCols {}
 	foreach elem $data(-stretch) {
@@ -492,7 +492,8 @@ proc tablelist::moveCol {win source target} {
     # Remove the trace from the array element data(activeCol) because otherwise
     # the procedure moveColData won't work if the selection type is cell
     #
-    trace vdelete data(activeCol) w [list tablelist::activeTrace $win]
+    trace remove variable data(activeCol) write \
+	[list tablelist::activeTrace $win]
 
     #
     # Move the elements of data, attribs, and selStates corresponding
@@ -517,7 +518,7 @@ proc tablelist::moveCol {win source target} {
     # If the column given by source was explicitly specified as
     # stretchable then add target1 to the list of stretchable columns
     #
-    if {[string compare $data(-stretch) "all"] != 0 && $sourceIsStretchable} {
+    if {$data(-stretch) ne "all" && $sourceIsStretchable} {
 	lappend data(-stretch) $target1
 	sortStretchableColList $win
     }
@@ -578,7 +579,7 @@ proc tablelist::moveCol {win source target} {
     # Restore the trace set on the array element data(activeCol)
     # and enforce the execution of the activeTrace command
     #
-    trace variable data(activeCol) w [list tablelist::activeTrace $win]
+    trace add variable data(activeCol) write [list tablelist::activeTrace $win]
     set data(activeCol) $data(activeCol)
 
     return ""

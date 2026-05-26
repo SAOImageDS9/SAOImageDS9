@@ -1,12 +1,13 @@
-#!/usr/bin/env wish
+#! /usr/bin/env tclsh
 
 #==============================================================================
 # Demonstrates the use of embedded windows in tablelist widgets.
 #
-# Copyright (c) 2004-2019  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 2004-2024  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
-package require tablelist 6.8
+package require Tk
+package require tablelist
 
 wm title . "Tk Library Scripts"
 
@@ -19,12 +20,19 @@ source [file join $dir option.tcl]
 #
 # Create the font TkFixedFont if not yet present
 #
-catch {font create TkFixedFont -family Courier -size -12}
+catch {font create TkFixedFont -family Courier -size 9}
 
 #
-# Create an image to be displayed in buttons embedded in a tablelist widget
+# Create an image corresponding to the display's DPI scaling
+# level, to be displayed in buttons embedded in a tablelist widget
 #
-image create photo openImg -file [file join $dir open.gif]
+if {$tk_version >= 8.7 || [catch {package require tksvg}] == 0} {
+    set fmt $tablelist::svgfmt
+    image create photo viewImg -file [file join $dir view.svg] -format $fmt
+} else {
+    set pct $tablelist::scalingpct
+    image create photo viewImg -file [file join $dir view$pct.gif] -format gif
+}
 
 #
 # Create a vertically scrolled tablelist widget with 5
@@ -45,7 +53,8 @@ if {[$tbl cget -selectborderwidth] == 0} {
     $tbl configure -spacing 1
 }
 $tbl columnconfigure 0 -name fileName
-$tbl columnconfigure 1 -formatcommand emptyStr -sortmode integer
+$tbl columnconfigure 1 -formatcommand emptyStr -sortmode integer \
+    -stretchwindow yes
 $tbl columnconfigure 2 -name fileSize -sortmode integer
 $tbl columnconfigure 4 -name seen
 scrollbar $vsb -orient vertical -command [list $tbl yview]
@@ -58,7 +67,7 @@ proc emptyStr val { return "" }
 set tblFont [$tbl cget -font]
 set size [font actual $tblFont -size]
 if {$size == 0} {					;# e.g., on Ubuntu
-    set size -12
+    set size 9
 }
 eval font create BoldFont [font actual $tblFont] -size $size -weight bold
 
@@ -68,6 +77,7 @@ eval font create BoldFont [font actual $tblFont] -size $size -weight bold
 cd $tk_library
 set totalSize 0
 set maxSize 0
+##nagelfar ignore
 foreach fileName [lsort [glob *.tcl]] {
     set fileSize [file size $fileName]
     $tbl insert end [list $fileName $fileSize $fileSize "" no]
@@ -94,7 +104,8 @@ proc createFrame {tbl row col w} {
     # Create the frame and replace the binding tag "Frame"
     # with "TablelistBody" in the list of its binding tags
     #
-    frame $w -width 102 -height 14 -background ivory -borderwidth 1 \
+    set height [expr {[font metrics $::tblFont -linespace] * 9 / 10}]
+    frame $w -width 72p -height $height -background ivory -borderwidth 1 \
 	     -relief solid
     bindtags $w [lreplace [bindtags $w] 1 1 TablelistBody]
 
@@ -102,14 +113,14 @@ proc createFrame {tbl row col w} {
     # Create the child frame and replace the binding tag "Frame"
     # with "TablelistBody" in the list of its binding tags
     #
-    frame $w.f -height 12 -background red -borderwidth 1 -relief raised
+    frame $w.f -background red -borderwidth 1 -relief raised
     bindtags $w.f [lreplace [bindtags $w] 1 1 TablelistBody]
 
     #
     # Manage the child frame
     #
     set fileSize [$tbl cellcget $row,fileSize -text]
-    place $w.f -relwidth [expr {double($fileSize) / $::maxSize}]
+    place $w.f -relheight 1.0 -relwidth [expr {double($fileSize) / $::maxSize}]
 }
 
 #------------------------------------------------------------------------------
@@ -120,7 +131,7 @@ proc createFrame {tbl row col w} {
 #------------------------------------------------------------------------------
 proc createButton {tbl row col w} {
     set key [$tbl getkeys $row]
-    button $w -image openImg -highlightthickness 0 -takefocus 0 \
+    button $w -image viewImg -highlightthickness 0 -takefocus 0 \
 	      -command [list viewFile $tbl $key]
 }
 
@@ -146,12 +157,12 @@ proc viewFile {tbl key} {
     # Create a vertically scrolled text widget as a grandchild of the toplevel
     #
     set tf $top.tf
-    frame $tf -class ScrollArea 
+    frame $tf -class ScrollArea
     set txt $tf.txt
     set vsb $tf.vsb
     text $txt -background white -font TkFixedFont -setgrid yes \
 	      -yscrollcommand [list $vsb set]
-    catch {$txt configure -tabstyle wordprocessor}	;# for Tk 8.5 and above
+    catch {$txt configure -tabstyle wordprocessor}
     scrollbar $vsb -orient vertical -command [list $txt yview]
 
     #
@@ -170,7 +181,7 @@ proc viewFile {tbl key} {
     grid $vsb -row 0 -column 1 -sticky ns
     grid rowconfigure    $tf 0 -weight 1
     grid columnconfigure $tf 0 -weight 1
-    pack $btn -side bottom -pady 10
+    pack $btn -side bottom -pady 7p
     pack $tf  -side top -expand yes -fill both
 
     #
@@ -185,11 +196,8 @@ proc viewFile {tbl key} {
 #
 # Create embedded windows in the columns no. 1 and 3
 #
-set rowCount [$tbl size]
-for {set row 0} {$row < $rowCount} {incr row} {
-    $tbl cellconfigure $row,1 -window createFrame -stretchwindow yes
-    $tbl cellconfigure $row,3 -window createButton
-}
+$tbl fillcolumn 1 -window createFrame
+$tbl fillcolumn 3 -window createButton
 
 set btn [button .btn -text "Close" -command exit]
 
@@ -197,7 +205,7 @@ set btn [button .btn -text "Close" -command exit]
 # Manage the widgets
 #
 grid $tbl -row 0 -rowspan 2 -column 0 -sticky news
-if {[string compare $winSys "win32"] == 0} {		;# see option.tcl
+if {[tk windowingsystem] eq "win32"} {
     grid $vsb -row 0 -rowspan 2 -column 1 -sticky ns
 } else {
     grid [$tbl cornerpath] -row 0 -column 1 -sticky ew
@@ -205,5 +213,5 @@ if {[string compare $winSys "win32"] == 0} {		;# see option.tcl
 }
 grid rowconfigure    $tf 1 -weight 1
 grid columnconfigure $tf 0 -weight 1
-pack $btn -side bottom -pady 10
+pack $btn -side bottom -pady 7p
 pack $tf  -side top -expand yes -fill both

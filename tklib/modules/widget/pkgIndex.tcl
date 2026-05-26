@@ -1,32 +1,15 @@
-# Tcl Package Index File 1.0
-if {![llength [info commands ::tcl::pkgindex]]} {
-    proc ::tcl::pkgindex {dir bundle bundlev packages} {
-	set allpkgs [list]
-	foreach {pkg ver file} $packages {
-	    lappend allpkgs [list package require $pkg $ver]
-	    package ifneeded $pkg $ver [list source [file join $dir $file]]
-	}
-	if {$bundle != ""} {
-	    lappend allpkgs [list package provide $bundle $bundlev]
-	    package ifneeded $bundle $bundlev [join $allpkgs \n]
-	}
-	return
-    }
-}
-if {![package vsatisfies [package provide Tcl] 8.4]} {return}
-::tcl::pkgindex $dir widget::all 1.2.4 {
-    widget			3.1	widget.tcl
-    widget::arrowbutton	        1.0	arrowb.tcl
-    widget::calendar		1.0.1	calendar.tcl
-    widget::dateentry		0.96	dateentry.tcl
-    widget::dialog		1.3.1	dialog.tcl
-    widget::menuentry		1.0.1	mentry.tcl
-    widget::panelframe		1.1	panelframe.tcl
-    widget::ruler		1.1	ruler.tcl
-    widget::screenruler		1.2	ruler.tcl
-    widget::scrolledtext	1.0	stext.tcl
-    widget::scrolledwindow	1.2.1	scrollw.tcl
-    widget::statusbar		1.2.1	statusbar.tcl
-    widget::superframe		1.0.1	superframe.tcl
-    widget::toolbar		1.2.1	toolbar.tcl
-}
+if {![package vsatisfies [package provide Tcl] 8.4-]} {return}
+package ifneeded widget                 3.2   [list source [file join $dir widget.tcl]]
+package ifneeded widget::arrowbutton    1.0   [list source [file join $dir arrowb.tcl]]
+package ifneeded widget::calendar       1.0.2 [list source [file join $dir calendar.tcl]]
+package ifneeded widget::dateentry      0.98  [list source [file join $dir dateentry.tcl]]
+package ifneeded widget::dialog         1.3.1 [list source [file join $dir dialog.tcl]]
+package ifneeded widget::menuentry      1.0.1 [list source [file join $dir mentry.tcl]]
+package ifneeded widget::panelframe     1.1   [list source [file join $dir panelframe.tcl]]
+package ifneeded widget::ruler          1.2   [list source [file join $dir ruler.tcl]]
+package ifneeded widget::screenruler    1.3   [list source [file join $dir ruler.tcl]]
+package ifneeded widget::scrolledtext   1.0   [list source [file join $dir stext.tcl]]
+package ifneeded widget::scrolledwindow 1.2.1 [list source [file join $dir scrollw.tcl]]
+package ifneeded widget::statusbar      1.2.1 [list source [file join $dir statusbar.tcl]]
+package ifneeded widget::superframe     1.0.1 [list source [file join $dir superframe.tcl]]
+package ifneeded widget::toolbar        1.2.1 [list source [file join $dir toolbar.tcl]]

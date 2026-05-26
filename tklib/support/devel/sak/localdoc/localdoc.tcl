@@ -26,25 +26,38 @@ proc ::sak::localdoc::run {} {
     package require doctools::idx 1
     package require dtplite
 
+    # Read installation information. Need the list of excluded
+    # modules to suppress them here in the doc generation as well.
+    global excluded modules apps guide distribution
+    set distribution [pwd]
+    source support/installation/modules.tcl
+
+    lappend baseconfig -module tklib
+    foreach e $excluded {
+	puts "Excluding $e ..."
+	lappend baseconfig -exclude */modules/$e/*
+    }
+
     set nav ../../../../home
 
     puts "Reindex the documentation..."
-    sak::doc::imake __dummy__
-    sak::doc::index __dummy__
+    sak::doc::imake __dummy__ $excluded
+    sak::doc::index __dummy__ $excluded
 
     puts "Removing old documentation..."
-    file delete -force embedded
-    file mkdir embedded/man
-    file mkdir embedded/www
+    # Keep the manually created pages around, not to be touched
+    # TODO: catch errors and restore automatically
+    file rename embedded/index.md e_index.md
+    file rename embedded/head.md  e_head.md
 
-    puts "Generating manpages..."
-    dtplite::do \
-	[list \
-	     -exclude {*/doctools/tests/*} \
-	     -exclude {*/support/*} \
-	     -ext n \
-	     -o embedded/man \
-	     nroff .]
+    file delete -force embedded
+    file mkdir         embedded/md
+
+    # Put the saved pages back into place, early.
+    file rename e_index.md embedded/index.md
+    file rename e_head.md  embedded/head.md
+
+    run-idoc-man $baseconfig
 
     # Note: Might be better to run them separately.
     # Note @: Or we shuffle the results a bit more in the post processing stage.
@@ -60,41 +73,68 @@ proc ::sak::localdoc::run {} {
     set mods [string map $map [fileutil::cat support/devel/sak/doc/toc_mods.txt]]
     set cats [string map $map [fileutil::cat support/devel/sak/doc/toc_cats.txt]]
 
-    puts "Generating HTML... Pass 1, draft..."
-    dtplite::do \
-	[list \
-	     -toc $toc \
-	     -nav {Tklib Home} $nav \
-	     -post+toc Categories $cats \
-	     -post+toc Modules $mods \
-	     -post+toc Applications $apps \
-	     -exclude {*/doctools/tests/*} \
-	     -exclude {*/support/*} \
-	     -merge \
-	     -o embedded/www \
-	     html .]
+    run-idoc-www $baseconfig $toc $nav $cats $mods $apps
 
-    puts "Generating HTML... Pass 2, resolving cross-references..."
-    dtplite::do \
-	[list \
-	     -toc $toc \
-	     -nav {Tklib Home} $nav \
-	     -post+toc Categories $cats \
-	     -post+toc Modules $mods \
-	     -post+toc Applications $apps \
-	     -exclude {*/doctools/tests/*} \
-	     -exclude {*/support/*} \
-	     -merge \
-	     -o embedded/www \
-	     html .]
+    set map  {
+	.man     .md
+	modules/ tklib/files/modules/
+	apps/    tklib/files/apps/
+    }
+
+    set toc  [string map $map [fileutil::cat support/devel/sak/doc/toc.txt]]
+    set apps [string map $map [fileutil::cat support/devel/sak/doc/toc_apps.txt]]
+    set mods [string map $map [fileutil::cat support/devel/sak/doc/toc_mods.txt]]
+    set cats [string map $map [fileutil::cat support/devel/sak/doc/toc_cats.txt]]
+
+    run-embedded $baseconfig $toc $cats $mods $apps
+    return
+}
+
+proc ::sak::localdoc::run-idoc-man {baseconfig} {
+    file delete -force idoc
+    file mkdir idoc/man
+    file mkdir idoc/www
+
+    puts "Generating manpages (installation)..."
+    set     config $baseconfig
+    lappend config -exclude {*/doctools/tests/*}
+    lappend config -exclude {*/support/*}
+    lappend config -ext n
+    lappend config -o idoc/man
+    lappend config nroff .
+
+    dtplite::do $config
+    return
+}
+
+proc ::sak::localdoc::run-idoc-www {baseconfig toc nav cats mods apps} {
+    puts "Generating HTML (installation)... Pass 1, draft..."
+    set     config $baseconfig
+    lappend config -exclude {*/doctools/tests/*}
+    lappend config -exclude {*/support/*}
+    lappend config -toc                   $toc
+    lappend config -nav {Tklib Home}      $nav
+    lappend config -post+toc Categories   $cats
+    lappend config -post+toc Modules      $mods
+    lappend config -post+toc Applications $apps
+    lappend config -merge
+    lappend config -o idoc/www
+    lappend config html .
+
+    dtplite::do $config
+
+    puts "Generating HTML (installation)... Pass 2, resolving cross-references..."
+    dtplite::do $config
 
     # Special docs, pre-made HTML. Integrate into the docs made above.
 
-    puts "Special HTML..."
+    puts "Special HTML (installation)..."
 
-    set base  embedded/www
+    set base  idoc/www
     set dst   [lindex [glob $base/*/files/modules] 0]
     set xbase [file dirname [file dirname $dst]]
+
+    puts \t@\t$xbase
     
     foreach special [glob -nocomplain modules/*/doc/index.html] {
 	set src  [file dirname $special]
@@ -111,6 +151,26 @@ proc ::sak::localdoc::run {} {
 	write $base/toc0.html [basetoc0 [cat $base/toc0.html] $mod $desc]
 	write $base/toc1.html [basetoc1 [cat $base/toc1.html] $mod $desc]
     }
+}
+
+proc ::sak::localdoc::run-embedded {baseconfig toc cats mods apps} {
+    puts "Generating Markdown (online)... Pass 1, draft..."
+    set     config $baseconfig
+    lappend config -exclude  {*/doctools/tests/*}
+    lappend config -exclude  {*/support/*}
+    lappend config -ext md ;# must be known before nav options
+    lappend config -toc                    $toc
+    lappend config -post+toc Categories    $cats
+    lappend config -post+toc Modules       $mods
+    lappend config -post+toc Applications  $apps
+    lappend config -merge
+    lappend config -o embedded/md
+    lappend config markdown .
+
+    dtplite::do $config
+
+    puts "Generating Markdown (online)... Pass 2, resolving cross-references..."
+    dtplite::do $config
     return
 }
 
@@ -121,13 +181,13 @@ proc sak::localdoc::xdesc {path} {
 }
 
 proc sak::localdoc::basetoc {toc mod mdesc} {
-    regexp {^(.*>Widget</dt><dd>\n<table class="#doctools_toc">)(.*)(</table></dl>\n</dl>\n<dl><dt><a name='by_type'>.*)$} $toc -> h t f
+    regexp {^(.*>Widget</dt><dd>\n<table class="doctools_toc">)(.*)(</table></dl>\n</dl>\n<dl><dt><a name='by_type'>.*)$} $toc -> h t f
     set tn [xtable $t $mod $mdesc tklib/]
     return $h\n$tn$f
 }
 
 proc sak::localdoc::basetoc0 {toc mod mdesc} {
-    regexp {^(.*>Widget</dt><dd>\n<table class="#doctools_toc">)(.*)(</table>.*)$} $toc -> h t f
+    regexp {^(.*>Widget</dt><dd>\n<table class="doctools_toc">)(.*)(</table>.*)$} $toc -> h t f
     set tn [xtable $t $mod $mdesc tklib/]
     return $h\n$tn$f
 }
@@ -139,7 +199,7 @@ proc sak::localdoc::basetoc1 {toc mod mdesc} {
 }
 
 proc sak::localdoc::xbasetoc {toc mod mdesc} {
-    regexp {^(.*<table class="#doctools_toc">)(.*)(</table>.*)$} $toc -> h t f
+    regexp {^(.*<table class="doctools_toc">)(.*)(</table>.*)$} $toc -> h t f
     set tn [xtable $t $mod $mdesc]
     return $h\n$tn$f
 }
@@ -168,10 +228,10 @@ proc sak::localdoc::xdd {t mod mdesc {prefix {}}} {
 	}
 	append tn $line \n
     }
-    
+
     return $tn
 }
-    
+
 proc sak::localdoc::xtable {t mod mdesc {prefix {}}} {
     set check 1
     set even 1
@@ -183,14 +243,14 @@ proc sak::localdoc::xtable {t mod mdesc {prefix {}}} {
 	if {$check && ([string compare $name $mod] > 0)} {
 	    # Insert before first entry just lexicographically after the new module.
 	    set check 0
-	    append tn "<tr class=\"#doctools_toc[expr {$even ? "even\"" : "odd\" "}] >" \n
-	    append tn "<td class=\"#doctools_tocleft\" ><a name='$mod'><a href=\"${prefix}files/modules/$mod/index.html\">$mod</a></td>" \n
-	    append tn "<td class=\"#doctools_tocright\">$mdesc</td>" \n
+	    append tn "<tr class=\"doctools_toc[expr {$even ? "even\"" : "odd\" "}] >" \n
+	    append tn "<td class=\"doctools_tocleft\" ><a name='$mod'><a href=\"${prefix}files/modules/$mod/index.html\">$mod</a></td>" \n
+	    append tn "<td class=\"doctools_tocright\">$mdesc</td>" \n
 	    append tn "</tr>" \n
 	    set even [expr {1-$even}]
 	}
-	
-	append tn "<tr class=\"#doctools_toc[expr {$even ? "even\"" : "odd\" "}] >" \n
+
+	append tn "<tr class=\"doctools_toc[expr {$even ? "even\"" : "odd\" "}] >" \n
 	append tn $link \n
 	append tn $desc \n
 	append tn $post \n

@@ -7,7 +7,7 @@
 #
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
-# 
+#
 # RCS: @(#) $Id: node.tcl,v 1.4 2010/01/06 20:55:54 tomk Exp $
 
 package require TclOO

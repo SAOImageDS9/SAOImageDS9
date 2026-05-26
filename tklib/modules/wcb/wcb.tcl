@@ -1,22 +1,21 @@
 #==============================================================================
 # Main Wcb package module.
 #
-# Copyright (c) 1999-2018  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 1999-2024  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
-package require Tk 8
+if {$tcl_version >= 8.5} {
+    package require Tk 8.4-
+} else {
+    package require Tk 8.4
+}
 
 namespace eval wcb {
     #
     # Public variables:
     #
-    variable version	3.6
-    variable library
-    if {$::tcl_version >= 8.4} {
-	set library	[file dirname [file normalize [info script]]]
-    } else {
-	set library	[file dirname [info script]] ;# no "file normalize" yet
-    }
+    variable version	4.1.1
+    variable library	[file dirname [file normalize [info script]]]
 
     #
     # Basic procedures:
@@ -25,22 +24,22 @@ namespace eval wcb {
 			extend replace pathname
 
     #
-    # Utility procedures for Tk entry, tile entry, BWidget Entry,
-    # Tk spinbox, tile spinbox, and tile combobox widgets:
+    # Utility procedures for Tk entry, Ttk entry, BWidget
+    # Entry, Tk spinbox, Ttk spinbox, and Ttk combobox widgets:
     #
     namespace export	changeEntryText postInsertEntryLen \
 			postInsertEntryText postDeleteEntryText
 
     #
-    # Simple before-insert callback routines for Tk entry, tile entry,
-    # BWidget Entry, Tk spinbox, tile spinbox, and tile combobox widgets:
+    # Simple before-insert callback routines for Tk entry, Ttk entry,
+    # BWidget Entry, Tk spinbox, Ttk spinbox, and Ttk combobox widgets:
     #
     namespace export	checkStrForRegExp checkStrForAlpha checkStrForNum \
 			checkStrForAlnum convStrToUpper convStrToLower
 
     #
-    # Further before-insert callback routines for Tk entry, tile entry,
-    # BWidget Entry, Tk spinbox, tile spinbox, and tile combobox widgets:
+    # Further before-insert callback routines for Tk entry, Ttk entry,
+    # BWidget Entry, Tk spinbox, Ttk spinbox, and Ttk combobox widgets:
     #
     namespace export	checkEntryForInt  checkEntryForUInt \
 			checkEntryForReal checkEntryForFixed \
@@ -56,4 +55,8 @@ namespace eval wcb {
 package provide wcb $wcb::version
 package provide Wcb $wcb::version
 
+#
+# Everything else needed is lazily loaded on demand, via the dispatcher
+# set up in the subdirectory "scripts" (see the file "tclIndex").
+#
 lappend auto_path [file join $wcb::library scripts]

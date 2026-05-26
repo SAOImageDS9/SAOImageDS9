@@ -1,4 +1,4 @@
-#!/usr/bin/env tclsh
+#! /usr/bin/env tclsh
 ## -*- tcl -*-
 # testtable.tcl --
 #     Small program to test the table chart

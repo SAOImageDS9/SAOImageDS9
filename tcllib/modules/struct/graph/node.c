@@ -2,6 +2,7 @@
  * (b) Node operations.
  */
 
+#include <nacommon.h>
 #include <arc.h>
 #include <node.h>
 #include <util.h>
@@ -57,11 +58,11 @@ gn_err_duplicate (Tcl_Interp* interp, Tcl_Obj* n, Tcl_Obj* g)
 {
     Tcl_Obj* err = Tcl_NewObj ();
 
-    Tcl_AppendToObj    (err, "node \"", -1);
+    Tcl_AppendToObj    (err, "node \"", TCL_AUTO_LENGTH); /* OK tcl9 */
     Tcl_AppendObjToObj (err, n);
-    Tcl_AppendToObj    (err, "\" already exists in graph \"", -1);
+    Tcl_AppendToObj    (err, "\" already exists in graph \"", TCL_AUTO_LENGTH); /* OK tcl9 */
     Tcl_AppendObjToObj (err, g);
-    Tcl_AppendToObj    (err, "\"", -1);
+    Tcl_AppendToObj    (err, "\"", TCL_AUTO_LENGTH); /* OK tcl9 */
 	    
     Tcl_SetObjResult (interp, err);
 }
@@ -73,11 +74,11 @@ gn_err_missing (Tcl_Interp* interp, Tcl_Obj* n, Tcl_Obj* g)
 
     /* Keep any prefix ... */
     Tcl_AppendObjToObj (err, Tcl_GetObjResult (interp));
-    Tcl_AppendToObj    (err, "node \"", -1);
+    Tcl_AppendToObj    (err, "node \"", TCL_AUTO_LENGTH); /* OK tcl9 */
     Tcl_AppendObjToObj (err, n);
-    Tcl_AppendToObj    (err, "\" does not exist in graph \"", -1);
+    Tcl_AppendToObj    (err, "\" does not exist in graph \"", TCL_AUTO_LENGTH); /* OK tcl9 */
     Tcl_AppendObjToObj (err, g);
-    Tcl_AppendToObj    (err, "\"", -1);
+    Tcl_AppendToObj    (err, "\"", TCL_AUTO_LENGTH); /* OK tcl9 */
 
     Tcl_SetObjResult (interp, err);
 }
@@ -87,12 +88,12 @@ gn_err_missing (Tcl_Interp* interp, Tcl_Obj* n, Tcl_Obj* g)
 Tcl_Obj*
 gn_serial_arcs (GN* n, Tcl_Obj* empty, Tcl_HashTable* cn)
 {
-    int       lc;
+    Tcl_Size  lc, i;
     Tcl_Obj** lv;
     Tcl_Obj*  arcs;
     GL*       il;
     GA*       a;
-    int       i, id;
+    long int  id;
     Tcl_HashEntry* he;
 
     /* Quick return if node has no outgoing arcs */
@@ -114,13 +115,13 @@ gn_serial_arcs (GN* n, Tcl_Obj* empty, Tcl_HashTable* cn)
 
 	if (!he) continue;
 	ASSERT_BOUNDS(i, lc);
-	id = (int) Tcl_GetHashValue (he);
+	id = (long int) Tcl_GetHashValue (he);
 	lv [i] = ga_serial (a, empty, id);
 	i++;
     }
     lc = i;
 
-    arcs = Tcl_NewListObj (lc, lv);
+    arcs = Tcl_NewListObj (lc, lv); /* OK tcl9 */
     ckfree ((char*) lv);
     return arcs;
 }

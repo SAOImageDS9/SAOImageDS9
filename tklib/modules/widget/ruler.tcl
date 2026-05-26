@@ -6,8 +6,6 @@
 #
 # Copyright (c) 2005 Jeffrey Hobbs.  All Rights Reserved.
 #
-# RCS: @(#) $Id: ruler.tcl,v 1.13 2008/02/21 20:11:16 hobbs Exp $
-#
 
 ###
 # Creation and Options - widget::ruler $path ...
@@ -497,6 +495,7 @@ snit::widget widget::screenruler {
     }
 
     method C-zoom {option value} {
+	##nagelfar ignore
 	if {![string is integer -strict $value] || $value < 1} {
 	    return -code error "invalid $option value \"$value\":\
 		must be a valid integer >= 1"
@@ -632,8 +631,8 @@ snit::widget widget::screenruler {
 ########################################
 ## Ready for use
 
-package provide widget::ruler 1.1
-package provide widget::screenruler 1.2
+package provide widget::ruler 1.2
+package provide widget::screenruler 1.3
 
 if {[info exist ::argv0] && $::argv0 eq [info script]} {
     # We are the main script being run - show ourselves

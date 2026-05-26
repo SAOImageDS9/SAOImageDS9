@@ -1,4 +1,4 @@
-#!/bin/env tclsh8.5
+#! /usr/bin/env tclsh
 # -*- tcl -*-
 # # ## ### ##### ######## ############# #####################
 # demo_editpoly.tcl --
@@ -18,7 +18,7 @@
 # # ## ### ##### ######## ############# #####################
 ## Requirements
 
-package require Tcl 8.5
+package require Tcl 8.5-
 
 # Extend the package search path so that this demonstration works with
 # the non-installed tklib packages well. A regular application should
@@ -69,9 +69,11 @@ grid $w.clear -row 2 -column 3               -sticky swen
 # # ## ### ##### ######## ############# #####################
 ## Setup the behavioral triggers and responses ...
 
-canvas::edit polyline EDITOR $c -data-cmd M
+canvas::edit polyline EDITOR $c -data-cmd M -active-cmd A
 
+proc A {args} { puts A:$args }
 proc M {args} {
+    puts M:[llength $args]:$args
     global w
     $w.msg configure -text $args
     return
@@ -98,6 +100,8 @@ proc clear {} {
 
 # # ## ### ##### ######## ############# #####################
 ## Invoke event loop.
+
+flip
 
 vwait __forever__
 exit

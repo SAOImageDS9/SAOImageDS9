@@ -1,8 +1,80 @@
+2024-07-18 Harald Oehlmann <harald.oehlmann@elmicron.de>
+
+	* pkgIndex.tcl:	Bumped the tooltip version number to 2.0.0.
+	* tooltip.man: Removed msgcat information
+	* tooltip.tcl: Removed all msgcat code and options -namespace,
+	  -msgargs and -infoargs. The implemented late binding is not
+	  possible, if the creation command is called from an oo class
+	  or method. See Ticket
+	  [https://core.tcl-lang.org/tklib/info/6e85abae9e49281b]
+
+2024-06-26  Csaba Nemethi  <csaba.nemethi@t-online.de>
+
+	* pkgIndex.tcl:	Bumped the tooltip version number to 1.8.2.
+	* tooltip.man:
+
+	* tooltip.tcl: Fixed a few bugs related to "option add" and the proc
+	  tooltip::configure; bumped the version number to 1.8.2.
+
+2024-05-23  Andreas Kupries <andreas.kupries@gmail.com>
+
+	* Bumped to version 1.8. Support images and additional info text.
+	  Ticket [https://core.tcl-lang.org/tklib/tktview/803a13c9f0].
+	  Patch by Rene Zaumseil.
+	* Evaluate msgcat in the callers namespace. New options
+	  -namespace, -msgargs, infoargs to specify the namespace and the
+	  arguments to the msgcat::mc call. Patch by Harald Oehlmann
+	  Ticket [https://core.tcl-lang.org/tklib/info/3300362fffffffff].
+
+2024-05-22  Andreas Kupries <andreas.kupries@gmail.com>
+
+	* Bumped to version 1.7.1. Bail if widget goes away during early
+	  idletasks in `show`. Ticket [https://core.tcl-lang.org/tklib/tktview/ff46309014].
+	  Patch by Emmanuel Frecon.
+
+2024-05-05  Csaba Nemethi  <csaba.nemethi@t-online.de>
+
+	* pkgIndex.tcl:	Bumped the tooltip version number to 1.7.
+
+	* tooltip.tcl:	Added support for ttk::treeview column headings (based
+	* tooltip.man:	on a patch submitted by Mathias Kende); bumped the
+			version number to 1.7 (fix for ticket [2895994fff]).
+
+2022-08-22  Csaba Nemethi  <csaba.nemethi@t-online.de>
+
+	* pkgIndex.tcl:	Bumped the tooltip version number to 1.6.
+	* tooltip.tcl:	Added support for ttk::notebook tabs; several further
+			improvements; bumped the version number to 1.6.
+	* tooltip.man:  Documented the "-tab" option and added an example for
+			it; extended the description of the "configure"
+			subcommand; several further improvements; bumped the
+			version number to 1.6.
+
+2022-05-20 Emiliano Gavilan <emilianogavilan@gmail.com>
+
+        * tooltip.tcl, tooltip.man, tooltip.html: Add configure command.
+	* pkgIndex.tcl: Bump the version number to 1.5.
+
+2021-11-30  Csaba Nemethi  <csaba.nemethi@t-online.de>
+
+	* tooltip.tcl, tooltip.man: Minor improvements.
+
+2021-11-27  Csaba Nemethi  <csaba.nemethi@t-online.de>
+
+	* pkgIndex.tcl:	Bumped the tooltip version number to 1.4.7.
+	* tooltip.tcl:	Made sure that the "clear" subcommand will work for
+			widgets having spaces in their names, too; several
+			further improvements; bumped the version number to
+			1.4.7.
+	* tooltip.man:	Corrected the description of the "clear" subcommand;
+			several further improvements; bumped the version number
+			to 1.4.7.
+
 2020-02-09  0.7  <andreas_kupries@users.sourceforge.net>
 
 	*
 	* Released and tagged Tklib 0.7 ========================
-	* 
+	*
 
 2016-11-24  Arjen Markus  <arjenmarkus@users.sourceforge.net>
 	* tooltip.tcl: Updated one of the error messages (the new option -- was missing)

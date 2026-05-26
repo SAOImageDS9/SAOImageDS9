@@ -199,7 +199,7 @@ proc ::city::Init {} {
     }
 
     #puts /[llength $lego]
-    
+
     # Now compute which tiles can be neighbours of what others, for
     # all four sides.
 

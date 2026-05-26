@@ -26,11 +26,11 @@
 # of decoding them.
 
 # We use newer string routines
-package require Tcl 8.4
+package require Tcl 8.5 9
 package require fileutil ; # Required by importFile.
 package require uri
 
-package provide ncgi 1.4.4
+package provide ncgi 1.4.6
 
 namespace eval ::ncgi {
 
@@ -211,7 +211,7 @@ proc ::ncgi::query {} {
 	    if {[info exists env(CONTENT_LENGTH)] &&
 		    [string length $env(CONTENT_LENGTH)] != 0} {
  		## added by Steve Cassidy to try to fix binary file upload
- 		fconfigure stdin -translation binary -encoding binary
+ 		fconfigure stdin -translation binary
 		set query [read stdin $env(CONTENT_LENGTH)]
 	    }
 	}
@@ -253,7 +253,7 @@ proc ::ncgi::type {} {
 # Results:
 #	The decoded value
 
-if {[package vsatisfies [package present Tcl] 8.6]} {
+if {[package vsatisfies [package present Tcl] 8.6 9]} {
     # 8.6+, use 'binary decode hex'
     proc ::ncgi::DecodeHex {hex} {
 	return [binary decode hex $hex]
@@ -302,6 +302,7 @@ proc ::ncgi::encode {string} {
     regsub -all -- \[^a-zA-Z0-9\] $string {$map(&)} string
     # This quotes cases like $map([) or $map($) => $map(\[) ...
     regsub -all -- {[][{})\\]\)} $string {\\&} string
+    set string [string map {$map(() $map(\\()} $string]
     return [subst -nocommand $string]
 }
 
@@ -815,7 +816,7 @@ proc ::ncgi::header {{type text/html} args} {
 #	parameters.  Given the above example, the return value is
 #	{
 #		value
-#		{param value param2 value param3 value3}
+#		{param value param2 value2 param3 value3}
 #	}
 
 proc ::ncgi::parseMimeValue {value} {
@@ -827,11 +828,10 @@ proc ::ncgi::parseMimeValue {value} {
             set key [string trim [string tolower $key]]
             set val [string trim $val]
             # Allow single as well as double quotes
-            if {[regexp -- {^["']} $val quote]} { ;# need a " for balance
-                if {[regexp -- ^${quote}(\[^$quote\]*)$quote $val x val2]} {
-                    # Trim quotes and any extra crap after close quote
-                    set val $val2
-                }
+            if {[regexp -- {^(['"])(.*)\1} $val x quote val2]} { ; # need a " for balance
+               # Trim quotes and any extra crap after close quote
+               # remove quoted quotation marks
+               set val [string map {\\" "\"" \\' "\'"} $val2]
             }
             lappend paramList $key $val
 	}
@@ -1022,11 +1022,12 @@ proc ::ncgi::importFile {cmd var {filename {}}} {
 		}
 
 		# write out the data only if it's not been done already
-		if {[catch {open $_tmpfiles($var) w} h]} {
+		if {[catch {
+		    open $_tmpfiles($var) wb
+		} h]} {
 		    error "Can't open temporary file in ncgi::importFile ($h)"
 		} 
 
-		fconfigure $h -translation binary -encoding binary
 		puts -nonewline $h $contents 
 		close $h
 	    }

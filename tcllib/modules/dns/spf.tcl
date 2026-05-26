@@ -20,7 +20,7 @@
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 # -------------------------------------------------------------------------
 
-package require Tcl 8.2;                # tcl minimum version
+package require Tcl 8.5 9;                # tcl minimum version
 package require dns;                    # tcllib 1.3
 package require logger;                 # tcllib 1.3
 package require ip;                     # tcllib 1.7
@@ -34,7 +34,7 @@ namespace eval spf {
     if {![info exists uid]} {set uid 0}
 
     variable log
-    if {![info exists log]} { 
+    if {![info exists log]} {
         set log [logger::init spf]
         ${log}::setlevel warn
         proc ${log}::stdoutcmd {level text} {
@@ -117,20 +117,20 @@ proc ::spf::Spf {ip domain sender spf} {
             set r [catch {::spf::_$cmd $ip $domain $sender $param} res]
             if {$r} {
                 if {$r == 2} {return $res};# deal with return -code return
-                if {[string equal $res "none"] 
+                if {[string equal $res "none"]
                     || [string equal $res "error"]
                     || [string equal $res "unknown"]} {
                     return $res
                 }
                 return -code error "error in \"$cmd\": $res"
-            }            
+            }
             if {$res} { set result $prefix }
         }
-        
+
         ${log}::debug "$prefix $cmd\($param) -> $result"
         if {[string equal $result "+"]} break
     }
-    
+
     return $result
 }
 
@@ -178,7 +178,7 @@ proc ::spf::_include {ip domain sender param} {
         set spf [SPF $new_domain]
         if {[string equal $spf none]} {
             return $spf
-        } 
+        }
         set r [Spf $ip $new_domain $sender $spf]
     }
     return [string equal $r "+"]
@@ -384,7 +384,7 @@ proc ::spf::ExpandMacro {macro ip domain sender} {
                 }
             }
             h - d { set res $domain }
-            i { 
+            i {
                 set res [ip::normalize $ip]
                 if {[ip::is ipv6 $res]} {
                     # Convert 0000:0001 to 0.1
@@ -398,20 +398,20 @@ proc ::spf::ExpandMacro {macro ip domain sender} {
                     set res [join $t .]
                 }
             }
-            v { 
+            v {
                 if {[ip::is ipv6 $ip]} {
                     set res ip6
                 } else {
                     set res "in-addr"
                 }
             }
-            c { 
+            c {
                 set res [ip::normalize $ip]
                 if {[ip::is ipv6 $res]} {
                     set res [ip::contract $res]
                 }
             }
-            r { 
+            r {
                 set s [socket -server {} -myaddr [info host] 0]
                 set res [lindex [fconfigure $s -sockname] 1]
                 close $s
@@ -517,10 +517,10 @@ proc ::spf::MX {domain} {
     return [lsort -index 0 $r]
 }
 
-    
+
 # -------------------------------------------------------------------------
 
-package provide spf 1.1.1
+package provide spf 1.1.2
 
 # -------------------------------------------------------------------------
 # Local Variables:

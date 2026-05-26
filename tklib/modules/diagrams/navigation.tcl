@@ -11,7 +11,7 @@
 # # ## ### ##### ######## ############# ######################
 ## Requisites
 
-package require Tcl 8.5              ; # Want the nice things it
+package require Tcl 8.5-              ; # Want the nice things it
 				       # brings (dicts, {*}, etc.)
 package require snit                 ; # Object framework.
 package require struct::stack

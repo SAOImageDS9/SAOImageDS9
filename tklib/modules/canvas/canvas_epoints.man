@@ -1,4 +1,4 @@
-[vset VERSION 0.1]
+[vset VERSION 0.3]
 [comment {-*- tcl -*- doctools manpage}]
 [manpage_begin canvas::edit::points n [vset VERSION]]
 [keywords canvas]
@@ -12,11 +12,61 @@
 [require canvas::edit::points [opt [vset VERSION]]]
 [description]
 
-This package provides a class whose instances handle editing a cloud
-of point markers on a canvas. Instances can be configured with regard
-to the visual appearance of markers (regular, and highlighted). Note
-that instances do not store the edited points themselves, but delegate
-this to a configurable object.
+This package provides a class whose instances handle editing a cloud of point markers on a
+canvas. Instances can be configured with regard to the visual appearance of markers. Note that
+instances do not store the edited points themselves, but delegate this to a configurable object.
+
+[section {Interaction}]
+
+[para] The default bindings enable the creation, removal and dragging of point (markers) using the
+mouse buttons 1, 2, and 3. Specifically:
+
+[list_begin enumerated]
+[enum] Clicking anywhere with button 1 adds a new point.
+[enum] Clicking on a point with button 2 removes that point.
+[enum] Clicking on a point with button 3 starts a drag operation ending with the release of the
+       button.
+[list_end]
+
+[para] The option [option -drag-point] can be used to change the button used to initiate drag
+operations. Note that the option value may not only contain the button number, but also modifier
+prefix separated from the button by a dash "[const -]".
+
+The recognized modifiers are [const Control], [const Shift], and [const Alt].
+
+[para] The option [option -add-remove-point] can be used to change the button used to add/remove
+points. This works because removal is an item binding, while adding is canvas global. The option
+recognizes the same syntax for button as [option -drag-point].
+
+[para] In the standard configuration the canvas item representing a point is a circle configured
+using the appearance options [option -color], [option -hilit-color], and [option -radius]. Their
+defaults are [const Skyblue2], [const red], and [const 3], repsectively.
+
+[para] The option [option -kind] can be used to slightly customize the canvas item to any kind
+accepting the item options [option -width], [option -outline], [option -fill], and
+[option -activefill].
+
+[para] For more extensive customization its is necessary to configure a creation callback using
+option [option -create-cmd]. The callback takes the canvas and x. y coordinates as arguments, in
+this order, and is expected to return a list of the canvas items representing the point.
+
+[para] Note the plural. With the callback it is possible to visualize a point using a group of
+items.
+
+[para] Further note that when the callback return an empty list no point is created. In other words,
+the callback can also be used to perform checks if a point at the given location is desirable, or
+not. This can be combined with the default creation behaviour as the option can be queried, and its
+default value is the callback for the default behaviour.
+
+[para] Keeping with the callback for a bit, the option [option -active-cmd] sets a callback invoked
+whenever the mouse is over one of the created points, i.e. active. This can be used to drive derived
+displays. For example highlighting the point's entry in a table or other widget.
+
+[para] The last option of importance is [option -tag]. Its value is the name of the canvas tag used
+to mark all the items owned, i.e. created and managed by an. The default is [const POINT].
+
+[para] When attaching multiple instances of this behaviour to the same canvas each instance has to
+be configured with a unique tag, to prevent them from interfering with each other.
 
 [section {Class API}]
 
@@ -118,16 +168,53 @@ when the user interactively removes a point, i.e. [option -data-cmd].
 The class command accepts the following options
 
 [list_begin options]
-[comment {= = == === ===== ======== ============= =====================}]
-[comment {= = == === ===== ======== ============= =====================}]
-[opt_def -tag [arg string]]
 
-The value of this option is the name of the canvas tag with which to
-identify all items of all points managed by the editor.
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -active-cmd [arg command-prefix]]
+
+The value of this option is a command prefix the editor will invoke
+when the mouse enters or leaves a point managed by the instance.
+
+[para] If not specified it defaults to an empty command which does nothing.
+
+[para] The signature of this command prefix is
+
+[list_begin definitions]
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd activeCmd] [arg editorObj] [arg id]]
+
+[para] The [arg id] identifies the point within the editor.
+
+[para] An empty [arg id] indicates that the last entered point was left.
+
+[para] The result of this method is ignored.
+
+[list_end]
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -add-remove-point [arg eventspec]]
+
+The value of this option is an event specification (without bracketing angles) declaring which event
+will trigger adding and removing a point.
 
 [para] This option can only be set at construction time.
 
-[para] If not specified it defaults to [const POINT]
+[para] The default setup uses different events for adding and removing points, [const ButtonPress-1]
+and [const ButtonPress-2] respectively.
+
+[para] When using this option the same event is used for both operations. This is no problem because
+adding is bound as canvas-global event while removal is bound to the relevant canvas items.
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -color [arg colorspec]]
+
+The value of this option is the fill color for the default item created when adding a point, and no
+[option -create-cmd] is specified.
+
+[para] The default value is [const SkyBlue2].
 
 [comment {= = == === ===== ======== ============= =====================}]
 [comment {= = == === ===== ======== ============= =====================}]
@@ -136,7 +223,9 @@ identify all items of all points managed by the editor.
 The value of this option is a command prefix the editor will invoke
 when it has to create a new point.
 
-[para] This option can only be set at construction time.
+[para] While this option can be set after construction, it is recommended to use this feature only
+as a means of inserting custom processing to be done at creation time which remembers and calls the
+previous value of the option.
 
 [para] If not specified it defaults to a command which will create a
 black-bordered blue circle of radius 3 centered on the location of the
@@ -155,46 +244,6 @@ arbitrary shape.
 
 [para] The returned list of items is allowed to be empty, and such is
 taken as signal that the callback vetoed the creation of the point.
-
-[list_end]
-
-[comment {= = == === ===== ======== ============= =====================}]
-[comment {= = == === ===== ======== ============= =====================}]
-[opt_def -highlight-cmd [arg command-prefix]]
-
-The value of this option is a command prefix the editor will invoke
-when it has to (un)highlight a point.
-
-[para] This option can only be set at construction time.
-
-[para] If not specified it defaults to a command which will re-color
-the item to highlight in red (and restores the color for
-unhighlighting).
-
-[para] The two signatures of this command prefix are
-
-[list_begin definitions]
-[comment {= = == === ===== ======== ============= =====================}]
-[call [cmd highlightCmd] [method on] [arg canvas] [arg item]]
-
-[para] This method of the command prefix has to perform whatever is
-needed to highlight the point the [arg item] is a part of (remember
-the note above about points allowed to be constructed from multiple
-canvas items).
-
-[para] The result of the command can be anything and will be passed as
-is as argument [arg state] to the [method off] method.
-
-[comment {= = == === ===== ======== ============= =====================}]
-[call [cmd highlightCmd] [method off] [arg canvas] [arg state]]
-
-[para] This method is invoked to unhighlight a point described by the
-[arg state], which is the unchanged result of the [method on] method
-of the command prefix. The result of this method is ignored.
-
-[para] Note any interaction between dragging and highlighting of
-points is handled within the editor, and that the callback bears no
-responsibility for doing such.
 
 [list_end]
 
@@ -284,6 +333,58 @@ instance is complete.
 method returns [const false] the move is vetoed and rollbed back.
 
 [list_end][comment callback-signatures]
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -drag-point [arg eventspec]]
+
+The value of this option is an event specification (without bracketing angles) declaring which event
+will trigger a drag action on points.
+
+[para] This option can only be set at construction time.
+
+[para] The default specification is [const ButtonPress-3].
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -hilit-color [arg colorspec]]
+
+The value of this option is the highlight color for the default item created when adding a point,
+and no [option -highlight-cmd] is specified.
+
+[para] The default value is [const red].
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -kind [arg name]]
+
+The value of this option is the canvas item type for the default item created when adding a point,
+and no [option -create-cmd] is specified.
+
+Only item types specified through a bounding box are suitable.
+
+[para] The default value is [const oval].
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -radius [arg int]]
+
+The value of this option is the radius for the default item created when adding a point,
+and no [option -create-cmd] is specified.
+
+[para] The default value is [const 3].
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -tag [arg string]]
+
+The value of this option is the name of the canvas tag with which to
+identify all items of all points managed by the editor.
+
+[para] This option can only be set at construction time.
+
+[para] If not specified it defaults to [const POINT]
+
 [list_end][comment options]
 [vset CATEGORY canvas]
 [include ../../support/devel/doc/feedback.inc]

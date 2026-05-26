@@ -1,5 +1,6 @@
 [comment {-*- tcl -*- doctools manpage}]
-[manpage_begin fileutil::magic::cfront n 1.2.0]
+[vset VERSION 1.3.2]
+[manpage_begin fileutil::magic::cfront n [vset VERSION]]
 [see_also file(1)]
 [see_also fileutil]
 [see_also magic(5)]
@@ -11,8 +12,8 @@
 [moddesc   {file utilities}]
 [titledesc {Generator core for compiler of magic(5) files}]
 [category  {Programming tools}]
-[require Tcl 8.5]
-[require fileutil::magic::cfront [opt 1.2.0]]
+[require Tcl "8.5 9"]
+[require fileutil::magic::cfront [opt [vset VERSION]]]
 [require fileutil::magic::cgen [opt 1.2.0]]
 [require fileutil::magic::rt [opt 1.2.0]]
 [require struct::list]
@@ -31,9 +32,11 @@ the package [package fileutil::magic::cgen].
 
 [call [cmd ::fileutil::magic::cfront::compile] [arg path]...]
 
-This command takes the paths of one or more files and directories and
-compiles all the files, and the files in all the directories into a
-single recognizer for all the file types specified in these files.
+This command takes the paths of one or more files and directories and compiles
+all the files, and the files in all the directories into a single analyzer for
+all the file types specified in these files.  It returns a list whose first
+item is a list per-file dictionaries of analyzer scripts and whose second item
+is a list of analyzer commands.
 
 [para]
 

@@ -6,14 +6,12 @@
 #
 # Copyright (c) 2005 Jeffrey Hobbs
 #
-# RCS: @(#) $Id: widget.tcl,v 1.6 2010/06/01 18:06:52 hobbs Exp $
-#
 
-package require Tk 8.4
+package require Tk 8.4-
 package require snit
 
 # As most widgets need tile, do the right conditional require here
-if {![package vsatisfies [package provide Tk] 8.5]} { package require tile }
+if {![package vsatisfies [package provide Tk] 8.5-]} { package require tile }
 
 #package provide Widget 3.1 ; # at end
 
@@ -127,6 +125,7 @@ proc ::widget::isa {as args} {
 	}
     } elseif {$as eq "integer" || $as eq "int"} {
 	foreach {min max} $range { break }
+	##nagelfar ignore
 	if {![string is integer -strict $value]
 	    || ($value < $min) || ($value > $max)} {
 	    return -code error "$option requires an integer in the\
@@ -136,8 +135,9 @@ proc ::widget::isa {as args} {
 	if {$range eq ""} { set range [expr {1<<16}] }
 	set i 0
 	foreach val $value {
+	    ##nagelfar ignore
 	    if {![string is integer -strict $val] || ([incr i] > $range)} {
-		return -code error "$option requires an list of integers"
+		return -code error "$option requires a list of integers"
 	    }
 	}
     } elseif {$as eq "double"} {
@@ -159,4 +159,4 @@ proc ::widget::isa {as args} {
     return
 }
 
-package provide widget 3.1
+package provide widget 3.2

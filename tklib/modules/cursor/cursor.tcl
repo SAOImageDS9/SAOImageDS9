@@ -6,10 +6,10 @@
 #
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
-# 
+#
 # RCS: @(#) $Id: cursor.tcl,v 1.4 2011/01/18 18:17:17 andreas_kupries Exp $
 
-package require Tk 8.0
+package require Tk 8.0-
 package provide cursor 0.3.1
 
 namespace eval ::cursor {

@@ -2,7 +2,7 @@
 # Contains the implementation of a multi-entry widget for real numbers in
 # fixed-point format.
 #
-# Copyright (c) 1999-2019  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 1999-2023  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
 #
@@ -22,9 +22,11 @@ proc mentry::fixedPointMentry {win cnt1 cnt2 args} {
     #
     # Check the arguments
     #
+    ##nagelfar ignore
     if {[catch {format "%d" $cnt1}] != 0 || $cnt1 <= 0} {
 	return -code error "expected positive integer but got \"$cnt1\""
     }
+    ##nagelfar ignore
     if {[catch {format "%d" $cnt2}] != 0 || $cnt2 <= 0} {
 	return -code error "expected positive integer but got \"$cnt2\""
     }
@@ -33,7 +35,7 @@ proc mentry::fixedPointMentry {win cnt1 cnt2 args} {
     # Change the default separator if the first optional argument is -comma
     #
     set sep .
-    if {[string compare [lindex $args 0] "-comma"] == 0} {
+    if {[lindex $args 0] eq "-comma"} {
 	set sep ,
 	set args [lrange $args 1 end]
     }
@@ -46,20 +48,20 @@ proc mentry::fixedPointMentry {win cnt1 cnt2 args} {
     ::$win attrib type FixedPoint
 
     #
-    # Allow only integer input in the first entry child
+    # Allow only integer input in the first entry
     #
-    ::$win adjustentry 0 "+-0123456789"
     set w [::$win entrypath 0]
-    $w configure -justify right
     wcb::cbappend $w before insert wcb::checkEntryForInt
+    ::$win adjustentry 0 "0123456789" "+-"
+    $w configure -justify right
 
     #
-    # Allow only decimal digits in the second entry child
+    # Allow only decimal digits in the second entry
     #
-    ::$win adjustentry 1 "0123456789"
     set w [::$win entrypath 1]
-    $w configure -justify left
     wcb::cbappend $w before insert wcb::checkStrForNum
+    ::$win adjustentry 1 "0123456789"
+    $w configure -justify left
 
     return $win
 }
@@ -134,8 +136,8 @@ proc mentry::checkIfFixedPointMentry win {
 	return -code error "bad window path name \"$win\""
     }
 
-    if {[string compare [winfo class $win] "Mentry"] != 0 ||
-	[string compare [::$win attrib type] "FixedPoint"] != 0} {
+    if {[winfo class $win] ne "Mentry" ||
+	[::$win attrib type] ne "FixedPoint"} {
 	return -code error \
 	       "window \"$win\" is not a mentry widget for fixed-point numbers"
     }

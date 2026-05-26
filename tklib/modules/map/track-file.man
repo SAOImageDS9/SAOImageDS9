@@ -1,0 +1,30 @@
+[comment {-*- tcl -*- doctools manpage}]
+[vset VERSION 0.1]
+[manpage_begin map::track::file n [vset VERSION]]
+[category {Map Display and Supporting Utilities}][keywords map]
+[keywords {file, geo/track}]
+[keywords {geo/track, file}]
+[moddesc   {Map display support}]
+[titledesc {Reading/writing tklib geo/track files}]
+[require Tcl 8.6-]
+[require {Tcl 8.6-}]
+[require debug]
+[require debug::caller]
+[require map::slippy 0.8]
+[require snit]
+[require map::track::file [opt [vset VERSION]]]
+[description]
+
+This package provides read/write functions for Tklib [term geo/track] files.
+
+[section API]
+
+[list_begin definitions]
+[list_end]
+
+[section EXAMPLE]
+
+[vset CATEGORY map]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]
+

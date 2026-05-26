@@ -7,9 +7,9 @@
 # ### ### ### ######### ######### #########
 ## Requisites
 
-package require Tcl 8.4        ; # No {*}-expansion :(
+package require Tcl 8.4-       ; # No {*}-expansion :(
 package require Tk
-package require snit           ; # 
+package require snit           ; #
 package require uevent::onidle ; # Some defered actions.
 
 # ### ### ### ######### ######### #########
@@ -104,7 +104,7 @@ snit::widget ::canvas::zoom {
         # Use an unmapped scale to keep var between lo and hi and
         # avoid doing our own trace management
         scale $win.z.sc -from $lo -to $hi -variable $var
-        
+
         pack $win.z -fill both -expand 1
         if {$side eq "vertical"} {
             pack $win.z.plus $win.z.val $win.z.minus -side top  -fill x

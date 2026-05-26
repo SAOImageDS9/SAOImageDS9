@@ -776,11 +776,11 @@ doctools::toc::export::html
 \fBfiles/apps/dtplite\&.n\fR
 dtplite
 .TP
-\fBfiles/modules/dtplite/pkg_dtplite\&.n\fR
-dtplite
-.TP
 \fBfiles/modules/doctools/mpexpand\&.n\fR
 mpexpand
+.TP
+\fBfiles/modules/dtplite/pkg_dtplite\&.n\fR
+pkg_dtplite
 .RE
 IBAN
 .RS
@@ -1436,11 +1436,11 @@ doctools::toc
 \fBfiles/apps/dtplite\&.n\fR
 dtplite
 .TP
-\fBfiles/modules/dtplite/pkg_dtplite\&.n\fR
-dtplite
-.TP
 \fBfiles/modules/doctools/mpexpand\&.n\fR
 mpexpand
+.TP
+\fBfiles/modules/dtplite/pkg_dtplite\&.n\fR
+pkg_dtplite
 .RE
 TOOL
 .RS
@@ -2492,6 +2492,18 @@ term::ansi::send
 \fBfiles/modules/term/term_send\&.n\fR
 term::send
 .RE
+character type
+.RS
+.TP
+\fBfiles/modules/textutil/wcswidth\&.n\fR
+textutil::wcswidth
+.RE
+character width
+.RS
+.TP
+\fBfiles/modules/textutil/wcswidth\&.n\fR
+textutil::wcswidth
+.RE
 chat
 .RS
 .TP
@@ -2966,6 +2978,9 @@ control
 \fBfiles/modules/control/control\&.n\fR
 control
 .TP
+\fBfiles/modules/math/changepoint\&.n\fR
+math::changepoint
+.TP
 \fBfiles/modules/term/term\&.n\fR
 term
 .TP
@@ -3047,14 +3062,14 @@ doctools::toc::import
 \fBfiles/apps/dtplite\&.n\fR
 dtplite
 .TP
-\fBfiles/modules/dtplite/pkg_dtplite\&.n\fR
-dtplite
-.TP
 \fBfiles/modules/math/roman\&.n\fR
 math::roman
 .TP
 \fBfiles/modules/doctools/mpexpand\&.n\fR
 mpexpand
+.TP
+\fBfiles/modules/dtplite/pkg_dtplite\&.n\fR
+pkg_dtplite
 .TP
 \fBfiles/modules/pt/pt_peg_from_json\&.n\fR
 pt::peg::from::json
@@ -3557,6 +3572,12 @@ differential equations
 \fBfiles/modules/math/calculus\&.n\fR
 math::calculus
 .RE
+digital
+.RS
+.TP
+\fBfiles/modules/math/filtergen\&.n\fR
+math::filters
+.RE
 dijkstra
 .RS
 .TP
@@ -3657,7 +3678,7 @@ doctools::msgcat::idx::fr
 dtplite
 .TP
 \fBfiles/modules/dtplite/pkg_dtplite\&.n\fR
-dtplite
+pkg_dtplite
 .RE
 docidx commands
 .RS
@@ -3774,7 +3795,7 @@ doctools::toc::structure
 dtplite
 .TP
 \fBfiles/modules/dtplite/pkg_dtplite\&.n\fR
-dtplite
+pkg_dtplite
 .RE
 doctoc commands
 .RS
@@ -3945,7 +3966,7 @@ doctools::toc::structure
 dtplite
 .TP
 \fBfiles/modules/dtplite/pkg_dtplite\&.n\fR
-dtplite
+pkg_dtplite
 .RE
 doctools commands
 .RS
@@ -4063,6 +4084,12 @@ domain name service
 .TP
 \fBfiles/modules/dns/tcllib_dns\&.n\fR
 dns
+.RE
+double-wide character
+.RS
+.TP
+\fBfiles/modules/textutil/wcswidth\&.n\fR
+textutil::wcswidth
 .RE
 e
 .RS
@@ -4535,6 +4562,12 @@ tcl::chan::fifo2
 \fBfiles/modules/virtchannel_base/halfpipe\&.n\fR
 tcl::chan::halfpipe
 .RE
+figurate numbers
+.RS
+.TP
+\fBfiles/modules/math/figurate\&.n\fR
+math::figurate
+.RE
 file
 .RS
 .TP
@@ -4615,6 +4648,12 @@ generator
 .TP
 \fBfiles/modules/struct/struct_list\&.n\fR
 struct::list
+.RE
+filtering
+.RS
+.TP
+\fBfiles/modules/math/filtergen\&.n\fR
+math::filters
 .RE
 final
 .RS
@@ -6281,11 +6320,11 @@ doctools_plugin_apiref
 \fBfiles/apps/dtplite\&.n\fR
 dtplite
 .TP
-\fBfiles/modules/dtplite/pkg_dtplite\&.n\fR
-dtplite
-.TP
 \fBfiles/modules/doctools/mpexpand\&.n\fR
 mpexpand
+.TP
+\fBfiles/modules/dtplite/pkg_dtplite\&.n\fR
+pkg_dtplite
 .RE
 map
 .RS
@@ -6416,11 +6455,11 @@ doctools_plugin_apiref
 \fBfiles/apps/dtplite\&.n\fR
 dtplite
 .TP
-\fBfiles/modules/dtplite/pkg_dtplite\&.n\fR
-dtplite
-.TP
 \fBfiles/modules/doctools/mpexpand\&.n\fR
 mpexpand
+.TP
+\fBfiles/modules/dtplite/pkg_dtplite\&.n\fR
+pkg_dtplite
 .TP
 \fBfiles/apps/tcldocstrip\&.n\fR
 tcldocstrip
@@ -6632,8 +6671,14 @@ simulation::random
 mathematics
 .RS
 .TP
+\fBfiles/modules/math/figurate\&.n\fR
+math::figurate
+.TP
 \fBfiles/modules/math/fourier\&.n\fR
 math::fourier
+.TP
+\fBfiles/modules/math/probopt\&.n\fR
+math::probopt
 .TP
 \fBfiles/modules/math/quasirandom\&.n\fR
 math::quasirandom
@@ -6661,9 +6706,6 @@ report
 .TP
 \fBfiles/modules/struct/matrix\&.n\fR
 struct::matrix
-.TP
-\fBfiles/modules/struct/matrix1\&.n\fR
-struct::matrix_v1
 .TP
 \fBfiles/modules/struct/queue\&.n\fR
 struct::queue
@@ -7223,11 +7265,11 @@ doctools::toc::export::nroff
 \fBfiles/apps/dtplite\&.n\fR
 dtplite
 .TP
-\fBfiles/modules/dtplite/pkg_dtplite\&.n\fR
-dtplite
-.TP
 \fBfiles/modules/doctools/mpexpand\&.n\fR
 mpexpand
+.TP
+\fBfiles/modules/dtplite/pkg_dtplite\&.n\fR
+pkg_dtplite
 .RE
 null
 .RS
@@ -7318,6 +7360,12 @@ oo
 .TP
 \fBfiles/modules/clay/clay\&.n\fR
 clay
+.RE
+optimisation
+.RS
+.TP
+\fBfiles/modules/math/probopt\&.n\fR
+math::probopt
 .RE
 optimization
 .RS
@@ -8194,6 +8242,9 @@ textutil::string
 .TP
 \fBfiles/modules/textutil/trim\&.n\fR
 textutil::trim
+.TP
+\fBfiles/modules/textutil/wcswidth\&.n\fR
+textutil::wcswidth
 .RE
 prime
 .RS
@@ -8215,6 +8266,12 @@ priority queue
 .TP
 \fBfiles/modules/struct/prioqueue\&.n\fR
 struct::prioqueue
+.RE
+probabilistic calculations
+.RS
+.TP
+\fBfiles/modules/math/probopt\&.n\fR
+math::probopt
 .RE
 proc
 .RS
@@ -8869,6 +8926,9 @@ textutil::split
 .TP
 \fBfiles/modules/textutil/trim\&.n\fR
 textutil::trim
+.TP
+\fBfiles/modules/textutil/wcswidth\&.n\fR
+textutil::wcswidth
 .RE
 regular grammar
 .RS
@@ -10028,6 +10088,9 @@ counter
 \fBfiles/modules/math/math\&.n\fR
 math
 .TP
+\fBfiles/modules/math/changepoint\&.n\fR
+math::changepoint
+.TP
 \fBfiles/modules/math/pca\&.n\fR
 math::PCA
 .TP
@@ -10096,6 +10159,9 @@ textutil::tabify
 .TP
 \fBfiles/modules/textutil/trim\&.n\fR
 textutil::trim
+.TP
+\fBfiles/modules/textutil/wcswidth\&.n\fR
+textutil::wcswidth
 .RE
 stringprep
 .RS

@@ -1,13 +1,14 @@
-#!/usr/bin/env wish
+#! /usr/bin/env tclsh
 
 #==============================================================================
 # Demo:	wcb::callback <entry> before insert <callback> ...
 #	wcb::postInsertEntryText <entry> <index> <string>
 #	wcb::cancel
 #
-# Copyright (c) 1999-2018  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 1999-2023  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
+package require Tk
 package require wcb
 
 wm title . Entrytest
@@ -16,7 +17,7 @@ wm title . Entrytest
 # Add some entries to the Tk option database
 #
 source [file join [file dirname [info script]] option.tcl]
-option add *Entry.font		"Courier -12"
+option add *Entry.font		TkFixedFont
 option add *Entry.background	white
 
 #
@@ -79,7 +80,7 @@ frame .bottom -height 10
 # Manage the widgets
 #
 pack .bottom .close -side bottom
-pack .sep -side bottom -pady 10 -fill x
-pack .f1 .l1 .e1 -padx 10
-pack .f2 .l2 .e2 -padx 10
-pack .f3 .l3 .e3 -padx 10
+pack .sep -side bottom -pady 7p -fill x
+pack .f1 .l1 .e1 -padx 7p
+pack .f2 .l2 .e2 -padx 7p
+pack .f3 .l3 .e3 -padx 7p

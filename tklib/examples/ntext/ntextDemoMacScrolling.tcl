@@ -1,10 +1,8 @@
-#!/bin/sh
-# the next line restarts using tclsh \
-exec tclsh "$0" "$@"
+#! /usr/bin/env tclsh
 
-package require Tk
+package require Tk 8.5-
 
-# Copyright (c) 2005-2018 Keith Nash.
+# Copyright (c) 2005-2023 Keith Nash.
 #
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -22,7 +20,7 @@ set message {Ntext tries to offer a user experience that is as close as possible
 
 This example demonstrates the Mac bindings for keyboard navigation, and in particular the use of the keyboard for vertical scrolling.  The description below will not agree with the behavior of the application unless you are running it on a Mac.
 
-If you are using a Mac, one of the sets of radiobuttons at the bottom of the window will not be disabled (this set of buttons is not present on non-Mac platforms).  These radiobuttons allow you to set the value of ::ntext::classicParagraphs, which controls the response to the keyboard events described in (5) below.
+If you are using a Mac, one of the sets of radiobuttons in the control panel (right) will not be disabled (this set of buttons is not present on non-Mac platforms).  These radiobuttons allow you to set the value of ::ntext::classicParagraphs, which controls the response to the keyboard events described in (5) below.
 
 The key names are those used in Tk bindings (see the Tk manual page for the bind command).
 
@@ -99,7 +97,7 @@ There are five sets of bindings that use the keyboard for vertical scrolling.
 
 (4) Up and Down keys, with Control modifier
 
-    On recent versions of OS X, these keystrokes are intercepted by the windowing system.  To avoid confusion, Ntext defines these keystrokes to have no effect on any version of OS X.
+    On recent versions of macOS, these keystrokes are intercepted by the windowing system.  To avoid confusion, Ntext defines these keystrokes to have no effect on any version of macOS.
 
 (5) Up and Down keys, with Option modifier
 
@@ -127,7 +125,7 @@ if {::ntext::classicParagraphs == 1}
 
     The start of a paragraph is the first non-blank character after a blank line.
 
-    On non-Mac platforms, these actions are bound in Ntext and Text to the events <Control-Up>, <Control-Down>, <Shift-Control-Up>, <Shift-Control-Down>.  The Control- bindings are also defined in the Text binding tag on the Mac, although on recent versions of OS X these keystrokes are intercepted by the windowing system).
+    On non-Mac platforms, these actions are bound in Ntext and Text to the events <Control-Up>, <Control-Down>, <Shift-Control-Up>, <Shift-Control-Down>.  The Control- bindings are also defined in the Text binding tag on the Mac, although on recent versions of macOS these keystrokes are intercepted by the windowing system).
 
 }
 # End of string for widget text.
@@ -160,109 +158,56 @@ set ::ntext::classicSelection   0
 set ::ntext::classicParagraphs  0
 
 
+# ------------------------------------------------------------------------------
+# Now begin constructing the GUI.
+# ------------------------------------------------------------------------------
+
 set col #e0dfde
 . configure -bg $col
 
-pack [frame .rhf   -bg $col] -side right -anchor nw
-pack [frame .rhf.f -bg $col]
-pack [scrollbar .rhf.f.scroll -bg $col] -side right -anchor nw -expand 1 -fill y
-pack [text  .rhf.f.new ] -padx 2 -side right -anchor nw
-bindtags .rhf.f.new {.rhf.f.new Ntext . all}
+pack [frame .f -bg $col] -side right -anchor e
+pack [frame .cp -bg $col -bd 2p -relief ridge] -anchor ne -in .f
+pack [label .cp2 -bg $col -text "(These options are applied only\n to the right-hand text widget)"] -anchor n -pady 4p -in .f
 
-.rhf.f.new configure -wrap word -undo 1 -yscrollcommand {.rhf.f.scroll set}
-.rhf.f.new configure -width 61 -height 29 -font {{Courier} -15} -bg white
-.rhf.f.new insert end "  I use the Ntext bindings.\n\n$message"
-.rhf.f.new edit separator
-.rhf.f.scroll configure -command {.rhf.f.new yview}
+pack [frame .rhf   -bg $col] -side right -anchor nw
+pack [scrollbar .rhf.scroll -bg $col] -side right -anchor nw -expand 1 -fill y
+pack [text  .rhf.new ] -padx 2 -side right -anchor nw
+bindtags .rhf.new {.rhf.new Ntext . all}
+
+.rhf.new configure -wrap word -undo 1 -yscrollcommand {.rhf.scroll set}
+.rhf.new configure -width 61 -height 29 -font TkFixedFont -bg white
+.rhf.new insert end "  I use the Ntext bindings.\n\n$message"
+.rhf.new edit separator
+.rhf.scroll configure -command {.rhf.new yview}
 
 pack [frame .lhf   -bg $col] -side left -anchor ne
-pack [frame .lhf.f -bg $col]
-pack [scrollbar .lhf.f.scroll -bg $col] -side left -anchor nw -expand 1 -fill y
-pack [text .lhf.f.classic ] -padx 2 -side left -anchor nw
-.lhf.f.classic configure -width 61 -height 29 -wrap word -undo 1 -font {{Courier} -15} -bg #FFFFCC -yscrollcommand {.lhf.f.scroll set}
-.lhf.f.classic insert end "  I use the (default) Text bindings.\n\n$message"
-.lhf.f.classic edit separator
-.lhf.f.scroll configure -command {.lhf.f.classic yview}
+pack [scrollbar .lhf.scroll -bg $col] -side left -anchor nw -expand 1 -fill y
+pack [text .lhf.classic ] -padx 2 -side left -anchor nw
+.lhf.classic configure -width 61 -height 29 -wrap word -undo 1 -font TkFixedFont -bg #FFFFCC -yscrollcommand {.lhf.scroll set}
+.lhf.classic insert end "  I use the (default) Text bindings.\n\n$message"
+.lhf.classic edit separator
+.lhf.scroll configure -command {.lhf.classic yview}
 
+# What is the largest font such that the demo will fit on the screen?
+# Allow 100 pixels or 1 inch for desktop panels that are not counted in wm maxsize.
+# Reduce the font if necessary.
+set siz    [font actual TkFixedFont -size]
+set maxPts [expr { ([lindex [wm maxsize .] 1] - 6 - max (100., 72. * [tk scaling])) * $siz / ([winfo reqheight .lhf.classic] - 6) }]
+set siz    [expr { int(min($siz, $maxPts)) }]
+font configure TkFixedFont -size $siz
 
-pack [label  .lhf.m   -bg $col -text "(The radiobutton controls do not\napply to the left-hand text widget)"]
+set fam [font actual TkFixedFont -family]
+set TitleFixedFont [list $fam $siz bold]
 
-pack [frame .rhf.h -bg $col] -fill x
-pack [radiobutton .rhf.h.on  -bg $col -text "On " -variable ::ntext::classicMouseSelect -value 1] -side right
-pack [radiobutton .rhf.h.off -bg $col -text "Off" -variable ::ntext::classicMouseSelect -value 0] -side right
-pack [label  .rhf.h.l -bg $col -text "classicMouseSelect: "] -side right
+.lhf.classic tag add red  1.0 2.0
+.rhf.new     tag add blue 1.0 2.0
+.lhf.classic tag configure red  -foreground #A00000 -font $TitleFixedFont
+.rhf.new     tag configure red  -foreground #A00000 -font $TitleFixedFont
+.rhf.new     tag configure blue -foreground #0000A0 -font $TitleFixedFont
 
-pack [frame .rhf.g -bg $col] -anchor ne
-pack [radiobutton .rhf.g.on  -bg $col -text "On " -variable ::ntext::classicAnchor -value 1] -side right
-pack [radiobutton .rhf.g.off -bg $col -text "Off" -variable ::ntext::classicAnchor -value 0] -side right
-pack [label  .rhf.g.l -bg $col -text "classicAnchor: "] -side right
-
-pack [frame .rhf.k -bg $col] -anchor ne
-pack [radiobutton .rhf.k.on  -bg $col -text "On " -variable ::ntext::classicExtras -value 1] -side right
-pack [radiobutton .rhf.k.off -bg $col -text "Off" -variable ::ntext::classicExtras -value 0] -side right
-pack [label  .rhf.k.l -bg $col -text "classicExtras: "] -side right
-
-pack [frame .rhf.j -bg $col] -anchor ne
-set wordBreakChoice new
-pack [radiobutton .rhf.j.wind -bg $col -text "On (Windows)" -variable wordBreakChoice -value "windows" -command {setPattern}] -side right
-pack [radiobutton .rhf.j.unix -bg $col -text "On (Unix)" -variable wordBreakChoice -value "unix" -command {setPattern}] -side right
-pack [radiobutton .rhf.j.off  -bg $col -text "Off" -variable wordBreakChoice -value "new" -command {setPattern}] -side right
-pack [label  .rhf.j.l -bg $col -text "classicWordBreak: "] -side right
-
-pack [frame .rhf.m -bg $col] -anchor ne
-pack [radiobutton .rhf.m.on  -bg $col -text "On " -variable ::ntext::classicSelection -value 1] -side right
-pack [radiobutton .rhf.m.off -bg $col -text "Off" -variable ::ntext::classicSelection -value 0] -side right
-pack [label  .rhf.m.l -bg $col -text "classicSelection: "] -side right
-
-if {[tk windowingsystem] eq "aqua"} {
-pack [frame .rhf.n -bg $col -bg $col] -anchor ne -pady {0 10}
-pack [radiobutton .rhf.n.on  -bg $col -text "On " -variable ::ntext::classicParagraphs -value 1] -side right
-pack [radiobutton .rhf.n.off -bg $col -text "Off" -variable ::ntext::classicParagraphs -value 0] -side right
-pack [label  .rhf.n.l -bg $col -text "classicParagraphs: "] -side right
-}
-
-proc setPattern {} {
-    global wordBreakChoice
-    set platform $::tcl_platform(platform)
-
-    if {$wordBreakChoice eq "unix"} {
-        set ::tcl_platform(platform) unix
-        set ::ntext::classicWordBreak 1
-    } elseif {$wordBreakChoice eq "windows"} {
-        set ::tcl_platform(platform) windows
-        set ::ntext::classicWordBreak 1
-    } else {
-        set ::ntext::classicWordBreak 0
-    }
-
-    ::ntext::initializeMatchPatterns
-    set ::tcl_platform(platform) $platform
-}
-
-# Disable all radiobuttons except .rhf.n.on .rhf.n.off which are relevant to this demo:
-# And all labels except .lhf.m, .rhf.n.l
-
-foreach rb {
-    .rhf.h.on
-    .rhf.h.off
-    .rhf.g.on
-    .rhf.g.off
-    .rhf.k.on
-    .rhf.k.off
-    .rhf.j.wind
-    .rhf.j.unix
-    .rhf.j.off
-    .rhf.m.on
-    .rhf.m.off
-
-    .rhf.h.l
-    .rhf.g.l
-    .rhf.k.l
-    .rhf.j.l
-    .rhf.m.l
-} {
-    $rb configure -state disabled
-}
+# ------------------------------------------------------------------------------
+# Highlight names of bindings and modifiers in the text.
+# ------------------------------------------------------------------------------
 
 foreach term {
     <
@@ -291,7 +236,7 @@ foreach term {
     set lenny [string length $term]
     set nextPlace 1.0
     while {1} {
-        set place [.rhf.f.new search -- $term $nextPlace end-1c]
+        set place [.rhf.new search -- $term $nextPlace end-1c]
         if {$place eq {}} {
             break
         }
@@ -299,14 +244,123 @@ foreach term {
         if {$first && $term in {F14 F15 F16}} {
             # The first use of these terms is not as a binding name.
         } else {
-            .lhf.f.classic tag add red $place $nextPlace
-            .rhf.f.new     tag add red $place $nextPlace
+            .lhf.classic tag add red $place $nextPlace
+            .rhf.new     tag add red $place $nextPlace
         }
         set first 0
     }
 }
 
-.lhf.f.classic tag configure red -foreground #A00000 -font {{Courier} -15 bold}
+# ------------------------------------------------------------------------------
+# The code below populates frame .cp and implements the
+# control panel for selecting ntext configuration options.
+# ------------------------------------------------------------------------------
 
-.rhf.f.new     tag configure red -foreground #A00000 -font {{Courier} -15 bold}
+set col2 #f0efee
+set col3 #d0cfce
+font configure TkDefaultFont -size $siz
+set fam [font actual TkDefaultFont -family]
+set TitleVariableFont [list $fam $siz bold]
 
+proc radiobutton2 {w args} {
+    radiobutton23 $w 2 {*}$args
+}
+proc radiobutton3 {w args} {
+    radiobutton23 $w 3 {*}$args
+}
+proc radiobutton23 {w num args} {
+    if {$num == 2} {
+        set bg $::col2
+        set ab $::col3
+    } else {
+        set bg $::col3
+        set ab $::col2
+    }
+    frame $w -bg $bg
+    radiobutton $w.rb -bg $bg -activebackground $ab -highlightthickness 0 -padx 4p -pady 2p -anchor w {*}$args
+    pack $w.rb -expand 1 -fill both -pady 2p
+    return $w
+}
+
+label  .cp.n:l -bg $col2 -text "Options for ntext bindings" -font $TitleVariableFont
+grid .cp.n:l -ipady 2 -sticky ewn -columnspan 3
+
+label  .cp.h:l -bg $col3 -anchor e -text "classicMouseSelect: "
+radiobutton3 .cp.h:off -text "Off" -variable ::ntext::classicMouseSelect -value 0
+radiobutton3 .cp.h:on  -text "On " -variable ::ntext::classicMouseSelect -value 1
+grid .cp.h:l .cp.h:off .cp.h:on -ipady 2 -sticky ewns
+
+label  .cp.g:l -bg $col2 -anchor e -text "classicAnchor: "
+radiobutton2 .cp.g:off -text "Off" -variable ::ntext::classicAnchor -value 0
+radiobutton2 .cp.g:on  -text "On " -variable ::ntext::classicAnchor -value 1
+grid .cp.g:l .cp.g:off .cp.g:on -ipady 2 -sticky ewns
+
+label .cp.k:l -bg $col3 -anchor e -text "classicExtras: "
+radiobutton3 .cp.k:off -text "Off" -variable ::ntext::classicExtras -value 0
+radiobutton3 .cp.k:on  -text "On " -variable ::ntext::classicExtras -value 1
+grid .cp.k:l .cp.k:off .cp.k:on -ipady 2 -sticky ewns
+
+label  .cp.m:l -bg $col2 -anchor e -text "classicSelection: "
+radiobutton2 .cp.m:off -text "Off" -variable ::ntext::classicSelection -value 0
+radiobutton2 .cp.m:on  -text "On " -variable ::ntext::classicSelection -value 1
+grid .cp.m:l .cp.m:off .cp.m:on -ipady 2 -sticky ewns
+
+if {[tk windowingsystem] eq "aqua"} {
+label  .cp.p:l -bg $col3 -text "classicParagraphs: "
+radiobutton3 .cp.p:off -text "Off" -variable ::ntext::classicParagraphs -value 0
+radiobutton3 .cp.p:on  -text "On " -variable ::ntext::classicParagraphs -value 1
+grid .cp.p:l .cp.p:off .cp.p:on -ipady 2 -sticky ewns
+}
+
+set wordBreakChoice new
+label  .cp.j:l -bg $col2 -anchor e -text "classicWordBreak: "
+radiobutton2 .cp.j:off  -text "Off"          -variable wordBreakChoice -value "new"     -command setPattern
+radiobutton2 .cp.j:unix -text "On (Unix)"    -variable wordBreakChoice -value "unix"    -command setPattern
+radiobutton2 .cp.j:wind -text "On (Windows)" -variable wordBreakChoice -value "windows" -command setPattern
+frame .cp.j:sp1 -bg $col2
+frame .cp.j:sp2 -bg $col2
+grid .cp.j:l   .cp.j:off .cp.j:unix -ipady 2 -sticky ewns
+grid .cp.j:sp1 .cp.j:sp2 .cp.j:wind -ipady 2 -sticky ewns
+
+proc setPattern {} {
+    global wordBreakChoice
+    set platform $::tcl_platform(platform)
+
+    if {$wordBreakChoice eq "unix"} {
+        set ::tcl_platform(platform) unix
+        set ::ntext::classicWordBreak 1
+    } elseif {$wordBreakChoice eq "windows"} {
+        set ::tcl_platform(platform) windows
+        set ::ntext::classicWordBreak 1
+    } else {
+        set ::ntext::classicWordBreak 0
+    }
+
+    ::ntext::initializeMatchPatterns
+    set ::tcl_platform(platform) $platform
+}
+
+# Disable all radiobuttons except .cp.p.on .cp.p.off which are relevant to this demo:
+# And all labels except .cp2, .cp.p.l
+
+foreach rb {
+    .cp.h:on.rb
+    .cp.h:off.rb
+    .cp.g:on.rb
+    .cp.g:off.rb
+    .cp.k:on.rb
+    .cp.k:off.rb
+    .cp.j:wind.rb
+    .cp.j:unix.rb
+    .cp.j:off.rb
+    .cp.m:on.rb
+    .cp.m:off.rb
+
+    .cp.h:l
+    .cp.g:l
+    .cp.k:l
+    .cp.j:l
+    .cp.m:l
+} {
+    $rb configure -state disabled
+}

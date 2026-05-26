@@ -1,0 +1,417 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>widgetPlus - Enhanced Entry, Spinbox, and Combobox Widgets with Undo/Redo and other useful features</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'widgetPlus.man' by tcllib/doctools with format 'html'
+   -->
+<!-- widgetPlus.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">widgetPlus(n) 1.0 tklib &quot;Enhanced Entry, Spinbox, and Combobox Widgets with Undo/Redo and other useful features&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>widgetPlus - Enhanced Entry, Spinbox, and Combobox Widgets with Undo/Redo and other useful features</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">WIDGET OPTIONS</a></li>
+<li class="doctools_section"><a href="#section3">COMMANDS</a></li>
+<li class="doctools_section"><a href="#section4">WIDGET COMMANDS</a></li>
+<li class="doctools_section"><a href="#section5">BINDINGS</a>
+<ul>
+<li class="doctools_subsection"><a href="#subsection1">Class Bindings</a></li>
+<li class="doctools_subsection"><a href="#subsection2">Undo and Redo</a></li>
+<li class="doctools_subsection"><a href="#subsection3">EntryPlus</a></li>
+<li class="doctools_subsection"><a href="#subsection4">SpinboxPlus</a></li>
+<li class="doctools_subsection"><a href="#subsection5">TEntryPlus</a></li>
+<li class="doctools_subsection"><a href="#subsection6">TSpinboxPlus</a></li>
+<li class="doctools_subsection"><a href="#subsection7">TComboboxPlus</a></li>
+</ul>
+</li>
+<li class="doctools_section"><a href="#section6">VIRTUAL EVENT &lt;&lt;Selection&gt;&gt;</a></li>
+<li class="doctools_section"><a href="#section7">USE WITH MEGAWIDGETS</a>
+<ul>
+<li class="doctools_subsection"><a href="#subsection8">combobox (by Bryan Oakley)</a></li>
+<li class="doctools_subsection"><a href="#subsection9">ComboBox (BWidget)</a></li>
+</ul>
+</li>
+<li class="doctools_section"><a href="#section8">TO DO</a></li>
+<li class="doctools_section"><a href="#section9">BUGS</a></li>
+<li class="doctools_section"><a href="#section10">EXAMPLES</a></li>
+<li class="doctools_section"><a href="#section11">Bugs, Ideas, Feedback</a></li>
+<li class="doctools_section"><a href="#see-also">See Also</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_requirements">
+<li>package require <b class="pkgname">Tcl 8.5</b></li>
+<li>package require <b class="pkgname">Tk 8.5</b></li>
+<li>package require <b class="pkgname">snit</b></li>
+<li>package require <b class="pkgname">widgetPlus <span class="opt">?1.0?</span></b></li>
+</ul>
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">widgetPlus::entryPlus</b> <span class="opt">?<i class="arg">create</i>?</span> <i class="arg">pathName</i></a></li>
+<li><a href="#2"><b class="cmd">widgetPlus::spinboxPlus</b> <span class="opt">?<i class="arg">create</i>?</span> <i class="arg">pathName</i></a></li>
+<li><a href="#3"><b class="cmd">widgetPlus::ttkEntryPlus</b> <span class="opt">?<i class="arg">create</i>?</span> <i class="arg">pathName</i></a></li>
+<li><a href="#4"><b class="cmd">widgetPlus::ttkSpinboxPlus</b> <span class="opt">?<i class="arg">create</i>?</span> <i class="arg">pathName</i></a></li>
+<li><a href="#5"><b class="cmd">widgetPlus::ttkComboboxPlus</b> <span class="opt">?<i class="arg">create</i>?</span> <i class="arg">pathName</i></a></li>
+<li><a href="#6"><b class="cmd">widgetPlus::EnableBWidget</b></a></li>
+<li><a href="#7"><i class="arg">pathName</i> <b class="cmd">edit</b> <span class="opt">?<i class="arg">arg arg ...</i>?</span></a></li>
+<li><a href="#8"><i class="arg">pathName</i> <b class="cmd">edit canredo</b></a></li>
+<li><a href="#9"><i class="arg">pathName</i> <b class="cmd">edit canundo</b></a></li>
+<li><a href="#10"><i class="arg">pathName</i> <b class="cmd">edit modified</b> <span class="opt">?<i class="arg">boolean</i>?</span></a></li>
+<li><a href="#11"><i class="arg">pathName</i> <b class="cmd">edit redo</b></a></li>
+<li><a href="#12"><i class="arg">pathName</i> <b class="cmd">edit reset</b></a></li>
+<li><a href="#13"><i class="arg">pathName</i> <b class="cmd">edit separator</b></a></li>
+<li><a href="#14"><i class="arg">pathName</i> <b class="cmd">edit undo</b></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>The <b class="package">widgetPlus</b> package adds new features to the widgets <b class="syscmd"><b class="widget">entry</b></b>, <b class="syscmd"><b class="widget">spinbox</b></b>, <b class="syscmd"><b class="widget">ttk::entry</b></b>, <b class="syscmd"><b class="widget">ttk::spinbox</b></b>, and <b class="syscmd"><b class="widget">ttk::combobox</b></b>.</p>
+<p>The new features are Undo and Redo operations, a <b class="const">&lt;&lt;Selection&gt;&gt;</b> event, and for the <b class="const">Tk</b> (unthemed) widgets an <b class="option">-inactiveselectbackground</b> option, and some minor fixes to bindings.  The new facilities closely follow those of the <b class="syscmd"><b class="widget">text</b></b> widget.</p>
+<p>The revised <b class="syscmd"><b class="widget">entry</b></b>, <b class="syscmd"><b class="widget">spinbox</b></b>, <b class="syscmd"><b class="widget">ttk::entry</b></b>, <b class="syscmd"><b class="widget">ttk::spinbox</b></b>, and <b class="syscmd"><b class="widget">ttk::combobox</b></b> widgets are created by the commands <b class="cmd">widgetPlus::entryPlus</b>, <b class="cmd">widgetPlus::spinboxPlus</b>, <b class="cmd">widgetPlus::ttkEntryPlus</b>, <b class="cmd">widgetPlus::ttkSpinboxPlus</b>, and <b class="cmd">widgetPlus::ttkComboboxPlus</b> respectively.</p>
+<p>For example, the <b class="cmd">widgetPlus::entryPlus</b> widget is implemented as a <i class="term"><a href="../../../../index.html#snit">Snit</a></i> <b class="syscmd">snit::widgetadaptor</b> that wraps a <b class="package"><a href="../../../../index.html#tk">Tk</a></b> <b class="syscmd"><b class="widget">entry</b></b> widget.  Its <b class="syscmd">winfo class</b> is <b class="const">Entry</b>, and it uses a binding tag <b class="const">EntryPlus</b> that replaces the <b class="const">Entry</b> binding tag.  The other widgets are implemented in a similar way.</p>
+<p>The package uses the namespace <b class="namespace">::widgetPlus</b>, which exports (only) the five commands defined below that begin with a lower-case letter (<b class="cmd">EnableBWidget</b> is not exported).  These commands can be imported into the global namespace, and for simplicity, descriptive text in this manual will henceforth omit the namespace qualifier.</p>
+<pre class="doctools_example">
+namespace import ::widgetPlus::*
+</pre>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">WIDGET OPTIONS</a></h2>
+<p>In addition to the usual options of the <b class="syscmd"><b class="widget">entry</b></b>, <b class="syscmd"><b class="widget">spinbox</b></b>, <b class="syscmd"><b class="widget">ttk::entry</b></b>, <b class="syscmd"><b class="widget">ttk::spinbox</b></b>, and <b class="syscmd"><b class="widget">ttk::combobox</b></b> widgets, the wrappers <b class="cmd"><b class="widget">entryPlus</b></b>, <b class="cmd"><b class="widget">spinboxPlus</b></b>, <b class="cmd"><b class="widget">ttkEntryPlus</b></b>, <b class="cmd"><b class="widget">ttkSpinboxPlus</b></b>, and <b class="cmd"><b class="widget">ttkComboboxPlus</b></b> provide the options below.</p>
+<dl class="doctools_tkoptions">
+<dt>Command-Line Switch:	<b class="option"><b class="option">-inactiveselectbackground</b></b><br>
+Database Name:	<b class="optdbname">inactiveSelectBackground</b><br>
+Database Class:	<b class="optdbclass">Foreground</b><br>
+</dt>
+<dd><p>Specifies the color to use for the selection when the window does not have the input <b class="syscmd">focus</b>. If empty, <b class="const">{}</b>, then no selection is shown when the window does not have the <b class="syscmd">focus</b>.  The <b class="option">-inactiveselectbackground</b> option has no effect on the <b class="const">Ttk</b> (themed) widgets <b class="cmd"><b class="widget">ttkEntryPlus</b></b>, <b class="cmd"><b class="widget">ttkSpinboxPlus</b></b>, and <b class="cmd"><b class="widget">ttkComboboxPlus</b></b>.</p></dd>
+<dt>Command-Line Switch:	<b class="option"><b class="option">-maxundo</b></b><br>
+Database Name:	<b class="optdbname">maxUndo</b><br>
+Database Class:	<b class="optdbclass">MaxUndo</b><br>
+</dt>
+<dd><p>Specifies the maximum number of compound undo actions on the <i class="term">undo stack</i>. A zero or a negative value imply an unlimited <i class="term">undo stack</i>.</p></dd>
+<dt>Command-Line Switch:	<b class="option"><b class="option">-undo</b></b><br>
+Database Name:	<b class="optdbname">undo</b><br>
+Database Class:	<b class="optdbclass">Undo</b><br>
+</dt>
+<dd><p>Specifies a <i class="term">boolean</i> that says whether the undo mechanism is active or not.</p></dd>
+</dl>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">COMMANDS</a></h2>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">widgetPlus::entryPlus</b> <span class="opt">?<i class="arg">create</i>?</span> <i class="arg">pathName</i></a></dt>
+<dd><p>Create an <b class="cmd"><b class="widget">entryPlus</b></b> widget; or convert an existing <b class="widget">entry</b> widget into an <b class="cmd"><b class="widget">entryPlus</b></b>.</p></dd>
+<dt><a name="2"><b class="cmd">widgetPlus::spinboxPlus</b> <span class="opt">?<i class="arg">create</i>?</span> <i class="arg">pathName</i></a></dt>
+<dd><p>Create a <b class="cmd"><b class="widget">spinboxPlus</b></b> widget; or convert an existing <b class="widget">spinbox</b> widget into a <b class="cmd"><b class="widget">spinboxPlus</b></b>.</p></dd>
+<dt><a name="3"><b class="cmd">widgetPlus::ttkEntryPlus</b> <span class="opt">?<i class="arg">create</i>?</span> <i class="arg">pathName</i></a></dt>
+<dd><p>Create a <b class="cmd"><b class="widget">ttkEntryPlus</b></b> widget; or convert an existing <b class="widget">ttk::entry</b> widget into a <b class="cmd"><b class="widget">ttkEntryPlus</b></b>.</p></dd>
+<dt><a name="4"><b class="cmd">widgetPlus::ttkSpinboxPlus</b> <span class="opt">?<i class="arg">create</i>?</span> <i class="arg">pathName</i></a></dt>
+<dd><p>Create a <b class="cmd"><b class="widget">ttkSpinboxPlus</b></b> widget; or convert an existing <b class="widget">ttk::spinbox</b> widget into a <b class="cmd"><b class="widget">ttkSpinboxPlus</b></b>.</p></dd>
+<dt><a name="5"><b class="cmd">widgetPlus::ttkComboboxPlus</b> <span class="opt">?<i class="arg">create</i>?</span> <i class="arg">pathName</i></a></dt>
+<dd><p>Create a <b class="cmd"><b class="widget">ttkComboboxPlus</b></b> widget; or convert an existing <b class="widget">ttk::combobox</b> widget into a <b class="cmd"><b class="widget">ttkComboboxPlus</b></b>.</p></dd>
+<dt><a name="6"><b class="cmd">widgetPlus::EnableBWidget</b></a></dt>
+<dd><p>Enable <b class="package">widgetPlus</b> to modify <b class="package">BWidget</b> <b class="syscmd"><b class="widget">Entry</b></b> widgets and their compounds (such as the <b class="package">BWidget</b> <b class="syscmd"><b class="widget">ComboBox</b></b>).  The command creates a bindtag <b class="const">BwEntryPlus</b> to replace the default bindtag <b class="const">BwEntry</b>.  This operation is not performed when the package is loaded because it requires <b class="package">BWidget</b> to be loaded first.  This command is not exported from namespace <b class="namespace">::widgetPlus</b>.</p></dd>
+</dl>
+</div>
+<div id="section4" class="doctools_section"><h2><a name="section4">WIDGET COMMANDS</a></h2>
+<p>In addition to the usual commands of the <b class="syscmd"><b class="widget">entry</b></b>, <b class="syscmd"><b class="widget">spinbox</b></b>, <b class="syscmd"><b class="widget">ttk::entry</b></b>, <b class="syscmd"><b class="widget">ttk::spinbox</b></b>, and <b class="syscmd"><b class="widget">ttk::combobox</b></b> widgets, the wrappers <b class="cmd"><b class="widget">entryPlus</b></b>, <b class="cmd"><b class="widget">ttkEntryPlus</b></b>, <b class="cmd"><b class="widget">spinboxPlus</b></b>, <b class="cmd"><b class="widget">ttkSpinboxPlus</b></b>, and <b class="cmd"><b class="widget">ttkComboboxPlus</b></b> provide:</p>
+<dl class="doctools_definitions">
+<dt><a name="7"><i class="arg">pathName</i> <b class="cmd">edit</b> <span class="opt">?<i class="arg">arg arg ...</i>?</span></a></dt>
+<dd><p>This command controls the undo mechanism and the <i class="term">modified flag</i>. The exact behavior of the command depends on the option argument that follows the edit argument. The following forms of the command are currently supported:</p></dd>
+<dt><a name="8"><i class="arg">pathName</i> <b class="cmd">edit canredo</b></a></dt>
+<dd><p>Returns a <i class="term">boolean</i> <b class="const">true</b> if redo is possible, i.e. when the <i class="term">redo stack</i> is not empty. Otherwise returns <b class="const">false</b>.</p></dd>
+<dt><a name="9"><i class="arg">pathName</i> <b class="cmd">edit canundo</b></a></dt>
+<dd><p>Returns a <i class="term">boolean</i> <b class="const">true</b> if undo is possible, i.e. when the <i class="term">undo stack</i> is not empty. Otherwise returns <b class="const">false</b>.</p></dd>
+<dt><a name="10"><i class="arg">pathName</i> <b class="cmd">edit modified</b> <span class="opt">?<i class="arg">boolean</i>?</span></a></dt>
+<dd><p>If <i class="arg">boolean</i> is not specified, returns the <i class="term">modified flag</i> of the widget. The <b class="cmd">insert</b>, <b class="cmd">delete</b>, <b class="cmd">edit undo</b> and <b class="cmd">edit redo</b> commands, or (by using this command) the user, can set or clear the <i class="term">modified flag</i>. If <i class="arg">boolean</i> is specified, sets the <i class="term">modified flag</i> of the widget to <i class="arg">boolean</i>.</p></dd>
+<dt><a name="11"><i class="arg">pathName</i> <b class="cmd">edit redo</b></a></dt>
+<dd><p>When the <b class="option">-undo</b> option is <b class="const">true</b>, reapplies the last undone edits provided no other edits were done since then. Generates an error when the <i class="term">redo stack</i> is empty. Does nothing when the <b class="option">-undo</b> option is <b class="const">false</b>.</p></dd>
+<dt><a name="12"><i class="arg">pathName</i> <b class="cmd">edit reset</b></a></dt>
+<dd><p>Clears the <i class="term">undo stack</i> and <i class="term">redo stack</i>.</p></dd>
+<dt><a name="13"><i class="arg">pathName</i> <b class="cmd">edit separator</b></a></dt>
+<dd><p>Included for completeness, but has no effect.</p>
+<p>(N.B. An implicit separator is added to the <i class="term">undo stack</i> for each call to a widget command (e.g. <b class="cmd">insert</b> or <b class="cmd">delete</b>) that changes the widget contents.  These therefore separate the addition or removal of individual characters by typing, except that <i class="term">cut</i> or <i class="term">paste</i> operations are discrete.)</p></dd>
+<dt><a name="14"><i class="arg">pathName</i> <b class="cmd">edit undo</b></a></dt>
+<dd><p>Undoes the last edit action when the <b class="option">-undo</b> option is <b class="const">true</b>. An edit action is defined as a single <b class="cmd">insert</b> or <b class="cmd">delete</b> command that is recorded on the <i class="term">undo stack</i>. Generates an error when the <i class="term">undo stack</i> is empty. Does nothing when the <b class="option">-undo</b> option is <b class="const">false</b>.</p></dd>
+</dl>
+</div>
+<div id="section5" class="doctools_section"><h2><a name="section5">BINDINGS</a></h2>
+<div id="subsection1" class="doctools_subsection"><h3><a name="subsection1">Class Bindings</a></h3>
+<p>The class binding tag for different widgets has these default values:</p>
+<ul class="doctools_itemized">
+<li><p><b class="syscmd"><b class="widget">entry</b></b>           uses <b class="const">Entry</b></p></li>
+<li><p><b class="syscmd"><b class="widget">spinbox</b></b>         uses <b class="const">Spinbox</b></p></li>
+<li><p><b class="syscmd"><b class="widget">ttk::entry</b></b>      uses <b class="const">TEntry</b></p></li>
+<li><p><b class="syscmd"><b class="widget">ttk::spinbox</b></b>    uses <b class="const">TSpinbox</b></p></li>
+<li><p><b class="syscmd"><b class="widget">ttk::combobox</b></b>   uses <b class="const">TCombobox</b></p></li>
+<li><p><b class="cmd"><b class="widget">entryPlus</b></b>       uses <b class="const">EntryPlus</b></p></li>
+<li><p><b class="cmd"><b class="widget">spinboxPlus</b></b>     uses <b class="const">SpinboxPlus</b></p></li>
+<li><p><b class="cmd"><b class="widget">ttkEntryPlus</b></b>    uses <b class="const">TEntryPlus</b></p></li>
+<li><p><b class="cmd"><b class="widget">ttkSpinboxPlus</b></b>  uses <b class="const">TSpinboxPlus</b></p></li>
+<li><p><b class="cmd"><b class="widget">ttkComboboxPlus</b></b> uses <b class="const">TComboboxPlus</b></p></li>
+</ul>
+</div>
+<div id="subsection2" class="doctools_subsection"><h3><a name="subsection2">Undo and Redo</a></h3>
+<p>The <b class="const">&lt;&lt;Undo&gt;&gt;</b> and <b class="const">&lt;&lt;Redo&gt;&gt;</b> virtual events are mapped to these keyboard events:</p>
+<ul class="doctools_itemized">
+<li><p>On X11 systems (Linux&reg;, BSD&reg;, Solaris&reg;, etc):</p>
+<ul class="doctools_itemized">
+<li><p><b class="const">&lt;&lt;Undo&gt;&gt;</b> is mapped to <b class="const">&lt;Control-z&gt;</b></p></li>
+</ul>
+<ul class="doctools_itemized">
+<li><p><b class="const">&lt;&lt;Redo&gt;&gt;</b> is mapped to <b class="const">&lt;Control-Shift-z&gt;</b></p></li>
+</ul>
+</li>
+<li><p>On Windows&reg; systems:</p>
+<ul class="doctools_itemized">
+<li><p><b class="const">&lt;&lt;Undo&gt;&gt;</b> is mapped to <b class="const">&lt;Control-z&gt;</b></p></li>
+</ul>
+<ul class="doctools_itemized">
+<li><p><b class="const">&lt;&lt;Redo&gt;&gt;</b> is mapped to <b class="const">&lt;Control-y&gt;</b></p></li>
+</ul>
+</li>
+<li><p>On Aqua&reg; systems (i.e. Apple&reg; macOS&reg; or OS X&reg;):</p>
+<ul class="doctools_itemized">
+<li><p><b class="const">&lt;&lt;Undo&gt;&gt;</b> is mapped to <b class="const">&lt;Command-z&gt;</b></p></li>
+</ul>
+<ul class="doctools_itemized">
+<li><p><b class="const">&lt;&lt;Redo&gt;&gt;</b> is mapped to <b class="const">&lt;Command-Shift-z&gt;</b></p></li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="subsection3" class="doctools_subsection"><h3><a name="subsection3">EntryPlus</a></h3>
+<p>The <b class="const">EntryPlus</b> bindings are based on those of the <b class="const">Entry</b> bindtag, with these changes:</p>
+<ul class="doctools_itemized">
+<li><p>New bindings to <b class="const">&lt;&lt;Undo&gt;&gt;</b> and <b class="const">&lt;&lt;Redo&gt;&gt;</b>.</p></li>
+<li><p>An adjustment to the <b class="const">&lt;&lt;Paste&gt;&gt;</b> binding, so that it behaves the same way on X11 as on other windowing systems (i.e. it deletes the existing selection, if any exists).</p></li>
+<li><p>The removal of the antiquated <b class="const">&lt;Insert&gt;</b> binding.</p></li>
+<li><p>New bindings to <b class="const">&lt;FocusIn&gt;</b> and <b class="const">&lt;FocusOut&gt;</b>, to facilitate the implementation of the <b class="option">-inactiveselectbackground</b> option.</p></li>
+</ul>
+</div>
+<div id="subsection4" class="doctools_subsection"><h3><a name="subsection4">SpinboxPlus</a></h3>
+<p>The <b class="const">SpinboxPlus</b> bindings are based on those of the <b class="const">Spinbox</b> bindtag, with the same changes as are made when converting <b class="const">Entry</b> to <b class="const">EntryPlus</b>.</p>
+</div>
+<div id="subsection5" class="doctools_subsection"><h3><a name="subsection5">TEntryPlus</a></h3>
+<p>The <b class="const">TEntryPlus</b> bindings are based on those of the <b class="const">TEntry</b> bindtag, with these changes:</p>
+<ul class="doctools_itemized">
+<li><p>New bindings to <b class="const">&lt;&lt;Undo&gt;&gt;</b> and <b class="const">&lt;&lt;Redo&gt;&gt;</b>.</p></li>
+</ul>
+</div>
+<div id="subsection6" class="doctools_subsection"><h3><a name="subsection6">TSpinboxPlus</a></h3>
+<p>The <b class="const">TSpinboxPlus</b> bindings are based on those of the <b class="const">TSpinbox</b> bindtag, with these changes:</p>
+<ul class="doctools_itemized">
+<li><p>New bindings to <b class="const">&lt;&lt;Undo&gt;&gt;</b> and <b class="const">&lt;&lt;Redo&gt;&gt;</b>.</p></li>
+</ul>
+</div>
+<div id="subsection7" class="doctools_subsection"><h3><a name="subsection7">TComboboxPlus</a></h3>
+<p>The <b class="const">TComboboxPlus</b> bindings are based on those of the <b class="const">TCombobox</b> bindtag, with these changes:</p>
+<ul class="doctools_itemized">
+<li><p>New bindings to <b class="const">&lt;&lt;Undo&gt;&gt;</b> and <b class="const">&lt;&lt;Redo&gt;&gt;</b>.</p></li>
+</ul>
+</div>
+</div>
+<div id="section6" class="doctools_section"><h2><a name="section6">VIRTUAL EVENT &lt;&lt;Selection&gt;&gt;</a></h2>
+<p>Each <b class="package">widgetPlus</b> widget generates a virtual event <b class="const">&lt;&lt;Selection&gt;&gt;</b> whenever the value of its selection changes.  This allows other <b class="package">Tcl</b> code, for example the package <b class="package"><a href="../persistentSelection/persistentSelection.html">persistentSelection</a></b>, to monitor the selection in these widgets.</p>
+</div>
+<div id="section7" class="doctools_section"><h2><a name="section7">USE WITH MEGAWIDGETS</a></h2>
+<p>When an <b class="syscmd"><b class="widget">entry</b></b>, <b class="syscmd"><b class="widget">spinbox</b></b>, <b class="syscmd"><b class="widget">ttk::entry</b></b>, <b class="syscmd"><b class="widget">ttk::spinbox</b></b>, or <b class="syscmd"><b class="widget">ttk::combobox</b></b> is a component of a megawidget, it is often possible to apply <b class="package">widgetPlus</b> to that component without modifying the megawidget code.</p>
+<div id="subsection8" class="doctools_subsection"><h3><a name="subsection8">combobox (by Bryan Oakley)</a></h3>
+<p>A <b class="syscmd"><b class="widget">combobox</b></b> with path <b class="const">$w</b> includes an <b class="syscmd"><b class="widget">entry</b></b> widget <b class="const">$w.entry</b>, which uses the <b class="const">Entry</b> binding tag.  Thus <b class="package">widgetPlus</b> can be applied to the <b class="syscmd"><b class="widget">combobox</b></b> after creation, using the command (see <span class="sectref"><a href="#section10">EXAMPLES</a></span>)</p>
+<pre class="doctools_example">
+entryPlus $w.entry -undo 1 -maxundo 0
+</pre>
+</div>
+<div id="subsection9" class="doctools_subsection"><h3><a name="subsection9">ComboBox (BWidget)</a></h3>
+<p>A <b class="package">BWidget</b> <b class="syscmd">ComboBox</b> with path <b class="const">$w</b> includes an <b class="syscmd"><b class="widget">entry</b></b> widget <b class="const">$w.e</b>, which uses the <b class="const">BwEntry</b> binding tag in place of the default tag <b class="const">Entry</b>.</p>
+<p>Package <b class="package">widgetPlus</b> provides a replacement bindtag <b class="const">BwEntryPlus</b>, but this is not computed when the package is loaded because it requires <b class="package">BWidget</b> to be loaded first.  The command <b class="cmd">::widgetPlus::EnableBWidget</b> must be called to provide <b class="const">BwEntryPlus</b>, and then the <b class="package">BWidget</b> <b class="syscmd">ComboBox</b> can be modified (see <span class="sectref"><a href="#section10">EXAMPLES</a></span>)</p>
+<pre class="doctools_example">
+::widgetPlus::EnableBWidget
+entryPlus $w.e -undo 1 -maxundo 0
+</pre>
+</div>
+</div>
+<div id="section8" class="doctools_section"><h2><a name="section8">TO DO</a></h2>
+<ul class="doctools_itemized">
+<li><p>Undo and Redo do not sync the value of the <i class="term">modified flag</i> - they always set the value to <i class="term">boolean</i> <b class="const">true</b>.</p></li>
+<li><p>Undo and Redo do not sync the position of the insertion cursor.</p></li>
+<li><p>The <b class="const">&lt;&lt;Modified&gt;&gt;</b> event is not generated.</p></li>
+<li><p>Undo/Redo separators, and the <b class="option">-autoseparators</b> option, as found in the <b class="syscmd"><b class="widget">text</b></b> widget, are not implemented. An implicit separator is added for each call to a widget command (e.g. <b class="cmd">insert</b> or <b class="cmd">delete</b>) that changes the widget contents.  The <b class="cmd">edit separator</b> command has no effect.  Separator functionality would be less useful for widgets such as <b class="cmd"><b class="widget">entryPlus</b></b> than it is for a <b class="syscmd"><b class="widget">text</b></b> widget.</p></li>
+<li><p>Add an <i class="term">overwrite</i> mode, toggled by <b class="const">&lt;Insert&gt;</b> on non-macOS&reg; systems.</p></li>
+</ul>
+</div>
+<div id="section9" class="doctools_section"><h2><a name="section9">BUGS</a></h2>
+<p>This version of <b class="package">widgetPlus</b> is intended to be compatible with all releases of <b class="package"><a href="../../../../index.html#tk">Tk</a></b> 8.5 and 8.6, and with the branches <em>core-8-5-branch</em>, <em>core-8-6-branch</em>, and <em>trunk</em> in the source code repository for <b class="package"><a href="../../../../index.html#tk">Tk</a></b>.  Any incompatibility with any of these versions, for any <b class="package"><a href="../../../../index.html#tk">Tk</a></b> windowing system, should be reported as a bug. Please report such in the category <em>widgetPlus</em> of the <a href="http://core.tcl.tk/tklib/reportlist">Tklib Trackers</a>.</p>
+</div>
+<div id="section10" class="doctools_section"><h2><a name="section10">EXAMPLES</a></h2>
+<p>To create and map an <b class="cmd"><b class="widget">entryPlus</b></b> widget .ep with an unlimited Undo/Redo stack:</p>
+<pre class="doctools_example">
+package require widgetPlus
+widgetPlus::entryPlus .ep -undo 1 -maxundo 0
+pack .ep
+</pre>
+<p>The same but using <b class="syscmd">namespace import</b>:</p>
+<pre class="doctools_example">
+package require widgetPlus
+namespace import widgetPlus::*
+entryPlus .ep -undo 1 -maxundo 0
+pack .ep
+</pre>
+<p>To convert an existing <b class="syscmd"><b class="widget">entry</b></b> widget .ee into an <b class="cmd"><b class="widget">entryPlus</b></b> with an unlimited Undo/Redo stack:</p>
+<pre class="doctools_example">
+entry .ee
+    .
+    .
+    .
+package require widgetPlus
+widgetPlus::entryPlus .ee -undo 1 -maxundo 0
+</pre>
+<p>The same but using <b class="syscmd">namespace import</b>:</p>
+<pre class="doctools_example">
+entry .ee
+    .
+    .
+    .
+package require widgetPlus
+namespace import widgetPlus::*
+entryPlus .ee -undo 1 -maxundo 0
+</pre>
+<p>Apply <b class="package">widgetPlus</b> to a Bryan Oakley <b class="syscmd"><b class="widget">combobox</b></b>:</p>
+<pre class="doctools_example">
+package require combobox
+combobox::combobox .cb
+    .
+    .
+    .
+package require widgetPlus
+namespace import widgetPlus::*
+entryPlus .cb.entry -undo 1 -maxundo 0
+</pre>
+<p>Apply <b class="package">widgetPlus</b> to a <b class="package">BWidget</b> <b class="syscmd"><b class="widget">ComboBox</b></b>.  The command <b class="cmd">::widgetPlus::EnableBWidget</b> must be called first.</p>
+<pre class="doctools_example">
+package require BWidget
+ComboBox .cb
+    .
+    .
+    .
+package require widgetPlus
+::widgetPlus::EnableBWidget
+namespace import widgetPlus::*
+entryPlus .cb.e -undo 1 -maxundo 0
+</pre>
+</div>
+<div id="section11" class="doctools_section"><h2><a name="section11">Bugs, Ideas, Feedback</a></h2>
+<p>This document, and the package it describes, will undoubtedly contain
+bugs and other problems.
+Please report such in the category <em>widgetPlus</em> of the
+<a href="http://core.tcl.tk/tklib/reportlist">Tklib Trackers</a>.
+Please also report any ideas for enhancements you may have for either
+package and/or documentation.</p>
+</div>
+<div id="see-also" class="doctools_section"><h2><a name="see-also">See Also</a></h2>
+<p>BWidget, ComboBox, <a href="../../../../index.html#entry">Entry</a>, <a href="../../../../index.html#entry">entry</a>, <a href="../persistentSelection/persistentSelection.html">persistentSelection</a>, spinbox, <a href="../../../../index.html#text">text</a>, <a href="../../../../index.html#ttk_combobox">ttk::combobox</a>, <a href="../../../../index.html#ttk_entry">ttk::entry</a>, ttk::spinbox</p>
+</div>
+</div></body></html>

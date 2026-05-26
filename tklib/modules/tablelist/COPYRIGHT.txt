@@ -1,5 +1,5 @@
-Multi-column listbox and tree widget package Tablelist, version 6.8
-Copyright (c) 2000-2019  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+Multi-column listbox and tree widget package Tablelist, version 7.4.1
+Copyright (c) 2000-2024  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 
 This library is free software; you can use, modify, and redistribute it
 for any purpose, provided that existing copyright notices are retained

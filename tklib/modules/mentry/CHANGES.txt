@@ -1,5 +1,181 @@
-What is new in Mentry 3.10?
+What is new in Mentry 4.3.1?
+----------------------------
+
+1. Made sure that the Migration Tool for Tcl 9 by Ashok Nadkarni won't
+   output any warnings or notes (thanks to Andreas Kupries for his
+   valuable input).
+
+What was new in Mentry 4.3?
 ---------------------------
+
+1. Made sure that the handling of the <TouchpadScroll> event won't
+   pollute the global namespace (thanks to Rolf Ade for drawing my
+   attention to this issue).
+
+2. Loading the package no longer sets a global variable (thanks to
+   Emiliano Gavilan for reporting this issue).
+
+3. The "put" subcommand no longer moves the focus temporarily from the
+   mentry widget to the containing toplevel window (thanks to Emiliano
+   Gavilan for his bug report).
+
+4. Restored the support for Tcl/Tk 8.4, which was broken due to the use
+   of package version numbers with a trailing "-" (thanks to Samuel
+   Brown for his bug report).
+
+What was new in Mentry 4.2?
+---------------------------
+
+1. Adapted to the recent improvements in the "classic" theme by Emiliano
+   Gavilan.
+
+2. Adapted the default value of the "-selectborderwidth" option in
+   Mentry_tile to recent changes in the "default" and "classic" themes.
+
+What was new in Mentry 4.1?
+---------------------------
+
+1. Fixed a long-standing bug due to which under some circumstances the
+   default values of several configuration options became theme-specific
+   even if the mentry package rather than mentry_tile was being used.
+
+2. Fixed a typo in the mega-widget utility file mwutil.tcl, introduced
+   in the previous release (thanks to Harald Oehlmann for his bug
+   report).
+
+What was new in Mentry 4.0?
+---------------------------
+
+1. Dropped the support for Tk versions earlier than 8.4.  This has made
+   the code simpler and easier to maintain.
+
+2. Adapted to the changes made in the Entry and TEntry bindings in Tk
+   8.7.
+
+3. Added explicit support for the themes "black", "breeze",
+   "breeze-dark", "sun-valley-light", and "sun-valley-dark".
+
+4. Improved the compatibility with Tcl 9 and Tk 8.7/9.  For example,
+   added support for the new <TouchpadScroll> event, introduced in Tk
+   8.7 and 9.
+
+5. Updated the Wcb command reference "wcbRef.html" to the version
+   included in the most recent Wcb release 4.0.
+
+What was new in Mentry 3.18?
+----------------------------
+
+1. For Tcl versions 8.4 and later replaced the deprecated "trace
+   variable" invocations with "trace add variable".
+
+What was new in Mentry 3.17?
+----------------------------
+
+1. Extended the description of the "mentry::setThemeDefaults" command by
+   the hint that with current Mentry_tile versions there is no need for
+   invocations of this procedure in application code.
+
+2. Included the same version 2.20 of the mega-widget utility package
+   mwutil as in the most recent Tablelist release 6.21.
+
+3. Fixed a bug related to the comparison of package versions.
+
+What was new in Mentry 3.16?
+----------------------------
+
+1. Updated the Wcb command reference "wcbRef.html" to the version
+   included in the most recent Wcb release 3.8.
+
+2. Corrected a typo in the copyright information contained in the file
+   "mentry_tile.tcl" (thanks to Stuart Cassoff for his bug report).
+
+What was new in Mentry 3.15?
+----------------------------
+
+1. Fixed a bug related to the handling of the <<ThemeChanged>> event
+   when the package Mentry rather than Mentry_tile was loaded into the
+   interpreter (thanks to "saitology9" for reporting a similar bug in
+   Tablelist).
+
+2. Improved and updated the documentation.
+
+What was new in Mentry 3.14?
+----------------------------
+
+1. Extended the "adjustentry" subcommand by an optional second string
+   argument and used this extended form in the implementation of the
+   "mentry::fixedPointMentry" command.  This significantly improves the
+   layout of the mentry widgets of type "FixedPoint".
+
+2. Added code that handles the virtual event <<TkWorldChanged>> with the
+   "user_data" field (%d) set to "FontChanged", which, with Tk versions
+   later than 8.6.11 and 8.7.a5, will be sent by the Tk engine to all
+   widgets when a font is changed, for example, by invoking "font
+   configure" (see TIP 608).
+
+3. Added bindings that handle <<Paste>> events in the entry components
+   of the mentry widgets of types "IPAddr", "IPv6Addr", "EthernetAddr",
+   and "PhoneNumber" (thanks to Paul Obermeier for his proposal).
+
+4. Improved and updated the documentation.
+
+What was new in Mentry 3.13?
+----------------------------
+
+1. Reworked the support for the awthemes package and extended it by
+   support for the "awbreezedark" theme, introduced in awthemes 10.3.
+
+2. Included the same version 2.19 of the mega-widget utility package
+   mwutil as in the most recent Tablelist release 6.13.
+
+What was new in Mentry 3.12?
+----------------------------
+
+1. Added support for the platform-independent handling of mouse wheel
+   events (TIP 474), introduced in Tk 8.7a4 (as of January 9, 2021).
+
+2. Included the same version 2.18 of the mega-widget utility package
+   mwutil as in the most recent Tablelist release 6.12.
+
+What was new in Mentry 3.11?
+----------------------------
+
+1. Adapted the "aqua" theme support to Tk releases 8.6.10 and 8.6.11,
+   including the support for the Dark Mode appearance, introduced in
+   Mac OS version 10.14 (Mojave).  When using Tk 8.6.10 or later, the
+   mentry widgets are now rendered according to the current system
+   appearance and are updated whenever the latter toggles between Light
+   Mode and Dark Mode or the Accent Color or Highlight Color in the
+   General Preferences changes.
+
+2. Added support for the "awdark", "awlight", and the five other themes
+   provided by the package awthemes 9.4 or later by Brad Lanam.
+
+3. Added the virtual event <<MentryThemeDefaultsChanged>>, sent to the
+   main window when handling the virtual events <<ThemeChanged>>,
+   <<LightAqua>>, and <<DarkAqua>>.  See the section "The mentry::
+   setThemeDefaults Command" of the manual page "Commands Related to
+   Tile Themes" for details.
+
+4. Included the same version 2.17 of the general mega-widget utility
+   module "mwutil.tcl" as in the most recent Tablelist release 6.11.
+
+5. For current Tk versions Mentry no longer requires that changing the
+   theme be done using the "ttk::setTheme" command instead of
+   "ttk::style theme use", which was necessary for older tile versions.
+
+6. Made the demo-scripts scaling-aware.  In addition, with Tk 8.6.10 or
+   later, they now fully support the Dark Mode appearance on Mac OS
+   10.14 and later.
+
+7. Reworked the invocations of "package vcompare", taking into account
+   that Tcl versions earlier than 8.5 did not support the letters "a"
+   and "b" in version numbers (thanks to Mike Walsh for his bug report).
+
+8. Several further improvements in the code and documentation.
+
+What was new in Mentry 3.10?
+----------------------------
 
 1. Included the same version 2.15 of the general mega-widget utility
    module "mwutil.tcl" as in the most recent Tablelist release 6.7.

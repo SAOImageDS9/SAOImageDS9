@@ -1,11 +1,12 @@
-#!/usr/bin/env wish
+#! /usr/bin/env tclsh
 
 #==============================================================================
 # Demonstrates how to implement a multi-entry widget for 10-digit phone numbers.
 #
-# Copyright (c) 1999-2019  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 1999-2023  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
+package require Tk
 package require mentry
 
 set title "Phone Number"
@@ -33,14 +34,16 @@ proc phoneNumberMentry {win args} {
     $win attrib type PhoneNumber
 
     #
-    # Allow only decimal digits in all entry children; use
+    # Allow only decimal digits in all entry components; use
     # wcb::cbappend (or wcb::cbprepend) instead of wcb::callback
     # in order to keep the wcb::checkEntryLen callback,
-    # registered by mentry::mentry for all entry children
+    # registered by mentry::mentry for all entry components
     #
     for {set n 0} {$n < 3} {incr n} {
-	wcb::cbappend [$win entrypath $n] before insert wcb::checkStrForNum
+	set w [$win entrypath $n]
+	wcb::cbappend $w before insert wcb::checkStrForNum
 	$win adjustentry $n "0123456789"
+	bindtags $w [linsert [bindtags $w] 1 MentryPhoneNumber]
     }
 
     return $win
@@ -81,7 +84,7 @@ proc getPhoneNumber win {
     checkIfPhoneNumberMentry $win
 
     #
-    # Generate an error if any entry child is empty or incomplete
+    # Generate an error if any entry component is empty or incomplete
     #
     for {set n 0} {$n < 3} {incr n} {
 	if {[$win isempty $n]} {
@@ -96,7 +99,7 @@ proc getPhoneNumber win {
 
     #
     # Return the phone number built from the
-    # values contained in the entry children
+    # values contained in the entry components
     #
     $win getarray strs
     return $strs(0)$strs(1)$strs(2)
@@ -112,11 +115,30 @@ proc checkIfPhoneNumberMentry win {
 	return -code error "bad window path name \"$win\""
     }
 
-    if {[string compare [winfo class $win] "Mentry"] != 0 ||
-	[string compare [$win attrib type] "PhoneNumber"] != 0} {
+    if {[winfo class $win] ne "Mentry" ||
+	[$win attrib type] ne "PhoneNumber"} {
 	return -code error \
 	       "window \"$win\" is not a mentry widget for phone numbers"
     }
+}
+
+bind MentryPhoneNumber <<Paste>> { pastePhoneNumber %W }
+
+#------------------------------------------------------------------------------
+# pastePhoneNumber
+#
+# Handles <<Paste>> events in the entry component w of a mentry widget for
+# 10-digit phone numbers by pasting the current contents of the clipboard into
+# the mentry if it is a valid 10-digit phone number.
+#------------------------------------------------------------------------------
+proc pastePhoneNumber w {
+    set res [catch {::tk::GetSelection $w CLIPBOARD} num]
+    if {$res == 0} {
+	set win [winfo parent $w]
+	catch { putPhoneNumber $num $win }
+    }
+
+    return -code break ""
 }
 
 #------------------------------------------------------------------------------
@@ -126,7 +148,7 @@ proc checkIfPhoneNumberMentry win {
 #
 frame .f
 label .f.l -text "A mentry widget for phone numbers:"
-phoneNumberMentry .f.me -background white
+phoneNumberMentry .f.me
 pack .f.l .f.me
 
 #
@@ -155,7 +177,7 @@ button .get -text "Get from mentry" -command {
 #
 # Label .num displaying the result of getPhoneNumber
 #
-label .num -textvariable num -background white
+label .num -textvariable num
 
 #
 # Frame .sep and button .close
@@ -166,11 +188,11 @@ button .close -text Close -command exit
 #
 # Manage the widgets
 #
-pack .close -side bottom -pady 10
+pack .close -side bottom -pady 7p
 pack .sep -side bottom -fill x
-pack .f -padx 10 -pady 10
-pack .get -padx 10
-pack .num -padx 10 -pady 10
+pack .f -padx 7p -pady 7p
+pack .get -padx 7p
+pack .num -padx 7p -pady 7p
 
 putPhoneNumber 1234567890 .f.me
 focus [.f.me entrypath 0]

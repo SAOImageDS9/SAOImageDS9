@@ -1,11 +1,11 @@
 [comment {-*- tcl -*- doctools manpage}]
-[manpage_begin Plotchart n 2.3.5]
-[copyright {2013 Arjen Markus <arjenmarkus@users.sourceforge.net>}]
+[manpage_begin Plotchart n 2.6.2]
+[copyright {2022 Arjen Markus <arjenmarkus@users.sourceforge.net>}]
 [moddesc   Plotchart]
 [titledesc {Simple plotting and charting package}]
 [require Tcl [opt 8.5]]
 [require Tk [opt 8.5]]
-[require Plotchart [opt 2.4.0]]
+[require Plotchart [opt 2.6.2]]
 
 [description]
 [para]
@@ -842,6 +842,45 @@ diagram. In addition to the positioning options (-box and -axesbox) the diagram 
 [term "-xaxis yes/no"], to turn displaying the numeric labels on or off.
 
 [list_end]
+
+[call [cmd ::Plotchart::createDendrogram] [arg w] [arg args]]
+
+Create a dendrogram to plot hierarchically organised data. The labels that identify
+the endpoints of the hierarchy can all be drawn on the same level or where their
+branch ends. This is controlled by the option "-extend".
+
+[para] The data are organised as nested lists, like:
+[example {
+     \$dendrogram plot data { {"Label1"  "Label2"} {F {A B} {C {D E}}} }
+}]
+Sublists with more than one element are considered a branching and are drawn in that way.
+Sublists with only one element are considered a leaf and are drawn as text.
+Because a string with two or more words can not be distinguished from a list with two
+or more elements, a provision is made for this situation: if the first element is "LEAF",
+then the list is considered to consist of leafs only and all elements (even if they
+are actually nested lists themselves are drawn as text:
+[example {
+     \$dendrogram plot data { {LEAF "Label 1"  "Label 2"} {F {A B} {C {D E}}} }
+}]
+
+[list_begin arguments]
+[arg_def widget w in]
+Name of the canvas widget to hold the dendrogram.
+
+[arg_def list args in]
+Zero or more option-value pairs:
+[list_begin itemized]
+[item]
+The option "-direction" takes one of the following values: left-right, right-left,
+top-bottom, bottom-top, with "top-bottom" as the default. The tree will be drawn
+according to this option, the labels appear either horizontally or vertically at
+the end of the tree.
+[item]
+The option "-extend" with value 1 (default) or 0 (no extension) to indicate that
+the labels should all appear at the same level.
+[list_end]
+
+[list_end]
 [para]
 
 [list_end]
@@ -1190,6 +1229,10 @@ bottom-left or bottom-right. (Default value is top-right.)
 Set the vertical spacing between entries in the legend (in pixels).
 bottom-left or bottom-right. (Default value is 10 pixels.)
 
+[opt_def order string]
+Determine the ordering of the legend entries - "normal" means the order
+in which the entries are defined, "reverse" exactly the opposite. (Default: normal)
+
 [list_end]
 [para]
 
@@ -1455,6 +1498,7 @@ List of Y-coordinates for the region.
 Draw a filled strip representing a minimum and a maximum. The configuration of the series influences the polygon as follows:
 [term -fillcolour] is used to fill the polygon, [term -colour] is used for the boundary (set it to {} if
 no boundary is required and [term -width] determines the width of the boundary.
+
 [para]
 The arguments [term ymin] and [term ymax] may be empty to get an extra vertex in the strip. If both
 are empty, a new strip is started. For best results, the x-coordinate should be specified in ascending
@@ -1602,6 +1646,37 @@ Y-coordinate of the box or a list of values.
 [para]
 The box ends at the 1st and 3rd quartile, while the whiskers by default
 are plotted to span 1.5 IQR (interquartile range) from the 1st and 3rd quartile.
+
+
+[call [cmd \$xyplot] violin [arg series] [arg xcrd] [arg ycrd]]
+
+Draw a violin plot based on the given data set. It is an alternative to the box and whiskers presentation.
+Just as with the box-and-whiskers subcommand, if the argument [term xcrd] is a
+list of several values and the argument [term ycrd] is a single value, a
+horizontal "violin" is drawn.
+[para]
+If, instead, the argument [term ycrd] contains a list of several values
+and the argument [term xcrd] a single value, then a vertical "violin" is
+drawn.
+[para]
+
+The option -violinwidth to the dataconfig command determines the width (or
+height) of the violin (default: 50 pixels).
+[para]
+The option -colour (-color) determines the outline colour and the option -fillcolour (-fillcolor)
+determines the colour by which the violin is filled (defaults: black and not filled).
+
+[list_begin arguments]
+[arg_def string series in]
+Name of the data series to use.
+
+[arg_def float xcrd in]
+X-coordinate of the violin or a list of values.
+
+[arg_def float ymin in]
+Y-coordinate of the violin or a list of values.
+[list_end]
+
 
 [call [cmd \$xyplot] vector [arg series] [arg xcrd] [arg ycrd] [arg ucmp] [arg vcmp]]
 
@@ -2481,8 +2556,25 @@ The label along the x- or y-axis to which the data belong
 [arg_def list values in]
 List of raw values, the extent of the box and the whiskers will be
 determined from this list.
-
 [list_end]
+
+[call [cmd \$boxplot] violin [arg series] [arg label] [arg values]]
+
+Add a "violin" to the plot. The dataconfig command can be used to customize
+the appearance (see the violin command for the xyplot for details).
+
+[list_begin arguments]
+[arg_def string series in]
+Name of the data series to be used for settings
+
+[arg_def string label in]
+The label along the x- or y-axis to which the data belong
+
+[arg_def list values in]
+List of raw values, the extent of the box and the whiskers will be
+determined from this list.
+[list_end]
+
 [list_end]
 
 
@@ -3034,6 +3126,24 @@ X-coordinate (or time) at which the line is to be drawn
 Individual optional arguments that will be passed to the [term "create line"] subcommand
 of the underlying canvas. This way you can set the colour or the line width
 of the vertical line.
+[list_end]
+[list_end]
+
+
+For [emph {dendrograms}] there is one specific subcommand:
+
+[list_begin definitions]
+[call [cmd \$dendrogram] plot [arg series] [arg data]]
+Draw a dendrogram according to the options given or implied when the dendrogram command was created.
+The "series" name allows you to select the colour of the branches (-colour/-color) as well as the colour and font of the labels
+(-labelcolour/-labelcolor and -labelfont).
+
+[list_begin arguments]
+[arg_def string series in]
+Name of the set of options to draw the dendrogram with.
+
+[arg_def list data in]
+Nested list, describing the tree structure. See the [emph createDendrogram] command.
 [list_end]
 [list_end]
 
@@ -3778,6 +3888,16 @@ Finally the [emph frame] component uses [emph color], [emph outerwidth]
 [emph innerwidth] (for the width of lines separating columns and rows).
 [list_end]
 
+[item]
+The target diagram and the Taylor diagram use the [emph limits] components
+in addition to the various general components. The limits component has
+one property: the color of the circles and circle segments.
+
+[para]
+For the Taylor diagram you can specify the color of the reference circles
+via the [emph reference] component.
+[list_end]
+
 
 [list_begin definitions]
 [call [cmd ::Plotchart::eraseplot] [arg anyplot]]
@@ -3790,7 +3910,6 @@ The plot/chart command. All canvas items associated with this command and all
 internal resources will be removed, including the plot/chart command itself.
 [list_end]
 
-[list_end]
 [list_end]
 
 See the examples in plotdemos7.tcl for its use.
@@ -3890,6 +4009,10 @@ Desmond Higham and Nicholas Higham
     SIAM, 2005, Philadephia
 }]
 
+[item]
+Taylor diagrams are another graphical representation of how numerical models reproduce
+measurement data. A detailed description appears in [uri https://en.wikipedia.org/wiki/Taylor_diagram]
+
 [list_end]
 
 Most of the general methods for XY-plots work for these plots as well, but their
@@ -3964,7 +4087,177 @@ appearance is controlled via prior dataconfig subcommand.
 List of series names and data. All data must be given at once.
 [list_end]
 
+[call [cmd ::Plotchart::createTaylorDiagram] [arg w] [arg radius_data] [arg args]]
+
+Create a new Taylor diagram (one quadrant) with circles indicating the distance to the reference point.
+[para]
+The data points are given as the standard deviation and the correlation to the reference.
+
+[list_begin arguments]
+[arg_def widget w in]
+Name of the [emph existing] canvas widget to hold the plot.
+
+[arg_def list radius_data in]
+A list of the maximum radius for the standard deviation and the step size. Quarter circles are
+drawn with the axis labels.
 [list_end]
+[para]
+
+Currently one option is supported:
+[list_begin options]
+[opt_def reference value]
+Reference value for the data points to be compared with. It appears as a dot at the x-axis.
+Along with this dot circle segments are drawn at the same spacing as the axis labels to indicate
+the distance of the data points from the reference.
+[list_end]
+
+[call [cmd \$taylor] plot [arg series] [arg stdev] [arg corr]]
+The plot method takes the standard deviation and the correlation to the reference as input
+and draws a symbol as a representation. The standard deviation serves as the distance from the
+origin and the correlation determines the angle.
+
+[list_begin arguments]
+[arg_def string series in]
+Name of the series (it will be plotted as a symbol that is configured via the
+[emph {$target dataconfig}] command (see the XY-plot equivalent for an explanation)
+
+[arg_def float stdev in]
+Standard deviation of the data point
+
+[arg_def list corr in]
+Correlation coefficient with the reference dataset
+[list_end]
+
+
+
+[call [cmd ::Plotchart::createHeatmap] [arg w] [arg rowlabels] [arg columnlabels] [arg args]]
+Create a heatmap, i.e. a tableau of rectangles whose colours depend on some data. The row and
+column labels are used as identifiers when filling in the data. The number of them determines the
+size of the tableau.
+[para]
+The data are passed by row, by column or per individual cell.
+
+[list_begin arguments]
+[arg_def widget w in]
+Name of the [emph existing] canvas widget to hold the heatmap.
+
+[arg_def list rowlabels in]
+List of labels to display at each row. The labels also serve as identifiers.
+
+[arg_def list columnlabels in]
+List of labels to display at each column. The labels also serve as identifiers.
+
+[arg_def list args in]
+Zero or more arguments to influence the size of the heatmap. See XY plot for more information.
+[list_end]
+
+[call [cmd \$heatmap] plot row [arg label] [arg data]]
+Use the given data to fill the rectangles belonging to the row "label".
+
+[list_begin arguments]
+[arg_def string label in]
+String indicating which row to use.
+[arg_def list data in]
+List of numerical data to be used for the colouring of the rectangles.
+[list_end]
+
+[call [cmd \$heatmap] plot column [arg label] [arg data]]
+Use the given data to fill the rectangles belonging to the column "label".
+
+[list_begin arguments]
+[arg_def string label in]
+String indicating which column to use.
+[arg_def list data in]
+List of numerical data to be used for the colouring of the rectangles.
+[list_end]
+
+[call [cmd \$heatmap] plot cell [arg rowlabel] [arg columnlabel] [arg value]]
+Use the given value to fill the rectangle belonging to the cell with the given row and column labels.
+
+[list_begin arguments]
+[arg_def string rowlabel in]
+String indicating which row to use.
+[arg_def string columnlabel in]
+String indicating which column to use.
+[arg_def float value in]
+Value to be used for the colouring of the cell.
+[list_end]
+
+[call [cmd \$heatmap] scale values [arg min] [arg max]]
+Set the range for the values - they are mapped to a colour via linear interpolation.
+
+[list_begin arguments]
+[arg_def float min in]
+Minimum value to be used.
+[arg_def float max in]
+Maximum value to be used.
+[list_end]
+
+[call [cmd \$heatmap] scale colours [arg mincolour] [arg maxcolour]]
+Set the colours to be used for the minimum and the maximum values. The actual
+colour is determined via linear interpolation of the RGB values.
+
+[list_begin arguments]
+[arg_def string mincolour in]
+Colour to be used at the minimum value.
+[arg_def string maxcolour in]
+Colour to be used at the maximum value.
+[list_end]
+
+
+[call [cmd ::Plotchart::createCircleplot] [arg w] [arg labels] [arg args]]
+Create a circle plot, i.e. a circle with labels that can be connected by coloured arcs.
+Typical use: present the relationship between the items on the circle in a graphical way.
+[para]
+The connections can be drawn pair by pair.
+
+[list_begin arguments]
+[arg_def widget w in]
+Name of the [emph existing] canvas widget to hold the circle plot.
+
+[arg_def list rowlabels in]
+List of labels to display along the circle. Each label is accompanied by a filled dot.
+
+[arg_def list args in]
+Zero or more arguments to influence the size of the circle plot. See XY plot for more information.
+[list_end]
+
+[call [cmd \$circleplot] connect [arg label1] [arg label2] [arg colour] [arg width]]
+Connect the two labels via a coloured arc of given width (the arc is actually a parabola).
+
+[list_begin arguments]
+[arg_def string label1 in]
+String indicating the first label to connect.
+[arg_def string label2 in]
+String indicating the second label to connect.
+[arg_def string colour in]
+Colour to use for the connected arc.
+[arg_def string width in]
+Width for the connected arc.
+[list_end]
+
+[call [cmd \$circleplot] modify [arg label] [arg args]]
+Modify the appearance of the label and the accompanying dot.
+
+[list_begin arguments]
+[arg_def string label in]
+String indicating which label to modify.
+[arg_def list args in]
+List of key-value pairs:
+[list_begin itemized]
+[item]
+[emph "-textcolour colour"] - colour of the text to be used (alternative: "-textcolor")
+[item]
+[emph "-font font"] - font for the text
+[item]
+[emph "-dotcolour colour"] - colour for the dot (alternative: "-dotcolor")
+[list_end]
+[list_end]
+
+[list_end]
+
+
+[section "ADDING SPECIFIC PLOT METHODS"]
 
 The command [term plotmethod] can be used to add new methods for a particular
 plot or chart type. It is intended to help you develop specialised graphical displays.
@@ -4074,6 +4367,8 @@ options were implemented to take care of date/time labels for stripcharts,
 as you can also use custom labels (the option -xlabels) if the axis is "static".
 Since this is not the case for stripcharts, this was not an option (Tcllib/Tklib bug 3613718).
 
+You can also specify the -locale option to get a localised date/time label.
+
 The example below illustrates how to use the -timeformat option. The -gmt option
 merely suppresses the handling of daylight saving time by the [lb]clock format[rb] command.
 
@@ -4088,6 +4383,9 @@ pack [canvas .c -width 500 -bg white]
 set start [clock scan  "0:00"]
 set stop  [clock scan "10:00"]
 set s [Plotchart::createStripchart .c [list $start $stop 7200] {0 10 1} -timeformat "%H:%M"]
+
+# With a locale like "de":
+#set s [Plotchart::createStripchart .c [list $start $stop 7200] {0 10 1} -timeformat "%H:%M" -locale de]
 
 foreach {x y} {0 0 2 5 5 2 9 9 12 10} {
     set x [expr {$start + 3600 * $x}] ;# Convert hour to clock seconds
@@ -4437,6 +4735,11 @@ The text associated with the bars has no tags. The ribbon lines and areas have n
 [emph "Tables:"]
 [para]
 Tags used are: frame, cellbg and celltext
+
+[para]
+[emph "Special plot types (target diagrams, Taylor diagrams:"]
+[para]
+Tags used are: limits, limit_labels, reference
 
 
 [emph "In addition:"]

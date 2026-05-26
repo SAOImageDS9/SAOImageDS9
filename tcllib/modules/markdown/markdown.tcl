@@ -22,6 +22,7 @@
 # THE SOFTWARE.
 #
 
+package require Tcl 8.5 9
 package require textutil::tabify
 
 ## \file
@@ -38,14 +39,17 @@ namespace eval Markdown {
     #
     # Converts text written in markdown to HTML.
     #
-    # @param markdown  currently takes as a single argument the text in markdown
+    # @param markdown  the text in markdown
+    # @param tabs      whether to preserve tabs in markdown
     #
     # The output of this function is only a fragment, not a complete HTML
     # document. The format of the output is generic XHTML.
     #
-    proc convert {markdown} {
-        set markdown [regsub {\r\n?} $markdown {\n}]
-        set markdown [::textutil::tabify::untabify2 $markdown 4]
+    proc convert {markdown {tabs 0}} {
+        set markdown [regsub -all {\r\n?} $markdown \n]
+        if {!$tabs} {
+	    set markdown [::textutil::tabify::untabify2 $markdown 4]
+	}
         set markdown [string trimright $markdown]
 
         # COLLECT REFERENCES
@@ -53,7 +57,7 @@ namespace eval Markdown {
         array set ::Markdown::_references [collect_references markdown]
 
         # PROCESS
-        return [apply_templates markdown]
+        return [parse_block markdown]
     }
 
     #
@@ -61,8 +65,8 @@ namespace eval Markdown {
     # used for fenced code blocks to transform the code block into a
     # prettified HTML.
     #
-    proc register {lang_specifier converter} {
-	set ::Markdown::converter($lang_specifier) $converter
+    proc register {lang_specifier converter {extended 0}} {
+	set ::Markdown::converter($lang_specifier) [list $extended $converter]
     }
 
     #
@@ -94,17 +98,18 @@ namespace eval Markdown {
             set line [lindex $lines $index]
 
             if {[regexp \
-                {^[ ]{0,3}\[((?:[^\]]|\[[^\]]*?\])+)\]:\s*(\S+)(?:\s+(([\"\']).*\4|\(.*\))\s*$)?} \
-                $line match ref link title]} \
-            {
+		     {^[ ]{0,3}\[((?:[^\]]|\[[^\]]*?\])+)\]:\s*(\S+)(?:\s+(([\"\']).*\4|\(.*\))\s*$)?} \
+		     $line \
+		     match ref link title]
+	    } {
                 set title [string trim [string range $title 1 end-1]]
                 if {$title eq {}} {
-                    set next_line [lindex $lines [expr $index + 1]]
+                    set next_line [lindex $lines $index+1]]
 
                     if {[regexp \
-                        {^(?:\s+(?:([\"\']).*\1|\(.*\))\s*$)} \
-                        $next_line]} \
-                    {
+			     {^(?:\s+(?:([\"\']).*\1|\(.*\))\s*$)} \
+			     $next_line]
+		    } {
                         set title [string range [string trim $next_line] 1 end-1]
                         incr index
                     }
@@ -121,7 +126,7 @@ namespace eval Markdown {
     }
 
     ## \private
-    proc apply_templates {markdown_var {parent {}}} {
+    proc parse_block {markdown_var {parent {}}} {
         upvar $markdown_var markdown
 
         set lines    [split $markdown \n]
@@ -136,22 +141,22 @@ namespace eval Markdown {
         while {$index < $no_lines} {
             set line [lindex $lines $index]
 
-            switch -regexp -matchvar matches -- $line {
+            switch -regexp -matchvar line_match -- $line {
                 {^\s*$} {
                     # EMPTY LINES
-                    if {![regexp {^\s*$} [lindex $lines [expr $index - 1]]]} {
+                    if {![regexp {^\s*$} [lindex $lines $index-1]]} {
                         append result "\n\n"
                     }
                     incr index
                 }
                 {^[ ]{0,3}\[(?:[^\]]|\[[^\]]*?\])+\]:\s*\S+(?:\s+(?:([\"\']).*\1|\(.*\))\s*$)?} {
                     # SKIP REFERENCES
-                    set next_line [lindex $lines [expr $index + 1]]
+                    set next_line [lindex $lines $index+1]
 
                     if {[regexp \
-                        {^(?:\s+(?:([\"\']).*\1|\(.*\))\s*$)} \
-                        $next_line]} \
-                    {
+			     {^(?:\s+(?:([\"\']).*\1|\(.*\))\s*$)} \
+			     $next_line]
+		    } {
                         incr index
                     }
 
@@ -161,34 +166,22 @@ namespace eval Markdown {
                 {^[ ]{0,3}_[ ]*_[ ]*_[_ ]*$} -
                 {^[ ]{0,3}\*[ ]*\*[ ]*\*[\* ]*$} {
                     # HORIZONTAL RULES
-                    append result "<hr/>"
+                    append result "<hr />"
                     incr index
                 }
                 {^[ ]{0,3}#{1,6}} {
-                    # ATX STYLE HEADINGS
-                    set h_level 0
-                    set h_result {}
+                    # ATX STYLE HEADERS
 
-                    while {$index < $no_lines && ![is_empty_line $line]} {
-                        incr index
+                    regexp {^\s*#+} $line m
+                    set h_level [string length [string trim $m]]
 
-                        if {!$h_level} {
-                            regexp {^\s*#+} $line m
-                            set h_level [string length [string trim $m]]
-                        }
-
-                        lappend h_result $line
-
-                        set line [lindex $lines $index]
-                    }
-
-                    set h_result [\
-                        parse_inline [\
-                            regsub -all {^\s*#+\s*|\s*#+\s*$} [join $h_result \n] {} \
-                        ]\
-                    ]
+                    set h_result \
+			[parse_inline \
+			     [regsub -all {^\s*#+\s*|\s*#+\s*$} \
+				  $line {}]]
 
                     append result "<h$h_level>$h_result</h$h_level>"
+                    incr index
                 }
                 {^[ ]{0,3}\>} {
                     # BLOCK QUOTES
@@ -220,9 +213,10 @@ namespace eval Markdown {
                     }
                     set bq_result [string trim [join $bq_result \n]]
 
-                    append result <blockquote>\n \
-                                    [apply_templates bq_result] \
-                                  \n</blockquote>
+                    append result \
+			<blockquote>\n \
+			[parse_block bq_result] \
+			\n</blockquote>
                 }
                 {^\s{4,}\S+} {
                     # CODE BLOCKS
@@ -255,7 +249,9 @@ namespace eval Markdown {
 
                     append result <pre><code> $code_result </code></pre>
                 }
-                {^(?:(?:`{3,})|(?:~{3,}))\{?(\S+)?\}?\s*$} {
+                {^(?:(?:`{3,})|(?:~{3,}))(\{?\S+\}?)?\s*.*$} {
+		    # orig:  {^(?:(?:`{3,})|(?:~{3,}))\{?(\S+)?\}?\s*$}
+
                     # FENCED CODE BLOCKS
                     set code_result {}
                     if {[string index $line 0] eq {`}} {
@@ -276,9 +272,9 @@ namespace eval Markdown {
 		    #    When such a converter is registered,
 		    #    the codeblock will be sent through this converter.
 		    #
-		    set lang_specifier [string tolower [lindex $matches end]]
+		    set lang_specifier [string tolower [lindex $line_match 1]]
 		    if {$lang_specifier ne ""} {
-			set code_CCS_class " class='$lang_specifier'"
+			set code_CCS_class " class='[html_escape $lang_specifier]'"
 			incr ::Markdown::lang_counter($lang_specifier)
 		    } else {
 			set code_CCS_class ""
@@ -294,7 +290,7 @@ namespace eval Markdown {
                             break
                         }
 
-                        lappend code_result $line
+                        lappend code_result [html_escape $line]	;# (*)
                     }
                     set code_result [join $code_result \n]
 
@@ -303,10 +299,13 @@ namespace eval Markdown {
 		    # the resulting snippet.
 		    #
 		    if {[info exists ::Markdown::converter($lang_specifier)]} {
-			set code_result [{*}$::Markdown::converter($lang_specifier) $code_result]
-		    } else {
-                        set code_result [html_escape $code_result]
-                }
+			lassign $::Markdown::converter($lang_specifier) extended converter
+
+			set cmd $converter
+			if {$extended} { lappend cmd [lrange [lindex $line_match 0] 1 end] }
+			lappend cmd $code_result
+			set code_result [uplevel #0 $cmd]
+		    } ;# else do nothing, do not escape again, already done at (*)
                     append result \
 			"<pre class='code'>" \
 			<code$code_CCS_class> \
@@ -329,8 +328,7 @@ namespace eval Markdown {
 
                     set last_line AAA
 
-                    while {$index < $no_lines} \
-                    {
+                    while {$index < $no_lines} {
                         if {![regexp $list_match [lindex $lines $index]]} {
                             break
                         }
@@ -352,25 +350,22 @@ namespace eval Markdown {
 
                         lappend item_result $line
 
-                        for {set peek [expr $index + 1]} {$peek < $no_lines} {incr peek} {
+                        for {set peek [expr {$index + 1}]} {$peek < $no_lines} {incr peek} {
                             set line [lindex $lines $peek]
 
                             if {[is_empty_line $line]} {
                                 set in_p 0
-                            }\
-                            elseif {[regexp {^    } $line]} {
+                            } elseif {[regexp {^    } $line]} {
                                 if {!$in_p} {
                                     incr p_count
                                 }
                                 set in_p 1
-                            }\
-                            elseif {[regexp $list_match $line]} {
+                            } elseif {[regexp $list_match $line]} {
                                 if {!$in_p} {
                                     incr p_count
                                 }
                                 break
-                            }\
-                            elseif {!$in_p} {
+                            } elseif {!$in_p} {
                                 break
                             }
 
@@ -381,15 +376,15 @@ namespace eval Markdown {
                         set item_result [join $item_result \n]
 
                         if {$p_count > 1} {
-                            set item_result [apply_templates item_result li]
+                            set item_result [parse_block item_result li]
                         } else {
                             if {[regexp -lineanchor \
-                                {(\A.*?)((?:^[ ]{0,3}(?:\*|-|\+) |^[ ]{0,3}\d+\. ).*\Z)} \
-                                $item_result \
-                                match para rest]} \
-                            {
+				     {(\A.*?)((?:^[ ]{0,3}(?:\*|-|\+) |^[ ]{0,3}\d+\. ).*\Z)} \
+				     $item_result \
+				     match para rest]
+			    } {
                                 set item_result [parse_inline $para]
-                                append item_result [apply_templates rest]
+                                append item_result [parse_block rest]
                             } else {
                                 set item_result [parse_inline $item_result]
                             }
@@ -399,42 +394,49 @@ namespace eval Markdown {
                         set index $peek
                     }
 
-                    append result <$list_type>\n \
-                                    [join $list_result \n] \
-                                </$list_type>\n\n
+                    append result \
+			<$list_type>\n \
+			[join $list_result \n] \
+			</$list_type>\n\n
                 }
                 {^<(?:p|div|h[1-6]|blockquote|pre|table|dl|ol|ul|script|noscript|form|fieldset|iframe|math|ins|del)} {
                     # HTML BLOCKS
-                    set re_htmltag {<(/?)(\w+)(?:\s+\w+=(?:\"[^\"]+\"|'[^']+'))*\s*>}
+                    set block_tag [string range $line_match 1 end]
+		    set re_htmltag {<(/?)(\w+)(?:\s+\w+(?:=\"[^\"]+\"|'[^']+')?)*\s*>}
+
+                    set block_lines 0
                     set buffer {}
+                    while {$index < $no_lines} {
+                        append buffer $line \n
 
-                    while {$index < $no_lines} \
-                    {
-                        while {$index < $no_lines} \
-                        {
-                            incr index
+                        incr block_lines
+                        incr index
 
-                            append buffer $line \n
+                        set tags [regexp -inline -all $re_htmltag $buffer]
 
-                            if {[is_empty_line $line]} {
-                                break
-                            }
-
-                            set line [lindex $lines $index]
-                        }
-
-                        set tags [regexp -inline -all $re_htmltag  $buffer]
                         set stack_count 0
-
                         foreach {match type name} $tags {
-                            if {$type eq {}} {
-                                incr stack_count +1
-                            } else {
-                                incr stack_count -1
+                            if {$name eq $block_tag} {
+                                if {$type eq {}} {
+                                    incr stack_count +1
+                                } else {
+                                    incr stack_count -1
+                                }
                             }
                         }
 
-                        if {$stack_count == 0} { break }
+                        if {$stack_count == 0} break
+
+                        set line [lindex $lines $index]
+                    }
+
+                    # Skip empty lines after the block.
+                    while {$index < $no_lines && [is_empty_line [lindex $lines $index]]} {
+                        incr index
+                    }
+
+                    if {$index < $no_lines} {
+                        append buffer \n
                     }
 
                     append result $buffer
@@ -444,25 +446,23 @@ namespace eval Markdown {
                     set cell_align {}
                     set row_count 0
 
-                    while {$index < $no_lines} \
-                    {
+                    while {$index < $no_lines} {
                         # insert a space between || to handle empty cells
-                        set row_cols [regexp -inline -all {(?:[^|]|\\\|)+} \
-                            [regsub -all {\|(?=\|)} [string trim $line] {| }] \
-                        ]
+                        set row_cols \
+			    [regexp -inline -all {(?:[^|]|\\\|)+} \
+				 [regsub -all {\|(?=\|)} \
+				      [string trim $line] {| }]]
 
-                        if {$row_count == 0} \
-                        {
-                            set sep_cols [lindex $lines [expr $index + 1]]
+                        if {$row_count == 0} {
+                            set sep_cols [lindex $lines $index+1]
 
                             # check if we have a separator row
-                            if {[regexp {^\s{0,3}\|?(?:\s*:?-+:?(?:\s*$|\s*\|))+} $sep_cols]} \
-                            {
-                                set sep_cols [regexp -inline -all {(?:[^|]|\\\|)+} \
-                                    [string trim $sep_cols]]
+                            if {[regexp {^\s{0,3}\|?(?:\s*:?-+:?(?:\s*$|\s*\|))+} $sep_cols]} {
+                                set sep_cols \
+				    [regexp -inline -all {(?:[^|]|\\\|)+} \
+					 [string trim $sep_cols]]
 
-                                foreach {cell_data} $sep_cols \
-                                {
+                                foreach {cell_data} $sep_cols {
                                     switch -regexp $cell_data {
                                         {:-*:} {
                                             lappend cell_align center
@@ -492,16 +492,18 @@ namespace eval Markdown {
                                 set num_cols [llength $row_cols]
                             }
 
-                            for {set i 0} {$i < $num_cols} {incr i} \
-                            {
+                            for {set i 0} {$i < $num_cols} {incr i} {
                                 if {[set align [lindex $cell_align $i]] ne {}} {
                                     append result "    <th style=\"text-align: $align\">"
                                 } else {
                                     append result "    <th>"
                                 }
 
-                                append result [parse_inline [string trim \
-                                    [lindex $row_cols $i]]] </th> "\n"
+                                append result \
+				    [parse_inline \
+					 [string trim \
+					      [lindex $row_cols $i]]] \
+				    </th> "\n"
                             }
 
                             append result "  </tr>\n"
@@ -519,16 +521,18 @@ namespace eval Markdown {
                                 set num_cols [llength $row_cols]
                             }
 
-                            for {set i 0} {$i < $num_cols} {incr i} \
-                            {
+                            for {set i 0} {$i < $num_cols} {incr i} {
                                 if {[set align [lindex $cell_align $i]] ne {}} {
                                     append result "    <td style=\"text-align: $align\">"
                                 } else {
                                     append result "    <td>"
                                 }
 
-                                append result [parse_inline [string trim \
-                                    [lindex $row_cols $i]]] </td> "\n"
+                                append result \
+				    [parse_inline \
+					 [string trim \
+					      [lindex $row_cols $i]]] \
+				    </td> "\n"
                             }
 
                             append result "  </tr>\n"
@@ -554,12 +558,11 @@ namespace eval Markdown {
                     }
                 }
                 default {
-                    # PARAGRAPHS AND SETTEXT STYLE HEADERS
+                    # PARAGRAPHS AND SETEXT STYLE HEADERS
                     set p_type p
                     set p_result {}
 
-                    while {($index < $no_lines) && ![is_empty_line $line]} \
-                    {
+                    while {($index < $no_lines) && ![is_empty_line $line]} {
                         incr index
 
                         switch -regexp $line {
@@ -582,8 +585,7 @@ namespace eval Markdown {
                             {^[ ]{0,3}-[ ]*-[ ]*-[- ]*$} -
                             {^[ ]{0,3}_[ ]*_[ ]*_[_ ]*$} -
                             {^[ ]{0,3}\*[ ]*\*[ ]*\*[\* ]*$} -
-                            {^[ ]{0,3}#{1,6}} \
-                            {
+                            {^[ ]{0,3}#{1,6}} {
                                 incr index -1
                                 break
                             }
@@ -595,11 +597,10 @@ namespace eval Markdown {
                         set line [lindex $lines $index]
                     }
 
-                    set p_result [\
-                        parse_inline [\
-                            string trim [join $p_result \n]\
-                        ]\
-                    ]
+                    set p_result \
+			[parse_inline \
+			     [string trim \
+				  [join $p_result \n]]]
 
                     if {[is_empty_line [regsub -all {<!--.*?-->} $p_result {}]]} {
                         # Do not make a new paragraph for just comments.
@@ -623,7 +624,7 @@ namespace eval Markdown {
 
         set re_backticks   {\A`+}
         set re_whitespace  {\s}
-        set re_inlinelink  {\A\!?\[((?:[^\]]|\[[^\]]*?\])+)\]\s*\(\s*((?:[^\s\)]+|\([^\s\)]+\))+)?(\s+([\"'])(.*)?\4)?\s*\)}
+        set re_inlinelink  {\A!?\[([^\]]*)\]\(\s*((?:[^\s\)]+|\([^\s\)]+\))+)?(\s+([\"'])(.*)?\4)?\s*\)}
         set re_reflink     {\A\!?\[((?:[^\]]|\[[^\]]*?\])+)\](?:\s*\[((?:[^\]]|\[[^\]]*?\])*)\])?}
         set re_htmltag     {\A</?\w+\s*>|\A<\w+(?:\s+\w+=(?:\"[^\"]+\"|\'[^\']+\'))*\s*/?>}
         set re_autolink    {\A<(?:(\S+@\S+)|(\S+://\S+))>}
@@ -634,7 +635,7 @@ namespace eval Markdown {
             switch $chr {
                 "\\" {
                     # ESCAPES
-                    set next_chr [string index $text [expr $index + 1]]
+                    set next_chr [string index $text $index+1]
 
                     if {[string first $next_chr {\`*_\{\}[]()#+-.!>|}] != -1} {
                         set chr $next_chr
@@ -645,14 +646,14 @@ namespace eval Markdown {
                 {*} {
                     # EMPHASIS
                     if {[regexp $re_whitespace [string index $result end]] &&
-                        [regexp $re_whitespace [string index $text [expr $index + 1]]]} \
-                    {
+                        [regexp $re_whitespace [string index $text $index+1]]
+		    } {
                         #do nothing
-                    } \
-                    elseif {[regexp -start $index \
-                        "\\A(\\$chr{1,3})((?:\[^\\$chr\\\\]|\\\\\\$chr)*)\\1" \
-                        $text m del sub]} \
-                    {
+                    } elseif {[regexp -start $index \
+				   "\\A(\\$chr{1,3})((?:\[^\\$chr\\\\]|\\\\\\$chr)*)\\1" \
+				   $text \
+				   m del sub]
+		    } {
                         switch [string length $del] {
                             1 {
                                 append result "<em>[parse_inline $sub]</em>"
@@ -672,15 +673,15 @@ namespace eval Markdown {
                 {`} {
                     # CODE
                     regexp -start $index $re_backticks $text m
-                    set start [expr $index + [string length $m]]
+                    set start [expr {$index + [string length $m]}]
 
                     if {[regexp -start $start -indices $m $text m]} {
-                        set stop [expr [lindex $m 0] - 1]
-
-                        set sub [string trim [string range $text $start $stop]]
+			lassign $m from to
+			
+                        set sub [string trim [string range $text $start $from-1]]
 
                         append result "<code>[html_escape $sub]</code>"
-                        set index [expr [lindex $m 1] + 1]
+                        set index [expr {$to + 1}]
                         continue
                     }
                 }
@@ -808,5 +809,5 @@ namespace eval Markdown {
     }
 }
 
-package provide Markdown 1.1.1
+package provide Markdown 1.2.4
 return

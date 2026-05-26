@@ -1,0 +1,248 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>canvas::drag - Variations on a canvas</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'canvas_drag.man' by tcllib/doctools with format 'html'
+   -->
+<!-- canvas::drag.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">canvas::drag(n) 0.1 tklib &quot;Variations on a canvas&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>canvas::drag - Manage the dragging of canvas items or item groups</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">API</a>
+<ul>
+<li class="doctools_subsection"><a href="#subsection1">Drag callback</a></li>
+<li class="doctools_subsection"><a href="#subsection2">Options</a></li>
+</ul>
+</li>
+<li class="doctools_section"><a href="#section3">Bugs, Ideas, Feedback</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_requirements">
+<li>package require <b class="pkgname">Tcl 8.5</b></li>
+<li>package require <b class="pkgname">Tk 8.5</b></li>
+<li>package require <b class="pkgname">canvas::drag <span class="opt">?0.1?</span></b></li>
+</ul>
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">::canvas::drag</b> <b class="method">on</b> <i class="arg">canvas</i> <i class="arg">tagOrId</i> <i class="arg">cmd</i> <i class="arg">option</i>...</a></li>
+<li><a href="#2"><b class="cmd">::canvas::drag</b> <b class="method">off</b> <i class="arg">canvas</i> <i class="arg">tagOrId</i></a></li>
+<li><a href="#3"><b class="cmd">::canvas::drag</b> <b class="method">item</b> <i class="arg">canvas</i> <i class="arg">tagOrId</i> <i class="arg">option</i>...</a></li>
+<li><a href="#4"><b class="cmd">::canvas::drag</b> <b class="method">group</b> <i class="arg">canvas</i> <i class="arg">tagOrId</i> <i class="arg">cmd</i> <i class="arg">option</i>...</a></li>
+<li><a href="#5"><b class="cmd">{*}cmd</b> <b class="method">start</b> <i class="arg">canvas</i> <i class="arg">item</i></a></li>
+<li><a href="#6"><b class="cmd">{*}cmd</b> <b class="method">move</b> <i class="arg">canvas</i> <i class="arg">clientdata</i> <i class="arg">dx</i> <i class="arg">dy</i></a></li>
+<li><a href="#7"><b class="cmd">{*}cmd</b> <b class="method">done</b> <i class="arg">canvas</i> <i class="arg">clientdata</i></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>This package provides utility commands to setup and rmeove dragging of
+items or item groups on a canvas, hiding all complexity regarding
+bindings from the user.</p>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">API</a></h2>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">::canvas::drag</b> <b class="method">on</b> <i class="arg">canvas</i> <i class="arg">tagOrId</i> <i class="arg">cmd</i> <i class="arg">option</i>...</a></dt>
+<dd><p>This command initializes item dragging on the <i class="arg">canvas</i> widget,
+with the items used as drag handles identified by <i class="arg">tagOrId</i>.
+The command prefix <i class="arg">cmd</i>, invoked for drag start and movement, is
+responsible for the initialization and actual execution of the drag
+operation.</p>
+<p>The signature of the command prefix is described later, in
+section <span class="sectref"><a href="#subsection1">Drag callback</a></span>.</p>
+<p>Similarly, the accepted options and their values are described
+in section <span class="sectref"><a href="#subsection2">Options</a></span></p>
+<p>The result of the command is the empty string.</p></dd>
+<dt><a name="2"><b class="cmd">::canvas::drag</b> <b class="method">off</b> <i class="arg">canvas</i> <i class="arg">tagOrId</i></a></dt>
+<dd><p>This command removes any drag operation set on the items of canvas
+<i class="arg">canvas</i> identified by <i class="arg">tagOrId</i>.</p>
+<p>The result of the command is the empty string.</p></dd>
+<dt><a name="3"><b class="cmd">::canvas::drag</b> <b class="method">item</b> <i class="arg">canvas</i> <i class="arg">tagOrId</i> <i class="arg">option</i>...</a></dt>
+<dd><p>This is a convenience command wrapped around method <b class="method">on</b> (see above)
+to drag single items of the <i class="arg">canvas</i> widget, identified by <i class="arg">tagOrId</i>.</p>
+<p>It uses an internal standard callback for this.</p>
+<p>The result of the command is the empty string.</p></dd>
+<dt><a name="4"><b class="cmd">::canvas::drag</b> <b class="method">group</b> <i class="arg">canvas</i> <i class="arg">tagOrId</i> <i class="arg">cmd</i> <i class="arg">option</i>...</a></dt>
+<dd><p>This is a convenience command wrapped around method <b class="method">on</b> (see above)
+to drag single items of the <i class="arg">canvas</i> widget, identified by <i class="arg">tagOrId</i>.</p>
+<p>It uses an internal standard callback for this. The callback
+<i class="arg">cmd</i> specified has the same signature as the <span class="sectref"><a href="#subsection1">Drag callback</a></span>,
+except that</p>
+<ol class="doctools_enumerated">
+<li><p>The <b class="method">move</b> method is not invoked.</p></li>
+<li><p>The result of the <b class="method">start</b> method <em>has to be</em> a
+canvas tag refering to the whole group of items to move. In other words,
+it must convert from drag handle (item id) to dragged groupt (tag).</p></li>
+</ol>
+<p>The result of the command is the empty string.</p></dd>
+</dl>
+<div id="subsection1" class="doctools_subsection"><h3><a name="subsection1">Drag callback</a></h3>
+<p>The drag callback is a command prefix invoked in the following two
+ways:</p>
+<dl class="doctools_definitions">
+<dt><a name="5"><b class="cmd">{*}cmd</b> <b class="method">start</b> <i class="arg">canvas</i> <i class="arg">item</i></a></dt>
+<dd><p>This form is invoked when has initiated dragging using drag handle
+identified by the canvas <i class="arg">item</i> id.
+The callback now has to perform anything necessary for its type of
+drag operation.</p>
+<p>The result of the command can be anything. It is stored by the
+system as client information and passed unchanged to the movement
+callback for its use. In this manner the drag callback is able to
+maintain custom state from start to movement.</p></dd>
+<dt><a name="6"><b class="cmd">{*}cmd</b> <b class="method">move</b> <i class="arg">canvas</i> <i class="arg">clientdata</i> <i class="arg">dx</i> <i class="arg">dy</i></a></dt>
+<dd><p>This form is invoked when the mouse moved during a drag operation.
+It is invoked with the client data from the start callback (or the
+previous move callback) and the distances the mouse has traveled in
+horizontal and vertical directions.</p>
+<p>The result of the command can be anything. It is stored by the
+system as client information and passed unchanged to the next movement
+callback for its use. In this manner the drag callback is able to
+maintain custom state from movement to movement.</p></dd>
+<dt><a name="7"><b class="cmd">{*}cmd</b> <b class="method">done</b> <i class="arg">canvas</i> <i class="arg">clientdata</i></a></dt>
+<dd><p>This form is invoked when the drag operation ends.
+It is invoked with the client data from the last movement callback (or
+start callback if there had been no motion).</p>
+<p>The result of the command is ignored.</p></dd>
+</dl>
+</div>
+<div id="subsection2" class="doctools_subsection"><h3><a name="subsection2">Options</a></h3>
+<p>The commands to create drag operations (<b class="method">on</b>, <b class="method">item</b>,
+and <b class="method">group</b>) all accept the following options to configure the
+new drag.</p>
+<dl class="doctools_options">
+<dt><b class="option">-event</b> <i class="arg">spec</i></dt>
+<dd><p>The value of this option specifies the mouse button used to initiate
+the drag operation, and the keyboard modifier, if any. Examples of
+specifications:</p>
+<p>To initiate a drag operation by pressing mouse button 3 on a
+drag handle, use:</p>
+<pre class="doctools_example"> -event 3 </pre>
+<p>This is the default as well, if the option is not specified.</p>
+<p>To initiate a drag operation by pressing mouse button 2 on a
+drag handle while holding down the Control key, use:</p>
+<pre class="doctools_example"> -event Control-2 </pre>
+</dd>
+</dl>
+</div>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">Bugs, Ideas, Feedback</a></h2>
+<p>This document, and the package it describes, will undoubtedly contain
+bugs and other problems.
+Please report such in the category <em>canvas</em> of the
+<a href="http://core.tcl.tk/tklib/reportlist">Tklib Trackers</a>.
+Please also report any ideas for enhancements you may have for either
+package and/or documentation.</p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../../../index.html#canvas">canvas</a>, <a href="../../../../index.html#dragging">dragging</a></p>
+</div>
+</div></body></html>

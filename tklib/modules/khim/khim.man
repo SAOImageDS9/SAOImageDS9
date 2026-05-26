@@ -1,5 +1,6 @@
+[vset VERSION 1.0.3]
 [comment {-*- tcl -*- doctools manpage}]
-[manpage_begin khim n 1.0]
+[manpage_begin khim n [vset VERSION]]
 [keywords character]
 [keywords i18n]
 [keywords input]
@@ -8,7 +9,7 @@
 [moddesc   {Kevin's Hacky Input Method}]
 [titledesc {Provides key bindings for entering international characters on a keyboard that does not support them}]
 [require Tcl]
-[require khim [opt 1.0]]
+[require khim [opt [vset VERSION]]]
 [description]
 
 This package provides a set of key bindings to allow

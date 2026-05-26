@@ -7,7 +7,7 @@
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 # -------------------------------------------------------------------------
 
-package require Tcl 8.2;                # tcl minimum version
+package require Tcl 8.5 9;                # tcl minimum version
 
 # Try and get some compiled helper package.
 if {[catch {package require tcllibc}]} {
@@ -30,9 +30,9 @@ proc ::uuencode::Encode {s} {
         if {$c2 == {}} {set c2 0}
         if {$c3 == {}} {set c3 0}
         append r [Enc [expr {$c1 >> 2}]]
-        append r [Enc [expr {(($c1 << 4) & 060) | (($c2 >> 4) & 017)}]]
-        append r [Enc [expr {(($c2 << 2) & 074) | (($c3 >> 6) & 003)}]]
-        append r [Enc [expr {($c3 & 077)}]]
+        append r [Enc [expr {(($c1 << 4) & 0o060) | (($c2 >> 4) & 0o017)}]]
+        append r [Enc [expr {(($c2 << 2) & 0o074) | (($c3 >> 6) & 0o003)}]]
+        append r [Enc [expr {($c3 & 0o077)}]]
     }
     return $r
 }
@@ -42,7 +42,7 @@ proc ::uuencode::Decode {s} {
     if {[string length $s] == 0} {return ""}
     set r {}
     binary scan [pad $s] c* d
-        
+
     foreach {c0 c1 c2 c3} $d {
         append r [format %c [expr {((($c0-0x20)&0x3F) << 2) & 0xFF
                                    | ((($c1-0x20)&0x3F) >> 4) & 0xFF}]]
@@ -67,29 +67,30 @@ if {[package provide critcl] != {}} {
         }
         critcl::ccommand CEncode {dummy interp objc objv} {
             Tcl_Obj *inputPtr, *resultPtr;
-            int len, rlen, xtra;
+            Tcl_Size len, rlen, xtra;
             unsigned char *input, *p, *r;
-            
+
             if (objc !=  2) {
-                Tcl_WrongNumArgs(interp, 1, objv, "data");
+                Tcl_WrongNumArgs(interp, 1, objv, "data"); /* OK tcl9 */
                 return TCL_ERROR;
             }
-            
+
             inputPtr = objv[1];
-            input = Tcl_GetByteArrayFromObj(inputPtr, &len);
+            input = Tcl_GetBytesFromObj(interp, inputPtr, &len); /* OK tcl9 */
+            if (input == NULL) return TCL_ERROR;
             if ((xtra = (3 - (len % 3))) != 3) {
                 if (Tcl_IsShared(inputPtr))
                     inputPtr = Tcl_DuplicateObj(inputPtr);
-                input = Tcl_SetByteArrayLength(inputPtr, len + xtra);
+                input = Tcl_SetByteArrayLength(inputPtr, len + xtra); /* OK tcl9 */
                 memset(input + len, 0, xtra);
                 len += xtra;
             }
 
             rlen = (len / 3) * 4;
             resultPtr = Tcl_NewObj();
-            r = Tcl_SetByteArrayLength(resultPtr, rlen);
+            r = Tcl_SetByteArrayLength(resultPtr, rlen); /* OK tcl9 */
             memset(r, 0, rlen);
-            
+
             for (p = input; p < input + len; p += 3) {
                 char a, b, c;
                 a = *p; b = *(p+1), c = *(p+2);
@@ -104,21 +105,22 @@ if {[package provide critcl] != {}} {
 
         critcl::ccommand CDecode {dummy interp objc objv} {
             Tcl_Obj *inputPtr, *resultPtr;
-            int len, rlen, xtra;
+            Tcl_Size len, rlen, xtra;
             unsigned char *input, *p, *r;
-            
+
             if (objc !=  2) {
-                Tcl_WrongNumArgs(interp, 1, objv, "data");
+                Tcl_WrongNumArgs(interp, 1, objv, "data"); /* OK tcl9 */
                 return TCL_ERROR;
             }
-            
+
             /* if input is not mod 4, extend it with nuls */
             inputPtr = objv[1];
-            input = Tcl_GetByteArrayFromObj(inputPtr, &len);
+            input = Tcl_GetBytesFromObj(interp, inputPtr, &len); /* OK tcl9 */
+            if (input == NULL) return TCL_ERROR;
             if ((xtra = (4 - (len % 4))) != 4) {
                 if (Tcl_IsShared(inputPtr))
                     inputPtr = Tcl_DuplicateObj(inputPtr);
-                input = Tcl_SetByteArrayLength(inputPtr, len + xtra);
+                input = Tcl_SetByteArrayLength(inputPtr, len + xtra); /* OK tcl9 */
                 memset(input + len, 0, xtra);
                 len += xtra;
             }
@@ -126,9 +128,9 @@ if {[package provide critcl] != {}} {
             /* output will be 1/3 smaller than input and a multiple of 3 */
             rlen = (len / 4) * 3;
             resultPtr = Tcl_NewObj();
-            r = Tcl_SetByteArrayLength(resultPtr, rlen);
+            r = Tcl_SetByteArrayLength(resultPtr, rlen); /* OK tcl9 */
             memset(r, 0, rlen);
-            
+
             for (p = input; p < input + len; p += 4) {
                 char a, b, c, d;
                 a = *p; b = *(p+1), c = *(p+2), d = *(p+3);
@@ -161,7 +163,7 @@ proc ::uuencode::pad {s} {
 
 # If the Trf package is available then we shall use this by default but the
 # Tcllib implementations are always visible if needed (ie: for testing)
-if {[info commands ::uuencode::CDecode] != {}} {    
+if {[info commands ::uuencode::CDecode] != {}} {
     # tcllib critcl package
     interp alias {} ::uuencode::encode {} ::uuencode::CEncode
     interp alias {} ::uuencode::decode {} ::uuencode::CDecode
@@ -181,7 +183,7 @@ if {[info commands ::uuencode::CDecode] != {}} {
 # -------------------------------------------------------------------------
 
 proc ::uuencode::uuencode {args} {
-    array set opts {mode 0644 filename {} name {}}
+    array set opts {mode 0o0644 filename {} name {}}
     set wrongargs "wrong \# args: should be\
             \"uuencode ?-name string? ?-mode octal?\
             (-file filename | ?--? string)\""
@@ -253,12 +255,12 @@ proc ::uuencode::uuencode {args} {
 # -------------------------------------------------------------------------
 # Description:
 #  Perform uudecoding of a file or data. A file may contain more than one
-#  encoded data section so the result is a list where each element is a 
-#  three element list of the provided filename, the suggested mode and the 
+#  encoded data section so the result is a list where each element is a
+#  three element list of the provided filename, the suggested mode and the
 #  data itself.
 #
 proc ::uuencode::uudecode {args} {
-    array set opts {mode 0644 filename {}}
+    array set opts {mode 0o0644 filename {}}
     set wrongargs "wrong \# args: should be \"uudecode (-file filename | ?--? string)\""
     while {[string match -* [lindex $args 0]]} {
         switch -glob -- [lindex $args 0] {
@@ -324,7 +326,7 @@ proc ::uuencode::uudecode {args} {
 
 # -------------------------------------------------------------------------
 
-package provide uuencode 1.1.5
+package provide uuencode 1.1.6
 
 # -------------------------------------------------------------------------
 #

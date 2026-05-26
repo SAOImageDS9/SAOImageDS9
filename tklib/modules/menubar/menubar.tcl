@@ -1,22 +1,20 @@
 # menubar.tcl --
 #
-#    Package that defines the menubar class. The menubar class 
-#    encapsulates the definition, installation and dynamic behavior 
+#    Package that defines the menubar class. The menubar class
+#    encapsulates the definition, installation and dynamic behavior
 #    of a menubar.
 #
 # Copyright (c) 2009    Tom Krehbiel <tomk@users.sourceforge.net>
 #
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
-# 
-# RCS: @(#) $Id: menubar.tcl,v 1.6 2010/01/09 20:41:29 tomk Exp $
 
 package require Tk
 package require TclOO
 
 package require menubar::tree
 
-package provide menubar 0.5
+package provide menubar 0.5.1
 
 # --------------------------------------------------
 # DESIGN NOTES
@@ -71,7 +69,7 @@ oo::class create ::menubar {
 
 		variable wtop
 		variable mtop
-		
+
 		# The tagVal array holds the current value
 		# for all checkbutton and radiobutton items
 		variable tagVal
@@ -87,7 +85,7 @@ oo::class create ::menubar {
 		destroy .temp
 
 		set next_id 0
-	
+
 		set mtree [menubar::tree new]
 
 		${mtree} rename root menubar
@@ -98,7 +96,7 @@ oo::class create ::menubar {
 		foreach {opt value} ${args} {
 			${mtree} key.set menubar ${opt} ${value}
 		}
-		
+
 		set installs [dict create]
 		set tearoffpathnames [dict create]
 		set first_install ""
@@ -136,7 +134,7 @@ oo::class create ::menubar {
 	#        w - window
 	#
 	# Results:
-	#       Returns the path name of the top-of-hierarchy window 
+	#       Returns the path name of the top-of-hierarchy window
 	#        containing window.
 	#
 	# Side effects:
@@ -146,7 +144,7 @@ oo::class create ::menubar {
 	method getTopLevel { w } {
 		return [winfo toplevel ${w}]
 	}
-	
+
 
 	# ------------------------------------------------------------
 	#
@@ -227,9 +225,9 @@ oo::class create ::menubar {
 			set node [my ParseItem ${parent} ${name} ${istype} end ${more}]
 		}
 		return
-	} 
-	
-	
+	}
+
+
 	# ------------------------------------------------------------
 	#
 	# TagCheck --
@@ -316,13 +314,13 @@ oo::class create ::menubar {
 			set tearoff [expr { [string index ${istype} end] eq "+" ? 1 : 0 }]
 			dict set opts +tearoff ${tearoff}
 			dict set opts +tearoffpathname {}
-			
+
 			dict set opts +hide 0
 			set istype [string trimright ${istype} "+"]
 			lassign [split ${istype} ":"] - tag
 			if { ${tag} eq "" } {
 				error "bug: menu (${name} ${istype}) has no tag name."
-			}	
+			}
 			my TagCheck ${tag}
 			${mtree} insert ${parent} ${index} ${tag}
 			dict set opts -label ${name}
@@ -330,7 +328,7 @@ oo::class create ::menubar {
 			dict set opts -hidemargin 0
 			dict for {opt val} ${opts} {
 				${mtree} key.set ${tag} ${opt} ${val}
-			} 
+			}
 			my MenuAdd ${tag} ${def}
 		}
 		"S" {
@@ -343,7 +341,7 @@ oo::class create ::menubar {
 			dict for {opt val} ${opts} {
 				${mtree} key.set ${tag} ${opt} ${val}
 			}
-		} 
+		}
 		"C" {
 			# add a command
 			set tag ${more}
@@ -377,7 +375,7 @@ oo::class create ::menubar {
 				set tagVal(${tag}%%) ${value}
 				dict set opts +variable [self namespace]::tagVal(${tag}%%)
 			} elseif { [string index ${istype} end] eq "=" } {
-				# toplevel multi-valued local 
+				# toplevel multi-valued local
 				${mtree} key.set ${tag} +scope multival
 				set tagVal(${tag}%%) ${value}
 				dict set opts +variable [self namespace]::tagVal(${tag}%%)
@@ -393,7 +391,7 @@ oo::class create ::menubar {
 			dict set opts -offvalue 0
 			dict for {opt val} ${opts} {
 				${mtree} key.set ${tag} ${opt} ${val}
-			} 
+			}
 		}
 		{R[@=]?} {
 			# add a radiobutton
@@ -403,18 +401,18 @@ oo::class create ::menubar {
 			my TagCheck ${tag} 0
 			if { ${tag} ni [${mtree} nodes] } {
 				${mtree} insert ${parent} ${index} ${tag}
-				${mtree} key.set ${tag} +type radiogroup				
+				${mtree} key.set ${tag} +type radiogroup
 				${mtree} key.set ${tag} +command {}
 				${mtree} key.set ${tag} +value {}
 				${mtree} key.set ${tag} +initval {}
 				# determine the scope of the button variable
 				if { [string index ${istype} end] eq "@" } {
-					# toplevel single-valued local 
+					# toplevel single-valued local
 					${mtree} key.set ${tag} +scope local
 					set tagVal(${tag}%%) ${value}
 					${mtree} key.set ${tag} +variable [self namespace]::tagVal(${tag}%%)
 				} elseif { [string index ${istype} end] eq "=" } {
-					# toplevel multi-valued local 
+					# toplevel multi-valued local
 					${mtree} key.set ${tag} +scope multival
 					set tagVal(${tag}%%) ${value}
 					${mtree} key.set ${tag} +variable [self namespace]::tagVal(${tag}%%)
@@ -432,12 +430,12 @@ oo::class create ::menubar {
 			${mtree} insert ${tag} ${index} ${_tag}
 			if { ${value} == 1 } {
 				${mtree} key.set ${tag} +initval ${name}
-			}			
+			}
 			dict set opts -label "${name}"
 			dict set opts -underline 0
 			dict for {opt val} ${opts} {
 				${mtree} key.set ${_tag} ${opt} ${val}
-			} 
+			}
 		}
 		"G" {
 			# add a command group
@@ -447,7 +445,7 @@ oo::class create ::menubar {
 			${mtree} insert ${parent} ${index} ${tag}
 			dict for {opt val} ${opts} {
 				${mtree} key.set ${tag} ${opt} ${val}
-			} 
+			}
 		}
 		default {
 			error "bug: '${name}' - unknown item type (${istype})"
@@ -511,7 +509,7 @@ oo::class create ::menubar {
 		if { [dict size ${installs}] == 0 } {
 			error "error: tag.cget - '${mtree}' not installed."
 		}
-		
+
 		# if opt isn't included then return the value of an
 		# user defined (install) tag (not a menu tag)
 		if { ${opt} eq "" } {
@@ -520,15 +518,15 @@ oo::class create ::menubar {
 			} else {
 				error "error: tag(${tag}) - not defined for toplevel(${wtop})"
 			}
-			return ${value}	
+			return ${value}
 		}
-		
+
 		if { [${mtree} exists ${tag}] ne "" } {
 			error "error: tag.cget - tag '${tag}' not found"
 		}
-		
+
 		set parent_node [${mtree} parent ${tag}]
-		
+
 		switch -exact -- [${mtree} key.get ${tag} +type] {
 		"cascade" {
 			set parent_path [dict get ${installs} ${wtop} ${parent_node} +pathname]
@@ -572,7 +570,7 @@ oo::class create ::menubar {
 		}}
 		return
 	}
-	
+
 	# ------------------------------------------------------------
 	#
 	# menu.namespace --
@@ -597,7 +595,7 @@ oo::class create ::menubar {
 		variable wtop
 		variable installs
 		variable first_install
-		
+
 		# Only set during an install
 		if { ${first_install} ne ""  } {
 			if { [${mtree} key.get ${tag} +type] ni {commandgroup cascade}  } {
@@ -651,7 +649,7 @@ oo::class create ::menubar {
 		} else {
 			set mtop [join [list ${wtop} "m0"] "."]
 		}
-		
+
 		if { [dict keys ${installs} ${wtop}] eq "" } {
 			# puts a Destroy binding on the new toplevel
 			bind ${wtop} <Destroy> [namespace code [list my WindowCleanup %W ${wtop}]]
@@ -665,7 +663,7 @@ oo::class create ::menubar {
 			${wtop} configure -menu ${mtop}
 			dict set installs ${wtop} menubar +pathname ${mtop}
 			dict set installs ${wtop} menubar +callback_ns [uplevel {namespace current}]
-			
+
 			# configure the menubar
 			${mtop} configure  {*}[${mtree} key.getall menubar -*]
 
@@ -673,20 +671,20 @@ oo::class create ::menubar {
 			foreach node [${mtree} children menubar] {
 				my MenuInstall ${wtop} ${mtop} ${node}
 			}
-			
-			# configure the new menubar		
+
+			# configure the new menubar
 			uplevel ${config}
 			set first_install ""
 		}
 		return
 	}
-	
+
 	# ------------------------------------------------------------
 	#
 	# WindowCleanup --
 	#
 	#    Cleanup internal data structures associated with a toplevel window
-	#    when it is destroyed. Note that is will get called for each 
+	#    when it is destroyed. Note that is will get called for each
 	#
 	# Arguments:
 	#    w    - the window being destroyed
@@ -722,7 +720,7 @@ oo::class create ::menubar {
 	#
 	# Arguments:
 	#    win         - pathname of window where tk menu will be added
-	#    parent_path - pathname of parent menu 
+	#    parent_path - pathname of parent menu
 	#    node        - mtree node containing the item to be created
 	#
 	# Results:
@@ -833,8 +831,8 @@ oo::class create ::menubar {
 				dict set notebookVals ${wtop} +var ${node} ${varname}
 			}
 			dict set installs ${wtop} +btnvars ${node} ${varname}
-			# process the rest of the option settings		
-			my InstallSubTree ${wtop} ${parent_path} ${node} 
+			# process the rest of the option settings
+			my InstallSubTree ${wtop} ${parent_path} ${node}
 		}
 		"radiobutton" {
 			set varname [${mtree} key.get [${mtree} parent ${node}] +variable]
@@ -846,7 +844,7 @@ oo::class create ::menubar {
 			${parent_path} add separator
 			dict set installs ${wtop} ${node} +pathname ${parent_path}
 			my RenderTag ${wtop} ${node}
-			my InstallSubTree ${wtop} ${parent_path} ${node} 
+			my InstallSubTree ${wtop} ${parent_path} ${node}
 		}
 		default {
 		}}
@@ -987,7 +985,7 @@ oo::class create ::menubar {
 			set lines [split ${settings} \n]
 			foreach line ${lines} {
 				set line [string trim ${line}]
-				if { ${line} eq "" || [string index ${line} 0] eq "#" } { continue }					
+				if { ${line} eq "" || [string index ${line} 0] eq "#" } { continue }
 				lassign ${line} tag value
 				my tag.configure group ${tag} ${opt} ${value}
 			}
@@ -1036,7 +1034,7 @@ oo::class create ::menubar {
 					${mtree} key.set ${node} +command ${value}
 				}
 				"radiobutton" {
-					# command is stored in 
+					# command is stored in
 				}
 				default {
 					${mtree} key.set ${node} +command ${value}
@@ -1049,6 +1047,7 @@ oo::class create ::menubar {
 			}
 			-bind {
 				lassign ${value} uline accel sequence
+				##nagelfar ignore
 				if { ${uline} eq "" || [string is integer ${uline}] } {
 					${mtree} key.set ${node} -underline [expr {(${uline} eq "") ? -1 : ${uline}}]
 				} else {
@@ -1144,12 +1143,12 @@ oo::class create ::menubar {
 		variable mtree
 		variable installs
 		variable next_id
-						
+
 		# don't configure hidden items
 		if { [my IsHidden ${node}] == 1 } {
 			return
 		}
-		
+
 		set parent_node [${mtree} parent ${node}]
 		switch -exact -- [${mtree} key.get ${node} +type] {
 		"cascade" {
@@ -1253,12 +1252,12 @@ oo::class create ::menubar {
 	method commandCallback { wtop node } {
 		variable mtree
 		variable installs
-		
+
 		# set namespace for callbacks
 		set parent [${mtree} parent ${node}]
 		set parent_path [dict get ${installs} ${wtop} ${parent} +pathname]
 		set name [${mtree} key.get ${node} -label]
-		
+
 		# don't execute callback if item is disabled
 		set state [${parent_path} entrycget ${name} -state]
 		if { ${state} eq "normal" } {
@@ -1271,7 +1270,7 @@ oo::class create ::menubar {
 				} else {
 					namespace eval ${ns} ${cmd} ${wtop}
 				}
-			}		
+			}
 			"groupcommand" {
 				set ns [dict get ${installs} ${wtop} ${parent} +callback_ns]
 				set cmd [${mtree} key.get ${node} +command]
@@ -1282,7 +1281,7 @@ oo::class create ::menubar {
 					#puts "namespace eval ${ns} ${cmd}"
 					namespace eval ${ns} ${cmd} ${wtop}
 				}
-			}		
+			}
 			"checkbutton" {
 				set ns [dict get ${installs} ${wtop} ${parent} +callback_ns]
 				set cmd [${mtree} key.get ${node} +command]
@@ -1292,7 +1291,7 @@ oo::class create ::menubar {
 				} else {
 					namespace eval ${ns} [list {*}${cmd} ${wtop} ${node} ${value}]
 				}
-			}		
+			}
 			"radiobutton" {
 				set ns [dict get ${installs} ${wtop} [${mtree} parent ${parent}] +callback_ns]
 				set parent_node [${mtree} parent ${node}]
@@ -1305,13 +1304,13 @@ oo::class create ::menubar {
 				} else {
 					namespace eval ${ns} [list {*}${cmd} ${wtop} ${parent_node} ${value}]
 				}
-			}		
+			}
 			default {
 			}}
 		}
 		return
 	}
-			
+
 	# ------------------------------------------------------------
 	#
 	# menu.show --
@@ -1350,7 +1349,7 @@ oo::class create ::menubar {
 		}
 		return
 	}
-			
+
 	# ------------------------------------------------------------
 	#
 	# menu.hide --
@@ -1410,7 +1409,7 @@ oo::class create ::menubar {
 	method DeleteMenu { wtop node } {
 		variable mtree
 		variable installs
-		
+
 		set type [${mtree} key.get ${node} +type]
 		switch -exact -- ${type} {
 		"cascade" {
@@ -1433,7 +1432,7 @@ oo::class create ::menubar {
 	}
 
 	# ===== GROUP COMMANDS ====================================
-	
+
 	# ------------------------------------------------------------
 	#
 	# group.add --
@@ -1458,14 +1457,14 @@ oo::class create ::menubar {
 	method group.add { parent args } {
 		variable mtree
 		variable installs
-		
+
 		if { [${mtree} key.get ${parent} +type] ne "commandgroup"  } {
 			#puts stderr "group.add: tag (${parent}) not a command group"
 			return 1
 		}
-		
+
 		lassign ${args} name cmd accel sequence state
- 
+
 		# don't add item if name already exists
 		if { ${name} in [${mtree} children ${parent}] } {
 			#puts stderr "warning: command '${name}' already used in command group '${parent}'"
@@ -1475,7 +1474,7 @@ oo::class create ::menubar {
 		# add command to tree
 		my TagCheck ${name}
 		${mtree} insert ${parent} end ${name}
-		${mtree} key.set ${name} +type groupcommand				
+		${mtree} key.set ${name} +type groupcommand
 		set opts [dict create]
 		dict set opts -label ${name}
 		dict set opts -underline 0
@@ -1497,7 +1496,7 @@ oo::class create ::menubar {
 		dict for {opt val} ${opts} {
 			${mtree} key.set ${name} ${opt} ${val}
 		}
-		
+
 		# update the node in all top level windows
 		foreach wtop [dict keys ${installs}] {
 			if { [my IsHidden ${parent}] != 1 } {
@@ -1532,7 +1531,7 @@ oo::class create ::menubar {
 	method group.entries { parent } {
 		variable mtree
 		variable installs
-		
+
 		if { [${mtree} key.get ${parent} +type] ne "commandgroup"  } {
 			#puts stderr "group.add: tag (${parent}) not a command group"
 			return 1
@@ -1540,7 +1539,7 @@ oo::class create ::menubar {
 
 		return [${mtree} children ${parent}]
 	}
-	
+
 	# ------------------------------------------------------------
 	#
 	# group.delete --
@@ -1561,7 +1560,7 @@ oo::class create ::menubar {
 	method group.delete { parent name } {
 		variable mtree
 		variable installs
-		
+
 		if { [${mtree} key.get ${parent} +type] ne "commandgroup"  } {
 			#puts stderr "group.add: tag (${parent}) not a command group"
 			return 1
@@ -1572,7 +1571,7 @@ oo::class create ::menubar {
 			#puts stderr "warning: command '${name}' not found in command group '${parent}'"
 			return 1
 		}
-		
+
 		# update the node in all top level windows
 		foreach wtop [dict keys ${installs}] {
 			# delete menu item
@@ -1590,13 +1589,13 @@ oo::class create ::menubar {
  				set sequence [${mtree} key.get ${name} +bind]
 				bind ${wtop} <${sequence}> {}
 			}
-			
+
 		}
 		# delete the node from the menu tree
 		${mtree} delete ${name}
 		return 0
 	}
-	
+
 	# ------------------------------------------------------------
 	#
 	# group.move --
@@ -1612,13 +1611,13 @@ oo::class create ::menubar {
 	#    Returns 0 on success or 1 on failure.
 	#
 	# Side effects:
-	#    A menu items is move up or down on all installed menubar. 
+	#    A menu items is move up or down on all installed menubar.
 	#
 	# ------------------------------------------------------------
 	method group.move { direction parent name } {
 		variable mtree
 		variable installs
-		
+
 		if { [${mtree} key.get ${parent} +type] ne "commandgroup"  } {
 			#puts stderr "group.add: tag (${parent}) not a command group"
 			return 1
@@ -1629,7 +1628,7 @@ oo::class create ::menubar {
 			#puts stderr "warning: command '${name}' not found in command group '${parent}'"
 			return 1
 		}
-		
+
 		if { ${direction} eq "up" } {
 			set neighbor "previous"
 			set sign "-"
@@ -1639,7 +1638,7 @@ oo::class create ::menubar {
 		} else {
 			return 1
 		}
-		
+
 		set node ${name}
 		set neighbor_node [${mtree} ${neighbor} ${node}]
 		if { ${neighbor_node} eq "" } {
@@ -1656,7 +1655,7 @@ oo::class create ::menubar {
 				set grandparent_path [dict get ${installs} ${wtop} ${grandparent_node} +pathname]
 				if { ![catch {${grandparent_path} index ${name}} old_idx] } {
 					# compute new command location within group menu
-					set new_idx [expr ${old_idx}${sign}1]		
+					set new_idx [expr ${old_idx}${sign}1]
 					# remove the command from its current location
 					${grandparent_path} delete ${old_idx}
 					# insert command in the new location
@@ -1684,25 +1683,25 @@ oo::class create ::menubar {
 	#    Returns 0 on success or 1 on failure.
 	#
 	# Side effects:
-	#    A menu items is move up or down on all installed menubar. 
+	#    A menu items is move up or down on all installed menubar.
 	#
 	# ------------------------------------------------------------
 	method group.configure { parent name args } {
 		variable mtree
 		variable first_install
 		variable installs
-		
+
 		if { [${mtree} key.get ${parent} +type] ne "commandgroup"  } {
 			#puts stderr "group.configure: tag (${parent}) not a command group"
 			return 1
 		}
- 
+
 		# don't configure item if it doesn't exists
 		if { ${name} ni [${mtree} children ${parent}] } {
 			#puts stderr "group.configure: command '${name}' doesn't exist in command group '${parent}'"
 			return 1
 		}
-		
+
 		# put option info in tree structure
 		foreach {opt value} ${args} {
 			switch -exact -- ${opt} {
@@ -1717,6 +1716,7 @@ oo::class create ::menubar {
 			}
 			-bind {
 				lassign ${value} uline accel sequence
+				##nagelfar ignore
 				if { ${uline} eq "" || [string is integer ${uline}] } {
 					${mtree} key.set ${name} -underline [expr {(${uline} eq "") ? -1 : ${uline}}]
 				} else {
@@ -1749,17 +1749,17 @@ oo::class create ::menubar {
 	#    Returns a string serialization or a 1 on failure.
 	#
 	# Side effects:
-	#    none 
+	#    none
 	#
 	# ------------------------------------------------------------
 	method group.serialize { node } {
 		variable mtree
-		
+
 		if { [${mtree} key.get ${node} +type] ne "commandgroup"  } {
 			#puts stderr "group.serialize: tag (${parent}) not a command group"
 			return 1
 		}
-		
+
 		return [${mtree} serialize ${node}]
 	}
 
@@ -1779,13 +1779,13 @@ oo::class create ::menubar {
 	#
 	# Side effects:
 	#    All the items in the commandgroup are deleted and replaced
-	#    with new items defined by the serialization string. 
+	#    with new items defined by the serialization string.
 	#
 	# ------------------------------------------------------------
 	method group.deserialize { node stream } {
 		variable mtree
 		variable installs
-		
+
 		if { [${mtree} key.get ${node} +type] ne "commandgroup"  } {
 			#puts stderr "group.serialize: tag (${parent}) not a command group"
 			return 1
@@ -1797,7 +1797,7 @@ oo::class create ::menubar {
 
 		# replace the node from the serialized stream
 		${mtree} deserialize ${node} ${stream}
-		
+
 		set parent ${node}
 		# update the node in all top level windows
 		foreach wtop [dict keys ${installs}] {
@@ -1816,7 +1816,7 @@ oo::class create ::menubar {
 	}
 
 	# ===== COMMANDS THAT SUPPORT NOTEBOOK TABS =========================
-	
+
 	# ------------------------------------------------------------
 	#
 	# notebook.addTabStore --
@@ -1840,7 +1840,7 @@ oo::class create ::menubar {
 			dict set notebookVals ${wtop} ${pathname} ${tag} [set ${var}]
 		}
 	}
-	
+
 	# ------------------------------------------------------------
 	#
 	# notebook.deleteTabStore --
@@ -1862,7 +1862,7 @@ oo::class create ::menubar {
 		variable notebookVals
 		set notebookVals [dict remove ${notebookVals} ${wtop} ${pathname}]
 	}
-	
+
 	# ------------------------------------------------------------
 	#
 	# notebook.setTabValue --
@@ -1889,7 +1889,7 @@ oo::class create ::menubar {
 			dict set notebookVals ${wtop} ${pathname} ${tag} ${val}
 		}
 	}
-	
+
 	# ------------------------------------------------------------
 	#
 	# notebook.restoreTabValues --
@@ -1915,6 +1915,6 @@ oo::class create ::menubar {
 			set ${var} ${val}
 		}
 	}
-	
+
 }
 

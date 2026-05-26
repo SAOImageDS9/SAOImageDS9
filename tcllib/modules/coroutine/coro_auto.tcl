@@ -2,10 +2,10 @@
 # # ## ### ##### ######## #############
 
 # @@ Meta Begin
-# Package coroutine::auto 1.1.2
+# Package coroutine::auto 1.3
 # Meta platform        tcl
 # Meta require         {Tcl 8.6}
-# Meta require         {coroutine 1.1}
+# Meta require         {coroutine 1.4}
 # Meta license         BSD
 # Meta as::author      {Andreas Kupries}
 # Meta as::origin      http://wiki.tcl.tk/21555
@@ -20,20 +20,19 @@
 
 # Copyright (c) 2009-2014 Andreas Kupries
 
-## $Id: coro_auto.tcl,v 1.3 2011/11/17 08:00:45 andreas_kupries Exp $
 # # ## ### ##### ######## #############
 ## Requisites, and ensemble setup.
 
-package require Tcl 8.6
-package require coroutine
+package require Tcl 8.6 9
+package require coroutine 1.4
 
 namespace eval ::coroutine::auto {}
 
 # # ## ### ##### ######## #############
 ## API implementations. Uses the coroutine commands where
 ## possible.
-
-proc ::coroutine::auto::wrap_global {args} {
+
+proc ::coroutine::auto::wrap_global args {
     if {[info coroutine] eq {}} {
 	tailcall ::coroutine::auto::core_global {*}$args
     }
@@ -42,7 +41,7 @@ proc ::coroutine::auto::wrap_global {args} {
 }
 
 # - -- --- ----- -------- -------------
-
+
 proc ::coroutine::auto::wrap_after {delay args} {
     if {
 	([info coroutine] eq {}) ||
@@ -50,16 +49,15 @@ proc ::coroutine::auto::wrap_after {delay args} {
     } {
 	# We use the core builtin when called from either outside of a
 	# coroutine, or for an asynchronous delay.
-
 	tailcall ::coroutine::auto::core_after $delay {*}$args
     }
 
-    # Inside of coroutine, and synchronous delay (args == "").
+    # Inside of coroutine, and synchronous delay (args == {}).
     tailcall ::coroutine::util::after $delay
 }
 
 # - -- --- ----- -------- -------------
-
+
 proc ::coroutine::auto::wrap_exit {{status 0}} {
     if {[info coroutine] eq {}} {
 	tailcall ::coroutine::auto::core_exit $status
@@ -69,17 +67,16 @@ proc ::coroutine::auto::wrap_exit {{status 0}} {
 }
 
 # - -- --- ----- -------- -------------
-
-proc ::coroutine::auto::wrap_vwait {varname} {
+
+proc ::coroutine::auto::wrap_vwait varname {
     if {[info coroutine] eq {}} {
 	tailcall ::coroutine::auto::core_vwait $varname
     }
-
     tailcall ::coroutine::util::vwait $varname
 }
 
 # - -- --- ----- -------- -------------
-
+
 proc ::coroutine::auto::wrap_update {{what {}}} {
     if {[info coroutine] eq {}} {
 	tailcall ::coroutine::auto::core_update {*}$what
@@ -89,7 +86,7 @@ proc ::coroutine::auto::wrap_update {{what {}}} {
     # coroutine-aware part uses the builtin itself for some
     # functionality, and this part cannot be taken as is.
 
-    if {$what eq "idletasks"} {
+    if {$what eq {idletasks}} {
         after idle [info coroutine]
     } elseif {$what ne {}} {
         # Force proper error message for bad call.
@@ -99,11 +96,11 @@ proc ::coroutine::auto::wrap_update {{what {}}} {
     }
     yield
     return
-} 
+}
 
 # - -- --- ----- -------- -------------
-
-proc ::coroutine::auto::wrap_gets {args} {
+
+proc ::coroutine::auto::wrap_gets args {
     # Process arguments.
     # Acceptable syntax:
     # * gets CHAN ?VARNAME?
@@ -131,9 +128,9 @@ proc ::coroutine::auto::wrap_gets {args} {
     }
 
     # Loop until we have a complete line. Yield to the event loop
-    # where necessary. During 
+    # where necessary. During
 
-    while {1} {
+    while 1 {
         set blocking [::chan configure $chan -blocking]
         ::chan configure $chan -blocking 0
 
@@ -161,8 +158,8 @@ proc ::coroutine::auto::wrap_gets {args} {
 }
 
 # - -- --- ----- -------- -------------
-
-proc ::coroutine::auto::wrap_read {args} {
+
+proc ::coroutine::auto::wrap_read args {
     # Process arguments.
     # Acceptable syntax:
     # * read ?-nonewline ? CHAN
@@ -189,7 +186,7 @@ proc ::coroutine::auto::wrap_read {args} {
 
     if {[llength $args] == 2} {
 	lassign $args a b
-	if {$a eq "-nonewline"} {
+	if {$a eq {-nonewline}} {
 	    set chan $b
 	    set chop yes
 	} else {
@@ -205,10 +202,10 @@ proc ::coroutine::auto::wrap_read {args} {
 
     set buf {}
 
-    if {$total eq "Inf"} {
+    if {$total eq {Inf}} {
 	# Loop until eof.
 
-	while {1} {
+	while 1 {
 	    set blocking [::chan configure $chan -blocking]
 	    ::chan configure $chan -blocking 0
 
@@ -238,7 +235,7 @@ proc ::coroutine::auto::wrap_read {args} {
 	# whichever is first.
 
 	set left $total
-	while {1} {
+	while 1 {
 	    set blocking [::chan configure $chan -blocking]
 	    ::chan configure $chan -blocking 0
 
@@ -275,9 +272,97 @@ proc ::coroutine::auto::wrap_read {args} {
     return $buf
 }
 
+# - -- --- ----- -------- -------------
+
+proc ::coroutine::auto::wrap_puts args {
+    # Process arguments.
+    # Acceptable syntax:
+    # * puts ?-nonewline? ?CHAN? string
+
+    if {[info coroutine] eq {}} {
+        tailcall ::coroutine::auto::core_puts {*}$args
+    }
+
+    # This is a full re-implementation of puts, because the
+    # coroutine-aware part uses the builtin itself for some
+    # functionality, and this part cannot be taken as is.
+
+    # Calling the builtin puts command with the bogus arguments
+    # gives us the necessary error with the proper message.
+
+    switch [llength $args] {
+        1 {
+            set ch stdout
+        }
+        2 {
+            set ch [lindex $args 0]
+            if {[string match {-*} $ch]} {
+                if {$ch ne {-nonewline}} {
+                    # Force proper error message for bad call
+                    tailcall ::coroutine::auto::core_puts {*}$args
+                }
+                set ch stdout
+            }
+        }
+        3 {
+            lassign $args opt ch
+            if {$opt ne {-nonewline}} {
+                # Force proper error message for bad call
+                tailcall ::coroutine::auto::core_puts {*}$args
+            }
+        }
+        default {
+            # Force proper error message for bad call
+            tailcall ::coroutine::auto::core_puts {*}$args
+        }
+    }
+        set blocking [::chan configure $ch -blocking]
+    ::chan event $ch writable [info coroutine]
+    yield
+    ::chan event $ch writable {}
+    try {
+        ::coroutine::auto::core_puts {*}$args
+    } on error {result opts} {
+        return -code $result -options $opts
+    } finally {
+        ::chan configure $ch -blocking $blocking
+    }
+    return
+}
+
+# - -- --- ----- -------- -------------
+
+proc ::coroutine::auto::wrap_socket args {
+    # Process arguments.
+    # Acceptable syntax:
+    # * connect ?options? host port
+    # * connect -server command ?options? port
+
+    if {[info coroutine] eq {} || [lsearch -exact $args -server] >= 0} {
+        tailcall ::coroutine::auto::core_socket {*}$args
+    }
+
+    # This is a full re-implementation of socket, because the
+    # coroutine-aware part uses the builtin itself for some
+    # functionality, and this part cannot be taken as is.
+
+    set s [::coroutine::auto::core_socket -async {*}$args]
+    ::chan event $s writable [info coroutine]
+    while {[::chan configure $s -connecting]} {
+        yield
+    }
+    ::chan event $s writable {}
+    set errmsg [::chan configure $s -error]
+    if {$errmsg ne {}} {
+        ::chan close $s
+        error $errmsg
+    }
+    return $s
+}
+
 # # ## ### ##### ######## #############
 ## Internal. Setup.
-
+
 ::apply {{} {
     # Replaces the builtin commands with coroutine-aware
     # counterparts. We cannot use the coroutine commands directly,
@@ -293,6 +378,7 @@ proc ::coroutine::auto::wrap_read {args} {
 	after
 	vwait
 	update
+        socket
     } {
 	rename ::$cmd [namespace current]::core_$cmd
 	rename [namespace current]::wrap_$cmd ::$cmd
@@ -301,6 +387,7 @@ proc ::coroutine::auto::wrap_read {args} {
     foreach cmd {
 	gets
 	read
+        puts
     } {
 	rename ::tcl::chan::$cmd [namespace current]::core_$cmd
 	rename [namespace current]::wrap_$cmd ::tcl::chan::$cmd
@@ -312,5 +399,5 @@ proc ::coroutine::auto::wrap_read {args} {
 # # ## ### ##### ######## #############
 ## Ready
 
-package provide coroutine::auto 1.1.3
+package provide coroutine::auto 1.3
 return

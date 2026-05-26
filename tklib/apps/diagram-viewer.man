@@ -77,7 +77,10 @@ the file.
 This argument specifies the image format to convert the diagrams into
 when processing the input. The application recognizes all formats
 supported by the [package Img] package, i.e. for which it can load a
-package [package img::[var format]]
+package [package img::[var format]] (together with [package canvas::snap]),
+and all formats for which it can load a package
+[package canvas::[var format]]. These are (currently) [const mvg],
+and [const pdf].
 
 [arg_def path inputfile in]
 

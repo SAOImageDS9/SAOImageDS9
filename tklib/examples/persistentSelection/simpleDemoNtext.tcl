@@ -1,6 +1,4 @@
-#!/bin/sh
-# the next line restarts using tclsh \
-exec tclsh "$0" "$@"
+#! /usr/bin/env tclsh
 
 # Copyright (c) 2017-2018 Keith Nash.
 #

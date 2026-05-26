@@ -30,7 +30,7 @@
 # # ## ### ##### ######## ############# #####################
 ## Requisites
 
-package require Tcl 8.5
+package require Tcl 8.5-
 package require Tk
 package require snit
 package require canvas::edit::points
@@ -45,39 +45,52 @@ namespace eval ::canvas::edit {
 ## API
 
 snit::type ::canvas::edit::quadrilateral {
-    option -tag           -default QUADRILATERAL -readonly 1
-    option -create-cmd    -default {}       -readonly 1
-    option -highlight-cmd -default {}       -readonly 1
-    option -data-cmd      -default {}       -readonly 1
+    option -tag              -default QUADRILATERAL -readonly 1
+    option -create-cmd       -default {}            -readonly 1
+    option -highlight-cmd    -default {}            -readonly 1
+    option -data-cmd         -default {}            -readonly 1
+    option -convex           -default  0            -readonly 1 -type snit::boolean
+    option -add-remove-point -default {}            -readonly 1
+    option -drag-point       -default  3            -readonly 1
 
-    option -convex -type snit::boolean -default 0 -readonly 1
+    # Additional line/polygon configuration
+    # NOTE: __Cannot__ supercede -color/-hilit-color
+    option -color -default Skyblue2
 
     constructor {c args} {
 	set mycanvas $c
 	set myfreeref $ourrefs
 
+	$self configurelist $args
+
 	# Generate an internal point cloud editor, which will handle
 	# the basic tasks regarding the quadrilaterals's vertices.
 
 	lappend cmd canvas::edit points ${selfns}::P $c
-	lappend cmd -tag        [from args -tag QUADRILATERAL]
+	lappend cmd -tag        $options(-tag)
 	lappend cmd -data-cmd   [mymethod Point]
 	lappend cmd -create-cmd [mymethod Create]
 
-	set c [from args -highlight-cmd {}]
-	if {$c ne {}} { lappend cmd -highlight-cmd $c }
+	# Pass event options/configuration to the subordinate editor
+	foreach o {
+	    -add-remove-point
+	    -drag-point
+	    -highlight-cmd
+	} {
+	    set c $options($o)
+	    if {$c ne {}} { lappend cmd $o $c }
+	}
 
 	set myeditor  [{*}$cmd]
 	set mytracker [canvas::track lines ${selfns}::TRACK $mycanvas]
 
-	set c [from args -create-cmd [mymethod DefaultCreate]]
-	set options(-create-cmd) $c
+	if {$options(-create-cmd) eq {}} {
+	    set options(-create-cmd) [mymethod DefaultCreate]
+	}
 
-	$self configurelist $args
-
-	# TODO :: Connect this to the option processing to alow me to
+	# TODO :: Connect this to the option processing to allow me to
 	# drop -readonly 1 from their definition. Note that this also
-	# requires code to re-tag all the items on the fly.
+	# may require code to re-tag all the items on the fly.
 
 	return
     }
@@ -330,7 +343,8 @@ snit::type ::canvas::edit::quadrilateral {
 	# lines. At which point the 'line' may consist of multiple
 	# items.
 
-	set segment [$mycanvas create line {*}$a {*}$b -width 1 -fill black]
+	set segment [$mycanvas create line {*}$a {*}$b \
+			 -width 1 -fill $options(-color)]
 	$mycanvas lower $segment $options(-tag)
 
 	set myline($key) $segment
@@ -393,7 +407,7 @@ snit::type ::canvas::edit::quadrilateral {
 # # ## ### ##### ######## ############# #####################
 ## Ready
 
-package provide canvas::edit::quadrilateral 0.1
+package provide canvas::edit::quadrilateral 0.2
 return
 
 # # ## ### ##### ######## ############# #####################

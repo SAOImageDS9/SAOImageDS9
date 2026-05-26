@@ -189,7 +189,7 @@ namespace eval ttk {
 }
 
 # PostPosition --
-#	Returns the x and y coordinates where the menu 
+#	Returns the x and y coordinates where the menu
 #	should be posted, based on the menuentry and menu size
 #	and -direction option.
 #
@@ -242,7 +242,7 @@ proc ttk::menuentry::Popdown {me x y} {
 
 # Pulldown (X11 only) --
 #	Called when Button1 is pressed on a menuentry.
-#	Posts the menu; a subsequent ButtonRelease 
+#	Posts the menu; a subsequent ButtonRelease
 #	or Leave event will set a grab on the menu.
 #
 proc ttk::menuentry::Pulldown {mb x y} {

@@ -7,8 +7,6 @@
 #
 # Copyright (c) 1999 by Ajuba Solutions.
 # All rights reserved.
-#
-# RCS: @(#) $Id: cmdline.test,v 1.18 2011/02/23 17:41:52 andreas_kupries Exp $
 
 # -------------------------------------------------------------------------
 
@@ -16,7 +14,7 @@ source [file join \
 	[file dirname [file dirname [file join [pwd] [info script]]]] \
 	devtools testutilities.tcl]
 
-testsNeedTcl     8.2
+testsNeedTcl     8.5
 testsNeedTcltest 1.0
 
 testing {
@@ -150,7 +148,7 @@ test cmdline-2.8 {cmdline::getoptions, errors} {
     list [catch {cmdline::getoptions argList {{foo.arg blat} a}} msg] $msg $argList
 } [list 1 "[cmdline::getArgv0] options:
  -foo value            <blat>
- -a                   
+ -a
  --                   Forcibly stop option processing
  -help                Print this message
  -?                   Print this message
@@ -161,7 +159,7 @@ test cmdline-2.9 {cmdline::getoptions, errors} {
 	    $argList
 } [list 1 "[cmdline::getArgv0] options:
  -foo value            <blat>
- -a                   
+ -a
  --                   Forcibly stop option processing
  -help                Print this message
  -?                   Print this message
@@ -172,18 +170,19 @@ test cmdline-2.10 {cmdline::getoptions, errors} {
 	    $argList
 } [list 1 "[cmdline::getArgv0] options:
  -foo value            <blat>
- -a                   
+ -a
  --                   Forcibly stop option processing
  -help                Print this message
  -?                   Print this message
 " {}]
+
 test cmdline-2.11 {cmdline::getoptions, usage string in errors} {
     set argList {-help}
     list [catch {cmdline::getoptions argList {{foo.arg blat} a} {testing}} msg] $msg \
-	    $argList
+           $argList
 } [list 1 "[cmdline::getArgv0] testing
  -foo value            <blat>
- -a                   
+ -a
  --                   Forcibly stop option processing
  -help                Print this message
  -?                   Print this message
@@ -194,8 +193,8 @@ test cmdline-2.12 {cmdline::getoptions, bug 3189786} {
     list [catch {cmdline::getoptions argList {myarg a} {testing}} msg] $msg \
 	    $argList
 } [list 1 "[cmdline::getArgv0] testing
- -myarg               
- -a                   
+ -myarg
+ -a
  --                   Forcibly stop option processing
  -help                Print this message
  -?                   Print this message
@@ -208,7 +207,7 @@ test cmdline-3.1 {cmdline::usage,hidden options} {
     list [catch {cmdline::getoptions argList {{foo.secret blat} a}} msg] $msg \
 	    $argList
 } [list 1 "[cmdline::getArgv0] options:
- -a                   
+ -a
  --                   Forcibly stop option processing
  -help                Print this message
  -?                   Print this message
@@ -219,7 +218,7 @@ test cmdline-3.2 {cmdline::usage, with & without arg} {
 	    {{foo.arg blat testing} {a {} {line 2}}}} msg] $msg $argList
 } [list 1 "[cmdline::getArgv0] options:
  -foo value           testing <blat>
- -a                   
+ -a
  --                   Forcibly stop option processing
  -help                Print this message
  -?                   Print this message
@@ -232,10 +231,23 @@ test cmdline-3.3 {cmdline::usage, bug 3189786} {
 	    $argList
 } [list 1 "[cmdline::getArgv0] options:
  -mysecret            blat
- -a                   
+ -a
  --                   Forcibly stop option processing
  -help                Print this message
  -?                   Print this message
+" {}]
+
+test cmdline-3.4 {cmdline::usage, long options} {
+    set argList {-help}
+    list [catch {cmdline::getoptions argList {{mysecret blat} a {very-long-option.arg foobar {A very very long option}}}} msg] $msg \
+	    $argList
+} [list 1 "[cmdline::getArgv0] options:
+ -mysecret               blat
+ -a
+ -very-long-option value A very very long option <foobar>
+ --                      Forcibly stop option processing
+ -help                   Print this message
+ -?                      Print this message
 " {}]
 
 # cmdline::getfiles
@@ -268,7 +280,7 @@ test cmdline-4.1 {cmdline::getfiles} {pcOnly} {
     runGetFilesTest {
 	cmdline::getfiles {} 0
     }
-} {}    
+} {}
 test cmdline-4.2 {cmdline::getfiles, one pattern} {pcOnly} {
     runGetFilesTest {
 	cd cmdlineJunk
@@ -510,7 +522,7 @@ test cmdline-7.12 {cmdline::getKnownOptions, errors} {
     list [catch {cmdline::getKnownOptions argList {{foo.arg blat} a}} msg] $msg $argList
 } [list 1 "[cmdline::getArgv0] options:
  -foo value            <blat>
- -a                   
+ -a
  --                   Forcibly stop option processing
  -help                Print this message
  -?                   Print this message
@@ -521,7 +533,7 @@ test cmdline-7.13 {cmdline::getKnownOptions, errors} {
 	    $argList
 } [list 1 "[cmdline::getArgv0] options:
  -foo value            <blat>
- -a                   
+ -a
  --                   Forcibly stop option processing
  -help                Print this message
  -?                   Print this message
@@ -532,7 +544,7 @@ test cmdline-7.14 {cmdline::getKnownOptions, errors} {
 	    $argList
 } [list 1 "[cmdline::getArgv0] options:
  -foo value            <blat>
- -a                   
+ -a
  --                   Forcibly stop option processing
  -help                Print this message
  -?                   Print this message
@@ -543,7 +555,7 @@ test cmdline-7.15 {cmdline::getKnownOptions, usage string in errors} {
 	    $argList
 } [list 1 "[cmdline::getArgv0] testing
  -foo value            <blat>
- -a                   
+ -a
  --                   Forcibly stop option processing
  -help                Print this message
  -?                   Print this message

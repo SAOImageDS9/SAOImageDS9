@@ -15,8 +15,8 @@ source [file join \
 	[file dirname [file dirname [file join [pwd] [info script]]]] \
 	devtools testutilities.tcl]
 
-testsNeedTcl     8.2
-testsNeedTcltest 1.0
+testsNeedTcl     8.5
+testsNeedTcltest 1.0-
 
 support {
     useLocal list.tcl struct::list

@@ -2,7 +2,7 @@
 #     Routine to plot arbitrary canvas items into plots
 #
 
-namespace eval ::Plotchart {
+proc ::Plotchart::InitObject {} {
     #
     # Settings and variable for the DrawObject method
     #
@@ -102,6 +102,11 @@ namespace eval ::Plotchart {
         #
         set canvasObject($itemType,defaults) $defaultValues
     }
+}
+
+namespace eval ::Plotchart {
+    InitObject
+    rename InitObject {}
 }
 
 

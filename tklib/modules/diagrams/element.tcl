@@ -12,7 +12,7 @@
 # # ## ### ##### ######## ############# ######################
 ## Requisites
 
-package require Tcl 8.5              ; # Want the nice things it
+package require Tcl 8.5-              ; # Want the nice things it
 				       # brings (dicts, {*}, etc.)
 package require snit                 ; # Object framework.
 package require math::geometry 1.1.2 ; # Vector math (points, line

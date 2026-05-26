@@ -1,4 +1,4 @@
-#!/usr/bin/env tclsh
+#! /usr/bin/env tclsh
 ## -*- tcl -*-
 # test-histogram.tcl --
 #     Example of a histogram plot with filled background

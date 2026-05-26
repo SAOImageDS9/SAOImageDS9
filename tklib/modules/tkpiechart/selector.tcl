@@ -1,6 +1,6 @@
 # $Id: selector.tcl,v 2.8 2006/01/27 19:05:52 andreas_kupries Exp $
 
-package require Tk 8.3
+package require Tk 8.3-
 package require stooop
 
 # implements generic selection on a list of unique identifiers

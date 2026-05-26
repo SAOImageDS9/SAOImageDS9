@@ -44,7 +44,7 @@ proc ::swaplist::swaplist {w var list1 list2 args} {
     catch {destroy $w}
     set focus [focus]
     set grab [grab current .]
-    
+
     toplevel $w -class Swaplist -relief raised
     wm title $w $options(-title)
     wm protocol $w WM_DELETE_WINDOW {set ::swaplist::whichButton 0}
@@ -64,7 +64,7 @@ proc ::swaplist::swaplist {w var list1 list2 args} {
     bind $w <Destroy> {set ::swaplist::whichButton 0}
 
     #SetButtonState $w
-    
+
     wm withdraw $w
     update idletasks
     if {[info exists options(-geometry)]} {
@@ -110,7 +110,7 @@ proc ::swaplist::createSwaplist {w var list1 list2 args} {
                       $args
 
     set olist $list1
-    
+
     # remove items in list2 from list1
     foreach x $list2 {
         if {[set i [lsearch $list1 $x]] >= 0} {
@@ -173,7 +173,7 @@ proc ::swaplist::createSwaplist {w var list1 list2 args} {
     bind $w.list2.list <Double-Button-1> [list ::swaplist::Double %W]
     #bind $w.list1.list <<ListboxSelect>> [list ::swaplist::SetButtonState %W]
     #bind $w.list2.list <<ListboxSelect>> [list ::swaplist::SetButtonState %W]
-    
+
     if {![catch {package present autoscroll}]} {
         ::autoscroll::autoscroll $w.list1.scrollx
         ::autoscroll::autoscroll $w.list1.scrolly
@@ -228,7 +228,7 @@ proc ::swaplist::lreverse {list} {
 proc ::swaplist::ShiftL {w olist} {
     set from $w.list2.list
     set to $w.list1.list
-        
+
     if {[set cur [$from curselection]] == ""} { return }
     foreach x [lreverse $cur] {
         set name [$from get $x]
@@ -268,7 +268,7 @@ proc ::swaplist::ShiftRNormal {w olist} {
 proc ::swaplist::ShiftRNoReorder {w olist} {
     set from $w.list1.list
     set to $w.list2.list
-        
+
     if {[set cur [$from curselection]] == ""} { return }
     foreach x $cur {
         set name [$from get $x]

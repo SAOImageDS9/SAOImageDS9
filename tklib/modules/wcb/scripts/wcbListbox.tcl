@@ -1,7 +1,7 @@
 #==============================================================================
 # Contains Wcb procedures for listbox widgets.
 #
-# Copyright (c) 1999-2018  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 1999-2023  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
 #

@@ -1,7 +1,7 @@
-#!/usr/bin/env tclsh
+#! /usr/bin/env tclsh
 ## -*- tcl -*-
 
-package require Tcl 8.5
+package require Tcl 8.5-
 package require Tk
 
 package require Plotchart
@@ -51,18 +51,18 @@ update
 	set pct_number 5
 	for {set elines 1} {$elines <= 5} {incr elines} {
 	    set pct [expr $pct_number * $elines]
-	
+
 	    $p dataconfig ${pct}_pct -colour $colors($elines)
-			
+
 	    if {$min < 0} {$p plot ${pct}_pct $min [expr $min * (1.0 - ($pct /100.0))]      } else {$p plot ${pct}_pct $min [expr $min * (1.0 + ($pct /100.0))]     }
 	    if {$max > 0} {$p plot ${pct}_pct      [expr $max * (1.0 - ($pct /100.0))] $max } else {$p plot ${pct}_pct      [expr $max * (1.0 + ($pct /100.0))] $max}
 
 	    #--- plotting the negative percentage of errpr line
 	    $p dataconfig n_${pct}_pct -colour $colors($elines)
-			
+
 	    if {$min < 0} {$p plot  n_${pct}_pct      [expr $min * (1.0 - ($pct /100.0))] $min } else {$p plot  n_${pct}_pct      [expr $min * (1.0 + ($pct /100.0))] $min}
 	    if {$max > 0} {$p plot  n_${pct}_pct $max [expr $max * (1.0 - ($pct /100.0))]      } else {$p plot  n_${pct}_pct $max [expr $max * (1.0 + ($pct /100.0))]     }
-			
+
 	    $p legend ${pct}_pct  "+/- ${pct} percent"
 	}
 	#--- This controls the display of the ticklines
@@ -100,18 +100,18 @@ update
 	set pct_number 5
 	for {set elines 1} {$elines <= 2} {incr elines} {
 	    set pct [expr $pct_number * $elines]
-	
+
 	    $p dataconfig ${pct}_pct -colour $colors($elines)
-			
+
 	    if {$min < 0} {$p plot ${pct}_pct $min [expr $min * (1.0 - ($pct /100.0))]      } else {$p plot ${pct}_pct $min [expr $min * (1.0 + ($pct /100.0))]     }
 	    if {$max > 0} {$p plot ${pct}_pct      [expr $max * (1.0 - ($pct /100.0))] $max } else {$p plot ${pct}_pct      [expr $max * (1.0 + ($pct /100.0))] $max}
 
 	    #--- plotting the negative percentage of errpr line
 	    $p dataconfig n_${pct}_pct -colour $colors($elines)
-			
+
 	    if {$min < 0} {$p plot  n_${pct}_pct      [expr $min * (1.0 - ($pct /100.0))] $min } else {$p plot  n_${pct}_pct      [expr $min * (1.0 + ($pct /100.0))] $min}
 	    if {$max > 0} {$p plot  n_${pct}_pct $max [expr $max * (1.0 - ($pct /100.0))]      } else {$p plot  n_${pct}_pct $max [expr $max * (1.0 + ($pct /100.0))]     }
-			
+
 	    $p legend ${pct}_pct  "+/- ${pct} percent"
 	}
 	#--- This controls the display of the ticklines

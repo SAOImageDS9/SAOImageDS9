@@ -1,7 +1,7 @@
 #==============================================================================
 # Contains the implementation of a multi-entry widget for IPv6 addresses.
 #
-# Copyright (c) 2009-2019  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 2009-2023  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
 #
@@ -13,35 +13,73 @@ namespace eval mentry {
     #
     # Define some bindings for the binding tag MentryIPv6Addr
     #
-    bind MentryIPv6Addr <Up>	{ mentry::incrIPv6AddrComp %W  1 }
-    bind MentryIPv6Addr <Down>	{ mentry::incrIPv6AddrComp %W -1 }
-    bind MentryIPv6Addr <Prior>	{ mentry::incrIPv6AddrComp %W  10 }
-    bind MentryIPv6Addr <Next>	{ mentry::incrIPv6AddrComp %W -10 }
+    bind MentryIPv6Addr <Up>	  { mentry::incrIPv6AddrComp %W  1 }
+    bind MentryIPv6Addr <Down>	  { mentry::incrIPv6AddrComp %W -1 }
+    bind MentryIPv6Addr <Prior>	  { mentry::incrIPv6AddrComp %W  10 }
+    bind MentryIPv6Addr <Next>	  { mentry::incrIPv6AddrComp %W -10 }
+    bind MentryIPv6Addr <<Paste>> { mentry::pasteIPv6Addr %W }
     variable winSys
-    catch {
-	if {[string compare $winSys "classic"] == 0 ||
-	    [string compare $winSys "aqua"] == 0} {
+    variable uniformWheelSupport
+    if {$uniformWheelSupport} {
+	bind MentryIPv6Addr <MouseWheel> {
+	    mentry::incrIPv6AddrComp %W \
+		[expr {%D > 0 ? (%D + 119) / 120 : %D / 120}]
+	}
+	bind MentryIPv6Addr <Option-MouseWheel> {
+	    mentry::incrIPv6AddrComp %W \
+		[expr {%D > 0 ? (%D + 11) / 12 : %D / 12}]
+	}
+	bind MentryIPv6Addr <Shift-MouseWheel> {
+	    # Ignore the event
+	}
+    } elseif {$winSys eq "aqua"} {
+	catch {
 	    bind MentryIPv6Addr <MouseWheel> {
 		mentry::incrIPv6AddrComp %W %D
 	    }
 	    bind MentryIPv6Addr <Option-MouseWheel> {
 		mentry::incrIPv6AddrComp %W [expr {10 * %D}]
 	    }
-	} else {
+	    bind MentryIPv6Addr <Shift-MouseWheel> {
+		# Ignore the event
+	    }
+	}
+    } else {
+	catch {
 	    bind MentryIPv6Addr <MouseWheel> {
-		mentry::incrIPv6AddrComp %W [expr {%D / 120}]
+		mentry::incrIPv6AddrComp %W \
+		    [expr {%D > 0 ? (%D + 11) / 12 : %D / 12}]
+	    }
+	    bind MentryIPv6Addr <Shift-MouseWheel> {
+		# Ignore the event
+	    }
+	}
+
+	if {$winSys eq "x11"} {
+	    bind MentryIPv6Addr <Button-4> {
+		if {!$tk_strictMotif} {
+		    mentry::incrIPv6AddrComp %W 1
+		}
+	    }
+	    bind MentryIPv6Addr <Button-5> {
+		if {!$tk_strictMotif} {
+		    mentry::incrIPv6AddrComp %W -1
+		}
+	    }
+	    bind MentryIPv6Addr <Shift-Button-4> {
+		# Ignore the event
+	    }
+	    bind MentryIPv6Addr <Shift-Button-5> {
+		# Ignore the event
 	    }
 	}
     }
-    if {[string compare $winSys "x11"] == 0} {
-	bind MentryIPv6Addr <Button-4> {
-	    if {!$tk_strictMotif} {
-		mentry::incrIPv6AddrComp %W 1
-	    }
-	}
-	bind MentryIPv6Addr <Button-5> {
-	    if {!$tk_strictMotif} {
-		mentry::incrIPv6AddrComp %W -1
+    variable touchpadScrollSupport
+    if {$touchpadScrollSupport} {
+	bind MentryIPv6Addr <TouchpadScroll> {
+	    lassign [tk::PreciseScrollDeltas %D] mentry::dX mentry::dY
+	    if {$mentry::dY != 0 && [expr {%# %% 12}] == 0} {
+		mentry::incrIPv6AddrComp %W [expr {$mentry::dY > 0 ? -1 : 1}]
 	    }
 	}
     }
@@ -68,15 +106,15 @@ proc mentry::ipv6AddrMentry {win args} {
     ::$win attrib type IPv6Addr
 
     #
-    # In each entry child allow only hexadecimal digits, and
+    # In each entry component allow only hexadecimal digits, and
     # insert the binding tag MentryIPv6Addr in the list of
     # binding tags of the entry, just after its path name
     #
     for {set n 0} {$n < 8} {incr n} {
-	::$win adjustentry $n "0123456789abcdefABCDEF"
 	set w [::$win entrypath $n]
 	wcb::cbappend $w before insert wcb::convStrToLower \
 		      {wcb::checkStrForRegExp {^[0-9a-fA-F]*$}}
+	::$win adjustentry $n "0123456789abcdefABCDEF"
 	bindtags $w [linsert [bindtags $w] 1 MentryIPv6Addr]
     }
 
@@ -103,7 +141,7 @@ proc mentry::putIPv6Addr {addr win} {
     # Split addr on colons; make sure that a starting or
     # trailing "::" will give rise to a single empty string
     #
-    if {[string compare $addr "::"] == 0} {
+    if {$addr eq "::"} {
 	set lst [list ""]
     } elseif {[regexp {^::(.+)} $addr dummy var]} {
 	set lst [list ""]
@@ -143,6 +181,7 @@ proc mentry::putIPv6Addr {addr win} {
     #
     for {set n 0} {$n < 8} {incr n} {
 	set val 0x[lindex $lst $n]
+	##nagelfar ignore
 	if {[catch {format "%x" $val} str$n] != 0 | $val > 65535} {
 	    return -code error $errorMsg
 	}
@@ -161,7 +200,7 @@ proc mentry::getIPv6Addr win {
     checkIfIPv6AddrMentry $win
 
     #
-    # Generate an error if any entry child is empty
+    # Generate an error if any entry component is empty
     #
     for {set n 0} {$n < 8} {incr n} {
 	if {[::$win isempty $n]} {
@@ -171,6 +210,7 @@ proc mentry::getIPv6Addr win {
     }
 
     ::$win getarray strs
+    ##nagelfar ignore
     return [format "%x:%x:%x:%x:%x:%x:%x:%x" \
 	    0x$strs(0) 0x$strs(1) 0x$strs(2) 0x$strs(3) \
 	    0x$strs(4) 0x$strs(5) 0x$strs(6) 0x$strs(7)]
@@ -191,8 +231,7 @@ proc mentry::checkIfIPv6AddrMentry win {
 	return -code error "bad window path name \"$win\""
     }
 
-    if {[string compare [winfo class $win] "Mentry"] != 0 ||
-	[string compare [::$win attrib type] "IPv6Addr"] != 0} {
+    if {[winfo class $win] ne "Mentry" || [::$win attrib type] ne "IPv6Addr"} {
 	return -code error \
 	       "window \"$win\" is not a mentry widget for IPv6 addresses"
     }
@@ -202,12 +241,12 @@ proc mentry::checkIfIPv6AddrMentry win {
 # mentry::incrIPv6AddrComp
 #
 # This procedure handles <Up>, <Down>, <Prior>, and <Next> events in the entry
-# child w of a mentry widget for IPv6 addresses.  It increments the entry's
+# component w of a mentry widget for IPv6 addresses.  It increments the entry's
 # value by the specified amount if allowed.
 #------------------------------------------------------------------------------
 proc mentry::incrIPv6AddrComp {w amount} {
     set str [$w get]
-    if {[string length $str] == 0} {
+    if {$str eq ""} {
 	#
 	# Insert a "0"
 	#
@@ -217,6 +256,7 @@ proc mentry::incrIPv6AddrComp {w amount} {
 	#
 	# Increment the entry's value by the given amount if allowed
 	#
+	##nagelfar ignore
 	scan $str "%x" val
 	if {$amount > 0} {
 	    if {$val < 65535} {
@@ -237,10 +277,28 @@ proc mentry::incrIPv6AddrComp {w amount} {
 		return ""
 	    }
 	}
+	##nagelfar ignore
 	set str [format "%x" $val]
 	set oldPos [$w index insert]
 	_$w delete 0 end
 	_$w insert end $str
 	_$w icursor $oldPos
     }
+}
+
+#------------------------------------------------------------------------------
+# mentry::pasteIPv6Addr
+#
+# This procedure handles <<Paste>> events in the entry component w of a mentry
+# widget for IPv6 addresses by pasting the current contents of the clipboard
+# into the mentry if it is a valid IPv6 address.
+#------------------------------------------------------------------------------
+proc mentry::pasteIPv6Addr w {
+    set res [catch {::tk::GetSelection $w CLIPBOARD} addr]
+    if {$res == 0} {
+	parseChildPath $w win n
+	catch { putIPv6Addr $addr $win }
+    }
+
+    return -code break ""
 }

@@ -18,8 +18,8 @@
 # # ## ### ##### ######## ############# #####################
 ## Requisites
 
-package require Tcl 8.5 ; # dict, {*}
-package require Tk  8.5 ; # ttk/tile
+package require Tcl 8.5- ; # dict, {*}
+package require Tk  8.5- ; # ttk/tile
 
 # # ## ### ##### ######## ############# #####################
 ## Package state (database of attachments).

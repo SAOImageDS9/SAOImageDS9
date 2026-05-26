@@ -7,19 +7,6 @@
 # Copyright (c) 1998-1999 by Scriptics Corporation.
 # All rights reserved.
 
-if {![package vsatisfies [package provide Tcl] 8.5]} {
-    puts "    Aborting the tests found in \"[file tail [info script]]\"."
-    puts "    Requiring Tcl 8.5, have [package present Tcl]"
-    return
-}
-
-# Future: put all tests under constraint tk and set constraint properly
-if {[catch { package require Tk 8.5 } msg]} {
-    puts "    Aborting the tests found in \"[file tail [info script]]\"."
-    puts "    Requiring Tk 8.5, $msg"
-    return
-}
-
 ::tcltest::testConstraint tk 1
 
 package require widgetPlus
@@ -30,10 +17,11 @@ namespace import ::widgetPlus::entryPlus
 # entryPlus.test which is copied with mods from Tk entry.test.
 # ------------------------------------------------------------
 
+package require Tk
 package require tcltest 2.2
-namespace import ::tcltest::*
+namespace import -force tcltest::*
 catch { tcltest::configure {*}$::argv }
-tcltest::loadTestedCommands
+loadTestedCommands
 
 # ------------------------------------------------------------
 # First test the entry widget when changing its -textvariable.
@@ -134,8 +122,6 @@ test entry-35.4 {entryPlus replace textvar unset} -setup {
     destroy .e
     unset ::foo ::bar
 } -result {Some Text}
-
-
 
 cleanupTests
 return

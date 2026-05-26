@@ -2,8 +2,8 @@
 [manpage_begin ntextBindings n 1.0]
 [moddesc   {Alternative Bindings for the Text Widget}]
 [titledesc {Alternative Bindings for the Text Widget}]
-[require Tcl 8.5]
-[require Tk 8.5]
+[require Tcl 8.5-]
+[require Tk 8.5-]
 [require ntext [opt 1.0]]
 [description]
 
@@ -136,7 +136,7 @@ The definition of the virtual event <<NtextCut>> (etc) is similar to that of <<C
 
 [section BUGS]
 
-This version of [package ntext] is intended to be compatible with all releases of [package Tk] 8.5 and 8.6, and with the branches [emph core-8-5-branch], [emph core-8-6-branch], and [emph trunk] in the source code repository for [package Tk].  Any incompatibility with any of these versions, for any [package Tk] windowing system, should be reported as a bug. Please report such in the category [emph ntext] of the [uri http://core.tcl.tk/tklib/reportlist {Tklib Trackers}].
+This version of [package ntext] is intended to be compatible with all releases of [package Tk] 8.5, 8.6, and 8.7, and with the branches [emph core-8-5-branch], [emph core-8-6-branch], and [emph trunk] in the source code repository for [package Tk].  Any incompatibility with any of these versions, for any [package Tk] windowing system, should be reported as a bug. Please report such in the category [emph ntext] of the [uri https://core.tcl-lang.org/tklib/reportlist {Tklib Trackers}].
 
 [section EXAMPLE]
 

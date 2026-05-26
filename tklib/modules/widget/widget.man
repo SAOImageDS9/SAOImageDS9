@@ -1,5 +1,6 @@
 [comment {-*- tcl -*- doctools manpage}]
-[manpage_begin widget n 3.0]
+[vset VERSION 3.2]
+[manpage_begin widget n [vset VERSION]]
 [keywords bundle]
 [keywords calendar]
 [keywords dateentry]
@@ -20,7 +21,7 @@
 [category Widget]
 [require Tcl 8.4]
 [require Tk 8.4]
-[require widget [opt 3.0]] [require snit]
+[require widget [opt [vset VERSION]]] [require snit]
 [description]
 
 This package provides megawidgets based on the snit oo system (snidgets).

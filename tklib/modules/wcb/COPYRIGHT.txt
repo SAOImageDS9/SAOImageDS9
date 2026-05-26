@@ -1,5 +1,5 @@
-Widget callback package Wcb, version 3.6
-Copyright (c) 1999-2018  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+Widget callback package Wcb, version 4.1.1
+Copyright (c) 1999-2024  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 
 This library is free software; you can use, modify, and redistribute it
 for any purpose, provided that existing copyright notices are retained

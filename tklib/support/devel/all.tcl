@@ -7,7 +7,7 @@
 #
 # Copyright (c) 1998-2000 by Ajuba Solutions.
 # All rights reserved.
-# 
+#
 # RCS: @(#) $Id: all.tcl,v 1.1 2009/02/07 05:18:22 andreas_kupries Exp $
 
 catch {wm withdraw .}
@@ -173,7 +173,7 @@ foreach module $modules {
 	# Under wish 8.2/8.3 we have to explicitly load Tk into the
 	# slave, the package management is not able to.
 
-	if {![package vsatisfies [package provide Tcl] 8.4]} {
+	if {![package vsatisfies [package provide Tcl] 8.4-]} {
 	    catch {
 		load {} Tk
 		wm withdraw .

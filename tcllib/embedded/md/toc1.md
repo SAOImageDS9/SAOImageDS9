@@ -77,7 +77,7 @@
 
           + [clock\_iso8601](tcllib/files/modules/clock/iso8601\.md) Parsing ISO 8601 dates/times
 
-          + [clock\_rfc2822](tcllib/files/modules/clock/rfc2822\.md) Parsing ISO 8601 dates/times
+          + [clock\_rfc2822](tcllib/files/modules/clock/rfc2822\.md) Parsing RFC 2822 dates/times
 
       * [cmdline]()
 
@@ -85,7 +85,7 @@
 
       * [comm]()
 
-          + [comm](tcllib/files/modules/comm/comm\.md) A remote communication facility for Tcl \(8\.3 and later\)
+          + [comm](tcllib/files/modules/comm/comm\.md) A remote communication facility for Tcl \(8\.5 and later\)
 
           + [comm\_wire](tcllib/files/modules/comm/comm\_wire\.md) The comm wire protocol
 
@@ -297,7 +297,7 @@
 
       * [dtplite]()
 
-          + [dtplite](tcllib/files/modules/dtplite/pkg\_dtplite\.md) Lightweight DocTools Markup Processor
+          + [pkg\_dtplite](tcllib/files/modules/dtplite/pkg\_dtplite\.md) Lightweight DocTools Markup Processor
 
       * [fileutil]()
 
@@ -493,6 +493,8 @@
 
           + [math::calculus::symdiff](tcllib/files/modules/math/symdiff\.md) Symbolic differentiation for Tcl
 
+          + [math::changepoint](tcllib/files/modules/math/changepoint\.md) Change point detection methods
+
           + [math::combinatorics](tcllib/files/modules/math/combinatorics\.md) Combinatorial functions in the Tcl Math Library
 
           + [math::complexnumbers](tcllib/files/modules/math/qcomplex\.md) Straightforward complex number package
@@ -502,6 +504,10 @@
           + [math::decimal](tcllib/files/modules/math/decimal\.md) General decimal arithmetic
 
           + [math::exact](tcllib/files/modules/math/exact\.md) Exact Real Arithmetic
+
+          + [math::figurate](tcllib/files/modules/math/figurate\.md) Evaluate figurate numbers
+
+          + [math::filters](tcllib/files/modules/math/filtergen\.md) Digital filters
 
           + [math::fourier](tcllib/files/modules/math/fourier\.md) Discrete and fast fourier transforms
 
@@ -513,6 +519,8 @@
 
           + [math::linearalgebra](tcllib/files/modules/math/linalg\.md) Linear Algebra
 
+          + [math::machineparameters](tcllib/files/modules/math/machineparameters\.md) Compute double precision machine parameters\.
+
           + [math::numtheory](tcllib/files/modules/math/numtheory\.md) Number Theory
 
           + [math::optimize](tcllib/files/modules/math/optimize\.md) Optimisation routines
@@ -520,6 +528,8 @@
           + [math::PCA](tcllib/files/modules/math/pca\.md) Package for Principal Component Analysis
 
           + [math::polynomials](tcllib/files/modules/math/polynomials\.md) Polynomial functions
+
+          + [math::probopt](tcllib/files/modules/math/probopt\.md) Probabilistic optimisation methods
 
           + [math::quasirandom](tcllib/files/modules/math/quasirandom\.md) Quasi\-random points for integration and Monte Carlo type methods
 
@@ -532,8 +542,6 @@
           + [math::statistics](tcllib/files/modules/math/statistics\.md) Basic statistical functions and procedures
 
           + [math::trig](tcllib/files/modules/math/trig\.md) Trigonometric anf hyperbolic functions
-
-          + [tclrep/machineparameters](tcllib/files/modules/math/machineparameters\.md) Compute double precision machine parameters\.
 
       * [md4]()
 
@@ -552,6 +560,10 @@
           + [mime](tcllib/files/modules/mime/mime\.md) Manipulation of MIME body parts
 
           + [smtp](tcllib/files/modules/mime/smtp\.md) Client\-side tcl implementation of the smtp protocol
+
+      * [mkdoc]()
+
+          + [mkdoc](tcllib/files/modules/mkdoc/mkdoc\.md) Extracts and optionally converts Markdown comments in source code to HTML
 
       * [multiplexer]()
 
@@ -847,8 +859,6 @@
 
           + [struct::matrix](tcllib/files/modules/struct/matrix\.md) Create and manipulate matrix objects
 
-          + [struct::matrix\_v1](tcllib/files/modules/struct/matrix1\.md) Create and manipulate matrix objects
-
           + [struct::pool](tcllib/files/modules/struct/pool\.md) Create and manipulate pool objects \(of discrete items\)
 
           + [struct::prioqueue](tcllib/files/modules/struct/prioqueue\.md) Create and manipulate prioqueue objects
@@ -927,6 +937,8 @@
 
           + [textutil::trim](tcllib/files/modules/textutil/trim\.md) Procedures to trim strings
 
+          + [textutil::wcswidth](tcllib/files/modules/textutil/wcswidth\.md) Procedures to compute terminal width of strings
+
       * [tie]()
 
           + [tie](tcllib/files/modules/tie/tie\.md) Array persistence
@@ -966,6 +978,8 @@
           + [treeql](tcllib/files/modules/treeql/treeql\.md) Query tree objects
 
       * [try]()
+
+          + [file::home](tcllib/files/modules/try/tcllib\_fhome\.md) file home \- Return home directory of current or other user
 
           + [throw](tcllib/files/modules/try/tcllib\_throw\.md) throw \- Throw an error exception with a message
 

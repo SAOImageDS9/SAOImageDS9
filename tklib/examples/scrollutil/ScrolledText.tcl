@@ -1,14 +1,16 @@
-#!/usr/bin/env wish
+#! /usr/bin/env tclsh
 
 #==============================================================================
 # Demonstrates the use of the scrollutil::scrollarea widget in connection with
 # a text widget.
 #
-# Copyright (c) 2020  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 2020-2023  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
+package require Tk
 package require scrollutil_tile
-source styleUtil.tcl
+set dir [file dirname [info script]]
+source [file join $dir styleUtil.tcl]
 
 wm title . "Scrolled Text"
 
@@ -18,7 +20,7 @@ wm title . "Scrolled Text"
 set f  [ttk::frame .f]
 set sa [scrollutil::scrollarea $f.sa -lockinterval 10]
 set txt [text $sa.txt -font TkFixedFont -width 49 -height 12 \
-	 -spacing1 2 -spacing3 2 -wrap none]
+	 -spacing1 1.5p -spacing3 1.5p -wrap none]
 $sa setwidget $txt
 
 #
@@ -36,12 +38,12 @@ $txt tag add bgRed 25.0 25.end
 # Create a ttk::button widget outside the scrollarea
 #
 set b [ttk::button $f.b -text "Close" -command exit]
-pack $b -side bottom -pady {0 10}
+pack $b -side bottom -pady {0 7p}
 
 #
 # Manage the scrollarea
 #
-pack $sa -expand yes -fill both -padx 10 -pady 10
+pack $sa -expand yes -fill both -padx 7p -pady 7p
 pack $f  -expand yes -fill both
 
 #

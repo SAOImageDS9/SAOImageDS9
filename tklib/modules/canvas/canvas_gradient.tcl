@@ -10,8 +10,8 @@
 # ### ### ### ######### ######### #########
 ## Requisites
 
-package require Tcl 8.5
-package require Tk  8.5
+package require Tcl 8.5-
+package require Tk 8.5-
 
 namespace eval ::canvas {}
 
@@ -47,11 +47,11 @@ proc ::canvas::gradient::DrawGradient {canvas args} {
 	-color2    green
 	-type      linear
     } $args]
-    
+
     set color1 [dict get $args -color1]
     set color2 [dict get $args -color2]
     set direction [dict get $args -direction]
-    
+
     ## Clear gradient. Destroys all canvas items the old gradient
     ## consisted of.
     $canvas delete canvas::gradient
@@ -59,11 +59,11 @@ proc ::canvas::gradient::DrawGradient {canvas args} {
     ## Get current canvas width and height.
     set canWidthPx  [winfo width  $canvas]
     set canHeightPx [winfo height $canvas]
-    
+
     ## No gradient if the canvas' area is too small
     if {($canWidthPx < 10) ||
 	($canHeightPx < 10)} return
-    
+
     ## Get the distance 'distPx' (in pixels) over which
     ## the 2 colors are to be gradiated.
 
@@ -110,7 +110,7 @@ proc ::canvas::gradient::DrawGradient {canvas args} {
     ## Calculate the data needed for the interpolation, i.e. color
     ## range and slope of the line (The ratio of RGB-color-ranges to
     ## distance 'across' the canvas).
-    
+
     set rRange [expr {$r2 - $r1 + 0.0}]
     set gRange [expr {$g2 - $g1 + 0.0}]
     set bRange [expr {$b2 - $b1 + 0.0}]
@@ -173,7 +173,7 @@ proc ::canvas::gradient::Draw_d1 {} {
 proc ::canvas::gradient::Draw_d2 {} {
     upvar 1 canvas canvas r1 r1 g1 g1 b1 b1 rRatio rRatio gRatio gRatio bRatio bRatio
     upvar 1 canHeightPx canHeightPx canWidthPx canWidthPx
-    
+
     # Drawing for diagonal direction, bottom+left to top+right
 
     # Two stages:

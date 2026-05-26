@@ -220,7 +220,7 @@ Module documentation
 --------------------
 
 The main format used for the documentation of packages in Tklib is
-'doctools', the support packages of which are part of Tklib, see the
+'doctools', the support packages of which are part of Tcllib, see the
 module 'doctools'.
 
 To convert this documentation to HTML or nroff manpages, or some other

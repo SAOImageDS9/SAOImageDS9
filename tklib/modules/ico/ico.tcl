@@ -4,15 +4,13 @@
 #
 # Copyright (c) 2003-2007 Aaron Faupell
 # Copyright (c) 2003-2011 ActiveState
-#
-# RCS: @(#) $Id: ico.tcl,v 1.32 2011/10/05 00:10:46 hobbs Exp $
 
 # Sample usage:
 #	set file bin/wish.exe
 #	set icos [::ico::icons $file]
 #	set img  [::ico::getIcon $file [lindex $icos 1] -format image -res 32]
 
-package require Tcl 8.4
+package require Tcl 8.4-
 
 # Instantiate vars we need for this package
 namespace eval ::ico {
@@ -81,7 +79,7 @@ proc ::ico::iconMembers {file name args} {
     parseOpts type $args
     if {![file exists $file]} {
         return -code error "couldn't open \"$file\": no such file or directory"
-    } 
+    }
     gettype type $file
     if {![llength [info commands getIconMembers$type]]} {
 	return -code error "unsupported file format $type"
@@ -215,7 +213,7 @@ proc ::ico::getIconByName {file name args} {
 #
 # ARGS:
 #	file	File to get icon for.
-#	
+#
 #	optional arguments and return values are the same as getIcon
 #
 proc ::ico::getFileIcon {file args} {
@@ -331,7 +329,7 @@ proc ::ico::copyIcon {file1 name1 file2 name2 args} {
     parseOpts {fromtype totype} $args
     if {![file exists $file1]} {
         return -code error "couldn't open \"$file1\": no such file or directory"
-    } 
+    }
     if {![file exists $file2]} {
         return -code error "couldn't open \"$file2\": no such file or directory"
     }
@@ -426,15 +424,14 @@ proc ::ico::EXEtoICO {exeFile {icoDir {}}} {
 
     if {![file exists $exeFile]} {
         return -code error "couldn't open \"$exeFile\": no such file or directory"
-    } 
+    }
 
     set file [file normalize $exeFile]
     FindResources $file
 
     if {$icoDir == ""} { set icoDir [file dirname $file] }
 
-    set fh [open $file]
-    fconfigure $fh -eofchar {} -encoding binary -translation lf
+    set fh [open $file rb]
 
     foreach group $RES($file,group,names) {
         set dir  {}
@@ -447,8 +444,7 @@ proc ::ico::EXEtoICO {exeFile {icoDir {}}} {
         }
 
         # write them out to a file
-        set ifh [open [file join $icoDir [file tail $exeFile]-$group.ico] w+]
-        fconfigure $ifh -eofchar {} -encoding binary -translation lf
+        set ifh [open [file join $icoDir [file tail $exeFile]-$group.ico] wb+]
 
         bputs $ifh sss 0 1 [llength $RES($file,group,$group,members)]
         set offset [expr {6 + ([llength $RES($file,group,$group,members)] * 16)}]
@@ -530,6 +526,7 @@ proc ::ico::getword {fh} {
 
 proc ::ico::getulong {fh} {
     binary scan [read $fh 4] i tmp
+    ##nagelfar ignore
     return [format %u $tmp]
 }
 
@@ -554,13 +551,13 @@ proc ::ico::createImage {colors {name {}}} {
     if {0} {
 	# if image supported "" colors as transparent pixels,
 	# we could use this much faster op
-	$img put -to 0 0 $colors
+	$img put $colors -to 0 0
     } else {
 	for {set x 0} {$x < $w} {incr x} {
 	    for {set y 0} {$y < $h} {incr y} {
                 set clr [lindex $colors $y $x]
                 if {$clr ne ""} {
-                    $img put -to $x $y $clr
+                    $img put $clr -to $x $y
                 }
             }
         }
@@ -855,8 +852,7 @@ proc ::ico::readDIBFromData {data loc} {
 }
 
 proc ::ico::getIconListICO {file} {
-    set fh [open $file r]
-    fconfigure $fh -eofchar {} -encoding binary -translation lf
+    set fh [open $file rb]
 
     if {"[getword $fh] [getword $fh]" ne "0 1"} {
 	return -code error "not an icon file"
@@ -905,8 +901,7 @@ proc ::ico::getIconMembersICO {file name} {
         return $ret
     }
 
-    set fh [open $file r]
-    fconfigure $fh -eofchar {} -encoding binary -translation lf
+    set fh [open $file rb]
 
     # both words must be read to keep in sync with later reads
     if {"[getword $fh] [getword $fh]" ne "0 1"} {
@@ -996,8 +991,7 @@ proc ::ico::getIconMembersEXE {file name} {
 # returns an icon in the form:
 #       {width height depth palette xor_mask and_mask}
 proc ::ico::getRawIconDataICO {file name} {
-    set fh [open $file r]
-    fconfigure $fh -eofchar {} -encoding binary -translation lf
+    set fh [open $file rb]
 
     # both words must be read to keep in sync with later reads
     if {"[getword $fh] [getword $fh]" ne "0 1"} {
@@ -1005,6 +999,7 @@ proc ::ico::getRawIconDataICO {file name} {
         return -code error "not an icon file"
     }
     set num [getword $fh]
+    ##nagelfar ignore
     if {![string is integer -strict $name] || $name < 0 || $name >= $num} { return -code error "no icon \"$name\"" }
 
     seek $fh [expr {(16 * $name) + 12}] current
@@ -1023,6 +1018,7 @@ proc ::ico::getRawIconDataICODATA {data name} {
     if {[binary scan $data sss h1 h2 num] != 3 || $h1 != 0 || $h2 != 1} {
 	return -code error "not icon data"
     }
+    ##nagelfar ignore
     if {![string is integer -strict $name] || $name < 0 || $name >= $num} {
 	return -code error "No icon $name"
     }
@@ -1074,8 +1070,7 @@ proc ::ico::getRawIconDataEXE {file name} {
     FindResources $file
 
     if {![info exists RES($file,icon,$name,offset)]} { error "No icon \"$name\"" }
-    set fh [open $file]
-    fconfigure $fh -eofchar {} -encoding binary -translation lf
+    set fh [open $file rb]
     seek $fh $RES($file,icon,$name,offset) start
 
     # readDIB returns: {w h bpp palette xor and}
@@ -1086,12 +1081,10 @@ proc ::ico::getRawIconDataEXE {file name} {
 
 proc ::ico::writeIconICO {file name w h bpp palette xor and} {
     if {![file exists $file]} {
-	set fh [open $file w+]
-	fconfigure $fh -eofchar {} -encoding binary -translation lf
+	set fh [open $file wb+]
 	set num 0
     } else {
-	set fh [open $file r+]
-	fconfigure $fh -eofchar {} -encoding binary -translation lf
+	set fh [open $file rb+]
 	if {"[getword $fh] [getword $fh]" ne "0 1"} {
 	    close $fh
 	    return -code error "not an icon file"
@@ -1109,7 +1102,7 @@ proc ::ico::writeIconICO {file name w h bpp palette xor and} {
         seek $fh -24 current
         lappend data [read $fh [expr {$a + $b}]]
     }
-
+    ##nagelfar ignore
     if {![string is integer -strict $name] || $name < 0 || $name >= $num} {
         set name [llength $data]
         lappend data $newicon
@@ -1150,7 +1143,7 @@ proc ::ico::writeIconICODATA {file name w h bpp palette xor and} {
         lappend data [string range $data $readpos [expr {$readpos + $a + $b}]]
         incr readpos [expr {$readpos + $a + $b}]
     }
-
+    ##nagelfar ignore
     if {![string is integer -strict $name] || $name < 0 || $name >= $num} {
         set name [llength $data]
         lappend data $newicon
@@ -1175,8 +1168,7 @@ proc ::ico::writeIconICODATA {file name w h bpp palette xor and} {
 }
 
 proc ::ico::writeIconBMP {file name w h bpp palette xor and} {
-    set fh [open $file w+]
-    fconfigure $fh -eofchar {} -encoding binary -translation lf
+    set fh [open $file wb+]
     set size [expr {[string length $palette] + [string length $xor]}]
     # bitmap header: magic, file size, reserved, reserved, offset of bitmap data
     bputs $fh a2issi BM [expr {14 + 40 + $size}] 0 0 54
@@ -1197,9 +1189,8 @@ proc ::ico::writeIconEXE {file name w h bpp palette xor and} {
     if {"$w $h $bpp" != $RES($file,icon,$name,data)} {
 	return -code error "icon format differs from original"
     }
-    
-    set fh [open $file r+]
-    fconfigure $fh -eofchar {} -encoding binary -translation lf
+
+    set fh [open $file rb+]
     seek $fh [expr {$RES($file,icon,$name,offset) + 40}] start
 
     puts -nonewline $fh $palette$xor$and
@@ -1213,8 +1204,7 @@ proc ::ico::FindResources {file} {
         return [llength $RES($file,group,names)]
     }
 
-    set fh [open $file]
-    fconfigure $fh -eofchar {} -encoding binary -translation lf
+    set fh [open $file rb]
     if {[read $fh 2] ne "MZ"} {
 	close $fh
 	return -code error "file is not a valid executable"
@@ -1464,4 +1454,4 @@ interp alias {} ::ico::getIconMembersICL {} ::ico::getIconMembersEXE
 interp alias {} ::ico::getRawIconDataICL {} ::ico::getRawIconDataEXE
 interp alias {} ::ico::writeIconICL      {} ::ico::writeIconEXE
 
-package provide ico 1.1
+package provide ico 1.1.3

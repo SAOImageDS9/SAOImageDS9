@@ -1,13 +1,18 @@
-#!/usr/bin/env wish
+#! /usr/bin/env tclsh
 
 #==============================================================================
 # Demonstrates how to use a tablelist widget for displaying the content of a
-# directory.
+# directory.  Uses images based on the following icons:
 #
-# Copyright (c) 2010-2019  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+#   https://icons8.com/icon/JXYalxb9XWWd/folder
+#   https://icons8.com/icon/RdCT0UIsKOIp/opened-folder
+#   https://icons8.com/icon/mEF_vyjYlnE3/file
+#
+# Copyright (c) 2010-2024  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
-package require tablelist_tile 6.8
+package require Tk
+package require tablelist_tile
 
 #
 # Add some entries to the Tk option database
@@ -16,18 +21,16 @@ set dir [file dirname [info script]]
 source [file join $dir option_tile.tcl]
 
 #
-# Create three images
+# Create three images corresponding to the display's DPI scaling level
 #
-image create photo clsdFolderImg -file [file join $dir clsdFolder.gif]
-image create photo openFolderImg -file [file join $dir openFolder.gif]
-image create photo fileImg       -file [file join $dir file.gif]
-
-#
-# Work around the improper appearance of the tile scrollbars in the aqua theme
-#
-if {[tablelist::getCurrentTheme] eq "aqua" &&
-    [package vcompare $::tk_patchLevel "8.6.10"] < 0} {
-    interp alias {} ttk::scrollbar {} ::scrollbar
+if {$tk_version >= 8.7 || [catch {package require tksvg}] == 0} {
+    set pct ""; set sfx "svg"; set fmt $tablelist::svgfmt
+} else {
+    set pct $tablelist::scalingpct; set sfx "gif"; set fmt "gif"
+}
+foreach name {clsdFolder openFolder file} {
+    set imgFile $name$pct.$sfx		;# e.g., "file.svg" or "file150.gif"
+    image create photo ${name}Img -file [file join $dir $imgFile] -format $fmt
 }
 
 #------------------------------------------------------------------------------
@@ -49,9 +52,9 @@ proc displayContents dir {
 	-columns {0 "Name"	    left
 		  0 "Size"	    right
 		  0 "Date Modified" left} \
-	-expandcommand expandCmd -collapsecommand collapseCmd \
-	-xscrollcommand [list $hsb set] -yscrollcommand [list $vsb set] \
-	-movablecolumns no -setgrid no -showseparators yes -height 18 -width 80
+	-height 16 -width 80 -movablecolumns no -setgrid no \
+	-showseparators yes -expandcommand expandCmd \
+	-xscrollcommand [list $hsb set] -yscrollcommand [list $vsb set]
     if {[$tbl cget -selectborderwidth] == 0} {
 	$tbl configure -spacing 1
     }
@@ -62,6 +65,23 @@ proc displayContents dir {
     ttk::scrollbar $hsb -orient horizontal -command [list $tbl xview]
 
     #
+    # On X11 configure the tablelist according
+    # to the display's DPI scaling level
+    #
+    global isAwTheme
+    if {[tk windowingsystem] eq "x11" && !$isAwTheme} {
+	global currentTheme pct				;# ""|100|125|...|200
+	if {$currentTheme eq "black" || $currentTheme eq "breeze-dark" ||
+	    $currentTheme eq "sun-valley-dark"} {
+	    $tbl configure -treestyle white$pct
+	} else {
+	    $tbl configure -treestyle bicolor$pct
+	}
+    }
+
+    bind $tbl <<TablelistYViewChanged>> [list addImages $tbl]
+
+    #
     # Create a pop-up menu with one command entry; bind the script
     # associated with its entry to the <Double-1> event, too
     #
@@ -69,6 +89,10 @@ proc displayContents dir {
     menu $menu -tearoff no
     $menu add command -label "Display Contents" \
 		      -command [list putContentsOfSelFolder $tbl]
+    if {$isAwTheme} {
+	global currentTheme
+	ttk::theme::${currentTheme}::setMenuColors $menu
+    }
     set bodyTag [$tbl bodytag]
     bind $bodyTag <<Button3>>  [bind TablelistBody <Button-1>]
     bind $bodyTag <<Button3>> +[bind TablelistBody <ButtonRelease-1>]
@@ -100,7 +124,7 @@ proc displayContents dir {
     grid $hsb -row 2 -column 0 -sticky ew
     grid rowconfigure    $tf 1 -weight 1
     grid columnconfigure $tf 0 -weight 1
-    pack $b1 $b2 $b3 -side left -expand yes -pady 10
+    pack $b1 $b2 $b3 -side left -expand yes -pady 7p
     pack $bf -side bottom -fill x
     pack $tf -side top -expand yes -fill both
 
@@ -122,15 +146,14 @@ proc putContents {dir tbl nodeIdx} {
     # The following check is necessary because this procedure
     # is also invoked by the "Refresh" and "Parent" buttons
     #
-    if {[string compare $dir ""] != 0 &&
-	(![file isdirectory $dir] || ![file readable $dir])} {
+    if {$dir ne "" && (![file isdirectory $dir] || ![file readable $dir])} {
 	bell
-	if {[string compare $nodeIdx "root"] == 0} {
+	if {$nodeIdx eq "root"} {
 	    set choice [tk_messageBox -title "Error" -icon warning -message \
 			"Cannot read directory \"[file nativename $dir]\"\
 			-- replacing it with nearest existent ancestor" \
 			-type okcancel -default ok]
-	    if {[string compare $choice "ok"] == 0} {
+	    if {$choice eq "ok"} {
 		while {![file isdirectory $dir] || ![file readable $dir]} {
 		    set dir [file dirname $dir]
 		}
@@ -142,8 +165,8 @@ proc putContents {dir tbl nodeIdx} {
 	}
     }
 
-    if {[string compare $nodeIdx "root"] == 0} {
-	if {[string compare $dir ""] == 0} {
+    if {$nodeIdx eq "root"} {
+	if {$dir eq ""} {
 	    if {[llength [file volumes]] == 1} {
 		wm title . "Contents of the File System"
 	    } else {
@@ -166,7 +189,7 @@ proc putContents {dir tbl nodeIdx} {
     # sorting purposes (it will be removed by formatString).
     #
     set itemList {}
-    if {[string compare $dir ""] == 0} {
+    if {$dir eq ""} {
 	foreach volume [file volumes] {
 	    lappend itemList [list D[file nativename $volume] -1 D $volume]
 	}
@@ -193,15 +216,9 @@ proc putContents {dir tbl nodeIdx} {
     set itemList [$tbl applysorting $itemList]
     $tbl insertchildlist $nodeIdx end $itemList
 
-    #
-    # Insert an image into the first cell of each newly inserted row
-    #
     foreach item $itemList {
 	set name [lindex $item end]
-	if {[string compare $name ""] == 0} {			;# file
-	    $tbl cellconfigure $row,0 -image fileImg
-	} else {						;# directory
-	    $tbl cellconfigure $row,0 -image clsdFolderImg
+	if {$name ne ""} {					;# directory
 	    $tbl rowattrib $row pathName $name
 
 	    #
@@ -216,18 +233,18 @@ proc putContents {dir tbl nodeIdx} {
 	incr row
     }
 
-    if {[string compare $nodeIdx "root"] == 0} {
+    if {$nodeIdx eq "root"} {
 	#
 	# Configure the "Refresh" and "Parent" buttons
 	#
 	.bf.b1 configure -command [list refreshView $dir $tbl]
 	set b2 .bf.b2
-	if {[string compare $dir ""] == 0} {
+	if {$dir eq ""} {
 	    $b2 configure -state disabled
 	} else {
 	    $b2 configure -state normal
 	    set p [file dirname $dir]
-	    if {[string compare $p $dir] == 0} {
+	    if {$p eq $dir} {
 		$b2 configure -command [list putContents "" $tbl root]
 	    } else {
 		$b2 configure -command [list putContents $p $tbl root]
@@ -271,27 +288,32 @@ proc formatSize val {
 #
 # Outputs the content of the directory whose leaf name is displayed in the
 # first cell of the specified row of the tablelist widget tbl, as child items
-# of the one identified by row, and updates the image displayed in that cell.
+# of the one identified by row.
 #------------------------------------------------------------------------------
 proc expandCmd {tbl row} {
     if {[$tbl childcount $row] == 0} {
 	set dir [$tbl rowattrib $row pathName]
 	putContents $dir $tbl $row
     }
-
-    if {[$tbl childcount $row] != 0} {
-	$tbl cellconfigure $row,0 -image openFolderImg
-    }
 }
 
 #------------------------------------------------------------------------------
-# collapseCmd
+# addImages
 #
-# Updates the image displayed in the first cell of the specified row of the
-# tablelist widget tbl.
+# Embeds an image into the first cell of each row in the current view.
 #------------------------------------------------------------------------------
-proc collapseCmd {tbl row} {
-    $tbl cellconfigure $row,0 -image clsdFolderImg
+proc addImages tbl {
+    set topRow [$tbl index top]
+    set btmRow [$tbl index bottom]
+    for {set row $topRow} {$row <= $btmRow} {incr row} {
+	if {[$tbl hasrowattrib $row pathName]} {	;# directory item
+	    set img [expr {[$tbl isexpanded $row] ?
+		    "openFolderImg" : "clsdFolderImg"}]
+	} else {					;# file item
+	    set img fileImg
+	}
+	$tbl cellconfigure $row,0 -image $img
+    }
 }
 
 #------------------------------------------------------------------------------
@@ -392,8 +414,7 @@ proc restoreExpandedStates {tbl nodeIdx expandedFoldersName} {
 
     foreach key [$tbl childkeys $nodeIdx] {
 	set pathName [$tbl rowattrib $key pathName]
-	if {[string compare $pathName ""] != 0 &&
-	    [info exists expandedFolders($pathName)]} {
+	if {$pathName ne "" && [info exists expandedFolders($pathName)]} {
 	    $tbl expand $key -partly
 	    restoreExpandedStates $tbl $key expandedFolders
 	}

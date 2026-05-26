@@ -35,9 +35,9 @@ Module autoscroll    _tcl  _man  _null
 Module canvas        _tcl  _man  _null
 Module chatwidget    _tcl  _man  _null
 Module controlwidget _tcl  _man  _exa
+Module crosshair     _tcl  _man  _null
 Module ctext         _ctxt _man  _null
 Module cursor        _tcl  _man  _null
-Module crosshair     _tcl  _man  _null
 Module datefield     _tcl  _man  _null
 Module diagrams      _tcl  _man  _null
 Module getstring     _tcl  _man  _null
@@ -45,26 +45,31 @@ Module history       _tcl  _man  _null
 Module ico           _tcl  _man  _null
 Module ipentry       _tcl  _man  _null
 Module khim          _tclm _man  _null
+Module map           _tcl  _null _exa
 Module mentry        _tab  _null _exa
 Module menubar       _tcl  _man  _exa
-Module ntext         _tcl  _man  _exa
 Module notifywindow  _tcl  _man  _null
+Module ntext         _tcl  _man  _exa
 Module persistentSelection _tcl _man _exa
 Module plotchart     _tcl  _man  _exa
 Module scrollutil    _tab  _null _exa
+Module shtmlview     _tcl  _man  _null
 Module style         _tcl  _man  _null
 Module swaplist      _tcl  _man  _null
 Module tablelist     _tab  _null _exa
+Module text          _tcl  _null _null
 Module tkpiechart    _tcl  _man  _exa
 Module tooltip       _tcl  _man  _null
+Module treeview      _tcl  _null _null
 Module wcb           _tab  _null _exa
 Module widget        _tcl  _man  _exa
-Module widgetl       _tcl  _man  _null
 Module widgetPlus    _tcl  _man  _exa
+Module widgetl       _tcli _man  _null
 Module widgetv       _tcl  _man  _null
 
 Application  diagram-viewer
 Application  bitmap-editor
+Application  shtmlview
 
 # @@ Registration END
 # --------------------------------------------------------------

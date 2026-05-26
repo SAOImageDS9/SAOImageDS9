@@ -1,5 +1,5 @@
-Multi-entry widget package Mentry, version 3.10
-Copyright (c) 1999-2019  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+Multi-entry widget package Mentry, version 4.3.1
+Copyright (c) 1999-2024  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 
 This library is free software; you can use, modify, and redistribute it
 for any purpose, provided that existing copyright notices are retained

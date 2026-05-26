@@ -38,12 +38,10 @@
 # AND  THE  AUTHOR  AND  DISTRIBUTORS  HAVE  NO  OBLIGATION  TO  PROVIDE
 # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #
-# $Id: voltmeter.tcl,v 1.3 2010/09/10 17:16:29 andreas_kupries Exp $
-#
 
-package require Tk   8.5
+package require Tk 8.5-   
 package require snit
-package provide voltmeter 0.1
+package provide voltmeter 0.2
 
 namespace eval controlwidget {
     namespace export voltmeter
@@ -281,7 +279,6 @@ snit::widget controlwidget::voltmeter {
         set ::$options(-variable) [expr {$options(-min) + ($options(-max)-$options(-min))*(15.0-$angle) / 30.0}]
     }
 
-
     proc rivet { c xc yc } {
         shadowcircle $c \
             [expr {$xc-4}] [expr {$yc-4}] [expr {$xc+4}] [expr {$yc+4}] \
@@ -289,55 +286,56 @@ snit::widget controlwidget::voltmeter {
     }
 
     proc shadowcircle { canvas x1 y1 x2 y2 ticks width orient } {
-        set radius [expr {($x2-$x1)/2.0}]
+	set radius [expr {($x2-$x1)/2.0}]
 
-        set angle $orient
-        set delta [expr {180.0/$ticks}]
-        for {set i 0} {$i <= $ticks} {incr i} {
-           set a [expr {($angle+$i*$delta)}]
-           set b [expr {($angle-$i*$delta)}]
+	set angle $orient
+	set delta [expr {180.0/$ticks}]
+	for {set i 0} {$i <= $ticks} {incr i} {
+	    set a [expr {($angle+$i*$delta)}]
+	    set b [expr {($angle-$i*$delta)}]
 
-           set color [expr {40+$i*(200/$ticks)}]
-           set color [format "#%x%x%x" $color $color $color]
+	    set color [expr {40+$i*(200/$ticks)}]
+	    ##nagelfar ignore
+	    set color [format "#%x%x%x" $color $color $color]
 
-           $canvas create arc $x1 $y1 $x2 $y2 -start $a -extent $delta \
-                   -style arc -outline $color -width $width
-           $canvas create arc $x1 $y1 $x2 $y2 -start $b -extent $delta \
-                   -style arc -outline $color -width $width
-        }
+	    $canvas create arc $x1 $y1 $x2 $y2 -start $a -extent $delta \
+		-style arc -outline $color -width $width
+	    $canvas create arc $x1 $y1 $x2 $y2 -start $b -extent $delta \
+		-style arc -outline $color -width $width
+	}
     }
 }
 
 if {0} {
-# main --
-#     Demonstration of the voltmeter object
-#
-proc main { argc argv } {
-    global     forever
+    # main --
+    #     Demonstration of the voltmeter object
+    #
+    proc main { argc argv } {
+	global     forever
 
-    wm withdraw .
-    wm title    . "A voltmeter-like widget"
-    wm geometry . +10+10
+	wm withdraw .
+	wm title    . "A voltmeter-like widget"
+	wm geometry . +10+10
 
-    ::controlwidget::voltmeter .t1 -variable value1 -labels { 0 50 100 } -title "Voltmeter (V)"
-    scale .s1 -command "set ::value1" -variable value1
+	::controlwidget::voltmeter .t1 -variable value1 -labels { 0 50 100 } -title "Voltmeter (V)"
+	scale .s1 -command "set ::value1" -variable value1
 
-    ::controlwidget::voltmeter .t2 -variable value2 -labels { 0 {} 2.5 {} 5 } \
-       -width 80m -height 40m -title "Ampere (mA)" -dialcolor lightgreen -scalecolor white \
-       -min 0 -max 5
-    scale .s2 -command "set ::value2" -variable value2
+	::controlwidget::voltmeter .t2 -variable value2 -labels { 0 {} 2.5 {} 5 } \
+	    -width 80m -height 40m -title "Ampere (mA)" -dialcolor lightgreen -scalecolor white \
+	    -min 0 -max 5
+	scale .s2 -command "set ::value2" -variable value2
 
-    button .b -text Quit -command "set ::forever 1"
+	button .b -text Quit -command "set ::forever 1"
 
-    grid .t1 .s1 .t2 .s2 .b
-    wm deiconify .
-    vwait forever
-    .t1 destructor
-    .t2 destructor
-    exit 0
-}
+	grid .t1 .s1 .t2 .s2 .b
+	wm deiconify .
+	vwait forever
+	.t1 destructor
+	.t2 destructor
+	exit 0
+    }
 
-main $argc $argv
+    main $argc $argv
 }
 
 ### end of file

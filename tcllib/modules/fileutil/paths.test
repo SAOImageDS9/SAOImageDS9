@@ -10,12 +10,12 @@ source [file join \
 	[file dirname [file dirname [file join [pwd] [info script]]]] \
 	devtools testutilities.tcl]
 
-testsNeedTcl     8.4
+testsNeedTcl     8.5
 testsNeedTcltest 2.0
 
 support {
     use snit/snit.tcl snit
-}    
+}
 testing {
     useLocal paths.tcl fileutil::paths
 }

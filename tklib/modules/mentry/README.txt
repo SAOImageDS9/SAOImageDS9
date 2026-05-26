@@ -10,7 +10,7 @@
 What Is Mentry?
 ---------------
 
-Mentry is a library package for Tcl/Tk versions 8.0 or higher, written
+Mentry is a library package for Tcl/Tk versions 8.4 or higher, written
 in pure Tcl/Tk code.  It contains:
 
   - the implementation of the multi-entry mega-widget "mentry",
@@ -48,20 +48,20 @@ callback package Wcb, written in pure Tcl/Tk code as well.  The Mentry
 package requires version 3.1 or higher of Wcb, whose download location
 is
 
-    http://www.nemethi.de
+    https://www.nemethi.de
 
 How to Get It?
 --------------
 
 Mentry is available for free download from the same URL as Wcb.  The
-distribution file is "mentry3.10.tar.gz" for UNIX and "mentry3_10.zip"
+distribution file is "mentry4.3.1.tar.gz" for UNIX and "mentry4_3_1.zip"
 for Windows.  These files contain the same information, except for the
 additional carriage return character preceding the linefeed at the end
 of each line in the text files for Windows.
 
 Mentry is also included in tklib, which has the address
 
-    http://core.tcl.tk/tklib
+    https://core.tcl.tk/tklib
 
 How to Install It?
 ------------------
@@ -73,20 +73,20 @@ locations of these library directories are given by the "tcl_library"
 and "tk_library" variables, respectively.
 
 To install Mentry on UNIX, "cd" to the desired directory and unpack the
-distribution file "mentry3.10.tar.gz":
+distribution file "mentry4.3.1.tar.gz":
 
-    gunzip -c mentry3.10.tar.gz | tar -xf -
+    gunzip -c mentry4.3.1.tar.gz | tar -xf -
 
 On most UNIX systems this can be replaced with
 
-    tar -zxf mentry3.10.tar.gz
+    tar -zxf mentry4.3.1.tar.gz
 
-Both commands will create a directory named "mentry3.10", with the
+Both commands will create a directory named "mentry4.3.1", with the
 subdirectories "demos", "doc", and "scripts".
 
 On Windows, use WinZip or some other program capable of unpacking the
-distribution file "mentry3_10.zip" into the directory "mentry3.10", with
-the subdirectories "demos", "doc", and "scripts".
+distribution file "mentry4_3_1.zip" into the directory "mentry4.3.1",
+with the subdirectories "demos", "doc", and "scripts".
 
 The file "mentryThemes.tcl" in the "scripts" directory is only needed
 for applications using the package Mentry_tile (see next section).
@@ -97,10 +97,10 @@ How to Use It?
 The Mentry distribution provides two packages, called Mentry and
 Mentry_tile.  The main difference between the two is that Mentry_tile
 enables the tile-based, theme-specific appearance of mentry widgets;
-this package requires Tcl/Tk 8.4 or higher and tile 0.6 or higher.  It
-is not possible to use both packages in one and the same application,
-because both are implemented in the same "mentry" namespace and provide
-identical commands.
+this package requires tile 0.6 or higher.  It is not possible to use
+both packages in one and the same application, because both are
+implemented in the same "mentry" namespace and provide identical
+commands.
 
 To be able to use the commands and variables implemented in the package
 Mentry, your scripts must contain one of the lines

@@ -1,7 +1,7 @@
-#!/usr/bin/env tclsh
+#! /usr/bin/env tclsh
 ## -*- tcl -*-
 
-package require Tcl 8.6
+package require Tcl 8.6-
 package require Tk
 
 package require TclOO
@@ -21,7 +21,7 @@ package require menubar
 package provide AppMain 0.5
 
 # --
-# 
+#
 namespace eval Main {
 
 	variable wid
@@ -32,7 +32,7 @@ namespace eval Main {
 		variable mbar
 		variable wid
 		set wid 0
-		
+
 		wm withdraw .
 
 		##
@@ -53,7 +53,7 @@ namespace eval Main {
 		# define the menu tree for the instance
 		${mbar} define {
 			File M:file {
-			#   Label				 Type	Tag Name(s)	
+			#   Label				 Type	Tag Name(s)
 			#   ----------------- 	 ----	---------
 				"New Window"	 	 C 		new
 				--					 S 							s0
@@ -66,7 +66,7 @@ namespace eval Main {
 				Exit			  	 C		exit
 			}
 			Edit M:items+ {
-			#   Label				Type	Tag Name(s)	
+			#   Label				Type	Tag Name(s)
 			#   ----------------- 	----	---------
 				"Cut"				C 		cut
 				"Copy"				C 		copy
@@ -108,7 +108,7 @@ namespace eval Main {
 				}
 			}
  			Macros M:macros+ {
- 			#	Label				Type	Tag Name(s) 
+ 			#	Label				Type	Tag Name(s)
  			#	-----------------	----	---------
 				"Add Item" 			C		item_add
 				"Delete Item" 		C		item_delete
@@ -122,7 +122,7 @@ namespace eval Main {
 				--COMMANDGROUP--	G		macro
  			}
 			Debug M:debug {
-			#   Label				Type	Tag Name(s)	
+			#   Label				Type	Tag Name(s)
 			#   ----------------- 	----	---------
 				"Test tag.cget"		C 		testcget
 				"Debug Tree"		C 		debug_tree
@@ -134,18 +134,18 @@ namespace eval Main {
 				"pkeys"				C 		pkeys
 			}
 			Help M:help {
-			#   Label				Type	Tag Name(s)	
+			#   Label				Type	Tag Name(s)
 			#   ----------------- 	----	---------
 				About			  	C 		about
 				--					S						s10
 				Clear			  	C 		clear
 			}
 		}
-		
+
 		NewWindow
 
 	}
-	
+
 	proc NewWindow { args } {
 		variable mbar
 		variable wid
@@ -153,13 +153,13 @@ namespace eval Main {
 		# create pathname for new toplevel window
 		set w ".top${wid}"
 		incr wid
-		
+
 		Gui new ${wid} ${w} ${mbar}
 	}
 }
 
 # --
-# 
+#
 oo::class create Gui {
 
 	# ----------------------------------------
@@ -170,15 +170,15 @@ oo::class create Gui {
 		my variable nb
 		my variable tout
 		my variable tabvars
-		
-		## 
+
+		##
 		## Create toplevel window
 		##
 
 		set wtop ${w}
 		toplevel ${wtop}
 		wm withdraw ${wtop}
-		
+
 		##
 		## Define the GUI
 		##
@@ -198,15 +198,15 @@ oo::class create Gui {
 		# add binding for notebook tabs
 		bind ${nb} "<<NotebookTabChanged>>" [list [self object] nbTabSelect ${wtop}]
 
-		## 
+		##
 		## Install & Configure the menu bar
 		##
-		
+
 		set mbar ${menubar}
-		
+
 		${mbar} install ${wtop} {
 
-			# Create tags for this windows text widget. They will be 
+			# Create tags for this windows text widget. They will be
 			# used by the menubar callbacks to direct output to the
 			# text widget.
 			${mbar} tag.add tout ${tout}
@@ -261,11 +261,11 @@ oo::class create Gui {
 			}
 
 
-			# change the namespace for commands associated the 
+			# change the namespace for commands associated the
 			# 'macros' commands and 'macro' command group
 			${mbar} menu.namespace macros ::Macros
 			${mbar} menu.namespace macro  ::Macros
-			
+
 			# configure the macros menu
 			${mbar} menu.configure -command {
 				item_add		{NewItem}
@@ -284,7 +284,7 @@ oo::class create Gui {
 				mark_down	{0 Cntl+J  Control-Key-j}
 				mark_del	{0 Cntl+K  Control-Key-k}
 			}
-			
+
 			# initally hide the macros menu
 			${mbar} menu.hide macros
 
@@ -320,14 +320,14 @@ oo::class create Gui {
 
 		return
 	}
-	
+
 	method pout { txt } {
 		my variable wtop
 		my variable mbar
 		set tout [${mbar} tag.cget ${wtop} tout]
 		${tout} insert end "${txt}\n"
 	}
-	
+
 	method nbNewTab { text } {
 		my variable mbar
 		my variable wtop
@@ -338,7 +338,7 @@ oo::class create Gui {
 		${nb} add [frame ${tabwin}] -text ${text}
 		${mbar} notebook.addTabStore ${tabwin}
 	}
-	
+
 	method nbTabSelect { wtop args } {
 		my variable mbar
 		my variable nb
@@ -400,7 +400,7 @@ oo::class create Gui {
 		set tout [${mbar} tag.cget ${wtop} tout]
 		${tout} delete 0.0 end
 	}
-	
+
 	method TestCget { args } {
 		my variable wtop
 		my variable mbar
@@ -474,7 +474,7 @@ oo::class create Gui {
 }
 
 # --
-# 
+#
 namespace eval Macros {
 
 	variable next 0
@@ -483,7 +483,7 @@ namespace eval Macros {
 
 	proc Mark { args } {
 		set mbar $::Main::mbar
-		
+
 		lassign ${args} action wtop
 		set gui [${mbar} tag.cget ${wtop} gui]
 
@@ -518,7 +518,7 @@ namespace eval Macros {
  			}
 		}}
 	}
-	
+
 	proc NewItem { args } {
 		variable next
 		if { ${next} == 9 } { return }
@@ -529,9 +529,9 @@ namespace eval Macros {
 			lassign ${args} wtop
 			set gui [${mbar} tag.cget ${wtop} gui]
 			${gui} pout "warning: Item${next} already exists"
- 		}	
+ 		}
 	}
-	
+
 	proc DeleteItem { args } {
 		variable next
 		set mbar $::Main::mbar

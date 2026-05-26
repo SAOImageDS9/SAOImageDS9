@@ -40,7 +40,7 @@ proc ::sak::registry::Refresh {} {
 namespace eval ::sak::registry {
     variable _here    [file dirname [info script]]
 
-    variable statedir [file join ~ .Tklib]
+    variable statedir [file join $::env(HOME) .Tklib]
     variable state    [file join $statedir Registry]
     variable _local   {}
 }

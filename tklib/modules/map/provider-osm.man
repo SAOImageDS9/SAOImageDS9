@@ -1,0 +1,30 @@
+[comment {-*- tcl -*- doctools manpage}]
+[vset VERSION 0.1]
+[manpage_begin map::provider::osm n [vset VERSION]]
+[category {Map Display and Supporting Utilities}]
+[keywords map {tile provider} {provider, tiles} openstreetmap mapnik]
+[moddesc   {Map display support}]
+[titledesc {Tile provider using OpenStreetMap Mapnik as origin}]
+[require Tcl 8.6-]
+[require debug]
+[require debug::caller]
+[require map::slippy 0.8]
+[require map::slippy::cache]
+[require map::slippy::fetcher]
+[require snit]
+[require map::provider::osm [opt [vset VERSION]]]
+[description]
+
+This package provides a tile provider suitable for use with [package map::display].
+It uses OpenStreetMap Mapnik as origin and caches fetched tiles in the local filesystem.
+
+[section API]
+
+[list_begin definitions]
+[list_end]
+
+[section EXAMPLE]
+
+[vset CATEGORY map]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]

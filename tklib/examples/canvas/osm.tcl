@@ -1,4 +1,4 @@
-#!/usr/bin/env tclsh8.5
+#! /usr/bin/env tclsh
 ## -*- tcl -*-
 # ### ### ### ######### ######### #########
 
@@ -74,7 +74,7 @@
 # ### ### ### ######### ######### #########
 ## Other requirements for this example.
 
-package require Tcl 8.5
+package require Tcl 8.5-
 package require Tk
 package require widget::scrolledwindow
 package require canvas::sqmap
@@ -83,7 +83,7 @@ package require crosshair
 package require img::png
 package require tooltip
 
-package require map::slippy 0.5         ; # Slippy utilities
+package require map::slippy 0.8         ; # Slippy utilities
 package require map::slippy::fetcher    ; # Slippy server access
 package require map::slippy::cache      ; # Local slippy tile cache
 #package require map::slippy::prefetcher ; # Agressive prefetch
@@ -291,8 +291,7 @@ proc TRACK {win x y args} {
     global location zoom clat clon
 
     # Convert pixels to geographic location.
-    set point [list $zoom $y $x]
-    foreach {_ clat clon} [map::slippy point 2geo $point] break
+    lassign [map slippy point 2geo $zoom [list $x $y]] clat clon
 
     # Update entry field.
     set location [PrettyLatLon $clat $clon]
@@ -307,7 +306,7 @@ proc GET {__ at donecmd} {
     global provider zoom
     set tile [linsert $at 0 $zoom]
 
-    if {![map::slippy tile valid $tile [$provider levels]]} {
+    if {![map slippy tile valid {*}$at [$provider levels]]} {
         GOT $donecmd unset $tile
         return
     }
@@ -340,7 +339,7 @@ proc ZOOM {w level} {
 }
 
 proc SetRegion {level} {
-    set rlength [map::slippy length $level]
+    set rlength [map slippy length $level]
     set region  [list 0 0 $rlength $rlength]
 
     .map configure -scrollregion $region
@@ -360,9 +359,8 @@ proc Goto {geo} {
     # left corner. for this translation we need the viewport data of
     # VPTRACK.
 
-    foreach {z y x} [map::slippy geo 2point $geo] break
-    set zoom $z
-    after 200 [list Jigger $z $y $x]
+    lassign [map slippy geo 2point $zoom $geo] x y
+    after 200 [list Jigger $zoom $y $x]
     #.map xview moveto $ofx
     #.map yview moveto $ofy
     return
@@ -370,8 +368,8 @@ proc Goto {geo} {
 
 proc Jigger {z y x} {
     global viewport
-    set len [map::slippy length $z]
-    foreach {l t r b} $viewport break
+    set len [map slippy length $z]
+    lassign $viewport l t r b
     set ofy [expr {($y - ($b - $t)/2.0)/$len}]
     set ofx [expr {($x - ($r - $l)/2.0)/$len}]
 
@@ -403,7 +401,7 @@ proc SavePoints {} {
     global points
     set lines {}
     foreach p $points {
-        foreach {lat lon comment} $p break
+	lassign $p lat lon comment
         lappend lines [list waypoint $lat $lon $comment]
     }
 
@@ -478,22 +476,21 @@ proc ShowPoints {} {
     set cmds {}
     set cmd [list .map create line]
 
-    set lat0 {}
-    set lon0 {}
-    set dist 0
+    set dist  0
+    set glast {}
 
     foreach point $points {
-        foreach {lat lon comment} $point break
-        foreach {_ y x} [map::slippy geo 2point [list $zoom $lat $lon]] break
+	lassign $point lat lon comment
+	set geo [list $lat $lon]
+	lassign [map slippy geo 2point $zoom $geo] x y
         lappend cmd  $x $y
         lappend cmds [list POI $y $x $lat $lon $comment -fill salmon -tags Series]
 
-        if {$lat0 ne {}} {
-            set leg [GreatCircleDistance $lat0 $lon0 $lat $lon]
+        if {$glast ne {}} {
+            set leg  [map slippy geo distance $glast $geo]
             set dist [expr {$dist + $leg}]
         }
-        set lat0 $lat
-        set lon0 $lon
+	set glast $geo
     }
     lappend cmd -width 2 -tags Series -capstyle round ;#-smooth 1
 
@@ -518,8 +515,8 @@ proc RememberPoint {x y} {
     global pcounter zoom
     incr   pcounter
 
-    set point [list $zoom [.map canvasy $y] [.map canvasx $x]]
-    foreach {_ lat lon} [map::slippy point 2geo $point] break
+    set point [list [.map canvasy $y] [.map canvasx $x]]
+    lassign [map slippy point 2geo $zoom $point] lat lon
     lassign [PrettyLatLon $lat $lon] lat lon
 
     set comment "$pcounter:<$lat,$lon>"
@@ -554,7 +551,7 @@ proc ForgetPoint {pid} {
     set pos -1
     foreach p $points {
         incr pos
-        foreach {lat lon comment id} $p break
+	lassign $p lat lon comment id
         if {$id != $pid} continue
         #puts \tFound/$pos
         set points [lreplace $points $pos $pos]
@@ -658,24 +655,24 @@ proc GotoMark {} {
     if {![llength $sel]} return
     set sel [lindex $sel 0]
     set sel [lindex $lmarks $sel]
-    foreach {lat lon attrs} $sel break
+    lassign $sel lat lon attrs
 
     if { [dict exists $attrs boundingbox] } {
         global viewport
-        foreach {x0 y0 x1 y1} $viewport break
-        set z [map::slippy fit geobox \
-                   [list [expr $x1 - $x0] [expr $y1 - $y0]] \
+	lassign $viewport x0 y0 x1 y1
+        set z [map slippy geo box fit \
                    [dict get $attrs boundingbox] \
-                   0 [expr {[$provider levels] - 1}]]
+                   [list [expr {$x1 - $x0}] [expr {$y1 - $y0}]] \
+                   [expr {[$provider levels] - 1}]]
         if {$z != $zoom} {
             set zoom $z
             ZOOM .map $zoom
         }
         # Debug: draw a red rectangle to show bbox:
-        foreach {lat0 lat1 lon0 lon1} [dict get $attrs boundingbox] break
-        foreach {_ y0 x0} [map::slippy geo 2point [list $zoom $lat0 $lon0]] break
-        foreach {_ y1 x1} [map::slippy geo 2point [list $zoom $lat1 $lon1]] break
-        .map create rectangle $x0 $y0 $x1 $y1 -width 2 -outline red 
+	lassign [dict get $attrs boundingbox]                    lat0 lat1 lon0 lon1
+	lassign [map slippy geo 2point $zoom [list $lat0 $lon0]] x0 y0
+	lassign [map slippy geo 2point $zoom [list $lat1 $lon1]] x1 y1
+        .map create rectangle $x0 $y0 $x1 $y1 -width 2 -outline red
         # End debug
     }
 

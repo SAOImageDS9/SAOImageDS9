@@ -10,11 +10,11 @@
 # RCS: @(#) $Id: mapproj.tcl,v 1.1 2007/08/24 22:36:35 kennykb Exp $
 #------------------------------------------------------------------------------
 
-package require Tcl 8.4
-package require math::interpolate 1.0
-package require math::special 0.2.1
+package require Tcl 8.5 9
+package require math::interpolate 1.1
+package require math::special 0.2.2
 
-package provide mapproj 1.0
+package provide mapproj 1.1
 
 # ::mapproj --
 #
@@ -220,7 +220,7 @@ proc ::mapproj::ellRF {x y z} {
 
 # ::mapproj::toPlateCarree --
 #
-#	Project a latitude and longitude onto the plate carrée.
+#	Project a latitude and longitude onto the plate carrÃ©e.
 #
 # Parameters:
 #	phi_0 -- Latitude of the center of the sheet in degrees
@@ -246,7 +246,7 @@ proc ::mapproj::toPlateCarree {lambda_0 phi_0 lambda phi} {
 
 # ::mapproj::fromPlateCarree --
 #
-#	Solve a plate carrée projection for the
+#	Solve a plate carrÃ©e projection for the
 #	latitude and longitude represented by a point on the map.
 #
 # Parameters:

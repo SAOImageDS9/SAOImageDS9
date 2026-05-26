@@ -1,5 +1,51 @@
-What is new in Wcb 3.6?
------------------------
+What is new in Wcb 4.1.1?
+-------------------------
+
+1. Made sure that the Migration Tool for Tcl 9 by Ashok Nadkarni won't
+   output any warnings or notes (thanks to Andreas Kupries for his
+   valuable input).
+
+What was new in Wcb 4.1?
+------------------------
+
+1. The demo script "listboxtest1.tcl" now correctly takes into account
+   that the names of all bitmap files in the directory "images" have the
+   suffix ".xbm", regardless of the Tk version being used.
+
+2. Restored the support for Tcl/Tk 8.4, which was broken due to the use
+   of package version numbers with a trailing "-" (thanks to Samuel
+   Brown for his bug report).
+
+What was new in Wcb 4.0?
+------------------------
+
+1. Dropped the support for Tk versions earlier than 8.4.  This has made
+   the code simpler and easier to maintain.
+
+2. Support for the new ttk::treeview commands "cellselection set",
+   "cellselection add", "cellselection remove", and "cellselection
+   toggle", added in Tk 8.7.
+
+3. The demo scripts "listboxtest*.tcl" no longer expect the images in
+   the directory $tk_library/demos/images, since in Tk 8.7 and later the
+   Tk demos directory has a different location.
+
+What was new in Wcb 3.8?
+------------------------
+
+1. For more clarity, the new name of the original widget command is now
+   also referred to as "proxy command" (thanks to Julian H J Loaring for
+   his proposal).
+
+What was new in Wcb 3.7?
+------------------------
+
+1. Made the demo-scripts scaling-aware.
+
+2. Improved and updated the documentation.
+
+What was new in Wcb 3.6?
+------------------------
 
 1. Adapted to some changes in future Tcl and Tk releases (for example,
    made sure that it works with Tcl 9.0 and Tk 8.7).

@@ -41,12 +41,10 @@
 # AND  THE  AUTHOR  AND  DISTRIBUTORS  HAVE  NO  OBLIGATION  TO  PROVIDE
 # MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 #
-# $Id: tachometer.tcl,v 1.4 2010/09/10 17:16:29 andreas_kupries Exp $
-#
 
-package require Tk  8.5
+package require Tk 8.5- 
 package require snit
-package provide tachometer 0.1
+package provide tachometer 0.2
 
 namespace eval controlwidget {
     namespace export tachometer
@@ -95,8 +93,9 @@ snit::widget controlwidget::tachometer {
         #
         $self configurelist $args
 
-        canvas $win.c -background $options(-background) -width $options(-width) -height $options(-height) \
-                      -relief $options(-relief) -borderwidth $options(-borderwidth)
+        canvas $win.c -background $options(-background) -width $options(-width) \
+	    -height $options(-height) \
+	    -relief $options(-relief) -borderwidth $options(-borderwidth)
         grid $win.c -sticky news
 
         if {$options(-variable) ne ""} {
@@ -130,7 +129,9 @@ snit::widget controlwidget::tachometer {
         # danger marker
         if { $options(-dangerlevel) != {} && $options(-dangerlevel) < $options(-max)} {
 
-            set deltadanger [expr {(360.0-40.0)*($options(-max)-$options(-dangerlevel))/(1.0*$options(-max)-$options(-min))}]
+            set deltadanger [expr {
+		(360.0-40.0)*($options(-max)-$options(-dangerlevel))/(1.0*$options(-max)-$options(-min))
+	    }]
 
             # Transform the thickness into a plain number (if given in mm for instance)
             set id [$win.c create line 0 0 1 0]
@@ -144,7 +145,8 @@ snit::widget controlwidget::tachometer {
                 [expr {$width/50.0*4.0+$thickness}]  [expr {$width/50.0*4.0+$thickness}] \
                 [expr {$width/50.0*46.0-$thickness}] [expr {$width/50.0*46.0-$thickness}] \
                 -start -70 -extent $deltadanger -style arc \
-                -outline $options(-dangercolor) -fill $options(-dangercolor) -width $options(-dangerwidth)
+                -outline $options(-dangercolor) -fill $options(-dangercolor) \
+		-width $options(-dangerwidth)
         }
 
         # graduate line
@@ -168,8 +170,7 @@ snit::widget controlwidget::tachometer {
         set l3 [expr {$half*0.62}]
 
         set angle  110.0
-        for {set i 0} {$i < $num} {incr i} \
-        {
+        for {set i 0} {$i < $num} {incr i} {
             set a [expr {($angle+$delta*$i)*$pi}]
 
             set x1 [expr {$half+$l1*cos($a)}]
@@ -182,8 +183,7 @@ snit::widget controlwidget::tachometer {
             set y1 [expr {$half+$l3*sin($a)}]
 
             set label [lindex $options(-labels) $i]
-            if { [string length $label] } \
-            {
+            if { [string length $label] } {
                $win.c create text $x1 $y1 \
                    -anchor center -justify center -fill black \
                    -text $label -font { Helvetica 10 }
@@ -199,11 +199,10 @@ snit::widget controlwidget::tachometer {
         $self drawline $win $value
     }
 
-    method destructor { widget } \
-    {
+    method destructor { widget } {
         set varname [option get $widget varname {}]
         trace remove variable $varname write \
-         [namespace code "tracer $widget $varname"]
+	    [namespace code "tracer $widget $varname"]
     }
 
     #
@@ -217,10 +216,10 @@ snit::widget controlwidget::tachometer {
             $self draw $win.c $options(-value)
         }
     }
+
     method get {} {
         return $options(-value)
     }
-
 
     #
     # private methods --
@@ -250,14 +249,13 @@ snit::widget controlwidget::tachometer {
             $self drawline $win.c [set ::$options(-variable)]
         }
     }
-    method tracer { varname args } \
-    {
+
+    method tracer { varname args } {
         set options(-value) [set ::$varname]
         $self drawline $win [set ::$varname]
     }
 
-    method drawline { widget value } \
-    {
+    method drawline { widget value } {
         set c $widget.c
 
         set min  $options(-min)
@@ -283,18 +281,15 @@ snit::widget controlwidget::tachometer {
         set options(-indexid) $id
     }
 
-    method needlePress {w} \
-    {
+    method needlePress {w} {
         set motion 1
     }
 
-    method needleRelease {w} \
-    {
+    method needleRelease {w} {
         set motion 0
     }
 
-    method needleMotion {w x y} \
-    {
+    method needleMotion {w x y} {
         if {! $motion} { return }
         if {$y == $yc && $x == $xc} { return }
 
@@ -311,75 +306,75 @@ snit::widget controlwidget::tachometer {
         set ::$options(-variable) [expr {$options(-min) + ($options(-max)-$options(-min))*(160.0-$angle) / 320.0}]
     }
 
-    proc rivet { c xc yc } \
-    {
+    proc rivet { c xc yc } {
         set width 5
         set bevel 0.5m
         set angle -45.0
         set ticks 7
-          shadowcircle $c \
-           [expr {$xc-$width}] [expr {$yc-$width}] [expr {$xc+$width}] [expr {$yc+$width}] \
-           $ticks $bevel $angle
+	shadowcircle $c \
+	    [expr {$xc-$width}] [expr {$yc-$width}] \
+	    [expr {$xc+$width}] [expr {$yc+$width}] \
+	    $ticks $bevel $angle
     }
 
-    proc shadowcircle { canvas x1 y1 x2 y2 ticks width orient } \
-    {
+    proc shadowcircle { canvas x1 y1 x2 y2 ticks width orient } {
         set angle $orient
         set delta [expr {180.0/$ticks}]
-        for {set i 0} {$i <= $ticks} {incr i} \
-        {
-           set a [expr {($angle+$i*$delta)}]
-           set b [expr {($angle-$i*$delta)}]
+        for {set i 0} {$i <= $ticks} {incr i} {
+	    set a [expr {($angle+$i*$delta)}]
+	    set b [expr {($angle-$i*$delta)}]
 
-           set color [expr {40+$i*(200/$ticks)}]
-           set color [format "#%x%x%x" $color $color $color]
+	    set color [expr {40+$i*(200/$ticks)}]
+	    ##nagelfar ignore	    
+	    set color [format "#%x%x%x" $color $color $color]
 
-           $canvas create arc $x1 $y1 $x2 $y2 -start $a -extent $delta \
-             -style arc -outline $color -width $width
-           $canvas create arc $x1 $y1 $x2 $y2 -start $b -extent $delta \
-             -style arc -outline $color -width $width
+	    $canvas create arc $x1 $y1 $x2 $y2 -start $a -extent $delta \
+		-style arc -outline $color -width $width
+	    $canvas create arc $x1 $y1 $x2 $y2 -start $b -extent $delta \
+		-style arc -outline $color -width $width
         }
     }
 }
 
 if {0} {
-# main --
-#     Demonstration of the tachometer object
-#
-proc main { argc argv } \
-{
-    global forever
-
-    wm withdraw .
-    wm title . "A tachometer-like widget"
-    wm geometry . +10+10
-
-    controlwidget::tachometer .t1 -variable ::value1 -labels { 0 10 20 30 40 50 60 70 80 90 100 } \
-       -pincolor green -dialcolor lightpink
-    scale .s1 -command "set ::value1" -variable ::value1
-
+    # main --
+    #     Demonstration of the tachometer object
     #
-    # Note: the labels are not used in the scaling of the values
-    #
-    controlwidget::tachometer .t2 -variable ::value2 -labels { 0 {} {} 5 {} {} 10 } -width 100m -height 100m \
-        -min 0 -max 10 -dangerlevel 3
-    scale .s2 -command "set ::value2" -variable ::value2 -from 0 -to 10
+    proc main { argc argv } {
+	global forever
 
-    button .b -text Quit -command "set ::forever 1"
+	wm withdraw .
+	wm title . "A tachometer-like widget"
+	wm geometry . +10+10
 
-    grid .t1 .s1 .t2 .s2 .b -padx 2 -pady 2
-    wm deiconify .
+	controlwidget::tachometer .t1 -variable ::value1 \
+	    -labels { 0 10 20 30 40 50 60 70 80 90 100 } \
+	    -pincolor green -dialcolor lightpink
+	scale .s1 -command "set ::value1" -variable ::value1
 
-    console show
+	#
+	# Note: the labels are not used in the scaling of the values
+	#
+	controlwidget::tachometer .t2 -variable ::value2 -labels { 0 {} {} 5 {} {} 10 } \
+	    -width 100m -height 100m \
+	    -min 0 -max 10 -dangerlevel 3
+	scale .s2 -command "set ::value2" -variable ::value2 -from 0 -to 10
+
+	button .b -text Quit -command "set ::forever 1"
+
+	grid .t1 .s1 .t2 .s2 .b -padx 2 -pady 2
+	wm deiconify .
+
+	console show
 
 
-    vwait forever
-    #tachometer::destructor .t1
-    #tachometer::destructor .t2
-    exit 0
-}
+	vwait forever
+	#tachometer::destructor .t1
+	#tachometer::destructor .t2
+	exit 0
+    }
 
-main $argc $argv
+    main $argc $argv
 }
 
 ### end of file

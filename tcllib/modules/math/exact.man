@@ -1,4 +1,4 @@
-[vset VERSION 1.0.1]
+[vset VERSION 1.0.2]
 [manpage_begin math::exact n [vset VERSION]]
 [copyright "2015 Kevin B. Kenny <kennykb@acm.org>
 Redistribution permitted under the terms of the Open\
@@ -6,7 +6,7 @@ Publication License <http://www.opencontent.org/openpub/>"]
 [moddesc {Tcl Math Library}]
 [titledesc {Exact Real Arithmetic}]
 [category Mathematics]
-[require Tcl 8.6]
+[require Tcl "8.6 9"]
 [require grammar::aycock 1.0]
 [require math::exact [vset VERSION]]
 [description]
@@ -108,15 +108,15 @@ The following functions are available for use within exact real expressions.
 
 
 [def [const acos(][arg x][const )]]
-The inverse cosine of [arg x]. The result is expressed in radians. 
+The inverse cosine of [arg x]. The result is expressed in radians.
 The absolute value of [arg x] must be less than 1.
 
 [def [const acosh(][arg x][const )]]
-The inverse hyperbolic cosine of [arg x]. 
+The inverse hyperbolic cosine of [arg x].
 [arg x] must be greater than 1.
 
 [def [const asin(][arg x][const )]]
-The inverse sine of [arg x]. The result is expressed in radians. 
+The inverse sine of [arg x]. The result is expressed in radians.
 The absolute value of [arg x] must be less than 1.
 
 [def [const asinh(][arg x][const )]]

@@ -1,45 +1,51 @@
-# -*- tcl -*-
 # This file is a Tcl script to test spinbox widgets in Tk.  It is
 # organized in the standard fashion for Tcl tests.
 #
-# Copyright (c) 1994 The Regents of the University of California.
-# Copyright (c) 1994-1997 Sun Microsystems, Inc.
-# Copyright (c) 1998-1999 by Scriptics Corporation.
+# Copyright © 1994 The Regents of the University of California.
+# Copyright © 1994-1997 Sun Microsystems, Inc.
+# Copyright © 1998-1999 Scriptics Corporation.
 # All rights reserved.
 
-if {![package vsatisfies [package provide Tcl] 8.5]} {
-    puts "    Aborting the tests found in \"[file tail [info script]]\"."
-    puts "    Requiring Tcl 8.5, have [package present Tcl]"
-    return
-}
-
-# Future: put all tests under constraint tk and set constraint properly
-if {[catch { package require Tk 8.5 } msg]} {
-    puts "    Aborting the tests found in \"[file tail [info script]]\"."
-    puts "    Requiring Tk 8.5, $msg"
-    return
-}
-
-::tcltest::testConstraint tk 1
-
+package require Tk
 package require tcltest 2.2
-namespace import ::tcltest::*
-catch { tcltest::configure {*}$::argv }
-tcltest::loadTestedCommands
+namespace import -force tcltest::*
+loadTestedCommands
+
+### REPLACE THESE COMMANDS WITH THOSE ABOVE
+###package require tcltest 2.2
+###namespace import ::tcltest::*
+###eval tcltest::configure $argv
+###tcltest::loadTestedCommands
+
+# x11 and win32 need "wm deiconify ." only for a few tests and this is done in
+# the individual tests.
+# The original tests are from Tk which does not "wm withdraw .", but for some
+# reason the tklib test setup does.
+# FIXME "x11" (SDL) is untested.
+# FIXME aqua is untested.
 
 package require widgetPlus
 namespace import ::widgetPlus::spinboxPlus
+testConstraint x11 [expr {[tk windowingsystem] eq "x11" }]
+testConstraint TkAbove8.6 [expr {[package vsatisfies [package provide Tk] 8.7-]}]
 
 # ------------------------------------------------------------------------------
-# This file is copied from spinbox.test, with addition of the two lines above,
+# This file is copied from Tk trunk (8.7) checkin 127ff912ed,
+# file spinbox.test, with addition of the four lines above,
+# replacement of the four lines of initialization code above that,
 # application of "s/spinbox/spinboxPlus/g" to the code (but not to comments,
 # results, test names or other metadata), and further editing of failing tests
-# as described below.
+# as described below.  Plus comments at the end.
 #
 # The purpose is to check that "spinboxPlus" does not break any features
 # of "spinbox", including important matters such as validation.
 #
-# There are 13 test failures:
+# There is one known bug, currently under investigation:
+# - 5.12 (switching -from and -to) -- Snit configure handles each option-value
+# pair separately, and this causes a double switch.
+# The test is tagged with the constraint "knownBug".
+#
+# There are 13 further test failures:
 # - 3.15.spinbox (llength of [.s configure])
 # - 12 differences in error messages
 #
@@ -51,36 +57,50 @@ namespace import ::widgetPlus::spinboxPlus
 # Copies of the same tests without the ".spinbox" suffix or the added constraints
 # have the test result modified to reflect the (valid but different) value
 # obtained when using "spinboxPlus" instead of "spinbox".
+#
+# 18 further tests require the widgets to be mapped for the tests to pass with
+# Tcl/Tk 8.7 (mapping is not required for Tcl 9.0 with Tk 8.7).  The
+# corresponding tests in Tk have the same requirement.  The -setup and
+# -cleanup sections for these tests have been modified accordingly.
+#
+# With these revisions, all tests pass.
+#
+# Adapting the tests for use with Tcl/Tk 8.6.
+# 3 tests are for new features of Tk 8.7 - these are given the constraint
+# TkAbove8.6 which is computed above.  The new feature is an
+# alternative value {} for index -1, and a corresponding test
+# from Tk 8.6 is available and is added with the suffix "--8.6".  In three
+# cases the test is valid if this file is sourced with -encoding utf-8,
+# but the 8.6 tcltest facility on Windows does not do this.
+# In 5 other tests, the error message differs between Tk 8.6 and 8.7.  In
+# these cases, the expected test result is computed using the Tk version.
 # ------------------------------------------------------------------------------
 
-# Initialize
-set scrollInfo {Inf Inf}
-set x          {}
-
 # For xscrollcommand
+set scrollInfo {}
 proc scroll args {
-    global scrollInfo
-    set scrollInfo $args
+        global scrollInfo
+        set scrollInfo $args
 }
-# For trace variable 
+# For trace add variable
 proc override args {
-    global x
-    set x 12345
+        global x
+        set x 12345
 }
 
 # Procedures used in widget VALIDATION tests
 proc doval {W d i P s S v V} {
-    set ::vVals [list $W $d $i $P $s $S $v $V]
-    return 1
+        set ::vVals [list $W $d $i $P $s $S $v $V]
+        return 1
 }
 proc doval2 {W d i P s S v V} {
-    set ::vVals [list $W $d $i $P $s $S $v $V]
-    set ::e mydata
-    return 1
+        set ::vVals [list $W $d $i $P $s $S $v $V]
+        set ::e mydata
+        return 1
 }
 proc doval3 {W d i P s S v V} {
-    set ::vVals [list $W $d $i $P $s $S $v $V]
-    return 0
+        set ::vVals [list $W $d $i $P $s $S $v $V]
+        return 0
 }
 
 set cy [font metrics {Courier -12} -linespace]
@@ -139,7 +159,7 @@ test spinbox-1.5 {configuration option: "bd"} -setup {
     .e cget -bd
 } -cleanup {
     destroy .e
-} -result {4}
+} -result 4
 test spinbox-1.6 {configuration option: "bd" for spinbox} -setup {
         spinboxPlus .e -borderwidth 2 -highlightthickness 2 -font {Helvetica -12} \
         -relief sunken
@@ -183,7 +203,7 @@ test spinbox-1.9 {configuration option: "borderwidth"} -setup {
     .e cget -borderwidth
 } -cleanup {
     destroy .e
-} -result {1}
+} -result 1
 test spinbox-1.10 {configuration option: "borderwidth" for spinbox} -setup {
         spinboxPlus .e -borderwidth 2 -highlightthickness 2 -font {Helvetica -12} \
         -relief sunken
@@ -327,7 +347,7 @@ test spinbox-1.22 {configuration option: "exportselection"} -setup {
     .e cget -exportselection
 } -cleanup {
     destroy .e
-} -result {1}
+} -result 1
 test spinbox-1.23 {configuration option: "exportselection" for spinbox} -setup {
         spinboxPlus .e -borderwidth 2 -highlightthickness 2 -font {Helvetica -12} \
         -relief sunken
@@ -503,7 +523,7 @@ test spinbox-1.38 {configuration option: "highlightthickness"} -setup {
     .e cget -highlightthickness
 } -cleanup {
     destroy .e
-} -result {6}
+} -result 6
 test spinbox-1.39 {configuration option: "highlightthickness" for spinbox} -setup {
         spinboxPlus .e -borderwidth 2 -highlightthickness 2 -font {Helvetica -12} \
         -relief sunken
@@ -525,7 +545,7 @@ test spinbox-1.40 {configuration option: "highlightthickness"} -setup {
     .e cget -highlightthickness
 } -cleanup {
     destroy .e
-} -result {0}
+} -result 0
 
 test spinbox-1.41 {configuration option: "increment"} -setup {
         spinboxPlus .e -borderwidth 2 -highlightthickness 2 -font {Helvetica -12} \
@@ -572,7 +592,7 @@ test spinbox-1.44 {configuration option: "insertbackground" for spinbox} -setup 
 } -returnCodes {error} -result {unknown color name "bogus"}
 
 test spinbox-1.45 {configuration option: "insertborderwidth"} -setup {
-        spinboxPlus .e -borderwidth 2 -highlightthickness 2 -font {Helvetica -12} \
+        spinboxPlus .e -borderwidth 2 -insertwidth 2 -highlightthickness 2 -font {Helvetica -12} \
         -relief sunken
     pack .e
     update
@@ -581,7 +601,7 @@ test spinbox-1.45 {configuration option: "insertborderwidth"} -setup {
     .e cget -insertborderwidth
 } -cleanup {
     destroy .e
-} -result {1}
+} -result 1
 test spinbox-1.46 {configuration option: "insertborderwidth" for spinbox} -setup {
         spinboxPlus .e -borderwidth 2 -highlightthickness 2 -font {Helvetica -12} \
         -relief sunken
@@ -603,7 +623,7 @@ test spinbox-1.47 {configuration option: "insertofftime"} -setup {
     .e cget -insertofftime
 } -cleanup {
     destroy .e
-} -result {100}
+} -result 100
 test spinbox-1.48 {configuration option: "insertofftime" for spinbox} -setup {
         spinboxPlus .e -borderwidth 2 -highlightthickness 2 -font {Helvetica -12} \
         -relief sunken
@@ -625,7 +645,7 @@ test spinbox-1.49 {configuration option: "insertontime"} -setup {
     .e cget -insertontime
 } -cleanup {
     destroy .e
-} -result {100}
+} -result 100
 test spinbox-1.50 {configuration option: "insertontime" for spinbox} -setup {
         spinboxPlus .e -borderwidth 2 -highlightthickness 2 -font {Helvetica -12} \
         -relief sunken
@@ -737,7 +757,7 @@ test spinbox-1.59 {configuration option: "repeatdelay"} -setup {
     .e cget -repeatdelay
 } -cleanup {
     destroy .e
-} -result {500}
+} -result 500
 test spinbox-1.60 {configuration option: "repeatdelay" for spinbox} -setup {
         spinboxPlus .e -borderwidth 2 -highlightthickness 2 -font {Helvetica -12} \
         -relief sunken
@@ -759,7 +779,7 @@ test spinbox-1.61 {configuration option: "repeatinterval"} -setup {
     .e cget -repeatinterval
 } -cleanup {
     destroy .e
-} -result {-500}
+} -result -500
 test spinbox-1.62 {configuration option: "repeatinterval" for spinbox} -setup {
         spinboxPlus .e -borderwidth 2 -highlightthickness 2 -font {Helvetica -12} \
         -relief sunken
@@ -783,7 +803,7 @@ test spinbox-1.63 {configuration option: "selectbackground"} -setup {
     destroy .e
 } -result {#110022}
 test spinbox-1.64.spinbox {configuration option: "selectbackground" for spinbox} -constraints {
-	spinboxErrorMsgDifferent
+    spinboxErrorMsgDifferent
 } -setup {
         spinboxPlus .e -borderwidth 2 -highlightthickness 2 -font {Helvetica -12} \
         -relief sunken
@@ -815,7 +835,7 @@ test spinbox-1.65 {configuration option: "selectborderwidth"} -setup {
     .e cget -selectborderwidth
 } -cleanup {
     destroy .e
-} -result {1}
+} -result 1
 test spinbox-1.66 {configuration option: "selectborderwidth" for spinbox} -setup {
         spinboxPlus .e -borderwidth 2 -highlightthickness 2 -font {Helvetica -12} \
         -relief sunken
@@ -973,14 +993,14 @@ test spinbox-1.79 {configuration option: "values" for spinbox} -setup {
     destroy .e
 } -returnCodes {error} -result {list element in braces followed by "list" instead of space}
 
-test spinbox-1.80 {configuration option: "vcmd"} -setup {
+test spinbox-1.80 {configuration option: "validatecommand"} -setup {
         spinboxPlus .e -borderwidth 2 -highlightthickness 2 -font {Helvetica -12} \
         -relief sunken
     pack .e
     update
 } -body {
-    .e configure -vcmd "a command"
-    .e cget -vcmd
+    .e configure -validatecommand "a command"
+    .e cget -validatecommand
 } -cleanup {
     destroy .e
 } -result {a command}
@@ -995,7 +1015,7 @@ test spinbox-1.81 {configuration option: "width"} -setup {
     .e cget -width
 } -cleanup {
     destroy .e
-} -result {402}
+} -result 402
 test spinbox-1.82 {configuration option: "width" for spinbox} -setup {
         spinboxPlus .e -borderwidth 2 -highlightthickness 2 -font {Helvetica -12} \
         -relief sunken
@@ -1017,7 +1037,7 @@ test spinbox-1.83 {configuration option: "wrap"} -setup {
     .e cget -wrap
 } -cleanup {
     destroy .e
-} -result {1}
+} -result 1
 test spinbox-1.84 {configuration option: "wrap" for spinbox} -setup {
         spinboxPlus .e -borderwidth 2 -highlightthickness 2 -font {Helvetica -12} \
         -relief sunken
@@ -1043,7 +1063,7 @@ test spinbox-1.85 {configuration option: "xscrollcommand"} -setup {
 
 
 test spinbox-2.1.spinbox {Tk_SpinboxCmd procedure} -constraints {
-	spinboxErrorMsgDifferent
+    spinboxErrorMsgDifferent
 } -body {
     spinboxPlus
 } -returnCodes error -result {wrong # args: should be "spinbox pathName ?-option value ...?"}
@@ -1051,7 +1071,7 @@ test spinbox-2.1 {Tk_SpinboxCmd procedure} -body {
     spinboxPlus
 } -returnCodes error -result {wrong # args: should be "spinboxPlus pathName ?-option value ...?"}
 test spinbox-2.2.spinbox {Tk_SpinboxCmd procedure} -constraints {
-	spinboxErrorMsgDifferent
+    spinboxErrorMsgDifferent
 } -body {
     spinboxPlus gorp
 } -returnCodes error -result {bad window path name "gorp"}
@@ -1067,7 +1087,7 @@ test spinbox-2.3 {Tk_SpinboxCmd procedure} -body {
     destroy .e
 } -result {1 Spinbox .e}
 test spinbox-2.4.spinbox {Tk_SpinboxCmd procedure} -constraints {
-	spinboxErrorMsgDifferent
+    spinboxErrorMsgDifferent
 } -body {
     spinboxPlus .e -gorp foo
 } -cleanup {
@@ -1089,10 +1109,12 @@ test spinbox-2.5 {Tk_SpinboxCmd procedure} -body {
 } -cleanup {
     destroy .e
 } -result {.e}
+
+
 test spinbox-3.1.spinbox {SpinboxWidgetCmd procedure} -constraints {
-	spinboxErrorMsgDifferent
+    spinboxErrorMsgDifferent
 } -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
     pack .e
     update
 } -body {
@@ -1100,22 +1122,17 @@ test spinbox-3.1.spinbox {SpinboxWidgetCmd procedure} -constraints {
 } -cleanup {
     destroy .e
 } -returnCodes error -result {wrong # args: should be ".e option ?arg ...?"}
-
 test spinbox-3.1 {SpinboxWidgetCmd procedure} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
     pack .e
     update
 } -body {
     .e
 } -cleanup {
     destroy .e
-} -returnCodes error \
-    -result [expr {[package vsatisfies [package present Tcl] 8.6]
-		   ? "wrong # args: should be \".e subcommand ?arg ...?\""
-		   : "wrong # args: should be \".e subcommand ?argument ...?\""}]
-
+} -returnCodes error -result {wrong # args: should be ".e subcommand ?arg ...?"}
 test spinbox-3.2 {SpinboxWidgetCmd procedure, "bbox" widget command} -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
     update
 } -body {
@@ -1124,7 +1141,7 @@ test spinbox-3.2 {SpinboxWidgetCmd procedure, "bbox" widget command} -setup {
     destroy .e
 } -returnCodes error -result {wrong # args: should be ".e bbox index"}
 test spinbox-3.3 {SpinboxWidgetCmd procedure, "bbox" widget command} -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
     update
 } -body {
@@ -1133,7 +1150,7 @@ test spinbox-3.3 {SpinboxWidgetCmd procedure, "bbox" widget command} -setup {
     destroy .e
 } -returnCodes error -result {wrong # args: should be ".e bbox index"}
 test spinbox-3.4 {SpinboxWidgetCmd procedure, "bbox" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
     pack .e
     update
 } -body {
@@ -1142,16 +1159,20 @@ test spinbox-3.4 {SpinboxWidgetCmd procedure, "bbox" widget command} -setup {
     destroy .e
 } -returnCodes error -result {bad spinbox index "bogus"}
 test spinbox-3.5 {SpinboxWidgetCmd procedure, "bbox" widget command} -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    set st [wm state .]
+    wm deiconify .
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
     update
 } -body {
    .e bbox 0
 } -cleanup {
     destroy .e
+    wm state . $st
+    unset st
 } -result [list 5 5 0 $cy]
 
-# Oryginaly the result was count using measurements 
+# Oryginaly the result was count using measurements
 # and metrics. It was changed to less verbose solution - the result is the one
 # that passes fonts constraint (this concerns tests 3.6, 3.7, 3.8, 3.10)
 test spinbox-3.6 {SpinboxWidgetCmd procedure, "bbox" widget command} -constraints {
@@ -1170,12 +1191,12 @@ test spinbox-3.6 {SpinboxWidgetCmd procedure, "bbox" widget command} -constraint
 test spinbox-3.7 {SpinboxWidgetCmd procedure, "bbox" widget command} -constraints {
 	fonts
 } -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
     update
 } -body {
 # Tcl_UtfAtIndex(): utf at end
-    .e insert 0 "ab\u4e4e"
+    .e insert 0 "ab乎"
     .e bbox end
 } -cleanup {
     destroy .e
@@ -1183,18 +1204,20 @@ test spinbox-3.7 {SpinboxWidgetCmd procedure, "bbox" widget command} -constraint
 test spinbox-3.8 {SpinboxWidgetCmd procedure, "bbox" widget command} -constraints {
 	fonts
 } -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
     update
 } -body {
 # Tcl_UtfAtIndex(): utf before index
-    .e insert 0 "ab\u4e4ec"
+    .e insert 0 "ab乎c"
     .e bbox 3
 } -cleanup {
     destroy .e
 } -result {31 5 7 13}
 test spinbox-3.9 {SpinboxWidgetCmd procedure, "bbox" widget command} -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    set st [wm state .]
+    wm deiconify .
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
     update
 } -body {
@@ -1202,107 +1225,111 @@ test spinbox-3.9 {SpinboxWidgetCmd procedure, "bbox" widget command} -setup {
     .e bbox end
 } -cleanup {
     destroy .e
+    wm state . $st
+    unset st
 } -result "5 5 0 $cy"
 test spinbox-3.10 {SpinboxWidgetCmd procedure, "bbox" widget command} -constraints {
 	fonts
 } -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
     update
 } -body {
-    .e insert 0 "abcdefghij\u4e4eklmnop"
+    .e insert 0 "abcdefghij乎klmnop"
     list [.e bbox 0] [.e bbox 1] [.e bbox 10] [.e bbox end]
 } -cleanup {
     destroy .e
 } -result {{5 5 7 13} {12 5 7 13} {75 5 12 13} {122 5 7 13}}
 test spinbox-3.11 {SpinboxWidgetCmd procedure, "cget" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e cget
 } -cleanup {
     destroy .e
 } -returnCodes error -result {wrong # args: should be ".e cget option"}
 test spinbox-3.12 {SpinboxWidgetCmd procedure, "cget" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e cget a b
 } -cleanup {
     destroy .e
 } -returnCodes error -result {wrong # args: should be ".e cget option"}
 test spinbox-3.13 {SpinboxWidgetCmd procedure, "cget" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e cget -gorp
 } -cleanup {
     destroy .e
 } -returnCodes error -result {unknown option "-gorp"}
 test spinbox-3.14 {SpinboxWidgetCmd procedure, "cget" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e configure -bd 4
     .e cget -bd
 } -cleanup {
     destroy .e
-} -result {4}
+} -result 4
 test spinbox-3.15.spinbox {SpinboxWidgetCmd procedure, "configure" widget command} -constraints {
-	spinboxResultDifferent
+    spinboxResultDifferent
 } -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
     pack .e
     update
 } -body {
     llength [.e configure]
 } -cleanup {
     destroy .e
-} -result {49}
+} -result 51
 test spinbox-3.15 {SpinboxWidgetCmd procedure, "configure" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
     pack .e
     update
 } -body {
     llength [.e configure]
 } -cleanup {
     destroy .e
-} -result {52}
+} -result [expr {[package vsatisfies [package present Tk] 8.7-]
+    ? 54
+    : 52 }]
 test spinbox-3.16 {SpinboxWidgetCmd procedure, "configure" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e configure -foo
 } -cleanup {
     destroy .e
 } -returnCodes error -result {unknown option "-foo"}
 test spinbox-3.17 {SpinboxWidgetCmd procedure, "configure" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e configure -bd 4
     .e configure -bg #ffffff
     lindex [.e configure -bd] 4
 } -cleanup {
     destroy .e
-} -result {4}
+} -result 4
 test spinbox-3.18 {SpinboxWidgetCmd procedure, "delete" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e delete
 } -cleanup {
     destroy .e
 } -returnCodes error -result {wrong # args: should be ".e delete firstIndex ?lastIndex?"}
 test spinbox-3.19 {SpinboxWidgetCmd procedure, "delete" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e delete a b c
 } -cleanup {
     destroy .e
 } -returnCodes error -result {wrong # args: should be ".e delete firstIndex ?lastIndex?"}
 test spinbox-3.20 {SpinboxWidgetCmd procedure, "delete" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e delete foo
 } -cleanup {
     destroy .e
 } -returnCodes error -result {bad spinbox index "foo"}
 test spinbox-3.21 {SpinboxWidgetCmd procedure, "delete" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e delete 0 bar
 } -cleanup {
@@ -1311,27 +1338,49 @@ test spinbox-3.21 {SpinboxWidgetCmd procedure, "delete" widget command} -setup {
 test spinbox-3.22 {SpinboxWidgetCmd procedure, "delete" widget command} -setup {
     spinboxPlus .e
     pack .e
-    update 
+    update
 } -body {
     .e insert end "01234567890"
     .e delete 2 4
     .e get
 } -cleanup {
     destroy .e
-} -result {014567890}
+} -result 014567890
 test spinbox-3.23 {SpinboxWidgetCmd procedure, "delete" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e insert end "01234567890"
     .e delete 6
     .e get
 } -cleanup {
     destroy .e
-} -result {0123457890}
-test spinbox-3.24 {SpinboxWidgetCmd procedure, "delete" widget command} -setup {
+} -result 0123457890
+test spinbox-3.24 {SpinboxWidgetCmd procedure, "delete" widget command} -constraints TkAbove8.6 -setup {
+    # A valid test if this file is sourced with -encoding utf-8.  Tcl 8.6 on Windows does not.
     spinboxPlus .e
     pack .e
-    update 
+    update
+    set x {}
+} -body {
+# UTF
+    .e insert end "01234乎67890"
+    .e delete 6
+    lappend x [.e get]
+    .e delete 0 end
+    .e insert end "012345乎7890"
+    .e delete 6
+    lappend x [.e get]
+    .e delete 0 end
+    .e insert end "0123456乎890"
+    .e delete 6
+    lappend x [.e get]
+} -cleanup {
+    destroy .e
+} -result [list "01234乎7890" "0123457890" "012345乎890"]
+test spinbox-3.24--8.6 {SpinboxWidgetCmd procedure, "delete" widget command} -setup {
+    spinboxPlus .e
+    pack .e
+    update
     set x {}
 } -body {
 # UTF
@@ -1352,18 +1401,18 @@ test spinbox-3.24 {SpinboxWidgetCmd procedure, "delete" widget command} -setup {
 test spinbox-3.25 {SpinboxWidgetCmd procedure, "delete" widget command} -setup {
     spinboxPlus .e
     pack .e
-    update  
+    update
 } -body {
     .e insert end "01234567890"
     .e delete 6 5
     .e get
 } -cleanup {
     destroy .e
-} -result {01234567890}
+} -result 01234567890
 test spinbox-3.26 {SpinboxWidgetCmd procedure, "delete" widget command} -setup {
     spinboxPlus .e
     pack .e
-    update  
+    update
 } -body {
     .e insert end "01234567890"
     .e configure -state disabled
@@ -1372,11 +1421,11 @@ test spinbox-3.26 {SpinboxWidgetCmd procedure, "delete" widget command} -setup {
     .e get
 } -cleanup {
     destroy .e
-} -result {01234567890}
+} -result 01234567890
 test spinbox-3.26.1 {SpinboxWidgetCmd procedure, "delete" widget command} -setup {
     spinboxPlus .e
     pack .e
-    update  
+    update
 } -body {
     .e insert end "01234567890"
     .e configure -state readonly
@@ -1385,53 +1434,53 @@ test spinbox-3.26.1 {SpinboxWidgetCmd procedure, "delete" widget command} -setup
     .e get
 } -cleanup {
     destroy .e
-} -result {01234567890}
+} -result 01234567890
 test spinbox-3.27 {SpinboxWidgetCmd procedure, "get" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e get foo
 } -cleanup {
     destroy .e
 } -returnCodes error -result {wrong # args: should be ".e get"}
 test spinbox-3.28 {SpinboxWidgetCmd procedure, "icursor" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e icursor
 } -cleanup {
     destroy .e
 } -returnCodes error -result {wrong # args: should be ".e icursor pos"}
 test spinbox-3.29 {SpinboxWidgetCmd procedure, "icursor" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e icursor foo
 } -cleanup {
     destroy .e
 } -returnCodes error -result {bad spinbox index "foo"}
 test spinbox-3.30 {SpinboxWidgetCmd procedure, "icursor" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e insert end "01234567890"
     .e icursor 4
     .e index insert
 } -cleanup {
     destroy .e
-} -result {4}
+} -result 4
 test spinbox-3.31 {SpinboxWidgetCmd procedure, "index" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e in
 } -cleanup {
     destroy .e
 } -returnCodes error -result {ambiguous option "in": must be bbox, cget, configure, delete, get, icursor, identify, index, insert, invoke, scan, selection, set, validate, or xview}
 test spinbox-3.32 {SpinboxWidgetCmd procedure, "index" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e index
 } -cleanup {
     destroy .e
 } -returnCodes error -result {wrong # args: should be ".e index string"}
 test spinbox-3.33 {SpinboxWidgetCmd procedure, "index" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e index foo
 } -cleanup {
@@ -1440,16 +1489,28 @@ test spinbox-3.33 {SpinboxWidgetCmd procedure, "index" widget command} -setup {
 test spinbox-3.34 {SpinboxWidgetCmd procedure, "index" widget command} -setup {
     spinboxPlus .e
     pack .e
-    update  
+    update
 } -body {
     .e index 0
 } -cleanup {
     destroy .e
 } -returnCodes {ok} -match glob -result {*}
-test spinbox-3.35 {SpinboxWidgetCmd procedure, "index" widget command} -setup {
+test spinbox-3.35 {SpinboxWidgetCmd procedure, "index" widget command} -constraints TkAbove8.6 -setup {
+    # A valid test if this file is sourced with -encoding utf-8.  Tcl 8.6 on Windows does not.
     spinboxPlus .e
     pack .e
-    update  
+    update
+} -body {
+# UTF
+    .e insert 0 abc乎œdef
+    list [.e index 3] [.e index 4] [.e index end]
+} -cleanup {
+    destroy .e
+} -result {3 4 8}
+test spinbox-3.35--8.6 {SpinboxWidgetCmd procedure, "index" widget command} -setup {
+    spinboxPlus .e
+    pack .e
+    update
 } -body {
 # UTF
     .e insert 0 abc\u4e4e\u0153def
@@ -1458,21 +1519,21 @@ test spinbox-3.35 {SpinboxWidgetCmd procedure, "index" widget command} -setup {
     destroy .e
 } -result {3 4 8}
 test spinbox-3.36 {SpinboxWidgetCmd procedure, "insert" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e insert a
 } -cleanup {
     destroy .e
 } -returnCodes error -result {wrong # args: should be ".e insert index text"}
 test spinbox-3.37 {SpinboxWidgetCmd procedure, "insert" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e insert a b c
 } -cleanup {
     destroy .e
 } -returnCodes error -result {wrong # args: should be ".e insert index text"}
 test spinbox-3.38 {SpinboxWidgetCmd procedure, "insert" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e insert foo Text
 } -cleanup {
@@ -1481,7 +1542,7 @@ test spinbox-3.38 {SpinboxWidgetCmd procedure, "insert" widget command} -setup {
 test spinbox-3.39 {SpinboxWidgetCmd procedure, "insert" widget command} -setup {
     spinboxPlus .e
     pack .e
-    update  
+    update
 } -body {
     .e insert end "01234567890"
     .e insert 3 xxx
@@ -1492,7 +1553,7 @@ test spinbox-3.39 {SpinboxWidgetCmd procedure, "insert" widget command} -setup {
 test spinbox-3.40 {SpinboxWidgetCmd procedure, "insert" widget command} -setup {
     spinboxPlus .e
     pack .e
-    update  
+    update
 } -body {
     .e insert end "01234567890"
     .e configure -state disabled
@@ -1501,11 +1562,11 @@ test spinbox-3.40 {SpinboxWidgetCmd procedure, "insert" widget command} -setup {
     .e get
 } -cleanup {
     destroy .e
-} -result {01234567890}
+} -result 01234567890
 test spinbox-3.40.1 {SpinboxWidgetCmd procedure, "insert" widget command} -setup {
     spinboxPlus .e
     pack .e
-    update  
+    update
 } -body {
     .e insert end "01234567890"
     .e configure -state readonly
@@ -1514,16 +1575,16 @@ test spinbox-3.40.1 {SpinboxWidgetCmd procedure, "insert" widget command} -setup
     .e get
 } -cleanup {
     destroy .e
-} -result {01234567890}
+} -result 01234567890
 test spinbox-3.41 {SpinboxWidgetCmd procedure, "insert" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e insert a b c
 } -cleanup {
     destroy .e
 } -returnCodes error -result {wrong # args: should be ".e insert index text"}
 test spinbox-3.42 {SpinboxWidgetCmd procedure, "scan" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
     pack .e
     update
 } -body {
@@ -1534,7 +1595,7 @@ test spinbox-3.42 {SpinboxWidgetCmd procedure, "scan" widget command} -setup {
 test spinbox-3.43 {SpinboxWidgetCmd procedure, "scan" widget command} -setup {
     spinboxPlus .e
     pack .e
-    update 
+    update
 } -body {
     .e scan a b c
 } -cleanup {
@@ -1543,16 +1604,18 @@ test spinbox-3.43 {SpinboxWidgetCmd procedure, "scan" widget command} -setup {
 test spinbox-3.44 {SpinboxWidgetCmd procedure, "scan" widget command} -setup {
     spinboxPlus .e
     pack .e
-    update 
+    update
 } -body {
     .e scan foobar 20
 } -cleanup {
     destroy .e
-} -returnCodes error -result {bad scan option "foobar": must be mark or dragto}
+} -returnCodes error -result [expr {[package vsatisfies [package present Tk] 8.7-]
+    ? {bad scan option "foobar": must be dragto or mark}
+    : {bad scan option "foobar": must be mark or dragto} }]
 test spinbox-3.45 {SpinboxWidgetCmd procedure, "scan" widget command} -setup {
     spinboxPlus .e
     pack .e
-    update 
+    update
 } -body {
     .e scan mark 20.1
 } -cleanup {
@@ -1563,7 +1626,7 @@ test spinbox-3.45 {SpinboxWidgetCmd procedure, "scan" widget command} -setup {
 test spinbox-3.46 {SpinboxWidgetCmd procedure, "scan" widget command} -constraints {
     fonts
 } -setup {
-    spinboxPlus .e -font {Helvetica -12} -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -font {Helvetica -12} -borderwidth 2 -highlightthickness 2
     pack .e
     update
 } -body {
@@ -1574,25 +1637,25 @@ test spinbox-3.46 {SpinboxWidgetCmd procedure, "scan" widget command} -constrain
     .e index @0
 } -cleanup {
     destroy .e
-} -result {2}
+} -result 2
 test spinbox-3.47.spinbox {SpinboxWidgetCmd procedure, "select" widget command} -constraints {
-	spinboxErrorMsgDifferent
+    spinboxErrorMsgDifferent
 } -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e select
 } -cleanup {
     destroy .e
 } -returnCodes error -result {wrong # args: should be ".e selection option ?index?"}
 test spinbox-3.47 {SpinboxWidgetCmd procedure, "select" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e select
 } -cleanup {
     destroy .e
 } -returnCodes error -result {wrong # args: should be ".e select option ?index?"}
 test spinbox-3.48 {SpinboxWidgetCmd procedure, "select" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e select foo
 } -cleanup {
@@ -1600,37 +1663,37 @@ test spinbox-3.48 {SpinboxWidgetCmd procedure, "select" widget command} -setup {
 } -returnCodes error -result {bad selection option "foo": must be adjust, clear, element, from, present, range, or to}
 
 test spinbox-3.49.spinbox {SpinboxWidgetCmd procedure, "select clear" widget command} -constraints {
-	spinboxErrorMsgDifferent
+    spinboxErrorMsgDifferent
 } -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e select clear gorp
 } -cleanup {
     destroy .e
 } -returnCodes error -result {wrong # args: should be ".e selection clear"}
 test spinbox-3.49 {SpinboxWidgetCmd procedure, "select clear" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e select clear gorp
 } -cleanup {
     destroy .e
 } -returnCodes error -result {wrong # args: should be ".e select clear"}
 test spinbox-3.50 {SpinboxWidgetCmd procedure, "select clear" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e insert end "0123456789"
     .e select from 1
     .e select to 4
     update
     .e select clear
-    selection get 
+    selection get
 } -cleanup {
     destroy .e
 } -returnCodes error -result {PRIMARY selection doesn't exist or form "STRING" not defined}
 test spinbox-3.50.1 {SpinboxWidgetCmd procedure, "select clear" widget command} -setup {
     spinboxPlus .e
     pack .e
-    update  
+    update
 } -body {
     .e insert end "0123456789"
     .e select from 1
@@ -1644,7 +1707,7 @@ test spinbox-3.50.1 {SpinboxWidgetCmd procedure, "select clear" widget command} 
 } -result {.e}
 
 test spinbox-3.51 {SpinboxWidgetCmd procedure, "selection present" widget command} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
 } -body {
     .e selection present foo
 } -cleanup {
@@ -1653,7 +1716,7 @@ test spinbox-3.51 {SpinboxWidgetCmd procedure, "selection present" widget comman
 test spinbox-3.52 {SpinboxWidgetCmd procedure, "selection present" widget command} -setup {
     spinboxPlus .e
     pack .e
-    update  
+    update
 } -body {
     .e insert end 0123456789
     .e select from 3
@@ -1661,11 +1724,11 @@ test spinbox-3.52 {SpinboxWidgetCmd procedure, "selection present" widget comman
     .e selection present
 } -cleanup {
     destroy .e
-} -result {1}
+} -result 1
 test spinbox-3.53 {SpinboxWidgetCmd procedure, "selection present" widget command} -setup {
     spinboxPlus .e
     pack .e
-    update  
+    update
 } -body {
     .e insert end 0123456789
     .e select from 3
@@ -1674,11 +1737,11 @@ test spinbox-3.53 {SpinboxWidgetCmd procedure, "selection present" widget comman
     .e selection present
 } -cleanup {
     destroy .e
-} -result {1}
+} -result 1
 test spinbox-3.54 {SpinboxWidgetCmd procedure, "selection present" widget command} -setup {
     spinboxPlus .e
     pack .e
-    update 
+    update
 } -body {
     .e insert end 0123456789
     .e select from 3
@@ -1687,7 +1750,7 @@ test spinbox-3.54 {SpinboxWidgetCmd procedure, "selection present" widget comman
     .e selection present
 } -cleanup {
     destroy .e
-} -result {0}
+} -result 0
 test spinbox-3.55 {SpinboxWidgetCmd procedure, "selection adjust" widget command} -setup {
     spinboxPlus .e
 } -body {
@@ -1696,7 +1759,7 @@ test spinbox-3.55 {SpinboxWidgetCmd procedure, "selection adjust" widget command
     destroy .e
 } -returnCodes error -result {bad spinbox index "x"}
 test spinbox-3.56.spinbox {SpinboxWidgetCmd procedure, "selection adjust" widget command} -constraints {
-	spinboxErrorMsgDifferent
+    spinboxErrorMsgDifferent
 } -setup {
     spinboxPlus .e
 } -body {
@@ -1724,7 +1787,7 @@ test spinbox-3.57 {SpinboxWidgetCmd procedure, "selection adjust" widget command
     selection get
 } -cleanup {
     destroy .e
-} -result {123}
+} -result 123
 test spinbox-3.58 {SpinboxWidgetCmd procedure, "selection adjust" widget command} -setup {
     spinboxPlus .e
     pack .e
@@ -1738,9 +1801,9 @@ test spinbox-3.58 {SpinboxWidgetCmd procedure, "selection adjust" widget command
     selection get
 } -cleanup {
     destroy .e
-} -result {234}
+} -result 234
 test spinbox-3.59.spinbox {SpinboxWidgetCmd procedure, "selection from" widget command} -constraints {
-	spinboxErrorMsgDifferent
+    spinboxErrorMsgDifferent
 } -setup {
     spinboxPlus .e
 } -body {
@@ -1757,7 +1820,7 @@ test spinbox-3.59 {SpinboxWidgetCmd procedure, "selection from" widget command} 
 } -returnCodes error -result {wrong # args: should be ".e select from index"}
 
 test spinbox-3.60.spinbox {SpinboxWidgetCmd procedure, "selection range" widget command} -constraints {
-	spinboxErrorMsgDifferent
+    spinboxErrorMsgDifferent
 } -setup {
     spinboxPlus .e
 } -body {
@@ -1804,7 +1867,7 @@ test spinbox-3.63 {SpinboxWidgetCmd procedure, "selection range" widget command}
     destroy .e
 } -result {2 9 3}
 test spinbox-3.64.spinbox {SpinboxWidgetCmd procedure, "selection to" widget command} -constraints {
-	spinboxErrorMsgDifferent
+    spinboxErrorMsgDifferent
 } -setup {
     spinboxPlus .e
     pack .e
@@ -1857,7 +1920,7 @@ test spinbox-3.64.2 {SpinboxWidgetCmd procedure, "selection" widget command} -se
 } -result {2 4}
 
 test spinbox-3.65 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
     update
 } -body {
@@ -1869,7 +1932,7 @@ test spinbox-3.65 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
     destroy .e
 } -result {0.053763 0.268817}
 test spinbox-3.66 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
     update
 } -body {
@@ -1878,7 +1941,7 @@ test spinbox-3.66 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
     destroy .e
 } -returnCodes error -result {bad spinbox index "gorp"}
 test spinbox-3.67 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
     update
 } -body {
@@ -1892,7 +1955,7 @@ test spinbox-3.67 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
     destroy .e
 } -result {0.107527 0.322581}
 test spinbox-3.68 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
     update
 } -body {
@@ -1901,7 +1964,7 @@ test spinbox-3.68 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
     destroy .e
 } -returnCodes error -result {wrong # args: should be ".e xview moveto fraction"}
 test spinbox-3.69 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
     update
 } -body {
@@ -1910,7 +1973,7 @@ test spinbox-3.69 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
     destroy .e
 } -returnCodes error -result {expected floating-point number but got "foo"}
 test spinbox-3.70 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
     update
 } -body {
@@ -1922,7 +1985,7 @@ test spinbox-3.70 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
     destroy .e
 } -result {0.505376 0.720430}
 test spinbox-3.71 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
     update
 } -body {
@@ -1931,9 +1994,11 @@ test spinbox-3.71 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
     .e xview scroll 24
 } -cleanup {
     destroy .e
-} -returnCodes error -result {wrong # args: should be ".e xview scroll number units|pages"}
+} -returnCodes error -result [expr {[package vsatisfies [package present Tk] 8.7-]
+    ? {wrong # args: should be ".e xview scroll number pages|units"}
+    : {wrong # args: should be ".e xview scroll number units|pages"} }]
 test spinbox-3.72 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
 } -body {
     .e insert end "This is quite a long text string, so long that it "
@@ -1942,9 +2007,11 @@ test spinbox-3.72 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
     .e xview scroll gorp units
 } -cleanup {
     destroy .e
-} -returnCodes error -result {expected integer but got "gorp"}
+} -returnCodes error -result [expr {[package vsatisfies [package present Tk] 8.7-]
+    ? {expected floating-point number but got "gorp"}
+    : {expected integer but got "gorp"} }]
 test spinbox-3.73 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
 } -body {
     .e insert end "This is quite a long text string, so long that it "
@@ -1957,7 +2024,7 @@ test spinbox-3.73 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
     destroy .e
 } -result {0.193548 0.408602}
 test spinbox-3.74 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
     update
 } -body {
@@ -1971,7 +2038,7 @@ test spinbox-3.74 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
     destroy .e
 } -result {0.397849 0.612903}
 test spinbox-3.75 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
 } -body {
     .e insert end "This is quite a long text string, so long that it "
@@ -1979,13 +2046,13 @@ test spinbox-3.75 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
     update
     .e xview 30
     update
-    .e xview scroll 2 units 
+    .e xview scroll 2 units
     .e index @0
 } -cleanup {
     destroy .e
-} -result {32}
+} -result 32
 test spinbox-3.76 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
 } -body {
     .e insert end "This is quite a long text string, so long that it "
@@ -1993,13 +2060,13 @@ test spinbox-3.76 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
     update
     .e xview 30
     update
-    .e xview scroll -1 units 
+    .e xview scroll -1 units
     .e index @0
 } -cleanup {
     destroy .e
-} -result {29}
+} -result 29
 test spinbox-3.77 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
 } -body {
     .e insert end "This is quite a long text string, so long that it "
@@ -2008,9 +2075,11 @@ test spinbox-3.77 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
     .e xview scroll 23 foobars
 } -cleanup {
     destroy .e
-} -returnCodes error -result {bad argument "foobars": must be units or pages}
+} -returnCodes error -result [expr {[package vsatisfies [package present Tk] 8.7-]
+    ? {bad argument "foobars": must be pages or units}
+    : {bad argument "foobars": must be units or pages} }]
 test spinbox-3.78 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
 } -body {
     .e insert end "This is quite a long text string, so long that it "
@@ -2020,8 +2089,8 @@ test spinbox-3.78 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
 } -cleanup {
     destroy .e
 } -returnCodes error -result {unknown option "eat": must be moveto or scroll}
-test spinbox-3.79 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+test spinbox-3.79 {SpinboxWidgetCmd procedure, "xview" widget command} -constraints TkAbove8.6 -setup {
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
     update
 } -body {
@@ -2029,13 +2098,27 @@ test spinbox-3.79 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
     .e insert end "runs off the end of the window quite a bit."
     .e xview 0
     update
-    .e xview -4
+    .e xview {}
     .e index @0
 } -cleanup {
     destroy .e
-} -result {0}
+} -result 0
+test spinbox-3.79--8.6 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
+    pack .e
+    update
+} -body {
+    .e insert end "This is quite a long text string, so long that it "
+    .e insert end "runs off the end of the window quite a bit."
+    .e xview 0
+    update
+    .e xview -1
+    .e index @0
+} -cleanup {
+    destroy .e
+} -result 0
 test spinbox-3.80 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
 } -body {
     .e insert end "This is quite a long text string, so long that it "
@@ -2045,9 +2128,31 @@ test spinbox-3.80 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
     .e index @0
 } -cleanup {
     destroy .e
-} -result {73}
-test spinbox-3.81 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+} -result 73
+test spinbox-3.81 {SpinboxWidgetCmd procedure, "xview" widget command} -constraints TkAbove8.6 -setup {
+    # A valid test if this file is sourced with -encoding utf-8.  Tcl 8.6 on Windows does not.
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
+    pack .e
+} -body {
+    .e insert end "This is quite a long text string, so long that it "
+    .e insert end "runs off the end of the window quite a bit."
+    .e insert 10 乎
+    update
+# UTF
+# If Tcl_NumUtfChars wasn't used, wrong answer would be:
+# 0.106383 0.117021 0.117021
+    set x {}
+    .e xview moveto .1
+    lappend x [format {%.6f} [lindex [.e xview] 0]]
+    .e xview moveto .11
+    lappend x [format {%.6f} [lindex [.e xview] 0]]
+    .e xview moveto .12
+    lappend x [format {%.6f} [lindex [.e xview] 0]]
+} -cleanup {
+    destroy .e
+} -result {0.095745 0.106383 0.117021}
+test spinbox-3.81--8.6 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
 } -body {
     .e insert end "This is quite a long text string, so long that it "
@@ -2069,7 +2174,7 @@ test spinbox-3.81 {SpinboxWidgetCmd procedure, "xview" widget command} -setup {
 } -result {0.095745 0.106383 0.117021}
 
 test spinbox-3.82 {SpinboxWidgetCmd procedure} -setup {
-    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -font {Courier -12} -borderwidth 2 -highlightthickness 2
     pack .e
     update
 } -body {
@@ -2084,7 +2189,7 @@ test spinbox-5.1 {ConfigureSpinbox procedure, -textvariable} -body {
     .e get
 } -cleanup {
     destroy .e
-} -result {12345}
+} -result 12345
 test spinbox-5.2 {ConfigureSpinbox procedure, -textvariable} -body {
     set x 12345
     spinboxPlus .e -textvariable x
@@ -2109,13 +2214,13 @@ test spinbox-5.4 {ConfigureSpinbox procedure, -textvariable} -setup {
     unset -nocomplain x
     spinboxPlus .e
 } -body {
-    trace variable x w override
+    trace add variable x write override
     .e insert 0 "Some text"
     .e configure -textvariable x
     list $x [.e get]
 } -cleanup {
     destroy .e
-    trace vdelete x w override
+    trace remove variable x write override
 } -result {12345 12345}
 
 test spinbox-5.5 {ConfigureSpinbox procedure} -setup {
@@ -2140,14 +2245,14 @@ test spinbox-5.5 {ConfigureSpinbox procedure} -setup {
     destroy .e1 .e2
 } -result {{This is so} {This is so} 1234}
 test spinbox-5.6 {ConfigureSpinbox procedure} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
     pack .e
 } -body {
     .e insert end "0123456789"
     .e select from 1
     .e select to 5
     .e configure -exportselection 0
-    selection get 
+    selection get
 } -cleanup {
     destroy .e
 } -returnCodes error -result {PRIMARY selection doesn't exist or form "STRING" not defined}
@@ -2159,29 +2264,35 @@ test spinbox-5.6.1 {ConfigureSpinbox procedure} -setup {
     .e select from 1
     .e select to 5
     .e configure -exportselection 0
-    catch {selection get} 
+    catch {selection get}
     list [.e index sel.first] [.e index sel.last]
 } -cleanup {
     destroy .e
 } -result {1 5}
 
 test spinbox-5.7 {ConfigureSpinbox procedure} -setup {
-    spinboxPlus .e -font {Helvetica -12} -borderwidth 2 -highlightthickness 2 
+    set st [wm state .]
+    wm deiconify .
+    spinboxPlus .e -font {Helvetica -12} -borderwidth 2 -highlightthickness 2
     pack .e
 } -body {
     .e configure -font {Courier -12} -width 4 -xscrollcommand scroll
     .e insert end "01234567890"
     update
+    set scrollInfo wrong
     .e configure -width 5
+    update
     format {%.6f %.6f} {*}$scrollInfo
 } -cleanup {
     destroy .e
-} -result {0.000000 0.363636}
+    wm state . $st
+    unset st
+} -result {0.000000 0.454545}
 
 test spinbox-5.8 {ConfigureSpinbox procedure} -constraints {
     fonts
 } -setup {
-    spinboxPlus .e -borderwidth 2 -highlightthickness 2 
+    spinboxPlus .e -borderwidth 2 -highlightthickness 2
     pack .e
 } -body {
     .e configure -width 0 -font {Helvetica -12}
@@ -2230,13 +2341,28 @@ test spinbox-5.11 {ConfigureSpinbox procedure} -setup {
 } -cleanup {
     destroy .e
 } -result {}
+test spinbox-5.12 {ConfigureSpinbox procedure, -from and -to swapping} -constraints {knownBug} -setup {
+    spinboxPlus .e
+} -body {
+    # this statement used to trigger error "-to value must be greater than -from value"
+    # because default value for -to is zero (bug [841280ffff])
+    set res [catch {.e configure -from 10}]
+    .e configure -from 1971 -to 2016  ; # standard case
+    lappend res [.e cget -from] [.e cget -to]
+    .e configure -from 2016 -to 1971  ; # auto-swapping happens
+    lappend res [.e cget -from] [.e cget -to]
+    .e configure -to 1971 -from 2016 ; # auto-swapping, order of options does not matter
+    lappend res [.e cget -from] [.e cget -to]
+} -cleanup {
+    destroy .e
+} -result {0 1971.0 2016.0 1971.0 2016.0 1971.0 2016.0}
 
 # No tests for DisplaySpinbox.
 
 test spinbox-6.1 {SpinboxComputeGeometry procedure} -constraints {
     fonts
 } -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
     pack .e
 } -body {
     .e configure -font {Courier -12} -bd 2 -relief raised -width 20 -highlightthickness 3
@@ -2249,7 +2375,7 @@ test spinbox-6.1 {SpinboxComputeGeometry procedure} -constraints {
 test spinbox-6.2 {SpinboxComputeGeometry procedure} -constraints {
     fonts
 } -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
     pack .e
 } -body {
     .e configure -font {Courier -12} -bd 2 -relief raised -width 20 -justify center \
@@ -2263,7 +2389,7 @@ test spinbox-6.2 {SpinboxComputeGeometry procedure} -constraints {
 test spinbox-6.3 {SpinboxComputeGeometry procedure} -constraints {
     fonts
 } -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
     pack .e
 } -body {
     .e configure -font {Courier -12} -bd 2 -relief raised -width 20 -justify right \
@@ -2275,7 +2401,7 @@ test spinbox-6.3 {SpinboxComputeGeometry procedure} -constraints {
     destroy .e
 } -result {3 4}
 test spinbox-6.4 {SpinboxComputeGeometry procedure} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
     pack .e
 } -body {
     .e configure -font {Courier -12} -bd 2 -relief raised -width 5
@@ -2285,26 +2411,26 @@ test spinbox-6.4 {SpinboxComputeGeometry procedure} -setup {
     .e index @0
 } -cleanup {
     destroy .e
-} -result {6}
+} -result 6
 test spinbox-6.5 {SpinboxComputeGeometry procedure} -setup {
     spinboxPlus .e -highlightthickness 2
     pack .e
 } -body {
-    .e configure -font {Courier -12} -bd 2 -relief raised -width 5 	    
+    .e configure -font {Courier -12} -bd 2 -relief raised -width 5
     .e insert end "01234567890"
     update
     .e xview 7
     .e index @0
 } -cleanup {
     destroy .e
-} -result {6}
+} -result 6
 test spinbox-6.6 {SpinboxComputeGeometry procedure} -constraints {
     fonts
 } -setup {
     spinboxPlus .e -highlightthickness 2
     pack .e
 } -body {
-    .e configure -font {Courier -12} -bd 2 -relief raised -width 10 
+    .e configure -font {Courier -12} -bd 2 -relief raised -width 10
     .e insert end "01234\t67890"
     update
     .e xview 3
@@ -2344,7 +2470,7 @@ test spinbox-6.9 {SpinboxComputeGeometry procedure} -constraints {
     spinboxPlus .e -highlightthickness 2
     pack .e
 } -body {
-    .e configure -font {Helvetica -24} -bd 3 -relief raised -width 0 
+    .e configure -font {Helvetica -24} -bd 3 -relief raised -width 0
     update
     list [winfo reqwidth .e] [winfo reqheight .e]
 } -cleanup {
@@ -2353,33 +2479,45 @@ test spinbox-6.9 {SpinboxComputeGeometry procedure} -constraints {
 
 
 test spinbox-7.1 {InsertChars procedure} -setup {
-    unset -nocomplain contents 
+    set st [wm state .]
+    wm deiconify .
+    unset -nocomplain contents
     spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
     focus .e
 } -body {
     .e configure -textvariable contents -xscrollcommand scroll
     .e insert 0 abcde
+    update
+    set scrollInfo wrong
     .e insert 2 XXX
     update
     list [.e get] $contents [format {%.6f %.6f} {*}$scrollInfo]
 } -cleanup {
     destroy .e
+    wm state . $st
+    unset st
 } -result {abXXXcde abXXXcde {0.000000 1.000000}}
 
 test spinbox-7.2 {InsertChars procedure} -setup {
-    unset -nocomplain contents 
-    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2 
+    set st [wm state .]
+    wm deiconify .
+    unset -nocomplain contents
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
     focus .e
 } -body {
     .e configure -textvariable contents -xscrollcommand scroll
     .e insert 0 abcde
+    update
+    set scrollInfo wrong
     .e insert 500 XXX
     update
     list [.e get] $contents [format {%.6f %.6f} {*}$scrollInfo]
 } -cleanup {
     destroy .e
+    wm state . $st
+    unset st
 } -result {abcdeXXX abcdeXXX {0.000000 1.000000}}
 test spinbox-7.3 {InsertChars procedure} -setup {
     spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
@@ -2438,7 +2576,7 @@ test spinbox-7.6 {InsertChars procedure} -setup {
     destroy .e
 } -result {2 6 2 5}
 test spinbox-7.7 {InsertChars procedure} -setup {
-    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
 } -body {
     .e configure -xscrollcommand scroll
@@ -2448,9 +2586,9 @@ test spinbox-7.7 {InsertChars procedure} -setup {
     .e index insert
 } -cleanup {
     destroy .e
-} -result {7}
+} -result 7
 test spinbox-7.8 {InsertChars procedure} -setup {
-    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
 } -body {
     .e insert 0 0123456789
@@ -2459,9 +2597,9 @@ test spinbox-7.8 {InsertChars procedure} -setup {
     .e index insert
 } -cleanup {
     destroy .e
-} -result {4}
+} -result 4
 test spinbox-7.9 {InsertChars procedure} -setup {
-    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
 } -body {
     .e insert 0 "This is a very long string"
@@ -2471,9 +2609,9 @@ test spinbox-7.9 {InsertChars procedure} -setup {
     .e index @0
 } -cleanup {
     destroy .e
-} -result {7}
+} -result 7
 test spinbox-7.10 {InsertChars procedure} -setup {
-    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
 } -body {
     .e insert 0 "This is a very long string"
@@ -2483,12 +2621,12 @@ test spinbox-7.10 {InsertChars procedure} -setup {
     .e index @0
 } -cleanup {
     destroy .e
-} -result {4}
+} -result 4
 
 test spinbox-7.11 {InsertChars procedure} -constraints {
     fonts
 } -setup {
-    spinboxPlus .e -width 0 -font {Courier -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -width 0 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
 } -body {
     .e insert 0 "xyzzy"
@@ -2497,52 +2635,90 @@ test spinbox-7.11 {InsertChars procedure} -constraints {
     winfo reqwidth .e
 } -cleanup {
     destroy .e
-} -result {70}
+} -result 70
 
 test spinbox-8.1 {DeleteChars procedure} -setup {
-    unset -nocomplain contents 
-    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2 
+    set st [wm state .]
+    wm deiconify .
+    unset -nocomplain contents
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
     focus .e
 } -body {
     .e configure -textvariable contents -xscrollcommand scroll
     .e insert 0 abcde
+    update
+    set scrollInfo wrong
     .e delete 2 4
     update
     list [.e get] $contents [format {%.6f %.6f} {*}$scrollInfo]
 } -cleanup {
     destroy .e
+    wm state . $st
+    unset st
 } -result {abe abe {0.000000 1.000000}}
-test spinbox-8.2 {DeleteChars procedure} -setup {
-    unset -nocomplain contents 
-    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2 
+test spinbox-8.2 {DeleteChars procedure} -constraints TkAbove8.6 -setup {
+    set st [wm state .]
+    wm deiconify .
+    unset -nocomplain contents
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
     focus .e
 } -body {
     .e configure -textvariable contents -xscrollcommand scroll
     .e insert 0 abcde
-    .e delete -2 2
+    update
+    set scrollInfo wrong
+    .e delete {} 2
     update
     list [.e get] $contents [format {%.6f %.6f} {*}$scrollInfo]
 } -cleanup {
     destroy .e
+    wm state . $st
+    unset st
 } -result {cde cde {0.000000 1.000000}}
-test spinbox-8.3 {DeleteChars procedure} -setup {
-    unset -nocomplain contents 
-    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2 
+test spinbox-8.2--8.6 {DeleteChars procedure} -setup {
+    set st [wm state .]
+    wm deiconify .
+    unset -nocomplain contents
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
     focus .e
 } -body {
     .e configure -textvariable contents -xscrollcommand scroll
     .e insert 0 abcde
+    update
+    set scrollInfo wrong
+    .e delete -1 2
+    update
+    list [.e get] $contents [format {%.6f %.6f} {*}$scrollInfo]
+} -cleanup {
+    destroy .e
+    wm state . $st
+    unset st
+} -result {cde cde {0.000000 1.000000}}
+test spinbox-8.3 {DeleteChars procedure} -setup {
+    set st [wm state .]
+    wm deiconify .
+    unset -nocomplain contents
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
+    pack .e
+    focus .e
+} -body {
+    .e configure -textvariable contents -xscrollcommand scroll
+    .e insert 0 abcde
+    update
+    set scrollInfo wrong
     .e delete 3 1000
     update
     list [.e get] $contents [format {%.6f %.6f} {*}$scrollInfo]
 } -cleanup {
     destroy .e
+    wm state . $st
+    unset st
 } -result {abc abc {0.000000 1.000000}}
 test spinbox-8.4 {DeleteChars procedure} -setup {
-    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
     focus .e
 } -body {
@@ -2558,7 +2734,7 @@ test spinbox-8.4 {DeleteChars procedure} -setup {
     destroy .e
 } -result {1 6 1 5}
 test spinbox-8.5 {DeleteChars procedure} -setup {
-    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
     focus .e
 } -body {
@@ -2574,7 +2750,7 @@ test spinbox-8.5 {DeleteChars procedure} -setup {
     destroy .e
 } -result {1 5 1 4}
 test spinbox-8.6 {DeleteChars procedure} -setup {
-    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
     focus .e
 } -body {
@@ -2590,7 +2766,7 @@ test spinbox-8.6 {DeleteChars procedure} -setup {
     destroy .e
 } -result {1 2 1 5}
 test spinbox-8.7 {DeleteChars procedure} -setup {
-    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
     focus .e
 } -body {
@@ -2604,7 +2780,7 @@ test spinbox-8.7 {DeleteChars procedure} -setup {
     destroy .e
 } -returnCodes error -result {selection isn't in widget .e}
 test spinbox-8.8 {DeleteChars procedure} -setup {
-    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
     focus .e
 } -body {
@@ -2620,7 +2796,7 @@ test spinbox-8.8 {DeleteChars procedure} -setup {
     destroy .e
 } -result {3 4 3 8}
 test spinbox-8.9 {DeleteChars procedure} -setup {
-    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
 } -body {
     .e insert 0 0123456789abcde
@@ -2633,7 +2809,7 @@ test spinbox-8.9 {DeleteChars procedure} -setup {
     destroy .e
 } -returnCodes error -result {selection isn't in widget .e}
 test spinbox-8.10 {DeleteChars procedure} -setup {
-    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
     focus .e
 } -body {
@@ -2649,7 +2825,7 @@ test spinbox-8.10 {DeleteChars procedure} -setup {
     destroy .e
 } -result {3 5 5 8}
 test spinbox-8.11 {DeleteChars procedure} -setup {
-    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
     focus .e
 } -body {
@@ -2665,7 +2841,7 @@ test spinbox-8.11 {DeleteChars procedure} -setup {
     destroy .e
 } -result {3 8 4 8}
 test spinbox-8.12 {DeleteChars procedure} -setup {
-    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
     focus .e
 } -body {
@@ -2676,9 +2852,9 @@ test spinbox-8.12 {DeleteChars procedure} -setup {
     .e index insert
 } -cleanup {
     destroy .e
-} -result {1}
+} -result 1
 test spinbox-8.13 {DeleteChars procedure} -setup {
-    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
     focus .e
 } -body {
@@ -2689,9 +2865,9 @@ test spinbox-8.13 {DeleteChars procedure} -setup {
     .e index insert
 } -cleanup {
     destroy .e
-} -result {1}
+} -result 1
 test spinbox-8.14 {DeleteChars procedure} -setup {
-    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
     focus .e
 } -body {
@@ -2702,9 +2878,9 @@ test spinbox-8.14 {DeleteChars procedure} -setup {
     .e index insert
 } -cleanup {
     destroy .e
-} -result {4}
+} -result 4
 test spinbox-8.15 {DeleteChars procedure} -setup {
-    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
     focus .e
 } -body {
@@ -2715,9 +2891,9 @@ test spinbox-8.15 {DeleteChars procedure} -setup {
     .e index @0
 } -cleanup {
     destroy .e
-} -result {1}
+} -result 1
 test spinbox-8.16 {DeleteChars procedure} -setup {
-    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
     focus .e
 } -body {
@@ -2728,9 +2904,9 @@ test spinbox-8.16 {DeleteChars procedure} -setup {
     .e index @0
 } -cleanup {
     destroy .e
-} -result {1}
+} -result 1
 test spinbox-8.17 {DeleteChars procedure} -setup {
-    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -width 10 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
     focus .e
 } -body {
@@ -2741,30 +2917,45 @@ test spinbox-8.17 {DeleteChars procedure} -setup {
     .e index @0
 } -cleanup {
     destroy .e
-} -result {4}
+} -result 4
 test spinbox-8.18 {DeleteChars procedure} -setup {
-    spinboxPlus .e -width 0 -font {Courier -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -width 0 -font {Courier -12} -highlightthickness 2 -bd 2
     pack .e
     focus .e
 } -body {
     .e insert 0 "xyzzy"
     update
     .e delete 2 4
-    winfo reqwidth .e
+    # To check that deletion actually happened we measure the new width
+    # of the widget, based on the measuring width of the remaining text ("xyy")
+    # in the widget. For that purpose we have to mirror the code in tkEntry.c
+    # for computation of the reqwidth
+    # note: XPAD corresponds to the hardcoded    #define XPAD 1
+    set XPAD 1
+    set buttonWidth [expr { [font measure [.e cget -font] "0"] + 2 * (1 + $XPAD) }]
+    if {$buttonWidth < 11} {
+        set buttonWidth 11
+    }
+    set expected [expr { [font measure [.e cget -font] "xyy"] \
+                          + 2 * ( [.e cget -borderwidth] + \
+                                [.e cget -highlightthickness] + $XPAD ) \
+                          + $buttonWidth } ]
+    expr {[winfo reqwidth .e] == $expected}
 } -cleanup {
     destroy .e
-} -result {42}
+    unset XPAD buttonWidth expected
+} -result {1}
 
 test spinbox-9.1 {SpinboxValueChanged procedure} -setup {
     unset -nocomplain x
 } -body {
-    trace variable x w override
+    trace add variable x write override
     spinboxPlus .e -textvariable x -width 0
     .e insert 0 foo
     list $x [.e get]
 } -cleanup {
     destroy .e
-    trace vdelete x w override
+    trace remove variable x write override
 } -result {12345 12345}
 
 
@@ -2773,7 +2964,7 @@ test spinbox-10.1 {SpinboxSetValue procedure} -constraints fonts -body {
     set y ab
     spinboxPlus .e  -font {Helvetica -12} -highlightthickness 2 -bd 2  -width 0
     pack .e
-    .e configure -textvariable x 
+    .e configure -textvariable x
     .e configure -textvariable y
     update
     list [.e get] [winfo reqwidth .e]
@@ -2782,7 +2973,7 @@ test spinbox-10.1 {SpinboxSetValue procedure} -constraints fonts -body {
 } -result {ab 35}
 test spinbox-10.2 {SpinboxSetValue procedure, updating selection} -setup {
     unset -nocomplain x
-    spinboxPlus .e -font {Helvetica -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -font {Helvetica -12} -highlightthickness 2 -bd 2
     pack .e
 } -body {
     .e configure -textvariable x
@@ -2795,7 +2986,7 @@ test spinbox-10.2 {SpinboxSetValue procedure, updating selection} -setup {
 } -returnCodes error -result {selection isn't in widget .e}
 test spinbox-10.3 {SpinboxSetValue procedure, updating selection} -setup {
     unset -nocomplain x
-    spinboxPlus .e -font {Helvetica -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -font {Helvetica -12} -highlightthickness 2 -bd 2
     pack .e
 } -body {
     .e configure -textvariable x
@@ -2808,7 +2999,7 @@ test spinbox-10.3 {SpinboxSetValue procedure, updating selection} -setup {
 } -result {4 7}
 test spinbox-10.4 {SpinboxSetValue procedure, updating selection} -setup {
     unset -nocomplain x
-    spinboxPlus .e -font {Helvetica -12} -highlightthickness 2 -bd 2 
+    spinboxPlus .e -font {Helvetica -12} -highlightthickness 2 -bd 2
     pack .e
 } -body {
     .e configure -textvariable x
@@ -2821,7 +3012,7 @@ test spinbox-10.4 {SpinboxSetValue procedure, updating selection} -setup {
 } -result {4 10}
 test spinbox-10.5 {SpinboxSetValue procedure, updating display position} -setup {
     unset -nocomplain x
-    spinboxPlus .e -highlightthickness 2 -bd 2 
+    spinboxPlus .e -highlightthickness 2 -bd 2
     pack .e
 } -body {
     .e configure -width 10 -font {Courier -12} -textvariable x
@@ -2833,10 +3024,10 @@ test spinbox-10.5 {SpinboxSetValue procedure, updating display position} -setup 
     .e index @0
 } -cleanup {
     destroy .e
-} -result {0}
+} -result 0
 test spinbox-10.6 {SpinboxSetValue procedure, updating display position} -setup {
     unset -nocomplain x
-    spinboxPlus .e -highlightthickness 2 -bd 2 
+    spinboxPlus .e -highlightthickness 2 -bd 2
     pack .e
 } -body {
     .e configure -width 10 -font {Courier -12} -textvariable x
@@ -2849,10 +3040,10 @@ test spinbox-10.6 {SpinboxSetValue procedure, updating display position} -setup 
     .e index @0
 } -cleanup {
     destroy .e
-} -result {10}
+} -result 10
 test spinbox-10.7 {SpinboxSetValue procedure, updating insertion cursor} -setup {
     unset -nocomplain x
-    spinboxPlus .e -highlightthickness 2 -bd 2 
+    spinboxPlus .e -highlightthickness 2 -bd 2
     pack .e
     update
 } -body {
@@ -2864,10 +3055,10 @@ test spinbox-10.7 {SpinboxSetValue procedure, updating insertion cursor} -setup 
     .e index insert
 } -cleanup {
     destroy .e
-} -result {3}
+} -result 3
 test spinbox-10.8 {SpinboxSetValue procedure, updating insertion cursor} -setup {
     unset -nocomplain x
-    spinboxPlus .e -highlightthickness 2 -bd 2 
+    spinboxPlus .e -highlightthickness 2 -bd 2
     pack .e
 } -body {
     .e configure -width 10 -font {Courier -12} -textvariable x
@@ -2878,7 +3069,7 @@ test spinbox-10.8 {SpinboxSetValue procedure, updating insertion cursor} -setup 
     .e index insert
 } -cleanup {
     destroy .e
-} -result {5}
+} -result 5
 
 test spinbox-11.1 {SpinboxEventProc procedure} -setup {
     spinboxPlus .e -highlightthickness 2 -bd 2 -font {Helvetica -12}
@@ -2922,9 +3113,9 @@ test spinbox-13.1 {GetSpinboxIndex procedure} -setup {
     .e index end
 } -cleanup {
     destroy .e
-} -result {21}
+} -result 21
 test spinbox-13.2 {GetSpinboxIndex procedure} -body {
-    spinboxPlus .e 
+    spinboxPlus .e
     .e index abogus
 } -cleanup {
     destroy .e
@@ -2941,7 +3132,7 @@ test spinbox-13.3 {GetSpinboxIndex procedure} -setup {
     .e index anchor
 } -cleanup {
     destroy .e
-} -result {1}
+} -result 1
 test spinbox-13.4 {GetSpinboxIndex procedure} -setup {
     spinboxPlus .e -font {Courier -12} -width 5 -bd 2 -relief sunken
     pack .e
@@ -2954,7 +3145,7 @@ test spinbox-13.4 {GetSpinboxIndex procedure} -setup {
     .e index anchor
 } -cleanup {
     destroy .e
-} -result {4}
+} -result 4
 test spinbox-13.5 {GetSpinboxIndex procedure} -setup {
     spinboxPlus .e -font {Courier -12} -width 5 -bd 2 -relief sunken
     pack .e
@@ -2968,7 +3159,7 @@ test spinbox-13.5 {GetSpinboxIndex procedure} -setup {
     .e index anchor
 } -cleanup {
     destroy .e
-} -result {15}
+} -result 15
 test spinbox-13.6 {GetSpinboxIndex procedure} -setup {
     spinboxPlus .e
 } -body {
@@ -2987,7 +3178,7 @@ test spinbox-13.7 {GetSpinboxIndex procedure} -setup {
     .e index insert
 } -cleanup {
     destroy .e
-} -result {2}
+} -result 2
 test spinbox-13.8 {GetSpinboxIndex procedure} -setup {
     spinboxPlus .e
 } -body {
@@ -3009,8 +3200,8 @@ test spinbox-13.9 {GetSpinboxIndex procedure} -setup {
     destroy .e
 } -result {1 6}
 
-test spinbox-13.10 {GetSpinboxIndex procedure} -constraints unix -body {
-# On unix, when selection is cleared, spinbox widget's internal 
+test spinbox-13.10 {GetSpinboxIndex procedure} -constraints x11 -body {
+# On unix, when selection is cleared, spinbox widget's internal
 # selection range is reset.
 # Previous settings:
 	spinboxPlus .e -font {Courier -12} -width 5 -bd 2 -relief sunken
@@ -3028,9 +3219,9 @@ test spinbox-13.10 {GetSpinboxIndex procedure} -constraints unix -body {
     destroy .e
 } -returnCodes error -result {selection isn't in widget .e}
 
-test spinbox-13.11 {GetSpinboxIndex procedure} -constraints win -body {
+test spinbox-13.11 {GetSpinboxIndex procedure} -constraints aquaOrWin32 -body {
 # On mac and pc, when selection is cleared, spinbox widget remembers
-# last selected range.  When selection ownership is restored to 
+# last selected range.  When selection ownership is restored to
 # spinbox, the old range will be rehighlighted.
 # Previous settings:
 	spinboxPlus .e -font {Courier -12} -width 5 -bd 2 -relief sunken
@@ -3047,9 +3238,9 @@ test spinbox-13.11 {GetSpinboxIndex procedure} -constraints win -body {
     .e index sel.first
 } -cleanup {
     destroy .e
-} -result {1}           
+} -result 1
 
-test spinbox-13.12 {GetSpinboxIndex procedure} -constraints unix -body {
+test spinbox-13.12 {GetSpinboxIndex procedure} -constraints x11 -body {
 # Previous settings:
 	spinboxPlus .e -font {Courier -12} -width 5 -bd 2 -relief sunken
 	pack .e
@@ -3102,7 +3293,7 @@ test spinbox-13.13 {GetSpinboxIndex procedure} -constraints win -body {
 
 test spinbox-13.14 {GetSpinboxIndex procedure} -constraints win -body {
 # On mac and pc, when selection is cleared, spinbox widget remembers
-# last selected range.  When selection ownership is restored to 
+# last selected range.  When selection ownership is restored to
 # spinbox, the old range will be rehighlighted.
 # Previous settings:
 	spinboxPlus .e -font {Courier -12} -width 5 -bd 2 -relief sunken
@@ -3115,14 +3306,14 @@ test spinbox-13.14 {GetSpinboxIndex procedure} -constraints win -body {
     list [.e index sel.first] [.e index sel.last]
 # Testing:
     selection clear .e
-    selection get 
+    selection get
 } -cleanup {
     destroy .e
 } -returnCodes error -match glob -result {*}
 
 test spinbox-13.14.1 {GetSpinboxIndex procedure} -constraints win -body {
 # On mac and pc, when selection is cleared, spinbox widget remembers
-# last selected range.  When selection ownership is restored to 
+# last selected range.  When selection ownership is restored to
 # spinbox, the old range will be rehighlighted.
 # Previous settings:
 	spinboxPlus .e -font {Courier -12} -width 5 -bd 2 -relief sunken
@@ -3134,9 +3325,9 @@ test spinbox-13.14.1 {GetSpinboxIndex procedure} -constraints win -body {
     .e select to 6
     list [.e index sel.first] [.e index sel.last]
 # Testing:
-    selection clear .e  
-    catch {selection get} 
-    .e index sbogus      
+    selection clear .e
+    catch {selection get}
+    .e index sbogus
 } -cleanup {
     destroy .e
 } -returnCodes error -match glob -result {*}
@@ -3151,7 +3342,7 @@ test spinbox-13.15 {GetSpinboxIndex procedure} -body {
 
 test spinbox-13.16 {GetSpinboxIndex procedure} -constraints fonts -body {
     spinboxPlus .e -width 5 -relief sunken -highlightthickness 2 -bd 2 \
-        -font {Courier -12} 
+        -font {Courier -12}
     pack .e
     .e insert 0 012345678901234567890
     .e xview 4
@@ -3159,10 +3350,10 @@ test spinbox-13.16 {GetSpinboxIndex procedure} -constraints fonts -body {
     .e index @4
 } -cleanup {
     destroy .e
-} -result {4}
+} -result 4
 test spinbox-13.17 {GetSpinboxIndex procedure} -constraints fonts -body {
     spinboxPlus .e -width 5 -relief sunken -highlightthickness 2 -bd 2 \
-        -font {Courier -12} 
+        -font {Courier -12}
     pack .e
     .e insert 0 012345678901234567890
     .e xview 4
@@ -3170,10 +3361,10 @@ test spinbox-13.17 {GetSpinboxIndex procedure} -constraints fonts -body {
     .e index @11
 } -cleanup {
     destroy .e
-} -result {4}
+} -result 4
 test spinbox-13.18 {GetSpinboxIndex procedure} -constraints fonts -body {
     spinboxPlus .e -width 5 -relief sunken -highlightthickness 2 -bd 2 \
-        -font {Courier -12} 
+        -font {Courier -12}
     pack .e
     .e insert 0 012345678901234567890
     .e xview 4
@@ -3181,10 +3372,10 @@ test spinbox-13.18 {GetSpinboxIndex procedure} -constraints fonts -body {
     .e index @12
 } -cleanup {
     destroy .e
-} -result {5}
+} -result 5
 test spinbox-13.19 {GetSpinboxIndex procedure} -constraints fonts -body {
     spinboxPlus .e -width 5 -relief sunken -highlightthickness 2 -bd 2 \
-        -font {Courier -12} 
+        -font {Courier -12}
     pack .e
     .e insert 0 012345678901234567890
     .e xview 4
@@ -3192,10 +3383,10 @@ test spinbox-13.19 {GetSpinboxIndex procedure} -constraints fonts -body {
     .e index @[expr {[winfo width .e] - 6-11}]
 } -cleanup {
     destroy .e
-} -result {8}
+} -result 8
 test spinbox-13.20 {GetSpinboxIndex procedure} -constraints fonts -body {
     spinboxPlus .e -width 5 -relief sunken -highlightthickness 2 -bd 2 \
-        -font {Courier -12} 
+        -font {Courier -12}
     pack .e
     .e insert 0 012345678901234567890
     .e xview 4
@@ -3203,10 +3394,10 @@ test spinbox-13.20 {GetSpinboxIndex procedure} -constraints fonts -body {
     .e index @[expr {[winfo width .e] - 5}]
 } -cleanup {
     destroy .e
-} -result {9}
+} -result 9
 test spinbox-13.21 {GetSpinboxIndex procedure} -body {
     spinboxPlus .e -width 5 -relief sunken -highlightthickness 2 -bd 2 \
-        -font {Courier -12} 
+        -font {Courier -12}
     pack .e
     .e insert 0 012345678901234567890
     .e xview 4
@@ -3214,9 +3405,9 @@ test spinbox-13.21 {GetSpinboxIndex procedure} -body {
     .e index @1000
 } -cleanup {
     destroy .e
-} -result {9}
+} -result 9
 test spinbox-13.22 {GetSpinboxIndex procedure} -setup {
-    spinboxPlus .e 
+    spinboxPlus .e
     pack .e
     update
 } -body {
@@ -3224,20 +3415,31 @@ test spinbox-13.22 {GetSpinboxIndex procedure} -setup {
 } -cleanup {
     destroy .e
 } -returnCodes error -result {bad spinbox index "1xyz"}
-test spinbox-13.23 {GetSpinboxIndex procedure} -body {
+test spinbox-13.23 {GetSpinboxIndex procedure} -constraints TkAbove8.6 -body {
     spinboxPlus .e -width 5 -relief sunken -highlightthickness 2 -bd 2 \
-        -font {Courier -12} 
+        -font {Courier -12}
     pack .e
     .e insert 0 012345678901234567890
     .e xview 4
     update
-    .e index -10
+    .e index {}
 } -cleanup {
     destroy .e
-} -result {0}
+} -result 0
+test spinbox-13.23--8.6 {GetSpinboxIndex procedure} -body {
+    spinboxPlus .e -width 5 -relief sunken -highlightthickness 2 -bd 2 \
+        -font {Courier -12}
+    pack .e
+    .e insert 0 012345678901234567890
+    .e xview 4
+    update
+    .e index -1
+} -cleanup {
+    destroy .e
+} -result 0
 test spinbox-13.24 {GetSpinboxIndex procedure} -body {
     spinboxPlus .e -width 5 -relief sunken -highlightthickness 2 -bd 2 \
-        -font {Courier -12} 
+        -font {Courier -12}
     pack .e
     .e insert 0 012345678901234567890
     .e xview 4
@@ -3245,10 +3447,10 @@ test spinbox-13.24 {GetSpinboxIndex procedure} -body {
     .e index 12
 } -cleanup {
     destroy .e
-} -result {12}
+} -result 12
 test spinbox-13.25 {GetSpinboxIndex procedure} -body {
     spinboxPlus .e -width 5 -relief sunken -highlightthickness 2 -bd 2 \
-        -font {Courier -12} 
+        -font {Courier -12}
     pack .e
     .e insert 0 012345678901234567890
     .e xview 4
@@ -3256,7 +3458,7 @@ test spinbox-13.25 {GetSpinboxIndex procedure} -body {
     .e index 49
 } -cleanup {
     destroy .e
-} -result {21}
+} -result 21
 
 # XXX Still need to write tests for SpinboxScanTo and SpinboxSelectTo.
 
@@ -3276,13 +3478,13 @@ test spinbox-14.3 {SpinboxFetchSelection procedure} -setup {
 }
 } -body {
     spinboxPlus .e
-    .e insert end $x    
+    .e insert end $x
     .e select from 0
     .e select to end
     string compare [selection get] $x
 } -cleanup {
     destroy .e
-} -result {0}
+} -result 0
 
 test spinbox-15.1 {SpinboxLostSelection} -body {
     spinboxPlus .e
@@ -3303,7 +3505,7 @@ test spinbox-16.1 {SpinboxVisibleRange procedure} -constraints fonts  -body {
     spinboxPlus .e -width 10 -font {Helvetica -12}
     pack .e
     update
-    .e insert 0 "............................." 
+    .e insert 0 "............................."
     format {%.6f %.6f} {*}[.e xview]
 } -cleanup {
     destroy .e
@@ -3316,49 +3518,77 @@ test spinbox-16.2 {SpinboxVisibleRange procedure} -body {
 } -result {0.000000 1.000000}
 
 
-test spinbox-17.1 {SpinboxUpdateScrollbar procedure} -body {
+test spinbox-17.1 {SpinboxUpdateScrollbar procedure} -setup {
+    set st [wm state .]
+    wm deiconify .
+} -body {
     spinboxPlus .e -width 10 -xscrollcommand scroll -font {Courier -12}
     pack .e
+    update
+    set scrollInfo wrong
     .e delete 0 end
     .e insert 0 123
     update
     format {%.6f %.6f} {*}$scrollInfo
 } -cleanup {
     destroy .e
+    wm state . $st
+    unset st
 } -result {0.000000 1.000000}
-test spinbox-17.2 {SpinboxUpdateScrollbar procedure} -body {
+test spinbox-17.2 {SpinboxUpdateScrollbar procedure} -setup {
+    set st [wm state .]
+    wm deiconify .
+} -body {
     spinboxPlus .e -width 10 -xscrollcommand scroll -font {Courier -12}
     pack .e
     .e insert 0 0123456789abcdef
+    update
+    set scrollInfo wrong
     .e xview 3
     update
     format {%.6f %.6f} {*}$scrollInfo
 } -cleanup {
     destroy .e
+    wm state . $st
+    unset st
 } -result {0.187500 0.812500}
-test spinbox-17.3 {SpinboxUpdateScrollbar procedure} -body {
+test spinbox-17.3 {SpinboxUpdateScrollbar procedure} -setup {
+    set st [wm state .]
+    wm deiconify .
+} -body {
     spinboxPlus .e -width 10 -xscrollcommand scroll -font {Courier -12}
     pack .e
+    update
+    set scrollInfo wrong
     .e insert 0 abcdefghijklmnopqrs
-    .e xview 6
+    .e xview
     update
     format {%.6f %.6f} {*}$scrollInfo
 } -cleanup {
     destroy .e
-} -result {0.315789 0.842105}
+    wm state . $st
+    unset st
+} -result {0.000000 0.526316}
 test spinbox-17.4 {SpinboxUpdateScrollbar procedure} -setup {
+    set st [wm state .]
+    wm deiconify .
     proc bgerror msg {
 	global x
 	set x $msg
-}
+    }
 } -body {
-    spinboxPlus .e -width 5 -xscrollcommand thisisnotacommand
+    spinboxPlus .e -width 5
     pack .e
+    update
+    set scrollInfo wrong
+    .e configure -xscrollcommand thisisnotacommand
     update
     list $x $errorInfo
 } -cleanup {
     destroy .e
     rename bgerror {}
+    wm state . $st
+    unset st
 } -result {{invalid command name "thisisnotacommand"} {invalid command name "thisisnotacommand"
     while executing
 "thisisnotacommand 0.0 1.0"
@@ -3374,7 +3604,7 @@ test spinbox-18.1 {Spinbox widget vs hiding} -setup {
     set res1 [list [winfo children .] [interp hidden]]
     set res2 [list {} $l]
     expr {$res1 == $res2}
-} -result {1} 
+} -result 1
 
 ##
 ## Spinbox widget VALIDATION tests
@@ -3499,6 +3729,8 @@ test spinbox-19.7 {spinbox widget validation} -setup {
 } -result {}
 
 test spinbox-19.8 {spinbox widget validation} -setup {
+    set st [wm state .]
+    wm deiconify .
     unset -nocomplain ::e ::vVals
 } -body {
     spinboxPlus .e -validate all \
@@ -3515,9 +3747,13 @@ test spinbox-19.8 {spinbox widget validation} -setup {
     set ::vVals
 } -cleanup {
     destroy .e
+    wm state . $st
+    unset st
 } -result {.e -1 -1 abcd abcd {} focus focusin}
 
 test spinbox-19.9 {spinbox widget validation} -setup {
+    set st [wm state .]
+    wm deiconify .
     unset -nocomplain ::e ::vVals
 } -body {
     spinboxPlus .e -validate focus \
@@ -3536,9 +3772,13 @@ test spinbox-19.9 {spinbox widget validation} -setup {
     set ::vVals
 } -cleanup {
     destroy .e
+    wm state . $st
+    unset st
 } -result {.e -1 -1 abcd abcd {} focus focusout}
 
 test spinbox-19.10 {spinbox widget validation} -setup {
+    set st [wm state .]
+    wm deiconify .
     unset -nocomplain ::e ::vVals
 } -body {
     spinboxPlus .e -validate all \
@@ -3554,9 +3794,13 @@ test spinbox-19.10 {spinbox widget validation} -setup {
     set ::vVals
 } -cleanup {
     destroy .e
+    wm state . $st
+    unset st
 } -result {.e -1 -1 abcd abcd {} all focusin}
 
 test spinbox-19.11 {spinbox widget validation} -setup {
+    set st [wm state .]
+    wm deiconify .
     unset -nocomplain ::e ::vVals
 } -body {
     spinboxPlus .e -validate all \
@@ -3575,9 +3819,13 @@ test spinbox-19.11 {spinbox widget validation} -setup {
     set ::vVals
 } -cleanup {
     destroy .e
+    wm state . $st
+    unset st
 } -result {.e -1 -1 abcd abcd {} all focusout}
 
 test spinbox-19.12 {spinbox widget validation} -setup {
+    set st [wm state .]
+    wm deiconify .
     unset -nocomplain ::e ::vVals
 } -body {
     spinboxPlus .e -validate focusin \
@@ -3593,6 +3841,8 @@ test spinbox-19.12 {spinbox widget validation} -setup {
     set ::vVals
 } -cleanup {
     destroy .e
+    wm state . $st
+    unset st
 } -result {.e -1 -1 abcd abcd {} focusin focusin}
 
 test spinbox-19.13 {spinbox widget validation} -setup {
@@ -3634,6 +3884,8 @@ test spinbox-19.14 {spinbox widget validation} -setup {
 } -result {}
 
 test spinbox-19.15 {spinbox widget validation} -setup {
+    set st [wm state .]
+    wm deiconify .
     unset -nocomplain ::e ::vVals
 } -body {
     spinboxPlus .e -validate focuso \
@@ -3653,6 +3905,8 @@ test spinbox-19.15 {spinbox widget validation} -setup {
     set ::vVals
 } -cleanup {
     destroy .e
+    wm state . $st
+    unset st
 } -result {.e -1 -1 abcd abcd {} focusout focusout}
 
 # the same as 19.16 but added [.e validate] to returned list
@@ -3728,13 +3982,13 @@ test spinbox-19.19 {spinbox widget validation} -setup {
         -background red -foreground white
     pack .e
     set ::e nextdata                 ;# previous settings
-    
+
     .e configure -validatecommand [list doval2 %W %d %i %P %s %S %v %V]
     .e validate
     list [.e cget -validate] [.e get] $::vVals
 } -cleanup {
     destroy .e
-} -result {none mydata {.e -1 -1 nextdata nextdata {} all forced}}
+} -result {none nextdata {.e -1 -1 nextdata nextdata {} all forced}}
 
 ## This leaves validate alone because we trigger validation through the
 ## textvar (a write trace), and the write during validation triggers
@@ -3753,13 +4007,33 @@ test spinbox-19.20 {spinbox widget validation} -setup {
     set ::e nextdata                 ;# previous settings
     .e configure -validatecommand [list doval2 %W %d %i %P %s %S %v %V] ;# prev
     .e validate                     ;# previous settings
-    
+
     .e configure -validate all
     set ::e testdata
     list [.e cget -validate] [.e get] $::e $::vVals
 } -cleanup {
     destroy .e
 } -result {all testdata mydata {.e -1 -1 testdata mydata {} all forced}}
+
+## This leaves validate alone because we trigger validation through the
+## textvar (a write trace), and the write during validation triggers
+## nothing (by definition of avoiding loops on var traces).  This is
+## one of those "dangerous" conditions where the user will have a
+## different value in the entry widget shown as is in the textvar.
+test spinbox-19.21 {spinbox widget validation - bug 40e4bf6198} -setup {
+    unset -nocomplain ::e ::vVals
+} -body {
+    spinboxPlus .e -validate key \
+        -validatecommand [list doval2 %W %d %i %P %s %S %v %V] \
+        -textvariable ::e
+    pack .e
+    set ::e origdata
+    .e insert 0 A
+    list [.e cget -validate] [.e get] $::e $::vVals
+} -cleanup {
+    destroy .e
+} -result {none origdata mydata {.e 1 0 Aorigdata origdata A key key}}
+
 ##
 ## End validation tests
 ##
@@ -3915,7 +4189,7 @@ test spinbox-22.1 {spinbox config, -from changes SF bug 559078} -body {
     set val
 } -cleanup {
     destroy .e
-} -result {5}
+} -result 5
 test spinbox-22.2 {spinbox config, -from changes SF bug 559078} -body {
     set val 5
     spinboxPlus .e -from 1 -to 10 -textvariable val
@@ -3923,7 +4197,7 @@ test spinbox-22.2 {spinbox config, -from changes SF bug 559078} -body {
     set val
 } -cleanup {
     destroy .e
-} -result {5}
+} -result 5
 test spinbox-22.3 {spinbox config, -from changes SF bug 559078} -body {
     set val 5
     spinboxPlus .e -from 3 -to 10 -textvariable val
@@ -3931,7 +4205,7 @@ test spinbox-22.3 {spinbox config, -from changes SF bug 559078} -body {
     set val
 } -cleanup {
     destroy .e
-} -result {6}
+} -result 6
 
 test spinbox-23.1 {selection present while disabled, bug 637828} -body {
     spinboxPlus .e
@@ -3951,7 +4225,7 @@ test spinbox-23.1 {selection present while disabled, bug 637828} -body {
 test spinbox-24.1 {error in trace proc attached to the textvariable} -setup {
     destroy .s
 } -body {
-    trace variable myvar w traceit
+    trace add variable myvar write traceit
     proc traceit args {error "Intentional error here!"}
     spinboxPlus .s -textvariable myvar -from 1 -to 10
     catch {.s set mystring} result1
@@ -3967,7 +4241,7 @@ test spinbox-24.1 {error in trace proc attached to the textvariable} -setup {
     {can't set "myvar": Intentional error here!}]
 
 test spinbox-25.1.spinbox {textvariable lives in a non-existing namespace} -constraints {
-	spinboxErrorMsgDifferent
+    spinboxErrorMsgDifferent
 } -setup {
     destroy .s
 } -body {

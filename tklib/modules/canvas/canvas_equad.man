@@ -1,4 +1,4 @@
-[vset VERSION 0.1]
+[vset VERSION 0.2]
 [comment {-*- tcl -*- doctools manpage}]
 [manpage_begin canvas::edit::quadrilateral n [vset VERSION]]
 [keywords canvas]

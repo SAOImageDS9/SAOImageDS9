@@ -2,16 +2,13 @@
 #
 #	Based on 'tooltip', provides a dynamic stack of tip texts per
 #	widget. This allows dynamic transient changes to the tips, for
-#	example to temporarily replace a standard epxlanation with an
+#	example to temporarily replace a standard explanation with an
 #	error message.
 #
 # Copyright (c) 2003 ActiveState Corporation.
 #
 # See the file "license.terms" for information on usage and
 # redistribution of this file, and for a DISCLAIMER OF ALL WARRANTIES.
-#
-# RCS: @(#) $Id: tipstack.tcl,v 1.4 2009/01/09 05:46:12 andreas_kupries Exp $
-#
 
 # ### ######### ###########################
 # Requisites

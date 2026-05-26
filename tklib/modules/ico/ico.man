@@ -1,5 +1,6 @@
 [comment {-*- tcl -*- doctools manpage}]
-[manpage_begin ico n 1.0.5]
+[vset VERSION 1.1.3]
+[manpage_begin ico n [vset VERSION]]
 [keywords dll]
 [keywords entry]
 [keywords exe]
@@ -8,7 +9,7 @@
 [moddesc   {Windows ICO handling}]
 [titledesc {Reading and writing windows icons}]
 [require Tcl 8.4]
-[require ico [opt 1.0.5]]
+[require ico [opt [vset VERSION]]]
 [description]
 
 This package provides functions for reading and writing Windows icons

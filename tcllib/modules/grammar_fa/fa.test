@@ -11,9 +11,8 @@ source [file join \
 	[file dirname [file dirname [file join [pwd] [info script]]]] \
 	devtools testutilities.tcl]
 
-testsNeedTcl     8.4
+testsNeedTcl     8.5
 testsNeedTcltest 1.0
-snitErrors
 
 support {
     useAccel [useTcllibC] struct/sets.tcl struct::set
@@ -28,6 +27,8 @@ support {
 testing {
     useLocalKeep fa.tcl grammar::fa
 }
+
+snitErrors
 
 # -------------------------------------------------------------------------
 

@@ -2,5 +2,6 @@
 [division_start Applications]
 [item apps/bitmap-editor.man  bitmap-editor  {Editor for XBM images}]
 [item apps/diagram-viewer.man diagram-viewer {Lightweight Diagram Processor}]
+[item apps/shtmlview.man      shtmlview      {Basic HTML and Markdown viewer application}]
 [division_end]
 [toc_end]

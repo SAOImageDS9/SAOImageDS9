@@ -1,7 +1,7 @@
-#!/usr/bin/env tclsh
+#! /usr/bin/env tclsh
 ## -*- tcl -*-
 
-package require Tcl 8.4
+package require Tcl 8.4-
 package require Tk
 
 package require Plotchart

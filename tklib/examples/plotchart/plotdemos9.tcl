@@ -1,4 +1,4 @@
-#!/usr/bin/env tclsh
+#! /usr/bin/env tclsh
 ## -*- tcl -*-
 
 # plotdemos9.tcl --
@@ -45,6 +45,6 @@ $p labeldot 6 20 "Point 2" e
 $p labeldot 9 10 "Point 3" n
 $p labeldot 9 30 "Point 4" s
 
-if { [package vsatisfies [package require Tk] 8.6]} {
+if { [package vsatisfies [package require Tk] 8.6-]} {
     $p vtext "Vertical axis label"
 }

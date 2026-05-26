@@ -10,7 +10,7 @@ if {[file exists [file join $moddir .. .. scripts practcl.tcl]]} {
 }
 
 ::practcl::doctool create AutoDoc
-set version 4.3.4
+set version 4.3.5
 set tclversion 8.6
 set module [file tail $moddir]
 set filename $module
@@ -55,6 +55,7 @@ foreach {file} {
   puts $fout "###\n# END: [file tail $file]\n###"
 }
 # These files can be loaded in any order
+##nagelfar ignore
 foreach file [glob [file join $srcdir *.tcl]] {
   if {[file tail $file] in $loaded} continue
   lappend loaded $file

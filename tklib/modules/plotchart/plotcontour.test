@@ -2,14 +2,14 @@
 # Informal test for plotcontour
 #
 
-if {![package vsatisfies [package provide Tcl] 8.5]} {
+if {![package vsatisfies [package provide Tcl] 8.5-]} {
     puts "    Aborting the tests found in \"[file tail [info script]]\"."
     puts "    Requiring Tcl 8.5, have [package present Tcl]"
     return
 }
 
 # Future: put all tests under constraint tk and set constraint properly
-if {[catch { package require Tk 8.5 } msg]} {
+if {[catch { package require Tk 8.5- } msg]} {
     puts "    Aborting the tests found in \"[file tail [info script]]\"."
     puts "    Requiring Tk 8.5, $msg"
     return
@@ -270,7 +270,7 @@ tcltest::test Plotcontours-1.1 {Test of rosenbrock contours with given function 
 
   set xvec {-2.0 -1.5 -1.0 -0.5 0.0 0.5 1.0 1.5 2.0}
   set yvec {-1.0 -0.5 0.0 0.5 1.0 1.5 2.0}
-  
+
   set fmat {}
   foreach y $yvec {
     set frow {}
@@ -279,12 +279,12 @@ tcltest::test Plotcontours-1.1 {Test of rosenbrock contours with given function 
     }
     lappend fmat $frow
   }
-  
+
   set contours { \
     0.0 5.0 10 20 30 40 \
     50  100  200  500  1000  2000  3000   \
     }
-  
+
   set xlimits {-2.0 2.0 2.0}
   set ylimits {-1.0 2.0 1.0}
   wm title . "Rosenbrock contours"

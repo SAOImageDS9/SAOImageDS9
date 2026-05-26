@@ -63,7 +63,7 @@ proc ::getstring::tk_getString {w var text args} {
     bind $w <Destroy> {set ::getstring::result 0}
     if {!$options(-allowempty)} {
         bind $w.entry <KeyPress> [list after idle [list ::getstring::getStringEnable $w]]
-        $w.ok configure -state disabled 
+        $w.ok configure -state disabled
     }
 
     wm withdraw $w
@@ -72,13 +72,13 @@ proc ::getstring::tk_getString {w var text args} {
     if {[info exists options(-geometry)]} {
         wm geometry $w $options(-geometry)
     } elseif {[winfo parent $w] == "."} {
-        set x [expr {[winfo screenwidth $w]/2 - [winfo reqwidth $w]/2 - [winfo vrootx $w]}]
-        set y [expr {[winfo screenheight $w]/2 - [winfo reqheight $w]/2 - [winfo vrooty $w]}]
+        set x [expr {[winfo vrootx $w] + [winfo screenwidth $w]/2 - [winfo reqwidth $w]/2}]
+        set y [expr {[winfo vrooty $w] + [winfo screenheight $w]/2 - [winfo reqheight $w]/2}]
         wm geom $w +$x+$y
     } else {
         set t [winfo toplevel [winfo parent $w]]
-        set x [expr {[winfo width $t]/2 - [winfo reqwidth $w]/2 - [winfo vrootx $w]}]
-        set y [expr {[winfo height $t]/2 - [winfo reqheight $w]/2 - [winfo vrooty $w]}]
+        set x [expr {[winfo vrootx $w] + [winfo width $t]/2 - [winfo reqwidth $w]/2}]
+        set y [expr {[winfo vrooty $w] + [winfo height $t]/2 - [winfo reqheight $w]/2}]
         wm geom $w +$x+$y
     }
     wm deiconify $w

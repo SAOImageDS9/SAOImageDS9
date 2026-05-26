@@ -1,41 +1,44 @@
-# -*- tcl -*-
-
-if {![package vsatisfies [package provide Tcl] 8.5]} {
-    puts "    Aborting the tests found in \"[file tail [info script]]\"."
-    puts "    Requiring Tcl 8.5, have [package present Tcl]"
-    return
-}
-
-# Future: put all tests under constraint tk and set constraint properly
-if {[catch { package require Tk 8.5 } msg]} {
-    puts "    Aborting the tests found in \"[file tail [info script]]\"."
-    puts "    Requiring Tk 8.5, $msg"
-    return
-}
-
-::tcltest::testConstraint tk 1
-
 #
 # ttk::spinbox widget tests
 #
 
+package require Tk
+package require tcltest 2.2
+namespace import -force tcltest::*
+loadTestedCommands
+
+# x11 and win32 need "wm deiconify ." only for a few tests and this is done in
+# the individual tests.
+# The original tests are from Tk which does not "wm withdraw .", but for some
+# reason the tklib test setup does.
+# FIXME "x11" (SDL) is untested.
+# FIXME aqua is untested.
+
 package require widgetPlus
 namespace import ::widgetPlus::ttkSpinboxPlus
+testConstraint TkAbove8.6 [expr {[package vsatisfies [package provide Tk] 8.7-]}]
 
 # ------------------------------------------------------------------------------
-# This file is copied from ttk/spinbox.test, with addition of the two lines
+# This file is copied from Tk trunk (8.7) checkin 127ff912ed,
+# file ttk/spinbox.test, with addition of the three lines
 # above, application of "s/ttk::spinbox/ttkSpinboxPlus/g" to the code (but not
-# to comments, results, test names or other metadata).
+# to comments, results, test names or other metadata), and further editing of
+# failing tests as described below.
 #
 # The purpose is to check that "ttkSpinboxPlus" does not break any features of
 # "ttk::spinbox", including important matters such as validation.
 #
-# All tests pass.
+# 2 tests require the widgets to be mapped for the tests to pass with
+# Tcl/Tk 8.7 (mapping is not required for Tcl 9.0 with Tk 8.7).  The
+# corresponding tests in Tk have the same requirement.  The -setup and
+# -cleanup sections for these tests have been modified accordingly.
+#
+# With these revisions, all tests pass.
+#
+# Adapting the tests for use with Tcl/Tk 8.6.
+# 2 tests test new features of Tk 8.7 - these are given the constraint
+# TkAbove8.6 which is computed above.
 # ------------------------------------------------------------------------------
-
-package require Tk
-package require tcltest ; namespace import -force tcltest::*
-loadTestedCommands
 
 test spinbox-1.0 "Spinbox tests -- setup" -body {
     ttkSpinboxPlus .sb
@@ -157,7 +160,7 @@ test spinbox-1.8.2 "option -validate" -setup {
     .sb cget -validate
 } -cleanup {
     destroy .sb
-} -result {none}
+} -result none
 
 test spinbox-1.8.3 "option -validate" -setup {
     ttkSpinboxPlus .sb -from 0 -to 100
@@ -168,18 +171,26 @@ test spinbox-1.8.3 "option -validate" -setup {
 } -returnCodes error -result {bad validate "bogus": must be all, key, focus, focusin, focusout, or none}
 
 test spinbox-1.8.4 "-validate option: " -setup {
-    set ::spinbox_test {}
+    set st [wm state .]
+    wm deiconify .
     ttkSpinboxPlus .sb -from 0 -to 100
+    set ::spinbox_test {}
 } -body {
-    .sb configure -validate all -validatecommand {lappend ::spinbox_test %P}
+    .sb configure -validate all -validatecommand {set ::spinbox_test %P}
     pack .sb
+    update idletasks
     .sb set 50
     focus -force .sb
-    after 500 {set ::spinbox_wait 1} ; vwait ::spinbox_wait
+    set ::spinbox_wait 0
+    set timer [after 100 {set ::spinbox_wait 1}]
+    vwait ::spinbox_wait
+    after cancel $timer
     set ::spinbox_test
 } -cleanup {
     destroy .sb
-} -result {50}
+    wm state . $st
+    unset st
+} -result 50
 
 
 test spinbox-2.0 "current command -- unset should be 0" -constraints nyi -setup {
@@ -230,6 +241,94 @@ test spinbox-2.4 "current command -- value not in list" -constraints nyi -setup 
     destroy .sb
 } -result -1
 
+test spinbox-3.0 "textarea should expand to fill widget" -setup {
+    set st [wm state .]
+    wm deiconify .
+    set SBV 5
+    set ::spinbox_test {}
+    ttkSpinboxPlus .sb -from 0 -to 10 -textvariable SBV
+} -body {
+    grid columnconfigure . 0 -weight 1
+    update idletasks
+    set timer [after 500 {set ::spinbox_test timedout}]
+    bind . <Map> {
+        after idle {
+            wm geometry . "210x80"
+	    update idletasks
+            set ::spinbox_test [.sb identify element 25 5]
+        }
+        bind . <Map> {}
+    }
+    grid .sb -sticky ew
+    vwait ::spinbox_test
+    set ::spinbox_test
+} -cleanup {
+    destroy .sb
+    unset -nocomplain ::spinbox_test SBV
+    wm state . $st
+    unset st
+} -result {textarea}
+
+test spinbox-4.0 "Increment with duplicates in -values, wrap" -setup {
+    ttkSpinboxPlus .sb -values {one two three 4 5 two six} -wrap true
+    set max [expr {[llength [.sb cget -values]] + 2}]
+} -body {
+    set ::spinbox_test [.sb get]
+    for {set i 0} {$i < $max} {incr i} {
+        event generate .sb <<Increment>>
+        lappend ::spinbox_test [.sb get]
+    }
+    for {set i 0} {$i < $max} {incr i} {
+        event generate .sb <<Decrement>>
+        lappend ::spinbox_test [.sb get]
+    }
+    set ::spinbox_test
+} -cleanup {
+    destroy .sb
+    unset -nocomplain ::spinbox_test max
+} -result {one two three 4 5 two six one two one six two 5 4 three two one six}
+
+test spinbox-4.1 "Increment with duplicates in -values, wrap, initial value set" -setup {
+    ttkSpinboxPlus .sb -values {one two three 4 5 two six} -wrap true
+    set max [expr {[llength [.sb cget -values]] + 2}]
+} -body {
+    .sb set three
+    set ::spinbox_test [.sb get]
+    for {set i 0} {$i < $max} {incr i} {
+        event generate .sb <<Increment>>
+        lappend ::spinbox_test [.sb get]
+    }
+    .sb set two    ; # the first "two" in the -values list becomes the current value
+    for {set i 0} {$i < $max} {incr i} {
+        event generate .sb <<Decrement>>
+        lappend ::spinbox_test [.sb get]
+    }
+    set ::spinbox_test
+} -cleanup {
+    destroy .sb
+    unset -nocomplain ::spinbox_test max
+} -result {three 4 5 two six one two three 4 5 one six two 5 4 three two one six}
+
+test spinbox-4.2 "Increment with duplicates in -values, no wrap" -setup {
+    ttkSpinboxPlus .sb -values {one two three 4 5 two six} -wrap false
+    set max [expr {[llength [.sb cget -values]] + 2}]
+} -body {
+    set ::spinbox_test [.sb get]
+    for {set i 0} {$i < $max} {incr i} {
+        event generate .sb <<Increment>>
+        lappend ::spinbox_test [.sb get]
+    }
+    for {set i 0} {$i < $max} {incr i} {
+        event generate .sb <<Decrement>>
+        lappend ::spinbox_test [.sb get]
+    }
+    set ::spinbox_test
+} -cleanup {
+    destroy .sb
+    unset -nocomplain ::spinbox_test max
+} -result {one two three 4 5 two six six six two 5 4 three two one one one one}
+
+
 # nostomp: NB intentional difference between ttk::spinbox and tk::spinbox;
 # see also #1439266
 #
@@ -263,7 +362,7 @@ test spinbox-nostomp-3 "don't stomp on -variable (configure; -from/to)" -body {
 
 test spinbox-nostomp-4 "don't stomp on -variable (configure; -values)" -body {
     set SBV Apr
-    ttkSpinboxPlus .sb 
+    ttkSpinboxPlus .sb
     .sb configure -textvariable SBV -values {Jan Feb Mar Apr May Jun Jul Aug}
     list $SBV [.sb get]
 } -cleanup {
@@ -288,7 +387,7 @@ test spinbox-dieoctaldie-1 "Cope with leading zeros" -body {
     event generate .sb <<Decrement>>; lappend result $secs
 
     set result
-} -result [list 07 08 09 10 11 10 09 08 07] -cleanup { 
+} -result [list 07 08 09 10 11 10 09 08 07] -cleanup {
     destroy .sb
     unset secs
 }
@@ -303,6 +402,20 @@ test spinbox-dieoctaldie-2 "Cope with general bad input" -body {
 } -result [list asdfasdf 000 asdfasdf 000] -cleanup {
     destroy .sb
 }
+
+test spinbox-5.1 "style command" -constraints {TkAbove8.6} -body {
+    ttkSpinboxPlus .w
+    list [.w cget -style] [.w style] [winfo class .w]
+} -cleanup {
+    destroy .w
+} -result {{} TSpinbox TSpinbox}
+test spinbox-5.2 "style command" -constraints {TkAbove8.6} -body {
+    ttk::style configure customStyle.TSpinbox
+    ttkSpinboxPlus .w -style customStyle.TSpinbox
+    list [.w cget -style] [.w style] [winfo class .w]
+} -cleanup {
+    destroy .w
+} -result {customStyle.TSpinbox customStyle.TSpinbox TSpinbox}
 
 tcltest::cleanupTests
 

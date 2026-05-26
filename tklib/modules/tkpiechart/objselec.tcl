@@ -2,7 +2,7 @@
 # this program is free software: please read the COPYRIGHT file enclosed in this
 # package or use the Help Copyright menu
 
-package require Tk 8.3
+package require Tk 8.3-
 package require stooop
 
 # $Id: objselec.tcl,v 1.13 2006/01/27 19:05:52 andreas_kupries Exp $

@@ -7,7 +7,7 @@
 #
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
-# 
+#
 # RCS: @(#) $Id: debug.tcl,v 1.5 2010/01/06 20:55:54 tomk Exp $
 
 package require TclOO
@@ -158,7 +158,7 @@ oo::define ::menubar method debug { {type tree} } {
 	variable mtree
 	variable installs
 	variable notebookVals
-	
+
 	set result ""
 	if { ${type} eq "tree" } {
 		lappend result "##### tag tree #####"
@@ -170,10 +170,10 @@ oo::define ::menubar method debug { {type tree} } {
 		foreach node [lsort -dictionary [${mtree} nodes]] {
 			lappend result ${node}
 			foreach {attr val} [${mtree} key.getall ${node} +*] {
-				lappend result "  ${attr}: ${val}" 
+				lappend result "  ${attr}: ${val}"
 			}
 			foreach {opt val} [${mtree} key.getall ${node} -*] {
-				lappend result "  ${opt}: ${val}" 
+				lappend result "  ${opt}: ${val}"
 			}
 		}
 	} elseif { ${type} eq "installs" } {
@@ -201,10 +201,10 @@ oo::define ::menubar method debug_node { node } {
 	variable mtree
 	lappend result "==== node: ${node}"
 	foreach {attr val} [${mtree} key.getall ${node} +*] {
-		lappend result "  ${attr}: ${val}" 
+		lappend result "  ${attr}: ${val}"
 	}
 	foreach {opt val} [${mtree} key.getall ${node} -*] {
-		lappend result "  ${opt}: ${val}" 
+		lappend result "  ${opt}: ${val}"
 	}
 	return ${result}
 }

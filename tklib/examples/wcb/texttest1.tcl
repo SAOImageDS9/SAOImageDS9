@@ -1,4 +1,4 @@
-#!/usr/bin/env wish
+#! /usr/bin/env tclsh
 
 #==============================================================================
 # Demo:	wcb::callback <text> before insert <callback> ...
@@ -10,9 +10,10 @@
 #	wcb::cancel
 #	wcb::extend <arg>
 #
-# Copyright (c) 1999-2018  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 1999-2023  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
+package require Tk
 package require wcb
 
 wm title . "Texttest #1"
@@ -27,7 +28,7 @@ source [file join [file dirname [info script]] option.tcl]
 #
 set width 50
 text .txt -width $width -height 12 -setgrid true -wrap none -background white \
-	  -font "Courier -12"
+	  -font TkFixedFont
 .txt tag configure prog -foreground red
 .txt tag configure user -foreground DarkGreen
 .txt insert end "Everything you type or paste into this window will\n"	prog
@@ -85,10 +86,12 @@ proc changeColor {w args} {
 #
 proc displayPos {w idx} {
     set index [$w index $idx]
+    ##nagelfar ignore
     scan $index "%d.%d" line column
     incr column
 
     global pos
+    ##nagelfar ignore
     set pos [format "Line: %d   Column: %d" $line $column]
 }
 
@@ -108,8 +111,10 @@ proc checkLines {maxCharsPerLine w args} {
     #
     # Disable or enable the .send button
     #
+    ##nagelfar ignore
     scan [$w index end] "%d" lastLine
     for {set line 1} {$line < $lastLine} {incr line} {
+	##nagelfar ignore
 	scan [$w index $line.end] "%d.%d" dummy charsInLine
 	if {$charsInLine > $maxCharsPerLine} {
 	    .send configure -state disabled
@@ -122,7 +127,7 @@ proc checkLines {maxCharsPerLine w args} {
 #
 # Manage the widgets
 #
-pack .send -side bottom -pady 10
+pack .send -side bottom -pady 7p
 pack .pos -side bottom
 pack .txt -expand yes -fill both
 

@@ -1,12 +1,12 @@
-#!/bin/sh
+#! /usr/bin/env tclsh
 #
 # installFile.tcl - a Tcl version of install-sh
 #	that copies a file and preserves its permission bits.
 #	This also optimizes out installation of existing files
 #	that have the same size and time stamp as the source.
 #
-# \
-exec tclsh8.3 "$0" ${1+"$@"}
+
+package require Tcl 8.3-
 
 set doCopy 0	;# Rename files instead of copy
 set doStrip 0	;# Strip the symbols from installed copy

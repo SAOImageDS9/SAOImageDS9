@@ -1,3 +1,991 @@
+2024-12-03 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Tablelist 7.4.1.
+
+2024-12-03 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:              Bumped the version number to 7.4.1.
+	* COPYRIGHT.txt:
+	* README.txt:
+	* doc/tablelist.html:
+
+	* CHANGES.txt: Updated to reflect the changes.
+
+	* scripts/tablelistConfig.tcl: Eliminated a negative side effect of the
+	  optimization of "cellconfigure -image|text" introduced in Tablelist
+	  7.4, related to interactive cell editing.
+
+2024-11-29 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Tablelist 7.4.
+
+2024-11-18 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:              Updated to reflect the changes.
+	* doc/tablelist.html:
+	* doc/tablelistWidget.html:
+
+	* scripts/*.tcl: The "-text" option at row and cell levels, as well as
+	  the "-image" cell configuraton option no longer perform a text/image
+	  update if the new option value equals the old one; minor improvement
+	  related to the "collapse" subcommand.
+
+	* ../../examples/tablelist/dirViewer*.tcl: Now also demonstrate how the
+	  virtual event <<TablelistYViewChanged>> can be used to embed images
+	  into the items contained in the current view.
+
+2024-10-19 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 7.4.
+	* COPYRIGHT.txt:
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl: Made sure that the Migration Tool for Tcl 9 won't
+	  output any warnings or notes; eliminated a potential error message
+	  caused by the handling of <TouchpadScroll> events.
+
+	* scripts/utils/*.tcl: Made sure that the Migration Tool for Tcl 9
+	  won't output any warnings or notes; improvements in the themepatch
+	  package.
+
+	* scripts/utils/indicatorImgs/*.tcl: Improvements in the themepatch
+	  package, regarding the "default" theme.
+
+	* doc/*.png: Updated a series of screenshots.
+
+	* ../../examples/tablelist/*.tcl: Made sure that the Migration Tool for
+	  Tcl 9 won't output any warnings or notes.
+
+2024-09-04 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Tablelist 7.3.
+
+2024-08-20 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 7.3; restored the support
+	* COPYRIGHT.txt: for Tcl/Tk 8.4.
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl: Improved the performance of "cellconfigure ... -text";
+	  guarded against the case that an embedded image was deleted; made
+	  sure that the handling of the <TouchpadScroll> event won't polluate
+	  the global namespace; adapted the handling of the <FocusIn> and
+	  <FocusOut> events to recent changes made in Tk related to these
+	  events and the detail field "NotifyInferior"; fixed a long-standing
+	  bug related to the optimization of item insertion; restored the
+	  support for Tcl/Tk 8.4.
+
+	* scripts/utils/*.tcl: Restored the support for Tcl/Tk 8.4.
+
+2024-05-15 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Tablelist 7.2.
+
+2024-05-14 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:                 Adapted the default value of the
+	* scripts/tablelistThemes.tcl: "-selectborderwidth" option in
+	  Tablelist_tile to recent changes in the "default" and "classic"
+	  themes.
+
+2024-05-11 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:                 Adapted the scaleutil package to the
+	* tablelistCommon.tcl:         recent improvements in the "classic"
+	* scripts/utils/pkgIndex.tcl:  theme by Emiliano Gavilan.
+	* scripts/utils/scaleutil.tcl:
+
+2024-05-07 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:                 Eliminated the temporary hang-ups
+	* scripts/tablelistUtil.tcl:   experienced sporadically during
+	* scripts/tablelistWidget.tcl: scrolling in the presence of many
+	  embedded images (including tree indentations) or multi-line cells.
+
+2024-04-23 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 7.2.
+	* COPYRIGHT.txt:
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl: Added the virtual event <<TablelistCopyFinished>>;
+	  added the "-aftercopycommand" configuration option; added the
+	  "-allowduplicates" column configuration option; on the windowing
+	  system "aqua" the termination of the editing with subsequent "fill
+	  all" action is now bound to the <Control-Command-a> event; photo
+	  image creation now always with explicitly specified "-format" option.
+
+	* scripts/utils/*.tcl:		     Photo image creation now always
+	* scripts/utils/indicatorImgs/*.tcl: with explicitly specified
+	  "-format" option.
+
+	* ../../examples/tablelist/*.tcl: Photo image creation now always with
+	  explicitly specified "-format" option; demonstrate how to use the new
+	  "-aftercopycommand" and "-allowduplicates" options; improved the
+	  compatibility with Tcl 9.
+
+2024-03-05 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Tablelist 7.1.
+
+2024-02-11 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 7.1.
+	* COPYRIGHT.txt:
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl: The multi-line cell texts are now displayed vertically
+	  centered within their rows; fixed a long-standing bug due to which
+	  under some circumstances the default values of several configuration
+	  options became theme-specific even if the tablelist package rather
+	  than tablelist_tile was being used; fixed a long-standing bug related
+	  to creating the expand/collapse control images when handling the
+	  "-treestyle" option; guarded against destroying a tablelist widget in
+	  which an interactive column resize or row/column move operation is in
+	  progress; handled the extremely rare case that the frame widget to be
+	  used as parent of the edit window already exists.
+
+	* scripts/tclIndex: Newly generated.
+
+	* scripts/utils/mwutil.tcl:   Fixed a typo in the file mwutil.tcl,
+	* scripts/utils/pkgIndex.tcl: introduced in the previous release.
+
+2023-12-27 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Tablelist 7.0.
+
+2023-12-07 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:              Added support for the new <TouchpadScroll>
+	* scripts/*.tcl:            event.
+	* doc/tablelistWidget.html:
+
+2023-10-07 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 7.0; dropped the support
+	* COPYRIGHT.txt: for Tk versions earlier than 8.4.
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl: Dropped the support for Tk versions earlier than 8.4;
+	  for the selection type "cell", the F2 key now starts the interactive
+	  editing of the active element; added explicit support for the themes
+	  "black", "breeze", "breeze-dark", "sun-valley-light", and
+	  "sun-valley-dark"; removed the now redundant script repair.tcl.
+
+	* scripts/tclIndex: Newly generated.
+
+	* scripts/utils/*.tcl:            Dropped the support for Tk versions
+	* ../../examples/tablelist/*.tcl: earlier than 8.4; improved the
+	  compatibility with Tcl 9.0 and Tk 8.7.
+
+2023-07-03 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Tablelist 6.22.
+
+2023-06-28 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* tablelistCommon.tcl: For Tcl versions 8.4 and later replaced the
+	  deprecated "trace variable" and "trace vdelete" invocations with
+	  "trace add variable" and "trace remove variable", respectively;
+	  bumped the version number to 6.22.
+
+	* *.tcl:         Bumped the version number to 6.22.
+	* COPYRIGHT.txt:
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl: In the presence of SVG support, added the variable
+	  "tablelist::svgfmt" and the arrow style "photo0x0"; removed the very
+	  rarely needed arrow styles "flat6x4", "flat7x5", "flat9x6",
+	  "flatAngle9x7", and "flatAngle10x7"; added the arrow styles
+	  "flat10x5", "flat12x6", "flat14x7", and "flat16x8"; the default value
+	  of the "-arrowstyle" option on X11 is now "photo0x0" if SVG is
+	  supported, and one of "flat8x4", "flat10x5", "flat12x6", "flat14x7",
+	  or "flat16x8" otherwise; in the presence of SVG support, added the
+	  tree styles "plain", "bicolor", "white", and "classic"; the
+	  temporarily or persistently embedded checkbuttons now use scaling-
+	  aware SVG images; for Tcl versions 8.4 and later replaced the
+	  deprecated "trace variable" and "trace vdelete" invocations with
+	  "trace add variable" and "trace remove variable", respectively;
+	  guarded against destroying a tablelist widget in which interactive
+	  cell editing is in progress.
+
+	* scripts/utils/*.tcl:               Various updates in the scaleutil,
+	* scripts/utils/indicatorImgs/*.tcl: scaleutilmisc, and themepatch
+	  packages, e.g., related to the BWidget SpinBox and ComboBox as well
+	  as Iwidgets dateentry and timeentry widgets used for interactive cell
+	  editing, and to patching the "default" theme.
+
+	* doc/*.png: Updated a series of screenshots and added 4 new ones.
+
+	* ../../examples/tablelist/*: In the presence of SVG support, the demo
+	  scripts now use SVG images, and on X11 the demo scripts
+	  "browseTree(_tile).tcl" and "dirViewer(_tile).tcl" now set the
+	  "-treestyle" option to the SVG-based style "bicolor"; bumped the
+	  version number to 6.22.
+
+2023-03-20 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Tablelist 6.21.
+
+2023-03-18 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* scripts/utils/mwutil.tcl: Procedure getAncestorByClass significantly
+	  enhanced.
+
+2023-03-16 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* tablelistCommon.tcl: Fixed a few bugs related to the comparison of
+	  package versions; bumped the version number to 6.21; updated the
+	  copyright information.
+
+	* *.tcl:         Bumped the version number to 6.21; updated the
+	* COPYRIGHT.txt: copyright information.
+	* README.txt:
+
+	* doc/tablelistThemes.html: Added the hint that with current
+	  Tablelist_tile versions there is no need for invocations of the
+	  tablelist::setThemeDefaults command in application code.
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl: For the built-in themes "alt", "clam", "classic", and
+	  "default", the "-stripebackground" option now has a nonempty theme-
+	  specific default value; in disabled state, the "finishediting"
+	  subcommand now returns immediately, without terminating the
+	  interactive cell editing; improvements related to the appearance of
+	  Tk core checkbutton widgets embedded into a header label or a cell
+	  (temporarily or persistently); added support for the case that the
+	  "alt" theme was modified by invoking the "themepatch::patch" command
+	  of the themepatch package; fixed two bugs related to the
+	  "embedcheckbutton(s)", "embedttkcheckbutton(s)", "header
+	  embedcheckbutton(s)", and "header embedttkcheckbutton(s)"
+	  subcommands; updated the copyright information.
+
+	* scripts/utils/*.tcl:               Various extensions and updates in
+	* scripts/utils/indicatorImgs/*.tcl: the mwutil and scaleutil packages;
+	  added the themepatch package; updated the copyright information.
+
+	* doc/*.png: Updated a few screenshots.
+
+	* ../../examples/tablelist/*.tcl: The (ttk::)checkbutton embedded into
+	  the header label of the column "available" of the tablelist widget
+	  created by the demo-scripts for interactive cell editing now appears
+	  in tri-state mode and is dynamically selected/deselected or set into
+	  the tri-state mode; bumped the version number to 6.21; updated the
+	  copyright information.
+
+2022-10-24 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Tablelist 6.20.
+
+2022-10-22 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:               Renamed themepatch::(un)patchTheme to
+	* scripts/tablelistUtil.tcl: themepatch::(un)patch.
+
+2022-10-21 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:                          Bumped the version number to 6.20.
+	* COPYRIGHT.txt:
+	* README.txt:
+	* ../../examples/tablelist/*.tcl:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/tablelistBind.tcl: The argument of the
+	  "tablelist::getTablelistColumn" command now may also be the path name
+	  of a Tk core or tile checkbutton embedded into a header label;
+	  improvements related to moving a column interactively, especially on
+	  Mac OS X/11+.
+
+	* scripts/tablelistUtil.tcl: Redisplaying a column is no longer
+	  suppressed if the column is hidden; restricted the workaround for a
+	  crash on Mac OS X/11+ to the affected Tk releases 8.6.11, 8.6.12, and
+	  8.7a5; added support for the case that the "default" theme was
+	  modified by invoking the "themepatch::patchTheme" command of the
+	  themepatch package (bundled with Scrollutil).
+
+	* scripts/tablelistWidget.tcl: Added the "dumptostring" and
+	  "loadfromstring" subcommands.
+
+	* scripts/tclIndex: Newly generated.
+
+2022-05-30 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Tablelist 6.19.
+
+2022-05-30 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:                          Bumped the version number to 6.19.
+	* COPYRIGHT.txt:
+	* README.txt:
+	* ../../examples/tablelist/*.tcl:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/tablelistBind.tcl: Made sure that the workaround for the 
+	  problem that in Tk 8.6.11 and later on Mac OS X/11+ the idle
+	  callbacks are often fired at unexpected times won't lead to
+	  invocations of callbacks for already destroyed tablelist widgets.
+
+	* scripts/tablelistEdit.tcl: Moved part of the body of the doEditCell
+	  proc into the new proc configAutoFinishEditing.
+
+	* scripts/tablelistUtil.tcl: Fixed a bug related to making a hidden
+	  column visible again.
+
+	* scripts/tablelistWidget.tcl: The "get", "getcells", "getformatted",
+	  "getformattedcells", "getfullkeys", and "getkeys" subcommands now
+	  accept an optional argument with the possible values "-all",
+	  "-nonhidden", and "-viewable"; if the tablelist widget has no columns
+	  then the "deletecolumns" subcommand now returns immediately without
+	  any further action, like checking the validity of the column indices.
+
+	* scripts/tclIndex: Newly generated.
+
+	* scripts/utils/pkgIndex.tcl:  Made the detection of the desktop
+	* scripts/utils/scaleutil.tcl: environment when calculating the scaling
+	  percentage corresponding to the display's DPI scaling level on X11
+	  more reliable; removed the TEntry scaling for "vista" and "xpnative".
+
+2022-03-22 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Tablelist 6.18.
+
+2022-03-13 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:                          Bumped the version number to 6.18.
+	* COPYRIGHT.txt:
+	* README.txt:
+	* ../../examples/tablelist/*.tcl:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl: Added support for the case that the "clam" theme was
+	  modified by invoking the "clampatch::patchClamTheme" command of the
+	  clampatch package (bundled with Scrollutil); when starting the
+	  editing session, the "-exportselection" option of the tablelist
+	  widget is now set to 0, and when the editing is finished or canceled,
+	  the option's original value is restored; made sure that the
+	  "-showeditcursor" configuration option will work as expected also in
+	  the special case that the application was cross-wrapped on Linux for
+	  Windows using freewrap; overhauled the workaround for the problem
+	  that in Tk 8.6.11 and later on Mac OS X/11+ the idle callbacks are
+	  often fired at unexpected times; fixed a bug related to the handling
+	  of the <<ThemeChanged>> event when the package Tablelist rather than
+	  Tablelist_tile was loaded into the interpreter; fixed a bug related
+	  to the mouse event handling for the header labels in the special case
+	  that there is another tablelist closely to the left of the widget in
+	  question.
+
+	* scripts/tclIndex: Newly generated.
+
+	* scripts/utils/*.tcl:  Setting the default height of the ttk::treeview
+	  rows to a value based on the font's metrics; extensions related to
+	  the TSpinbox style; several further extensions and improvements.
+
+2022-01-10 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Tablelist 6.17.
+
+2022-01-01 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:                          Updated the copyright information.
+	* COPYRIGHT.txt:
+	* scripts/*.tcl:
+	* scripts/utils/*.tcl:
+	* ../../examples/tablelist/*.tcl:
+
+2021-12-29 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:                          Bumped the version number to 6.17.
+	* COPYRIGHT.txt:
+	* README.txt:
+	* ../../examples/tablelist/*.tcl:
+
+	* doc/tablelistWidget.html: Extended the descriptions of the
+	  "-tooltipaddcommand" and "-tooltipdelcommand" options by hints
+	  showing how to use these options with version 1.3+ of the baltip
+	  package by Alex Plotnikov.
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl: The virtual event <<TablelistCellUpdated>> is now only
+	  generated if the editing session has effectively changed the cell's
+	  content; worked around the problem that on Mac OS X/11+ the idle
+	  callbacks are often fired at unexpected times; fixed a bug related to
+	  the embedded ttk::checkbutton widgets when the package Tablelist
+	  rather than Tablelist_tile was loaded into the interpreter.
+
+2021-12-21 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* scripts/utils/scaleutil.tcl: The scaleutil package now works "as is"
+	  with undroidwish and AndroWish, too; added a way to prevent this
+	  package from changing Tk's scaling factor when calculating the
+	  scaling percentage corresponding to the display's DPI scaling level
+	  on X11; fixed a bug related to setting the default height of the
+	  ttk::treeview rows for one of the themes provided by the awthemes
+	  package.
+
+	* scripts/utils/pkgIndex.tcl: Bumped the scaleutil version to 1.7.
+
+2021-11-11 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Tablelist 6.16.
+
+2021-11-10 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* doc/*.html: Updated.
+
+2021-11-07 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:                 Updated the handling of the mouse wheel
+	* scripts/tablelistBind.tcl:   events; changes related to TIP #577.
+	* scripts/tablelistUtil.tcl:
+	* scripts/tablelistWidget.tcl:
+	* doc/tablelistWidget.html:
+
+2021-10-31 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:                          Bumped the version number to 6.16.
+	* COPYRIGHT.txt:
+	* README.txt:
+	* ../../examples/tablelist/*.tcl:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl: Scaling the default vertical padding of the header
+	  labels for the themes "clam", "vista", and "xpnative; extended the
+	  "itemtodict" subcommand by an optional argument that specifies the
+	  column indices of the elements that are to be ignored when building
+	  the result dictionary; improvements related to the appearance of the
+	  (temporarily or persistently) embedded ttk::checkbutton widgets;
+	  fixed a bug related to the "cellbbox" subcommand.
+
+	* scripts/tclIndex: Newly generated.
+
+	* scripts/utils/pkgIndex.tcl:  Significantly extended the procedure
+	* scripts/utils/scaleutil.tcl: "scaleutil::scalingPercentage" and
+	  adapted to the changes made recently in the Tk library file
+	  "ttk/fonts.tcl".
+
+2021-09-13 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Tablelist 6.15.1.
+
+2021-09-12 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:              Bumped the version number to 6.15.1.
+	* COPYRIGHT.txt:
+	* README.txt:
+	* doc/index.html:
+	* doc/tablelist.html:
+
+	* CHANGES.txt: Updated to reflect the changes.
+
+	* scripts/tablelistUtil.tcl: Guarded against potential endless loops,
+	  triggered in the previous Tablelist release by the presence of hidden
+	  columns and a strictly positive value of the "-titlecolumns" option.
+
+2021-09-07 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Tablelist 6.15.
+
+2021-09-06 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 6.15.
+	* COPYRIGHT.txt:
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl: Added the "dumptofile" and "loadfromfile" subcommands;
+	  the "dicttoitem" subcommand now simply ignores those keys that are no
+	  valid column indices; added binding for <<TkWorldChanged>> with %d
+	  set to "FontChanged" (see TIP 608); adapted the sort rank bitmaps
+	  used in multi-column sorting to the display's scaling percentage;
+	  worked around a serious regression in Tk 8.6 regarding the text
+	  widget's "see" subcommand; further code optimizations; fixed a bug
+	  related to the "searchcolumn" subcommand with the "-descend" option,
+	  which in addition no longer depends on the interpreter's recursion
+	  limit; fixed some bugs related to the "deletecolumns" subcommand by
+	  adapting its implementation to changes made in current Mac OS
+	  versions.
+
+	* scripts/tclIndex: Newly generated.
+
+	* scripts/utils/pkgIndex.tcl:  Fixed a bug related to the supported
+	* scripts/utils/scaleutil.tcl: scaling percentages on Windows.
+
+	* ../../examples/tablelist/*.tcl: Bumped the version number to 6.15.
+
+2021-05-28 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Tablelist 6.14.
+
+2021-05-15 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* scripts/utils/scaleutil.tcl: Removed some holdovers from the previous
+	  version, which are not compatible with the new one.
+
+2021-05-14 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 6.14.
+	* COPYRIGHT.txt:
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl: Added the "-labelwindow" column configuration option,
+	  with the possible values "checkbutton" and "ttk::checkbutton"; added
+	  the "labelwindowpath" subcommand; added the virtual event
+	  <<TablelistActivate>>, generated whenever the active row or cell
+	  changes due to user interaction; if the value of the "-titlecolums"
+	  option is positive then <Shift-MouseWheel> now scrolls the tablelist
+	  widget by one column only; the "-stretchwindow", "-windowdestroy",
+	  and "-windowupdate" options are now supported at column level, too;
+	  the "fillcolumn" and "header fillcolumn" subcommands now can embed an
+	  image or window in all body/header cells of the specified column.
+
+	* scripts/tclIndex: Newly generated.
+
+	* scripts/utils/pkgIndex.tcl:  On X11 only correct the sizes of the
+	* scripts/utils/scaleutil.tcl: standard fonts and set the scaling
+	  factor if the display's scaling percentage is > 100; don't change the
+	  scaling factor if the scaling percentage was derived from it.
+
+	* doc/bwidget.png:     Updated screenshots.
+	* doc/tileWidgets.png:
+
+	* ../../examples/tablelist/*.tcl: Bumped the version number to 6.14;
+	  the demo scripts "bwidget*.tcl", "iwidgets*.tcl", "miscWidgets*.tcl",
+	  and "tileWidgets.tcl" now use the new "-labelwindow" column
+	  configuration option and "labelwindowpath" subcommand; the demo
+	  scripts "embeddedWindows*.tcl" now use the "-stretchwindow" option at
+	  column level and embed the windows into the cells by means of the
+	  "fillcolumn" subcommand.
+
+2021-04-14 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Tablelist 6.13.
+
+2021-04-10 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* scripts/tablelistWidget.tcl: Fixed a holdover from earlier versions.
+
+2021-04-09 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:                              Reworked and extended the
+	* scripts/tablelistThemes.tcl:              awthemes support.
+	* scripts/tablelistUtil.tcl:
+	* ../../examples/tablelist/tileWidgets.tcl:
+
+	* scripts/tclIndex: Newly generated.
+
+2021-04-08 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* tablelistCommon.tcl:         Various improvements, related mainly to
+	* scripts/tablelistBind.tcl:   the awthemes support and macOS 11.
+	* scripts/tablelistConfig.tcl:
+	* scripts/tablelistThemes.tcl:
+	* scripts/tablelistUtil.tcl:
+	* scripts/tablelistWidget.tcl:
+	* scripts/utils/mwutil.tcl:
+	* scripts/utils/pkgIndex.tcl:
+
+2021-04-06 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:                              Added support for the
+	* scripts/tablelistThemes.tcl:              "awbreezedark" theme.
+	* doc/tablelist.html:
+	* doc/tablelistWidget.html:
+	* ../../examples/tablelist/config_tile.tcl:
+	* ../../examples/tablelist/option_tile.tcl:
+
+	* scripts/tablelistEdit.tcl: Improved the editing with the aid of a
+	  ttk::menubutton widget.
+
+	* scripts/tclIndex: Newly generated.
+
+2021-04-03 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:                 Big Sur support slightly improved.
+	* scripts/tablelistConfig.tcl:
+	* scripts/tablelistThemes.tcl:
+
+2021-04-02 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 6.13.
+	* COPYRIGHT.txt:
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl: The "expand(all)" and "collapse(all)" subcommands no
+	  longer depend on the interpreter's recursion limit; drastically
+	  reduced the memory consumption of tablelist widgets displaying a
+	  deeply nested tree structure and significantly improved their
+	  performance; added the tree style "aqua11", which is now the default
+	  on macOS 11; fixed a bug related to the interactive row move
+	  operation.
+
+	* scripts/tclIndex: Newly generated.
+
+	* scripts/utils/pkgIndex.tcl:  Fixed a bug related to font scaling on
+	* scripts/utils/scaleutil.tcl: X11.
+
+	* doc/aqua11.png: Added screenshot.
+
+	* doc/aqua.png: Updated screenshot.
+
+	* ../../examples/tablelist/*.tcl: Improvements in the demo scripts.
+
+2021-02-03 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Tablelist 6.12.
+
+2021-02-02 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:                 Renamed "-editendonmodifclick" to
+	* scripts/tablelistBind.tcl:   "-editendonmodclick".
+	* scripts/tablelistConfig.tcl:
+	* scripts/tablelistWidget.tcl:
+	* doc/tablelistWidget.html:
+
+2021-02-02 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:                 Added the "-editendonmodifclick"
+	* scripts/tablelistBind.tcl:   configuration option; improvements
+	* scripts/tablelistConfig.tcl: related to the termination of
+	* scripts/tablelistEdit.tcl:   interactive cell editing.
+	* scripts/tablelistWidget.tcl:
+	* doc/tablelistWidget.html:
+
+2021-02-01 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:                          Bumped the version number to 6.12;
+	* COPYRIGHT.txt:                  updated the copyright information.
+	* README.txt:
+	* ../../examples/tablelist/*.tcl:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl:            Added support for the platform-independent
+	* scripts/utils/mwutil.tcl: handling of mouse wheel events (TIP 474);
+	  added the "-editendonfocusout" and "-itembackground" configuration
+	  options; added the "autoscrolltarget" and "stopautoscroll"
+	  subcommands; fixed a few long-standing issues related to the "yview"
+	  subcommand; updated the copyright information.
+
+	* scripts/tclIndex: Newly generated.
+
+	* scripts/utils/*.tcl: Improved the font scaling on X11 in the calendar
+	  component of an iwidgets::dateentry widget used for interactive cell
+	  editing; fixed a regression related to font scaling on X11 if the
+	  display's DPI scaling level is > 100 %, introduced in the previous
+	  release; the file scaleutilMisc.tcl now implements the new
+	  scaleutilmisc package; updated the copyright information.
+
+2020-12-09 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* scripts/tablelistWidget.tcl: Trace procedure slightly improved.
+
+2020-12-03 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* scripts/tablelistThemes.tcl:              Added support for awthemes
+	* scripts/tablelistUtil.tcl:                10.0.
+	* ../../examples/tablelist/config_tile.tcl:
+	* ../../examples/tablelist/option_tile.tcl:
+	* ../../examples/tablelist/tileWidgets.tcl:
+
+	* scripts/tclIndex: Newly generated.
+
+2020-12-01 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* scripts/tablelistBind.tcl: Improvements in the bindings for
+	  <Shift-Button-1> and <Control-Button-1>.
+
+	* scripts/tclIndex: Newly generated.
+
+2020-11-28 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* scripts/tablelistBind.tcl: Minor improvements.
+	* scripts/tablelistUtil.tcl:
+
+2020-11-25 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* scripts/tablelistWidget.tcl: Slightly improved.
+
+2020-11-22 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* ../../examples/tablelist/config_tile.tcl: Made TIP 278 conformant.
+
+2020-11-21 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* scripts/tablelistBind.tcl:                     Minor improvements.
+	* scripts/tablelistUtil.tcl:
+	* scripts/tablelistWidget.tcl:
+	* doc/tablelist.html:
+	* ../../examples/tablelist/embeddedWindows*.tcl:
+
+2020-11-14 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* doc/tablelistWidget.html: Slightly improved.
+
+2020-11-08 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* scripts/utils/scaleutil.tcl: Corrected a typo.
+
+2020-11-07 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* tablelistCommon.tcl: Updated the scaleutil version.
+
+	* scripts/utils/pkgIndex.tcl:      Moved part of scaleutil.tcl into the
+	* scripts/utils/scaleutil.tcl:     new file scaleutilMisc.tcl.
+	* scripts/utils/scaleutilMisc.tcl:
+
+2020-11-05 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* scripts/tablelistBind.tcl: Cleanup for mouse wheel handling.
+
+	* scripts/tclIndex: Newly generated.
+
+2020-10-17 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:                    Improvements and updates related to
+	* scripts/tablelistThemes.tcl:    awthemes 9.4.
+	* scripts/tablelistUtil.tcl:
+	* doc/tablelist.html:
+	* doc/tablelistWidget.html:
+	* ../../examples/tablelist/*.tcl:
+
+	* scripts/tclIndex: Newly generated.
+
+2020-10-14 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:                    Added support for all the themes
+	* scripts/tablelistThemes.tcl:    provided by the awthemes package.
+	* doc/tablelist.html:
+	* doc/tablelistWidget.html:
+	* ../../examples/tablelist/*.tcl:
+
+	* scripts/tclIndex: Newly generated.
+
+2020-10-09 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt: Updated.
+
+	* scripts/tablelistEdit.tcl:      Added support for the "awdark" theme.
+	* scripts/tablelistThemes.tcl:
+	* doc/tablelist.html:
+	* ../../examples/tablelist/*.tcl:
+
+	* scripts/tablelistImages.tcl: Added the tree styles "white100",
+	* scripts/tablelistWidget.tcl: "white125", ..., "white200".
+	* doc/tablelistWidget.html:
+	* doc/white*.png:
+
+	* scripts/utils/scaleutil.tcl: Improvements related to the X11 fonts.
+
+	* scripts/tclIndex: Newly generated.
+
+2020-10-03 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:              Dropped the requirement that changing the
+	* scripts/utils/mwutil.tcl: theme be done using the "ttk::setTheme"
+	* doc/tablelist.html:       command, which was necessary for older tile
+	* doc/tablelistThemes.html: versions.
+
+2020-09-24 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* scripts/tablelistWidget.tcl: Restored the mwutil::getScrollInfo2
+	* scripts/utils/mwutil.tcl:    command.
+
+2020-09-20 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:        Updated.
+	* doc/tablelist.html:
+
+	* ../../examples/tablelist/*.tcl: Improvements related to font
+	  scalabilty.
+
+2020-09-08 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 6.11.
+	* COPYRIGHT.txt:
+	* README.txt:
+
+	* tablelistCommon.tcl: Replaces the former tablelistPublic.tcl; bumped
+	  the version number to 6.11.
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl: Updated the "aqua" theme support and extended it by
+	  support for the Dark Mode appearance; handling the virtual events
+	  <<LightAqua>> and <<DarkAqua>> by updating the overall appearance of
+	  the tablelist widgets; added the virtual event
+	  <<TablelistThemeDefaultsChanged>> and sent to the main window when
+	  handling the virtual events <<ThemeChanged>>, <<LightAqua>>, and
+	  <<DarkAqua>>; improvements related to laying out the widget used for
+	  interactive cell editing; reworked the invocations of "package
+	  vcompare", taking into account that Tcl versions earlier than 8.5 did
+	  not support the letters "a" and "b" in version numbers.
+
+	* scripts/utils:               Moved mwutil.tcl and scaleutil.tcl to
+	* scripts/utils/mwutil.tcl:    the new subdirectory utils and made them
+	* scripts/utils/scaleutil.tcl: to packages.
+	* scripts/utils/pkgIndex.tcl:
+
+	* scripts/tclIndex: Newly generated.
+
+	* ../../examples/tablelist/*.tcl: Bumped the version number to 6.11;
+	  with Tk 8.6.10 or later, the demo-scripts browse(Tree)_tile.tcl,
+	  config_tile.tcl, dirViewer_tile.tcl, embeddedWindows_tile.tcl, and
+	  tileWidgets.tcl now fully support the Dark Mode appearance on Mac OS
+	  10.14 and later.
+
+2020-06-27 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* CHANGES.txt:           Minor improvements.
+	* scripts/scaleutil.tcl:
+	* doc/tablelist.html:
+
+2020-06-25 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* scripts/scaleutil.tcl: Made sure that the scaled default width of the
+	  Tk core scrollbar on X11 won't get overridden by an unscaled resource
+	  database value.
+
+2020-06-23 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 6.10.
+	* COPYRIGHT.txt:
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl: Made the variable "tablelist::scalingpct" read-only;
+	   automatic scaling of the default arrow style on the windowing system
+	   "x11" and for a few tile themes; made sure that the widgets used for
+	   interactive cell editing will appear properly scaled.
+
+	* scripts/scaleutil.tcl: New file containing scaling-related stuff:
+	  getting the display's DPI scaling percentage; scaling the default
+	  width of the Tk core scrollbars on X11, the default width of the
+	  ttk::scrollbar widget in a few built-in themes, the arrows of the
+	  ttk::combobox, ttk::spinbox, and ttk::menubutton widgets, and the
+	  indicators of the ttk::checkbutton and ttk::radiobutton widgets;
+	  a workaround for a long-standing scaling-related bug in the
+	  implementation of the ttk::checkbutton and ttk::radiobutton widgets
+	  in the "vista" and "xpnative" themes; procedures for scaling several
+	  widgets used for interactive cell editing.
+
+	* scripts/tclIndex: Newly generated.
+
+	* doc/stylesheet.css: Updated.
+
+	* doc/browse.png:		Updated screenshots.
+	* doc/browseTree.png:
+	* doc/bwidget.png:
+	* doc/config.png:
+	* doc/dirViewer.png:
+	* doc/embeddedWindows.png:
+	* doc/embeddedWindows_tile.png:
+	* doc/plain200.png:
+	* doc/styles.png:
+	* doc/tileWidgets.png:
+
+	* ../../examples/tablelist/*.tcl: Bumped the version number to 6.10;
+	  made all demo-scripts fully scaling-aware.
+
+	* ../../examples/tablelist/*.gif: Removed checked.gif, unchecked.gif,
+	  and open.gif; added (checked|unchecked|openAction)100.gif,
+	  (checked|unchecked|openAction)125.gif, ...,
+	  (checked|unchecked|openAction)200.gif.
+
+	* ../../examples/tablelist/*.xbm: Removed comp.xbm and leaf.xbm; added
+	  (comp|leaf)100.xbm, (comp|leaf)125.xbm, ..., (comp|leaf)200.xbm.
+
+2020-04-20 Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 6.9; updated the
+	* COPYRIGHT.txt: copyright information.
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl: Significantly extended and improved the code for
+	  initializing the variable "tablelist::scalingpct", especially on X11;
+	  added the percentage value 175 and the corresponding arrow styles
+	  "flat13x7", "flatAngle13x7", and "photo13x7"; removed the arrow
+	  styles "flat5x3" and "flat5x4"; changed the tree style names
+	  "(bicolor|classic|plain)1", ..., "(bicolor|classic|plain)4" to
+	  "(bicolor|classic|plain)100", "(bicolor|classic|plain)125",
+	  "(bicolor|classic|plain)150", and "(bicolor|classic|plain)200"; added
+	  the tree styles "(bicolor|classic|plain)175"; updated the tree styles
+	  "adwaita", "ubuntuMate", and "win10"; made the "refreshsorting"
+	  subcommand by orders of magnitude faster; fixed an issue related to
+	  the bindings for the edit window; fixed a bug related to the "expand"
+	  subcommand for a list of indices; updated the copyright information.
+
+	* scripts/tclIndex: Newly generated.
+
+	* doc/bicolor*png:  Renamed (bicolor|classic|plain)1.png, ...,
+	* doc/classic*.png: (bicolor|classic|plain)4.png to
+	* doc/plain*.png:   (bicolor|classic|plain)100.png,
+	  (bicolor|classic|plain)125.png, (bicolor|classic|plain)150.png, and
+	  (bicolor|classic|plain)200.png; updated screenshots; added
+	  (bicolor|classic|plain)175.png.
+
+	* doc/adwaita.png:           Updated screenshots.
+	* doc/arrowStyles.png:
+	* doc/arrowStyles_vista.png:
+	* doc/dirViewer.png:
+	* doc/scrollbars.png:
+	* doc/ubuntuMate.png:
+	* doc/win10.png:
+
+	* ../../examples/tablelist/*.tcl: Bumped the version number to 6.9;
+	  updated the copyright information; the scripts "dirViewer.tcl" and
+	  "dirViewer_tile.tcl" now also demonstrate how to use the variable
+	  "tablelist::scalingpct" for developing scaling-aware applications.
+
+	* ../../examples/tablelist/*.gif: Removed clsdFolder.gif,
+	  openFolder.gif, and file.gif; added (clsd|open)Folder100.gif,
+	  (clsd|open)Folder125.gif, ..., (clsd|open)Folder200.gif; added
+	  file100.gif, file125.gif, .., file200.gif.
+
 2020-02-09  0.7  <andreas_kupries@users.sourceforge.net>
 
 	*

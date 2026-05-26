@@ -1,6 +1,5 @@
-#!/bin/sh
-# -*- tcl -*- \
-exec tclsh "$0" ${1+"$@"}
+#! /usr/bin/env tclsh
+# -*- tcl -*-
 
 # --------------------------------------------------------------
 # Perform various checks and operations on the distribution.
@@ -8,7 +7,6 @@ exec tclsh "$0" ${1+"$@"}
 
 set distribution   [file dirname [info script]]
 set auto_path      [linsert $auto_path 0 [file join $distribution modules]]
-lappend auto_path  [file join $distribution/../tcllib modules]
 
 set critcldefault {}
 set critclnotes   {}
@@ -226,8 +224,10 @@ proc ppackages {args} {
     array set notprovided {}
 
     foreach f $files {
-	# We ignore package indices and all files not in a module.
+	# We ignore package indices, all files not in a module,
+	# and everything which is not Tcl at all.
 
+	if {![string match *.tcl $f]}                   {continue}
 	if {[string equal pkgIndex.tcl [file tail $f]]} {continue}
 	if {![regexp modules $f]}                       {continue}
 
@@ -267,7 +267,14 @@ proc ppackages {args} {
 
 	    sakdebug {puts stderr __$f\ _________$line}
 
-	    foreach {n v} $line break
+            #foreach {n v} $line break
+            if {[catch {
+	      set n [lindex $line 0]
+              set v [lindex $line 1]
+            } err]} {
+              sakdebug {puts stderr "Line: $line of file $f threw $err"}
+              continue
+            }
 
 	    # HACK ...
 	    # Module 'page', package 'page::gen::peg::cpkg'.
@@ -436,6 +443,12 @@ proc gd-gen-archives {} {
         if {$bzip != {}} {
             puts "    Bzipped tarball (${package_nv}.tar.bz2)..."
             exec tar cf - ${package_nv} | bzip2 > ${package_nv}.tar.bz2
+        }
+
+	set xz [auto_execok xz]
+        if {$xz != {}} {
+            puts "    Xzipped tarball (${package_nv}.tar.xz)..."
+            exec tar cf - ${package_nv} | xz > ${package_nv}.tar.xz
         }
     }
 
@@ -917,7 +930,7 @@ proc validate_testsuite_mod {m} {
     return
 }
 
-proc bench_mod {mlist paths interp flags norm format verbose output} {
+proc bench_mod {mlist paths interp flags norm format verbose output coll rep} {
     global distribution env tcl_platform
 
     getpackage logger logger/logger.tcl
@@ -964,20 +977,49 @@ proc bench_mod {mlist paths interp flags norm format verbose output} {
 	    continue
 	}
 
-	set run $cmd
-	lappend run $interps $files
-	array set DATA [eval $run]
+	for {set i 0} {$i <= $rep} {incr i} {
+	    if {$i} { puts "Repeat $i" }
+
+	    set run $cmd
+	    lappend run $interps $files
+	    array set tmp [eval $run]
+
+	    # Merge new set of data into the previous run, if any.
+	    foreach key [array names tmp] {
+		set val $tmp($key)
+		if {![info exists DATA($key)]} {
+		    set DATA($key) $val
+		    continue
+		} elseif {[string is double -strict $val]} {
+		    # Call user-request collation type
+		    set DATA($key) [collate_$coll $DATA($key) $val $i]
+		}
+	    }
+	    unset tmp
+	}
     }
 
     _bench_write $output [array get DATA] $norm $format
     return
 }
 
-proc bench_all {flags norm format verbose output} {
-    bench_mod [modules] $flags $norm $format $verbose $output
-    return
+proc collate_min {cur new runs} {
+    # Minimum
+    return [expr {$cur > $new ? $new : $cur}]
+}
+proc collate_avg {cur new runs} {
+    # Average
+    return [expr {($cur * $runs + $new)/($runs+1)}]
+}
+proc collate_max {cur new runs} {
+    # Maximum
+    return [expr {$cur < $new ? $new : $cur}]
 }
 
+if 0 {proc bench_all {flags norm format verbose output} {
+    bench_mod [modules] $flags $norm $format $verbose $output ? ?
+    return
+}}
 
 proc _bench_write {output data norm format} {
     if {$norm != {}} {
@@ -1174,44 +1216,6 @@ proc gd-gen-packages {} {
 
     nparray packages $f
     close $f
-}
-
-
-
-proc modified-modules {} {
-    global distribution
-
-    set mlist [modules]
-    set modified [list]
-
-    foreach m $mlist {
-	set cl [file join $distribution modules $m ChangeLog]
-	if {![file exists $cl]} {
-	    lappend modified [list $m no-changelog]
-	    continue
-	}
-	# Look for 'Released and tagged' within
-	# the first four lines of the file. If
-	# not present assume that the line is
-	# deeper down, indicating that the module
-	# has been modified since the last release.
-
-	set f [open $cl r]
-	set n 0
-	set mod 1
-	while {$n < 5} {
-	    gets $f line
-	    incr n
-	    if {[string match -nocase "*Released and tagged*" $line]} {
-		if {$n <= 4} {set mod 0 ; break}
-	    }
-	}
-	if {$mod} {
-	    lappend modified $m
-	}
-	close $f
-    }
-    return $modified
 }
 
 # --------------------------------------------------------------
@@ -1643,6 +1647,9 @@ proc __critcl-modules {} {
 
 proc critcl_module {pkg {extra ""}} {
     global critcl distribution critclmodules critcldefault
+
+    lappend extra -cache [pwd]/.critcl
+
     if {$pkg == $critcldefault} {
 	set files {}
 	foreach f $critclmodules($critcldefault) {
@@ -1857,6 +1864,8 @@ proc __bench {} {
     set output  {}
     set paths   {}
     set interp  {}
+    set repeat  0
+    set collate min
 
     while {[string match -* [set option [lindex $argv 0]]]} {
 	set val [lindex $argv 1]
@@ -1878,6 +1887,19 @@ proc __bench {} {
 		    }
 		}
 		set format $val
+	    }
+	    -collate {
+		switch -exact -- $val {
+		    min - max - avg {}
+		    default {
+			return -error "Bad collation \"$val\", expected avg, max, or min"
+		    }
+		}
+		set collate $val
+	    }
+	    -repeat {
+		# TODO: test for integer >= 0
+		set repeat $val
 	    }
 	    -verbose {
 		set verbose info
@@ -1915,27 +1937,27 @@ proc __bench {} {
     # only selected modules.
 
     if {[llength $argv] == 0} {
-	_bench_all $paths $interp $flags $norm $format $verbose $output
+	_bench_all $paths $interp $flags $norm $format $verbose $output $collate $repeat
     } else {
 	if {![checkmod]} {return}
-	_bench_module [dealias $argv] $paths $interp $flags $norm $format $verbose $output
+	_bench_module [dealias $argv] $paths $interp $flags $norm $format $verbose $output $collate $repeat
     }
     return
 }
 
-proc _bench_module {mlist paths interp flags norm format verbose output} {
+proc _bench_module {mlist paths interp flags norm format verbose output coll rep} {
     global package_name package_version
 
     puts "Benchmarking $package_name $package_version development"
     puts "======================================================"
-    bench_mod $mlist $paths $interp $flags $norm $format $verbose $output
+    bench_mod $mlist $paths $interp $flags $norm $format $verbose $output $coll $rep
     puts "------------------------------------------------------"
     puts ""
     return
 }
 
-proc _bench_all {paths flags interp norm format verbose output} {
-    _bench_module [modules] $paths $interp $flags $norm $format $verbose $output
+proc _bench_all {paths flags interp norm format verbose output coll rep} {
+    _bench_module [modules] $paths $interp $flags $norm $format $verbose $output $coll $rep
     return
 }
 
@@ -2216,6 +2238,8 @@ proc __rpmspec {} {
 
 proc __release {} {
     # Regenerate PACKAGES, and extend
+    gd-gen-packages
+    return
 
     global argv argv0 distribution package_name package_version
 

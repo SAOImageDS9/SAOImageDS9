@@ -1,7 +1,7 @@
 
 [//000000001]: # (cmdline \- Command line and option processing)
 [//000000002]: # (Generated from file 'cmdline\.man' by tcllib/doctools with format 'markdown')
-[//000000003]: # (cmdline\(n\) 1\.5 tcllib "Command line and option processing")
+[//000000003]: # (cmdline\(n\) 1\.5\.3 tcllib "Command line and option processing")
 
 <hr> [ <a href="../../../../toc.md">Main Table Of Contents</a> &#124; <a
 href="../../../toc.md">Table Of Contents</a> &#124; <a
@@ -30,6 +30,10 @@ cmdline \- Procedures to process command lines and options\.
 
   - [EXAMPLES](#section4)
 
+      - [cmdline::getoptions](#subsection2)
+
+      - [cmdline::getopt](#subsection3)
+
   - [Bugs, Ideas, Feedback](#section5)
 
   - [Keywords](#keywords)
@@ -38,13 +42,13 @@ cmdline \- Procedures to process command lines and options\.
 
 # <a name='synopsis'></a>SYNOPSIS
 
-package require Tcl 8\.2  
-package require cmdline ?1\.3\.3?  
+package require Tcl 8\.5 9  
+package require cmdline ?1\.5\.3?  
 
 [__::cmdline::getopt__ *argvVar* *optstring* *optVar* *valVar*](#1)  
 [__::cmdline::getKnownOpt__ *argvVar* *optstring* *optVar* *valVar*](#2)  
-[__::cmdline::getoptions__ *arglistVar* *optlist* ?*usage*?](#3)  
-[__::cmdline::getKnownOptions__ *arglistVar* *optlist* ?*usage*?](#4)  
+[__::cmdline::getoptions__ *argvVar* *optlist* ?*usage*?](#3)  
+[__::cmdline::getKnownOptions__ *argvVar* *optlist* ?*usage*?](#4)  
 [__::cmdline::usage__ *optlist* ?*usage*?](#5)  
 [__::cmdline::getfiles__ *patterns* *quiet*](#6)  
 [__::cmdline::getArgv0__](#7)  
@@ -70,9 +74,9 @@ desired or required, is the responsibility of the caller\.
 
     This command works in a fashion like the standard C based __getopt__
     function\. Given an option string and a pointer to an array of args this
-    command will process the first argument and return info on how to proceed\.
-    The command returns 1 if an option was found, 0 if no more options were
-    found, and \-1 if an error occurred\.
+    command will process the *first argument* and return info on how to
+    proceed\. The command returns 1 if an option was found, 0 if no more options
+    were found, and \-1 if an error occurred\.
 
     *argvVar* contains the name of the list of arguments to process\. If
     options are found the list is modified and the processed arguments are
@@ -94,16 +98,21 @@ desired or required, is the responsibility of the caller\.
 
   - <a name='2'></a>__::cmdline::getKnownOpt__ *argvVar* *optstring* *optVar* *valVar*
 
-    Like __::cmdline::getopt__, but ignores any unknown options in the
+    Like __::cmdline::getopt__, except it ignores any unknown options in the
     input\.
 
-  - <a name='3'></a>__::cmdline::getoptions__ *arglistVar* *optlist* ?*usage*?
+  - <a name='3'></a>__::cmdline::getoptions__ *argvVar* *optlist* ?*usage*?
 
-    Processes the set of command line options found in the list variable named
-    by *arglistVar* and fills in defaults for those not specified\. This also
-    generates an error message that lists the allowed flags if an incorrect flag
-    is specified\. The optional *usage*\-argument contains a string to include
-    in front of the generated message\. If not present it defaults to "options:"\.
+    Processes the entire set of command line options found in the list variable
+    named by *argvVar* and fills in defaults for those not specified\. This
+    also generates an error message that lists the allowed flags if an incorrect
+    flag is specified\. The optional *usage*\-argument contains a string to
+    include in front of the generated message\. If not present it defaults to
+    "options:"\.
+
+    *argvVar* contains the name of the list of arguments to process\. If
+    options are found the list is modified and the processed arguments are
+    removed from the start of the list\.
 
     *optlist* contains a list of lists where each element specifies an option
     in the form: *flag* *default* *comment*\.
@@ -122,7 +131,7 @@ desired or required, is the responsibility of the caller\.
     The result of the command is a dictionary mapping all options to their
     values, be they user\-specified or defaults\.
 
-  - <a name='4'></a>__::cmdline::getKnownOptions__ *arglistVar* *optlist* ?*usage*?
+  - <a name='4'></a>__::cmdline::getKnownOptions__ *argvVar* *optlist* ?*usage*?
 
     Like __::cmdline::getoptions__, but ignores any unknown options in the
     input\.
@@ -150,7 +159,7 @@ desired or required, is the responsibility of the caller\.
 
     This command returns the "sanitized" version of *argv0*\. It will strip off
     the leading path and removes the extension "\.bin"\. The latter is used by the
-    pro\-apps because they must be wrapped by a shell script\.
+    TclPro applications because they must be wrapped by a shell script\.
 
 ## <a name='subsection1'></a>Error Codes
 
@@ -159,6 +168,15 @@ __::errorCode__ for use with Tcl's __[try](\.\./try/tcllib\_try\.md)__
 command\. This code always has the word __CMDLINE__ as its first element\.
 
 # <a name='section4'></a>EXAMPLES
+
+## <a name='subsection2'></a>cmdline::getoptions
+
+This example, taken from the package
+__[fileutil](\.\./fileutil/fileutil\.md)__ and slightly modified,
+demonstrates how to use __cmdline::getoptions__\. First, a list of options is
+created, then the 'args' list is passed to cmdline for processing\. Subsequently,
+different options are checked to see if they have been passed to the script, and
+what their value is\.
 
             package require Tcl 8.5
             package require try         ;# Tcllib.
@@ -182,6 +200,9 @@ command\. This code always has the word __CMDLINE__ as its first element\.
 
             try {
                 array set params [::cmdline::getoptions argv $options $usage]
+
+    	    # Note: argv is modified now. The recognized options are
+    	    # removed from it, leaving the non-option arguments behind.
             } trap {CMDLINE USAGE} {msg o} {
                 # Trap the usage signal, print the message, and exit the application.
                 # Note: Other errors are not caught and passed through to higher levels!
@@ -198,11 +219,19 @@ command\. This code always has the word __CMDLINE__ as its first element\.
     	    ...
             }
 
-This example, taken \(and slightly modified\) from the package
-__[fileutil](\.\./fileutil/fileutil\.md)__, shows how to use cmdline\.
-First, a list of options is created, then the 'args' list is passed to cmdline
-for processing\. Subsequently, different options are checked to see if they have
-been passed to the script, and what their value is\.
+## <a name='subsection3'></a>cmdline::getopt
+
+This example shows the core loop of __cmdline::getoptions__ from the
+previous example\. It demonstrates how it uses __cmdline::get__ to process
+the options one at a time\.
+
+        while {[set err [getopt argv $opts opt arg]]} {
+    	if {$err < 0} {
+                set result(?) ""
+                break
+    	}
+    	set result($opt) $arg
+        }
 
 # <a name='section5'></a>Bugs, Ideas, Feedback
 

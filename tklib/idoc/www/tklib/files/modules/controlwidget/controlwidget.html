@@ -1,0 +1,536 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>controlwidget - controlwidget</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'controlwidget.man' by tcllib/doctools with format 'html'
+   -->
+<!-- Copyright &amp;copy; 2010 Ron Fox &amp;lt;rfox@...&amp;gt;   -- Copyright &amp;copy; 2010 Gerhard Reithofer &amp;lt;...@...&amp;gt;   -- Copyright &amp;copy; 2010 Marco Maggi &amp;lt;...@...&amp;gt;   -- Copyright &amp;copy; 2010 Arjen Markus &amp;lt;arjenmarkus@users.sourceforge.net&amp;gt;
+   -->
+<!-- controlwidget.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">controlwidget(n) 0.1 tklib &quot;controlwidget&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>controlwidget - Collection of widgets for displaying and controlling numerical values</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">TYPES OF WIDGETS</a></li>
+<li class="doctools_section"><a href="#section3">COMMANDS</a></li>
+<li class="doctools_section"><a href="#section4">ACKNOWLEDGMENTS</a></li>
+<li class="doctools_section"><a href="#section5">Bugs, Ideas, Feedback</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+<li class="doctools_section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_requirements">
+<li>package require <b class="pkgname">Tcl <span class="opt">?8.5?</span></b></li>
+<li>package require <b class="pkgname">Tk <span class="opt">?8.5?</span></b></li>
+<li>package require <b class="pkgname">snit <span class="opt">?2.0?</span></b></li>
+<li>package require <b class="pkgname">controlwidget <span class="opt">?0.1?</span></b></li>
+</ul>
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">::controlwidget::meter</b> <i class="arg">w</i> <i class="arg">args</i></a></li>
+<li><a href="#2"><b class="cmd">::controlwidget::slider</b> <i class="arg">w</i> <i class="arg">args</i></a></li>
+<li><a href="#3"><b class="cmd">::controlwidget::equalizerBar</b> <i class="arg">w</i> <i class="arg">args</i></a></li>
+<li><a href="#4"><b class="cmd">::controlwidget::thermometer</b> <i class="arg">w</i> <i class="arg">args</i></a></li>
+<li><a href="#5"><b class="cmd">::controlwidget::voltmeter</b> <i class="arg">w</i> <i class="arg">args</i></a></li>
+<li><a href="#6"><b class="cmd">::controlwidget::tachometer</b> <i class="arg">w</i> <i class="arg">args</i></a></li>
+<li><a href="#7"><b class="cmd">::controlwidget::rdial</b> <i class="arg">w</i> <i class="arg">args</i></a></li>
+<li><a href="#8"><b class="cmd">$widget</b> get</a></li>
+<li><a href="#9"><b class="cmd">$widget</b> set <i class="arg">value</i></a></li>
+<li><a href="#10"><b class="cmd">::controlwidget::led</b> <i class="arg">w</i> <i class="arg">args</i></a></li>
+<li><a href="#11"><b class="cmd">::controlwidget::radioMatrix</b> <i class="arg">w</i> <i class="arg">args</i></a></li>
+<li><a href="#12"><b class="cmd">$led</b> on</a></li>
+<li><a href="#13"><b class="cmd">$led</b> off</a></li>
+<li><a href="#14"><b class="cmd">$led</b> setstate <i class="arg">state</i></a></li>
+<li><a href="#15"><b class="cmd">$matrix</b> get</a></li>
+<li><a href="#16"><b class="cmd">$matrix</b> set <i class="arg">index</i></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>The controlwidget package focuses on the display and interactive control of numerical values.
+It mimicks several of the meters and controls found in laboratory settings but also
+daily life: volt meters, equalizers and tachometers to name a few. They can be seen as alternatives
+for the <em>scale widget</em>.</p>
+<p><em>Note:</em> The package has not sofar been tested extensively, and that may result in
+an unexpected appearance if you use sizes that are different than the defaults. Also
+not all options for the coloring of the various parts and fonts and so on have been tested, so that
+may be another source of bugs.</p>
+<p>A last note: some parts have not been included in any option, most notably the colors of
+parts that require lighter and darker shades to cooperate.</p>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">TYPES OF WIDGETS</a></h2>
+<p>The package distinguishes several typed of widgets:</p>
+<ul class="doctools_itemized">
+<li><p>Vertical meters: the value of the variable is translated into a vertical position, like with
+the coloured bars you find on your stereo installation.</p></li>
+<li><p>Angle displays: the value of the variable is related to the angle of a needle, like with tachometers.</p></li>
+<li><p>Interactive widgets: most widgets allow you to change the value of the variable by pressing the mouse button
+on the needle and shifting it up and down or left and right.</p></li>
+<li><p>Non-interactive widgets: some widgets, like the thermometer widget, do not allow such interaction.</p></li>
+<li><p>Logical or choice widgets: some widgets display the values as either on/off (or true/false) or as
+one of a set of discrete choices.</p></li>
+</ul>
+<p>All widgets have in common, however, that you can connect them to a variable and that changing the variable
+changes the display. Forthermore, all widgets have the set and get methods to interact with the value that
+the widget displays (whether that is stored in a global variable or not).</p>
+<p>They also have in common that their appearance and behaviour is determined by one or more options that
+you can set at creation time and often later on as well. The widgets are all based on the <em>snit</em>
+package, so that the methods <b class="method">configure</b> and <b class="method">cget</b> are available to set and get these options.</p>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">COMMANDS</a></h2>
+<p>Currently the package contains these widgets of the <em>vertical meter</em> type:</p>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">::controlwidget::meter</b> <i class="arg">w</i> <i class="arg">args</i></a></dt>
+<dd><p>Create a vertical meter consisting of an axis and a moveable arrow.</p>
+<dl class="doctools_arguments">
+<dt>widget <i class="arg">w</i> (in)</dt>
+<dd><p>Name of the widget to be created.</p></dd>
+<dt>arguments <i class="arg">args</i> (in)</dt>
+<dd><p>List of key-value pairs, controlling the appearance and behaviour of the widget:</p>
+<dl class="doctools_options">
+<dt><b class="option">variable</b> name</dt>
+<dd><p>Name of the variable to be associated with the meter</p></dd>
+<dt><b class="option">background</b> color</dt>
+<dd><p>Background color for the widget</p></dd>
+<dt><b class="option">height</b> pixels</dt>
+<dd><p>Height of the widget</p></dd>
+<dt><b class="option">width</b> pixels</dt>
+<dd><p>Width of the widget</p></dd>
+<dt><b class="option">arrowthickness</b> pixels</dt>
+<dd><p>Thickness of the displayed arrow in pixels</p></dd>
+<dt><b class="option">arrowcolor</b> color</dt>
+<dd><p>Color of the displayed arrow</p></dd>
+<dt><b class="option">readonly</b> boolean</dt>
+<dd><p>Whether the arrow can be moved interactively or not</p></dd>
+</dl></dd>
+</dl></dd>
+<dt><a name="2"><b class="cmd">::controlwidget::slider</b> <i class="arg">w</i> <i class="arg">args</i></a></dt>
+<dd><p>Create a widget containing one or more vertical sliders and an axis. You can shift the slider handles
+interactively via the mouse.</p>
+<dl class="doctools_arguments">
+<dt>widget <i class="arg">w</i> (in)</dt>
+<dd><p>Name of the widget to be created.</p></dd>
+<dt>arguments <i class="arg">args</i> (in)</dt>
+<dd><p>List of key-value pairs, controlling the appearance and behaviour of the widget:</p>
+<dl class="doctools_options">
+<dt><b class="option">variable</b> name</dt>
+<dd><p>Name of the (list) variable to be associated with the widget</p></dd>
+<dt><b class="option">number</b> integer</dt>
+<dd><p>Number of sliders in the widget</p></dd>
+<dt><b class="option">background</b> color</dt>
+<dd><p>Background color for the widget</p></dd>
+<dt><b class="option">height</b> pixels</dt>
+<dd><p>Height of the widget</p></dd>
+<dt><b class="option">width</b> pixels</dt>
+<dd><p>Width of the widget</p></dd>
+<dt><b class="option">sliderthickness</b> pixels</dt>
+<dd><p>Thickness of the slider handles</p></dd>
+<dt><b class="option">sliderwidth</b> color</dt>
+<dd><p>Width of the slider handles</p></dd>
+<dt><b class="option">troughwidth</b> color</dt>
+<dd><p>Width of the troughs holding the sliders</p></dd>
+</dl></dd>
+</dl></dd>
+<dt><a name="3"><b class="cmd">::controlwidget::equalizerBar</b> <i class="arg">w</i> <i class="arg">args</i></a></dt>
+<dd><p>Create a widget containing one or more vertical bars resembling those found on hifi graphical equalizers.
+Note that it is a read-only widget.</p>
+<dl class="doctools_arguments">
+<dt>widget <i class="arg">w</i> (in)</dt>
+<dd><p>Name of the widget to be created.</p></dd>
+<dt>arguments <i class="arg">args</i> (in)</dt>
+<dd><p>List of key-value pairs, controlling the appearance and behaviour of the widget:</p>
+<dl class="doctools_options">
+<dt><b class="option">variable</b> name</dt>
+<dd><p>Name of the (list) variable to be associated with the widget</p></dd>
+<dt><b class="option">number</b> integer</dt>
+<dd><p>Number of bars in the widget</p></dd>
+<dt><b class="option">background</b> color</dt>
+<dd><p>Background color for the widget</p></dd>
+<dt><b class="option">height</b> pixels</dt>
+<dd><p>Height of the widget</p></dd>
+<dt><b class="option">width</b> pixels</dt>
+<dd><p>Width of the widget</p></dd>
+<dt><b class="option">barwidth</b> pixels</dt>
+<dd><p>Width of the bars</p></dd>
+<dt><b class="option">segments</b> integer</dt>
+<dd><p>Number of segments the bars are divided in</p></dd>
+<dt><b class="option">safecolor</b> color</dt>
+<dd><p>Color for values lower than the warning level</p></dd>
+<dt><b class="option">warningcolor</b> color</dt>
+<dd><p>Color for values greater than the warning level</p></dd>
+<dt><b class="option">warninglevel</b> double</dt>
+<dd><p>Threshold value, determines at what level the color changes</p></dd>
+</dl></dd>
+</dl></dd>
+<dt><a name="4"><b class="cmd">::controlwidget::thermometer</b> <i class="arg">w</i> <i class="arg">args</i></a></dt>
+<dd><p>Create a thermometer widget (read-only)</p>
+<dl class="doctools_arguments">
+<dt>widget <i class="arg">w</i> (in)</dt>
+<dd><p>Name of the widget to be created.</p></dd>
+<dt>arguments <i class="arg">args</i> (in)</dt>
+<dd><p>List of key-value pairs, controlling the appearance and behaviour of the widget:</p>
+<dl class="doctools_options">
+<dt><b class="option">variable</b> name</dt>
+<dd><p>Name of the (list) variable to be associated with the widget</p></dd>
+<dt><b class="option">background</b> color</dt>
+<dd><p>Background color for the widget</p></dd>
+<dt><b class="option">height</b> pixels</dt>
+<dd><p>Height of the widget</p></dd>
+<dt><b class="option">width</b> pixels</dt>
+<dd><p>Width of the widget</p></dd>
+<dt><b class="option">linethickness</b> pixels</dt>
+<dd><p>Thickness of the line representing the &quot;temperature&quot;</p></dd>
+<dt><b class="option">linecolor</b> color</dt>
+<dd><p>Color of the line</p></dd>
+</dl></dd>
+</dl></dd>
+</dl>
+<p>These widgets all use a vertical axis and have the following options in common for configuring the
+axis:</p>
+<dl class="doctools_options">
+<dt><b class="option">axisformat</b> string</dt>
+<dd><p>Format string for formatting the numbers along the axis</p></dd>
+<dt><b class="option">axisfont</b> string</dt>
+<dd><p>Name of the font to be used for the numbers</p></dd>
+<dt><b class="option">axiscolor</b> color</dt>
+<dd><p>Color of the axis (including the numbers)</p></dd>
+<dt><b class="option">from</b> color</dt>
+<dd><p>Lower value for the axis</p></dd>
+<dt><b class="option">to</b> color</dt>
+<dd><p>Upper value for the axis</p></dd>
+<dt><b class="option">majorticks</b> integer</dt>
+<dd><p>Number of major tickmarks to draw (each is labelled)</p></dd>
+<dt><b class="option">minorticks</b> integer</dt>
+<dd><p>Number of minor tickmarks to draw between two major tickmarks</p></dd>
+<dt><b class="option">log</b> boolean</dt>
+<dd><p>Use a logarithmic axis (true) or a linear axis (false)</p></dd>
+</dl>
+<p>The package contains the following widget based on angle displays:</p>
+<dl class="doctools_definitions">
+<dt><a name="5"><b class="cmd">::controlwidget::voltmeter</b> <i class="arg">w</i> <i class="arg">args</i></a></dt>
+<dd><p>Create a voltmeter-like widget.</p>
+<dl class="doctools_arguments">
+<dt>widget <i class="arg">w</i> (in)</dt>
+<dd><p>Name of the widget to be created.</p></dd>
+<dt>arguments <i class="arg">args</i> (in)</dt>
+<dd><p>List of key-value pairs, controlling the appearance and behaviour of the widget:</p>
+<dl class="doctools_options">
+<dt><b class="option">variable</b> name</dt>
+<dd><p>Name of the variable to be associated with the meter</p></dd>
+<dt><b class="option">value</b> value</dt>
+<dd><p>Value for the meter (if not associated with a variable)</p></dd>
+<dt><b class="option">min</b> value</dt>
+<dd><p>The minimum value for data in the display</p></dd>
+<dt><b class="option">max</b> value</dt>
+<dd><p>The maximum value for data in the display</p></dd>
+<dt><b class="option">labels</b> list</dt>
+<dd><p>The labels to be shown along the scale. (These are simply considered texts, so no
+relation with the minimum and maximum perse)</p></dd>
+<dt><b class="option">title</b> string</dt>
+<dd><p>String to be shown below the dial</p></dd>
+<dt><b class="option">width</b> pixels</dt>
+<dd><p>The width of the widget</p></dd>
+<dt><b class="option">height</b> pixels</dt>
+<dd><p>The height of the widget</p></dd>
+<dt><b class="option">borderwidth</b> pixels</dt>
+<dd><p>The width of the border surrounding the entire widget</p></dd>
+<dt><b class="option">relief</b> string</dt>
+<dd><p>The relief of the border surrounding the entire widget</p></dd>
+<dt><b class="option">highlightthickness</b> pixels</dt>
+<dd><p>The width of the border to indicate the widget has keyboard focus</p></dd>
+<dt><b class="option">labelfont</b> fontname</dt>
+<dd><p>Font of the labels to the scale</p></dd>
+<dt><b class="option">titlefont</b> fontname</dt>
+<dd><p>Font of the title below the dial</p></dd>
+<dt><b class="option">dialcolor</b> color</dt>
+<dd><p>Color of the dial holding the needle</p></dd>
+<dt><b class="option">needlecolor</b> color</dt>
+<dd><p>Color of the needle</p></dd>
+<dt><b class="option">scalecolor</b> color</dt>
+<dd><p>Color of the scale (arc and tickmarks)</p></dd>
+<dt><b class="option">labelcolor</b> color</dt>
+<dd><p>Color of the labels to the scale</p></dd>
+<dt><b class="option">titlecolor</b> color</dt>
+<dd><p>Color of the title below the dial</p></dd>
+</dl></dd>
+</dl></dd>
+<dt><a name="6"><b class="cmd">::controlwidget::tachometer</b> <i class="arg">w</i> <i class="arg">args</i></a></dt>
+<dd><p>Create a tachometer-like widget.</p>
+<dl class="doctools_arguments">
+<dt>widget <i class="arg">w</i> (in)</dt>
+<dd><p>Name of the widget to be created.</p></dd>
+<dt>arguments <i class="arg">args</i> (in)</dt>
+<dd><p>List of key-value pairs, controlling the appearance and behaviour of the widget. In addition
+to the ones given for the voltmeter widget:</p>
+<dl class="doctools_options">
+<dt><b class="option">variable</b> name</dt>
+<dd><p>Name of the variable to be associated with the meter</p></dd>
+<dt><b class="option">value</b> value</dt>
+<dd><p>Value for the meter (if not associated with a variable)</p></dd>
+<dt><b class="option">dangerlevel</b> value</dt>
+<dd><p>Level above which values are indicated with a different color</p></dd>
+<dt><b class="option">dangercolor</b> color</dt>
+<dd><p>Color for the values above the &quot;danger level&quot;</p></dd>
+<dt><b class="option">dangerwidth</b> pixels</dt>
+<dd><p>Width for the colored band indicating the &quot;danger level&quot;</p></dd>
+<dt><b class="option">pincolor</b> color</dt>
+<dd><p>Color for the needle and the pin</p></dd>
+</dl></dd>
+</dl></dd>
+<dt><a name="7"><b class="cmd">::controlwidget::rdial</b> <i class="arg">w</i> <i class="arg">args</i></a></dt>
+<dd><p>Create a rotating dial. You can drag the dial to change the value. With the shift button
+depressed the value changes slowly, with the control button depressed it changes fast.
+Similarly, you can control the dial via the mouse wheel, with the shift and control button
+working in the same way as with the mouse pointer.
+<em>Note:</em> The shift and control buttons currently have no effect on Windows.</p>
+<dl class="doctools_arguments">
+<dt>widget <i class="arg">w</i> (in)</dt>
+<dd><p>Name of the widget to be created.</p></dd>
+<dt>arguments <i class="arg">args</i> (in)</dt>
+<dd><p>List of key-value pairs, controlling the appearance and behaviour of the widget:</p>
+<dl class="doctools_options">
+<dt><b class="option">variable</b> name</dt>
+<dd><p>Name of the variable to be associated with the dial</p></dd>
+<dt><b class="option">value</b> value</dt>
+<dd><p>Value for the dial (if not associated with a variable)</p></dd>
+<dt><b class="option">orient</b> string</dt>
+<dd><p>Whether a horizontal disk/dial is required (&quot;horizontal&quot;) or a vertical one (&quot;vertical&quot;)</p></dd>
+<dt><b class="option">step</b> value</dt>
+<dd><p>Initial step for incrementing or decrementing the value</p></dd>
+<dt><b class="option">bindwheel</b> value</dt>
+<dd><p>Step size for controlling the dial's value via the mouse wheel</p></dd>
+<dt><b class="option">slow</b> value</dt>
+<dd><p>Factor on the step size for incrementing or decrementing the value slowly</p></dd>
+<dt><b class="option">fast</b> value</dt>
+<dd><p>Factor on the step size for incrementing or decrementing the value fast</p></dd>
+<dt><b class="option">scale</b> value</dt>
+<dd><p>Scale value to be applied to the actual value</p></dd>
+<dt><b class="option">callback</b> command</dt>
+<dd><p>Command to be called when the value changes</p></dd>
+<dt><b class="option">width</b> pixels</dt>
+<dd><p>The width of the widget</p></dd>
+<dt><b class="option">height</b> pixels</dt>
+<dd><p>The height of the widget</p></dd>
+<dt><b class="option">background</b> color</dt>
+<dd><p>The background color of the widget (coloring of the disk/dial)</p></dd>
+<dt><b class="option">foreground</b> color</dt>
+<dd><p>The foreground color of the widget (the marker lines)</p></dd>
+</dl></dd>
+</dl></dd>
+</dl>
+<p>All these widgets have the following methods:</p>
+<dl class="doctools_definitions">
+<dt><a name="8"><b class="cmd">$widget</b> get</a></dt>
+<dd><p>Return the current value or values shown in the widget</p></dd>
+<dt><a name="9"><b class="cmd">$widget</b> set <i class="arg">value</i></a></dt>
+<dd><p>Reset the value or values shown in the widget. If the widget is associated with
+a variable, that variable is set as well.</p>
+<dl class="doctools_arguments">
+<dt>value <i class="arg">double/list</i></dt>
+<dd><p>New value or values for the widget</p></dd>
+</dl></dd>
+</dl>
+<p>Two further widgets are available, meant to display logical values:</p>
+<dl class="doctools_definitions">
+<dt><a name="10"><b class="cmd">::controlwidget::led</b> <i class="arg">w</i> <i class="arg">args</i></a></dt>
+<dd><p>Create a LED-like widget.</p>
+<dl class="doctools_arguments">
+<dt>widget <i class="arg">w</i> (in)</dt>
+<dd><p>Name of the widget to be created.</p></dd>
+<dt>arguments <i class="arg">args</i> (in)</dt>
+<dd><p>List of key-value pairs, controlling the appearance and behaviour of the widget. In addition
+to the ones given for the voltmeter widget:</p>
+<dl class="doctools_options">
+<dt><b class="option">variable</b> name</dt>
+<dd><p>Name of the variable to be associated with the LED</p></dd>
+<dt><b class="option">size</b> pixels</dt>
+<dd><p>Diameter of the LED widget</p></dd>
+<dt><b class="option">on</b> color</dt>
+<dd><p>Color to use for the &quot;on&quot; state</p></dd>
+<dt><b class="option">off</b> color</dt>
+<dd><p>Color to use for the &quot;off&quot; state</p></dd>
+</dl></dd>
+</dl></dd>
+<dt><a name="11"><b class="cmd">::controlwidget::radioMatrix</b> <i class="arg">w</i> <i class="arg">args</i></a></dt>
+<dd><p>Create a matrix of radio buttons that behaves as a single widget.</p>
+<dl class="doctools_arguments">
+<dt>widget <i class="arg">w</i> (in)</dt>
+<dd><p>Name of the widget to be created.</p></dd>
+<dt>arguments <i class="arg">args</i> (in)</dt>
+<dd><p>List of key-value pairs, controlling the appearance and behaviour of the widget. In addition
+to the ones given for the voltmeter widget:</p>
+<dl class="doctools_options">
+<dt><b class="option">variable</b> name</dt>
+<dd><p>Name of the variable to be associated with the matrix</p></dd>
+<dt><b class="option">orient</b> string</dt>
+<dd><p>The way the radio buttons are to be arranged (horizontal or vertical first)</p></dd>
+<dt><b class="option">rows</b> integer</dt>
+<dd><p>Number of rows in the matrix</p></dd>
+<dt><b class="option">columns</b> integer</dt>
+<dd><p>Number of columns in the matrix</p></dd>
+<dt><b class="option">command</b> list</dt>
+<dd><p>Command associated with the radio buttons. Invoked when the active radio button changes.</p></dd>
+</dl></dd>
+</dl></dd>
+</dl>
+<p>The LED widget has the following public methods:</p>
+<dl class="doctools_definitions">
+<dt><a name="12"><b class="cmd">$led</b> on</a></dt>
+<dd><p>Set the state to &quot;on&quot;</p></dd>
+<dt><a name="13"><b class="cmd">$led</b> off</a></dt>
+<dd><p>Set the state to &quot;off&quot;</p></dd>
+<dt><a name="14"><b class="cmd">$led</b> setstate <i class="arg">state</i></a></dt>
+<dd><p>Set the state according to the value of &quot;state&quot;</p>
+<dl class="doctools_arguments">
+<dt>state <i class="arg">boolean</i> (in)</dt>
+<dd><p>New state for the LED widget</p></dd>
+</dl></dd>
+</dl>
+<p>The radioMatrix widget has two public methods:</p>
+<dl class="doctools_definitions">
+<dt><a name="15"><b class="cmd">$matrix</b> get</a></dt>
+<dd><p>Return the index of the currently selected radio button</p></dd>
+<dt><a name="16"><b class="cmd">$matrix</b> set <i class="arg">index</i></a></dt>
+<dd><p>Select the radio button with index &quot;index&quot;</p>
+<dl class="doctools_arguments">
+<dt>index <i class="arg">integer</i></dt>
+<dd><p>Index of the radio button to be set</p></dd>
+</dl></dd>
+</dl>
+</div>
+<div id="section4" class="doctools_section"><h2><a name="section4">ACKNOWLEDGMENTS</a></h2>
+<p>The code for most of these widgets first appeared on the Wiki. In many cases, Arjen Markus merely
+refactored the code a bit and &quot;snitified&quot; some of them. The original code was developed by the following people:</p>
+<ul class="doctools_itemized">
+<li><p>Vertical meter, LED display, radio matrix: Ron Fox</p></li>
+<li><p>Rotating dials: Gerhard Reithofer</p></li>
+<li><p>Voltmeter and tachometer: Marco Maggi</p></li>
+<li><p>Code for moving the needle: ?</p></li>
+</ul>
+</div>
+<div id="section5" class="doctools_section"><h2><a name="section5">Bugs, Ideas, Feedback</a></h2>
+<p>This document, and the package it describes, will undoubtedly contain
+bugs and other problems.
+Please report such in the category <em>controlwidget</em> of the
+<a href="http://core.tcl.tk/tklib/reportlist">Tklib Trackers</a>.
+Please also report any ideas for enhancements you may have for either
+package and/or documentation.</p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../../../index.html#controlling">controlling</a>, <a href="../../../../index.html#displaying">displaying</a>, <a href="../../../../index.html#numerical_values">numerical values</a>, <a href="../../../../index.html#scale_widget">scale widget</a></p>
+</div>
+<div id="copyright" class="doctools_section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2010 Ron Fox &lt;rfox@...&gt;<br>
+Copyright &copy; 2010 Gerhard Reithofer &lt;...@...&gt;<br>
+Copyright &copy; 2010 Marco Maggi &lt;...@...&gt;<br>
+Copyright &copy; 2010 Arjen Markus &lt;arjenmarkus@users.sourceforge.net&gt;</p>
+</div>
+</div></body></html>

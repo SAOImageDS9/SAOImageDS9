@@ -4,8 +4,6 @@
 #
 #	Generic dialog widget (themed)
 #
-# RCS: @(#) $Id: dialog.tcl,v 1.23 2010/06/01 18:06:52 hobbs Exp $
-#
 
 # Creation and Options - widget::dialog $path ...
 #    -command	-default {} ; # gets appended: $win $reason

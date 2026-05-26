@@ -8,8 +8,8 @@
 # ### ### ### ######### ######### #########
 ## Requisites
 
-package require Tcl 8.5
-package require Tk  8.5
+package require Tcl 8.5-
+package require Tk 8.5-
 package require img::window
 
 namespace eval ::canvas {}
@@ -23,7 +23,7 @@ proc ::canvas::snap {canvas} {
     # to get white ranges in the image, due to overlapped portions of
     # the window with other windows...
 
-    raise [winfo toplevel $canvas] 
+    raise [winfo toplevel $canvas]
     update
 
     # XXX: Undo the raise at the end ?!

@@ -8,7 +8,7 @@
 # Copyright (c) 1994-1997 Sun Microsystems, Inc.
 # Copyright (c) 1998 by Scriptics Corporation.
 # Copyright (c) 2015-2017 Gregor Cramer
-# Copyright (c) 2005-2018 additions by Keith Nash.
+# Copyright (c) 2005-2023 additions by Keith Nash.
 #
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -105,8 +105,8 @@
 #   requires these bindings to generate <<Selection>> events.
 # ------------------------------------------------------------------------------
 
-package require Tcl 8.5
-package require Tk  8.5
+package require Tcl 8.5-
+package require Tk  8.5-
 
 # ------------------------------------------------------------------------------
 # Define the set of common virtual events.
@@ -647,6 +647,7 @@ bind Ntext <Delete> {
 	    }
 	    set ::ntext::OldFirst [%W index sel.first]
 	    ntext::TextDelete %W sel.first sel.last
+	    ntext::ColorTabsBinding %W $::ntext::OldFirst
 	    ntext::AdjustIndentOneLine %W $::ntext::OldFirst
 	    if {[%W cget -autoseparators]} {
 		%W edit separator
@@ -660,6 +661,7 @@ bind Ntext <Delete> {
 	    }
 	} elseif {[%W compare end != insert+1i]} {
 	    %W delete insert
+	    ntext::ColorTabsBinding %W insert
 	    ntext::AdjustIndentOneLine %W insert
 	}
 	%W see insert
@@ -670,11 +672,13 @@ bind Ntext <BackSpace> {
 	if {[ntext::TextCursorInSelection %W]} {
 	    set ::ntext::OldFirst [%W index sel.first]
 	    ntext::TextDelete %W sel.first sel.last
+	    ntext::ColorTabsBinding %W $::ntext::OldFirst
 	    ntext::AdjustIndentOneLine %W $::ntext::OldFirst
 	} elseif {[%W compare insert != 1.0]} {
 	    # ensure that this operation is triggering "watch"
 	    %W mark set insert insert-1i
 	    %W delete insert
+	    ntext::ColorTabsBinding %W insert
 	    ntext::AdjustIndentOneLine %W insert
 	}
 	%W see insert
@@ -687,9 +691,11 @@ catch {bind Ntext <Terminate_Server> {
     if {[ntext::TextCursorInSelection %W]} {
 	set ::ntext::OldFirst [%W index sel.first]
 	%W delete sel.first sel.last
+	ntext::ColorTabsBinding %W $::ntext::OldFirst
 	ntext::AdjustIndentOneLine %W $::ntext::OldFirst
     } elseif {[%W compare insert != 1.0]} {
 	%W delete insert-1c
+	ntext::ColorTabsBinding %W insert
 	ntext::AdjustIndentOneLine %W insert
     }
     %W see insert
@@ -745,6 +751,7 @@ bind Ntext <<Clear>> {
 	    }
 	    set ::ntext::OldFirst [%W index sel.first]
 	    ntext::TextDelete %W sel.first sel.last
+	    ntext::ColorTabsBinding %W $::ntext::OldFirst
 	    ntext::AdjustIndentOneLine %W $::ntext::OldFirst
 	    if {[%W cget -autoseparators]} {
 		%W edit separator
@@ -792,6 +799,7 @@ bind Ntext <Control-d> {
     if {[%W cget -state] eq "normal" && $::ntext::classicExtras && !$tk_strictMotif &&
 	    [%W compare end != insert+1i]} {
 	%W delete insert
+	ntext::ColorTabsBinding %W insert
 	ntext::AdjustIndentOneLine %W insert
     }
 }
@@ -803,6 +811,7 @@ bind Ntext <Control-k> {
 	} else {
 	    %W delete insert {insert lineend}
 	}
+	ntext::ColorTabsBinding %W insert
 	ntext::AdjustIndentOneLine %W insert
     }
 }
@@ -810,6 +819,7 @@ bind Ntext <Control-o> {
     if {[%W cget -state] eq "normal" && $::ntext::classicExtras && !$tk_strictMotif} {
 	%W insert insert \n
 	%W mark set insert insert-1i
+	ntext::ColorTabsBinding %W "insert + 1 line"
 	ntext::AdjustIndentOneLine %W "insert + 1 line"
     }
 }
@@ -831,6 +841,7 @@ bind Ntext <<Undo>> {
 	    # Cancel the selection so that Undo does not mess it up.
 	    %W tag remove sel 1.0 end
 	    # The undo stack does not record tags - so we need to reapply them.
+	    ntext::ColorTabsBinding %W 1.0 end
 	    ntext::AdjustIndentMultipleLines %W 1.0 end
 	}
 	if {[%W cget -autoseparators]} {
@@ -843,6 +854,7 @@ bind Ntext <<Redo>> {
 	# Cancel the selection so that Redo does not mess it up.
 	%W tag remove sel 1.0 end
 	# The redo stack does not record tags - so we need to reapply them.
+	ntext::ColorTabsBinding %W 1.0 end
 	ntext::AdjustIndentMultipleLines %W 1.0 end
     }
 }
@@ -860,6 +872,7 @@ bind Ntext <Meta-b> {
 bind Ntext <Meta-d> {
     if {!$tk_strictMotif && [%W compare end != insert+1i]} {
 	%W delete insert [ntext::TextNextWord %W insert]
+	ntext::ColorTabsBinding %W insert
 	ntext::AdjustIndentOneLine %W insert
     }
 }
@@ -885,12 +898,14 @@ bind Ntext <Meta-BackSpace> {
     if {[%W cget -state] eq "normal" && !$tk_strictMotif} {
 	ntext::TextDelete %W [ntext::TextPrevPos %W insert ntext::new_startOfPreviousWord] insert
     }
+    ntext::ColorTabsBinding %W insert
     ntext::AdjustIndentOneLine %W insert
 }
 bind Ntext <Meta-Delete> {
     if {[%W cget -state] eq "normal" && !$tk_strictMotif} {
 	ntext::TextDelete %W [ntext::TextPrevPos %W insert ntext::new_startOfPreviousWord] insert
     }
+    ntext::ColorTabsBinding %W insert
     ntext::AdjustIndentOneLine %W insert
 }
 
@@ -1165,6 +1180,7 @@ bind Ntext <Control-h> {
 	%W mark set insert insert-1i
 	%W delete insert
 	%W see insert
+	ntext::ColorTabsBinding %W insert
 	ntext::AdjustIndentOneLine %W insert
     }
 }
@@ -1270,7 +1286,7 @@ namespace eval ::ntext {
     namespace export createMatchPatterns initializeMatchPatterns
     namespace export new_endOfWord new_textCopy new_textCut new_textPaste
     namespace export new_startOfNextWord new_startOfPreviousWord
-    namespace export new_wordBreakAfter new_wordBreakBefore wrapIndent
+    namespace export new_wordBreakAfter new_wordBreakBefore wrapIndent syncTabColor
 
     # Variables that control the behaviour of certain bindings and may be
     # changed by the user's script
@@ -1308,6 +1324,13 @@ namespace eval ::ntext {
     # Color to use for the hanging (-lmargin2) indent itself.
     # Set to {} for no color.
     variable indentColor        #d9d9d9
+
+    # Color to use for tabs.
+    # Set to {} for no color.
+    # If tabSelColor is {}, the color defaults to tabColor,
+    # not to the widget -selectbackground.
+    variable tabColor    #ffffaa
+    variable tabSelColor #418bd4
 
     # Whether to use the -blockcursor when in "overwrite" mode (the alternative
     # is a change of color).  Defaults to YES iff 8.5.12 or over.  For earlier
@@ -1527,9 +1550,14 @@ proc ::ntext::TextButton1 {w x y} {
 	}
     }
 
-    # Allow focus in any case on Windows, because that will let the
-    # selection be displayed even for state disabled text widgets.
-    if {[tk windowingsystem] eq "win32" || [$w cget -state] eq "normal"} {
+    # - Allow focus in any case on Windows, because that will let the
+    #   selection be displayed even for state disabled text widgets.
+    # - Use -force for Windows, because without it, an embedded window
+    #   from another process will not relinquish focus.
+
+    if {[tk windowingsystem] eq "win32"} {
+	focus -force $w
+    } elseif {[$w cget -state] eq "normal"} {
 	focus $w
     }
     return
@@ -2146,9 +2174,9 @@ proc ::ntext::TextResetAnchor {w index} {
 	$w mark gravity $anchorname right
 	return
     }
-    scan $a "%d.%d" lineA chA
-    scan $b "%d.%d" lineB chB
-    scan $c "%d.%d" lineC chC
+    scan $a "%lld.%lld" lineA chA
+    scan $b "%lld.%lld" lineB chB
+    scan $c "%lld.%lld" lineC chC
     if {$lineB < $lineC + 2} {
 	set total [string length [$w get $b $c]]
 	if {$total <= 2} {
@@ -2228,6 +2256,7 @@ proc ::ntext::TextInsert {w s} {
 	$w delete insert
     }
     $w insert insert $s
+    ColorTabsBinding $w insert-1i insert
     AdjustIndentOneLine $w insert
     $w see insert
     if {$compound} {
@@ -2235,6 +2264,7 @@ proc ::ntext::TextInsert {w s} {
 	$w configure -autoseparators 1
     }
 }
+
 
 # ::tk::TextUpDownLine --
 # Returns the index of the character one display line above or below the
@@ -2475,6 +2505,7 @@ proc ::ntext::TextTranspose w {
     if {[$w compare insert == "insert linestart"]} {
 	AdjustIndentOneLine $w "insert - 1 line"
     }
+    ColorTabsBinding $w insert
     AdjustIndentOneLine $w insert
 
     $w see insert
@@ -2531,6 +2562,7 @@ proc ::ntext::new_textCut w {
 
 	    set LocalOldFirst [$w index sel.first]
 	    TextDelete $w sel.first sel.last
+	    ColorTabsBinding $w $LocalOldFirst
 	    AdjustIndentOneLine $w $LocalOldFirst
 	
 	    if {$oldSeparator} {
@@ -2743,9 +2775,11 @@ proc ::ntext::TextInsertSelection {w selection} {
 
 	TextDelete $w sel.first sel.last
 	$w insert $LocalOldFirst $sel
+	ColorTabsBinding $w $LocalOldFirst ntextIndentMark
 	AdjustIndentMultipleLines $w $LocalOldFirst ntextIndentMark
     } else {
 	$w insert insert $sel
+	ColorTabsBinding $w $oldInsert insert
 	AdjustIndentMultipleLines $w $oldInsert insert
     }
     if {$oldSeparator} {
@@ -3276,6 +3310,62 @@ proc ::ntext::new_startOfPreviousWord {str start} {
 
 ##### END OF CODE FOR WORD BOUNDARY DETECTION
 
+##### START OF CODE FOR (OPTIONAL) TAB COLORING
+
+# ::ntext::syncTabColor --
+#
+# Procedure to color tabs.
+# Set tabColor and tabSelColor to {} for no coloring.
+#
+# Arguments:
+# w      -		text widget to be colored
+
+proc ::ntext::syncTabColor {w} {
+    variable tabColor
+    variable tabSelColor
+    ColorTabs $w $tabColor $tabSelColor
+    return
+}
+
+
+proc ::ntext::ColorTabsBinding {w args} {
+    variable tabColor
+    variable tabSelColor
+    if {($tabColor ne {}) || ($tabSelColor ne {})} {
+	ColorTabs $w $tabColor $tabSelColor {*}$args
+    }
+    return
+}
+
+
+proc ::ntext::ColorTabs {w tabColorArg tabSelColorArg args} {
+    if {[llength $args] == 0} {
+	set start  1.0
+	set finish end
+    } elseif {[llength $args] == 1} {
+	set index  [lindex $args 0]
+	set start  [$w index "$index linestart"]
+	set finish [$w index "$start + 1 line"]
+    } else {
+	set index  [lindex $args 0]
+	set start  [$w index "$index linestart"]
+	set index  [lindex $args 1]
+	set finish [$w index "$index linestart"]
+	set finish [$w index "$finish + 1 line"]
+    }
+
+    # If tag -selectbackground is {}, the color defaults to the
+    # tag -background, not to the widget -selectbackground.
+    $w tag configure NtextTab -background $tabColorArg -selectbackground $tabSelColorArg
+    set tabList [$w search -all -- "\t" $start $finish]
+    foreach tab $tabList {
+        $w tag add NtextTab $tab "$tab+1i"
+    }
+    return
+}
+
+##### END OF CODE FOR (OPTIONAL) TAB COLORING
+
 ##### START OF CODE TO HANDLE (OPTIONAL) INDENTATION USING -lmargin2
 
 # ::ntext::wrapIndent --
@@ -3385,6 +3475,7 @@ proc ::ntext::AdjustIndentOneLine {textWidget index} {
     # its -lmargin2 value so that the start of every wrapped display line
     # is aligned with the first display line.
     variable classicWrap
+
     if {([$textWidget cget -wrap] eq "word") && !$classicWrap} {
 	RemoveIndentOneLine $textWidget $index
 	set pix [HowMuchIndent $textWidget $index]
@@ -3600,4 +3691,5 @@ proc ::ntext::syncIndentColor {w} {
 
 ::ntext::initializeMatchPatterns
 
-package provide ntext 1.0b3
+package provide ntext 1.0
+

@@ -6,15 +6,12 @@
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
 # -------------------------------------------------------------------------
-# RCS: @(#) $Id: ipMore.test,v 1.4 2006/10/09 21:41:40 andreas_kupries Exp $
-
-# -------------------------------------------------------------------------
 
 source [file join \
 	[file dirname [file dirname [file join [pwd] [info script]]]] \
 	devtools testutilities.tcl]
 
-testsNeedTcl     8.2
+testsNeedTcl     8.5
 testsNeedTcltest 2.2
 
 testing {
@@ -27,8 +24,6 @@ testing {
     [llength [info commands ::ip::prefixToNativec]]
 
 # -------------------------------------------------------------------------
-
-logger::setlevel critical
 
 namespace eval ::ip::test {
 
@@ -129,7 +124,7 @@ namespace eval ::ip::test {
     } -result {1.1.1.0/24 1.0.0.0/8 2.1.1.0/24 1.1.1.1/32}
 
     ::tcltest::test ip::nativeToPrefix-3 {
-        0 test 
+        0 test
     } -setup {
     } -constraints {
     } -cleanup {
@@ -245,7 +240,7 @@ namespace eval ::ip::test {
     } -constraints {
     } -cleanup {
     } -body {
-        ::ip::lengthToMask 24 
+        ::ip::lengthToMask 24
     } -result {255.255.255.0}
 
     ::tcltest::test ::ip:maskToInt-1 {
@@ -365,7 +360,7 @@ namespace eval ::ip::test {
     } -constraints {
     } -cleanup {
     } -body {
-        ip::nextNet 0x01010101 [ip::maskToInt 32] 2 
+        ip::nextNet 0x01010101 [ip::maskToInt 32] 2
     } -result {0x01010103}
 
     ::tcltest::test ::ip:isOverlap-1 {
@@ -425,7 +420,7 @@ namespace eval ::ip::test {
     } -cleanup {
     } -body {
         set a [::ip::isOverlapNativeTcl  -ipv4 0x01010100 0xffffff00 {{0x02010001 0xffffffff} {0x01010101 0xffffffff}}]
-        expr $a > 0 
+        expr $a > 0
     } -result {1}
 
     ::tcltest::test ::ip:isOverlapNativeTcl-3 {
@@ -444,7 +439,7 @@ namespace eval ::ip::test {
     } -cleanup {
     } -body {
         set a [::ip::isOverlapNativeTcl  -ipv4 -all 0x01010100 0xffffff00 {
-            {0x02010001 0xffffffff} 
+            {0x02010001 0xffffffff}
             {0x01010101 0xffffffff}
             {0x01010102 0xffffffff}
         }]
@@ -457,7 +452,7 @@ namespace eval ::ip::test {
     } -cleanup {
     } -body {
         set a [::ip::isOverlapNativeTcl  -ipv4 -all -inline 0x01010100 0xffffff00 {
-            {0x02010001 0xffffffff} 
+            {0x02010001 0xffffffff}
             {0x01010101 0xffffffff}
             {0x01010102 0xffffffff}
         }]
@@ -470,7 +465,7 @@ namespace eval ::ip::test {
     } -cleanup {
     } -body {
         set a [::ip::isOverlapNativeTcl -ipv4 -inline 0x01010100 0xffffff00 {
-            {0x02010001 0xffffffff} 
+            {0x02010001 0xffffffff}
             {0x01010101 0xffffffff}
             {0x01010102 0xffffffff}
         }]
@@ -483,7 +478,7 @@ namespace eval ::ip::test {
     } -cleanup {
     } -body {
         set a [::ip::isOverlapNativeTcl -ipv4 -all -inline 0x01010100 0xffffff00 {
-            {0x02010001 0xffffffff} 
+            {0x02010001 0xffffffff}
             {0x01010101 0xffffffff}
         }]
     } -result {{0x01010101 0xffffffff}}
@@ -495,7 +490,7 @@ namespace eval ::ip::test {
     } -cleanup {
     } -body {
         set a [::ip::isOverlapNativeTcl -ipv4 -inline 0x01010100 0xffffff00 {
-            {0x02010001 0xffffffff} 
+            {0x02010001 0xffffffff}
         }]
     } -result {}
 
@@ -539,7 +534,7 @@ namespace eval ::ip::test {
     } -cleanup {
     } -body {
         set a [::ip::isOverlapNativec -ipv4  -all 0x01010100 0xffffff00 {
-            {0x02010001 0xffffffff} 
+            {0x02010001 0xffffffff}
             {0x01010101 0xffffffff}
             {0x01010102 0xffffffff}
         }]
@@ -553,7 +548,7 @@ namespace eval ::ip::test {
     } -cleanup {
     } -body {
         set a [::ip::isOverlapNativec -ipv4 -all -inline 0x01010100 0xffffff00 {
-            {0x02010001 0xffffffff} 
+            {0x02010001 0xffffffff}
             {0x01010101 0xffffffff}
             {0x01010102 0xffffffff}
         }]
@@ -567,7 +562,7 @@ namespace eval ::ip::test {
     } -cleanup {
     } -body {
         set a [::ip::isOverlapNativec -ipv4 -inline 0x01010100 0xffffff00 {
-            {0x02010001 0xffffffff} 
+            {0x02010001 0xffffffff}
             {0x01010101 0xffffffff}
             {0x01010102 0xffffffff}
         }]
@@ -581,7 +576,7 @@ namespace eval ::ip::test {
     } -cleanup {
     } -body {
         set a [::ip::isOverlapNativec -ipv4 -all -inline 0x01010100 0xffffff00 {
-            {0x02010001 0xffffffff} 
+            {0x02010001 0xffffffff}
             {0x01010101 0xffffffff}
         }]
     } -result {{0x01010101 0xffffffff}}
@@ -594,7 +589,7 @@ namespace eval ::ip::test {
     } -cleanup {
     } -body {
         set a [::ip::isOverlapNativec -ipv4  -inline 0x01010100 0xffffff00 {
-            {0x02010001 0xffffffff} 
+            {0x02010001 0xffffffff}
         }]
     } -result {}
 
@@ -637,10 +632,10 @@ namespace eval ::ip::test {
             1.1.1.18/32
             1.1.1.13/32
             1.1.1.17/32
-            2.1.1.0/24 
-            1.1.0.0/16 
+            2.1.1.0/24
+            1.1.0.0/16
             1.1.1.12/30
-            1.1.1.4/30 
+            1.1.1.4/30
         }
         set x [::ip::ipHostFromPrefix  $testPrefix -exclude $exlList ]
         ip::longestPrefixMatch $x [concat $exlList [list $testPrefix]] -ipv4
@@ -689,7 +684,7 @@ namespace eval ::ip::test {
         set y {1.0.0.0/8 2.2.0.0/16 128.0.0.0/16 3.3.3.3/32}
         ::ip::longestPrefixMatch $x $y -ipv4
         # there was a problem when using varibles, it looked like
-        # tcl was modifying the original variables in an 
+        # tcl was modifying the original variables in an
         # upvar fashion
         ::ip::longestPrefixMatch $x $y -ipv4
     } -result {128.0.0.0/16}
@@ -713,7 +708,7 @@ namespace eval ::ip::test {
     } -result {128.0.0.0/8}
 
     ::tcltest::test ::ip:cmpDotIP-1 {
-        test sorting of cmpDotIP 
+        test sorting of cmpDotIP
     } -setup {
         set iplist {1.0.0.0 2.2.0.0 128.0.0.0 3.3.3.3}
     } -constraints {

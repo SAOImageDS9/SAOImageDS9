@@ -1,5 +1,6 @@
 [comment {-*- tcl -*- doctools manpage}]
-[manpage_begin widget_dateentry n 0.96]
+[vset VERSION 0.98]
+[manpage_begin widget_dateentry n [vset VERSION]]
 [keywords date]
 [keywords dateentry]
 [keywords megawidget]
@@ -11,7 +12,7 @@
 [require Tcl 8.4]
 [require Tk 8.4]
 [require widget [opt 3.0]]
-[require widget::dateentry [opt 0.96]]
+[require widget::dateentry [opt [vset VERSION]]]
 [description]
 
 This package provides a dateentry megawidget (snidget).
@@ -33,15 +34,19 @@ are available for the dateentry.
 
 [opt_def -command]
 
-A script to evaluate when a date was selected.
+A command prefix to evaluate when a date was selected.
+
+The command prefix is executed in the global namespace and given two
+arguments, the raw date in seconds, and the formatted date, as per
+option [option -dateformat].
 
 [opt_def -dateformat]
 
-The format of the date that is returned. Default: %m/%d/%Y.
+The format of the date that is entered or returned. Default: %m/%d/%Y.
 
 [opt_def -firstday]
 
-See the calendar man page.
+See the [package widget::calendar] man page.
 
 [opt_def -font]
 
@@ -49,33 +54,47 @@ Select the font used in the widget. It defaults to Helvetica 9.
 
 [opt_def -highlightcolor]
 
+See the [package widget::calendar] man page.
 See the calendar man page.
 
 [opt_def -language]
 
-See the calendar man page.
+See the [package widget::calendar] man page.
 
 [opt_def -shadecolor]
 
-See the calendar man page.
+See the [package widget::calendar] man page.
 
 [opt_def -showpast]
 
-See the calendar man page.
+See the [package widget::calendar] man page.
 
 [opt_def -textvariable]
 
 Specifies the name of a variable whose value is linked to the entry widget's contents.
-Whenever the variable changes value, the widget's contents are updated, and
-vice versa.
+Whenever the variable changes value, the widget's contents are updated, and vice versa.
 
 [list_end]
 
 [section "WIDGET COMMAND"]
 
-[arg pathname] [cmd get]
+[list_begin definitions]
+
+[call [arg pathname] [cmd get]]
 
 Returns the selected date.
+
+[call [arg pathname] [cmd set] [arg date]]
+
+Programmatically sets a new date. Expects that the date is in the same format
+as configured by option [option -dateformat].
+
+[para] The same effect can also be achieved by setting a linked
+[option -textvariable].
+
+[list_end]
+
+
 
 [section "DEFAULT BINDINGS"]
 

@@ -1,12 +1,13 @@
+[vset VERSION 0.3]
 [comment {-*- tcl -*- doctools manpage}]
-[manpage_begin history n 0.1]
+[manpage_begin history n [vset VERSION]]
 [keywords entry]
 [keywords history]
 [moddesc   {Provides a history for Entry widgets}]
 [titledesc {Provides a history for Entry widgets}]
 [require Tcl 8.4]
 [require Tk 8.4]
-[require history [opt 0.1]]
+[require history [opt [vset VERSION]]]
 [description]
 
 This package provides a convenient history mechanism for Entry widgets.

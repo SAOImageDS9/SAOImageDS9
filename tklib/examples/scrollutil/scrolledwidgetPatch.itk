@@ -2,7 +2,7 @@
 # Patch for the iwidgets distribution file scrolledwidget.itk.  It replaces the
 # Tk core scrollbars with ttk::scrollbar widgets.
 #
-# Copyright (c) 2019-2020  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 2019-2023  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
 itcl::body iwidgets::Scrolledwidget::constructor {args} {

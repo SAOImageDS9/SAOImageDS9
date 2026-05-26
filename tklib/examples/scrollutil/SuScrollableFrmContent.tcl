@@ -2,20 +2,8 @@
 # Populates the content frame of the scrollutil::scrollableframe widget created
 # in the demo script SuScrollableFrmDemo2.tcl.
 #
-# Copyright (c) 2019-2020  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 2019-2024  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
-
-#
-# Add some entries to the Tk option database
-#
-tablelist::setThemeDefaults
-if {$ttk::currentTheme eq "aqua"} {
-    option add *Listbox.selectBackground \
-	       $tablelist::themeDefaults(-selectbackground)
-    option add *Listbox.selectForeground \
-	       $tablelist::themeDefaults(-selectforeground)
-}
-option add *selectBorderWidth  $tablelist::themeDefaults(-selectborderwidth)
 
 #
 # Create some widgets in the content frame
@@ -27,67 +15,68 @@ option add *selectBorderWidth  $tablelist::themeDefaults(-selectborderwidth)
 set row 0
 set l [ttk::label $cf.l$row -text \
        "Contents of the Tablelist distribution file \"CHANGES.txt\":"]
-grid $l -row $row -column 0 -columnspan 3 -sticky w -padx 10 -pady {10 0}
+grid $l -row $row -column 0 -columnspan 3 -sticky w -padx 7p -pady {7p 0}
 incr row
 set _sa [scrollutil::scrollarea $cf.sa$row]
 set txt [text $_sa.txt -font TkFixedFont -width 73]
 scrollutil::addMouseWheelSupport $txt
 $_sa setwidget $txt
-grid $_sa -row $row -column 0 -columnspan 3 -sticky w -padx 10 -pady {5 0}
+grid $_sa -row $row -column 0 -columnspan 3 -sticky w -padx 7p -pady {3p 0}
 
 #
 # A scrolled listbox widget
 #
 incr row
 set l [ttk::label $cf.l$row -text "Tablelist releases:"]
-grid $l -row $row -column 0 -sticky w -padx {10 0} -pady {10 0}
+grid $l -row $row -column 0 -sticky w -padx {7p 0} -pady {7p 0}
 incr row
 set _sa [scrollutil::scrollarea $cf.sa$row]
 set lb [listbox $_sa.lb -width 0]
 $_sa setwidget $lb
-grid $_sa -row $row -rowspan 6 -column 0 -sticky w -padx {10 0} -pady {5 0}
+grid $_sa -row $row -rowspan 6 -column 0 -sticky w -padx {7p 0} -pady {3p 0}
 
 #
 # A ttk::combobox widget
 #
 set l [ttk::label $cf.l$row -text "Release:"]
-grid $l -row $row -column 1 -sticky w -padx {10 0} -pady {5 0}
+grid $l -row $row -column 1 -sticky w -padx {7p 0} -pady {3p 0}
 set cb [ttk::combobox $cf.cb -state readonly -width 14]
-grid $cb -row $row -column 2 -sticky w -padx {5 10} -pady {5 0}
+bind $cb <<ComboboxSelected>> updateWidgets
+grid $cb -row $row -column 2 -sticky w -padx {3p 7p} -pady {3p 0}
 
 #
 # A ttk::spinbox widget
 #
 incr row
 set l [ttk::label $cf.l$row -text "Changes:"]
-grid $l -row $row -column 1 -sticky w -padx {10 0} -pady {10 0}
+grid $l -row $row -column 1 -sticky w -padx {7p 0} -pady {7p 0}
 set sb [ttk::spinbox $cf.sb -from 0 -to 20 -state readonly -width 4]
-grid $sb -row $row -column 2 -sticky w -padx {5 10} -pady {10 0}
+grid $sb -row $row -column 2 -sticky w -padx {3p 7p} -pady {7p 0}
 
 #
 # A ttk::entry widget
 #
 incr row
 set l [ttk::label $cf.l$row -text "Comment:"]
-grid $l -row $row -column 1 -sticky w -padx {10 0} -pady {10 0}
+grid $l -row $row -column 1 -sticky w -padx {7p 0} -pady {7p 0}
 set e [ttk::entry $cf.e -width 32]
-grid $e -row $row -column 2 -sticky w -padx {5 10} -pady {10 0}
+grid $e -row $row -column 2 -sticky w -padx {3p 7p} -pady {7p 0}
 
 #
 # A ttk::separator widget
 #
 incr row
 set sep [ttk::separator $cf.sep]
-grid $sep -row $row -column 1 -columnspan 2 -sticky we -padx 10 -pady {10 0}
+grid $sep -row $row -column 1 -columnspan 2 -sticky we -padx 7p -pady {7p 0}
 
 #
 # A mentry widget of type "Date"
 #
 incr row
 set l [ttk::label $cf.l$row -text "Date of first release:"]
-grid $l -row $row -column 1 -sticky w -padx {10 0} -pady {10 0}
+grid $l -row $row -column 1 -sticky w -padx {7p 0} -pady {7p 0}
 set me [mentry::dateMentry $cf.me Ymd -]
-grid $me -row $row -column 2 -sticky w -padx {5 10} -pady {10 0}
+grid $me -row $row -column 2 -sticky w -padx {3p 7p} -pady {7p 0}
 
 incr row
 grid rowconfigure $cf $row -weight 1
@@ -98,21 +87,31 @@ grid rowconfigure $cf $row -weight 1
 incr row
 set l [ttk::label $cf.l$row -text \
        "Tablelist release statistics, displayed in a tablelist widget:"]
-grid $l -row $row -column 0 -columnspan 3 -sticky w -padx 10 -pady {10 0}
+grid $l -row $row -column 0 -columnspan 3 -sticky w -padx 7p -pady {7p 0}
 incr row
 set _sa [scrollutil::scrollarea $cf.sa$row]
 set tbl [tablelist::tablelist $_sa.tbl \
 	 -columns {0 "Release" left  0 "Changes" right  0 "Comment" left} \
-	 -height 16 -width 0 -showseparators yes -stripebackground #f0f0f0 \
-	 -incrarrowtype down -labelcommand tablelist::sortByColumn]
-if {[$tbl cget -selectborderwidth] == 0} {
-    $tbl configure -spacing 1
+	 -height 16 -width 0 -showseparators yes -incrarrowtype down \
+	 -labelcommand tablelist::sortByColumn]
+if {$tablelist::themeDefaults(-stripebackground) eq ""} {
+    $tbl configure -background white -stripebackground #f0f0f0
 }
 $tbl columnconfigure 0 -name release -sortmode dictionary
 $tbl columnconfigure 1 -name changes -sortmode integer
 $tbl columnconfigure 2 -name comment
 $_sa setwidget $tbl
-grid $_sa -row $row -column 0 -columnspan 3 -sticky w -padx 10 -pady {5 0}
+grid $_sa -row $row -column 0 -columnspan 3 -sticky w -padx 7p -pady {3p 0}
+
+#
+# On X11 configure the tablelist according to the display's
+# DPI scaling level (redundant for Tablelist 6.10 and later)
+#
+if {[tk windowingsystem] eq "x11" &&
+    [package vcompare $tablelist::version "6.22"] < 0} {
+    array set arr {100 8x4  125 9x5  150 11x6  175 13x7  200 15x8}
+    $tbl configure -arrowstyle flat$arr($scrollutil::scalingpct)
+}
 
 #
 # A scrolled ttk::treeview widget
@@ -120,12 +119,13 @@ grid $_sa -row $row -column 0 -columnspan 3 -sticky w -padx 10 -pady {5 0}
 incr row
 set l [ttk::label $cf.l$row -text \
        "Tablelist release statistics, displayed in a ttk::treeview widget:"]
-grid $l -row $row -column 0 -columnspan 3 -sticky w -padx 10 -pady {10 0}
+grid $l -row $row -column 0 -columnspan 3 -sticky w -padx 7p -pady {7p 0}
 incr row
 set _sa [scrollutil::scrollarea $cf.sa$row -borderwidth 0]
 set tv [ttk::treeview $_sa.tv -columns {release changes comment} \
 	-show headings -height 16 -selectmode browse]
-if {$ttk::currentTheme eq "aqua" &&
+set currentTheme [styleutil::getCurrentTheme]
+if {$currentTheme eq "aqua" &&
     [package vcompare $::tk_patchLevel "8.6.10"] >= 0} {
     $_sa configure -borderwidth 1 ;# because in this case $tv has a flat relief
 }
@@ -136,7 +136,7 @@ $tv column release -anchor w
 $tv column changes -anchor e
 $tv column comment -anchor w
 $_sa setwidget $tv
-grid $_sa -row $row -column 0 -columnspan 3 -sticky w -padx 10 -pady {5 10}
+grid $_sa -row $row -column 0 -columnspan 3 -sticky w -padx 7p -pady {3p 7p}
 
 grid columnconfigure $cf 2 -weight 1
 
@@ -167,6 +167,7 @@ foreach line $lineList {
 		set changes 1
 	    }
 	    switch $version {
+		7.0 { set comment "Dropped the support for Tk versions < 8.4" }
 		6.0 { set comment "Added support for header items" }
 		5.0 { set comment "Added support for tree functionality" }
 		4.0 { set comment "Added support for the tile engine" }
@@ -183,7 +184,7 @@ foreach line $lineList {
 	    }
 	    set item [list "Tablelist $version" $changes $comment]
 	    $tbl insert end $item
-	    $tv insert {} end -values $item
+	    $tv insert {} end -id $version -values $item
 	    incr totalChanges $changes
 	}
 
@@ -205,17 +206,26 @@ if {$changes == 0} {
 set comment ""
 set item [list "Tablelist $version" $changes $comment]
 $tbl insert end $item
-$tv insert {} end -values $item
+$tv insert {} end -id $version -values $item
 incr totalChanges $changes
 
 $lb insert end "Tablelist 0.8"
 set item [list "Tablelist 0.8" 0 "First release, on 2000-10-27"]
 $tbl insert end $item
-$tv insert {} end -values $item
+$tv insert {} end -id 0.8 -values $item
 
 $tbl header insert 0 \
-	    [list "All [$tbl size] releases" $totalChanges "Total number"]
+     [list "All [$tbl size] releases" $totalChanges "Total number"]
 $tbl header rowconfigure 0 -foreground blue
+
+if {$currentTheme eq "aqua" &&
+    [package vcompare $tk_patchLevel "8.6.10"] >= 0} {
+    if {[tk::unsupported::MacWindowStyle isdark .]} {
+	$tbl header rowconfigure 0 -foreground SkyBlue
+    }
+    bind . <<LightAqua>> { $tbl header rowconfigure 0 -foreground blue }
+    bind . <<DarkAqua>>  { $tbl header rowconfigure 0 -foreground SkyBlue }
+}
 
 $cb configure -values [$lb get 0 end]
 $cb current 0
@@ -231,15 +241,7 @@ foreach colId [$tv cget -columns] {
     $tv column $colId -width [$tbl columnwidth $colId -total]
 }
 
-#
-# Set the scrollableframe's width, height, and yscrollincrement
-#
-update idletasks
-set height [expr {[winfo reqheight $cf.l0] + [winfo reqheight $cf.sa1] + 25}]
-$sf configure -width [winfo reqwidth $cf] -height $height \
-    -yscrollincrement [expr {[winfo reqheight $lb] / 10}]
-
-pack $sa -expand yes -fill both -padx 10 -pady 10
+pack $sa -expand yes -fill both -padx 7p -pady 7p
 
 #
 # Create two ttk::button widgets within a frame outside the scrollarea
@@ -248,16 +250,49 @@ set bf [ttk::frame .bf]
 set b1 [ttk::button $bf.b1 -text "Configure Tablelist Widget" \
         -command configTablelist]
 set b2 [ttk::button $bf.b2 -text "Close" -command exit]
-pack $b2 -side right -padx 10 -pady {0 10}
-pack $b1 -side left -padx 10 -pady {0 10}
+pack $b2 -side right -padx 7p -pady {0 7p}
+pack $b1 -side left -padx 7p -pady {0 7p}
 
 pack $bf -side bottom -fill x
 pack $tf -side top -expand yes -fill both
+
+#
+# Set the scrollableframe's width, height, and yscrollincrement
+#
+after 100 [list configMainSf $sf $cf $lb]
+
+#------------------------------------------------------------------------------
+
+proc updateWidgets {} {
+    global cb tbl sb e tv
+    set release [$cb get]
+    set idx [$tbl searchcolumn 0 $release]
+    set item [$tbl get $idx]
+
+    $sb set [lindex $item 1]
+    $e delete 0 end; $e insert 0 [lindex $item 2]
+
+    $tbl selection clear 0 end; $tbl selection set $idx
+    $tbl activate $idx; $tbl see $idx
+
+    set version [lindex [split $release] 1]
+    $tv selection set [list $version]; $tv focus $version; $tv see $version
+}
 
 #------------------------------------------------------------------------------
 
 proc cancelEdit {w args} {
     wcb::cancel
+}
+
+#------------------------------------------------------------------------------
+
+proc configMainSf {sf cf lb} {
+    set width [winfo reqwidth $cf]
+    set height [expr {[winfo reqheight $cf.l0] + [winfo pixels . 3p] + \
+		      [winfo reqheight $cf.sa1] + 2*[winfo pixels . 7p]}]
+    $sf configure -width $width -height $height \
+	-yscrollincrement [expr {[winfo reqheight $lb] / 10}]
 }
 
 #------------------------------------------------------------------------------
@@ -282,12 +317,6 @@ proc configTablelist {} {
     $sa setwidget $sf
 
     #
-    # Register the scrollableframe for scrolling by the mouse wheel event
-    # bindings created by the scrollutil::createWheelEventBindings command
-    #
-    scrollutil::enableScrollingByWheel $sf
-
-    #
     # Get the content frame
     #
     set cf [$sf contentframe]
@@ -305,7 +334,7 @@ proc configTablelist {} {
 
 	set opt [lindex $configSet 0]
 	set w [ttk::label $cf.l$row -text $opt]
-	grid $w -row $row -column 0 -sticky w -padx {5 0} -pady {5 0}
+	grid $w -row $row -column 0 -sticky w -padx {3p 0} -pady {3p 0}
 
 	set w $cf.w$row
 	switch -- $opt {
@@ -323,40 +352,25 @@ proc configTablelist {} {
 		switch -- $opt {
 		    -activestyle { set values {frame none underline} }
 		    -arrowstyle {
-			set values {flat5x3 flat5x4 flat6x4 flat7x4 flat7x5
-			    flat7x7 flat8x4 flat8x5 flat9x5 flat9x6 flat11x6
-			    flat15x8 flatAngle7x4 flatAngle7x5 flatAngle9x5
-			    flatAngle9x6 flatAngle9x7 flatAngle10x6
-			    flatAngle10x7 flatAngle11x6 flatAngle15x8 photo7x4
-			    photo7x7 photo9x5 photo11x6 photo15x8 sunken8x7
-			    sunken10x9 sunken12x11}
+			set values $tablelist::arrowStyles   ;# dirty, but safe
 		    }
 		    -incrarrowtype { set values {up down} }
 		    -labelrelief -
 		    -relief {
 			set values {flat groove raised ridge solid sunken}
 		    }
-		    -selectmode {
-			set values {single browse multiple extended}
-		    }
+		    -selectmode { set values {single browse multiple extended} }
 		    -selecttype { set values {row cell} }
 		    -state { set values {disabled normal} }
 		    -treestyle {
-			set values {adwaita ambiance aqua arc baghira bicolor1
-			bicolor2 bicolor3 bicolor4 blueMenta classic1 classic2
-			classic3 classic4 dust dustSand gtk klearlooks mate
-			menta mint mint2 newWave oxygen1 oxygen2 phase plain1
-			plain2 plain3 plain4 plastik plastique radiance ubuntu
-			ubuntu2 ubuntu3 ubuntuMate vistaAero vistaClassic
-			win7Aero win7Classic win10 winnative winxpBlue
-			winxpOlive winxpSilver yuyo}
+			set values $tablelist::treeStyles    ;# dirty, but safe
 		    }
 		}
 
 		$w configure -values $values
 		$w set [$tbl cget $opt]
 		bind $w <<ComboboxSelected>> [list applyValue %W $opt]
-		grid $w -row $row -column 1 -sticky w -padx 5 -pady {5 0}
+		grid $w -row $row -column 1 -sticky w -padx 3p -pady {3p 0}
 
 		#
 		# Adapt the handling of the mouse wheel
@@ -369,6 +383,8 @@ proc configTablelist {} {
 	    -autoscan -
 	    -customdragsource -
 	    -displayondemand -
+	    -editendonfocusout -
+	    -editendonmodclick -
 	    -editselectedonly -
 	    -exportselection -
 	    -forceeditendcommand -
@@ -390,8 +406,8 @@ proc configTablelist {} {
 		ttk::checkbutton $w -command [list applyBoolean $w $opt]
 		global $w
 		set $w [$tbl cget $opt]
-		$w configure -text [expr {[set $w] ? "true": "false"}]
-		grid $w -row $row -column 1 -sticky w -padx 5 -pady {5 0}
+		$w configure -text [expr {[set $w] ? "on": "off"}]
+		grid $w -row $row -column 1 -sticky w -padx 3p -pady {3p 0}
 	    }
 
 	    -borderwidth -
@@ -415,7 +431,7 @@ proc configTablelist {} {
 		foreach event {<Return> <KP_Enter> <FocusOut>} {
 		    bind $w $event [list applyValue %W $opt]
 		}
-		grid $w -row $row -column 1 -sticky w -padx 5 -pady {5 0}
+		grid $w -row $row -column 1 -sticky w -padx 3p -pady {3p 0}
 
 		#
 		# Adapt the handling of the mouse wheel
@@ -425,12 +441,12 @@ proc configTablelist {} {
 	    }
 
 	    default {
-		ttk::entry $w -width 20
+		ttk::entry $w -width 25
 		$w insert 0 [$tbl cget $opt]
 		foreach event {<Return> <KP_Enter> <FocusOut>} {
 		    bind $w $event [list applyValue %W $opt]
 		}
-		grid $w -row $row -column 1 -sticky we -padx 5 -pady {5 0}
+		grid $w -row $row -column 1 -sticky we -padx 3p -pady {3p 0}
 	    }
 	}
 
@@ -446,21 +462,18 @@ proc configTablelist {} {
     grid columnconfigure $cf 1   -weight 1
 
     #
-    # Set the scrollableframe's width, height, and yscrollincrement
-    #
-    update idletasks
-    set rowHeight [expr {[winfo reqheight $cf] / $row}]
-    $sf configure -width [winfo reqwidth $cf] \
-	-height [expr {10*$rowHeight + 5}] -yscrollincrement $rowHeight
-
-    #
     # Create a ttk::button widget outside the scrollarea
     #
     set b [ttk::button $f.b -text "Close" -command [list destroy $top]]
 
-    pack $b  -side bottom -pady {0 10}
-    pack $sa -side top -expand yes -fill both -padx 10 -pady 10
+    pack $b  -side bottom -pady {0 7p}
+    pack $sa -side top -expand yes -fill both -padx 7p -pady 7p
     pack $f  -expand yes -fill both
+
+    #
+    # Set the scrollableframe's width, height, and yscrollincrement
+    #
+    after 50 [list configTopSf $sf $cf $row]
 }
 
 #------------------------------------------------------------------------------
@@ -472,16 +485,24 @@ proc applyValue {w opt} {
 	tk_messageBox -title "Error" -icon error -message $result \
 	    -parent [winfo toplevel $w]
 	### $w set [$tbl cget $opt]		;# not supported by ttk::entry
-	$w delete 0 end
-	$w insert 0 [$tbl cget $opt]
+	$w delete 0 end; $w insert 0 [$tbl cget $opt]
     }
 }
 
 #------------------------------------------------------------------------------
 
 proc applyBoolean {w opt} {
-    global tbl $w
-    set val [set $w]
-    $tbl configure $opt $val
-    $w configure -text [expr {$val ? "true" : "false"}]
+    global tbl
+    upvar #0 $w var
+    $tbl configure $opt $var
+    $w configure -text [expr {$var ? "on" : "off"}]
+}
+
+#------------------------------------------------------------------------------
+
+proc configTopSf {sf cf row} {
+    set width [winfo reqwidth $cf]
+    set rowHeight [expr {[winfo reqheight $cf] / $row}]
+    set height [expr {10*$rowHeight + [winfo pixels .top 3p]}]
+    $sf configure -width $width -height $height -yscrollincrement $rowHeight
 }

@@ -1,0 +1,32 @@
+[comment {-*- tcl -*- doctools manpage}]
+[vset VERSION 0.1]
+[manpage_begin map::area::table-display n [vset VERSION]]
+[category {Map Display and Supporting Utilities}][keywords map]
+[keywords {area display, tabular}]
+[keywords {tabular, area display}]
+[moddesc   {Map display support}]
+[titledesc {Widget to display a table of area definitions}]
+[require Tcl 8.6-]
+[require Tk  8.6-]
+[require debug]
+[require debug::caller]
+[require map::slippy 0.8]
+[require scrollutil]
+[require snit]
+[require tablelist]
+[require map::area::table-display [opt [vset VERSION]]]
+[description]
+
+This package provides a widget showing the information of many [term geo/area] definitions in a
+table.
+
+[section API]
+
+[list_begin definitions]
+[list_end]
+
+[section EXAMPLE]
+
+[vset CATEGORY map]
+[include ../../support/devel/doc/feedback.inc]
+[manpage_end]

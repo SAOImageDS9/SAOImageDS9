@@ -1,13 +1,23 @@
-#!/usr/bin/env wish
+#! /usr/bin/env tclsh
 
 #==============================================================================
 # Demonstrates the interactive tablelist cell editing with the aid of some
 # widgets from the tile package.
 #
-# Copyright (c) 2005-2019  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 2005-2024  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
-package require tablelist_tile 6.8
+package require Tk
+package require tablelist_tile
+
+if {[tk windowingsystem] eq "x11" &&
+    ($tk_version < 8.7 || [package vcompare $::tk_patchLevel "8.7a5"] <= 0)} {
+    #
+    # Patch the default theme's styles TCheckbutton and TRadiobutton
+    #
+    package require themepatch
+    themepatch::patch default
+}
 
 wm title . "Serial Line Configuration"
 
@@ -29,7 +39,11 @@ source [file join $dir images.tcl]
 # Improve the window's appearance by using a tile
 # frame as a container for the other widgets
 #
-set f [ttk::frame .f]
+if {$::argc == 0} {
+    set f [ttk::frame .f]
+} else {
+    set f [lindex $::argv 0]	;# provided by the awthemes script "demottk.tcl"
+}
 
 #
 # Create a tablelist widget with editable columns (except the first one)
@@ -48,15 +62,19 @@ tablelist::tablelist $tbl \
 	      0 "Activation Time" center
 	      0 "Cable Color"	  center} \
     -editstartcommand editStartCmd -editendcommand editEndCmd \
-    -height 0 -width 0
+    -aftercopycommand afterCopyCmd -height 0 -width 0
+if {$isAwTheme && ![regexp {^(aw)?(arc|breeze.*)$} $currentTheme]} {
+    $tbl configure -borderwidth 2
+}
 if {[$tbl cget -selectborderwidth] == 0} {
     $tbl configure -spacing 1
 }
 $tbl columnconfigure 0 -sortmode integer
 $tbl columnconfigure 1 -name available -editable yes \
-    -editwindow ttk::checkbutton -formatcommand emptyStr
+    -editwindow ttk::checkbutton -formatcommand emptyStr \
+    -labelwindow ttk::checkbutton
 $tbl columnconfigure 2 -name lineName  -editable yes -editwindow ttk::entry \
-    -sortmode dictionary
+    -allowduplicates 0 -sortmode dictionary
 $tbl columnconfigure 3 -name baudRate  -editable yes -editwindow ttk::combobox \
     -sortmode integer
 if {[info commands ttk::spinbox] eq ""} {
@@ -79,27 +97,27 @@ proc formatDate val { return [clock format $val -format "%Y-%m-%d"] }
 proc formatTime val { return [clock format $val -format "%H:%M:%S"] }
 
 #
-# Populate the tablelist widget; set the activation
-# date & time to 10 minutes past the current clock value
+# Populate the tablelist widget and configure the checkbutton
+# embedded into the header label of the column "available"
 #
-set clock [expr {[clock seconds] + 600}]
-for {set i 0; set n 1} {$i < 16} {set i $n; incr n} {
-    $tbl insert end [list $n [expr {$i < 8}] "Line $n" 9600 8 None 1 XON/XOFF \
-	$clock $clock [lindex $colorNames $i]]
+source [file join $dir serialParams.tcl]
 
-    set availImg [expr {($i < 8) ? "checkedImg" : "uncheckedImg"}]
-    $tbl cellconfigure end,available -image $availImg
-    $tbl cellconfigure end,color -image img[lindex $colorValues $i]
+if {$::argc == 0} {
+    set btn [ttk::button $f.btn -text "Close" -command exit]
 }
-
-set btn [ttk::button $f.btn -text "Close" -command exit]
 
 #
 # Manage the widgets
 #
-pack $btn -side bottom -pady 10
-pack $tbl -side top -expand yes -fill both
-pack $f -expand yes -fill both
+if {$::argc == 0} {
+    pack $btn -side bottom -pady 7p
+    pack $tbl -side top -expand yes -fill both
+    pack $f -expand yes -fill both
+} else {
+    $tbl configure -stretch all
+    foreach col {8 9} { $tbl columnconfigure $col -hide yes }
+    pack $tbl -side top -expand yes -fill both -padx 3p -pady {0 3p}
+}
 
 #------------------------------------------------------------------------------
 # editStartCmd
@@ -204,10 +222,12 @@ proc editEndCmd {tbl row col text} {
     switch [$tbl columncget $col -name] {
 	available {
 	    #
-	    # Update the image contained in the cell
+	    # Update the image contained in the cell and the checkbutton
+	    # embedded into the header label of the column "available"
 	    #
 	    set img [expr {$text ? "checkedImg" : "uncheckedImg"}]
 	    $tbl cellconfigure $row,$col -image $img
+	    after idle [list updateCkbtn $tbl $row $col]
 	}
 
 	baudRate {
@@ -224,7 +244,7 @@ proc editEndCmd {tbl row col text} {
 
 	actDate {
 	    #
-	    # Get the activation date in seconds from the last argument 
+	    # Get the activation date in seconds from the last argument
 	    #
 	    if {[catch {clock scan $text} actDate] != 0} {
 		bell
@@ -253,7 +273,7 @@ proc editEndCmd {tbl row col text} {
 
 	actTime {
 	    #
-	    # Get the activation clock value in seconds from the last argument 
+	    # Get the activation clock value in seconds from the last argument
 	    #
 	    set actDate [$tbl cellcget $row,actDate -text]
 	    if {[catch {clock scan $text -base $actDate} actClock] != 0} {

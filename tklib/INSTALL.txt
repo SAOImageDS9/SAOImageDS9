@@ -67,11 +67,3 @@ has no knowledge of its environment.
 In all other cases the intepreter executable is outside of the
 distribution, which means that its location can be used to determine
 sensible defaults.
-
-Notes
------
-
-The installer will overwrite an existing installation of tklib 0.2
-without asking back after the initial confirmation is given. And if
-the user chooses the same directory as for tklib 0.1, or 0.0, etc.
-then the installer will overwrite that too.

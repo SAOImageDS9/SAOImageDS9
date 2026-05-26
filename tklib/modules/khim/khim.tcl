@@ -17,17 +17,14 @@
 # Refer to the file "license.terms" for the terms and conditions of
 # use and redistribution of this file, and a DISCLAIMER OF ALL WARRANTEES.
 #
-# $Id: khim.tcl,v 1.10 2007/06/08 19:24:31 kennykb Exp $
-# $Source: /home/rkeene/tmp/cvs2fossil/tcllib/tklib/modules/khim/khim.tcl,v $
-#
 #----------------------------------------------------------------------
 
-package require Tcl 8.4
-package require Tk 8.4
+package require Tcl 8.4-
+package require Tk 8.4-
 package require msgcat 1.2
 package require autoscroll 1.0
 
-package provide khim 1.0.1
+package provide khim 1.0.3
 
 namespace eval khim [list variable KHIMDir [file dirname [info script]]]
 
@@ -80,7 +77,7 @@ namespace eval khim {
 					# of KHIM character map dialogs and
 					# whose values are the characters
 					# currently selected in the dialogs
-					
+
     variable CMapXL;			# Array whose keys are the path names
 					# of KHIM character map dialogs and
 					# whose values are the
@@ -298,7 +295,7 @@ proc khim::getOptions {w} {
 
     checkbutton $w.v -variable ::khim::inputUse -text [mc "Use KHIM"]
     label $w.l1 -text [mc "Compose key:"]
-    button $w.b1 -textvariable khim::inputComposeKey \
+    button $w.b1 -textvariable ::khim::inputComposeKey \
 	-command [list ::khim::GetComposeKey $w.b1]
     labelframe $w.lf1 -text [mc "Key sequences"] -padx 5 -pady 5 -width 400
     listbox $w.lf1.lb -height 20 -yscroll [list $w.lf1.y set] \
@@ -342,7 +339,7 @@ proc khim::getOptions {w} {
     grid $w.lf1.f3.b1 $w.lf1.f3.b2 -padx 5 -sticky ew
     grid columnconfigure $w.lf1.f3 {0 1} -weight 1 -uniform A
     grid $w.lf1.f3 -row 3 -column 2 -sticky e -padx 20
-    
+
     grid rowconfigure $w.lf1 2 -weight 1
     grid columnconfigure $w.lf1 3 -weight 1
     ::autoscroll::autoscroll $w.lf1.y
@@ -702,7 +699,7 @@ proc khim::ShowSequences {w {inputSequence {}}} {
     # Remember the scroll position
 
     foreach {top bottom} [$w.lf1.lb yview] break
-    
+
     # Clear the listbox
 
     $w.lf1.lb delete 0 end
@@ -1035,7 +1032,7 @@ proc khim::ReplaceU {string} {
 #       The values list of the spinbox is updated to be a list of
 #	the decimal or hexadecimal code page numbers according to
 #	whether the variable's string representation contains
-#	'0x'. 
+#	'0x'.
 #
 #----------------------------------------------------------------------
 
@@ -1047,7 +1044,7 @@ proc khim::CMapUpdateSpinbox {w args} {
     set spin $w.spin
 
     # Test validity of the code page number
-
+    ##nagelfar ignore
     if { ![string is integer -strict $CMapInputCodePage($w)]
 	 || $CMapInputCodePage($w) < 0
 	 || $CMapInputCodePage($w) >= 0x100 } {
@@ -1214,7 +1211,7 @@ proc khim::CMapDrawCanvas {w args} {
 
     # We interpolate between foreground and background to draw the lines,
     # so that they appear "finer" visually than a 0-pixel line
-    
+
     set linecolor \#
     foreach \
 	c1 [winfo rgb $c $CMapForeground($w)] \
@@ -1363,8 +1360,8 @@ proc khim::CMapSelectedCharacter {w x y} {
     set row [BSearch $CMapYL($w) $y]
     set col [BSearch $CMapXL($w) $x]
     if { $row >= 0 && $row <= 15 && $col >= 0 && $col <= 15 } {
-	return [format %c [expr { 0x100 * $CMapCodePage($w) 
-				  + 0x10 * $row 
+	return [format %c [expr { 0x100 * $CMapCodePage($w)
+				  + 0x10 * $row
 				  + $col }]]
     } else {
 	return {}
@@ -1560,7 +1557,7 @@ proc khim::CMapKey {c char} {
 #
 # Side effects:
 #	Adjusts the selection by an appropriately scaled version of 'delta'
-#	
+#
 #----------------------------------------------------------------------
 
 proc khim::CMapWheel { c delta shifted } {
@@ -1641,7 +1638,7 @@ proc khim::CMapInteractor {w} {
     }
     grid [label $map.l1 -text [mc {Select code page:}]] \
 	-row 0 -column 0 -sticky e
-    grid [spinbox $map.spin -textvariable khim::CMapInputCodePage($map) \
+    grid [spinbox $map.spin -textvariable ::khim::CMapInputCodePage($map) \
 	      -width 4] \
 	-row 0 -column 1 -sticky w
 
@@ -1696,7 +1693,7 @@ proc khim::CMapInteractor {w} {
     }
     focus $w
     return
-}    
+}
 
 #----------------------------------------------------------------------
 #
@@ -1864,7 +1861,7 @@ proc khim::CMapDestroy {c} {
     catch {unset CMapSelectBackground($w)}
     return
 }
-    
+
 # Bindings for the "khim::cmap" bindtag that is used in the character map
 # dialog
 
@@ -2015,12 +2012,12 @@ if {[info exists ::argv0] && ![string compare $::argv0 [info script]]} {
 	[button .bhelp -text "Help" -command "khim::showHelp .help"] \
 	[button .bquit -text "Quit" -command "exit"] \
 	-padx 5 -pady 5
-    
+
     proc testLoadConfig {} {
-	source ~/.khimrc
+	source $::env(HOME)/.khimrc
     }
     proc testSaveConfig {} {
-	set f [open ~/.khimrc w]
+	set f [open $::env(HOME)/.khimrc w]
 	puts $f [khim::getConfig]
 	close $f
     }

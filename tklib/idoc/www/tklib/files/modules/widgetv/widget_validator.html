@@ -1,0 +1,236 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>widget_validator - widget::validator behaviour</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'widget_validator.man' by tcllib/doctools with format 'html'
+   -->
+<!-- widget_validator.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">widget_validator(n) 0.1 tklib &quot;widget::validator behaviour&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>widget_validator - widget::validator behaviour</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">Validation</a></li>
+<li class="doctools_section"><a href="#section3">Example</a></li>
+<li class="doctools_section"><a href="#section4">Bugs, Ideas, Feedback</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_requirements">
+<li>package require <b class="pkgname">Tcl 8.5</b></li>
+<li>package require <b class="pkgname">Tk 8.5</b></li>
+<li>package require <b class="pkgname">widget::validator <span class="opt">?0.1?</span></b></li>
+</ul>
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">widget::validator</b> <b class="method">attach</b> <i class="arg">w</i> <i class="arg">color</i> <i class="arg">cmdprefix</i></a></li>
+<li><a href="#2"><b class="cmd">widget::validator</b> <b class="method">detach</b> <i class="arg">w</i></a></li>
+<li><a href="#3"><b class="cmd">widget::validator</b> <b class="method">validate</b> <i class="arg">w</i></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>This package provides a unified validation API
+for <b class="package">ttk</b>'s entry and combobox widgets.</p>
+<p>Please note that the validation behaviour
+defined in this package will not reject invalid
+edits. It will only highlight the entry containing
+invalid data and set the proper state flag.</p>
+<p>It is the responsibility of the using package
+or application to decide how and when to actually
+reject such invalid content.</p>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">widget::validator</b> <b class="method">attach</b> <i class="arg">w</i> <i class="arg">color</i> <i class="arg">cmdprefix</i></a></dt>
+<dd><p>This method adds a validating behaviour to the widget <i class="arg">w</i>.</p>
+<p>Whenever the content of the widget's entry field changes
+the specified <i class="arg">cmdprefix</i> is invoked and has to return a
+boolean value, where <b class="const">true</b> means that content is ok, and
+<b class="const">false</b> that the content is invalid. For more information
+on the command prefix see section <span class="sectref"><a href="#section2">Validation</a></span>.
+In case of the latter the background color of the entry field
+is changed to <i class="arg">color</i> to indicate the invalidity.</p>
+<p>The system does not support nesting of validators on a
+widget, nor the attachment of multiple validators. To change
+validating conditions <b class="method">detach</b> the current validator first
+before attaching the new.</p>
+<p>An error is thrown if the widget has already
+validating behaviour attached to it.</p>
+<p>The result of the method is the empty string.</p>
+<p>To achieve its aims the package overrides various
+configuration options of the widget the behaviour is
+attached to. These options are restored to their previous
+values on <b class="method">detach</b>.</p>
+<p>If other behaviours are attached the validator
+may be rendered temporarily (partially) non-functional.
+Similarly, if the validator is detached while a different
+behaviour is also attached its restoration of configuration
+settings may render the other non-functional</p></dd>
+<dt><a name="2"><b class="cmd">widget::validator</b> <b class="method">detach</b> <i class="arg">w</i></a></dt>
+<dd><p>This method removes the validating behaviour from
+the widget <i class="arg">w</i> and restores it to its original
+state.</p>
+<p>An error is thrown if the widget has no
+validating behaviour attached to it.</p>
+<p>The result of the method is the empty string.</p></dd>
+<dt><a name="3"><b class="cmd">widget::validator</b> <b class="method">validate</b> <i class="arg">w</i></a></dt>
+<dd><p>Invoking this method forces a validation of the
+widget <i class="arg">w</i>, assuming that it has a validator
+behaviour attached to it.</p>
+<p>The result of the method is the empty string.</p></dd>
+</dl>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">Validation</a></h2>
+<p>The command prefix for used for validation has to
+have the following signature:</p>
+<dl class="doctools_definitions">
+<dt>{*}<i class="arg">cmdprefix</i> <i class="arg">text</i></dt>
+<dd><p>The argument is the text to validate.</p>
+<p>The result of the callback has to be a boolean value
+where <b class="const">true</b> means that <i class="arg">text</i> is ok, and
+<b class="const">false</b> that <i class="arg">text</i> is invalid.</p></dd>
+</dl>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">Example</a></h2>
+<pre class="doctools_example">
+package require Tk 8.5
+package require widget::validator
+set TE {}
+set TC {}
+ttk::entry    .e -textvariable TE
+ttk::combobox .c -textvariable TC -values {fruit vegetable corn}
+ttk::combobox .n -values {fruit vegetable corn}
+ttk::button   .x -command ::exit -text Exit
+pack .e -expand 1 -fill both -side top
+pack .c -expand 1 -fill both -side top
+pack .n -expand 1 -fill both -side top
+pack .x -expand 1 -fill both -side top
+widget::validator attach .e lightblue {apply {text {
+    expr {$text ne {}}
+}}}
+widget::validator attach .c yellow {apply {text {
+    expr {$text ni {{} hello world}}
+}}}
+widget::validator attach .n pink {apply {text {
+    expr {$text ni {{} blub}}
+}}}
+</pre>
+</div>
+<div id="section4" class="doctools_section"><h2><a name="section4">Bugs, Ideas, Feedback</a></h2>
+<p>This document, and the package it describes, will undoubtedly contain
+bugs and other problems.
+Please report such in the category <em>widget::validator</em> of the
+<a href="http://core.tcl.tk/tklib/reportlist">Tklib Trackers</a>.
+Please also report any ideas for enhancements you may have for either
+package and/or documentation.</p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../../../index.html#invalid">invalid</a>, <a href="../../../../index.html#state_management">state management</a>, <a href="../../../../index.html#ttk_combobox">ttk::combobox</a>, <a href="../../../../index.html#ttk_entry">ttk::entry</a>, <a href="../../../../index.html#validation">validation</a>, <a href="../../../../index.html#widget_validation">widget validation</a></p>
+</div>
+</div></body></html>

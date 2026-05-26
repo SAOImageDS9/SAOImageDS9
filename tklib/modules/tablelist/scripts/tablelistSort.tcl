@@ -7,7 +7,7 @@
 #   - Public procedures related to sorting
 #   - Private procedures implementing the sorting
 #
-# Copyright (c) 2000-2019  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 2000-2024  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
 #
@@ -28,7 +28,7 @@ proc tablelist::sortByColumn {win col} {
     if {![winfo exists $win]} {
 	return -code error "bad window path name \"$win\""
     }
-    if {[string compare [winfo class $win] "Tablelist"] != 0} {
+    if {[winfo class $win] ne "Tablelist"} {
 	return -code error "window \"$win\" is not a tablelist widget"
     }
     if {[catch {::$win columnindex $col} result] != 0} {
@@ -46,8 +46,7 @@ proc tablelist::sortByColumn {win col} {
     # Determine the sort order
     #
     if {[set idx [lsearch -exact [::$win sortcolumnlist] $col]] >= 0 &&
-	[string compare [lindex [::$win sortorderlist] $idx] "increasing"]
-	== 0} {
+	[lindex [::$win sortorderlist] $idx] eq "increasing"} {
 	set sortOrder decreasing
     } else {
 	set sortOrder increasing
@@ -80,7 +79,7 @@ proc tablelist::addToSortColumns {win col} {
     if {![winfo exists $win]} {
 	return -code error "bad window path name \"$win\""
     }
-    if {[string compare [winfo class $win] "Tablelist"] != 0} {
+    if {[winfo class $win] ne "Tablelist"} {
 	return -code error "window \"$win\" is not a tablelist widget"
     }
     if {[catch {::$win columnindex $col} result] != 0} {
@@ -100,7 +99,7 @@ proc tablelist::addToSortColumns {win col} {
     set sortColList [::$win sortcolumnlist]
     set sortOrderList [::$win sortorderlist]
     if {[set idx [lsearch -exact $sortColList $col]] >= 0} {
-	if {[string compare [lindex $sortOrderList $idx] "increasing"] == 0} {
+	if {[lindex $sortOrderList $idx] eq "increasing"} {
 	    set sortOrder decreasing
 	} else {
 	    set sortOrder increasing
@@ -138,11 +137,10 @@ proc tablelist::addToSortColumns {win col} {
 # Processes the tablelist sort, sortbycolumn, and sortbycolumnlist subcommands.
 #------------------------------------------------------------------------------
 proc tablelist::sortItems {win parentKey sortColList sortOrderList} {
-    variable canElide
     variable snipSides
     upvar ::tablelist::ns${win}::data data
 
-    set sortAllItems [expr {[string compare $parentKey "root"] == 0}]
+    set sortAllItems [expr {$parentKey eq "root"}]
 
     #
     # Make sure sortOrderList has the same length as sortColList
@@ -177,7 +175,7 @@ proc tablelist::sortItems {win parentKey sortColList sortOrderList} {
     #
     set descItemList {}
     if {[llength $sortColList] == 1 && [lindex $sortColList 0] == -1} {
-	if {[string length $data(-sortcommand)] == 0} {
+	if {$data(-sortcommand) eq ""} {
 	    return -code error "value of the -sortcommand option is empty"
 	}
 
@@ -247,7 +245,7 @@ proc tablelist::sortItems {win parentKey sortColList sortOrderList} {
 
 	    set descItemList {}
 	    set order [lindex $sortOrderList $idx]
-	    if {[string compare $data($col-sortmode) "command"] == 0} {
+	    if {$data($col-sortmode) eq "command"} {
 		if {![info exists data($col-sortcommand)]} {
 		    return -code error "value of the -sortcommand option for\
 					column $col is missing or empty"
@@ -255,8 +253,7 @@ proc tablelist::sortItems {win parentKey sortColList sortOrderList} {
 
 		sortChildren $win $parentKey [list lsort -$order -index $col \
 		    -command $data($col-sortcommand)] descItemList
-	    } elseif {[string compare $data($col-sortmode) "asciinocase"]
-		== 0} {
+	    } elseif {$data($col-sortmode) eq "asciinocase"} {
 		if {$::tcl_version >= 8.5} {
 		    sortChildren $win $parentKey [list lsort -$order \
 			-index $col -ascii -nocase] descItemList
@@ -283,7 +280,13 @@ proc tablelist::sortItems {win parentKey sortColList sortOrderList} {
 
 	set canvasWidth $data(arrowWidth)
 	if {[llength $data(arrowColList)] > 1} {
-	    incr canvasWidth 6
+	    variable scalingpct
+	    if {$scalingpct > 150} {
+		variable centerArrows
+		incr canvasWidth [expr {$centerArrows ? 7 : 9}]
+	    } else {
+		incr canvasWidth 6
+	    }
 	}
 	foreach col $data(arrowColList) {
 	    #
@@ -353,14 +356,21 @@ proc tablelist::sortItems {win parentKey sortColList sortOrderList} {
     condUpdateListVar $win
 
     #
+    # Remove the tags elidedRow and hiddenRow from all lines between
+    # 1 and $lastDescLine.  For the lines between $firstDescLine and
+    # $lastDescLine this is needed because of the sorting, and for the
+    # others because it improves the performance quite significantly.
+    #
+    variable pu
+    set w $data(body)
+    $w tag remove elidedRow 1.0 $lastDescLine.end+1$pu
+    $w tag remove hiddenRow 1.0 $lastDescLine.end+1$pu
+
+    #
     # Delete the items from the body text widget and insert the sorted ones.
     # Interestingly, for a large number of items it is much more efficient
     # to empty each line individually than to invoke a global delete command.
     #
-    variable pu
-    set w $data(body)
-    $w tag remove elidedRow $firstDescLine.0 $lastDescLine.end+1$pu
-    $w tag remove hiddenRow $firstDescLine.0 $lastDescLine.end+1$pu
     for {set line $firstDescLine} {$line <= $lastDescLine} {incr line} {
 	$w delete $line.0 $line.end
     }
@@ -402,11 +412,6 @@ proc tablelist::sortItems {win parentKey sortColList sortOrderList} {
 		    colFont $data(colFontList) \
 		    colTags $data(colTagsList) \
 		    {pixels alignment} $data(colList) {
-		if {$data($col-hide) && !$canElide} {
-		    incr col
-		    continue
-		}
-
 		#
 		# Build the list of tags to be applied to the cell
 		#
@@ -486,8 +491,7 @@ proc tablelist::sortItems {win parentKey sortColList sortOrderList} {
 		findTabs $win $w $line $col $col tabIdx1 tabIdx2
 		set msgScript [list ::tablelist::displayText $win $key \
 			       $col $text $font $pixels $alignment]
-		$w window create $tabIdx2 \
-			  -align top -pady $padY -create $msgScript
+		$w window create $tabIdx2 -pady $padY -create $msgScript
 		$w tag add elidedWin $tabIdx2
 	    }
 
@@ -496,11 +500,6 @@ proc tablelist::sortItems {win parentKey sortColList sortOrderList} {
 		    colFont $data(colFontList) \
 		    colTags $data(colTagsList) \
 		    {pixels alignment} $data(colList) {
-		if {$data($col-hide) && !$canElide} {
-		    incr col
-		    continue
-		}
-
 		#
 		# Build the list of tags to be applied to the cell
 		#
@@ -534,6 +533,25 @@ proc tablelist::sortItems {win parentKey sortColList sortOrderList} {
 	    }
 	}
 
+	#
+	# Restore the tags elidedRow and hiddenRow for this row if needed
+	#
+	if {[info exists data($key-elide)]} {
+	    $w tag add elidedRow $line.0 $line.end+1$pu
+	}
+	if {[info exists data($key-hide)]} {
+	    $w tag add hiddenRow $line.0 $line.end+1$pu
+	}
+    }
+
+    #
+    # Restore the tags elidedRow and hiddenRow
+    # for the rows between 0 and $parentRow, too
+    #
+    for {set row 0; set line 1} {$row <= $parentRow} \
+	{set row $line; incr line} {
+	set item [lindex $data(itemList) $row]
+	set key [lindex $item end]
 	if {[info exists data($key-elide)]} {
 	    $w tag add elidedRow $line.0 $line.end+1$pu
 	}
@@ -574,7 +592,7 @@ proc tablelist::sortItems {win parentKey sortColList sortOrderList} {
     #
     foreach type {anchor active} {
 	upvar 0 ${type}Key key2
-	if {[string length $key2] != 0} {
+	if {$key2 ne ""} {
 	    set data(${type}Row) [keyToRow $win $key2]
 	}
     }
@@ -585,7 +603,12 @@ proc tablelist::sortItems {win parentKey sortColList sortOrderList} {
     if {$editCol >= 0} {
 	set editRow [keyToRow $win $editKey]
 	if {$editRow >= $firstDescRow && $editRow <= $lastDescRow} {
-	    doEditCell $win $editRow $editCol 1
+	    if {$::tk_version >= 8.5} {
+		$w sync -command \
+		    [list tablelist::doEditCell $win $editRow $editCol 1]
+	    } else {
+		doEditCell $win $editRow $editCol 1
+	    }
 	}
     } else {
 	set selRows [curSelection $win]
@@ -594,14 +617,22 @@ proc tablelist::sortItems {win parentKey sortColList sortOrderList} {
 	    set selKey [lindex $data(keyList) $selRow]
 	    if {$selRow >= $firstDescRow && $selRow <= $lastDescRow &&
 		![info exists data($selKey-elide)]} {
-		seeRow $win $selRow
+		if {$::tk_version >= 8.5} {
+		    $w sync -command [list tablelist::seeRow $win $selRow]
+		} else {
+		    seeRow $win $selRow
+		}
 	    }
-	} elseif {[string compare [focus -lastfor $w] $w] == 0} {
-	    set activeKey [lindex $data(keyList) $data(activeRow)]
-	    if {$data(activeRow) >= $firstDescRow &&
-		$data(activeRow) <= $lastDescRow &&
+	} elseif {[focus -lastfor $w] eq $w} {
+	    set activeRow $data(activeRow)
+	    set activeKey [lindex $data(keyList) $activeRow]
+	    if {$activeRow >= $firstDescRow && $activeRow <= $lastDescRow &&
 		![info exists data($activeKey-elide)]} {
-		seeRow $win $data(activeRow)
+		if {$::tk_version >= 8.5} {
+		    $w sync -command [list tablelist::seeRow $win $activeRow]
+		} else {
+		    seeRow $win $activeRow
+		}
 	    }
 	}
     }
@@ -619,7 +650,7 @@ proc tablelist::sortItems {win parentKey sortColList sortOrderList} {
     # Work around a Tk bug on Mac OS X Aqua
     #
     variable winSys
-    if {[string compare $winSys "aqua"] == 0} {
+    if {$winSys eq "aqua"} {
 	foreach col $data(arrowColList) {
 	    set canvas [list $data(hdrTxtFrmCanv)$col]
 	    after idle [list lower $canvas]
@@ -681,7 +712,7 @@ proc tablelist::sortList {win list} {
     }
 
     if {[llength $sortColList] == 1 && [lindex $sortColList 0] == -1} {
-	if {[string length $data(-sortcommand)] == 0} {
+	if {$data(-sortcommand) eq ""} {
 	    return -code error "value of the -sortcommand option is empty"
 	}
 
@@ -699,7 +730,7 @@ proc tablelist::sortList {win list} {
 	    set col [lindex $sortColList $idx]
 	    set order [lindex $sortOrderList $idx]
 
-	    if {[string compare $data($col-sortmode) "command"] == 0} {
+	    if {$data($col-sortmode) eq "command"} {
 		if {![info exists data($col-sortcommand)]} {
 		    return -code error "value of the -sortcommand option for\
 					column $col is missing or empty"
@@ -707,8 +738,7 @@ proc tablelist::sortList {win list} {
 
 		set list [lsort -$order -index $col -command \
 			  $data($col-sortcommand) $list]
-	    } elseif {[string compare $data($col-sortmode) "asciinocase"]
-		== 0} {
+	    } elseif {$data($col-sortmode) eq "asciinocase"} {
 		if {$::tcl_version >= 8.5} {
 		    set list [lsort -$order -index $col -ascii -nocase $list]
 		} else {

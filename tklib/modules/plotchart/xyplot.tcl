@@ -2,8 +2,8 @@
 #     Interactive layer for plotting XY graphs via Plotchart
 #     Package provided by Jos Decoster
 #
-package require Tcl 8.5
-package require Tk 8.5
+package require Tcl 8.5-
+package require Tk 8.5-
 
 package require Plotchart 2.0
 package require cmdline

@@ -1,0 +1,91 @@
+[comment {-*- tcl -*- doctools manpage}]
+[manpage_begin shtmlview n 1.1.0]
+[keywords html markdown doctools mkdoc]
+[keywords viewer]
+[copyright {}]
+[titledesc {Basic HTML and Markdown viewer application}]
+[moddesc   {Basic HTML and Markdown viewer}]
+[category  {Document display}]
+[description]
+[para]
+
+The application described by this document, [syscmd shtmlview], is a
+simple viewer for HTML files. Further supported are documents written
+in [term Markdown], [term doctools], or [term mkdoc] format, if
+various supporting packages are available.
+
+See section [sectref {Beyond HTML}].
+
+[subsection {COMMAND LINE}]
+
+[list_begin definitions]
+
+[call [cmd shtmlview]]
+[call [cmd shtmlview] [option --help]]
+
+Prints usage information to standard error.
+
+[call [cmd shtmlview] [option --version]]
+
+Prints the application version to standard output.
+
+[call [cmd shtmlview] [option --render] [arg text]]
+
+Displays the provided text in a viewer window.
+
+Treats the text as Markdown except if it starts with a recognized HTML
+tag. In that case it assumes and renders as HTML.
+
+[call [cmd shtmlview] [option --render] [const -]]
+
+As before, except it reads the text to render from standard input.
+
+[call [cmd shtmlview] [arg filename]]
+
+Reads and renders the named file in a viewer widget.
+
+[list_end]
+
+
+[section {Beyond HTML}]
+
+Documents in any other format than HTML require the presence of
+various supporting packages to enable the application to display them.
+
+[list_begin definitions]
+[def Markdown]
+
+[list_begin itemized]
+[item] [package Markdown]
+[list_end]
+
+[def doctools]
+
+[list_begin itemized]
+[item] [package shtmlview::doctools]
+[item] [package dtplite]
+[list_end]
+
+[def mkdoc]
+
+[list_begin itemized]
+[item] [package shtmlview::mkdoc]
+[item] [package mkdoc::mkdoc]
+[list_end]
+
+[list_end]
+
+[section {BUGS, IDEAS, FEEDBACK}]
+
+This document, and the application it describes, will undoubtedly
+contain bugs and other problems.
+
+Please report such in the category [emph shtmlview] of the
+[uri {https://core.tcl-lang.org/tklib/ticket} {Tklib Trackers}].
+
+Please also report any ideas for enhancements you may have for either
+application and/or documentation.
+
+[vset CATEGORY shtmlview]
+[include ../support/devel/doc/feedback.inc]
+[manpage_end]

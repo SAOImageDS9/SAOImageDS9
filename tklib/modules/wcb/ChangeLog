@@ -1,3 +1,104 @@
+2024-11-29  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Wcb 4.1.1.
+
+2024-10-19  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 4.1.1.
+	* COPYRIGHT.txt:
+	* README.txt:
+	* doc/wcb.html:
+
+	* CHANGES.txt: Updated to reflect the changes.
+
+	* scripts/wcbEntry.tcl:     Made sure that the Migration Tool for Tcl 9
+	* ../../examples/wcb/*.tcl: won't output any warnings or notes.
+
+2024-09-04  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Wcb 4.1.
+
+2024-08-20  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 4.1; restored the support
+	* COPYRIGHT.txt: for Tcl/Tk 8.4; updated the copyright information.
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* ../../examples/wcb/listboxtest1.tcl: Now expects bitmap files whose
+	  names have the suffix ".xbm", regardless of the Tk version; updated
+	  the copyright information.
+
+2023-12-27  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Wcb 4.0.
+
+2023-10-07  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 4.0; dropped the support
+	* COPYRIGHT.txt: for Tk versions earlier than 8.4; updated the
+	* README.txt:    copyright information.
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl: Dropped the support for Tk versions earlier than 8.4;
+	  added support for the new ttk::treeview commands "cellselection *";
+	  updated the copyright information.
+
+	* doc/*.png: Updated the screenshots.
+
+	* ../../examples/wcb/*.tcl: Dropped the support for Tk versions earlier
+	  than 8.4; the demo scripts listboxtest*.tcl no longer expect the
+	  images in the directory $tk_library/demos/images; updated the
+	  copyright information.
+
+	* ../../examples/wcb/images/*: Added images for the demo scripts
+	  listboxtest*.tcl.
+
+2022-08-12  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* Released Wcb 3.8.
+
+2022-08-04  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 3.8; updated the
+	* COPYRIGHT.txt: copyright information.
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+
+	* doc/*.html: The new name of the original widget command is now also
+	  referred to as "proxy command"; bumped the version number to 3.8.
+
+	* scripts/*.tcl:            Updated the copyright information.
+	* ../../examples/wcb/*.tcl:
+
+2020-12-01  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* README.txt:   Corrected: "http" -> "https".
+	* doc/wcb.html:
+
+2020-09-20  Csaba Nemethi <csaba.nemethi@t-online.de>
+
+	* *.tcl:         Bumped the version number to 3.7; updated the
+	* COPYRIGHT.txt: copyright information.
+	* README.txt:
+
+	* CHANGES.txt: Updated to reflect the changes.
+	* doc/*.html:
+
+	* scripts/*.tcl: Updated the copyright information.
+
+	* doc/stylesheet.css: Updated.
+
+	* doc/*.png: Updated the screenshots.
+
+	* ../../examples/wcb/*.tcl: Made the demo-scripts scaling-aware;
+	  updated the copyright information.
+
 2020-02-09  0.7  <andreas_kupries@users.sourceforge.net>
 
 	*

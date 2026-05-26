@@ -1,6 +1,6 @@
 # copyright (C) 1995-2004 Jean-Luc Fontaine (mailto:jfontain@free.fr)
 
-package require Tk 8.3
+package require Tk 8.3-
 package require stooop
 
 
@@ -21,8 +21,10 @@ proc slice::slice {this canvas xRadius yRadius args} switched {$args} {
 }
 
 proc slice::~slice {this} {
+    ##nagelfar ignore
     if {[string length $switched::($this,-deletecommand)] > 0} {
         # always invoke command at global level
+	##nagelfar ignore
         uplevel #0 $switched::($this,-deletecommand)
     }
     $($this,canvas) delete slice($this)
@@ -40,6 +42,7 @@ proc slice::options {this} {
 }
 
 proc slice::set-height {this value} {      ;# not a dynamic option: see complete
+    ##nagelfar ignore
     if {$switched::($this,complete)} {
         error {option -height cannot be set dynamically}
     }
@@ -64,6 +67,7 @@ proc slice::set-topcolor {this value} {
 proc slice::set-deletecommand {this value} {}
 
 proc slice::set-scale {this value} {
+    ##nagelfar ignore
     if {$switched::($this,complete) && ($value > 0)} {
         # check for valid value following a non reproducible bug report
         update $this                   ;# requires initialization to be complete
@@ -82,6 +86,7 @@ proc slice::set-startandextent {this value} {
     } else {
         set ($this,extent) $extent
     }
+    ##nagelfar ignore
     if {$switched::($this,complete)} {
         update $this                   ;# requires initialization to be complete
     }
@@ -102,10 +107,12 @@ proc slice::complete {this} {
     set canvas $($this,canvas)
     set xRadius $($this,xRadius)
     set yRadius $($this,yRadius)
+    ##nagelfar ignore
     set bottomColor $switched::($this,-bottomcolor)
     # use an empty image as an origin marker with only 2 coordinates
     set ($this,origin)\
         [$canvas create image -$xRadius -$yRadius -tags slice($this)]
+    ##nagelfar ignore
     if {$switched::($this,-height) > 0} {                                  ;# 3D
         set ($this,startBottomArcFill) [$canvas create arc\
             0 0 0 0 -style chord -extent 0 -fill $bottomColor\
@@ -135,9 +142,11 @@ proc slice::complete {this} {
         set ($this,endRightLine)\
             [$canvas create line 0 0 0 0 -tags slice($this)]
     }
+    ##nagelfar ignore
+    set tfill $switched::($this,-topcolor)
     set ($this,topArc) [$canvas create arc\
         -$xRadius -$yRadius $xRadius $yRadius\
-        -fill $switched::($this,-topcolor) -tags slice($this)\
+        -fill $fill -tags slice($this)\
     ]
     # move slice so upper-left corner is at requested coordinates
     $canvas move slice($this) $xRadius $yRadius
@@ -153,6 +162,7 @@ proc slice::update {this} {
     $canvas coords $($this,topArc) -$xRadius -$yRadius $xRadius $yRadius
     $canvas itemconfigure $($this,topArc)\
         -start $($this,start) -extent $($this,extent)
+    ##nagelfar ignore
     if {$switched::($this,-height) > 0} {                                  ;# 3D
         updateBottom $this
     }
@@ -160,6 +170,7 @@ proc slice::update {this} {
     $canvas move slice($this) [expr {[lindex $coordinates 0] + $xRadius}]\
         [expr {[lindex $coordinates 1] + $yRadius}]
     # finally apply scale
+    ##nagelfar ignore
     eval $canvas scale slice($this) $coordinates $switched::($this,-scale)
 }
 
@@ -172,6 +183,7 @@ proc slice::updateBottom {this} {
     set canvas $($this,canvas)
     set xRadius $($this,xRadius)
     set yRadius $($this,yRadius)
+    ##nagelfar ignore
     set height $switched::($this,-height)
 
     # first make all bottom parts invisible
@@ -302,9 +314,11 @@ proc slice::data {this arrayName} {
 
     set data(start) $($this,start)
     set data(extent) $($this,extent)
+    ##nagelfar ignore
     foreach {x y} $switched::($this,-scale) {}
     set data(xRadius) [expr {$x * $($this,xRadius)}]
     set data(yRadius) [expr {$y * $($this,yRadius)}]
+    ##nagelfar ignore
     set data(height) [expr {$y * $switched::($this,-height)}]
     foreach {x y} [$($this,canvas) coords $($this,origin)] {}
     set data(xCenter) [expr {$x + $data(xRadius)}]

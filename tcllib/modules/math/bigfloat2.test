@@ -36,7 +36,9 @@ proc assert {name version code result} {
 interp alias {} zero {} string repeat 0
 # S.ARNOLD 08/01/2005
 # trying to set the precision of the comparisons to 15 digits
-set old_precision $::tcl_precision
+if {![package vsatisfies [package provide Tcl] 9]} {
+    set old_precision $::tcl_precision
+}
 set ::tcl_precision 15
 proc Zero {x} {
     global tcl_precision
@@ -65,8 +67,6 @@ proc fassert {name version code result} {
 ######################################################
 
 proc testSuite {} {
-
-
     # adds 999..9 and 1 -> 1000..0
     for {set i 1} {$i<15} {incr i} {
         assert add 1.0 {tostr [add \
@@ -99,16 +99,44 @@ proc testSuite {} {
     ################################################################################
     # fromstr problem with octal exponents
     ################################################################################
-    fassert fromstr 2.0 {todouble [fromstr 1.0e+099]} 1.0e+099
+    fassert fromstr 2.0  {todouble [fromstr 1.0e+099]} 1.0e+099
     fassert fromstr 2.0a {todouble [fromstr 1.0e99]} 1.0e99
     fassert fromstr 2.0b {todouble [fromstr 1.0e-99]} 1.0e-99
     fassert fromstr 2.0c {todouble [fromstr 1.0e-099]} 1.0e-99
 
+    foreach {x rx r} {
+	0    0  0
+	0.0  0. {F 0 -18 32768}
+	.0   0. {F 0 -18 32768}
+	+0   0  0
+	+0.0 0. {F 0 -18 32768}
+	+.0  0. {F 0 -18 32768}
+	-0   -0 -0
+	-0.0 0. {F 0 -19 52430}
+	-.0  0. {F 0 -19 52430}
+    } {
+	test bigfloat2-fromstr-3.[incr k] {fromstr zeroes} {
+	    fromstr $x
+	} $r
+
+	test bigfloat2-fromstr-4.${k} {fromstr zeroes as double} {
+	    tostr [fromstr $x]
+	} $rx
+    }
+    unset k
+
+    test bigfloat2-fromstr-5.0 {fromstr zero exponent} {
+	fromstr 1.0e0
+    } {F 524288 -19 52430}
+
+    test bigfloat2-fromstr-6.0 {fromstr zero exponent} {
+	tostr [fromstr 1.0e0]
+    } 1.
 
     ################################################################################
     # fromdouble with precision
     ################################################################################
-    assert fromdouble 2.1 {tostr [ceil [fromdouble 1.0e99 100]]} 1[zero 99]
+    assert fromdouble 2.1  {tostr [ceil [fromdouble 1.0e99 100]]} 1[zero 99]
     assert fromdouble 2.1a {tostr [fromdouble 1.11 3]} 1.11
     assert fromdouble 2.1b {tostr [fromdouble +1.11 3]} 1.11
     assert fromdouble 2.1c {tostr [fromdouble -1.11 3]} -1.11
@@ -636,6 +664,9 @@ rename Zero ""
 
 testsuiteCleanup
 
-set ::tcl_precision $old_precision
-
-
+if {![package vsatisfies [package provide Tcl] 9]} {
+    set ::tcl_precision $old_precision
+} else {
+    unset ::tcl_precision
+}
+return

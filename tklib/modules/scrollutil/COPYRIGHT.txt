@@ -1,5 +1,5 @@
-Scrolling utilities package Scrollutil 1.5
-Copyright (c) 2019-2020  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+Scrolling utilities package Scrollutil 2.4
+Copyright (c) 2019-2024  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 
 This library is free software; you can use, modify, and redistribute it
 for any purpose, provided that existing copyright notices are retained

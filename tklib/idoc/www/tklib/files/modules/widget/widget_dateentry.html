@@ -1,0 +1,221 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>widget_dateentry - Various megawidgets</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'widget_dateentry.man' by tcllib/doctools with format 'html'
+   -->
+<!-- widget_dateentry.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">widget_dateentry(n) 0.98 tklib &quot;Various megawidgets&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>widget_dateentry - Date Entry Megawidget</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">WIDGET OPTIONS</a></li>
+<li class="doctools_section"><a href="#section3">WIDGET COMMAND</a></li>
+<li class="doctools_section"><a href="#section4">DEFAULT BINDINGS</a></li>
+<li class="doctools_section"><a href="#section5">EXAMPLE</a></li>
+<li class="doctools_section"><a href="#section6">Bugs, Ideas, Feedback</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+<li class="doctools_section"><a href="#category">Category</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_requirements">
+<li>package require <b class="pkgname">Tcl 8.4</b></li>
+<li>package require <b class="pkgname">Tk 8.4</b></li>
+<li>package require <b class="pkgname">widget <span class="opt">?3.0?</span></b></li>
+<li>package require <b class="pkgname">widget::dateentry <span class="opt">?0.98?</span></b></li>
+</ul>
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">widget::dateentry</b> <i class="arg">pathname</i> <span class="opt">?options?</span></a></li>
+<li><a href="#2"><i class="arg">pathname</i> <b class="cmd">get</b></a></li>
+<li><a href="#3"><i class="arg">pathname</i> <b class="cmd">set</b> <i class="arg">date</i></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>This package provides a dateentry megawidget (snidget).
+It is based on an ttk::entry. All widget commands of the ttk::entry
+are available for the dateentry.</p>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">widget::dateentry</b> <i class="arg">pathname</i> <span class="opt">?options?</span></a></dt>
+<dd></dd>
+</dl>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">WIDGET OPTIONS</a></h2>
+<dl class="doctools_options">
+<dt><b class="option">-command</b></dt>
+<dd><p>A command prefix to evaluate when a date was selected.
+The command prefix is executed in the global namespace and given two
+arguments, the raw date in seconds, and the formatted date, as per
+option <b class="option">-dateformat</b>.</p></dd>
+<dt><b class="option">-dateformat</b></dt>
+<dd><p>The format of the date that is entered or returned. Default: %m/%d/%Y.</p></dd>
+<dt><b class="option">-firstday</b></dt>
+<dd><p>See the <b class="package">widget::calendar</b> man page.</p></dd>
+<dt><b class="option">-font</b></dt>
+<dd><p>Select the font used in the widget. It defaults to Helvetica 9.</p></dd>
+<dt><b class="option">-highlightcolor</b></dt>
+<dd><p>See the <b class="package">widget::calendar</b> man page.
+See the calendar man page.</p></dd>
+<dt><b class="option">-language</b></dt>
+<dd><p>See the <b class="package">widget::calendar</b> man page.</p></dd>
+<dt><b class="option">-shadecolor</b></dt>
+<dd><p>See the <b class="package">widget::calendar</b> man page.</p></dd>
+<dt><b class="option">-showpast</b></dt>
+<dd><p>See the <b class="package">widget::calendar</b> man page.</p></dd>
+<dt><b class="option">-textvariable</b></dt>
+<dd><p>Specifies the name of a variable whose value is linked to the entry widget's contents.
+Whenever the variable changes value, the widget's contents are updated, and vice versa.</p></dd>
+</dl>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">WIDGET COMMAND</a></h2>
+<dl class="doctools_definitions">
+<dt><a name="2"><i class="arg">pathname</i> <b class="cmd">get</b></a></dt>
+<dd><p>Returns the selected date.</p></dd>
+<dt><a name="3"><i class="arg">pathname</i> <b class="cmd">set</b> <i class="arg">date</i></a></dt>
+<dd><p>Programmatically sets a new date. Expects that the date is in the same format
+as configured by option <b class="option">-dateformat</b>.</p>
+<p>The same effect can also be achieved by setting a linked
+<b class="option">-textvariable</b>.</p></dd>
+</dl>
+</div>
+<div id="section4" class="doctools_section"><h2><a name="section4">DEFAULT BINDINGS</a></h2>
+<p>On creation of the dateentry widget the following bindings are installed.
+For navigation within the calendar, see its manpage.</p>
+<ul class="doctools_itemized">
+<li><p>Button-1 - Accept and select the date and close the calendar window.</p></li>
+<li><p>Return, space - Accept the selected date and close the calendar window</p></li>
+<li><p>Escape - Close calendar window</p></li>
+<li><p>Control-space - Show calendar window</p></li>
+</ul>
+</div>
+<div id="section5" class="doctools_section"><h2><a name="section5">EXAMPLE</a></h2>
+<pre class="doctools_example">
+    package require widget::dateentry; # or widget::all
+    set t [widget::dateentry .de]
+    pack $t -fill x -expand 1
+</pre>
+</div>
+<div id="section6" class="doctools_section"><h2><a name="section6">Bugs, Ideas, Feedback</a></h2>
+<p>This document, and the package it describes, will undoubtedly contain
+bugs and other problems.
+Please report such in the category <em>widget::dateentry</em> of the
+<a href="http://core.tcl.tk/tklib/reportlist">Tklib Trackers</a>.
+Please also report any ideas for enhancements you may have for either
+package and/or documentation.</p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../../../index.html#date">date</a>, <a href="../../../../index.html#dateentry">dateentry</a>, <a href="../../../../index.html#megawidget">megawidget</a>, <a href="../../../../index.html#snit">snit</a>, <a href="../../../../index.html#widget">widget</a></p>
+</div>
+<div id="category" class="doctools_section"><h2><a name="category">Category</a></h2>
+<p>Widget</p>
+</div>
+</div></body></html>

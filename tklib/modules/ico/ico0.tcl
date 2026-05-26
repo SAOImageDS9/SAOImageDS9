@@ -4,8 +4,6 @@
 #
 # Copyright (c) 2003 Aaron Faupell
 # Copyright (c) 2003-2004 ActiveState Corporation
-#
-# RCS: @(#) $Id: ico0.tcl,v 1.3 2011/10/05 00:10:46 hobbs Exp $
 
 # JH: speed has been considered in these routines, although they
 # may not be fully optimized.  Running EXEtoICO on explorer.exe,
@@ -17,7 +15,7 @@
 #	set icos [::ico::getIconList $file]
 #	set img  [::ico::getIcon $file 1 -format image]
 
-package require Tcl 8.4
+package require Tcl 8.4-
 
 # Instantiate vars we need for this package
 namespace eval ::ico {
@@ -281,9 +279,8 @@ proc ::ico::EXEtoICO {exeFile icoFile} {
     set cnt  [SearchForIcos $file]
     set dir  {}
     set data {}
-    
-    set fh [open $file]
-    fconfigure $fh -eofchar {} -encoding binary -translation lf
+
+    set fh [open $file rb]
 
     for {set i 0} {$i <= $cnt} {incr i} {
         seek $fh $ICONS($file,$i) start
@@ -294,8 +291,7 @@ proc ::ico::EXEtoICO {exeFile icoFile} {
     close $fh
 
     # write them out to a file
-    set ifh [open $icoFile w+]
-    fconfigure $ifh -eofchar {} -encoding binary -translation lf
+    set ifh [open $icoFile wb+]
 
     bputs $ifh sss 0 1 [expr {$cnt + 1}]
     set offset [expr {6 + (($cnt + 1) * 16)}]
@@ -371,6 +367,7 @@ proc ::ico::getword {fh} {
 
 proc ::ico::getulong {fh} {
     binary scan [read $fh 4] i tmp
+    ##nagelfar ignore
     return [format %u $tmp]
 }
 
@@ -397,13 +394,13 @@ proc ::ico::createImage {colors {name {}}} {
     if {0} {
 	# if image supported "" colors as transparent pixels,
 	# we could use this much faster op
-	$img put -to 0 0 $colors
+	$img put $colors -to 0 0
     } else {
 	for {set x 0} {$x < $w} {incr x} {
 	    for {set y 0} {$y < $h} {incr y} {
 		set clr [lindex $colors $y $x]
 		if {$clr ne ""} {
-		    $img put -to $x $y $clr
+		    $img put $clr -to $x $y
 		}
 	    }
 	}
@@ -697,8 +694,7 @@ proc ::ico::readDIBFromData {data loc} {
 }
 
 proc ::ico::getIconListICO {file} {
-    set fh [open $file r]
-    fconfigure $fh -eofchar {} -encoding binary -translation lf
+    set fh [open $file rb]
 
     # both words must be read to keep in sync with later reads
     if {"[getword $fh] [getword $fh]" ne "0 1"} {
@@ -779,8 +775,7 @@ proc ::ico::getIconListEXE {file} {
 # returns an icon in the form:
 #	{width height depth palette xor_mask and_mask}
 proc ::ico::getRawIconDataICO {file index} {
-    set fh [open $file r]
-    fconfigure $fh -eofchar {} -encoding binary -translation lf
+    set fh [open $file rb]
 
     # both words must be read to keep in sync with later reads
     if {"[getword $fh] [getword $fh]" ne "0 1"} {
@@ -857,8 +852,7 @@ proc ::ico::getRawIconDataEXE {file index} {
 
     if {$cnt < $index} { return -code error "index out of range" }
 
-    set fh [open $file]
-    fconfigure $fh -eofchar {} -encoding binary -translation lf
+    set fh [open $file rb]
     seek $fh $ICONS($file,$index) start
 
     # readDIB returns: {w h bpp palette xor and}
@@ -869,13 +863,11 @@ proc ::ico::getRawIconDataEXE {file index} {
 
 proc ::ico::writeIconICO {file index w h bpp palette xor and} {
     if {![file exists $file]} {
-	set fh [open $file w+]
-	fconfigure $fh -eofchar {} -encoding binary -translation lf
+	set fh [open $file wb+]
 	bputs $fh sss 0 1 0
 	seek $fh 0 start
     } else {
-	set fh [open $file r+]
-	fconfigure $fh -eofchar {} -encoding binary -translation lf
+	set fh [open $file rb+]
     }
     if {[file size $file] > 4 && "[getword $fh] [getword $fh]" ne "0 1"} {
 	close $fh
@@ -965,8 +957,7 @@ proc ::ico::writeIconICODATA {file index w h bpp palette xor and} {
 
 proc ::ico::writeIconBMP {file index w h bpp palette xor and} {
     if {$index != 0} {return -code error "index out of range"}
-    set fh [open $file w+]
-    fconfigure $fh -eofchar {} -encoding binary -translation lf
+    set fh [open $file wb+]
     set size [expr {[string length $palette] + [string length $xor]}]
     # bitmap header: magic, file size, reserved, reserved, offset of bitmap data
     bputs $fh a2issi BM [expr {14 + 40 + $size}] 0 0 54
@@ -987,9 +978,8 @@ proc ::ico::writeIconEXE {file index w h bpp palette xor and} {
     if {[list $w $h $bpp] != $ICONS($file,$index,data)} {
 	return -code error "icon format differs from original"
     }
-    
-    set fh [open $file r+]
-    fconfigure $fh -eofchar {} -encoding binary -translation lf
+
+    set fh [open $file rb+]
     seek $fh [expr {$ICONS($file,$index) + 40}] start
 
     puts -nonewline $fh $palette$xor$and
@@ -1002,8 +992,7 @@ proc ::ico::SearchForIcos {file {index -1}} {
     if {[info exists ICONS($file,$index)]} {
 	return $ICONS($file,$index)
     }
-    set fh [open $file]
-    fconfigure $fh -eofchar {} -encoding binary -translation lf
+    set fh [open $file rb]
     if {[read $fh 2] ne "MZ"} {
 	close $fh
 	return -code error "unknown file format"
@@ -1028,7 +1017,7 @@ proc ::ico::SearchForIcosNE {fh file index} {
 
     seek $fh 36 current
     seek $fh [expr {[getword $fh] - 38}] current
-    
+
     set base [tell $fh]
     set shift [expr {int(pow(2, [getushort $fh]))}]
     while {[set type [expr {[getushort $fh] & 0x7fff}]] != 0} {
@@ -1190,4 +1179,4 @@ proc ::ico::Show {file args} {
     grid columnconfigure $parent 0 -weight 1
 }
 
-package provide ico 0.3.2
+package provide ico 0.3.5

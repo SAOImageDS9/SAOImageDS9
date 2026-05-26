@@ -2,7 +2,7 @@
 # # ## ### ##### ######## #############
 
 # @@ Meta Begin
-# Package coroutine 1.2
+# Package coroutine 1.4
 # Meta platform        tcl
 # Meta require         {Tcl 8.6}
 # Meta license         BSD
@@ -45,16 +45,15 @@
 # Copyright (c) 2009 Neil Madden
 # Copyright (c) 2009 Peter Spjuth
 
-## $Id: coroutine.tcl,v 1.2 2011/04/18 20:23:58 andreas_kupries Exp $
 # # ## ### ##### ######## #############
 ## Requisites, and ensemble setup.
 
-package require Tcl 8.6
+package require Tcl 8.6 9
 
 namespace eval ::coroutine::util {
 
     namespace export \
-	create global after exit vwait update gets read await
+	create global after exit vwait update gets read puts socket await
 
     namespace ensemble create
 }
@@ -62,7 +61,7 @@ namespace eval ::coroutine::util {
 # # ## ### ##### ######## #############
 ## API. Spawn coroutines, automatic naming
 ##      (like thread::create).
-
+
 proc ::coroutine::util::create {args} {
     ::coroutine [ID] {*}$args
 }
@@ -77,18 +76,28 @@ proc ::coroutine::util::create {args} {
 # vwait
 # gets               [1]
 # read               [1]
+# puts               [1]
+# socket             [1]
 #
 # [1] These commands call on their builtin counterparts to get some of
 #     their functionality (like proper error messages for syntax errors).
 
 # - -- --- ----- -------- -------------
-
+
 proc ::coroutine::util::global {args} {
     # Frame #1 is the coroutine-specific stack frame at its
     # bottom. Variables there are out of view of the main code, and
     # can be made visible in the entire coroutine underneath.
 
-    set cmd [list upvar "#1"]
+    # Ticket [bf8b80af]. Nothing needs to be done when the command is
+    # invoked by the main procedure of the coroutine. Such code
+    # already runs in frame #1, i.e. the variables are already in
+    # scope, automatically.
+    if {[info level] < 2} {
+	return
+    }
+
+    set cmd [list upvar #1]
     foreach var $args {
 	lappend cmd $var $var
     }
@@ -96,22 +105,22 @@ proc ::coroutine::util::global {args} {
 }
 
 # - -- --- ----- -------- -------------
-
-proc ::coroutine::util::after {delay} {
+
+proc ::coroutine::util::after delay {
     ::after $delay [list [info coroutine]]
     yield
     return
 }
 
 # - -- --- ----- -------- -------------
-
+
 proc ::coroutine::util::exit {{status 0}} {
     return -level [info level] $status
 }
 
 # - -- --- ----- -------- -------------
-
-proc ::coroutine::util::vwait {varname} {
+
+proc ::coroutine::util::vwait varname {
     upvar 1 $varname var
     set callback [list [namespace current]::VWaitTrace [info coroutine]]
 
@@ -134,15 +143,16 @@ proc ::coroutine::util::vwait {varname} {
     return
 }
 
+
 proc ::coroutine::util::VWaitTrace {coroutine args} {
     $coroutine
     return
 }
 
 # - -- --- ----- -------- -------------
-
+
 proc ::coroutine::util::update {{what {}}} {
-    if {$what eq "idletasks"} {
+    if {$what eq {idletasks}} {
         ::after idle [list [info coroutine]]
     } elseif {$what ne {}} {
         # Force proper error message for bad call.
@@ -155,8 +165,8 @@ proc ::coroutine::util::update {{what {}}} {
 }
 
 # - -- --- ----- -------- -------------
-
-proc ::coroutine::util::gets {args} {
+
+proc ::coroutine::util::gets args {
     # Process arguments.
     # Acceptable syntax:
     # * gets CHAN ?VARNAME?
@@ -178,33 +188,34 @@ proc ::coroutine::util::gets {args} {
     # Loop until we have a complete line. Yield to the event loop
     # where necessary. During
     set blocking [::chan configure $chan -blocking]
-    while {1} {
-        ::chan configure $chan -blocking 0
+    set readable [::chan event $chan readable]
+    ::chan event $chan readable [list [info coroutine]]
+    ::chan configure $chan -blocking 0
+    try {
+	while 1 {
+	    try {
+		set result [::chan gets $chan line]
+	    } on error {result opts} {
+		return -code $result -options $opts
+	    }
 
-	try {
-	    set result [::chan gets $chan line]
-	} on error {result opts} {
-            ::chan configure $chan -blocking $blocking
-            return -code $result -options $opts
+	    if {[::chan blocked $chan]} {
+		yield
+	    } else {
+		if {[llength $args] == 2} {
+		    return $result
+		} else {
+		    return $line
+		}
+	    }
 	}
-
-	if {[::chan blocked $chan]} {
-            ::chan event $chan readable [list [info coroutine]]
-            yield
-            ::chan event $chan readable {}
-        } else {
-            ::chan configure $chan -blocking $blocking
-
-            if {[llength $args] == 2} {
-                return $result
-            } else {
-                return $line
-            }
-        }
+    } finally {
+	::chan configure $chan -blocking $blocking
+	::chan event $chan readable $readable
     }
 }
 
-
+
 proc ::coroutine::util::gets_safety {chan limit varname {timeout 120000}} {
     # Process arguments.
     # Acceptable syntax:
@@ -212,12 +223,14 @@ proc ::coroutine::util::gets_safety {chan limit varname {timeout 120000}} {
 
     # Loop until we have a complete line. Yield to the event loop
     # where necessary. During
-    set blocking [::chan configure $chan -blocking]
     upvar 1 $varname line
+    set blocking [::chan configure $chan -blocking]
+    ::chan configure $chan -blocking 0
+    set readable [::chan event $chan readable]
+    ::chan event $chan readable [list [info coroutine] readable]
     try {
-	while {1} {
-	    ::chan configure $chan -blocking 0
-	    if {[::chan pending input $chan]>= $limit} {
+	while 1 {
+	    if {[::chan pending input $chan] >= $limit} {
 		error {Too many notes, Mozart. Too many notes}
 	    }
 	    try {
@@ -227,28 +240,26 @@ proc ::coroutine::util::gets_safety {chan limit varname {timeout 120000}} {
 	    }
 
 	    if {[::chan blocked $chan]} {
-	  set timeoutevent [::after $timeout [list [info coroutine] timeout]]
-		::chan event $chan readable [list [info coroutine] readable]
+		set timeoutevent [::after $timeout [list [info coroutine] timeout]]
 		set event [yield]
-		if {$event eq "timeout"} {
-		  error "Connection Timed Out"
+		if {$event eq {timeout}} {
+		  error {Connection Timed Out}
 		}
 		::after cancel $timeoutevent
-		::chan event $chan readable {}
 	    } else {
 		return $result
 	    }
 	}
     } finally {
-        ::chan configure $chan -blocking $blocking
+	::chan configure $chan -blocking $blocking
+	::chan event $chan readable $readable
     }
 }
 
 
-
 # - -- --- ----- -------- -------------
-
-proc ::coroutine::util::read {args} {
+
+proc ::coroutine::util::read args {
     # Process arguments.
     # Acceptable syntax:
     # * read ?-nonewline ? CHAN
@@ -267,7 +278,7 @@ proc ::coroutine::util::read {args} {
 
     if {[llength $args] == 2} {
 	lassign $args a b
-	if {$a eq "-nonewline"} {
+	if {$a eq {-nonewline}} {
 	    set chan $b
 	    set chop yes
 	} else {
@@ -283,62 +294,55 @@ proc ::coroutine::util::read {args} {
 
     set buf {}
 
-    if {$total eq "Inf"} {
-	# Loop until eof.
+    set blocking [::chan configure $chan -blocking]
+    set readable [::chan event $chan readable]
+    ::chan event $chan readable [list [info coroutine]]
+    ::chan configure $chan -blocking 0
+    try {
+	if {$total eq {Inf}} {
+	    # Loop until eof.
+	    while 1 {
+		if {[::chan eof $chan]} {
+		    break
+		} elseif {[::chan blocked $chan]} {
+		    yield
+		}
 
-	while 1 {
-	    set blocking [::chan configure $chan -blocking]
-	    ::chan configure $chan -blocking 0
-	    if {[::chan eof $chan]} {
-		break
-	    } elseif {[::chan blocked $chan]} {
-		::chan event $chan readable [list [info coroutine]]
-		yield
-		::chan event $chan readable {}
+		try {
+		    set result [::chan read $chan]
+		} on error {result opts} {
+		    return -code $result -options $opts
+		} 
+		append buf $result
 	    }
+	} else {
+	    # Loop until total characters have been read, or eof found,
+	    # whichever is first.
 
-	    try {
-		set result [::chan read $chan]
-	    } on error {result opts} {
-		::chan configure $chan -blocking $blocking
-		return -code $result -options $opts
-	    } finally {
-		::chan configure $chan -blocking $blocking
-	    }
-	    append buf $result
-	}
-    } else {
-	# Loop until total characters have been read, or eof found,
-	# whichever is first.
+	    set left $total
+	    while 1 {
+		if {[::chan eof $chan]} {
+		    break
+		} elseif {[::chan blocked $chan]} {
+		    yield
+		}
 
-	set left $total
-	while 1 {
-	    set blocking [::chan configure $chan -blocking]
-	    ::chan configure $chan -blocking 0
+		try {
+		    set result [::chan read $chan $left]
+		} on error {result opts} {
+		    return -code $result -options $opts
+		}
 
-	    if {[::chan eof $chan]} {
-		break
-	    } elseif {[::chan blocked $chan]} {
-		::chan event $chan readable [list [info coroutine]]
-		yield
-		::chan event $chan readable {}
-	    }
-
-	    try {
-		set result [::chan read $chan $left]
-	    } on error {result opts} {
-		::chan configure $chan -blocking $blocking
-		return -code $result -options $opts
-	    } finally {
-		::chan configure $chan -blocking $blocking
-	    }
-
-	    append buf $result
-	    incr left -[string length $result]
-	    if {!$left} {
-		break
+		append buf $result
+		incr left -[string length $result]
+		if {!$left} {
+		    break
+		}
 	    }
 	}
+    } finally {
+	::chan configure $chan -blocking $blocking
+	::chan event $chan readable $readable
     }
 
     if {$chop && [string index $buf end] eq "\n"} {
@@ -349,10 +353,85 @@ proc ::coroutine::util::read {args} {
 }
 
 # - -- --- ----- -------- -------------
+
+## Yields until the channel is writable before actually writing, as
+## suggested by the documentation for non-blocking puts
+proc ::coroutine::util::puts args {
+    # Process arguments.
+    # Acceptable syntax:
+    # * puts ?-nonewline? ?CHAN? string
+
+    switch [llength $args] {
+        1 {
+            set ch stdout
+        }
+        2 {
+            set ch [lindex $args 0]
+            if {[string match {-*} $ch]} {
+                if {$ch ne {-nonewline}} {
+                    # Force proper error message for bad call
+                    tailcall ::chan puts {*}$args
+                }
+                set ch stdout
+            }
+        }
+        3 {
+            lassign $args opt ch
+            if {$opt ne {-nonewline}} {
+                # Force proper error message for bad call
+                tailcall ::chan puts {*}$args
+            }
+        }
+        default {
+            # Force proper error message for bad call
+            tailcall ::chan puts {*}$args
+        }
+    }
+    set blocking [::chan configure $ch -blocking]
+    ::chan event $ch writable [info coroutine]
+    yield
+    ::chan event $ch writable {}
+    try {
+        ::chan puts {*}$args
+    } on error {result opts} {
+        return -code $result -options $opts
+    } finally {
+        ::chan configure $ch -blocking $blocking
+    }
+    return
+}
+
+# - -- --- ----- -------- -------------
+## Does a non-blocking connect in the background and yields until finished.
+
+proc ::coroutine::util::socket args {
+    # Process arguments.
+    # Acceptable syntax:
+    # * socket ?options? host port
+
+    if {[lsearch -exact $args -server] >= 0} {
+        error "[namespace current]::socket cannot be used for server sockets."
+    }
+    set s [::socket -async {*}$args]
+    ::chan event $s writable [info coroutine]
+    while {[::chan configure $s -connecting]} {
+        yield
+    }
+    ::chan event $s writable {}
+    set errmsg [::chan configure $s -error]
+    if {$errmsg ne {}} {
+        ::chan close $s
+        error $errmsg
+    }
+    return $s
+}
+
+
+# - -- --- ----- -------- -------------
 ## This goes beyond the builtin vwait, wait for multiple variables,
 ## result is the name of the variable which was written.
 ## This code mainly by Neil Madden.
-
+
 proc ::coroutine::util::await args {
     set callback [list [namespace current]::AWaitSignal [info coroutine]]
 
@@ -386,16 +465,17 @@ proc ::coroutine::util::await args {
     return $choice
 }
 
+
 proc ::coroutine::util::AWaitSignal {coroutine var index op} {
-    if {$op ne "write"} { return }
+    if {$op ne {write}} return
     set fullvar $var
-    if {$index ne ""} { append fullvar ($index) }
+    if {$index ne {}} {append fullvar ($index)}
     $coroutine $fullvar
 }
 
 # # ## ### ##### ######## #############
 ## Internal (package specific) commands
-
+
 proc ::coroutine::util::ID {} {
     variable counter
     return [namespace current]::C[incr counter]
@@ -411,5 +491,5 @@ namespace eval ::coroutine::util {
 
 # # ## ### ##### ######## #############
 ## Ready
-package provide coroutine 1.2
+package provide coroutine 1.4
 return

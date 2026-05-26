@@ -10,7 +10,10 @@
 #
 # Static data
 #
-namespace eval ::Plotchart {
+proc ::Plotchart::InitAnnot {} {
+    variable BalloonDir
+    variable TextDir
+
     # Index, three pairs of scale factors to determine xy-coordinates
     set BalloonDir(north-west) {0  0  1 -2 -2  1  0}
     set BalloonDir(north)      {1 -1  0  0 -3  1  0}
@@ -40,6 +43,11 @@ namespace eval ::Plotchart {
     set TextDir(s)          s
     set TextDir(south-east) ew
     set TextDir(east)       e
+}
+
+namespace eval ::Plotchart {
+    InitAnnot
+    rename InitAnnot {}
 }
 
 # DefaultBalloon --
@@ -390,7 +398,7 @@ proc ::Plotchart::DrawGradientBackground { w colour dir intensity {rect {}} } {
     if { $dir == "h" } {
         set nmax [expr {ceil($n*($rxmax-$rxmin)/double($pxmax-$pxmin))}]
     } else {
-        set nmax [expr {ceil($n*($rymin-$rymax)/double($pymin-$pymax))}]
+        set nmax [expr {ceil($n*($rymin-$rymax)/double($pymax-$pymin))}]
     }
     for { set i 0 } { $i < $nmax } { incr i } {
         set factor [expr {($first*$i+$last*($n-$i-1))/double($n)}]
@@ -404,9 +412,9 @@ proc ::Plotchart::DrawGradientBackground { w colour dir intensity {rect {}} } {
             }
         } else {
             set y1     $y2
-            set y2     [expr {$rymax+($i+1)*$fac}]
+            set y2     [expr {$rymin+$i*$fac}]
             if { $i == $nmax-1 } {
-                set y2 $rymin
+                set y2 $rymax
             }
         }
 

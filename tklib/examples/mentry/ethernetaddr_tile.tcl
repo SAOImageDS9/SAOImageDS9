@@ -1,11 +1,12 @@
-#!/usr/bin/env wish
+#! /usr/bin/env tclsh
 
 #==============================================================================
 # Demonstrates how to implement a multi-entry widget for Ethernet addresses.
 #
-# Copyright (c) 1999-2019  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 1999-2023  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
+package require Tk
 package require mentry_tile
 
 set title "Ethernet Address"
@@ -25,8 +26,8 @@ source [file join [file dirname [info script]] option_tile.tcl]
 #------------------------------------------------------------------------------
 proc ethernetAddrMentry {win args} {
     #
-    # Create a mentry widget consisting of 6 entry children of
-    # width 2, separated by colons, and set its type to EthernetAddr
+    # Create a mentry widget consisting of 6 entries of width
+    # 2, separated by colons, and set its type to EthernetAddr
     #
     eval [list mentry::mentry $win] $args
     $win configure -body {2 : 2 : 2 : 2 : 2 : 2}
@@ -34,14 +35,16 @@ proc ethernetAddrMentry {win args} {
 
     #
     # Install automatic uppercase conversion and allow only hexadecimal
-    # digits in all entry children; use wcb::cbappend (or wcb::cbprepend)
+    # digits in all entry components; use wcb::cbappend (or wcb::cbprepend)
     # instead of wcb::callback in order to keep the wcb::checkEntryLen
-    # callback, registered by mentry::mentry for all entry children
+    # callback, registered by mentry::mentry for all entry components
     #
     for {set n 0} {$n < 6} {incr n} {
-	$win adjustentry $n "0123456789ABCDEF"
-	wcb::cbappend [$win entrypath $n] before insert wcb::convStrToUpper \
+	set w [$win entrypath $n]
+	wcb::cbappend $w before insert wcb::convStrToUpper \
 		      {wcb::checkStrForRegExp {^[0-9A-F]*$}}
+	$win adjustentry $n "0123456789ABCDEF"
+	bindtags $w [linsert [bindtags $w] 1 MentryEthernetAddr]
     }
 
     return $win
@@ -99,7 +102,7 @@ proc getEthernetAddr win {
     checkIfEthernetAddrMentry $win
 
     #
-    # Generate an error if any entry child is empty
+    # Generate an error if any entry component is empty
     #
     for {set n 0} {$n < 6} {incr n} {
 	if {[$win isempty $n]} {
@@ -110,7 +113,7 @@ proc getEthernetAddr win {
 
     #
     # Return the properly formatted Ethernet address built
-    # from the values contained in the entry children
+    # from the values contained in the entry components
     #
     $win getarray strs
     return [format "%02X:%02X:%02X:%02X:%02X:%02X" \
@@ -127,11 +130,30 @@ proc checkIfEthernetAddrMentry win {
 	return -code error "bad window path name \"$win\""
     }
 
-    if {[string compare [winfo class $win] "Mentry"] != 0 ||
-	[string compare [$win attrib type] "EthernetAddr"] != 0} {
+    if {[winfo class $win] ne "Mentry" ||
+	[$win attrib type] ne "EthernetAddr"} {
 	return -code error \
 	       "window \"$win\" is not a mentry widget for Ethernet addresses"
     }
+}
+
+bind MentryEthernetAddr <<Paste>> { pasteEthernetAddr %W }
+
+#------------------------------------------------------------------------------
+# pasteEthernetAddr
+#
+# Handles <<Paste>> events in the entry component w of a mentry widget for
+# Ethernet addresses by pasting the current contents of the clipboard into the
+# mentry if it is a valid Ethernet address.
+#------------------------------------------------------------------------------
+proc pasteEthernetAddr w {
+    set res [catch {::tk::GetSelection $w CLIPBOARD} addr]
+    if {$res == 0} {
+	set win [winfo parent [winfo parent $w]]
+	catch { putEthernetAddr $addr $win }
+    }
+
+    return -code break ""
 }
 
 #------------------------------------------------------------------------------
@@ -168,7 +190,7 @@ ttk::button .base.get -text "Get from mentry" -command {
 #
 # Label .base.addr displaying the result of getEthernetAddr
 #
-ttk::label .base.addr -textvariable addr -background white
+ttk::label .base.addr -textvariable addr
 
 #
 # Separator .sep and button .close
@@ -179,11 +201,11 @@ ttk::button .base.close -text Close -command exit
 #
 # Manage the widgets
 #
-pack .base.close -side bottom -pady 10
+pack .base.close -side bottom -pady 7p
 pack .base.sep -side bottom -fill x
-pack .base.f -padx 10 -pady 10
-pack .base.get -padx 10
-pack .base.addr -padx 10 -pady 10
+pack .base.f -padx 7p -pady 7p
+pack .base.get -padx 7p
+pack .base.addr -padx 7p -pady 7p
 pack .base -expand yes -fill both
 
 putEthernetAddr 0:40:5:E4:99:26 .base.f.me

@@ -9,7 +9,7 @@
 
 # FUTURE: Rework to allow switching between the tcl/critcl implementations.
 
-package require Tcl 8.2;                # tcl minimum version
+package require Tcl 8.5 9;                # tcl minimum version
 catch {package require crc32};          # tcllib 1.1
 catch {package require tcllibc};        # critcl enhancements for tcllib
 
@@ -24,7 +24,7 @@ proc ::yencode::Encode {s} {
     binary scan $s c* d
     foreach {c} $d {
         set v [expr {($c + 42) % 256}]
-        if {$v == 0x00 || $v == 0x09 || $v == 0x0A 
+        if {$v == 0x00 || $v == 0x09 || $v == 0x0A
             || $v == 0x0D || $v == 0x3D} {
             append r "="
             set v [expr {($v + 64) % 256}]
@@ -65,17 +65,18 @@ if {[package provide critcl] != {}} {
         }
         critcl::ccommand CEncode {dummy interp objc objv} {
             Tcl_Obj *inputPtr, *resultPtr;
-            int len, rlen, xtra;
+            Tcl_Size len, rlen, xtra;
             unsigned char *input, *p, *r, v;
-            
+
             if (objc !=  2) {
-                Tcl_WrongNumArgs(interp, 1, objv, "data");
+                Tcl_WrongNumArgs(interp, 1, objv, "data"); /* OK tcl9 */
                 return TCL_ERROR;
             }
-            
+
             /* fetch the input data */
             inputPtr = objv[1];
-            input = Tcl_GetByteArrayFromObj(inputPtr, &len);
+            input = Tcl_GetBytesFromObj(interp, inputPtr, &len); /* OK tcl9 */
+            if (input == NULL) return TCL_ERROR;
 
             /* calculate the length of the encoded result */
             rlen = len;
@@ -84,11 +85,11 @@ if {[package provide critcl] != {}} {
                 if (v == 0 || v == 9 || v == 0x0A || v == 0x0D || v == 0x3D)
                    rlen++;
             }
-            
+
             /* allocate the output buffer */
             resultPtr = Tcl_NewObj();
-            r = Tcl_SetByteArrayLength(resultPtr, rlen);
-            
+            r = Tcl_SetByteArrayLength(resultPtr, rlen); /* OK tcl9 */
+
             /* encode the input */
             for (p = input; p < input + len; p++) {
                 v = (*p + 42) % 256;
@@ -104,22 +105,23 @@ if {[package provide critcl] != {}} {
 
         critcl::ccommand CDecode {dummy interp objc objv} {
             Tcl_Obj *inputPtr, *resultPtr;
-            int len, rlen, esc;
+            Tcl_Size len, rlen, esc;
             unsigned char *input, *p, *r, v;
-            
+
             if (objc !=  2) {
-                Tcl_WrongNumArgs(interp, 1, objv, "data");
+                Tcl_WrongNumArgs(interp, 1, objv, "data"); /* OK tcl9 */
                 return TCL_ERROR;
             }
-            
+
             /* fetch the input data */
             inputPtr = objv[1];
-            input = Tcl_GetByteArrayFromObj(inputPtr, &len);
+            input = Tcl_GetBytesFromObj(interp, inputPtr, &len); /* OK tcl9 */
+            if (input == NULL) return TCL_ERROR;
 
             /* allocate the output buffer */
             resultPtr = Tcl_NewObj();
-            r = Tcl_SetByteArrayLength(resultPtr, len);
-            
+            r = Tcl_SetByteArrayLength(resultPtr, len); /* OK tcl9 */
+
             /* encode the input */
             for (p = input, esc = 0, rlen = 0; p < input + len; p++) {
                 if (*p == 61 && esc == 0) {
@@ -134,7 +136,7 @@ if {[package provide critcl] != {}} {
                 *r++ = v;
                 rlen++;
             }
-            Tcl_SetByteArrayLength(resultPtr, rlen);
+            Tcl_SetByteArrayLength(resultPtr, rlen); /* OK tcl9 */
             Tcl_SetObjResult(interp, resultPtr);
             return TCL_OK;
         }
@@ -192,7 +194,7 @@ proc ::yencode::yencode {args} {
     }
 
     if {$opts(filename) != {}} {
-        set f [open $opts(filename) r]
+        set f [open $opts(filename) rb]
         fconfigure $f -translation binary
         set data [read $f]
         close $f
@@ -203,9 +205,9 @@ proc ::yencode::yencode {args} {
         }
         set data [lindex $args 0]
     }
-    
+
     set opts(size) [string length $data]
-    
+
     set r {}
     append r [format "=ybegin line=%d size=%d name=%s" \
                   $opts(line) $opts(size) $opts(name)] "\n"
@@ -228,8 +230,8 @@ proc ::yencode::yencode {args} {
 # -------------------------------------------------------------------------
 # Description:
 #  Perform ydecoding of a file or data. A file may contain more than one
-#  encoded data section so the result is a list where each element is a 
-#  three element list of the provided filename, the file size and the 
+#  encoded data section so the result is a list where each element is a
+#  three element list of the provided filename, the file size and the
 #  data itself.
 #
 proc ::yencode::ydecode {args} {
@@ -296,7 +298,7 @@ proc ::yencode::ydecode {args} {
 
 # -------------------------------------------------------------------------
 
-package provide yencode 1.1.3
+package provide yencode 1.1.4
 
 # -------------------------------------------------------------------------
 #

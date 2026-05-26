@@ -1,8 +1,5 @@
 [comment {-*- tcl -*- doctools manpage}]
 [manpage_begin pregistry n 0.1]
-[keywords {data store}]
-[keywords registry]
-[keywords tree]
 [copyright {2006 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
 [moddesc   {Registry like data store}]
 [titledesc {Registry like data store}]
@@ -16,6 +13,7 @@ storage objects. The contents of each storage are organized in a tree,
 with each node managing a set of children and attributes, each
 possibly empty. Stores are not persistent by default, but can be made
 so through configuring them with a tie backend to talk to.
+
 
 [section {Class API}]
 
@@ -53,6 +51,7 @@ did not exist, the command has no effect.
 
 The command returns the empty string as its result.
 
+
 [call [arg object] [method mtime] [arg key] [opt [arg attr]]]
 
 If the optional [arg attr] argument is present, the time of the last
@@ -63,6 +62,7 @@ If the optional [arg attr] is omitted, the time of the last
 modification of the specified [arg key] will be returned.
 
 If the key did not exist, the command will generate an error.
+
 
 [call [arg object] [method exists] [arg key] [opt [arg attr]]]
 
@@ -75,17 +75,20 @@ specified [arg key] is present or not.
 In both cases the result returned is boolean value, [const True] if
 the checked entity exists, and [const False] otherwise.
 
+
 [call [arg object] [method get] [arg key] [arg attr]]
 
 Returns the data associated with the attribute [arg attr] under the
 [arg key]. If either the key or the attribute does not exist, then an
 error is generated.
 
+
 [call [arg object] [method get||default] [arg key] [arg attr] [arg default]]
 
 Like method [method get], except that the [arg default] is returned if
 either the key or the attribute does not exist, instead of generating
 an error.
+
 
 [call [arg object] [method keys] [arg key] [opt [arg pattern]]]
 
@@ -94,6 +97,7 @@ of all the subkeys of [arg key]. If [arg pattern] is specified, only
 those names matching the pattern are returned. Matching is determined
 using the same rules as for [cmd {string match}]. If the specified
 [arg key] does not exist, then an error is generated.
+
 
 [call [arg object] [method set] [arg key] [opt "[arg attr] [arg value]"]]
 
@@ -104,12 +108,15 @@ keyName and attribute [arg attr] if necessary.
 The contents of [arg attr] are set to [arg value]. The command returns
 the [arg value] as its result.
 
+
 [call [arg object] [method attrs] [arg key] [opt [arg pattern]]]
 
 If [arg pattern] isn't specified, returns a list of names of all the
 attributes of [arg key]. If [arg pattern] is specified, only those
 names matching the pattern are returned. Matching is determined using
 the same rules as for [cmd {string match}].
+
+
 
 [call [arg object] [method configure]]
 
@@ -129,6 +136,7 @@ Returns the value configured for the specified option [arg option].
 
 [list_end]
 
+
 [section KEYS]
 
 All elements in the registry are identified by a unique key, which is
@@ -137,6 +145,7 @@ to the requested element. The root itself is identified by the empty
 list. Each child C of an element E have to have unique name, which
 will be the last element of the key identifying this child. The head
 of the key will be the key of E.
+
 
 [section OPTIONS]
 
@@ -157,4 +166,6 @@ Example:
 }]
 
 [list_end]
+
+[keywords registry {data store} tree]
 [manpage_end]

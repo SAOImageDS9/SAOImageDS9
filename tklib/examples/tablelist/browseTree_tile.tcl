@@ -2,32 +2,32 @@
 # Demonstrates how to use a tablelist widget for displaying information about
 # the children of an arbitrary widget.
 #
-# Copyright (c) 2010-2019  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 2010-2024  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
-package require tablelist_tile 6.8
+package require tablelist_tile
 
 namespace eval demo {
     variable dir [file dirname [info script]]
 
     #
-    # Create two images, needed in the procedure putChildren
+    # Create two images corresponding to the display's DPI scaling level
     #
-    variable leafImg [image create bitmap -file [file join $dir leaf.xbm] \
-		      -background coral -foreground gray50]
-    variable compImg [image create bitmap -file [file join $dir comp.xbm] \
-		      -background yellow -foreground gray50]
+    variable compImg [image create photo]
+    variable leafImg [image create photo]
+    variable pct ""
+    if {$::tk_version >= 8.7 || [catch {package require tksvg}] == 0} {
+	variable fmt $::tablelist::svgfmt
+	$compImg read [file join $dir comp.svg] -format $fmt
+	$leafImg read [file join $dir leaf.svg] -format $fmt
+    } else {
+	set pct $::tablelist::scalingpct
+	$compImg read [file join $dir comp$pct.gif] -format gif
+	$leafImg read [file join $dir leaf$pct.gif] -format gif
+    }
 }
 
 source [file join $demo::dir config_tile.tcl]
-
-#
-# Work around the improper appearance of the tile scrollbars in the aqua theme
-#
-if {[tablelist::getCurrentTheme] eq "aqua" &&
-    [package vcompare $::tk_patchLevel "8.6.10"] < 0} {
-    interp alias {} ttk::scrollbar {} ::scrollbar
-}
 
 #------------------------------------------------------------------------------
 # demo::displayChildren
@@ -85,6 +85,22 @@ proc demo::displayChildren w {
     ttk::scrollbar $vsb -orient vertical -command [list $tbl yview]
 
     #
+    # On X11 configure the tablelist according
+    # to the display's DPI scaling level
+    #
+    variable isAwTheme
+    if {[tk windowingsystem] eq "x11" && !$isAwTheme} {
+	variable currentTheme
+	variable pct					;# ""|100|125|...|200
+	if {$currentTheme eq "black" || $currentTheme eq "breeze-dark" ||
+	    $currentTheme eq "sun-valley-dark"} {
+	    $tbl configure -treestyle white$pct
+	} else {
+	    $tbl configure -treestyle bicolor$pct
+	}
+    }
+
+    #
     # When displaying the information about the children of any
     # ancestor of the label widgets, the widths of some of the
     # labels and thus also the widths and x coordinates of some
@@ -106,6 +122,10 @@ proc demo::displayChildren w {
 		      -command [list demo::putChildrenOfSelWidget $tbl]
     $menu add command -label "Display Config" \
 		      -command [list demo::dispConfigOfSelWidget $tbl]
+    if {$isAwTheme} {
+	variable currentTheme
+	ttk::theme::${currentTheme}::setMenuColors $menu
+    }
     set bodyTag [$tbl bodytag]
     bind $bodyTag <Double-1>   [list demo::putChildrenOfSelWidget $tbl]
     bind $bodyTag <<Button3>>  [bind TablelistBody <Button-1>]
@@ -136,7 +156,7 @@ proc demo::displayChildren w {
     }
     grid rowconfigure    $tf 1 -weight 1
     grid columnconfigure $tf 0 -weight 1
-    pack $b1 $b2 $b3 -side left -expand yes -pady 10
+    pack $b1 $b2 $b3 -side left -expand yes -pady 7p
     pack $bf -side bottom -fill x
     pack $tf -side top -expand yes -fill both
 
@@ -160,13 +180,13 @@ proc demo::putChildren {w tbl nodeIdx} {
     #
     if {![winfo exists $w]} {
 	bell
-	if {[string compare $nodeIdx "root"] == 0} {
+	if {$nodeIdx eq "root"} {
 	    set choice [tk_messageBox -title "Error" -icon warning \
 			-message "Bad window path name \"$w\" -- replacing\
 				  it with nearest existent ancestor" \
 			-type okcancel -default ok \
 			-parent [winfo toplevel $tbl]]
-	    if {[string compare $choice "ok"] == 0} {
+	    if {$choice eq "ok"} {
 		while {![winfo exists $w]} {
 		    set last [string last "." $w]
 		    if {$last != 0} {
@@ -182,7 +202,7 @@ proc demo::putChildren {w tbl nodeIdx} {
 	}
     }
 
-    if {[string compare $nodeIdx "root"] == 0} {
+    if {$nodeIdx eq "root"} {
 	set top [winfo toplevel $tbl]
 	wm title $top "Children of the [winfo class $w] Widget \"$w\""
 
@@ -211,7 +231,7 @@ proc demo::putChildren {w tbl nodeIdx} {
 	$tbl insertchild $nodeIdx end $item
 
 	#
-	# Insert an image into the first cell of the row; mark the
+	# Embed an image into the first cell of the row; mark the
 	# row as collapsed if the child widget has children itself
 	#
 	if {[llength [winfo children $c]] == 0} {
@@ -225,14 +245,14 @@ proc demo::putChildren {w tbl nodeIdx} {
 	incr row
     }
 
-    if {[string compare $nodeIdx "root"] == 0} {
+    if {$nodeIdx eq "root"} {
 	#
 	# Configure the "Refresh" and "Parent" buttons
 	#
 	$top.bf.b1 configure -command [list demo::refreshView $w $tbl]
 	set b2 $top.bf.b2
 	set p [winfo parent $w]
-	if {[string compare $p ""] == 0} {
+	if {$p eq ""} {
 	    $b2 configure -state disabled
 	} else {
 	    $b2 configure -state normal -command \
@@ -291,7 +311,7 @@ proc demo::updateItemsDelayed tbl {
     # Schedule the demo::updateItems command for execution
     # 500 ms later, but only if it is not yet pending
     #
-    if {[string compare [$tbl attrib afterId] ""] == 0} {
+    if {[$tbl attrib afterId] eq ""} {
 	$tbl attrib afterId [after 500 [list demo::updateItems $tbl]]
     }
 }
@@ -420,7 +440,7 @@ proc demo::refreshView {w tbl} {
 
 #------------------------------------------------------------------------------
 # demo::restoreExpandedStates
-#   
+#
 # Expands those children of the parent identified by nodeIdx that display the
 # data of child widgets whose path names are the names of the elements of the
 # array specified by the last argument.

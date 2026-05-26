@@ -1,7 +1,7 @@
 #==============================================================================
 # Contains common Wcb procedures.
 #
-# Copyright (c) 1999-2018  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 1999-2023  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
 #
@@ -31,17 +31,18 @@ namespace eval wcb {
 # when, and the command corresponding to option.  when can be "before" or
 # "after", and option can take one of the following values:
 #
-#   - "insert", "delete", or "motion",	for a Tk or tile entry, BWidget Entry,
-#					Tk or tile spinbox, tile combobox,
-#				 	text, or ctext widget;
+#   - "insert", "delete", or "motion",	for a Tk or Ttk entry, BWidget Entry,
+#					Tk or Ttk spinbox, Ttk combobox, text,
+#				 	or ctext widget;
 #   - "replace",			for a text or ctext widget;
-#   - "activate",			for a listbox, tablelist, or tile
+#   - "activate",			for a listbox, tablelist, or Ttk
 #					treeview widget;
-#   - "selset" or "selclear",		for a listbox, tablelist, tile treeview,
+#   - "selset" or "selclear",		for a listbox, tablelist, Ttk treeview,
 #					text, or ctext widget;
-#   - "seladd" or "seltoggle",		for a tile treeview widget;
-#   - "activatecell", "cellselset", or
-#     "cellselclear",			for a tablelist widget.
+#   - "seladd" or "seltoggle",		for a Ttk treeview widget;
+#   - "cellselset" or "cellselclear",	for a tablelist or Ttk treeview widget;
+#   - "cellseladd" or "cellseltoggle",	for a Ttk treeview widget;
+#   - "activatecell",			for a tablelist widget.
 #
 # If no arguments after the option parameter are specified, then the procedure
 # just returns the current before- or after-callback list, respectively, for
@@ -64,9 +65,9 @@ namespace eval wcb {
 # then the procedure unregisters all the corresponding callbacks for the given
 # widget and returns an empty string.
 #
-# When a callback is invoked, the name of the original Tcl command for the
-# widget w as well as the command arguments are automatically appended to it as
-# parameters.
+# When a callback is invoked, the new name of the original Tcl command for the
+# widget w (i.e., the name of the proxy command) as well as the command
+# arguments are automatically appended to it as parameters.
 #------------------------------------------------------------------------------
 proc wcb::callback {w when option args} {
     if {![winfo exists $w]} {
@@ -165,7 +166,7 @@ proc wcb::cancel {{script bell}} {
     variable data
     set data(canceled-[info level 1]) 1
 
-    if {[string length $script] != 0} {
+    if {$script ne ""} {
 	uplevel #0 $script
     }
 }
@@ -225,11 +226,11 @@ proc wcb::replace {first last args} {
 #------------------------------------------------------------------------------
 # wcb::pathname
 #
-# Returns the path name of the widget corresponding to the Tcl command origCmd
+# Returns the path name of the widget corresponding to the Tcl command proxyCmd
 # (which is supposed to be of the form "::_pathName").
 #------------------------------------------------------------------------------
-proc wcb::pathname origCmd {
-    return [string range $origCmd 3 end]
+proc wcb::pathname proxyCmd {
+    return [string range $proxyCmd 3 end]
 }
 
 #
@@ -326,10 +327,19 @@ proc wcb::fullCallbackOpt {w opt} {
 		set opt selclear
 	    } elseif {[string first $opt "seltoggle"] == 0 && $opLen >= 4} {
 		set opt seltoggle
+	    } elseif {[string first $opt "cellselset"] == 0 && $opLen >= 8} {
+		set opt cellselset
+	    } elseif {[string first $opt "cellseladd"] == 0 && $opLen >= 8} {
+		set opt cellseladd
+	    } elseif {[string first $opt "cellselclear"] == 0 && $opLen >= 8} {
+		set opt cellselclear
+	    } elseif {[string first $opt "cellseltoggle"] == 0 && $opLen >= 8} {
+		set opt cellseltoggle
 	    } else {
 		return -code error \
 		       "bad option \"$opt\": must be activate, selset, seladd,\
-			selclear, or seltoggle"
+			selclear, seltoggle, cellselset, cellseladd,\
+			cellselclear, or cellseltoggle"
 	    }
 	}
 
@@ -356,9 +366,9 @@ proc wcb::fullCallbackOpt {w opt} {
 
 	default {
 	    return -code error \
-		   "window \"$w\" is not a Tk or tile entry, BWidget Entry,\
-		    Tk or tile spinbox, tile combobox, listbox, tablelist,\
-		    tile treeview, text, or ctext widget"
+		   "window \"$w\" is not a Tk or Ttk entry, BWidget Entry,\
+		    Tk or Ttk spinbox, Ttk combobox, listbox, tablelist,\
+		    Ttk treeview, text, or ctext widget"
 	}
     }
 
@@ -372,7 +382,7 @@ proc wcb::fullCallbackOpt {w opt} {
 #------------------------------------------------------------------------------
 proc wcb::areAllEmptyStrings lst {
     foreach elem $lst {
-	if {[string length $elem] != 0} {
+	if {$elem ne ""} {
 	    return 0
 	}
     }
@@ -383,8 +393,9 @@ proc wcb::areAllEmptyStrings lst {
 #------------------------------------------------------------------------------
 # wcb::redefWidgetCmd
 #
-# Renames the Tcl command w to _w, builds a new widget procedure w that invokes
-# cmd, and appends WcbCleanup to the list of binding tags of the widget w.
+# Renames the Tcl command ::w to ::_w, builds a new widget procedure w that
+# invokes cmd, and appends WcbCleanup to the list of binding tags of the widget
+# w.
 #------------------------------------------------------------------------------
 proc wcb::redefWidgetCmd {w cmd} {
     if {[catch {rename ::$w ::_$w}] != 0} {
@@ -431,7 +442,7 @@ proc wcb::processCmd {w wcbOp cmdOp argList} {
     #
     if {[info exists data($w-before-$wcbOp)]} {
 	foreach cb $data($w-before-$wcbOp) {
-	    if {[string length $cb] != 0} {
+	    if {$cb ne ""} {
 		#
 		# Set the two array elements that might be changed
 		# by cancel, extend, or replace, invoked (directly
@@ -473,7 +484,7 @@ proc wcb::processCmd {w wcbOp cmdOp argList} {
     #
     if {[info exists data($w-after-$wcbOp)]} {
 	foreach cb $data($w-after-$wcbOp) {
-	    if {[string length $cb] != 0} {
+	    if {$cb ne ""} {
 		uplevel #0 $cb $orig $argList
 	    }
 	}

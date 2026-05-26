@@ -1,6 +1,6 @@
-#!/bin/sh 
-# the next line restarts using wish \
-exec wish "$0" ${1+"$@"} 
+#! /usr/bin/env tclsh
+
+package require Tk
 
 #set tcl_traceExec 1
 
@@ -39,13 +39,13 @@ proc main {} {
 	ctext::addHighlightClassForSpecialChars .f.t brackets green {[]{}}
 	ctext::addHighlightClassForRegexp .f.t paths lightblue {\.[a-zA-Z0-9\_\-]+}
 	ctext::addHighlightClassForRegexp .f.t comments khaki {#[^\n\r]*}
-	#After overloading, insertion is a little slower with the 
+	#After overloading, insertion is a little slower with the
 	#regular insert, so use fastinsert.
 	#set fi [open Ctext_Bug_Crasher.tcl r]
 	set fi [open long_test_script r]
 	.f.t fastinsert end [read $fi]
 	close $fi
-	
+
 	pack [frame .f1] -fill x
 
 	pack [button .f1.append -text Append -command {.f.t append}] -side left
@@ -71,9 +71,9 @@ proc main {} {
 	pack [button .f2.des -text Destroy -command {destroy .f.t}] -side left
 	pack [button .f2.editModSet0 -text "Set Modified 0" -command {puts [.f.t edit modified 0]}] -side left
 	pack [button .f2.editModGet -text "Print Modified" -command {puts [.f.t edit modified]}] -side left
-	
+
 	pack [button .f2.exit -text Exit -command exit] -side left
-	
+
 	puts [.f.t cget -linemap]
 	puts [.f.t cget -linemapfg]
 	puts [.f.t cget -linemapbg]

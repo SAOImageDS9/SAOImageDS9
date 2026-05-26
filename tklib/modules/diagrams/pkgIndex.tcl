@@ -1,4 +1,4 @@
-if {![package vsatisfies [package provide Tcl] 8.5]} {
+if {![package vsatisfies [package provide Tcl] 8.5-]} {
     # PRAGMA: returnok
     return
 }
@@ -11,5 +11,5 @@ package ifneeded diagram::core        1 [list source [file join $dir core.tcl]]
 package ifneeded diagram::basic   1.0.1 [list source [file join $dir basic.tcl]]
 package ifneeded diagram              1 [list source [file join $dir diagram.tcl]]
 
-package ifneeded diagram::application 1.2 [list source [file join $dir application.tcl]]
+package ifneeded diagram::application 1.3 [list source [file join $dir application.tcl]]
 

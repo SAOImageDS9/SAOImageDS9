@@ -7,8 +7,8 @@
 # - Factored patch parsing into a helper
 # - Replaced `puts` with report callback.
 
-package require Tcl 8.5
-package provide textutil::patch 0.1
+package require Tcl 8.5 9
+package provide textutil::patch 0.2
 
 # # ## ### ##### ######## ############# #####################
 
@@ -77,7 +77,7 @@ proc ::textutil::patch::apply {dir striplevel patch reportcmd} {
 
 # # ## ### ##### ######## ############# #####################
 
-proc ::textutil::patch::Report {args} {
+proc ::textutil::patch::Report args {
     upvar 1 reportcmd reportcmd
     uplevel #0 [list {*}$reportcmd {*}$args]
     ##

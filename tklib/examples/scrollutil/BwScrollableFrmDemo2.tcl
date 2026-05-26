@@ -1,20 +1,21 @@
-#!/usr/bin/env wish
+#! /usr/bin/env tclsh
 
 #==============================================================================
 # Demonstrates the use of the Scrollutil package in connection with the BWidget
 # ScrollableFrame widget.
 #
-# Copyright (c) 2019-2020  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 2019-2023  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
-package require Tk 8.5.9			;# for ttk::spinbox
+package require Tk 8.5.9-			;# for ttk::spinbox
 package require BWidget
 Widget::theme yes
-package require mentry_tile 3.2			;# for mouse wheel support
-package require tablelist_tile 6.5		;# for -(x|y)mousewheelwindow
+package require mentry_tile 3.2-		;# for mouse wheel support
+package require tablelist_tile 6.5-		;# for -(x|y)mousewheelwindow
 						;# and scrollutil::scrollarea
 package require scrollutil_tile
-source styleUtil.tcl
+set dir [file dirname [info script]]
+source [file join $dir styleUtil.tcl]
 
 wm title . "Scrollutil Demo"
 
@@ -30,7 +31,7 @@ $sa setwidget $sf
 # Work around a tile bug which is not handled in
 # the BWidget procedure ScrollableFrame::create
 #
-if {$ttk::currentTheme eq "aqua" &&
+if {[styleutil::getCurrentTheme] eq "aqua" &&
     [package vcompare $tk_patchLevel "8.6.10"] < 0} {
     $sf:cmd configure -background #ececec
 }
@@ -39,7 +40,7 @@ if {$ttk::currentTheme eq "aqua" &&
 # Get the content frame and populate it
 #
 set cf [$sf getframe]
-source BwScrollableFrmContent.tcl
+source [file join $dir BwScrollableFrmContent.tcl]
 
 #
 # Make the keyboard navigation more user-friendly

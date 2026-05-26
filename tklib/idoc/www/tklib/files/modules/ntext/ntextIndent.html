@@ -1,0 +1,279 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ntextIndent - ntext Indentation for the Text Widget</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'ntextIndent.man' by tcllib/doctools with format 'html'
+   -->
+<!-- ntextIndent.n
+   -->
+<body><hr> [
+   <a href="../../../../../../../../home">Tklib Home</a>
+&#124; <a href="../../../../toc.html">Main Table Of Contents</a>
+&#124; <a href="../../../toc.html">Table Of Contents</a>
+&#124; <a href="../../../../index.html">Keyword Index</a>
+&#124; <a href="../../../../toc0.html">Categories</a>
+&#124; <a href="../../../../toc1.html">Modules</a>
+&#124; <a href="../../../../toc2.html">Applications</a>
+ ] <hr>
+<div class="doctools">
+<h1 class="doctools_title">ntextIndent(n) 1.0 tklib &quot;ntext Indentation for the Text Widget&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>ntextIndent - ntext Indentation for the Text Widget</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">COMMANDS</a></li>
+<li class="doctools_section"><a href="#section3">CONFIGURATION OPTIONS</a></li>
+<li class="doctools_section"><a href="#section4">INDENTING DISPLAY LINES</a></li>
+<li class="doctools_section"><a href="#section5">FUNCTIONS</a></li>
+<li class="doctools_section"><a href="#section6">BUGS</a></li>
+<li class="doctools_section"><a href="#section7">EXAMPLES</a></li>
+<li class="doctools_section"><a href="#see-also">See Also</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_requirements">
+<li>package require <b class="pkgname">Tcl 8.5-</b></li>
+<li>package require <b class="pkgname">Tk 8.5-</b></li>
+<li>package require <b class="pkgname">ntext <span class="opt">?1.0?</span></b></li>
+</ul>
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">::ntext::new_textCopy</b> <i class="arg">pathName</i></a></li>
+<li><a href="#2"><b class="cmd">::ntext::new_textCut</b> <i class="arg">pathName</i></a></li>
+<li><a href="#3"><b class="cmd">::ntext::new_textPaste</b> <i class="arg">pathName</i></a></li>
+<li><a href="#4"><b class="cmd">::ntext::syncIndentColor</b> <i class="arg">pathName</i></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>The <b class="package"><a href="ntext.html">ntext</a></b> package provides a binding tag named <em>Ntext</em> for use by text widgets in place of the default <em>Text</em> binding tag.</p>
+<p>Tk's text widget may be configured to wrap lines of text that are longer than the width of the text area, a feature that is familiar from text editors and word processors.  A complete line of text (delimited by newlines, or by the beginning or end of the document) is called a &quot;logical line&quot;.  When a logical line is wrapped onto more than one line of the display area, these fragments of the logical line are called &quot;display lines&quot;.</p>
+<p>If a logical line begins with whitespace, then wrapped display lines begin further to the left than the first display line, which can make the text layout untidy and difficult to read.  The <em>Ntext</em> binding tag provides facilities so that a text widget in <i class="arg">-wrap</i> <i class="arg">word</i> mode will automatically indent display lines (other than the first) to match the initial whitespace of the first display line.</p>
+<p>This indentation is available to text widgets only in <i class="arg">-wrap</i> <i class="arg">word</i> mode.</p>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">COMMANDS</a></h2>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">::ntext::new_textCopy</b> <i class="arg">pathName</i></a></dt>
+<dd><p>Replacement for ::tk_textCopy.</p></dd>
+<dt><a name="2"><b class="cmd">::ntext::new_textCut</b> <i class="arg">pathName</i></a></dt>
+<dd><p>Replacement for ::tk_textCut that also maintains <em>Ntext</em> indentation.</p></dd>
+<dt><a name="3"><b class="cmd">::ntext::new_textPaste</b> <i class="arg">pathName</i></a></dt>
+<dd><p>Replacement for ::tk_textPaste that also maintains <em>Ntext</em> indentation.</p></dd>
+<dt><a name="4"><b class="cmd">::ntext::syncIndentColor</b> <i class="arg">pathName</i></a></dt>
+<dd><p>Command to apply the current value of the variable <b class="variable">::ntext::indentColor</b> to existing lines in a text widget.  This command is useful if a text widget has been created, text has been inserted in the widget, <em>and then</em> the value of <b class="variable">::ntext::indentColor</b> is changed.</p></dd>
+</dl>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">CONFIGURATION OPTIONS</a></h2>
+<p>The behavior of <em>Ntext</em> may be configured application-wide by setting the values of a number of namespace variables:</p>
+<p><b class="variable">::ntext::classicWrap</b></p>
+<ul class="doctools_itemized">
+<li><p><b class="const">0</b> - selects <em>Ntext</em> behaviour, i.e. display lines are indented to match the initial whitespace of the first display line of a logical line.</p>
+<p>No other action is required if this option, and the text widget's <i class="arg">-wrap</i> option, are set before any text is entered in the widget, and if text is entered and edited only by the mouse and keyboard.  If, instead, text is manipulated by the script, or if the text widget's <i class="arg">-wrap</i> option or the value of <b class="variable">::ntext::classicWrap</b> are changed while the widget holds text, then calls to <em>ntext</em> functions are needed to alter the indentation.  See the section <span class="sectref"><a href="#section4">INDENTING DISPLAY LINES</a></span> for detailed instructions.</p></li>
+<li><p><b class="const">1</b> - (default value) selects classic <em>Text</em> behaviour, i.e. no indentation.</p></li>
+</ul>
+<p><b class="variable">::ntext::indentColor</b></p>
+<ul class="doctools_itemized">
+<li><p><b class="const">{}</b> - if the value is the empty string, then the indent of wrapped display lines has the same color as the widget background.</p></li>
+<li><p><em>color</em> - a valid Tk color to use for the indent of wrapped display lines (default value <em>#d9d9d9</em>).</p>
+<p>Coloring is implemented with the text widget tag option <i class="arg">-lmargincolor</i>, which is available from <b class="package"><a href="../../../../index.html#tk">Tk</a></b> 8.6.6 onwards.  <em>Ntext</em> indent coloring has no effect in earlier versions of <b class="package"><a href="../../../../index.html#tk">Tk</a></b>.</p>
+<p>The value of <b class="variable">::ntext::indentColor</b> will often be set at startup.  If the value is changed when text widgets already exist and contain text, those widgets can be updated by calling command <b class="cmd">::ntext::syncIndentColor</b>.</p></li>
+</ul>
+<p><em>Advanced Use</em></p>
+<p><b class="variable">::ntext::newWrapRegexp</b></p>
+<ul class="doctools_itemized">
+<li><p>the value is a regexp pattern that determines the character of a logical line to which display lines other than the first will be aligned.  The default value, <b class="const">[^[:space:]]</b>, ensures alignment with the first non-whitespace character.</p></li>
+</ul>
+</div>
+<div id="section4" class="doctools_section"><h2><a name="section4">INDENTING DISPLAY LINES</a></h2>
+<p>To use <em>Ntext</em> 's display line indentation:</p>
+<ol class="doctools_enumerated">
+<li><p>Set the variable <b class="variable">::ntext::classicWrap</b> to <b class="const">0</b> (default value is <b class="const">1</b>).  This enables bindings that will preserve indentation whenever the user modifies the widget contents using the keyboard and mouse.  If the widget already holds text, call <b class="function">::ntext::wrapIndent</b> to initialise indentation.</p>
+<p>Further instructions apply if the program changes the widget's contents, wrap configuration, or indent configuration.</p></li>
+<li><p>The program can change the text contents, e.g. by the .text insert command.  Such a change does not trigger a window binding, so the program should explicitly call function <b class="function">::ntext::wrapIndent</b> after inserting text.</p></li>
+<li><p>Auto-indentation occurs only if the widget is in <i class="arg">-wrap</i> <i class="arg">word</i> mode.  If the program changes to or from <i class="arg">-wrap</i> <i class="arg">word</i> when the widget is not empty, it should call <b class="function">::ntext::wrapIndent</b> to format the widget's text.</p></li>
+<li><p>If indentation is used, and then switched off by setting <b class="variable">::ntext::classicWrap</b> to <b class="const">1</b>,  call <b class="function">::ntext::wrapIndent</b> to remove indentation.</p></li>
+</ol>
+</div>
+<div id="section5" class="doctools_section"><h2><a name="section5">FUNCTIONS</a></h2>
+<p><b class="function">::ntext::wrapIndent</b> <i class="arg">textWidget</i> <span class="opt">?index1?</span> <span class="opt">?index2?</span></p>
+<ul class="doctools_itemized">
+<li><p>Adjust the indentation of a text widget.  Different cases are discussed below.</p></li>
+</ul>
+<p><b class="function">::ntext::wrapIndent</b> <i class="arg">textWidget</i></p>
+<ul class="doctools_itemized">
+<li><p>Adjust the indentation of all the text in text widget <i class="arg">textWidget</i>.</p></li>
+</ul>
+<p><b class="function">::ntext::wrapIndent</b> <i class="arg">textWidget</i> <i class="arg">index1</i></p>
+<ul class="doctools_itemized">
+<li><p>Adjust the indentation of a single logical line of a text widget - the line of <i class="arg">textWidget</i> that contains the index <i class="arg">index1</i>.</p></li>
+</ul>
+<p><b class="function">::ntext::wrapIndent</b> <i class="arg">textWidget</i> <i class="arg">index1</i> <i class="arg">index2</i></p>
+<ul class="doctools_itemized">
+<li><p>Adjust the indentation of a range of logical lines of a text widget - the lines of <i class="arg">textWidget</i> that contain indices <i class="arg">index1</i> to <i class="arg">index2</i>.</p></li>
+</ul>
+<p><em>Usage</em></p>
+<ul class="doctools_itemized">
+<li><p><b class="function">::ntext::wrapIndent</b> should be called only if the script changes the widget's contents or display properties.  If the contents of the widget have been modified by the keyboard or mouse, it is not necessary for the script to call <b class="function">::ntext::wrapIndent</b> because the appropriate calls are made automatically by the <em>Ntext</em> bindings.</p></li>
+<li><p>The script should normally call <b class="function">::ntext::wrapIndent</b> if, for example, the script changes one of the following when the widget is not empty: the value of <b class="variable">::ntext::classicWrap</b>, or the widget's <i class="arg">-wrap</i> status, or the widget's tab spacing, or the font size, or the widget's contents.</p></li>
+<li><p>A call of the form <b class="function">::ntext::wrapIndent</b> <i class="arg">textWidget</i> will always suffice, but if changes are needed only to certain lines, it is more efficient to specify those lines with the optional arguments <span class="opt">?index1?</span>, <span class="opt">?index2?</span>.</p></li>
+<li><p>If the widget is in <i class="arg">-word</i> <i class="arg">wrap</i> mode, and if <b class="variable">::ntext::classicWrap</b> is set to <b class="const">0</b>, <b class="function">::ntext::wrapIndent</b> will apply indentation to the logical lines within the range specified by the function's arguments.</p></li>
+<li><p>In other cases, i.e. if the widget is in <i class="arg">-word</i> <i class="arg">char</i> or <i class="arg">-word</i> <i class="arg">none</i> mode, or if <b class="variable">::ntext::classicWrap</b> is set to <b class="const">1</b>,  <b class="function">::ntext::wrapIndent</b> will remove the indentation of the logical lines within the range specified by the function's arguments.</p></li>
+</ul>
+</div>
+<div id="section6" class="doctools_section"><h2><a name="section6">BUGS</a></h2>
+<p>This version of <b class="package"><a href="ntext.html">ntext</a></b> is intended to be compatible with all releases of <b class="package"><a href="../../../../index.html#tk">Tk</a></b> 8.5, 8.6, and 8.7, and with the branches <em>core-8-5-branch</em>, <em>core-8-6-branch</em>, and <em>trunk</em> in the source code repository for <b class="package"><a href="../../../../index.html#tk">Tk</a></b>.  Any incompatibility with any of these versions, for any <b class="package"><a href="../../../../index.html#tk">Tk</a></b> windowing system, should be reported as a bug. Please report such in the category <em>ntext</em> of the <a href="https://core.tcl-lang.org/tklib/reportlist">Tklib Trackers</a>.</p>
+</div>
+<div id="section7" class="doctools_section"><h2><a name="section7">EXAMPLES</a></h2>
+<p>To switch on <em>Ntext</em> 's indentation and use it in widget .t, using the default indent color <em>#d9d9d9</em>:</p>
+<pre class="doctools_example">
+package require ntext
+set ::ntext::classicWrap 0
+text .t -wrap word
+bindtags .t {.t Ntext . all}
+</pre>
+<p>To switch on <em>Ntext</em> 's indentation and use it in widget .t, without colored indents:</p>
+<pre class="doctools_example">
+package require ntext
+set ::ntext::classicWrap 0
+set ::ntext::indentColor {}
+text .t -wrap word
+bindtags .t {.t Ntext . all}
+</pre>
+<p>To switch on <em>Ntext</em> 's indentation and use it in widget .t, coloring the indents black:</p>
+<pre class="doctools_example">
+package require ntext
+set ::ntext::classicWrap 0
+set ::ntext::indentColor black
+text .t -wrap word
+bindtags .t {.t Ntext . all}
+</pre>
+<p>To decide later to switch off <em>Ntext</em> 's indentation:</p>
+<pre class="doctools_example">
+set ::ntext::classicWrap 1
+::ntext::wrapIndent .t
+</pre>
+<p>To decide later to switch <em>Ntext</em> 's indentation back on:</p>
+<pre class="doctools_example">
+set ::ntext::classicWrap 0
+::ntext::wrapIndent .t 1.0 end
+</pre>
+<p>To inject some text into the widget:</p>
+<pre class="doctools_example">
+set foo [.t index end]
+.t insert end {This line was added by the script, not the keyboard!}
+::ntext::wrapIndent .t $foo end
+</pre>
+<p>To change the indentation color when a widget .t already holds text:</p>
+<pre class="doctools_example">
+set ::ntext::indentColor black
+::ntext::syncIndentColor .t
+</pre>
+<p>To switch to <i class="arg">-wrap</i> <i class="arg">char</i> mode:</p>
+<pre class="doctools_example">
+.t configure -wrap char
+::ntext::wrapIndent .t
+</pre>
+</div>
+<div id="see-also" class="doctools_section"><h2><a name="see-also">See Also</a></h2>
+<p><a href="../../../../index.html#bindtags">bindtags</a>, <a href="ntext.html">ntext</a>, <a href="../../../../index.html#re_syntax">re_syntax</a>, <a href="../../../../index.html#regexp">regexp</a>, <a href="../../../../index.html#text">text</a></p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p><a href="../../../../index.html#bindtags">bindtags</a>, <a href="../../../../index.html#re_syntax">re_syntax</a>, <a href="../../../../index.html#regexp">regexp</a>, <a href="../../../../index.html#text">text</a></p>
+</div>
+</div></body></html>

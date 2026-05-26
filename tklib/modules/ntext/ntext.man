@@ -2,8 +2,8 @@
 [manpage_begin ntext n 1.0]
 [moddesc   {Alternative Bindings for the Text Widget}]
 [titledesc {Alternative Bindings for the Text Widget}]
-[require Tcl 8.5]
-[require Tk 8.5]
+[require Tcl 8.5-]
+[require Tk 8.5-]
 [require ntext [opt 1.0]]
 [description]
 
@@ -55,6 +55,11 @@ Replacement for ::tk_textPaste that also maintains [emph Ntext] indentation (see
 [call [cmd ::ntext::syncIndentColor] [arg pathName]]
 
 Command to apply the current value of the variable [var ::ntext::indentColor] to existing lines in a text widget.  This command is useful if a text widget has been created, text has been inserted in the widget, [emph {and then}] the value of [var ::ntext::indentColor] is changed (see [term ntextIndent]).
+
+[call [cmd ::ntext::syncTabColor] [arg pathName]]
+
+Command to apply the current values of the variables [var ::ntext::tabColor] and [var ::ntext::tabSelColor] to tab spaces in a text widget.  This command is useful if a text widget has been created, text has been inserted in the widget, [emph {and then}] the value of [var ::ntext::tabColor] or [var ::ntext::tabSelColor] is changed.
+[para]
 
 [list_end]
 
@@ -166,6 +171,28 @@ The behaviour of [emph Ntext] may be configured application-wide by setting the 
 [list_end]
 
 [para]
+[var ::ntext::tabColor]
+[list_begin itemized]
+[item]
+   [const {{}}] - if the value is the empty string, then the tab spaces have the same color as the widget background.
+[item]
+   [emph color] - a valid [package Tk] color to use for tab spaces (default value [emph #ffffaa]).
+[para]
+  The value of [var ::ntext::tabColor] will often be set at startup. If the value is changed when text widgets already exist and contain text, those widgets can be updated by calling command [cmd ::ntext::syncTabColor].
+[list_end]
+
+[para]
+[var ::ntext::tabSelColor]
+[list_begin itemized]
+[item]
+   [const {{}}] - if the value is the empty string, then the color of tab spaces in the selection defaults to the same color as unselected tabs (see [var ::ntext::tabColor]), and [emph not] to the widget [arg -selectbackground] color.
+[item]
+   [emph color] - a valid [package Tk] color to use for tab spaces in the selection (default value [emph #418bd4]).
+[para]
+  The value of [var ::ntext::tabSelColor] will often be set at startup. If the value is changed when text widgets already exist and contain text, those widgets can be updated by calling command [cmd ::ntext::syncTabColor].
+[list_end]
+
+[para]
 [var ::ntext::useBlockCursor]
 [list_begin itemized]
 [item]
@@ -180,7 +207,7 @@ The behaviour of [emph Ntext] may be configured application-wide by setting the 
 
 [section BUGS]
 
-This version of [package ntext] is intended to be compatible with all releases of [package Tk] 8.5 and 8.6, and with the branches [emph core-8-5-branch], [emph core-8-6-branch], and [emph trunk] in the source code repository for [package Tk].  Any incompatibility with any of these versions, for any [package Tk] windowing system, should be reported as a bug. Please report such in the category [emph ntext] of the [uri http://core.tcl.tk/tklib/reportlist {Tklib Trackers}].
+This version of [package ntext] is intended to be compatible with all releases of [package Tk] 8.5, 8.6, and 8.7, and with the branches [emph core-8-5-branch], [emph core-8-6-branch], and [emph trunk] in the source code repository for [package Tk].  Any incompatibility with any of these versions, for any [package Tk] windowing system, should be reported as a bug. Please report such in the category [emph ntext] of the [uri https://core.tcl-lang.org/tklib/reportlist {Tklib Trackers}].
 
 [section EXAMPLE]
 
@@ -191,7 +218,7 @@ text .t
 bindtags .t {.t Ntext . all}
 }]
 
-See bindtags for more information.
+See [cmd bindtags] for more information.
 [see_also ntextWordBreak ntextIndent ntextBindings]
 [see_also text bindtags regexp re_syntax]
 [keywords text bindtags regexp re_syntax]

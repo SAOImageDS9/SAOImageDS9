@@ -1,0 +1,41 @@
+
+man2html - umbenannt - doctools
+
+Paket gibt Widget Unterstuetzung fuer doctools 
+Auch wenn die Datei-Erweiterung .man benutzt wird, doctools ist der relevante Term.
+
+2html - Es ist nicht notwendig zu wissen das die interne Konversion nach HTML geht.
+      Das ist auch effektiv durch das widget (html viewr) impliziert.
+
+--
+
+shtmlview::doctools manipuliert die Interna des widgets.
+
+==> Neu globale proc `shtmlview::converter` um Konversionen anzumelden.
+
+    Konverter-Auswahl umgeschrieben
+    Markdown registriert sich intern.
+
+    --> koennte in eigenes Paket verlagert werden
+
+---
+
+!! svgconvert !! critcl !! Vieleicht nach tcllib ?
+Benutzen bereits dtplite und Markdown.
+(Tk-unabhaengig)
+
+---
+
+tempfile Nutzung korrigiert.
+Resultat ist channel, nicht der Dateiname.
+
+---
+
+Tcl 8.5 -- `{*}`, lmap, ...
+
+---
+
+mkdoc Unterstuetzung aus Anwendung nach Erweiterung,
+wie doctools.
+
+---

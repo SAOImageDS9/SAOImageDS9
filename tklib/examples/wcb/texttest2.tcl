@@ -1,4 +1,4 @@
-#!/usr/bin/env wish
+#! /usr/bin/env tclsh
 
 #==============================================================================
 # Demo:	wcb::callback <text> before insert <callback> ...
@@ -10,10 +10,10 @@
 #	wcb::cancel
 #	wcb::extend <arg>
 #
-# Copyright (c) 2004-2018  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 2004-2023  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
-package require Tk 8.4	;# because of the undo mechanism for text widgets
+package require Tk
 package require wcb
 
 wm title . "Texttest #2"
@@ -28,7 +28,7 @@ source [file join [file dirname [info script]] option.tcl]
 #
 set width 50
 text .txt -width $width -height 12 -setgrid true -wrap none -background white \
-	  -font "Courier -12"
+	  -font TkFixedFont
 .txt configure -undo yes
 .txt tag configure prog -foreground red
 .txt tag configure user -foreground DarkGreen
@@ -87,10 +87,12 @@ proc changeColor {w args} {
 #
 proc displayPos {w idx} {
     set index [$w index $idx]
+    ##nagelfar ignore
     scan $index "%d.%d" line column
     incr column
 
     global pos
+    ##nagelfar ignore
     set pos [format "Line: %d   Column: %d" $line $column]
 }
 
@@ -105,8 +107,10 @@ proc checkLines {maxCharsPerLine w args} {
     #
     # Undo the last insert or delete action if necessary
     #
+    ##nagelfar ignore
     scan [$w index end] "%d" lastLine
     for {set line 1} {$line < $lastLine} {incr line} {
+	##nagelfar ignore
 	scan [$w index $line.end] "%d.%d" dummy charsInLine
 	if {$charsInLine > $maxCharsPerLine} {
 	    $w edit undo
@@ -125,7 +129,7 @@ proc checkLines {maxCharsPerLine w args} {
 #
 # Manage the widgets
 #
-pack .close -side bottom -pady 10
+pack .close -side bottom -pady 7p
 pack .pos -side bottom
 pack .txt -expand yes -fill both
 

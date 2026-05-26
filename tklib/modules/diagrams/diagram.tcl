@@ -11,7 +11,7 @@
 # # ## ### ##### ######## ############# ######################
 ## Requisites
 
-package require Tcl 8.5        ; # Want the nice things it brings
+package require Tcl 8.5-        ; # Want the nice things it brings
 				 # (dicts, {*}, etc.)
 package require diagram::core  ; # Core drawing management
 package require diagram::basic ; # Basic shapes.

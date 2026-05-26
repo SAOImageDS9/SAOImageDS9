@@ -12,4 +12,4 @@ tclPkgSetup [file dirname [file join [pwd] [info script]]] tkpiechart 6.6 {
     {relirect.tcl source {::canvasReliefRectangle::_copy ::canvasReliefRectangle::canvasReliefRectangle ::canvasReliefRectangle::options ::canvasReliefRectangle::set-background ::canvasReliefRectangle::set-coordinates ::canvasReliefRectangle::set-relief ::canvasReliefRectangle::update ::canvasReliefRectangle::~canvasReliefRectangle}}
 }
 
-package provide tkpiechart 6.6
+package provide tkpiechart 6.6.1

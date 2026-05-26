@@ -7,13 +7,19 @@
 
 source plotchart.tcl
 
-namespace eval ::Plotchart {
+proc ::Plotchart::InitScada {} {
+    variable methodProc
 
-   set methodProc(scada,scaling)           ScadaScaling
-   set methodProc(scada,axis)              ScadaAxis
-   set methodProc(scada,object)            ScadaObject
-   set methodProc(scada,plot)              ScadaPlot
-   set methodProc(scada,angular-scaling)   ScadaAngularScaling
+    set methodProc(scada,scaling)           ScadaScaling
+    set methodProc(scada,axis)              ScadaAxis
+    set methodProc(scada,object)            ScadaObject
+    set methodProc(scada,plot)              ScadaPlot
+    set methodProc(scada,angular-scaling)   ScadaAngularScaling
+}
+
+namespace eval ::Plotchart {
+    InitScada
+    rename InitScada {}
 }
 
 # createScada --

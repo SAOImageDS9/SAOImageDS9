@@ -1,6 +1,6 @@
 # -*- tcl -*-
 # # ## ### ##### ######## ############# ##################### 
-# (C) 2013 Andreas Kupries <andreas_kupries@users.sourceforge.net>
+# (C) 2013-2022 Andreas Kupries <andreas_kupries@users.sourceforge.net>
 ##
 # ###
 
@@ -36,13 +36,84 @@ proc ::sak::review::run {} {
 proc ::sak::review::Scan {} {
     global distribution
     variable review
+    variable rm
 
     Banner "Scan for modules and packages to review..."
 
+    # Future: Consolidate with ... readme ...
     # Determine which packages are potentially changed and therefore
     # in need of review, from the set of modules touched since the
-    # last release, as per their changelog ... (future: md5sum of
-    # files in a module, and file/package association).
+    # last release, as per the fossil repository's commit log.
+
+    # list of modified modules.
+    set modifiedm {}
+
+    # database of commit messages per changed module.
+    # cm: module -> list(string)
+    array set cm {}
+
+    # pt: database of files per changed module.
+    # module -> list(path)
+
+    # rm: module -> list (revs); rev = uuid+desc+files (string)
+    array set rm {}
+
+    foreach {trunk   tuid} [Leaf          trunk]   break ;# rid + uuid
+    foreach {release ruid} [YoungestOfTag release] break ;# datetime + uuid
+
+    #puts T:($trunk)\t($tuid)
+    #puts Y:($release)\t($ruid)
+    
+    AllParentsAfter $trunk $tuid $release $ruid -> rid uuid numparents {
+	Next ; Progress " $rid $uuid"
+
+	if {$numparents > 1} {
+	    Progress " SKIP"
+	} else {
+	    # Consider only commits with one parent, i.e. non-merges,
+	    # as possible contributors to modules and packages.
+	    
+	    set d [Description $rid]
+	    Progress " D"
+
+	    set ts [Timestamp $rid]
+	    Progress " $ts"
+
+	    # Determine file set, split by modules, then generate a package of
+	    # uuid, description and filtered files per modules touched.
+
+	    array set fs {}
+
+	    FileSet $rid -> path action {
+		Progress .
+
+		set px [file split $path]
+		set themodule [lindex $px 1]
+		lappend modifiedm $themodule
+		lappend cm($themodule) "($ts) $d"
+
+		# ignore files in modules/
+		if {[llength $px] < 3} continue
+
+		#puts $themodule||$rid||$action|$px|
+
+		lappend fs($themodule) [file join {*}[lrange $px 2 end]]
+		lappend pt($themodule) [file join {*}[lrange $px 2 end]]
+	    }
+
+	    foreach {m files} [array get fs] {
+		set str "($ts)\n\[https://core.tcl-lang.org/tklib/info/$uuid\]\n$d\n\n[join [lsort -dict [lsort -unique $files]] \n]"
+		lappend rm($m) $str
+		set rm($m) [lsort $rm($m)]
+	    }
+	    unset fs
+	}
+    }
+
+    Next
+
+    # cleanup module list, may have duplicates
+    set modifiedm [lsort -unique $modifiedm]
 
     array set review {}
 
@@ -51,7 +122,6 @@ proc ::sak::review::Scan {} {
     array set releasep [loadpkglist [location_PACKAGES]]
     array set currentp [ipackages]
 
-    set modifiedm [modified-modules]
     array set changed {}
     foreach p [array names currentp] {
 	foreach {vlist module} $currentp($p) break
@@ -120,20 +190,24 @@ proc ::sak::review::Scan {} {
 
     Close
 
-    # Postprocessing phase, pull in all relevant changelogs.
+    # Postprocessing phase, pull in all relevant commit messages of the module.
 
     foreach m [array names review] {
-	set clog [fileutil::cat $distribution/modules/$m/ChangeLog]
-	set entries {}
-	foreach e [doctools::changelog::scan $clog] {
-	    if {[string match -nocase "*Released and tagged*" $e]} break
-	    lappend entries $e
+	# commit messages
+	if {[info exists cm($m)]} {
+	    set entries [lsort -unique $cm($m)]
+	} else {
+	    set entries {}
 	}
-	set entries [doctools::changelog::flatten $entries]
+	# and affected files
+	if {[info exists pt($m)]} {
+	    lappend entries [join [lsort -dict [lsort -unique $pt($m)]] \n]
+	}
 
 	set review($m) [list $review($m) [join $entries \n\n]]
     }
 
+    # review: module -> list (notes, desc+files)
     set review() $np
     return
 }
@@ -188,7 +262,7 @@ proc ::sak::review::Clear {} {
 
 proc ::sak::review::Banner {text} {
     Clear
-    puts stdout "\n <<SAK Tcllib: $text>>\n"
+    puts stdout "\n <<SAK Tklib: $text>>\n"
     return
 }
 
@@ -233,6 +307,183 @@ proc ::sak::review::LoadNotes {} {
     return
 }
 
+proc ::sak::review::FileSet {rid _ pv av script} {
+    upvar 1 $pv thepath $av theaction
+
+    lappend map @rid@ $rid
+    foreach line [split [string trim [F [string map $map {
+	SELECT filename.name,
+	       CASE WHEN nullif(mlink.pid,0) is null THEN 'added'
+                    WHEN nullif(mlink.fid,0) is null THEN 'deleted'
+                    ELSE                                  'edited'
+	       END
+	FROM  mlink, filename
+	WHERE mlink.mid  = @rid@
+	AND   mlink.fnid = filename.fnid
+	ORDER BY filename.name;
+    }] file-set]] \n] {
+	foreach {thepath theaction} [split $line |] break
+	# ignore all changes not in modules
+	if {![string match modules* $thepath]} continue
+	uplevel 1 $script
+    }
+    return
+}
+
+proc ::sak::review::Description {rid} {
+    lappend map @rid@ $rid
+    string trim [F [string map $map {
+	SELECT coalesce(event.ecomment,event.comment)
+	FROM   event
+	WHERE  event.objid = @rid@
+	;
+    }] description]
+}
+
+proc ::sak::review::Timestamp {rid} {
+    lappend map @rid@ $rid
+    string trim [F [string map $map {
+	SELECT datetime(event.mtime)
+	FROM   event
+	WHERE  event.objid = @rid@
+	;
+    }] timestamp]
+}
+
+proc ::sak::review::AllParentsAfter {rid ruid cut cutuid _ rv uv nv script} {
+    #puts X:[info level 0]
+    upvar 1 $rv therev $uv theuid $nv thenump
+
+    array set rev {}
+    set rev($rid) .
+    lappend front $rid
+
+    # Initial run, for the starting revision.
+    set thenump [llength [AllParents $rid]]
+    set therev $rid
+    set theuid $ruid
+    uplevel 1 $script
+
+    # Standard iterative incremental transitive-closure. We have a
+    # front of revisions whose parents we take, which become the new
+    # front to follow, until no parents are delivered anymore due to
+    # the cutoff condition (timestamp, only the revisions coming after
+    # are accepted).
+
+    while {1} {
+	set new {}
+	foreach cid $front {
+	    foreach pid [Parents $cid $cut] {
+		foreach {pid uuid mtraw mtime} [split [string trim $pid |] |] break
+		if {$uuid eq $cutuid} continue
+
+		lappend new $pid $mtime $uuid
+		if {$mtraw <= $cut} {
+		    puts "Overshot: $rid $mtime $uuid"
+		}
+	    }
+	}
+	if {![llength $new]} break
+
+	# record new parents, and make them the new starting points
+	set front {}
+	foreach {pid mtime uuid} $new {
+	    if {[info exists rev($pid)]} continue
+	    set rev($pid) .
+	    lappend front $pid
+
+	    set thenump [llength [AllParents $pid]]
+	    set therev $pid
+	    set theuid $uuid
+	    uplevel 1 $script
+	}
+    }
+}
+
+proc ::sak::review::Parents {rid cut} {
+    lappend map @rid@    $rid
+    lappend map @cutoff@ $cut
+    split [F [string map $map {
+	SELECT pid, blob.uuid, event.mtime, datetime(event.mtime)
+	FROM  plink, blob, event
+	WHERE plink.cid   = @rid@
+	AND   plink.pid = blob.rid
+	AND   plink.pid = event.objid
+	AND   event.mtime > @cutoff@
+	;
+    }] parents] \n
+}
+
+proc ::sak::review::AllParents {rid} {
+    #puts X:[info level 0]
+    lappend map @rid@    $rid
+    split [F [string map $map {
+	SELECT pid, blob.uuid, event.mtime, datetime(event.mtime)
+	FROM  plink, blob, event
+	WHERE plink.cid   = @rid@
+	AND   plink.pid = blob.rid
+	AND   plink.pid = event.objid
+	;
+    }] all-parents] \n
+}
+
+proc ::sak::review::YoungestOfTag {tag} {
+    lappend map @tag@ $tag
+    puts stderr "last $tag = [F [string map $map {
+	SELECT datetime (event.mtime)
+	FROM   tag, tagxref, event
+	WHERE tag.tagname     = 'sym-' || '@tag@'
+	AND   tagxref.tagid   = tag.tagid
+	AND   tagxref.tagtype > 0
+	AND   tagxref.rid     = event.objid
+	AND   event.type      = 'ci'
+	ORDER BY event.mtime DESC
+	LIMIT 1
+	;
+    }] youngest-tag]"
+    split [F [string map $map {
+	SELECT event.mtime, blob.uuid
+	FROM   tag, tagxref, event, blob
+	WHERE tag.tagname     = 'sym-' || '@tag@'
+	AND   tagxref.tagid   = tag.tagid
+	AND   tagxref.tagtype > 0
+	AND   tagxref.rid     = event.objid
+	AND   event.type      = 'ci'
+        AND   blob.rid        = event.objid
+	ORDER BY event.mtime DESC
+	LIMIT 1
+	;
+    }] youngest-tag] |
+}
+
+proc ::sak::review::Leaf {branch} {
+    lappend map @branch@ $branch
+    set script [string map $map {
+	SELECT blob.rid, blob.uuid
+	FROM   leaf, blob, tag, tagxref
+	WHERE blob.rid        = leaf.rid
+	AND   tag.tagname     = 'sym-' || '@branch@'
+	AND   tagxref.tagid   = tag.tagid
+	AND   tagxref.tagtype > 0
+	AND   tagxref.rid     = leaf.rid
+	ORDER BY blob.rid
+	;
+    }]
+    set r [split [lindex [split [F $script leaf] \n] end] |]
+
+    #puts ($script)-->($r)
+    return $r
+}
+
+proc ::sak::review::F {script {label unknown}} {
+    #puts stderr $label:|$script|
+    set r [exec fossil sqlite3 << ".mode list\n$script"]
+    #puts stderr =($r)
+    return $r
+}
+
+
+
 # # ## ### ##### ######## ############# ##################### 
 ## Phase II. Interactively review the changes packages.
 
@@ -247,6 +498,7 @@ proc ::sak::review::LoadNotes {} {
 # currentp    : index in --> packages
 # im          : 1+current  | indices for display
 # ip          : 1+currentp |
+# ir          : 1+currentr |
 # end         : array : module (name) --> index of last package
 # stop        : repl exit flag
 # map         : array : text -> module/package index
@@ -255,11 +507,13 @@ proc ::sak::review::LoadNotes {} {
 # 
 
 proc ::sak::review::Review {} {
-    variable review   ;# table of everything to review
-    variable nm       ;# number of modules
-    variable modules  ;# list of module names, sorted
-    variable stop 0   ;# repl exit flag
-    variable end      ;# last module/package index.
+    variable review    ;# table of everything to review
+    variable rm        ;# Alt structure, rev (desc, files) by module.
+    variable nm        ;# number of modules
+    variable modules   ;# list of module names, sorted
+    variable stop 0    ;# repl exit flag
+    variable end       ;# last module/package index.
+    variable smode rev ;# standard display per revision.
 
     variable navcommands
     variable allcommands ;# list of all commands, sorted
@@ -358,12 +612,28 @@ proc ::sak::review::Review {} {
 proc ::sak::review::RefreshDisplay {} {
     variable m
     variable im
+    variable ir
     variable nm
+    variable nr
     variable clog
+    variable rlog
     variable what
+    variable smode
+    variable ip
+    variable np
 
-    Banner "\[$im/$nm\] [=cya [string totitle $what]] [=green $m]"
-    puts "| [join [split $clog \n] \n|]\n"
+    if {$smode eq "rev"} {
+	set text $rlog
+    } else {
+	set text $clog
+    }
+
+    if {$smode eq "rev"} {
+	Banner "(C $ir/$nr) \[M $im/$nm\] [=cya [string totitle $what]] \[P $ip/$np\] [=green $m]"
+    } else {
+	Banner "\[M $im/$nm\] [=cya [string totitle $what]] \[P $ip/$np\] [=green $m]"
+    }
+    puts "| [join [split $text \n] "\n| "]\n"
     return
 }
 
@@ -381,8 +651,21 @@ proc ::sak::review::Prompt {} {
     variable np
     variable name
     variable tags
+    variable smode
+    variable im
+    variable ir
+    variable nm
+    variable nr
+    variable what
+    variable m
 
-    return "\[$ip/$np\] $name ($tags): "
+    if {$smode eq "rev"} {
+	append p "(C $ir/$nr) "
+    }
+
+    append p "\[M $im/$nm\] [=green $m] [=cya [string totitle $what]] "
+    append p "\[P $ip/$np\] [=whi $name] ($tags): "
+    return $p
 }
 
 proc ::sak::review::Complete {line} {
@@ -428,13 +711,18 @@ proc ::sak::review::Dispatch {line} {
 
 proc ::sak::review::Goto {loc {skip 0}} {
     variable review
+    variable rm
     variable modules
     variable packages
     variable clog
+    variable rlog
+    variable rloga
     variable current
     variable currentp
+    variable currentr
     variable nm
     variable np
+    variable nr
     variable at
     variable tags
     variable what
@@ -444,13 +732,25 @@ proc ::sak::review::Goto {loc {skip 0}} {
     variable p
     variable ip
     variable im
+    variable ir
 
     foreach {current currentp} $loc break
+    set currentr 0
 
     puts "Goto ($current/$currentp)"
 
     set m [lindex $modules $current]
     foreach {packages clog} $review($m) break
+    if {[catch {
+	set nr   [llength $rm($m)]
+	set rloga $rm($m)
+	set rlog [lindex $rloga $currentr]
+    }]} {
+	set nr 0
+	set currentr 0
+	set rloga {}
+	set rlog {}
+    }
 
     set np [llength $packages]
     set p  [lindex  $packages $currentp]
@@ -460,6 +760,7 @@ proc ::sak::review::Goto {loc {skip 0}} {
 
     set im [expr {1+$current}]
     set ip [expr {1+$currentp}]
+    set ir [expr {1+$currentr}]
 
     if {$skip && ([llength $tags] ||
 		  ($tags == "---"))} {
@@ -467,6 +768,59 @@ proc ::sak::review::Goto {loc {skip 0}} {
     } else {
 	RefreshDisplay
     }
+    return
+}
+
+proc ::sak::review::C_* {} {
+    variable smode
+    variable currentr
+    if {$smode eq "all"} {
+	set smode rev
+	set currentr 0
+    } else {
+	set smode all
+    }
+    RefreshDisplay
+    return
+}
+proc ::sak::review::C_, {} {
+    # next revision
+    variable smode
+    variable rlog
+    variable rloga
+    variable currentr
+    if {$smode eq "all"} {
+	set smode rev
+	set currentr 0
+    } else {
+	variable nr
+	incr currentr
+	if {$currentr >= $nr} { set currentr 0 }
+    }
+    variable ir [expr {1+$currentr}]
+    set rlog [lindex $rloga $currentr]
+    RefreshDisplay
+    return
+}
+proc ::sak::review::C_' {} {
+    # previous revision
+    variable smode
+    variable rlog
+    variable rloga
+    variable nr
+    variable currentr
+    if {$smode eq "all"} {
+	set smode rev
+	set currentr $nr
+    }
+    incr currentr -1
+    if {$currentr <= 0} {
+	set currentr $nr
+	incr currentr -1
+    }
+    variable ir [expr {1+$currentr}]
+    set rlog [lindex $rloga $currentr]
+    RefreshDisplay
     return
 }
 
@@ -489,10 +843,21 @@ proc ::sak::review::C_@start {} { Goto {0 0} }
 proc ::sak::review::C_@0     {} { Goto {0 0} }
 proc ::sak::review::C_@end   {} { variable end ; Goto $end() }
 
-proc ::sak::review::C_next {} {
+proc ::sak::review::C_>> {} { C_next 1 }
+proc ::sak::review::C_next {{skiprev 0}} {
     variable tags
     variable current
     variable currentp
+    variable smode
+
+    if {!($skiprev) && ($smode eq "rev")} {
+	variable ir
+	variable nr
+	if {$ir < $nr} {
+	    C_,
+	    return
+	}
+    }
 
     C_step 0
 
@@ -529,13 +894,23 @@ proc ::sak::review::C_step {{refresh 1}} {
     return
 }
 
-proc ::sak::review::C_prev {} {
+proc ::sak::review::C_<< {} { C_prev 1 }
+proc ::sak::review::C_prev {{skiprev 0}} {
     variable end
     variable nm
     variable np
     variable current
     variable currentp
     variable packages
+    variable smode
+
+    if {!$skiprev && ($smode eq "rev")} {
+	variable ir
+	if {$ir > 1} {
+	    C_'
+	    return
+	}
+    }
 
     incr currentp -1
     if {$currentp < 0} {

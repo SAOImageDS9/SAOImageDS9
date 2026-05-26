@@ -6,8 +6,8 @@
 # # ## ### ##### ######## ############# #####################
 ## Requisites
 
-package require Tcl 8.5
-package provide clock::rfc2822 0.1
+package require Tcl 8.5 9
+package provide clock::rfc2822 0.2
 namespace eval ::clock::rfc2822 {}
 
 # # ## ### ##### ######## ############# #####################
@@ -110,7 +110,7 @@ proc ::clock::rfc2822::AddDatePat { wpat wgrp ypat ygrp mdpat mdgrp
 # Side effects:
 
 proc ::clock::rfc2822::InitDatePats { permissible } {
-    # Produce formats for the observed variants of ISO2822 dates.
+    # Produce formats for the observed variants of RFC 2822 dates.
     # Permissible variants come first in the list; impermissible ones
     # come later.
 

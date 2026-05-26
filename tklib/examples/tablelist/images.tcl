@@ -1,18 +1,33 @@
 #==============================================================================
 # Creates some images.
 #
-# Copyright (c) 2011-2019  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 2011-2024  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
 #
 # Create two images, to be displayed in tablelist cells with boolean values
 #
-image create photo checkedImg   -file [file join $dir checked.gif]
-image create photo uncheckedImg -file [file join $dir unchecked.gif]
+if {$tk_version >= 8.7 || [catch {package require tksvg}] == 0} {
+    set fmt $tablelist::svgfmt
+    image create photo checkedImg   -file [file join $dir checked.svg] \
+	-format $fmt
+    image create photo uncheckedImg -file [file join $dir unchecked.svg] \
+	-format $fmt
+} else {
+    set pct $tablelist::scalingpct
+    image create photo checkedImg   -file [file join $dir checked$pct.gif] \
+	-format gif
+    image create photo uncheckedImg -file [file join $dir unchecked$pct.gif] \
+	-format gif
+}
 
 #
 # Create 16 images representing different colors
 #
+# Declare the variables as global because this
+# file might be sourced from within a procedure
+#
+global colorNames colorValues colors
 set colorNames {
     "red" "green" "blue" "magenta"
     "yellow" "cyan" "light gray" "white"
@@ -28,11 +43,13 @@ set colorValues {
 foreach name $colorNames value $colorValues {
     set colors($name) $value
 }
+set dim  [expr {round(12 * $scaleutil::scalingPct / 100.0)}]
+set dim1 [expr {$dim - 1}]
 foreach value $colorValues {
-    image create photo img$value -height 13 -width 13
-    img$value put gray50 -to 0 0 13 1				;# top edge
-    img$value put gray50 -to 0 1 1 12				;# left edge
-    img$value put gray75 -to 0 12 13 13				;# bottom edge
-    img$value put gray75 -to 12 1 13 12				;# right edge
-    img$value put $value -to 1 1 12 12
+    image create photo img$value -height $dim -width $dim
+    img$value put gray50 -to 0 0 $dim 1				;# top edge
+    img$value put gray50 -to 0 1 1 $dim1			;# left edge
+    img$value put gray75 -to 0 $dim1 $dim $dim			;# bottom edge
+    img$value put gray75 -to $dim1 1 $dim $dim1			;# right edge
+    img$value put $value -to 1 1 $dim1 $dim1			;# interior
 }

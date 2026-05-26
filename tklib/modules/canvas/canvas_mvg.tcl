@@ -8,8 +8,8 @@
 # ### ### ### ######### ######### #########
 ## Requisites
 
-package require Tcl 8.5
-package require Tk  8.5
+package require Tcl 8.5-
+package require Tk 8.5-
 
 namespace eval ::canvas {}
 
@@ -18,7 +18,7 @@ namespace eval ::canvas {}
 
 proc ::canvas::mvg {canvas} {
 
-    #raise [winfo toplevel $canvas] 
+    #raise [winfo toplevel $canvas]
     #update
 
     # Initialize drawing state... This array is keyed by the MVG

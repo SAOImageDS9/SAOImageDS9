@@ -1,7 +1,7 @@
 
 [//000000001]: # (math::fourier \- Tcl Math Library)
 [//000000002]: # (Generated from file 'fourier\.man' by tcllib/doctools with format 'markdown')
-[//000000003]: # (math::fourier\(n\) 1\.0\.2 tcllib "Tcl Math Library")
+[//000000003]: # (math::fourier\(n\) 1\.0\.3 tcllib "Tcl Math Library")
 
 <hr> [ <a href="../../../../toc.md">Main Table Of Contents</a> &#124; <a
 href="../../../toc.md">Table Of Contents</a> &#124; <a
@@ -34,8 +34,8 @@ math::fourier \- Discrete and fast fourier transforms
 
 # <a name='synopsis'></a>SYNOPSIS
 
-package require Tcl 8\.4  
-package require math::fourier 1\.0\.2  
+package require Tcl 8\.5 9  
+package require math::fourier 1\.0\.3  
 
 [__::math::fourier::dft__ *in\_data*](#1)  
 [__::math::fourier::inverse\_dft__ *in\_data*](#2)  
@@ -44,10 +44,10 @@ package require math::fourier 1\.0\.2
 
 # <a name='description'></a>DESCRIPTION
 
-The __math::fourier__ package implements two versions of discrete Fourier
-transforms, the ordinary transform and the fast Fourier transform\. It also
-provides a few simple filter procedures as an illustrations of how such filters
-can be implemented\.
+The __math::fourier__ package uses the fast Fourier transform, if
+applicable, or the ordinary transform to implement the discrete Fourier
+transform\. It also provides a few simple filter procedures as an illustration of
+how such filters can be implemented\.
 
 The purpose of this document is to describe the implemented procedures and
 provide some examples of their usage\. As there is ample literature on the
@@ -75,7 +75,7 @@ errors due to floating point arithmetic\) return the original list of numbers\.
 
 If the input length N is a power of two then these procedures will utilize the
 O\(N log N\) Fast Fourier Transform algorithm\. If input length is not a power of
-two then the DFT will instead be computed using a the naive quadratic algorithm\.
+two then the DFT will instead be computed using the naive quadratic algorithm\.
 
 Some examples:
 

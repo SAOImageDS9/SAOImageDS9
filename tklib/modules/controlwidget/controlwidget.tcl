@@ -3,7 +3,7 @@
 #     and source the individual files
 #
 
-package require Tk 8.5
+package require Tk 8.5-
 package require snit
 
 package require bindDown

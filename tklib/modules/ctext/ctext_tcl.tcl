@@ -1,4 +1,4 @@
-# RCS: @(#) $Id: ctext_tcl.tcl,v 1.2 2005/03/31 03:15:48 andreas_kupries Exp $ 
+# RCS: @(#) $Id: ctext_tcl.tcl,v 1.2 2005/03/31 03:15:48 andreas_kupries Exp $
 
 package provide ctext_tcl 0.8
 
@@ -31,7 +31,7 @@ proc ctext::setHighlightTcl {w} {
 	     -regexp -backwards -forwards -bd -pady -ipady -state -row \
 	     -column -cursor -highlightcolors -linemap -menu -tearoff \
 	     -displayof -cursor -underline -tags -tag -length]
-    
+
     ctext::addHighlightClass $w stackControl $color(stackControl) \
 	[list proc uplevel namespace while for foreach if else]
     ctext::addHighlightClassWithOnlyCharStart $w vars $color(vars) "\$"

@@ -66,7 +66,7 @@ proc f_setupcircle {} {
 
     if {
 	[string equal $::tcl_platform(platform) windows] &&
-	[package vsatisfies [package require Tcl] 8.4]
+	[package vsatisfies [package require Tcl] 8.5 9]
     } {
 	if {[string equal $::tcl_platform(platform) windows]} {
 	    # Windows doesn't like the .. in the target, it needs an
@@ -99,7 +99,7 @@ proc f_setupcircle {} {
 # Change previous sample tree so that its circular symbolic
 # link points to the base directory. Unix-only.
 #
-#	dir                    
+#	dir
 #	+--{find 1}             <----------+
 #          +--{find 2}                     |
 #          |  +--{file* 2}		   |
@@ -121,7 +121,7 @@ proc f_setupcircle2 {} {
 
     if {
 	[string equal $::tcl_platform(platform) windows] &&
-	[package vsatisfies [package require Tcl] 8.4]
+	[package vsatisfies [package require Tcl] 8.5 9]
     } {
 	if {[string equal $::tcl_platform(platform) windows]} {
 	    # Windows doesn't like the .. in the target, it needs an
@@ -176,7 +176,7 @@ proc f_setupbroken {} {
 
     if {
 	[string equal $::tcl_platform(platform) windows] &&
-	[package vsatisfies [package require Tcl] 8.4]
+	[package vsatisfies [package require Tcl] 8.5 9]
     } {
 	makeFile {} [file dirname $fthree]/BROKEN
 
@@ -228,13 +228,13 @@ proc f_setupdot {} {
 #  dir/a/c                   |			a/c/g		== a
 #  dir/a/d                   | a/c/h
 #  dir/a/c/g --> ..          |                  a/c/h/e         == c
-#  dir/a/c/h --> ../../b     | a/c/h/f					
-#  dir/a/c/i                 | a/c/i					
-#  dir/b/e   --> ../a/c	     | a/d					
-#  dir/b/f                   | b					
-#                            | b/e					
-#                            | b/e/g					
-#                            | b/e/g/c					
+#  dir/a/c/h --> ../../b     | a/c/h/f
+#  dir/a/c/i                 | a/c/i
+#  dir/b/e   --> ../a/c	     | a/d
+#  dir/b/f                   | b
+#                            | b/e
+#                            | b/e/g
+#                            | b/e/g/c
 #                            | 			b/e/g/c/g	== b/e/g
 #                            |			b/e/g/c/h	== b
 #                            | b/e/g/d
@@ -282,7 +282,7 @@ proc f_link {src target} {
 
     if {
 	[string equal $::tcl_platform(platform) windows] &&
-	[package vsatisfies [package require Tcl] 8.4]
+	[package vsatisfies [package require Tcl] 8.5 9]
     } {
 	if {[string equal $::tcl_platform(platform) windows]} {
 	    # Windows doesn't like the .. in the target, it needs an

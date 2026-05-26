@@ -1,0 +1,835 @@
+'\"
+'\" Generated from file 'shtmlview\&.man' by tcllib/doctools with format 'nroff'
+'\" Copyright (c) 2018-2022, Detlef Groth <detlef(at)dgroth(dot)de>
+'\" Copyright (c) 2009, Robert Heller
+'\" Copyright (c) 2000, Clif Flynt
+'\" Copyright (c) 1995-1999, Stephen Uhler
+'\"
+.TH "shtmlview" n 1\&.1\&.2 tklib "Basic HTML and Markdown viewer widget"
+.\" The -*- nroff -*- definitions below are for supplemental macros used
+.\" in Tcl/Tk manual entries.
+.\"
+.\" .AP type name in/out ?indent?
+.\"	Start paragraph describing an argument to a library procedure.
+.\"	type is type of argument (int, etc.), in/out is either "in", "out",
+.\"	or "in/out" to describe whether procedure reads or modifies arg,
+.\"	and indent is equivalent to second arg of .IP (shouldn't ever be
+.\"	needed;  use .AS below instead)
+.\"
+.\" .AS ?type? ?name?
+.\"	Give maximum sizes of arguments for setting tab stops.  Type and
+.\"	name are examples of largest possible arguments that will be passed
+.\"	to .AP later.  If args are omitted, default tab stops are used.
+.\"
+.\" .BS
+.\"	Start box enclosure.  From here until next .BE, everything will be
+.\"	enclosed in one large box.
+.\"
+.\" .BE
+.\"	End of box enclosure.
+.\"
+.\" .CS
+.\"	Begin code excerpt.
+.\"
+.\" .CE
+.\"	End code excerpt.
+.\"
+.\" .VS ?version? ?br?
+.\"	Begin vertical sidebar, for use in marking newly-changed parts
+.\"	of man pages.  The first argument is ignored and used for recording
+.\"	the version when the .VS was added, so that the sidebars can be
+.\"	found and removed when they reach a certain age.  If another argument
+.\"	is present, then a line break is forced before starting the sidebar.
+.\"
+.\" .VE
+.\"	End of vertical sidebar.
+.\"
+.\" .DS
+.\"	Begin an indented unfilled display.
+.\"
+.\" .DE
+.\"	End of indented unfilled display.
+.\"
+.\" .SO ?manpage?
+.\"	Start of list of standard options for a Tk widget. The manpage
+.\"	argument defines where to look up the standard options; if
+.\"	omitted, defaults to "options". The options follow on successive
+.\"	lines, in three columns separated by tabs.
+.\"
+.\" .SE
+.\"	End of list of standard options for a Tk widget.
+.\"
+.\" .OP cmdName dbName dbClass
+.\"	Start of description of a specific option.  cmdName gives the
+.\"	option's name as specified in the class command, dbName gives
+.\"	the option's name in the option database, and dbClass gives
+.\"	the option's class in the option database.
+.\"
+.\" .UL arg1 arg2
+.\"	Print arg1 underlined, then print arg2 normally.
+.\"
+.\" .QW arg1 ?arg2?
+.\"	Print arg1 in quotes, then arg2 normally (for trailing punctuation).
+.\"
+.\" .PQ arg1 ?arg2?
+.\"	Print an open parenthesis, arg1 in quotes, then arg2 normally
+.\"	(for trailing punctuation) and then a closing parenthesis.
+.\"
+.\"	# Set up traps and other miscellaneous stuff for Tcl/Tk man pages.
+.if t .wh -1.3i ^B
+.nr ^l \n(.l
+.ad b
+.\"	# Start an argument description
+.de AP
+.ie !"\\$4"" .TP \\$4
+.el \{\
+.   ie !"\\$2"" .TP \\n()Cu
+.   el          .TP 15
+.\}
+.ta \\n()Au \\n()Bu
+.ie !"\\$3"" \{\
+\&\\$1 \\fI\\$2\\fP (\\$3)
+.\".b
+.\}
+.el \{\
+.br
+.ie !"\\$2"" \{\
+\&\\$1	\\fI\\$2\\fP
+.\}
+.el \{\
+\&\\fI\\$1\\fP
+.\}
+.\}
+..
+.\"	# define tabbing values for .AP
+.de AS
+.nr )A 10n
+.if !"\\$1"" .nr )A \\w'\\$1'u+3n
+.nr )B \\n()Au+15n
+.\"
+.if !"\\$2"" .nr )B \\w'\\$2'u+\\n()Au+3n
+.nr )C \\n()Bu+\\w'(in/out)'u+2n
+..
+.AS Tcl_Interp Tcl_CreateInterp in/out
+.\"	# BS - start boxed text
+.\"	# ^y = starting y location
+.\"	# ^b = 1
+.de BS
+.br
+.mk ^y
+.nr ^b 1u
+.if n .nf
+.if n .ti 0
+.if n \l'\\n(.lu\(ul'
+.if n .fi
+..
+.\"	# BE - end boxed text (draw box now)
+.de BE
+.nf
+.ti 0
+.mk ^t
+.ie n \l'\\n(^lu\(ul'
+.el \{\
+.\"	Draw four-sided box normally, but don't draw top of
+.\"	box if the box started on an earlier page.
+.ie !\\n(^b-1 \{\
+\h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.el \}\
+\h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\l'|0u-1.5n\(ul'
+.\}
+.\}
+.fi
+.br
+.nr ^b 0
+..
+.\"	# VS - start vertical sidebar
+.\"	# ^Y = starting y location
+.\"	# ^v = 1 (for troff;  for nroff this doesn't matter)
+.de VS
+.if !"\\$2"" .br
+.mk ^Y
+.ie n 'mc \s12\(br\s0
+.el .nr ^v 1u
+..
+.\"	# VE - end of vertical sidebar
+.de VE
+.ie n 'mc
+.el \{\
+.ev 2
+.nf
+.ti 0
+.mk ^t
+\h'|\\n(^lu+3n'\L'|\\n(^Yu-1v\(bv'\v'\\n(^tu+1v-\\n(^Yu'\h'-|\\n(^lu+3n'
+.sp -1
+.fi
+.ev
+.\}
+.nr ^v 0
+..
+.\"	# Special macro to handle page bottom:  finish off current
+.\"	# box/sidebar if in box/sidebar mode, then invoked standard
+.\"	# page bottom macro.
+.de ^B
+.ev 2
+'ti 0
+'nf
+.mk ^t
+.if \\n(^b \{\
+.\"	Draw three-sided box if this is the box's first page,
+.\"	draw two sides but no top otherwise.
+.ie !\\n(^b-1 \h'-1.5n'\L'|\\n(^yu-1v'\l'\\n(^lu+3n\(ul'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.el \h'-1.5n'\L'|\\n(^yu-1v'\h'\\n(^lu+3n'\L'\\n(^tu+1v-\\n(^yu'\h'|0u'\c
+.\}
+.if \\n(^v \{\
+.nr ^x \\n(^tu+1v-\\n(^Yu
+\kx\h'-\\nxu'\h'|\\n(^lu+3n'\ky\L'-\\n(^xu'\v'\\n(^xu'\h'|0u'\c
+.\}
+.bp
+'fi
+.ev
+.if \\n(^b \{\
+.mk ^y
+.nr ^b 2
+.\}
+.if \\n(^v \{\
+.mk ^Y
+.\}
+..
+.\"	# DS - begin display
+.de DS
+.RS
+.nf
+.sp
+..
+.\"	# DE - end display
+.de DE
+.fi
+.RE
+.sp
+..
+.\"	# SO - start of list of standard options
+.de SO
+'ie '\\$1'' .ds So \\fBoptions\\fR
+'el .ds So \\fB\\$1\\fR
+.SH "STANDARD OPTIONS"
+.LP
+.nf
+.ta 5.5c 11c
+.ft B
+..
+.\"	# SE - end of list of standard options
+.de SE
+.fi
+.ft R
+.LP
+See the \\*(So manual entry for details on the standard options.
+..
+.\"	# OP - start of full description for a single option
+.de OP
+.LP
+.nf
+.ta 4c
+Command-Line Name:	\\fB\\$1\\fR
+Database Name:	\\fB\\$2\\fR
+Database Class:	\\fB\\$3\\fR
+.fi
+.IP
+..
+.\"	# CS - begin code excerpt
+.de CS
+.RS
+.nf
+.ta .25i .5i .75i 1i
+..
+.\"	# CE - end code excerpt
+.de CE
+.fi
+.RE
+..
+.\"	# UL - underline word
+.de UL
+\\$1\l'|0\(ul'\\$2
+..
+.\"	# QW - apply quotation marks to word
+.de QW
+.ie '\\*(lq'"' ``\\$1''\\$2
+.\"" fix emacs highlighting
+.el \\*(lq\\$1\\*(rq\\$2
+..
+.\"	# PQ - apply parens and quotation marks to word
+.de PQ
+.ie '\\*(lq'"' (``\\$1''\\$2)\\$3
+.\"" fix emacs highlighting
+.el (\\*(lq\\$1\\*(rq\\$2)\\$3
+..
+.\"	# QR - quoted range
+.de QR
+.ie '\\*(lq'"' ``\\$1''\\-``\\$2''\\$3
+.\"" fix emacs highlighting
+.el \\*(lq\\$1\\*(rq\\-\\*(lq\\$2\\*(rq\\$3
+..
+.\"	# MT - "empty" string
+.de MT
+.QW ""
+..
+.BS
+.SH NAME
+shtmlview \- Extended Tcl/Tk text widget with basic support for rendering of HTML and Markdown
+.SH SYNOPSIS
+package require \fBTk\fR
+.sp
+package require \fBsnit\fR
+.sp
+package require \fBMarkdown ;# optional Markdown support\fR
+.sp
+package require \fBimg::jpeg ;# optional jpeg image support\fR
+.sp
+package require \fBshtmlview::shtmlview ?1\&.1\&.2?\fR
+.sp
+\fB::shtmlview::converter\fR \fIextension\fR \fIdescription\fR \fIcmdprefix\fR
+.sp
+\fB::shtmlview::shtmlview\fR \fIpathName\fR ?\fIoptions\fR?
+.sp
+\fIpathName\fR \fBback\fR
+.sp
+\fIpathName\fR \fBbrowse\fR \fIfilename\fR ?args?
+.sp
+\fIpathName\fR \fBdosearch\fR \fIstring\fR \fIdirection\fR
+.sp
+\fIpathName\fR \fBedittext\fR \fIcmd\fR ?\fIoptions\fR?
+.sp
+\fIpathName\fR \fBeditView\fR
+.sp
+\fIpathName\fR \fBforward\fR
+.sp
+\fIpathName\fR \fBgetFiles\fR
+.sp
+\fIpathName\fR \fBgetHistory\fR
+.sp
+\fIpathName\fR \fBgetEditWidget\fR
+.sp
+\fIpathName\fR \fBgetTextWidget\fR
+.sp
+\fIpathName\fR \fBhelptext\fR \fIcmd\fR ?\fIoptions\fR?
+.sp
+\fIpathName\fR \fBhome\fR
+.sp
+\fIpathName\fR \fBopen\fR
+.sp
+\fIpathName\fR \fBreload\fR
+.sp
+\fIpathName\fR \fBrender\fR \fItext\fR ?ext?
+.sp
+\fIpathName\fR \fBsourceView\fR
+.sp
+\fIpathName\fR \fBurl\fR
+.sp
+.BE
+.SH DESCRIPTION
+The \fBshtmlview::shtmlview\fR package provides a pure Tcl/Tk
+widget of the same name to render and display basic HTML and Markdown
+files and string\&.
+.PP
+Some history: The widget is based on the \fBhtmllib\fR library
+developed in the 90ties by Stephen Uhler and Clif Flynt\&.
+In 2009 Robert Heller wrapped this library into the excellent
+mega-widget framework \fBsnit\fR\&.
+The resulting widget was however tied directly into a help system\&.
+The author of this document first just isolated the display part and
+then added some functions such as changing font size and a few buttons
+in the toolbar\&. Then a rudimentary display of data tables was
+added\&. Even later support for inline images and extended keybindings
+and Markdown support was added\&.
+.PP
+The widget is \fInot\fR a web browser\&. It only supports relative
+links in the local filesystem\&.  It does \fInot\fR support style
+sheets\&. It does not support http(s) links nor images\&.
+It is thought of as a last fallback to use in cases where no other
+possibilities exists to display HTML or Markdown markup from a Tk
+application\&.
+.PP
+Use cases are as a help viewer and wherever the developer has control
+about the used html tags\&.
+.PP
+Comments and feedbacks are welcome\&.
+.PP
+The \fBshtmlview::shtmlview\fR widget overloads the text widget and
+provides new commands and options\&.
+These are explained in the sections \fBWIDGET COMMANDS\fR and
+\fBWIDGET OPTIONS\fR\&.
+.PP
+Note that the file "\fIshtmlview\&.tcl\fR" is not only a package but also
+a standalone application for the direct viewing of Markdown and HTML
+files\&.
+Invoke it as
+.CS
+
+ tclsh shtmlview\&.tcl filename\&.html
+.CE
+in a terminal\&.
+.PP
+The API described in this document is not the whole API offered by the snit
+object \fB::shtmlview::shtmlview\fR\&.
+Instead, it is the subset of that API that is expected not to change in future
+versions\&.
+.SH COMMANDS
+.TP
+\fB::shtmlview::converter\fR \fIextension\fR \fIdescription\fR \fIcmdprefix\fR
+Registers a conversion command prefix (\fIcmdprefix\fR) for files
+having the \fIextension\fR\&.
+The \fIdescription\fR is a short summary of the kind of files expected
+to have that extension\&.
+.sp
+The result of the command is the empty string\&.
+.sp
+Whenever an shtmlview widget encounters a file with the specified
+\fIextension\fR it will invoke the registered command prefix with one
+argument, the path to the file to convert\&. The result of the
+invokation is expected to be the HTML to render and display\&.
+.sp
+See section \fBEXTENSIONS\fR for an example\&.
+.TP
+\fB::shtmlview::shtmlview\fR \fIpathName\fR ?\fIoptions\fR?
+Creates and configures the shtmlview widget \fIpathName\fR\&.
+.sp
+The result of the command is the \fIpathName\fR\&.
+.sp
+An error is thrown if a widget for \fIpathName\fR already exists\&.
+.sp
+An error is also thrown if the parent for \fIpathName\fR does not exist\&.
+.sp
+The recognized options are explained in section \fBWIDGET OPTIONS\fR\&.
+.sp
+The methods of the new widget are explained in section \fBWIDGET COMMANDS\fR\&.
+.PP
+.SH "WIDGET OPTIONS"
+.PP
+Use method \fBhelptext\fR to configure the internal text widget\&.
+.TP
+\fB-browsecmd\fR cmd
+Each time a HTML or Markdown page is rendered the specified \fIcmd\fR
+command is invoked\&. The actual URL is appended as first argument to
+the command\&.
+.TP
+\fB-closebutton\fR boolean
+If \fBtrue\fR (default) a close button is shown in the toolbar\&.
+This is useful if the widget is the sole child of a toplevel widget\&.
+.TP
+\fB-historycombo\fR boolean
+If \fBtrue\fR, and the \fBtile\fR package is available, then a
+\fBttk::combobox\fR to show page history is added to the toolbar\&.
+Defaults to \fBfalse\fR\&.
+Can be only set at widget creation\&.
+.TP
+\fB-home\fR string
+Sets the homepage filename of the widget\&.
+If not set, the first page browsed to will be automatically set as the
+home page\&.
+.TP
+\fB-tablesupport\fR boolean
+If \fBtrue\fR (default) some table support is provided\&.
+This will have some undesired results if table tags are misused as
+markup tool\&.
+Simple html tables with \fBth\fR and \fBtd\fR tags should however
+display well if no internal markup inside of those tags is used\&.
+.TP
+\fB-toolbar\fR boolean
+If \fBtrue\fR (default) a toolbar will be displayed at the top\&.
+The toolbar will provide standard buttons for the methods \fBback\fR,
+\fBforward\fR and \fBhome\fR, as well as search facilities\&.
+Defaults to \fBtrue\fR\&.
+.PP
+.SH "WIDGET COMMANDS"
+Each shtmlview widget created with the above command supports the following
+commands and options:
+.TP
+\fIpathName\fR \fBback\fR
+Displays the previous HTML and Markdown page in the browsing history
+if any\&.
+.TP
+\fIpathName\fR \fBbrowse\fR \fIfilename\fR ?args?
+Displays the HTML or Markdown text contained in the named file\&.
+Any additional arguments, while also file names, are just added to the
+history stack\&.
+They can be walked to using the history keys, \fBf\fR and \fBb\fR\&.
+.TP
+\fIpathName\fR \fBdosearch\fR \fIstring\fR \fIdirection\fR
+Search for and highlight the given string starting from the current
+index in the specified direction\&. The direction has to be either
+\fBforward\fR (default) or \fBbackwards\fR\&.
+.TP
+\fIpathName\fR \fBedittext\fR \fIcmd\fR ?\fIoptions\fR?
+This command exposes the internal text editor widget for
+configuration\&. See the following example:
+.CS
+
+
+    ::shtmlview::shtmlview \&.help
+    \&.help browse index\&.md
+    \&.help editView
+    \&.help edittext configure -background salmon
+
+.CE
+.TP
+\fIpathName\fR \fBeditView\fR
+This command switches the widget from viewing to editing\&.  In this
+mode the user is able to edit and change the currently loaded file\&.
+To switch to a non-editable source display instead see
+\fBsourceView\fR below\&.
+.CS
+
+
+    ::shtmlview::shtmlview \&.help
+    \&.help browse index\&.md
+    \&.help editView
+
+.CE
+.TP
+\fIpathName\fR \fBforward\fR
+Displays the next HTML or Markdown page in the browsing history if
+any\&.
+.TP
+\fIpathName\fR \fBgetFiles\fR
+This command returns a list of all visited files\&.
+Duplicates and anchor links are removed from the raw data\&.
+.TP
+\fIpathName\fR \fBgetHistory\fR
+This command returns a list of the current history of visited files
+and anchors\&.
+.TP
+\fIpathName\fR \fBgetEditWidget\fR
+This commands returns the internal pathname of the text editor widget
+used for editing the current document\&.
+This enables the developer to directly access it, if required or desired\&.
+This is dangerous\&.
+See also \fBedittext\fR, above\&.
+.TP
+\fIpathName\fR \fBgetTextWidget\fR
+This commands returns the internal pathname of the internal viewer
+text widget\&.
+This enables the developer to directly access it, if required or
+desired\&.
+This is dangerous\&.
+See also \fBhelptext\fR, below\&.
+.TP
+\fIpathName\fR \fBhelptext\fR \fIcmd\fR ?\fIoptions\fR?
+This command exposes the internal viewer text widget for
+configuration\&. See the following example:
+.CS
+
+
+    ::shtmlview::shtmlview \&.help
+    \&.help browse index\&.html
+    \&.help helptext configure -background yellow
+
+.CE
+.TP
+\fIpathName\fR \fBhome\fR
+Displays either the page set by option \fB-home\fR, or the first
+page \fBbrowse\fR was called for\&.
+.TP
+\fIpathName\fR \fBopen\fR
+Uses a standard file open dialog to select a document in any of the
+supported formats for display, and then renders that file, if any\&.
+.TP
+\fIpathName\fR \fBreload\fR
+Reloads and redisplays the currently shown page\&.
+.TP
+\fIpathName\fR \fBrender\fR \fItext\fR ?ext?
+Renders the given \fItext\fR in the viewer\&.
+If an extension \fIext\fR is specified the string is assumed to be in
+the associated format, and the associated converter is used\&.
+Otherwise the string is considered to be either HTML or Markdown\&.  To
+be treated as HTML the \fItext\fR has to start with a recognized HTML
+tag\&. In any other case it is considered to be Markdown\&.
+.TP
+\fIpathName\fR \fBsourceView\fR
+This command switches the widget from viewing the current document
+itself to viewing the source of that document\&. To switch to a editable
+source display see \fBeditView\fR above\&.
+.CS
+
+
+    ::shtmlview::shtmlview \&.help
+    \&.help browse index\&.md
+    \&.help sourceView
+
+.CE
+.TP
+\fIpathName\fR \fBurl\fR
+Returns the currently shown URL\&.
+.PP
+.SH "BINDINGS FOR THE WIDGET"
+The following keys are bound to the widget for navigation and other
+actions:
+.TP
+<cursor>
+Standard cursor movement in the view
+.TP
+b
+Back - display previous page in history
+.TP
+f
+Forward - display next page in history
+.TP
+p
+Previous - Move cursor to previous search match
+.TP
+n
+Next - Move cursor to next search match
+.TP
+q
+Remove current page from history\&. Implies \fBf\fR\&.
+.TP
+r
+Start search backward
+.TP
+s
+Start search forward
+.TP
+Ctrl-E
+Toggle edit mode
+.TP
+Ctrl-s
+In edit mode, save page
+.TP
+Ctrl-r
+Reload current page
+.TP
+Ctrl-u
+Toggle source vs rendered views
+.TP
+Return
+Follow link under cursor
+.TP
+TAB
+Move cursor to next link on current page
+.PP
+.SH EXAMPLE
+.CS
+
+
+    package require shtmlview::shtmlview
+    proc browsed {url} {
+        puts "You browsed $url"
+    }
+    ::shtmlview::shtmlview \&.help -toolbar true -browsecmd browsed
+    \&.help browse index\&.html
+    pack \&.help -fill both -expand true -side left
+    package require Markdown
+    \&.help browser test\&.md
+
+.CE
+More examples can be found in the sources of the package\&.
+.SH EXTENSIONS
+.PP
+While the package natively only support HTML documents, and Markdown
+documents if the supporting \fBMarkdown\fR package is available,
+it is possible to extend the range of supported formats by means of a
+plugin mechanism\&.
+.PP
+The main entry point to that system is the \fBshtmlview::converter\fR
+command\&. With it is possible to register a document format and an
+associated conversion command\&.
+The format is identified by its file extension, like, for example
+"\fI\&.md\fR", "\fI\&.man\fR", etc\&.
+The conversion command is expected to convert the content of the file
+given to it into HTML for display\&.
+.PP
+The packages \fBshtmlview::doctools\fR and
+\fBshtmlview::mkdoc\fR are examples of such plugins\&.
+The first provides support for the \fIdoctools\fR format used by both
+\fITcllib\fR and \fITklib\fR for their manpages, while the second
+provides support for \fImkdoc\fR-enhanced Tcl source files\&. In other
+words, Tcl files with embedded documentation in \fImkdoc\fR syntax\&.
+.PP
+Enclosed below the bare Tcl code of the \fBshtmlview::mkdoc\fR
+package:
+.CS
+
+
+    package require shtmlview::shtmlview
+    package require mkdoc::mkdoc
+
+    ::shtmlview::converter \&.tcl {Tcl+mkdoc files}   ::shtmlview::mkdoc
+    ::shtmlview::converter \&.tm  {Tcl+mkdoc modules} ::shtmlview::mkdoc
+
+    proc ::shtmlview::mkdoc {url} {
+	close [file tempfile htmltemp \&.html]
+
+	mkdoc::mkdoc $url $htmltemp -html
+
+	if {[catch {
+	    open $htmltemp r
+	} result]} {
+	    return -code error "Cannot open $url: $result"
+	}
+
+	set html [read $result]
+	close $result
+	file delete $htmltemp
+
+	return $html
+    }
+
+    package provide shtmlview::mkdoc 0\&.1
+
+.CE
+.PP
+It is of course possible to write plugins which use an external
+application like \fBpandoc\fR to generate the HTML to render,
+instead of a Tcl package\&.
+.PP
+And it is of course also possible to register conversion commands
+directly from the application using this package, instead of going
+through a separate package\&.
+.SH CHANGELOG
+.TP
+2022-02-25 version 0\&.9\&.2
+.RS
+.IP \(bu
+Fix for \fBtk_textCopy\fR and documentation update
+.RE
+.TP
+2022-03-06 version 0\&.9\&.3
+.RS
+.IP \(bu
+Support for MouseWheel bindings
+.IP \(bu
+Fixing hyperlinks to http(s) links
+.IP \(bu
+Support for file-anchor links like \fBfile\&.html#anchor\fR
+.IP \(bu
+Support for \fB#\fR as link to the top
+.IP \(bu
+Thanks to aplsimple for suggestions and bug reports
+.RE
+.TP
+2022-03-26 version 1\&.0\&.0
+.RS
+.IP \(bu
+HTML 3\&.2 tags div, sub, sup, small, big
+.IP \(bu
+Initial support for Markdown files
+.IP \(bu
+Initial support for base64 encoded inline image files
+.IP \(bu
+Support for JPEG images if the \fBimg::jpeg\fR package is available
+.IP \(bu
+Support for SVG images if either \fBcritcl\fR and \fIlibrsvg-dev(el)\fR or terminal application \fBrsvg-convert\fR or \fBcairosvg\fR are available
+.IP \(bu
+Back and forward as well for anchors
+.IP \(bu
+First and last browse entry buttons for history
+.IP \(bu
+History with full file path to allow directory changes
+.IP \(bu
+Improved usage line and install option
+.IP \(bu
+Keyboard bindings for next and previous search
+.IP \(bu
+Return and tab for links
+.IP \(bu
+Historycombo option
+.IP \(bu
+Toolbar fix
+.IP \(bu
+Browse fix for non-existing files
+.IP \(bu
+Removed unused css/stylesheet and web forms code
+.IP \(bu
+Thanks to pepdiz for bug-reports and suggestions
+.RE
+.TP
+2022-04-XX version 1\&.1\&.0
+.RS
+.IP \(bu
+Keybinding Ctrl-u to source view for HTML and Markdown files
+.IP \(bu
+Keybinding Ctrl-Shift-e to use a simple text editor for file editing
+.IP \(bu
+File open dialog now remembers the last directory and the last file extension
+.IP \(bu
+File close button added with option -closebutton, useful for toplevel windows
+.IP \(bu
+Some backslash fixes for Markdown links
+.IP \(bu
+Adding span tag for styling
+.IP \(bu
+Adding render method to read HTML directly without filename
+.IP \(bu
+Adding plugin structure for additional file types like Tcllib doctools, or mkdoc
+.IP \(bu
+Tcl doctools support resides in its own package
+.IP \(bu
+Tcl mkdoc supports resides in its own package
+.RE
+.PP
+.SH TODO
+.IP \(bu
+Markdown rendering using tcllib package \fBMarkdown\fR in case an URL ends with "\fI\&.md\fR" (done)
+.IP \(bu
+Support for SVG images for instance using \fIsvgconvert\fR [https://wiki\&.tcl-lang\&.org/page/svgconvert], at least on Linux/Windows
+.IP \(bu
+More tags, see tag history add 3\&.2 tags: \fIhttp://www\&.martinrinehart\&.com/frontend-engineering/engineers/html/html-tag-history\&.html\fR (done)
+.IP \(bu
+Source view using Ctrl-u (done)
+.IP \(bu
+Edit view using Ctrl-Shift-e
+.IP \(bu
+Fixing mouse wheel issues
+.PP
+.SH THANKS
+Stephen Uhler, Clif Flynt and Robert Heller, they provided the majority of the code in this widget\&.
+.SH "BUGS, IDEAS, FEEDBACK"
+This document, and the package it describes, will undoubtedly contain bugs and
+other problems\&. Please report such to the author of this package\&. Please also report any ideas for enhancements you may have for
+either package and/or documentation\&.
+.SH "CODE COPYRIGHT"
+BSD License type:
+.PP
+Sun Microsystems, Inc\&.  The following terms apply to all files a
+ssociated with the software unless explicitly disclaimed in individual
+files\&.
+.PP
+The authors hereby grant permission to use, copy, modify, distribute,
+and license this software and its documentation for any purpose,
+provided that existing copyright notices are retained in all copies
+and that this notice is included verbatim in any distributions\&. No
+written agreement, license, or royalty fee is required for any of the
+authorized uses\&.  Modifications to this software may be copyrighted by
+their authors and need not follow the licensing terms described here,
+provided that the new terms are clearly indicated on the first page of
+each file where they apply\&.
+.PP
+In no event shall the authors or distributors be liable to any party
+for direct, indirect, special, incidental, or consequential damages
+arising out of the use of this software, its documentation, or any
+derivatives thereof, even if the authors have been advised of the
+possibility of such damage\&.
+.PP
+The authors and distributors specifically disclaim any warranties,
+including, but not limited to, the implied warranties of
+merchantability, fitness for a particular purpose, and
+non-infringement\&.
+This software is provided on an "as is" basis, and the authors and
+distributors have no obligation to provide maintenance, support,
+updates, enhancements, or modifications\&.
+.PP
+RESTRICTED RIGHTS: Use, duplication or disclosure by the government is
+subject to the restrictions as set forth in subparagraph (c) (1) (ii)
+of the Rights in Technical Data and Computer Software Clause as DFARS
+252\&.227-7013 and FAR 52\&.227-19\&.
+.SH "SEE ALSO"
+text
+.SH KEYWORDS
+html, text, widget
+.SH COPYRIGHT
+.nf
+Copyright (c) 2018-2022, Detlef Groth <detlef(at)dgroth(dot)de>
+Copyright (c) 2009, Robert Heller
+Copyright (c) 2000, Clif Flynt
+Copyright (c) 1995-1999, Stephen Uhler
+
+.fi

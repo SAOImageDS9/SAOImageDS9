@@ -1,4 +1,4 @@
-[vset VERSION 0.1]
+[vset VERSION 0.2]
 [comment {-*- tcl -*- doctools manpage}]
 [manpage_begin canvas::edit::polyline n [vset VERSION]]
 [keywords canvas]
@@ -12,11 +12,29 @@
 [require canvas::edit::polyline [opt [vset VERSION]]]
 [description]
 
-This package provides a class whose instances handle editing a single
-poly-line on a canvas. Instances can be configured with regard to the
-visual appearance (regular, and highlighted) of the markers denoting
-the line's vertices. Note that instances do not store the edited
-polyline themselves, but delegate this to a configurable object.
+This package provides a class whose instances handle editing a single poly-line (or -gon) on a
+canvas. Instances can be configured with regard to the visual appearance of the markers denoting the
+line's vertices, as well as if the line is to be closed or not, and further if a closed line has to
+be convex or not. Note that instances do not store the edited polyline themselves, but delegate this
+to a configurable object.
+
+[section {Interaction}]
+
+[para] The polyline editor internally uses an instance of package [package canvas::edit::points],
+and inherits all the options and behaviours for it. The color options are additionally applied to
+the line element of this editor
+
+[para] Beyond that it provides 2 options to configure the editing mode, and one option to customize
+the line/polygon item used to render the line through the points.
+
+[para] The main editing mode is controlled by option [option -closed] for [term line] (i.e. open)
+versus [term polygon] (i.e. closed). The default is line/open mode.
+
+[para] In polygon/closed mode the option [option -convex] controls if the editor enforces convexity
+of the polygon, or not. The default is no enforcement of convexity.
+
+[para] The option [option -line-config] enables basic customization of the line/polygon item. Note
+that it cannot overide the inherited color options.
 
 [section {Class API}]
 
@@ -122,16 +140,83 @@ when the user interactively removes a vertex, i.e. [option -data-cmd].
 The class command accepts the following options
 
 [list_begin options]
-[comment {= = == === ===== ======== ============= =====================}]
-[comment {= = == === ===== ======== ============= =====================}]
-[opt_def -tag [arg string]]
 
-The value of this option is the name of the canvas tag with which to
-identify all items of all vertices managed by the editor.
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -active-cmd [arg command-prefix]]
+
+The value of this option is a command prefix the editor will invoke
+when the mouse enters or leaves the line or a point managed by the instance.
+
+[para] If not specified it defaults to an empty command which does nothing.
+
+[para] The signature of this command prefix is
+
+[list_begin definitions]
+[comment {= = == === ===== ======== ============= =====================}]
+[call [cmd activeCmd] [arg editorObj] [arg id]]
+
+[para] The [arg id] identifies the entered object.
+
+[para] An empty [arg id] indicates that the last entered object was left.
+
+[para] The value [const line] indicates that the line was entered.
+
+[para] A numeric value [var N] indicates that the [var N]'th vertex of the line was entered,
+counting from [const 0].
+
+[para] The result of this method is ignored.
+
+[list_end]
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -add-remove-point [arg eventspec]]
+
+The value of this option is an event specification (without bracketing angles) declaring which event
+will trigger adding and removing a point.
 
 [para] This option can only be set at construction time.
 
-[para] If not specified it defaults to [const POLYLINE]
+[para] The default setup uses different events for adding and removing points, [const ButtonPress-1]
+and [const ButtonPress-2] respectively.
+
+[para] When using this option the same event is used for both operations. This is no problem because
+adding is bound as canvas-global event while removal is bound to the relevant canvas items.
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -closed [arg boolean]]
+
+The value of this option is a boolean flag indicating if the edited polyline is closed, i.e. a loop,
+or not. [strong NOTE] that a proper loop requires at least 3 points. For less than that an open line
+is shown, or even just a point.
+
+[para] This option can only be set at construction time.
+
+[para] If not specified it defaults to [const false]
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -color [arg colorspec]]
+
+The value of this option is the fill color for the default item created when adding a point, and no
+[option -create-cmd] is specified.
+
+[para] The default value is [const SkyBlue2].
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -convex [arg boolean]]
+
+The value of this option is a boolean flag indicating if the edited polyline is strictly convex, or
+not.
+
+This option has meaning if and only if option [option -closed] is configured to be [const true].
+
+[para] This option can only be set at construction time.
+
+[para] If not specified it defaults to [const false]
 
 [comment {= = == === ===== ======== ============= =====================}]
 [comment {= = == === ===== ======== ============= =====================}]
@@ -140,7 +225,9 @@ identify all items of all vertices managed by the editor.
 The value of this option is a command prefix the editor will invoke
 when it has to create a new vertex.
 
-[para] This option can only be set at construction time.
+[para] While this option can be set after construction, it is recommended to use this feature only
+as a means of inserting custom processing to be done at creation time which remembers and calls the
+previous value of the option.
 
 [para] If not specified it defaults to a command which will create a
 black-bordered blue circle of radius 3 centered on the location of the
@@ -159,46 +246,6 @@ an arbitrary shape.
 
 [para] The returned list of items is allowed to be empty, and such is
 taken as signal that the callback vetoed the creation of the vertex.
-
-[list_end]
-
-[comment {= = == === ===== ======== ============= =====================}]
-[comment {= = == === ===== ======== ============= =====================}]
-[opt_def -highlight-cmd [arg command-prefix]]
-
-The value of this option is a command prefix the editor will invoke
-when it has to (un)highlight a vertex.
-
-[para] This option can only be set at construction time.
-
-[para] If not specified it defaults to a command which will re-color
-the item to highlight in red (and restores the color for
-unhighlighting).
-
-[para] The two signatures of this command prefix are
-
-[list_begin definitions]
-[comment {= = == === ===== ======== ============= =====================}]
-[call [cmd highlightCmd] [method on] [arg canvas] [arg item]]
-
-[para] This method of the command prefix has to perform whatever is
-needed to highlight the vertex the [arg item] is a part of (remember
-the note above about points allowed to be constructed from multiple
-canvas items).
-
-[para] The result of the command can be anything and will be passed as
-is as argument [arg state] to the [method off] method.
-
-[comment {= = == === ===== ======== ============= =====================}]
-[call [cmd highlightCmd] [method off] [arg canvas] [arg state]]
-
-[para] This method is invoked to unhighlight a vertex described by the
-[arg state], which is the unchanged result of the [method on] method
-of the command prefix. The result of this method is ignored.
-
-[para] Note any interaction between dragging and highlighting of
-vertices is handled within the editor, and that the callback bears no
-responsibility for doing such.
 
 [list_end]
 
@@ -234,6 +281,70 @@ with each location a pair of x- and y-coordinates.
 [para] The result of this method is ignored.
 
 [list_end][comment callback-signatures]
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -drag-point [arg eventspec]]
+
+The value of this option is an event specification (without bracketing angles) declaring which event
+will trigger a drag action on points.
+
+[para] This option can only be set at construction time.
+
+[para] The default specification is [const ButtonPress-3].
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -hilit-color [arg colorspec]]
+
+The value of this option is the highlight color for the default item created when adding a point,
+and no [option -highlight-cmd] is specified.
+
+[para] The default value is [const red].
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -kind [arg name]]
+
+The value of this option is the canvas item type for the default item created when adding a point,
+and no [option -create-cmd] is specified.
+
+Only item types specified through a bounding box are suitable.
+
+[para] The default value is [const oval].
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -line-config [arg list]]
+
+The value of this option is a list of options and their values to be applied to the internal
+line/polygon item whenever it is regenerated after changes.
+
+Note that these options [strong cannot] override the principal coloring of the line/polygon as
+applied by the main options [option -color] and [option -hilit-color].
+
+[para] If not specified it defaults to the empty list.
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -radius [arg int]]
+
+The value of this option is the radius for the default item created when adding a point,
+and no [option -create-cmd] is specified.
+
+[para] The default value is [const 3].
+
+[comment {= = == === ===== ======== ============= =====================}]
+[comment {= = == === ===== ======== ============= =====================}]
+[opt_def -tag [arg string]]
+
+The value of this option is the name of the canvas tag with which to
+identify all items of all vertices managed by the editor.
+
+[para] This option can only be set at construction time.
+
+[para] If not specified it defaults to [const POLYLINE]
+
 [list_end][comment options]
 [vset CATEGORY canvas]
 [include ../../support/devel/doc/feedback.inc]

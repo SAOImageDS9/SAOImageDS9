@@ -1,16 +1,18 @@
-#!/usr/bin/env wish
+#! /usr/bin/env tclsh
 
 #==============================================================================
 # Demonstrates the use of the Scrollutil package in connection with the BWidget
 # ScrollableFrame widget.
 #
-# Copyright (c) 2019-2020  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 2019-2023  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
+package require Tk
 package require BWidget
 Widget::theme yes
 package require scrollutil_tile
-source styleUtil.tcl
+set dir [file dirname [info script]]
+source [file join $dir styleUtil.tcl]
 
 wm title . "European Capitals Quiz"
 
@@ -26,7 +28,8 @@ $sa setwidget $sf
 # Work around a tile bug which is not handled in
 # the BWidget procedure ScrollableFrame::create
 #
-if {$ttk::currentTheme eq "aqua" &&
+set currentTheme [styleutil::getCurrentTheme]
+if {$currentTheme eq "aqua" &&
     [package vcompare $tk_patchLevel "8.6.10"] < 0} {
     $sf:cmd configure -background #ececec
 }
@@ -67,22 +70,22 @@ foreach country $countryList capital $capitalList {
 
 set capitalList [lsort $capitalList]
 
-if {[lsearch -exact {aqua vista xpnative} $ttk::currentTheme] >= 0} {
-    set topPadY 2
+if {[lsearch -exact {aqua vista xpnative} $currentTheme] >= 0} {
+    set topPadY 1.5p
 } else {
-    set topPadY 5
+    set topPadY 3p
 }
 set padY [list $topPadY 0]
 
 set row 0
 foreach country $countryList {
     set w [ttk::label $cf.l$row -text $country]
-    grid $w -row $row -column 0 -sticky w -padx {5 0} -pady $padY
+    grid $w -row $row -column 0 -sticky w -padx {3p 0} -pady $padY
 
     set w [ttk::combobox $cf.cb$row -state readonly -width 14 \
 	   -values $capitalList]
     bind $w <<ComboboxSelected>> [list checkCapital %W $country]
-    grid $w -row $row -column 1 -sticky w -padx {5 0} -pady $padY
+    grid $w -row $row -column 1 -sticky w -padx {3p 0} -pady $padY
 
     #
     # Make the keyboard navigation more user-friendly
@@ -94,9 +97,9 @@ foreach country $countryList {
     #
     scrollutil::adaptWheelEventHandling $w
 
-    set b [createToolbutton $cf.b$row -text "Resolve" \
+    set b [styleutil::createToolbutton $cf.b$row -text "Resolve" \
 	   -command [list setCapital $w $country]]
-    grid $b -row $row -column 2 -sticky w -padx 5 -pady $padY
+    grid $b -row $row -column 2 -sticky w -padx 3p -pady $padY
 
     #
     # Make the keyboard navigation more user-friendly
@@ -107,21 +110,18 @@ foreach country $countryList {
 }
 
 #
-# Set the ScrollableFrame's width, height, and yscrollincrement
-#
-update idletasks
-set rowHeight [expr {[winfo reqheight $cf] / $row}]
-$sf configure -width [winfo reqwidth $cf] \
-    -height [expr {10*$rowHeight + $topPadY}] -yscrollincrement $rowHeight
-
-#
 # Create a ttk::button widget outside the scrollarea
 #
 set b [ttk::button $f.b -text "Close" -command exit]
 
-pack $b  -side bottom -pady {0 10}
-pack $sa -side top -expand yes -fill both -padx 10 -pady 10
+pack $b  -side bottom -pady {0 7p}
+pack $sa -side top -expand yes -fill both -padx 7p -pady 7p
 pack $f  -expand yes -fill both
+
+#
+# Set the ScrollableFrame's width, height, and yscrollincrement
+#
+after 50 [list configSf $sf $cf $row $topPadY]
 
 #------------------------------------------------------------------------------
 
@@ -143,4 +143,13 @@ proc setCapital {w country} {
     $w configure -foreground ""
     global capitalArr
     $w set $capitalArr($country)
+}
+
+#------------------------------------------------------------------------------
+
+proc configSf {sf cf row topPadY} {
+    set width [winfo reqwidth $cf]
+    set rowHeight [expr {[winfo reqheight $cf] / $row}]
+    set height [expr {10*$rowHeight + [winfo pixels . $topPadY]}]
+    $sf configure -width $width -height $height -yscrollincrement $rowHeight
 }

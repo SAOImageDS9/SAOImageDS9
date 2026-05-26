@@ -1,6 +1,6 @@
 # $Id: package_rpm.txt,v 1.1 2009/02/07 05:18:22 andreas_kupries Exp $
 
-%define version 0.7
+%define version 0.8
 %define directory /usr
 
 Summary: The standard Tk library

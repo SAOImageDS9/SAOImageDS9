@@ -1,4 +1,4 @@
-#!/usr/bin/env wish
+#! /usr/bin/env tclsh
 ## -*- tcl -*-
 
 package require Tk

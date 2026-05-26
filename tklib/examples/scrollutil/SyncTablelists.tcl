@@ -1,15 +1,17 @@
-#!/usr/bin/env wish
+#! /usr/bin/env tclsh
 
 #==============================================================================
 # Demonstrates the use of the scrollutil::scrollsync widget in connection with
 # three tablelist widgets.
 #
-# Copyright (c) 2019-2020  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
+# Copyright (c) 2019-2023  Csaba Nemethi (E-mail: csaba.nemethi@t-online.de)
 #==============================================================================
 
+package require Tk
 package require tablelist_tile
 package require scrollutil_tile
-source styleUtil.tcl
+set dir [file dirname [info script]]
+source [file join $dir styleUtil.tcl]
 
 wm title . "Synchronized Tablelists"
 
@@ -37,7 +39,10 @@ $sa setwidget $ss
 # Populate the scrollsync widget with three tablelists
 #
 
-option add *Tablelist.stripeBackground  #f0f0f0
+if {$tablelist::themeDefaults(-stripebackground) eq ""} {
+    option add *Tablelist.background		white
+    option add *Tablelist.stripeBackground	#f0f0f0
+}
 
 for {set n 1; set colWidth 40} {$n <= 3} {incr n; incr colWidth 20} {
     set tbl [tablelist::tablelist $ss.tbl$n \
@@ -50,7 +55,7 @@ for {set n 1; set colWidth 40} {$n <= 3} {incr n; incr colWidth 20} {
 }
 $ss setwidgets [list $tbl1 $tbl2 $tbl3]
 
-grid $tbl1 $tbl2 $tbl3 -sticky news -padx {0 2}
+grid $tbl1 $tbl2 $tbl3 -sticky news -padx {0 1.5p}
 grid rowconfigure    $ss 0 -weight 1
 grid columnconfigure $ss 0 -weight 1
 grid columnconfigure $ss 1 -weight 1
@@ -61,9 +66,9 @@ grid columnconfigure $ss 2 -weight 1
 #
 set b [ttk::button $f.b -text "Close" -command exit]
 
-pack $b  -side bottom -pady {0 10}
-pack $tf -side top -fill x -pady {10 0}    ;# for -padx see the proc updatePadx
-pack $sa -side top -expand yes -fill both -padx 10 -pady {2 10}
+pack $b  -side bottom -pady {0 7p}
+pack $tf -side top -fill x -pady {7p 0}    ;# for -padx see the proc updatePadx
+pack $sa -side top -expand yes -fill both -padx 7p -pady {1.5p 7p}
 pack $f  -expand yes -fill both
 
 #
@@ -72,7 +77,7 @@ pack $f  -expand yes -fill both
 #
 proc updatePadx {w vsb vsbMapped} {
     set sa [winfo parent $vsb]
-    set l [expr {10 + [$sa cget -borderwidth]}]
+    set l [expr {[winfo pixels . 7p] + [$sa cget -borderwidth]}]
     set r $l
     if {$vsbMapped} {
 	incr r [winfo width $vsb]

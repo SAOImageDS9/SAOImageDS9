@@ -7,9 +7,9 @@ proc DS9Def {} {
     global pds9
 
     # Must be major,minor
-    set ds9(version) {8.7}
+    set ds9(version) {8.8}
     # For display purposes only
-    set ds9(version,display) {8.7}
+    set ds9(version,display) {8.8b1}
 
     set ds9(visual) {}
     set ds9(depth) 8
@@ -43,7 +43,7 @@ proc DS9Def {} {
 	    # bad system fonts returned by Mojave
 	    set ds9(helvetica) {.AppleSystemUIFont}
 	    set ds9(times) times
-	}	    
+	}
 	win32 {
 	    set ds9(times) times
 	}
@@ -359,7 +359,7 @@ CrosshairDef
 CubeDef
 CurrentDef
 CursorDef
-DebugDef 
+DebugDef
 ESODef
 ExamineDef
 ExportDef
@@ -484,7 +484,7 @@ switch $ds9(wm) {
 	if {$ds9(depth)==32} {
 	    set ds9(depth) 24
 	}
-    } 
+    }
     aqua {
 	if {$ds9(depth)==15} {
 	    set ds9(depth) 16

@@ -198,7 +198,7 @@ proc CreateXPA {} {
 	{} \
 	{} {} {} \
 	XPARcvdExport {} "fillbuf=false"
- 
+
     xpacmdadd $xpa fade \
 	{} \
 	XPASendFade {} {} \
@@ -1163,7 +1163,7 @@ proc XPASendGIF {xpa cdata param} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
-	    Darwin {ProcessSendGIFCmd {} {} $param [xparec $xpa datachan] {}} 
+	    Darwin {ProcessSendGIFCmd {} {} $param [xparec $xpa datachan] {}}
 	    {Windows NT} {ProcessSendGIFCmd {} {} $param dummy {}}
 	}
     }
@@ -1178,7 +1178,7 @@ proc XPARcvdGIF {xpa cdata param buf len} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
-	    Darwin {ProcessGIFCmd param i [xparec $xpa datachan] {}} 
+	    Darwin {ProcessGIFCmd param i [xparec $xpa datachan] {}}
 	    {Windows NT} {ProcessGIFCmd param i dummy {}}
 	}
     }
@@ -1387,7 +1387,7 @@ proc XPASendJPEG {xpa cdata param} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
-	    Darwin {ProcessSendJPEGCmd {} {} $param [xparec $xpa datachan] {}} 
+	    Darwin {ProcessSendJPEGCmd {} {} $param [xparec $xpa datachan] {}}
 	    {Windows NT} {ProcessSendJPEGCmd {} {} $param dummy {}}
 	}
     }
@@ -1402,7 +1402,7 @@ proc XPARcvdJPEG {xpa cdata param buf len} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
-	    Darwin {ProcessJPEGCmd param i [xparec $xpa datachan] {}} 
+	    Darwin {ProcessJPEGCmd param i [xparec $xpa datachan] {}}
 	    {Windows NT} {ProcessJPEGCmd param i dummy {}}
 	}
     }
@@ -1596,7 +1596,7 @@ proc XPARcvdMultiFrame {xpa cdata param buf len} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
-	    Darwin {ProcessMultiFrameCmd param i [xparec $xpa datachan] {}} 
+	    Darwin {ProcessMultiFrameCmd param i [xparec $xpa datachan] {}}
 	    {Windows NT} {ProcessMultiFrameCmd param i dummy {}}
 	}
     }
@@ -1752,7 +1752,7 @@ proc XPASendPNG {xpa cdata param} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
-	    Darwin {ProcessSendPNGCmd {} {} $param [xparec $xpa datachan] {}} 
+	    Darwin {ProcessSendPNGCmd {} {} $param [xparec $xpa datachan] {}}
 	    {Windows NT} {ProcessSendPNGCmd {} {} $param dummy {}}
 	}
     }
@@ -1827,7 +1827,7 @@ proc XPARcvdPrint {xpa cdata param buf len} {
 	    set i 0
 	    ProcessPrintCmd param i
 	} else {
-	    Error [msgcat::mc {This function is not available.}]    
+	    Error [msgcat::mc {This function is not available.}]
 	}
     }
     XPACatchError $xpa
@@ -1860,7 +1860,7 @@ proc XPARcvdPSPrint {xpa cdata param buf len} {
 	    set i 0
 	    ProcessPrintCmd param i
 	} else {
-	    Error [msgcat::mc {This function is not available.}]    
+	    Error [msgcat::mc {This function is not available.}]
 	}
     }
     XPACatchError $xpa
@@ -2110,7 +2110,7 @@ proc XPARcvdSource {xpa cdata param buf len} {
 	    set i 0
 	    ProcessSourceCmd param i
 	} else {
-	    Error [msgcat::mc {This function is not available.}]    
+	    Error [msgcat::mc {This function is not available.}]
 	}
     }
     XPACatchError $xpa
@@ -2132,7 +2132,7 @@ proc XPARcvdTcl {xpa cdata param buf len} {
 	    set i 0
 	    ProcessTclCmd param i $buf {}
 	} else {
-	    Error [msgcat::mc {This function is not available.}]    
+	    Error [msgcat::mc {This function is not available.}]
 	}
     }
     XPACatchError $xpa
@@ -2363,8 +2363,9 @@ proc XPAConnect {} {
     global xpa
 
     if {[info exists xpa]} {
-	catch {xpafree $xpa}
-	unset xpa
+	#~ catch {xpafree $xpa}
+	#~ unset xpa
+        Error [msgcat::mc {XPA is already connected; disconnect first.}]
     }
     InitXPA
 

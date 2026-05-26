@@ -23,6 +23,7 @@
 #include "order.h"
 #include "iis.h"
 #include "hist.h"
+#include "hpx.h"
 #include "compress.h"
 #include "analysis.h"
 #include "photo.h"
@@ -1709,7 +1710,7 @@ void FitsImage::process(const char* fn, int id)
       load();
     }
     // HEALPIX
-    else if ((fits_->find("PIXTYPE") && (!strncmp(fits_->getString("PIXTYPE"),"HEALPIX",4))) || fits_->find("NSIDE")) {
+    else if (FitsHPX::isHPX(fits_->head())) {
       initHPX();
       if (!hpx_ || !hpx_->isValid()) {
 	reset();

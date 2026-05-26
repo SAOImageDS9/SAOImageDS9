@@ -20,8 +20,8 @@ protected:
   char* tform_;
   char* ttype_;
   char* tunit_;
-  float tscal_;
-  float tzero_;
+  double tscal_;
+  double tzero_;
 
   int tnull_;
   int hastnull_;
@@ -53,8 +53,8 @@ public:
   const char* tform() {return tform_;}
   const char* ttype() {return ttype_;}
   const char* tunit() {return tunit_;}
-  float tscal() {return tscal_;}
-  float tzero() {return tzero_;}
+  double tscal() {return tscal_;}
+  double tzero() {return tzero_;}
   int tnull() {return tnull_;}
   float tlmin() {return tlmin_;}
   float tlmax() {return tlmax_;}
@@ -64,7 +64,7 @@ public:
 
   void setMin(double m) {min_=m;}
   void setMax(double m) {max_=m;}
-  
+
   double getMin() {return min_;}
   double getMax() {return max_;}
 
@@ -74,6 +74,7 @@ public:
   virtual int isInt() =0;
   virtual char* str(const char* ptr, int i =0);
   virtual double value(const char*, int i =0) {return 0;}
+  virtual long long integer(const char* ptr, int i =0);
   virtual Vector dimension() {return Vector();}
 };
 
@@ -82,7 +83,7 @@ public:
 class FitsAsciiColumn : public FitsColumn {
 public:
   FitsAsciiColumn(FitsHead*, int, int);
-  
+
   char* str(const char* ptr, int i =0);
 };
 
@@ -120,7 +121,7 @@ protected:
   char* tdim_;
   int tdimM_;
   int* tdimK_;
-  
+
 public:
   FitsBinColumn(FitsHead*, int, int);
   ~FitsBinColumn();
@@ -168,7 +169,7 @@ class FitsBinColumnArray : public FitsBinColumn {
 
 public:
   FitsBinColumnArray(FitsHead*, int, int);
-  virtual ~FitsBinColumnArray();  
+  virtual ~FitsBinColumnArray();
 
   virtual void* get(const char* heap, const char* ptr, int* cnt);
   int isInt() {return 0;}
@@ -208,6 +209,7 @@ public:
 
   char* str(const char* ptr, int i =0);
   double value(const char*, int i =0);
+  long long integer(const char*, int i =0);
   Vector dimension();
   int isInt();
 };

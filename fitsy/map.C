@@ -4,6 +4,7 @@
 
 #include "map.h"
 #include "head.h"
+#include "hpx.h"
 #include "util.h"
 
 // FitsMap
@@ -263,15 +264,8 @@ void FitsFitsMap::processRelaxImage()
       }
     }
 
-    // else, check for bin table with keyword PIXTYPE = 'HEALPIX '
-    if (head_->isBinTable() && head_->find("PIXTYPE") &&
-	(!strncmp(head_->getString("PIXTYPE"),"HEALPIX",4))) {
-      found(here);
-      return;
-    }
-
-    // else, check for bin table with keyword NSIDE (also HEALPIX)
-    if (head_->isBinTable() && head_->find("NSIDE")) {
+    // else, check for HEALPIX or MOC binary tables
+    if (FitsHPX::isHPX(head_)) {
       found(here);
       return;
     }

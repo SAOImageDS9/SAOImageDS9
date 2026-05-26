@@ -9,30 +9,26 @@
 id="sun.pngsaoimageds9-version-8.8-release-notes"><img alt="" src="../sun.png" align="middle">SAOImageDS9
 Version 8.8 Release Notes</h1>
 <ol type="1">
+<h3 id="beta-1">Beta 1:</h3>
+<ul>
 <li><strong>BUILD</strong>: Updated <code>Makefiles</code> to ensure
 that <code>tclsh</code> is getting picked up from the local build
 directory.</li>
-<li>OPENSSL: Updated to 3.6.2</li>
-<li><strong>TLS</strong>: Upgraded to 2.0
-<ul>
-<li>Needed to modify several files from the upstream repro to work with
-<code>DS9</code></li>
-</ul></li>
-<li><strong>CERTIFI</strong>: Added <code>certifi</code> package to
-obtain SSL certificates.
-<ul>
-<li>Users can override with standard <code>SSL</code> environment
-variables</li>
-</ul></li>
+<li><strong>OPENSSL</strong>: Updated to 3.6.2</li>
+<li><strong>TLS</strong>: Upgraded to 2.0</li>
+<li><strong>TLS</strong>: Tweaked to work with <code>ds9</code>
+build</li>
+<li><strong>CERTIFI</strong>: Added <code>certifi</code> package
+(<code>2026.04.22</code>) to obtain SSL certificates.</li>
 <li><strong>HTTP</strong>: Updated to support changes in TLS 2.0</li>
 <li><strong>WINDOWS</strong>: Changed packaging to use Inno Setup
-installer.</li>
+installer</li>
 <li><strong>CUBE</strong>: Fix problem trying to access specific cube
 slices (123, 132, 213, etc.)</li>
 <li><strong>VIEW</strong>: Advanced view now supports separate icons
 that are dark mode friendly.</li>
-<li><strong>THEMES</strong>: Updated latest <code>scid</code> themes and
-added dark mode options.</li>
+<li><strong>THEMES</strong>: Updated <code>scid</code> themes to 1.0.0
+and added dark mode options.</li>
 <li><strong>FOOTPRINT</strong>: Updated the URL to the CXC footprint
 service</li>
 <li><strong>VOTABLE</strong>: Updated to support both <code>POST</code>
@@ -43,7 +39,7 @@ files (.seg) that contain a <code>line</code> shape.</li>
 repository.</li>
 <li><strong>HTTP</strong>: Updated to respect
 <code>Content-Disposition</code> header keys which contain
-<code>filename</code> value.</li>
+<code>filename</code> values; required for new cpt-city server.</li>
 <li><strong>GRAPH</strong>: Parser updated to require
 <code>horizontal</code> or <code>vertical</code> options</li>
 <li><strong>DATA</strong>: Updated to return an error message if there
@@ -55,6 +51,25 @@ actively maintained, so <code>dsssao</code> now returns an error
 message.</li>
 <li><strong>EXAMINE</strong>: Fix bug when event file is loaded, data
 are now properly rebinned to 1.0/zoom level.</li>
+<li><strong>XPA</strong>: Generate an error if already connected instead
+of trying to disconnect and re-init the connection.</li>
+<li><strong>TKSAO</strong>: Updated to use <code>pkg-config</code> if
+<code>xml2-config</code> is not available</li>
+<li><strong>TCLXML</strong>: Updated to use <code>pkg-config</code> if
+<code>xml2-config</code> and/or <code>xslt-config</code> are not
+available</li>
+<li><strong>DS9</strong>: Updated to use <code>pkg-config</code> if
+<code>xml2-config</code> is not available</li>
+<li><strong>CAT</strong>: Updated selection of easy access catalogs to
+remove obsoleted versions and include newer surveys.</li>
+<li><strong>TCLLIB</strong>: Updated to 1.2</li>
+<li><strong>TKLIB</strong>: Updated to 0.9</li>
+<li><strong>TCLSIGNAL</strong>: Updated to 1.4.5</li>
+<li><strong>AWTHEMES</strong>: Updated to 10.4.0</li>
+<li><strong>TTKTHEMES</strong>: Updated to 3.3.0</li>
+<li><strong>FITSY</strong>: Updated HEALPIX code to support partial
+healpix files included Multi-Order-Coverage (MOC) maps. Contributed by
+A. Fruscione using ChatGPT.</li>
 </ol>
 
 </body>

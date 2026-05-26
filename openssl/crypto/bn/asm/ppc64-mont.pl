@@ -1,10 +1,17 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2007-2025 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 
 # ====================================================================
-# Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
+# Written by Andy Polyakov, @dot-asm, initially for use in the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
-# details see http://www.openssl.org/~appro/cryptogams/.
+# details see https://github.com/dot-asm/cryptogams/.
 # ====================================================================
 
 # December 2007
@@ -28,7 +35,7 @@
 # key lengths. As it's obviously inappropriate as "best all-round"
 # alternative, it has to be complemented with run-time CPU family
 # detection. Oh! It should also be noted that unlike other PowerPC
-# implementation IALU ppc-mont.pl module performs *suboptimaly* on
+# implementation IALU ppc-mont.pl module performs *suboptimally* on
 # >=1024-bit key lengths on Power 6. It should also be noted that
 # *everything* said so far applies to 64-bit builds! As far as 32-bit
 # application executed on 64-bit CPU goes, this module is likely to
@@ -73,7 +80,10 @@
 # ppc-mont.pl, but improvement coefficient is not as impressive
 # for longer keys...
 
-$flavour = shift;
+# $output is the last argument if it looks like a file (it has an extension)
+# $flavour is the first argument if it doesn't look like a file
+$output = $#ARGV >= 0 && $ARGV[$#ARGV] =~ m|\.\w+$| ? pop : undef;
+$flavour = $#ARGV >= 0 && $ARGV[0] !~ m|\.| ? shift : undef;
 
 if ($flavour =~ /32/) {
 	$SIZE_T=4;
@@ -101,7 +111,8 @@ $0 =~ m/(.*[\/\\])[^\/\\]+$/; $dir=$1;
 ( $xlate="${dir}../../perlasm/ppc-xlate.pl" and -f $xlate) or
 die "can't locate ppc-xlate.pl";
 
-open STDOUT,"| $^X $xlate $flavour ".shift || die "can't call $xlate: $!";
+open STDOUT,"| $^X $xlate $flavour \"$output\""
+    or die "can't call $xlate: $!";
 
 $FRAME=64;	# padded frame header
 $TRANSFER=16*8;
@@ -1346,7 +1357,7 @@ $code.=<<___;
 	std	$t3,-16($tp)		; tp[j-1]
 	std	$t5,-8($tp)		; tp[j]
 
-	add	$carry,$carry,$ovf	; comsume upmost overflow
+	add	$carry,$carry,$ovf	; consume upmost overflow
 	add	$t6,$t6,$carry		; can not overflow
 	srdi	$carry,$t6,16
 	add	$t7,$t7,$carry
@@ -1637,9 +1648,9 @@ $code.=<<___;
 	.long	0
 .size	.$fname,.-.$fname
 
-.asciz  "Montgomery Multiplication for PPC64, CRYPTOGAMS by <appro\@openssl.org>"
+.asciz  "Montgomery Multiplication for PPC64, CRYPTOGAMS by <https://github.com/dot-asm>"
 ___
 
 $code =~ s/\`([^\`]*)\`/eval $1/gem;
 print $code;
-close STDOUT;
+close STDOUT or die "error closing STDOUT: $!";

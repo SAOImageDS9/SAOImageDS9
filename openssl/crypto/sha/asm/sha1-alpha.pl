@@ -1,10 +1,17 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2009-2025 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 
 # ====================================================================
-# Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
+# Written by Andy Polyakov, @dot-asm, initially for use in the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
-# details see http://www.openssl.org/~appro/cryptogams/.
+# details see https://github.com/dot-asm/cryptogams/.
 # ====================================================================
 
 # SHA1 block procedure for Alpha.
@@ -314,9 +321,9 @@ $code.=<<___;
 	lda	sp,64(sp)
 	ret	(ra)
 .end	sha1_block_data_order
-.ascii	"SHA1 block transform for Alpha, CRYPTOGAMS by <appro\@openssl.org>"
+.ascii	"SHA1 block transform for Alpha, CRYPTOGAMS by <https://github.com/dot-asm>"
 .align	2
 ___
-$output=shift and open STDOUT,">$output";
+$output=pop and open STDOUT,">$output";
 print $code;
-close STDOUT;
+close STDOUT or die "error closing STDOUT: $!";

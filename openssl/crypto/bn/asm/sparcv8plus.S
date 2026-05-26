@@ -1,22 +1,22 @@
 .ident	"sparcv8plus.s, Version 1.4"
-.ident	"SPARC v9 ISA artwork by Andy Polyakov <appro@fy.chalmers.se>"
+.ident	"SPARC v9 ISA artwork by Andy Polyakov <https://github.com/dot-asm>"
 
 /*
  * ====================================================================
- * Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
- * project.
+ * Copyright 1999-2025 The OpenSSL Project Authors. All Rights Reserved.
  *
- * Rights for redistribution and usage in source and binary forms are
- * granted according to the OpenSSL license. Warranty of any kind is
- * disclaimed.
+ * Licensed under the Apache License 2.0 (the "License").  You may not use
+ * this file except in compliance with the License.  You can obtain a copy
+ * in the file LICENSE in the source distribution or at
+ * https://www.openssl.org/source/license.html
  * ====================================================================
  */
 
 /*
- * This is my modest contributon to OpenSSL project (see
+ * This is my modest contribution to OpenSSL project (see
  * http://www.openssl.org/ for more information about it) and is
  * a drop-in UltraSPARC ISA replacement for crypto/bn/bn_asm.c
- * module. For updates see http://fy.chalmers.se/~appro/hpe/.
+ * module.
  *
  * Questions-n-answers.
  *
@@ -52,7 +52,7 @@
  *	# cd ../..
  *	# make; make test
  *
- * Q. V8plus achitecture? What kind of beast is that?
+ * Q. V8plus architecture? What kind of beast is that?
  * A. Well, it's rather a programming model than an architecture...
  *    It's actually v9-compliant, i.e. *any* UltraSPARC, CPU under
  *    special conditions, namely when kernel doesn't preserve upper
@@ -71,7 +71,7 @@
  *
  * Q. 64-bit registers under 32-bit kernels? Didn't you just say it
  *    doesn't work?
- * A. You can't adress *all* registers as 64-bit wide:-( The catch is
+ * A. You can't address *all* registers as 64-bit wide:-( The catch is
  *    that you actually may rely upon %o0-%o5 and %g1-%g4 being fully
  *    preserved if you're in a leaf function, i.e. such never calling
  *    any other functions. All functions in this module are leaf and
@@ -154,9 +154,9 @@
   .register	%g2,#scratch
   .register	%g3,#scratch
 # define	FRAME_SIZE	-192
-#else 
+#else
 # define	FRAME_SIZE	-96
-#endif 
+#endif
 /*
  * GNU assembler can't stand stuw:-(
  */
@@ -278,7 +278,7 @@ bn_mul_add_words:
  */
 bn_mul_words:
 	sra	%o2,%g0,%o2	! signx %o2
-	brgz,a	%o2,.L_bn_mul_words_proceeed
+	brgz,a	%o2,.L_bn_mul_words_proceed
 	lduw	[%o1],%g2
 	retl
 	clr	%o0
@@ -286,7 +286,7 @@ bn_mul_words:
 	nop
 	nop
 
-.L_bn_mul_words_proceeed:
+.L_bn_mul_words_proceed:
 	srl	%o3,%g0,%o3	! clruw	%o3
 	andcc	%o2,-4,%g0
 	bz,pn	%icc,.L_bn_mul_words_tail
@@ -366,7 +366,7 @@ bn_mul_words:
  */
 bn_sqr_words:
 	sra	%o2,%g0,%o2	! signx %o2
-	brgz,a	%o2,.L_bn_sqr_words_proceeed
+	brgz,a	%o2,.L_bn_sqr_words_proceed
 	lduw	[%o1],%g2
 	retl
 	clr	%o0
@@ -374,7 +374,7 @@ bn_sqr_words:
 	nop
 	nop
 
-.L_bn_sqr_words_proceeed:
+.L_bn_sqr_words_proceed:
 	andcc	%o2,-4,%g0
 	nop
 	bz,pn	%icc,.L_bn_sqr_words_tail
@@ -496,7 +496,7 @@ bn_add_words:
 	inc	16,%o1
 	addccc	%g1,%g2,%g1
 	stuw	%g1,[%o0+4]
-	
+
 	inc	16,%o2
 	addccc	%g3,%g4,%g3
 	stuw	%g3,[%o0+8]
@@ -1126,7 +1126,7 @@ bn_mul_comba4:
 	srlx	t_1,32,c_12	!=
 	stuw	t_1,rp(6)	!r[6]=c1;
 	stuw	c_12,rp(7)	!r[7]=c2;
-	
+
 	ret
 	restore	%g0,%g0,%o0
 
@@ -1548,7 +1548,7 @@ bn_sqr_comba4:
 	srlx	t_1,32,c_12
 	stuw	t_1,rp(6)	!r[6]=c1;
 	stuw	c_12,rp(7)	!r[7]=c2;
-	
+
 	ret
 	restore	%g0,%g0,%o0
 

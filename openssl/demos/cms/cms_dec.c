@@ -1,3 +1,12 @@
+/*
+ * Copyright 2008-2023 The OpenSSL Project Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License 2.0 (the "License").  You may not use
+ * this file except in compliance with the License.  You can obtain a copy
+ * in the file LICENSE in the source distribution or at
+ * https://www.openssl.org/source/license.html
+ */
+
 /* Simple S/MIME decryption example */
 #include <openssl/pem.h>
 #include <openssl/cms.h>
@@ -9,7 +18,7 @@ int main(int argc, char **argv)
     X509 *rcert = NULL;
     EVP_PKEY *rkey = NULL;
     CMS_ContentInfo *cms = NULL;
-    int ret = 1;
+    int ret = EXIT_FAILURE;
 
     OpenSSL_add_all_algorithms();
     ERR_load_crypto_strings();
@@ -22,7 +31,8 @@ int main(int argc, char **argv)
 
     rcert = PEM_read_bio_X509(tbio, NULL, 0, NULL);
 
-    BIO_reset(tbio);
+    if (BIO_reset(tbio) < 0)
+        goto err;
 
     rkey = PEM_read_bio_PrivateKey(tbio, NULL, 0, NULL);
 
@@ -50,29 +60,21 @@ int main(int argc, char **argv)
     if (!CMS_decrypt(cms, rkey, rcert, NULL, out, 0))
         goto err;
 
-    ret = 0;
+    printf("Decryption Successful\n");
 
- err:
+    ret = EXIT_SUCCESS;
 
-    if (ret) {
+err:
+    if (ret != EXIT_SUCCESS) {
         fprintf(stderr, "Error Decrypting Data\n");
         ERR_print_errors_fp(stderr);
     }
 
-    if (cms)
-        CMS_ContentInfo_free(cms);
-    if (rcert)
-        X509_free(rcert);
-    if (rkey)
-        EVP_PKEY_free(rkey);
-
-    if (in)
-        BIO_free(in);
-    if (out)
-        BIO_free(out);
-    if (tbio)
-        BIO_free(tbio);
-
+    CMS_ContentInfo_free(cms);
+    X509_free(rcert);
+    EVP_PKEY_free(rkey);
+    BIO_free(in);
+    BIO_free(out);
+    BIO_free(tbio);
     return ret;
-
 }

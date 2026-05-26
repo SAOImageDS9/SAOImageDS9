@@ -1,248 +1,350 @@
-/* apps/pkey.c */
 /*
- * Written by Dr Stephen N Henson (steve@openssl.org) for the OpenSSL project
- * 2006
+ * Copyright 2006-2025 The OpenSSL Project Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License 2.0 (the "License").  You may not use
+ * this file except in compliance with the License.  You can obtain a copy
+ * in the file LICENSE in the source distribution or at
+ * https://www.openssl.org/source/license.html
  */
-/* ====================================================================
- * Copyright (c) 2006 The OpenSSL Project.  All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the
- *    distribution.
- *
- * 3. All advertising materials mentioning features or use of this
- *    software must display the following acknowledgment:
- *    "This product includes software developed by the OpenSSL Project
- *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"
- *
- * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to
- *    endorse or promote products derived from this software without
- *    prior written permission. For written permission, please contact
- *    licensing@OpenSSL.org.
- *
- * 5. Products derived from this software may not be called "OpenSSL"
- *    nor may "OpenSSL" appear in their names without prior written
- *    permission of the OpenSSL Project.
- *
- * 6. Redistributions of any form whatsoever must retain the following
- *    acknowledgment:
- *    "This product includes software developed by the OpenSSL Project
- *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"
- *
- * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY
- * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR
- * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
- * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE.
- * ====================================================================
- *
- * This product includes cryptographic software written by Eric Young
- * (eay@cryptsoft.com).  This product includes software written by Tim
- * Hudson (tjh@cryptsoft.com).
- *
- */
+
 #include <stdio.h>
 #include <string.h>
 #include "apps.h"
+#include "progs.h"
+#include "ec_common.h"
 #include <openssl/pem.h>
 #include <openssl/err.h>
 #include <openssl/evp.h>
+#include <openssl/core_names.h>
 
-#define PROG pkey_main
+typedef enum OPTION_choice {
+    OPT_COMMON,
+    OPT_INFORM,
+    OPT_OUTFORM,
+    OPT_PASSIN,
+    OPT_PASSOUT,
+    OPT_ENGINE,
+    OPT_IN,
+    OPT_OUT,
+    OPT_PUBIN,
+    OPT_PUBOUT,
+    OPT_TEXT_PUB,
+    OPT_TEXT,
+    OPT_NOOUT,
+    OPT_CIPHER,
+    OPT_TRADITIONAL,
+    OPT_CHECK,
+    OPT_PUB_CHECK,
+    OPT_EC_PARAM_ENC,
+    OPT_EC_CONV_FORM,
+    OPT_PROV_ENUM
+} OPTION_CHOICE;
 
-int MAIN(int, char **);
+const OPTIONS pkey_options[] = {
+    OPT_SECTION("General"),
+    { "help", OPT_HELP, '-', "Display this summary" },
+#ifndef OPENSSL_NO_ENGINE
+    { "engine", OPT_ENGINE, 's', "Use engine, possibly a hardware device" },
+#endif
+    OPT_PROV_OPTIONS,
 
-int MAIN(int argc, char **argv)
+    { "check", OPT_CHECK, '-', "Check key consistency" },
+    { "pubcheck", OPT_PUB_CHECK, '-', "Check public key consistency" },
+
+    OPT_SECTION("Input"),
+    { "in", OPT_IN, 's', "Input key" },
+    { "inform", OPT_INFORM, 'f',
+        "Key input format (ENGINE, other values ignored)" },
+    { "passin", OPT_PASSIN, 's', "Key input pass phrase source" },
+    { "pubin", OPT_PUBIN, '-',
+        "Read only public components from key input" },
+
+    OPT_SECTION("Output"),
+    { "out", OPT_OUT, '>', "Output file for encoded and/or text output" },
+    { "outform", OPT_OUTFORM, 'F', "Output encoding format (DER or PEM)" },
+    { "", OPT_CIPHER, '-', "Any supported cipher to be used for encryption" },
+    { "passout", OPT_PASSOUT, 's', "Output PEM file pass phrase source" },
+    { "traditional", OPT_TRADITIONAL, '-',
+        "Use traditional format for private key PEM output" },
+    { "pubout", OPT_PUBOUT, '-', "Restrict encoded output to public components" },
+    { "noout", OPT_NOOUT, '-', "Do not output the key in encoded form" },
+    { "text", OPT_TEXT, '-', "Output key components in plaintext" },
+    { "text_pub", OPT_TEXT_PUB, '-',
+        "Output only public key components in text form" },
+    { "ec_conv_form", OPT_EC_CONV_FORM, 's',
+        "Specifies the EC point conversion form in the encoding" },
+    { "ec_param_enc", OPT_EC_PARAM_ENC, 's',
+        "Specifies the way the EC parameters are encoded" },
+
+    { NULL }
+};
+
+int pkey_main(int argc, char **argv)
 {
+    BIO *out = NULL;
     ENGINE *e = NULL;
-    char **args, *infile = NULL, *outfile = NULL;
-    char *passargin = NULL, *passargout = NULL;
-    BIO *in = NULL, *out = NULL;
-    const EVP_CIPHER *cipher = NULL;
-    int informat, outformat;
-    int pubin = 0, pubout = 0, pubtext = 0, text = 0, noout = 0;
     EVP_PKEY *pkey = NULL;
-    char *passin = NULL, *passout = NULL;
-    int badarg = 0;
-    char *engine = NULL;
-    int ret = 1;
-
-    if (bio_err == NULL)
-        bio_err = BIO_new_fp(stderr, BIO_NOCLOSE);
-
-    if (!load_config(bio_err, NULL))
-        goto end;
-
-    informat = FORMAT_PEM;
-    outformat = FORMAT_PEM;
-
-    ERR_load_crypto_strings();
-    OpenSSL_add_all_algorithms();
-    args = argv + 1;
-    while (!badarg && *args && *args[0] == '-') {
-        if (!strcmp(*args, "-inform")) {
-            if (args[1]) {
-                args++;
-                informat = str2fmt(*args);
-            } else
-                badarg = 1;
-        } else if (!strcmp(*args, "-outform")) {
-            if (args[1]) {
-                args++;
-                outformat = str2fmt(*args);
-            } else
-                badarg = 1;
-        } else if (!strcmp(*args, "-passin")) {
-            if (!args[1])
-                goto bad;
-            passargin = *(++args);
-        } else if (!strcmp(*args, "-passout")) {
-            if (!args[1])
-                goto bad;
-            passargout = *(++args);
-        }
-#ifndef OPENSSL_NO_ENGINE
-        else if (strcmp(*args, "-engine") == 0) {
-            if (!args[1])
-                goto bad;
-            engine = *(++args);
-        }
+    EVP_PKEY_CTX *ctx = NULL;
+    EVP_CIPHER *cipher = NULL;
+    char *infile = NULL, *outfile = NULL, *passin = NULL, *passout = NULL;
+    char *passinarg = NULL, *passoutarg = NULL, *ciphername = NULL, *prog;
+    OPTION_CHOICE o;
+    int informat = FORMAT_UNDEF, outformat = FORMAT_PEM;
+    int pubin = 0, pubout = 0, text_pub = 0, text = 0, noout = 0, ret = 1;
+    int private = 0, traditional = 0, check = 0, pub_check = 0;
+#ifndef OPENSSL_NO_EC
+    char *asn1_encoding = NULL;
+    char *point_format = NULL;
 #endif
-        else if (!strcmp(*args, "-in")) {
-            if (args[1]) {
-                args++;
-                infile = *args;
-            } else
-                badarg = 1;
-        } else if (!strcmp(*args, "-out")) {
-            if (args[1]) {
-                args++;
-                outfile = *args;
-            } else
-                badarg = 1;
-        } else if (strcmp(*args, "-pubin") == 0) {
-            pubin = 1;
+
+    opt_set_unknown_name("cipher");
+    prog = opt_init(argc, argv, pkey_options);
+    while ((o = opt_next()) != OPT_EOF) {
+        switch (o) {
+        case OPT_EOF:
+        case OPT_ERR:
+        opthelp:
+            BIO_printf(bio_err, "%s: Use -help for summary.\n", prog);
+            goto end;
+        case OPT_HELP:
+            opt_help(pkey_options);
+            ret = 0;
+            goto end;
+        case OPT_INFORM:
+            if (!opt_format(opt_arg(), OPT_FMT_ANY, &informat))
+                goto opthelp;
+            break;
+        case OPT_OUTFORM:
+            if (!opt_format(opt_arg(), OPT_FMT_PEMDER, &outformat))
+                goto opthelp;
+            break;
+        case OPT_PASSIN:
+            passinarg = opt_arg();
+            break;
+        case OPT_PASSOUT:
+            passoutarg = opt_arg();
+            break;
+        case OPT_ENGINE:
+            e = setup_engine(opt_arg(), 0);
+            break;
+        case OPT_IN:
+            infile = opt_arg();
+            break;
+        case OPT_OUT:
+            outfile = opt_arg();
+            break;
+        case OPT_PUBIN:
+            pubin = pubout = 1;
+            break;
+        case OPT_PUBOUT:
             pubout = 1;
-            pubtext = 1;
-        } else if (strcmp(*args, "-pubout") == 0)
-            pubout = 1;
-        else if (strcmp(*args, "-text_pub") == 0) {
-            pubtext = 1;
+            break;
+        case OPT_TEXT_PUB:
+            text_pub = 1;
+            break;
+        case OPT_TEXT:
             text = 1;
-        } else if (strcmp(*args, "-text") == 0)
-            text = 1;
-        else if (strcmp(*args, "-noout") == 0)
+            break;
+        case OPT_NOOUT:
             noout = 1;
-        else {
-            cipher = EVP_get_cipherbyname(*args + 1);
-            if (!cipher) {
-                BIO_printf(bio_err, "Unknown cipher %s\n", *args + 1);
-                badarg = 1;
-            }
-        }
-        args++;
-    }
-
-    if (badarg) {
- bad:
-        BIO_printf(bio_err, "Usage pkey [options]\n");
-        BIO_printf(bio_err, "where options are\n");
-        BIO_printf(bio_err, "-in file        input file\n");
-        BIO_printf(bio_err, "-inform X       input format (DER or PEM)\n");
-        BIO_printf(bio_err,
-                   "-passin arg     input file pass phrase source\n");
-        BIO_printf(bio_err, "-outform X      output format (DER or PEM)\n");
-        BIO_printf(bio_err, "-out file       output file\n");
-        BIO_printf(bio_err,
-                   "-passout arg    output file pass phrase source\n");
-#ifndef OPENSSL_NO_ENGINE
-        BIO_printf(bio_err,
-                   "-engine e       use engine e, possibly a hardware device.\n");
+            break;
+        case OPT_TRADITIONAL:
+            traditional = 1;
+            break;
+        case OPT_CHECK:
+            check = 1;
+            break;
+        case OPT_PUB_CHECK:
+            pub_check = 1;
+            break;
+        case OPT_CIPHER:
+            ciphername = opt_unknown();
+            break;
+        case OPT_EC_CONV_FORM:
+#ifdef OPENSSL_NO_EC
+            goto opthelp;
+#else
+            point_format = opt_arg();
+            if (!opt_string(point_format, point_format_options))
+                goto opthelp;
+            break;
 #endif
-        return 1;
+        case OPT_EC_PARAM_ENC:
+#ifdef OPENSSL_NO_EC
+            goto opthelp;
+#else
+            asn1_encoding = opt_arg();
+            if (!opt_string(asn1_encoding, asn1_encoding_options))
+                goto opthelp;
+            break;
+#endif
+        case OPT_PROV_CASES:
+            if (!opt_provider(o))
+                goto end;
+            break;
+        }
     }
-    e = setup_engine(bio_err, engine, 0);
 
-    if (!app_passwd(bio_err, passargin, passargout, &passin, &passout)) {
+    /* No extra arguments. */
+    if (!opt_check_rest_arg(NULL))
+        goto opthelp;
+
+    if (text && text_pub)
+        BIO_printf(bio_err,
+            "Warning: The -text option is ignored with -text_pub\n");
+    if (traditional && (noout || pubout))
+        BIO_printf(bio_err,
+            "Warning: -traditional is ignored with no private key output\n");
+
+    /* -pubout and -text is the same as -text_pub */
+    if (!text_pub && pubout && text) {
+        text = 0;
+        text_pub = 1;
+    }
+
+    private = (!noout && !pubout) || (text && !text_pub);
+
+    if (!opt_cipher(ciphername, &cipher))
+        goto opthelp;
+    if (cipher == NULL) {
+        if (passoutarg != NULL)
+            BIO_printf(bio_err,
+                "Warning: The -passout option is ignored without a cipher option\n");
+    } else {
+        if (noout || outformat != FORMAT_PEM) {
+            BIO_printf(bio_err,
+                "Error: Cipher options are supported only for PEM output\n");
+            goto end;
+        }
+    }
+    if (!app_passwd(passinarg, passoutarg, &passin, &passout)) {
         BIO_printf(bio_err, "Error getting passwords\n");
         goto end;
     }
 
-    if (outfile) {
-        if (!(out = BIO_new_file(outfile, "wb"))) {
-            BIO_printf(bio_err, "Can't open output file %s\n", outfile);
+    if (pubin)
+        pkey = load_pubkey(infile, informat, 1, passin, e, "Public Key");
+    else
+        pkey = load_key(infile, informat, 1, passin, e, "key");
+    if (pkey == NULL)
+        goto end;
+
+    out = bio_open_owner(outfile, outformat, private);
+    if (out == NULL)
+        goto end;
+
+#ifndef OPENSSL_NO_EC
+    if (asn1_encoding != NULL || point_format != NULL) {
+        OSSL_PARAM params[3], *p = params;
+
+        if (!EVP_PKEY_is_a(pkey, "EC"))
+            goto end;
+
+        if (asn1_encoding != NULL)
+            *p++ = OSSL_PARAM_construct_utf8_string(OSSL_PKEY_PARAM_EC_ENCODING,
+                asn1_encoding, 0);
+        if (point_format != NULL)
+            *p++ = OSSL_PARAM_construct_utf8_string(
+                OSSL_PKEY_PARAM_EC_POINT_CONVERSION_FORMAT,
+                point_format, 0);
+        *p = OSSL_PARAM_construct_end();
+        if (EVP_PKEY_set_params(pkey, params) <= 0)
+            goto end;
+    }
+#endif
+
+    if (check || pub_check) {
+        int r;
+
+        ctx = EVP_PKEY_CTX_new(pkey, e);
+        if (ctx == NULL) {
+            ERR_print_errors(bio_err);
             goto end;
         }
-    } else {
-        out = BIO_new_fp(stdout, BIO_NOCLOSE);
-#ifdef OPENSSL_SYS_VMS
-        {
-            BIO *tmpbio = BIO_new(BIO_f_linebuffer());
-            out = BIO_push(tmpbio, out);
-        }
-#endif
-    }
 
-    if (pubin)
-        pkey = load_pubkey(bio_err, infile, informat, 1,
-                           passin, e, "Public Key");
-    else
-        pkey = load_key(bio_err, infile, informat, 1, passin, e, "key");
-    if (!pkey)
-        goto end;
+        if (check && !pubin)
+            r = EVP_PKEY_check(ctx);
+        else
+            r = EVP_PKEY_public_check(ctx);
+
+        if (r == 1) {
+            BIO_printf(out, "Key is valid\n");
+        } else {
+            /*
+             * Note: at least for RSA keys if this function returns
+             * -1, there will be no error reasons.
+             */
+            BIO_printf(bio_err, "Key is invalid\n");
+            ERR_print_errors(bio_err);
+            goto end;
+        }
+    }
 
     if (!noout) {
         if (outformat == FORMAT_PEM) {
-            if (pubout)
-                PEM_write_bio_PUBKEY(out, pkey);
-            else
-                PEM_write_bio_PrivateKey(out, pkey, cipher,
-                                         NULL, 0, NULL, passout);
+            if (pubout) {
+                if (!PEM_write_bio_PUBKEY(out, pkey))
+                    goto end;
+            } else {
+                assert(private);
+                if (traditional) {
+                    if (!PEM_write_bio_PrivateKey_traditional(out, pkey, cipher,
+                            NULL, 0, NULL,
+                            passout))
+                        goto end;
+                } else {
+                    if (!PEM_write_bio_PrivateKey(out, pkey, cipher,
+                            NULL, 0, NULL, passout))
+                        goto end;
+                }
+            }
         } else if (outformat == FORMAT_ASN1) {
-            if (pubout)
-                i2d_PUBKEY_bio(out, pkey);
-            else
-                i2d_PrivateKey_bio(out, pkey);
+            if (text || text_pub) {
+                BIO_printf(bio_err,
+                    "Error: Text output cannot be combined with DER output\n");
+                goto end;
+            }
+            if (pubout) {
+                if (!i2d_PUBKEY_bio(out, pkey))
+                    goto end;
+            } else {
+                assert(private);
+                if (traditional) {
+                    if (!i2d_PrivateKey_bio(out, pkey))
+                        goto end;
+                } else {
+                    if (!i2d_PKCS8PrivateKey_bio(out, pkey, NULL, NULL, 0,
+                            NULL, NULL))
+                        goto end;
+                }
+            }
         } else {
             BIO_printf(bio_err, "Bad format specified for key\n");
             goto end;
         }
-
     }
 
-    if (text) {
-        if (pubtext)
-            EVP_PKEY_print_public(out, pkey, 0, NULL);
-        else
-            EVP_PKEY_print_private(out, pkey, 0, NULL);
+    if (text_pub) {
+        if (EVP_PKEY_print_public(out, pkey, 0, NULL) <= 0)
+            goto end;
+    } else if (text) {
+        assert(private);
+        if (EVP_PKEY_print_private(out, pkey, 0, NULL) <= 0)
+            goto end;
     }
 
     ret = 0;
 
- end:
+end:
+    if (ret != 0)
+        ERR_print_errors(bio_err);
+    EVP_PKEY_CTX_free(ctx);
     EVP_PKEY_free(pkey);
+    EVP_CIPHER_free(cipher);
     release_engine(e);
     BIO_free_all(out);
-    BIO_free(in);
-    if (passin)
-        OPENSSL_free(passin);
-    if (passout)
-        OPENSSL_free(passout);
+    OPENSSL_free(passin);
+    OPENSSL_free(passout);
 
     return ret;
 }

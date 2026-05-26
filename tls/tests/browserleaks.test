@@ -1,0 +1,82 @@
+# Auto generated test cases for browserleaks.csv
+
+# Load Tcl Test package
+if {[lsearch [namespace children] ::tcltest] < 0} {
+	package require tcltest
+	namespace import ::tcltest::*
+}
+
+set ::auto_path [concat [list [file dirname [file dirname [info script]]]] $::auto_path]
+
+package prefer latest
+package require tls
+package require http
+
+# Constraints
+set dir [file join [pwd] [file dirname [info script]]]
+source [file join $dir common.tcl]
+
+# Helper functions
+set ::cafile [file join $dir certs cacert.pem]
+set ::env(SSL_CERT_FILE) $::cafile
+::http::register https 443 [list ::tls::socket -cafile $::cafile]
+proc get_url {url} {
+    set token [::http::geturl $url]
+    set body [::http::data $token]
+    ::http::cleanup $token
+    return $body
+}
+
+proc get_data {url} {
+    set token [::http::geturl $url]
+    set body [::http::data $token]
+    ::http::cleanup $token
+    set pattern {<body.*?>(.*?)</body>}
+    set data ""
+    regexp -nocase $pattern $body match data
+    return $data
+}
+
+
+# browserleaks.com Tests
+
+
+test BrowserLeaks-1.1 {TLS 1.3} -constraints {OpenSSL3.2} -body {
+	get_url https://tls13.browserleaks.com
+    } -result {TLS 1.3}
+
+test BrowserLeaks-1.2 {TLS 1.2} -constraints {OpenSSL3.2} -body {
+	get_url https://tls12.browserleaks.com
+    } -result {TLS 1.2}
+
+test BrowserLeaks-1.3 {TLS 1.1} -constraints {OpenSSL3.2} -body {
+	get_url https://tls11.browserleaks.com
+    } -result {failed to use socket} -returnCodes {1}
+
+test BrowserLeaks-1.4 {TLS 1.0} -constraints {OpenSSL3.2} -body {
+	get_url https://tls10.browserleaks.com
+    } -result {failed to use socket} -returnCodes {1}
+
+test BrowserLeaks-1.5 {JA4 Raw Fingerprint} -constraints {OpenSSL3.2} -body {
+	get_data https://tls.browserleaks.com/iframe/ja4
+    } -match {glob} -result {t*}
+
+test BrowserLeaks-1.6 {JA4 Raw Fingerprint, Original Order} -constraints {OpenSSL3.2} -body {
+	get_data https://tls.browserleaks.com/iframe/ja4_o
+    } -match {glob} -result {t*}
+
+test BrowserLeaks-1.7 {JA3 Raw Fingerprint} -constraints {OpenSSL3.2} -body {
+	get_data https://tls.browserleaks.com/iframe/ja3
+    } -match {glob} -result {*}
+
+test BrowserLeaks-1.8 {JA3 Raw Fingerprint, Original Order} -constraints {OpenSSL3.2} -body {
+	get_data https://tls.browserleaks.com/iframe/ja3_n
+    } -match {glob} -result {*}
+
+test BrowserLeaks-1.9 {Encrypted Client Hello} -constraints {OpenSSL3.2} -body {
+	get_data https://tls.browserleaks.com/iframe/ech
+    } -match {glob} -result {*False*}
+
+# Cleanup
+::tcltest::cleanupTests
+return

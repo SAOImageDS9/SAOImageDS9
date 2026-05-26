@@ -1,10 +1,17 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2009-2025 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 
 # ====================================================================
-# Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
+# Written by Andy Polyakov, @dot-asm, initially for use in the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
-# details see http://www.openssl.org/~appro/cryptogams/.
+# details see https://github.com/dot-asm/cryptogams/.
 # ====================================================================
 
 # SHA256/512 block procedure for PA-RISC.
@@ -25,9 +32,12 @@
 #
 # Special thanks to polarhome.com for providing HP-UX account.
 
-$flavour = shift;
-$output = shift;
-open STDOUT,">$output";
+# $output is the last argument if it looks like a file (it has an extension)
+# $flavour is the first argument if it doesn't look like a file
+$output = $#ARGV >= 0 && $ARGV[$#ARGV] =~ m|\.\w+$| ? pop : undef;
+$flavour = $#ARGV >= 0 && $ARGV[0] !~ m|\.| ? shift : undef;
+
+$output and open STDOUT,">$output";
 
 if ($flavour =~ /64/) {
 	$LEVEL		="2.0W";
@@ -361,7 +371,7 @@ L\$parisc1
 ___
 
 @V=(  $Ahi,  $Alo,  $Bhi,  $Blo,  $Chi,  $Clo,  $Dhi,  $Dlo,
-      $Ehi,  $Elo,  $Fhi,  $Flo,  $Ghi,  $Glo,  $Hhi,  $Hlo) = 
+      $Ehi,  $Elo,  $Fhi,  $Flo,  $Ghi,  $Glo,  $Hhi,  $Hlo) =
    ( "%r1", "%r2", "%r3", "%r4", "%r5", "%r6", "%r7", "%r8",
      "%r9","%r10","%r11","%r12","%r13","%r14","%r15","%r16");
 $a0 ="%r17";
@@ -412,7 +422,7 @@ $code.=<<___;
 	 add	$t0,$hlo,$hlo
 	shd	$ahi,$alo,$Sigma0[0],$t0
 	 addc	$t1,$hhi,$hhi		; h += Sigma1(e)
-	shd	$alo,$ahi,$Sigma0[0],$t1	
+	shd	$alo,$ahi,$Sigma0[0],$t1
 	 add	$a0,$hlo,$hlo
 	shd	$ahi,$alo,$Sigma0[1],$t2
 	 addc	$a1,$hhi,$hhi		; h += Ch(e,f,g)
@@ -682,7 +692,7 @@ $code.=<<___;
 	.EXIT
 	$POPMB	-$FRAME(%sp),%r3
 	.PROCEND
-	.STRINGZ "SHA`64*$SZ` block transform for PA-RISC, CRYPTOGAMS by <appro\@openssl.org>"
+	.STRINGZ "SHA`64*$SZ` block transform for PA-RISC, CRYPTOGAMS by <https://github.com/dot-asm>"
 ___
 
 # Explicitly encode PA-RISC 2.0 instructions used in this module, so
@@ -760,13 +770,18 @@ sub assemble {
     ref($opcode) eq 'CODE' ? &$opcode($mod,$args) : "\t$mnemonic$mod\t$args";
 }
 
+if (`$ENV{CC} -Wa,-v -c -o /dev/null -x assembler /dev/null 2>&1`
+	=~ /GNU assembler/) {
+    $gnuas = 1;
+}
+
 foreach (split("\n",$code)) {
 	s/\`([^\`]*)\`/eval $1/ge;
 
 	s/shd\s+(%r[0-9]+),(%r[0-9]+),([0-9]+)/
 		$3>31 ? sprintf("shd\t%$2,%$1,%d",$3-32)	# rotation for >=32
 		:       sprintf("shd\t%$1,%$2,%d",$3)/e			or
-	# translate made up instructons: _ror, _shr, _align, _shl
+	# translate made up instructions: _ror, _shr, _align, _shl
 	s/_ror(\s+)(%r[0-9]+),/
 		($SZ==4 ? "shd" : "shrpd")."$1$2,$2,"/e			or
 
@@ -783,11 +798,13 @@ foreach (split("\n",$code)) {
 
 	s/^\s+([a-z]+)([\S]*)\s+([\S]*)/&assemble($1,$2,$3)/e if ($SIZE_T==4);
 
-	s/cmpb,\*/comb,/ if ($SIZE_T==4);
-
-	s/\bbv\b/bve/    if ($SIZE_T==8);
+	s/(\.LEVEL\s+2\.0)W/$1w/	if ($gnuas && $SIZE_T==8);
+	s/\.SPACE\s+\$TEXT\$/.text/	if ($gnuas && $SIZE_T==8);
+	s/\.SUBSPA.*//			if ($gnuas && $SIZE_T==8);
+	s/cmpb,\*/comb,/ 		if ($SIZE_T==4);
+	s/\bbv\b/bve/    		if ($SIZE_T==8);
 
 	print $_,"\n";
 }
 
-close STDOUT;
+close STDOUT or die "error closing STDOUT: $!";

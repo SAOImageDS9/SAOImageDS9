@@ -1,53 +1,168 @@
+/*
+ * Copyright 1998-2021 The OpenSSL Project Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License 2.0 (the "License").  You may not use
+ * this file except in compliance with the License.  You can obtain a copy
+ * in the file LICENSE in the source distribution or at
+ * https://www.openssl.org/source/license.html
+ */
+
+/*
+ * DES low level APIs are deprecated for public use, but still ok for internal
+ * use.
+ */
+#include "internal/deprecated.h"
+
 /* NOCW */
 #include <stdio.h>
 #ifdef _OSD_POSIX
-# ifndef CHARSET_EBCDIC
-#  define CHARSET_EBCDIC 1
-# endif
+#ifndef CHARSET_EBCDIC
+#define CHARSET_EBCDIC 1
+#endif
 #endif
 #ifdef CHARSET_EBCDIC
-# include <openssl/ebcdic.h>
+#include <openssl/ebcdic.h>
 #endif
 
-/*
- * This version of crypt has been developed from my MIT compatible DES
- * library. Eric Young (eay@cryptsoft.com)
- */
-
-/*
- * Modification by Jens Kupferschmidt (Cu) I have included directive PARA for
- * shared memory computers. I have included a directive LONGCRYPT to using
- * this routine to cipher passwords with more then 8 bytes like HP-UX 10.x it
- * used. The MAXPLEN definition is the maximum of length of password and can
- * changed. I have defined 24.
- */
-
-#include "des_locl.h"
+#include <openssl/crypto.h>
+#include "des_local.h"
 
 /*
  * Added more values to handle illegal salt values the way normal crypt()
- * implementations do.  The patch was sent by Bjorn Gronvall <bg@sics.se>
+ * implementations do.
  */
-static unsigned const char con_salt[128] = {
-    0xD2, 0xD3, 0xD4, 0xD5, 0xD6, 0xD7, 0xD8, 0xD9,
-    0xDA, 0xDB, 0xDC, 0xDD, 0xDE, 0xDF, 0xE0, 0xE1,
-    0xE2, 0xE3, 0xE4, 0xE5, 0xE6, 0xE7, 0xE8, 0xE9,
-    0xEA, 0xEB, 0xEC, 0xED, 0xEE, 0xEF, 0xF0, 0xF1,
-    0xF2, 0xF3, 0xF4, 0xF5, 0xF6, 0xF7, 0xF8, 0xF9,
-    0xFA, 0xFB, 0xFC, 0xFD, 0xFE, 0xFF, 0x00, 0x01,
-    0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
-    0x0A, 0x0B, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A,
-    0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12,
-    0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A,
-    0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22,
-    0x23, 0x24, 0x25, 0x20, 0x21, 0x22, 0x23, 0x24,
-    0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, 0x2C,
-    0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x34,
-    0x35, 0x36, 0x37, 0x38, 0x39, 0x3A, 0x3B, 0x3C,
-    0x3D, 0x3E, 0x3F, 0x40, 0x41, 0x42, 0x43, 0x44,
+static const unsigned char con_salt[128] = {
+    0xD2,
+    0xD3,
+    0xD4,
+    0xD5,
+    0xD6,
+    0xD7,
+    0xD8,
+    0xD9,
+    0xDA,
+    0xDB,
+    0xDC,
+    0xDD,
+    0xDE,
+    0xDF,
+    0xE0,
+    0xE1,
+    0xE2,
+    0xE3,
+    0xE4,
+    0xE5,
+    0xE6,
+    0xE7,
+    0xE8,
+    0xE9,
+    0xEA,
+    0xEB,
+    0xEC,
+    0xED,
+    0xEE,
+    0xEF,
+    0xF0,
+    0xF1,
+    0xF2,
+    0xF3,
+    0xF4,
+    0xF5,
+    0xF6,
+    0xF7,
+    0xF8,
+    0xF9,
+    0xFA,
+    0xFB,
+    0xFC,
+    0xFD,
+    0xFE,
+    0xFF,
+    0x00,
+    0x01,
+    0x02,
+    0x03,
+    0x04,
+    0x05,
+    0x06,
+    0x07,
+    0x08,
+    0x09,
+    0x0A,
+    0x0B,
+    0x05,
+    0x06,
+    0x07,
+    0x08,
+    0x09,
+    0x0A,
+    0x0B,
+    0x0C,
+    0x0D,
+    0x0E,
+    0x0F,
+    0x10,
+    0x11,
+    0x12,
+    0x13,
+    0x14,
+    0x15,
+    0x16,
+    0x17,
+    0x18,
+    0x19,
+    0x1A,
+    0x1B,
+    0x1C,
+    0x1D,
+    0x1E,
+    0x1F,
+    0x20,
+    0x21,
+    0x22,
+    0x23,
+    0x24,
+    0x25,
+    0x20,
+    0x21,
+    0x22,
+    0x23,
+    0x24,
+    0x25,
+    0x26,
+    0x27,
+    0x28,
+    0x29,
+    0x2A,
+    0x2B,
+    0x2C,
+    0x2D,
+    0x2E,
+    0x2F,
+    0x30,
+    0x31,
+    0x32,
+    0x33,
+    0x34,
+    0x35,
+    0x36,
+    0x37,
+    0x38,
+    0x39,
+    0x3A,
+    0x3B,
+    0x3C,
+    0x3D,
+    0x3E,
+    0x3F,
+    0x40,
+    0x41,
+    0x42,
+    0x43,
+    0x44,
 };
 
-static unsigned const char cov_2char[64] = {
+static const unsigned char cov_2char[64] = {
     0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35,
     0x36, 0x37, 0x38, 0x39, 0x41, 0x42, 0x43, 0x44,
     0x45, 0x46, 0x47, 0x48, 0x49, 0x4A, 0x4B, 0x4C,
@@ -63,33 +178,29 @@ char *DES_crypt(const char *buf, const char *salt)
     static char buff[14];
 
 #ifndef CHARSET_EBCDIC
-    return (DES_fcrypt(buf, salt, buff));
+    return DES_fcrypt(buf, salt, buff);
 #else
     char e_salt[2 + 1];
-    char e_buf[32 + 1];         /* replace 32 by 8 ? */
+    char e_buf[32 + 1]; /* replace 32 by 8 ? */
     char *ret;
 
-    /* Copy at most 2 chars of salt */
-    if ((e_salt[0] = salt[0]) != '\0')
-        e_salt[1] = salt[1];
+    if (salt[0] == '\0' || salt[1] == '\0')
+        return NULL;
 
-    /* Copy at most 32 chars of password */
-    strncpy(e_buf, buf, sizeof(e_buf));
-
-    /* Make sure we have a delimiter */
-    e_salt[sizeof(e_salt) - 1] = e_buf[sizeof(e_buf) - 1] = '\0';
-
-    /* Convert the e_salt to ASCII, as that's what DES_fcrypt works on */
+    /* Copy salt, convert to ASCII. */
+    e_salt[0] = salt[0];
+    e_salt[1] = salt[1];
+    e_salt[2] = '\0';
     ebcdic2ascii(e_salt, e_salt, sizeof(e_salt));
 
-    /* Convert the cleartext password to ASCII */
+    /* Convert password to ASCII. */
+    OPENSSL_strlcpy(e_buf, buf, sizeof(e_buf));
     ebcdic2ascii(e_buf, e_buf, sizeof(e_buf));
 
-    /* Encrypt it (from/to ASCII) */
+    /* Encrypt it (from/to ASCII); if it worked, convert back. */
     ret = DES_fcrypt(e_buf, e_salt, buff);
-
-    /* Convert the result back to EBCDIC */
-    ascii2ebcdic(ret, ret, strlen(ret));
+    if (ret != NULL)
+        ascii2ebcdic(ret, ret, strlen(ret));
 
     return ret;
 #endif
@@ -106,25 +217,14 @@ char *DES_fcrypt(const char *buf, const char *salt, char *ret)
     unsigned char *b = bb;
     unsigned char c, u;
 
-    /*
-     * eay 25/08/92 If you call crypt("pwd","*") as often happens when you
-     * have * as the pwd field in /etc/passwd, the function returns
-     * *\0XXXXXXXXX The \0 makes the string look like * so the pwd "*" would
-     * crypt to "*".  This was found when replacing the crypt in our shared
-     * libraries.  People found that the disabled accounts effectively had no
-     * passwd :-(.
-     */
-#ifndef CHARSET_EBCDIC
-    x = ret[0] = ((salt[0] == '\0') ? 'A' : salt[0]);
+    x = ret[0] = salt[0];
+    if (x == 0 || x >= sizeof(con_salt))
+        return NULL;
     Eswap0 = con_salt[x] << 2;
-    x = ret[1] = ((salt[1] == '\0') ? 'A' : salt[1]);
+    x = ret[1] = salt[1];
+    if (x == 0 || x >= sizeof(con_salt))
+        return NULL;
     Eswap1 = con_salt[x] << 6;
-#else
-    x = ret[0] = ((salt[0] == '\0') ? os_toascii['A'] : salt[0]);
-    Eswap0 = con_salt[x] << 2;
-    x = ret[1] = ((salt[1] == '\0') ? os_toascii['A'] : salt[1]);
-    Eswap1 = con_salt[x] << 6;
-#endif
 
     /*
      * EAY r=strlen(buf); r=(r+7)/8;
@@ -163,5 +263,5 @@ char *DES_fcrypt(const char *buf, const char *salt, char *ret)
         ret[i] = cov_2char[c];
     }
     ret[13] = '\0';
-    return (ret);
+    return ret;
 }

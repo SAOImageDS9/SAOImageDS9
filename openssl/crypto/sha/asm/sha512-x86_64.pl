@@ -1,9 +1,16 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2005-2025 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 #
 # ====================================================================
-# Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
+# Written by Andy Polyakov, @dot-asm, initially for use in the OpenSSL
 # project. Rights for redistribution and usage in source and binary
-# forms are granted according to the OpenSSL license.
+# forms are granted according to the License.
 # ====================================================================
 #
 # sha256/512_block procedure for x86_64.
@@ -34,7 +41,7 @@
 # level parallelism, on a given CPU implementation in this case.
 #
 # Special note on Intel EM64T. While Opteron CPU exhibits perfect
-# perfromance ratio of 1.5 between 64- and 32-bit flavors [see above],
+# performance ratio of 1.5 between 64- and 32-bit flavors [see above],
 # [currently available] EM64T CPUs apparently are far from it. On the
 # contrary, 64-bit version, sha512_block, is ~30% *slower* than 32-bit
 # sha256_block:-( This is presumably because 64-bit shifts/rotates
@@ -73,6 +80,10 @@
 # March 2014.
 #
 # Add support for Intel SHA Extensions.
+#
+# December 2024.
+#
+# Add support for Intel(R) SHA512 Extensions.
 
 ######################################################################
 # Current performance in cycles per processed byte (less is better):
@@ -86,21 +97,26 @@
 # Sandy Bridge	17.4	14.2(+23%)  11.6(+50%(**))  11.2    8.10(+38%(**))
 # Ivy Bridge	12.6	10.5(+20%)  10.3(+22%)	    8.17    7.22(+13%)
 # Haswell	12.2	9.28(+31%)  7.80(+56%)	    7.66    5.40(+42%)
+# Skylake	11.4	9.03(+26%)  7.70(+48%)      7.25    5.20(+40%)
 # Bulldozer	21.1	13.6(+54%)  13.6(+54%(***)) 13.5    8.58(+57%)
+# Ryzen		11.0	9.02(+22%)  2.05(+440%)     7.05    5.67(+20%)
 # VIA Nano	23.0	16.5(+39%)  -		    14.7    -
 # Atom		23.0	18.9(+22%)  -		    14.7    -
 # Silvermont	27.4	20.6(+33%)  -               17.5    -
+# Knights L	27.4	21.0(+30%)  19.6(+40%)	    17.5    12.8(+37%)
+# Goldmont	18.9	14.3(+32%)  4.16(+350%)     12.0    -
 #
-# (*)	whichever best applicable;
+# (*)	whichever best applicable, including SHAEXT;
 # (**)	switch from ror to shrd stands for fair share of improvement;
 # (***)	execution time is fully determined by remaining integer-only
 #	part, body_00_15; reducing the amount of SIMD instructions
 #	below certain limit makes no difference/sense; to conserve
 #	space SHA256 XOP code path is therefore omitted;
 
-$flavour = shift;
-$output  = shift;
-if ($flavour =~ /\./) { $output = $flavour; undef $flavour; }
+# $output is the last argument if it looks like a file (it has an extension)
+# $flavour is the first argument if it doesn't look like a file
+$output = $#ARGV >= 0 && $ARGV[$#ARGV] =~ m|\.\w+$| ? pop : undef;
+$flavour = $#ARGV >= 0 && $ARGV[0] !~ m|\.| ? shift : undef;
 
 $win64=0; $win64=1 if ($flavour =~ /[nm]asm|mingw64/ || $output =~ /\.asm$/);
 
@@ -124,14 +140,15 @@ if (!$avx && $win64 && ($flavour =~ /masm/ || $ENV{ASM} =~ /ml64/) &&
 	$avx = ($1>=10) + ($1>=11);
 }
 
-if (!$avx && `$ENV{CC} -v 2>&1` =~ /((?:^clang|LLVM) version|.*based on LLVM) ([3-9]\.[0-9]+)/) {
+if (!$avx && `$ENV{CC} -v 2>&1` =~ /((?:clang|LLVM) version|.*based on LLVM) ([0-9]+\.[0-9]+)/) {
 	$avx = ($2>=3.0) + ($2>3.0);
 }
 
 $shaext=1;	### set to zero if compiling for 1.0.1
 $avx=1		if (!$shaext && $avx);
 
-open OUT,"| \"$^X\" $xlate $flavour $output";
+open OUT,"| \"$^X\" \"$xlate\" $flavour \"$output\""
+    or die "can't call $xlate: $!";
 *STDOUT=*OUT;
 
 if ($output =~ /512/) {
@@ -167,7 +184,7 @@ $Tbl="%rbp";
 $_ctx="16*$SZ+0*8(%rsp)";
 $_inp="16*$SZ+1*8(%rsp)";
 $_end="16*$SZ+2*8(%rsp)";
-$_rsp="16*$SZ+3*8(%rsp)";
+$_rsp="`16*$SZ+3*8`(%rsp)";
 $framesz="16*$SZ+4*8";
 
 
@@ -260,45 +277,69 @@ $code=<<___;
 .type	$func,\@function,3
 .align	16
 $func:
+.cfi_startproc
 ___
 $code.=<<___ if ($SZ==4 || $avx);
-	lea	OPENSSL_ia32cap_P(%rip),%r11
-	mov	0(%r11),%r9d
-	mov	4(%r11),%r10d
-	mov	8(%r11),%r11d
+    lea OPENSSL_ia32cap_P(%rip),%r10
+    mov 0(%r10),%r9
+    mov 8(%r10),%r11d
 ___
-$code.=<<___ if ($SZ==4 && $shaext);
-	test	\$`1<<29`,%r11d		# check for SHA
-	jnz	_shaext_shortcut
+$code.=<<___ if ($SZ==8 && $avx>1);
+    mov 20(%r10),%r10d
 ___
-$code.=<<___ if ($avx && $SZ==8);
-	test	\$`1<<11`,%r10d		# check for XOP
-	jnz	.Lxop_shortcut
+if ($SZ==4) {
+$code.=<<___ if ($shaext);
+    test \$`1<<29`,%r11d            # check for SHA
+    jnz  _shaext_shortcut
 ___
 $code.=<<___ if ($avx>1);
-	and	\$`1<<8|1<<5|1<<3`,%r11d	# check for BMI2+AVX2+BMI1
-	cmp	\$`1<<8|1<<5|1<<3`,%r11d
-	je	.Lavx2_shortcut
+    and \$`1<<8|1<<5|1<<3`,%r11d    # check for BMI2+AVX2+BMI1
+    cmp \$`1<<8|1<<5|1<<3`,%r11d
+    je  .Lavx2_shortcut
 ___
+} else { # $SZ==8
 $code.=<<___ if ($avx);
-	and	\$`1<<30`,%r9d		# mask "Intel CPU" bit
-	and	\$`1<<28|1<<9`,%r10d	# mask AVX and SSSE3 bits
-	or	%r9d,%r10d
-	cmp	\$`1<<28|1<<9|1<<30`,%r10d
-	je	.Lavx_shortcut
+    bt \$43,%r9                     # check for XOP
+    jc .Lxop_shortcut
+___
+if ($avx>1) { # $SZ==8 && $avx>1
+$code.=<<___;
+    test \$`1<<5`,%r11d             # check for AVX2
+    jz   .Lavx_dispatch
+    test \$`1<<0`,%r10d             # AVX2 confirmed, check SHA512
+    jnz  .Lsha512ext_shortcut
+    and \$`1<<8|1<<3`,%r11d         # AVX2 confirmed, check BMI2+BMI1
+    cmp \$`1<<8|1<<3`,%r11d
+    je  .Lavx2_shortcut
+___
+}}
+
+$code.=<<___ if ($avx);
+.Lavx_dispatch:                     # AVX2 not detected/enabled
+    mov \$`1<<60|1<<41|1<<30`,%r11  # mask "Intel CPU", AVX, SSSE3
+    and %r11,%r9
+    cmp %r11,%r9
+    je  .Lavx_shortcut
 ___
 $code.=<<___ if ($SZ==4);
-	test	\$`1<<9`,%r10d
-	jnz	.Lssse3_shortcut
+    bt \$41,%r9                     # mask SSSE3
+    jc .Lssse3_shortcut
 ___
 $code.=<<___;
+	mov	%rsp,%rax		# copy %rsp
+.cfi_def_cfa_register	%rax
 	push	%rbx
+.cfi_push	%rbx
 	push	%rbp
+.cfi_push	%rbp
 	push	%r12
+.cfi_push	%r12
 	push	%r13
+.cfi_push	%r13
 	push	%r14
+.cfi_push	%r14
 	push	%r15
-	mov	%rsp,%r11		# copy %rsp
+.cfi_push	%r15
 	shl	\$4,%rdx		# num*16
 	sub	\$$framesz,%rsp
 	lea	($inp,%rdx,$SZ),%rdx	# inp+num*16*$SZ
@@ -306,7 +347,8 @@ $code.=<<___;
 	mov	$ctx,$_ctx		# save ctx, 1st arg
 	mov	$inp,$_inp		# save inp, 2nd arh
 	mov	%rdx,$_end		# save end pointer, "3rd" arg
-	mov	%r11,$_rsp		# save copy of %rsp
+	mov	%rax,$_rsp		# save copy of %rsp
+.cfi_cfa_expression	$_rsp,deref,+8
 .Lprologue:
 
 	mov	$SZ*0($ctx),$A
@@ -373,20 +415,30 @@ $code.=<<___;
 	jb	.Lloop
 
 	mov	$_rsp,%rsi
-	mov	(%rsi),%r15
-	mov	8(%rsi),%r14
-	mov	16(%rsi),%r13
-	mov	24(%rsi),%r12
-	mov	32(%rsi),%rbp
-	mov	40(%rsi),%rbx
-	lea	48(%rsi),%rsp
+.cfi_def_cfa	%rsi,8
+	mov	-48(%rsi),%r15
+.cfi_restore	%r15
+	mov	-40(%rsi),%r14
+.cfi_restore	%r14
+	mov	-32(%rsi),%r13
+.cfi_restore	%r13
+	mov	-24(%rsi),%r12
+.cfi_restore	%r12
+	mov	-16(%rsi),%rbp
+.cfi_restore	%rbp
+	mov	-8(%rsi),%rbx
+.cfi_restore	%rbx
+	lea	(%rsi),%rsp
+.cfi_def_cfa_register	%rsp
 .Lepilogue:
 	ret
+.cfi_endproc
 .size	$func,.-$func
 ___
 
 if ($SZ==4) {
 $code.=<<___;
+.section .rodata align=64
 .align	64
 .type	$TABLE,\@object
 $TABLE:
@@ -429,10 +481,12 @@ $TABLE:
 	.long	0x03020100,0x0b0a0908,0xffffffff,0xffffffff
 	.long	0xffffffff,0xffffffff,0x03020100,0x0b0a0908
 	.long	0xffffffff,0xffffffff,0x03020100,0x0b0a0908
-	.asciz	"SHA256 block transform for x86_64, CRYPTOGAMS by <appro\@openssl.org>"
+	.asciz	"SHA256 block transform for x86_64, CRYPTOGAMS by <https://github.com/dot-asm>"
+.previous
 ___
 } else {
 $code.=<<___;
+.section .rodata align=64
 .align	64
 .type	$TABLE,\@object
 $TABLE:
@@ -519,7 +573,54 @@ $TABLE:
 
 	.quad	0x0001020304050607,0x08090a0b0c0d0e0f
 	.quad	0x0001020304050607,0x08090a0b0c0d0e0f
-	.asciz	"SHA512 block transform for x86_64, CRYPTOGAMS by <appro\@openssl.org>"
+	.asciz	"SHA512 block transform for x86_64, CRYPTOGAMS by <https://github.com/dot-asm>"
+
+# $K512 duplicates data every 16 bytes.
+# The Intel(R) SHA512 implementation requires reads of 32 consecutive bytes.
+.align 64
+.type ${TABLE}_single,\@object
+${TABLE}_single:
+    .quad 0x428a2f98d728ae22, 0x7137449123ef65cd
+    .quad 0xb5c0fbcfec4d3b2f, 0xe9b5dba58189dbbc
+    .quad 0x3956c25bf348b538, 0x59f111f1b605d019
+    .quad 0x923f82a4af194f9b, 0xab1c5ed5da6d8118
+    .quad 0xd807aa98a3030242, 0x12835b0145706fbe
+    .quad 0x243185be4ee4b28c, 0x550c7dc3d5ffb4e2
+    .quad 0x72be5d74f27b896f, 0x80deb1fe3b1696b1
+    .quad 0x9bdc06a725c71235, 0xc19bf174cf692694
+    .quad 0xe49b69c19ef14ad2, 0xefbe4786384f25e3
+    .quad 0x0fc19dc68b8cd5b5, 0x240ca1cc77ac9c65
+    .quad 0x2de92c6f592b0275, 0x4a7484aa6ea6e483
+    .quad 0x5cb0a9dcbd41fbd4, 0x76f988da831153b5
+    .quad 0x983e5152ee66dfab, 0xa831c66d2db43210
+    .quad 0xb00327c898fb213f, 0xbf597fc7beef0ee4
+    .quad 0xc6e00bf33da88fc2, 0xd5a79147930aa725
+    .quad 0x06ca6351e003826f, 0x142929670a0e6e70
+    .quad 0x27b70a8546d22ffc, 0x2e1b21385c26c926
+    .quad 0x4d2c6dfc5ac42aed, 0x53380d139d95b3df
+    .quad 0x650a73548baf63de, 0x766a0abb3c77b2a8
+    .quad 0x81c2c92e47edaee6, 0x92722c851482353b
+    .quad 0xa2bfe8a14cf10364, 0xa81a664bbc423001
+    .quad 0xc24b8b70d0f89791, 0xc76c51a30654be30
+    .quad 0xd192e819d6ef5218, 0xd69906245565a910
+    .quad 0xf40e35855771202a, 0x106aa07032bbd1b8
+    .quad 0x19a4c116b8d2d0c8, 0x1e376c085141ab53
+    .quad 0x2748774cdf8eeb99, 0x34b0bcb5e19b48a8
+    .quad 0x391c0cb3c5c95a63, 0x4ed8aa4ae3418acb
+    .quad 0x5b9cca4f7763e373, 0x682e6ff3d6b2b8a3
+    .quad 0x748f82ee5defb2fc, 0x78a5636f43172f60
+    .quad 0x84c87814a1f0ab72, 0x8cc702081a6439ec
+    .quad 0x90befffa23631e28, 0xa4506cebde82bde9
+    .quad 0xbef9a3f7b2c67915, 0xc67178f2e372532b
+    .quad 0xca273eceea26619c, 0xd186b8c721c0c207
+    .quad 0xeada7dd6cde0eb1e, 0xf57d4f7fee6ed178
+    .quad 0x06f067aa72176fba, 0x0a637dc5a2c898a6
+    .quad 0x113f9804bef90dae, 0x1b710b35131c471b
+    .quad 0x28db77f523047d84, 0x32caab7b40c72493
+    .quad 0x3c9ebe0a15c9bebc, 0x431d67c49c100d4c
+    .quad 0x4cc5d4becb3e42b6, 0x597f299cfc657e2a
+    .quad 0x5fcb6fab3ad6faec, 0x6c44198c4a475817
+.previous
 ___
 }
 
@@ -540,6 +641,7 @@ $code.=<<___;
 .align	64
 sha256_block_data_order_shaext:
 _shaext_shortcut:
+.cfi_startproc
 ___
 $code.=<<___ if ($win64);
 	lea	`-8-5*16`(%rsp),%rsp
@@ -683,6 +785,7 @@ $code.=<<___ if ($win64);
 ___
 $code.=<<___;
 	ret
+.cfi_endproc
 .size	sha256_block_data_order_shaext,.-sha256_block_data_order_shaext
 ___
 }}}
@@ -751,14 +854,22 @@ $code.=<<___;
 .type	${func}_ssse3,\@function,3
 .align	64
 ${func}_ssse3:
+.cfi_startproc
 .Lssse3_shortcut:
+	mov	%rsp,%rax		# copy %rsp
+.cfi_def_cfa_register	%rax
 	push	%rbx
+.cfi_push	%rbx
 	push	%rbp
+.cfi_push	%rbp
 	push	%r12
+.cfi_push	%r12
 	push	%r13
+.cfi_push	%r13
 	push	%r14
+.cfi_push	%r14
 	push	%r15
-	mov	%rsp,%r11		# copy %rsp
+.cfi_push	%r15
 	shl	\$4,%rdx		# num*16
 	sub	\$`$framesz+$win64*16*4`,%rsp
 	lea	($inp,%rdx,$SZ),%rdx	# inp+num*16*$SZ
@@ -766,7 +877,8 @@ ${func}_ssse3:
 	mov	$ctx,$_ctx		# save ctx, 1st arg
 	mov	$inp,$_inp		# save inp, 2nd arh
 	mov	%rdx,$_end		# save end pointer, "3rd" arg
-	mov	%r11,$_rsp		# save copy of %rsp
+	mov	%rax,$_rsp		# save copy of %rsp
+.cfi_cfa_expression	$_rsp,deref,+8
 ___
 $code.=<<___ if ($win64);
 	movaps	%xmm6,16*$SZ+32(%rsp)
@@ -1065,6 +1177,7 @@ $code.=<<___;
 	jb	.Lloop_ssse3
 
 	mov	$_rsp,%rsi
+.cfi_def_cfa	%rsi,8
 ___
 $code.=<<___ if ($win64);
 	movaps	16*$SZ+32(%rsp),%xmm6
@@ -1073,15 +1186,23 @@ $code.=<<___ if ($win64);
 	movaps	16*$SZ+80(%rsp),%xmm9
 ___
 $code.=<<___;
-	mov	(%rsi),%r15
-	mov	8(%rsi),%r14
-	mov	16(%rsi),%r13
-	mov	24(%rsi),%r12
-	mov	32(%rsi),%rbp
-	mov	40(%rsi),%rbx
-	lea	48(%rsi),%rsp
+	mov	-48(%rsi),%r15
+.cfi_restore	%r15
+	mov	-40(%rsi),%r14
+.cfi_restore	%r14
+	mov	-32(%rsi),%r13
+.cfi_restore	%r13
+	mov	-24(%rsi),%r12
+.cfi_restore	%r12
+	mov	-16(%rsi),%rbp
+.cfi_restore	%rbp
+	mov	-8(%rsi),%rbx
+.cfi_restore	%rbx
+	lea	(%rsi),%rsp
+.cfi_def_cfa_register	%rsp
 .Lepilogue_ssse3:
 	ret
+.cfi_endproc
 .size	${func}_ssse3,.-${func}_ssse3
 ___
 }
@@ -1095,14 +1216,22 @@ $code.=<<___;
 .type	${func}_xop,\@function,3
 .align	64
 ${func}_xop:
+.cfi_startproc
 .Lxop_shortcut:
+	mov	%rsp,%rax		# copy %rsp
+.cfi_def_cfa_register	%rax
 	push	%rbx
+.cfi_push	%rbx
 	push	%rbp
+.cfi_push	%rbp
 	push	%r12
+.cfi_push	%r12
 	push	%r13
+.cfi_push	%r13
 	push	%r14
+.cfi_push	%r14
 	push	%r15
-	mov	%rsp,%r11		# copy %rsp
+.cfi_push	%r15
 	shl	\$4,%rdx		# num*16
 	sub	\$`$framesz+$win64*16*($SZ==4?4:6)`,%rsp
 	lea	($inp,%rdx,$SZ),%rdx	# inp+num*16*$SZ
@@ -1110,7 +1239,8 @@ ${func}_xop:
 	mov	$ctx,$_ctx		# save ctx, 1st arg
 	mov	$inp,$_inp		# save inp, 2nd arh
 	mov	%rdx,$_end		# save end pointer, "3rd" arg
-	mov	%r11,$_rsp		# save copy of %rsp
+	mov	%rax,$_rsp		# save copy of %rsp
+.cfi_cfa_expression	$_rsp,deref,+8
 ___
 $code.=<<___ if ($win64);
 	movaps	%xmm6,16*$SZ+32(%rsp)
@@ -1437,6 +1567,7 @@ $code.=<<___;
 	jb	.Lloop_xop
 
 	mov	$_rsp,%rsi
+.cfi_def_cfa	%rsi,8
 	vzeroupper
 ___
 $code.=<<___ if ($win64);
@@ -1450,15 +1581,23 @@ $code.=<<___ if ($win64 && $SZ>4);
 	movaps	16*$SZ+112(%rsp),%xmm11
 ___
 $code.=<<___;
-	mov	(%rsi),%r15
-	mov	8(%rsi),%r14
-	mov	16(%rsi),%r13
-	mov	24(%rsi),%r12
-	mov	32(%rsi),%rbp
-	mov	40(%rsi),%rbx
-	lea	48(%rsi),%rsp
+	mov	-48(%rsi),%r15
+.cfi_restore	%r15
+	mov	-40(%rsi),%r14
+.cfi_restore	%r14
+	mov	-32(%rsi),%r13
+.cfi_restore	%r13
+	mov	-24(%rsi),%r12
+.cfi_restore	%r12
+	mov	-16(%rsi),%rbp
+.cfi_restore	%rbp
+	mov	-8(%rsi),%rbx
+.cfi_restore	%rbx
+	lea	(%rsi),%rsp
+.cfi_def_cfa_register	%rsp
 .Lepilogue_xop:
 	ret
+.cfi_endproc
 .size	${func}_xop,.-${func}_xop
 ___
 }
@@ -1471,14 +1610,22 @@ $code.=<<___;
 .type	${func}_avx,\@function,3
 .align	64
 ${func}_avx:
+.cfi_startproc
 .Lavx_shortcut:
+	mov	%rsp,%rax		# copy %rsp
+.cfi_def_cfa_register	%rax
 	push	%rbx
+.cfi_push	%rbx
 	push	%rbp
+.cfi_push	%rbp
 	push	%r12
+.cfi_push	%r12
 	push	%r13
+.cfi_push	%r13
 	push	%r14
+.cfi_push	%r14
 	push	%r15
-	mov	%rsp,%r11		# copy %rsp
+.cfi_push	%r15
 	shl	\$4,%rdx		# num*16
 	sub	\$`$framesz+$win64*16*($SZ==4?4:6)`,%rsp
 	lea	($inp,%rdx,$SZ),%rdx	# inp+num*16*$SZ
@@ -1486,7 +1633,8 @@ ${func}_avx:
 	mov	$ctx,$_ctx		# save ctx, 1st arg
 	mov	$inp,$_inp		# save inp, 2nd arh
 	mov	%rdx,$_end		# save end pointer, "3rd" arg
-	mov	%r11,$_rsp		# save copy of %rsp
+	mov	%rax,$_rsp		# save copy of %rsp
+.cfi_cfa_expression	$_rsp,deref,+8
 ___
 $code.=<<___ if ($win64);
 	movaps	%xmm6,16*$SZ+32(%rsp)
@@ -1745,6 +1893,7 @@ $code.=<<___;
 	jb	.Lloop_avx
 
 	mov	$_rsp,%rsi
+.cfi_def_cfa	%rsi,8
 	vzeroupper
 ___
 $code.=<<___ if ($win64);
@@ -1758,15 +1907,23 @@ $code.=<<___ if ($win64 && $SZ>4);
 	movaps	16*$SZ+112(%rsp),%xmm11
 ___
 $code.=<<___;
-	mov	(%rsi),%r15
-	mov	8(%rsi),%r14
-	mov	16(%rsi),%r13
-	mov	24(%rsi),%r12
-	mov	32(%rsi),%rbp
-	mov	40(%rsi),%rbx
-	lea	48(%rsi),%rsp
+	mov	-48(%rsi),%r15
+.cfi_restore	%r15
+	mov	-40(%rsi),%r14
+.cfi_restore	%r14
+	mov	-32(%rsi),%r13
+.cfi_restore	%r13
+	mov	-24(%rsi),%r12
+.cfi_restore	%r12
+	mov	-16(%rsi),%rbp
+.cfi_restore	%rbp
+	mov	-8(%rsi),%rbx
+.cfi_restore	%rbx
+	lea	(%rsi),%rsp
+.cfi_def_cfa_register	%rsp
 .Lepilogue_avx:
 	ret
+.cfi_endproc
 .size	${func}_avx,.-${func}_avx
 ___
 
@@ -1774,7 +1931,7 @@ if ($avx>1) {{
 ######################################################################
 # AVX2+BMI code path
 #
-my $a5=$SZ==4?"%esi":"%rsi";	# zap $inp 
+my $a5=$SZ==4?"%esi":"%rsi";	# zap $inp
 my $PUSH8=8*2*$SZ;
 use integer;
 
@@ -1822,14 +1979,22 @@ $code.=<<___;
 .type	${func}_avx2,\@function,3
 .align	64
 ${func}_avx2:
+.cfi_startproc
 .Lavx2_shortcut:
+	mov	%rsp,%rax		# copy %rsp
+.cfi_def_cfa_register	%rax
 	push	%rbx
+.cfi_push	%rbx
 	push	%rbp
+.cfi_push	%rbp
 	push	%r12
+.cfi_push	%r12
 	push	%r13
+.cfi_push	%r13
 	push	%r14
+.cfi_push	%r14
 	push	%r15
-	mov	%rsp,%r11		# copy %rsp
+.cfi_push	%r15
 	sub	\$`2*$SZ*$rounds+4*8+$win64*16*($SZ==4?4:6)`,%rsp
 	shl	\$4,%rdx		# num*16
 	and	\$-256*$SZ,%rsp		# align stack frame
@@ -1838,7 +2003,8 @@ ${func}_avx2:
 	mov	$ctx,$_ctx		# save ctx, 1st arg
 	mov	$inp,$_inp		# save inp, 2nd arh
 	mov	%rdx,$_end		# save end pointer, "3rd" arg
-	mov	%r11,$_rsp		# save copy of %rsp
+	mov	%rax,$_rsp		# save copy of %rsp
+.cfi_cfa_expression	$_rsp,deref,+8
 ___
 $code.=<<___ if ($win64);
 	movaps	%xmm6,16*$SZ+32(%rsp)
@@ -1900,7 +2066,23 @@ $code.=<<___;
 	vmovdqa	$t0,0x00(%rsp)
 	xor	$a1,$a1
 	vmovdqa	$t1,0x20(%rsp)
+___
+$code.=<<___ if (!$win64);
+# temporarily use %rdi as frame pointer
+	mov	$_rsp,%rdi
+.cfi_def_cfa	%rdi,8
+___
+$code.=<<___;
 	lea	-$PUSH8(%rsp),%rsp
+___
+$code.=<<___ if (!$win64);
+# the frame info is at $_rsp, but the stack is moving...
+# so a second frame pointer is saved at -8(%rsp)
+# that is in the red zone
+	mov	%rdi,-8(%rsp)
+.cfi_cfa_expression	%rsp-8,deref,+8
+___
+$code.=<<___;
 	mov	$B,$a3
 	vmovdqa	$t2,0x00(%rsp)
 	xor	$C,$a3			# magic
@@ -1920,7 +2102,18 @@ my @X = @_;
 my @insns = (&$body,&$body,&$body,&$body);	# 96 instructions
 my $base = "+2*$PUSH8(%rsp)";
 
-	&lea	("%rsp","-$PUSH8(%rsp)")	if (($j%2)==0);
+	if (($j%2)==0) {
+	&lea	("%rsp","-$PUSH8(%rsp)");
+$code.=<<___ if (!$win64);
+.cfi_cfa_expression	%rsp+`$PUSH8-8`,deref,+8
+# copy secondary frame pointer to new location again at -8(%rsp)
+	pushq	$PUSH8-8(%rsp)
+.cfi_cfa_expression	%rsp,deref,+8
+	lea	8(%rsp),%rsp
+.cfi_cfa_expression	%rsp-8,deref,+8
+___
+	}
+
 	foreach (Xupdate_256_AVX()) {		# 29 instructions
 	    eval;
 	    eval(shift(@insns));
@@ -1991,7 +2184,23 @@ $code.=<<___;
 	vmovdqa	$t2,0x40(%rsp)
 	vpaddq	0x40($Tbl),@X[6],$t2
 	vmovdqa	$t3,0x60(%rsp)
+___
+$code.=<<___ if (!$win64);
+# temporarily use %rdi as frame pointer
+	mov	$_rsp,%rdi
+.cfi_def_cfa	%rdi,8
+___
+$code.=<<___;
 	lea	-$PUSH8(%rsp),%rsp
+___
+$code.=<<___ if (!$win64);
+# the frame info is at $_rsp, but the stack is moving...
+# so a second frame pointer is saved at -8(%rsp)
+# that is in the red zone
+	mov	%rdi,-8(%rsp)
+.cfi_cfa_expression	%rsp-8,deref,+8
+___
+$code.=<<___;
 	vpaddq	0x60($Tbl),@X[7],$t3
 	vmovdqa	$t0,0x00(%rsp)
 	xor	$a1,$a1
@@ -2015,7 +2224,18 @@ my @X = @_;
 my @insns = (&$body,&$body);			# 48 instructions
 my $base = "+2*$PUSH8(%rsp)";
 
-	&lea	("%rsp","-$PUSH8(%rsp)")	if (($j%4)==0);
+	if (($j%4)==0) {
+	&lea	("%rsp","-$PUSH8(%rsp)");
+$code.=<<___ if (!$win64);
+.cfi_cfa_expression	%rsp+`$PUSH8-8`,deref,+8
+# copy secondary frame pointer to new location again at -8(%rsp)
+	pushq	$PUSH8-8(%rsp)
+.cfi_cfa_expression	%rsp,deref,+8
+	lea	8(%rsp),%rsp
+.cfi_cfa_expression	%rsp-8,deref,+8
+___
+	}
+
 	foreach (Xupdate_512_AVX()) {		# 23 instructions
 	    eval;
 	    if ($_ !~ /\;$/) {
@@ -2090,6 +2310,8 @@ $code.=<<___;
 	add	$a1,$A
 	#mov	`2*$SZ*$rounds+8`(%rsp),$inp	# $_inp
 	lea	`2*$SZ*($rounds-8)`(%rsp),%rsp
+# restore frame pointer to original location at $_rsp
+.cfi_cfa_expression	$_rsp,deref,+8
 
 	add	$SZ*0($ctx),$A
 	add	$SZ*1($ctx),$B
@@ -2115,36 +2337,297 @@ $code.=<<___;
 
 	jbe	.Loop_avx2
 	lea	(%rsp),$Tbl
+# temporarily use $Tbl as index to $_rsp
+# this avoids the need to save a secondary frame pointer at -8(%rsp)
+.cfi_cfa_expression	$Tbl+`16*$SZ+3*8`,deref,+8
 
 .Ldone_avx2:
-	lea	($Tbl),%rsp
-	mov	$_rsp,%rsi
+	mov	`16*$SZ+3*8`($Tbl),%rsi
+.cfi_def_cfa	%rsi,8
 	vzeroupper
 ___
 $code.=<<___ if ($win64);
-	movaps	16*$SZ+32(%rsp),%xmm6
-	movaps	16*$SZ+48(%rsp),%xmm7
-	movaps	16*$SZ+64(%rsp),%xmm8
-	movaps	16*$SZ+80(%rsp),%xmm9
+	movaps	16*$SZ+32($Tbl),%xmm6
+	movaps	16*$SZ+48($Tbl),%xmm7
+	movaps	16*$SZ+64($Tbl),%xmm8
+	movaps	16*$SZ+80($Tbl),%xmm9
 ___
 $code.=<<___ if ($win64 && $SZ>4);
-	movaps	16*$SZ+96(%rsp),%xmm10
-	movaps	16*$SZ+112(%rsp),%xmm11
+	movaps	16*$SZ+96($Tbl),%xmm10
+	movaps	16*$SZ+112($Tbl),%xmm11
 ___
 $code.=<<___;
-	mov	(%rsi),%r15
-	mov	8(%rsi),%r14
-	mov	16(%rsi),%r13
-	mov	24(%rsi),%r12
-	mov	32(%rsi),%rbp
-	mov	40(%rsi),%rbx
-	lea	48(%rsi),%rsp
+	mov	-48(%rsi),%r15
+.cfi_restore	%r15
+	mov	-40(%rsi),%r14
+.cfi_restore	%r14
+	mov	-32(%rsi),%r13
+.cfi_restore	%r13
+	mov	-24(%rsi),%r12
+.cfi_restore	%r12
+	mov	-16(%rsi),%rbp
+.cfi_restore	%rbp
+	mov	-8(%rsi),%rbx
+.cfi_restore	%rbx
+	lea	(%rsi),%rsp
+.cfi_def_cfa_register	%rsp
 .Lepilogue_avx2:
 	ret
+.cfi_endproc
 .size	${func}_avx2,.-${func}_avx2
 ___
 }}
 }}}}}
+
+if ($SZ==8) {
+$code.=<<___;
+.type ${func}_sha512ext,\@function,3
+.align 64
+${func}_sha512ext:
+.cfi_startproc
+    endbranch
+.Lsha512ext_shortcut:
+___
+
+my ($arg_hash,$arg_msg,$arg_num_blks)=("%rdi","%rsi","%rdx");
+
+$code.=<<___;
+    or $arg_num_blks, $arg_num_blks
+    je .Lsha512ext_done
+___
+
+$code.=<<___ if($win64);
+    # xmm6:xmm9, xmm11:xmm15 need to be maintained for Windows
+    # xmm10 not used
+    sub \$`9*16`,%rsp
+.cfi_adjust_cfa_offset \$`9*16`
+    vmovdqu %xmm6, 16*0(%rsp)
+    vmovdqu %xmm7, 16*1(%rsp)
+    vmovdqu %xmm8, 16*2(%rsp)
+    vmovdqu %xmm9, 16*3(%rsp)
+    vmovdqu %xmm11,16*4(%rsp)
+    vmovdqu %xmm12,16*5(%rsp)
+    vmovdqu %xmm13,16*6(%rsp)
+    vmovdqu %xmm14,16*7(%rsp)
+    vmovdqu %xmm15,16*8(%rsp)
+___
+
+$code.=<<___;
+    # reuse shuffle indices from $K512
+    vbroadcasti128 0x500+$TABLE(%rip),%ymm15
+
+#################################################
+# Format of comments describing register contents
+#################################################
+# ymm0 = ABCD
+# A is the most  significant word in `ymm0`
+# D is the least significant word in `ymm0`
+#################################################
+
+    # load current hash value and transform
+    vmovdqu 0x00($arg_hash),%ymm0
+    vmovdqu 0x20($arg_hash),%ymm1
+    # ymm0 = DCBA, ymm1 = HGFE
+    vperm2i128 \$0x20,%ymm1,%ymm0,%ymm2
+    vperm2i128 \$0x31,%ymm1,%ymm0,%ymm3
+    # ymm2 = FEBA, ymm3 = HGDC
+    vpermq \$0x1b,%ymm2,%ymm13
+    vpermq \$0x1b,%ymm3,%ymm14
+    # ymm13 = ABEF, ymm14 = CDGH
+
+    lea ${TABLE}_single(%rip),%r9
+
+.align 32
+.Lsha512ext_block_loop:
+
+    vmovdqa %ymm13,%ymm11                   # ABEF
+    vmovdqa %ymm14,%ymm12                   # CDGH
+
+    # R0 - R3
+    vmovdqu 0*32($arg_msg),%ymm0
+    vpshufb %ymm15,%ymm0,%ymm3              # ymm0/ymm3 = W[0..3]
+    vpaddq 0*32(%r9),%ymm3,%ymm0
+    vsha512rnds2 %xmm0,%ymm11,%ymm12
+    vperm2i128 \$0x1,%ymm0,%ymm0,%ymm0
+    vsha512rnds2 %xmm0,%ymm12,%ymm11
+
+    # R4 - R7
+    vmovdqu 1*32($arg_msg),%ymm0
+    vpshufb %ymm15,%ymm0,%ymm4              # ymm0/ymm4 = W[4..7]
+    vpaddq 1*32(%r9),%ymm4,%ymm0
+    vsha512rnds2 %xmm0,%ymm11,%ymm12
+    vperm2i128 \$0x1,%ymm0,%ymm0,%ymm0
+    vsha512rnds2 %xmm0,%ymm12,%ymm11
+    vsha512msg1 %xmm4,%ymm3                 # ymm3 = W[0..3] + S0(W[1..4])
+
+    # R8 - R11
+    vmovdqu 2*32($arg_msg),%ymm0
+    vpshufb %ymm15,%ymm0,%ymm5              # ymm0/ymm5 = W[8..11]
+    vpaddq 2*32(%r9),%ymm5,%ymm0
+    vsha512rnds2 %xmm0,%ymm11,%ymm12
+    vperm2i128 \$0x1,%ymm0,%ymm0,%ymm0
+    vsha512rnds2 %xmm0,%ymm12,%ymm11
+    vsha512msg1 %xmm5,%ymm4                 # ymm4 = W[4..7] + S0(W[5..8])
+
+    # R12 - R15
+    vmovdqu 3*32($arg_msg),%ymm0
+    vpshufb %ymm15,%ymm0,%ymm6              # ymm0/ymm6 = W[12..15]
+    vpaddq 3*32(%r9),%ymm6,%ymm0
+    vpermq \$0x1b,%ymm6,%ymm8               # ymm8 = W[12] W[13] W[14] W[15]
+    vpermq \$0x39,%ymm5,%ymm9               # ymm9 = W[8]  W[11] W[10] W[9]
+    vpblendd \$0x3f,%ymm9,%ymm8,%ymm8       # ymm8 = W[12] W[11] W[10] W[9]
+    vpaddq %ymm8,%ymm3,%ymm3                # ymm3 = W[0..3] + S0(W[1..4]) + W[9..12]
+    vsha512msg2 %ymm6,%ymm3                 # W[16..19] = ymm3 + S1(W[14..17])
+    vsha512rnds2 %xmm0,%ymm11,%ymm12
+    vperm2i128 \$0x1,%ymm0,%ymm0,%ymm0
+    vsha512rnds2 %xmm0,%ymm12,%ymm11
+    vsha512msg1 %xmm6,%ymm5                 # ymm5 = W[8..11] + S0(W[9..12])
+___
+
+# R16 - R63
+for($i=4;$i<16;) {
+$code.=<<___;
+    # R16 - R19, R32 - R35, R48 - R51
+    vpaddq `$i * 32`(%r9),%ymm3,%ymm0
+    vpermq \$0x1b,%ymm3,%ymm8               # ymm8 = W[16] W[17] W[18] W[19]
+    vpermq \$0x39,%ymm6,%ymm9               # ymm9 = W[12] W[15] W[14] W[13]
+    vpblendd \$0x3f,%ymm9,%ymm8,%ymm7       # ymm7 = W[16] W[15] W[14] W[13]
+    vpaddq %ymm7,%ymm4,%ymm4                # ymm4 = W[4..7] + S0(W[5..8]) + W[13..16]
+    vsha512msg2 %ymm3,%ymm4                 # W[20..23] = ymm4 + S1(W[18..21])
+    vsha512rnds2 %xmm0,%ymm11,%ymm12
+    vperm2i128 \$0x1,%ymm0,%ymm0,%ymm0
+    vsha512rnds2 %xmm0,%ymm12,%ymm11
+    vsha512msg1 %xmm3,%ymm6                 # ymm6 = W[12..15] + S0(W[13..16])
+___
+    $i++;
+$code.=<<___;
+    # R20 - R23, R36 - R39, R52 - R55
+    vpaddq `$i * 32`(%r9),%ymm4,%ymm0
+    vpermq \$0x1b,%ymm4,%ymm8               # ymm8 = W[20] W[21] W[22] W[23]
+    vpermq \$0x39,%ymm3,%ymm9               # ymm9 = W[16] W[19] W[18] W[17]
+    vpblendd \$0x3f,%ymm9,%ymm8,%ymm7       # ymm7 = W[20] W[19] W[18] W[17]
+    vpaddq %ymm7,%ymm5,%ymm5                # ymm5 = W[8..11] + S0(W[9..12]) + W[17..20]
+    vsha512msg2 %ymm4,%ymm5                 # W[24..27] = ymm5 + S1(W[22..25])
+    vsha512rnds2 %xmm0,%ymm11,%ymm12
+    vperm2i128 \$0x1,%ymm0,%ymm0,%ymm0
+    vsha512rnds2 %xmm0,%ymm12,%ymm11
+    vsha512msg1 %xmm4,%ymm3                 # ymm3 = W[16..19] + S0(W[17..20])
+___
+    $i++;
+$code.=<<___;
+    # R24 - R27, R40 - R43, R56 - R59
+    vpaddq `$i * 32`(%r9),%ymm5,%ymm0
+    vpermq \$0x1b,%ymm5,%ymm8               # ymm8 = W[24] W[25] W[26] W[27]
+    vpermq \$0x39,%ymm4,%ymm9               # ymm9 = W[20] W[23] W[22] W[21]
+    vpblendd \$0x3f,%ymm9,%ymm8,%ymm7       # ymm7 = W[24] W[23] W[22] W[21]
+    vpaddq %ymm7,%ymm6,%ymm6                # ymm6 = W[12..15] + S0(W[13..16]) + W[21..24]
+    vsha512msg2 %ymm5,%ymm6                 # W[28..31] = ymm6 + S1(W[26..29])
+    vsha512rnds2 %xmm0,%ymm11,%ymm12
+    vperm2i128 \$0x1,%ymm0,%ymm0,%ymm0
+    vsha512rnds2 %xmm0,%ymm12,%ymm11
+    vsha512msg1 %xmm5,%ymm4                 # ymm4 = W[20..23] + S0(W[21..24])
+___
+    $i++;
+$code.=<<___;
+    # R28 - R31, R44 - R47, R60 - R63
+    vpaddq `$i * 32`(%r9),%ymm6,%ymm0
+    vpermq \$0x1b,%ymm6,%ymm8               # ymm8 = W[28] W[29] W[30] W[31]
+    vpermq \$0x39,%ymm5,%ymm9               # ymm9 = W[24] W[27] W[26] W[25]
+    vpblendd \$0x3f,%ymm9,%ymm8,%ymm7       # ymm7 = W[28] W[27] W[26] W[25]
+    vpaddq %ymm7,%ymm3,%ymm3                # ymm3 = W[16..19] + S0(W[17..20]) + W[25..28]
+    vsha512msg2 %ymm6,%ymm3                 # W[32..35] = ymm3 + S1(W[30..33])
+    vsha512rnds2 %xmm0,%ymm11,%ymm12
+    vperm2i128 \$0x1,%ymm0,%ymm0,%ymm0
+    vsha512rnds2 %xmm0,%ymm12,%ymm11
+    vsha512msg1 %xmm6,%ymm5                 # ymm5 = W[24..27] + S0(W[25..28])
+___
+    $i++;
+}
+
+$code.=<<___;
+    # R64 - R67
+    vpaddq 16*32(%r9),%ymm3,%ymm0
+    vpermq \$0x1b,%ymm3,%ymm8               # ymm8 = W[64] W[65] W[66] W[67]
+    vpermq \$0x39,%ymm6,%ymm9               # ymm9 = W[60] W[63] W[62] W[61]
+    vpblendd \$0x3f,%ymm9,%ymm8,%ymm7       # ymm7 = W[64] W[63] W[62] W[61]
+    vpaddq %ymm7,%ymm4,%ymm4                # ymm4 = W[52..55] + S0(W[53..56]) + W[61..64]
+    vsha512msg2 %ymm3,%ymm4                 # W[64..67] = ymm4 + S1(W[62..65])
+    vsha512rnds2 %xmm0,%ymm11,%ymm12
+    vperm2i128 \$0x1,%ymm0,%ymm0,%ymm0
+    vsha512rnds2 %xmm0,%ymm12,%ymm11
+    vsha512msg1 %xmm3,%ymm6                 # ymm6 = W[60..63] + S0(W[61..64])
+
+    # R68 - R71
+    vpaddq 17*32(%r9),%ymm4,%ymm0
+    vpermq \$0x1b,%ymm4,%ymm8               # ymm8 = W[68] W[69] W[70] W[71]
+    vpermq \$0x39,%ymm3,%ymm9               # ymm9 = W[64] W[67] W[66] W[65]
+    vpblendd \$0x3f,%ymm9,%ymm8,%ymm7       # ymm7 = W[68] W[67] W[66] W[65]
+    vpaddq %ymm7,%ymm5,%ymm5                # ymm5 = W[56..59] + S0(W[57..60]) + W[65..68]
+    vsha512msg2 %ymm4,%ymm5                 # W[68..71] = ymm5 + S1(W[66..69])
+    vsha512rnds2 %xmm0,%ymm11,%ymm12
+    vperm2i128 \$0x1,%ymm0,%ymm0,%ymm0
+    vsha512rnds2 %xmm0,%ymm12,%ymm11
+
+    # R72 - R75
+    vpaddq 18*32(%r9),%ymm5,%ymm0
+    vpermq \$0x1b,%ymm5,%ymm8               # ymm8 = W[72] W[73] W[74] W[75]
+    vpermq \$0x39,%ymm4,%ymm9               # ymm9 = W[68] W[71] W[70] W[69]
+    vpblendd \$0x3f,%ymm9,%ymm8,%ymm7       # ymm7 = W[72] W[71] W[70] W[69]
+    vpaddq %ymm7,%ymm6,%ymm6                # ymm6 = W[60..63] + S0(W[61..64]) + W[69..72]
+    vsha512msg2 %ymm5,%ymm6                 # W[72..75] = ymm6 + S1(W[70..73])
+    vsha512rnds2 %xmm0,%ymm11,%ymm12
+    vperm2i128 \$0x1,%ymm0,%ymm0,%ymm0
+    vsha512rnds2 %xmm0,%ymm12,%ymm11
+
+    # R76 - R79
+    vpaddq 19*32(%r9),%ymm6,%ymm0
+    vsha512rnds2 %xmm0,%ymm11,%ymm12
+    vperm2i128 \$0x1,%ymm0,%ymm0,%ymm0
+    vsha512rnds2 %xmm0,%ymm12,%ymm11
+
+    # update hash value
+    vpaddq %ymm12,%ymm14,%ymm14
+    vpaddq %ymm11,%ymm13,%ymm13
+    add \$`4*32`,$arg_msg
+    dec $arg_num_blks
+    jnz .Lsha512ext_block_loop
+
+    # store the hash value back in memory
+    #   ymm13 = ABEF
+    #   ymm14 = CDGH
+    vperm2i128 \$0x31,%ymm14,%ymm13,%ymm1
+    vperm2i128 \$0x20,%ymm14,%ymm13,%ymm2
+    vpermq \$0xb1,%ymm1,%ymm1               # ymm1 = DCBA
+    vpermq \$0xb1,%ymm2,%ymm2               # ymm2 = HGFE
+    vmovdqu %ymm1,0x00($arg_hash)
+    vmovdqu %ymm2,0x20($arg_hash)
+
+    vzeroupper
+___
+
+$code.=<<___ if($win64);
+    # xmm6:xmm9, xmm11:xmm15 need to be maintained for Windows
+    # xmm10 not used
+    vmovdqu 16*0(%rsp),%xmm6
+    vmovdqu 16*1(%rsp),%xmm7
+    vmovdqu 16*2(%rsp),%xmm8
+    vmovdqu 16*3(%rsp),%xmm9
+    vmovdqu 16*4(%rsp),%xmm11
+    vmovdqu 16*5(%rsp),%xmm12
+    vmovdqu 16*6(%rsp),%xmm13
+    vmovdqu 16*7(%rsp),%xmm14
+    vmovdqu 16*8(%rsp),%xmm15
+    add \$`9*16`,%rsp
+.cfi_adjust_cfa_offset \$`-9*16`
+___
+
+$code.=<<___;
+.Lsha512ext_done:
+    ret
+.cfi_endproc
+.size ${func}_sha512ext,.-${func}_sha512ext
+___
+}
 
 # EXCEPTION_DISPOSITION handler (EXCEPTION_RECORD *rec,ULONG64 frame,
 #		CONTEXT *context,DISPATCHER_CONTEXT *disp)
@@ -2200,7 +2683,6 @@ ___
 $code.=<<___;
 	mov	%rax,%rsi		# put aside Rsp
 	mov	16*$SZ+3*8(%rax),%rax	# pull $_rsp
-	lea	48(%rax),%rax
 
 	mov	-8(%rax),%rbx
 	mov	-16(%rax),%rbp
@@ -2371,6 +2853,34 @@ $code.=<<___ if ($avx>1);
 ___
 }
 
+sub sha512op {
+    my $instr = shift;
+
+    my $args = shift;
+    if ($args =~ /^(.+)\s*#/) {
+        $args = $1; # drop comment and its leading whitespace
+    }
+
+    if (($instr eq "vsha512msg1") && ($args =~ /%xmm(\d{1,2})\s*,\s*%ymm(\d{1,2})/)) {
+        my $b1 = sprintf("0x%02x", 0x42 | ((1-int($1/8))<<5) | ((1-int($2/8))<<7) );
+        my $b2 = sprintf("0x%02x", 0xc0 | ($1 & 7) | (($2 & 7)<<3)                );
+        return ".byte 0xc4,".$b1.",0x7f,0xcc,".$b2;
+    }
+    elsif (($instr eq "vsha512msg2") && ($args =~ /%ymm(\d{1,2})\s*,\s*%ymm(\d{1,2})/)) {
+        my $b1 = sprintf("0x%02x", 0x42 | ((1-int($1/8))<<5) | ((1-int($2/8))<<7) );
+        my $b2 = sprintf("0x%02x", 0xc0 | ($1 & 7) | (($2 & 7)<<3)                );
+        return ".byte 0xc4,".$b1.",0x7f,0xcd,".$b2;
+    }
+    elsif (($instr eq "vsha512rnds2") && ($args =~ /%xmm(\d{1,2})\s*,\s*%ymm(\d{1,2})\s*,\s*%ymm(\d{1,2})/)) {
+        my $b1 = sprintf("0x%02x", 0x42 | ((1-int($1/8))<<5) | ((1-int($3/8))<<7) );
+        my $b2 = sprintf("0x%02x", 0x07 | (15 - $2 & 15)<<3                       );
+        my $b3 = sprintf("0x%02x", 0xc0 | ($1 & 7) | (($3 & 7)<<3)                );
+        return ".byte 0xc4,".$b1.",".$b2.",0xcb,".$b3;
+    }
+
+    return $instr."\t".$args;
+}
+
 sub sha256op38 {
     my $instr = shift;
     my %opcodelet = (
@@ -2391,8 +2901,9 @@ sub sha256op38 {
 foreach (split("\n",$code)) {
 	s/\`([^\`]*)\`/eval $1/geo;
 
+	s/\b(vsha512[^\s]*)\s+(.*)/sha512op($1,$2)/geo;
 	s/\b(sha256[^\s]*)\s+(.*)/sha256op38($1,$2)/geo;
 
 	print $_,"\n";
 }
-close STDOUT;
+close STDOUT or die "error closing STDOUT: $!";

@@ -1,10 +1,17 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2011-2025 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 #
 # ====================================================================
-# Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
+# Written by Andy Polyakov, @dot-asm, initially for use in the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
-# details see http://www.openssl.org/~appro/cryptogams/.
+# details see https://github.com/dot-asm/cryptogams/.
 # ====================================================================
 #
 # May 2011
@@ -36,7 +43,9 @@ $0 =~ m/(.*[\/\\])[^\/\\]+$/; $dir=$1;
 push(@INC,"${dir}","${dir}../../perlasm");
 require "x86asm.pl";
 
-&asm_init($ARGV[0],$0,$x86only = $ARGV[$#ARGV] eq "386");
+$output = pop and open STDOUT,">$output";
+
+&asm_init($ARGV[0],$x86only = $ARGV[$#ARGV] eq "386");
 
 $sse2=0;
 for (@ARGV) { $sse2=1 if (/-DOPENSSL_IA32_SSE2/); }
@@ -142,7 +151,7 @@ $R="mm0";
 	 &xor	($a4,$a2);		# a2=a4^a2^a4
 	 &mov	(&DWP(5*4,"esp"),$a1);	# a1^a4
 	 &xor	($a4,$a1);		# a1^a2^a4
-	&sar	(@i[1],31);		# broardcast 30th bit
+	&sar	(@i[1],31);		# broadcast 30th bit
 	&and	($lo,$b);
 	 &mov	(&DWP(6*4,"esp"),$a2);	# a2^a4
 	&and	(@i[1],$b);
@@ -308,6 +317,8 @@ if ($sse2) {
 	&ret	();
 &function_end_B("bn_GF2m_mul_2x2");
 
-&asciz	("GF(2^m) Multiplication for x86, CRYPTOGAMS by <appro\@openssl.org>");
+&asciz	("GF(2^m) Multiplication for x86, CRYPTOGAMS by <https://github.com/dot-asm>");
 
 &asm_finish();
+
+close STDOUT or die "error closing STDOUT: $!";

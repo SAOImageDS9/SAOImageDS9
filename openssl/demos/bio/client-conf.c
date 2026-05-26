@@ -1,3 +1,13 @@
+/*
+ * Copyright 2013-2023 The OpenSSL Project Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License 2.0 (the "License").  You may not use
+ * this file except in compliance with the License.  You can obtain a copy
+ * in the file LICENSE in the source distribution or at
+ * https://www.openssl.org/source/license.html
+ */
+
+#include <string.h>
 #include <openssl/err.h>
 #include <openssl/ssl.h>
 #include <openssl/conf.h>
@@ -15,10 +25,7 @@ int main(int argc, char **argv)
     CONF_VALUE *cnf;
     const char *connect_str = "localhost:4433";
     long errline = -1;
-
-    ERR_load_crypto_strings();
-    ERR_load_SSL_strings();
-    SSL_library_init();
+    int ret = EXIT_FAILURE;
 
     conf = NCONF_new(NULL);
 
@@ -37,7 +44,7 @@ int main(int argc, char **argv)
         goto end;
     }
 
-    ctx = SSL_CTX_new(SSLv23_client_method());
+    ctx = SSL_CTX_new(TLS_client_method());
     cctx = SSL_CONF_CTX_new();
     SSL_CONF_CTX_set_flags(cctx, SSL_CONF_FLAG_CLIENT);
     SSL_CONF_CTX_set_flags(cctx, SSL_CONF_FLAG_FILE);
@@ -49,11 +56,11 @@ int main(int argc, char **argv)
             continue;
         if (rv != -2) {
             fprintf(stderr, "Error processing %s = %s\n",
-                    cnf->name, cnf->value);
+                cnf->name, cnf->value);
             ERR_print_errors_fp(stderr);
             goto end;
         }
-        if (!strcmp(cnf->name, "Connect")) {
+        if (strcmp(cnf->name, "Connect") == 0) {
             connect_str = cnf->value;
         } else {
             fprintf(stderr, "Unknown configuration option %s\n", cnf->name);
@@ -64,7 +71,7 @@ int main(int argc, char **argv)
     if (!SSL_CONF_CTX_finish(cctx)) {
         fprintf(stderr, "Finish error\n");
         ERR_print_errors_fp(stderr);
-        goto err;
+        goto end;
     }
 
     /*
@@ -82,9 +89,6 @@ int main(int argc, char **argv)
         goto end;
     }
 
-    /* Don't want any retries */
-    SSL_set_mode(ssl, SSL_MODE_AUTO_RETRY);
-
     /* We might want to do other things with ssl here */
 
     BIO_set_conn_hostname(sbio, connect_str);
@@ -92,12 +96,6 @@ int main(int argc, char **argv)
     out = BIO_new_fp(stdout, BIO_NOCLOSE);
     if (BIO_do_connect(sbio) <= 0) {
         fprintf(stderr, "Error connecting to server\n");
-        ERR_print_errors_fp(stderr);
-        goto end;
-    }
-
-    if (BIO_do_handshake(sbio) <= 0) {
-        fprintf(stderr, "Error establishing SSL connection\n");
         ERR_print_errors_fp(stderr);
         goto end;
     }
@@ -111,10 +109,12 @@ int main(int argc, char **argv)
             break;
         BIO_write(out, tmpbuf, len);
     }
- end:
+    ret = EXIT_SUCCESS;
+
+end:
     SSL_CONF_CTX_free(cctx);
     BIO_free_all(sbio);
     BIO_free(out);
     NCONF_free(conf);
-    return 0;
+    return ret;
 }

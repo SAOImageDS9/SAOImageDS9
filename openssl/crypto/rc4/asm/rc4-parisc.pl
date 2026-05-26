@@ -1,10 +1,17 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2009-2025 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 
 # ====================================================================
-# Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
+# Written by Andy Polyakov, @dot-asm, initially for use in the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
-# details see http://www.openssl.org/~appro/cryptogams/.
+# details see https://github.com/dot-asm/cryptogams/.
 # ====================================================================
 
 # RC4 for PA-RISC.
@@ -20,9 +27,12 @@
 
 $0 =~ m/(.*[\/\\])[^\/\\]+$/; $dir=$1;
 
-$flavour = shift;
-$output = shift;
-open STDOUT,">$output";
+# $output is the last argument if it looks like a file (it has an extension)
+# $flavour is the first argument if it doesn't look like a file
+$output = $#ARGV >= 0 && $ARGV[$#ARGV] =~ m|\.\w+$| ? pop : undef;
+$flavour = $#ARGV >= 0 && $ARGV[0] !~ m|\.| ? shift : undef;
+
+$output and open STDOUT,">$output";
 
 if ($flavour =~ /64/) {
 	$LEVEL		="2.0W";
@@ -91,7 +101,7 @@ sub unrolledloopbody {
 for ($i=0;$i<4;$i++) {
 $code.=<<___;
 	ldo	1($XX[0]),$XX[1]
-	`sprintf("$LDX	%$TY(%$key),%$dat1") if ($i>0)`	
+	`sprintf("$LDX	%$TY(%$key),%$dat1") if ($i>0)`
 	and	$mask,$XX[1],$XX[1]
 	$LDX	$YY($key),$TY
 	$MKX	$YY,$key,$ix
@@ -159,7 +169,7 @@ RC4
 	ldo	`2*$SZ`($key),$key
 
 	ldi	0xff,$mask
-	ldi	3,$dat0		
+	ldi	3,$dat0
 
 	ldo	1($XX[0]),$XX[0]	; warm up loop
 	and	$mask,$XX[0],$XX[0]
@@ -243,9 +253,9 @@ ___
 
 $code.=<<___;
 
-	.EXPORT	private_RC4_set_key,ENTRY,ARGW0=GR,ARGW1=GR,ARGW2=GR
+	.EXPORT	RC4_set_key,ENTRY,ARGW0=GR,ARGW1=GR,ARGW2=GR
 	.ALIGN	8
-private_RC4_set_key
+RC4_set_key
 	.PROC
 	.CALLINFO	NO_CALLS
 	.ENTRY
@@ -304,11 +314,23 @@ L\$pic
 	.ALIGN	8
 L\$opts
 	.STRINGZ "rc4(4x,`$SZ==1?"char":"int"`)"
-	.STRINGZ "RC4 for PA-RISC, CRYPTOGAMS by <appro\@openssl.org>"
+	.STRINGZ "RC4 for PA-RISC, CRYPTOGAMS by <https://github.com/dot-asm>"
 ___
-$code =~ s/\`([^\`]*)\`/eval $1/gem;
-$code =~ s/cmpib,\*/comib,/gm	if ($SIZE_T==4);
-$code =~ s/\bbv\b/bve/gm	if ($SIZE_T==8);
 
-print $code;
-close STDOUT;
+if (`$ENV{CC} -Wa,-v -c -o /dev/null -x assembler /dev/null 2>&1`
+	=~ /GNU assembler/) {
+    $gnuas = 1;
+}
+
+foreach(split("\n",$code)) {
+	s/\`([^\`]*)\`/eval $1/ge;
+
+	s/(\.LEVEL\s+2\.0)W/$1w/	if ($gnuas && $SIZE_T==8);
+	s/\.SPACE\s+\$TEXT\$/.text/	if ($gnuas && $SIZE_T==8);
+	s/\.SUBSPA.*//			if ($gnuas && $SIZE_T==8);
+	s/cmpib,\*/comib,/		if ($SIZE_T==4);
+	s/\bbv\b/bve/			if ($SIZE_T==8);
+
+	print $_,"\n";
+}
+close STDOUT or die "error closing STDOUT: $!";

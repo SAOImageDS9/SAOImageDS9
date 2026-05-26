@@ -1,8 +1,18 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2009-2025 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
 
-$flavour = shift;
-$output = shift;
-open STDOUT,">$output";
+
+# $output is the last argument if it looks like a file (it has an extension)
+# $flavour is the first argument if it doesn't look like a file
+$output = $#ARGV >= 0 && $ARGV[$#ARGV] =~ m|\.\w+$| ? pop : undef;
+$flavour = $#ARGV >= 0 && $ARGV[0] !~ m|\.| ? shift : undef;
+
+$output and open STDOUT,">$output";
 
 if ($flavour =~ /64/) {
 	$LEVEL		="2.0W";
@@ -45,46 +55,6 @@ OPENSSL_rdtsc
 	.EXIT
 	nop
 	.PROCEND
-
-	.EXPORT	OPENSSL_wipe_cpu,ENTRY
-	.ALIGN	8
-OPENSSL_wipe_cpu
-	.PROC
-	.CALLINFO	NO_CALLS
-	.ENTRY
-	xor		%r0,%r0,%r1
-	fcpy,dbl	%fr0,%fr4
-	xor		%r0,%r0,%r19
-	fcpy,dbl	%fr0,%fr5
-	xor		%r0,%r0,%r20
-	fcpy,dbl	%fr0,%fr6
-	xor		%r0,%r0,%r21
-	fcpy,dbl	%fr0,%fr7
-	xor		%r0,%r0,%r22
-	fcpy,dbl	%fr0,%fr8
-	xor		%r0,%r0,%r23
-	fcpy,dbl	%fr0,%fr9
-	xor		%r0,%r0,%r24
-	fcpy,dbl	%fr0,%fr10
-	xor		%r0,%r0,%r25
-	fcpy,dbl	%fr0,%fr11
-	xor		%r0,%r0,%r26
-	fcpy,dbl	%fr0,%fr22
-	xor		%r0,%r0,%r29
-	fcpy,dbl	%fr0,%fr23
-	xor		%r0,%r0,%r31
-	fcpy,dbl	%fr0,%fr24
-	fcpy,dbl	%fr0,%fr25
-	fcpy,dbl	%fr0,%fr26
-	fcpy,dbl	%fr0,%fr27
-	fcpy,dbl	%fr0,%fr28
-	fcpy,dbl	%fr0,%fr29
-	fcpy,dbl	%fr0,%fr30
-	fcpy,dbl	%fr0,%fr31
-	bv		($rp)
-	.EXIT
-	ldo		0($sp),$rv
-	.PROCEND
 ___
 {
 my $inp="%r26";
@@ -124,6 +94,37 @@ L\$ittle
 	addib,*<>	-1,$len,L\$ittle
 	ldo		1($inp),$inp
 L\$done
+	bv		($rp)
+	.EXIT
+	nop
+	.PROCEND
+___
+}
+{
+my ($in1,$in2,$len)=("%r26","%r25","%r24");
+
+$code.=<<___;
+	.EXPORT	CRYPTO_memcmp,ENTRY,ARGW0=GR,ARGW1=GR,ARGW1=GR
+	.ALIGN	8
+CRYPTO_memcmp
+	.PROC
+	.CALLINFO	NO_CALLS
+	.ENTRY
+	cmpib,*=	0,$len,L\$no_data
+	xor		$rv,$rv,$rv
+
+L\$oop_cmp
+	ldb		0($in1),%r19
+	ldb		0($in2),%r20
+	ldo		1($in1),$in1
+	ldo		1($in2),$in2
+	xor		%r19,%r20,%r29
+	addib,*<>	-1,$len,L\$oop_cmp
+	or		%r29,$rv,$rv
+
+	sub		%r0,$rv,%r29
+	extru		%r29,0,1,$rv
+L\$no_data
 	bv		($rp)
 	.EXIT
 	nop
@@ -217,9 +218,22 @@ L\$done2
 	.PROCEND
 ___
 }
-$code =~ s/cmpib,\*/comib,/gm	if ($SIZE_T==4);
-$code =~ s/,\*/,/gm		if ($SIZE_T==4);
-$code =~ s/\bbv\b/bve/gm	if ($SIZE_T==8);
-print $code;
-close STDOUT;
+
+if (`$ENV{CC} -Wa,-v -c -o /dev/null -x assembler /dev/null 2>&1`
+	=~ /GNU assembler/) {
+    $gnuas = 1;
+}
+
+foreach(split("\n",$code)) {
+
+	s/(\.LEVEL\s+2\.0)W/$1w/	if ($gnuas && $SIZE_T==8);
+	s/\.SPACE\s+\$TEXT\$/.text/	if ($gnuas && $SIZE_T==8);
+	s/\.SUBSPA.*//			if ($gnuas && $SIZE_T==8);
+	s/cmpib,\*/comib,/		if ($SIZE_T==4);
+	s/,\*/,/			if ($SIZE_T==4);
+	s/\bbv\b/bve/			if ($SIZE_T==8);
+
+	print $_,"\n";
+}
+close STDOUT or die "error closing STDOUT: $!";
 

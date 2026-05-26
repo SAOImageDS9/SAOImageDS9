@@ -1,12 +1,19 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2007-2025 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 
 # ====================================================================
-# Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
+# Written by Andy Polyakov, @dot-asm, initially for use in the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
-# details see http://www.openssl.org/~appro/cryptogams/.
+# details see https://github.com/dot-asm/cryptogams/.
 #
-# Hardware SPARC T4 support by David S. Miller <davem@davemloft.net>.
+# Hardware SPARC T4 support by David S. Miller
 # ====================================================================
 
 # SHA256 performance improvement over compiler generated code varies
@@ -20,7 +27,7 @@
 # over 2x than 32-bit code. X[16] resides on stack, but access to it
 # is scheduled for L2 latency and staged through 32 least significant
 # bits of %l0-%l7. The latter is done to achieve 32-/64-bit ABI
-# duality. Nevetheless it's ~40% faster than SHA256, which is pretty
+# duality. Nevertheless it's ~40% faster than SHA256, which is pretty
 # good [optimal coefficient is 50%].
 #
 # SHA512 on UltraSPARC T1.
@@ -49,8 +56,10 @@
 # saturates at 11.5x single-process result on 8-core processor, or
 # ~11/16GBps per 2.85GHz socket.
 
-$output=shift;
-open STDOUT,">$output";
+# $output is the last argument if it looks like a file (it has an extension)
+$output = $#ARGV >= 0 && $ARGV[$#ARGV] =~ m|\.\w+$| ? pop : undef;
+
+$output and open STDOUT,">$output";
 
 if ($output =~ /512/) {
 	$label="512";
@@ -95,7 +104,7 @@ if ($output =~ /512/) {
 
 	$locals=0;		# X[16] is register resident
 	@X=("%o0","%o1","%o2","%o3","%o4","%o5","%g1","%o7");
-	
+
 	$A="%l0";
 	$B="%l1";
 	$C="%l2";
@@ -247,7 +256,7 @@ $code.=<<___;
 	$SLL	$a,`$SZ*8-@Sigma0[1]`,$tmp1
 	xor	$tmp0,$h,$h
 	$SRL	$a,@Sigma0[2],$tmp0
-	xor	$tmp1,$h,$h	
+	xor	$tmp1,$h,$h
 	$SLL	$a,`$SZ*8-@Sigma0[0]`,$tmp1
 	xor	$tmp0,$h,$h
 	xor	$tmp1,$h,$h		! Sigma0(a)
@@ -385,7 +394,10 @@ ___
 } if ($SZ==8);
 
 $code.=<<___;
-#include "sparc_arch.h"
+#ifndef __ASSEMBLER__
+# define __ASSEMBLER__ 1
+#endif
+#include "crypto/sparc_arch.h"
 
 #ifdef __arch64__
 .register	%g2,#scratch
@@ -785,13 +797,13 @@ $code.=<<___;
 	restore
 .type	sha${label}_block_data_order,#function
 .size	sha${label}_block_data_order,(.-sha${label}_block_data_order)
-.asciz	"SHA${label} block transform for SPARCv9, CRYPTOGAMS by <appro\@openssl.org>"
+.asciz	"SHA${label} block transform for SPARCv9, CRYPTOGAMS by <https://github.com/dot-asm>"
 .align	4
 ___
 
 # Purpose of these subroutines is to explicitly encode VIS instructions,
 # so that one can compile the module without having to specify VIS
-# extentions on compiler command line, e.g. -xarch=v9 vs. -xarch=v9a.
+# extensions on compiler command line, e.g. -xarch=v9 vs. -xarch=v9a.
 # Idea is to reserve for option to produce "universal" binary and let
 # programmer detect if current CPU is VIS capable at run-time.
 sub unvis {
@@ -847,4 +859,4 @@ foreach (split("\n",$code)) {
 	print $_,"\n";
 }
 
-close STDOUT;
+close STDOUT or die "error closing STDOUT: $!";

@@ -1,4 +1,13 @@
 /*
+ * Copyright 2008-2025 The OpenSSL Project Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License 2.0 (the "License").  You may not use
+ * this file except in compliance with the License.  You can obtain a copy
+ * in the file LICENSE in the source distribution or at
+ * https://www.openssl.org/source/license.html
+ */
+
+/*
  * S/MIME detached data decrypt example: rarely done but should the need
  * arise this is an example....
  */
@@ -12,7 +21,7 @@ int main(int argc, char **argv)
     X509 *rcert = NULL;
     EVP_PKEY *rkey = NULL;
     CMS_ContentInfo *cms = NULL;
-    int ret = 1;
+    int ret = EXIT_FAILURE;
 
     OpenSSL_add_all_algorithms();
     ERR_load_crypto_strings();
@@ -25,7 +34,8 @@ int main(int argc, char **argv)
 
     rcert = PEM_read_bio_X509(tbio, NULL, 0, NULL);
 
-    BIO_reset(tbio);
+    if (BIO_reset(tbio) < 0)
+        goto err;
 
     rkey = PEM_read_bio_PrivateKey(tbio, NULL, 0, NULL);
 
@@ -48,7 +58,7 @@ int main(int argc, char **argv)
     /* Open file containing detached content */
     dcont = BIO_new_file("smencr.out", "rb");
 
-    if (!in)
+    if (dcont == NULL)
         goto err;
 
     out = BIO_new_file("encrout.txt", "w");
@@ -59,31 +69,21 @@ int main(int argc, char **argv)
     if (!CMS_decrypt(cms, rkey, rcert, dcont, out, 0))
         goto err;
 
-    ret = 0;
+    ret = EXIT_SUCCESS;
 
- err:
+err:
 
-    if (ret) {
+    if (ret != EXIT_SUCCESS) {
         fprintf(stderr, "Error Decrypting Data\n");
         ERR_print_errors_fp(stderr);
     }
 
-    if (cms)
-        CMS_ContentInfo_free(cms);
-    if (rcert)
-        X509_free(rcert);
-    if (rkey)
-        EVP_PKEY_free(rkey);
-
-    if (in)
-        BIO_free(in);
-    if (out)
-        BIO_free(out);
-    if (tbio)
-        BIO_free(tbio);
-    if (dcont)
-        BIO_free(dcont);
-
+    CMS_ContentInfo_free(cms);
+    X509_free(rcert);
+    EVP_PKEY_free(rkey);
+    BIO_free(in);
+    BIO_free(out);
+    BIO_free(tbio);
+    BIO_free(dcont);
     return ret;
-
 }

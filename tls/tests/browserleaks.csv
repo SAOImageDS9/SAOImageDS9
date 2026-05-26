@@ -1,0 +1,41 @@
+# Group,Name,Constraints,Setup,Body,Cleanup,Match,Result,Output,Error Output,Return Codes
+command,package prefer latest,,,,,,,,,
+command,package require tls,,,,,,,,,
+command,package require http,,,,,,,,,
+,,,,,,,,,,
+command,# Constraints,,,,,,,,,
+command,set dir [file join [pwd] [file dirname [info script]]],,,,,,,,,
+command,source [file join $dir common.tcl],,,,,,,,,
+,,,,,,,,,,
+command,# Helper functions,,,,,,,,,
+command,set ::cafile [file join $dir certs cacert.pem],,,,,,,,,
+command,set ::env(SSL_CERT_FILE) $::cafile,,,,,,,,,
+command,::http::register https 443 [list ::tls::socket -cafile $::cafile],,,,,,,,,
+command,"proc get_url {url} {
+    set token [::http::geturl $url]
+    set body [::http::data $token]
+    ::http::cleanup $token
+    return $body
+}
+",,,,,,,,,
+command,"proc get_data {url} {
+    set token [::http::geturl $url]
+    set body [::http::data $token]
+    ::http::cleanup $token
+    set pattern {<body.*?>(.*?)</body>}
+    set data """"
+    regexp -nocase $pattern $body match data
+    return $data
+}
+",,,,,,,,,
+,,,,,,,,,,
+command,# browserleaks.com Tests,,,,,,,,,
+BrowserLeaks,TLS 1.3,OpenSSL3.2,,get_url https://tls13.browserleaks.com,,,TLS 1.3,,,
+BrowserLeaks,TLS 1.2,OpenSSL3.2,,get_url https://tls12.browserleaks.com,,,TLS 1.2,,,
+BrowserLeaks,TLS 1.1,OpenSSL3.2,,get_url https://tls11.browserleaks.com,,,failed to use socket,,,1
+BrowserLeaks,TLS 1.0,OpenSSL3.2,,get_url https://tls10.browserleaks.com,,,failed to use socket,,,1
+BrowserLeaks,JA4 Raw Fingerprint,OpenSSL3.2,,get_data https://tls.browserleaks.com/iframe/ja4,,glob,t*,,,
+BrowserLeaks,"JA4 Raw Fingerprint, Original Order",OpenSSL3.2,,get_data https://tls.browserleaks.com/iframe/ja4_o,,glob,t*,,,
+BrowserLeaks,JA3 Raw Fingerprint,OpenSSL3.2,,get_data https://tls.browserleaks.com/iframe/ja3,,glob,*,,,
+BrowserLeaks,"JA3 Raw Fingerprint, Original Order",OpenSSL3.2,,get_data https://tls.browserleaks.com/iframe/ja3_n,,glob,*,,,
+BrowserLeaks,Encrypted Client Hello,OpenSSL3.2,,get_data https://tls.browserleaks.com/iframe/ech,,glob, *False*,,,

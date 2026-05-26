@@ -1,0 +1,107 @@
+# Group,Name,Constraints,Setup,Body,Cleanup,Match,Result,Output,Error Output,Return Codes
+command,package prefer latest,,,,,,,,,
+command,package require tls,,,,,,,,,
+,,,,,,,,,,
+command,# Constraints,,,,,,,,,
+command,set dir [file join [pwd] [file dirname [info script]]],,,,,,,,,
+command,source [file join $dir common.tcl],,,,,,,,,
+,,,,,,,,,,
+command,# Helper functions,,,,,,,,,
+command,set ::cafile [file join $dir certs cacert.pem],,,,,,,,,
+command,set ::env(SSL_CERT_FILE) $::cafile,,,,,,,,,
+command,"proc connect {url} {
+    set port 443
+    lassign [split $url "":""] url port
+    if {$port eq """"} {
+	set port 443
+    }
+    set ch [tls::socket -autoservername 1 -require 1 -cafile $::cafile $url $port]
+    if {[catch {tls::handshake $ch} err]} {
+	close $ch
+	return -code error $err
+    } else {
+	close $ch
+    }
+}",,,,,,,,,
+,,,,,,,,,,
+command,# BadSSL.com Tests,,,,,,,,,
+BadSSL,1000 sans,,,connect 1000-sans.connect.com,,,,,,
+BadSSL,1000 sans,,,connect 1000-sans.badssl.com,,,"handshake failed: certificate verify failed due to ""certificate has expired""",,,1
+BadSSL,10000 sans,,,connect 10000-sans.badssl.com,,,handshake failed: excessive message size,,,1
+BadSSL,3des,,,connect 3des.badssl.com,,glob,handshake failed: * alert handshake failure,,,1
+BadSSL,captive portal,OpenSSL1.1.1,,connect captive-portal.badssl.com,,,"handshake failed: certificate verify failed due to ""Hostname mismatch""",,,1
+BadSSL,captive portal,!OpenSSL1.1.1,,connect captive-portal.badssl.com,,,"handshake failed: certificate verify failed due to ""hostname mismatch""",,,1
+BadSSL,cbc,,,connect cbc.badssl.com,,,,,,
+BadSSL,client cert missing,,,connect client-cert-missing.badssl.com,,,,,,
+BadSSL,client,,,connect client.badssl.com,,,,,,
+BadSSL,dh composite,OpenSSL1.1.1,,connect dh-composite.badssl.com,,,,,,
+BadSSL,dh composite,win OpenSSL3.0,,connect dh-composite.badssl.com,,,,,,
+BadSSL,dh composite,unix OpenSSL3.0,,connect dh-composite.badssl.com,,,,,,
+BadSSL,dh composite,unix OpenSSL3.2,,connect dh-composite.badssl.com,,,handshake failed: dh key too small,,,1
+BadSSL,dh composite,OpenSSL3.2,,connect dh-composite.badssl.com,,,handshake failed: dh key too small,,,1
+BadSSL,dh small subgroup,,,connect dh-small-subgroup.badssl.com,,,,,,
+BadSSL,dh480,OpenSSL1.1.1,,connect dh480.badssl.com,,,handshake failed: dh key too small,,,1
+BadSSL,dh480,!OpenSSL1.1.1,,connect dh480.badssl.com,,,handshake failed: modulus too small,,,1
+BadSSL,dh512,OpenSSL1.1.1,,connect dh512.badssl.com,,,handshake failed: dh key too small,,,1
+BadSSL,dh512,OpenSSL3.0,,connect dh512.badssl.com,,,handshake failed: dh key too small,,,1
+BadSSL,dh512,OpenSSL3.2,,connect dh512.badssl.com,,,handshake failed: unknown security bits,,,1
+BadSSL,dh1024,OpenSSL1.1.1,,connect dh1024.badssl.com,,,,,,
+BadSSL,dh1024,win OpenSSL3.0,,connect dh1024.badssl.com,,,,,,
+BadSSL,dh1024,unix OpenSSL3.0,,connect dh1024.badssl.com,,,,,,
+BadSSL,dh1024,unix OpenSSL3.2,,connect dh1024.badssl.com,,,handshake failed: dh key too small,,,1
+BadSSL,dh1024,OpenSSL3.2,,connect dh1024.badssl.com,,,handshake failed: dh key too small,,,1
+BadSSL,dh2048,,,connect dh2048.badssl.com,,,,,,
+BadSSL,dsdtestprovider,,,connect dsdtestprovider.badssl.com,,,"handshake failed: certificate verify failed due to ""unable to get local issuer certificate""",,,1
+BadSSL,ecc256,,,connect ecc256.badssl.com,,,,,,
+BadSSL,ecc384,,,connect ecc384.badssl.com,,,,,,
+BadSSL,edellroot,,,connect edellroot.badssl.com,,,"handshake failed: certificate verify failed due to ""unable to get local issuer certificate""",,,1
+BadSSL,expired,,,connect expired.badssl.com,,,"handshake failed: certificate verify failed due to ""certificate has expired""",,,1
+BadSSL,extended validation,,,connect extended-validation.badssl.com,,,"handshake failed: certificate verify failed due to ""certificate has expired""",,,1
+BadSSL,hsts,,,connect hsts.badssl.com,,,,,,
+BadSSL,https everywhere,,,connect https-everywhere.badssl.com,,,,,,
+BadSSL,incomplete chain,,,connect incomplete-chain.badssl.com,,,"handshake failed: certificate verify failed due to ""unable to get local issuer certificate""",,,1
+BadSSL,invalid expected sct,,,connect invalid-expected-sct.badssl.com,,,"handshake failed: certificate verify failed due to ""unable to get local issuer certificate""",,,1
+BadSSL,long extended subdomain name containing many letters and dashes,,,connect long-extended-subdomain-name-containing-many-letters-and-dashes.badssl.com,,,,,,
+BadSSL,longextendedsubdomainnamewithoutdashesinordertotestwordwrapping,,,connect longextendedsubdomainnamewithoutdashesinordertotestwordwrapping.badssl.com,,,,,,
+BadSSL,mitm software,,,connect mitm-software.badssl.com,,,"handshake failed: certificate verify failed due to ""unable to get local issuer certificate""",,,1
+BadSSL,no common name,,,connect no-common-name.badssl.com,,,"handshake failed: certificate verify failed due to ""certificate has expired""",,,1
+BadSSL,no sct,,,connect no-sct.badssl.com,,,"handshake failed: certificate verify failed due to ""certificate has expired""",,,1
+BadSSL,no subject,,,connect no-subject.badssl.com,,,"handshake failed: certificate verify failed due to ""certificate has expired""",,,1
+BadSSL,null,,,connect null.badssl.com,,glob,handshake failed: * alert handshake failure,,,1
+BadSSL,pinning test,,,connect pinning-test.badssl.com,,,,,,
+BadSSL,preact cli,,,connect preact-cli.badssl.com,,,"handshake failed: certificate verify failed due to ""unable to get local issuer certificate""",,,1
+BadSSL,preloaded hsts,,,connect preloaded-hsts.badssl.com,,,,,,
+BadSSL,rc4 md5,,,connect rc4-md5.badssl.com,,glob,handshake failed: * alert handshake failure,,,1
+BadSSL,rc4,,,connect rc4.badssl.com,,glob,handshake failed: * alert handshake failure,,,1
+BadSSL,revoked,,,connect revoked.badssl.com,,,,,,
+BadSSL,rsa2048,,,connect rsa2048.badssl.com,,,,,,
+BadSSL,rsa4096,,,connect rsa4096.badssl.com,,,,,,
+BadSSL,rsa8192,,,connect rsa8192.badssl.com,,,"handshake failed: certificate verify failed due to ""certificate has expired""",,,1
+BadSSL,self signed,OpenSSL1.1.1,,connect self-signed.badssl.com,,,"handshake failed: certificate verify failed due to ""self signed certificate""",,,1
+BadSSL,self signed,!OpenSSL1.1.1,,connect self-signed.badssl.com,,,"handshake failed: certificate verify failed due to ""self-signed certificate""",,,1
+BadSSL,sha1 2016,,,connect sha1-2016.badssl.com,,,"handshake failed: certificate verify failed due to ""unable to get local issuer certificate""",,,1
+BadSSL,sha1 2017,win OpenSSL1.1.1,,connect sha1-2017.badssl.com,,,"handshake failed: certificate verify failed due to ""certificate has expired""",,,1
+BadSSL,sha1 2017,unix !mac OpenSSL3.2,,connect sha1-2017.badssl.com,,,"handshake failed: certificate verify failed due to ""certificate has expired""",,,1
+BadSSL,sha1 2017,unix OpenSSL3.0,,connect sha1-2017.badssl.com,,,"handshake failed: certificate verify failed due to ""CA signature digest algorithm too weak""",,,1
+BadSSL,sha1 2017,mac OpenSSL3.2,,connect sha1-2017.badssl.com,,,"handshake failed: certificate verify failed due to ""CA signature digest algorithm too weak""",,,1
+BadSSL,sha1 2017,win OpenSSL3.2,,connect sha1-2017.badssl.com,,,"handshake failed: certificate verify failed due to ""CA signature digest algorithm too weak""",,,1
+BadSSL,sha1 intermediate,,,connect sha1-intermediate.badssl.com,,,"handshake failed: certificate verify failed due to ""unable to get local issuer certificate""",,,1
+BadSSL,sha256,,,connect sha256.badssl.com,,,,,,
+BadSSL,sha384,,,connect sha384.badssl.com,,,"handshake failed: certificate verify failed due to ""certificate has expired""",,,1
+BadSSL,sha512,,,connect sha512.badssl.com,,,"handshake failed: certificate verify failed due to ""certificate has expired""",,,1
+BadSSL,static rsa,,,connect static-rsa.badssl.com,,,,,,
+BadSSL,subdomain.preloaded hsts,OpenSSL1.1.1,,connect subdomain.preloaded-hsts.badssl.com,,,"handshake failed: certificate verify failed due to ""Hostname mismatch""",,,1
+BadSSL,subdomain.preloaded hsts,!OpenSSL1.1.1,,connect subdomain.preloaded-hsts.badssl.com,,,"handshake failed: certificate verify failed due to ""hostname mismatch""",,,1
+BadSSL,superfish,,,connect superfish.badssl.com,,,"handshake failed: certificate verify failed due to ""unable to get local issuer certificate""",,,1
+BadSSL,tls v1 0:1010,,,connect tls-v1-0.badssl.com:1010,,,handshake failed: unsupported protocol,,,1
+BadSSL,tls v1 1:1011,,,connect tls-v1-1.badssl.com:1011,,,handshake failed: unsupported protocol,,,1
+BadSSL,tls v1 2:1012,tls1.2,,connect tls-v1-2.badssl.com:1012,,,,,,
+BadSSL,untrusted root,OpenSSL1.1.1,,connect untrusted-root.badssl.com,,,"handshake failed: certificate verify failed due to ""self signed certificate in certificate chain""",,,1
+BadSSL,untrusted root,!OpenSSL1.1.1,,connect untrusted-root.badssl.com,,,"handshake failed: certificate verify failed due to ""self-signed certificate in certificate chain""",,,1
+BadSSL,upgrade,,,connect upgrade.badssl.com,,,,,,
+BadSSL,webpack dev server,,,connect webpack-dev-server.badssl.com,,,"handshake failed: certificate verify failed due to ""unable to get local issuer certificate""",,,1
+BadSSL,wrong.host,OpenSSL1.1.1,,connect wrong.host.badssl.com,,,"handshake failed: certificate verify failed due to ""Hostname mismatch""",,,1
+BadSSL,wrong.host,!OpenSSL1.1.1,,connect wrong.host.badssl.com,,,"handshake failed: certificate verify failed due to ""hostname mismatch""",,,1
+BadSSL,mozilla modern,,,connect mozilla-modern.badssl.com,,,,,,
+BadSSL,mozilla old,,,connect mozilla-old.badssl.com,,,,,,
+BadSSL,mozilla intermediate,,,connect mozilla-intermediate.badssl.com,,,,,,

@@ -1,10 +1,17 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2005-2025 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 
 # ====================================================================
-# Written by Andy Polyakov <appro@fy.chalmers.se> for the OpenSSL
+# Written by Andy Polyakov, @dot-asm, initially for use in the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
-# details see http://www.openssl.org/~appro/cryptogams/.
+# details see https://github.com/dot-asm/cryptogams/.
 # ====================================================================
 
 # October 2005
@@ -51,21 +58,19 @@
 #
 # Modulo-scheduled inner loops allow to interleave floating point and
 # integer instructions and minimize Read-After-Write penalties. This
-# results in *further* 20-50% perfromance improvement [depending on
+# results in *further* 20-50% performance improvement [depending on
 # key length, more for longer keys] on USI&II cores and 30-80% - on
 # USIII&IV.
 
-$fname="bn_mul_mont_fpu";
-$bits=32;
-for (@ARGV) { $bits=64 if (/\-m64/ || /\-xarch\=v9/); }
+# $output is the last argument if it looks like a file (it has an extension)
+$output = $#ARGV >= 0 && $ARGV[$#ARGV] =~ m|\.\w+$| ? pop : undef;
 
-if ($bits==64) {
-	$bias=2047;
-	$frame=192;
-} else {
-	$bias=0;
-	$frame=128;	# 96 rounded up to largest known cache-line
-}
+$output and open STDOUT,">$output";
+
+$fname="bn_mul_mont_fpu";
+
+$frame="STACK_FRAME";
+$bias="STACK_BIAS";
 $locals=64;
 
 # In order to provide for 32-/64-bit ABI duality, I keep integers wider
@@ -121,6 +126,11 @@ $nhia="%f56"; $nhib="%f58"; $nhic="%f60"; $nhid="%f62";
 $ASI_FL16_P=0xD2;	# magic ASI value to engage 16-bit FP load
 
 $code=<<___;
+#ifndef __ASSEMBLER__
+# define __ASSEMBLER__ 1
+#endif
+#include "crypto/sparc_arch.h"
+
 .section	".text",#alloc,#execinstr
 
 .global $fname
@@ -860,14 +870,14 @@ $fname:
 	restore
 .type   $fname,#function
 .size	$fname,(.-$fname)
-.asciz	"Montgomery Multipltication for UltraSPARC, CRYPTOGAMS by <appro\@openssl.org>"
+.asciz	"Montgomery Multiplication for UltraSPARC, CRYPTOGAMS by <https://github.com/dot-asm>"
 .align	32
 ___
 
 $code =~ s/\`([^\`]*)\`/eval($1)/gem;
 
 # Below substitution makes it possible to compile without demanding
-# VIS extentions on command line, e.g. -xarch=v9 vs. -xarch=v9a. I
+# VIS extensions on command line, e.g. -xarch=v9 vs. -xarch=v9a. I
 # dare to do this, because VIS capability is detected at run-time now
 # and this routine is not called on CPU not capable to execute it. Do
 # note that fzeros is not the only VIS dependency! Another dependency
@@ -879,4 +889,4 @@ $code =~ s/fzeros\s+%f([0-9]+)/
 
 print $code;
 # flush
-close STDOUT;
+close STDOUT or die "error closing STDOUT: $!";

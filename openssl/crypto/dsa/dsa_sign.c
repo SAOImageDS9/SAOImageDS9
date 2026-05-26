@@ -1,110 +1,217 @@
-/* crypto/dsa/dsa_sign.c */
-/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
- * All rights reserved.
+/*
+ * Copyright 1995-2024 The OpenSSL Project Authors. All Rights Reserved.
  *
- * This package is an SSL implementation written
- * by Eric Young (eay@cryptsoft.com).
- * The implementation was written so as to conform with Netscapes SSL.
- *
- * This library is free for commercial and non-commercial use as long as
- * the following conditions are aheared to.  The following conditions
- * apply to all code found in this distribution, be it the RC4, RSA,
- * lhash, DES, etc., code; not just the SSL code.  The SSL documentation
- * included with this distribution is covered by the same copyright terms
- * except that the holder is Tim Hudson (tjh@cryptsoft.com).
- *
- * Copyright remains Eric Young's, and as such any Copyright notices in
- * the code are not to be removed.
- * If this package is used in a product, Eric Young should be given attribution
- * as the author of the parts of the library used.
- * This can be in the form of a textual message at program startup or
- * in documentation (online or textual) provided with the package.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *    "This product includes cryptographic software written by
- *     Eric Young (eay@cryptsoft.com)"
- *    The word 'cryptographic' can be left out if the rouines from the library
- *    being used are not cryptographic related :-).
- * 4. If you include any Windows specific code (or a derivative thereof) from
- *    the apps directory (application code) you must include an acknowledgement:
- *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"
- *
- * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- *
- * The licence and distribution terms for any publically available version or
- * derivative of this code cannot be changed.  i.e. this code cannot simply be
- * copied and put under another distribution licence
- * [including the GNU Public Licence.]
+ * Licensed under the Apache License 2.0 (the "License").  You may not use
+ * this file except in compliance with the License.  You can obtain a copy
+ * in the file LICENSE in the source distribution or at
+ * https://www.openssl.org/source/license.html
  */
 
-/* Original version from Steven Schoch <schoch@sheba.arc.nasa.gov> */
+/*
+ * DSA low level APIs are deprecated for public use, but still ok for
+ * internal use.
+ */
+#include "internal/deprecated.h"
 
-#include "cryptlib.h"
-#include <openssl/dsa.h>
-#include <openssl/rand.h>
 #include <openssl/bn.h>
+#include "internal/cryptlib.h"
+#include "dsa_local.h"
+#include "crypto/asn1_dsa.h"
+#include "crypto/dsa.h"
 
 DSA_SIG *DSA_do_sign(const unsigned char *dgst, int dlen, DSA *dsa)
 {
-#ifdef OPENSSL_FIPS
-    if (FIPS_mode() && !(dsa->meth->flags & DSA_FLAG_FIPS_METHOD)
-        && !(dsa->flags & DSA_FLAG_NON_FIPS_ALLOW)) {
-        DSAerr(DSA_F_DSA_DO_SIGN, DSA_R_NON_FIPS_DSA_METHOD);
-        return NULL;
-    }
-#endif
     return dsa->meth->dsa_do_sign(dgst, dlen, dsa);
 }
 
+#ifndef OPENSSL_NO_DEPRECATED_3_0
 int DSA_sign_setup(DSA *dsa, BN_CTX *ctx_in, BIGNUM **kinvp, BIGNUM **rp)
 {
-#ifdef OPENSSL_FIPS
-    if (FIPS_mode() && !(dsa->meth->flags & DSA_FLAG_FIPS_METHOD)
-        && !(dsa->flags & DSA_FLAG_NON_FIPS_ALLOW)) {
-        DSAerr(DSA_F_DSA_SIGN_SETUP, DSA_R_NON_FIPS_DSA_METHOD);
-        return 0;
-    }
-#endif
     return dsa->meth->dsa_sign_setup(dsa, ctx_in, kinvp, rp);
 }
+#endif
 
 DSA_SIG *DSA_SIG_new(void)
 {
-    DSA_SIG *sig;
-    sig = OPENSSL_malloc(sizeof(DSA_SIG));
-    if (!sig)
-        return NULL;
-    sig->r = NULL;
-    sig->s = NULL;
+    DSA_SIG *sig = OPENSSL_zalloc(sizeof(*sig));
+
     return sig;
 }
 
 void DSA_SIG_free(DSA_SIG *sig)
 {
-    if (sig) {
-        if (sig->r)
-            BN_free(sig->r);
-        if (sig->s)
-            BN_free(sig->s);
-        OPENSSL_free(sig);
+    if (sig == NULL)
+        return;
+    BN_clear_free(sig->r);
+    BN_clear_free(sig->s);
+    OPENSSL_free(sig);
+}
+
+DSA_SIG *d2i_DSA_SIG(DSA_SIG **psig, const unsigned char **ppin, long len)
+{
+    DSA_SIG *sig;
+
+    if (len < 0)
+        return NULL;
+    if (psig != NULL && *psig != NULL) {
+        sig = *psig;
+    } else {
+        sig = DSA_SIG_new();
+        if (sig == NULL)
+            return NULL;
     }
+    if (sig->r == NULL)
+        sig->r = BN_new();
+    if (sig->s == NULL)
+        sig->s = BN_new();
+    if (sig->r == NULL || sig->s == NULL
+        || ossl_decode_der_dsa_sig(sig->r, sig->s, ppin, (size_t)len) == 0) {
+        if (psig == NULL || *psig == NULL)
+            DSA_SIG_free(sig);
+        return NULL;
+    }
+    if (psig != NULL && *psig == NULL)
+        *psig = sig;
+    return sig;
+}
+
+int i2d_DSA_SIG(const DSA_SIG *sig, unsigned char **ppout)
+{
+    BUF_MEM *buf = NULL;
+    size_t encoded_len;
+    WPACKET pkt;
+
+    if (ppout == NULL) {
+        if (!WPACKET_init_null(&pkt, 0))
+            return -1;
+    } else if (*ppout == NULL) {
+        if ((buf = BUF_MEM_new()) == NULL
+            || !WPACKET_init_len(&pkt, buf, 0)) {
+            BUF_MEM_free(buf);
+            return -1;
+        }
+    } else {
+        if (!WPACKET_init_static_len(&pkt, *ppout, SIZE_MAX, 0))
+            return -1;
+    }
+
+    if (!ossl_encode_der_dsa_sig(&pkt, sig->r, sig->s)
+        || !WPACKET_get_total_written(&pkt, &encoded_len)
+        || !WPACKET_finish(&pkt)) {
+        BUF_MEM_free(buf);
+        WPACKET_cleanup(&pkt);
+        return -1;
+    }
+
+    if (ppout != NULL) {
+        if (*ppout == NULL) {
+            *ppout = (unsigned char *)buf->data;
+            buf->data = NULL;
+            BUF_MEM_free(buf);
+        } else {
+            *ppout += encoded_len;
+        }
+    }
+
+    return (int)encoded_len;
+}
+
+int DSA_size(const DSA *dsa)
+{
+    int ret = -1;
+    DSA_SIG sig;
+
+    if (dsa->params.q != NULL) {
+        sig.r = sig.s = dsa->params.q;
+        ret = i2d_DSA_SIG(&sig, NULL);
+
+        if (ret < 0)
+            ret = 0;
+    }
+    return ret;
+}
+
+void DSA_SIG_get0(const DSA_SIG *sig, const BIGNUM **pr, const BIGNUM **ps)
+{
+    if (pr != NULL)
+        *pr = sig->r;
+    if (ps != NULL)
+        *ps = sig->s;
+}
+
+int DSA_SIG_set0(DSA_SIG *sig, BIGNUM *r, BIGNUM *s)
+{
+    if (r == NULL || s == NULL)
+        return 0;
+    BN_clear_free(sig->r);
+    BN_clear_free(sig->s);
+    sig->r = r;
+    sig->s = s;
+    return 1;
+}
+
+int ossl_dsa_sign_int(int type, const unsigned char *dgst, int dlen,
+    unsigned char *sig, unsigned int *siglen, DSA *dsa,
+    unsigned int nonce_type, const char *digestname,
+    OSSL_LIB_CTX *libctx, const char *propq)
+{
+    DSA_SIG *s;
+
+    if (sig == NULL) {
+        *siglen = DSA_size(dsa);
+        return 1;
+    }
+
+    /* legacy case uses the method table */
+    if (dsa->libctx == NULL || dsa->meth != DSA_get_default_method())
+        s = DSA_do_sign(dgst, dlen, dsa);
+    else
+        s = ossl_dsa_do_sign_int(dgst, dlen, dsa,
+            nonce_type, digestname, libctx, propq);
+    if (s == NULL) {
+        *siglen = 0;
+        return 0;
+    }
+    *siglen = i2d_DSA_SIG(s, &sig);
+    DSA_SIG_free(s);
+    return 1;
+}
+
+int DSA_sign(int type, const unsigned char *dgst, int dlen,
+    unsigned char *sig, unsigned int *siglen, DSA *dsa)
+{
+    return ossl_dsa_sign_int(type, dgst, dlen, sig, siglen, dsa,
+        0, NULL, NULL, NULL);
+}
+
+/* data has already been hashed (probably with SHA or SHA-1). */
+/*-
+ * returns
+ *      1: correct signature
+ *      0: incorrect signature
+ *     -1: error
+ */
+int DSA_verify(int type, const unsigned char *dgst, int dgst_len,
+    const unsigned char *sigbuf, int siglen, DSA *dsa)
+{
+    DSA_SIG *s;
+    const unsigned char *p = sigbuf;
+    unsigned char *der = NULL;
+    int derlen = -1;
+    int ret = -1;
+
+    s = DSA_SIG_new();
+    if (s == NULL)
+        return ret;
+    if (d2i_DSA_SIG(&s, &p, siglen) == NULL)
+        goto err;
+    /* Ensure signature uses DER and doesn't have trailing garbage */
+    derlen = i2d_DSA_SIG(s, &der);
+    if (derlen != siglen || memcmp(sigbuf, der, derlen))
+        goto err;
+    ret = DSA_do_verify(dgst, dgst_len, s, dsa);
+err:
+    OPENSSL_clear_free(der, derlen);
+    DSA_SIG_free(s);
+    return ret;
 }

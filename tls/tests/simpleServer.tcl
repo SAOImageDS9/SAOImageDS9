@@ -1,7 +1,6 @@
-#!/bin/sh
-# The next line is executed by /bin/sh, but not tcl \
-exec tclsh8.3 "$0" ${1+"$@"}
+#!/usr/bin/env tclsh
 
+package prefer latest
 package require tls
 
 set dir			[file join [file dirname [info script]] ../tests/certs]
@@ -20,7 +19,7 @@ foreach {key val} $argv {
 		\n\t-cafile   file     Cert. Auth. File ($OPTS(-cafile))\
 		\n\t-cert     file     Server Cert ($OPTS(-cert))\
 		\n\t-key      file     Server Key ($OPTS(-key))\
-		\n\t-require  boolean  Require Certification ($OPTS(-require))\
+		\n\t-require  boolean  Require Certificate ($OPTS(-require))\
 		\n\t-port     num      Port to listen on ($OPTS(-port))"
 	exit
     }
@@ -44,7 +43,7 @@ proc respond {chan} {
 	catch {close $chan}
 	return
     }
-    #if {$data != ""} { dputs "got $chan ([shortstr $data])" }
+    #if {$data ne ""} { dputs "got $chan ([shortstr $data])" }
     if {[eof $chan]} {
 	# client gone or finished
 	dputs "EOF $chan"

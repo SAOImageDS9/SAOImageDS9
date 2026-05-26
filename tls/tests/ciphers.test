@@ -1,159 +1,143 @@
-# Commands covered:  tls::ciphers
-#
-# This file contains a collection of tests for one or more of the Tcl
-# built-in commands.  Sourcing this file into Tcl runs the tests and
-# generates output for errors.  No output means no errors were found.
-#
+# Auto generated test cases for ciphers.csv
 
-# All rights reserved.
-#
-# See the file "license.terms" for information on usage and redistribution
-# of this file, and for a DISCLAIMER OF ALL WARRANTIES.
-#
-
-if {[lsearch [namespace children] ::tcltest] == -1} {
-    package require tcltest
-    namespace import ::tcltest::*
+# Load Tcl Test package
+if {[lsearch [namespace children] ::tcltest] < 0} {
+	package require tcltest
+	namespace import ::tcltest::*
 }
 
-# The build dir is added as the first element of $PATH
-set auto_path [linsert $auto_path 0 [lindex [split $env(PATH) ";:"] 0]]
+set ::auto_path [concat [list [file dirname [file dirname [info script]]]] $::auto_path]
 
+package prefer latest
 package require tls
 
-# One of these should == 1, depending on what type of ssl library
-# tls was compiled against. (RSA BSAFE SSL-C or OpenSSL).
-#
-set ::tcltest::testConstraints(rsabsafe) 0
-set ::tcltest::testConstraints(openssl) [string match "OpenSSL*" [tls::version]]
+# Make sure path includes location of OpenSSL executable
+if {[info exists ::env(OPENSSL)]} {set ::env(path) [string cat [file join $::env(OPENSSL) bin ";"] $::env(path)]}
 
-set ::EXPECTEDCIPHERS(rsabsafe) {
-    EDH-DSS-RC4-SHA
-    EDH-RSA-DES-CBC3-SHA
-    EDH-DSS-DES-CBC3-SHA
-    DES-CBC3-SHA
-    RC4-SHA
-    RC4-MD5
-    EDH-RSA-DES-CBC-SHA
-    EDH-DSS-DES-CBC-SHA
-    DES-CBC-SHA
-    EXP-EDH-DSS-DES-56-SHA
-    EXP-EDH-DSS-RC4-56-SHA
-    EXP-DES-56-SHA
-    EXP-RC4-56-SHA
-    EXP-EDH-RSA-DES-CBC-SHA
-    EXP-EDH-DSS-DES-CBC-SHA
-    EXP-DES-CBC-SHA
-    EXP-RC2-CBC-MD5
-    EXP-RC4-MD5
-}
+# Constraints
+set protocols [list ssl2 ssl3 tls1 tls1.1 tls1.2 tls1.3]
+foreach protocol $protocols {::tcltest::testConstraint $protocol 0}
+foreach protocol [::tls::protocols] {::tcltest::testConstraint $protocol 1}
+::tcltest::testConstraint OpenSSL [string match "OpenSSL*" [::tls::version]]
 
-set ::EXPECTEDCIPHERS(openssl) {
-    AES128-SHA
-    AES256-SHA
-    DES-CBC-SHA
-    DES-CBC3-SHA
-    DHE-DSS-AES128-SHA
-    DHE-DSS-AES256-SHA
-    DHE-DSS-RC4-SHA
-    DHE-RSA-AES128-SHA
-    DHE-RSA-AES256-SHA
-    EDH-DSS-DES-CBC-SHA
-    EDH-DSS-DES-CBC3-SHA
-    EDH-RSA-DES-CBC-SHA
-    EDH-RSA-DES-CBC3-SHA
-    EXP-DES-CBC-SHA
-    EXP-EDH-DSS-DES-CBC-SHA
-    EXP-EDH-RSA-DES-CBC-SHA
-    EXP-RC2-CBC-MD5
-    EXP-RC4-MD5
-    EXP1024-DES-CBC-SHA
-    EXP1024-DHE-DSS-DES-CBC-SHA
-    EXP1024-DHE-DSS-RC4-SHA
-    EXP1024-RC2-CBC-MD5
-    EXP1024-RC4-MD5
-    EXP1024-RC4-SHA
-    IDEA-CBC-SHA
-    RC4-MD5
-    RC4-SHA
-}
-
-set ::EXPECTEDCIPHERS(openssl0.9.8) {
-    DHE-RSA-AES256-SHA
-    DHE-DSS-AES256-SHA
-    AES256-SHA
-    EDH-RSA-DES-CBC3-SHA
-    EDH-DSS-DES-CBC3-SHA
-    DES-CBC3-SHA
-    DHE-RSA-AES128-SHA
-    DHE-DSS-AES128-SHA
-    AES128-SHA
-    IDEA-CBC-SHA
-    RC4-SHA
-    RC4-MD5
-    EDH-RSA-DES-CBC-SHA
-    EDH-DSS-DES-CBC-SHA
-    DES-CBC-SHA
-    EXP-EDH-RSA-DES-CBC-SHA
-    EXP-EDH-DSS-DES-CBC-SHA
-    EXP-DES-CBC-SHA
-    EXP-RC2-CBC-MD5
-    EXP-RC4-MD5
-}
-
-set version ""
-if {[string match "OpenSSL*" [tls::version]]} {
-   regexp {OpenSSL ([\d\.]+)} [tls::version] -> version
-}
-if {![info exists ::EXPECTEDCIPHERS(openssl$version)]} {
-    set version ""
-}
-
-proc listcompare {wants haves} {
-    array set want {}
-    array set have {}
-    foreach item $wants { set want($item) 1 }
-    foreach item $haves { set have($item) 1 }
-    foreach item [lsort -dictionary [array names have]] {
-	if {[info exists want($item)]} {
-	    unset want($item) have($item)
-	}
+# Helper functions
+proc lcompare {list1 list2} {
+    set m ""
+    set u ""
+    foreach i $list1 {
+        if {$i ni $list2} {
+            lappend m $i
+        }
     }
-    if {[array size want] || [array size have]} {
-	return [list MISSING [array names want] UNEXPECTED [array names have]]
+    foreach i $list2 {
+        if {$i ni $list1} {
+            lappend u $i
+        }
     }
+    return [list "missing" $m "unexpected" $u]
 }
 
-test ciphers-1.1 {Tls::ciphers for ssl3} {rsabsafe} {
-    # This will fail if you compiled against OpenSSL.
-    # Change the constraint setting above.
-    listcompare $::EXPECTEDCIPHERS(rsabsafe) [tls::ciphers ssl3]
-} {}
+proc exec_get {delim args} {return [split [exec openssl {*}$args] $delim]}
 
-test ciphers-1.2 {Tls::ciphers for tls1} {rsabsafe} {
-    # This will fail if you compiled against OpenSSL.
-    # Change the constraint setting above.
-    listcompare $::EXPECTEDCIPHERS(rsabsafe) [tls::ciphers tls1]
-} {}
-
-test ciphers-1.3 {Tls::ciphers for ssl3} {openssl} {
-    # This will fail if you compiled against RSA bsafe or with a
-    # different set of defines than the default.
-    # Change the constraint setting above.
-    listcompare $::EXPECTEDCIPHERS(openssl$version) [tls::ciphers ssl3]
-} {}
-
-# This version of the test is correct for OpenSSL only.
-# An equivalent test for the RSA BSAFE SSL-C is earlier in this file.
-
-test ciphers-1.4 {Tls::ciphers for tls1} {openssl} {
-    # This will fail if you compiled against RSA bsafe or with a
-    # different set of defines than the default.
-    # Change the constraint setting in all.tcl
-    listcompare $::EXPECTEDCIPHERS(openssl$version) [tls::ciphers tls1]
-} {}
+# Test protocols
 
 
-# cleanup
+test Protocols-1.1 {All} -body {
+	lcompare $protocols [::tls::protocols]
+    } -result {missing {ssl2 ssl3} unexpected {}}
+
+# Test ciphers
+
+
+test Ciphers_By_Protocol-2.1 {SSL2} -constraints {ssl2} -body {
+	lcompare [exec_get ":" ciphers -ssl2] [::tls::ciphers ssl2]
+    } -result {missing {} unexpected {}}
+
+test Ciphers_By_Protocol-2.2 {SSL3} -constraints {ssl3} -body {
+	lcompare [exec_get ":" ciphers -ssl3] [::tls::ciphers ssl3]
+    } -result {missing {} unexpected {}}
+
+test Ciphers_By_Protocol-2.3 {TLS1.0} -constraints {tls1} -body {
+	lcompare [exec_get ":" ciphers -tls1] [::tls::ciphers tls1]
+    } -result {missing {} unexpected {}}
+
+test Ciphers_By_Protocol-2.4 {TLS1.1} -constraints {tls1.1} -body {
+	lcompare [exec_get ":" ciphers -tls1_1] [::tls::ciphers tls1.1]
+    } -result {missing {} unexpected {}}
+
+test Ciphers_By_Protocol-2.5 {TLS1.2} -constraints {tls1.2} -body {
+	lcompare [exec_get ":" ciphers -tls1_2] [::tls::ciphers tls1.2]
+    } -result {missing {} unexpected {}}
+
+test Ciphers_By_Protocol-2.6 {TLS1.3} -constraints {tls1.3} -body {
+	lcompare [exec_get ":" ciphers -tls1_3] [::tls::ciphers tls1.3]
+    } -result {missing {} unexpected {}}
+
+# Test cipher descriptions
+
+
+test Ciphers_With_Descriptions-3.1 {SSL2} -constraints {ssl2} -body {
+	lcompare [exec_get "\r\n" ciphers -ssl2 -v] [split [string trim [::tls::ciphers ssl2 1]] \n]
+    } -result {missing {} unexpected {}}
+
+test Ciphers_With_Descriptions-3.2 {SSL3} -constraints {ssl3} -body {
+	lcompare [exec_get "\r\n" ciphers -ssl3 -v] [split [string trim [::tls::ciphers ssl3 1]] \n]
+    } -result {missing {} unexpected {}}
+
+test Ciphers_With_Descriptions-3.3 {TLS1.0} -constraints {tls1 OpenSSL1.1.1} -body {
+	lcompare [exec_get "\r\n" ciphers -tls1 -v] [split [string trim [::tls::ciphers tls1 1]] \n]
+    } -result {missing {} unexpected {}}
+
+test Ciphers_With_Descriptions-3.4 {TLS1.1} -constraints {tls1.1 OpenSSL1.1.1} -body {
+	lcompare [exec_get "\r\n" ciphers -tls1_1 -v] [split [string trim [::tls::ciphers tls1.1 1]] \n]
+    } -result {missing {} unexpected {}}
+
+test Ciphers_With_Descriptions-3.5 {TLS1.2} -constraints {tls1.2 OpenSSL1.1.1} -body {
+	lcompare [exec_get "\r\n" ciphers -tls1_2 -v] [split [string trim [::tls::ciphers tls1.2 1]] \n]
+    } -result {missing {} unexpected {}}
+
+test Ciphers_With_Descriptions-3.6 {TLS1.3} -constraints {tls1.3 OpenSSL1.1.1} -body {
+	lcompare [exec_get "\r\n" ciphers -tls1_3 -v] [split [string trim [::tls::ciphers tls1.3 1]] \n]
+    } -result {missing {} unexpected {}}
+
+# Test protocol specific ciphers
+
+
+test Ciphers_Protocol_Specific-4.1 {SSL2} -constraints {ssl2} -body {
+	lcompare [exec_get ":" ciphers -ssl2 -s] [::tls::ciphers ssl2 0 1]
+    } -result {missing {} unexpected {}}
+
+test Ciphers_Protocol_Specific-4.2 {SSL3} -constraints {ssl3} -body {
+	lcompare [exec_get ":" ciphers -ssl3 -s] [::tls::ciphers ssl3 0 1]
+    } -result {missing {} unexpected {}}
+
+test Ciphers_Protocol_Specific-4.3 {TLS1.0} -constraints {tls1 OpenSSL1.1.1} -body {
+	lcompare [exec_get ":" ciphers -tls1 -s] [::tls::ciphers tls1 0 1]
+    } -result {missing {} unexpected {}}
+
+test Ciphers_Protocol_Specific-4.4 {TLS1.1} -constraints {tls1.1 OpenSSL1.1.1} -body {
+	lcompare [exec_get ":" ciphers -tls1_1 -s] [::tls::ciphers tls1.1 0 1]
+    } -result {missing {} unexpected {}}
+
+test Ciphers_Protocol_Specific-4.5 {TLS1.2} -constraints {tls1.2 OpenSSL1.1.1} -body {
+	lcompare [exec_get ":" ciphers -tls1_2 -s] [::tls::ciphers tls1.2 0 1]
+    } -result {missing {} unexpected {}}
+
+test Ciphers_Protocol_Specific-4.6 {TLS1.3} -constraints {tls1.3 OpenSSL1.1.1} -body {
+	lcompare [exec_get ":" ciphers -tls1_3 -s] [::tls::ciphers tls1.3 0 1]
+    } -result {missing {} unexpected {}}
+
+# Test version
+
+
+test Version-5.1 {All} -body {
+	::tls::version
+    } -match {glob} -result {*}
+
+test Version-5.2 {OpenSSL} -constraints {OpenSSL} -body {
+	::tls::version
+    } -match {glob} -result {OpenSSL*}
+
+# Cleanup
 ::tcltest::cleanupTests
 return

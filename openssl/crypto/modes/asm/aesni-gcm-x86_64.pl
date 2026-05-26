@@ -1,10 +1,17 @@
-#!/usr/bin/env perl
+#! /usr/bin/env perl
+# Copyright 2013-2025 The OpenSSL Project Authors. All Rights Reserved.
+#
+# Licensed under the Apache License 2.0 (the "License").  You may not use
+# this file except in compliance with the License.  You can obtain a copy
+# in the file LICENSE in the source distribution or at
+# https://www.openssl.org/source/license.html
+
 #
 # ====================================================================
-# Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
+# Written by Andy Polyakov, @dot-asm, initially for use in the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
-# details see http://www.openssl.org/~appro/cryptogams/.
+# details see https://github.com/dot-asm/cryptogams/.
 # ====================================================================
 #
 #
@@ -22,17 +29,21 @@
 # [1] and [2], with MOVBE twist suggested by Ilya Albrekht and Max
 # Locktyukhin of Intel Corp. who verified that it reduces shuffles
 # pressure with notable relative improvement, achieving 1.0 cycle per
-# byte processed with 128-bit key on Haswell processor, and 0.74 -
-# on Broadwell. [Mentioned results are raw profiled measurements for
-# favourable packet size, one divisible by 96. Applications using the
-# EVP interface will observe a few percent worse performance.]
+# byte processed with 128-bit key on Haswell processor, 0.74 - on
+# Broadwell, 0.63 - on Skylake... [Mentioned results are raw profiled
+# measurements for favourable packet size, one divisible by 96.
+# Applications using the EVP interface will observe a few percent
+# worse performance.]
+#
+# Knights Landing processes 1 byte in 1.25 cycles (measured with EVP).
 #
 # [1] http://rt.openssl.org/Ticket/Display.html?id=2900&user=guest&pass=guest
 # [2] http://www.intel.com/content/dam/www/public/us/en/documents/software-support/enabling-high-performance-gcm.pdf
 
-$flavour = shift;
-$output  = shift;
-if ($flavour =~ /\./) { $output = $flavour; undef $flavour; }
+# $output is the last argument if it looks like a file (it has an extension)
+# $flavour is the first argument if it doesn't look like a file
+$output = $#ARGV >= 0 && $ARGV[$#ARGV] =~ m|\.\w+$| ? pop : undef;
+$flavour = $#ARGV >= 0 && $ARGV[0] !~ m|\.| ? shift : undef;
 
 $win64=0; $win64=1 if ($flavour =~ /[nm]asm|mingw64/ || $output =~ /\.asm$/);
 
@@ -42,13 +53,15 @@ $0 =~ m/(.*[\/\\])[^\/\\]+$/; $dir=$1;
 die "can't locate x86_64-xlate.pl";
 
 if (`$ENV{CC} -Wa,-v -c -o /dev/null -x assembler /dev/null 2>&1`
-		=~ /GNU assembler version ([2-9]\.[0-9]+)/) {
-	$avx = ($1>=2.20) + ($1>=2.22);
+		=~ /GNU assembler version ([0-9]+)\.([0-9]+)/) {
+	my $ver = $1 + $2/100.0; # 3.1->3.01, 3.10->3.10
+	$avx = ($ver >= 2.20) + ($ver >= 2.22);
 }
 
 if (!$avx && $win64 && ($flavour =~ /nasm/ || $ENV{ASM} =~ /nasm/) &&
-	    `nasm -v 2>&1` =~ /NASM version ([2-9]\.[0-9]+)/) {
-	$avx = ($1>=2.09) + ($1>=2.10);
+	    `nasm -v 2>&1` =~ /NASM version ([0-9]+)\.([0-9]+)/) {
+	my $ver = $1 + $2/100.0; # 3.1->3.01, 3.10->3.10
+	$avx = ($ver >= 2.09) + ($ver >= 2.10);
 }
 
 if (!$avx && $win64 && ($flavour =~ /masm/ || $ENV{ASM} =~ /ml64/) &&
@@ -56,11 +69,12 @@ if (!$avx && $win64 && ($flavour =~ /masm/ || $ENV{ASM} =~ /ml64/) &&
 	$avx = ($1>=10) + ($1>=11);
 }
 
-if (!$avx && `$ENV{CC} -v 2>&1` =~ /((?:^clang|LLVM) version|.*based on LLVM) ([3-9]\.[0-9]+)/) {
+if (!$avx && `$ENV{CC} -v 2>&1` =~ /((?:clang|LLVM) version|.*based on LLVM) ([0-9]+\.[0-9]+)/) {
 	$avx = ($2>=3.0) + ($2>3.0);
 }
 
-open OUT,"| \"$^X\" $xlate $flavour $output";
+open OUT,"| \"$^X\" \"$xlate\" $flavour \"$output\""
+    or die "can't call $xlate: $!";
 *STDOUT=*OUT;
 
 if ($avx>1) {{{
@@ -80,6 +94,7 @@ $code=<<___;
 .type	_aesni_ctr32_ghash_6x,\@abi-omnipotent
 .align	32
 _aesni_ctr32_ghash_6x:
+.cfi_startproc
 	vmovdqu		0x20($const),$T2	# borrow $T2, .Lone_msb
 	sub		\$6,$len
 	vpxor		$Z0,$Z0,$Z0		# $Z0   = 0
@@ -387,6 +402,7 @@ _aesni_ctr32_ghash_6x:
 	vpxor		$Z0,$Xi,$Xi		# modulo-scheduled
 
 	ret
+.cfi_endproc
 .size	_aesni_ctr32_ghash_6x,.-_aesni_ctr32_ghash_6x
 ___
 ######################################################################
@@ -399,17 +415,25 @@ $code.=<<___;
 .type	aesni_gcm_decrypt,\@function,6
 .align	32
 aesni_gcm_decrypt:
+.cfi_startproc
 	xor	$ret,$ret
 	cmp	\$0x60,$len			# minimal accepted length
 	jb	.Lgcm_dec_abort
 
 	lea	(%rsp),%rax			# save stack pointer
+.cfi_def_cfa_register	%rax
 	push	%rbx
+.cfi_push	%rbx
 	push	%rbp
+.cfi_push	%rbp
 	push	%r12
+.cfi_push	%r12
 	push	%r13
+.cfi_push	%r13
 	push	%r14
+.cfi_push	%r14
 	push	%r15
+.cfi_push	%r15
 ___
 $code.=<<___ if ($win64);
 	lea	-0xa8(%rsp),%rsp
@@ -501,15 +525,23 @@ $code.=<<___ if ($win64);
 ___
 $code.=<<___;
 	mov	-48(%rax),%r15
+.cfi_restore	%r15
 	mov	-40(%rax),%r14
+.cfi_restore	%r14
 	mov	-32(%rax),%r13
+.cfi_restore	%r13
 	mov	-24(%rax),%r12
+.cfi_restore	%r12
 	mov	-16(%rax),%rbp
+.cfi_restore	%rbp
 	mov	-8(%rax),%rbx
+.cfi_restore	%rbx
 	lea	(%rax),%rsp		# restore %rsp
+.cfi_def_cfa_register	%rsp
 .Lgcm_dec_abort:
 	mov	$ret,%rax		# return value
 	ret
+.cfi_endproc
 .size	aesni_gcm_decrypt,.-aesni_gcm_decrypt
 ___
 
@@ -517,6 +549,7 @@ $code.=<<___;
 .type	_aesni_ctr32_6x,\@abi-omnipotent
 .align	32
 _aesni_ctr32_6x:
+.cfi_startproc
 	vmovdqu		0x00-0x80($key),$Z0	# borrow $Z0 for $rndkey
 	vmovdqu		0x20($const),$T2	# borrow $T2, .Lone_msb
 	lea		-1($rounds),%r13
@@ -603,23 +636,32 @@ _aesni_ctr32_6x:
 	vpshufb		$Ii,$T1,$T1		# next counter value
 	vpxor		$Z0,$inout5,$inout5
 	jmp	.Loop_ctr32
+.cfi_endproc
 .size	_aesni_ctr32_6x,.-_aesni_ctr32_6x
 
 .globl	aesni_gcm_encrypt
 .type	aesni_gcm_encrypt,\@function,6
 .align	32
 aesni_gcm_encrypt:
+.cfi_startproc
 	xor	$ret,$ret
 	cmp	\$0x60*3,$len			# minimal accepted length
 	jb	.Lgcm_enc_abort
 
 	lea	(%rsp),%rax			# save stack pointer
+.cfi_def_cfa_register	%rax
 	push	%rbx
+.cfi_push	%rbx
 	push	%rbp
+.cfi_push	%rbp
 	push	%r12
+.cfi_push	%r12
 	push	%r13
+.cfi_push	%r13
 	push	%r14
+.cfi_push	%r14
 	push	%r15
+.cfi_push	%r15
 ___
 $code.=<<___ if ($win64);
 	lea	-0xa8(%rsp),%rsp
@@ -882,19 +924,28 @@ $code.=<<___ if ($win64);
 ___
 $code.=<<___;
 	mov	-48(%rax),%r15
+.cfi_restore	%r15
 	mov	-40(%rax),%r14
+.cfi_restore	%r14
 	mov	-32(%rax),%r13
+.cfi_restore	%r13
 	mov	-24(%rax),%r12
+.cfi_restore	%r12
 	mov	-16(%rax),%rbp
+.cfi_restore	%rbp
 	mov	-8(%rax),%rbx
+.cfi_restore	%rbx
 	lea	(%rax),%rsp		# restore %rsp
+.cfi_def_cfa_register	%rsp
 .Lgcm_enc_abort:
 	mov	$ret,%rax		# return value
 	ret
+.cfi_endproc
 .size	aesni_gcm_encrypt,.-aesni_gcm_encrypt
 ___
 
 $code.=<<___;
+.section .rodata align=64
 .align	64
 .Lbswap_mask:
 	.byte	15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0
@@ -906,7 +957,8 @@ $code.=<<___;
 	.byte	2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 .Lone_lsb:
 	.byte	1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-.asciz	"AES-NI GCM module for x86_64, CRYPTOGAMS by <appro\@openssl.org>"
+.asciz	"AES-NI GCM module for x86_64, CRYPTOGAMS by <https://github.com/dot-asm>"
+.previous
 .align	64
 ___
 if ($win64) {
@@ -1037,15 +1089,19 @@ $code=<<___;	# assembler is too old
 .globl	aesni_gcm_encrypt
 .type	aesni_gcm_encrypt,\@abi-omnipotent
 aesni_gcm_encrypt:
+.cfi_startproc
 	xor	%eax,%eax
 	ret
+.cfi_endproc
 .size	aesni_gcm_encrypt,.-aesni_gcm_encrypt
 
 .globl	aesni_gcm_decrypt
 .type	aesni_gcm_decrypt,\@abi-omnipotent
 aesni_gcm_decrypt:
+.cfi_startproc
 	xor	%eax,%eax
 	ret
+.cfi_endproc
 .size	aesni_gcm_decrypt,.-aesni_gcm_decrypt
 ___
 }}}
@@ -1054,4 +1110,4 @@ $code =~ s/\`([^\`]*)\`/eval($1)/gem;
 
 print $code;
 
-close STDOUT;
+close STDOUT or die "error closing STDOUT: $!";

@@ -1,496 +1,153 @@
-# makefile.vc --                                               -*- Makefile -*-
+#------------------------------------------------------------- -*- makefile -*-
 #
-# Microsoft Visual C++ makefile for use with nmake.exe v1.62+ (VC++ 5.0+)
+# Makefile for TCL TLS extension
 #
-# This makefile is based upon the Tcl 8.4 Makefile.vc and modified to 
-# make it suitable as a general package makefile. Look for the word EDIT
-# which marks sections that may need modification. As a minumum you will
-# need to change the PROJECT, DOTVERSION and DLLOBJS variables to values
-# relevant to your package.
+# Basic build, test and install
+#   nmake /f makefile.vc INSTALLDIR=c:\path\to\tcl TCLDIR=c:\path\to\tcl\sources
+#   nmake /f makefile.vc INSTALLDIR=c:\path\to\tcl TCLDIR=c:\path\to\tcl\sources test
+#   nmake /f makefile.vc INSTALLDIR=c:\path\to\tcl TCLDIR=c:\path\to\tcl\sources install
+#
+# For other build options (debug, static etc.),
+# See TIP 477 (https://core.tcl-lang.org/tips/doc/main/tip/477.md) for
+# detailed documentation.
 #
 # See the file "license.terms" for information on usage and redistribution
 # of this file, and for a DISCLAIMER OF ALL WARRANTIES.
-# 
-# Copyright (c) 1995-1996 Sun Microsystems, Inc.
-# Copyright (c) 1998-2000 Ajuba Solutions.
-# Copyright (c) 2001 ActiveState Corporation.
-# Copyright (c) 2001-2002 David Gravereaux.
-# Copyright (c) 2003-2006 Pat Thoyts
-#
-#-------------------------------------------------------------------------
-# RCS: @(#)$Id: makefile.vc,v 1.14 2015/06/06 09:07:08 apnadkarni Exp $
-#-------------------------------------------------------------------------
-
-# Check to see we are configured to build with MSVC (MSDEVDIR or MSVCDIR)
-# or with the MS Platform SDK (MSSDK). Visual Studio .NET 2003 and 2005 define
-# VCINSTALLDIR instead. The MSVC Toolkit release defines yet another.
-!if !defined(MSDEVDIR) && !defined(MSVCDIR) && !defined(MSSDK) && !defined(VCINSTALLDIR) && !defined(VCToolkitInstallDir)
-MSG = ^
-You need to run vcvars32.bat from Developer Studio or setenv.bat from the^
-Platform SDK first to setup the environment.  Jump to this line to read^
-the build instructions.
-!error $(MSG)
-!endif
-
-#------------------------------------------------------------------------------
-# HOW TO USE this makefile:
-#
-# 1)  It is now necessary to have %MSVCDir% set in the environment.  This is
-#     used  as a check to see if vcvars32.bat had been run prior to running
-#     nmake or during the installation of Microsoft Visual C++, MSVCDir had
-#     been set globally and the PATH adjusted.  Either way is valid.
-#
-#     You'll need to run vcvars32.bat contained in the MsDev's vc(98)/bin
-#     directory to setup the proper environment, if needed, for your current
-#     setup.  This is a needed bootstrap requirement and allows the swapping of
-#     different environments to be easier.
-#
-# 2)  To use the Platform SDK (not expressly needed), run setenv.bat after
-#     vcvars32.bat according to the instructions for it.  This can also turn on
-#     the 64-bit compiler, if your SDK has it.
-#
-# 3)  Targets are:
-#	all       -- Builds everything.
-#       <project> -- Builds the project (eg: nmake sample)
-#	test      -- Builds and runs the test suite.
-#	install   -- Installs the built binaries and libraries to $(INSTALLDIR)
-#		     in an appropriate subdirectory.
-#	clean/realclean/distclean -- varying levels of cleaning.
-#
-# 4)  Macros usable on the commandline:
-#	INSTALLDIR=<path>
-#		Sets where to install Tcl from the built binaries.
-#		C:\Progra~1\Tcl is assumed when not specified.
-#
-#	OPTS=static,msvcrt,staticpkg,threads,symbols,profile,loimpact,none
-#		Sets special options for the core.  The default is for none.
-#		Any combination of the above may be used (comma separated).
-#		'none' will over-ride everything to nothing.
-#
-#		static  =  Builds a static library of the core instead of a
-#			   dll.  The shell will be static (and large), as well.
-#		msvcrt  =  Effects the static option only to switch it from
-#			   using libcmt(d) as the C runtime [by default] to
-#			   msvcrt(d). This is useful for static embedding
-#			   support.
-#		staticpkg = Effects the static option only to switch
-#			   tclshXX.exe to have the dde and reg extension linked
-#			   inside it.
-#		nothreads = Turns off multithreading support (not recommended)
-#		thrdalloc = Use the thread allocator (shared global free pool).
-#		symbols =  Adds symbols for step debugging.
-#		profile =  Adds profiling hooks.  Map file is assumed.
-#		loimpact =  Adds a flag for how NT treats the heap to keep memory
-#			   in use, low.  This is said to impact alloc performance.
-#
-#	STATS=memdbg,compdbg,none
-#		Sets optional memory and bytecode compiler debugging code added
-#		to the core.  The default is for none.  Any combination of the
-#		above may be used (comma separated).  'none' will over-ride
-#		everything to nothing.
-#
-#		memdbg   = Enables the debugging memory allocator.
-#		compdbg  = Enables byte compilation logging.
-#
-#	MACHINE=(IX86|IA64|ALPHA|AMD64)
-#		Set the machine type used for the compiler, linker, and
-#		resource compiler.  This hook is needed to tell the tools
-#		when alternate platforms are requested.  IX86 is the default
-#		when not specified. If the CPU environment variable has been
-#		set (ie: recent Platform SDK) then MACHINE is set from CPU.
-#
-#	TMP_DIR=<path>
-#	OUT_DIR=<path>
-#		Hooks to allow the intermediate and output directories to be
-#		changed.  $(OUT_DIR) is assumed to be 
-#		$(BINROOT)\(Release|Debug) based on if symbols are requested.
-#		$(TMP_DIR) will de $(OUT_DIR)\<buildtype> by default.
-#
-#	TESTPAT=<file>
-#		Reads the tests requested to be run from this file.
-#
-#	CFG_ENCODING=encoding
-#		name of encoding for configuration information. Defaults
-#		to cp1252
-#
-# 5)  Examples:
-#
-#	Basic syntax of calling nmake looks like this:
-#	nmake [-nologo] -f makefile.vc [target|macrodef [target|macrodef] [...]]
-#
-#                        Standard (no frills)
-#       c:\tcl_src\win\>c:\progra~1\micros~1\vc98\bin\vcvars32.bat
-#       Setting environment for using Microsoft Visual C++ tools.
-#       c:\tcl_src\win\>nmake -f makefile.vc all
-#       c:\tcl_src\win\>nmake -f makefile.vc install INSTALLDIR=c:\progra~1\tcl
-#
-#                         Building for Win64
-#       c:\tcl_src\win\>c:\progra~1\micros~1\vc98\bin\vcvars32.bat
-#       Setting environment for using Microsoft Visual C++ tools.
-#       c:\tcl_src\win\>c:\progra~1\platfo~1\setenv.bat /pre64 /RETAIL
-#       Targeting Windows pre64 RETAIL
-#       c:\tcl_src\win\>nmake -f makefile.vc MACHINE=IA64
 #
 #------------------------------------------------------------------------------
-#==============================================================================
-###############################################################################
-#------------------------------------------------------------------------------
-
-!if !exist("makefile.vc")
-MSG = ^
-You must run this makefile only from the directory it is in.^
-Please `cd` to its location first.
-!error $(MSG)
-!endif
 
 #-------------------------------------------------------------------------
-# Project specific information (EDIT)
-#
-# You should edit this with the name and version of your project. This
-# information is used to generate the name of the package library and
-# it's install location.
-#
-# For example, the sample extension is  going to build sample04.dll and
-# would install it into $(INSTALLDIR)\lib\sample04
-#
-# You need to specify the object files that need to be linked into your
-# binary here.
-#
+# Project specific information
 #-------------------------------------------------------------------------
 
-PROJECT = tls
+# The name of the package
+PROJECT=tls
 
-# Uncomment the following line if this is a Tk extension.
-#PROJECT_REQUIRES_TK=1
-!include "rules.vc"
+!include "rules-ext.vc"
 
-DOTVERSION      = 1.6.6
-VERSION         = $(DOTVERSION:.=)
-STUBPREFIX      = $(PROJECT)stub
-
-DLLOBJS = \
-	$(TMP_DIR)\tls.obj \
+# Define the object files and resource file that make up the extension.
+# Note the resource file does not makes sense if doing a static library build
+# hence it is under that condition. TMP_DIR is the output directory
+# defined by rules for object files.
+PRJ_OBJS = $(TMP_DIR)\tls.obj \
 	$(TMP_DIR)\tlsBIO.obj \
 	$(TMP_DIR)\tlsIO.obj \
-	$(TMP_DIR)\tlsX509.obj \
-!if !$(STATIC_BUILD)
-	$(TMP_DIR)\tls.res
-!endif
+	$(TMP_DIR)\tlsX509.obj
 
-#-------------------------------------------------------------------------
-# Locate the OpenSSL library and headers
-#-------------------------------------------------------------------------
+# Define any additional project include flags
+# SSL_INSTALL_FOLDER = with the OpenSSL installation folder following.
+PRJ_INCLUDES = -I"$(SSL_INSTALL_FOLDER)\include" -I"$(OPENSSL_INSTALL_DIR)\include" -I"$(TMP_DIR)"
 
-!ifndef OPENSSL
-OPENSSL = c:\opt\openssl
-!endif
+# Define any additional compiler flags that might be required for the project
+PRJ_DEFINES = -D NO_SSL2 -D NO_SSL3 /D_CRT_SECURE_NO_WARNINGS /D_CRT_NONSTDC_NO_DEPRECATE /D__STDC_WANT_SECURE_LIB__=1
+# /DTCLTLS_SSL_USE_FASTPATH
+# /DTCLEXT_TCLTLS_DEBUG
 
-!ifndef SSL_INCLUDE_DIR
-SSL_INCLUDE_DIR = $(OPENSSL)\include
-!endif
-!ifndef SSL_LIB_DIR
-SSL_LIB_DIR     = $(OPENSSL)\lib
-!endif
+#
+# SSL Libs:
+#    1. ${LIBCRYPTO}.dll
+#    2. ${LIBSSL}.dll
+# Where LIBCRYPTO (#1.) and LIBSSL (#2.) are defined as follows:
+#    v1.1: libcrypto-1.1-x64.dll and libssl-1.1-x64.dll
+#    v3: libcrypto-3-x64.dll and libssl-3-x64.dll
+# On *nix libcrypto.so.* and libssl.so.* (where suffix is a version indicator).
+#
+PRJ_LIBS = \
+	"$(SSL_INSTALL_FOLDER)\lib\libssl.lib" \
+	"$(SSL_INSTALL_FOLDER)\lib\libcrypto.lib" \
+	User32.Lib WS2_32.Lib Gdi32.Lib AdvAPI32.Lib Crypt32.Lib
 
-SSL_LIBS        =-libpath:"$(SSL_LIB_DIR)" ssleay32.lib libeay32.lib
+# Define the standard targets which calls rules.vc
+!include "targets.vc"
 
-SSL_CFLAGS      =-DNO_IDEA=1 -DNO_RC5=1
-
-!if !exist("$(SSL_LIB_DIR)\ssleay32.lib")
-MSG = ^
-Failed to locate "$(SSL_LIB_DIR)\ssleay32.lib"
-You must provide the path to your OpenSSL library....
-!error $(MSG)
-!endif
-
-#-------------------------------------------------------------------------
-# Target names and paths ( shouldn't need changing )
-#-------------------------------------------------------------------------
-
-BINROOT		= .
-ROOT            = ..
-
-PRJIMPLIB	= $(OUT_DIR)\$(PROJECT)$(VERSION)$(SUFX).lib
-PRJLIBNAME	= $(PROJECT)$(VERSION)$(SUFX).$(EXT)
-PRJLIB		= $(OUT_DIR)\$(PRJLIBNAME)
-
-PRJSTUBLIBNAME	= $(STUBPREFIX)$(VERSION).lib
-PRJSTUBLIB	= $(OUT_DIR)\$(PRJSTUBLIBNAME)
-
-### Make sure we use backslash only.
-PRJ_INSTALL_DIR         = $(_INSTALLDIR)\$(PROJECT)$(DOTVERSION)
-LIB_INSTALL_DIR		= $(PRJ_INSTALL_DIR)
-BIN_INSTALL_DIR		= $(PRJ_INSTALL_DIR)
-DOC_INSTALL_DIR		= $(PRJ_INSTALL_DIR)
-SCRIPT_INSTALL_DIR	= $(PRJ_INSTALL_DIR)
-INCLUDE_INSTALL_DIR	= $(_TCLDIR)\include
-
-### The following paths CANNOT have spaces in them.
-GENERICDIR	= $(ROOT)
-WINDIR		= $(ROOT)\win
-LIBDIR          = $(ROOT)
-DOCDIR		= $(ROOT)
-TOOLSDIR	= $(ROOT)\tools
-COMPATDIR	= $(ROOT)\compat
+.SUFFIXES: .c .obj .res .man
 
 #---------------------------------------------------------------------
-# Compile flags
+# Project specific targets
 #---------------------------------------------------------------------
 
-!if !$(DEBUG)
-!if $(OPTIMIZING)
-### This cranks the optimization level to maximize speed
-cdebug	= $(OPTIMIZATIONS)
-!else
-cdebug	=
-!endif
-!else if "$(MACHINE)" == "IA64" #|| "$(MACHINE)" == "AMD64"
-### Warnings are too many, can't support warnings into errors.
-cdebug	= -Zi -Od $(DEBUGFLAGS)
-!else
-cdebug	= -Zi -WX $(DEBUGFLAGS)
-!endif
+# Implicit rule to generate html from man files
+# NOTE: this requires doctools from tcllib hence it is not intended
+# to be run during install. Rather, use it to generate a new version
+# of HTML docs to be stored in the repository.
+TCLSH = "$(_INSTALLDIR)\..\bin\tclsh.exe"
+DTPLITE = "$(_INSTALLDIR)\..\bin\dtplite.tcl"
 
-### Declarations common to all compiler options
-cwarn = $(WARNINGS) -D _CRT_SECURE_NO_DEPRECATE -D _CRT_NONSTDC_NO_DEPRECATE
-cflags = -nologo -c $(COMPILERFLAGS) $(cwarn) -Fp$(TMP_DIR)^\
-
-!if $(MSVCRT)
-!if $(DEBUG) && !$(UNCHECKED)
-crt = -MDd
-!else
-crt = -MD
-!endif
-!else
-!if $(DEBUG) && !$(UNCHECKED)
-crt = -MTd
-!else
-crt = -MT
-!endif
-!endif
-
-!if !$(STATIC_BUILD)
-cflags = $(cflags) -DUSE_TCL_STUBS
-!if defined(TKSTUBLIB)
-cflags = $(cflags) -DUSE_TK_STUBS
-!endif
-!endif
-
-INCLUDES	= $(TCL_INCLUDES) -I"$(WINDIR)" -I"$(GENERICDIR)" \
-		  -I"$(SSL_INCLUDE_DIR)"
-BASE_CFLAGS	= $(cflags) $(cdebug) $(crt) $(INCLUDES)
-CON_CFLAGS	= $(cflags) $(cdebug) $(crt) -DCONSOLE
-TCL_CFLAGS	= -DPACKAGE_NAME="\"$(PROJECT)\"" \
-		  -DPACKAGE_VERSION="\"$(DOTVERSION)\"" \
-                  $(SSL_CFLAGS) \
-		  $(BASE_CFLAGS) $(OPTDEFINES)
-
-#---------------------------------------------------------------------
-# Link flags
-#---------------------------------------------------------------------
-
-!if $(DEBUG)
-ldebug	= -debug:full -debugtype:cv
-!if $(MSVCRT)
-ldebug = $(ldebug) -nodefaultlib:msvcrt
-!endif
-!else
-ldebug	= -release -opt:ref -opt:icf,3
-!endif
-
-### Declarations common to all linker options
-lflags	= -nologo -machine:$(MACHINE) $(LINKERFLAGS) $(ldebug)
-
-!if $(PROFILE)
-lflags	= $(lflags) -profile
-!endif
-
-!if $(ALIGN98_HACK) && !$(STATIC_BUILD)
-### Align sections for PE size savings.
-lflags	= $(lflags) -opt:nowin98
-!else if !$(ALIGN98_HACK) && $(STATIC_BUILD)
-### Align sections for speed in loading by choosing the virtual page size.
-lflags	= $(lflags) -align:4096
-!endif
-
-!if $(LOIMPACT)
-lflags	= $(lflags) -ws:aggressive
-!endif
-
-dlllflags = $(lflags) -dll
-conlflags = $(lflags) -subsystem:console
-guilflags = $(lflags) -subsystem:windows
-!if !$(STATIC_BUILD)
-baselibs  = $(TCLSTUBLIB)
-!if defined(TKSTUBLIB)
-baselibs  = $(baselibs) $(TKSTUBLIB)
-!endif
-!endif
-
-# Avoid 'unresolved external symbol __security_cookie' errors.
-# c.f. http://support.microsoft.com/?id=894573
-!if "$(MACHINE)" == "IA64" || "$(MACHINE)" == "AMD64"
-!if $(VCVERSION) >= 1400 && $(VCVERSION) < 1500
-baselibs   = $(baselibs) bufferoverflowU.lib
-!endif
-!endif
-
-baselibs  = $(baselibs) $(SSL_LIBS) ws2_32.lib user32.lib gdi32.lib advapi32.lib
-
-#---------------------------------------------------------------------
-# TclTest flags
-#---------------------------------------------------------------------
-
-!IF "$(TESTPAT)" != ""
-TESTFLAGS = $(TESTFLAGS) -file $(TESTPAT)
+make-docs-html:
+!IF EXIST($(DTPLITE))
+	"$(TCLSH)" "$(DTPLITE)" -o "$(ROOT)\doc\$(PROJECT).html" html "$(ROOT)\doc\$(PROJECT).man"
 !ENDIF
 
-#---------------------------------------------------------------------
-# Project specific targets (EDIT)
-#---------------------------------------------------------------------
+make-docs-n:
+!IF EXIST($(DTPLITE))
+	"$(TCLSH)" "$(DTPLITE)" -o "$(ROOT)\doc\$(PROJECT).n" nroff "$(ROOT)\doc\$(PROJECT).man"
+!ENDIF
 
-all:	    setup $(PROJECT)
-$(PROJECT): setup $(OUT_DIR)\pkgIndex.tcl $(OUT_DIR)\tls.tcl $(PRJLIB)
-install:    install-binaries install-libraries install-docs
+make-docs:
+!IF EXIST($(DTPLITE))
+	"$(TCLSH)" "$(DTPLITE)" -o "$DOCDIR" html "$(ROOT)\doc"
+	"$(TCLSH)" "$(DTPLITE)" -o "$DOCDIR" nroff "$(ROOT)\doc"
+!ENDIF
 
-test: setup $(PROJECT)
-	@set TCL_LIBRARY=$(TCL_LIBRARY:\=/)
-	@set TCLLIBPATH=$(OUT_DIR_PATH:\=/)
-!if $(TCLINSTALL)
-	@set PATH=$(_TCLDIR)\bin;$(PATH)
-!else
-	@set PATH=$(_TCLDIR)\win\$(BUILDDIRTOP);$(PATH)
-!endif
-!if "$(OS)" == "Windows_NT"  || "$(MSVCDIR)" == "IDE"
-	$(DEBUGGER) $(TCLSH) "$(ROOT)/tests/all.tcl" $(TESTFLAGS)
-!else
-	@echo Please wait while the tests are collected...
-	$(DEBUGGER) $(TCLSH) "$(ROOT)/tests/all.tcl" $(TESTFLAGS) > tests.log
-	type tests.log | more
-!endif
+docs: make-docs-n make-docs-html
 
-shell: setup $(PROJECT)
-	@set TCL_LIBRARY=$(TCL_LIBRARY:\=/)
-	@set TCLLIBPATH=$(OUT_DIR_PATH:\=/)
-!if $(TCLINSTALL)
-	@set PATH=$(_TCLDIR)\bin;$(PATH)
-!else
-	@set PATH=$(_TCLDIR)\win\$(BUILDDIRTOP);$(PATH)
-!endif
-	$(DEBUGGER) $(TCLSH) $(SCRIPT)
+all: setup default-target
 
-setup:
-	@if not exist $(OUT_DIR)\nul mkdir $(OUT_DIR)
-	@if not exist $(TMP_DIR)\nul mkdir $(TMP_DIR)
+clean: default-clean
 
-# See <tcl>/win/coffbase.txt for extension base addresses.
-$(PRJLIB): $(DLLOBJS)
-!if $(STATIC_BUILD)
-	$(lib32) -nologo -out:$@ @<<
-$**
-<<
-!else
-	$(link32) $(dlllflags) -base:0x10780000 -out:$@ $(baselibs) @<<
-$**
-<<
-	$(_VC_MANIFEST_EMBED_DLL)
-	-@del $*.exp
-!endif
+realclean: default-hose
 
-$(PRJSTUBLIB): $(PRJSTUBOBJS)
-	$(lib32) -nologo -out:$@ $(PRJSTUBOBJS)
-
-#---------------------------------------------------------------------
-# Implicit rules
-#---------------------------------------------------------------------
-
-{$(WINDIR)}.c{$(TMP_DIR)}.obj::
-    $(cc32) $(TCL_CFLAGS) -DBUILD_$(PROJECT) -Fo$(TMP_DIR)\ @<<
-$<
-<<
-
-{$(GENERICDIR)}.c{$(TMP_DIR)}.obj::
-    $(cc32) $(TCL_CFLAGS) -DBUILD_$(PROJECT) -Fo$(TMP_DIR)\ @<<
-$<
-<<
-
-{$(COMPATDIR)}.c{$(TMP_DIR)}.obj::
-    $(cc32) $(TCL_CFLAGS) -DBUILD_$(PROJECT) -Fo$(TMP_DIR)\ @<<
-$<
-<<
-
-{$(WINDIR)}.rc{$(TMP_DIR)}.res:
-	$(rc32) -fo $@ -r -i "$(GENERICDIR)" -D__WIN32__ \
-		-DCOMMAVERSION=$(DOTVERSION:.=,),0 \
-		-DDOTVERSION=\"$(DOTVERSION)\" \
-		-DVERSION=\"$(VERSION)$(SUFX)\" \
-!if $(DEBUG)
-	-d DEBUG \
-!endif
-!if $(TCL_THREADS)
-	-d TCL_THREADS \
-!endif
-!if $(STATIC_BUILD)
-	-d STATIC_BUILD \
-!endif
-	$<
-
-.SUFFIXES:
-.SUFFIXES:.c .rc
-
-#-------------------------------------------------------------------------
 # Explicit dependency rules
-#
-#-------------------------------------------------------------------------
+$(PRJ_OBJS): $(TMP_DIR)\tls.tcl.h $(TMP_DIR)\tlsUuid.h
 
-.PHONY: $(OUT_DIR)\pkgIndex.tcl $(OUT_DIR)\tls.tcl
+# We must define a pkgindex target that will create a pkgIndex.tcl
+# file in the $(OUT_DIR) directory. We can just redirect to the
+# default-pkgindex target for our sample extension.
+pkgindex: default-pkgindex-tea
 
-$(OUT_DIR)\tls.tcl: $(GENERICDIR)\tls.tcl
-	@$(COPY) $** $@
-
-$(OUT_DIR)\pkgIndex.tcl:
-        @type << > $@
-if {![package vsatisfies [package provide Tcl] 8.3]} {return}
-package ifneeded $(PROJECT) $(DOTVERSION) "source \[file join [list $$dir] tls.tcl\] ; tls::initlib [list $$dir] $(PRJLIBNAME)"
+# Create a C source file version of the script resources for inclusion in the
+# build so that only the compiled library file is needed for this extension to
+# load and operate.
+$(TMP_DIR)\tls.tcl.h: $(LIBDIR)\tls.tcl
+	"$(TCLSH)" << $(LIBDIR)\tls.tcl >$(TMP_DIR)\tls.tcl.h
+	set in [open [lindex $$argv 0] r]
+	while {[gets $$in line] != -1} {
+	    switch -regexp -- $$line "^$$" - {^\s*#} continue
+	    regsub -all {\\} $$line {\\\\} line
+	    regsub -all {"} $$line {\"} line
+	    puts "\"$$line\\n\""
+	}
 <<
 
-#---------------------------------------------------------------------
-# Installation. (EDIT)
-#
-# You may need to modify this section to reflect the final distribution
-# of your files and possibly to generate documentation.
-#
-#---------------------------------------------------------------------
+# Use manifest file which defines fossil/git commit id for build-info command
+$(TMP_DIR)\manifest.uuid:
+!IF EXIST($(ROOT)\manifest.uuid)
+	@copy "$(ROOT)\manifest.uuid" "$(TMP_DIR)\manifest.uuid"
+!ELSE
+!IF EXIST($(ROOT)\.git)
+	@copy "$(WIN_DIR)\gitmanifest.in" "$(TMP_DIR)\manifest.uuid"
+	@git rev-parse HEAD >>$(TMP_DIR)\manifest.uuid || echo unknown >>$(TMP_DIR)\manifest.uuid
+!ELSE
+	@echo unknown >$(TMP_DIR)\manifest.uuid
+!ENDIF
+!ENDIF
 
-install-binaries:
-	@echo Installing binaries to '$(SCRIPT_INSTALL_DIR)'
-	@if not exist "$(SCRIPT_INSTALL_DIR)" mkdir "$(SCRIPT_INSTALL_DIR)"
-	@$(CPY) $(PRJLIB) "$(SCRIPT_INSTALL_DIR)" >NUL
+$(TMP_DIR)\tlsUuid.h:	$(TMP_DIR)\manifest.uuid
+	@copy $(WIN_DIR)\tlsUuid.h.in+$(TMP_DIR)\manifest.uuid $(TMP_DIR)\tlsUuid.h
+	@echo: >>$(TMP_DIR)\tlsUuid.h
 
-install-libraries:
-        @echo Installing libraries to '$(SCRIPT_INSTALL_DIR)'
-        @if exist $(LIBDIR) $(CPY) $(LIBDIR)\tls.tcl "$(SCRIPT_INSTALL_DIR)" > NUL
-        @echo Installing package index in '$(SCRIPT_INSTALL_DIR)'
-	@$(CPY) $(OUT_DIR)\pkgIndex.tcl "$(SCRIPT_INSTALL_DIR)"
+# The default install target only installs binaries and scripts so add
+# an additional target for our documentation. Note this *adds* a target
+# since no commands are listed after it. The original targets for
+# install (from targets.vc) will remain.
+install: pkgindex default-install default-install-docs-html default-install-demos
+!IF EXIST($(SSL_INSTALL_FOLDER)\bin\libcrypto-*-x64.dll)
+	@xcopy /c /y "$(SSL_INSTALL_FOLDER)\bin\libcrypto-*-x64.dll" "$(PRJ_INSTALL_DIR)"
+!ENDIF
+!IF EXIST($(SSL_INSTALL_FOLDER)\bin\libssl-*-x64.dll)
+	@xcopy /c /y "$(SSL_INSTALL_FOLDER)\bin\libssl-*-x64.dll" "$(PRJ_INSTALL_DIR)"
+!ENDIF
 
-install-docs:
-	@echo Installing documentation files to '$(DOC_INSTALL_DIR)'
-	@if exist $(DOCDIR) $(CPY) $(DOCDIR)\tls.htm "$(DOC_INSTALL_DIR)" >NUL
+# Test package
+test: default-test
 
-#---------------------------------------------------------------------
-# Clean up
-#---------------------------------------------------------------------
-
-clean:
-	@if exist $(TMP_DIR)\nul $(RMDIR) $(TMP_DIR)
-	@if exist $(WINDIR)\version.vc del $(WINDIR)\version.vc
-	@if exist $(WINDIR)\vercl.i del $(WINDIR)\vercl.i
-	@if exist $(WINDIR)\vercl.x del $(WINDIR)\vercl.x
-	@if exist $(WINDIR)\_junk.pch del $(WINDIR)\_junk.pch
-
-realclean: clean
-	@if exist $(OUT_DIR)\nul $(RMDIR) $(OUT_DIR)
-
-distclean: realclean
-	@if exist $(WINDIR)\nmakehlp.exe del $(WINDIR)\nmakehlp.exe
-	@if exist $(WINDIR)\nmakehlp.obj del $(WINDIR)\nmakehlp.obj

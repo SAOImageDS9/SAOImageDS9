@@ -137,6 +137,14 @@ taken with the UK Schmidt.
 # Process Cmds
 
 proc ProcessSAOCmd {varname iname} {
+    error "The DSS server at SAO is no longer in service."
+}
+
+proc ProcessSendSAOCmd {proc id param {sock {}} {fn {}}} {
+    error "The DSS server at SAO is no longer in service."
+}
+
+proc ProcessSAOCmd_orig {varname iname} {
     upvar $varname var
     upvar $iname i
 
@@ -148,7 +156,7 @@ proc ProcessSAOCmd {varname iname} {
     incr i [expr $dsssao::yycnt-1]
 }
 
-proc ProcessSendSAOCmd {proc id param {sock {}} {fn {}}} {
+proc ProcessSendSAOCmd_orig {proc id param {sock {}} {fn {}}} {
     global parse
     set parse(proc) $proc
     set parse(id) $id

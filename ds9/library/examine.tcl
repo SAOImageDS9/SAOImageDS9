@@ -39,7 +39,7 @@ proc ExamineButtonBase {which x y} {
     # find filename/slice
     set fn [$which get fits file name full canvas $x $y]
     set slice [$which get fits slice]
-    
+
     # so the new frame will have all of the parent frame when created
     GotoFrame $which
 
@@ -77,8 +77,8 @@ proc ExamineButtonBase {which x y} {
     # zoom to about
     if {[$current(frame) has fits bin]} {
 	set bf "[$current(frame) get bin factor]"
-	set bx [expr [lindex $bf 0]/$pexamine(zoom)]
-	set by [expr [lindex $bf 1]/$pexamine(zoom)]
+	set bx [expr (1.0*[lindex $bf 0])/$pexamine(zoom)]
+	set by [expr (1.0*[lindex $bf 1])/$pexamine(zoom)]
 	$current(frame) bin factor to $bx $by about \
 	    [lindex $coord 0] [lindex $coord 1]
     } else {
@@ -169,8 +169,8 @@ proc ExamineButtonRGB {which x y} {
 	    $current(frame) rgb channel $cc
 
 	    set bf "[$current(frame) get bin factor]"
-	    set bx [expr [lindex $bf 0]/$pexamine(zoom)]
-	    set by [expr [lindex $bf 1]/$pexamine(zoom)]
+	    set bx [expr (1.0*[lindex $bf 0])/$pexamine(zoom)]
+	    set by [expr (1.0*[lindex $bf 1])/$pexamine(zoom)]
 	    $current(frame) bin factor to $bx $by about \
 		[lindex $coord 0] [lindex $coord 1]
 	}
@@ -266,8 +266,8 @@ proc ExamineButtonHSV {which x y} {
 	    $current(frame) hsv channel $cc
 
 	    set bf "[$current(frame) get bin factor]"
-	    set bx [expr [lindex $bf 0]/$pexamine(zoom)]
-	    set by [expr [lindex $bf 1]/$pexamine(zoom)]
+	    set bx [expr (1.0*[lindex $bf 0])/$pexamine(zoom)]
+	    set by [expr (1.0*[lindex $bf 1])/$pexamine(zoom)]
 	    $current(frame) bin factor to $bx $by about \
 		[lindex $coord 0] [lindex $coord 1]
 	}
@@ -363,8 +363,8 @@ proc ExamineButtonHLS {which x y} {
 	    $current(frame) hls channel $cc
 
 	    set bf "[$current(frame) get bin factor]"
-	    set bx [expr [lindex $bf 0]/$pexamine(zoom)]
-	    set by [expr [lindex $bf 1]/$pexamine(zoom)]
+	    set bx [expr (1.0*[lindex $bf 0])/$pexamine(zoom)]
+	    set by [expr (1.0*[lindex $bf 1])/$pexamine(zoom)]
 	    $current(frame) bin factor to $bx $by about \
 		[lindex $coord 0] [lindex $coord 1]
 	}
@@ -397,7 +397,7 @@ proc ExamineButton3D {which x y} {
     # find filename/slice
     set fn [$which get fits file name full canvas $x $y]
     set slice [$which get fits slice]
-    
+
     # and 3d info
     set rr [$current(frame) get 3d view]
     set az [lindex $rr 0]
@@ -441,8 +441,8 @@ proc ExamineButton3D {which x y} {
     # zoom to about
     if {[$current(frame) has fits bin]} {
 	set bf "[$current(frame) get bin factor]"
-	set bx [expr [lindex $bf 0]/$pexamine(zoom)]
-	set by [expr [lindex $bf 1]/$pexamine(zoom)]
+	set bx [expr (1.0*[lindex $bf 0])/$pexamine(zoom)]
+	set by [expr (1.0*[lindex $bf 1])/$pexamine(zoom)]
 	$current(frame) bin factor to $bx $by about \
 	    [lindex $coord 0] [lindex $coord 1]
     } else {

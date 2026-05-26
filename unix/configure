@@ -647,8 +647,6 @@ ac_header_c_list=
 ac_subst_vars='LTLIBOBJS
 CORES
 SSLCONFIG
-XSLTCONFIG
-XML2CONFIG
 TKFLAGS
 ARCH
 OS
@@ -7572,9 +7570,6 @@ printf "%s\n" "$tcl_cv_sys_version" >&6; }
     system=$tcl_cv_sys_version
 
 
-XML2CONFIG=`which xml2-config`
-XSLTCONFIG=`which xslt-config`
-
 case $system in
     Darwin* )
 	TKFLAGS="--disable-corefoundation"
@@ -7607,8 +7602,6 @@ case $system in
 	CORES=1
 	;;
 esac
-
-
 
 
 

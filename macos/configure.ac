@@ -87,7 +87,7 @@ case `arch` in
 	SSLCONFIG="./Configure darwin64-arm64-cc"
     ;;
 esac
-
+	
 AC_SUBST(XML2CONFIG)
 AC_SUBST(XSLTCONFIG)
 AC_SUBST(SSLCONFIG)

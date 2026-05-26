@@ -357,38 +357,26 @@ TEA_PROG_WISH
 #--------------------------------------------------------------------
 # Load libxml2 configuration
 #--------------------------------------------------------------------
-
-AC_MSG_CHECKING([for xml2-config script])
+AC_MSG_CHECKING([Checking for libxml2])
 
 AC_ARG_WITH(xml2-config,
     [  --with-xml2-config      the xml2-config configuration script],
     with_xml2_config=${withval})
 
-LIBXML2_CONFIG=
-if test "x${with_xml2_config}" = "x" ; then
-    for c in \
-	${prefix}/bin/xml2-config \
-	/usr/bin/xml2-config \
-	/usr/local/bin/xml2-config
-    do
-	if test -x "$c" ; then
-	    LIBXML2_CONFIG="$c"
-	    break
-	fi
-    done
+dir=`AS_DIRNAME(["$withval"])`
+AC_PATH_TOOL([xmlprog], [xml2-config], [none], [$dir] )
+if test $xmlprog = "none"
+then
+    AC_MSG_RESULT([Could not locate xml2-config, trying pkg-config])
+    PKG_CHECK_MODULES( [XML2], [libxml-2.0])
 else
-    LIBXML2_CONFIG="${with_xml2_config}"
-fi
-if test "x$LIBXML2_CONFIG" = "x" ; then
-    AC_MSG_ERROR([unable to find xml2-config])
-else
-    AC_MSG_RESULT([${LIBXML2_CONFIG}])
-    XML2_CFLAGS=`${LIBXML2_CONFIG} --cflags`
-    XML2_LIBS="`${LIBXML2_CONFIG} --libs`"
+    AC_MSG_RESULT([Using xml2-config: $xmlprog])
+    XML2_CFLAGS=`${xmlprog} --cflags`
+    XML2_LIBS="`${xmlprog} --libs`"
+    AC_SUBST(XML2_CFLAGS)
+    AC_SUBST(XML2_LIBS)
 fi
 
-AC_SUBST(XML2_CFLAGS)
-AC_SUBST(XML2_LIBS)
 
 #--------------------------------------------------------------------
 # Setup a *Config.sh.in configuration file.

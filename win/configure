@@ -648,8 +648,6 @@ ac_subst_vars='LTLIBOBJS
 CORES
 TARGET
 ENABLE64BIT
-XSLTCONFIG
-XML2CONFIG
 ARCH
 OS
 LDFLAGS_DEFAULT
@@ -7550,11 +7548,7 @@ case $with_arch in
 	TARGET=x86_64-w64-mingw32
 	;;
 esac
-XML2CONFIG=/usr/$TARGET/sys-root/mingw/bin/xml2-config
-XSLTCONFIG=/usr/$TARGET/sys-root/mingw/bin/xslt-config
 CORES=`grep -c ^processor /proc/cpuinfo`
-
-
 
 
 

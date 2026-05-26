@@ -91,7 +91,7 @@ proc SIALoad {varname url query} {
 	unset $var(tbldb)
     }
 
-    TBLGetURL $varname $url $query
+    TBLGetURL $varname $url $query POST
     return
 }
 

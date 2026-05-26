@@ -4,22 +4,25 @@
 
 package provide DS9 1.0
 
-proc TBLGetURL {varname url query} {
+proc TBLGetURL {varname url query get_or_post} {
     upvar #0 $varname var
     global $varname
+    global ihttp
 
     # save just in case of redirection
     set var(qq) $query
 
     ARStatus $varname [msgcat::mc {Loading}]
 
-    global ihttp
+
+    if {$get_or_post == "POST" } {
+        set get_cmd [list http::geturl $url -query $query -timeout $ihttp(timeout) -headers "[ProxyHTTP]" ]
+    } else {
+        set get_cmd [list http::geturl $url?$query -timeout $ihttp(timeout) -headers "[ProxyHTTP]" ]
+    }
+
     if {$var(sync)} {
-	if {![catch {set var(token) [http::geturl $url \
-					 -query $query \
-					 -timeout $ihttp(timeout) \
-					 -headers "[ProxyHTTP]"]
-	}]} {
+	if {![catch {set var(token) [eval $get_cmd]}]} {
 	    global errorInfo
 	    set errorInfo {}
 
@@ -29,13 +32,8 @@ proc TBLGetURL {varname url query} {
 	    eval [list $var(proc,error) $varname "[msgcat::mc {Unable to locate URL}] $url"]
 	}
     } else {
-	if {![catch {set var(token) [http::geturl $url \
-					 -query $query \
-					 -timeout $ihttp(timeout) \
-					 -command \
-					 [list TBLGetURLFinish $varname] \
-					 -headers "[ProxyHTTP]"]
-	}]} {
+        lappend get_cmd -command "[list TBLGetURLFinish $varname ]"
+	if {![catch {set var(token) [eval $get_cmd]}]} {
 	    global errorInfo
 	    set errorInfo {}
 
@@ -106,7 +104,7 @@ proc TBLValidDB {varname} {
     upvar #0 $varname var
     global $varname
 
-    if {[info exists var(Nrows)] && 
+    if {[info exists var(Nrows)] &&
 	[info exists var(Ncols)] &&
 	[info exists var(Header)]} {
 	return 1
@@ -155,7 +153,7 @@ proc TBLSelectTimer {varname layer} {
 		    }
 		}
 	    }
-	    
+
 	    incr ${varname}(blink,count)
 	    if {$var(blink,count) < 5} {
 		set var(blink) 2
@@ -187,7 +185,7 @@ proc TBLSelectTimer {varname layer} {
 proc TBLSelectTimerCancel {varname layer} {
     upvar #0 $varname var
     global $varname
-    
+
     if {$var(blink)} {
 	# cancel all pending
 	foreach aa [after info] {
@@ -334,7 +332,7 @@ proc TBLBindMouseWheel {varname} {
 	    bind $var(tbl) <MouseWheel> [list TBLYScroll $varname %D]
 	}
     }
-} 
+}
 
 proc TBLXScroll {varname cnt} {
     upvar #0 $varname var
@@ -657,7 +655,7 @@ proc TBLEditDialog {varname which db} {
     $mb.math add command -label {round} \
 	-command "$ed(text) insert insert {round()}"
 
-    # Text  
+    # Text
     set f [ttk::frame $w.param]
 
     text $f.txt \
@@ -666,7 +664,7 @@ proc TBLEditDialog {varname which db} {
 	-yscrollcommand "$f.yscroll set" \
 	-xscrollcommand "$f.xscroll set" \
 	-undo true \
-	-wrap none 
+	-wrap none
     ttk::scrollbar $f.yscroll -command [list $ed(text) yview] \
 	-orient vertical
     ttk::scrollbar $f.xscroll -command [list $ed(text) xview] \
@@ -680,7 +678,7 @@ proc TBLEditDialog {varname which db} {
     # Buttons
     set f [ttk::frame $w.buttons]
     ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
-        -default active 
+        -default active
     ttk::button $f.clear -text [msgcat::mc {Clear}] -command TBLEditDialogClear
     ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
     pack $f.ok $f.clear $f.cancel -side left -expand true -padx 2 -pady 4
@@ -855,7 +853,7 @@ proc TBLPrint {varname} {
     upvar #0 $varname var
     global $varname
 
-    if {[PRPrintDialog]} { 
+    if {[PRPrintDialog]} {
 	if {[catch {TBLPostScript $varname} printError]} {
 	    Error "[msgcat::mc {An error has occurred while printing}] $printError"
 	}

@@ -252,7 +252,8 @@ switch $ds9(wm) {
 #	package require ttk::theme::winxpblue
 
 	# scidthemes
-	package require ttk::theme::scidthemes
+	package require ttk::theme::scidlightthemes
+	package require ttk::theme::sciddarkthemes
 
 	# edit theme list
 	set ds9(themes) [lsort [ttk::style theme names]]

@@ -8,7 +8,7 @@ proc CreateMenuBar {} {
     global ds9
 
     # we need this first, before the configure command
-    ThemeMenu $ds9(mb) 
+    ThemeMenu $ds9(mb)
     switch $ds9(wm) {
 	x11 -
 	win32 {}
@@ -169,11 +169,12 @@ proc ThemeChange {} {
 	aqua {}
     }
     FontChange
+    ConfigureIcons
 }
 
 proc ThemeForeground {} {
     global ds9
-    
+
     switch $ds9(wm) {
 	x11 -
 	win32 {return [ttk::style lookup . -foreground]}
@@ -183,7 +184,7 @@ proc ThemeForeground {} {
 
 proc ThemeBackground {} {
     global ds9
-    
+
     switch $ds9(wm) {
 	x11 -
 	win32 {return [ttk::style lookup . -background]}
@@ -193,7 +194,7 @@ proc ThemeBackground {} {
 
 proc ThemeTreeForeground {} {
     global ds9
-    
+
     switch $ds9(wm) {
 	x11 -
 	win32 {return [ttk::style lookup Treeview -foreground]}
@@ -203,7 +204,7 @@ proc ThemeTreeForeground {} {
 
 proc ThemeTreeBackground {} {
     global ds9
-    
+
     switch $ds9(wm) {
 	x11 -
 	win32 {return [ttk::style lookup Treeview -background]}
@@ -213,7 +214,7 @@ proc ThemeTreeBackground {} {
 
 proc ThemeSelectedForeground {} {
     global ds9
-    
+
     switch $ds9(wm) {
 	x11 -
 	win32 {return [ttk::style lookup Treeview -foreground selected]}
@@ -223,7 +224,7 @@ proc ThemeSelectedForeground {} {
 
 proc ThemeSelectedBackground {} {
     global ds9
-    
+
     switch $ds9(wm) {
 	x11 -
 	win32 {return [ttk::style lookup Treeview -background selected]}
@@ -233,7 +234,7 @@ proc ThemeSelectedBackground {} {
 
 proc ThemeBold {} {
     global ds9
-    
+
     switch $ds9(wm) {
 	x11 -
 	win32 {return [ttk::style lookup Treeview -background selected]}
@@ -320,7 +321,7 @@ proc CoordMenuButton {w varname system other sky skyformat cmd} {
 proc CoordMenuButtonCmd {varname system sky cmd} {
     upvar #0 $varname var
     global $varname
-    
+
     set ${varname}($system,msg) [msgcat::mc $var($system)]
 
     if {$sky != {}} {
@@ -349,7 +350,7 @@ proc CoordMenuButtonCmd {varname system sky cmd} {
 proc CoordMenuEnable {w varname system sky skyformat} {
     upvar #0 $varname var
     global $varname
-    
+
     if {![info exists var(frame)]} {
 	return
     }
@@ -363,7 +364,7 @@ proc CoordMenuEnable {w varname system sky skyformat} {
     } else {
 	$w entryconfig [msgcat::mc {WCS}] -state disabled
     }
-    
+
     $w entryconfig [msgcat::mc {Multiple WCS}] -state normal
 
     foreach ll {a b c d e f g h i j k l m n o p q r s t u v w x y z} {
@@ -478,7 +479,7 @@ proc DistMenuButton {w varname system other format cmd} {
 proc DistMenuButtonCmd {varname system format cmd} {
     upvar #0 $varname var
     global $varname
-    
+
     set ${varname}($system,msg) [msgcat::mc $var($system)]
 
     if {$format != {}} {
@@ -507,7 +508,7 @@ proc DistMenuButtonCmd {varname system format cmd} {
 proc DistMenuEnable {w varname system format} {
     upvar #0 $varname var
     global $varname
-    
+
     if {![info exists var(frame)]} {
 	return
     }
@@ -521,7 +522,7 @@ proc DistMenuEnable {w varname system format} {
     } else {
 	$w entryconfig [msgcat::mc {WCS}] -state disabled
     }
-    
+
     $w entryconfig [msgcat::mc {Multiple WCS}] -state normal
 
     foreach ll {a b c d e f g h i j k l m n o p q r s t u v w x y z} {
@@ -548,7 +549,7 @@ proc DistMenuEnable {w varname system format} {
 proc DistMenuReset {w varname system format} {
     upvar #0 $varname var
     global $varname
-    
+
     $w entryconfig [msgcat::mc {WCS}] -state normal
     $w entryconfig [msgcat::mc {Multiple WCS}] -state normal
 
@@ -621,7 +622,7 @@ proc ColorMenuOther {varname id cmd} {
 proc ColorMenuButton {w varname color cmd} {
     upvar #0 $varname var
     global $varname
-    
+
     ttk::menubutton $w -textvariable ${varname}($color) -menu $w.menu
     ColorMenu $w.menu $varname $color $cmd
 }
@@ -659,7 +660,7 @@ proc ColorFillMenu {w varname color fill cmd1 cmd2} {
 proc ColorFillMenuButton {w varname color fill cmd1 cmd2} {
     upvar #0 $varname var
     global $varname
-    
+
     ttk::menubutton $w -textvariable ${varname}($color) -menu $w.menu
     ColorFillMenu $w.menu $varname $color $fill $cmd1 $cmd
 }
@@ -752,7 +753,7 @@ proc WidthMenu {w varname width cmd} {
 proc WidthMenuButton {w varname width cmd} {
     upvar #0 $varname var
     global $varname
-    
+
     ttk::menubutton $w -textvariable ${varname}($width) -menu $w.menu
     WidthMenu $w.menu $varname $width $cmd
 }
@@ -779,7 +780,7 @@ proc WidthDashMenu {w varname width dash cmd1 cmd2} {
 proc WidthDashMenuButton {w varname width dash cmd1 cmd2} {
     upvar #0 $varname var
     global $varname
-    
+
     ttk::menubutton $w -textvariable ${varname}($width) -menu $w.menu
     WidthDashMenu $w.menu $varname $width $dash $cmd1 $cmd2
 }
@@ -810,7 +811,7 @@ proc ShapeSizeMenu {w varname width cmd} {
 proc ShapeSizeMenuButton {w varname width cmd} {
     upvar #0 $varname var
     global $varname
-    
+
     ttk::menubutton $w -textvariable ${varname}($width) -menu $w.menu
     ShapeSizeMenu $w.menu $varname $width $cmd
 }

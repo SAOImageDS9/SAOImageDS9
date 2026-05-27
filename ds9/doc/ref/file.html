@@ -35,6 +35,7 @@
 <a href="#PreferenceFile">Preference File</a><br>
 <a href="#StartupFile">Startup File</a><br>
 <a href="#TCL">TCL</a><br>
+<a href="#Script">Movie Script</a><br>
 <p><b><a name="FITS" id="FITS"></a>FITS</b></p>
 DS9 supports FITS images and FITS binary tables. The following algorithm is used to locate and to load the FITS image or table if no additional information is provide:
 <blockquote>
@@ -470,5 +471,93 @@ If a startup file <tt>$HOME/ds9.ini</tt> is available, it is sourced as the last
 Users may have several different startup files. DS9 looks for a startup file with its own name. By default, if the application is named <tt>ds9</tt>, it will look for <tt>.ds9.ini.</tt> However, if the DS9 application is named <tt>foo</tt>, then DS9 will look for <tt>.foo.ini.</tt> In this manner, the user can have several predefined startup files that are activated by invoking DS9 with a different application names.<br>
 <p><b><a name="TCL" id="TCL"></a>TCL</b></p>
 TCL/TK script file. Users may customize the appearance and enhance the capabilities of DS9 by sourcing their own TCL scripts.</blockquote>
+
+<p><b><a name="Script" id="Script"></a>Movie Script</b></p>
+<p>
+The movie script format is used to specify a set of ds9 commands to run to create a movie.
+The user can run any of the command line options. A frame is added to the movie after each command.
+For example the script</p>
+<pre>
+pan to 4096 4096 physical
+zoom to 1
+zoom to 2
+zoom to 3
+sleep 2
+zoom to 2
+zoom to 1
+pan to 5120 5120 physical
+</pre>
+
+<p>will create a movie with 8 frames. The first will be after the current image is
+pan'ed  to the specified location, then the imager will zoom into that location, pause,
+and zoom out, and then pan to a different location.</p>
+
+<p>
+Lines in the script starting with <tt>#</tt> are treated as comments and ignored.
+Lines ending with <tt>\</tt> are continued onto the next line; multiple continue lines are allowed.
+Lines ending with <tt>&amp;&amp;</tt> are executed but a new shot/frame is not added to the movie;
+this allows multiple commands to be run before the next frame is added.
+</p>
+
+<p>
+The <tt>sleep</tt> command will be used in conjunction with the movie Delay value. The amount of time
+to sleep will be used to calculate the number of frames to add to the movie to introduce the desired delay.
+</p>
+
+<p>
+Finally, there is a <tt>path</tt> option that allows the user to specify a story path across the dataset.
+Rather than just jumping from location to location, the <tt>path</tt> option allows the user to specify multiple way-points
+on the way from one location to another.  Hint: You can use the <tt>segment</tt> region to draw a multi-line-segment line and the copy the coordinates of the endpoints to the path command.
+</p>
+
+<p>
+A longer movie script then could look like:
+</p>
+
+<pre>
+# This is a sample movie script
+cmap grey &&
+pan to 4096 4096 physical &&
+scale log &&
+scale limits 0 10
+sleep 2
+cmap bb
+zoom to 1
+zoom to 2
+zoom to 3
+zoom to 4
+sleep 1
+zoom to 3
+zoom to 2
+zoom to 1
+pan to 4455 3322 physical
+regions command {circle 4455 3322 15}
+zoom to 2
+zoom to 4
+zoom to 1
+path 165.3592040 -60.9888579 \
+     165.3343777 -60.9970403 \
+     165.3368115 -61.0279289 \
+     165.3568057 -61.0420197 \
+     165.3979999 -61.0543396 \
+     165.4389455 -61.0510670 \
+     165.4801702 -61.0521552 \
+     165.4951121 -61.0380736 \
+     165.5151265 -61.0274043 \
+     165.5052158 -61.0092326 \
+     165.4899765 -61.0009021 \
+     165.4583989 -60.9924361 \
+     165.4369801 -60.9902503 \
+     165.4124623 -60.9905203 \
+     165.3913201 -60.9943406 \
+     165.3752255 -61.0081368 \
+     165.3757554 -61.0242638 \
+     165.4008507 -61.0339772 \
+     165.4347153 -61.0311135 \
+     165.4479761 -61.0223669 \
+     fk5
+</pre>
+
+
 </body>
 </html>

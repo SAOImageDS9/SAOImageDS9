@@ -1364,50 +1364,50 @@ array set movie::rules {
 }
 
 array set movie::rules {
-  41,line 106
+  41,line 105
   7,line 55
-  37,line 102
+  37,line 101
   4,line 49
-  34,line 98
+  34,line 97
   1,line 45
-  31,line 95
-  27,line 91
-  24,line 86
-  21,line 81
-  17,line 75
-  14,line 70
-  11,line 65
-  43,line 108
+  31,line 94
+  27,line 90
+  24,line 85
+  21,line 80
+  17,line 74
+  14,line 69
+  11,line 64
+  43,line 107
   9,line 60
-  40,line 105
-  39,line 104
+  40,line 104
+  39,line 103
   6,line 53
-  36,line 101
+  36,line 100
   3,line 49
-  33,line 97
+  33,line 96
   4,e 1
-  29,line 93
-  30,line 94
-  26,line 90
-  23,line 85
-  19,line 77
-  20,line 80
-  16,line 72
-  13,line 67
+  29,line 92
+  30,line 93
+  26,line 89
+  23,line 84
+  19,line 76
+  20,line 79
+  16,line 71
+  13,line 66
   10,line 62
-  42,line 107
+  42,line 106
   8,line 57
-  38,line 103
+  38,line 102
   5,line 50
-  35,line 100
+  35,line 99
   2,line 46
-  32,line 96
-  28,line 92
-  25,line 89
-  22,line 82
-  18,line 76
-  15,line 71
-  12,line 66
+  32,line 95
+  28,line 91
+  25,line 88
+  22,line 81
+  18,line 75
+  15,line 70
+  12,line 65
 }
 
 array set movie::lr1_table {
@@ -1583,7 +1583,7 @@ array set movie::token_id_table {
   280,title TO
   279,title SLTO
   264,line 18
-  292,line 88
+  292,line 87
   287 movie
   270,t 0
   269,t 0
@@ -1599,7 +1599,7 @@ array set movie::token_id_table {
   274,t 0
   261,line 15
   293 start'
-  288,line 69
+  288,line 68
   257,t 0
   270,title FROM
   269,title FRAME
@@ -1633,7 +1633,7 @@ array set movie::token_id_table {
   287,title {}
   258,t 0
   263,line 17
-  291,line 84
+  291,line 83
   error,title {}
   280,t 0
   279,t 0
@@ -1669,7 +1669,7 @@ array set movie::token_id_table {
   272,title MPEG
   261 AZ_
   265,line 19
-  293,line 109
+  293,line 108
   291,title {}
   262 AZFROM_
   281,t 0
@@ -1682,8 +1682,8 @@ array set movie::token_id_table {
   265 EL_
   262,line 16
   266 ELFROM_
-  290,line 79
-  289,line 74
+  290,line 78
+  289,line 73
   285,t 1
   267 ELTO_
   0,t 0

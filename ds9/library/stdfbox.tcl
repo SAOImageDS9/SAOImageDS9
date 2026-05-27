@@ -155,6 +155,12 @@ proc InitDialogBox {} {
 			     [list {MPEG} {*.mpeg}] \
 			     [list {MPEG} {*.mpg}] \
 			    ]
+    global cmdfbox
+    set cmdfbox(file) {ds9.cmd}
+    set cmdfbox(dir) {}
+    set cmdfbox(types) [list \
+			    [list {CMD} {*.cmd}] \
+			   ]
 
     global votfbox
     set votfbox(file) {ds9.xml}

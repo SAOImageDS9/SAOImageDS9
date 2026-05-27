@@ -40,6 +40,7 @@ proc MovieDialog {} {
     global movie
     global mpegfbox
     global giffbox
+    global cmdfbox
     global ed
     global current
 
@@ -71,6 +72,8 @@ proc MovieDialog {} {
     ttk::label $f.title -text [msgcat::mc {Format}]
     ttk::radiobutton $f.frame -text {Frames Movie} \
 	-variable ed(action) -value frame -command [list MovieDialogUpdate $w]
+    ttk::radiobutton $f.script -text {Script Movie} \
+	-variable ed(action) -value script -command [list MovieDialogUpdate $w]
     ttk::radiobutton $f.slice -text {Slice Movie} \
 	-variable ed(action) -value slice -command [list MovieDialogUpdate $w]
     ttk::radiobutton $f.3d -text {3D Movie} \
@@ -78,6 +81,7 @@ proc MovieDialog {} {
 
     grid $f.slice -padx 2 -pady 2 -sticky w
     grid $f.frame -padx 2 -pady 2 -sticky w
+    grid $f.script -padx 2 -pady 2 -sticky w
     grid $f.3d -padx 2 -pady 2 -sticky w
 
     # Transition
@@ -126,22 +130,34 @@ proc MovieDialog {} {
 	set movie(type) $ed(type)
 	set movie(delay) $ed(delay)
 	set movie(trans) $ed(trans)
+
+	set scriptfn {}
+	if {$movie(action) == {script}} {
+	    set scriptfn [OpenFileDialog cmdfbox]
+	}
 	
-	switch $movie(type) {
-	    mpeg {set fn [SaveFileDialog mpegfbox]}
-	    gif {set fn [SaveFileDialog giffbox]}
+	if {$movie(action) != {script} || $scriptfn != {}} {
+	    switch $movie(type) {
+		mpeg {set fn [SaveFileDialog mpegfbox]}
+		gif {set fn [SaveFileDialog giffbox]}
+	    }
 	}
 
-	if {$fn != {}} {
+	if {[info exists fn] && $fn != {}} {
 	    set ok 1
 	    switch $movie(action) {
 		slice -
-		frame {}
+		frame -
+		script {}
 		3d {set ok [Movie3dDialog]}
 	    }
 
 	    if {$ok} {
-		MovieCreate $fn
+		if {$movie(action) == {script}} {
+		    MovieCreate $fn $scriptfn
+		} else {
+		    MovieCreate $fn
+		}
 	    }
 	}
     }
@@ -180,14 +196,15 @@ proc MovieDialogUpdate {w} {
 	    $f.blink configure -state disabled
 	    $f.fade configure -state disabled
 	}
-	frame {
+	frame -
+	script {
 	    $f.blink configure -state normal
 	    $f.fade configure -state normal
 	}
     }
 }
 
-proc MovieCreate {fn} {
+proc MovieCreate {fn {scriptfn {}}} {
     global ds9
     global movie
     global current
@@ -205,8 +222,10 @@ proc MovieCreate {fn} {
 
     switch $movie(action) {
 	frame {MovieFrame}
+	script {MovieScript $scriptfn}
 	slice {MovieSlice}
 	3d {Movie3d}
+    default {Error [msgcat::mc {Unknown movie option.}]}
     }
 
     # close
@@ -284,6 +303,150 @@ proc MovieFrame {} {
 	set current(display) $modesav
 	DisplayMode
     }
+}
+
+proc MovieScript {fn} {
+    global ds9
+    global current
+    global movie
+    global fade
+
+
+    if {$fn == {}} {
+	return
+    }
+
+    set rr [catch {open $fn r} ch]
+    if {$rr} {
+	Error [msgcat::mc {An error has occurred while opening script}]
+    }
+
+    set movie(first) 1
+    set movie(status) 0
+    set movie(abort) 0
+
+    set cmd {}
+    while {[gets $ch line] >= 0} {
+	set line [string trim $line]
+	if {$line == {} || [string index $line 0] == {#}} {
+	    continue
+	}
+
+	set cont [regexp {\\$} $line]
+	if {$cont} {
+	    set line [string trimright [string range $line 0 end-1]]
+	}
+
+	append cmd " " $line
+	set cmd [string trim $cmd]
+
+	if {$cont} {
+	    continue
+	}
+
+	if {[MovieScriptCommand $cmd]} {
+	    set cmd {}
+	    break
+	}
+	set cmd {}
+    }
+
+    if {$cmd != {}} {
+	MovieScriptCommand $cmd
+    }
+
+    close $ch
+}
+
+proc MovieScriptCommand {cmd} {
+    set cmd [string trim $cmd]
+    if {$cmd == {}} {
+	return 0
+    }
+
+    set takePhoto 1
+    if {[regexp {&&$} $cmd]} {
+	set cmd [string trimright [string range $cmd 0 end-2]]
+	set takePhoto 0
+    }
+
+    if {[lindex $cmd 0] == {path}} {
+	return [MovieScriptPath $cmd]
+    }
+
+    if {[lindex $cmd 0] == {sleep}} {
+	return [MovieScriptSleep $cmd]
+    }
+
+
+    if {[MovieScriptDS9Cmd $cmd]} {
+	return 1
+    }
+
+    if {$takePhoto} {
+	return [MoviePhoto]
+    }
+    return 0
+}
+
+
+proc MovieScriptSleep {cmd} {
+    global movie
+
+    if {$movie(delay) == 0} {
+	return [MoviePhoto]
+    }
+
+    set scmd [split $cmd]
+    if {[llength $scmd] == 1} {
+	return [MoviePhoto]
+    }
+
+    set wait_secs [lindex $scmd 1]
+    if {$wait_secs <= 0} {
+	return [MoviePhoto]
+    }
+
+    # Delay is 100ths of sec; convert sleep value
+    set wait_decisec [expr $wait_secs * 100.]
+    for {set ii 0} {$ii < $wait_decisec} {incr ii $movie(delay)} {
+	if {[MoviePhoto]} {
+	    return 1
+	}
+    }
+
+    return 0
+}
+
+proc MovieScriptPath {cmd} {
+    set path [lrange $cmd 1 end]
+    set sys [lindex $path end]
+    set coords [lrange $path 0 end-1]
+
+    for {set ii 0} {$ii < [llength $coords]} {incr ii 2} {
+	set x [lindex $coords $ii]
+	set y [lindex $coords [expr $ii+1]]
+	if {$x == {} || $y == {} || $sys == {}} {
+	    break
+	}
+
+	if {[MovieScriptDS9Cmd [list pan to $x $y $sys]]} {
+	    return 1
+	}
+	if {[MoviePhoto]} {
+	    return 1
+	}
+    }
+
+    return 0
+}
+
+proc MovieScriptDS9Cmd {cmd} {
+    if {[catch {ds9Cmd -$cmd}]} {
+	Error [msgcat::mc {An error has occurred while processing}]
+	return 1
+    }
+    return 0
 }
 
 proc MovieSlice {} {
@@ -713,4 +876,3 @@ proc ProcessMovieCmd {varname iname} {
     movie::yyparse
     incr i [expr $movie::yycnt-1]
 }
-

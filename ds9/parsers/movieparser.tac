@@ -23,6 +23,7 @@
 %token NUMBER_
 %token OSCILLATE_
 %token REPEAT_
+%token SCRIPT_
 %token SLICE_
 %token SLFROM_
 %token SLTO_
@@ -51,6 +52,9 @@ movie : action type trans STRING_ {ProcessCmdSet4 movie action $1 type $2 delay 
    {ProcessCmdSet3 movie action 3d type $2 delay 0; MovieCreate $3}
  | 3D_ type INT_ STRING_ 3dopts
    {ProcessCmdSet3 movie action 3d type $2 delay $3; MovieCreate $4}
+
+ | SCRIPT_ type trans STRING_ STRING_ {ProcessCmdSet4 movie action script type $2 delay 0 trans $3; MovieCreate $5 $4}
+ | SCRIPT_ type INT_ trans STRING_ STRING_ {ProcessCmdSet4 movie action script type $2 delay $3 trans $4; MovieCreate $6 $5}
  ;
 
 action : {set _ frame}

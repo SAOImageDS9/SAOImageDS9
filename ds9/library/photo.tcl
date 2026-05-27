@@ -12,7 +12,7 @@ proc ImportPhotoFile {fn mode} {
     set loadParam(load,type) photo
 
     # find stdin
-    if {[string range $fn 0 4] == "stdin" || 
+    if {[string range $fn 0 4] == "stdin" ||
 	[string range $fn 0 4] == "STDIN" ||
 	[string range $fn 0 0] == "-"} {
 
@@ -166,15 +166,20 @@ proc ExportPhotoSocket {ch format opt} {
 	return
     }
 
-    switch -- $format {
-	jpeg -
-	tiff {
-	    puts -nonewline $ch [base64::decode $data]
-	}
-	default {
-	    puts -nonewline $ch $data
-	}
-    }
+    # Not sure why this was here. Maybe older version of tkimg
+    # returned image base64 encoded? Does not look to be the case now.
+    #
+    #~ switch -- $format {
+	#~ jpeg -
+	#~ tiff {
+	    #~ puts -nonewline $ch [base64::decode $data]
+	#~ }
+	#~ default {
+	    #~ puts -nonewline $ch $data
+	#~ }
+    #~ }
+
+    puts -nonewline $ch $data
 
     image delete $ph
 }

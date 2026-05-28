@@ -424,7 +424,7 @@ proc MovieScriptForeach {cmd} {
 
     foreach item $items {
         # Replace the @ symbol in the template with the current item value(s)
-        set runCmd [string map [list @ $item] $template]
+        set runCmd [string trim [string map [list @ $item] $template]]
 
         if {[MovieScriptDS9Cmd $runCmd]} {
             return 1

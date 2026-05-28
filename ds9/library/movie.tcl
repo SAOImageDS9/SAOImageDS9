@@ -104,7 +104,7 @@ proc MovieDialog {} {
     # Buttons
     set f [ttk::frame $w.buttons]
     ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
-	-default active 
+	-default active
     ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
     pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
 
@@ -135,7 +135,7 @@ proc MovieDialog {} {
 	if {$movie(action) == {script}} {
 	    set scriptfn [OpenFileDialog cmdfbox]
 	}
-	
+
 	if {$movie(action) != {script} || $scriptfn != {}} {
 	    switch $movie(type) {
 		mpeg {set fn [SaveFileDialog mpegfbox]}
@@ -370,8 +370,8 @@ proc MovieScriptCommand {cmd} {
 	set takePhoto 0
     }
 
-    if {[lindex $cmd 0] == {path}} {
-	return [MovieScriptPath $cmd]
+    if {[lindex $cmd 0] == {foreach}} {
+	return [MovieScriptForeach $cmd]
     }
 
     if {[lindex $cmd 0] == {sleep}} {
@@ -418,24 +418,20 @@ proc MovieScriptSleep {cmd} {
     return 0
 }
 
-proc MovieScriptPath {cmd} {
-    set path [lrange $cmd 1 end]
-    set sys [lindex $path end]
-    set coords [lrange $path 0 end-1]
+proc MovieScriptForeach {cmd} {
+    set items [lindex $cmd 1]
+    set template [lindex $cmd 2]
 
-    for {set ii 0} {$ii < [llength $coords]} {incr ii 2} {
-	set x [lindex $coords $ii]
-	set y [lindex $coords [expr $ii+1]]
-	if {$x == {} || $y == {} || $sys == {}} {
-	    break
-	}
+    foreach item $items {
+        # Replace the @ symbol in the template with the current item value(s)
+        set runCmd [string map [list @ $item] $template]
 
-	if {[MovieScriptDS9Cmd [list pan to $x $y $sys]]} {
-	    return 1
-	}
-	if {[MoviePhoto]} {
-	    return 1
-	}
+        if {[MovieScriptDS9Cmd $runCmd]} {
+            return 1
+        }
+        if {[MoviePhoto]} {
+            return 1
+        }
     }
 
     return 0
@@ -778,7 +774,7 @@ proc Movie3dDialog {} {
     # Buttons
     set f [ttk::frame $w.buttons]
     ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed2(ok) 1} \
-	-default active 
+	-default active
     ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed2(ok) 0}
     pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
 

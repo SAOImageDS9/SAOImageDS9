@@ -489,7 +489,7 @@ pan to 5120 5120 physical
 </pre>
 
 <p>will create a movie with 8 frames. The first will be after the current image is
-pan'ed  to the specified location, then the imager will zoom into that location, pause,
+panned to the specified location, then the image will zoom into that location, pause,
 and zoom out, and then pan to a different location.</p>
 
 <p>
@@ -505,13 +505,22 @@ to sleep will be used to calculate the number of frames to add to the movie to i
 </p>
 
 <p>
-Finally, there is a <tt>path</tt> option that allows the user to specify a story path across the dataset.
-Rather than just jumping from location to location, the <tt>path</tt> option allows the user to specify multiple way-points
-on the way from one location to another.  Hint: You can use the <tt>segment</tt> region to draw a multi-line-segment line and the copy the coordinates of the endpoints to the path command.
+Finally, there is a <tt>foreach</tt> option that allows the user loop over
+a list of parameter values. This can be used with any command that takes one or more arguments.  For example it can be used with the <tt>pan to</tt> command to set way points when panning the image from one location to another. Or it could be used to incrementally zoom in/out.
+The syntax is
+</p>
+
+<pre>
+foreach {value1 value2 value3 ...} {command ... @ ...}
+</pre>
+
+<p>
+The <tt>@</tt> symbol in the command will be replaced with each of the specified values.
+Note: if a command takes multiple values, e.g. the coordinates required by the `pan to` command, then they must be enclosed in braces, {}.
 </p>
 
 <p>
-A longer movie script then could look like:
+This is an example of a longer movie script:
 </p>
 
 <pre>
@@ -522,10 +531,7 @@ scale log &&
 scale limits 0 10
 sleep 2
 cmap bb
-zoom to 1
-zoom to 2
-zoom to 3
-zoom to 4
+foreach {1 2 3 4} {zoom to @}
 sleep 1
 zoom to 3
 zoom to 2
@@ -535,27 +541,28 @@ regions command {circle 4455 3322 15}
 zoom to 2
 zoom to 4
 zoom to 1
-path 165.3592040 -60.9888579 \
-     165.3343777 -60.9970403 \
-     165.3368115 -61.0279289 \
-     165.3568057 -61.0420197 \
-     165.3979999 -61.0543396 \
-     165.4389455 -61.0510670 \
-     165.4801702 -61.0521552 \
-     165.4951121 -61.0380736 \
-     165.5151265 -61.0274043 \
-     165.5052158 -61.0092326 \
-     165.4899765 -61.0009021 \
-     165.4583989 -60.9924361 \
-     165.4369801 -60.9902503 \
-     165.4124623 -60.9905203 \
-     165.3913201 -60.9943406 \
-     165.3752255 -61.0081368 \
-     165.3757554 -61.0242638 \
-     165.4008507 -61.0339772 \
-     165.4347153 -61.0311135 \
-     165.4479761 -61.0223669 \
-     fk5
+foreach { \
+     {165.3592040 -60.9888579} \
+     {165.3343777 -60.9970403} \
+     {165.3368115 -61.0279289} \
+     {165.3568057 -61.0420197} \
+     {165.3979999 -61.0543396} \
+     {165.4389455 -61.0510670} \
+     {165.4801702 -61.0521552} \
+     {165.4951121 -61.0380736} \
+     {165.5151265 -61.0274043} \
+     {165.5052158 -61.0092326} \
+     {165.4899765 -61.0009021} \
+     {165.4583989 -60.9924361} \
+     {165.4369801 -60.9902503} \
+     {165.4124623 -60.9905203} \
+     {165.3913201 -60.9943406} \
+     {165.3752255 -61.0081368} \
+     {165.3757554 -61.0242638} \
+     {165.4008507 -61.0339772} \
+     {165.4347153 -61.0311135} \
+     {165.4479761 -61.0223669} \
+    } {pan to @ fk5 }
 </pre>
 
 

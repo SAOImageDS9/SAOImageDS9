@@ -10,7 +10,7 @@
 
 case $DS9_BUILD_OS in
 
-    "ubuntu-latest")
+    ubuntu-*)
 	source .github/scripts/setup_ubuntu.sh
 	;;
 

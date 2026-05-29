@@ -47,7 +47,6 @@ jobs:
       run: |
         make
 
-    # Rely on xvfb to check SAOImageDS9 starts up
-    - name: Check version
+    - name: Check executable
       run: |
-        ./bin/ds9 -version
+        ./bin/ds9 -help

@@ -14,6 +14,10 @@ case $DS9_BUILD_OS in
 	source .github/scripts/setup_ubuntu.sh
 	;;
 
+    macos-*)
+	source .github/scripts/setup_macos.sh
+	;;
+
     *)
 	echo "** UNKNOWN OS: '$DS9_BUILD_OS'"
 	exit 1

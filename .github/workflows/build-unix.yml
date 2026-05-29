@@ -1,0 +1,53 @@
+name: build-unix
+run-name: Build UNIX
+
+on:
+  push:
+    branches:
+    - master
+    tags:
+    - '*'
+  pull_request:
+
+#Reduces GH Action duplication:
+# Cancels the previous pipeline for this ref it is still running
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-builds:
+    defaults:
+      run:
+        shell: bash
+
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - name: Ubuntu Latest
+            os: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # 6.0.2
+
+    - name: Install dependencies
+      env:
+        DS9_BUILD_OS: ${{ matrix.os }}
+      run: |
+        source .github/scripts/setup.sh
+
+    - name: Configure
+      run: |
+        unix/configure
+
+    - name: Build
+      run: |
+        make
+
+    # Rely on xvfb to check SAOImageDS9 starts up
+    - name: Check version
+      run: |
+        ./bin/ds9 -version

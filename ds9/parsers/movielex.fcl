@@ -23,6 +23,7 @@ mpeg	    {return $MPEG_}
 number	    {return $NUMBER_}
 oscillate   {return $OSCILLATE_}
 repeat	    {return $REPEAT_}
+script	    {return $SCRIPT_}
 slice	    {return $SLICE_}
 slfrom	    {return $SLFROM_}
 slto	    {return $SLTO_}

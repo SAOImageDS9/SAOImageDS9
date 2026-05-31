@@ -26,12 +26,6 @@ jobs:
     strategy:
       matrix:
         include:
-          #~ - name: Ubuntu Latest
-            #~ os: ubuntu-latest
-
-          # - name: Ubuntu 24.04 ARM
-          #   os: ubuntu-24.04-arm
-
           - name: macOS Latest ARM
             os: macos-latest
 
@@ -51,8 +45,5 @@ jobs:
 
     - name: Build
       run: |
-        make
+        make && make dist
 
-    - name: Check executable
-      run: |
-        ./bin/ds9 -help

@@ -1,0 +1,233 @@
+name: build-cygwin
+run-name: Build cygwin
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - '*'
+  pull_request:
+
+#Reduces GH Action duplication:
+# Cancels the previous pipeline for this ref it is still running
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-builds:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - name: Windows
+            os: windows-latest
+
+    steps:
+      # 1. Configure line endings BEFORE checkout so files land correctly
+      - name: Configure Git line endings
+        shell: pwsh
+        run: git config --global core.autocrlf input
+
+      # 2. Checkout the source code
+      - name: Checkout Code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+
+      # 3. Install Cygwin and required packages
+      - name: Install Cygwin
+        uses: cygwin/cygwin-install-action@v6
+        with:
+          packages: >-
+            make
+            cmake
+            gcc-core
+            gcc-g++
+            git
+            pkg-config
+            autoconf
+            binutils
+            bzip2
+            coreutils
+            cygwin-devel
+            dash
+            dejavu-fonts
+            diffutils
+            editrights
+            file
+            findutils
+            gawk
+            getent
+            gettext
+            gettext-locale-alias
+            grep
+            groff
+            gzip
+            hostname
+            info
+            ipc-utils
+            less
+            libarchive13
+            libargp
+            libatomic1
+            libattr1
+            libblkid1
+            libbrotlicommon1
+            libbrotlidec1
+            libbz2_1
+            libcharset1
+            libcom_err2
+            libcrypt2
+            libcurl4
+            libdb5.3
+            libedit0
+            libexpat1
+            libfdisk1
+            libffi8
+            libfido2
+            libfontconfig-common
+            libfontconfig1
+            libfreetype6
+            libgc1
+            libgcc1
+            libgcrypt-devel
+            libgcrypt20
+            libgdbm6
+            libgdbm_compat4
+            libgmp10
+            libgomp1
+            libgpg-error-devel
+            libgpg-error0
+            libgsasl-common
+            libgsasl18
+            libgssapi_krb5_2
+            libguile3.0_1
+            libiconv-devel
+            libiconv2
+            libidn2_0
+            libintl-devel
+            libintl8
+            libisl23
+            libjsoncpp26
+            libk5crypto3
+            libkrb5_3
+            libkrb5support0
+            liblz4_1
+            liblzma-devel
+            liblzma5
+            liblzo2_2
+            libmpc3
+            libmpfr6
+            libncursesw10
+            libnghttp2_14
+            libntlm0
+            libopenldap2_4_2
+            libp11-kit0
+            libpcre2_8_0
+            libpipeline1
+            libpkgconf7
+            libpng16
+            libpopt0
+            libpsl5
+            libquadmath0
+            libreadline8
+            librhash0
+            libsasl2_3
+            libsigsegv2
+            libsmartcols1
+            libsqlite3_0
+            libssh2_1
+            libssl3
+            libstdc++6
+            libtasn1_6
+            libuchardet0
+            libunistring5
+            libuuid1
+            libuv1
+            libX11-devel
+            libX11_6
+            libXau-devel
+            libXau6
+            libxcb-devel
+            libxcb1
+            libXdmcp-devel
+            libXdmcp6
+            libXext-devel
+            libXext6
+            libXft2
+            libxml2
+            libxml2-devel
+            libXrandr-devel
+            libXrandr2
+            libXrender-devel
+            libXrender1
+            libxslt
+            libxslt-devel
+            libXss1
+            libxxhash0
+            libzip-devel
+            libzip5
+            libzstd1
+            login
+            m4
+            man-db
+            mingw64-x86_64-binutils
+            mingw64-x86_64-gcc-core
+            mingw64-x86_64-gcc-g++
+            mingw64-x86_64-headers
+            mingw64-x86_64-libxml2
+            mingw64-x86_64-libxslt
+            mingw64-x86_64-runtime
+            mingw64-x86_64-tcl
+            mingw64-x86_64-win-iconv
+            mingw64-x86_64-windows-default-manifest
+            mingw64-x86_64-winpthreads
+            mingw64-x86_64-xz
+            mingw64-x86_64-zlib
+            mintty
+            ncurses
+            openssh
+            openssl
+            p11-kit
+            p11-kit-trust
+            perl
+            perl-XML-Parser
+            perl_autorebase
+            perl_base
+            pkgconf
+            rebase
+            rsync
+            run
+            sed
+            tar
+            tcl
+            tcl-devel
+            tcl-tk
+            tcl-tk-devel
+            terminfo
+            tzcode
+            tzdata
+            unzip
+            util-linux
+            vim-minimal
+            w32api-headers
+            w32api-runtime
+            which
+            windows-default-manifest
+            xorgproto
+            xz
+            zip
+            zlib
+            zlib-devel
+            zlib0
+            zstd
+
+      # 4. Build inside Cygwin
+      - name: Run Cygwin Script
+        # Use the absolute path to Cygwin bash to avoid accidentally
+        # picking up Git-for-Windows bash from the PATH.
+        shell: bash -eo pipefail {0}
+        run: |
+          # Need to && cmds and tack on echo to avoid windows newlines
+          chmod +x ./win/configure && ./win/configure && make && echo ok

@@ -24,7 +24,7 @@ SRCL = $(wildcard $(prefix)/ds9/parsers/*.fcl)
 
 $(LIBDIR)/library : $(SRCP:.tac=.tcl) $(SRCP:.tac=.tab.tcl) $(SRCL:.fcl=.tcl) $(prefix)/ds9/library/*.tcl
 	mkdir -p "$@"
-	cp -prf $? "$@"
+	cp -rf $? "$@"
 # must do it this way for win
 	cd "$@"; \
 	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
@@ -33,25 +33,25 @@ $(LIBDIR)/library : $(SRCP:.tac=.tcl) $(SRCP:.tac=.tab.tcl) $(SRCL:.fcl=.tcl) $(
 #--------------------------support
 
 $(LIBDIR)/msgs : $(prefix)/ds9/msgs
-	cp -prf $? "$@"
+	cp -rf $? "$@"
 
 $(LIBDIR)/doc : $(prefix)/ds9/doc
-	cp -prf $? "$@"
+	cp -rf $? "$@"
 
 $(LIBDIR)/cmaps : $(prefix)/ds9/cmaps
-	cp -prf $? "$@"
+	cp -rf $? "$@"
 
 $(LIBDIR)/template : $(prefix)/ds9/template
-	cp -prf $? "$@"
+	cp -rf $? "$@"
 
 $(LIBDIR)/icons : $(prefix)/ds9/icons
-	cp -prf $? "$@"
+	cp -rf $? "$@"
 
 #--------------------------tls
 
 $(LIBDIR)/tls	: $(prefix)/tls/library/tls.tcl
 	mkdir -p "$@"
-	cp -prf $? "$@"
+	cp -rf $? "$@"
 # must do it this way for win
 	cd "$@"; \
 	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
@@ -68,7 +68,7 @@ $(LIBDIR)/tkblt	: $(prefix)/tkblt/library/*.tcl
 #--------------------------tkcon
 
 $(LIBDIR)/tkcon	: $(prefix)/tkcon
-	cp -prf $? "$@"
+	cp -rf $? "$@"
 # must do it this way for win
 	cd "$@"; \
 	echo "pkg_mkIndex . *.tcl; exit" | $(TCLSH_PROG)
@@ -76,24 +76,24 @@ $(LIBDIR)/tkcon	: $(prefix)/tkcon
 #--------------------------tcllib
 
 $(LIBDIR)/base64: $(prefix)/tcllib/modules/base64
-	cp -prf $? "$@"
+	cp -rf $? "$@"
 
 $(LIBDIR)/ftp	: $(prefix)/tcllib/modules/ftp
-	cp -prf $? "$@"
+	cp -rf $? "$@"
 
 $(LIBDIR)/log	: $(prefix)/tcllib/modules/log
-	cp -prf $? "$@"
+	cp -rf $? "$@"
 
 $(LIBDIR)/textutil: $(prefix)/tcllib/modules/textutil
-	cp -prf $? "$@"
+	cp -rf $? "$@"
 
 $(LIBDIR)/math	: $(prefix)/tcllib/modules/math
-	cp -prf $? "$@"
+	cp -rf $? "$@"
 
 #--------------------------tklib
 
 $(LIBDIR)/tooltip: $(prefix)/tklib/modules/tooltip
-	cp -prf $? "$@"
+	cp -rf $? "$@"
 
 #--------------------------distclean
 

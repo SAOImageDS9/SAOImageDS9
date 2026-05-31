@@ -204,7 +204,7 @@ tclxmlrpc/Makefile :
 tls	: tls/Makefile
 	@echo ""
 	@echo "*** $@ ***"
-	$(MAKE) -C tls install
+	$(MAKE) -C tls install-binaries
 
 tls/Makefile :
 	@echo ""

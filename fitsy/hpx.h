@@ -33,6 +33,11 @@ class FitsHPX : public FitsFile {
   void NESTidx(int nside, int facet, int rotn, int jmap, long long *healidx);
   void RINGidx(int nside, int facet, int rotn, int jmap, long long *healidx);
 
+  // Structural Refactoring Helpers
+  FitsBinColumn* findDefaultDataColumn(FitsBinTableHDU* hdu, FitsBinColumn* excludeCol);
+  void adjustFacetForQuad(int& facet) const;
+  void applyHalveBlanking(float* row, int nside, int jj, int halve, float blankValue) const;
+  void computeIndices(int nside, int facet, int rotn, int jj, long long* healidx);
 
  public:
   FitsHPX(FitsFile*, Order, CoordSys, Layout, int, int);

@@ -217,6 +217,20 @@ int FitsHPX::isHPX(FitsHead* head)
   return isMOC(head);
 }
 
+// Helper: Safely scans for fallback metrics columns
+FitsBinColumn* FitsHPX::findDefaultDataColumn(FitsBinTableHDU* hdu, FitsBinColumn* excludeCol)
+{
+  for (int ii=0; ii<hdu->cols(); ii++) {
+    FitsBinColumn* col = (FitsBinColumn*)hdu->find(ii);
+    if (col && col != excludeCol && col->type() != 'A' &&
+        col->type() != 'L' && col->type() != 'X' &&
+        col->type() != 'P' && col->type() != 'Q') {
+      return col;
+    }
+  }
+  return NULL;
+}
+
 FitsHPX::FitsHPX(FitsFile* fits, Order oo, CoordSys ss, Layout ll,
 		 int cc, int qq)
   : order_(oo), coord_(ss), layout_(ll), quad_(qq)
@@ -243,15 +257,7 @@ FitsHPX::FitsHPX(FitsFile* fits, Order oo, CoordSys ss, Layout ll,
 	col_ = NULL;
     }
     else {
-      for (int ii=0; ii<hdu->cols(); ii++) {
-	FitsBinColumn* col = (FitsBinColumn*)hdu->find(ii);
-	if (col && col != uniqCol_ && col->type() != 'A' &&
-	    col->type() != 'L' && col->type() != 'X' &&
-	    col->type() != 'P' && col->type() != 'Q') {
-	  col_ = col;
-	  break;
-	}
-      }
+      col_ = findDefaultDataColumn(hdu, uniqCol_);
     }
   }
   else if (head && keywordStarts(head, "INDXSCHM", "EXPLICIT")) {
@@ -266,15 +272,7 @@ FitsHPX::FitsHPX(FitsFile* fits, Order oo, CoordSys ss, Layout ll,
     }
 
     if (!col_) {
-      for (int ii=0; ii<hdu->cols(); ii++) {
-	FitsBinColumn* col = (FitsBinColumn*)hdu->find(ii);
-	if (col && col != pixelCol_ && col->type() != 'A' &&
-	    col->type() != 'L' && col->type() != 'X' &&
-	    col->type() != 'P' && col->type() != 'Q') {
-	  col_ = col;
-	  break;
-	}
-      }
+      col_ = findDefaultDataColumn(hdu, pixelCol_);
     }
     if (!col_)
       return;
@@ -324,6 +322,52 @@ FitsHPX::~FitsHPX()
 {
   if (data_)
     delete [] (float*)data_;
+}
+
+// Helper: Quadrant adjustments
+void FitsHPX::adjustFacetForQuad(int& facet) const
+{
+  if (quad_ && facet >= 0) {
+    int base = (facet <= 3) ? 0 : (facet <= 7) ? 4 : 8;
+    facet += quad_;
+    if (facet > base + 3)
+      facet -= 4;
+  }
+}
+
+// Helper: Structural row layout blanking calculations
+void FitsHPX::applyHalveBlanking(float* row, int nside, int jj, int halve, float blankValue) const
+{
+  if (!halve) return;
+
+  int i1 = 0, i2 = 0;
+  int abs_halve = abs(halve);
+  if (abs_halve == 1) {
+    i1 = (halve > 0) ? jj + 1 : jj;
+    i2 = nside;
+  } else if (abs_halve == 2) {
+    i1 = (halve < 0) ? nside - jj - 1 : nside - jj;
+    i2 = nside;
+  } else if (abs_halve == 3) {
+    i1 = 0;
+    i2 = (halve < 0) ? jj + 1 : jj;
+  } else if (abs_halve == 4) {
+    i1 = 0;
+    i2 = (halve > 0) ? nside - jj - 1 : nside - jj;
+  }
+
+  for (float* rowp = row + i1; rowp < row + i2; rowp++)
+    *rowp = blankValue;
+}
+
+// Helper: Uniform execution of HEALPix mapping indices
+void FitsHPX::computeIndices(int nside, int facet, int rotn, int jj, long long* healidx)
+{
+  if (order_ == NESTED || order_ == NUNIQ) {
+    NESTidx(nside, facet, rotn, jj, healidx);
+  } else if (order_ == RING) {
+    RINGidx(nside, facet, rotn, jj, healidx);
+  }
 }
 
 void FitsHPX::build(FitsFile* fits)
@@ -378,97 +422,31 @@ void FitsHPX::build(FitsFile* fits)
         int rotn  = FROTAT[layout][jfacet][ifacet];
         int halve = FHALVE[layout][jfacet][ifacet];
 
-        // Recentre longitude?
-        if (quad_ && facet >= 0) {
-          if (facet <= 3) {
-            facet += quad_;
-            if (facet > 3) facet -= 4;
+	 // Recentre longitude?
+        adjustFacetForQuad(facet);
+
+        if (facet >= 0) {
+          computeIndices(nside, facet, rotn, jj, healidx);
+
+	  // Gather data into the output vector.
+          for (int ii=0; ii<nside_; ii++) {
+            long long aa = healidx[ii] / repeat;
+            int bb = (int)(healidx[ii] - aa * repeat);
+            if (aa < nrow)
+              row[ii] = col_->value(data + (size_t)aa * (size_t)rowlen, bb);
+            else
+              row[ii] = 0;
           }
-	  else if (facet <= 7) {
-            facet += quad_;
-            if (facet > 7) facet -= 4;
-          }
-	  else {
-            facet += quad_;
-            if (facet > 11) facet -= 4;
-          }
+
+          applyHalveBlanking(row, nside, jj, halve, NAN);
+          memcpy(dest+fpixel-1, row, nside*sizeof(float));
         }
-
-        // Write out the data
-        if (facet < 0)
-	  ;
-	else {
-	  switch (order_) {
-	  case NESTED:
-            NESTidx(nside, facet, rotn, jj, healidx);
-	    break;
-	  case RING:
-            RINGidx(nside, facet, rotn, jj, healidx);
-	    break;
-	  case NUNIQ:
-	    break;
-	  }
-
-          // Gather data into the output vector.
-	  /*
-	  long* healp = healidx;
-	  for (float* rowp = row; rowp < row+nside; rowp++)
-	    *rowp = col_->value(data+*(healp++),0);
-	  */
-	  for (int ii=0; ii<nside_; ii++) {
-      long long aa = healidx[ii] / repeat;
-      int bb = (int)(healidx[ii] - aa * repeat);
-      if (aa < nrow)
-        row[ii] = col_->value(data + (size_t)aa * (size_t)rowlen, bb);
-	    else
-	      row[ii] = 0;
-	  }
-
-          // Apply blanking to halved facets.
-          if (halve) {
-	    int i1;
-	    int i2;
-            if (abs(halve) == 1) {
-              // Blank bottom-right.
-              i1 = jj;
-              i2 = nside;
-              if (halve > 0)
-		i1++;
-            } else if (abs(halve) == 2) {
-              // Blank top-right.
-              i1 = nside - jj;
-              i2 = nside;
-              if (halve < 0)
-		i1--;
-            } else if (abs(halve) == 3) {
-              // Blank top-left.
-              i1 = 0;
-              i2 = jj;
-              if (halve < 0)
-		i2++;
-            } else {
-              // Blank bottom-left.
-              i1 = 0;
-              i2 = nside - jj;
-              if (halve > 0)
-		i2--;
-            }
-
-	    for (float* rowp = row+i1; rowp < row+i2; rowp++)
-	      *rowp = NAN;
-	  }
-
-          // Write out this facet's contribution to this row of the map.
-	  memcpy(dest+fpixel-1, row, nside*sizeof(float));
-        }
-
 	fpixel += nelem;
       }
     }
   }
 
   data_ = dest;
-
   dataSize_ = pSize;
   dataSkip_ = 0;
 }
@@ -561,23 +539,10 @@ void FitsHPX::buildMOC(FitsFile* fits)
 	int rotn  = FROTAT[layout][jfacet][ifacet];
 	int halve = FHALVE[layout][jfacet][ifacet];
 
-	if (quad_ && facet >= 0) {
-	  if (facet <= 3) {
-	    facet += quad_;
-	    if (facet > 3) facet -= 4;
-	  }
-	  else if (facet <= 7) {
-	    facet += quad_;
-	    if (facet > 7) facet -= 4;
-	  }
-	  else {
-	    facet += quad_;
-	    if (facet > 11) facet -= 4;
-	  }
-	}
+	adjustFacetForQuad(facet);
 
 	if (facet >= 0) {
-	  NESTidx(nside, facet, rotn, jj, healidx);
+	  computeIndices(nside, facet, rotn, jj, healidx);
 
 	  for (int ii=0; ii<nside; ii++) {
 	    const MocRange* range = findMocRange(ranges, healidx[ii]);
@@ -585,37 +550,9 @@ void FitsHPX::buildMOC(FitsFile* fits)
 	      row[ii] = range->value;
 	  }
 
-	  if (halve) {
-	    int i1;
-	    int i2;
-	    if (abs(halve) == 1) {
-	      i1 = jj;
-	      i2 = nside;
-	      if (halve > 0)
-		i1++;
-	    } else if (abs(halve) == 2) {
-	      i1 = nside - jj;
-	      i2 = nside;
-	      if (halve < 0)
-		i1--;
-	    } else if (abs(halve) == 3) {
-	      i1 = 0;
-	      i2 = jj;
-	      if (halve < 0)
-		i2++;
-	    } else {
-	      i1 = 0;
-	      i2 = nside - jj;
-	      if (halve > 0)
-		i2--;
-	    }
-
-	    for (float* rowp = row+i1; rowp < row+i2; rowp++)
-	      *rowp = 0;
-	  }
+          applyHalveBlanking(row, nside, jj, halve, 0.0f);
+          memcpy(dest+fpixel-1, row, nside*sizeof(float));
 	}
-
-	memcpy(dest+fpixel-1, row, nside*sizeof(float));
 	fpixel += nelem;
       }
     }
@@ -625,7 +562,6 @@ void FitsHPX::buildMOC(FitsFile* fits)
   delete [] row;
 
   data_ = dest;
-
   dataSize_ = pSize;
   dataSkip_ = 0;
 }
@@ -691,32 +627,10 @@ void FitsHPX::buildPartial(FitsFile* fits)
 	int rotn  = FROTAT[layout][jfacet][ifacet];
 	int halve = FHALVE[layout][jfacet][ifacet];
 
-	if (quad_ && facet >= 0) {
-	  if (facet <= 3) {
-	    facet += quad_;
-	    if (facet > 3) facet -= 4;
-	  }
-	  else if (facet <= 7) {
-	    facet += quad_;
-	    if (facet > 7) facet -= 4;
-	  }
-	  else {
-	    facet += quad_;
-	    if (facet > 11) facet -= 4;
-	  }
-	}
+	adjustFacetForQuad(facet);
 
 	if (facet >= 0) {
-	  switch (order_) {
-	  case NESTED:
-	    NESTidx(nside, facet, rotn, jj, healidx);
-	    break;
-	  case RING:
-	    RINGidx(nside, facet, rotn, jj, healidx);
-	    break;
-	  case NUNIQ:
-	    break;
-	  }
+	  computeIndices(nside, facet, rotn, jj, healidx);
 
 	  for (int ii=0; ii<nside; ii++) {
 	    long long target = healidx[ii];
@@ -740,37 +654,9 @@ void FitsHPX::buildPartial(FitsFile* fits)
 	    }
 	  }
 
-	  if (halve) {
-	    int i1;
-	    int i2;
-	    if (abs(halve) == 1) {
-	      i1 = jj;
-	      i2 = nside;
-	      if (halve > 0)
-		i1++;
-	    } else if (abs(halve) == 2) {
-	      i1 = nside - jj;
-	      i2 = nside;
-	      if (halve < 0)
-		i1--;
-	    } else if (abs(halve) == 3) {
-	      i1 = 0;
-	      i2 = jj;
-	      if (halve < 0)
-		i2++;
-	    } else {
-	      i1 = 0;
-	      i2 = nside - jj;
-	      if (halve > 0)
-		i2--;
-	    }
-
-	    for (float* rowp = row+i1; rowp < row+i2; rowp++)
-	      *rowp = NAN;
-	  }
+          applyHalveBlanking(row, nside, jj, halve, NAN);
+          memcpy(dest+fpixel-1, row, nside*sizeof(float));
 	}
-
-	memcpy(dest+fpixel-1, row, nside*sizeof(float));
 	fpixel += nelem;
       }
     }

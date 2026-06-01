@@ -46,19 +46,29 @@ jobs:
         source .github/scripts/setup.sh
 
     - name: Configure
+      env:
+        DS9_BUILD_OS: ${{ matrix.os }}
       run: |
         if [ "${RUNNER_OS}" == "macOS" ]; then
           export PKG_CONFIG_PATH=/opt/X11/lib/pkgconfig:/opt/X11/share/pkgconfig/
         fi
-        unix/configure
+        unix/configure --with-arch=${DS9_BUILD_OS}
 
     - name: Build
       run: |
         if [ "${RUNNER_OS}" == "macOS" ]; then
           export PKG_CONFIG_PATH=/opt/X11/lib/pkgconfig:/opt/X11/share/pkgconfig/
         fi
-        make
+        make && make dist
 
     - name: Check executable
       run: |
         ./bin/ds9 -help
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v7
+      with:
+        name: binary-${{ matrix.os }}
+        path: |
+            dist/ds9.${{ matrix.os }}.*.tar.gz
+            dist/xpa.${{ matrix.os }}.*.tar.gz

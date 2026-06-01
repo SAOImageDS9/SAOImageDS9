@@ -23,9 +23,11 @@ class FitsHPX : public FitsFile {
 
   FitsBinColumn* col_;
   FitsBinColumn* uniqCol_;
+  FitsBinColumn* pixelCol_;
 
   void build(FitsFile*);
   void buildMOC(FitsFile*);
+  void buildPartial(FitsFile*);
   void initHeader(FitsFile*);
   void swap();
   void NESTidx(int nside, int facet, int rotn, int jmap, long long *healidx);

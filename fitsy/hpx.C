@@ -80,9 +80,19 @@ struct MocCell {
   float value;
 };
 
+struct PartialCell {
+  long long pixel;
+  float value;
+};
+
 static bool mocRangeLess(const MocRange& a, const MocRange& b)
 {
   return a.first < b.first;
+}
+
+static bool partialCellLess(const PartialCell& a, const PartialCell& b)
+{
+  return a.pixel < b.pixel;
 }
 
 static const MocRange* findMocRange(const vector<MocRange>& ranges,
@@ -215,6 +225,7 @@ FitsHPX::FitsHPX(FitsFile* fits, Order oo, CoordSys ss, Layout ll,
   FitsBinTableHDU* hdu = (FitsBinTableHDU*)(head->hdu());
   col_ = NULL;
   uniqCol_ = NULL;
+  pixelCol_ = NULL;
 
   if (order_ == NUNIQ) {
     uniqCol_ = (FitsBinColumn*)hdu->find("UNIQ");
@@ -242,6 +253,33 @@ FitsHPX::FitsHPX(FitsFile* fits, Order oo, CoordSys ss, Layout ll,
 	}
       }
     }
+  }
+  else if (head && keywordStarts(head, "INDXSCHM", "EXPLICIT")) {
+    pixelCol_ = (FitsBinColumn*)hdu->find("PIXEL");
+    if (!pixelCol_)
+      pixelCol_ = (FitsBinColumn*)hdu->find(0);
+
+    if (cc >= 0) {
+      col_ = (FitsBinColumn*)hdu->find(cc);
+      if (col_ == pixelCol_)
+	col_ = NULL;
+    }
+
+    if (!col_) {
+      for (int ii=0; ii<hdu->cols(); ii++) {
+	FitsBinColumn* col = (FitsBinColumn*)hdu->find(ii);
+	if (col && col != pixelCol_ && col->type() != 'A' &&
+	    col->type() != 'L' && col->type() != 'X' &&
+	    col->type() != 'P' && col->type() != 'Q') {
+	  col_ = col;
+	  break;
+	}
+      }
+    }
+    if (!col_)
+      return;
+
+    nside_ = head->getInteger("NSIDE", 0);
   }
   else {
     col_ = (FitsBinColumn*)hdu->find(cc);
@@ -296,6 +334,11 @@ void FitsHPX::build(FitsFile* fits)
   }
 
   FitsHead* head = fits->head();
+  if (head && keywordStarts(head, "INDXSCHM", "EXPLICIT")) {
+    buildPartial(fits);
+    return;
+  }
+
   FitsTableHDU* hdu = (FitsTableHDU*)(head->hdu());
   int rowlen = hdu->width();
   int nrow = hdu->rows();
@@ -583,6 +626,160 @@ void FitsHPX::buildMOC(FitsFile* fits)
 
   data_ = dest;
 
+  dataSize_ = pSize;
+  dataSkip_ = 0;
+}
+
+void FitsHPX::buildPartial(FitsFile* fits)
+{
+  if (!pixelCol_)
+    return;
+
+  FitsHead* head = fits->head();
+  FitsTableHDU* hdu = (FitsTableHDU*)(head->hdu());
+  int rowlen = hdu->width();
+  int nrow = hdu->rows();
+  char* data = (char*)fits->data();
+
+  vector<PartialCell> cells;
+  cells.reserve(nrow);
+
+  int pixRepeat = pixelCol_->repeat();
+  int valRepeat = col_ ? col_->repeat() : 1;
+  int nElem = (pixRepeat < valRepeat) ? pixRepeat : valRepeat;
+
+  for (int row=0; row<nrow; row++) {
+    char* ptr = data + (size_t)row * (size_t)rowlen;
+    for (int e = 0; e < nElem; e++) {
+      long long pix = pixelCol_->integer(ptr, e);
+      float val = col_ ? (float)col_->value(ptr, e) : 1.0f;
+      PartialCell cell;
+      cell.pixel = pix;
+      cell.value = val;
+      cells.push_back(cell);
+    }
+  }
+
+  sort(cells.begin(), cells.end(), partialCellLess);
+
+  int nside = nside_;
+  int layout = layout_;
+  int nfacet = NFACET[layout];
+
+  pWidth_ = nfacet*nside;
+  pHeight_ = pWidth_;
+
+  size_t pSize = (size_t)pWidth_*pHeight_;
+  float* dest = new float[pSize];
+  for (long long ii=0; ii<pSize; ii++)
+    dest[ii] = NAN;
+
+  initHeader(fits);
+
+  long long* healidx = new long long[nside];
+  float* row = new float[nside];
+
+  long long fpixel = 1;
+  long long nelem = (long long)nside;
+  for (int jfacet = 0; jfacet<nfacet; jfacet++) {
+    for (int jj = 0; jj<nside; jj++) {
+      for (int ifacet = 0; ifacet<nfacet; ifacet++) {
+	for (int ii=0; ii<nside; ii++)
+	  row[ii] = NAN;
+
+	int facet = FACETS[layout][jfacet][ifacet];
+	int rotn  = FROTAT[layout][jfacet][ifacet];
+	int halve = FHALVE[layout][jfacet][ifacet];
+
+	if (quad_ && facet >= 0) {
+	  if (facet <= 3) {
+	    facet += quad_;
+	    if (facet > 3) facet -= 4;
+	  }
+	  else if (facet <= 7) {
+	    facet += quad_;
+	    if (facet > 7) facet -= 4;
+	  }
+	  else {
+	    facet += quad_;
+	    if (facet > 11) facet -= 4;
+	  }
+	}
+
+	if (facet >= 0) {
+	  switch (order_) {
+	  case NESTED:
+	    NESTidx(nside, facet, rotn, jj, healidx);
+	    break;
+	  case RING:
+	    RINGidx(nside, facet, rotn, jj, healidx);
+	    break;
+	  case NUNIQ:
+	    break;
+	  }
+
+	  for (int ii=0; ii<nside; ii++) {
+	    long long target = healidx[ii];
+	    size_t lo = 0;
+	    size_t hi = cells.size();
+	    bool found = false;
+	    while (lo < hi) {
+	      size_t mid = lo + (hi - lo) / 2;
+	      if (cells[mid].pixel < target) {
+		lo = mid + 1;
+	      } else if (cells[mid].pixel > target) {
+		hi = mid;
+	      } else {
+		row[ii] = cells[mid].value;
+		found = true;
+		break;
+	      }
+	    }
+	    if (!found) {
+	      row[ii] = NAN;
+	    }
+	  }
+
+	  if (halve) {
+	    int i1;
+	    int i2;
+	    if (abs(halve) == 1) {
+	      i1 = jj;
+	      i2 = nside;
+	      if (halve > 0)
+		i1++;
+	    } else if (abs(halve) == 2) {
+	      i1 = nside - jj;
+	      i2 = nside;
+	      if (halve < 0)
+		i1--;
+	    } else if (abs(halve) == 3) {
+	      i1 = 0;
+	      i2 = jj;
+	      if (halve < 0)
+		i2++;
+	    } else {
+	      i1 = 0;
+	      i2 = nside - jj;
+	      if (halve > 0)
+		i2--;
+	    }
+
+	    for (float* rowp = row+i1; rowp < row+i2; rowp++)
+	      *rowp = NAN;
+	  }
+	}
+
+	memcpy(dest+fpixel-1, row, nside*sizeof(float));
+	fpixel += nelem;
+      }
+    }
+  }
+
+  delete [] healidx;
+  delete [] row;
+
+  data_ = dest;
   dataSize_ = pSize;
   dataSkip_ = 0;
 }

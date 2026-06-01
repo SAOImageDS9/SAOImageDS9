@@ -6,7 +6,7 @@ Last updated 2026-05-26
 | ---------- | ---------- | --- | ----- | -------------------------------------------------------------------- | ------------------------------- |
 | ast        | 9.2.14     |     |       | https://github.com/Starlink/ast                                      | 9.2.14                          |
 | awthemes   | **10.4.0** |     |       | https://sourceforge.net/projects/tcl-awthemes/                       | 10.4.0                          |
-| ds9        | 8.7        | y   |       |                                                                      |                                 |
+| ds9        | 8.8        | y   |       |                                                                      |                                 |
 | fickle     | 2.04       | y   |       | https://github.com/wjoye/fickle                                      | previous upstream abandoned     |
 | fitsy      |            | y   |       |                                                                      |                                 |
 | funtools   | 1.4.8      | y   | y     | https://github.com/ericmandel/funtools                               | abandoned                       |

@@ -1267,14 +1267,14 @@ static const char* nsvg__parseNumber(const char* s, char* it, const int size)
 	return s;
 }
 
-static const char* nsvg__getNextPathItem(const char* s, char* it)
+static const char* nsvg__getNextPathItem(const char* s, char* it, const int size)
 {
 	it[0] = '\0';
 	/* Skip white spaces and commas */
 	while (*s && (nsvg__isspace(*s) || *s == ',')) s++;
 	if (!*s) return s;
 	if (*s == '-' || *s == '+' || *s == '.' || nsvg__isdigit(*s)) {
-		s = nsvg__parseNumber(s, it, 64);
+		s = nsvg__parseNumber(s, it, size);
 	} else {
 		/* Parse command */
 		it[0] = *s++;
@@ -2340,7 +2340,7 @@ static void nsvg__parsePath(NSVGparser* p, const char** attr)
 		nargs = 0;
 
 		while (*s) {
-			s = nsvg__getNextPathItem(s, item);
+			s = nsvg__getNextPathItem(s, item, sizeof(item));
 			if (!*item) break;
 			if (cmd != '\0' && nsvg__isCoordinate(item)) {
 				if (nargs < 10)
@@ -2610,7 +2610,7 @@ static void nsvg__parsePoly(NSVGparser* p, const char** attr, int closeFlag)
 				s = attr[i + 1];
 				nargs = 0;
 				while (*s) {
-					s = nsvg__getNextPathItem(s, item);
+					s = nsvg__getNextPathItem(s, item, sizeof(item));
 					args[nargs++] = (float)nsvg__atof(item);
 					if (nargs >= 2) {
 						if (npts == 0)

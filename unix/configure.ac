@@ -110,6 +110,11 @@ case $system in
 	;;
 esac
 
+XML2CONFIG=`which xml2-config`
+XSLTCONFIG=`which xslt-config`
+AC_SUBST(XML2CONFIG)
+AC_SUBST(XSLTCONFIG)
+
 AC_SUBST(SSLCONFIG)
 AC_SUBST(CORES)
 

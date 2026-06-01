@@ -157,13 +157,13 @@ PREQS	= \
 .PHONY	: debug
 
 $(APPDIR)/ds9.exe : ds9Base.exe $(PREQS)
-	cp -p ds9base.exe ds9.exe
+	cp -f ds9base.exe ds9.exe
 	strip ds9.exe
-	cp -p ds9.exe $(APPDIR)/.
+	cp -f ds9.exe $(APPDIR)/.
 
 debug	: ds9Base.exe $(PREQS)
 	mv ds9base.exe ds9.exe
-	cp -p ds9.exe $(APPDIR)/.
+	cp -f ds9.exe $(APPDIR)/.
 
 ds9Base.exe: $(OBJS) $(LLIBS)
 	$(RM) $@
@@ -196,40 +196,40 @@ $(APPDIR):
 	mkdir -p $@
 
 $(APPDIR)/tcl$(TCL_VERSION) : $(prefix)/lib/tcl$(TCL_VERSION)
-	cp -pr $? $@
+	cp -fr $? $@
 
 $(APPDIR)/tcl8 : $(prefix)/lib/tcl8
-	cp -pr $? $@
+	cp -fr $? $@
 
 $(APPDIR)/tk$(TCL_VERSION) : $(prefix)/lib/tk$(TCL_VERSION)
-	cp -pr $? $@
+	cp -fr $? $@
 
 #--------------------------awthemes
 
 $(APPDIR)/awthemes: $(prefix)/awthemes
-	cp -prf $? "$@"
+	cp -fr $? "$@"
 
 #--------------------------ttkthemes
 
 $(APPDIR)/ttkthemes: $(prefix)/ttkthemes/ttkthemes/themes
-	cp -prf $? "$@"
+	cp -fr $? "$@"
 
 #--------------------------scidthemes
 
 $(APPDIR)/scidthemes: $(prefix)/scidthemes
-	cp -prf $? "$@"
+	cp -fr $? "$@"
 
 
 # ------------------ssl
 $(APPDIR)/ssl: $(prefix)/openssl
 	mkdir "$@"
-	cp -pvf "$(prefix)/certifi/certifi/cacert.pem" "$@"
+	cp -fv "$(prefix)/certifi/certifi/cacert.pem" "$@"
 
 $(APPDIR)/xpans.exe: $(bindir)/xpans.exe
-	cp -p $? $@
+	cp -f $? $@
 
 $(APPDIR)/install.vbs: install.vbs
-	cp -p $? $@
+	cp -f $? $@
 
 $(APPDIR)/tcc: $(prefix)/compilers/tcc-0.9.25-win32-bin.zip
 	$(RM) -rf $@

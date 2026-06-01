@@ -117,9 +117,13 @@ proc CreateIconsTopColormap {} {
     ThemeMenu $mb.colormap.m
     $mb.colormap.m configure -tearoff 0
 
+    set ii 0
     foreach lut $luts {
 	IconMenuButton $mb.colormap {} colorbar map $lut \
 	    [list ChangeColormapName $lut]
+
+        $mb.colormap.m entryconfigure $ii -image $icons(colorbarmap,$lut)
+        incr ii
     }
 
     trace add variable colorbar(map) write [list IconMenuButtonCB $mb.colormap]

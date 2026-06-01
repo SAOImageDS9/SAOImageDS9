@@ -64,3 +64,11 @@ jobs:
     - name: Check executable
       run: |
         ./bin/ds9 -help
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v7
+      with:
+        name: binary-${{ matrix.os }}
+        path: |
+            dist/ds9.${{ matrix.os }}.*.tar.gz
+            dist/xpa.${{ matrix.os }}.*.tar.gz

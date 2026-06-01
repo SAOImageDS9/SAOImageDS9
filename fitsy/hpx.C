@@ -264,7 +264,8 @@ FitsHPX::FitsHPX(FitsFile* fits, Order oo, CoordSys ss, Layout ll,
       if (col_ == pixelCol_)
 	col_ = NULL;
     }
-    else {
+
+    if (!col_) {
       for (int ii=0; ii<hdu->cols(); ii++) {
 	FitsBinColumn* col = (FitsBinColumn*)hdu->find(ii);
 	if (col && col != pixelCol_ && col->type() != 'A' &&
@@ -1091,6 +1092,4 @@ void FitsHPX::swap()
     u.c[0] = *p;
     dest[ii] = u.f;
   }
-}
-
 }

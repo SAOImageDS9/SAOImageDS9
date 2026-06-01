@@ -22,6 +22,113 @@
 
 #include "tkColor.h"
 
+#include <vector>
+
+static int EvalObjv(Tcl_Interp* interp, Tcl_Size objc, Tcl_Obj** objv)
+{
+  for (Tcl_Size ii=0; ii<objc; ii++)
+    Tcl_IncrRefCount(objv[ii]);
+
+  int rr = Tcl_EvalObjv(interp, objc, objv, TCL_EVAL_GLOBAL);
+
+  for (Tcl_Size ii=0; ii<objc; ii++)
+    Tcl_DecrRefCount(objv[ii]);
+
+  return rr;
+}
+
+static int PdfMethod(Tcl_Interp* interp, Tcl_Obj* pdfObj, const char* method,
+		     Tcl_Size objc, Tcl_Obj** args)
+{
+  Tcl_Obj** objv = new Tcl_Obj*[objc+2];
+  objv[0] = pdfObj;
+  objv[1] = Tcl_NewStringObj(method, -1);
+  for (Tcl_Size ii=0; ii<objc; ii++)
+    objv[ii+2] = args[ii];
+
+  int rr = EvalObjv(interp, objc+2, objv);
+  delete [] objv;
+
+  return rr;
+}
+
+static int PdfColor(Tcl_Interp* interp, Tcl_Obj* pdfObj,
+		    double r, double g, double b)
+{
+  Tcl_Obj* args[3];
+  args[0] = Tcl_NewDoubleObj(r);
+  args[1] = Tcl_NewDoubleObj(g);
+  args[2] = Tcl_NewDoubleObj(b);
+
+  if (PdfMethod(interp, pdfObj, "setStrokeColor", 3, args) != TCL_OK)
+    return TCL_ERROR;
+
+  args[0] = Tcl_NewDoubleObj(r);
+  args[1] = Tcl_NewDoubleObj(g);
+  args[2] = Tcl_NewDoubleObj(b);
+
+  return PdfMethod(interp, pdfObj, "setFillColor", 3, args);
+}
+
+static int PdfLine(Tcl_Interp* interp, Tcl_Obj* pdfObj,
+		   double x1, double y1, double x2, double y2)
+{
+  Tcl_Obj* args[4];
+  args[0] = Tcl_NewDoubleObj(x1);
+  args[1] = Tcl_NewDoubleObj(y1);
+  args[2] = Tcl_NewDoubleObj(x2);
+  args[3] = Tcl_NewDoubleObj(y2);
+
+  return PdfMethod(interp, pdfObj, "line", 4, args);
+}
+
+static int PdfPolygon(Tcl_Interp* interp, Tcl_Obj* pdfObj,
+		      const std::vector<double>& pts, int closed,
+		      int filled, int stroke)
+{
+  Tcl_Size objc = pts.size() + 6;
+  Tcl_Obj** args = new Tcl_Obj*[objc];
+  Tcl_Size jj = 0;
+
+  for (size_t ii=0; ii<pts.size(); ii++)
+    args[jj++] = Tcl_NewDoubleObj(pts[ii]);
+
+  args[jj++] = Tcl_NewStringObj("-closed", -1);
+  args[jj++] = Tcl_NewIntObj(closed);
+  args[jj++] = Tcl_NewStringObj("-filled", -1);
+  args[jj++] = Tcl_NewIntObj(filled);
+  args[jj++] = Tcl_NewStringObj("-stroke", -1);
+  args[jj++] = Tcl_NewIntObj(stroke);
+
+  int rr = PdfMethod(interp, pdfObj, "polygon", objc, args);
+  delete [] args;
+
+  return rr;
+}
+
+static int PdfCircle(Tcl_Interp* interp, Tcl_Obj* pdfObj,
+		     double x, double y, double r, int filled, int stroke)
+{
+  Tcl_Obj* args[7];
+  args[0] = Tcl_NewDoubleObj(x);
+  args[1] = Tcl_NewDoubleObj(y);
+  args[2] = Tcl_NewDoubleObj(r);
+  args[3] = Tcl_NewStringObj("-filled", -1);
+  args[4] = Tcl_NewIntObj(filled);
+  args[5] = Tcl_NewStringObj("-stroke", -1);
+  args[6] = Tcl_NewIntObj(stroke);
+
+  return PdfMethod(interp, pdfObj, "circle", 7, args);
+}
+
+static int PdfSetLineWidth(Tcl_Interp* interp, Tcl_Obj* pdfObj, double width)
+{
+  Tcl_Obj* args[1];
+  args[0] = Tcl_NewDoubleObj(width);
+
+  return PdfMethod(interp, pdfObj, "setLineWidth", 1, args);
+}
+
 // Debug
 int DebugBin= 0;
 int DebugBlock= 0;
@@ -901,6 +1008,303 @@ int Base::postscriptProc(int prepass)
   }
 
   return TCL_OK;
+}
+
+int Base::pdfCmd(Tcl_Obj* pdfObj, Tcl_Size, Tcl_Obj *const [])
+{
+  if (!visible)
+    return TCL_OK;
+
+  if (pdfImage(pdfObj) != TCL_OK)
+    return TCL_ERROR;
+
+  return pdfVectorLayers(pdfObj);
+}
+
+int Base::pdfImage(Tcl_Obj* pdfObj)
+{
+  if (!currentContext->fits)
+    return TCL_OK;
+
+  double ss = psResolution / 96.;
+  int ww = options->width*ss;
+  int hh = options->height*ss;
+
+  pushPSMatrices(ss, ww, hh);
+
+  unsigned char* img = fillImage(ww, hh, Coord::PS);
+  if (!img)
+    return TCL_OK;
+
+  char photoName[128];
+  snprintf(photoName, sizeof(photoName), "::tksao_pdf_photo_%p", (void*)this);
+
+  Tcl_Obj* createObjv[4];
+  createObjv[0] = Tcl_NewStringObj("image", -1);
+  createObjv[1] = Tcl_NewStringObj("create", -1);
+  createObjv[2] = Tcl_NewStringObj("photo", -1);
+  createObjv[3] = Tcl_NewStringObj(photoName, -1);
+
+  int rr = EvalObjv(interp, 4, createObjv);
+  if (rr != TCL_OK) {
+    delete [] img;
+    return rr;
+  }
+
+  Tk_PhotoHandle photo = Tk_FindPhoto(interp, photoName);
+  if (!photo) {
+    Tcl_AppendResult(interp, "unable to create temporary PDF photo image", NULL);
+    delete [] img;
+    return TCL_ERROR;
+  }
+
+  Tk_PhotoImageBlock block;
+  block.pixelPtr = img;
+  block.width = ww;
+  block.height = hh;
+  block.pitch = ww*3;
+  block.pixelSize = 3;
+  block.offset[0] = 0;
+  block.offset[1] = 1;
+  block.offset[2] = 2;
+  block.offset[3] = 0;
+
+  rr = Tk_PhotoPutBlock(interp, photo, &block, 0, 0, ww, hh,
+			TK_PHOTO_COMPOSITE_SET);
+  delete [] img;
+  if (rr != TCL_OK)
+    return rr;
+
+  Tcl_Obj* dataObjv[2];
+  dataObjv[0] = Tcl_NewStringObj(photoName, -1);
+  dataObjv[1] = Tcl_NewStringObj("data", -1);
+  rr = EvalObjv(interp, 2, dataObjv);
+  if (rr != TCL_OK)
+    return rr;
+
+  Tcl_Obj* dataObj = Tcl_GetObjResult(interp);
+  Tcl_IncrRefCount(dataObj);
+
+  Tcl_Obj* addArgs[1];
+  addArgs[0] = dataObj;
+  rr = PdfMethod(interp, pdfObj, "addRawImage", 1, addArgs);
+  Tcl_DecrRefCount(dataObj);
+  if (rr != TCL_OK)
+    return rr;
+
+  Tcl_Obj* imageId = Tcl_GetObjResult(interp);
+  Tcl_IncrRefCount(imageId);
+
+  Vector oo = Vector(originX, originY);
+  Tcl_Obj* putArgs[10];
+  putArgs[0] = imageId;
+  putArgs[1] = Tcl_NewDoubleObj(oo[0]);
+  putArgs[2] = Tcl_NewDoubleObj(oo[1]);
+  putArgs[3] = Tcl_NewStringObj("-width", -1);
+  putArgs[4] = Tcl_NewDoubleObj(options->width);
+  putArgs[5] = Tcl_NewStringObj("-height", -1);
+  putArgs[6] = Tcl_NewDoubleObj(options->height);
+  putArgs[7] = Tcl_NewStringObj("-anchor", -1);
+  putArgs[8] = Tcl_NewStringObj("nw", -1);
+  rr = PdfMethod(interp, pdfObj, "putImage", 9, putArgs);
+  Tcl_DecrRefCount(imageId);
+
+  Tcl_Obj* deleteObjv[3];
+  deleteObjv[0] = Tcl_NewStringObj("image", -1);
+  deleteObjv[1] = Tcl_NewStringObj("delete", -1);
+  deleteObjv[2] = Tcl_NewStringObj(photoName, -1);
+  int deleteResult = EvalObjv(interp, 3, deleteObjv);
+
+  if (rr != TCL_OK)
+    return rr;
+
+  return deleteResult;
+}
+
+int Base::pdfVectorLayers(Tcl_Obj* pdfObj)
+{
+  Tcl_Obj* saved = Tcl_GetObjResult(interp);
+  Tcl_IncrRefCount(saved);
+  Tcl_ResetResult(interp);
+
+  switch (psLevel) {
+  case 1:
+    switch (psColorSpace) {
+    case BW:
+    case GRAY:
+      currentContext->contourPS(GRAY);
+      if (grid)
+	grid->ps(GRAY);
+      if (showMarkers) {
+	psMarkers(&footprintMarkers, GRAY, HEAD);
+	psMarkers(&catalogMarkers, GRAY, HEAD);
+	psMarkers(&userMarkers, GRAY, TAIL);
+      }
+      psCrosshair(GRAY);
+      psGraphics(GRAY);
+      break;
+    case RGB:
+    case CMYK:
+      currentContext->contourPS(RGB);
+      if (grid)
+	grid->ps(RGB);
+      if (showMarkers) {
+	psMarkers(&footprintMarkers, psColorSpace, HEAD);
+	psMarkers(&catalogMarkers, psColorSpace, HEAD);
+	psMarkers(&userMarkers, psColorSpace, TAIL);
+      }
+      psCrosshair(RGB);
+      psGraphics(RGB);
+      break;
+    }
+    break;
+  case 2:
+  case 3:
+    currentContext->contourPS(psColorSpace);
+    if (grid)
+      grid->ps(psColorSpace);
+    if (showMarkers) {
+      psMarkers(&footprintMarkers, psColorSpace, HEAD);
+      psMarkers(&catalogMarkers, psColorSpace, HEAD);
+      psMarkers(&userMarkers, psColorSpace, TAIL);
+    }
+    psCrosshair(psColorSpace);
+    psGraphics(psColorSpace);
+    break;
+  }
+
+  Tcl_Obj* psObj = Tcl_GetObjResult(interp);
+  Tcl_IncrRefCount(psObj);
+  const char* ps = Tcl_GetString(psObj);
+
+  std::vector<double> stack;
+  std::vector<double> path;
+  int closed = 0;
+  int rr = TCL_OK;
+  istringstream istr(ps);
+  string tok;
+
+  while (rr == TCL_OK && istr >> tok) {
+    char* end = NULL;
+    double val = strtod(tok.c_str(), &end);
+    if (end && *end == '\0') {
+      stack.push_back(val);
+      continue;
+    }
+
+    if (tok[0] == '[') {
+      while (istr >> tok) {
+	if (tok.find("setdash") != string::npos)
+	  break;
+      }
+      continue;
+    }
+
+    if (tok[0] == '/') {
+      while (istr >> tok) {
+	if (tok == "setfont")
+	  break;
+      }
+      continue;
+    }
+
+    if (tok == "newpath") {
+      path.clear();
+      closed = 0;
+    }
+    else if (tok == "moveto" && stack.size() >= 2) {
+      double y = stack.back(); stack.pop_back();
+      double x = stack.back(); stack.pop_back();
+      path.clear();
+      path.push_back(x);
+      path.push_back(Tk_CanvasPsY(canvas, y));
+      closed = 0;
+    }
+    else if (tok == "lineto" && stack.size() >= 2) {
+      double y = stack.back(); stack.pop_back();
+      double x = stack.back(); stack.pop_back();
+      path.push_back(x);
+      path.push_back(Tk_CanvasPsY(canvas, y));
+    }
+    else if (tok == "curveto" && stack.size() >= 6) {
+      double y3 = stack.back(); stack.pop_back();
+      double x3 = stack.back(); stack.pop_back();
+      stack.pop_back(); stack.pop_back();
+      stack.pop_back(); stack.pop_back();
+      path.push_back(x3);
+      path.push_back(Tk_CanvasPsY(canvas, y3));
+    }
+    else if (tok == "arc" && stack.size() >= 5) {
+      double a2 = stack.back(); stack.pop_back();
+      double a1 = stack.back(); stack.pop_back();
+      double r = stack.back(); stack.pop_back();
+      double y = stack.back(); stack.pop_back();
+      double x = stack.back(); stack.pop_back();
+      y = Tk_CanvasPsY(canvas, y);
+      if (fabs(a1) < FLT_EPSILON && fabs(a2-360) < FLT_EPSILON) {
+	path.clear();
+	rr = PdfCircle(interp, pdfObj, x, y, r, 0, 1);
+      }
+      else {
+	int steps = 24;
+	for (int ii=0; ii<=steps; ii++) {
+	  double aa = degToRad(a1 + (a2-a1)*ii/steps);
+	  path.push_back(x + r*cos(aa));
+	  path.push_back(y - r*sin(aa));
+	}
+      }
+    }
+    else if (tok == "closepath")
+      closed = 1;
+    else if (tok == "stroke") {
+      if (path.size() == 4 && !closed)
+	rr = PdfLine(interp, pdfObj, path[0], path[1], path[2], path[3]);
+      else if (path.size() >= 4)
+	rr = PdfPolygon(interp, pdfObj, path, closed, 0, 1);
+      path.clear();
+      closed = 0;
+    }
+    else if (tok == "fill") {
+      if (path.size() >= 4)
+	rr = PdfPolygon(interp, pdfObj, path, 1, 1, 0);
+      path.clear();
+      closed = 0;
+    }
+    else if (tok == "setlinewidth" && stack.size() >= 1) {
+      double width = stack.back(); stack.pop_back();
+      rr = PdfSetLineWidth(interp, pdfObj, width);
+    }
+    else if (tok == "setgray" && stack.size() >= 1) {
+      double gray = stack.back(); stack.pop_back();
+      rr = PdfColor(interp, pdfObj, gray, gray, gray);
+    }
+    else if (tok == "setrgbcolor" && stack.size() >= 3) {
+      double b = stack.back(); stack.pop_back();
+      double g = stack.back(); stack.pop_back();
+      double r = stack.back(); stack.pop_back();
+      rr = PdfColor(interp, pdfObj, r, g, b);
+    }
+    else if (tok == "setcmykcolor" && stack.size() >= 4) {
+      double k = stack.back(); stack.pop_back();
+      double y = stack.back(); stack.pop_back();
+      double m = stack.back(); stack.pop_back();
+      double c = stack.back(); stack.pop_back();
+      double r = 1 - min(1., c+k);
+      double g = 1 - min(1., m+k);
+      double b = 1 - min(1., y+k);
+      rr = PdfColor(interp, pdfObj, r, g, b);
+    }
+    else if (tok == "show") {
+      stack.clear();
+    }
+  }
+
+  Tcl_DecrRefCount(psObj);
+  if (rr == TCL_OK)
+    Tcl_SetObjResult(interp, saved);
+  Tcl_DecrRefCount(saved);
+
+  return rr;
 }
 
 void Base::printInteger(int i)

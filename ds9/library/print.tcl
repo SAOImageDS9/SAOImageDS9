@@ -247,6 +247,243 @@ proc EPS {fn} {
     $ds9(canvas) delete $bg
 }
 
+proc PDFGraphColor {pdf stroke fill} {
+    $pdf setStrokeColor $stroke
+    $pdf setFillColor $fill
+}
+
+proc PDFGraphPoint {gr x0 y0 xx yy} {
+    foreach {sx sy} [$gr transform $xx $yy] {}
+    return [list [expr $x0+$sx] [expr $y0+$sy]]
+}
+
+proc PDFGraphClamp {vv minv maxv} {
+    if {$vv < $minv} {
+	return $minv
+    }
+    if {$vv > $maxv} {
+	return $maxv
+    }
+    return $vv
+}
+
+proc PDFGraphFlushLine {pdf points} {
+    if {[llength $points] < 4} {
+	return
+    }
+
+    if {[llength $points] == 4} {
+	eval $pdf line $points
+    } else {
+	eval $pdf polygon $points -closed 0 -filled 0 -stroke 1
+    }
+}
+
+proc PDFGraphTicks {minv maxv count} {
+    if {$count < 2 || $minv == $maxv} {
+	return [list $minv]
+    }
+
+    set result {}
+    for {set ii 0} {$ii < $count} {incr ii} {
+	lappend result [expr $minv + ($maxv-$minv)*$ii/double($count-1)]
+    }
+    return $result
+}
+
+proc PDFGraphLabel {vv} {
+    set av [expr abs($vv)]
+    if {$av != 0 && ($av < .01 || $av >= 10000)} {
+	return [format %.2e $vv]
+    }
+    if {$av < 10} {
+	return [format %.2f $vv]
+    }
+    if {$av < 100} {
+	return [format %.1f $vv]
+    }
+    return [format %.0f $vv]
+}
+
+proc PDFGraph {pdf frame which} {
+    global graph
+
+    set varname ${frame}gr
+    global $varname
+
+    if {![array exists $varname]} {
+	return
+    }
+
+    set id [subst $${varname}($which,id)]
+    if {!$id} {
+	return
+    }
+
+    set gr [subst $${varname}($which)]
+    if {![winfo exists $gr]} {
+	return
+    }
+
+    set x0 [subst $${varname}($which,xx)]
+    set y0 [subst $${varname}($which,yy)]
+    set width [winfo width $gr]
+    set height [winfo height $gr]
+    if {$width <= 1 || $height <= 1} {
+	return
+    }
+
+    set bg [$gr cget -background]
+    set fg [$gr cget -foreground]
+    set plotbg [$gr cget -plotbackground]
+
+    $pdf setFillColor $bg
+    $pdf rectangle $x0 $y0 $width $height -filled 1 -stroke 0
+
+    set xlim [$gr axis limits x]
+    set ylim [$gr axis limits y]
+    set xmin [lindex $xlim 0]
+    set xmax [lindex $xlim 1]
+    set ymin [lindex $ylim 0]
+    set ymax [lindex $ylim 1]
+
+    set corners {}
+    foreach xx [list $xmin $xmax] {
+	foreach yy [list $ymin $ymax] {
+	    foreach {px py} [PDFGraphPoint $gr $x0 $y0 $xx $yy] {}
+	    lappend corners $px $py
+	}
+    }
+
+    set px0 [lindex $corners 0]
+    set px1 $px0
+    set py0 [lindex $corners 1]
+    set py1 $py0
+    for {set ii 0} {$ii < [llength $corners]} {incr ii 2} {
+	set px [lindex $corners $ii]
+	set py [lindex $corners [expr $ii+1]]
+	if {$px < $px0} {set px0 $px}
+	if {$px > $px1} {set px1 $px}
+	if {$py < $py0} {set py0 $py}
+	if {$py > $py1} {set py1 $py}
+    }
+
+    $pdf setFillColor $plotbg
+    $pdf rectangle $px0 $py0 [expr $px1-$px0] [expr $py1-$py0] \
+	-filled 1 -stroke 0
+
+    $pdf setLineWidth .5
+    PDFGraphColor $pdf $fg $fg
+
+    if {$graph(grid)} {
+	foreach xx [PDFGraphTicks $xmin $xmax 5] {
+	    foreach {p1x p1y} [PDFGraphPoint $gr $x0 $y0 $xx $ymin] {}
+	    foreach {p2x p2y} [PDFGraphPoint $gr $x0 $y0 $xx $ymax] {}
+	    $pdf line $p1x $p1y $p2x $p2y
+	}
+	foreach yy [PDFGraphTicks $ymin $ymax 5] {
+	    foreach {p1x p1y} [PDFGraphPoint $gr $x0 $y0 $xmin $yy] {}
+	    foreach {p2x p2y} [PDFGraphPoint $gr $x0 $y0 $xmax $yy] {}
+	    $pdf line $p1x $p1y $p2x $p2y
+	}
+    }
+
+    $pdf setLineWidth 1
+    $pdf rectangle $px0 $py0 [expr $px1-$px0] [expr $py1-$py0] \
+	-filled 0 -stroke 1
+
+    $pdf setFont $graph(font,size) Helvetica
+    set tickLen 4
+    switch -- $which {
+	horz {
+	    foreach xx [PDFGraphTicks $xmin $xmax 5] {
+		foreach {tx ty} [PDFGraphPoint $gr $x0 $y0 $xx $ymin] {}
+		$pdf line $tx $py1 $tx [expr $py1+$tickLen]
+	    }
+	    foreach yy [PDFGraphTicks $ymin $ymax 5] {
+		foreach {tx ty} [PDFGraphPoint $gr $x0 $y0 $xmax $yy] {}
+		$pdf line $px1 $ty [expr $px1+$tickLen] $ty
+		$pdf text [PDFGraphLabel $yy] \
+		    -x [expr $px1+$tickLen+3] -y [expr $ty+$graph(font,size)/2.] \
+		    -align left
+	    }
+	}
+	vert {
+	    foreach xx [PDFGraphTicks $xmin $xmax 5] {
+		foreach {tx ty} [PDFGraphPoint $gr $x0 $y0 $xx $ymin] {}
+		$pdf line [expr $px0-$tickLen] $ty $px0 $ty
+	    }
+	    foreach yy [PDFGraphTicks $ymin $ymax 5] {
+		foreach {tx ty} [PDFGraphPoint $gr $x0 $y0 $xmin $yy] {}
+		$pdf line $tx $py1 $tx [expr $py1+$tickLen]
+		$pdf text [PDFGraphLabel $yy] \
+		    -x $tx -y [expr $py1+$tickLen+$graph(font,size)] \
+		    -align center
+	    }
+	}
+    }
+
+    set xv [subst $${varname}($which,vect,xx)]
+    set yv [subst $${varname}($which,vect,yy)]
+    set len [$xv length]
+    if {[$yv length] < $len} {
+	set len [$yv length]
+    }
+    if {$len < 2} {
+	return
+    }
+
+    set xs [$xv range 0 [expr $len-1]]
+    set ys [$yv range 0 [expr $len-1]]
+
+    PDFGraphColor $pdf $fg $fg
+    $pdf setLineWidth 1
+
+    set points {}
+    for {set ii 0} {$ii < $len} {incr ii} {
+	set xx [lindex $xs $ii]
+	set yy [lindex $ys $ii]
+
+	if {![string is double -strict $xx] ||
+	    ![string is double -strict $yy] ||
+	    [string equal -nocase $xx nan] ||
+	    [string equal -nocase $yy nan]} {
+	    PDFGraphFlushLine $pdf $points
+	    set points {}
+	    continue
+	}
+
+	if {[catch {PDFGraphPoint $gr $x0 $y0 $xx $yy} pp]} {
+	    PDFGraphFlushLine $pdf $points
+	    set points {}
+	    continue
+	}
+
+	foreach {px py} $pp {}
+	set px [PDFGraphClamp $px $px0 $px1]
+	set py [PDFGraphClamp $py $py0 $py1]
+	lappend points $px $py
+
+	if {[llength $points] >= 1000} {
+	    PDFGraphFlushLine $pdf $points
+	    set last [lrange $points end-1 end]
+	    set points $last
+	}
+    }
+    PDFGraphFlushLine $pdf $points
+}
+
+proc PDFGraphs {pdf frame} {
+    global view
+
+    if {$view(graph,horz)} {
+	PDFGraph $pdf $frame horz
+    }
+    if {$view(graph,vert)} {
+	PDFGraph $pdf $frame vert
+    }
+}
+
 proc PDF {fn} {
     global ds9
     global ps
@@ -286,6 +523,8 @@ proc PDF {fn} {
 		$cb postscript resolution $ps(resolution)
 		$cb pdf $pdf
 	    }
+
+	    PDFGraphs $pdf $ff
 	}
 
 	$pdf write -file $fn

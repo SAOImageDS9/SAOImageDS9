@@ -18,6 +18,8 @@ protected:
 protected:
   void psHorz(ostream&, Filter&, int, int);
   void psVert(ostream&, Filter&, int, int);
+  void pdfHorz(unsigned char*, int, int);
+  void pdfVert(unsigned char*, int, int);
   void loadDefaultCmaps();
   int initColormap();
   void updateColorCells();

@@ -266,7 +266,7 @@ case $system in
 	;;
 esac
 TEA_ADD_STUB_SOURCES([])
-TEA_ADD_TCL_SOURCES([])
+TEA_ADD_TCL_SOURCES([pdf.tcl])
 
 # Needed to compile open_unix
 if test "${TEA_PLATFORM}" != "windows" ; then

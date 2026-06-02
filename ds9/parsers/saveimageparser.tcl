@@ -61,249 +61,266 @@ proc saveimage::unsetupvalues {numsyms} {
 }
 
 array set saveimage::table {
-  7:264,target 17
   17:259 reduce
+  27:0 reduce
   6:259,target 16
   6:257 reduce
-  3:267,target 13
   6:259 reduce
   26:259 reduce
-  0:275,target 11
   6:0,target 16
   2:0 reduce
-  6:264 reduce
-  6:267 reduce
+  6:265 reduce
+  12:265,target 14
+  27:259,target 8
   24:0 reduce
   6:268 reduce
   6:257,target 16
   6:269 reduce
+  6:270 reduce
   4:269,target 14
-  25:0,target 7
+  4:270,target 14
+  25:0,target 5
   16:259,target 22
-  17:0,target 6
-  10:0,target 3
-  0:273,target 10
+  3:265,target 13
+  17:0,target 23
+  1:277,target 18
+  10:0,target 0
   7:259,target 17
-  21:0 reduce
   14:259 reduce
-  4:267,target 14
+  22:277,target 26
   3:257 reduce
   3:259 reduce
-  23:259 reduce
-  0:271,target 9
-  3:264 reduce
+  23:259 shift
+  3:265 reduce
   7:257,target 17
   17:0 reduce
   5:269,target 15
-  3:267 reduce
+  5:270,target 15
   3:268 reduce
-  17:259,target 6
+  17:259,target 23
   3:269 reduce
+  3:270 reduce
+  4:265,target 14
   3:0,target 13
   8:259,target 18
   14:0 reduce
-  5:267,target 15
-  11:257 shift
-  14:0,target 19
-  11:259 shift
-  21:268,target 15
-  11:264 shift
+  22:0,target 19
+  14:0,target 21
+  11:259 reduce
+  12:277,target 23
+  19:257 shift
   0:259 shift
   0:260 shift
-  0:261 shift
   0:266,target 8
-  9:0 accept
-  11:267 shift
+  0:261 shift
+  8:257,target 18
+  11:273,target 21
+  20:259 reduce
   0:262 shift
   6:269,target 16
-  11:268 shift
+  6:270,target 16
+  11:0 reduce
   19:259 reduce
-  20:259 shift
   0:263 shift
-  11:269 shift
   0:264 shift
-  18:259,target 10
+  18:259,target 6
   0:265 shift
+  5:265,target 15
   0:266 shift
-  8:259 shift
-  11:276 goto
-  0:271 goto
+  8:257 reduce
+  11:273 goto
+  0:267 shift
+  8:259 reduce
+  0:272 goto
   1:268,target 15
-  0:273 goto
-  0:275 goto
+  9:259,target 19
+  0:274 goto
+  8:265 reduce
   6:0 reduce
   0:264,target 6
-  6:267,target 16
+  0:276 goto
+  8:268 reduce
+  8:269 reduce
+  8:270 reduce
   7:0,target 17
-  18:257,target 23
-  8:274 goto
-  8:274,target 19
-  21:264,target 13
-  26:0,target 8
+  22:268,target 15
+  26:0,target 7
   3:0 reduce
   7:269,target 17
-  18:0,target 10
+  7:270,target 17
+  18:0,target 6
+  20:259,target 9
+  19:259,target 10
   0:262,target 4
-  11:268,target 15
-  19:259,target 9
-  20:259,target 24
+  11:0,target 3
+  6:265,target 16
   25:0 reduce
   16:259 reduce
   5:257 reduce
   2:268,target 12
   5:259 reduce
-  25:259 reduce
-  1:264,target 13
-  5:264 reduce
-  7:267,target 17
+  5:265 reduce
+  19:257,target 24
   0:260,target 2
   0:259,target 1
-  5:267 reduce
+  22:0 reduce
   5:268 reduce
   5:269 reduce
-  21:259,target 18
+  5:270 reduce
+  8:269,target 18
+  8:270,target 18
+  21:259,target 25
+  12:268,target 15
   4:0,target 14
-  11:264,target 13
+  7:265,target 17
   18:0 reduce
-  10:259,target 4
   13:259 reduce
   3:268,target 13
-  23:0,target 11
   2:257 reduce
-  2:264,target 12
-  15:0,target 21
+  15:0,target 20
+  22:257 shift
   2:259 reduce
-  22:259 shift
-  21:257,target 12
-  1:259,target 18
-  2:264 reduce
+  0:276,target 12
+  22:259 reduce
+  1:259,target 19
   15:0 reduce
-  2:267 reduce
+  2:265 reduce
+  22:265 shift
   2:268 reduce
   2:269 reduce
-  21:276,target 25
-  22:259,target 26
-  1:257,target 12
-  12:0 reduce
-  11:259,target 21
+  2:270 reduce
+  22:268 shift
+  22:270 shift
+  22:269 shift
+  22:259,target 19
+  0:274,target 11
+  8:265,target 18
+  1:257,target 13
+  22:277 goto
+  11:259,target 4
   4:268,target 14
-  10:259 reduce
-  3:264,target 13
-  1:276,target 17
-  1:0,target 18
+  8:0,target 18
+  1:0,target 19
+  22:257,target 13
   2:259,target 12
+  0:272,target 10
   7:0 reduce
-  18:257 shift
   18:259 reduce
-  11:257,target 12
-  10:272 goto
+  27:0,target 8
+  20:0,target 9
   7:257 reduce
-  19:0,target 9
-  12:0,target 23
+  19:0,target 10
   7:259 reduce
-  23:259,target 11
+  23:259,target 27
+  27:259 reduce
   2:257,target 12
-  7:264 reduce
   4:0 reduce
-  11:276,target 22
-  7:267 reduce
-  12:259,target 23
+  7:265 reduce
+  12:259,target 22
   7:268 reduce
-  10:272,target 20
   26:0 reduce
   5:268,target 15
   7:269 reduce
-  4:264,target 14
+  7:270 reduce
   3:259,target 13
-  21:269,target 16
   1:0 reduce
-  23:0 reduce
+  0:267,target 9
+  12:257,target 13
   15:259 reduce
   5:0,target 15
+  24:259,target 11
   4:257 reduce
   3:257,target 13
   4:259 reduce
-  21:267,target 14
+  1:270,target 17
   1:269,target 16
-  13:259,target 20
+  24:259 reduce
+  13:259,target 24
   0:265,target 7
-  4:264 reduce
-  24:0,target 5
+  24:0,target 11
+  4:265 reduce
   6:268,target 16
+  20:0 reduce
   16:0,target 22
   19:0 reduce
-  4:267 reduce
   4:268 reduce
-  5:264,target 15
   4:269 reduce
+  4:270 reduce
   4:259,target 14
-  1:267,target 14
+  22:270,target 17
+  22:269,target 16
   0:263,target 5
-  11:269,target 16
   16:0 reduce
-  25:259,target 7
-  12:259 reduce
+  12:257 shift
+  12:259 shift
   4:257,target 14
   2:269,target 12
+  2:270,target 12
   1:257 shift
-  14:259,target 19
-  21:257 shift
+  12:265 shift
+  14:259,target 21
+  1:265,target 14
   1:259 reduce
   7:268,target 17
-  21:259 reduce
+  21:259 shift
+  12:268 shift
   0:261,target 3
-  9:0,target 0
-  11:267,target 14
+  12:269 shift
+  12:270 shift
   13:0 reduce
   2:0,target 12
-  1:264 shift
-  6:264,target 16
-  21:264 shift
-  1:267 shift
+  1:265 shift
   5:259,target 15
   1:268 shift
+  9:259 shift
+  1:270 shift
   1:269 shift
-  21:267 shift
-  21:268 shift
-  21:269 shift
-  2:267,target 12
-  21:0,target 18
-  13:0,target 20
-  1:276 goto
-  10:0 reduce
-  21:276 goto
-  26:259,target 8
+  9:275,target 20
+  12:277 goto
+  22:265,target 14
+  12:269,target 16
+  12:270,target 17
+  13:0,target 24
+  8:0 reduce
+  1:277 goto
+  10:0 accept
+  26:259,target 7
   5:257,target 15
   3:269,target 13
-  15:259,target 21
+  3:270,target 13
+  9:275 goto
+  15:259,target 20
+  2:265,target 12
+  8:268,target 18
   5:0 reduce
 }
 
 array set saveimage::rules {
-  9,l 273
-  11,l 274
-  15,l 275
-  20,l 276
-  19,l 276
-  2,l 270
-  6,l 273
-  12,l 275
-  16,l 275
-  21,l 276
-  3,l 271
-  7,l 273
-  13,l 275
-  0,l 277
-  17,l 275
-  22,l 276
-  4,l 272
-  8,l 273
-  10,l 274
-  14,l 275
+  9,l 274
+  11,l 275
+  15,l 276
+  20,l 277
+  19,l 277
+  2,l 271
+  24,l 277
+  6,l 274
+  12,l 276
+  16,l 276
+  21,l 277
+  3,l 272
+  7,l 274
+  13,l 276
+  0,l 278
+  17,l 276
+  22,l 277
+  4,l 273
+  8,l 274
+  10,l 275
+  14,l 276
   18,l 276
-  1,l 270
-  23,l 276
-  5,l 271
+  1,l 271
+  23,l 277
+  5,l 272
 }
 
 array set saveimage::rules {
@@ -317,8 +334,9 @@ array set saveimage::rules {
   3,dc 1
   15,dc 1
   10,dc 1
+  24,dc 1
   6,dc 2
-  18,dc 0
+  18,dc 1
   1,dc 1
   13,dc 1
   9,dc 2
@@ -328,136 +346,142 @@ array set saveimage::rules {
   11,dc 2
   7,dc 3
   20,dc 1
-  19,dc 1
+  19,dc 0
   2,dc 1
   14,dc 1
 }
 
 array set saveimage::rules {
-  13,line 53
-  7,line 42
-  10,line 48
-  22,line 65
-  4,line 36
-  18,line 61
-  1,line 32
-  15,line 55
-  9,line 45
-  12,line 52
-  6,line 40
-  21,line 64
-  3,line 36
-  17,line 57
+  13,line 54
+  7,line 43
+  10,line 49
+  22,line 66
+  4,line 37
+  18,line 59
+  1,line 33
+  15,line 56
+  9,line 46
+  12,line 53
+  24,line 68
+  6,line 41
+  21,line 65
+  3,line 37
+  17,line 58
   4,e 1
-  14,line 54
-  8,line 44
-  11,line 49
-  23,line 66
-  5,line 37
-  20,line 63
-  19,line 62
-  2,line 33
-  16,line 56
+  14,line 55
+  8,line 45
+  11,line 50
+  23,line 67
+  5,line 38
+  20,line 64
+  19,line 63
+  2,line 34
+  16,line 57
 }
 
 array set saveimage::lr1_table {
   14,trans {}
-  1,trans {{257 12} {264 13} {267 14} {268 15} {269 16} {276 17}}
-  18,trans {{257 28}}
-  23,trans {}
+  1,trans {{257 13} {265 14} {268 15} {269 16} {270 17} {277 18}}
+  18,trans {}
+  23,trans {{257 13} {265 14} {268 15} {269 16} {270 17} {277 31}}
   5,trans {}
-  27,trans {{259 31}}
-  9,trans {}
+  27,trans {}
+  9,trans {{259 19} {275 20}}
   13,trans {}
-  0,trans {{259 1} {260 2} {261 3} {262 4} {263 5} {264 6} {265 7} {266 8} {271 9} {273 10} {275 11}}
+  32,trans {}
+  0,trans {{259 1} {260 2} {261 3} {262 4} {263 5} {264 6} {265 7} {266 8} {267 9} {272 10} {274 11} {276 12}}
   17,trans {}
-  22,trans {{257 12} {264 13} {267 14} {268 15} {269 16} {276 30}}
+  22,trans {}
   4,trans {}
   26,trans {}
-  8,trans {{259 18} {274 19}}
-  12,trans {}
+  8,trans {}
+  12,trans {{257 22} {259 23} {265 24} {268 25} {269 26} {270 27} {277 28}}
   31,trans {}
   16,trans {}
-  21,trans {}
+  21,trans {{259 30}}
   3,trans {}
-  10 {{3 0 1} {5 0 1} {4 259 0}}
-  11 {{7 {0 259} 1} {8 {0 259} 1} {18 259 0} {19 259 0} {20 259 0} {21 259 0} {22 259 0} {23 259 0}}
+  10 {{0 0 1}}
+  11 {{3 0 1} {5 0 1} {4 259 0}}
   25,trans {}
-  12 {{23 {0 259} 1}}
+  12 {{7 {0 259} 1} {8 {0 259} 1} {19 259 0} {20 259 0} {21 259 0} {22 259 0} {23 259 0} {24 259 0}}
   7,trans {}
-  13 {{20 {0 259} 1}}
-  14 {{19 {0 259} 1}}
-  15 {{21 {0 259} 1}}
-  11,trans {{257 21} {259 22} {264 23} {267 24} {268 25} {269 26} {276 27}}
+  13 {{24 {0 259} 1}}
+  14 {{21 {0 259} 1}}
+  15 {{20 {0 259} 1}}
+  11,trans {{273 21}}
   30,trans {}
   29,trans {}
   16 {{22 {0 259} 1}}
-  0 {{0 0 0} {3 0 0} {5 0 0} {6 {0 259} 0} {7 {0 259} 0} {8 {0 259} 0} {9 {0 259} 0} {12 {0 257 259 264 267 268 269} 0} {13 {0 257 259 264 267 268 269} 0} {14 {0 257 259 264 267 268 269} 0} {15 {0 257 259 264 267 268 269} 0} {16 {0 257 259 264 267 268 269} 0} {17 {0 257 259 264 267 268 269} 0}}
-  17 {{6 {0 259} 2}}
-  1 {{6 {0 259} 1} {18 {0 259} 0} {19 {0 259} 0} {20 {0 259} 0} {21 {0 259} 0} {22 {0 259} 0} {23 {0 259} 0}}
-  18 {{10 {0 259} 1} {11 {0 259} 1}}
-  2 {{12 {0 257 259 264 267 268 269} 1}}
-  19 {{9 {0 259} 2}}
-  20 {{5 0 2}}
+  0 {{0 0 0} {3 0 0} {5 0 0} {6 {0 259} 0} {7 {0 259} 0} {8 {0 259} 0} {9 {0 259} 0} {12 {0 257 259 265 268 269 270} 0} {13 {0 257 259 265 268 269 270} 0} {14 {0 257 259 265 268 269 270} 0} {15 {0 257 259 265 268 269 270} 0} {16 {0 257 259 265 268 269 270} 0} {17 {0 257 259 265 268 269 270} 0} {18 {0 257 259 265 268 269 270} 0}}
+  17 {{23 {0 259} 1}}
+  1 {{6 {0 259} 1} {19 {0 259} 0} {20 {0 259} 0} {21 {0 259} 0} {22 {0 259} 0} {23 {0 259} 0} {24 {0 259} 0}}
+  18 {{6 {0 259} 2}}
+  2 {{12 {0 257 259 265 268 269 270} 1}}
+  19 {{10 {0 259} 1} {11 {0 259} 1}}
+  20 {{9 {0 259} 2}}
   15,trans {}
-  3 {{13 {0 257 259 264 267 268 269} 1}}
-  21 {{23 259 1}}
-  4 {{14 {0 257 259 264 267 268 269} 1}}
-  22 {{7 {0 259} 2} {18 {0 259} 0} {19 {0 259} 0} {20 {0 259} 0} {21 {0 259} 0} {22 {0 259} 0} {23 {0 259} 0}}
-  5 {{15 {0 257 259 264 267 268 269} 1}}
-  23 {{20 259 1}}
-  20,trans {{259 29}}
-  19,trans {}
-  6 {{16 {0 257 259 264 267 268 269} 1}}
+  3 {{13 {0 257 259 265 268 269 270} 1}}
+  21 {{5 0 2}}
+  4 {{14 {0 257 259 265 268 269 270} 1}}
+  22 {{24 259 1}}
+  5 {{15 {0 257 259 265 268 269 270} 1}}
+  23 {{7 {0 259} 2} {19 {0 259} 0} {20 {0 259} 0} {21 {0 259} 0} {22 {0 259} 0} {23 {0 259} 0} {24 {0 259} 0}}
+  20,trans {}
+  19,trans {{257 29}}
+  6 {{16 {0 257 259 265 268 269 270} 1}}
   2,trans {}
-  24 {{19 259 1}}
-  7 {{17 {0 257 259 264 267 268 269} 1}}
-  25 {{21 259 1}}
-  8 {{9 {0 259} 1} {10 {0 259} 0} {11 {0 259} 0}}
+  24 {{21 259 1}}
+  7 {{17 {0 257 259 265 268 269 270} 1}}
+  25 {{20 259 1}}
+  8 {{18 {0 257 259 265 268 269 270} 1}}
   26 {{22 259 1}}
-  9 {{0 0 1}}
-  27 {{8 {0 259} 2}}
+  9 {{9 {0 259} 1} {10 {0 259} 0} {11 {0 259} 0}}
+  27 {{23 259 1}}
   24,trans {}
   6,trans {}
-  28 {{11 {0 259} 2}}
-  30 {{7 {0 259} 3}}
-  29 {{5 0 3}}
-  31 {{8 {0 259} 3}}
-  10,trans {{272 20}}
-  28,trans {}
+  28 {{8 {0 259} 2}}
+  30 {{5 0 3}}
+  29 {{11 {0 259} 2}}
+  31 {{7 {0 259} 3}}
+  32 {{8 {0 259} 3}}
+  10,trans {}
+  28,trans {{259 32}}
 }
 
 array set saveimage::token_id_table {
   264,line 18
-  270,t 1
+  270,t 0
   269,t 0
-  276,line 60
-  265,title PNG
+  276,line 52
+  265,title JPEG
   274,t 1
   261,line 15
   257,t 0
-  270,title {}
-  269,title DEFLATE
-  273,line 39
+  270,title DEFLATE
+  269,title PACKBITS
+  273,line 37
+  278,t 1
   257,line 7
   262,t 0
   274,title {}
-  270,line 31
+  270,line 25
   269,line 24
   259,title string
   260,title FITS
   266,t 0
+  278,title {}
   271,t 1
   error error
-  264,title JPEG
+  264,title TIFF
   266,line 20
+  278,line 69
   275,t 1
-  error,line 30
-  268,title PACKBITS
+  error,line 31
+  268,title NONE
   258,t 0
   263,line 17
   error,title {}
-  275,line 51
+  275,line 48
   273,title {}
   263,t 0
   259,line 10
@@ -466,10 +490,10 @@ array set saveimage::token_id_table {
   277,title {}
   272,line 36
   267,t 0
-  263,title TIFF
+  263,title GIF
   272,t 1
   268,line 23
-  267,title NONE
+  267,title MPEG
   257 INT_
   276,t 1
   258 REAL_
@@ -480,41 +504,42 @@ array set saveimage::token_id_table {
   272,title {}
   261 EPS_
   265,line 19
-  262 GIF_
-  263 TIFF_
-  277,line 67
+  262 PDF_
+  263 GIF_
+  277,line 62
   257,title integer
-  264 JPEG_
+  264 TIFF_
   264,t 0
   276,title {}
-  265 PNG_
+  265 JPEG_
   262,line 16
-  266 MPEG_
-  267 NONE_
+  266 PNG_
+  267 MPEG_
   0,t 0
   0 {$}
-  262,title GIF
-  268 PACKBITS_
+  262,title PDF
+  268 NONE_
   268,t 0
-  274,line 47
-  270 numeric
-  269 DEFLATE_
-  271 command
+  274,line 40
+  270 DEFLATE_
+  269 PACKBITS_
+  271 numeric
   error,t 0
-  272 @PSEUDO1
+  272 command
   258,line 8
   273,t 1
-  273 saveimage
-  266,title MPEG
-  274 mpeg
-  275 ext
-  271,line 35
-  276 opts
+  273 @PSEUDO1
+  266,title PNG
+  274 saveimage
+  275 mpeg
+  271,line 32
+  276 ext
   277,t 1
-  277 start'
+  277 opts
   271,title {}
+  278 start'
   261,t 0
-  267,line 22
+  267,line 21
   275,title {}
   265,t 0
   261,title EPS
@@ -624,15 +649,16 @@ proc saveimage::yyparse {} {
                     11 { SaveImageCmdMPEG $1 $2 }
                     12 { set _ fits }
                     13 { set _ eps }
-                    14 { set _ gif }
-                    15 { set _ tiff }
-                    16 { set _ jpeg }
-                    17 { set _ png }
-                    19 { ProcessCmdSet saveimage tiff,compress none }
-                    20 { ProcessCmdSet saveimage tiff,compress jpeg }
-                    21 { ProcessCmdSet saveimage tiff,compress packbits }
-                    22 { ProcessCmdSet saveimage tiff,compress deflate }
-                    23 { ProcessCmdSet saveimage jpeg,quality $1 }
+                    14 { set _ pdf }
+                    15 { set _ gif }
+                    16 { set _ tiff }
+                    17 { set _ jpeg }
+                    18 { set _ png }
+                    20 { ProcessCmdSet saveimage tiff,compress none }
+                    21 { ProcessCmdSet saveimage tiff,compress jpeg }
+                    22 { ProcessCmdSet saveimage tiff,compress packbits }
+                    23 { ProcessCmdSet saveimage tiff,compress deflate }
+                    24 { ProcessCmdSet saveimage jpeg,quality $1 }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

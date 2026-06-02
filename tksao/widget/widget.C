@@ -25,6 +25,8 @@ void* magnifierparentptr_ =NULL;
 void* pannerptr_ =NULL;
 void* pannerparentptr_ =NULL;
 
+int widgetPdfMode_ =0;
+
 // Tk Canvas Widget Functions Declaration
 
 int WidgetConfigProc(Tcl_Interp* interp, Tk_Canvas canvas, Tk_Item* item, 
@@ -744,6 +746,9 @@ int Widget::setClipRectangles(Display *d, GC gc, int x, int y,
 #endif
 
 Vector Widget::TkCanvasPs(const Vector& v) {
+  if (widgetPdfMode_)
+    return Vector(v[0], v[1]);
+
   return Vector(v[0], Tk_CanvasPsY(canvas, v[1]));
 }
 

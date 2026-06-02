@@ -92,6 +92,8 @@ class ColorbarBase : public Widget {
   void psGrid();
   void psGridNumerics();
   void psGridAST();
+  int pdfImage(Tcl_Obj*);
+  int pdfGrid(Tcl_Obj*);
 
 #ifdef MAC_OSX_TK
   void macosxGrid();
@@ -113,6 +115,8 @@ class ColorbarBase : public Widget {
   int postscriptProc(int);   // generate postscript
   virtual void psHorz(ostream&, Filter&, int, int) =0;
   virtual void psVert(ostream&, Filter&, int, int) =0;
+  virtual void pdfHorz(unsigned char*, int, int) =0;
+  virtual void pdfVert(unsigned char*, int, int) =0;
 
   virtual int initColormap() =0;
   virtual void reset() =0;
@@ -142,6 +146,7 @@ class ColorbarBase : public Widget {
   virtual void adjustCmd(float, float) =0;
 
   int configure(int, const char* [], int);
+  int pdfCmd(Tcl_Obj*, Tcl_Size, Tcl_Obj *const []);
 
   virtual void getBiasCmd() =0;
   virtual void getColorbarCmd() =0;
@@ -209,4 +214,3 @@ class ColorbarBase : public Widget {
 };
 
 #endif
-

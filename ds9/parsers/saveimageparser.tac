@@ -9,6 +9,7 @@
 
 %token FITS_
 %token EPS_
+%token PDF_
 %token GIF_
 %token TIFF_
 %token JPEG_
@@ -41,6 +42,7 @@ mpeg : STRING_ {SaveImageCmdMPEG $1 1}
 
 ext : FITS_ {set _ fits}
  | EPS_ {set _ eps}
+ | PDF_ {set _ pdf}
  | GIF_ {set _ gif}
  | TIFF_ {set _ tiff}
  | JPEG_ {set _ jpeg}

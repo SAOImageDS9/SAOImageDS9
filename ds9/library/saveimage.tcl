@@ -15,6 +15,7 @@ proc SaveImageDialog {format} {
     global saveimage
     global fitsfbox
     global epsfbox
+    global pdffbox
     global giffbox
     global jpegfbox
     global tifffbox
@@ -23,6 +24,7 @@ proc SaveImageDialog {format} {
     switch -- $format {
 	fits {set fn [SaveFileDialog fitsfbox]}
 	eps {set fn [SaveFileDialog epsfbox]}
+	pdf {set fn [SaveFileDialog pdffbox]}
 	gif {set fn [SaveFileDialog giffbox]}
 	jpeg {set fn [SaveFileDialog jpegfbox]}
 	tiff {set fn [SaveFileDialog tifffbox]}
@@ -34,6 +36,7 @@ proc SaveImageDialog {format} {
 	switch -- $format {
 	    fits -
 	    eps -
+	    pdf -
 	    gif -
 	    png {}
 	    jpeg {set ok [JPEGExportDialog saveimage(jpeg,quality)]}
@@ -67,6 +70,7 @@ proc SaveImage {fn format} {
     switch -- $format {
 	fits {$current(frame) save fits resample file "\{$fn\}"}
 	eps {EPS $fn}
+	pdf {PDF $fn}
 	gif -
 	tiff -
 	jpeg -
@@ -128,6 +132,18 @@ proc ProcessSaveImageCmd {varname iname} {
     UpdateDS9
     RealizeDS9
 
+    set arg0 [lindex $var $i]
+    if {[string equal -nocase $arg0 pdf]} {
+	set fn [lindex $var [expr {$i+1}]]
+	if {$fn eq {}} {
+	    Error [msgcat::mc {An error has occurred while saving}]
+	    return
+	}
+	SaveImageCmdLoad pdf $fn
+	incr i
+	return
+    }
+
     saveimage::YY_FLUSH_BUFFER
     saveimage::yy_scan_string [lrange $var $i end]
     saveimage::yyparse
@@ -138,6 +154,7 @@ proc SaveImageCmdLoad {format fn} {
     switch -- $format {
 	fits {FileLast fitsfbox $fn}
 	eps {FileLast epsfbox $fn}
+	pdf {FileLast pdffbox $fn}
 	gif {FileLast giffbox $fn}
 	jpeg {FileLast jpegfbox $fn}
 	tiff {FileLast tifffbox $fn}

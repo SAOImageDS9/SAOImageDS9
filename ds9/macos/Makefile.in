@@ -144,6 +144,7 @@ PREQS	= \
 	$(LIBDIR)/log \
 	$(LIBDIR)/textutil \
 	$(LIBDIR)/math \
+	$(LIBDIR)/pdf4tcl094 \
 	$(LIBDIR)/tooltip \
 	$(LIBDIR)/xpans \
 	$(LIBDIR)/ssl
@@ -220,6 +221,9 @@ $(TKDIR)/Resources : $(TKSRC)/Resources
 $(LIBDIR)/xpans	: $(bindir)/xpans
 	cp -p $? "$@"
 
+$(LIBDIR)/pdf4tcl094: $(prefix)/pdf4tcl094
+	cp -prf $? "$@"
+
 # --------------------------- ssl
 $(LIBDIR)/ssl: $(prefix)/openssl
 	mkdir "$@"
@@ -236,4 +240,3 @@ clean	: parsersclean
 	$(RM) -f tkAppInit.c
 
 include ../make.include
-

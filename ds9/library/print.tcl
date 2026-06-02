@@ -247,6 +247,61 @@ proc EPS {fn} {
     $ds9(canvas) delete $bg
 }
 
+proc PDF {fn} {
+    global ds9
+    global ps
+
+    RealizeDS9
+    UpdateColormapLevel
+
+    set width [winfo width $ds9(canvas)]
+    set height [winfo height $ds9(canvas)]
+    set bg [$ds9(canvas) cget -background]
+
+    if {[catch {
+	package require pdf4tcl
+
+	set pdf [::pdf4tcl::new %AUTO% \
+		     -paper [list ${width}p ${height}p] \
+		     -margin 0 \
+		     -orient 1]
+
+	$pdf setFillColor $bg
+	$pdf rectangle 0 0 $width $height -filled 1 -stroke 0
+
+	foreach ff $ds9(frames) {
+	    if {![llength [info commands $ff]]} {
+		continue
+	    }
+
+	    $ff postscript level $ps(level)
+	    $ff postscript colorspace $ps(color)
+	    $ff postscript resolution $ps(resolution)
+	    $ff pdf $pdf
+
+	    set cb ${ff}cb
+	    if {[llength [info commands $cb]]} {
+		$cb postscript level $ps(level)
+		$cb postscript colorspace $ps(color)
+		$cb postscript resolution $ps(resolution)
+		$cb pdf $pdf
+	    }
+	}
+
+	$pdf write -file $fn
+    } rr]} {
+	if {[info exists pdf]} {
+	    catch {$pdf destroy}
+	}
+	Error "[msgcat::mc {A pdf generation error has occurred}] $rr"
+	return
+    }
+
+    if {[info exists pdf]} {
+	catch {$pdf destroy}
+    }
+}
+
 proc PostScriptPageSize {xx yy ww hh unit optname} {
     upvar $optname options
 

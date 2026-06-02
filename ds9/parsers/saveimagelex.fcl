@@ -9,6 +9,7 @@
 
 fits	    {return $FITS_}
 eps	    {return $EPS_}
+pdf	    {return $PDF_}
 gif	    {return $GIF_}
 tiff	    {return $TIFF_}
 jpeg	    {return $JPEG_}

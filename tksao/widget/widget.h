@@ -51,6 +51,8 @@ extern void* magnifierparentptr_;
 extern void* pannerptr_;
 extern void* pannerparentptr_;
 
+extern int widgetPdfMode_;
+
 // General Defines
 
 #define WIDGET(x) (*(((WidgetOptions*)(x))->widget))

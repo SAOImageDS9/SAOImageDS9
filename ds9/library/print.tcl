@@ -484,6 +484,249 @@ proc PDFGraphs {pdf frame} {
     }
 }
 
+proc PDFCanvasSetDash {pdf dash} {
+    if {$dash == {}} {
+	$pdf setLineDash
+    } else {
+	eval $pdf setLineDash $dash
+    }
+}
+
+proc PDFCanvasFont {font} {
+    if {[catch {font actual $font} actual]} {
+	return [list 12 Helvetica]
+    }
+
+    set family [string tolower [dict get $actual -family]]
+    set size [dict get $actual -size]
+    set weight [dict get $actual -weight]
+    set slant [dict get $actual -slant]
+
+    if {$size < 0} {
+	set size [expr -$size]
+    }
+
+    switch -glob -- $family {
+	*courier* {set pdfFont Courier}
+	*times* {set pdfFont Times}
+	default {set pdfFont Helvetica}
+    }
+
+    if {$weight == {bold}} {
+	append pdfFont -Bold
+    }
+    if {$slant != {roman}} {
+	append pdfFont -Oblique
+    }
+
+    return [list $size $pdfFont]
+}
+
+proc PDFCanvasArrow {pdf x1 y1 x2 y2 fill width shape} {
+    if {$fill == {}} {
+	return
+    }
+
+    foreach {a b c} $shape {}
+    if {$a == {}} {
+	set a 8
+	set b 10
+	set c 3
+    }
+
+    set dx [expr $x1-$x2]
+    set dy [expr $y1-$y2]
+    set len [expr hypot($dx,$dy)]
+    if {$len <= 0} {
+	return
+    }
+
+    set ux [expr $dx/$len]
+    set uy [expr $dy/$len]
+    set px [expr -$uy]
+    set py $ux
+    set scale [expr max(1,$width)]
+    set back [expr $b*$scale]
+    set half [expr $c*$scale]
+
+    set bx [expr $x2+$ux*$back]
+    set by [expr $y2+$uy*$back]
+    set p1x [expr $bx+$px*$half]
+    set p1y [expr $by+$py*$half]
+    set p2x [expr $bx-$px*$half]
+    set p2y [expr $by-$py*$half]
+
+    $pdf setFillColor $fill
+    $pdf polygon $x2 $y2 $p1x $p1y $p2x $p2y -closed 1 -filled 1 -stroke 0
+}
+
+proc PDFCanvasText {pdf txt x y size align angle} {
+    set lines [split $txt "\n"]
+    set count [llength $lines]
+    if {$count < 1} {
+	return
+    }
+
+    set lineHeight [expr $size*1.2]
+    set firstOffset [expr -($count-1)*$lineHeight/2. + $size/2.]
+    set aa [expr $angle*acos(-1)/180.]
+    set dx [expr -sin($aa)]
+    set dy [expr cos($aa)]
+
+    for {set ii 0} {$ii < $count} {incr ii} {
+	set offset [expr $firstOffset + $ii*$lineHeight]
+	$pdf text [lindex $lines $ii] \
+	    -x [expr $x+$dx*$offset] \
+	    -y [expr $y+$dy*$offset] \
+	    -align $align -angle $angle
+    }
+}
+
+proc PDFCanvasGraphics {pdf} {
+    global ds9
+
+    foreach id [$ds9(canvas) find withtag graphic] {
+	if {[$ds9(canvas) itemcget $id -state] == {hidden}} {
+	    continue
+	}
+
+	set type [$ds9(canvas) type $id]
+	set coords [$ds9(canvas) coords $id]
+
+	switch -- $type {
+	    oval {
+		foreach {x1 y1 x2 y2} $coords {}
+		set outline [$ds9(canvas) itemcget $id -outline]
+		set fill [$ds9(canvas) itemcget $id -fill]
+		set width [$ds9(canvas) itemcget $id -width]
+		set dash [$ds9(canvas) itemcget $id -dash]
+		set stroke [expr {$outline != {} && $width > 0}]
+		set filled [expr {$fill != {}}]
+
+		if {$stroke} {
+		    $pdf setStrokeColor $outline
+		    $pdf setLineWidth $width
+		    PDFCanvasSetDash $pdf $dash
+		}
+		if {$filled} {
+		    $pdf setFillColor $fill
+		}
+
+		$pdf oval [expr ($x1+$x2)/2.] [expr ($y1+$y2)/2.] \
+		    [expr abs($x2-$x1)/2.] [expr abs($y2-$y1)/2.] \
+		    -filled $filled -stroke $stroke
+	    }
+	    rectangle {
+		foreach {x1 y1 x2 y2} $coords {}
+		set outline [$ds9(canvas) itemcget $id -outline]
+		set fill [$ds9(canvas) itemcget $id -fill]
+		set width [$ds9(canvas) itemcget $id -width]
+		set dash [$ds9(canvas) itemcget $id -dash]
+		set stroke [expr {$outline != {} && $width > 0}]
+		set filled [expr {$fill != {}}]
+
+		if {$stroke} {
+		    $pdf setStrokeColor $outline
+		    $pdf setLineWidth $width
+		    PDFCanvasSetDash $pdf $dash
+		}
+		if {$filled} {
+		    $pdf setFillColor $fill
+		}
+
+		$pdf rectangle $x1 $y1 [expr $x2-$x1] [expr $y2-$y1] \
+		    -filled $filled -stroke $stroke
+	    }
+	    polygon {
+		set outline [$ds9(canvas) itemcget $id -outline]
+		set fill [$ds9(canvas) itemcget $id -fill]
+		set width [$ds9(canvas) itemcget $id -width]
+		set dash [$ds9(canvas) itemcget $id -dash]
+		set stroke [expr {$outline != {} && $width > 0}]
+		set filled [expr {$fill != {}}]
+
+		if {$stroke} {
+		    $pdf setStrokeColor $outline
+		    $pdf setLineWidth $width
+		    PDFCanvasSetDash $pdf $dash
+		}
+		if {$filled} {
+		    $pdf setFillColor $fill
+		}
+
+		eval $pdf polygon $coords -closed 1 -filled $filled -stroke $stroke
+	    }
+	    line {
+		set fill [$ds9(canvas) itemcget $id -fill]
+		set width [$ds9(canvas) itemcget $id -width]
+		set dash [$ds9(canvas) itemcget $id -dash]
+		set arrow [$ds9(canvas) itemcget $id -arrow]
+		set arrowshape [$ds9(canvas) itemcget $id -arrowshape]
+
+		if {$fill != {} && $width > 0} {
+		    $pdf setStrokeColor $fill
+		    $pdf setFillColor $fill
+		    $pdf setLineWidth $width
+		    PDFCanvasSetDash $pdf $dash
+		    PDFGraphFlushLine $pdf $coords
+
+		    if {$arrow == {first} || $arrow == {both}} {
+			PDFCanvasArrow $pdf \
+			    [lindex $coords 2] [lindex $coords 3] \
+			    [lindex $coords 0] [lindex $coords 1] \
+			    $fill $width $arrowshape
+		    }
+		    if {$arrow == {last} || $arrow == {both}} {
+			set n [llength $coords]
+			PDFCanvasArrow $pdf \
+			    [lindex $coords [expr $n-4]] [lindex $coords [expr $n-3]] \
+			    [lindex $coords [expr $n-2]] [lindex $coords [expr $n-1]] \
+			    $fill $width $arrowshape
+		    }
+		}
+	    }
+	    text {
+		foreach {x y} $coords {}
+		set txt [$ds9(canvas) itemcget $id -text]
+		set fill [$ds9(canvas) itemcget $id -fill]
+		set angle [$ds9(canvas) itemcget $id -angle]
+		set justify [$ds9(canvas) itemcget $id -justify]
+		foreach {size font} [PDFCanvasFont [$ds9(canvas) itemcget $id -font]] {}
+
+		switch -- $justify {
+		    center {set align center}
+		    right {set align right}
+		    default {set align left}
+		}
+
+		if {$fill != {}} {
+		    $pdf setFillColor $fill
+		    $pdf setFont $size $font
+		    PDFCanvasText $pdf $txt $x $y $size $align $angle
+		}
+	    }
+	    image {
+		foreach {x y} $coords {}
+		set image [$ds9(canvas) itemcget $id -image]
+		if {$image == {}} {
+		    continue
+		}
+
+		if {[catch {set imgid [$pdf addRawImage [$image data]]}]} {
+		    continue
+		}
+
+		$pdf putImage $imgid $x $y \
+		    -width [image width $image] \
+		    -height [image height $image] \
+		    -anchor [$ds9(canvas) itemcget $id -anchor]
+	    }
+	}
+    }
+
+    $pdf setLineDash
+}
+
 proc PDF {fn} {
     global ds9
     global ps
@@ -526,6 +769,8 @@ proc PDF {fn} {
 
 	    PDFGraphs $pdf $ff
 	}
+
+	PDFCanvasGraphics $pdf
 
 	$pdf write -file $fn
     } rr]} {

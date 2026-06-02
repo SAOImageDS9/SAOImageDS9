@@ -88,6 +88,8 @@ proc PlotDialog {varname wtt {theme true}} {
     ThemeMenu $var(mb).file.export
     $var(mb).file.export add command -label {EPS} \
 	-command [list PlotExportDialog $varname eps]
+    $var(mb).file.export add command -label {PDF} \
+	-command [list PlotExportDialog $varname pdf]
     $var(mb).file.export add command -label {GIF} \
 	-command [list PlotExportDialog $varname gif]
     $var(mb).file.export add command -label {TIFF} \
@@ -587,12 +589,14 @@ proc PlotExportDialog {varname format} {
 
     global giffbox
     global jpegfbox
+    global pdffbox
     global tifffbox
     global pngfbox
     global iap
 
     switch -- $format {
 	eps {set fn [SaveFileDialog epsfbox $var(top)]}
+	pdf {set fn [SaveFileDialog pdffbox $var(top)]}
 	gif {set fn [SaveFileDialog giffbox $var(top)]}
 	jpeg {set fn [SaveFileDialog jpegfbox $var(top)]}
 	tiff {set fn [SaveFileDialog tifffbox $var(top)]}
@@ -603,6 +607,7 @@ proc PlotExportDialog {varname format} {
 	set ok 1
 	switch -- $format {
 	    eps {}
+	    pdf {}
 	    gif {}
 	    jpeg {set ok [JPEGExportDialog iap(jpeg,quality)]}
 	    tiff {set ok [TIFFExportDialog iap(tiff,compress)]}
@@ -638,6 +643,7 @@ proc PlotExport {varname fn format} {
 
     switch -- $format {
 	eps {PlotEPS $varname $fn}
+	pdf {PlotPDF $varname $fn}
 	gif -
 	tiff -
 	jpeg -

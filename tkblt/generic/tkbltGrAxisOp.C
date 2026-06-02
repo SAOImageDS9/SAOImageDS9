@@ -299,6 +299,22 @@ static int TransformOp(ClientData clientData, Tcl_Interp* interp,
   return AxisTransformOp(axisPtr, interp, objc-1, objv+1);
 }
 
+static int TicksOp(ClientData clientData, Tcl_Interp* interp,
+		   int objc, Tcl_Obj* const objv[])
+{
+  Graph* graphPtr = (Graph*)clientData;
+  if (objc!=4) {
+    Tcl_WrongNumArgs(interp, 3, objv, "axisId");
+    return TCL_ERROR;
+  }
+
+  Axis* axisPtr;
+  if (graphPtr->getAxis(objv[3], &axisPtr) != TCL_OK)
+    return TCL_ERROR;
+
+  return AxisTicksOp(axisPtr, interp, objc-1, objv+1);
+}
+
 static int TypeOp(ClientData clientData, Tcl_Interp* interp, 
 		  int objc, Tcl_Obj* const objv[])
 {
@@ -343,6 +359,7 @@ const Ensemble Blt::axisEnsemble[] = {
   {"limits",       LimitsOp, 0},
   {"margin",       MarginOp, 0},
   {"names",        NamesOp, 0},
+  {"ticks",        TicksOp, 0},
   {"transform",    TransformOp, 0},
   {"type",         TypeOp, 0},
   {"view",         ViewOp, 0},
@@ -576,6 +593,54 @@ int AxisTransformOp(Axis* axisPtr, Tcl_Interp* interp,
   return TCL_OK;
 }
 
+int AxisTicksOp(Axis* axisPtr, Tcl_Interp* interp,
+		int objc, Tcl_Obj* const objv[])
+{
+  AxisOptions* ops = (AxisOptions*)axisPtr->ops();
+  Graph* graphPtr = axisPtr->graphPtr_;
+
+  graphPtr->map();
+
+  Ticks* ticksPtr = ops->t1UPtr ? ops->t1UPtr : axisPtr->t1Ptr_;
+  Tcl_Obj* listObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+  if (!ops->showTicks || !ticksPtr) {
+    Tcl_SetObjResult(interp, listObjPtr);
+    return TCL_OK;
+  }
+
+  ChainLink* link = Chain_FirstLink(axisPtr->tickLabels_);
+  for (int ii=0; ii<ticksPtr->nTicks; ii++) {
+    double value = ticksPtr->values[ii];
+    double labelValue = value;
+    if (ops->labelOffset)
+      labelValue += axisPtr->majorSweep_.step * 0.5;
+
+    if (!axisPtr->inRange(labelValue, &axisPtr->axisRange_))
+      continue;
+    if (!link)
+      break;
+
+    TickLabel* labelPtr = (TickLabel*)Chain_GetValue(link);
+    link = Chain_NextLink(link);
+
+    if (ops->logScale)
+      value = EXP10(value);
+
+    Tcl_Obj* tickObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+    Tcl_ListObjAppendElement(interp, tickObjPtr, Tcl_NewDoubleObj(value));
+    Tcl_ListObjAppendElement(interp, tickObjPtr,
+			     Tcl_NewStringObj(labelPtr->string, -1));
+    Tcl_ListObjAppendElement(interp, tickObjPtr,
+			     Tcl_NewDoubleObj(labelPtr->anchorPos.x));
+    Tcl_ListObjAppendElement(interp, tickObjPtr,
+			     Tcl_NewDoubleObj(labelPtr->anchorPos.y));
+    Tcl_ListObjAppendElement(interp, listObjPtr, tickObjPtr);
+  }
+
+  Tcl_SetObjResult(interp, listObjPtr);
+  return TCL_OK;
+}
+
 int AxisTypeOp(Axis* axisPtr, Tcl_Interp* interp, 
 	       int objc, Tcl_Obj* const objv[])
 {
@@ -673,4 +738,3 @@ int AxisViewOp(Axis* axisPtr, Tcl_Interp* interp,
 
   return TCL_OK;
 }
-

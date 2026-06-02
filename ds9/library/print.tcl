@@ -252,6 +252,13 @@ proc PDFGraphColor {pdf stroke fill} {
     $pdf setFillColor $fill
 }
 
+proc PDFGraphGet {script default} {
+    if {[catch {uplevel 1 $script} rr]} {
+	return $default
+    }
+    return $rr
+}
+
 proc PDFGraphPoint {gr x0 y0 xx yy} {
     foreach {sx sy} [$gr transform $xx $yy] {}
     return [list [expr $x0+$sx] [expr $y0+$sy]]
@@ -279,30 +286,28 @@ proc PDFGraphFlushLine {pdf points} {
     }
 }
 
-proc PDFGraphTicks {minv maxv count} {
+proc PDFGraphTicks {minv maxv log count} {
     if {$count < 2 || $minv == $maxv} {
 	return [list $minv]
     }
 
     set result {}
-    for {set ii 0} {$ii < $count} {incr ii} {
-	lappend result [expr $minv + ($maxv-$minv)*$ii/double($count-1)]
+    if {$log && $minv > 0 && $maxv > 0} {
+	set lmin [expr log10($minv)]
+	set lmax [expr log10($maxv)]
+	for {set ii 0} {$ii < $count} {incr ii} {
+	    lappend result [expr pow(10,$lmin + ($lmax-$lmin)*$ii/double($count-1))]
+	}
+    } else {
+	for {set ii 0} {$ii < $count} {incr ii} {
+	    lappend result [expr $minv + ($maxv-$minv)*$ii/double($count-1)]
+	}
     }
     return $result
 }
 
 proc PDFGraphLabel {vv} {
-    set av [expr abs($vv)]
-    if {$av != 0 && ($av < .01 || $av >= 10000)} {
-	return [format %.2e $vv]
-    }
-    if {$av < 10} {
-	return [format %.2f $vv]
-    }
-    if {$av < 100} {
-	return [format %.1f $vv]
-    }
-    return [format %.0f $vv]
+    return [format %.12g $vv]
 }
 
 proc PDFGraph {pdf frame which} {
@@ -346,6 +351,12 @@ proc PDFGraph {pdf frame which} {
     set xmax [lindex $xlim 1]
     set ymin [lindex $ylim 0]
     set ymax [lindex $ylim 1]
+    set xlog [PDFGraphGet [list $gr xaxis cget -logscale] 0]
+    set ylog [PDFGraphGet [list $gr yaxis cget -logscale] 0]
+    switch -- $which {
+	horz {set ylog [PDFGraphGet [list $gr y2axis cget -logscale] $ylog]}
+	vert {set xlog [PDFGraphGet [list $gr x2axis cget -logscale] $xlog]}
+    }
 
     set corners {}
     foreach xx [list $xmin $xmax] {
@@ -376,12 +387,12 @@ proc PDFGraph {pdf frame which} {
     PDFGraphColor $pdf $fg $fg
 
     if {$graph(grid)} {
-	foreach xx [PDFGraphTicks $xmin $xmax 5] {
+	foreach xx [PDFGraphTicks $xmin $xmax $xlog 5] {
 	    foreach {p1x p1y} [PDFGraphPoint $gr $x0 $y0 $xx $ymin] {}
 	    foreach {p2x p2y} [PDFGraphPoint $gr $x0 $y0 $xx $ymax] {}
 	    $pdf line $p1x $p1y $p2x $p2y
 	}
-	foreach yy [PDFGraphTicks $ymin $ymax 5] {
+	foreach yy [PDFGraphTicks $ymin $ymax $ylog 5] {
 	    foreach {p1x p1y} [PDFGraphPoint $gr $x0 $y0 $xmin $yy] {}
 	    foreach {p2x p2y} [PDFGraphPoint $gr $x0 $y0 $xmax $yy] {}
 	    $pdf line $p1x $p1y $p2x $p2y
@@ -396,11 +407,11 @@ proc PDFGraph {pdf frame which} {
     set tickLen 4
     switch -- $which {
 	horz {
-	    foreach xx [PDFGraphTicks $xmin $xmax 5] {
+	    foreach xx [PDFGraphTicks $xmin $xmax $xlog 5] {
 		foreach {tx ty} [PDFGraphPoint $gr $x0 $y0 $xx $ymin] {}
 		$pdf line $tx $py1 $tx [expr $py1+$tickLen]
 	    }
-	    foreach yy [PDFGraphTicks $ymin $ymax 5] {
+	    foreach yy [PDFGraphTicks $ymin $ymax $ylog 5] {
 		foreach {tx ty} [PDFGraphPoint $gr $x0 $y0 $xmax $yy] {}
 		$pdf line $px1 $ty [expr $px1+$tickLen] $ty
 		$pdf text [PDFGraphLabel $yy] \
@@ -409,11 +420,11 @@ proc PDFGraph {pdf frame which} {
 	    }
 	}
 	vert {
-	    foreach xx [PDFGraphTicks $xmin $xmax 5] {
+	    foreach xx [PDFGraphTicks $xmin $xmax $xlog 5] {
 		foreach {tx ty} [PDFGraphPoint $gr $x0 $y0 $xx $ymin] {}
 		$pdf line [expr $px0-$tickLen] $ty $px0 $ty
 	    }
-	    foreach yy [PDFGraphTicks $ymin $ymax 5] {
+	    foreach yy [PDFGraphTicks $ymin $ymax $ylog 5] {
 		foreach {tx ty} [PDFGraphPoint $gr $x0 $y0 $xmin $yy] {}
 		$pdf line $tx $py1 $tx [expr $py1+$tickLen]
 		$pdf text [PDFGraphLabel $yy] \

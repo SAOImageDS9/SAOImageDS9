@@ -438,6 +438,31 @@ proc PlotPDFLabel {vv fmt} {
     return [format %.12g $vv]
 }
 
+proc PlotPDFAxisTicks {gr axis minv maxv log fmt count} {
+    if {![catch {$gr axis ticks $axis} ticks] && [llength $ticks]} {
+	return $ticks
+    }
+
+    set result {}
+    foreach value [PlotPDFTicks $minv $maxv $log $count] {
+	if {![catch {$gr axis transform $axis $value} pos]} {
+	    lappend result [list $value [PlotPDFLabel $value $fmt] $pos $pos]
+	}
+    }
+    return $result
+}
+
+proc PlotPDFTextWidth {text size} {
+    return [expr [string length $text]*$size*.6]
+}
+
+proc PlotPDFLegendLabel {label} {
+    if {[string length $label] > 80} {
+	return "[string range $label 0 76]..."
+    }
+    return $label
+}
+
 proc PlotPDFFlushLine {pdf points} {
     if {[llength $points] < 4} {
 	return
@@ -661,6 +686,211 @@ proc PlotPDFElement {pdf gr ox oy elem px0 py0 px1 py1} {
     }
 }
 
+proc PlotPDFLegendEntry {gr elem} {
+    if {[catch {$gr element cget $elem -hide} hide] || $hide} {
+	return {}
+    }
+
+    if {[catch {$gr element cget $elem -label} label]} {
+	return {}
+    }
+    if {$label == {}} {
+	return {}
+    }
+    set label [PlotPDFLegendLabel $label]
+
+    set type [PlotPDFGet [list $gr element type $elem] line]
+    if {$type == {bar}} {
+	set outline [PlotPDFGet [list $gr element cget $elem -outline] black]
+	set fill [PlotPDFGet [list $gr element cget $elem -fill] white]
+	set width [PlotPDFGet [list $gr element cget $elem -borderwidth] 1]
+	return [list $elem $label $type $outline $width {} none 0 $outline $fill]
+    }
+
+    set color [PlotPDFGet [list $gr element cget $elem -color] black]
+    set linewidth [PlotPDFGet [list $gr element cget $elem -linewidth] 1]
+    set dash [PlotPDFGet [list $gr element cget $elem -dashes] {}]
+    set symbol [PlotPDFGet [list $gr element cget $elem -symbol] none]
+    set pixels [PlotPDFGet [list $gr element cget $elem -pixels] 0]
+    set outline [PlotPDFGet [list $gr element cget $elem -outline] $color]
+    set fill [PlotPDFGet [list $gr element cget $elem -fill] {}]
+    return [list $elem $label $type $color $linewidth $dash $symbol $pixels $outline $fill]
+}
+
+proc PlotPDFLegend {pdf gr ox oy px0 py0 px1 py1 elems fg bg} {
+    if {[PlotPDFGet [list $gr legend cget -hide] 1]} {
+	return
+    }
+
+    set entries {}
+    set maxLabelWidth 0
+    set maxEntries 100
+    set maxScanned 1000
+    set scanned 0
+    foreach elem $elems {
+	incr scanned
+	if {$scanned > $maxScanned} {
+	    break
+	}
+	set entry [PlotPDFLegendEntry $gr $elem]
+	if {$entry == {}} {
+	    continue
+	}
+	lappend entries $entry
+	if {[llength $entries] >= $maxEntries} {
+	    break
+	}
+    }
+    if {![llength $entries]} {
+	return
+    }
+
+    foreach {fontSize fontName} [PlotPDFFont [PlotPDFGet [list $gr legend cget -font] [$gr cget -font]]] {}
+    foreach {titleSize titleFont} [PlotPDFFont [PlotPDFGet [list $gr legend cget -titlefont] [$gr cget -font]]] {}
+    set title [PlotPDFGet [list $gr legend cget -title] {}]
+    set position [PlotPDFGet [list $gr legend cget -position] right]
+    set legendFg [PlotPDFGet [list $gr legend cget -foreground] $fg]
+    set titleFg [PlotPDFGet [list $gr legend cget -titlecolor] $legendFg]
+    set legendBg [PlotPDFGet [list $gr legend cget -background] $bg]
+
+    foreach entry $entries {
+	set ww [PlotPDFTextWidth [lindex $entry 1] $fontSize]
+	if {$ww > $maxLabelWidth} {
+	    set maxLabelWidth $ww
+	}
+    }
+
+    set pad 4
+    set symbolWidth [expr $fontSize*2.2]
+    set maxEntryWidth [expr max(40, [winfo width $gr] - 2*$pad)]
+    set entryWidth [expr min($symbolWidth + $maxLabelWidth + 10, $maxEntryWidth)]
+    set rowHeight [expr max($fontSize*1.45, 12)]
+    set titleHeight [expr {$title == {} ? 0 : $titleSize*1.45}]
+    set n [llength $entries]
+    set columns 1
+
+    switch -glob -- $position {
+	top* -
+	bottom* {
+	    set avail [expr max(1,$px1-$px0)]
+	    set columns [expr int($avail/$entryWidth)]
+	    if {$columns < 1} {
+		set columns 1
+	    }
+	    if {$columns > $n} {
+		set columns $n
+	    }
+	}
+    }
+    set rows [expr int(ceil($n/double($columns)))]
+
+    set legendW [expr $columns*$entryWidth + 2*$pad]
+    if {$title != {}} {
+	set titleW [expr [PlotPDFTextWidth $title $titleSize] + 2*$pad]
+	if {$titleW > $legendW} {
+	    set legendW $titleW
+	}
+    }
+    set legendH [expr $rows*$rowHeight + $titleHeight + 2*$pad]
+
+    set width [winfo width $gr]
+    set height [winfo height $gr]
+    if {$legendW > $width - 2*$pad} {
+	set legendW [expr $width - 2*$pad]
+    }
+    if {$legendH > $height - 2*$pad} {
+	set legendH [expr $height - 2*$pad]
+    }
+    if {$legendW <= 0 || $legendH <= 0} {
+	return
+    }
+
+    switch -glob -- $position {
+	left* {
+	    set lx [expr max($ox+$pad, $px0-$legendW-8)]
+	    set ly [expr $py0 + (($py1-$py0)-$legendH)/2.]
+	}
+	top* {
+	    set lx [expr $px0 + (($px1-$px0)-$legendW)/2.]
+	    set ly [expr max($oy+$pad, $py0-$legendH-8)]
+	}
+	bottom* {
+	    set lx [expr $px0 + (($px1-$px0)-$legendW)/2.]
+	    set ly [expr min($oy+$height-$legendH-$pad, $py1+8)]
+	}
+	plotarea -
+	xy {
+	    set lx [expr $px1-$legendW-8]
+	    set ly [expr $py0+8]
+	}
+	default {
+	    set lx [expr min($ox+$width-$legendW-$pad, $px1+8)]
+	    set ly [expr $py0 + (($py1-$py0)-$legendH)/2.]
+	}
+    }
+
+    if {$lx < $ox+$pad} {
+	set lx [expr $ox+$pad]
+    }
+    if {$ly < $oy+$pad} {
+	set ly [expr $oy+$pad]
+    }
+    if {$lx+$legendW > $ox+$width-$pad} {
+	set lx [expr $ox+$width-$legendW-$pad]
+    }
+    if {$ly+$legendH > $oy+$height-$pad} {
+	set ly [expr $oy+$height-$legendH-$pad]
+    }
+
+    if {$legendBg != {}} {
+	$pdf setFillColor $legendBg
+	$pdf rectangle $lx $ly $legendW $legendH -filled 1 -stroke 0
+    }
+
+    set y [expr $ly+$pad]
+    if {$title != {}} {
+	PlotPDFColor $pdf $titleFg $titleFg
+	$pdf setFont $titleSize $titleFont
+	$pdf text $title -x [expr $lx+$pad] -y [expr $y+$titleSize] -align left
+	set y [expr $y+$titleHeight]
+    }
+
+    $pdf setFont $fontSize $fontName
+    for {set ii 0} {$ii < $n} {incr ii} {
+	set entry [lindex $entries $ii]
+	foreach {elem label type color linewidth dash symbol pixels outline fill} $entry {}
+	set col [expr $ii % $columns]
+	set row [expr int($ii/$columns)]
+	set ex [expr $lx+$pad+$col*$entryWidth]
+	set ey [expr $y+$row*$rowHeight]
+	set sy [expr $ey+$rowHeight/2.]
+
+	if {$type == {bar}} {
+	    PlotPDFColor $pdf $outline $fill
+	    $pdf setLineWidth $linewidth
+	    $pdf setLineDash
+	    $pdf rectangle $ex [expr $sy-$fontSize*.35] $symbolWidth [expr $fontSize*.7] \
+		-filled [expr {$fill != {}}] -stroke [expr {$outline != {} && $linewidth > 0}]
+	} else {
+	    if {$linewidth > 0} {
+		PlotPDFColor $pdf $color {}
+		$pdf setLineWidth $linewidth
+		PlotPDFSetDash $pdf $dash
+		$pdf line $ex $sy [expr $ex+$symbolWidth] $sy
+	    }
+	    if {$symbol != {none} && $pixels > 0} {
+		PlotPDFSymbol $pdf $symbol [expr $ex+$symbolWidth/2.] $sy \
+		    $pixels $outline $fill
+	    }
+	}
+
+	PlotPDFColor $pdf $legendFg $legendFg
+	$pdf setLineDash
+	$pdf text $label -x [expr $ex+$symbolWidth+6] \
+	    -y [expr $ey+$fontSize+($rowHeight-$fontSize)/2.] -align left
+    }
+}
+
 proc PlotPDFGraph {pdf gr ox oy varname cc} {
     upvar #0 $varname var
     global $varname
@@ -707,19 +937,21 @@ proc PlotPDFGraph {pdf gr ox oy varname cc} {
     } else {
 	set yfmt {}
     }
+    set xticks [PlotPDFAxisTicks $gr x $xmin $xmax $xlog $xfmt 6]
+    set yticks [PlotPDFAxisTicks $gr y $ymin $ymax $ylog $yfmt 6]
 
     $pdf setLineWidth .5
     PlotPDFColor $pdf $fg {}
     $pdf setLineDash
     if {$xgrid} {
-	foreach xx [PlotPDFTicks $xmin $xmax $xlog 6] {
-	    foreach {gx gy} [PlotPDFPoint $gr $ox $oy $xx $ymin] {}
+	foreach tick $xticks {
+	    set gx [expr $ox+[lindex $tick 2]]
 	    $pdf line $gx $py0 $gx $py1
 	}
     }
     if {$ygrid} {
-	foreach yy [PlotPDFTicks $ymin $ymax $ylog 6] {
-	    foreach {gx gy} [PlotPDFPoint $gr $ox $oy $xmin $yy] {}
+	foreach tick $yticks {
+	    set gy [expr $oy+[lindex $tick 3]]
 	    $pdf line $px0 $gy $px1 $gy
 	}
     }
@@ -742,21 +974,24 @@ proc PlotPDFGraph {pdf gr ox oy varname cc} {
     PlotPDFColor $pdf $xfg $xfg
     $pdf setFont $fontSize $fontName
     set tickLen 4
-    foreach xx [PlotPDFTicks $xmin $xmax $xlog 6] {
-	foreach {tx ty} [PlotPDFPoint $gr $ox $oy $xx $ymin] {}
+    foreach tick $xticks {
+	set label [lindex $tick 1]
+	set tx [expr $ox+[lindex $tick 2]]
+	set ty [expr $oy+[lindex $tick 3]]
 	$pdf line $tx $py1 $tx [expr $py1+$tickLen]
-	$pdf text [PlotPDFLabel $xx $xfmt] -x $tx -y [expr $py1+$tickLen+$fontSize] -align center
+	$pdf text $label -x $tx -y [expr $ty+$fontSize] -align center
     }
 
     foreach {fontSize fontName} [PlotPDFFont [$gr yaxis cget -tickfont]] {}
     set yfg [PlotPDFGet [list $gr yaxis cget -foreground] $fg]
     PlotPDFColor $pdf $yfg $yfg
     $pdf setFont $fontSize $fontName
-    foreach yy [PlotPDFTicks $ymin $ymax $ylog 6] {
-	foreach {tx ty} [PlotPDFPoint $gr $ox $oy $xmin $yy] {}
+    foreach tick $yticks {
+	set label [lindex $tick 1]
+	set tx [expr $ox+[lindex $tick 2]]
+	set ty [expr $oy+[lindex $tick 3]]
 	$pdf line [expr $px0-$tickLen] $ty $px0 $ty
-	$pdf text [PlotPDFLabel $yy $yfmt] -x [expr $px0-$tickLen-3] \
-	    -y [expr $ty+$fontSize/2.] -align right
+	$pdf text $label -x $tx -y [expr $ty+$fontSize/2.] -align right
     }
 
     set title [$gr cget -title]
@@ -785,6 +1020,8 @@ proc PlotPDFGraph {pdf gr ox oy varname cc} {
 	$pdf text $ytitle -x [expr $ox+$fontSize+3] -y [expr ($py0+$py1)/2.] \
 	    -align center -angle 90
     }
+
+    catch {PlotPDFLegend $pdf $gr $ox $oy $px0 $py0 $px1 $py1 $elems $fg $bg}
 }
 
 proc PlotPDF {varname fn} {

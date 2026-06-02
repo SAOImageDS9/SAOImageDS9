@@ -143,7 +143,7 @@ PREQS	= \
 	$(LIBDIR)/log \
 	$(LIBDIR)/textutil \
 	$(LIBDIR)/math \
-	$(LIBDIR)/pdf4tcl094 \
+	$(LIBDIR)/pdf4tcl \
 	$(LIBDIR)/tooltip \
 	$(LIBDIR)/awthemes \
 	$(LIBDIR)/ttkthemes \
@@ -224,7 +224,7 @@ $(LIBDIR)/tk$(TCL_VERSION) :
 	rm -rf $(APPDIR)/tk$(TCL_VERSION)/images
 	rm -rf $(APPDIR)/tk$(TCL_VERSION)/demos
 
-$(LIBDIR)/pdf4tcl094: $(prefix)/pdf4tcl094
+$(LIBDIR)/pdf4tcl: $(prefix)/pdf4tcl
 	cp -prf $? "$@"
 
 #--------------------------awthemes

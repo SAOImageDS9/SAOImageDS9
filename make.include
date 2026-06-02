@@ -415,7 +415,7 @@ ast/Makefile :
 	star_cv_cnf_trail_type=long star_cv_cnf_f2c_compatible=no \
 	$(CONFIGFLAGS) \
 	$(PREFIX)
-	cd ast; touch configure.ac aclocal.m4 configure Makefile.am Makefile.in
+	cd ast; touch configure.ac aclocal.m4 configure Makefile.am Makefile.in config.h.in
 
 ast/ast.h :
 	@echo ""

@@ -231,3 +231,15 @@ jobs:
         run: |
           # Need to && cmds and tack on echo to avoid windows newlines
           chmod +x ./win/configure && ./win/configure && make && echo ok
+
+      - name: Compile Inno Setup Installer
+        uses: Minionguyjpro/Inno-Setup-Action@v1.2.8
+        with:
+          path: ds9\win\ds9.iss
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: binary-${{ matrix.os }}
+          path: dist/SAOImageDS9*exe
+          archive: false

@@ -126,6 +126,7 @@ namespace Blt {
     void print(PSOutput*);
     void printActive(PSOutput*);
     void printSymbol(PSOutput*, double, double, int);
+    void appendPdfStyleData(Tcl_Interp*, Tcl_Obj*);
   };
 };
 

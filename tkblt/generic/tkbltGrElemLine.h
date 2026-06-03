@@ -179,6 +179,7 @@ namespace Blt {
     void printActive(PSOutput*);
     void printSymbol(PSOutput*, double, double, int);
     void appendTracePoints(Tcl_Interp*, Tcl_Obj*);
+    void appendPdfStyleData(Tcl_Interp*, Tcl_Obj*);
   };
 };
 

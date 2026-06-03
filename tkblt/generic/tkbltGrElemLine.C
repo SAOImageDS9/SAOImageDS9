@@ -2460,6 +2460,129 @@ void LineElement::appendTracePoints(Tcl_Interp* interp, Tcl_Obj* listObjPtr)
   }
 }
 
+static Tcl_Obj* LinePdfColorObj(XColor* colorPtr)
+{
+  if (!colorPtr)
+    return Tcl_NewStringObj("", -1);
+
+  char buf[16];
+  snprintf(buf, sizeof(buf), "#%02x%02x%02x",
+	   colorPtr->red >> 8, colorPtr->green >> 8, colorPtr->blue >> 8);
+  return Tcl_NewStringObj(buf, -1);
+}
+
+static Tcl_Obj* LinePdfDashesObj(Dashes* dashesPtr)
+{
+  Tcl_Obj* listObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+  if (!dashesPtr || !LineIsDashed(*dashesPtr))
+    return listObjPtr;
+
+  for (int ii=0; ii<12 && dashesPtr->values[ii] != 0; ii++)
+    Tcl_ListObjAppendElement(NULL, listObjPtr,
+			     Tcl_NewIntObj(dashesPtr->values[ii]));
+
+  return listObjPtr;
+}
+
+static Tcl_Obj* LinePdfPointsObj(Point2d* points, int count)
+{
+  Tcl_Obj* listObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+  for (int ii=0; ii<count; ii++) {
+    Tcl_ListObjAppendElement(NULL, listObjPtr, Tcl_NewDoubleObj(points[ii].x));
+    Tcl_ListObjAppendElement(NULL, listObjPtr, Tcl_NewDoubleObj(points[ii].y));
+  }
+
+  return listObjPtr;
+}
+
+static Tcl_Obj* LinePdfSegmentsObj(GraphSegments* segmentsPtr)
+{
+  Tcl_Obj* listObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+  for (int ii=0; ii<segmentsPtr->length; ii++) {
+    Tcl_Obj* segObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(segmentsPtr->segments[ii].p.x));
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(segmentsPtr->segments[ii].p.y));
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(segmentsPtr->segments[ii].q.x));
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(segmentsPtr->segments[ii].q.y));
+    Tcl_ListObjAppendElement(NULL, listObjPtr, segObjPtr);
+  }
+
+  return listObjPtr;
+}
+
+void LineElement::appendPdfStyleData(Tcl_Interp* interp, Tcl_Obj* dictObjPtr)
+{
+  LineElementOptions* ops = (LineElementOptions*)ops_;
+
+  if (ops->fillBg && fillPts_) {
+    XColor* fillColor = Tk_3DBorderColor(ops->fillBg);
+    Tcl_Obj* areaObjPtr = Tcl_NewDictObj();
+    Tcl_DictObjPut(interp, areaObjPtr, Tcl_NewStringObj("fill", -1),
+		   LinePdfColorObj(fillColor));
+    Tcl_DictObjPut(interp, areaObjPtr, Tcl_NewStringObj("points", -1),
+		   LinePdfPointsObj(fillPts_, nFillPts_));
+    Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("area", -1),
+		   areaObjPtr);
+  }
+
+  Tcl_Obj* stylesObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+  for (ChainLink* link = Chain_FirstLink(ops->stylePalette); link;
+       link = Chain_NextLink(link)) {
+    LineStyle* stylePtr = (LineStyle*)Chain_GetValue(link);
+    LinePen* penPtr = (LinePen*)stylePtr->penPtr;
+    LinePenOptions* pops = (LinePenOptions*)penPtr->ops();
+    XColor* fillColor = pops->symbol.fillColor ?
+      pops->symbol.fillColor : pops->traceColor;
+    XColor* outlineColor = pops->symbol.outlineColor ?
+      pops->symbol.outlineColor : pops->traceColor;
+    XColor* errorColor = pops->errorBarColor ?
+      pops->errorBarColor : pops->traceColor;
+
+    Tcl_Obj* styleObjPtr = Tcl_NewDictObj();
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("color", -1),
+		   LinePdfColorObj(pops->traceColor));
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("linewidth", -1),
+		   Tcl_NewIntObj(pops->traceWidth));
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("dashes", -1),
+		   LinePdfDashesObj(&pops->traceDashes));
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("symbol", -1),
+		   Tcl_NewStringObj(symbolObjOption[pops->symbol.type], -1));
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("pixels", -1),
+		   Tcl_NewIntObj(stylePtr->symbolSize));
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("outline", -1),
+		   LinePdfColorObj(outlineColor));
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("outlinewidth", -1),
+		   Tcl_NewIntObj(pops->symbol.outlineWidth));
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("fill", -1),
+		   LinePdfColorObj(fillColor));
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("symbols", -1),
+		   LinePdfPointsObj(stylePtr->symbolPts.points,
+				    stylePtr->symbolPts.length));
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("errorbarcolor", -1),
+		   LinePdfColorObj(errorColor));
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("errorbarwidth", -1),
+		   Tcl_NewIntObj(pops->errorBarLineWidth));
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("errorbarcap", -1),
+		   Tcl_NewIntObj(stylePtr->errorBarCapWidth));
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("xerrors", -1),
+		   (pops->errorBarShow & SHOW_X) ?
+		   LinePdfSegmentsObj(&stylePtr->xeb) :
+		   Tcl_NewListObj(0, (Tcl_Obj**)NULL));
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("yerrors", -1),
+		   (pops->errorBarShow & SHOW_Y) ?
+		   LinePdfSegmentsObj(&stylePtr->yeb) :
+		   Tcl_NewListObj(0, (Tcl_Obj**)NULL));
+    Tcl_ListObjAppendElement(interp, stylesObjPtr, styleObjPtr);
+  }
+
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("styles", -1),
+		 stylesObjPtr);
+}
+
 void LineElement::printValues(PSOutput* psPtr, LinePen* penPtr, 
 			      int nSymbolPts, Point2d *symbolPts, 
 			      int *pointToData)

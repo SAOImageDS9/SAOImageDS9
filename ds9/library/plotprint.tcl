@@ -344,6 +344,13 @@ proc PlotPDFGet {script default} {
     return $rr
 }
 
+proc PlotPDFDictGet {dict key default} {
+    if {[dict exists $dict $key]} {
+	return [dict get $dict $key]
+    }
+    return $default
+}
+
 proc PlotPDFDataList {data} {
     if {$data != {} && [llength [info commands $data]]} {
 	set len [$data length]
@@ -494,6 +501,184 @@ proc PlotPDFDrawTrace {pdf trace ox oy px0 py0 px1 py1} {
     PlotPDFFlushLine $pdf $points
 }
 
+proc PlotPDFDrawScreenPolygon {pdf coords ox oy px0 py0 px1 py1 filled stroke} {
+    set points {}
+    foreach {x y} $coords {
+	if {![string is double -strict $x] || ![string is double -strict $y]} {
+	    continue
+	}
+	lappend points \
+	    [PlotPDFClamp [expr $ox+$x] $px0 $px1] \
+	    [PlotPDFClamp [expr $oy+$y] $py0 $py1]
+    }
+    if {[llength $points] >= 6} {
+	eval $pdf polygon $points -closed 1 -filled $filled -stroke $stroke
+    }
+}
+
+proc PlotPDFDrawScreenSegments {pdf segments ox oy} {
+    foreach seg $segments {
+	foreach {x1 y1 x2 y2} $seg {}
+	if {![string is double -strict $x1] || ![string is double -strict $y1] ||
+	    ![string is double -strict $x2] || ![string is double -strict $y2]} {
+	    continue
+	}
+	$pdf line [expr $ox+$x1] [expr $oy+$y1] [expr $ox+$x2] [expr $oy+$y2]
+    }
+}
+
+proc PlotPDFDrawElementErrors {pdf style ox oy} {
+    set segments [concat \
+		      [PlotPDFDictGet $style xerrors {}] \
+		      [PlotPDFDictGet $style yerrors {}]]
+    if {$segments == {}} {
+	return
+    }
+
+    PlotPDFColor $pdf [PlotPDFDictGet $style errorbarcolor black] {}
+    $pdf setLineWidth [PlotPDFDictGet $style errorbarwidth 1]
+    $pdf setLineDash
+    PlotPDFDrawScreenSegments $pdf $segments $ox $oy
+}
+
+proc PlotPDFDrawStyleSymbols {pdf style ox oy px0 py0 px1 py1} {
+    set symbol [PlotPDFDictGet $style symbol none]
+    set pixels [PlotPDFDictGet $style pixels 0]
+    if {$symbol == {none} || $pixels <= 0} {
+	return
+    }
+
+    set outline [PlotPDFDictGet $style outline [PlotPDFDictGet $style color black]]
+    set fill [PlotPDFDictGet $style fill $outline]
+    $pdf setLineWidth [PlotPDFDictGet $style outlinewidth 1]
+
+    foreach {x y} [PlotPDFDictGet $style symbols {}] {
+	set px [expr $ox+$x]
+	set py [expr $oy+$y]
+	if {$px >= $px0 && $px <= $px1 && $py >= $py0 && $py <= $py1} {
+	    PlotPDFSymbol $pdf $symbol $px $py $pixels $outline $fill
+	}
+    }
+}
+
+proc PlotPDFDrawBarStyles {pdf styles ox oy} {
+    foreach style $styles {
+	set fill [PlotPDFDictGet $style fill white]
+	set outline [PlotPDFDictGet $style outline black]
+	set width [PlotPDFDictGet $style borderwidth 1]
+	PlotPDFColor $pdf $outline $fill
+	$pdf setLineWidth $width
+	$pdf setLineDash
+
+	foreach rect [PlotPDFDictGet $style bars {}] {
+	    foreach {x y w h} $rect {}
+	    if {$w > 0 && $h > 0} {
+		$pdf rectangle [expr $ox+$x] [expr $oy+$y] $w $h \
+		    -filled [expr {$fill != {}}] \
+		    -stroke [expr {$outline != {} && $width > 0}]
+	    }
+	}
+
+	PlotPDFDrawElementErrors $pdf $style $ox $oy
+    }
+}
+
+proc PlotPDFDrawMarkers {pdf gr ox oy px0 py0 px1 py1 under} {
+    if {[catch {$gr marker names} markers]} {
+	return
+    }
+
+    foreach marker $markers {
+	if {[PlotPDFGet [list $gr marker cget $marker -hide] 0]} {
+	    continue
+	}
+	if {[PlotPDFGet [list $gr marker cget $marker -under] 0] != $under} {
+	    continue
+	}
+
+	set elem [PlotPDFGet [list $gr marker cget $marker -element] {}]
+	if {$elem != {} && [PlotPDFGet [list $gr element cget $elem -hide] 0]} {
+	    continue
+	}
+
+	set type [PlotPDFGet [list $gr marker type $marker] {}]
+	set coords [PlotPDFGet [list $gr marker cget $marker -coords] {}]
+	set xoff [PlotPDFGet [list $gr marker cget $marker -xoffset] 0]
+	set yoff [PlotPDFGet [list $gr marker cget $marker -yoffset] 0]
+
+	switch -- $type {
+	    line {
+		set color [PlotPDFGet [list $gr marker cget $marker -outline] black]
+		set width [PlotPDFGet [list $gr marker cget $marker -linewidth] 1]
+		set dash [PlotPDFGet [list $gr marker cget $marker -dashes] {}]
+		PlotPDFColor $pdf $color {}
+		$pdf setLineWidth $width
+		PlotPDFSetDash $pdf $dash
+		set points {}
+		foreach {x y} $coords {
+		    if {[catch {$gr transform $x $y} pp]} {
+			PlotPDFFlushLine $pdf $points
+			set points {}
+			continue
+		    }
+		    foreach {px py} $pp {}
+		    lappend points \
+			[PlotPDFClamp [expr $ox+$px+$xoff] $px0 $px1] \
+			[PlotPDFClamp [expr $oy+$py+$yoff] $py0 $py1]
+		}
+		PlotPDFFlushLine $pdf $points
+	    }
+	    polygon {
+		set outline [PlotPDFGet [list $gr marker cget $marker -outline] black]
+		set fill [PlotPDFGet [list $gr marker cget $marker -fill] {}]
+		set width [PlotPDFGet [list $gr marker cget $marker -linewidth] 1]
+		set dash [PlotPDFGet [list $gr marker cget $marker -dashes] {}]
+		set points {}
+		foreach {x y} $coords {
+		    if {![catch {$gr transform $x $y} pp]} {
+			foreach {px py} $pp {}
+			lappend points \
+			    [PlotPDFClamp [expr $ox+$px+$xoff] $px0 $px1] \
+			    [PlotPDFClamp [expr $oy+$py+$yoff] $py0 $py1]
+		    }
+		}
+		if {[llength $points] >= 6} {
+		    if {$outline != {} && $width > 0} {
+			$pdf setLineWidth $width
+			PlotPDFSetDash $pdf $dash
+		    }
+		    PlotPDFColor $pdf $outline $fill
+		    eval $pdf polygon $points -closed 1 -filled [expr {$fill != {}}] \
+			-stroke [expr {$outline != {} && $width > 0}]
+		}
+	    }
+	    text {
+		foreach {x y} $coords {}
+		if {[catch {$gr transform $x $y} pp]} {
+		    continue
+		}
+		foreach {px py} $pp {}
+		set text [PlotPDFGet [list $gr marker cget $marker -text] {}]
+		set color [PlotPDFGet [list $gr marker cget $marker -foreground] black]
+		set angle [PlotPDFGet [list $gr marker cget $marker -rotate] 0]
+		set anchor [PlotPDFGet [list $gr marker cget $marker -anchor] center]
+		foreach {size font} [PlotPDFFont \
+					 [PlotPDFGet [list $gr marker cget $marker -font] [$gr cget -font]]] {}
+		switch -glob -- $anchor {
+		    *e {set align right}
+		    *w {set align left}
+		    default {set align center}
+		}
+		PlotPDFColor $pdf $color $color
+		$pdf setFont $size $font
+		$pdf text $text -x [expr $ox+$px+$xoff] -y [expr $oy+$py+$yoff+$size/2.] \
+		    -align $align -angle $angle
+	    }
+	}
+    }
+    $pdf setLineDash
+}
+
 proc PlotPDFSymbol {pdf symbol x y size outline fill} {
     if {$symbol == {} || $symbol == {none} || $size <= 0} {
 	return
@@ -622,7 +807,14 @@ proc PlotPDFElement {pdf gr ox oy elem px0 py0 px1 py1} {
     }
 
     set type [PlotPDFGet [list $gr element type $elem] line]
+    set pdfdata {}
+    catch {set pdfdata [$gr element pdfdata $elem]}
     if {$type == {bar}} {
+	if {[dict exists $pdfdata styles]} {
+	    PlotPDFDrawBarStyles $pdf [dict get $pdfdata styles] $ox $oy
+	    return
+	}
+
 	set outline [PlotPDFGet [list $gr element cget $elem -outline] black]
 	set fill [PlotPDFGet [list $gr element cget $elem -fill] white]
 	set width [PlotPDFGet [list $gr element cget $elem -borderwidth] 1]
@@ -660,10 +852,26 @@ proc PlotPDFElement {pdf gr ox oy elem px0 py0 px1 py1} {
     set outline [PlotPDFGet [list $gr element cget $elem -outline] $color]
     set fill [PlotPDFGet [list $gr element cget $elem -fill] {}]
 
-    PlotPDFErrorBars $pdf $gr $ox $oy $xs $ys \
-	[PlotPDFGet [list $gr element cget $elem -xerror] {}] \
-	[PlotPDFGet [list $gr element cget $elem -yerror] {}] \
-	$px0 $px1 $py0 $py1 $elem
+    if {[dict exists $pdfdata area]} {
+	set area [dict get $pdfdata area]
+	set areaFill [PlotPDFDictGet $area fill {}]
+	if {$areaFill != {}} {
+	    PlotPDFColor $pdf {} $areaFill
+	    PlotPDFDrawScreenPolygon $pdf [PlotPDFDictGet $area points {}] \
+		$ox $oy $px0 $py0 $px1 $py1 1 0
+	}
+    }
+
+    if {[dict exists $pdfdata styles]} {
+	foreach style [dict get $pdfdata styles] {
+	    PlotPDFDrawElementErrors $pdf $style $ox $oy
+	}
+    } else {
+	PlotPDFErrorBars $pdf $gr $ox $oy $xs $ys \
+	    [PlotPDFGet [list $gr element cget $elem -xerror] {}] \
+	    [PlotPDFGet [list $gr element cget $elem -yerror] {}] \
+	    $px0 $px1 $py0 $py1 $elem
+    }
 
     if {$linewidth > 0} {
 	PlotPDFColor $pdf $color {}
@@ -701,7 +909,11 @@ proc PlotPDFElement {pdf gr ox oy elem px0 py0 px1 py1} {
 	}
     }
 
-    if {$symbol != {none} && $pixels > 0} {
+    if {[dict exists $pdfdata styles]} {
+	foreach style [dict get $pdfdata styles] {
+	    PlotPDFDrawStyleSymbols $pdf $style $ox $oy $px0 $py0 $px1 $py1
+	}
+    } elseif {$symbol != {none} && $pixels > 0} {
 	for {set ii 0} {$ii < $len} {incr ii} {
 	    set x [lindex $xs $ii]
 	    set y [lindex $ys $ii]
@@ -986,6 +1198,8 @@ proc PlotPDFGraph {pdf gr ox oy varname cc} {
 	}
     }
 
+    PlotPDFDrawMarkers $pdf $gr $ox $oy $px0 $py0 $px1 $py1 1
+
     set elems [$gr element show]
     if {$elems == {}} {
 	set elems [$gr element names]
@@ -993,6 +1207,8 @@ proc PlotPDFGraph {pdf gr ox oy varname cc} {
     foreach elem $elems {
 	PlotPDFElement $pdf $gr $ox $oy $elem $px0 $py0 $px1 $py1
     }
+
+    PlotPDFDrawMarkers $pdf $gr $ox $oy $px0 $py0 $px1 $py1 0
 
     PlotPDFColor $pdf $fg $fg
     $pdf setLineWidth 1

@@ -527,6 +527,72 @@ proc PlotPDFDrawScreenSegments {pdf segments ox oy} {
     }
 }
 
+proc PlotPDFTextAlign {anchor} {
+    switch -- $anchor {
+	e - ne - se {return right}
+	w - nw - sw {return left}
+	default {return center}
+    }
+}
+
+proc PlotPDFTextY {y size anchor} {
+    switch -- $anchor {
+	n - ne - nw {return [expr $y+$size]}
+	s - se - sw {return $y}
+	default {return [expr $y+$size/2.]}
+    }
+}
+
+proc PlotPDFDrawAnchoredText {pdf text x y size font color anchor angle} {
+    if {$text == {}} {
+	return
+    }
+
+    PlotPDFColor $pdf $color $color
+    $pdf setFont $size $font
+    $pdf text $text -x $x -y [PlotPDFTextY $y $size $anchor] \
+	-align [PlotPDFTextAlign $anchor] -angle $angle
+}
+
+proc PlotPDFDrawAxisPdfData {pdf axisData ox oy} {
+    if {[PlotPDFDictGet $axisData hide 0] || ![PlotPDFDictGet $axisData use 0]} {
+	return
+    }
+
+    set color [PlotPDFDictGet $axisData foreground black]
+    set width [PlotPDFDictGet $axisData linewidth 1]
+    if {$width > 0} {
+	PlotPDFColor $pdf $color {}
+	$pdf setLineWidth $width
+	$pdf setLineDash
+	PlotPDFDrawScreenSegments $pdf [PlotPDFDictGet $axisData segments {}] $ox $oy
+    }
+
+    foreach {tickSize tickFont} [PlotPDFFont [PlotPDFDictGet $axisData tickfont {}]] {}
+    foreach tick [PlotPDFDictGet $axisData ticks {}] {
+	PlotPDFDrawAnchoredText $pdf \
+	    [PlotPDFDictGet $tick label {}] \
+	    [expr $ox+[PlotPDFDictGet $tick x 0]] \
+	    [expr $oy+[PlotPDFDictGet $tick y 0]] \
+	    $tickSize $tickFont $color \
+	    [PlotPDFDictGet $tick anchor center] \
+	    [PlotPDFDictGet $tick angle 0]
+    }
+
+    set title [PlotPDFDictGet $axisData title {}]
+    set titleText [PlotPDFDictGet $title text {}]
+    if {$titleText != {}} {
+	foreach {titleSize titleFont} [PlotPDFFont [PlotPDFDictGet $title font {}]] {}
+	PlotPDFDrawAnchoredText $pdf $titleText \
+	    [expr $ox+[PlotPDFDictGet $title x 0]] \
+	    [expr $oy+[PlotPDFDictGet $title y 0]] \
+	    $titleSize $titleFont \
+	    [PlotPDFDictGet $title color $color] \
+	    [PlotPDFDictGet $title anchor center] \
+	    [PlotPDFDictGet $title angle 0]
+    }
+}
+
 proc PlotPDFDrawElementErrors {pdf style ox oy} {
     set segments [concat \
 		      [PlotPDFDictGet $style xerrors {}] \
@@ -583,12 +649,87 @@ proc PlotPDFDrawBarStyles {pdf styles ox oy} {
     }
 }
 
+proc PlotPDFDrawMarkerPdfData {pdf markerData ox oy} {
+    set type [PlotPDFDictGet $markerData type {}]
+
+    switch -- $type {
+	line {
+	    set outline [PlotPDFDictGet $markerData outline black]
+	    set width [PlotPDFDictGet $markerData linewidth 1]
+	    if {$outline != {} && $width > 0} {
+		PlotPDFColor $pdf $outline {}
+		$pdf setLineWidth $width
+		PlotPDFSetDash $pdf [PlotPDFDictGet $markerData dashes {}]
+		PlotPDFDrawScreenSegments $pdf [PlotPDFDictGet $markerData segments {}] $ox $oy
+	    }
+	}
+	polygon {
+	    set fill [PlotPDFDictGet $markerData fill {}]
+	    set outline [PlotPDFDictGet $markerData outline black]
+	    set width [PlotPDFDictGet $markerData linewidth 1]
+	    set points {}
+	    foreach {x y} [PlotPDFDictGet $markerData fillpoints {}] {
+		lappend points [expr $ox+$x] [expr $oy+$y]
+	    }
+	    if {[llength $points] >= 6 && $fill != {}} {
+		PlotPDFColor $pdf $outline $fill
+		$pdf setLineWidth $width
+		$pdf setLineDash
+		eval $pdf polygon $points -closed 1 -filled 1 \
+		    -stroke [expr {$outline != {} && $width > 0}]
+	    }
+	    if {$outline != {} && $width > 0} {
+		PlotPDFColor $pdf $outline {}
+		$pdf setLineWidth $width
+		PlotPDFSetDash $pdf [PlotPDFDictGet $markerData dashes {}]
+		PlotPDFDrawScreenSegments $pdf \
+		    [PlotPDFDictGet $markerData outlineSegments {}] $ox $oy
+	    }
+	}
+	text {
+	    set fill [PlotPDFDictGet $markerData fill {}]
+	    set bg {}
+	    foreach {x y} [PlotPDFDictGet $markerData background {}] {
+		lappend bg [expr $ox+$x] [expr $oy+$y]
+	    }
+	    if {$fill != {} && [llength $bg] >= 6} {
+		PlotPDFColor $pdf {} $fill
+		eval $pdf polygon $bg -closed 1 -filled 1 -stroke 0
+	    }
+	    foreach {size font} [PlotPDFFont [PlotPDFDictGet $markerData font {}]] {}
+	    PlotPDFDrawAnchoredText $pdf \
+		[PlotPDFDictGet $markerData text {}] \
+		[expr $ox+[PlotPDFDictGet $markerData x 0]] \
+		[expr $oy+[PlotPDFDictGet $markerData y 0]] \
+		$size $font \
+		[PlotPDFDictGet $markerData foreground black] \
+		[PlotPDFDictGet $markerData anchor center] \
+		[PlotPDFDictGet $markerData angle 0]
+	}
+    }
+}
+
 proc PlotPDFDrawMarkers {pdf gr ox oy px0 py0 px1 py1 under} {
     if {[catch {$gr marker names} markers]} {
 	return
     }
 
     foreach marker $markers {
+	if {![catch {$gr marker pdfdata $marker} markerData]} {
+	    if {[PlotPDFDictGet $markerData hide 0]} {
+		continue
+	    }
+	    if {[PlotPDFDictGet $markerData under 0] != $under} {
+		continue
+	    }
+	    set elem [PlotPDFDictGet $markerData element {}]
+	    if {$elem != {} && [PlotPDFGet [list $gr element cget $elem -hide] 0]} {
+		continue
+	    }
+	    PlotPDFDrawMarkerPdfData $pdf $markerData $ox $oy
+	    continue
+	}
+
 	if {[PlotPDFGet [list $gr marker cget $marker -hide] 0]} {
 	    continue
 	}
@@ -1232,7 +1373,8 @@ proc PlotPDFGraph {pdf gr ox oy varname cc} {
     if {$elems == {}} {
 	set elems [$gr element names]
     }
-    foreach elem $elems {
+    set drawElems [lreverse $elems]
+    foreach elem $drawElems {
 	PlotPDFElement $pdf $gr $ox $oy $elem $px0 $py0 $px1 $py1
     }
 
@@ -1243,29 +1385,12 @@ proc PlotPDFGraph {pdf gr ox oy varname cc} {
     $pdf setLineDash
     $pdf rectangle $px0 $py0 $pw $ph -filled 0 -stroke 1
 
-    foreach {fontSize fontName} [PlotPDFFont [$gr xaxis cget -tickfont]] {}
-    set xfg [PlotPDFGet [list $gr xaxis cget -foreground] $fg]
-    PlotPDFColor $pdf $xfg $xfg
-    $pdf setFont $fontSize $fontName
-    set tickLen 4
-    foreach tick $xticks {
-	set label [lindex $tick 1]
-	set tx [expr $ox+[lindex $tick 2]]
-	set ty [expr $oy+[lindex $tick 3]]
-	$pdf line $tx $py1 $tx [expr $py1+$tickLen]
-	$pdf text $label -x $tx -y [expr $ty+$fontSize] -align center
-    }
-
-    foreach {fontSize fontName} [PlotPDFFont [$gr yaxis cget -tickfont]] {}
-    set yfg [PlotPDFGet [list $gr yaxis cget -foreground] $fg]
-    PlotPDFColor $pdf $yfg $yfg
-    $pdf setFont $fontSize $fontName
-    foreach tick $yticks {
-	set label [lindex $tick 1]
-	set tx [expr $ox+[lindex $tick 2]]
-	set ty [expr $oy+[lindex $tick 3]]
-	$pdf line [expr $px0-$tickLen] $ty $px0 $ty
-	$pdf text $label -x $tx -y [expr $ty+$fontSize/2.] -align right
+    if {![catch {$gr axis names} axisNames]} {
+	foreach axis $axisNames {
+	    if {![catch {$gr axis pdfdata $axis} axisData]} {
+		PlotPDFDrawAxisPdfData $pdf $axisData $ox $oy
+	    }
+	}
     }
 
     set title [$gr cget -title]
@@ -1274,36 +1399,6 @@ proc PlotPDFGraph {pdf gr ox oy varname cc} {
 	PlotPDFColor $pdf $fg $fg
 	$pdf setFont $fontSize $fontName
 	$pdf text $title -x [expr $ox+$width/2.] -y [expr $oy+$fontSize+3] -align center
-    }
-
-    set xtitle [$gr xaxis cget -title]
-    if {$xtitle != {}} {
-	foreach {fontSize fontName} [PlotPDFFont [$gr xaxis cget -titlefont]] {}
-	set xtitlecolor [PlotPDFGet [list $gr xaxis cget -titlecolor] $xfg]
-	set xtitleY [expr $oy+$height-4]
-	set legendPosition [PlotPDFGet [list $gr legend cget -position] right]
-	if {![PlotPDFGet [list $gr legend cget -hide] 1] &&
-	    [string match -nocase bottom* $legendPosition] &&
-	    ![catch {$gr extents legend} legendExtents] &&
-	    [llength $legendExtents] == 4} {
-	    foreach {legx legy legw legh} $legendExtents {}
-	    if {$legw > 0 && $legh > 0} {
-		set xtitleY [expr min($xtitleY, $oy+$legy-4)]
-	    }
-	}
-	PlotPDFColor $pdf $xtitlecolor $xtitlecolor
-	$pdf setFont $fontSize $fontName
-	$pdf text $xtitle -x [expr ($px0+$px1)/2.] -y $xtitleY -align center
-    }
-
-    set ytitle [$gr yaxis cget -title]
-    if {$ytitle != {}} {
-	foreach {fontSize fontName} [PlotPDFFont [$gr yaxis cget -titlefont]] {}
-	set ytitlecolor [PlotPDFGet [list $gr yaxis cget -titlecolor] $yfg]
-	PlotPDFColor $pdf $ytitlecolor $ytitlecolor
-	$pdf setFont $fontSize $fontName
-	$pdf text $ytitle -x [expr $ox+$fontSize+3] -y [expr ($py0+$py1)/2.] \
-	    -align center -angle 90
     }
 
     catch {PlotPDFLegend $pdf $gr $ox $oy $px0 $py0 $px1 $py1 $elems $fg $bg}

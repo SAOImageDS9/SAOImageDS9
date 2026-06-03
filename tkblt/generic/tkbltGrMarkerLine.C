@@ -295,4 +295,60 @@ void LineMarker::print(PSOutput* psPtr)
   }
 }
 
+static Tcl_Obj* LineMarkerPdfColorObj(XColor* colorPtr)
+{
+  if (!colorPtr)
+    return Tcl_NewStringObj("", -1);
+
+  char buf[16];
+  snprintf(buf, sizeof(buf), "#%02x%02x%02x",
+	   colorPtr->red >> 8, colorPtr->green >> 8, colorPtr->blue >> 8);
+  return Tcl_NewStringObj(buf, -1);
+}
+
+static Tcl_Obj* LineMarkerPdfDashesObj(Dashes* dashesPtr)
+{
+  Tcl_Obj* listObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+  if (!dashesPtr || !LineIsDashed(*dashesPtr))
+    return listObjPtr;
+
+  for (int ii=0; ii<12 && dashesPtr->values[ii] != 0; ii++)
+    Tcl_ListObjAppendElement(NULL, listObjPtr,
+			     Tcl_NewIntObj(dashesPtr->values[ii]));
+
+  return listObjPtr;
+}
+
+static Tcl_Obj* LineMarkerPdfSegmentsObj(Segment2d* segments, int count)
+{
+  Tcl_Obj* listObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+  for (int ii=0; ii<count; ii++) {
+    Tcl_Obj* segObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(segments[ii].p.x));
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(segments[ii].p.y));
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(segments[ii].q.x));
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(segments[ii].q.y));
+    Tcl_ListObjAppendElement(NULL, listObjPtr, segObjPtr);
+  }
+
+  return listObjPtr;
+}
+
+void LineMarker::appendPdfData(Tcl_Interp* interp, Tcl_Obj* dictObjPtr)
+{
+  LineMarkerOptions* ops = (LineMarkerOptions*)ops_;
+
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("outline", -1),
+		 LineMarkerPdfColorObj(ops->outlineColor));
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("linewidth", -1),
+		 Tcl_NewIntObj(ops->lineWidth));
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("dashes", -1),
+		 LineMarkerPdfDashesObj(&ops->dashes));
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("segments", -1),
+		 LineMarkerPdfSegmentsObj(segments_, nSegments_));
+}
 

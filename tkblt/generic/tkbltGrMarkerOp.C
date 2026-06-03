@@ -407,6 +407,39 @@ static int NamesOp(ClientData clientData, Tcl_Interp* interp,
   return TCL_OK;
 }
 
+static int PdfDataOp(ClientData clientData, Tcl_Interp* interp,
+		     int objc, Tcl_Obj* const objv[])
+{
+  Graph* graphPtr = (Graph*)clientData;
+  if (objc!=4) {
+    Tcl_WrongNumArgs(interp, 3, objv, "markerId");
+    return TCL_ERROR;
+  }
+
+  Marker* markerPtr;
+  if (GetMarkerFromObj(interp, graphPtr, objv[3], &markerPtr) != TCL_OK)
+    return TCL_ERROR;
+
+  graphPtr->map();
+
+  MarkerOptions* ops = (MarkerOptions*)markerPtr->ops();
+  Tcl_Obj* dictObjPtr = Tcl_NewDictObj();
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("name", -1),
+		 Tcl_NewStringObj(markerPtr->name_, -1));
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("type", -1),
+		 Tcl_NewStringObj(markerPtr->typeName(), -1));
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("hide", -1),
+		 Tcl_NewIntObj(ops->hide));
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("under", -1),
+		 Tcl_NewIntObj(ops->drawUnder));
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("element", -1),
+		 Tcl_NewStringObj(ops->elemName ? ops->elemName : "", -1));
+  markerPtr->appendPdfData(interp, dictObjPtr);
+
+  Tcl_SetObjResult(interp, dictObjPtr);
+  return TCL_OK;
+}
+
 static int RelinkOp(ClientData clientData, Tcl_Interp* interp, 
 		    int objc, Tcl_Obj* const objv[])
 {
@@ -469,6 +502,7 @@ const Ensemble Blt::markerEnsemble[] = {
   {"find",      FindOp, 0},
   {"lower",     RelinkOp, 0},
   {"names",     NamesOp, 0},
+  {"pdfdata",   PdfDataOp, 0},
   {"raise",     RelinkOp, 0},
   {"type",      TypeOp, 0},
   { 0,0,0 }
@@ -492,4 +526,3 @@ static int GetMarkerFromObj(Tcl_Interp* interp, Graph* graphPtr,
 
   return TCL_ERROR;
 }
-

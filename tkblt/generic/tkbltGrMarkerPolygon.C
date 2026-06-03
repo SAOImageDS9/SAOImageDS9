@@ -296,3 +296,74 @@ void PolygonMarker::print(PSOutput* psPtr)
   }
 }
 
+static Tcl_Obj* PolygonMarkerPdfColorObj(XColor* colorPtr)
+{
+  if (!colorPtr)
+    return Tcl_NewStringObj("", -1);
+
+  char buf[16];
+  snprintf(buf, sizeof(buf), "#%02x%02x%02x",
+	   colorPtr->red >> 8, colorPtr->green >> 8, colorPtr->blue >> 8);
+  return Tcl_NewStringObj(buf, -1);
+}
+
+static Tcl_Obj* PolygonMarkerPdfDashesObj(Dashes* dashesPtr)
+{
+  Tcl_Obj* listObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+  if (!dashesPtr || !LineIsDashed(*dashesPtr))
+    return listObjPtr;
+
+  for (int ii=0; ii<12 && dashesPtr->values[ii] != 0; ii++)
+    Tcl_ListObjAppendElement(NULL, listObjPtr,
+			     Tcl_NewIntObj(dashesPtr->values[ii]));
+
+  return listObjPtr;
+}
+
+static Tcl_Obj* PolygonMarkerPdfPointsObj(Point2d* points, int count)
+{
+  Tcl_Obj* listObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+  for (int ii=0; ii<count; ii++) {
+    Tcl_ListObjAppendElement(NULL, listObjPtr, Tcl_NewDoubleObj(points[ii].x));
+    Tcl_ListObjAppendElement(NULL, listObjPtr, Tcl_NewDoubleObj(points[ii].y));
+  }
+
+  return listObjPtr;
+}
+
+static Tcl_Obj* PolygonMarkerPdfSegmentsObj(Segment2d* segments, int count)
+{
+  Tcl_Obj* listObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+  for (int ii=0; ii<count; ii++) {
+    Tcl_Obj* segObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(segments[ii].p.x));
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(segments[ii].p.y));
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(segments[ii].q.x));
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(segments[ii].q.y));
+    Tcl_ListObjAppendElement(NULL, listObjPtr, segObjPtr);
+  }
+
+  return listObjPtr;
+}
+
+void PolygonMarker::appendPdfData(Tcl_Interp* interp, Tcl_Obj* dictObjPtr)
+{
+  PolygonMarkerOptions* ops = (PolygonMarkerOptions*)ops_;
+
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("fill", -1),
+		 PolygonMarkerPdfColorObj(ops->fill));
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("outline", -1),
+		 PolygonMarkerPdfColorObj(ops->outline));
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("linewidth", -1),
+		 Tcl_NewIntObj(ops->lineWidth));
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("dashes", -1),
+		 PolygonMarkerPdfDashesObj(&ops->dashes));
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("fillpoints", -1),
+		 PolygonMarkerPdfPointsObj(fillPts_, nFillPts_));
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("outlineSegments", -1),
+		 PolygonMarkerPdfSegmentsObj(outlinePts_, nOutlinePts_));
+}

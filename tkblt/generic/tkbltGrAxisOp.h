@@ -54,6 +54,8 @@ extern int AxisTransformOp(Blt::Axis* axisPtr, Tcl_Interp* interp,
 			   int objc, Tcl_Obj* const objv[]);
 extern int AxisTicksOp(Blt::Axis* axisPtr, Tcl_Interp* interp,
 		       int objc, Tcl_Obj* const objv[]);
+extern int AxisPdfDataOp(Blt::Axis* axisPtr, Tcl_Interp* interp,
+			 int objc, Tcl_Obj* const objv[]);
 extern int AxisTypeOp(Blt::Axis* axisPtr, Tcl_Interp* interp, 
 		      int objc, Tcl_Obj* const objv[]);
 extern int AxisViewOp(Blt::Axis* axisPtr, Tcl_Interp* interp, 

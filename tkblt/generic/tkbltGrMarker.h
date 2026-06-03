@@ -90,6 +90,7 @@ namespace Blt {
     virtual int pointIn(Point2d*) =0;
     virtual int regionIn(Region2d*, int) =0;
     virtual void print(PSOutput*) =0;
+    virtual void appendPdfData(Tcl_Interp*, Tcl_Obj*) =0;
 
     virtual ClassId classId() =0;
     virtual const char* className() =0;

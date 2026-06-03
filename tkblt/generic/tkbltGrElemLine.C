@@ -2439,6 +2439,27 @@ void LineElement::printTraces(PSOutput* psPtr, LinePen* penPtr)
   }
 }
 
+void LineElement::appendTracePoints(Tcl_Interp* interp, Tcl_Obj* listObjPtr)
+{
+  if (!traces_)
+    return;
+
+  for (ChainLink* link = Chain_FirstLink(traces_); link;
+       link = Chain_NextLink(link)) {
+    bltTrace* tracePtr = (bltTrace*)Chain_GetValue(link);
+    Tcl_Obj* traceObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+
+    for (int ii=0; ii<tracePtr->screenPts.length; ii++) {
+      Tcl_ListObjAppendElement(interp, traceObjPtr,
+			       Tcl_NewDoubleObj(tracePtr->screenPts.points[ii].x));
+      Tcl_ListObjAppendElement(interp, traceObjPtr,
+			       Tcl_NewDoubleObj(tracePtr->screenPts.points[ii].y));
+    }
+
+    Tcl_ListObjAppendElement(interp, listObjPtr, traceObjPtr);
+  }
+}
+
 void LineElement::printValues(PSOutput* psPtr, LinePen* penPtr, 
 			      int nSymbolPts, Point2d *symbolPts, 
 			      int *pointToData)
@@ -2471,5 +2492,3 @@ void LineElement::printValues(PSOutput* psPtr, LinePen* penPtr,
     ts.printText(psPtr, string, pp->x, pp->y);
   } 
 }
-
-

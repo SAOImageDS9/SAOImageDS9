@@ -475,6 +475,25 @@ proc PlotPDFFlushLine {pdf points} {
     }
 }
 
+proc PlotPDFDrawTrace {pdf trace ox oy px0 py0 px1 py1} {
+    set points {}
+    foreach {x y} $trace {
+	if {![string is double -strict $x] || ![string is double -strict $y]} {
+	    PlotPDFFlushLine $pdf $points
+	    set points {}
+	    continue
+	}
+	set px [PlotPDFClamp [expr $ox+$x] $px0 $px1]
+	set py [PlotPDFClamp [expr $oy+$y] $py0 $py1]
+	lappend points $px $py
+	if {[llength $points] >= 1000} {
+	    PlotPDFFlushLine $pdf $points
+	    set points [lrange $points end-1 end]
+	}
+    }
+    PlotPDFFlushLine $pdf $points
+}
+
 proc PlotPDFSymbol {pdf symbol x y size outline fill} {
     if {$symbol == {} || $symbol == {none} || $size <= 0} {
 	return
@@ -650,25 +669,36 @@ proc PlotPDFElement {pdf gr ox oy elem px0 py0 px1 py1} {
 	PlotPDFColor $pdf $color {}
 	$pdf setLineWidth $linewidth
 	PlotPDFSetDash $pdf $dash
-	set points {}
-	for {set ii 0} {$ii < $len} {incr ii} {
-	    set x [lindex $xs $ii]
-	    set y [lindex $ys $ii]
-	    if {![string is double -strict $x] || ![string is double -strict $y]} {
-		PlotPDFFlushLine $pdf $points
-		set points {}
-		continue
-	    }
-	    foreach {px py} [PlotPDFPoint $gr $ox $oy $x $y] {}
-	    set px [PlotPDFClamp $px $px0 $px1]
-	    set py [PlotPDFClamp $py $py0 $py1]
-	    lappend points $px $py
-	    if {[llength $points] >= 1000} {
-		PlotPDFFlushLine $pdf $points
-		set points [lrange $points end-1 end]
+
+	set drewTraces 0
+	if {![catch {$gr element traces $elem} traces] && [llength $traces]} {
+	    foreach trace $traces {
+		PlotPDFDrawTrace $pdf $trace $ox $oy $px0 $py0 $px1 $py1
+		set drewTraces 1
 	    }
 	}
-	PlotPDFFlushLine $pdf $points
+
+	if {!$drewTraces} {
+	    set points {}
+	    for {set ii 0} {$ii < $len} {incr ii} {
+		set x [lindex $xs $ii]
+		set y [lindex $ys $ii]
+		if {![string is double -strict $x] || ![string is double -strict $y]} {
+		    PlotPDFFlushLine $pdf $points
+		    set points {}
+		    continue
+		}
+		foreach {px py} [PlotPDFPoint $gr $ox $oy $x $y] {}
+		set px [PlotPDFClamp $px $px0 $px1]
+		set py [PlotPDFClamp $py $py0 $py1]
+		lappend points $px $py
+		if {[llength $points] >= 1000} {
+		    PlotPDFFlushLine $pdf $points
+		    set points [lrange $points end-1 end]
+		}
+	    }
+	    PlotPDFFlushLine $pdf $points
+	}
     }
 
     if {$symbol != {none} && $pixels > 0} {

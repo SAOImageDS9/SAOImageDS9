@@ -601,6 +601,32 @@ static int TypeOp(ClientData clientData, Tcl_Interp* interp,
   return TCL_OK;
 }
 
+static int TracesOp(ClientData clientData, Tcl_Interp* interp,
+		    int objc, Tcl_Obj* const objv[])
+{
+  Graph* graphPtr = (Graph*)clientData;
+
+  if (objc!=4) {
+    Tcl_WrongNumArgs(interp, 3, objv, "elemId");
+    return TCL_ERROR;
+  }
+
+  Element* elemPtr;
+  if (graphPtr->getElement(objv[3], &elemPtr) != TCL_OK)
+    return TCL_ERROR;
+
+  graphPtr->map();
+
+  Tcl_Obj* listObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+  if (elemPtr->classId() == CID_ELEM_LINE) {
+    LineElement* linePtr = (LineElement*)elemPtr;
+    linePtr->appendTracePoints(interp, listObjPtr);
+  }
+
+  Tcl_SetObjResult(interp, listObjPtr);
+  return TCL_OK;
+}
+
 const Ensemble Blt::elementEnsemble[] = {
   {"activate",   ActivateOp, 0},
   {"bind",       BindOp, 0},
@@ -615,6 +641,7 @@ const Ensemble Blt::elementEnsemble[] = {
   {"names",      NamesOp, 0},
   {"raise",      RaiseOp, 0},
   {"show",       ShowOp, 0},
+  {"traces",     TracesOp, 0},
   {"type",       TypeOp, 0},
   { 0,0,0 }
 };
@@ -648,5 +675,4 @@ static int GetIndex(Tcl_Interp* interp, Element* elemPtr,
 
   return TCL_OK;
 }
-
 

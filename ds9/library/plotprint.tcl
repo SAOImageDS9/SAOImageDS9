@@ -1047,18 +1047,41 @@ proc PlotPDFLegend {pdf gr ox oy px0 py0 px1 py1 elems fg bg} {
 	return
     }
 
+    set haveLegendExtents 0
+    if {![catch {$gr extents legend} legendExtents] && [llength $legendExtents] == 4} {
+	foreach {legx legy legw legh} $legendExtents {}
+	if {$legw > 0 && $legh > 0} {
+	    set haveLegendExtents 1
+	}
+    }
+
     switch -glob -- $position {
 	left* {
-	    set lx [expr max($ox+$pad, $px0-$legendW-8)]
-	    set ly [expr $py0 + (($py1-$py0)-$legendH)/2.]
+	    if {$haveLegendExtents} {
+		set lx [expr $ox+$legx]
+		set ly [expr $oy+$legy]
+	    } else {
+		set lx [expr max($ox+$pad, $px0-$legendW-8)]
+		set ly [expr $py0 + (($py1-$py0)-$legendH)/2.]
+	    }
 	}
 	top* {
-	    set lx [expr $px0 + (($px1-$px0)-$legendW)/2.]
-	    set ly [expr max($oy+$pad, $py0-$legendH-8)]
+	    if {$haveLegendExtents} {
+		set lx [expr $ox+$legx]
+		set ly [expr $oy+$legy]
+	    } else {
+		set lx [expr $px0 + (($px1-$px0)-$legendW)/2.]
+		set ly [expr max($oy+$pad, $py0-$legendH-8)]
+	    }
 	}
 	bottom* {
-	    set lx [expr $px0 + (($px1-$px0)-$legendW)/2.]
-	    set ly [expr min($oy+$height-$legendH-$pad, $py1+8)]
+	    if {$haveLegendExtents} {
+		set lx [expr $ox+$legx]
+		set ly [expr max($oy+$legy, $oy+$height-$legendH-$pad)]
+	    } else {
+		set lx [expr $px0 + (($px1-$px0)-$legendW)/2.]
+		set ly [expr min($oy+$height-$legendH-$pad, $py1+8)]
+	    }
 	}
 	plotarea -
 	xy {
@@ -1066,8 +1089,13 @@ proc PlotPDFLegend {pdf gr ox oy px0 py0 px1 py1 elems fg bg} {
 	    set ly [expr $py0+8]
 	}
 	default {
-	    set lx [expr min($ox+$width-$legendW-$pad, $px1+8)]
-	    set ly [expr $py0 + (($py1-$py0)-$legendH)/2.]
+	    if {$haveLegendExtents} {
+		set lx [expr $ox+$legx]
+		set ly [expr $oy+$legy]
+	    } else {
+		set lx [expr min($ox+$width-$legendW-$pad, $px1+8)]
+		set ly [expr $py0 + (($py1-$py0)-$legendH)/2.]
+	    }
 	}
     }
 
@@ -1252,9 +1280,20 @@ proc PlotPDFGraph {pdf gr ox oy varname cc} {
     if {$xtitle != {}} {
 	foreach {fontSize fontName} [PlotPDFFont [$gr xaxis cget -titlefont]] {}
 	set xtitlecolor [PlotPDFGet [list $gr xaxis cget -titlecolor] $xfg]
+	set xtitleY [expr $oy+$height-4]
+	set legendPosition [PlotPDFGet [list $gr legend cget -position] right]
+	if {![PlotPDFGet [list $gr legend cget -hide] 1] &&
+	    [string match -nocase bottom* $legendPosition] &&
+	    ![catch {$gr extents legend} legendExtents] &&
+	    [llength $legendExtents] == 4} {
+	    foreach {legx legy legw legh} $legendExtents {}
+	    if {$legw > 0 && $legh > 0} {
+		set xtitleY [expr min($xtitleY, $oy+$legy-4)]
+	    }
+	}
 	PlotPDFColor $pdf $xtitlecolor $xtitlecolor
 	$pdf setFont $fontSize $fontName
-	$pdf text $xtitle -x [expr ($px0+$px1)/2.] -y [expr $oy+$height-4] -align center
+	$pdf text $xtitle -x [expr ($px0+$px1)/2.] -y $xtitleY -align center
     }
 
     set ytitle [$gr yaxis cget -title]

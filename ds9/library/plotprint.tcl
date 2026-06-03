@@ -1380,10 +1380,16 @@ proc PlotPDFGraph {pdf gr ox oy varname cc} {
 
     PlotPDFDrawMarkers $pdf $gr $ox $oy $px0 $py0 $px1 $py1 0
 
-    PlotPDFColor $pdf $fg $fg
-    $pdf setLineWidth 1
-    $pdf setLineDash
-    $pdf rectangle $px0 $py0 $pw $ph -filled 0 -stroke 1
+    set plotBW [PlotPDFGet [list $gr cget -plotborderwidth] 0]
+    set plotRelief [PlotPDFGet [list $gr cget -plotrelief] flat]
+    if {$plotBW > 0 && ![string match -nocase flat $plotRelief]} {
+	PlotPDFColor $pdf $fg {}
+	$pdf setLineWidth $plotBW
+	$pdf setLineDash
+	set inset [expr $plotBW/2.]
+	$pdf rectangle [expr $px0-$inset] [expr $py0-$inset] \
+	    [expr $pw+2*$inset] [expr $ph+2*$inset] -filled 0 -stroke 1
+    }
 
     if {![catch {$gr axis names} axisNames]} {
 	foreach axis $axisNames {

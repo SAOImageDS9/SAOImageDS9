@@ -243,3 +243,4 @@ jobs:
           name: binary-${{ matrix.os }}
           path: dist/SAOImageDS9*exe
           archive: false
+          retention-days: 2

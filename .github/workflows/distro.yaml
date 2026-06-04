@@ -124,12 +124,12 @@ jobs:
           dnf install -y \
             make gcc gcc-c++ automake autoconf \
             libX11-devel zlib-devel libxml2-devel libxslt-devel libXft-devel \
-            zip tcl-devel tk-devel
+            zip tcl-devel tk-devel perl-FindBin which file
         elif [ "${{ matrix.pkg_mgr }}" == "zypper" ]; then
           zypper --non-interactive install \
             make gcc gcc-c++ automake autoconf \
             libX11-devel zlib-devel libxml2-devel libxslt-devel libXft-devel \
-            zip tcl-devel tk-devel
+            zip tcl-devel tk-devel which tar file
         fi
 
     - name: Configure

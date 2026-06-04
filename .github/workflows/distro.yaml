@@ -1,0 +1,156 @@
+name: build-multiarch-linux
+run-name: Build Multi-Arch Linux (x86_64 / ARM64)
+
+on:
+  workflow_dispatch:
+  #~ push:
+    #~ branches:
+    #~ - master
+    #~ tags:
+    #~ - '*'
+  #~ pull_request:
+
+# Cancels the previous pipeline for this ref if it is still running
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-linux:
+    defaults:
+      run:
+        shell: bash
+
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.runner }}
+    container:
+      image: ${{ matrix.container }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # === CentOS Stream 9 ===
+          - name: CentOS Stream 9 (x86_64)
+            runner: ubuntu-latest
+            container: quay.io/centos/centos:stream9
+            pkg_mgr: dnf
+            arch_label: centos-x86_64
+          - name: CentOS Stream 9 (ARM64)
+            runner: ubuntu-24.04-arm
+            container: quay.io/centos/centos:stream9
+            pkg_mgr: dnf
+            arch_label: centos-aarch64
+
+          # === Fedora ===
+          - name: Fedora Latest (x86_64)
+            runner: ubuntu-latest
+            container: fedora:latest
+            pkg_mgr: dnf
+            arch_label: fedora-x86_64
+          - name: Fedora Latest (ARM64)
+            runner: ubuntu-24.04-arm
+            container: fedora:latest
+            pkg_mgr: dnf
+            arch_label: fedora-aarch64
+
+          # === Ubuntu ===
+          - name: Ubuntu Latest (x86_64)
+            runner: ubuntu-latest
+            container: ubuntu:latest
+            pkg_mgr: apt
+            arch_label: ubuntu-x86_64
+          - name: Ubuntu Latest (ARM64)
+            runner: ubuntu-24.04-arm
+            container: ubuntu:latest
+            pkg_mgr: apt
+            arch_label: ubuntu-aarch64
+
+          # === OpenSUSE ===
+          - name: OpenSUSE Tumbleweed (x86_64)
+            runner: ubuntu-latest
+            container: opensuse/tumbleweed:latest
+            pkg_mgr: zypper
+            arch_label: opensuse-x86_64
+          - name: OpenSUSE Tumbleweed (ARM64)
+            runner: ubuntu-24.04-arm
+            container: opensuse/tumbleweed:latest
+            pkg_mgr: zypper
+            arch_label: opensuse-aarch64
+
+          # === Debian ===
+          - name: Debian Latest (x86_64)
+            runner: ubuntu-latest
+            container: debian:latest
+            pkg_mgr: apt
+            arch_label: debian-x86_64
+          - name: Debian Latest (ARM64)
+            runner: ubuntu-24.04-arm
+            container: debian:latest
+            pkg_mgr: apt
+            arch_label: debian-aarch64
+
+    steps:
+    - name: Pre-install core environment tools
+      run: |
+        if [ "${{ matrix.pkg_mgr }}" == "apt" ]; then
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get update -y
+          apt-get install -y git tar gzip
+        elif [ "${{ matrix.pkg_mgr }}" == "dnf" ]; then
+          # Special provision: CentOS Stream requires the CRB repo explicitly enabled for tcl/tk devel packages
+          if grep -q "CentOS" /etc/os-release; then
+            dnf install -y 'dnf-command(config-manager)'
+            dnf config-manager --set-enabled crb
+          fi
+          dnf install -y git tar gzip
+        elif [ "${{ matrix.pkg_mgr }}" == "zypper" ]; then
+          zypper --non-interactive refresh
+          zypper --non-interactive install git tar gzip
+        fi
+
+    - name: Checkout Code
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # 6.0.2
+
+    - name: Install build dependencies
+      run: |
+        if [ "${{ matrix.pkg_mgr }}" == "apt" ]; then
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get install -y \
+            make gcc g++ automake autoconf \
+            libx11-dev zlib1g-dev libxml2-dev libxslt1-dev libxft-dev \
+            zip tcl-dev tk-dev
+        elif [ "${{ matrix.pkg_mgr }}" == "dnf" ]; then
+          dnf install -y \
+            make gcc gcc-c++ automake autoconf \
+            libX11-devel zlib-devel libxml2-devel libxslt-devel libXft-devel \
+            zip tcl-devel tk-devel
+        elif [ "${{ matrix.pkg_mgr }}" == "zypper" ]; then
+          zypper --non-interactive install \
+            make gcc gcc-c++ automake autoconf \
+            libX11-devel zlib-devel libxml2-devel libxslt-devel libXft-devel \
+            zip tcl-devel tk-devel
+        fi
+
+    - name: Configure
+      env:
+        DS9_BUILD_OS: ${{ matrix.arch_label }}
+      run: |
+        unix/configure --with-arch=${DS9_BUILD_OS}
+
+    - name: Build
+      run: |
+        make && make dist
+
+    - name: Check executable
+      run: |
+        ./bin/ds9 -help
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v7
+      with:
+        name: binary-${{ matrix.arch_label }}
+        path: |
+            dist/ds9.${{ matrix.arch_label }}.*.tar.gz
+            dist/xpa.${{ matrix.arch_label }}.*.tar.gz
+        retention-days: 2

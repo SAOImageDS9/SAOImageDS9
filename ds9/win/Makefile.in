@@ -221,7 +221,7 @@ $(APPDIR)/scidthemes: $(prefix)/scidthemes
 	cp -fr $? "$@"
 
 $(LIBDIR)/pdf4tcl: $(prefix)/pdf4tcl
-	cp -prf $? "$@"
+	cp -rf $? "$@"
 
 # ------------------ssl
 $(APPDIR)/ssl: $(prefix)/openssl

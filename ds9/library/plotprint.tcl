@@ -59,9 +59,9 @@ proc PlotPrintDialog {} {
 
     ttk::label $f.color -text [msgcat::mc {Color}]
     ttk::radiobutton $f.rgb -text [msgcat::mc {RGB}] \
-	-variable ed(color) -value rgb 
+	-variable ed(color) -value rgb
     ttk::radiobutton $f.gray -text [msgcat::mc {Grayscale}] \
-	-variable ed(color) -value gray 
+	-variable ed(color) -value gray
 
     grid $f.color $f.rgb $f.gray -padx 2 -pady 2 -sticky w
 
@@ -1413,7 +1413,8 @@ proc PlotPDFGraph {pdf gr ox oy varname cc} {
 proc PlotPDF {varname fn} {
     upvar #0 $varname var
     global $varname
-
+    global pps
+    global ds9
     package require pdf4tcl
 
     update
@@ -1425,10 +1426,18 @@ proc PlotPDF {varname fn} {
 	set height [winfo reqheight $var(top)]
     }
 
+    set cmyk [expr {$pps(color) == "cmyk" ? 1 : 0}]
+
     set pdf [::pdf4tcl::new %AUTO% \
 		 -paper [list ${width}p ${height}p] \
 		 -margin 0 \
-		 -orient 1]
+		 -orient 1 \
+         -cmyk $cmyk ]
+
+    # Need to set font to work around a bug in pdf4tcl
+    $pdf setFont 12 Helvetica
+    $pdf metadata -creator "SAOImageDS9 $ds9(version,display)" \
+        -author [PDFUtilUserName]
 
     if {[catch {
 	set bg [$var(top) cget -background]

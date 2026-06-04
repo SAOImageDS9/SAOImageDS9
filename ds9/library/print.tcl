@@ -738,9 +738,43 @@ proc PDFCanvasGraphics {pdf} {
     $pdf setLineDash
 }
 
+proc PDFUtilUserName {} {
+    global env
+    if {[info exists env(USER)]} {
+        set username $env(USER)
+    } elseif {[info exists env(LOGNAME)]} {
+        set username $env(LOGNAME)
+    } else {
+        set username "unknown"
+    }
+
+    set fullName ""
+
+    # 2. Try to use getent safely
+    if {$username ne "unknown" && [catch {exec getent passwd $username} entry] == 0} {
+        # Success: Parse the string using pure Tcl routines
+        set fields [split $entry ":"]
+        set gecos [lindex $fields 4]
+        set fullName [lindex [split $gecos ","] 0]
+    }
+
+    # 3. Fallback: If getent failed, is missing, or fullName is blank
+    if {$fullName eq ""} {
+        if {[info exists env(LOGNAME)]} {
+            set fullName $env(LOGNAME)
+        } else {
+            set fullName $username
+        }
+    }
+
+    return $fullName
+}
+
+
 proc PDF {fn} {
     global ds9
     global ps
+    global pps
 
     RealizeDS9
     UpdateColormapLevel
@@ -749,13 +783,22 @@ proc PDF {fn} {
     set height [winfo height $ds9(canvas)]
     set bg [$ds9(canvas) cget -background]
 
+    set cmyk [expr {$pps(color) == "cmyk" ? 1 : 0}]
+    set title [$ds9(active) get fits file name]
+    set obj [$ds9(active) get fits object name]
+
     if {[catch {
 	package require pdf4tcl
-
 	set pdf [::pdf4tcl::new %AUTO% \
 		     -paper [list ${width}p ${height}p] \
 		     -margin 0 \
-		     -orient 1]
+		     -orient 1 \
+             -cmyk $cmyk]
+
+    # Need to set font to work around a bug in pdf4tcl
+    $pdf setFont 12 Helvetica
+    $pdf metadata -creator "SAOImageDS9 $ds9(version,display)" \
+        -title "$title" -subject "$obj" -author [PDFUtilUserName]
 
 	$pdf setFillColor $bg
 	$pdf rectangle 0 0 $width $height -filled 1 -stroke 0
@@ -871,11 +914,11 @@ proc PSPrintDialog {which} {
 
     ttk::label $f.color -text [msgcat::mc {Color}]
     ttk::radiobutton $f.rgb -text [msgcat::mc {RGB}] \
-	-variable ed(color) -value rgb 
+	-variable ed(color) -value rgb
     ttk::radiobutton $f.cmyk -text [msgcat::mc {CMYK}] \
-	-variable ed(color) -value cmyk 
+	-variable ed(color) -value cmyk
     ttk::radiobutton $f.gray -text [msgcat::mc {Grayscale}] \
-	-variable ed(color) -value gray 
+	-variable ed(color) -value gray
     ttk::label $f.level -text [msgcat::mc {Level}]
     ttk::radiobutton $f.level1 -text "[msgcat::mc {Level}] 1" \
 	-variable ed(level) -value 1
@@ -944,7 +987,7 @@ proc PrefsDialogPrint {} {
     set w $dprefs(tab)
 
     $dprefs(listbox) insert {} end -id [ttk::frame $w.print] \
-	-text [msgcat::mc {Postscript}]
+	-text [msgcat::mc {Postscript/PDF}]
 
     # PrintTo
     set f [ttk::labelframe $w.print.printto -text [msgcat::mc {Print To}]]
@@ -976,23 +1019,23 @@ proc PrefsDialogPrint {} {
     grid $f.file $f.tname $f.name $f.browse -padx 2 -pady 2 -sticky w
 
     # Options
-    set f [ttk::labelframe $w.print.ps -text [msgcat::mc {Postscript}]]
+    set f [ttk::labelframe $w.print.ps -text [msgcat::mc {Postscript/PDF}]]
 
     ttk::label $f.color -text [msgcat::mc {Color}]
     ttk::radiobutton $f.rgb -text [msgcat::mc {RGB}] \
-	-variable pps(color) -value rgb 
+	-variable pps(color) -value rgb
     ttk::radiobutton $f.cmyk -text [msgcat::mc {CMYK}] \
-	-variable pps(color) -value cmyk 
-    ttk::radiobutton $f.gray -text [msgcat::mc {Grayscale}] \
-	-variable pps(color) -value gray 
-    ttk::label $f.level -text [msgcat::mc {Level}]
+	-variable pps(color) -value cmyk
+    ttk::radiobutton $f.gray -text [msgcat::mc {Grayscale (PS only)}] \
+	-variable pps(color) -value gray
+    ttk::label $f.level -text [msgcat::mc {Level (PS only)}]
     ttk::radiobutton $f.level1 -text "[msgcat::mc {Level}] 1" \
 	-variable pps(level) -value 1
     ttk::radiobutton $f.level2 -text "[msgcat::mc {Level}] 2" \
 	-variable pps(level) -value 2
     ttk::radiobutton $f.level3 -text "[msgcat::mc {Level}] 3" \
 	-variable pps(level) -value 3
-    ttk::label $f.dpi -text [msgcat::mc {DPI}]
+    ttk::label $f.dpi -text [msgcat::mc {DPI (PS only)}]
 
     set m $f.resolution
     set mm $m.menu

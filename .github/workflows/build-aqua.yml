@@ -53,3 +53,4 @@ jobs:
         name: binary-${{ matrix.os }}
         path: dist/SAOImage*dmg
         archive: false
+        retention-days: 2

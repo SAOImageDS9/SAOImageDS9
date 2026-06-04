@@ -72,3 +72,4 @@ jobs:
         path: |
             dist/ds9.${{ matrix.os }}.*.tar.gz
             dist/xpa.${{ matrix.os }}.*.tar.gz
+        retention-days: 2

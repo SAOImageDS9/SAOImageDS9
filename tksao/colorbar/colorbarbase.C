@@ -105,11 +105,12 @@ static int CbPdfSetLineWidth(Tcl_Interp* interp, Tcl_Obj* pdfObj, double width)
 }
 
 static int CbPdfText(Tcl_Interp* interp, Tcl_Obj* pdfObj, const string& text,
-		     double x, double y, const char* align)
+		     double x, double y, const char* align,
+		     const char* fontName, double fontSize)
 {
   Tcl_Obj* fontArgs[2];
-  fontArgs[0] = Tcl_NewIntObj(10);
-  fontArgs[1] = Tcl_NewStringObj("Helvetica", -1);
+  fontArgs[0] = Tcl_NewDoubleObj(fontSize);
+  fontArgs[1] = Tcl_NewStringObj(fontName, -1);
   if (CbPdfMethod(interp, pdfObj, "setFont", 2, fontArgs) != TCL_OK)
     return TCL_ERROR;
 
@@ -724,8 +725,8 @@ int ColorbarBase::pdfImage(Tcl_Obj* pdfObj)
 {
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
 
-  int width = !opts->orientation ? options->width : opts->size;
-  int height = !opts->orientation ? opts->size : options->height;
+  int width = barWidth();
+  int height = barHeight();
   if (width <= 0 || height <= 0 || !colorCells || colorCount <= 0)
     return TCL_OK;
 
@@ -805,8 +806,8 @@ int ColorbarBase::pdfImage(Tcl_Obj* pdfObj)
   Tcl_Obj* imageId = Tcl_GetObjResult(interp);
   Tcl_IncrRefCount(imageId);
 
-  double x = originX;
-  double y = originY;
+  double x = originX + barX();
+  double y = originY + barY();
 
   Tcl_Obj* putArgs[9];
   putArgs[0] = imageId;
@@ -837,13 +838,13 @@ int ColorbarBase::pdfGrid(Tcl_Obj* pdfObj)
 {
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
 
-  int width = !opts->orientation ? options->width : opts->size;
-  int height = !opts->orientation ? opts->size : options->height;
+  int width = barWidth();
+  int height = barHeight();
   if (width <= 0 || height <= 0)
     return TCL_OK;
 
-  double x = originX;
-  double y = originY;
+  double x = originX + barX();
+  double y = originY + barY();
 
   double r = opts->fgColor ? opts->fgColor->red/65535. : 0;
   double g = opts->fgColor ? opts->fgColor->green/65535. : 0;
@@ -879,30 +880,39 @@ int ColorbarBase::pdfGrid(Tcl_Obj* pdfObj)
   if (!font)
     return TCL_OK;
 
+  const char* fontName =
+    psFontName(opts->font, opts->fontWeight, opts->fontSlant);
+#ifdef MAC_OSX_TK
+  double fontSize = opts->fontSize*getDisplayRatio();
+#else
+  double fontSize = opts->fontSize;
+#endif
+
   lutToText(font);
 
   int incrcnt = 0;
   for (int ii=0; rr == TCL_OK && ii<opts->ticks; ii++) {
     if (!opts->orientation) {
-      double xx = x + ii/double(opts->ticks-1)*options->width;
+      double xx = x + ii/double(opts->ticks-1)*width;
       double y1 = y + height;
       double y2 = y1 + TICKLEN;
       rr = CbPdfLine(interp, pdfObj, xx, y1, xx, y2);
 
       if (rr == TCL_OK && !incrcnt && ticktxt[ii])
 	rr = CbPdfText(interp, pdfObj, ticktxt[ii],
-		       xx, y2 + TICKGAP + opts->fontSize, "center");
+		       xx, y2 + TICKGAP + fontSize, "center",
+		       fontName, fontSize);
     }
     else {
       double x1 = x + width;
       double x2 = x1 + TICKLEN;
-      double yy = y + options->height -
-	ii/double(opts->ticks-1)*options->height;
+      double yy = y + height - ii/double(opts->ticks-1)*height;
       rr = CbPdfLine(interp, pdfObj, x1, yy, x2, yy);
 
       if (rr == TCL_OK && !incrcnt && ticktxt[ii])
 	rr = CbPdfText(interp, pdfObj, ticktxt[ii],
-		       x2 + TICKGAP, yy + opts->fontSize/2., "left");
+		       x2 + TICKGAP, yy + fontSize/2., "left",
+		       fontName, fontSize);
     }
 
     if (incrcnt < skipcnt)

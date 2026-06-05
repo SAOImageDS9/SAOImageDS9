@@ -656,6 +656,22 @@ proc FixPrefsVarOld {} {
 
     # 8.3
 
+    # 8.8
+    global colorbar
+    global pcolorbar
+    if {![info exists pcolorbar(center)]} {
+	set pcolorbar(center) 0.5
+    }
+    if {![info exists pcolorbar(width)]} {
+	set pcolorbar(width) 1
+    }
+    if {![info exists colorbar(center)]} {
+	set colorbar(center) $pcolorbar(center)
+    }
+    if {![info exists colorbar(width)]} {
+	set colorbar(width) $pcolorbar(width)
+    }
+
     # and fix any previous theme issues
     global pds9
     global ds9

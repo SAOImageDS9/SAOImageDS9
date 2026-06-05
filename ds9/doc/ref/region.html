@@ -121,8 +121,10 @@ The Highlite property specifies if the edit handles become visible when the regi
 <p><b>Callback</b></p>
 <p>The callback property registers a Tcl procedure to be called when a region event occurs. The format is:</p>
 <blockquote><tt>callback=&lt;event&gt; &lt;proc&gt; [&lt;arg&gt; ...]</tt></blockquote>
-<p>When the event fires, DS9 calls the Tcl procedure with any arguments specified in the region file, followed by the marker id. Supported events include selection and highlight events such as <tt>select</tt>, <tt>unselect</tt>, <tt>highlite</tt>, and <tt>unhighlite</tt>; geometry and editing events such as <tt>move</tt>, <tt>edit</tt>, <tt>rotate</tt>, and <tt>delete</tt>; property events such as <tt>text</tt>, <tt>color</tt>, <tt>width</tt>, <tt>font</tt>, and <tt>property</tt>; the <tt>key</tt> event; and begin/end forms such as <tt>begin move</tt>, <tt>end move</tt>, <tt>begin edit</tt>, <tt>end edit</tt>, <tt>begin rotate</tt>, and <tt>end rotate</tt>.</p>
-<tt>Example: circle(100,100,20) # callback=select HelloWorldCB {Hello World}</tt>
+<p>When the event fires, DS9 calls the Tcl procedure with any arguments specified in the region file, followed by the marker id. Supported events include selection and highlight events such as <tt>select</tt>, <tt>unselect</tt>, <tt>highlite</tt>, and <tt>unhighlite</tt>; geometry and editing events such as <tt>move</tt>, <tt>edit</tt>, <tt>rotate</tt>, and <tt>delete</tt>; property events such as <tt>text</tt>, <tt>color</tt>, <tt>width</tt>, <tt>font</tt>, and <tt>property</tt>; the <tt>key</tt> event; and begin/end forms such as <tt>begin move</tt>, <tt>end move</tt>, <tt>begin edit</tt>, <tt>end edit</tt>, <tt>begin rotate</tt>, and <tt>end rotate</tt>.
+
+</p>
+<tt>Example: circle(100,100,20) # callback=select HelloWorldCB {"Hello World"}</tt>
 <p>A simple Tcl callback may be loaded with the <tt>-source</tt> command line option before loading the region file:</p>
 <blockquote><tt>proc HelloWorldCB {message id} {<br>
 &nbsp;&nbsp;&nbsp;&nbsp;puts stderr "$message from region $id"<br>
@@ -130,9 +132,14 @@ The Highlite property specifies if the edit handles become visible when the regi
 <p>With a region file containing:</p>
 <blockquote><tt># Region file format: DS9 version 4.0<br>
 image<br>
-circle(100,100,20) # callback=select HelloWorldCB {Hello World}</tt></blockquote>
+circle(100,100,20) # callback=select HelloWorldCB {"Hello World"}</tt></blockquote>
 <p>For example:</p>
-<blockquote><tt>$ds9 -source hello.tcl -region hello.reg</tt></blockquote>
+<blockquote><tt>$ds9 img.fits -source hello.tcl -region hello.reg</tt></blockquote>
+<p>
+When the region is selected the text <code>Hello World from region 1</code> is displayed in the terminal where ds9 was started.
+</p>
+
+
 <p><b>Circle | Ellipse | Box | Polygon<br></b></p>
 <p>Circle, ellipse, box, and polygon regions may be rendered with outline or solid color fill. To indicate fill, use the fill property. A '1' indicates fill, '0' indicates no outline.</p>
 <tt>Example: circle(100,100,20) # fill=1</tt>

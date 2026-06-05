@@ -10,8 +10,8 @@ ColorbarTTrueColor8::ColorbarTTrueColor8(Tcl_Interp* i,Tk_Canvas c,Tk_Item* item
 
 void ColorbarTTrueColor8::updateColorsHorz()
 {
-  int width = options->width-2;
-  int height = ((ColorbarBaseOptions*)options)->size-2;
+  int width = xmap->width;
+  int height = xmap->height;
   char* data = xmap->data;
     
   unsigned char row[xmap->bytes_per_line];
@@ -56,8 +56,8 @@ void ColorbarTTrueColor8::updateColorsHorz()
 
 void ColorbarTTrueColor8::updateColorsVert()
 {
-  int width = ((ColorbarBaseOptions*)options)->size-2;
-  int height = options->height-2;
+  int width = xmap->width;
+  int height = xmap->height;
   char* data = xmap->data;
     
   for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {

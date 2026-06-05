@@ -221,6 +221,71 @@ ColorbarBase::~ColorbarBase()
   }
 }
 
+double ColorbarBase::clamp01(double value)
+{
+  if (value < 0)
+    return 0;
+  if (value > 1)
+    return 1;
+  return value;
+}
+
+int ColorbarBase::barX()
+{
+  ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
+
+  if (opts->orientation)
+    return 0;
+
+  int length = options->width;
+  int active = barWidth();
+  return (int)((length-active)*clamp01(opts->center)+.5);
+}
+
+int ColorbarBase::barY()
+{
+  ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
+
+  if (!opts->orientation)
+    return 0;
+
+  int length = options->height;
+  int active = barHeight();
+  return (int)((length-active)*(1-clamp01(opts->center))+.5);
+}
+
+int ColorbarBase::barWidth()
+{
+  ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
+
+  int length = !opts->orientation ? options->width : opts->size;
+  int active = !opts->orientation ? 
+    (int)(length*clamp01(opts->widthFactor)+.5) : length;
+
+  if (active < 3)
+    active = 3;
+  if (active > length)
+    active = length;
+
+  return active;
+}
+
+int ColorbarBase::barHeight()
+{
+  ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
+
+  int length = opts->orientation ? options->height : opts->size;
+  int active = opts->orientation ? 
+    (int)(length*clamp01(opts->widthFactor)+.5) : length;
+
+  if (active < 3)
+    active = 3;
+  if (active > length)
+    active = length;
+
+  return active;
+}
+
 int ColorbarBase::configure(int argc, const char* argv[], int flags)
 {
   if (Widget::configure(argc, argv, flags) == TCL_ERROR)
@@ -361,12 +426,12 @@ void ColorbarBase::lutToText(Tk_Font font)
 	  ww = aa;
       }
     }
-    skipcnt = (ww+2)*opts->ticks/opts->width;
+    skipcnt = (ww+2)*opts->ticks/barWidth();
   }
   else {
     // vertical
     int total = (metrics.linespace+1)*opts->ticks;
-    skipcnt = total/opts->height;
+    skipcnt = total/barHeight();
   }
 }
 
@@ -381,13 +446,13 @@ void ColorbarBase::updateColors()
 
   if (!((ColorbarBaseOptions*)options)->orientation) {
     updateColorsHorz();
-    TkPutImage(NULL,0,display, pixmap, widgetGC, xmap, 0, 0, 1, 1, 
-	      options->width-2, ((ColorbarBaseOptions*)options)->size-2);
+    TkPutImage(NULL,0,display, pixmap, widgetGC, xmap, 0, 0, 
+	       barX()+1, barY()+1, barWidth()-2, barHeight()-2);
   }
   else {
     updateColorsVert();
-    TkPutImage(NULL,0,display, pixmap, widgetGC, xmap, 0, 0, 1, 1, 
-	      ((ColorbarBaseOptions*)options)->size-2, options->height-2);
+    TkPutImage(NULL,0,display, pixmap, widgetGC, xmap, 0, 0, 
+	       barX()+1, barY()+1, barWidth()-2, barHeight()-2);
   }
 
   redraw();
@@ -458,8 +523,8 @@ int ColorbarBase::updatePixmap(const BBox& bb)
   if (!xmap) {
     if (!opts->orientation) {
       if (!(xmap = XGetImage(display, pixmap, 1, 1,
-			     options->width-2,
-			     opts->size-2,
+			     barWidth()-2,
+			     barHeight()-2,
 			     AllPlanes, ZPixmap))){
 	internalError("Colorbar: Unable to Create XImage");
 	return TCL_OK;
@@ -467,8 +532,8 @@ int ColorbarBase::updatePixmap(const BBox& bb)
     }
     else {
       if (!(xmap = XGetImage(display, pixmap, 1, 1,
-			     opts->size-2,
-			     options->height-2,
+			     barWidth()-2,
+			     barHeight()-2,
 			     AllPlanes, ZPixmap))){
 	internalError("Colorbar: Unable to Create XImage");
 	return TCL_OK;
@@ -532,12 +597,8 @@ void ColorbarBase::renderGrid()
 
   // box
   XSetForeground(display, widgetGC, opts->fgColor->pixel);
-  if (!opts->orientation)
-    XDrawRectangle(display, pixmap, widgetGC, 0, 0,
-		   options->width-1, opts->size-1);
-  else
-    XDrawRectangle(display, pixmap, widgetGC, 0, 0, 
-		   opts->size-1, options->height-1);
+  XDrawRectangle(display, pixmap, widgetGC, barX(), barY(),
+		 barWidth()-1, barHeight()-1);
 
   if (opts->numerics && lut)
     renderGridNumerics();
@@ -569,9 +630,9 @@ void ColorbarBase::renderGridNumerics()
   for (int ii=1; ii<opts->ticks-1; ii++) {
     if (!opts->orientation) {
       // horizontal
-      int ww = (int)(ii/double(opts->ticks-1)*opts->width);
-      int h = opts->size-1;
-      int hh = opts->size-1 + TICKLEN;
+      int ww = barX() + (int)(ii/double(opts->ticks-1)*barWidth());
+      int h = barY() + barHeight()-1;
+      int hh = h + TICKLEN;
       XDrawLine(display, pixmap, widgetGC, ww, h, ww, hh);
 
       if (!incrcnt) {
@@ -584,9 +645,10 @@ void ColorbarBase::renderGridNumerics()
     }
     else {
       // vertical
-      int w = opts->size-1;
-      int ww = opts->size-1 + TICKLEN;
-      int hh = opts->height - (int)(ii/double(opts->ticks-1)*opts->height);
+      int w = barX() + barWidth()-1;
+      int ww = w + TICKLEN;
+      int hh = barY() + barHeight() -
+	(int)(ii/double(opts->ticks-1)*barHeight());
       XDrawLine(display, pixmap, widgetGC, w, hh, ww, hh);
 
       if (!incrcnt) {
@@ -858,20 +920,23 @@ void ColorbarBase::ps()
 {
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
 
-  int& width = options->width;
-  int& height = options->height;
-  int& size = opts->size;
+  int width = barWidth();
+  int height = barHeight();
 
   // image
   Vector org = psOrigin();
-  if (!opts->orientation)
-    org += Vector(0,height-size);
+  if (!opts->orientation) {
+    org += Vector(barX(),barY());
+    org += Vector(0,options->height-height);
+  }
+  else
+    org += Vector(barX(),options->height-barY()-height);
   
   ostringstream str;
   str << org << " translate " << 1 << ' ' << 1 << " scale" << endl;
 
-  int ww = !opts->orientation ? width : size;
-  int hh = !opts->orientation ? size : height;
+  int ww = width;
+  int hh = height;
   switch (psLevel) {
   case 1:
     {
@@ -914,22 +979,20 @@ void ColorbarBase::psGrid()
 {
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
 
-  int& width = options->width;
-  int& height = options->height;
-  int& size = opts->size;
+  int width = barWidth();
+  int height = barHeight();
 
   // box
   int ww,hh;
   Vector org = psOrigin();
   if (!opts->orientation) {
-    ww = width;
-    hh = size;
-    org += Vector(0,height-size);
+    org += Vector(barX(),barY());
+    org += Vector(0,options->height-height);
   }
-  else {
-    ww = size;
-    hh = height;
-  }
+  else
+    org += Vector(barX(),options->height-barY()-height);
+  ww = width;
+  hh = height;
 
   Vector ll = Vector(0,0);
   Vector lr = Vector(ww,0);
@@ -993,7 +1056,7 @@ void ColorbarBase::psGridNumerics()
   for (int ii=0; ii<opts->ticks; ii++) {
     if (!opts->orientation) {
       // horizontal
-      int ww = (int)(ii/double(opts->ticks-1)*opts->width);
+      int ww = (int)(ii/double(opts->ticks-1)*barWidth());
       int h = 0;
       int hh = h-TICKLEN;
 
@@ -1022,9 +1085,9 @@ void ColorbarBase::psGridNumerics()
     }
     else {
       // vertical
-      int w = opts->size;
-      int ww = opts->size + TICKLEN;
-      int hh = (int)(ii/double(opts->ticks-1)*opts->height);
+      int w = barWidth();
+      int ww = barWidth() + TICKLEN;
+      int hh = (int)(ii/double(opts->ticks-1)*barHeight());
 
       ostringstream str;
       str << "newpath " << endl
@@ -1063,8 +1126,9 @@ void ColorbarBase::psGridAST()
 {
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
 
-  Vector oo;
-  Vector uu(options->width, options->height);
+  int yy = !opts->orientation ? barY() : options->height-barY()-barHeight();
+  Vector oo(barX(), yy);
+  Vector uu(barX()+barWidth(), yy+barHeight());
   float delta = 4*opts->fontSize;
 
   // clip rect (to remove ticks on inside)
@@ -1095,7 +1159,7 @@ void ColorbarBase::psGridAST()
 
   // grid
   if (grid)
-    grid->ps(psColorSpace, originX, originY);
+    grid->ps(psColorSpace, originX+barX(), originY+yy);
 }
 
 // Commands
@@ -1117,11 +1181,12 @@ void ColorbarBase::getValueCmd(int xx, int yy)
     ostringstream str;
     if (!opts->orientation) {
       // horizontal
-      id = (int)((xx-options->x) / float(options->width) * cnt);
+      id = (int)((xx-options->x-barX()) / float(barWidth()) * cnt);
     }
     else {
       // vertical
-      id = (int)((options->height - (yy-options->y)) / float(options->height) * cnt);
+      id = (int)((barHeight() - (yy-options->y-barY())) / 
+		 float(barHeight()) * cnt);
     }
 
     if (id<0)
@@ -1399,18 +1464,11 @@ void ColorbarBase::win32PrintCmd()
   // init
   win32Begin();
 
-  int ww,hh;
-  if (!opts->orientation) {
-    ww = options->width;
-    hh = opts->size;
-  }
-  else {
-    ww = opts->size;
-    hh = options->height;
-  }
+  int ww = barWidth();
+  int hh = barHeight();
 
   // image
-  win32(1, ww, hh, Vector(originX,originY), Vector(ww,hh));
+  win32(1, ww, hh, Vector(originX+barX(),originY+barY()), Vector(ww,hh));
 
   // grid
   if (opts->numerics && opts->space && grid) {
@@ -1427,26 +1485,15 @@ void ColorbarBase::win32Grid()
 {
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
 
-  int& width = options->width;
-  int& height = options->height;
-  int& size = opts->size;
-
-  Matrix mm = Translate(originX, originY);
+  Matrix mm = Translate(originX+barX(), originY+barY());
 
   win32Color(opts->fgColor);
   win32Dash(NULL,0);
   win32Width(.5);
 
   // box
-  int ww,hh;
-  if (!opts->orientation) {
-    ww = width;
-    hh = size;
-  }
-  else {
-    ww = size;
-    hh = height;
-  }
+  int ww = barWidth();
+  int hh = barHeight();
 
   Vector v[5];
   v[0] = Vector(0,0) * mm;
@@ -1464,7 +1511,7 @@ void ColorbarBase::win32Grid()
 void ColorbarBase::win32GridNumerics()
 {
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
-  Matrix mm = Translate(originX, originY);
+  Matrix mm = Translate(originX+barX(), originY+barY());
 
   // font
   Tk_Font font = getFont();
@@ -1483,9 +1530,9 @@ void ColorbarBase::win32GridNumerics()
   for (int ii=0; ii<opts->ticks; ii++) {
     if (!opts->orientation) {
       // horizontal
-      int ww = ii/double(opts->ticks-1)*opts->width;
-      int h = opts->size;
-      int hh = opts->size + TICKLEN;
+      int ww = ii/double(opts->ticks-1)*barWidth();
+      int h = barHeight();
+      int hh = barHeight() + TICKLEN;
       Vector vv[2];
       vv[0] = Vector(ww,h)*mm;
       vv[1] = Vector(ww,hh)*mm;
@@ -1500,9 +1547,9 @@ void ColorbarBase::win32GridNumerics()
     }
     else {
       // vertical
-      int w = opts->size;
-      int ww = opts->size + TICKLEN;
-      int hh = opts->height - (int)(ii/double(opts->ticks-1)*opts->height);
+      int w = barWidth();
+      int ww = barWidth() + TICKLEN;
+      int hh = barHeight() - (int)(ii/double(opts->ticks-1)*barHeight());
       Vector vv[2];
       vv[0] = Vector(w,hh)*mm;
       vv[1] = Vector(ww,hh)*mm;
@@ -1528,8 +1575,8 @@ void ColorbarBase::win32GridAST()
 {
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
 
-  Vector oo(originX, originY);
-  Vector uu(options->width, options->height);
+  Vector oo(originX+barX(), originY+barY());
+  Vector uu(barWidth(), barHeight());
   float delta = 4*opts->fontSize;
 
   if (!opts->orientation) {
@@ -1543,7 +1590,7 @@ void ColorbarBase::win32GridAST()
   win32Clip(oo,uu);
 
   if (grid)
-    grid->win32(originX, originY);
+    grid->win32(originX+barX(), originY+barY());
 }
 
 #endif

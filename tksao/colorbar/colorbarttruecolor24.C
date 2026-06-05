@@ -10,8 +10,8 @@ ColorbarTTrueColor24::ColorbarTTrueColor24(Tcl_Interp* i,Tk_Canvas c,Tk_Item* it
 
 void ColorbarTTrueColor24::updateColorsHorz()
 {
-  int width = options->width-2;
-  int height = ((ColorbarBaseOptions*)options)->size-2;
+  int width = xmap->width;
+  int height = xmap->height;
   char* data = xmap->data;
 
   switch (xmap->bits_per_pixel) {
@@ -29,8 +29,8 @@ void ColorbarTTrueColor24::updateColorsHorz()
 
 void ColorbarTTrueColor24::updateColorsVert()
 {
-  int width = ((ColorbarBaseOptions*)options)->size-2;
-  int height = options->height-2;
+  int width = xmap->width;
+  int height = xmap->height;
   char* data = xmap->data;
     
   switch (xmap->bits_per_pixel) {

@@ -361,12 +361,12 @@ void Colorbar::getTagCmd(int xx, int yy)
 
   int rr,ss;
   if (!opts->orientation) {
-    rr = xx;
-    ss = float(rr)/opts->width * colorCount;
+    rr = xx-barX();
+    ss = float(rr)/barWidth() * colorCount;
   }
   else {
-    rr = yy;
-    ss = (1-float(rr)/opts->height) * colorCount;
+    rr = yy-barY();
+    ss = (1-float(rr)/barHeight()) * colorCount;
   }
 
   ctags.head();
@@ -648,12 +648,12 @@ void Colorbar::tagDeleteCmd(int xx, int yy)
 
   int rr,ss;
   if (!opts->orientation) {
-    rr = xx;
-    ss = float(rr)/opts->width * colorCount;
+    rr = xx-barX();
+    ss = float(rr)/barWidth() * colorCount;
   }
   else {
-    rr = yy;
-    ss = (1-float(rr)/opts->height) * colorCount;
+    rr = yy-barY();
+    ss = (1-float(rr)/barHeight()) * colorCount;
   }
 
   ctags.head();
@@ -680,12 +680,12 @@ void Colorbar::tagEditBeginCmd(int xx, int yy, const char* color)
 
   int rr,ss;
   if (!opts->orientation) {
-    rr = xx;
-    ss = float(rr)/opts->width * colorCount;
+    rr = xx-barX();
+    ss = float(rr)/barWidth() * colorCount;
   }
   else {
-    rr = yy;
-    ss = (1-float(rr)/opts->height) * colorCount;
+    rr = yy-barY();
+    ss = (1-float(rr)/barHeight()) * colorCount;
   }
 
   ctags.head();
@@ -723,14 +723,14 @@ void Colorbar::tagEditMotionCmd(int xx, int yy)
   if (tag) {
     int rr,ss,tt;
     if (!opts->orientation) {
-      rr = xx;
-      ss = float(rr)/opts->width * colorCount;
-      tt = float(taginit)/opts->width *colorCount;
+      rr = xx-barX();
+      ss = float(rr)/barWidth() * colorCount;
+      tt = float(taginit)/barWidth() *colorCount;
     }
     else {
-      rr = yy;
-      ss = (1-float(rr)/opts->height) * colorCount;
-      tt = (1-float(taginit)/opts->height) *colorCount;
+      rr = yy-barY();
+      ss = (1-float(rr)/barHeight()) * colorCount;
+      tt = (1-float(taginit)/barHeight()) *colorCount;
     }
 
     switch (tagaction) {

@@ -6,6 +6,7 @@
 
 %start colorbarsend
 
+%token CENTER_
 %token LOCK_
 %token NUMERICS_
 %token ORIENTATION_
@@ -13,6 +14,7 @@
 %token SPACE_
 %token TICKS_
 %token VALUE_
+%token WIDTH_
 
 %%
 
@@ -27,8 +29,10 @@ colorbarsend : {ProcessSendCmdYesNo view colorbar}
  | FONTSLANT_ {ProcessSendCmdGet colorbar font,slant}
 # backward compatibility
  | FONTSTYLE_ {ProcessSendCmdGet colorbar font,weight}
+ | CENTER_ {ProcessSendCmdGet colorbar center}
  | SIZE_ {ProcessSendCmdGet colorbar size}
  | TICKS_ {ProcessSendCmdGet colorbar ticks}
+ | WIDTH_ {ProcessSendCmdGet colorbar width}
  ;
  
 %%

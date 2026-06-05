@@ -1,102 +1,142 @@
-/*
- *	Copyright (c) 1999-2003 Smithsonian Astrophysical Observatory
- */
+/* conf.h.in.  Generated from configure.ac by autoheader.  */
 
-/* Define as 1 if you have string.h  */
-#undef HAVE_STRING_H
-
-/* Define as 1 if you have strings.h  */
-#undef HAVE_STRINGS_H
-
-/* Define as 1 if you have stdlib.h  */
-#undef HAVE_STDLIB_H
-
-/* Define as 1 if you have stdint.h  */
-#undef HAVE_STDINT_H
-
-/* Define as 1 if you have malloc.h  */
-#undef HAVE_MALLOC_H
-
-/* Define as 1 if you have unistd.h  */
-#undef HAVE_UNISTD_H
-
-/* Define as 1 if you have getopt.h  */
-#undef HAVE_GETOPT_H
-
-/* Define as 1 if you have pwd.h  */
-#undef HAVE_PWD_H
-
-/* Define as 1 if you have values.h  */
-#undef HAVE_VALUES_H
-
-/* Define as 1 if you have dlfcn.h  */
-#undef HAVE_DLFCN_H
-
-/* Define as 1 if you have sys/un.h  */
-#undef HAVE_SYS_UN_H
-
-/* Define as 1 if you have sys/shm.h  */
-#undef HAVE_SYS_SHM_H
-
-/* Define as 1 if you have sys/mman.h  */
-#undef HAVE_SYS_MMAN_H
-
-/* Define as 1 if you have sys/select.h  */
-#undef HAVE_SYS_SELECT_H
-
-/* Define as 1 if you have sys/ipc.h  */
-#undef HAVE_SYS_IPC_H
-
-/* Define as 1 if you have setjmp.h  */
-#undef HAVE_SETJMP_H
-
-/* Define as 1 if you have socklen_t */
-#undef HAVE_SOCKLEN_T
-
-/* Define as 1 if you have strchr  */
-#undef HAVE_STRCHR
-
-/* Define as 1 if you have memcpy  */
-#undef HAVE_MEMCPY
-
-/* Define as 1 if you have snprintf  */
-#undef HAVE_SNPRINTF
-
-/* Define as 1 if you have setenv  */
-#undef HAVE_SETENV
-
-/* Define as 1 if you have posix_spawn  */
-#undef HAVE_POSIX_SPAWN
-
-/* Define as 1 if you have crt_externs.h  */
-#undef HAVE_CRT_EXTERNS_H
-
-/* Define as 1 if you have NSGetEvniron  */
-#undef HAVE__NSGETENVIRON
-
-/* Define as 1 if you have atexit  */
+/* Define to 1 if you have the 'atexit' function. */
 #undef HAVE_ATEXIT
 
-/* Define as 1 if you have getaddrinfo  */
-#undef HAVE_GETADDRINFO
+/* Define to 1 if you have the <crt_externs.h> header file. */
+#undef HAVE_CRT_EXTERNS_H
 
-/* Define as 1 if you have pthread library  */
-#undef HAVE_LIBPTHREAD
-
-/* Define as 1 if you need reentrant errno, etc.  */
-#undef _REENTRANT
-
-/* Define as 1 if you have Tcl  */
-#undef HAVE_TCL
-
-/* Define as 1 if you have Xt */
-#undef HAVE_XT
-
-/* Define as 1 if you have Gtk  */
-#undef HAVE_GTK
-
-/* Define as 1 if you are running Cygwin. */
+/* Define to 1 when building on Cygwin. */
 #undef HAVE_CYGWIN
 
-/* Define as 1 if you are running MinGW. */
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
+/* Define to 1 if you have the 'getaddrinfo' function. */
+#undef HAVE_GETADDRINFO
+
+/* Define to 1 if you have the <getopt.h> header file. */
+#undef HAVE_GETOPT_H
+
+/* Define to 1 if GTK support is enabled. */
+#undef HAVE_GTK
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if pthread is available. */
+#undef HAVE_LIBPTHREAD
+
+/* Define to 1 if you have the <malloc.h> header file. */
+#undef HAVE_MALLOC_H
+
+/* Define to 1 if you have the 'memcpy' function. */
+#undef HAVE_MEMCPY
+
+/* Define to 1 when building on MinGW. */
 #undef HAVE_MINGW32
+
+/* Define to 1 if you have the 'posix_spawn' function. */
+#undef HAVE_POSIX_SPAWN
+
+/* Define to 1 if you have the <pwd.h> header file. */
+#undef HAVE_PWD_H
+
+/* Define to 1 if you have the 'setenv' function. */
+#undef HAVE_SETENV
+
+/* Define to 1 if you have the <setjmp.h> header file. */
+#undef HAVE_SETJMP_H
+
+/* Define to 1 if you have the 'snprintf' function. */
+#undef HAVE_SNPRINTF
+
+/* Define to 1 if the system has the type 'socklen_t'. */
+#undef HAVE_SOCKLEN_T
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdio.h> header file. */
+#undef HAVE_STDIO_H
+
+/* Define to 1 if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the 'strchr' function. */
+#undef HAVE_STRCHR
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define to 1 if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the <sys/ipc.h> header file. */
+#undef HAVE_SYS_IPC_H
+
+/* Define to 1 if you have the <sys/mman.h> header file. */
+#undef HAVE_SYS_MMAN_H
+
+/* Define to 1 if you have the <sys/select.h> header file. */
+#undef HAVE_SYS_SELECT_H
+
+/* Define to 1 if you have the <sys/shm.h> header file. */
+#undef HAVE_SYS_SHM_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the <sys/un.h> header file. */
+#undef HAVE_SYS_UN_H
+
+/* Define to 1 if Tcl support is enabled. */
+#undef HAVE_TCL
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Define to 1 if you have the <values.h> header file. */
+#undef HAVE_VALUES_H
+
+/* Define to 1 if X Window support is available. */
+#undef HAVE_XT
+
+/* Define to 1 if you have the '_NSGetEnviron' function. */
+#undef HAVE__NSGETENVIRON
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* The size of 'long', as computed by sizeof. */
+#undef SIZEOF_LONG
+
+/* Define to 1 if all C89 standard headers are available. */
+#undef STDC_HEADERS
+
+/* Define to 1 if the X Window System is missing or not being used. */
+#undef X_DISPLAY_MISSING
+
+/* Define to 1 to enable reentrant library interfaces. */
+#undef _REENTRANT
+
+/* Define to empty if 'const' does not conform to ANSI C. */
+#undef const

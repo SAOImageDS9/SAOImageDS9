@@ -14,6 +14,10 @@ using namespace std;
 
 Tcl_Interp *global_interp =NULL;
 
+#define STR2(s) #s
+#define STR(s) STR2(s)
+#define DS9_TCLTK_VERSION STR(TCL_MAJOR_VERSION) "." STR(TCL_MINOR_VERSION)
+
 #define DEBUGS(x) {FILE* fp=fopen("debug.txt","a+");fprintf(fp,"%s\n",x);fclose(fp);}
 
 extern "C" {
@@ -73,7 +77,7 @@ int SAOLocalMainHook(int* argcPtr, char*** argvPtr)
   // we do it here before InitLibraryPath is called
   {
     strncpy(rr,ss,PATHSIZE);
-    strncat(rr,"/tcl8.6",PATHSIZE);
+    strncat(rr,"/tcl" DS9_TCLTK_VERSION,PATHSIZE);
     ostringstream str;
     str << "TCL_LIBRARY=" << rr << ends;
     putenv((char*)str.str().c_str());
@@ -81,7 +85,7 @@ int SAOLocalMainHook(int* argcPtr, char*** argvPtr)
   
   {
     strncpy(rr,ss,PATHSIZE);
-    strncat(rr,"/tk8.6",PATHSIZE);
+    strncat(rr,"/tk" DS9_TCLTK_VERSION,PATHSIZE);
     ostringstream str;
     str << "TK_LIBRARY=" << rr << ends;
     putenv((char*)str.str().c_str());

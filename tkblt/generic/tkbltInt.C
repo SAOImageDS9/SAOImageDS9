@@ -45,9 +45,9 @@ DLLEXPORT int Tkblt_Init(Tcl_Interp* interp)
 {
   Tcl_Namespace *nsPtr;
 
-  if (Tcl_InitStubs(interp, TCL_PATCH_LEVEL, 0) == NULL)
+  if (Tcl_InitStubs(interp, "8.6-10", 0) == NULL)
     return TCL_ERROR;
-  if (Tk_InitStubs(interp, TK_PATCH_LEVEL, 0) == NULL)
+  if (Tk_InitStubs(interp, "8.6-10", 0) == NULL)
     return TCL_ERROR;
 
   nsPtr = Tcl_FindNamespace(interp, "::blt", (Tcl_Namespace *)NULL, 0);

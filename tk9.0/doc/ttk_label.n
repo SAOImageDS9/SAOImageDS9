@@ -1,0 +1,75 @@
+'\"
+'\" Copyright (c) 2004 Joe English
+'\"
+'\" See the file "license.terms" for information on usage and redistribution
+'\" of this file, and for a DISCLAIMER OF ALL WARRANTIES.
+'\"
+.TH ttk::label n 8.5 Tk "Tk Themed Widget"
+.so man.macros
+.BS
+.SH NAME
+ttk::label \- Display a text string and/or image
+.SH SYNOPSIS
+\fBttk::label\fI pathName \fR?\fIoptions\fR?
+.BE
+.SH DESCRIPTION
+.PP
+A \fBttk::label\fR widget displays a textual label and/or image.
+The label may be linked to a Tcl variable
+to automatically change the displayed text.
+.SO ttk_widget
+\-anchor	\-class	\-compound
+\-cursor	\-font	\-foreground
+\-image	\-justify	\-padding
+\-state	\-style	\-takefocus
+\-text	\-textvariable	\-underline
+\-width	\-wraplength
+.SE
+.SH "WIDGET-SPECIFIC OPTIONS"
+.OP \-background frameColor FrameColor
+The widget's background color.
+If unspecified, the theme default is used.
+.OP \-relief relief Relief
+.\" Rewrite this:
+Specifies the 3-D effect desired for the widget border.
+Valid values are
+\fBflat\fR, \fBgroove\fR, \fBraised\fR, \fBridge\fR, \fBsolid\fR,
+and \fBsunken\fR.
+.OP \-wraplength wrapLength WrapLength
+Specifies the maximum line length (in pixels).
+If this option is negative or zero,
+then automatic wrapping is not performed; otherwise
+the text is split into lines such that no line is longer
+than the specified value.
+.SH "WIDGET COMMAND"
+.PP
+Label widgets support the standard commands
+\fBcget\fR, \fBconfigure\fR, \fBidentify element\fR, \fBinstate\fR,
+\fBstate\fR and \fBstyle\fR
+(see \fBttk::widget\fR).
+.SH "STYLING OPTIONS"
+.PP
+The class name for a \fBttk::label\fP is \fBTLabel\fP.
+.PP
+Dynamic states: \fBdisabled\fP, \fBreadonly\fP.
+.PP
+\fBTLabel\fP styling options configurable with \fBttk::style\fP
+are:
+.PP
+\fB\-background\fP \fIcolor\fP
+.br
+\fB\-compound\fP \fIcompound\fP
+.br
+\fB\-foreground\fP \fIcolor\fP
+.br
+\fB\-font\fP \fIfont\fP
+.PP
+Some options are only available for specific themes.
+.PP
+See the \fBttk::style\fP manual page for information on how to configure
+ttk styles.
+.SH "SEE ALSO"
+ttk::widget(n), label(n)
+'\" Local Variables:
+'\" mode: nroff
+'\" End:

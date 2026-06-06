@@ -1,0 +1,53 @@
+#
+# Tests for the "ttk::style layout" command
+#
+
+#
+# TESTFILE INITIALIZATION
+#
+
+package require tcltest 2.2; # needed in mode -singleproc 0
+
+# Load the main script main.tcl, which takes care of:
+# - setup for the application and the root window
+# - importing commands from the tcltest namespace
+# - loading of the testutils mechanism along with its utility procs
+# - loading of Tk specific test constraints (additionally to constraints
+#   provided by the package tcltest)
+source [file join [file dirname [tcltest::configure -testdir]] main.tcl]
+
+# Ensure a pristine initial window state
+resetWindows
+
+#
+# TESTS
+#
+
+test layout-1.1 "Size computations for mixed-orientation layouts" -body {
+    ttk::style theme use default
+
+    set block [image create photo -width 10 -height 10]
+    ttk::style element create block image $block
+    ttk::style layout Blocks {
+	border -children { block } -side left
+	border -children { block } -side top
+	border -children { block } -side bottom
+    }
+    ttk::style configure Blocks -borderwidth 1 -relief raised
+    ttk::button .b -style Blocks
+
+    pack .b -expand true -fill both
+
+    list [winfo reqwidth .b] [winfo reqheight .b]
+
+} -cleanup { destroy .b } -result [list 24 24]
+
+test layout-2 "Empty -children not allowed" -body {
+    ttk::style layout Test.Tentry {Entry.field -children {}}
+} -returnCodes error -result {Invalid -children value}
+
+#
+# TESTFILE CLEANUP
+#
+
+tcltest::cleanupTests

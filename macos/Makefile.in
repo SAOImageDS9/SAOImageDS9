@@ -60,16 +60,16 @@ tcl	: tcl$(TCL_VERSION)/macosx/Makefile
 
 # install include, lib
 	cp -p $(TCLFILES) include/.
-	cp -p build/tcl/Tcl.framework/libtclstub8.6.a lib/.
-	cp -rp build/tcl/Tcl.framework/Versions/8.6/Resources/Scripts lib/tcl8.6
-	cp -rp build/tcl/Tcl.framework/Versions/8.6/Resources/tcl8 lib/.
+	cp -p build/tcl/Tcl.framework/libtclstub$(TCL_VERSION).a lib/.
+	cp -rp build/tcl/Tcl.framework/Versions/$(TCL_VERSION)/Resources/Scripts lib/tcl$(TCL_VERSION)
+	cp -rp build/tcl/Tcl.framework/Versions/$(TCL_VERSION)/Resources/tcl$(TCL_MAJOR_VERSION) lib/.
 
 # we need this also
-	install_name_tool -change /Library/Frameworks/Tcl.framework/Versions/8.6/Tcl @executable_path/../Tcl.framework/Tcl build/tcl/Development/tclsh
+	install_name_tool -change /Library/Frameworks/Tcl.framework/Versions/$(TCL_VERSION)/Tcl @executable_path/../Tcl.framework/Tcl build/tcl/Development/tclsh
 
 # we need a working tclsh later
-	cp -p build/tcl/tclsh8.6 bin/.
-	install_name_tool -change /Library/Frameworks/Tcl.framework/Versions/8.6/Tcl @executable_path/../build/tcl/Tcl.framework/Tcl bin/tclsh8.6
+	cp -p build/tcl/tclsh$(TCL_VERSION) bin/.
+	install_name_tool -change /Library/Frameworks/Tcl.framework/Versions/$(TCL_VERSION)/Tcl @executable_path/../build/tcl/Tcl.framework/Tcl bin/tclsh$(TCL_VERSION)
 
 tcl$(TCL_VERSION)/macosx/Makefile :
 	@echo ""
@@ -87,17 +87,17 @@ tk	: tk$(TCL_VERSION)/macosx/Makefile
 
 # install include, lib
 	cp -p $(TKFILES) include/.
-	cp -p build/tk/Tk.framework/libtkstub8.6.a lib/.
-	cp -rp build/tk/Tk.framework/Versions/8.6/Resources/Scripts lib/tk8.6
+	cp -p build/tk/Tk.framework/libtkstub$(TCL_VERSION).a lib/.
+	cp -rp build/tk/Tk.framework/Versions/$(TCL_VERSION)/Resources/Scripts lib/tk$(TCL_VERSION)
 
 # we need this also
-	install_name_tool -change /Library/Frameworks/Tcl.framework/Versions/8.6/Tcl @executable_path/../Tcl.framework/Tcl build/tk/Development/wish
-	install_name_tool -change /Library/Frameworks/Tk.framework/Versions/8.6/Tk @executable_path/../Tk.framework/Tk build/tk/Development/wish
+	install_name_tool -change /Library/Frameworks/Tcl.framework/Versions/$(TCL_VERSION)/Tcl @executable_path/../Tcl.framework/Tcl build/tk/Development/wish
+	install_name_tool -change /Library/Frameworks/Tk.framework/Versions/$(TCL_VERSION)/Tk @executable_path/../Tk.framework/Tk build/tk/Development/wish
 
-# fix wish8.6
-	cp -p build/tk/wish8.6 bin/.
-	install_name_tool -change /Library/Frameworks/Tcl.framework/Versions/8.6/Tcl @executable_path/../build/tcl/Tcl.framework/Tcl bin/wish8.6
-	install_name_tool -change /Library/Frameworks/Tk.framework/Versions/8.6/Tk @executable_path/../build/tk/Tk.framework/Tk bin/wish8.6
+# fix wish
+	cp -p build/tk/wish$(TCL_VERSION) bin/.
+	install_name_tool -change /Library/Frameworks/Tcl.framework/Versions/$(TCL_VERSION)/Tcl @executable_path/../build/tcl/Tcl.framework/Tcl bin/wish$(TCL_VERSION)
+	install_name_tool -change /Library/Frameworks/Tk.framework/Versions/$(TCL_VERSION)/Tk @executable_path/../build/tk/Tk.framework/Tk bin/wish$(TCL_VERSION)
 
 tk$(TCL_VERSION)/macosx/Makefile :
 	@echo ""
@@ -179,29 +179,29 @@ tcldistclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tcl$(TCL_VERSION)/macosx distclean
 	rm -rf \
-	tcl8.6/macosx/Makefile \
-	tcl8.6/macosx/Tcl-Info.plist \
-	tcl8.6/macosx/Tclsh-Info.plist \
-	tcl8.6/macosx/config.log \
-	tcl8.6/macosx/config.status \
-	tcl8.6/macosx/dltest/ \
-	tcl8.6/macosx/tcl.pc \
-	tcl8.6/macosx/tclConfig.h \
-	tcl8.6/macosx/tclConfig.sh
+	tcl$(TCL_VERSION)/macosx/Makefile \
+	tcl$(TCL_VERSION)/macosx/Tcl-Info.plist \
+	tcl$(TCL_VERSION)/macosx/Tclsh-Info.plist \
+	tcl$(TCL_VERSION)/macosx/config.log \
+	tcl$(TCL_VERSION)/macosx/config.status \
+	tcl$(TCL_VERSION)/macosx/dltest/ \
+	tcl$(TCL_VERSION)/macosx/tcl.pc \
+	tcl$(TCL_VERSION)/macosx/tclConfig.h \
+	tcl$(TCL_VERSION)/macosx/tclConfig.sh
 
 tkdistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/macosx distclean
 	rm -rf \
-	tk8.6/macosx/Makefile \
-	tk8.6/macosx/Tk-Info.plist \
-	tk8.6/macosx/Wish-Info.plist \
-	tk8.6/macosx/config.log \
-	tk8.6/macosx/config.status \
-	tk8.6/macosx/tk.pc \
-	tk8.6/macosx/tkConfig.h \
-	tk8.6/macosx/tkConfig.sh
+	tk$(TCL_VERSION)/macosx/Makefile \
+	tk$(TCL_VERSION)/macosx/Tk-Info.plist \
+	tk$(TCL_VERSION)/macosx/Wish-Info.plist \
+	tk$(TCL_VERSION)/macosx/config.log \
+	tk$(TCL_VERSION)/macosx/config.status \
+	tk$(TCL_VERSION)/macosx/tk.pc \
+	tk$(TCL_VERSION)/macosx/tkConfig.h \
+	tk$(TCL_VERSION)/macosx/tkConfig.sh
 
 osdistclean : tclsignaldistclean tkmacosxdistclean
 

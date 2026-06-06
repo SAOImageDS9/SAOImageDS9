@@ -76,8 +76,10 @@ TEA_LOAD_CONFIG(tclxml)
 TEA_PATH_CONFIG(tclxmlrpc)
 TEA_LOAD_CONFIG(tclxmlrpc)
 
-TEA_PATH_CONFIG(tclzipfs)
-TEA_LOAD_CONFIG(tclzipfs)
+if test "${TCL_MAJOR_VERSION}" -lt 9; then
+    TEA_PATH_CONFIG(tclzipfs)
+    TEA_LOAD_CONFIG(tclzipfs)
+fi
 
 TEA_PATH_CONFIG(tls)
 TEA_LOAD_CONFIG(tls)
@@ -144,7 +146,7 @@ AC_PROG_CXX
 
 #TEA_ADD_SOURCES([sample.c tclsample.c])
 #TEA_ADD_HEADERS([])
-TEA_ADD_INCLUDES([-I${prefix}/tk8.6/unix])
+TEA_ADD_INCLUDES([-I${prefix}/tk${TCL_VERSION}/unix])
 #TEA_ADD_LIBS()
 #TEA_ADD_CFLAGS([])
 #TEA_ADD_STUB_SOURCES([])

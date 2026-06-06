@@ -11,7 +11,7 @@
 /* Check, if Tcl version supports Tcl_Size,
    which was introduced in Tcl 8.7 and 9.
 */
-#if TCL_MAJOR_VERSION <= 8 && TCL_MINOR_VERSION <= 6
+#ifndef TCL_SIZE_MAX
 typedef int Tcl_Size;
 #endif
 
@@ -2689,9 +2689,9 @@ int Tclxpa_Init (vinterp)
 
   if(
 #ifdef USE_TCL_STUBS
-     Tcl_InitStubs(interp, "8.4", 0)
+     Tcl_InitStubs(interp, "8.4-10", 0)
 #else
-     Tcl_PkgRequire(interp, "Tcl", "8.4", 0)
+     Tcl_PkgRequire(interp, "Tcl", "8.4-10", 0)
 #endif
      == NULL) {
     return TCL_ERROR;

@@ -12,6 +12,8 @@ mandir		= @mandir@
 TCLSH_PROG      = @TCLSH_PROG@
 
 TCL_VERSION	= @TCL_VERSION@
+TCL_MAJOR_VERSION = $(firstword $(subst ., ,$(TCL_VERSION)))
+TCL_MINOR_VERSION = $(word 2,$(subst ., ,$(TCL_VERSION)))
 TCL_LIB_SPEC	= @TCL_LIB_SPEC@
 TCL_STUB_LIB_SPEC= @TCL_STUB_LIB_SPEC@
 TK_LIBS		= @TK_LIBS@
@@ -58,7 +60,7 @@ DLLDIR		= /usr/$(CC:-gcc=)/sys-root/mingw/bin
 INCLUDES	= @PKG_INCLUDES@ @TCL_INCLUDES@ @TK_INCLUDES@ @TK_XINCLUDES@
 
 PKG_CFLAGS	= @PKG_CFLAGS@
-DEFS		= @DEFS@ $(PKG_CFLAGS)
+DEFS		= @DEFS@ $(PKG_CFLAGS) -DTCL_MAJOR_VERSION=$(TCL_MAJOR_VERSION) -DTCL_MINOR_VERSION=$(TCL_MINOR_VERSION)
 
 CPPFLAGS	= @CPPFLAGS@
 LIBS		= @PKG_LIBS@ @LIBS@ @XML2_LIBS@
@@ -125,7 +127,7 @@ LLIBS	= \
 PREQS	= \
 	$(APPDIR) \
 	$(APPDIR)/tcl$(TCL_VERSION) \
-	$(APPDIR)/tcl8 \
+	$(APPDIR)/tcl$(TCL_MAJOR_VERSION) \
 	$(APPDIR)/tk$(TCL_VERSION) \
 	$(LIBDIR)/library \
 	$(LIBDIR)/msgs \
@@ -199,7 +201,7 @@ $(APPDIR):
 $(APPDIR)/tcl$(TCL_VERSION) : $(prefix)/lib/tcl$(TCL_VERSION)
 	cp -fr $? $@
 
-$(APPDIR)/tcl8 : $(prefix)/lib/tcl8
+$(APPDIR)/tcl$(TCL_MAJOR_VERSION) : $(prefix)/lib/tcl$(TCL_MAJOR_VERSION)
 	cp -fr $? $@
 
 $(APPDIR)/tk$(TCL_VERSION) : $(prefix)/lib/tk$(TCL_VERSION)

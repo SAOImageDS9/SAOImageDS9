@@ -37,10 +37,8 @@ using namespace std;
 
 #include <tk.h>
 
-/* Check, if Tcl version supports Tcl_Size,
-   which was introduced in Tcl 8.7 and 9.
-*/
-#if TCL_MAJOR_VERSION <= 8 && TCL_MINOR_VERSION <= 6
+/* Tcl 8.6 compatibility for APIs that use Tcl_Size in Tcl 8.7/9. */
+#ifndef TCL_SIZE_MAX
 typedef int Tcl_Size;
 #endif
 

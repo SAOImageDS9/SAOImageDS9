@@ -1,5 +1,5 @@
-# tcl 8.6.15
-# tk 8.6.15
+# tcl 9.0.3
+# tk 9.0.3
 # tcllib 1.20
 # tklib .7
 
@@ -31,7 +31,8 @@
 
 DS9_VERSION	= 8.8
 XPA_VERSION	= 2.1.20
-TCL_VERSION	= 8.6
+TCL_VERSION	= 9.0
+TCL_MAJOR_VERSION = $(firstword $(subst ., ,$(TCL_VERSION)))
 
 Tidy = \
 	cd $(1); \
@@ -530,14 +531,14 @@ tktable/Makefile :
 
 language:
 	cd ds9; \
-	grep 'msgcat::mc' library/*.tcl | tclsh8.6 util/mergedict.tcl da iso8859-1; \
-	grep 'msgcat::mc' library/*.tcl | tclsh8.6 util/mergedict.tcl de iso8859-1; \
-	grep 'msgcat::mc' library/*.tcl | tclsh8.6 util/mergedict.tcl es iso8859-1; \
-	grep 'msgcat::mc' library/*.tcl | tclsh8.6 util/mergedict.tcl fr iso8859-1; \
-	grep 'msgcat::mc' library/*.tcl | tclsh8.6 util/mergedict.tcl pt iso8859-1; \
-	grep 'msgcat::mc' library/*.tcl | tclsh8.6 util/mergedict.tcl cs iso8859-2; \
-	grep 'msgcat::mc' library/*.tcl | tclsh8.6 util/mergedict.tcl ja euc-jp; \
-	grep 'msgcat::mc' library/*.tcl | tclsh8.6 util/mergedict.tcl zh big5
+	grep 'msgcat::mc' library/*.tcl | tclsh$(TCL_VERSION) util/mergedict.tcl da iso8859-1; \
+	grep 'msgcat::mc' library/*.tcl | tclsh$(TCL_VERSION) util/mergedict.tcl de iso8859-1; \
+	grep 'msgcat::mc' library/*.tcl | tclsh$(TCL_VERSION) util/mergedict.tcl es iso8859-1; \
+	grep 'msgcat::mc' library/*.tcl | tclsh$(TCL_VERSION) util/mergedict.tcl fr iso8859-1; \
+	grep 'msgcat::mc' library/*.tcl | tclsh$(TCL_VERSION) util/mergedict.tcl pt iso8859-1; \
+	grep 'msgcat::mc' library/*.tcl | tclsh$(TCL_VERSION) util/mergedict.tcl cs iso8859-2; \
+	grep 'msgcat::mc' library/*.tcl | tclsh$(TCL_VERSION) util/mergedict.tcl ja euc-jp; \
+	grep 'msgcat::mc' library/*.tcl | tclsh$(TCL_VERSION) util/mergedict.tcl zh big5
 
 #-------------------------- tidy
 
@@ -730,8 +731,8 @@ localdistclean :
 	@echo "*** $@ ***"
 	$(RM) -f core *~ *#
 	$(RM) -f config.log config.status config.cache Makefile
-	$(RM) -f tk8.6/unix/Credits.html
-	$(RM) -f tk8.6/macosx/Credits.html
+	$(RM) -f tk$(TCL_VERSION)/unix/Credits.html
+	$(RM) -f tk$(TCL_VERSION)/macosx/Credits.html
 
 openssldistclean :
 	@echo ""
@@ -853,4 +854,3 @@ xpadistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C xpa distclean
-

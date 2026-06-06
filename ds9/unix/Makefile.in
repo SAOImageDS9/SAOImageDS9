@@ -12,6 +12,7 @@ mandir		= @mandir@
 TCLSH_PROG	= @TCLSH_PROG@
 
 TCL_VERSION	= @TCL_VERSION@
+TCL_MAJOR_VERSION = $(firstword $(subst ., ,$(TCL_VERSION)))
 TCL_LIB_SPEC	= @TCL_LIB_SPEC@
 TCL_STUB_LIB_SPEC= @TCL_STUB_LIB_SPEC@
 TK_LIBS		= @TK_LIBS@
@@ -36,6 +37,10 @@ tclxml_LIB_SPEC	= @tclxml_LIB_SPEC@
 tclxmlrpc_LIB_SPEC= @tclxmlrpc_LIB_SPEC@
 tclzipfs_LIB_SPEC= @tclzipfs_LIB_SPEC@
 tls_LIB_SPEC	=@tls_LIB_SPEC@
+
+ifeq ($(TCL_MAJOR_VERSION),9)
+tclzipfs_LIB_SPEC =
+endif
 
 tkblt_LIB_SPEC	= @tkblt_LIB_SPEC@
 tkhtml1_LIB_SPEC= @tkhtml1_LIB_SPEC@
@@ -127,7 +132,7 @@ LLIBS	= \
 PREQS	= \
 	$(APPDIR) \
 	$(LIBDIR)/tcl$(TCL_VERSION) \
-	$(LIBDIR)/tcl8 \
+	$(LIBDIR)/tcl$(TCL_MAJOR_VERSION) \
 	$(LIBDIR)/tk$(TCL_VERSION) \
 	$(LIBDIR)/library \
 	$(LIBDIR)/msgs \
@@ -216,8 +221,8 @@ $(APPDIR) :
 $(LIBDIR)/tcl$(TCL_VERSION) :
 	cp -prf $(prefix)/lib/tcl$(TCL_VERSION) $(LIBDIR)/.
 
-$(LIBDIR)/tcl8 :
-	cp -prf $(prefix)/lib/tcl8 $(LIBDIR)/.
+$(LIBDIR)/tcl$(TCL_MAJOR_VERSION) :
+	cp -prf $(prefix)/lib/tcl$(TCL_MAJOR_VERSION) $(LIBDIR)/.
 
 $(LIBDIR)/tk$(TCL_VERSION) :
 	cp -prf $(prefix)/lib/tk$(TCL_VERSION) $(LIBDIR)/.

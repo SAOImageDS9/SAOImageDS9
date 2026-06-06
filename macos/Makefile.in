@@ -39,6 +39,14 @@ TKFILES = \
 	tk$(TCL_VERSION)/generic/tkIntXlibDecls.h \
 	tk$(TCL_VERSION)/macosx/tkMacOSX.h
 
+ifeq ($(TCL_MAJOR_VERSION),9)
+TCL_STUB_LIB	= libtclstub.a
+TK_STUB_LIB	= libtkstub.a
+else
+TCL_STUB_LIB	= libtclstub$(TCL_VERSION).a
+TK_STUB_LIB	= libtkstub$(TCL_VERSION).a
+endif
+
 #--------------------------build
 
 .PHONY	: saods9 tcl tk tkmacosx
@@ -61,7 +69,7 @@ tcl	: tcl$(TCL_VERSION)/macosx/Makefile
 
 # install include, lib
 	cp -p $(TCLFILES) include/.
-	cp -p build/tcl/Tcl.framework/libtclstub$(TCL_VERSION).a lib/.
+	cp -p build/tcl/Tcl.framework/$(TCL_STUB_LIB) lib/.
 	cp -rp build/tcl/Tcl.framework/Versions/$(TCL_VERSION)/Resources/Scripts lib/tcl$(TCL_VERSION)
 	cp -rp build/tcl/Tcl.framework/Versions/$(TCL_VERSION)/Resources/tcl$(TCL_MAJOR_VERSION) lib/.
 
@@ -88,7 +96,7 @@ tk	: tk$(TCL_VERSION)/macosx/Makefile
 
 # install include, lib
 	cp -p $(TKFILES) include/.
-	cp -p build/tk/Tk.framework/libtkstub$(TCL_VERSION).a lib/.
+	cp -p build/tk/Tk.framework/$(TK_STUB_LIB) lib/.
 	cp -rp build/tk/Tk.framework/Versions/$(TCL_VERSION)/Resources/Scripts lib/tk$(TCL_VERSION)
 
 # we need this also

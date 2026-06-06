@@ -225,7 +225,8 @@ tls/Makefile :
 xpa	: xpa/Makefile
 	@echo ""
 	@echo "*** $@ ***"
-	$(MAKE) -C xpa -j $(JOBS) install
+	$(MAKE) -C xpa -j $(JOBS) install \
+	TCL_CFLAGS="-I$(prefix)/tcl$(TCL_VERSION)/generic -I$(prefix)/tcl$(TCL_VERSION)/unix"
 
 xpa/Makefile :
 	@echo ""
@@ -481,7 +482,7 @@ funtools/Makefile : funtools/configure
 	cd funtools; \
 	./configure \
 	CFLAGS='-g -O2 -std=gnu90 -w' \
-	--with-zlib=$(libdir) \
+	--with-zlib=$(libdir)/libz.a \
 	$(CONFIGFLAGS) $(TARGET) \
 	$(PREFIX) \
 	--disable-shared

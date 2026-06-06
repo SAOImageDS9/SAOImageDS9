@@ -648,6 +648,7 @@ ac_subst_vars='LTLIBOBJS
 CORES
 TARGET
 ENABLE64BIT
+TKFLAGS
 ARCH
 OS
 LDFLAGS_DEFAULT
@@ -7538,6 +7539,8 @@ ARCH=$with_arch
 prefix=$ac_pwd
 exec_prefix=$ac_pwd
 
+TKFLAGS=""
+
 case $with_arch in
     win32 | WIN32 )
 	ENABLE64BIT=
@@ -8719,6 +8722,5 @@ if test -n "$ac_unrecognized_opts" && test "$enable_option_checking" != no; then
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: unrecognized options: $ac_unrecognized_opts" >&5
 printf "%s\n" "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2;}
 fi
-
 
 

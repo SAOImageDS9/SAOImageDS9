@@ -75,6 +75,9 @@ AC_SUBST(ARCH)
 prefix=$ac_pwd
 exec_prefix=$ac_pwd
 
+TKFLAGS="--disable-libcups"
+AC_SUBST(TKFLAGS)
+
 XML2CONFIG=`which xml2-config`
 XSLTCONFIG=`which xslt-config`
 CORES=`sysctl -n "hw.ncpu"`
@@ -107,4 +110,3 @@ AC_CONFIG_FILES([Makefile])
 #--------------------------------------------------------------------
 
 AC_OUTPUT()
-

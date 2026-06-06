@@ -11,6 +11,7 @@ mandir		= @mandir@
 
 OS		= @OS@
 ARCH		= @ARCH@
+TKFLAGS		= @TKFLAGS@
 SSLCONFIG	= @SSLCONFIG@
 JOBS		= @CORES@
 XML2CONFIG	= @XML2CONFIG@
@@ -104,6 +105,7 @@ tk$(TCL_VERSION)/macosx/Makefile :
 	@echo "*** $@ ***"
 	cd tk$(TCL_VERSION)/macosx; \
 	./configure \
+	$(TKFLAGS) \
 	$(WITHTCL) \
 	--enable-64bit \
 	--enable-symbols \

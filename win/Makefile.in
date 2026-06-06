@@ -16,6 +16,7 @@ JOBS		= @CORES@
 
 ENABLE64BIT	= @ENABLE64BIT@
 TARGET		= @TARGET@
+TKFLAGS		= @TKFLAGS@
 
 CONFIGFLAGS	=CC=$(TARGET)-gcc AR=$(TARGET)-ar
 
@@ -147,4 +148,3 @@ tkwindistclean :
 dist	:
 	$(RM) -f dist/$(DS9APP)\ Install.*
 	/cygdrive/c/Program\ Files\ \(x86\)/Inno\ Setup\ 6/ISCC ds9/win/ds9.iss
-

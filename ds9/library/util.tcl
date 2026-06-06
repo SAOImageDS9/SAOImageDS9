@@ -1038,6 +1038,8 @@ proc OpenConsole {} {
     } else {
 	set ::tkcon::OPT(exec) {}
 	set ::tkcon::OPT(font) [font actual TkFixedFont]
+	set ::tkcon::OPT(overrideexit) 0
+	set ::tkcon::PRIV(protocol) {tkcon hide}
 
 	tkcon::Init
 
@@ -1894,4 +1896,3 @@ proc ProcessSendVersionCmd {proc id param {sock {}} {fn {}}} {
     global ds9
     $proc $id "$ds9(app) $ds9(version,display)\n"
 }
-

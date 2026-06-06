@@ -816,8 +816,29 @@ int ConfigureHtmlWidget(
       redraw = 1;
     }
   }
-  rc = Tk_ConfigureWidget(interp, htmlPtr->tkwin, configSpecs, argc, (const char**)argv,
-                         (char *) htmlPtr, flags);
+#if TCL_MAJOR_VERSION > 8 || (TCL_MAJOR_VERSION == 8 && TCL_MINOR_VERSION >= 7)
+  {
+    Tcl_Obj **objv = NULL;
+    if (argc > 0) {
+      objv = (Tcl_Obj **)ckalloc(sizeof(Tcl_Obj *) * argc);
+      for (i = 0; i < argc; i++) {
+        objv[i] = Tcl_NewStringObj(argv[i], -1);
+        Tcl_IncrRefCount(objv[i]);
+      }
+    }
+    rc = Tk_ConfigureWidget(interp, htmlPtr->tkwin, configSpecs, argc,
+                           objv, (char *) htmlPtr, flags | TK_CONFIG_OBJS);
+    for (i = 0; i < argc; i++) {
+      Tcl_DecrRefCount(objv[i]);
+    }
+    if (objv) {
+      ckfree(objv);
+    }
+  }
+#else
+  rc = Tk_ConfigureWidget(interp, htmlPtr->tkwin, configSpecs, argc,
+                         (const char**)argv, (char *) htmlPtr, flags);
+#endif
   if( rc!=TCL_OK || redraw==0 ){ TestPoint(0); return rc; }
   memset(htmlPtr->fontValid, 0, sizeof(htmlPtr->fontValid));
   htmlPtr->apColor[COLOR_Normal] = htmlPtr->fgColor;

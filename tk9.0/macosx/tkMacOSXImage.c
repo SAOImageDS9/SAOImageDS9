@@ -25,8 +25,6 @@ static CGImageRef CreateCGImageFromDrawableRect( Drawable drawable, int force_1x
 static inline CGRect ClipCopyRects(CGRect srcBounds, CGRect dstBounds,
      int src_x, int src_y, unsigned int width,  unsigned int height);
 
-int enableScreenCapture = 0;
-
 /* Pixel formats
  *
  * Tk uses the XImage structure defined in Xlib.h for storing images.  The

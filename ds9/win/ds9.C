@@ -6,7 +6,7 @@
 #include <string.h>
 
 #include <iostream>
-#include <sstream>
+#include <string>
 using namespace std;
 
 #include <tcl.h>
@@ -19,13 +19,6 @@ extern "C" {
   int SAOLocalMainHook(int* argc, char*** argv);
 
   void TclSetStartupScriptFileName(const char*);
-
-#if TCL_MAJOR_VERSION < 9
-  int TclZipfs_Init(Tcl_Interp*);
-  int TclZipfs_Mount(Tcl_Interp*, const char*, const char *, const char*);
-#else
-  int TclZipfs_Mount(Tcl_Interp*, const char*, const char *, const char*);
-#endif
 
   int Tkblt_Init(Tcl_Interp*);
   int Tktable_Init(Tcl_Interp*);
@@ -62,13 +55,24 @@ extern "C" {
 #define STR2(s) #s
 #define STR(s) STR2(s)
 
-#if TCL_MAJOR_VERSION < 9
-#define DS9_ZIPFS_ROOT "zipfs:/"
-#else
-#define DS9_ZIPFS_ROOT "//zipfs:/"
-#endif
+static string tclLibraryEnv;
+static string tkLibraryEnv;
 
-#define DS9_ZIPFS_MOUNT DS9_ZIPFS_ROOT "mntpt"
+static string DS9ExecutableDir()
+{
+  const char* executable = Tcl_GetNameOfExecutable();
+  string path = executable ? executable : "";
+
+  for (string::iterator ii = path.begin(); ii != path.end(); ii++)
+    if (*ii == '\\')
+      *ii = '/';
+
+  string::size_type pos = path.rfind('/');
+  if (pos == string::npos)
+    return ".";
+
+  return path.substr(0, pos);
+}
 
 int SAOLocalMainHook(int* argcPtr, char*** argvPtr)
 {
@@ -78,13 +82,18 @@ int SAOLocalMainHook(int* argcPtr, char*** argvPtr)
   // do this first
   Tcl_FindExecutable((*argvPtr)[0]);
 
+  string root = DS9ExecutableDir();
+
   // so that tcl and tk know where to find their libs
   // we do it here before InitLibraryPath is called
-  putenv((char*)"TCL_LIBRARY=" DS9_ZIPFS_MOUNT "/tcl" STR(TCL_MAJOR_VERSION) "." STR(TCL_MINOR_VERSION));
-  putenv((char*)"TK_LIBRARY=" DS9_ZIPFS_MOUNT "/tk" STR(TCL_MAJOR_VERSION) "." STR(TCL_MINOR_VERSION));
+  tclLibraryEnv = "TCL_LIBRARY=" + root + "/tcl" STR(TCL_MAJOR_VERSION) "." STR(TCL_MINOR_VERSION);
+  tkLibraryEnv = "TK_LIBRARY=" + root + "/tk" STR(TCL_MAJOR_VERSION) "." STR(TCL_MINOR_VERSION);
+  putenv((char*)tclLibraryEnv.c_str());
+  putenv((char*)tkLibraryEnv.c_str());
 
   // startup script
-  Tcl_Obj *path = Tcl_NewStringObj(DS9_ZIPFS_MOUNT "/library/ds9.tcl",-1);
+  string startup = root + "/library/ds9.tcl";
+  Tcl_Obj *path = Tcl_NewStringObj(startup.c_str(), -1);
   Tcl_SetStartupScript(path, NULL);
 
   return TCL_OK;
@@ -94,40 +103,6 @@ int SAOAppInit(Tcl_Interp *interp)
 {
   // save interp for cputs function
   global_interp = interp;
-
-  // We have to initialize the virtual filesystem before calling
-  // Tcl_Init().  Otherwise, Tcl_Init() will not be able to find
-  // its startup script files.
-#if TCL_MAJOR_VERSION < 9
-  if (TclZipfs_Init(interp) == TCL_ERROR)
-    return TCL_ERROR;
-  Tcl_StaticPackage (interp, "zipfs", TclZipfs_Init,
-		     (Tcl_PackageInitProc*)NULL);
-#endif
-
-  // find current working directory, and set as mount point
-  {
-#ifdef ZIPFILE
-    ostringstream str;
-    str << (char *)Tcl_GetNameOfExecutable()
-	<< ".zip"
-	<<  ends;
-#if TCL_MAJOR_VERSION < 9
-    if(TclZipfs_Mount(interp, "", (const char*)str.str().c_str(), NULL) != TCL_OK ){
-#else
-    if(TclZipfs_Mount(interp, (const char*)str.str().c_str(), DS9_ZIPFS_ROOT, NULL) != TCL_OK ){
-#endif
-      cerr << "ERROR: Unable to open the auxiliary ds9 file 'ds9.zip'. If you moved the ds9 program from its original location, please also move the zip file to the same place." << endl;
-      exit(1);
-    }
-#else
-#if TCL_MAJOR_VERSION < 9
-    TclZipfs_Mount(interp, "", (const char *)Tcl_GetNameOfExecutable(), NULL);
-#else
-    TclZipfs_Mount(interp, (const char *)Tcl_GetNameOfExecutable(), DS9_ZIPFS_ROOT, NULL);
-#endif
-#endif
-  }
 
   // Tcl
   if (Tcl_Init(interp) == TCL_ERROR)

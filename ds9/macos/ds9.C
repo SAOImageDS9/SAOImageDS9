@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <string>
 using namespace std;
 
 #include <tcl.h>
@@ -72,6 +73,19 @@ extern "C" {
 
 #define DS9_ZIPFS_MOUNT DS9_ZIPFS_ROOT "mntpt"
 
+static string DS9ContentsDir()
+{
+  const char* executable = Tcl_GetNameOfExecutable();
+  string path = executable ? executable : "";
+  const string marker = "/Contents/MacOS/";
+  string::size_type pos = path.rfind(marker);
+
+  if (pos == string::npos)
+    return "";
+
+  return path.substr(0, pos + string("/Contents").length());
+}
+
 int SAOLocalMainHook(int* argcPtr, char*** argvPtr)
 {
   // sync C++ io calls with C io calls
@@ -80,13 +94,26 @@ int SAOLocalMainHook(int* argcPtr, char*** argvPtr)
   // do this first
   Tcl_FindExecutable((*argvPtr)[0]);
 
-  // so that tcl and tk know where to find their libs
-  // we do it here before InitLibraryPath is called
-  putenv((char*)"TCL_LIBRARY=" DS9_ZIPFS_MOUNT "/tcl" STR(TCL_MAJOR_VERSION) "." STR(TCL_MINOR_VERSION));
-  putenv((char*)"TK_LIBRARY=" DS9_ZIPFS_MOUNT "/tk" STR(TCL_MAJOR_VERSION) "." STR(TCL_MINOR_VERSION));
+  string startup;
+  string contents = DS9ContentsDir();
 
-  // startup script
-  Tcl_Obj *path = Tcl_NewStringObj(DS9_ZIPFS_MOUNT "/library/ds9.tcl",-1);
+  if (!contents.empty()) {
+    string frameworks = contents + "/Frameworks";
+    string tclLibrary = frameworks + "/Tcl.framework/Resources/Scripts";
+    string tkLibrary = frameworks + "/Tk.framework/Resources/Scripts";
+
+    setenv("TCL_LIBRARY", tclLibrary.c_str(), 1);
+    setenv("TK_LIBRARY", tkLibrary.c_str(), 1);
+    startup = frameworks + "/Tksao.framework/Resources/library/ds9.tcl";
+  }
+  else {
+    // Fallback for non-bundle invocations.
+    putenv((char*)"TCL_LIBRARY=" DS9_ZIPFS_MOUNT "/tcl" STR(TCL_MAJOR_VERSION) "." STR(TCL_MINOR_VERSION));
+    putenv((char*)"TK_LIBRARY=" DS9_ZIPFS_MOUNT "/tk" STR(TCL_MAJOR_VERSION) "." STR(TCL_MINOR_VERSION));
+    startup = DS9_ZIPFS_MOUNT "/library/ds9.tcl";
+  }
+
+  Tcl_Obj *path = Tcl_NewStringObj(startup.c_str(), -1);
   Tcl_SetStartupScript(path, NULL);
 
   return TCL_OK;

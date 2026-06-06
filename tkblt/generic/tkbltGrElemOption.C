@@ -66,7 +66,7 @@ Tk_ObjCustomOption valuesObjOption =
 
 static int ValuesSetProc(ClientData clientData, Tcl_Interp* interp,
 			 Tk_Window tkwin, Tcl_Obj** objPtr, char* widgRec,
-			 int offset, char* savePtr, int flags)
+			 Tcl_Size offset, char* savePtr, int flags)
 {
   ElemValues** valuesPtrPtr = (ElemValues**)(widgRec + offset);
   *(double*)savePtr = *(double*)valuesPtrPtr;
@@ -113,7 +113,7 @@ static int ValuesSetProc(ClientData clientData, Tcl_Interp* interp,
 }
 
 static Tcl_Obj* ValuesGetProc(ClientData clientData, Tk_Window tkwin, 
-			      char *widgRec, int offset)
+			      char *widgRec, Tcl_Size offset)
 {
   ElemValues* valuesPtr = *(ElemValues**)(widgRec + offset);
 
@@ -150,7 +150,7 @@ Tk_ObjCustomOption pairsObjOption =
 
 static int PairsSetProc(ClientData clientData, Tcl_Interp* interp,
 			Tk_Window tkwin, Tcl_Obj** objPtr, char* widgRec,
-			int offset, char* savePtr, int flags)
+			Tcl_Size offset, char* savePtr, int flags)
 {
   ElemCoords* coordsPtr = (ElemCoords*)(widgRec + offset);
   savePtr = NULL;
@@ -190,7 +190,7 @@ static int PairsSetProc(ClientData clientData, Tcl_Interp* interp,
 };
 
 static Tcl_Obj* PairsGetProc(ClientData clientData, Tk_Window tkwin, 
-			     char *widgRec, int offset)
+			     char *widgRec, Tcl_Size offset)
 {
   ElemCoords* coordsPtr = (ElemCoords*)(widgRec + offset);
 
@@ -224,7 +224,7 @@ static void PairsFreeProc(ClientData clientData, Tk_Window tkwin, char *ptr)
 
 int StyleSetProc(ClientData clientData, Tcl_Interp* interp,
 		 Tk_Window tkwin, Tcl_Obj** objPtr, char* widgRec,
-		 int offset, char* save, int flags)
+		 Tcl_Size offset, char* save, int flags)
 {
   Chain* stylePalette = *(Chain**)(widgRec + offset);
   ElementOptions* ops = (ElementOptions*)(widgRec);
@@ -265,7 +265,7 @@ int StyleSetProc(ClientData clientData, Tcl_Interp* interp,
 }
 
 Tcl_Obj* StyleGetProc(ClientData clientData, Tk_Window tkwin, 
-		      char *widgRec, int offset)
+		      char *widgRec, Tcl_Size offset)
 {
   Chain* stylePalette = *(Chain**)(widgRec + offset);
 

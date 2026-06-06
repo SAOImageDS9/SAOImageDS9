@@ -1016,8 +1016,8 @@ ClientData Legend::pickEntry(int xx, int yy, ClassId* classIdPtr)
 
 // Support
 
-static int SelectionProc(ClientData clientData, int offset, char *buffer,
-			 int maxBytes)
+static Tcl_Size SelectionProc(ClientData clientData, Tcl_Size offset,
+			      char *buffer, Tcl_Size maxBytes)
 {
   Legend* legendPtr = (Legend*)clientData;
   Graph* graphPtr = legendPtr->graphPtr_;
@@ -1069,6 +1069,5 @@ static void SelectCmdProc(ClientData clientData)
   }
   Tcl_Release(legendPtr);
 }
-
 
 

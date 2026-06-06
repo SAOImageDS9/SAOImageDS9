@@ -57,7 +57,7 @@ exec wish "$0" ${1+"$@"}
 if {$tcl_version < 8.4} {
     return -code error "tkcon requires at least Tcl/Tk 8.4"
 } else {
-    package require Tk 8.4
+    package require Tk
 }
 
 # We need to load some package to get what's available, and we

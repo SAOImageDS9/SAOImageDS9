@@ -79,7 +79,7 @@ TEA_CONFIG_SYSTEM
 
 case $system in
     Darwin* )
-	TKFLAGS="--disable-corefoundation"
+	TKFLAGS="--disable-corefoundation --disable-libcups"
 	AC_SUBST(TKFLAGS)
 
 	case `arch` in

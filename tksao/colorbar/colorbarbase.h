@@ -154,6 +154,7 @@ class ColorbarBase : public Widget {
   virtual void adjustCmd(float, float) =0;
 
   int configure(int, const char* [], int);
+  int configure(int, const char* [], int, int);
   int pdfCmd(Tcl_Obj*, Tcl_Size, Tcl_Obj *const []);
 
   virtual void getBiasCmd() =0;

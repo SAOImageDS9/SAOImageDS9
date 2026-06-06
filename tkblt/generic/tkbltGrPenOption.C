@@ -43,7 +43,7 @@ Tk_ObjCustomOption penObjOption =
 
 static int PenSetProc(ClientData clientData, Tcl_Interp* interp,
 		      Tk_Window tkwin, Tcl_Obj** objPtr, char* widgRec,
-		      int offset, char* savePtr, int flags)
+		      Tcl_Size offset, char* savePtr, int flags)
 {
   Pen** penPtrPtr = (Pen**)(widgRec + offset);
   *(double*)savePtr = *(double*)penPtrPtr;
@@ -69,7 +69,7 @@ static int PenSetProc(ClientData clientData, Tcl_Interp* interp,
 };
 
 static Tcl_Obj* PenGetProc(ClientData clientData, Tk_Window tkwin, 
-			   char *widgRec, int offset)
+			   char *widgRec, Tcl_Size offset)
 {
   Pen* penPtr = *(Pen**)(widgRec + offset);
   if (!penPtr)

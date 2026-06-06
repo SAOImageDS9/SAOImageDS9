@@ -165,6 +165,7 @@ class Widget {
   virtual int parse(istringstream&) =0;           // parse subcommands
 
   virtual int configure(Tcl_Size, const char**, int); // parse config options
+  int configure(Tcl_Size, const char**, int, int); // parse config options
   void error(const char*);                     // parse error function
   void msg(const char*);                       // parse msg function
 

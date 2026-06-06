@@ -91,7 +91,7 @@ OBJS	= ds9.o tkAppInit.o
 empty:=
 space:=$(empty) $(empty)
 
-SPECS	= \
+EXT_SPECS = \
 	$(tclfitsy_LIB_SPEC) \
 	$(tclsignal_LIB_SPEC) \
 	$(tclxml_LIB_SPEC) \
@@ -113,19 +113,28 @@ SPECS	= \
 	$(tifftcl_LIB_SPEC) \
 	$(zlibtcl_LIB_SPEC) \
 	$(fitsy_LIB_SPEC) \
-	$(vector_LIB_SPEC) \
+	$(vector_LIB_SPEC)
+
+CORE_SPECS = \
 	$(TK_STUB_LIB_SPEC) \
 	$(TK_LIB_SPEC) \
 	$(TCL_STUB_LIB_SPEC) \
 	$(TCL_LIB_SPEC)
 
+ifeq ($(TCL_MAJOR_VERSION),9)
+EXT_LIB_PREFIX = libtcl9
+else
+EXT_LIB_PREFIX = lib
+endif
+
 LLIBS	= \
-	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(SPECS)))) \
+	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,$(EXT_LIB_PREFIX)%.a,$(EXT_SPECS)))) \
+	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(CORE_SPECS)))) \
 	$(libdir)/libast.a \
 	$(libdir)/libast_err.a \
 	$(libdir)/libast_pal.a \
 	$(libdir)/libast_cminpack.a \
-	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(tksao_LIB_SPEC)))) \
+	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,$(EXT_LIB_PREFIX)%.a,$(tksao_LIB_SPEC)))) \
 	$(libdir)/libfuntools.a \
 	$(libdir)/libxpa.a
 
@@ -218,16 +227,30 @@ tkAppInit.c : $(prefix)/tk$(TCL_VERSION)/unix/tkAppInit.c
 $(APPDIR) :
 	mkdir -p $@
 
+ifeq ($(TCL_MAJOR_VERSION),9)
+$(LIBDIR)/tcl$(TCL_VERSION) : $(prefix)/tcl$(TCL_VERSION)/library
+	mkdir -p $@
+	cp -prf $?/* $@/.
+else
 $(LIBDIR)/tcl$(TCL_VERSION) :
 	cp -prf $(prefix)/lib/tcl$(TCL_VERSION) $(LIBDIR)/.
+endif
 
 $(LIBDIR)/tcl$(TCL_MAJOR_VERSION) :
 	cp -prf $(prefix)/lib/tcl$(TCL_MAJOR_VERSION) $(LIBDIR)/.
 
+ifeq ($(TCL_MAJOR_VERSION),9)
+$(LIBDIR)/tk$(TCL_VERSION) : $(prefix)/tk$(TCL_VERSION)/library
+	mkdir -p $@
+	cp -prf $?/* $@/.
+	rm -rf $(APPDIR)/tk$(TCL_VERSION)/images
+	rm -rf $(APPDIR)/tk$(TCL_VERSION)/demos
+else
 $(LIBDIR)/tk$(TCL_VERSION) :
 	cp -prf $(prefix)/lib/tk$(TCL_VERSION) $(LIBDIR)/.
 	rm -rf $(APPDIR)/tk$(TCL_VERSION)/images
 	rm -rf $(APPDIR)/tk$(TCL_VERSION)/demos
+endif
 
 $(LIBDIR)/pdf4tcl: $(prefix)/pdf4tcl
 	cp -prf $? "$@"

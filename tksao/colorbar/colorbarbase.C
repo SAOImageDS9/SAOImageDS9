@@ -162,7 +162,7 @@ void cberror(ColorbarBase* cb, cbFlexLexer* ll, const char* m)
 
 // Public Member Functions
 
-ColorbarBase::ColorbarBase(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item) 
+ColorbarBase::ColorbarBase(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   : Widget(i,c,item)
 {
   // no XCreateGC() at this level
@@ -260,7 +260,7 @@ int ColorbarBase::barWidth()
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
 
   int length = !opts->orientation ? options->width : opts->size;
-  int active = !opts->orientation ? 
+  int active = !opts->orientation ?
     (int)(length*clamp01(opts->widthFactor)+.5) : length;
 
   if (active < 3)
@@ -276,7 +276,7 @@ int ColorbarBase::barHeight()
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
 
   int length = opts->orientation ? options->height : opts->size;
-  int active = opts->orientation ? 
+  int active = opts->orientation ?
     (int)(length*clamp01(opts->widthFactor)+.5) : length;
 
   if (active < 3)
@@ -289,7 +289,12 @@ int ColorbarBase::barHeight()
 
 int ColorbarBase::configure(int argc, const char* argv[], int flags)
 {
-  if (Widget::configure(argc, argv, flags) == TCL_ERROR)
+  return configure(argc, argv, flags, 0);
+}
+
+int ColorbarBase::configure(int argc, const char* argv[], int flags, int objArgs)
+{
+  if (Widget::configure(argc, argv, flags, objArgs) == TCL_ERROR)
     return TCL_ERROR;
 
   // only valid for the initial configuration call
@@ -330,16 +335,16 @@ Tk_Font ColorbarBase::getFont()
 #endif
 
   if (!strncmp(opts->font,"helvetica",4))
-    fstr << '{' << opts->helvetica << '}' << ' ' << fz << ' ' 
+    fstr << '{' << opts->helvetica << '}' << ' ' << fz << ' '
 	 << opts->fontWeight << ' ' << opts->fontSlant << ends;
   else if (!strncmp(opts->font,"courier",4))
-    fstr << '{' << opts->courier << '}' << ' ' << fz << ' ' 
+    fstr << '{' << opts->courier << '}' << ' ' << fz << ' '
 	 << opts->fontWeight << ' ' << opts->fontSlant << ends;
   else if (!strncmp(opts->font,"times",4))
-    fstr << '{' << opts->times << '}' << ' ' << fz << ' ' 
+    fstr << '{' << opts->times << '}' << ' ' << fz << ' '
 	 << opts->fontWeight << ' ' << opts->fontSlant << ends;
   else
-    fstr << '{' << opts->helvetica << '}' << ' ' << fz << ' ' 
+    fstr << '{' << opts->helvetica << '}' << ' ' << fz << ' '
 	 << opts->fontWeight << ' ' << opts->fontSlant << ends;
 
   return Tk_GetFont(interp, tkwin, fstr.str().c_str());
@@ -407,7 +412,7 @@ void ColorbarBase::lutToText(Tk_Font font)
     for (int ii=1; ii<opts->ticks; ii++) {
       if (!strcmp(ticktxt[ii-1],ticktxt[ii]))
 	ok=0;
-    }    
+    }
 
     if (ok)
       break;
@@ -447,12 +452,12 @@ void ColorbarBase::updateColors()
 
   if (!((ColorbarBaseOptions*)options)->orientation) {
     updateColorsHorz();
-    TkPutImage(NULL,0,display, pixmap, widgetGC, xmap, 0, 0, 
+    TkPutImage(NULL,0,display, pixmap, widgetGC, xmap, 0, 0,
 	       barX()+1, barY()+1, barWidth()-2, barHeight()-2);
   }
   else {
     updateColorsVert();
-    TkPutImage(NULL,0,display, pixmap, widgetGC, xmap, 0, 0, 
+    TkPutImage(NULL,0,display, pixmap, widgetGC, xmap, 0, 0,
 	       barX()+1, barY()+1, barWidth()-2, barHeight()-2);
   }
 
@@ -464,7 +469,7 @@ int ColorbarBase::calcContrastBias(int i, float bias, float contrast)
   // if default (contrast = 1.0 && bias = .5) return
   if (fabs(bias - 0.5) < 0.0001 && fabs(contrast - 1.0) < 0.0001)
     return i;
-  
+
   // map i to range of 0 to 1.0
   // shift by bias (if invert, bias = 1-bias)
   // multiply by contrast
@@ -507,18 +512,18 @@ int ColorbarBase::updatePixmap(const BBox& bb)
     gridGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
 
   if (!pixmap) {
-    if (!(pixmap = Tk_GetPixmap(display, Tk_WindowId(tkwin), options->width, 
+    if (!(pixmap = Tk_GetPixmap(display, Tk_WindowId(tkwin), options->width,
 				options->height, depth))) {
-      internalError("Colorbar: Unable to Create Pixmap"); 
+      internalError("Colorbar: Unable to Create Pixmap");
       return TCL_OK;
 
       // Geometry has changed, redefine our marker GCs including clip regions
       updateGCs();
     }
   }
-      
+
   XSetForeground(display, widgetGC, opts->bgColor->pixel);
-  XFillRectangle(display, pixmap, widgetGC, 0, 0, 
+  XFillRectangle(display, pixmap, widgetGC, 0, 0,
 		 options->width,options->height);
 
   if (!xmap) {
@@ -541,17 +546,17 @@ int ColorbarBase::updatePixmap(const BBox& bb)
       }
     }
   }
-    
+
   updateColors();
 
   if (opts->numerics && opts->space) {
     renderGridAST();
     return TCL_OK;
   }
-      
+
   // we want a border, even with no numerics
   renderGrid();
-  
+
   return TCL_OK;
 }
 
@@ -640,7 +645,7 @@ void ColorbarBase::renderGridNumerics()
 	int txtwidth = Tk_TextWidth(font, ticktxt[ii], strlen(ticktxt[ii]));
 	int www = ww - txtwidth/2.;
 	int hhh = hh + TICKGAP + metrics.ascent;
-	Tk_DrawChars(display, pixmap, widgetGC, font, ticktxt[ii], 
+	Tk_DrawChars(display, pixmap, widgetGC, font, ticktxt[ii],
 		     strlen(ticktxt[ii]), www, hhh);
       }
     }
@@ -655,7 +660,7 @@ void ColorbarBase::renderGridNumerics()
       if (!incrcnt) {
 	int www = ww + TICKGAP;
 	int hhh = hh + (metrics.ascent-metrics.descent)/2.;
-	Tk_DrawChars(display, pixmap, widgetGC, font, ticktxt[ii], 
+	Tk_DrawChars(display, pixmap, widgetGC, font, ticktxt[ii],
 		     strlen(ticktxt[ii]), www, hhh);
       }
     }
@@ -941,7 +946,7 @@ void ColorbarBase::ps()
   }
   else
     org += Vector(barX(),options->height-barY()-height);
-  
+
   ostringstream str;
   str << org << " translate " << 1 << ' ' << 1 << " scale" << endl;
 
@@ -1039,7 +1044,7 @@ void ColorbarBase::psGridNumerics()
   Tk_Font font = NULL;
   {
     ostringstream fstr;
-    fstr << opts->font << ' ' << opts->fontSize << ' ' 
+    fstr << opts->font << ' ' << opts->fontSize << ' '
 	 << opts->fontWeight << ' ' << opts->fontSlant << ends;
     font = Tk_GetFont(interp, tkwin, fstr.str().c_str());
     if (!font)
@@ -1084,7 +1089,7 @@ void ColorbarBase::psGridNumerics()
 	Vector tt = Vector(ww,hh-TICKGAP);
 	str << "newpath " << endl
 	    << tt << " moveto" << endl
-	    << '(' << psQuote(ticktxt[ii]) << ')' 
+	    << '(' << psQuote(ticktxt[ii]) << ')'
 	    << "dup true charpath pathbbox " << endl
 	    << "closepath " << endl
 	    << "3 -1 roll sub 1.2 mul neg " << endl
@@ -1113,7 +1118,7 @@ void ColorbarBase::psGridNumerics()
 	Vector tt = Vector(ww+TICKGAP,hh);
 	str << "newpath " << endl
 	    << tt << " moveto" << endl
-	    << '(' << psQuote(ticktxt[ii]) << ')' 
+	    << '(' << psQuote(ticktxt[ii]) << ')'
 	    << "dup true charpath pathbbox " << endl
 	    << "closepath " << endl
 	    << "3 -1 roll sub 2 div neg " << endl
@@ -1195,7 +1200,7 @@ void ColorbarBase::getValueCmd(int xx, int yy)
     }
     else {
       // vertical
-      id = (int)((barHeight() - (yy-options->y-barY())) / 
+      id = (int)((barHeight() - (yy-options->y-barY())) /
 		 float(barHeight()) * cnt);
     }
 
@@ -1232,7 +1237,7 @@ void ColorbarBase::setColormapLevelCmd(int cc)
 {
   if (!colormaplevelptr_ || !colormaplevelparentptr_)
     return;
-  
+
   double* ff = (double*)colormaplevelptr_;
 
   // check for the same
@@ -1259,7 +1264,7 @@ void ColorbarBase::setColormapLevelCmd(int cc)
   // clear
   colormaplevelptr_ =NULL;
   colormaplevelparentptr_ =NULL;
-    
+
   invalidPixmap();
   redraw();
 }

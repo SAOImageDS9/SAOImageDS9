@@ -32,7 +32,7 @@ int widgetPdfMode_ =0;
 int WidgetConfigProc(Tcl_Interp* interp, Tk_Canvas canvas, Tk_Item* item, 
 		     Tcl_Size argc, Tcl_Obj *const argv[], int flags)
 {
-  return WIDGET(item).configure(argc, (const char**)argv, flags);
+  return WIDGET(item).configure(argc, (const char**)argv, flags, 1);
 }
 
 int WidgetCoordProc(Tcl_Interp* interp, Tk_Canvas canvas, Tk_Item* item, 
@@ -242,14 +242,32 @@ void Widget::msg(const char* m)
 
 int Widget::configure(Tcl_Size argc, const char** argv, int flags)
 {
+  return configure(argc, argv, flags, 0);
+}
+
+int Widget::configure(Tcl_Size argc, const char** argv, int flags, int objArgs)
+{
 #if TCL_MAJOR_VERSION <= 8 && TCL_MINOR_VERSION <= 6
   int rr = Tk_ConfigureWidget(interp, tkwin, configSpecs, argc,
 			      argv,
 			      (char*)this->options, flags);
 #else
+  Tcl_Obj** objv = (Tcl_Obj**)argv;
+  if (!objArgs) {
+    objv = new Tcl_Obj*[argc];
+    for (Tcl_Size ii=0; ii<argc; ii++) {
+      objv[ii] = Tcl_NewStringObj(argv[ii], -1);
+      Tcl_IncrRefCount(objv[ii]);
+    }
+  }
   int rr = Tk_ConfigureWidget(interp, tkwin, configSpecs, argc,
-			      (Tcl_Obj *const *)argv,
-			      (char*)this->options, flags);
+			      objv,
+			      (char*)this->options, flags|TK_CONFIG_OBJS);
+  if (!objArgs) {
+    for (Tcl_Size ii=0; ii<argc; ii++)
+      Tcl_DecrRefCount(objv[ii]);
+    delete [] objv;
+  }
 #endif
 
  if (rr != TCL_OK)

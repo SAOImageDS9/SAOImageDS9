@@ -654,10 +654,10 @@ proc LanguageToName {which} {
 	da {return {Dansk}}
 	de {return {Deutsch}}
 	en {return {English}}
-	es {return {Español}}
-	fr {return {Français}}
+	es {return {EspaÃ±ol}}
+	fr {return {FranÃ§ais}}
 	ja {return [encoding convertfrom euc-jp "\xc6\xfc\xcb\xdc\xb8\xec"]}
-	pt {return {Português}}
+	pt {return {PortuguÃªs}}
 	zh {return [encoding convertfrom big5 "\xA4\xA4\xA4\xE5"]}
     }
 }

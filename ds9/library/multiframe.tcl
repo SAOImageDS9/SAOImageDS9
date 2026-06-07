@@ -12,8 +12,8 @@ proc LoadMultiFrameFile {fn} {
 	set path [tmpnam {.fits}]
 	catch {
 	    set ch [open "$path" w]
-	    fconfigure stdin -translation binary -encoding binary
-	    fconfigure $ch -translation binary -encoding binary
+	    fconfigure stdin -translation binary -encoding iso8859-1
+	    fconfigure $ch -translation binary -encoding iso8859-1
 	    puts -nonewline $ch [read stdin]
 	    close $ch
 	}
@@ -26,8 +26,8 @@ proc LoadMultiFrameSocket {sock fn} {
     set path [tmpnam {.fits}]
     catch {
 	set ch [open "$path" w]
-	fconfigure $ch -translation binary -encoding binary
-	fconfigure $sock -translation binary -encoding binary
+	fconfigure $ch -translation binary -encoding iso8859-1
+	fconfigure $sock -translation binary -encoding iso8859-1
 	puts -nonewline $ch [read $sock]
 	close $ch
     }

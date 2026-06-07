@@ -16,7 +16,7 @@ proc ImportPhotoFile {fn mode} {
 	[string range $fn 0 4] == "STDIN" ||
 	[string range $fn 0 0] == "-"} {
 
-	fconfigure stdin -translation binary -encoding binary
+	fconfigure stdin -translation binary -encoding iso8859-1
 	if {[catch {image create photo -data [read -nonewline stdin]} ph]} {
 	    Error [msgcat::mc {An error has occurred while loading}]
 	    return
@@ -69,7 +69,7 @@ proc ImportPhotoSocket {ch fn mode} {
     set loadParam(load,type) photo
     set loadParam(file,name) $fn
 
-    fconfigure $ch -translation binary -encoding binary
+    fconfigure $ch -translation binary -encoding iso8859-1
     if {[catch {image create photo -data [read $ch]} ph]} {
 	Error [msgcat::mc {An error has occurred while loading}]
 	return 0
@@ -145,7 +145,7 @@ proc ExportPhotoSocket {ch format opt} {
 
     $current(frame) save photo $ph
 
-    fconfigure $ch -translation binary -encoding binary
+    fconfigure $ch -translation binary -encoding iso8859-1
     set ff $format
     switch -- $format {
 	jpeg {

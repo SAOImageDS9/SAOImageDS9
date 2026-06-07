@@ -826,7 +826,7 @@ proc HVParseMulti {varname} {
 			binary -
 			base64 {
 			    fconfigure $var(ch) \
-				-translation binary -encoding binary
+				-translation binary -encoding iso8859-1
 			}
 		    }
 

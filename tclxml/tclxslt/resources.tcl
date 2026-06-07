@@ -349,7 +349,7 @@ proc xslt::resources::write-base64 {fnameNd b64Nd args} {
 	return 0
     } else {
 	set binarydata [base64::decode $b64]
-	fconfigure $ch -trans binary -encoding binary
+	fconfigure $ch -trans binary -encoding iso8859-1
 	puts -nonewline $ch $binarydata
 	close $ch
 	return 1
@@ -379,10 +379,9 @@ proc xslt::resources::read-base64 {fnameNd args} {
     if {[catch {open $fname} ch]} {
 	return 0
     } else {
-	fconfigure $ch -trans binary -encoding binary
+	fconfigure $ch -trans binary -encoding iso8859-1
 	set binarydata [read $ch]
 	close $ch
 	return [base64::encode $binarydata]
     }
 }
-

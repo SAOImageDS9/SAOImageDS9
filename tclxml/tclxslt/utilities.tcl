@@ -102,7 +102,7 @@ proc xslt::utilities::binary-document {fnameNd srcNd args} {
     if {[catch {open $fname w} ch]} {
 	return 0
     }
-    fconfigure $ch -trans binary -encoding binary
+    fconfigure $ch -trans binary -encoding iso8859-1
     puts -nonewline $ch $data
     close $ch
 
@@ -135,10 +135,9 @@ proc xslt::utilities::base64-binary-document {fnameNd args} {
     if {[catch {open $fname} ch]} {
 	return {}
     }
-    fconfigure $ch -trans binary -encoding binary
+    fconfigure $ch -trans binary -encoding iso8859-1
     set data [read $ch]
     close $ch
 
     return [base64::encode $data]
 }
-

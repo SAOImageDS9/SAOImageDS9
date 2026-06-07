@@ -301,7 +301,15 @@ static int XPATclSend(client_data, call_data, paramlist, buf, len)
      size_t *len;
 #endif
 {
-  return(XPATclHandler(client_data, call_data, paramlist, NULL, 0, 4));
+  XPA xpa = (XPA)call_data;
+  int result;
+
+  result = XPATclHandler(client_data, call_data, paramlist, NULL, 0, 4);
+  if( (result == 0) && xpa && xpa->comm ){
+    *buf = xpa->comm->buf;
+    *len = xpa->comm->len;
+  }
+  return(result);
 }
 
 /*
@@ -1097,6 +1105,7 @@ static int XPASetBuf_Tcl(clientData, interp, objc, objv)
 {
   int error;
   int len;
+  Tcl_Size tclLen;
   char *buf;
   XPA xpa;
 
@@ -1112,7 +1121,8 @@ static int XPASetBuf_Tcl(clientData, interp, objc, objv)
   }
 
   /* get buf */
-  buf = Tcl_GetStringFromObj(objv[2], (Tcl_Size*)&len);
+  buf = Tcl_GetStringFromObj(objv[2], &tclLen);
+  len = (int)tclLen;
   /* get len if specified */
   if( objc >= 4 ){
     if( (error = Tcl_GetIntFromObj(interp, objv[3], &len)) != TCL_OK )
@@ -1654,6 +1664,7 @@ static int XPASet_Tcl(clientData, interp, objc, objv)
   int i;
   int blen;
   int len;
+  Tcl_Size tclBlen;
   char *xpastr;
   char *tmpl;
   char *paramlist;
@@ -1696,7 +1707,8 @@ static int XPASet_Tcl(clientData, interp, objc, objv)
   tmpl = Tcl_GetStringFromObj(objv[2], NULL);
   paramlist = Tcl_GetStringFromObj(objv[3], NULL);
   mode = Tcl_GetStringFromObj(objv[4], NULL);
-  buf = Tcl_GetStringFromObj(objv[5], (Tcl_Size*)&blen);
+  buf = Tcl_GetStringFromObj(objv[5], &tclBlen);
+  blen = (int)tclBlen;
   if( (Tcl_GetIntFromObj(interp, objv[6], &len) != TCL_OK) || (len < 0) ){
     len = blen;
   }

@@ -9,8 +9,16 @@
 #include <string>
 using namespace std;
 
+// This is executable startup code, not a loadable extension.  Tcl 9 stubs
+// redirect several pre-init entry points through a DLL loader path.
+#undef USE_TCL_STUBS
+#undef USE_TK_STUBS
+
 #include <tcl.h>
 #include <tk.h>
+
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 
 Tcl_Interp *global_interp =NULL;
 
@@ -55,9 +63,6 @@ extern "C" {
 #define STR2(s) #s
 #define STR(s) STR2(s)
 
-static string tclLibraryEnv;
-static string tkLibraryEnv;
-
 static string DS9ExecutableDir()
 {
   const char* executable = Tcl_GetNameOfExecutable();
@@ -76,20 +81,23 @@ static string DS9ExecutableDir()
 
 int SAOLocalMainHook(int* argcPtr, char*** argvPtr)
 {
+  (void)argcPtr;
+  (void)argvPtr;
+
   // sync C++ io calls with C io calls
   ios::sync_with_stdio();
 
   // do this first
-  Tcl_FindExecutable((*argvPtr)[0]);
+  Tcl_FindExecutable(NULL);
 
   string root = DS9ExecutableDir();
 
   // so that tcl and tk know where to find their libs
   // we do it here before InitLibraryPath is called
-  tclLibraryEnv = "TCL_LIBRARY=" + root + "/tcl" STR(TCL_MAJOR_VERSION) "." STR(TCL_MINOR_VERSION);
-  tkLibraryEnv = "TK_LIBRARY=" + root + "/tk" STR(TCL_MAJOR_VERSION) "." STR(TCL_MINOR_VERSION);
-  putenv((char*)tclLibraryEnv.c_str());
-  putenv((char*)tkLibraryEnv.c_str());
+  string tclLibrary = root + "/tcl" STR(TCL_MAJOR_VERSION) "." STR(TCL_MINOR_VERSION);
+  string tkLibrary = root + "/tk" STR(TCL_MAJOR_VERSION) "." STR(TCL_MINOR_VERSION);
+  SetEnvironmentVariableA("TCL_LIBRARY", tclLibrary.c_str());
+  SetEnvironmentVariableA("TK_LIBRARY", tkLibrary.c_str());
 
   // startup script
   string startup = root + "/library/ds9.tcl";

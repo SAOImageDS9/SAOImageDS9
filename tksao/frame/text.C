@@ -7,7 +7,13 @@
 
 EXTERN void TkDrawAngledChars(Display *display,
 			      Drawable drawable, GC gc, Tk_Font tkfont,
-			      const char *source, int numBytes, double x,
+			      const char *source,
+#if TCL_MAJOR_VERSION >= 9
+			      Tcl_Size numBytes,
+#else
+			      int numBytes,
+#endif
+			      double x,
 			      double y, double angle);
 
 Text::Text(const Text& a) : Marker(a) 
@@ -253,7 +259,6 @@ void Text::listSAOtng(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   
   listSAOtngPost(str, strip);
 }
-
 
 
 

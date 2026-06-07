@@ -85,6 +85,7 @@ int gethost(xhost, len)
 #endif
 {
     char *s=NULL;
+    int fromenv=0;
 #if HAVE_GETADDRINFO
     struct addrinfo *hints=NULL, *addrinfo=NULL;
 #else
@@ -96,10 +97,17 @@ int gethost(xhost, len)
       if( init == 0 ){
 	if( (s=(char *)getenv(MYHOST)) != NULL ){
 	  strncpy(myhost, s, SZ_LINE-1);
+	  fromenv = 1;
 	} else {
-	  gethostname(myhost, SZ_LINE-1);
+	  if( gethostname(myhost, SZ_LINE-1) < 0 ){
+	    strncpy(myhost, "localhost", SZ_LINE-1);
+	  }
 	}
+	myhost[SZ_LINE-1] = '\0';
 	init++;
+      }
+      else if( (s=(char *)getenv(MYHOST)) != NULL ){
+	fromenv = 1;
       }
       strncpy(xhost, myhost, len-1);
 
@@ -108,8 +116,15 @@ int gethost(xhost, len)
       hints->ai_flags |= AI_CANONNAME;
       hints->ai_family = AF_INET;
       if( getaddrinfo(xhost, NULL, hints, &addrinfo) != 0 ){
-	freeaddrinfo(addrinfo);
+	if( addrinfo ) freeaddrinfo(addrinfo);
 	if( hints ) free(hints);
+	if( !fromenv ){
+	  strncpy(myhost, "localhost", SZ_LINE-1);
+	  myhost[SZ_LINE-1] = '\0';
+	  strncpy(xhost, myhost, len-1);
+	  xhost[len-1] = '\0';
+	  return(0);
+	}
 	return -1;
       }
       strncpy(xhost, addrinfo->ai_canonname, len-1);
@@ -117,6 +132,13 @@ int gethost(xhost, len)
       if( hints ) free(hints);
 #else
       if( (hent = gethostbyname(xhost)) == NULL ){
+	if( !fromenv ){
+	  strncpy(myhost, "localhost", SZ_LINE-1);
+	  myhost[SZ_LINE-1] = '\0';
+	  strncpy(xhost, myhost, len-1);
+	  xhost[len-1] = '\0';
+	  return(0);
+	}
 	return(-1);
       }
       strncpy(xhost, hent->h_name, len-1);

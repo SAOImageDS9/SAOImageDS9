@@ -716,7 +716,8 @@ void Base::contourLoadCmd(const char* fn,
 
 void Base::contourPasteCmd(const char* var)
 {
-  const char* ccmd = Tcl_GetVar(interp, var, TCL_LEAVE_ERR_MSG);
+  const char* ccmd = Tcl_GetVar(interp, var,
+				TCL_GLOBAL_ONLY | TCL_LEAVE_ERR_MSG);
   if (!ccmd) {
     result = TCL_ERROR;
     return;
@@ -744,7 +745,8 @@ void Base::contourPasteCmd(const char* var)
 void Base::contourPasteCmd(const char* var, const char* color,
 			   int width, int dash)
 {
-  const char* ccmd = Tcl_GetVar(interp, var, TCL_LEAVE_ERR_MSG);
+  const char* ccmd = Tcl_GetVar(interp, var,
+				TCL_GLOBAL_ONLY | TCL_LEAVE_ERR_MSG);
   if (!ccmd) {
     result = TCL_ERROR;
     return;
@@ -3319,6 +3321,5 @@ void Base::get3dRenderBackgroundCmd()
 {
   Tcl_AppendResult(interp, "none", NULL);
 }
-
 
 

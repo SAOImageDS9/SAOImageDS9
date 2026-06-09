@@ -121,6 +121,23 @@ int WidgetCopyArea(Display* display, Drawable src, Drawable dst, GC gc,
   if (!img)
     return BadDrawable;
 
+  if (img->bits_per_pixel == 32) {
+    for (int yy=0; yy<img->height; yy++) {
+      unsigned char* ptr =
+	(unsigned char*)img->data + yy*img->bytes_per_line;
+      for (int xx=0; xx<img->width; xx++, ptr+=4) {
+	unsigned char a = ptr[0];
+	unsigned char r = ptr[1];
+	unsigned char g = ptr[2];
+	unsigned char b = ptr[3];
+	ptr[0] = b;
+	ptr[1] = g;
+	ptr[2] = r;
+	ptr[3] = a;
+      }
+    }
+  }
+
   int result = TkPutImage(NULL, 0, display, dst, gc, img, 0, 0, dstX, dstY,
 			  width, height);
   XDestroyImage(img);

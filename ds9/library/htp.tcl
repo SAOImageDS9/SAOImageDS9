@@ -244,8 +244,11 @@ proc http::Event {sock token} {
 		    }
 		    if {![info exists state(-handler)]} {
 			# Initiate a sequence of background fcopies.
+			# Initiate a sequence of background fcopies.
 			fileevent $sock readable {}
-			rename ${token}EventCoroutine {}
+			if {[info coroutine] ne ""} {
+			    rename [info coroutine] {}
+			}
 			CopyStart $sock $token
 			return
 		    }

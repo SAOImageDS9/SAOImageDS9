@@ -108,6 +108,28 @@ void WidgetDCharsProc(Tk_Canvas canvas, Tk_Item* item, int first, int last)
   WIDGET(item).dcharsProc(first, last);
 }
 
+int WidgetCopyArea(Display* display, Drawable src, Drawable dst, GC gc,
+		   int srcX, int srcY, unsigned int width, unsigned int height,
+		   int dstX, int dstY)
+{
+  if (!width || !height)
+    return Success;
+
+#ifdef MAC_OSX_TK
+  XImage* img = XGetImage(display, src, srcX, srcY, width, height,
+			  AllPlanes, ZPixmap);
+  if (!img)
+    return BadDrawable;
+
+  int result = TkPutImage(NULL, 0, display, dst, gc, img, 0, 0, dstX, dstY,
+			  width, height);
+  XDestroyImage(img);
+  return result;
+#else
+  return XCopyArea(display, src, dst, gc, srcX, srcY, width, height, dstX, dstY);
+#endif
+}
+
 int WidgetParse(ClientData widget, Tcl_Interp* interp, int argc, 
 		const char** argv)
 {
@@ -382,8 +404,8 @@ void Widget::displayProc(Drawable draw, int clipX, int clipY,
 
   // set the clip region and copy the pixmap into the drawable
   XSetClipOrigin(display, widgetGC, drawX - pmX, drawY - pmY);
-  XCopyArea(display, pixmap, draw, widgetGC, pmX, pmY, (unsigned int) pmWidth,
-	    (unsigned int) pmHeight, drawX, drawY);
+  WidgetCopyArea(display, pixmap, draw, widgetGC, pmX, pmY,
+		 (unsigned int)pmWidth, (unsigned int)pmHeight, drawX, drawY);
 }
 
 double Widget::pointProc(double* point)

@@ -43,6 +43,9 @@ typedef struct Ensemble {
 } Ensemble;
 
 namespace Blt {
+  extern int CopyArea(Display*, Drawable, Drawable, GC, int, int,
+		      unsigned int, unsigned int, int, int);
+
   class Axis;
   class BindTable;
   class Crosshairs;

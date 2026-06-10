@@ -156,6 +156,45 @@ Graph::~Graph()
   free (ops_);
 }
 
+int Blt::CopyArea(Display* display, Drawable src, Drawable dst, GC gc,
+		  int srcX, int srcY, unsigned int width, unsigned int height,
+		  int dstX, int dstY)
+{
+  if (!width || !height)
+    return Success;
+
+#ifdef MAC_OSX_TK
+  XImage* img = XGetImage(display, src, srcX, srcY, width, height,
+			  AllPlanes, ZPixmap);
+  if (!img)
+    return BadDrawable;
+
+  if (img->bits_per_pixel == 32) {
+    for (int yy=0; yy<img->height; yy++) {
+      unsigned char* ptr =
+	(unsigned char*)img->data + yy*img->bytes_per_line;
+      for (int xx=0; xx<img->width; xx++, ptr+=4) {
+	unsigned char a = ptr[0];
+	unsigned char r = ptr[1];
+	unsigned char g = ptr[2];
+	unsigned char b = ptr[3];
+	ptr[0] = b;
+	ptr[1] = g;
+	ptr[2] = r;
+	ptr[3] = a;
+      }
+    }
+  }
+
+  int result = TkPutImage(NULL, 0, display, dst, gc, img, 0, 0, dstX, dstY,
+			  width, height);
+  XDestroyImage(img);
+  return result;
+#else
+  return XCopyArea(display, src, dst, gc, srcX, srcY, width, height, dstX, dstY);
+#endif
+}
+
 int Graph::configure()	
 {
   GraphOptions* ops = (GraphOptions*)ops_;
@@ -310,8 +349,8 @@ void Graph::draw()
     flags &= ~CACHE;
   }
 
-  XCopyArea(display_, cache_, drawable, drawGC_, 0, 0, Tk_Width(tkwin_),
-	    Tk_Height(tkwin_), 0, 0);
+  CopyArea(display_, cache_, drawable, drawGC_, 0, 0, Tk_Width(tkwin_),
+	   Tk_Height(tkwin_), 0, 0);
   
   drawMarkers(drawable, MARKER_ABOVE);
 
@@ -332,8 +371,8 @@ void Graph::draw()
   // crosshairs
   crosshairs_->draw(drawable);
 
-  XCopyArea(display_, drawable, Tk_WindowId(tkwin_), drawGC_, 
-	    0, 0, width_, height_, 0, 0);
+  CopyArea(display_, drawable, Tk_WindowId(tkwin_), drawGC_,
+	   0, 0, width_, height_, 0, 0);
 
   Tk_FreePixmap(display_, drawable);
 }

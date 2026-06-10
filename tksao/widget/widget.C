@@ -582,7 +582,7 @@ void Widget::createCommand()
 
   cmd = new char[strlen(options->cmdName)+1];
   strcpy(cmd, options->cmdName);
-  Tcl_CreateObjCommand(interp, cmd, WidgetObjParse, (ClientData)this, NULL);
+  Tcl_CreateObjCommand2(interp, cmd, WidgetObjParse, (ClientData)this, NULL);
 }
 
 int Widget::checkArgs(int should, Tcl_Size argc, char** argv)

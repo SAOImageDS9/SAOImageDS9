@@ -50,6 +50,10 @@ static Tk_ConfigSpec colorbarHSVTrueColor16Specs[] = {
    offsetof(ColorbarBaseOptions, orientation), 0, NULL},
   {TK_CONFIG_INT, (char*)"-size", NULL, NULL, "20",
    offsetof(ColorbarBaseOptions, size), 0, NULL},
+  {TK_CONFIG_DOUBLE, (char*)"-center", NULL, NULL, "0.5",
+   offsetof(ColorbarBaseOptions, center), 0, NULL},
+  {TK_CONFIG_DOUBLE, (char*)"-barwidth", NULL, NULL, "1",
+   offsetof(ColorbarBaseOptions, widthFactor), 0, NULL},
 
   {TK_CONFIG_STRING, (char*)"-font", NULL, NULL, "helvetica",
    offsetof(ColorbarBaseOptions, font), 0, NULL},

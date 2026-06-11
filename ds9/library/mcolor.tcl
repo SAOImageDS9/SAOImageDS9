@@ -79,6 +79,12 @@ proc ColorMainMenu {} {
 	-label [msgcat::mc {Size}] \
 	-command ColorbarSizeDialog
     $ds9(mb).color.colorbar add command \
+	-label [msgcat::mc {Center}] \
+	-command ColorbarCenterDialog
+    $ds9(mb).color.colorbar add command \
+	-label [msgcat::mc {Width}] \
+	-command ColorbarWidthDialog
+    $ds9(mb).color.colorbar add command \
 	-label [msgcat::mc {Number of Ticks}] \
 	-command TicksDialog
 
@@ -237,6 +243,12 @@ proc PrefsDialogColor {} {
 
     ttk::label $f.tsize -text [msgcat::mc {Colorbar Size}]
     ttk::entry $f.size -textvariable pcolorbar(size) -width 10
+
+    ttk::label $f.tcenter -text [msgcat::mc {Colorbar Center}]
+    ttk::entry $f.center -textvariable pcolorbar(center) -width 10
+
+    ttk::label $f.twidth -text [msgcat::mc {Colorbar Width}]
+    ttk::entry $f.width -textvariable pcolorbar(width) -width 10
     
     ttk::label $f.tticks -text [msgcat::mc {Number of Ticks}]
     ttk::entry $f.ticks -textvariable pcolorbar(ticks) -width 10
@@ -245,6 +257,8 @@ proc PrefsDialogColor {} {
     ColorMenuButton $f.color pcolorbar tag {}
 
     grid $f.tsize $f.size -padx 2 -pady 2 -sticky w
+    grid $f.tcenter $f.center -padx 2 -pady 2 -sticky w
+    grid $f.twidth $f.width -padx 2 -pady 2 -sticky w
     grid $f.tticks $f.ticks -padx 2 -pady 2 -sticky w
     grid $f.tcolor $f.color -padx 2 -pady 2 -sticky w
 

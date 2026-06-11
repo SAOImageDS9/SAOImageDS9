@@ -4,12 +4,13 @@
 
 #include yesno.tin
 #include fonts.tin
-#include int.tin
+#include numeric.tin
 #include string.tin
 
 %start command
 
 %token DISTANCE_
+%token CENTER_
 %token HORIZONTAL_
 %token LOCK_
 %token MATCH_
@@ -20,11 +21,13 @@
 %token TICKS_
 %token VALUE_
 %token VERTICAL_
+%token WIDTH_
 
 %%
 
 #include yesno.trl
 #include fonts.trl
+#include numeric.trl
 
 command : colorbar
  | colorbar {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
@@ -42,6 +45,9 @@ colorbar : yesno {ProcessCmdSet view colorbar $1 ColorbarUpdateView}
  | FONTSLANT_ fontSlant {ProcessCmdSet colorbar font,slant $2 ColorbarUpdateView}
 # backward compatibility
  | FONTSTYLE_ fontStyle {ProcessCmdFontStyle colorbar font $2 ColorbarUpdateView}
+
+ | CENTER_ numeric {ProcessCmdSet colorbar center $2 ColorbarUpdateView}
+ | WIDTH_ numeric {ProcessCmdSet colorbar width $2 ColorbarUpdateView}
 
  | orientation {ProcessCmdSet colorbar orientation $1 ColorbarUpdateView}
 # backward compatibility

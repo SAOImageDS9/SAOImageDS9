@@ -77,6 +77,8 @@ int CBGrid::render()
 {
   pixmap_ = ((ColorbarBase*)parent_)->pixmap;
   gridGC_ = ((ColorbarBase*)parent_)->gridGC_;
+  matrix_ = Translate(((ColorbarBase*)parent_)->barX(),
+		      ((ColorbarBase*)parent_)->barY());
   return doit(X11);
 }
 
@@ -127,13 +129,15 @@ int CBGrid::doit(RenderMode rm)
     goto error;
 
   if (!opts->orientation) {
-    if (!(aa = astLutMap(cnt_, lut_, 0, double(opts->width)/(cnt_-1), "")))
+    if (!(aa = astLutMap(cnt_, lut_, 0, 
+			 double(((ColorbarBase*)parent_)->barWidth())/(cnt_-1), "")))
       goto error;
     if (!(cmp = astCmpMap(aa, bb, 0, "")))
       goto error;
   }
   else {
-    if (!(aa = astLutMap(cnt_, lut_, 0, double(opts->height)/(cnt_-1), "")))
+    if (!(aa = astLutMap(cnt_, lut_, 0, 
+			 double(((ColorbarBase*)parent_)->barHeight())/(cnt_-1), "")))
       goto error;
     if (!(cmp = astCmpMap(bb, aa, 0, "")))
       goto error;
@@ -156,12 +160,12 @@ int CBGrid::doit(RenderMode rm)
 
   int ww,hh,zz;
   if (!opts->orientation) {
-    ww = opts->width;
-    hh = opts->size;
+    ww = ((ColorbarBase*)parent_)->barWidth();
+    hh = ((ColorbarBase*)parent_)->barHeight();
   }
   else {
-    ww = opts->size;
-    hh = opts->height;
+    ww = ((ColorbarBase*)parent_)->barWidth();
+    hh = ((ColorbarBase*)parent_)->barHeight();
   }
   zz =0;
 

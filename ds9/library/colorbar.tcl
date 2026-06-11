@@ -236,6 +236,8 @@ proc ColorbarDef {} {
     set colorbar(tag) red
 
     set colorbar(size) 20
+    set colorbar(center) 0.5
+    set colorbar(width) 1
     set colorbar(ticks) 11
     set colorbar(numerics) 1
     set colorbar(space) 0
@@ -263,6 +265,8 @@ proc CreateColorbar {} {
 	-anchor nw \
 	\
 	-size $colorbar(size) \
+	-center $colorbar(center) \
+	-barwidth $colorbar(width) \
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
@@ -343,6 +347,8 @@ proc CreateColorbarBase {frame} {
 	-anchor nw \
 	\
 	-size $colorbar(size) \
+	-center $colorbar(center) \
+	-barwidth $colorbar(width) \
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
@@ -418,6 +424,8 @@ proc CreateColorbarRGB {frame} {
 	-anchor nw \
 	\
 	-size $colorbar(size) \
+	-center $colorbar(center) \
+	-barwidth $colorbar(width) \
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
@@ -465,6 +473,8 @@ proc CreateColorbarHSV {frame} {
 	-anchor nw \
 	\
 	-size $colorbar(size) \
+	-center $colorbar(center) \
+	-barwidth $colorbar(width) \
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
@@ -512,6 +522,8 @@ proc CreateColorbarHLS {frame} {
 	-anchor nw \
 	\
 	-size $colorbar(size) \
+	-center $colorbar(center) \
+	-barwidth $colorbar(width) \
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
@@ -1252,6 +1264,18 @@ proc ColorbarSizeDialog {} {
     }
 }
 
+proc ColorbarCenterDialog {} {
+    if {[EntryDialogGlobal [msgcat::mc {Colorbar}] [msgcat::mc {Center}] 10 colorbar center]} {
+	ColorbarUpdateView
+    }
+}
+
+proc ColorbarWidthDialog {} {
+    if {[EntryDialogGlobal [msgcat::mc {Colorbar}] [msgcat::mc {Width}] 10 colorbar width]} {
+	ColorbarUpdateView
+    }
+}
+
 proc TicksDialog {} {
     if {[EntryDialogGlobal [msgcat::mc {Colorbar}] [msgcat::mc {Number of Ticks}] 10 colorbar ticks]} {
 	ColorbarUpdateView
@@ -1702,6 +1726,8 @@ proc LayoutColorbar {cb fx fy fw fh} {
 
     $cb configure \
 	-size $colorbar(size) \
+	-center $colorbar(center) \
+	-barwidth $colorbar(width) \
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
@@ -1788,6 +1814,8 @@ proc ColorbarUpdateView {} {
     # update default colorbar
     colorbar configure \
 	-size $colorbar(size) \
+	-center $colorbar(center) \
+	-barwidth $colorbar(width) \
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
@@ -1804,6 +1832,8 @@ proc ColorbarUpdateView {} {
 
 	$cb configure \
 	    -size $colorbar(size) \
+	    -center $colorbar(center) \
+	    -barwidth $colorbar(width) \
 	    -ticks $colorbar(ticks) \
 	    -numerics $colorbar(numerics) \
 	    -space $colorbar(space) \
@@ -1841,6 +1871,8 @@ proc ColorbarBackup {ch dir} {
 
     # colorbar params
     puts $ch "colorbar configure -size $colorbar(size)"
+    puts $ch "colorbar configure -center $colorbar(center)"
+    puts $ch "colorbar configure -barwidth $colorbar(width)"
     puts $ch "colorbar configure -ticks $colorbar(ticks)"
     puts $ch "colorbar configure -numerics $colorbar(numerics)"
     puts $ch "colorbar configure -space $colorbar(space)"

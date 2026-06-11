@@ -51,6 +51,10 @@ static Tk_ConfigSpec colorbarTrueColor8Specs[] = {
    offsetof(ColorbarBaseOptions, orientation), 0, NULL},
   {TK_CONFIG_INT, (char*)"-size", NULL, NULL, "20",
    offsetof(ColorbarBaseOptions, size), 0, NULL},
+  {TK_CONFIG_DOUBLE, (char*)"-center", NULL, NULL, "0.5",
+   offsetof(ColorbarBaseOptions, center), 0, NULL},
+  {TK_CONFIG_DOUBLE, (char*)"-barwidth", NULL, NULL, "1",
+   offsetof(ColorbarBaseOptions, widthFactor), 0, NULL},
 
   {TK_CONFIG_STRING, (char*)"-font", NULL, NULL, "helvetica",
    offsetof(ColorbarBaseOptions, font), 0, NULL},
@@ -139,8 +143,8 @@ ColorbarTrueColor8::ColorbarTrueColor8(Tcl_Interp* i, Tk_Canvas c,
 
 void ColorbarTrueColor8::updateColorsHorz()
 {
-  int width = options->width-2;
-  int height = ((ColorbarBaseOptions*)options)->size-2;
+  int width = xmap->width;
+  int height = xmap->height;
   char* data = xmap->data;
     
   for (int ii=0; ii<width; ii++)
@@ -155,8 +159,8 @@ void ColorbarTrueColor8::updateColorsHorz()
 
 void ColorbarTrueColor8::updateColorsVert()
 {
-  int width = ((ColorbarBaseOptions*)options)->size-2;
-  int height = options->height-2;
+  int width = xmap->width;
+  int height = xmap->height;
   char* data = xmap->data;
     
   for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {

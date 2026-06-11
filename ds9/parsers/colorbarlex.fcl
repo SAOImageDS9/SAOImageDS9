@@ -7,6 +7,7 @@
 
 %%
 
+center		{return $CENTER_}
 distance	{return $DISTANCE_}
 horizontal	{return $HORIZONTAL_}
 lock		{return $LOCK_}
@@ -18,10 +19,11 @@ space		{return $SPACE_}
 ticks		{return $TICKS_}
 value		{return $VALUE_}
 vertical	{return $VERTICAL_}
+width		{return $WIDTH_}
 
 #include yesno.fin
 #include fonts.fin
-#include int.fin
+#include numeric.fin
 #include string.fin
 #include ws.fin
 

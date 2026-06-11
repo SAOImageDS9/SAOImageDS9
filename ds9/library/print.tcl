@@ -311,6 +311,7 @@ proc PDFGraphLabel {vv} {
 }
 
 proc PDFGraph {pdf frame which} {
+    global ds9
     global graph
 
     set varname ${frame}gr
@@ -403,7 +404,9 @@ proc PDFGraph {pdf frame which} {
     $pdf rectangle $px0 $py0 [expr $px1-$px0] [expr $py1-$py0] \
 	-filled 0 -stroke 1
 
-    $pdf setFont $graph(font,size) Helvetica
+    foreach {fontSize fontName} [PDFCanvasFont \
+				     "$ds9($graph(font)) $graph(font,size) $graph(font,weight) $graph(font,slant)"] {}
+    $pdf setFont $fontSize $fontName
     set tickLen 4
     switch -- $which {
 	horz {
@@ -415,7 +418,7 @@ proc PDFGraph {pdf frame which} {
 		foreach {tx ty} [PDFGraphPoint $gr $x0 $y0 $xmax $yy] {}
 		$pdf line $px1 $ty [expr $px1+$tickLen] $ty
 		$pdf text [PDFGraphLabel $yy] \
-		    -x [expr $px1+$tickLen+3] -y [expr $ty+$graph(font,size)/2.] \
+		    -x [expr $px1+$tickLen+3] -y [expr $ty+$fontSize/2.] \
 		    -align left
 	    }
 	}
@@ -428,7 +431,7 @@ proc PDFGraph {pdf frame which} {
 		foreach {tx ty} [PDFGraphPoint $gr $x0 $y0 $xmin $yy] {}
 		$pdf line $tx $py1 $tx [expr $py1+$tickLen]
 		$pdf text [PDFGraphLabel $yy] \
-		    -x $tx -y [expr $py1+$tickLen+$graph(font,size)] \
+		    -x $tx -y [expr $py1+$tickLen+$fontSize] \
 		    -align center
 	    }
 	}
@@ -775,6 +778,7 @@ proc PDF {fn} {
     global ds9
     global ps
     global pps
+    global current
 
     RealizeDS9
     UpdateColormapLevel
@@ -784,8 +788,16 @@ proc PDF {fn} {
     set bg [$ds9(canvas) cget -background]
 
     set cmyk [expr {$pps(color) == "cmyk" ? 1 : 0}]
-    set title [$ds9(active) get fits file name]
-    set obj [$ds9(active) get fits object name]
+    set title {}
+    set obj {}
+    set metaFrame $current(frame)
+    if {$metaFrame == {} && [llength $ds9(active)]} {
+	set metaFrame [lindex $ds9(active) 0]
+    }
+    if {$metaFrame != {} && [llength [info commands $metaFrame]]} {
+	catch {set title [$metaFrame get fits file name]}
+	catch {set obj [$metaFrame get fits object name]}
+    }
 
     if {[catch {
 	package require pdf4tcl

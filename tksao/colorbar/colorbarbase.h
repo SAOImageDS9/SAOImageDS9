@@ -32,6 +32,8 @@ struct ColorbarBaseOptions {
 
   int orientation;           // 0-horizontal, 1-vertical
   int size;
+  double center;             // long-axis placement, 0..1
+  double widthFactor;        // long-axis size, 0..1
 
   char* font;
   int fontSize;
@@ -80,6 +82,7 @@ class ColorbarBase : public Widget {
   int cmapid_;
 
  private:
+  double clamp01(double);
   Tk_Font getFont();
   void lutToText(Tk_Font);
 
@@ -108,6 +111,11 @@ class ColorbarBase : public Widget {
 #endif
 
  protected:
+  int barX();
+  int barY();
+  int barWidth();
+  int barHeight();
+
   void updateGCs();
   void updateMatrices();
   void invalidPixmap();

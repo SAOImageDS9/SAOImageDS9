@@ -399,6 +399,7 @@ proc PlotCmdExport {format fn} {
 
     switch -- $format {
 	eps {FileLast epsbox $fn}
+	pdf {FileLast pdffbox $fn}
 	gif {FileLast giffbox $fn}
 	jpeg {FileLast jpegfbox $fn}
 	tiff {FileLast tifffbox $fn}
@@ -410,4 +411,3 @@ proc PlotCmdExport {format fn} {
     }
     PlotExport $cvarname $fn $format
 }
-

@@ -432,6 +432,9 @@ public:
   void printAngleFromRef(double, Coord::CoordSystem, Coord::SkyFrame);
 
   void ps();
+  int pdfCmd(Tcl_Obj*, Tcl_Size, Tcl_Obj *const []);
+  int pdfImage(Tcl_Obj*);
+  int pdfVectorLayers(Tcl_Obj*);
   void psCrosshair(PSColorSpace);
   virtual void psGraphics(PSColorSpace) {}
   void psImage(ostream&, Filter&, int, int, float);

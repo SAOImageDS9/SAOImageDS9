@@ -65,6 +65,12 @@ proc InitDialogBox {} {
     set epsfbox(types) [list \
 			    [list {EPS} {*.eps}] \
 			   ]
+    global pdffbox
+    set pdffbox(file) {ds9.pdf}
+    set pdffbox(dir) {}
+    set pdffbox(types) [list \
+			    [list {PDF} {*.pdf}] \
+			   ]
     global arrayfbox
     set arrayfbox(file) {ds9.arr}
     set arrayfbox(dir) {}
@@ -471,6 +477,7 @@ proc ExtToFormat {fn} {
 	.nrrd {return nrrd}
 	.eps -
 	.epsf {return eps}
+	.pdf {return pdf}
 	.gif -
 	.giff {return gif}
 	.jpg -

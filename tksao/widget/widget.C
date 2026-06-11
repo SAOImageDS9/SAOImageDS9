@@ -25,6 +25,8 @@ void* magnifierparentptr_ =NULL;
 void* pannerptr_ =NULL;
 void* pannerparentptr_ =NULL;
 
+int widgetPdfMode_ =0;
+
 // Tk Canvas Widget Functions Declaration
 
 int WidgetConfigProc(Tcl_Interp* interp, Tk_Canvas canvas, Tk_Item* item, 
@@ -121,6 +123,38 @@ int WidgetParse(ClientData widget, Tcl_Interp* interp, int argc,
 
     for (int i=1; i<argc; i++)
       ostr << argv[i] << " ";
+    ostr << ends;
+
+    result = ((Widget*)widget)->parse(istr);
+  }
+
+  Tcl_Release(widget);
+  return result;
+}
+
+int WidgetObjParse(ClientData widget, Tcl_Interp* interp, Tcl_Size objc, 
+		   Tcl_Obj *const objv[])
+{
+  int result;
+  Tcl_Preserve(widget);
+
+  if (objc >= 2 && !strncmp(Tcl_GetString(objv[1]),"config",6)) {
+    const char** argv = new const char*[objc > 2 ? objc-2 : 1];
+    for (Tcl_Size ii=2; ii<objc; ii++)
+      argv[ii-2] = Tcl_GetString(objv[ii]);
+
+    result = ((Widget*)widget)->configCmd(objc-2, argv);
+    delete [] argv;
+  }
+  else if (objc >= 3 && !strcmp(Tcl_GetString(objv[1]),"pdf"))
+    result = ((Widget*)widget)->pdfCmd(objv[2], objc-3, objv+3);
+
+  else {
+    istringstream istr(ios::in|ios::out);
+    ostream ostr(istr.rdbuf());
+
+    for (Tcl_Size i=1; i<objc; i++)
+      ostr << Tcl_GetString(objv[i]) << " ";
     ostr << ends;
 
     result = ((Widget*)widget)->parse(istr);
@@ -373,6 +407,12 @@ int Widget::postscriptProc(int prepass)
   return TCL_OK;
 }
 
+int Widget::pdfCmd(Tcl_Obj*, Tcl_Size, Tcl_Obj *const [])
+{
+  Tcl_AppendResult(interp, "pdf output is not supported by this widget", NULL);
+  return TCL_ERROR;
+}
+
 void Widget::scaleProc(double Ox, double Oy, double Sx, double Sy)
 {
   // translate to (Ox,Oy), scale by (Sx,Sy), translate back from (Ox,Oy)
@@ -485,7 +525,7 @@ void Widget::createCommand()
 
   cmd = new char[strlen(options->cmdName)+1];
   strcpy(cmd, options->cmdName);
-  Tcl_CreateCommand(interp, cmd, WidgetParse, (ClientData)this, NULL);
+  Tcl_CreateObjCommand(interp, cmd, WidgetObjParse, (ClientData)this, NULL);
 }
 
 int Widget::checkArgs(int should, Tcl_Size argc, char** argv)
@@ -706,6 +746,9 @@ int Widget::setClipRectangles(Display *d, GC gc, int x, int y,
 #endif
 
 Vector Widget::TkCanvasPs(const Vector& v) {
+  if (widgetPdfMode_)
+    return Vector(v[0], v[1]);
+
   return Vector(v[0], Tk_CanvasPsY(canvas, v[1]));
 }
 

@@ -70,6 +70,7 @@ namespace Blt {
     int pointIn(Point2d*);
     int regionIn(Region2d*, int);
     void print(PSOutput*);
+    void appendPdfData(Tcl_Interp*, Tcl_Obj*);
 
   public:
     PolygonMarker(Graph*, const char*, Tcl_HashEntry*);

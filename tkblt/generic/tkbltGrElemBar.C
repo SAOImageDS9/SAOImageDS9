@@ -1314,3 +1314,95 @@ void BarElement::printValues(PSOutput* psPtr, BarPen* penPtr,
   }
 }
 
+static Tcl_Obj* BarPdfColorObj(XColor* colorPtr)
+{
+  if (!colorPtr)
+    return Tcl_NewStringObj("", -1);
+
+  char buf[16];
+  snprintf(buf, sizeof(buf), "#%02x%02x%02x",
+	   colorPtr->red >> 8, colorPtr->green >> 8, colorPtr->blue >> 8);
+  return Tcl_NewStringObj(buf, -1);
+}
+
+static Tcl_Obj* BarPdfSegmentsObj(GraphSegments* segmentsPtr)
+{
+  Tcl_Obj* listObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+  for (int ii=0; ii<segmentsPtr->length; ii++) {
+    Tcl_Obj* segObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(segmentsPtr->segments[ii].p.x));
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(segmentsPtr->segments[ii].p.y));
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(segmentsPtr->segments[ii].q.x));
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(segmentsPtr->segments[ii].q.y));
+    Tcl_ListObjAppendElement(NULL, listObjPtr, segObjPtr);
+  }
+
+  return listObjPtr;
+}
+
+static Tcl_Obj* BarPdfRectanglesObj(Rectangle* bars, int count)
+{
+  Tcl_Obj* listObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+  for (int ii=0; ii<count; ii++) {
+    Tcl_Obj* rectObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+    Tcl_ListObjAppendElement(NULL, rectObjPtr, Tcl_NewIntObj(bars[ii].x));
+    Tcl_ListObjAppendElement(NULL, rectObjPtr, Tcl_NewIntObj(bars[ii].y));
+    Tcl_ListObjAppendElement(NULL, rectObjPtr,
+			     Tcl_NewIntObj((int)bars[ii].width));
+    Tcl_ListObjAppendElement(NULL, rectObjPtr,
+			     Tcl_NewIntObj((int)bars[ii].height));
+    Tcl_ListObjAppendElement(NULL, listObjPtr, rectObjPtr);
+  }
+
+  return listObjPtr;
+}
+
+void BarElement::appendPdfStyleData(Tcl_Interp* interp, Tcl_Obj* dictObjPtr)
+{
+  BarElementOptions* ops = (BarElementOptions*)ops_;
+  Tcl_Obj* stylesObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+
+  for (ChainLink* link = Chain_FirstLink(ops->stylePalette); link;
+       link = Chain_NextLink(link)) {
+    BarStyle* stylePtr = (BarStyle*)Chain_GetValue(link);
+    BarPen* penPtr = (BarPen*)stylePtr->penPtr;
+    BarPenOptions* pops = (BarPenOptions*)penPtr->ops();
+    XColor* fillColor = pops->fill ? Tk_3DBorderColor(pops->fill) : NULL;
+    XColor* errorColor = pops->errorBarColor ?
+      pops->errorBarColor : pops->outlineColor;
+    if (!errorColor)
+      errorColor = fillColor;
+
+    Tcl_Obj* styleObjPtr = Tcl_NewDictObj();
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("fill", -1),
+		   BarPdfColorObj(fillColor));
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("outline", -1),
+		   BarPdfColorObj(pops->outlineColor));
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("borderwidth", -1),
+		   Tcl_NewIntObj(pops->borderWidth));
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("bars", -1),
+		   BarPdfRectanglesObj(stylePtr->bars, stylePtr->nBars));
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("errorbarcolor", -1),
+		   BarPdfColorObj(errorColor));
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("errorbarwidth", -1),
+		   Tcl_NewIntObj(pops->errorBarLineWidth));
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("errorbarcap", -1),
+		   Tcl_NewIntObj(stylePtr->errorBarCapWidth));
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("xerrors", -1),
+		   (pops->errorBarShow & SHOW_X) ?
+		   BarPdfSegmentsObj(&stylePtr->xeb) :
+		   Tcl_NewListObj(0, (Tcl_Obj**)NULL));
+    Tcl_DictObjPut(interp, styleObjPtr, Tcl_NewStringObj("yerrors", -1),
+		   (pops->errorBarShow & SHOW_Y) ?
+		   BarPdfSegmentsObj(&stylePtr->yeb) :
+		   Tcl_NewListObj(0, (Tcl_Obj**)NULL));
+    Tcl_ListObjAppendElement(interp, stylesObjPtr, styleObjPtr);
+  }
+
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("styles", -1),
+		 stylesObjPtr);
+}

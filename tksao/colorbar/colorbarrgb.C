@@ -54,6 +54,77 @@ void ColorbarRGB::psVert(ostream& str, Filter& filter, int width, int height)
   }
 }
 
+void ColorbarRGB::pdfHorz(unsigned char* data, int width, int height)
+{
+  int blueEnd = (int)(height/3.);
+  int greenEnd = (int)(height*2/3.);
+
+  for (int jj=0; jj<(int)(height/3.); jj++) {
+    for (int ii=0; ii<width; ii++) {
+      unsigned char* pix = data + (jj*width + ii)*3;
+      int kk = (int)(double(ii)/width*colorCount)*3;
+
+      pix[0] = 0;
+      pix[1] = 0;
+      pix[2] = colorCells[kk+2];
+    }
+  }
+
+  for (int jj=blueEnd; jj<greenEnd; jj++) {
+    for (int ii=0; ii<width; ii++) {
+      unsigned char* pix = data + (jj*width + ii)*3;
+      int kk = (int)(double(ii)/width*colorCount)*3;
+
+      pix[0] = 0;
+      pix[1] = colorCells[kk+1];
+      pix[2] = 0;
+    }
+  }
+
+  for (int jj=greenEnd; jj<height; jj++) {
+    for (int ii=0; ii<width; ii++) {
+      unsigned char* pix = data + (jj*width + ii)*3;
+      int kk = (int)(double(ii)/width*colorCount)*3;
+
+      pix[0] = colorCells[kk];
+      pix[1] = 0;
+      pix[2] = 0;
+    }
+  }
+}
+
+void ColorbarRGB::pdfVert(unsigned char* data, int width, int height)
+{
+  int redEnd = (int)(width/3.);
+  int greenEnd = (int)(width*2/3.);
+
+  for (int jj=0; jj<height; jj++) {
+    int kk = (int)(double(height-1-jj)/height*colorCount)*3;
+    unsigned char red = colorCells[kk];
+    unsigned char green = colorCells[kk+1];
+    unsigned char blue = colorCells[kk+2];
+
+    for (int ii=0; ii<width; ii++) {
+      unsigned char* pix = data + (jj*width + ii)*3;
+      if (ii < redEnd) {
+	pix[0] = red;
+	pix[1] = 0;
+	pix[2] = 0;
+      }
+      else if (ii < greenEnd) {
+	pix[0] = 0;
+	pix[1] = green;
+	pix[2] = 0;
+      }
+      else {
+	pix[0] = 0;
+	pix[1] = 0;
+	pix[2] = blue;
+      }
+    }
+  }
+}
+
 void ColorbarRGB::updateColorCells()
 {
   int clrs = (((ColorbarBaseOptions*)options)->colors);

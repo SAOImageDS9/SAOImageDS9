@@ -11,6 +11,7 @@ Last updated 2026-05-26
 | fitsy      |            | y   |       |                                                                      |                                 |
 | funtools   | 1.4.8      | y   | y     | https://github.com/ericmandel/funtools                               | abandoned                       |
 | openssl    | **3.2.0**  |     |       | https://github.com/openssl/openssl                                   | 4.0.0                           |
+| pdf4tcl    | 0.9.4      |     |       | https://sourceforge.net/projects/pdf4tcl/                            | 0.9.4                           |
 | scidthemes | **1.0**    |     |       | https://sourceforge.net/projects/scid/files/Scid/Additional%20Files/ | 1.0                             |
 | taccle     |            | y   |       | https://github.com/wjoye/taccle                                      | previous upstream abandoned     |
 | tcl8.6     | 8.6.15     |     |       | https://github.com/tcltk/tcl                                         | 8.6.18/9.0.3                    |

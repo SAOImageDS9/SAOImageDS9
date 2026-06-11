@@ -8,7 +8,7 @@
 <h1 id="sun.pngsaoimageds9-version-8.8-release-notes"><img alt="" src="../sun.png" align="middle">SAOImageDS9
 Version 8.8 Release Notes</h1>
 <h3 id="beta-1">Beta 1:</h3>
-<ol>
+<ul>
 <li><strong>BUILD</strong>: Updated <code>Makefiles</code> to ensure
 that <code>tclsh</code> is getting picked up from the local build
 directory.</li>
@@ -49,8 +49,9 @@ actively maintained, so <code>dsssao</code> now returns an error
 message.</li>
 <li><strong>EXAMINE</strong>: Fix bug when event file is loaded, data
 are now properly binned to 1.0/zoom level.</li>
-<li><strong>XPA</strong>: Generate an error if already connected instead
-of trying to disconnect and re-init the connection.</li>
+<li><strong>XPA</strong>: Generate an error on <code>xpa connect</code>
+if already connected instead of trying to disconnect and re-init the
+connection.</li>
 <li><strong>TKSAO</strong>: Updated to use <code>pkg-config</code> if
 <code>xml2-config</code> is not available</li>
 <li><strong>TCLXML</strong>: Updated to use <code>pkg-config</code> if
@@ -65,22 +66,29 @@ remove obsoleted versions and include newer surveys.</li>
 <li><strong>TCLSIGNAL</strong>: Updated to 1.4.5</li>
 <li><strong>AWTHEMES</strong>: Updated to 10.4.0</li>
 <li><strong>TTKTHEMES</strong>: Updated to 3.3.0</li>
-<li><strong>FITSY</strong>: Updated HEALPIX code to support partial
-healpix files included Multi-Order-Coverage (MOC) maps. Contributed by
-A. Fruscione using ChatGPT.</li>
+<li><strong>FITSY</strong>: Updated HEALPIX code to support
+Multi-Order-Coverage (MOC) maps and partial Healpix files. Contributed
+by A. Fruscione.</li>
 <li><strong>PHOTO</strong>: Fix regression introduced in 8.7 saving TIFF
 and JPEG formats via <code>xpaget ds9 jpeg &gt; foo.jpg</code> due to
-tkimg behavior change.</li>
+<code>tkimg</code> behavior change.</li>
 <li><strong>MOVIE</strong>: New <code>script</code> option allows users
 to write a script of instructions to control the image display such as
 pan, zoom, add/delete regions, adjust color map/scaling, etc, and turn
-that into movie. ChatGPT + Gemini.</li>
+that into movie.</li>
 <li><strong>MANIFEST</strong>: added <code>Manifest.md</code> to
 identify which packages come from where, versions, and identify upstream
 sources.</li>
-<li><strong>GITHUB</strong>: added GitHub actions to demo proof of
-concept contributed by D. Burke.</li>
-</ol>
-
+<li><strong>GITHUB</strong>: added GitHub actions contributed by D.
+Burke.</li>
+<li><strong>SAVEIMAGE</strong>: Added new option:
+<code>-saveimage pdf</code> will save image to PDF format.</li>
+<li><strong>PLOT</strong>: Added new export option:
+<code>-plot export pdf</code> will save plots to PDF format.</li>
+<li><strong>TKBLT</strong>: Updated to expose plot tick mark locations,
+curve points, and more to support PDF plots.</li>
+<li><strong>PDF4TCL</strong>: Added v0.9.4 to packages to provide PDF
+support.</li>
+</ul>
 </body>
 </html>

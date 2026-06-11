@@ -2167,7 +2167,7 @@ plot [gui]<br>
 <p>
 # export<br>
 plot [export &lt;filename&gt;]<br>
-&nbsp;&nbsp;&nbsp; [export eps|gif|tiff|jpeg|png &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [export eps|pdf|gif|tiff|jpeg|png &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [export jpeg &lt;filename&gt; [int(1-100)]]<br>
 &nbsp;&nbsp;&nbsp; [export tiff &lt;filename&gt; none|jpeg|packbits|deflate]]<br>
 </p>
@@ -2284,6 +2284,7 @@ plot mode pointer<br>
 # export plot<br>
 ds9.set(string cmd)<br>
 plot export tiff foo.tiff jpeg<br>
+plot export pdf foo.pdf<br>
 plot export jpeg foo.jpeg 75<br>
 plot export png foo.png<br>
 </p>
@@ -2865,13 +2866,14 @@ save mosaicimage foo.fits</tt><br>
 <p><b><a name="saveimage" id="saveimage"></a>saveimage</b></p>
 <p>Create a snap shot of the current DS9 window and save in specified image format. If no format specified, the file name extension is used to determine the output format. Optional parameters: <tt>jpeg</tt> quality int(1-100) and <tt>tiff</tt> compression method.</p>
 <tt>Syntax:<br>
-saveimage[fits|eps|gif|tiff|jpeg|png]&lt;filename&gt;<br>
+saveimage[fits|eps|pdf|gif|tiff|jpeg|png]&lt;filename&gt;<br>
 saveimage &lt;filename&gt;.jpeg [int(1-100)]<br>
 saveimage &lt;filename&gt;.tiff [none|jpeg|packbits|deflate]<br>
 &nbsp;<br>
 Example:<br>
 ds9.set(string cmd)<br>
 saveimage ds9.tiff<br>
+saveimage pdf ds9.pdf<br>
 saveimage jpeg ds9.jpeg 75</tt><br>
 <p><b><a name="scale" id="scale"></a>scale</b></p>
 <p>Controls the limits and color scale distribution.</p>

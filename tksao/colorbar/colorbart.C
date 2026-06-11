@@ -128,6 +128,85 @@ void ColorbarT::psVert(ostream& str, Filter& filter, int width, int height)
   }
 }
 
+void ColorbarT::pdfHorz(unsigned char* data, int width, int height)
+{
+  int rgbEnd = (int)(height/3.);
+  int satStart = (int)(height/3.+1);
+  int satEnd = (int)(height*2/3.);
+  int valStart = (int)(height*2/3.+1);
+
+  for (int jj=0; jj<height; jj++) {
+    for (int ii=0; ii<width; ii++) {
+      unsigned char* pix = data + (jj*width + ii)*3;
+      int kk = (int)(double(ii)/width*colorCount)*5;
+
+      if (jj < rgbEnd) {
+	pix[0] = colorCells[kk+2];
+	pix[1] = colorCells[kk+1];
+	pix[2] = colorCells[kk];
+      }
+      else if (jj >= satStart && jj < satEnd) {
+	unsigned char v = colorCells[kk+3];
+	pix[0] = v;
+	pix[1] = v;
+	pix[2] = v;
+      }
+      else if (jj >= valStart) {
+	unsigned char v = colorCells[kk+4];
+	pix[0] = v;
+	pix[1] = v;
+	pix[2] = v;
+      }
+      else {
+	pix[0] = 0;
+	pix[1] = 0;
+	pix[2] = 0;
+      }
+    }
+  }
+}
+
+void ColorbarT::pdfVert(unsigned char* data, int width, int height)
+{
+  int rgbEnd = (int)(width/3.);
+  int satStart = (int)(width/3.+1);
+  int satEnd = (int)(width*2/3.);
+  int valStart = (int)(width*2/3.+1);
+
+  for (int jj=0; jj<height; jj++) {
+    int kk = (int)(double(height-1-jj)/height*colorCount)*5;
+    unsigned char blue = colorCells[kk];
+    unsigned char green = colorCells[kk+1];
+    unsigned char red = colorCells[kk+2];
+    unsigned char ss = colorCells[kk+3];
+    unsigned char vv = colorCells[kk+4];
+
+    for (int ii=0; ii<width; ii++) {
+      unsigned char* pix = data + (jj*width + ii)*3;
+      if (ii < rgbEnd) {
+	pix[0] = red;
+	pix[1] = green;
+	pix[2] = blue;
+      }
+      else if (ii >= satStart && ii < satEnd) {
+	pix[0] = ss;
+	pix[1] = ss;
+	pix[2] = ss;
+      }
+      else if (ii >= valStart) {
+	pix[0] = vv;
+	pix[1] = vv;
+	pix[2] = vv;
+      }
+      else {
+	pix[0] = 0;
+	pix[1] = 0;
+	pix[2] = 0;
+      }
+    }
+  }
+}
+
 #ifdef MAC_OSX_TK
 void ColorbarT::macosx(float scale, int width, int height, 
 		       const Vector& v, const Vector& s)
@@ -141,4 +220,3 @@ void ColorbarT::win32(float scale, int width, int height,
 		      const Vector& v, const Vector& s)
 {}
 #endif
-

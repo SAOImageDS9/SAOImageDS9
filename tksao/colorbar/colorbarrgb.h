@@ -13,6 +13,8 @@ class ColorbarRGB : public ColorbarT {
 protected:
   void psHorz(ostream&, Filter&, int, int);
   void psVert(ostream&, Filter&, int, int);
+  void pdfHorz(unsigned char*, int, int);
+  void pdfVert(unsigned char*, int, int);
   void updateColorCells();
   int initColormap();
 

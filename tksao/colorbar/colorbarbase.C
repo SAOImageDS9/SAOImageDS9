@@ -9,8 +9,131 @@
 #include "cbgrid.h"
 #include "ps.h"
 
+#include <vector>
+
 #define TICKLEN 3
 #define TICKGAP 7
+
+static int CbPdfEvalObjv(Tcl_Interp* interp, Tcl_Size objc, Tcl_Obj** objv)
+{
+  for (Tcl_Size ii=0; ii<objc; ii++)
+    Tcl_IncrRefCount(objv[ii]);
+
+  int rr = Tcl_EvalObjv(interp, objc, objv, TCL_EVAL_GLOBAL);
+
+  for (Tcl_Size ii=0; ii<objc; ii++)
+    Tcl_DecrRefCount(objv[ii]);
+
+  return rr;
+}
+
+static int CbPdfMethod(Tcl_Interp* interp, Tcl_Obj* pdfObj,
+		       const char* method, Tcl_Size objc, Tcl_Obj** args)
+{
+  Tcl_Obj** objv = new Tcl_Obj*[objc+2];
+  objv[0] = pdfObj;
+  objv[1] = Tcl_NewStringObj(method, -1);
+  for (Tcl_Size ii=0; ii<objc; ii++)
+    objv[ii+2] = args[ii];
+
+  int rr = CbPdfEvalObjv(interp, objc+2, objv);
+  delete [] objv;
+
+  return rr;
+}
+
+static int CbPdfColor(Tcl_Interp* interp, Tcl_Obj* pdfObj,
+		      double r, double g, double b)
+{
+  Tcl_Obj* args[3];
+  args[0] = Tcl_NewDoubleObj(r);
+  args[1] = Tcl_NewDoubleObj(g);
+  args[2] = Tcl_NewDoubleObj(b);
+
+  if (CbPdfMethod(interp, pdfObj, "setStrokeColor", 3, args) != TCL_OK)
+    return TCL_ERROR;
+
+  args[0] = Tcl_NewDoubleObj(r);
+  args[1] = Tcl_NewDoubleObj(g);
+  args[2] = Tcl_NewDoubleObj(b);
+
+  return CbPdfMethod(interp, pdfObj, "setFillColor", 3, args);
+}
+
+static int CbPdfLine(Tcl_Interp* interp, Tcl_Obj* pdfObj,
+		     double x1, double y1, double x2, double y2)
+{
+  Tcl_Obj* args[4];
+  args[0] = Tcl_NewDoubleObj(x1);
+  args[1] = Tcl_NewDoubleObj(y1);
+  args[2] = Tcl_NewDoubleObj(x2);
+  args[3] = Tcl_NewDoubleObj(y2);
+
+  return CbPdfMethod(interp, pdfObj, "line", 4, args);
+}
+
+static int CbPdfPolygon(Tcl_Interp* interp, Tcl_Obj* pdfObj,
+			const std::vector<double>& pts, int closed,
+			int filled, int stroke)
+{
+  Tcl_Size objc = pts.size() + 6;
+  Tcl_Obj** args = new Tcl_Obj*[objc];
+  Tcl_Size jj = 0;
+
+  for (size_t ii=0; ii<pts.size(); ii++)
+    args[jj++] = Tcl_NewDoubleObj(pts[ii]);
+
+  args[jj++] = Tcl_NewStringObj("-closed", -1);
+  args[jj++] = Tcl_NewIntObj(closed);
+  args[jj++] = Tcl_NewStringObj("-filled", -1);
+  args[jj++] = Tcl_NewIntObj(filled);
+  args[jj++] = Tcl_NewStringObj("-stroke", -1);
+  args[jj++] = Tcl_NewIntObj(stroke);
+
+  int rr = CbPdfMethod(interp, pdfObj, "polygon", objc, args);
+  delete [] args;
+
+  return rr;
+}
+
+static int CbPdfSetLineWidth(Tcl_Interp* interp, Tcl_Obj* pdfObj, double width)
+{
+  Tcl_Obj* args[1];
+  args[0] = Tcl_NewDoubleObj(width);
+
+  return CbPdfMethod(interp, pdfObj, "setLineWidth", 1, args);
+}
+
+static int CbPdfText(Tcl_Interp* interp, Tcl_Obj* pdfObj, const string& text,
+		     double x, double y, const char* align)
+{
+  Tcl_Obj* fontArgs[2];
+  fontArgs[0] = Tcl_NewIntObj(10);
+  fontArgs[1] = Tcl_NewStringObj("Helvetica", -1);
+  if (CbPdfMethod(interp, pdfObj, "setFont", 2, fontArgs) != TCL_OK)
+    return TCL_ERROR;
+
+  Tcl_Obj* args[7];
+  args[0] = Tcl_NewStringObj(text.c_str(), -1);
+  args[1] = Tcl_NewStringObj("-x", -1);
+  args[2] = Tcl_NewDoubleObj(x);
+  args[3] = Tcl_NewStringObj("-y", -1);
+  args[4] = Tcl_NewDoubleObj(y);
+  args[5] = Tcl_NewStringObj("-align", -1);
+  args[6] = Tcl_NewStringObj(align, -1);
+
+  return CbPdfMethod(interp, pdfObj, "text", 7, args);
+}
+
+static int CbDeletePhoto(Tcl_Interp* interp, const char* photoName)
+{
+  Tcl_Obj* deleteObjv[3];
+  deleteObjv[0] = Tcl_NewStringObj("image", -1);
+  deleteObjv[1] = Tcl_NewStringObj("delete", -1);
+  deleteObjv[2] = Tcl_NewStringObj(photoName, -1);
+
+  return CbPdfEvalObjv(interp, 3, deleteObjv);
+}
 
 // Parser Stuff
 #undef yyFlexLexer
@@ -522,6 +645,213 @@ int ColorbarBase::postscriptProc(int prepass)
   Tcl_AppendResult(interp, "grestore\n", NULL);
 
   return TCL_OK;
+}
+
+int ColorbarBase::pdfCmd(Tcl_Obj* pdfObj, Tcl_Size, Tcl_Obj *const [])
+{
+  if (!visible)
+    return TCL_OK;
+
+  if (pdfImage(pdfObj) != TCL_OK)
+    return TCL_ERROR;
+
+  return pdfGrid(pdfObj);
+}
+
+int ColorbarBase::pdfImage(Tcl_Obj* pdfObj)
+{
+  ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
+
+  int width = !opts->orientation ? options->width : opts->size;
+  int height = !opts->orientation ? opts->size : options->height;
+  if (width <= 0 || height <= 0 || !colorCells || colorCount <= 0)
+    return TCL_OK;
+
+  updateColorCells();
+
+  unsigned char* img = new unsigned char[width*height*3];
+  memset(img, 0, width*height*3);
+  if (!opts->orientation)
+    pdfHorz(img, width, height);
+  else
+    pdfVert(img, width, height);
+
+  char photoName[128];
+  snprintf(photoName, sizeof(photoName), "::tksao_pdf_colorbar_%p",
+	   (void*)this);
+
+  Tcl_Obj* createObjv[4];
+  createObjv[0] = Tcl_NewStringObj("image", -1);
+  createObjv[1] = Tcl_NewStringObj("create", -1);
+  createObjv[2] = Tcl_NewStringObj("photo", -1);
+  createObjv[3] = Tcl_NewStringObj(photoName, -1);
+
+  int rr = CbPdfEvalObjv(interp, 4, createObjv);
+  if (rr != TCL_OK) {
+    delete [] img;
+    return rr;
+  }
+
+  Tk_PhotoHandle photo = Tk_FindPhoto(interp, photoName);
+  if (!photo) {
+    Tcl_AppendResult(interp, "unable to create temporary PDF colorbar image",
+		     NULL);
+    delete [] img;
+    return TCL_ERROR;
+  }
+
+  Tk_PhotoImageBlock block;
+  block.pixelPtr = img;
+  block.width = width;
+  block.height = height;
+  block.pitch = width*3;
+  block.pixelSize = 3;
+  block.offset[0] = 0;
+  block.offset[1] = 1;
+  block.offset[2] = 2;
+  block.offset[3] = 0;
+
+  rr = Tk_PhotoPutBlock(interp, photo, &block, 0, 0, width, height,
+			TK_PHOTO_COMPOSITE_SET);
+  delete [] img;
+  if (rr != TCL_OK) {
+    CbDeletePhoto(interp, photoName);
+    return rr;
+  }
+
+  Tcl_Obj* dataObjv[2];
+  dataObjv[0] = Tcl_NewStringObj(photoName, -1);
+  dataObjv[1] = Tcl_NewStringObj("data", -1);
+  rr = CbPdfEvalObjv(interp, 2, dataObjv);
+  if (rr != TCL_OK) {
+    CbDeletePhoto(interp, photoName);
+    return rr;
+  }
+
+  Tcl_Obj* dataObj = Tcl_GetObjResult(interp);
+  Tcl_IncrRefCount(dataObj);
+
+  Tcl_Obj* addArgs[1];
+  addArgs[0] = dataObj;
+  rr = CbPdfMethod(interp, pdfObj, "addRawImage", 1, addArgs);
+  Tcl_DecrRefCount(dataObj);
+  if (rr != TCL_OK) {
+    CbDeletePhoto(interp, photoName);
+    return rr;
+  }
+
+  Tcl_Obj* imageId = Tcl_GetObjResult(interp);
+  Tcl_IncrRefCount(imageId);
+
+  double x = originX;
+  double y = originY;
+
+  Tcl_Obj* putArgs[9];
+  putArgs[0] = imageId;
+  putArgs[1] = Tcl_NewDoubleObj(x);
+  putArgs[2] = Tcl_NewDoubleObj(y);
+  putArgs[3] = Tcl_NewStringObj("-width", -1);
+  putArgs[4] = Tcl_NewDoubleObj(width);
+  putArgs[5] = Tcl_NewStringObj("-height", -1);
+  putArgs[6] = Tcl_NewDoubleObj(height);
+  putArgs[7] = Tcl_NewStringObj("-anchor", -1);
+  putArgs[8] = Tcl_NewStringObj("nw", -1);
+  rr = CbPdfMethod(interp, pdfObj, "putImage", 9, putArgs);
+  Tcl_DecrRefCount(imageId);
+
+  if (rr != TCL_OK) {
+    Tcl_Obj* errorObj = Tcl_GetObjResult(interp);
+    Tcl_IncrRefCount(errorObj);
+    CbDeletePhoto(interp, photoName);
+    Tcl_SetObjResult(interp, errorObj);
+    Tcl_DecrRefCount(errorObj);
+    return rr;
+  }
+
+  return CbDeletePhoto(interp, photoName);
+}
+
+int ColorbarBase::pdfGrid(Tcl_Obj* pdfObj)
+{
+  ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
+
+  int width = !opts->orientation ? options->width : opts->size;
+  int height = !opts->orientation ? opts->size : options->height;
+  if (width <= 0 || height <= 0)
+    return TCL_OK;
+
+  double x = originX;
+  double y = originY;
+
+  double r = opts->fgColor ? opts->fgColor->red/65535. : 0;
+  double g = opts->fgColor ? opts->fgColor->green/65535. : 0;
+  double b = opts->fgColor ? opts->fgColor->blue/65535. : 0;
+
+  int rr = TCL_OK;
+
+  rr = CbPdfColor(interp, pdfObj, r, g, b);
+  if (rr != TCL_OK)
+    return rr;
+
+  rr = CbPdfSetLineWidth(interp, pdfObj, .5);
+  if (rr != TCL_OK)
+    return rr;
+
+  std::vector<double> box;
+  box.push_back(x);
+  box.push_back(y);
+  box.push_back(x+width);
+  box.push_back(y);
+  box.push_back(x+width);
+  box.push_back(y+height);
+  box.push_back(x);
+  box.push_back(y+height);
+  rr = CbPdfPolygon(interp, pdfObj, box, 1, 0, 1);
+  if (rr != TCL_OK)
+    return rr;
+
+  if (!opts->numerics || !lut || opts->ticks < 2)
+    return TCL_OK;
+
+  Tk_Font font = getFont();
+  if (!font)
+    return TCL_OK;
+
+  lutToText(font);
+
+  int incrcnt = 0;
+  for (int ii=0; rr == TCL_OK && ii<opts->ticks; ii++) {
+    if (!opts->orientation) {
+      double xx = x + ii/double(opts->ticks-1)*options->width;
+      double y1 = y + height;
+      double y2 = y1 + TICKLEN;
+      rr = CbPdfLine(interp, pdfObj, xx, y1, xx, y2);
+
+      if (rr == TCL_OK && !incrcnt && ticktxt[ii])
+	rr = CbPdfText(interp, pdfObj, ticktxt[ii],
+		       xx, y2 + TICKGAP + opts->fontSize, "center");
+    }
+    else {
+      double x1 = x + width;
+      double x2 = x1 + TICKLEN;
+      double yy = y + options->height -
+	ii/double(opts->ticks-1)*options->height;
+      rr = CbPdfLine(interp, pdfObj, x1, yy, x2, yy);
+
+      if (rr == TCL_OK && !incrcnt && ticktxt[ii])
+	rr = CbPdfText(interp, pdfObj, ticktxt[ii],
+		       x2 + TICKGAP, yy + opts->fontSize/2., "left");
+    }
+
+    if (incrcnt < skipcnt)
+      incrcnt++;
+    else
+      incrcnt = 0;
+  }
+
+  Tk_FreeFont(font);
+
+  return rr;
 }
 
 void ColorbarBase::ps()
@@ -1217,5 +1547,3 @@ void ColorbarBase::win32GridAST()
 }
 
 #endif
-
-

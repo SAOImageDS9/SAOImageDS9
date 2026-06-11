@@ -1,4 +1,5 @@
 %{
+package provide DS9 1.0
 %}
 #include def.tin
 
@@ -78,6 +79,7 @@
 %token PAGESIZE_
 %token PALETTE_
 %token PLOTAREA_
+%token PDF_
 %token PLUS_
 %token POINTER_
 %token PORTRAIT_
@@ -375,6 +377,7 @@ export : STRING_ {PlotCmdExport [ExtToFormat $1] $1}
  ;
 
 exportExt : EPS_ {set _ eps}
+ | PDF_ {set _ pdf}
  | GIF_ {set _ gif}
  | TIFF_ {set _ tiff}
  | JPEG_ {set _ jpeg}

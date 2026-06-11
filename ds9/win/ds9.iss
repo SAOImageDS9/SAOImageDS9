@@ -74,6 +74,7 @@ Source: "..\..\bin\SAOImageDS9\tls\*"; DestDir: "{app}\tls\"; Flags: ignoreversi
 Source: "..\..\bin\SAOImageDS9\tooltip\*"; DestDir: "{app}\tooltip\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\bin\SAOImageDS9\ttkthemes\*"; DestDir: "{app}\ttkthemes\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\bin\SAOImageDS9\ssl\*"; DestDir: "{app}\ssl\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\bin\SAOImageDS9\pdf4tcl\*"; DestDir: "{app}\pdf4tcl\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\bin\SAOImageDS9\xpans.exe"; DestDir: "{app}";
 
 

@@ -141,6 +141,7 @@ PREQS	= \
 	$(LIBDIR)/log \
 	$(LIBDIR)/textutil \
 	$(LIBDIR)/math \
+	$(LIBDIR)/pdf4tcl \
 	$(LIBDIR)/tooltip \
 	$(LIBDIR)/awthemes \
 	$(LIBDIR)/ttkthemes \
@@ -219,6 +220,8 @@ $(APPDIR)/ttkthemes: $(prefix)/ttkthemes/ttkthemes/themes
 $(APPDIR)/scidthemes: $(prefix)/scidthemes
 	cp -fr $? "$@"
 
+$(LIBDIR)/pdf4tcl: $(prefix)/pdf4tcl
+	cp -rf $? "$@"
 
 # ------------------ssl
 $(APPDIR)/ssl: $(prefix)/openssl

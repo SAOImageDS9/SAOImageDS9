@@ -36,6 +36,7 @@
 #include "tkbltGrAxis.h"
 #include "tkbltGrAxisOp.h"
 #include "tkbltGrMisc.h"
+#include "tkbltGrText.h"
 #include "tkbltInt.h"
 
 using namespace Blt;
@@ -299,6 +300,38 @@ static int TransformOp(ClientData clientData, Tcl_Interp* interp,
   return AxisTransformOp(axisPtr, interp, objc-1, objv+1);
 }
 
+static int TicksOp(ClientData clientData, Tcl_Interp* interp,
+		   int objc, Tcl_Obj* const objv[])
+{
+  Graph* graphPtr = (Graph*)clientData;
+  if (objc!=4) {
+    Tcl_WrongNumArgs(interp, 3, objv, "axisId");
+    return TCL_ERROR;
+  }
+
+  Axis* axisPtr;
+  if (graphPtr->getAxis(objv[3], &axisPtr) != TCL_OK)
+    return TCL_ERROR;
+
+  return AxisTicksOp(axisPtr, interp, objc-1, objv+1);
+}
+
+static int PdfDataOp(ClientData clientData, Tcl_Interp* interp,
+		     int objc, Tcl_Obj* const objv[])
+{
+  Graph* graphPtr = (Graph*)clientData;
+  if (objc!=4) {
+    Tcl_WrongNumArgs(interp, 3, objv, "axisId");
+    return TCL_ERROR;
+  }
+
+  Axis* axisPtr;
+  if (graphPtr->getAxis(objv[3], &axisPtr) != TCL_OK)
+    return TCL_ERROR;
+
+  return AxisPdfDataOp(axisPtr, interp, objc-1, objv+1);
+}
+
 static int TypeOp(ClientData clientData, Tcl_Interp* interp, 
 		  int objc, Tcl_Obj* const objv[])
 {
@@ -343,6 +376,8 @@ const Ensemble Blt::axisEnsemble[] = {
   {"limits",       LimitsOp, 0},
   {"margin",       MarginOp, 0},
   {"names",        NamesOp, 0},
+  {"pdfdata",      PdfDataOp, 0},
+  {"ticks",        TicksOp, 0},
   {"transform",    TransformOp, 0},
   {"type",         TypeOp, 0},
   {"view",         ViewOp, 0},
@@ -576,6 +611,177 @@ int AxisTransformOp(Axis* axisPtr, Tcl_Interp* interp,
   return TCL_OK;
 }
 
+int AxisTicksOp(Axis* axisPtr, Tcl_Interp* interp,
+		int objc, Tcl_Obj* const objv[])
+{
+  AxisOptions* ops = (AxisOptions*)axisPtr->ops();
+  Graph* graphPtr = axisPtr->graphPtr_;
+
+  graphPtr->map();
+
+  Ticks* ticksPtr = ops->t1UPtr ? ops->t1UPtr : axisPtr->t1Ptr_;
+  Tcl_Obj* listObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+  if (!ops->showTicks || !ticksPtr) {
+    Tcl_SetObjResult(interp, listObjPtr);
+    return TCL_OK;
+  }
+
+  ChainLink* link = Chain_FirstLink(axisPtr->tickLabels_);
+  for (int ii=0; ii<ticksPtr->nTicks; ii++) {
+    double value = ticksPtr->values[ii];
+    double labelValue = value;
+    if (ops->labelOffset)
+      labelValue += axisPtr->majorSweep_.step * 0.5;
+
+    if (!axisPtr->inRange(labelValue, &axisPtr->axisRange_))
+      continue;
+    if (!link)
+      break;
+
+    TickLabel* labelPtr = (TickLabel*)Chain_GetValue(link);
+    link = Chain_NextLink(link);
+
+    if (ops->logScale)
+      value = EXP10(value);
+
+    Tcl_Obj* tickObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+    Tcl_ListObjAppendElement(interp, tickObjPtr, Tcl_NewDoubleObj(value));
+    Tcl_ListObjAppendElement(interp, tickObjPtr,
+			     Tcl_NewStringObj(labelPtr->string, -1));
+    Tcl_ListObjAppendElement(interp, tickObjPtr,
+			     Tcl_NewDoubleObj(labelPtr->anchorPos.x));
+    Tcl_ListObjAppendElement(interp, tickObjPtr,
+			     Tcl_NewDoubleObj(labelPtr->anchorPos.y));
+    Tcl_ListObjAppendElement(interp, listObjPtr, tickObjPtr);
+  }
+
+  Tcl_SetObjResult(interp, listObjPtr);
+  return TCL_OK;
+}
+
+static Tcl_Obj* AxisPdfColorObj(XColor* colorPtr)
+{
+  if (!colorPtr)
+    return Tcl_NewStringObj("", -1);
+
+  char buf[16];
+  snprintf(buf, sizeof(buf), "#%02x%02x%02x",
+	   colorPtr->red >> 8, colorPtr->green >> 8, colorPtr->blue >> 8);
+  return Tcl_NewStringObj(buf, -1);
+}
+
+static Tcl_Obj* AxisPdfSegmentsObj(Segment2d* segments, int count)
+{
+  Tcl_Obj* listObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+  for (int ii=0; ii<count; ii++) {
+    Tcl_Obj* segObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(segments[ii].p.x));
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(segments[ii].p.y));
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(segments[ii].q.x));
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(segments[ii].q.y));
+    Tcl_ListObjAppendElement(NULL, listObjPtr, segObjPtr);
+  }
+
+  return listObjPtr;
+}
+
+static const char* AxisPdfAnchorName(Tk_Anchor anchor)
+{
+  switch (anchor) {
+  case TK_ANCHOR_N: return "n";
+  case TK_ANCHOR_NE: return "ne";
+  case TK_ANCHOR_E: return "e";
+  case TK_ANCHOR_SE: return "se";
+  case TK_ANCHOR_S: return "s";
+  case TK_ANCHOR_SW: return "sw";
+  case TK_ANCHOR_W: return "w";
+  case TK_ANCHOR_NW: return "nw";
+  case TK_ANCHOR_CENTER:
+  default:
+    return "center";
+  }
+}
+
+int AxisPdfDataOp(Axis* axisPtr, Tcl_Interp* interp,
+		  int objc, Tcl_Obj* const objv[])
+{
+  AxisOptions* ops = (AxisOptions*)axisPtr->ops();
+  Graph* graphPtr = axisPtr->graphPtr_;
+
+  graphPtr->map();
+
+  Tcl_Obj* dictObjPtr = Tcl_NewDictObj();
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("name", -1),
+		 Tcl_NewStringObj(axisPtr->name_, -1));
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("hide", -1),
+		 Tcl_NewIntObj(ops->hide));
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("use", -1),
+		 Tcl_NewIntObj(axisPtr->use_));
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("horizontal", -1),
+		 Tcl_NewIntObj(axisPtr->isHorizontal()));
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("margin", -1),
+		 Tcl_NewStringObj(axisPtr->use_ ?
+				  axisNames[axisPtr->margin_].name : "", -1));
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("foreground", -1),
+		 AxisPdfColorObj(axisPtr->active_ ?
+				 ops->activeFgColor : ops->tickColor));
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("linewidth", -1),
+		 Tcl_NewIntObj(ops->lineWidth));
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("segments", -1),
+		 AxisPdfSegmentsObj(axisPtr->segments_, axisPtr->nSegments_));
+
+  Tcl_Obj* ticksObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+  if (ops->showTicks) {
+    for (ChainLink* link = Chain_FirstLink(axisPtr->tickLabels_); link;
+	 link = Chain_NextLink(link)) {
+      TickLabel* labelPtr = (TickLabel*)Chain_GetValue(link);
+      Tcl_Obj* tickObjPtr = Tcl_NewDictObj();
+      Tcl_DictObjPut(interp, tickObjPtr, Tcl_NewStringObj("label", -1),
+		     Tcl_NewStringObj(labelPtr->string, -1));
+      Tcl_DictObjPut(interp, tickObjPtr, Tcl_NewStringObj("x", -1),
+		     Tcl_NewDoubleObj(labelPtr->anchorPos.x));
+      Tcl_DictObjPut(interp, tickObjPtr, Tcl_NewStringObj("y", -1),
+		     Tcl_NewDoubleObj(labelPtr->anchorPos.y));
+      Tcl_DictObjPut(interp, tickObjPtr, Tcl_NewStringObj("anchor", -1),
+		     Tcl_NewStringObj(AxisPdfAnchorName(axisPtr->tickAnchor_), -1));
+      Tcl_DictObjPut(interp, tickObjPtr, Tcl_NewStringObj("angle", -1),
+		     Tcl_NewDoubleObj(ops->tickAngle));
+      Tcl_ListObjAppendElement(interp, ticksObjPtr, tickObjPtr);
+    }
+  }
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("ticks", -1),
+		 ticksObjPtr);
+
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("tickfont", -1),
+		 Tcl_NewStringObj(Tk_NameOfFont(ops->tickFont), -1));
+
+  Tcl_Obj* titleObjPtr = Tcl_NewDictObj();
+  Tcl_DictObjPut(interp, titleObjPtr, Tcl_NewStringObj("text", -1),
+		 Tcl_NewStringObj(ops->title ? ops->title : "", -1));
+  Tcl_DictObjPut(interp, titleObjPtr, Tcl_NewStringObj("x", -1),
+		 Tcl_NewDoubleObj(axisPtr->titlePos_.x));
+  Tcl_DictObjPut(interp, titleObjPtr, Tcl_NewStringObj("y", -1),
+		 Tcl_NewDoubleObj(axisPtr->titlePos_.y));
+  Tcl_DictObjPut(interp, titleObjPtr, Tcl_NewStringObj("anchor", -1),
+		 Tcl_NewStringObj(AxisPdfAnchorName(axisPtr->titleAnchor_), -1));
+  Tcl_DictObjPut(interp, titleObjPtr, Tcl_NewStringObj("angle", -1),
+		 Tcl_NewDoubleObj(axisPtr->titleAngle_));
+  Tcl_DictObjPut(interp, titleObjPtr, Tcl_NewStringObj("font", -1),
+		 Tcl_NewStringObj(Tk_NameOfFont(ops->titleFont), -1));
+  Tcl_DictObjPut(interp, titleObjPtr, Tcl_NewStringObj("color", -1),
+		 AxisPdfColorObj(axisPtr->active_ ?
+				 ops->activeFgColor : ops->titleColor));
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("title", -1),
+		 titleObjPtr);
+
+  Tcl_SetObjResult(interp, dictObjPtr);
+  return TCL_OK;
+}
+
 int AxisTypeOp(Axis* axisPtr, Tcl_Interp* interp, 
 	       int objc, Tcl_Obj* const objv[])
 {
@@ -673,4 +879,3 @@ int AxisViewOp(Axis* axisPtr, Tcl_Interp* interp,
 
   return TCL_OK;
 }
-

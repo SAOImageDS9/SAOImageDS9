@@ -22,6 +22,277 @@
 
 #include "tkColor.h"
 
+#include <algorithm>
+#include <vector>
+
+static int EvalObjv(Tcl_Interp* interp, Tcl_Size objc, Tcl_Obj** objv)
+{
+  for (Tcl_Size ii=0; ii<objc; ii++)
+    Tcl_IncrRefCount(objv[ii]);
+
+  int rr = Tcl_EvalObjv(interp, objc, objv, TCL_EVAL_GLOBAL);
+
+  for (Tcl_Size ii=0; ii<objc; ii++)
+    Tcl_DecrRefCount(objv[ii]);
+
+  return rr;
+}
+
+static int PdfMethod(Tcl_Interp* interp, Tcl_Obj* pdfObj, const char* method,
+		     Tcl_Size objc, Tcl_Obj** args)
+{
+  Tcl_Obj** objv = new Tcl_Obj*[objc+2];
+  objv[0] = pdfObj;
+  objv[1] = Tcl_NewStringObj(method, -1);
+  for (Tcl_Size ii=0; ii<objc; ii++)
+    objv[ii+2] = args[ii];
+
+  int rr = EvalObjv(interp, objc+2, objv);
+  delete [] objv;
+
+  return rr;
+}
+
+static int PdfColor(Tcl_Interp* interp, Tcl_Obj* pdfObj,
+		    double r, double g, double b)
+{
+  Tcl_Obj* args[3];
+  args[0] = Tcl_NewDoubleObj(r);
+  args[1] = Tcl_NewDoubleObj(g);
+  args[2] = Tcl_NewDoubleObj(b);
+
+  if (PdfMethod(interp, pdfObj, "setStrokeColor", 3, args) != TCL_OK)
+    return TCL_ERROR;
+
+  args[0] = Tcl_NewDoubleObj(r);
+  args[1] = Tcl_NewDoubleObj(g);
+  args[2] = Tcl_NewDoubleObj(b);
+
+  return PdfMethod(interp, pdfObj, "setFillColor", 3, args);
+}
+
+static int PdfLine(Tcl_Interp* interp, Tcl_Obj* pdfObj,
+		   double x1, double y1, double x2, double y2)
+{
+  Tcl_Obj* args[4];
+  args[0] = Tcl_NewDoubleObj(x1);
+  args[1] = Tcl_NewDoubleObj(y1);
+  args[2] = Tcl_NewDoubleObj(x2);
+  args[3] = Tcl_NewDoubleObj(y2);
+
+  return PdfMethod(interp, pdfObj, "line", 4, args);
+}
+
+static int PdfPolygon(Tcl_Interp* interp, Tcl_Obj* pdfObj,
+		      const std::vector<double>& pts, int closed,
+		      int filled, int stroke)
+{
+  Tcl_Size objc = pts.size() + 6;
+  Tcl_Obj** args = new Tcl_Obj*[objc];
+  Tcl_Size jj = 0;
+
+  for (size_t ii=0; ii<pts.size(); ii++)
+    args[jj++] = Tcl_NewDoubleObj(pts[ii]);
+
+  args[jj++] = Tcl_NewStringObj("-closed", -1);
+  args[jj++] = Tcl_NewIntObj(closed);
+  args[jj++] = Tcl_NewStringObj("-filled", -1);
+  args[jj++] = Tcl_NewIntObj(filled);
+  args[jj++] = Tcl_NewStringObj("-stroke", -1);
+  args[jj++] = Tcl_NewIntObj(stroke);
+
+  int rr = PdfMethod(interp, pdfObj, "polygon", objc, args);
+  delete [] args;
+
+  return rr;
+}
+
+static int PdfCircle(Tcl_Interp* interp, Tcl_Obj* pdfObj,
+		     double x, double y, double r, int filled, int stroke)
+{
+  Tcl_Obj* args[7];
+  args[0] = Tcl_NewDoubleObj(x);
+  args[1] = Tcl_NewDoubleObj(y);
+  args[2] = Tcl_NewDoubleObj(r);
+  args[3] = Tcl_NewStringObj("-filled", -1);
+  args[4] = Tcl_NewIntObj(filled);
+  args[5] = Tcl_NewStringObj("-stroke", -1);
+  args[6] = Tcl_NewIntObj(stroke);
+
+  return PdfMethod(interp, pdfObj, "circle", 7, args);
+}
+
+static int PdfSetLineWidth(Tcl_Interp* interp, Tcl_Obj* pdfObj, double width)
+{
+  Tcl_Obj* args[1];
+  args[0] = Tcl_NewDoubleObj(width);
+
+  return PdfMethod(interp, pdfObj, "setLineWidth", 1, args);
+}
+
+static int PdfSetLineDash(Tcl_Interp* interp, Tcl_Obj* pdfObj,
+			  const std::vector<double>& pattern, double offset)
+{
+  if (pattern.empty())
+    return PdfMethod(interp, pdfObj, "setLineDash", 0, NULL);
+
+  std::vector<double> pdfPattern = pattern;
+  if (pdfPattern.size() % 2) {
+    size_t count = pdfPattern.size();
+    for (size_t ii=0; ii<count; ii++)
+      pdfPattern.push_back(pdfPattern[ii]);
+  }
+
+  Tcl_Size objc = pdfPattern.size();
+  if (fabs(offset) > FLT_EPSILON)
+    objc++;
+
+  Tcl_Obj** args = new Tcl_Obj*[objc];
+  Tcl_Size jj = 0;
+  for (size_t ii=0; ii<pdfPattern.size(); ii++)
+    args[jj++] = Tcl_NewDoubleObj(pdfPattern[ii]);
+
+  if (fabs(offset) > FLT_EPSILON)
+    args[jj++] = Tcl_NewDoubleObj(offset);
+
+  int rr = PdfMethod(interp, pdfObj, "setLineDash", objc, args);
+  delete [] args;
+
+  return rr;
+}
+
+static void PdfParseDashToken(const string& tok, std::vector<double>& pattern)
+{
+  string item;
+  for (size_t ii=0; ii<tok.length(); ii++) {
+    char cc = tok[ii];
+    if (cc == '[' || cc == ']') {
+      if (!item.empty()) {
+	char* end = NULL;
+	double val = strtod(item.c_str(), &end);
+	if (end && *end == '\0')
+	  pattern.push_back(val);
+	item.erase();
+      }
+    }
+    else
+      item += cc;
+  }
+
+  if (!item.empty()) {
+    char* end = NULL;
+    double val = strtod(item.c_str(), &end);
+    if (end && *end == '\0')
+      pattern.push_back(val);
+  }
+}
+
+static int PdfText(Tcl_Interp* interp, Tcl_Obj* pdfObj, const string& text,
+		   double x, double y, const string& fontName,
+		   double fontSize, double angle)
+{
+  Tcl_Obj* fontArgs[2];
+  fontArgs[0] = Tcl_NewDoubleObj(fontSize);
+  fontArgs[1] = Tcl_NewStringObj(fontName.c_str(), -1);
+  if (PdfMethod(interp, pdfObj, "setFont", 2, fontArgs) != TCL_OK)
+    return TCL_ERROR;
+
+  Tcl_Obj* args[9];
+  args[0] = Tcl_NewStringObj(text.c_str(), -1);
+  args[1] = Tcl_NewStringObj("-x", -1);
+  args[2] = Tcl_NewDoubleObj(x);
+  args[3] = Tcl_NewStringObj("-y", -1);
+  args[4] = Tcl_NewDoubleObj(y);
+  args[5] = Tcl_NewStringObj("-align", -1);
+  args[6] = Tcl_NewStringObj("left", -1);
+  args[7] = Tcl_NewStringObj("-angle", -1);
+  args[8] = Tcl_NewDoubleObj(angle);
+
+  return PdfMethod(interp, pdfObj, "text", 9, args);
+}
+
+static size_t PdfTextMaxLineLength(const string& text)
+{
+  size_t maxLen = 0;
+  size_t curLen = 0;
+
+  for (size_t ii=0; ii<text.length(); ii++) {
+    if (text[ii] == '\n') {
+      if (curLen > maxLen)
+	maxLen = curLen;
+      curLen = 0;
+    }
+    else
+      curLen++;
+  }
+
+  return curLen > maxLen ? curLen : maxLen;
+}
+
+static void PdfTextPathBBox(const string& text, double fontSize,
+			    double* llx, double* lly, double* urx, double* ury)
+{
+  double width = PdfTextMaxLineLength(text) * fontSize * .6;
+  *llx = 0;
+  *lly = -fontSize * .2;
+  *urx = width;
+  *ury = fontSize * .8;
+}
+
+static void PdfRollStack(std::vector<double>& stack, int count, int shift)
+{
+  if (count <= 0 || (size_t)count > stack.size())
+    return;
+
+  shift %= count;
+  if (shift < 0)
+    shift += count;
+  if (!shift)
+    return;
+
+  std::vector<double>::iterator first = stack.end() - count;
+  std::vector<double>::iterator middle = stack.end() - shift;
+  std::rotate(first, middle, stack.end());
+}
+
+static void PdfAppendBezier(std::vector<double>& path, double x0, double y0,
+			    double x1, double y1, double x2, double y2,
+			    double x3, double y3)
+{
+  double chord = hypot(x3-x0, y3-y0);
+  double ctrl = hypot(x1-x0, y1-y0) + hypot(x2-x1, y2-y1) +
+    hypot(x3-x2, y3-y2);
+  int steps = (int)ceil(max(chord, ctrl)/8.);
+  if (steps < 8)
+    steps = 8;
+  if (steps > 64)
+    steps = 64;
+
+  if (path.empty()) {
+    path.push_back(x0);
+    path.push_back(y0);
+  }
+
+  for (int ii=1; ii<=steps; ii++) {
+    double t = (double)ii/steps;
+    double u = 1-t;
+    double x = u*u*u*x0 + 3*u*u*t*x1 + 3*u*t*t*x2 + t*t*t*x3;
+    double y = u*u*u*y0 + 3*u*u*t*y1 + 3*u*t*t*y2 + t*t*t*y3;
+    path.push_back(x);
+    path.push_back(y);
+  }
+}
+
+static int DeletePhoto(Tcl_Interp* interp, const char* photoName)
+{
+  Tcl_Obj* deleteObjv[3];
+  deleteObjv[0] = Tcl_NewStringObj("image", -1);
+  deleteObjv[1] = Tcl_NewStringObj("delete", -1);
+  deleteObjv[2] = Tcl_NewStringObj(photoName, -1);
+
+  return EvalObjv(interp, 3, deleteObjv);
+}
+
 // Debug
 int DebugBin= 0;
 int DebugBlock= 0;
@@ -901,6 +1172,525 @@ int Base::postscriptProc(int prepass)
   }
 
   return TCL_OK;
+}
+
+int Base::pdfCmd(Tcl_Obj* pdfObj, Tcl_Size, Tcl_Obj *const [])
+{
+  if (!visible || !currentContext)
+    return TCL_OK;
+
+  if (pdfImage(pdfObj) != TCL_OK)
+    return TCL_ERROR;
+
+  return pdfVectorLayers(pdfObj);
+}
+
+int Base::pdfImage(Tcl_Obj* pdfObj)
+{
+  if (!currentContext || !currentContext->fits)
+    return TCL_OK;
+
+  double ss = 1.;
+  int ww = options->width*ss;
+  int hh = options->height*ss;
+
+  pushPSMatrices(ss, ww, hh);
+
+  unsigned char* img = fillImage(ww, hh, Coord::WIDGET);
+  if (!img)
+    return TCL_OK;
+
+  char photoName[128];
+  snprintf(photoName, sizeof(photoName), "::tksao_pdf_photo_%p", (void*)this);
+
+  Tcl_Obj* createObjv[4];
+  createObjv[0] = Tcl_NewStringObj("image", -1);
+  createObjv[1] = Tcl_NewStringObj("create", -1);
+  createObjv[2] = Tcl_NewStringObj("photo", -1);
+  createObjv[3] = Tcl_NewStringObj(photoName, -1);
+
+  int rr = EvalObjv(interp, 4, createObjv);
+  if (rr != TCL_OK) {
+    delete [] img;
+    return rr;
+  }
+
+  Tk_PhotoHandle photo = Tk_FindPhoto(interp, photoName);
+  if (!photo) {
+    Tcl_AppendResult(interp, "unable to create temporary PDF photo image", NULL);
+    delete [] img;
+    return TCL_ERROR;
+  }
+
+  Tk_PhotoImageBlock block;
+  block.pixelPtr = img;
+  block.width = ww;
+  block.height = hh;
+  block.pitch = ww*3;
+  block.pixelSize = 3;
+  block.offset[0] = 0;
+  block.offset[1] = 1;
+  block.offset[2] = 2;
+  block.offset[3] = 0;
+
+  rr = Tk_PhotoPutBlock(interp, photo, &block, 0, 0, ww, hh,
+			TK_PHOTO_COMPOSITE_SET);
+  delete [] img;
+  if (rr != TCL_OK) {
+    DeletePhoto(interp, photoName);
+    return rr;
+  }
+
+  Tcl_Obj* dataObjv[2];
+  dataObjv[0] = Tcl_NewStringObj(photoName, -1);
+  dataObjv[1] = Tcl_NewStringObj("data", -1);
+  rr = EvalObjv(interp, 2, dataObjv);
+  if (rr != TCL_OK) {
+    DeletePhoto(interp, photoName);
+    return rr;
+  }
+
+  Tcl_Obj* dataObj = Tcl_GetObjResult(interp);
+  Tcl_IncrRefCount(dataObj);
+
+  Tcl_Obj* addArgs[1];
+  addArgs[0] = dataObj;
+  rr = PdfMethod(interp, pdfObj, "addRawImage", 1, addArgs);
+  Tcl_DecrRefCount(dataObj);
+  if (rr != TCL_OK) {
+    DeletePhoto(interp, photoName);
+    return rr;
+  }
+
+  Tcl_Obj* imageId = Tcl_GetObjResult(interp);
+  Tcl_IncrRefCount(imageId);
+
+  Vector oo = Vector(originX, originY);
+  Tcl_Obj* putArgs[10];
+  putArgs[0] = imageId;
+  putArgs[1] = Tcl_NewDoubleObj(oo[0]);
+  putArgs[2] = Tcl_NewDoubleObj(oo[1]);
+  putArgs[3] = Tcl_NewStringObj("-width", -1);
+  putArgs[4] = Tcl_NewDoubleObj(options->width);
+  putArgs[5] = Tcl_NewStringObj("-height", -1);
+  putArgs[6] = Tcl_NewDoubleObj(options->height);
+  putArgs[7] = Tcl_NewStringObj("-anchor", -1);
+  putArgs[8] = Tcl_NewStringObj("nw", -1);
+  rr = PdfMethod(interp, pdfObj, "putImage", 9, putArgs);
+  Tcl_DecrRefCount(imageId);
+
+  if (rr != TCL_OK) {
+    Tcl_Obj* errorObj = Tcl_GetObjResult(interp);
+    Tcl_IncrRefCount(errorObj);
+    DeletePhoto(interp, photoName);
+    Tcl_SetObjResult(interp, errorObj);
+    Tcl_DecrRefCount(errorObj);
+    return rr;
+  }
+
+  return DeletePhoto(interp, photoName);
+}
+
+int Base::pdfVectorLayers(Tcl_Obj* pdfObj)
+{
+  if (!currentContext)
+    return TCL_OK;
+
+  Tcl_Obj* saved = Tcl_GetObjResult(interp);
+  Tcl_IncrRefCount(saved);
+  Tcl_ResetResult(interp);
+
+  int oldPdfMode = widgetPdfMode_;
+  widgetPdfMode_ = 1;
+
+  switch (psLevel) {
+  case 1:
+    switch (psColorSpace) {
+    case BW:
+    case GRAY:
+      currentContext->contourPS(GRAY);
+      if (grid)
+	grid->ps(GRAY);
+      if (showMarkers) {
+	psMarkers(&footprintMarkers, GRAY, HEAD);
+	psMarkers(&catalogMarkers, GRAY, HEAD);
+	psMarkers(&userMarkers, GRAY, TAIL);
+      }
+      psCrosshair(GRAY);
+      psGraphics(GRAY);
+      break;
+    case RGB:
+    case CMYK:
+      currentContext->contourPS(RGB);
+      if (grid)
+	grid->ps(RGB);
+      if (showMarkers) {
+	psMarkers(&footprintMarkers, psColorSpace, HEAD);
+	psMarkers(&catalogMarkers, psColorSpace, HEAD);
+	psMarkers(&userMarkers, psColorSpace, TAIL);
+      }
+      psCrosshair(RGB);
+      psGraphics(RGB);
+      break;
+    }
+    break;
+  case 2:
+  case 3:
+    currentContext->contourPS(psColorSpace);
+    if (grid)
+      grid->ps(psColorSpace);
+    if (showMarkers) {
+      psMarkers(&footprintMarkers, psColorSpace, HEAD);
+      psMarkers(&catalogMarkers, psColorSpace, HEAD);
+      psMarkers(&userMarkers, psColorSpace, TAIL);
+    }
+    psCrosshair(psColorSpace);
+    psGraphics(psColorSpace);
+    break;
+  }
+
+  widgetPdfMode_ = oldPdfMode;
+
+  Tcl_Obj* psObj = Tcl_GetObjResult(interp);
+  Tcl_IncrRefCount(psObj);
+  const char* ps = Tcl_GetString(psObj);
+
+  std::vector<double> stack;
+  std::vector<double> path;
+  string text;
+  string currentFont = "Helvetica";
+  string pendingFont;
+  double currentFontSize = 10;
+  double currentAngle = 0;
+  double currentX = 0;
+  double currentY = 0;
+  double tx = 0;
+  double ty = 0;
+  double circleX = 0;
+  double circleY = 0;
+  double circleR = 0;
+  int closed = 0;
+  int circlePath = 0;
+  int rr = TCL_OK;
+  istringstream istr(ps);
+  string tok;
+
+  while (rr == TCL_OK && istr >> tok) {
+    if (tok[0] == '(') {
+      text = tok.substr(1);
+      while (text.empty() || text[text.length()-1] != ')') {
+	string tt;
+	if (!(istr >> tt))
+	  break;
+	text += " ";
+	text += tt;
+      }
+      if (!text.empty() && text[text.length()-1] == ')')
+	text.erase(text.length()-1);
+      continue;
+    }
+
+    char* end = NULL;
+    double val = strtod(tok.c_str(), &end);
+    if (end && *end == '\0') {
+      stack.push_back(val);
+      continue;
+    }
+
+    if (tok[0] == '[') {
+      std::vector<double> dashPattern;
+      PdfParseDashToken(tok, dashPattern);
+
+      while (tok.find(']') == string::npos && istr >> tok)
+	PdfParseDashToken(tok, dashPattern);
+
+      double dashOffset = 0;
+      if (istr >> tok) {
+	char* end = NULL;
+	double val = strtod(tok.c_str(), &end);
+	if (end && *end == '\0') {
+	  dashOffset = val;
+	  if (!(istr >> tok))
+	    tok.erase();
+	}
+      }
+
+      if (tok == "setdash")
+	rr = PdfSetLineDash(interp, pdfObj, dashPattern, dashOffset);
+      continue;
+    }
+
+    if (tok[0] == '/') {
+      pendingFont = tok.substr(1);
+      continue;
+    }
+
+    if (tok == "findfont" || tok == "scalefont")
+      continue;
+
+    if (tok == "setfont") {
+      if (stack.size() >= 1)
+	currentFontSize = stack.back();
+      if (!pendingFont.empty()) {
+	currentFont = pendingFont;
+	pendingFont.erase();
+      }
+      stack.clear();
+      continue;
+    }
+
+    if (tok == "true" || tok == "charpath")
+      continue;
+
+    if (tok == "dup") {
+      if (!stack.empty())
+	stack.push_back(stack.back());
+      continue;
+    }
+
+    if (tok == "index" && stack.size() >= 1) {
+      int idx = (int)stack.back();
+      stack.pop_back();
+      if (idx >= 0 && (size_t)idx < stack.size())
+	stack.push_back(stack[stack.size()-1-idx]);
+      continue;
+    }
+
+    if (tok == "roll" && stack.size() >= 2) {
+      int shift = (int)stack.back(); stack.pop_back();
+      int count = (int)stack.back(); stack.pop_back();
+      PdfRollStack(stack, count, shift);
+      continue;
+    }
+
+    if (tok == "pathbbox") {
+      double llx = 0;
+      double lly = 0;
+      double urx = 0;
+      double ury = 0;
+      PdfTextPathBBox(text, currentFontSize, &llx, &lly, &urx, &ury);
+      stack.push_back(llx);
+      stack.push_back(lly);
+      stack.push_back(urx);
+      stack.push_back(ury);
+      continue;
+    }
+
+    if (tok == "add" && stack.size() >= 2) {
+      double b = stack.back(); stack.pop_back();
+      double a = stack.back(); stack.pop_back();
+      stack.push_back(a+b);
+      continue;
+    }
+
+    if (tok == "sub" && stack.size() >= 2) {
+      double b = stack.back(); stack.pop_back();
+      double a = stack.back(); stack.pop_back();
+      stack.push_back(a-b);
+      continue;
+    }
+
+    if (tok == "mul" && stack.size() >= 2) {
+      double b = stack.back(); stack.pop_back();
+      double a = stack.back(); stack.pop_back();
+      stack.push_back(a*b);
+      continue;
+    }
+
+    if (tok == "div" && stack.size() >= 2) {
+      double b = stack.back(); stack.pop_back();
+      double a = stack.back(); stack.pop_back();
+      stack.push_back(b ? a/b : 0);
+      continue;
+    }
+
+    if (tok == "neg" && stack.size() >= 1) {
+      stack.back() = -stack.back();
+      continue;
+    }
+
+    if (tok == "exch" && stack.size() >= 2) {
+      double b = stack.back(); stack.pop_back();
+      double a = stack.back(); stack.pop_back();
+      stack.push_back(b);
+      stack.push_back(a);
+      continue;
+    }
+
+    if (tok == "sin" && stack.size() >= 1) {
+      stack.back() = sin(degToRad(stack.back()));
+      continue;
+    }
+
+    if (tok == "cos" && stack.size() >= 1) {
+      stack.back() = cos(degToRad(stack.back()));
+      continue;
+    }
+
+    if (tok == "translate" && stack.size() >= 2) {
+      double y = stack.back(); stack.pop_back();
+      double x = stack.back(); stack.pop_back();
+      tx += x;
+      ty += y;
+    }
+    else if (tok == "newpath") {
+      path.clear();
+      closed = 0;
+      circlePath = 0;
+    }
+    else if (tok == "moveto" && stack.size() >= 2) {
+      double y = stack.back(); stack.pop_back();
+      double x = stack.back(); stack.pop_back();
+      double xx = x+tx;
+      double yy = y+ty;
+      if (path.size() < 2 ||
+	  hypot(path[path.size()-2]-xx, path[path.size()-1]-yy) > 1e-4) {
+	path.clear();
+	path.push_back(xx);
+	path.push_back(yy);
+      }
+      currentX = xx;
+      currentY = yy;
+      closed = 0;
+      circlePath = 0;
+    }
+    else if (tok == "rmoveto" && stack.size() >= 2) {
+      double y = stack.back(); stack.pop_back();
+      double x = stack.back(); stack.pop_back();
+      if (fabs(currentAngle) > FLT_EPSILON) {
+	double aa = degToRad(currentAngle);
+	double xx = x*cos(aa) - y*sin(aa);
+	double yy = x*sin(aa) + y*cos(aa);
+	currentX += xx;
+	currentY += yy;
+      }
+      else {
+	currentX += x;
+	currentY += y;
+      }
+    }
+    else if (tok == "lineto" && stack.size() >= 2) {
+      double y = stack.back(); stack.pop_back();
+      double x = stack.back(); stack.pop_back();
+      currentX = x+tx;
+      currentY = y+ty;
+      path.push_back(currentX);
+      path.push_back(currentY);
+      circlePath = 0;
+    }
+    else if (tok == "curveto" && stack.size() >= 6) {
+      double y3 = stack.back(); stack.pop_back();
+      double x3 = stack.back(); stack.pop_back();
+      double y2 = stack.back(); stack.pop_back();
+      double x2 = stack.back(); stack.pop_back();
+      double y1 = stack.back(); stack.pop_back();
+      double x1 = stack.back(); stack.pop_back();
+      x1 += tx;
+      y1 += ty;
+      x2 += tx;
+      y2 += ty;
+      x3 += tx;
+      y3 += ty;
+      PdfAppendBezier(path, currentX, currentY, x1, y1, x2, y2, x3, y3);
+      currentX = x3;
+      currentY = y3;
+      circlePath = 0;
+    }
+    else if (tok == "arc" && stack.size() >= 5) {
+      double a2 = stack.back(); stack.pop_back();
+      double a1 = stack.back(); stack.pop_back();
+      double r = stack.back(); stack.pop_back();
+      double y = stack.back(); stack.pop_back();
+      double x = stack.back(); stack.pop_back();
+      x += tx;
+      y = y+ty;
+      if (fabs(a1) < FLT_EPSILON && fabs(a2-360) < FLT_EPSILON) {
+	path.clear();
+	circleX = x;
+	circleY = y;
+	circleR = r;
+	circlePath = 1;
+      }
+      else {
+	int steps = 24;
+	for (int ii=0; ii<=steps; ii++) {
+	  double aa = degToRad(a1 + (a2-a1)*ii/steps);
+	  currentX = x + r*cos(aa);
+	  currentY = y - r*sin(aa);
+	  path.push_back(currentX);
+	  path.push_back(currentY);
+	}
+	circlePath = 0;
+      }
+    }
+    else if (tok == "closepath")
+      closed = 1;
+    else if (tok == "stroke") {
+      if (circlePath)
+	rr = PdfCircle(interp, pdfObj, circleX, circleY, circleR, 0, 1);
+      else if (path.size() == 4 && !closed)
+	rr = PdfLine(interp, pdfObj, path[0], path[1], path[2], path[3]);
+      else if (path.size() >= 4)
+	rr = PdfPolygon(interp, pdfObj, path, closed, 0, 1);
+      path.clear();
+      closed = 0;
+      circlePath = 0;
+    }
+    else if (tok == "fill") {
+      if (circlePath)
+	rr = PdfCircle(interp, pdfObj, circleX, circleY, circleR, 1, 0);
+      else if (path.size() >= 4)
+	rr = PdfPolygon(interp, pdfObj, path, 1, 1, 0);
+      path.clear();
+      closed = 0;
+      circlePath = 0;
+    }
+    else if (tok == "setlinewidth" && stack.size() >= 1) {
+      double width = stack.back(); stack.pop_back();
+      rr = PdfSetLineWidth(interp, pdfObj, width);
+    }
+    else if (tok == "setgray" && stack.size() >= 1) {
+      double gray = stack.back(); stack.pop_back();
+      rr = PdfColor(interp, pdfObj, gray, gray, gray);
+    }
+    else if (tok == "setrgbcolor" && stack.size() >= 3) {
+      double b = stack.back(); stack.pop_back();
+      double g = stack.back(); stack.pop_back();
+      double r = stack.back(); stack.pop_back();
+      rr = PdfColor(interp, pdfObj, r, g, b);
+    }
+    else if (tok == "setcmykcolor" && stack.size() >= 4) {
+      double k = stack.back(); stack.pop_back();
+      double y = stack.back(); stack.pop_back();
+      double m = stack.back(); stack.pop_back();
+      double c = stack.back(); stack.pop_back();
+      double r = 1 - min(1., c+k);
+      double g = 1 - min(1., m+k);
+      double b = 1 - min(1., y+k);
+      rr = PdfColor(interp, pdfObj, r, g, b);
+    }
+    else if (tok == "rotate" && stack.size() >= 1) {
+      currentAngle = stack.back();
+      stack.pop_back();
+    }
+    else if (tok == "show") {
+      if (!text.empty()) {
+	rr = PdfText(interp, pdfObj, text, currentX, currentY,
+		     currentFont, currentFontSize, currentAngle);
+	text.erase();
+      }
+      stack.clear();
+    }
+    else if (tok == "grestore")
+      currentAngle = 0;
+  }
+
+  Tcl_DecrRefCount(psObj);
+  if (rr == TCL_OK)
+    Tcl_SetObjResult(interp, saved);
+  Tcl_DecrRefCount(saved);
+
+  return rr;
 }
 
 void Base::printInteger(int i)

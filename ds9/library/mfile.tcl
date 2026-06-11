@@ -234,6 +234,8 @@ proc FileMainMenu {} {
 	-command [list SaveImageDialog fits]
     $ds9(mb).file.saveimage add command -label {EPS} \
 	-command [list SaveImageDialog eps]
+    $ds9(mb).file.saveimage add command -label {PDF} \
+	-command [list SaveImageDialog pdf]
     $ds9(mb).file.saveimage add command -label {GIF} \
 	-command [list SaveImageDialog gif]
     $ds9(mb).file.saveimage add command -label {TIFF} \

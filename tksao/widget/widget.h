@@ -51,6 +51,8 @@ extern void* magnifierparentptr_;
 extern void* pannerptr_;
 extern void* pannerparentptr_;
 
+extern int widgetPdfMode_;
+
 // General Defines
 
 #define WIDGET(x) (*(((WidgetOptions*)(x))->widget))
@@ -76,6 +78,7 @@ extern void WidgetInsertProc(Tk_Canvas, Tk_Item*, int, char*);
 extern void WidgetDCharsProc(Tk_Canvas, Tk_Item*, int, int);
 
 extern int WidgetParse(ClientData, Tcl_Interp*, int, char**);
+extern int WidgetObjParse(ClientData, Tcl_Interp*, Tcl_Size, Tcl_Obj *const []);
 
 class Widget;
 
@@ -193,6 +196,7 @@ class Widget {
   double pointProc(double*);
   int areaProc(double*);
   virtual int postscriptProc(int);
+  virtual int pdfCmd(Tcl_Obj*, Tcl_Size, Tcl_Obj *const []);
   void scaleProc(double, double, double, double);
   void translateProc(double, double);
   virtual int indexProc(char indexString, int* indexPtr) {return TCL_OK;}
@@ -223,4 +227,3 @@ class Widget {
 };
 
 #endif
-

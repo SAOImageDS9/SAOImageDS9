@@ -124,6 +124,34 @@ void Colorbar::psVert(ostream& str, Filter& filter, int width, int height)
   }
 }
 
+void Colorbar::pdfHorz(unsigned char* data, int width, int height)
+{
+  for (int jj=0; jj<height; jj++) {
+    for (int ii=0; ii<width; ii++, data+=3) {
+      int kk = (int)(double(ii)/width*colorCount)*3;
+      data[0] = colorCells[kk+2];
+      data[1] = colorCells[kk+1];
+      data[2] = colorCells[kk];
+    }
+  }
+}
+
+void Colorbar::pdfVert(unsigned char* data, int width, int height)
+{
+  for (int jj=0; jj<height; jj++) {
+    int kk = (int)(double(height-1-jj)/height*colorCount)*3;
+    unsigned char red = colorCells[kk+2];
+    unsigned char green = colorCells[kk+1];
+    unsigned char blue = colorCells[kk];
+
+    for (int ii=0; ii<width; ii++, data+=3) {
+      data[0] = red;
+      data[1] = green;
+      data[2] = blue;
+    }
+  }
+}
+
 int Colorbar::initColormap()
 {
   colorCount = (((ColorbarBaseOptions*)options)->colors);

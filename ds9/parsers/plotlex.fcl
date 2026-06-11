@@ -1,6 +1,7 @@
 #tab plotparser.tab.tcl
 
 %{
+package provide DS9 1.0
 %}
 
 #include defs.fin
@@ -79,6 +80,7 @@ pagesetup   {return $PAGESETUP_}
 pagesize    {return $PAGESIZE_}
 palette	    {return $PALETTE_}
 plotarea    {return $PLOTAREA_}
+pdf	    {return $PDF_}
 plus	    {return $PLUS_}
 pointer	    {return $POINTER_}
 portrait    {return $PORTRAIT_}

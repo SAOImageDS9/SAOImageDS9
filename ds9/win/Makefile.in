@@ -135,9 +135,9 @@ LLIBS	= \
 
 PREQS	= \
 	$(APPDIR) \
-	$(APPDIR)/tcl$(TCL_VERSION) \
-	$(APPDIR)/tcl$(TCL_MAJOR_VERSION) \
-	$(APPDIR)/tk$(TCL_VERSION) \
+	$(LIBDIR)/tcl$(TCL_VERSION) \
+	$(LIBDIR)/tcl$(TCL_MAJOR_VERSION) \
+	$(LIBDIR)/tk$(TCL_VERSION) \
 	$(LIBDIR)/library \
 	$(LIBDIR)/msgs \
 	$(LIBDIR)/doc \
@@ -207,14 +207,33 @@ ds9.res.o: ds9.rc ds9.ico
 $(APPDIR):
 	mkdir -p $@
 
-$(APPDIR)/tcl$(TCL_VERSION) : $(prefix)/lib/tcl$(TCL_VERSION)
-	cp -fr $? $@
+ifeq ($(TCL_MAJOR_VERSION),9)
+$(LIBDIR)/tcl$(TCL_VERSION) : $(prefix)/tcl$(TCL_VERSION)/library
+	mkdir -p $@
+	cp -prf $?/* $@/.
+else
+$(LIBDIR)/tcl$(TCL_VERSION) :
+	cp -prf $(prefix)/lib/tcl$(TCL_VERSION) $(LIBDIR)/.
+endif
 
-$(APPDIR)/tcl$(TCL_MAJOR_VERSION) : $(prefix)/lib/tcl$(TCL_MAJOR_VERSION)
-	cp -fr $? $@
+$(LIBDIR)/tcl$(TCL_MAJOR_VERSION) :
+	cp -prf $(prefix)/lib/tcl$(TCL_MAJOR_VERSION) $(LIBDIR)/.
 
-$(APPDIR)/tk$(TCL_VERSION) : $(prefix)/lib/tk$(TCL_VERSION)
-	cp -fr $? $@
+ifeq ($(TCL_MAJOR_VERSION),9)
+$(LIBDIR)/tk$(TCL_VERSION) : $(prefix)/tk$(TCL_VERSION)/library
+	mkdir -p $@
+	cp -prf $?/* $@/.
+	rm -rf $(APPDIR)/tk$(TCL_VERSION)/images
+	rm -rf $(APPDIR)/tk$(TCL_VERSION)/demos
+else
+$(LIBDIR)/tk$(TCL_VERSION) :
+	cp -prf $(prefix)/lib/tk$(TCL_VERSION) $(LIBDIR)/.
+	rm -rf $(APPDIR)/tk$(TCL_VERSION)/images
+	rm -rf $(APPDIR)/tk$(TCL_VERSION)/demos
+endif
+
+$(LIBDIR)/pdf4tcl: $(prefix)/pdf4tcl
+	cp -prf $? "$@"
 
 #--------------------------awthemes
 

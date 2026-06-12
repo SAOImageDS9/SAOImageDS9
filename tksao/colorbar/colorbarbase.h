@@ -95,6 +95,7 @@ class ColorbarBase : public Widget {
   void psGrid();
   void psGridNumerics();
   void psGridAST();
+  int pdfBackground(Tcl_Obj*);
   int pdfImage(Tcl_Obj*);
   int pdfGrid(Tcl_Obj*);
 

@@ -689,6 +689,91 @@ static Tcl_Obj* AxisPdfSegmentsObj(Segment2d* segments, int count)
   return listObjPtr;
 }
 
+static Tcl_Obj* AxisPdfDashesObj(Dashes* dashesPtr)
+{
+  Tcl_Obj* listObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+  if (!dashesPtr)
+    return listObjPtr;
+
+  for (int ii=0; dashesPtr->values[ii]; ii++)
+    Tcl_ListObjAppendElement(NULL, listObjPtr,
+			     Tcl_NewIntObj(dashesPtr->values[ii]));
+
+  return listObjPtr;
+}
+
+static void AxisPdfAppendGridSegment(Tcl_Obj* listObjPtr, Axis* axisPtr,
+				     double value)
+{
+  AxisOptions* ops = (AxisOptions*)axisPtr->ops();
+  Graph* graphPtr = axisPtr->graphPtr_;
+
+  if (ops->logScale)
+    value = EXP10(value);
+
+  Tcl_Obj* segObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+  if (axisPtr->isHorizontal()) {
+    double x = axisPtr->hMap(value);
+    Tcl_ListObjAppendElement(NULL, segObjPtr, Tcl_NewDoubleObj(x));
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(graphPtr->top_));
+    Tcl_ListObjAppendElement(NULL, segObjPtr, Tcl_NewDoubleObj(x));
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(graphPtr->bottom_));
+  }
+  else {
+    double y = axisPtr->vMap(value);
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(graphPtr->left_));
+    Tcl_ListObjAppendElement(NULL, segObjPtr, Tcl_NewDoubleObj(y));
+    Tcl_ListObjAppendElement(NULL, segObjPtr,
+			     Tcl_NewDoubleObj(graphPtr->right_));
+    Tcl_ListObjAppendElement(NULL, segObjPtr, Tcl_NewDoubleObj(y));
+  }
+  Tcl_ListObjAppendElement(NULL, listObjPtr, segObjPtr);
+}
+
+static Tcl_Obj* AxisPdfGridSegmentsObj(Axis* axisPtr, int minor)
+{
+  Tcl_Obj* listObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
+
+  Ticks* t1Ptr = axisPtr->t1Ptr_;
+  if (!t1Ptr)
+    t1Ptr = axisPtr->generateTicks(&axisPtr->majorSweep_);
+
+  Ticks* t2Ptr = NULL;
+  if (minor) {
+    t2Ptr = axisPtr->t2Ptr_;
+    if (!t2Ptr)
+      t2Ptr = axisPtr->generateTicks(&axisPtr->minorSweep_);
+  }
+
+  if (minor) {
+    for (int ii=0; t1Ptr && ii<t1Ptr->nTicks; ii++) {
+      double value = t1Ptr->values[ii];
+      for (int jj=0; t2Ptr && jj<t2Ptr->nTicks; jj++) {
+	double subValue = value + (axisPtr->majorSweep_.step*t2Ptr->values[jj]);
+	if (axisPtr->inRange(subValue, &axisPtr->axisRange_))
+	  AxisPdfAppendGridSegment(listObjPtr, axisPtr, subValue);
+      }
+    }
+  }
+  else {
+    for (int ii=0; t1Ptr && ii<t1Ptr->nTicks; ii++) {
+      double value = t1Ptr->values[ii];
+      if (axisPtr->inRange(value, &axisPtr->axisRange_))
+	AxisPdfAppendGridSegment(listObjPtr, axisPtr, value);
+    }
+  }
+
+  if (t1Ptr != axisPtr->t1Ptr_)
+    delete t1Ptr;
+  if (t2Ptr && t2Ptr != axisPtr->t2Ptr_)
+    delete t2Ptr;
+
+  return listObjPtr;
+}
+
 static const char* AxisPdfAnchorName(Tk_Anchor anchor)
 {
   switch (anchor) {
@@ -733,6 +818,34 @@ int AxisPdfDataOp(Axis* axisPtr, Tcl_Interp* interp,
 		 Tcl_NewIntObj(ops->lineWidth));
   Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("segments", -1),
 		 AxisPdfSegmentsObj(axisPtr->segments_, axisPtr->nSegments_));
+
+  Tcl_Obj* gridObjPtr = Tcl_NewDictObj();
+  Tcl_DictObjPut(interp, gridObjPtr, Tcl_NewStringObj("show", -1),
+		 Tcl_NewIntObj(ops->showGrid));
+  Tcl_DictObjPut(interp, gridObjPtr, Tcl_NewStringObj("color", -1),
+		 AxisPdfColorObj(ops->major.color));
+  Tcl_DictObjPut(interp, gridObjPtr, Tcl_NewStringObj("linewidth", -1),
+		 Tcl_NewIntObj(ops->major.lineWidth));
+  Tcl_DictObjPut(interp, gridObjPtr, Tcl_NewStringObj("dashes", -1),
+		 AxisPdfDashesObj(&ops->major.dashes));
+  Tcl_DictObjPut(interp, gridObjPtr, Tcl_NewStringObj("segments", -1),
+		 AxisPdfGridSegmentsObj(axisPtr, 0));
+
+  Tcl_Obj* minorGridObjPtr = Tcl_NewDictObj();
+  Tcl_DictObjPut(interp, minorGridObjPtr, Tcl_NewStringObj("show", -1),
+		 Tcl_NewIntObj(ops->showGridMinor));
+  Tcl_DictObjPut(interp, minorGridObjPtr, Tcl_NewStringObj("color", -1),
+		 AxisPdfColorObj(ops->minor.color));
+  Tcl_DictObjPut(interp, minorGridObjPtr, Tcl_NewStringObj("linewidth", -1),
+		 Tcl_NewIntObj(ops->minor.lineWidth));
+  Tcl_DictObjPut(interp, minorGridObjPtr, Tcl_NewStringObj("dashes", -1),
+		 AxisPdfDashesObj(&ops->minor.dashes));
+  Tcl_DictObjPut(interp, minorGridObjPtr, Tcl_NewStringObj("segments", -1),
+		 AxisPdfGridSegmentsObj(axisPtr, 1));
+  Tcl_DictObjPut(interp, gridObjPtr, Tcl_NewStringObj("minor", -1),
+		 minorGridObjPtr);
+  Tcl_DictObjPut(interp, dictObjPtr, Tcl_NewStringObj("grid", -1),
+		 gridObjPtr);
 
   Tcl_Obj* ticksObjPtr = Tcl_NewListObj(0, (Tcl_Obj**)NULL);
   if (ops->showTicks) {

@@ -720,10 +720,41 @@ int ColorbarBase::pdfCmd(Tcl_Obj* pdfObj, Tcl_Size, Tcl_Obj *const [])
   if (!visible)
     return TCL_OK;
 
+  if (pdfBackground(pdfObj) != TCL_OK)
+    return TCL_ERROR;
+
   if (pdfImage(pdfObj) != TCL_OK)
     return TCL_ERROR;
 
   return pdfGrid(pdfObj);
+}
+
+int ColorbarBase::pdfBackground(Tcl_Obj* pdfObj)
+{
+  ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
+
+  if (options->width <= 0 || options->height <= 0)
+    return TCL_OK;
+
+  double r = opts->bgColor ? opts->bgColor->red/65535. : 1;
+  double g = opts->bgColor ? opts->bgColor->green/65535. : 1;
+  double b = opts->bgColor ? opts->bgColor->blue/65535. : 1;
+
+  int rr = CbPdfColor(interp, pdfObj, r, g, b);
+  if (rr != TCL_OK)
+    return rr;
+
+  std::vector<double> box;
+  box.push_back(originX);
+  box.push_back(originY);
+  box.push_back(originX+options->width);
+  box.push_back(originY);
+  box.push_back(originX+options->width);
+  box.push_back(originY+options->height);
+  box.push_back(originX);
+  box.push_back(originY+options->height);
+
+  return CbPdfPolygon(interp, pdfObj, box, 1, 1, 0);
 }
 
 int ColorbarBase::pdfImage(Tcl_Obj* pdfObj)

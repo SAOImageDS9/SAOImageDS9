@@ -37,6 +37,7 @@ class FitsHPX : public FitsFile {
   FitsBinColumn* findDefaultDataColumn(FitsBinTableHDU* hdu, FitsBinColumn* excludeCol);
   void adjustFacetForQuad(int& facet) const;
   void applyHalveBlanking(float* row, int nside, int jj, int halve, float blankValue) const;
+  int isHalveBlanked(int nside, int ii, int jj, int halve) const;
   void computeIndices(int nside, int facet, int rotn, int jj, long long* healidx);
 
  public:

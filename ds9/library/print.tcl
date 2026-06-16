@@ -782,7 +782,9 @@ proc PDFUtilUserName {} {
     set fullName ""
 
     # 2. Try to use getent safely
-    if {$username ne "unknown" && [catch {exec getent passwd $username} entry] == 0} {
+    set getent [auto_execok getent]
+    if {$username ne "unknown" && $getent ne {} &&
+	[catch {exec {*}$getent passwd $username} entry] == 0} {
         # Success: Parse the string using pure Tcl routines
         set fields [split $entry ":"]
         set gecos [lindex $fields 4]

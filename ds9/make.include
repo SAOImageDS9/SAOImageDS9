@@ -86,7 +86,7 @@ $(LIBDIR)/log	: $(prefix)/tcllib/modules/log
 
 $(LIBDIR)/textutil: $(prefix)/tcllib/modules/textutil
 	cp -rf $? "$@"
-    rm -rf "$@"/build
+	rm -rf "$@"/build
 
 $(LIBDIR)/math	: $(prefix)/tcllib/modules/math
 	cp -rf $? "$@"

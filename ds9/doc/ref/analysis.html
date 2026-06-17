@@ -50,7 +50,7 @@ The analysis file that defines the known analysis commands consists of one or mo
 <tt>button</tt><br>
 <tt>$data | doit | $text</tt></blockquote>
 <p><b>bind</b></p>
-<p>A <tt>bind</tt> command is a command that is bound to an event. When the event occurs, the command is executed. Types of events available include all TK events, including all <i>keystrokes</i> and <i>mouse clicks.</i> If a command is bound to an event other that a <i>keystroke</i>, care must be taken to not to interfere with other internal DS9 events.</p>
+<p>A <tt>bind</tt> command is a command that is bound to an event. When the event occurs, the command is executed. Types of events available include all TK events, including all <i>keystrokes</i> and <i>mouse clicks.</i> If a command is bound to an event other than a <i>keystroke</i>, care must be taken not to interfere with other internal DS9 events.</p>
 <p>To bind to a key stroke, use the following command type:</p>
 <blockquote><tt>bind &lt;keystroke&gt;</tt><br></blockquote>
 <tt>Example:</tt>
@@ -199,9 +199,9 @@ $depth</b></p>
 <tt>Example:<br>
 &nbsp;&nbsp;&nbsp; echo $pan(fk5,sexagesimal) | $text</tt><br>
 <p><b>$plot</b></p>
-<p>Display data in plot window. This macro should be the last macro of a command line. The data is read via <tt>STDIN</tt> and consist of a pair of coordinates, with option error values. (<tt>xy, xyex, xyey, xyexe</tt>y) Default dimension is <tt>xy.</tt> The macro is removed from the command line before execution.</p>
+<p>Display data in plot window. This macro should be the last macro of a command line. The data is read via <tt>STDIN</tt> and consists of a pair of coordinates, with optional error values. (<tt>xy, xyex, xyey, xyexe</tt>y) Default dimension is <tt>xy.</tt> The macro is removed from the command line before execution.</p>
 <p>For <tt>$plot(stdin)</tt> only:</p>
-<p>The title, x axis label, and y axis label are assumed to be on the first line of input, delimited with a new-line. However, if the data starts with $<tt>BEGINTEXT</tt>, all text between $<tt>BEGINTEXT</tt> and $<tt>ENDTEXT</tt> will be removed from the data and displayed in a separate text dialog window, with the remaining data, including the title, x axis label, and y axis label, will be displayed in a plot window. Furthermore, if the data contains the string $<tt>ERROR,</tt> an error is assumed to have occurred and a text dialog window is displayed only.</p>
+<p>The title, x axis label, and y axis label are assumed to be on the first line of input, delimited with a new-line. However, if the data starts with $<tt>BEGINTEXT</tt>, all text between $<tt>BEGINTEXT</tt> and $<tt>ENDTEXT</tt> will be removed from the data and displayed in a separate text dialog window, with the remaining data, including the title, x axis label, and y axis label, displayed in a plot window. Furthermore, if the data contains the string $<tt>ERROR,</tt> an error is assumed to have occurred and a text dialog window is displayed only.</p>
 <tt>Syntax:<br>
 &nbsp;&nbsp;&nbsp; $plot</tt><br>
 <tt>&nbsp;&nbsp;&nbsp; $plot(,,,)</tt><br>
@@ -306,7 +306,7 @@ $z<br></b></p>
 <tt>Example:<br>
 &nbsp;&nbsp;&nbsp; echo '$xpa_method' | $text</tt>
 <p><b><a name="Buttonbar" id="Buttonbar"></a>Buttonbar</b></p>
-<p>Creates an analysis buttonbar, in which button commands maybe created. After all buttons commands have been defined, use <tt>endbuttonbar</tt> to complete the definition. </p>
+<p>Creates an analysis buttonbar, in which button commands may be created. After all button commands have been defined, use <tt>endbuttonbar</tt> to complete the definition. </p>
 <tt>Example:</tt>
 <blockquote><tt>buttonbar</tt><br>
 <tt>Hello</tt><br>
@@ -319,7 +319,7 @@ $z<br></b></p>
 <tt>echo "world" | $text</tt><br>
 <tt>endbuttonbar</tt></blockquote>
 <p><b><a name="Help" id="Help"></a>Help</b></p>
-<p>The user may define his own <tt>HELP</tt> message. This message will be available to the user as a menu item. An optional label maybe specified. The default label is <tt>Help</tt>. When invoked, an text dialog window will appear, containing the message. Multiple <tt>HELP</tt> items maybe defined within a menu or across hierarchical menus.</p>
+<p>The user may define his own <tt>HELP</tt> message. This message will be available to the user as a menu item. An optional label may be specified. The default label is <tt>Help</tt>. When invoked, a text dialog window will appear, containing the message. Multiple <tt>HELP</tt> items may be defined within a menu or across hierarchical menus.</p>
 <tt>Example:</tt>
 <blockquote><tt>help Main Help</tt><br>
 <tt>A help message may contain</tt><br>
@@ -327,7 +327,7 @@ $z<br></b></p>
 <tt>in the menu or menus</tt><br>
 <tt>endhelp</tt></blockquote>
 <p><b><a name="Parameters" id="Parameters"></a>Parameters</b></p>
-<p>The user may define his own macros or parameters to be evaluated before the command line is executed. To do this, the user defines a parameter segment that is referenced in the command line. Parameters maybe displayed in a notebook style via use of the 'tab' 'endtab' keywords. The parameter definition has the follow format:</p>
+<p>The user may define his own macros or parameters to be evaluated before the command line is executed. To do this, the user defines a parameter segment that is referenced in the command line. Parameters may be displayed in a notebook style via use of the 'tab' 'endtab' keywords. The parameter definition has the following format:</p>
 <blockquote><tt>param &lt;name&gt;<br>
 &nbsp;&nbsp;&lt;variable&gt; &lt;entry|text|checkbox|menu|combobox|open|save&gt; &lt;title&gt; &lt;default&gt; &lt;{comment}&gt;<br>
 &nbsp;&nbsp;...<br>
@@ -346,11 +346,11 @@ endparam</tt></blockquote>
 <blockquote><tt>param &lt;name&gt;</tt><br>
 <tt>@&lt;iraf param filename&gt;</tt><br>
 <tt>end</tt></blockquote>
-<p>The definition either consisted of a number of variables, one per row, or the name of a IRAF style parameter file. DS9 will look for the IRAF parameter file in:</p>
+<p>The definition either consists of a number of variables, one per row, or the name of an IRAF style parameter file. DS9 will look for the IRAF parameter file in:</p>
 <blockquote><tt>./&lt;filename&gt;</tt><br>
 <tt>$UPARM/&lt;filename&gt;</tt><br>
 <tt>$HOME/iraf/&lt;filename&gt;</tt></blockquote>
-<p>The following macros are supported if encounted in the default field:</p>
+<p>The following macros are supported if encountered in the default field:</p>
 <blockquote><tt>$width<br>
 $height<br>
 $depth<br>
@@ -360,25 +360,25 @@ $filename[region]<br>
 $env<br></tt></blockquote>
 <p>Example:</p>
 <blockquote><tt>param foo<br>
-&nbsp;&nbsp;var1 entry {Variable 1} {default} {this is a entry}<br>
+&nbsp;&nbsp;var1 entry {Variable 1} {default} {this is an entry}<br>
 &nbsp;&nbsp;var2 text {Variable 2} {static} {this is text}<br>
 &nbsp;&nbsp;var3 checkbox {Variable 3} 1 {this is a checkbox}<br>
 &nbsp;&nbsp;var4 menu {Variable 4} {AAA|BBB|CCC} {this is a menu}<br>
 &nbsp;&nbsp;var5 combobox {Variable 5} {XXX|YYY|ZZZ} {this is a combobox}<br>
-&nbsp;&nbsp;var6 open {Variable 6} {default} {this is a open file dialog}<br>
+&nbsp;&nbsp;var6 open {Variable 6} {default} {this is an open file dialog}<br>
 &nbsp;&nbsp;var7 save {Variable 7} {default} {this is a save file dialog}<br>
 endparam<br>
 <br>
 param bar<br>
 &nbsp;&nbsp;tab {First Params}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;var1 entry {Variable 1} {default} {this is a entry}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var1 entry {Variable 1} {default} {this is an entry}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;var2 text {Variable 2} {static} {this is text}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;var3 checkbox {Variable 3} 1 {this is a checkbox}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;var4 menu {Variable 4} {AAA|BBB|CCC} {this is a menu}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;var5 combobox {Variable 5} {XXX|YYY|ZZZ} {this is a combobox}<br>
 &nbsp;&nbsp;endtab<br>
 &nbsp;&nbsp;tab {Second Params}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;var6 open {Variable 6} {default} {this is a open file dialog}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var6 open {Variable 6} {default} {this is an open file dialog}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;var7 save {Variable 7} {default} {this is a save file dialog}<br>
 &nbsp;&nbsp;endtab<br>
 endparam<br>
@@ -397,7 +397,7 @@ endparam<br></tt></blockquote>
 <tt>$param(foobar); echo "$var1 $var2 $var3 $var4 $var5" | $text</tt></blockquote>
 <p>When the menu item is selected, the user will be presented with a dialog box that contains <i>entry, text, open, save, checkbox, or menu</i> choices for each variable specified. If the user clicks ok, the values are substituted in the command line before execution.</p>
 <p><b><a name="HierarchicalMenus" id="HierarchicalMenus"></a>Hierarchical Menus</b></p>
-<p>The user may define hierarchical menus. Use this to organized crowded menus. To do this, frame menu entries with <tt>hmenu &lt;label&gt;</tt> and <tt>endhmenu</tt>. Hierarchical menu labels may contain spaces. Multiple levels maybe implemented.</p>
+<p>The user may define hierarchical menus. Use this to organize crowded menus. To do this, frame menu entries with <tt>hmenu &lt;label&gt;</tt> and <tt>endhmenu</tt>. Hierarchical menu labels may contain spaces. Multiple levels may be implemented.</p>
 Example:<br>
 <blockquote><tt>hmenu Stuff<br>
 &nbsp;&nbsp;hello<br>
@@ -426,25 +426,25 @@ endhmenu</tt></blockquote>
 #&nbsp;&nbsp;analysis command line<br>
 <br>
 param foo<br>
-&nbsp;&nbsp;var1 entry {Variable 1} {default} {this is a entry}<br>
+&nbsp;&nbsp;var1 entry {Variable 1} {default} {this is an entry}<br>
 &nbsp;&nbsp;var2 text {Variable 2} {static} {this is text}<br>
 &nbsp;&nbsp;var3 checkbox {Variable 3} 1 {this is a checkbox}<br>
 &nbsp;&nbsp;var4 menu {Variable 4} {AAA|BBB|CCC} {this is a menu}<br>
 &nbsp;&nbsp;var5 combobox {Variable 5} {XXX|YYY|ZZZ} {this is a combobox}<br>
-&nbsp;&nbsp;var6 open {Variable 6} {default} {this is a open file dialog}<br>
+&nbsp;&nbsp;var6 open {Variable 6} {default} {this is an open file dialog}<br>
 &nbsp;&nbsp;var7 save {Variable 7} {default} {this is a save file dialog}<br>
 endparam<br>
 <br>
 param bar<br>
 &nbsp;&nbsp;tab {First Params}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;var1 entry {Variable 1} {default} {this is a entry}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var1 entry {Variable 1} {default} {this is an entry}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;var2 text {Variable 2} {static} {this is text}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;var3 checkbox {Variable 3} 1 {this is a checkbox}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;var4 menu {Variable 4} {AAA|BBB|CCC} {this is a menu}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;var5 combobox {Variable 5} {XXX|YYY|ZZZ} {this is a combobox}<br>
 &nbsp;&nbsp;endtab<br>
 &nbsp;&nbsp;tab {Second Params}<br>
-&nbsp;&nbsp;&nbsp;&nbsp;var6 open {Variable 6} {default} {this is a open file dialog}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;var6 open {Variable 6} {default} {this is an open file dialog}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;var7 save {Variable 7} {default} {this is a save file dialog}<br>
 &nbsp;&nbsp;endtab<br>
 endparam<br>

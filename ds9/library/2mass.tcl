@@ -72,7 +72,19 @@ proc 2MASSExec {varname} {
 	}
 
     } else {
-	set var(fn) [tmpnam {.fits.gz}]
+	set var(fn) [tmpnam {.fits}]
+    }
+
+    # skyformat
+    switch -- $var(skyformat) {
+	degrees {
+	    set xx $var(x)
+	    set yy $var(y)
+	}
+	sexagesimal {
+	    set xx [h2d [Sex2H $var(x)]]
+	    set yy [Sex2D $var(y)]
+	}
     }
 
     # size - convert to arcsec
@@ -97,10 +109,13 @@ proc 2MASSExec {varname} {
 	set rr 1024
     }
 
-    set foo "$var(x) $var(y)"
+    # IRSA Finder Chart subsetsize is in arcmin.
+    set ss [expr $rr/60.]
 
-    set query [http::formatQuery objstr $foo size $rr band $var(survey)]
-    set url "https://irsa.ipac.caltech.edu/cgi-bin/Oasis/2MASSImg/nph-2massimg"
+    set query [http::formatQuery mode getImage RA $xx DEC $yy \
+		   subsetsize $ss thumbnail_size medium survey 2mass \
+		   twomass_bands $var(survey) type fitsurl]
+    set url "https://irsa.ipac.caltech.edu/applications/finderchart/servlet/api"
     IMGSVRGetURL $varname $url $query
 }
 

@@ -281,17 +281,15 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
 			*((int*)obuf+ll) = u.i;
 		      }
 		      // very carefull about type conversions
+		      // a floating point image with no scaling holds raw IEEE
+		      // floats (lossless GZIP); otherwise the tile holds quantized
+		      // integers that getValue() dequantizes
 		      T val =0;
-		      switch (FitsCompressm<T>::quantize_) {
-		      case FitsCompress::NONE:
+		      if (FitsCompressm<T>::quantize_ == FitsCompress::NONE ||
+			  (FitsCompressm<T>::bitpix_ < 0 && !FitsCompressm<T>::hasScaling_))
 			val = FitsCompressm<T>::getValue((float*)obuf+ll,zs,zz,blank);
-			break;
-		      case FitsCompress::NODITHER:
-		      case FitsCompress::SUBDITHER1:
-		      case FitsCompress::SUBDITHER2:
+		      else
 			val = FitsCompressm<T>::getValue((int*)obuf+ll,zs,zz,blank);
-			break;
-		      }
 		      dest[FitsCompressm<T>::calcIndex(xx)] = val;
 		    }
     break;
@@ -325,17 +323,15 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
 			*((long long*)obuf+ll) = u.i;
 		      }
 		      // very carefull about type conversions
+		      // a floating point image with no scaling holds raw IEEE
+		      // doubles (lossless GZIP); otherwise the tile holds quantized
+		      // integers that getValue() dequantizes
 		      T val =0;
-		      switch (FitsCompressm<T>::quantize_) {
-		      case FitsCompress::NONE:
+		      if (FitsCompressm<T>::quantize_ == FitsCompress::NONE ||
+			  (FitsCompressm<T>::bitpix_ < 0 && !FitsCompressm<T>::hasScaling_))
 			val = FitsCompressm<T>::getValue((double*)obuf+ll,zs,zz,blank);
-			break;
-		      case FitsCompress::NODITHER:
-		      case FitsCompress::SUBDITHER1:
-		      case FitsCompress::SUBDITHER2:
+		      else
 			val = FitsCompressm<T>::getValue((long long*)obuf+ll,zs,zz,blank);
-			break;
-		      }
 		      dest[FitsCompressm<T>::calcIndex(xx)] = val;
 		    }
     break;

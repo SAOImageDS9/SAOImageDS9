@@ -26,7 +26,7 @@ library of XPA client and server routines for use in C/C++ programs and
 a suite of high-level user programs built on top of these libraries.
 Using the XPA library, access points can be added to Tcl/Tk programs,
 Xt programs, or to Unix programs that use the XPA event loop or any
-event loop based on select().  Client access subroutines can be added
+event loop based on select( ).  Client access subroutines can be added
 to any Tcl/Tk, Xt, or Unix program. Client access also is supported at
 the command line via a suite of high-level programs.
 

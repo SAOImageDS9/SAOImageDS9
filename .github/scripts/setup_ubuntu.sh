@@ -11,6 +11,7 @@ sudo apt-get install \
   libxml2-dev \
   libxslt1-dev \
   libxft-dev \
+  libxt-dev \
   zip \
   tcl8.6-dev \
   tk8.6-dev

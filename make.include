@@ -235,7 +235,7 @@ xpa/Makefile :
 	$(WITHTCL) \
 	$(PREFIX) \
 	$(STD) \
-	--with-x=disabled
+	--with-x=no
 
 #-------------------------- tkblt
 

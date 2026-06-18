@@ -109,7 +109,7 @@ proc VLAExec {varname} {
     }
 
     set query [http::formatQuery .submit "Extract the Cutout" RA "$xx $yy" Equinox J2000 ImageSize $rr MaxInt 10 .cgifields ImageType ImageType "FITS Image"]
-    set url "https://third.ucllnl.org/cgi-bin/$var(survey)cutout"
+    set url "https://sundog.stsci.edu/cgi-bin/$var(survey)cutout"
     IMGSVRGetURL $varname $url $query
 }
 
@@ -117,7 +117,7 @@ proc VLAAck {varname} {
     upvar #0 $varname var
     global $varname
 
-    set msg {Acknowledgments for the VLA 
+    set msg {Acknowledgments for the VLA
 
 This major undertaking has received the generous technical and
 scientific support of many individuals. The NRAO staff has provided

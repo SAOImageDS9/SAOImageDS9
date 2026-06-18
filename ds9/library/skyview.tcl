@@ -81,6 +81,8 @@ proc SkyViewDialog {} {
 	-menu $var(mb).survey.diffuse
     $var(mb).survey add cascade -label {UV} \
 	-menu $var(mb).survey.uv
+    $var(mb).survey add cascade -label {Swift UVOT} \
+	-menu $var(mb).survey.uvot
     $var(mb).survey add cascade -label {Optical: DSS} \
 	-menu $var(mb).survey.dss
     $var(mb).survey add cascade -label {Optical: SDSS} \
@@ -101,12 +103,16 @@ proc SkyViewDialog {} {
 	-menu $var(mb).survey.planck
     $var(mb).survey add cascade -label {IR: WMAP/COBE} \
 	-menu $var(mb).survey.wmap
-    $var(mb).survey add cascade -label {Radio: Ghz} \
+    $var(mb).survey add cascade -label {Radio: GHz} \
 	-menu $var(mb).survey.radioghz
-    $var(mb).survey add cascade -label {Radio: Mhz} \
+    $var(mb).survey add cascade -label {Radio: MHz} \
 	-menu $var(mb).survey.radiomhz
+    $var(mb).survey add cascade -label {Radio: GLEAM} \
+	-menu $var(mb).survey.gleam
     $var(mb).survey add cascade -label {All: GOODS/HDF/CDF} \
 	-menu $var(mb).survey.goods
+    $var(mb).survey add cascade -label {All: HiPS} \
+	-menu $var(mb).survey.hips
 
     set f $var(mb).survey.gamma
     ThemeMenu $f
@@ -123,10 +129,10 @@ proc SkyViewDialog {} {
     $f add separator
     $f add radiobutton -label {EGRET (3D)} \
 	-variable ${varname}(survey) -value {EGRET (3D)}
-    $f add radiobutton -label {EGRET <100 Mev} \
-	-variable ${varname}(survey) -value {EGRET <100 Mev}
-    $f add radiobutton -label {EGRET >100 Mev} \
-	-variable ${varname}(survey) -value {EGRET >100 Mev}
+    $f add radiobutton -label {EGRET <100 MeV} \
+	-variable ${varname}(survey) -value {EGRET <100 MeV}
+    $f add radiobutton -label {EGRET >100 MeV} \
+	-variable ${varname}(survey) -value {EGRET >100 MeV}
     $f add separator
     $f add radiobutton -label {COMPTEL} \
 	-variable ${varname}(survey) -value {COMPTEL}
@@ -175,6 +181,13 @@ proc SkyViewDialog {} {
 
     set f $var(mb).survey.soft
     ThemeMenu $f
+    $f add radiobutton -label {SwiftXRTCnt} \
+	-variable ${varname}(survey) -value {SwiftXRTCnt}
+    $f add radiobutton -label {SwiftXRTExp} \
+	-variable ${varname}(survey) -value {SwiftXRTExp}
+    $f add radiobutton -label {SwiftXRTInt} \
+	-variable ${varname}(survey) -value {SwiftXRTInt}
+    $f add separator
     $f add radiobutton -label {RASS-Cnt Soft} \
 	-variable ${varname}(survey) -value {RASS-Cnt Soft}
     $f add radiobutton -label {RASS-Cnt Hard} \
@@ -223,12 +236,31 @@ proc SkyViewDialog {} {
     $f add radiobutton -label {ROSAT WFC F2} \
 	-variable ${varname}(survey) -value {ROSAT WFC F2}
     $f add separator
+    $f add radiobutton -label {EUVE 83 A} \
+	-variable ${varname}(survey) -value {EUVE 83 A}
     $f add radiobutton -label {EUVE 171 A} \
 	-variable ${varname}(survey) -value {EUVE 171 A}
     $f add radiobutton -label {EUVE 405 A} \
 	-variable ${varname}(survey) -value {EUVE 405 A}
     $f add radiobutton -label {EUVE 555 A} \
 	-variable ${varname}(survey) -value {EUVE 555 A}
+
+    set f $var(mb).survey.uvot
+    ThemeMenu $f
+    $f add radiobutton -label {UVOT WHITE Intensity} \
+	-variable ${varname}(survey) -value {UVOT WHITE Intensity}
+    $f add radiobutton -label {UVOT V Intensity} \
+	-variable ${varname}(survey) -value {UVOT V Intensity}
+    $f add radiobutton -label {UVOT B Intensity} \
+	-variable ${varname}(survey) -value {UVOT B Intensity}
+    $f add radiobutton -label {UVOT U Intensity} \
+	-variable ${varname}(survey) -value {UVOT U Intensity}
+    $f add radiobutton -label {UVOT UVW1 Intensity} \
+	-variable ${varname}(survey) -value {UVOT UVW1 Intensity}
+    $f add radiobutton -label {UVOT UVM2 Intensity} \
+	-variable ${varname}(survey) -value {UVOT UVM2 Intensity}
+    $f add radiobutton -label {UVOT UVW2 Intensity} \
+	-variable ${varname}(survey) -value {UVOT UVW2 Intensity}
 
     set f $var(mb).survey.dss
     ThemeMenu $f
@@ -260,20 +292,12 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {SDSSu}
     $f add radiobutton -label {SDSSz} \
 	-variable ${varname}(survey) -value {SDSSz}
-    $f add separator
-    $f add radiobutton -label {SDSSdr7g} \
-	-variable ${varname}(survey) -value {SDSSdr7g}
-    $f add radiobutton -label {SDSSdr7i} \
-	-variable ${varname}(survey) -value {SDSSdr7i}
-    $f add radiobutton -label {SDSSdr7r} \
-	-variable ${varname}(survey) -value {SDSSdr7r}
-    $f add radiobutton -label {SDSSdr7u} \
-	-variable ${varname}(survey) -value {SDSSdr7u}
-    $f add radiobutton -label {SDSSdr7z} \
-	-variable ${varname}(survey) -value {SDSSdr7z}
 
     set f $var(mb).survey.other
     ThemeMenu $f
+    $f add radiobutton -label {TESS} \
+	-variable ${varname}(survey) -value {TESS}
+    $f add separator
     $f add radiobutton -label {Mellinger Red} \
 	-variable ${varname}(survey) -value {Mellinger Red}
     $f add radiobutton -label {Mellinger Green} \
@@ -281,8 +305,6 @@ proc SkyViewDialog {} {
     $f add radiobutton -label {Mellinger Blue} \
 	-variable ${varname}(survey) -value {Mellinger Blue}
     $f add separator
-    $f add radiobutton -label {NEAT} \
-	-variable ${varname}(survey) -value {NEAT}
     $f add radiobutton -label {H-Alpha Comp} \
 	-variable ${varname}(survey) -value {H-Alpha Comp}
     $f add separator
@@ -302,7 +324,7 @@ proc SkyViewDialog {} {
     $f add radiobutton -label {IRIS 25} \
 	-variable ${varname}(survey) -value {IRIS 25}
     $f add radiobutton -label {IRIS 60} \
-	-variable ${varname}(survey) -value {IRIS 160}
+	-variable ${varname}(survey) -value {IRIS 60}
     $f add radiobutton -label {IRIS 100} \
 	-variable ${varname}(survey) -value {IRIS 100}
     $f add separator
@@ -339,6 +361,8 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {UKIDSS-H}
     $f add radiobutton -label {UKIDSS-K} \
 	-variable ${varname}(survey) -value {UKIDSS-K}
+    $f add radiobutton -label {UKIDSS-1-0S1} \
+	-variable ${varname}(survey) -value {UKIDSS-1-0S1}
 
     set f $var(mb).survey.irwise
     ThemeMenu $f
@@ -364,27 +388,50 @@ proc SkyViewDialog {} {
 
     set f $var(mb).survey.planck
     ThemeMenu $f
-    $f add radiobutton -label {Planck 857} \
-	-variable ${varname}(survey) -value {Planck 857}
-    $f add radiobutton -label {Planck 545} \
-	-variable ${varname}(survey) -value {Planck 545}
-    $f add radiobutton -label {Planck 353} \
-	-variable ${varname}(survey) -value {Planck 353}
-    $f add radiobutton -label {Planck 217} \
-	-variable ${varname}(survey) -value {Planck 217}
-    $f add radiobutton -label {Planck 143} \
-	-variable ${varname}(survey) -value {Planck 143}
-    $f add radiobutton -label {Planck 100} \
-	-variable ${varname}(survey) -value {Planck 100}
-    $f add radiobutton -label {Planck 070} \
-	-variable ${varname}(survey) -value {Planck 070}
-    $f add radiobutton -label {Planck 044} \
-	-variable ${varname}(survey) -value {Planck 044}
-    $f add radiobutton -label {Planck 030} \
-	-variable ${varname}(survey) -value {Planck 030}
+    $f add radiobutton -label {Planck 857 I} \
+	-variable ${varname}(survey) -value {Planck 857 I}
+    $f add radiobutton -label {Planck 545 I} \
+	-variable ${varname}(survey) -value {Planck 545 I}
+    $f add separator
+    foreach pp {I Q U PI PA PI/I} {
+	$f add radiobutton -label "Planck 353 $pp" \
+	    -variable ${varname}(survey) -value "Planck 353 $pp"
+    }
+    $f add separator
+    foreach pp {I Q U PI PA PI/I} {
+	$f add radiobutton -label "Planck 217 $pp" \
+	    -variable ${varname}(survey) -value "Planck 217 $pp"
+    }
+    $f add separator
+    foreach pp {I Q U PI PA PI/I} {
+	$f add radiobutton -label "Planck 143 $pp" \
+	    -variable ${varname}(survey) -value "Planck 143 $pp"
+    }
+    $f add separator
+    foreach pp {I Q U PI PA PI/I} {
+	$f add radiobutton -label "Planck 100 $pp" \
+	    -variable ${varname}(survey) -value "Planck 100 $pp"
+    }
+    $f add separator
+    foreach pp {I Q U PI PA PI/I} {
+	$f add radiobutton -label "Planck 070 $pp" \
+	    -variable ${varname}(survey) -value "Planck 070 $pp"
+    }
+    $f add separator
+    foreach pp {I Q U PI PA PI/I} {
+	$f add radiobutton -label "Planck 044 $pp" \
+	    -variable ${varname}(survey) -value "Planck 044 $pp"
+    }
+    $f add separator
+    foreach pp {I Q U PI PA PI/I} {
+	$f add radiobutton -label "Planck 030 $pp" \
+	    -variable ${varname}(survey) -value "Planck 030 $pp"
+    }
 
     set f $var(mb).survey.wmap
     ThemeMenu $f
+    $f add radiobutton -label {WMAP ILC} \
+	-variable ${varname}(survey) -value {WMAP ILC}
     $f add radiobutton -label {WMAP Ka} \
 	-variable ${varname}(survey) -value {WMAP Ka}
     $f add radiobutton -label {WMAP K} \
@@ -397,16 +444,16 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {WMAP W}
     $f add separator
     $f add radiobutton -label {COBE DIRBE/AAM} \
-	-variable ${varname}(survey) -value cobeaam
+	-variable ${varname}(survey) -value {COBE DIRBE/AAM}
     $f add radiobutton -label {COBE DIRBE/ZSMA} \
-	-variable ${varname}(survey) -value cobezsma
+	-variable ${varname}(survey) -value {COBE DIRBE/ZSMA}
 
     set f $var(mb).survey.radioghz
     ThemeMenu $f
     $f add radiobutton -label {CO} \
 	-variable ${varname}(survey) -value {CO}
-    $f add radiobutton -label {GB6 (4850MHZ)} \
-	-variable ${varname}(survey) -value {GB6 (4850MHZ)}
+    $f add radiobutton -label {GB6 (4850MHz)} \
+	-variable ${varname}(survey) -value {GB6 (4850MHz)}
     $f add radiobutton -label {VLA FIRST (1.4 GHz)} \
 	-variable ${varname}(survey) -value {VLA FIRST (1.4 GHz)}
     $f add radiobutton -label {NVSS} \
@@ -415,6 +462,10 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {Stripe82VLA}
     $f add radiobutton -label {1420MHz (Bonn)} \
 	-variable ${varname}(survey) -value {1420MHz (Bonn)}
+    $f add radiobutton -label {HI4PI} \
+	-variable ${varname}(survey) -value {HI4PI}
+    $f add radiobutton -label {EBHIS} \
+	-variable ${varname}(survey) -value {EBHIS}
     $f add radiobutton -label {nH} \
 	-variable ${varname}(survey) -value {nH}
 
@@ -432,6 +483,19 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {VLSSr}
     $f add radiobutton -label {0035MHz} \
 	-variable ${varname}(survey) -value {0035MHz}
+    $f add radiobutton -label {0022MHz} \
+	-variable ${varname}(survey) -value {0022MHz}
+
+    set f $var(mb).survey.gleam
+    ThemeMenu $f
+    $f add radiobutton -label {GLEAM 72-103 MHz} \
+	-variable ${varname}(survey) -value {GLEAM 72-103 MHz}
+    $f add radiobutton -label {GLEAM 103-134 MHz} \
+	-variable ${varname}(survey) -value {GLEAM 103-134 MHz}
+    $f add radiobutton -label {GLEAM 139-170 MHz} \
+	-variable ${varname}(survey) -value {GLEAM 139-170 MHz}
+    $f add radiobutton -label {GLEAM 170-231 MHz} \
+	-variable ${varname}(survey) -value {GLEAM 170-231 MHz}
 
     set f $var(mb).survey.goods
     ThemeMenu $f
@@ -468,8 +532,8 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {Hawaii HDF R}
     $f add radiobutton -label {Hawaii HDF I} \
 	-variable ${varname}(survey) -value {Hawaii HDF I}
-    $f add radiobutton -label {Hawaii HDF Z} \
-	-variable ${varname}(survey) -value {Hawaii HDF Z}
+    $f add radiobutton -label {Hawaii HDF z} \
+	-variable ${varname}(survey) -value {Hawaii HDF z}
     $f add radiobutton -label {Hawaii HDF HK} \
 	-variable ${varname}(survey) -value {Hawaii HDF HK}
     $f add separator
@@ -495,8 +559,8 @@ proc SkyViewDialog {} {
     $f add radiobutton -label {GOODS: Spitzer MIPS 24} \
 	-variable ${varname}(survey) -value {GOODS: Spitzer MIPS 24}
     $f add separator
-    $f add radiobutton -label {GOODS: Herschel 100} \
-	-variable ${varname}(survey) -value {GOODS: Herschel 100}
+    $f add radiobutton -label {GOODS: Herschel 160} \
+	-variable ${varname}(survey) -value {GOODS: Herschel 160}
     $f add radiobutton -label {GOODS: Herschel 100} \
 	-variable ${varname}(survey) -value {GOODS: Herschel 100}
     $f add radiobutton -label {GOODS: Herschel 250} \
@@ -510,6 +574,41 @@ proc SkyViewDialog {} {
 	-variable ${varname}(survey) -value {CDFS: LESS}
     $f add radiobutton -label {GOODS: VLA North} \
 	-variable ${varname}(survey) -value {GOODS: VLA North}
+
+    set f $var(mb).survey.hips
+    ThemeMenu $f
+    $f add radiobutton -label {UltraVista-H} \
+	-variable ${varname}(survey) -value {UltraVista-H}
+    $f add radiobutton -label {UltraVista-J} \
+	-variable ${varname}(survey) -value {UltraVista-J}
+    $f add radiobutton -label {UltraVista-Ks} \
+	-variable ${varname}(survey) -value {UltraVista-Ks}
+    $f add radiobutton -label {UltraVista-NB118} \
+	-variable ${varname}(survey) -value {UltraVista-NB118}
+    $f add radiobutton -label {UltraVista-Y} \
+	-variable ${varname}(survey) -value {UltraVista-Y}
+    $f add separator
+    $f add radiobutton -label {CFHTLS-W-u} \
+	-variable ${varname}(survey) -value {CFHTLS-W-u}
+    $f add radiobutton -label {CFHTLS-W-g} \
+	-variable ${varname}(survey) -value {CFHTLS-W-g}
+    $f add radiobutton -label {CFHTLS-W-r} \
+	-variable ${varname}(survey) -value {CFHTLS-W-r}
+    $f add radiobutton -label {CFHTLS-W-i} \
+	-variable ${varname}(survey) -value {CFHTLS-W-i}
+    $f add radiobutton -label {CFHTLS-W-z} \
+	-variable ${varname}(survey) -value {CFHTLS-W-z}
+    $f add separator
+    $f add radiobutton -label {CFHTLS-D-u} \
+	-variable ${varname}(survey) -value {CFHTLS-D-u}
+    $f add radiobutton -label {CFHTLS-D-g} \
+	-variable ${varname}(survey) -value {CFHTLS-D-g}
+    $f add radiobutton -label {CFHTLS-D-r} \
+	-variable ${varname}(survey) -value {CFHTLS-D-r}
+    $f add radiobutton -label {CFHTLS-D-i} \
+	-variable ${varname}(survey) -value {CFHTLS-D-i}
+    $f add radiobutton -label {CFHTLS-D-z} \
+	-variable ${varname}(survey) -value {CFHTLS-D-z}
 
     IMGSVRUpdate $varname
 }

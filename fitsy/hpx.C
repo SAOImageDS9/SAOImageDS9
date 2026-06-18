@@ -68,12 +68,6 @@ static const int FHALVE[][5][5] = {{{ 0,  0,  0,  0,  0},
 				    { 0, -2,  3,  0,  0},
 				    { 0,  0,  0,  0,  0}}};
 
-struct MocRange {
-  long long first;
-  long long last;
-  double value;
-};
-
 struct MocCell {
   int order;
   long long npix;
@@ -85,33 +79,16 @@ struct PartialCell {
   float value;
 };
 
-static bool mocRangeLess(const MocRange& a, const MocRange& b)
-{
-  return a.first < b.first;
-}
+struct FacetPlacement {
+  int jfacet;
+  int ifacet;
+  int rotn;
+  int halve;
+};
 
 static bool partialCellLess(const PartialCell& a, const PartialCell& b)
 {
   return a.pixel < b.pixel;
-}
-
-static const MocRange* findMocRange(const vector<MocRange>& ranges,
-				    long long idx)
-{
-  size_t lo = 0;
-  size_t hi = ranges.size();
-  while (lo < hi) {
-    size_t mid = lo + (hi-lo)/2;
-    if (ranges[mid].last <= idx)
-      lo = mid+1;
-    else
-      hi = mid;
-  }
-
-  if (lo < ranges.size() && ranges[lo].first <= idx && idx < ranges[lo].last)
-    return &ranges[lo];
-
-  return NULL;
 }
 
 static int keywordStarts(FitsHead* head, const char* key, const char* value)
@@ -161,6 +138,48 @@ static long long uniqOffset(int order)
     return 0;
 
   return 4LL << (2*order);
+}
+
+static void decodeNEST(int nside, long long pixel, int* facet, int* ii, int* jj)
+{
+  long long facetSize = (long long)nside * (long long)nside;
+  *facet = (int)(pixel / facetSize);
+  long long nested = pixel - (long long)(*facet) * facetSize;
+
+  *ii = 0;
+  *jj = 0;
+  int bit = 1;
+  while (nested) {
+    if (nested & 1LL)
+      *ii |= bit;
+    nested >>= 1;
+    if (nested & 1LL)
+      *jj |= bit;
+    nested >>= 1;
+    bit <<= 1;
+  }
+}
+
+static void inverseNESTMap(int nside, int rotn, int ii, int jj,
+			   int* imap, int* jmap)
+{
+  int nside1 = nside - 1;
+  if (rotn == 0) {
+    *imap = nside1 - ii;
+    *jmap = jj;
+  }
+  else if (rotn == 1) {
+    *imap = nside1 - jj;
+    *jmap = nside1 - ii;
+  }
+  else if (rotn == 2) {
+    *imap = ii;
+    *jmap = nside1 - jj;
+  }
+  else {
+    *imap = jj;
+    *jmap = ii;
+  }
 }
 
 static int mocHeaderOrder(FitsHead* head)
@@ -360,6 +379,30 @@ void FitsHPX::applyHalveBlanking(float* row, int nside, int jj, int halve, float
     *rowp = blankValue;
 }
 
+int FitsHPX::isHalveBlanked(int nside, int ii, int jj, int halve) const
+{
+  if (!halve)
+    return 0;
+
+  int i1 = 0, i2 = 0;
+  int abs_halve = abs(halve);
+  if (abs_halve == 1) {
+    i1 = (halve > 0) ? jj + 1 : jj;
+    i2 = nside;
+  } else if (abs_halve == 2) {
+    i1 = (halve < 0) ? nside - jj - 1 : nside - jj;
+    i2 = nside;
+  } else if (abs_halve == 3) {
+    i1 = 0;
+    i2 = (halve < 0) ? jj + 1 : jj;
+  } else if (abs_halve == 4) {
+    i1 = 0;
+    i2 = (halve > 0) ? nside - jj - 1 : nside - jj;
+  }
+
+  return i1 <= ii && ii < i2;
+}
+
 // Helper: Uniform execution of HEALPix mapping indices
 void FitsHPX::computeIndices(int nside, int facet, int rotn, int jj, long long* healidx)
 {
@@ -505,18 +548,6 @@ void FitsHPX::buildMOC(FitsFile* fits)
   pWidth_ = nfacet*nside;
   pHeight_ = pWidth_;
 
-  vector<MocRange> ranges;
-  ranges.reserve(cells.size());
-  for (size_t ii=0; ii<cells.size(); ii++) {
-    int shift = 2*(maxorder - cells[ii].order);
-    MocRange range;
-    range.first = cells[ii].npix << shift;
-    range.last = (cells[ii].npix + 1) << shift;
-    range.value = cells[ii].value;
-    ranges.push_back(range);
-  }
-  sort(ranges.begin(), ranges.end(), mocRangeLess);
-
   size_t pSize = (size_t)pWidth_*pHeight_;
   float* dest = new float[pSize];
   for (long long ii=0; ii<pSize; ii++)
@@ -524,42 +555,61 @@ void FitsHPX::buildMOC(FitsFile* fits)
 
   initHeader(fits);
 
-  long long* healidx = new long long[nside];
-  float* row = new float[nside];
-
-  long long fpixel = 1;
-  long long nelem = (long long)nside;
+  vector<FacetPlacement> placements[12];
   for (int jfacet = 0; jfacet<nfacet; jfacet++) {
-    for (int jj = 0; jj<nside; jj++) {
-      for (int ifacet = 0; ifacet<nfacet; ifacet++) {
-	for (int ii=0; ii<nside; ii++)
-	  row[ii] = 0;
+    for (int ifacet = 0; ifacet<nfacet; ifacet++) {
+      int facet = FACETS[layout][jfacet][ifacet];
+      if (facet < 0)
+	continue;
 
-	int facet = FACETS[layout][jfacet][ifacet];
-	int rotn  = FROTAT[layout][jfacet][ifacet];
-	int halve = FHALVE[layout][jfacet][ifacet];
+      int rotn  = FROTAT[layout][jfacet][ifacet];
+      int halve = FHALVE[layout][jfacet][ifacet];
 
-	adjustFacetForQuad(facet);
-
-	if (facet >= 0) {
-	  computeIndices(nside, facet, rotn, jj, healidx);
-
-	  for (int ii=0; ii<nside; ii++) {
-	    const MocRange* range = findMocRange(ranges, healidx[ii]);
-	    if (range)
-	      row[ii] = range->value;
-	  }
-
-          applyHalveBlanking(row, nside, jj, halve, 0.0f);
-          memcpy(dest+fpixel-1, row, nside*sizeof(float));
-	}
-	fpixel += nelem;
+      adjustFacetForQuad(facet);
+      if (facet >= 0 && facet < 12) {
+	FacetPlacement placement;
+	placement.jfacet = jfacet;
+	placement.ifacet = ifacet;
+	placement.rotn = rotn;
+	placement.halve = halve;
+	placements[facet].push_back(placement);
       }
     }
   }
 
-  delete [] healidx;
-  delete [] row;
+  long long maxpix = 12LL * (long long)nside * (long long)nside;
+  for (size_t cc=0; cc<cells.size(); cc++) {
+    int shift = 2*(maxorder - cells[cc].order);
+    long long first = cells[cc].npix << shift;
+    long long last = (cells[cc].npix + 1) << shift;
+    if (first < 0)
+      first = 0;
+    if (last > maxpix)
+      last = maxpix;
+
+    for (long long pixel=first; pixel<last; pixel++) {
+      int facet, ii, jj;
+      decodeNEST(nside, pixel, &facet, &ii, &jj);
+      if (facet < 0 || facet >= 12)
+	continue;
+
+      for (size_t pp=0; pp<placements[facet].size(); pp++) {
+	FacetPlacement* placement = &placements[facet][pp];
+	int imap, jmap;
+	inverseNESTMap(nside, placement->rotn, ii, jj, &imap, &jmap);
+	if (imap < 0 || imap >= nside || jmap < 0 || jmap >= nside)
+	  continue;
+	if (isHalveBlanked(nside, imap, jmap, placement->halve))
+	  continue;
+
+	size_t destIdx =
+	  ((size_t)placement->jfacet * (size_t)nside + (size_t)jmap) *
+	  (size_t)pWidth_ + (size_t)placement->ifacet * (size_t)nside +
+	  (size_t)imap;
+	dest[destIdx] = cells[cc].value;
+      }
+    }
+  }
 
   data_ = dest;
   dataSize_ = pSize;
@@ -596,8 +646,6 @@ void FitsHPX::buildPartial(FitsFile* fits)
     }
   }
 
-  sort(cells.begin(), cells.end(), partialCellLess);
-
   int nside = nside_;
   int layout = layout_;
   int nfacet = NFACET[layout];
@@ -611,6 +659,65 @@ void FitsHPX::buildPartial(FitsFile* fits)
     dest[ii] = NAN;
 
   initHeader(fits);
+
+  if (order_ == NESTED) {
+    vector<FacetPlacement> placements[12];
+    for (int jfacet = 0; jfacet<nfacet; jfacet++) {
+      for (int ifacet = 0; ifacet<nfacet; ifacet++) {
+	int facet = FACETS[layout][jfacet][ifacet];
+	if (facet < 0)
+	  continue;
+
+	int rotn  = FROTAT[layout][jfacet][ifacet];
+	int halve = FHALVE[layout][jfacet][ifacet];
+
+	adjustFacetForQuad(facet);
+	if (facet >= 0 && facet < 12) {
+	  FacetPlacement placement;
+	  placement.jfacet = jfacet;
+	  placement.ifacet = ifacet;
+	  placement.rotn = rotn;
+	  placement.halve = halve;
+	  placements[facet].push_back(placement);
+	}
+      }
+    }
+
+    long long maxpix = 12LL * (long long)nside * (long long)nside;
+    for (size_t cc=0; cc<cells.size(); cc++) {
+      long long pixel = cells[cc].pixel;
+      if (pixel < 0 || pixel >= maxpix)
+	continue;
+
+      int facet, ii, jj;
+      decodeNEST(nside, pixel, &facet, &ii, &jj);
+      if (facet < 0 || facet >= 12)
+	continue;
+
+      for (size_t pp=0; pp<placements[facet].size(); pp++) {
+	FacetPlacement* placement = &placements[facet][pp];
+	int imap, jmap;
+	inverseNESTMap(nside, placement->rotn, ii, jj, &imap, &jmap);
+	if (imap < 0 || imap >= nside || jmap < 0 || jmap >= nside)
+	  continue;
+	if (isHalveBlanked(nside, imap, jmap, placement->halve))
+	  continue;
+
+	size_t destIdx =
+	  ((size_t)placement->jfacet * (size_t)nside + (size_t)jmap) *
+	  (size_t)pWidth_ + (size_t)placement->ifacet * (size_t)nside +
+	  (size_t)imap;
+	dest[destIdx] = cells[cc].value;
+      }
+    }
+
+    data_ = dest;
+    dataSize_ = pSize;
+    dataSkip_ = 0;
+    return;
+  }
+
+  sort(cells.begin(), cells.end(), partialCellLess);
 
   long long* healidx = new long long[nside];
   float* row = new float[nside];

@@ -16,7 +16,7 @@
 <a href="#Contours">Contours</a><br>
 <a href="#LargeFiles">Large Files</a><br>
 <p><b><a name="How" id="How"></a>How DS9 renders an image</b></p>
-<p>Here is a short description on how DS9 decides to paint a pixel a color on the the screen, give an data value... you need a color scale, a contrast/bias pair for the colorscale, clip values for the data, a scale distribution, and finally, the value of the pixel in question.</p>
+<p>Here is a short description of how DS9 decides to paint a pixel a color on the screen, given a data value... you need a color scale, a contrast/bias pair for the colorscale, clip values for the data, a scale distribution, and finally, the value of the pixel in question.</p>
 <blockquote>
 <p>Step 1. Select a color scale. A color scale is defined as a number of colors (RGB triplets). The number of RGB triplets can vary from just a few to over 200. DS9 contains a number of predefined color scales (Gray, A, B, I8, ...) or the user may load his own color scale.</p>
 <p>Step 2. Apply a contrast/bias pair. This step takes the result of step 1 and creates a new array with the contrast/bias applied. The length of the new array will between 200 (for pseudocolor) and 4096 (for truecolor).</p>
@@ -56,12 +56,12 @@
 <blockquote>Kernel width/height = <i>2k+1</i> with <i>r</i> <i>&lt;=</i> <i><tt>k</tt></i><br>
 Boxcar function, width = <i>2</i><i>r</i><i>+1</i><br>
 Tophat function, where the diameter = <i>2r</i><i>+1</i><br>
-Gaussian and Ellipical Gaussian function, defined as:
+Gaussian and Elliptical Gaussian function, defined as:
 <blockquote><img src="img/gauss.png" alt="Gaussian Equation" width="173" height="38"><br></blockquote>
-where the mean = 0 and sigma = <i>r/2</i> as initial values. sigma and radius are independant parameters which can be changed by the user.<br>
+where the mean = 0 and sigma = <i>r/2</i> as initial values. sigma and radius are independent parameters which can be changed by the user.<br>
 </blockquote>
 <p><b><a name="Contours" id="Contours"></a>Contours</b></p>
-<p>The contour algorithm is from an unknown author and originally came from FV. The difference between the two modes are:<tt><br></tt></p>
+<p>The contour algorithm is from an unknown author and originally came from FV. The difference between the two modes is:<tt><br></tt></p>
 <blockquote><tt>block</tt> : the image is blocked down before the contour is generated<br>
 <tt>smooth</tt> : the image is smoothed via a Gaussian kernel before the contour is generated.</blockquote>
 <p><tt>block</tt> mode is faster as the smoothing parameter increases. Inversely, <tt>smooth</tt> mode is much slower as the smoothing parameter increases.</p>

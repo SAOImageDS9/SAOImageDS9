@@ -145,7 +145,6 @@ tkwindistclean :
 .PHONY	: dist
 
 dist	:
-	cp ds9/win/ds9.iss bin
 	$(RM) -f dist/$(DS9APP)\ Install.*
-	(cd bin; /cygdrive/c/Program\ Files\ \(x86\)/Inno\ Setup\ 6/ISCC ./ds9.iss)
+	/cygdrive/c/Program\ Files\ \(x86\)/Inno\ Setup\ 6/ISCC ds9/win/ds9.iss
 

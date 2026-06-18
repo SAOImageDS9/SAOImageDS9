@@ -7,7 +7,25 @@
 <body>
 <h1 id="sun.pngsaoimageds9-version-8.8-release-notes"><img alt="" src="../sun.png" align="middle">SAOImageDS9
 Version 8.8 Release Notes</h1>
-<h3 id="beta-1">Beta 1:</h3>
+<h2 id="beta-1">Beta 1:</h2>
+<h4 id="summary">Summary</h4>
+<ul>
+<li>Upgraded Tcl/Tk to version 9, including updates to many
+sub-packages</li>
+<li>Upgraded to SSL 3.6.2/TLS 2.0 to improve <code>https</code> site
+access.</li>
+<li>Now supports partial Healpix files, including Multi-Order-Coverage
+(MOC) files</li>
+<li>New movie <code>script</code> mode.</li>
+<li>Now supports PDF export using <code>Save Image</code> for images and
+<code>Export</code> for plots.</li>
+<li>Color bars now support the <code>width</code> and
+<code>center</code> options to adjust the width and placement</li>
+<li>The DSS-SAO image server is no longer being maintained and has been
+removed.</li>
+<li>Several other bug fixes and build enhancements.</li>
+</ul>
+<h4 id="details">Details</h4>
 <ul>
 <li><strong>BUILD</strong>: Updated <code>Makefiles</code> to ensure
 that <code>tclsh</code> is getting picked up from the local build
@@ -89,6 +107,45 @@ Burke.</li>
 curve points, and more to support PDF plots.</li>
 <li><strong>PDF4TCL</strong>: Added v0.9.4 to packages to provide PDF
 support.</li>
+<li><strong>COLORBAR</strong>: Added <code>-center</code> and
+<code>-width</code> options to reposition the colorbar. Both are numbers
+in the range from <code>0</code> to <code>1</code>. For
+<code>center</code> a value of <code>0.5</code> (default) will be the
+center of the image, <code>0</code> is all the way to the left (or
+bottom for vertical orientation) and <code>1</code> is at the right
+(top). For <code>width</code> a value of <code>1</code> (default) is the
+full width (height) of the image; a value of <code>0.5</code> would be
+50% of the width (height) of the image.</li>
+<li><strong>REGIONS</strong>: Added documentation for the interactive
+<code>callback</code> option with DS9 format region files.</li>
+<li><strong>TCL</strong> and <strong>TK</strong>: Updated to 9.0.3.
+Several subpackage updates:
+<ul>
+<li><strong>DS9</strong>: UTF-8 encoding normalization in
+internationalization files; runtime fixes for coroutine self-deletion;
+Tcl 9 binary data handling; menu tearoff restoration</li>
+<li><strong>TCLXML</strong>: Minimal refactoring to adapt to Tcl 9’s
+removal of the “binary” option in file/I/O operations. Changes are
+predominantly mechanical updates to use Tcl 9-compatible
+alternatives.</li>
+<li><strong>TKBLT</strong>: Rotated text rendering fixes for Tk 9;
+missing stdarg.h include addition; pointer/string handling updates for
+Tcl 9 API compatibility. Fix for double-buffer compatibility on
+macOS.</li>
+<li><strong>TKCON</strong>: Single-line exit behavior fix for Tcl 9
+compatibility<br />
+</li>
+<li><strong>TKHTML</strong>: Placeholder image handling for binary
+data/Tcl 9 compatibility. Fix for double-buffer compatibility on macOS
+.</li>
+<li><strong>TKSAO</strong>: Extensive widget system refactoring;
+consistent updates across 26 rendering variant files (colorbar + frame
+truecolor); macOS-specific rendering fixes; internal Tcl/Tk API
+compatibility for event loop and object access. Fix for double-buffer
+compatibility on macOS</li>
+<li><strong>TKSVG</strong>: Windows issue fix<br />
+</li>
+<li><strong>XPA</strong>: Tcl 9 event loop integration; network
+resilience improvements for XPA_METHOD=inet when DNS resolution fails ;
+additional Tcl 9 compatibility fixes  </li>
 </ul>
-</body>
-</html>

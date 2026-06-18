@@ -207,6 +207,7 @@ proc HV {varname title url {init {}} {sync 0} {save 0}} {
 	    x11 {
 		bind $w <Button-4> "HVMouseWheel $varname 1"
 		bind $w <Button-5> "HVMouseWheel $varname -1"
+		bind $w <MouseWheel> "HVMouseWheel $varname %D"
 	    }
 	    aqua -
 	    win32 {

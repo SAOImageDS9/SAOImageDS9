@@ -326,6 +326,8 @@ proc TBLBindMouseWheel {varname} {
 	    bind $var(tbl) <Button-5> [list TBLYScroll $varname -1]
 	    bind $var(tbl) <Shift-Button-4> [list TBLXScroll $varname 1]
 	    bind $var(tbl) <Shift-Button-5> [list TBLXScroll $varname -1]
+	    bind $var(tbl) <MouseWheel> [list TBLYScroll $varname %D]
+	    bind $var(tbl) <Shift-MouseWheel> [list TBLXScroll $varname %D]
 	}
 	aqua -
 	win32 {
@@ -893,5 +895,4 @@ proc TBLCmdPrint {varname} {
     starbase_writefp $var(tbldb) $ch
     close $ch
 }
-
 

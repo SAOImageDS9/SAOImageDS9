@@ -624,7 +624,7 @@ proc GridDialog {} {
     $mb.type add radiobutton -label [msgcat::mc {Exterior Numerics}] \
 	-variable grid(numlab,type) -value exterior -command GridApplyDialog
     $mb.type add separator
-    $mb.type add checkbutton -label [msgcat::mc {Vertical Text}] \
+    $mb.type add checkbutton -label [msgcat::mc {Horizontal Text}] \
 	-variable grid(numlab,vertical) -command GridApplyDialog
 
     # Coordinate
@@ -811,7 +811,7 @@ proc GridDialog {} {
 	-variable grid(numlab,type) -value interior -command GridApplyDialog
     ttk::radiobutton $f.numlabout -text [msgcat::mc {Exterior}] \
 	-variable grid(numlab,type) -value exterior -command GridApplyDialog
-    ttk::checkbutton $f.numlabvert -text [msgcat::mc {Vertical Text}] \
+    ttk::checkbutton $f.numlabvert -text [msgcat::mc {Horizontal Text}] \
 	-variable grid(numlab,vertical) -command GridApplyDialog
 
     ttk::label $f.torigin -text [msgcat::mc {Origin}]
@@ -1050,7 +1050,7 @@ proc UpdateGridDialog {} {
 			-state normal
 		    $mb.type entryconfig [msgcat::mc {Exterior Numerics}] \
 			-state normal
-		    $mb.type entryconfig [msgcat::mc {Vertical Text}] \
+		    $mb.type entryconfig [msgcat::mc {Horizontal Text}] \
 			-state normal
 		    $mb.axes entryconfig [msgcat::mc {Origin}] \
 			-state disable
@@ -1098,7 +1098,7 @@ proc UpdateGridDialog {} {
 			-state disabled
 		    $mb.type entryconfig [msgcat::mc {Exterior Numerics}] \
 			-state disabled
-		    $mb.type entryconfig [msgcat::mc {Vertical Text}] \
+		    $mb.type entryconfig [msgcat::mc {Horizontal Text}] \
 			-state disabled
 		    $mb.axes entryconfig [msgcat::mc {Origin}] -state normal
 

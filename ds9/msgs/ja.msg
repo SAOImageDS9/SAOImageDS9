@@ -1033,7 +1033,7 @@
 ::msgcat::mcset ja {Vector} [encoding convertfrom euc-jp "\xa5\xd9\xa5\xaf\xa5\xc8\xa5\xeb"]
 ::msgcat::mcset ja {Vertical Graph} [encoding convertfrom euc-jp "\xbd\xc4\xc3\xc7\xcc\xcc"]
 ::msgcat::mcset ja {Vertical Layout} [encoding convertfrom euc-jp "\xb2\xe8\xcc\xcc\xa4\xce\xba\xb8\xa4\xcb\xc7\xdb\xc3\xd6"]
-::msgcat::mcset ja {Vertical Text} 
+::msgcat::mcset ja {Horizontal Text}
 ::msgcat::mcset ja {Vertical} 
 ::msgcat::mcset ja {View} [encoding convertfrom euc-jp "\xc9\xbd\xbc\xa8"]
 ::msgcat::mcset ja {Virtual Observatory} [encoding convertfrom euc-jp "\xb2\xbe\xc1\xdb\xc5\xb7\xca\xb8\xc2\xe6"]

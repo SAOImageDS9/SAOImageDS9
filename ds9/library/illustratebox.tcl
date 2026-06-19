@@ -4,7 +4,7 @@
 
 package provide DS9 1.0
 
-proc IllustrateBoxCreate {xx yy rr1 rr2 color fill width dash} {
+proc IllustrateBoxCreate {xx yy rr1 rr2 color fill width dash {angle 0}} {
     global ds9
     global illustrate
 
@@ -19,9 +19,8 @@ proc IllustrateBoxCreate {xx yy rr1 rr2 color fill width dash} {
 	set dashlist {}
     }
 
-    set id [$ds9(canvas) create rectangle \
-		[expr $xx-$rr1] [expr $yy-$rr2] \
-		[expr $xx+$rr1] [expr $yy+$rr2] \
+    set id [$ds9(canvas) create polygon \
+		[IllustrateBaseRotatedCoords $xx $yy $rr1 $rr2 $angle 4] \
 		-outline $color \
 		-fill $fillcolor \
 		-width $width \
@@ -41,8 +40,7 @@ proc IllustrateBoxDefault {id} {
     set rr2 [expr $pillustrate(box,radius2)/2]
 
     $ds9(canvas) coords $id \
-		[expr $xx-$rr1] [expr $yy-$rr2] \
-		[expr $xx+$rr1] [expr $yy+$rr2]
+	[IllustrateBaseRotatedCoords $xx $yy $rr1 $rr2 0 4]
 }
 
 # BaseDup
@@ -51,25 +49,29 @@ proc IllustrateBoxEdit {id xx yy} {
     global ds9
     global iillustrate
 
-    foreach {x1 y1 x2 y2} [$ds9(canvas) coords $id] {}
+    foreach {xc yc rr1 rr2 angle} [IllustrateBoxGeometry $id] {}
+    foreach {x1 y1 x2 y2} [$ds9(canvas) bbox $id] {}
     switch $iillustrate(handle) {
-	1 {$ds9(canvas) coords $id $xx $yy $x2 $y2}
-	2 {$ds9(canvas) coords $id $x1 $yy $xx $y2}
-	3 {$ds9(canvas) coords $id $x1 $y1 $xx $yy}
-	4 {$ds9(canvas) coords $id $xx $y1 $x2 $yy}
+	1 {set x1 $xx; set y1 $yy}
+	2 {set x2 $xx; set y1 $yy}
+	3 {set x2 $xx; set y2 $yy}
+	4 {set x1 $xx; set y2 $yy}
     }
+
+    set xc [expr {($x2-$x1)/2+$x1}]
+    set yc [expr {($y2-$y1)/2+$y1}]
+    set rr1 [expr {abs($x2-$x1)/2}]
+    set rr2 [expr {abs($y2-$y1)/2}]
+    $ds9(canvas) coords $id \
+	[IllustrateBaseRotatedCoords $xc $yc $rr1 $rr2 $angle 4]
 }
 
 proc IllustrateBoxList {id} {
     global ds9
 
-    foreach {x1 y1 x2 y2} [$ds9(canvas) coords $id] {}
-    set xc [expr ($x2-$x1)/2+$x1]
-    set yc [expr ($y2-$y1)/2+$y1]
-    set r1 [expr ($x2-$x1)/2]
-    set r2 [expr ($y2-$y1)/2]
+    foreach {xc yc r1 r2 angle} [IllustrateBoxGeometry $id] {}
     
-    return "box $xc $yc $r1 $r2 [IllustrateBaseListProps $id]"
+    return "box $xc $yc $r1 $r2 [IllustrateBaseAngleProps $id $angle]"
 }
 
 # Dialog
@@ -96,6 +98,7 @@ proc IllustrateBoxDialog {id} {
     # variables
     set var(rr1) 0
     set var(rr2) 0
+    set var(angle) 0
 
     # proc
     set var(proc,apply) IllustrateBoxApply
@@ -108,6 +111,12 @@ proc IllustrateBoxDialog {id} {
     ttk::entry $f.radius1 -textvariable ${varname}(rr1) -width 13 
     ttk::entry $f.radius2 -textvariable ${varname}(rr2) -width 13 
     grid $f.tradius $f.radius1 $f.radius2 -padx 2 -pady 2 -sticky w
+
+    # Angle
+    ttk::label $f.tangle -text [msgcat::mc {Angle}]
+    ttk::entry $f.angle -textvariable ${varname}(angle) -width 13
+    ttk::label $f.uangle -text [msgcat::mc {Degrees}]
+    grid $f.tangle $f.angle $f.uangle -padx 2 -pady 2 -sticky w
 
     # init
     IllustrateBoxEditCB $var(id)
@@ -129,13 +138,57 @@ proc IllustrateBoxApply {varname} {
 	set yc $var(yc)
 	set rr1 $var(rr1)
 	set rr2 $var(rr2)
+	set angle $var(angle)
 
 	$ds9(canvas) coords $var(id) \
-	    [expr $xc-$rr1] [expr $yc-$rr2] \
-	    [expr $xc+$rr1] [expr $yc+$rr2]
+	    [IllustrateBaseRotatedCoords $xc $yc $rr1 $rr2 $angle 4]
 
 	IllustrateBaseUpdateHandle $var(id)
     }
+}
+
+proc IllustrateBoxRotate {id xx yy} {
+    global ds9
+    global iillustrate
+
+    foreach {xc yc rr1 rr2 angle} [IllustrateBoxGeometry $id] {}
+    set dx [expr {$xx-$xc}]
+    set dy [expr {$yy-$yc}]
+    set aa [expr {atan2($dy,$dx)*180./acos(-1)}]
+
+    switch $iillustrate(handle) {
+	1 {set bx -$rr1; set by -$rr2}
+	2 {set bx $rr1; set by -$rr2}
+	3 {set bx $rr1; set by $rr2}
+	4 {set bx -$rr1; set by $rr2}
+    }
+    set bb [expr {atan2($by,$bx)*180./acos(-1)}]
+    set angle [expr {$aa-$bb}]
+
+    $ds9(canvas) coords $id \
+	[IllustrateBaseRotatedCoords $xc $yc $rr1 $rr2 $angle 4]
+}
+
+proc IllustrateBoxGeometry {id} {
+    global ds9
+
+    set coords [$ds9(canvas) coords $id]
+    if {[llength $coords] == 4} {
+	foreach {x1 y1 x2 y2} $coords {}
+	set xc [expr {($x2-$x1)/2+$x1}]
+	set yc [expr {($y2-$y1)/2+$y1}]
+	set rr1 [expr {abs($x2-$x1)/2}]
+	set rr2 [expr {abs($y2-$y1)/2}]
+	return [list $xc $yc $rr1 $rr2 0]
+    }
+
+    foreach {x1 y1 x2 y2 x3 y3 x4 y4} $coords {}
+    set xc [expr {($x1+$x2+$x3+$x4)/4.}]
+    set yc [expr {($y1+$y2+$y3+$y4)/4.}]
+    set rr1 [expr {sqrt(($x2-$x1)*($x2-$x1)+($y2-$y1)*($y2-$y1))/2.}]
+    set rr2 [expr {sqrt(($x4-$x1)*($x4-$x1)+($y4-$y1)*($y4-$y1))/2.}]
+    set angle [expr {atan2($y2-$y1,$x2-$x1)*180./acos(-1)}]
+    return [list $xc $yc $rr1 $rr2 $angle]
 }
 
 # callbacks
@@ -153,9 +206,10 @@ proc IllustrateBoxEditCB {id} {
 
     global ds9
 
-    foreach {x1 y1 x2 y2} [$ds9(canvas) coords $var(id)] {}
-    set var(xc) [expr ($x2-$x1)/2+$x1]
-    set var(yc) [expr ($y2-$y1)/2+$y1]
-    set var(rr1) [expr ($x2-$x1)/2]
-    set var(rr2) [expr ($y2-$y1)/2]
+    foreach {xc yc rr1 rr2 angle} [IllustrateBoxGeometry $var(id)] {}
+    set var(xc) $xc
+    set var(yc) $yc
+    set var(rr1) $rr1
+    set var(rr2) $rr2
+    set var(angle) $angle
 }

@@ -4,6 +4,14 @@
 
 package provide DS9 1.0
 
+proc VODefaultServer {} {
+    return {https://ds9.si.edu/chandraed/list.txt}
+}
+
+proc VOLegacyServer {} {
+    return {https://cxc.harvard.edu/chandraed/list.txt}
+}
+
 proc VODef {} {
     global ivo
     global pvo
@@ -19,7 +27,7 @@ proc VODef {} {
     set ivo(ka,id) {}
 
     # prefs only
-    set pvo(server) {https://cxc.harvard.edu/chandraed/list.txt}
+    set pvo(server) [VODefaultServer]
     set pvo(hv) 1
     # only support mime now (not xpa)
     set pvo(method) mime
@@ -240,7 +248,7 @@ proc VOApply {varname} {
     
     # next try
     set var(valid) 0
-    VOLoad $varname {https://cxc.harvard.edu/chandraed/list.txt}
+    VOLoad $varname [VODefaultServer]
     if {$var(valid)} {
 	VOKeepAlive 0
 	return

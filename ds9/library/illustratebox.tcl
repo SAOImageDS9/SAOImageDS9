@@ -47,21 +47,9 @@ proc IllustrateBoxDefault {id} {
 
 proc IllustrateBoxEdit {id xx yy} {
     global ds9
-    global iillustrate
 
     foreach {xc yc rr1 rr2 angle} [IllustrateBoxGeometry $id] {}
-    foreach {x1 y1 x2 y2} [$ds9(canvas) bbox $id] {}
-    switch $iillustrate(handle) {
-	1 {set x1 $xx; set y1 $yy}
-	2 {set x2 $xx; set y1 $yy}
-	3 {set x2 $xx; set y2 $yy}
-	4 {set x1 $xx; set y2 $yy}
-    }
-
-    set xc [expr {($x2-$x1)/2+$x1}]
-    set yc [expr {($y2-$y1)/2+$y1}]
-    set rr1 [expr {abs($x2-$x1)/2}]
-    set rr2 [expr {abs($y2-$y1)/2}]
+    foreach {rr1 rr2} [IllustrateBaseRotatedRadii $xc $yc $xx $yy $angle] {}
     $ds9(canvas) coords $id \
 	[IllustrateBaseRotatedCoords $xc $yc $rr1 $rr2 $angle 4]
 }

@@ -111,6 +111,18 @@ proc IllustrateBaseRotatedCoords {xc yc rr1 rr2 angle points} {
     return $coords
 }
 
+proc IllustrateBaseRotatedRadii {xc yc xx yy angle} {
+    set aa [expr {$angle*acos(-1)/180.}]
+    set ca [expr {cos($aa)}]
+    set sa [expr {sin($aa)}]
+    set dx [expr {$xx-$xc}]
+    set dy [expr {$yy-$yc}]
+
+    set rr1 [expr {abs($dx*$ca + $dy*$sa)}]
+    set rr2 [expr {abs(-$dx*$sa + $dy*$ca)}]
+    return [list $rr1 $rr2]
+}
+
 proc IllustrateBaseAngleProps {id angle} {
     set rr [IllustrateBaseListProps $id]
     if {abs($angle) > .000001} {
@@ -451,4 +463,3 @@ proc IllustrateBaseWidthCB {id} {
 	set var(dash) 0
     }
 }
-

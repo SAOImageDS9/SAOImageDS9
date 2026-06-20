@@ -58,8 +58,13 @@ proc IllustrateEllipseList {id} {
     global ds9
 
     foreach {xc yc r1 r2 angle} [IllustrateEllipseGeometry $id] {}
-    
-    return "ellipse $xc $yc $r1 $r2 [IllustrateBaseAngleProps $id $angle]"
+    set rr [format "ellipse %s %s %s %s" \
+		[IllustrateBaseFormatNumber $xc] \
+		[IllustrateBaseFormatNumber $yc] \
+		[IllustrateBaseFormatNumber $r1] \
+		[IllustrateBaseFormatNumber $r2]]
+    append rr [IllustrateBaseAngleProps $id $angle]
+    return $rr
 }
 
 # Dialog
@@ -208,9 +213,9 @@ proc IllustrateEllipseEditCB {id} {
     global ds9
 
     foreach {xc yc rr1 rr2 angle} [IllustrateEllipseGeometry $id] {}
-    set var(xc) $xc
-    set var(yc) $yc
-    set var(rr1) $rr1
-    set var(rr2) $rr2
-    set var(angle) $angle
+    set var(xc) [IllustrateBaseFormatNumber $xc]
+    set var(yc) [IllustrateBaseFormatNumber $yc]
+    set var(rr1) [IllustrateBaseFormatNumber $rr1]
+    set var(rr2) [IllustrateBaseFormatNumber $rr2]
+    set var(angle) [IllustrateBaseFormatNumber $angle]
 }

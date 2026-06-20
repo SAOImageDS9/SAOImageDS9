@@ -125,12 +125,24 @@ proc IllustrateBaseRotatedRadii {xc yc xx yy angle} {
 
 proc IllustrateBaseAngleProps {id angle} {
     set rr [IllustrateBaseListProps $id]
-    if {abs($angle) > .000001} {
+    if {abs($angle) > 1.0e-6} {
 	if {$rr == {}} {
 	    append rr " #"
 	}
-	append rr " angle = $angle"
+	append rr " angle = [IllustrateBaseFormatNumber $angle]"
     }
+    return $rr
+}
+
+proc IllustrateBaseFormatNumber {value} {
+    set rounded [expr {round($value)}]
+    if {abs($value-$rounded) < 1.0e-6} {
+	return [format %.1f [expr {double($rounded)}]]
+    }
+
+    set rr [format %.6f $value]
+    set rr [string trimright $rr 0]
+    set rr [string trimright $rr .]
     return $rr
 }
 

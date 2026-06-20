@@ -31,7 +31,7 @@ proc AnalysisMainMenu {} {
     $ds9(mb).analysis add checkbutton -label [msgcat::mc {Coordinate Grid}] \
 	-variable grid(view) -command UpdateGridCurrent
     $ds9(mb).analysis add command \
-	-label [msgcat::mc {Coordinate Grid Control Panel}] \
+	-label [msgcat::mc {Coordinate Grid Parameters}] \
 	-command GridDialog
     $ds9(mb).analysis add separator
     $ds9(mb).analysis add cascade -label [msgcat::mc {Block}] \

@@ -101,7 +101,7 @@ proc GridDefault {} {
 
 proc UpdateGridCurrent {} {
     global current
-    
+
     if {$current(frame) != {}} {
 	UpdateGrid $current(frame)
     }
@@ -119,7 +119,7 @@ proc UpdateGrid {which} {
     } else {
 	$which grid delete
     }
-}	    
+}
 
 proc UpdateGridZoom {} {
     global grid
@@ -202,7 +202,7 @@ proc GridBuildOptions {which} {
 	    append opt " Format(2)=$ff,"
 	}
     }
-    
+
     # Ticks
     if {!$grid(tick)} {
 	append opt " MajTickLen=0,"
@@ -215,7 +215,7 @@ proc GridBuildOptions {which} {
 		    base -
 		    rgb {}
 		    3d {append opt " MinTick(3)=0,"}
-		}		    
+		}
 	    }
 	}
     }
@@ -251,7 +251,7 @@ proc GridBuildOptions {which} {
 		base -
 		rgb {append opt " TextLab=$grid(textlab),"}
 		3d {append opt " TextLab=0,"}
-	    }		    
+	    }
 	}
     }
     if {!$grid(textlab,def1)} {
@@ -337,7 +337,7 @@ proc GridBuildOptions {which} {
 		    set numy -.03
 		}
 		3d {}
-	    }		    
+	    }
 	}
 	publication {
 	    switch -- [$which get type] {
@@ -356,7 +356,7 @@ proc GridBuildOptions {which} {
 		    }
 		}
 		3d {}
-	    }		    
+	    }
 	}
     }
 
@@ -436,7 +436,7 @@ proc GridBuildOptions {which} {
 		base -
 		rgb {}
 		3d {append opt " Norm(1)=0, Norm(2)=0, Norm(3)=-1,"}
-	    }		    
+	    }
 	}
     }
 
@@ -575,7 +575,7 @@ proc GridDialog {} {
     set w $igrid(top)
     set mb $igrid(mb)
 
-    Toplevel $w $mb 6 [msgcat::mc {Coordinate Grid Control Panel}] \
+    Toplevel $w $mb 6 [msgcat::mc {Coordinate Grid Parameters}] \
 	GridDestroyDialog
 
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
@@ -870,12 +870,12 @@ proc GridDialog {} {
 	-variable grid(title,def) -command GridApplyDialog
     ttk::label $f.label1 -text "[msgcat::mc {Axis}] 1"
     ttk::entry $f.title1 -textvariable grid(textlab,text1) \
-	-width 60 
+	-width 60
     ttk::checkbutton $f.default1 -text [msgcat::mc {Default}] \
 	-variable grid(textlab,def1) -command GridApplyDialog
     ttk::label $f.label2 -text "[msgcat::mc {Axis}] 2"
     ttk::entry $f.title2 -textvariable grid(textlab,text2) \
-	-width 60 
+	-width 60
     ttk::checkbutton $f.default2 -text [msgcat::mc {Default}] \
 	-variable grid(textlab,def2) -command GridApplyDialog
 
@@ -893,26 +893,26 @@ proc GridDialog {} {
 
     ttk::label $f.titlet -text [msgcat::mc {Title}]
     ttk::entry $f.spacet -textvariable grid(title,gap) \
-	-width 8 
+	-width 8
 
     ttk::label $f.title1 -text "[msgcat::mc {Axis}] 1"
-    ttk::entry $f.tspace1 -textvariable grid(textlab,gap1) -width 8 
-    ttk::entry $f.nspace1 -textvariable grid(numlab,gap1) -width 8 
-    ttk::entry $f.format1 -textvariable grid(format1) -width 8 
-    ttk::entry $f.gap1 -textvariable grid(grid,gap1) -width 8 
+    ttk::entry $f.tspace1 -textvariable grid(textlab,gap1) -width 8
+    ttk::entry $f.nspace1 -textvariable grid(numlab,gap1) -width 8
+    ttk::entry $f.format1 -textvariable grid(format1) -width 8
+    ttk::entry $f.gap1 -textvariable grid(grid,gap1) -width 8
     ttk::label $f.gapunit1 -textvariable grid(grid,gapunit1)
 
     ttk::label $f.title2 -text "[msgcat::mc {Axis}] 2"
-    ttk::entry $f.tspace2 -textvariable grid(textlab,gap2) -width 8 
-    ttk::entry $f.nspace2 -textvariable grid(numlab,gap2) -width 8 
-    ttk::entry $f.format2 -textvariable grid(format2) -width 8 
-    ttk::entry $f.gap2 -textvariable grid(grid,gap2) -width 8 
+    ttk::entry $f.tspace2 -textvariable grid(textlab,gap2) -width 8
+    ttk::entry $f.nspace2 -textvariable grid(numlab,gap2) -width 8
+    ttk::entry $f.format2 -textvariable grid(format2) -width 8
+    ttk::entry $f.gap2 -textvariable grid(grid,gap2) -width 8
     ttk::label $f.gapunit2 -textvariable grid(grid,gapunit2)
 
     ttk::label $f.title3 -text "[msgcat::mc {Axis}] 3"
-    ttk::entry $f.nspace3 -textvariable grid(numlab,gap3) -width 8 
-    ttk::entry $f.format3 -textvariable grid(format3) -width 8 
-    ttk::entry $f.gap3 -textvariable grid(grid,gap3) -width 8 
+    ttk::entry $f.nspace3 -textvariable grid(numlab,gap3) -width 8
+    ttk::entry $f.format3 -textvariable grid(format3) -width 8
+    ttk::entry $f.gap3 -textvariable grid(grid,gap3) -width 8
     ttk::label $f.gapunit3 -textvariable grid(grid,gapunit3)
 
     grid x $f.lspace $f.ngap $f.lformat $f.lgap -padx 2 -pady 2 -sticky w
@@ -1182,7 +1182,7 @@ proc GridCreateColorMenuButton {which color} {
 
 proc GridLoadDialog {} {
     global igrid
-    
+
     set fn [OpenFileDialog gridfbox $igrid(top)]
     GridLoad $fn
 }

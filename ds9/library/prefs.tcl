@@ -461,6 +461,7 @@ proc FixPrefs {version} {
     # these old vars may exists in the wild
     # be sure to rm them
     FixPrefsVarOld
+    FixPrefsVO
 
     switch $version {
 	5.x {
@@ -620,6 +621,14 @@ proc FixPrefs {version} {
 	}
 	8.4 {
 	}
+    }
+}
+
+proc FixPrefsVO {} {
+    global pvo
+
+    if {[info exists pvo(server)] && $pvo(server) == [VOLegacyServer]} {
+	set pvo(server) [VODefaultServer]
     }
 }
 

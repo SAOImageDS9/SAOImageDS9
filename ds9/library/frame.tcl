@@ -981,6 +981,13 @@ proc ControlButton1Frame {which x y} {
 
     set ds9(cb1) 1
 
+    if {$ds9(display) == {tile} && [llength $ds9(active)] > 1} {
+	set ds9(tile,drag) $which
+	set ds9(tile,drop) {}
+	GotoFrame $which
+	return
+    }
+
     switch -- $current(mode) {
 	none {}
 	pointer -
@@ -1080,6 +1087,13 @@ proc Motion1Frame {which x y} {
 	return
     }
 
+    if {$ds9(display) == {tile} && $ds9(cb1) &&
+	[info exists ds9(tile,drag)] && $ds9(tile,drag) != {}} {
+	UpdateTileDropTarget [FindFrameAt $x $y]
+	UpdateMagnifier $which $x $y
+	return
+    }
+
     switch -- $current(mode) {
 	none {}
 	pointer -
@@ -1175,6 +1189,23 @@ proc Release1Frame {which x y} {
 	return
     }
 
+    if {$ds9(display) == {tile} && $ds9(cb1) &&
+	[info exists ds9(tile,drag)] && $ds9(tile,drag) != {}} {
+	set target [FindFrameAt $x $y]
+	ClearTileDropTarget
+	MoveFrameToFramePosition $ds9(tile,drag) $target
+	set ds9(tile,drag) {}
+	set ds9(tile,drop) {}
+
+	set ds9(b1) 0
+	set ds9(sb1) 0
+	set ds9(cb1) 0
+	set ds9(csb1) 0
+
+	UpdateEditMenu
+	return
+    }
+
     switch -- $current(mode) {
 	none {}
 	pointer -
@@ -1240,6 +1271,8 @@ proc Release1Frame {which x y} {
     set ds9(sb1) 0
     set ds9(cb1) 0
     set ds9(csb1) 0
+    set ds9(tile,drag) {}
+    set ds9(tile,drop) {}
 
     UpdateEditMenu
 }
@@ -1749,6 +1782,79 @@ proc MoveLastFrame {} {
 
     UpdateFrameMenuItems
     UpdateActiveFrames
+}
+
+proc MoveFrameToFramePosition {source target} {
+    global ds9
+
+    if {$source == {} || $target == {} || $source == $target} {
+	return
+    }
+    if {[lsearch $ds9(active) $source] == -1 ||
+	[lsearch $ds9(active) $target] == -1} {
+	return
+    }
+
+    set sourceIndex [lsearch $ds9(frames) $source]
+    set targetIndex [lsearch $ds9(frames) $target]
+    if {$sourceIndex == -1 || $targetIndex == -1} {
+	return
+    }
+
+    set ds9(frames) [lreplace $ds9(frames) $sourceIndex $sourceIndex]
+    set ds9(frames) [linsert $ds9(frames) $targetIndex $source]
+
+    UpdateFrameMenuItems
+    UpdateActiveFrames
+}
+
+proc UpdateTileDropTarget {target} {
+    global ds9
+
+    if {$target == $ds9(tile,drag)} {
+	set target {}
+    }
+    if {[info exists ds9(tile,drop)] && $target == $ds9(tile,drop)} {
+	return
+    }
+
+    ClearTileDropTarget
+
+    if {$target != {}} {
+	set ds9(tile,drop) $target
+	set ds9(tile,drop,color) [$target get highlite color]
+	$target highlite color red
+	$target highlite on
+    }
+}
+
+proc ClearTileDropTarget {} {
+    global ds9
+
+    if {[info exists ds9(tile,drop)] && $ds9(tile,drop) != {}} {
+	set target $ds9(tile,drop)
+	$target highlite off
+	if {[info exists ds9(tile,drop,color)]} {
+	    $target highlite color $ds9(tile,drop,color)
+	}
+	set ds9(tile,drop) {}
+	set ds9(tile,drop,color) {}
+    }
+}
+
+proc FindFrameAt {x y} {
+    global ds9
+
+    foreach id [lreverse [$ds9(canvas) find overlapping $x $y $x $y]] {
+	foreach tag [$ds9(canvas) gettags $id] {
+	    if {[regexp {^Frame[0-9]+$} $tag] &&
+		[lsearch $ds9(active) $tag] != -1} {
+		return $tag
+	    }
+	}
+    }
+
+    return {}
 }
 
 proc UpdateActiveFrames {} {

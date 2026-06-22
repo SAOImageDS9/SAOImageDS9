@@ -1033,7 +1033,7 @@
 ::msgcat::mcset cs {Vector} 
 ::msgcat::mcset cs {Vertical Graph} [encoding convertfrom iso8859-2 {Vertikální graf}]
 ::msgcat::mcset cs {Vertical Layout} [encoding convertfrom iso8859-2 {Vertikální rozlo¾ení}]
-::msgcat::mcset cs {Vertical Text} 
+::msgcat::mcset cs {Horizontal Text}
 ::msgcat::mcset cs {Vertical} 
 ::msgcat::mcset cs {View} [encoding convertfrom iso8859-2 {Zobrazit}]
 ::msgcat::mcset cs {Virtual Observatory} [encoding convertfrom iso8859-2 {Virtuální Observatoø}]

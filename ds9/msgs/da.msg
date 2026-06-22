@@ -1033,7 +1033,7 @@
 ::msgcat::mcset da {Vector} {Vektor}
 ::msgcat::mcset da {Vertical Graph} {Lodret graf}
 ::msgcat::mcset da {Vertical Layout} {Lodret layoyt}
-::msgcat::mcset da {Vertical Text} {Lodret tekst}
+::msgcat::mcset da {Horizontal Text} {Vandret tekst}
 ::msgcat::mcset da {Vertical} 
 ::msgcat::mcset da {View} {Vis}
 ::msgcat::mcset da {Virtual Observatory} {Virtuelt Observatorium}

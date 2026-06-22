@@ -1033,7 +1033,7 @@
 ::msgcat::mcset de {Vector} {Vektor}
 ::msgcat::mcset de {Vertical Graph} {Vertikaldarstellung}
 ::msgcat::mcset de {Vertical Layout} {Vertikales layout}
-::msgcat::mcset de {Vertical Text} {Vertikaler text}
+::msgcat::mcset de {Horizontal Text} {Horizontaler Text}
 ::msgcat::mcset de {Vertical} 
 ::msgcat::mcset de {View} {Ansicht}
 ::msgcat::mcset de {Virtual Observatory} 

@@ -101,7 +101,7 @@ proc GridDefault {} {
 
 proc UpdateGridCurrent {} {
     global current
-    
+
     if {$current(frame) != {}} {
 	UpdateGrid $current(frame)
     }
@@ -119,7 +119,7 @@ proc UpdateGrid {which} {
     } else {
 	$which grid delete
     }
-}	    
+}
 
 proc UpdateGridZoom {} {
     global grid
@@ -202,7 +202,7 @@ proc GridBuildOptions {which} {
 	    append opt " Format(2)=$ff,"
 	}
     }
-    
+
     # Ticks
     if {!$grid(tick)} {
 	append opt " MajTickLen=0,"
@@ -215,7 +215,7 @@ proc GridBuildOptions {which} {
 		    base -
 		    rgb {}
 		    3d {append opt " MinTick(3)=0,"}
-		}		    
+		}
 	    }
 	}
     }
@@ -251,7 +251,7 @@ proc GridBuildOptions {which} {
 		base -
 		rgb {append opt " TextLab=$grid(textlab),"}
 		3d {append opt " TextLab=0,"}
-	    }		    
+	    }
 	}
     }
     if {!$grid(textlab,def1)} {
@@ -337,7 +337,7 @@ proc GridBuildOptions {which} {
 		    set numy -.03
 		}
 		3d {}
-	    }		    
+	    }
 	}
 	publication {
 	    switch -- [$which get type] {
@@ -356,7 +356,7 @@ proc GridBuildOptions {which} {
 		    }
 		}
 		3d {}
-	    }		    
+	    }
 	}
     }
 
@@ -436,7 +436,7 @@ proc GridBuildOptions {which} {
 		base -
 		rgb {}
 		3d {append opt " Norm(1)=0, Norm(2)=0, Norm(3)=-1,"}
-	    }		    
+	    }
 	}
     }
 
@@ -624,7 +624,7 @@ proc GridDialog {} {
     $mb.type add radiobutton -label [msgcat::mc {Exterior Numerics}] \
 	-variable grid(numlab,type) -value exterior -command GridApplyDialog
     $mb.type add separator
-    $mb.type add checkbutton -label [msgcat::mc {Vertical Text}] \
+    $mb.type add checkbutton -label [msgcat::mc {Horizontal Text}] \
 	-variable grid(numlab,vertical) -command GridApplyDialog
 
     # Coordinate
@@ -740,6 +740,127 @@ proc GridDialog {} {
     ColorMenu $mb.border.color grid border,color GridApplyDialog
     GridCreateLineMenu $mb.border.line border,width border,style
 
+    # General
+    set f [ttk::labelframe $w.general -text [msgcat::mc {Coordinate Grid}] -padding 2]
+    ttk::checkbutton $f.view -text [msgcat::mc {Show}] \
+	-variable grid(view) -command UpdateGridCurrent
+
+    ttk::label $f.ttype -text [msgcat::mc {Type}]
+    ttk::radiobutton $f.analysis -text [msgcat::mc {Analysis}] \
+	-variable grid(type) -value analysis -command GridApplyDialog
+    ttk::radiobutton $f.publication -text [msgcat::mc {Publication}] \
+	-variable grid(type) -value publication -command GridApplyDialog
+
+    ttk::label $f.tcoord -text [msgcat::mc {Coordinate}]
+    CoordMenuButton $f.coord grid system 1 sky skyformat GridApplyDialog
+
+    grid $f.view -padx 2 -pady 2 -sticky w
+    grid $f.ttype $f.analysis $f.publication -padx 2 -pady 2 -sticky w
+    grid $f.tcoord $f.coord -padx 2 -pady 2 -sticky w
+
+    # Appearance
+    set f [ttk::labelframe $w.appearance -text [msgcat::mc {Appearance}] -padding 2]
+    ttk::label $f.tcomponent -text [msgcat::mc {Component}]
+    ttk::label $f.tshow -text [msgcat::mc {Show}]
+    ttk::label $f.tcolor -text [msgcat::mc {Color}]
+    ttk::label $f.tline -text [msgcat::mc {Line}]
+
+    ttk::label $f.tgrid -text [msgcat::mc {Grid}]
+    ttk::checkbutton $f.gridshow -variable grid(grid) -command GridApplyDialog
+    GridCreateColorMenuButton $f.gridcolor grid,color
+    GridCreateLineMenuButton $f.gridline grid,width grid,style
+
+    ttk::label $f.taxes -text [msgcat::mc {Axes}]
+    ttk::checkbutton $f.axesshow -variable grid(axes) -command GridApplyDialog
+    GridCreateColorMenuButton $f.axescolor axes,color
+    GridCreateLineMenuButton $f.axesline axes,width axes,style
+
+    ttk::label $f.ttick -text [msgcat::mc {Tickmarks}]
+    ttk::checkbutton $f.tickshow -variable grid(tick) -command GridApplyDialog
+    GridCreateColorMenuButton $f.tickcolor tick,color
+    GridCreateLineMenuButton $f.tickline tick,width tick,style
+
+    ttk::label $f.tborder -text [msgcat::mc {Border}]
+    ttk::checkbutton $f.bordershow -variable grid(border) -command GridApplyDialog
+    GridCreateColorMenuButton $f.bordercolor border,color
+    GridCreateLineMenuButton $f.borderline border,width border,style
+
+    grid $f.tcomponent $f.tshow $f.tcolor $f.tline \
+	-padx 2 -pady 2 -sticky w
+    grid $f.tgrid $f.gridshow $f.gridcolor $f.gridline \
+	-padx 2 -pady 2 -sticky w
+    grid $f.taxes $f.axesshow $f.axescolor $f.axesline \
+	-padx 2 -pady 2 -sticky w
+    grid $f.ttick $f.tickshow $f.tickcolor $f.tickline \
+	-padx 2 -pady 2 -sticky w
+    grid $f.tborder $f.bordershow $f.bordercolor $f.borderline \
+	-padx 2 -pady 2 -sticky w
+
+    # Axes
+    set f [ttk::labelframe $w.axes -text [msgcat::mc {Axes}] -padding 2]
+    ttk::label $f.taxes -text [msgcat::mc {Axes}]
+    ttk::radiobutton $f.axesin -text [msgcat::mc {Interior}] \
+	-variable grid(axes,type) -value interior -command GridApplyDialog
+    ttk::radiobutton $f.axesout -text [msgcat::mc {Exterior}] \
+	-variable grid(axes,type) -value exterior -command GridApplyDialog
+
+    ttk::label $f.tnumlab -text [msgcat::mc {Numerics}]
+    ttk::checkbutton $f.numlabshow -text [msgcat::mc {Show}] \
+	-variable grid(numlab) -command GridApplyDialog
+    ttk::radiobutton $f.numlabin -text [msgcat::mc {Interior}] \
+	-variable grid(numlab,type) -value interior -command GridApplyDialog
+    ttk::radiobutton $f.numlabout -text [msgcat::mc {Exterior}] \
+	-variable grid(numlab,type) -value exterior -command GridApplyDialog
+    ttk::checkbutton $f.numlabvert -text [msgcat::mc {Horizontal Text}] \
+	-variable grid(numlab,vertical) -command GridApplyDialog
+
+    ttk::label $f.torigin -text [msgcat::mc {Origin}]
+    ttk::menubutton $f.origin -textvariable grid(axes,origin) \
+	-menu $f.origin.menu
+    $mb.axes.origin clone $f.origin.menu
+
+    grid $f.taxes $f.axesin $f.axesout -padx 2 -pady 2 -sticky w
+    grid $f.tnumlab $f.numlabshow $f.numlabin $f.numlabout \
+	$f.numlabvert -padx 2 -pady 2 -sticky w
+    grid $f.torigin $f.origin -padx 2 -pady 2 -sticky w
+
+    # Text
+    set f [ttk::labelframe $w.text -text [msgcat::mc {Text}] -padding 2]
+    ttk::label $f.tcomponent -text [msgcat::mc {Component}]
+    ttk::label $f.tshow -text [msgcat::mc {Show}]
+    ttk::label $f.tcolor -text [msgcat::mc {Color}]
+    ttk::label $f.tfont -text [msgcat::mc {Font}]
+
+    ttk::label $f.tnumlab -text [msgcat::mc {Numerics}]
+    ttk::checkbutton $f.numlabshow -variable grid(numlab) \
+	-command GridApplyDialog
+    GridCreateColorMenuButton $f.numlabcolor numlab,color
+    FontMenuButton $f.numlabfont grid numlab,font numlab,size \
+	numlab,weight numlab,slant GridApplyDialog
+
+    ttk::label $f.ttextlab -text [msgcat::mc {Labels}]
+    ttk::checkbutton $f.textlabshow -variable grid(textlab) \
+	-command GridApplyDialog
+    GridCreateColorMenuButton $f.textlabcolor textlab,color
+    FontMenuButton $f.textlabfont grid textlab,font textlab,size \
+	textlab,weight textlab,slant GridApplyDialog
+
+    ttk::label $f.ttitle -text [msgcat::mc {Title}]
+    ttk::checkbutton $f.titleshow -variable grid(title) \
+	-command GridApplyDialog
+    GridCreateColorMenuButton $f.titlecolor title,color
+    FontMenuButton $f.titlefont grid title,font title,size \
+	title,weight title,slant GridApplyDialog
+
+    grid $f.tcomponent $f.tshow $f.tcolor $f.tfont \
+	-padx 2 -pady 2 -sticky w
+    grid $f.tnumlab $f.numlabshow $f.numlabcolor $f.numlabfont \
+	-padx 2 -pady 2 -sticky w
+    grid $f.ttextlab $f.textlabshow $f.textlabcolor $f.textlabfont \
+	-padx 2 -pady 2 -sticky w
+    grid $f.ttitle $f.titleshow $f.titlecolor $f.titlefont \
+	-padx 2 -pady 2 -sticky w
+
     # Labels
     set f [ttk::labelframe $w.label -text [msgcat::mc {Labels}] -padding 2]
     ttk::label $f.label -text [msgcat::mc {Title}]
@@ -749,12 +870,12 @@ proc GridDialog {} {
 	-variable grid(title,def) -command GridApplyDialog
     ttk::label $f.label1 -text "[msgcat::mc {Axis}] 1"
     ttk::entry $f.title1 -textvariable grid(textlab,text1) \
-	-width 60 
+	-width 60
     ttk::checkbutton $f.default1 -text [msgcat::mc {Default}] \
 	-variable grid(textlab,def1) -command GridApplyDialog
     ttk::label $f.label2 -text "[msgcat::mc {Axis}] 2"
     ttk::entry $f.title2 -textvariable grid(textlab,text2) \
-	-width 60 
+	-width 60
     ttk::checkbutton $f.default2 -text [msgcat::mc {Default}] \
 	-variable grid(textlab,def2) -command GridApplyDialog
 
@@ -772,26 +893,26 @@ proc GridDialog {} {
 
     ttk::label $f.titlet -text [msgcat::mc {Title}]
     ttk::entry $f.spacet -textvariable grid(title,gap) \
-	-width 8 
+	-width 8
 
     ttk::label $f.title1 -text "[msgcat::mc {Axis}] 1"
-    ttk::entry $f.tspace1 -textvariable grid(textlab,gap1) -width 8 
-    ttk::entry $f.nspace1 -textvariable grid(numlab,gap1) -width 8 
-    ttk::entry $f.format1 -textvariable grid(format1) -width 8 
-    ttk::entry $f.gap1 -textvariable grid(grid,gap1) -width 8 
+    ttk::entry $f.tspace1 -textvariable grid(textlab,gap1) -width 8
+    ttk::entry $f.nspace1 -textvariable grid(numlab,gap1) -width 8
+    ttk::entry $f.format1 -textvariable grid(format1) -width 8
+    ttk::entry $f.gap1 -textvariable grid(grid,gap1) -width 8
     ttk::label $f.gapunit1 -textvariable grid(grid,gapunit1)
 
     ttk::label $f.title2 -text "[msgcat::mc {Axis}] 2"
-    ttk::entry $f.tspace2 -textvariable grid(textlab,gap2) -width 8 
-    ttk::entry $f.nspace2 -textvariable grid(numlab,gap2) -width 8 
-    ttk::entry $f.format2 -textvariable grid(format2) -width 8 
-    ttk::entry $f.gap2 -textvariable grid(grid,gap2) -width 8 
+    ttk::entry $f.tspace2 -textvariable grid(textlab,gap2) -width 8
+    ttk::entry $f.nspace2 -textvariable grid(numlab,gap2) -width 8
+    ttk::entry $f.format2 -textvariable grid(format2) -width 8
+    ttk::entry $f.gap2 -textvariable grid(grid,gap2) -width 8
     ttk::label $f.gapunit2 -textvariable grid(grid,gapunit2)
 
     ttk::label $f.title3 -text "[msgcat::mc {Axis}] 3"
-    ttk::entry $f.nspace3 -textvariable grid(numlab,gap3) -width 8 
-    ttk::entry $f.format3 -textvariable grid(format3) -width 8 
-    ttk::entry $f.gap3 -textvariable grid(grid,gap3) -width 8 
+    ttk::entry $f.nspace3 -textvariable grid(numlab,gap3) -width 8
+    ttk::entry $f.format3 -textvariable grid(format3) -width 8
+    ttk::entry $f.gap3 -textvariable grid(grid,gap3) -width 8
     ttk::label $f.gapunit3 -textvariable grid(grid,gapunit3)
 
     grid x $f.lspace $f.ngap $f.lformat $f.lgap -padx 2 -pady 2 -sticky w
@@ -811,12 +932,17 @@ proc GridDialog {} {
 	-padx 2 -pady 4
 
     # Fini
-    grid $w.label -sticky news
-    grid $w.param -sticky news
-    grid $w.buttons -sticky ew
+    grid $w.general $w.axes -sticky news
+    grid $w.appearance $w.text -sticky news
+    grid $w.label - -sticky news
+    grid $w.param - -sticky news
+    grid $w.buttons - -sticky ew
     grid rowconfigure $w 0 -weight 1
     grid rowconfigure $w 1 -weight 1
+    grid rowconfigure $w 2 -weight 1
+    grid rowconfigure $w 3 -weight 1
     grid columnconfigure $w 0 -weight 1
+    grid columnconfigure $w 1 -weight 1
 
     bind $w <Return> GridApplyDialog
 
@@ -924,7 +1050,7 @@ proc UpdateGridDialog {} {
 			-state normal
 		    $mb.type entryconfig [msgcat::mc {Exterior Numerics}] \
 			-state normal
-		    $mb.type entryconfig [msgcat::mc {Vertical Text}] \
+		    $mb.type entryconfig [msgcat::mc {Horizontal Text}] \
 			-state normal
 		    $mb.axes entryconfig [msgcat::mc {Origin}] \
 			-state disable
@@ -944,6 +1070,24 @@ proc UpdateGridDialog {} {
 		    $g.tspace1 configure -state normal
 		    $g.tspace2 configure -state normal
 
+		    set a $igrid(top).axes
+		    GridSetWidgetState normal \
+			$a.axesin $a.axesout $a.numlabshow $a.numlabin \
+			$a.numlabout $a.numlabvert
+		    GridSetWidgetState disabled $a.origin
+
+		    set t $igrid(top).text
+		    GridSetWidgetState normal \
+			$t.numlabshow $t.numlabcolor $t.numlabfont \
+			$t.textlabshow $t.textlabcolor $t.textlabfont \
+			$t.titleshow $t.titlecolor $t.titlefont
+
+		    set h $igrid(top).label
+		    GridSetWidgetState normal \
+			$h.label $h.title $h.default \
+			$h.label1 $h.title1 $h.default1 \
+			$h.label2 $h.title2 $h.default2
+
 		    grid forget $g.title3 $g.nspace3 $g.format3 $g.gap3 \
 			$g.gapunit3
 		}
@@ -954,7 +1098,7 @@ proc UpdateGridDialog {} {
 			-state disabled
 		    $mb.type entryconfig [msgcat::mc {Exterior Numerics}] \
 			-state disabled
-		    $mb.type entryconfig [msgcat::mc {Vertical Text}] \
+		    $mb.type entryconfig [msgcat::mc {Horizontal Text}] \
 			-state disabled
 		    $mb.axes entryconfig [msgcat::mc {Origin}] -state normal
 
@@ -973,6 +1117,25 @@ proc UpdateGridDialog {} {
 		    $g.tspace1 configure -state disabled
 		    $g.tspace2 configure -state disabled
 
+		    set a $igrid(top).axes
+		    GridSetWidgetState normal \
+			$a.axesin $a.axesout $a.numlabshow $a.origin
+		    GridSetWidgetState disabled \
+			$a.numlabin $a.numlabout $a.numlabvert
+
+		    set t $igrid(top).text
+		    GridSetWidgetState normal \
+			$t.numlabshow $t.numlabcolor $t.numlabfont
+		    GridSetWidgetState disabled \
+			$t.textlabshow $t.textlabcolor $t.textlabfont \
+			$t.titleshow $t.titlecolor $t.titlefont
+
+		    set h $igrid(top).label
+		    GridSetWidgetState disabled \
+			$h.label $h.title $h.default \
+			$h.label1 $h.title1 $h.default1 \
+			$h.label2 $h.title2 $h.default2
+
 		    grid $g.title3 x $g.nspace3 $g.format3 $g.gap3 $g.gapunit3 \
 			-padx 2 -pady 2 -sticky w
 		}
@@ -981,9 +1144,22 @@ proc UpdateGridDialog {} {
 	    set grid(frame) $current(frame)
 	    if {[$current(frame) has fits]} {
 		CoordMenuEnable $igrid(mb).coord grid system sky skyformat
+		CoordMenuEnable $igrid(top).general.coord.menu \
+		    grid system sky skyformat
 	    } else {
 		CoordMenuReset $igrid(mb).coord grid system sky skyformat
+		CoordMenuReset $igrid(top).general.coord.menu \
+		    grid system sky skyformat
 	    }
+	    CoordMenuButtonCmd grid system sky {}
+	}
+    }
+}
+
+proc GridSetWidgetState {state args} {
+    foreach w $args {
+	if {[winfo exists $w]} {
+	    $w configure -state $state
 	}
     }
 }
@@ -995,9 +1171,18 @@ proc GridCreateLineMenu {which width dash} {
     WidthDashMenu $which grid $width $dash GridApplyDialog GridApplyDialog
 }
 
+proc GridCreateLineMenuButton {which width dash} {
+    ttk::menubutton $which -textvariable grid($width) -menu $which.menu
+    GridCreateLineMenu $which.menu $width $dash
+}
+
+proc GridCreateColorMenuButton {which color} {
+    ColorMenuButton $which grid $color GridApplyDialog
+}
+
 proc GridLoadDialog {} {
     global igrid
-    
+
     set fn [OpenFileDialog gridfbox $igrid(top)]
     GridLoad $fn
 }

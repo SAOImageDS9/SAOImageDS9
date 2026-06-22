@@ -1033,7 +1033,7 @@
 ::msgcat::mcset es {Vector} 
 ::msgcat::mcset es {Vertical Graph} [encoding convertfrom iso8859-1 {Gráfica vertical}]
 ::msgcat::mcset es {Vertical Layout} [encoding convertfrom iso8859-1 {Distribución vertical}]
-::msgcat::mcset es {Vertical Text} {Texto vertical} 
+::msgcat::mcset es {Horizontal Text} {Texto horizontal}
 ::msgcat::mcset es {Vertical} 
 ::msgcat::mcset es {View} {Ver}
 ::msgcat::mcset es {Virtual Observatory} {Observatorio Virtual}

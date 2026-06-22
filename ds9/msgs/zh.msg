@@ -1033,7 +1033,7 @@
 ::msgcat::mcset zh {Vector} [encoding convertfrom big5 "\xA6\x56 \xB6\x71"]
 ::msgcat::mcset zh {Vertical Graph} 
 ::msgcat::mcset zh {Vertical Layout} 
-::msgcat::mcset zh {Vertical Text} 
+::msgcat::mcset zh {Horizontal Text}
 ::msgcat::mcset zh {Vertical} [encoding convertfrom big5 "\xAB\xAB \xAA\xBD"]
 ::msgcat::mcset zh {View} [encoding convertfrom big5 "\xC0\xCB \xB5\xF8"]
 ::msgcat::mcset zh {Virtual Observatory} 

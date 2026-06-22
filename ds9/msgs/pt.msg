@@ -1036,15 +1036,6 @@
 ::msgcat::mcset pt Vector Vetor
 ::msgcat::mcset pt {Vertical Graph} {Gr√°fico Vertical}
 ::msgcat::mcset pt {Vertical Layout} {Layout Vertical}
-<<<<<<< HEAD
-::msgcat::mcset pt {Horizontal Text} {Texto Horizontal}
-::msgcat::mcset pt {Vertical} 
-::msgcat::mcset pt {View} {Visualizar}
-::msgcat::mcset pt {Virtual Observatory} [encoding convertfrom iso8859-1 {ObservatÛrio Virtual}]
-::msgcat::mcset pt {WCS Parameters} 
-::msgcat::mcset pt {WCS} 
-::msgcat::mcset pt {Wavelength} {Comprimento de Onda}
-=======
 ::msgcat::mcset pt {Vertical Text} {Texto Vertical}
 ::msgcat::mcset pt Vertical Vertical
 ::msgcat::mcset pt View Visualizar
@@ -1052,7 +1043,6 @@
 ::msgcat::mcset pt {WCS Parameters} {WCS Parameters}
 ::msgcat::mcset pt WCS WCS
 ::msgcat::mcset pt Wavelength {Comprimento de Onda}
->>>>>>> 3a664f7b9 (DS9: update language files to be UTF-8clean)
 ::msgcat::mcset pt {Web Browser} {Navegador Web}
 ::msgcat::mcset pt White Branco
 ::msgcat::mcset pt Width Largura

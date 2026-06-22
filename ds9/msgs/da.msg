@@ -1036,15 +1036,9 @@
 ::msgcat::mcset da Vector Vektor
 ::msgcat::mcset da {Vertical Graph} {Lodret graf}
 ::msgcat::mcset da {Vertical Layout} {Lodret layoyt}
-<<<<<<< HEAD
-::msgcat::mcset da {Horizontal Text} {Vandret tekst}
-::msgcat::mcset da {Vertical} 
-::msgcat::mcset da {View} {Vis}
-=======
 ::msgcat::mcset da {Vertical Text} {Lodret tekst}
 ::msgcat::mcset da Vertical Vertical
 ::msgcat::mcset da View Vis
->>>>>>> 3a664f7b9 (DS9: update language files to be UTF-8clean)
 ::msgcat::mcset da {Virtual Observatory} {Virtuelt Observatorium}
 ::msgcat::mcset da {WCS Parameters} {WCS Parameters}
 ::msgcat::mcset da WCS WCS

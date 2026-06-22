@@ -1036,19 +1036,6 @@
 ::msgcat::mcset de Vector Vektor
 ::msgcat::mcset de {Vertical Graph} Vertikaldarstellung
 ::msgcat::mcset de {Vertical Layout} {Vertikales layout}
-<<<<<<< HEAD
-::msgcat::mcset de {Horizontal Text} {Horizontaler Text}
-::msgcat::mcset de {Vertical} 
-::msgcat::mcset de {View} {Ansicht}
-::msgcat::mcset de {Virtual Observatory} 
-::msgcat::mcset de {WCS Parameters} 
-::msgcat::mcset de {WCS} 
-::msgcat::mcset de {Wavelength} [encoding convertfrom iso8859-1 {Wellenlänge}]
-::msgcat::mcset de {Web Browser} {Webbrowser}
-::msgcat::mcset de {White} [encoding convertfrom iso8859-1 {Weiß}]
-::msgcat::mcset de {Width} {Breite}
-::msgcat::mcset de {Window} 
-=======
 ::msgcat::mcset de {Vertical Text} {Vertikaler text}
 ::msgcat::mcset de Vertical Vertical
 ::msgcat::mcset de View Ansicht
@@ -1060,7 +1047,6 @@
 ::msgcat::mcset de White WeiÃŸ
 ::msgcat::mcset de Width Breite
 ::msgcat::mcset de Window Window
->>>>>>> 3a664f7b9 (DS9: update language files to be UTF-8clean)
 ::msgcat::mcset de {Words matching title, description} {Worte im Titel, Bezeichnung}
 ::msgcat::mcset de {X Axis Title} {X Axis Title}
 ::msgcat::mcset de {X Axis} {X Axis}

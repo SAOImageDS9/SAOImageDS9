@@ -1022,25 +1022,6 @@
 ::msgcat::mcset es {Use Internal Web Browser} {Usar Web Browser interno}
 ::msgcat::mcset es {Use Original Color/Width} {Use Original Color/Width}
 ::msgcat::mcset es {Use Proxy} {Usar Proxy}
-<<<<<<< HEAD
-::msgcat::mcset es {Use Theme Colors} 
-::msgcat::mcset es {Use background color instead of theme color} 
-::msgcat::mcset es {User Manual} 
-::msgcat::mcset es {Username} {Nombre de usuario}
-::msgcat::mcset es {User} {Usuario}
-::msgcat::mcset es {Use} {Usa} 
-::msgcat::mcset es {VO Server} 
-::msgcat::mcset es {VOTable} 
-::msgcat::mcset es {VOT} 
-::msgcat::mcset es {VO} 
-::msgcat::mcset es {Value} {Valor}
-::msgcat::mcset es {Vector} 
-::msgcat::mcset es {Vertical Graph} [encoding convertfrom iso8859-1 {Gráfica vertical}]
-::msgcat::mcset es {Vertical Layout} [encoding convertfrom iso8859-1 {Distribución vertical}]
-::msgcat::mcset es {Horizontal Text} {Texto horizontal}
-::msgcat::mcset es {Vertical} 
-::msgcat::mcset es {View} {Ver}
-=======
 ::msgcat::mcset es {Use Theme Colors} {Use Theme Colors}
 ::msgcat::mcset es {Use background color instead of theme color} {Use background color instead of theme color}
 ::msgcat::mcset es {User Manual} {User Manual}
@@ -1058,7 +1039,6 @@
 ::msgcat::mcset es {Vertical Text} {Texto vertical}
 ::msgcat::mcset es Vertical Vertical
 ::msgcat::mcset es View Ver
->>>>>>> 3a664f7b9 (DS9: update language files to be UTF-8clean)
 ::msgcat::mcset es {Virtual Observatory} {Observatorio Virtual}
 ::msgcat::mcset es {WCS Parameters} {WCS Parameters}
 ::msgcat::mcset es WCS WCS

@@ -379,7 +379,7 @@ proc rewrite_grammar {} {
     }
     # add to the used token list {$} but /not/ start'
     set ::used_token_list [concat [lrange $::used_token_list 0 end-1] \
-                               $::token_table("\$")]
+                               [set ::token_table("\$")]]
 }
 
 # Determine which non-terminals are nullable.  Any terminal which can
@@ -479,7 +479,7 @@ proc generate_first_recurse {tok_id history} {
 
 # Generate the table of FOLLOW symbols for the grammar.
 proc generate_follow_table {} {
-    set ::follow_table($::token_table(start')) $::token_table("\$")
+    set ::follow_table([set ::token_table(start')]) [set ::token_table("\$")]
     foreach tok_id $::token_list {
         generate_follow_recurse $tok_id ""
     }
@@ -537,7 +537,7 @@ proc generate_follow_recurse {tok_id history} {
 # successively adding closures/states until no more new states.
 proc generate_lr1 {} {
     # first add start rule to the closure list
-    set first_item [list [list 0 $::token_table("\$") 0]]
+    set first_item [list [list 0 [set ::token_table("\$")] 0]]
     set first_closure [add_closure $first_item 0 1]
     set ::lr1_table(0) [concat $first_item $first_closure]
     

@@ -53,8 +53,20 @@ proc IllustrateBaseDup {type param} {
     
     switch $type {
 	circle -
-	ellipse {set tt oval}
-	box {set tt rectangle}
+	ellipse {
+	    if {[llength [lindex $param 0]] > 4} {
+		set tt polygon
+	    } else {
+		set tt oval
+	    }
+	}
+	box {
+	    if {[llength [lindex $param 0]] > 4} {
+		set tt polygon
+	    } else {
+		set tt rectangle
+	    }
+	}
     }
 
     foreach {coords color fill width dash} $param {
@@ -70,6 +82,68 @@ proc IllustrateBaseDup {type param} {
     IllustrateBaseCreateHandles $id [$ds9(canvas) itemcget $id -outline]
 
     return $id
+}
+
+proc IllustrateBaseRotatedCoords {xc yc rr1 rr2 angle points} {
+    set aa [expr {$angle*acos(-1)/180.}]
+    set ca [expr {cos($aa)}]
+    set sa [expr {sin($aa)}]
+    set coords {}
+
+    if {$points == 4} {
+	set local [list -$rr1 -$rr2 $rr1 -$rr2 $rr1 $rr2 -$rr1 $rr2]
+	foreach {dx dy} $local {
+	    lappend coords \
+		[expr {$xc + $dx*$ca - $dy*$sa}] \
+		[expr {$yc + $dx*$sa + $dy*$ca}]
+	}
+    } else {
+	for {set ii 0} {$ii < $points} {incr ii} {
+	    set tt [expr {2*acos(-1)*$ii/$points}]
+	    set dx [expr {$rr1*cos($tt)}]
+	    set dy [expr {$rr2*sin($tt)}]
+	    lappend coords \
+		[expr {$xc + $dx*$ca - $dy*$sa}] \
+		[expr {$yc + $dx*$sa + $dy*$ca}]
+	}
+    }
+
+    return $coords
+}
+
+proc IllustrateBaseRotatedRadii {xc yc xx yy angle} {
+    set aa [expr {$angle*acos(-1)/180.}]
+    set ca [expr {cos($aa)}]
+    set sa [expr {sin($aa)}]
+    set dx [expr {$xx-$xc}]
+    set dy [expr {$yy-$yc}]
+
+    set rr1 [expr {abs($dx*$ca + $dy*$sa)}]
+    set rr2 [expr {abs(-$dx*$sa + $dy*$ca)}]
+    return [list $rr1 $rr2]
+}
+
+proc IllustrateBaseAngleProps {id angle} {
+    set rr [IllustrateBaseListProps $id]
+    if {abs($angle) > 1.0e-6} {
+	if {$rr == {}} {
+	    append rr " #"
+	}
+	append rr " angle = [IllustrateBaseFormatNumber $angle]"
+    }
+    return $rr
+}
+
+proc IllustrateBaseFormatNumber {value} {
+    set rounded [expr {round($value)}]
+    if {abs($value-$rounded) < 1.0e-6} {
+	return [format %.1f [expr {double($rounded)}]]
+    }
+
+    set rr [format %.6f $value]
+    set rr [string trimright $rr 0]
+    set rr [string trimright $rr .]
+    return $rr
 }
 
 proc IllustrateBaseCreateHandles {id color} {
@@ -401,5 +475,3 @@ proc IllustrateBaseWidthCB {id} {
 	set var(dash) 0
     }
 }
-
-

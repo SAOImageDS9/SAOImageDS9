@@ -56,9 +56,9 @@ command : VERSION_ {puts "DS9 Illustrate File 1.0"}
 shape : CIRCLE_ bp numeric sp numeric sp numeric ep comment
  {IllustrateCircleCreate $3 $5 $7 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash}
  | ELLIPSE_ bp numeric sp numeric sp numeric sp numeric ep comment
- {IllustrateEllipseCreate $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash}
+ {IllustrateEllipseCreate $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localAngle}
  | BOX_ bp numeric sp numeric sp numeric sp numeric ep comment
- {IllustrateBoxCreate $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash}
+ {IllustrateBoxCreate $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localAngle}
  | POLYGON_ bp coords ep comment
  {IllustratePolygonCreate $illustratefile::coords $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash}
  | LINE_ bp numeric sp numeric sp numeric sp numeric ep comment

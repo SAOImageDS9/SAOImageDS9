@@ -168,10 +168,10 @@ proc IllustrateEditCB {id} {
 proc IllustrateRotate {id xx yy} {
     switch [IllustrateGetType $id] {
 	circle -
-	ellipse -
-	box -
 	polygon -
 	line {}
+	ellipse {IllustrateEllipseRotate $id $xx $yy}
+	box {IllustrateBoxRotate $id $xx $yy}
 	text {IllustrateTextRotate $id $xx $yy}
 	image {IllustrateImageEdit $id $xx $yy 1}
     }
@@ -180,10 +180,10 @@ proc IllustrateRotate {id xx yy} {
 proc IllustrateRotateCB {id} {
     switch [IllustrateGetType $id] {
 	circle -
-	ellipse -
-	box -
 	polygon -
 	line {}
+	ellipse {IllustrateEllipseEditCB $id}
+	box {IllustrateBoxEditCB $id}
 	text {IllustrateTextRotateCB $id}
 	image {IllustrateImageEditCB $id}
     }

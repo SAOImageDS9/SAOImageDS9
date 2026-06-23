@@ -248,15 +248,19 @@ proc EPS {fn} {
 }
 
 proc PDFGraphColor {pdf stroke fill} {
-    $pdf setStrokeColor $stroke
-    $pdf setFillColor $fill
+    if {$stroke != {}} {
+	$pdf setStrokeColor $stroke
+    }
+    if {$fill != {}} {
+	$pdf setFillColor $fill
+    }
 }
 
-proc PDFGraphGet {script default} {
-    if {[catch {uplevel 1 $script} rr]} {
-	return $default
+proc PDFGraphDictGet {dict key default} {
+    if {[dict exists $dict $key]} {
+	return [dict get $dict $key]
     }
-    return $rr
+    return $default
 }
 
 proc PDFGraphPoint {gr x0 y0 xx yy} {
@@ -286,34 +290,97 @@ proc PDFGraphFlushLine {pdf points} {
     }
 }
 
-proc PDFGraphTicks {minv maxv log count} {
-    if {$count < 2 || $minv == $maxv} {
-	return [list $minv]
+proc PDFGraphTextAlign {anchor} {
+    switch -- $anchor {
+	e - ne - se {return right}
+	w - nw - sw {return left}
+	default {return center}
     }
-
-    set result {}
-    if {$log && $minv > 0 && $maxv > 0} {
-	set lmin [expr log10($minv)]
-	set lmax [expr log10($maxv)]
-	for {set ii 0} {$ii < $count} {incr ii} {
-	    lappend result [expr pow(10,$lmin + ($lmax-$lmin)*$ii/double($count-1))]
-	}
-    } else {
-	for {set ii 0} {$ii < $count} {incr ii} {
-	    lappend result [expr $minv + ($maxv-$minv)*$ii/double($count-1)]
-	}
-    }
-    return $result
 }
 
-proc PDFGraphLabel {vv} {
-    return [format %.12g $vv]
+proc PDFGraphTextY {y size anchor} {
+    switch -- $anchor {
+	n - ne - nw {return [expr $y+$size]}
+	s - se - sw {return $y}
+	default {return [expr $y+$size/2.]}
+    }
+}
+
+proc PDFGraphDrawAnchoredText {pdf text x y size font color anchor angle} {
+    if {$text == {}} {
+	return
+    }
+
+    PDFGraphColor $pdf $color $color
+    $pdf setFont $size $font
+    $pdf text $text -x $x -y [PDFGraphTextY $y $size $anchor] \
+	-align [PDFGraphTextAlign $anchor] -angle $angle
+}
+
+proc PDFGraphDrawSegments {pdf segments x0 y0} {
+    foreach seg $segments {
+	foreach {x1 y1 x2 y2} $seg {}
+	$pdf line [expr $x0+$x1] [expr $y0+$y1] \
+	    [expr $x0+$x2] [expr $y0+$y2]
+    }
+}
+
+proc PDFGraphDrawAxisGrid {pdf gridData x0 y0} {
+    if {![PDFGraphDictGet $gridData show 0]} {
+	return
+    }
+
+    set width [PDFGraphDictGet $gridData linewidth 1]
+    if {$width <= 0} {
+	return
+    }
+
+    PDFGraphColor $pdf [PDFGraphDictGet $gridData color black] {}
+    $pdf setLineWidth $width
+    PDFCanvasSetDash $pdf [PDFGraphDictGet $gridData dashes {}]
+    PDFGraphDrawSegments $pdf [PDFGraphDictGet $gridData segments {}] $x0 $y0
+}
+
+proc PDFGraphDrawAxis {pdf axisData x0 y0} {
+    if {[PDFGraphDictGet $axisData hide 0] || ![PDFGraphDictGet $axisData use 0]} {
+	return
+    }
+
+    set color [PDFGraphDictGet $axisData foreground black]
+    set width [PDFGraphDictGet $axisData linewidth 1]
+    if {$width > 0} {
+	PDFGraphColor $pdf $color {}
+	$pdf setLineWidth $width
+	$pdf setLineDash
+	PDFGraphDrawSegments $pdf [PDFGraphDictGet $axisData segments {}] $x0 $y0
+    }
+
+    foreach {tickSize tickFont} [PDFCanvasFont [PDFGraphDictGet $axisData tickfont {}]] {}
+    foreach tick [PDFGraphDictGet $axisData ticks {}] {
+	PDFGraphDrawAnchoredText $pdf \
+	    [PDFGraphDictGet $tick label {}] \
+	    [expr $x0+[PDFGraphDictGet $tick x 0]] \
+	    [expr $y0+[PDFGraphDictGet $tick y 0]] \
+	    $tickSize $tickFont $color \
+	    [PDFGraphDictGet $tick anchor center] \
+	    [PDFGraphDictGet $tick angle 0]
+    }
+
+    set title [PDFGraphDictGet $axisData title {}]
+    set titleText [PDFGraphDictGet $title text {}]
+    if {$titleText != {}} {
+	foreach {titleSize titleFont} [PDFCanvasFont [PDFGraphDictGet $title font {}]] {}
+	PDFGraphDrawAnchoredText $pdf $titleText \
+	    [expr $x0+[PDFGraphDictGet $title x 0]] \
+	    [expr $y0+[PDFGraphDictGet $title y 0]] \
+	    $titleSize $titleFont \
+	    [PDFGraphDictGet $title color $color] \
+	    [PDFGraphDictGet $title anchor center] \
+	    [PDFGraphDictGet $title angle 0]
+    }
 }
 
 proc PDFGraph {pdf frame which} {
-    global ds9
-    global graph
-
     set varname ${frame}gr
     global $varname
 
@@ -352,12 +419,6 @@ proc PDFGraph {pdf frame which} {
     set xmax [lindex $xlim 1]
     set ymin [lindex $ylim 0]
     set ymax [lindex $ylim 1]
-    set xlog [PDFGraphGet [list $gr xaxis cget -logscale] 0]
-    set ylog [PDFGraphGet [list $gr yaxis cget -logscale] 0]
-    switch -- $which {
-	horz {set ylog [PDFGraphGet [list $gr y2axis cget -logscale] $ylog]}
-	vert {set xlog [PDFGraphGet [list $gr x2axis cget -logscale] $xlog]}
-    }
 
     set corners {}
     foreach xx [list $xmin $xmax] {
@@ -384,57 +445,24 @@ proc PDFGraph {pdf frame which} {
     $pdf rectangle $px0 $py0 [expr $px1-$px0] [expr $py1-$py0] \
 	-filled 1 -stroke 0
 
-    $pdf setLineWidth .5
-    PDFGraphColor $pdf $fg $fg
-
-    if {$graph(grid)} {
-	foreach xx [PDFGraphTicks $xmin $xmax $xlog 5] {
-	    foreach {p1x p1y} [PDFGraphPoint $gr $x0 $y0 $xx $ymin] {}
-	    foreach {p2x p2y} [PDFGraphPoint $gr $x0 $y0 $xx $ymax] {}
-	    $pdf line $p1x $p1y $p2x $p2y
-	}
-	foreach yy [PDFGraphTicks $ymin $ymax $ylog 5] {
-	    foreach {p1x p1y} [PDFGraphPoint $gr $x0 $y0 $xmin $yy] {}
-	    foreach {p2x p2y} [PDFGraphPoint $gr $x0 $y0 $xmax $yy] {}
-	    $pdf line $p1x $p1y $p2x $p2y
+    set axisData {}
+    if {![catch {$gr axis names} axisNames]} {
+	foreach axis $axisNames {
+	    if {![catch {$gr axis pdfdata $axis} data]} {
+		if {[PDFGraphDictGet $data hide 0] ||
+		    ![PDFGraphDictGet $data use 0]} {
+		    continue
+		}
+		lappend axisData $data
+		PDFGraphDrawAxisGrid $pdf [PDFGraphDictGet $data grid {}] $x0 $y0
+		set minor [PDFGraphDictGet [PDFGraphDictGet $data grid {}] minor {}]
+		PDFGraphDrawAxisGrid $pdf $minor $x0 $y0
+	    }
 	}
     }
 
-    $pdf setLineWidth 1
-    $pdf rectangle $px0 $py0 [expr $px1-$px0] [expr $py1-$py0] \
-	-filled 0 -stroke 1
-
-    foreach {fontSize fontName} [PDFCanvasFont \
-				     "$ds9($graph(font)) $graph(font,size) $graph(font,weight) $graph(font,slant)"] {}
-    $pdf setFont $fontSize $fontName
-    set tickLen 4
-    switch -- $which {
-	horz {
-	    foreach xx [PDFGraphTicks $xmin $xmax $xlog 5] {
-		foreach {tx ty} [PDFGraphPoint $gr $x0 $y0 $xx $ymin] {}
-		$pdf line $tx $py1 $tx [expr $py1+$tickLen]
-	    }
-	    foreach yy [PDFGraphTicks $ymin $ymax $ylog 5] {
-		foreach {tx ty} [PDFGraphPoint $gr $x0 $y0 $xmax $yy] {}
-		$pdf line $px1 $ty [expr $px1+$tickLen] $ty
-		$pdf text [PDFGraphLabel $yy] \
-		    -x [expr $px1+$tickLen+3] -y [expr $ty+$fontSize/2.] \
-		    -align left
-	    }
-	}
-	vert {
-	    foreach xx [PDFGraphTicks $xmin $xmax $xlog 5] {
-		foreach {tx ty} [PDFGraphPoint $gr $x0 $y0 $xx $ymin] {}
-		$pdf line [expr $px0-$tickLen] $ty $px0 $ty
-	    }
-	    foreach yy [PDFGraphTicks $ymin $ymax $ylog 5] {
-		foreach {tx ty} [PDFGraphPoint $gr $x0 $y0 $xmin $yy] {}
-		$pdf line $tx $py1 $tx [expr $py1+$tickLen]
-		$pdf text [PDFGraphLabel $yy] \
-		    -x $tx -y [expr $py1+$tickLen+$fontSize] \
-		    -align center
-	    }
-	}
+    foreach data $axisData {
+	PDFGraphDrawAxis $pdf $data $x0 $y0
     }
 
     set xv [subst $${varname}($which,vect,xx)]
@@ -754,7 +782,9 @@ proc PDFUtilUserName {} {
     set fullName ""
 
     # 2. Try to use getent safely
-    if {$username ne "unknown" && [catch {exec getent passwd $username} entry] == 0} {
+    set getent [auto_execok getent]
+    if {$username ne "unknown" && $getent ne {} &&
+	[catch {exec {*}$getent passwd $username} entry] == 0} {
         # Success: Parse the string using pure Tcl routines
         set fields [split $entry ":"]
         set gecos [lindex $fields 4]

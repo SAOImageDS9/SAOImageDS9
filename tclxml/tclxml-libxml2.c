@@ -26,7 +26,7 @@
 /* Check, if Tcl version supports Tcl_Size,
    which was introduced in Tcl 8.7 and 9.
 */
-#if TCL_MAJOR_VERSION <= 8 && TCL_MINOR_VERSION <= 6
+#ifndef TCL_SIZE_MAX
 typedef int Tcl_Size;
 #endif
 
@@ -120,7 +120,7 @@ int Tclxml_libxml2_Init (Tcl_Interp *interp)
   TclXML_ParserClassInfo *classinfo;
 
 #ifdef USE_TCL_STUBS
-  if (Tcl_InitStubs(interp, "8.1", 0) == NULL) {
+  if (Tcl_InitStubs(interp, "8.1-10", 0) == NULL) {
     return TCL_ERROR;
   }
 #endif

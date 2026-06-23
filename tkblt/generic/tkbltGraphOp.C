@@ -456,7 +456,7 @@ void DisplayGraph(ClientData clientData)
 }
 
 // called by Tcl_EventuallyFree and others
-void DestroyGraph(char* dataPtr)
+void DestroyGraph(void* dataPtr)
 {
   Graph* graphPtr = (Graph*)dataPtr;
   delete graphPtr;

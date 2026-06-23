@@ -96,7 +96,7 @@ int PannerTrueColorCreateProc(Tcl_Interp* interp, Tk_Canvas canvas,
 
   // and set default configuration
 
-  if (panner->configure(argc, (const char**)argv, 0) != TCL_OK) {
+  if (panner->Widget::configure(argc, (const char**)argv, 0, 1) != TCL_OK) {
     delete panner;
     Tcl_AppendResult(interp, " error occured while creating pannerTrueColor.",
 		     NULL);

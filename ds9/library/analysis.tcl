@@ -600,6 +600,10 @@ proc AnalysisTask {i which {frame {}} {x 0} {y 0} {sync 0}} {
     global current
     global ds9
 
+    if {![info exists ianalysis($which,$i,cmd)]} {
+	return
+    }
+
     if {$frame == {}} {
 	set frame $current(frame)
     }
@@ -2004,6 +2008,10 @@ proc AnalysisCmdTask {task} {
     global ianalysis
     
     for {set ii 0} {$ii<$ianalysis(menu,count)} {incr ii} {
+	if {![info exists ianalysis(menu,$ii,item)] ||
+	    ![info exists ianalysis(menu,$ii,cmd)]} {
+	    continue
+	}
 	if {[string equal -nocase $ianalysis(menu,$ii,item) $task]} {
 	    AnalysisTask $ii menu
 	}
@@ -2088,6 +2096,11 @@ proc AnalysisSendCmd {} {
     global ianalysis
 
     for {set ii 0} {$ii<$ianalysis(menu,count)} {incr ii} {
+	if {![info exists ianalysis(menu,$ii,item)] ||
+	    ![info exists ianalysis(menu,$ii,template)] ||
+	    ![info exists ianalysis(menu,$ii,cmd)]} {
+	    continue
+	}
 	append result "menu [expr $ii+1]"
 	append result "\n$ianalysis(menu,$ii,item)"
 	append result "\n$ianalysis(menu,$ii,template)"
@@ -2147,6 +2160,9 @@ proc AnalysisSendCmdTask {} {
 
     # invoke by name
     for {set ii 0} {$ii<$ianalysis(menu,count)} {incr ii} {
+	if {![info exists ianalysis(menu,$ii,item)]} {
+	    continue
+	}
 	append result "$ii $ianalysis(menu,$ii,item)\n"
     }
 

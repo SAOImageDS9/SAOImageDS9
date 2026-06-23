@@ -63,11 +63,11 @@ Source: "..\..\bin\SAOImageDS9\math\*"; DestDir: "{app}\math\"; Flags: ignorever
 Source: "..\..\bin\SAOImageDS9\msgs\*"; DestDir: "{app}\msgs\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\bin\SAOImageDS9\scidthemes\*"; DestDir: "{app}\scidthemes\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\bin\SAOImageDS9\tcc\*"; DestDir: "{app}\tcc\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\..\bin\SAOImageDS9\tcl8\*"; DestDir: "{app}\tcl8\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\..\bin\SAOImageDS9\tcl8.6\*"; DestDir: "{app}\tcl8.6"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\bin\SAOImageDS9\tcl9\*"; DestDir: "{app}\tcl9\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\bin\SAOImageDS9\tcl9.0\*"; DestDir: "{app}\tcl9.0"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\bin\SAOImageDS9\template\*"; DestDir: "{app}\template\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\bin\SAOImageDS9\textutil\*"; DestDir: "{app}\textutil\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\..\bin\SAOImageDS9\tk8.6\*"; DestDir: "{app}\tk8.6\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\bin\SAOImageDS9\tk9.0\*"; DestDir: "{app}\tk9.0\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\bin\SAOImageDS9\tkblt\*"; DestDir: "{app}\tkblt\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\bin\SAOImageDS9\tkcon\*"; DestDir: "{app}\tkcon\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\bin\SAOImageDS9\tls\*"; DestDir: "{app}\tls\"; Flags: ignoreversion recursesubdirs createallsubdirs

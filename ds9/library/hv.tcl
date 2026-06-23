@@ -138,7 +138,8 @@ proc HV {varname title url {init {}} {sync 0} {save 0}} {
 	image create photo $var(images,stop) -data {R0lGODlhDQANALP/AP///1Lq81I5Of+EhCEAAHsAAMYAAP+UQv9zCHuMjP8AMf8AKf+MnK1CSv8QIQAAACH5BAEAAAEALAAAAAANAA0AAARWMMjUTC1J6ubOQYdiCBuIIMuiiCT1OWu6Ys05AMPC4ItBGB8dYMdI+RoHR4qY6v1CwlvRcEQ4brndwFAgJAwIRdPIzVTEYiqXJBEU1FQCW5Mg2O0ZSQQAOw==}
 	image create photo $var(images,reload) -data {R0lGODlhDAANALP/AP///zk5OVJSUoSEhKWlpcDAwP//1v//xr3erZTOezGcEFKtSimce3NzezkxOQAAACH5BAEAAAUALAAAAAAMAA0AAARRcJBJyRilEMC5AcjQaB1wHMYkCFuXLKDQONsBLIuynEBAGAcJAnYy0AyGBOLENPg4qGUISTMdEIoEg4A6ohK6BND4YyqBqCdyve453vB44BEBADs=}
 
-	image create photo $var(images,gray) -data {R0lGODdhPAA+APAAALi4uAAAACwAAAAAPAA+AAACQISPqcvtD6OctNqLs968+w+G4kiW5omm6sq27gvH8kzX9o3n+s73/g8MCofEovGITCqXzKbzCY1Kp9Sq9YrNFgsAO}
+	image create photo $var(images,gray) -width 60 -height 62
+	$var(images,gray) put #b8b8b8 -to 0 0 60 62
 
 	# Buttons
 	set f [ttk::frame $w.buttons]
@@ -206,6 +207,7 @@ proc HV {varname title url {init {}} {sync 0} {save 0}} {
 	    x11 {
 		bind $w <Button-4> "HVMouseWheel $varname 1"
 		bind $w <Button-5> "HVMouseWheel $varname -1"
+		bind $w <MouseWheel> "HVMouseWheel $varname %D"
 	    }
 	    aqua -
 	    win32 {
@@ -917,4 +919,3 @@ proc ProcessSendWebCmd {proc id param {sock {}} {fn {}}} {
     global ihv
     $proc $id "$ihv(windows)\n"
 }
-

@@ -219,7 +219,7 @@ proc BindEventsCanvas {} {
 	win32 {}
     }
     switch $ds9(wm) {
-	x11 {}
+	x11 -
 	aqua -
 	win32 {bind $ds9(canvas) <MouseWheel> [list MouseWheelFrame %x %y %D]}
     }
@@ -273,7 +273,7 @@ proc UnBindEventsCanvas {} {
 	win32 {}
     }
     switch $ds9(wm) {
-	x11 {}
+	x11 -
 	aqua -
 	win32 {bind $ds9(canvas) <MouseWheel> {}}
     }

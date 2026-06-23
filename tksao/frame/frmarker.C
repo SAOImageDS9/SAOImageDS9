@@ -752,27 +752,15 @@ void Base::createTemplateVarCmd(const Vector& center, const char* var)
   if (!obj)
     return;
 
-  // just in case
-  Tcl_ConvertToType(interp, obj, Tcl_GetObjType("bytearray"));
-
-  typedef struct ByteArray {
-    int used;			/* The number of bytes used in the byte
-				 * array. */
-    int allocated;		/* The amount of space actually allocated
-				 * minus 1 byte. */
-    unsigned char bytes[4];	/* The array of bytes.  The actual size of
-				 * this field depends on the 'allocated' field
-				 * above. */
-  } ByteArray;
-
   Tcl_IncrRefCount(obj);
 
   // only make command string as long as needed
   // or the rest will be processed as garbage
-  ByteArray* ba = (ByteArray*)(obj->internalRep.otherValuePtr);
-  int len = ba->used+2;
+  Tcl_Size objLen = 0;
+  unsigned char* bytes = Tcl_GetByteArrayFromObj(obj, &objLen);
+  Tcl_Size len = objLen+2;
   char* buf = new char[len];
-  memcpy(buf, (char*)ba->bytes, ba->used);
+  memcpy(buf, (char*)bytes, objLen);
 
   Tcl_DecrRefCount(obj);
 
@@ -6144,4 +6132,3 @@ void Base::win32Markers(List<Marker>* ml)
   }
 }
 #endif
-

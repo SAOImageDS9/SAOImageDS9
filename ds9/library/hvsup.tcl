@@ -341,6 +341,7 @@ proc HVProcessURLHTTP {varname url query rr sync} {
 	HVError $varname "[msgcat::mc {Unable to open file}] $var(fn)"
 	return
     }
+    fconfigure $var(ch) -translation binary -encoding iso8859-1
 
     # disable timeouts for analysis
     global ihttp
@@ -784,6 +785,7 @@ proc HVParseMulti {varname} {
 	    HVError $varname "[msgcat::mc {Unable to open file}] $var(fn)"
 	    return
 	}
+	fconfigure $ch -translation binary -encoding iso8859-1
     }
 
     set boundary [HVParseMimeParam $varname "boundary"]
@@ -792,104 +794,108 @@ proc HVParseMulti {varname} {
 	return
     }
 
-    set state 1
     set var(ch) {}
 
-    HVSetResult $varname 200 {}
-    HVSetData $varname {} {}
+    set data [read $ch]
+    catch {close $ch}
 
-    while {[gets $ch line] >= 0} {
-	if {$debug(tcl,hv)} {
-	    puts stderr "HVParseMulti $state:$line"
+    set delim "--$boundary"
+    set dlen [string length $delim]
+    set pos [string first $delim $data]
+
+    while {$pos >= 0} {
+	set after [expr {$pos+$dlen}]
+
+	if {[string range $data $after [expr {$after+1}]] == "--"} {
+	    break
 	}
 
-	switch -- $state {
-	    1 {
-		# boundary
-		if {[string equal "--$boundary" $line]} {
-		    set state 2
-		}
-	    }
-	    2 {
-		# header
-		if {[string length $line] == 0} {
-		    HVParseMeta $varname
+	set eol [string range $data $after [expr {$after+1}]]
+	if {$eol == "\r\n"} {
+	    set part [expr {$after+2}]
+	} elseif {[string index $data $after] == "\n"} {
+	    set part [expr {$after+1}]
+	} else {
+	    set pos [string first $delim $data $after]
+	    continue
+	}
 
-		    # save to a file
-		    set var(fn) [tmpnam {.http}]
-		    set var(delete) 1
-		    if {[catch {open "$var(fn)" w} ${varname}(ch)]} {
-			HVError $varname "[msgcat::mc {Unable to open file}] $var(fn)"
-			return
-		    }
-		    switch $var(transfer) {
-			binary -
-			base64 {
-			    fconfigure $var(ch) \
-				-translation binary -encoding binary
-			}
-		    }
+	set hend [string first "\r\n\r\n" $data $part]
+	set hlen 4
+	if {$hend < 0} {
+	    set hend [string first "\n\n" $data $part]
+	    set hlen 2
+	}
+	if {$hend < 0} {
+	    break
+	}
 
-		    set state 3
-		} else {
-		    if {[regexp -nocase {^([^:]+):(.+)$} $line x key value]} {
-			lappend var(meta) $key [string trim $value]
-		    }
-		}
-	    }
-	    3 {
-		# body
-		if {[string equal "--$boundary" $line]} {
-		    catch {close $var(ch)}
-		    HVParseSingle $varname
-		    HVClearTmpFile $varname
+	HVSetResult $varname 200 {}
+	HVSetData $varname {} {}
 
-		    set var(ch) {}
-
-		    HVSetResult $varname 200 {}
-
-		    # we want to preserve var(text)
-		    # HVSetData $varname {} {}
-		    set var(data) {}
-		    set var(fn) {}
-
-		    set state 2
-
-		} elseif {[string equal "--$boundary--" $line]} {
-		    catch {close $var(ch)}
-		    catch {close $ch}
-
-		    HVParseSingle $varname
-		    HVClearTmpFile $varname
-
-		    # reset file values
-		    set var(fn) $fn
-		    set var(delete) $del
-
-		    if {[info exists var(index)]} {
-			# reset index
-			set var(index) $index
-			HVClearIndex $varname $index
-		    }
-
-		    return
-
-		} else {
-		    switch $var(transfer) {
-			binary {puts -nonewline $var(ch) $line}
-			base64 {
-			    puts -nonewline $var(ch) [base64::decode $line]
-			}
-			default {puts $var(ch) $line}
-		    }
-		}
+	set headers [string range $data $part [expr {$hend-1}]]
+	foreach line [split $headers "\n"] {
+	    set line [string trimright $line "\r"]
+	    if {[regexp -nocase {^([^:]+):(.+)$} $line x key value]} {
+		lappend var(meta) $key [string trim $value]
 	    }
 	}
+	HVParseMeta $varname
+
+	set body [expr {$hend+$hlen}]
+	set nextCRLF [string first "\r\n$delim" $data $body]
+	set nextLF [string first "\n$delim" $data $body]
+	if {$nextCRLF >= 0 && ($nextLF < 0 || $nextCRLF <= $nextLF)} {
+	    set next $nextCRLF
+	    set pos [expr {$nextCRLF+2}]
+	} elseif {$nextLF >= 0} {
+	    set next $nextLF
+	    set pos [expr {$nextLF+1}]
+	} else {
+	    break
+	}
+
+	set payload [string range $data $body [expr {$next-1}]]
+
+	set var(fn) [tmpnam {.http}]
+	set var(delete) 1
+	if {[catch {open "$var(fn)" w} ${varname}(ch)]} {
+	    HVError $varname "[msgcat::mc {Unable to open file}] $var(fn)"
+	    return
+	}
+	fconfigure $var(ch) -translation binary -encoding iso8859-1
+
+	switch $var(transfer) {
+	    base64 {
+		set payload [string map [list "\r" "" "\n" "" "\t" "" " " ""] \
+				 $payload]
+		puts -nonewline $var(ch) [base64::decode $payload]
+	    }
+	    default {
+		puts -nonewline $var(ch) $payload
+	    }
+	}
+	catch {close $var(ch)}
+	set var(ch) {}
+
+	HVParseSingle $varname
+	HVClearTmpFile $varname
+
+	# we want to preserve var(text)
+	# HVSetData $varname {} {}
+	set var(data) {}
+	set var(fn) {}
     }
 
-    # clean up
-    catch {close $ch}
+    # reset file values
     set var(fn) $fn
+    set var(delete) $del
+
+    if {[info exists var(index)]} {
+	# reset index
+	set var(index) $index
+	HVClearIndex $varname $index
+    }
 }
 
 proc HVParseSingle {varname} {

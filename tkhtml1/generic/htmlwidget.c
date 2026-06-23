@@ -23,20 +23,74 @@
 **   http://www.hwaci.com/drh/
 */
 #include <tk.h>
+#ifdef MAC_OSX_TK
+# include <tkIntXlibDecls.h>
+# include <X11/Xutil.h>
+#endif
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 #include "htmlwidget.h"
 /*
-#ifdef USE_TK_STUBS
-# include <tkIntXlibDecls.h>
-#endif
-*/
-/*
 ** This global variable is used for tracing the operation of
 ** the Html formatter.
 */
 int HtmlTraceMask = 0;
+
+static int HtmlCopyArea(
+  Display *display,
+  Drawable src,
+  Drawable dst,
+  GC gc,
+  int srcX,
+  int srcY,
+  unsigned int width,
+  unsigned int height,
+  int dstX,
+  int dstY
+){
+  if( width==0 || height==0 ){
+    return Success;
+  }
+
+#ifdef MAC_OSX_TK
+  {
+    XImage *img;
+    int yy, xx;
+
+    img = XGetImage(display, src, srcX, srcY, width, height,
+                    AllPlanes, ZPixmap);
+    if( !img ){
+      return BadDrawable;
+    }
+
+    if( img->bits_per_pixel==32 ){
+      for(yy=0; yy<img->height; yy++){
+        unsigned char *ptr =
+          (unsigned char*)img->data + yy*img->bytes_per_line;
+        for(xx=0; xx<img->width; xx++, ptr+=4){
+          unsigned char a = ptr[0];
+          unsigned char r = ptr[1];
+          unsigned char g = ptr[2];
+          unsigned char b = ptr[3];
+          ptr[0] = b;
+          ptr[1] = g;
+          ptr[2] = r;
+          ptr[3] = a;
+        }
+      }
+    }
+
+    yy = TkPutImage(NULL, 0, display, dst, gc, img, 0, 0, dstX, dstY,
+                    width, height);
+    XDestroyImage(img);
+    return yy;
+  }
+#else
+  return XCopyArea(display, src, dst, gc, srcX, srcY, width, height,
+                   dstX, dstY);
+#endif
+}
 
 #ifdef __WIN32__
 # define DEF_FRAME_BG_COLOR        "SystemButtonFace"
@@ -616,8 +670,8 @@ static void HtmlRedrawCallback(ClientData clientData){
      
     /* Finally, copy the pixmap onto the window and delete the pixmap */
     if( !dead ){
-      XCopyArea(display, pixmap, Tk_WindowId(clipwin),
-                gcBg, 0, 0, w, h, htmlPtr->dirtyLeft, htmlPtr->dirtyTop);
+      HtmlCopyArea(display, pixmap, Tk_WindowId(clipwin),
+                   gcBg, 0, 0, w, h, htmlPtr->dirtyLeft, htmlPtr->dirtyTop);
     }
     Tk_FreePixmap(display, pixmap);
     if( dead ) goto redrawExit;
@@ -816,8 +870,29 @@ int ConfigureHtmlWidget(
       redraw = 1;
     }
   }
-  rc = Tk_ConfigureWidget(interp, htmlPtr->tkwin, configSpecs, argc, (const char**)argv,
-                         (char *) htmlPtr, flags);
+#if TCL_MAJOR_VERSION > 8 || (TCL_MAJOR_VERSION == 8 && TCL_MINOR_VERSION >= 7)
+  {
+    Tcl_Obj **objv = NULL;
+    if (argc > 0) {
+      objv = (Tcl_Obj **)ckalloc(sizeof(Tcl_Obj *) * argc);
+      for (i = 0; i < argc; i++) {
+        objv[i] = Tcl_NewStringObj(argv[i], -1);
+        Tcl_IncrRefCount(objv[i]);
+      }
+    }
+    rc = Tk_ConfigureWidget(interp, htmlPtr->tkwin, configSpecs, argc,
+                           objv, (char *) htmlPtr, flags | TK_CONFIG_OBJS);
+    for (i = 0; i < argc; i++) {
+      Tcl_DecrRefCount(objv[i]);
+    }
+    if (objv) {
+      ckfree(objv);
+    }
+  }
+#else
+  rc = Tk_ConfigureWidget(interp, htmlPtr->tkwin, configSpecs, argc,
+                         (const char**)argv, (char *) htmlPtr, flags);
+#endif
   if( rc!=TCL_OK || redraw==0 ){ TestPoint(0); return rc; }
   memset(htmlPtr->fontValid, 0, sizeof(htmlPtr->fontValid));
   htmlPtr->apColor[COLOR_Normal] = htmlPtr->fgColor;

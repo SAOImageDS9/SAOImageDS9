@@ -293,7 +293,7 @@ proc SAMPReturn {msg} {
     return [list params [list [list param [list value [list string $msg]]]]]
 }
 
-proc SAMPReply {msgid status {result {}} {url {}} {msg {}}} {
+proc SAMPReply {msgid status {result {}} {url {}} {msg {}} {hasResult 0}} {
     global samp
 
     if {$samp(debug)} {
@@ -302,7 +302,7 @@ proc SAMPReply {msgid status {result {}} {url {}} {msg {}}} {
 
     switch -- $status {
 	OK {
-	    if {$result != {}} {
+	    if {$hasResult || $result != {}} {
 		set map2(value) "string \"$result\""
 	    }
 	    if {$url != {}} {
@@ -320,7 +320,7 @@ proc SAMPReply {msgid status {result {}} {url {}} {msg {}}} {
 	    set map3(samp.errortxt) "string \"$msg\""
 	    set m3 [xmlrpcList2Member [array get map3]]
 
-	    if {$result != {}} {
+	    if {$hasResult || $result != {}} {
 		set map2(value) "string \"$result\""
 	    }
 	    if {$url != {}} {
@@ -826,5 +826,4 @@ proc SAMPDelTmpFiles {} {
 	}
     }
 }
-
 

@@ -5637,37 +5637,37 @@ proc illustratefile::yyparse {} {
                     20 { initGlobal }
                     24 { puts "DS9 Illustrate File 1.0" }
                     26 { initLocal }
-                    29 { IllustrateCircleCreate $3 $5 $7 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash }
-                    30 { IllustrateEllipseCreate $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localAngle }
-                    31 { IllustrateBoxCreate $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash $illustratefile::localAngle }
-                    32 { IllustratePolygonCreate $illustratefile::coords $illustratefile::localColor $illustratefile::localFill $illustratefile::localWidth $illustratefile::localDash }
-                    33 { IllustrateLineCreate $3 $5 $7 $9 $illustratefile::localColor $illustratefile::localWidth $illustratefile::localDash $illustratefile::localLine1 $illustratefile::localLine2 }
-                    34 { IllustrateTextCreate $3 $5 $7 $illustratefile::localColor $illustratefile::localFont $illustratefile::localFontSize $illustratefile::localFontWeight $illustratefile::localFontSlant $illustratefile::localAngle $illustratefile::localJustify }
-                    36 { IllustrateTextCreate $3 $5 $10 $illustratefile::localColor $illustratefile::localFont $illustratefile::localFontSize $illustratefile::localFontWeight $illustratefile::localFontSlant $illustratefile::localAngle $illustratefile::localJustify }
+                    29 { IllustrateCircleCreate $3 $5 $7 $::illustratefile::localColor $::illustratefile::localFill $::illustratefile::localWidth $::illustratefile::localDash }
+                    30 { IllustrateEllipseCreate $3 $5 $7 $9 $::illustratefile::localColor $::illustratefile::localFill $::illustratefile::localWidth $::illustratefile::localDash $::illustratefile::localAngle }
+                    31 { IllustrateBoxCreate $3 $5 $7 $9 $::illustratefile::localColor $::illustratefile::localFill $::illustratefile::localWidth $::illustratefile::localDash $::illustratefile::localAngle }
+                    32 { IllustratePolygonCreate $::illustratefile::coords $::illustratefile::localColor $::illustratefile::localFill $::illustratefile::localWidth $::illustratefile::localDash }
+                    33 { IllustrateLineCreate $3 $5 $7 $9 $::illustratefile::localColor $::illustratefile::localWidth $::illustratefile::localDash $::illustratefile::localLine1 $::illustratefile::localLine2 }
+                    34 { IllustrateTextCreate $3 $5 $7 $::illustratefile::localColor $::illustratefile::localFont $::illustratefile::localFontSize $::illustratefile::localFontWeight $::illustratefile::localFontSlant $::illustratefile::localAngle $::illustratefile::localJustify }
+                    36 { IllustrateTextCreate $3 $5 $10 $::illustratefile::localColor $::illustratefile::localFont $::illustratefile::localFontSize $::illustratefile::localFontWeight $::illustratefile::localFontSlant $::illustratefile::localAngle $::illustratefile::localJustify }
                     37 { IllustrateImageCreate $3 $5 $7 0 0 }
                     38 { IllustrateImageCreate $3 $5 $7 $9 $11 }
-                    41 { lappend illustratefile::coords $1 $3 }
-                    50 { set illustratefile::globalColor $3 }
-                    51 { set illustratefile::globalFill $3 }
-                    52 { set illustratefile::globalWidth $3 }
-                    53 { set illustratefile::globalDash $3 }
-                    54 { set illustratefile::globalFont $3 }
-                    55 { set illustratefile::globalFontSize $3 }
-                    56 { set illustratefile::globalFontWeight $3 }
-                    57 { set illustratefile::globalFontSlant $3 }
-                    58 { set illustratefile::globalAngle $3 }
-                    59 { set illustratefile::globalJustify $3 }
-                    62 { set illustratefile::localColor $3 }
-                    63 { set illustratefile::localFill $3 }
-                    64 { set illustratefile::localWidth $3 }
-                    65 { set illustratefile::localDash $3 }
-                    66 { set illustratefile::localFont $3 }
-                    67 { set illustratefile::localFontSize $3 }
-                    68 { set illustratefile::localFontWeight $3 }
-                    69 { set illustratefile::localFontSlant $3 }
-                    70 { set illustratefile::localLine1 $3; set illustratefile::localLine2 $4; }
-                    71 { set illustratefile::localAngle $3 }
-                    72 { set illustratefile::localJustify $3 }
+                    41 { lappend ::illustratefile::coords $1 $3 }
+                    50 { set ::illustratefile::globalColor $3 }
+                    51 { set ::illustratefile::globalFill $3 }
+                    52 { set ::illustratefile::globalWidth $3 }
+                    53 { set ::illustratefile::globalDash $3 }
+                    54 { set ::illustratefile::globalFont $3 }
+                    55 { set ::illustratefile::globalFontSize $3 }
+                    56 { set ::illustratefile::globalFontWeight $3 }
+                    57 { set ::illustratefile::globalFontSlant $3 }
+                    58 { set ::illustratefile::globalAngle $3 }
+                    59 { set ::illustratefile::globalJustify $3 }
+                    62 { set ::illustratefile::localColor $3 }
+                    63 { set ::illustratefile::localFill $3 }
+                    64 { set ::illustratefile::localWidth $3 }
+                    65 { set ::illustratefile::localDash $3 }
+                    66 { set ::illustratefile::localFont $3 }
+                    67 { set ::illustratefile::localFontSize $3 }
+                    68 { set ::illustratefile::localFontWeight $3 }
+                    69 { set ::illustratefile::localFontSlant $3 }
+                    70 { set ::illustratefile::localLine1 $3; set ::illustratefile::localLine2 $4; }
+                    71 { set ::illustratefile::localAngle $3 }
+                    72 { set ::illustratefile::localJustify $3 }
                     81 { set _ left }
                     82 { set _ center }
                     83 { set _ right }

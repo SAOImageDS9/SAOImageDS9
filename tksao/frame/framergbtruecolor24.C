@@ -92,7 +92,7 @@ int FrameRGBTrueColor24CreateProc(Tcl_Interp* interp, Tk_Canvas canvas,
 
   // and set default configuration
 
-  if (frame->configure(argc, (const char**)argv, 0) != TCL_OK) {
+  if (frame->Widget::configure(argc, (const char**)argv, 0, 1) != TCL_OK) {
     delete frame;
     Tcl_AppendResult(interp, " error occured while creating frame.", NULL);
     return TCL_ERROR;

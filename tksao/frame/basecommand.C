@@ -716,17 +716,23 @@ void Base::contourLoadCmd(const char* fn,
 
 void Base::contourPasteCmd(const char* var)
 {
-  const char* ccmd = Tcl_GetVar(interp, var, TCL_LEAVE_ERR_MSG);
-  if (!ccmd) {
+  Tcl_Obj* obj = Tcl_GetVar2Ex(interp, var, NULL, TCL_LEAVE_ERR_MSG);
+  if (!obj) {
     result = TCL_ERROR;
     return;
   }
 
+  Tcl_IncrRefCount(obj);
+
   // only make command string as long as needed
   // or the rest will be processed as garbage
-  int len = strlen(ccmd)+2;
+  Tcl_Size objLen = 0;
+  unsigned char* bytes = Tcl_GetByteArrayFromObj(obj, &objLen);
+  Tcl_Size len = objLen+2;
   char* buf = new char[len];
-  memcpy(buf, ccmd, len);
+  memcpy(buf, (char*)bytes, objLen);
+
+  Tcl_DecrRefCount(obj);
 
   // add terminator to make parser happy
   buf[len-2] = '\n';
@@ -744,17 +750,23 @@ void Base::contourPasteCmd(const char* var)
 void Base::contourPasteCmd(const char* var, const char* color,
 			   int width, int dash)
 {
-  const char* ccmd = Tcl_GetVar(interp, var, TCL_LEAVE_ERR_MSG);
-  if (!ccmd) {
+  Tcl_Obj* obj = Tcl_GetVar2Ex(interp, var, NULL, TCL_LEAVE_ERR_MSG);
+  if (!obj) {
     result = TCL_ERROR;
     return;
   }
 
+  Tcl_IncrRefCount(obj);
+
   // only make command string as long as needed
   // or the rest will be processed as garbage
-  int len = strlen(ccmd)+2;
+  Tcl_Size objLen = 0;
+  unsigned char* bytes = Tcl_GetByteArrayFromObj(obj, &objLen);
+  Tcl_Size len = objLen+2;
   char* buf = new char[len];
-  memcpy(buf, ccmd, len);
+  memcpy(buf, (char*)bytes, objLen);
+
+  Tcl_DecrRefCount(obj);
 
   // add terminator to make parser happy
   buf[len-2] = '\n';
@@ -3319,6 +3331,4 @@ void Base::get3dRenderBackgroundCmd()
 {
   Tcl_AppendResult(interp, "none", NULL);
 }
-
-
 

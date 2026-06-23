@@ -1,0 +1,14 @@
+#
+# This is how I run configure.  You'll want to change the
+# pathnames to match your system, of course.
+#
+# Note the CC=gcc must be set *before* the "configure" is ran.
+# This is really needed, otherwise configure will not be able
+# to compile the small test file which checks the presence
+# of the MinGW build environment. It is *not* enough to use
+# "--enable-gcc" configure option; you *need* to define CC.
+#
+
+export CC=gcc
+sh ../configure --enable-threads --with-tcl=e:/tcl/win
+

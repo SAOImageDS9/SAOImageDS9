@@ -78,8 +78,8 @@ int Magnifier::updatePixmap(const BBox& bb)
   if (use_) {
     if (magnifierptr_ && magnifierparentptr_) {
       XSetClipOrigin(display, widgetGC, 0, 0);
-      XCopyArea(display, (Pixmap)magnifierptr_, pixmap, widgetGC, 0, 0, 
-		options->width, options->height, 0, 0);
+      WidgetCopyArea(display, (Pixmap)magnifierptr_, pixmap, widgetGC, 0, 0,
+		     options->width, options->height, 0, 0);
     }
   }
   else

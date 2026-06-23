@@ -4,17 +4,21 @@
 
 #include <stdlib.h>
 #include <string.h>
-
-#include <iostream>
 #include <sstream>
+#include <iostream>
+#include <string>
 using namespace std;
+#include <cstdlib>
+
 
 #include <tcl.h>
 #include <tk.h>
 
 Tcl_Interp *global_interp =NULL;
+static string tclLibraryEnv;
+static string tkLibraryEnv;
 
-#define DEBUGS(x) {FILE* fp=fopen("debug.txt","a+");fprintf(fp,"%s\n",x);fclose(fp);}
+Tcl_Obj *startup_script_path=NULL;
 
 extern "C" {
   int SAOAppInit(Tcl_Interp *interp);
@@ -59,13 +63,17 @@ int SAOLocalMainHook(int* argcPtr, char*** argvPtr)
   // use exec path
   char** argv = *argvPtr;
   char ss[PATHSIZE];
+  memset(ss,0,PATHSIZE);
   strncpy(ss,argv[0],PATHSIZE);
 
   // now remove "/ds9.exe"
   char* ptr = ss+strlen(ss);
   while (*ptr != '/' && ptr != ss)
     ptr--;
-  *ptr = '\0';
+  if (ptr != ss)
+    *ptr = '\0';
+  else
+    strcpy(ss, ".");
 
   char rr[PATHSIZE];
 
@@ -73,29 +81,31 @@ int SAOLocalMainHook(int* argcPtr, char*** argvPtr)
   // we do it here before InitLibraryPath is called
   {
     strncpy(rr,ss,PATHSIZE);
-    strncat(rr,"/tcl8.6",PATHSIZE);
+    strncat(rr,"/tcl9.0",PATHSIZE);
     ostringstream str;
     str << "TCL_LIBRARY=" << rr << ends;
     putenv((char*)str.str().c_str());
+    tclLibraryEnv = rr;
   }
-  
+
   {
     strncpy(rr,ss,PATHSIZE);
-    strncat(rr,"/tk8.6",PATHSIZE);
+    strncat(rr,"/tk9.0",PATHSIZE);
     ostringstream str;
     str << "TK_LIBRARY=" << rr << ends;
     putenv((char*)str.str().c_str());
+    tkLibraryEnv = rr;
   }
-  
+
   // do this first
   Tcl_FindExecutable((*argvPtr)[0]);
 
   // and add startup script
   strncpy(rr,ss,PATHSIZE);
   strncat(rr,"/library/ds9.tcl",PATHSIZE);
-  Tcl_Obj *path = Tcl_NewStringObj(rr,-1);
+  Tcl_Obj *path = Tcl_NewStringObj(rr, -1);
   Tcl_SetStartupScript(path, NULL);
-  
+  startup_script_path = path;
   return TCL_OK;
 }
 
@@ -104,7 +114,11 @@ int SAOAppInit(Tcl_Interp *interp)
   // save interp for cputs function
   global_interp = interp;
 
-  // Initialize Tcl and Tk
+  //~ cout << "TCL_LIBRARAY=" << getenv("TCL_LIBRARY") << endl;
+  //~ cout << "TK_LIBRARY=" << getenv("TK_LIBRARY") << endl;
+  Tcl_SetStartupScript(startup_script_path, NULL);
+
+  // Tcl
   if (Tcl_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
 
@@ -116,20 +130,20 @@ int SAOAppInit(Tcl_Interp *interp)
   // Tkblt
   if (Tkblt_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
-  Tcl_StaticPackage(interp, "tkblt", Tkblt_Init, 
+  Tcl_StaticPackage(interp, "tkblt", Tkblt_Init,
 		    (Tcl_PackageInitProc*)NULL);
 
   // Tktable
   if (Tktable_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
-  Tcl_StaticPackage (interp, "Tktable", Tktable_Init, 
+  Tcl_StaticPackage (interp, "Tktable", Tktable_Init,
 		     (Tcl_PackageInitProc*)NULL);
 
   // Tls
   if (Tls_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
-  Tcl_StaticPackage (interp, "tls", Tls_Init, 
-  		     (Tcl_PackageInitProc*)NULL);
+  Tcl_StaticPackage (interp, "tls", Tls_Init,
+		     (Tcl_PackageInitProc*)NULL);
 
   // Tksao
   if (Tksao_Init(interp) == TCL_ERROR)
@@ -152,25 +166,25 @@ int SAOAppInit(Tcl_Interp *interp)
   // Tclfitsy
   if (Tclfitsy_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
-  Tcl_StaticPackage (interp, "tclfitsy", Tclfitsy_Init, 
-  		     (Tcl_PackageInitProc*)NULL);
+  Tcl_StaticPackage (interp, "Tclfitsy", Tclfitsy_Init,
+		     (Tcl_PackageInitProc*)NULL);
 
   // Tkmpeg
   if (Tkmpeg_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
-  Tcl_StaticPackage (interp, "tkmpeg", Tkmpeg_Init, 
+  Tcl_StaticPackage (interp, "tkmpeg", Tkmpeg_Init,
 		     (Tcl_PackageInitProc*)NULL);
 
   // Tksvg
   if (Tksvg_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
-  Tcl_StaticPackage (interp, "tksvg", Tksvg_Init, 
+  Tcl_StaticPackage (interp, "tksvg", Tksvg_Init,
 		     (Tcl_PackageInitProc*)NULL);
 
   // Tkagif
   if (Tkagif_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
-  Tcl_StaticPackage (interp, "tkagif", Tkagif_Init, 
+  Tcl_StaticPackage (interp, "tkagif", Tkagif_Init,
 		     (Tcl_PackageInitProc*)NULL);
 
   // Tclxml

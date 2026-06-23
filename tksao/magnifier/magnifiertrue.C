@@ -95,7 +95,7 @@ int MagnifierTrueColorCreateProc(Tcl_Interp* interp, Tk_Canvas canvas,
 
   // and set default configuration
 
-  if (magnifier->configure(argc, (const char**)argv, 0) != TCL_OK) {
+  if (magnifier->Widget::configure(argc, (const char**)argv, 0, 1) != TCL_OK) {
     delete magnifier;
     Tcl_AppendResult(interp, " error occured while creating magnifier.", NULL);
     return TCL_ERROR;

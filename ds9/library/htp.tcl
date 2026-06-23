@@ -1,6 +1,13 @@
 package provide DS9 1.0
 namespace eval ::http {}
 
+proc http::DS9GetTextLine {sock} {
+    if {[llength [info commands ::http::GetTextLine]]} {
+	return [GetTextLine $sock]
+    }
+    return [getTextLine $sock]
+}
+
 # needed because Topcat does not set totalsize in meta
 proc http::Event {sock token} {
     variable http
@@ -244,8 +251,11 @@ proc http::Event {sock token} {
 		    }
 		    if {![info exists state(-handler)]} {
 			# Initiate a sequence of background fcopies.
+			# Initiate a sequence of background fcopies.
 			fileevent $sock readable {}
-			rename ${token}EventCoroutine {}
+			if {[info coroutine] ne ""} {
+			    rename [info coroutine] {}
+			}
 			CopyStart $sock $token
 			return
 		    }
@@ -338,7 +348,7 @@ proc http::Event {sock token} {
 		    }
 		} elseif {[info exists state(transfer_final)]} {
 		    # This code forgives EOF in place of the final CRLF.
-		    set line [getTextLine $sock]
+		    set line [DS9GetTextLine $sock]
 		    set n [string length $line]
 		    set state(state) complete
 		    if {$n > 0} {
@@ -361,7 +371,7 @@ proc http::Event {sock token} {
 		} {
 		    ##Log chunked - token $token
 		    set size 0
-		    set hexLenChunk [getTextLine $sock]
+		    set hexLenChunk [DS9GetTextLine $sock]
 		    #set ntl [string length $hexLenChunk]
 		    if {[string trim $hexLenChunk] ne ""} {
 			scan $hexLenChunk %x size
@@ -389,7 +399,7 @@ proc http::Event {sock token} {
 			    }
 			    # CRLF that follows chunk.
 			    # If eof, this is handled at the end of this proc.
-			    getTextLine $sock
+			    DS9GetTextLine $sock
 			} else {
 			    set n 0
 			    set state(transfer_final) {}
@@ -497,4 +507,3 @@ proc http::Event {sock token} {
 	}
     }
 }
-

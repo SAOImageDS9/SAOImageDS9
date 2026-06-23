@@ -76,11 +76,16 @@ proc CreateMenuBar {} {
 proc ThemeMenu {w} {
     global ds9
 
-    menu $w
     switch $ds9(wm) {
-	x11 -
-	win32 {ThemeConfigMenu $w}
-	aqua {}
+	x11 {
+	    menu $w -tearoff 1
+	    ThemeConfigMenu $w
+	}
+	win32 {
+	    menu $w
+	    ThemeConfigMenu $w
+	}
+	aqua {menu $w}
     }
 
     return $w
@@ -839,4 +844,3 @@ proc PrefsDialogMenu {} {
     PrefsDialogAnalysisMenu $w.menu
     PrefsDialogHelpMenu $w.menu
 }
-

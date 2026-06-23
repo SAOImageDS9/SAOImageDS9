@@ -507,7 +507,7 @@ proc PrismLoad {varname fn} {
 	    # compressed?
 	    catch {
 		set ch [open $fn r]
-		fconfigure $ch -encoding binary -translation binary
+		fconfigure $ch -encoding iso8859-1 -translation binary
 		set bb [read $ch 2]
 		close $ch
 		binary scan $bb H4 cc

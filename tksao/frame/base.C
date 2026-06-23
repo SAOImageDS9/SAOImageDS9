@@ -2526,7 +2526,8 @@ void Base::updatePM(const BBox& bbox)
     }
   }
 
-  XCopyArea(display, basePixmap, pixmap, widgetGC, 0, 0, width, height, 0, 0);
+  WidgetCopyArea(display, basePixmap, pixmap, widgetGC, 0, 0, width, height,
+		 0, 0);
 
   // contours
   // needs to before markers if marker is filled

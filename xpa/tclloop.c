@@ -251,7 +251,7 @@ static void XPATclDisableOneInput(client_data)
   if( xptr == NULL )
     return;
 #if HAVE_TCLFILEHANDLER
-  Tcl_CreateFileHandler(xptr->fd, 0, XPATclHandler, xptr->client_data);
+  Tcl_DeleteFileHandler(xptr->fd);
 #else
   Tcl_DeleteEventSource(XPASetupProc, XPACheckProc, xptr);
 #endif

@@ -1374,32 +1374,35 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
 
   // only good for skyframe
 
-  astClearStatus; // just to make sure
-  astBegin; // start memory management
-
   // get lists
   Tcl_Obj* listxx1 =
-    Tcl_GetVar2Ex(interp_, xxname1, NULL, TCL_LEAVE_ERR_MSG);
+    Tcl_GetVar2Ex(interp_, xxname1, NULL, TCL_GLOBAL_ONLY | TCL_LEAVE_ERR_MSG);
   Tcl_Obj* listyy1 =
-    Tcl_GetVar2Ex(interp_, yyname1, NULL, TCL_LEAVE_ERR_MSG);
+    Tcl_GetVar2Ex(interp_, yyname1, NULL, TCL_GLOBAL_ONLY | TCL_LEAVE_ERR_MSG);
   Tcl_Obj* listxx2 =
-    Tcl_GetVar2Ex(interp_, xxname2, NULL, TCL_LEAVE_ERR_MSG);
+    Tcl_GetVar2Ex(interp_, xxname2, NULL, TCL_GLOBAL_ONLY | TCL_LEAVE_ERR_MSG);
   Tcl_Obj* listyy2 =
-    Tcl_GetVar2Ex(interp_, yyname2, NULL, TCL_LEAVE_ERR_MSG);
+    Tcl_GetVar2Ex(interp_, yyname2, NULL, TCL_GLOBAL_ONLY | TCL_LEAVE_ERR_MSG);
+  if (!listxx1 || !listyy1 || !listxx2 || !listyy2)
+    return;
 
   // get objects
   Tcl_Size nxx1;
   Tcl_Obj **objxx1;
-  Tcl_ListObjGetElements(interp_, listxx1, &nxx1, &objxx1);
+  if (Tcl_ListObjGetElements(interp_, listxx1, &nxx1, &objxx1) != TCL_OK)
+    return;
   Tcl_Size nyy1;
   Tcl_Obj **objyy1;
-  Tcl_ListObjGetElements(interp_, listyy1, &nyy1, &objyy1);
+  if (Tcl_ListObjGetElements(interp_, listyy1, &nyy1, &objyy1) != TCL_OK)
+    return;
   Tcl_Size nxx2;
   Tcl_Obj **objxx2;
-  Tcl_ListObjGetElements(interp_, listxx2, &nxx2, &objxx2);
+  if (Tcl_ListObjGetElements(interp_, listxx2, &nxx2, &objxx2) != TCL_OK)
+    return;
   Tcl_Size nyy2;
   Tcl_Obj **objyy2;
-  Tcl_ListObjGetElements(interp_, listyy2, &nyy2, &objyy2);
+  if (Tcl_ListObjGetElements(interp_, listyy2, &nyy2, &objyy2) != TCL_OK)
+    return;
 
   // sanity check
   if (nxx1 != nyy1 || nxx2 != nyy2)
@@ -1407,6 +1410,9 @@ void FitsImage::match(const char* xxname1, const char* yyname1,
 
   if (!hasWCSCel(sys1) || !hasWCSCel(sys2))
     return;
+
+  astClearStatus; // just to make sure
+  astBegin; // start memory management
 
   // get doubles
   double* ixx1 = new double[nxx1];

@@ -12,6 +12,7 @@ mandir		= @mandir@
 TCLSH_PROG	= @TCLSH_PROG@
 
 TCL_VERSION	= @TCL_VERSION@
+TCL_MAJOR_VERSION = $(firstword $(subst ., ,$(TCL_VERSION)))
 TCL_LIB_SPEC	= @TCL_LIB_SPEC@
 TCL_STUB_LIB_SPEC= @TCL_STUB_LIB_SPEC@
 TK_LIBS		= @TK_LIBS@
@@ -89,7 +90,7 @@ OBJS	= ds9.o tkAppInit.o
 empty:=
 space:=$(empty) $(empty)
 
-SPECS	= \
+EXT_SPECS = \
 	$(tclfitsy_LIB_SPEC) \
 	$(tclsignal_LIB_SPEC) \
 	$(tclxml_LIB_SPEC) \
@@ -111,12 +112,21 @@ SPECS	= \
 	$(tifftcl_LIB_SPEC) \
 	$(zlibtcl_LIB_SPEC) \
 	$(fitsy_LIB_SPEC) \
-	$(vector_LIB_SPEC) \
+	$(vector_LIB_SPEC)
+
+CORE_SPECS = \
 	$(TK_STUB_LIB_SPEC) \
 	$(TCL_STUB_LIB_SPEC)
 
+ifeq ($(TCL_MAJOR_VERSION),9)
+EXT_LIB_PREFIX = libtcl9
+else
+EXT_LIB_PREFIX = lib
+endif
+
 LLIBS	= \
-	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(SPECS)))) \
+	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,$(EXT_LIB_PREFIX)%.a,$(EXT_SPECS)))) \
+	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(CORE_SPECS)))) \
 	$(libdir)/libast.a \
 	$(libdir)/libast_err.a \
 	$(libdir)/libast_pal.a \

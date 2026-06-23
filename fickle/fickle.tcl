@@ -216,7 +216,7 @@ proc handle_rules_buf {rules_buf} {
         foreach sub_rule [array names ::sub_table] {
             # the quotes around the regexp below is necessary, to
             # allow for substitution of the sub_rule
-            regsub -all -- "\{$sub_rule\}" $pattern "\($::sub_table($sub_rule)\)" pattern
+            regsub -all -- "\{$sub_rule\}" $pattern "\([set ::sub_table($sub_rule)]\)" pattern
         }
 
         # now determine the action; an action of just a vertical bar

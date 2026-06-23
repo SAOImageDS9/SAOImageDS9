@@ -123,7 +123,7 @@ int ColorbarRGBTrueColor16CreateProc(Tcl_Interp* interp, Tk_Canvas canvas,
     new ColorbarRGBTrueColor16(interp, canvas, item);
 
   // and set default configuration
-  if (colorbar->configure(argc, (const char**)argv, 0) != TCL_OK) {
+  if (colorbar->configure(argc, (const char**)argv, 0, 1) != TCL_OK) {
     delete colorbar;
     Tcl_AppendResult(interp, " error occured while creating colorbar.", NULL);
     return TCL_ERROR;

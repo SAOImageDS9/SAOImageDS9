@@ -72,8 +72,8 @@ Additional Linux notes:
     % sudo apt-get install libxft-dev
 
     % sudo apt-get install zip
-    % sudo apt-get install tcl8.6-dev
-    % sudo apt-get install tk8.6-dev
+    % sudo apt-get install tcl-dev
+    % sudo apt-get install tk-dev
 
 *** Debian
     % apt-get install automake
@@ -84,5 +84,5 @@ Additional Linux notes:
     % apt-get install libxslt1-dev
     % apt-get install libxft-dev
     % apt-get install zip
-    % apt-get install tcl8.6-dev
-    % apt-get install tk8.6-dev
+    % apt-get install tcl-dev
+    % apt-get install tk-dev

@@ -32,7 +32,7 @@ int widgetPdfMode_ =0;
 int WidgetConfigProc(Tcl_Interp* interp, Tk_Canvas canvas, Tk_Item* item, 
 		     Tcl_Size argc, Tcl_Obj *const argv[], int flags)
 {
-  return WIDGET(item).configure(argc, (const char**)argv, flags);
+  return WIDGET(item).configure(argc, (const char**)argv, flags, 1);
 }
 
 int WidgetCoordProc(Tcl_Interp* interp, Tk_Canvas canvas, Tk_Item* item, 
@@ -106,6 +106,45 @@ void WidgetInsertProc(Tk_Canvas canvas, Tk_Item* item, int index, char* string)
 void WidgetDCharsProc(Tk_Canvas canvas, Tk_Item* item, int first, int last)
 {
   WIDGET(item).dcharsProc(first, last);
+}
+
+int WidgetCopyArea(Display* display, Drawable src, Drawable dst, GC gc,
+		   int srcX, int srcY, unsigned int width, unsigned int height,
+		   int dstX, int dstY)
+{
+  if (!width || !height)
+    return Success;
+
+#ifdef MAC_OSX_TK
+  XImage* img = XGetImage(display, src, srcX, srcY, width, height,
+			  AllPlanes, ZPixmap);
+  if (!img)
+    return BadDrawable;
+
+  if (img->bits_per_pixel == 32) {
+    for (int yy=0; yy<img->height; yy++) {
+      unsigned char* ptr =
+	(unsigned char*)img->data + yy*img->bytes_per_line;
+      for (int xx=0; xx<img->width; xx++, ptr+=4) {
+	unsigned char a = ptr[0];
+	unsigned char r = ptr[1];
+	unsigned char g = ptr[2];
+	unsigned char b = ptr[3];
+	ptr[0] = b;
+	ptr[1] = g;
+	ptr[2] = r;
+	ptr[3] = a;
+      }
+    }
+  }
+
+  int result = TkPutImage(NULL, 0, display, dst, gc, img, 0, 0, dstX, dstY,
+			  width, height);
+  XDestroyImage(img);
+  return result;
+#else
+  return XCopyArea(display, src, dst, gc, srcX, srcY, width, height, dstX, dstY);
+#endif
 }
 
 int WidgetParse(ClientData widget, Tcl_Interp* interp, int argc, 
@@ -242,14 +281,32 @@ void Widget::msg(const char* m)
 
 int Widget::configure(Tcl_Size argc, const char** argv, int flags)
 {
+  return configure(argc, argv, flags, 0);
+}
+
+int Widget::configure(Tcl_Size argc, const char** argv, int flags, int objArgs)
+{
 #if TCL_MAJOR_VERSION <= 8 && TCL_MINOR_VERSION <= 6
   int rr = Tk_ConfigureWidget(interp, tkwin, configSpecs, argc,
 			      argv,
 			      (char*)this->options, flags);
 #else
+  Tcl_Obj** objv = (Tcl_Obj**)argv;
+  if (!objArgs) {
+    objv = new Tcl_Obj*[argc];
+    for (Tcl_Size ii=0; ii<argc; ii++) {
+      objv[ii] = Tcl_NewStringObj(argv[ii], -1);
+      Tcl_IncrRefCount(objv[ii]);
+    }
+  }
   int rr = Tk_ConfigureWidget(interp, tkwin, configSpecs, argc,
-			      (Tcl_Obj *const *)argv,
-			      (char*)this->options, flags);
+			      objv,
+			      (char*)this->options, flags|TK_CONFIG_OBJS);
+  if (!objArgs) {
+    for (Tcl_Size ii=0; ii<argc; ii++)
+      Tcl_DecrRefCount(objv[ii]);
+    delete [] objv;
+  }
 #endif
 
  if (rr != TCL_OK)
@@ -364,8 +421,8 @@ void Widget::displayProc(Drawable draw, int clipX, int clipY,
 
   // set the clip region and copy the pixmap into the drawable
   XSetClipOrigin(display, widgetGC, drawX - pmX, drawY - pmY);
-  XCopyArea(display, pixmap, draw, widgetGC, pmX, pmY, (unsigned int) pmWidth,
-	    (unsigned int) pmHeight, drawX, drawY);
+  WidgetCopyArea(display, pixmap, draw, widgetGC, pmX, pmY,
+		 (unsigned int)pmWidth, (unsigned int)pmHeight, drawX, drawY);
 }
 
 double Widget::pointProc(double* point)
@@ -525,7 +582,7 @@ void Widget::createCommand()
 
   cmd = new char[strlen(options->cmdName)+1];
   strcpy(cmd, options->cmdName);
-  Tcl_CreateObjCommand(interp, cmd, WidgetObjParse, (ClientData)this, NULL);
+  Tcl_CreateObjCommand2(interp, cmd, WidgetObjParse, (ClientData)this, NULL);
 }
 
 int Widget::checkArgs(int should, Tcl_Size argc, char** argv)

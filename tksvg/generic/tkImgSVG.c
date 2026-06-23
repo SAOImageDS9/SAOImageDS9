@@ -43,17 +43,11 @@
 
 /* Adoption to use the original tk core file */
 #define TkGetStringFromObj Tcl_GetStringFromObj
-/* Check, if Tcl version supports Tcl_Size,
-   which was introduced in Tcl 8.7 and 9.
-*/
-#if TCL_MAJOR_VERSION <= 8
-#if TCL_MINOR_VERSION <= 6
+/* Tcl_Size was introduced in Tcl 8.7 and is pointer-sized in Tcl 9. */
+#if TCL_MAJOR_VERSION > 8 || (TCL_MAJOR_VERSION == 8 && TCL_MINOR_VERSION > 6)
+#define TkSizeT Tcl_Size
+#else
 #define TkSizeT int
-#endif
-#endif
-
-#ifndef TkSizeT
-#define TkSizeT long
 #endif
 
 #ifndef TCL_IO_FAILURE

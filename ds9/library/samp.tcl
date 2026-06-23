@@ -405,7 +405,7 @@ proc SAMPRcvdDS9GetReply {msgid msg {fn {}}} {
 	    lappend samp(tmp,files) $fn
 	}
 
-	SAMPReply $msgid OK $value $url
+	SAMPReply $msgid OK $value $url {} 1
     }
     InitError tcl
 }
@@ -647,7 +647,7 @@ proc client.env.get {msgid args} {
     if {[catch {set rr $env($name)}]} {
 	SAMPReply $msgid ERROR {} {} {not found}
     } else {
-	SAMPReply $msgid OK $rr
+	SAMPReply $msgid OK $rr {} {} 1
     }
 }
 

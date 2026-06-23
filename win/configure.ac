@@ -76,6 +76,9 @@ AC_SUBST(ARCH)
 prefix=$ac_pwd
 exec_prefix=$ac_pwd
 
+TKFLAGS=""
+AC_SUBST(TKFLAGS)
+
 case $with_arch in
     win32 | WIN32 )
 	ENABLE64BIT=
@@ -106,4 +109,3 @@ AC_CONFIG_FILES([Makefile])
 #--------------------------------------------------------------------
 
 AC_OUTPUT()
-

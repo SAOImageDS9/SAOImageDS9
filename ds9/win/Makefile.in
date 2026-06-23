@@ -12,6 +12,8 @@ mandir		= @mandir@
 TCLSH_PROG      = @TCLSH_PROG@
 
 TCL_VERSION	= @TCL_VERSION@
+TCL_MAJOR_VERSION = $(firstword $(subst ., ,$(TCL_VERSION)))
+TCL_MINOR_VERSION = $(word 2,$(subst ., ,$(TCL_VERSION)))
 TCL_LIB_SPEC	= @TCL_LIB_SPEC@
 TCL_STUB_LIB_SPEC= @TCL_STUB_LIB_SPEC@
 TK_LIBS		= @TK_LIBS@
@@ -58,7 +60,7 @@ DLLDIR		= /usr/$(CC:-gcc=)/sys-root/mingw/bin
 INCLUDES	= @PKG_INCLUDES@ @TCL_INCLUDES@ @TK_INCLUDES@ @TK_XINCLUDES@
 
 PKG_CFLAGS	= @PKG_CFLAGS@
-DEFS		= @DEFS@ $(PKG_CFLAGS)
+DEFS		= @DEFS@ $(PKG_CFLAGS) -DTCL_MAJOR_VERSION=$(TCL_MAJOR_VERSION) -DTCL_MINOR_VERSION=$(TCL_MINOR_VERSION)
 
 CPPFLAGS	= @CPPFLAGS@
 LIBS		= @PKG_LIBS@ @LIBS@ @XML2_LIBS@
@@ -85,7 +87,7 @@ OBJS	= ds9.o winMain.o ds9.res.o
 empty:=
 space:=$(empty) $(empty)
 
-SPECS	= \
+EXT_SPECS = \
 	$(tclfitsy_LIB_SPEC) \
 	$(tclxml_LIB_SPEC) \
 	$(tclxmlrpc_LIB_SPEC) \
@@ -106,27 +108,36 @@ SPECS	= \
 	$(tifftcl_LIB_SPEC) \
 	$(zlibtcl_LIB_SPEC) \
 	$(fitsy_LIB_SPEC) \
-	$(vector_LIB_SPEC) \
+	$(vector_LIB_SPEC)
+
+CORE_SPECS = \
 	$(TK_STUB_LIB_SPEC) \
 	$(TK_LIB_SPEC) \
 	$(TCL_STUB_LIB_SPEC) \
 	$(TCL_LIB_SPEC)
 
+ifeq ($(TCL_MAJOR_VERSION),9)
+EXT_LIB_PREFIX = libtcl9
+else
+EXT_LIB_PREFIX = lib
+endif
+
 LLIBS	= \
-	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(SPECS)))) \
+	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,$(EXT_LIB_PREFIX)%.a,$(EXT_SPECS)))) \
+	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(CORE_SPECS)))) \
 	$(libdir)/libast.a \
 	$(libdir)/libast_err.a \
 	$(libdir)/libast_pal.a \
 	$(libdir)/libast_cminpack.a \
-	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,lib%.a,$(tksao_LIB_SPEC)))) \
+	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,$(EXT_LIB_PREFIX)%.a,$(tksao_LIB_SPEC)))) \
 	$(libdir)/libfuntools.a \
 	$(libdir)/libxpa.a
 
 PREQS	= \
 	$(APPDIR) \
-	$(APPDIR)/tcl$(TCL_VERSION) \
-	$(APPDIR)/tcl8 \
-	$(APPDIR)/tk$(TCL_VERSION) \
+	$(LIBDIR)/tcl$(TCL_VERSION) \
+	$(LIBDIR)/tcl$(TCL_MAJOR_VERSION) \
+	$(LIBDIR)/tk$(TCL_VERSION) \
 	$(LIBDIR)/library \
 	$(LIBDIR)/msgs \
 	$(LIBDIR)/doc \
@@ -196,14 +207,33 @@ ds9.res.o: ds9.rc ds9.ico
 $(APPDIR):
 	mkdir -p $@
 
-$(APPDIR)/tcl$(TCL_VERSION) : $(prefix)/lib/tcl$(TCL_VERSION)
-	cp -fr $? $@
+ifeq ($(TCL_MAJOR_VERSION),9)
+$(LIBDIR)/tcl$(TCL_VERSION) : $(prefix)/tcl$(TCL_VERSION)/library
+	mkdir -p $@
+	cp -prf $?/* $@/.
+else
+$(LIBDIR)/tcl$(TCL_VERSION) :
+	cp -prf $(prefix)/lib/tcl$(TCL_VERSION) $(LIBDIR)/.
+endif
 
-$(APPDIR)/tcl8 : $(prefix)/lib/tcl8
-	cp -fr $? $@
+$(LIBDIR)/tcl$(TCL_MAJOR_VERSION) :
+	cp -prf $(prefix)/lib/tcl$(TCL_MAJOR_VERSION) $(LIBDIR)/.
 
-$(APPDIR)/tk$(TCL_VERSION) : $(prefix)/lib/tk$(TCL_VERSION)
-	cp -fr $? $@
+ifeq ($(TCL_MAJOR_VERSION),9)
+$(LIBDIR)/tk$(TCL_VERSION) : $(prefix)/tk$(TCL_VERSION)/library
+	mkdir -p $@
+	cp -prf $?/* $@/.
+	rm -rf $(APPDIR)/tk$(TCL_VERSION)/images
+	rm -rf $(APPDIR)/tk$(TCL_VERSION)/demos
+else
+$(LIBDIR)/tk$(TCL_VERSION) :
+	cp -prf $(prefix)/lib/tk$(TCL_VERSION) $(LIBDIR)/.
+	rm -rf $(APPDIR)/tk$(TCL_VERSION)/images
+	rm -rf $(APPDIR)/tk$(TCL_VERSION)/demos
+endif
+
+$(LIBDIR)/pdf4tcl: $(prefix)/pdf4tcl
+	cp -prf $? "$@"
 
 #--------------------------awthemes
 

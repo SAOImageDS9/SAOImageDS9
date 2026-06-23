@@ -65,8 +65,8 @@ TkMacosx::~TkMacosx()
 {
 }
 
-// major kludge, located in hacked tk8.6/macosx/tkMacOSXImage.c
-extern int enableScreenCapture;
+int enableScreenCapture = 0;
+
 int TkMacosx::sc(int argc, const char* argv[])
 {
   if (argc >= 1) {
@@ -86,4 +86,3 @@ int TkMacosx::sc(int argc, const char* argv[])
   Tcl_AppendResult(interp, "usage: macos sc yes|no", NULL);
   return TCL_ERROR;
 }
-

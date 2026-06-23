@@ -192,7 +192,7 @@ set ds9(mb) .mb
 switch $ds9(wm) {
     x11 {
 	set ds9(root) "[::tcl::zipfs::root]mntpt"
-	set auto_path [list $ds9(root) $ds9(root)/tcl8.6 $ds9(root)/tk8.6 $ds9(root)/tk8.6/ttk]
+	set auto_path [list $ds9(root) $ds9(root)/tcl9.0 $ds9(root)/tk9.0 $ds9(root)/tk9.0/ttk]
     }
     aqua {
 	# set to absolute path
@@ -202,7 +202,7 @@ switch $ds9(wm) {
     }
     win32 {
 	set ds9(root) [file dirname [file dirname $argv0]]
-	set auto_path [list $ds9(root) $ds9(root)/tcl8.6 $ds9(root)/tk8.6 $ds9(root)/tk8.6/ttk]
+	set auto_path [list $ds9(root) $ds9(root)/tcl9.0 $ds9(root)/tk9.0 $ds9(root)/tk9.0/ttk]
     }
 }
 
@@ -709,4 +709,3 @@ switch $ds9(wm) {
 	event generate $ds9(canvas) <Tab> -x 0 -y 0
     }
 }
-

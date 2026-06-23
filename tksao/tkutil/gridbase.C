@@ -9,7 +9,13 @@
 
 EXTERN void TkDrawAngledChars(Display *display,
 			      Drawable drawable, GC gc, Tk_Font tkfont,
-			      const char *source, int numBytes, double x,
+			      const char *source,
+#if TCL_MAJOR_VERSION >= 9
+			      Tcl_Size numBytes,
+#else
+			      int numBytes,
+#endif
+			      double x,
 			      double y, double angle);
 extern "C" {
   #include "ast.h"
@@ -443,4 +449,3 @@ Matrix GridBase::calcTextPos(const Vector& vv, double angle, const char* txt,
     
   return rr*mm;
 }
-

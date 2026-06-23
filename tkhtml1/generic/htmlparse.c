@@ -32,7 +32,7 @@
 /* Check, if Tcl version supports Tcl_Size,
    which was introduced in Tcl 8.7 and 9.
 */
-#if TCL_MAJOR_VERSION <= 8 && TCL_MINOR_VERSION <= 6
+#ifndef TCL_SIZE_MAX
 typedef int Tcl_Size;
 #endif
 

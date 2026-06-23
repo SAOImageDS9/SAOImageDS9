@@ -424,8 +424,8 @@ void Legend::draw(Drawable drawable)
       // store pixmap or (if no backing store exists) just fill it with the
       // background color of the plot.
       if (graphPtr_->cache_ != None)
-	XCopyArea(graphPtr_->display_, graphPtr_->cache_, pixmap, 
-		  graphPtr_->drawGC_, x_, y_, w, h, 0, 0);
+	CopyArea(graphPtr_->display_, graphPtr_->cache_, pixmap,
+		 graphPtr_->drawGC_, x_, y_, w, h, 0, 0);
       else 
 	Tk_Fill3DRectangle(tkwin, pixmap, gops->plotBg, 0, 0, 
 			   w, h, TK_RELIEF_FLAT, 0);
@@ -518,8 +518,8 @@ void Legend::draw(Drawable drawable)
 
   Tk_Draw3DRectangle(tkwin, pixmap, bg, 0, 0, w, h, 
 		     ops->borderWidth, ops->relief);
-  XCopyArea(graphPtr_->display_, pixmap, drawable, graphPtr_->drawGC_, 
-	    0, 0, w, h, x_, y_);
+  CopyArea(graphPtr_->display_, pixmap, drawable, graphPtr_->drawGC_,
+	   0, 0, w, h, x_, y_);
 
   Tk_FreePixmap(graphPtr_->display_, pixmap);
 }
@@ -1016,8 +1016,8 @@ ClientData Legend::pickEntry(int xx, int yy, ClassId* classIdPtr)
 
 // Support
 
-static int SelectionProc(ClientData clientData, int offset, char *buffer,
-			 int maxBytes)
+static Tcl_Size SelectionProc(ClientData clientData, Tcl_Size offset,
+			      char *buffer, Tcl_Size maxBytes)
 {
   Legend* legendPtr = (Legend*)clientData;
   Graph* graphPtr = legendPtr->graphPtr_;
@@ -1069,6 +1069,3 @@ static void SelectCmdProc(ClientData clientData)
   }
   Tcl_Release(legendPtr);
 }
-
-
-

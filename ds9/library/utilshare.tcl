@@ -48,6 +48,17 @@ proc ParseURL {url varname} {
     global tcl_platform
     switch $tcl_platform(platform) {
 	unix {
+	    if {($r(scheme) == {} || $r(scheme) == {file}) &&
+		($r(authority) == {zipfs} || $r(authority) == {zipfs:})} {
+		# Tcl 9 zipfs paths are volumes like //zipfs:/mntpt.
+		# Keep the volume prefix as part of the filesystem path.
+		set r(path) "//$r(authority)$r(path)"
+		set r(authority) {}
+		if {$r(scheme) == {file}} {
+		    set r(scheme) {}
+		}
+	    }
+
 	    switch -- $r(scheme) {
 		zipfs {
 		    # special case for zipfs

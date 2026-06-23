@@ -14,15 +14,17 @@ Version 8.8 Release Notes</h1>
 sub-packages</li>
 <li>Upgraded to SSL 3.6.2/TLS 2.0 to improve <code>https</code> site
 access.</li>
+<li>Now supports PDF export using <code>Save Image</code> for images and
+<code>Export</code> for plots.</li>
 <li>Now supports partial Healpix files, including Multi-Order-Coverage
 (MOC) files</li>
 <li>New movie <code>script</code> mode.</li>
-<li>Now supports PDF export using <code>Save Image</code> for images and
-<code>Export</code> for plots.</li>
 <li>Color bars now support the <code>width</code> and
 <code>center</code> options to adjust the width and placement</li>
 <li>The DSS-SAO image server is no longer being maintained and has been
-removed.</li>
+removed. <code>2MASS</code> and <code>VLA</code> image servers updated
+to new interfaces. <code>SKYVIEW</code> updated list of surveys. The
+list of catalogs has also been refreshed.</li>
 <li>Several other bug fixes and build enhancements.</li>
 </ul>
 <h4 id="details">Details</h4>
@@ -86,7 +88,7 @@ remove obsoleted versions and include newer surveys.</li>
 <li><strong>TTKTHEMES</strong>: Updated to 3.3.0</li>
 <li><strong>FITSY</strong>: Updated HEALPIX code to support
 Multi-Order-Coverage (MOC) maps and partial Healpix files. Contributed
-by A. Fruscione.</li>
+by Antonella Fruscione.</li>
 <li><strong>PHOTO</strong>: Fix regression introduced in 8.7 saving TIFF
 and JPEG formats via <code>xpaget ds9 jpeg &gt; foo.jpg</code> due to
 <code>tkimg</code> behavior change.</li>
@@ -97,7 +99,7 @@ that into movie.</li>
 <li><strong>MANIFEST</strong>: added <code>Manifest.md</code> to
 identify which packages come from where, versions, and identify upstream
 sources.</li>
-<li><strong>GITHUB</strong>: added GitHub actions contributed by D.
+<li><strong>GITHUB</strong>: added GitHub actions contributed by Doug
 Burke.</li>
 <li><strong>SAVEIMAGE</strong>: Added new option:
 <code>-saveimage pdf</code> will save image to PDF format.</li>
@@ -118,6 +120,20 @@ full width (height) of the image; a value of <code>0.5</code> would be
 50% of the width (height) of the image.</li>
 <li><strong>REGIONS</strong>: Added documentation for the interactive
 <code>callback</code> option with DS9 format region files.</li>
+<li><strong>VLA</strong> and <strong>2MASS</strong>: Updated to new
+URLs/interfaces.</li>
+<li><strong>SKYVIEW</strong>: Updated the list of surveys that are
+available.</li>
+<li><strong>ILLUSTRATE</strong> : Now supports rotated ellipses and
+boxes.</li>
+<li><strong>FRAME</strong>: In <code>tiled</code> frame mode, users can
+now re-order frames by pressing the Control Key and clicking then
+dragging the frame to move it.</li>
+<li><strong>GRID</strong>: Coordinate grid parameters are now displayed
+in a single widget.</li>
+<li><strong>FITSY</strong>: Bug fix for lossless compressed GZIP
+floating point images (e.g. created by astropy). Contributed by Tim
+Jenness.</li>
 <li><strong>TCL</strong> and <strong>TK</strong>: Updated to 9.0.3.
 Several subpackage updates:
 <ul>
@@ -143,9 +159,9 @@ consistent updates across 26 rendering variant files (colorbar + frame
 truecolor); macOS-specific rendering fixes; internal Tcl/Tk API
 compatibility for event loop and object access. Fix for double-buffer
 compatibility on macOS</li>
-<li><strong>TKSVG</strong>: Windows issue fix<br />
-</li>
+<li><strong>TKSVG</strong>: Windows issue fix</li>
 <li><strong>XPA</strong>: Tcl 9 event loop integration; network
 resilience improvements for XPA_METHOD=inet when DNS resolution fails ;
 additional Tcl 9 compatibility fixes  </li>
+</ul></li>
 </ul>

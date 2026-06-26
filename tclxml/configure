@@ -6003,6 +6003,11 @@ printf "%s\n" "#define USE_TK_STUBS 1" >>confdefs.h
 
 
 
+if test "${STUBS_BUILD}" = "1" ; then
+    PKG_CFLAGS="$PKG_CFLAGS -DUSE_TCL_STUBS=1 -DUSE_TCLOO_STUBS=1"
+
+fi
+
 #--------------------------------------------------------------------
 # This macro figures out what flags to use with the compiler/linker
 # when building shared/static debug/optimized objects.  This information
@@ -10789,5 +10794,4 @@ if test -n "$ac_unrecognized_opts" && test "$enable_option_checking" != no; then
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: unrecognized options: $ac_unrecognized_opts" >&5
 printf "%s\n" "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2;}
 fi
-
 

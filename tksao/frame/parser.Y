@@ -82,6 +82,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %type <integer> markerLayer
 %type <integer> maskType
 %type <integer> maskBlend
+%type <integer> layerRef
 %type <integer> pscolorspace
 %type <integer> scaleType
 %type <integer> minmaxMode
@@ -150,6 +151,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token BLEND_
 %token BLOCK_
 %token BORDER_
+%token BOTTOM_
 %token BOX_
 %token BOXANNULUS_
 %token BOXCAR_
@@ -207,6 +209,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token DETECTOR_
 %token DIAMOND_
 %token DIM_
+%token DOWN_
 %token DS9_
 %token EDIT_
 %token ECLIPTIC_
@@ -275,6 +278,8 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token KEY_
 %token KEYWORD_
 %token LABEL_
+%token LAYER_
+%token LAYERNO_
 %token LAST_
 %token LENGTH_
 %token LEVEL_
@@ -305,6 +310,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token MOSAIC_
 %token MODE_
 %token MOTION_
+%token MULTICOLOR_
 %token MOVE_
 %token NAME_
 %token NAN_
@@ -404,6 +410,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token THREED_
 %token THRESHOLD_
 %token THICK_
+%token TOP_
 %token TRANSPARENCY_
 %token TO_
 %token TOGGLE_
@@ -415,6 +422,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token UNLOAD_
 %token UNSELECT_
 %token UPDATE_
+%token UP_
 %token USER_
 %token VALUE_
 %token VAR_
@@ -499,6 +507,7 @@ command : DEBUG_ debug
 	| MATCH_ match
 	| MARKER_ markerLayer marker
 	| MASK_ mask
+	| LAYER_ layer
 	| NAN_ COLOR_ STRING {fr->nanColorCmd($3);}
 	| ORIENT_ orient
 	| PAN_ pan
@@ -898,6 +907,8 @@ colormap : INT numeric numeric INT INT
 	{fr->colormapCmd($2,$3,$4,$5,$6,$7,$8,$9);}
 	| HLS_ numeric numeric numeric numeric numeric numeric INT INT
 	{fr->colormapCmd($2,$3,$4,$5,$6,$7,$8,$9);}
+	| MULTICOLOR_ INT INT STRING STRING STRING INT
+	{fr->colormapCmd($2,$3,$4,$5,$6,$7);}
 	| BEGIN_
 	| MOTION_ colormapMotion
 	| END_
@@ -911,6 +922,8 @@ colormapMotion: INT numeric numeric INT INT
 	{fr->colormapCmd($2,$3,$4,$5,$6,$7,$8,$9);}
 	| HLS_ numeric numeric numeric numeric numeric numeric INT INT
 	{fr->colormapCmd($2,$3,$4,$5,$6,$7,$8,$9);}
+	| MULTICOLOR_ INT INT STRING STRING STRING INT
+	{fr->colormapCmd($2,$3,$4,$5,$6,$7);}
 
 colorscale : scaleType {fr->colorScaleCmd((FrScale::ColorScaleType)$1);}
 	| LOG_ numeric {fr->colorScaleLogCmd($2);}
@@ -1063,6 +1076,7 @@ get	: /* empty */ {fr->getCmd();}
 	| MINMAX_ {fr->getMinMaxCmd();}
 	| MARKER_ markerLayer markerGet
 	| MASK_ getMask
+	| LAYER_ getLayer
 	| NAN_ COLOR_ {fr->getNANColorCmd();}
 	| ORIENT_ {fr->getOrientCmd();}
 	| PAN_ getPan
@@ -1296,13 +1310,25 @@ getGrid : /* empty */ {fr->getGridCmd();}
 	| VAR_ {fr->getGridVarsCmd();}
 	;
 
+getLayer : COUNT_ {fr->getLayerCountCmd();}
+	| LAYERNO_ {fr->getLayerNoCmd();}
+	| COLOR_ layerRef {fr->getLayerColorCmd($2);}
+	| BLEND_ layerRef {fr->getLayerBlendCmd($2);}
+	| TRANSPARENCY_ layerRef {fr->getLayerTransparencyCmd($2);}
+	| VIEW_ layerRef {fr->getLayerViewCmd($2);}
+	;
+
 getMask	: COLOR_ {fr->getMaskColorCmd();}
 	| MARK_ {fr->getMaskMarkCmd();}
 	| RANGE_ {fr->getMaskRangeCmd();}
         | SYSTEM_ {fr->getMaskSystemCmd();}
 	| TRANSPARENCY_ {fr->getMaskTransparencyCmd();}
 	| COUNT_ {fr->getMaskCountCmd();}
-        | BLEND_ {fr->getMaskBlendCmd();}
+	| BLEND_ {fr->getMaskBlendCmd();}
+	;
+
+layerRef : /* empty */ {$$ = 0;}
+	| INT {$$ = $1;}
 	;
 
 getPan : PRESERVE_ {fr->getPanPreserveCmd();}
@@ -2632,6 +2658,32 @@ tag	: TAG_ '=' STRING {taglist.append(new Tag($3));}
 
 callback : CALLBACK_ '=' markerCallBack STRING STRING {cblist.append(
 	new CallBack(fr->getInterp(),(CallBack::Type)$3,$4,$5));}
+	;
+
+layer	: /* empty */ {fr->layerCreateCmd();}
+	| CREATE_ {fr->layerCreateCmd();}
+	| INT {fr->layerNoCmd($1);}
+	| LAYERNO_ INT {fr->layerNoCmd($2);}
+	| COLOR_ STRING {fr->layerColorCmd(0,$2);}
+	| INT COLOR_ STRING {fr->layerColorCmd($1,$3);}
+	| BLEND_ maskBlend {fr->layerBlendCmd(0,(FitsMask::MaskBlend)$2);}
+	| INT BLEND_ maskBlend {fr->layerBlendCmd($1,(FitsMask::MaskBlend)$3);}
+	| TRANSPARENCY_ numeric {fr->layerTransparencyCmd(0,$2);}
+	| INT TRANSPARENCY_ numeric {fr->layerTransparencyCmd($1,$3);}
+	| SHOW_ {fr->layerShowCmd(0);}
+	| INT SHOW_ {fr->layerShowCmd($1);}
+	| HIDE_ {fr->layerHideCmd(0);}
+	| INT HIDE_ {fr->layerHideCmd($1);}
+	| DELETE_ {fr->layerDeleteCmd(0);}
+	| INT DELETE_ {fr->layerDeleteCmd($1);}
+	| UP_ {fr->layerUpCmd(0);}
+	| INT UP_ {fr->layerUpCmd($1);}
+	| DOWN_ {fr->layerDownCmd(0);}
+	| INT DOWN_ {fr->layerDownCmd($1);}
+	| TOP_ {fr->layerTopCmd(0);}
+	| INT TOP_ {fr->layerTopCmd($1);}
+	| BOTTOM_ {fr->layerBottomCmd(0);}
+	| INT BOTTOM_ {fr->layerBottomCmd($1);}
 	;
 
 mask	: CLEAR_ {fr->maskClearCmd();}

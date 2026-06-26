@@ -82,7 +82,8 @@ proc EvalLock {var which cmd} {
 
     switch [$which get type] {
 	base -
-	3d {eval $cmd}
+	3d -
+	multicolor {eval $cmd}
 	rgb {
 	    if {$rgb($var)} {
 		set ch [$which get rgb channel]
@@ -136,7 +137,8 @@ proc EvalLockColorbar {which cmd} {
     set cb ${which}cb
     switch [$which get type] {
 	base -
-	3d {eval $cmd}
+	3d -
+	multicolor {eval $cmd}
 	rgb {
 	    if {$rgb(lock,colorbar)} {
 		set ch [$which get rgb channel]
@@ -215,6 +217,7 @@ proc UpdateDS9 {} {
     UpdateSmoothMenu
     UpdateCubeMenu
     UpdateRGBMenu
+    UpdateMultiColorMenu
     UpdatePanZoomMenu
 
     UpdateBinDialog
@@ -230,6 +233,7 @@ proc UpdateDS9 {} {
     UpdateCentroidDialog
     UpdateCubeDialog
     UpdateRGBDialog
+    UpdateMultiColorDialog
     UpdateHSVDialog
     UpdateHLSDialog
     Update3DDialog

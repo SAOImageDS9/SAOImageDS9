@@ -866,6 +866,7 @@ proc ScaleBackup {ch which} {
     switch -- [$which get type] {
 	base -
 	3d {ScaleBackupBase $ch $which}
+	multicolor {ScaleBackupMultiColor $ch $which}
 	rgb {ScaleBackupRGB $ch $which}
 	hsv {ScaleBackupHSV $ch $which}
 	hls {ScaleBackupHLS $ch $which}
@@ -917,6 +918,18 @@ proc ScaleBackupHLS {ch which} {
     }
     $which hls channel $sav
     puts $ch "$which hls channel $sav"
+}
+
+proc ScaleBackupMultiColor {ch which} {
+    set sav [$which get layer layerno]
+    set count [$which get layer count]
+    for {set ii 1} {$ii <= $count} {incr ii} {
+	$which layer layerno $ii
+	puts $ch "$which layer layerno $ii"
+	ScaleBackupBase $ch $which
+    }
+    $which layer layerno $sav
+    puts $ch "$which layer layerno $sav"
 }
 
 # Process Cmds

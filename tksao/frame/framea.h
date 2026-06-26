@@ -13,12 +13,13 @@
 class FrameA : public FrameBase {
 protected:
   Coord::CoordSystem rgbSystem;        // alignment coordinate system
-  Matrix rgb[3];                // rgb matrix
+  int contextCount;
+  Matrix* rgb;                  // per-context alignment matrix
 
   int channel;                  // current channel
-  int view[3];                  // visible channels
-  float bias[3];                // current colormap bias
-  float contrast[3];            // current colormap contrast
+  int* view;                    // visible channels
+  float* bias;                  // current colormap bias
+  float* contrast;              // current colormap contrast
   
   int keyContextSet;
 
@@ -56,10 +57,10 @@ protected:
   void loadRGBImage(MemType, const char*, FitsImage*);
 
 public:
-  FrameA(Tcl_Interp*, Tk_Canvas, Tk_Item*);
+  FrameA(Tcl_Interp*, Tk_Canvas, Tk_Item*, int =3);
   virtual ~FrameA();
 
-  void colormapCmd(float, float, float, float, float, float, int, int);
+  virtual void colormapCmd(float, float, float, float, float, float, int, int);
   void getInfoCmd(const Vector&, Coord::InternalSystem, char*,
 		  Base::FileNameType);
 

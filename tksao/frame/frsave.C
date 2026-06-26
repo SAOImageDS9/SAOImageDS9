@@ -5,6 +5,7 @@
 #include "util.h"
 #include "context.h"
 #include "framebase.h"
+#include "framemulticolor.h"
 #include "framergb.h"
 #include "fitsimage.h"
 #include "outfile.h"
@@ -15,6 +16,11 @@
 
 void Base::saveFits(OutFitsStream& str)
 {
+  if (isFrameMultiColor()) {
+    ((FrameMultiColor*)this)->saveMultiColorFits(str);
+    return;
+  }
+
   FitsImage* ptr = currentContext->fits;
   if (!ptr) 
     return;

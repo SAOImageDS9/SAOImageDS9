@@ -318,6 +318,10 @@ proc BackupFrame {ch which dir} {
 
 	    puts $ch "HLSDialog"
 	}
+	multicolor {
+	    BackupFrameLoadMultiColor $ch $which $fdir $rdir
+	    puts $ch "MultiColorDialog"
+	}
 	3d {
 	    BackupFrameLoad $ch $which $fdir $rdir {}
 	    puts $ch "3DDialog"
@@ -355,6 +359,43 @@ proc BackupFrame {ch which dir} {
     ContourBackup $ch $which $fdir $rdir
     GridBackup $ch $which
     CATBackup $ch $which $fdir $rdir
+}
+
+proc BackupFrameLoadMultiColor {ch which fdir rdir} {
+    set sav [$which get layer layerno]
+    set cnt [$which get layer count]
+
+    for {set ii 1} {$ii<=$cnt} {incr ii} {
+	if {$ii > 1} {
+	    puts $ch "$which layer create"
+	}
+
+	puts $ch "$which layer layerno $ii"
+	$which layer layerno $ii
+
+	set varname ${which}l${ii}
+	global $varname
+	if {[info exists $varname]} {
+	    BackupFrameLoadParam $varname $ch $which $fdir $rdir $ii
+	}
+
+	set color [$which get layer color $ii]
+	set blend [$which get layer blend $ii]
+	set trans [$which get layer transparency $ii]
+	set view [$which get layer view $ii]
+
+	puts $ch "$which layer color \{$color\}"
+	puts $ch "$which layer blend $blend"
+	puts $ch "$which layer transparency $trans"
+	if {$view} {
+	    puts $ch "$which layer show"
+	} else {
+	    puts $ch "$which layer hide"
+	}
+    }
+
+    $which layer layerno $sav
+    puts $ch "$which layer layerno $sav"
 }
 
 proc BackupFrameLoad {ch which fdir rdir channel} {
@@ -426,6 +467,12 @@ proc BackupFrameLoadParam {varname ch which fdir rdir channel} {
 		    $which hsv channel $channel
 		    puts $ch "$which hsv channel $channel"
 		}
+	    }
+	}
+	multicolor {
+	    if {$channel != {}} {
+		$which layer layerno $channel
+		puts $ch "$which layer layerno $channel"
 	    }
 	}
 	3d {}

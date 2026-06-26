@@ -380,6 +380,7 @@ public:
   virtual int isFrameRGB() {return 0;}
   virtual int isFrameHSV() {return 0;}
   virtual int isFrameHLS() {return 0;}
+  virtual int isFrameMultiColor() {return 0;}
 
   virtual void loadDone(int);
 
@@ -626,22 +627,22 @@ public:
 
   // Clip Commands
   virtual void clipScopeCmd(FrScale::ClipScope);
-  void clipModeCmd(float);
-  void clipModeCmd(FrScale::ClipMode);
-  void clipMinMaxCmd(FrScale::MinMaxMode, int);
-  void clipMinMaxRescanCmd();
+  virtual void clipModeCmd(float);
+  virtual void clipModeCmd(FrScale::ClipMode);
+  virtual void clipMinMaxCmd(FrScale::MinMaxMode, int);
+  virtual void clipMinMaxRescanCmd();
   // backward compatibilty backup
-  void clipMinMaxModeCmd(FrScale::MinMaxMode);
+  virtual void clipMinMaxModeCmd(FrScale::MinMaxMode);
   // backward compatibilty backup
-  void clipMinMaxSampleCmd(int);
-  void clipUserCmd(double, double);
-  void clipZScaleCmd(float,int,int);
+  virtual void clipMinMaxSampleCmd(int);
+  virtual void clipUserCmd(double, double);
+  virtual void clipZScaleCmd(float,int,int);
   // backward compatibilty backup
-  void clipZScaleContrastCmd(float);
+  virtual void clipZScaleContrastCmd(float);
   // backward compatibilty backup
-  void clipZScaleSampleCmd(int);
+  virtual void clipZScaleSampleCmd(int);
   // backward compatibilty backup
-  void clipZScaleLineCmd(int);
+  virtual void clipZScaleLineCmd(int);
 
   void getClipCmd();
   void getClipCmd(float, FrScale::ClipScope);
@@ -666,6 +667,8 @@ public:
 
   virtual void colormapCmd(int, float, float, int, int) {}
   virtual void colormapCmd(float, float, float, float, float, float, int,int) {}
+  virtual void colormapCmd(int, int, const char*, const char*, const char*,
+			   int) {}
   virtual void getColorbarCmd() =0;
 
   // Contour Commands
@@ -1580,6 +1583,27 @@ public:
   virtual void maskBlendCmd(FitsMask::MaskBlend) {};
   virtual void maskSystemCmd(Coord::CoordSystem) {};
 
+  // Multi-color Layer Commands
+  virtual void getLayerCountCmd() {};
+  virtual void getLayerNoCmd() {};
+  virtual void getLayerColorCmd(int) {};
+  virtual void getLayerBlendCmd(int) {};
+  virtual void getLayerTransparencyCmd(int) {};
+  virtual void getLayerViewCmd(int) {};
+
+  virtual void layerCreateCmd() {};
+  virtual void layerNoCmd(int) {};
+  virtual void layerColorCmd(int, const char*) {};
+  virtual void layerBlendCmd(int, FitsMask::MaskBlend) {};
+  virtual void layerTransparencyCmd(int, float) {};
+  virtual void layerShowCmd(int) {};
+  virtual void layerHideCmd(int) {};
+  virtual void layerDeleteCmd(int) {};
+  virtual void layerUpCmd(int) {};
+  virtual void layerDownCmd(int) {};
+  virtual void layerTopCmd(int) {};
+  virtual void layerBottomCmd(int) {};
+
   // NaN Commands
   void getNANColorCmd();
   void nanColorCmd(const char*);
@@ -1645,8 +1669,8 @@ public:
 #endif
 
   // Scale Commands
-  void colorScaleCmd(FrScale::ColorScaleType);
-  void colorScaleLogCmd(double);
+  virtual void colorScaleCmd(FrScale::ColorScaleType);
+  virtual void colorScaleLogCmd(double);
   void getColorMapLevelCmd(int);
   void getColorMapLevelCmd(int, double, double, FrScale::ColorScaleType, float);
   void getColorMapLevelCmd(int, const Vector&, Coord::InternalSystem);

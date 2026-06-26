@@ -307,6 +307,10 @@ proc ProcessLoad {{err 1}} {
 		}
 	    }
 	}
+	multicolor {
+	    ProcessLoadSaveParams \
+		"$current(frame)l[$current(frame) get layer layerno]"
+	}
 	3d {ProcessLoadSaveParams $current(frame)}
     }
 

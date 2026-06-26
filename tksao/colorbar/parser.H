@@ -74,30 +74,31 @@
      MACOSX_ = 290,
      MAP_ = 291,
      MOTION_ = 292,
-     N_ = 293,
-     NAME_ = 294,
-     NO_ = 295,
-     OFF_ = 296,
-     ON_ = 297,
-     POSTSCRIPT_ = 298,
-     PRINT_ = 299,
-     QUERY_ = 300,
-     RESET_ = 301,
-     RESOLUTION_ = 302,
-     RGB_ = 303,
-     SAVE_ = 304,
-     SHOW_ = 305,
-     TAG_ = 306,
-     TRUE_ = 307,
-     TYPE_ = 308,
-     VALUE_ = 309,
-     VAR_ = 310,
-     VERSION_ = 311,
-     WIDTH_ = 312,
-     WIN32_ = 313,
-     WINDOW_ = 314,
-     Y_ = 315,
-     YES_ = 316
+     MULTICOLOR_ = 293,
+     N_ = 294,
+     NAME_ = 295,
+     NO_ = 296,
+     OFF_ = 297,
+     ON_ = 298,
+     POSTSCRIPT_ = 299,
+     PRINT_ = 300,
+     QUERY_ = 301,
+     RESET_ = 302,
+     RESOLUTION_ = 303,
+     RGB_ = 304,
+     SAVE_ = 305,
+     SHOW_ = 306,
+     TAG_ = 307,
+     TRUE_ = 308,
+     TYPE_ = 309,
+     VALUE_ = 310,
+     VAR_ = 311,
+     VERSION_ = 312,
+     WIDTH_ = 313,
+     WIN32_ = 314,
+     WINDOW_ = 315,
+     Y_ = 316,
+     YES_ = 317
    };
 #endif
 /* Tokens.  */
@@ -136,30 +137,31 @@
 #define MACOSX_ 290
 #define MAP_ 291
 #define MOTION_ 292
-#define N_ 293
-#define NAME_ 294
-#define NO_ 295
-#define OFF_ 296
-#define ON_ 297
-#define POSTSCRIPT_ 298
-#define PRINT_ 299
-#define QUERY_ 300
-#define RESET_ 301
-#define RESOLUTION_ 302
-#define RGB_ 303
-#define SAVE_ 304
-#define SHOW_ 305
-#define TAG_ 306
-#define TRUE_ 307
-#define TYPE_ 308
-#define VALUE_ 309
-#define VAR_ 310
-#define VERSION_ 311
-#define WIDTH_ 312
-#define WIN32_ 313
-#define WINDOW_ 314
-#define Y_ 315
-#define YES_ 316
+#define MULTICOLOR_ 293
+#define N_ 294
+#define NAME_ 295
+#define NO_ 296
+#define OFF_ 297
+#define ON_ 298
+#define POSTSCRIPT_ 299
+#define PRINT_ 300
+#define QUERY_ 301
+#define RESET_ 302
+#define RESOLUTION_ 303
+#define RGB_ 304
+#define SAVE_ 305
+#define SHOW_ 306
+#define TAG_ 307
+#define TRUE_ 308
+#define TYPE_ 309
+#define VALUE_ 310
+#define VAR_ 311
+#define VERSION_ 312
+#define WIDTH_ 313
+#define WIN32_ 314
+#define WINDOW_ 315
+#define Y_ 316
+#define YES_ 317
 
 
 
@@ -174,7 +176,7 @@ typedef union YYSTYPE
   char str[CBBUFSIZE];
 }
 /* Line 1529 of yacc.c.  */
-#line 178 "colorbar/parser.H"
+#line 180 "colorbar/parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

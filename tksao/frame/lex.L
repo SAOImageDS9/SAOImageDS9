@@ -64,6 +64,7 @@ bitpix		{return BITPIX_;}
 blend           {return BLEND_;}
 block		{return BLOCK_;}
 border		{return BORDER_;}
+bottom		{return BOTTOM_;}
 box		{return BOX_;}
 boxannulus	{return BOXANNULUS_;}
 boxcar		{return BOXCAR_;}
@@ -126,6 +127,7 @@ depth		{return DEPTH_;}
 detector	{return DETECTOR_;}
 diamond		{return DIAMOND_;}
 dim		{return DIM_;}
+down		{return DOWN_;}
 ds9		{return DS9_;}
 ecliptic	{return ECLIPTIC_;}
 elevation       {return ELEVATION_;}
@@ -194,6 +196,8 @@ j2000		{return J2000_;}
 key		{return KEY_;}
 keyword		{return KEYWORD_;}
 label		{return LABEL_;}
+layer		{return LAYER_;}
+layerno		{return LAYERNO_;}
 last            {return LAST_;}
 length		{return LENGTH_;}
 level		{return LEVEL_;}
@@ -224,6 +228,7 @@ mmapincr	{return MMAPINCR_;}
 mode		{return MODE_;}
 mosaic		{return MOSAIC_;}
 motion		{return MOTION_;}
+multicolor	{return MULTICOLOR_;}
 move		{return MOVE_;}
 name		{return NAME_;}
 nan		{return NAN_;}
@@ -324,6 +329,7 @@ threads		{return THREADS_;}
 3d		{return THREED_;}
 threshold	{return THRESHOLD_;}
 thick		{return THICK_;}
+top		{return TOP_;}
 transparency	{return TRANSPARENCY_;}
 to		{return TO_;}
 toggle		{return TOGGLE_;}
@@ -335,6 +341,7 @@ unload		{return UNLOAD_;}
 unhighlite 	{return UNHIGHLITE_;}
 unselect 	{return UNSELECT_;}
 update		{return UPDATE_;}
+up		{return UP_;}
 user		{return USER_;}
 value		{return VALUE_;}
 var		{return VAR_;}

@@ -12,6 +12,10 @@ extern int FrameRGBTrueColor8_Init(Tcl_Interp*);
 extern int FrameRGBTrueColor16_Init(Tcl_Interp*);
 extern int FrameRGBTrueColor24_Init(Tcl_Interp*);
 
+extern int FrameMultiColorTrueColor8_Init(Tcl_Interp*);
+extern int FrameMultiColorTrueColor16_Init(Tcl_Interp*);
+extern int FrameMultiColorTrueColor24_Init(Tcl_Interp*);
+
 extern int FrameHSVTrueColor8_Init(Tcl_Interp*);
 extern int FrameHSVTrueColor16_Init(Tcl_Interp*);
 extern int FrameHSVTrueColor24_Init(Tcl_Interp*);
@@ -77,6 +81,13 @@ int Tksao_Init(Tcl_Interp* interp) {
   if (FrameRGBTrueColor16_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
   if (FrameRGBTrueColor24_Init(interp) == TCL_ERROR)
+    return TCL_ERROR;
+
+  if (FrameMultiColorTrueColor8_Init(interp) == TCL_ERROR)
+    return TCL_ERROR;
+  if (FrameMultiColorTrueColor16_Init(interp) == TCL_ERROR)
+    return TCL_ERROR;
+  if (FrameMultiColorTrueColor24_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
 
   if (FrameHSVTrueColor8_Init(interp) == TCL_ERROR)

@@ -23,7 +23,7 @@ proc SAMPConnectMetadata {} {
     set map(samp.documentation.url) {string https://ds9.si.edu/doc/ref/index.html}
 
     set map(home.page) {string https://ds9.si.edu/}
-    set map(author.name) {string "William Joye"}
+    set map(author.name) {string "Chandra X-ray Center"}
     set map(author.email) {string ds9help@cfa.harvard.edu}
     set map(author.affiliation) {string "Smithsonian Astrophysical Observatory"}
     set map(ds9.version) "string [lindex $ds9(version) 0]"
@@ -31,7 +31,7 @@ proc SAMPConnectMetadata {} {
     set param1 [list param [list value [list string $samp(private)]]]
     set param2 [list param [list value [list struct [xmlrpcList2Member [array get map]]]]]
     set params [list params [list $param1 $param2]]
-    
+
     set rr {}
     if {![SAMPSend samp.hub.declareMetadata $params rr]} {
 	# Error
@@ -42,7 +42,7 @@ proc SAMPConnectMetadata {} {
 
 proc SAMPConnectSubscriptions {} {
     global samp
-    
+
     set map(samp.app.ping) {struct {}}
 
     set map(samp.hub.event.shutdown) {struct {}}
@@ -83,7 +83,7 @@ proc SAMPConnectSubscriptions {} {
 
 proc SAMPSendMType {mtype id mm} {
     global samp
-    
+
     set m2 [xmlrpcList2Member $mm]
 
     set map1(samp.mtype) "string $mtype"
@@ -741,7 +741,7 @@ proc ds9.get {msgid args} {
 
 proc SAMPErrorInfo {} {
     global errorInfo
-    
+
     set rr [lindex [split $errorInfo "\n"] 0]
     return [string trim [string map {\" {} \\ {}} $rr]]
 }
@@ -820,4 +820,4 @@ proc SAMPCmdSendTable {name} {
 	    }
 	}
     }
-}    
+}

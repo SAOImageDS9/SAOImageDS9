@@ -21,8 +21,9 @@ proc HelpDef {} {
     # remember to update macos/SAOImageDS9/Contents/Resources/Credits.html
     set help(authors) "William Joye (Smithsonian Astrophysical Observatory)\nEric Mandel (Smithsonian Astrophysical Observatory)"
     set help(supporters) "Steve Murray (Smithsonian Astrophysical Observatory)\nJonathan McDowell (Smithsonian Astrophysical Observatory)\nBill Foreman (Smithsonian Astrophysical Observatory)"
+    set help(maintainers) "Maintained by the Chandra X-ray Center"
     set help(funding) "NASA's Applied Information Systems Research Program (NASA/ETSO)\nChandra X-ray Science Center (CXC)\nHigh Energy Astrophysics Science Archive Center (NASA/HEASARC)"
-    set help(about) "SAOImageDS9\nVersion $ds9(version,display)\n\nAuthors\n$help(authors)\n\nAcknowledgement\n$help(supporters)\n\nFunding\n$help(funding)"
+    set help(about) "SAOImageDS9\nVersion $ds9(version,display)\n\n$help(maintainers)\n\nOriginal Authors\n$help(authors)\n\nAcknowledgement\n$help(supporters)"
 }
 
 proc HelpRef {} {

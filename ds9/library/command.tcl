@@ -295,7 +295,11 @@ proc ProcessCommand {argv argc} {
 	    -mecube {set file(type) mecube}
 	    -memf -
 	    -multiframe {set file(type) multiframe}
-	    -multicolor {CreateMultiColorFrame}
+	    -multicolor {
+		CreateMultiColorFrame
+		incr i
+		ProcessMultiColorCmd argv i
+	    }
 	    -layer {ProcessLayerCmd argv i}
 	    -minmax {incr i; ProcessMinMaxCmd argv i}
 	    -minmaxmode {

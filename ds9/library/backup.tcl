@@ -334,6 +334,7 @@ proc BackupFrame {ch which dir} {
     DS9Backup $ch $which
     CubeBackup $ch $which
     RGBBackup $ch $which
+    MultiColorBackup $ch $which
     HSVBackup $ch $which
     HLSBackup $ch $which
     BinBackup $ch $which

@@ -12,9 +12,9 @@
 
 class FrameA : public FrameBase {
 protected:
-  Coord::CoordSystem rgbSystem;        // alignment coordinate system
+  Coord::CoordSystem alignmentSystem;        // alignment coordinate system
   int contextCount;
-  Matrix* rgb;                  // per-context alignment matrix
+  Matrix* alignmentMatrix;      // per-context alignment matrix
 
   int channel;                  // current channel
   int* view;                    // visible channels
@@ -49,7 +49,7 @@ protected:
 
   void unloadFits();
   void unloadAllFits();
-  void updateRGBMatrices();
+  void updateAlignmentMatrices();
 
   void loadDone(int);
   void loadRGBCube(MemType, const char*, FitsImage*);

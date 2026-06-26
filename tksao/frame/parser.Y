@@ -508,6 +508,7 @@ command : DEBUG_ debug
 	| MARKER_ markerLayer marker
 	| MASK_ mask
 	| LAYER_ layer
+	| MULTICOLOR_ multicolor
 	| NAN_ COLOR_ STRING {fr->nanColorCmd($3);}
 	| ORIENT_ orient
 	| PAN_ pan
@@ -1077,6 +1078,7 @@ get	: /* empty */ {fr->getCmd();}
 	| MARKER_ markerLayer markerGet
 	| MASK_ getMask
 	| LAYER_ getLayer
+	| MULTICOLOR_ getMultiColor
 	| NAN_ COLOR_ {fr->getNANColorCmd();}
 	| ORIENT_ {fr->getOrientCmd();}
 	| PAN_ getPan
@@ -1337,6 +1339,9 @@ getPan : PRESERVE_ {fr->getPanPreserveCmd();}
 getRGB	: CHANNEL_ {fr->getRGBChannelCmd();}
 	| SYSTEM_ {fr->getRGBSystemCmd();}
 	| VIEW_ {fr->getRGBViewCmd();}
+	;
+
+getMultiColor : SYSTEM_ {fr->getMultiColorSystemCmd();}
 	;
 
 getHLS	: CHANNEL_ {fr->getHLSChannelCmd();}
@@ -2800,6 +2805,10 @@ renderBackground: NONE_ {$$ = Frame3dBase::NONE;}
 rgb	: CHANNEL_ STRING {fr->setRGBChannelCmd($2);}
 	| SYSTEM_ coordSystem {fr->setRGBSystemCmd((Coord::CoordSystem)$2);}
 	| VIEW_ INT INT INT {fr->setRGBViewCmd($2,$3,$4);}
+	;
+
+multicolor : SYSTEM_ coordSystem
+	{fr->setMultiColorSystemCmd((Coord::CoordSystem)$2);}
 	;
 
 hls	: CHANNEL_ STRING {fr->setHLSChannelCmd($2);}

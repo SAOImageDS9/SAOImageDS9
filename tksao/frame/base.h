@@ -1713,6 +1713,10 @@ public:
   virtual void setRGBViewCmd(int, int, int) {}
   virtual void setRGBSystemCmd(Coord::CoordSystem) {}
 
+  // MultiColor Commands
+  virtual void getMultiColorSystemCmd();
+  virtual void setMultiColorSystemCmd(Coord::CoordSystem) {}
+
   // HLS Commands
   virtual void getHLSChannelCmd();
   virtual void getHLSViewCmd();

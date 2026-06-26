@@ -1,0 +1,16 @@
+#tab multicolorparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+system	    {return $SYSTEM_}
+
+#include wcssys.fin
+#include string.fin
+#include ws.fin
+
+%%

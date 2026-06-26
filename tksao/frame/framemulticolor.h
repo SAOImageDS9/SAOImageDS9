@@ -47,6 +47,7 @@ class FrameMultiColor : public FrameA {
   void getLayerBlendCmd(int);
   void getLayerTransparencyCmd(int);
   void getLayerViewCmd(int);
+  void getMultiColorSystemCmd() {getSystem();}
   void saveMultiColorFits(OutFitsStream&);
   void savePhotoCmd(const char*);
 
@@ -79,6 +80,7 @@ class FrameMultiColor : public FrameA {
   void layerDownCmd(int);
   void layerTopCmd(int);
   void layerBottomCmd(int);
+  void setMultiColorSystemCmd(Coord::CoordSystem sys) {setSystem(sys);}
 };
 
 #endif

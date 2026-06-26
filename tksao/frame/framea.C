@@ -9,13 +9,13 @@
 FrameA::FrameA(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item, int cnt)
 : FrameBase(i,c,item)
 {
-  rgbSystem = Coord::WCS;
+  alignmentSystem = Coord::WCS;
   contextCount = cnt;
 
   channel = 0;
 
   context = new Context[contextCount];
-  rgb = new Matrix[contextCount];
+  alignmentMatrix = new Matrix[contextCount];
   view = new int[contextCount];
   bias = new float[contextCount];
   contrast = new float[contextCount];
@@ -36,8 +36,8 @@ FrameA::~FrameA()
 {
   if (context)
     delete [] context;
-  if (rgb)
-    delete [] rgb;
+  if (alignmentMatrix)
+    delete [] alignmentMatrix;
   if (view)
     delete [] view;
   if (bias)
@@ -57,7 +57,7 @@ void FrameA::alignWCS()
     calcAlignWCS(keyContext->fits, wcsSystem_, wcsSkyFrame_,
 		 &wcsOrientation, &wcsOrientationMatrix, &wcsRotation);
 
-  updateRGBMatrices();
+  updateAlignmentMatrices();
 }   
 
 void FrameA::alignWCS(Coord::CoordSystem sys, Coord::SkyFrame sky)
@@ -71,7 +71,7 @@ void FrameA::alignWCS(Coord::CoordSystem sys, Coord::SkyFrame sky)
     calcAlignWCS(keyContext->fits, sys, sky,
 		 &wcsOrientation, &wcsOrientationMatrix, &wcsRotation);
 
-  updateRGBMatrices();
+  updateAlignmentMatrices();
 }
 
 void FrameA::alignWCS(FitsImage* ptr, Coord::CoordSystem sys)
@@ -98,7 +98,7 @@ void FrameA::alignWCS(FitsImage* ptr, Coord::CoordSystem sys)
     }
   }
 
-  updateRGBMatrices();
+  updateAlignmentMatrices();
 }
 
 int FrameA::doRender()
@@ -112,7 +112,7 @@ int FrameA::doRender()
 
 void FrameA::getSystem()
 {
-  printCoordSystem(rgbSystem);
+  printCoordSystem(alignmentSystem);
 }
 
 void FrameA::getView()
@@ -126,7 +126,7 @@ BBox FrameA::imageBBox(FrScale::SecMode mode)
   // returns imageBBox in IMAGE coords
   //   and extends edge to edge
 
-  updateRGBMatrices();
+  updateAlignmentMatrices();
 
   BBox rr;
   int first=1;
@@ -135,7 +135,7 @@ BBox FrameA::imageBBox(FrScale::SecMode mode)
       FitsImage* ptr = context[ii].fits;
       while (ptr) {
 	FitsBound* params = ptr->getDataParams(mode);
-	Matrix mm = ptr->wcsToRef() * rgb[ii] * Translate(.5, .5);
+	Matrix mm = ptr->wcsToRef() * alignmentMatrix[ii] * Translate(.5, .5);
 
 	Vector aa = Vector(params->xmin,params->ymin) * mm;
 	if (first) {
@@ -160,7 +160,7 @@ BBox FrameA::imageBBox(FrScale::SecMode mode)
 void FrameA::pushMatrices()
 {
   for (int ii=0; ii<contextCount; ii++)
-    Base::pushMatrices(context[ii].fits, rgb[ii]);
+    Base::pushMatrices(context[ii].fits, alignmentMatrix[ii]);
 }
 
 void FrameA::pushMagnifierMatrices()
@@ -215,18 +215,18 @@ void FrameA::setChannel()
 
 void FrameA::setSystem(Coord::CoordSystem sys)
 {
-  rgbSystem = sys;
+  alignmentSystem = sys;
 
   // save current matrix
   Matrix* old = new Matrix[contextCount];
   for (int ii=0; ii<contextCount; ii++)
-    old[ii] = rgb[ii];
+    old[ii] = alignmentMatrix[ii];
 
   alignWCS();
 
   // fix any contours
   for (int ii=0; ii<contextCount; ii++) {
-    Matrix mx = old[ii].invert() * rgb[ii];
+    Matrix mx = old[ii].invert() * alignmentMatrix[ii];
     context[ii].updateContours(mx);
   }
   delete [] old;
@@ -248,7 +248,7 @@ void FrameA::unloadFits()
   if (DebugPerf)
     cerr << "FrameA::unloadFits()" << endl;
 
-  rgb[channel].identity();
+  alignmentMatrix[channel].identity();
   context[channel].unload();
 
   // always (for HISTEQU and LOG)
@@ -261,7 +261,7 @@ void FrameA::unloadAllFits()
     cerr << "FrameA::unloadAllFits()" << endl;
 
   for (int ii=0; ii<contextCount; ii++) {
-    rgb[ii].identity();
+    alignmentMatrix[ii].identity();
     context[ii].unload();
 
     // always (for HISTEQU and LOG)
@@ -276,54 +276,54 @@ void FrameA::unloadAllFits()
   Base::unloadFits();
 }
 
-void FrameA::updateRGBMatrices()
+void FrameA::updateAlignmentMatrices()
 {
   // image,pysical,amplifier,detector are ok, check for wcs
-  if (rgbSystem >= Coord::WCS) {
+  if (alignmentSystem >= Coord::WCS) {
     for (int ii=0; ii<contextCount; ii++) {
-      if (context[ii].fits && !context[ii].fits->hasWCS(rgbSystem)) {
+      if (context[ii].fits && !context[ii].fits->hasWCS(alignmentSystem)) {
 	// ok, don't have requested coordinate system
 	// down grade to image
-	rgbSystem = Coord::IMAGE;
+	alignmentSystem = Coord::IMAGE;
 	break;
       }
     }
   }
 
-  // rgb align
+  // align each context to the key context
   for (int ii=0; ii<contextCount; ii++) {
-    rgb[ii].identity();
+    alignmentMatrix[ii].identity();
 
     if (context[ii].fits && keyContext->fits) {
-      switch (rgbSystem) {
+      switch (alignmentSystem) {
       case Coord::IMAGE:
 	// nothing to do here
 	break;
       case Coord::PHYSICAL:
 	if (context[ii].fits != keyContext->fits) 
-	  rgb[ii] = 
+	  alignmentMatrix[ii] =
 	    context[ii].fits->imageToPhysical *
 	    keyContext->fits->physicalToImage;
 	break;
       case Coord::AMPLIFIER:
 	if (context[ii].fits != keyContext->fits) 
-	  rgb[ii] = context[ii].fits->imageToAmplifier *
+	  alignmentMatrix[ii] = context[ii].fits->imageToAmplifier *
 	    keyContext->fits->amplifierToImage;
 	break;
       case Coord::DETECTOR:
 	if (context[ii].fits != keyContext->fits) 
-	  rgb[ii] = context[ii].fits->imageToDetector * 
+	  alignmentMatrix[ii] = context[ii].fits->imageToDetector *
 	    keyContext->fits->detectorToImage;
 	break;
       default:
-	if (keyContext->fits->hasWCS(rgbSystem))
-	  rgb[ii] = calcAlignWCS(keyContext->fits, context[ii].fits, rgbSystem, rgbSystem, Coord::ICRS);
+	if (keyContext->fits->hasWCS(alignmentSystem))
+	  alignmentMatrix[ii] = calcAlignWCS(keyContext->fits, context[ii].fits, alignmentSystem, alignmentSystem, Coord::ICRS);
 	break;
       }
     }
 
     if (DebugRGB) 
-      cerr << "rgb[" << ii << "] " << rgb[ii] << endl;
+      cerr << "alignmentMatrix[" << ii << "] " << alignmentMatrix[ii] << endl;
   }
 }
 

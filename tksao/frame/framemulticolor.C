@@ -677,237 +677,72 @@ void FrameMultiColor::savePhotoCmd(const char* ph)
 
 void FrameMultiColor::clipScopeCmd(FrScale::ClipScope ss)
 {
-  int changed = 0;
-  for (int ii=0; ii<layerCount; ii++) {
-    Context* cc = &context[layerSlot[ii]];
-    if (cc->updateClipScope(ss)) {
-      cc->clearHist();
-      cc->updateClip();
-      changed = 1;
-    }
-  }
-
-  if (changed) {
-    updateColorScale();
-    update(BASE);
-  }
+  Base::clipScopeCmd(ss);
 }
 
 void FrameMultiColor::clipModeCmd(FrScale::ClipMode mm)
 {
-  int changed = 0;
-  for (int ii=0; ii<layerCount; ii++) {
-    Context* cc = &context[layerSlot[ii]];
-    if (cc->updateClipMode(mm)) {
-      cc->updateClip();
-      changed = 1;
-    }
-  }
-
-  if (changed) {
-    updateColorScale();
-    update(BASE);
-  }
+  Base::clipModeCmd(mm);
 }
 
 void FrameMultiColor::clipModeCmd(float per)
 {
-  int changed = 0;
-  for (int ii=0; ii<layerCount; ii++) {
-    Context* cc = &context[layerSlot[ii]];
-    if (cc->updateClipMode(per)) {
-      cc->updateClip();
-      changed = 1;
-    }
-  }
-
-  if (changed) {
-    updateColorScale();
-    update(BASE);
-  }
+  Base::clipModeCmd(per);
 }
 
 void FrameMultiColor::clipUserCmd(double ll, double hh)
 {
-  int changed = 0;
-  for (int ii=0; ii<layerCount; ii++) {
-    Context* cc = &context[layerSlot[ii]];
-    if (cc->updateUser(ll,hh)) {
-      cc->updateClip();
-      changed = 1;
-    }
-  }
-
-  if (changed) {
-    updateColorScale();
-    update(BASE);
-  }
+  Base::clipUserCmd(ll, hh);
 }
 
 void FrameMultiColor::clipMinMaxCmd(FrScale::MinMaxMode mm, int ss)
 {
-  int changed = 0;
-  for (int ii=0; ii<layerCount; ii++) {
-    Context* cc = &context[layerSlot[ii]];
-    if (cc->updateMinMax(mm,ss)) {
-      cc->clearHist();
-      cc->updateClip();
-      changed = 1;
-    }
-  }
-
-  if (changed) {
-    updateColorScale();
-    update(BASE);
-  }
+  Base::clipMinMaxCmd(mm, ss);
 }
 
 void FrameMultiColor::clipMinMaxRescanCmd()
 {
-  for (int ii=0; ii<layerCount; ii++) {
-    Context* cc = &context[layerSlot[ii]];
-    cc->clearHist();
-    cc->rescanClip();
-  }
-
-  updateColorScale();
-  update(BASE);
+  Base::clipMinMaxRescanCmd();
 }
 
 void FrameMultiColor::clipMinMaxModeCmd(FrScale::MinMaxMode mm)
 {
-  int changed = 0;
-  for (int ii=0; ii<layerCount; ii++) {
-    Context* cc = &context[layerSlot[ii]];
-    if (cc->updateMinMaxMode(mm)) {
-      cc->clearHist();
-      cc->updateClip();
-      changed = 1;
-    }
-  }
-
-  if (changed) {
-    updateColorScale();
-    update(BASE);
-  }
+  Base::clipMinMaxModeCmd(mm);
 }
 
 void FrameMultiColor::clipMinMaxSampleCmd(int ss)
 {
-  int changed = 0;
-  for (int ii=0; ii<layerCount; ii++) {
-    Context* cc = &context[layerSlot[ii]];
-    if (cc->updateMinMaxSample(ss)) {
-      cc->clearHist();
-      cc->updateClip();
-      changed = 1;
-    }
-  }
-
-  if (changed) {
-    updateColorScale();
-    update(BASE);
-  }
+  Base::clipMinMaxSampleCmd(ss);
 }
 
 void FrameMultiColor::clipZScaleCmd(float ccnt, int ss, int ll)
 {
-  int changed = 0;
-  for (int ii=0; ii<layerCount; ii++) {
-    Context* cc = &context[layerSlot[ii]];
-    if (cc->updateZscale(ccnt,ss,ll)) {
-      cc->updateClip();
-      changed = 1;
-    }
-  }
-
-  if (changed) {
-    updateColorScale();
-    update(BASE);
-  }
+  Base::clipZScaleCmd(ccnt, ss, ll);
 }
 
 void FrameMultiColor::clipZScaleContrastCmd(float ccnt)
 {
-  int changed = 0;
-  for (int ii=0; ii<layerCount; ii++) {
-    Context* cc = &context[layerSlot[ii]];
-    if (cc->updateZscaleContrast(ccnt)) {
-      cc->updateClip();
-      changed = 1;
-    }
-  }
-
-  if (changed) {
-    updateColorScale();
-    update(BASE);
-  }
+  Base::clipZScaleContrastCmd(ccnt);
 }
 
 void FrameMultiColor::clipZScaleSampleCmd(int ss)
 {
-  int changed = 0;
-  for (int ii=0; ii<layerCount; ii++) {
-    Context* cc = &context[layerSlot[ii]];
-    if (cc->updateZscaleSample(ss)) {
-      cc->updateClip();
-      changed = 1;
-    }
-  }
-
-  if (changed) {
-    updateColorScale();
-    update(BASE);
-  }
+  Base::clipZScaleSampleCmd(ss);
 }
 
 void FrameMultiColor::clipZScaleLineCmd(int ll)
 {
-  int changed = 0;
-  for (int ii=0; ii<layerCount; ii++) {
-    Context* cc = &context[layerSlot[ii]];
-    if (cc->updateZscaleLine(ll)) {
-      cc->updateClip();
-      changed = 1;
-    }
-  }
-
-  if (changed) {
-    updateColorScale();
-    update(BASE);
-  }
+  Base::clipZScaleLineCmd(ll);
 }
 
 void FrameMultiColor::colorScaleCmd(FrScale::ColorScaleType s)
 {
-  int changed = 0;
-  for (int ii=0; ii<layerCount; ii++) {
-    Context* cc = &context[layerSlot[ii]];
-    if (cc->colorScaleType() != s) {
-      cc->setColorScaleType(s);
-      changed = 1;
-    }
-  }
-
-  if (changed) {
-    updateColorScale();
-    update(BASE);
-  }
+  Base::colorScaleCmd(s);
 }
 
 void FrameMultiColor::colorScaleLogCmd(double exp)
 {
-  int changed = 0;
-  for (int ii=0; ii<layerCount; ii++) {
-    Context* cc = &context[layerSlot[ii]];
-    if (cc->updateExpo(exp))
-      changed = 1;
-  }
-
-  if (changed) {
-    updateColorScale();
-    update(BASE);
-  }
+  Base::colorScaleLogCmd(exp);
 }
 
 void FrameMultiColor::layerCreateCmd()
@@ -921,7 +756,7 @@ void FrameMultiColor::layerCreateCmd()
 
   slotUsed[ss] = 1;
   view[ss] = 1;
-  rgb[ss].identity();
+  alignmentMatrix[ss].identity();
   layerSlot[layerCount++] = ss;
   channel = ss;
 
@@ -984,7 +819,7 @@ void FrameMultiColor::layerDeleteCmd(int layer)
   int ss = layerSlot[ll];
 
   context[ss].unload();
-  rgb[ss].identity();
+  alignmentMatrix[ss].identity();
   slotUsed[ss] = 0;
 
   for (int ii=ll; ii<layerCount-1; ii++)

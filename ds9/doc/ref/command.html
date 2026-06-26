@@ -73,6 +73,7 @@
 <a href="#illustrate">illustrate</a><br>
 <a href="#jpeg">jpeg</a><br>
 <a href="#language">language</a><br>
+<a href="#layer">layer</a><br>
 <a href="#linear">linear</a><br>
 <a href="#lightness">lightness</a><br>
 <a href="#lock">lock</a><br>
@@ -89,6 +90,7 @@
 <a href="#movie">movie</a><br>
 <a href="#msg">msg</a><br>
 <a href="#multiframe">multiframe</a><br>
+<a href="#multicolor">multicolor</a><br>
 <a href="#nameserver">nameserver</a><br>
 <a href="#notes">notes</a><br>
 <a href="#nrrd">nrrd</a><br>
@@ -1366,6 +1368,27 @@ $cat foo.jpeg | ds9 -jpeg -</tt><br>
 &nbsp;<br>
 Example:<br>
 $ds9 -language fr<br></tt>
+<p><b><a name="layer" id="layer"></a>layer</b></p>
+<p>Controls layers in a multi-color frame. If no frame exists, a multi-color frame is created. The layer option may also be used before loading an image to select which layer receives the next image.</p>
+<tt>Syntax:<br>
+-layer [create]<br>
+&nbsp;&nbsp;&nbsp; [&lt;integer&gt;]<br>
+&nbsp;&nbsp;&nbsp; [layerno &lt;integer&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] color &lt;color&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] blend source|screen|darken|lighten]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] transparency &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] show|hide|delete|up|down|top|bottom]<br>
+&nbsp;<br>
+Example:<br>
+$ds9 -multicolor -layer color red foo.fits<br>
+$ds9 -layer create -layer color green bar.fits<br>
+$ds9 -layer 2 color blue<br>
+$ds9 -layer 2 blend screen<br>
+$ds9 -layer 2 transparency 35<br>
+$ds9 -layer 2 hide<br>
+$ds9 -layer 2 show<br>
+$ds9 -layer 2 up<br>
+$ds9 -layer layerno 1<br></tt>
 <p><b><a name="linear" id="linear"></a>linear</b></p>
 <p>Select linear scale function for the current frame.</p>
 <tt>Syntax:<br>
@@ -1569,6 +1592,15 @@ multiframe &lt;filename&gt;<br>
 Example:<br>
 $ds9 -multiframe foo.fits<br>
 $cat foo.fits | ds9 -multiframe -<br></tt>
+<p><b><a name="multicolor" id="multicolor"></a>multicolor</b></p>
+<p>Create a multi-color frame and control multi-color frame parameters. Subsequent image loads may be assigned to layers with the <a href="#layer">layer</a> option. Each layer has its own scale, limits, color, blend mode, transparency, and visibility.</p>
+<tt>Syntax:<br>
+-multicolor [system &lt;coordsys&gt;]<br>
+&nbsp;<br>
+Example:<br>
+$ds9 -multicolor foo.fits<br>
+$ds9 -multicolor -layer color red red.fits -layer create -layer color green green.fits<br>
+$ds9 -multicolor system wcs -layer color red red.fits -layer create -layer color green green.fits<br></tt>
 <p><b><a name="nameserver" id="nameserver"></a>nameserver</b></p>
 <p>Support Name Server functions. Coordinates are in fk5.</p>
 <tt>Syntax:<br>

@@ -130,6 +130,8 @@ proc CommSet {fn paramlist {safemode 0}} {
 	    notes {ProcessNotesCmd param i}
 	    nrrd {ProcessNRRDCmd param i {} $fn}
 	    nvss {ProcessNVSSCmd param i}
+	    multicolor {ProcessMultiColorCmd param i}
+	    layer {ProcessLayerInterfaceCmd param i}
 	    orient {ProcessOrientCmd param i}
 	    {page setup} -
 	    pagesetup {ProcessPageSetupCmd param i}
@@ -409,6 +411,8 @@ proc CommGet {proc id paramlist fn} {
 		return $fn.nrrd
 	    }
 	    nvss {ProcessSendNVSSCmd $proc $id $param}
+	    multicolor {ProcessSendMultiColorCmd $proc $id $param}
+	    layer {ProcessSendLayerInterfaceCmd $proc $id $param}
 	    orient {ProcessSendOrientCmd $proc $id $param}
 	    {page setup} -
 	    pagesetup {ProcessSendPageSetupCmd $proc $id $param}
@@ -516,5 +520,4 @@ proc CommGet {proc id paramlist fn} {
     # default, no filename
     return {}
 }
-
 

@@ -1,0 +1,7 @@
+set BLEND_ 257
+set COLOR_ 258
+set COUNT_ 259
+set INT_ 260
+set LAYERNO_ 261
+set TRANSPARENCY_ 262
+set VIEW_ 263

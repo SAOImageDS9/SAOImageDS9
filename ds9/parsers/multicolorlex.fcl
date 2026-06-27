@@ -9,6 +9,7 @@
 
 system	    {return $SYSTEM_}
 
+#include coordsys.fin
 #include wcssys.fin
 #include string.fin
 #include ws.fin

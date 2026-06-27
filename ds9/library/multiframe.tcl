@@ -504,10 +504,148 @@ proc ProcessMultiColorCmd {varname iname} {
     upvar $varname var
     upvar $iname i
 
+    global current
+    if {$current(frame) == {} ||
+	[$current(frame) get type] != {multicolor}} {
+	CreateMultiColorFrame
+    }
+
     multicolor::YY_FLUSH_BUFFER
     multicolor::yy_scan_string [lrange $var $i end]
     multicolor::yyparse
     incr i [expr $multicolor::yycnt-1]
+}
+
+proc ProcessSendMultiColorCmd {proc id param {sock {}} {fn {}}} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    multicolorsend::YY_FLUSH_BUFFER
+    multicolorsend::yy_scan_string $param
+    multicolorsend::yyparse
+}
+
+proc ProcessSendMultiColorSystem {} {
+    global current
+    global parse
+
+    if {$current(frame) != {} &&
+	[$current(frame) get type] == {multicolor}} {
+	$parse(proc) $parse(id) "[$current(frame) get multicolor system]\n"
+    } else {
+	Error [msgcat::mc {Current frame is not multi-color}]
+    }
+}
+
+proc MultiColorLayerFrame {{create 1}} {
+    global current
+
+    if {$current(frame) == {} ||
+	[$current(frame) get type] != {multicolor}} {
+	if {!$create} {
+	    Error [msgcat::mc {Current frame is not multi-color}]
+	    return {}
+	}
+	CreateMultiColorFrame
+    }
+
+    return $current(frame)
+}
+
+proc MultiColorLayerRefresh {which} {
+    ${which}cb colorbar [$which get colorbar]
+    UpdateMultiColorDialog
+}
+
+proc MultiColorLayerCreateCmd {} {
+    set which [MultiColorLayerFrame]
+    $which layer create
+    MultiColorLayerRefresh $which
+}
+
+proc MultiColorLayerNoCmd {layer} {
+    set which [MultiColorLayerFrame]
+    $which layer layerno $layer
+    MultiColorLayerRefresh $which
+}
+
+proc MultiColorLayerColorCmd {layer color} {
+    set which [MultiColorLayerFrame]
+    $which layer $layer color $color
+    MultiColorLayerRefresh $which
+}
+
+proc MultiColorLayerBlendCmd {layer blend} {
+    set which [MultiColorLayerFrame]
+    $which layer $layer blend $blend
+    MultiColorLayerRefresh $which
+}
+
+proc MultiColorLayerTransparencyCmd {layer transparency} {
+    set which [MultiColorLayerFrame]
+    $which layer $layer transparency $transparency
+    MultiColorLayerRefresh $which
+}
+
+proc MultiColorLayerViewCmd {layer view} {
+    set which [MultiColorLayerFrame]
+    if {$view} {
+	$which layer $layer show
+    } else {
+	$which layer $layer hide
+    }
+    MultiColorLayerRefresh $which
+}
+
+proc MultiColorLayerOrderCmd {layer command} {
+    set which [MultiColorLayerFrame]
+    $which layer $layer $command
+    MultiColorLayerRefresh $which
+}
+
+proc ProcessLayerInterfaceCmd {varname iname} {
+    upvar $varname var
+    upvar $iname i
+
+    layer::YY_FLUSH_BUFFER
+    layer::yy_scan_string [lrange $var $i end]
+    layer::yyparse
+    incr i [expr $layer::yycnt-1]
+}
+
+proc ProcessSendLayerInterfaceCmd {proc id param {sock {}} {fn {}}} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    layersend::YY_FLUSH_BUFFER
+    layersend::yy_scan_string $param
+    layersend::yyparse
+}
+
+proc ProcessSendLayerCmd {command layer} {
+    global parse
+
+    set which [MultiColorLayerFrame 0]
+    if {$which == {}} {
+	return
+    }
+
+    switch -- $command {
+	count -
+	layerno {
+	    set result [$which get layer $command]
+	}
+	default {
+	    if {$layer > 0} {
+		set result [$which get layer $command $layer]
+	    } else {
+		set result [$which get layer $command]
+	    }
+	}
+    }
+    $parse(proc) $parse(id) "$result\n"
 }
 
 proc MultiColorBackup {ch which} {

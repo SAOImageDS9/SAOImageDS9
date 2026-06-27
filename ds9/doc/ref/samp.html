@@ -82,6 +82,7 @@ ds9.set<br>
 <a href="#iis">iis</a><br>
 <a href="#illustrate">illustrate</a><br>
 <a href="#jpeg">jpeg</a><br>
+<a href="#layer">layer</a><br>
 <a href="#lock">lock</a><br>
 <a href="#lower">lower</a><br>
 <a href="#magnifier">magnifier</a><br>
@@ -94,6 +95,7 @@ ds9.set<br>
 <a href="#mosaicimage">mosaicimage</a><br>
 <a href="#movie">movie</a><br>
 <a href="#multiframe">multiframe</a><br>
+<a href="#multicolor">multicolor</a><br>
 <a href="#nameserver">nameserver</a><br>
 <a href="#notes">notes</a><br>
 <a href="#nrrd">nrrd</a><br>
@@ -1958,6 +1960,34 @@ multiframe [&lt;filename&gt;]<br>
 Example:<br>
 ds9.set(string cmd)<br>
 multiframe foo.fits</tt><br>
+<p><b><a name="multicolor" id="multicolor"></a>multicolor</b></p>
+<p>Create a multi-color frame and control its layer alignment coordinate system.</p>
+<tt>Syntax:<br>
+ds9.set(string cmd)<br>
+multicolor<br>
+multicolor system image|physical|amplifier|detector|wcs|wcsa...wcsz<br>
+&nbsp;<br>
+string value = ds9.get(string cmd)<br>
+multicolor system<br></tt>
+<p><b><a name="layer" id="layer"></a>layer</b></p>
+<p>Control layers in the current multi-color frame. A layer number is optional for property and ordering commands; when omitted, the current layer is used.</p>
+<tt>Syntax:<br>
+ds9.set(string cmd)<br>
+layer create<br>
+layer &lt;integer&gt;<br>
+layer layerno &lt;integer&gt;<br>
+layer [&lt;integer&gt;] color &lt;color&gt;<br>
+layer [&lt;integer&gt;] blend source|screen|darken|lighten<br>
+layer [&lt;integer&gt;] transparency &lt;value&gt;<br>
+layer [&lt;integer&gt;] show|hide|delete|up|down|top|bottom<br>
+&nbsp;<br>
+string value = ds9.get(string cmd)<br>
+layer count<br>
+layer layerno<br>
+layer color [&lt;integer&gt;]<br>
+layer blend [&lt;integer&gt;]<br>
+layer transparency [&lt;integer&gt;]<br>
+layer view [&lt;integer&gt;]<br></tt>
 <p><b><a name="nameserver" id="nameserver"></a>nameserver</b></p>
 <p>Support Name Server functions. Coordinates are in fk5.</p>
 <tt>Syntax:<br>

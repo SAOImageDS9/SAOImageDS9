@@ -2,6 +2,7 @@
 %}
 #include def.tin
 
+#include coordsys.tin
 #include wcssys.tin
 #include string.tin
 
@@ -11,6 +12,7 @@
 
 %%
 
+#include coordsys.trl
 #include wcssys.trl
 
 command : multicolor
@@ -18,7 +20,11 @@ command : multicolor
  ;
 
 multicolor :
- | SYSTEM_ wcssys {ProcessCmdSet multicolor system $2 MultiColorSystem}
+ | SYSTEM_ system {ProcessCmdSet multicolor system $2 MultiColorSystem}
+ ;
+
+system : coordsys {set _ $1}
+ | wcssys {set _ $1}
  ;
 
 %%

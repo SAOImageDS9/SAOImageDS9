@@ -296,7 +296,6 @@ proc ProcessCommand {argv argc} {
 	    -memf -
 	    -multiframe {set file(type) multiframe}
 	    -multicolor {
-		CreateMultiColorFrame
 		incr i
 		ProcessMultiColorCmd argv i
 	    }

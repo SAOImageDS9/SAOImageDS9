@@ -735,6 +735,11 @@ proc ProcessLayerCmd {varname iname} {
 	    }
 	}
     }
+
+    set which $current(frame)
+    if {$which != {} && [$which get type] == {multicolor}} {
+	${which}cb colorbar [$which get colorbar]
+    }
 }
 
 proc CommandLineLoadBase {item argvname iname} {

@@ -582,6 +582,8 @@ proc LayoutViewAdvanced {} {
     
     # image
     grid $ds9(image) -row 2 -column 2 -sticky news
+
+    UpdateAnalysisProgress
 }
 
 proc LayoutFrames {} {

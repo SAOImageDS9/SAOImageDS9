@@ -16,6 +16,10 @@ proc CreateIconsBottom {} {
     CreateIconsBottomZoom
     CreateIconsBottomFrame
     CreateIconsBottomView
+
+    # progress bar and label for analysis tasks
+    ttk::label $ds9(icons,bottom).progresslabel -anchor e
+    ttk::progressbar $ds9(icons,bottom).progressbar -mode indeterminate -length 100 -max 15
 }
 
 proc ConfigureIconsBottom {} {
@@ -266,4 +270,53 @@ proc ConfigureIconsBottomView {} {
         "$ds9(icons,ui)/view_horizontal.png"]
     $mb.colorbar configure -image [image create photo -file \
         "$ds9(icons,ui)/view_colorbar.png"]
+}
+
+proc UpdateAnalysisProgress {} {
+    global ds9
+    global ianalysis
+
+    if {![info exists ds9(icons,bottom)] || ![winfo exists $ds9(icons,bottom)]} {
+	return
+    }
+
+    set pb $ds9(icons,bottom).progressbar
+    set pl $ds9(icons,bottom).progresslabel
+
+    if {![winfo exists $pb] || ![winfo exists $pl]} {
+	return
+    }
+
+    set running {}
+    if {[info exists ianalysis(running,tasks)]} {
+	set running $ianalysis(running,tasks)
+    }
+
+    set count [llength $running]
+
+    if {$count == 0} {
+	catch {$pb stop}
+	$pl configure -text ""
+	pack forget $pb
+	pack forget $pl
+    } else {
+	if {$count == 1} {
+	    set task [lindex $running 0]
+	    set which [lindex $task 0]
+	    set i [lindex $task 1]
+	    set name ""
+	    if {[info exists ianalysis($which,$i,item)]} {
+		set name $ianalysis($which,$i,item)
+	    }
+	    $pl configure -text $name
+	} else {
+	    $pl configure -text "($count)"
+	}
+
+	if {[lsearch [pack slaves $ds9(icons,bottom)] $pb] == -1} {
+	    pack $pb -side right -padx {5 10} -pady 2
+	    pack $pl -side right -padx 5 -pady 2
+	}
+	catch {$pb start}
+    }
 }

@@ -18,6 +18,7 @@ proc AnalysisDef {} {
     set ianalysis(buttonbar,count) 0
     set ianalysis(param,count) 0
     set ianalysis(param,seq) 0
+    set ianalysis(running,tasks) {}
 
     # temp
     set analysis(load,buf) {}
@@ -823,6 +824,7 @@ proc AnalysisTaskDoit {i which frame x y sync} {
 
     # ok, we are off and running
     set ianalysis($which,$i,inuse) 1
+    AnalysisTaskStarted $which $i
 
     switch -- $ianalysis($which,$i,start) {
 	geturl {
@@ -1084,6 +1086,8 @@ proc AnalysisProcessGetURL {which i result} {
 
 proc AnalysisTaskEnd {which i} {
     global ianalysis
+
+    AnalysisTaskEnded $which $i
 
     set ianalysis($which,$i,inuse) 0
     if {$ianalysis($which,$i,start,fn) != {}} {
@@ -2167,4 +2171,35 @@ proc AnalysisSendCmdTask {} {
     }
 
     ProcessSendCmdTxt $result
+}
+
+proc AnalysisTaskStarted {which i} {
+    global ianalysis
+
+    if {![info exists ianalysis(running,tasks)]} {
+	set ianalysis(running,tasks) {}
+    }
+
+    set task [list $which $i]
+    if {[lsearch -exact $ianalysis(running,tasks) $task] == -1} {
+	lappend ianalysis(running,tasks) $task
+    }
+
+    UpdateAnalysisProgress
+}
+
+proc AnalysisTaskEnded {which i} {
+    global ianalysis
+
+    if {![info exists ianalysis(running,tasks)]} {
+	set ianalysis(running,tasks) {}
+    }
+
+    set task [list $which $i]
+    set idx [lsearch -exact $ianalysis(running,tasks) $task]
+    if {$idx != -1} {
+	set ianalysis(running,tasks) [lreplace $ianalysis(running,tasks) $idx $idx]
+    }
+
+    UpdateAnalysisProgress
 }

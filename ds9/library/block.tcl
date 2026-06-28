@@ -257,6 +257,7 @@ proc BlockBackup {ch which} {
     switch [$which get type] {
 	base -
 	3d {BlockBackupBase $ch $which}
+	multicolor {BlockBackupMultiColor $ch $which}
 	rgb {BlockBackupRGB $ch $which}
 	hsv {BlockBackupHSV $ch $which}
 	hls {BlockBackupHLS $ch $which}
@@ -266,6 +267,18 @@ proc BlockBackup {ch which} {
 proc BlockBackupBase {ch which} {
     set factor [$which get block factor]
     puts $ch "$which block to $factor"
+}
+
+proc BlockBackupMultiColor {ch which} {
+    set sav [$which get layer layerno]
+    set count [$which get layer count]
+    for {set ii 1} {$ii <= $count} {incr ii} {
+	$which layer layerno $ii
+	puts $ch "$which layer layerno $ii"
+	BlockBackupBase $ch $which
+    }
+    $which layer layerno $sav
+    puts $ch "$which layer layerno $sav"
 }
 
 proc BlockBackupRGB {ch which} {

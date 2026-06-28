@@ -695,6 +695,7 @@ proc BinBackup {ch which} {
     switch [$which get type] {
 	base -
 	3d {BinBackupBase $ch $which}
+	multicolor {BinBackupMultiColor $ch $which}
 	rgb {BinBackupRGB $ch $which}
 	hsv {BinBackupHSV $ch $which}
 	hls {BinBackupHLS $ch $which}
@@ -715,6 +716,18 @@ proc BinBackupBase {ch which} {
     if {$cols != {}} {
 	puts $ch "$which bin cols \{\"[lindex $cols 0]\"\} \{\"[lindex $cols 1]\"\} \{\"[lindex $cols 2]\"\}  "
     }
+}
+
+proc BinBackupMultiColor {ch which} {
+    set sav [$which get layer layerno]
+    set count [$which get layer count]
+    for {set ii 1} {$ii <= $count} {incr ii} {
+	$which layer layerno $ii
+	puts $ch "$which layer layerno $ii"
+	BinBackupBase $ch $which
+    }
+    $which layer layerno $sav
+    puts $ch "$which layer layerno $sav"
 }
 
 proc BinBackupRGB {ch which} {

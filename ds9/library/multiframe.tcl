@@ -197,7 +197,7 @@ proc MultiColorDialog {} {
     ttk::label $f.color -text [msgcat::mc {Color}]
     ttk::label $f.blend -text [msgcat::mc {Blend}]
     ttk::label $f.trans -text [msgcat::mc {Transparency}]
-    ttk::label $f.view -text [msgcat::mc {Show}]
+    ttk::label $f.view -text [msgcat::mc {View}]
     ttk::label $f.move -text [msgcat::mc {Move}]
     ttk::label $f.delete -text [msgcat::mc {Delete}]
 

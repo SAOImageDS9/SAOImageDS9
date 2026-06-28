@@ -254,7 +254,7 @@ proc MultiColorMakeLayerRow {f ii} {
 	[list MultiColorLayerColor $ii]
 
     ttk::combobox $f.blend$ii -textvariable multicolor(blend,$ii) \
-	-values {source screen darken lighten} -state readonly -width 10
+	-values [ColorBlendModes] -state readonly -width 12
     bind $f.blend$ii <<ComboboxSelected>> [list MultiColorLayerBlend $ii]
 
     ttk::scale $f.trans$ii -variable multicolor(transparency,$ii) \
@@ -387,9 +387,9 @@ proc MultiColorLayerView {layer} {
     }
 
     if {$multicolor(view,$layer)} {
-	$which layer $layer show
+	$which layer $layer view yes
     } else {
-	$which layer $layer hide
+	$which layer $layer view no
     }
 
     ${which}cb colorbar [$which get colorbar]
@@ -590,11 +590,7 @@ proc MultiColorLayerTransparencyCmd {layer transparency} {
 
 proc MultiColorLayerViewCmd {layer view} {
     set which [MultiColorLayerFrame]
-    if {$view} {
-	$which layer $layer show
-    } else {
-	$which layer $layer hide
-    }
+    $which layer $layer view $view
     MultiColorLayerRefresh $which
 }
 
@@ -644,6 +640,9 @@ proc ProcessSendLayerCmd {command layer} {
 		set result [$which get layer $command]
 	    }
 	}
+    }
+    if {$command == {view}} {
+	set result [ToYesNo $result]
     }
     $parse(proc) $parse(id) "$result\n"
 }

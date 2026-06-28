@@ -1,0 +1,17 @@
+blend : SOURCE_ {set _ source}
+ | MULTIPLY_ {set _ multiply}
+ | SCREEN_ {set _ screen}
+ | OVERLAY_ {set _ overlay}
+ | DARKEN_ {set _ darken}
+ | LIGHTEN_ {set _ lighten}
+ | COLORDODGE_ {set _ color-dodge}
+ | COLORBURN_ {set _ color-burn}
+ | HARDLIGHT_ {set _ hard-light}
+ | SOFTLIGHT_ {set _ soft-light}
+ | DIFFERENCE_ {set _ difference}
+ | EXCLUSION_ {set _ exclusion}
+ | HUE_ {set _ hue}
+ | SATURATION_ {set _ saturation}
+ | COLOR_ {set _ color}
+ | LUMINOSITY_ {set _ luminosity}
+ ;

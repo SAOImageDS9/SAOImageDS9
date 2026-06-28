@@ -166,27 +166,6 @@ int FrameMultiColor::validColorScale()
   return 1;
 }
 
-unsigned char FrameMultiColor::blendColor(unsigned char src, unsigned char bg,
-					  FitsMask::MaskBlend bl)
-{
-  switch (bl) {
-  case FitsMask::SOURCE:
-    return src;
-  case FitsMask::SCREEN:
-    {
-      float sm = src/255.;
-      float bm = bg/255.;
-      return (unsigned char)((bm+sm - bm*sm) * 255.);
-    }
-  case FitsMask::DARKEN:
-    return min(src,bg);
-  case FitsMask::LIGHTEN:
-    return max(src,bg);
-  }
-
-  return src;
-}
-
 unsigned char* FrameMultiColor::fillImage(int width, int height,
 					  Coord::InternalSystem sys)
 {
@@ -256,11 +235,11 @@ unsigned char* FrameMultiColor::fillImage(int width, int height,
 
 	      const unsigned char* src = table + idx*3;
 	      if (*mkptr == 2) {
-		for (int cc=0; cc<3; cc++) {
-		  unsigned char blended = blendColor(src[cc], dest[cc], blend[kk]);
+		unsigned char blended[3];
+		FitsMask::blendRGB(src,dest,blended,blend[kk]);
+		for (int cc=0; cc<3; cc++)
 		  dest[cc] = (unsigned char)(dest[cc]*(1-alpha[kk]) +
-					     blended*alpha[kk]);
-		}
+					     blended[cc]*alpha[kk]);
 	      }
 	      else {
 		for (int cc=0; cc<3; cc++)
@@ -572,20 +551,9 @@ void FrameMultiColor::getLayerColorCmd(int layer)
 
 void FrameMultiColor::getLayerBlendCmd(int layer)
 {
-  switch (blend[layerSlot[layerIndex(layer)]]) {
-  case FitsMask::SOURCE:
-    Tcl_AppendResult(interp, "source", NULL);
-    break;
-  case FitsMask::SCREEN:
-    Tcl_AppendResult(interp, "screen", NULL);
-    break;
-  case FitsMask::DARKEN:
-    Tcl_AppendResult(interp, "darken", NULL);
-    break;
-  case FitsMask::LIGHTEN:
-    Tcl_AppendResult(interp, "lighten", NULL);
-    break;
-  }
+  Tcl_AppendResult(interp,
+		   FitsMask::blendName(blend[layerSlot[layerIndex(layer)]]),
+		   NULL);
 }
 
 void FrameMultiColor::getLayerTransparencyCmd(int layer)
@@ -796,6 +764,14 @@ void FrameMultiColor::layerTransparencyCmd(int layer, float tt)
     alpha[ss] = 1;
 
   update(BASE);
+}
+
+void FrameMultiColor::layerViewCmd(int layer, int vv)
+{
+  if (vv)
+    layerShowCmd(layer);
+  else
+    layerHideCmd(layer);
 }
 
 void FrameMultiColor::layerShowCmd(int layer)

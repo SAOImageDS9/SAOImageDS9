@@ -1375,9 +1375,10 @@ $ds9 -language fr<br></tt>
 &nbsp;&nbsp;&nbsp; [&lt;integer&gt;]<br>
 &nbsp;&nbsp;&nbsp; [layerno &lt;integer&gt;]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] color &lt;color&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] blend source|screen|darken|lighten]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] blend source|multiply|screen|overlay|darken|lighten|color-dodge|color-burn|hard-light|soft-light|difference|exclusion|hue|saturation|color|luminosity]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] transparency &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] show|hide|delete|up|down|top|bottom]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] view yes|no]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] delete|up|down|top|bottom]<br>
 &nbsp;<br>
 Example:<br>
 $ds9 -multicolor -layer color red foo.fits<br>
@@ -1385,8 +1386,8 @@ $ds9 -layer create -layer color green bar.fits<br>
 $ds9 -layer 2 color blue<br>
 $ds9 -layer 2 blend screen<br>
 $ds9 -layer 2 transparency 35<br>
-$ds9 -layer 2 hide<br>
-$ds9 -layer 2 show<br>
+$ds9 -layer 2 view no<br>
+$ds9 -layer 2 view yes<br>
 $ds9 -layer 2 up<br>
 $ds9 -layer layerno 1<br></tt>
 <p><b><a name="linear" id="linear"></a>linear</b></p>
@@ -1467,7 +1468,7 @@ nomask<br></b></p>
 &nbsp;&nbsp;&nbsp; [mark zero|nonzero|nan|nonnan|range]<br>
 &nbsp;&nbsp;&nbsp; [range &lt;low&gt; &lt;high&gt;]<br>
 &nbsp;&nbsp;&nbsp; [transparency &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp; [blend source|screen|darken|lighten]<br>
+&nbsp;&nbsp;&nbsp; [blend source|multiply|screen|overlay|darken|lighten|color-dodge|color-burn|hard-light|soft-light|difference|exclusion|hue|saturation|color|luminosity]<br>
 &nbsp;&nbsp;&nbsp; [system &lt;coordsys&gt;]<br>
 &nbsp;&nbsp;&nbsp; [clear]<br>
 &nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>

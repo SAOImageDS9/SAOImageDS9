@@ -1596,6 +1596,7 @@ public:
   virtual void layerColorCmd(int, const char*) {};
   virtual void layerBlendCmd(int, FitsMask::MaskBlend) {};
   virtual void layerTransparencyCmd(int, float) {};
+  virtual void layerViewCmd(int, int) {};
   virtual void layerShowCmd(int) {};
   virtual void layerHideCmd(int) {};
   virtual void layerDeleteCmd(int) {};

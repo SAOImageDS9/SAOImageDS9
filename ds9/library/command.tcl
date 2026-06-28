@@ -662,6 +662,7 @@ proc ProcessLayerCmd {varname iname} {
 	set arg [lindex $argv $next]
     }
 
+    # Keep show/hide as aliases for existing command lines and backup files.
     switch -- $arg {
 	create {
 	    $current(frame) layer
@@ -700,6 +701,18 @@ proc ProcessLayerCmd {varname iname} {
 		    $current(frame) layer transparency $trans
 		} else {
 		    $current(frame) layer $layer transparency $trans
+		}
+		set i $next
+	    }
+	}
+	view {
+	    incr next
+	    if {$next < $argc} {
+		set view [FromYesNo [lindex $argv $next]]
+		if {$layer == {}} {
+		    $current(frame) layer view $view
+		} else {
+		    $current(frame) layer $layer view $view
 		}
 		set i $next
 	    }

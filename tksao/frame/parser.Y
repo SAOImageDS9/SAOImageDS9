@@ -171,6 +171,8 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token CLEAR_
 %token CLIP_
 %token COLOR_
+%token COLORBURN_
+%token COLORDODGE_
 %token COLORBAR_
 %token COLORMAP_
 %token COLORSCALE_
@@ -208,6 +210,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token DEPTH_
 %token DETECTOR_
 %token DIAMOND_
+%token DIFFERENCE_
 %token DIM_
 %token DOWN_
 %token DS9_
@@ -223,6 +226,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token EPSILON_
 %token EQUATORIAL_
 %token ERASE_
+%token EXCLUSION_
 %token EXT_
 %token FADE_
 %token FACTOR_
@@ -253,6 +257,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token GRID_
 %token GZ_
 %token HANDLE_
+%token HARDLIGHT_
 %token HAS_
 %token HEAD_
 %token HEADER_
@@ -262,6 +267,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token HISTEQU_
 %token HISTOGRAM_
 %token HORIZONTAL_
+%token HUE_
 %token HSV_
 %token HLS_
 %token ICRS_
@@ -292,6 +298,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token LOAD_
 %token LOCAL_
 %token LOG_
+%token LUMINOSITY_
 %token MACOSX_
 %token MAGNIFIER_
 %token MATCH_
@@ -311,6 +318,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token MODE_
 %token MOTION_
 %token MULTICOLOR_
+%token MULTIPLY_
 %token MOVE_
 %token NAME_
 %token NAN_
@@ -331,6 +339,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token ONLY_
 %token OPTION_
 %token ORIENT_
+%token OVERLAY_
 %token PAN_
 %token PANNER_
 %token PARSER_
@@ -371,6 +380,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token SAOIMAGE_
 %token SAOTNG_
 %token SAVE_
+%token SATURATION_
 %token SCALE_
 %token SCAN_
 %token SCIENTIFIC_
@@ -391,6 +401,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token SLICE_
 %token SMMAP_
 %token SMOOTH_
+%token SOFTLIGHT_
 %token SOCKET_
 %token SOCKETGZ_
 %token SOURCE_
@@ -674,9 +685,21 @@ maskType : /* empty */ {$$ = FitsMask::NONZERO;}
 
 maskBlend : /* empty */ {$$ = FitsMask::SOURCE;}
         | SOURCE_ {$$ = FitsMask::SOURCE;}
+        | MULTIPLY_ {$$ = FitsMask::MULTIPLY;}
         | SCREEN_ {$$ = FitsMask::SCREEN;}
+        | OVERLAY_ {$$ = FitsMask::OVERLAY;}
         | DARKEN_ {$$ = FitsMask::DARKEN;}
         | LIGHTEN_ {$$ = FitsMask::LIGHTEN;}
+        | COLORDODGE_ {$$ = FitsMask::COLOR_DODGE;}
+        | COLORBURN_ {$$ = FitsMask::COLOR_BURN;}
+        | HARDLIGHT_ {$$ = FitsMask::HARD_LIGHT;}
+        | SOFTLIGHT_ {$$ = FitsMask::SOFT_LIGHT;}
+        | DIFFERENCE_ {$$ = FitsMask::DIFFERENCE;}
+        | EXCLUSION_ {$$ = FitsMask::EXCLUSION;}
+        | HUE_ {$$ = FitsMask::HUE;}
+        | SATURATION_ {$$ = FitsMask::SATURATION;}
+        | COLOR_ {$$ = FitsMask::COLOR;}
+        | LUMINOSITY_ {$$ = FitsMask::LUMINOSITY;}
         ;
 
 scaleType: LINEAR_ {$$ = FrScale::LINEARSCALE;}
@@ -2675,6 +2698,9 @@ layer	: /* empty */ {fr->layerCreateCmd();}
 	| INT BLEND_ maskBlend {fr->layerBlendCmd($1,(FitsMask::MaskBlend)$3);}
 	| TRANSPARENCY_ numeric {fr->layerTransparencyCmd(0,$2);}
 	| INT TRANSPARENCY_ numeric {fr->layerTransparencyCmd($1,$3);}
+	| VIEW_ yesno {fr->layerViewCmd(0,$2);}
+	| INT VIEW_ yesno {fr->layerViewCmd($1,$3);}
+	/* backward compatibility */
 	| SHOW_ {fr->layerShowCmd(0);}
 	| INT SHOW_ {fr->layerShowCmd($1);}
 	| HIDE_ {fr->layerHideCmd(0);}

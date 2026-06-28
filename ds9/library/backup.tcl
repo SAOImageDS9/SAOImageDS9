@@ -389,9 +389,9 @@ proc BackupFrameLoadMultiColor {ch which fdir rdir} {
 	puts $ch "$which layer blend $blend"
 	puts $ch "$which layer transparency $trans"
 	if {$view} {
-	    puts $ch "$which layer show"
+	    puts $ch "$which layer view yes"
 	} else {
-	    puts $ch "$which layer hide"
+	    puts $ch "$which layer view no"
 	}
     }
 

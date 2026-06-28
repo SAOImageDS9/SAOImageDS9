@@ -33,8 +33,6 @@ class FrameMultiColor : public FrameA {
   int allocSlot();
   void setLayer(int);
   void rebuildLayerScale(int);
-  unsigned char blendColor(unsigned char, unsigned char, FitsMask::MaskBlend);
-
  public:
   FrameMultiColor(Tcl_Interp*, Tk_Canvas, Tk_Item*);
   virtual ~FrameMultiColor();
@@ -73,6 +71,7 @@ class FrameMultiColor : public FrameA {
   void layerColorCmd(int, const char*);
   void layerBlendCmd(int, FitsMask::MaskBlend);
   void layerTransparencyCmd(int, float);
+  void layerViewCmd(int, int);
   void layerShowCmd(int);
   void layerHideCmd(int);
   void layerDeleteCmd(int);

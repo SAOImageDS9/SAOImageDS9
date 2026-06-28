@@ -85,6 +85,8 @@ clear		{return CLEAR_;}
 clip		{return CLIP_;}
 color		{return COLOR_;}
 colour		{return COLOR_;}
+color-burn	{return COLORBURN_;}
+color-dodge	{return COLORDODGE_;}
 colorbar	{return COLORBAR_;}
 colourbar	{return COLORBAR_;}
 colormap	{return COLORMAP_;}
@@ -126,6 +128,7 @@ delete		{return DELETE_;}
 depth		{return DEPTH_;}
 detector	{return DETECTOR_;}
 diamond		{return DIAMOND_;}
+difference	{return DIFFERENCE_;}
 dim		{return DIM_;}
 down		{return DOWN_;}
 ds9		{return DS9_;}
@@ -141,6 +144,7 @@ epanda		{return EPANDA_;}
 epsilon         {return EPSILON_;}
 equatorial      {return EQUATORIAL_;}
 erase		{return ERASE_;}
+exclusion	{return EXCLUSION_;}
 ext		{return EXT_;}
 factor		{return FACTOR_;}
 fade            {return FADE_;}
@@ -171,6 +175,7 @@ gray		{return GRAY_;}
 grid		{return GRID_;}
 gz		{return GZ_;}
 handle		{return HANDLE_;}
+hard-light	{return HARDLIGHT_;}
 has		{return HAS_;}
 head		{return HEAD_;}
 header		{return HEADER_;}
@@ -180,6 +185,7 @@ highlite	{return HIGHLITE_;}
 histequ		{return HISTEQU_;}
 histogram	{return HISTOGRAM_;}
 horizontal	{return HORIZONTAL_;}
+hue		{return HUE_;}
 hls		{return HLS_;}
 hsv		{return HSV_;}
 icrs		{return ICRS_;}
@@ -210,6 +216,7 @@ list		{return LIST_;}
 load		{return LOAD_;}
 local		{return LOCAL_;}
 log		{return LOG_;}
+luminosity	{return LUMINOSITY_;}
 macosx		{return MACOSX_;}
 magnifier	{return MAGNIFIER_;}
 match           {return MATCH_;}
@@ -229,6 +236,7 @@ mode		{return MODE_;}
 mosaic		{return MOSAIC_;}
 motion		{return MOTION_;}
 multicolor	{return MULTICOLOR_;}
+multiply	{return MULTIPLY_;}
 move		{return MOVE_;}
 name		{return NAME_;}
 nan		{return NAN_;}
@@ -249,6 +257,7 @@ on		{return ON_;}
 only		{return ONLY_;}
 option		{return OPTION_;}
 orient		{return ORIENT_;}
+overlay		{return OVERLAY_;}
 pan		{return PAN_;}
 panda		{return CPANDA_;}
 panner		{return PANNER_;}
@@ -290,6 +299,7 @@ sample		{return SAMPLE_;}
 saoimage	{return SAOIMAGE_;}
 saotng		{return SAOTNG_;}
 save		{return SAVE_;}
+saturation	{return SATURATION_;}
 scale		{return SCALE_;}
 scan		{return SCAN_;}
 scientific	{return SCIENTIFIC_;}
@@ -310,6 +320,7 @@ size		{return SIZE_;}
 slice		{return SLICE_;}
 smmap		{return SMMAP_;}
 smooth		{return SMOOTH_;}
+soft-light	{return SOFTLIGHT_;}
 socket		{return SOCKET_;}
 socketgz	{return SOCKETGZ_;}
 source		{return SOURCE_;}

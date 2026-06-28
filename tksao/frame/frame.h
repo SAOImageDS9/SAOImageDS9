@@ -38,7 +38,9 @@ class Frame : public FrameBase {
   unsigned char* blendDarkenMask(unsigned char*, unsigned char*,
 				 unsigned char*, int, int);
   unsigned char* blendLightenMask(unsigned char*, unsigned char*,
-				  unsigned char*, int, int);
+				   unsigned char*, int, int);
+  unsigned char* blendMask(unsigned char*, unsigned char*, unsigned char*,
+			   int, int, FitsMask::MaskBlend);
   unsigned char blendScreenColor(unsigned char, unsigned char);
   int isIIS();
   void pushMatrices();

@@ -222,6 +222,33 @@ unsigned char* Frame::blendLightenMask(unsigned char* dest,
   return dest;
 }
 
+unsigned char* Frame::blendMask(unsigned char* dest, unsigned char* src,
+				unsigned char* bg, int width, int height,
+				FitsMask::MaskBlend blend)
+{
+  unsigned char* dptr = dest;
+  unsigned char* sptr = src;
+  unsigned char* bptr = bg;
+
+  for (int jj=0; jj<height; jj++) {
+    for (int ii=0; ii<width; ii++) {
+      if (sptr[3]) {
+	FitsMask::blendRGB(sptr,bptr,dptr,blend);
+	dptr[3] = sptr[3];
+      }
+      else {
+	for (int cc=0; cc<4; cc++)
+	  dptr[cc] = bptr[cc];
+      }
+      dptr += 4;
+      sptr += 4;
+      bptr += 4;
+    }
+  }
+
+  return dest;
+}
+
 unsigned char* Frame::fillImage(int width, int height,
 				Coord::InternalSystem sys)
 {
@@ -361,20 +388,7 @@ unsigned char* Frame::fillImage(int width, int height,
 	  memset(msk,0,width*height*4);
 	  src = fillMask(mptr, width, height, sys);
 	
-	  switch (maskBlend) {
-	  case FitsMask::SOURCE:
-	    blendSourceMask(msk,src,bg,width,height);
-	    break;
-	  case FitsMask::SCREEN:
-	    blendScreenMask(msk,src,bg,width,height);
-	    break;
-	  case FitsMask::DARKEN:
-	    blendDarkenMask(msk,src,bg,width,height);
-	    break;
-	  case FitsMask::LIGHTEN:
-	    blendLightenMask(msk,src,bg,width,height);
-	    break;
-	  }
+	  blendMask(msk,src,bg,width,height,maskBlend);
 
 	  delete [] bg;
 	  delete [] src;
@@ -756,20 +770,7 @@ void Frame::getMaskTransparencyCmd()
 
 void Frame::getMaskBlendCmd()
 {
-  switch (maskBlend) {
-  case FitsMask::SOURCE:
-    Tcl_AppendResult(interp, "source", NULL);
-    break;
-  case FitsMask::SCREEN:
-    Tcl_AppendResult(interp, "screen", NULL);
-    break;
-  case FitsMask::DARKEN:
-    Tcl_AppendResult(interp, "darken", NULL);
-    break;
-  case FitsMask::LIGHTEN:
-    Tcl_AppendResult(interp, "lighten", NULL);
-    break;
-  }
+  Tcl_AppendResult(interp, FitsMask::blendName(maskBlend), NULL);
 }
 
 void Frame::maskClearCmd()

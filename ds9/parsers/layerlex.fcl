@@ -9,24 +9,21 @@
 
 blend		{return $BLEND_}
 bottom		{return $BOTTOM_}
-color		{return $COLOR_}
-colour		{return $COLOR_}
 create		{return $CREATE_}
-darken		{return $DARKEN_}
 delete		{return $DELETE_}
 down		{return $DOWN_}
 hide		{return $HIDE_}
 layerno		{return $LAYERNO_}
-lighten		{return $LIGHTEN_}
-screen		{return $SCREEN_}
 show		{return $SHOW_}
-source		{return $SOURCE_}
 top		{return $TOP_}
 transparency	{return $TRANSPARENCY_}
 up		{return $UP_}
+view		{return $VIEW_}
 
+#include blend.fin
 #include numeric.fin
 #include string.fin
+#include yesno.fin
 #include ws.fin
 
 %%

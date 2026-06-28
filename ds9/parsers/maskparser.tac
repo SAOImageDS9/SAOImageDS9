@@ -6,15 +6,13 @@
 #include wcssys.tin
 #include numeric.tin
 #include string.tin
+#include blend.tin
 
 %start command
 
 %token BLEND_
 %token CLEAR_
 %token CLOSE_
-%token COLOR_
-%token DARKEN_
-%token LIGHTEN_
 %token LOAD_
 %token MARK_
 %token NAN_
@@ -22,8 +20,6 @@
 %token NONZERO_
 %token OPEN_
 %token RANGE_
-%token SCREEN_
-%token SOURCE_
 %token SYSTEM_
 %token TRANSPARENCY_
 %token ZERO_
@@ -33,6 +29,7 @@
 #include coordsys.trl
 #include wcssys.trl
 #include numeric.trl
+#include blend.trl
 
 command : mask 
  | mask {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
@@ -58,12 +55,6 @@ mark : ZERO_ {set _ zero}
  | NAN_ {set _ nan}
  | NONNAN_ {set _ nonnan}
  | RANGE_ {set _ range}
- ;
-
-blend : SOURCE_ {set _ source}
- | DARKEN_ {set _ darken}
- | LIGHTEN_ {set _ lighten}
- | SCREEN_ {set _ screen}
  ;
 
 system : coordsys {ProcessCmdSet mask system $1 MaskSystem}

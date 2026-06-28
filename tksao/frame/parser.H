@@ -104,305 +104,316 @@
      CLEAR_ = 320,
      CLIP_ = 321,
      COLOR_ = 322,
-     COLORBAR_ = 323,
-     COLORMAP_ = 324,
-     COLORSCALE_ = 325,
-     COLORSPACE_ = 326,
-     COLS_ = 327,
-     COLUMN_ = 328,
-     COMMAND_ = 329,
-     COMPASS_ = 330,
-     COMPOSITE_ = 331,
-     COMPRESS_ = 332,
-     CONTOUR_ = 333,
-     CONTRAST_ = 334,
-     COORDINATES_ = 335,
-     COPY_ = 336,
-     COUNT_ = 337,
-     CPANDA_ = 338,
-     CREATE_ = 339,
-     CROP_ = 340,
-     CROSS_ = 341,
-     CROSSHAIR_ = 342,
-     CUBE_ = 343,
-     CURSOR_ = 344,
-     CUT_ = 345,
-     CMYK_ = 346,
-     DARKEN_ = 347,
-     DASH_ = 348,
-     DASHLIST_ = 349,
-     DATA_ = 350,
-     DATAMIN_ = 351,
-     DATASEC_ = 352,
-     DEBUG_ = 353,
-     DEGREES_ = 354,
-     DEFAULT_ = 355,
-     DELETE_ = 356,
-     DEPTH_ = 357,
-     DETECTOR_ = 358,
-     DIAMOND_ = 359,
-     DIM_ = 360,
-     DOWN_ = 361,
-     DS9_ = 362,
-     EDIT_ = 363,
-     ECLIPTIC_ = 364,
-     ELEVATION_ = 365,
-     ELLIPTIC_ = 366,
-     ELLIPSE_ = 367,
-     ELLIPSEANNULUS_ = 368,
-     END_ = 369,
-     ENVI_ = 370,
-     EPANDA_ = 371,
-     EPSILON_ = 372,
-     EQUATORIAL_ = 373,
-     ERASE_ = 374,
-     EXT_ = 375,
-     FADE_ = 376,
-     FACTOR_ = 377,
-     FALSE_ = 378,
-     FILE_ = 379,
-     FILL_ = 380,
-     FILTER_ = 381,
-     FIRST_ = 382,
-     FIT_ = 383,
-     FITS_ = 384,
-     FITSY_ = 385,
-     FIXED_ = 386,
-     FK4_ = 387,
-     FK5_ = 388,
-     FONT_ = 389,
-     FORMAT_ = 390,
-     FOOTPRINT_ = 391,
-     FROM_ = 392,
-     FRONT_ = 393,
-     FULL_ = 394,
-     FUNCTION_ = 395,
-     GALACTIC_ = 396,
-     GAUSSIAN_ = 397,
-     GET_ = 398,
-     GLOBAL_ = 399,
-     GRAPHICS_ = 400,
-     GRAY_ = 401,
-     GRID_ = 402,
-     GZ_ = 403,
-     HANDLE_ = 404,
-     HAS_ = 405,
-     HEAD_ = 406,
-     HEADER_ = 407,
-     HEIGHT_ = 408,
-     HIDE_ = 409,
-     HIGHLITE_ = 410,
-     HISTEQU_ = 411,
-     HISTOGRAM_ = 412,
-     HORIZONTAL_ = 413,
-     HSV_ = 414,
-     HLS_ = 415,
-     ICRS_ = 416,
-     ID_ = 417,
-     IIS_ = 418,
-     IMAGE_ = 419,
-     INCLUDE_ = 420,
-     INCR_ = 421,
-     INFO_ = 422,
-     ITERATION_ = 423,
-     IRAF_ = 424,
-     IRAFMIN_ = 425,
-     J2000_ = 426,
-     KEY_ = 427,
-     KEYWORD_ = 428,
-     LABEL_ = 429,
-     LAYER_ = 430,
-     LAYERNO_ = 431,
-     LAST_ = 432,
-     LENGTH_ = 433,
-     LEVEL_ = 434,
-     LIGHTEN_ = 435,
-     LITTLE_ = 436,
-     LITTLEENDIAN_ = 437,
-     LINE_ = 438,
-     LINEAR_ = 439,
-     LIST_ = 440,
-     LOAD_ = 441,
-     LOCAL_ = 442,
-     LOG_ = 443,
-     MACOSX_ = 444,
-     MAGNIFIER_ = 445,
-     MATCH_ = 446,
-     MAP_ = 447,
-     MARK_ = 448,
-     MARKER_ = 449,
-     MASK_ = 450,
-     MEDIAN_ = 451,
-     MESSAGE_ = 452,
-     METHOD_ = 453,
-     MINMAX_ = 454,
-     MINOR_ = 455,
-     MIP_ = 456,
-     MMAP_ = 457,
-     MMAPINCR_ = 458,
-     MOSAIC_ = 459,
-     MODE_ = 460,
-     MOTION_ = 461,
-     MULTICOLOR_ = 462,
-     MOVE_ = 463,
-     NAME_ = 464,
-     NAN_ = 465,
-     NATIVE_ = 466,
-     NAXES_ = 467,
-     NEW_ = 468,
-     NEXT_ = 469,
-     NO_ = 470,
-     NONE_ = 471,
-     NONNAN_ = 472,
-     NONZERO_ = 473,
-     NOW_ = 474,
-     NRRD_ = 475,
-     NUMBER_ = 476,
-     OBJECT_ = 477,
-     OFF_ = 478,
-     ON_ = 479,
-     ONLY_ = 480,
-     OPTION_ = 481,
-     ORIENT_ = 482,
-     PAN_ = 483,
-     PANNER_ = 484,
-     PARSER_ = 485,
-     PASTE_ = 486,
-     PERF_ = 487,
-     PHOTO_ = 488,
-     PHYSICAL_ = 489,
-     PIXEL_ = 490,
-     PLOT2D_ = 491,
-     PLOT3D_ = 492,
-     POINT_ = 493,
-     POINTER_ = 494,
-     POLYGON_ = 495,
-     POSTSCRIPT_ = 496,
-     POW_ = 497,
-     PRECISION_ = 498,
-     PRINT_ = 499,
-     PRESERVE_ = 500,
-     PROJECTION_ = 501,
-     PROPERTY_ = 502,
-     PUBLICATION_ = 503,
-     PROS_ = 504,
-     QUERY_ = 505,
-     RADIAL_ = 506,
-     RADIUS_ = 507,
-     RANGE_ = 508,
-     REGION_ = 509,
-     REPLACE_ = 510,
-     RESAMPLE_ = 511,
-     RESCAN_ = 512,
-     RESET_ = 513,
-     RESOLUTION_ = 514,
-     RGB_ = 515,
-     ROOT_ = 516,
-     ROTATE_ = 517,
-     RULER_ = 518,
-     SAMPLE_ = 519,
-     SAOIMAGE_ = 520,
-     SAOTNG_ = 521,
-     SAVE_ = 522,
-     SCALE_ = 523,
-     SCAN_ = 524,
-     SCIENTIFIC_ = 525,
-     SCOPE_ = 526,
-     SCREEN_ = 527,
-     SEGMENT_ = 528,
-     SELECT_ = 529,
-     SET_ = 530,
-     SEXAGESIMAL_ = 531,
-     SHAPE_ = 532,
-     SHARED_ = 533,
-     SHIFT_ = 534,
-     SHMID_ = 535,
-     SHOW_ = 536,
-     SIGMA_ = 537,
-     SINH_ = 538,
-     SIZE_ = 539,
-     SLICE_ = 540,
-     SMMAP_ = 541,
-     SMOOTH_ = 542,
-     SOCKET_ = 543,
-     SOCKETGZ_ = 544,
-     SOURCE_ = 545,
-     SQRT_ = 546,
-     SQUARED_ = 547,
-     SSHARED_ = 548,
-     STATS_ = 549,
-     STATUS_ = 550,
-     SUM_ = 551,
-     SYNC_ = 552,
-     SYSTEM_ = 553,
-     TABLE_ = 554,
-     TAG_ = 555,
-     TEMPLATE_ = 556,
-     TEXT_ = 557,
-     THREADS_ = 558,
-     THREED_ = 559,
-     THRESHOLD_ = 560,
-     THICK_ = 561,
-     TOP_ = 562,
-     TRANSPARENCY_ = 563,
-     TO_ = 564,
-     TOGGLE_ = 565,
-     TOPHAT_ = 566,
-     TRUE_ = 567,
-     TYPE_ = 568,
-     UNDO_ = 569,
-     UNHIGHLITE_ = 570,
-     UNLOAD_ = 571,
-     UNSELECT_ = 572,
-     UPDATE_ = 573,
-     UP_ = 574,
-     USER_ = 575,
-     VALUE_ = 576,
-     VAR_ = 577,
-     VIEW_ = 578,
-     VECTOR_ = 579,
-     VERSION_ = 580,
-     VERTEX_ = 581,
-     VERTICAL_ = 582,
-     WARP_ = 583,
-     WCS_ = 584,
-     WCSA_ = 585,
-     WCSB_ = 586,
-     WCSC_ = 587,
-     WCSD_ = 588,
-     WCSE_ = 589,
-     WCSF_ = 590,
-     WCSG_ = 591,
-     WCSH_ = 592,
-     WCSI_ = 593,
-     WCSJ_ = 594,
-     WCSK_ = 595,
-     WCSL_ = 596,
-     WCSM_ = 597,
-     WCSN_ = 598,
-     WCSO_ = 599,
-     WCSP_ = 600,
-     WCSQ_ = 601,
-     WCSR_ = 602,
-     WCSS_ = 603,
-     WCST_ = 604,
-     WCSU_ = 605,
-     WCSV_ = 606,
-     WCSW_ = 607,
-     WCSX_ = 608,
-     WCSY_ = 609,
-     WCSZ_ = 610,
-     WCS0_ = 611,
-     WFPC2_ = 612,
-     WIDTH_ = 613,
-     WIN32_ = 614,
-     XML_ = 615,
-     XY_ = 616,
-     YES_ = 617,
-     ZERO_ = 618,
-     ZMAX_ = 619,
-     ZSCALE_ = 620,
-     ZOOM_ = 621
+     COLORBURN_ = 323,
+     COLORDODGE_ = 324,
+     COLORBAR_ = 325,
+     COLORMAP_ = 326,
+     COLORSCALE_ = 327,
+     COLORSPACE_ = 328,
+     COLS_ = 329,
+     COLUMN_ = 330,
+     COMMAND_ = 331,
+     COMPASS_ = 332,
+     COMPOSITE_ = 333,
+     COMPRESS_ = 334,
+     CONTOUR_ = 335,
+     CONTRAST_ = 336,
+     COORDINATES_ = 337,
+     COPY_ = 338,
+     COUNT_ = 339,
+     CPANDA_ = 340,
+     CREATE_ = 341,
+     CROP_ = 342,
+     CROSS_ = 343,
+     CROSSHAIR_ = 344,
+     CUBE_ = 345,
+     CURSOR_ = 346,
+     CUT_ = 347,
+     CMYK_ = 348,
+     DARKEN_ = 349,
+     DASH_ = 350,
+     DASHLIST_ = 351,
+     DATA_ = 352,
+     DATAMIN_ = 353,
+     DATASEC_ = 354,
+     DEBUG_ = 355,
+     DEGREES_ = 356,
+     DEFAULT_ = 357,
+     DELETE_ = 358,
+     DEPTH_ = 359,
+     DETECTOR_ = 360,
+     DIAMOND_ = 361,
+     DIFFERENCE_ = 362,
+     DIM_ = 363,
+     DOWN_ = 364,
+     DS9_ = 365,
+     EDIT_ = 366,
+     ECLIPTIC_ = 367,
+     ELEVATION_ = 368,
+     ELLIPTIC_ = 369,
+     ELLIPSE_ = 370,
+     ELLIPSEANNULUS_ = 371,
+     END_ = 372,
+     ENVI_ = 373,
+     EPANDA_ = 374,
+     EPSILON_ = 375,
+     EQUATORIAL_ = 376,
+     ERASE_ = 377,
+     EXCLUSION_ = 378,
+     EXT_ = 379,
+     FADE_ = 380,
+     FACTOR_ = 381,
+     FALSE_ = 382,
+     FILE_ = 383,
+     FILL_ = 384,
+     FILTER_ = 385,
+     FIRST_ = 386,
+     FIT_ = 387,
+     FITS_ = 388,
+     FITSY_ = 389,
+     FIXED_ = 390,
+     FK4_ = 391,
+     FK5_ = 392,
+     FONT_ = 393,
+     FORMAT_ = 394,
+     FOOTPRINT_ = 395,
+     FROM_ = 396,
+     FRONT_ = 397,
+     FULL_ = 398,
+     FUNCTION_ = 399,
+     GALACTIC_ = 400,
+     GAUSSIAN_ = 401,
+     GET_ = 402,
+     GLOBAL_ = 403,
+     GRAPHICS_ = 404,
+     GRAY_ = 405,
+     GRID_ = 406,
+     GZ_ = 407,
+     HANDLE_ = 408,
+     HARDLIGHT_ = 409,
+     HAS_ = 410,
+     HEAD_ = 411,
+     HEADER_ = 412,
+     HEIGHT_ = 413,
+     HIDE_ = 414,
+     HIGHLITE_ = 415,
+     HISTEQU_ = 416,
+     HISTOGRAM_ = 417,
+     HORIZONTAL_ = 418,
+     HUE_ = 419,
+     HSV_ = 420,
+     HLS_ = 421,
+     ICRS_ = 422,
+     ID_ = 423,
+     IIS_ = 424,
+     IMAGE_ = 425,
+     INCLUDE_ = 426,
+     INCR_ = 427,
+     INFO_ = 428,
+     ITERATION_ = 429,
+     IRAF_ = 430,
+     IRAFMIN_ = 431,
+     J2000_ = 432,
+     KEY_ = 433,
+     KEYWORD_ = 434,
+     LABEL_ = 435,
+     LAYER_ = 436,
+     LAYERNO_ = 437,
+     LAST_ = 438,
+     LENGTH_ = 439,
+     LEVEL_ = 440,
+     LIGHTEN_ = 441,
+     LITTLE_ = 442,
+     LITTLEENDIAN_ = 443,
+     LINE_ = 444,
+     LINEAR_ = 445,
+     LIST_ = 446,
+     LOAD_ = 447,
+     LOCAL_ = 448,
+     LOG_ = 449,
+     LUMINOSITY_ = 450,
+     MACOSX_ = 451,
+     MAGNIFIER_ = 452,
+     MATCH_ = 453,
+     MAP_ = 454,
+     MARK_ = 455,
+     MARKER_ = 456,
+     MASK_ = 457,
+     MEDIAN_ = 458,
+     MESSAGE_ = 459,
+     METHOD_ = 460,
+     MINMAX_ = 461,
+     MINOR_ = 462,
+     MIP_ = 463,
+     MMAP_ = 464,
+     MMAPINCR_ = 465,
+     MOSAIC_ = 466,
+     MODE_ = 467,
+     MOTION_ = 468,
+     MULTICOLOR_ = 469,
+     MULTIPLY_ = 470,
+     MOVE_ = 471,
+     NAME_ = 472,
+     NAN_ = 473,
+     NATIVE_ = 474,
+     NAXES_ = 475,
+     NEW_ = 476,
+     NEXT_ = 477,
+     NO_ = 478,
+     NONE_ = 479,
+     NONNAN_ = 480,
+     NONZERO_ = 481,
+     NOW_ = 482,
+     NRRD_ = 483,
+     NUMBER_ = 484,
+     OBJECT_ = 485,
+     OFF_ = 486,
+     ON_ = 487,
+     ONLY_ = 488,
+     OPTION_ = 489,
+     ORIENT_ = 490,
+     OVERLAY_ = 491,
+     PAN_ = 492,
+     PANNER_ = 493,
+     PARSER_ = 494,
+     PASTE_ = 495,
+     PERF_ = 496,
+     PHOTO_ = 497,
+     PHYSICAL_ = 498,
+     PIXEL_ = 499,
+     PLOT2D_ = 500,
+     PLOT3D_ = 501,
+     POINT_ = 502,
+     POINTER_ = 503,
+     POLYGON_ = 504,
+     POSTSCRIPT_ = 505,
+     POW_ = 506,
+     PRECISION_ = 507,
+     PRINT_ = 508,
+     PRESERVE_ = 509,
+     PROJECTION_ = 510,
+     PROPERTY_ = 511,
+     PUBLICATION_ = 512,
+     PROS_ = 513,
+     QUERY_ = 514,
+     RADIAL_ = 515,
+     RADIUS_ = 516,
+     RANGE_ = 517,
+     REGION_ = 518,
+     REPLACE_ = 519,
+     RESAMPLE_ = 520,
+     RESCAN_ = 521,
+     RESET_ = 522,
+     RESOLUTION_ = 523,
+     RGB_ = 524,
+     ROOT_ = 525,
+     ROTATE_ = 526,
+     RULER_ = 527,
+     SAMPLE_ = 528,
+     SAOIMAGE_ = 529,
+     SAOTNG_ = 530,
+     SAVE_ = 531,
+     SATURATION_ = 532,
+     SCALE_ = 533,
+     SCAN_ = 534,
+     SCIENTIFIC_ = 535,
+     SCOPE_ = 536,
+     SCREEN_ = 537,
+     SEGMENT_ = 538,
+     SELECT_ = 539,
+     SET_ = 540,
+     SEXAGESIMAL_ = 541,
+     SHAPE_ = 542,
+     SHARED_ = 543,
+     SHIFT_ = 544,
+     SHMID_ = 545,
+     SHOW_ = 546,
+     SIGMA_ = 547,
+     SINH_ = 548,
+     SIZE_ = 549,
+     SLICE_ = 550,
+     SMMAP_ = 551,
+     SMOOTH_ = 552,
+     SOFTLIGHT_ = 553,
+     SOCKET_ = 554,
+     SOCKETGZ_ = 555,
+     SOURCE_ = 556,
+     SQRT_ = 557,
+     SQUARED_ = 558,
+     SSHARED_ = 559,
+     STATS_ = 560,
+     STATUS_ = 561,
+     SUM_ = 562,
+     SYNC_ = 563,
+     SYSTEM_ = 564,
+     TABLE_ = 565,
+     TAG_ = 566,
+     TEMPLATE_ = 567,
+     TEXT_ = 568,
+     THREADS_ = 569,
+     THREED_ = 570,
+     THRESHOLD_ = 571,
+     THICK_ = 572,
+     TOP_ = 573,
+     TRANSPARENCY_ = 574,
+     TO_ = 575,
+     TOGGLE_ = 576,
+     TOPHAT_ = 577,
+     TRUE_ = 578,
+     TYPE_ = 579,
+     UNDO_ = 580,
+     UNHIGHLITE_ = 581,
+     UNLOAD_ = 582,
+     UNSELECT_ = 583,
+     UPDATE_ = 584,
+     UP_ = 585,
+     USER_ = 586,
+     VALUE_ = 587,
+     VAR_ = 588,
+     VIEW_ = 589,
+     VECTOR_ = 590,
+     VERSION_ = 591,
+     VERTEX_ = 592,
+     VERTICAL_ = 593,
+     WARP_ = 594,
+     WCS_ = 595,
+     WCSA_ = 596,
+     WCSB_ = 597,
+     WCSC_ = 598,
+     WCSD_ = 599,
+     WCSE_ = 600,
+     WCSF_ = 601,
+     WCSG_ = 602,
+     WCSH_ = 603,
+     WCSI_ = 604,
+     WCSJ_ = 605,
+     WCSK_ = 606,
+     WCSL_ = 607,
+     WCSM_ = 608,
+     WCSN_ = 609,
+     WCSO_ = 610,
+     WCSP_ = 611,
+     WCSQ_ = 612,
+     WCSR_ = 613,
+     WCSS_ = 614,
+     WCST_ = 615,
+     WCSU_ = 616,
+     WCSV_ = 617,
+     WCSW_ = 618,
+     WCSX_ = 619,
+     WCSY_ = 620,
+     WCSZ_ = 621,
+     WCS0_ = 622,
+     WFPC2_ = 623,
+     WIDTH_ = 624,
+     WIN32_ = 625,
+     XML_ = 626,
+     XY_ = 627,
+     YES_ = 628,
+     ZERO_ = 629,
+     ZMAX_ = 630,
+     ZSCALE_ = 631,
+     ZOOM_ = 632
    };
 #endif
 /* Tokens.  */
@@ -471,305 +482,316 @@
 #define CLEAR_ 320
 #define CLIP_ 321
 #define COLOR_ 322
-#define COLORBAR_ 323
-#define COLORMAP_ 324
-#define COLORSCALE_ 325
-#define COLORSPACE_ 326
-#define COLS_ 327
-#define COLUMN_ 328
-#define COMMAND_ 329
-#define COMPASS_ 330
-#define COMPOSITE_ 331
-#define COMPRESS_ 332
-#define CONTOUR_ 333
-#define CONTRAST_ 334
-#define COORDINATES_ 335
-#define COPY_ 336
-#define COUNT_ 337
-#define CPANDA_ 338
-#define CREATE_ 339
-#define CROP_ 340
-#define CROSS_ 341
-#define CROSSHAIR_ 342
-#define CUBE_ 343
-#define CURSOR_ 344
-#define CUT_ 345
-#define CMYK_ 346
-#define DARKEN_ 347
-#define DASH_ 348
-#define DASHLIST_ 349
-#define DATA_ 350
-#define DATAMIN_ 351
-#define DATASEC_ 352
-#define DEBUG_ 353
-#define DEGREES_ 354
-#define DEFAULT_ 355
-#define DELETE_ 356
-#define DEPTH_ 357
-#define DETECTOR_ 358
-#define DIAMOND_ 359
-#define DIM_ 360
-#define DOWN_ 361
-#define DS9_ 362
-#define EDIT_ 363
-#define ECLIPTIC_ 364
-#define ELEVATION_ 365
-#define ELLIPTIC_ 366
-#define ELLIPSE_ 367
-#define ELLIPSEANNULUS_ 368
-#define END_ 369
-#define ENVI_ 370
-#define EPANDA_ 371
-#define EPSILON_ 372
-#define EQUATORIAL_ 373
-#define ERASE_ 374
-#define EXT_ 375
-#define FADE_ 376
-#define FACTOR_ 377
-#define FALSE_ 378
-#define FILE_ 379
-#define FILL_ 380
-#define FILTER_ 381
-#define FIRST_ 382
-#define FIT_ 383
-#define FITS_ 384
-#define FITSY_ 385
-#define FIXED_ 386
-#define FK4_ 387
-#define FK5_ 388
-#define FONT_ 389
-#define FORMAT_ 390
-#define FOOTPRINT_ 391
-#define FROM_ 392
-#define FRONT_ 393
-#define FULL_ 394
-#define FUNCTION_ 395
-#define GALACTIC_ 396
-#define GAUSSIAN_ 397
-#define GET_ 398
-#define GLOBAL_ 399
-#define GRAPHICS_ 400
-#define GRAY_ 401
-#define GRID_ 402
-#define GZ_ 403
-#define HANDLE_ 404
-#define HAS_ 405
-#define HEAD_ 406
-#define HEADER_ 407
-#define HEIGHT_ 408
-#define HIDE_ 409
-#define HIGHLITE_ 410
-#define HISTEQU_ 411
-#define HISTOGRAM_ 412
-#define HORIZONTAL_ 413
-#define HSV_ 414
-#define HLS_ 415
-#define ICRS_ 416
-#define ID_ 417
-#define IIS_ 418
-#define IMAGE_ 419
-#define INCLUDE_ 420
-#define INCR_ 421
-#define INFO_ 422
-#define ITERATION_ 423
-#define IRAF_ 424
-#define IRAFMIN_ 425
-#define J2000_ 426
-#define KEY_ 427
-#define KEYWORD_ 428
-#define LABEL_ 429
-#define LAYER_ 430
-#define LAYERNO_ 431
-#define LAST_ 432
-#define LENGTH_ 433
-#define LEVEL_ 434
-#define LIGHTEN_ 435
-#define LITTLE_ 436
-#define LITTLEENDIAN_ 437
-#define LINE_ 438
-#define LINEAR_ 439
-#define LIST_ 440
-#define LOAD_ 441
-#define LOCAL_ 442
-#define LOG_ 443
-#define MACOSX_ 444
-#define MAGNIFIER_ 445
-#define MATCH_ 446
-#define MAP_ 447
-#define MARK_ 448
-#define MARKER_ 449
-#define MASK_ 450
-#define MEDIAN_ 451
-#define MESSAGE_ 452
-#define METHOD_ 453
-#define MINMAX_ 454
-#define MINOR_ 455
-#define MIP_ 456
-#define MMAP_ 457
-#define MMAPINCR_ 458
-#define MOSAIC_ 459
-#define MODE_ 460
-#define MOTION_ 461
-#define MULTICOLOR_ 462
-#define MOVE_ 463
-#define NAME_ 464
-#define NAN_ 465
-#define NATIVE_ 466
-#define NAXES_ 467
-#define NEW_ 468
-#define NEXT_ 469
-#define NO_ 470
-#define NONE_ 471
-#define NONNAN_ 472
-#define NONZERO_ 473
-#define NOW_ 474
-#define NRRD_ 475
-#define NUMBER_ 476
-#define OBJECT_ 477
-#define OFF_ 478
-#define ON_ 479
-#define ONLY_ 480
-#define OPTION_ 481
-#define ORIENT_ 482
-#define PAN_ 483
-#define PANNER_ 484
-#define PARSER_ 485
-#define PASTE_ 486
-#define PERF_ 487
-#define PHOTO_ 488
-#define PHYSICAL_ 489
-#define PIXEL_ 490
-#define PLOT2D_ 491
-#define PLOT3D_ 492
-#define POINT_ 493
-#define POINTER_ 494
-#define POLYGON_ 495
-#define POSTSCRIPT_ 496
-#define POW_ 497
-#define PRECISION_ 498
-#define PRINT_ 499
-#define PRESERVE_ 500
-#define PROJECTION_ 501
-#define PROPERTY_ 502
-#define PUBLICATION_ 503
-#define PROS_ 504
-#define QUERY_ 505
-#define RADIAL_ 506
-#define RADIUS_ 507
-#define RANGE_ 508
-#define REGION_ 509
-#define REPLACE_ 510
-#define RESAMPLE_ 511
-#define RESCAN_ 512
-#define RESET_ 513
-#define RESOLUTION_ 514
-#define RGB_ 515
-#define ROOT_ 516
-#define ROTATE_ 517
-#define RULER_ 518
-#define SAMPLE_ 519
-#define SAOIMAGE_ 520
-#define SAOTNG_ 521
-#define SAVE_ 522
-#define SCALE_ 523
-#define SCAN_ 524
-#define SCIENTIFIC_ 525
-#define SCOPE_ 526
-#define SCREEN_ 527
-#define SEGMENT_ 528
-#define SELECT_ 529
-#define SET_ 530
-#define SEXAGESIMAL_ 531
-#define SHAPE_ 532
-#define SHARED_ 533
-#define SHIFT_ 534
-#define SHMID_ 535
-#define SHOW_ 536
-#define SIGMA_ 537
-#define SINH_ 538
-#define SIZE_ 539
-#define SLICE_ 540
-#define SMMAP_ 541
-#define SMOOTH_ 542
-#define SOCKET_ 543
-#define SOCKETGZ_ 544
-#define SOURCE_ 545
-#define SQRT_ 546
-#define SQUARED_ 547
-#define SSHARED_ 548
-#define STATS_ 549
-#define STATUS_ 550
-#define SUM_ 551
-#define SYNC_ 552
-#define SYSTEM_ 553
-#define TABLE_ 554
-#define TAG_ 555
-#define TEMPLATE_ 556
-#define TEXT_ 557
-#define THREADS_ 558
-#define THREED_ 559
-#define THRESHOLD_ 560
-#define THICK_ 561
-#define TOP_ 562
-#define TRANSPARENCY_ 563
-#define TO_ 564
-#define TOGGLE_ 565
-#define TOPHAT_ 566
-#define TRUE_ 567
-#define TYPE_ 568
-#define UNDO_ 569
-#define UNHIGHLITE_ 570
-#define UNLOAD_ 571
-#define UNSELECT_ 572
-#define UPDATE_ 573
-#define UP_ 574
-#define USER_ 575
-#define VALUE_ 576
-#define VAR_ 577
-#define VIEW_ 578
-#define VECTOR_ 579
-#define VERSION_ 580
-#define VERTEX_ 581
-#define VERTICAL_ 582
-#define WARP_ 583
-#define WCS_ 584
-#define WCSA_ 585
-#define WCSB_ 586
-#define WCSC_ 587
-#define WCSD_ 588
-#define WCSE_ 589
-#define WCSF_ 590
-#define WCSG_ 591
-#define WCSH_ 592
-#define WCSI_ 593
-#define WCSJ_ 594
-#define WCSK_ 595
-#define WCSL_ 596
-#define WCSM_ 597
-#define WCSN_ 598
-#define WCSO_ 599
-#define WCSP_ 600
-#define WCSQ_ 601
-#define WCSR_ 602
-#define WCSS_ 603
-#define WCST_ 604
-#define WCSU_ 605
-#define WCSV_ 606
-#define WCSW_ 607
-#define WCSX_ 608
-#define WCSY_ 609
-#define WCSZ_ 610
-#define WCS0_ 611
-#define WFPC2_ 612
-#define WIDTH_ 613
-#define WIN32_ 614
-#define XML_ 615
-#define XY_ 616
-#define YES_ 617
-#define ZERO_ 618
-#define ZMAX_ 619
-#define ZSCALE_ 620
-#define ZOOM_ 621
+#define COLORBURN_ 323
+#define COLORDODGE_ 324
+#define COLORBAR_ 325
+#define COLORMAP_ 326
+#define COLORSCALE_ 327
+#define COLORSPACE_ 328
+#define COLS_ 329
+#define COLUMN_ 330
+#define COMMAND_ 331
+#define COMPASS_ 332
+#define COMPOSITE_ 333
+#define COMPRESS_ 334
+#define CONTOUR_ 335
+#define CONTRAST_ 336
+#define COORDINATES_ 337
+#define COPY_ 338
+#define COUNT_ 339
+#define CPANDA_ 340
+#define CREATE_ 341
+#define CROP_ 342
+#define CROSS_ 343
+#define CROSSHAIR_ 344
+#define CUBE_ 345
+#define CURSOR_ 346
+#define CUT_ 347
+#define CMYK_ 348
+#define DARKEN_ 349
+#define DASH_ 350
+#define DASHLIST_ 351
+#define DATA_ 352
+#define DATAMIN_ 353
+#define DATASEC_ 354
+#define DEBUG_ 355
+#define DEGREES_ 356
+#define DEFAULT_ 357
+#define DELETE_ 358
+#define DEPTH_ 359
+#define DETECTOR_ 360
+#define DIAMOND_ 361
+#define DIFFERENCE_ 362
+#define DIM_ 363
+#define DOWN_ 364
+#define DS9_ 365
+#define EDIT_ 366
+#define ECLIPTIC_ 367
+#define ELEVATION_ 368
+#define ELLIPTIC_ 369
+#define ELLIPSE_ 370
+#define ELLIPSEANNULUS_ 371
+#define END_ 372
+#define ENVI_ 373
+#define EPANDA_ 374
+#define EPSILON_ 375
+#define EQUATORIAL_ 376
+#define ERASE_ 377
+#define EXCLUSION_ 378
+#define EXT_ 379
+#define FADE_ 380
+#define FACTOR_ 381
+#define FALSE_ 382
+#define FILE_ 383
+#define FILL_ 384
+#define FILTER_ 385
+#define FIRST_ 386
+#define FIT_ 387
+#define FITS_ 388
+#define FITSY_ 389
+#define FIXED_ 390
+#define FK4_ 391
+#define FK5_ 392
+#define FONT_ 393
+#define FORMAT_ 394
+#define FOOTPRINT_ 395
+#define FROM_ 396
+#define FRONT_ 397
+#define FULL_ 398
+#define FUNCTION_ 399
+#define GALACTIC_ 400
+#define GAUSSIAN_ 401
+#define GET_ 402
+#define GLOBAL_ 403
+#define GRAPHICS_ 404
+#define GRAY_ 405
+#define GRID_ 406
+#define GZ_ 407
+#define HANDLE_ 408
+#define HARDLIGHT_ 409
+#define HAS_ 410
+#define HEAD_ 411
+#define HEADER_ 412
+#define HEIGHT_ 413
+#define HIDE_ 414
+#define HIGHLITE_ 415
+#define HISTEQU_ 416
+#define HISTOGRAM_ 417
+#define HORIZONTAL_ 418
+#define HUE_ 419
+#define HSV_ 420
+#define HLS_ 421
+#define ICRS_ 422
+#define ID_ 423
+#define IIS_ 424
+#define IMAGE_ 425
+#define INCLUDE_ 426
+#define INCR_ 427
+#define INFO_ 428
+#define ITERATION_ 429
+#define IRAF_ 430
+#define IRAFMIN_ 431
+#define J2000_ 432
+#define KEY_ 433
+#define KEYWORD_ 434
+#define LABEL_ 435
+#define LAYER_ 436
+#define LAYERNO_ 437
+#define LAST_ 438
+#define LENGTH_ 439
+#define LEVEL_ 440
+#define LIGHTEN_ 441
+#define LITTLE_ 442
+#define LITTLEENDIAN_ 443
+#define LINE_ 444
+#define LINEAR_ 445
+#define LIST_ 446
+#define LOAD_ 447
+#define LOCAL_ 448
+#define LOG_ 449
+#define LUMINOSITY_ 450
+#define MACOSX_ 451
+#define MAGNIFIER_ 452
+#define MATCH_ 453
+#define MAP_ 454
+#define MARK_ 455
+#define MARKER_ 456
+#define MASK_ 457
+#define MEDIAN_ 458
+#define MESSAGE_ 459
+#define METHOD_ 460
+#define MINMAX_ 461
+#define MINOR_ 462
+#define MIP_ 463
+#define MMAP_ 464
+#define MMAPINCR_ 465
+#define MOSAIC_ 466
+#define MODE_ 467
+#define MOTION_ 468
+#define MULTICOLOR_ 469
+#define MULTIPLY_ 470
+#define MOVE_ 471
+#define NAME_ 472
+#define NAN_ 473
+#define NATIVE_ 474
+#define NAXES_ 475
+#define NEW_ 476
+#define NEXT_ 477
+#define NO_ 478
+#define NONE_ 479
+#define NONNAN_ 480
+#define NONZERO_ 481
+#define NOW_ 482
+#define NRRD_ 483
+#define NUMBER_ 484
+#define OBJECT_ 485
+#define OFF_ 486
+#define ON_ 487
+#define ONLY_ 488
+#define OPTION_ 489
+#define ORIENT_ 490
+#define OVERLAY_ 491
+#define PAN_ 492
+#define PANNER_ 493
+#define PARSER_ 494
+#define PASTE_ 495
+#define PERF_ 496
+#define PHOTO_ 497
+#define PHYSICAL_ 498
+#define PIXEL_ 499
+#define PLOT2D_ 500
+#define PLOT3D_ 501
+#define POINT_ 502
+#define POINTER_ 503
+#define POLYGON_ 504
+#define POSTSCRIPT_ 505
+#define POW_ 506
+#define PRECISION_ 507
+#define PRINT_ 508
+#define PRESERVE_ 509
+#define PROJECTION_ 510
+#define PROPERTY_ 511
+#define PUBLICATION_ 512
+#define PROS_ 513
+#define QUERY_ 514
+#define RADIAL_ 515
+#define RADIUS_ 516
+#define RANGE_ 517
+#define REGION_ 518
+#define REPLACE_ 519
+#define RESAMPLE_ 520
+#define RESCAN_ 521
+#define RESET_ 522
+#define RESOLUTION_ 523
+#define RGB_ 524
+#define ROOT_ 525
+#define ROTATE_ 526
+#define RULER_ 527
+#define SAMPLE_ 528
+#define SAOIMAGE_ 529
+#define SAOTNG_ 530
+#define SAVE_ 531
+#define SATURATION_ 532
+#define SCALE_ 533
+#define SCAN_ 534
+#define SCIENTIFIC_ 535
+#define SCOPE_ 536
+#define SCREEN_ 537
+#define SEGMENT_ 538
+#define SELECT_ 539
+#define SET_ 540
+#define SEXAGESIMAL_ 541
+#define SHAPE_ 542
+#define SHARED_ 543
+#define SHIFT_ 544
+#define SHMID_ 545
+#define SHOW_ 546
+#define SIGMA_ 547
+#define SINH_ 548
+#define SIZE_ 549
+#define SLICE_ 550
+#define SMMAP_ 551
+#define SMOOTH_ 552
+#define SOFTLIGHT_ 553
+#define SOCKET_ 554
+#define SOCKETGZ_ 555
+#define SOURCE_ 556
+#define SQRT_ 557
+#define SQUARED_ 558
+#define SSHARED_ 559
+#define STATS_ 560
+#define STATUS_ 561
+#define SUM_ 562
+#define SYNC_ 563
+#define SYSTEM_ 564
+#define TABLE_ 565
+#define TAG_ 566
+#define TEMPLATE_ 567
+#define TEXT_ 568
+#define THREADS_ 569
+#define THREED_ 570
+#define THRESHOLD_ 571
+#define THICK_ 572
+#define TOP_ 573
+#define TRANSPARENCY_ 574
+#define TO_ 575
+#define TOGGLE_ 576
+#define TOPHAT_ 577
+#define TRUE_ 578
+#define TYPE_ 579
+#define UNDO_ 580
+#define UNHIGHLITE_ 581
+#define UNLOAD_ 582
+#define UNSELECT_ 583
+#define UPDATE_ 584
+#define UP_ 585
+#define USER_ 586
+#define VALUE_ 587
+#define VAR_ 588
+#define VIEW_ 589
+#define VECTOR_ 590
+#define VERSION_ 591
+#define VERTEX_ 592
+#define VERTICAL_ 593
+#define WARP_ 594
+#define WCS_ 595
+#define WCSA_ 596
+#define WCSB_ 597
+#define WCSC_ 598
+#define WCSD_ 599
+#define WCSE_ 600
+#define WCSF_ 601
+#define WCSG_ 602
+#define WCSH_ 603
+#define WCSI_ 604
+#define WCSJ_ 605
+#define WCSK_ 606
+#define WCSL_ 607
+#define WCSM_ 608
+#define WCSN_ 609
+#define WCSO_ 610
+#define WCSP_ 611
+#define WCSQ_ 612
+#define WCSR_ 613
+#define WCSS_ 614
+#define WCST_ 615
+#define WCSU_ 616
+#define WCSV_ 617
+#define WCSW_ 618
+#define WCSX_ 619
+#define WCSY_ 620
+#define WCSZ_ 621
+#define WCS0_ 622
+#define WFPC2_ 623
+#define WIDTH_ 624
+#define WIN32_ 625
+#define XML_ 626
+#define XY_ 627
+#define YES_ 628
+#define ZERO_ 629
+#define ZMAX_ 630
+#define ZSCALE_ 631
+#define ZOOM_ 632
 
 
 
@@ -787,7 +809,7 @@ typedef union YYSTYPE
   int dash[2];
 }
 /* Line 1529 of yacc.c.  */
-#line 791 "frame/parser.H"
+#line 813 "frame/parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

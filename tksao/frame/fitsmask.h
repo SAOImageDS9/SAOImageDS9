@@ -13,7 +13,15 @@ class Context;
 class FitsMask {
  public:
   enum MaskType {ZERO, NONZERO, NaN, NONNaN, RANGE};
-  enum MaskBlend {SOURCE, SCREEN, DARKEN, LIGHTEN};
+  enum MaskBlend {
+    SOURCE, MULTIPLY, SCREEN, OVERLAY, DARKEN, LIGHTEN,
+    COLOR_DODGE, COLOR_BURN, HARD_LIGHT, SOFT_LIGHT,
+    DIFFERENCE, EXCLUSION, HUE, SATURATION, COLOR, LUMINOSITY
+  };
+
+  static void blendRGB(const unsigned char*, const unsigned char*,
+		       unsigned char*, MaskBlend);
+  static const char* blendName(MaskBlend);
 
  private:
   Context* context_;
@@ -47,4 +55,3 @@ class FitsMask {
 };
 
 #endif
-

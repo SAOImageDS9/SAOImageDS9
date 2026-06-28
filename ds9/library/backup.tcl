@@ -225,12 +225,12 @@ proc Restore {fn} {
 
     # and load the world
     if {[catch {eval $src}]} {
-	Error [msgcat::mc {An error has occurred during restore}]
 	global debug
 	if {$debug(tcl,restore)} {
 	    global errorInfo
 	    puts stderr "$errorInfo"
 	}
+	Error [msgcat::mc {An error has occurred during restore}]
 	return
     }
 

@@ -2838,12 +2838,16 @@ multicolor : SYSTEM_ coordSystem
 	;
 
 hls	: CHANNEL_ STRING {fr->setHLSChannelCmd($2);}
+	| CHANNEL_ HUE_ {fr->setHLSChannelCmd("hue");}
+	| CHANNEL_ SATURATION_ {fr->setHLSChannelCmd("saturation");}
 	| SYSTEM_ coordSystem {fr->setHLSSystemCmd((Coord::CoordSystem)$2);}
 	| VIEW_ INT INT INT {fr->setHLSViewCmd($2,$3,$4);}
 	;
 
 hsv	: CHANNEL_ STRING {fr->setHSVChannelCmd($2);}
-        | CHANNEL_ VALUE_ {fr->setHSVChannelCmd("value");}
+	| CHANNEL_ HUE_ {fr->setHSVChannelCmd("hue");}
+	| CHANNEL_ SATURATION_ {fr->setHSVChannelCmd("saturation");}
+	| CHANNEL_ VALUE_ {fr->setHSVChannelCmd("value");}
 	| SYSTEM_ coordSystem {fr->setHSVSystemCmd((Coord::CoordSystem)$2);}
 	| VIEW_ INT INT INT {fr->setHSVViewCmd($2,$3,$4);}
 	;

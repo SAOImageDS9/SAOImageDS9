@@ -179,7 +179,17 @@ proc multicolorsend::yylex {} {
     variable done_
     variable state_table_
 
-set SYSTEM_ 257
+set BIN_ 257
+set BLOCK_ 258
+set COLORBAR_ 259
+set CROP_ 260
+set LOCK_ 261
+set SCALE_ 262
+set SCALELIMITS_ 263
+set SLICE_ 264
+set SMOOTH_ 265
+set SYSTEM_ 266
+set WCS_ 267
 
     while {1} {
         if {[string length $yy_current_buffer] - $index_ < 1024} {
@@ -201,26 +211,96 @@ set SYSTEM_ 257
         }
         set yyleng 0
         set matched_rule -1
-        # rule 0: system
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(system)} $yy_current_buffer match] > 0 && \
+        # rule 0: bin
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(bin)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 0
         }
-        # rule 1: \s
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\s)} $yy_current_buffer match] > 0 && \
+        # rule 1: block
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(block)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 1
         }
-        # rule 2: .
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(.)} $yy_current_buffer match] > 0 && \
+        # rule 2: colorbar
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(colorbar)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 2
+        }
+        # rule 3: crop
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(crop)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 3
+        }
+        # rule 4: lock
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(lock)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 4
+        }
+        # rule 5: scale
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(scale)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 5
+        }
+        # rule 6: scalelimits
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(scalelimits)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 6
+        }
+        # rule 7: slice
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(slice)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 7
+        }
+        # rule 8: smooth
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(smooth)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 8
+        }
+        # rule 9: system
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(system)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 9
+        }
+        # rule 10: wcs
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(wcs)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 10
+        }
+        # rule 11: \s
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\s)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 11
+        }
+        # rule 12: .
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(.)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 12
         }
         if {$matched_rule == -1} {
             set yytext [string index $yy_current_buffer $index_]
@@ -235,12 +315,42 @@ set SYSTEM_ 257
         set numlines [expr {[llength [split $yytext "\n"]] - 1}]
         switch -- $matched_rule {
             0 {
-return $SYSTEM_
+return $BIN_
             }
             1 {
-# ignore whitespace
+return $BLOCK_
             }
             2 {
+return $COLORBAR_
+            }
+            3 {
+return $CROP_
+            }
+            4 {
+return $LOCK_
+            }
+            5 {
+return $SCALE_
+            }
+            6 {
+return $SCALELIMITS_
+            }
+            7 {
+return $SLICE_
+            }
+            8 {
+return $SMOOTH_
+            }
+            9 {
+return $SYSTEM_
+            }
+            10 {
+return $WCS_
+            }
+            11 {
+# ignore whitespace
+            }
+            12 {
 set yylval $yytext; return $yylval
             }
             default

@@ -1966,9 +1966,11 @@ multiframe foo.fits</tt><br>
 ds9.set(string cmd)<br>
 multicolor<br>
 multicolor system image|physical|amplifier|detector|wcs|wcsa...wcsz<br>
+multicolor lock wcs|crop|slice|bin|scale|scalelimits|colorbar|block|smooth yes|no<br>
 &nbsp;<br>
 string value = ds9.get(string cmd)<br>
-multicolor system<br></tt>
+multicolor system<br>
+multicolor lock wcs|crop|slice|bin|scale|scalelimits|colorbar|block|smooth<br></tt>
 <p><b><a name="layer" id="layer"></a>layer</b></p>
 <p>Control layers in the current multi-color frame. A layer number is optional for property and ordering commands; when omitted, the current layer is used.</p>
 <tt>Syntax:<br>

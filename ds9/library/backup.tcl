@@ -739,6 +739,10 @@ proc BackupGUI {ch} {
     puts $ch "global rgb"
     puts $ch "array set rgb \{ [array get rgb] \}"
 
+    global multicolor
+    puts $ch "global multicolor"
+    puts $ch "array set multicolor \{ [array get multicolor] \}"
+
     global hsv
     puts $ch "global hsv"
     puts $ch "array set hsv \{ [array get hsv] \}"

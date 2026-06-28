@@ -79,11 +79,24 @@ proc EvalLock {var which cmd} {
     global rgb
     global hsv
     global hls
+    global multicolor
 
     switch [$which get type] {
 	base -
-	3d -
-	multicolor {eval $cmd}
+	3d {eval $cmd}
+	multicolor {
+	    if {$multicolor($var)} {
+		set layer [$which get layer layerno]
+		set count [$which get layer count]
+		for {set ii 1} {$ii <= $count} {incr ii} {
+		    $which layer layerno $ii
+		    eval $cmd
+		}
+		$which layer layerno $layer
+	    } else {
+		eval $cmd
+	    }
+	}
 	rgb {
 	    if {$rgb($var)} {
 		set ch [$which get rgb channel]
@@ -133,12 +146,25 @@ proc EvalLockColorbar {which cmd} {
     global rgb
     global hsv
     global hls
+    global multicolor
 
     set cb ${which}cb
     switch [$which get type] {
 	base -
-	3d -
-	multicolor {eval $cmd}
+	3d {eval $cmd}
+	multicolor {
+	    if {$multicolor(lock,colorbar)} {
+		set layer [$which get layer layerno]
+		set count [$which get layer count]
+		for {set ii 1} {$ii <= $count} {incr ii} {
+		    $which layer layerno $ii
+		    eval $cmd
+		}
+		$which layer layerno $layer
+	    } else {
+		eval $cmd
+	    }
+	}
 	rgb {
 	    if {$rgb(lock,colorbar)} {
 		set ch [$which get rgb channel]

@@ -1,1 +1,11 @@
-set SYSTEM_ 257
+set BIN_ 257
+set BLOCK_ 258
+set COLORBAR_ 259
+set CROP_ 260
+set LOCK_ 261
+set SCALE_ 262
+set SCALELIMITS_ 263
+set SLICE_ 264
+set SMOOTH_ 265
+set SYSTEM_ 266
+set WCS_ 267

@@ -1597,11 +1597,14 @@ $cat foo.fits | ds9 -multiframe -<br></tt>
 <p>Create a multi-color frame and control multi-color frame parameters. Subsequent image loads may be assigned to layers with the <a href="#layer">layer</a> option. Each layer has its own scale, limits, color, blend mode, transparency, and visibility.</p>
 <tt>Syntax:<br>
 -multicolor [system &lt;coordsys&gt;]<br>
+&nbsp;&nbsp;&nbsp; [lock wcs|crop|slice|bin|scale|scalelimits|colorbar|block|smooth [yes|no]]<br>
 &nbsp;<br>
 Example:<br>
 $ds9 -multicolor foo.fits<br>
 $ds9 -multicolor -layer color red red.fits -layer create -layer color green green.fits<br>
-$ds9 -multicolor system wcs -layer color red red.fits -layer create -layer color green green.fits<br></tt>
+$ds9 -multicolor system wcs -layer color red red.fits -layer create -layer color green green.fits<br>
+$ds9 -multicolor lock scale yes<br>
+$ds9 -multicolor lock scalelimits yes<br></tt>
 <p><b><a name="nameserver" id="nameserver"></a>nameserver</b></p>
 <p>Support Name Server functions. Coordinates are in fk5.</p>
 <tt>Syntax:<br>

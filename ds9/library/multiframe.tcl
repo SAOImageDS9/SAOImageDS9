@@ -160,6 +160,15 @@ proc MultiColorDef {} {
     set multicolor(transparency) 0
     set multicolor(view) 1
     set multicolor(system) wcs
+    set multicolor(lock,wcs) 0
+    set multicolor(lock,crop) 0
+    set multicolor(lock,slice) 0
+    set multicolor(lock,bin) 0
+    set multicolor(lock,scale) 0
+    set multicolor(lock,scalelimits) 0
+    set multicolor(lock,colorbar) 0
+    set multicolor(lock,block) 0
+    set multicolor(lock,smooth) 0
 
     set imulticolor(rowcount) 0
     set imulticolor(updating) 0
@@ -184,12 +193,33 @@ proc MultiColorDialog {} {
 
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     $mb add cascade -label [msgcat::mc {Align}] -menu $mb.align
+    $mb add cascade -label [msgcat::mc {Lock}] -menu $mb.lock
 
     ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command MultiColorDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     CoordMenu $mb.align multicolor system 1 {} {} MultiColorSystem
+
+    ThemeMenu $mb.lock
+    $mb.lock add checkbutton -label [msgcat::mc {WCS}] \
+	-variable multicolor(lock,wcs)
+    $mb.lock add checkbutton -label [msgcat::mc {Crop}] \
+	-variable multicolor(lock,crop)
+    $mb.lock add checkbutton -label [msgcat::mc {Slice}] \
+	-variable multicolor(lock,slice)
+    $mb.lock add checkbutton -label [msgcat::mc {Bin}] \
+	-variable multicolor(lock,bin)
+    $mb.lock add checkbutton -label [msgcat::mc {Scale}] \
+	-variable multicolor(lock,scale)
+    $mb.lock add checkbutton -label [msgcat::mc {Scale and Limits}] \
+	-variable multicolor(lock,scalelimits)
+    $mb.lock add checkbutton -label [msgcat::mc {Colorbar}] \
+	-variable multicolor(lock,colorbar)
+    $mb.lock add checkbutton -label [msgcat::mc {Block}] \
+	-variable multicolor(lock,block)
+    $mb.lock add checkbutton -label [msgcat::mc {Smooth}] \
+	-variable multicolor(lock,smooth)
 
     set f [ttk::frame $w.layers]
 

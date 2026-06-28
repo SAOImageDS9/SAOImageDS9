@@ -1846,11 +1846,14 @@ $cat foo.fits | xpaset ds9 multiframe# not available windows</tt><br>
 <p>Create a multi-color frame and control its layer alignment coordinate system.</p>
 <tt>Syntax:<br>
 multicolor [system image|physical|amplifier|detector|wcs|wcsa...wcsz]<br>
+&nbsp;&nbsp;&nbsp; [lock wcs|crop|slice|bin|scale|scalelimits|colorbar|block|smooth yes|no]<br>
 &nbsp;<br>
 Example:<br>
 $xpaset -p ds9 multicolor<br>
 $xpaset -p ds9 multicolor system wcs<br>
-$xpaget ds9 multicolor system<br></tt>
+$xpaset -p ds9 multicolor lock scale yes<br>
+$xpaget ds9 multicolor system<br>
+$xpaget ds9 multicolor lock scale<br></tt>
 <p><b><a name="layer" id="layer"></a>layer</b></p>
 <p>Control layers in the current multi-color frame. A layer number is optional for property and ordering commands; when omitted, the current layer is used.</p>
 <tt>Syntax:<br>

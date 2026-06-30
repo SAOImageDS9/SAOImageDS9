@@ -331,6 +331,11 @@ void FrameMultiColor::rebuildLayerScale(int ss)
     return;
 
   XColor* xc = getXColor(colorName[ss]);
+  if (!xc) {
+    result = TCL_ERROR;
+    return;
+  }
+
   double r = double(xc->red)/65535.;
   double g = double(xc->green)/65535.;
   double b = double(xc->blue)/65535.;
@@ -739,6 +744,11 @@ void FrameMultiColor::layerNoCmd(int layer)
 void FrameMultiColor::layerColorCmd(int layer, const char* color)
 {
   int ss = layerSlot[layerIndex(layer)];
+
+  if (!getXColor(color)) {
+    result = TCL_ERROR;
+    return;
+  }
 
   if (colorName[ss])
     delete [] colorName[ss];

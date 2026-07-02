@@ -74,6 +74,11 @@ proc CreateXPA {} {
 	{} {} {} \
 	XPARcvdBackup {} {}
 
+    xpacmdadd $xpa bookmark \
+	{} \
+	XPASendBookmark {} {} \
+	XPARcvdBookmark {} "fillbuf=false"
+
     xpacmdadd $xpa bg \
 	{} \
 	XPASendBg {} {} \
@@ -857,6 +862,19 @@ proc XPARcvdBackup {xpa cdata param buf len} {
     XPADebug "XPARcvdBackup" $param
     InitError xpa
     catch {set i 0; ProcessBackupCmd param i}
+    XPACatchError $xpa
+}
+
+proc XPASendBookmark {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendBookmarkCmd xpasetbuf $xpa $param}
+    XPACatchError $xpa
+}
+
+proc XPARcvdBookmark {xpa cdata param buf len} {
+    XPADebug "XPARcvdBookmark" $param
+    InitError xpa
+    catch {set i 0; ProcessBookmarkCmd param i}
     XPACatchError $xpa
 }
 
@@ -2498,4 +2516,3 @@ proc ProcessXPASendCmdConnect {} {
 
     $parse(proc) $parse(id) "[ToYesNo [info exists xpa]]"
 }
-

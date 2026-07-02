@@ -280,6 +280,24 @@ $ds9 -asinh</tt><br>
 &nbsp;<br>
 Example:<br>
 $ds9 -backup ds9.bck</tt><br>
+<p><b><a name="bookmark" id="bookmark"></a>bookmark</b></p>
+<p>Controls bookmarks for the current frame. Bookmark numbers range from 1 to the number of bookmarks.</p>
+<tt>Syntax:<br>
+-bookmark [add [&lt;name&gt;]]<br>
+&nbsp;&nbsp;&nbsp; [delete &lt;integer&gt;]<br>
+&nbsp;&nbsp;&nbsp; [clear]<br>
+&nbsp;&nbsp;&nbsp; [goto &lt;integer&gt;]<br>
+&nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
+&nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
+&nbsp;<br>
+Example:<br>
+$ds9 -bookmark add<br>
+$ds9 -bookmark add {Source A}<br>
+$ds9 -bookmark goto 1<br>
+$ds9 -bookmark delete 1<br>
+$ds9 -bookmark clear<br>
+$ds9 -bookmark save foo.bmrk<br>
+$ds9 -bookmark load foo.bmrk</tt><br>
 <p><b><a name="bin" id="bin"></a>bin</b></p>
 <p>Controls binning factor, binning buffer size, and&nbsp; binning function for binning FITS bin tables.</p>
 <tt>Syntax:<br>

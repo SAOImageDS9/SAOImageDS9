@@ -32,7 +32,7 @@ proc BookmarksDeleteFrame {which} {
     UpdateBookmarksDialog
 }
 
-proc BookmarkAdd {which} {
+proc BookmarkAdd {which {requestedName {}}} {
     global bookmarks current wcs
 
     if {$which == {} || ![$which has fits]} {
@@ -53,15 +53,117 @@ proc BookmarkAdd {which} {
 
     set slices [BookmarkGetSlices $which]
 
-    if {![info exists bookmarks(next,$which)]} {
-	set bookmarks(next,$which) [expr {[llength $bookmarks($which)] + 1}]
+    if {$requestedName == {}} {
+	if {![info exists bookmarks(next,$which)]} {
+	    set bookmarks(next,$which) [expr {[llength $bookmarks($which)] + 1}]
+	}
+	set name "Bookmark $bookmarks(next,$which)"
+	incr bookmarks(next,$which)
+    } else {
+	set name $requestedName
     }
-    set name "Bookmark $bookmarks(next,$which)"
-    incr bookmarks(next,$which)
     lappend bookmarks($which) \
 	[list $name $coord $system $sky $format [$which get zoom] \
 	     [$which get rotate] [$which get orient] $slices]
     UpdateBookmarksDialog
+}
+
+proc BookmarkCurrentAdd {{name {}}} {
+    global current
+    if {$current(frame) == {}} {
+	error "No current frame."
+    }
+    BookmarkAdd $current(frame) $name
+}
+
+proc BookmarkCurrentDelete {number} {
+    global bookmarks current
+    set index [BookmarkCurrentIndex $number]
+    set bookmarks($current(frame)) \
+	[lreplace $bookmarks($current(frame)) $index $index]
+    UpdateBookmarksDialog
+}
+
+proc BookmarkCurrentClear {} {
+    global current
+    if {$current(frame) == {}} {
+	error "No current frame."
+    }
+    BookmarksClearFrame $current(frame)
+}
+
+proc BookmarkCurrentGoto {number} {
+    global current
+    set index [BookmarkCurrentIndex $number]
+    BookmarkRestore $current(frame) $index
+}
+
+proc BookmarkCurrentSave {filename} {
+    global current
+    if {$current(frame) == {}} {
+	error "No current frame."
+    }
+    BookmarksSaveFile $current(frame) $filename
+}
+
+proc BookmarkCurrentLoad {filename} {
+    global current
+    if {$current(frame) == {}} {
+	error "No current frame."
+    }
+    BookmarksLoadFile $current(frame) $filename
+}
+
+proc BookmarkCurrentIndex {number} {
+    global bookmarks current
+    if {$current(frame) == {} ||
+	![info exists bookmarks($current(frame))]} {
+	error "No current frame."
+    }
+    if {$number < 1 || $number > [llength $bookmarks($current(frame))]} {
+	error "Bookmark number must be from 1 to [llength $bookmarks($current(frame))]."
+    }
+    return [expr {$number - 1}]
+}
+
+proc BookmarkSendCmd {{number {}}} {
+    global bookmarks current parse
+    if {$current(frame) == {}} {
+	error "No current frame."
+    }
+    if {![info exists bookmarks($current(frame))]} {
+	set bookmarks($current(frame)) {}
+    }
+    if {$number == {}} {
+	$parse(proc) $parse(id) "[llength $bookmarks($current(frame))]\n"
+	return
+    }
+    set row [lindex $bookmarks($current(frame)) [BookmarkCurrentIndex $number]]
+    set fields {}
+    foreach field $row {
+	lappend fields [list $field]
+    }
+    $parse(proc) $parse(id) "[join $fields \t]\n"
+}
+
+proc ProcessBookmarkCmd {varname iname} {
+    upvar $varname var
+    upvar $iname i
+
+    bookmark::YY_FLUSH_BUFFER
+    bookmark::yy_scan_string [lrange $var $i end]
+    bookmark::yyparse
+    incr i [expr {$bookmark::yycnt - 1}]
+}
+
+proc ProcessSendBookmarkCmd {proc id param {sock {}} {fn {}}} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+
+    bookmarksend::YY_FLUSH_BUFFER
+    bookmarksend::yy_scan_string $param
+    bookmarksend::yyparse
 }
 
 proc BookmarkGetSlices {which} {

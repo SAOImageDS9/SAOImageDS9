@@ -1,0 +1,8 @@
+set INT_ 257
+set STRING_ 258
+set ADD_ 259
+set CLEAR_ 260
+set DELETE_ 261
+set GOTO_ 262
+set LOAD_ 263
+set SAVE_ 264

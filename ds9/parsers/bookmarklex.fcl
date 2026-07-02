@@ -1,0 +1,21 @@
+#tab bookmarkparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+add	    {return $ADD_}
+clear	    {return $CLEAR_}
+delete	    {return $DELETE_}
+goto	    {return $GOTO_}
+load	    {return $LOAD_}
+save	    {return $SAVE_}
+
+#include int.fin
+#include string.fin
+#include ws.fin
+
+%%

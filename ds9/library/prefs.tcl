@@ -360,6 +360,10 @@ proc SavePrefs {} {
     puts $ch "global pcat"
     puts $ch "array set pcat \{ [array get pcat] \}"
 
+    global psia
+    puts $ch "global psia"
+    puts $ch "array set psia \{ [array get psia] \}"
+
     global pvo
     puts $ch "global pvo"
     puts $ch "array set pvo \{ [array get pvo] \}"

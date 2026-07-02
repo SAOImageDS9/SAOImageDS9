@@ -5,7 +5,7 @@
 package provide DS9 1.0
 
 # used by backup
-proc SIADialog {varname title url opts action} {
+proc SIADialog {varname title url opts action {standard {ivo://ivoa.net/std/sia}}} {
     global sia
     global isia
     global psia
@@ -48,6 +48,8 @@ proc SIADialog {varname title url opts action} {
     lappend isia(sias) $varname
 
     set var(tbldb) ${varname}db
+    set var(alltbldb) ${varname}alldb
+    set var(filter) {}
 
     set var(system) $wcs(system)
     set var(sky) $wcs(sky)
@@ -60,6 +62,7 @@ proc SIADialog {varname title url opts action} {
     set var(url) $url
     set var(title) $title
     set var(opts) $opts
+    set var(standard) $standard
 
     # create the window
     set w $var(top)
@@ -162,7 +165,18 @@ proc SIADialog {varname title url opts action} {
     set var(found) [ttk::label $f.found \
 			-width 14 -relief groove -anchor w]
 
-    grid $f.ftitle $f.found -padx 2 -pady 2 -sticky w
+    ttk::label $f.filtertitle -text [msgcat::mc {Filter}]
+    ttk::entry $f.filter -textvariable ${varname}(filter) -width 45
+    ttk::button $f.filterapply -text [msgcat::mc {Apply}] \
+	-command [list SIAFilter $varname]
+    ttk::button $f.filterclear -text [msgcat::mc {Clear}] \
+	-command [list SIAFilterClear $varname]
+
+    grid $f.ftitle $f.found - -padx 2 -pady 2 -sticky w
+    grid $f.filtertitle $f.filter $f.filterapply $f.filterclear \
+	-padx 2 -pady 2 -sticky ew
+    grid columnconfigure $f 1 -weight 1
+    bind $f.filter <Return> [list SIAFilter $varname]
 
     # Table
     set f [ttk::frame $w.tbl]
@@ -334,8 +348,13 @@ proc SIAVOT {varname} {
 	}
     }
 
-    # query
-    set query "$var(opts)[http::formatQuery POS "$xx,$yy" SIZE $rr FORMAT image/fits]"
+    # SIA 2 uses DALI's POS=CIRCLE syntax; SIA 1 uses POS and SIZE.
+    if {[string match -nocase {ivo://ivoa.net/std/sia#query-2*} $var(standard)] ||
+	[string match -nocase {ivo://ivoa.net/std/sia#2*} $var(standard)]} {
+	set query "$var(opts)[http::formatQuery POS "CIRCLE $xx $yy $rr" FORMAT image/fits]"
+    } else {
+	set query "$var(opts)[http::formatQuery POS "$xx,$yy" SIZE $rr FORMAT image/fits]"
+    }
 
     SIALoad $varname $var(url) $query
 }
@@ -353,6 +372,10 @@ proc SIADestroy {varname} {
 
     if {[info exists $var(tbldb)]} {
 	unset $var(tbldb)
+    }
+    global $var(alltbldb)
+    if {[info exists $var(alltbldb)]} {
+	unset $var(alltbldb)
     }
 
     set ii [lsearch $isia(sias) $varname]
@@ -448,7 +471,29 @@ proc SIAImageCmd {varname} {
     }
     set rowlist [lsort -unique $rowlist]
 
-    set col [expr [lsearch [subst $${varname}db(Ucd)] {VOX:Image_AccessReference}] +1]
+    set col 0
+    if {[info exists ${var(tbldb)}(Ucd)]} {
+	set ucds [subst $${var(tbldb)}(Ucd)]
+	set cc 0
+	foreach ucd $ucds {
+	    incr cc
+	    if {[string match -nocase {*VOX:Image_AccessReference*} $ucd] ||
+		[string match -nocase {*meta.ref.url*} $ucd]} {
+		set col $cc
+		break
+	    }
+	}
+    }
+    if {$col == 0} {
+	foreach wanted {access_url AccessURL URL url} {
+	    if {[catch {set col [starbase_colnum $var(tbldb) $wanted]}]} {
+		set col 0
+	    }
+	    if {$col > 0} {
+		break
+	    }
+	}
+    }
     if {$col == 0} {
 	ARError $varname [msgcat::mc {Unable to find URL column}]
 	return
@@ -479,6 +524,12 @@ proc SIAImageCmd {varname} {
 	    }
 	}
     }
+}
+
+proc SIAFilterClear {varname} {
+    upvar #0 $varname var
+    set var(filter) {}
+    SIAFilter $varname
 }
 
 proc SIASelectCmd {varname ss rc} {
@@ -557,4 +608,3 @@ proc SIACrosshair {varname} {
 	set var(y) {}
     }
 }
-

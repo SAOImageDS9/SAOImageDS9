@@ -147,6 +147,7 @@ proc Restore {fn} {
     global ds9
     global pds9
     global current
+    global bookmarks
 
     if {[string length $fn] == 0} {
 	return
@@ -355,6 +356,7 @@ proc BackupFrame {ch which dir} {
     ContourBackup $ch $which $fdir $rdir
     GridBackup $ch $which
     CATBackup $ch $which $fdir $rdir
+    BookmarksBackup $ch $which
 }
 
 proc BackupFrameLoad {ch which fdir rdir channel} {

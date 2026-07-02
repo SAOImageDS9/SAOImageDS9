@@ -193,6 +193,13 @@ proc InitDialogBox {} {
 			       [list [::msgcat::mc {TSV}] {*.csv}] \
 			      ]
 
+    global bookmarkfbox
+    set bookmarkfbox(file) {ds9.bmrk}
+    set bookmarkfbox(dir) {}
+    set bookmarkfbox(types) [list \
+				 [list [::msgcat::mc {Bookmarks}] {*.bmrk}] \
+				]
+
     global catfitsfbox
     set catfitsfbox(file) {cat.fits}
     set catfitsfbox(dir) {}

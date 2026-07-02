@@ -66,6 +66,9 @@ proc ZoomMainMenu {} {
     $ds9(mb).zoom add command -label [msgcat::mc {Crop Parameters}] \
 	-command CropDialog
     $ds9(mb).zoom add separator
+    $ds9(mb).zoom add command -label [msgcat::mc {Bookmarks}] \
+	-command BookmarksDialog -accelerator "m"
+    $ds9(mb).zoom add separator
     $ds9(mb).zoom add command \
 	-label [msgcat::mc {Pan Zoom Rotate Parameters}] \
 	-command PanZoomDialog
@@ -412,4 +415,3 @@ proc UpdateZoomMenu {} {
 	set current(align) [$current(frame) get wcs align]
     }
 }
-

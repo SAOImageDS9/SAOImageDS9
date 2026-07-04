@@ -99,7 +99,9 @@ proc SIARegistryDialog {varname} {
     set var(proc,error) ARError
     set var(db) ${varname}db
     set var(alldb) ${varname}alldb
+    set var(filterdb) ${varname}filterdb
     set var(filter) {}
+    set var(description,row) 0
 
     set w $var(top)
     set mb $var(mb)
@@ -133,12 +135,13 @@ proc SIARegistryDialog {varname} {
     set f [ttk::frame $w.tbl]
     set var(tbl) [table $f.t \
 		      -state disabled -usecommand 0 -variable $var(db) \
-		      -colorigin 1 -roworigin 0 -cols 7 -rows 20 \
+		      -colorigin 1 -roworigin 0 -cols 6 -rows 20 \
 		      -width -1 -height -1 -maxwidth 500 -maxheight 260 \
 		      -titlerows 1 -resizeborders col \
 		      -xscrollcommand [list $f.xscroll set] \
 		      -yscrollcommand [list $f.yscroll set] \
 		      -selecttype row -selectmode single -anchor w \
+		      -browsecommand [list SIARegistrySelectCmd $varname %s %S] \
 		      -font [font actual TkDefaultFont] \
 		      -fg [ThemeTreeForeground] -bg [ThemeTreeBackground]]
     $var(tbl) tag configure sel \
@@ -149,6 +152,20 @@ proc SIARegistryDialog {varname} {
     ttk::scrollbar $f.xscroll -command [list $var(tbl) xview] -orient horizontal
     grid $var(tbl) $f.yscroll -sticky news
     grid $f.xscroll -sticky news
+    grid rowconfigure $f 0 -weight 1
+    grid columnconfigure $f 0 -weight 1
+
+    set f [ttk::labelframe $w.description \
+	       -text [msgcat::mc {Description}] -padding 2]
+    set var(description) [text $f.text -height 5 -wrap word \
+			      -state disabled -relief flat \
+			      -font [font actual TkDefaultFont] \
+			      -foreground [ThemeTreeForeground] \
+			      -background [ThemeTreeBackground] \
+			      -yscrollcommand [list $f.yscroll set]]
+    ttk::scrollbar $f.yscroll -command [list $var(description) yview] \
+	-orient vertical
+    grid $var(description) $f.yscroll -sticky news
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 0 -weight 1
 
@@ -172,6 +189,7 @@ proc SIARegistryDialog {varname} {
     ttk::separator $w.sstatus -orient horizontal
     pack $w.buttons $w.sstatus $w.status -side bottom -fill x
     pack $w.search -side top -fill x
+    pack $w.description -side bottom -fill x
     pack $w.tbl -side top -fill both -expand true
     bind $w <<Close>> [list SIARegistryDestroy $varname]
 
@@ -222,15 +240,133 @@ proc SIARegistryFilter {varname} {
     global $varname
     global $var(db)
 
-    SIACopyFilteredTable $var(alldb) $var(db) $var(filter)
+    SIACopyFilteredTable $var(alldb) $var(filterdb) $var(filter)
+    SIARegistryProjectTable $varname
     if {![TBLValidDB $var(db)]} {
 	return
     }
     set nc [starbase_ncols $var(db)]
     set nr [expr [starbase_nrows $var(db)] + 1]
-    $var(tbl) configure -cols [expr {$nc > 7 ? $nc : 7}]
+    $var(tbl) configure -cols [expr {$nc > 6 ? $nc : 6}]
     $var(tbl) configure -rows [expr {$nr > 20 ? $nr : 20}]
+    SIARegistryColumnWidths $varname
+    $var(tbl) selection clear all
+    set var(description,row) 0
+    SIARegistryDescription $varname {}
     ARStatus $varname "[starbase_nrows $var(db)] [msgcat::mc {Items Found}]"
+}
+
+proc SIARegistryColumnWidths {varname} {
+    upvar #0 $varname var
+    upvar #0 $var(db) D
+
+    if {![TBLValidDB $var(db)]} {
+	return
+    }
+    set tableFont [$var(tbl) cget -font]
+    for {set cc 1} {$cc <= $D(Ncols)} {incr cc} {
+	set pixels 0
+	for {set rr 0} {$rr <= $D(Nrows)} {incr rr} {
+	    foreach line [split $D($rr,$cc) \n] {
+		set measured [font measure $tableFont $line]
+		if {$measured > $pixels} {
+		    set pixels $measured
+		}
+	    }
+	}
+	# Negative table widths are pixels.  Leave room for cell padding.
+	$var(tbl) width $cc [expr {-($pixels + 16)}]
+    }
+}
+
+proc SIARegistryProjectTable {varname} {
+    upvar #0 $varname var
+    upvar #0 $var(filterdb) S
+    upvar #0 $var(db) D
+
+    catch {array unset D}
+    foreach key [array names var "description,*"] {
+	unset var($key)
+    }
+    if {![TBLValidDB $var(filterdb)]} {
+	return
+    }
+
+    set descriptionColumn \
+	[expr {[lsearch -exact $S(Header) res_description] + 1}]
+    set columns {}
+    set header {}
+    for {set cc 1} {$cc <= $S(Ncols)} {incr cc} {
+	if {$cc != $descriptionColumn} {
+	    lappend columns $cc
+	    lappend header [lindex $S(Header) [expr {$cc-1}]]
+	}
+    }
+    set D(Header) $header
+    starbase_colmap D
+    set D(Nrows) $S(Nrows)
+    set D(HLines) $S(HLines)
+
+    foreach key {DataType Id ArraySize Width Precision Unit Ref Ucd Description} {
+	if {[info exists S($key)]} {
+	    set values {}
+	    foreach cc $columns {
+		lappend values [lindex $S($key) [expr {$cc-1}]]
+	    }
+	    set D($key) $values
+	}
+    }
+    for {set hh 1} {$hh <= $S(HLines)} {incr hh} {
+	if {[info exists S(H_$hh)]} {
+	    set D(H_$hh) $S(H_$hh)
+	}
+    }
+    for {set rr 1} {$rr <= $S(Nrows)} {incr rr} {
+	if {$descriptionColumn > 0} {
+	    set var(description,$rr) $S($rr,$descriptionColumn)
+	} else {
+	    set var(description,$rr) {}
+	}
+	set out 0
+	foreach cc $columns {
+	    incr out
+	    set D($rr,$out) $S($rr,$cc)
+	}
+    }
+}
+
+proc SIARegistryDescription {varname text} {
+    upvar #0 $varname var
+
+    if {![winfo exists $var(description)]} {
+	return
+    }
+    set text [string trim $text]
+    $var(description) configure -state normal
+    $var(description) delete 1.0 end
+    $var(description) insert end $text
+    $var(description) configure -state disabled
+}
+
+proc SIARegistryShowDescription {varname row} {
+    upvar #0 $varname var
+
+    if {$row > 0 && [info exists var(description,$row)]} {
+	SIARegistryDescription $varname $var(description,$row)
+    } else {
+	SIARegistryDescription $varname {}
+    }
+}
+
+proc SIARegistrySelectCmd {varname old new} {
+    upvar #0 $varname var
+
+    set row [lindex [split $new ,] 0]
+    if {![string is integer -strict $row] || $row < 1} {
+	set row 0
+    }
+    set var(description,row) $row
+    SIARegistryShowDescription $varname $row
 }
 
 proc SIARegistryFilterClear {varname} {
@@ -269,7 +405,7 @@ proc SIARegistryOpen {varname} {
 
 proc SIARegistryDestroy {varname} {
     upvar #0 $varname var
-    foreach dbkey {db alldb} {
+    foreach dbkey {db alldb filterdb} {
 	if {[info exists var($dbkey)]} {
 	    upvar #0 $var($dbkey) D
 	    catch {array unset D}

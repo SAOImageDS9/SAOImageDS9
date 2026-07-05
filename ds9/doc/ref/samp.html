@@ -1039,6 +1039,12 @@ footprint [cxc|hla]<br>
 &nbsp;&nbsp;&nbsp; [cancel]<br>
 &nbsp;&nbsp;&nbsp; [clear]<br>
 &nbsp;&nbsp;&nbsp; [close]<br>
+&nbsp;&nbsp;&nbsp; [registry]<br>
+&nbsp;&nbsp;&nbsp; [registry filter &lt;string&gt;]<br>
+&nbsp;&nbsp;&nbsp; [registry ivoid &lt;string&gt;]<br>
+&nbsp;&nbsp;&nbsp; [registry load]<br>
+&nbsp;&nbsp;&nbsp; [registry clear]<br>
+&nbsp;&nbsp;&nbsp; [registry retrieve]<br>
 <br>
 &nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [export rdb|tsv &lt;filename&gt;]<br>
@@ -2956,7 +2962,7 @@ shm rgbimage key 100 foo<br>
 shm rgbarray key 100 [dim=200,zdim=3,bitpix=-32]<br>
 shm array shmid 102 [dim=32,bitpix=-32]<br></tt>
 <p><b><a name="sia" id="sia"></a>sia</b></p>
-<p>Support for VO Simple Image Access protocol. The first command will create a new search. All other commands operated on the last search created, unless indicated otherwise via current command.</p>
+<p>Support for VO Simple Image Access protocol. The first command will create a new search. All other commands operate on the last search created, unless indicated otherwise via the current command. Registry filter and ivoid constraints are cumulative; use registry clear or registry retrieve to reset them. Registry clear empties the current results, while registry retrieve reloads the full Registry list.</p>
 <tt>Syntax:<br>
 sia[2mass|akari|astrowise|cadc|cxc|hla|mast|sdss|skyview|tgssadr]<br>
 &nbsp;&nbsp;&nbsp; [cancel]<br>
@@ -2987,9 +2993,16 @@ sia 2mass<br>
 sia cancel<br>
 sia clear<br>
 sia close<br>
+sia registry<br>
+sia registry filter "x-ray"<br>
+sia registry ivoid "ivo://nasa.heasarc/"<br>
+sia registry load<br>
+sia registry clear<br>
+sia registry retrieve<br>
 sia coordinate 202.48 47.21 fk5<br>
 sia crosshair<br>
 sia current 2mass<br>
+sia current "HEASARC SkyView Images"<br>
 sia export tsv bar.tsv<br>
 sia name m51<br>
 sia print<br>

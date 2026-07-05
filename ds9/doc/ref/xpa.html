@@ -973,6 +973,12 @@ footprint [cxc|hla]<br>
 &nbsp;&nbsp;&nbsp; [cancel]<br>
 &nbsp;&nbsp;&nbsp; [clear]<br>
 &nbsp;&nbsp;&nbsp; [close]<br>
+&nbsp;&nbsp;&nbsp; [registry]<br>
+&nbsp;&nbsp;&nbsp; [registry filter &lt;string&gt;]<br>
+&nbsp;&nbsp;&nbsp; [registry ivoid &lt;string&gt;]<br>
+&nbsp;&nbsp;&nbsp; [registry load]<br>
+&nbsp;&nbsp;&nbsp; [registry clear]<br>
+&nbsp;&nbsp;&nbsp; [registry retrieve]<br>
 <br>
 &nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [export rdb|tsv &lt;filename&gt;]<br>
@@ -2816,7 +2822,7 @@ $xpaset -p ds9 shm rgbimage key 100 foo<br>
 $xpaset -p ds9 shm rgbarray key 100 [dim=200,zdim=3,bitpix=-32]<br>
 $xpaset -p ds9 shm array shmid 102 [dim=32,bitpix=-32]<br></tt>
 <p><b><a name="sia" id="sia"></a>sia</b></p>
-<p>Support for VO Simple Image Access protocol. The first command will create a new search. All other commands operated on the last search created, unless indicated otherwise via current command.</p>
+<p>Support for VO Simple Image Access protocol. The first command will create a new search. All other commands operate on the last search created, unless indicated otherwise via the current command. Registry filter and ivoid constraints are cumulative; use registry clear or registry retrieve to reset them. Registry clear empties the current results, while registry retrieve reloads the full Registry list.</p>
 <tt>Syntax:<br>
 sia [2mass|akari|astrowise|cadc|cxc|hla|mast|sdss|skyview|tgssadr]<br>
 &nbsp;&nbsp;&nbsp; [cancel]<br>
@@ -2845,9 +2851,16 @@ $xpaset -p ds9 sia 2mass<br>
 $xpaset -p ds9 sia cancel<br>
 $xpaset -p ds9 sia clear<br>
 $xpaset -p ds9 sia close<br>
+$xpaset -p ds9 sia registry<br>
+$xpaset -p ds9 sia registry filter "x-ray"<br>
+$xpaset -p ds9 sia registry ivoid "ivo://nasa.heasarc/"<br>
+$xpaset -p ds9 sia registry load<br>
+$xpaset -p ds9 sia registry clear<br>
+$xpaset -p ds9 sia registry retrieve<br>
 $xpaset -p ds9 sia coordinate 202.48 47.21 fk5<br>
 $xpaset -p ds9 sia crosshair<br>
 $xpaset -p ds9 sia current 2mass<br>
+$xpaset -p ds9 sia current "HEASARC SkyView Images"<br>
 $xpaset -p ds9 sia export tsv bar.tsv<br>
 $xpaset -p ds9 sia name m51<br>
 $xpaset -p ds9 sia print<br>

@@ -99,9 +99,12 @@ proc SIARegistryDialog {varname} {
     set var(proc,error) ARError
     set var(db) ${varname}db
     set var(alldb) ${varname}alldb
+    set var(textdb) ${varname}textdb
     set var(filterdb) ${varname}filterdb
     set var(filter) {}
+    set var(filter,ivoid) {}
     set var(description,row) 0
+    set var(load,pending) 0
 
     set w $var(top)
     set mb $var(mb)
@@ -233,6 +236,10 @@ proc SIARegistryExec {varname} {
     VOTParse $var(alldb) $var(token)
     ARDone $varname
     SIARegistryFilter $varname
+    if {$var(load,pending)} {
+	set var(load,pending) 0
+	SIARegistryOpen $varname 1
+    }
 }
 
 proc SIARegistryFilter {varname} {
@@ -240,7 +247,9 @@ proc SIARegistryFilter {varname} {
     global $varname
     global $var(db)
 
-    SIACopyFilteredTable $var(alldb) $var(filterdb) $var(filter)
+    SIACopyFilteredTable $var(alldb) $var(textdb) $var(filter)
+    SIACopyFilteredTable $var(textdb) $var(filterdb) \
+	$var(filter,ivoid) ivoid
     SIARegistryProjectTable $varname
     if {![TBLValidDB $var(db)]} {
 	return
@@ -372,22 +381,31 @@ proc SIARegistrySelectCmd {varname old new} {
 proc SIARegistryFilterClear {varname} {
     upvar #0 $varname var
     set var(filter) {}
+    set var(filter,ivoid) {}
     SIARegistryFilter $varname
 }
 
-proc SIARegistryOpen {varname} {
+proc SIARegistryOpen {varname {first 0}} {
     upvar #0 $varname var
     global $var(db)
 
     if {![TBLValidDB $var(db)]} {
 	return
     }
-    set selected [$var(tbl) curselection]
-    if {$selected == {}} {
-	ARError $varname [msgcat::mc {Please select a service}]
-	return
+    if {$first} {
+	if {[starbase_nrows $var(db)] < 1} {
+	    ARError $varname [msgcat::mc {No Items Found}]
+	    return
+	}
+	set row 1
+    } else {
+	set selected [$var(tbl) curselection]
+	if {$selected == {}} {
+	    ARError $varname [msgcat::mc {Please select a service}]
+	    return
+	}
+	set row [lindex [split [lindex $selected 0] ,] 0]
     }
-    set row [lindex [split [lindex $selected 0] ,] 0]
     set urlcol [starbase_colnum $var(db) access_url]
     set titlecol [starbase_colnum $var(db) res_title]
     set stdcol [starbase_colnum $var(db) standard_id]
@@ -405,13 +423,91 @@ proc SIARegistryOpen {varname} {
 
 proc SIARegistryDestroy {varname} {
     upvar #0 $varname var
-    foreach dbkey {db alldb filterdb} {
+    foreach dbkey {db alldb textdb filterdb} {
 	if {[info exists var($dbkey)]} {
 	    upvar #0 $var($dbkey) D
 	    catch {array unset D}
 	}
     }
     ARDestroy $varname
+}
+
+proc SIARegistryCmdDialog {} {
+    set varname siaregistry1
+    SIARegistryDialog $varname
+    return $varname
+}
+
+proc SIARegistryCmdFilter {text} {
+    set varname [SIARegistryCmdDialog]
+    upvar #0 $varname var
+
+    if {$var(filter) == {}} {
+	set var(filter) $text
+    } else {
+	append var(filter) " " $text
+    }
+    SIARegistryFilter $varname
+}
+
+proc SIARegistryCmdIvoid {text} {
+    set varname [SIARegistryCmdDialog]
+    upvar #0 $varname var
+
+    if {$var(filter,ivoid) == {}} {
+	set var(filter,ivoid) $text
+    } else {
+	append var(filter,ivoid) " " $text
+    }
+    SIARegistryFilter $varname
+}
+
+proc SIARegistryCmdLoad {} {
+    set varname [SIARegistryCmdDialog]
+    upvar #0 $varname var
+
+    if {([info exists var(active)] && $var(active)) ||
+	![TBLValidDB $var(db)]} {
+	set var(load,pending) 1
+	return
+    }
+    SIARegistryOpen $varname 1
+}
+
+proc SIARegistryCmdClear {} {
+    set varname [SIARegistryCmdDialog]
+    upvar #0 $varname var
+
+    ARCancel $varname
+    set var(filter) {}
+    set var(filter,ivoid) {}
+    set var(load,pending) 0
+    foreach dbkey {db alldb textdb filterdb} {
+	upvar #0 $var($dbkey) D
+	catch {array unset D}
+    }
+    set var(description,row) 0
+    SIARegistryDescription $varname {}
+    $var(tbl) selection clear all
+    $var(tbl) configure -cols 6 -rows 20
+    ARStatus $varname {}
+}
+
+proc SIARegistryCmdRetrieve {} {
+    set varname siaregistry1
+    if {![winfo exists ".${varname}"]} {
+	SIARegistryDialog $varname
+	return
+    }
+    upvar #0 $varname var
+
+    set var(filter) {}
+    set var(filter,ivoid) {}
+    set var(load,pending) 0
+    if {[info exists var(active)] && $var(active)} {
+	return
+    }
+    SIARegistryApply $varname
 }
 
 proc PrefsDialogSIA {} {
@@ -470,7 +566,7 @@ proc SIAExec {varname} {
     SIADialogUpdate $varname
 }
 
-proc SIACopyFilteredTable {src dest text} {
+proc SIACopyFilteredTable {src dest text {column {}}} {
     upvar #0 $src S
     upvar #0 $dest D
 
@@ -497,11 +593,23 @@ proc SIACopyFilteredTable {src dest text} {
     }
 
     set words [regexp -all -inline {\S+} [string tolower [string trim $text]]]
+    set filterColumn 0
+    if {$column != {}} {
+	set filterColumn [expr {[lsearch -exact $S(Header) $column] + 1}]
+	if {$filterColumn == 0} {
+	    set D(Nrows) 0
+	    return
+	}
+    }
     set out 0
     for {set rr 1} {$rr <= $S(Nrows)} {incr rr} {
 	set haystack {}
-	for {set cc 1} {$cc <= $S(Ncols)} {incr cc} {
-	    append haystack " " [string tolower $S($rr,$cc)]
+	if {$filterColumn > 0} {
+	    set haystack [string tolower $S($rr,$filterColumn)]
+	} else {
+	    for {set cc 1} {$cc <= $S(Ncols)} {incr cc} {
+		append haystack " " [string tolower $S($rr,$cc)]
+	    }
 	}
 	set match 1
 	foreach word $words {
@@ -629,8 +737,23 @@ proc SIACmdRef {ref} {
     global isia
     global cvarname
 
-    set rr sia${ref}
-    set id [lsearch $isia(sias) $rr]
+    set rr $ref
+    set id [lsearch -exact $isia(sias) $rr]
+    if {$id < 0} {
+	set rr sia${ref}
+	set id [lsearch -exact $isia(sias) $rr]
+    }
+    if {$id < 0} {
+	foreach candidate $isia(sias) {
+	    upvar #0 $candidate var
+	    if {[info exists var(title)] &&
+		[string equal -nocase $var(title) $ref]} {
+		set rr $candidate
+		set id [lsearch -exact $isia(sias) $candidate]
+		break
+	    }
+	}
+    }
 
     # look for reference in current list
     if { $id < 0} {

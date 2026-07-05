@@ -101,8 +101,10 @@ proc SIARegistryDialog {varname} {
     set var(alldb) ${varname}alldb
     set var(textdb) ${varname}textdb
     set var(filterdb) ${varname}filterdb
+    set var(matchdb) ${varname}matchdb
     set var(filter) {}
     set var(filter,ivoid) {}
+    set var(filter,ivoid,list) {}
     set var(description,row) 0
     set var(load,pending) 0
 
@@ -250,6 +252,13 @@ proc SIARegistryFilter {varname} {
     SIACopyFilteredTable $var(alldb) $var(textdb) $var(filter)
     SIACopyFilteredTable $var(textdb) $var(filterdb) \
 	$var(filter,ivoid) ivoid
+    if {$var(filter,ivoid,list) != {}} {
+	SIACopyFilteredTable $var(filterdb) $var(matchdb) \
+	    $var(filter,ivoid,list) ivoid anyexact
+	set var(projectdb) $var(matchdb)
+    } else {
+	set var(projectdb) $var(filterdb)
+    }
     SIARegistryProjectTable $varname
     if {![TBLValidDB $var(db)]} {
 	return
@@ -290,14 +299,14 @@ proc SIARegistryColumnWidths {varname} {
 
 proc SIARegistryProjectTable {varname} {
     upvar #0 $varname var
-    upvar #0 $var(filterdb) S
+    upvar #0 $var(projectdb) S
     upvar #0 $var(db) D
 
     catch {array unset D}
     foreach key [array names var "description,*"] {
 	unset var($key)
     }
-    if {![TBLValidDB $var(filterdb)]} {
+    if {![TBLValidDB $var(projectdb)]} {
 	return
     }
 
@@ -382,6 +391,7 @@ proc SIARegistryFilterClear {varname} {
     upvar #0 $varname var
     set var(filter) {}
     set var(filter,ivoid) {}
+    set var(filter,ivoid,list) {}
     SIARegistryFilter $varname
 }
 
@@ -423,7 +433,7 @@ proc SIARegistryOpen {varname {first 0}} {
 
 proc SIARegistryDestroy {varname} {
     upvar #0 $varname var
-    foreach dbkey {db alldb textdb filterdb} {
+    foreach dbkey {db alldb textdb filterdb matchdb} {
 	if {[info exists var($dbkey)]} {
 	    upvar #0 $var($dbkey) D
 	    catch {array unset D}
@@ -481,8 +491,9 @@ proc SIARegistryCmdClear {} {
     ARCancel $varname
     set var(filter) {}
     set var(filter,ivoid) {}
+    set var(filter,ivoid,list) {}
     set var(load,pending) 0
-    foreach dbkey {db alldb textdb filterdb} {
+    foreach dbkey {db alldb textdb filterdb matchdb} {
 	upvar #0 $var($dbkey) D
 	catch {array unset D}
     }
@@ -491,6 +502,17 @@ proc SIARegistryCmdClear {} {
     $var(tbl) selection clear all
     $var(tbl) configure -cols 6 -rows 20
     ARStatus $varname {}
+}
+
+proc SIARegistrySAMPResources {name ids} {
+    set varname [SIARegistryCmdDialog]
+    upvar #0 $varname var
+
+    set var(filter) {}
+    set var(filter,ivoid) {}
+    set var(filter,ivoid,list) $ids
+    set var(samp,name) $name
+    SIARegistryFilter $varname
 }
 
 proc SIARegistryCmdRetrieve {} {
@@ -503,6 +525,7 @@ proc SIARegistryCmdRetrieve {} {
 
     set var(filter) {}
     set var(filter,ivoid) {}
+    set var(filter,ivoid,list) {}
     set var(load,pending) 0
     if {[info exists var(active)] && $var(active)} {
 	return
@@ -566,7 +589,7 @@ proc SIAExec {varname} {
     SIADialogUpdate $varname
 }
 
-proc SIACopyFilteredTable {src dest text {column {}}} {
+proc SIACopyFilteredTable {src dest text {column {}} {match all}} {
     upvar #0 $src S
     upvar #0 $dest D
 
@@ -592,7 +615,12 @@ proc SIACopyFilteredTable {src dest text {column {}}} {
 	}
     }
 
-    set words [regexp -all -inline {\S+} [string tolower [string trim $text]]]
+    if {$match == {anyexact}} {
+	set words $text
+    } else {
+	set words \
+	    [regexp -all -inline {\S+} [string tolower [string trim $text]]]
+    }
     set filterColumn 0
     if {$column != {}} {
 	set filterColumn [expr {[lsearch -exact $S(Header) $column] + 1}]
@@ -611,14 +639,24 @@ proc SIACopyFilteredTable {src dest text {column {}}} {
 		append haystack " " [string tolower $S($rr,$cc)]
 	    }
 	}
-	set match 1
-	foreach word $words {
-	    if {[string first $word $haystack] < 0} {
-		set match 0
-		break
+	set pass 1
+	if {$match == {anyexact}} {
+	    set pass 0
+	    foreach word $words {
+		if {[string equal -nocase $word $haystack]} {
+		    set pass 1
+		    break
+		}
+	    }
+	} else {
+	    foreach word $words {
+		if {[string first $word $haystack] < 0} {
+		    set pass 0
+		    break
+		}
 	    }
 	}
-	if {$match} {
+	if {$pass} {
 	    incr out
 	    for {set cc 1} {$cc <= $S(Ncols)} {incr cc} {
 		set D($out,$cc) $S($rr,$cc)

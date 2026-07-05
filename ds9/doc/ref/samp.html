@@ -31,6 +31,7 @@ ds9.set<br>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ERROR (samp.error map)<br>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; samp.errortxt (string)<br></tt>
 <p><tt>ds9.set</tt> may be called via notification, call and call/wait. <tt>ds9.get</tt> can only be called via call and call/wait. Most of the <tt>ds9.get</tt> calls return a value string, but a few will return a url instead.</p>
+<p>DS9 also subscribes to the standard <tt>coverage.load.moc.fits</tt> MType. The required <tt>url</tt> parameter is loaded as a FITS MOC/partial HEALPix image in a new frame. The optional <tt>coverage-id</tt> and <tt>name</tt> parameters are accepted.</p>
 <tt><a href="#twomass">2mass</a><br>
 <a href="#threed">3d</a><br>
 <a href="#about">about</a><br>
@@ -2963,6 +2964,7 @@ shm rgbarray key 100 [dim=200,zdim=3,bitpix=-32]<br>
 shm array shmid 102 [dim=32,bitpix=-32]<br></tt>
 <p><b><a name="sia" id="sia"></a>sia</b></p>
 <p>Support for VO Simple Image Access protocol. The first command will create a new search. All other commands operate on the last search created, unless indicated otherwise via the current command. Registry filter and ivoid constraints are cumulative; use registry clear or registry retrieve to reset them. Registry clear empties the current results, while registry retrieve reloads the full Registry list.</p>
+<p>DS9 subscribes to the standard <tt>voresource.loadlist.siap</tt> MType. Receiving this message opens the SIA Registry window and displays Registry services whose <tt>ivoid</tt> exactly matches any identifier in the message's <tt>ids</tt> map. Optional resource-document URLs are accepted but identifiers are resolved using DS9's configured SIA Registry TAP service.</p>
 <tt>Syntax:<br>
 sia[2mass|akari|astrowise|cadc|cxc|hla|mast|sdss|skyview|tgssadr]<br>
 &nbsp;&nbsp;&nbsp; [cancel]<br>

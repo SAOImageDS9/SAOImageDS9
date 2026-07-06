@@ -23,7 +23,7 @@ proc SAMPHubDialog {} {
     Toplevel $w $mb 6 [msgcat::mc {SAMP Hub}] SAMPHubDestroyDialog
 
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
-    $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
+    #~ $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
 
     ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Save}] \
@@ -183,7 +183,7 @@ proc SAMPHubDialogClient {client} {
 
 proc SAMPHubDialogRecvd {recvd} {
     global dsamphub
-    
+
     set dsamphub(recvd,txt) $recvd.txt
     roText::roText $recvd.txt
 

@@ -22,6 +22,22 @@ proc xmlrpcServeOnce {sock addr port} {
     fileevent $sock readable [list xmlrpcDoRequest $sock]
 }
 
+proc xmlrpcPreflightResponse {request} {
+    set header "HTTP/1.1 204 No Content\n"
+    append header "Access-Control-Allow-Origin: *\n"
+    append header "Access-Control-Allow-Methods: POST, GET, OPTIONS\n"
+    append header "Access-Control-Allow-Headers: Content-Type\n"
+
+    # Private Network Access preflights require the local server to opt in.
+    if {[regexp -nocase \
+	     {(^|\n)Access-Control-Request-Private-Network:[ \t]*true[ \t\r]*(\n|$)} \
+	     $request]} {
+	append header "Access-Control-Allow-Private-Network: true\n"
+    }
+
+    return $header
+}
+
 proc xmlrpcDoRequest {sock} {
     global xmlrpc
 
@@ -44,10 +60,7 @@ proc xmlrpcDoRequest {sock} {
     # CORS preflight
     set	RE "OPTIONS"
     if {[regexp $RE $headerStatus {}]} {
-	set header "HTTP/1.1 204 No Content\n"
-	append header "Access-Control-Allow-Origin: *\n"
-	append header "Access-Control-Allow-Methods: POST, GET, OPTIONS\n"
-	append header "Access-Control-Allow-Headers: Content-Type\n"
+	set header [xmlrpcPreflightResponse $headerStatus]
 
 	puts -nonewline $sock $header
 	flush $sock

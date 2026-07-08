@@ -6,6 +6,9 @@
 
 int wcsSystem(AstFrameSet* ast, Coord::CoordSystem sys)
 {
+  if (!ast)
+    return 0;
+
   int nn = astGetI(ast,"nframe");
   char cc = ' ';
   int ww = sys-Coord::WCS;

@@ -3608,6 +3608,9 @@ void ast2FitsSink(const char* line)
 
 void FitsImage::ast2Fits()
 {
+  if (!ast_)
+    return;
+
   // we may have an error, just reset
   astClearStatus;
   astBegin;

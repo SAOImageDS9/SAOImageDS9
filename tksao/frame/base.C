@@ -683,8 +683,16 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
   int naxes1 = astGetI(astGetFrame(cvt,AST__BASE),"Naxes");
   int naxes2 = astGetI(astGetFrame(cvt,AST__CURRENT),"Naxes");
 
-  Vector ll2 = fits2->center() - Vector(10,10);
-  Vector ur2 = fits2->center() + Vector(10,10);
+  Vector center2 = fits2->center();
+  if (fits2->isHPX()) {
+    Vector cc = wcsTran(context, cvt, fits1->center(), 0);
+    if (!isnan(cc[0]) && !isinf(cc[0]) &&
+	!isnan(cc[1]) && !isinf(cc[1]))
+      center2 = cc;
+  }
+
+  Vector ll2 = center2 - Vector(10,10);
+  Vector ur2 = center2 + Vector(10,10);
   double ll[4];
   ll[0] =ll2[0];
   ll[1] =ll2[1];

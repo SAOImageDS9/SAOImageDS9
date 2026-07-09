@@ -223,6 +223,12 @@ proc Restore {fn} {
 	return
     }
 
+    set colorbarHasPosition [regexp {colorbar\(position\)} $src]
+    regsub -all {colorbar configure -orientation horizontal} $src \
+	{colorbar configure -orientation 0} src
+    regsub -all {colorbar configure -orientation vertical} $src \
+	{colorbar configure -orientation 1} src
+
     # and load the world
     if {[catch {eval $src}]} {
 	global debug
@@ -256,6 +262,8 @@ proc Restore {fn} {
 	set current(colorbar) ${current(frame)}cb
       }
     }
+
+    ColorbarBackupRestore $colorbarHasPosition
 
     # reset standard dialog
     switch $ds9(wm) {

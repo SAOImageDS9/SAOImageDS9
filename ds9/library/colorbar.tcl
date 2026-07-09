@@ -286,6 +286,14 @@ proc ColorbarLabelSide {} {
     return $side
 }
 
+proc ColorbarNormalizeOrientation {orientation} {
+    switch -- $orientation {
+	horizontal {return 0}
+	vertical {return 1}
+	default {return [expr {$orientation ? 1 : 0}]}
+    }
+}
+
 proc ColorbarCmdPosition {position} {
     global colorbar
 
@@ -297,12 +305,27 @@ proc ColorbarCmdPosition {position} {
 proc ColorbarCmdOrientation {orientation} {
     global colorbar
 
-    set colorbar(orientation) $orientation
-    if {$orientation} {
+    set colorbar(orientation) [ColorbarNormalizeOrientation $orientation]
+    if {$colorbar(orientation)} {
 	set colorbar(position) right
     } else {
 	set colorbar(position) bottom
     }
+    ColorbarUpdateView
+}
+
+proc ColorbarBackupRestore {hasPosition} {
+    global colorbar
+
+    set colorbar(orientation) [ColorbarNormalizeOrientation $colorbar(orientation)]
+    if {!$hasPosition} {
+	if {$colorbar(orientation)} {
+	    set colorbar(position) right
+	} else {
+	    set colorbar(position) bottom
+	}
+    }
+
     ColorbarUpdateView
 }
 

@@ -27,11 +27,17 @@ CBGrid::CBGrid(Widget* p, int cc, double* ll)
 
   if (!opts->orientation) {
     // horizontal
-    str << ", Edge(1)=top, Edge(2)=left, LabelUp(1)=1, MajTickLen(1)=-.15, MajTickLen(2)=0, NumLab(1)=1, NumLab(2)=0, NumLabGap(1)=.5";
+    if (opts->labelSide)
+      str << ", Edge(1)=bottom, Edge(2)=left, LabelUp(1)=1, MajTickLen(1)=.15, MajTickLen(2)=0, NumLab(1)=1, NumLab(2)=0, NumLabGap(1)=.5";
+    else
+      str << ", Edge(1)=top, Edge(2)=left, LabelUp(1)=1, MajTickLen(1)=-.15, MajTickLen(2)=0, NumLab(1)=1, NumLab(2)=0, NumLabGap(1)=.5";
   }
   else {
     // vertical
-    str << ", Edge(1)=bottom, Edge(2)=right, LabelUp(2)=1, MajTickLen(1)=0, MajTickLen(2)=-.15, NumLab(1)=0, NumLab(2)=1, NumLabGap(2)=.5";
+    if (opts->labelSide)
+      str << ", Edge(1)=bottom, Edge(2)=left, LabelUp(2)=1, MajTickLen(1)=0, MajTickLen(2)=.15, NumLab(1)=0, NumLab(2)=1, NumLabGap(2)=.5";
+    else
+      str << ", Edge(1)=bottom, Edge(2)=right, LabelUp(2)=1, MajTickLen(1)=0, MajTickLen(2)=-.15, NumLab(1)=0, NumLab(2)=1, NumLabGap(2)=.5";
   }
 
   // font

@@ -242,6 +242,8 @@ proc ColorbarDef {} {
     set colorbar(numerics) 1
     set colorbar(space) 0
     set colorbar(orientation) 0
+    set colorbar(position) bottom
+    set colorbar(label,position) natural
 
     set colorbar(font) helvetica
     set colorbar(font,size) 9
@@ -252,6 +254,56 @@ proc ColorbarDef {} {
 
     set colorbar(vertical,width) 75
     set colorbar(horizontal,height) 45
+}
+
+proc ColorbarPositionOrientation {} {
+    global colorbar
+
+    switch -- $colorbar(position) {
+	top -
+	bottom {return 0}
+	left -
+	right {return 1}
+	default {return $colorbar(orientation)}
+    }
+}
+
+proc ColorbarLabelSide {} {
+    global colorbar
+
+    switch -- $colorbar(position) {
+	top -
+	left {set side 1}
+	bottom -
+	right -
+	default {set side 0}
+    }
+
+    if {$colorbar(label,position) == {opposite}} {
+	set side [expr {!$side}]
+    }
+
+    return $side
+}
+
+proc ColorbarCmdPosition {position} {
+    global colorbar
+
+    set colorbar(position) $position
+    set colorbar(orientation) [ColorbarPositionOrientation]
+    ColorbarUpdateView
+}
+
+proc ColorbarCmdOrientation {orientation} {
+    global colorbar
+
+    set colorbar(orientation) $orientation
+    if {$orientation} {
+	set colorbar(position) right
+    } else {
+	set colorbar(position) bottom
+    }
+    ColorbarUpdateView
 }
 
 proc CreateColorbar {} {
@@ -270,6 +322,8 @@ proc CreateColorbar {} {
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
+	-orientation [ColorbarPositionOrientation] \
+	-labelside [ColorbarLabelSide] \
 	\
 	-font $colorbar(font) \
 	-fontsize $colorbar(font,size) \
@@ -352,7 +406,8 @@ proc CreateColorbarBase {frame} {
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
-	-orientation $colorbar(orientation) \
+	-orientation [ColorbarPositionOrientation] \
+	-labelside [ColorbarLabelSide] \
 	\
 	-font $colorbar(font) \
 	-fontsize $colorbar(font,size) \
@@ -429,6 +484,8 @@ proc CreateColorbarRGB {frame} {
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
+	-orientation [ColorbarPositionOrientation] \
+	-labelside [ColorbarLabelSide] \
 	\
 	-font $colorbar(font) \
 	-fontsize $colorbar(font,size) \
@@ -478,6 +535,8 @@ proc CreateColorbarHSV {frame} {
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
+	-orientation [ColorbarPositionOrientation] \
+	-labelside [ColorbarLabelSide] \
 	\
 	-font $colorbar(font) \
 	-fontsize $colorbar(font,size) \
@@ -527,6 +586,8 @@ proc CreateColorbarHLS {frame} {
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
+	-orientation [ColorbarPositionOrientation] \
+	-labelside [ColorbarLabelSide] \
 	\
 	-font $colorbar(font) \
 	-fontsize $colorbar(font,size) \
@@ -1731,13 +1792,15 @@ proc LayoutColorbar {cb fx fy fw fh} {
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
-	-orientation $colorbar(orientation) \
+	-orientation [ColorbarPositionOrientation] \
+	-labelside [ColorbarLabelSide] \
 	\
 	-font $colorbar(font) \
 	-fontsize $colorbar(font,size) \
 	-fontweight $colorbar(font,weight) \
 	-fontslant $colorbar(font,slant)
 
+    set colorbar(orientation) [ColorbarPositionOrientation]
     set cbh [expr !$colorbar(orientation)]
     set cbv $colorbar(orientation)
     set grh $view(graph,horz)
@@ -1746,20 +1809,28 @@ proc LayoutColorbar {cb fx fy fw fh} {
     # cbh
     if {$cbh} {
 	set xx $fx
-	set yy [expr $fy + $fh - $colorbar(horizontal,height)]
+	if {$colorbar(position) == {top}} {
+	    set yy $fy
+	} else {
+	    set yy [expr $fy + $fh - $colorbar(horizontal,height)]
+	}
 	set ww $fw
 	set hh $colorbar(horizontal,height)
     }
     # cbv
     if {$cbv} {
-	set xx [expr $fx + $fw - $colorbar(vertical,width)]
+	if {$colorbar(position) == {left}} {
+	    set xx $fx
+	} else {
+	    set xx [expr $fx + $fw - $colorbar(vertical,width)]
+	}
 	set yy $fy
 	set ww $colorbar(vertical,width)
 	set hh $fh
     }
 
     # cbhgrh
-    if {$cbh && !$cbv && $grh && !$grv} {
+    if {$cbh && !$cbv && $grh && !$grv && $colorbar(position) != {top}} {
 	incr yy -$graph(size)
 	incr ww -$dgraph(horz,offset)
     }
@@ -1770,7 +1841,9 @@ proc LayoutColorbar {cb fx fy fw fh} {
     # cbhgrhgrv
     if {$cbh && !$cbv && $grh && $grv} {
 	incr ww -$graph(size)
-	incr yy -$graph(size)
+	if {$colorbar(position) != {top}} {
+	    incr yy -$graph(size)
+	}
     }
 
     # cbvgrh
@@ -1778,14 +1851,16 @@ proc LayoutColorbar {cb fx fy fw fh} {
 	incr hh -$graph(size)
     }
     # cbvgrv
-    if {!$cbh && $cbv && !$grh && $grv} {
+    if {!$cbh && $cbv && !$grh && $grv && $colorbar(position) != {left}} {
 	incr xx -$graph(size)
 	incr hh -$dgraph(vert,offset)
     }
     # cbvgrhgrv
     if {!$cbh && $cbv && $grh && $grv} {
 	incr hh -$graph(size)
-	incr xx -$graph(size)
+	if {$colorbar(position) != {left}} {
+	    incr xx -$graph(size)
+	}
     }
 
     # grh
@@ -1819,7 +1894,8 @@ proc ColorbarUpdateView {} {
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
-	-orientation $colorbar(orientation) \
+	-orientation [ColorbarPositionOrientation] \
+	-labelside [ColorbarLabelSide] \
 	\
 	-font $colorbar(font) \
 	-fontsize $colorbar(font,size) \
@@ -1837,7 +1913,8 @@ proc ColorbarUpdateView {} {
 	    -ticks $colorbar(ticks) \
 	    -numerics $colorbar(numerics) \
 	    -space $colorbar(space) \
-	    -orientation $colorbar(orientation) \
+	    -orientation [ColorbarPositionOrientation] \
+	-labelside [ColorbarLabelSide] \
 	    \
 	    -font $colorbar(font) \
 	    -fontsize $colorbar(font,size) \
@@ -1877,6 +1954,8 @@ proc ColorbarBackup {ch dir} {
     puts $ch "colorbar configure -numerics $colorbar(numerics)"
     puts $ch "colorbar configure -space $colorbar(space)"
     puts $ch "colorbar configure -orientation $colorbar(orientation)"
+    puts $ch "set colorbar(position) $colorbar(position)"
+    puts $ch "set colorbar(label,position) $colorbar(label,position)"
 
     puts $ch "colorbar configure -font $colorbar(font)"
     puts $ch "colorbar configure -fontsize $colorbar(font,size)"
@@ -2004,6 +2083,20 @@ proc ColorbarSendCmdOrientation {} {
     } else {
 	$parse(proc) $parse(id) "vertical\n"
     }
+}
+
+proc ColorbarSendCmdPosition {} {
+    global parse
+    global colorbar
+
+    $parse(proc) $parse(id) "$colorbar(position)\n"
+}
+
+proc ColorbarSendCmdLabelPosition {} {
+    global parse
+    global colorbar
+
+    $parse(proc) $parse(id) "$colorbar(label,position)\n"
 }
 
 proc ColorbarSendCmdSpace {} {

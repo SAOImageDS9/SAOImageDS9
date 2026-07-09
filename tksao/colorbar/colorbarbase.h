@@ -43,6 +43,7 @@ struct ColorbarBaseOptions {
   int numerics;
   int space;              // 0-distance (linear), 1-value (AST)
   int ticks;
+  int labelSide;          // 0-bottom/right, 1-top/left
 
   int colors;
 };

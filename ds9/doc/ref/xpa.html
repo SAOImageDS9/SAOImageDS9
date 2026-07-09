@@ -559,6 +559,8 @@ colorbar []<br>
 &nbsp;&nbsp;&nbsp; [yes|no]<br>
 &nbsp;&nbsp;&nbsp; [orientation]<br>
 &nbsp;&nbsp;&nbsp; [horizontal|vertical]<br>
+&nbsp;&nbsp;&nbsp; [position top|bottom|left|right]<br>
+&nbsp;&nbsp;&nbsp; [label position natural|opposite]<br>
 &nbsp;&nbsp;&nbsp; [numerics yes|no]<br>
 &nbsp;&nbsp;&nbsp; [space value|distance]<br>
 &nbsp;&nbsp;&nbsp; [font times|helvetica|courier]<br>
@@ -575,6 +577,8 @@ colorbar []<br>
 <tt>Example:<br>
 $xpaget ds9 colorbar<br>
 $xpaget ds9 colorbar orientation<br>
+$xpaget ds9 colorbar position<br>
+$xpaget ds9 colorbar label position<br>
 $xpaget ds9 colorbar numerics<br>
 $xpaget ds9 colorbar space<br>
 $xpaget ds9 colorbar font<br>
@@ -590,6 +594,8 @@ $xpaget ds9 colorbar lock<br>
 $xpaset -p ds9 colorbar yes<br>
 $xpaset -p ds9 colorbar vertical<br>
 $xpaset -p ds9 colorbar orientation vertical<br>
+$xpaset -p ds9 colorbar position top<br>
+$xpaset -p ds9 colorbar label position opposite<br>
 $xpaset -p ds9 colorbar numerics yes<br>
 $xpaset -p ds9 colorbar space value<br>
 $xpaset -p ds9 colorbar font times<br>

@@ -1,3 +1,4 @@
+
 package provide DS9 1.0
 
 ######
@@ -61,82 +62,98 @@ proc colorbar::unsetupvalues {numsyms} {
 }
 
 array set colorbar::table {
-  32:277,target 13
+  17:257 shift
+  17:258 shift
+  32:277,target 28
+  17:259 shift
+  17:260 shift
+  21:292 shift
   27:0 reduce
+  9:302,target 36
+  17:261 shift
+  21:308,target 59
+  17:262 shift
   38:277 reduce
   48:0 reduce
-  16:262,target 6
-  21:277,target 41
-  9:294 goto
+  9:302 goto
+  21:308 goto
+  15:257,target 1
   6:0,target 7
   2:0 reduce
-  47:277 reduce
-  24:0 accept
-  48:0,target 37
-  41:0,target 30
+  64:0,target 50
+  55:277,target 37
+  56:0,target 39
+  48:0,target 25
+  41:0,target 11
+  17:277 reduce
+  47:284 shift
   45:0 reduce
-  33:0,target 14
-  25:0,target 20
-  16:259,target 3
-  16:260,target 4
-  17:280 shift
-  44:277,target 33
+  33:0,target 29
+  25:0,target 23
+  0:294,target 24
+  56:277 reduce
+  44:277,target 18
+  17:0,target 1
+  66:0 reduce
+  47:287 shift
   1:277,target 2
   6:277 reduce
-  26:277 reduce
-  33:277,target 14
-  14:257 shift
-  17:289 shift
-  21:0 reduce
-  14:291,target 45
-  14:258 shift
-  17:301 goto
-  14:259 shift
-  14:260 shift
+  33:277,target 29
+  65:277 reduce
+  17:262,target 6
   42:0 reduce
-  14:261 shift
-  14:262 shift
+  47:311 goto
   35:277 reduce
-  16:257,target 1
-  19:300,target 51
+  63:0 reduce
+  17:299 goto
+  56:277,target 39
   44:277 reduce
-  22:296,target 53
+  17:0 reduce
+  14:288,target 47
   38:0 reduce
-  45:277,target 25
+  17:259,target 3
+  17:260,target 4
+  21:292,target 58
+  45:277,target 19
+  22:275,target 60
   2:277,target 5
-  14:277 reduce
-  22:275,target 42
-  0:290,target 22
-  0:289,target 21
+  60:0 reduce
+  59:0 reduce
+  0:289,target 20
+  0:290,target 21
   3:0,target 3
+  17:299,target 49
   53:277 reduce
-  34:277,target 31
-  53:0,target 34
+  61:0,target 34
+  34:277,target 13
+  53:0,target 47
   3:277 reduce
-  45:0,target 25
-  37:0,target 17
-  14:0 reduce
+  47:284,target 63
+  45:0,target 19
+  37:0,target 15
   23:277 reduce
-  30:0,target 28
-  29:0,target 10
-  10:271,target 35
+  30:0,target 9
+  29:0,target 8
+  10:271,target 37
+  14:288 shift
+  62:277 shift
   35:0 reduce
-  14:0,target 1
-  23:277,target 23
-  14:291 goto
-  0:287,target 20
+  23:277,target 43
+  17:257,target 1
+  56:0 reduce
   32:277 reduce
   0:257 shift
+  57:277,target 42
   0:258 shift
   0:259 shift
   0:260 shift
-  0:261 shift
   0:266,target 10
+  0:261 shift
   0:262 shift
   0:263 shift
   0:264 shift
   11:271 shift
-  46:277,target 26
+  46:277,target 33
   41:277 reduce
   32:0 reduce
   0:265 shift
@@ -144,17 +161,17 @@ array set colorbar::table {
   0:266 shift
   3:277,target 3
   0:267 shift
-  12:296,target 44
   53:0 reduce
-  0:285,target 18
-  35:277,target 15
-  12:275,target 42
+  18:309,target 50
+  0:285,target 17
+  47:311,target 65
+  35:277,target 14
+  12:275,target 44
   50:277 reduce
   49:277 reduce
   6:0 reduce
-  16:291,target 46
   0:264,target 8
-  11:271,target 39
+  11:271,target 41
   0:277 reduce
   20:275 shift
   28:0 reduce
@@ -162,265 +179,311 @@ array set colorbar::table {
   0:280 shift
   0:0,target 1
   0:281 shift
-  19:278 shift
   0:282 shift
+  58:277 reduce
   50:0 reduce
   49:0 reduce
   0:283 shift
-  0:284 shift
+  12:304,target 46
+  65:0,target 38
   8:275 shift
+  11:301 goto
+  57:0,target 42
   0:285 shift
-  13:277,target 42
-  50:0,target 39
-  49:0,target 40
+  13:277,target 44
+  58:277,target 41
+  50:0,target 36
+  49:0,target 26
   0:286 shift
   0:283,target 16
-  11:293 goto
-  42:0,target 18
-  0:287 shift
-  14:261,target 5
-  34:0,target 31
+  42:0,target 12
+  34:0,target 13
   28:277 reduce
-  26:0,target 35
-  0:290 shift
+  0:288 shift
+  26:0,target 0
   0:289 shift
+  0:290 shift
   3:0 reduce
-  7:269,target 28
-  7:270,target 29
-  0:301 goto
-  0:291 goto
-  19:288 shift
+  7:269,target 30
+  7:270,target 31
+  0:291 shift
   0:262,target 6
-  16:257 shift
-  19:300 goto
-  47:277,target 36
-  16:258 shift
+  0:293 shift
   25:0 reduce
+  24:275,target 44
+  0:294 shift
   4:277,target 6
-  16:259 shift
-  16:260 shift
-  16:261 shift
-  16:262 shift
+  0:305 goto
+  19:310,target 55
   46:0 reduce
   37:277 reduce
-  0:297 goto
-  36:277,target 16
+  0:307 goto
+  19:295 shift
+  19:296 shift
+  36:277,target 31
+  0:309 goto
   0:299 goto
-  25:298,target 54
+  19:297 shift
+  19:298 shift
   0:281,target 14
-  19:278,target 49
-  14:258,target 2
-  17:301,target 47
+  19:310 goto
+  24:304,target 61
   0:0 reduce
   46:277 reduce
-  25:277,target 21
+  25:277,target 23
   0:259,target 3
   0:260,target 4
   43:0 reduce
+  0:309,target 28
   0:299,target 25
   16:277 reduce
-  14:277,target 1
-  9:274,target 33
+  19:297,target 53
+  60:277,target 40
+  59:277,target 27
+  9:274,target 35
+  64:0 reduce
+  55:277 reduce
+  15:261,target 5
+  18:293,target 23
   5:277 reduce
-  48:277,target 37
+  48:277,target 25
   25:277 reduce
   4:0,target 6
   5:277,target 4
   0:257,target 1
-  16:291 goto
+  64:277 reduce
+  54:0,target 48
   40:0 reduce
   39:0 reduce
-  46:0,target 26
-  37:277,target 17
-  0:297,target 24
-  38:0,target 32
+  46:0,target 33
+  37:277,target 15
+  0:307,target 27
+  19:295,target 51
+  38:0,target 16
+  61:0 reduce
   34:277 reduce
-  31:0,target 29
-  23:0,target 23
-  15:0,target 24
-  26:277,target 35
+  31:0,target 10
+  21:278,target 57
+  23:0,target 43
+  15:258,target 2
+  15:0,target 1
   15:0 reduce
   43:277 reduce
   36:0 reduce
-  15:277,target 24
-  25:298 goto
-  16:261,target 5
+  15:277,target 1
+  61:277,target 34
+  0:305,target 26
+  57:0 reduce
   13:277 reduce
   52:277 reduce
-  50:277,target 39
-  49:277,target 40
+  50:277,target 36
+  49:277,target 26
   6:277,target 7
   2:277 reduce
   22:275 shift
-  22:276 shift
-  38:277,target 32
+  38:277,target 16
   33:0 reduce
-  16:258,target 2
+  61:277 reduce
+  54:0 reduce
+  0:293,target 23
   31:277 reduce
-  27:277,target 8
+  27:277,target 21
   1:0,target 2
-  10:295,target 38
-  51:0,target 27
-  10:274,target 37
-  43:0,target 19
-  16:277,target 1
-  35:0,target 15
+  66:0,target 22
+  47:287,target 64
+  58:0,target 41
+  51:0,target 45
+  10:274,target 39
+  43:0,target 30
+  16:277,target 24
+  62:277,target 66
+  35:0,target 14
   30:0 reduce
   29:0 reduce
   10:271 shift
   40:277 reduce
   39:277 reduce
-  27:0,target 8
+  27:0,target 20
   10:272 shift
-  22:296 goto
+  17:261,target 5
+  27:306,target 62
   51:0 reduce
   10:274 shift
-  22:276,target 43
-  0:301,target 26
-  0:291,target 23
-  19:288,target 50
-  51:277,target 27
+  0:291,target 22
+  51:277,target 45
+  10:303,target 40
   48:277 reduce
   4:0 reduce
-  17:280,target 13
-  40:277,target 12
-  39:277,target 11
+  40:277,target 32
+  39:277,target 17
   7:268 shift
-  10:272,target 36
-  18:275 shift
-  26:0 reduce
+  10:272,target 38
+  26:0 accept
   7:269 shift
   7:270 shift
-  47:0 reduce
-  28:277,target 9
+  17:258,target 2
+  18:280 shift
+  57:277 reduce
+  28:277,target 35
+  0:288,target 19
+  10:303 goto
   27:277 reduce
   1:0 reduce
-  10:295 goto
   0:267,target 11
+  17:277,target 1
+  63:277,target 49
+  15:257 shift
   23:0 reduce
+  15:258 shift
+  15:259 shift
+  15:260 shift
+  15:261 shift
+  18:293 shift
   44:0 reduce
   5:0,target 4
+  15:262 shift
   36:277 reduce
-  52:277,target 38
-  0:286,target 19
-  11:293,target 41
-  7:292 goto
-  55:0,target 22
-  12:276,target 43
-  47:0,target 36
-  40:0,target 12
-  39:0,target 11
-  41:277,target 30
-  32:0,target 13
+  52:277,target 46
+  7:300 goto
+  65:0 reduce
+  0:286,target 18
+  63:0,target 49
+  55:0,target 37
+  12:276,target 45
+  18:309 goto
+  18:280,target 13
+  40:0,target 32
+  39:0,target 17
+  41:277,target 11
+  32:0,target 28
   0:265,target 9
-  11:272,target 40
+  11:272,target 42
   45:277 reduce
-  24:0,target 0
-  16:0,target 1
+  27:306 goto
+  16:0,target 24
   41:0 reduce
-  30:277,target 28
-  29:277,target 10
+  30:277,target 9
+  29:277,target 8
   15:277 reduce
-  7:292,target 30
-  54:277 shift
-  0:284,target 17
-  8:275,target 31
-  14:262,target 6
+  54:277 reduce
+  8:275,target 33
+  11:301,target 43
+  24:275 shift
   4:277 reduce
+  64:277,target 50
+  24:276 shift
   0:263,target 7
   16:0 reduce
+  24:276,target 45
+  63:277 reduce
   37:0 reduce
-  53:277,target 34
+  53:277,target 47
+  58:0 reduce
+  7:300,target 32
   33:277 reduce
   0:282,target 15
-  14:259,target 3
-  14:260,target 4
-  42:277,target 18
-  7:268,target 27
-  18:275,target 48
+  42:277,target 12
+  7:268,target 29
+  15:299 goto
   0:261,target 5
   13:0 reduce
+  24:304 goto
   2:0,target 5
   42:277 reduce
   34:0 reduce
-  31:277,target 29
+  31:277,target 10
+  19:298,target 54
+  60:0,target 40
+  59:0,target 27
   12:275 shift
   55:0 reduce
-  52:0,target 38
+  52:0,target 46
   12:276 shift
-  44:0,target 33
-  36:0,target 16
-  28:0,target 9
+  44:0,target 18
+  15:262,target 6
+  36:0,target 31
+  28:0,target 35
   0:279,target 12
   0:280,target 13
+  65:277,target 38
   51:277 reduce
-  14:257,target 1
-  17:289,target 21
-  21:0,target 41
-  13:0,target 42
+  13:0,target 44
   1:277 reduce
   0:258,target 2
-  9:294,target 34
-  21:277 reduce
-  54:277,target 55
+  54:277,target 48
   31:0 reduce
+  21:278 shift
   9:273 shift
+  60:277 reduce
+  59:277 reduce
   9:274 shift
+  19:296,target 52
   52:0 reduce
-  9:273,target 32
-  43:277,target 19
+  9:273,target 34
+  15:259,target 3
+  15:260,target 4
+  43:277,target 30
+  12:304 goto
   30:277 reduce
   29:277 reduce
   0:277,target 1
-  20:275,target 52
-  12:296 goto
+  20:275,target 56
   5:0 reduce
+  15:299,target 48
 }
 
 array set colorbar::rules {
-  9,l 292
-  11,l 293
-  32,l 299
-  6,l 291
-  28,l 299
-  3,l 291
-  25,l 299
-  0,l 302
-  22,l 297
-  18,l 296
-  40,l 300
-  39,l 300
-  15,l 295
-  36,l 299
-  12,l 293
-  33,l 299
-  7,l 291
-  29,l 299
-  30,l 299
-  4,l 291
-  26,l 299
-  1,l 291
-  23,l 299
-  19,l 296
-  20,l 297
-  41,l 301
-  16,l 295
-  37,l 299
-  13,l 294
-  34,l 299
-  8,l 292
-  10,l 292
-  31,l 299
-  5,l 291
-  27,l 299
-  2,l 291
-  24,l 299
-  21,l 298
-  42,l 301
-  17,l 295
-  38,l 299
-  14,l 294
-  35,l 299
+  9,l 300
+  11,l 301
+  32,l 307
+  6,l 299
+  28,l 307
+  50,l 311
+  49,l 311
+  3,l 299
+  25,l 307
+  46,l 310
+  0,l 312
+  22,l 305
+  43,l 309
+  18,l 304
+  40,l 307
+  39,l 307
+  15,l 303
+  36,l 307
+  12,l 301
+  33,l 307
+  7,l 299
+  29,l 307
+  30,l 307
+  4,l 299
+  26,l 307
+  47,l 310
+  1,l 299
+  23,l 307
+  44,l 309
+  19,l 304
+  20,l 305
+  41,l 308
+  16,l 303
+  37,l 307
+  13,l 302
+  34,l 307
+  8,l 300
+  10,l 300
+  31,l 307
+  5,l 299
+  27,l 307
+  48,l 310
+  2,l 299
+  24,l 307
+  45,l 310
+  21,l 306
+  42,l 308
+  17,l 303
+  38,l 307
+  14,l 302
+  35,l 307
 }
 
 array set colorbar::rules {
@@ -431,21 +494,24 @@ array set colorbar::rules {
   18,dc 1
   33,dc 2
   9,dc 1
+  47,dc 1
   11,dc 1
   25,dc 2
   2,dc 1
-  40,dc 1
-  39,dc 1
+  40,dc 2
+  39,dc 2
   17,dc 1
   32,dc 2
   8,dc 1
+  46,dc 1
   10,dc 1
   24,dc 1
   1,dc 0
-  38,dc 2
+  38,dc 3
   16,dc 1
   31,dc 2
   7,dc 1
+  45,dc 1
   23,dc 1
   0,dc 1
   37,dc 2
@@ -453,13 +519,17 @@ array set colorbar::rules {
   29,dc 2
   30,dc 2
   6,dc 1
+  44,dc 1
   22,dc 3
   36,dc 2
   14,dc 1
   28,dc 2
   5,dc 1
+  43,dc 1
   21,dc 0
   35,dc 1
+  50,dc 1
+  49,dc 1
   13,dc 1
   27,dc 2
   4,dc 1
@@ -467,360 +537,431 @@ array set colorbar::rules {
   19,dc 1
   20,dc 1
   34,dc 2
+  48,dc 1
 }
 
 array set colorbar::rules {
-  41,line 142
-  7,line 86
-  37,line 134
-  4,line 83
-  34,line 129
-  1,line 80
-  31,line 124
-  27,line 119
-  24,line 115
-  21,line 110
-  17,line 103
-  14,line 98
-  11,line 93
-  9,line 89
-  40,line 139
-  39,line 138
-  6,line 85
-  36,line 133
-  3,line 82
-  33,line 127
-  29,line 121
-  30,line 122
-  26,line 118
-  23,line 114
-  19,line 107
-  20,line 110
-  16,line 102
-  13,line 97
-  10,line 90
-  42,line 143
-  8,line 88
-  38,line 135
-  5,line 84
-  35,line 131
-  2,line 81
-  32,line 126
-  28,line 120
-  25,line 117
-  22,line 111
-  18,line 106
-  15,line 101
+  41,line 148
+  7,line 94
+  37,line 141
+  4,line 91
+  34,line 137
+  1,line 88
+  31,line 132
+  27,line 127
+  24,line 123
+  21,line 118
+  17,line 111
+  14,line 106
+  11,line 101
+  50,line 163
+  49,line 162
+  46,line 157
+  43,line 152
+  9,line 97
+  40,line 145
+  39,line 144
+  6,line 93
+  36,line 140
+  3,line 90
+  33,line 135
+  29,line 129
+  30,line 130
+  26,line 126
+  23,line 122
+  19,line 115
+  20,line 118
+  16,line 110
+  13,line 105
+  10,line 98
+  48,line 159
+  45,line 156
+  42,line 149
+  8,line 96
+  38,line 143
+  5,line 92
+  35,line 139
+  2,line 89
+  32,line 134
+  28,line 128
+  25,line 125
+  22,line 119
+  18,line 114
+  15,line 109
   21,e 1
-  12,line 94
+  12,line 102
+  47,line 158
+  44,line 153
 }
 
 array set colorbar::lr1_table {
-  35 {{15 {0 277} 1}}
-  14,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {291 45}}
-  36 {{16 {0 277} 1}}
+  66,trans {}
+  35 {{14 {0 277} 1}}
+  14,trans {{288 47}}
+  36 {{31 {0 277} 2}}
   33,trans {}
-  37 {{17 {0 277} 1}}
+  37 {{15 {0 277} 1}}
   52,trans {}
-  38 {{32 {0 277} 2}}
-  40 {{12 {0 277} 1}}
-  39 {{11 {0 277} 1}}
-  18,trans {{275 48}}
-  41 {{30 {0 277} 2}}
+  38 {{16 {0 277} 1}}
+  40 {{32 {0 277} 2}}
+  39 {{17 {0 277} 1}}
+  18,trans {{280 13} {293 23} {309 50}}
+  41 {{11 {0 277} 1}}
   1,trans {}
   37,trans {}
-  42 {{18 {0 277} 1}}
-  43 {{19 {0 277} 1}}
-  44 {{33 {0 277} 2}}
+  42 {{12 {0 277} 1}}
+  56,trans {}
+  43 {{30 {0 277} 2}}
+  44 {{18 {0 277} 1}}
   23,trans {}
-  45 {{25 {0 277} 2}}
+  45 {{19 {0 277} 1}}
   5,trans {}
   42,trans {}
-  46 {{26 {0 277} 2}}
-  47 {{36 {0 277} 2}}
-  48 {{37 {0 277} 2}}
-  27,trans {}
-  50 {{39 {0 277} 1}}
-  49 {{40 {0 277} 1}}
-  9,trans {{273 32} {274 33} {294 34}}
+  46 {{33 {0 277} 2}}
+  61,trans {}
+  47 {{38 {0 277} 2} {49 {0 277} 0} {50 {0 277} 0}}
+  48 {{25 {0 277} 2}}
+  27,trans {{306 62}}
+  50 {{36 {0 277} 2}}
+  49 {{26 {0 277} 2}}
+  9,trans {{273 34} {274 35} {302 36}}
   46,trans {}
-  51 {{27 {0 277} 2}}
-  52 {{38 {0 277} 2}}
-  53 {{34 {0 277} 2}}
+  51 {{45 {0 277} 1}}
+  65,trans {}
+  52 {{46 {0 277} 1}}
+  53 {{47 {0 277} 1}}
   13,trans {}
   32,trans {}
-  54 {{22 0 2}}
-  55 {{22 0 3}}
+  54 {{48 {0 277} 1}}
   51,trans {}
-  17,trans {{280 13} {289 21} {301 47}}
-  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {263 7} {264 8} {265 9} {266 10} {267 11} {279 12} {280 13} {281 14} {282 15} {283 16} {284 17} {285 18} {286 19} {287 20} {289 21} {290 22} {291 23} {297 24} {299 25} {301 26}}
+  55 {{37 {0 277} 2}}
+  56 {{39 {0 277} 2}}
+  57 {{42 {0 277} 1}}
+  17,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {299 49}}
+  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {263 7} {264 8} {265 9} {266 10} {267 11} {279 12} {280 13} {281 14} {282 15} {283 16} {285 17} {286 18} {288 19} {289 20} {290 21} {291 22} {293 23} {294 24} {299 25} {305 26} {307 27} {309 28}}
   36,trans {}
+  58 {{41 {0 277} 1}}
   55,trans {}
-  22,trans {{275 42} {276 43} {296 53}}
+  60 {{40 {0 277} 2}}
+  59 {{27 {0 277} 2}}
+  61 {{34 {0 277} 2}}
+  62 {{22 0 2}}
+  22,trans {{275 60}}
   4,trans {}
+  63 {{49 {0 277} 1}}
   41,trans {}
+  60,trans {}
+  59,trans {}
+  64 {{50 {0 277} 1}}
+  65 {{38 {0 277} 3}}
+  66 {{22 0 3}}
   26,trans {}
-  8,trans {{275 31}}
+  8,trans {{275 33}}
   45,trans {}
-  12,trans {{275 42} {276 43} {296 44}}
+  64,trans {}
+  12,trans {{275 44} {276 45} {304 46}}
   31,trans {}
   50,trans {}
   49,trans {}
-  16,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {291 46}}
+  16,trans {}
   35,trans {}
-  54,trans {{277 55}}
-  21,trans {}
+  54,trans {}
+  21,trans {{278 57} {292 58} {308 59}}
   3,trans {}
   40,trans {}
   39,trans {}
+  58,trans {}
   10 {{32 {0 277} 1} {15 {0 277} 0} {16 {0 277} 0} {17 {0 277} 0}}
   11 {{30 {0 277} 1} {11 {0 277} 0} {12 {0 277} 0}}
-  25,trans {{298 54}}
+  25,trans {}
   12 {{33 {0 277} 1} {18 {0 277} 0} {19 {0 277} 0}}
-  7,trans {{268 27} {269 28} {270 29} {292 30}}
+  7,trans {{268 29} {269 30} {270 31} {300 32}}
   44,trans {}
-  13 {{42 {0 277} 1}}
-  14 {{25 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
-  11,trans {{271 39} {272 40} {293 41}}
-  15 {{24 {0 277} 1}}
+  13 {{44 {0 277} 1}}
+  63,trans {}
+  14 {{38 {0 277} 1}}
+  11,trans {{271 41} {272 42} {301 43}}
+  15 {{25 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
   30,trans {}
   29,trans {}
-  16 {{26 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
+  16 {{24 {0 277} 1}}
   48,trans {}
-  0 {{0 0 0} {20 0 0} {22 0 0} {23 {0 277} 0} {24 {0 277} 0} {25 {0 277} 0} {26 {0 277} 0} {27 {0 277} 0} {28 {0 277} 0} {29 {0 277} 0} {30 {0 277} 0} {31 {0 277} 0} {32 {0 277} 0} {33 {0 277} 0} {34 {0 277} 0} {35 {0 277} 0} {36 {0 277} 0} {37 {0 277} 0} {38 {0 277} 0} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0} {41 {0 277} 0} {42 {0 277} 0}}
-  17 {{36 {0 277} 1} {41 {0 277} 0} {42 {0 277} 0}}
+  0 {{0 0 0} {20 0 0} {22 0 0} {23 {0 277} 0} {24 {0 277} 0} {25 {0 277} 0} {26 {0 277} 0} {27 {0 277} 0} {28 {0 277} 0} {29 {0 277} 0} {30 {0 277} 0} {31 {0 277} 0} {32 {0 277} 0} {33 {0 277} 0} {34 {0 277} 0} {35 {0 277} 0} {36 {0 277} 0} {37 {0 277} 0} {38 {0 277} 0} {39 {0 277} 0} {40 {0 277} 0} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0} {43 {0 277} 0} {44 {0 277} 0}}
+  17 {{26 {0 277} 1} {1 {0 277} 0} {2 {0 277} 0} {3 {0 277} 0} {4 {0 277} 0} {5 {0 277} 0} {6 {0 277} 0} {7 {0 277} 0}}
   1 {{2 {0 277} 1}}
-  18 {{37 {0 277} 1}}
-  15,trans {}
+  18 {{36 {0 277} 1} {43 {0 277} 0} {44 {0 277} 0}}
+  15,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {299 48}}
   2 {{5 {0 277} 1}}
-  19 {{27 {0 277} 1} {39 {0 277} 0} {40 {0 277} 0}}
-  20 {{38 {0 277} 1}}
+  19 {{37 {0 277} 1} {45 {0 277} 0} {46 {0 277} 0} {47 {0 277} 0} {48 {0 277} 0}}
+  20 {{39 {0 277} 1}}
   34,trans {}
   3 {{3 {0 277} 1}}
-  21 {{41 {0 277} 1}}
+  21 {{27 {0 277} 1} {41 {0 277} 0} {42 {0 277} 0}}
   53,trans {}
   4 {{6 {0 277} 1}}
-  22 {{34 {0 277} 1} {18 {0 277} 0} {19 {0 277} 0}}
+  22 {{40 {0 277} 1}}
   5 {{4 {0 277} 1}}
-  23 {{23 {0 277} 1}}
-  20,trans {{275 52}}
-  19,trans {{278 49} {288 50} {300 51}}
+  23 {{43 {0 277} 1}}
+  20,trans {{275 56}}
+  19,trans {{295 51} {296 52} {297 53} {298 54} {310 55}}
   6 {{7 {0 277} 1}}
-  24 {{0 0 1}}
+  24 {{34 {0 277} 1} {18 {0 277} 0} {19 {0 277} 0}}
   2,trans {}
   38,trans {}
   7 {{28 {0 277} 1} {8 {0 277} 0} {9 {0 277} 0} {10 {0 277} 0}}
-  25 {{20 0 1} {22 0 1} {21 277 0}}
+  25 {{23 {0 277} 1}}
+  57,trans {}
   8 {{29 {0 277} 1}}
-  26 {{35 {0 277} 1}}
+  26 {{0 0 1}}
   9 {{31 {0 277} 1} {13 {0 277} 0} {14 {0 277} 0}}
-  27 {{8 {0 277} 1}}
-  24,trans {}
+  27 {{20 0 1} {22 0 1} {21 277 0}}
+  24,trans {{275 44} {276 45} {304 61}}
+  28 {{35 {0 277} 1}}
   6,trans {}
-  28 {{9 {0 277} 1}}
   43,trans {}
-  29 {{10 {0 277} 1}}
-  30 {{28 {0 277} 2}}
-  31 {{29 {0 277} 2}}
-  10,trans {{271 35} {272 36} {274 37} {295 38}}
-  32 {{13 {0 277} 1}}
+  29 {{8 {0 277} 1}}
+  30 {{9 {0 277} 1}}
+  62,trans {{277 66}}
+  31 {{10 {0 277} 1}}
+  10,trans {{271 37} {272 38} {274 39} {303 40}}
+  32 {{28 {0 277} 2}}
   28,trans {}
-  33 {{14 {0 277} 1}}
-  47,trans {}
-  34 {{31 {0 277} 2}}
+  33 {{29 {0 277} 2}}
+  47,trans {{284 63} {287 64} {311 65}}
+  34 {{13 {0 277} 1}}
 }
 
 array set colorbar::token_id_table {
+  286 ORIENTATION_
   286,t 0
-  286 SPACE_
-  280,title HORIZONTAL
-  279,title CENTER
-  264,line 15
-  302,line 144
-  298,title {}
-  292,line 87
-  287 TICKS_
-  270,t 0
-  269,t 0
-  288 VALUE_
-  300 space
-  290 WIDTH_
-  289 VERTICAL_
-  276,line 28
+  287 OPPOSITE_
+  292,line 48
+  302,line 104
+  288 POSITION_
   265,title FONTSLANT
-  301,t 1
-  301 orientation
-  291,t 1
-  291 yesno
-  284,title ORIENTATION
-  302 start'
-  292 font
-  274,t 0
-  261,line 11
-  293 fontWeight
+  289 SIZE_
+  290 SPACE_
+  300 font
+  284,title NATURAL
+  291 TICKS_
+  301 fontWeight
+  292 VALUE_
+  302 fontSlant
   288,line 44
-  257,t 0
-  294 fontSlant
-  270,title COURIER
-  269,title HELVETICA
-  295,t 1
-  295 fontStyle
-  288,title VALUE
-  273,line 24
-  296 numeric
-  278,t 0
-  297 command
-  257,line 7
+  293 VERTICAL_
+  303 fontStyle
+  304 numeric
+  294 WIDTH_
+  305 command
+  295 TOP_
+  306 @PSEUDO1
+  296 BOTTOM_
+  307 colorbar
   262,t 0
-  298 @PSEUDO1
+  297 LEFT_
+  308 space
   285,line 41
-  274,title ITALIC
-  299,t 1
-  299 colorbar
-  293,title {}
+  298 RIGHT_
+  310 position
+  309 orientation
+  299 yesno
+  311 labelPosition
   283,t 0
-  270,line 21
-  269,line 20
-  297,line 109
-  259,title ON
-  260,title OFF
-  266,t 0
-  278,title DISTANCE
-  297,title {}
+  312 start'
   282,line 38
-  287,t 0
-  error error
-  271,t 0
   264,title FONTSIZE
-  266,line 17
-  294,line 96
-  283,title NUMERICS
-  302,t 1
-  292,t 1
+  283,title MATCH
+  312,title {}
   278,line 34
-  error,line 78
-  275,t 0
-  268,title TIMES
-  287,title TICKS
+  error,line 86
   258,t 0
-  263,line 14
-  301,line 141
-  291,line 79
-  error,title {}
-  296,t 1
-  280,t 0
-  279,t 0
   275,line 27
-  273,title ROMAN
-  302,title {}
-  292,title {}
-  263,t 0
-  259,line 9
-  260,line 10
-  287,line 43
-  258,title NO
-  284,t 0
-  277,title string
-  296,title {}
+  279,t 0
+  280,t 0
+  311,t 1
   272,line 23
-  267,t 0
-  299,line 113
   263,title FONT
-  288,t 0
-  284,line 40
-  282,title MATCH
-  272,t 0
+  282,title LOCK
+  311,title {}
   268,line 19
-  296,line 105
-  267,title FONTWEIGHT
-  293,t 1
-  286,title SPACE
-  257 YES_
-  281,line 37
   276,t 0
-  258 NO_
-  259,t 0
-  259 ON_
-  260 OFF_
-  260,t 0
-  272,title BOLD
-  261 TRUE_
   265,line 16
-  301,title {}
-  297,t 1
-  293,line 92
-  291,title {}
-  262 FALSE_
-  281,t 0
-  263 FONT_
-  277,line 30
-  257,title YES
-  264 FONTSIZE_
-  264,t 0
-  276,title float
-  265 FONTSLANT_
-  295,title {}
+  307,t 1
+  297,t 0
   262,line 12
-  266 FONTSTYLE_
-  300,line 137
-  290,line 46
-  289,line 45
-  285,t 0
-  267 FONTWEIGHT_
-  0,t 0
-  0 {$}
   262,title FALSE
-  268 TIMES_
-  268,t 0
-  281,title LOCK
-  274,line 25
-  270 COURIER_
-  269 HELVETICA_
-  299,title {}
+  0 {$}
+  0,t 0
+  281,title LABEL
+  310,title {}
+  309,title {}
   error,t 0
-  271 NORMAL_
-  300,t 1
-  290,t 0
-  289,t 0
-  272 BOLD_
+  299,title {}
   258,line 8
-  286,line 42
   273,t 0
-  273 ROMAN_
-  266,title FONTSTYLE
-  285,title SIZE
-  274 ITALIC_
-  275 INT_
-  271,line 22
-  298,line 110
-  294,t 1
-  276 REAL_
-  277,t 0
-  277 STRING_
-  271,title NORMAL
-  300,title {}
-  290,title WIDTH
-  289,title VERTICAL
-  283,line 39
-  278 DISTANCE_
-  261,t 0
-  280 HORIZONTAL_
-  279 CENTER_
-  298,t 1
-  281 LOCK_
-  267,line 18
-  295,line 100
-  282,t 0
-  282 MATCH_
-  275,title integer
-  294,title {}
-  283 NUMERICS_
-  265,t 0
-  284 ORIENTATION_
-  280,line 36
-  279,line 35
-  285 SIZE_
+  304,t 1
+  294,t 0
   261,title TRUE
+  279,title CENTER
+  280,title HORIZONTAL
+  308,title {}
+  269,t 0
+  270,t 0
+  298,title RIGHT
+  291,t 0
+  301,t 1
+  311,line 161
+  307,line 121
+  266,t 0
+  260,title OFF
+  259,title ON
+  297,line 53
+  278,title DISTANCE
+  307,title {}
+  297,title LEFT
+  287,t 0
+  304,line 113
+  294,line 50
+  291,line 47
+  error,title {}
+  301,line 100
+  263,t 0
+  258,title NO
+  287,line 43
+  277,title string
+  284,t 0
+  306,title {}
+  296,title BOTTOM
+  284,line 40
+  281,line 37
+  260,t 0
+  259,t 0
+  281,t 0
+  257,title YES
+  277,line 30
+  276,title float
+  312,t 1
+  305,title {}
+  295,title TOP
+  274,line 25
+  271,line 22
+  277,t 0
+  308,t 1
+  267,line 18
+  298,t 0
+  275,title integer
+  304,title {}
+  294,title WIDTH
+  264,line 15
+  261,line 11
+  274,t 0
+  305,t 1
+  295,t 0
+  257,line 7
+  274,title ITALIC
+  293,title VERTICAL
+  303,title {}
+  271,t 0
+  error error
+  292,t 0
+  302,t 1
+  273,title ROMAN
+  292,title VALUE
+  302,title {}
+  267,t 0
+  310,line 155
+  309,line 151
+  299,line 87
+  288,t 0
+  306,line 118
+  296,line 52
+  272,title BOLD
+  303,line 108
+  291,title TICKS
+  293,line 49
+  301,title {}
+  264,t 0
+  285,t 0
+  289,line 45
+  290,line 46
+  300,line 95
+  286,line 42
+  271,title NORMAL
+  261,t 0
+  283,line 39
+  289,title SIZE
+  290,title SPACE
+  300,title {}
+  282,t 0
+  279,line 35
+  280,line 36
+  276,line 28
+  257,t 0
+  269,title HELVETICA
+  270,title COURIER
+  273,line 24
+  288,title POSITION
+  278,t 0
+  310,t 1
+  309,t 1
+  299,t 1
+  269,line 20
+  270,line 21
+  266,line 17
+  268,title TIMES
+  275,t 0
+  263,line 14
+  287,title OPPOSITE
+  306,t 1
+  296,t 0
+  260,line 10
+  259,line 9
+  272,t 0
+  267,title FONTWEIGHT
+  303,t 1
+  257 YES_
+  286,title ORIENTATION
+  293,t 0
+  258 NO_
+  260 OFF_
+  259 ON_
+  261 TRUE_
+  262 FALSE_
+  263 FONT_
+  264 FONTSIZE_
+  265 FONTSLANT_
+  266 FONTSTYLE_
+  267 FONTWEIGHT_
+  268,t 0
+  268 TIMES_
+  269 HELVETICA_
+  270 COURIER_
+  312,line 164
+  271 NORMAL_
+  272 BOLD_
+  289,t 0
+  290,t 0
+  300,t 1
+  266,title FONTSTYLE
+  273 ROMAN_
+  274 ITALIC_
+  285,title NUMERICS
+  275 INT_
+  308,line 147
+  276 REAL_
+  298,line 54
+  277 STRING_
+  278 DISTANCE_
+  279 CENTER_
+  280 HORIZONTAL_
+  281 LABEL_
+  305,line 117
+  282 LOCK_
+  295,line 51
+  265,t 0
+  283 MATCH_
+  284 NATURAL_
+  285 NUMERICS_
 }
 
 proc colorbar::yyparse {} {
@@ -949,14 +1090,22 @@ proc colorbar::yyparse {} {
                     32 { ProcessCmdFontStyle colorbar font $2 ColorbarUpdateView }
                     33 { ProcessCmdSet colorbar center $2 ColorbarUpdateView }
                     34 { ProcessCmdSet colorbar width $2 ColorbarUpdateView }
-                    35 { ProcessCmdSet colorbar orientation $1 ColorbarUpdateView }
-                    36 { ProcessCmdSet colorbar orientation $2 ColorbarUpdateView }
-                    37 { ProcessCmdSet colorbar size $2 ColorbarUpdateView }
-                    38 { ProcessCmdSet colorbar ticks $2 ColorbarUpdateView }
-                    39 { set _ 1 }
-                    40 { set _ 0 }
+                    35 { ColorbarCmdOrientation $1 }
+                    36 { ColorbarCmdOrientation $2 }
+                    37 { ColorbarCmdPosition $2 }
+                    38 { ProcessCmdSet colorbar label,position $3 ColorbarUpdateView }
+                    39 { ProcessCmdSet colorbar size $2 ColorbarUpdateView }
+                    40 { ProcessCmdSet colorbar ticks $2 ColorbarUpdateView }
                     41 { set _ 1 }
                     42 { set _ 0 }
+                    43 { set _ 1 }
+                    44 { set _ 0 }
+                    45 { set _ top }
+                    46 { set _ bottom }
+                    47 { set _ left }
+                    48 { set _ right }
+                    49 { set _ natural }
+                    50 { set _ opposite }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

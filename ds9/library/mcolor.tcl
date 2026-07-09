@@ -68,8 +68,10 @@ proc ColorMainMenu {} {
 	-command ColormapDialog
 
     ThemeMenu $ds9(mb).color.colorbar
-    $ds9(mb).color.colorbar add cascade -label [msgcat::mc {Orientation}] \
+    $ds9(mb).color.colorbar add cascade -label [msgcat::mc {Position}] \
 	-menu $ds9(mb).color.colorbar.orient
+    $ds9(mb).color.colorbar add cascade -label [msgcat::mc {Labels}] \
+	-menu $ds9(mb).color.colorbar.labels
     $ds9(mb).color.colorbar add cascade -label [msgcat::mc {Numerics}] \
 	-menu $ds9(mb).color.colorbar.numerics
     $ds9(mb).color.colorbar add cascade  -label [msgcat::mc {Font}] \
@@ -90,11 +92,25 @@ proc ColorMainMenu {} {
 
     ThemeMenu $ds9(mb).color.colorbar.orient
     $ds9(mb).color.colorbar.orient add radiobutton \
-	-label [msgcat::mc {Horizontal}] -variable colorbar(orientation) \
-	-value 0 -command ColorbarUpdateView
+	-label [msgcat::mc {Bottom}] -variable colorbar(position) \
+	-value bottom -command [list ColorbarCmdPosition bottom]
     $ds9(mb).color.colorbar.orient add radiobutton \
-	-label [msgcat::mc {Vertical}] -variable colorbar(orientation) \
-	-value 1 -command ColorbarUpdateView
+	-label [msgcat::mc {Top}] -variable colorbar(position) \
+	-value top -command [list ColorbarCmdPosition top]
+    $ds9(mb).color.colorbar.orient add radiobutton \
+	-label [msgcat::mc {Right}] -variable colorbar(position) \
+	-value right -command [list ColorbarCmdPosition right]
+    $ds9(mb).color.colorbar.orient add radiobutton \
+	-label [msgcat::mc {Left}] -variable colorbar(position) \
+	-value left -command [list ColorbarCmdPosition left]
+
+    ThemeMenu $ds9(mb).color.colorbar.labels
+    $ds9(mb).color.colorbar.labels add radiobutton \
+	-label [msgcat::mc {Natural}] -variable colorbar(label,position) \
+	-value natural -command ColorbarUpdateView
+    $ds9(mb).color.colorbar.labels add radiobutton \
+	-label [msgcat::mc {Opposite}] -variable colorbar(label,position) \
+	-value opposite -command ColorbarUpdateView
 
     ThemeMenu $ds9(mb).color.colorbar.numerics
     $ds9(mb).color.colorbar.numerics add checkbutton \
@@ -188,18 +204,30 @@ proc PrefsDialogColorMenu {w} {
     $m add cascade -label [msgcat::mc {Colorbar}] -menu $m.colorbar
 
     ThemeMenu $m.colorbar
-    $m.colorbar add cascade -label [msgcat::mc {Orientation}] \
+    $m.colorbar add cascade -label [msgcat::mc {Position}] \
 	-menu $m.colorbar.orient
+    $m.colorbar add cascade -label [msgcat::mc {Labels}] \
+	-menu $m.colorbar.labels
     $m.colorbar add cascade -label [msgcat::mc {Numerics}] \
 	-menu $m.colorbar.numerics
     $m.colorbar add cascade  -label [msgcat::mc {Font}] \
 	-menu $m.colorbar.cb 
 
     ThemeMenu $m.colorbar.orient
-    $m.colorbar.orient add radiobutton -label [msgcat::mc {Horizontal}] \
-	-variable pcolorbar(orientation) -value 0
-    $m.colorbar.orient add radiobutton -label [msgcat::mc {Vertical}] \
-	-variable pcolorbar(orientation) -value 1
+    $m.colorbar.orient add radiobutton -label [msgcat::mc {Bottom}] \
+	-variable pcolorbar(position) -value bottom
+    $m.colorbar.orient add radiobutton -label [msgcat::mc {Top}] \
+	-variable pcolorbar(position) -value top
+    $m.colorbar.orient add radiobutton -label [msgcat::mc {Right}] \
+	-variable pcolorbar(position) -value right
+    $m.colorbar.orient add radiobutton -label [msgcat::mc {Left}] \
+	-variable pcolorbar(position) -value left
+
+    ThemeMenu $m.colorbar.labels
+    $m.colorbar.labels add radiobutton -label [msgcat::mc {Natural}] \
+	-variable pcolorbar(label,position) -value natural
+    $m.colorbar.labels add radiobutton -label [msgcat::mc {Opposite}] \
+	-variable pcolorbar(label,position) -value opposite
 
     ThemeMenu $m.colorbar.numerics
     $m.colorbar.numerics add checkbutton -label [msgcat::mc {Show}] \
@@ -341,11 +369,11 @@ proc CreateButtonsColor {} {
     ButtonButton $ds9(buttons).color.reset \
 	[string tolower [msgcat::mc {Reset}]] ResetColormap
     RadioButton $ds9(buttons).color.horz \
-	[string tolower [msgcat::mc {Horizontal}]] \
-	colorbar orientation 0 ColorbarUpdateView
+	[string tolower [msgcat::mc {Bottom}]] \
+	colorbar position bottom [list ColorbarCmdPosition bottom]
     RadioButton $ds9(buttons).color.vert \
-	[string tolower [msgcat::mc {Vertical}]] \
-	colorbar orientation 1 ColorbarUpdateView
+	[string tolower [msgcat::mc {Right}]] \
+	colorbar position right [list ColorbarCmdPosition right]
     CheckButton $ds9(buttons).color.numerics \
 	[string tolower [msgcat::mc {Numerics}]] \
 	colorbar numerics ColorbarUpdateView

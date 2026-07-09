@@ -8,9 +8,11 @@
 %%
 
 center		{return $CENTER_}
+label		{return $LABEL_}
 lock		{return $LOCK_}
 numerics	{return $NUMERICS_}
 orientation	{return $ORIENTATION_}
+position	{return $POSITION_}
 size		{return $SIZE_}
 space		{return $SPACE_}
 ticks		{return $TICKS_}

@@ -684,6 +684,22 @@ proc FixPrefsVarOld {} {
     if {![info exists colorbar(width)]} {
 	set colorbar(width) $pcolorbar(width)
     }
+    if {![info exists pcolorbar(position)]} {
+	if {[info exists pcolorbar(orientation)] && $pcolorbar(orientation)} {
+	    set pcolorbar(position) right
+	} else {
+	    set pcolorbar(position) bottom
+	}
+    }
+    if {![info exists pcolorbar(label,position)]} {
+	set pcolorbar(label,position) natural
+    }
+    if {![info exists colorbar(position)]} {
+	set colorbar(position) $pcolorbar(position)
+    }
+    if {![info exists colorbar(label,position)]} {
+	set colorbar(label,position) $pcolorbar(label,position)
+    }
 
     # and fix any previous theme issues
     global pds9

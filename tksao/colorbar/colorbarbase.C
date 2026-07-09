@@ -236,11 +236,12 @@ int ColorbarBase::barX()
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
 
   if (opts->orientation)
-    return 0;
-
-  int length = options->width;
-  int active = barWidth();
-  return (int)((length-active)*clamp01(opts->center)+.5);
+    return opts->labelSide ? options->width-barWidth() : 0;
+  else {
+    int length = options->width;
+    int active = barWidth();
+    return (int)((length-active)*clamp01(opts->center)+.5);
+  }
 }
 
 int ColorbarBase::barY()
@@ -248,11 +249,12 @@ int ColorbarBase::barY()
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
 
   if (!opts->orientation)
-    return 0;
-
-  int length = options->height;
-  int active = barHeight();
-  return (int)((length-active)*(1-clamp01(opts->center))+.5);
+    return opts->labelSide ? options->height-barHeight() : 0;
+  else {
+    int length = options->height;
+    int active = barHeight();
+    return (int)((length-active)*(1-clamp01(opts->center))+.5);
+  }
 }
 
 int ColorbarBase::barWidth()
@@ -637,28 +639,31 @@ void ColorbarBase::renderGridNumerics()
     if (!opts->orientation) {
       // horizontal
       int ww = barX() + (int)(ii/double(opts->ticks-1)*barWidth());
-      int h = barY() + barHeight()-1;
-      int hh = h + TICKLEN;
+      int h = opts->labelSide ? barY() : barY() + barHeight()-1;
+      int hh = h + (opts->labelSide ? -TICKLEN : TICKLEN);
       XDrawLine(display, pixmap, widgetGC, ww, h, ww, hh);
 
       if (!incrcnt) {
 	int txtwidth = Tk_TextWidth(font, ticktxt[ii], strlen(ticktxt[ii]));
 	int www = ww - txtwidth/2.;
-	int hhh = hh + TICKGAP + metrics.ascent;
+	int hhh = opts->labelSide ?
+	  hh - TICKGAP - metrics.descent :
+	  hh + TICKGAP + metrics.ascent;
 	Tk_DrawChars(display, pixmap, widgetGC, font, ticktxt[ii],
 		     strlen(ticktxt[ii]), www, hhh);
       }
     }
     else {
       // vertical
-      int w = barX() + barWidth()-1;
-      int ww = w + TICKLEN;
+      int w = opts->labelSide ? barX() : barX() + barWidth()-1;
+      int ww = w + (opts->labelSide ? -TICKLEN : TICKLEN);
       int hh = barY() + barHeight() -
 	(int)(ii/double(opts->ticks-1)*barHeight());
       XDrawLine(display, pixmap, widgetGC, w, hh, ww, hh);
 
       if (!incrcnt) {
-	int www = ww + TICKGAP;
+	int txtwidth = Tk_TextWidth(font, ticktxt[ii], strlen(ticktxt[ii]));
+	int www = opts->labelSide ? ww - TICKGAP - txtwidth : ww + TICKGAP;
 	int hhh = hh + (metrics.ascent-metrics.descent)/2.;
 	Tk_DrawChars(display, pixmap, widgetGC, font, ticktxt[ii],
 		     strlen(ticktxt[ii]), www, hhh);
@@ -930,24 +935,28 @@ int ColorbarBase::pdfGrid(Tcl_Obj* pdfObj)
   for (int ii=0; rr == TCL_OK && ii<opts->ticks; ii++) {
     if (!opts->orientation) {
       double xx = x + ii/double(opts->ticks-1)*width;
-      double y1 = y + height;
-      double y2 = y1 + TICKLEN;
+      double y1 = opts->labelSide ? y : y + height;
+      double y2 = y1 + (opts->labelSide ? -TICKLEN : TICKLEN);
       rr = CbPdfLine(interp, pdfObj, xx, y1, xx, y2);
 
       if (rr == TCL_OK && !incrcnt && ticktxt[ii])
 	rr = CbPdfText(interp, pdfObj, ticktxt[ii],
-		       xx, y2 + TICKGAP + fontSize, "center",
+		       xx,
+		       opts->labelSide ? y2 - TICKGAP : y2 + TICKGAP + fontSize,
+		       "center",
 		       fontName, fontSize);
     }
     else {
-      double x1 = x + width;
-      double x2 = x1 + TICKLEN;
+      double x1 = opts->labelSide ? x : x + width;
+      double x2 = x1 + (opts->labelSide ? -TICKLEN : TICKLEN);
       double yy = y + height - ii/double(opts->ticks-1)*height;
       rr = CbPdfLine(interp, pdfObj, x1, yy, x2, yy);
 
       if (rr == TCL_OK && !incrcnt && ticktxt[ii])
 	rr = CbPdfText(interp, pdfObj, ticktxt[ii],
-		       x2 + TICKGAP, yy + fontSize/2., "left",
+		       opts->labelSide ? x2 - TICKGAP : x2 + TICKGAP,
+		       yy + fontSize/2.,
+		       opts->labelSide ? "right" : "left",
 		       fontName, fontSize);
     }
 
@@ -964,19 +973,12 @@ int ColorbarBase::pdfGrid(Tcl_Obj* pdfObj)
 
 void ColorbarBase::ps()
 {
-  ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
-
   int width = barWidth();
   int height = barHeight();
 
   // image
   Vector org = psOrigin();
-  if (!opts->orientation) {
-    org += Vector(barX(),barY());
-    org += Vector(0,options->height-height);
-  }
-  else
-    org += Vector(barX(),options->height-barY()-height);
+  org += Vector(barX(),options->height-barY()-height);
 
   ostringstream str;
   str << org << " translate " << 1 << ' ' << 1 << " scale" << endl;
@@ -1031,12 +1033,7 @@ void ColorbarBase::psGrid()
   // box
   int ww,hh;
   Vector org = psOrigin();
-  if (!opts->orientation) {
-    org += Vector(barX(),barY());
-    org += Vector(0,options->height-height);
-  }
-  else
-    org += Vector(barX(),options->height-barY()-height);
+  org += Vector(barX(),options->height-barY()-height);
   ww = width;
   hh = height;
 
@@ -1103,8 +1100,8 @@ void ColorbarBase::psGridNumerics()
     if (!opts->orientation) {
       // horizontal
       int ww = (int)(ii/double(opts->ticks-1)*barWidth());
-      int h = 0;
-      int hh = h-TICKLEN;
+      int h = opts->labelSide ? barHeight() : 0;
+      int hh = h + (opts->labelSide ? TICKLEN : -TICKLEN);
 
       ostringstream str;
       str << "newpath " << endl
@@ -1117,7 +1114,7 @@ void ColorbarBase::psGridNumerics()
 
       if (!incrcnt) {
 	ostringstream str;
-	Vector tt = Vector(ww,hh-TICKGAP);
+	Vector tt = Vector(ww,hh + (opts->labelSide ? TICKGAP : -TICKGAP));
 	str << "newpath " << endl
 	    << tt << " moveto" << endl
 	    << '(' << psQuote(ticktxt[ii]) << ')'
@@ -1131,8 +1128,8 @@ void ColorbarBase::psGridNumerics()
     }
     else {
       // vertical
-      int w = barWidth();
-      int ww = barWidth() + TICKLEN;
+      int w = opts->labelSide ? 0 : barWidth();
+      int ww = w + (opts->labelSide ? -TICKLEN : TICKLEN);
       int hh = (int)(ii/double(opts->ticks-1)*barHeight());
 
       ostringstream str;
@@ -1146,14 +1143,16 @@ void ColorbarBase::psGridNumerics()
 
       if (!incrcnt) {
 	ostringstream str;
-	Vector tt = Vector(ww+TICKGAP,hh);
+	Vector tt = Vector(ww + (opts->labelSide ? -TICKGAP : TICKGAP), hh);
 	str << "newpath " << endl
 	    << tt << " moveto" << endl
 	    << '(' << psQuote(ticktxt[ii]) << ')'
 	    << "dup true charpath pathbbox " << endl
 	    << "closepath " << endl
 	    << "3 -1 roll sub 2 div neg " << endl
-	    << "3 1 roll pop pop 0 exch " << endl
+	    << (opts->labelSide ?
+		"3 1 roll sub exch " :
+		"3 1 roll pop pop 0 exch ") << endl
 	    << tt << " moveto rmoveto show " << endl;
 	Tcl_AppendResult(interp, str.str().c_str(), NULL);
       }
@@ -1172,7 +1171,7 @@ void ColorbarBase::psGridAST()
 {
   ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
 
-  int yy = !opts->orientation ? barY() : options->height-barY()-barHeight();
+  int yy = options->height-barY()-barHeight();
   Vector oo(barX(), yy);
   Vector uu(barX()+barWidth(), yy+barHeight());
   float delta = 4*opts->fontSize;
@@ -1577,8 +1576,8 @@ void ColorbarBase::win32GridNumerics()
     if (!opts->orientation) {
       // horizontal
       int ww = ii/double(opts->ticks-1)*barWidth();
-      int h = barHeight();
-      int hh = barHeight() + TICKLEN;
+      int h = opts->labelSide ? 0 : barHeight();
+      int hh = h + (opts->labelSide ? -TICKLEN : TICKLEN);
       Vector vv[2];
       vv[0] = Vector(ww,h)*mm;
       vv[1] = Vector(ww,hh)*mm;
@@ -1587,14 +1586,16 @@ void ColorbarBase::win32GridNumerics()
       if (!incrcnt) {
 	int txtwidth = Tk_TextWidth(font, ticktxt[ii], strlen(ticktxt[ii]));
 	int www = ww - txtwidth/2.;
-	int hhh = hh + TICKGAP + metrics.ascent;
+	int hhh = opts->labelSide ?
+	  hh - TICKGAP - metrics.descent :
+	  hh + TICKGAP + metrics.ascent;
 	win32DrawText(Vector(www,hhh)*mm, 0, ticktxt[ii]);
       }
     }
     else {
       // vertical
-      int w = barWidth();
-      int ww = barWidth() + TICKLEN;
+      int w = opts->labelSide ? 0 : barWidth();
+      int ww = w + (opts->labelSide ? -TICKLEN : TICKLEN);
       int hh = barHeight() - (int)(ii/double(opts->ticks-1)*barHeight());
       Vector vv[2];
       vv[0] = Vector(w,hh)*mm;
@@ -1602,7 +1603,8 @@ void ColorbarBase::win32GridNumerics()
       win32DrawLines(vv,2);
 
       if (!incrcnt) {
-	int www = ww + TICKGAP;
+	int txtwidth = Tk_TextWidth(font, ticktxt[ii], strlen(ticktxt[ii]));
+	int www = opts->labelSide ? ww - TICKGAP - txtwidth : ww + TICKGAP;
 	int hhh = hh + (metrics.ascent-metrics.descent)/2.;
 	win32DrawText(Vector(www,hhh)*mm, 0, ticktxt[ii]);
       }

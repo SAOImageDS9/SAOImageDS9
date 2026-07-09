@@ -10,16 +10,24 @@
 center		{return $CENTER_}
 distance	{return $DISTANCE_}
 horizontal	{return $HORIZONTAL_}
+label		{return $LABEL_}
+left		{return $LEFT_}
 lock		{return $LOCK_}
 match		{return $MATCH_}
+natural		{return $NATURAL_}
 numerics	{return $NUMERICS_}
 orientation	{return $ORIENTATION_}
+opposite	{return $OPPOSITE_}
+position	{return $POSITION_}
+right		{return $RIGHT_}
 size		{return $SIZE_}
 space		{return $SPACE_}
 ticks		{return $TICKS_}
+top		{return $TOP_}
 value		{return $VALUE_}
 vertical	{return $VERTICAL_}
 width		{return $WIDTH_}
+bottom		{return $BOTTOM_}
 
 #include yesno.fin
 #include fonts.fin

@@ -1,3 +1,4 @@
+
 package provide DS9 1.0
 
 ######
@@ -65,56 +66,66 @@ array set colorbarsend::table {
   0:258 shift
   0:259 shift
   0:260 shift
-  5:0,target 8
-  0:261 shift
-  0:266,target 10
+  5:0,target 10
+  15:0,target 16
   9:0 reduce
+  0:266,target 10
+  0:261 shift
   11:0 reduce
   0:262 shift
   0:263 shift
   0:264 shift
   0:265 shift
+  15:0 reduce
   0:266 shift
   0:267 shift
   0:265,target 9
   0:268 shift
+  0:269 shift
   0:270 shift
-  6:0,target 11
-  0:271 goto
+  6:0,target 13
+  16:0,target 0
   2:0 reduce
+  0:272 shift
+  0:273 goto
   6:0 reduce
   0:264,target 8
-  7:0,target 2
+  17:0,target 5
   12:0 reduce
   0:0,target 1
-  10:0,target 12
+  10:0,target 3
   0:263,target 7
+  16:0 accept
+  0:273,target 16
+  8:0,target 2
   3:0 reduce
-  8:0,target 4
-  1:0,target 6
-  11:0,target 5
+  1:0,target 8
+  11:0,target 4
   0:262,target 6
-  7:0 reduce
+  0:272,target 15
   13:0 reduce
-  9:0,target 3
+  9:0,target 6
   0:261,target 5
-  0:271,target 14
-  2:0,target 7
-  12:0,target 13
+  2:0,target 9
+  12:0,target 14
+  17:0 reduce
   0:0 reduce
+  7:267,target 17
   0:259,target 3
   0:260,target 4
-  0:270,target 13
+  0:269,target 13
+  0:270,target 14
   4:0 reduce
-  3:0,target 9
-  13:0,target 14
+  3:0,target 11
+  7:267 shift
+  13:0,target 7
   8:0 reduce
   10:0 reduce
   0:258,target 2
   0:268,target 12
-  14:0 accept
-  4:0,target 10
-  14:0,target 0
+  14:0 reduce
+  4:0,target 12
+  14:0,target 15
   0:257,target 1
   1:0 reduce
   0:267,target 11
@@ -122,35 +133,39 @@ array set colorbarsend::table {
 }
 
 array set colorbarsend::rules {
-  9,l 271
-  11,l 271
-  2,l 271
-  6,l 271
-  12,l 271
-  3,l 271
-  7,l 271
-  13,l 271
-  0,l 272
-  4,l 271
-  8,l 271
-  10,l 271
-  14,l 271
-  1,l 271
-  5,l 271
+  9,l 273
+  11,l 273
+  15,l 273
+  2,l 273
+  6,l 273
+  12,l 273
+  16,l 273
+  3,l 273
+  7,l 273
+  13,l 273
+  0,l 274
+  4,l 273
+  8,l 273
+  10,l 273
+  14,l 273
+  1,l 273
+  5,l 273
 }
 
 array set colorbarsend::rules {
-  5,dc 1
+  5,dc 2
   0,dc 1
   12,dc 1
   8,dc 1
   3,dc 1
+  15,dc 1
   10,dc 1
   6,dc 1
   1,dc 0
   13,dc 1
   9,dc 1
   4,dc 1
+  16,dc 1
   11,dc 1
   7,dc 1
   2,dc 1
@@ -158,122 +173,138 @@ array set colorbarsend::rules {
 }
 
 array set colorbarsend::rules {
-  13,line 41
-  7,line 34
-  10,line 38
-  4,line 31
-  1,line 28
-  9,line 37
-  12,line 40
-  6,line 33
-  3,line 30
-  14,line 42
-  8,line 35
-  11,line 39
-  5,line 32
-  2,line 29
+  13,line 43
+  7,line 36
+  10,line 39
+  4,line 33
+  1,line 30
+  15,line 45
+  9,line 38
+  12,line 42
+  6,line 35
+  3,line 32
+  14,line 44
+  8,line 37
+  11,line 41
+  5,line 34
+  2,line 31
+  16,line 46
 }
 
 array set colorbarsend::lr1_table {
   13,trans {}
-  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0} {7 0 0} {8 0 0} {9 0 0} {10 0 0} {11 0 0} {12 0 0} {13 0 0} {14 0 0}}
+  17 {{5 0 2}}
+  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0} {7 0 0} {8 0 0} {9 0 0} {10 0 0} {11 0 0} {12 0 0} {13 0 0} {14 0 0} {15 0 0} {16 0 0}}
   14,trans {}
-  1 {{6 0 1}}
-  2 {{7 0 1}}
-  3 {{9 0 1}}
-  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {263 7} {264 8} {265 9} {266 10} {267 11} {268 12} {270 13} {271 14}}
-  4 {{10 0 1}}
+  1 {{8 0 1}}
+  15,trans {}
+  2 {{9 0 1}}
+  16,trans {}
+  3 {{11 0 1}}
+  17,trans {}
+  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {263 7} {264 8} {265 9} {266 10} {267 11} {268 12} {269 13} {270 14} {272 15} {273 16}}
+  4 {{12 0 1}}
   1,trans {}
-  5 {{8 0 1}}
+  5 {{10 0 1}}
   2,trans {}
-  6 {{11 0 1}}
+  6 {{13 0 1}}
   3,trans {}
-  7 {{2 0 1}}
+  7 {{5 0 1}}
   4,trans {}
-  8 {{4 0 1}}
+  8 {{2 0 1}}
   5,trans {}
-  9 {{3 0 1}}
-  10 {{12 0 1}}
+  9 {{6 0 1}}
+  10 {{3 0 1}}
   6,trans {}
-  11 {{5 0 1}}
-  7,trans {}
-  12 {{13 0 1}}
+  11 {{4 0 1}}
+  7,trans {{267 17}}
+  12 {{14 0 1}}
   8,trans {}
-  13 {{14 0 1}}
+  13 {{7 0 1}}
   10,trans {}
   9,trans {}
-  14 {{0 0 1}}
+  14 {{15 0 1}}
   11,trans {}
+  15 {{16 0 1}}
   12,trans {}
+  16 {{0 0 1}}
 }
 
 array set colorbarsend::token_id_table {
   264,line 17
   270,t 0
   269,t 0
-  265,title ORIENTATION
+  265,title NUMERICS
+  274,t 1
   261,line 11
   257,t 0
-  270,title WIDTH
-  269,title VALUE
+  270,title TICKS
+  269,title SPACE
+  273,line 29
   257,line 7
   262,t 0
+  274,title {}
   270,line 23
   269,line 22
   259,title FONTSLANT
   260,title FONTSTYLE
   266,t 0
-  271,t 1
   error error
-  264,title NUMERICS
+  271,t 0
+  264,title LOCK
   266,line 19
-  error,line 26
-  268,title TICKS
+  error,line 28
+  268,title SIZE
   258,t 0
   263,line 16
   error,title {}
+  273,title {}
   263,t 0
   259,line 9
   260,line 10
   258,title FONTSIZE
-  272,line 43
+  272,line 25
   267,t 0
-  263,title LOCK
-  272,t 1
+  263,title LABEL
+  272,t 0
   268,line 21
-  267,title SPACE
+  267,title POSITION
   257 FONT_
   258 FONTSIZE_
   259,t 0
   259 FONTSLANT_
   260 FONTSTYLE_
   260,t 0
-  272,title {}
+  272,title WIDTH
   261 FONTWEIGHT_
   265,line 18
   262 CENTER_
-  263 LOCK_
+  263 LABEL_
   257,title FONT
-  264 NUMERICS_
+  264 LOCK_
   264,t 0
-  265 ORIENTATION_
+  265 NUMERICS_
   262,line 15
-  266 SIZE_
-  267 SPACE_
+  266 ORIENTATION_
+  267 POSITION_
   0,t 0
   0 {$}
   262,title CENTER
-  268 TICKS_
+  268 SIZE_
   268,t 0
-  270 WIDTH_
-  269 VALUE_
-  271 colorbarsend
+  274,line 47
+  270 TICKS_
+  269 SPACE_
   error,t 0
-  272 start'
+  271 VALUE_
+  272 WIDTH_
   258,line 8
-  266,title SIZE
-  271,line 27
-  271,title {}
+  273,t 1
+  273 colorbarsend
+  266,title ORIENTATION
+  274 start'
+  271,line 24
+  271,title VALUE
   261,t 0
   267,line 20
   265,t 0
@@ -377,17 +408,19 @@ proc colorbarsend::yyparse {} {
                     1 { ProcessSendCmdYesNo view colorbar }
                     2 { ProcessSendCmdYesNo colorbar lock }
                     3 { ColorbarSendCmdOrientation }
-                    4 { ProcessSendCmdYesNo colorbar numerics }
-                    5 { ColorbarSendCmdSpace }
-                    6 { ProcessSendCmdGet colorbar font }
-                    7 { ProcessSendCmdGet colorbar font,size }
-                    8 { ProcessSendCmdGet colorbar font,weight }
-                    9 { ProcessSendCmdGet colorbar font,slant }
+                    4 { ColorbarSendCmdPosition }
+                    5 { ColorbarSendCmdLabelPosition }
+                    6 { ProcessSendCmdYesNo colorbar numerics }
+                    7 { ColorbarSendCmdSpace }
+                    8 { ProcessSendCmdGet colorbar font }
+                    9 { ProcessSendCmdGet colorbar font,size }
                     10 { ProcessSendCmdGet colorbar font,weight }
-                    11 { ProcessSendCmdGet colorbar center }
-                    12 { ProcessSendCmdGet colorbar size }
-                    13 { ProcessSendCmdGet colorbar ticks }
-                    14 { ProcessSendCmdGet colorbar width }
+                    11 { ProcessSendCmdGet colorbar font,slant }
+                    12 { ProcessSendCmdGet colorbar font,weight }
+                    13 { ProcessSendCmdGet colorbar center }
+                    14 { ProcessSendCmdGet colorbar size }
+                    15 { ProcessSendCmdGet colorbar ticks }
+                    16 { ProcessSendCmdGet colorbar width }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

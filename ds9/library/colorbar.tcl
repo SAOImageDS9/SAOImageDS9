@@ -1483,7 +1483,7 @@ proc ColormapDialog {} {
 	-command SaveColormap -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Apply}] \
-	-command ApplyColormap
+	-command ColormapApplyDialog
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Download Colormap}] \
 	-command {HV cpt CPT-CITY https://phillips.shef.ac.uk/pub/cpt-city/}
@@ -1560,8 +1560,9 @@ proc ColormapDialog {} {
 
     UpdateColorDialog
 
-    # Param
-    set f [ttk::frame $w.param]
+    # Colormap
+    set f [ttk::labelframe $w.colormap -text [msgcat::mc {Colormap}] \
+	       -padding 2]
 
     slider $f.cslider 0. 10. [msgcat::mc {Contrast}] \
 	dcolorbar(contrast) [list AdjustColormap]
@@ -1577,10 +1578,68 @@ proc ColormapDialog {} {
     bind $f.bslider.slider <Button-1> BeginAdjustColormap
     bind $f.bslider.slider <ButtonRelease-1> EndAdjustColormap
 
+    # Colorbar
+    set f [ttk::labelframe $w.colorbar -text [msgcat::mc {Colorbar}] \
+	       -padding 2]
+
+    ttk::label $f.tposition -text [msgcat::mc {Position}]
+    ttk::radiobutton $f.bottom -text [msgcat::mc {Bottom}] \
+	-variable colorbar(position) -value bottom \
+	-command [list ColorbarCmdPosition bottom]
+    ttk::radiobutton $f.top -text [msgcat::mc {Top}] \
+	-variable colorbar(position) -value top \
+	-command [list ColorbarCmdPosition top]
+    ttk::radiobutton $f.right -text [msgcat::mc {Right}] \
+	-variable colorbar(position) -value right \
+	-command [list ColorbarCmdPosition right]
+    ttk::radiobutton $f.left -text [msgcat::mc {Left}] \
+	-variable colorbar(position) -value left \
+	-command [list ColorbarCmdPosition left]
+
+    ttk::label $f.tlabels -text [msgcat::mc {Labels}]
+    ttk::radiobutton $f.natural -text [msgcat::mc {Natural}] \
+	-variable colorbar(label,position) -value natural \
+	-command ColorbarUpdateView
+    ttk::radiobutton $f.opposite -text [msgcat::mc {Opposite}] \
+	-variable colorbar(label,position) -value opposite \
+	-command ColorbarUpdateView
+
+    ttk::label $f.tnumerics -text [msgcat::mc {Numerics}]
+    ttk::checkbutton $f.numerics -text [msgcat::mc {Show}] \
+	-variable colorbar(numerics) -command ColorbarUpdateView
+    ttk::radiobutton $f.value -text [msgcat::mc {Space Equal Value}] \
+	-variable colorbar(space) -value 1 -command ColorbarUpdateView
+    ttk::radiobutton $f.distance -text [msgcat::mc {Space Equal Distance}] \
+	-variable colorbar(space) -value 0 -command ColorbarUpdateView
+
+    ttk::label $f.tfont -text [msgcat::mc {Font}]
+    FontMenuButton $f.font colorbar font font,size font,weight font,slant \
+	ColorbarUpdateView
+
+    ttk::label $f.tsize -text [msgcat::mc {Size}]
+    ttk::entry $f.size -textvariable colorbar(size) -width 10
+    ttk::label $f.tticks -text [msgcat::mc {Number of Ticks}]
+    ttk::entry $f.ticks -textvariable colorbar(ticks) -width 10
+    slider $f.center 0. 1. [msgcat::mc {Center}] colorbar(center) \
+	ColorbarUpdateView
+    slider $f.width 0. 1. [msgcat::mc {Width}] colorbar(width) \
+	ColorbarUpdateView
+
+    grid $f.tposition $f.bottom $f.top $f.right $f.left \
+	-padx 2 -pady 2 -sticky w
+    grid $f.tlabels $f.natural $f.opposite -padx 2 -pady 2 -sticky w
+    grid $f.tnumerics $f.numerics $f.value $f.distance \
+	-padx 2 -pady 2 -sticky w
+    grid $f.tfont $f.font -padx 2 -pady 2 -sticky w
+    grid $f.tsize $f.size $f.tticks $f.ticks -padx 2 -pady 2 -sticky w
+    grid $f.center -columnspan 5 -padx 2 -pady 2 -sticky ew
+    grid $f.width -columnspan 5 -padx 2 -pady 2 -sticky ew
+    grid columnconfigure $f 0 -weight 1
+
     # Buttons
     set f [ttk::frame $w.buttons]
     ttk::button $f.apply -text [msgcat::mc {Apply}] \
-	-command ApplyColormap
+	-command ColormapApplyDialog
     ttk::button $f.close -text [msgcat::mc {Close}] \
 	-command ColormapDestroyDialog
     pack $f.apply $f.close -side left -expand true -padx 2 -pady 4
@@ -1588,11 +1647,12 @@ proc ColormapDialog {} {
     # Fini
     ttk::separator $w.sep -orient horizontal
     pack $w.buttons $w.sep -side bottom -fill x
-    pack $w.param -side top -fill both -expand true
+    pack $w.colormap $w.colorbar -side top -fill both -expand true
 
     bind $w <<Open>> LoadColormap
     bind $w <<Save>> SaveColormap
     bind $w <<Close>> ColormapDestroyDialog
+    bind $w <Return> ColormapApplyDialog
 }
 
 proc ColormapDialogExternal {which} {
@@ -1628,6 +1688,11 @@ proc ColormapDestroyDialog {} {
 	destroy $icolorbar(mb)
 	unset dcolorbar
     }
+}
+
+proc ColormapApplyDialog {} {
+    ApplyColormap
+    ColorbarUpdateView
 }
 
 proc ApplyColormap {} {

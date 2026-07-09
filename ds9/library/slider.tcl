@@ -24,7 +24,6 @@ proc slider {w from to label varname cmd {num {5}} {width {7}}} {
     }
 
     grid rowconfigure $w 1 -weight 1
-    grid columnconfigure $w 0 -weight 1
     grid rowconfigure $w 2 -weight 1
 
     bind $w.entry <Return> $cmd
@@ -43,6 +42,13 @@ proc SliderMinMax {w from to {num 5} {max 5}} {
     grid $w.label -columnspan $num
     grid $w.slider -columnspan $num
     grid $w.entry -column $num
+
+    for {set ii 0} {$ii<$max} {incr ii} {
+	grid columnconfigure $w $ii -weight 0 -uniform {}
+    }
+    for {set ii 0} {$ii<$num} {incr ii} {
+	grid columnconfigure $w $ii -weight 1 -uniform slider
+    }
 
     # forget all txt
     for {set ii 0} {$ii<$max} {incr ii} {

@@ -255,7 +255,7 @@ $(LIBDIR)/pdf4tcl: $(prefix)/pdf4tcl
 
 # ------------------ssl
 $(APPDIR)/ssl: $(prefix)/openssl
-	mkdir "$@"
+	mkdir -p "$@"
 	cp -fv "$(prefix)/certifi/certifi/cacert.pem" "$@"
 
 $(APPDIR)/xpans.exe: $(bindir)/xpans.exe

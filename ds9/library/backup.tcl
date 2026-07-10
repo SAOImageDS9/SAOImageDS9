@@ -229,6 +229,11 @@ proc Restore {fn} {
 	{colorbar configure -orientation 0} src
     regsub -all {colorbar configure -orientation vertical} $src \
 	{colorbar configure -orientation 1} src
+    set cc [string first {set colorbar(} $src]
+    set gg [string first {global colorbar} $src]
+    if {$cc != -1 && ($gg == -1 || $cc < $gg)} {
+	set src "[string range $src 0 [expr {$cc-1}]]global colorbar\n[string range $src $cc end]"
+    }
 
     # and load the world
     if {[catch {eval $src}]} {

@@ -274,9 +274,9 @@ proc ColorbarLabelSide {} {
 
     switch -- $colorbar(position) {
 	top -
-	left {set side 1}
+	right {set side 1}
+	left -
 	bottom -
-	right -
 	default {set side 0}
     }
 
@@ -439,9 +439,9 @@ proc ColorbarLabelSideFrame {frame} {
 
     switch -- $colorbar($frame,position) {
 	top -
-	left {set side 1}
+	right {set side 1}
+	left -
 	bottom -
-	right -
 	default {set side 0}
     }
 
@@ -1669,7 +1669,7 @@ proc ColormapDialog {} {
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
     $mb add cascade -label [msgcat::mc {Colormap}] -menu $mb.colormap
-    $mb add cascade -label [msgcat::mc {Color}] -menu $mb.color
+    $mb add cascade -label [msgcat::mc {Tags}] -menu $mb.tags
 
     ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Open}] \
@@ -1688,19 +1688,20 @@ proc ColormapDialog {} {
     $mb.file add command -label [msgcat::mc {Save Contrast/Bias}] \
 	-command SaveContrastBias
     $mb.file add separator
-    $mb.file add command -label [msgcat::mc {Load Color Tags}]\
-	-command OpenColorTag
-    $mb.file add command -label [msgcat::mc {Save Color Tags}] \
-	-command SaveColorTag
-    $mb.file add command -label [msgcat::mc {Delete Color Tags}] \
-	-command DeleteColorTag
-    $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command ColormapDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     EditMenu $mb icolorbar
 
-    ColorMenu $mb.color colorbar tag {}
+    ThemeMenu $mb.tags
+    $mb.tags add command -label [msgcat::mc {Load Color Tags}]\
+	-command OpenColorTag
+    $mb.tags add command -label [msgcat::mc {Save Color Tags}] \
+	-command SaveColorTag
+    $mb.tags add command -label [msgcat::mc {Delete Color Tags}] \
+	-command DeleteColorTag
+    $mb.tags add cascade -label [msgcat::mc {Color}] -menu $mb.tags.color
+    ColorMenu $mb.tags.color colorbar tag {}
 
     ThemeMenu $mb.colormap
     foreach cmap $icolorbar(default,cmaps) {
@@ -2084,7 +2085,7 @@ proc LayoutColorbar {cb fx fy fw fh} {
     }
     # cbv
     if {$cbv} {
-	if {$colorbar(position) == {left}} {
+	if {$colorbar(position) == {right}} {
 	    set xx $fx
 	} else {
 	    set xx [expr $fx + $fw - $colorbar(vertical,width)]
@@ -2116,14 +2117,14 @@ proc LayoutColorbar {cb fx fy fw fh} {
 	incr hh -$graph(size)
     }
     # cbvgrv
-    if {!$cbh && $cbv && !$grh && $grv && $colorbar(position) != {left}} {
+    if {!$cbh && $cbv && !$grh && $grv && $colorbar(position) != {right}} {
 	incr xx -$graph(size)
 	incr hh -$dgraph(vert,offset)
     }
     # cbvgrhgrv
     if {!$cbh && $cbv && $grh && $grv} {
 	incr hh -$graph(size)
-	if {$colorbar(position) != {left}} {
+	if {$colorbar(position) != {right}} {
 	    incr xx -$graph(size)
 	}
     }
@@ -2200,6 +2201,7 @@ proc ColorbarBackup {ch dir} {
     }
 
     # colorbar params
+    puts $ch "global colorbar"
     puts $ch "set colorbar(show) $colorbar(show)"
     puts $ch "colorbar configure -size $colorbar(size)"
     puts $ch "colorbar configure -center $colorbar(center)"

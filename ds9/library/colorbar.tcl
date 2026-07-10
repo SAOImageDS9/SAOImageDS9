@@ -235,6 +235,7 @@ proc ColorbarDef {} {
     set colorbar(invert) 0
     set colorbar(tag) red
 
+    set colorbar(show) 1
     set colorbar(size) 20
     set colorbar(center) 0.5
     set colorbar(width) 1
@@ -314,7 +315,16 @@ proc ColorbarCmdOrientation {orientation} {
     ColorbarUpdateView
 }
 
-proc ColorbarBackupRestore {hasPosition} {
+proc ColorbarCmdSet {key value {cmd ColorbarUpdateView}} {
+    global colorbar
+
+    set colorbar($key) $value
+    ColorbarGlobalToCurrent
+    eval $cmd
+}
+
+proc ColorbarBackupRestore {hasPosition {hasFrameProps 0}} {
+    global ds9
     global colorbar
 
     set colorbar(orientation) [ColorbarNormalizeOrientation $colorbar(orientation)]
@@ -326,7 +336,161 @@ proc ColorbarBackupRestore {hasPosition} {
 	}
     }
 
-    ColorbarUpdateView
+    if {!$hasFrameProps} {
+	foreach ff $ds9(frames) {
+	    ColorbarFrameSetFromGlobal $ff
+	    ColorbarApplyFrame $ff
+	}
+    } else {
+	ColorbarCurrentToGlobal
+    }
+
+    LayoutFrames
+}
+
+proc ColorbarPropertyKeys {} {
+    return [list \
+	show size center width ticks numerics space orientation position label,position \
+	font font,size font,weight font,slant \
+    ]
+}
+
+proc ColorbarFrameInit {frame} {
+    ColorbarFrameSetFromGlobal $frame
+}
+
+proc ColorbarFrameDelete {frame} {
+    global colorbar
+
+    foreach key [ColorbarPropertyKeys] {
+	catch {unset colorbar($frame,$key)}
+    }
+}
+
+proc ColorbarFrameSetFromGlobal {frame} {
+    global colorbar
+
+    foreach key [ColorbarPropertyKeys] {
+	set colorbar($frame,$key) $colorbar($key)
+    }
+}
+
+proc ColorbarGlobalSetFromFrame {frame} {
+    global colorbar
+
+    foreach key [ColorbarPropertyKeys] {
+	if {![info exists colorbar($frame,$key)]} {
+	    set colorbar($frame,$key) $colorbar($key)
+	}
+	set colorbar($key) $colorbar($frame,$key)
+    }
+}
+
+proc ColorbarCurrentToGlobal {} {
+    global current
+
+    if {$current(frame) != {}} {
+	ColorbarGlobalSetFromFrame $current(frame)
+    }
+}
+
+proc ColorbarGlobalToCurrent {} {
+    global current
+
+    if {$current(frame) != {}} {
+	ColorbarFrameSetFromGlobal $current(frame)
+    }
+}
+
+proc ColorbarApplyFrame {frame} {
+    global colorbar
+
+    set cb ${frame}cb
+    $cb configure \
+	-size $colorbar($frame,size) \
+	-center $colorbar($frame,center) \
+	-barwidth $colorbar($frame,width) \
+	-ticks $colorbar($frame,ticks) \
+	-numerics $colorbar($frame,numerics) \
+	-space $colorbar($frame,space) \
+	-orientation [ColorbarPositionOrientationFrame $frame] \
+	-labelside [ColorbarLabelSideFrame $frame] \
+	\
+	-font $colorbar($frame,font) \
+	-fontsize $colorbar($frame,font,size) \
+	-fontweight $colorbar($frame,font,weight) \
+	-fontslant $colorbar($frame,font,slant)
+}
+
+proc ColorbarPositionOrientationFrame {frame} {
+    global colorbar
+
+    switch -- $colorbar($frame,position) {
+	top -
+	bottom {return 0}
+	left -
+	right {return 1}
+	default {return [ColorbarNormalizeOrientation $colorbar($frame,orientation)]}
+    }
+}
+
+proc ColorbarLabelSideFrame {frame} {
+    global colorbar
+
+    switch -- $colorbar($frame,position) {
+	top -
+	left {set side 1}
+	bottom -
+	right -
+	default {set side 0}
+    }
+
+    if {$colorbar($frame,label,position) == {opposite}} {
+	set side [expr {!$side}]
+    }
+
+    return $side
+}
+
+proc ColorbarMatchProps {src dst} {
+    global colorbar
+
+    foreach key [ColorbarPropertyKeys] {
+	set colorbar($dst,$key) $colorbar($src,$key)
+    }
+    ColorbarApplyFrame $dst
+}
+
+proc ColorbarFrameGetList {frame} {
+    global colorbar
+
+    set rr {}
+    foreach key [ColorbarPropertyKeys] {
+	if {![info exists colorbar($frame,$key)]} {
+	    set colorbar($frame,$key) $colorbar($key)
+	}
+	lappend rr $key $colorbar($frame,$key)
+    }
+    return $rr
+}
+
+proc ColorbarFrameRestore {frame props} {
+    global colorbar
+    global current
+
+    array set rr $props
+    foreach key [ColorbarPropertyKeys] {
+	if {[info exists rr($key)]} {
+	    set colorbar($frame,$key) $rr($key)
+	} else {
+	    set colorbar($frame,$key) $colorbar($key)
+	}
+    }
+
+    ColorbarApplyFrame $frame
+    if {$current(frame) == $frame} {
+	ColorbarCurrentToGlobal
+    }
 }
 
 proc CreateColorbar {} {
@@ -416,6 +580,7 @@ proc CreateColorbarBase {frame} {
     }
 
     set which ${frame}cb
+    ColorbarFrameInit $frame
 
     $ds9(canvas) create colorbar$ds9(visual)$ds9(depth) \
 	-colors 2048 \
@@ -494,6 +659,7 @@ proc CreateColorbarRGB {frame} {
     }
 
     set which ${frame}cb
+    ColorbarFrameInit $frame
 
     $ds9(canvas) create colorbarrgb$ds9(visual)$ds9(depth) \
 	-colors 2048 \
@@ -545,6 +711,7 @@ proc CreateColorbarHSV {frame} {
     }
 
     set which ${frame}cb
+    ColorbarFrameInit $frame
 
     $ds9(canvas) create colorbarhsv$ds9(visual)$ds9(depth) \
 	-colors 2048 \
@@ -596,6 +763,7 @@ proc CreateColorbarHLS {frame} {
     }
 
     set which ${frame}cb
+    ColorbarFrameInit $frame
 
     $ds9(canvas) create colorbarhls$ds9(visual)$ds9(depth) \
 	-colors 2048 \
@@ -1239,14 +1407,18 @@ proc MatchColor {which} {
 
     set tt [$which get type]
     set cb ${which}cb
+    ColorbarGlobalSetFromFrame $which
     foreach ff $ds9(frames) {
 	if {$ff != $which} {
 	    if {$tt == [$ff get type]} {
 		$ff colormap [$cb get colormap]
 		${ff}cb colorbar [$ff get colorbar]
+		ColorbarMatchProps $which $ff
 	    }
 	}
     }
+    ColorbarCurrentToGlobal
+    LayoutFrames
 }
 
 proc LockColorCurrent {} {
@@ -1605,6 +1777,10 @@ proc ColormapDialog {} {
     set f [ttk::labelframe $w.colorbar -text [msgcat::mc {Colorbar}] \
 	       -padding 2]
 
+    ttk::label $f.tshow -text [msgcat::mc {Show}]
+    ttk::checkbutton $f.show -text [msgcat::mc {Colorbar}] \
+	-variable colorbar(show) -command ColorbarUpdateView
+
     ttk::label $f.tposition -text [msgcat::mc {Position}]
     ttk::radiobutton $f.bottom -text [msgcat::mc {Bottom}] \
 	-variable colorbar(position) -value bottom \
@@ -1648,6 +1824,7 @@ proc ColormapDialog {} {
     slider $f.width 0. 1. [msgcat::mc {Width}] colorbar(width) \
 	ColorbarUpdateView
 
+    grid $f.tshow $f.show -padx 2 -pady 2 -sticky w
     grid $f.tposition $f.bottom $f.top $f.right $f.left \
 	-padx 2 -pady 2 -sticky w
     grid $f.tlabels $f.natural $f.opposite -padx 2 -pady 2 -sticky w
@@ -1973,6 +2150,9 @@ proc LayoutColorbar {cb fx fy fw fh} {
 proc ColorbarUpdateView {} {
     global ds9
     global colorbar
+    global current
+
+    ColorbarGlobalToCurrent
 
     # update default colorbar
     colorbar configure \
@@ -1990,26 +2170,11 @@ proc ColorbarUpdateView {} {
 	-fontweight $colorbar(font,weight) \
 	-fontslant $colorbar(font,slant)
 
-    # update all colorbars
-    foreach ff $ds9(frames) {
-	set cb ${ff}cb
-
-	$cb configure \
-	    -size $colorbar(size) \
-	    -center $colorbar(center) \
-	    -barwidth $colorbar(width) \
-	    -ticks $colorbar(ticks) \
-	    -numerics $colorbar(numerics) \
-	    -space $colorbar(space) \
-	    -orientation [ColorbarPositionOrientation] \
-	-labelside [ColorbarLabelSide] \
-	    \
-	    -font $colorbar(font) \
-	    -fontsize $colorbar(font,size) \
-	    -fontweight $colorbar(font,weight) \
-	    -fontslant $colorbar(font,slant)
+    if {$current(frame) != {}} {
+	ColorbarApplyFrame $current(frame)
     }
 
+    LockColorCurrent
     LayoutFrames
 }
 
@@ -2035,6 +2200,7 @@ proc ColorbarBackup {ch dir} {
     }
 
     # colorbar params
+    puts $ch "set colorbar(show) $colorbar(show)"
     puts $ch "colorbar configure -size $colorbar(size)"
     puts $ch "colorbar configure -center $colorbar(center)"
     puts $ch "colorbar configure -barwidth $colorbar(width)"
@@ -2054,6 +2220,7 @@ proc ColorbarBackup {ch dir} {
 proc ColorbarFrameBackup {ch which} {
     set cb ${which}cb
 
+    puts $ch [list ColorbarFrameRestore $which [ColorbarFrameGetList $which]]
     puts $ch [list $cb colorbar [$which get colorbar]]
     puts $ch "$which colormap \[$cb get colormap\]"
     puts $ch "$which colorbar tag \"\{[$which get colorbar tag]\}\""

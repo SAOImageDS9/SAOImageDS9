@@ -354,6 +354,7 @@ proc CreateNameNumberFrame {which type} {
     # set to current frame
     set current(frame) $which
     set current(colorbar) ${which}cb
+    ColorbarCurrentToGlobal
 
     # next sequence number
     incr ds9(seq)
@@ -426,6 +427,7 @@ proc DeleteFrame {which} {
     
     # delete canvas colorbar
     $ds9(canvas) delete ${which}cb
+    ColorbarFrameDelete $which
 
     # delete canvas graphs
     GraphsDelete $which
@@ -439,6 +441,7 @@ proc DeleteFrame {which} {
 	if {$ii>0} {
 	    set current(frame) [lindex $ds9(active) [expr $ii-1]]
 	    set current(colorbar) ${current(frame)}cb
+	    ColorbarCurrentToGlobal
 	}
     }
 
@@ -1939,6 +1942,7 @@ proc UpdateActiveFrames {} {
 	if {[lsearch $ds9(active) $current(frame)] == -1} {
 	    set current(frame) [lindex $ds9(active) 0]
 	    set current(colorbar) ${current(frame)}cb
+	    ColorbarCurrentToGlobal
 	}
     } else {
 	set current(frame) {}
@@ -2007,6 +2011,12 @@ proc GotoFrame {which} {
     if {$current(frame) != $which} {
 	set current(frame) $which
 	set current(colorbar) ${current(frame)}cb
+	ColorbarCurrentToGlobal
+
+	if {$ds9(display) == {tile} && !$view(multi)} {
+	    LayoutFrames
+	    return
+	}
 
 	# frame
 	$current(frame) show

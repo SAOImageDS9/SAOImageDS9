@@ -224,6 +224,7 @@ proc Restore {fn} {
     }
 
     set colorbarHasPosition [regexp {colorbar\(position\)} $src]
+    set colorbarHasFrameProps [regexp {ColorbarFrameRestore} $src]
     regsub -all {colorbar configure -orientation horizontal} $src \
 	{colorbar configure -orientation 0} src
     regsub -all {colorbar configure -orientation vertical} $src \
@@ -263,7 +264,7 @@ proc Restore {fn} {
       }
     }
 
-    ColorbarBackupRestore $colorbarHasPosition
+    ColorbarBackupRestore $colorbarHasPosition $colorbarHasFrameProps
 
     # reset standard dialog
     switch $ds9(wm) {

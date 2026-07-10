@@ -294,8 +294,8 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
     global $varname
 
     set colorbar(orientation) [ColorbarPositionOrientation]
-    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
-    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
+    set cbh [expr $view(colorbar) && $colorbar(show) && !$colorbar(orientation)]
+    set cbv [expr $view(colorbar) && $colorbar(show) &&  $colorbar(orientation)]
     set grh $view(graph,horz)
     set grv $view(graph,vert)
 
@@ -395,8 +395,8 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     global $varname
 
     set colorbar(orientation) [ColorbarPositionOrientation]
-    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
-    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
+    set cbh [expr $view(colorbar) && $colorbar(show) && !$colorbar(orientation)]
+    set cbv [expr $view(colorbar) && $colorbar(show) &&  $colorbar(orientation)]
     set grh $view(graph,horz)
     set grv $view(graph,vert)
 

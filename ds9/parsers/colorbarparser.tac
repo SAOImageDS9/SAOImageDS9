@@ -30,6 +30,7 @@
 %token BOTTOM_
 %token LEFT_
 %token RIGHT_
+%token SHOW_
 
 %%
 
@@ -44,6 +45,7 @@ command : colorbar
 colorbar : yesno {ProcessCmdSet view colorbar $1 ColorbarUpdateView}
  | MATCH_ {MatchColorCurrent}
  | LOCK_ yesno {ProcessCmdSet colorbar lock $2 LockColorCurrent}
+ | SHOW_ yesno {ProcessCmdSet colorbar show $2 ColorbarUpdateView}
 
  | NUMERICS_ yesno {ProcessCmdSet colorbar numerics $2 ColorbarUpdateView}
  | SPACE_ space {ProcessCmdSet colorbar space $2 ColorbarUpdateView}

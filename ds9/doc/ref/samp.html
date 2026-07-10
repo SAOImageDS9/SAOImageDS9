@@ -603,6 +603,7 @@ cmap close<br></tt>
 <tt>Syntax:<br>
 colorbar []<br>
 &nbsp;&nbsp;&nbsp; [yes|no]<br>
+&nbsp;&nbsp;&nbsp; [show yes|no]<br>
 &nbsp;&nbsp;&nbsp; [orientation]<br>
 &nbsp;&nbsp;&nbsp; [horizontal|vertical]<br>
 &nbsp;&nbsp;&nbsp; [position top|bottom|left|right]<br>
@@ -623,6 +624,7 @@ colorbar []<br>
 Example:<br>
 string value = ds9.get(string cmd)<br>
 colorbar<br>
+colorbar show<br>
 colorbar orientation<br>
 colorbar position<br>
 colorbar label position<br>
@@ -640,6 +642,7 @@ colorbar lock<br>
 <br>
 ds9.set(string cmd)<br>
 colorbar yes<br>
+colorbar show yes<br>
 colorbar vertical<br>
 colorbar position top<br>
 colorbar label position opposite<br>

@@ -911,6 +911,7 @@ proc ResetColormap {} {
     set colorbar(invert) [$current(colorbar) get invert]
     if {$current(frame) != {} } {
 	EvalLockCurrent lock,colorbar [list $current(frame) colormap [$current(colorbar) get colormap]]
+	MarkerAnalysisPlot3dUpdateColorbar $current(frame)
     }
 
     LockColorCurrent
@@ -1387,6 +1388,7 @@ proc ChangeColormapName {name} {
     set colorbar(invert) [$current(colorbar) get invert]
     if {$current(frame) != {} } {
 	$current(frame) colormap [$current(colorbar) get colormap]
+	MarkerAnalysisPlot3dUpdateColorbar $current(frame)
     }
 
     LockColorCurrent
@@ -1445,6 +1447,7 @@ proc InvertColorbar {} {
 
     if {$current(frame) != {} } {
 	$current(frame) colormap [$current(colorbar) get colormap]
+	MarkerAnalysisPlot3dUpdateColorbar $current(frame)
     }
 
     LockColorCurrent
@@ -1905,6 +1908,7 @@ proc ApplyColormap {} {
     EvalLockColorbarCurrent [list $current(colorbar) adjust $dcolorbar(contrast) $dcolorbar(bias)]
     if {$current(frame) != {}} {
 	EvalLockCurrent lock,colorbar [list $current(frame) colormap [$current(colorbar) get colormap]]
+	MarkerAnalysisPlot3dUpdateColorbar $current(frame)
 	LockColorCurrent
     }
 }
@@ -1931,6 +1935,7 @@ proc AdjustColormap {} {
 	EvalLockColorbarCurrent [list $current(colorbar) adjust $dcolorbar(contrast) $dcolorbar(bias)]
 	if {$current(frame) != {}} {
 	    EvalLockCurrent lock,colorbar [list $current(frame) colormap motion [$current(colorbar) get colormap]]
+	    MarkerAnalysisPlot3dUpdateColorbar $current(frame)
 	}
     }
 }

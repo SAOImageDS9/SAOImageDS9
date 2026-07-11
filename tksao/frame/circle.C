@@ -181,6 +181,12 @@ void Circle::analysisPlot3d(char* xname, char* yname,
   Vector ll = -annuli_[0] * Translate(center);
   Vector ur =  annuli_[0] * Translate(center);
   BBox bb(ll,ur) ;
+
+  if (!strcmp(yname, "__cutout3d")) {
+    parent->markerAnalysisCutout3d(this, xname, bb);
+    return;
+  }
+
   int num = parent->markerAnalysisPlot3d(this, &x, &y, bb, sys, method);
   analysisXYResult(xname, yname, x, y, num);
 }
@@ -351,4 +357,3 @@ void Circle::setComposite(const Matrix& mx, double aa)
   center *= mx;
   updateBBox();
 }
-

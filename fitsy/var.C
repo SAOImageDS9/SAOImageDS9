@@ -8,6 +8,8 @@
 
 FitsVar::FitsVar(Tcl_Interp* interp, const char* var, const char* fn)
 {
+  obj = NULL;
+
   parse(fn);
   if (!valid_)
     return;
@@ -20,24 +22,18 @@ FitsVar::FitsVar(Tcl_Interp* interp, const char* var, const char* fn)
   if (!obj)
     return;
 
-  // just in case
-  Tcl_ConvertToType(interp, obj, Tcl_GetObjType("bytearray"));
-
-  typedef struct ByteArray {
-    int used;			/* The number of bytes used in the byte
-				 * array. */
-    int allocated;		/* The amount of space actually allocated
-				 * minus 1 byte. */
-    unsigned char bytes[4];	/* The array of bytes.  The actual size of
-				 * this field depends on the 'allocated' field
-				 * above. */
-  } ByteArray;
-
-  ByteArray* ba = (ByteArray*)(obj->internalRep.otherValuePtr);
-  mapsize_ = ba->used;
-  mapdata_ = (char*)ba->bytes;
-
   Tcl_IncrRefCount(obj);
+
+  Tcl_Size objLen = 0;
+  unsigned char* bytes = Tcl_GetByteArrayFromObj(obj, &objLen);
+  if (!bytes) {
+    Tcl_DecrRefCount(obj);
+    obj = NULL;
+    return;
+  }
+
+  mapsize_ = objLen;
+  mapdata_ = (char*)bytes;
 
   // so far, so good
   valid_ = 1;
@@ -48,6 +44,5 @@ FitsVar::~FitsVar()
   if (obj)
     Tcl_DecrRefCount(obj);
 }
-
 
 

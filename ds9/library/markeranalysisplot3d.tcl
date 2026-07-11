@@ -20,7 +20,7 @@ proc MarkerAnalysisPlot3dDialog {varname} {
     set var(plot3d) [info exists ${vvarname}(top)]
     set var(method) average
 
-    $var(mb).analysis add checkbutton -label [msgcat::mc {Plot 3D}] \
+    $var(mb).analysis add checkbutton -label [msgcat::mc {3D Cutout}] \
 	-variable ${varname}(plot3d) \
 	-command "MarkerAnalysisPlot3dCmd $varname"
     $var(mb).analysis add separator
@@ -85,7 +85,6 @@ proc MarkerAnalysisPlot3dMethod {varname} {
     if {[info exists var(plot3d)]} {
 	if {$var(plot3d)} {
 	    MarkerAnalysisPlot3dCB $frame $id
-	    MarkerAnalysisPlot3dAxisTitle $vvarname
 	}
     }
 }
@@ -106,7 +105,6 @@ proc MarkerAnalysisPlot3dSystem {varname} {
     if {[info exists var(plot3d)]} {
 	if {$var(plot3d)} {
 	    MarkerAnalysisPlot3dCB $frame $id
-	    MarkerAnalysisPlot3dAxisTitle $vvarname
 	}
     }
 }
@@ -115,6 +113,9 @@ proc MarkerAnalysisPlot3dSystem {varname} {
 proc MarkerAnalysisPlot3dCB {frame id} {
     global imarker
     global wcs
+    global current
+    global ds9
+    global tile
 
     set varname ${imarker(prefix,dialog)}${id}${frame}
     global $varname
@@ -142,51 +143,45 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 	set vvar(method) average
     }
 
-    # sanity check
-    if {![$frame has wcs 3d $vvar(system)]} {
-	set vvar(system) image
+    if {![$frame has fits]} {
+	return
     }
 
-    set xdata ${vvarname}xx
-    set ydata ${vvarname}yy
-    global $xdata $ydata
+    set saveframe $current(frame)
+    set savecolorbar $current(colorbar)
+    set datavar ${vvarname}fits
+    global $datavar
 
-    if {[info command $xdata] == {}} {
-	blt::vector create $xdata $ydata
+    catch {unset $datavar}
+    $frame get marker $id analysis plot3d $datavar __cutout3d image average
+    if {![info exists $datavar]} {
+	return
     }
-    $frame get marker $id analysis plot3d $xdata $ydata \
-	$vvar(system) $vvar(method)
-    
-    if {![PlotPing $vvarname]} {
-	set vvar(bunit) [string trim [$frame get fits header keyword BUNIT]]
-	if {$vvar(bunit)=={}} {
-	    set vvar(bunit) {Counts}
+
+    if {![info exists vvar(cutoutframe)] ||
+	[lsearch -exact $ds9(frames) $vvar(cutoutframe)] < 0} {
+	set olddisplay $current(display)
+	Create3DFrame
+	set vvar(cutoutframe) $current(frame)
+	if {$olddisplay == "single"} {
+	    set current(display) tile
+	    set tile(mode) grid
+	    DisplayMode
 	}
-	PlotDialog $vvarname [string totitle [$frame get marker $id type]] true
-	PlotAddGraph $vvarname line
-
-	MarkerAnalysisPlot3dAxisTitle $vvarname
-
-	set vvar(markerslice) [$vvar(graph) marker create line -element bar1 \
-			     -outline cyan -linewidth 2 \
-			     -bindtags [list slice]]
-	$vvar(graph) configure -halo 10
-	$vvar(graph) marker bind slice <B1-Motion> \
-	    [list MarkerAnalysisPlot3dMotion $vvarname %x %y]
-
-	set vvar(mode) pointer
-	PlotChangeMode $vvarname
-
-	set vvar(graph,ds,xdata) $xdata
-	set vvar(graph,ds,ydata) $ydata
-	PlotExternal $vvarname xy
     }
 
-    set vvar(slice) [$frame get fits slice from image $vvar(system)]
-    MarkerAnalysisPlot3dMarker $vvarname
+    set cutout $vvar(cutoutframe)
 
-    PlotStats $vvarname
-    PlotList $vvarname
+    GotoFrame $cutout
+    LoadVar $datavar "${frame}.${id}.3d-cutout.fits" {} {}
+    catch {$cutout colormap [${frame}cb get colormap]}
+    catch {$cutout 3d view 45 30}
+    catch {$cutout zoom to fit}
+
+    if {$saveframe != {} && [lsearch -exact $ds9(frames) $saveframe] >= 0} {
+	GotoFrame $saveframe
+	set current(colorbar) $savecolorbar
+    }
 }
 
 # hardcoded marker.C
@@ -200,7 +195,28 @@ proc MarkerAnalysisPlot3dDeleteCB {frame id} {
     upvar #0 $vvarname vvar
     global $vvarname
 
-    PlotDestroy $vvarname
+    if {[info exists vvar(cutoutframe)]} {
+	global ds9
+	if {[lsearch -exact $ds9(frames) $vvar(cutoutframe)] >= 0} {
+	    DeleteFrame $vvar(cutoutframe)
+	}
+    }
+    catch {unset vvar}
+}
+
+proc MarkerAnalysisPlot3dUpdateColorbar {frame} {
+    global imarker
+    global ds9
+
+    foreach vvarname [info globals ${imarker(prefix,plot3d)}*] {
+	upvar #0 $vvarname vvar
+	if {[info exists vvar(frame)] &&
+	    $vvar(frame) == $frame &&
+	    [info exists vvar(cutoutframe)] &&
+	    [lsearch -exact $ds9(frames) $vvar(cutoutframe)] >= 0} {
+	    catch {$vvar(cutoutframe) colormap [${frame}cb get colormap]}
+	}
+    }
 }
 
 # hardcoded marker.C

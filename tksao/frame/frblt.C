@@ -13,6 +13,52 @@ extern "C" {
 
 #include "sigbus.h"
 
+#include <string>
+
+static void appendFitsCard(std::string& out, const char* key, const char* value)
+{
+  char card[81];
+  snprintf(card, sizeof(card), "%-8s= %20s", key, value);
+  size_t len = strlen(card);
+  memset(card + len, ' ', 80 - len);
+  card[80] = '\0';
+  out.append(card, 80);
+}
+
+static void appendFitsEnd(std::string& out)
+{
+  char card[81];
+  memset(card, ' ', 80);
+  memcpy(card, "END", 3);
+  card[80] = '\0';
+  out.append(card, 80);
+}
+
+static void padFitsBlock(std::string& out)
+{
+  size_t pad = 2880 - (out.size() % 2880);
+  if (pad != 2880)
+    out.append(pad, ' ');
+}
+
+static void appendFitsFloat(std::string& out, float value)
+{
+  union {
+    float f;
+    unsigned char b[4];
+  } u;
+  u.f = value;
+
+#if WORDS_BIGENDIAN
+  out.append((char*)u.b, 4);
+#else
+  out.push_back(u.b[3]);
+  out.push_back(u.b[2]);
+  out.push_back(u.b[1]);
+  out.push_back(u.b[0]);
+#endif
+}
+
 static int dCompare(const void* a, const void* b)
 {
   double* aa = (double*)a;
@@ -226,6 +272,99 @@ int Base::markerAnalysisPlot2d(Marker* pp, double** x, double** y,
     delete [] marr;
 
   return num;
+}
+
+void Base::markerAnalysisCutout3d(Marker* pp, const char* varname,
+				  const BBox& bb)
+{
+  if (!currentContext || !pp || !varname || !*varname)
+    return;
+
+  FitsImage* ptr = isInCFits(pp->getCenter(),Coord::REF,NULL);
+  if (!ptr)
+    ptr = currentContext->cfits;
+  if (!ptr)
+    return;
+
+  FitsBound* params = ptr->getDataParams(currentContext->secMode());
+  if (!params)
+    return;
+
+  int srcw = ptr->width();
+  if (srcw <= 0)
+    return;
+
+  Vector ll = (bb.ll*ptr->refToData).floor();
+  Vector ur = (bb.ur*ptr->refToData).ceil();
+
+  int xmin = max((int)ll[0], params->xmin);
+  int ymin = max((int)ll[1], params->ymin);
+  int xmax = min((int)ur[0], params->xmax);
+  int ymax = min((int)ur[1], params->ymax);
+
+  int width = xmax - xmin;
+  int depth = ymax - ymin;
+  if (width <= 0 || depth <= 0)
+    return;
+
+  float* plane = new float[width*depth];
+  memset(plane, 0, width*depth*sizeof(float));
+
+  double vmax = 0;
+  Matrix bck = pp->bckMatrix();
+
+  SETSIGBUS
+    for (int jj=ymin; jj<ymax; jj++) {
+      for (int ii=xmin; ii<xmax; ii++) {
+	Vector rr = Vector(ii,jj)+Vector(.5,.5);
+	int inside = pp->isFixed() ? pp->isIn(rr*ptr->dataToRef,Coord::REF) :
+	  pp->isIn(rr*ptr->dataToRef,bck);
+	if (inside) {
+	  double val = ptr->getValueDouble(long(jj)*srcw+long(ii));
+	  if (isfinite(val) && val > 0) {
+	    plane[(jj-ymin)*width + (ii-xmin)] = val;
+	    if (val > vmax)
+	      vmax = val;
+	  }
+	}
+      }
+    }
+  CLEARSIGBUS
+
+  int height = max(1, (int)ceil(vmax) + 1);
+
+  std::string fits;
+  appendFitsCard(fits, "SIMPLE", "T");
+  appendFitsCard(fits, "BITPIX", "-32");
+  appendFitsCard(fits, "NAXIS", "3");
+
+  char buf[64];
+  snprintf(buf, sizeof(buf), "%d", width);
+  appendFitsCard(fits, "NAXIS1", buf);
+  snprintf(buf, sizeof(buf), "%d", height);
+  appendFitsCard(fits, "NAXIS2", buf);
+  snprintf(buf, sizeof(buf), "%d", depth);
+  appendFitsCard(fits, "NAXIS3", buf);
+  appendFitsCard(fits, "BZERO", "0");
+  appendFitsCard(fits, "BSCALE", "1");
+  appendFitsEnd(fits);
+  padFitsBlock(fits);
+
+  for (int kk=0; kk<depth; kk++)
+    for (int jj=0; jj<height; jj++)
+      for (int ii=0; ii<width; ii++) {
+	float val = plane[kk*width + ii];
+	appendFitsFloat(fits, val >= jj ? val : 0);
+      }
+
+  padFitsBlock(fits);
+  Tcl_Obj* obj = Tcl_NewByteArrayObj((unsigned char*)fits.data(), fits.size());
+  if (Tcl_SetVar2Ex(interp, varname, NULL, obj, TCL_GLOBAL_ONLY)) {
+    snprintf(buf, sizeof(buf), "%s %d %d %d", varname, width, height, depth);
+    Tcl_AppendResult(interp, buf, NULL);
+  }
+
+  delete [] plane;
 }
 
 int Base::markerAnalysisPlot3d(Marker* pp, double** x, double** y,
@@ -1117,4 +1256,3 @@ void Base::bltCutFits(double* xx, double* yy, int size, Coord::Orientation axis,
   if (marr)
     delete [] marr;
 }
-

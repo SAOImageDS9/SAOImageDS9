@@ -6,6 +6,15 @@ package provide DS9 1.0
 
 # Public Procedures
 
+proc FrameExists {which} {
+    global ds9
+
+    return [expr {$which != {} &&
+		  [info exists ds9(frames)] &&
+		  [lsearch -exact $ds9(frames) $which] >= 0 &&
+		  [llength [info commands $which]]}]
+}
+
 proc CreateFrame {} {
     CreateNamedFrame base
 }
@@ -133,7 +142,7 @@ proc CreateNameNumberFrame {which type} {
 	}
     }
     GraphsCreate $which
-    
+
     $which configure -x 0 -y 0 \
 	-anchor nw \
 	-tag $which \
@@ -169,7 +178,7 @@ proc CreateNameNumberFrame {which type} {
 	$pds9(prec,len,linear) $pds9(prec,len,deg) \
 	$pds9(prec,len,arcmin) $pds9(prec,len,arcsec) \
 	$pds9(prec,angle)
-    
+
     $which bg color $pds9(bg)
     $which bg color $pds9(bg,use)
     $which nan color $pds9(nan)
@@ -225,9 +234,9 @@ proc CreateNameNumberFrame {which type} {
 	    $which bin buffer size $bin(buffersize)
 
 	    $which block to $block(factor)
-	    
+
 	    $which cube axes $cube(axes)
-	    
+
 	    if {$smooth(view)} {
 		$which smooth $smooth(function) \
 		    $smooth(radius) $smooth(radius,minor) \
@@ -341,7 +350,7 @@ proc CreateNameNumberFrame {which type} {
 
     # enable events
     BindEventsFrame $which
-    
+
     switch -- $current(mode) {
 	crosshair {$which crosshair on}
     }
@@ -387,7 +396,7 @@ proc DeleteAllFrames {} {
     global ds9
 
     foreach ff $ds9(frames) {
-	DeleteFrame $ff
+	catch {DeleteFrame $ff}
     }
 
     set ds9(seq) 1
@@ -415,9 +424,15 @@ proc DeleteFrame {which} {
     global contour
     global marker
 
+    if {$which == {}} {
+	return
+    }
+
     # clear any loaded images
-    ClearFrame $which
+    if {[llength [info commands $which]]} {
+	ClearFrame $which
     BookmarksDeleteFrame $which
+    }
 
     # contour copy
     if {$contour(copy) == $which} {
@@ -427,16 +442,16 @@ proc DeleteFrame {which} {
     if {$marker(copy) == $which} {
 	set marker(copy) {}
     }
-    
+
     # delete canvas colorbar
-    $ds9(canvas) delete ${which}cb
+    catch {$ds9(canvas) delete ${which}cb}
     ColorbarFrameDelete $which
 
     # delete canvas graphs
-    GraphsDelete $which
+    catch {GraphsDelete $which}
 
     # delete canvas widget
-    $ds9(canvas) delete $which
+    catch {$ds9(canvas) delete $which}
 
     # reset current(frame) if needed
     if {$current(frame) == $which} {
@@ -452,12 +467,14 @@ proc DeleteFrame {which} {
     set ii [lsearch $ds9(active) $which]
     if {$ii>0} {
 	set ds9(active) [lreplace $ds9(active) $ii $ii]
-	unset active($which)
+	catch {unset active($which)}
     }
 
     # delete it from the frame list
     set ii [lsearch $ds9(frames) $which]
-    set ds9(frames) [lreplace $ds9(frames) $ii $ii]
+    if {$ii>=0} {
+	set ds9(frames) [lreplace $ds9(frames) $ii $ii]
+    }
 }
 
 proc UpdateCurrentFrame {} {
@@ -526,7 +543,7 @@ proc BindEventsFrame {which} {
 		[list Motion2Frame $which %x %y]
 	    $ds9(canvas) bind $which <ButtonRelease-2> \
 		[list Release2Frame $which %x %y]
-	} 
+	}
 	aqua {
 	    # swap button-2 and button-3 on the mighty mouse
 	    $ds9(canvas) bind $which <Button-3> \
@@ -547,7 +564,7 @@ proc BindEventsFrame {which} {
 		[list Release2Frame $which %x %y]
 
 	    # x11 command key emulation
-	    # we need this to eat the Button-1 events 
+	    # we need this to eat the Button-1 events
 	    # so it passes to the canvas
 	    $ds9(canvas) bind $which <Command-Button-1> {set foo bar}
 	    $ds9(canvas) bind $which <Command-B1-Motion> {set foo bar}
@@ -631,7 +648,7 @@ proc UnBindEventsFrame {which} {
 	    $ds9(canvas) bind $which <Shift-Button-2> {}
 	    $ds9(canvas) bind $which <B2-Motion> {}
 	    $ds9(canvas) bind $which <ButtonRelease-2> {}
-	} 
+	}
 	aqua {
 	    $ds9(canvas) bind $which <Command-Button-1> {}
 	    $ds9(canvas) bind $which <Command-B1-Motion> {}
@@ -692,7 +709,7 @@ proc EnterFrame {which x y} {
     }
 
     # check to see if this event was generated while processing other events
-    if {$ds9(b1) || $ds9(sb1) || $ds9(cb1) || 
+    if {$ds9(b1) || $ds9(sb1) || $ds9(cb1) ||
 	$ds9(csb1) || $ds9(b2) || $ds9(b3)} {
 	return
     }
@@ -750,7 +767,7 @@ proc LeaveFrame {which} {
     }
 
     # check to see if this event was generated while processing other events
-    if {$ds9(b1) || $ds9(sb1) || $ds9(cb1) || 
+    if {$ds9(b1) || $ds9(sb1) || $ds9(cb1) ||
 	$ds9(csb1) || $ds9(b2) || $ds9(b3)} {
 	return
     }
@@ -871,7 +888,7 @@ proc Button1Frame {which x y} {
 	none {
 	    if {$which == $current(frame)} {
 	    } else {
-		# we need this cause MarkerMotion maybe called, 
+		# we need this cause MarkerMotion maybe called,
 		# and we don't want it
 		set imarker(motion) none
 		set imarker(handle) -1
@@ -884,7 +901,7 @@ proc Button1Frame {which x y} {
 	    if {$which == $current(frame)} {
 		MarkerButton $which $x $y
 	    } else {
-		# we need this cause MarkerMotion maybe called, 
+		# we need this cause MarkerMotion maybe called,
 		# and we don't want it
 		set imarker(motion) none
 		set imarker(handle) -1
@@ -919,7 +936,7 @@ proc Button1Frame {which x y} {
 	    if {$which == $current(frame)} {
 		CATButton $which $x $y
 	    } else {
-		# we need this cause MarkerMotion maybe called, 
+		# we need this cause MarkerMotion maybe called,
 		# and we don't want it
 		set imarker(motion) none
 		set imarker(handle) -1
@@ -931,8 +948,8 @@ proc Button1Frame {which x y} {
             if {$which == $current(frame)} {
                 FPButton $which $x $y
             } else {
-                # we need this cause MarkerMotion maybe called,                 
-                # and we don't want it                                          
+                # we need this cause MarkerMotion maybe called,
+                # and we don't want it
                 set imarker(motion) none
                 set imarker(handle) -1
 
@@ -1028,7 +1045,7 @@ proc ControlButton1Frame {which x y} {
 		    MarkerCreate $which $x $y
 		}
 	    } else {
-		# we need this cause MarkerMotion maybe called, 
+		# we need this cause MarkerMotion maybe called,
 		# and we don't want it
 		set imarker(motion) none
 		set imarker(handle) -1
@@ -1039,7 +1056,7 @@ proc ControlButton1Frame {which x y} {
 	    if {$which == $current(frame)} {
 		MarkerControl $which $x $y
 	    } else {
-		# we need this cause MarkerMotion maybe called, 
+		# we need this cause MarkerMotion maybe called,
 		# and we don't want it
 		set imarker(motion) none
 		set imarker(handle) -1
@@ -1083,7 +1100,7 @@ proc ControlShiftButton1Frame {which x y} {
 	    if {$which == $current(frame)} {
 		MarkerControlShift $which $x $y
 	    } else {
-		# we need this cause MarkerMotion maybe called, 
+		# we need this cause MarkerMotion maybe called,
 		# and we don't want it
 		set imarker(motion) none
 		set imarker(handle) -1
@@ -1112,7 +1129,7 @@ proc Motion1Frame {which x y} {
     }
 
     # abort if we are here by accident (such as a double click)
-    if {($ds9(b1) == 0) && ($ds9(sb1) == 0) && 
+    if {($ds9(b1) == 0) && ($ds9(sb1) == 0) &&
 	($ds9(cb1) == 0) && ($ds9(csb1) == 0)} {
 	return
     }
@@ -1214,7 +1231,7 @@ proc Release1Frame {which x y} {
     }
 
     # abort if we are here by accident (such as a double click)
-    if {($ds9(b1) == 0) && ($ds9(sb1) == 0) && 
+    if {($ds9(b1) == 0) && ($ds9(sb1) == 0) &&
 	($ds9(cb1) == 0) && ($ds9(csb1) == 0)} {
 	return
     }
@@ -1569,7 +1586,7 @@ proc KeyFrame {which K A xx yy} {
 
 		z {Zoom 2 2}
 		Z {Zoom .5 .5}
-	    }    
+	    }
 	}
 	crosshair {
 	    switch -- $K {
@@ -1623,21 +1640,21 @@ proc KeyFrame {which K A xx yy} {
 		h {MarkerArrowKey $which -1 0}
 		Right -
 		l {MarkerArrowKey $which 1 0}
-	    }	    
+	    }
 	    CATKey $which $K
 	}
-        footprint {                                                             
-            switch -- $K {                                                      
-                Up -                                                            
-                k {MarkerArrowKey $which 0 -1}                                  
-                Down -                                                          
-                j {MarkerArrowKey $which 0 1}                                   
-                Left -                                                          
-                h {MarkerArrowKey $which -1 0}                                  
-                Right -                                                         
-                l {MarkerArrowKey $which 1 0}                                   
-            }                                                                   
-        }                                                                       
+        footprint {
+            switch -- $K {
+                Up -
+                k {MarkerArrowKey $which 0 -1}
+                Down -
+                j {MarkerArrowKey $which 0 1}
+                Left -
+                h {MarkerArrowKey $which -1 0}
+                Right -
+                l {MarkerArrowKey $which 1 0}
+            }
+        }
 	iexam {IExamKey $which $K $xx $yy}
 	colorbar -
 	crop -
@@ -1934,16 +1951,25 @@ proc UpdateActiveFrames {} {
     # reset active list
     set ds9(active) {}
 
+    set frames {}
     foreach ff $ds9(frames) {
-	if {$active($ff)} {
+	if {![llength [info commands $ff]]} {
+	    catch {unset active($ff)}
+	    continue
+	}
+
+	lappend frames $ff
+	if {[info exists active($ff)] && $active($ff)} {
 	    lappend ds9(active) $ff
 	    $ds9(mb).frame.goto entryconfig \
 		"[msgcat::mc {Frame}] [string range $ff 5 end]" -state normal
 	} else {
+	    set active($ff) 0
 	    $ds9(mb).frame.goto entryconfig \
 		"[msgcat::mc {Frame}] [string range $ff 5 end]" -state disabled
 	}
     }
+    set ds9(frames) $frames
 
     # New layout if needed
     if {[llength $ds9(active)] > 0} {
@@ -1986,9 +2012,15 @@ proc GotoFrame {which} {
     global active
     global view
 
-    if {$current(frame) != {} && $current(frame) != $which} {
-	$current(frame) highlite off
-	$current(frame) panner off
+    if {$which == {} || ![llength [info commands $which]]} {
+	return
+    }
+
+    if {$current(frame) != {} &&
+	$current(frame) != $which &&
+	[llength [info commands $current(frame)]]} {
+	catch {$current(frame) highlite off}
+	catch {$current(frame) panner off}
 
 	switch -- $ds9(display) {
 	    blink -
@@ -1996,21 +2028,21 @@ proc GotoFrame {which} {
 	    single {
 		set ff $current(frame)
 		# frame
-		$ff hide
+		catch {$ff hide}
 
 		# colorbar
 		if {$view(colorbar)} {
-		    ${ff}cb hide
+		    catch {${ff}cb hide}
 		}
 
 		# graphs
 		if {$view(graph,horz)} {
-		    GraphHide $ff horz
+		    catch {GraphHide $ff horz}
 		}
 		if {$view(graph,vert)} {
-		    GraphHide $ff vert
+		    catch {GraphHide $ff vert}
 		}
-		
+
 	    }
 	    tile {}
 	}
@@ -2027,23 +2059,23 @@ proc GotoFrame {which} {
 	}
 
 	# frame
-	$current(frame) show
-	LayoutRaise $current(frame)
+	catch {$current(frame) show}
+	catch {LayoutRaise $current(frame)}
 #	$ds9(canvas) raise $current(frame)
 
 	# colorbar
 	if {$view(colorbar)} {
-	    $current(colorbar) show
-	    LayoutRaise $current(colorbar)
+	    catch {$current(colorbar) show}
+	    catch {LayoutRaise $current(colorbar)}
 #	    $ds9(canvas) raise $current(colorbar)
 	}
 
 	# graphs
 	if {$view(graph,horz)} {
-	    GraphShow $current(frame) horz
+	    catch {GraphShow $current(frame) horz}
 	}
 	if {$view(graph,vert)} {
-	    GraphShow $current(frame) vert
+	    catch {GraphShow $current(frame) vert}
 	}
 
 	FrameToFront
@@ -2098,8 +2130,9 @@ proc DisplayMode {} {
 		set ifade(id) {}
 		set ifade(index) -1
 		set ifade(alpha) 0
-		if {$current(frame) != {}} {
-		    $current(frame) fade clear
+		if {$current(frame) != {} &&
+		    [llength [info commands $current(frame)]]} {
+		    catch {$current(frame) fade clear}
 		}
 	    }
 
@@ -2112,8 +2145,9 @@ proc DisplayMode {} {
 		set ifade(id) {}
 		set ifade(index) -1
 		set ifade(alpha) 0
-		if {$current(frame) != {}} {
-		    $current(frame) fade clear
+		if {$current(frame) != {} &&
+		    [llength [info commands $current(frame)]]} {
+		    catch {$current(frame) fade clear}
 		}
 	    }
 
@@ -2188,14 +2222,14 @@ proc FadeTimer {} {
 
 	set ifade(alpha) 0
     }
-    
+
     # fade
     set next [lindex $ds9(active) $ifade(index)]
     switch [$next get type] {
 	base -
 	rgb {
 	    $current(frame) fade [$next get] $ifade(alpha)
-	    
+
 	    # next time thru
 	    set ifade(alpha) [expr $ifade(alpha)+(100.*$fade(step)/($fade(interval)/2.))]
 
@@ -2307,6 +2341,10 @@ proc ClearFrame {which} {
 	if {[info exists $varname]} {
 	    unset $varname
 	}
+    }
+
+    if {![llength [info commands $which]]} {
+	return
     }
 
     set cnt [$which get fits count]
@@ -2473,7 +2511,7 @@ proc TileApplyDialog {} {
     set tile(grid,row) $dtile(row)
     set tile(grid,col) $dtile(col)
     set tile(grid,gap) $dtile(gap)
-    
+
     DisplayMode
 }
 
@@ -2561,7 +2599,7 @@ proc ProcessSendTileCmd {proc id param {sock {}} {fn {}}} {
 proc TileSendCmd {} {
     global parse
     global current
-    
+
     if {$current(display)=="tile"} {
 	$parse(proc) $parse(id) "yes\n"
     } else {
@@ -2592,7 +2630,7 @@ proc ProcessSendBlinkCmd {proc id param {sock {}} {fn {}}} {
 proc BlinkSendCmd {} {
     global parse
     global current
-    
+
     if {$current(display)=="blink"} {
 	$parse(proc) $parse(id) "yes\n"
     } else {
@@ -2630,7 +2668,7 @@ proc ProcessSendFadeCmd {proc id param {sock {}} {fn {}}} {
 proc FadeSendCmd {} {
     global parse
     global current
-    
+
     if {$current(display)=="fade"} {
 	$parse(proc) $parse(id) "yes\n"
     } else {

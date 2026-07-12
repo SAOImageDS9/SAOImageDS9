@@ -45,6 +45,36 @@ proc MarkerAnalysisPlot3dDialog {varname} {
 
 # support
 
+proc MarkerAnalysisPlot3dFrameExists {frame} {
+    global ds9
+
+    return [expr {$frame != {} &&
+		  [info exists ds9(frames)] &&
+		  [lsearch -exact $ds9(frames) $frame] >= 0 &&
+		  [llength [info commands $frame]]}]
+}
+
+proc MarkerAnalysisPlot3dColorbarExists {frame} {
+    return [expr {$frame != {} &&
+		  [llength [info commands ${frame}cb]]}]
+}
+
+proc MarkerAnalysisPlot3dApplyColorbar {frame cutout} {
+    if {![MarkerAnalysisPlot3dFrameExists $frame] ||
+	![MarkerAnalysisPlot3dFrameExists $cutout] ||
+	![MarkerAnalysisPlot3dColorbarExists $frame] ||
+	![MarkerAnalysisPlot3dColorbarExists $cutout]} {
+	return
+    }
+
+    if {[catch {${frame}cb get colormap} cmap]} {
+	return
+    }
+
+    catch {$cutout colormap $cmap}
+    catch {${cutout}cb colorbar [$cutout get colorbar]}
+}
+
 proc MarkerAnalysisPlot3dCmd {varname} {
     upvar #0 $varname var
     global $varname
@@ -55,6 +85,10 @@ proc MarkerAnalysisPlot3dCmd {varname} {
 proc MarkerAnalysisPlot3d {frame id plot} {
     global imarker
 
+    if {![MarkerAnalysisPlot3dFrameExists $frame]} {
+	return
+    }
+
     $frame marker $id analysis plot3d $plot
     if {$plot} {
 	MarkerAnalysisPlot3dCB $frame $id
@@ -63,7 +97,7 @@ proc MarkerAnalysisPlot3d {frame id plot} {
 	upvar #0 $vvarname vvar
 	global $vvarname
 
-	PlotRaise $vvarname
+	catch {PlotRaise $vvarname}
     } else {
 	MarkerAnalysisPlot3dDeleteCB $frame $id
     }
@@ -117,6 +151,10 @@ proc MarkerAnalysisPlot3dCB {frame id} {
     global ds9
     global tile
 
+    if {![MarkerAnalysisPlot3dFrameExists $frame]} {
+	return
+    }
+
     set varname ${imarker(prefix,dialog)}${id}${frame}
     global $varname
     upvar #0 $varname var
@@ -143,7 +181,7 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 	set vvar(method) average
     }
 
-    if {![$frame has fits]} {
+    if {[catch {$frame has fits} hasfits] || !$hasfits} {
 	return
     }
 
@@ -153,13 +191,17 @@ proc MarkerAnalysisPlot3dCB {frame id} {
     global $datavar
 
     catch {unset $datavar}
-    $frame get marker $id analysis plot3d $datavar __cutout3d image average
+    if {[catch {
+	$frame get marker $id analysis plot3d $datavar __cutout3d image average
+    }]} {
+	return
+    }
     if {![info exists $datavar]} {
 	return
     }
 
     if {![info exists vvar(cutoutframe)] ||
-	[lsearch -exact $ds9(frames) $vvar(cutoutframe)] < 0} {
+	![MarkerAnalysisPlot3dFrameExists $vvar(cutoutframe)]} {
 	set olddisplay $current(display)
 	Create3DFrame
 	set vvar(cutoutframe) $current(frame)
@@ -171,15 +213,18 @@ proc MarkerAnalysisPlot3dCB {frame id} {
     }
 
     set cutout $vvar(cutoutframe)
+    if {![MarkerAnalysisPlot3dFrameExists $cutout]} {
+	return
+    }
 
-    GotoFrame $cutout
-    LoadVar $datavar "${frame}.${id}.3d-cutout.fits" {} {}
-    catch {$cutout colormap [${frame}cb get colormap]}
+    catch {GotoFrame $cutout}
+    catch {LoadVar $datavar "${frame}.${id}.3d-cutout.fits" {} {}}
+    MarkerAnalysisPlot3dApplyColorbar $frame $cutout
     catch {$cutout 3d view 45 30}
     catch {$cutout zoom to fit}
 
-    if {$saveframe != {} && [lsearch -exact $ds9(frames) $saveframe] >= 0} {
-	GotoFrame $saveframe
+    if {[MarkerAnalysisPlot3dFrameExists $saveframe]} {
+	catch {GotoFrame $saveframe}
 	set current(colorbar) $savecolorbar
     }
 }
@@ -196,9 +241,9 @@ proc MarkerAnalysisPlot3dDeleteCB {frame id} {
     global $vvarname
 
     if {[info exists vvar(cutoutframe)]} {
-	global ds9
-	if {[lsearch -exact $ds9(frames) $vvar(cutoutframe)] >= 0} {
-	    DeleteFrame $vvar(cutoutframe)
+	set cutout $vvar(cutoutframe)
+	if {[MarkerAnalysisPlot3dFrameExists $cutout]} {
+	    catch {DeleteFrame $cutout}
 	}
     }
     catch {unset vvar}
@@ -213,8 +258,8 @@ proc MarkerAnalysisPlot3dUpdateColorbar {frame} {
 	if {[info exists vvar(frame)] &&
 	    $vvar(frame) == $frame &&
 	    [info exists vvar(cutoutframe)] &&
-	    [lsearch -exact $ds9(frames) $vvar(cutoutframe)] >= 0} {
-	    catch {$vvar(cutoutframe) colormap [${frame}cb get colormap]}
+	    [MarkerAnalysisPlot3dFrameExists $vvar(cutoutframe)]} {
+	    MarkerAnalysisPlot3dApplyColorbar $frame $vvar(cutoutframe)
 	}
     }
 }
@@ -222,6 +267,10 @@ proc MarkerAnalysisPlot3dUpdateColorbar {frame} {
 # hardcoded marker.C
 proc MarkerAnalysisPlot3dSliceCB {frame id} {
     global imarker
+
+    if {![MarkerAnalysisPlot3dFrameExists $frame]} {
+	return
+    }
 
     set vvarname ${imarker(prefix,plot3d)}${id}${frame}
     upvar #0 $vvarname vvar
@@ -231,8 +280,12 @@ proc MarkerAnalysisPlot3dSliceCB {frame id} {
     # this routine will be called, so check first
 
     if {[info exists ${vvarname}(system)]} {
-	set vvar(slice) \
-	    [$frame get fits slice from image $vvar(system)]
+	if {[catch {
+	    set vvar(slice) \
+		[$frame get fits slice from image $vvar(system)]
+	}]} {
+	    return
+	}
 	MarkerAnalysisPlot3dMarker $vvarname
     }
 }

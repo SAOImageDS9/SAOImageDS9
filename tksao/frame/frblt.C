@@ -313,14 +313,13 @@ void Base::markerAnalysisCutout3d(Marker* pp, const char* varname,
   FrScale::ColorScaleType scaleType = currentContext->colorScaleType();
   float expo = currentContext->expo();
   double* hist = currentContext->histequ();
-  int yscale = max(width, depth);
+  int height = max(1, max(width, depth));
 
   float* plane = new float[width*depth];
   int* heights = new int[width*depth];
   memset(plane, 0, width*depth*sizeof(float));
   memset(heights, 0, width*depth*sizeof(int));
 
-  int hmax = 0;
   Matrix bck = pp->bckMatrix();
 
   SETSIGBUS
@@ -337,18 +336,16 @@ void Base::markerAnalysisCutout3d(Marker* pp, const char* varname,
 					    scaleType, expo, hist,
 					    HISTEQUSIZE, colorbarBias,
 					    colorbarContrast, invert);
-	    int height = index ? (index*yscale + colorCount - 1)/colorCount : 0;
+	    int scaledHeight = (index*height)/colorCount;
+	    if (scaledHeight >= height)
+	      scaledHeight = height - 1;
 	    plane[ndx] = val;
-	    heights[ndx] = height;
-	    if (height > hmax)
-	      hmax = height;
+	    heights[ndx] = scaledHeight;
 	  }
 	}
       }
     }
   CLEARSIGBUS
-
-  int height = max(1, hmax + 1);
 
   std::string fits;
   appendFitsCard(fits, "SIMPLE", "T");

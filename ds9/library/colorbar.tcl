@@ -274,9 +274,9 @@ proc ColorbarLabelSide {} {
 
     switch -- $colorbar(position) {
 	top -
-	right {set side 1}
-	left -
+	left {set side 1}
 	bottom -
+	right -
 	default {set side 0}
     }
 
@@ -439,9 +439,9 @@ proc ColorbarLabelSideFrame {frame} {
 
     switch -- $colorbar($frame,position) {
 	top -
-	right {set side 1}
-	left -
+	left {set side 1}
 	bottom -
+	right -
 	default {set side 0}
     }
 
@@ -1789,12 +1789,12 @@ proc ColormapDialog {} {
     ttk::radiobutton $f.top -text [msgcat::mc {Top}] \
 	-variable colorbar(position) -value top \
 	-command [list ColorbarCmdPosition top]
-    ttk::radiobutton $f.right -text [msgcat::mc {Right}] \
-	-variable colorbar(position) -value right \
-	-command [list ColorbarCmdPosition right]
     ttk::radiobutton $f.left -text [msgcat::mc {Left}] \
 	-variable colorbar(position) -value left \
 	-command [list ColorbarCmdPosition left]
+    ttk::radiobutton $f.right -text [msgcat::mc {Right}] \
+	-variable colorbar(position) -value right \
+	-command [list ColorbarCmdPosition right]
 
     ttk::label $f.tlabels -text [msgcat::mc {Labels}]
     ttk::radiobutton $f.natural -text [msgcat::mc {Natural}] \
@@ -1826,7 +1826,7 @@ proc ColormapDialog {} {
 	ColorbarUpdateView
 
     grid $f.tshow $f.show -padx 2 -pady 2 -sticky w
-    grid $f.tposition $f.bottom $f.top $f.right $f.left \
+    grid $f.tposition $f.bottom $f.top $f.left $f.right \
 	-padx 2 -pady 2 -sticky w
     grid $f.tlabels $f.natural $f.opposite -padx 2 -pady 2 -sticky w
     grid $f.tnumerics $f.numerics $f.value $f.distance \
@@ -2085,7 +2085,7 @@ proc LayoutColorbar {cb fx fy fw fh} {
     }
     # cbv
     if {$cbv} {
-	if {$colorbar(position) == {right}} {
+	if {$colorbar(position) == {left}} {
 	    set xx $fx
 	} else {
 	    set xx [expr $fx + $fw - $colorbar(vertical,width)]
@@ -2117,14 +2117,14 @@ proc LayoutColorbar {cb fx fy fw fh} {
 	incr hh -$graph(size)
     }
     # cbvgrv
-    if {!$cbh && $cbv && !$grh && $grv && $colorbar(position) != {right}} {
+    if {!$cbh && $cbv && !$grh && $grv && $colorbar(position) != {left}} {
 	incr xx -$graph(size)
 	incr hh -$dgraph(vert,offset)
     }
     # cbvgrhgrv
     if {!$cbh && $cbv && $grh && $grv} {
 	incr hh -$graph(size)
-	if {$colorbar(position) != {right}} {
+	if {$colorbar(position) != {left}} {
 	    incr xx -$graph(size)
 	}
     }

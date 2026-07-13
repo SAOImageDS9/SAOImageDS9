@@ -1124,7 +1124,7 @@ proc LayoutFrameOriginAdjust {xvar yvar} {
 		incr yy $colorbar(horizontal,height)
 		incr yy $canvas(gap)
 	    }
-	    right {
+	    left {
 		incr xx $colorbar(vertical,width)
 		incr xx $canvas(gap)
 	    }

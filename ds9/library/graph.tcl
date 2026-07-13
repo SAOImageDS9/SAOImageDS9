@@ -328,7 +328,7 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
 	incr ww -$colorbar(vertical,width)
 	incr ww -$canvas(gap)
 	incr ww $dgraph(horz,offset)
-	if {$colorbar(position) == {right}} {
+	if {$colorbar(position) == {left}} {
 	    incr xx $colorbar(vertical,width)
 	    incr xx $canvas(gap)
 	}
@@ -342,7 +342,7 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
 	incr ww -$canvas(gap)
 	incr ww -$graph(size)
 	incr ww $dgraph(horz,offset)
-	if {$colorbar(position) == {right}} {
+	if {$colorbar(position) == {left}} {
 	    incr xx $colorbar(vertical,width)
 	    incr xx $canvas(gap)
 	}

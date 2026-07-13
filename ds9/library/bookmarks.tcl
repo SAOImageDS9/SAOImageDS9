@@ -270,6 +270,9 @@ proc BookmarksDialog {} {
 
     set w $ibookmarks(top)
     set mb $ibookmarks(mb)
+    if {[winfo exists $mb]} {
+	destroy $mb
+    }
     Toplevel $w $mb 7 [msgcat::mc {Bookmarks}] BookmarksDestroyDialog
 
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
@@ -341,14 +344,20 @@ proc BookmarksDestroyDialog {} {
     if {[winfo exists $ibookmarks(top)]} {
 	destroy $ibookmarks(top)
     }
+    if {[winfo exists $ibookmarks(mb)]} {
+	destroy $ibookmarks(mb)
+    }
     set ibookmarks(frame) {}
+    unset -nocomplain ibookmarks(tree)
 }
 
 proc UpdateBookmarksDialog {} {
     global bookmarks current ibookmarks
 
     if {![info exists ibookmarks(top)] ||
-	![winfo exists $ibookmarks(top)]} {
+	![winfo exists $ibookmarks(top)] ||
+	![info exists ibookmarks(tree)] ||
+	![winfo exists $ibookmarks(tree)]} {
 	return
     }
 

@@ -75,7 +75,10 @@ proc MarkerAnalysisPlot3dApplyColorbar {frame cutout} {
     catch {${cutout}cb colorbar [$cutout get colorbar]}
 }
 
-proc MarkerAnalysisPlot3dApplyScaleLimits {frame cutout} {
+proc MarkerAnalysisPlot3dApplyScaleLimits {frame cutout vvarname} {
+    upvar #0 $vvarname vvar
+    global $vvarname
+
     if {![MarkerAnalysisPlot3dFrameExists $frame] ||
 	![MarkerAnalysisPlot3dFrameExists $cutout]} {
 	return
@@ -85,8 +88,17 @@ proc MarkerAnalysisPlot3dApplyScaleLimits {frame cutout} {
 	return
     }
 
+    if {[info exists vvar(scaleLimits)] &&
+	[info exists vvar(scaleFrame)] &&
+	$vvar(scaleLimits) == $limits &&
+	$vvar(scaleFrame) == $cutout} {
+	return
+    }
+
     catch {eval [list $cutout clip user] $limits}
     catch {$cutout clip mode user}
+    set vvar(scaleLimits) $limits
+    set vvar(scaleFrame) $cutout
 }
 
 proc MarkerAnalysisPlot3dCmd {varname} {
@@ -233,7 +245,7 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 
     catch {GotoFrame $cutout}
     catch {LoadVar $datavar "${frame}.${id}.3d-cutout.fits" {} {}}
-    MarkerAnalysisPlot3dApplyScaleLimits $frame $cutout
+    MarkerAnalysisPlot3dApplyScaleLimits $frame $cutout $vvarname
     MarkerAnalysisPlot3dApplyColorbar $frame $cutout
     catch {$cutout 3d view 45 30}
     catch {$cutout zoom to fit}

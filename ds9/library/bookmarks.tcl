@@ -9,6 +9,9 @@ proc BookmarksDef {} {
     set ibookmarks(top) .bookmarks
     set ibookmarks(mb) .bookmarksmb
     set ibookmarks(frame) {}
+    unset -nocomplain ibookmarks(update)
+    catch {trace remove variable current(frame) write BookmarksFrameTrace}
+    trace add variable current(frame) write BookmarksFrameTrace
 }
 
 proc BookmarksInitFrame {which} {
@@ -351,8 +354,23 @@ proc BookmarksDestroyDialog {} {
     unset -nocomplain ibookmarks(tree)
 }
 
+proc BookmarksFrameTrace {name1 name2 op} {
+    global ibookmarks
+
+    if {![info exists ibookmarks(top)] ||
+	[info commands winfo] == {} ||
+	![winfo exists $ibookmarks(top)] ||
+	[info exists ibookmarks(update)]} {
+	return
+    }
+
+    set ibookmarks(update) [after idle UpdateBookmarksDialog]
+}
+
 proc UpdateBookmarksDialog {} {
     global bookmarks current ibookmarks
+
+    unset -nocomplain ibookmarks(update)
 
     if {![info exists ibookmarks(top)] ||
 	![winfo exists $ibookmarks(top)] ||

@@ -307,10 +307,20 @@ void Base::markerAnalysisCutout3d(Marker* pp, const char* varname,
   if (width <= 0 || depth <= 0)
     return;
 
-  float* plane = new float[width*depth];
-  memset(plane, 0, width*depth*sizeof(float));
+  int colorCount = this->colorCount > 0 ? this->colorCount : 1;
+  double low = ptr->low();
+  double high = ptr->high();
+  FrScale::ColorScaleType scaleType = currentContext->colorScaleType();
+  float expo = currentContext->expo();
+  double* hist = currentContext->histequ();
+  int yscale = max(width, depth);
 
-  double vmax = 0;
+  float* plane = new float[width*depth];
+  int* heights = new int[width*depth];
+  memset(plane, 0, width*depth*sizeof(float));
+  memset(heights, 0, width*depth*sizeof(int));
+
+  int hmax = 0;
   Matrix bck = pp->bckMatrix();
 
   SETSIGBUS
@@ -321,17 +331,24 @@ void Base::markerAnalysisCutout3d(Marker* pp, const char* varname,
 	  pp->isIn(rr*ptr->dataToRef,bck);
 	if (inside) {
 	  double val = ptr->getValueDouble(long(jj)*srcw+long(ii));
-	  if (isfinite(val) && val > 0) {
-	    plane[(jj-ymin)*width + (ii-xmin)] = val;
-	    if (val > vmax)
-	      vmax = val;
+	  if (isfinite(val)) {
+	    int ndx = (jj-ymin)*width + (ii-xmin);
+	    int index = FrScale::colorIndex(val, low, high, colorCount,
+					    scaleType, expo, hist,
+					    HISTEQUSIZE, colorbarBias,
+					    colorbarContrast, invert);
+	    int height = index ? (index + yscale - 1)/yscale : 0;
+	    plane[ndx] = val;
+	    heights[ndx] = height;
+	    if (height > hmax)
+	      hmax = height;
 	  }
 	}
       }
     }
   CLEARSIGBUS
 
-  int height = max(1, (int)ceil(vmax) + 1);
+  int height = max(1, hmax + 1);
 
   std::string fits;
   appendFitsCard(fits, "SIMPLE", "T");
@@ -353,8 +370,9 @@ void Base::markerAnalysisCutout3d(Marker* pp, const char* varname,
   for (int kk=0; kk<depth; kk++)
     for (int jj=0; jj<height; jj++)
       for (int ii=0; ii<width; ii++) {
-	float val = plane[kk*width + ii];
-	appendFitsFloat(fits, val >= jj ? val : 0);
+	int ndx = kk*width + ii;
+	float val = plane[ndx];
+	appendFitsFloat(fits, heights[ndx] >= jj ? val : 0);
       }
 
   padFitsBlock(fits);
@@ -365,6 +383,7 @@ void Base::markerAnalysisCutout3d(Marker* pp, const char* varname,
   }
 
   delete [] plane;
+  delete [] heights;
 }
 
 int Base::markerAnalysisPlot3d(Marker* pp, double** x, double** y,

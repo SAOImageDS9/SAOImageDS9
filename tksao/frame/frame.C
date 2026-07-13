@@ -816,6 +816,8 @@ void Frame::colormapCmd(int id, float b, float c, int i, int cnt)
   cmapID = id;
   bias = b;
   contrast = c;
+  colorbarBias = b;
+  colorbarContrast = c;
   invert = i;
 
   updateColorCells(cnt);

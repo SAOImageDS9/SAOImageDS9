@@ -191,6 +191,7 @@ proc UpdateScale {} {
     UpdateContourScale
     UpdateInfoBoxFrame $current(frame)
     UpdateGraphAxes $current(frame)
+    MarkerAnalysisPlot3dUpdateScale $current(frame)
     UpdateMain
 }
 

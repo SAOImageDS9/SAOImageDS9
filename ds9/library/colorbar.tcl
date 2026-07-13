@@ -1358,6 +1358,7 @@ proc ColorbarMotion3 {frame xx yy} {
 
     EvalLockColorbar $frame [list $cb adjust $contrast $bias]
     $frame colormap motion [$cb get colormap]
+    MarkerAnalysisPlot3dUpdateColorbar $frame
     UpdateColorDialog
 }
 
@@ -1374,6 +1375,7 @@ proc ColorbarRelease3 {frame x y} {
 
     $frame colormap end
 
+    MarkerAnalysisPlot3dUpdateColorbar $frame
     LockColor $frame
     UpdateColorDialog
 }
@@ -2283,6 +2285,7 @@ proc CmapValueCmd {c b} {
 	EvalLockCurrent lock,colorbar [list $current(frame) colormap begin]
 	EvalLockCurrent lock,colorbar [list $current(frame) colormap motion [$current(colorbar) get colormap]]
 	EvalLockCurrent lock,colorbar [list $current(frame) colormap end]
+	MarkerAnalysisPlot3dUpdateColorbar $current(frame)
     }
     LockColorCurrent
     UpdateColorDialog

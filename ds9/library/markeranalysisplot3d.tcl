@@ -240,12 +240,6 @@ proc MarkerAnalysisPlot3dDeleteCB {frame id} {
     upvar #0 $vvarname vvar
     global $vvarname
 
-    if {[info exists vvar(cutoutframe)]} {
-	set cutout $vvar(cutoutframe)
-	if {[MarkerAnalysisPlot3dFrameExists $cutout]} {
-	    catch {DeleteFrame $cutout}
-	}
-    }
     catch {unset vvar}
 }
 
@@ -259,7 +253,21 @@ proc MarkerAnalysisPlot3dUpdateColorbar {frame} {
 	    $vvar(frame) == $frame &&
 	    [info exists vvar(cutoutframe)] &&
 	    [MarkerAnalysisPlot3dFrameExists $vvar(cutoutframe)]} {
-	    MarkerAnalysisPlot3dApplyColorbar $frame $vvar(cutoutframe)
+	    MarkerAnalysisPlot3dCB $vvar(frame) $vvar(id)
+	}
+    }
+}
+
+proc MarkerAnalysisPlot3dUpdateScale {frame} {
+    global imarker
+
+    foreach vvarname [info globals ${imarker(prefix,plot3d)}*] {
+	upvar #0 $vvarname vvar
+	if {[info exists vvar(frame)] &&
+	    $vvar(frame) == $frame &&
+	    [info exists vvar(id)] &&
+	    [MarkerAnalysisPlot3dFrameExists $frame]} {
+	    MarkerAnalysisPlot3dCB $vvar(frame) $vvar(id)
 	}
     }
 }

@@ -141,6 +141,8 @@ public:
 
   int colorCount;               // number of dynamic colors
   unsigned char* colorCells;    // current color values
+  float colorbarBias;           // current colormap bias
+  float colorbarContrast;       // current colormap contrast
 
   int byteorder_;
   int bitsperpixel_;

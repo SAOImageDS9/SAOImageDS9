@@ -337,7 +337,7 @@ void Base::markerAnalysisCutout3d(Marker* pp, const char* varname,
 					    scaleType, expo, hist,
 					    HISTEQUSIZE, colorbarBias,
 					    colorbarContrast, invert);
-	    int height = index ? (index + yscale - 1)/yscale : 0;
+	    int height = index ? (index*yscale + colorCount - 1)/colorCount : 0;
 	    plane[ndx] = val;
 	    heights[ndx] = height;
 	    if (height > hmax)

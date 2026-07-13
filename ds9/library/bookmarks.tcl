@@ -6,6 +6,8 @@ package provide DS9 1.0
 
 proc BookmarksDef {} {
     global ibookmarks
+    global current
+
     set ibookmarks(top) .bookmarks
     set ibookmarks(mb) .bookmarksmb
     set ibookmarks(frame) {}

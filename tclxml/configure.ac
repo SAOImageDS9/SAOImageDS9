@@ -133,6 +133,9 @@ TEA_ENABLE_THREADS
 #--------------------------------------------------------------------
 
 TEA_ENABLE_SHARED
+if test "${STUBS_BUILD}" = "1" ; then
+    TEA_ADD_CFLAGS([-DUSE_TCL_STUBS=1 -DUSE_TCLOO_STUBS=1])
+fi
 
 #--------------------------------------------------------------------
 # This macro figures out what flags to use with the compiler/linker

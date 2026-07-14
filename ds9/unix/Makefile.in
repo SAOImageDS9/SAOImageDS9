@@ -272,7 +272,7 @@ $(LIBDIR)/scidthemes: $(prefix)/scidthemes
 
 # --------------------------- ssl
 $(LIBDIR)/ssl: $(prefix)/openssl
-	mkdir "$@"
+	mkdir -p "$@"
 	cp -pvf $(prefix)/certifi/certifi/cacert.pem "$@"
 
 #--------------------------clean

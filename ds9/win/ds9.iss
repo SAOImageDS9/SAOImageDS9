@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "SAOImageDS9"
-#define MyAppVersion "8.8"
+#define MyAppVersion "8.8b1"
 #define MyAppPublisher "Smithsonian Astrophysical Observatory"
 #define MyAppURL "https://ds9.si.edu"
 #define MyAppExeName "ds9.exe"

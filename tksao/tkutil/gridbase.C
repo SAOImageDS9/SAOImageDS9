@@ -166,8 +166,8 @@ int GridBase::x11Line(int n, float* x, float* y)
   }
 
   for (int i=0; i<n-1; i++) {
-    Vector s = Vector(x[i],y[i]).round();
-    Vector e = Vector(x[i+1],y[i+1]).round();
+    Vector s = (Vector(x[i],y[i]) * matrix_).round();
+    Vector e = (Vector(x[i+1],y[i+1]) * matrix_).round();
     XDrawLine(parent_->getDisplay(), pixmap_, gridGC_, 
 	      (int)s[0],(int)s[1],(int)e[0],(int)e[1]);
   }
@@ -181,7 +181,7 @@ int GridBase::x11Text(const char* txt, float x, float y,
   XSetFont(parent_->getDisplay(), gridGC_, Tk_FontId(text_->tkfont()));
   XSetForeground(parent_->getDisplay(), gridGC_, text_->color());
 
-  Vector vv = Vector(x,y);
+  Vector vv = Vector(x,y) * matrix_;
   double angle = calcTextAngle(just, up);
   Vector cc = vv * calcTextPos(vv, angle, txt, just, up, text_->tkfont());
 

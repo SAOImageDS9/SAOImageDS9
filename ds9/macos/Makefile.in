@@ -236,7 +236,7 @@ $(LIBDIR)/pdf4tcl: $(prefix)/pdf4tcl
 
 # --------------------------- ssl
 $(LIBDIR)/ssl: $(prefix)/openssl
-	mkdir "$@"
+	mkdir -p "$@"
 	cp -pvf $(prefix)/certifi/certifi/cacert.pem "$@"
 
 

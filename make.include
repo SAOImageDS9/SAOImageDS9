@@ -29,7 +29,7 @@
 # libxslt 1.1.29
 # openssl 1.0.2u
 
-DS9_VERSION	= 8.8
+DS9_VERSION	= 8.8b1
 XPA_VERSION	= 2.1.20
 TCL_VERSION	= 9.0
 TCL_MAJOR_VERSION = $(firstword $(subst ., ,$(TCL_VERSION)))
@@ -51,6 +51,7 @@ TidyFile = \
 DIRS   = $(bindir) $(libdir) $(includedir) $(datadir) man build dist
 PREFIX = --prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir)
 STD    = --disable-shared --disable-stubs --enable-symbols
+STDSTUBS = --disable-shared --enable-stubs --enable-symbols
 
 #-------------------------- funtools tmp files
 
@@ -177,9 +178,9 @@ tclxml/Makefile :
 	./configure \
 	$(WITHTCL) \
   	--with-xml2-config=$(XML2CONFIG) \
-  	--with-xslt-config=$(XSLTCONFIG) \
+	--with-xslt-config=$(XSLTCONFIG) \
 	$(PREFIX) \
-	$(STD) \
+	$(STDSTUBS) \
 	$(CACHE)
 
 #-------------------------- tclxmlrpc

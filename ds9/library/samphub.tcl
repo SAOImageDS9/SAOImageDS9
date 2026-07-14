@@ -50,15 +50,15 @@ proc SAMPHubStart {verbose} {
 	    catch {file delete -force $samp(fn)}
 	}
     }
-    
+
     # ok, we are on our own
     # global samp maybe unset by SAMPParseHub
     catch {unset samp}
     catch {unset samphub}
-    
+
     # hub file name
     set fn {}
-    
+
     if {[info exists env(SAMP_HUB)]} {
 	if {$env(SAMP_HUB) != {}} {
 	    set exp {std-lockurl:(.*)}
@@ -111,7 +111,7 @@ proc SAMPHubStart {verbose} {
     if {![SAMPHubStartConnect]} {
 	return
     }
-    
+
     # Write profile
     if {![SAMPHubStartProfile]} {
 	return
@@ -192,7 +192,7 @@ proc SAMPHubStartRegister {} {
 						[list samp.description.text "SAOImageDS9 Internal Hub"] \
 						[list samp.icon.url "https://ds9.si.edu/bandw.png"] \
 						[list author.mail "ds9help@cfa.harvard.edu"] \
-						[list author.name {William Joye}] \
+						[list author.name {Chandra X-ray Center}] \
 					       ]
 }
 
@@ -268,7 +268,7 @@ proc SAMPHubGenerateKey {} {
 
 proc SAMPHubValidSecret {secret} {
     global samphub
-    
+
     if {![info exists samphub($secret,id)]} {
 	if {$samphub(debug)} {
 	    puts "SAMPHub: bad private-key $secret"
@@ -292,7 +292,7 @@ proc SAMPHubFindDelimiter {tag} {
 
 proc SAMPHubFindSecret {id} {
     global samphub
-    
+
     foreach cc $samphub(client,secret) {
 	if {$id == $samphub($cc,id)} {
 	    return $cc
@@ -339,7 +339,7 @@ proc SAMPHubDisconnect {secret} {
 
     set map2(reason) {string disconnect}
     set m2 [xmlrpcList2Member [array get map2]]
-    
+
     set map1(samp.mtype) "string $mtype"
     set map1(samp.params) [list struct $m2]
     set m1 [xmlrpcList2Member [array get map1]]
@@ -407,7 +407,7 @@ proc SAMPHubDisconnect {secret} {
 
 proc SAMPHubRemove {secret} {
     global samphub
-    
+
     if {$samphub(debug)} {
 	puts stderr "SAMPHubRemove: $secret"
     }
@@ -418,7 +418,7 @@ proc SAMPHubRemove {secret} {
     }
 
     SAMPHubDialogListRemove $secret
-    
+
     set id [lsearch $samphub(client,secret) $secret]
     set samphub(client,secret) [lreplace $samphub(client,secret) $id $id]
 
@@ -707,7 +707,7 @@ proc samp.hub.unregister {rpc} {
     if {![SAMPHubValidSecret $secret]} {
 	return -code error
     }
-    
+
     SAMPHubDialogRecvdMsg "samp.hub.unregister\t$samphub($secret,id)"
 
     # update other clients
@@ -763,7 +763,7 @@ proc samp.hub.unregister {rpc} {
 
 proc samp.hub.declareMetadata {rpc} {
     global samphub
-    
+
     if {$samphub(debug)} {
 	puts "samp.hub.declareMetadata: $rpc"
     }
@@ -776,7 +776,7 @@ proc samp.hub.declareMetadata {rpc} {
     if {![SAMPHubValidSecret $secret]} {
 	return -code error
     }
-    
+
     SAMPHubDialogRecvdMsg "samp.hub.declareMetadata\t$samphub($secret,id)"
 
     # clear any previous
@@ -786,7 +786,7 @@ proc samp.hub.declareMetadata {rpc} {
 	    lappend samphub($secret,metadata) [list $key $val]
 	}
     }
-    
+
     SAMPHubDialogMetaUpdate $secret
     SAMPHubDialogListUpdate
 
@@ -799,7 +799,7 @@ proc samp.hub.declareMetadata {rpc} {
     set map2(id) "string $samphub($secret,id)"
     set map2(metadata) $m3
     set m2 [xmlrpcList2Member [array get map2]]
-    
+
     set map1(samp.mtype) "string $mtype"
     set map1(samp.params) [list struct $m2]
     set m1 [xmlrpcList2Member [array get map1]]
@@ -885,7 +885,7 @@ proc samp.hub.declareSubscriptions {rpc} {
     xmlrpcParams2List $rpc args
 
     set secret [lindex $args 0]
-    
+
     if {![SAMPHubValidSecret $secret]} {
 	return -code error
     }
@@ -1160,7 +1160,7 @@ proc samp.hub.notifyAll {rpc} {
 
 proc samp.hub.call {rpc} {
     global samphub
-    
+
     if {$samphub(debug)} {
 	puts "samp.hub.call: $rpc"
     }
@@ -1189,12 +1189,12 @@ proc samp.hub.call {rpc} {
            }
        }
     }
-    
-    
+
+
     set ss [SAMPHubFindDelimiter $msgtag]
     # the delimiter is the first char
     set msgid "$ss$msgtag$ss$samphub($secret,id)$ss"
- 
+
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return -code error
     }
@@ -1247,7 +1247,7 @@ proc samp.hub.callAll {rpc} {
     set ss [SAMPHubFindDelimiter $msgtag]
     # the delimiter is the first char
     set msgid "$ss$msgtag$ss$samphub($secret,id)$ss"
- 
+
     foreach cc $samphub(client,secret) {
 	# ignore hub
 	if {$cc == $samphub(secret)} {
@@ -1276,7 +1276,7 @@ proc samp.hub.callAll {rpc} {
 
 proc samp.hub.callAndWait {rpc} {
     global samphub
-    
+
     if {$samphub(debug)} {
 	puts "samp.hub.callAndWait: $rpc"
     }
@@ -1313,7 +1313,7 @@ proc samp.hub.callAndWait {rpc} {
     set ss [SAMPHubFindDelimiter $msgtag]
     # the delimiter is the first char
     set msgid "$ss$msgtag$ss$samphub($secret,id)$ss$cnt$ss"
-    
+
     if {[catch {set cc [SAMPHubFindSecret $id]}]} {
 	return -code error
     }
@@ -1353,7 +1353,7 @@ proc samp.hub.callAndWait {rpc} {
 	unset samphub(cw,$cnt,result)
 	unset samphub(cw,$cnt,id)
 	unset samphub(cw,$cnt,timeout,id)
-		
+
 	return [list params [list $rr]]
 
     } elseif {[info exists samphub(cw,$cnt,timeout,id)]} {
@@ -1364,7 +1364,7 @@ proc samp.hub.callAndWait {rpc} {
 	unset samphub(cw,$cnt,result)
 	unset samphub(cw,$cnt,id)
 	unset samphub(cw,$cnt,timeout,id)
-		
+
 	return [list params [list $rr]]
     } else {
 	return -code error
@@ -1373,7 +1373,7 @@ proc samp.hub.callAndWait {rpc} {
 
 proc SAMPHubTimeout {cnt} {
     global samphub
-    
+
     if {[info exists samphub(cw,$cnt,id)]} {
 	after cancel $samphub(cw,$cnt,id)
     }
@@ -1385,7 +1385,7 @@ proc SAMPHubTimeout {cnt} {
 
 proc samp.hub.reply {rpc} {
     global samphub
-    
+
     if {$samphub(debug)} {
 	puts "samp.hub.reply: $rpc"
     }

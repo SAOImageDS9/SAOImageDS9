@@ -2791,15 +2791,16 @@ $xpaset -p ds9 samp send table topcat<br></tt>
 $xpaset -p ds9 samp hub info<br></tt>
 
 <p><b><a name="save" id="save"></a>save<br></b></p>
-<p>Save loaded image data of current frame as FITS.</p>
+<p>Save loaded image data of current frame as FITS. The <tt>pixmask</tt> format saves a signed 16-bit integer pixel mask initialized to zero. Pixels inside include regions are assigned the region ID; pixels inside exclude regions are reset to zero. The current frame's FITS header keywords are copied and adjusted for the mask data type and dimensions.</p>
 <tt>Syntax:<br>
-save [fits|rgbimage|rgbcube|mecube|mosaic|mosaicimage] &lt;filename&gt; [image|table|slice]<br>
+save [fits|pixmask|rgbimage|rgbcube|mecube|mosaic|mosaicimage] &lt;filename&gt; [image|table|slice]<br>
 &nbsp;<br>
 Example:<br>
 $xpaset -p ds9 save foo.fits<br>
 $xpaset -p ds9 save fits foo.fits image<br>
 $xpaset -p ds9 save fits foo.fits table<br>
 $xpaset -p ds9 save fits foo.fits slice<br>
+$xpaset -p ds9 save pixmask mask.fits<br>
 $xpaset -p ds9 save rgbimage foo.fits<br>
 $xpaset -p ds9 save rgbcube foo.fits<br>
 $xpaset -p ds9 save mecube foo.fits<br>

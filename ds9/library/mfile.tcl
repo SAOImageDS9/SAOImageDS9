@@ -129,6 +129,9 @@ proc FileMainMenu {} {
 
     # File Save Menu
     ThemeMenu $ds9(mb).file.save
+    $ds9(mb).file.save add command -label [msgcat::mc {Pixel Mask}] \
+	-command [list SaveDialog pixmask]
+    $ds9(mb).file.save add separator
     $ds9(mb).file.save add command -label [msgcat::mc {Slice}] \
 	-command [list SaveDialog slice]
     $ds9(mb).file.save add separator

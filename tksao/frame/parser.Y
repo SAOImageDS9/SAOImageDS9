@@ -485,6 +485,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token ZERO_
 %token ZMAX_
 %token ZSCALE_
+%token PIXMASK_
 %token ZOOM_
 
 %%
@@ -2894,9 +2895,15 @@ rotateMotion : BEGIN_ {fr->rotateBeginCmd();}
 
 save	: ARRAY_ saveArray
 	| FITS_ saveFits
+	| PIXMASK_ savePixelMask
         | NRRD_ saveNRRD
         | ENVI_ saveENVI
 	| PHOTO_ STRING {fr->savePhotoCmd($2);}
+	;
+
+savePixelMask : FILE_ STRING {fr->savePixelMaskFileCmd($2);}
+	| CHANNEL_ STRING {fr->savePixelMaskChannelCmd($2);}
+	| SOCKET_ INT {fr->savePixelMaskSocketCmd($2);}
 	;
 
 saveArray : FILE_ STRING endian

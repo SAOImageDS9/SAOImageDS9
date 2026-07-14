@@ -270,6 +270,7 @@ perf		{return PERF_;}
 photo		{return PHOTO_;}
 physical	{return PHYSICAL_;}
 pixel		{return PIXEL_;}
+pixmask		{return PIXMASK_;}
 plot2d		{return PLOT2D_;}
 plot3d		{return PLOT3D_;}
 point		{return POINT_;}

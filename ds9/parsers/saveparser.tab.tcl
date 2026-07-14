@@ -16,3 +16,4 @@ set WCS_ 271
 set IMAGE_ 272
 set TABLE_ 273
 set SLICE_ 274
+set PIXMASK_ 275

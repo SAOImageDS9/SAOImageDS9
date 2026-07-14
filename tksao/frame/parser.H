@@ -395,7 +395,8 @@
      ZERO_ = 611,
      ZMAX_ = 612,
      ZSCALE_ = 613,
-     ZOOM_ = 614
+     PIXMASK_ = 614,
+     ZOOM_ = 615
    };
 #endif
 /* Tokens.  */
@@ -755,7 +756,8 @@
 #define ZERO_ 611
 #define ZMAX_ 612
 #define ZSCALE_ 613
-#define ZOOM_ 614
+#define PIXMASK_ 614
+#define ZOOM_ 615
 
 
 
@@ -773,7 +775,7 @@ typedef union YYSTYPE
   int dash[2];
 }
 /* Line 1529 of yacc.c.  */
-#line 777 "frame/parser.H"
+#line 779 "frame/parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

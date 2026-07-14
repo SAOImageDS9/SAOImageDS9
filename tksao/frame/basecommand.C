@@ -2738,6 +2738,27 @@ void Base::saveFitsSocketCmd(int ss)
     saveFits(str);
 }
 
+void Base::savePixelMaskFileCmd(const char* fn)
+{
+  OutFitsFile str(fn);
+  if (str.valid())
+    savePixelMask(str);
+}
+
+void Base::savePixelMaskChannelCmd(const char* ch)
+{
+  OutFitsChannel str(interp, ch);
+  if (str.valid())
+    savePixelMask(str);
+}
+
+void Base::savePixelMaskSocketCmd(int ss)
+{
+  OutFitsSocket str(ss);
+  if (str.valid())
+    savePixelMask(str);
+}
+
 void Base::saveFitsTableFileCmd(const char* fn)
 {
   OutFitsFile str(fn);
@@ -3331,4 +3352,3 @@ void Base::get3dRenderBackgroundCmd()
 {
   Tcl_AppendResult(interp, "none", NULL);
 }
-

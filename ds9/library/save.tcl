@@ -17,6 +17,7 @@ proc Save {format fn} {
     switch -- $format {
 	fits {SaveFitsFile $savefits(type) $fn}
 	sfits {}
+	pixmask {SavePixelMaskFile $fn}
 	rgbimage {SaveRGBImageFile $fn}
 	rgbcube {SaveRGBCubeFile $fn}
 	hlsimage {SaveHLSImageFile $fn}

@@ -61,297 +61,306 @@ proc save::unsetupvalues {numsyms} {
 }
 
 array set save::table {
-  27:272,target 20
-  17:258 reduce
+  17:258 shift
   0:258 shift
-  1:281,target 23
-  23:0,target 4
-  15:258,target 2
-  0:260 shift
+  23:0,target 26
   0:259 shift
-  27:0 reduce
+  0:260 shift
   20:258 reduce
   19:258 reduce
-  15:0,target 1
+  15:0,target 0
   2:258 reduce
   0:261 shift
   0:266,target 9
+  0:276,target 15
   0:262 shift
   22:258 reduce
-  10:258,target 16
+  10:258,target 17
   4:258 reduce
   0:263 shift
   0:264 shift
-  29:258,target 5
+  30:258,target 5
   24:258 reduce
   6:258 reduce
   0:265 shift
-  15:0 reduce
+  15:0 accept
   0:266 shift
-  27:281,target 29
-  26:258 shift
+  26:258 reduce
   8:258 reduce
   0:267 shift
-  24:258,target 17
-  6:258,target 10
+  28:257 shift
+  24:258,target 4
+  6:258,target 11
   0:265,target 8
   0:268 shift
+  28:258 reduce
+  24:0,target 4
   0:275,target 14
   0:269 shift
   0:270 shift
+  28:274,target 23
   20:0 reduce
-  19:0 reduce
+  16:0,target 1
   18:258,target 15
-  1:258,target 22
-  15:276 goto
-  13:258,target 21
-  0:275 goto
+  1:258,target 23
+  24:0 reduce
+  13:258,target 22
+  0:275 shift
+  0:276 goto
   0:264,target 7
-  15:276,target 26
-  0:277 goto
+  28:273,target 22
   0:278 goto
   28:0 reduce
-  1:257,target 19
+  1:257,target 20
   0:279 goto
   0:280 goto
-  27:258,target 22
-  9:258,target 13
+  27:258,target 29
+  9:258,target 14
+  0:281 goto
+  28:272 shift
+  28:273 shift
   22:258,target 25
-  4:258,target 8
+  4:258,target 9
   0:263,target 6
+  28:274 shift
+  16:0 reduce
+  28:272,target 21
   10:258 reduce
-  16:258,target 27
-  27:257,target 19
+  28:282,target 30
+  16:258,target 2
   12:258 reduce
   21:0 reduce
-  11:258,target 18
-  1:0,target 22
+  14:258 reduce
+  11:258,target 19
+  1:0,target 23
   0:262,target 5
-  16:258 shift
+  28:282 goto
+  16:258 reduce
   1:257 shift
   18:258 reduce
   1:258 reduce
-  25:258,target 20
-  7:258,target 11
+  25:258,target 18
+  7:258,target 12
   21:258 reduce
+  16:277,target 27
   3:258 reduce
+  30:0 reduce
   29:0 reduce
   10:271 shift
-  27:0,target 22
   23:258 reduce
-  20:258,target 23
-  19:258,target 26
+  20:258,target 27
+  19:258,target 16
   5:258 reduce
   2:258,target 6
   0:261,target 4
-  20:0,target 23
-  19:0,target 26
+  20:0,target 27
   12:271 shift
   25:258 reduce
   7:258 reduce
-  27:257 shift
-  27:258 reduce
-  12:271,target 25
+  0:281,target 19
+  14:258,target 7
+  27:258 shift
+  12:271,target 26
   9:258 reduce
-  1:274,target 22
-  29:258 reduce
+  1:274,target 23
+  30:258 reduce
   0:259,target 2
   0:260,target 3
+  28:258,target 23
   22:0 reduce
   0:269,target 12
   0:270,target 13
   1:272 shift
-  28:0,target 3
+  28:0,target 23
   0:279,target 17
   0:280,target 18
   1:273 shift
   21:0,target 24
   1:274 shift
-  23:258,target 4
-  5:258,target 9
-  1:273,target 21
-  27:274,target 22
-  17:258,target 14
+  23:258,target 26
+  16:277 goto
+  5:258,target 10
+  1:273,target 22
+  17:258,target 28
   0:258,target 1
+  28:257,target 20
   0:268,target 11
-  27:272 shift
   0:278,target 16
-  1:281 goto
-  27:273 shift
-  14:0 accept
-  12:258,target 19
-  29:0,target 5
-  27:274 shift
-  10:271,target 24
+  12:258,target 20
+  1:282 goto
+  30:0,target 5
+  29:0,target 3
+  10:271,target 25
   22:0,target 25
-  1:272,target 20
-  27:273,target 21
-  14:0,target 0
+  1:272,target 21
+  1:282,target 24
   11:258 reduce
   1:0 reduce
-  26:258,target 28
-  8:258,target 12
+  26:258,target 21
+  8:258,target 13
   0:267,target 10
   13:258 reduce
-  0:277,target 15
-  27:281 goto
   23:0 reduce
   21:258,target 24
-  15:258 reduce
-  3:258,target 7
+  3:258,target 8
 }
 
 array set save::rules {
-  9,l 278
-  11,l 278
-  15,l 278
-  20,l 280
+  27,l 282
+  9,l 279
+  11,l 279
+  15,l 279
+  20,l 281
   19,l 280
-  2,l 276
-  24,l 281
-  6,l 278
-  12,l 278
+  2,l 277
+  24,l 282
+  6,l 279
+  12,l 279
   16,l 279
-  21,l 280
-  3,l 275
-  25,l 281
-  7,l 278
-  13,l 278
-  0,l 282
-  17,l 279
+  21,l 281
+  3,l 276
+  25,l 282
+  7,l 279
+  13,l 279
+  0,l 283
+  17,l 280
   22,l 281
-  4,l 277
-  26,l 281
-  8,l 278
-  10,l 278
-  14,l 278
-  18,l 279
-  1,l 275
-  23,l 281
-  5,l 277
+  4,l 278
+  26,l 282
+  8,l 279
+  10,l 279
+  14,l 279
+  18,l 280
+  1,l 276
+  23,l 282
+  5,l 278
 }
 
 array set save::rules {
-  23,dc 1
+  23,dc 0
   5,dc 3
   0,dc 1
-  17,dc 2
+  17,dc 1
   12,dc 1
   26,dc 1
   8,dc 1
-  21,dc 1
+  21,dc 2
   3,dc 3
   15,dc 1
   10,dc 1
   24,dc 1
   6,dc 1
-  18,dc 1
+  18,dc 2
   1,dc 1
   13,dc 1
+  27,dc 1
   9,dc 1
-  22,dc 0
+  22,dc 1
   4,dc 2
   16,dc 1
   11,dc 1
   25,dc 1
   7,dc 1
-  20,dc 2
+  20,dc 1
   19,dc 1
   2,dc 0
   14,dc 1
 }
 
 array set save::rules {
-  13,line 49
-  25,line 67
+  13,line 50
+  25,line 68
   2,e 1
-  7,line 43
-  10,line 46
-  22,line 64
-  4,line 38
-  18,line 56
-  1,line 34
-  15,line 51
-  9,line 45
-  12,line 48
-  24,line 66
-  6,line 42
-  21,line 61
-  3,line 35
-  17,line 55
-  14,line 50
-  26,line 68
-  8,line 44
-  11,line 47
-  23,line 65
-  5,line 39
-  20,line 60
-  19,line 59
-  2,line 34
-  16,line 54
+  7,line 44
+  10,line 47
+  22,line 63
+  4,line 39
+  18,line 57
+  1,line 35
+  15,line 52
+  27,line 70
+  9,line 46
+  12,line 49
+  24,line 67
+  6,line 43
+  21,line 62
+  3,line 36
+  17,line 56
+  14,line 51
+  26,line 69
+  8,line 45
+  11,line 48
+  23,line 66
+  5,line 40
+  20,line 61
+  19,line 58
+  2,line 35
+  16,line 53
 }
 
 array set save::lr1_table {
   14,trans {}
-  1,trans {{257 19} {272 20} {273 21} {274 22} {281 23}}
+  1,trans {{257 20} {272 21} {273 22} {274 23} {282 24}}
   18,trans {}
   23,trans {}
   5,trans {}
-  27,trans {{257 19} {272 20} {273 21} {274 22} {281 29}}
+  27,trans {{258 29}}
   9,trans {}
   13,trans {}
-  0,trans {{258 1} {259 2} {260 3} {261 4} {262 5} {263 6} {264 7} {265 8} {266 9} {267 10} {268 11} {269 12} {270 13} {275 14} {277 15} {278 16} {279 17} {280 18}}
-  17,trans {}
+  0,trans {{258 1} {259 2} {260 3} {261 4} {262 5} {263 6} {264 7} {265 8} {266 9} {267 10} {268 11} {269 12} {270 13} {275 14} {276 15} {278 16} {279 17} {280 18} {281 19}}
+  17,trans {{258 28}}
   22,trans {}
   4,trans {}
-  26,trans {{258 28}}
+  26,trans {}
   8,trans {}
-  12,trans {{271 25}}
-  16,trans {{258 27}}
+  12,trans {{271 26}}
+  16,trans {{277 27}}
   21,trans {}
   3,trans {}
-  10 {{16 258 1} {17 258 1}}
-  11 {{18 258 1}}
+  10 {{17 258 1} {18 258 1}}
+  11 {{19 258 1}}
   25,trans {}
-  12 {{19 258 1} {20 258 1}}
+  12 {{20 258 1} {21 258 1}}
   7,trans {}
-  13 {{21 258 1}}
-  14 {{0 0 1}}
-  15 {{1 0 1} {3 0 1} {2 258 0}}
+  13 {{22 258 1}}
+  14 {{7 258 1}}
+  15 {{0 0 1}}
   11,trans {}
+  30,trans {}
   29,trans {}
-  16 {{5 {0 258} 1}}
-  0 {{0 0 0} {1 0 0} {3 0 0} {4 {0 258} 0} {5 {0 258} 0} {6 258 0} {7 258 0} {8 258 0} {9 258 0} {10 258 0} {11 258 0} {12 258 0} {13 258 0} {14 258 0} {15 258 0} {16 258 0} {17 258 0} {18 258 0} {19 258 0} {20 258 0} {21 258 0}}
-  17 {{14 258 1}}
-  1 {{4 {0 258} 1} {22 {0 258} 0} {23 {0 258} 0} {24 {0 258} 0} {25 {0 258} 0} {26 {0 258} 0}}
+  16 {{1 0 1} {3 0 1} {2 258 0}}
+  0 {{0 0 0} {1 0 0} {3 0 0} {4 {0 258} 0} {5 {0 258} 0} {6 258 0} {7 258 0} {8 258 0} {9 258 0} {10 258 0} {11 258 0} {12 258 0} {13 258 0} {14 258 0} {15 258 0} {16 258 0} {17 258 0} {18 258 0} {19 258 0} {20 258 0} {21 258 0} {22 258 0}}
+  17 {{5 {0 258} 1}}
+  1 {{4 {0 258} 1} {23 {0 258} 0} {24 {0 258} 0} {25 {0 258} 0} {26 {0 258} 0} {27 {0 258} 0}}
   18 {{15 258 1}}
   2 {{6 258 1}}
-  19 {{26 {0 258} 1}}
-  20 {{23 {0 258} 1}}
-  15,trans {{276 26}}
-  3 {{7 258 1}}
+  19 {{16 258 1}}
+  20 {{27 {0 258} 1}}
+  15,trans {}
+  3 {{8 258 1}}
   21 {{24 {0 258} 1}}
-  4 {{8 258 1}}
+  4 {{9 258 1}}
   22 {{25 {0 258} 1}}
-  5 {{9 258 1}}
-  23 {{4 {0 258} 2}}
+  5 {{10 258 1}}
+  23 {{26 {0 258} 1}}
   20,trans {}
-  6 {{10 258 1}}
-  2,trans {}
-  24 {{17 258 2}}
   19,trans {}
-  7 {{11 258 1}}
-  25 {{20 258 2}}
-  8 {{12 258 1}}
-  26 {{3 0 2}}
-  9 {{13 258 1}}
-  27 {{5 {0 258} 2} {22 {0 258} 0} {23 {0 258} 0} {24 {0 258} 0} {25 {0 258} 0} {26 {0 258} 0}}
-  28 {{3 0 3}}
+  6 {{11 258 1}}
+  24 {{4 {0 258} 2}}
+  2,trans {}
+  7 {{12 258 1}}
+  25 {{18 258 2}}
+  8 {{13 258 1}}
+  26 {{21 258 2}}
+  9 {{14 258 1}}
+  27 {{3 0 2}}
   24,trans {}
   6,trans {}
-  29 {{5 {0 258} 3}}
-  10,trans {{271 24}}
-  28,trans {}
+  28 {{5 {0 258} 2} {23 {0 258} 0} {24 {0 258} 0} {25 {0 258} 0} {26 {0 258} 0} {27 {0 258} 0}}
+  30 {{5 {0 258} 3}}
+  29 {{3 0 3}}
+  10,trans {{271 25}}
+  28,trans {{257 20} {272 21} {273 22} {274 23} {282 30}}
 }
 
 array set save::token_id_table {
@@ -372,27 +381,29 @@ array set save::token_id_table {
   257,line 7
   262,t 0
   274,title SLICE
+  283,t 1
   270,line 24
   269,line 23
   259,title FITS
   260,title RGBIMAGE
   266,t 0
   278,title {}
-  282,line 69
+  282,line 65
   error error
   271,t 0
   264,title HSVIMAGE
   266,line 20
-  278,line 41
-  275,t 1
-  error,line 32
+  283,title {}
+  278,line 38
+  error,line 33
+  275,t 0
   268,title MOSAICWCS
   258,t 0
   263,line 17
   error,title {}
   280,t 1
   279,t 1
-  275,line 33
+  275,line 30
   273,title TABLE
   263,t 0
   259,line 13
@@ -407,7 +418,7 @@ array set save::token_id_table {
   268,line 22
   267,title MOSAIC
   257 INT_
-  281,line 63
+  281,line 60
   276,t 1
   258 STRING_
   259,t 0
@@ -420,7 +431,7 @@ array set save::token_id_table {
   262 HLSIMAGE_
   281,t 1
   263 HLSCUBE_
-  277,line 37
+  277,line 35
   257,title integer
   264 HSVIMAGE_
   264,t 0
@@ -446,24 +457,26 @@ array set save::token_id_table {
   273 TABLE_
   266,title MECUBE
   274 SLICE_
-  275 command
+  275 PIXMASK_
   271,line 25
-  276 @PSEUDO1
+  276 command
   277,t 1
-  277 save
+  277 @PSEUDO1
   271,title WCS
-  278 format
+  283,line 71
+  278 save
   261,t 0
-  280 mosaicimage
-  279 mosaic
-  281 opts
+  280 mosaic
+  279 format
+  281 mosaicimage
   267,line 21
   282,t 1
-  282 start'
-  275,title {}
+  282 opts
+  275,title PIXMASK
+  283 start'
   265,t 0
-  280,line 58
-  279,line 53
+  280,line 55
+  279,line 42
   261,title RGBCUBE
 }
 
@@ -565,26 +578,27 @@ proc save::yyparse {} {
                     4 { SaveCmdLoad [ExtToFormat $1] $1 }
                     5 { SaveCmdLoad $1 $2 }
                     6 { set _ fits }
-                    7 { set _ rgbimage }
-                    8 { set _ rgbcube }
-                    9 { set _ hlsimage }
-                    10 { set _ hlscube }
-                    11 { set _ hsvimage }
-                    12 { set _ hsvcube }
-                    13 { set _ mecube }
-                    14 { set _ $1 }
+                    7 { set _ pixmask }
+                    8 { set _ rgbimage }
+                    9 { set _ rgbcube }
+                    10 { set _ hlsimage }
+                    11 { set _ hlscube }
+                    12 { set _ hsvimage }
+                    13 { set _ hsvcube }
+                    14 { set _ mecube }
                     15 { set _ $1 }
-                    16 { set _ mosaic }
+                    16 { set _ $1 }
                     17 { set _ mosaic }
                     18 { set _ mosaic }
-                    19 { set _ mosaicimage }
+                    19 { set _ mosaic }
                     20 { set _ mosaicimage }
                     21 { set _ mosaicimage }
-                    22 { ProcessCmdSet savefits type image; ProcessCmdSet savefits mosaic 1 }
-                    23 { ProcessCmdSet savefits type image }
-                    24 { ProcessCmdSet savefits type table }
-                    25 { ProcessCmdSet savefits type slice }
-                    26 { ProcessCmdSet savefits mosaic $1 }
+                    22 { set _ mosaicimage }
+                    23 { ProcessCmdSet savefits type image; ProcessCmdSet savefits mosaic 1 }
+                    24 { ProcessCmdSet savefits type image }
+                    25 { ProcessCmdSet savefits type table }
+                    26 { ProcessCmdSet savefits type slice }
+                    27 { ProcessCmdSet savefits mosaic $1 }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

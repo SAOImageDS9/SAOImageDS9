@@ -197,6 +197,7 @@ set WCS_ 271
 set IMAGE_ 272
 set TABLE_ 273
 set SLICE_ 274
+set PIXMASK_ 275
 
     while {1} {
         if {[string length $yy_current_buffer] - $index_ < 1024} {
@@ -225,159 +226,166 @@ set SLICE_ 274
             set yyleng [string length $yytext]
             set matched_rule 0
         }
-        # rule 1: rgbimage
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(rgbimage)} $yy_current_buffer match] > 0 && \
+        # rule 1: pixmask
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(pixmask)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 1
         }
-        # rule 2: rgbcube
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(rgbcube)} $yy_current_buffer match] > 0 && \
+        # rule 2: rgbimage
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(rgbimage)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 2
         }
-        # rule 3: hlsimage
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(hlsimage)} $yy_current_buffer match] > 0 && \
+        # rule 3: rgbcube
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(rgbcube)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 3
         }
-        # rule 4: hlscube
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(hlscube)} $yy_current_buffer match] > 0 && \
+        # rule 4: hlsimage
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(hlsimage)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 4
         }
-        # rule 5: hsvimage
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(hsvimage)} $yy_current_buffer match] > 0 && \
+        # rule 5: hlscube
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(hlscube)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 5
         }
-        # rule 6: hsvcube
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(hsvcube)} $yy_current_buffer match] > 0 && \
+        # rule 6: hsvimage
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(hsvimage)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 6
         }
-        # rule 7: mecube
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(mecube)} $yy_current_buffer match] > 0 && \
+        # rule 7: hsvcube
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(hsvcube)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 7
         }
-        # rule 8: mosaic
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(mosaic)} $yy_current_buffer match] > 0 && \
+        # rule 8: mecube
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(mecube)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 8
         }
-        # rule 9: mosaicwcs
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(mosaicwcs)} $yy_current_buffer match] > 0 && \
+        # rule 9: mosaic
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(mosaic)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 9
         }
-        # rule 10: mosaicimage
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(mosaicimage)} $yy_current_buffer match] > 0 && \
+        # rule 10: mosaicwcs
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(mosaicwcs)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 10
         }
-        # rule 11: mosaicimagewcs
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(mosaicimagewcs)} $yy_current_buffer match] > 0 && \
+        # rule 11: mosaicimage
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(mosaicimage)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 11
         }
-        # rule 12: wcs
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(wcs)} $yy_current_buffer match] > 0 && \
+        # rule 12: mosaicimagewcs
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(mosaicimagewcs)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 12
         }
-        # rule 13: image
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(image)} $yy_current_buffer match] > 0 && \
+        # rule 13: wcs
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(wcs)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 13
         }
-        # rule 14: table
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(table)} $yy_current_buffer match] > 0 && \
+        # rule 14: image
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(image)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 14
         }
-        # rule 15: slice
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(slice)} $yy_current_buffer match] > 0 && \
+        # rule 15: table
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(table)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 15
         }
-        # rule 16: [+-]?{D}+
-        if {[regexp -start $index_ -indices -line -nocase -- {\A([+-]?([0-9])+)} $yy_current_buffer match] > 0 && \
+        # rule 16: slice
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(slice)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 16
         }
-        # rule 17: \"[^\"]*\"
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\"[^\"]*\")} $yy_current_buffer match] > 0 && \
+        # rule 17: [+-]?{D}+
+        if {[regexp -start $index_ -indices -line -nocase -- {\A([+-]?([0-9])+)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 17
         }
-        # rule 18: \'[^\']*\'
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\'[^\']*\')} $yy_current_buffer match] > 0 && \
+        # rule 18: \"[^\"]*\"
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\"[^\"]*\")} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 18
         }
-        # rule 19: \{[^\}]*\}
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\{[^\}]*\})} $yy_current_buffer match] > 0 && \
+        # rule 19: \'[^\']*\'
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\'[^\']*\')} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 19
         }
-        # rule 20: \S+\S+
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\S+\S+)} $yy_current_buffer match] > 0 && \
+        # rule 20: \{[^\}]*\}
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\{[^\}]*\})} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 20
         }
-        # rule 21: \s
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\s)} $yy_current_buffer match] > 0 && \
+        # rule 21: \S+\S+
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\S+\S+)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 21
         }
-        # rule 22: .
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(.)} $yy_current_buffer match] > 0 && \
+        # rule 22: \s
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\s)} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
             set matched_rule 22
+        }
+        # rule 23: .
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(.)} $yy_current_buffer match] > 0 && \
+                [lindex $match 1] - $index_ + 1 > $yyleng} {
+            set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
+            set yyleng [string length $yytext]
+            set matched_rule 23
         }
         if {$matched_rule == -1} {
             set yytext [string index $yy_current_buffer $index_]
@@ -395,55 +403,55 @@ set SLICE_ 274
 return $FITS_
             }
             1 {
-return $RGBIMAGE_
+return $PIXMASK_
             }
             2 {
-return $RGBCUBE_
+return $RGBIMAGE_
             }
             3 {
-return $HLSIMAGE_
+return $RGBCUBE_
             }
             4 {
-return $HLSCUBE_
+return $HLSIMAGE_
             }
             5 {
-return $HSVIMAGE_
+return $HLSCUBE_
             }
             6 {
-return $HSVCUBE_
+return $HSVIMAGE_
             }
             7 {
-return $MECUBE_
+return $HSVCUBE_
             }
             8 {
-return $MOSAIC_
+return $MECUBE_
             }
             9 {
-return $MOSAICWCS_
+return $MOSAIC_
             }
             10 {
-return $MOSAICIMAGE_
+return $MOSAICWCS_
             }
             11 {
-return $MOSAICIMAGEWCS_
+return $MOSAICIMAGE_
             }
             12 {
-return $WCS_
+return $MOSAICIMAGEWCS_
             }
             13 {
-return $IMAGE_
+return $WCS_
             }
             14 {
-return $TABLE_
+return $IMAGE_
             }
             15 {
-return $SLICE_
+return $TABLE_
             }
             16 {
-set yylval $yytext; return $INT_
+return $SLICE_
             }
             17 {
-set yylval [string range $yytext 1 end-1]; return $STRING_
+set yylval $yytext; return $INT_
             }
             18 {
 set yylval [string range $yytext 1 end-1]; return $STRING_
@@ -452,12 +460,15 @@ set yylval [string range $yytext 1 end-1]; return $STRING_
 set yylval [string range $yytext 1 end-1]; return $STRING_
             }
             20 {
-set yylval $yytext; return $STRING_
+set yylval [string range $yytext 1 end-1]; return $STRING_
             }
             21 {
-# ignore whitespace
+set yylval $yytext; return $STRING_
             }
             22 {
+# ignore whitespace
+            }
+            23 {
 set yylval $yytext; return $yylval
             }
             default
@@ -470,4 +481,3 @@ set yylval $yytext; return $yylval
 ######
 # end autogenerated fickle functions
 ######
-

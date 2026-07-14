@@ -95,6 +95,19 @@ proc SaveFitsSocket {which sock} {
     $current(frame) save fits $which socket $sock
 }
 
+proc SavePixelMaskFile {fn} {
+    global current
+
+    if {$fn == {} || $current(frame) == {}} {
+	return
+    }
+    if {![$current(frame) has fits]} {
+	return
+    }
+
+    $current(frame) save pixmask file "\{$fn\}"
+}
+
 proc ProcessFitsCmd {varname iname sock fn} {
     upvar $varname var
     upvar $iname i
@@ -375,4 +388,3 @@ proc ProcessFitsBackwardCmd {varname iname sock fn} {
 
     return 0
 }
-

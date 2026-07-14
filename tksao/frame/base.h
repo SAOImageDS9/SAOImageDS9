@@ -912,6 +912,11 @@ public:
   void saveFitsChannelCmd(const char*);
   void saveFitsSocketCmd(int);
 
+  void savePixelMask(OutFitsStream&);
+  void savePixelMaskFileCmd(const char*);
+  void savePixelMaskChannelCmd(const char*);
+  void savePixelMaskSocketCmd(int);
+
   void saveFitsTable(OutFitsStream&);
   void saveFitsTableFileCmd(const char*);
   void saveFitsTableChannelCmd(const char*);

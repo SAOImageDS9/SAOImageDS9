@@ -8,6 +8,7 @@
 %%
 
 fits	    {return $FITS_}
+pixmask     {return $PIXMASK_}
 rgbimage    {return $RGBIMAGE_}
 rgbcube	    {return $RGBCUBE_}
 hlsimage    {return $HLSIMAGE_}

@@ -19,6 +19,7 @@ colour		{return $COLOR_}
 compass		{return $COMPASS_}
 el		{return $EL_}
 elevation	{return $EL_}
+fip		{return $FIP_}
 highlite	{return $HIGHLITE_}
 lock		{return $LOCK_}
 match		{return $MATCH_}

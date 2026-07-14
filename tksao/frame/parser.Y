@@ -235,6 +235,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token FILL_
 %token FILTER_
 %token FIRST_
+%token FIP_
 %token FIT_
 %token FITS_
 %token FITSY_
@@ -2821,6 +2822,7 @@ regionSelect : BEGIN_ numeric numeric
 
 renderMethod: MIP_ {$$ = Frame3dBase::MIP;}
 	| AIP_ {$$ = Frame3dBase::AIP;}
+	| FIP_ {$$ = Frame3dBase::FIP;}
 	;
 
 renderBackground: NONE_ {$$ = Frame3dBase::NONE;}

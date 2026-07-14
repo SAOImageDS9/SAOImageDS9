@@ -224,6 +224,9 @@ void Frame3dBase::get3dRenderMethodCmd()
   case AIP:
     str << "aip" << ends;
     break;
+  case FIP:
+    str << "fip" << ends;
+    break;
   }
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }

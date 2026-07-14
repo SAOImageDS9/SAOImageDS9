@@ -16,6 +16,7 @@
 %token COLOR_
 %token COMPASS_
 %token EL_
+%token FIP_
 %token HIGHLITE_
 %token LOCK_
 %token MATCH_
@@ -52,6 +53,7 @@ command : 3d
  ;
 
 method : AIP_ {set _ aip}
+ | FIP_ {set _ fip}
  | MIP_ {set _ mip}
  ;
  

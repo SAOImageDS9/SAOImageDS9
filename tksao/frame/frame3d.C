@@ -263,6 +263,7 @@ void* raytrace(void* arg)
     int cnt=0;
     float acc=0;
     float max = -FLT_MAX;
+    float first =0;
 
     int kks = zstart;
     int kkt = zstop;
@@ -285,12 +286,22 @@ void* raytrace(void* arg)
 	float value = sjv[int(zz)]->getValueDouble(long(yy)*srcw+long(xx));
 	inside =1;
 
-	// ignore nan
+	// ignore non-finite values
 	if (isfinite(value)) {
-	  if (value>max)
-	    max = value;
-	  cnt++;
-	  acc+=value;
+	  if (renderMethod == Frame3dBase::FIP) {
+	    // First finite, non-zero sample from the viewer into the cube.
+	    if (value != 0) {
+	      first =value;
+	      cnt =1;
+	      break;
+	    }
+	  }
+	  else {
+	    if (value>max)
+	      max = value;
+	    cnt++;
+	    acc+=value;
+	  }
 	}
       }
       else {
@@ -310,6 +321,9 @@ void* raytrace(void* arg)
 	break;
       case Frame3dBase::AIP:
 	*dest =acc/cnt;
+	break;
+      case Frame3dBase::FIP:
+	*dest =first;
 	break;
       }
 

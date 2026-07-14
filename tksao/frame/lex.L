@@ -152,6 +152,7 @@ false		{return FALSE_;}
 file		{return FILE_;}
 fill            {return FILL_;}
 filter		{return FILTER_;}
+fip             {return FIP_;}
 first           {return FIRST_;}
 fit		{return FIT_;}
 fits		{return FITS_;}

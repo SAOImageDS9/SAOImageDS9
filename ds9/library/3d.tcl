@@ -69,6 +69,8 @@ proc 3DDialog {} {
 	-variable threed(method) -value {mip} -command 3DRenderMethod 
     $mb.render add radiobutton -label [msgcat::mc {AIP}] \
 	-variable threed(method) -value {aip} -command 3DRenderMethod 
+    $mb.render add radiobutton -label [msgcat::mc {FIP}] \
+	-variable threed(method) -value {fip} -command 3DRenderMethod
     $mb.render add separator
     $mb.render add radiobutton -label [msgcat::mc {None}] \
 	-variable threed(background) -value {none} -command 3DBackground
@@ -462,6 +464,8 @@ proc PrefsDialog3d {} {
 	-variable pthreed(method) -value {mip}
     $m add radiobutton -label [msgcat::mc {AIP}] \
 	-variable pthreed(method) -value {aip}
+    $m add radiobutton -label [msgcat::mc {FIP}] \
+	-variable pthreed(method) -value {fip}
 
     set m $f.background.menu
     ThemeMenu $m

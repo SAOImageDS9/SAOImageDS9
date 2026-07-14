@@ -14,7 +14,7 @@ class Frame3dBase : public Base {
   friend class Grid3d;
 
  public:
-  enum RenderMethod {MIP,AIP};
+  enum RenderMethod {MIP,AIP,FIP};
   enum MotionType {NONE,AZIMUTH,ELEVATION};
 
  protected:

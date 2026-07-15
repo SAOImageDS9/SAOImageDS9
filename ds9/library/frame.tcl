@@ -203,6 +203,11 @@ proc CreateNameNumberFrame {which type} {
 	hls {}
 	3d {
 	    $which 3d method $pthreed(method)
+	    $which 3d shade $pthreed(shade)
+	    $which 3d shade ambient $pthreed(shade,ambient)
+	    $which 3d shade strength $pthreed(shade,strength)
+	    $which 3d shade normal $pthreed(shade,normal)
+	    $which 3d shade normal strength $pthreed(shade,normal,strength)
 	    $which 3d background $pthreed(background)
 	    $which 3d border $pthreed(border)
 	    $which 3d border color $pthreed(border,color)

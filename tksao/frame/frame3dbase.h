@@ -27,6 +27,11 @@ class Frame3dBase : public Base {
   float az_;
   float el_;
   RenderMethod renderMethod_;
+  int shade_;
+  double shadeAmbient_;
+  double shadeStrength_;
+  int shadeNormal_;
+  double shadeNormalStrength_;
   int sync_; // update 3d syncronous
 
   List<RayTrace> cache_;
@@ -202,6 +207,11 @@ class Frame3dBase : public Base {
   void get3dHighliteColorCmd();
   void get3dRenderMethodCmd();
   void get3dRenderBackgroundCmd();
+  void get3dShadeCmd();
+  void get3dShadeAmbientCmd();
+  void get3dShadeStrengthCmd();
+  void get3dShadeNormalCmd();
+  void get3dShadeNormalStrengthCmd();
   void get3dScaleCmd();
   void get3dViewCmd();
   void get3dViewPointCmd();
@@ -213,6 +223,11 @@ class Frame3dBase : public Base {
   void set3dHighliteColorCmd(const char*);
   void set3dRenderMethodCmd(int);
   void set3dRenderBackgroundCmd(int);
+  void set3dShadeCmd(int);
+  void set3dShadeAmbientCmd(double);
+  void set3dShadeStrengthCmd(double);
+  void set3dShadeNormalCmd(int);
+  void set3dShadeNormalStrengthCmd(double);
   void set3dScaleCmd(double);
   void set3dSyncCmd(int);
   void set3dViewCmd(float, float);

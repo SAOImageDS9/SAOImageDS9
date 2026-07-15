@@ -22,6 +22,11 @@ Frame3dBase::Frame3dBase(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   az_ =0;
   el_ =0;
   renderMethod_ = MIP;
+  shade_ =0;
+  shadeAmbient_ =.35;
+  shadeStrength_ =1;
+  shadeNormal_ =1;
+  shadeNormalStrength_ =1;
 
   sync_ = 0;
 

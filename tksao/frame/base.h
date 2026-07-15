@@ -1749,6 +1749,11 @@ public:
   virtual void get3dViewPointCmd();
   virtual void get3dRenderMethodCmd();
   virtual void get3dRenderBackgroundCmd();
+  virtual void get3dShadeCmd() {}
+  virtual void get3dShadeAmbientCmd() {}
+  virtual void get3dShadeStrengthCmd() {}
+  virtual void get3dShadeNormalCmd() {}
+  virtual void get3dShadeNormalStrengthCmd() {}
   virtual void set3dBorderCmd(int) {}
   virtual void set3dBorderColorCmd(const char*) {}
   virtual void set3dCompassCmd(int) {}
@@ -1761,6 +1766,11 @@ public:
   virtual void set3dViewPointCmd(const Vector3d&, const Vector&) {}
   virtual void set3dRenderMethodCmd(int) {}
   virtual void set3dRenderBackgroundCmd(int) {}
+  virtual void set3dShadeCmd(int) {}
+  virtual void set3dShadeAmbientCmd(double) {}
+  virtual void set3dShadeStrengthCmd(double) {}
+  virtual void set3dShadeNormalCmd(int) {}
+  virtual void set3dShadeNormalStrengthCmd(double) {}
 };
 
 #endif

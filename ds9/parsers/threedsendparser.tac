@@ -5,6 +5,7 @@
 %start threedsend
 
 %token AZ_
+%token AMBIENT_
 %token BG_
 %token BORDER_
 %token COLOR_
@@ -13,7 +14,10 @@
 %token HIGHLITE_
 %token LOCK_
 %token METHOD_
+%token NORMAL_
 %token SCALE_
+%token SHADE_
+%token STRENGTH_
 %token VIEW_
 
 %%
@@ -23,11 +27,22 @@ threedsend : AZ_ {ProcessSendCmdGet threed az}
  | VIEW_ {ProcessSendCmdGet2 threed az el}
  | SCALE_ {ProcessSendCmdGet threed scale}
  | METHOD_ {ProcessSendCmdGet threed method}
+ | SHADE_ shade
  | BG_ {ProcessSendCmdGet threed background}
  | LOCK_ {ProcessSendCmdYesNo threed lock}
  | HIGHLITE_ highlite
  | BORDER_ border
  | COMPASS_ compass
+ ;
+
+shade: {ProcessSendCmdYesNo threed shade}
+ | AMBIENT_ {ProcessSendCmdGet threed shade,ambient}
+ | STRENGTH_ {ProcessSendCmdGet threed shade,strength}
+ | NORMAL_ shadeNormal
+ ;
+
+shadeNormal: {ProcessSendCmdYesNo threed shade,normal}
+ | STRENGTH_ {ProcessSendCmdGet threed shade,normal,strength}
  ;
 
 highlite: {ProcessSendCmdYesNo threed highlite}

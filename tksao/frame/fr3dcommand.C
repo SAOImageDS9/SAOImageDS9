@@ -267,6 +267,37 @@ void Frame3dBase::get3dRenderBackgroundCmd()
   }
 }
 
+void Frame3dBase::get3dShadeCmd()
+{
+  Tcl_AppendResult(interp, shade_ ? "1" : "0", NULL);
+}
+
+void Frame3dBase::get3dShadeAmbientCmd()
+{
+  ostringstream str;
+  str << shadeAmbient_ << ends;
+  Tcl_AppendResult(interp, str.str().c_str(), NULL);
+}
+
+void Frame3dBase::get3dShadeStrengthCmd()
+{
+  ostringstream str;
+  str << shadeStrength_ << ends;
+  Tcl_AppendResult(interp, str.str().c_str(), NULL);
+}
+
+void Frame3dBase::get3dShadeNormalCmd()
+{
+  Tcl_AppendResult(interp, shadeNormal_ ? "1" : "0", NULL);
+}
+
+void Frame3dBase::get3dShadeNormalStrengthCmd()
+{
+  ostringstream str;
+  str << shadeNormalStrength_ << ends;
+  Tcl_AppendResult(interp, str.str().c_str(), NULL);
+}
+
 void Frame3dBase::getCursorCmd(Coord::InternalSystem sys)
 {
   Vector aa = Vector(options->width,options->height)/2.;
@@ -478,6 +509,59 @@ void Frame3dBase::set3dRenderBackgroundCmd(int which)
     render_ = (MotionType)which;
     cancelDetach();
     preservecache_ =1;
+    update(BASE);
+  }
+}
+
+void Frame3dBase::set3dShadeCmd(int which)
+{
+  int ss =which ? 1 : 0;
+  if (ss != shade_) {
+    // Enabling needs depth data.  FIP traces created while shading is off do
+    // not allocate or write a depth buffer, avoiding overhead in that mode.
+    if (ss) {
+      cancelDetach();
+      cache_.deleteAll();
+      pannerCache_.deleteAll();
+    }
+    shade_ =ss;
+    // Once depth exists, disabling and parameter changes reuse the cache.
+    update(BASE);
+  }
+}
+
+void Frame3dBase::set3dShadeAmbientCmd(double value)
+{
+  double aa =value<0 ? 0 : (value>1 ? 1 : value);
+  if (aa != shadeAmbient_) {
+    shadeAmbient_ =aa;
+    update(BASE);
+  }
+}
+
+void Frame3dBase::set3dShadeStrengthCmd(double value)
+{
+  double ss =value<0 ? 0 : (value>1 ? 1 : value);
+  if (ss != shadeStrength_) {
+    shadeStrength_ =ss;
+    update(BASE);
+  }
+}
+
+void Frame3dBase::set3dShadeNormalCmd(int which)
+{
+  int nn =which ? 1 : 0;
+  if (nn != shadeNormal_) {
+    shadeNormal_ =nn;
+    update(BASE);
+  }
+}
+
+void Frame3dBase::set3dShadeNormalStrengthCmd(double value)
+{
+  double ss =value<0 ? 0 : (value>1 ? 1 : value);
+  if (ss != shadeNormalStrength_) {
+    shadeNormalStrength_ =ss;
     update(BASE);
   }
 }

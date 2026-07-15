@@ -17,6 +17,7 @@ class RayTrace {
   Matrix3d mm_;
   BBox3d bb_;
   float* zbuf_;
+  float* depthbuf_; // FIP camera-space depth; suitable for later normals
   unsigned char* mkzbuf_;
 
   RayTrace* next_;
@@ -24,7 +25,7 @@ class RayTrace {
 
  public:
   RayTrace();
-  RayTrace(double, double, int, int, Matrix3d, BBox3d);
+  RayTrace(double, double, int, int, Matrix3d, BBox3d, int);
   ~RayTrace();
 
   RayTrace* previous() {return previous_;}

@@ -34,6 +34,7 @@ allocgz		{return ALLOCGZ_;}
 align		{return ALIGN_;}
 all		{return ALL_;}
 alt		{return ALT_;}
+ambient         {return AMBIENT_;}
 amplifier	{return AMPLIFIER_;}
 analysis	{return ANALYSIS_;}
 angle		{return ANGLE_;}
@@ -247,6 +248,7 @@ new		{return NEW_;}
 next		{return NEXT_;}
 no		{return NO_;}
 none		{return NONE_;}
+normal          {return NORMAL_;}
 nonnan		{return NONNAN_;}
 nonzero		{return NONZERO_;}
 now		{return NOW_;}
@@ -311,6 +313,7 @@ select		{return SELECT_;}
 set		{return SET_;}
 sexagesimal	{return SEXAGESIMAL_;}
 shape		{return SHAPE_;}
+shade           {return SHADE_;}
 shared		{return SHARED_;}
 shift		{return SHIFT_;}
 shmid		{return SHMID_;}
@@ -330,6 +333,7 @@ squared		{return SQUARED_;}
 sshared		{return SSHARED_;}
 stats		{return STATS_;}
 status		{return STATUS_;}
+strength        {return STRENGTH_;}
 sum		{return SUM_;}
 sync            {return SYNC_;}
 system		{return SYSTEM_;}

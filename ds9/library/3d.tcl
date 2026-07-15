@@ -17,6 +17,11 @@ proc 3DDef {} {
     set threed(lock) 0
 
     set threed(method) mip
+    set threed(shade) 0
+    set threed(shade,ambient) .35
+    set threed(shade,strength) 1
+    set threed(shade,normal) 1
+    set threed(shade,normal,strength) 1
     set threed(background) none
     set threed(highlite) 1
     set threed(highlite,color) cyan
@@ -114,6 +119,25 @@ proc 3DDialog {} {
     # for order of focus
     raise $f.elslider 
 
+    # FIP Depth Shade
+    set f [ttk::labelframe $w.shade -text [msgcat::mc {FIP Depth Shade}]]
+    ttk::checkbutton $f.enable -text [msgcat::mc {Enable}] \
+	-variable threed(shade) -command 3DShade
+    slider $f.ambient 0.0 1.0 [msgcat::mc {Ambient}] \
+	threed(shade,ambient) [list 3DShade]
+    slider $f.strength 0.0 1.0 [msgcat::mc {Strength}] \
+	threed(shade,strength) [list 3DShade]
+    ttk::checkbutton $f.normal -text [msgcat::mc {Surface Lighting}] \
+	-variable threed(shade,normal) -command 3DShade
+    slider $f.normalstrength 0.0 1.0 [msgcat::mc {Normal Strength}] \
+	threed(shade,normal,strength) [list 3DShade]
+    grid $f.enable -padx 2 -pady 2 -sticky w
+    grid $f.ambient -padx 2 -pady 2 -sticky ew
+    grid $f.strength -padx 2 -pady 2 -sticky ew
+    grid $f.normal -padx 2 -pady 2 -sticky w
+    grid $f.normalstrength -padx 2 -pady 2 -sticky ew
+    grid columnconfigure $f 0 -weight 1
+
     # Scale
     set f [ttk::frame $w.scale]
     ttk::label $f.tscale -text [msgcat::mc {Z Axis Scale}]
@@ -138,7 +162,7 @@ proc 3DDialog {} {
     ttk::separator $w.sep2 -orient horizontal
     ttk::separator $w.sep3 -orient horizontal
     pack $w.buttons $w.sep $w.status $w.sep2 -side bottom -fill x
-    pack $w.param $w.sep3 $w.scale -side top -fill x
+    pack $w.param $w.sep3 $w.shade $w.scale -side top -fill x
 
     bind $w <<Close>> 3DDestroyDialog
 
@@ -163,6 +187,7 @@ proc 3DApplyDialog {} {
     if {$current(frame) != {}} {
 	$current(frame) 3d view $threed(az) $threed(el)
 	$current(frame) 3d scale $threed(scale)
+	3DShade
 	if {$grid(view)} {
 	    UpdateGridCurrent
 	}
@@ -199,6 +224,12 @@ proc Update3DDialog {} {
 	set threed(el) [lindex $rr 1]
 	set threed(scale) [$current(frame) get 3d scale]
 	set threed(method) [$current(frame) get 3d method]
+	set threed(shade) [$current(frame) get 3d shade]
+	set threed(shade,ambient) [$current(frame) get 3d shade ambient]
+	set threed(shade,strength) [$current(frame) get 3d shade strength]
+	set threed(shade,normal) [$current(frame) get 3d shade normal]
+	set threed(shade,normal,strength) \
+	    [$current(frame) get 3d shade normal strength]
 	set threed(background) [$current(frame) get 3d background]
 	set threed(highlite) [$current(frame) get 3d highlite]
 	set threed(highlite,color) [$current(frame) get 3d highlite color]
@@ -215,6 +246,11 @@ proc 3DBackup {ch which} {
     puts $ch "$which 3d view [$which get 3d view]"
     puts $ch "$which 3d scale [$which get 3d scale]"
     puts $ch "$which 3d method [$which get 3d method]"
+    puts $ch "$which 3d shade [$which get 3d shade]"
+    puts $ch "$which 3d shade ambient [$which get 3d shade ambient]"
+    puts $ch "$which 3d shade strength [$which get 3d shade strength]"
+    puts $ch "$which 3d shade normal [$which get 3d shade normal]"
+    puts $ch "$which 3d shade normal strength [$which get 3d shade normal strength]"
     puts $ch "$which 3d highlite [$which get 3d highlite]"
     puts $ch "$which 3d border [$which get 3d border]"
     puts $ch "$which 3d background [$which get 3d background]"
@@ -267,6 +303,20 @@ proc 3DRenderMethod {} {
 
     if {$current(frame) != {}} {
 	$current(frame) 3d method $threed(method)
+    }
+}
+
+proc 3DShade {} {
+    global threed
+    global current
+
+    if {$current(frame) != {}} {
+	$current(frame) 3d shade $threed(shade)
+	$current(frame) 3d shade ambient $threed(shade,ambient)
+	$current(frame) 3d shade strength $threed(shade,strength)
+	$current(frame) 3d shade normal $threed(shade,normal)
+	$current(frame) 3d shade normal strength \
+	    $threed(shade,normal,strength)
     }
 }
 
@@ -476,6 +526,26 @@ proc PrefsDialog3d {} {
     $m add radiobutton -label [msgcat::mc {Elevation}] \
 	-variable pthreed(background) -value {elevation}
 
+    set f [ttk::labelframe $w.threed.shade \
+	-text [msgcat::mc {FIP Depth Shade}]]
+    ttk::checkbutton $f.enable -text [msgcat::mc {Enable}] \
+	-variable pthreed(shade)
+    slider $f.ambient 0.0 1.0 [msgcat::mc {Ambient}] \
+	pthreed(shade,ambient) {}
+    slider $f.strength 0.0 1.0 [msgcat::mc {Strength}] \
+	pthreed(shade,strength) {}
+    ttk::checkbutton $f.normal -text [msgcat::mc {Surface Lighting}] \
+	-variable pthreed(shade,normal)
+    slider $f.normalstrength 0.0 1.0 [msgcat::mc {Normal Strength}] \
+	pthreed(shade,normal,strength) {}
+
+    grid $f.enable -padx 2 -pady 2 -sticky w
+    grid $f.ambient -padx 2 -pady 2 -sticky ew
+    grid $f.strength -padx 2 -pady 2 -sticky ew
+    grid $f.normal -padx 2 -pady 2 -sticky w
+    grid $f.normalstrength -padx 2 -pady 2 -sticky ew
+    grid columnconfigure $f 0 -weight 1
+
     set f [ttk::labelframe $w.threed.highlite -text [msgcat::mc {Highlite}]]
     ttk::checkbutton $f.show -text [msgcat::mc {Show}] \
 	-variable pthreed(highlite)
@@ -502,7 +572,7 @@ proc PrefsDialog3d {} {
     grid $f.show -padx 2 -pady 2 -sticky w
     grid $f.tcolor $f.color -padx 2 -pady 2 -sticky w
 
-    pack $w.threed.misc $w.threed.highlite $w.threed.border \
+    pack $w.threed.misc $w.threed.shade $w.threed.highlite $w.threed.border \
 	-side top -fill both -expand true
 }
 

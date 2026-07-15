@@ -9,6 +9,62 @@
 
 #include <pthread.h>
 
+#define FIP_NORMAL_LUT_RADIUS 32
+#define FIP_NORMAL_LUT_SIZE 65
+#define FIP_NORMAL_GRADIENT_SCALE 4.
+
+// Quantized Lambert lighting avoids a square root for every visible pixel.
+// The fixed view-space light points from the upper left toward the viewer.
+static const unsigned char* fipNormalLightTable()
+{
+  static unsigned char table[FIP_NORMAL_LUT_SIZE*FIP_NORMAL_LUT_SIZE];
+  static int initialized =0;
+
+  if (!initialized) {
+    const double lx =-.408248290463863;
+    const double ly =-.408248290463863;
+    const double lz =-.816496580927726;
+
+    for (int yy=-FIP_NORMAL_LUT_RADIUS;
+	 yy<=FIP_NORMAL_LUT_RADIUS; yy++) {
+      for (int xx=-FIP_NORMAL_LUT_RADIUS;
+	   xx<=FIP_NORMAL_LUT_RADIUS; xx++) {
+	double gx =xx/FIP_NORMAL_GRADIENT_SCALE;
+	double gy =yy/FIP_NORMAL_GRADIENT_SCALE;
+	// Camera depth increases away from the viewer, so this is the
+	// viewer-facing normal of P=(screen x, screen y, depth).
+	double nx =gx;
+	double ny =gy;
+	double nz =-1;
+	double light =(nx*lx + ny*ly + nz*lz) /
+	  sqrt(nx*nx + ny*ny + nz*nz);
+	if (light<0)
+	  light =0;
+	else if (light>1)
+	  light =1;
+	table[(yy+FIP_NORMAL_LUT_RADIUS)*FIP_NORMAL_LUT_SIZE+
+	      xx+FIP_NORMAL_LUT_RADIUS] =
+	  (unsigned char)(light*255. + .5);
+      }
+    }
+    initialized =1;
+  }
+
+  return table;
+}
+
+static inline int fipNormalGradientIndex(float value)
+{
+  int result =value>=0 ?
+    (int)(value*FIP_NORMAL_GRADIENT_SCALE+.5) :
+    (int)(value*FIP_NORMAL_GRADIENT_SCALE-.5);
+  if (result < -FIP_NORMAL_LUT_RADIUS)
+    return -FIP_NORMAL_LUT_RADIUS;
+  if (result > FIP_NORMAL_LUT_RADIUS)
+    return FIP_NORMAL_LUT_RADIUS;
+  return result;
+}
+
 void render3dTimer(void* ptr) {
   int rr = ((Frame3d*)ptr)->processDetach();
   if (rr) {
@@ -99,7 +155,8 @@ unsigned char* Frame3d::fillImage(int width, int height,
       RayTrace* rt = findInCache(cache_, az_, el_);
       if (!rt) {
 	BBox3d bb = imageBounds(width, height, mm);
-	rt = new RayTrace(az_, el_, width, height, mm, bb);
+	rt = new RayTrace(az_, el_, width, height, mm, bb,
+			  renderMethod_ == FIP && shade_);
 	if (!fillImageJoin(rt))
 	  return NULL;
 	cacheIt(cache_, rt);
@@ -135,7 +192,8 @@ unsigned char* Frame3d::fillImage(int width, int height,
 	    cancelDetach();
 
 	  BBox3d bb = imageBounds(width, height, mm);
-	  rt_ = new RayTrace(az_, el_, width, height, mm, bb);
+	  rt_ = new RayTrace(az_, el_, width, height, mm, bb,
+			     renderMethod_ == FIP && shade_);
 
 	  // are we very small?
 	  if (bb.volume() < 1.25e7*nthreads_) {
@@ -179,7 +237,8 @@ unsigned char* Frame3d::fillImage(int width, int height,
       RayTrace* rt = findInCache(pannerCache_, az_, el_);
       if (!rt) {
 	BBox3d bb = imageBounds(width, height, mm);
-	rt = new RayTrace(az_, el_, width, height, mm, bb);
+	rt = new RayTrace(az_, el_, width, height, mm, bb,
+			  renderMethod_ == FIP && shade_);
 	if (!fillImageJoin(rt))
 	  return NULL;
 	cacheIt(pannerCache_, rt);
@@ -190,7 +249,8 @@ unsigned char* Frame3d::fillImage(int width, int height,
   case Coord::PS:
     {
       BBox3d bb = imageBounds(width, height, mm);
-      RayTrace* rt = new RayTrace(az_, el_, width, height, mm, bb);
+      RayTrace* rt = new RayTrace(az_, el_, width, height, mm, bb,
+				  renderMethod_ == FIP && shade_);
       if (!fillImageJoin(rt))
 	return NULL;
       img = fillImageColor(rt);
@@ -212,6 +272,7 @@ void* raytrace(void* arg)
   Frame3dBase::RenderMethod renderMethod = targ->renderMethod;
   int width = targ->width;
   float* zbuf = targ->zbuf;
+  float* depthbuf = targ->depthbuf;
   unsigned char* mkzbuf = targ->mkzbuf;
   Context* context = targ->context;
 
@@ -264,6 +325,7 @@ void* raytrace(void* arg)
     float acc=0;
     float max = -FLT_MAX;
     float first =0;
+    float depth =0;
 
     int kks = zstart;
     int kkt = zstop;
@@ -292,6 +354,7 @@ void* raytrace(void* arg)
 	    // First finite, non-zero sample from the viewer into the cube.
 	    if (value != 0) {
 	      first =value;
+	      depth =kk;
 	      cnt =1;
 	      break;
 	    }
@@ -324,6 +387,8 @@ void* raytrace(void* arg)
 	break;
       case Frame3dBase::FIP:
 	*dest =first;
+	if (depthbuf)
+	  depthbuf[jj*width+ii] =depth;
 	break;
       }
 
@@ -372,6 +437,7 @@ int Frame3d::fillImageJoin(RayTrace* rt)
     targ[ii].renderMethod = renderMethod_;
     targ[ii].width = rt->width_;
     targ[ii].zbuf = rt->zbuf_;
+    targ[ii].depthbuf = rt->depthbuf_;
     targ[ii].mkzbuf = rt->mkzbuf_;
     targ[ii].context = context;
 
@@ -468,6 +534,7 @@ void Frame3d::fillImageDetach(RayTrace* rt)
     targ_[ii].renderMethod = renderMethod_;
     targ_[ii].width = rt->width_;
     targ_[ii].zbuf = rt->zbuf_;
+    targ_[ii].depthbuf = rt->depthbuf_;
     targ_[ii].mkzbuf = rt->mkzbuf_;
     targ_[ii].context = context;
 
@@ -792,7 +859,8 @@ int Frame3d::bkgDetach(double az, double el) {
     Matrix3d mm = (context->fits->dataToRef3d * refToWidget3d).invert();
     BBox3d bb = imageBounds(options->width, options->height, mm);
 
-    rtb_ = new RayTrace(az, el, options->width, options->height, mm, bb);
+    rtb_ = new RayTrace(az, el, options->width, options->height, mm, bb,
+			renderMethod_ == FIP && shade_);
     fillImageDetach(rtb_);
 
     status_ =3;
@@ -823,6 +891,7 @@ unsigned char* Frame3d::fillImageColor(RayTrace* rt)
   int width = rt->width_;
   int height = rt->height_;
   float* zbuf = rt->zbuf_;
+  float* depthbuf = rt->depthbuf_;
   unsigned char* mkzbuf = rt->mkzbuf_;
 
   unsigned char* img = new unsigned char[width*height*3];
@@ -837,15 +906,33 @@ unsigned char* Frame3d::fillImageColor(RayTrace* rt)
   double hh = keyContext->fits->high();
   double diff = hh - ll;
 
+  // MIP/AIP never allocate depthbuf_, so they bypass shading completely.
+  // Normal lighting uses quantized depth gradients and a small Lambert LUT;
+  // there are no square roots in the per-pixel path.
+  double shadeNear =rt->bb_.ll[2];
+  double shadeRange =rt->bb_.ur[2] - shadeNear;
+  int doDepthShade =shadeStrength_>0 && shadeRange>0;
+  int doNormalShade =shadeNormal_ && shadeNormalStrength_>0;
+  int doShade =shade_ && depthbuf && shadeAmbient_<1 &&
+    (doDepthShade || doNormalShade);
+  double depthSlope =doShade && doDepthShade ?
+    255.*shadeStrength_/shadeRange : 0;
+  int ambient =(int)(shadeAmbient_*255. + .5);
+  int normalStrength =(int)(shadeNormalStrength_*255. + .5);
+  const unsigned char* normalTable =doShade && doNormalShade ?
+    fipNormalLightTable() : NULL;
+
   XColor* bgColor = useBgColor? getXColor(bgColourName) :
     ((WidgetOptions*)options)->bgColor;
 
   unsigned char* dest = img;
   float* src = zbuf;
   unsigned char* mksrc = mkzbuf;
+  int offset =0;
 
   for (int jj=0; jj<height; jj++) {
-    for (int ii=0; ii<width; ii++, dest+=3, src++, mksrc++) {
+    for (int ii=0; ii<width;
+	 ii++, dest+=3, src++, mksrc++, offset++) {
       *dest = (unsigned char)bgColor->red;
       *(dest+1) = (unsigned char)bgColor->green;
       *(dest+2) = (unsigned char)bgColor->blue;
@@ -870,6 +957,81 @@ unsigned char* Frame3d::fillImageColor(RayTrace* rt)
 	    *(dest+2) = table[l*3];
 	    *(dest+1) = table[l*3+1];
 	    *dest = table[l*3+2];
+	  }
+
+	  if (doShade) {
+	    int surface =255;
+	    if (doDepthShade) {
+	      surface =255 -
+		(int)((depthbuf[offset]-shadeNear)*depthSlope + .5);
+	      if (surface<0)
+		surface =0;
+	      else if (surface>255)
+		surface =255;
+	    }
+
+	    if (normalTable) {
+	      float center =depthbuf[offset];
+	      float dx =0;
+	      float dy =0;
+	      if (ii>0 && ii+1<width && jj>0 && jj+1<height) {
+		// A 3x3 Sobel derivative smooths the integer ray-step depth
+		// while estimating the normal.  Missing FIP neighbors use the
+		// center depth so lighting does not bleed across empty pixels.
+		float tl =mkzbuf[offset-width-1] ?
+		  depthbuf[offset-width-1] : center;
+		float tt =mkzbuf[offset-width] ?
+		  depthbuf[offset-width] : center;
+		float tr =mkzbuf[offset-width+1] ?
+		  depthbuf[offset-width+1] : center;
+		float ll =mkzbuf[offset-1] ? depthbuf[offset-1] : center;
+		float rr =mkzbuf[offset+1] ? depthbuf[offset+1] : center;
+		float bl =mkzbuf[offset+width-1] ?
+		  depthbuf[offset+width-1] : center;
+		float bb =mkzbuf[offset+width] ?
+		  depthbuf[offset+width] : center;
+		float br =mkzbuf[offset+width+1] ?
+		  depthbuf[offset+width+1] : center;
+
+		dx =(tr + 2*rr + br - tl - 2*ll - bl)*.125;
+		dy =(bl + 2*bb + br - tl - 2*tt - tr)*.125;
+	      }
+	      else {
+		// The image boundary is uncommon; retain a one-sided estimate.
+		int hasLeft =ii>0 && mkzbuf[offset-1];
+		int hasRight =ii+1<width && mkzbuf[offset+1];
+		int hasUp =jj>0 && mkzbuf[offset-width];
+		int hasDown =jj+1<height && mkzbuf[offset+width];
+		if (hasLeft && hasRight)
+		  dx =(depthbuf[offset+1]-depthbuf[offset-1])*.5;
+		else if (hasRight)
+		  dx =depthbuf[offset+1]-center;
+		else if (hasLeft)
+		  dx =center-depthbuf[offset-1];
+
+		if (hasUp && hasDown)
+		  dy =(depthbuf[offset+width]-depthbuf[offset-width])*.5;
+		else if (hasDown)
+		  dy =depthbuf[offset+width]-center;
+		else if (hasUp)
+		  dy =center-depthbuf[offset-width];
+	      }
+
+	      int gx =fipNormalGradientIndex(dx);
+	      int gy =fipNormalGradientIndex(dy);
+	      int light =normalTable[
+		(gy+FIP_NORMAL_LUT_RADIUS)*FIP_NORMAL_LUT_SIZE+
+		gx+FIP_NORMAL_LUT_RADIUS];
+	      int normal =255 -
+		((255-light)*normalStrength + 127)/255;
+	      surface =(surface*normal + 127)/255;
+	    }
+
+	    int shade =ambient +
+	      ((255-ambient)*surface + 127)/255;
+	    *dest =(*dest*shade + 127)/255;
+	    *(dest+1) =(*(dest+1)*shade + 127)/255;
+	    *(dest+2) =(*(dest+2)*shade + 127)/255;
 	  }
 	}
       }

@@ -226,11 +226,13 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 	return
     }
 
+    set newcutout 0
     if {![info exists vvar(cutoutframe)] ||
 	![MarkerAnalysisPlot3dFrameExists $vvar(cutoutframe)]} {
 	set olddisplay $current(display)
 	Create3DFrame
 	set vvar(cutoutframe) $current(frame)
+	set newcutout 1
 	if {$olddisplay == "single"} {
 	    set current(display) tile
 	    set tile(mode) grid
@@ -243,12 +245,20 @@ proc MarkerAnalysisPlot3dCB {frame id} {
 	return
     }
 
+    set view {}
+    if {!$newcutout} {
+	catch {set view [$cutout get 3d view]}
+    }
+    if {$view == {}} {
+	set view {45 30}
+    }
+
     catch {GotoFrame $cutout}
     catch {LoadVar $datavar "${frame}.${id}.3d-cutout.fits" {} {}}
     MarkerAnalysisPlot3dApplyScaleLimits $frame $cutout $vvarname
     MarkerAnalysisPlot3dApplyColorbar $frame $cutout
-    catch {$cutout 3d view 45 30}
     catch {$cutout zoom to fit}
+    catch {eval [list $cutout 3d view] $view}
 
     if {[MarkerAnalysisPlot3dFrameExists $saveframe]} {
 	catch {GotoFrame $saveframe}

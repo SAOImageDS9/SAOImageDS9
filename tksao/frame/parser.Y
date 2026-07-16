@@ -32,7 +32,7 @@ static Coord::CoordSystem currentCoord = Coord::IMAGE;
 static Coord::SkyFrame currentSky = Coord::ICRS;
 
 static unsigned short defaultProps = Marker::SELECT | Marker::HIGHLITE |
-		Marker::EDIT | Marker::MOVE | Marker::ROTATE | 
+		Marker::EDIT | Marker::MOVE | Marker::ROTATE |
 		Marker::DELETE | Marker::INCLUDE | Marker::SOURCE;
 static unsigned short currentProps;
 static char currentColor[16];
@@ -603,7 +603,7 @@ dms	: DMSSTR {$$ = parseDMSStr($1);}
 coord	: sexagesimal sexagesimal
 	{
 	  Vector r;
-	  if (currentSky == Coord::GALACTIC || currentSky == Coord::ECLIPTIC) 
+	  if (currentSky == Coord::GALACTIC || currentSky == Coord::ECLIPTIC)
 	    r = Vector($1,$2);
 	  else
 	    r = Vector($1*360./24.,$2);
@@ -626,7 +626,7 @@ coord	: sexagesimal sexagesimal
 	  $$[1] = r[1];
 	  $$[2] = r[2];
 	}
-	| numeric numeric 
+	| numeric numeric
 	{
 	  $$[0] = $1;
 	  $$[1] = $2;
@@ -710,7 +710,7 @@ scaleType: LINEAR_ {$$ = FrScale::LINEARSCALE;}
 	| ASINH_ {$$ = FrScale::ASINHSCALE;}
 	| SINH_ {$$ = FrScale::SINHSCALE;}
 	| HISTEQU_ {$$ = FrScale::HISTEQUSCALE;}
-	;	
+	;
 
 minmaxMode : AUTO_ {$$=FrScale::SCAN;}
 	| SCAN_ {$$=FrScale::SCAN;}
@@ -853,16 +853,16 @@ binFunction : AVERAGE_ {fr->binFunctionCmd(FitsHist::AVERAGE);}
 	;
 
 binTo	: FIT_ {fr->binToFitCmd();}
-	| numeric numeric ABOUT_ CENTER_ STRING STRING STRING 
+	| numeric numeric ABOUT_ CENTER_ STRING STRING STRING
 	{fr->binCmd(Vector($1,$2), $5, $6, $7);}
-	| numeric numeric INT numeric numeric ABOUT_ CENTER_ 
+	| numeric numeric INT numeric numeric ABOUT_ CENTER_
 	    STRING STRING STRING STRING
 	{fr->binCmd(Vector($1,$2), $3, Vector($4,$5), $8, $9, $10, $11);}
-	| numeric numeric ABOUT_ numeric numeric STRING STRING STRING 
+	| numeric numeric ABOUT_ numeric numeric STRING STRING STRING
 	{fr->binCmd(Vector($1,$2), Vector($4,$5), $6, $7, $8);}
-	| numeric numeric INT numeric numeric ABOUT_ numeric numeric 
+	| numeric numeric INT numeric numeric ABOUT_ numeric numeric
 	    STRING STRING STRING STRING
-	{fr->binCmd(Vector($1,$2), $3, Vector($4,$5), Vector($7,$8), 
+	{fr->binCmd(Vector($1,$2), $3, Vector($4,$5), Vector($7,$8),
 	    $9, $10, $11, $12);}
 	;
 
@@ -923,7 +923,7 @@ clipZScale: numeric INT INT {fr->clipZScaleCmd($1,$2,$3);}
         }
 	;
 
-colormap : INT numeric numeric INT INT 
+colormap : INT numeric numeric INT INT
         {fr->colormapCmd($1, $2, $3, $4, $5);}
 	| RGB_ numeric numeric numeric numeric numeric numeric INT INT
 	{fr->colormapCmd($2,$3,$4,$5,$6,$7,$8,$9);}
@@ -987,7 +987,7 @@ contourDelete : /*empty */ {fr->contourDeleteCmd();}
 
 contourLoad : STRING {fr->contourLoadCmd($1);}
         | STRING STRING INT yesno {fr->contourLoadCmd($1,$2,$3,$4);}
-        | STRING INT yesno STRING coordSystem skyFrame 
+        | STRING INT yesno STRING coordSystem skyFrame
 	{
 	  // backward compatibility with backup
 	  fr->contourLoadCmd($4,(Coord::CoordSystem)$5,(Coord::SkyFrame)$6,$1,$2,$3);
@@ -1151,16 +1151,16 @@ getBlock : FACTOR_  {fr->getBlockCmd();}
 	;
 
 getClip	: {fr->getClipCmd();}
-        | contourClipMode contourClipScope 
+        | contourClipMode contourClipScope
 	{fr->getClipCmd((FrScale::ClipMode)$1, (FrScale::ClipScope)$2);}
-        | numeric contourClipScope 
+        | numeric contourClipScope
 	{fr->getClipCmd($1, (FrScale::ClipScope)$2);}
 	| SCOPE_ {fr->getClipScopeCmd();}
 	| MODE_ {fr->getClipModeCmd();}
 	| MINMAX_ getClipMinMax
 	| USER_ LEVEL_ {fr->getClipUserCmd();}
 	| ZSCALE_ getClipZScale
- 	| PRESERVE_ 
+ 	| PRESERVE_
 	{
 	  // backward compatibility with backup
 	  fr->getClipPreserveCmd();
@@ -1199,7 +1199,7 @@ getColorScaleLevel: INT numeric numeric scaleType numeric
         {fr->getColorScaleLevelCmd($1,$2,$3,(FrScale::ColorScaleType)$4,$5);}
 	;
 
-getContour: coordSystem skyFrame 
+getContour: coordSystem skyFrame
 	{fr->getContourCmd((Coord::CoordSystem)$1,(Coord::SkyFrame)$2);}
 	| CLIP_ getContourClip
 	| COLOR_ {fr->getContourColorNameCmd();}
@@ -1256,7 +1256,7 @@ getCursor : internalSystem {fr->getCursorCmd((Coord::InternalSystem)$1);}
 getData	: coordSystem skyFrame coord numeric numeric STRING
 	{fr->getDataValuesCmd(1, Vector($3), (Coord::CoordSystem)$1, (Coord::SkyFrame)$2, Vector($4,$5), $6);}
 	| INT coordSystem skyFrame coord numeric numeric STRING
-	{fr->getDataValuesCmd($1, Vector($4), 
+	{fr->getDataValuesCmd($1, Vector($4),
 	    (Coord::CoordSystem)$2, (Coord::SkyFrame)$3, Vector($5,$6), $7);}
 	| internalSystem numeric numeric INT INT
 	{fr->getDataValuesCmd(Vector($2,$3),(Coord::InternalSystem)$1,
@@ -1265,7 +1265,7 @@ getData	: coordSystem skyFrame coord numeric numeric STRING
 
 getInfo	: STRING fileNameType {fr->getInfoCmd($1, (Base::FileNameType)$2);}
 	| CLIP_ {fr->getInfoClipCmd();}
- 	| internalSystem numeric numeric STRING fileNameType 
+ 	| internalSystem numeric numeric STRING fileNameType
 	{fr->getInfoCmd(Vector($2,$3), (Coord::InternalSystem)$1, $4, (Base::FileNameType)$5);}
 	;
 
@@ -1311,12 +1311,12 @@ getFitsDepth : /* empty */ {fr->getFitsDepthCmd(2);}
         | INT {fr->getFitsDepthCmd($1);}
 	;
 
-getFitsFileName: fileNameType 
+getFitsFileName: fileNameType
 	{fr->getFitsFileNameCmd((Base::FileNameType)$1);}
 	| fileNameType internalSystem numeric numeric
 	{fr->getFitsFileNameCmd(Vector($3,$4), (Coord::InternalSystem)$2,
 	    (Base::FileNameType)$1);}
-	| fileNameType INT 
+	| fileNameType INT
 	{fr->getFitsFileNameCmd($2, (Base::FileNameType)$1);}
 	;
 
@@ -1424,12 +1424,12 @@ grid	: CREATE_ gridCreate
 	;
 
 gridCreate: coordSystem skyFrame skyFormat gridType STRING STRING
-        {fr->gridCmd((Coord::CoordSystem)$1, (Coord::SkyFrame)$2, 
+        {fr->gridCmd((Coord::CoordSystem)$1, (Coord::SkyFrame)$2,
 	    (Coord::SkyFormat)$3, (Grid2d::GridType)$4, $5, $6);}
         | coordSystem skyFrame skyFormat gridType STRING
 	{
 	  // backward compatibility with backup
-	  fr->gridCmd((Coord::CoordSystem)$1, (Coord::SkyFrame)$2, 
+	  fr->gridCmd((Coord::CoordSystem)$1, (Coord::SkyFrame)$2,
 		      (Coord::SkyFormat)$3, (Grid2d::GridType)$4, $5, "");
 	}
         ;
@@ -1493,7 +1493,7 @@ iis	: NEW_ INT INT {fr->iisCmd($2,$3);}
 	| SET_ INT INT INT INT
 	{fr->iisSetCmd($2,$3,$4,$5);}
 	| UPDATE_ {fr->iisUpdateCmd();}
-	| WCS_ numeric numeric numeric numeric 
+	| WCS_ numeric numeric numeric numeric
 	  numeric numeric numeric numeric INT
 	{fr->iisWCSCmd(Matrix($2,$3,$4,$5,$6,$7),Vector($8,$9),$10);}
 	;
@@ -1517,22 +1517,22 @@ load	: ARRAY_ loadArr
 	| PHOTO_ loadPhoto
 	;
 
-loadArr : STRING ALLOC_ STRING layerType 
+loadArr : STRING ALLOC_ STRING layerType
 	{fr->loadArrAllocCmd($3, $1, (Base::LayerType)$4);}
-	| STRING ALLOCGZ_ STRING layerType 
+	| STRING ALLOCGZ_ STRING layerType
 	{fr->loadArrAllocGZCmd($3, $1, (Base::LayerType)$4);}
-	| STRING CHANNEL_ STRING layerType 
+	| STRING CHANNEL_ STRING layerType
 	{fr->loadArrChannelCmd($3, $1, (Base::LayerType)$4);}
 	| STRING MMAP_ layerType {fr->loadArrMMapCmd($1, (Base::LayerType)$3);}
-	| STRING MMAPINCR_ layerType 
+	| STRING MMAPINCR_ layerType
 	{fr->loadArrMMapIncrCmd($1, (Base::LayerType)$3);}
 	| STRING SHARED_ shmType INT layerType
 	{fr->loadArrShareCmd((Base::ShmType)$3, $4, $1, (Base::LayerType)$5);}
-	| STRING SOCKET_ INT layerType 
+	| STRING SOCKET_ INT layerType
 	{fr->loadArrSocketCmd($3, $1, (Base::LayerType)$4);}
-	| STRING SOCKETGZ_ INT layerType 
+	| STRING SOCKETGZ_ INT layerType
 	{fr->loadArrSocketGZCmd($3, $1, (Base::LayerType)$4);}
-	| STRING VAR_ STRING layerType 
+	| STRING VAR_ STRING layerType
 	{fr->loadArrVarCmd($3, $1, (Base::LayerType)$4);}
 	| RGB_ CUBE_ loadArrayRGBCube
 	| HLS_ CUBE_ loadArrayRGBCube
@@ -1554,11 +1554,11 @@ loadArrayRGBCube : STRING ALLOC_ STRING {fr->loadRGBArrayCubeAllocCmd($3, $1);}
 loadENVI : STRING STRING SMMAP_ {fr->loadENVISMMapCmd($1,$2);}
 	;
 
-loadFits: STRING ALLOC_ STRING layerType 
+loadFits: STRING ALLOC_ STRING layerType
 	{fr->loadFitsAllocCmd($3, $1, (Base::LayerType)$4);}
-	| STRING ALLOCGZ_ STRING layerType 
+	| STRING ALLOCGZ_ STRING layerType
 	{fr->loadFitsAllocGZCmd($3, $1, (Base::LayerType)$4);}
-	| STRING CHANNEL_ STRING layerType 
+	| STRING CHANNEL_ STRING layerType
 	{fr->loadFitsChannelCmd($3, $1, (Base::LayerType)$4);}
 	| STRING MMAP_ incrLoad layerType
 	{fr->loadFitsMMapCmd($1, (Base::LayerType)$4);}
@@ -1569,7 +1569,7 @@ loadFits: STRING ALLOC_ STRING layerType
 	| STRING SHARED_ shmType INT incrLoad layerType
 	{fr->loadFitsShareCmd((Base::ShmType)$3, $4, $1, (Base::LayerType)$6);}
 	| STRING SSHARED_ shmType INT INT incrLoad layerType
-	{fr->loadFitsSShareCmd((Base::ShmType)$3, $4, $5, $1, 
+	{fr->loadFitsSShareCmd((Base::ShmType)$3, $4, $5, $1,
 	  (Base::LayerType)$7);}
 	| STRING SOCKET_ INT  layerType
 	{fr->loadFitsSocketCmd($3, $1, (Base::LayerType)$4);}
@@ -1623,7 +1623,7 @@ loadFitsMosaic : IMAGE_ IRAF_ loadFitsMosaicImageIRAF
 	;
 
 loadFitsMosaicImageIRAF : STRING ALLOC_ STRING layerType
-	{fr->loadMosaicImageAllocCmd(Base::IRAF, Coord::WCS, 
+	{fr->loadMosaicImageAllocCmd(Base::IRAF, Coord::WCS,
 	    $3, $1, (Base::LayerType)$4);}
 	| STRING ALLOCGZ_ STRING layerType
 	{fr->loadMosaicImageAllocGZCmd(Base::IRAF, Coord::WCS,
@@ -1690,7 +1690,7 @@ loadFitsMosaicImageWCS : wcsSystem STRING ALLOC_ STRING layerType
 	{fr->loadMosaicImageAllocCmd(Base::WCSMOSAIC, (Coord::CoordSystem)$1,
 	    $4, $2, (Base::LayerType)$5);}
 	| wcsSystem STRING ALLOCGZ_ STRING layerType
-	{fr->loadMosaicImageAllocGZCmd(Base::WCSMOSAIC, 
+	{fr->loadMosaicImageAllocGZCmd(Base::WCSMOSAIC,
 	    (Coord::CoordSystem)$1, $4, $2, (Base::LayerType)$5);}
 	| wcsSystem STRING CHANNEL_ STRING layerType
 	{fr->loadMosaicImageChannelCmd(Base::WCSMOSAIC,
@@ -1702,13 +1702,13 @@ loadFitsMosaicImageWCS : wcsSystem STRING ALLOC_ STRING layerType
 	{fr->loadMosaicImageMMapIncrCmd(Base::WCSMOSAIC,
 	    (Coord::CoordSystem)$1, $2, (Base::LayerType)$5);}
 	| wcsSystem STRING SHARED_ shmType INT incrLoad layerType
-	{fr->loadMosaicImageShareCmd(Base::WCSMOSAIC, (Coord::CoordSystem)$1, 
+	{fr->loadMosaicImageShareCmd(Base::WCSMOSAIC, (Coord::CoordSystem)$1,
 	    (Base::ShmType)$4, $5, $2, (Base::LayerType)$7);}
 	| wcsSystem STRING SOCKET_ INT layerType
 	{fr->loadMosaicImageSocketCmd(Base::WCSMOSAIC, (Coord::CoordSystem)$1,
 	    $4, $2, (Base::LayerType)$5);}
 	| wcsSystem STRING SOCKETGZ_ INT layerType
-	{fr->loadMosaicImageSocketGZCmd(Base::WCSMOSAIC, 
+	{fr->loadMosaicImageSocketGZCmd(Base::WCSMOSAIC,
 	    (Coord::CoordSystem)$1, $4, $2, (Base::LayerType)$5);}
 	| wcsSystem STRING VAR_ STRING incrLoad layerType
 	{fr->loadMosaicImageVarCmd(Base::WCSMOSAIC, (Coord::CoordSystem)$1,
@@ -1757,10 +1757,10 @@ loadFitsMosaicWCS : wcsSystem STRING ALLOC_ STRING layerType
 	{fr->loadMosaicMMapIncrCmd((Base::WCSMOSAIC), (Coord::CoordSystem)$1,
 	    $2, (Base::LayerType)$5);}
 	| wcsSystem STRING SHARED_ shmType INT incrLoad layerType
-	{fr->loadMosaicShareCmd((Base::WCSMOSAIC), (Coord::CoordSystem)$1, 
+	{fr->loadMosaicShareCmd((Base::WCSMOSAIC), (Coord::CoordSystem)$1,
 	    (Base::ShmType)$4, $5, $2, (Base::LayerType)$7);}
 	| wcsSystem STRING SSHARED_ shmType INT INT incrLoad layerType
-	{fr->loadMosaicSShareCmd((Base::WCSMOSAIC), (Coord::CoordSystem)$1, 
+	{fr->loadMosaicSShareCmd((Base::WCSMOSAIC), (Coord::CoordSystem)$1,
 	    (Base::ShmType)$4, $5, $6, $2, (Base::LayerType)$8);}
 	| wcsSystem STRING SOCKET_ INT  layerType
 	{fr->loadMosaicSocketCmd((Base::WCSMOSAIC), (Coord::CoordSystem)$1,
@@ -1800,16 +1800,16 @@ loadFitsRGBImage: STRING ALLOC_ STRING {fr->loadRGBImageAllocCmd($3, $1);}
 	| STRING VAR_ STRING incrLoad {fr->loadRGBImageVarCmd($3, $1);}
 	;
 
-loadNRRD : STRING ALLOC_ STRING layerType 
+loadNRRD : STRING ALLOC_ STRING layerType
 	{fr->loadNRRDAllocCmd($3, $1, (Base::LayerType)$4);}
-	| STRING CHANNEL_ STRING layerType 
+	| STRING CHANNEL_ STRING layerType
 	{fr->loadNRRDChannelCmd($3, $1, (Base::LayerType)$4);}
 	| STRING MMAP_ layerType {fr->loadNRRDMMapCmd($1, (Base::LayerType)$3);}
 	| STRING SHARED_ shmType INT layerType
 	{fr->loadNRRDShareCmd((Base::ShmType)$3, $4, $1, (Base::LayerType)$5);}
-	| STRING SOCKET_ INT layerType 
+	| STRING SOCKET_ INT layerType
 	{fr->loadNRRDSocketCmd($3, $1, (Base::LayerType)$4);}
-	| STRING VAR_ STRING layerType 
+	| STRING VAR_ STRING layerType
 	{fr->loadNRRDVarCmd($3, $1, (Base::LayerType)$4);}
 	;
 
@@ -1858,7 +1858,7 @@ marker	: CENTROID_ markerCentroid
 	| FONT_ STRING {fr->markerFontCmd($2);}
 
 	| HIGHLITE_ ALL_ {fr->markerHighliteAllCmd();}
-	| HIGHLITE_ ONLY_ numeric numeric 
+	| HIGHLITE_ ONLY_ numeric numeric
 	{fr->markerHighliteOnlyCmd(Vector($3,$4));}
 	| HIGHLITE_ TOGGLE_ numeric numeric
 	{fr->markerHighliteToggleCmd(Vector($3,$4));}
@@ -1877,31 +1877,31 @@ marker	: CENTROID_ markerCentroid
 	| INT ANNULUS_ RADIUS_ STRING coordSystem skyDist
 	{fr->markerAnnulusRadiusCmd($1, $4,(Coord::CoordSystem)$5,(Coord::DistFormat)$6);}
 
-	| INT BOXANNULUS_ RADIUS_ numeric numeric numeric INT 
+	| INT BOXANNULUS_ RADIUS_ numeric numeric numeric INT
 	    coordSystem skyDist
-	{fr->markerBoxAnnulusRadiusCmd($1, Vector($4, $5), 
+	{fr->markerBoxAnnulusRadiusCmd($1, Vector($4, $5),
 	    Vector($6, $6*$5/$4), $7, (Coord::CoordSystem)$8, (Coord::DistFormat)$9);}
 	| INT BOXANNULUS_ RADIUS_ STRING coordSystem skyDist
 	{fr->markerBoxAnnulusRadiusCmd($1,$4,(Coord::CoordSystem)$5,(Coord::DistFormat)$6);}
 
 	| INT BOX_ RADIUS_ numeric numeric coordSystem skyDist
-	{fr->markerBoxRadiusCmd($1, Vector($4,$5), 
+	{fr->markerBoxRadiusCmd($1, Vector($4,$5),
 	    (Coord::CoordSystem)$6, (Coord::DistFormat)$7);}
-	| INT BPANDA_ EDIT_ angle angle INT numeric numeric numeric INT 
+	| INT BPANDA_ EDIT_ angle angle INT numeric numeric numeric INT
 	{fr->markerBpandaEditCmd($1, $4, $5, $6,
 	    Vector($7,$8), Vector($9,$9*$8/$7), $10);}
-	| INT BPANDA_ EDIT_ angle angle INT numeric numeric numeric INT 
+	| INT BPANDA_ EDIT_ angle angle INT numeric numeric numeric INT
 	    internalSystem
 	{fr->markerBpandaEditCmd($1, $4, $5, $6,
 	    Vector($7,$8), Vector($9,$9*$8/$7), $10);}
-	| INT BPANDA_ EDIT_ angle angle INT numeric numeric numeric INT 
+	| INT BPANDA_ EDIT_ angle angle INT numeric numeric numeric INT
 	    coordSystem skyFrame
 	{fr->markerBpandaEditCmd($1, $4, $5, $6,
 	    Vector($7,$8), Vector($9,$9*$8/$7), $10,
 	    (Coord::CoordSystem)$11, (Coord::SkyFrame)$12);}
-	| INT BPANDA_ EDIT_ STRING STRING coordSystem skyFrame 
+	| INT BPANDA_ EDIT_ STRING STRING coordSystem skyFrame
 	    coordSystem skyDist
-	{fr->markerBpandaEditCmd($1, $4, $5, 
+	{fr->markerBpandaEditCmd($1, $4, $5,
 	    (Coord::CoordSystem)$6, (Coord::SkyFrame)$7, (Coord::CoordSystem)$8, (Coord::DistFormat)$9);}
 
 	| INT CALLBACK_ markerCallBack STRING STRING
@@ -1909,7 +1909,7 @@ marker	: CENTROID_ markerCentroid
 	| INT CIRCLE_ RADIUS_ numeric coordSystem skyDist
 	{fr->markerCircleRadiusCmd($1, $4, (Coord::CoordSystem)$5, (Coord::DistFormat)$6);}
 	| INT COLOR_ STRING {fr->markerColorCmd($1,$3);}
-	| INT COMPASS_ ARROW_ yesno yesno 
+	| INT COMPASS_ ARROW_ yesno yesno
 	{fr->markerCompassArrowCmd($1,$4,$5);}
 	| INT COMPASS_ LABEL_ STRING STRING
 	{fr->markerCompassLabelCmd($1,$4,$5);}
@@ -1918,15 +1918,15 @@ marker	: CENTROID_ markerCentroid
 	| INT COMPASS_ SYSTEM_ coordSystem skyFrame
 	{fr->markerCompassSystemCmd($1, (Coord::CoordSystem)$4, (Coord::SkyFrame)$5);}
 	| INT COMPOSITE_ GLOBAL_ yesno {fr->markerCompositeCmd($1,$4);}
-	| INT CPANDA_ EDIT_ angle angle INT numeric numeric INT 
+	| INT CPANDA_ EDIT_ angle angle INT numeric numeric INT
 	{fr->markerCpandaEditCmd($1, $4, $5, $6, $7, $8, $9);}
 	| INT CPANDA_ EDIT_ angle angle INT numeric numeric INT internalSystem
 	{fr->markerCpandaEditCmd($1, $4, $5, $6, $7, $8, $9);}
-	| INT CPANDA_ EDIT_ angle angle INT numeric numeric INT 
+	| INT CPANDA_ EDIT_ angle angle INT numeric numeric INT
 	    coordSystem skyFrame
 	{fr->markerCpandaEditCmd($1, $4, $5, $6, $7, $8, $9,
 	    (Coord::CoordSystem)$10, (Coord::SkyFrame)$11);}
-	| INT CPANDA_ EDIT_ STRING STRING coordSystem skyFrame 
+	| INT CPANDA_ EDIT_ STRING STRING coordSystem skyFrame
 	    coordSystem skyDist
 	{fr->markerCpandaEditCmd($1, $4, $5, (Coord::CoordSystem)$6, (Coord::SkyFrame)$7,
 	    (Coord::CoordSystem)$8, (Coord::DistFormat)$9);}
@@ -1955,20 +1955,20 @@ marker	: CENTROID_ markerCentroid
 	{fr->markerSegmentCreateVertexCmd($1,$5,Vector($6,$7));}
 
 	| INT DELETE_ {fr->markerDeleteCmd($1);}
-	| INT DELETE_ ANNULUS_ INT 
+	| INT DELETE_ ANNULUS_ INT
 	{fr->markerAnnulusDeleteRadiusCmd($1,$4);}
-	| INT DELETE_ BOXANNULUS_ INT 
+	| INT DELETE_ BOXANNULUS_ INT
 	{fr->markerBoxAnnulusDeleteRadiusCmd($1,$4);}
 	| INT DELETE_ BPANDA_ INT {fr->markerBpandaDeleteCmd($1,$4);}
-	| INT DELETE_ ELLIPSEANNULUS_ INT 
+	| INT DELETE_ ELLIPSEANNULUS_ INT
 	{fr->markerEllipseAnnulusDeleteRadiusCmd($1,$4);}
 	| INT DELETE_ CALLBACK_ markerCallBack STRING
 	{fr->markerDeleteCallBackCmd($1,(CallBack::Type)$4,$5);}
 	| INT DELETE_ EPANDA_ INT {fr->markerEpandaDeleteCmd($1,$4);}
 	| INT DELETE_ CPANDA_ INT {fr->markerCpandaDeleteCmd($1,$4);}
-	| INT DELETE_ POLYGON_ VERTEX_ INT 
+	| INT DELETE_ POLYGON_ VERTEX_ INT
 	{fr->markerPolygonDeleteVertexCmd($1,$5);}
-	| INT DELETE_ SEGMENT_ VERTEX_ INT 
+	| INT DELETE_ SEGMENT_ VERTEX_ INT
 	{fr->markerSegmentDeleteVertexCmd($1,$5);}
 	| INT DELETE_ TAG_ {fr->markerDeleteTagCmd($1);}
 	| INT DELETE_ TAG_ STRING {fr->markerDeleteTagCmd($1,$4);}
@@ -1980,26 +1980,26 @@ marker	: CENTROID_ markerCentroid
 	    (Coord::CoordSystem)$6, (Coord::DistFormat)$7);}
 	| INT ELLIPSEANNULUS_ RADIUS_ numeric numeric numeric INT
 	    coordSystem skyDist
-	{fr->markerEllipseAnnulusRadiusCmd($1, Vector($4,$5), 
+	{fr->markerEllipseAnnulusRadiusCmd($1, Vector($4,$5),
 	    Vector($6,$6*$5/$4), $7, (Coord::CoordSystem)$8, (Coord::DistFormat)$9);}
 	| INT ELLIPSEANNULUS_ RADIUS_ STRING coordSystem skyDist
 	{fr->markerEllipseAnnulusRadiusCmd($1, $4,
 	    (Coord::CoordSystem)$5, (Coord::DistFormat)$6);}
-	| INT EPANDA_ EDIT_ angle angle INT numeric numeric numeric INT 
+	| INT EPANDA_ EDIT_ angle angle INT numeric numeric numeric INT
 	{fr->markerEpandaEditCmd($1, $4, $5, $6,
 	    Vector($7,$8), Vector($9,$9*$8/$7), $10);}
-	| INT EPANDA_ EDIT_ angle angle INT numeric numeric numeric INT 
+	| INT EPANDA_ EDIT_ angle angle INT numeric numeric numeric INT
 	    internalSystem
 	{fr->markerEpandaEditCmd($1, $4, $5, $6,
 	    Vector($7,$8), Vector($9,$9*$8/$7), $10);}
-	| INT EPANDA_ EDIT_ angle angle INT numeric numeric numeric INT 
+	| INT EPANDA_ EDIT_ angle angle INT numeric numeric numeric INT
 	    coordSystem skyFrame
 	{fr->markerEpandaEditCmd($1, $4, $5, $6,
 	    Vector($7,$8), Vector($9,$9*$8/$7), $10,
 	    (Coord::CoordSystem)$11, (Coord::SkyFrame)$12);}
-	| INT EPANDA_ EDIT_ STRING STRING coordSystem skyFrame 
+	| INT EPANDA_ EDIT_ STRING STRING coordSystem skyFrame
 	    coordSystem skyDist
-	{fr->markerEpandaEditCmd($1, $4, $5, 
+	{fr->markerEpandaEditCmd($1, $4, $5,
 	    (Coord::CoordSystem)$6, (Coord::SkyFrame)$7,
 	    (Coord::CoordSystem)$8, (Coord::DistFormat)$9);}
 
@@ -2009,14 +2009,14 @@ marker	: CENTROID_ markerCentroid
 
 	| INT LINE_ ARROW_ yesno yesno {fr->markerLineArrowCmd($1,$4,$5);}
 	| INT LINE_ POINT_ coordSystem skyFrame coord coord
-	{fr->markerLineCmd($1, Vector($6), Vector($7), 
+	{fr->markerLineCmd($1, Vector($6), Vector($7),
 	    (Coord::CoordSystem)$4, (Coord::SkyFrame)$5);}
 
-	| INT MOVE_ numeric numeric 
+	| INT MOVE_ numeric numeric
 	{fr->markerMoveCmd($1, Vector($3,$4));}
 	| INT MOVE_ FRONT_ {fr->markerFrontCmd($1);}
 	| INT MOVE_ BACK_ {fr->markerBackCmd($1);}
-	| INT MOVE_ TO_ coordSystem skyFrame coord 
+	| INT MOVE_ TO_ coordSystem skyFrame coord
 	{fr->markerMoveToCmd($1,Vector($6),(Coord::CoordSystem)$4,(Coord::SkyFrame)$5);}
 
 	| INT POLYGON_ RESET_ numeric numeric coordSystem skyDist
@@ -2025,7 +2025,7 @@ marker	: CENTROID_ markerCentroid
 	| INT SEGMENT_ RESET_ numeric numeric coordSystem skyDist
 	{fr->markerSegmentResetCmd($1, Vector($4,$5),
 	    (Coord::CoordSystem)$6, (Coord::DistFormat)$7);}
-	| INT POINT_ SHAPE_ pointShape 
+	| INT POINT_ SHAPE_ pointShape
 	{fr->markerPointShapeCmd($1,(Point::PointShape)$4);}
 	| INT POINT_ SIZE_ INT {fr->markerPointSizeCmd($1,$4);}
 
@@ -2034,7 +2034,7 @@ marker	: CENTROID_ markerCentroid
 	{fr->markerProjectionCmd($1, Vector($5), Vector($6),
 	    (Coord::CoordSystem)$3, (Coord::SkyFrame)$4, $7,
 	    (Coord::CoordSystem)$8, (Coord::DistFormat)$9);}
-	| INT PROPERTY_ markerProperty yesno 
+	| INT PROPERTY_ markerProperty yesno
 	{fr->markerPropertyCmd($1,$3,$4);}
 
 	| INT ROTATE_ BEGIN_ {fr->markerRotateBeginCmd($1);}
@@ -2057,7 +2057,7 @@ marker	: CENTROID_ markerCentroid
 	| INT UNSELECT_ {fr->markerUnselectCmd($1);}
 
 	| INT VECTOR_ ARROW_ yesno {fr->markerVectorArrowCmd($1,$4);}
-	| INT VECTOR_ POINT_ coordSystem skyFrame coord 
+	| INT VECTOR_ POINT_ coordSystem skyFrame coord
 	    coordSystem skyDist numeric angle
 	{fr->markerVectorCmd($1, Vector($6), (Coord::CoordSystem)$4, (Coord::SkyFrame)$5,
 	    $9, (Coord::CoordSystem)$7, (Coord::DistFormat)$8, $10);}
@@ -2074,7 +2074,7 @@ marker	: CENTROID_ markerCentroid
 	| PROPERTY_ markerProperty yesno {fr->markerPropertyCmd($2,$3);}
 	| PROPERTY_ markerProperty yesno numeric numeric
 	{fr->markerPropertyCmd($2,$3,Vector($4,$5));}
-	| ROTATE_ BEGIN_ numeric numeric 
+	| ROTATE_ BEGIN_ numeric numeric
 	{fr->markerRotateBeginCmd(Vector($3,$4));}
 	| ROTATE_ MOTION_ numeric numeric INT
 	{fr->markerRotateMotionCmd(Vector($3,$4),$5);}
@@ -2094,9 +2094,9 @@ marker	: CENTROID_ markerCentroid
 	| STRING MOVE_ numeric numeric {fr->markerMoveCmd($1,Vector($3,$4));}
 	| STRING MOVE_ FRONT_ {fr->markerFrontCmd($1);}
 	| STRING MOVE_ BACK_ {fr->markerBackCmd($1);}
-	| STRING MOVE_ TO_ coordSystem skyFrame coord 
+	| STRING MOVE_ TO_ coordSystem skyFrame coord
 	{fr->markerMoveToCmd($1,Vector($6),(Coord::CoordSystem)$4,(Coord::SkyFrame)$5);}
-	| STRING PROPERTY_ markerProperty yesno 
+	| STRING PROPERTY_ markerProperty yesno
 	{fr->markerPropertyCmd($1,$3,$4);}
 	| STRING SELECT_ {fr->markerSelectCmd($1);}
 	| STRING SELECT_ ONLY_ {fr->markerSelectOnlyCmd($1);}
@@ -2152,16 +2152,16 @@ markerCentroid : /* empty */ {fr->markerCentroidCmd();}
 	}
 	;
 
-markerCreate : 
-	  CIRCLE_ numeric numeric 
-	    numeric 
+markerCreate :
+	  CIRCLE_ numeric numeric
+	    numeric
 	    markerProperties
 	{fr->createCircleCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
 	    $4,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
-	| ELLIPSE_ numeric numeric 
-	    numeric numeric 
+	| ELLIPSE_ numeric numeric
+	    numeric numeric
 	    optangle
 	    markerProperties
 	{fr->createEllipseCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
@@ -2169,47 +2169,47 @@ markerCreate :
             $6,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
-	| BOX_ numeric numeric 
-	    numeric numeric 
-	    optangle 
+	| BOX_ numeric numeric
+	    numeric numeric
+	    optangle
 	    markerProperties
 	{fr->createBoxCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
 	    Vector($4,$5),
             $6,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
-	| POLYGON_ numeric numeric 
-	    numeric numeric 
+	| POLYGON_ numeric numeric
+	    numeric numeric
 	    markerProperties
 	{fr->createPolygonCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
             Vector($4,$5),
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
-	| SEGMENT_ numeric numeric 
-	    numeric numeric 
+	| SEGMENT_ numeric numeric
+	    numeric numeric
 	    markerProperties
 	{fr->createSegmentCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
 	    Vector($4,$5),
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
-	| LINE_ numeric numeric 
-	    numeric numeric 
+	| LINE_ numeric numeric
+	    numeric numeric
 	    markerProperties
 	{fr->createLineCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
 	    fr->mapToRef(Vector($4,$5),Coord::CANVAS),
 	    0, 0,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
-	| VECTOR_ numeric numeric 
-	    numeric numeric 
+	| VECTOR_ numeric numeric
+	    numeric numeric
 	    markerProperties
 	{fr->createVectCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
 	    fr->mapToRef(Vector($4,$5),Coord::CANVAS),
 	    1,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
-	| TEXT_ numeric numeric 
-	    optangle 
+	| TEXT_ numeric numeric
+	    optangle
 	    markerProperties
 	{fr->createTextCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
 	    $4, 1,
@@ -2251,29 +2251,29 @@ markerCreate :
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
 
-	| RULER_ numeric numeric 
-	    numeric numeric 
+	| RULER_ numeric numeric
+	    numeric numeric
 	    coordSystem skyFrame coordSystem skyDist STRING
 	    markerProperties
 	{fr->createRulerCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
 	    fr->mapToRef(Vector($4,$5),Coord::CANVAS),
-            (Coord::CoordSystem)$6, (Coord::SkyFrame)$7, 
+            (Coord::CoordSystem)$6, (Coord::SkyFrame)$7,
             (Coord::CoordSystem)$8, (Coord::DistFormat)$9, $10,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
-	| COMPASS_ numeric numeric 
-	    numeric 
+	| COMPASS_ numeric numeric
+	    numeric
 	    coordSystem skyFrame
 	    markerProperties
-	{fr->createCompassCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS), 
+	{fr->createCompassCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
 	    $4,
 	    "N", "E", 1, 1,
 	    (Coord::CoordSystem)$5, (Coord::SkyFrame)$6,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
-	| PROJECTION_ numeric numeric 
-	    numeric numeric 
-	    numeric 
+	| PROJECTION_ numeric numeric
+	    numeric numeric
+	    numeric
 	    markerProperties
 	{fr->createProjectionCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
 	    fr->mapToRef(Vector($4,$5),Coord::CANVAS),
@@ -2281,26 +2281,26 @@ markerCreate :
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
 
-	| ANNULUS_ numeric numeric 
-	    numeric numeric INT 
+	| ANNULUS_ numeric numeric
+	    numeric numeric INT
 	    markerProperties
 	{fr->createAnnulusCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
 	    $4,$5,$6,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
-	| ELLIPSEANNULUS_ numeric numeric 
-	    numeric numeric numeric INT 
-	    optangle 
+	| ELLIPSEANNULUS_ numeric numeric
+	    numeric numeric numeric INT
+	    optangle
 	    markerProperties
 	{fr->createEllipseAnnulusCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
-	    Vector($4,$5), 
+	    Vector($4,$5),
 	    Vector($6,$6*$4/$5),$7,
 	    $8,
-	    currentColor,currentDash,currentWidth,currentFont, 
+	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
-	| BOXANNULUS_ numeric numeric 
-	    numeric numeric numeric INT 
-	    optangle 
+	| BOXANNULUS_ numeric numeric
+	    numeric numeric numeric INT
+	    optangle
 	    markerProperties
 	{fr->createBoxAnnulusCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
 	    Vector($4,$5),Vector($6,$6*$4/$5),$7,
@@ -2308,19 +2308,19 @@ markerCreate :
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
 
-	| CPANDA_ numeric numeric 
+	| CPANDA_ numeric numeric
 	    angle angle INT
-	    numeric numeric INT 
+	    numeric numeric INT
 	    markerProperties
 	{fr->createCpandaCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
 	    $4,$5,$6,
 	    $7,$8,$9,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
-	| EPANDA_ numeric numeric 
+	| EPANDA_ numeric numeric
 	    angle angle INT
-	    numeric numeric numeric INT 
-	    optangle 
+	    numeric numeric numeric INT
+	    optangle
 	    markerProperties
 	{fr->createEpandaCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
 	    $4,$5,$6,
@@ -2329,10 +2329,10 @@ markerCreate :
 	    $11,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
-	| BPANDA_ numeric numeric 
+	| BPANDA_ numeric numeric
 	    angle angle INT
-	    numeric numeric numeric INT 
-	    optangle 
+	    numeric numeric numeric INT
+	    optangle
 	    markerProperties
 	{fr->createBpandaCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
 	    $4,$5,$6,
@@ -2354,8 +2354,8 @@ markerCreateTemplate : STRING numeric numeric
 	{fr->createTemplateCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS), $1);}
 	| VAR_ STRING numeric numeric
 	{fr->createTemplateVarCmd(fr->mapToRef(Vector($3,$4),Coord::CANVAS), $2);}
-	| numeric numeric VAR_ STRING 
-	  { 
+	| numeric numeric VAR_ STRING
+	  {
 	    // backward compatibility
 	    fr->createTemplateVarCmd(fr->mapToRef(Vector($1,$2),Coord::CANVAS), $4);
 	  }
@@ -2371,9 +2371,9 @@ markerDelete :	{fr->markerDeleteAllCmd(0);}
         }
         ;
 
-markerEdit : BEGIN_ numeric numeric INT 
+markerEdit : BEGIN_ numeric numeric INT
 	{fr->markerEditBeginCmd(Vector($2,$3),$4);}
-	| MOTION_ numeric numeric INT 
+	| MOTION_ numeric numeric INT
 	{fr->markerEditMotionCmd(Vector($2,$3),$4);}
 	| END_ {fr->markerEditEndCmd();}
 	;
@@ -2426,8 +2426,8 @@ markerGet : CENTROID_ markerGetCentroid
 	| INT BPANDA_ RADIUS_ coordSystem skyDist
 	{fr->getMarkerBpandaRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
 
-	| INT CENTER_ coordSystem skyFrame skyFormat 
-	{fr->getMarkerCenterCmd($1, (Coord::CoordSystem)$3, (Coord::SkyFrame)$4, 
+	| INT CENTER_ coordSystem skyFrame skyFormat
+	{fr->getMarkerCenterCmd($1, (Coord::CoordSystem)$3, (Coord::SkyFrame)$4,
 	    (Coord::SkyFormat)$5);}
 	| INT CIRCLE_ RADIUS_ coordSystem skyDist
 	{fr->getMarkerCircleRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
@@ -2447,7 +2447,7 @@ markerGet : CENTROID_ markerGetCentroid
 	| INT ELLIPSE_ RADIUS_ coordSystem skyDist
 	{fr->getMarkerEllipseRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
 	| INT ELLIPSEANNULUS_ RADIUS_ coordSystem skyDist
-	{fr->getMarkerEllipseAnnulusRadiusCmd($1, (Coord::CoordSystem)$4, 
+	{fr->getMarkerEllipseAnnulusRadiusCmd($1, (Coord::CoordSystem)$4,
 	    (Coord::DistFormat)$5);}
 	| INT EPANDA_ ANGLE_ {fr->getMarkerEpandaAnglesCmd($1);}
 	| INT EPANDA_ ANGLE_ internalSystem {fr->getMarkerEpandaAnglesCmd($1);}
@@ -2474,7 +2474,7 @@ markerGet : CENTROID_ markerGetCentroid
 	{fr->getMarkerProjectionPointsCmd($1, (Coord::CoordSystem)$4,
 	    (Coord::SkyFrame)$5, (Coord::SkyFormat)$6);}
 	| INT PROJECTION_ LENGTH_ coordSystem skyDist
-	{fr->getMarkerProjectionLengthCmd($1, (Coord::CoordSystem)$4, 
+	{fr->getMarkerProjectionLengthCmd($1, (Coord::CoordSystem)$4,
 	    (Coord::DistFormat)$5);}
 	| INT PROJECTION_ THICK_ coordSystem skyDist
 	{fr->getMarkerProjectionWidthCmd($1,(Coord::CoordSystem)$4,(Coord::DistFormat)$5);}
@@ -2574,13 +2574,13 @@ markerLayer : /* empty */ {fr->markerLayerCmd(Base::USER);}
 	| FOOTPRINT_  {fr->markerLayerCmd(Base::FOOTPRINT);}
 	;
 
-markerList : markerFormat coordSystem skyFrame skyFormat 
+markerList : markerFormat coordSystem skyFrame skyFormat
 	    yesno markerQuery markerTags
 	{fr->markerListCmd((Base::MarkerFormat)$1,
 	    (Coord::CoordSystem)$2, (Coord::SkyFrame)$3, (Coord::SkyFormat)$4, $5, 0, propQMask, propQValue, taglist);}
-	| SELECT_ markerFormat coordSystem skyFrame skyFormat 
+	| SELECT_ markerFormat coordSystem skyFrame skyFormat
 	    yesno markerQuery markerTags
-	{fr->markerListCmd((Base::MarkerFormat)$2, 
+	{fr->markerListCmd((Base::MarkerFormat)$2,
 	    (Coord::CoordSystem)$3, (Coord::SkyFrame)$4, (Coord::SkyFormat)$5, $6, 1, propQMask, propQValue, taglist);}
 	;
 
@@ -2606,7 +2606,7 @@ markerMoveSelected : numeric numeric {fr->markerMoveCmd(Vector($1,$2));}
 	| BEGIN_ numeric numeric {fr->markerMoveBeginCmd(Vector($2,$3));}
 	| MOTION_ numeric numeric {fr->markerMoveMotionCmd(Vector($2,$3));}
 	| END_ {fr->markerMoveEndCmd();}
-	| TO_ coordSystem skyFrame coord 
+	| TO_ coordSystem skyFrame coord
 	{fr->markerMoveToCmd(Vector($4), (Coord::CoordSystem)$2, (Coord::SkyFrame)$3);}
 	;
 
@@ -2669,7 +2669,7 @@ queries : queries query
 	| query
 	;
 
-query	: markerProperty '=' yesno 
+query	: markerProperty '=' yesno
 	  {propQMask |= $1; setProps(&propQValue,$1,$3);}
 	;
 
@@ -2736,10 +2736,10 @@ orient	: 'X' {fr->orientCmd(Coord::XX);}
 	| NONE_ {fr->orientCmd(Coord::NORMAL);}
 	;
 
-pan	: numeric numeric numeric numeric 
+pan	: numeric numeric numeric numeric
 	  {fr->panCmd(Vector($1,$2),Vector($3,$4));}
 	| numeric numeric {fr->panCmd(Vector($1,$2));}
-	| internalSystem numeric numeric 
+	| internalSystem numeric numeric
 	{
 	  // backward compatibility
 	  fr->panCmd(Vector($2,$3));
@@ -2753,7 +2753,7 @@ pan	: numeric numeric numeric numeric
 	;
 
 panTo	: numeric numeric {fr->panToCmd(Vector($1,$2));}
-	| internalSystem numeric numeric 
+	| internalSystem numeric numeric
 	{
 	  // backward compatibility
 	  fr->panToCmd(Vector($2,$3));
@@ -2768,7 +2768,7 @@ panMotion : BEGIN_ numeric numeric {fr->panBeginCmd(Vector($2,$3));}
 	;
 
 panner	: yesno {fr->pannerCmd($1);}
-	| WCS_ wcsSystem skyFrame 
+	| WCS_ wcsSystem skyFrame
 	{
 	  // backward compatibility
 	  fr->pannerCmd((Coord::CoordSystem)$2,(Coord::SkyFrame)$3);
@@ -2777,7 +2777,7 @@ panner	: yesno {fr->pannerCmd($1);}
 	| UPDATE_ {fr->updatePannerCmd();}
 	;
 
-postscript : COLORSPACE_ pscolorspace 
+postscript : COLORSPACE_ pscolorspace
 	{fr->psColorSpaceCmd((PSColorSpace)$2);}
 	| LEVEL_ INT {fr->psLevelCmd($2);}
 	| RESOLUTION_ INT {fr->psResolutionCmd($2);}
@@ -2804,15 +2804,15 @@ region	: HIGHLITE_ regionHighlite
 	| SELECT_ regionSelect
 	;
 
-regionHighlite : BEGIN_ numeric numeric 
+regionHighlite : BEGIN_ numeric numeric
 	{fr->regionHighliteBeginCmd(Vector($2,$3));}
-	| MOTION_ numeric numeric 
+	| MOTION_ numeric numeric
 	{fr->regionHighliteMotionCmd(Vector($2,$3));}
 	| END_ {fr->regionHighliteEndCmd();}
 	| SHIFT_ END_ {fr->regionHighliteShiftEndCmd();}
 	;
 
-regionSelect : BEGIN_ numeric numeric 
+regionSelect : BEGIN_ numeric numeric
 	{fr->regionSelectBeginCmd(Vector($2,$3));}
 	| MOTION_ numeric numeric {fr->regionSelectMotionCmd(Vector($2,$3));}
 	| END_ {fr->regionSelectEndCmd();}
@@ -2838,15 +2838,15 @@ multicolor : SYSTEM_ coordSystem
 	;
 
 hls	: CHANNEL_ STRING {fr->setHLSChannelCmd($2);}
-	| CHANNEL_ HUE_ {fr->setHLSChannelCmd("hue");}
-	| CHANNEL_ SATURATION_ {fr->setHLSChannelCmd("saturation");}
+	| CHANNEL_ HUE_ {fr->setHLSChannelCmd($2);}
+	| CHANNEL_ SATURATION_ {fr->setHLSChannelCmd($2);}
 	| SYSTEM_ coordSystem {fr->setHLSSystemCmd((Coord::CoordSystem)$2);}
 	| VIEW_ INT INT INT {fr->setHLSViewCmd($2,$3,$4);}
 	;
 
 hsv	: CHANNEL_ STRING {fr->setHSVChannelCmd($2);}
-	| CHANNEL_ HUE_ {fr->setHSVChannelCmd("hue");}
-	| CHANNEL_ SATURATION_ {fr->setHSVChannelCmd("saturation");}
+	| CHANNEL_ HUE_ {fr->setHSVChannelCmd($2);}
+	| CHANNEL_ SATURATION_ {fr->setHSVChannelCmd($2);}
 	| CHANNEL_ VALUE_ {fr->setHSVChannelCmd("value");}
 	| SYSTEM_ coordSystem {fr->setHSVSystemCmd((Coord::CoordSystem)$2);}
 	| VIEW_ INT INT INT {fr->setHSVViewCmd($2,$3,$4);}
@@ -2871,11 +2871,11 @@ save	: ARRAY_ saveArray
 	| PHOTO_ STRING {fr->savePhotoCmd($2);}
 	;
 
-saveArray : FILE_ STRING endian 
+saveArray : FILE_ STRING endian
 	{fr->saveArrayFileCmd($2, (FitsFile::ArchType)$3);}
-	| CHANNEL_ STRING endian 
+	| CHANNEL_ STRING endian
 	{fr->saveArrayChannelCmd($2, (FitsFile::ArchType)$3);}
-	| SOCKET_ INT endian 
+	| SOCKET_ INT endian
 	{fr->saveArraySocketCmd($2, (FitsFile::ArchType)$3);}
         | RGB_ CUBE_ saveArrayRGBCube
         | HLS_ CUBE_ saveArrayHLSCube
@@ -2917,7 +2917,7 @@ saveFitsExtCube : FILE_ STRING {fr->saveFitsExtCubeFileCmd($2);}
 	| SOCKET_ INT {fr->saveFitsExtCubeSocketCmd($2);}
 	;
 
-saveFitsMosaic : IMAGE_ saveFitsMosaicImage 
+saveFitsMosaic : IMAGE_ saveFitsMosaicImage
         | FILE_ STRING INT {fr->saveFitsMosaicFileCmd($2,$3);}
         | CHANNEL_ STRING INT {fr->saveFitsMosaicChannelCmd($2,$3);}
         | SOCKET_ INT INT {fr->saveFitsMosaicSocketCmd($2,$3);}
@@ -2928,11 +2928,11 @@ saveFitsMosaicImage : FILE_ STRING {fr->saveFitsMosaicImageFileCmd($2);}
         | SOCKET_ INT {fr->saveFitsMosaicImageSocketCmd($2);}
         ;
 
-saveArrayRGBCube : FILE_ STRING endian 
+saveArrayRGBCube : FILE_ STRING endian
 	{fr->saveRGBArrayCubeFileCmd($2, (FitsFile::ArchType)$3);}
-	| CHANNEL_ STRING endian 
+	| CHANNEL_ STRING endian
 	{fr->saveRGBArrayCubeChannelCmd($2, (FitsFile::ArchType)$3);}
-	| SOCKET_ INT endian 
+	| SOCKET_ INT endian
 	{fr->saveRGBArrayCubeSocketCmd($2, (FitsFile::ArchType)$3);}
         ;
 
@@ -2946,11 +2946,11 @@ saveFitsRGBCube : FILE_ STRING {fr->saveRGBCubeFileCmd($2);}
 	| SOCKET_ INT {fr->saveRGBCubeSocketCmd($2);}
 	;
 
-saveArrayHLSCube : FILE_ STRING endian 
+saveArrayHLSCube : FILE_ STRING endian
 	{fr->saveRGBArrayCubeFileCmd($2, (FitsFile::ArchType)$3);}
-	| CHANNEL_ STRING endian 
+	| CHANNEL_ STRING endian
 	{fr->saveRGBArrayCubeChannelCmd($2, (FitsFile::ArchType)$3);}
-	| SOCKET_ INT endian 
+	| SOCKET_ INT endian
 	{fr->saveRGBArrayCubeSocketCmd($2, (FitsFile::ArchType)$3);}
         ;
 
@@ -2964,11 +2964,11 @@ saveFitsHLSCube : FILE_ STRING {fr->saveRGBCubeFileCmd($2);}
 	| SOCKET_ INT {fr->saveRGBCubeSocketCmd($2);}
 	;
 
-saveArrayHSVCube : FILE_ STRING endian 
+saveArrayHSVCube : FILE_ STRING endian
 	{fr->saveRGBArrayCubeFileCmd($2, (FitsFile::ArchType)$3);}
-	| CHANNEL_ STRING endian 
+	| CHANNEL_ STRING endian
 	{fr->saveRGBArrayCubeChannelCmd($2, (FitsFile::ArchType)$3);}
-	| SOCKET_ INT endian 
+	| SOCKET_ INT endian
 	{fr->saveRGBArrayCubeSocketCmd($2, (FitsFile::ArchType)$3);}
         ;
 
@@ -2987,15 +2987,15 @@ saveFitsResample : FILE_ STRING {fr->saveFitsResampleFileCmd($2);}
 	| SOCKET_ INT {fr->saveFitsResampleSocketCmd($2);}
 	;
 
-saveNRRD : FILE_ STRING endian 
+saveNRRD : FILE_ STRING endian
 	  {fr->saveNRRDFileCmd($2, (FitsFile::ArchType)$3);}
-	| CHANNEL_ STRING endian 
+	| CHANNEL_ STRING endian
 	  {fr->saveNRRDChannelCmd($2, (FitsFile::ArchType)$3);}
-	| SOCKET_ INT endian 
+	| SOCKET_ INT endian
 	  {fr->saveNRRDSocketCmd($2, (FitsFile::ArchType)$3);}
 	;
 
-saveENVI : FILE_ STRING STRING endian 
+saveENVI : FILE_ STRING STRING endian
         {fr->saveENVIFileCmd($2, $3, (FitsFile::ArchType)$4);}
         ;
 
@@ -3035,7 +3035,7 @@ warp	: numeric numeric {fr->warpCmd(Vector($1,$2));}
 	| TO_ numeric numeric {fr->warpToCmd(Vector($2,$3));}
 	;
 
-wcs	: wcsSystem skyFrame skyFormat 
+wcs	: wcsSystem skyFrame skyFormat
 	{fr->wcsCmd((Coord::CoordSystem)$1, (Coord::SkyFrame)$2, (Coord::SkyFormat)$3);}
 	| ALIGN_ wcsAlign
 	| RESET_ INT {fr->wcsResetCmd($2);}
@@ -3054,7 +3054,7 @@ wcsReplace : INT INT {fr->wcsReplaceCmd($1,$2);}
 	;
 
 wcsAlign : INT {fr->wcsAlignCmd($1);}
-	|  INT wcsSystem skyFrame 
+	|  INT wcsSystem skyFrame
 	{
 	  // used by backup
 	  fr->wcsAlignCmd($1, (Coord::CoordSystem)$2, (Coord::SkyFrame)$3);

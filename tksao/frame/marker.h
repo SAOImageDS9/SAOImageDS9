@@ -156,6 +156,7 @@ protected:
   void listPre(ostream&, Coord::CoordSystem, Coord::SkyFrame, 
 	       FitsImage*, int, int);
   virtual void listPost(ostream&, int, int);
+  const char* listConjunction(int);
 
   void listCiaoPre(ostream&);
   void listCiaoPost(ostream&, int);
@@ -234,6 +235,7 @@ protected:
 
   // assume Coord::CANVAS
   virtual int isIn(const Vector& vv) {return bbox.isIn(vv);}
+  virtual int hasArea() {return 0;}
 
   virtual int isIn(const Vector& vv, Coord::InternalSystem sys);
   virtual int isIn(const Vector& vv, Coord::InternalSystem sys, int nn)

@@ -45,6 +45,7 @@
 %token GROUPS_
 %token INCLUDE_
 %token INVERT_
+%token INTERSECTION_
 %token ITERATION_
 %token LAST_
 %token LIST_
@@ -75,6 +76,7 @@
 %token SYSTEM_
 %token TEMPLATE_
 %token UPDATE_
+%token UNION_
 %token WIDTH_
 
 %token DS9_
@@ -199,6 +201,8 @@ region : {RegionCmdLoad}
  | GROUP_ group
 
  | COMPOSITE_ {CompositeCreate}
+ | COMPOSITE_ UNION_ {CompositeCreate 0}
+ | COMPOSITE_ INTERSECTION_ {CompositeCreate 1}
  | DISSOLVE_ {CompositeDelete}
 
  | TEMPLATE_ template

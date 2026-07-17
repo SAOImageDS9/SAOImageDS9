@@ -2033,6 +2033,7 @@ Example:<br>
 $ds9 -raise<br></tt>
 <p><b><a name="region" id="region"></a>region</b></p>
 <p>Controls regions in the current frame.</p>
+<p>The <tt>composite</tt> command combines the currently selected regions into a composite region. The default operation is <tt>union</tt>; specify <tt>intersection</tt> to create an intersection composite. The <tt>dissolve</tt> command separates a selected composite into its component regions.</p>
 <tt>Syntax:<br>
 -region [&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [load [all] &lt;filename&gt;]<br>
@@ -2066,7 +2067,7 @@ $ds9 -raise<br></tt>
 &nbsp;&nbsp;&nbsp; [include|exclude|source|background]<br>
 &nbsp;&nbsp;&nbsp; [command &lt;marker command&gt;]<br>
 &nbsp;&nbsp;&nbsp; [analysis histogram|panda|plot2d|plot3d|radial|stats [open|close|save]]<br>
-&nbsp;&nbsp;&nbsp; [composite]<br>
+&nbsp;&nbsp;&nbsp; [composite [union|intersection]]<br>
 &nbsp;&nbsp;&nbsp; [dissolve]<br>
 &nbsp;&nbsp;&nbsp; [template &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [template &lt;filename&gt; at &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt; &lt;skyframe&gt;]<br>
@@ -2141,6 +2142,8 @@ $ds9 -region analysis stats
 $ds9 -region analysis stats close
 $ds9 -region analysis histogram save
 $ds9 -region composite<br>
+$ds9 -region composite union<br>
+$ds9 -region composite intersection<br>
 $ds9 -region dissolve<br>
 $ds9 -region template foo.tpl<br>
 $ds9 -region template foo.tpl at 13:29:55.92 +47:12:48.02 fk5<br>

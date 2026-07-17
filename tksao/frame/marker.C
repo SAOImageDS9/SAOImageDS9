@@ -1318,16 +1318,21 @@ void Marker::listPost(ostream& str, int conj, int strip)
   // no props for semicolons
   if (!strip) {
     if (conj)
-      str << " ||";
+      str << ' ' << listConjunction(conj);
 
     listProperties(str,1);
   }
   else {
     if (conj)
-      str << "||";
+      str << listConjunction(conj);
     else
       str << ';';
   }
+}
+
+const char* Marker::listConjunction(int conj)
+{
+  return conj == 2 ? "&&" : "||";
 }
 
 void Marker::listProperties(ostream& str, int hash)
@@ -1832,4 +1837,3 @@ void Marker::setComposite(const char* clr, int w, int h)
   color = parent->getColor(colorName);
   highlited = h;
 }
-

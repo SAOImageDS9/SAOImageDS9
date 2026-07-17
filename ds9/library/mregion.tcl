@@ -140,8 +140,10 @@ proc RegionMainMenu {} {
 	-variable marker(shape) -value {boxcircle point}
 
     ThemeMenu $ds9(mb).region.composite
-    $ds9(mb).region.composite add command -label [msgcat::mc {Create}] \
-	-command CompositeCreate
+    $ds9(mb).region.composite add command -label [msgcat::mc {Create Union}] \
+	-command {CompositeCreate 0}
+    $ds9(mb).region.composite add command -label [msgcat::mc {Create Intersection}] \
+	-command {CompositeCreate 1}
     $ds9(mb).region.composite add command -label [msgcat::mc {Dissolve}] \
 	-command CompositeDelete
 
@@ -815,7 +817,7 @@ proc CreateButtonsRegion {} {
 	marker shape bpanda {}
 
     ButtonButton $ds9(buttons).region.create \
-	[string tolower [msgcat::mc {Composite}]] CompositeCreate
+	[string tolower [msgcat::mc {Union}]] {CompositeCreate 0}
     ButtonButton $ds9(buttons).region.dissolve \
 	[string tolower [msgcat::mc {Dissolve}]] CompositeDelete
 

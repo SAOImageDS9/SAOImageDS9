@@ -62,6 +62,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 
 %type <real> numeric
 %type <integer> yesno
+%type <integer> compositeOperation
 
 %type <real> angle
 %type <real> optangle
@@ -1865,6 +1866,8 @@ marker	: CENTROID_ markerCentroid
 	| INT COMPASS_ SYSTEM_ coordSystem skyFrame
 	{fr->markerCompassSystemCmd($1, (Coord::CoordSystem)$4, (Coord::SkyFrame)$5);}
 	| INT COMPOSITE_ GLOBAL_ yesno {fr->markerCompositeCmd($1,$4);}
+	| INT COMPOSITE_ TYPE_ STRING
+	{fr->markerCompositeOperationCmd($1,$4);}
 	| INT CPANDA_ EDIT_ angle angle INT numeric numeric INT 
 	{fr->markerCpandaEditCmd($1, $4, $5, $6, $7, $8, $9);}
 	| INT CPANDA_ EDIT_ angle angle INT numeric numeric INT internalSystem
@@ -2289,13 +2292,24 @@ markerCreate :
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
 
-	| COMPOSITE_ markerProperties
+	| COMPOSITE_ compositeOperation markerProperties
 	{fr->createCompositeCmd(
+	    $2,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
 
 	| TEMPLATE_ markerCreateTemplate
 	;
+
+compositeOperation : /* empty */ {$$=0;}
+	| INT
+	{
+	  if ($1 < 0 || $1 > 1) {
+	    fr->error("composite operation must be 0 (union) or 1 (intersection)");
+	    YYERROR;
+	  }
+	  $$=$1;
+	}
 
 markerCreateTemplate : STRING numeric numeric
 	{fr->createTemplateCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS), $1);}
@@ -2385,6 +2399,7 @@ markerGet : CENTROID_ markerGetCentroid
 	{fr->getMarkerCompassRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
 	| INT COMPASS_ SYSTEM_ {fr->getMarkerCompassSystemCmd($1);}
 	| INT COMPOSITE_ GLOBAL_ {fr->getMarkerCompositeCmd($1);}
+	| INT COMPOSITE_ TYPE_ {fr->getMarkerCompositeOperationCmd($1);}
 	| INT CPANDA_ ANGLE_ {fr->getMarkerCpandaAnglesCmd($1);}
 	| INT CPANDA_ ANGLE_ internalSystem {fr->getMarkerCpandaAnglesCmd($1);}
 	| INT CPANDA_ ANGLE_ coordSystem skyFrame

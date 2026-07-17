@@ -197,7 +197,7 @@ void Line::listPost(ostream& str, int conj, int strip)
   // no props for semicolons
   if (!strip) {
     if (conj)
-      str << " ||";
+      str << ' ' << listConjunction(conj);
 
     str << " # line=" << p1Arrow << ' ' << p2Arrow;
 
@@ -205,7 +205,7 @@ void Line::listPost(ostream& str, int conj, int strip)
   }
   else {
     if (conj)
-      str << "||";
+      str << listConjunction(conj);
     else
       str << ';';
   }

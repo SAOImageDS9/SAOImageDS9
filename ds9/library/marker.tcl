@@ -1442,12 +1442,12 @@ proc MarkerPaste {} {
     UpdateGroupDialog
 }
 
-proc CompositeCreate {} {
+proc CompositeCreate {{operation 0}} {
     global current
     global marker
 
     if {$current(frame) != {}} {
-	set cmd "$current(frame) marker create composite"
+	set cmd "$current(frame) marker create composite $operation"
 	append cmd " color = $marker(color)"
 	append cmd " width = $marker(width)"
 	append cmd " font = \{\"$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\"\}"

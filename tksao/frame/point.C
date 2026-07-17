@@ -688,7 +688,7 @@ void Point::listPost(ostream& str, int conj, int strip)
   // no props for semicolons
   if (!strip) {
     if (conj)
-      str << " ||";
+      str << ' ' << listConjunction(conj);
 
     str << " # point=" << shapestr_;
 
@@ -698,7 +698,7 @@ void Point::listPost(ostream& str, int conj, int strip)
   }
   else {
     if (conj)
-      str << "||";
+      str << listConjunction(conj);
     else
       str << ';';
   }

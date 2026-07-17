@@ -4,6 +4,7 @@
 
 #include "util.h"
 #include "context.h"
+#include "composite.h"
 #include "framebase.h"
 #include "framergb.h"
 #include "fitsimage.h"
@@ -57,10 +58,18 @@ void Base::savePixelMask(OutFitsStream& str)
 	continue;
 
       const short value = include ? (short)mk->getId() : 0;
+      Composite* composite = !strncmp(mk->getType(),"composite",9) ?
+	(Composite*)mk : NULL;
+      List<Marker> compositeMembers;
+      if (composite)
+	composite->copyRegionMembers(compositeMembers);
       for (int jj=0; jj<height; jj++) {
 	for (int ii=0; ii<width; ii++) {
 	  Vector pixel = (Vector(ii,jj) + Vector(.5,.5)) * ptr->dataToRef;
-	  if (mk->isIn(pixel, Coord::REF))
+	  Vector canvas = pixel*refToCanvas;
+	  int inside = composite ?
+	    composite->isInRegion(canvas,compositeMembers) : mk->isIn(canvas);
+	  if (inside)
 	    mask[size_t(jj)*width+ii] = value;
 	}
       }

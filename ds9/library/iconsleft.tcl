@@ -410,8 +410,8 @@ proc CreateIconsLeftMarkerComposite {} {
 
     set mb $ds9(icons,left)
 
-    ttk::button $mb.composite -takefocus 0 -command CompositeCreate
-    tooltip::tooltip $mb.composite [msgcat::mc {Create Composite Region}]
+    ttk::button $mb.composite -takefocus 0 -command {CompositeCreate 0}
+    tooltip::tooltip $mb.composite [msgcat::mc {Create Union Composite Region}]
 
     ttk::button $mb.dissolve -takefocus 0 -command CompositeDelete
     tooltip::tooltip $mb.dissolve [msgcat::mc {Dissolve Composite Region}]

@@ -220,13 +220,13 @@ void Circle::listPost(ostream& str, int conj, int strip)
   // no props for semicolons
   if (!strip) {
     if (conj)
-      str << " ||";
+      str << ' ' << listConjunction(conj);
 
     listProperties(str, 1);
   }
   else {
     if (conj)
-      str << "||";
+      str << listConjunction(conj);
     else
       str << ';';
   }
@@ -351,4 +351,3 @@ void Circle::setComposite(const Matrix& mx, double aa)
   center *= mx;
   updateBBox();
 }
-

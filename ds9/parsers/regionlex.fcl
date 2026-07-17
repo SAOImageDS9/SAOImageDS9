@@ -40,6 +40,7 @@ group	    {return $GROUP_}
 groups	    {return $GROUPS_}
 include	    {return $INCLUDE_}
 invert	    {return $INVERT_}
+intersection {return $INTERSECTION_}
 iteration   {return $ITERATION_}
 last	    {return $LAST_}
 list	    {return $LIST_}
@@ -70,6 +71,7 @@ strip	    {return $STRIP_}
 system	    {return $SYSTEM_}
 template    {return $TEMPLATE_}
 update	    {return $UPDATE_}
+union	    {return $UNION_}
 width	    {return $WIDTH_}
 
 ds9	    {return $DS9_}

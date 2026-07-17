@@ -16,6 +16,7 @@ proc CompositeDialog {varname} {
 
     # variables
     set var(global) [$var(frame) get marker $var(id) composite global]
+    set var(operation) [$var(frame) get marker $var(id) composite type]
 
     # procs
     set var(proc,apply) CompositeApply
@@ -46,9 +47,19 @@ proc CompositeDialog {varname} {
     ttk::checkbutton $f.global -variable ${varname}(global) \
 	-command "CompositeGlobal $varname"
 
+    # Operation
+    ttk::label $f.toperation -text [msgcat::mc {Logic}]
+    ttk::radiobutton $f.union -text [msgcat::mc {Union}] \
+	-variable ${varname}(operation) -value union \
+	-command "CompositeOperation $varname"
+    ttk::radiobutton $f.intersection -text [msgcat::mc {Intersection}] \
+	-variable ${varname}(operation) -value intersection \
+	-command "CompositeOperation $varname"
+
     grid $f.tangle $f.angle x $f.uangle -padx 2 -pady 2 -sticky w
     grid $f.tcomp $f.comp x $f.ucomp -padx 2 -pady 2 -sticky w
     grid $f.tglobal $f.global -padx 2 -pady 2 -sticky w
+    grid $f.toperation $f.union $f.intersection -padx 2 -pady 2 -sticky w
 
     CompositeCompAngle $varname
 }
@@ -102,6 +113,13 @@ proc CompositeGlobal {varname} {
     global $varname
 
     $var(frame) marker $var(id) composite global $var(global)
+}
+
+proc CompositeOperation {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    $var(frame) marker $var(id) composite type $var(operation)
 }
 
 # callbacks

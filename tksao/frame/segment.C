@@ -149,7 +149,7 @@ void Segment::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     listBase(ptr, str, sys, sky, format);
 
     if (conj)
-      str << " ||";
+      str << ' ' << listConjunction(conj);
     listProperties(str, 0);
   }
 }
@@ -175,4 +175,3 @@ void Segment::listXML(ostream& str, Coord::CoordSystem sys,
   XMLRowProps(ptr,sys);
   XMLRowEnd(str);
 }
-

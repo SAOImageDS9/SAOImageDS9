@@ -16,11 +16,21 @@ class Composite : public Marker {
   List<Marker> members;
   int global;
   Operation operation;
+  int showArea;
 
   void renderX(Drawable, Coord::InternalSystem, RenderMode) {}
   void renderPS(PSColorSpace mode) {}
 #ifdef __WIN32
   void renderWIN32() {}
+#endif
+
+  void renderXArea(Drawable);
+  void renderXAreaLine(Drawable, double);
+  void renderPSArea(PSColorSpace);
+  void renderPSAreaLine(double);
+#ifdef __WIN32
+  void renderWIN32Area();
+  void renderWIN32AreaLine(double);
 #endif
 
 protected:
@@ -56,6 +66,8 @@ public:
   int getGlobal() {return global;}
   Operation getOperation() {return operation;}
   void setOperation(Operation op) {operation = op;}
+  void setShowArea(int w) {showArea = w ? 1 : 0;}
+  int getShowArea() {return showArea;}
 
   void list(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, int, int);
   void listXML(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat) {}

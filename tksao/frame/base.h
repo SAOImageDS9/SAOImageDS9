@@ -1287,6 +1287,7 @@ public:
   void getMarkerCompassSystemCmd(int);
   void getMarkerCompositeCmd(int);
   void getMarkerCompositeOperationCmd(int);
+  void getMarkerCompositeAreaCmd(int);
   void getMarkerCpandaAnglesCmd(int);
   void getMarkerCpandaAnglesCmd(int, Coord::CoordSystem, Coord::SkyFrame);
   void getMarkerCpandaRadiusCmd(int, Coord::CoordSystem, Coord::DistFormat);
@@ -1408,6 +1409,7 @@ public:
   void markerCompassSystemCmd(int, Coord::CoordSystem, Coord::SkyFrame);
   void markerCompositeCmd(int, int);
   void markerCompositeOperationCmd(int, const char*);
+  void markerCompositeAreaCmd(int, int);
   void markerCompositeDeleteCmd();
   void markerCommandCmd(MarkerFormat, const char*);
   void markerCommandVarCmd(MarkerFormat, const char*);

@@ -5,11 +5,19 @@
 #include "composite.h"
 #include "fitsimage.h"
 
+#ifdef __WIN32
+#include <win32lib.h>
+#endif
+
+static const double compositeAreaSpacing = 8;
+static const double compositeAreaStep = 4;
+
 Composite::Composite(const Composite& a) : Marker(a) 
 {
   members = a.members;
   global = a.global;
   operation = a.operation;
+  showArea = a.showArea;
 }
 
 Composite::Composite(Base* p, const Vector& ctr, 
@@ -24,6 +32,7 @@ Composite::Composite(Base* p, const Vector& ctr,
 
   global = gl;
   operation = op;
+  showArea = 0;
 
   handle = new Vector[4];
   numHandle = 4;
@@ -34,6 +43,9 @@ Composite::Composite(Base* p, const Vector& ctr,
 void Composite::x11(Drawable drawable, Coord::InternalSystem sys,
 		    int tt, HandleMode hh)
 {
+  if (showArea && renderMode == Marker::SRC)
+    renderXArea(drawable);
+
   if (hh==HANDLES && renderMode != Marker::XOR)
     renderXHandles(drawable);
   if (tt)
@@ -54,6 +66,9 @@ void Composite::x11(Drawable drawable, Coord::InternalSystem sys,
 
 void Composite::ps(PSColorSpace mode, int tt)
 {
+  if (showArea)
+    renderPSArea(mode);
+
   if (tt)
     renderPSText(mode);
 
@@ -72,6 +87,9 @@ void Composite::ps(PSColorSpace mode, int tt)
 #ifdef __WIN32
 void Composite::win32(int tt)
 {
+  if (showArea)
+    renderWIN32Area();
+
   if (tt)
     renderWIN32Text();
 
@@ -84,6 +102,155 @@ void Composite::win32(int tt)
     m->win32(tt);
     delete m;
     mk=mk->next();
+  }
+}
+#endif
+
+void Composite::renderXArea(Drawable drawable)
+{
+  GC lgc = renderXGC(Marker::SRC);
+  renderXLineNoDash(lgc);
+
+  renderXAreaLine(drawable, 1);
+  if (operation == INTERSECTION)
+    renderXAreaLine(drawable, -1);
+}
+
+void Composite::renderXAreaLine(Drawable drawable, double slope)
+{
+  double cmin = slope > 0 ? bbox.ll[1]-bbox.ur[0] : bbox.ll[1]+bbox.ll[0];
+  double cmax = slope > 0 ? bbox.ur[1]-bbox.ll[0] : bbox.ur[1]+bbox.ur[0];
+
+  for (double c=cmin; c<=cmax; c+=compositeAreaSpacing) {
+    int inside = 0;
+    Vector start;
+    Vector last;
+
+    for (double x=bbox.ll[0]; x<=bbox.ur[0]; x+=compositeAreaStep) {
+      double y = slope > 0 ? x+c : -x+c;
+      Vector vv(x,y);
+      int valid = y >= bbox.ll[1] && y <= bbox.ur[1] && isIn(vv);
+
+      if (valid) {
+	if (!inside)
+	  start = vv;
+	last = vv;
+	inside = 1;
+      }
+      else if (inside) {
+	Vector aa = (start * parent->canvasToWidget).round();
+	Vector bb = (last * parent->canvasToWidget).round();
+	XDrawLine(display, drawable, gc, aa[0], aa[1], bb[0], bb[1]);
+	inside = 0;
+      }
+    }
+
+    if (inside) {
+      Vector aa = (start * parent->canvasToWidget).round();
+      Vector bb = (last * parent->canvasToWidget).round();
+      XDrawLine(display, drawable, gc, aa[0], aa[1], bb[0], bb[1]);
+    }
+  }
+}
+
+void Composite::renderPSArea(PSColorSpace mode)
+{
+  parent->psColor(mode, parent->getXColor(colorName));
+
+  ostringstream str;
+  str << lineWidth << " setlinewidth" << endl
+      << "[] 0 setdash" << endl
+      << ends;
+  Tcl_AppendResult(parent->interp, (char*)str.str().c_str(), NULL);
+
+  renderPSAreaLine(1);
+  if (operation == INTERSECTION)
+    renderPSAreaLine(-1);
+}
+
+void Composite::renderPSAreaLine(double slope)
+{
+  ostringstream str;
+
+  double cmin = slope > 0 ? bbox.ll[1]-bbox.ur[0] : bbox.ll[1]+bbox.ll[0];
+  double cmax = slope > 0 ? bbox.ur[1]-bbox.ll[0] : bbox.ur[1]+bbox.ur[0];
+
+  for (double c=cmin; c<=cmax; c+=compositeAreaSpacing) {
+    int inside = 0;
+    Vector start;
+    Vector last;
+
+    for (double x=bbox.ll[0]; x<=bbox.ur[0]; x+=compositeAreaStep) {
+      double y = slope > 0 ? x+c : -x+c;
+      Vector vv(x,y);
+      int valid = y >= bbox.ll[1] && y <= bbox.ur[1] && isIn(vv);
+
+      if (valid) {
+	if (!inside)
+	  start = vv;
+	last = vv;
+	inside = 1;
+      }
+      else if (inside) {
+	str << "newpath "
+	    << parent->TkCanvasPs(start) << " moveto "
+	    << parent->TkCanvasPs(last) << " lineto stroke" << endl;
+	inside = 0;
+      }
+    }
+
+    if (inside) {
+      str << "newpath "
+	  << parent->TkCanvasPs(start) << " moveto "
+	  << parent->TkCanvasPs(last) << " lineto stroke" << endl;
+    }
+  }
+
+  str << ends;
+  Tcl_AppendResult(parent->interp, (char*)str.str().c_str(), NULL);
+}
+
+#ifdef __WIN32
+void Composite::renderWIN32Area()
+{
+  win32Color(parent->getXColor(colorName));
+  win32Width(lineWidth);
+  win32Dash(NULL,0);
+
+  renderWIN32AreaLine(1);
+  if (operation == INTERSECTION)
+    renderWIN32AreaLine(-1);
+}
+
+void Composite::renderWIN32AreaLine(double slope)
+{
+  double cmin = slope > 0 ? bbox.ll[1]-bbox.ur[0] : bbox.ll[1]+bbox.ll[0];
+  double cmax = slope > 0 ? bbox.ur[1]-bbox.ll[0] : bbox.ur[1]+bbox.ur[0];
+
+  for (double c=cmin; c<=cmax; c+=compositeAreaSpacing) {
+    int inside = 0;
+    Vector start;
+    Vector last;
+
+    for (double x=bbox.ll[0]; x<=bbox.ur[0]; x+=compositeAreaStep) {
+      double y = slope > 0 ? x+c : -x+c;
+      Vector vv(x,y);
+      int valid = y >= bbox.ll[1] && y <= bbox.ur[1] && isIn(vv);
+
+      if (valid) {
+	if (!inside)
+	  start = vv;
+	last = vv;
+	inside = 1;
+      }
+      else if (inside) {
+	win32DrawLine(start,last);
+	inside = 0;
+      }
+    }
+
+    if (inside)
+      win32DrawLine(start,last);
   }
 }
 #endif

@@ -146,6 +146,10 @@ proc RegionMainMenu {} {
 	-command {CompositeCreate 1}
     $ds9(mb).region.composite add command -label [msgcat::mc {Dissolve}] \
 	-command CompositeDelete
+    $ds9(mb).region.composite add separator
+    $ds9(mb).region.composite add checkbutton \
+	-label [msgcat::mc {Show Composite Area}] \
+	-variable marker(composite,area) -command CompositeAreaSelected
 
     CreateFOVMenu
 
@@ -1157,6 +1161,14 @@ proc UpdateRegionMenu {} {
 		set marker(source) \
 		    [$current(frame) get marker property source]
 
+		set id [lindex [$current(frame) get marker select] 0]
+		if {[$current(frame) get marker $id type] eq {composite}} {
+		    set marker(composite,area) \
+			[$current(frame) get marker $id composite area]
+		} else {
+		    set marker(composite,area) $pmarker(composite,area)
+		}
+
 	    } else {
 		# defaults
 		set marker(color) $pmarker(color)
@@ -1176,6 +1188,7 @@ proc UpdateRegionMenu {} {
 		set marker(delete) $pmarker(delete) 
 		set marker(include) $pmarker(include) 
 		set marker(source) $pmarker(source) 
+		set marker(composite,area) $pmarker(composite,area)
 	    }
 	}
     }

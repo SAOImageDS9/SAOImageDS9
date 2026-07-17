@@ -1417,6 +1417,21 @@ void Base::getMarkerCompositeOperationCmd(int id)
   }
 }
 
+void Base::getMarkerCompositeAreaCmd(int id)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      if (((Composite*)mm)->getShowArea())
+	Tcl_AppendResult(interp, "1", NULL);
+      else
+	Tcl_AppendResult(interp, "0", NULL);
+      return;
+    }
+    mm=mm->next();
+  }
+}
+
 void Base::getMarkerEllipseRadiusCmd(int id, Coord::CoordSystem sys, 
 				     Coord::DistFormat dist)
 {
@@ -3217,6 +3232,23 @@ void Base::markerCompositeOperationCmd(int id, const char* operation)
     if (mm->getId() == id) {
       if (mm->canEdit()) {
 	((Composite*)mm)->setOperation(op);
+	update(PIXMAP, mm->getAllBBox());
+      }
+      return;
+    }
+    mm=mm->next();
+  }
+
+  result = TCL_ERROR;
+}
+
+void Base::markerCompositeAreaCmd(int id, int show)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      if (mm->canEdit()) {
+	((Composite*)mm)->setShowArea(show);
 	update(PIXMAP, mm->getAllBBox());
       }
       return;

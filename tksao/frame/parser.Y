@@ -132,6 +132,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token ARCSEC_
 %token ARRAY_
 %token ARROW_
+%token AREA_
 %token ASINH_
 %token AST_
 %token AUTO_
@@ -1947,6 +1948,7 @@ marker	: CENTROID_ markerCentroid
 	| INT COMPASS_ SYSTEM_ coordSystem skyFrame
 	{fr->markerCompassSystemCmd($1, (Coord::CoordSystem)$4, (Coord::SkyFrame)$5);}
 	| INT COMPOSITE_ GLOBAL_ yesno {fr->markerCompositeCmd($1,$4);}
+	| INT COMPOSITE_ AREA_ yesno {fr->markerCompositeAreaCmd($1,$4);}
 	| INT COMPOSITE_ TYPE_ STRING
 	{fr->markerCompositeOperationCmd($1,$4);}
 	| INT CPANDA_ EDIT_ angle angle INT numeric numeric INT
@@ -2480,6 +2482,7 @@ markerGet : CENTROID_ markerGetCentroid
 	{fr->getMarkerCompassRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
 	| INT COMPASS_ SYSTEM_ {fr->getMarkerCompassSystemCmd($1);}
 	| INT COMPOSITE_ GLOBAL_ {fr->getMarkerCompositeCmd($1);}
+	| INT COMPOSITE_ AREA_ {fr->getMarkerCompositeAreaCmd($1);}
 	| INT COMPOSITE_ TYPE_ {fr->getMarkerCompositeOperationCmd($1);}
 	| INT CPANDA_ ANGLE_ {fr->getMarkerCpandaAnglesCmd($1);}
 	| INT CPANDA_ ANGLE_ internalSystem {fr->getMarkerCpandaAnglesCmd($1);}

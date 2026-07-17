@@ -5,6 +5,10 @@
 #include "composite.h"
 #include "fitsimage.h"
 
+#include <sstream>
+#include <string>
+#include <vector>
+
 #ifdef __WIN32
 #include <win32lib.h>
 #endif
@@ -400,15 +404,47 @@ void Composite::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 
 void Composite::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
 {
+  vector<string> regions;
+
   Marker* mk=members.head();
   while (mk) {
     Marker* m = mk->dup();
     mk=mk->next();
 
     m->setComposite(fwdMatrix(), angle);
-    m->listCiao(str, sys, strip);
+
+    ostringstream ostr;
+    m->listCiao(ostr, sys, 0);
+
+    string buf = ostr.str();
+    string::size_type start = 0;
+    while (start < buf.length()) {
+      string::size_type end = buf.find_first_of("\n;", start);
+      string rr = buf.substr(start, end == string::npos ?
+			     string::npos : end-start);
+
+      if (!rr.empty())
+	regions.push_back(rr);
+
+      if (end == string::npos)
+	break;
+      start = end+1;
+    }
+
     delete m;
   }
+
+  if (regions.empty())
+    return;
+
+  const char* op = operation == INTERSECTION ? "&" : "|";
+  for (vector<string>::size_type ii=0; ii<regions.size(); ii++) {
+    if (ii)
+      str << op;
+    str << regions[ii];
+  }
+
+  listCiaoPost(str, strip);
 }
 
 void Composite::listPros(ostream& str, Coord::CoordSystem sys,

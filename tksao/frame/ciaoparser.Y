@@ -19,6 +19,7 @@
 #include "base.h"
 #include "fitsimage.h"
 #include "basemarker.h"
+#include "composite.h"
 
 #undef yyFlexLexer
 #define yyFlexLexer ciaoFlexLexer
@@ -37,11 +38,13 @@ static List<Vertex> polylist;
 static List<Tag> taglist;
 static List<CallBack> cblist;
 
-static int andCount;
+static int compositeCount;
+static Composite::Operation compositeOperation;
 static int havePrevious;
 
 static void setProps(unsigned short* props, unsigned short prop, int value);
-static void endAnd(Base* fr);
+static void beginComposite(Base* fr, Composite::Operation operation);
+static void endComposite(Base* fr);
 %}
 
 %union {
@@ -96,7 +99,8 @@ static void endAnd(Base* fr);
 
 start	: {
   strcpy(color, fr->markerColor());
-  andCount = 0;
+  compositeCount = 0;
+  compositeOperation = Composite::UNION;
   havePrevious = 0;
  } commands
 	;
@@ -112,20 +116,20 @@ command : /* empty */
 	;
 
 terminator: ep
-	| '\n' {endAnd(fr); havePrevious = 0;}
-	| EOF_ {endAnd(fr); YYACCEPT;}
+	| '\n' {endComposite(fr); havePrevious = 0;}
+	| EOF_ {endComposite(fr); YYACCEPT;}
 	;
 
-include	: /* empty */ {endAnd(fr); havePrevious = 0;}
-	| '*' /* AND */ {if (havePrevious) andCount = andCount ? andCount+1 : 2;}
-	| '&' /* AND */ {if (havePrevious) andCount = andCount ? andCount+1 : 2;}
-	| '|' /* OR */ {endAnd(fr); havePrevious = 0;}
-	| '+' /* OR */ {endAnd(fr); havePrevious = 0;}
-	| '-' /* NOT */ {endAnd(fr); havePrevious = 0;
+include	: /* empty */ {endComposite(fr); havePrevious = 0;}
+	| '*' /* AND */ {beginComposite(fr, Composite::INTERSECTION);}
+	| '&' /* AND */ {beginComposite(fr, Composite::INTERSECTION);}
+	| '|' /* OR */ {beginComposite(fr, Composite::UNION);}
+	| '+' /* OR */ {beginComposite(fr, Composite::UNION);}
+	| '-' /* NOT */ {endComposite(fr); havePrevious = 0;
 	  setProps(&props, Marker::INCLUDE, 0);}
-	| '!''*' /* NOT */ {endAnd(fr); havePrevious = 0;
+	| '!''*' /* NOT */ {endComposite(fr); havePrevious = 0;
 	  setProps(&props, Marker::INCLUDE, 0);}
-	| '!' /* NOT */ {endAnd(fr); havePrevious = 0;
+	| '!' /* NOT */ {endComposite(fr); havePrevious = 0;
 	  setProps(&props, Marker::INCLUDE, 0);}
 	;
 
@@ -308,10 +312,22 @@ static void setProps(unsigned short* props, unsigned short prop, int value)
     *props &= ~prop;
 }
 
-static void endAnd(Base* fr)
+static void beginComposite(Base* fr, Composite::Operation operation)
 {
-  if (andCount > 1)
-    fr->createCIAOCompositeCmd(andCount,
+  if (!havePrevious)
+    return;
+
+  if (compositeCount && compositeOperation != operation)
+    endComposite(fr);
+
+  compositeOperation = operation;
+  compositeCount = compositeCount ? compositeCount+1 : 2;
+}
+
+static void endComposite(Base* fr)
+{
+  if (compositeCount > 1)
+    fr->createCIAOCompositeCmd(compositeCount, compositeOperation,
 			       color,dash,1,font,text,props,NULL,taglist,cblist);
-  andCount = 0;
+  compositeCount = 0;
 }

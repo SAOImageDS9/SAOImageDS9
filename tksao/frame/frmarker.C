@@ -732,6 +732,7 @@ void Base::createCompositeCmd(
 
 void Base::createCIAOCompositeCmd(
 				 int count,
+				 int operation,
 				 const char* color, int* dash,
 				 int width, const char* font,
 				 const char* text, unsigned short prop,
@@ -750,12 +751,13 @@ void Base::createCIAOCompositeCmd(
   }
   center /= count;
 
-  // Extract only the shapes in this AND expression, preserving their order.
+  // Extract only the shapes in this logical expression, preserving their order.
   List<Marker> members;
   for (int ii=0; ii<count; ii++)
     members.insertHead(markers->pop());
 
   Composite* mk = new Composite(this, center, 0, 1,
+				(Composite::Operation)operation,
 				color, dash, width, font, text,
 				prop, comment, tag, cb);
   while (!members.isEmpty())
@@ -4704,6 +4706,7 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color)
       center /= members.size();
 
       Composite* composite = new Composite(this, center, 0, 1,
+					   Composite::INTERSECTION,
 					   color, dash, width, font, text,
 					   compositeProps, NULL, taglist, cblist);
       for (FitsRegionComponent::iterator mm=members.begin();

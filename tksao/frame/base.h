@@ -1241,7 +1241,7 @@ public:
 			  const char*, int*, int, const char*, 
 			  const char*, unsigned short, const char*,
 			  const List<Tag>&, const List<CallBack>& cb);
-  void createCIAOCompositeCmd(int,
+  void createCIAOCompositeCmd(int, int,
 			      const char*, int*, int, const char*,
 			      const char*, unsigned short, const char*,
 			      const List<Tag>&, const List<CallBack>& cb);

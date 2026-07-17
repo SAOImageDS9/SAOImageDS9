@@ -9,10 +9,11 @@ Composite::Composite(const Composite& a) : Marker(a)
 {
   members = a.members;
   global = a.global;
+  operation = a.operation;
 }
 
 Composite::Composite(Base* p, const Vector& ctr, 
-		     double ang, int gl,
+		     double ang, int gl, Operation op,
 		     const char* clr, int* dsh, 
 		     int wth, const char* fnt, const char* txt,
 		     unsigned short prop, const char* cmt,
@@ -22,6 +23,7 @@ Composite::Composite(Base* p, const Vector& ctr,
   strcpy(type_, "composite");
 
   global = gl;
+  operation = op;
 
   handle = new Vector[4];
   numHandle = 4;
@@ -129,20 +131,56 @@ int Composite::isIn(const Vector& v)
   if (!bbox.isIn(v))
     return 0;
 
+  int found = 0;
   Marker* mk=members.head();
   while (mk) {
     Marker* m = mk->dup();
     m->setComposite(fwdMatrix(), angle);
-    if (m->isIn(v)) {
-      delete m;
-      return 1;
-    }
+    int inside = m->isIn(v);
+    int area = m->hasArea();
     delete m;
+
+    if (operation == UNION && inside)
+      return 1;
+    if (operation == INTERSECTION && (!area || !inside))
+      return 0;
+    found = 1;
 
     mk=mk->next();
   }
 
-  return 0;
+  return operation == INTERSECTION ? found : 0;
+}
+
+void Composite::copyRegionMembers(List<Marker>& result)
+{
+  Marker* mk=members.head();
+  while (mk) {
+    Marker* m = mk->dup();
+    m->setComposite(fwdMatrix(), angle);
+    result.append(m);
+    mk=mk->next();
+  }
+}
+
+int Composite::isInRegion(const Vector& v, List<Marker>& regionMembers)
+{
+  if (!bbox.isIn(v))
+    return 0;
+
+  int found = 0;
+  Marker* m=regionMembers.head();
+  while (m) {
+    int inside = m->isIn(v);
+    if (operation == UNION && inside)
+      return 1;
+    if (operation == INTERSECTION && (!m->hasArea() || !inside))
+      return 0;
+    found = 1;
+    m=m->next();
+  }
+
+  return operation == INTERSECTION ? found : 0;
 }
 
 void Composite::append(Marker* m)
@@ -166,6 +204,7 @@ Marker* Composite::extract()
 void Composite::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky, 
 		 Coord::SkyFormat format, int conj, int strip)
 {
+  int memberConjunction = operation == INTERSECTION ? 2 : 1;
   if (!strip) {
     FitsImage* ptr = parent->findFits(sys,center);
     listPre(str, sys, sky, ptr, strip, 1);
@@ -176,7 +215,7 @@ void Composite::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     parent->listAngleFromRef(str,angle,sys,sky);
     str << ')';
       
-    str << " ||";
+    str << ' ' << listConjunction(memberConjunction);
     str << " composite=" << global;
     listProperties(str, 0);
   }
@@ -187,7 +226,7 @@ void Composite::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     mk=mk->next();
 
     m->setComposite(fwdMatrix(), angle);
-    m->list(str, sys, sky, format, (mk?1:0), strip);
+    m->list(str, sys, sky, format, (mk?memberConjunction:0), strip);
     delete m;
   }
 }
@@ -262,4 +301,3 @@ void Composite::listXY(ostream& str, Coord::CoordSystem sys,
     mk=mk->next();
   }
 }
-

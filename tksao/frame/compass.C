@@ -499,7 +499,7 @@ void Compass::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     str  << ')';
 
     if (conj)
-      str << " ||";
+      str << ' ' << listConjunction(conj);
 
     str << " compass=";
     coord.listCoordSystem(str, coordSystem, skyFrame, ptr);

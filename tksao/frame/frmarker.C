@@ -659,7 +659,7 @@ void Base::createBpandaCmd(const Vector& center,
 
 // Composite Regions
 void Base::createCompositeCmd(const Vector& center, double angle, 
-			      int global,
+			      int global, int operation,
 			      const char* color, int* dash, 
 			      int width, const char* font,
 			      const char* text, unsigned short prop, 
@@ -667,7 +667,8 @@ void Base::createCompositeCmd(const Vector& center, double angle,
 			      const List<Tag>& tag, 
 			      const List<CallBack>& cb)
 {
-  Composite* m = new Composite(this, center, angle, global, 
+  Composite* m = new Composite(this, center, angle, global,
+			       (Composite::Operation)operation,
 			       color, dash, width, font, text, 
 			       prop, comment, tag, cb);
   if (createMarker(m))
@@ -675,6 +676,7 @@ void Base::createCompositeCmd(const Vector& center, double angle,
 }
 
 void Base::createCompositeCmd(
+			      int operation,
 			      const char* color, int* dash, 
 			      int width, const char* font,
 			      const char* text, unsigned short prop, 
@@ -696,7 +698,9 @@ void Base::createCompositeCmd(
   cc /= cnt;
 
   // create composite
-  Composite* mk = new Composite(this, cc, 0, 1, color, dash, width, font, 
+  Composite* mk = new Composite(this, cc, 0, 1,
+				(Composite::Operation)operation,
+				color, dash, width, font,
 				text, prop, comment, tag, cb);
   if (!createMarker(mk))
     return;
@@ -1352,6 +1356,21 @@ void Base::getMarkerCompositeCmd(int id)
 	Tcl_AppendResult(interp, "1", NULL);
       else
 	Tcl_AppendResult(interp, "0", NULL);
+      return;
+    }
+    mm=mm->next();
+  }
+}
+
+void Base::getMarkerCompositeOperationCmd(int id)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      Composite* composite = (Composite*)mm;
+      Tcl_AppendResult(interp,
+	composite->getOperation() == Composite::INTERSECTION ?
+	"intersection" : "union", NULL);
       return;
     }
     mm=mm->next();
@@ -3131,6 +3150,33 @@ void Base::markerCompositeCmd(int id, int gl)
     if (mm->getId() == id) {
       if (mm->canEdit()) {
 	((Composite*)(mm))->setGlobal(gl);
+	update(PIXMAP, mm->getAllBBox());
+      }
+      return;
+    }
+    mm=mm->next();
+  }
+
+  result = TCL_ERROR;
+}
+
+void Base::markerCompositeOperationCmd(int id, const char* operation)
+{
+  Composite::Operation op;
+  if (!strcasecmp(operation,"union"))
+    op = Composite::UNION;
+  else if (!strcasecmp(operation,"intersection"))
+    op = Composite::INTERSECTION;
+  else {
+    result = TCL_ERROR;
+    return;
+  }
+
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      if (mm->canEdit()) {
+	((Composite*)mm)->setOperation(op);
 	update(PIXMAP, mm->getAllBBox());
       }
       return;

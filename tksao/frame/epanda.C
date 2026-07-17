@@ -527,7 +527,7 @@ void Epanda::listB(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 
       if (!strip) {
 	if (conj)
-	  str << " ||";
+	  str << ' ' << listConjunction(conj);
 
 	str << " # epanda=";
 	if (ii==1 && jj==1 && !strip) {
@@ -557,7 +557,7 @@ void Epanda::listB(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       }
       else {
 	if (conj)
-	  str << "||";
+	  str << listConjunction(conj);
 	else
 	  str << ";";
       }
@@ -581,4 +581,3 @@ void Epanda::listXML(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   XMLRowProps(ptr,sys);
   XMLRowEnd(str);
 }
-

@@ -9,9 +9,13 @@
 #include "list.h"
 
 class Composite : public Marker {
+ public:
+  enum Operation {UNION, INTERSECTION};
+
  private:
   List<Marker> members;
   int global;
+  Operation operation;
 
   void renderX(Drawable, Coord::InternalSystem, RenderMode) {}
   void renderPS(PSColorSpace mode) {}
@@ -25,13 +29,14 @@ protected:
 public:
   Composite(const Composite&);
   Composite(Base* p, const Vector& ctr, 
-	    double ang, int gl,
+	    double ang, int gl, Operation op,
 	    const char* clr, int* dsh,
 	    int wth, const char* fnt, const char* txt,
 	    unsigned short prop, const char* cmt,
 	    const List<Tag>& tg, const List<CallBack>& cb);
 
   Marker* dup() {return new Composite(*this);}
+  int hasArea() {return 1;}
 
   void x11(Drawable, Coord::InternalSystem, int, HandleMode);
   void ps(PSColorSpace,int);
@@ -41,12 +46,16 @@ public:
 
   void updateCoords(const Matrix&);
   int isIn(const Vector& v);
+  void copyRegionMembers(List<Marker>&);
+  int isInRegion(const Vector&, List<Marker>&);
 
   void append(Marker*);
   Marker* extract();
 
   void setGlobal(int w) {global = w ? 1 : 0;}
   int getGlobal() {return global;}
+  Operation getOperation() {return operation;}
+  void setOperation(Operation op) {operation = op;}
 
   void list(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, int, int);
   void listXML(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat) {}

@@ -118,6 +118,7 @@ static int aNum;
 static int aNumsao;
 static int aStatus;
 static int cStatus;
+static int compositeOperation;
 static Vector aCenter;
 static double aAngles[MAXANGLES];
 static int aAngNum;
@@ -378,8 +379,30 @@ ep	: /* emtpy */
 	;
 
 conjunction : /* empty */ {cStatus = 0;}
-	| '|' {cStatus = 1;}
-	| '|' '|' {cStatus = 1;}
+	| '|'
+	{
+	  if (compositeOperation == 2) {
+	    mkerror(fr,ll,"cannot mix || and && in a composite region");
+	    YYERROR;
+	  }
+	  cStatus = 1;
+	}
+	| '|' '|'
+	{
+	  if (compositeOperation == 2) {
+	    mkerror(fr,ll,"cannot mix || and && in a composite region");
+	    YYERROR;
+	  }
+	  cStatus = 1;
+	}
+	| '&' '&'
+	{
+	  if (compositeOperation == 1) {
+	    mkerror(fr,ll,"cannot mix || and && in a composite region");
+	    YYERROR;
+	  }
+	  cStatus = 2;
+	}
 	;
 
 optangle: /* empty */ {$$ = fr->mapAngleToRef(0,localSystem,localSky);}
@@ -811,6 +834,7 @@ initGlobal:{
 
 	  aStatus = 0;
 	  cStatus = 0;
+	  compositeOperation = 0;
 	} 
 	;
 
@@ -969,7 +993,10 @@ initLocal : {
 	  aNum = 2;
 
 	  // composite (previous conjunction found?)
-	  if (!cStatus) fr->resetCompositeMarker();
+	  if (!cStatus) {
+	    fr->resetCompositeMarker();
+	    compositeOperation = 0;
+	  }
 
 	  // global properties
 	  localSystem = globalSystem;
@@ -1087,9 +1114,10 @@ nonshape : VECTOR_ bp coord sp value sp angle ep conjunction nonshapeComment
 	| COMPOSITE_ bp coord sp optangle ep conjunction nonshapeComment
 	{
 	  fr->createCompositeCmd(Vector($3),
-	  $5, localComposite,
+	  $5, localComposite, cStatus == 2 ? 1 : 0,
 	  localColor,localDash,localWidth,localFont,
 	  localText,localProps,localComment,taglist,cblist);
+	  compositeOperation = cStatus ? cStatus : 1;
 	}
 	;
 
@@ -1478,9 +1506,10 @@ shape	: CIRCLE_ bp coord sp value ep conjunction shapeComment
 	| COMPOSITE_ bp coord sp optangle ep conjunction shapeComment
 	{
 	  fr->createCompositeCmd(Vector($3),
-	  $5, localComposite,
+	  $5, localComposite, cStatus == 2 ? 1 : 0,
 	  localColor,localDash,localWidth,localFont,
 	  localText,localProps,localComment,taglist,cblist);
+	  compositeOperation = cStatus ? cStatus : 1;
 	}
 	;
 
@@ -1579,4 +1608,3 @@ static Coord::SkyFrame checkWCSSky()
    return localSky;
   }
 }
-

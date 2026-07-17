@@ -35,6 +35,7 @@ public:
   Polygon(const Polygon& a);
 
   Marker* dup() {return new Polygon(*this);}
+  int hasArea() {return 1;}
 
   void analysis(AnalysisTask, int);
   void analysisHistogram(char*, char*, int);

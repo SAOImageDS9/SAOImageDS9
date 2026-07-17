@@ -294,6 +294,8 @@ POINT is translated into BOX CIRCLE POINT<br>
 ROTBOX is translated into BOX<br>
 RECTANGLE is translated into BOX<br>
 PANDA is translated as PIE<br>
+The logical AND operators &amp; and * create a COMPOSITE region containing the associated shapes<br>
+The logical OR operators + and | leave the associated shapes as separate regions<br>
 SECTOR is ignored<br>
 FIELD is ignored<br>
 REGION is ignored<br>
@@ -355,6 +357,8 @@ RECTANGLE is translated into BOX<br>
 ROTRECTANGLE is translated into a BOX<br>
 PIE is translated into PANDA<br>
 ELLIPTANNULUS is ignored<br>
+If a COMPONENT column is present, all rows with the same COMPONENT value are imported as members of one COMPOSITE region. Column names are case insensitive, and matching rows do not need to be adjacent in the table.<br>
+If no COMPONENT column is present, rows are imported as separate regions.<br>
 SECTOR is ignored<br>
 FIELD is ignored<br>
 DIAMOND is ignored<br>

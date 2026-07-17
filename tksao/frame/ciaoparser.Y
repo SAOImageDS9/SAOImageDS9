@@ -37,7 +37,11 @@ static List<Vertex> polylist;
 static List<Tag> taglist;
 static List<CallBack> cblist;
 
+static int andCount;
+static int havePrevious;
+
 static void setProps(unsigned short* props, unsigned short prop, int value);
+static void endAnd(Base* fr);
 %}
 
 %union {
@@ -92,6 +96,8 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 
 start	: {
   strcpy(color, fr->markerColor());
+  andCount = 0;
+  havePrevious = 0;
  } commands
 	;
 
@@ -102,22 +108,25 @@ commands: commands command terminator
 command : /* empty */
 	| DEBUG_ debug
 	| VERSION_ {cerr << "CIAO Regions File 1.0" << endl;}
-	| init include shape
+	| init include shape {havePrevious = 1;}
 	;
 
 terminator: ep
-	| '\n'
-	| EOF_ {YYACCEPT;}
+	| '\n' {endAnd(fr); havePrevious = 0;}
+	| EOF_ {endAnd(fr); YYACCEPT;}
 	;
 
-include	: /* empty */
-	| '*' /* AND */
-	| '&' /* AND */
-	| '|' /* OR */
-	| '+' /* OR */
-	| '-' /* NOT */ {setProps(&props, Marker::INCLUDE, 0);}
-	| '!''*' /* NOT */ {setProps(&props, Marker::INCLUDE, 0);}
-	| '!' /* NOT */ {setProps(&props, Marker::INCLUDE, 0);}
+include	: /* empty */ {endAnd(fr); havePrevious = 0;}
+	| '*' /* AND */ {if (havePrevious) andCount = andCount ? andCount+1 : 2;}
+	| '&' /* AND */ {if (havePrevious) andCount = andCount ? andCount+1 : 2;}
+	| '|' /* OR */ {endAnd(fr); havePrevious = 0;}
+	| '+' /* OR */ {endAnd(fr); havePrevious = 0;}
+	| '-' /* NOT */ {endAnd(fr); havePrevious = 0;
+	  setProps(&props, Marker::INCLUDE, 0);}
+	| '!''*' /* NOT */ {endAnd(fr); havePrevious = 0;
+	  setProps(&props, Marker::INCLUDE, 0);}
+	| '!' /* NOT */ {endAnd(fr); havePrevious = 0;
+	  setProps(&props, Marker::INCLUDE, 0);}
 	;
 
 numeric	: REAL {$$=$1;}
@@ -297,4 +306,12 @@ static void setProps(unsigned short* props, unsigned short prop, int value)
     *props |= prop;
   else
     *props &= ~prop;
+}
+
+static void endAnd(Base* fr)
+{
+  if (andCount > 1)
+    fr->createCIAOCompositeCmd(andCount,
+			       color,dash,1,font,text,props,NULL,taglist,cblist);
+  andCount = 0;
 }

@@ -1241,6 +1241,10 @@ public:
 			  const char*, int*, int, const char*, 
 			  const char*, unsigned short, const char*,
 			  const List<Tag>&, const List<CallBack>& cb);
+  void createCIAOCompositeCmd(int,
+			      const char*, int*, int, const char*,
+			      const char*, unsigned short, const char*,
+			      const List<Tag>&, const List<CallBack>& cb);
 
   // Template Regions
   void createTemplateCmd(const Vector&, const char*);

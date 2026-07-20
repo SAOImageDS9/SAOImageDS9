@@ -266,8 +266,27 @@ int Composite::isInArea(const Vector& v)
   if (!bbox.isIn(v))
     return 0;
 
-  int found = 0;
   Marker* mk=members.head();
+  while (mk) {
+    if (mk->getProperty(Marker::INCLUDE)) {
+      mk=mk->next();
+      continue;
+    }
+
+    Marker* m = mk->dup();
+    m->setComposite(fwdMatrix(), angle);
+    int inside = m->isIn(v);
+    int area = m->hasArea();
+    delete m;
+
+    if (area && inside)
+      return 0;
+
+    mk=mk->next();
+  }
+
+  int found = 0;
+  mk=members.head();
   while (mk) {
     if (!mk->getProperty(Marker::INCLUDE)) {
       mk=mk->next();

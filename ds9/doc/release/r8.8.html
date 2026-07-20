@@ -7,8 +7,139 @@
 <body>
 <h1 id="sun.pngsaoimageds9-version-8.8-release-notes"><img alt="" src="../sun.png" align="middle">SAOImageDS9
 Version 8.8 Release Notes</h1>
-<h2 id="beta-1">Beta 1:</h2>
+<h2 id="beta-2">Beta 2:</h2>
 <h4 id="summary">Summary</h4>
+<ul>
+<li>New <code>multicolor</code> frames support multiple color
+<code>layers</code> and color <code>blend</code> mode options.</li>
+<li>Color bars are now managed independently for each frame. They can
+also now be place on <code>top</code> or to <code>left</code> of the
+image.</li>
+<li>New <code>bookmark</code> feature allows users to quickly record and
+revisit coordinates in an image.</li>
+<li>New <code>save pixmask</code> option to generate pixel maps from
+regions.</li>
+<li>New <code>3D Cutout</code> region analysis tasks allows users to
+examine 2D image pixels in a region as an interactive 3D data cube.</li>
+<li>Added support to search a Virtual Observatory <code>registry</code>
+for Simple Image Access (<code>sia</code>) servers to download
+images.</li>
+<li>New 3D <code>fip</code> (First Intensity Point) ray trace option
+which includes a rudimentary shader and lighting.</li>
+<li>Improvements to composite regions to fully support <em>CIAO</em> and
+<em>FITS</em> region files which contain <code>intersecion</code> or
+<code>union</code> logic operators including optional hatching to
+visualize logic.</li>
+</ul>
+<h4 id="details">Details</h4>
+<ul>
+<li><strong>ANALYSIS</strong>: When an Analysis tasks is run, a progress
+bar will be created at the bottom right of the display showing the task
+name. This is only available in the <code>Advanced</code> view. Multiple
+tasks running will show the number of tasks.</li>
+<li><strong>ARCHIVES</strong>: There is a new <code>Analysis</code>
+-&gt; <code>Search SIA Registry</code> option that will query the
+Virtual Observatory registry for services that provide access to images
+using the Simple Image Access (SIA) protocol. There is a set of new
+<code>sia registry</code> commands to access the registry from the
+command line and XPA/SAMP.</li>
+<li><strong>SAMP</strong>: Updated web SAMP response header for recent
+changes in browser security</li>
+<li><strong>PAN</strong>: In <em>PAN</em> mode, using
+<code>Shift+Arrow</code> will now cause the image display to pan a
+screen full at a time.</li>
+<li><strong>TKSAO</strong>: Check that image has a WCS before asking the
+AST library to return the WCS parameters.</li>
+<li><strong>COLORBAR</strong>: Colorbars are now managed independently
+for each frame, this includes the position, label placement, and whether
+the colorbar is shown at all. There are 3 new/updated colorbar commands
+that apply to the current frame
+<ul>
+<li><code>show yes|no</code> to control whether the colorbar is
+visible.</li>
+<li><code>position top|bottom|left|right</code> update to support
+colorbars on the top and left of the image.</li>
+<li><code>label position natural|opposite</code> to control the
+placement of the colorbar numeric labels.</li>
+</ul></li>
+<li><strong>BOOKMARKS</strong>: a new feature that lets the user record
+the current location in the image using the <code>m</code> keyboard
+short cut or via the <code>Add</code> button in the new
+<code>Zoom</code> -&gt; <code>Bookmarks</code> window. Selecting the
+bookmark will jump back to that location in the image making it easy to
+catalog points of interest within a dataset. Bookmarks record the
+position, zoom level, rotation, orientation, and the slice within a N-d
+data cube. Bookmarks are included in the backup and are specific to each
+frame. There are a series of new <code>bookmark</code> command line and
+XPA+SAMP options.</li>
+<li><strong>MULTICOLOR</strong>: is a new type of frame. It is similar
+to the tri-color RGB (Red, Green, Blue) but it allows the user to create
+an arbitrary number of <code>layer</code> with separate colors. This is
+especially useful for instruments that have more than 3 filters or when
+trying to combine data from more than 3 observations. There is a new
+<code>multicolor</code> command line and XPA+SAMP command to create the
+new frame and control how the data are aligned.</li>
+<li><strong>LAYER</strong>: Part of the new <code>mutlicolor</code>
+frame is the concept of images displayed in a <code>layer</code>. Each
+layer has several properties including <code>color</code>,
+<code>transparency</code>, and <code>blend</code> mode. Layers can
+viewed, reordered, added, and deleted. The order of the layers matters
+as the colors have to be blended (combined) with the previous
+layer.</li>
+<li><strong>MASK</strong>: There are now several new blending mode
+options to support the new <code>layer</code> option:
+<code>multiply</code> <code>overlay</code> <code>color-dodge</code>
+<code>color-burn</code> <code>hard-light</code> <code>soft-light</code>
+<code>difference</code> <code>exclusion</code> <code>hue</code>
+<code>saturation</code> <code>color</code> <code>luminosity</code></li>
+<li><strong>PIXMASK</strong>: There is a new <code>save pixmask</code>
+option. This will save an image in FITS format; but instead of the
+original pixel values, the <code>pixmask</code> output will have pixel
+values that match the region ID number for all the regions drawn on the
+image. Excluded pixels and pixels not inside a region have a value of
+<code>0</code>.</li>
+<li><strong>3D CUTOUT</strong>: This is a new Region analysis task that
+will convert the pixels in the region into a 3D data cube and display it
+in a separate frame. The data cube is updated automatically as the
+region is moved, rotated, or otherwise edited. It will also update based
+on the scale, limits, and colormap parameters. Access from
+<code>Region</code> -&gt; <code>Get Information</code> or by double
+clicking on the region.</li>
+<li><strong>3D</strong>: There is a new <code>FIP</code> (First
+Intensity Point) ray trace option available that will render the first
+finite, non-zero voxel (pixel) that the ray trace intercepts. (Reminder
+<code>MIP</code> is the maximum intensity point along the ray trace
+vector, and <code>AIP</code> is the average along the vector.) With
+<code>fip</code>, there is also now the option to include rudimentary
+shading and lighting using the new <code>3d shade</code>
+parameters.</li>
+<li><strong>REGION</strong>: Now fully supports CIAO region logic (both
+ASCII regions and FITS regions). CIAO shapes that explicitly specify
+<em>AND</em> (<code>&amp;</code>, <code>*</code>) or <em>OR</em>
+(<code>|</code>, <code>+</code>) logic now generate DS9 composite
+regions.
+<ul>
+<li><strong>THIS IS A CHANGE IN BEHAVIOR</strong>. Previously the logic
+was ignored and individual DS9 regions were created.</li>
+<li>When DS9 now saves regions to CIAO format which includes a composite
+region, they are now expressed using the proper <em>AND</em>
+(<code>intersection</code>) or <em>OR</em> (<code>union</code>)
+logic.</li>
+<li>DS9 composite regions had to be expanded to include the concept of
+<code>intersection</code> and <code>union</code>. Existing ds9 region
+files which use <code>||</code> for composite regions will be understood
+to be <code>union</code>. Region files for composite regions using
+<code>intersection</code> logic will use <code>&amp;&amp;</code>.</li>
+<li>Using the <code>Composite Region</code> window (<code>Region</code>
+-&gt; <code>Get Information</code>, or double clicking the composite
+region), users can turn on/off hatching which will visually identify the
+area being expressed with the <code>union</code> or
+<code>intersection</code> logic.</li>
+</ul></li>
+</ul>
+<hr />
+<h2 id="beta-1">Beta 1:</h2>
+<h4 id="summary-1">Summary</h4>
 <ul>
 <li>Upgraded Tcl/Tk to version 9, including updates to many
 sub-packages</li>
@@ -27,7 +158,7 @@ to new interfaces. <code>SKYVIEW</code> updated list of surveys. The
 list of catalogs has also been refreshed.</li>
 <li>Several other bug fixes and build enhancements.</li>
 </ul>
-<h4 id="details">Details</h4>
+<h4 id="details-1">Details</h4>
 <ul>
 <li><strong>BUILD</strong>: Updated <code>Makefiles</code> to ensure
 that <code>tclsh</code> is getting picked up from the local build
@@ -165,3 +296,12 @@ resilience improvements for XPA_METHOD=inet when DNS resolution fails ;
 additional Tcl 9 compatibility fixes  </li>
 </ul></li>
 </ul>
+
+</body>
+</head>
+
+
+
+
+
+

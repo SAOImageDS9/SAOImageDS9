@@ -32,6 +32,7 @@ class Composite : public Marker {
   void renderWIN32Area();
   void renderWIN32AreaLine(double);
 #endif
+  int isInArea(const Vector&);
 
 protected:
   void updateHandles();

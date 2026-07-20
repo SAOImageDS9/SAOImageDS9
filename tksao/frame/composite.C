@@ -133,7 +133,7 @@ void Composite::renderXAreaLine(Drawable drawable, double slope)
     for (double x=bbox.ll[0]; x<=bbox.ur[0]; x+=compositeAreaStep) {
       double y = slope > 0 ? x+c : -x+c;
       Vector vv(x,y);
-      int valid = y >= bbox.ll[1] && y <= bbox.ur[1] && isIn(vv);
+      int valid = y >= bbox.ll[1] && y <= bbox.ur[1] && isInArea(vv);
 
       if (valid) {
 	if (!inside)
@@ -187,7 +187,7 @@ void Composite::renderPSAreaLine(double slope)
     for (double x=bbox.ll[0]; x<=bbox.ur[0]; x+=compositeAreaStep) {
       double y = slope > 0 ? x+c : -x+c;
       Vector vv(x,y);
-      int valid = y >= bbox.ll[1] && y <= bbox.ur[1] && isIn(vv);
+      int valid = y >= bbox.ll[1] && y <= bbox.ur[1] && isInArea(vv);
 
       if (valid) {
 	if (!inside)
@@ -239,7 +239,7 @@ void Composite::renderWIN32AreaLine(double slope)
     for (double x=bbox.ll[0]; x<=bbox.ur[0]; x+=compositeAreaStep) {
       double y = slope > 0 ? x+c : -x+c;
       Vector vv(x,y);
-      int valid = y >= bbox.ll[1] && y <= bbox.ur[1] && isIn(vv);
+      int valid = y >= bbox.ll[1] && y <= bbox.ur[1] && isInArea(vv);
 
       if (valid) {
 	if (!inside)
@@ -260,6 +260,37 @@ void Composite::renderWIN32AreaLine(double slope)
 #endif
 
 // Support
+
+int Composite::isInArea(const Vector& v)
+{
+  if (!bbox.isIn(v))
+    return 0;
+
+  int found = 0;
+  Marker* mk=members.head();
+  while (mk) {
+    if (!mk->getProperty(Marker::INCLUDE)) {
+      mk=mk->next();
+      continue;
+    }
+
+    Marker* m = mk->dup();
+    m->setComposite(fwdMatrix(), angle);
+    int inside = m->isIn(v);
+    int area = m->hasArea();
+    delete m;
+
+    if (operation == UNION && inside)
+      return 1;
+    if (operation == INTERSECTION && (!area || !inside))
+      return 0;
+    found = 1;
+
+    mk=mk->next();
+  }
+
+  return operation == INTERSECTION ? found : 0;
+}
 
 void Composite::updateHandles()
 {

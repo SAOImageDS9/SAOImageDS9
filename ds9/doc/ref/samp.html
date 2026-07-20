@@ -422,12 +422,12 @@ cat<br></b></p>
 <tt>Syntax:<br>
 catalog [new]<br>
 &nbsp;&nbsp;&nbsp; [ned|simbad|denis|skybot]<br>
-&nbsp;&nbsp;&nbsp; [aavso|ac|ascss|cmc|gaia|gsc1|gsc2|gsc3|nomad|ppmx|sao|sdss5|sdss6|sdss7|sdss8|sdss9|tycho]<br>
-&nbsp;&nbsp;&nbsp; [ua2|ub1|ucac2|ucac2sup|ucac3|ucac4|urat1]<br>
-&nbsp;&nbsp;&nbsp; [2mass|iras]<br>
-&nbsp;&nbsp;&nbsp; [csc|xmm|rosat]<br>
-&nbsp;&nbsp;&nbsp; [first|nvss]<br>
-&nbsp;&nbsp;&nbsp; [chandralog|cfhtlog|esolog|stlog|xmmlog]<br>
+&nbsp;&nbsp;&nbsp; [aavso|ac|ascss|cmc|gaia3|gsc|nomad|sao|sdss|ub1|ucac|urat1|panstarrs]<br>
+&nbsp;&nbsp;&nbsp; [galex]<br>
+&nbsp;&nbsp;&nbsp; [2mass|allwise]<br>
+&nbsp;&nbsp;&nbsp; [csc21|csc|xmm|rosat|erosita|swiftbat]<br>
+&nbsp;&nbsp;&nbsp; [first|nvss|vlss]<br>
+&nbsp;&nbsp;&nbsp; [chandralog|cfhtlog|esolog|hstlog|xmmlog]<br>
 &nbsp;&nbsp;&nbsp; [cds &lt;catalogname&gt;]<br>
 &nbsp;&nbsp;&nbsp; [cds &lt;catalogid&gt;]<br>
 <br>
@@ -1040,12 +1040,6 @@ footprint [cxc|hla]<br>
 &nbsp;&nbsp;&nbsp; [cancel]<br>
 &nbsp;&nbsp;&nbsp; [clear]<br>
 &nbsp;&nbsp;&nbsp; [close]<br>
-&nbsp;&nbsp;&nbsp; [registry]<br>
-&nbsp;&nbsp;&nbsp; [registry filter &lt;string&gt;]<br>
-&nbsp;&nbsp;&nbsp; [registry ivoid &lt;string&gt;]<br>
-&nbsp;&nbsp;&nbsp; [registry load]<br>
-&nbsp;&nbsp;&nbsp; [registry clear]<br>
-&nbsp;&nbsp;&nbsp; [registry retrieve]<br>
 <br>
 &nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [export rdb|tsv &lt;filename&gt;]<br>
@@ -2963,8 +2957,7 @@ shm rgbimage key 100 foo<br>
 shm rgbarray key 100 [dim=200,zdim=3,bitpix=-32]<br>
 shm array shmid 102 [dim=32,bitpix=-32]<br></tt>
 <p><b><a name="sia" id="sia"></a>sia</b></p>
-<p>Support for VO Simple Image Access protocol. The first command will create a new search. All other commands operate on the last search created, unless indicated otherwise via the current command. Registry filter and ivoid constraints are cumulative; use registry clear or registry retrieve to reset them. Registry clear empties the current results, while registry retrieve reloads the full Registry list.</p>
-<p>DS9 subscribes to the standard <tt>voresource.loadlist.siap</tt> MType. Receiving this message opens the SIA Registry window and displays Registry services whose <tt>ivoid</tt> exactly matches any identifier in the message's <tt>ids</tt> map. Optional resource-document URLs are accepted but identifiers are resolved using DS9's configured SIA Registry TAP service.</p>
+<p>Support for VO Simple Image Access protocol. The first command will create a new search. All other commands operated on the last search created, unless indicated otherwise via current command.</p>
 <tt>Syntax:<br>
 sia[2mass|akari|astrowise|cadc|cxc|hla|mast|sdss|skyview|tgssadr]<br>
 &nbsp;&nbsp;&nbsp; [cancel]<br>

@@ -1,6 +1,6 @@
 /* conf.h.in.  Generated from configure.ac by autoheader.  */
 
-/* Define to 1 if you have the 'atexit' function. */
+/* Define to 1 if you have the `atexit' function. */
 #undef HAVE_ATEXIT
 
 /* Define to 1 if you have the <crt_externs.h> header file. */
@@ -12,7 +12,7 @@
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
-/* Define to 1 if you have the 'getaddrinfo' function. */
+/* Define to 1 if you have the `getaddrinfo' function. */
 #undef HAVE_GETADDRINFO
 
 /* Define to 1 if you have the <getopt.h> header file. */
@@ -30,28 +30,28 @@
 /* Define to 1 if you have the <malloc.h> header file. */
 #undef HAVE_MALLOC_H
 
-/* Define to 1 if you have the 'memcpy' function. */
+/* Define to 1 if you have the `memcpy' function. */
 #undef HAVE_MEMCPY
 
 /* Define to 1 when building on MinGW. */
 #undef HAVE_MINGW32
 
-/* Define to 1 if you have the 'posix_spawn' function. */
+/* Define to 1 if you have the `posix_spawn' function. */
 #undef HAVE_POSIX_SPAWN
 
 /* Define to 1 if you have the <pwd.h> header file. */
 #undef HAVE_PWD_H
 
-/* Define to 1 if you have the 'setenv' function. */
+/* Define to 1 if you have the `setenv' function. */
 #undef HAVE_SETENV
 
 /* Define to 1 if you have the <setjmp.h> header file. */
 #undef HAVE_SETJMP_H
 
-/* Define to 1 if you have the 'snprintf' function. */
+/* Define to 1 if you have the `snprintf' function. */
 #undef HAVE_SNPRINTF
 
-/* Define to 1 if the system has the type 'socklen_t'. */
+/* Define to 1 if the system has the type `socklen_t'. */
 #undef HAVE_SOCKLEN_T
 
 /* Define to 1 if you have the <stdint.h> header file. */
@@ -63,7 +63,7 @@
 /* Define to 1 if you have the <stdlib.h> header file. */
 #undef HAVE_STDLIB_H
 
-/* Define to 1 if you have the 'strchr' function. */
+/* Define to 1 if you have the `strchr' function. */
 #undef HAVE_STRCHR
 
 /* Define to 1 if you have the <strings.h> header file. */
@@ -105,7 +105,7 @@
 /* Define to 1 if X Window support is available. */
 #undef HAVE_XT
 
-/* Define to 1 if you have the '_NSGetEnviron' function. */
+/* Define to 1 if you have the `_NSGetEnviron' function. */
 #undef HAVE__NSGETENVIRON
 
 /* Define to the address where bug reports for this package should be sent. */
@@ -126,7 +126,7 @@
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
 
-/* The size of 'long', as computed by sizeof. */
+/* The size of `long', as computed by sizeof. */
 #undef SIZEOF_LONG
 
 /* Define to 1 if all C89 standard headers are available. */
@@ -138,5 +138,5 @@
 /* Define to 1 to enable reentrant library interfaces. */
 #undef _REENTRANT
 
-/* Define to empty if 'const' does not conform to ANSI C. */
+/* Define to empty if `const' does not conform to ANSI C. */
 #undef const

@@ -20,8 +20,8 @@
 
 #define XPA_MAJOR_VERSION 2
 #define XPA_MINOR_VERSION 1
-#define XPA_PATCH_LEVEL 20
-#define XPA_VERSION "2.1.20"
+#define XPA_PATCH_LEVEL 21
+#define XPA_VERSION "2.1.21"
 
 /* #define XPA_DEBUG 1 */
 #ifdef XPA_DEBUG
@@ -120,7 +120,7 @@ typedef void (*MyFree)(
 
 typedef void Sigfunc(
 #ifdef ANSI_FUNC
-    int		     
+    int
 #endif
 );
 
@@ -232,7 +232,7 @@ typedef struct cliprec{
   char *value;
 } *XPAClip, XPAClipRec;
 
-/* 
+/*
  *
  * record struct for receiving data from stdin
  *
@@ -437,7 +437,7 @@ char *XPAArgvParamlist _PRx((int argc, char **argv, int start));
 int XPAMethod _PRx((char *method));
 int XPAAccess _PRx((XPA xpa, char *xtemplate, char *paramlist, char *mode,
 		    char **names, char **messages, int n));
-int XPANSLookup _PRx((XPA xpa, char *tname, char *ttype, 
+int XPANSLookup _PRx((XPA xpa, char *tname, char *ttype,
 		      char ***xclasses, char ***names,
 		      char ***methods, char ***infs));
 int XPANSClose _PRx((XPA xpa, NS ns));

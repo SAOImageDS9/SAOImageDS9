@@ -75,6 +75,18 @@ proc PanCanvas {x y} {
     }
 }
 
+proc PanCanvasPage {x y} {
+    global current
+    global ds9
+
+    if {$current(frame) != {}} {
+	set width [expr {int([$ds9(canvas) itemcget $current(frame) -width])}]
+	set height [expr {int([$ds9(canvas) itemcget $current(frame) -height])}]
+
+	PanCanvas [expr {$x*$width}] [expr {$y*$height}]
+    }
+}
+
 proc Pan {x y sys sky} {
     global current
 
@@ -767,4 +779,3 @@ proc ProcessSendRotateCmd {proc id param {sock {}} {fn {}}} {
     global current
     $proc $id "$current(rotate)\n"
 }
-

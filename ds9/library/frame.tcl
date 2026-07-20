@@ -561,6 +561,14 @@ proc BindEventsFrameKey {which} {
     }
 
     $ds9(canvas) bind $which <Key> [list KeyFrame $which %K %A %x %y]
+    $ds9(canvas) bind $which <Shift-Up> \
+	[list ShiftKeyFrame $which Up %A %x %y]
+    $ds9(canvas) bind $which <Shift-Down> \
+	[list ShiftKeyFrame $which Down %A %x %y]
+    $ds9(canvas) bind $which <Shift-Left> \
+	[list ShiftKeyFrame $which Left %A %x %y]
+    $ds9(canvas) bind $which <Shift-Right> \
+	[list ShiftKeyFrame $which Right %A %x %y]
     $ds9(canvas) bind $which <KeyRelease> \
 	[list KeyReleaseFrame $which %K %A %x %y]
 
@@ -644,6 +652,10 @@ proc UnBindEventsFrameKey {which} {
     }
 
     $ds9(canvas) bind $which <Key> {}
+    $ds9(canvas) bind $which <Shift-Up> {}
+    $ds9(canvas) bind $which <Shift-Down> {}
+    $ds9(canvas) bind $which <Shift-Left> {}
+    $ds9(canvas) bind $which <Shift-Right> {}
     $ds9(canvas) bind $which <KeyRelease> {}
 
     for {set i 0} {$i<$ianalysis(bind,count)} {incr i} {
@@ -1627,6 +1639,35 @@ proc KeyFrame {which K A xx yy} {
 
     # since most modes do zoom
     UpdateEditMenu
+}
+
+proc ShiftKeyFrame {which K A xx yy} {
+    global ds9
+    global current
+
+    global debug
+    if {$debug(tcl,events)} {
+	puts stderr "ShiftKeyFrame $which $K $A $xx $yy"
+    }
+
+    if {$ds9(modifier)} {
+	return
+    }
+
+    switch -- $current(mode) {
+	pan {
+	    switch -- $K {
+		Up {PanCanvasPage 0 -1}
+		Down {PanCanvasPage 0 1}
+		Left {PanCanvasPage -1 0}
+		Right {PanCanvasPage 1 0}
+	    }
+	    UpdateEditMenu
+	}
+	default {
+	    KeyFrame $which $K $A $xx $yy
+	}
+    }
 }
 
 proc KeyReleaseFrame {which K A xx yy} {

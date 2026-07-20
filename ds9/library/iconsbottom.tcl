@@ -18,8 +18,14 @@ proc CreateIconsBottom {} {
     CreateIconsBottomView
 
     # progress bar and label for analysis tasks
-    ttk::label $ds9(icons,bottom).progresslabel -anchor e
+    ttk::label $ds9(icons,bottom).progresslabel -anchor e -cursor hand2
     ttk::progressbar $ds9(icons,bottom).progressbar -mode indeterminate -length 100 -max 15
+    ThemeMenu $ds9(icons,bottom).progressmenu
+    $ds9(icons,bottom).progressmenu configure -tearoff 0
+    bind $ds9(icons,bottom).progresslabel <Button-1> \
+	[list AnalysisTaskMenuPost %X %Y]
+    tooltip::tooltip $ds9(icons,bottom).progresslabel \
+	[msgcat::mc {Show running analysis tasks}]
 }
 
 proc ConfigureIconsBottom {} {
@@ -308,9 +314,9 @@ proc UpdateAnalysisProgress {} {
 	    if {[info exists ianalysis($which,$i,item)]} {
 		set name $ianalysis($which,$i,item)
 	    }
-	    $pl configure -text $name
+	    $pl configure -text "$name \u25b2"
 	} else {
-	    $pl configure -text "($count)"
+	    $pl configure -text "($count) \u25b2"
 	}
 
 	if {[lsearch [pack slaves $ds9(icons,bottom)] $pb] == -1} {
@@ -318,5 +324,32 @@ proc UpdateAnalysisProgress {} {
 	    pack $pl -side right -padx 5 -pady 2
 	}
 	catch {$pb start}
+    }
+}
+
+proc AnalysisTaskMenuPost {x y} {
+    global ds9
+    global ianalysis
+
+    set m $ds9(icons,bottom).progressmenu
+    $m delete 0 end
+
+    if {![info exists ianalysis(running,tasks)]} {
+	return
+    }
+
+    foreach task $ianalysis(running,tasks) {
+	set which [lindex $task 0]
+	set i [lindex $task 1]
+	set name [msgcat::mc {Analysis Task}]
+	if {[info exists ianalysis($which,$i,item)]} {
+	    set name $ianalysis($which,$i,item)
+	}
+	$m add command -label $name -accelerator "\u2715" \
+	    -command [list AnalysisTaskCancel $which $i]
+    }
+
+    if {[$m index end] != {}} {
+	tk_popup $m $x $y
     }
 }

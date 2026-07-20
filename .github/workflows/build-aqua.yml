@@ -28,6 +28,9 @@ jobs:
         include:
           - name: macOS Latest ARM
             os: macos-latest
+        include:
+          - name: macOS 15 Intel
+            os: macos-15-intel
 
     steps:
     - name: Checkout Code

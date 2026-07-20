@@ -35,7 +35,7 @@ Last updated 2026-05-26
 | tls        | **2.0**    |     | y     | https://core.tcl-lang.org/tcltls/index                               | 2.0 (5)                         |
 | ttkthemes  | **3.3.0**  |     |       | https://github.com/TkinterEP/ttkthemes/                              | 3.3.0                           |
 | vector     |            | y   |       |                                                                      |                                 |
-| xpa        | 2.1.20     | y   | y     | https://github.com/ericmandel/xpa                                    | 2.1.20                          |
+| xpa        | 2.1.21     | y   | y     | https://github.com/SAOImageDS9/xpa                                   | 2.1.21                          |
 | -- -- --   |            |     |       |                                                                      |                                 |
 | compilers  |            | y   |       |                                                                      |                                 |
 | macos      |            | y   |       |                                                                      |                                 |

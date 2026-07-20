@@ -18,6 +18,7 @@ proc AnalysisDef {} {
     set ianalysis(buttonbar,count) 0
     set ianalysis(param,count) 0
     set ianalysis(param,seq) 0
+    set ianalysis(running,tasks) {}
 
     # temp
     set analysis(load,buf) {}
@@ -704,11 +705,7 @@ proc AnalysisTaskDoit {i which frame x y sync} {
 	}
 
 	if {[info exists ianalysis($which,$i,pid)]} {
-	    if {$ianalysis($which,$i,pid)>0} {
-		eval "exec kill -9 $ianalysis($which,$i,pid)"
-	    } else {
-		HVAnalysisCancel $which $i
-	    }
+	    AnalysisTaskCancel $which $i
 	}
 
 	return
@@ -727,6 +724,7 @@ proc AnalysisTaskDoit {i which frame x y sync} {
     set ianalysis($which,$i,plot,yaxis) {}
     set ianalysis($which,$i,plot,dim) 2
     set ianalysis($which,$i,image) {}
+    set ianalysis($which,$i,cancelled) 0
 
     set cmd $ianalysis($which,$i,cmd)
 
@@ -823,6 +821,7 @@ proc AnalysisTaskDoit {i which frame x y sync} {
 
     # ok, we are off and running
     set ianalysis($which,$i,inuse) 1
+    AnalysisTaskStarted $which $i
 
     switch -- $ianalysis($which,$i,start) {
 	geturl {
@@ -945,7 +944,8 @@ proc AnalysisReaderFinish {ch which i} {
 
     catch {close $ch}
 
-    switch -- $ianalysis($which,$i,finish) {
+    if {!$ianalysis($which,$i,cancelled)} {
+	switch -- $ianalysis($which,$i,finish) {
 	null -
 	image -
 	text {}
@@ -964,6 +964,7 @@ proc AnalysisReaderFinish {ch which i} {
 		$ianalysis($which,$i,result)
 	}
 	default {puts stdout $ianalysis($which,$i,result)}
+	}
     }
 
     AnalysisTaskEnd $which $i
@@ -1085,6 +1086,8 @@ proc AnalysisProcessGetURL {which i result} {
 proc AnalysisTaskEnd {which i} {
     global ianalysis
 
+    AnalysisTaskEnded $which $i
+
     set ianalysis($which,$i,inuse) 0
     if {$ianalysis($which,$i,start,fn) != {}} {
 	if {[file exists $ianalysis($which,$i,start,fn)]} {
@@ -1105,6 +1108,7 @@ proc AnalysisTaskEnd {which i} {
     unset ianalysis($which,$i,plot,yaxis)
     unset ianalysis($which,$i,plot,dim)
     unset ianalysis($which,$i,image)
+    unset ianalysis($which,$i,cancelled)
 }
 
 proc SetEscapedMacros {cmdname} {
@@ -2167,4 +2171,53 @@ proc AnalysisSendCmdTask {} {
     }
 
     ProcessSendCmdTxt $result
+}
+
+proc AnalysisTaskStarted {which i} {
+    global ianalysis
+
+    if {![info exists ianalysis(running,tasks)]} {
+	set ianalysis(running,tasks) {}
+    }
+
+    set task [list $which $i]
+    if {[lsearch -exact $ianalysis(running,tasks) $task] == -1} {
+	lappend ianalysis(running,tasks) $task
+    }
+
+    UpdateAnalysisProgress
+}
+
+proc AnalysisTaskEnded {which i} {
+    global ianalysis
+
+    if {![info exists ianalysis(running,tasks)]} {
+	set ianalysis(running,tasks) {}
+    }
+
+    set task [list $which $i]
+    set idx [lsearch -exact $ianalysis(running,tasks) $task]
+    if {$idx != -1} {
+	set ianalysis(running,tasks) [lreplace $ianalysis(running,tasks) $idx $idx]
+    }
+
+    UpdateAnalysisProgress
+}
+
+proc AnalysisTaskCancel {which i} {
+    global ianalysis
+
+    if {![info exists ianalysis($which,$i,pid)]} {
+	return
+    }
+
+    set pids $ianalysis($which,$i,pid)
+    if {[lindex $pids 0] > 0} {
+	set ianalysis($which,$i,cancelled) 1
+	foreach pid $pids {
+	    catch {exec kill -9 $pid}
+	}
+    } else {
+	HVAnalysisCancel $which $i
+    }
 }

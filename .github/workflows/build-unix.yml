@@ -28,12 +28,10 @@ jobs:
         include:
           - name: Ubuntu Latest
             os: ubuntu-latest
-
-          # - name: Ubuntu 24.04 ARM
-          #   os: ubuntu-24.04-arm
-
           - name: macOS Latest ARM
             os: macos-latest
+          - name: macOS 15 Intel
+            os: macos-15-intel
 
     steps:
     - name: Checkout Code

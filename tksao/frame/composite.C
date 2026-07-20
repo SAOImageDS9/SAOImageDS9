@@ -48,7 +48,7 @@ void Composite::x11(Drawable drawable, Coord::InternalSystem sys,
 		    int tt, HandleMode hh)
 {
   if (showArea && renderMode == Marker::SRC)
-    renderXArea(drawable);
+    renderXArea(drawable, sys);
 
   if (hh==HANDLES && renderMode != Marker::XOR)
     renderXHandles(drawable);
@@ -110,17 +110,18 @@ void Composite::win32(int tt)
 }
 #endif
 
-void Composite::renderXArea(Drawable drawable)
+void Composite::renderXArea(Drawable drawable, Coord::InternalSystem sys)
 {
   GC lgc = renderXGC(Marker::SRC);
   renderXLineNoDash(lgc);
 
-  renderXAreaLine(drawable, 1);
+  renderXAreaLine(drawable, sys, 1);
   if (operation == INTERSECTION)
-    renderXAreaLine(drawable, -1);
+    renderXAreaLine(drawable, sys, -1);
 }
 
-void Composite::renderXAreaLine(Drawable drawable, double slope)
+void Composite::renderXAreaLine(Drawable drawable, Coord::InternalSystem sys,
+				double slope)
 {
   double cmin = slope > 0 ? bbox.ll[1]-bbox.ur[0] : bbox.ll[1]+bbox.ll[0];
   double cmax = slope > 0 ? bbox.ur[1]-bbox.ll[0] : bbox.ur[1]+bbox.ur[0];
@@ -142,16 +143,20 @@ void Composite::renderXAreaLine(Drawable drawable, double slope)
 	inside = 1;
       }
       else if (inside) {
-	Vector aa = (start * parent->canvasToWidget).round();
-	Vector bb = (last * parent->canvasToWidget).round();
+	Vector aa = parent->mapFromRef(parent->mapToRef(start, Coord::CANVAS),
+				       sys).round();
+	Vector bb = parent->mapFromRef(parent->mapToRef(last, Coord::CANVAS),
+				       sys).round();
 	XDrawLine(display, drawable, gc, aa[0], aa[1], bb[0], bb[1]);
 	inside = 0;
       }
     }
 
     if (inside) {
-      Vector aa = (start * parent->canvasToWidget).round();
-      Vector bb = (last * parent->canvasToWidget).round();
+      Vector aa = parent->mapFromRef(parent->mapToRef(start, Coord::CANVAS),
+				     sys).round();
+      Vector bb = parent->mapFromRef(parent->mapToRef(last, Coord::CANVAS),
+				     sys).round();
       XDrawLine(display, drawable, gc, aa[0], aa[1], bb[0], bb[1]);
     }
   }

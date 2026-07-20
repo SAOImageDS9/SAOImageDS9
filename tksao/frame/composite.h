@@ -24,8 +24,8 @@ class Composite : public Marker {
   void renderWIN32() {}
 #endif
 
-  void renderXArea(Drawable);
-  void renderXAreaLine(Drawable, double);
+  void renderXArea(Drawable, Coord::InternalSystem);
+  void renderXAreaLine(Drawable, Coord::InternalSystem, double);
   void renderPSArea(PSColorSpace);
   void renderPSAreaLine(double);
 #ifdef __WIN32

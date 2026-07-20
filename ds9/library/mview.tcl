@@ -74,6 +74,27 @@ proc ViewMainMenu {} {
 	    -variable "view(info,wcs$l)" \
 	    -command LayoutInfoPanel
     }
+
+    # Bindings
+    switch $ds9(wm) {
+	x11 -
+	win32 {bind $ds9(top) <F11> ToggleFullScreen}
+	aqua {bind $ds9(top) <Control-Command-f> ToggleFullScreen}
+    }
+    bind $ds9(top) <Escape> ExitFullScreen
+}
+
+proc ToggleFullScreen {} {
+    global ds9
+
+    set isFull [wm attributes $ds9(top) -fullscreen]
+    wm attributes $ds9(top) -fullscreen [expr {!$isFull}]
+}
+
+proc ExitFullScreen {} {
+    global ds9
+
+    wm attributes $ds9(top) -fullscreen 0
 }
 
 proc PrefsDialogViewMenu {w} {

@@ -1,3 +1,11 @@
+
+
+This is a fork of the official XPA project. It is being minimally
+maintained exclusively to meet the needs for the SAOImageDS9 project.
+
+
+*** ORIGINAL README ***
+
 This is the directory for XPA 2.0.
 
 The XPA messaging system provides seamless communication between many
@@ -36,7 +44,7 @@ standard instructions for building software using GNU configure).
 Documentation for XPA is contained in the doc subdirectory (where the
 help.html file is the top-level index).
 
-If you have questions, please contact us at: saord@cfa.harvard.edu.
+If you have questions, please contact us at: xxxxxxxxx
 
 							Eric Mandel
 

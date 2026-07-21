@@ -56,7 +56,8 @@ proc MarkerBaseAnnulusDialog {varname} {
     ColorMenu $var(mb).color $varname color [list MarkerBaseColor $varname]
     WidthDashMenu $var(mb).width $varname linewidth dash \
 	[list MarkerBaseLineWidth $varname] \
-	[list MarkerBaseProperty $varname dash]
+	[list MarkerBaseProperty $varname dash] dashlist \
+	[list MarkerBaseDashList $varname]
     MarkerBasePropertyMenu $varname
     FontMenu $var(mb).font $varname font font,size font,weight \
 	font,slant [list MarkerBaseFont $varname]

@@ -1753,6 +1753,36 @@ void Base::getMarkerLineWidthCmd(int id)
   }
 }
 
+void Base::getMarkerDashListCmd()
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->isSelected()) {
+      float* dlist = mm->getDashList();
+      ostringstream str;
+      str << dlist[0] << ' ' << dlist[1] << ends;
+      Tcl_AppendResult(interp, str.str().c_str(), NULL);
+      return;
+    }
+    mm=mm->next();
+  }
+}
+
+void Base::getMarkerDashListCmd(int id)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      float* dlist = mm->getDashList();
+      ostringstream str;
+      str << dlist[0] << ' ' << dlist[1] << ends;
+      Tcl_AppendResult(interp, str.str().c_str(), NULL);
+      return;
+    }
+    mm=mm->next();
+  }
+}
+
 void Base::getMarkerMapLenFromRefCmd(int id, double dd,
 				     Coord::CoordSystem sys, 
 				     Coord::DistFormat dist)
@@ -4312,6 +4342,45 @@ void Base::markerLineWidthCmd(int id, int w)
   while (mm) {
     if (mm->getId() == id) {
       mm->setLineWidth(w);
+      update(PIXMAP, mm->getAllBBox());
+      return;
+    }
+    mm=mm->next();
+  }
+}
+
+void Base::markerDashListCmd(int length, int gap)
+{
+  if (length < 1 || length > 255 || gap < 1 || gap > 255) {
+    Tcl_AppendResult(interp,
+	"dash list values must be integers from 1 through 255", NULL);
+    result = TCL_ERROR;
+    return;
+  }
+
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->isSelected()) {
+      mm->setDashList(length, gap);
+      update(PIXMAP, mm->getAllBBox());
+    }
+    mm=mm->next();
+  }
+}
+
+void Base::markerDashListCmd(int id, int length, int gap)
+{
+  if (length < 1 || length > 255 || gap < 1 || gap > 255) {
+    Tcl_AppendResult(interp,
+	"dash list values must be integers from 1 through 255", NULL);
+    result = TCL_ERROR;
+    return;
+  }
+
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      mm->setDashList(length, gap);
       update(PIXMAP, mm->getAllBBox());
       return;
     }

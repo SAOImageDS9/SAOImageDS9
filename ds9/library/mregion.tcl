@@ -162,7 +162,7 @@ proc RegionMainMenu {} {
     ColorFillMenu $ds9(mb).region.color marker color fill \
 	MarkerColor [list MarkerProp fill]
     WidthDashMenu $ds9(mb).region.width marker width dash \
-	MarkerWidth [list MarkerProp dash]
+	MarkerWidth [list MarkerProp dash] dashlist MarkerDashList
 
     ThemeMenu $ds9(mb).region.properties
     $ds9(mb).region.properties add checkbutton \
@@ -305,7 +305,7 @@ proc PrefsDialogRegionMenu {w} {
 	-variable pmarker(shape) -value {boxcircle point}
 
     ColorFillMenu $m.color pmarker color fill {} {}
-    WidthDashMenu $m.width pmarker width dash {} {}
+    WidthDashMenu $m.width pmarker width dash {} {} dashlist {}
 
     ThemeMenu $m.properties
     $m.properties add checkbutton -label [msgcat::mc {Fixed in Size}] \
@@ -1139,6 +1139,8 @@ proc UpdateRegionMenu {} {
 		    [$current(frame) get marker width]
 		set marker(dash) \
 		    [$current(frame) get marker property dash]
+		set marker(dashlist) \
+		    [$current(frame) get marker dashlist]
 
 		set f [$current(frame) get marker font]
 		set marker(font) [lindex $f 0]
@@ -1175,6 +1177,7 @@ proc UpdateRegionMenu {} {
 		set marker(fill) $pmarker(fill) 
 		set marker(width) $pmarker(width) 
 		set marker(dash) $pmarker(dash) 
+		set marker(dashlist) $pmarker(dashlist)
 
 		set marker(font) $pmarker(font) 
 		set marker(font,size) $pmarker(font,size) 

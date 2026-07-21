@@ -57,6 +57,10 @@ class ContourLevel {
   void setDash(int dd) {dash_ =dd;}
   int lineWidth() {return lineWidth_;}
   void setLineWidth(int ww) {lineWidth_ =ww;}
+  void setDashList(int length, int gap) {
+    dlist_[0] = length;
+    dlist_[1] = gap;
+  }
 
   ContourLevel* previous() {return previous_;}
   void setPrevious(ContourLevel* m) {previous_ = m;}

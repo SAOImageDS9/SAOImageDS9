@@ -52,7 +52,8 @@ proc MarkerBaseDialog {varname} {
 	[list MarkerBaseProperty $varname fill]
     WidthDashMenu $var(mb).width $varname linewidth dash \
 	[list MarkerBaseLineWidth $varname] \
-	[list MarkerBaseProperty $varname dash]
+	[list MarkerBaseProperty $varname dash] dashlist \
+	[list MarkerBaseDashList $varname]
     MarkerBasePropertyMenu $varname
     FontMenu $var(mb).font $varname font font,size font,weight \
 	font,slant [list MarkerBaseFont $varname]
@@ -121,6 +122,14 @@ proc MarkerBaseLineWidth {varname} {
     global $varname
 
     $var(frame) marker $var(id) width $var(linewidth)
+}
+
+proc MarkerBaseDashList {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    $var(frame) marker $var(id) dashlist \
+	[lindex $var(dashlist) 0] [lindex $var(dashlist) 1]
 }
 
 proc MarkerBaseProperty {varname prop} {
@@ -198,6 +207,7 @@ proc MarkerBaseLineWidthCB {varname {dummy {}}} {
     }
 
     set var(linewidth) [$var(frame) get marker $var(id) width]
+    set var(dashlist) [$var(frame) get marker $var(id) dashlist]
 }
 
 proc MarkerBasePropertyCB {varname {dummy {}}} {

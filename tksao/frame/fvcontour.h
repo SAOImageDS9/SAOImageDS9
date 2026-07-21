@@ -86,6 +86,7 @@ public:
   int lineWidth() {return lineWidth_;}
   int dash() {return dash_;}
   int* dlist() {return dlist_;}
+  void setDashList(int, int);
 
   const char* methodName();
   int numLevel() {return numLevel_;}

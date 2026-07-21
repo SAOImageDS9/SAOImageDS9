@@ -549,7 +549,7 @@ void Context::contourLoadAux(istream& str)
 }
 
 void Context::contourLoadAux(istream& str, const char* color, 
-			     int width, int dash)
+			     int width, int dash, int* dlist)
 {
   if (!cfits)
     return;
@@ -573,6 +573,8 @@ void Context::contourLoadAux(istream& str, const char* color,
       auxcontours_.current()->setColor(color);
       auxcontours_.current()->setLineWidth(width);
       auxcontours_.current()->setDash(dash);
+      if (dlist)
+	auxcontours_.current()->setDashList(dlist[0], dlist[1]);
     }
     while (auxcontours_.next());
   }

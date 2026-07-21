@@ -1267,8 +1267,6 @@ void Axis::offsets(int margin, int offset, AxisInfo *infoPtr)
       labelOffset += ops->lineWidth;
   }
 
-  int axisPad =0;
-
   // Adjust offset for the interior border width and the line width */
   // fixme
   int pad = 0;
@@ -1293,18 +1291,14 @@ void Axis::offsets(int margin, int offset, AxisInfo *infoPtr)
 	top_ = mark - height_;
       bottom_ = mark;
 
-      axisLine = bottom_;
+      // Keep the axis baseline on the edge of the data plotting area.
+      axisLine = mark;
       if (ops->exterior) {
-	axisLine -= gops->plotBW + axisPad + ops->lineWidth / 2;
 	tickLabel = axisLine - 2;
 	if (ops->lineWidth > 0)
 	  tickLabel -= ops->tickLength;
       } 
       else {
-	if (gops->plotRelief == TK_RELIEF_SOLID)
-	  axisLine--;
-
-	axisLine -= axisPad + ops->lineWidth / 2;
 	tickLabel = graphPtr_->top_ -  gops->plotBW - 2;
       }
 
@@ -1357,24 +1351,20 @@ void Axis::offsets(int margin, int offset, AxisInfo *infoPtr)
 
       left_ = screenMin_ - inset - 2;
       right_ = screenMin_ + screenRange_ + inset - 1;
-      top_ = mark + labelOffset - t1;
+      top_ = mark;
       if (gops->stackAxes)
 	bottom_ = mark + marginPtr->axesOffset - 1;
       else
 	bottom_ = mark + height_ - 1;
 
-      axisLine = top_;
-      if (gops->plotRelief == TK_RELIEF_SOLID)
-	axisLine++;
-
+      // Keep the axis baseline on the edge of the data plotting area.
+      axisLine = mark;
       if (ops->exterior) {
-	axisLine += gops->plotBW + axisPad + ops->lineWidth / 2;
 	tickLabel = axisLine + 2;
 	if (ops->lineWidth > 0)
 	  tickLabel += ops->tickLength;
       }
       else {
-	axisLine -= axisPad + ops->lineWidth / 2;
 	tickLabel = graphPtr_->bottom_ +  gops->plotBW + 2;
       }
 
@@ -1442,21 +1432,18 @@ void Axis::offsets(int margin, int offset, AxisInfo *infoPtr)
 	left_ = mark - marginPtr->axesOffset;
       else
 	left_ = mark - width_;
-      right_ = mark - 3;
+      right_ = mark;
       top_ = screenMin_ - inset - 2;
       bottom_ = screenMin_ + screenRange_ + inset - 1;
 
-      axisLine = right_;
+      // Keep the axis baseline on the edge of the data plotting area.
+      axisLine = mark;
       if (ops->exterior) {
-	axisLine -= gops->plotBW + axisPad + ops->lineWidth / 2;
 	tickLabel = axisLine - 2;
 	if (ops->lineWidth > 0)
 	  tickLabel -= ops->tickLength;
       }
       else {
-	if (gops->plotRelief == TK_RELIEF_SOLID)
-	  axisLine--;
-	axisLine += axisPad + ops->lineWidth / 2;
 	tickLabel = graphPtr_->left_ - gops->plotBW - 2;
       }
 
@@ -1492,18 +1479,14 @@ void Axis::offsets(int margin, int offset, AxisInfo *infoPtr)
       top_ = screenMin_ - inset - 2;
       bottom_ = screenMin_ + screenRange_ + inset -1;
 
-      axisLine = left_;
-      if (gops->plotRelief == TK_RELIEF_SOLID)
-	axisLine++;
-
+      // Keep the axis baseline on the edge of the data plotting area.
+      axisLine = mark;
       if (ops->exterior) {
-	axisLine += gops->plotBW + axisPad + ops->lineWidth / 2;
 	tickLabel = axisLine + 2;
 	if (ops->lineWidth > 0)
 	  tickLabel += ops->tickLength;
       }
       else {
-	axisLine -= axisPad + ops->lineWidth / 2;
 	tickLabel = graphPtr_->right_ + gops->plotBW + 2;
       }
 
@@ -1979,4 +1962,3 @@ void Axis::getGeometry()
   else
     width_ = y;
 }
-

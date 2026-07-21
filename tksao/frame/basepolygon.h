@@ -45,9 +45,12 @@ public:
   void createVertex(int, const Vector&);
   void deleteVertex(int);
   void edit(const Vector&, int);
+  void listVertices(FitsImage*, ostream&, Coord::CoordSystem,
+		    Coord::SkyFrame, Coord::SkyFormat);
   virtual int getSegment(const Vector&) =0;
   virtual void reset(const Vector&) =0;
   void rotate(const Vector&, int);
+  void setVertices(List<Vertex>&);
   void updateCoords(const Matrix&);
 };
 

@@ -1699,6 +1699,31 @@ void Base::getMarkerLineLengthCmd(int id, Coord::CoordSystem sys,
   }
 }
 
+void Base::getMarkerPolygonPointCmd(int id, Coord::CoordSystem sys,
+				    Coord::SkyFrame sky,
+				    Coord::SkyFormat format)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      if (strcmp(mm->getType(), "polygon")) {
+	result = TCL_ERROR;
+	return;
+      }
+
+      FitsImage* ptr = findFits(sys,mm->getCenter());
+      ostringstream str;
+      ((Polygon*)mm)->listVertices(ptr,str,sys,sky,format);
+      str << ends;
+      Tcl_AppendResult(interp,str.str().c_str(),NULL);
+      return;
+    }
+    mm=mm->next();
+  }
+
+  result = TCL_ERROR;
+}
+
 void Base::getMarkerLineWidthCmd()
 {
   // return first found
@@ -5041,6 +5066,92 @@ void Base::markerPolygonDeleteVertexCmd(int id, int h)
     }
     mm=mm->next();
   }
+}
+
+void Base::markerPolygonPointCmd(int id, const char* value,
+				 Coord::CoordSystem sys, Coord::SkyFrame sky,
+				 Coord::SkyFormat format)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      if (strcmp(mm->getType(), "polygon") || !mm->canEdit()) {
+	result = TCL_ERROR;
+	return;
+      }
+
+      FitsImage* ptr = findFits(sys,mm->getCenter());
+      List<Vertex> points;
+      string input(value);
+      istringstream str(input);
+      string sx;
+      string sy;
+
+      while (str >> sx) {
+	if (!(str >> sy)) {
+	  Tcl_AppendResult(interp,"polygon point list requires X Y pairs",NULL);
+	  result = TCL_ERROR;
+	  return;
+	}
+
+	double xx;
+	double yy;
+	if (format == Coord::SEXAGESIMAL && ptr->hasWCSCel(sys)) {
+	  int xmajor;
+	  int xminute;
+	  int ymajor;
+	  int yminute;
+	  double xsecond;
+	  double ysecond;
+	  char extra;
+	  if (sscanf(sx.c_str(),"%d:%d:%lf%c",&xmajor,&xminute,&xsecond,
+		     &extra) != 3 ||
+	      sscanf(sy.c_str(),"%d:%d:%lf%c",&ymajor,&yminute,&ysecond,
+		     &extra) != 3 ||
+	      xminute < 0 || xminute >= 60 ||
+	      yminute < 0 || yminute >= 60 ||
+	      xsecond < 0 || xsecond >= 60 ||
+	      ysecond < 0 || ysecond >= 60) {
+	    Tcl_AppendResult(interp,"invalid polygon point coordinate",NULL);
+	    result = TCL_ERROR;
+	    return;
+	  }
+	  xx = parseSEXStr(sx.c_str());
+	  yy = parseSEXStr(sy.c_str());
+	  if (sky != Coord::GALACTIC && sky != Coord::ECLIPTIC)
+	    xx *= 360./24.;
+	}
+	else {
+	  char* ex;
+	  char* ey;
+	  xx = strtod(sx.c_str(),&ex);
+	  yy = strtod(sy.c_str(),&ey);
+	  if (*ex || *ey) {
+	    Tcl_AppendResult(interp,"invalid polygon point coordinate",NULL);
+	    result = TCL_ERROR;
+	    return;
+	  }
+	}
+
+	points.append(new Vertex(ptr->mapToRef(Vector(xx,yy),sys,sky)));
+      }
+
+      if (points.count() < 3) {
+	Tcl_AppendResult(interp,"polygon requires at least three points",NULL);
+	result = TCL_ERROR;
+	return;
+      }
+
+      markerUndo(mm,EDIT);
+      update(PIXMAP,mm->getAllBBox());
+      ((Polygon*)mm)->setVertices(points);
+      update(PIXMAP,mm->getAllBBox());
+      return;
+    }
+    mm=mm->next();
+  }
+
+  result = TCL_ERROR;
 }
 
 void Base::markerPolygonResetCmd(int id, const Vector& size, 

@@ -2052,6 +2052,9 @@ marker	: CENTROID_ markerCentroid
 	| INT MOVE_ TO_ coordSystem skyFrame coord
 	{fr->markerMoveToCmd($1,Vector($6),(Coord::CoordSystem)$4,(Coord::SkyFrame)$5);}
 
+	| INT POLYGON_ POINT_ coordSystem skyFrame skyFormat STRING
+	{fr->markerPolygonPointCmd($1,$7,(Coord::CoordSystem)$4,
+	    (Coord::SkyFrame)$5,(Coord::SkyFormat)$6);}
 	| INT POLYGON_ RESET_ numeric numeric coordSystem skyDist
 	{fr->markerPolygonResetCmd($1, Vector($4,$5),
 	    (Coord::CoordSystem)$6, (Coord::DistFormat)$7);}
@@ -2516,6 +2519,9 @@ markerGet : CENTROID_ markerGetCentroid
 
 	| INT POINT_ SHAPE_ {fr->getMarkerPointShapeCmd($1);}
 	| INT POINT_ SIZE_ {fr->getMarkerPointSizeCmd($1);}
+	| INT POLYGON_ POINT_ coordSystem skyFrame skyFormat
+	{fr->getMarkerPolygonPointCmd($1,(Coord::CoordSystem)$4,
+	    (Coord::SkyFrame)$5,(Coord::SkyFormat)$6);}
 	| INT PROJECTION_ POINT_ coordSystem skyFrame skyFormat
 	{fr->getMarkerProjectionPointsCmd($1, (Coord::CoordSystem)$4,
 	    (Coord::SkyFrame)$5, (Coord::SkyFormat)$6);}

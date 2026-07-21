@@ -1317,6 +1317,8 @@ public:
   void getMarkerNumberCmd();
   void getMarkerPointShapeCmd(int);
   void getMarkerPointSizeCmd(int);
+  void getMarkerPolygonPointCmd(int, Coord::CoordSystem, Coord::SkyFrame,
+				Coord::SkyFormat);
   void getMarkerPolygonSegmentCmd(const Vector&);
   void getMarkerPreserveCmd();
   void getMarkerProjectionPointsCmd(int, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
@@ -1514,6 +1516,8 @@ public:
   void markerPointSizeCmd(int, int);
   void markerPolygonCreateVertexCmd(int, int, const Vector&);
   void markerPolygonDeleteVertexCmd(int, int);
+  void markerPolygonPointCmd(int, const char*, Coord::CoordSystem,
+			     Coord::SkyFrame, Coord::SkyFormat);
   void markerPolygonResetCmd(int, const Vector&, Coord::CoordSystem, Coord::DistFormat);
   void markerPreserveCmd(int r) {preserveMarkers = r;}
   void markerPropertyCmd(unsigned short, int);

@@ -94,6 +94,45 @@ void BasePolygon::deleteVertex(int h)
   }
 }
 
+void BasePolygon::listVertices(FitsImage* ptr, ostream& str,
+			       Coord::CoordSystem sys, Coord::SkyFrame sky,
+			       Coord::SkyFormat format)
+{
+  Matrix mm = fwdMatrix();
+
+  if (vertex.head()) {
+    do {
+      ptr->listFromRef(str, vertex.current()->vector*mm, sys, sky, format);
+      str << endl;
+    } while (vertex.next());
+  }
+}
+
+void BasePolygon::setVertices(List<Vertex>& vv)
+{
+  if (vv.count() < 3)
+    return;
+
+  vertex = vv;
+
+  center = Vector(0,0);
+  vertex.head();
+  do
+    center += vertex.current()->vector;
+  while (vertex.next());
+  center /= vertex.count();
+
+  Matrix mm = Translate(-center) * FlipY() * Rotate(-angle);
+  vertex.head();
+  do
+    vertex.current()->vector *= mm;
+  while (vertex.next());
+
+  updateBBox();
+  doCallBack(CallBack::EDITCB);
+  doCallBack(CallBack::MOVECB);
+}
+
 void BasePolygon::edit(const Vector& v, int h)
 {
   if (h < 5) {
@@ -232,4 +271,3 @@ void BasePolygon::listBase(FitsImage* ptr, ostream& str,
   } while (vertex.next());
   str << ')';
 }
-

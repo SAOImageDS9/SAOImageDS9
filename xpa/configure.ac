@@ -1,7 +1,7 @@
 #	This file is an input file used by the GNU "autoconf" program to
 #	generate the file "configure", which is run during XPA installation
 #	to configure the system for the local environment.
-AC_INIT(xpa, 2.1.20, eric@cfa.harvard.edu, xpa)
+AC_INIT(xpa, 2.2.0, ds9help@cfa.harvard.edu, xpa)
 
 AC_CONFIG_HEADERS([conf.h])
 AC_CONFIG_SRCDIR(./xpa.h)
@@ -50,16 +50,16 @@ AC_CHECK_FUNCS(strchr memcpy snprintf atexit setenv getaddrinfo)
 AC_CHECK_FUNC(connect)
 if test $ac_cv_func_connect = no; then
   AC_CHECK_LIB(socket, connect,  EXTRA_LIBS="$EXTRA_LIBS -lsocket")
-fi                                                                          
+fi
 AC_CHECK_FUNC(gethostbyname)
 if test $ac_cv_func_gethostbyname = no; then
   AC_CHECK_LIB(nsl, gethostbyname, EXTRA_LIBS="$EXTRA_LIBS -lnsl")
-fi                                                                          
+fi
 # AC_CHECK_LIB(db, snprintf, EXTRA_LIBS="$EXTRA_LIBS -ldb")
 
 #
 # checks specific to this project
-# 
+#
 
 AC_MSG_CHECKING(for threaded xpans)
 AC_ARG_ENABLE(threaded-xpans, [  --enable-threaded-xpans    build threaded xpans],

@@ -5,6 +5,16 @@
 <body>
 <center><h3>XPA ChangeLog</h3></center>
 
+<h3> Public Release 2.2.0 (July 20, 2026)</h3>
+<ul>
+<li> Forked project to SAOImageDS9/xpa-maintenance
+<li> Updated to support tcl/tk9
+<li> Updated config files for modern versions
+<li> Updated to degrade gracefully if hostname doesn't match IP address.
+</ul>
+
+
+
 <h3> Public Release 2.1.20 (April 3, 2020)</h3>
 <ul>
 <li> Makefile.in: fix mingw support
@@ -186,7 +196,7 @@ all users have write permissions to the socket file (OS X apparently uses
 these permissions while previous platforms ignore them).
 <li> Configure now checks for socklen_t type (OS X does not define it).
 
-<p> 
+<p>
 <li> Added an atexit function to run XPAFree. The aim here is to delete Unix
 socket files on exiting.
 <li> Under Windows, the Tcl event-handling code now blocks for 1/1000 of a
@@ -205,7 +215,7 @@ searching for xpans. This is no longer the case.
 <li> Upgraded autoconf to 2.57. Included in this upgrade is a change that
 makes gcc the default compiler (use "configure CC=cc" to change this).
 Also, by default, the Tcl shared object is no longer automatically built
-if the Tcl libraries are used. Use the --enable-tclshlib switch in 
+if the Tcl libraries are used. Use the --enable-tclshlib switch in
 configure to enable this feature.
 <li>  Changed license from public domain to GNU GPL.
 </ul>
@@ -337,7 +347,7 @@ to help differentiate between XPA versions within Tcl code.
 <li> Fixed client.c/xopen() so that it does not open an extra socket.
 <li> Fixed xpainfo/xopen() to prevent client from hanging waiting for ack.
 
-<p> 
+<p>
 <li> Modified stest to generate xpaaccess points xpa, xpa1, c_xpa, and
 i_xpa (or more generally, <name>, <name>1, c_<name>, i<name>) to allow
 more flexible testing of templates. Also added -a for testing XPAAccess().

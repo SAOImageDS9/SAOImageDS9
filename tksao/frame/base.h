@@ -918,6 +918,11 @@ public:
   void saveFitsChannelCmd(const char*);
   void saveFitsSocketCmd(int);
 
+  void savePixelMask(OutFitsStream&);
+  void savePixelMaskFileCmd(const char*);
+  void savePixelMaskChannelCmd(const char*);
+  void savePixelMaskSocketCmd(int);
+
   void saveFitsTable(OutFitsStream&);
   void saveFitsTableFileCmd(const char*);
   void saveFitsTableChannelCmd(const char*);
@@ -1227,14 +1232,19 @@ public:
 		       const List<Tag>&, const List<CallBack>& cb);
 
   // Composite Regions
-  void createCompositeCmd(const Vector&, double, int,
+  void createCompositeCmd(const Vector&, double, int, int,
 			  const char*, int*, int, const char*, 
 			  const char*, unsigned short, const char*,
 			  const List<Tag>&, const List<CallBack>& cb);
   void createCompositeCmd(
+			  int,
 			  const char*, int*, int, const char*, 
 			  const char*, unsigned short, const char*,
 			  const List<Tag>&, const List<CallBack>& cb);
+  void createCIAOCompositeCmd(int, int,
+			      const char*, int*, int, const char*,
+			      const char*, unsigned short, const char*,
+			      const List<Tag>&, const List<CallBack>& cb);
 
   // Template Regions
   void createTemplateCmd(const Vector&, const char*);
@@ -1276,6 +1286,8 @@ public:
   void getMarkerCompassRadiusCmd(int, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerCompassSystemCmd(int);
   void getMarkerCompositeCmd(int);
+  void getMarkerCompositeOperationCmd(int);
+  void getMarkerCompositeAreaCmd(int);
   void getMarkerCpandaAnglesCmd(int);
   void getMarkerCpandaAnglesCmd(int, Coord::CoordSystem, Coord::SkyFrame);
   void getMarkerCpandaRadiusCmd(int, Coord::CoordSystem, Coord::DistFormat);
@@ -1396,6 +1408,8 @@ public:
   void markerCompassRadiusCmd(int, double, Coord::CoordSystem, Coord::DistFormat);
   void markerCompassSystemCmd(int, Coord::CoordSystem, Coord::SkyFrame);
   void markerCompositeCmd(int, int);
+  void markerCompositeOperationCmd(int, const char*);
+  void markerCompositeAreaCmd(int, int);
   void markerCompositeDeleteCmd();
   void markerCommandCmd(MarkerFormat, const char*);
   void markerCommandVarCmd(MarkerFormat, const char*);

@@ -4,6 +4,7 @@
 
 #include "util.h"
 #include "context.h"
+#include "composite.h"
 #include "framebase.h"
 #include "framemulticolor.h"
 #include "framergb.h"
@@ -41,6 +42,84 @@ void Base::saveFits(OutFitsStream& str)
     size_t cnt = ptr->saveFitsIIS(str);
     ptr->saveFitsPad(str,cnt,'\0');
   }
+}
+
+void Base::savePixelMask(OutFitsStream& str)
+{
+  FitsImage* ptr = currentContext->cfits;
+  if (!ptr)
+    return;
+
+  const int width = ptr->width();
+  const int height = ptr->height();
+  const size_t npixel = size_t(width) * size_t(height);
+  short* mask = new short[npixel];
+  memset(mask, 0, npixel * sizeof(short));
+
+  // Includes assign their region ID.  Excludes are applied in a second pass
+  // and therefore always clear pixels, regardless of marker list order.
+  for (int include=1; include>=0; include--) {
+    for (Marker* mk=userMarkers.begin(); mk; mk=mk->next()) {
+      if (mk->getProperty(Marker::INCLUDE) != include)
+	continue;
+
+      const short value = include ? (short)mk->getId() : 0;
+      Composite* composite = !strncmp(mk->getType(),"composite",9) ?
+	(Composite*)mk : NULL;
+      List<Marker> compositeMembers;
+      if (composite)
+	composite->copyRegionMembers(compositeMembers);
+      for (int jj=0; jj<height; jj++) {
+	for (int ii=0; ii<width; ii++) {
+	  Vector pixel = (Vector(ii,jj) + Vector(.5,.5)) * ptr->dataToRef;
+	  Vector canvas = pixel*refToCanvas;
+	  int inside = composite ?
+	    composite->isInRegion(canvas,compositeMembers) : mk->isIn(canvas);
+	  if (inside)
+	    mask[size_t(jj)*width+ii] = value;
+	}
+      }
+    }
+  }
+
+  // Start with a valid primary image header, then preserve all non-structural
+  // cards from the current image.  This also handles frames loaded from an
+  // image extension, whose source header begins with XTENSION rather than
+  // SIMPLE.  Scaling and checksum cards cannot describe the new mask data.
+  FitsHead head(width, height, 1, 16);
+  FitsHead* src = ptr->head();
+  char* card = src->cards();
+  for (int ii=0; ii<src->ncard(); ii++, card+=FTY_CARDLEN) {
+    if (!strncmp(card,"END",3))
+      break;
+    if (!strncmp(card,"SIMPLE",6) || !strncmp(card,"XTENSION",8) ||
+	!strncmp(card,"BITPIX",6) || !strncmp(card,"NAXIS",5) ||
+	!strncmp(card,"PCOUNT",6) || !strncmp(card,"GCOUNT",6) ||
+	!strncmp(card,"TFIELDS",7) || !strncmp(card,"THEAP",5) ||
+	!strncmp(card,"TTYPE",5) || !strncmp(card,"TFORM",5) ||
+	!strncmp(card,"TUNIT",5) || !strncmp(card,"TSCAL",5) ||
+	!strncmp(card,"TZERO",5) || !strncmp(card,"TNULL",5) ||
+	!strncmp(card,"TDISP",5) || !strncmp(card,"TDIM",4) ||
+	!strncmp(card,"ZIMAGE",6) || !strncmp(card,"ZBITPIX",7) ||
+	!strncmp(card,"ZNAXIS",6) || !strncmp(card,"ZTILE",5) ||
+	!strncmp(card,"ZCMPTYPE",8) || !strncmp(card,"ZNAME",5) ||
+	!strncmp(card,"ZVAL",4) ||
+	!strncmp(card,"BSCALE",6) || !strncmp(card,"BZERO",5) ||
+	!strncmp(card,"BLANK",5) || !strncmp(card,"CHECKSUM",8) ||
+	!strncmp(card,"DATASUM",7))
+      continue;
+    head.cardins(card,NULL);
+  }
+  str.write(head.cards(), head.headbytes());
+
+  const size_t nbytes = npixel * sizeof(short);
+  if (lsb())
+    str.writeSwap((char*)mask, nbytes, 16);
+  else
+    str.write((char*)mask, nbytes);
+  ptr->saveFitsPad(str, nbytes, '\0');
+
+  delete [] mask;
 }
 
 void Base::saveFitsTable(OutFitsStream& str)

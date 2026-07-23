@@ -140,10 +140,16 @@ proc RegionMainMenu {} {
 	-variable marker(shape) -value {boxcircle point}
 
     ThemeMenu $ds9(mb).region.composite
-    $ds9(mb).region.composite add command -label [msgcat::mc {Create}] \
-	-command CompositeCreate
+    $ds9(mb).region.composite add command -label [msgcat::mc {Create Union}] \
+	-command {CompositeCreate 0}
+    $ds9(mb).region.composite add command -label [msgcat::mc {Create Intersection}] \
+	-command {CompositeCreate 1}
     $ds9(mb).region.composite add command -label [msgcat::mc {Dissolve}] \
 	-command CompositeDelete
+    $ds9(mb).region.composite add separator
+    $ds9(mb).region.composite add checkbutton \
+	-label [msgcat::mc {Show Composite Area}] \
+	-variable marker(composite,area) -command CompositeAreaSelected
 
     CreateFOVMenu
 
@@ -815,7 +821,7 @@ proc CreateButtonsRegion {} {
 	marker shape bpanda {}
 
     ButtonButton $ds9(buttons).region.create \
-	[string tolower [msgcat::mc {Composite}]] CompositeCreate
+	[string tolower [msgcat::mc {Union}]] {CompositeCreate 0}
     ButtonButton $ds9(buttons).region.dissolve \
 	[string tolower [msgcat::mc {Dissolve}]] CompositeDelete
 
@@ -1155,6 +1161,14 @@ proc UpdateRegionMenu {} {
 		set marker(source) \
 		    [$current(frame) get marker property source]
 
+		set id [lindex [$current(frame) get marker select] 0]
+		if {[$current(frame) get marker $id type] eq {composite}} {
+		    set marker(composite,area) \
+			[$current(frame) get marker $id composite area]
+		} else {
+		    set marker(composite,area) $pmarker(composite,area)
+		}
+
 	    } else {
 		# defaults
 		set marker(color) $pmarker(color)
@@ -1174,6 +1188,7 @@ proc UpdateRegionMenu {} {
 		set marker(delete) $pmarker(delete) 
 		set marker(include) $pmarker(include) 
 		set marker(source) $pmarker(source) 
+		set marker(composite,area) $pmarker(composite,area)
 	    }
 	}
     }

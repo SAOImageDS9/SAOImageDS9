@@ -531,7 +531,7 @@ void Cpanda::listB(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 
       if (!strip) {
 	if (conj)
-	  str << " ||";
+	  str << ' ' << listConjunction(conj);
 
 	str << " # panda=";
 	if (ii==1 && jj==1 && !strip) {
@@ -555,7 +555,7 @@ void Cpanda::listB(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
       }
       else {
 	if (conj)
-	  str << "||";
+	  str << listConjunction(conj);
 	else
 	  str << ";";
       }

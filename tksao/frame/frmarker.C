@@ -3,6 +3,9 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include <fstream>
+#include <map>
+#include <string>
+#include <vector>
 #include "fdstream.hpp"
 
 #include "util.h"
@@ -659,7 +662,7 @@ void Base::createBpandaCmd(const Vector& center,
 
 // Composite Regions
 void Base::createCompositeCmd(const Vector& center, double angle, 
-			      int global,
+			      int global, int operation,
 			      const char* color, int* dash, 
 			      int width, const char* font,
 			      const char* text, unsigned short prop, 
@@ -667,7 +670,8 @@ void Base::createCompositeCmd(const Vector& center, double angle,
 			      const List<Tag>& tag, 
 			      const List<CallBack>& cb)
 {
-  Composite* m = new Composite(this, center, angle, global, 
+  Composite* m = new Composite(this, center, angle, global,
+			       (Composite::Operation)operation,
 			       color, dash, width, font, text, 
 			       prop, comment, tag, cb);
   if (createMarker(m))
@@ -675,6 +679,7 @@ void Base::createCompositeCmd(const Vector& center, double angle,
 }
 
 void Base::createCompositeCmd(
+			      int operation,
 			      const char* color, int* dash, 
 			      int width, const char* font,
 			      const char* text, unsigned short prop, 
@@ -696,7 +701,9 @@ void Base::createCompositeCmd(
   cc /= cnt;
 
   // create composite
-  Composite* mk = new Composite(this, cc, 0, 1, color, dash, width, font, 
+  Composite* mk = new Composite(this, cc, 0, 1,
+				(Composite::Operation)operation,
+				color, dash, width, font,
 				text, prop, comment, tag, cb);
   if (!createMarker(mk))
     return;
@@ -721,6 +728,43 @@ void Base::createCompositeCmd(
   mk->select();
 
   update(PIXMAP);
+}
+
+void Base::createCIAOCompositeCmd(
+				 int count,
+				 int operation,
+				 const char* color, int* dash,
+				 int width, const char* font,
+				 const char* text, unsigned short prop,
+				 const char* comment,
+				 const List<Tag>& tag,
+				 const List<CallBack>& cb)
+{
+  if (count < 2 || markers->count() < count)
+    return;
+
+  Vector center;
+  Marker* mm = markers->tail();
+  for (int ii=0; ii<count; ii++) {
+    center += mm->getCenter();
+    mm = mm->previous();
+  }
+  center /= count;
+
+  // Extract only the shapes in this logical expression, preserving their order.
+  List<Marker> members;
+  for (int ii=0; ii<count; ii++)
+    members.insertHead(markers->pop());
+
+  Composite* mk = new Composite(this, center, 0, 1,
+				(Composite::Operation)operation,
+				color, dash, width, font, text,
+				prop, comment, tag, cb);
+  while (!members.isEmpty())
+    mk->append(members.fifo());
+  mk->updateBBox();
+
+  createMarker(mk);
 }
 
 // Template Regions
@@ -1349,6 +1393,36 @@ void Base::getMarkerCompositeCmd(int id)
   while (mm) {
     if (mm->getId() == id) {
       if (((Composite*)mm)->getGlobal())
+	Tcl_AppendResult(interp, "1", NULL);
+      else
+	Tcl_AppendResult(interp, "0", NULL);
+      return;
+    }
+    mm=mm->next();
+  }
+}
+
+void Base::getMarkerCompositeOperationCmd(int id)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      Composite* composite = (Composite*)mm;
+      Tcl_AppendResult(interp,
+	composite->getOperation() == Composite::INTERSECTION ?
+	"intersection" : "union", NULL);
+      return;
+    }
+    mm=mm->next();
+  }
+}
+
+void Base::getMarkerCompositeAreaCmd(int id)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      if (((Composite*)mm)->getShowArea())
 	Tcl_AppendResult(interp, "1", NULL);
       else
 	Tcl_AppendResult(interp, "0", NULL);
@@ -3141,6 +3215,50 @@ void Base::markerCompositeCmd(int id, int gl)
   result = TCL_ERROR;
 }
 
+void Base::markerCompositeOperationCmd(int id, const char* operation)
+{
+  Composite::Operation op;
+  if (!strcasecmp(operation,"union"))
+    op = Composite::UNION;
+  else if (!strcasecmp(operation,"intersection"))
+    op = Composite::INTERSECTION;
+  else {
+    result = TCL_ERROR;
+    return;
+  }
+
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      if (mm->canEdit()) {
+	((Composite*)mm)->setOperation(op);
+	update(PIXMAP, mm->getAllBBox());
+      }
+      return;
+    }
+    mm=mm->next();
+  }
+
+  result = TCL_ERROR;
+}
+
+void Base::markerCompositeAreaCmd(int id, int show)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      if (mm->canEdit()) {
+	((Composite*)mm)->setShowArea(show);
+	update(PIXMAP, mm->getAllBBox());
+      }
+      return;
+    }
+    mm=mm->next();
+  }
+
+  result = TCL_ERROR;
+}
+
 void Base::markerCompositeDeleteCmd()
 {
   Marker* mm=markers->head();
@@ -4410,6 +4528,7 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color)
   FitsBinColumn* shape = (FitsBinColumn*)mkhdu->find("shape");
   FitsBinColumnB* r = (FitsBinColumnB*)mkhdu->find("r");
   FitsBinColumnB* ang = (FitsBinColumnB*)mkhdu->find("rotang");
+  FitsBinColumn* component = (FitsBinColumn*)mkhdu->find("component");
   
   // manatory columns x and y
   if (!x || !y) {
@@ -4436,7 +4555,13 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color)
   List<Tag> taglist;
   List<CallBack> cblist;
 
+  typedef std::vector<Marker*> FitsRegionComponent;
+  std::map<std::string, FitsRegionComponent> components;
+  std::vector<std::string> componentOrder;
+
   for (int i=0; i<rows; i++, ptr+=rowlen) {
+    Marker* previous = component ? markers->tail() : NULL;
+
     char* s1;
     if (shape)
       s1 = toUpper(shape->str(ptr));
@@ -4583,7 +4708,47 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color)
 			 taglist,cblist);
     }
 
+    if (component) {
+      Marker* created = markers->tail();
+      if (created && created != previous) {
+	// Compare the encoded table values directly. COMPONENT is normally an
+	// integer column, but this also supports fixed-width string columns.
+	std::string key(ptr+component->offset(), component->width());
+	if (components.find(key) == components.end())
+	  componentOrder.push_back(key);
+	components[key].push_back(created);
+      }
+    }
+
     delete [] s1;
+  }
+
+  if (component) {
+    unsigned short compositeProps =
+      Marker::SELECT | Marker::HIGHLITE | Marker::EDIT | Marker::MOVE |
+      Marker::ROTATE | Marker::DELETE | Marker::INCLUDE | Marker::SOURCE;
+
+    for (std::vector<std::string>::iterator key=componentOrder.begin();
+	 key != componentOrder.end(); ++key) {
+      FitsRegionComponent& members = components[*key];
+      Vector center;
+      for (FitsRegionComponent::iterator mm=members.begin();
+	   mm != members.end(); ++mm)
+	center += (*mm)->getCenter();
+      center /= members.size();
+
+      Composite* composite = new Composite(this, center, 0, 1,
+					   Composite::INTERSECTION,
+					   color, dash, width, font, text,
+					   compositeProps, NULL, taglist, cblist);
+      for (FitsRegionComponent::iterator mm=members.begin();
+	   mm != members.end(); ++mm) {
+	markers->extractNext(*mm);
+	composite->append(*mm);
+      }
+      composite->updateBBox();
+      createMarker(composite);
+    }
   }
 
   if (mkfits)

@@ -2099,6 +2099,7 @@ Example:<br>
 $ds9 -raise<br></tt>
 <p><b><a name="region" id="region"></a>region</b></p>
 <p>Controls regions in the current frame.</p>
+<p>The <tt>composite</tt> command combines the currently selected regions into a composite region. The default operation is <tt>union</tt>; specify <tt>intersection</tt> to create an intersection composite. The <tt>dissolve</tt> command separates a selected composite into its component regions.</p>
 <tt>Syntax:<br>
 -region [&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [load [all] &lt;filename&gt;]<br>
@@ -2132,7 +2133,7 @@ $ds9 -raise<br></tt>
 &nbsp;&nbsp;&nbsp; [include|exclude|source|background]<br>
 &nbsp;&nbsp;&nbsp; [command &lt;marker command&gt;]<br>
 &nbsp;&nbsp;&nbsp; [analysis histogram|panda|plot2d|plot3d|radial|stats [open|close|save]]<br>
-&nbsp;&nbsp;&nbsp; [composite]<br>
+&nbsp;&nbsp;&nbsp; [composite [union|intersection]]<br>
 &nbsp;&nbsp;&nbsp; [dissolve]<br>
 &nbsp;&nbsp;&nbsp; [template &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [template &lt;filename&gt; at &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt; &lt;skyframe&gt;]<br>
@@ -2207,6 +2208,8 @@ $ds9 -region analysis stats
 $ds9 -region analysis stats close
 $ds9 -region analysis histogram save
 $ds9 -region composite<br>
+$ds9 -region composite union<br>
+$ds9 -region composite intersection<br>
 $ds9 -region dissolve<br>
 $ds9 -region template foo.tpl<br>
 $ds9 -region template foo.tpl at 13:29:55.92 +47:12:48.02 fk5<br>
@@ -2337,15 +2340,16 @@ $ds9 -samp hub info
 Example:<br>
 $ds9 -hsv -saturation foo.fits</tt>
 <p><b><a name="save" id="save"></a>save<br></b></p>
-<p>Save loaded image data of current frame as FITS.</p>
+<p>Save loaded image data of current frame as FITS. The <tt>pixmask</tt> format saves a signed 16-bit integer pixel mask initialized to zero. Pixels inside include regions are assigned the region ID; pixels inside exclude regions are reset to zero. The current frame's FITS header keywords are copied and adjusted for the mask data type and dimensions.</p>
 <tt>Syntax:<br>
--save[fits|rgbimage|rgbcube|mecube|mosaic|mosaicimage] &lt;filename&gt; [image|table|slice]<br>
+-save [fits|pixmask|rgbimage|rgbcube|mecube|mosaic|mosaicimage] &lt;filename&gt; [image|table|slice]<br>
 <br>
 Example:<br>
 $ds9 -save foo.fits<br>
 $ds9 -save fits foo.fits image<br>
 $ds9 -save fits foo.fits table<br>
 $ds9 -save fits foo.fits slice<br>
+$ds9 -save pixmask mask.fits<br>
 $ds9 -save rgbimage foo.fits<br>
 $ds9 -save rgbcube foo.fits<br>
 $ds9 -save mecube foo.fits<br>

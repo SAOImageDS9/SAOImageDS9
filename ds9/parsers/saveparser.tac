@@ -24,6 +24,7 @@
 %token IMAGE_
 %token TABLE_
 %token SLICE_
+%token PIXMASK_
 
 %%
 
@@ -36,6 +37,7 @@ save : STRING_ opts {SaveCmdLoad [ExtToFormat $1] $1}
  ;
 
 format : FITS_ {set _ fits}
+ | PIXMASK_ {set _ pixmask}
  | RGBIMAGE_ {set _ rgbimage}
  | RGBCUBE_ {set _ rgbcube}
  | HLSIMAGE_ {set _ hlsimage}

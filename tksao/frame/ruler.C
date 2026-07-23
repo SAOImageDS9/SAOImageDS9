@@ -445,7 +445,7 @@ void Ruler::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     str  << ')';
 
     if (conj)
-      str << " ||";
+      str << ' ' << listConjunction(conj);
 
     str << " ruler=";
     coord.listCoordSystem(str, coordSystem, skyFrame, ptr);
@@ -485,4 +485,3 @@ void Ruler::listXML(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   XMLRowProps(ptr,sys);
   XMLRowEnd(str);
 }
-

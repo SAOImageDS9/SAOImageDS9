@@ -44,6 +44,7 @@ arcmin		{return ARCMIN_;}
 arcsec		{return ARCSEC_;}
 array		{return ARRAY_;}
 arrow		{return ARROW_;}
+area		{return AREA_;}
 asinh		{return ASINH_;}
 ast		{return AST_;}
 auto		{return AUTO_;}
@@ -270,6 +271,7 @@ perf		{return PERF_;}
 photo		{return PHOTO_;}
 physical	{return PHYSICAL_;}
 pixel		{return PIXEL_;}
+pixmask		{return PIXMASK_;}
 plot2d		{return PLOT2D_;}
 plot3d		{return PLOT3D_;}
 point		{return POINT_;}

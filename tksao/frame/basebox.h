@@ -55,6 +55,7 @@ public:
 
   virtual Marker* dup() =0;
 
+  int hasArea() {return 1;}
   int isIn(const Vector& vv) 
   {return isIn(vv, Coord::CANVAS);}
   int isIn(const Vector& vv, Coord::InternalSystem sys)

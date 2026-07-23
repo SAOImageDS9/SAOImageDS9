@@ -319,7 +319,7 @@ void Projection::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   str  << ')';
 
   if (conj)
-    str << " ||";
+    str << ' ' << listConjunction(conj);
 
   listProperties(str, 0);
 }
@@ -344,6 +344,5 @@ void Projection::listXML(ostream& str, Coord::CoordSystem sys,
   XMLRowProps(ptr,sys);
   XMLRowEnd(str);
 }
-
 
 

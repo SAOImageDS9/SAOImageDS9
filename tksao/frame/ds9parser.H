@@ -296,7 +296,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 138 "frame/ds9parser.Y"
+#line 139 "frame/ds9parser.Y"
 {
 #define MKBUFSIZE 2048
   double real;

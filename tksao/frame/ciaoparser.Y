@@ -19,6 +19,7 @@
 #include "base.h"
 #include "fitsimage.h"
 #include "basemarker.h"
+#include "composite.h"
 
 #undef yyFlexLexer
 #define yyFlexLexer ciaoFlexLexer
@@ -37,7 +38,13 @@ static List<Vertex> polylist;
 static List<Tag> taglist;
 static List<CallBack> cblist;
 
+static int compositeCount;
+static Composite::Operation compositeOperation;
+static int havePrevious;
+
 static void setProps(unsigned short* props, unsigned short prop, int value);
+static void beginComposite(Base* fr, Composite::Operation operation);
+static void endComposite(Base* fr);
 %}
 
 %union {
@@ -92,6 +99,9 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 
 start	: {
   strcpy(color, fr->markerColor());
+  compositeCount = 0;
+  compositeOperation = Composite::UNION;
+  havePrevious = 0;
  } commands
 	;
 
@@ -102,22 +112,25 @@ commands: commands command terminator
 command : /* empty */
 	| DEBUG_ debug
 	| VERSION_ {cerr << "CIAO Regions File 1.0" << endl;}
-	| init include shape
+	| init include shape {havePrevious = 1;}
 	;
 
 terminator: ep
-	| '\n'
-	| EOF_ {YYACCEPT;}
+	| '\n' {endComposite(fr); havePrevious = 0;}
+	| EOF_ {endComposite(fr); YYACCEPT;}
 	;
 
-include	: /* empty */
-	| '*' /* AND */
-	| '&' /* AND */
-	| '|' /* OR */
-	| '+' /* OR */
-	| '-' /* NOT */ {setProps(&props, Marker::INCLUDE, 0);}
-	| '!''*' /* NOT */ {setProps(&props, Marker::INCLUDE, 0);}
-	| '!' /* NOT */ {setProps(&props, Marker::INCLUDE, 0);}
+include	: /* empty */ {endComposite(fr); havePrevious = 0;}
+	| '*' /* AND */ {beginComposite(fr, Composite::INTERSECTION);}
+	| '&' /* AND */ {beginComposite(fr, Composite::INTERSECTION);}
+	| '|' /* OR */ {beginComposite(fr, Composite::UNION);}
+	| '+' /* OR */ {beginComposite(fr, Composite::UNION);}
+	| '-' /* NOT */ {endComposite(fr); havePrevious = 0;
+	  setProps(&props, Marker::INCLUDE, 0);}
+	| '!''*' /* NOT */ {endComposite(fr); havePrevious = 0;
+	  setProps(&props, Marker::INCLUDE, 0);}
+	| '!' /* NOT */ {endComposite(fr); havePrevious = 0;
+	  setProps(&props, Marker::INCLUDE, 0);}
 	;
 
 numeric	: REAL {$$=$1;}
@@ -297,4 +310,24 @@ static void setProps(unsigned short* props, unsigned short prop, int value)
     *props |= prop;
   else
     *props &= ~prop;
+}
+
+static void beginComposite(Base* fr, Composite::Operation operation)
+{
+  if (!havePrevious)
+    return;
+
+  if (compositeCount && compositeOperation != operation)
+    endComposite(fr);
+
+  compositeOperation = operation;
+  compositeCount = compositeCount ? compositeCount+1 : 2;
+}
+
+static void endComposite(Base* fr)
+{
+  if (compositeCount > 1)
+    fr->createCIAOCompositeCmd(compositeCount, compositeOperation,
+			       color,dash,1,font,text,props,NULL,taglist,cblist);
+  compositeCount = 0;
 }

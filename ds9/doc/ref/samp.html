@@ -2628,6 +2628,7 @@ ds9.set(string cmd)<br>
 raise</tt>
 <p><b><a name="region" id="region"></a>region</b></p>
 <p>Controls regions in the current frame.</p>
+<p>The <tt>composite</tt> command combines the currently selected regions into a composite region. The default operation is <tt>union</tt>; specify <tt>intersection</tt> to create an intersection composite. The <tt>dissolve</tt> command separates a selected composite into its component regions.</p>
 <tt>Syntax:<br>
 region&nbsp;[&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [load [all] &lt;filename&gt;]<br>
@@ -2660,7 +2661,7 @@ region&nbsp;[&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [fixed|edit|rotate|delete yes|no]<br>
 &nbsp;&nbsp;&nbsp; [command &lt;marker command&gt;]<br>
 &nbsp;&nbsp;&nbsp; [analysis histogram|panda|plot2d|plot3d|radial|stats [open|close|save]]<br>
-&nbsp;&nbsp;&nbsp; [composite]<br>
+&nbsp;&nbsp;&nbsp; [composite [union|intersection]]<br>
 &nbsp;&nbsp;&nbsp; [dissolve]<br>
 &nbsp;&nbsp;&nbsp; [template &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [template &lt;filename&gt; at &lt;ra&gt; &lt;dec&gt; &lt;coordsys&gt; &lt;skyframe&gt;]<br>
@@ -2779,6 +2780,8 @@ region analysis stats
 region analysis stats close
 region analysis histograme save
 region composite<br>
+region composite union<br>
+region composite intersection<br>
 region dissolve<br>
 region template foo.tpl<br>
 region template foo.tpl at 13:29:55.92 +47:12:48.02 fk5<br>
@@ -2927,9 +2930,9 @@ samp send topcat<br>
 samp send table topcat<br>
 samp hub info<br></tt>
 <p><b><a name="save" id="save"></a>save<br></b></p>
-<p>Save loaded image data of current frame as FITS.</p>
+<p>Save loaded image data of current frame as FITS. The <tt>pixmask</tt> format saves a signed 16-bit integer pixel mask initialized to zero. Pixels inside include regions are assigned the region ID; pixels inside exclude regions are reset to zero. The current frame's FITS header keywords are copied and adjusted for the mask data type and dimensions.</p>
 <tt>Syntax:<br>
-save[fits|rgbimage|rgbcube|mecube|mosaic|mosaicimage] &lt;filename&gt; [image|table|slice]<br>
+save [fits|pixmask|rgbimage|rgbcube|mecube|mosaic|mosaicimage] &lt;filename&gt; [image|table|slice]<br>
 &nbsp;<br>
 Example:<br>
 ds9.set(string cmd)<br>
@@ -2937,6 +2940,7 @@ save foo.fits<br>
 save fits foo.fits image<br>
 save fits foo.fits table<br>
 save fits foo.fits slice<br>
+save pixmask mask.fits<br>
 save rgbimage foo.fits<br>
 save rgbcube foo.fits<br>
 save mecube foo.fits<br>

@@ -35,6 +35,7 @@ proc MarkerDef {} {
     set marker(color,default) 0
     set marker(width) 1
     set marker(dash) 0
+    set marker(composite,area) 0
 
     set marker(fixed) 0
     set marker(edit) 1
@@ -1443,12 +1444,12 @@ proc MarkerPaste {} {
     UpdateGroupDialog
 }
 
-proc CompositeCreate {} {
+proc CompositeCreate {{operation 0}} {
     global current
     global marker
 
     if {$current(frame) != {}} {
-	set cmd "$current(frame) marker create composite"
+	set cmd "$current(frame) marker create composite $operation"
 	append cmd " color = $marker(color)"
 	append cmd " width = $marker(width)"
 	append cmd " font = \{\"$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\"\}"
@@ -1471,6 +1472,19 @@ proc CompositeDelete {} {
 
     if {$current(frame) != {}} {
 	$current(frame) marker composite delete
+    }
+}
+
+proc CompositeAreaSelected {} {
+    global current
+    global marker
+
+    if {$current(frame) != {}} {
+	foreach id [$current(frame) get marker select] {
+	    if {[$current(frame) get marker $id type] == {composite}} {
+		$current(frame) marker $id composite area $marker(composite,area)
+	    }
+	}
     }
 }
 

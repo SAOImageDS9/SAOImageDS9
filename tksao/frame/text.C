@@ -201,7 +201,7 @@ void Text::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     str  << ')';
     
     if (conj)
-      str << " ||";
+      str << ' ' << listConjunction(conj);
 
     if (angle != 0) {
       str << " textangle=";
@@ -259,6 +259,5 @@ void Text::listSAOtng(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   
   listSAOtngPost(str, strip);
 }
-
 
 

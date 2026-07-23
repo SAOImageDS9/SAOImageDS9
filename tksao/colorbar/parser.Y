@@ -69,6 +69,7 @@ extern void cberror(ColorbarBase*, cbFlexLexer*, const char*);
 %token MACOSX_
 %token MAP_
 %token MOTION_
+%token MULTICOLOR_
 %token N_
 %token NAME_
 %token NO_
@@ -150,6 +151,9 @@ colorbar: INT numeric numeric INT {cb->setColorbarCmd($1, $2, $3, $4);}
 	  {cb->setColorbarCmd($2, $3, $4, $5, $6, $7, $8);}
 	| HLS_ numeric numeric numeric numeric numeric numeric INT
 	  {cb->setColorbarCmd($2, $3, $4, $5, $6, $7, $8);}
+	| MULTICOLOR_ INT STRING {cb->setMultiColorCmd($2, $3);}
+	| MULTICOLOR_ INT INT STRING STRING STRING
+	  {cb->setMultiColorCmd($2, $3, $4, $5, $6);}
 	;
 
 colormap: LEVEL_ colormaplevel

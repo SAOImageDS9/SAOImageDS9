@@ -1,0 +1,21 @@
+#tab layersendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+blend		{return $BLEND_}
+color		{return $COLOR_}
+colour		{return $COLOR_}
+count		{return $COUNT_}
+layerno		{return $LAYERNO_}
+transparency	{return $TRANSPARENCY_}
+view		{return $VIEW_}
+
+#include numeric.fin
+#include ws.fin
+
+%%

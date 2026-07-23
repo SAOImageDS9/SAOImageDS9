@@ -168,6 +168,10 @@ frame/framergb.C
 frame/framergbtruecolor16.C
 frame/framergbtruecolor24.C
 frame/framergbtruecolor8.C
+frame/framemulticolor.C
+frame/framemulticolortruecolor16.C
+frame/framemulticolortruecolor24.C
+frame/framemulticolortruecolor8.C
 frame/framet.C
 frame/framehsv.C
 frame/framehsvtruecolor16.C

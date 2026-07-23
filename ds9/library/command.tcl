@@ -295,6 +295,11 @@ proc ProcessCommand {argv argc} {
 	    -mecube {set file(type) mecube}
 	    -memf -
 	    -multiframe {set file(type) multiframe}
+	    -multicolor {
+		incr i
+		ProcessMultiColorCmd argv i
+	    }
+	    -layer {ProcessLayerCmd argv i}
 	    -minmax {incr i; ProcessMinMaxCmd argv i}
 	    -minmaxmode {
 		# backward compatibility
@@ -613,6 +618,7 @@ proc CommandLineLoad {item argvname iname} {
     if {$current(frame) != {}} {
 	switch -- [$current(frame) get type] {
 	    base {CommandLineLoadBase $item $argvname $iname}
+	    multicolor {CommandLineLoadBase $item $argvname $iname}
 	    rgb {CommandLineLoadRGB $item $argvname $iname}
 	    hsv -
 	    hls {CommandLineLoadT $item $argvname $iname}
@@ -623,6 +629,129 @@ proc CommandLineLoad {item argvname iname} {
     }
 
     SetFileLast $file(type) $item
+}
+
+proc ProcessLayerCmd {varname iname} {
+    upvar $varname argv
+    upvar $iname i
+
+    global argc
+    global current
+
+    if {$current(frame) == {}} {
+	CreateMultiColorFrame
+    }
+
+    set next [expr {$i+1}]
+    if {$next >= $argc} {
+	$current(frame) layer
+	return
+    }
+
+    set arg [lindex $argv $next]
+    set layer {}
+
+    if {[string is integer -strict $arg]} {
+	set layer $arg
+	incr next
+	if {$next >= $argc} {
+	    $current(frame) layer $layer
+	    set i [expr {$next-1}]
+	    return
+	}
+	set arg [lindex $argv $next]
+    }
+
+    # Keep show/hide as aliases for existing command lines and backup files.
+    switch -- $arg {
+	create {
+	    $current(frame) layer
+	    set i $next
+	}
+	color -
+	colour {
+	    incr next
+	    if {$next < $argc} {
+		set color [lindex $argv $next]
+		if {$layer == {}} {
+		    $current(frame) layer color $color
+		} else {
+		    $current(frame) layer $layer color $color
+		}
+		set i $next
+	    }
+	}
+	blend {
+	    incr next
+	    if {$next < $argc} {
+		set blend [lindex $argv $next]
+		if {$layer == {}} {
+		    $current(frame) layer blend $blend
+		} else {
+		    $current(frame) layer $layer blend $blend
+		}
+		set i $next
+	    }
+	}
+	transparency {
+	    incr next
+	    if {$next < $argc} {
+		set trans [lindex $argv $next]
+		if {$layer == {}} {
+		    $current(frame) layer transparency $trans
+		} else {
+		    $current(frame) layer $layer transparency $trans
+		}
+		set i $next
+	    }
+	}
+	view {
+	    incr next
+	    if {$next < $argc} {
+		set view [FromYesNo [lindex $argv $next]]
+		if {$layer == {}} {
+		    $current(frame) layer view $view
+		} else {
+		    $current(frame) layer $layer view $view
+		}
+		set i $next
+	    }
+	}
+	show -
+	hide -
+	delete -
+	up -
+	down -
+	top -
+	bottom {
+	    if {$layer == {}} {
+		$current(frame) layer $arg
+	    } else {
+		$current(frame) layer $layer $arg
+	    }
+	    set i $next
+	}
+	layerno {
+	    incr next
+	    if {$next < $argc} {
+		$current(frame) layer layerno [lindex $argv $next]
+		set i $next
+	    }
+	}
+	default {
+	    if {$layer == {}} {
+		$current(frame) layer
+	    } else {
+		$current(frame) layer $layer
+		set i [expr {$next-1}]
+	    }
+	}
+    }
+
+    set which $current(frame)
+    if {$which != {} && [$which get type] == {multicolor}} {
+	${which}cb colorbar [$which get colorbar]
+    }
 }
 
 proc CommandLineLoadBase {item argvname iname} {

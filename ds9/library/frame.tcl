@@ -15,6 +15,11 @@ proc CreateRGBFrame {} {
     RGBDialog
 }
 
+proc CreateMultiColorFrame {} {
+    CreateNamedFrame multicolor
+    MultiColorDialog
+}
+
 proc CreateHSVFrame {} {
     CreateNamedFrame hsv
     HSVDialog
@@ -103,6 +108,12 @@ proc CreateNameNumberFrame {which type} {
 		-command $which
 	    CreateColorbarRGB $which
 	}
+	multicolor {
+	    $ds9(canvas) create framemulticolor$ds9(visual)$ds9(depth) \
+		-command $which
+	    CreateColorbarRGB $which
+	    ${which}cb colorbar [$which get colorbar]
+	}
 	hsv {
 	    $ds9(canvas) create framehsv$ds9(visual)$ds9(depth) \
 		-command $which
@@ -176,6 +187,7 @@ proc CreateNameNumberFrame {which type} {
     switch -- [$which get type] {
 	base -
 	rgb -
+	multicolor -
 	hsv -
 	hls {}
 	3d {
@@ -2261,6 +2273,14 @@ proc ClearFrame {which} {
 
     foreach cc {{} red green blue hue saturation value lightness} {
 	set varname $which$cc
+	global $varname
+	if {[info exists $varname]} {
+	    unset $varname
+	}
+    }
+
+    for {set ii 1} {$ii<=64} {incr ii} {
+	set varname ${which}l${ii}
 	global $varname
 	if {[info exists $varname]} {
 	    unset $varname

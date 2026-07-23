@@ -191,6 +191,10 @@ class ColorbarBase : public Widget {
   virtual void saveVarCmd(const char*, const char*) {}
   virtual void setColorbarCmd(int, float, float, int) {}
   virtual void setColorbarCmd(float, float, float, float, float, float, int) {}
+  virtual void setMultiColorCmd(int, const char*) {}
+  virtual void setMultiColorCmd(float, float, int, const char*) {}
+  virtual void setMultiColorCmd(int, int, const char*, const char*,
+				const char*) {}
   void setColormapLevelCmd();
   void setColormapLevelCmd(int);
   virtual void setColormapWindowCmd(char*) {}

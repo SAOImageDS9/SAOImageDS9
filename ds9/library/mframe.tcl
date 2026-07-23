@@ -15,6 +15,8 @@ proc FrameMainMenu {} {
 	-command CreateFrame
     $ds9(mb).frame add command -label [msgcat::mc {New Frame RGB}] \
 	-command CreateRGBFrame
+    $ds9(mb).frame add command -label [msgcat::mc {New Frame Multi-Color}] \
+	-command CreateMultiColorFrame
     $ds9(mb).frame add command -label [msgcat::mc {New Frame HSV}] \
 	-command CreateHSVFrame
     $ds9(mb).frame add command -label [msgcat::mc {New Frame HLS}] \
@@ -68,6 +70,8 @@ proc FrameMainMenu {} {
 	-command CubeDialog
     $ds9(mb).frame add command -label [msgcat::mc {RGB}] \
 	-command RGBDialog
+    $ds9(mb).frame add command -label [msgcat::mc {Multi-Color}] \
+	-command MultiColorDialog
     $ds9(mb).frame add command -label [msgcat::mc {HSV}] \
 	-command HSVDialog
     $ds9(mb).frame add command -label [msgcat::mc {HLS}] \
@@ -506,6 +510,8 @@ proc CreateButtonsFrame {} {
 	[string tolower [msgcat::mc {New}]] CreateFrame
     ButtonButton $ds9(buttons).frame.newrgb \
 	[string tolower [msgcat::mc {RGB}]] CreateRGBFrame
+    ButtonButton $ds9(buttons).frame.newmulticolor \
+	[string tolower [msgcat::mc {Multi-Color}]] CreateMultiColorFrame
     ButtonButton $ds9(buttons).frame.newhsv \
 	[string tolower [msgcat::mc {HSV}]] CreateHSVFrame
     ButtonButton $ds9(buttons).frame.newhls \
@@ -713,6 +719,8 @@ proc CreateButtonsFrame {} {
 	[string tolower [msgcat::mc {Cube}]] CubeDialog
     ButtonButton $ds9(buttons).frame.rgb \
 	[string tolower [msgcat::mc {RGB}]] RGBDialog
+    ButtonButton $ds9(buttons).frame.multicolor \
+	[string tolower [msgcat::mc {Multi-Color}]] MultiColorDialog
     ButtonButton $ds9(buttons).frame.hsv \
 	[string tolower [msgcat::mc {HSV}]] HSVDialog
     ButtonButton $ds9(buttons).frame.hls \
@@ -1260,4 +1268,3 @@ proc UpdateFrameMenuItems {} {
 	}
     }
 }
-

@@ -11,12 +11,27 @@ class Filter;
 
 class ColorbarRGB : public ColorbarT {
 protected:
+  int multiColorMode;
+  int multiColorCount;
+  int multiColorCurrent;
+  char** multiColorName;
+  float* multiColorBias;
+  float* multiColorContrast;
+  unsigned char colorCellBuffer[3];
+
   void psHorz(ostream&, Filter&, int, int);
   void psVert(ostream&, Filter&, int, int);
   void pdfHorz(unsigned char*, int, int);
   void pdfVert(unsigned char*, int, int);
   void updateColorCells();
   int initColormap();
+  void clearMultiColorNames();
+  const unsigned char* colorCell(int, int);
+  int lineCount();
+  int lineFromHorz(int, int);
+  int lineFromVert(int, int);
+  int sampleFromHorz(int, int);
+  int sampleFromVert(int, int);
 
 #ifdef MAC_OSX_TK
   void macosx(float, int, int, const Vector&, const Vector&);
@@ -28,6 +43,7 @@ protected:
 
 public:
   ColorbarRGB(Tcl_Interp*, Tk_Canvas, Tk_Item*);
+  ~ColorbarRGB();
 
   // SubCommandFunctions
 
@@ -41,7 +57,12 @@ public:
   void getCurrentNameCmd();
   void getTypeCmd();
   void getRGBChannelCmd();
+  void adjustCmd(float, float);
   void setRGBChannelCmd(const char*);
+  void setColorbarCmd(float, float, float, float, float, float, int);
+  void setMultiColorCmd(int, const char*);
+  void setMultiColorCmd(float, float, int, const char*);
+  void setMultiColorCmd(int, int, const char*, const char*, const char*);
 };
 
 #endif

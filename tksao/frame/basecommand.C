@@ -3241,6 +3241,13 @@ void Base::getRGBSystemCmd()
   Tcl_AppendResult(interp, "image", NULL);
 }
 
+// FrameMultiColor
+
+void Base::getMultiColorSystemCmd()
+{
+  Tcl_AppendResult(interp, "image", NULL);
+}
+
 // FrameHSV
 
 void Base::getHSVChannelCmd()
@@ -3331,4 +3338,3 @@ void Base::get3dRenderBackgroundCmd()
 {
   Tcl_AppendResult(interp, "none", NULL);
 }
-

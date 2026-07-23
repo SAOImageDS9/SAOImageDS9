@@ -6361,6 +6361,10 @@ frame/framergb.C
 frame/framergbtruecolor16.C
 frame/framergbtruecolor24.C
 frame/framergbtruecolor8.C
+frame/framemulticolor.C
+frame/framemulticolortruecolor16.C
+frame/framemulticolortruecolor24.C
+frame/framemulticolortruecolor8.C
 frame/framet.C
 frame/framehsv.C
 frame/framehsvtruecolor16.C
@@ -12195,5 +12199,4 @@ if test -n "$ac_unrecognized_opts" && test "$enable_option_checking" != no; then
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: unrecognized options: $ac_unrecognized_opts" >&5
 printf "%s\n" "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2;}
 fi
-
 

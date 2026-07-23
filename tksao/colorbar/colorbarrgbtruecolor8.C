@@ -148,29 +148,16 @@ void ColorbarRGBTrueColor8::updateColorsHorz()
     
   unsigned char row[xmap->bytes_per_line];
 
-  // red
-  for (int ii=0; ii<width; ii++) {
-    char r = colorCells[((int)(double(ii)/width*colorCount))*3];
-    row[ii] = (r & rm_) >> rs_;
-  }
-  for (int jj=0; jj<(int)(height/3.); jj++)
+  for (int jj=0; jj<height; jj++) {
+    int line = lineFromHorz(jj, height);
+    for (int ii=0; ii<width; ii++) {
+      const unsigned char* clr = colorCell(line, sampleFromHorz(ii, width));
+      row[ii] = ((clr[0] & rm_) >> rs_) |
+	((clr[1] & gm_) >> gs_) |
+	((clr[2] & bm_) >> bs_);
+    }
     memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
-
-  // green
-  for (int ii=0; ii<width; ii++) {
-    char g = colorCells[((int)(double(ii)/width*colorCount))*3+1];
-    row[ii] = (g & gm_) >> gs_;
   }
-  for (int jj=(int)(height/3.); jj<(int)(height*2/3.); jj++)
-    memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
-
-  // blue
-  for (int ii=0; ii<width; ii++) {
-    char b =colorCells[((int)(double(ii)/width*colorCount))*3+2];
-    row[ii] = (b & bm_) >> bs_;
-  }
-  for (int jj=(int)(height*2/3.); jj<height; jj++)
-    memcpy(data+(jj*xmap->bytes_per_line), row, xmap->bytes_per_line);
 }
 
 void ColorbarRGBTrueColor8::updateColorsVert()
@@ -180,29 +167,12 @@ void ColorbarRGBTrueColor8::updateColorsVert()
   char* data = xmap->data;
     
   for (int jj=height-1; jj>=0; jj--, data+=xmap->bytes_per_line) {
-    // red
-    {
-      char r = colorCells[((int)(double(jj)/height*colorCount))*3];
-      char a = (r & rm_) >> rs_;
-      for (int ii=0; ii<(int)(width/3.); ii++)
-	data[ii] = a;
-    }
-
-    // green
-    {
-      char g = colorCells[((int)(double(jj)/height*colorCount))*3+1];
-      char a = (g & gm_) >> gs_;
-      for (int ii=(int)(width/3.); ii<(int)(width*2/3.); ii++)
-	data[ii] = a;
-    }
-
-    // blue
-    {
-      char b =colorCells[((int)(double(jj)/height*colorCount))*3+2];
-      char a = (b & bm_) >> bs_;
-      for (int ii=(int)(width*2/3.); ii<width; ii++)
-	data[ii] = a;
+    for (int ii=0; ii<width; ii++) {
+      const unsigned char* clr =
+	colorCell(lineFromVert(ii, width), sampleFromVert(jj, height));
+      data[ii] = ((clr[0] & rm_) >> rs_) |
+	((clr[1] & gm_) >> gs_) |
+	((clr[2] & bm_) >> bs_);
     }
   }
 }
-

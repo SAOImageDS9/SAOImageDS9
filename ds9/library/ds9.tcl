@@ -391,6 +391,7 @@ PlotDef
 PrefsDef
 PSDef
 RGBDef
+MultiColorDef
 HSVDef
 HLSDef
 SAMPHubDef

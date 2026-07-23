@@ -1,0 +1,29 @@
+#tab layerparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+blend		{return $BLEND_}
+bottom		{return $BOTTOM_}
+create		{return $CREATE_}
+delete		{return $DELETE_}
+down		{return $DOWN_}
+hide		{return $HIDE_}
+layerno		{return $LAYERNO_}
+show		{return $SHOW_}
+top		{return $TOP_}
+transparency	{return $TRANSPARENCY_}
+up		{return $UP_}
+view		{return $VIEW_}
+
+#include blend.fin
+#include numeric.fin
+#include string.fin
+#include yesno.fin
+#include ws.fin
+
+%%

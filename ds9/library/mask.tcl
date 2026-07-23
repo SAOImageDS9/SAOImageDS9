@@ -4,6 +4,14 @@
 
 package provide DS9 1.0
 
+proc ColorBlendModes {} {
+    return {
+	source multiply screen overlay darken lighten color-dodge color-burn
+	hard-light soft-light difference exclusion hue saturation color
+	luminosity
+    }
+}
+
 proc MaskDef {} {
     global mask
     global imask
@@ -150,14 +158,11 @@ proc MaskDialog {} {
     CoordMenu $mb.align mask system 1 {} {} MaskSystem
 
     ThemeMenu $mb.blend
-    $mb.blend add radiobutton -label [msgcat::mc {Source}] \
-	-variable mask(blend) -value source -command MaskBlend
-    $mb.blend add radiobutton -label [msgcat::mc {Screen}] \
-	-variable mask(blend) -value screen -command MaskBlend
-    $mb.blend add radiobutton -label [msgcat::mc {Darken}] \
-	-variable mask(blend) -value darken -command MaskBlend
-    $mb.blend add radiobutton -label [msgcat::mc {Lighten}] \
-	-variable mask(blend) -value lighten -command MaskBlend
+    foreach mode [ColorBlendModes] {
+	set label [string totitle [string map {- { }} $mode]]
+	$mb.blend add radiobutton -label [msgcat::mc $label] \
+	    -variable mask(blend) -value $mode -command MaskBlend
+    }
 
     # Param
     set f [ttk::frame $w.param]

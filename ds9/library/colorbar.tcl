@@ -1887,7 +1887,7 @@ proc ColorbarBackup {ch dir} {
 proc ColorbarFrameBackup {ch which} {
     set cb ${which}cb
 
-    puts $ch "$cb colorbar [$which get colorbar]"
+    puts $ch [list $cb colorbar [$which get colorbar]]
     puts $ch "$which colormap \[$cb get colormap\]"
     puts $ch "$which colorbar tag \"\{[$which get colorbar tag]\}\""
     puts $ch "$cb tag \"\{[$which get colorbar tag]\}\""

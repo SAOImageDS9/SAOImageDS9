@@ -1,0 +1,24 @@
+#tab multicolorsendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+bin	    {return $BIN_}
+block	    {return $BLOCK_}
+colorbar    {return $COLORBAR_}
+crop	    {return $CROP_}
+lock	    {return $LOCK_}
+scale	    {return $SCALE_}
+scalelimits {return $SCALELIMITS_}
+slice	    {return $SLICE_}
+smooth	    {return $SMOOTH_}
+system	    {return $SYSTEM_}
+wcs	    {return $WCS_}
+
+#include ws.fin
+
+%%

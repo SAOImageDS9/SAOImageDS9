@@ -1,0 +1,16 @@
+%token COLOR_
+%token COLORBURN_
+%token COLORDODGE_
+%token DARKEN_
+%token DIFFERENCE_
+%token EXCLUSION_
+%token HARDLIGHT_
+%token HUE_
+%token LIGHTEN_
+%token LUMINOSITY_
+%token MULTIPLY_
+%token OVERLAY_
+%token SATURATION_
+%token SCREEN_
+%token SOFTLIGHT_
+%token SOURCE_

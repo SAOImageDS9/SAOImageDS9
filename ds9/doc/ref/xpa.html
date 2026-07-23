@@ -62,6 +62,7 @@
 <a href="#iis">iis</a><br>
 <a href="#illustrate">illustrate</a><br>
 <a href="#jpeg">jpeg</a><br>
+<a href="#layer">layer</a><br>
 <a href="#lock">lock</a><br>
 <a href="#lower">lower</a><br>
 <a href="#magnifier">magnifier</a><br>
@@ -74,6 +75,7 @@
 <a href="#mosaicimage">mosaicimage</a><br>
 <a href="#movie">movie</a><br>
 <a href="#multiframe">multiframe</a><br>
+<a href="#multicolor">multicolor</a><br>
 <a href="#nameserver">nameserver</a><br>
 <a href="#notes">notes</a><br>
 <a href="#nrrd">nrrd</a><br>
@@ -1693,7 +1695,7 @@ mask [color &lt;color&gt;]<br>
 &nbsp;&nbsp;&nbsp; [mark zero|nonzero|nan|nonnan|range]<br>
 &nbsp;&nbsp;&nbsp; [range &lt;low&gt; &lt;high&gt;]<br>
 &nbsp;&nbsp;&nbsp; [transparency &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp; [blend source|screen|darken|lighten]<br>
+&nbsp;&nbsp;&nbsp; [blend source|multiply|screen|overlay|darken|lighten|color-dodge|color-burn|hard-light|soft-light|difference|exclusion|hue|saturation|color|luminosity]<br>
 &nbsp;&nbsp;&nbsp; [system &lt;coordsys&gt;]<br>
 &nbsp;&nbsp;&nbsp; [clear]<br>
 &nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
@@ -1840,6 +1842,38 @@ Example:<br>
 $xpaset -p ds9 multiframe foo.fits<br>
 <br>
 $cat foo.fits | xpaset ds9 multiframe# not available windows</tt><br>
+<p><b><a name="multicolor" id="multicolor"></a>multicolor</b></p>
+<p>Create a multi-color frame and control its layer alignment coordinate system.</p>
+<tt>Syntax:<br>
+multicolor [system image|physical|amplifier|detector|wcs|wcsa...wcsz]<br>
+&nbsp;&nbsp;&nbsp; [lock wcs|crop|slice|bin|scale|scalelimits|colorbar|block|smooth yes|no]<br>
+&nbsp;<br>
+Example:<br>
+$xpaset -p ds9 multicolor<br>
+$xpaset -p ds9 multicolor system wcs<br>
+$xpaset -p ds9 multicolor lock scale yes<br>
+$xpaget ds9 multicolor system<br>
+$xpaget ds9 multicolor lock scale<br></tt>
+<p><b><a name="layer" id="layer"></a>layer</b></p>
+<p>Control layers in the current multi-color frame. A layer number is optional for property and ordering commands; when omitted, the current layer is used.</p>
+<tt>Syntax:<br>
+layer [create|&lt;integer&gt;|layerno &lt;integer&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] color &lt;color&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] blend source|multiply|screen|overlay|darken|lighten|color-dodge|color-burn|hard-light|soft-light|difference|exclusion|hue|saturation|color|luminosity]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] transparency &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] view yes|no]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] delete|up|down|top|bottom]<br>
+&nbsp;<br>
+Example:<br>
+$xpaset -p ds9 layer create<br>
+$xpaset -p ds9 layer 2 color green<br>
+$xpaset -p ds9 layer 2 transparency 25<br>
+$xpaget ds9 layer count<br>
+$xpaget ds9 layer layerno<br>
+$xpaget ds9 layer color 2<br>
+$xpaget ds9 layer blend 2<br>
+$xpaget ds9 layer transparency 2<br>
+$xpaget ds9 layer view 2<br></tt>
 <p><b><a name="nameserver" id="nameserver"></a>nameserver</b></p>
 <p>Support Name Server functions. Coordinates are in fk5.</p>
 <tt>Syntax:<br>

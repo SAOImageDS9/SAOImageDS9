@@ -25,7 +25,7 @@ proc CropReset {} {
     global current
 
     if {$current(frame) != {}} {
-	$current(frame) crop
+	EvalLock lock,crop $current(frame) [list $current(frame) crop]
 	UpdateCrop $current(frame)
     }
 }
@@ -359,6 +359,7 @@ proc CropBackup {ch which} {
     switch [$which get type] {
 	base -
 	3d {CropBackupBase $ch $which}
+	multicolor {CropBackupMultiColor $ch $which}
 	rgb {CropBackupRGB $ch $which}
 	hsv {CropBackupHSV $ch $which}
 	hls {CropBackupHLS $ch $which}
@@ -377,6 +378,18 @@ proc CropBackupBase {ch which} {
 	    }
 	}
     }
+}
+
+proc CropBackupMultiColor {ch which} {
+    set sav [$which get layer layerno]
+    set count [$which get layer count]
+    for {set ii 1} {$ii <= $count} {incr ii} {
+	$which layer layerno $ii
+	puts $ch "$which layer layerno $ii"
+	CropBackupBase $ch $which
+    }
+    $which layer layerno $sav
+    puts $ch "$which layer layerno $sav"
 }
 
 proc CropBackupRGB {ch which} {

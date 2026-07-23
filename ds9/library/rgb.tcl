@@ -224,4 +224,3 @@ proc ProcessSendRGBCmd {proc id param {sock {}} {fn {}}} {
     rgbsend::yy_scan_string $param
     rgbsend::yyparse
 }
-

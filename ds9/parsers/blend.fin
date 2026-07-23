@@ -1,0 +1,17 @@
+source		{return $SOURCE_}
+multiply	{return $MULTIPLY_}
+screen		{return $SCREEN_}
+overlay		{return $OVERLAY_}
+darken		{return $DARKEN_}
+lighten		{return $LIGHTEN_}
+color-dodge	{return $COLORDODGE_}
+color-burn	{return $COLORBURN_}
+hard-light	{return $HARDLIGHT_}
+soft-light	{return $SOFTLIGHT_}
+difference	{return $DIFFERENCE_}
+exclusion	{return $EXCLUSION_}
+hue		{return $HUE_}
+saturation	{return $SATURATION_}
+color		{return $COLOR_}
+colour		{return $COLOR_}
+luminosity	{return $LUMINOSITY_}

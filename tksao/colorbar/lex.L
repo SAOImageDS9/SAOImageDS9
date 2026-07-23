@@ -60,6 +60,7 @@ load		{return LOAD_;}
 macosx		{return MACOSX_;}
 map		{return MAP_;}
 motion		{return MOTION_;}
+multicolor	{return MULTICOLOR_;}
 n		{return N_;}
 name		{return NAME_;}
 no		{return NO_;}

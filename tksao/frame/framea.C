@@ -6,19 +6,22 @@
 
 #include "sigbus.h"
 
-FrameA::FrameA(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
+FrameA::FrameA(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item, int cnt)
 : FrameBase(i,c,item)
 {
-  rgbSystem = Coord::WCS;
+  alignmentSystem = Coord::WCS;
+  contextCount = cnt;
 
   channel = 0;
 
-  context = new Context[3];
-  context[0].parent(this);
-  context[1].parent(this);
-  context[2].parent(this);
+  context = new Context[contextCount];
+  alignmentMatrix = new Matrix[contextCount];
+  view = new int[contextCount];
+  bias = new float[contextCount];
+  contrast = new float[contextCount];
 
-  for (int ii=0; ii<3; ii++) {
+  for (int ii=0; ii<contextCount; ii++) {
+    context[ii].parent(this);
     view[ii] = 1;
     bias[ii] = .5;
     contrast[ii] = 1.0;
@@ -33,6 +36,14 @@ FrameA::~FrameA()
 {
   if (context)
     delete [] context;
+  if (alignmentMatrix)
+    delete [] alignmentMatrix;
+  if (view)
+    delete [] view;
+  if (bias)
+    delete [] bias;
+  if (contrast)
+    delete [] contrast;
 }
 
 void FrameA::alignWCS()
@@ -46,7 +57,7 @@ void FrameA::alignWCS()
     calcAlignWCS(keyContext->fits, wcsSystem_, wcsSkyFrame_,
 		 &wcsOrientation, &wcsOrientationMatrix, &wcsRotation);
 
-  updateRGBMatrices();
+  updateAlignmentMatrices();
 }   
 
 void FrameA::alignWCS(Coord::CoordSystem sys, Coord::SkyFrame sky)
@@ -60,7 +71,7 @@ void FrameA::alignWCS(Coord::CoordSystem sys, Coord::SkyFrame sky)
     calcAlignWCS(keyContext->fits, sys, sky,
 		 &wcsOrientation, &wcsOrientationMatrix, &wcsRotation);
 
-  updateRGBMatrices();
+  updateAlignmentMatrices();
 }
 
 void FrameA::alignWCS(FitsImage* ptr, Coord::CoordSystem sys)
@@ -87,24 +98,26 @@ void FrameA::alignWCS(FitsImage* ptr, Coord::CoordSystem sys)
     }
   }
 
-  updateRGBMatrices();
+  updateAlignmentMatrices();
 }
 
 int FrameA::doRender()
 {
-  return ((context[0].fits&&view[0]) || 
-	  (context[1].fits&&view[1]) || 
-	  (context[2].fits&&view[2]));
+  for (int ii=0; ii<contextCount; ii++)
+    if (context[ii].fits && view[ii])
+      return 1;
+
+  return 0;
 }
 
 void FrameA::getSystem()
 {
-  printCoordSystem(rgbSystem);
+  printCoordSystem(alignmentSystem);
 }
 
 void FrameA::getView()
 {
-  for (int ii=0; ii<3; ii++)
+  for (int ii=0; ii<contextCount; ii++)
     Tcl_AppendElement(interp, view[ii] ? "1" : "0");
 }
 
@@ -113,16 +126,16 @@ BBox FrameA::imageBBox(FrScale::SecMode mode)
   // returns imageBBox in IMAGE coords
   //   and extends edge to edge
 
-  updateRGBMatrices();
+  updateAlignmentMatrices();
 
   BBox rr;
   int first=1;
-  for (int ii=0; ii<3; ii++) {
+  for (int ii=0; ii<contextCount; ii++) {
     if (context[ii].fits) {
       FitsImage* ptr = context[ii].fits;
       while (ptr) {
 	FitsBound* params = ptr->getDataParams(mode);
-	Matrix mm = ptr->wcsToRef() * rgb[ii] * Translate(.5, .5);
+	Matrix mm = ptr->wcsToRef() * alignmentMatrix[ii] * Translate(.5, .5);
 
 	Vector aa = Vector(params->xmin,params->ymin) * mm;
 	if (first) {
@@ -146,31 +159,31 @@ BBox FrameA::imageBBox(FrScale::SecMode mode)
 
 void FrameA::pushMatrices()
 {
-  for (int ii=0; ii<3; ii++)
-    Base::pushMatrices(context[ii].fits, rgb[ii]);
+  for (int ii=0; ii<contextCount; ii++)
+    Base::pushMatrices(context[ii].fits, alignmentMatrix[ii]);
 }
 
 void FrameA::pushMagnifierMatrices()
 {
-  for (int ii=0; ii<3; ii++)
+  for (int ii=0; ii<contextCount; ii++)
     Base::pushMagnifierMatrices(context[ii].fits);
 }
 
 void FrameA::pushPannerMatrices()
 {
-  for (int ii=0; ii<3; ii++)
+  for (int ii=0; ii<contextCount; ii++)
     Base::pushPannerMatrices(context[ii].fits);
 }
 
 void FrameA::pushPSMatrices(float scale, int width, int height)
 {
-  for (int ii=0; ii<3; ii++)
+  for (int ii=0; ii<contextCount; ii++)
     Base::pushPSMatrices(context[ii].fits, scale, width, height);
 }
 
 void FrameA::reset()
 {
-  for (int ii=0; ii<3; ii++) {
+  for (int ii=0; ii<contextCount; ii++) {
     bias[ii] = 0.5;
     contrast[ii] = 1.0;
     context[ii].resetSecMode();
@@ -182,7 +195,7 @@ void FrameA::reset()
 
 void FrameA::setBinCursor()
 {
-  for (int ii=0; ii<3; ii++)
+  for (int ii=0; ii<contextCount; ii++)
     if (context[ii].fits)
       context[ii].fits->setBinCursor(cursor);
 }
@@ -202,20 +215,21 @@ void FrameA::setChannel()
 
 void FrameA::setSystem(Coord::CoordSystem sys)
 {
-  rgbSystem = sys;
+  alignmentSystem = sys;
 
   // save current matrix
-  Matrix old[3];
-  for (int ii=0; ii<3; ii++)
-    old[ii] = rgb[ii];
+  Matrix* old = new Matrix[contextCount];
+  for (int ii=0; ii<contextCount; ii++)
+    old[ii] = alignmentMatrix[ii];
 
   alignWCS();
 
   // fix any contours
-  for (int ii=0; ii<3; ii++) {
-    Matrix mx = old[ii].invert() * rgb[ii];
+  for (int ii=0; ii<contextCount; ii++) {
+    Matrix mx = old[ii].invert() * alignmentMatrix[ii];
     context[ii].updateContours(mx);
   }
+  delete [] old;
 
   update(MATRIX);
 }
@@ -234,7 +248,7 @@ void FrameA::unloadFits()
   if (DebugPerf)
     cerr << "FrameA::unloadFits()" << endl;
 
-  rgb[channel].identity();
+  alignmentMatrix[channel].identity();
   context[channel].unload();
 
   // always (for HISTEQU and LOG)
@@ -246,8 +260,8 @@ void FrameA::unloadAllFits()
   if (DebugPerf)
     cerr << "FrameA::unloadAllFits()" << endl;
 
-  for (int ii=0; ii<3; ii++) {
-    rgb[ii].identity();
+  for (int ii=0; ii<contextCount; ii++) {
+    alignmentMatrix[ii].identity();
     context[ii].unload();
 
     // always (for HISTEQU and LOG)
@@ -262,54 +276,54 @@ void FrameA::unloadAllFits()
   Base::unloadFits();
 }
 
-void FrameA::updateRGBMatrices()
+void FrameA::updateAlignmentMatrices()
 {
   // image,pysical,amplifier,detector are ok, check for wcs
-  if (rgbSystem >= Coord::WCS) {
-    for (int ii=0; ii<3; ii++) {
-      if (context[ii].fits && !context[ii].fits->hasWCS(rgbSystem)) {
+  if (alignmentSystem >= Coord::WCS) {
+    for (int ii=0; ii<contextCount; ii++) {
+      if (context[ii].fits && !context[ii].fits->hasWCS(alignmentSystem)) {
 	// ok, don't have requested coordinate system
 	// down grade to image
-	rgbSystem = Coord::IMAGE;
+	alignmentSystem = Coord::IMAGE;
 	break;
       }
     }
   }
 
-  // rgb align
-  for (int ii=0; ii<3; ii++) {
-    rgb[ii].identity();
+  // align each context to the key context
+  for (int ii=0; ii<contextCount; ii++) {
+    alignmentMatrix[ii].identity();
 
     if (context[ii].fits && keyContext->fits) {
-      switch (rgbSystem) {
+      switch (alignmentSystem) {
       case Coord::IMAGE:
 	// nothing to do here
 	break;
       case Coord::PHYSICAL:
 	if (context[ii].fits != keyContext->fits) 
-	  rgb[ii] = 
+	  alignmentMatrix[ii] =
 	    context[ii].fits->imageToPhysical *
 	    keyContext->fits->physicalToImage;
 	break;
       case Coord::AMPLIFIER:
 	if (context[ii].fits != keyContext->fits) 
-	  rgb[ii] = context[ii].fits->imageToAmplifier *
+	  alignmentMatrix[ii] = context[ii].fits->imageToAmplifier *
 	    keyContext->fits->amplifierToImage;
 	break;
       case Coord::DETECTOR:
 	if (context[ii].fits != keyContext->fits) 
-	  rgb[ii] = context[ii].fits->imageToDetector * 
+	  alignmentMatrix[ii] = context[ii].fits->imageToDetector *
 	    keyContext->fits->detectorToImage;
 	break;
       default:
-	if (keyContext->fits->hasWCS(rgbSystem))
-	  rgb[ii] = calcAlignWCS(keyContext->fits, context[ii].fits, rgbSystem, rgbSystem, Coord::ICRS);
+	if (keyContext->fits->hasWCS(alignmentSystem))
+	  alignmentMatrix[ii] = calcAlignWCS(keyContext->fits, context[ii].fits, alignmentSystem, alignmentSystem, Coord::ICRS);
 	break;
       }
     }
 
     if (DebugRGB) 
-      cerr << "rgb[" << ii << "] " << rgb[ii] << endl;
+      cerr << "alignmentMatrix[" << ii << "] " << alignmentMatrix[ii] << endl;
   }
 }
 
@@ -338,10 +352,8 @@ void FrameA::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
   if (!currentContext->cfits)
     return;
 
-  const char* array[3] = {"value,1","value,2","value,3"};
-
   SETSIGBUS
-  for (int ii=0; ii<3; ii++) {
+  for (int ii=0; ii<contextCount; ii++) {
 
     // make sure we have an image
     FitsImage* sptr = context[ii].cfits;
@@ -358,7 +370,9 @@ void FrameA::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
       if (img[0]>=params->xmin && img[0]<params->xmax && 
 	  img[1]>=params->ymin && img[1]<params->ymax) {
 
-	Tcl_SetVar2(interp,var,array[ii],(char*)sptr->getValue(img),0);
+	char array[32];
+	snprintf(array, sizeof(array), "value,%d", ii+1);
+	Tcl_SetVar2(interp,var,array,(char*)sptr->getValue(img),0);
 	break;
       }
       else {
@@ -373,4 +387,3 @@ void FrameA::getInfoCmd(const Vector& vv, Coord::InternalSystem ref,
   }
   CLEARSIGBUS
 }
-

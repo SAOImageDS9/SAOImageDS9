@@ -244,6 +244,11 @@ proc CreateXPA {} {
 	XPASendGrid {} {} \
 	XPARcvdGrid {} "fillbuf=false"
 
+    xpacmdadd $xpa layer \
+	{} \
+	XPASendLayer {} {} \
+	XPARcvdLayer {} "fillbuf=false"
+
     xpacmdadd $xpa header \
 	{} \
 	{} {} {} \
@@ -544,6 +549,11 @@ proc CreateXPA {} {
 	{} \
 	{} {} {} \
 	XPARcvdRestore {} {}
+
+    xpacmdadd $xpa multicolor \
+	{} \
+	XPASendMultiColor {} {} \
+	XPARcvdMultiColor {} "fillbuf=false"
 
     xpacmdadd $xpa rgb \
 	{} \
@@ -1893,6 +1903,32 @@ proc XPARcvdRestore {xpa cdata param buf len} {
     XPACatchError $xpa
 }
 
+proc XPASendMultiColor {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendMultiColorCmd xpasetbuf $xpa $param}
+    XPACatchError $xpa
+}
+
+proc XPARcvdMultiColor {xpa cdata param buf len} {
+    XPADebug "XPARcvdMultiColor" $param
+    InitError xpa
+    catch {set i 0; ProcessMultiColorCmd param i}
+    XPACatchError $xpa
+}
+
+proc XPASendLayer {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendLayerInterfaceCmd xpasetbuf $xpa $param}
+    XPACatchError $xpa
+}
+
+proc XPARcvdLayer {xpa cdata param buf len} {
+    XPADebug "XPARcvdLayer" $param
+    InitError xpa
+    catch {set i 0; ProcessLayerInterfaceCmd param i}
+    XPACatchError $xpa
+}
+
 proc XPASendRGB {xpa cdata param} {
     InitError xpa
     catch {ProcessSendRGBCmd xpasetbuf $xpa $param}
@@ -2498,4 +2534,3 @@ proc ProcessXPASendCmdConnect {} {
 
     $parse(proc) $parse(id) "[ToYesNo [info exists xpa]]"
 }
-

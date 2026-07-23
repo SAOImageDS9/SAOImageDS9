@@ -1,0 +1,13 @@
+#tab bookmarksendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+#include int.fin
+#include ws.fin
+
+%%

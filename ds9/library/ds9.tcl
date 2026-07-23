@@ -347,6 +347,7 @@ AutoSaveDef
 BinDef
 BlinkDef
 BlockDef
+BookmarksDef
 CanvasDef
 CATDef
 CATSymDef

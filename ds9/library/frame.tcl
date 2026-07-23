@@ -91,6 +91,8 @@ proc CreateNameNumberFrame {which type} {
     global threed
     global cube
 
+    BookmarksInitFrame $which
+
     # update frame lists
     lappend ds9(frames) $which
     lappend ds9(active) $which
@@ -415,6 +417,7 @@ proc DeleteFrame {which} {
 
     # clear any loaded images
     ClearFrame $which
+    BookmarksDeleteFrame $which
 
     # contour copy
     if {$contour(copy) == $which} {
@@ -1510,6 +1513,11 @@ proc KeyFrame {which K A xx yy} {
 	return
     }
 
+    if {$K == {m}} {
+	BookmarkAdd $which
+	return
+    }
+
     # modal bindings
     switch -- $current(mode) {
 	none {
@@ -2039,6 +2047,7 @@ proc GotoFrame {which} {
 	}
 
 	FrameToFront
+	UpdateBookmarksDialog
     }
 }
 
@@ -2229,6 +2238,7 @@ proc ResetAllFrame {} {
 
 proc ResetFrame {which} {
     if {$which != {}} {
+	BookmarksClearFrame $which
 	if {[$which has iis]} {
 	    IISCursorModeCmd 0
 	}
@@ -2280,6 +2290,8 @@ proc ClearFrame {which} {
     if {$which == {}} {
 	return
     }
+
+    BookmarksClearFrame $which
 
     foreach cc {{} red green blue hue saturation value lightness} {
 	set varname $which$cc

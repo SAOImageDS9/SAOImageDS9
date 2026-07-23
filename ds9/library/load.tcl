@@ -156,6 +156,12 @@ proc ProcessLoad {{err 1}} {
     global loadParam
     global ds9
 
+    # A newly loaded image invalidates view locations from the old image.
+    # Masks and other overlay layers do not replace the frame image.
+    if {$current(frame) != {} && $loadParam(load,layer) == {}} {
+	BookmarksClearFrame $current(frame)
+    }
+
     # restrict load type for windows
     switch $ds9(wm) {
 	x11 -

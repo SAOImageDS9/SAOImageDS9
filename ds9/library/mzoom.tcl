@@ -66,6 +66,9 @@ proc ZoomMainMenu {} {
     $ds9(mb).zoom add command -label [msgcat::mc {Crop Parameters}] \
 	-command CropDialog
     $ds9(mb).zoom add separator
+    $ds9(mb).zoom add command -label [msgcat::mc {Bookmarks}] \
+	-command BookmarksDialog
+    $ds9(mb).zoom add separator
     $ds9(mb).zoom add command \
 	-label [msgcat::mc {Pan Zoom Rotate Parameters}] \
 	-command PanZoomDialog
@@ -81,7 +84,7 @@ proc PrefsDialogZoomMenu {w} {
     PrefsDialogButtonbarZoom $f.buttonbar
 
     grid $f.menu $f.buttonbar -padx 2 -pady 2
-    
+
     set m $f.menu.menu
     ThemeMenu $m
     $m add checkbutton -label [msgcat::mc {Align}] \
@@ -120,7 +123,7 @@ proc PrefsDialogZoomMenu {w} {
 	-variable pcurrent(orient) -value xy
     $m add separator
     $m add radiobutton -label "0 [msgcat::mc {Degrees}]" \
-	-variable pcurrent(rotate) -value 0 
+	-variable pcurrent(rotate) -value 0
     $m add radiobutton -label "90 [msgcat::mc {Degrees}]" \
 	-variable pcurrent(rotate) -value 90
     $m add radiobutton -label "180 [msgcat::mc {Degrees}]" \
@@ -170,7 +173,7 @@ proc ButtonsZoomDef {} {
     global pbuttons
 
     array set pbuttons {
-	zoom,center 0 
+	zoom,center 0
 	zoom,align 0
 
 	zoom,in 1
@@ -317,7 +320,7 @@ proc PrefsDialogButtonbarZoom {f} {
     global pbuttons
 
     ttk::menubutton $f -text [msgcat::mc {Buttonbar}] -menu $f.menu
-    
+
     set m $f.menu
     ThemeMenu $m
     $m add checkbutton -label [msgcat::mc {Center Image}] \
@@ -386,7 +389,7 @@ proc UpdateZoomMenu {} {
     global ds9
     global current
     global panzoom
-    
+
     global debug
     if {$debug(tcl,update)} {
 	puts stderr "UpdateZoomMenu"
@@ -412,4 +415,3 @@ proc UpdateZoomMenu {} {
 	set current(align) [$current(frame) get wcs align]
     }
 }
-

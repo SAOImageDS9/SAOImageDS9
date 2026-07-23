@@ -13,6 +13,7 @@ RayTrace::RayTrace()
   width_ =0;
   height_ =0;
   zbuf_ =NULL;
+  depthbuf_ =NULL;
   mkzbuf_ =NULL;
 
   next_ =NULL;
@@ -20,7 +21,7 @@ RayTrace::RayTrace()
 }
 
 RayTrace::RayTrace(double az, double el, int width, int height, 
-		   Matrix3d mm, BBox3d bb)
+		   Matrix3d mm, BBox3d bb, int depth)
 {
   az_ = az;
   el_ = el;
@@ -29,10 +30,18 @@ RayTrace::RayTrace(double az, double el, int width, int height,
   mm_ = mm;
   bb_ = bb;
 
+  zbuf_ =NULL;
+  depthbuf_ =NULL;
+  mkzbuf_ =NULL;
+
   zbuf_ = new float[width_*height_];
   if (!zbuf_) 
     return;
   memset(zbuf_, 0, width_*height_*sizeof(float));
+
+  // FIP only: allocation is intentionally omitted for MIP/AIP.  Valid
+  // elements are written by the ray tracer before mkzbuf_ is set.
+  depthbuf_ = depth ? new float[width_*height_] : NULL;
 
   mkzbuf_ = new unsigned char[width_*height_];
   if (!mkzbuf_)
@@ -47,7 +56,8 @@ RayTrace::~RayTrace()
 {
   if (zbuf_)
     delete [] zbuf_;
+  if (depthbuf_)
+    delete [] depthbuf_;
   if (mkzbuf_)
     delete [] mkzbuf_;
 }
-

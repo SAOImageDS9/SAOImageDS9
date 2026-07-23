@@ -62,244 +62,331 @@ proc threedsend::unsetupvalues {numsyms} {
 
 array set threedsend::table {
   0:257 shift
-  0:258 shift
+  23:0,target 17
   0:259 shift
+  0:260 shift
   5:0,target 2
-  15:0,target 10
+  15:0,target 23
   9:0 reduce
-  0:266,target 9
-  0:261 shift
-  6:260,target 16
-  11:0 accept
+  0:266,target 8
+  20:274,target 24
+  11:0 reduce
   0:262 shift
-  6:269,target 17
+  10:258,target 19
   0:263 shift
   0:264 shift
-  4:260 shift
   0:265 shift
+  4:261 shift
   15:0 reduce
   0:266 shift
-  6:260 shift
-  0:267 shift
-  0:268 goto
-  0:265,target 8
-  4:271,target 15
-  6:0,target 11
-  16:0,target 12
+  6:261 shift
+  0:268 shift
+  0:265,target 7
+  4:261,target 15
+  24:0,target 15
+  0:269 shift
+  6:0,target 18
+  20:0 reduce
+  19:0 reduce
+  16:0,target 11
+  0:271 shift
   2:0 reduce
-  4:271 goto
+  20:270 shift
+  10:267,target 20
+  0:272 goto
+  3:276,target 14
+  24:0 reduce
   6:0 reduce
-  0:264,target 7
-  4:260,target 14
-  6:269 goto
-  7:0,target 7
-  17:0,target 8
-  12:0 reduce
-  10:0,target 3
-  0:263,target 6
+  20:274 goto
+  0:264,target 6
+  7:0,target 8
+  17:0,target 19
+  12:0 accept
+  10:0,target 12
+  4:277 goto
+  6:275 goto
+  0:263,target 5
   16:0 reduce
+  10:258 shift
+  21:0 reduce
   8:0,target 5
   3:0 reduce
+  18:0,target 9
   1:0,target 1
-  11:0,target 0
-  0:262,target 5
+  11:0,target 3
+  0:262,target 4
+  20:270,target 23
+  0:272,target 12
   7:0 reduce
-  3:260 shift
+  4:277,target 16
+  6:275,target 18
+  10:267 shift
+  10:270 shift
   13:0 reduce
   9:0,target 4
-  0:261,target 4
-  2:0,target 6
-  12:0,target 14
+  3:261 shift
+  20:0,target 16
+  19:0,target 13
+  10:273 goto
+  0:271,target 11
+  2:0,target 7
+  12:0,target 0
   17:0 reduce
-  0:259,target 3
-  3:270 goto
+  10:273,target 22
+  0:259,target 2
+  0:260,target 3
+  22:0 reduce
+  0:269,target 10
   4:0 reduce
-  3:0,target 13
-  13:0,target 9
+  21:0,target 14
+  3:0,target 20
+  13:0,target 21
+  3:261,target 13
   8:0 reduce
   10:0 reduce
-  0:258,target 2
-  0:268,target 11
+  3:276 goto
+  0:268,target 9
   14:0 reduce
-  3:260,target 12
-  3:270,target 13
-  4:0,target 15
-  14:0,target 16
+  22:0,target 6
+  4:0,target 22
+  14:0,target 10
+  18:0 reduce
   0:257,target 1
   1:0 reduce
-  0:267,target 10
+  6:261,target 17
+  23:0 reduce
+  10:270,target 21
   5:0 reduce
 }
 
 array set threedsend::rules {
-  9,l 268
-  11,l 269
-  15,l 271
-  2,l 268
-  6,l 268
-  12,l 269
-  16,l 271
-  3,l 268
-  7,l 268
-  13,l 270
-  0,l 272
-  4,l 268
-  8,l 268
-  10,l 268
-  14,l 270
-  1,l 268
-  5,l 268
+  9,l 272
+  11,l 272
+  15,l 273
+  20,l 276
+  19,l 275
+  2,l 272
+  6,l 272
+  12,l 273
+  16,l 274
+  21,l 276
+  3,l 272
+  7,l 272
+  13,l 273
+  0,l 278
+  17,l 274
+  22,l 277
+  4,l 272
+  8,l 272
+  10,l 272
+  14,l 273
+  18,l 275
+  1,l 272
+  23,l 277
+  5,l 272
 }
 
 array set threedsend::rules {
+  23,dc 1
   5,dc 1
   0,dc 1
-  12,dc 1
-  8,dc 2
+  17,dc 1
+  12,dc 0
+  8,dc 1
+  21,dc 1
   3,dc 1
-  15,dc 0
+  15,dc 2
   10,dc 2
-  6,dc 1
+  6,dc 2
+  18,dc 0
   1,dc 1
-  13,dc 0
+  13,dc 1
   9,dc 2
+  22,dc 0
   4,dc 1
-  16,dc 1
-  11,dc 0
+  16,dc 0
+  11,dc 2
   7,dc 1
+  20,dc 0
+  19,dc 1
   2,dc 1
   14,dc 1
 }
 
 array set threedsend::rules {
-  13,line 39
-  7,line 29
-  10,line 32
-  4,line 26
-  1,line 23
+  13,line 41
+  7,line 33
+  10,line 36
+  22,line 58
+  4,line 30
+  18,line 50
+  1,line 27
   15,line 43
-  9,line 31
-  12,line 36
-  6,line 28
-  3,line 25
-  14,line 40
-  8,line 30
-  11,line 35
-  5,line 27
-  2,line 24
-  16,line 44
+  9,line 35
+  12,line 40
+  6,line 32
+  21,line 55
+  3,line 29
+  17,line 47
+  14,line 42
+  8,line 34
+  11,line 37
+  23,line 59
+  5,line 31
+  20,line 54
+  19,line 51
+  2,line 28
+  16,line 46
 }
 
 array set threedsend::lr1_table {
-  13,trans {}
-  17 {{8 0 2}}
-  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0} {7 0 0} {8 0 0} {9 0 0} {10 0 0}}
   14,trans {}
-  1 {{1 0 1}}
-  15,trans {}
-  2 {{6 0 1}}
-  16,trans {}
-  3 {{9 0 1} {13 0 0} {14 0 0}}
-  17,trans {}
-  0,trans {{257 1} {258 2} {259 3} {261 4} {262 5} {263 6} {264 7} {265 8} {266 9} {267 10} {268 11}}
-  4 {{10 0 1} {15 0 0} {16 0 0}}
   1,trans {}
-  5 {{2 0 1}}
-  2,trans {}
-  6 {{8 0 1} {11 0 0} {12 0 0}}
-  3,trans {{260 12} {270 13}}
-  7 {{7 0 1}}
-  4,trans {{260 14} {271 15}}
-  8 {{5 0 1}}
+  18,trans {}
+  23,trans {}
   5,trans {}
-  9 {{4 0 1}}
-  10 {{3 0 1}}
-  6,trans {{260 16} {269 17}}
-  11 {{0 0 1}}
-  7,trans {}
-  12 {{14 0 1}}
-  8,trans {}
-  13 {{9 0 2}}
-  10,trans {}
   9,trans {}
-  14 {{16 0 1}}
-  11,trans {}
-  15 {{10 0 2}}
+  13,trans {}
+  0,trans {{257 1} {259 2} {260 3} {262 4} {263 5} {264 6} {265 7} {266 8} {268 9} {269 10} {271 11} {272 12}}
+  17,trans {}
+  4,trans {{261 15} {277 16}}
+  22,trans {}
+  8,trans {}
   12,trans {}
-  16 {{12 0 1}}
+  16,trans {}
+  3,trans {{261 13} {276 14}}
+  21,trans {}
+  10 {{6 0 1} {12 0 0} {13 0 0} {14 0 0} {15 0 0}}
+  11 {{3 0 1}}
+  12 {{0 0 1}}
+  7,trans {}
+  13 {{21 0 1}}
+  14 {{10 0 2}}
+  15 {{23 0 1}}
+  11,trans {}
+  16 {{11 0 2}}
+  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0} {7 0 0} {8 0 0} {9 0 0} {10 0 0} {11 0 0}}
+  17 {{19 0 1}}
+  1 {{1 0 1}}
+  18 {{9 0 2}}
+  2 {{7 0 1}}
+  19 {{13 0 1}}
+  20 {{15 0 1} {16 0 0} {17 0 0}}
+  15,trans {}
+  3 {{10 0 1} {20 0 0} {21 0 0}}
+  21 {{14 0 1}}
+  4 {{11 0 1} {22 0 0} {23 0 0}}
+  22 {{6 0 2}}
+  5 {{2 0 1}}
+  23 {{17 0 1}}
+  6 {{9 0 1} {18 0 0} {19 0 0}}
+  2,trans {}
+  19,trans {}
+  24 {{15 0 2}}
+  20,trans {{270 23} {274 24}}
+  7 {{8 0 1}}
+  8 {{5 0 1}}
+  9 {{4 0 1}}
+  24,trans {}
+  6,trans {{261 17} {275 18}}
+  10,trans {{258 19} {267 20} {270 21} {273 22}}
 }
 
 array set threedsend::token_id_table {
   264,line 15
-  270,t 1
-  269,t 1
-  265,title METHOD
+  270,t 0
+  269,t 0
+  276,line 53
+  265,title LOCK
+  274,t 1
   261,line 12
   257,t 0
-  270,title {}
-  269,title {}
+  270,title STRENGTH
+  269,title SHADE
+  273,line 39
+  278,t 1
   257,line 8
   262,t 0
-  270,line 38
-  269,line 34
-  259,title BORDER
-  260,title COLOR
+  274,title {}
+  270,line 21
+  269,line 20
+  259,title BG
+  260,title BORDER
   266,t 0
-  271,t 1
-  264,title LOCK
-  266,line 17
+  278,title {}
   error error
-  268,title {}
-  error,line 21
+  271,t 0
+  264,title HIGHLITE
+  266,line 17
+  278,line 60
+  275,t 1
+  error,line 25
+  268,title SCALE
   258,t 0
   263,line 14
   error,title {}
+  275,line 49
+  273,title {}
   263,t 0
   259,line 10
   260,line 11
-  258,title BG
-  272,line 45
+  258,title AMBIENT
+  277,title {}
+  272,line 26
   267,t 0
-  263,title HIGHLITE
+  263,title EL
   272,t 1
-  268,line 22
-  267,title VIEW
+  268,line 19
+  267,title NORMAL
   257 AZ_
-  258 BG_
+  276,t 1
+  258 AMBIENT_
   259,t 0
-  259 BORDER_
-  260 COLOR_
+  259 BG_
+  260 BORDER_
   260,t 0
   272,title {}
-  261 COMPASS_
+  261 COLOR_
   265,line 16
-  262 EL_
-  263 HIGHLITE_
+  262 COMPASS_
+  263 EL_
+  277,line 57
   257,title AZ
-  264 LOCK_
+  264 HIGHLITE_
   264,t 0
-  265 METHOD_
+  276,title {}
+  265 LOCK_
   262,line 13
-  266 SCALE_
-  267 VIEW_
-  268,t 1
-  268 threedsend
-  262,title EL
-  0 {$}
+  266 METHOD_
+  267 NORMAL_
   0,t 0
-  270 border
-  269 highlite
-  271 compass
+  0 {$}
+  262,title COMPASS
+  268 SCALE_
+  268,t 0
+  274,line 45
+  270 STRENGTH_
+  269 SHADE_
   error,t 0
-  272 start'
+  271 VIEW_
+  272 threedsend
   258,line 9
-  266,title SCALE
-  271,line 42
-  271,title {}
+  273,t 1
+  273 shade
+  266,title METHOD
+  274 shadeNormal
+  275 highlite
+  271,line 22
+  276 border
+  277,t 1
+  277 compass
+  271,title VIEW
+  278 start'
   261,t 0
   267,line 18
+  275,title {}
   265,t 0
-  261,title COMPASS
+  261,title COLOR
 }
 
 proc threedsend::yyparse {} {
@@ -401,14 +488,19 @@ proc threedsend::yyparse {} {
                     3 { ProcessSendCmdGet2 threed az el }
                     4 { ProcessSendCmdGet threed scale }
                     5 { ProcessSendCmdGet threed method }
-                    6 { ProcessSendCmdGet threed background }
-                    7 { ProcessSendCmdYesNo threed lock }
-                    11 { ProcessSendCmdYesNo threed highlite }
-                    12 { ProcessSendCmdGet threed highlite,color }
-                    13 { ProcessSendCmdYesNo threed border }
-                    14 { ProcessSendCmdGet threed border,color }
-                    15 { ProcessSendCmdYesNo threed compass }
-                    16 { ProcessSendCmdGet threed compass,color }
+                    7 { ProcessSendCmdGet threed background }
+                    8 { ProcessSendCmdYesNo threed lock }
+                    12 { ProcessSendCmdYesNo threed shade }
+                    13 { ProcessSendCmdGet threed shade,ambient }
+                    14 { ProcessSendCmdGet threed shade,strength }
+                    16 { ProcessSendCmdYesNo threed shade,normal }
+                    17 { ProcessSendCmdGet threed shade,normal,strength }
+                    18 { ProcessSendCmdYesNo threed highlite }
+                    19 { ProcessSendCmdGet threed highlite,color }
+                    20 { ProcessSendCmdYesNo threed border }
+                    21 { ProcessSendCmdGet threed border,color }
+                    22 { ProcessSendCmdYesNo threed compass }
+                    23 { ProcessSendCmdGet threed compass,color }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

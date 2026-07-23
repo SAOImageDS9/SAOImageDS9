@@ -8,6 +8,7 @@
 %%
 
 aip		{return $AIP_}
+ambient		{return $AMBIENT_}
 az		{return $AZ_}
 azimuth		{return $AZ_}
 background	{return $BG_}
@@ -19,14 +20,18 @@ colour		{return $COLOR_}
 compass		{return $COMPASS_}
 el		{return $EL_}
 elevation	{return $EL_}
+fip		{return $FIP_}
 highlite	{return $HIGHLITE_}
 lock		{return $LOCK_}
 match		{return $MATCH_}
 method		{return $METHOD_}
 mip		{return $MIP_}
 none		{return $NONE_}
+normal		{return $NORMAL_}
 open		{return $OPEN_}
 scale		{return $SCALE_}
+shade		{return $SHADE_}
+strength	{return $STRENGTH_}
 view		{return $VIEW_}
 vp		{return $VIEW_}
 

@@ -13,6 +13,7 @@ typedef struct {
   Frame3dBase::RenderMethod renderMethod;
   int width;
   float* zbuf;
+  float* depthbuf;
   unsigned char* mkzbuf;
   Context* context;
 

@@ -9,6 +9,7 @@
 %start command
 
 %token AIP_
+%token AMBIENT_
 %token AZ_
 %token BG_
 %token BORDER_
@@ -16,14 +17,18 @@
 %token COLOR_
 %token COMPASS_
 %token EL_
+%token FIP_
 %token HIGHLITE_
 %token LOCK_
 %token MATCH_
 %token METHOD_
 %token MIP_
 %token NONE_
+%token NORMAL_
 %token OPEN_
 %token SCALE_
+%token SHADE_
+%token STRENGTH_
 %token VIEW_
 
 %%
@@ -43,6 +48,7 @@ command : 3d
  | VIEW_ numeric numeric {ProcessCmdSet threed az $2; ProcessCmdSet threed el $3 3DViewPoint}
  | SCALE_ numeric {ProcessCmdSet threed scale $2 3DScale}
  | METHOD_ method {ProcessCmdSet threed method $2 3DRenderMethod}
+ | SHADE_ shade
  | BG_ bg {ProcessCmdSet threed background $2 3DBackground}
  | HIGHLITE_ highlite
  | BORDER_ border
@@ -52,7 +58,18 @@ command : 3d
  ;
 
 method : AIP_ {set _ aip}
+ | FIP_ {set _ fip}
  | MIP_ {set _ mip}
+ ;
+
+shade : yesno {ProcessCmdSet threed shade $1 3DShade}
+ | AMBIENT_ numeric {ProcessCmdSet threed shade,ambient $2 3DShade}
+ | STRENGTH_ numeric {ProcessCmdSet threed shade,strength $2 3DShade}
+ | NORMAL_ shadeNormal
+ ;
+
+shadeNormal : yesno {ProcessCmdSet threed shade,normal $1 3DShade}
+ | STRENGTH_ numeric {ProcessCmdSet threed shade,normal,strength $2 3DShade}
  ;
  
 bg : NONE_ {set _ none}

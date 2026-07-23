@@ -121,6 +121,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token ALIGN_
 %token ALL_
 %token ALT_
+%token AMBIENT_
 %token AMPLIFIER_
 %token ANALYSIS_
 %token ANGLE_
@@ -235,6 +236,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token FILL_
 %token FILTER_
 %token FIRST_
+%token FIP_
 %token FIT_
 %token FITS_
 %token FITSY_
@@ -328,6 +330,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token NEXT_
 %token NO_
 %token NONE_
+%token NORMAL_
 %token NONNAN_
 %token NONZERO_
 %token NOW_
@@ -391,6 +394,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token SET_
 %token SEXAGESIMAL_
 %token SHAPE_
+%token SHADE_
 %token SHARED_
 %token SHIFT_
 %token SHMID_
@@ -410,6 +414,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token SSHARED_
 %token STATS_
 %token STATUS_
+%token STRENGTH_
 %token SUM_
 %token SYNC_
 %token SYSTEM_
@@ -797,10 +802,21 @@ threed	: VIEW_ threedView
 	| HIGHLITE_ threedHighlite
 	| METHOD_ renderMethod {fr->set3dRenderMethodCmd($2);}
 	| BACKGROUND_ renderBackground {fr->set3dRenderBackgroundCmd($2);}
+	| SHADE_ threedShade
 	| SCALE_ numeric {fr->set3dScaleCmd($2);}
         | SYNC_ INT {fr->set3dSyncCmd($2)};
 	| THRESHOLD_ numeric
 	  {/* needed for compatibility with old version of backup */}
+	;
+
+threedShade : yesno {fr->set3dShadeCmd($1);}
+	| AMBIENT_ numeric {fr->set3dShadeAmbientCmd($2);}
+	| STRENGTH_ numeric {fr->set3dShadeStrengthCmd($2);}
+	| NORMAL_ threedShadeNormal
+	;
+
+threedShadeNormal : yesno {fr->set3dShadeNormalCmd($1);}
+	| STRENGTH_ numeric {fr->set3dShadeNormalStrengthCmd($2);}
 	;
 
 threedBorder : yesno {fr->set3dBorderCmd($1);}
@@ -1390,8 +1406,19 @@ getThreed : VIEW_ getThreedView
 	| COMPASS_ getThreedCompass
 	| HIGHLITE_ getThreedHighlite
 	| METHOD_ {fr->get3dRenderMethodCmd();}
-        | BACKGROUND_ {fr->get3dRenderBackgroundCmd();}
+	| BACKGROUND_ {fr->get3dRenderBackgroundCmd();}
+	| SHADE_ getThreedShade
 	| SCALE_ {fr->get3dScaleCmd();}
+	;
+
+getThreedShade : {fr->get3dShadeCmd();}
+	| AMBIENT_ {fr->get3dShadeAmbientCmd();}
+	| STRENGTH_ {fr->get3dShadeStrengthCmd();}
+	| NORMAL_ getThreedShadeNormal
+	;
+
+getThreedShadeNormal : {fr->get3dShadeNormalCmd();}
+	| STRENGTH_ {fr->get3dShadeNormalStrengthCmd();}
 	;
 
 getThreedBorder : {fr->get3dBorderCmd();}
@@ -2821,6 +2848,7 @@ regionSelect : BEGIN_ numeric numeric
 
 renderMethod: MIP_ {$$ = Frame3dBase::MIP;}
 	| AIP_ {$$ = Frame3dBase::AIP;}
+	| FIP_ {$$ = Frame3dBase::FIP;}
 	;
 
 renderBackground: NONE_ {$$ = Frame3dBase::NONE;}

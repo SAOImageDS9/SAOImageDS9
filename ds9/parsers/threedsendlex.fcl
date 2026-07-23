@@ -8,6 +8,7 @@
 %%
 
 az		{return $AZ_}
+ambient		{return $AMBIENT_}
 azimuth		{return $AZ_}
 background	{return $BG_}
 bg		{return $BG_}
@@ -20,7 +21,10 @@ elevation	{return $EL_}
 highlite	{return $HIGHLITE_}
 lock		{return $LOCK_}
 method		{return $METHOD_}
+normal		{return $NORMAL_}
 scale		{return $SCALE_}
+shade		{return $SHADE_}
+strength	{return $STRENGTH_}
 view		{return $VIEW_}
 vp		{return $VIEW_}
 

@@ -293,8 +293,9 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
     set varname ${frame}gr
     global $varname
 
-    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
-    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
+    set colorbar(orientation) [ColorbarPositionOrientation]
+    set cbh [expr $view(colorbar) && $colorbar(show) && !$colorbar(orientation)]
+    set cbv [expr $view(colorbar) && $colorbar(show) &&  $colorbar(orientation)]
     set grh $view(graph,horz)
     set grv $view(graph,vert)
 
@@ -327,6 +328,10 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
 	incr ww -$colorbar(vertical,width)
 	incr ww -$canvas(gap)
 	incr ww $dgraph(horz,offset)
+	if {$colorbar(position) == {left}} {
+	    incr xx $colorbar(vertical,width)
+	    incr xx $canvas(gap)
+	}
     }
     # cbvgrv
     if {!$cbh && $cbv && !$grh && $grv} {
@@ -337,6 +342,10 @@ proc LayoutGraphHorz {frame fx fy fw fh} {
 	incr ww -$canvas(gap)
 	incr ww -$graph(size)
 	incr ww $dgraph(horz,offset)
+	if {$colorbar(position) == {left}} {
+	    incr xx $colorbar(vertical,width)
+	    incr xx $canvas(gap)
+	}
     }
 
     # grh
@@ -385,8 +394,9 @@ proc LayoutGraphVert {frame fx fy fw fh} {
     set varname ${frame}gr
     global $varname
 
-    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
-    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
+    set colorbar(orientation) [ColorbarPositionOrientation]
+    set cbh [expr $view(colorbar) && $colorbar(show) && !$colorbar(orientation)]
+    set cbv [expr $view(colorbar) && $colorbar(show) &&  $colorbar(orientation)]
     set grh $view(graph,horz)
     set grv $view(graph,vert)
 
@@ -1051,4 +1061,3 @@ proc PrefsDialogGraph {} {
 
     pack $w.graph.gr -side top -fill both -expand true
 }
-

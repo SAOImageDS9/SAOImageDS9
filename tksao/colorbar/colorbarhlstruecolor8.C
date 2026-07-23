@@ -70,6 +70,8 @@ static Tk_ConfigSpec colorbarHLSTrueColor8Specs[] = {
    offsetof(ColorbarBaseOptions, space), 0, NULL},
   {TK_CONFIG_INT, (char*)"-ticks", NULL, NULL, "11",
    offsetof(ColorbarBaseOptions, ticks), 0, NULL},
+  {TK_CONFIG_INT, (char*)"-labelside", NULL, NULL, "0",
+   offsetof(ColorbarBaseOptions, labelSide), 0, NULL},
 
   {TK_CONFIG_INT, (char*)"-colors", NULL, NULL, "1024",
    offsetof(ColorbarBaseOptions, colors), 0, NULL},

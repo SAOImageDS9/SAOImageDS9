@@ -7,10 +7,13 @@
 %start colorbarsend
 
 %token CENTER_
+%token LABEL_
 %token LOCK_
 %token NUMERICS_
 %token ORIENTATION_
+%token POSITION_
 %token SIZE_
+%token SHOW_
 %token SPACE_
 %token TICKS_
 %token VALUE_
@@ -20,7 +23,10 @@
 
 colorbarsend : {ProcessSendCmdYesNo view colorbar}
  | LOCK_ {ProcessSendCmdYesNo colorbar lock}
+ | SHOW_ {ProcessSendCmdYesNo colorbar show}
  | ORIENTATION_ {ColorbarSendCmdOrientation}
+ | POSITION_ {ColorbarSendCmdPosition}
+ | LABEL_ POSITION_ {ColorbarSendCmdLabelPosition}
  | NUMERICS_ {ProcessSendCmdYesNo colorbar numerics}
  | SPACE_ {ColorbarSendCmdSpace}
  | FONT_ {ProcessSendCmdGet colorbar font}

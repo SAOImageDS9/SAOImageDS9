@@ -235,6 +235,7 @@ proc ColorbarDef {} {
     set colorbar(invert) 0
     set colorbar(tag) red
 
+    set colorbar(show) 1
     set colorbar(size) 20
     set colorbar(center) 0.5
     set colorbar(width) 1
@@ -242,6 +243,8 @@ proc ColorbarDef {} {
     set colorbar(numerics) 1
     set colorbar(space) 0
     set colorbar(orientation) 0
+    set colorbar(position) bottom
+    set colorbar(label,position) natural
 
     set colorbar(font) helvetica
     set colorbar(font,size) 9
@@ -252,6 +255,242 @@ proc ColorbarDef {} {
 
     set colorbar(vertical,width) 75
     set colorbar(horizontal,height) 45
+}
+
+proc ColorbarPositionOrientation {} {
+    global colorbar
+
+    switch -- $colorbar(position) {
+	top -
+	bottom {return 0}
+	left -
+	right {return 1}
+	default {return $colorbar(orientation)}
+    }
+}
+
+proc ColorbarLabelSide {} {
+    global colorbar
+
+    switch -- $colorbar(position) {
+	top -
+	left {set side 1}
+	bottom -
+	right -
+	default {set side 0}
+    }
+
+    if {$colorbar(label,position) == {opposite}} {
+	set side [expr {!$side}]
+    }
+
+    return $side
+}
+
+proc ColorbarNormalizeOrientation {orientation} {
+    switch -- $orientation {
+	horizontal {return 0}
+	vertical {return 1}
+	default {return [expr {$orientation ? 1 : 0}]}
+    }
+}
+
+proc ColorbarCmdPosition {position} {
+    global colorbar
+
+    set colorbar(position) $position
+    set colorbar(orientation) [ColorbarPositionOrientation]
+    ColorbarUpdateView
+}
+
+proc ColorbarCmdOrientation {orientation} {
+    global colorbar
+
+    set colorbar(orientation) [ColorbarNormalizeOrientation $orientation]
+    if {$colorbar(orientation)} {
+	set colorbar(position) right
+    } else {
+	set colorbar(position) bottom
+    }
+    ColorbarUpdateView
+}
+
+proc ColorbarCmdSet {key value {cmd ColorbarUpdateView}} {
+    global colorbar
+
+    set colorbar($key) $value
+    ColorbarGlobalToCurrent
+    eval $cmd
+}
+
+proc ColorbarBackupRestore {hasPosition {hasFrameProps 0}} {
+    global ds9
+    global colorbar
+
+    set colorbar(orientation) [ColorbarNormalizeOrientation $colorbar(orientation)]
+    if {!$hasPosition} {
+	if {$colorbar(orientation)} {
+	    set colorbar(position) right
+	} else {
+	    set colorbar(position) bottom
+	}
+    }
+
+    if {!$hasFrameProps} {
+	foreach ff $ds9(frames) {
+	    ColorbarFrameSetFromGlobal $ff
+	    ColorbarApplyFrame $ff
+	}
+    } else {
+	ColorbarCurrentToGlobal
+    }
+
+    LayoutFrames
+}
+
+proc ColorbarPropertyKeys {} {
+    return [list \
+	show size center width ticks numerics space orientation position label,position \
+	font font,size font,weight font,slant \
+    ]
+}
+
+proc ColorbarFrameInit {frame} {
+    ColorbarFrameSetFromGlobal $frame
+}
+
+proc ColorbarFrameDelete {frame} {
+    global colorbar
+
+    foreach key [ColorbarPropertyKeys] {
+	catch {unset colorbar($frame,$key)}
+    }
+}
+
+proc ColorbarFrameSetFromGlobal {frame} {
+    global colorbar
+
+    foreach key [ColorbarPropertyKeys] {
+	set colorbar($frame,$key) $colorbar($key)
+    }
+}
+
+proc ColorbarGlobalSetFromFrame {frame} {
+    global colorbar
+
+    foreach key [ColorbarPropertyKeys] {
+	if {![info exists colorbar($frame,$key)]} {
+	    set colorbar($frame,$key) $colorbar($key)
+	}
+	set colorbar($key) $colorbar($frame,$key)
+    }
+}
+
+proc ColorbarCurrentToGlobal {} {
+    global current
+
+    if {$current(frame) != {}} {
+	ColorbarGlobalSetFromFrame $current(frame)
+    }
+}
+
+proc ColorbarGlobalToCurrent {} {
+    global current
+
+    if {$current(frame) != {}} {
+	ColorbarFrameSetFromGlobal $current(frame)
+    }
+}
+
+proc ColorbarApplyFrame {frame} {
+    global colorbar
+
+    set cb ${frame}cb
+    $cb configure \
+	-size $colorbar($frame,size) \
+	-center $colorbar($frame,center) \
+	-barwidth $colorbar($frame,width) \
+	-ticks $colorbar($frame,ticks) \
+	-numerics $colorbar($frame,numerics) \
+	-space $colorbar($frame,space) \
+	-orientation [ColorbarPositionOrientationFrame $frame] \
+	-labelside [ColorbarLabelSideFrame $frame] \
+	\
+	-font $colorbar($frame,font) \
+	-fontsize $colorbar($frame,font,size) \
+	-fontweight $colorbar($frame,font,weight) \
+	-fontslant $colorbar($frame,font,slant)
+}
+
+proc ColorbarPositionOrientationFrame {frame} {
+    global colorbar
+
+    switch -- $colorbar($frame,position) {
+	top -
+	bottom {return 0}
+	left -
+	right {return 1}
+	default {return [ColorbarNormalizeOrientation $colorbar($frame,orientation)]}
+    }
+}
+
+proc ColorbarLabelSideFrame {frame} {
+    global colorbar
+
+    switch -- $colorbar($frame,position) {
+	top -
+	left {set side 1}
+	bottom -
+	right -
+	default {set side 0}
+    }
+
+    if {$colorbar($frame,label,position) == {opposite}} {
+	set side [expr {!$side}]
+    }
+
+    return $side
+}
+
+proc ColorbarMatchProps {src dst} {
+    global colorbar
+
+    foreach key [ColorbarPropertyKeys] {
+	set colorbar($dst,$key) $colorbar($src,$key)
+    }
+    ColorbarApplyFrame $dst
+}
+
+proc ColorbarFrameGetList {frame} {
+    global colorbar
+
+    set rr {}
+    foreach key [ColorbarPropertyKeys] {
+	if {![info exists colorbar($frame,$key)]} {
+	    set colorbar($frame,$key) $colorbar($key)
+	}
+	lappend rr $key $colorbar($frame,$key)
+    }
+    return $rr
+}
+
+proc ColorbarFrameRestore {frame props} {
+    global colorbar
+    global current
+
+    array set rr $props
+    foreach key [ColorbarPropertyKeys] {
+	if {[info exists rr($key)]} {
+	    set colorbar($frame,$key) $rr($key)
+	} else {
+	    set colorbar($frame,$key) $colorbar($key)
+	}
+    }
+
+    ColorbarApplyFrame $frame
+    if {$current(frame) == $frame} {
+	ColorbarCurrentToGlobal
+    }
 }
 
 proc CreateColorbar {} {
@@ -270,6 +509,8 @@ proc CreateColorbar {} {
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
+	-orientation [ColorbarPositionOrientation] \
+	-labelside [ColorbarLabelSide] \
 	\
 	-font $colorbar(font) \
 	-fontsize $colorbar(font,size) \
@@ -339,6 +580,7 @@ proc CreateColorbarBase {frame} {
     }
 
     set which ${frame}cb
+    ColorbarFrameInit $frame
 
     $ds9(canvas) create colorbar$ds9(visual)$ds9(depth) \
 	-colors 2048 \
@@ -352,7 +594,8 @@ proc CreateColorbarBase {frame} {
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
-	-orientation $colorbar(orientation) \
+	-orientation [ColorbarPositionOrientation] \
+	-labelside [ColorbarLabelSide] \
 	\
 	-font $colorbar(font) \
 	-fontsize $colorbar(font,size) \
@@ -416,6 +659,7 @@ proc CreateColorbarRGB {frame} {
     }
 
     set which ${frame}cb
+    ColorbarFrameInit $frame
 
     $ds9(canvas) create colorbarrgb$ds9(visual)$ds9(depth) \
 	-colors 2048 \
@@ -429,6 +673,8 @@ proc CreateColorbarRGB {frame} {
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
+	-orientation [ColorbarPositionOrientation] \
+	-labelside [ColorbarLabelSide] \
 	\
 	-font $colorbar(font) \
 	-fontsize $colorbar(font,size) \
@@ -465,6 +711,7 @@ proc CreateColorbarHSV {frame} {
     }
 
     set which ${frame}cb
+    ColorbarFrameInit $frame
 
     $ds9(canvas) create colorbarhsv$ds9(visual)$ds9(depth) \
 	-colors 2048 \
@@ -478,6 +725,8 @@ proc CreateColorbarHSV {frame} {
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
+	-orientation [ColorbarPositionOrientation] \
+	-labelside [ColorbarLabelSide] \
 	\
 	-font $colorbar(font) \
 	-fontsize $colorbar(font,size) \
@@ -514,6 +763,7 @@ proc CreateColorbarHLS {frame} {
     }
 
     set which ${frame}cb
+    ColorbarFrameInit $frame
 
     $ds9(canvas) create colorbarhls$ds9(visual)$ds9(depth) \
 	-colors 2048 \
@@ -527,6 +777,8 @@ proc CreateColorbarHLS {frame} {
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
+	-orientation [ColorbarPositionOrientation] \
+	-labelside [ColorbarLabelSide] \
 	\
 	-font $colorbar(font) \
 	-fontsize $colorbar(font,size) \
@@ -1155,14 +1407,18 @@ proc MatchColor {which} {
 
     set tt [$which get type]
     set cb ${which}cb
+    ColorbarGlobalSetFromFrame $which
     foreach ff $ds9(frames) {
 	if {$ff != $which} {
 	    if {$tt == [$ff get type]} {
 		$ff colormap [$cb get colormap]
 		${ff}cb colorbar [$ff get colorbar]
+		ColorbarMatchProps $which $ff
 	    }
 	}
     }
+    ColorbarCurrentToGlobal
+    LayoutFrames
 }
 
 proc LockColorCurrent {} {
@@ -1413,7 +1669,7 @@ proc ColormapDialog {} {
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
     $mb add cascade -label [msgcat::mc {Colormap}] -menu $mb.colormap
-    $mb add cascade -label [msgcat::mc {Color}] -menu $mb.color
+    $mb add cascade -label [msgcat::mc {Tags}] -menu $mb.tags
 
     ThemeMenu $mb.file
     $mb.file add command -label [msgcat::mc {Open}] \
@@ -1422,7 +1678,7 @@ proc ColormapDialog {} {
 	-command SaveColormap -accelerator "${ds9(ctrl)}S"
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Apply}] \
-	-command ApplyColormap
+	-command ColormapApplyDialog
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Download Colormap}] \
 	-command {HV cpt CPT-CITY https://phillips.shef.ac.uk/pub/cpt-city/}
@@ -1432,19 +1688,20 @@ proc ColormapDialog {} {
     $mb.file add command -label [msgcat::mc {Save Contrast/Bias}] \
 	-command SaveContrastBias
     $mb.file add separator
-    $mb.file add command -label [msgcat::mc {Load Color Tags}]\
-	-command OpenColorTag
-    $mb.file add command -label [msgcat::mc {Save Color Tags}] \
-	-command SaveColorTag
-    $mb.file add command -label [msgcat::mc {Delete Color Tags}] \
-	-command DeleteColorTag
-    $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command ColormapDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     EditMenu $mb icolorbar
 
-    ColorMenu $mb.color colorbar tag {}
+    ThemeMenu $mb.tags
+    $mb.tags add command -label [msgcat::mc {Load Color Tags}]\
+	-command OpenColorTag
+    $mb.tags add command -label [msgcat::mc {Save Color Tags}] \
+	-command SaveColorTag
+    $mb.tags add command -label [msgcat::mc {Delete Color Tags}] \
+	-command DeleteColorTag
+    $mb.tags add cascade -label [msgcat::mc {Color}] -menu $mb.tags.color
+    ColorMenu $mb.tags.color colorbar tag {}
 
     ThemeMenu $mb.colormap
     foreach cmap $icolorbar(default,cmaps) {
@@ -1499,8 +1756,9 @@ proc ColormapDialog {} {
 
     UpdateColorDialog
 
-    # Param
-    set f [ttk::frame $w.param]
+    # Colormap
+    set f [ttk::labelframe $w.colormap -text [msgcat::mc {Colormap}] \
+	       -padding 2]
 
     slider $f.cslider 0. 10. [msgcat::mc {Contrast}] \
 	dcolorbar(contrast) [list AdjustColormap]
@@ -1516,10 +1774,73 @@ proc ColormapDialog {} {
     bind $f.bslider.slider <Button-1> BeginAdjustColormap
     bind $f.bslider.slider <ButtonRelease-1> EndAdjustColormap
 
+    # Colorbar
+    set f [ttk::labelframe $w.colorbar -text [msgcat::mc {Colorbar}] \
+	       -padding 2]
+
+    ttk::label $f.tshow -text [msgcat::mc {Show}]
+    ttk::checkbutton $f.show -text [msgcat::mc {Colorbar}] \
+	-variable colorbar(show) -command ColorbarUpdateView
+
+    ttk::label $f.tposition -text [msgcat::mc {Position}]
+    ttk::radiobutton $f.bottom -text [msgcat::mc {Bottom}] \
+	-variable colorbar(position) -value bottom \
+	-command [list ColorbarCmdPosition bottom]
+    ttk::radiobutton $f.top -text [msgcat::mc {Top}] \
+	-variable colorbar(position) -value top \
+	-command [list ColorbarCmdPosition top]
+    ttk::radiobutton $f.left -text [msgcat::mc {Left}] \
+	-variable colorbar(position) -value left \
+	-command [list ColorbarCmdPosition left]
+    ttk::radiobutton $f.right -text [msgcat::mc {Right}] \
+	-variable colorbar(position) -value right \
+	-command [list ColorbarCmdPosition right]
+
+    ttk::label $f.tlabels -text [msgcat::mc {Labels}]
+    ttk::radiobutton $f.natural -text [msgcat::mc {Natural}] \
+	-variable colorbar(label,position) -value natural \
+	-command ColorbarUpdateView
+    ttk::radiobutton $f.opposite -text [msgcat::mc {Opposite}] \
+	-variable colorbar(label,position) -value opposite \
+	-command ColorbarUpdateView
+
+    ttk::label $f.tnumerics -text [msgcat::mc {Numerics}]
+    ttk::checkbutton $f.numerics -text [msgcat::mc {Show}] \
+	-variable colorbar(numerics) -command ColorbarUpdateView
+    ttk::radiobutton $f.value -text [msgcat::mc {Space Equal Value}] \
+	-variable colorbar(space) -value 1 -command ColorbarUpdateView
+    ttk::radiobutton $f.distance -text [msgcat::mc {Space Equal Distance}] \
+	-variable colorbar(space) -value 0 -command ColorbarUpdateView
+
+    ttk::label $f.tfont -text [msgcat::mc {Font}]
+    FontMenuButton $f.font colorbar font font,size font,weight font,slant \
+	ColorbarUpdateView
+
+    ttk::label $f.tsize -text [msgcat::mc {Size}]
+    ttk::entry $f.size -textvariable colorbar(size) -width 10
+    ttk::label $f.tticks -text [msgcat::mc {Number of Ticks}]
+    ttk::entry $f.ticks -textvariable colorbar(ticks) -width 10
+    slider $f.center 0. 1. [msgcat::mc {Center}] colorbar(center) \
+	ColorbarUpdateView
+    slider $f.width 0. 1. [msgcat::mc {Width}] colorbar(width) \
+	ColorbarUpdateView
+
+    grid $f.tshow $f.show -padx 2 -pady 2 -sticky w
+    grid $f.tposition $f.bottom $f.top $f.left $f.right \
+	-padx 2 -pady 2 -sticky w
+    grid $f.tlabels $f.natural $f.opposite -padx 2 -pady 2 -sticky w
+    grid $f.tnumerics $f.numerics $f.value $f.distance \
+	-padx 2 -pady 2 -sticky w
+    grid $f.tfont $f.font -padx 2 -pady 2 -sticky w
+    grid $f.tsize $f.size $f.tticks $f.ticks -padx 2 -pady 2 -sticky w
+    grid $f.center -columnspan 5 -padx 2 -pady 2 -sticky ew
+    grid $f.width -columnspan 5 -padx 2 -pady 2 -sticky ew
+    grid columnconfigure $f 0 -weight 1
+
     # Buttons
     set f [ttk::frame $w.buttons]
     ttk::button $f.apply -text [msgcat::mc {Apply}] \
-	-command ApplyColormap
+	-command ColormapApplyDialog
     ttk::button $f.close -text [msgcat::mc {Close}] \
 	-command ColormapDestroyDialog
     pack $f.apply $f.close -side left -expand true -padx 2 -pady 4
@@ -1527,11 +1848,12 @@ proc ColormapDialog {} {
     # Fini
     ttk::separator $w.sep -orient horizontal
     pack $w.buttons $w.sep -side bottom -fill x
-    pack $w.param -side top -fill both -expand true
+    pack $w.colormap $w.colorbar -side top -fill both -expand true
 
     bind $w <<Open>> LoadColormap
     bind $w <<Save>> SaveColormap
     bind $w <<Close>> ColormapDestroyDialog
+    bind $w <Return> ColormapApplyDialog
 }
 
 proc ColormapDialogExternal {which} {
@@ -1567,6 +1889,11 @@ proc ColormapDestroyDialog {} {
 	destroy $icolorbar(mb)
 	unset dcolorbar
     }
+}
+
+proc ColormapApplyDialog {} {
+    ApplyColormap
+    ColorbarUpdateView
 }
 
 proc ApplyColormap {} {
@@ -1731,13 +2058,15 @@ proc LayoutColorbar {cb fx fy fw fh} {
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
-	-orientation $colorbar(orientation) \
+	-orientation [ColorbarPositionOrientation] \
+	-labelside [ColorbarLabelSide] \
 	\
 	-font $colorbar(font) \
 	-fontsize $colorbar(font,size) \
 	-fontweight $colorbar(font,weight) \
 	-fontslant $colorbar(font,slant)
 
+    set colorbar(orientation) [ColorbarPositionOrientation]
     set cbh [expr !$colorbar(orientation)]
     set cbv $colorbar(orientation)
     set grh $view(graph,horz)
@@ -1746,20 +2075,28 @@ proc LayoutColorbar {cb fx fy fw fh} {
     # cbh
     if {$cbh} {
 	set xx $fx
-	set yy [expr $fy + $fh - $colorbar(horizontal,height)]
+	if {$colorbar(position) == {top}} {
+	    set yy $fy
+	} else {
+	    set yy [expr $fy + $fh - $colorbar(horizontal,height)]
+	}
 	set ww $fw
 	set hh $colorbar(horizontal,height)
     }
     # cbv
     if {$cbv} {
-	set xx [expr $fx + $fw - $colorbar(vertical,width)]
+	if {$colorbar(position) == {left}} {
+	    set xx $fx
+	} else {
+	    set xx [expr $fx + $fw - $colorbar(vertical,width)]
+	}
 	set yy $fy
 	set ww $colorbar(vertical,width)
 	set hh $fh
     }
 
     # cbhgrh
-    if {$cbh && !$cbv && $grh && !$grv} {
+    if {$cbh && !$cbv && $grh && !$grv && $colorbar(position) != {top}} {
 	incr yy -$graph(size)
 	incr ww -$dgraph(horz,offset)
     }
@@ -1770,7 +2107,9 @@ proc LayoutColorbar {cb fx fy fw fh} {
     # cbhgrhgrv
     if {$cbh && !$cbv && $grh && $grv} {
 	incr ww -$graph(size)
-	incr yy -$graph(size)
+	if {$colorbar(position) != {top}} {
+	    incr yy -$graph(size)
+	}
     }
 
     # cbvgrh
@@ -1778,14 +2117,16 @@ proc LayoutColorbar {cb fx fy fw fh} {
 	incr hh -$graph(size)
     }
     # cbvgrv
-    if {!$cbh && $cbv && !$grh && $grv} {
+    if {!$cbh && $cbv && !$grh && $grv && $colorbar(position) != {left}} {
 	incr xx -$graph(size)
 	incr hh -$dgraph(vert,offset)
     }
     # cbvgrhgrv
     if {!$cbh && $cbv && $grh && $grv} {
 	incr hh -$graph(size)
-	incr xx -$graph(size)
+	if {$colorbar(position) != {left}} {
+	    incr xx -$graph(size)
+	}
     }
 
     # grh
@@ -1810,6 +2151,9 @@ proc LayoutColorbar {cb fx fy fw fh} {
 proc ColorbarUpdateView {} {
     global ds9
     global colorbar
+    global current
+
+    ColorbarGlobalToCurrent
 
     # update default colorbar
     colorbar configure \
@@ -1819,32 +2163,19 @@ proc ColorbarUpdateView {} {
 	-ticks $colorbar(ticks) \
 	-numerics $colorbar(numerics) \
 	-space $colorbar(space) \
-	-orientation $colorbar(orientation) \
+	-orientation [ColorbarPositionOrientation] \
+	-labelside [ColorbarLabelSide] \
 	\
 	-font $colorbar(font) \
 	-fontsize $colorbar(font,size) \
 	-fontweight $colorbar(font,weight) \
 	-fontslant $colorbar(font,slant)
 
-    # update all colorbars
-    foreach ff $ds9(frames) {
-	set cb ${ff}cb
-
-	$cb configure \
-	    -size $colorbar(size) \
-	    -center $colorbar(center) \
-	    -barwidth $colorbar(width) \
-	    -ticks $colorbar(ticks) \
-	    -numerics $colorbar(numerics) \
-	    -space $colorbar(space) \
-	    -orientation $colorbar(orientation) \
-	    \
-	    -font $colorbar(font) \
-	    -fontsize $colorbar(font,size) \
-	    -fontweight $colorbar(font,weight) \
-	    -fontslant $colorbar(font,slant)
+    if {$current(frame) != {}} {
+	ColorbarApplyFrame $current(frame)
     }
 
+    LockColorCurrent
     LayoutFrames
 }
 
@@ -1870,6 +2201,8 @@ proc ColorbarBackup {ch dir} {
     }
 
     # colorbar params
+    puts $ch "global colorbar"
+    puts $ch "set colorbar(show) $colorbar(show)"
     puts $ch "colorbar configure -size $colorbar(size)"
     puts $ch "colorbar configure -center $colorbar(center)"
     puts $ch "colorbar configure -barwidth $colorbar(width)"
@@ -1877,6 +2210,8 @@ proc ColorbarBackup {ch dir} {
     puts $ch "colorbar configure -numerics $colorbar(numerics)"
     puts $ch "colorbar configure -space $colorbar(space)"
     puts $ch "colorbar configure -orientation $colorbar(orientation)"
+    puts $ch "set colorbar(position) $colorbar(position)"
+    puts $ch "set colorbar(label,position) $colorbar(label,position)"
 
     puts $ch "colorbar configure -font $colorbar(font)"
     puts $ch "colorbar configure -fontsize $colorbar(font,size)"
@@ -1887,6 +2222,7 @@ proc ColorbarBackup {ch dir} {
 proc ColorbarFrameBackup {ch which} {
     set cb ${which}cb
 
+    puts $ch [list ColorbarFrameRestore $which [ColorbarFrameGetList $which]]
     puts $ch [list $cb colorbar [$which get colorbar]]
     puts $ch "$which colormap \[$cb get colormap\]"
     puts $ch "$which colorbar tag \"\{[$which get colorbar tag]\}\""
@@ -2004,6 +2340,20 @@ proc ColorbarSendCmdOrientation {} {
     } else {
 	$parse(proc) $parse(id) "vertical\n"
     }
+}
+
+proc ColorbarSendCmdPosition {} {
+    global parse
+    global colorbar
+
+    $parse(proc) $parse(id) "$colorbar(position)\n"
+}
+
+proc ColorbarSendCmdLabelPosition {} {
+    global parse
+    global colorbar
+
+    $parse(proc) $parse(id) "$colorbar(label,position)\n"
 }
 
 proc ColorbarSendCmdSpace {} {

@@ -638,6 +638,8 @@ proc LayoutFrames {} {
 	    }
 	}
     }
+
+    ColorbarCurrentToGlobal
 }
 
 proc LayoutFramesNone {} {
@@ -663,7 +665,7 @@ proc LayoutFramesNone {} {
     }
 
     # colorbar
-    if {$view(colorbar)} {
+    if {$view(colorbar) && $colorbar(show)} {
 	if {[LayoutColorbar colorbar 0 0 [winfo width $ds9(canvas)] [winfo height $ds9(canvas)]]} {
 	    colorbar show
 	    LayoutRaise colorbar
@@ -719,15 +721,20 @@ proc LayoutFrameOne {} {
     set hh [winfo height $ds9(canvas)]
 
     foreach ff $ds9(active) {
+	ColorbarGlobalSetFromFrame $ff
+	LayoutColorbarAdjust
 	set fw $ww
 	set fh $hh
 
 	# frame
+	set fx 0
+	set fy 0
+	LayoutFrameOriginAdjust fx fy
 	LayoutFrameAdjust fw fh
-	$ff configure -x 0 -y 0 -width $fw -height $fh -anchor nw
+	$ff configure -x $fx -y $fy -width $fw -height $fh -anchor nw
 
 	# colorbar
-	if {$view(colorbar)} {
+	if {$view(colorbar) && $colorbar(show)} {
 	    LayoutColorbar ${ff}cb 0 0 $ww $hh
 	}
 
@@ -748,7 +755,7 @@ proc LayoutFrameOne {} {
 #    $ds9(canvas) raise $current(frame)
 
     # colorbar
-    if {$view(colorbar)} {
+    if {$view(colorbar) && $colorbar(show)} {
 	$current(colorbar) show
 	LayoutRaise $current(colorbar)
 #	$ds9(canvas) raise $current(colorbar)
@@ -864,18 +871,23 @@ proc TileRect {numx numy} {
 
     set ii 0
     foreach ff $ds9(active) {
+	ColorbarGlobalSetFromFrame $ff
+	LayoutColorbarAdjust
 	set fw $ww
 	set fh $hh
 
 	# frame
 	LayoutFrameAdjust fw fh
-	$ff configure -x $xx($ii) -y $yy($ii) -width $fw -height $fh -anchor nw
+	set fx $xx($ii)
+	set fy $yy($ii)
+	LayoutFrameOriginAdjust fx fy
+	$ff configure -x $fx -y $fy -width $fw -height $fh -anchor nw
 	$ff show
 	LayoutRaise $ff
 #	$ds9(canvas) raise $ff
 
 	# colorbar
-	if {$view(colorbar)} {
+	if {$view(colorbar) && $colorbar(show)} {
 	    LayoutColorbar ${ff}cb $xx($ii) $yy($ii) $ww $hh
 	    ${ff}cb show
 	    LayoutRaise ${ff}cb
@@ -909,6 +921,13 @@ proc TileRectNone {numx numy} {
     
     set fw [winfo width $ds9(canvas)]
     set fh [winfo height $ds9(canvas)]
+    set fx 0
+    set fy 0
+    if {$current(frame) != {}} {
+	ColorbarGlobalSetFromFrame $current(frame)
+	LayoutColorbarAdjust
+    }
+    LayoutFrameOriginAdjust fx fy
     LayoutFrameAdjust fw fh
     
     set ww [expr int(($fw-($tile(grid,gap)*($numx-1)))/$numx)]
@@ -919,8 +938,8 @@ proc TileRectNone {numx numy} {
 	    for {set jj 0} {$jj<$numy} {incr jj} {
 		for {set ii 0} {$ii<$numx} {incr ii} {
 		    set nn [expr $jj*$numx + $ii]
-		    set xx($nn) [expr ($ww+$tile(grid,gap))*$ii]
-		    set yy($nn) [expr ($hh+$tile(grid,gap))*$jj]
+		    set xx($nn) [expr $fx + ($ww+$tile(grid,gap))*$ii]
+		    set yy($nn) [expr $fy + ($hh+$tile(grid,gap))*$jj]
 		}
 	    }
 	}
@@ -928,8 +947,8 @@ proc TileRectNone {numx numy} {
 	    for {set ii 0} {$ii<$numx} {incr ii} {
 		for {set jj 0} {$jj<$numy} {incr jj} {
 		    set nn [expr $ii*$numy + $jj]
-		    set xx($nn) [expr ($ww+$tile(grid,gap))*$ii]
-		    set yy($nn) [expr ($hh+$tile(grid,gap))*$jj]
+		    set xx($nn) [expr $fx + ($ww+$tile(grid,gap))*$ii]
+		    set yy($nn) [expr $fy + ($hh+$tile(grid,gap))*$jj]
 		}
 	    }
 	}
@@ -948,7 +967,7 @@ proc TileRectNone {numx numy} {
 #	    $ds9(canvas) raise $ff
 	}
 
-	if {$view(colorbar)} {
+	if {$view(colorbar) && $colorbar(show)} {
 	    LayoutColorbar ${ff}cb 0 0 \
 		[winfo width $ds9(canvas)] [winfo height $ds9(canvas)]
 	}
@@ -975,7 +994,7 @@ proc TileRectNone {numx numy} {
     set ff $current(frame)
 
     # colorbar
-    if {$view(colorbar)} {
+    if {$view(colorbar) && $colorbar(show)} {
 	${ff}cb show
 	LayoutRaise ${ff}cb
 #	$ds9(canvas) raise ${ff}cb
@@ -1003,8 +1022,9 @@ proc LayoutFrameAdjust {wvar hvar} {
     upvar $wvar ww
     upvar $hvar hh
 
-    set cbh [expr $view(colorbar) && !$colorbar(orientation)]
-    set cbv [expr $view(colorbar) &&  $colorbar(orientation)]
+    set colorbar(orientation) [ColorbarPositionOrientation]
+    set cbh [expr $view(colorbar) && $colorbar(show) && !$colorbar(orientation)]
+    set cbv [expr $view(colorbar) && $colorbar(show) &&  $colorbar(orientation)]
     set grh $view(graph,horz)
     set grv $view(graph,vert)
 
@@ -1087,6 +1107,28 @@ proc LayoutFrameAdjust {wvar hvar} {
     }
     if {$hh<0} {
 	set hh 1
+    }
+}
+
+proc LayoutFrameOriginAdjust {xvar yvar} {
+    global canvas
+    global view
+    global colorbar
+
+    upvar $xvar xx
+    upvar $yvar yy
+
+    if {$view(colorbar) && $colorbar(show)} {
+	switch -- $colorbar(position) {
+	    top {
+		incr yy $colorbar(horizontal,height)
+		incr yy $canvas(gap)
+	    }
+	    left {
+		incr xx $colorbar(vertical,width)
+		incr xx $canvas(gap)
+	    }
+	}
     }
 }
 

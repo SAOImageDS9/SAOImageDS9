@@ -677,13 +677,14 @@ public:
   // Contour Commands
   void contourCreateCmd(const char*, int, int, FVContour::Method, int, int, FrScale::ColorScaleType, float, FrScale::ClipMode, float, FrScale::ClipScope, double, double, const char*);
   void contourCreatePolygonCmd();
+  void contourDashListCmd(int, int);
   void contourDeleteCmd();
   void contourDeleteAuxCmd();
   void contourLoadCmd(const char*);
   void contourLoadCmd(const char*, const char*, int, int);
   void contourLoadCmd(const char*, Coord::CoordSystem, Coord::SkyFrame, const char*, int, int);
   void contourPasteCmd(const char*);
-  void contourPasteCmd(const char*, const char*, int, int);
+  void contourPasteCmd(const char*, const char*, int, int, int =0, int =0);
   void contourSaveCmd(const char*, Coord::CoordSystem, Coord::SkyFrame);
   void contourSaveAuxCmd(const char*, Coord::CoordSystem, Coord::SkyFrame);
 
@@ -693,6 +694,7 @@ public:
   void getContourClipScopeCmd();
   void getContourColorNameCmd();
   void getContourDashCmd();
+  void getContourDashListCmd();
   void getContourLevelCmd();
   void getContourLineWidthCmd();
   void getContourMethodCmd();
@@ -1313,6 +1315,8 @@ public:
   void getMarkerLineLengthCmd(int, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerLineWidthCmd();
   void getMarkerLineWidthCmd(int);
+  void getMarkerDashListCmd();
+  void getMarkerDashListCmd(int);
   void getMarkerMapLenFromRefCmd(int, double, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerNumberCmd();
   void getMarkerPointShapeCmd(int);
@@ -1490,6 +1494,8 @@ public:
   void markerLineArrowCmd(int, int, int);
   void markerLineWidthCmd(int);
   void markerLineWidthCmd(int, int);
+  void markerDashListCmd(int, int);
+  void markerDashListCmd(int, int, int);
   void markerListCmd(MarkerFormat,
 		     Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, 
 		     int strip, int select,

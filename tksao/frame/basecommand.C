@@ -675,6 +675,19 @@ void Base::contourCreateCmd(const char* color, int width, int dash,
   update(PIXMAP);
 }
 
+void Base::contourDashListCmd(int length, int gap)
+{
+  if (length < 1 || length > 255 || gap < 1 || gap > 255) {
+    Tcl_AppendResult(interp,
+	"dash list values must be integers from 1 through 255", NULL);
+    result = TCL_ERROR;
+    return;
+  }
+
+  currentContext->fvcontour().setDashList(length, gap);
+  update(PIXMAP);
+}
+
 void Base::contourDeleteCmd()
 {
   currentContext->contourDeleteFV();
@@ -748,8 +761,16 @@ void Base::contourPasteCmd(const char* var)
 }
 
 void Base::contourPasteCmd(const char* var, const char* color,
-			   int width, int dash)
+			   int width, int dash, int length, int gap)
 {
+  if ((length || gap) &&
+      (length < 1 || length > 255 || gap < 1 || gap > 255)) {
+    Tcl_AppendResult(interp,
+	"dash list values must be integers from 1 through 255", NULL);
+    result = TCL_ERROR;
+    return;
+  }
+
   Tcl_Obj* obj = Tcl_GetVar2Ex(interp, var, NULL, TCL_LEAVE_ERR_MSG);
   if (!obj) {
     result = TCL_ERROR;
@@ -774,8 +795,11 @@ void Base::contourPasteCmd(const char* var, const char* color,
 
   string x(buf);
   istringstream str(x);
-  if (str)
-    currentContext->contourLoadAux(str, color, width, dash);
+  if (str) {
+    int dlist[2] = {length, gap};
+    currentContext->contourLoadAux(str, color, width, dash,
+				   length && gap ? dlist : NULL);
+  }
   delete [] buf;
 
   update(PIXMAP);
@@ -1316,6 +1340,14 @@ void Base::getContourDashCmd()
     Tcl_AppendResult(interp, "1", NULL);
   else
     Tcl_AppendResult(interp, "0", NULL);
+}
+
+void Base::getContourDashListCmd()
+{
+  int* dlist = currentContext->fvcontour().dlist();
+  ostringstream str;
+  str << dlist[0] << ' ' << dlist[1] << ends;
+  Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
 void Base::getContourLevelCmd()

@@ -70,6 +70,18 @@ FVContour::~FVContour()
     delete [] kernel_;
 }
 
+void FVContour::setDashList(int length, int gap)
+{
+  dlist_[0] = length;
+  dlist_[1] = gap;
+
+  ContourLevel* level = lcontourlevel_.head();
+  while (level) {
+    level->setDashList(length, gap);
+    level = level->next();
+  }
+}
+
 void FVContour::create(Base* pp, FitsImage* fits, FrScale* fr,
 		       const char* cc, int ww, int dd, 
 		       Method mm, int nn, int rr, 

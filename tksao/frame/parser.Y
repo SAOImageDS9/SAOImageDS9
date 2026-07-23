@@ -973,6 +973,7 @@ colorscale : scaleType {fr->colorScaleCmd((FrScale::ColorScaleType)$1);}
 	;
 
 contour	: CREATE_ contourCreate
+	| DASHLIST_ INT INT {fr->contourDashListCmd($2,$3);}
 	| DELETE_ contourDelete
         | LOAD_ contourLoad
         | PASTE_ contourPaste
@@ -1029,6 +1030,8 @@ contourMethod : SMOOTH_ {$$ = FVContour::SMOOTH;}
 
 contourPaste : STRING {fr->contourPasteCmd($1);}
         | STRING STRING INT yesno {fr->contourPasteCmd($1,$2,$3,$4);}
+        | STRING STRING INT yesno INT INT
+	{fr->contourPasteCmd($1,$2,$3,$4,$5,$6);}
         ;
 
 contourSave : STRING coordSystem skyFrame
@@ -1223,6 +1226,7 @@ getContour: coordSystem skyFrame
 	| CLIP_ getContourClip
 	| COLOR_ {fr->getContourColorNameCmd();}
 	| DASH_ {fr->getContourDashCmd();}
+	| DASHLIST_ {fr->getContourDashListCmd();}
 	| LEVEL_ {fr->getContourLevelCmd();}
 	| NUMBER_ LEVEL_ {fr->getContourNumLevelCmd();}
 	| METHOD_ {fr->getContourMethodCmd();}
@@ -2099,6 +2103,7 @@ marker	: CENTROID_ markerCentroid
 	    $9, (Coord::CoordSystem)$7, (Coord::DistFormat)$8, $10);}
 
 	| INT WIDTH_ INT {fr->markerLineWidthCmd($1,$3);}
+	| INT DASHLIST_ INT INT {fr->markerDashListCmd($1,$3,$4);}
 
 	| KEY_ {fr->markerKeyCmd();}
 	| KEY_ numeric numeric {fr->markerKeyCmd(Vector($2,$3));}
@@ -2151,6 +2156,7 @@ marker	: CENTROID_ markerCentroid
 	| UNHIGHLITE_ ALL_ {fr->markerUnhighliteAllCmd();}
 	| UNSELECT_ ALL_ {fr->markerUnselectAllCmd();}
 	| WIDTH_ INT {fr->markerLineWidthCmd($2);}
+	| DASHLIST_ INT INT {fr->markerDashListCmd($2,$3);}
 	;
 
 markerCallBack : SELECT_ {$$ = CallBack::SELECTCB;}
@@ -2554,6 +2560,7 @@ markerGet : CENTROID_ markerGetCentroid
 	{fr->getMarkerVectorCmd($1, (Coord::CoordSystem)$4,
 	    (Coord::SkyFrame)$5, (Coord::SkyFormat)$6);}
 	| INT WIDTH_ {fr->getMarkerLineWidthCmd($1);}
+	| INT DASHLIST_ {fr->getMarkerDashListCmd($1);}
 	| HIGHLITE_ markerGetHighlite
 	| HIGHLITE_ NUMBER_ {fr->getMarkerHighlitedNumberCmd();}
 	| NUMBER_ {fr->getMarkerNumberCmd();}
@@ -2579,6 +2586,7 @@ markerGet : CENTROID_ markerGetCentroid
 	| TAG_ DEFAULT_ NAME_ {fr->getMarkerTagDefaultNameCmd();}
 
 	| WIDTH_ {fr->getMarkerLineWidthCmd();}
+	| DASHLIST_ {fr->getMarkerDashListCmd();}
 	;
 
 markerGetCentroid : AUTO_ {fr->getMarkerCentroidAutoCmd();}

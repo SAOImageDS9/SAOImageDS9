@@ -18,6 +18,7 @@ proc ContourDef {} {
     set contour(color) green
     set contour(width) 1
     set contour(dash) 0
+    set contour(dashlist) {8 3}
 
     set contour(method) smooth
     set contour(smooth) 4
@@ -43,6 +44,7 @@ proc ContourDef {} {
     set pcontour(color) $contour(color)
     set pcontour(width) $contour(width)
     set pcontour(dash) $contour(dash)
+    set pcontour(dashlist) $contour(dashlist)
     set pcontour(smooth) $contour(smooth)
     set pcontour(numlevel) $contour(numlevel)
 }
@@ -110,6 +112,20 @@ proc UpdateContour {} {
 		$contour(min) $contour(max) \
 		"{}"
 	}
+    }
+
+    if {[$current(frame) has contour]} {
+	ContourDashList
+    }
+}
+
+proc ContourDashList {} {
+    global contour
+    global current
+
+    if {$current(frame) != {} && [$current(frame) has contour]} {
+	$current(frame) contour dashlist \
+	    [lindex $contour(dashlist) 0] [lindex $contour(dashlist) 1]
     }
 }
 
@@ -207,7 +223,7 @@ proc ContourDialog {} {
 	-command ContourPasteDialog -accelerator "${ds9(ctrl)}V"
 
     ColorMenu $mb.color contour color {}
-    WidthDashMenu $mb.width contour width dash {} {}
+    WidthDashMenu $mb.width contour width dash {} {} dashlist ContourDashList
 
     ThemeMenu $mb.scale
     $mb.scale add radiobutton -label [msgcat::mc {Linear}] \
@@ -445,6 +461,7 @@ proc ContourCPasteDialog {} {
     set ed2(color) green
     set ed2(width) 1
     set ed2(dash) 0
+    set ed2(dashlist) {8 3}
     set ed2(frame) $current(frame)
     set ed2(original) 0
 
@@ -456,7 +473,9 @@ proc ContourCPasteDialog {} {
     # Param
     set f [ttk::frame $w.param1]
 
-    ttk::checkbutton $f.original -text [msgcat::mc {Use Original Color/Width}] -variable ed2(original)
+    ttk::checkbutton $f.original \
+	-text [msgcat::mc {Use Original Color/Width/Dash}] \
+	-variable ed2(original)
     grid $f.original -padx 2 -pady 2 -sticky w
 
     set f [ttk::frame $w.param]
@@ -472,11 +491,20 @@ proc ContourCPasteDialog {} {
     ttk::label $f.widthtitle -text [msgcat::mc {Width}]
     ttk::menubutton $f.widthbutton -textvariable ed2(width) \
 	-menu $f.widthbutton.menu
-    WidthDashMenu $f.widthbutton.menu ed2 width dash {} {}
+    WidthMenu $f.widthbutton.menu ed2 width {}
+
+    ttk::label $f.dashtitle -text [msgcat::mc {Dash}]
+    ttk::checkbutton $f.dashbutton -variable ed2(dash)
+
+    ttk::label $f.dashlisttitle -text [msgcat::mc {Dash List}]
+    ttk::button $f.dashlistbutton -textvariable ed2(dashlist) \
+	-command [list WidthDashDialog ed2 dashlist {}]
 
     grid $f.coordtitle $f.coordbutton -padx 2 -pady 2 -sticky w
     grid $f.colortitle $f.colorbutton -padx 2 -pady 2 -sticky w
     grid $f.widthtitle $f.widthbutton -padx 2 -pady 2 -sticky w
+    grid $f.dashtitle $f.dashbutton -padx 2 -pady 2 -sticky w
+    grid $f.dashlisttitle $f.dashlistbutton -padx 2 -pady 2 -sticky w
 
     # Buttons
     set f [ttk::frame $w.buttons]
@@ -508,7 +536,8 @@ proc ContourCPasteDialog {} {
 	if {$ed2(original)} {
 	    $current(frame) contour paste cc
 	} else {
-	    $current(frame) contour paste cc $ed2(color) $ed2(width) $ed2(dash)
+	    $current(frame) contour paste cc $ed2(color) $ed2(width) $ed2(dash) \
+		[lindex $ed2(dashlist) 0] [lindex $ed2(dashlist) 1]
 	}
 	UpdateContourDialog
     }
@@ -870,6 +899,7 @@ proc UpdateContourMenu {} {
 	set contour(color) [$current(frame) get contour color]
 	set contour(width) [$current(frame) get contour width]
 	set contour(dash) [$current(frame) get contour dash]
+	set contour(dashlist) [$current(frame) get contour dashlist]
 	set contour(method) [$current(frame) get contour method]
 	set contour(smooth) [$current(frame) get contour smooth]
 	set contour(numlevel) [$current(frame) get contour number level]
@@ -978,6 +1008,7 @@ proc ContourBackupBase {ch which fdir rdir} {
 	set color [$which get contour color]
 	set width [$which get contour width]
 	set dash [$which get contour dash]
+	set dashlist [$which get contour dashlist]
 	set method [$which get contour method]
 	set numlevel [$which get contour number level]
 	set smooth [$which get contour smooth]
@@ -989,6 +1020,7 @@ proc ContourBackupBase {ch which fdir rdir} {
 	set levels [$which get contour level]
 
 	puts $ch "$which contour create $color $width $dash $method $numlevel $smooth $scale $log $mode $scope $limits \{\"$levels\"\}"
+	puts $ch "$which contour dashlist [lindex $dashlist 0] [lindex $dashlist 1]"
     }
 
     # delete old contours
@@ -1057,7 +1089,7 @@ proc PrefsDialogContour {} {
 
     ttk::label $f.wtitle -text [msgcat::mc {Width}]
     ttk::menubutton $f.width -textvariable pcontour(width) -menu $f.width.menu
-    WidthDashMenu $f.width.menu pcontour width dash {} {}
+    WidthDashMenu $f.width.menu pcontour width dash {} {} dashlist {}
 
     grid $f.mtitle $f.method -padx 2 -pady 2 -sticky w
     grid $f.ctitle $f.color -padx 2 -pady 2 -sticky w

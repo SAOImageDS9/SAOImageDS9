@@ -764,7 +764,7 @@ proc WidthMenuButton {w varname width cmd} {
 }
 
 # WidthDashMenu
-proc WidthDashMenu {w varname width dash cmd1 cmd2} {
+proc WidthDashMenu {w varname width dash cmd1 cmd2 {dashlist {}} {cmd3 {}}} {
     upvar #0 $varname var
     global $varname
 
@@ -780,14 +780,88 @@ proc WidthDashMenu {w varname width dash cmd1 cmd2} {
     $w add separator
     $w add checkbutton -label [msgcat::mc {Dash}] \
 	-variable ${varname}($dash) -command $cmd2
+    if {$dashlist != {}} {
+	$w add command -label [msgcat::mc {Dash List}] \
+	    -command [list WidthDashDialog $varname $dashlist $cmd3]
+    }
 }
 
-proc WidthDashMenuButton {w varname width dash cmd1 cmd2} {
+proc WidthDashMenuButton {w varname width dash cmd1 cmd2 \
+			  {dashlist {}} {cmd3 {}}} {
     upvar #0 $varname var
     global $varname
 
     ttk::menubutton $w -textvariable ${varname}($width) -menu $w.menu
-    WidthDashMenu $w.menu $varname $width $dash $cmd1 $cmd2
+    WidthDashMenu $w.menu $varname $width $dash $cmd1 $cmd2 $dashlist $cmd3
+}
+
+proc WidthDashDialog {varname dashlist cmd} {
+    upvar #0 $varname var
+    global $varname
+    global wddash
+
+    set w {.dashlist}
+    if {[winfo exists $w]} {
+	raise $w
+	return
+    }
+
+    if {![info exists var($dashlist)] || [llength $var($dashlist)] != 2} {
+	set var($dashlist) {8 3}
+    }
+
+    set wddash(ok) 0
+    set wddash(length) [lindex $var($dashlist) 0]
+    set wddash(gap) [lindex $var($dashlist) 1]
+
+    DialogCreate $w [msgcat::mc {Dash List}] wddash(ok)
+
+    set f [ttk::frame $w.param]
+    ttk::label $f.tlength -text [msgcat::mc {Length}]
+    ttk::entry $f.length -textvariable wddash(length) -width 8
+    ttk::label $f.tgap -text [msgcat::mc {Gap}]
+    ttk::entry $f.gap -textvariable wddash(gap) -width 8
+    grid $f.tlength $f.length -padx 2 -pady 2 -sticky w
+    grid $f.tgap $f.gap -padx 2 -pady 2 -sticky w
+
+    set f [ttk::frame $w.buttons]
+    ttk::button $f.apply -text [msgcat::mc {Apply}] \
+	-command WidthDashDialogApply -default active
+    ttk::button $f.cancel -text [msgcat::mc {Cancel}] \
+	-command {set wddash(ok) 0}
+    pack $f.apply $f.cancel -side left -expand true -padx 2 -pady 4
+
+    bind $w <Return> WidthDashDialogApply
+
+    ttk::separator $w.sep -orient horizontal
+    pack $w.buttons $w.sep -side bottom -fill x
+    pack $w.param -side top -fill both -expand true
+
+    $w.param.length select range 0 end
+    DialogWait $w wddash(ok) $w.param.length
+    destroy $w
+
+    if {$wddash(ok)} {
+	set var($dashlist) [list $wddash(length) $wddash(gap)]
+	if {$cmd != {}} {
+	    eval $cmd
+	}
+    }
+
+    unset wddash
+}
+
+proc WidthDashDialogApply {} {
+    global wddash
+
+    if {![string is integer -strict $wddash(length)] ||
+	![string is integer -strict $wddash(gap)] ||
+	$wddash(length) < 1 || $wddash(length) > 255 ||
+	$wddash(gap) < 1 || $wddash(gap) > 255} {
+	Error [msgcat::mc {Length and Gap must be integers from 1 through 255.}]
+	return
+    }
+    set wddash(ok) 1
 }
 
 # Shape Size

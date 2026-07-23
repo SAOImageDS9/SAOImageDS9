@@ -36,6 +36,7 @@ proc MarkerDef {} {
     set marker(width) 1
     set marker(dash) 0
     set marker(composite,area) 0
+    set marker(dashlist) {8 3}
 
     set marker(fixed) 0
     set marker(edit) 1
@@ -126,13 +127,13 @@ proc MarkerDef {} {
 proc MarkerControl {which x y} {
     global imarker
     global current
-    
+
     # if nothing is loaded, abort
     if {![$which has fits]} {
 	return -1
     }
 
-    # we need this cause MarkerMotion maybe called, 
+    # we need this cause MarkerMotion maybe called,
     # and we don't want it
     set imarker(motion) none
     set imarker(handle) -1
@@ -188,13 +189,13 @@ proc MarkerControl {which x y} {
 proc MarkerControlShift {which x y} {
     global imarker
     global current
-    
+
     # if nothing is loaded, abort
     if {![$which has fits]} {
 	return -1
     }
 
-    # we need this cause MarkerMotion maybe called, 
+    # we need this cause MarkerMotion maybe called,
     # and we don't want it
     set imarker(motion) none
     set imarker(handle) -1
@@ -246,7 +247,7 @@ proc MarkerCursor {which x y handleCursor overCursor} {
 	if {$handle < 5} {
 	    # edit/rotate handle
 	    SetCursor $handleCursor
-	} else { 
+	} else {
 	    # polygon/segment/annulus vertex
 	    SetCursor dotbox
 	}
@@ -509,7 +510,7 @@ proc MarkerRelease {which x y} {
 
 	    if {$imarker(id)>=0} {
 		if {$marker(centroid,auto)} {
-		    $which marker centroid $imarker(id) 
+		    $which marker centroid $imarker(id)
 		}
 
 		MarkerReleaseCB $which
@@ -531,7 +532,7 @@ proc MarkerRelease {which x y} {
 
 	    if {$imarker(id)>=0} {
 		if {$marker(centroid,auto)} {
-		    $which marker centroid $imarker(id) 
+		    $which marker centroid $imarker(id)
 		}
 
 		MarkerReleaseCB $which
@@ -677,6 +678,7 @@ proc MarkerCreateShape {which x y} {
     append cmd " fill = $marker(fill)"
     append cmd " width = $marker(width)"
     append cmd " dash = $marker(dash)"
+    append cmd " dashlist = [lindex $marker(dashlist) 0] [lindex $marker(dashlist) 1]"
     append cmd " font = \{\"$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\"\}"
 
     append cmd " fixed = $marker(fixed)"
@@ -912,7 +914,7 @@ proc MarkerPreserve {} {
 
 proc MarkerCentroid {} {
     global current
-    
+
     if {$current(frame) != {}} {
 	$current(frame) marker centroid
     }
@@ -930,7 +932,7 @@ proc MarkerCentroidAuto {} {
 proc MarkerCentroidRadius {} {
     global current
     global marker
-    
+
     if {$current(frame) != {}} {
 	$current(frame) marker centroid radius $marker(centroid,radius)
     }
@@ -939,7 +941,7 @@ proc MarkerCentroidRadius {} {
 proc MarkerCentroidIteration {} {
     global current
     global marker
-    
+
     if {$current(frame) != {}} {
 	$current(frame) marker centroid iteration $marker(centroid,iteration)
     }
@@ -947,7 +949,7 @@ proc MarkerCentroidIteration {} {
 
 proc MarkerFront {} {
     global current
-    
+
     if {$current(frame) != {}} {
 	$current(frame) marker move front
     }
@@ -955,7 +957,7 @@ proc MarkerFront {} {
 
 proc MarkerBack {} {
     global current
-    
+
     if {$current(frame) != {}} {
 	$current(frame) marker move back
 	$current(frame) marker unselect all
@@ -964,7 +966,7 @@ proc MarkerBack {} {
 
 proc MarkerSelectAll {} {
     global current
-    
+
     if {$current(frame) != {}} {
 	$current(frame) marker select all
     }
@@ -974,7 +976,7 @@ proc MarkerSelectAll {} {
 
 proc MarkerSelectNone {} {
     global current
-    
+
     if {$current(frame) != {}} {
 	$current(frame) marker unselect all
     }
@@ -984,7 +986,7 @@ proc MarkerSelectNone {} {
 
 proc MarkerSelectInvert {} {
     global current
-    
+
     if {$current(frame) != {}} {
 	$current(frame) marker select toggle
     }
@@ -1025,7 +1027,7 @@ proc MarkerDeleteAll {} {
 
 proc MarkerDeleteSelect {} {
     global current
-    
+
     if {$current(frame) != {}} {
 	$current(frame) marker delete select
 	UpdateGroupDialog
@@ -1042,7 +1044,7 @@ proc MarkerDeleteLoad {} {
 proc MarkerColor {} {
     global current
     global marker
-    
+
     if {$current(frame) != {}} {
 	$current(frame) marker color $marker(color)
     }
@@ -1051,9 +1053,19 @@ proc MarkerColor {} {
 proc MarkerWidth {} {
     global current
     global marker
-    
+
     if {$current(frame) != {}} {
 	$current(frame) marker width $marker(width)
+    }
+}
+
+proc MarkerDashList {} {
+    global current
+    global marker
+
+    if {$current(frame) != {}} {
+	$current(frame) marker dashlist \
+	    [lindex $marker(dashlist) 0] [lindex $marker(dashlist) 1]
     }
 }
 
@@ -1187,7 +1199,7 @@ proc MarkerLoadFrames {str frames format sys sky} {
     if {$str == {}} {
 	return
     }
-    
+
     if {[catch {glob $str} fns]} {
 	# reset errors, we don't want to hear about it
 	InitError tcl
@@ -1239,7 +1251,7 @@ proc MarkerLoadFile {filename which format sys sky} {
 	    return -code error
 	}
     }
-    
+
     # determine if its a fits file
     # look for hdu ext in the filename
     # first, strip the filename
@@ -1312,7 +1324,7 @@ proc MarkerInfo {} {
     if {![$current(frame) has fits]} {
 	return
     }
-    
+
     set ll [$current(frame) get marker select]
     if {$ll != {}} {
 	foreach id $ll {
@@ -1439,7 +1451,7 @@ proc MarkerPaste {} {
 	$current(frame) marker command ds9 var cmd
 	unset cmd
     }
-	
+
     UpdateEditMenu
     UpdateGroupDialog
 }
@@ -1454,6 +1466,7 @@ proc CompositeCreate {{operation 0}} {
 	append cmd " width = $marker(width)"
 	append cmd " font = \{\"$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\"\}"
 	append cmd " dash = $marker(dash)"
+	append cmd " dashlist = [lindex $marker(dashlist) 0] [lindex $marker(dashlist) 1]"
 	append cmd " fill = $marker(fill)"
 	append cmd " edit = $marker(edit)"
 	append cmd " move = $marker(move)"
@@ -1521,7 +1534,7 @@ proc ProcessRegionsCmd {varname iname sock fn} {
     set marker(load,system) $marker(system)
     set marker(load,sky) $marker(sky)
     set marker(tag) {}
-    
+
     region::YY_FLUSH_BUFFER
     region::yy_scan_string [lrange $var $i end]
     region::yyparse
@@ -1532,7 +1545,7 @@ proc RegionCmdLoad {} {
     global marker
     global current
     global parse
-    
+
     if {$current(frame) == {}} {
 	return
     }
@@ -1542,7 +1555,7 @@ proc RegionCmdLoad {} {
 
     if {$parse(sock) != {}} {
 	# xpa path
-	# fits regions files not supported  
+	# fits regions files not supported
 	$current(frame) marker load $marker(load,format) \
 	    $parse(sock) $marker(color,default) $marker(color) \
 	    $marker(load,system) $marker(load,sky)
@@ -1563,7 +1576,7 @@ proc RegionCmdLoadFn {fn {all {0}}} {
 	set frames $ds9(frames)
     } else {
 	set frames $current(frame)
-    }    
+    }
     MarkerLoadFrames $fn $frames \
 	$marker(load,format) $marker(load,system) $marker(load,sky)
 }
@@ -1641,7 +1654,7 @@ proc RegionCmdListSelect {} {
 proc RegionCmdGroup {cmd {val1 {}} {val2 {}}} {
     global current
     global marker
-    
+
     if {$current(frame) == {}} {
 	return
     }
@@ -1656,7 +1669,7 @@ proc RegionCmdGroup {cmd {val1 {}} {val2 {}}} {
 proc RegionCmdGroupNew {} {
     global current
     global marker
-    
+
     if {$current(frame) == {}} {
 	return
     }
@@ -1675,7 +1688,7 @@ proc RegionCmdGroupNew {} {
 proc RegionCmdGroupUpdate {} {
     global current
     global marker
-    
+
     if {$current(frame) == {}} {
 	return
     }
@@ -1690,7 +1703,7 @@ proc RegionCmdGroupUpdate {} {
 proc RegionCmdGroupFont {value} {
     global current
     global marker
-    
+
     if {$current(frame) == {}} {
 	return
     }
@@ -1750,7 +1763,7 @@ proc RegionCmdOpen {} {
     if {![$current(frame) has fits]} {
 	return
     }
-    
+
     set ll [$current(frame) get marker select]
     if {$ll != {}} {
 	foreach id $ll {

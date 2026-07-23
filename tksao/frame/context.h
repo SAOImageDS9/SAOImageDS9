@@ -141,7 +141,7 @@ class Context {
   void contourListFV(ostream&, Coord::CoordSystem, Coord::SkyFrame);
   void contourListAux(ostream&, Coord::CoordSystem, Coord::SkyFrame);
   void contourLoadAux(istream&);
-  void contourLoadAux(istream&, const char*, int, int);
+  void contourLoadAux(istream&, const char*, int, int, int* =NULL);
   void contourLoadAux(istream&, Coord::CoordSystem, Coord::SkyFrame, 
 		      const char*, int, int);
   void contourPS(PSColorSpace cs);

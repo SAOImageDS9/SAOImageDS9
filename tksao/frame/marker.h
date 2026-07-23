@@ -293,6 +293,8 @@ protected:
 
   void setLineWidth(int);
   int getLineWidth() {return lineWidth;}
+  void setDashList(int, int);
+  float* getDashList() {return dlist;}
 
   void setText(const char*);
   const char* getText() {return text;}

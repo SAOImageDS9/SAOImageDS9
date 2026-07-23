@@ -758,6 +758,14 @@ void Marker::setLineWidth(int w)
   doCallBack(CallBack::LINEWIDTHCB);
 }
 
+void Marker::setDashList(int length, int gap)
+{
+  dlist[0] = length;
+  dlist[1] = gap;
+
+  doCallBack(CallBack::LINEWIDTHCB);
+}
+
 void Marker::setFont(const char* f)
 {
   initFonts(f);

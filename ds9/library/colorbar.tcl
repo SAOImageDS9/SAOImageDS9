@@ -911,6 +911,7 @@ proc ResetColormap {} {
     set colorbar(invert) [$current(colorbar) get invert]
     if {$current(frame) != {} } {
 	EvalLockCurrent lock,colorbar [list $current(frame) colormap [$current(colorbar) get colormap]]
+	MarkerAnalysisPlot3dUpdateColorbar $current(frame)
     }
 
     LockColorCurrent
@@ -1357,6 +1358,7 @@ proc ColorbarMotion3 {frame xx yy} {
 
     EvalLockColorbar $frame [list $cb adjust $contrast $bias]
     $frame colormap motion [$cb get colormap]
+    MarkerAnalysisPlot3dUpdateColorbar $frame
     UpdateColorDialog
 }
 
@@ -1373,6 +1375,7 @@ proc ColorbarRelease3 {frame x y} {
 
     $frame colormap end
 
+    MarkerAnalysisPlot3dUpdateColorbar $frame
     LockColor $frame
     UpdateColorDialog
 }
@@ -1387,6 +1390,7 @@ proc ChangeColormapName {name} {
     set colorbar(invert) [$current(colorbar) get invert]
     if {$current(frame) != {} } {
 	$current(frame) colormap [$current(colorbar) get colormap]
+	MarkerAnalysisPlot3dUpdateColorbar $current(frame)
     }
 
     LockColorCurrent
@@ -1445,6 +1449,7 @@ proc InvertColorbar {} {
 
     if {$current(frame) != {} } {
 	$current(frame) colormap [$current(colorbar) get colormap]
+	MarkerAnalysisPlot3dUpdateColorbar $current(frame)
     }
 
     LockColorCurrent
@@ -1905,6 +1910,7 @@ proc ApplyColormap {} {
     EvalLockColorbarCurrent [list $current(colorbar) adjust $dcolorbar(contrast) $dcolorbar(bias)]
     if {$current(frame) != {}} {
 	EvalLockCurrent lock,colorbar [list $current(frame) colormap [$current(colorbar) get colormap]]
+	MarkerAnalysisPlot3dUpdateColorbar $current(frame)
 	LockColorCurrent
     }
 }
@@ -1931,6 +1937,7 @@ proc AdjustColormap {} {
 	EvalLockColorbarCurrent [list $current(colorbar) adjust $dcolorbar(contrast) $dcolorbar(bias)]
 	if {$current(frame) != {}} {
 	    EvalLockCurrent lock,colorbar [list $current(frame) colormap motion [$current(colorbar) get colormap]]
+	    MarkerAnalysisPlot3dUpdateColorbar $current(frame)
 	}
     }
 }
@@ -2278,6 +2285,7 @@ proc CmapValueCmd {c b} {
 	EvalLockCurrent lock,colorbar [list $current(frame) colormap begin]
 	EvalLockCurrent lock,colorbar [list $current(frame) colormap motion [$current(colorbar) get colormap]]
 	EvalLockCurrent lock,colorbar [list $current(frame) colormap end]
+	MarkerAnalysisPlot3dUpdateColorbar $current(frame)
     }
     LockColorCurrent
     UpdateColorDialog

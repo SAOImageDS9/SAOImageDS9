@@ -5,6 +5,8 @@
 #include "frscale.h"
 #include "fitsimage.h"
 
+#include <math.h>
+
 FrScale::FrScale()
 {
   colorScaleType_ = LINEARSCALE;
@@ -145,6 +147,87 @@ FrScale& FrScale::operator=(const FrScale& a)
   force_ = a.force_;
 
   return *this;
+}
+
+int FrScale::colorIndex(double value, double low, double high, int count,
+			ColorScaleType scaleType, float expo, double* hist,
+			int histsize, float bias, float contrast, int invert)
+{
+  if (count <= 1)
+    return 0;
+
+  double diff = high - low;
+  if (!isfinite(value) || !isfinite(diff) || diff <= 0)
+    return 0;
+
+  double scaled;
+  if (value <= low)
+    scaled = 0;
+  else if (value >= high)
+    scaled = 1;
+  else
+    scaled = (value - low) / diff;
+
+  switch (scaleType) {
+  case LINEARSCALE:
+  case IISSCALE:
+    break;
+  case LOGSCALE:
+    if (expo > 0 && expo != 1)
+      scaled = log10(expo*scaled + 1) / log10(expo);
+    break;
+  case POWSCALE:
+    if (expo > 0)
+      scaled = (::pow(expo, scaled) - 1) / expo;
+    break;
+  case SQRTSCALE:
+    scaled = sqrt(scaled);
+    break;
+  case SQUAREDSCALE:
+    scaled *= scaled;
+    break;
+  case ASINHSCALE:
+    scaled = asinh(10*scaled) / 3;
+    break;
+  case SINHSCALE:
+    scaled = sinh(3*scaled) / 10;
+    break;
+  case HISTEQUSCALE:
+    if (hist && histsize > 0) {
+      int hh = (int)(scaled * histsize);
+      if (hh < 0)
+	hh = 0;
+      else if (hh >= histsize)
+	hh = histsize - 1;
+      scaled = hist[hh];
+    }
+    break;
+  }
+
+  if (scaled <= 0)
+    scaled = 0;
+  else if (scaled >= 1)
+    scaled = 1;
+
+  int result = (int)(scaled * count);
+  if (result < 0)
+    return 0;
+  if (result >= count)
+    return count - 1;
+
+  if (fabs(bias - 0.5) < 0.0001 && fabs(contrast - 1.0) < 0.0001)
+    return invert ? count - 1 - result : result;
+
+  int ii = invert ? count - 1 - result : result;
+  float bb = invert ? 1 - bias : bias;
+  int adjusted =
+    (int)(((((float)ii / count) - bb) * contrast + .5) * count);
+
+  if (adjusted < 0)
+    return 0;
+  if (adjusted >= count)
+    return count - 1;
+  return adjusted;
 }
 
 double* FrScale::histequ(FitsImage* fits)
@@ -314,4 +397,3 @@ ostream& operator<<(ostream& s, FrScale& fr)
 
   return s;
 }
-

@@ -340,6 +340,8 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   colorCount = 0;
   colorCells = NULL;
+  colorbarBias = 0.5;
+  colorbarContrast = 1.0;
 
   byteorder_ = 0;
   bitsperpixel_ = 0;

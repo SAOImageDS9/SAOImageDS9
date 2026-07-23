@@ -222,6 +222,11 @@ void Box::analysisPlot3d(char* xname, char* yname,
   bb.bound(Vector( vv[0],-vv[1]) * mm);
   bb.bound(Vector(-vv[0], vv[1]) * mm);
 
+  if (!strcmp(yname, "__cutout3d")) {
+    parent->markerAnalysisCutout3d(this, xname, bb);
+    return;
+  }
+
   int num = parent->markerAnalysisPlot3d(this, &x, &y, bb, sys, method);
   analysisXYResult(xname, yname, x, y, num);
 }
@@ -420,4 +425,3 @@ void Box::listSAOimage(ostream& str, int strip)
 
   listSAOimagePost(str, strip);
 }
-

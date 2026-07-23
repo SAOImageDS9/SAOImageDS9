@@ -16,6 +16,7 @@ proc MarkerDef {} {
     set imarker(handle) -1
     set imarker(prefix,dialog) {mkr}
     set imarker(prefix,plot3d) {mkrplot3d}
+    set imarker(prefix,cutout3d) {mkrcutout3d}
     set imarker(prefix,plot2d) {mkrplot2d}
     set imarker(prefix,stats) {stats}
     set imarker(prefix,radial) {mkrradial}

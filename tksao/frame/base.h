@@ -141,6 +141,8 @@ public:
 
   int colorCount;               // number of dynamic colors
   unsigned char* colorCells;    // current color values
+  float colorbarBias;           // current colormap bias
+  float colorbarContrast;       // current colormap contrast
 
   int byteorder_;
   int bitsperpixel_;
@@ -391,6 +393,7 @@ public:
 			   Marker::AnalysisMethod);
   int markerAnalysisPlot3d(Marker*, double**, double**, const BBox&,
 			   Coord::CoordSystem, Marker::AnalysisMethod);
+  void markerAnalysisCutout3d(Marker*, const char*, const BBox&);
   int markerAnalysisRadial(Marker*, double**, double**, double**, 
 			   int, Vector*, BBox*, Coord::CoordSystem);
   int markerAnalysisPanda(Marker*, double**, double**, double**, 

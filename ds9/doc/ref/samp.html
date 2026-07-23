@@ -31,6 +31,7 @@ ds9.set<br>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ERROR (samp.error map)<br>
 &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; samp.errortxt (string)<br></tt>
 <p><tt>ds9.set</tt> may be called via notification, call and call/wait. <tt>ds9.get</tt> can only be called via call and call/wait. Most of the <tt>ds9.get</tt> calls return a value string, but a few will return a url instead.</p>
+<p>DS9 also subscribes to the standard <tt>coverage.load.moc.fits</tt> MType. The required <tt>url</tt> parameter is loaded as a FITS MOC/partial HEALPix image in a new frame. The optional <tt>coverage-id</tt> and <tt>name</tt> parameters are accepted.</p>
 <tt><a href="#twomass">2mass</a><br>
 <a href="#threed">3d</a><br>
 <a href="#about">about</a><br>
@@ -3020,9 +3021,16 @@ sia 2mass<br>
 sia cancel<br>
 sia clear<br>
 sia close<br>
+sia registry<br>
+sia registry filter "x-ray"<br>
+sia registry ivoid "ivo://nasa.heasarc/"<br>
+sia registry load<br>
+sia registry clear<br>
+sia registry retrieve<br>
 sia coordinate 202.48 47.21 fk5<br>
 sia crosshair<br>
 sia current 2mass<br>
+sia current "HEASARC SkyView Images"<br>
 sia export tsv bar.tsv<br>
 sia name m51<br>
 sia print<br>

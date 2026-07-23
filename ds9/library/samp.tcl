@@ -58,6 +58,8 @@ proc SAMPConnectSubscriptions {} {
     set map(table.highlight.row) {struct {}}
     set map(table.select.rowList) {struct {}}
     set map(coord.pointAt.sky) {struct {}}
+    set map(coverage.load.moc.fits) {struct {}}
+    set map(voresource.loadlist.siap) {struct {}}
     set map(client.env.get) {struct {}}
 
     set map1(x-samp.mostly-harmless) "1"
@@ -443,6 +445,43 @@ proc image.load.fits {msgid args} {
     }
 }
 
+proc coverage.load.moc.fits {msgid args} {
+    global samp
+
+    if {![info exists samp]} {
+	return
+    }
+
+    if {$samp(debug)} {
+	puts stderr "coverage.load.moc.fits $args"
+    }
+
+    set url {}
+    set coverageid {}
+    set name {}
+    foreach {key val} [join $args] {
+	switch -- $key {
+	    url {set url $val}
+	    coverage-id {set coverageid $val}
+	    name {set name $val}
+	}
+    }
+
+    if {$url == {}} {
+	if {$msgid != {}} {
+	    SAMPReply $msgid ERROR {} {} \
+		{coverage.load.moc.fits requires a url parameter}
+	}
+	return
+    }
+
+    LoadURLFits $url {} {} 1
+
+    if {$msgid != {}} {
+	SAMPReply $msgid OK
+    }
+}
+
 proc table.load.fits {msgid args} {
     global current
     global samp
@@ -618,6 +657,54 @@ proc coord.pointAt.sky {msgid args} {
 	PanTo $ra $dec wcs fk5
 	set samp(pointAt) 0
     }
+
+    if {$msgid != {}} {
+	SAMPReply $msgid OK
+    }
+}
+
+proc voresource.loadlist.siap {msgid args} {
+    global samp
+
+    if {![info exists samp]} {
+	return
+    }
+
+    if {$samp(debug)} {
+	puts stderr "voresource.loadlist.siap $args"
+    }
+
+    set name {}
+    set ids {}
+    foreach {key val} [join $args] {
+	switch -- $key {
+	    name {set name $val}
+	    ids {
+		foreach {ivoid url} $val {
+		    if {$ivoid != {}} {
+			lappend ids $ivoid
+		    }
+		}
+	    }
+	}
+    }
+    set uniqueIds {}
+    foreach ivoid $ids {
+	if {[lsearch -exact -nocase $uniqueIds $ivoid] < 0} {
+	    lappend uniqueIds $ivoid
+	}
+    }
+    set ids $uniqueIds
+
+    if {$ids == {}} {
+	if {$msgid != {}} {
+	    SAMPReply $msgid ERROR {} {} \
+		{voresource.loadlist.siap contained no resource identifiers}
+	}
+	return
+    }
+
+    SIARegistrySAMPResources $name $ids
 
     if {$msgid != {}} {
 	SAMPReply $msgid OK

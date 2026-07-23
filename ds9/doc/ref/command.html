@@ -2392,7 +2392,7 @@ $ds9 -shm rgbimage key 100 foo<br>
 $ds9 -shm rgbarray shmid 102 [dim=32,zdim=3,bitpix=-32]<br>
 $ds9 -shm array shmid 102 [dim=32,bitpix=-32]<br></tt>
 <p><b><a name="sia" id="sia"></a>sia<br></b></p>
-<p>Support for VO Simple Image Access protocol. The first command will create a new search. All other commands operated on the last search created, unless indicated otherwise via current command.</p>
+<p>Support for VO Simple Image Access protocol. The first command will create a new search. All other commands operate on the last search created, unless indicated otherwise via the current command. Registry filter and ivoid constraints are cumulative; use registry clear or registry retrieve to reset them. Registry clear empties the current results, while registry retrieve reloads the full Registry list.</p>
 <tt>Syntax:<br>
 -sia[2mass|akari|astrowise|cadc|cxc|hla|mast|sdss|skyview|tgssadr]<br>
 &nbsp;&nbsp;&nbsp; [cancel]<br>
@@ -2419,9 +2419,16 @@ $ds9 -sia 2mass<br>
 $ds9 -sia cancel<br>
 $ds9 -sia clear<br>
 $ds9 -sia close<br>
+$ds9 -sia registry<br>
+$ds9 -sia registry filter "x-ray"<br>
+$ds9 -sia registry ivoid "ivo://nasa.heasarc/"<br>
+$ds9 -sia registry load<br>
+$ds9 -sia registry clear<br>
+$ds9 -sia registry retrieve<br>
 $ds9 -sia coordinate 202.48 47.21 fk5<br>
 $ds9 -sia crosshair<br>
 $ds9 -sia current 2mass<br>
+$ds9 -sia current "HEASARC SkyView Images"<br>
 $ds9 -sia export tsv bar.tsv<br>
 $ds9 -sia name m51<br>
 $ds9 -sia print<br>

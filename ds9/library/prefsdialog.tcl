@@ -75,6 +75,7 @@ proc PrefsDialog {{which {}}} {
     PrefsDialogContour
     PrefsDialogSmooth
     PrefsDialogCatalog
+    PrefsDialogSIA
     PrefsDialogNRES
     PrefsDialogPlot
     PrefsDialogVO

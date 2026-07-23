@@ -19,10 +19,14 @@
 %token CROSSHAIR_
 %token CURRENT_
 %token EXPORT_
+%token FILTER_
+%token IVOID_
+%token LOAD_
 %token NAME_
 %token PRINT_
 %token RADIUS_
 %token RETRIEVE_
+%token REGISTRY_
 %token SAVE_
 %token SIZE_
 %token SKY_
@@ -54,6 +58,12 @@ command : sia
  ;
 
 sia : site {SIACmdRetrieve $1}
+ | REGISTRY_ {SIARegistryCmdDialog}
+ | REGISTRY_ FILTER_ STRING_ {SIARegistryCmdFilter $3}
+ | REGISTRY_ IVOID_ STRING_ {SIARegistryCmdIvoid $3}
+ | REGISTRY_ LOAD_ {SIARegistryCmdLoad}
+ | REGISTRY_ CLEAR_ {SIARegistryCmdClear}
+ | REGISTRY_ RETRIEVE_ {SIARegistryCmdRetrieve}
  | CANCEL_ {ProcessCmdCVAR0 ARCancel}
  | CLEAR_ {ProcessCmdCVAR0 SIAOff}
  | CLOSE_ {ProcessCmdCVAR0 SIADestroy}
@@ -64,6 +74,7 @@ sia : site {SIACmdRetrieve $1}
  | COORDINATE_ coordinate
  | CROSSHAIR_ {ProcessCmdCVAR0 SIACrosshair}
  | CURRENT_ site {SIACmdRef $2}
+ | CURRENT_ STRING_ {SIACmdRef $2}
  | NAME_ STRING_ {ProcessCmdCVAR name $2}
  | PRINT_ {ProcessCmdCVAR0 TBLCmdPrint}
  | RETRIEVE_ {global cvarname; SIAApply $cvarname 1}

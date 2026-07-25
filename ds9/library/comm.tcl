@@ -128,7 +128,7 @@ proc CommSet {fn paramlist {safemode 0}} {
 		ProcessNanCmd param i
 	    }
 	    note -
-	    notes {ProcessNotesCmd param i}
+	    notes {ProcessNotesCmd param i $safemode}
 	    nrrd {ProcessNRRDCmd param i {} $fn}
 	    nvss {ProcessNVSSCmd param i}
 	    multicolor {ProcessMultiColorCmd param i}
@@ -149,11 +149,7 @@ proc CommSet {fn paramlist {safemode 0}} {
 	    preserve {ProcessPreserveCmd param i}
 	    print -
 	    psprint {
-		if {$safemode} {
-		    Error [msgcat::mc {Command not allowed}]
-		} else {
-		    ProcessPrintCmd param i
-		}
+		ProcessPrintCmd param i $safemode
 	    }
 	    prism {ProcessPrismCmd param i}
 	    exit -
@@ -522,4 +518,3 @@ proc CommGet {proc id paramlist fn} {
     # default, no filename
     return {}
 }
-

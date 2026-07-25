@@ -75,6 +75,13 @@ proc PostScript {} {
     global ds9
     global ps
 
+    global parse
+    if {[info exists parse(safemode)] && $parse(safemode) &&
+	$ps(dest) != {file}} {
+	Error [msgcat::mc {Print destination must be file}]
+	return
+    }
+
     # we need to be realized
     RealizeDS9
     # need the colorbar levels updated
@@ -145,11 +152,11 @@ proc PostScript {} {
     set channel {}
     switch -- $ps(dest) {
 	file {
-	    append options " -file \{$ps(filename)\}"
+	    lappend options -file $ps(filename)
 	}
 	printer {
 	    set channel [open "| $ps(cmd)" w]
-	    append options " -channel $channel"
+	    lappend options -channel $channel
 	}
     }
 
@@ -1102,14 +1109,33 @@ proc PrefsDialogPrint {} {
 
 # Process Cmds
 
-proc ProcessPrintCmd {varname iname} {
+proc ProcessPrintCmd {varname iname {safemode 0}} {
     upvar $varname var
     upvar $iname i
 
-    ps::YY_FLUSH_BUFFER
-    ps::yy_scan_string [lrange $var $i end]
-    ps::yyparse
-    incr i [expr $ps::yycnt-1]
+    global parse
+    set hadSafeMode [info exists parse(safemode)]
+    if {$hadSafeMode} {
+	set oldSafeMode $parse(safemode)
+    }
+    set parse(safemode) $safemode
+
+    set code [catch {
+	ps::YY_FLUSH_BUFFER
+	ps::yy_scan_string [lrange $var $i end]
+	ps::yyparse
+	incr i [expr $ps::yycnt-1]
+    } result]
+
+    if {$hadSafeMode} {
+	set parse(safemode) $oldSafeMode
+    } else {
+	unset parse(safemode)
+    }
+    if {$code} {
+	return -code $code $result
+    }
+    return $result
 }
 
 proc ProcessSendPrintCmd {proc id param {sock {}} {fn {}}} {

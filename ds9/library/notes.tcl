@@ -15,14 +15,33 @@ proc DisplayNotes {} {
     EditTextDialog notes Notes 80 20 ds9notes
 }
 
-proc ProcessNotesCmd {varname iname} {
+proc ProcessNotesCmd {varname iname {safemode 0}} {
     upvar $varname var
     upvar $iname i
 
-    notes::YY_FLUSH_BUFFER
-    notes::yy_scan_string [lrange $var $i end]
-    notes::yyparse
-    incr i [expr $notes::yycnt-1]
+    global parse
+    set hadSafeMode [info exists parse(safemode)]
+    if {$hadSafeMode} {
+	set oldSafeMode $parse(safemode)
+    }
+    set parse(safemode) $safemode
+
+    set code [catch {
+	notes::YY_FLUSH_BUFFER
+	notes::yy_scan_string [lrange $var $i end]
+	notes::yyparse
+	incr i [expr $notes::yycnt-1]
+    } result]
+
+    if {$hadSafeMode} {
+	set parse(safemode) $oldSafeMode
+    } else {
+	unset parse(safemode)
+    }
+    if {$code} {
+	return -code $code $result
+    }
+    return $result
 }
 
 proc ProcessSendNotesCmd {proc id param {sock {}} {fn {}}} {
@@ -54,6 +73,12 @@ proc NotesCmdClear {} {
 proc NotesCmdLoad {fn} {
     global ds9notes
 
+    global parse
+    if {[info exists parse(safemode)] && $parse(safemode)} {
+	Error [msgcat::mc {Command not allowed}]
+	return
+    }
+
     if {$fn != {}} {
 	if {[catch {set ch [open "$fn" r]}]} {
 	    Error [msgcat::mc {An error has occurred while loading}]
@@ -78,4 +103,3 @@ proc NotesCmdSave {fn} {
 	close $ch
     }
 }
-

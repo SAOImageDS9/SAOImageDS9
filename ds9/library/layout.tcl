@@ -492,7 +492,7 @@ proc LayoutViewVert {} {
     }
 
     if {$view(info)} {
-	pack $ds9(info) -side top -padx 2 -pady 2 -fill y -expand true
+	pack $ds9(info) -side top -padx 2 -pady 2 -fill both -expand true
 	if {$view(magnifier)} {
 	    pack $ds9(info) -after $ds9(magnifier)
 	}
@@ -557,7 +557,7 @@ proc LayoutViewAdvanced {} {
     }
 
     if {$view(info)} {
-	pack $ds9(info) -side bottom -padx 2 -pady 2 -fill y -expand true
+	pack $ds9(info) -side bottom -padx 2 -pady 2 -fill both -expand true
 	if {$view(magnifier)} {
 	    pack $ds9(info) -after $ds9(magnifier)
 	}

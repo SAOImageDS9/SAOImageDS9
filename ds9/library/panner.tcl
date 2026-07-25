@@ -6,14 +6,23 @@ package provide DS9 1.0
 
 proc CreatePanner {} {
     global ipanner
+    global ppanner
     global ds9
+
+    foreach aa {x y} {
+	if {![string is integer -strict $ppanner(size,$aa)] ||
+	    $ppanner(size,$aa) < 32 || $ppanner(size,$aa) > 512} {
+	    set ppanner(size,$aa) 128
+	}
+	set ipanner(size,$aa) $ppanner(size,$aa)
+    }
 
     set ds9(panner) [ttk::frame $ds9(header).panner]
 
     set ds9(panner,canvas) \
 	[canvas $ds9(panner).canvas \
-	     -width $ipanner(size) \
-	     -height $ipanner(size) \
+	     -width $ipanner(size,x) \
+	     -height $ipanner(size,y) \
 	     -relief groove \
 	     -borderwidth 2 \
 	     -highlightthickness 0 \
@@ -22,8 +31,8 @@ proc CreatePanner {} {
 	    ]
 
     $ds9(panner,canvas) create panner$ds9(visual) \
-	-width $ipanner(size) \
-	-height $ipanner(size) \
+	-width $ipanner(size,x) \
+	-height $ipanner(size,y) \
 	-command panner \
 	-tag panner \
 	-helvetica $ds9(helvetica) \
@@ -78,9 +87,12 @@ proc PannerDef {} {
     global ipanner
     global ppanner
 
-    set ipanner(size) 128
+    set ipanner(size,x) 128
+    set ipanner(size,y) 128
 
     # prefs only
+    set ppanner(size,x) 128
+    set ppanner(size,y) 128
     set ppanner(compass) 1
 }
 
@@ -361,7 +373,19 @@ proc PrefsDialogPanner {} {
 	-text [msgcat::mc {Show Compass}] \
 	-variable ppanner(compass) -command PrefsPannerCompass
 
-    grid $f.compass -padx 2 -pady 2 -sticky w
+    ttk::label $f.tsizex -text [msgcat::mc {X Size}]
+    ttk::entry $f.sizex -textvariable ppanner(size,x) \
+	-validate focusout -validatecommand [list PrefsPannerSize x] -width 8
+    ttk::label $f.tpixelsx -text [msgcat::mc {pixels (32-512)}]
+
+    ttk::label $f.tsizey -text [msgcat::mc {Y Size}]
+    ttk::entry $f.sizey -textvariable ppanner(size,y) \
+	-validate focusout -validatecommand [list PrefsPannerSize y] -width 8
+    ttk::label $f.tpixelsy -text [msgcat::mc {pixels (32-512)}]
+
+    grid $f.compass - -padx 2 -pady 2 -sticky w
+    grid $f.tsizex $f.sizex $f.tpixelsx -padx 2 -pady 2 -sticky w
+    grid $f.tsizey $f.sizey $f.tpixelsy -padx 2 -pady 2 -sticky w
 
     pack $f -side top -fill both -expand true
 }
@@ -370,4 +394,31 @@ proc PrefsPannerCompass {} {
     global ppanner
 
     panner compass $ppanner(compass)
+}
+
+proc PrefsPannerSize {axis} {
+    global ds9
+    global ipanner
+    global ppanner
+
+    if {![string is integer -strict $ppanner(size,$axis)] ||
+	$ppanner(size,$axis) < 32 || $ppanner(size,$axis) > 512} {
+	set ppanner(size,$axis) $ipanner(size,$axis)
+	return true
+    }
+
+    set ipanner(size,$axis) $ppanner(size,$axis)
+
+    $ds9(panner,canvas) configure \
+	-width $ipanner(size,x) -height $ipanner(size,y)
+    $ds9(panner,canvas) itemconfigure panner \
+	-width $ipanner(size,x) -height $ipanner(size,y)
+
+    foreach ff $ds9(frames) {
+	$ff panner 'panner' $ipanner(size,x) $ipanner(size,y)
+	$ff panner update
+    }
+
+    LayoutView
+    return true
 }

@@ -18,7 +18,7 @@ proc 3DDef {} {
 
     set threed(method) mip
     set threed(shade) 0
-    set threed(shade,ambient) .35
+    set threed(shade,ambient) .8
     set threed(shade,strength) 1
     set threed(shade,normal) 1
     set threed(shade,normal,strength) 1
@@ -216,27 +216,91 @@ proc Update3DDialog {} {
 	puts stderr "Update3DDialog"
     }
 
+    if {![winfo exists $ithreed(top)]} {
+	return
+    }
+
+    if {$current(frame) == {} ||
+	[$current(frame) get type] != {3d}} {
+	3DDialogState disabled
+	return
+    }
+
+    set threed(method) [$current(frame) get 3d method]
+    3DDialogState normal
+
+    set rr [$current(frame) get 3d view]
+    set threed(az) [lindex $rr 0]
+    set threed(el) [lindex $rr 1]
+    set threed(scale) [$current(frame) get 3d scale]
+    set threed(shade) [$current(frame) get 3d shade]
+    set threed(shade,ambient) [$current(frame) get 3d shade ambient]
+    set threed(shade,strength) [$current(frame) get 3d shade strength]
+    set threed(shade,normal) [$current(frame) get 3d shade normal]
+    set threed(shade,normal,strength) \
+	[$current(frame) get 3d shade normal strength]
+    set threed(background) [$current(frame) get 3d background]
+    set threed(highlite) [$current(frame) get 3d highlite]
+    set threed(highlite,color) [$current(frame) get 3d highlite color]
+    set threed(border) [$current(frame) get 3d border]
+    set threed(border,color) [$current(frame) get 3d border color]
+    set threed(compass) [$current(frame) get 3d compass]
+    set threed(compass,color) [$current(frame) get 3d compass color]
+}
+
+proc 3DDialogState {state} {
+    global threed
+    global ithreed
+
+    set w $ithreed(top)
+    set mb $ithreed(mb)
+
+    $mb entryconfig [msgcat::mc {Edit}] -state $state
+    foreach label {Render Highlite Border Compass} {
+	$mb entryconfig [msgcat::mc $label] -state $state
+    }
+    foreach label {Apply Reset} {
+	$mb.file entryconfig [msgcat::mc $label] -state $state
+    }
+
+    foreach slider [list \
+			$w.param.elslider \
+			$w.param.azslider] {
+	$slider.slider configure -state $state
+	$slider.entry configure -state $state
+    }
+
+    foreach widget [list \
+			$w.scale.scale \
+			$w.buttons.apply \
+			$w.buttons.reset] {
+	$widget configure -state $state
+    }
+
+    if {$state == {normal} && $threed(method) == {fip}} {
+	3DDepthShadeState normal
+    } else {
+	3DDepthShadeState disabled
+    }
+}
+
+proc 3DDepthShadeState {state} {
+    global ithreed
+
     set w $ithreed(top)
 
-    if {[winfo exists $ithreed(top)] && $current(frame) != {}} {
-	set rr [$current(frame) get 3d view]
-	set threed(az) [lindex $rr 0]
-	set threed(el) [lindex $rr 1]
-	set threed(scale) [$current(frame) get 3d scale]
-	set threed(method) [$current(frame) get 3d method]
-	set threed(shade) [$current(frame) get 3d shade]
-	set threed(shade,ambient) [$current(frame) get 3d shade ambient]
-	set threed(shade,strength) [$current(frame) get 3d shade strength]
-	set threed(shade,normal) [$current(frame) get 3d shade normal]
-	set threed(shade,normal,strength) \
-	    [$current(frame) get 3d shade normal strength]
-	set threed(background) [$current(frame) get 3d background]
-	set threed(highlite) [$current(frame) get 3d highlite]
-	set threed(highlite,color) [$current(frame) get 3d highlite color]
-	set threed(border) [$current(frame) get 3d border]
-	set threed(border,color) [$current(frame) get 3d border color]
-	set threed(compass) [$current(frame) get 3d compass]
-	set threed(compass,color) [$current(frame) get 3d compass color]
+    foreach slider [list \
+			$w.shade.ambient \
+			$w.shade.strength \
+			$w.shade.normalstrength] {
+	$slider.slider configure -state $state
+	$slider.entry configure -state $state
+    }
+
+    foreach widget [list \
+			$w.shade.enable \
+			$w.shade.normal] {
+	$widget configure -state $state
     }
 }
 
@@ -304,6 +368,7 @@ proc 3DRenderMethod {} {
     if {$current(frame) != {}} {
 	$current(frame) 3d method $threed(method)
     }
+    Update3DDialog
 }
 
 proc 3DShade {} {

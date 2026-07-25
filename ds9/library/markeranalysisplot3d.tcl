@@ -401,12 +401,16 @@ proc MarkerAnalysisCutout3dCB {frame id} {
 
     catch {GotoFrame $cutout}
     catch {LoadVar $datavar "${frame}.${id}.3d-cutout.fits" {} {}}
+    if {$newcutout} {
+	catch {$cutout 3d method fip}
+	Update3DDialog
+    }
     MarkerAnalysisPlot3dApplyScaleLimits $frame $cutout $cvarname
     MarkerAnalysisPlot3dApplyColorbar $frame $cutout
     catch {$cutout zoom to fit}
     catch {eval [list $cutout 3d view] $view}
 
-    if {[MarkerAnalysisPlot3dFrameExists $saveframe]} {
+    if {!$newcutout && [MarkerAnalysisPlot3dFrameExists $saveframe]} {
 	catch {GotoFrame $saveframe}
 	set current(colorbar) $savecolorbar
     }

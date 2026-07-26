@@ -203,7 +203,7 @@ ds9.set(string cmd)<br>
 &nbsp;&nbsp; [border yes|no]<br>
 &nbsp;&nbsp; [border color &lt;color&gt;]<br>
 &nbsp;&nbsp; [highlite yes|no]<br>
-&nbsp;&nbsp; [hightlite color &lt;color&gt;]<br>
+&nbsp;&nbsp; [highlite color &lt;color&gt;]<br>
 &nbsp;&nbsp; [compass yes|no]<br>
 &nbsp;&nbsp; [compass color &lt;color&gt;]<br>
 &nbsp;&nbsp; [match]<br>
@@ -217,6 +217,11 @@ string value = ds9.get(string cmd)<br>
 3d el<br>
 3d scale<br>
 3d method<br>
+3d shade<br>
+3d shade ambient<br>
+3d shade strength<br>
+3d shade normal<br>
+3d shade normal strength<br>
 3d background<br>
 3d border<br>
 3d border color<br>
@@ -233,6 +238,11 @@ ds9.set(string cmd)<br>
 3d el 30<br>
 3d scale 10<br>
 3d method mip<br>
+3d shade yes<br>
+3d shade ambient 0.8<br>
+3d shade strength 1.0<br>
+3d shade normal yes<br>
+3d shade normal strength 1.0<br>
 3d background azimuth<br>
 3d border yes<br>
 3d border color red<br>
@@ -634,7 +644,7 @@ cmap close<br></tt>
 colorbar []<br>
 &nbsp;&nbsp;&nbsp; [yes|no]<br>
 &nbsp;&nbsp;&nbsp; [show yes|no]<br>
-&nbsp;&nbsp;&nbsp; [orientation]<br>
+&nbsp;&nbsp;&nbsp; [orientation [horizontal|vertical]]<br>
 &nbsp;&nbsp;&nbsp; [horizontal|vertical]<br>
 &nbsp;&nbsp;&nbsp; [position top|bottom|left|right]<br>
 &nbsp;&nbsp;&nbsp; [label position natural|opposite]<br>
@@ -674,13 +684,14 @@ ds9.set(string cmd)<br>
 colorbar yes<br>
 colorbar show yes<br>
 colorbar vertical<br>
+colorbar orientation vertical<br>
 colorbar position top<br>
 colorbar label position opposite<br>
 colorbar numerics yes<br>
 colorbar space value<br>
 colorbar font times<br>
 colorbar fontsize 14<br>
-colorbar fontwieght bold<br>
+colorbar fontweight bold<br>
 colorbar fontslant italic<br>
 colorbar center 0.5<br>
 colorbar size 20<br>
@@ -3033,12 +3044,18 @@ shm rgbimage key 100 foo<br>
 shm rgbarray key 100 [dim=200,zdim=3,bitpix=-32]<br>
 shm array shmid 102 [dim=32,bitpix=-32]<br></tt>
 <p><b><a name="sia" id="sia"></a>sia</b></p>
-<p>Support for VO Simple Image Access protocol. The first command will create a new search. All other commands operated on the last search created, unless indicated otherwise via current command.</p>
+<p>Support for VO Simple Image Access protocol. The first command will create a new search. All other commands operate on the last search created, unless indicated otherwise via the current command. Registry filter and ivoid constraints are cumulative; use registry clear or registry retrieve to reset them. Registry clear empties the current results, while registry retrieve reloads the full Registry list.</p>
 <tt>Syntax:<br>
-sia[2mass|akari|astrowise|cadc|cxc|hla|mast|sdss|skyview|tgssadr]<br>
+sia [2mass|akari|astrowise|cadc|cxc|hla|mast|sdss|skyview|tgssadr]<br>
 &nbsp;&nbsp;&nbsp; [cancel]<br>
 &nbsp;&nbsp;&nbsp; [clear]<br>
 &nbsp;&nbsp;&nbsp; [close]<br>
+&nbsp;&nbsp;&nbsp; [registry]<br>
+&nbsp;&nbsp;&nbsp; [registry filter &lt;text&gt;]<br>
+&nbsp;&nbsp;&nbsp; [registry ivoid &lt;identifier&gt;]<br>
+&nbsp;&nbsp;&nbsp; [registry load]<br>
+&nbsp;&nbsp;&nbsp; [registry clear]<br>
+&nbsp;&nbsp;&nbsp; [registry retrieve]<br>
 <br>
 &nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [export rdb|tsv &lt;filename&gt;]<br>

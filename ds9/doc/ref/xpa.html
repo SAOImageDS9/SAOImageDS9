@@ -192,6 +192,11 @@ $xpaget ds9 3d az<br>
 $xpaget ds9 3d el<br>
 $xpaget ds9 3d scale<br>
 $xpaget ds9 3d method<br>
+$xpaget ds9 3d shade<br>
+$xpaget ds9 3d shade ambient<br>
+$xpaget ds9 3d shade strength<br>
+$xpaget ds9 3d shade normal<br>
+$xpaget ds9 3d shade normal strength<br>
 $xpaget ds9 3d background<br>
 $xpaget ds9 3d border<br>
 $xpaget ds9 3d border color<br>
@@ -207,6 +212,11 @@ $xpaset -p ds9 3d az 45<br>
 $xpaset -p ds9 3d el 30<br>
 $xpaset -p ds9 3d scale 10<br>
 $xpaset -p ds9 3d method mip<br>
+$xpaset -p ds9 3d shade yes<br>
+$xpaset -p ds9 3d shade ambient 0.8<br>
+$xpaset -p ds9 3d shade strength 1.0<br>
+$xpaset -p ds9 3d shade normal yes<br>
+$xpaset -p ds9 3d shade normal strength 1.0<br>
 $xpaset -p ds9 3d background azimuth<br>
 $xpaset -p ds9 3d border yes<br>
 $xpaset -p ds9 3d border color red<br>
@@ -586,7 +596,7 @@ $xpaset -p ds9 cmap close<br></tt>
 colorbar []<br>
 &nbsp;&nbsp;&nbsp; [yes|no]<br>
 &nbsp;&nbsp;&nbsp; [show yes|no]<br>
-&nbsp;&nbsp;&nbsp; [orientation]<br>
+&nbsp;&nbsp;&nbsp; [orientation [horizontal|vertical]]<br>
 &nbsp;&nbsp;&nbsp; [horizontal|vertical]<br>
 &nbsp;&nbsp;&nbsp; [position top|bottom|left|right]<br>
 &nbsp;&nbsp;&nbsp; [label position natural|opposite]<br>
@@ -1900,6 +1910,13 @@ layer [create|&lt;integer&gt;|layerno &lt;integer&gt;]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] transparency &lt;value&gt;]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] view yes|no]<br>
 &nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] delete|up|down|top|bottom]<br>
+<br>
+&nbsp;&nbsp;&nbsp; [count]<br>
+&nbsp;&nbsp;&nbsp; [layerno]<br>
+&nbsp;&nbsp;&nbsp; [color [&lt;integer&gt;]]<br>
+&nbsp;&nbsp;&nbsp; [blend [&lt;integer&gt;]]<br>
+&nbsp;&nbsp;&nbsp; [transparency [&lt;integer&gt;]]<br>
+&nbsp;&nbsp;&nbsp; [view [&lt;integer&gt;]]<br>
 &nbsp;<br>
 Example:<br>
 $xpaset -p ds9 layer create<br>
@@ -2897,6 +2914,12 @@ sia [2mass|akari|astrowise|cadc|cxc|hla|mast|sdss|skyview|tgssadr]<br>
 &nbsp;&nbsp;&nbsp; [cancel]<br>
 &nbsp;&nbsp;&nbsp; [clear]<br>
 &nbsp;&nbsp;&nbsp; [close]<br>
+&nbsp;&nbsp;&nbsp; [registry]<br>
+&nbsp;&nbsp;&nbsp; [registry filter &lt;text&gt;]<br>
+&nbsp;&nbsp;&nbsp; [registry ivoid &lt;identifier&gt;]<br>
+&nbsp;&nbsp;&nbsp; [registry load]<br>
+&nbsp;&nbsp;&nbsp; [registry clear]<br>
+&nbsp;&nbsp;&nbsp; [registry retrieve]<br>
 <br>
 &nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [export rdb|tsv &lt;filename&gt;]<br>

@@ -17,11 +17,11 @@
 <tt># set view angle to az 45 el 30 deg</tt><br>
 <tt># set rendering method to Average Intensity Projection</tt><br>
 <br>
-<tt>% ds9 -3d mycube.fits-3d vp 45 30-3d method aip</tt><br>
+<tt>% ds9 -3d mycube.fits -3d view 45 30 -3d method aip</tt><br>
 <br>
 <tt>% xpaset -p ds9 3d</tt><br>
 <tt>% xpaset -p ds9 file mycube.fits</tt><br>
-<tt>% xpaset -p ds9 3d vp 45 30</tt><br>
+<tt>% xpaset -p ds9 3d view 45 30</tt><br>
 <tt>% xpaset -p ds9 3d method aip</tt></blockquote>
 All 2-D graphics, regions, cross hairs, contours, and coordinate grids, are applied to the current slice, which is selected by the user. When the user wishes to match or lock a 2-D image and to a 3-D data cube, the current slice is used to determine the rendering solution. The user can crop the data cube for all 3 axes via the command line or the GUI. The new module also supports FITS event files binned into a data cube.<br>
 <br>

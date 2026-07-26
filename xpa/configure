@@ -651,6 +651,7 @@ ac_includes_default="\
 ac_header_c_list=
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
+CONSOLE_LDFLAGS
 EXTRA_LIBS
 GTK_LIBS
 GTK_CFLAGS
@@ -5719,10 +5720,12 @@ fi
 # restore LDFLAGS
 LDFLAGS="$LDFLAGS $XLDFLAGS"
 
+CONSOLE_LDFLAGS=""
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking $host_os configuration" >&5
 printf %s "checking $host_os configuration... " >&6; }
 case $host_os in
     *cygwin*|*Cygwin* )
+        CONSOLE_LDFLAGS="-mconsole"
 
 printf "%s\n" "#define HAVE_CYGWIN 1" >>confdefs.h
 
@@ -5730,7 +5733,7 @@ printf "%s\n" "#define HAVE_CYGWIN 1" >>confdefs.h
 printf "%s\n" "flagging Cygwin" >&6; }
         ;;
     *mingw32*|*Mingw32*)
-        CFLAGS="$CFLAGS -mconsole"
+        CONSOLE_LDFLAGS="-mconsole"
 	EXTRA_LIBS="$EXTRA_LIBS -lwsock32"
 
 printf "%s\n" "#define HAVE_MINGW32 1" >>confdefs.h
@@ -7081,5 +7084,4 @@ if test -n "$ac_unrecognized_opts" && test "$enable_option_checking" != no; then
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: unrecognized options: $ac_unrecognized_opts" >&5
 printf "%s\n" "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2;}
 fi
-
 

@@ -169,14 +169,16 @@ AC_SUBST(GTK_LIBS)
 # restore LDFLAGS
 LDFLAGS="$LDFLAGS $XLDFLAGS"
 
+CONSOLE_LDFLAGS=""
 AC_MSG_CHECKING([$host_os configuration])
 case $host_os in
     *cygwin*|*Cygwin* )
+        CONSOLE_LDFLAGS="-mconsole"
         AC_DEFINE([HAVE_CYGWIN], [1], [Define to 1 when building on Cygwin.])
         AC_MSG_RESULT([flagging Cygwin])
         ;;
     *mingw32*|*Mingw32*)
-        CFLAGS="$CFLAGS -mconsole"
+        CONSOLE_LDFLAGS="-mconsole"
 	EXTRA_LIBS="$EXTRA_LIBS -lwsock32"
         AC_DEFINE([HAVE_MINGW32], [1], [Define to 1 when building on MinGW.])
         AC_MSG_RESULT([flagging MinGW])
@@ -205,6 +207,7 @@ case $host_os in
         ;;
 esac
 
+AC_SUBST(CONSOLE_LDFLAGS)
 AC_SUBST(EXTRA_LIBS)
 
 AC_CONFIG_FILES(Makefile)

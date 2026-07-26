@@ -73,7 +73,7 @@ proc TSVRead {t fn} {
 	}
 
 	# process header
-	set T(Header) [split $line $ss]
+	set T(Header) [TSVHeaderColumns $line $ss]
 	set T(HLines) 2
 	set T(H_1) $T(Header)
 	set T(H_2) [regsub -all {[A-Za-z0-9]} $T(Header) {-}]
@@ -120,6 +120,23 @@ proc TSVRead {t fn} {
     }
 }
 
+proc TSVHeaderColumns {line separator} {
+    set header {}
+
+    foreach column [split $line $separator] {
+	set column [string trim $column]
+	if {[regexp {^(.+)\([[:space:]]*([[:alnum:]_]+)[[:space:]]*,[[:space:]]*([[:alnum:]_]+)[[:space:]]*\)$} \
+		 $column match root component1 component2]} {
+	    set root [string trim $root]
+	    lappend header ${root}_${component1} ${root}_${component2}
+	} else {
+	    lappend header $column
+	}
+    }
+
+    return $header
+}
+
 proc TSVWrite {t fn {offset 0}} {
     upvar #0 $t T
     global $t
@@ -154,4 +171,3 @@ proc TSVWrite {t fn {offset 0}} {
 
     close $fp
 }
-

@@ -1625,6 +1625,7 @@ int XPAHandler(xpa, fd)
   unsigned short port=0;
   unsigned int ip=0;
   struct timeval tv;
+  void *xcommptr=NULL;
   XPAComm comm=NULL, tcomm=NULL, xcomm=NULL, ocomm=NULL;
   XPA txpa=NULL;
   NS ns=NULL;
@@ -1839,15 +1840,16 @@ retry:
       }
     }
     else if( !strcmp(tbuf, "-f") ){
-      /* B.Schoenhammer@bit-field.de 2009-09-21 */
-#if HAVE_MINGW32==0
-      if( !word(lbuf, tbuf, &lp) || (sscanf(tbuf, "%p", &xcomm) != 1) ){
-#else
-      if( !word(lbuf, tbuf, &lp) || (sscanf(tbuf, "%x", &xcomm) != 1) ){
-#endif
+      /*
+       * This token was written with %p below.  Parse it with the matching
+       * pointer conversion so it is not truncated on 64-bit Windows.
+       */
+      if( !word(lbuf, tbuf, &lp) ||
+	  (sscanf(tbuf, "%p", &xcommptr) != 1) ){
 	got = XPA_RTN_ILLCMD;
 	goto done;
       }
+      xcomm = (XPAComm)xcommptr;
       if( !word(lbuf, tbuf, &lp) || ((cmdfd = atoi(tbuf)) < 0) ){
 	got = XPA_RTN_ILLCMD;
 	goto done;

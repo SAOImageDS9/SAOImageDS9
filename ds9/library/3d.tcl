@@ -310,11 +310,13 @@ proc 3DBackup {ch which} {
     puts $ch "$which 3d view [$which get 3d view]"
     puts $ch "$which 3d scale [$which get 3d scale]"
     puts $ch "$which 3d method [$which get 3d method]"
-    puts $ch "$which 3d shade [$which get 3d shade]"
-    puts $ch "$which 3d shade ambient [$which get 3d shade ambient]"
-    puts $ch "$which 3d shade strength [$which get 3d shade strength]"
-    puts $ch "$which 3d shade normal [$which get 3d shade normal]"
-    puts $ch "$which 3d shade normal strength [$which get 3d shade normal strength]"
+    if {[$which get type] == {3d}} {
+	puts $ch "$which 3d shade [$which get 3d shade]"
+	puts $ch "$which 3d shade ambient [$which get 3d shade ambient]"
+	puts $ch "$which 3d shade strength [$which get 3d shade strength]"
+	puts $ch "$which 3d shade normal [$which get 3d shade normal]"
+	puts $ch "$which 3d shade normal strength [$which get 3d shade normal strength]"
+    }
     puts $ch "$which 3d highlite [$which get 3d highlite]"
     puts $ch "$which 3d border [$which get 3d border]"
     puts $ch "$which 3d background [$which get 3d background]"

@@ -469,6 +469,7 @@ void Composite::listCiao(ostream& str, Coord::CoordSystem sys, int strip)
     m->setComposite(fwdMatrix(), angle);
 
     ostringstream ostr;
+    ostr << setseparator(',');
     m->listCiao(ostr, sys, 0);
 
     string buf = ostr.str();

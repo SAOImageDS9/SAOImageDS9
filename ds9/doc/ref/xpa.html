@@ -1913,10 +1913,10 @@ layer [create|&lt;integer&gt;|layerno &lt;integer&gt;]<br>
 <br>
 &nbsp;&nbsp;&nbsp; [count]<br>
 &nbsp;&nbsp;&nbsp; [layerno]<br>
-&nbsp;&nbsp;&nbsp; [color [&lt;integer&gt;]]<br>
-&nbsp;&nbsp;&nbsp; [blend [&lt;integer&gt;]]<br>
-&nbsp;&nbsp;&nbsp; [transparency [&lt;integer&gt;]]<br>
-&nbsp;&nbsp;&nbsp; [view [&lt;integer&gt;]]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] color]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] blend]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] transparency]<br>
+&nbsp;&nbsp;&nbsp; [[&lt;integer&gt;] view]<br>
 &nbsp;<br>
 Example:<br>
 $xpaset -p ds9 layer create<br>
@@ -1924,10 +1924,10 @@ $xpaset -p ds9 layer 2 color green<br>
 $xpaset -p ds9 layer 2 transparency 25<br>
 $xpaget ds9 layer count<br>
 $xpaget ds9 layer layerno<br>
-$xpaget ds9 layer color 2<br>
-$xpaget ds9 layer blend 2<br>
-$xpaget ds9 layer transparency 2<br>
-$xpaget ds9 layer view 2<br></tt>
+$xpaget ds9 layer 2 color<br>
+$xpaget ds9 layer 2 blend<br>
+$xpaget ds9 layer 2 transparency<br>
+$xpaget ds9 layer 2 view<br></tt>
 <p><b><a name="nameserver" id="nameserver"></a>nameserver</b></p>
 <p>Support Name Server functions. Coordinates are in fk5.</p>
 <tt>Syntax:<br>

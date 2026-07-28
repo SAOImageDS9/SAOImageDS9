@@ -17,10 +17,10 @@
 layersend : {ProcessSendLayerCmd layerno 0}
  | COUNT_ {ProcessSendLayerCmd count 0}
  | LAYERNO_ {ProcessSendLayerCmd layerno 0}
- | COLOR_ layerref {ProcessSendLayerCmd color $2}
- | BLEND_ layerref {ProcessSendLayerCmd blend $2}
- | TRANSPARENCY_ layerref {ProcessSendLayerCmd transparency $2}
- | VIEW_ layerref {ProcessSendLayerCmd view $2}
+ | layerref COLOR_ {ProcessSendLayerCmd color $1}
+ | layerref BLEND_ {ProcessSendLayerCmd blend $1}
+ | layerref TRANSPARENCY_ {ProcessSendLayerCmd transparency $1}
+ | layerref VIEW_ {ProcessSendLayerCmd view $1}
  ;
 
 layerref : {set _ 0}

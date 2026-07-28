@@ -194,6 +194,10 @@ proc HV {varname title url {init {}} {sync 0} {save 0}} {
 
 	bind $w <Up> "$f.html yview scroll -1 units"
 	bind $w <Down> "$f.html yview scroll 1 units"
+	bind $w <Prior> "$f.html yview scroll -1 pages"
+	bind $w <Next> "$f.html yview scroll 1 pages"
+	bind $w <Home> "$f.html yview moveto 0"
+	bind $w <End> "$f.html yview moveto 1"
 	bind $w <Right> "$f.html xview scroll 1 units"
 	bind $w <Left> "$f.html xview scroll -1 units"
 	bind $w <<Copy>> "HVCopyCmd $varname"

@@ -129,6 +129,17 @@ proc TSVHeaderColumns {line separator} {
 		 $column match root component1 component2]} {
 	    set root [string trim $root]
 	    lappend header ${root}_${component1} ${root}_${component2}
+	} elseif {[regexp {^(.+)\[([[:digit:]]+)\]$} \
+		       $column match root dimension]} {
+	    set root [string trim $root]
+	    scan $dimension %d size
+	    if {[regexp {[()]} $root] || $size < 1} {
+		lappend header $column
+	    } else {
+		for {set ii 1} {$ii <= $size} {incr ii} {
+		    lappend header ${root}_${ii}
+		}
+	    }
 	} else {
 	    lappend header $column
 	}

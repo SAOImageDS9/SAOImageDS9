@@ -33,7 +33,7 @@ proc MarkerAnalysisPlot3dDialog {varname} {
 	ellipse -
 	box -
 	polygon {
-	    $var(mb).analysis add checkbutton -label [msgcat::mc {3D Cutout}] \
+	    $var(mb).analysis add checkbutton -label [msgcat::mc {3D Surface}] \
 		-variable ${varname}(cutout3d) \
 		-command "MarkerAnalysisCutout3dCmd $varname"
 	}

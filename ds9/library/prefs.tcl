@@ -694,11 +694,23 @@ proc FixPrefsVarOld {} {
     if {![info exists pcolorbar(label,position)]} {
 	set pcolorbar(label,position) natural
     }
+    if {![info exists pcolorbar(foreground)]} {
+	set pcolorbar(foreground) theme
+    }
+    if {![info exists pcolorbar(background)]} {
+	set pcolorbar(background) theme
+    }
     if {![info exists colorbar(position)]} {
 	set colorbar(position) $pcolorbar(position)
     }
     if {![info exists colorbar(label,position)]} {
 	set colorbar(label,position) $pcolorbar(label,position)
+    }
+    if {![info exists colorbar(foreground)]} {
+	set colorbar(foreground) $pcolorbar(foreground)
+    }
+    if {![info exists colorbar(background)]} {
+	set colorbar(background) $pcolorbar(background)
     }
 
     # and fix any previous theme issues

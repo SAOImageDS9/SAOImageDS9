@@ -165,15 +165,15 @@ proc ThemeConfigCanvas {w} {
     
     $w configure -bg [ThemeTreeBackground]
 
-    $w itemconfigure colorbar -fg [ThemeTreeForeground]
-    $w itemconfigure colorbar -bg [ThemeTreeBackground]
+    $w itemconfigure colorbar -fg [ColorbarForeground]
+    $w itemconfigure colorbar -bg [ColorbarBackground]
 
     foreach ff $ds9(frames) {
 	$w itemconfigure $ff -fg [ThemeTreeForeground]
 	$w itemconfigure $ff -bg [ThemeTreeBackground]
 
-	$w itemconfigure ${ff}cb -fg [ThemeTreeForeground]
-	$w itemconfigure ${ff}cb -bg [ThemeTreeBackground]
+	$w itemconfigure ${ff}cb -fg [ColorbarForeground $ff]
+	$w itemconfigure ${ff}cb -bg [ColorbarBackground $ff]
 
 	# since graphs are created, but maybe not realized
 	# must update manually

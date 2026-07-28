@@ -704,6 +704,11 @@ int ColorbarBase::postscriptProc(int prepass)
   if (prepass)
     return TCL_OK;
 
+  // background
+  Tcl_AppendResult(interp, "gsave\n", NULL);
+  psBackground();
+  Tcl_AppendResult(interp, "grestore\n", NULL);
+
   // bar
   Tcl_AppendResult(interp, "gsave\n", NULL);
   ps();
@@ -718,6 +723,32 @@ int ColorbarBase::postscriptProc(int prepass)
   Tcl_AppendResult(interp, "grestore\n", NULL);
 
   return TCL_OK;
+}
+
+void ColorbarBase::psBackground()
+{
+  ColorbarBaseOptions* opts = (ColorbarBaseOptions*)options;
+
+  if (options->width <= 0 || options->height <= 0)
+    return;
+
+  psColor(psColorSpace, opts->bgColor);
+
+  Vector org = psOrigin();
+  Vector ll(0, 0);
+  Vector lr(options->width, 0);
+  Vector ur(options->width, options->height);
+  Vector ul(0, options->height);
+
+  ostringstream str;
+  str << org << " translate" << endl
+      << "newpath" << endl
+      << ll << " moveto" << endl
+      << lr << " lineto" << endl
+      << ur << " lineto" << endl
+      << ul << " lineto" << endl
+      << "closepath fill" << endl << ends;
+  Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
 int ColorbarBase::pdfCmd(Tcl_Obj* pdfObj, Tcl_Size, Tcl_Obj *const [])

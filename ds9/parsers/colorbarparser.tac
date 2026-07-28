@@ -28,6 +28,8 @@
 %token WIDTH_
 %token TOP_
 %token BOTTOM_
+%token BACKGROUND_
+%token FOREGROUND_
 %token LEFT_
 %token RIGHT_
 %token SHOW_
@@ -49,6 +51,8 @@ colorbar : yesno {ProcessCmdSet view colorbar $1 ColorbarUpdateView}
 
  | NUMERICS_ yesno {ProcessCmdSet colorbar numerics $2 ColorbarUpdateView}
  | SPACE_ space {ProcessCmdSet colorbar space $2 ColorbarUpdateView}
+ | FOREGROUND_ STRING_ {ProcessCmdSet colorbar foreground $2 ColorbarUpdateView}
+ | BACKGROUND_ STRING_ {ProcessCmdSet colorbar background $2 ColorbarUpdateView}
  | FONT_ font {ProcessCmdSet colorbar font $2 ColorbarUpdateView}
  | FONTSIZE_ INT_ {ProcessCmdSet colorbar font,size $2 ColorbarUpdateView}
  | FONTWEIGHT_ fontWeight {ProcessCmdSet colorbar font,weight $2 ColorbarUpdateView}

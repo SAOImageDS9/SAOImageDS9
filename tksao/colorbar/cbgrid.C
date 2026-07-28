@@ -19,11 +19,15 @@ CBGrid::CBGrid(Widget* p, int cc, double* ll)
     (ColorbarBaseOptions*)(((ColorbarBase*)parent_)->options);
 
   ostringstream str;
+  unsigned long color =
+    ((unsigned long)(opts->fgColor->red >> 8) << 16) |
+    ((unsigned long)(opts->fgColor->green >> 8) << 8) |
+    (unsigned long)(opts->fgColor->blue >> 8);
 
   // basics
-  str << "Grid=0, DrawAxes=0, MinTickLen(1)=0, MinTickLen(2)=0, Width(ticks)=.5, Style(ticks)=0, Border=1, Width(border)=.5, Style(border)=0, Labelling=exterior, Colour(numlab)=0, TextLab=0, DrawTitle=0";
+  str << "Grid=0, DrawAxes=0, MinTickLen(1)=0, MinTickLen(2)=0, Width(ticks)=.5, Style(ticks)=0, Border=1, Width(border)=.5, Style(border)=0, Labelling=exterior, Colour(numlab)=" << color << ", TextLab=0, DrawTitle=0";
 
-  str << ", Colour(ticks)=0, Colour(border)=0";
+  str << ", Colour(ticks)=" << color << ", Colour(border)=" << color;
 
   if (!opts->orientation) {
     // horizontal

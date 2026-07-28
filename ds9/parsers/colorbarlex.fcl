@@ -8,8 +8,10 @@
 %%
 
 center		{return $CENTER_}
+background	{return $BACKGROUND_}
 distance	{return $DISTANCE_}
 horizontal	{return $HORIZONTAL_}
+foreground	{return $FOREGROUND_}
 label		{return $LABEL_}
 left		{return $LEFT_}
 lock		{return $LOCK_}

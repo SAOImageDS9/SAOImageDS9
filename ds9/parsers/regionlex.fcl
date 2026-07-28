@@ -110,6 +110,7 @@ plot2d      {return $PLOT2D_}
 plot3d      {return $PLOT3D_}
 radial      {return $RADIAL_}
 stats	    {return $STATS_}
+surface3d   {return $SURFACE3D_}
 
 -format	    {return $MFORMAT_}
 -system	    {return $MSYSTEM_}

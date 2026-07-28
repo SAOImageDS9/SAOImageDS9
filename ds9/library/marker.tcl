@@ -1951,6 +1951,29 @@ proc RegionCmdAnalysis {task action} {
 		    }
 		}
 	    }
+	    surface3d {
+		# check for region type
+		switch [$frame get marker $id type] {
+		    circle -
+		    ellipse -
+		    box -
+		    polygon {}
+		    default {continue}
+		}
+		MarkerDialog $frame $id
+
+		switch $action {
+		    open {
+			set var(cutout3d) 1
+			MarkerAnalysisCutout3dCmd $varname
+		    }
+		    close {
+			set var(cutout3d) 0
+			MarkerAnalysisCutout3dCmd $varname
+			eval "$var(proc,close) $varname"
+		    }
+		}
+	    }
 	    radial {
 		# check for region type
 		switch [$frame get marker $id type] {

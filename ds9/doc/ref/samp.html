@@ -2671,7 +2671,9 @@ region&nbsp;[&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [fontslant roman|italic]<br>
 &nbsp;&nbsp;&nbsp; [fixed|edit|rotate|delete yes|no]<br>
 &nbsp;&nbsp;&nbsp; [command &lt;marker command&gt;]<br>
-&nbsp;&nbsp;&nbsp; [analysis histogram|panda|plot2d|plot3d|radial|stats [open|close|save]]<br>
+&nbsp;&nbsp;&nbsp; [analysis histogram|panda|plot2d|radial|stats [open|close|save]]<br>
+&nbsp;&nbsp;&nbsp; [analysis plot3d [open|close|save]]<br>
+&nbsp;&nbsp;&nbsp; [analysis surface3d [open|close]]<br>
 &nbsp;&nbsp;&nbsp; [composite [union|intersection]]<br>
 &nbsp;&nbsp;&nbsp; [dissolve]<br>
 &nbsp;&nbsp;&nbsp; [template &lt;filename&gt;]<br>
@@ -2787,9 +2789,13 @@ region fontslant italic<br>
 region edit yes<br>
 region include<br>
 region command "circle 100 100 20 # color=red"<br>
-region analysis stats
-region analysis stats close
-region analysis histograme save
+region analysis stats<br>
+region analysis stats close<br>
+region analysis histogram save<br>
+region analysis plot3d<br>
+region analysis plot3d close<br>
+region analysis surface3d<br>
+region analysis surface3d close<br>
 region composite<br>
 region composite union<br>
 region composite intersection<br>

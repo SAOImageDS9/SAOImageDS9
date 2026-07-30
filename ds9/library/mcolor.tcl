@@ -217,6 +217,16 @@ proc PrefsDialogColor {} {
     
     ttk::label $f.tticks -text [msgcat::mc {Number of Ticks}]
     ttk::entry $f.ticks -textvariable pcolorbar(ticks) -width 10
+
+    ttk::label $f.tforeground -text [msgcat::mc {Text Color}]
+    ColorMenuButton $f.foreground pcolorbar foreground {}
+    $f.foreground.menu insert 0 radiobutton -label [msgcat::mc {Theme}] \
+	-variable pcolorbar(foreground) -value theme
+
+    ttk::label $f.tbackground -text [msgcat::mc {Background Color}]
+    ColorMenuButton $f.background pcolorbar background {}
+    $f.background.menu insert 0 radiobutton -label [msgcat::mc {Theme}] \
+	-variable pcolorbar(background) -value theme
     
     ttk::label $f.tcolor -text [msgcat::mc {Tag Color}]
     ColorMenuButton $f.color pcolorbar tag {}
@@ -225,6 +235,8 @@ proc PrefsDialogColor {} {
     grid $f.tcenter $f.center -padx 2 -pady 2 -sticky w
     grid $f.twidth $f.width -padx 2 -pady 2 -sticky w
     grid $f.tticks $f.ticks -padx 2 -pady 2 -sticky w
+    grid $f.tforeground $f.foreground -padx 2 -pady 2 -sticky w
+    grid $f.tbackground $f.background -padx 2 -pady 2 -sticky w
     grid $f.tcolor $f.color -padx 2 -pady 2 -sticky w
 
     pack $f -side top -fill both -expand true

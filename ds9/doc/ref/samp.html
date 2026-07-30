@@ -203,7 +203,7 @@ ds9.set(string cmd)<br>
 &nbsp;&nbsp; [border yes|no]<br>
 &nbsp;&nbsp; [border color &lt;color&gt;]<br>
 &nbsp;&nbsp; [highlite yes|no]<br>
-&nbsp;&nbsp; [hightlite color &lt;color&gt;]<br>
+&nbsp;&nbsp; [highlite color &lt;color&gt;]<br>
 &nbsp;&nbsp; [compass yes|no]<br>
 &nbsp;&nbsp; [compass color &lt;color&gt;]<br>
 &nbsp;&nbsp; [match]<br>
@@ -217,6 +217,11 @@ string value = ds9.get(string cmd)<br>
 3d el<br>
 3d scale<br>
 3d method<br>
+3d shade<br>
+3d shade ambient<br>
+3d shade strength<br>
+3d shade normal<br>
+3d shade normal strength<br>
 3d background<br>
 3d border<br>
 3d border color<br>
@@ -233,6 +238,11 @@ ds9.set(string cmd)<br>
 3d el 30<br>
 3d scale 10<br>
 3d method mip<br>
+3d shade yes<br>
+3d shade ambient 0.8<br>
+3d shade strength 1.0<br>
+3d shade normal yes<br>
+3d shade normal strength 1.0<br>
 3d background azimuth<br>
 3d border yes<br>
 3d border color red<br>
@@ -634,12 +644,14 @@ cmap close<br></tt>
 colorbar []<br>
 &nbsp;&nbsp;&nbsp; [yes|no]<br>
 &nbsp;&nbsp;&nbsp; [show yes|no]<br>
-&nbsp;&nbsp;&nbsp; [orientation]<br>
+&nbsp;&nbsp;&nbsp; [orientation [horizontal|vertical]]<br>
 &nbsp;&nbsp;&nbsp; [horizontal|vertical]<br>
 &nbsp;&nbsp;&nbsp; [position top|bottom|left|right]<br>
 &nbsp;&nbsp;&nbsp; [label position natural|opposite]<br>
 &nbsp;&nbsp;&nbsp; [numerics yes|no]<br>
 &nbsp;&nbsp;&nbsp; [space value|distance]<br>
+&nbsp;&nbsp;&nbsp; [foreground [&lt;color|theme&gt;]]<br>
+&nbsp;&nbsp;&nbsp; [background [&lt;color|theme&gt;]]<br>
 &nbsp;&nbsp;&nbsp; [font times|helvetica|courier]<br>
 &nbsp;&nbsp;&nbsp; [fontsize &lt;value&gt;]<br>
 &nbsp;&nbsp;&nbsp; [fontweight normal|bold]<br>
@@ -660,6 +672,8 @@ colorbar position<br>
 colorbar label position<br>
 colorbar numerics<br>
 colorbar space<br>
+colorbar foreground<br>
+colorbar background<br>
 colorbar font<br>
 colorbar fontsize<br>
 colorbar fontweight<br>
@@ -674,13 +688,16 @@ ds9.set(string cmd)<br>
 colorbar yes<br>
 colorbar show yes<br>
 colorbar vertical<br>
+colorbar orientation vertical<br>
 colorbar position top<br>
 colorbar label position opposite<br>
 colorbar numerics yes<br>
 colorbar space value<br>
+colorbar foreground white<br>
+colorbar background black<br>
 colorbar font times<br>
 colorbar fontsize 14<br>
-colorbar fontwieght bold<br>
+colorbar fontweight bold<br>
 colorbar fontslant italic<br>
 colorbar center 0.5<br>
 colorbar size 20<br>
@@ -2027,10 +2044,10 @@ layer [&lt;integer&gt;] delete|up|down|top|bottom<br>
 string value = ds9.get(string cmd)<br>
 layer count<br>
 layer layerno<br>
-layer color [&lt;integer&gt;]<br>
-layer blend [&lt;integer&gt;]<br>
-layer transparency [&lt;integer&gt;]<br>
-layer view [&lt;integer&gt;]<br></tt>
+layer [&lt;integer&gt;] color<br>
+layer [&lt;integer&gt;] blend<br>
+layer [&lt;integer&gt;] transparency<br>
+layer [&lt;integer&gt;] view<br></tt>
 <p><b><a name="nameserver" id="nameserver"></a>nameserver</b></p>
 <p>Support Name Server functions. Coordinates are in fk5.</p>
 <tt>Syntax:<br>
@@ -2660,7 +2677,9 @@ region&nbsp;[&lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [fontslant roman|italic]<br>
 &nbsp;&nbsp;&nbsp; [fixed|edit|rotate|delete yes|no]<br>
 &nbsp;&nbsp;&nbsp; [command &lt;marker command&gt;]<br>
-&nbsp;&nbsp;&nbsp; [analysis histogram|panda|plot2d|plot3d|radial|stats [open|close|save]]<br>
+&nbsp;&nbsp;&nbsp; [analysis histogram|panda|plot2d|radial|stats [open|close|save]]<br>
+&nbsp;&nbsp;&nbsp; [analysis plot3d [open|close|save]]<br>
+&nbsp;&nbsp;&nbsp; [analysis surface3d [open|close]]<br>
 &nbsp;&nbsp;&nbsp; [composite [union|intersection]]<br>
 &nbsp;&nbsp;&nbsp; [dissolve]<br>
 &nbsp;&nbsp;&nbsp; [template &lt;filename&gt;]<br>
@@ -2776,9 +2795,13 @@ region fontslant italic<br>
 region edit yes<br>
 region include<br>
 region command "circle 100 100 20 # color=red"<br>
-region analysis stats
-region analysis stats close
-region analysis histograme save
+region analysis stats<br>
+region analysis stats close<br>
+region analysis histogram save<br>
+region analysis plot3d<br>
+region analysis plot3d close<br>
+region analysis surface3d<br>
+region analysis surface3d close<br>
 region composite<br>
 region composite union<br>
 region composite intersection<br>
@@ -3033,12 +3056,18 @@ shm rgbimage key 100 foo<br>
 shm rgbarray key 100 [dim=200,zdim=3,bitpix=-32]<br>
 shm array shmid 102 [dim=32,bitpix=-32]<br></tt>
 <p><b><a name="sia" id="sia"></a>sia</b></p>
-<p>Support for VO Simple Image Access protocol. The first command will create a new search. All other commands operated on the last search created, unless indicated otherwise via current command.</p>
+<p>Support for VO Simple Image Access protocol. The first command will create a new search. All other commands operate on the last search created, unless indicated otherwise via the current command. Registry filter and ivoid constraints are cumulative; use registry clear or registry retrieve to reset them. Registry clear empties the current results, while registry retrieve reloads the full Registry list.</p>
 <tt>Syntax:<br>
-sia[2mass|akari|astrowise|cadc|cxc|hla|mast|sdss|skyview|tgssadr]<br>
+sia [2mass|akari|astrowise|cadc|cxc|hla|mast|sdss|skyview|tgssadr]<br>
 &nbsp;&nbsp;&nbsp; [cancel]<br>
 &nbsp;&nbsp;&nbsp; [clear]<br>
 &nbsp;&nbsp;&nbsp; [close]<br>
+&nbsp;&nbsp;&nbsp; [registry]<br>
+&nbsp;&nbsp;&nbsp; [registry filter &lt;text&gt;]<br>
+&nbsp;&nbsp;&nbsp; [registry ivoid &lt;identifier&gt;]<br>
+&nbsp;&nbsp;&nbsp; [registry load]<br>
+&nbsp;&nbsp;&nbsp; [registry clear]<br>
+&nbsp;&nbsp;&nbsp; [registry retrieve]<br>
 <br>
 &nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [export rdb|tsv &lt;filename&gt;]<br>

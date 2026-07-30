@@ -61,62 +61,56 @@ proc layersend::unsetupvalues {numsyms} {
 }
 
 array set layersend::table {
-  0:257 shift
-  0:258 shift
+  0:257 reduce
+  0:258 reduce
   0:259 shift
-  5:0,target 8
+  0:260 shift
+  2:257 reduce
   9:0 reduce
   0:261 shift
-  6:260,target 8
-  11:0 reduce
-  0:262 shift
-  2:260 shift
-  0:263 shift
+  2:258 reduce
+  0:262 reduce
+  0:263 reduce
   0:264 goto
-  1:260,target 8
-  5:265,target 11
-  6:260 shift
-  2:265 goto
-  6:0,target 8
-  2:0 reduce
-  6:265 goto
+  2:262 reduce
+  0:265 goto
+  2:263 reduce
+  0:265,target 5
+  2:263,target 9
+  6:0,target 5
   6:0 reduce
-  0:264,target 7
-  7:0,target 0
-  12:0 reduce
+  0:264,target 4
+  2:262,target 9
+  7:0,target 4
   0:0,target 1
-  10:0,target 4
-  0:263,target 6
-  8:0,target 9
+  5:263,target 9
+  0:263,target 8
+  5:262,target 8
+  8:0,target 6
   3:0 reduce
-  1:0,target 8
-  11:0,target 6
-  0:262,target 5
-  2:260,target 8
-  6:265,target 12
-  7:0 accept
-  1:265,target 9
-  1:260 shift
-  9:0,target 5
-  0:261,target 4
-  2:0,target 8
-  5:260 shift
-  12:0,target 7
-  1:265 goto
+  1:0,target 2
+  0:262,target 8
+  7:0 reduce
+  5:257 shift
+  9:0,target 7
+  0:261,target 3
+  2:258,target 9
+  5:258 shift
+  5:262 shift
   0:0 reduce
-  5:260,target 8
-  5:265 goto
-  0:259,target 3
-  4:0 reduce
-  3:0,target 2
+  5:263 shift
+  0:259,target 1
+  0:260,target 2
+  2:257,target 9
+  4:0 accept
+  3:0,target 3
+  5:258,target 7
   8:0 reduce
-  10:0 reduce
-  0:258,target 2
-  4:0,target 3
-  0:257,target 1
+  0:258,target 8
+  5:257,target 6
+  4:0,target 0
+  0:257,target 8
   1:0 reduce
-  2:265,target 10
-  5:0 reduce
 }
 
 array set layersend::rules {
@@ -158,32 +152,26 @@ array set layersend::rules {
 }
 
 array set layersend::lr1_table {
-  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0} {7 0 0}}
-  1 {{5 0 1} {8 0 0} {9 0 0}}
-  2 {{4 0 1} {8 0 0} {9 0 0}}
-  3 {{2 0 1}}
-  4 {{3 0 1}}
-  0,trans {{257 1} {258 2} {259 3} {261 4} {262 5} {263 6} {264 7}}
-  5 {{6 0 1} {8 0 0} {9 0 0}}
-  1,trans {{260 8} {265 9}}
-  2,trans {{260 8} {265 10}}
-  6 {{7 0 1} {8 0 0} {9 0 0}}
+  0 {{0 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 0 0} {6 0 0} {7 0 0} {8 {257 258 262 263} 0} {9 {257 258 262 263} 0}}
+  1 {{2 0 1}}
+  2 {{9 {257 258 262 263} 1}}
+  3 {{3 0 1}}
+  4 {{0 0 1}}
+  0,trans {{259 1} {260 2} {261 3} {264 4} {265 5}}
+  5 {{4 0 1} {5 0 1} {6 0 1} {7 0 1}}
+  1,trans {}
+  2,trans {}
+  6 {{5 0 2}}
+  7 {{4 0 2}}
   3,trans {}
-  7 {{0 0 1}}
+  8 {{6 0 2}}
   4,trans {}
-  8 {{9 0 1}}
-  5,trans {{260 8} {265 11}}
-  10 {{4 0 2}}
-  9 {{5 0 2}}
-  6,trans {{260 8} {265 12}}
-  11 {{6 0 2}}
+  5,trans {{257 6} {258 7} {262 8} {263 9}}
+  9 {{7 0 2}}
+  6,trans {}
   7,trans {}
-  12 {{7 0 2}}
   8,trans {}
-  10,trans {}
   9,trans {}
-  11,trans {}
-  12,trans {}
 }
 
 array set layersend::token_id_table {
@@ -332,10 +320,10 @@ proc layersend::yyparse {} {
                     1 { ProcessSendLayerCmd layerno 0 }
                     2 { ProcessSendLayerCmd count 0 }
                     3 { ProcessSendLayerCmd layerno 0 }
-                    4 { ProcessSendLayerCmd color $2 }
-                    5 { ProcessSendLayerCmd blend $2 }
-                    6 { ProcessSendLayerCmd transparency $2 }
-                    7 { ProcessSendLayerCmd view $2 }
+                    4 { ProcessSendLayerCmd color $1 }
+                    5 { ProcessSendLayerCmd blend $1 }
+                    6 { ProcessSendLayerCmd transparency $1 }
+                    7 { ProcessSendLayerCmd view $1 }
                     8 { set _ 0 }
                     9 { set _ $1 }
                 }

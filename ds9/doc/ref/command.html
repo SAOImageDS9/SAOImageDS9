@@ -201,11 +201,11 @@ $ds9 -2mass close<br></tt>
 &nbsp;&nbsp;&nbsp; [shade normal strength &lt;0..1&gt;]<br>
 &nbsp;&nbsp;&nbsp; [background none|azimuth|elevation]<br>
 &nbsp;&nbsp;&nbsp; [border yes|no]<br>
-&nbsp;&nbsp;&nbsp; [border color]<br>
+&nbsp;&nbsp;&nbsp; [border color &lt;color&gt;]<br>
 &nbsp;&nbsp;&nbsp; [highlite yes|no]<br>
-&nbsp;&nbsp;&nbsp; [highlite color]<br>
+&nbsp;&nbsp;&nbsp; [highlite color &lt;color&gt;]<br>
 &nbsp;&nbsp;&nbsp; [compass yes|no]<br>
-&nbsp;&nbsp;&nbsp; [compass color]<br>
+&nbsp;&nbsp;&nbsp; [compass color &lt;color&gt;]<br>
 &nbsp;&nbsp;&nbsp; [match]<br>
 &nbsp;&nbsp;&nbsp; [lock [yes|no]]<br>
 &nbsp;&nbsp;&nbsp; [open|close]<br>
@@ -217,6 +217,11 @@ $ds9 -3d az 45<br>
 $ds9 -3d el 30<br>
 $ds9 -3d scale 10<br>
 $ds9 -3d method mip<br>
+$ds9 -3d shade yes<br>
+$ds9 -3d shade ambient 0.8<br>
+$ds9 -3d shade strength 1.0<br>
+$ds9 -3d shade normal yes<br>
+$ds9 -3d shade normal strength 1.0<br>
 $ds9 -3d background azimuth<br>
 $ds9 -3d border yes<br>
 $ds9 -3d border color red<br>
@@ -560,10 +565,13 @@ $ds9 -cmap close<br></tt>
 &nbsp;&nbsp;&nbsp; [yes|no]<br>
 &nbsp;&nbsp;&nbsp; [show yes|no]<br>
 &nbsp;&nbsp;&nbsp; [horizontal|vertical]<br>
+&nbsp;&nbsp;&nbsp; [orientation horizontal|vertical]<br>
 &nbsp;&nbsp;&nbsp; [position top|bottom|left|right]<br>
 &nbsp;&nbsp;&nbsp; [label position natural|opposite]<br>
 &nbsp;&nbsp;&nbsp; [numerics yes|no]<br>
 &nbsp;&nbsp;&nbsp; [space value|distance]<br>
+&nbsp;&nbsp;&nbsp; [foreground &lt;color|theme&gt;]<br>
+&nbsp;&nbsp;&nbsp; [background &lt;color|theme&gt;]<br>
 &nbsp;&nbsp;&nbsp; [font times|helvetica|courier]<br>
 &nbsp;&nbsp;&nbsp; [fontsize &lt;value&gt;]<br>
 &nbsp;&nbsp;&nbsp; [fontweight normal|bold]<br>
@@ -579,10 +587,13 @@ Example:<br>
 $ds9 -colorbar yes<br>
 $ds9 -colorbar show yes<br>
 $ds9 -colorbar vertical<br>
+$ds9 -colorbar orientation vertical<br>
 $ds9 -colorbar position top<br>
 $ds9 -colorbar label position opposite<br>
 $ds9 -colorbar numerics yes<br>
 $ds9 -colorbar space value<br>
+$ds9 -colorbar foreground white<br>
+$ds9 -colorbar background black<br>
 $ds9 -colorbar font times<br>
 $ds9 -colorbar fontsize 14<br>
 $ds9 -colorbar fontweight bold<br>
@@ -1618,7 +1629,7 @@ $ds9 -msg $HOME/msgs</tt><br>
 <p><b><a name="multiframe" id="multiframe"></a>multiframe</b></p>
 <p>Load FITS multiple extension file as multiple images.<br></p>
 <tt>Syntax:<br>
-multiframe &lt;filename&gt;<br>
+-multiframe &lt;filename&gt;<br>
 &nbsp;<br>
 Example:<br>
 $ds9 -multiframe foo.fits<br>
@@ -2132,7 +2143,9 @@ $ds9 -raise<br></tt>
 &nbsp;&nbsp;&nbsp; [fixed|edit|rotate|delete yes|no]<br>
 &nbsp;&nbsp;&nbsp; [include|exclude|source|background]<br>
 &nbsp;&nbsp;&nbsp; [command &lt;marker command&gt;]<br>
-&nbsp;&nbsp;&nbsp; [analysis histogram|panda|plot2d|plot3d|radial|stats [open|close|save]]<br>
+&nbsp;&nbsp;&nbsp; [analysis histogram|panda|plot2d|radial|stats [open|close|save]]<br>
+&nbsp;&nbsp;&nbsp; [analysis plot3d [open|close|save]]<br>
+&nbsp;&nbsp;&nbsp; [analysis surface3d [open|close]]<br>
 &nbsp;&nbsp;&nbsp; [composite [union|intersection]]<br>
 &nbsp;&nbsp;&nbsp; [dissolve]<br>
 &nbsp;&nbsp;&nbsp; [template &lt;filename&gt;]<br>
@@ -2204,9 +2217,13 @@ $ds9 -region fontslant italic<br>
 $ds9 -region edit yes<br>
 $ds9 -region include<br>
 $ds9 -region command "circle 100 100 20 # color=red"<br>
-$ds9 -region analysis stats
-$ds9 -region analysis stats close
-$ds9 -region analysis histogram save
+$ds9 -region analysis stats<br>
+$ds9 -region analysis stats close<br>
+$ds9 -region analysis histogram save<br>
+$ds9 -region analysis plot3d<br>
+$ds9 -region analysis plot3d close<br>
+$ds9 -region analysis surface3d<br>
+$ds9 -region analysis surface3d close<br>
 $ds9 -region composite<br>
 $ds9 -region composite union<br>
 $ds9 -region composite intersection<br>
@@ -2428,10 +2445,16 @@ $ds9 -shm array shmid 102 [dim=32,bitpix=-32]<br></tt>
 <p><b><a name="sia" id="sia"></a>sia<br></b></p>
 <p>Support for VO Simple Image Access protocol. The first command will create a new search. All other commands operate on the last search created, unless indicated otherwise via the current command. Registry filter and ivoid constraints are cumulative; use registry clear or registry retrieve to reset them. Registry clear empties the current results, while registry retrieve reloads the full Registry list.</p>
 <tt>Syntax:<br>
--sia[2mass|akari|astrowise|cadc|cxc|hla|mast|sdss|skyview|tgssadr]<br>
+-sia [2mass|akari|astrowise|cadc|cxc|hla|mast|sdss|skyview|tgssadr]<br>
 &nbsp;&nbsp;&nbsp; [cancel]<br>
 &nbsp;&nbsp;&nbsp; [clear]<br>
 &nbsp;&nbsp;&nbsp; [close]<br>
+&nbsp;&nbsp;&nbsp; [registry]<br>
+&nbsp;&nbsp;&nbsp; [registry filter &lt;text&gt;]<br>
+&nbsp;&nbsp;&nbsp; [registry ivoid &lt;identifier&gt;]<br>
+&nbsp;&nbsp;&nbsp; [registry load]<br>
+&nbsp;&nbsp;&nbsp; [registry clear]<br>
+&nbsp;&nbsp;&nbsp; [registry retrieve]<br>
 <br>
 &nbsp;&nbsp;&nbsp; [save &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [export rdb|tsv &lt;filename&gt;]<br>

@@ -115,6 +115,7 @@
 %token PLOT3D_
 %token RADIAL_
 %token STATS_
+%token SURFACE3D_
 
 %token MFORMAT_
 %token MSYSTEM_
@@ -138,6 +139,8 @@ region : {RegionCmdLoad}
  | props {RegionCmdLoad}
  | open {RegionCmdOpen}
  | CLOSE_ {RegionCmdClose}
+ | ANALYSIS_ SURFACE3D_ {RegionCmdAnalysis surface3d open}
+ | ANALYSIS_ SURFACE3D_ surfaceAction {RegionCmdAnalysis surface3d $3}
  | ANALYSIS_ analysisTask {RegionCmdAnalysis $2 open}
  | ANALYSIS_ analysisTask analysisAction {RegionCmdAnalysis $2 $3}
  | STRING_ {RegionCmdLoadFn $1}
@@ -250,6 +253,10 @@ analysisTask : HISTOGRAM_ {set _ histogram}
 analysisAction : open {set _ open}
  | CLOSE_ {set _ close}
  | SAVE_ {set _ save}
+ ;
+
+surfaceAction : open {set _ open}
+ | CLOSE_ {set _ close}
  ;
 
 loadall : {set _ 0}

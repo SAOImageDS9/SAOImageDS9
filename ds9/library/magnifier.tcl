@@ -9,12 +9,20 @@ proc CreateMagnifier {} {
     global pmagnifier
     global ds9
 
+    foreach aa {x y} {
+	if {![string is integer -strict $pmagnifier(size,$aa)] ||
+	    $pmagnifier(size,$aa) < 32 || $pmagnifier(size,$aa) > 512} {
+	    set pmagnifier(size,$aa) 128
+	}
+	set imagnifier(size,$aa) $pmagnifier(size,$aa)
+    }
+
     set ds9(magnifier) [ttk::frame $ds9(header).magnifier]
 
     set ds9(magnifier,canvas) \
 	[canvas $ds9(magnifier).canvas \
-	     -width $imagnifier(size) \
-	     -height $imagnifier(size) \
+	     -width $imagnifier(size,x) \
+	     -height $imagnifier(size,y) \
 	     -relief groove \
 	     -borderwidth 2 \
 	     -highlightthickness 0 \
@@ -24,8 +32,8 @@ proc CreateMagnifier {} {
 	    ]
 
     $ds9(magnifier,canvas) create magnifier$ds9(visual) \
-	-width $imagnifier(size) \
-	-height $imagnifier(size) \
+	-width $imagnifier(size,x) \
+	-height $imagnifier(size,y) \
 	-command magnifier \
 	-tag magnifier \
 	-helvetica $ds9(helvetica) \
@@ -66,9 +74,12 @@ proc MagnifierDef {} {
     global imagnifier
     global pmagnifier
 
-    set imagnifier(size) 128
+    set imagnifier(size,x) 128
+    set imagnifier(size,y) 128
 
     # prefs only
+    set pmagnifier(size,x) 128
+    set pmagnifier(size,y) 128
     set pmagnifier(cursor) 1
     set pmagnifier(zoom) 4
     set pmagnifier(region) 1
@@ -162,6 +173,16 @@ proc PrefsDialogMagnifier {} {
     ttk::label $f.tcolor -text [msgcat::mc {Color}]
     ColorMenuButton $f.color pmagnifier color MagnifierColor
 
+    ttk::label $f.tsizex -text [msgcat::mc {X Size}]
+    ttk::entry $f.sizex -textvariable pmagnifier(size,x) \
+	-validate focusout -validatecommand [list PrefsMagnifierSize x] -width 8
+    ttk::label $f.tpixelsx -text [msgcat::mc {pixels (32-512)}]
+
+    ttk::label $f.tsizey -text [msgcat::mc {Y Size}]
+    ttk::entry $f.sizey -textvariable pmagnifier(size,y) \
+	-validate focusout -validatecommand [list PrefsMagnifierSize y] -width 8
+    ttk::label $f.tpixelsy -text [msgcat::mc {pixels (32-512)}]
+
     ttk::label $f.tx -text [msgcat::mc {Magnification}]
     ttk::radiobutton $f.x1 -text {1x} \
 	-variable pmagnifier(zoom) -value 1 -command MagnifierZoom
@@ -176,9 +197,37 @@ proc PrefsDialogMagnifier {} {
 
     grid $f.tshow $f.graphics - $f.cursor - -padx 2 -pady 2 -sticky w
     grid $f.tcolor $f.color - - -padx 2 -pady 2 -sticky w
+    grid $f.tsizex $f.sizex $f.tpixelsx - - -padx 2 -pady 2 -sticky w
+    grid $f.tsizey $f.sizey $f.tpixelsy - - -padx 2 -pady 2 -sticky w
     grid $f.tx $f.x1 $f.x2 $f.x4 $f.x8 $f.x16 -padx 2 -pady 2 -sticky w
 
     pack $f -side top -fill both -expand true
+}
+
+proc PrefsMagnifierSize {axis} {
+    global ds9
+    global imagnifier
+    global pmagnifier
+
+    if {![string is integer -strict $pmagnifier(size,$axis)] ||
+	$pmagnifier(size,$axis) < 32 || $pmagnifier(size,$axis) > 512} {
+	set pmagnifier(size,$axis) $imagnifier(size,$axis)
+	return true
+    }
+
+    set imagnifier(size,$axis) $pmagnifier(size,$axis)
+
+    $ds9(magnifier,canvas) configure \
+	-width $imagnifier(size,x) -height $imagnifier(size,y)
+    $ds9(magnifier,canvas) itemconfigure magnifier \
+	-width $imagnifier(size,x) -height $imagnifier(size,y)
+
+    foreach ff $ds9(frames) {
+	$ff magnifier 'magnifier' $imagnifier(size,x) $imagnifier(size,y)
+    }
+
+    LayoutView
+    return true
 }
 
 # Process Cmds
@@ -202,5 +251,3 @@ proc ProcessSendMagnifierCmd {proc id param {sock {}} {fn {}}} {
     magnifiersend::yy_scan_string $param
     magnifiersend::yyparse
 }
-
-

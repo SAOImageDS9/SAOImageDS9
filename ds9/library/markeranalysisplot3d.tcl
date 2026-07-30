@@ -33,7 +33,7 @@ proc MarkerAnalysisPlot3dDialog {varname} {
 	ellipse -
 	box -
 	polygon {
-	    $var(mb).analysis add checkbutton -label [msgcat::mc {3D Cutout}] \
+	    $var(mb).analysis add checkbutton -label [msgcat::mc {3D Surface}] \
 		-variable ${varname}(cutout3d) \
 		-command "MarkerAnalysisCutout3dCmd $varname"
 	}
@@ -401,12 +401,16 @@ proc MarkerAnalysisCutout3dCB {frame id} {
 
     catch {GotoFrame $cutout}
     catch {LoadVar $datavar "${frame}.${id}.3d-cutout.fits" {} {}}
+    if {$newcutout} {
+	catch {$cutout 3d method fip}
+	Update3DDialog
+    }
     MarkerAnalysisPlot3dApplyScaleLimits $frame $cutout $cvarname
     MarkerAnalysisPlot3dApplyColorbar $frame $cutout
     catch {$cutout zoom to fit}
     catch {eval [list $cutout 3d view] $view}
 
-    if {[MarkerAnalysisPlot3dFrameExists $saveframe]} {
+    if {!$newcutout && [MarkerAnalysisPlot3dFrameExists $saveframe]} {
 	catch {GotoFrame $saveframe}
 	set current(colorbar) $savecolorbar
     }

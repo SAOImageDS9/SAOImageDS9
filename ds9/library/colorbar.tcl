@@ -245,6 +245,8 @@ proc ColorbarDef {} {
     set colorbar(orientation) 0
     set colorbar(position) bottom
     set colorbar(label,position) natural
+    set colorbar(foreground) theme
+    set colorbar(background) theme
 
     set colorbar(font) helvetica
     set colorbar(font,size) 9
@@ -323,6 +325,32 @@ proc ColorbarCmdSet {key value {cmd ColorbarUpdateView}} {
     eval $cmd
 }
 
+proc ColorbarForeground {{frame {}}} {
+    global colorbar
+
+    set key foreground
+    if {$frame != {}} {
+	set key $frame,foreground
+    }
+    if {$colorbar($key) == {theme}} {
+	return [ThemeTreeForeground]
+    }
+    return $colorbar($key)
+}
+
+proc ColorbarBackground {{frame {}}} {
+    global colorbar
+
+    set key background
+    if {$frame != {}} {
+	set key $frame,background
+    }
+    if {$colorbar($key) == {theme}} {
+	return [ThemeTreeBackground]
+    }
+    return $colorbar($key)
+}
+
 proc ColorbarBackupRestore {hasPosition {hasFrameProps 0}} {
     global ds9
     global colorbar
@@ -351,7 +379,7 @@ proc ColorbarBackupRestore {hasPosition {hasFrameProps 0}} {
 proc ColorbarPropertyKeys {} {
     return [list \
 	show size center width ticks numerics space orientation position label,position \
-	font font,size font,weight font,slant \
+	foreground background font font,size font,weight font,slant \
     ]
 }
 
@@ -415,6 +443,8 @@ proc ColorbarApplyFrame {frame} {
 	-space $colorbar($frame,space) \
 	-orientation [ColorbarPositionOrientationFrame $frame] \
 	-labelside [ColorbarLabelSideFrame $frame] \
+	-fg [ColorbarForeground $frame] \
+	-bg [ColorbarBackground $frame] \
 	\
 	-font $colorbar($frame,font) \
 	-fontsize $colorbar($frame,font,size) \
@@ -520,8 +550,8 @@ proc CreateColorbar {} {
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
 	-times $ds9(times) \
-	-fg [ThemeTreeForeground] \
-	-bg [ThemeTreeBackground]
+	-fg [ColorbarForeground] \
+	-bg [ColorbarBackground]
 
     # preload external cmaps
     # maintain same order for backward compatibility
@@ -605,8 +635,8 @@ proc CreateColorbarBase {frame} {
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
 	-times $ds9(times) \
-	-fg [ThemeTreeForeground] \
-	-bg [ThemeTreeBackground]
+	-fg [ColorbarForeground $frame] \
+	-bg [ColorbarBackground $frame]
 
     # preload external cmaps
     # maintain same order for backward compatibility
@@ -684,8 +714,8 @@ proc CreateColorbarRGB {frame} {
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
 	-times $ds9(times) \
-	-fg [ThemeTreeForeground] \
-	-bg [ThemeTreeBackground]
+	-fg [ColorbarForeground $frame] \
+	-bg [ColorbarBackground $frame]
 
     # now init new colorbar to prev values
     $which colorbar $sav
@@ -736,8 +766,8 @@ proc CreateColorbarHSV {frame} {
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
 	-times $ds9(times) \
-	-fg [ThemeTreeForeground] \
-	-bg [ThemeTreeBackground]
+	-fg [ColorbarForeground $frame] \
+	-bg [ColorbarBackground $frame]
 
     # now init new colorbar to prev values
     $which colorbar $sav
@@ -788,8 +818,8 @@ proc CreateColorbarHLS {frame} {
 	-helvetica $ds9(helvetica) \
 	-courier $ds9(courier) \
 	-times $ds9(times) \
-	-fg [ThemeTreeForeground] \
-	-bg [ThemeTreeBackground]
+	-fg [ColorbarForeground $frame] \
+	-bg [ColorbarBackground $frame]
 
     # now init new colorbar to prev values
     $which colorbar $sav
@@ -1821,6 +1851,16 @@ proc ColormapDialog {} {
     FontMenuButton $f.font colorbar font font,size font,weight font,slant \
 	ColorbarUpdateView
 
+    ttk::label $f.tforeground -text [msgcat::mc {Text Color}]
+    ColorMenuButton $f.foreground colorbar foreground ColorbarUpdateView
+    $f.foreground.menu insert 0 radiobutton -label [msgcat::mc {Theme}] \
+	-variable colorbar(foreground) -value theme -command ColorbarUpdateView
+
+    ttk::label $f.tbackground -text [msgcat::mc {Background Color}]
+    ColorMenuButton $f.background colorbar background ColorbarUpdateView
+    $f.background.menu insert 0 radiobutton -label [msgcat::mc {Theme}] \
+	-variable colorbar(background) -value theme -command ColorbarUpdateView
+
     ttk::label $f.tsize -text [msgcat::mc {Size}]
     ttk::entry $f.size -textvariable colorbar(size) -width 10
     ttk::label $f.tticks -text [msgcat::mc {Number of Ticks}]
@@ -1837,6 +1877,8 @@ proc ColormapDialog {} {
     grid $f.tnumerics $f.numerics $f.value $f.distance \
 	-padx 2 -pady 2 -sticky w
     grid $f.tfont $f.font -padx 2 -pady 2 -sticky w
+    grid $f.tforeground $f.foreground -padx 2 -pady 2 -sticky w
+    grid $f.tbackground $f.background -padx 2 -pady 2 -sticky w
     grid $f.tsize $f.size $f.tticks $f.ticks -padx 2 -pady 2 -sticky w
     grid $f.center -columnspan 5 -padx 2 -pady 2 -sticky ew
     grid $f.width -columnspan 5 -padx 2 -pady 2 -sticky ew
@@ -2067,6 +2109,8 @@ proc LayoutColorbar {cb fx fy fw fh} {
 	-space $colorbar(space) \
 	-orientation [ColorbarPositionOrientation] \
 	-labelside [ColorbarLabelSide] \
+	-fg [ColorbarForeground] \
+	-bg [ColorbarBackground] \
 	\
 	-font $colorbar(font) \
 	-fontsize $colorbar(font,size) \
@@ -2219,6 +2263,8 @@ proc ColorbarBackup {ch dir} {
     puts $ch "colorbar configure -orientation $colorbar(orientation)"
     puts $ch "set colorbar(position) $colorbar(position)"
     puts $ch "set colorbar(label,position) $colorbar(label,position)"
+    puts $ch "set colorbar(foreground) $colorbar(foreground)"
+    puts $ch "set colorbar(background) $colorbar(background)"
 
     puts $ch "colorbar configure -font $colorbar(font)"
     puts $ch "colorbar configure -fontsize $colorbar(font,size)"

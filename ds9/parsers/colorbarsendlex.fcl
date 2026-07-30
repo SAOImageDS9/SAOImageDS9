@@ -8,6 +8,8 @@
 %%
 
 center		{return $CENTER_}
+background	{return $BACKGROUND_}
+foreground	{return $FOREGROUND_}
 label		{return $LABEL_}
 lock		{return $LOCK_}
 numerics	{return $NUMERICS_}

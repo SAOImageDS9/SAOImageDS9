@@ -154,8 +154,8 @@ proc CreateNameNumberFrame {which type} {
 
     $which threads $ds9(threads)
 
-    $which panner 'panner' $ipanner(size) $ipanner(size)
-    $which magnifier 'magnifier' $imagnifier(size) $imagnifier(size)
+    $which panner 'panner' $ipanner(size,x) $ipanner(size,y)
+    $which magnifier 'magnifier' $imagnifier(size,x) $imagnifier(size,y)
     $which magnifier zoom $pmagnifier(zoom)
     $which magnifier graphics $pmagnifier(region)
     $which magnifier cursor $pmagnifier(cursor)

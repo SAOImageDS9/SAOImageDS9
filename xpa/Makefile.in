@@ -86,6 +86,12 @@ CFLAGS = 		@CFLAGS@
 # To add ld switches, change the following line:
 LDFLAGS =		@LDFLAGS@
 
+# Select the console subsystem for installed Windows command-line tools.
+CONSOLE_LDFLAGS =	@CONSOLE_LDFLAGS@
+
+# Select the GUI subsystem for the Windows XPA name server.
+XPANS_LDFLAGS =		@XPANS_LDFLAGS@
+
 # Some versions of make, like SGI's, use the following variable to
 # determine which shell to use for executing commands:
 SHELL =			/bin/sh
@@ -213,22 +219,22 @@ index:		$(LIB)
 		echo "pkg_mkIndex -direct -verbose . libtclxpa.so; exit"| tclsh)
 
 xpaset:		$(LIB) xpaset.o
-		$(CC) $(LDFLAGS) xpaset.o -o xpaset$(EXE) $(LLIB) $(LIBS)
+		$(CC) $(LDFLAGS) xpaset.o -o xpaset$(EXE) $(LLIB) $(LIBS) $(CONSOLE_LDFLAGS)
 
 xpaget:		$(LIB) xpaget.o
-		$(CC) $(LDFLAGS) xpaget.o -o xpaget$(EXE) $(LLIB) $(LIBS)
+		$(CC) $(LDFLAGS) xpaget.o -o xpaget$(EXE) $(LLIB) $(LIBS) $(CONSOLE_LDFLAGS)
 
 xpainfo:	$(LIB) xpainfo.o
-		$(CC) $(LDFLAGS) xpainfo.o -o xpainfo$(EXE) $(LLIB) $(LIBS)
+		$(CC) $(LDFLAGS) xpainfo.o -o xpainfo$(EXE) $(LLIB) $(LIBS) $(CONSOLE_LDFLAGS)
 
 xpaaccess:	$(LIB) xpaaccess.o
-		$(CC) $(LDFLAGS) xpaaccess.o -o xpaaccess$(EXE) $(LLIB) $(LIBS)
+		$(CC) $(LDFLAGS) xpaaccess.o -o xpaaccess$(EXE) $(LLIB) $(LIBS) $(CONSOLE_LDFLAGS)
 
 xpans:		$(LIB) xpans.o
-		$(CC) $(LDFLAGS) xpans.o -o xpans$(EXE) $(LLIB) $(LIBS) $(TLIB)
+		$(CC) $(LDFLAGS) xpans.o -o xpans$(EXE) $(LLIB) $(LIBS) $(TLIB) $(XPANS_LDFLAGS)
 
 xpamb:		$(LIB) xpamb.o
-		$(CC) $(LDFLAGS) xpamb.o -o xpamb$(EXE) $(LLIB) $(LIBS)
+		$(CC) $(LDFLAGS) xpamb.o -o xpamb$(EXE) $(LLIB) $(LIBS) $(CONSOLE_LDFLAGS)
 
 ctest:		$(LIB) ctest.o
 		$(CC) $(LDFLAGS) ctest.o -o ctest$(EXE) $(LLIB) $(LIBS)

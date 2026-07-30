@@ -1367,6 +1367,11 @@ proc HTTPLog {token} {
 	upvar #0 $token t
 
 	DisplayLog "url: $t(url)\n"
+	if {[info exists t(-query)]} {
+	    DisplayLog "query: $t(-query)\n"
+	} elseif {[regexp {\?([^#]+)} $t(url) {} query]} {
+	    DisplayLog "query: $query\n"
+	}
 	DisplayLog "http: $t(http)\n"
 	DisplayLog "type: $t(type)\n"
 	DisplayLog "binary: $t(binary)\n"

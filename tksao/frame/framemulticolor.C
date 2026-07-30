@@ -755,13 +755,13 @@ void FrameMultiColor::layerColorCmd(int layer, const char* color)
   colorName[ss] = dupstr(color);
 
   rebuildLayerScale(ss);
-  update(BASE);
+  setLayer(layer);
 }
 
 void FrameMultiColor::layerBlendCmd(int layer, FitsMask::MaskBlend bl)
 {
   blend[layerSlot[layerIndex(layer)]] = bl;
-  update(BASE);
+  setLayer(layer);
 }
 
 void FrameMultiColor::layerTransparencyCmd(int layer, float tt)
@@ -773,7 +773,7 @@ void FrameMultiColor::layerTransparencyCmd(int layer, float tt)
   if (alpha[ss] > 1)
     alpha[ss] = 1;
 
-  update(BASE);
+  setLayer(layer);
 }
 
 void FrameMultiColor::layerViewCmd(int layer, int vv)
@@ -787,13 +787,13 @@ void FrameMultiColor::layerViewCmd(int layer, int vv)
 void FrameMultiColor::layerShowCmd(int layer)
 {
   view[layerSlot[layerIndex(layer)]] = 1;
-  update(BASE);
+  setLayer(layer);
 }
 
 void FrameMultiColor::layerHideCmd(int layer)
 {
   view[layerSlot[layerIndex(layer)]] = 0;
-  update(BASE);
+  setLayer(layer);
 }
 
 void FrameMultiColor::layerDeleteCmd(int layer)

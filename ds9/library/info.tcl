@@ -302,7 +302,7 @@ proc LayoutFrameInfoBoxVertValue {which} {
 		$ds9(info).value3Title $ds9(info).value3
 
 	    grid $ds9(info).value -row $ds9(info,row,value) \
-		-column 1 -padx 2 -sticky w
+		-column 1 -padx 2 -sticky ew
 	}
 	rgb -
 	hsv -
@@ -312,15 +312,15 @@ proc LayoutFrameInfoBoxVertValue {which} {
 	    grid $ds9(info).value1Title -row $ds9(info,row,value,1) \
 		-column 0 -sticky w
 	    grid $ds9(info).value1 -row $ds9(info,row,value,1) \
-		-column 1 -padx 2 -sticky w
+		-column 1 -padx 2 -sticky ew
 	    grid $ds9(info).value2Title -row $ds9(info,row,value,2) \
 		-column 0 -sticky w
 	    grid $ds9(info).value2 -row $ds9(info,row,value,2) \
-		-column 1 -padx 2 -sticky w
+		-column 1 -padx 2 -sticky ew
 	    grid $ds9(info).value3Title -row $ds9(info,row,value,3) \
 		-column 0 -sticky w
 	    grid $ds9(info).value3 -row $ds9(info,row,value,3) \
-		-column 1 -padx 2 -sticky w
+		-column 1 -padx 2 -sticky ew
 	}
     }
 
@@ -353,7 +353,7 @@ proc LayoutFrameInfoBoxVertWCS {which} {
 		grid $ds9(info).wcsZLabel$ll -row $ds9(info,row,wcs$ll)\
 		    -column 0
 		grid $ds9(info).wcsZValue$ll -row $ds9(info,row,wcs$ll)\
-		    -column 1 -padx 2
+		    -column 1 -padx 2 -sticky ew
 		incr row
 	    } else {
 		grid forget $ds9(info).wcsZLabel$ll $ds9(info).wcsZValue$ll
@@ -384,7 +384,7 @@ proc LayoutFrameInfoBoxVertImage {which} {
 		    grid $ds9(info).imageZLabel -row $ds9(info,row,image) \
 			-column 0 -sticky e
 		    grid $ds9(info).imageZValue -row $ds9(info,row,image) \
-			-column 1 -padx 2
+			-column 1 -padx 2 -sticky ew
 		} else {
 		    grid forget $ds9(info).imageZLabel $ds9(info).imageZValue
 		}
@@ -397,7 +397,7 @@ proc LayoutFrameInfoBoxVertImage {which} {
 		grid $ds9(info).imageZLabel -row $ds9(info,row,image) \
 		    -column 0 -sticky e
 		grid $ds9(info).imageZValue -row $ds9(info,row,image) \
-		    -column 1 -padx 2
+		    -column 1 -padx 2 -sticky ew
 	    } else {
 		grid forget $ds9(info).imageZLabel $ds9(info).imageZValue
 	    }
@@ -422,7 +422,7 @@ proc LayoutFrameInfoBoxAdvancedValue {which} {
 		$ds9(info).value3Title $ds9(info).value3
 
 	    grid $ds9(info).value -row $ds9(info,row,value) \
-		-column 1 -padx 2 -sticky w
+		-column 1 -padx 2 -sticky ew
 	}
 	rgb {
 	    grid forget $ds9(info).value
@@ -430,15 +430,15 @@ proc LayoutFrameInfoBoxAdvancedValue {which} {
 	    grid $ds9(info).value1Title -row $ds9(info,row,value,1) \
 		-column 0 -sticky w
 	    grid $ds9(info).value1 -row $ds9(info,row,value,1) \
-		-column 1 -padx 2 -sticky w
+		-column 1 -padx 2 -sticky ew
 	    grid $ds9(info).value2Title -row $ds9(info,row,value,2) \
 		-column 0 -sticky w
 	    grid $ds9(info).value2 -row $ds9(info,row,value,2) \
-		-column 1 -padx 2 -sticky w
+		-column 1 -padx 2 -sticky ew
 	    grid $ds9(info).value3Title -row $ds9(info,row,value,3) \
 		-column 0 -sticky w
 	    grid $ds9(info).value3 -row $ds9(info,row,value,3) \
-		-column 1 -padx 2 -sticky w
+		-column 1 -padx 2 -sticky ew
 	}
     }
 
@@ -471,7 +471,7 @@ proc LayoutFrameInfoBoxAdvancedWCS {which} {
 		grid $ds9(info).wcsZLabel$ll -row $ds9(info,row,wcs$ll)\
 		    -column 0
 		grid $ds9(info).wcsZValue$ll -row $ds9(info,row,wcs$ll)\
-		    -column 1 -padx 2
+		    -column 1 -padx 2 -sticky ew
 		incr row
 	    } else {
 		grid forget $ds9(info).wcsZLabel$ll $ds9(info).wcsZValue$ll
@@ -502,7 +502,7 @@ proc LayoutFrameInfoBoxAdvancedImage {which} {
 		    grid $ds9(info).imageZLabel -row $ds9(info,row,image) \
 			-column 0 -sticky e
 		    grid $ds9(info).imageZValue -row $ds9(info,row,image) \
-			-column 1 -padx 2
+			-column 1 -padx 2 -sticky ew
 		} else {
 		    grid forget $ds9(info).imageZLabel $ds9(info).imageZValue
 		}
@@ -515,7 +515,7 @@ proc LayoutFrameInfoBoxAdvancedImage {which} {
 		grid $ds9(info).imageZLabel -row $ds9(info,row,image) \
 		    -column 0 -sticky e
 		grid $ds9(info).imageZValue -row $ds9(info,row,image) \
-		    -column 1 -padx 2
+		    -column 1 -padx 2 -sticky ew
 	    } else {
 		grid forget $ds9(info).imageZLabel $ds9(info).imageZValue
 	    }
@@ -751,6 +751,7 @@ proc LayoutInfoPanel {} {
     global view
 
     # reset
+    grid columnconfigure $ds9(info) 1 -weight 0
     grid columnconfigure $ds9(info) 7 -weight 0
     if {$ds9(row) > -1} {
 	grid rowconfigure $ds9(info) $ds9(row) -weight 0
@@ -1041,6 +1042,8 @@ proc LayoutInfoPanelVert {} {
     set ww 13
     set row 0
 
+    grid columnconfigure $ds9(info) 1 -weight 1
+
     # filename
     if {$view(info,filename)} {
 	$ds9(info).fileValue configure -width $ww
@@ -1323,6 +1326,8 @@ proc LayoutInfoPanelVert {} {
 
     grid $ds9(info).dummy -row $row -column 1
     grid rowconfigure $ds9(info) $row -weight 1
+
+    LayoutInfoPanelFillColumn
 }
 
 proc LayoutInfoPanelAdvanced {} {
@@ -1333,6 +1338,8 @@ proc LayoutInfoPanelAdvanced {} {
     set ww 13
     set row 0
 
+    grid columnconfigure $ds9(info) 1 -weight 1
+
     # filename
     if {$view(info,filename)} {
 	$ds9(info).fileValue configure -width $ww
@@ -1615,4 +1622,54 @@ proc LayoutInfoPanelAdvanced {} {
 
     grid $ds9(info).dummy -row $row -column 1
     grid rowconfigure $ds9(info) $row -weight 1
+
+    LayoutInfoPanelFillColumn
+}
+
+proc LayoutInfoPanelFillColumn {} {
+    global ds9
+
+    set widgets [list \
+	$ds9(info).fileValue \
+	$ds9(info).objValue \
+	$ds9(info).keyWord \
+	$ds9(info).keyValue \
+	$ds9(info).minValue \
+	$ds9(info).minXValue \
+	$ds9(info).minYValue \
+	$ds9(info).maxValue \
+	$ds9(info).maxXValue \
+	$ds9(info).maxYValue \
+	$ds9(info).lowValue \
+	$ds9(info).highValue \
+	$ds9(info).value \
+	$ds9(info).value1 \
+	$ds9(info).value2 \
+	$ds9(info).value3 \
+	$ds9(info).bunitValue \
+	$ds9(info).detectorXValue \
+	$ds9(info).detectorYValue \
+	$ds9(info).amplifierXValue \
+	$ds9(info).amplifierYValue \
+	$ds9(info).physicalXValue \
+	$ds9(info).physicalYValue \
+	$ds9(info).imageXValue \
+	$ds9(info).imageYValue \
+	$ds9(info).imageZValue \
+	$ds9(info).frame \
+	$ds9(info).zoomValue \
+	$ds9(info).angleValue]
+
+    foreach ll {{} a b c d e f g h i j k l m n o p q r s t u v w x y z} {
+	lappend widgets \
+	    $ds9(info).wcsXValue$ll \
+	    $ds9(info).wcsYValue$ll \
+	    $ds9(info).wcsZValue$ll
+    }
+
+    foreach ww $widgets {
+	if {[winfo manager $ww] eq {grid}} {
+	    grid configure $ww -sticky ew
+	}
+    }
 }

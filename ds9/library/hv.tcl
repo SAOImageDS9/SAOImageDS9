@@ -194,6 +194,10 @@ proc HV {varname title url {init {}} {sync 0} {save 0}} {
 
 	bind $w <Up> "$f.html yview scroll -1 units"
 	bind $w <Down> "$f.html yview scroll 1 units"
+	bind $w <Prior> "$f.html yview scroll -1 pages"
+	bind $w <Next> "$f.html yview scroll 1 pages"
+	bind $w <Home> "$f.html yview moveto 0"
+	bind $w <End> "$f.html yview moveto 1"
 	bind $w <Right> "$f.html xview scroll 1 units"
 	bind $w <Left> "$f.html xview scroll -1 units"
 	bind $w <<Copy>> "HVCopyCmd $varname"
@@ -205,8 +209,8 @@ proc HV {varname title url {init {}} {sync 0} {save 0}} {
 
 	switch $ds9(wm) {
 	    x11 {
-		bind $w <Button-4> "HVMouseWheel $varname 1"
-		bind $w <Button-5> "HVMouseWheel $varname -1"
+		bind $w <Button-4> "HVMouseWheel $varname 120"
+		bind $w <Button-5> "HVMouseWheel $varname -120"
 		bind $w <MouseWheel> "HVMouseWheel $varname %D"
 	    }
 	    aqua -
@@ -361,7 +365,15 @@ proc HVMouseWheel {varname cnt} {
 	puts stderr "HVMouseWheel"
     }
 
-    $var(widget) yview scroll [expr -$cnt] units
+    # A standard wheel notch has a delta of 120.  One tkhtml scroll unit is
+    # one tenth of the visible page, or roughly three to five lines of text.
+    set units [expr {round(-$cnt / 120.)}]
+    if {$units == 0 && $cnt != 0} {
+	set units [expr {$cnt > 0 ? -1 : 1}]
+    }
+    if {$units != 0} {
+	$var(widget) yview scroll $units units
+    }
 }
 
 # Commands

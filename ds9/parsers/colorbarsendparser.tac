@@ -18,6 +18,8 @@
 %token TICKS_
 %token VALUE_
 %token WIDTH_
+%token BACKGROUND_
+%token FOREGROUND_
 
 %%
 
@@ -29,6 +31,8 @@ colorbarsend : {ProcessSendCmdYesNo view colorbar}
  | LABEL_ POSITION_ {ColorbarSendCmdLabelPosition}
  | NUMERICS_ {ProcessSendCmdYesNo colorbar numerics}
  | SPACE_ {ColorbarSendCmdSpace}
+ | FOREGROUND_ {ProcessSendCmdGet colorbar foreground}
+ | BACKGROUND_ {ProcessSendCmdGet colorbar background}
  | FONT_ {ProcessSendCmdGet colorbar font}
  | FONTSIZE_ {ProcessSendCmdGet colorbar font,size}
  | FONTWEIGHT_ {ProcessSendCmdGet colorbar font,weight}

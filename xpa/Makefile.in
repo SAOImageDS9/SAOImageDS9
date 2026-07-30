@@ -89,6 +89,9 @@ LDFLAGS =		@LDFLAGS@
 # Select the console subsystem for installed Windows command-line tools.
 CONSOLE_LDFLAGS =	@CONSOLE_LDFLAGS@
 
+# Select the GUI subsystem for the Windows XPA name server.
+XPANS_LDFLAGS =		@XPANS_LDFLAGS@
+
 # Some versions of make, like SGI's, use the following variable to
 # determine which shell to use for executing commands:
 SHELL =			/bin/sh
@@ -228,7 +231,7 @@ xpaaccess:	$(LIB) xpaaccess.o
 		$(CC) $(LDFLAGS) xpaaccess.o -o xpaaccess$(EXE) $(LLIB) $(LIBS) $(CONSOLE_LDFLAGS)
 
 xpans:		$(LIB) xpans.o
-		$(CC) $(LDFLAGS) xpans.o -o xpans$(EXE) $(LLIB) $(LIBS) $(TLIB) $(CONSOLE_LDFLAGS)
+		$(CC) $(LDFLAGS) xpans.o -o xpans$(EXE) $(LLIB) $(LIBS) $(TLIB) $(XPANS_LDFLAGS)
 
 xpamb:		$(LIB) xpamb.o
 		$(CC) $(LDFLAGS) xpamb.o -o xpamb$(EXE) $(LLIB) $(LIBS) $(CONSOLE_LDFLAGS)

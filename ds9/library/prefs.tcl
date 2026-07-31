@@ -1151,9 +1151,6 @@ proc FixPrefs6.0to6.1 {} {
     FixVarRm pmarker(load)
     FixVarRm pmarker(paste,system)
     FixVarRm pmarker(paste,sky)
-    FixVarRm pmarker(system)
-    FixVarRm pmarker(sky)
-    FixVarRm pmarker(skyformat)
     FixVarRm pmarker(strip)
 
     FixVarRm marker(dialog,system)

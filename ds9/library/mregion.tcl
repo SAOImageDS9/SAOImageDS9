@@ -376,6 +376,14 @@ proc PrefsDialogRegion {} {
     $f.format.menu add radiobutton -label {X Y} \
 	-variable pmarker(format) -value xy
 
+    # Coordinate System
+    set f [ttk::labelframe $w.region.coordsys \
+	       -text [msgcat::mc {Default Coordinate System}]]
+
+    CoordMenuButton $f.coordsys pmarker system 1 sky skyformat {}
+
+    grid $f.coordsys -padx 2 -pady 2 -sticky w
+
     # Length
     set f [ttk::labelframe $w.region.dformat \
 	       -text [msgcat::mc {Default Length}]]
@@ -509,7 +517,8 @@ proc PrefsDialogRegion {} {
     
     grid $f.title $f.size $f.unit -padx 2 -pady 2 -sticky w
 
-    pack $w.region.format $w.region.dformat $w.region.epsilon \
+    pack $w.region.format $w.region.coordsys \
+	$w.region.dformat $w.region.epsilon \
 	$w.region.centroid $w.region.plot \
 	$w.region.circle $w.region.ellipse \
 	$w.region.box $w.region.polygon $w.region.projection $w.region.point \

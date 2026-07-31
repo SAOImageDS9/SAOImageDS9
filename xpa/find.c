@@ -18,6 +18,12 @@
 
 #define MAXBUFSIZE 8192
 
+#if HAVE_MINGW32
+#define PATHDELIMS ";"
+#else
+#define PATHDELIMS ":;"
+#endif
+
 #ifndef HAVE_UNISTD_H
 #define F_OK            0       /* does file exist */
 #define X_OK            1       /* is it executable by caller */
@@ -79,7 +85,7 @@ static char *findpath(name, mode, path)
   pathbuff[MAXBUFSIZE-1] = '\0';
   path = pathbuff;
 
-  if ( (here = strpbrk(pathbuff, ":;")) ) {
+  if ( (here = strpbrk(pathbuff, PATHDELIMS)) ) {
     mark = *here;
     *here++ = '\0';
   }
@@ -134,7 +140,7 @@ static char *findpath(name, mode, path)
     }
 
     path = here;
-    if ( here && (here = strpbrk(here, ":;")) ) {
+    if ( here && (here = strpbrk(here, PATHDELIMS)) ) {
       mark = *here;
       *here++ = '\0';
     }

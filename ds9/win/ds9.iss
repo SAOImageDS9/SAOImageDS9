@@ -75,7 +75,7 @@ Source: "..\..\bin\SAOImageDS9\tooltip\*"; DestDir: "{app}\tooltip\"; Flags: ign
 Source: "..\..\bin\SAOImageDS9\ttkthemes\*"; DestDir: "{app}\ttkthemes\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\bin\SAOImageDS9\ssl\*"; DestDir: "{app}\ssl\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\bin\SAOImageDS9\pdf4tcl\*"; DestDir: "{app}\pdf4tcl\"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "..\..\bin\SAOImageDS9\xpans.exe"; DestDir: "{app}";
+Source: "..\..\bin\SAOImageDS9\xpa*.exe"; DestDir: "{app}";
 
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files

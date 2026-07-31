@@ -129,8 +129,8 @@ proc DS9Def {} {
     # start XPA
     switch $ds9(wm) {
 	x11 -
-	aqua {set pds9(xpa) 1}
-	win32 {set pds9(xpa) 0}
+	aqua -
+	win32 {set pds9(xpa) 1}
     }
 
     # start hub if unable to find another

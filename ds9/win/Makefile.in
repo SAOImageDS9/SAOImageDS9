@@ -84,6 +84,14 @@ LIBDIR	= $(APPDIR)
 
 OBJS	= ds9.o winMain.o ds9.res.o
 
+XPA_TOOLS	= \
+	$(APPDIR)/xpaset.exe \
+	$(APPDIR)/xpaget.exe \
+	$(APPDIR)/xpainfo.exe \
+	$(APPDIR)/xpaaccess.exe \
+	$(APPDIR)/xpans.exe \
+	$(APPDIR)/xpamb.exe
+
 empty:=
 space:=$(empty) $(empty)
 
@@ -158,7 +166,7 @@ PREQS	= \
 	$(LIBDIR)/ttkthemes \
 	$(LIBDIR)/scidthemes \
 	$(LIBDIR)/ssl \
-	$(APPDIR)/xpans.exe \
+	$(XPA_TOOLS) \
 	$(APPDIR)/install.vbs \
 	$(APPDIR)/tcc \
 	DLLs
@@ -258,8 +266,8 @@ $(APPDIR)/ssl: $(prefix)/openssl
 	mkdir -p "$@"
 	cp -fv "$(prefix)/certifi/certifi/cacert.pem" "$@"
 
-$(APPDIR)/xpans.exe: $(bindir)/xpans.exe
-	cp -f $? $@
+$(APPDIR)/xpa%.exe: $(bindir)/xpa%.exe
+	cp -f $< $@
 
 $(APPDIR)/install.vbs: install.vbs
 	cp -f $? $@

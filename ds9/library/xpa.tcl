@@ -14,8 +14,8 @@ proc InitXPA {} {
     }
 
     switch -- $ds9(wm) {
-	x11 -
-	win32 {}
+	x11 {}
+	win32 {set env(PATH) "$ds9(root);$env(PATH)"}
 	aqua {set env(PATH) "$ds9(root):$env(PATH)"}
     }
 

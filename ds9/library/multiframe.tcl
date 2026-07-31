@@ -672,7 +672,7 @@ proc ProcessSendLayerCmd {command layer} {
 	}
     }
     if {$command == {view}} {
-	set result [ToYesNo $result]
+	set result [string trimright [ToYesNo $result] "\n"]
     }
     $parse(proc) $parse(id) "$result\n"
 }

@@ -381,8 +381,12 @@ proc PrefsDialogRegion {} {
 	       -text [msgcat::mc {Default Coordinate System}]]
 
     CoordMenuButton $f.coordsys pmarker system 1 sky skyformat {}
+    ttk::checkbutton $f.edit -text \
+	[msgcat::mc {Use Default Coordinates for Edits}] \
+	-variable pmarker(edit,system)
 
     grid $f.coordsys -padx 2 -pady 2 -sticky w
+    grid $f.edit -padx 2 -pady 2 -sticky w
 
     # Length
     set f [ttk::labelframe $w.region.dformat \

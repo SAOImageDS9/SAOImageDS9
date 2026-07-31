@@ -4,6 +4,25 @@
 
 package provide DS9 1.0
 
+proc MarkerBaseCoordInit {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    global pmarker
+
+    if {$pmarker(edit,system)} {
+	set var(system) $pmarker(system)
+	set var(sky) $pmarker(sky)
+	set var(skyformat) $pmarker(skyformat)
+    } elseif {![info exists var(system)]} {
+	set rr [$var(frame) get wcs]
+	set var(system) [lindex $rr 0]
+	set var(sky) [lindex $rr 1]
+	set var(skyformat) [lindex $rr 2]
+    }
+    AdjustCoordSystem $varname system
+}
+
 proc MarkerBaseDialog {varname} {
     upvar #0 $varname var
     global $varname
@@ -15,13 +34,7 @@ proc MarkerBaseDialog {varname} {
     }
 
     # variables - some may already be initialized (compass,ruler)
-    if {![info exists var(system)]} {
-	set rr [$var(frame) get wcs]
-	set var(system) [lindex $rr 0]
-	set var(sky) [lindex $rr 1]
-	set var(skyformat) [lindex $rr 2]
-    }
-    AdjustCoordSystem $varname system
+    MarkerBaseCoordInit $varname
 
     # init
     MarkerBaseTextCB $varname

@@ -75,6 +75,7 @@ proc MarkerDef {} {
 
     set pmarker(epsilon) 3
     set pmarker(dformat) degrees
+    set pmarker(edit,system) 0
     set pmarker(circle,radius) 20
     set pmarker(annulus,inner) 15
     set pmarker(annulus,outer) 30

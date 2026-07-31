@@ -16,11 +16,7 @@ proc MarkerBaseAnnulusDialog {varname} {
     }
 
     # variables
-    set rr [$var(frame) get wcs]
-    set var(system) [lindex $rr 0]
-    set var(sky) [lindex $rr 1]
-    set var(skyformat) [lindex $rr 2]
-    AdjustCoordSystem $varname system
+    MarkerBaseCoordInit $varname
 
     set var(x) 0
     set var(y) 0

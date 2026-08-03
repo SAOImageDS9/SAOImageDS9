@@ -23,6 +23,23 @@ proc MarkerBaseCoordInit {varname} {
     AdjustCoordSystem $varname system
 }
 
+proc MarkerBaseDistInit {varname {system dcoord} {format dformat}} {
+    upvar #0 $varname var
+    global $varname
+
+    global pmarker
+
+    if {$pmarker(edit,dformat)} {
+	set var($system) $pmarker(dcoord)
+	set var($format) $pmarker(dformat)
+    } elseif {![info exists var($system)]} {
+	set rr [$var(frame) get wcs]
+	set var($system) [lindex $rr 0]
+	set var($format) $pmarker(dformat)
+    }
+    AdjustCoordSystem $varname $system
+}
+
 proc MarkerBaseDialog {varname} {
     upvar #0 $varname var
     global $varname

@@ -17,10 +17,7 @@ proc AnnulusDialog {varname} {
     }
 
     # variables
-    set rr [$var(frame) get wcs]
-    set var(dcoord) [lindex $rr 0]
-    set var(dformat) $pmarker(dformat)
-    AdjustCoordSystem $varname dcoord
+    MarkerBaseDistInit $varname
     
     set var(method) dist
 

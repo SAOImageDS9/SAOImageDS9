@@ -346,6 +346,7 @@ proc PrefsDialogRegionMenu {w} {
 
 proc PrefsDialogRegion {} {
     global dprefs
+    global pmarker
 
     set w $dprefs(tab)
 
@@ -392,18 +393,16 @@ proc PrefsDialogRegion {} {
     set f [ttk::labelframe $w.region.dformat \
 	       -text [msgcat::mc {Default Length}]]
 
-    ttk::menubutton $f.dformat -textvariable pmarker(dformat) \
+    PrefsDialogRegionDistMenuButtonCmd
+    ttk::menubutton $f.dformat -textvariable pmarker(dcoord,msg) \
 	-menu $f.dformat.menu
+    DistMenu $f.dformat.menu pmarker dcoord 1 dformat \
+	PrefsDialogRegionDistMenuButtonCmd
+    ttk::checkbutton $f.edit -text [msgcat::mc {Use for Edits}] \
+	-variable pmarker(edit,dformat)
 
     grid $f.dformat -padx 2 -pady 2 -sticky w
-
-    ThemeMenu $f.dformat.menu
-    $f.dformat.menu add radiobutton -label {Degrees} \
-	-variable pmarker(dformat) -value degrees
-    $f.dformat.menu add radiobutton -label {ArcMin} \
-	-variable pmarker(dformat) -value arcmin
-    $f.dformat.menu add radiobutton -label {ArcSec} \
-	-variable pmarker(dformat) -value arcsec
+    grid $f.edit -padx 2 -pady 2 -sticky w
 
     # Epsilon
     set f [ttk::labelframe $w.region.epsilon \
@@ -527,6 +526,22 @@ proc PrefsDialogRegion {} {
 	$w.region.circle $w.region.ellipse \
 	$w.region.box $w.region.polygon $w.region.projection $w.region.point \
 	-side top -fill both -expand true
+}
+
+proc PrefsDialogRegionDistMenuButtonCmd {} {
+    global pmarker
+
+    switch -- $pmarker(dcoord) {
+	image -
+	physical -
+	amplifier -
+	detector {
+	    set pmarker(dcoord,msg) [msgcat::mc $pmarker(dcoord)]
+	}
+	default {
+	    set pmarker(dcoord,msg) [msgcat::mc $pmarker(dformat)]
+	}
+    }
 }
 
 proc PrefsDialogAnnulus {} {

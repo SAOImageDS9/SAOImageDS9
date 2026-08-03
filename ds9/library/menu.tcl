@@ -320,7 +320,12 @@ proc CoordMenuButton {w varname system other sky skyformat cmd} {
     CoordMenuButtonCmd $varname $system $sky {}
     ttk::menubutton $w -textvariable ${varname}($system,msg) -menu $w.menu
     CoordMenu $w.menu $varname $system $other $sky $skyformat \
-	[list CoordMenuButtonCmd $varname $system $sky $cmd]
+	[list CoordMenuButtonCB $w.menu $varname $system $sky $skyformat $cmd]
+}
+
+proc CoordMenuButtonCB {w varname system sky skyformat cmd} {
+    CoordMenuButtonCmd $varname $system $sky $cmd
+    CoordMenuEnable $w $varname $system $sky $skyformat
 }
 
 proc CoordMenuButtonCmd {varname system sky cmd} {
@@ -478,7 +483,12 @@ proc DistMenuButton {w varname system other format cmd} {
     DistMenuButtonCmd $varname $system $format {}
     ttk::menubutton $w -textvariable ${varname}($system,msg) -menu $w.menu
     DistMenu $w.menu $varname $system $other $format \
-	[list DistMenuButtonCmd $varname $system $format $cmd]
+	[list DistMenuButtonCB $w.menu $varname $system $format $cmd]
+}
+
+proc DistMenuButtonCB {w varname system format cmd} {
+    DistMenuButtonCmd $varname $system $format $cmd
+    DistMenuEnable $w $varname $system $format
 }
 
 proc DistMenuButtonCmd {varname system format cmd} {

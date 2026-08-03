@@ -74,7 +74,9 @@ proc MarkerDef {} {
     set marker(tag) {}
 
     set pmarker(epsilon) 3
+    set pmarker(dcoord) wcs
     set pmarker(dformat) degrees
+    set pmarker(edit,dformat) 0
     set pmarker(edit,system) 0
     set pmarker(circle,radius) 20
     set pmarker(annulus,inner) 15

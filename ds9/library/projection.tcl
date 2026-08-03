@@ -15,10 +15,15 @@ proc ProjectionDialog {varname} {
     }
 
     # variables
-    set rr [$var(frame) get wcs]
-    set var(tcoord) [lindex $rr 0]
-    set var(tformat) degrees
-    AdjustCoordSystem $varname tcoord
+    global pmarker
+    if {$pmarker(edit,dformat)} {
+	MarkerBaseDistInit $varname tcoord tformat
+    } else {
+	set rr [$var(frame) get wcs]
+	set var(tcoord) [lindex $rr 0]
+	set var(tformat) degrees
+	AdjustCoordSystem $varname tcoord
+    }
 
     # procs
     set var(which) projection
@@ -130,4 +135,3 @@ proc ProjectionThickCB {varname {dummy {}}} {
     set var(thick) [$var(frame) get marker $var(id) projection thick \
 			$var(tcoord) $var(tformat)]
 }
-

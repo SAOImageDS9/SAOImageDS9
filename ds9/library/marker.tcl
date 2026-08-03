@@ -55,19 +55,16 @@ proc MarkerDef {} {
     set marker(plot3d) 0
     set marker(stats) 0
 
+    # defaults used for region save/load/list
     set marker(format) ds9
-
-    # these are only used for save/load/list and
-    #   are set from current wcs values
+    set marker(system) physical
+    set marker(sky) fk5
+    set marker(skyformat) degrees
     array set pmarker [array get marker]
 
     set marker(copy) {}
     set marker(copy,system) {}
     set marker(load) current
-
-    set marker(system) physical
-    set marker(sky) fk5
-    set marker(skyformat) degrees
     set marker(strip) 0
 
     # temp
@@ -78,6 +75,7 @@ proc MarkerDef {} {
 
     set pmarker(epsilon) 3
     set pmarker(dformat) degrees
+    set pmarker(edit,system) 0
     set pmarker(circle,radius) 20
     set pmarker(annulus,inner) 15
     set pmarker(annulus,outer) 30

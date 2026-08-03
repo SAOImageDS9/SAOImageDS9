@@ -95,12 +95,6 @@ proc UpdateWCS {} {
     set hsv(system) $wcs(system)
     HSVSystem
 
-    # regions
-    global marker
-    set marker(system) $wcs(system)
-    set marker(sky) $wcs(sky)
-    set marker(skyformat) $wcs(skyformat)
-    AdjustCoordSystem marker system
 }
 
 proc LayoutWCSInfoBox {which} {

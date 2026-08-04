@@ -2683,7 +2683,9 @@ int XPASetFd(xpa, xtemplate, paramlist, mode, fd, names, messages, n)
   int got2=0;
   int type='s';
   int idef=1;
+#if HAVE_MINGW32==0
   int flags=0;
+#endif
   char *s;
   char tbuf[SZ_LINE];
   XPAClient client, tclient;
@@ -2709,12 +2711,17 @@ int XPASetFd(xpa, xtemplate, paramlist, mode, fd, names, messages, n)
     oldmode = xpa->client_mode;
   }
 
-  /* Set non-blocking mode for the input fd, if its not a tty */
+  /*
+   * Set non-blocking mode for non-tty input where fcntl operates on file
+   * descriptors.  A Windows CRT stdin descriptor is not a Winsock socket.
+   */
   xpa->ifd = fd;
-  if( isatty(xpa->ifd) == 0 ){
+#if HAVE_MINGW32==0
+  if( (xpa->ifd >= 0) && (isatty(xpa->ifd) == 0) ){
     /* save state and set in non-blocking mode */
     xfcntl_nonblock(xpa->ifd, flags);
   }
+#endif
   /* zero out the return buffers */
   if( names != NULL )
     memset((char *)names, 0, ABS(n)*sizeof(char *));
@@ -3064,4 +3071,3 @@ int XPAAccess(xpa, xtemplate, paramlist, mode, names, messages, n)
   /* return number of clients processes (including errors) */
   return(got);
 }
-

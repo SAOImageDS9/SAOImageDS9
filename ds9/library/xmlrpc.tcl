@@ -11,6 +11,7 @@ set xmlrpc(cnt) 0
 set xmlrpc(parser) true
 set xmlrpc(debug) false
 set xmlrpc(sock) {}
+set xmlrpc(timeout) 15000
 
 proc xmlrpcServe {port} {
     return [socket -server xmlrpcServeOnce $port]
@@ -258,33 +259,51 @@ proc xmlrpcCall {url method methodName params} {
 
     set xmlrpc(done,$cnt) 0
     set xmlrpc(result,$cnt) {}
+    set xmlrpc(buffer,$cnt) {}
 
     fconfigure $sock -translation {lf lf} -buffersize 4096
     fconfigure $sock -blocking off
     if {[catch {set request [xmlrpcBuildRequest $method $methodName $params]}]} {
 	# ERROR
+	catch {close $sock}
+	unset xmlrpc(done,$cnt)
+	unset xmlrpc(result,$cnt)
+	unset xmlrpc(buffer,$cnt)
 	return
     }
     puts $sock $request
     flush $sock
 
     fileevent $sock readable [list xmlrpcGetResponse $sock $cnt]
+    set timeoutId [after $xmlrpc(timeout) [list xmlrpcCallTimeout $sock $cnt]]
     vwait xmlrpc(done,$cnt)
+    after cancel $timeoutId
 
     set ss $xmlrpc(done,$cnt)
     set rr $xmlrpc(result,$cnt)
 
     unset xmlrpc(done,$cnt)
     unset xmlrpc(result,$cnt)
-
-#   close $sock
+    unset xmlrpc(buffer,$cnt)
 
     if {$ss > 0} {
 	return $rr
     } else {
-	# ERROR
+	return -code error "XML-RPC request timed out"
+    }
+}
+
+proc xmlrpcCallTimeout {sock cnt} {
+    global xmlrpc
+
+    if {![info exists xmlrpc(done,$cnt)] || $xmlrpc(done,$cnt) != 0} {
 	return
     }
+
+    catch {fileevent $sock readable {}}
+    catch {close $sock}
+    set xmlrpc(result,$cnt) {}
+    set xmlrpc(done,$cnt) -1
 }
 
 proc xmlrpcBuildRequest {method mname params} {
@@ -359,13 +378,57 @@ proc xmlrpcParseHTTPHeaders {str} {
 proc xmlrpcGetResponse {sock cnt} {
     global xmlrpc
 
-    set res [xmlrpcReadHeader $sock]
-    set headerStatus [lindex $res 0];	# Header + Status
-    set body [lindex $res 1];		# Body, if any
+    if {![info exists xmlrpc(done,$cnt)] || $xmlrpc(done,$cnt) != 0} {
+	catch {close $sock}
+	return
+    }
+
+    if {[catch {set buff [read $sock]}]} {
+	xmlrpcCallTimeout $sock $cnt
+	return
+    }
+    append xmlrpc(buffer,$cnt) $buff
+
+    set buffer $xmlrpc(buffer,$cnt)
+    set nindex [string first "\n\n" $buffer]
+    set bindex [string first "\r\n\r\n" $buffer]
+    if {$nindex >= 0 && ($bindex < 0 || $nindex < $bindex)} {
+	set headerStatus [string range $buffer 0 [expr {$nindex - 1}]]
+	set body [string range $buffer [expr {$nindex + 2}] end]
+    } elseif {$bindex >= 0} {
+	set headerStatus [string range $buffer 0 [expr {$bindex - 1}]]
+	set body [string range $buffer [expr {$bindex + 4}] end]
+    } else {
+	if {[eof $sock]} {
+	    xmlrpcCallTimeout $sock $cnt
+	}
+	return
+    }
 
     set header [xmlrpcParseHTTPCode $headerStatus]
-    set body [xmlrpcGetBody $sock $header $body]
+    set res [xmlrpcParseHTTPHeaders $header]
+    set headersl [lindex $res 1]
+    set expLenl [xmlrpcAssoc "Content-Length" $headersl]
+    if {$expLenl == {}} {
+	xmlrpcCallTimeout $sock $cnt
+	return
+    }
+
+    set expLen [lindex $expLenl 1]
+    set bodyLen [string length $body]
+    if {$bodyLen < $expLen} {
+	if {[eof $sock]} {
+	    xmlrpcCallTimeout $sock $cnt
+	}
+	return
+    }
+    if {$bodyLen > $expLen} {
+	set body [string range $body 0 [expr {$expLen - 1}]]
+    }
+
     set xmlrpc(result,$cnt) [xmlrpcParseResponse $body]
+    catch {fileevent $sock readable {}}
+    catch {close $sock}
     set xmlrpc(done,$cnt) 1
 }
 

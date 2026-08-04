@@ -230,6 +230,15 @@ proc SAMPShutdown {} {
     unset samp
 }
 
+proc SAMPResponseTimeout {msgtag} {
+    global samp
+
+    if {[info exists samp(msgtag)] && $samp(msgtag) == $msgtag} {
+	set samp(response,timeout) 1
+	set samp(msgtag) {}
+    }
+}
+
 proc SAMPSend {method params resultVar} {
     upvar $resultVar result
     global samp
@@ -256,9 +265,27 @@ proc SAMPSend {method params resultVar} {
 
 	samp.hub.call -
 	samp.hub.callAll {
-	    # and now we wait
-	    # must be set before
-	    vwait samp(msgtag)
+	    # A response can arrive while xmlrpcCall is waiting for the hub
+	    # acknowledgement.  Only wait if it has not already arrived.
+	    if {[info exists samp(msgtag)] && $samp(msgtag) != {}} {
+		set samp(response,timeout) 0
+		set timeoutId [after [expr {int($samp(timeout) * 1000)}] \
+				   [list SAMPResponseTimeout $samp(msgtag)]]
+		vwait samp(msgtag)
+		after cancel $timeoutId
+
+		if {![info exists samp]} {
+		    return false
+		}
+		set timedOut $samp(response,timeout)
+		unset samp(response,timeout)
+		if {$timedOut} {
+		    if {$samp(debug)} {
+			puts stderr "SAMPSend: response timed out"
+		    }
+		    return false
+		}
+	    }
 	}
 
 	samp.hub.callAndWait {
@@ -826,4 +853,3 @@ proc SAMPDelTmpFiles {} {
 	}
     }
 }
-

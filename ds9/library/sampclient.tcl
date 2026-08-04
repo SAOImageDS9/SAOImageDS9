@@ -27,7 +27,7 @@ proc SAMPConnectInit {verbose output debug} {
     set samp(clients) {}
     set samp(tmp,files) {}
     set samp(msgtag) {}
-    set samp(timeout) 30
+    set samp(timeout) 15
 
     # flags to prevent recursive calls
     set samp(pointAt) 0

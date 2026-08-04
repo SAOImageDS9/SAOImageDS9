@@ -18,9 +18,28 @@ proc xmlrpcServe {port} {
 }
 
 proc xmlrpcServeOnce {sock addr port} {
+    global xmlrpc
+
     fconfigure $sock -translation {lf lf} -buffersize 4096
     fconfigure $sock -blocking off
+    set xmlrpc(request,$sock) {}
+    set xmlrpc(request,timeout,$sock) \
+	[after $xmlrpc(timeout) [list xmlrpcRequestTimeout $sock]]
     fileevent $sock readable [list xmlrpcDoRequest $sock]
+}
+
+proc xmlrpcRequestTimeout {sock} {
+    global xmlrpc
+
+    if {![info exists xmlrpc(request,$sock)]} {
+	return
+    }
+
+    catch {after cancel $xmlrpc(request,timeout,$sock)}
+    catch {unset xmlrpc(request,timeout,$sock)}
+    catch {unset xmlrpc(request,$sock)}
+    catch {fileevent $sock readable {}}
+    catch {close $sock}
 }
 
 proc xmlrpcPreflightResponse {request} {
@@ -42,25 +61,47 @@ proc xmlrpcPreflightResponse {request} {
 proc xmlrpcDoRequest {sock} {
     global xmlrpc
 
-    set res [xmlrpcReadHeader $sock]
-    if {$res == {}} {
-	# ERROR
+    if {![info exists xmlrpc(request,$sock)]} {
 	catch {close $sock}
 	return
     }
-    
-    set headerStatus [lindex $res 0];	# Header + Status
-    set body [lindex $res 1];		# Body, if any
+
+    if {[catch {set buff [read $sock]}]} {
+	xmlrpcRequestTimeout $sock
+	return
+    }
+    append xmlrpc(request,$sock) $buff
+
+    set request $xmlrpc(request,$sock)
+    set nindex [string first "\n\n" $request]
+    set bindex [string first "\r\n\r\n" $request]
+    if {$nindex >= 0 && ($bindex < 0 || $nindex < $bindex)} {
+	set headerStatus [string range $request 0 [expr {$nindex - 1}]]
+	set body [string range $request [expr {$nindex + 2}] end]
+    } elseif {$bindex >= 0} {
+	set headerStatus [string range $request 0 [expr {$bindex - 1}]]
+	set body [string range $request [expr {$bindex + 4}] end]
+    } else {
+	if {[eof $sock]} {
+	    xmlrpcRequestTimeout $sock
+	}
+	return
+    }
 
     set RE "\[^\n\]+\n(.*)"
     if {![regexp $RE $headerStatus {} header]} {
-	# ERROR
+	xmlrpcRequestTimeout $sock
 	return
     }
 
     # CORS preflight
     set	RE "OPTIONS"
     if {[regexp $RE $headerStatus {}]} {
+	catch {after cancel $xmlrpc(request,timeout,$sock)}
+	unset xmlrpc(request,timeout,$sock)
+	unset xmlrpc(request,$sock)
+	fileevent $sock readable {}
+
 	set header [xmlrpcPreflightResponse $headerStatus]
 
 	catch {
@@ -70,8 +111,31 @@ proc xmlrpcDoRequest {sock} {
 	catch {close $sock}
 	return
     }
-    
-    set body [xmlrpcGetBody $sock $header $body]
+
+    set res [xmlrpcParseHTTPHeaders $header]
+    set headersl [lindex $res 1]
+    set expLenl [xmlrpcAssoc "Content-Length" $headersl]
+    if {$expLenl == {}} {
+	xmlrpcRequestTimeout $sock
+	return
+    }
+
+    set expLen [lindex $expLenl 1]
+    set bodyLen [string length $body]
+    if {$bodyLen < $expLen} {
+	if {[eof $sock]} {
+	    xmlrpcRequestTimeout $sock
+	}
+	return
+    }
+    if {$bodyLen > $expLen} {
+	set body [string range $body 0 [expr {$expLen - 1}]]
+    }
+
+    catch {after cancel $xmlrpc(request,timeout,$sock)}
+    unset xmlrpc(request,timeout,$sock)
+    unset xmlrpc(request,$sock)
+    fileevent $sock readable {}
 
     if {$xmlrpc(debug)} {
 	puts "***INCOMING Request***"

@@ -606,21 +606,31 @@ proc SAMPHubReply {cc id msgtag param} {
 	return
     }
 
+    # The destination can unregister while this idle callback is pending.
+    if {![info exists samphub($cc,id)] ||
+	![info exists samphub($cc,url)] ||
+	![info exists samphub($cc,web)]} {
+	return
+    }
+    set clientId $samphub($cc,id)
+    set clientUrl $samphub($cc,url)
+    set isWeb $samphub($cc,web)
+
     set param1 [list param [list value [list string $cc]]]
     set param2 [list param [list value [list string $id]]]
     set param3 [list param [list value [list string $msgtag]]]
     set param4 $param
     set params [list params [list $param1 $param2 $param3 $param4]]
 
-    if {$samphub($cc,web)} {
+    if {$isWeb} {
 	if {$samphub(web,allowReverseCallbacks)} {
 	    lappend samphub(web,msgs) \
 		[list samp.client.receiveResponse $params]
 	}
     } else {
 	set rr {}
-	SAMPHubSend samp.client.receiveResponse $samphub($cc,url) $params rr $msgtag
-	SAMPHubDialogSentMsg "samp.client.receiveResponse\t$samphub($cc,id)"
+	SAMPHubSend samp.client.receiveResponse $clientUrl $params rr $msgtag
+	SAMPHubDialogSentMsg "samp.client.receiveResponse\t$clientId"
     }
 }
 

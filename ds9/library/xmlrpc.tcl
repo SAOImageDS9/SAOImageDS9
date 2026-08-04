@@ -63,9 +63,11 @@ proc xmlrpcDoRequest {sock} {
     if {[regexp $RE $headerStatus {}]} {
 	set header [xmlrpcPreflightResponse $headerStatus]
 
-	puts -nonewline $sock $header
-	flush $sock
-	close $sock
+	catch {
+	    puts -nonewline $sock $header
+	    flush $sock
+	}
+	catch {close $sock}
 	return
     }
     
@@ -131,9 +133,11 @@ proc xmlrpcDoRequest {sock} {
     }
     set xmlrpc(sock) {}
     
-    puts -nonewline $sock $res
-    flush $sock
-    close $sock
+    catch {
+	puts -nonewline $sock $res
+	flush $sock
+    }
+    catch {close $sock}
 }
 
 proc xmlrpcResponse {rpc} {
@@ -229,7 +233,9 @@ proc xmlrpcNBRead {fd} {
     set buffer ""
     while {1} {
 	if {[eof $fd]} {
-	    close $fd
+	    if {$buffer == {}} {
+		return -code error "Premature eof"
+	    }
 	    break
 	}
 	set temp [read $fd 4096]

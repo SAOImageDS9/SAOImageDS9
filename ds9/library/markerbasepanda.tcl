@@ -11,10 +11,7 @@ proc MarkerBasePandaDialog {varname} {
     global pmarker
 
     # variables
-    set rr [$var(frame) get wcs]
-    set var(dcoord) [lindex $rr 0]
-    set var(dformat) $pmarker(dformat)
-    AdjustCoordSystem $varname dcoord
+    MarkerBaseDistInit $varname
 
     set var(method) dist
     set var(init) 0
@@ -220,4 +217,3 @@ proc MarkerBasePandaDistCB {varname {dummy {}}} {
 
     $var(proc,editCB) $varname
 }
-

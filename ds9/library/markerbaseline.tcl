@@ -11,12 +11,7 @@ proc MarkerBaseLineDialog {varname width height} {
     global pmarker
 
     # variables - some may already initialized (ruler)
-    if {![info exists ${varname}(dcoord)]} {
-	set rr [$var(frame) get wcs]
-	set var(dcoord) [lindex $rr 0]
-	set var(dformat) $pmarker(dformat)
-    }
-    AdjustCoordSystem $varname dcoord
+    MarkerBaseDistInit $varname
 
     # procs
     set var(proc,close) MarkerBaseLineClose

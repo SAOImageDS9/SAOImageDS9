@@ -19,31 +19,36 @@ image.</li>
 revisit coordinates in an image.</li>
 <li>New <code>save pixmask</code> option to generate pixel maps from
 regions.</li>
-<li>New <code>3D Cutout</code> region analysis tasks allows users to
+<li>New <code>3D Surface</code> region analysis tasks allows users to
 examine 2D image pixels in a region as an interactive 3D data cube.</li>
+<li>New 3D <code>fip</code> (First Intensity Point) ray trace option
+which includes a rudimentary shader and lighting.</li>
 <li>Added support to search a Virtual Observatory <code>registry</code>
 for Simple Image Access (<code>sia</code>) servers to download
 images.</li>
-<li>New 3D <code>fip</code> (First Intensity Point) ray trace option
-which includes a rudimentary shader and lighting.</li>
 <li>Improvements to composite regions to fully support <em>CIAO</em> and
 <em>FITS</em> region files which contain <code>intersecion</code> or
 <code>union</code> logic operators including optional hatching to
 visualize logic.</li>
+<li>New preference to set the size of the panner and magnifier
+widgets.</li>
+<li><code>XPA</code> now (mostly) works on Windows and is enabled by
+default.</li>
 </ul>
 <h4 id="details">Details</h4>
 <ul>
 <li><strong>ANALYSIS</strong>: When an Analysis tasks is run, a progress
 bar will be created at the bottom right of the display showing the task
 name. This is only available in the <code>Advanced</code> view. Multiple
-tasks running will show the number of tasks.</li>
+tasks running will show the number of tasks. Clicking on task name will
+open a menu where tasks can be terminated by clicking on name.</li>
 <li><strong>ARCHIVES</strong>: There is a new <code>Analysis</code>
 -&gt; <code>Search SIA Registry</code> option that will query the
 Virtual Observatory registry for services that provide access to images
 using the Simple Image Access (SIA) protocol. There is a set of new
 <code>sia registry</code> commands to access the registry from the
 command line and XPA/SAMP.</li>
-<li><strong>SAMP</strong>: Updated web SAMP response header for recent
+<li><strong>SAMP</strong>: Updated web SAMP HTTP header for recent
 changes in browser security</li>
 <li><strong>PAN</strong>: In <em>PAN</em> mode, using
 <code>Shift+Arrow</code> will now cause the image display to pan a
@@ -52,7 +57,7 @@ screen full at a time.</li>
 AST library to return the WCS parameters.</li>
 <li><strong>COLORBAR</strong>: Colorbars are now managed independently
 for each frame, this includes the position, label placement, and whether
-the colorbar is shown at all. There are 3 new/updated colorbar commands
+the colorbar is shown at all. There are 4 new/updated colorbar commands
 that apply to the current frame
 <ul>
 <li><code>show yes|no</code> to control whether the colorbar is
@@ -61,6 +66,9 @@ visible.</li>
 colorbars on the top and left of the image.</li>
 <li><code>label position natural|opposite</code> to control the
 placement of the colorbar numeric labels.</li>
+<li><code>foreground</code> and <code>background</code> colors can now
+be set. Use <code>Theme</code> to continue to use the colors set by the
+current UI theme.</li>
 </ul></li>
 <li><strong>BOOKMARKS</strong>: a new feature that lets the user record
 the current location in the image using the <code>m</code> keyboard
@@ -98,7 +106,7 @@ original pixel values, the <code>pixmask</code> output will have pixel
 values that match the region ID number for all the regions drawn on the
 image. Excluded pixels and pixels not inside a region have a value of
 <code>0</code>.</li>
-<li><strong>3D CUTOUT</strong>: This is a new Region analysis task that
+<li><strong>3D Surface</strong>: This is a new Region analysis task that
 will convert the pixels in the region into a 3D data cube and display it
 in a separate frame. The data cube is updated automatically as the
 region is moved, rotated, or otherwise edited. It will also update based
@@ -136,6 +144,48 @@ region), users can turn on/off hatching which will visually identify the
 area being expressed with the <code>union</code> or
 <code>intersection</code> logic.</li>
 </ul></li>
+<li><strong>DS9</strong>: new keyboard shortcut <code>F11</code> on
+Linux/Windows will now go full screen. <code>Command+Control+F</code>
+should work with macOS Aqua.</li>
+<li><strong>XPA</strong>: Forked the original repro and bumped up the
+version number; no other code change.</li>
+<li><strong>TKBLT</strong>: Plotting. Removed the gap/spacing between
+the axes and the data that caused the X and Y axes not to touch.</li>
+<li><strong>POLYGON</strong>: The region information GUI for polygons
+now shows the polygon vertices. Users can edit/add/delete points
+manually.</li>
+<li><strong>REGION</strong>: Add <code>Dash List</code> option in the
+GUI.</li>
+<li><strong>CONTOUR</strong>: Add <code>Dash List</code> option in the
+GUI. Also added to <code>Paste</code> dialog.</li>
+<li><strong>PANNER</strong>: Added preferences to allow user to adjust
+the size</li>
+<li><strong>MAGNIFIER</strong>: Added preferences to allow user to
+adjust the size</li>
+<li><strong>SAMP</strong>: <code>print</code> is now enabled but only
+for <code>destination file</code> for security reasons.</li>
+<li><strong>SAMP</strong>: <code>notes load</code> is disable due to
+security concerns.</li>
+<li><strong>HTML</strong>: Fix mouse wheel scrolling behavior from
+beta1</li>
+<li><strong>PDF</strong>: refactor code introduced in beta1</li>
+<li><strong>TSV</strong>: CIAO format tsv files that contain vector
+column names, e.g. <code>sky(x,y)</code> are now parsed as two columns:
+<code>sky_x</code> and <code>sky_y</code>. Array columns like
+<code>R[2]</code> will be expanded to <code>R_1</code> and
+<code>R_2</code>. Combined vector+arrays, eg <code>sky(x,y)[2]</code> or
+<code>sky(x[2],y[2])</code> are not supported.</li>
+<li><strong>DOC</strong>: Updated for suite of new commands added in
+beta2</li>
+<li><strong>XPA</strong>: Windows: updated to build with
+<code>-mconsole</code> flag to fix stdout/stdin issue. (ASCII support
+only)</li>
+<li><strong>HTML</strong>: Added bindings for <code>Page Up</code>,
+<code>Page Down</code>, <code>Home</code>, and <code>End</code> to help
+inter-page navigation.</li>
+<li><strong>PREFS</strong>: Add preference for preferred coordinates
+when editing regions. Extended Default Length preference to also be used
+when editing regions.</li>
 </ul>
 <hr />
 <h2 id="beta-1">Beta 1:</h2>

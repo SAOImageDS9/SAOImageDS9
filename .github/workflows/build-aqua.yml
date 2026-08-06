@@ -43,10 +43,18 @@ jobs:
 
     - name: Configure
       run: |
+        export MACOSX_DEPLOYMENT_TARGET=12.0
+        export CFLAGS="-mmacosx-version-min=12.0"
+        export CXXFLAGS="-mmacosx-version-min=12.0"
+        export LDFLAGS="-mmacosx-version-min=12.0"
         macos/configure
 
     - name: Build
       run: |
+        export MACOSX_DEPLOYMENT_TARGET=12.0
+        export CFLAGS="-mmacosx-version-min=12.0"
+        export CXXFLAGS="-mmacosx-version-min=12.0"
+        export LDFLAGS="-mmacosx-version-min=12.0"
         make && make dist
 
     - name: Upload artifacts

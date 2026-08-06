@@ -877,6 +877,7 @@ static int XPACmdDel_Tcl(clientData, interp, objc, objv)
  *			method
  *			cmdfd
  *			datafd
+ *			nsconnect
 #ifndef HAVE_CYGWIN
  *			cmdchan
  *			datachan
@@ -918,6 +919,7 @@ static int XPARec_Tcl(clientData, interp, objc, objv)
     "datafd",
     "method",
     "name",
+    "nsconnect",
     "sendian",
     "version",
     (char *) NULL};
@@ -934,10 +936,13 @@ static int XPARec_Tcl(clientData, interp, objc, objv)
     IDataFdIdx,
     IMethodIdx,
     INameIdx,
+    INsConnectIdx,
     ISendianIdx,
     IVersionIdx
   } index;
   XPA xpa;
+  NS ns;
+  int nsconnect;
   int result;
   char tbuf[SZ_LINE];
 
@@ -1061,6 +1066,17 @@ static int XPARec_Tcl(clientData, interp, objc, objv)
     break;
   case INameIdx:
     Tcl_SetResult(interp, xpa_name(xpa), TCL_VOLATILE);
+    result = TCL_OK;
+    break;
+  case INsConnectIdx:
+    nsconnect = 0;
+    for(ns=xpa->nshead; ns; ns=ns->next){
+      if( ns->nxpa > 0 ){
+	nsconnect = 1;
+	break;
+      }
+    }
+    Tcl_SetResult(interp, nsconnect ? "1" : "0", TCL_STATIC);
     result = TCL_OK;
     break;
   case ISendianIdx:

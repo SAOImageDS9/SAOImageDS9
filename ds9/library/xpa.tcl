@@ -4,7 +4,8 @@
 
 package provide DS9 1.0
 
-proc InitXPA {} {
+proc InitXPA {{report 0}} {
+    global xpa
     global ds9
     global pds9
     global env
@@ -19,8 +20,44 @@ proc InitXPA {} {
 	aqua {set env(PATH) "$ds9(root):$env(PATH)"}
     }
 
-    catch {CreateXPA}
+    set createError [catch {CreateXPA} result]
+    set registerError 0
+    if {!$createError && [XPANSRegisterEnabled] &&
+	![xparec $xpa nsconnect]} {
+	set registerError 1
+    }
+
+    if {$createError || $registerError} {
+	if {[info exists xpa]} {
+	    catch {xpafree $xpa}
+	    unset xpa
+	}
+    }
     UpdateFileMenu
+
+    if {$report} {
+	if {$createError} {
+	    Error "[msgcat::mc {Unable to initialize XPA:}] $result"
+	} elseif {$registerError} {
+	    if {[auto_execok xpans] == {}} {
+		Error [msgcat::mc \
+			   {Unable to register DS9 with the XPA name server: xpans was not found in PATH.}]
+	    } else {
+		Error [msgcat::mc \
+			   {Unable to register DS9 with the XPA name server: xpans could not be started or contacted.}]
+	    }
+	}
+    }
+}
+
+proc XPANSRegisterEnabled {} {
+    global env
+
+    if {[info exists env(XPA_NSREGISTER)] &&
+	[string is false -strict $env(XPA_NSREGISTER)]} {
+	return 0
+    }
+    return 1
 }
 
 proc CreateXPA {} {
@@ -2421,7 +2458,7 @@ proc XPAConnect {} {
 	#~ unset xpa
         Error [msgcat::mc {XPA is already connected; disconnect first.}]
     }
-    InitXPA
+    InitXPA 1
 
     UpdateFileMenu
 }
@@ -2461,6 +2498,8 @@ proc XPAInfoResult {} {
 	append rr "[format "XPA_CLASS:\t%s"   [xparec $xpa class]]\n"
 	append rr "[format "XPA_NAME:\t%s"    [xparec $xpa name]]\n"
 	append rr "[format "XPA_METHOD:\t%s"  [xparec $xpa method]]\n"
+	append rr "[format "XPA_NSREGISTERED:\t%s" \
+		       [ToYesNo [xparec $xpa nsconnect]]]\n"
     }
 
     return $rr

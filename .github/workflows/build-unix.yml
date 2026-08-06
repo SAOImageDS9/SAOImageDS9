@@ -49,6 +49,10 @@ jobs:
       run: |
         if [ "${RUNNER_OS}" == "macOS" ]; then
           export PKG_CONFIG_PATH=/opt/X11/lib/pkgconfig:/opt/X11/share/pkgconfig/
+          export MACOSX_DEPLOYMENT_TARGET=12.0
+          export CFLAGS="-mmacosx-version-min=12.0"
+          export CXXFLAGS="-mmacosx-version-min=12.0"
+          export LDFLAGS="-mmacosx-version-min=12.0"
         fi
         unix/configure --with-arch=${DS9_BUILD_OS}
 
@@ -56,6 +60,10 @@ jobs:
       run: |
         if [ "${RUNNER_OS}" == "macOS" ]; then
           export PKG_CONFIG_PATH=/opt/X11/lib/pkgconfig:/opt/X11/share/pkgconfig/
+          export MACOSX_DEPLOYMENT_TARGET=12.0
+          export CFLAGS="-mmacosx-version-min=12.0"
+          export CXXFLAGS="-mmacosx-version-min=12.0"
+          export LDFLAGS="-mmacosx-version-min=12.0"
         fi
         make && make dist
 

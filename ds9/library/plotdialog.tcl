@@ -660,23 +660,26 @@ proc PlotExportPhoto {varname fn format} {
 
     set rr [catch {image create photo -format window -data $var(top)} ph]
     if {$rr} {
+	MacOSPhotoRestore $var(top) $geom
 	Error [msgcat::mc {An error has occurred while creating}]
 	return
     }
 
-    switch -- $format {
-	gif -
-	png {$ph write $fn -format $format}
-	jpeg {$ph write $fn \
-		  -format [list $format -quality $iap(jpeg,quality)]}
-	tiff {$ph write $fn \
-		  -format [list $format -compression $iap(tiff,compress)]}
+    try {
+	switch -- $format {
+	    gif {GIFWritePhoto $ph $fn}
+	    png {$ph write $fn -format $format}
+	    jpeg {$ph write $fn \
+		      -format [list $format -quality $iap(jpeg,quality)]}
+	    tiff {$ph write $fn \
+		      -format [list $format -compression $iap(tiff,compress)]}
+	}
+    } finally {
+	image delete $ph
+
+	# reset if needed
+	MacOSPhotoRestore $var(top) $geom
     }
-
-    image delete $ph
-
-    # reset if needed
-    MacOSPhotoRestore $var(top) $geom
 }
 
 proc PlotUpdateMenus {varname} {

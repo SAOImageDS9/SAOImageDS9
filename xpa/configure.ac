@@ -1,7 +1,7 @@
 #	This file is an input file used by the GNU "autoconf" program to
 #	generate the file "configure", which is run during XPA installation
 #	to configure the system for the local environment.
-AC_INIT(xpa, 2.2.0, ds9help@cfa.harvard.edu, xpa)
+AC_INIT(xpa, 2.2.1, ds9help@cfa.harvard.edu, xpa)
 
 AC_CONFIG_HEADERS([conf.h])
 AC_CONFIG_SRCDIR(./xpa.h)

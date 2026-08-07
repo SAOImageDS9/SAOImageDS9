@@ -5,6 +5,18 @@
 <body>
 <center><h3>XPA ChangeLog</h3></center>
 
+
+<h3> Public Release 2.2.1 (August, 2026)</h3>
+<ul>
+<li> Updated Windows to correctly build with `-mconsole` flag (link not compile flag), except
+  xpans which is built with `-mwindows` so it launches in the background sans terminal window.
+<li> Updated Windows to correctly use 64bit integers for pointer addresses (old 32bit behavior).
+<li> Updated Windows to correctly search PATH for xpans (colon separator not good on Windows)
+<li> Added the `nsconnect` command to the Tcl/Tk wrapper so that applications can make sure that
+the `xpans` server started.
+</ul>
+
+
 <h3> Public Release 2.2.0 (July 20, 2026)</h3>
 <ul>
 <li> Forked project to SAOImageDS9/xpa-maintenance

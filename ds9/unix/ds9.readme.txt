@@ -1,0 +1,83 @@
+# Installing DS9 and XPA
+
+DS9 and the XPA tools are self-contained executables. There is no traditional installer: unpack the archive, then copy the executable files into a directory in your `PATH`.
+
+`$HOME` means your home directory.
+
+`PATH` is the list of directories your shell searches when you type the name of a program. Putting DS9 and XPA in a directory in your `PATH` lets you run them without typing their full location.
+
+## Step 1: Unpack the tar file
+
+Done.
+
+You needed to unpack the tar file to read this README.
+
+## Step 2: Install DS9
+
+### Linux
+
+Copy the `ds9` executable to a directory in your `PATH`.
+
+For example:
+
+```bash
+cp ds9 $HOME/.local/bin
+```
+
+This example assumes that `$HOME/.local/bin` already exists and is in your `PATH`.
+
+If you want DS9 to appear in your desktop environment's Applications menu, you can also copy the supplied desktop-entry file:
+
+```bash
+cp ds9.desktop $HOME/.local/share/applications/
+```
+
+and the DS9 icon:
+
+```bash
+cp ds9.png $HOME/.local/share/icons/
+```
+
+These desktop-integration steps are optional.
+
+### macOS X11 (Darwin)
+
+Copy both the `ds9` executable and the accompanying `ds9.zip` file to a directory in your `PATH`.
+
+For example:
+
+```bash
+cp ds9* $HOME/bin
+```
+
+The `ds9*` wildcard copies both files whose names begin with `ds9`.
+
+**Important: Do not unzip `ds9.zip`.** DS9 expects that file to remain zipped.
+
+This example assumes that `$HOME/bin` already exists and is in your `PATH`.
+
+If macOS gives you a security or quarantine warning when you try to run DS9, clear the quarantine attribute with:
+
+```bash
+xattr -c $HOME/bin/ds9*
+```
+
+If you copied DS9 somewhere other than `$HOME/bin`, use that directory instead.
+
+## Step 3: Install XPA (Optional)
+
+The XPA installation procedure is the same on Linux and macOS.
+
+Copy the XPA tools to a directory in your `PATH`.
+
+For example:
+
+```bash
+cp xpa* $HOME/bin
+```
+
+This example assumes that `$HOME/bin` already exists and is in your `PATH`.
+
+The XPA tools are optional.
+
+

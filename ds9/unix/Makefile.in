@@ -178,6 +178,9 @@ ds9	: ds9base ds9.zip
 	zip -A ds9
 	chmod 755 ds9
 	cp ds9 $(prefix)/bin/.
+	cp ds9.desktop $(prefix)/bin/.
+	cp ds9.png $(prefix)/bin/.
+	cp ds9.readme.txt $(prefix)/bin/.
 
 debug	: ds9base ds9.zip
 	$(RM) ds9
@@ -185,6 +188,9 @@ debug	: ds9base ds9.zip
 	zip -A ds9
 	chmod 755 ds9
 	cp ds9 $(prefix)/bin/.
+	cp ds9.desktop $(prefix)/bin/.
+	cp ds9.png $(prefix)/bin/.
+	cp ds9.readme.txt $(prefix)/bin/.
 
 else
 
@@ -194,6 +200,7 @@ ds9	: ds9base ds9.zip
 	cp ds9base ds9
 	cp ds9 $(prefix)/bin/.
 	cp ds9.zip $(prefix)/bin/.
+	cp ds9.readme.txt $(prefix)/bin/.
 #	cd $(prefix)/bin; codesign -s "$(ID)" ds9
 
 debug: ds9base ds9.zip
@@ -201,6 +208,7 @@ debug: ds9base ds9.zip
 	cp ds9base ds9
 	cp ds9 $(prefix)/bin/.
 	cp ds9.zip $(prefix)/bin/.
+	cp ds9.readme.txt $(prefix)/bin/.
 #	cd $(prefix)/bin; codesign -s "$(ID)" ds9
 
 endif

@@ -1575,6 +1575,193 @@ proc MacOSPhotoRestore {top geom} {
     }
 }
 
+proc GIFWritePhoto {ph fn} {
+    set qph [GIFQuantizePhoto $ph]
+    try {
+	set ch [file tempfile tmpfn \
+		    [file join [file dirname $fn] \
+			 ".[file tail $fn].XXXXXX"]]
+	close $ch
+	try {
+	    if {$qph == {}} {
+		$ph write $tmpfn -format gif
+	    } else {
+		$qph write $tmpfn -format gif
+	    }
+	    file rename -force $tmpfn $fn
+	    set tmpfn {}
+	} finally {
+	    if {$tmpfn != {}} {
+		file delete -force $tmpfn
+	    }
+	}
+    } finally {
+	if {$qph != {}} {
+	    image delete $qph
+	}
+    }
+}
+
+proc GIFQuantizePhoto {ph} {
+    # Tk reserves one GIF palette entry whenever a photo has an alpha
+    # channel, even when every pixel is opaque.
+    set maxcolors 255
+    set data [$ph data -format {default -colorformat list}]
+    set histogram {}
+
+    foreach row $data {
+	foreach pixel $row {
+	    lassign $pixel red green blue alpha
+	    set key [expr {($red << 16) | ($green << 8) | $blue}]
+	    dict incr histogram $key
+	}
+    }
+
+    if {[dict size $histogram] <= $maxcolors} {
+	return {}
+    }
+
+    set colors {}
+    dict for {key count} $histogram {
+	lappend colors [list \
+			    [expr {($key >> 16) & 0xff}] \
+			    [expr {($key >> 8) & 0xff}] \
+			    [expr {$key & 0xff}] \
+			    $count $key]
+    }
+
+    set boxes [list [GIFColorBox $colors]]
+    while {[llength $boxes] < $maxcolors} {
+	set best -1
+	set bestscore -1
+
+	for {set ii 0} {$ii < [llength $boxes]} {incr ii} {
+	    set box [lindex $boxes $ii]
+	    set boxcolors [dict get $box colors]
+	    if {[llength $boxcolors] < 2} {
+		continue
+	    }
+
+	    set range [expr {max([dict get $box rmax]-
+				    [dict get $box rmin],
+				[dict get $box gmax]-
+				    [dict get $box gmin],
+				[dict get $box bmax]-
+				    [dict get $box bmin])}]
+	    set score [expr {$range * [dict get $box count]}]
+	    if {$score > $bestscore} {
+		set best $ii
+		set bestscore $score
+	    }
+	}
+
+	if {$best < 0} {
+	    break
+	}
+
+	set box [lindex $boxes $best]
+	set rrange [expr {[dict get $box rmax]-[dict get $box rmin]}]
+	set grange [expr {[dict get $box gmax]-[dict get $box gmin]}]
+	set brange [expr {[dict get $box bmax]-[dict get $box bmin]}]
+	if {$rrange >= $grange && $rrange >= $brange} {
+	    set channel 0
+	} elseif {$grange >= $brange} {
+	    set channel 1
+	} else {
+	    set channel 2
+	}
+
+	set boxcolors [lsort -integer -index $channel \
+			   [dict get $box colors]]
+	set target [expr {([dict get $box count]+1)/2}]
+	set cumulative 0
+	set split 0
+	set last [expr {[llength $boxcolors]-1}]
+	foreach color $boxcolors {
+	    if {$split >= $last} {
+		break
+	    }
+	    incr cumulative [lindex $color 3]
+	    incr split
+	    if {$cumulative >= $target} {
+		break
+	    }
+	}
+
+	set left [GIFColorBox [lrange $boxcolors 0 $split-1]]
+	set right [GIFColorBox [lrange $boxcolors $split end]]
+	set boxes [lreplace $boxes $best $best $left $right]
+    }
+
+    set colormap {}
+    foreach box $boxes {
+	set redsum 0
+	set greensum 0
+	set bluesum 0
+	set count [dict get $box count]
+
+	foreach color [dict get $box colors] {
+	    set weight [lindex $color 3]
+	    incr redsum [expr {[lindex $color 0] * $weight}]
+	    incr greensum [expr {[lindex $color 1] * $weight}]
+	    incr bluesum [expr {[lindex $color 2] * $weight}]
+	}
+
+	set color [format "#%02x%02x%02x" \
+		       [expr {($redsum+$count/2)/$count}] \
+		       [expr {($greensum+$count/2)/$count}] \
+		       [expr {($bluesum+$count/2)/$count}]]
+	foreach source [dict get $box colors] {
+	    dict set colormap [lindex $source 4] $color
+	}
+    }
+
+    set qph [image create photo \
+		 -width [image width $ph] -height [image height $ph]]
+    try {
+	set yy 0
+	foreach row $data {
+	    set qrow {}
+	    foreach pixel $row {
+		lassign $pixel red green blue alpha
+		set key [expr {($red << 16) | ($green << 8) | $blue}]
+		lappend qrow [dict get $colormap $key]
+	    }
+	    $qph put [list $qrow] -to 0 $yy
+	    incr yy
+	}
+    } on error {result options} {
+	image delete $qph
+	return -options $options $result
+    }
+
+    return $qph
+}
+
+proc GIFColorBox {colors} {
+    lassign [lindex $colors 0] rmin gmin bmin
+    set rmax $rmin
+    set gmax $gmin
+    set bmax $bmin
+    set count 0
+
+    foreach color $colors {
+	lassign $color red green blue weight
+	set rmin [expr {min($rmin,$red)}]
+	set rmax [expr {max($rmax,$red)}]
+	set gmin [expr {min($gmin,$green)}]
+	set gmax [expr {max($gmax,$green)}]
+	set bmin [expr {min($bmin,$blue)}]
+	set bmax [expr {max($bmax,$blue)}]
+	incr count $weight
+    }
+
+    return [dict create colors $colors count $count \
+		rmin $rmin rmax $rmax \
+		gmin $gmin gmax $gmax \
+		bmin $bmin bmax $bmax]
+}
+
 proc DS9Backup {ch which} {
     global pds9
 

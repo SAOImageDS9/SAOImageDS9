@@ -105,19 +105,21 @@ proc SaveImagePhoto {fn format} {
 	return
     }
 
-    switch -- $format {
-	gif -
-	png {$ph write $fn -format $format}
-	jpeg {$ph write $fn \
-		  -format [list $format -quality $saveimage(jpeg,quality)]}
-	tiff {$ph write $fn \
-		  -format [list $format -compression $saveimage(tiff,compress)]}
+    try {
+	switch -- $format {
+	    gif {GIFWritePhoto $ph $fn}
+	    png {$ph write $fn -format $format}
+	    jpeg {$ph write $fn \
+		      -format [list $format -quality $saveimage(jpeg,quality)]}
+	    tiff {$ph write $fn \
+		      -format [list $format -compression $saveimage(tiff,compress)]}
+	}
+    } finally {
+	image delete $ph
+
+	# reset if needed
+	MacOSPhotoRestore $ds9(top) $geom
     }
-
-    image delete $ph
-
-    # reset if needed
-    MacOSPhotoRestore $ds9(top) $geom
 }
 
 # Process Cmds

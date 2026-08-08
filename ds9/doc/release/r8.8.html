@@ -34,6 +34,15 @@ visualize logic.</li>
 widgets.</li>
 <li><code>XPA</code> now (mostly) works on Windows and is enabled by
 default.</li>
+<li>macOS: Both the Darwin/X11 and macOS/Aqua builds are now packaged as
+universal binaries which support macOS 12 and later on both Intel
+(x86_64) and AMD (aarch64/M1/M2, ie “apple silicon”).</li>
+<li>Linux: DS9 is now also available as a universal <code>flatpak</code>
+package. The individual Linux operating system/architecture files are
+also available, but now also include a <code>.desktop</code> and icon
+file that can be used to integrate DS9 into your desktop environment;
+this is explained in the new <code>ds9.readme.txt</code> file included
+in the tar files.</li>
 </ul>
 <h4 id="details">Details</h4>
 <ul>
@@ -186,6 +195,19 @@ inter-page navigation.</li>
 <li><strong>PREFS</strong>: Add preference for preferred coordinates
 when editing regions. Extended Default Length preference to also be used
 when editing regions.</li>
+<li><strong>GIF</strong>: Force quantization to 255 colors.</li>
+<li><strong>XPA</strong>: Updated to expose <code>nsconnect</code> to
+Tcl/Tk so ds9 can know if the <code>xpans</code> process was
+successfully started.</li>
+<li><strong>XPA</strong>: DS9 now checks the <code>nsconnect</code>
+return result when trying to establish an XPA connection. On startup if
+this fails then XPA menu will properly reflect the disconnected state.
+If user tries to <code>Connect</code> but connection fails then an error
+is generated.</li>
+<li><strong>LINUX</strong>: The ds9 tar files now contain a
+<code>ds9.desktop</code> file and <code>ds9.png</code> icon file that
+can be used to integrate DS9 into your desktop environment; instructions
+are in the new <code>ds9.readme.txt</code> file.</li>
 </ul>
 <hr />
 <h2 id="beta-1">Beta 1:</h2>

@@ -164,7 +164,7 @@ proc MarkerAnalysisPlot2dCB {frame id} {
     }
     $frame get marker $id analysis plot2d $xdata $ydata $xcdata $ycdata \
 	$vvar(system) $vvar(sky) $vvar(method)
-    
+
     if {![PlotPing $vvarname]} {
 	set vvar(bunit) [string trim [$frame get fits header keyword BUNIT]]
 	if {$vvar(bunit)=={}} {
@@ -181,13 +181,22 @@ proc MarkerAnalysisPlot2dCB {frame id} {
 	set vvar(ycdata) $ycdata
 
 	$vvar(graph) xaxis configure \
-	    -command "MarkerAnalysisPlot2dXAxis $vvarname"
+	    -command [list PlotXAxisLabel $vvarname]
 
 	set vvar(graph,ds,xdata) $xdata
 	set vvar(graph,ds,ydata) $ydata
 	PlotExternal $vvarname xy
     }
 
+    set vvar(graph,axis,x,labels) {}
+    set ll [$xcdata length]
+    for {set ii 0} {$ii < $ll} {incr ii} {
+	set a [format "%6.3f" [expr "$$xcdata\($ii\)"]]
+	set b [format "%6.3f" [expr "$$ycdata\($ii\)"]]
+	lappend vvar(graph,axis,x,labels) "$a\n$b"
+    }
+
+    PlotSaveState $vvarname
     PlotStats $vvarname
     PlotList $vvarname
 }

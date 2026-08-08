@@ -58,6 +58,7 @@ proc PlotDefState {} {
     set pap(graph,axis,x,min) {}
     set pap(graph,axis,x,max) {}
     set pap(graph,axis,x,format) {}
+    set pap(graph,axis,x,labels) {}
 
     set pap(graph,axis,y,title) {}
     set pap(graph,axis,y,grid) 1
@@ -180,6 +181,7 @@ proc PlotSaveState {varname} {
     set var($cc,axis,x,min) $var(graph,axis,x,min)
     set var($cc,axis,x,max) $var(graph,axis,x,max)
     set var($cc,axis,x,format) $var(graph,axis,x,format)
+    set var($cc,axis,x,labels) $var(graph,axis,x,labels)
 
     set var($cc,axis,y,title) $var(graph,axis,y,title)
     set var($cc,axis,y,grid) $var(graph,axis,y,grid)
@@ -273,6 +275,7 @@ proc PlotRestoreState {varname} {
     set var(graph,axis,x,min) $var($cc,axis,x,min)
     set var(graph,axis,x,max) $var($cc,axis,x,max)
     set var(graph,axis,x,format) $var($cc,axis,x,format)
+    set var(graph,axis,x,labels) $var($cc,axis,x,labels)
 
     set var(graph,axis,y,title) $var($cc,axis,y,title)
     set var(graph,axis,y,grid) $var($cc,axis,y,grid)

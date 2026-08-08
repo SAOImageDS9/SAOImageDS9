@@ -928,7 +928,10 @@ proc PlotUpdateGraph {varname} {
 	set xflip $var(layout,axis,x,flip)
     }
 
-    if {$var(graph,format)} {
+    if {$var(graph,axis,x,labels) != {}} {
+	$var(graph) xaxis configure \
+	    -command [list PlotXAxisLabel $varname]
+    } elseif {$var(graph,format)} {
 	if {$var(graph,axis,x,format) != {}} {
 	    $var(graph) xaxis configure \
 		-command [list PlotAxisFormat $varname x]
@@ -1025,6 +1028,17 @@ proc PlotHighliteElement {varname cc nn rowlist} {
     upvar #0 $varname var
     global $varname
 # no-op
+}
+
+proc PlotXAxisLabel {varname w xx} {
+    upvar #0 $varname var
+    global $varname
+
+    set ii [expr {int($xx)-1}]
+    if {$ii >= 0 && $ii < [llength $var(graph,axis,x,labels)]} {
+	return [lindex $var(graph,axis,x,labels) $ii]
+    }
+    return {}
 }
 
 # menus

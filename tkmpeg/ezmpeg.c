@@ -702,6 +702,12 @@ void ezMPEG_EncodeAC(ezMPEGStream *ms, int runlength, int level)
 {
 	int level_abs;
 
+	// MPEG-1 escape-coded AC levels are limited to [-255, 255].
+	if(level > 255)
+		level = 255;
+	else if(level < -255)
+		level = -255;
+
 	level_abs = level < 0 ? -level : level;
 
 	// ac_codes_intra[runlength][0]: Dieser Wert dort gibt an, ob der entsprechende Level

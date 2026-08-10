@@ -105,8 +105,8 @@ TkMPEG::TkMPEG(Tcl_Interp* intp)
     }
 
     // width and height must be a multiple of 16
-    int ww = int(width/16.+1)*16;
-    int hh = int(height/16.+1)*16;
+    int ww = ((width + 15) / 16) * 16;
+    int hh = ((height + 15) / 16) * 16;
 
     if(!ezMPEG_Init(&ms, argv[2], ww, hh, fps, gop, quality)) {
       Tcl_AppendResult(interp, "ezMPEG_Init ", ezMPEG_GetLastError(&ms), NULL);

@@ -188,13 +188,13 @@ int ezMPEG_Init(ezMPEGStream *ms, const char *outfile, int hsize, int vsize, int
 		return 0;
 	}
 
-	if(hsize < 16 || hsize > 768) {
-		ezMPEG_SetError(ms, "ezMPEG_Init: Horizontal size should be between 16 and 768");
+	if(hsize < 16 || hsize > 4080) {
+		ezMPEG_SetError(ms, "ezMPEG_Init: Horizontal size should be between 16 and 4080");
 		return 0;
 	}
 
-	if(vsize < 16 || vsize > 576) {
-		ezMPEG_SetError(ms, "ezMPEG_Init: Vertical size should be between 16 and 576");
+	if(vsize < 16 || vsize > 4080) {
+		ezMPEG_SetError(ms, "ezMPEG_Init: Vertical size should be between 16 and 4080");
 		return 0;
 	}
 
@@ -295,7 +295,7 @@ void ezMPEG_WriteSequenceHeader(ezMPEGStream *ms)
 
 	ezMPEG_WriteBits(ms, 1, 1);							// marker_bit (1)
 	ezMPEG_WriteBits(ms, 20, 10);						// vbv_buffer_size (20)
-	ezMPEG_WriteBits(ms, 1, 1);							// constrained_parameter_flags (1)
+	ezMPEG_WriteBits(ms, 0, 1);							// constrained_parameter_flags (0)
 	ezMPEG_WriteBits(ms, 0, 1);							// load_intra_quantizer_matrix (0)
 	ezMPEG_WriteBits(ms, 0, 1);							// load_non_intra_quantizer_maxtrix (0)
 

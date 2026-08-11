@@ -250,13 +250,14 @@ int TkAGIF::add(int argc, const char* argv[])
       return TCL_ERROR;
     }
 
-    unsigned char* src = block.pixelPtr;
     Pixel* dst = pixels;
     for (int jj=0; jj<height_; jj++) {
       for (int ii=0; ii<width_; ii++, dst++) {
-	dst->red = src[(jj*width_+ii)*block.pixelSize+block.offset[0]];
-	dst->green = src[(jj*width_+ii)*block.pixelSize+block.offset[1]];
-	dst->blue = src[(jj*width_+ii)*block.pixelSize+block.offset[2]];
+	unsigned char* src = block.pixelPtr + jj*block.pitch +
+	  ii*block.pixelSize;
+	dst->red = src[block.offset[0]];
+	dst->green = src[block.offset[1]];
+	dst->blue = src[block.offset[2]];
       }
     }
   }

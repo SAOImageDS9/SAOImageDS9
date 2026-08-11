@@ -105,8 +105,8 @@ TkMPEG::TkMPEG(Tcl_Interp* intp)
     }
 
     // width and height must be a multiple of 16
-    int ww = int(width/16.+1)*16;
-    int hh = int(height/16.+1)*16;
+    int ww = ((width + 15) / 16) * 16;
+    int hh = ((height + 15) / 16) * 16;
 
     if(!ezMPEG_Init(&ms, argv[2], ww, hh, fps, gop, quality)) {
       Tcl_AppendResult(interp, "ezMPEG_Init ", ezMPEG_GetLastError(&ms), NULL);
@@ -152,15 +152,16 @@ int TkMPEG::add(int argc, const char* argv[])
   }
   memset(pict,0,ww*hh*3);
   
-  unsigned char* src = block.pixelPtr;
   unsigned char* dst = pict;
 
   for (int jj=0; jj<hh; jj++)
     for (int ii=0; ii<ww; ii++) {
-      if (jj<height && ii<width) {
-	*dst++ = src[(jj*width+ii)*block.pixelSize+block.offset[0]];
-	*dst++ = src[(jj*width+ii)*block.pixelSize+block.offset[1]];
-	*dst++ = src[(jj*width+ii)*block.pixelSize+block.offset[2]];
+      if (jj<block.height && ii<block.width) {
+	unsigned char* src = block.pixelPtr + jj*block.pitch +
+	  ii*block.pixelSize;
+	*dst++ = src[block.offset[0]];
+	*dst++ = src[block.offset[1]];
+	*dst++ = src[block.offset[2]];
       }
       else {
 	*dst++ = 255;

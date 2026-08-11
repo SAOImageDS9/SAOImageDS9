@@ -663,8 +663,7 @@ proc MoviePhotoMPEG {} {
     if {$movie(first)} {
 	set ww [image width $ph]
 	set hh [image height $ph]
-	# quality must be >=5, or sometimes will generate bad data
-	mpeg create "$movie(fn)" $ww $hh 25 1 5
+	mpeg create "$movie(fn)" $ww $hh 25 1 1
 	set movie(first) 0
     }
     mpeg add $ph

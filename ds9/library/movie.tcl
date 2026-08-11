@@ -324,6 +324,7 @@ proc MovieScript {fn} {
     set movie(first) 1
     set movie(status) 0
     set movie(abort) 0
+    set movie(3d,sync) {}
 
     set cmd {}
     while {[gets $ch line] >= 0} {
@@ -356,6 +357,38 @@ proc MovieScript {fn} {
     }
 
     close $ch
+    MovieScript3dSyncReset
+}
+
+proc MovieScript3dSync {} {
+    global ds9
+    global current
+    global movie
+
+    switch $ds9(display) {
+	single -
+	blink {set frames [list $current(frame)]}
+	tile {set frames $ds9(active)}
+    }
+
+    foreach ff $frames {
+	if {[$ff get type] == {3d} &&
+	    [lsearch -exact $movie(3d,sync) $ff] < 0} {
+	    $ff 3d sync 1
+	    lappend movie(3d,sync) $ff
+	}
+    }
+}
+
+proc MovieScript3dSyncReset {} {
+    global movie
+
+    foreach ff $movie(3d,sync) {
+	if {[llength [info commands $ff]]} {
+	    $ff 3d sync 0
+	}
+    }
+    unset movie(3d,sync)
 }
 
 proc MovieScriptCommand {cmd} {
@@ -637,6 +670,10 @@ proc Movie3d {} {
 
 proc MoviePhoto {} {
     global movie
+
+    if {$movie(action) == {script}} {
+	MovieScript3dSync
+    }
 
     switch $movie(type) {
 	mpeg {return [MoviePhotoMPEG]}

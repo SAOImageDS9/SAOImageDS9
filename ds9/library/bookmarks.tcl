@@ -101,6 +101,7 @@ proc BookmarkCurrentGoto {number} {
     global current
     set index [BookmarkCurrentIndex $number]
     BookmarkRestore $current(frame) $index
+    BookmarksSelectRow $current(frame) $index
 }
 
 proc BookmarkCurrentSave {filename} {
@@ -354,6 +355,7 @@ proc BookmarksDestroyDialog {} {
     }
     set ibookmarks(frame) {}
     unset -nocomplain ibookmarks(tree)
+    unset -nocomplain ibookmarks(selecting)
 }
 
 proc BookmarksFrameTrace {name1 name2 op} {
@@ -416,12 +418,51 @@ proc UpdateBookmarksDialog {} {
     }
 }
 
+proc BookmarksSelectRow {which index} {
+    global ibookmarks
+
+    if {![info exists ibookmarks(top)] ||
+	![winfo exists $ibookmarks(top)] ||
+	![info exists ibookmarks(tree)] ||
+	![winfo exists $ibookmarks(tree)]} {
+	return
+    }
+
+    if {$ibookmarks(frame) != $which} {
+	UpdateBookmarksDialog
+    }
+    if {$ibookmarks(frame) != $which} {
+	return
+    }
+
+    set tree $ibookmarks(tree)
+    set item "bookmark$index"
+    if {![$tree exists $item]} {
+	return
+    }
+
+    # Selecting the row generates <<TreeviewSelect>>.  The bookmark has
+    # already been restored by BookmarkCurrentGoto, so suppress that event.
+    set ibookmarks(selecting) $item
+    $tree selection set $item
+    $tree focus $item
+    $tree see $item
+}
+
 proc BookmarksSelect {} {
     global ibookmarks
     if {![winfo exists $ibookmarks(top)]} {
 	return
     }
     set selection [$ibookmarks(tree) selection]
+    if {[info exists ibookmarks(selecting)]} {
+	set selecting $ibookmarks(selecting)
+	unset ibookmarks(selecting)
+	if {[llength $selection] == 1 &&
+	    [lindex $selection 0] == $selecting} {
+	    return
+	}
+    }
     if {[llength $selection] == 1 &&
 	[scan [lindex $selection 0] "bookmark%d" index] == 1} {
 	BookmarkRestore $ibookmarks(frame) $index

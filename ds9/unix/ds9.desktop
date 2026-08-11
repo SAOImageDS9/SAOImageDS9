@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=SAOImageDS9
+GenericName=Astronomical Image Viewer
+Comment=Display and analyze astronomical images and data
+Exec=ds9 %F
+Icon=ds9
+Terminal=false
+Categories=Education;Science;Astronomy;DataVisualization;
+MimeType=application/fits;image/fits;
+StartupWMClass=Ds9.tcl

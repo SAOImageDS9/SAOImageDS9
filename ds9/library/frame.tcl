@@ -550,15 +550,27 @@ proc BindEventsFrame {which} {
 		[list Release2Frame $which %x %y]
 	}
 	aqua {
-	    # swap button-2 and button-3 on the mighty mouse
-	    $ds9(canvas) bind $which <Button-3> \
-		[list Button2Frame $which %x %y]
-	    $ds9(canvas) bind $which <Shift-Button-3> \
-		[list ShiftButton2Frame $which %x %y]
-	    $ds9(canvas) bind $which <B3-Motion> \
-		[list Motion2Frame $which %x %y]
-	    $ds9(canvas) bind $which <ButtonRelease-3> \
-		[list Release2Frame $which %x %y]
+	    if {[package vcompare [package provide Tk] 9.0] >= 0} {
+		# Tk 9 normalizes the middle mouse button to button-2.
+		$ds9(canvas) bind $which <Button-2> \
+		    [list Button2Frame $which %x %y]
+		$ds9(canvas) bind $which <Shift-Button-2> \
+		    [list ShiftButton2Frame $which %x %y]
+		$ds9(canvas) bind $which <B2-Motion> \
+		    [list Motion2Frame $which %x %y]
+		$ds9(canvas) bind $which <ButtonRelease-2> \
+		    [list Release2Frame $which %x %y]
+	    } else {
+		# swap button-2 and button-3 on the mighty mouse
+		$ds9(canvas) bind $which <Button-3> \
+		    [list Button2Frame $which %x %y]
+		$ds9(canvas) bind $which <Shift-Button-3> \
+		    [list ShiftButton2Frame $which %x %y]
+		$ds9(canvas) bind $which <B3-Motion> \
+		    [list Motion2Frame $which %x %y]
+		$ds9(canvas) bind $which <ButtonRelease-3> \
+		    [list Release2Frame $which %x %y]
+	    }
 
 	    # x11 option key emulation
 	    $ds9(canvas) bind $which <Option-Button-1> \
@@ -659,10 +671,17 @@ proc UnBindEventsFrame {which} {
 	    $ds9(canvas) bind $which <Command-B1-Motion> {}
 	    $ds9(canvas) bind $which <Command-ButtonRelease-1> {}
 
-	    $ds9(canvas) bind $which <Button-3> {}
-	    $ds9(canvas) bind $which <Shift-Button-3> {}
-	    $ds9(canvas) bind $which <B3-Motion> {}
-	    $ds9(canvas) bind $which <ButtonRelease-3> {}
+	    if {[package vcompare [package provide Tk] 9.0] >= 0} {
+		$ds9(canvas) bind $which <Button-2> {}
+		$ds9(canvas) bind $which <Shift-Button-2> {}
+		$ds9(canvas) bind $which <B2-Motion> {}
+		$ds9(canvas) bind $which <ButtonRelease-2> {}
+	    } else {
+		$ds9(canvas) bind $which <Button-3> {}
+		$ds9(canvas) bind $which <Shift-Button-3> {}
+		$ds9(canvas) bind $which <B3-Motion> {}
+		$ds9(canvas) bind $which <ButtonRelease-3> {}
+	    }
 
 	    $ds9(canvas) bind $which <Option-Button-1> {}
 	    $ds9(canvas) bind $which <Option-B1-Motion> {}
@@ -1508,6 +1527,19 @@ proc MouseWheelFrame {X Y dd} {
 	} else {
 	    Button4Frame $which $x $y
 	}
+    }
+}
+
+proc TouchpadScrollFrame {X Y dd serial} {
+    # TouchpadScroll events fire about 60 times per second.  DS9 zooms by a
+    # complete wheel step, so sample the event stream to keep zoom usable.
+    if {$serial % 5 != 0} {
+	return
+    }
+
+    lassign [tk::PreciseScrollDeltas $dd] deltaX deltaY
+    if {$deltaY != 0} {
+	MouseWheelFrame $X $Y $deltaY
     }
 }
 

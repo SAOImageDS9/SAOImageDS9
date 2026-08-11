@@ -221,7 +221,13 @@ proc BindEventsCanvas {} {
     switch $ds9(wm) {
 	x11 -
 	aqua -
-	win32 {bind $ds9(canvas) <MouseWheel> [list MouseWheelFrame %x %y %D]}
+	win32 {
+	    bind $ds9(canvas) <MouseWheel> [list MouseWheelFrame %x %y %D]
+	    if {[package vcompare [package provide Tk] 9.0] >= 0} {
+		bind $ds9(canvas) <TouchpadScroll> \
+		    [list TouchpadScrollFrame %x %y %D %#]
+	    }
+	}
     }
 
     # backward compatible bindings
@@ -233,10 +239,17 @@ proc BindEventsCanvas {} {
 	    bind $ds9(canvas) <ButtonRelease-3> {Release3Canvas %x %y}
 	} 
 	aqua {
-	    # swap button-2 and button-3 on the mighty mouse
-	    bind $ds9(canvas) <Button-2> {Button3Canvas %x %y}
-	    bind $ds9(canvas) <B2-Motion> {Motion3Canvas %x %y}
-	    bind $ds9(canvas) <ButtonRelease-2> {Release3Canvas %x %y}
+	    if {[package vcompare [package provide Tk] 9.0] >= 0} {
+		# Tk 9 normalizes the right mouse button to button-3.
+		bind $ds9(canvas) <Button-3> {Button3Canvas %x %y}
+		bind $ds9(canvas) <B3-Motion> {Motion3Canvas %x %y}
+		bind $ds9(canvas) <ButtonRelease-3> {Release3Canvas %x %y}
+	    } else {
+		# swap button-2 and button-3 on the mighty mouse
+		bind $ds9(canvas) <Button-2> {Button3Canvas %x %y}
+		bind $ds9(canvas) <B2-Motion> {Motion3Canvas %x %y}
+		bind $ds9(canvas) <ButtonRelease-2> {Release3Canvas %x %y}
+	    }
 
 	    # x11 command key emulation
 	    bind $ds9(canvas) <Command-Button-1> {Button3Canvas %x %y}
@@ -275,7 +288,12 @@ proc UnBindEventsCanvas {} {
     switch $ds9(wm) {
 	x11 -
 	aqua -
-	win32 {bind $ds9(canvas) <MouseWheel> {}}
+	win32 {
+	    bind $ds9(canvas) <MouseWheel> {}
+	    if {[package vcompare [package provide Tk] 9.0] >= 0} {
+		bind $ds9(canvas) <TouchpadScroll> {}
+	    }
+	}
     }
 
     # backward compatible bindings
@@ -287,10 +305,15 @@ proc UnBindEventsCanvas {} {
 	    bind $ds9(canvas) <ButtonRelease-3> {}
 	} 
 	aqua {
-	    # swap button-2 and button-3 on the mighty mouse
-	    bind $ds9(canvas) <Button-2> {}
-	    bind $ds9(canvas) <B2-Motion> {}
-	    bind $ds9(canvas) <ButtonRelease-2> {}
+	    if {[package vcompare [package provide Tk] 9.0] >= 0} {
+		bind $ds9(canvas) <Button-3> {}
+		bind $ds9(canvas) <B3-Motion> {}
+		bind $ds9(canvas) <ButtonRelease-3> {}
+	    } else {
+		bind $ds9(canvas) <Button-2> {}
+		bind $ds9(canvas) <B2-Motion> {}
+		bind $ds9(canvas) <ButtonRelease-2> {}
+	    }
 
 	    # x11 command key emulation
 	    bind $ds9(canvas) <Command-Button-1> {}

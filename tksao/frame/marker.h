@@ -24,6 +24,8 @@
 class Base;
 class FitsImage;
 class Vector;
+struct RegionStatisticResult;
+struct RegionStatisticJob;
 
 class Marker {
 public:
@@ -348,6 +350,10 @@ protected:
   virtual void analysisHistogram(char*, char*, int) {}
   virtual void analysisRadial(char*, char*, char*, Coord::CoordSystem) {}
   virtual void analysisStats(Coord::CoordSystem, Coord::SkyFrame) {}
+  virtual int analysisStatsResult(RegionStatisticResult*,
+				  Coord::CoordSystem) {return 0;}
+  virtual int analysisStatsJob(RegionStatisticJob*,
+			       Coord::CoordSystem) {return 0;}
   virtual void analysisPanda(char*, char*, char*, Coord::CoordSystem, int) {}
   virtual void analysisPlot2d(char*, char*, char*, char*,
 			      Coord::CoordSystem, Coord::SkyFrame, 

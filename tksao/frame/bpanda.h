@@ -59,6 +59,9 @@ class Bpanda : public BaseBox {
   void analysis(AnalysisTask, int);
   void analysisPanda(char*, char*, char*, Coord::CoordSystem sys, int);
   void analysisStats(Coord::CoordSystem, Coord::SkyFrame sky);
+  int analysisStatsResult(RegionStatisticResult*, Coord::CoordSystem);
+  int analysisStatsJob(RegionStatisticJob*, Coord::CoordSystem);
+  int isIn(const Vector&, const Matrix&, int, int);
 
   void list(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, int, int);
   void listXML(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);

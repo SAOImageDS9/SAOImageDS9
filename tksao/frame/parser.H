@@ -420,7 +420,8 @@
      ZMAX_ = 636,
      ZSCALE_ = 637,
      PIXMASK_ = 638,
-     ZOOM_ = 639
+     ZOOM_ = 639,
+     FIELDS_ = 640
    };
 #endif
 /* Tokens.  */
@@ -806,6 +807,7 @@
 #define ZSCALE_ 637
 #define PIXMASK_ 638
 #define ZOOM_ 639
+#define FIELDS_ 640
 
 
 
@@ -823,7 +825,7 @@ typedef union YYSTYPE
   int dash[2];
 }
 /* Line 1529 of yacc.c.  */
-#line 827 "frame/parser.H"
+#line 829 "frame/parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

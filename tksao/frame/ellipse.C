@@ -221,6 +221,32 @@ void Ellipse::analysisStats(Coord::CoordSystem sys, Coord::SkyFrame sky)
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
+int Ellipse::analysisStatsResult(RegionStatisticResult* result,
+				 Coord::CoordSystem sys)
+{
+  if (!result)
+    return 0;
+  Matrix mm = Rotate(angle) * Translate(center);
+  Vector vv = annuli_[0];
+  BBox bb(-vv * mm);
+  bb.bound( vv * mm);
+  bb.bound(Vector( vv[0],-vv[1]) * mm);
+  bb.bound(Vector(-vv[0], vv[1]) * mm);
+  *result = parent->markerAnalysisStatsData(this,bb,sys);
+  return 1;
+}
+
+int Ellipse::analysisStatsJob(RegionStatisticJob* job, Coord::CoordSystem sys)
+{
+  Matrix mm = Rotate(angle) * Translate(center);
+  Vector vv = annuli_[0];
+  BBox bb(-vv * mm);
+  bb.bound( vv * mm);
+  bb.bound(Vector( vv[0],-vv[1]) * mm);
+  bb.bound(Vector(-vv[0], vv[1]) * mm);
+  return parent->markerAnalysisStatsJob(this,job,bb,sys);
+}
+
 // list
 
 void Ellipse::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,

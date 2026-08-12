@@ -2,8 +2,11 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include <algorithm>
 #include <fstream>
 #include <map>
+#include <new>
+#include <pthread.h>
 #include <string>
 #include <vector>
 #include "fdstream.hpp"
@@ -1026,6 +1029,332 @@ void Base::getMarkerAnalysisStatsCmd(int id, Coord::CoordSystem sys,
     }
     mm=mm->next();
   }
+}
+
+static void regionStatsDictPut(Tcl_Interp* interp, Tcl_Obj* dict,
+			       const char* key, Tcl_Obj* value)
+{
+  Tcl_DictObjPut(interp,dict,Tcl_NewStringObj(key,-1),value);
+}
+
+static const char* regionStatsDataType(RegionStatisticField::DataType type)
+{
+  switch (type) {
+  case RegionStatisticField::FIELD_INTEGER:
+    return "integer";
+  case RegionStatisticField::FIELD_REAL:
+    return "real";
+  case RegionStatisticField::FIELD_STRING:
+    return "string";
+  }
+  return "";
+}
+
+static const char* regionStatsUnitKind(RegionStatisticField::UnitKind unit)
+{
+  switch (unit) {
+  case RegionStatisticField::NO_UNIT:
+    return "none";
+  case RegionStatisticField::DATA_VALUE:
+    return "data_value";
+  case RegionStatisticField::DATA_ERROR:
+    return "data_error";
+  case RegionStatisticField::PIXEL_COUNT:
+    return "pixel_count";
+  case RegionStatisticField::AREA:
+    return "area";
+  case RegionStatisticField::DATA_PER_AREA:
+    return "data_per_area";
+  }
+  return "";
+}
+
+static const char* regionStatsAreaUnit(RegionStatisticResult::AreaUnit unit)
+{
+  switch (unit) {
+  case RegionStatisticResult::PIXEL_AREA:
+    return "pixel_squared";
+  case RegionStatisticResult::ARCSEC_AREA:
+    return "arcsec_squared";
+  case RegionStatisticResult::LINEAR_PIXEL_AREA:
+    return "linear_squared";
+  }
+  return "";
+}
+
+static Tcl_Obj* regionStatsValueObj(const RegionStatisticValue& value)
+{
+  switch (value.type()) {
+  case RegionStatisticValue::VALUE_INTEGER:
+    return Tcl_NewWideIntObj((Tcl_WideInt)value.integerValue());
+  case RegionStatisticValue::VALUE_REAL:
+    return Tcl_NewDoubleObj(value.realValue());
+  case RegionStatisticValue::VALUE_STRING:
+    return Tcl_NewStringObj(value.stringValue().c_str(),-1);
+  case RegionStatisticValue::VALUE_MISSING:
+    break;
+  }
+  return NULL;
+}
+
+Tcl_Obj* Base::markerAnalysisStatsDataObj(
+  const RegionStatisticResult& stats, Coord::CoordSystem sys,
+  Coord::SkyFrame sky)
+{
+  Tcl_Obj* resultObj = Tcl_NewDictObj();
+  regionStatsDictPut(interp,resultObj,"schema_version",Tcl_NewIntObj(1));
+  regionStatsDictPut(interp,resultObj,"region_id",
+		     Tcl_NewIntObj(stats.regionId));
+  regionStatsDictPut(interp,resultObj,"shape",
+		     Tcl_NewStringObj(stats.shape.c_str(),-1));
+  regionStatsDictPut(interp,resultObj,"background",
+		     Tcl_NewIntObj(stats.background));
+  regionStatsDictPut(interp,resultObj,"exclude",
+		     Tcl_NewIntObj(stats.exclude));
+  regionStatsDictPut(interp,resultObj,"coordinate_system",
+		     Tcl_NewStringObj(coord.coordSystemStr(sys),-1));
+  regionStatsDictPut(interp,resultObj,"sky_frame",
+		     Tcl_NewStringObj(coord.skyFrameStr(sky),-1));
+  regionStatsDictPut(interp,resultObj,"area_unit",
+		     Tcl_NewStringObj(regionStatsAreaUnit(stats.areaUnit),-1));
+
+  FitsImage* ptr = isInCFits(stats.center,Coord::REF,NULL);
+  if (!ptr)
+    ptr = currentContext->cfits;
+  Vector center = ptr->mapFromRef(stats.center,sys,sky);
+  Tcl_Obj* centerObj = Tcl_NewListObj(0,NULL);
+  Tcl_ListObjAppendElement(interp,centerObj,Tcl_NewDoubleObj(center[0]));
+  Tcl_ListObjAppendElement(interp,centerObj,Tcl_NewDoubleObj(center[1]));
+  regionStatsDictPut(interp,resultObj,"center",centerObj);
+
+  Tcl_Obj* componentsObj = Tcl_NewListObj(0,NULL);
+  for (size_t ii=0; ii<stats.components.size(); ii++) {
+    const RegionStatisticComponent& component = stats.components[ii];
+    Tcl_Obj* componentObj = Tcl_NewDictObj();
+    regionStatsDictPut(interp,componentObj,"component",
+		       Tcl_NewIntObj(component.component));
+
+    Tcl_Obj* valuesObj = Tcl_NewDictObj();
+    std::map<std::string,RegionStatisticValue>::const_iterator value =
+      component.values.begin();
+    for (; value != component.values.end(); ++value) {
+      Tcl_Obj* valueObj = regionStatsValueObj(value->second);
+      if (valueObj)
+	regionStatsDictPut(interp,valuesObj,value->first.c_str(),valueObj);
+    }
+    regionStatsDictPut(interp,componentObj,"values",valuesObj);
+    Tcl_ListObjAppendElement(interp,componentsObj,componentObj);
+  }
+  regionStatsDictPut(interp,resultObj,"components",componentsObj);
+  return resultObj;
+}
+
+void Base::getMarkerAnalysisStatsFieldsCmd()
+{
+  Tcl_Obj* resultObj = Tcl_NewDictObj();
+  regionStatsDictPut(interp,resultObj,"schema_version",Tcl_NewIntObj(1));
+  Tcl_Obj* fieldsObj = Tcl_NewListObj(0,NULL);
+
+  const std::vector<RegionStatisticField>& fields = regionStatisticFields();
+  for (size_t ii=0; ii<fields.size(); ii++) {
+    const RegionStatisticField& field = fields[ii];
+    Tcl_Obj* fieldObj = Tcl_NewDictObj();
+    regionStatsDictPut(interp,fieldObj,"key",Tcl_NewStringObj(field.key,-1));
+    regionStatsDictPut(interp,fieldObj,"label",
+		       Tcl_NewStringObj(field.label,-1));
+    regionStatsDictPut(interp,fieldObj,"datatype",
+		       Tcl_NewStringObj(regionStatsDataType(field.datatype),-1));
+    regionStatsDictPut(interp,fieldObj,"unit_kind",
+		       Tcl_NewStringObj(regionStatsUnitKind(field.unit),-1));
+    regionStatsDictPut(interp,fieldObj,"description",
+		       Tcl_NewStringObj(field.description,-1));
+    regionStatsDictPut(interp,fieldObj,"ucd",Tcl_NewStringObj(field.ucd,-1));
+    regionStatsDictPut(interp,fieldObj,"precision",
+		       Tcl_NewIntObj(field.precision));
+    Tcl_ListObjAppendElement(interp,fieldsObj,fieldObj);
+  }
+  regionStatsDictPut(interp,resultObj,"fields",fieldsObj);
+  Tcl_SetObjResult(interp,resultObj);
+}
+
+void Base::getMarkerAnalysisStatsDataCmd(int id, Coord::CoordSystem sys,
+					 Coord::SkyFrame sky)
+{
+  if (!currentContext || !currentContext->cfits) {
+    error("no image data available");
+    return;
+  }
+
+  for (Marker* marker=userMarkers.head(); marker; marker=marker->next()) {
+    if (marker->getId() != id)
+      continue;
+
+    RegionStatisticResult stats;
+    if (!marker->analysisStatsResult(&stats,sys)) {
+      error("region type does not support statistics");
+      return;
+    }
+    Tcl_SetObjResult(interp,markerAnalysisStatsDataObj(stats,sys,sky));
+    return;
+  }
+  error("region id not found");
+}
+
+struct RegionStatsWorkQueue {
+  std::vector<RegionStatisticJob*> jobs;
+  size_t next;
+  int allocationFailed;
+  pthread_mutex_t mutex;
+
+  RegionStatsWorkQueue() : next(0), allocationFailed(0)
+  {pthread_mutex_init(&mutex,NULL);}
+  ~RegionStatsWorkQueue() {pthread_mutex_destroy(&mutex);}
+};
+
+static bool regionStatsJobLarger(RegionStatisticJob* aa,
+				 RegionStatisticJob* bb)
+{
+  return aa->workSize > bb->workSize;
+}
+
+static void* regionStatsWorker(void* value)
+{
+  RegionStatsWorkQueue* queue = (RegionStatsWorkQueue*)value;
+  while (1) {
+    pthread_mutex_lock(&queue->mutex);
+    if (queue->allocationFailed || queue->next >= queue->jobs.size()) {
+      pthread_mutex_unlock(&queue->mutex);
+      break;
+    }
+    RegionStatisticJob* job = queue->jobs[queue->next++];
+    pthread_mutex_unlock(&queue->mutex);
+
+    try {
+      job->measure();
+    }
+    catch (const std::bad_alloc&) {
+      pthread_mutex_lock(&queue->mutex);
+      queue->allocationFailed =1;
+      pthread_mutex_unlock(&queue->mutex);
+      break;
+    }
+  }
+  return NULL;
+}
+
+static int runRegionStatsJobs(std::vector<RegionStatisticJob*>& jobs,
+			      int requestedThreads, int* allocationFailed)
+{
+  *allocationFailed =0;
+  if (jobs.empty())
+    return 1;
+
+  RegionStatsWorkQueue queue;
+  queue.jobs = jobs;
+  std::sort(queue.jobs.begin(),queue.jobs.end(),regionStatsJobLarger);
+
+  int count = requestedThreads;
+  if (count < 1)
+    count =1;
+  if (count > (int)jobs.size())
+    count = jobs.size();
+
+  if (count == 1)
+    regionStatsWorker(&queue);
+  else {
+    std::vector<pthread_t> threads(count);
+    int created =0;
+    int createFailed =0;
+    for (int ii=0; ii<count; ii++) {
+      if (pthread_create(&threads[ii],NULL,regionStatsWorker,&queue)) {
+	createFailed =1;
+	break;
+      }
+      created++;
+    }
+
+    // If the platform cannot create every requested worker, the main thread
+    // drains the remaining queue before joining the successfully created set.
+    if (createFailed)
+      regionStatsWorker(&queue);
+    for (int ii=0; ii<created; ii++)
+      pthread_join(threads[ii],NULL);
+    if (createFailed)
+      return 0;
+  }
+
+  *allocationFailed = queue.allocationFailed;
+  return !queue.allocationFailed;
+}
+
+static void deleteRegionStatsJobs(std::vector<RegionStatisticJob*>& jobs)
+{
+  for (size_t ii=0; ii<jobs.size(); ii++)
+    delete jobs[ii];
+  jobs.clear();
+}
+
+void Base::getMarkerAnalysisStatsDataAllCmd(Coord::CoordSystem sys,
+					    Coord::SkyFrame sky)
+{
+  if (!currentContext || !currentContext->cfits) {
+    error("no image data available");
+    return;
+  }
+
+  std::vector<RegionStatisticJob*> jobs;
+  size_t order =0;
+  for (Marker* marker=userMarkers.head(); marker; marker=marker->next()) {
+    if (marker->isFixed())
+      continue;
+    RegionStatisticJob* job =NULL;
+    try {
+      job = new RegionStatisticJob;
+      job->order = order++;
+      if (marker->analysisStatsJob(job,sys))
+	jobs.push_back(job);
+      else
+	delete job;
+    }
+    catch (const std::bad_alloc&) {
+      if (job)
+	delete job;
+      deleteRegionStatsJobs(jobs);
+      error("unable to allocate region statistics jobs; set the DS9 thread count to 1 and retry");
+      return;
+    }
+  }
+
+  int allocationFailed =0;
+  int completed =0;
+  try {
+    completed = runRegionStatsJobs(jobs,nthreads_,&allocationFailed);
+  }
+  catch (const std::bad_alloc&) {
+    allocationFailed =1;
+  }
+  if (!completed) {
+    deleteRegionStatsJobs(jobs);
+    if (allocationFailed)
+      error("unable to allocate region statistics worker memory; set the DS9 thread count to 1 and retry");
+    else
+      error("unable to create region statistics worker threads");
+    return;
+  }
+
+  Tcl_Obj* resultObj = Tcl_NewDictObj();
+  regionStatsDictPut(interp,resultObj,"schema_version",Tcl_NewIntObj(1));
+  Tcl_Obj* regionsObj = Tcl_NewListObj(0,NULL);
+  for (size_t ii=0; ii<jobs.size(); ii++) {
+    RegionStatisticJob* job = jobs[ii];
+    RegionStatisticResult stats = markerAnalysisStatsResult(
+      job->seed,job->image,job->accumulators,sys);
+    Tcl_ListObjAppendElement(
+      interp,regionsObj,markerAnalysisStatsDataObj(stats,sys,sky));
+  }
+  regionStatsDictPut(interp,resultObj,"regions",regionsObj);
+  Tcl_SetObjResult(interp,resultObj);
+  deleteRegionStatsJobs(jobs);
 }
 
 void Base::getMarkerAngleCmd(int id)

@@ -350,6 +350,33 @@ void Polygon::analysisStats(Coord::CoordSystem sys, Coord::SkyFrame sky)
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
+int Polygon::analysisStatsResult(RegionStatisticResult* result,
+				 Coord::CoordSystem sys)
+{
+  if (!result)
+    return 0;
+  BBox bb(center);
+  Matrix mm = Rotate(angle) * Translate(center);
+  vertex.head();
+  do
+    bb.bound(vertex.current()->vector * mm);
+  while (vertex.next());
+  *result = parent->markerAnalysisStatsData(this,bb,sys);
+  return 1;
+}
+
+int Polygon::analysisStatsJob(RegionStatisticJob* job,
+			      Coord::CoordSystem sys)
+{
+  BBox bb(center);
+  Matrix mm = Rotate(angle) * Translate(center);
+  vertex.head();
+  do
+    bb.bound(vertex.current()->vector * mm);
+  while (vertex.next());
+  return parent->markerAnalysisStatsJob(this,job,bb,sys);
+}
+
 // list
 
 void Polygon::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,

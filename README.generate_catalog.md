@@ -534,8 +534,11 @@ Add a release-note entry and update Region and Catalog Tool user documentation.
 1. **Compound rows:** one row per `(region_id, component)`, matching the
    current non-overlapping Statistics components.
 2. **Region scope:** include supported excluded, background, and grouped user
-   regions. Omit composite, hidden, fixed-screen-size, non-area, and catalog
-   regions. Record `background` and `exclude` as numeric columns.
+   regions. Omit hidden, fixed-screen-size, non-area, catalog regions, and
+   genuine compound composites. Treat a one-member composite as its supported
+   member geometry; this accommodates the wrapper emitted for individual
+   sources by common CIAO/FITS region-table imports and their DS9 exports.
+   Record `background` and `exclude` as numeric columns.
 3. **Creation/edit completion:** add interactive regions after their initial
    completed edit. Recalculate polygons after each completed vertex add, move,
    or delete. Add regions loaded in bulk after the load transaction completes.
@@ -702,3 +705,11 @@ This ordering isolates numerical correctness, concurrency, and lifecycle synchro
   table without issuing nonexistent catalog-marker commands. Runtime tests
   passed for table and plot panning, row synchronization, correct coordinates,
   and disabled-preference behavior.
+- **2026-08-12 (CIAO/FITS composite compatibility):** diagnosed a real
+  979-source catalog loaded from a `.src` FITS region table and exported to a
+  DS9 region file. Its individual ellipses are each loaded as a one-member
+  composite. Added structured single and batch statistics delegation for that
+  unambiguous wrapper form while continuing to omit genuine compound
+  composites. The catalog retains the stable top-level region ID and reports
+  the supported member shape, allowing live updates to remain attached to the
+  visible composite region.

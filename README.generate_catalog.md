@@ -437,6 +437,14 @@ frame widget. This lets the catalog unsubscribe while its frame command is still
 valid, destroys its Catalog Tool window, and removes the per-frame association.
 Other frames and their catalogs are unaffected.
 
+Region-statistics catalogs retain the Catalog Tool's `Preferences → Pan To`
+behavior even though they do not create catalog symbols. Table and plot
+selections read the selected displayed row's frozen coordinate columns and pan
+the owning frame directly. Their plot/SAMP selection callback bypasses the
+ordinary Catalog Tool marker lookup and blink logic, avoiding syntax errors
+when no catalog marker exists. Disabling `Pan To` suppresses this movement as
+usual.
+
 Possible later controls:
 
 - Live Updates toggle;
@@ -604,6 +612,10 @@ Add a release-note entry and update Region and Catalog Tool user documentation.
     command that is enabled only for a current image frame. A generated catalog
     is owned by exactly one frame; repeated invocation reuses it, tool closure
     unsubscribes it, and frame deletion destroys only that frame's tool.
+29. **Marker-free Pan To:** preserve `Preferences → Pan To` for generated
+    region-statistics catalogs by panning from the selected view row's frozen
+    coordinates. Table, plot, and SAMP selection must not query, highlight, or
+    blink catalog markers because this catalog intentionally creates none.
 
 ## Remaining open implementation issues
 
@@ -684,3 +696,9 @@ This ordering isolates numerical correctness, concurrency, and lifecycle synchro
   tests passed for public menu invocation, repeated-tool reuse, enable/disable
   transitions, independent catalogs on two frames, selective frame deletion,
   window destruction, and observer-association cleanup.
+- **2026-08-12 (Phase 7 follow-up):** restored `Preferences → Pan To` for
+  region-statistics table and plot selections using displayed-row coordinates.
+  Added a region-catalog-specific plot/SAMP selection path that updates the
+  table without issuing nonexistent catalog-marker commands. Runtime tests
+  passed for table and plot panning, row synchronization, correct coordinates,
+  and disabled-preference behavior.

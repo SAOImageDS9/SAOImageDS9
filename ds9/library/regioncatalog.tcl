@@ -639,11 +639,86 @@ proc RegionCatalogSelectCmd {varname old current} {
 	    lappend rows $row
 	}
     }
+    set currentRow [lindex [split $current ,] 0]
+    if {[llength $rows] <= 1 && [string is integer -strict $currentRow] &&
+	$currentRow > 0} {
+	set rows [list $currentRow]
+    }
     if {[llength $rows]} {
-	TBLStatusRows $varname [lsort -integer -unique $rows]
+	set rows [lsort -integer -unique $rows]
+	TBLStatusRows $varname $rows
+	if {$var(plot)} {
+	    CATPlotHighliteElement $varname $rows
+	}
+	SAMPSendTableRowListCmd $varname $rows
+	RegionCatalogPanToRow $varname [lindex $rows 0]
     } else {
 	RegionCatalogUpdateStatus $varname
     }
+}
+
+proc RegionCatalogPanToRow {varname row} {
+    upvar #0 $varname var
+    if {!$var(panto) || [info commands $var(frame)] == {} ||
+	![$var(frame) has fits] || ![string is integer -strict $row] ||
+	$row < 1} {
+	return
+    }
+    upvar #0 $var(tbldb) view
+    if {![TBLValidDB $var(tbldb)] || $row > $view(Nrows)} {
+	return
+    }
+    set xcol $var(regioncatalog,coordx)
+    set ycol $var(regioncatalog,coordy)
+    if {![info exists view($xcol)] || ![info exists view($ycol)]} {
+	return
+    }
+    set x $view($row,$view($xcol))
+    set y $view($row,$view($ycol))
+    if {$x == {} || $y == {}} {
+	return
+    }
+    PanToFrame $var(frame) $x $y \
+	$var(regioncatalog,system) $var(regioncatalog,sky)
+}
+
+# Plot and SAMP callbacks identify rows in the current filtered/sorted view.
+# Handle them without catalog-marker lookups: region statistics catalogs never
+# create those markers.
+proc RegionCatalogSelectRows {varname src rowlist cc} {
+    upvar #0 $varname var
+    if {$cc != 1 || ![info exists var(regioncatalog)]} {
+	return
+    }
+    set rows {}
+    upvar #0 $var(tbldb) view
+    foreach row [lsort -integer -unique $rowlist] {
+	if {[string is integer -strict $row] && $row >= 1 &&
+	    $row <= $view(Nrows)} {
+	    lappend rows $row
+	}
+    }
+
+    $var(tbl) selection clear all
+    if {$rows == {}} {
+	RegionCatalogUpdateStatus $varname
+	return
+    }
+    foreach row $rows {
+	$var(tbl) selection set $row,1
+    }
+    $var(tbl) see [lindex $rows 0],1
+    TBLStatusRows $varname $rows
+
+    switch -- $src {
+	samp {
+	    if {$var(plot)} {
+		CATPlotHighliteElement $varname $rows
+	    }
+	}
+	plot {SAMPSendTableRowListCmd $varname $rows}
+    }
+    RegionCatalogPanToRow $varname [lindex $rows 0]
 }
 
 proc RegionCatalogFilterDialog {varname} {

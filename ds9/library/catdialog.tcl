@@ -684,6 +684,12 @@ proc CATServer {varname} {
 proc CATDestroy {varname} {
     upvar #0 $varname var
 
+    if {[info exists var(proc,destroy)]} {
+	set destroycmd $var(proc,destroy)
+	unset var(proc,destroy)
+	catch {{*}$destroycmd}
+    }
+
     global $varname
     global $var(catdb)
     global $var(tbldb)
@@ -882,5 +888,4 @@ proc UpdateCATDialogSAMP {} {
 	CATDialogUpdateSAMP $varname
     }
 }
-
 

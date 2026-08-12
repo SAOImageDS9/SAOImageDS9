@@ -74,7 +74,9 @@ The feature is implementable within DS9’s existing architecture. The plan shou
 | 2 | Complete (2026-08-12) | The existing statistics engine now produces typed, named results through a compile-time field registry and mergeable accumulators. The legacy Statistics report is formatted from those results. |
 | 3 | Complete (2026-08-12) | Versioned Tcl dictionaries now expose the field descriptors, one region result, or an ordered batch of supported user-region results. |
 | 4 | Complete (2026-08-12) | Batch results now use immutable geometry/pixel jobs and a bounded pthread work queue capped by DS9's configured thread count. |
-| 5 | Next | Add frame-level region lifecycle and image invalidation notifications. |
+| 5 | Complete (2026-08-12) | A frame-level observer now emits versioned, idle-coalesced user-region lifecycle and image-invalidation events, with bulk and interactive completion boundaries. |
+| 6 | Complete (2026-08-12) | A keyed Tcl model now discovers its schema, populates a Catalog Tool, consumes live observer batches, and preserves filtered/sorted view state. |
+| 7 | Next | Add the Analysis menu command and close the associated catalog when its frame is deleted. |
 
 Phase 2 introduced `RegionStatisticField`, `RegionStatisticValue`,
 `RegionStatisticComponent`, `RegionStatisticResult`, and
@@ -264,70 +266,113 @@ existing synchronous path.
 
 ### 5. Add a frame-level region observer
 
-Introduce internal frame notifications such as:
+Phase 5 adds an internal frame observer exposed to Tcl as:
+
+```tcl
+$frame marker analysis stats callback RegionCatalogEvent
+$frame marker analysis stats callback
+```
+
+The first form registers a Tcl command prefix; the versioned event dictionary is
+appended as its last argument. The no-argument form unsubscribes. Registering a
+new callback clears pending state, so Phase 6 will obtain its initial snapshot
+from the structured batch command and then consume only subsequent events.
+
+The payload contract is:
+
+```tcl
+schema_version 1
+generation 17
+reset 0
+image_changed 0
+added {12 13}
+changed {4}
+deleted {9}
+```
+
+IDs are deduplicated and sorted. `generation` increases for every delivered
+event. `reset` requests full region reconciliation and dominates the ID lists;
+`image_changed` requests recalculation of all surviving rows. Add/change/delete
+events within one batch are reduced to their net catalog operation.
+
+Delivery occurs at Tcl idle time. Nested update-depth guards cover region-file
+and command parsing, multi-delete/cut, paste, undo, and composite dissolve;
+their RAII cleanup also closes a batch during C++ error unwinding. Interactive
+move, edit, and rotate operations have a separate depth and release their event
+only from the matching end command. Geometry callbacks may therefore mark a
+region dirty during motion without exposing intermediate catalog values.
+
+Creation and deletion coverage includes:
+
+- the central user-marker insertion path, including interactive, parser,
+  template, and command creation;
+- paste and undo;
+- cut, delete-by-ID/tag/selection/all/last, and undo restoration;
+- composite formation and dissolve, including CIAO and FITS component paths.
+
+Marker mutation callbacks cover programmatic geometry and property changes.
+Explicit completion hooks at edit, move, and rotate end guarantee final delivery
+even for a region class that emits no intermediate callback. Membership checks
+restrict change events to `userMarkers`; catalog and footprint marker layers are
+never observed.
+
+Image invalidation is hooked into successful image load/reload, marker transform
+updates for the user layer, cube slice/bin/block/crop operations, smoothing,
+explicit FITS updates, and WCS append/reset/replace/alignment operations. Repeated
+hooks collapse into one `image_changed` flag for a logical event-loop turn.
+
+The frame destructor cancels any scheduled idle delivery and releases its Tcl
+callback, preventing a callback into a destroyed frame. Callback errors are
+reported through DS9's internal error path without corrupting the caller's Tcl
+interpreter result.
+
+The observer's internal C++ mutation interface corresponds to:
 
 ```cpp
-regionAdded(id)
-regionChanged(id)
+regionAdded(marker)
+regionChanged(marker)
 regionDeleted(id)
 regionsReset()
 imageDataChanged()
 ```
 
-For geometry changes, notify only at:
+For geometry changes, events are delivered only after:
 
 - `MOVEENDCB`;
 - `EDITENDCB`;
 - `ROTATEENDCB`.
 
-Do not reuse the current Statistics callbacks because they intentionally update continuously during motion.
-
-Creation notifications must cover all entry paths:
-
-- interactive creation;
-- region files;
-- XPA and command input;
-- paste;
-- undo;
-- templates;
-- composite dissolve operations that add ordinary user regions. Composite
-  markers themselves remain excluded.
-
-Bulk operations should use a transaction or batching mechanism:
-
-```cpp
-beginRegionUpdate();
-...
-endRegionUpdate();
-```
-
-The observer can then issue one consolidated set of dirty IDs rather than starting a calculation for every region during file loading.
-
-Live catalogs should observe `userMarkers` only, never `catalogMarkers`.
+Phase 6 binds this substrate to catalog row creation, replacement, deletion,
+and full recalculation.
 
 ### 6. Implement the live Catalog Tool model
 
-Create Tcl procedures dedicated to region-statistics catalogs:
+Phase 6 adds `ds9/library/regioncatalog.tcl`, with dedicated procedures including:
 
 ```tcl
 RegionCatalogCreate
 RegionCatalogReplaceRegion
 RegionCatalogDeleteRegion
 RegionCatalogRecalculate
-RegionCatalogReconcileSchema
+RegionCatalogRefreshView
 RegionCatalogDestroy
 ```
 
-Maintain indexes independent of physical table row positions:
+The model maintains indexes independent of physical table row positions:
 
 ```tcl
 rows(region_id) = {row keys}
 row(region_id,component) = logical record
 ```
 
-This is important because filtering and sorting can change displayed row positions.
+In the implementation these are `regioncatalog,keys` and
+`regioncatalog,record,<region_id>,<component>` entries in the catalog state.
+The canonical Starbase table and its filtered/sorted display table are derived
+from those records. Table selection is captured and restored using logical keys,
+so inserting rows, changing component count, filtering, or sorting cannot attach
+selection to the wrong source.
 
-The model must support:
+The implemented model supports:
 
 - inserting new regions;
 - replacing all components of one region;
@@ -336,13 +381,35 @@ The model must support:
 - preserving table selection where possible;
 - refreshing filters and sorts consistently.
 
-The schema is discovered when the catalog is created. It does not change while
-that catalog is open. Statistics added in a future DS9 release appear when a new
-catalog is created by that release.
+The schema is discovered from the Phase 3 field descriptors when the catalog is
+created and does not change while that catalog is open. Every descriptor becomes
+a column through a key-to-column map, so statistics added in a future compiled
+release appear automatically. Duplicate display labels receive deterministic
+`stat_` prefixes rather than colliding with structural columns.
 
-Populate Starbase metadata arrays such as `DataType`, `Unit`, `Precision`, `Ucd`, and `Description`.
+The Starbase `DataType`, `ArraySize`, `Unit`, `Precision`, `Ucd`, `Description`,
+and `Id` arrays are populated for structural, coordinate, and registered
+statistic columns. Missing statistic keys become blank table cells.
 
-Avoid calling the full `CATLoadDone` path for every region update. Add an incremental table refresh path.
+Coordinates are frozen when the catalog is created. Image and detector-like
+systems use `X`/`Y`; equatorial frames use `RA_B1950`/`DEC_B1950`,
+`RA_J2000`/`DEC_J2000`, or `RA_ICRS`/`DEC_ICRS`; galactic and ecliptic frames
+use `GLON`/`GLAT` and `ELON`/`ELAT`; non-celestial WCS uses `WCS_X`/`WCS_Y`.
+Coordinate units and UCDs accompany those headings.
+
+Observer batches are applied to the keyed records and followed by one view
+refresh, without calling `CATLoadDone` or creating catalog markers. The custom
+filter evaluator uses an isolated Tcl namespace, which allows statistic labels
+such as the existing `var` column without colliding with Catalog Tool local
+variables. Row selection reports table status only and never selects or
+highlights a source region.
+
+Initial and image-wide calculations replace the complete model atomically only
+after every structured result validates. A failed single-region update retains
+that region's previous rows and reports the error in catalog status. A valid
+empty/unsupported result removes its former rows. Closing the tool unsubscribes
+the observer; the internal create procedure raises and recalculates the existing
+tool when called again for the same frame.
 
 ### 7. UI and lifecycle integration
 
@@ -493,55 +560,46 @@ Add a release-note entry and update Region and Catalog Tool user documentation.
 20. **Parallel granularity and ordering:** schedule one job per region, ordered
     by approximate numeric work. Cap workers by both `nthreads_` and job count,
     and assemble results in original user-marker order after all joins.
+21. **Observer contract:** expose one internal Tcl callback command prefix per
+    frame. Append a schema-versioned dictionary containing a monotonic
+    generation, reset/image flags, and deduplicated added/changed/deleted ID
+    lists. Initial population remains an explicit structured batch query.
+22. **Notification timing and batching:** queue mutations and deliver at Tcl
+    idle time. Nested RAII bulk guards and interactive begin/end depth prevent
+    partial file loads, multi-region operations, or in-progress geometry from
+    reaching the catalog. Multiple mutations reduce to their net operation.
+23. **Observer scope and lifetime:** observe only live pointers in
+    `userMarkers`; ignore catalog/footprint layers. Cancel idle callbacks and
+    release the Tcl command when its frame is destroyed. Image-wide changes use
+    one coalesced invalidation flag rather than enumerating every region ID.
+24. **Catalog identity and refresh:** keep canonical records keyed by
+    `(region_id, component)` and derive physical Starbase rows from them. Apply
+    one refresh per observer batch and restore selection by logical key across
+    insertion, component changes, filtering, and sorting.
+25. **Coordinate headings:** use `X`/`Y` for image and detector-like systems;
+    explicit equatorial, galactic, and ecliptic headings for celestial WCS; and
+    `WCS_X`/`WCS_Y` for linear WCS. Freeze the selected system and sky frame at
+    catalog creation and attach matching units/UCDs.
+26. **Catalog schema and filters:** derive every statistic column and its
+    metadata from the registered descriptor list. Resolve label collisions with
+    deterministic `stat_` names, serialize missing values as blank cells, and
+    evaluate filters in an isolated namespace so column names cannot collide
+    with the filter implementation.
+27. **Failure atomicity:** validate a full replacement before changing live
+    records. Retain prior values when batch or single-region measurement fails
+    and report the error in catalog status; remove rows only for successful
+    deletion or a successful result showing the region is unsupported.
 
 ## Remaining open implementation issues
 
 These do not require changing the product behavior above, but they should be
 settled during Phase 1 or by a focused prototype before the dependent phase.
 
-### D. Region observer coverage
-
-Audit every marker insertion, removal, replacement, undo, paste, load, template,
-and composite-dissolve path. Decide whether notifications belong in the marker
-list abstraction or in `Base` helper methods so a path cannot silently bypass
-the live catalog.
-
-### E. Bulk transaction boundaries
-
-Identify existing begin/end points for region-file loads and other bulk changes,
-or add explicit transaction guards. Nested transactions and error unwinding must
-emit one consistent final notification.
-
-### F. Image invalidation hooks
-
-Map each confirmed image-changing operation to an existing callback or add a
-single frame data-generation notification. Avoid triggering several full
-recalculations for one logical operation.
-
-### G. WCS column names and metadata
-
-Determine the authoritative source for axis labels such as `RA`/`DEC`, including
-alternate celestial, galactic, ecliptic, and linear WCS axes. Define collision
-handling if an axis label conflicts with `X`, `Y`, or a statistic label.
-
 ### H. Hidden and fixed-region detection
 
 Confirm the exact marker properties that implement the product terms “hidden”
 and “fixed-screen-size,” including whether globally hidden regions are omitted
 or merely not displayed.
-
-### I. Incremental Catalog Tool refresh
-
-Specify the smallest safe table refresh that preserves the Catalog Tool window,
-filter/sort settings, and selection without creating catalog markers. Determine
-whether normal table selection behavior needs a region-statistics-specific mode.
-
-### J. Failure atomicity
-
-If one region fails to measure or a worker allocation fails, decide whether to
-retain its previous live values, replace them with blanks plus an error field,
-or abort the entire update. The UI must give an actionable error, including the
-single-thread retry recommendation for allocation failures.
 
 ### L. Catalog persistence and backup
 
@@ -559,7 +617,11 @@ continues to work unchanged.
 The second milestone delivered threaded batch calculation, which will be used
 for initial catalog creation in Phase 6.
 
-The third should add frame observation and live incremental updates.
+The third milestone delivered frame observation and coalesced live-update
+events. The fourth milestone delivered the keyed live Catalog Tool model,
+schema/metadata discovery, and state-preserving incremental refresh. Phase 7
+will expose it in the Analysis menu and connect frame deletion to catalog
+destruction.
 
 This ordering isolates numerical correctness, concurrency, and lifecycle synchronization, making regressions considerably easier to diagnose.
 
@@ -585,3 +647,19 @@ This ordering isolates numerical correctness, concurrency, and lifecycle synchro
   passed for legacy and structured statistics, celestial WCS output, exact
   1-versus-8-thread batch equality across all supported shape families and 51
   regions, stable marker ordering, and thread-count capping.
+- **2026-08-12 (implementation):** completed Phase 5. Added a frame-owned,
+  schema-versioned Tcl observer; idle coalescing; nested RAII bulk transactions;
+  interactive completion suppression; user-layer-only lifecycle coverage; and
+  image-wide invalidation hooks. Runtime tests passed for bulk creation,
+  command and interactive motion timing, delete/undo, catalog-layer isolation,
+  image invalidation, unsubscribe, and the prior structured, parallel, and WCS
+  regression suites.
+- **2026-08-12 (implementation):** completed Phase 6. Added the keyed live Tcl
+  catalog model, descriptor-driven Starbase schema and metadata, coordinate
+  column policy, atomic record replacement, isolated filtering, sorted-view
+  rebuilding, logical-key selection restoration, per-frame tool reuse, and
+  observer detachment on tool closure. Runtime tests passed for initial and
+  multi-component population, schema metadata, create/move/delete updates,
+  component-count reconciliation, image invalidation, filtering, sorting,
+  selection preservation and source isolation, one-tool-per-frame behavior,
+  destruction, celestial WCS headings/UCDs, and synthetic future-field flow.

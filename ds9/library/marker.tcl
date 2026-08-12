@@ -542,9 +542,9 @@ proc MarkerRelease {which x y} {
 	    set imarker(x) -1
 	    set imarker(y) -1
 	}
-	beginMove -
-	beginRotate {}
-	beginEdit {}
+	beginMove {$which marker move end}
+	beginRotate {$which marker rotate end}
+	beginEdit {$which marker edit end}
 	move {
 	    $which marker move end
 	    if {$marker(centroid,auto)} {

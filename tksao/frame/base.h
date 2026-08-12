@@ -5,6 +5,8 @@
 #ifndef __base_h__
 #define __base_h__
 
+#include <set>
+
 #include "widget.h"
 #include "vector.h"
 #include "vector3d.h"
@@ -317,6 +319,22 @@ public:
   Matrix pannerToWidget;
 
  private:
+  Tcl_Obj* regionStatsCallback_;
+  std::set<int> regionStatsAdded_;
+  std::set<int> regionStatsChanged_;
+  std::set<int> regionStatsDeleted_;
+  int regionStatsReset_;
+  int regionStatsImageChanged_;
+  int regionStatsUpdateDepth_;
+  int regionStatsInteractiveDepth_;
+  int regionStatsIdleScheduled_;
+  unsigned long regionStatsGeneration_;
+
+  static void regionStatsIdleProc(ClientData);
+  void regionStatsClearPending();
+  void regionStatsDispatch();
+  void regionStatsSchedule();
+
   void bltHist(char*, char*); // frblt.C
 
   void invalidPixmap();
@@ -548,6 +566,17 @@ public:
 #endif
 
  public:
+  void regionStatsBeginUpdate();
+  void regionStatsEndUpdate();
+  void regionStatsRegionAdded(Marker*);
+  void regionStatsRegionChanged(Marker*);
+  void regionStatsRegionDeleted(int);
+  void regionStatsRegionsReset();
+  void regionStatsImageInvalidated();
+  void regionStatsInteractiveBegin();
+  void regionStatsInteractiveEnd();
+  void regionStatsCallbackCmd(const char*);
+
   Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item);
   virtual ~Base();
 

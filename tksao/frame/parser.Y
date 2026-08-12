@@ -1900,6 +1900,10 @@ marker	: CENTROID_ markerCentroid
 
 	| INT ANALYSIS_ analysisTask yesno
 	{fr->markerAnalysisCmd($1, (Marker::AnalysisTask)$3, $4);}
+	| ANALYSIS_ STATS_ CALLBACK_ STRING
+	{fr->regionStatsCallbackCmd($4);}
+	| ANALYSIS_ STATS_ CALLBACK_
+	{fr->regionStatsCallbackCmd(NULL);}
 
 	| INT ANGLE_ angle {fr->markerAngleCmd($1,$3);}
 	| INT ANGLE_ angle internalSystem {fr->markerAngleCmd($1,$3);}

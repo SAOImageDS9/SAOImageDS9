@@ -47,6 +47,17 @@
 
 #define LISTBUFSIZE 8192
 
+namespace {
+class RegionStatsUpdateGuard {
+  Base* frame_;
+public:
+  RegionStatsUpdateGuard(Base* frame) : frame_(frame)
+  {frame_->regionStatsBeginUpdate();}
+  ~RegionStatsUpdateGuard()
+  {frame_->regionStatsEndUpdate();}
+};
+}
+
 // NOTE: all marker traversal routines use a local ptr as opposed to the
 // list current() because marker call backs may invoke another traversal 
 // routine or the event loop, which may process pending events
@@ -717,6 +728,8 @@ void Base::createCompositeCmd(
     if (mm->isSelected() && strncmp(mm->getType(),"composite",9)) {
       mm->unselect();
       Marker* next = markers->extractNext(mm);
+      if (markers == &userMarkers)
+	regionStatsRegionDeleted(mm->getId());
       mm->doCallBack(CallBack::DELETECB);
       mm->deleteCBs();
       mk->append(mm);
@@ -756,8 +769,12 @@ void Base::createCIAOCompositeCmd(
 
   // Extract only the shapes in this logical expression, preserving their order.
   List<Marker> members;
-  for (int ii=0; ii<count; ii++)
-    members.insertHead(markers->pop());
+  for (int ii=0; ii<count; ii++) {
+    Marker* member = markers->pop();
+    if (markers == &userMarkers)
+      regionStatsRegionDeleted(member->getId());
+    members.insertHead(member);
+  }
 
   Composite* mk = new Composite(this, center, 0, 1,
 				(Composite::Operation)operation,
@@ -871,6 +888,8 @@ Marker* Base::createMarker(Marker* m)
   }
   else {
     markers->append(m);
+    if (markers == &userMarkers)
+      regionStatsRegionAdded(m);
 
     // now update new marker
     update(PIXMAP, m->getAllBBox());
@@ -1035,6 +1054,187 @@ static void regionStatsDictPut(Tcl_Interp* interp, Tcl_Obj* dict,
 			       const char* key, Tcl_Obj* value)
 {
   Tcl_DictObjPut(interp,dict,Tcl_NewStringObj(key,-1),value);
+}
+
+static Tcl_Obj* regionStatsIdList(const std::set<int>& ids)
+{
+  Tcl_Obj* result = Tcl_NewListObj(0,NULL);
+  for (std::set<int>::const_iterator ii=ids.begin(); ii!=ids.end(); ++ii)
+    Tcl_ListObjAppendElement(NULL,result,Tcl_NewIntObj(*ii));
+  return result;
+}
+
+void Base::regionStatsClearPending()
+{
+  regionStatsAdded_.clear();
+  regionStatsChanged_.clear();
+  regionStatsDeleted_.clear();
+  regionStatsReset_ =0;
+  regionStatsImageChanged_ =0;
+}
+
+void Base::regionStatsSchedule()
+{
+  if (!regionStatsCallback_ || regionStatsIdleScheduled_ ||
+      regionStatsUpdateDepth_ || regionStatsInteractiveDepth_)
+    return;
+  if (!regionStatsReset_ && !regionStatsImageChanged_ &&
+      regionStatsAdded_.empty() && regionStatsChanged_.empty() &&
+      regionStatsDeleted_.empty())
+    return;
+
+  regionStatsIdleScheduled_ =1;
+  Tcl_DoWhenIdle(regionStatsIdleProc,(ClientData)this);
+}
+
+void Base::regionStatsIdleProc(ClientData data)
+{
+  Base* frame = (Base*)data;
+  frame->regionStatsIdleScheduled_ =0;
+  if (frame->regionStatsUpdateDepth_ || frame->regionStatsInteractiveDepth_)
+    return;
+  frame->regionStatsDispatch();
+}
+
+void Base::regionStatsDispatch()
+{
+  if (!regionStatsCallback_)
+    return;
+
+  Tcl_Obj* payload = Tcl_NewDictObj();
+  Tcl_IncrRefCount(payload);
+  regionStatsDictPut(interp,payload,"schema_version",Tcl_NewIntObj(1));
+  regionStatsDictPut(interp,payload,"generation",
+    Tcl_NewWideIntObj((Tcl_WideInt)++regionStatsGeneration_));
+  regionStatsDictPut(interp,payload,"reset",Tcl_NewIntObj(regionStatsReset_));
+  regionStatsDictPut(interp,payload,"image_changed",
+    Tcl_NewIntObj(regionStatsImageChanged_));
+  regionStatsDictPut(interp,payload,"added",regionStatsIdList(regionStatsAdded_));
+  regionStatsDictPut(interp,payload,"changed",
+    regionStatsIdList(regionStatsChanged_));
+  regionStatsDictPut(interp,payload,"deleted",
+    regionStatsIdList(regionStatsDeleted_));
+  regionStatsClearPending();
+
+  Tcl_Size objc =0;
+  Tcl_Obj** objv =NULL;
+  Tcl_InterpState state = Tcl_SaveInterpState(interp,TCL_OK);
+  std::string callbackError;
+  if (Tcl_ListObjGetElements(interp,regionStatsCallback_,&objc,&objv) == TCL_OK &&
+      objc > 0) {
+    std::vector<Tcl_Obj*> command(objv,objv+objc);
+    command.push_back(payload);
+    if (Tcl_EvalObjv(interp,(Tcl_Size)command.size(),&command[0],
+	TCL_EVAL_GLOBAL) != TCL_OK)
+      callbackError = Tcl_GetStringResult(interp);
+  }
+  else
+    callbackError = Tcl_GetStringResult(interp);
+  Tcl_RestoreInterpState(interp,state);
+  Tcl_DecrRefCount(payload);
+  if (!callbackError.empty()) {
+    std::string message("Unable to eval region statistics callback: ");
+    message += callbackError;
+    internalError(message.c_str());
+  }
+
+  // A callback may itself have caused another region mutation.
+  regionStatsSchedule();
+}
+
+void Base::regionStatsBeginUpdate()
+{
+  regionStatsUpdateDepth_++;
+}
+
+void Base::regionStatsEndUpdate()
+{
+  if (regionStatsUpdateDepth_ > 0)
+    regionStatsUpdateDepth_--;
+  regionStatsSchedule();
+}
+
+void Base::regionStatsInteractiveBegin()
+{
+  regionStatsInteractiveDepth_++;
+}
+
+void Base::regionStatsInteractiveEnd()
+{
+  if (regionStatsInteractiveDepth_ > 0)
+    regionStatsInteractiveDepth_--;
+  regionStatsSchedule();
+}
+
+void Base::regionStatsRegionAdded(Marker* marker)
+{
+  if (!marker || regionStatsReset_)
+    return;
+  const int id = marker->getId();
+  regionStatsDeleted_.erase(id);
+  regionStatsChanged_.erase(id);
+  regionStatsAdded_.insert(id);
+  regionStatsSchedule();
+}
+
+void Base::regionStatsRegionChanged(Marker* marker)
+{
+  if (!marker || regionStatsReset_)
+    return;
+  Marker* user = userMarkers.head();
+  while (user && user != marker)
+    user = user->next();
+  if (!user)
+    return;
+  const int id = marker->getId();
+  if (!regionStatsAdded_.count(id) && !regionStatsDeleted_.count(id))
+    regionStatsChanged_.insert(id);
+  regionStatsSchedule();
+}
+
+void Base::regionStatsRegionDeleted(int id)
+{
+  if (regionStatsReset_)
+    return;
+  if (regionStatsAdded_.erase(id))
+    regionStatsChanged_.erase(id);
+  else {
+    regionStatsChanged_.erase(id);
+    regionStatsDeleted_.insert(id);
+  }
+  regionStatsSchedule();
+}
+
+void Base::regionStatsRegionsReset()
+{
+  regionStatsAdded_.clear();
+  regionStatsChanged_.clear();
+  regionStatsDeleted_.clear();
+  regionStatsReset_ =1;
+  regionStatsSchedule();
+}
+
+void Base::regionStatsImageInvalidated()
+{
+  regionStatsImageChanged_ =1;
+  regionStatsSchedule();
+}
+
+void Base::regionStatsCallbackCmd(const char* command)
+{
+  if (regionStatsIdleScheduled_) {
+    Tcl_CancelIdleCall(regionStatsIdleProc,(ClientData)this);
+    regionStatsIdleScheduled_ =0;
+  }
+  if (regionStatsCallback_) {
+    Tcl_DecrRefCount(regionStatsCallback_);
+    regionStatsCallback_ =NULL;
+  }
+  regionStatsClearPending();
+  if (command && *command) {
+    regionStatsCallback_ = Tcl_NewStringObj(command,-1);
+    Tcl_IncrRefCount(regionStatsCallback_);
+  }
 }
 
 static const char* regionStatsDataType(RegionStatisticField::DataType type)
@@ -3645,6 +3845,7 @@ void Base::markerCompositeAreaCmd(int id, int show)
 
 void Base::markerCompositeDeleteCmd()
 {
+  RegionStatsUpdateGuard regionStatsUpdate(this);
   Marker* mm=markers->head();
   while (mm) {
     if (mm->isSelected() && !strncmp(mm->getType(),"composite",9)) {
@@ -3652,9 +3853,13 @@ void Base::markerCompositeDeleteCmd()
       Marker* nn = ((Composite*)mm)->extract();
       while (nn) {
 	markers->append(nn);
+	if (markers == &userMarkers)
+	  regionStatsRegionAdded(nn);
 	nn = ((Composite*)mm)->extract();
       }
       Marker* next = markers->extractNext(mm);
+      if (markers == &userMarkers)
+	regionStatsRegionDeleted(mm->getId());
       delete mm;
       mm = next;
 
@@ -3851,12 +4056,15 @@ void Base::markerCpandaEditCmd(int id, const char* a, const char* r,
 
 void Base::markerCutCmd()
 {
+  RegionStatsUpdateGuard regionStatsUpdate(this);
   undoMarkers->deleteAll();
   pasteMarkers->deleteAll();
   Marker* mm = markers->head();
   while (mm) {
     if (mm->isSelected() && mm->canDelete()) {
       Marker* next = markers->extractNext(mm);
+      if (markers == &userMarkers)
+	regionStatsRegionDeleted(mm->getId());
       update(PIXMAP);
       pasteMarkers->append(mm);
       mm->doCallBack(CallBack::DELETECB);
@@ -3870,12 +4078,15 @@ void Base::markerCutCmd()
 
 void Base::markerCutCmd(const char* tag)
 {
+  RegionStatsUpdateGuard regionStatsUpdate(this);
   undoMarkers->deleteAll();
   pasteMarkers->deleteAll();
   Marker* mm = markers->head();
   while (mm) {
     if (mm->canDelete() && mm->hasTag(tag)) {
       Marker* next = markers->extractNext(mm);
+      if (markers == &userMarkers)
+	regionStatsRegionDeleted(mm->getId());
       update(PIXMAP);
       pasteMarkers->append(mm);
       mm->doCallBack(CallBack::DELETECB);
@@ -3904,11 +4115,14 @@ void Base::markerDeleteCallBackCmd(int id, CallBack::Type cb,
 
 void Base::markerDeleteCmd(const char* tag)
 {
+  RegionStatsUpdateGuard regionStatsUpdate(this);
   undoMarkers->deleteAll();
   Marker* mm = markers->head();
   while (mm) {
     if (mm->canDelete() && mm->hasTag(tag)) {
       Marker* next = markers->extractNext(mm);
+      if (markers == &userMarkers)
+	regionStatsRegionDeleted(mm->getId());
       update(PIXMAP);
 
       mm->doCallBack(CallBack::DELETECB);
@@ -3931,6 +4145,8 @@ void Base::markerDeleteCmd(int id)
     if (mm->getId() == id) {
       if (mm->canDelete()) {
 	markers->extractNext(mm);
+	if (markers == &userMarkers)
+	  regionStatsRegionDeleted(mm->getId());
 	update(PIXMAP);
 
 	mm->doCallBack(CallBack::DELETECB);
@@ -3947,11 +4163,14 @@ void Base::markerDeleteCmd(int id)
 
 void Base::markerDeleteAllCmd(int select)
 {
+  RegionStatsUpdateGuard regionStatsUpdate(this);
   undoMarkers->deleteAll();
   Marker* mm = markers->head();
   while (mm) {
     if ((mm->isSelected() || !select) && mm->canDelete()) {
       Marker* next = markers->extractNext(mm);
+      if (markers == &userMarkers)
+	regionStatsRegionDeleted(mm->getId());
       update(PIXMAP);
 
       mm->doCallBack(CallBack::DELETECB);
@@ -3972,6 +4191,8 @@ void Base::markerDeleteLastCmd()
   Marker* mm=markers->tail();
   if (mm && mm->canDelete()) {
     markers->extractNext(mm);
+    if (markers == &userMarkers)
+      regionStatsRegionDeleted(mm->getId());
     update(PIXMAP);
 
     mm->doCallBack(CallBack::DELETECB);
@@ -4029,6 +4250,7 @@ void Base::markerEditBeginCmd(int id, int hh)
   while (mm) {
     if (mm->getId() == id && mm->canEdit()) {
       markerUndo(mm, EDIT);
+      regionStatsInteractiveBegin();
 
       editMarker = mm;
       editMarker->editBegin(hh);
@@ -4047,6 +4269,7 @@ void Base::markerEditBeginCmd(const Vector& vv, int hh)
   while (mm) {
     if (mm->isSelected() && mm->canEdit()) {
       markerUndo(mm, EDIT);
+      regionStatsInteractiveBegin();
 
       editMarker = mm;
       editMarker->editBegin(hh);
@@ -4073,9 +4296,11 @@ void Base::markerEditEndCmd()
   if (editMarker) {
     editMarker->setRenderMode(Marker::SRC);
     editMarker->editEnd();
+    regionStatsRegionChanged(editMarker);
   }
 
   editMarker = NULL;
+  regionStatsInteractiveEnd();
   update(PIXMAP);
 }
 
@@ -5167,6 +5392,8 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color)
       for (FitsRegionComponent::iterator mm=members.begin();
 	   mm != members.end(); ++mm) {
 	markers->extractNext(*mm);
+	if (markers == &userMarkers)
+	  regionStatsRegionDeleted((*mm)->getId());
 	composite->append(*mm);
       }
       composite->updateBBox();
@@ -5238,6 +5465,7 @@ void Base::markerMoveCmd(int id, const Vector& v)
 
 void Base::markerMoveBeginCmd(const Vector& vv)
 {
+  regionStatsInteractiveBegin();
   markerBegin = mapToRef(vv,Coord::CANVAS);
 
   undoMarkers->deleteAll();
@@ -5277,11 +5505,13 @@ void Base::markerMoveEndCmd()
     if (mm->isSelected() && mm->canMove()) {
       mm->setRenderMode(Marker::SRC);
       mm->moveEnd();
+      regionStatsRegionChanged(mm);
     }
     mm=mm->next();
   }
 
   update(PIXMAP);
+  regionStatsInteractiveEnd();
 }
 
 void Base::markerMoveToCmd(const Vector& v, Coord::CoordSystem sys,
@@ -5344,6 +5574,7 @@ void Base::markerMoveToCmd(int id, const Vector& v,
 
 void Base::markerPasteCmd()
 {
+  RegionStatsUpdateGuard regionStatsUpdate(this);
   // Internal copy/paste
   {
     Marker* mm=markers->head();
@@ -5359,6 +5590,8 @@ void Base::markerPasteCmd()
     Marker* nn = mm->dup();
     nn->newIdentity();
     markers->append(nn);
+    if (markers == &userMarkers)
+      regionStatsRegionAdded(nn);
     mm = mm->next();
   }
 
@@ -5703,6 +5936,7 @@ void Base::markerRotateBeginCmd(int id)
     if (mm->getId() == id) {
       if (mm->canRotate()) {
 	markerUndo(mm, EDIT);
+	regionStatsInteractiveBegin();
 	editMarker = mm;
 	editMarker->rotateBegin();
       }
@@ -5721,6 +5955,7 @@ void Base::markerRotateBeginCmd(const Vector& v)
   while (mm) {
     if (mm->isSelected() && mm->canRotate()) {
       markerUndo(mm, EDIT);
+      regionStatsInteractiveBegin();
       editMarker = mm;
       editMarker->rotateBegin();
       return;
@@ -5746,9 +5981,11 @@ void Base::markerRotateEndCmd()
   if (editMarker) {
     editMarker->setRenderMode(Marker::SRC);
     editMarker->rotateEnd();
+    regionStatsRegionChanged(editMarker);
   }
 
   editMarker = NULL;
+  regionStatsInteractiveEnd();
   update(PIXMAP);
 }
 
@@ -6288,6 +6525,7 @@ void Base::markerTextRotateCmd(int id, int rot)
 
 void Base::markerUndoCmd()
 {
+  RegionStatsUpdateGuard regionStatsUpdate(this);
   Marker* nn=undoMarkers->head();
   while (nn) {
     Marker* next = nn->next();
@@ -6298,6 +6536,8 @@ void Base::markerUndoCmd()
       break;
     case DELETE:
       markers->append(nn);
+      if (markers == &userMarkers)
+	regionStatsRegionAdded(nn);
       nn->updateBBox();
       update(PIXMAP,nn->getAllBBox());
       break;
@@ -6313,6 +6553,8 @@ void Base::markerUndoCmd()
 
 	    markers->insertNext(mm,nn);
 	    markers->extractNext(mm);
+	    if (markers == &userMarkers)
+	      regionStatsRegionChanged(nn);
 
 	    nn->updateBBox();
 	    update(PIXMAP,nn->getAllBBox());
@@ -6609,6 +6851,7 @@ void Base::markerUndo(Marker* m, UndoMarkerType t)
 
 void Base::parseMarker(MarkerFormat fm, istream& str)
 {
+  RegionStatsUpdateGuard regionStatsUpdate(this);
   switch (fm) {
   case DS9: 
     {
@@ -6788,6 +7031,8 @@ void Base::updateMarkerCBs(List<Marker>* ml)
     mm->doCallBack(CallBack::ROTATECB);
     mm=mm->next();
   }
+  if (ml == &userMarkers)
+    regionStatsImageInvalidated();
 }
 
 #ifdef __WIN32

@@ -53,6 +53,8 @@ proc AnalysisMainMenu {} {
     $ds9(mb).analysis add cascade -label [msgcat::mc {Footprint Servers}] \
 	-menu $ds9(mb).analysis.footprint
     $ds9(mb).analysis add separator
+    $ds9(mb).analysis add command -label [msgcat::mc {Make Catalog}] \
+	-command RegionCatalogCreate
     $ds9(mb).analysis add command -label [msgcat::mc {Catalog Tool}] \
 	-command CATTool
     $ds9(mb).analysis add cascade -label [msgcat::mc {Plot Tool}] \
@@ -348,6 +350,13 @@ proc UpdateAnalysisMenu {} {
 	$ds9(mb) entryconfig [msgcat::mc {Analysis}] -state disabled
 	ConfigureButtons analysis disabled
     }
+
+    set state disabled
+    if {$current(frame) != {} && [info commands $current(frame)] != {} &&
+	[$current(frame) has fits]} {
+	set state normal
+    }
+    $ds9(mb).analysis entryconfig [msgcat::mc {Make Catalog}] -state $state
 
     if {$current(frame) != {}} {
 	for {set ii 0} {$ii<$ianalysis(menu,count)} {incr ii} {

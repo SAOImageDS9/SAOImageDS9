@@ -76,7 +76,8 @@ The feature is implementable within DS9’s existing architecture. The plan shou
 | 4 | Complete (2026-08-12) | Batch results now use immutable geometry/pixel jobs and a bounded pthread work queue capped by DS9's configured thread count. |
 | 5 | Complete (2026-08-12) | A frame-level observer now emits versioned, idle-coalesced user-region lifecycle and image-invalidation events, with bulk and interactive completion boundaries. |
 | 6 | Complete (2026-08-12) | A keyed Tcl model now discovers its schema, populates a Catalog Tool, consumes live observer batches, and preserves filtered/sorted view state. |
-| 7 | Next | Add the Analysis menu command and close the associated catalog when its frame is deleted. |
+| 7 | Complete (2026-08-12) | `Analysis → Make Catalog` now creates or raises the current frame's live tool, is disabled without image data, and closes the owned tool when its frame is deleted. |
+| 8 | Next | Expand automated numeric, live-update, threading, lifecycle, and Catalog Tool coverage in the project test harness. |
 
 Phase 2 introduced `RegionStatisticField`, `RegionStatisticValue`,
 `RegionStatisticComponent`, `RegionStatisticResult`, and
@@ -413,10 +414,10 @@ tool when called again for the same frame.
 
 ### 7. UI and lifecycle integration
 
-Add `Analysis → Make Catalog` in
+Phase 7 adds `Analysis → Make Catalog` in
 [manalysis.tcl](/Users/kjg/DS9/SAOImageDS9/ds9/library/manalysis.tcl).
 
-Recommended initial behavior:
+Implemented behavior:
 
 - Title: `Region Statistics — <frame>`;
 - one live statistics catalog per frame;
@@ -425,6 +426,16 @@ Recommended initial behavior:
 - status reports measured, skipped, and empty regions;
 - closing the catalog unsubscribes it from the frame;
 - deleting the frame closes or detaches its catalog cleanly.
+
+The menu item is enabled only when the current frame exists and contains FITS
+image data. It participates in the normal `UpdateAnalysisMenu` state refresh,
+and the fixed Analysis-menu boundary was advanced so external analysis commands
+continue to append and clear at the correct index.
+
+`DeleteFrame` calls `RegionCatalogFrameDelete` before clearing or destroying the
+frame widget. This lets the catalog unsubscribe while its frame command is still
+valid, destroys its Catalog Tool window, and removes the per-frame association.
+Other frames and their catalogs are unaffected.
 
 Possible later controls:
 
@@ -589,6 +600,10 @@ Add a release-note entry and update Region and Catalog Tool user documentation.
     records. Retain prior values when batch or single-region measurement fails
     and report the error in catalog status; remove rows only for successful
     deletion or a successful result showing the region is unsupported.
+28. **UI ownership:** expose creation through one `Analysis → Make Catalog`
+    command that is enabled only for a current image frame. A generated catalog
+    is owned by exactly one frame; repeated invocation reuses it, tool closure
+    unsubscribes it, and frame deletion destroys only that frame's tool.
 
 ## Remaining open implementation issues
 
@@ -619,9 +634,9 @@ for initial catalog creation in Phase 6.
 
 The third milestone delivered frame observation and coalesced live-update
 events. The fourth milestone delivered the keyed live Catalog Tool model,
-schema/metadata discovery, and state-preserving incremental refresh. Phase 7
-will expose it in the Analysis menu and connect frame deletion to catalog
-destruction.
+schema/metadata discovery, and state-preserving incremental refresh. The fifth
+milestone exposed the model through the Analysis menu and completed frame/tool
+ownership cleanup. Phase 8 will consolidate and broaden the automated tests.
 
 This ordering isolates numerical correctness, concurrency, and lifecycle synchronization, making regressions considerably easier to diagnose.
 
@@ -663,3 +678,9 @@ This ordering isolates numerical correctness, concurrency, and lifecycle synchro
   component-count reconciliation, image invalidation, filtering, sorting,
   selection preservation and source isolation, one-tool-per-frame behavior,
   destruction, celestial WCS headings/UCDs, and synthetic future-field flow.
+- **2026-08-12 (implementation):** completed Phase 7. Added the
+  `Analysis → Make Catalog` command, image-aware menu state, corrected dynamic
+  Analysis-menu boundary, and frame-owned Catalog Tool destruction. Runtime
+  tests passed for public menu invocation, repeated-tool reuse, enable/disable
+  transitions, independent catalogs on two frames, selective frame deletion,
+  window destruction, and observer-association cleanup.

@@ -472,7 +472,7 @@ proc GridAst2Color {ast} {
 	16711935 {return {magenta}}
 	16776960 {return {yellow}}
 
-	default {return "#[format %x $ast]"}
+	default {return "#[format %06x $ast]"}
     }
 }
 
@@ -488,11 +488,21 @@ proc GridColor2Ast {which} {
 	yellow  {return [expr 0xffff00]}
 
 	default {
-	    if {[string range $which 0 0] == "#"} {
-		return [expr 0x[string range $which 1 end]]
-	    } else {
-		return [expr $which]
+	    # Tk color names and specifications (for example "gray" and
+	    # "#808080") are returned as 16-bit RGB components.  AST expects
+	    # the components packed into a 24-bit integer.
+	    if {![catch {winfo rgb . $which} rgb]} {
+		lassign $rgb red green blue
+		return [expr {(($red / 257) << 16) |
+		    (($green / 257) << 8) | ($blue / 257)}]
 	    }
+
+	    # Preserve support for a packed integer from older grid settings.
+	    if {[string is integer -strict $which]} {
+		return $which
+	    }
+
+	    error "invalid color \"$which\""
 	}
     }
 }

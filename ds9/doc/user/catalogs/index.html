@@ -26,6 +26,7 @@
 <hr size="5" noshade>
 <h2><a name="toc">Contents</a></h2>
 <ul>
+<li><strong><a href="index.html#regionstats">Making a Live Region Statistics Catalog</a></strong></li>
 <li><strong><a href="index.html#display">Displaying a Catalog</a></strong></li>
 <li><strong><a href="index.html#select">Selecting Sources with the Cursor</a></strong></li>
 <li><strong><a href="index.html#display2">Displaying Multiple Catalogs</a></strong></li>
@@ -53,6 +54,37 @@
 </ul>
 <hr>
 <div class="sectionlist">
+<div class="section">
+<h2><a name="regionstats">Making a Live Region Statistics Catalog</a></h2>
+
+	<p>
+	  Load an image, create or load one or more area regions, and choose
+	  "Analysis &rarr; Make Catalog". DS9 opens one Catalog Tool for the
+	  current frame with a row for every measured region component and
+	  columns for its position and statistics. Choosing Make Catalog again
+	  raises and recalculates the same tool.
+	</p>
+
+	<p>
+	  The table is live. It updates after regions are added, pasted, moved,
+	  edited, rotated, deleted, or restored, and after relevant image or WCS
+	  changes. You can sort, filter, plot, print, and export the measurements.
+	  The generated table has no catalog symbols and selecting a row does not
+	  select the source region. Enable "Preferences &rarr; Pan To" to pan the
+	  image to a selected table row or plot point.
+	</p>
+
+	<p>
+	  Closing the Catalog Tool stops its live updates. The exported table may
+	  be saved, but the live connection is not restored from a DS9 backup;
+	  choose Make Catalog again after restoring a session. For supported
+	  shapes, component meanings, columns, units, threading, and mosaic
+	  behavior, see the <a href="../../ref/region.html#StatisticsCatalog">Region
+	  Statistics Catalog reference</a>.
+	</p>
+
+      <hr>
+</div>
 <div class="section">
 <h2><a name="display">Displaying a Catalog</a></h2>
         
@@ -400,6 +432,12 @@ astronomiques de Strasbourg) and ESA-ESRIN (Information Systems Division).
 <hr size="5" noshade>
 <h2><a name="history">History</a></h2>
 <table class="history">
+      <tr>
+<td class="historydate">13 Aug 2026</td>
+<td>
+	Added live Region Statistics Catalog instructions
+     </td>
+</tr>
       <tr>
 <td class="historydate">08 Jan 2010</td>
 <td>

@@ -11,8 +11,9 @@ recorded here should be kept in sync with the implementation.
 - The catalog contains one row per `(region_id, component)`, using the same
   non-overlapping component semantics as the current Statistics report.
 - Supported user regions are included even when they are excluded, background,
-  or members of groups. Composite, hidden, and fixed-screen-size regions are
-  omitted.
+  members of groups, or globally hidden from display. Fixed-screen-size
+  regions and genuine compound composites are omitted. A one-member composite
+  is measured as its supported member.
 - The catalog records region classification with numeric `background` and
   `exclude` columns (`1` when true, `0` when false).
 - All current Statistics values are included. There is no statistics-selection
@@ -530,6 +531,13 @@ row selection does not select or highlight source regions.
 
 ### 9. Documentation
 
+Phase 9 documents the feature in the Analysis, Region, and Catalog reference
+pages, the Catalog Tool user tutorial, the command-line/XPA/SAMP catalog
+interfaces, and the 8.8 release notes. The Region reference is the canonical
+description of supported shapes, component rows, fields and units, live invalidation,
+threading and memory behavior, mosaic scope, and the compiled-statistic
+registration path.
+
 Document:
 
 - which region types support measurements;
@@ -547,10 +555,10 @@ Add a release-note entry and update Region and Catalog Tool user documentation.
 
 1. **Compound rows:** one row per `(region_id, component)`, matching the
    current non-overlapping Statistics components.
-2. **Region scope:** include supported excluded, background, and grouped user
-   regions. Omit hidden, fixed-screen-size, non-area, catalog regions, and
-   genuine compound composites. Treat a one-member composite as its supported
-   member geometry; this accommodates the wrapper emitted for individual
+2. **Region scope:** include supported excluded, background, grouped, and
+   globally hidden-display user regions. Omit fixed-screen-size, non-area,
+   catalog regions, and genuine compound composites. Treat a one-member
+   composite as its supported member geometry; this accommodates the wrapper emitted for individual
    sources by common CIAO/FITS region-table imports and their DS9 exports.
    Record `background` and `exclude` as numeric columns.
 3. **Creation/edit completion:** add interactive regions after their initial
@@ -634,23 +642,18 @@ Add a release-note entry and update Region and Catalog Tool user documentation.
     region-statistics catalogs by panning from the selected view row's frozen
     coordinates. Table, plot, and SAMP selection must not query, highlight, or
     blink catalog markers because this catalog intentionally creates none.
+30. **Visibility:** DS9 has no persistent per-region hidden property; the
+    Region Show/Hide control is global presentation state. It does not change
+    statistics-catalog membership. Fixed-size regions remain omitted.
+31. **Persistence:** generated catalog data may be exported, but the live tool
+    and frame association are not serialized in session backup. Recreate the
+    catalog with `Make Catalog` after restoring a session.
+32. **Mosaics:** measure a region using the mosaic segment containing its
+    center. Do not combine pixels across segment boundaries in one row.
 
 ## Remaining open implementation issues
 
-These do not require changing the product behavior above, but they should be
-settled during Phase 1 or by a focused prototype before the dependent phase.
-
-### H. Hidden and fixed-region detection
-
-Confirm the exact marker properties that implement the product terms “hidden”
-and “fixed-screen-size,” including whether globally hidden regions are omitted
-or merely not displayed.
-
-### L. Catalog persistence and backup
-
-Decide whether a live generated catalog participates in DS9 session backup and
-restore. If restored, determine whether it is serialized as data or recreated
-from its frame and regions.
+No open implementation issues remain for the initial feature.
 
 
 ## Suggested implementation order
@@ -666,7 +669,8 @@ The third milestone delivered frame observation and coalesced live-update
 events. The fourth milestone delivered the keyed live Catalog Tool model,
 schema/metadata discovery, and state-preserving incremental refresh. The fifth
 milestone exposed the model through the Analysis menu and completed frame/tool
-ownership cleanup. Phase 8 will consolidate and broaden the automated tests.
+ownership cleanup. Phase 8 consolidated and broadened the automated tests, and
+Phase 9 completed user, interface, developer, and release documentation.
 
 This ordering isolates numerical correctness, concurrency, and lifecycle synchronization, making regressions considerably easier to diagnose.
 
@@ -744,3 +748,11 @@ This ordering isolates numerical correctness, concurrency, and lifecycle synchro
   Pan To; multi-extension
   mosaic behavior; independent frame/tool destruction; menu, CLI, SAMP, and a
   real XPA round trip. The full suite passes against the packaged local build.
+- **2026-08-13 (implementation):** completed Phase 9. Added Analysis, Region,
+  and Catalog reference documentation and a Catalog Tool user tutorial,
+  clarified `catalog make` in the command-line, XPA, and SAMP references, and added an
+  8.8 release-note entry. Documented shapes,
+  component rows, fields and units, live invalidation, threading/memory,
+  mosaic segment scope, developer field registration, marker-free Pan To,
+  lifecycle, export, and backup/restore behavior. Resolved the remaining
+  visibility and persistence questions in decisions 30-32.

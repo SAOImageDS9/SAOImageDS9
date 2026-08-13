@@ -454,6 +454,20 @@ Possible later controls:
 
 ### 8. Testing and verification
 
+Phase 8 adds the durable `regioncatalog.sh` suite in the separate DS9 `Tests`
+repository and includes it from `all.sh`. Run it from that repository with DS9
+and the XPA tools (including `xpans`) on `PATH`. `DS9_BIN` may name a specific
+binary under test. The suite uses isolated temporary output, uniquely named XPA
+instances, bounded waits, and exits nonzero on the first failed case.
+
+The normal suite covers deterministic numeric/legacy comparisons, edge-value
+fixtures, bounded threading, observer events, live catalog behavior, WCS and
+mosaic behavior, UI and connector entry points, and Catalog Tool operations.
+The live cases include edit and rotate completion boundaries, copy/paste,
+delete/undo, and marker-free table/plot `Pan To` behavior.
+Resource-exhaustion injection and thread-sanitizer builds remain explicit
+specialized runs because they require non-default build/runtime environments.
+
 #### Numeric regression tests
 
 For every supported shape:
@@ -719,3 +733,14 @@ This ordering isolates numerical correctness, concurrency, and lifecycle synchro
   creation path as the Analysis menu and is therefore available through
   command-line `-catalog make`, the XPA `catalog make` access point, and SAMP
   `ds9.set` with `catalog make`.
+- **2026-08-13 (implementation):** completed Phase 8 with a durable automated
+  suite in the separate `Tests` repository. Coverage includes all supported
+  geometry families compared with the legacy Statistics report; rotated,
+  partial, empty, NaN, negative, and very large-value regions; exact
+  single-versus-multithreaded results; high requested thread counts; coalesced
+  create/move/edit/rotate/paste/delete/undo and invalidation events; repeated
+  live edits; schema, blank values, filtering, sorting, selection preservation,
+  and TSV export; image/physical/celestial coordinates; marker-free table/plot
+  Pan To; multi-extension
+  mosaic behavior; independent frame/tool destruction; menu, CLI, SAMP, and a
+  real XPA round trip. The full suite passes against the packaged local build.

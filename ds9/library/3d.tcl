@@ -492,6 +492,10 @@ proc Lock3DView {which} {
 }
 
 proc 3DMotion {which x y} {
+    MotionDispatch 3d-$which [list 3DMotionNow $which $x $y]
+}
+
+proc 3DMotionNow {which x y} {
     global ds9
     global threed
 

@@ -150,6 +150,8 @@ proc BindEventsPanner {} {
 proc UnBindEventsPanner {} {
     global ds9
 
+    MotionDispatchCancel panner
+
     $ds9(panner,canvas) bind panner <Enter> {}
     $ds9(panner,canvas) bind panner <Leave> {}
     $ds9(panner,canvas) bind panner <Motion> {}
@@ -224,10 +226,15 @@ proc Button1Panner {x y} {
 	puts stderr "Button1Panner"
     }
 
+    MotionDispatchCancel panner
     panner pan begin $x $y
 }
 
 proc Motion1Panner {x y} {
+    MotionDispatch panner [list Motion1PannerNow $x $y]
+}
+
+proc Motion1PannerNow {x y} {
     global ds9
     global current
 
@@ -255,6 +262,8 @@ proc Release1Panner {x y} {
 	puts stderr "Release1Panner"
     }
 
+    # Panner end and pan bbox apply the release coordinates themselves.
+    MotionDispatchCancel panner
     panner pan end $x $y
     if {$current(frame) != {}} {
 	$current(frame) pan bbox [panner get bbox]

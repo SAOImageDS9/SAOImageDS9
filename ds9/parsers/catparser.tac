@@ -55,6 +55,7 @@
 %token INCR_
 %token LOAD_
 %token LOCATION_
+%token MAKE_
 %token MATCH_
 %token MAXROWS_
 %token NAME_
@@ -148,6 +149,7 @@ catalog : NEW_ {CATTool}
 # backward compatibilty
  | HIDE_ {ProcessCmdCVAR show 0 CATGenerate}
  | LOCATION_ INT_ {ProcessCmdCVAR loc $2 CATGenerate}
+ | MAKE_ {CatalogCmdMake}
  | MATCH_ match
  | MAXROWS_ INT_ {ProcessCmdCVAR max $2}
  | NAME_ STRING_ {ProcessCmdCVAR name $2}

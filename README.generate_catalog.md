@@ -561,8 +561,9 @@ Add a release-note entry and update Region and Catalog Tool user documentation.
     Document the possibility of small reduction-order differences in code.
 14. **Filters/sorts:** maintain a keyed source table and regenerate the
     filtered/sorted view after a coalesced update batch.
-15. **XPA:** defer a new `analysis make catalog` command until the internal
-    interface is stable.
+15. **CLI/XPA/SAMP:** expose live catalog creation as `catalog make` after the
+    internal interface is stable. Route all three connectors through the
+    existing catalog command parser; do not add a separate analysis command.
 16. **Empty regions:** retain each supported empty component in structured
     results with `core.pixel_count = 0` and all other measurements missing. The
     legacy Statistics text formatter omits the empty data row, preserving its
@@ -713,3 +714,8 @@ This ordering isolates numerical correctness, concurrency, and lifecycle synchro
   composites. The catalog retains the stable top-level region ID and reports
   the supported member shape, allowing live updates to remain attached to the
   visible composite region.
+- **2026-08-13 (CLI/XPA/SAMP):** added `catalog make` to the catalog command
+  parser. The command invokes the same current-frame live statistics catalog
+  creation path as the Analysis menu and is therefore available through
+  command-line `-catalog make`, the XPA `catalog make` access point, and SAMP
+  `ds9.set` with `catalog make`.

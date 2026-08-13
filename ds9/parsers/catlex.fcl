@@ -49,6 +49,7 @@ import	    {return $IMPORT_}
 incr	    {return $INCR_}
 load	    {return $LOAD_}
 location    {return $LOCATION_}
+make        {return $MAKE_}
 match	    {return $MATCH_}
 maxrows	    {return $MAXROWS_}
 name	    {return $NAME_}

@@ -488,6 +488,13 @@ proc GridColor2Ast {which} {
 	yellow  {return [expr 0xffff00]}
 
 	default {
+	    # Expand Tk's #RGB shorthand without passing it through either the
+	    # Tcl expression parser or a downstream color parser.
+	    if {[regexp -nocase {^#([[:xdigit:]])([[:xdigit:]])([[:xdigit:]])$} \
+		$which {} red green blue]} {
+		return [scan "$red$red$green$green$blue$blue" %x]
+	    }
+
 	    # Tk color names and specifications (for example "gray" and
 	    # "#808080") are returned as 16-bit RGB components.  AST expects
 	    # the components packed into a 24-bit integer.

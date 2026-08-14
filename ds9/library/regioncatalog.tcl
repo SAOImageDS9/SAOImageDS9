@@ -117,8 +117,17 @@ proc RegionCatalogInitialize {varname fields batch} {
     if {[llength $regions]} {
 	set areaunit [dict get [lindex $regions 0] area_unit]
     }
+    set centroidwcsunit {}
+    foreach region $regions {
+	if {[dict exists $region centroid_wcs_unit] &&
+	    [dict get $region centroid_wcs_unit] != {}} {
+	    set centroidwcsunit [dict get $region centroid_wcs_unit]
+	    break
+	}
+    }
 
-    RegionCatalogBuildSchema $varname [dict get $fields fields] $areaunit
+    RegionCatalogBuildSchema $varname [dict get $fields fields] $areaunit \
+	$centroidwcsunit
     RegionCatalogReplaceAll $varname $batch 0
 
     set var(colx) $var(regioncatalog,coordx)
@@ -205,7 +214,7 @@ proc RegionCatalogUniqueColumn {used preferred key} {
     return $name
 }
 
-proc RegionCatalogUnit {kind areaunit} {
+proc RegionCatalogUnit {kind areaunit centroidwcsunit} {
     switch -- $areaunit {
 	pixel_squared {set area {pixel**2}}
 	arcsec_squared {set area {arcsec**2}}
@@ -218,11 +227,13 @@ proc RegionCatalogUnit {kind areaunit} {
 	pixel_count {return pixel}
 	area {return $area}
 	data_per_area {return "data/$area"}
+	image_coordinate {return pixel}
+	wcs_coordinate {return $centroidwcsunit}
 	default {return {}}
     }
 }
 
-proc RegionCatalogBuildSchema {varname fields areaunit} {
+proc RegionCatalogBuildSchema {varname fields areaunit centroidwcsunit} {
     upvar #0 $varname var
 
     set coord [RegionCatalogCoordinateInfo $var(frame) \
@@ -231,6 +242,7 @@ proc RegionCatalogBuildSchema {varname fields areaunit} {
     set var(regioncatalog,coordy) [dict get $coord y]
     set var(regioncatalog,fields) $fields
     set var(regioncatalog,areaunit) $areaunit
+    set var(regioncatalog,centroidwcsunit) $centroidwcsunit
 
     set header {region_id component shape background exclude}
     lappend header $var(regioncatalog,coordx) $var(regioncatalog,coordy)
@@ -265,7 +277,8 @@ proc RegionCatalogBuildSchema {varname fields areaunit} {
 	    }
 	}
 	lappend precision [dict get $field precision]
-	lappend unit [RegionCatalogUnit [dict get $field unit_kind] $areaunit]
+	lappend unit [RegionCatalogUnit [dict get $field unit_kind] $areaunit \
+	    $centroidwcsunit]
 	lappend ucd [dict get $field ucd]
 	lappend description [dict get $field description]
 	lappend ids $key

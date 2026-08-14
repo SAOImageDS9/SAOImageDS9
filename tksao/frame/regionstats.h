@@ -23,7 +23,7 @@ class Marker;
 struct RegionStatisticField {
   enum DataType {FIELD_INTEGER, FIELD_REAL, FIELD_STRING};
   enum UnitKind {NO_UNIT, DATA_VALUE, DATA_ERROR, PIXEL_COUNT,
-                 AREA, DATA_PER_AREA};
+                 AREA, DATA_PER_AREA, IMAGE_COORDINATE, WCS_COORDINATE};
 
   const char* key;
   const char* label;
@@ -64,9 +64,12 @@ public:
 
 struct RegionStatisticComponent {
   int component;
+  int hasCentroid;
+  Vector centroid;
   std::map<std::string, RegionStatisticValue> values;
 
-  explicit RegionStatisticComponent(int value=0) : component(value) {}
+  explicit RegionStatisticComponent(int value=0)
+    : component(value), hasCentroid(0) {}
 
   void set(const char* key, long value)
   {values[key] = RegionStatisticValue(value);}
@@ -106,15 +109,17 @@ class RegionStatisticAccumulator {
   double sum2_;
   double min_;
   double max_;
+  double weightedX_;
+  double weightedY_;
   std::vector<double> samples_;
 
 public:
   RegionStatisticAccumulator()
-    : sum_(0), sum2_(0), min_(0), max_(0) {}
+    : sum_(0), sum2_(0), min_(0), max_(0), weightedX_(0), weightedY_(0) {}
 
   void reserve(size_t size) {samples_.reserve(size);}
 
-  void add(double value)
+  void add(double value, const Vector& reference)
   {
     if (samples_.empty()) {
       min_ = value;
@@ -129,6 +134,8 @@ public:
 
     sum_ += value;
     sum2_ += value*value;
+    weightedX_ += reference[0]*value;
+    weightedY_ += reference[1]*value;
     samples_.push_back(value);
   }
 
@@ -150,6 +157,8 @@ public:
 
     sum_ += other.sum_;
     sum2_ += other.sum2_;
+    weightedX_ += other.weightedX_;
+    weightedY_ += other.weightedY_;
     samples_.insert(samples_.end(), other.samples_.begin(),
                     other.samples_.end());
   }
@@ -159,6 +168,8 @@ public:
   double sum2() const {return sum2_;}
   double minimum() const {return min_;}
   double maximum() const {return max_;}
+  int hasCentroid() const {return !samples_.empty() && sum_ > 0;}
+  Vector centroid() const {return Vector(weightedX_/sum_,weightedY_/sum_);}
 
   double median()
   {

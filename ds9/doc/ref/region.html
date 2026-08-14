@@ -291,8 +291,11 @@ median&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; upper middle value of the sorted pixels<br>
 min, max&nbsp;&nbsp;&nbsp; minimum and maximum<br>
 var&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; population variance<br>
 stddev&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; population standard deviation<br>
-rms&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; root mean square
+rms&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; root mean square<br>
+centroid_x, centroid_y&nbsp;&nbsp; intensity-weighted image coordinates<br>
+centroid_wcs_x, centroid_wcs_y&nbsp;&nbsp; intensity-weighted WCS coordinates
 </tt></blockquote>
+<p>Centroids use the centers of finite pixels as positions and the pixel values as weights, matching DS9's existing centroid behavior. A centroid is blank when the component is empty or its total weight is not positive. Image centroid coordinates are always reported. WCS coordinates use the requested WCS when one is selected, otherwise the primary WCS; they are blank when that image segment has no WCS.</p>
 <p>The coordinate system and sky frame are captured when the catalog is created. Image and detector-like centers use <tt>X</tt>/<tt>Y</tt> in pixels; celestial centers use the appropriate longitude/latitude headings in degrees; linear WCS centers use <tt>WCS_X</tt>/<tt>WCS_Y</tt>. Area is reported in <tt>pixel**2</tt>, <tt>arcsec**2</tt>, or <tt>linear**2</tt>, and surface values use data per corresponding area unit.</p>
 <p>The catalog updates after a region is created, pasted, deleted, restored with Undo, or completes a move, edit, or rotation. It is also recalculated after image changes that affect measured data or coordinates, including cube-slice, smoothing, binning, blocking, section/crop, reload, mosaic, and relevant WCS changes. Interactive geometry is measured only after the operation completes, and bulk region operations are coalesced into one update.</p>
 <p>Initial and image-wide recalculations use the DS9 thread preference, bounded by the number of measurable regions. Calculations are synchronous and results retain user-region order; small floating-point differences can occur from reduction order. Exact medians require per-region pixel storage. If allocation fails, reduce the thread preference to 1 and retry.</p>

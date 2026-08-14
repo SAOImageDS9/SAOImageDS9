@@ -1265,6 +1265,10 @@ static const char* regionStatsUnitKind(RegionStatisticField::UnitKind unit)
     return "area";
   case RegionStatisticField::DATA_PER_AREA:
     return "data_per_area";
+  case RegionStatisticField::IMAGE_COORDINATE:
+    return "image_coordinate";
+  case RegionStatisticField::WCS_COORDINATE:
+    return "wcs_coordinate";
   }
   return "";
 }
@@ -1297,6 +1301,14 @@ static Tcl_Obj* regionStatsValueObj(const RegionStatisticValue& value)
   return NULL;
 }
 
+static Coord::CoordSystem regionStatsCentroidWCSSystem(
+  FitsImage* ptr, Coord::CoordSystem requested)
+{
+  if (requested >= Coord::WCS && ptr->hasWCS(requested))
+    return requested;
+  return Coord::WCS;
+}
+
 Tcl_Obj* Base::markerAnalysisStatsDataObj(
   const RegionStatisticResult& stats, Coord::CoordSystem sys,
   Coord::SkyFrame sky)
@@ -1321,6 +1333,16 @@ Tcl_Obj* Base::markerAnalysisStatsDataObj(
   FitsImage* ptr = isInCFits(stats.center,Coord::REF,NULL);
   if (!ptr)
     ptr = currentContext->cfits;
+  const Coord::CoordSystem centroidWCS =
+    regionStatsCentroidWCSSystem(ptr,sys);
+  const int hasCentroidWCS = ptr->hasWCS(centroidWCS);
+  regionStatsDictPut(interp,resultObj,"centroid_wcs_system",
+    Tcl_NewStringObj(hasCentroidWCS ? coord.coordSystemStr(centroidWCS) : "",-1));
+  regionStatsDictPut(interp,resultObj,"centroid_wcs_sky_frame",
+    Tcl_NewStringObj(hasCentroidWCS ? coord.skyFrameStr(sky) : "",-1));
+  regionStatsDictPut(interp,resultObj,"centroid_wcs_unit",
+    Tcl_NewStringObj(hasCentroidWCS ?
+      (ptr->hasWCSCel(centroidWCS) ? "deg" : "linear") : "",-1));
   Vector center = ptr->mapFromRef(stats.center,sys,sky);
   Tcl_Obj* centerObj = Tcl_NewListObj(0,NULL);
   Tcl_ListObjAppendElement(interp,centerObj,Tcl_NewDoubleObj(center[0]));
@@ -1341,6 +1363,21 @@ Tcl_Obj* Base::markerAnalysisStatsDataObj(
       Tcl_Obj* valueObj = regionStatsValueObj(value->second);
       if (valueObj)
 	regionStatsDictPut(interp,valuesObj,value->first.c_str(),valueObj);
+    }
+    if (component.hasCentroid) {
+      const Vector image = ptr->mapFromRef(
+	component.centroid,Coord::IMAGE,sky);
+      regionStatsDictPut(interp,valuesObj,"core.centroid_image_x",
+	Tcl_NewDoubleObj(image[0]));
+      regionStatsDictPut(interp,valuesObj,"core.centroid_image_y",
+	Tcl_NewDoubleObj(image[1]));
+      if (hasCentroidWCS) {
+	const Vector wcs = ptr->mapFromRef(component.centroid,centroidWCS,sky);
+	regionStatsDictPut(interp,valuesObj,"core.centroid_wcs_x",
+	  Tcl_NewDoubleObj(wcs[0]));
+	regionStatsDictPut(interp,valuesObj,"core.centroid_wcs_y",
+	  Tcl_NewDoubleObj(wcs[1]));
+      }
     }
     regionStatsDictPut(interp,componentObj,"values",valuesObj);
     Tcl_ListObjAppendElement(interp,componentsObj,componentObj);

@@ -650,6 +650,11 @@ Add a release-note entry and update Region and Catalog Tool user documentation.
     catalog with `Make Catalog` after restoring a session.
 32. **Mosaics:** measure a region using the mosaic segment containing its
     center. Do not combine pixels across segment boundaries in one row.
+33. **Centroids:** compute an intensity-weighted centroid independently for
+    each component using finite pixel values and pixel-center positions. Match
+    DS9's existing positive-total-weight behavior; leave centroid fields blank
+    for empty or non-positive-total components. Report image coordinates and
+    the selected WCS, falling back to the primary WCS when needed.
 
 ## Remaining open implementation issues
 
@@ -756,3 +761,10 @@ This ordering isolates numerical correctness, concurrency, and lifecycle synchro
   mosaic segment scope, developer field registration, marker-free Pan To,
   lifecycle, export, and backup/restore behavior. Resolved the remaining
   visibility and persistence questions in decisions 30-32.
+- **2026-08-14 (statistic extension):** registered intensity-weighted centroid
+  image X/Y and WCS X/Y fields. Extended the mergeable accumulator with
+  weighted reference-coordinate moments so single and threaded paths share
+  identical semantics. Structured results, legacy Statistics output, generated
+  Catalog Tool columns/units, live updates, exports, and plots receive the new
+  fields through the descriptor-driven schema. Added exact synthetic centroid,
+  WCS conversion, catalog metadata, legacy parity, and thread parity coverage.

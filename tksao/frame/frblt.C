@@ -778,7 +778,19 @@ const std::vector<RegionStatisticField>& regionStatisticFields()
     {"core.standard_deviation", "stddev", RegionStatisticField::FIELD_REAL,
      RegionStatisticField::DATA_VALUE, "Population standard deviation", "", 6},
     {"core.rms", "rms", RegionStatisticField::FIELD_REAL,
-     RegionStatisticField::DATA_VALUE, "Root mean square", "", 6}
+     RegionStatisticField::DATA_VALUE, "Root mean square", "", 6},
+    {"core.centroid_image_x", "centroid_x", RegionStatisticField::FIELD_REAL,
+     RegionStatisticField::IMAGE_COORDINATE,
+     "Intensity-weighted centroid image X", "pos.cartesian.x", 10},
+    {"core.centroid_image_y", "centroid_y", RegionStatisticField::FIELD_REAL,
+     RegionStatisticField::IMAGE_COORDINATE,
+     "Intensity-weighted centroid image Y", "pos.cartesian.y", 10},
+    {"core.centroid_wcs_x", "centroid_wcs_x", RegionStatisticField::FIELD_REAL,
+     RegionStatisticField::WCS_COORDINATE,
+     "Intensity-weighted centroid WCS first coordinate", "", 10},
+    {"core.centroid_wcs_y", "centroid_wcs_y", RegionStatisticField::FIELD_REAL,
+     RegionStatisticField::WCS_COORDINATE,
+     "Intensity-weighted centroid WCS second coordinate", "", 10}
   };
   static const std::vector<RegionStatisticField> fields(
     fieldArray, fieldArray + sizeof(fieldArray)/sizeof(fieldArray[0]));
@@ -856,6 +868,10 @@ RegionStatisticResult Base::markerAnalysisStatsResult(
       component.set("core.variance", variance);
       component.set("core.standard_deviation", sqrt(variance));
       component.set("core.rms", sqrt(sum2/dcount));
+      if (accumulator.hasCentroid()) {
+	component.hasCentroid =1;
+	component.centroid = accumulator.centroid();
+      }
     }
 
     result.components.push_back(component);
@@ -907,7 +923,7 @@ void RegionStatisticJob::measure()
 	  break;
 	}
 	if (inside)
-	  accumulator.add(pixel.value);
+	  accumulator.add(pixel.value,pixel.reference);
       }
     }
   }
@@ -1019,6 +1035,14 @@ static long regionStatisticInteger(const RegionStatisticComponent& component,
   return value ? value->integerValue() : 0;
 }
 
+static Coord::CoordSystem regionStatisticWCSSystem(
+  FitsImage* ptr, Coord::CoordSystem requested)
+{
+  if (requested >= Coord::WCS && ptr->hasWCS(requested))
+    return requested;
+  return Coord::WCS;
+}
+
 void Base::markerAnalysisStatsFormat(Marker* pp, FitsImage* ptr, ostream& str,
                                      const RegionStatisticResult& result,
                                      Coord::CoordSystem sys,
@@ -1078,9 +1102,16 @@ void Base::markerAnalysisStatsFormat(Marker* pp, FitsImage* ptr, ostream& str,
 
   str << endl
       << "reg\t" << "sum\t" << "npix\t" << "mean\t" << "median\t"
-      << "min\t" << "max\t" << "var\t" << "stddev\t" << "rms\t" << endl
+      << "min\t" << "max\t" << "var\t" << "stddev\t" << "rms\t"
+      << "centroid_x\t" << "centroid_y\t"
+      << "centroid_wcs_x\t" << "centroid_wcs_y\t" << endl
       << "---\t" << "---\t" << "----\t" << "----\t" << "------\t"
-      << "---\t" << "---\t" << "---\t" << "------\t" << "---\t" << endl;
+      << "---\t" << "---\t" << "---\t" << "------\t" << "---\t"
+      << "----------\t" << "----------\t"
+      << "--------------\t" << "--------------\t" << endl;
+
+  const Coord::CoordSystem centroidWCS = regionStatisticWCSSystem(ptr,sys);
+  const int hasCentroidWCS = ptr->hasWCS(centroidWCS);
 
   for (size_t ii=0; ii<result.components.size(); ii++) {
     const RegionStatisticComponent& component = result.components[ii];
@@ -1099,8 +1130,21 @@ void Base::markerAnalysisStatsFormat(Marker* pp, FitsImage* ptr, ostream& str,
         << regionStatisticReal(component, "core.maximum") << '\t'
         << regionStatisticReal(component, "core.variance") << '\t'
         << regionStatisticReal(component, "core.standard_deviation") << '\t'
-        << regionStatisticReal(component, "core.rms") << '\t'
-        << endl;
+        << regionStatisticReal(component, "core.rms") << '\t';
+    if (component.hasCentroid) {
+      const Vector image = ptr->mapFromRef(
+	component.centroid,Coord::IMAGE,sky);
+      str << setprecision(10) << image[0] << '\t' << image[1] << '\t';
+      if (hasCentroidWCS) {
+	const Vector wcs = ptr->mapFromRef(component.centroid,centroidWCS,sky);
+	str << wcs[0] << '\t' << wcs[1] << '\t';
+      }
+      else
+	str << "\t\t";
+    }
+    else
+      str << "\t\t\t\t";
+    str << endl;
   }
 }
 
@@ -1133,7 +1177,7 @@ RegionStatisticResult Base::markerAnalysisStatsData(
           if (pp->isIn(ss,Coord::REF)) {
             double value = ptr->getValueDouble(long(jj)*srcw+long(ii));
             if (isfinite(value))
-              accumulators[0].add(value);
+              accumulators[0].add(value,ss);
           }
         }
       }
@@ -1181,7 +1225,7 @@ RegionStatisticResult Base::markerAnalysisStatsData(
                 !pp->isIn(ss,Coord::REF,kk)) {
               double value = ptr->getValueDouble(long(jj)*srcw+long(ii));
               if (isfinite(value))
-                accumulators[kk].add(value);
+                accumulators[kk].add(value,ss);
             }
           }
         }
@@ -1233,7 +1277,7 @@ RegionStatisticResult Base::markerAnalysisStatsData(
                   !pp->isIn(ss,Coord::REF,kk,qq)) {
                 double value = ptr->getValueDouble(long(jj)*srcw+long(ii));
                 if (isfinite(value))
-                  accumulator.add(value);
+                  accumulator.add(value,ss);
               }
             }
           }

@@ -59,6 +59,7 @@ proc DS9Def {} {
     set ds9(event,printdoc) {}
 
     set ds9(tmpdir) {}
+    set ds9(cacert,temp) {}
 
     switch $ds9(wm) {
 	x11 -

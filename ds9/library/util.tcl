@@ -1048,6 +1048,8 @@ proc QuitDS9 {} {
     # make sure everybody has had a chance to shut down properly
     update
 
+    DeleteExtractedCACert
+
     # and we are done
     focus {}
     exit
@@ -1389,45 +1391,105 @@ proc HTTPLog {token} {
     }
 }
 
+proc DeleteExtractedCACert {} {
+    global ds9
+
+    # System and user-supplied certificate files are never recorded here.
+    if {$ds9(cacert,temp) != {}} {
+	catch {file delete -force $ds9(cacert,temp)}
+	set ds9(cacert,temp) {}
+    }
+}
+
+proc ExtractBundledCACert {} {
+    global ds9
+    global env
+
+    if {$ds9(cacert,temp) != {} &&
+	[file isfile $ds9(cacert,temp)] &&
+	[file readable $ds9(cacert,temp)]} {
+	return $ds9(cacert,temp)
+    }
+
+    set template {}
+    if {[info exists env(XDG_RUNTIME_DIR)] &&
+	[file isdirectory $env(XDG_RUNTIME_DIR)] &&
+	[file writable $env(XDG_RUNTIME_DIR)]} {
+	set template [file join $env(XDG_RUNTIME_DIR) ds9_cacert]
+    } elseif {[file isdirectory $ds9(tmpdir)] &&
+	[file writable $ds9(tmpdir)]} {
+	set template [file join $ds9(tmpdir) ds9_cacert]
+    }
+
+    if {$template == {}} {
+	set out [file tempfile certfile]
+    } else {
+	set out [file tempfile certfile $template]
+    }
+
+    try {
+	set in [open [file join $ds9(root) ssl cacert.pem] rb]
+	try {
+	    fconfigure $out -translation binary
+	    fcopy $in $out
+	} finally {
+	    close $in
+	}
+	close $out
+	set out {}
+	set ds9(cacert,temp) $certfile
+    } finally {
+	if {$out != {}} {
+	    catch {close $out}
+	    catch {file delete -force $certfile}
+	}
+    }
+
+    return $ds9(cacert,temp)
+}
+
+proc GetBestCAFile {} {
+    global env
+
+    # Preserve an explicit, usable user override.
+    if {[info exists env(SSL_CERT_FILE)] &&
+	[file isfile $env(SSL_CERT_FILE)] &&
+	[file readable $env(SSL_CERT_FILE)]} {
+	return $env(SSL_CERT_FILE)
+    }
+
+    # Native trust bundles used by common Linux distributions and macOS.
+    foreach path {
+	/etc/ssl/certs/ca-certificates.crt
+	/etc/pki/tls/certs/ca-bundle.crt
+	/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+	/etc/ssl/certs/ca-bundle.crt
+	/etc/ssl/ca-bundle.pem
+	/etc/pki/tls/cacert.pem
+	/etc/ssl/cert.pem
+    } {
+	if {[file isfile $path] && [file readable $path]} {
+	    return $path
+	}
+    }
+
+    return [ExtractBundledCACert]
+}
+
 proc ConfigHTTP {} {
     global phttp
     global env
+
     # set the User-Agent
     http::config -useragent ds9
 
     set port 443
     set protocol "http/1.1"
 
-    # Hack?
-    #
-    # We can't package the SSL certificates inside the zipfs file system
-    # and honestly we probably don't want to.  So instead we'll use the
-    # certificates on the system.  This requires running the "openssl"
-    # command line tool to locate the directory and then set the
-    # SSL_CERT_DIR to locate them.
-
-    # TODO: Needs some kind of try/catch to warn users that
-    # https will be borked if openssl is not available or otherwise failes.
-    #
-    #~ set certdir [exec openssl version -d]
-    #~ set certdir2 [lindex [split $certdir ":"] 1]
-    #~ set certdir3 [string trim [string map {\" {}} $certdir2]]
-    #~ append certdir3 "/certs"
-
-    global ds9
-    global prefs
-
-    set certfile $ds9(root)/ssl/cacert.pem
-    set usr_cert_dir "$prefs(dir)"
-    set usr_cert_file [file join "$prefs(dir)" "cacert.pem"]
-
-    if {![info exists env(SSL_CERT_FILE)]} {
-        if {![file exists "$usr_cert_file"]} {
-            file mkdir "$usr_cert_dir"
-            file copy "$certfile" "$usr_cert_file"
-        }
-        set env(SSL_CERT_FILE) "$usr_cert_file"
-    }
+    # OpenSSL cannot use its normal file API to read a bundle inside zipfs.
+    # Prefer an up-to-date native trust store and extract the bundled certifi
+    # bundle to a secure temporary file only when no native bundle is usable.
+    set env(SSL_CERT_FILE) [GetBestCAFile]
 
 
     # Register https protocol handler with http package

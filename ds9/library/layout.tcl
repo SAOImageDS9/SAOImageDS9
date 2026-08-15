@@ -332,6 +332,7 @@ proc Button3Canvas {x y} {
 	puts stderr "Button3Canvas"
     }
 
+    MotionDispatchCancel colorbar-scale
     set ds9(b3) 1
     if {$current(frame) != {}} {
 	ColorbarButton3 $current(frame) $x $y
@@ -352,6 +353,76 @@ proc Motion3Canvas {x y} {
     }
 }
 
+proc MotionDispatchEnabled {} {
+    global ds9
+
+    return [expr {$ds9(wm) == {aqua} &&
+	[package vcompare [package provide Tk] 9.0] >= 0}]
+}
+
+proc MotionDispatch {key cmd} {
+    global ds9
+
+    if {![MotionDispatchEnabled]} {
+	uplevel #0 $cmd
+	return
+    }
+
+    # Native drag events can arrive faster than an image can be rendered.
+    # Retain the newest command for this gesture and render no more often
+    # than approximately the display refresh rate.
+    set ds9(motion,$key,cmd) $cmd
+    if {![info exists ds9(motion,$key,id)] ||
+	$ds9(motion,$key,id) == {}} {
+	set ds9(motion,$key,id) \
+	    [after 16 [list MotionDispatchNow $key]]
+    }
+}
+
+proc MotionDispatchNow {key} {
+    global ds9
+
+    if {![info exists ds9(motion,$key,cmd)]} {
+	unset -nocomplain ds9(motion,$key,id)
+	return
+    }
+
+    set cmd $ds9(motion,$key,cmd)
+    unset -nocomplain ds9(motion,$key,id) ds9(motion,$key,cmd)
+    uplevel #0 $cmd
+}
+
+proc MotionDispatchFlush {key {cmd {}}} {
+    global ds9
+
+    if {![MotionDispatchEnabled]} {
+	return
+    }
+
+    if {[info exists ds9(motion,$key,id)] &&
+	$ds9(motion,$key,id) != {}} {
+	after cancel $ds9(motion,$key,id)
+    }
+    if {$cmd == {} && [info exists ds9(motion,$key,cmd)]} {
+	set cmd $ds9(motion,$key,cmd)
+    }
+    unset -nocomplain ds9(motion,$key,id) ds9(motion,$key,cmd)
+
+    if {$cmd != {}} {
+	uplevel #0 $cmd
+    }
+}
+
+proc MotionDispatchCancel {key} {
+    global ds9
+
+    if {[info exists ds9(motion,$key,id)] &&
+	$ds9(motion,$key,id) != {}} {
+	after cancel $ds9(motion,$key,id)
+    }
+    unset -nocomplain ds9(motion,$key,id) ds9(motion,$key,cmd)
+}
+
 proc Release3Canvas {x y} {
     global ds9
     global current
@@ -361,9 +432,12 @@ proc Release3Canvas {x y} {
 	puts stderr "Release3Canvas"
     }
 
-    set ds9(b3) 0
     if {$current(frame) != {}} {
+	set ds9(b3) 0
 	ColorbarRelease3 $current(frame) $x $y
+    } else {
+	MotionDispatchCancel colorbar-scale
+	set ds9(b3) 0
     }
 }
 

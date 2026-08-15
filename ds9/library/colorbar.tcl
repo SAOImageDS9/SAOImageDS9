@@ -869,7 +869,7 @@ proc BindEventsColorbar {which} {
 	puts stderr "BindEventsColorbar $which"
     }
 
-    set frame [string trimright $which cb]
+    set frame [string range $which 0 end-2]
 
     $ds9(canvas) bind $which <Enter> [list ColorbarEnter $frame %x %y]
     $ds9(canvas) bind $which <Motion> [list ColorbarMotion $frame %x %y]
@@ -907,6 +907,9 @@ proc UnBindEventsColorbar {which} {
     if {$debug(tcl,events)} {
 	puts stderr "UnBindEventsColorbar $which"
     }
+
+    set frame [string trimright $which cb]
+    MotionDispatchCancel colorbar-tag-$frame
 
     $ds9(canvas) bind $which <Motion> {}
     $ds9(canvas) bind $which <Enter> {}
@@ -1229,6 +1232,7 @@ proc ColorbarButton1 {frame x y} {
     }
 
     set cb ${frame}cb
+    MotionDispatchCancel colorbar-tag-$frame
 
     # let others know that the mouse is down
     set ds9(b1) 1
@@ -1271,15 +1275,23 @@ proc ColorbarMotion1 {frame x y} {
 
     switch -- $current(mode) {
 	colorbar {
-	    set xx [$ds9(canvas) itemcget $cb -x]
-	    set yy [$ds9(canvas) itemcget $cb -y]
-	    set dx [expr $x-$xx]
-	    set dy [expr $y-$yy]
-	    $cb tag edit motion $dx $dy
-	    if {$frame != {}} {
-		$frame colormap [$cb get colormap]
-	    }
+	    MotionDispatch colorbar-tag-$frame \
+		[list ColorbarMotion1Now $frame $x $y]
 	}
+    }
+}
+
+proc ColorbarMotion1Now {frame x y} {
+    global ds9
+
+    set cb ${frame}cb
+    set xx [$ds9(canvas) itemcget $cb -x]
+    set yy [$ds9(canvas) itemcget $cb -y]
+    set dx [expr $x-$xx]
+    set dy [expr $y-$yy]
+    $cb tag edit motion $dx $dy
+    if {$frame != {}} {
+	$frame colormap [$cb get colormap]
     }
 }
 
@@ -1295,6 +1307,8 @@ proc ColorbarRelease1 {frame x y} {
     }
 
     set cb ${frame}cb
+    # Tag edit end applies the release coordinates itself.
+    MotionDispatchCancel colorbar-tag-$frame
 
     # abort if we are here by accident (such as a double click)
     if {($ds9(b1) == 0) && ($ds9(sb1) == 0) &&
@@ -1364,6 +1378,7 @@ proc ColorbarButton3 {frame x y} {
     global icursor
 
     set cb ${frame}cb
+    MotionDispatchCancel colorbar-scale
 
     # turn off blinking cursor
     if {$icursor(id)!={}} {
@@ -1375,6 +1390,10 @@ proc ColorbarButton3 {frame x y} {
 }
 
 proc ColorbarMotion3 {frame xx yy} {
+    MotionDispatch colorbar-scale [list ColorbarMotion3Now $frame $xx $yy]
+}
+
+proc ColorbarMotion3Now {frame xx yy} {
     global ds9
     global icolorbar
 
@@ -1397,6 +1416,10 @@ proc ColorbarRelease3 {frame x y} {
     global icursor
 
     set cb ${frame}cb
+
+    # Colormap end does not apply the release coordinates itself.
+    MotionDispatchFlush colorbar-scale \
+	[list ColorbarMotion3Now $frame $x $y]
 
     # and turn on blinking cursor if needed
     if {$icursor(timer)} {

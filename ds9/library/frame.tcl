@@ -989,7 +989,9 @@ proc Button1Frame {which x y} {
 	iexam {
 	    IExamButton $which $x $y
 	}
-	3d -
+	3d {
+	    MotionDispatchCancel 3d-$which
+	}
 	illustrate {}
     }
 }
@@ -1336,8 +1338,13 @@ proc Release1Frame {which x y} {
         }
 	examine -
 	iexam -
-	3d -
 	illustrate {}
+	3d {
+	    if {$ds9(b1)} {
+		MotionDispatchFlush 3d-$which \
+		    [list 3DMotionNow $which $x $y]
+	    }
+	}
     }
 
     # let others know that the mouse is up

@@ -432,6 +432,7 @@ proc MarkerAnalysisPlot3dDestroy {frame id} {
     upvar #0 $vvarname vvar
     global $vvarname
 
+    MotionDispatchCancel plot3d-slice-$vvarname
     catch {PlotDestroy $vvarname}
 }
 
@@ -500,10 +501,16 @@ proc MarkerAnalysisPlot3dSliceCB {frame id} {
 }
 
 proc MarkerAnalysisPlot3dMotion {vvarname xx yy} {
+    MotionDispatch plot3d-slice-$vvarname \
+	[list MarkerAnalysisPlot3dMotionNow $vvarname $xx $yy]
+}
+
+proc MarkerAnalysisPlot3dMotionNow {vvarname xx yy} {
     upvar #0 $vvarname vvar
     global $vvarname
 
-    if {$vvar(mode) != "pointer"} {
+    # The plot can be closed while a queued motion is waiting to run.
+    if {![info exists vvar(mode)] || $vvar(mode) != "pointer"} {
 	return
     }
 

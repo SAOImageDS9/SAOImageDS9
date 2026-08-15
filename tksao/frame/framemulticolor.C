@@ -464,7 +464,7 @@ void FrameMultiColor::getColorbarCmd()
   ostringstream str;
 
   str << "multicolor " << currentLayer()+1 << ' ' << invert
-      << " {" << Tcl_DStringValue(&colors) << "}"
+      << " \"" << Tcl_DStringValue(&colors) << "\""
       << " {" << Tcl_DStringValue(&biases) << "}"
       << " {" << Tcl_DStringValue(&contrasts) << "}" << ends;
 

@@ -5416,6 +5416,9 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color)
     for (std::vector<std::string>::iterator key=componentOrder.begin();
 	 key != componentOrder.end(); ++key) {
       FitsRegionComponent& members = components[*key];
+      if (members.size() < 2)
+	continue;
+
       Vector center;
       for (FitsRegionComponent::iterator mm=members.begin();
 	   mm != members.end(); ++mm)

@@ -116,7 +116,10 @@ proc PanButton {which x y} {
 
     switch -- $ppanzoom(mode) {
 	click {}
-	drag {$which pan motion begin $x $y}
+	drag {
+	    MotionDispatchCancel pan-$which
+	    $which pan motion begin $x $y
+	}
 	panzoom {}
     }
 }
@@ -126,7 +129,9 @@ proc PanMotion {which x y} {
 
     switch -- $ppanzoom(mode) {
 	click {}
-	drag {$which pan motion $x $y}
+	drag {
+	    MotionDispatch pan-$which [list $which pan motion $x $y]
+	}
 	panzoom {}
     }
 }
@@ -139,7 +144,11 @@ proc PanRelease {which x y} {
 
     switch -- $ppanzoom(mode) {
 	click {$which pan to $x $y}
-	drag {$which pan motion end $x $y}
+	drag {
+	    # Pan end applies the release coordinates itself.
+	    MotionDispatchCancel pan-$which
+	    $which pan motion end $x $y
+	}
 	panzoom {
 	    if {$ipanzoom(last) != "$x $y"} {
 		set ipanzoom(state) 1
@@ -324,11 +333,16 @@ proc ChangeRotate {} {
 proc RotateButton {which x y} {
     global ipanzoom
 
+    MotionDispatchCancel rotate-$which
     $which rotate motion begin
     set ipanzoom(x) $x
 }
 
 proc RotateMotion {which x y} {
+    MotionDispatch rotate-$which [list RotateMotionNow $which $x $y]
+}
+
+proc RotateMotionNow {which x y} {
     global current
     global ipanzoom
     global icursor
@@ -343,6 +357,7 @@ proc RotateMotion {which x y} {
 proc RotateRelease {which x y} {
     global current
 
+    MotionDispatchFlush rotate-$which [list RotateMotionNow $which $x $y]
     $which rotate motion end
     if {$current(frame) == $which} {
 	set current(rotate) [$which get rotate]

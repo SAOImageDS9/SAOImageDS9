@@ -12,16 +12,17 @@ Version 8.8 Release Notes</h1>
 <ul>
 <li>New <code>multicolor</code> frames support multiple color
 <code>layers</code> and color <code>blend</code> mode options.</li>
-<li>Color bars are now managed independently for each frame. They can
-also now be place on <code>top</code> or to <code>left</code> of the
-image.</li>
+<li>Colorbars are now managed separately for each frame: visibility,
+position, width, numerics, foreground &amp; background colors. They can
+also be placed on the <code>top</code> or to the <code>left</code> of
+the image.</li>
 <li>New <code>bookmark</code> feature allows users to quickly record and
 revisit coordinates in an image.</li>
+<li>New live Region Statistics Catalog (<code>Analysis</code> -&gt;
+<code>Make Catalog</code>) measures all supported regions in the current
+frame and displays the results together in the Catalog Tool.</li>
 <li>New <code>save pixmask</code> option to generate pixel maps from
 regions.</li>
-<li>New live Region Statistics Catalog measures all supported regions
-in the current frame and displays the results together in the Catalog
-Tool.</li>
 <li>New <code>3D Surface</code> region analysis tasks allows users to
 examine 2D image pixels in a region as an interactive 3D data cube.</li>
 <li>New 3D <code>fip</code> (First Intensity Point) ray trace option
@@ -42,7 +43,7 @@ universal binaries which support macOS 12 and later on both Intel
 (x86_64) and AMD (aarch64/M1/M2, ie “apple silicon”).</li>
 <li>Linux: DS9 is now also available as a universal <code>flatpak</code>
 package. The individual Linux operating system/architecture files are
-also available, but now also include a <code>.desktop</code> and icon
+also available; they also now include a <code>.desktop</code> and icon
 file that can be used to integrate DS9 into your desktop environment;
 this is explained in the new <code>ds9.readme.txt</code> file included
 in the tar files.</li>
@@ -59,7 +60,8 @@ open a menu where tasks can be terminated by clicking on name.</li>
 Virtual Observatory registry for services that provide access to images
 using the Simple Image Access (SIA) protocol. There is a set of new
 <code>sia registry</code> commands to access the registry from the
-command line and XPA/SAMP.</li>
+command line and XPA/SAMP. Set the URL for the VO registry in the
+preferences.</li>
 <li><strong>SAMP</strong>: Updated web SAMP HTTP header for recent
 changes in browser security</li>
 <li><strong>PAN</strong>: In <em>PAN</em> mode, using
@@ -125,18 +127,6 @@ region is moved, rotated, or otherwise edited. It will also update based
 on the scale, limits, and colormap parameters. Access from
 <code>Region</code> -&gt; <code>Get Information</code> or by double
 clicking on the region.</li>
-<li><strong>REGION STATISTICS</strong>: The new
-<code>Analysis</code> -&gt; <code>Make Catalog</code> command measures
-all supported area regions in the current frame and opens a live table
-in the Catalog Tool. Rows update when regions are created, pasted,
-moved, edited, rotated, deleted, or restored, and when relevant image or
-WCS state changes. Annulus and panda-family measurements use one row per
-non-overlapping component. The table supports sorting, filtering,
-plotting, export, and marker-free <code>Pan To</code>. Initial and
-image-wide measurements use bounded multithreading. The same operation
-is available to command-line, XPA, and SAMP clients as
-<code>catalog make</code>. Measurements include intensity-weighted
-centroids in both image and WCS coordinates.</li>
 <li><strong>3D</strong>: There is a new <code>FIP</code> (First
 Intensity Point) ray trace option available that will render the first
 finite, non-zero voxel (pixel) that the ray trace intercepts. (Reminder
@@ -223,6 +213,33 @@ is generated.</li>
 <code>ds9.desktop</code> file and <code>ds9.png</code> icon file that
 can be used to integrate DS9 into your desktop environment; instructions
 are in the new <code>ds9.readme.txt</code> file.</li>
+<li><strong>PLOT2D</strong>: The X-axis labels are now saved in the plot
+backup file.</li>
+<li><strong>MOVIE SCRIPT</strong>: Bug fix where 3D frames may not have
+completed rendering before image was captured for the movie.</li>
+<li><strong>TKMPEG</strong>: Remove obsolete resolution restriction. Now
+supports outputs up to 4080x4080. Fixed a separate quantization issue
+that limited compression; higher resolution outputs are now
+created.</li>
+<li><strong>TKMPEG</strong> and <strong>TKAGIF</strong>: Fix
+intermittent bug in rendering causing an apparent <em>skew</em> in
+output images.</li>
+<li><strong>macOS</strong>: Fixes to Apple magic mouse/track pad button
+mapping and click+drag behavior introduced with Tcl/Tk 9 in beta 1.</li>
+<li><strong>GRID</strong>: bug fix when trying to use
+<code>Other Colors</code></li>
+<li><strong>OPENSSL</strong>: Rework logic to use system certificates if
+available, falling back to using a temp file only if needed.</li>
+<li><strong>REGION STATISTICS</strong>: The new <code>Analysis</code>
+-&gt; <code>Make Catalog</code> command measures all supported area
+regions in the current frame and opens a live table in the Catalog Tool.
+Rows update when regions are created, pasted, moved, edited, rotated,
+deleted, or restored, and when relevant image or WCS state changes.
+Annulus and panda-family measurements use one row per non-overlapping
+component. The table supports sorting, filtering, plotting, export, and
+marker-free <code>Pan To</code>. Initial and image-wide measurements use
+bounded multithreading. Measurements include intensity-weighted
+centroids in both image and WCS coordinates.</li>
 </ul>
 <hr />
 <h2 id="beta-1">Beta 1:</h2>
@@ -386,7 +403,3 @@ additional Tcl 9 compatibility fixes  </li>
 
 </body>
 </head>
-
-
-
-

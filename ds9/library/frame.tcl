@@ -433,6 +433,9 @@ proc DeleteFrame {which} {
 	return
     }
 
+    # A generated region-statistics catalog is owned by its frame.
+    RegionCatalogFrameDelete $which
+
     # clear any loaded images
     if {[llength [info commands $which]]} {
 	ClearFrame $which

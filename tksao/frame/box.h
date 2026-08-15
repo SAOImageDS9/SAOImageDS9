@@ -37,6 +37,8 @@ public:
   void analysisPlot3d(char*, char*, Coord::CoordSystem,
 		      Marker::AnalysisMethod);
   void analysisStats(Coord::CoordSystem, Coord::SkyFrame sky);
+  int analysisStatsResult(RegionStatisticResult*, Coord::CoordSystem);
+  int analysisStatsJob(RegionStatisticJob*, Coord::CoordSystem);
 
   void list(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, int, int);
   virtual void listPost(ostream&, int, int);

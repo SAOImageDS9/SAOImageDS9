@@ -396,7 +396,7 @@ Example:<br>
 $ds9 -rgb -blue foo.fits<br></tt>
 <p><b><a name="catalog" id="catalog"></a>catalog<br>
 cat</b></p>
-<p>Support for catalogs. The first three commands will create a new catalog search. All other commands operated on the last search created, unless indicated otherwise.</p>
+<p>Support for catalogs. The first three commands will create a new catalog search. All other commands operate on the last search created, unless indicated otherwise. <tt>catalog make</tt> creates or raises the current frame's live <a href="region.html#StatisticsCatalog">Region Statistics Catalog</a>.</p>
 <tt>Syntax:<br>
 -catalog [new]<br>
 &nbsp;&nbsp;&nbsp; [ned|simbad|denis|skybot]<br>
@@ -428,6 +428,7 @@ cat</b></p>
 &nbsp;&nbsp;&nbsp; [filter load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [header]<br>
 &nbsp;&nbsp;&nbsp; [location &lt;code&gt;]<br>
+&nbsp;&nbsp;&nbsp; [make]<br>
 &nbsp;&nbsp;&nbsp; [match &lt;ref&gt; &lt;ref&gt;]<br>
 &nbsp;&nbsp;&nbsp; [match]<br>
 &nbsp;&nbsp;&nbsp; [match error &lt;value&gt; degrees|arcmin|arcsec]<br>
@@ -488,6 +489,7 @@ $ds9 -catalog filter'\$Jmag&gt;15'<br>
 $ds9 -catalog filter load foo.flt<br>
 $ds9 -catalog header<br>
 $ds9 -catalog location 500<br>
+$ds9 -catalog make<br>
 $ds9 -catalog match error 2 arcsec<br>
 $ds9 -catalog match function 1and2<br>
 $ds9 -catalog match unique no<br>

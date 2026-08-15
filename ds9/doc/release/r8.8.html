@@ -19,6 +19,9 @@ image.</li>
 revisit coordinates in an image.</li>
 <li>New <code>save pixmask</code> option to generate pixel maps from
 regions.</li>
+<li>New live Region Statistics Catalog measures all supported regions
+in the current frame and displays the results together in the Catalog
+Tool.</li>
 <li>New <code>3D Surface</code> region analysis tasks allows users to
 examine 2D image pixels in a region as an interactive 3D data cube.</li>
 <li>New 3D <code>fip</code> (First Intensity Point) ray trace option
@@ -122,6 +125,18 @@ region is moved, rotated, or otherwise edited. It will also update based
 on the scale, limits, and colormap parameters. Access from
 <code>Region</code> -&gt; <code>Get Information</code> or by double
 clicking on the region.</li>
+<li><strong>REGION STATISTICS</strong>: The new
+<code>Analysis</code> -&gt; <code>Make Catalog</code> command measures
+all supported area regions in the current frame and opens a live table
+in the Catalog Tool. Rows update when regions are created, pasted,
+moved, edited, rotated, deleted, or restored, and when relevant image or
+WCS state changes. Annulus and panda-family measurements use one row per
+non-overlapping component. The table supports sorting, filtering,
+plotting, export, and marker-free <code>Pan To</code>. Initial and
+image-wide measurements use bounded multithreading. The same operation
+is available to command-line, XPA, and SAMP clients as
+<code>catalog make</code>. Measurements include intensity-weighted
+centroids in both image and WCS coordinates.</li>
 <li><strong>3D</strong>: There is a new <code>FIP</code> (First
 Intensity Point) ray trace option available that will render the first
 finite, non-zero voxel (pixel) that the ray trace intercepts. (Reminder
@@ -371,8 +386,6 @@ additional Tcl 9 compatibility fixes  </li>
 
 </body>
 </head>
-
-
 
 
 

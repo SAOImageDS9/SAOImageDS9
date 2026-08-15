@@ -337,6 +337,12 @@ int Cpanda::isIn(const Vector& vv, Coord::InternalSystem sys, int nn, int aa)
   return BaseEllipse::isIn(vv,sys,nn) && isInAngle(pp,aa);
 }
 
+int Cpanda::isIn(const Vector& vv, const Matrix& bck, int nn, int aa)
+{
+  Vector pp = vv*bck;
+  return BaseEllipse::isIn(vv,bck,nn) && isInAngle(pp,aa);
+}
+
 void Cpanda::analysis(AnalysisTask mm, int which)
 {
   switch (mm) {
@@ -423,8 +429,40 @@ void Cpanda::analysisStats(Coord::CoordSystem sys, Coord::SkyFrame sky)
     bb[ii] = BBox(ll,ur) ;
   }
   parent->markerAnalysisStats(this, str, numAnnuli_-1, numAngles_-1, bb, sys, sky);
+  delete [] bb;
   str << ends;
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
+}
+
+int Cpanda::analysisStatsResult(RegionStatisticResult* result,
+				Coord::CoordSystem sys)
+{
+  if (!result)
+    return 0;
+  BBox* bb = new BBox[numAnnuli_];
+  for (int ii=0; ii<numAnnuli_; ii++) {
+    Vector ll = -annuli_[ii] * Translate(center);
+    Vector ur =  annuli_[ii] * Translate(center);
+    bb[ii] = BBox(ll,ur);
+  }
+  *result = parent->markerAnalysisStatsData(
+    this,numAnnuli_-1,numAngles_-1,bb,sys);
+  delete [] bb;
+  return 1;
+}
+
+int Cpanda::analysisStatsJob(RegionStatisticJob* job, Coord::CoordSystem sys)
+{
+  BBox* bb = new BBox[numAnnuli_];
+  for (int ii=0; ii<numAnnuli_; ii++) {
+    Vector ll = -annuli_[ii] * Translate(center);
+    Vector ur =  annuli_[ii] * Translate(center);
+    bb[ii] = BBox(ll,ur);
+  }
+  int result = parent->markerAnalysisStatsJob(
+    this,job,numAnnuli_-1,numAngles_-1,bb,sys);
+  delete [] bb;
+  return result;
 }
 
 // list

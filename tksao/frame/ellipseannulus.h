@@ -44,6 +44,8 @@ public:
   void analysis(AnalysisTask, int);
   void analysisRadial(char*, char*, char*, Coord::CoordSystem sys);
   void analysisStats(Coord::CoordSystem, Coord::SkyFrame sky);
+  int analysisStatsResult(RegionStatisticResult*, Coord::CoordSystem);
+  int analysisStatsJob(RegionStatisticJob*, Coord::CoordSystem);
 
   void list(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, int, int);
   void listXML(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
@@ -52,5 +54,3 @@ public:
 };
 
 #endif
-
-

@@ -60,6 +60,9 @@ public:
   void copyRegionMembers(List<Marker>&);
   int isInRegion(const Vector&, List<Marker>&);
 
+  int analysisStatsResult(RegionStatisticResult*, Coord::CoordSystem);
+  int analysisStatsJob(RegionStatisticJob*, Coord::CoordSystem);
+
   void append(Marker*);
   Marker* extract();
 

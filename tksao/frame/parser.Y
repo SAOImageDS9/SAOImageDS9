@@ -489,6 +489,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token ZSCALE_
 %token PIXMASK_
 %token ZOOM_
+%token FIELDS_
 
 %%
 
@@ -1899,6 +1900,10 @@ marker	: CENTROID_ markerCentroid
 
 	| INT ANALYSIS_ analysisTask yesno
 	{fr->markerAnalysisCmd($1, (Marker::AnalysisTask)$3, $4);}
+	| ANALYSIS_ STATS_ CALLBACK_ STRING
+	{fr->regionStatsCallbackCmd($4);}
+	| ANALYSIS_ STATS_ CALLBACK_
+	{fr->regionStatsCallbackCmd(NULL);}
 
 	| INT ANGLE_ angle {fr->markerAngleCmd($1,$3);}
 	| INT ANGLE_ angle internalSystem {fr->markerAngleCmd($1,$3);}
@@ -2459,6 +2464,12 @@ markerGet : CENTROID_ markerGetCentroid
 	{fr->getMarkerAnalysisRadialCmd($1,$4,$5,$6,(Coord::CoordSystem)$7);}
 	| INT ANALYSIS_ STATS_ coordSystem skyFrame
 	{fr->getMarkerAnalysisStatsCmd($1,(Coord::CoordSystem)$4, (Coord::SkyFrame)$5);}
+	| INT ANALYSIS_ STATS_ DATA_ coordSystem skyFrame
+	{fr->getMarkerAnalysisStatsDataCmd($1,(Coord::CoordSystem)$5, (Coord::SkyFrame)$6);}
+	| ANALYSIS_ STATS_ ALL_ DATA_ coordSystem skyFrame
+	{fr->getMarkerAnalysisStatsDataAllCmd((Coord::CoordSystem)$5, (Coord::SkyFrame)$6);}
+	| ANALYSIS_ STATS_ FIELDS_
+	{fr->getMarkerAnalysisStatsFieldsCmd();}
 
 	| ID_ ALL_ {fr->getMarkerIdAllCmd();}
 	| INT ANGLE_ {fr->getMarkerAngleCmd($1);}

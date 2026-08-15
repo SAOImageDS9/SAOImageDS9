@@ -452,11 +452,24 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   editMarker = NULL;
   compositeMarker = NULL;
 
+  regionStatsCallback_ =NULL;
+  regionStatsReset_ =0;
+  regionStatsImageChanged_ =0;
+  regionStatsUpdateDepth_ =0;
+  regionStatsInteractiveDepth_ =0;
+  regionStatsIdleScheduled_ =0;
+  regionStatsGeneration_ =0;
+
   inverseScale = NULL;
 }
 
 Base::~Base()
 {
+  if (regionStatsIdleScheduled_)
+    Tcl_CancelIdleCall(regionStatsIdleProc,(ClientData)this);
+  if (regionStatsCallback_)
+    Tcl_DecrRefCount(regionStatsCallback_);
+
   if (basePixmap)
     Tk_FreePixmap(display, basePixmap);
 
@@ -2048,6 +2061,7 @@ void Base::setSlice(int id, int ss)
   updateCBMarkers(&userMarkers);
   updateCBMarkers(&catalogMarkers);
   updateCBMarkers(&footprintMarkers);
+  regionStatsImageInvalidated();
 }
 
 void Base::unloadAllFits()
@@ -2065,6 +2079,7 @@ void Base::unloadFits()
     userMarkers.deleteAll();
     undoUserMarkers.deleteAll();
     pasteUserMarkers.deleteAll();
+    regionStatsRegionsReset();
   }
 
   catalogMarkers.deleteAll();
@@ -2083,6 +2098,7 @@ void Base::unloadFits()
   irafMatrix_.identity();
 
   updateColorScale();
+  regionStatsImageInvalidated();
 }
 
 void Base::update(UpdateType flag)
@@ -2190,6 +2206,7 @@ void Base::updateBin(const Matrix& mx)
   updateMarkerCBs(&userMarkers);
   updateMarkerCBs(&catalogMarkers);
   updateMarkerCBs(&footprintMarkers);
+  regionStatsImageInvalidated();
 }
 
 void Base::updateBlock(const Vector& vv)
@@ -2215,6 +2232,7 @@ void Base::updateBlock(const Vector& vv)
   updateMarkerCBs(&userMarkers);
   updateMarkerCBs(&catalogMarkers);
   updateMarkerCBs(&footprintMarkers);
+  regionStatsImageInvalidated();
 }
 
 void Base::updateGCs()

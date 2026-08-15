@@ -1058,6 +1058,19 @@ int Marker::isVisible(const BBox& b)
 
 void Marker::doCallBack(CallBack::Type t)
 {
+  switch (t) {
+  case CallBack::EDITCB:
+  case CallBack::MOVECB:
+  case CallBack::ROTATECB:
+  case CallBack::PROPERTYCB:
+  case CallBack::UPDATECB:
+  case CallBack::UPDATE3DCB:
+    parent->regionStatsRegionChanged(this);
+    break;
+  default:
+    break;
+  }
+
   if (!doCB)
     return;
 

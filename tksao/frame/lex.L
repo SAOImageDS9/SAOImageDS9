@@ -153,6 +153,7 @@ fade            {return FADE_;}
 false		{return FALSE_;}
 file		{return FILE_;}
 fill            {return FILL_;}
+fields          {return FIELDS_;}
 filter		{return FILTER_;}
 fip             {return FIP_;}
 first           {return FIRST_;}

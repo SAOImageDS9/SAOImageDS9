@@ -5,6 +5,8 @@
 #ifndef __base_h__
 #define __base_h__
 
+#include <set>
+
 #include "widget.h"
 #include "vector.h"
 #include "vector3d.h"
@@ -23,6 +25,7 @@
 #include "tag.h"
 #include "point.h"
 #include "fitsmask.h"
+#include "regionstats.h"
 
 extern int DebugMosaic;
 extern int DebugPerf;
@@ -316,6 +319,22 @@ public:
   Matrix pannerToWidget;
 
  private:
+  Tcl_Obj* regionStatsCallback_;
+  std::set<int> regionStatsAdded_;
+  std::set<int> regionStatsChanged_;
+  std::set<int> regionStatsDeleted_;
+  int regionStatsReset_;
+  int regionStatsImageChanged_;
+  int regionStatsUpdateDepth_;
+  int regionStatsInteractiveDepth_;
+  int regionStatsIdleScheduled_;
+  unsigned long regionStatsGeneration_;
+
+  static void regionStatsIdleProc(ClientData);
+  void regionStatsClearPending();
+  void regionStatsDispatch();
+  void regionStatsSchedule();
+
   void bltHist(char*, char*); // frblt.C
 
   void invalidPixmap();
@@ -399,13 +418,32 @@ public:
   int markerAnalysisPanda(Marker*, double**, double**, double**, 
 			  int, Vector*, int,
 			  BBox*, Coord::CoordSystem);
-  int markerAnalysisStats1(Marker*, FitsImage*, ostream&, 
-			   Coord::CoordSystem, Coord::SkyFrame);
-  void markerAnalysisStats2(FitsImage*, ostream&, Coord::CoordSystem,
-			    int, int, double, int);
-  void markerAnalysisStats3(ostream&);
-  void markerAnalysisStats4(ostream&, int, double, double, double,	
-			    double, double, double);
+  RegionStatisticResult markerAnalysisStatsResult(
+	Marker*, FitsImage*, std::vector<RegionStatisticAccumulator>&,
+	Coord::CoordSystem);
+  RegionStatisticResult markerAnalysisStatsResult(
+	const RegionStatisticResult&, FitsImage*,
+	std::vector<RegionStatisticAccumulator>&, Coord::CoordSystem);
+  void markerAnalysisStatsFormat(Marker*, FitsImage*, ostream&,
+				 const RegionStatisticResult&,
+				 Coord::CoordSystem, Coord::SkyFrame);
+  RegionStatisticResult markerAnalysisStatsData(
+	Marker*, const BBox&, Coord::CoordSystem);
+  RegionStatisticResult markerAnalysisStatsData(
+	Marker*, int, BBox*, Coord::CoordSystem);
+  RegionStatisticResult markerAnalysisStatsData(
+	Marker*, int, int, BBox*, Coord::CoordSystem);
+  int markerAnalysisStatsJob(Marker*, RegionStatisticJob*, const BBox&,
+			     Coord::CoordSystem);
+  int markerAnalysisStatsJob(Marker*, RegionStatisticJob*, int, BBox*,
+			     Coord::CoordSystem);
+  int markerAnalysisStatsJob(Marker*, RegionStatisticJob*, int, int, BBox*,
+			     Coord::CoordSystem);
+  int markerAnalysisStatsJobPrepare(
+	Marker*, RegionStatisticJob*, RegionStatisticJob::GeometryKind,
+	int, int, const std::vector<BBox>&, Coord::CoordSystem);
+  Tcl_Obj* markerAnalysisStatsDataObj(const RegionStatisticResult&,
+				      Coord::CoordSystem, Coord::SkyFrame);
   void markerAnalysisStats(Marker*, ostream&, const BBox&, 
 			   Coord::CoordSystem, Coord::SkyFrame);
   void markerAnalysisStats(Marker*, ostream&, int, BBox*, 
@@ -528,6 +566,17 @@ public:
 #endif
 
  public:
+  void regionStatsBeginUpdate();
+  void regionStatsEndUpdate();
+  void regionStatsRegionAdded(Marker*);
+  void regionStatsRegionChanged(Marker*);
+  void regionStatsRegionDeleted(int);
+  void regionStatsRegionsReset();
+  void regionStatsImageInvalidated();
+  void regionStatsInteractiveBegin();
+  void regionStatsInteractiveEnd();
+  void regionStatsCallbackCmd(const char*);
+
   Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item);
   virtual ~Base();
 
@@ -1265,6 +1314,11 @@ public:
 				 int);
   void getMarkerAnalysisRadialCmd(int, char*, char*, char*, Coord::CoordSystem);
   void getMarkerAnalysisStatsCmd(int, Coord::CoordSystem, Coord::SkyFrame);
+  void getMarkerAnalysisStatsDataCmd(int, Coord::CoordSystem,
+				     Coord::SkyFrame);
+  void getMarkerAnalysisStatsDataAllCmd(Coord::CoordSystem,
+					Coord::SkyFrame);
+  void getMarkerAnalysisStatsFieldsCmd();
 
   void getMarkerAngleCmd(int);
   void getMarkerAngleCmd(int, Coord::CoordSystem, Coord::SkyFrame);

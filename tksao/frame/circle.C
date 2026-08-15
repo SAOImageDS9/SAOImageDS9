@@ -202,6 +202,25 @@ void Circle::analysisStats(Coord::CoordSystem sys, Coord::SkyFrame sky)
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
+int Circle::analysisStatsResult(RegionStatisticResult* result,
+				Coord::CoordSystem sys)
+{
+  if (!result)
+    return 0;
+  Vector ll = -annuli_[0] * Translate(center);
+  Vector ur =  annuli_[0] * Translate(center);
+  BBox bb(ll,ur);
+  *result = parent->markerAnalysisStatsData(this,bb,sys);
+  return 1;
+}
+
+int Circle::analysisStatsJob(RegionStatisticJob* job, Coord::CoordSystem sys)
+{
+  Vector ll = -annuli_[0] * Translate(center);
+  Vector ur =  annuli_[0] * Translate(center);
+  return parent->markerAnalysisStatsJob(this,job,BBox(ll,ur),sys);
+}
+
 // list
 
 void Circle::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,

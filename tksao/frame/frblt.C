@@ -750,395 +750,554 @@ int Base::markerAnalysisPanda(Marker* pp, double** x, double** y, double** e,
   return num;
 }
 
-// for simple regions
-void Base::markerAnalysisStats(Marker* pp, ostream& str, const BBox& bb,
-			       Coord::CoordSystem sys, Coord::SkyFrame sky)
+const std::vector<RegionStatisticField>& regionStatisticFields()
 {
-  // does not extend across mosaic boundries
-  // uses currentContext
-  FitsImage* ptr = isInCFits(pp->getCenter(),Coord::REF,NULL);
-  if (!ptr)
-    ptr = currentContext->cfits;
-
-  int srcw = ptr->width();
-  FitsBound* params = ptr->getDataParams(currentContext->secMode());
-
-  double sum =0;
-  double sum2 =0;
-  int cnt =0;
-  double min =DBL_MAX;
-  double max =-DBL_MAX;
-
-  // take the bbox and extend to lower/upper pixel boundaries
-  Vector ll = (bb.ll*ptr->refToData).floor();
-  Vector ur = (bb.ur*ptr->refToData).ceil();
-
-  int msize = int(ur[1]-ll[1])*int(ur[0]-ll[0]);
-  double* marr = new double[msize];
-  memset(marr,0,msize*sizeof(double));
-
-  // main loop
-  SETSIGBUS
-    for (int jj=ll[1]; jj<ur[1]; jj++) {
-      for (int ii=ll[0]; ii<ur[0]; ii++) {
-	if (ii>=params->xmin && ii<params->xmax && 
-	    jj>=params->ymin && jj<params->ymax) {
-	  // shift to center of pixel in DATA
-	  Vector rr = Vector(ii,jj)+Vector(.5,.5);
-	  Vector ss = rr*ptr->dataToRef;
-
-	  if (pp->isIn(ss,Coord::REF)) {
-	    double val =ptr->getValueDouble(long(jj)*srcw+long(ii));
-	    // check for nan
-	    if (isfinite(val)) {
-	      sum += val;
-	      sum2 += val*val;
-	      if (cnt<msize)
-		marr[cnt] = val;
-	      if (val<min)
-		min =val;
-	      if (val>max)
-		max =val;
-
-	      cnt++;
-	    }
-	  }
-	}
-      }
-    }
-  CLEARSIGBUS
-
-  qsort((void*)marr,cnt,sizeof(double),dCompare);
-  double median = marr[int(cnt/2.)];
-  if (marr)
-    delete [] marr;
-
-  int unit = markerAnalysisStats1(pp,ptr,str,sys,sky);
-  if (cnt)
-    markerAnalysisStats2(ptr,str,sys,0,cnt,sum,unit);
-  markerAnalysisStats3(str);
-  if (cnt)
-    markerAnalysisStats4(str,0,cnt,sum,sum2,median,min,max);
+  static const RegionStatisticField fieldArray[] = {
+    {"core.sum", "sum", RegionStatisticField::FIELD_REAL,
+     RegionStatisticField::DATA_VALUE, "Sum of valid pixels", "", 8},
+    {"core.error", "error", RegionStatisticField::FIELD_REAL,
+     RegionStatisticField::DATA_ERROR, "Poisson error sqrt(abs(sum))", "", 6},
+    {"core.area", "area", RegionStatisticField::FIELD_REAL,
+     RegionStatisticField::AREA, "Area of valid pixels", "", 6},
+    {"core.surface_brightness", "surf_bri", RegionStatisticField::FIELD_REAL,
+     RegionStatisticField::DATA_PER_AREA, "Sum divided by area", "", 6},
+    {"core.surface_error", "surf_err", RegionStatisticField::FIELD_REAL,
+     RegionStatisticField::DATA_PER_AREA, "Poisson error divided by area", "", 6},
+    {"core.pixel_count", "npix", RegionStatisticField::FIELD_INTEGER,
+     RegionStatisticField::PIXEL_COUNT, "Number of valid pixels", "", 0},
+    {"core.mean", "mean", RegionStatisticField::FIELD_REAL,
+     RegionStatisticField::DATA_VALUE, "Arithmetic mean", "", 6},
+    {"core.median", "median", RegionStatisticField::FIELD_REAL,
+     RegionStatisticField::DATA_VALUE, "Upper middle pixel value", "", 6},
+    {"core.minimum", "min", RegionStatisticField::FIELD_REAL,
+     RegionStatisticField::DATA_VALUE, "Minimum pixel value", "", 6},
+    {"core.maximum", "max", RegionStatisticField::FIELD_REAL,
+     RegionStatisticField::DATA_VALUE, "Maximum pixel value", "", 6},
+    {"core.variance", "var", RegionStatisticField::FIELD_REAL,
+     RegionStatisticField::DATA_VALUE, "Population variance", "", 6},
+    {"core.standard_deviation", "stddev", RegionStatisticField::FIELD_REAL,
+     RegionStatisticField::DATA_VALUE, "Population standard deviation", "", 6},
+    {"core.rms", "rms", RegionStatisticField::FIELD_REAL,
+     RegionStatisticField::DATA_VALUE, "Root mean square", "", 6},
+    {"core.centroid_image_x", "centroid_x", RegionStatisticField::FIELD_REAL,
+     RegionStatisticField::IMAGE_COORDINATE,
+     "Intensity-weighted centroid image X", "pos.cartesian.x", 10},
+    {"core.centroid_image_y", "centroid_y", RegionStatisticField::FIELD_REAL,
+     RegionStatisticField::IMAGE_COORDINATE,
+     "Intensity-weighted centroid image Y", "pos.cartesian.y", 10},
+    {"core.centroid_wcs_x", "centroid_wcs_x", RegionStatisticField::FIELD_REAL,
+     RegionStatisticField::WCS_COORDINATE,
+     "Intensity-weighted centroid WCS first coordinate", "", 10},
+    {"core.centroid_wcs_y", "centroid_wcs_y", RegionStatisticField::FIELD_REAL,
+     RegionStatisticField::WCS_COORDINATE,
+     "Intensity-weighted centroid WCS second coordinate", "", 10}
+  };
+  static const std::vector<RegionStatisticField> fields(
+    fieldArray, fieldArray + sizeof(fieldArray)/sizeof(fieldArray[0]));
+  return fields;
 }
 
-// for annulus regions
-void Base::markerAnalysisStats(Marker* pp, ostream& str, 
-			       int num, BBox* bb,
-			       Coord::CoordSystem sys, Coord::SkyFrame sky)
+RegionStatisticResult Base::markerAnalysisStatsResult(
+  Marker* pp, FitsImage* ptr,
+  std::vector<RegionStatisticAccumulator>& accumulators,
+  Coord::CoordSystem sys)
 {
-  // does not extend across mosaic boundries
-  // uses currentContext
-  FitsImage* ptr = isInCFits(pp->getCenter(),Coord::REF,NULL);
-  if (!ptr)
-    ptr = currentContext->cfits;
-
-  int srcw = ptr->width();
-  FitsBound* params = ptr->getDataParams(currentContext->secMode());
-
-  double sum[num];
-  memset(sum,0,num*sizeof(double));
-  double sum2[num];
-  memset(sum2,0,num*sizeof(double));
-  int cnt[num];
-  memset(cnt,0,num*sizeof(int));
-  double min[num];
-  double max[num];
-  for (int ii=0; ii<num; ii++) {
-    min[ii] =DBL_MAX;
-    max[ii] =-DBL_MAX;
-  }
-  double median[num];
-  memset(median,0,num*sizeof(double));
-
-  for (int kk=0; kk<num; kk++) {
-    // take the bbox and extend to lower/upper pixel boundaries
-    Vector ll = (bb[kk+1].ll*ptr->refToData).floor();
-    Vector ur = (bb[kk+1].ur*ptr->refToData).ceil();
-
-    int msize = int(ur[1]-ll[1])*int(ur[0]-ll[0]);
-    double* marr = new double[msize];
-    memset(marr,0,msize*sizeof(double));
-
-    // main loop
-    SETSIGBUS
-      for (int jj=ll[1]; jj<ur[1]; jj++) {
-	for (int ii=ll[0]; ii<ur[0]; ii++) {
-	  if (ii>=params->xmin && ii<params->xmax && 
-	      jj>=params->ymin && jj<params->ymax) {
-	    // shift to center of pixel in DATA
-	    Vector rr = Vector(ii,jj)+Vector(.5,.5);
-	    Vector ss = rr*ptr->dataToRef;
-	  
-	    if (pp->isIn(ss,Coord::REF,kk+1) && !pp->isIn(ss,Coord::REF,kk)) {
-	      double val =ptr->getValueDouble(long(jj)*srcw+long(ii));
-	      // check for nan
-	      if (isfinite(val)) {
-		sum[kk] += val;
-		sum2[kk] += val*val;
-		if (cnt[kk]<msize)
-		  marr[cnt[kk]] = val;
-		if (val<min[kk])
-		  min[kk] =val;
-		if (val>max[kk])
-		  max[kk] =val;
-
-		cnt[kk]++;
-	      }
-	    }
-	  }
-	}
-      }
-    CLEARSIGBUS
-
-    qsort((void*)marr,cnt[kk],sizeof(double),dCompare);
-    median[kk] = marr[int(cnt[kk]/2.)];
-    if (marr)
-      delete [] marr;
-  }
-
-  int unit = markerAnalysisStats1(pp,ptr,str,sys,sky);
-  for (int kk=0; kk<num; kk++) 
-    if (cnt[kk])
-      markerAnalysisStats2(ptr,str,sys,kk,cnt[kk],sum[kk],unit);
-
-  markerAnalysisStats3(str);
-
-  for (int kk=0; kk<num; kk++)
-    if (cnt[kk])
-      markerAnalysisStats4(str,kk,cnt[kk],sum[kk],sum2[kk],
-			   median[kk],min[kk],max[kk]);
+  RegionStatisticResult seed;
+  seed.regionId = pp->getId();
+  seed.shape = pp->getType();
+  seed.center = pp->getCenter();
+  seed.background = pp->getProperty(Marker::SOURCE) ? 0 : 1;
+  seed.exclude = pp->getProperty(Marker::INCLUDE) ? 0 : 1;
+  return markerAnalysisStatsResult(seed,ptr,accumulators,sys);
 }
 
-// for panda regions
-void Base::markerAnalysisStats(Marker* pp, ostream& str, 
-			       int num, int na, BBox* bb, 
-			       Coord::CoordSystem sys, Coord::SkyFrame sky)
+RegionStatisticResult Base::markerAnalysisStatsResult(
+  const RegionStatisticResult& seed, FitsImage* ptr,
+  std::vector<RegionStatisticAccumulator>& accumulators,
+  Coord::CoordSystem sys)
 {
-  // does not extend across mosaic boundries
-  // uses currentContext
-  FitsImage* ptr = isInCFits(pp->getCenter(),Coord::REF,NULL);
-  if (!ptr)
-    ptr = currentContext->cfits;
-
-  int srcw = ptr->width();
-  FitsBound* params = ptr->getDataParams(currentContext->secMode());
-
-  double sum[num][na];
-  memset(sum,0,num*na*sizeof(double));
-  double sum2[num][na];
-  memset(sum2,0,num*na*sizeof(double));
-  int cnt[num][na];
-  memset(cnt,0,num*na*sizeof(int));
-  double min[num][na];
-  double max[num][na];
-  for (int ii=0; ii<num; ii++) {
-    for (int jj=0; jj<na; jj++) {
-      min[ii][jj] =DBL_MAX;
-      max[ii][jj] =-DBL_MAX;
-    }
-  }
-  double median[num][na];
-  memset(median,0,num*na*sizeof(double));
-
-  for (int kk=0; kk<num; kk++) {
-    // take the bbox and extend to lower/upper pixel boundaries
-    Vector ll = (bb[kk+1].ll*ptr->refToData).floor();
-    Vector ur = (bb[kk+1].ur*ptr->refToData).ceil();
-
-    int msize = int(ur[1]-ll[1])*int(ur[0]-ll[0]);
-    double* marr = new double[msize];
-
-    // main loop
-    SETSIGBUS
-      for (int qq=0; qq<na; qq++) {
-	memset(marr,0,msize*sizeof(double));
-
-	for (int jj=ll[1]; jj<ur[1]; jj++) {
-	  for (int ii=ll[0]; ii<ur[0]; ii++) {
-	    if (ii>=params->xmin && ii<params->xmax && 
-		jj>=params->ymin && jj<params->ymax) {
-	      // shift to center of pixel in DATA
-	      Vector rr = Vector(ii,jj)+Vector(.5,.5);
-	      Vector ss = rr*ptr->dataToRef;
-	  
-	      if (pp->isIn(ss,Coord::REF,kk+1,qq) && 
-		  !pp->isIn(ss,Coord::REF,kk,qq)) {
-		double val =ptr->getValueDouble(long(jj)*srcw+long(ii));
-		// check for nan
-		if (isfinite(val)) {
-		  sum[kk][qq] += val;
-		  sum2[kk][qq] += val*val;
-
-		  if (cnt[kk][qq]<msize)
-		    marr[cnt[kk][qq]] = val;
-
-		  if (val<min[kk][qq])
-		    min[kk][qq] = val;
-		  if (val>max[kk][qq])
-		    max[kk][qq] = val;
-
-		  cnt[kk][qq]++;
-		}
-	      }
-	    }
-	  }
-	}
-
-	qsort((void*)marr,cnt[kk][qq],sizeof(double),dCompare);
-	median[kk][qq] = marr[int(cnt[kk][qq]/2.)];
-      }
-    CLEARSIGBUS
-
-    if (marr)
-      delete [] marr;
-  }
-
-  int unit = markerAnalysisStats1(pp,ptr,str,sys,sky);
-
-  for (int kk=0; kk<num; kk++) 
-    for (int qq=0; qq<na; qq++)
-      if (cnt[kk][qq])
-	markerAnalysisStats2(ptr,str,sys,kk*na+qq,cnt[kk][qq],sum[kk][qq],unit);
-
-  markerAnalysisStats3(str);
-
-  for (int kk=0; kk<num; kk++)
-    for (int qq=0; qq<na; qq++)
-      if (cnt[kk][qq])
-	markerAnalysisStats4(str,kk*na+qq,cnt[kk][qq],sum[kk][qq],sum2[kk][qq],
-			     median[kk][qq],min[kk][qq],max[kk][qq]);
-}
-
-int Base::markerAnalysisStats1(Marker* pp,FitsImage* ptr, ostream& str, 
-			       Coord::CoordSystem sys, Coord::SkyFrame sky)
-{
-  str << "center=" << setprecision(8) 
-      << ptr->mapFromRef(pp->getCenter(),sys,sky) << endl;
-  coord.listCoordSystem(str, sys, sky, ptr);
-  str << endl;
+  RegionStatisticResult result = seed;
+  result.components.clear();
+  double areaScale =1;
 
   switch (sys) {
   case Coord::IMAGE:
   case Coord::PHYSICAL:
   case Coord::DETECTOR:
   case Coord::AMPLIFIER:
-    str << endl;
-    str << "reg\t" << "sum\t\t" << "error\t" 
-	<< "area\t\t" << "surf_bri\t\t" << "surf_err" << endl
-	<< "\t" << "\t" << "\t\t" 
-	<< "(pix**2)\t\t" << "(sum/pix**2)\t\t" << "(sum/pix**2)" << endl
-	<< "---\t" << "---\t\t" << "-----\t" 
-	<< "--------\t\t" << "------------\t\t" << "------------" << endl;
-    return 0;
-  default: 
+    result.areaUnit = RegionStatisticResult::PIXEL_AREA;
+    break;
+  default:
     {
-      double ll = ptr->getWCSSize(sys);
+      double size = ptr->getWCSSize(sys);
+      areaScale = size*size;
       if (ptr->hasWCSCel(sys)) {
-	str << "1 pixel = "<< ll*60*60 << " arcsec";
-	str << endl << endl;
-	str << "reg\t" << "sum\t\t" << "error\t" 
-	    << "area\t\t" << "surf_bri\t\t" << "surf_err" << endl
-	    << "\t" << "\t" << "\t\t" 
-	    << "(arcsec**2)\t\t" << "(sum/arcsec**2)\t" << "(sum/arcsec**2)" << endl
-	    << "---\t" << "---\t\t" << "-----\t" 
-	    << "-----------\t\t" << "---------------\t" << "---------------" << endl;
-	return 1;
+        areaScale *= 60*60*60*60;
+        result.areaUnit = RegionStatisticResult::ARCSEC_AREA;
       }
-      else {
-	str << "1 pixel = "<< ll;
-	str << endl << endl;
-	str << "reg\t" << "sum\t\t" << "error\t" 
-	    << "area\t\t" << "surf_bri\t\t" << "surf_err" << endl
-	    << "\t" << "\t" << "\t\t" 
-	    << "(pix**2)\t\t" << "(sum/pix**2)\t\t" << "(sum/pix**2)" << endl
-	    << "---\t" << "---\t\t" << "-----\t" 
-	    << "--------\t\t" << "------------\t\t" << "------------" << endl;
-	return 2;
-      }
+      else
+        result.areaUnit = RegionStatisticResult::LINEAR_PIXEL_AREA;
     }
     break;
   }
+
+  for (size_t ii=0; ii<accumulators.size(); ii++) {
+    RegionStatisticAccumulator& accumulator = accumulators[ii];
+    RegionStatisticComponent component = RegionStatisticComponent(int(ii)+1);
+    const long count = long(accumulator.count());
+    component.set("core.pixel_count", count);
+
+    if (count) {
+      const double dcount = double(count);
+      const double sum = accumulator.sum();
+      const double sum2 = accumulator.sum2();
+      const double error = sqrt(fabs(sum));
+      const double area = areaScale*dcount;
+      const double mean = sum/dcount;
+      const double variance = fabs(sum2/dcount - (sum*sum)/(dcount*dcount));
+
+      component.set("core.sum", sum);
+      component.set("core.error", error);
+      component.set("core.area", area);
+      component.set("core.surface_brightness", sum/area);
+      component.set("core.surface_error", error/area);
+      component.set("core.mean", mean);
+      component.set("core.median", accumulator.median());
+      component.set("core.minimum", accumulator.minimum());
+      component.set("core.maximum", accumulator.maximum());
+      component.set("core.variance", variance);
+      component.set("core.standard_deviation", sqrt(variance));
+      component.set("core.rms", sqrt(sum2/dcount));
+      if (accumulator.hasCentroid()) {
+	component.hasCentroid =1;
+	component.centroid = accumulator.centroid();
+      }
+    }
+
+    result.components.push_back(component);
+  }
+
+  return result;
 }
 
-void Base::markerAnalysisStats2(FitsImage* ptr, ostream& str, 
-				Coord::CoordSystem sys,
-				int kk, int cnt, double sum, int unit)
+RegionStatisticJob::RegionStatisticJob()
+  : order(0), workSize(0), geometryKind(SIMPLE_GEOMETRY),
+    radialComponents(1), angularComponents(1), geometry(NULL), image(NULL)
+{}
+
+RegionStatisticJob::~RegionStatisticJob()
 {
-  double area =0;
-  switch (unit) {
-  case 0:
-    // pixels
-    area = cnt;
-    break;
-  case 1:
-    {
-      // Cel WCS
-      double rr = ptr->getWCSSize(sys);
-      double aa = rr*rr;
-      area = aa*60*60*60*60*cnt;
+  if (geometry)
+    delete geometry;
+}
+
+void RegionStatisticJob::measure()
+{
+  accumulators.clear();
+  accumulators.resize(radialComponents*angularComponents);
+
+  for (int kk=0; kk<radialComponents; kk++) {
+    const std::vector<RegionStatisticPixel>& pixels = pixelSets[kk];
+    for (int qq=0; qq<angularComponents; qq++) {
+      RegionStatisticAccumulator& accumulator =
+	accumulators[kk*angularComponents+qq];
+      if (angularComponents > 1)
+	accumulator.reserve(pixels.size()/angularComponents+1);
+      else
+	accumulator.reserve(pixels.size());
+
+      for (size_t ii=0; ii<pixels.size(); ii++) {
+	const RegionStatisticPixel& pixel = pixels[ii];
+	int inside =0;
+	switch (geometryKind) {
+	case SIMPLE_GEOMETRY:
+	  inside = geometry->isIn(pixel.reference,backMatrix);
+	  break;
+	case ANNULUS_GEOMETRY:
+	  inside = geometry->isIn(pixel.reference,backMatrix,kk+1) &&
+	    !geometry->isIn(pixel.reference,backMatrix,kk);
+	  break;
+	case PANDA_GEOMETRY:
+	  inside = geometry->isIn(pixel.reference,backMatrix,kk+1,qq) &&
+	    !geometry->isIn(pixel.reference,backMatrix,kk,qq);
+	  break;
+	}
+	if (inside)
+	  accumulator.add(pixel.value,pixel.reference);
+      }
     }
+  }
+}
+
+int Base::markerAnalysisStatsJobPrepare(
+  Marker* pp, RegionStatisticJob* job,
+  RegionStatisticJob::GeometryKind kind, int radial, int angular,
+  const std::vector<BBox>& bounds, Coord::CoordSystem sys)
+{
+  (void)sys;
+  if (!job || !currentContext || !currentContext->cfits)
+    return 0;
+
+  job->geometryKind = kind;
+  job->radialComponents = radial;
+  job->angularComponents = angular;
+  job->geometry = pp->dup();
+  job->backMatrix = job->geometry->bckMatrix();
+  job->image = isInCFits(pp->getCenter(),Coord::REF,NULL);
+  if (!job->image)
+    job->image = currentContext->cfits;
+  job->seed.regionId = pp->getId();
+  job->seed.shape = pp->getType();
+  job->seed.center = pp->getCenter();
+  job->seed.background = pp->getProperty(Marker::SOURCE) ? 0 : 1;
+  job->seed.exclude = pp->getProperty(Marker::INCLUDE) ? 0 : 1;
+  job->pixelSets.clear();
+  job->pixelSets.resize(radial);
+  job->workSize =0;
+
+  const int srcw = job->image->width();
+  FitsBound* params =
+    job->image->getDataParams(currentContext->secMode());
+  for (int kk=0; kk<radial; kk++) {
+    Vector ll = (bounds[kk].ll*job->image->refToData).floor();
+    Vector ur = (bounds[kk].ur*job->image->refToData).ceil();
+    std::vector<RegionStatisticPixel>& pixels = job->pixelSets[kk];
+    const int size = int(ur[1]-ll[1])*int(ur[0]-ll[0]);
+    if (size > 0)
+      pixels.reserve(size);
+
+    // Validate and copy image values on the main thread. Workers operate only
+    // on this owned snapshot and therefore do not install signal handlers.
+    SETSIGBUS
+      for (int jj=ll[1]; jj<ur[1]; jj++) {
+	for (int ii=ll[0]; ii<ur[0]; ii++) {
+	  if (ii>=params->xmin && ii<params->xmax &&
+	      jj>=params->ymin && jj<params->ymax) {
+	    double value =
+	      job->image->getValueDouble(long(jj)*srcw+long(ii));
+	    if (isfinite(value)) {
+	      Vector data = Vector(ii,jj)+Vector(.5,.5);
+	      pixels.push_back(RegionStatisticPixel(
+		data*job->image->dataToRef,value));
+	    }
+	  }
+	}
+      }
+    CLEARSIGBUS
+    job->workSize += pixels.size()*angular;
+  }
+  return 1;
+}
+
+int Base::markerAnalysisStatsJob(Marker* pp, RegionStatisticJob* job,
+                                 const BBox& bb, Coord::CoordSystem sys)
+{
+  std::vector<BBox> bounds(1,bb);
+  return markerAnalysisStatsJobPrepare(
+    pp,job,RegionStatisticJob::SIMPLE_GEOMETRY,1,1,bounds,sys);
+}
+
+int Base::markerAnalysisStatsJob(Marker* pp, RegionStatisticJob* job,
+                                 int num, BBox* bb,
+                                 Coord::CoordSystem sys)
+{
+  std::vector<BBox> bounds;
+  bounds.reserve(num);
+  for (int kk=0; kk<num; kk++)
+    bounds.push_back(bb[kk+1]);
+  return markerAnalysisStatsJobPrepare(
+    pp,job,RegionStatisticJob::ANNULUS_GEOMETRY,num,1,bounds,sys);
+}
+
+int Base::markerAnalysisStatsJob(Marker* pp, RegionStatisticJob* job,
+                                 int num, int angular, BBox* bb,
+                                 Coord::CoordSystem sys)
+{
+  std::vector<BBox> bounds;
+  bounds.reserve(num);
+  for (int kk=0; kk<num; kk++)
+    bounds.push_back(bb[kk+1]);
+  return markerAnalysisStatsJobPrepare(
+    pp,job,RegionStatisticJob::PANDA_GEOMETRY,num,angular,bounds,sys);
+}
+
+static double regionStatisticReal(const RegionStatisticComponent& component,
+                                  const char* key)
+{
+  const RegionStatisticValue* value = component.find(key);
+  return value ? value->realValue() : 0;
+}
+
+static long regionStatisticInteger(const RegionStatisticComponent& component,
+                                   const char* key)
+{
+  const RegionStatisticValue* value = component.find(key);
+  return value ? value->integerValue() : 0;
+}
+
+static Coord::CoordSystem regionStatisticWCSSystem(
+  FitsImage* ptr, Coord::CoordSystem requested)
+{
+  if (requested >= Coord::WCS && ptr->hasWCS(requested))
+    return requested;
+  return Coord::WCS;
+}
+
+void Base::markerAnalysisStatsFormat(Marker* pp, FitsImage* ptr, ostream& str,
+                                     const RegionStatisticResult& result,
+                                     Coord::CoordSystem sys,
+                                     Coord::SkyFrame sky)
+{
+  str << "center=" << setprecision(8)
+      << ptr->mapFromRef(pp->getCenter(),sys,sky) << endl;
+  coord.listCoordSystem(str, sys, sky, ptr);
+  str << endl;
+
+  switch (result.areaUnit) {
+  case RegionStatisticResult::PIXEL_AREA:
+    str << endl;
+    str << "reg\t" << "sum\t\t" << "error\t"
+        << "area\t\t" << "surf_bri\t\t" << "surf_err" << endl
+        << "\t" << "\t" << "\t\t"
+        << "(pix**2)\t\t" << "(sum/pix**2)\t\t" << "(sum/pix**2)" << endl
+        << "---\t" << "---\t\t" << "-----\t"
+        << "--------\t\t" << "------------\t\t" << "------------" << endl;
     break;
-  case 2:
-    {
-      // Linear WCS
-      double rr = ptr->getWCSSize(sys);
-      double aa = rr*rr;
-      area = aa*cnt;
-    }
+  case RegionStatisticResult::ARCSEC_AREA:
+    str << "1 pixel = " << ptr->getWCSSize(sys)*60*60 << " arcsec";
+    str << endl << endl;
+    str << "reg\t" << "sum\t\t" << "error\t"
+        << "area\t\t" << "surf_bri\t\t" << "surf_err" << endl
+        << "\t" << "\t" << "\t\t"
+        << "(arcsec**2)\t\t" << "(sum/arcsec**2)\t" << "(sum/arcsec**2)" << endl
+        << "---\t" << "---\t\t" << "-----\t"
+        << "-----------\t\t" << "---------------\t" << "---------------" << endl;
+    break;
+  case RegionStatisticResult::LINEAR_PIXEL_AREA:
+    str << "1 pixel = " << ptr->getWCSSize(sys);
+    str << endl << endl;
+    str << "reg\t" << "sum\t\t" << "error\t"
+        << "area\t\t" << "surf_bri\t\t" << "surf_err" << endl
+        << "\t" << "\t" << "\t\t"
+        << "(pix**2)\t\t" << "(sum/pix**2)\t\t" << "(sum/pix**2)" << endl
+        << "---\t" << "---\t\t" << "-----\t"
+        << "--------\t\t" << "------------\t\t" << "------------" << endl;
     break;
   }
-  double err = sqrt(fabs(sum));
-  double bri = sum/area;
-  double brierr = err/area;
 
-  str << kk+1 << '\t' 
-      << setprecision(8)
-      << sum << "\t\t"
-      << setprecision(6)
-      << err << "\t"
-      << area << "\t\t"
-      << bri << "\t\t"
-      << brierr << endl;
-}
+  for (size_t ii=0; ii<result.components.size(); ii++) {
+    const RegionStatisticComponent& component = result.components[ii];
+    if (!regionStatisticInteger(component, "core.pixel_count"))
+      continue;
 
-void Base::markerAnalysisStats3(ostream& str)
-{
+    str << component.component << '\t'
+        << setprecision(8)
+        << regionStatisticReal(component, "core.sum") << "\t\t"
+        << setprecision(6)
+        << regionStatisticReal(component, "core.error") << "\t"
+        << regionStatisticReal(component, "core.area") << "\t\t"
+        << regionStatisticReal(component, "core.surface_brightness") << "\t\t"
+        << regionStatisticReal(component, "core.surface_error") << endl;
+  }
+
   str << endl
       << "reg\t" << "sum\t" << "npix\t" << "mean\t" << "median\t"
-      << "min\t" << "max\t" << "var\t" << "stddev\t" << "rms\t" << endl
-      << "---\t" << "---\t" << "----\t" << "----\t" << "------\t" 
-      << "---\t" << "---\t" << "---\t" << "------\t" << "---\t" << endl;
+      << "min\t" << "max\t" << "var\t" << "stddev\t" << "rms\t"
+      << "centroid_x\t" << "centroid_y\t"
+      << "centroid_wcs_x\t" << "centroid_wcs_y\t" << endl
+      << "---\t" << "---\t" << "----\t" << "----\t" << "------\t"
+      << "---\t" << "---\t" << "---\t" << "------\t" << "---\t"
+      << "----------\t" << "----------\t"
+      << "--------------\t" << "--------------\t" << endl;
+
+  const Coord::CoordSystem centroidWCS = regionStatisticWCSSystem(ptr,sys);
+  const int hasCentroidWCS = ptr->hasWCS(centroidWCS);
+
+  for (size_t ii=0; ii<result.components.size(); ii++) {
+    const RegionStatisticComponent& component = result.components[ii];
+    const long count = regionStatisticInteger(component, "core.pixel_count");
+    if (!count)
+      continue;
+
+    str << component.component << '\t'
+        << setprecision(8)
+        << regionStatisticReal(component, "core.sum") << '\t'
+        << count << '\t'
+        << setprecision(6)
+        << regionStatisticReal(component, "core.mean") << '\t'
+        << regionStatisticReal(component, "core.median") << '\t'
+        << regionStatisticReal(component, "core.minimum") << '\t'
+        << regionStatisticReal(component, "core.maximum") << '\t'
+        << regionStatisticReal(component, "core.variance") << '\t'
+        << regionStatisticReal(component, "core.standard_deviation") << '\t'
+        << regionStatisticReal(component, "core.rms") << '\t';
+    if (component.hasCentroid) {
+      const Vector image = ptr->mapFromRef(
+	component.centroid,Coord::IMAGE,sky);
+      str << setprecision(10) << image[0] << '\t' << image[1] << '\t';
+      if (hasCentroidWCS) {
+	const Vector wcs = ptr->mapFromRef(component.centroid,centroidWCS,sky);
+	str << wcs[0] << '\t' << wcs[1] << '\t';
+      }
+      else
+	str << "\t\t";
+    }
+    else
+      str << "\t\t\t\t";
+    str << endl;
+  }
 }
 
-void Base::markerAnalysisStats4(ostream& str, int kk, 
-				double cnt, double sum, double sum2, 
-				double median, double min, double max)
+// for simple regions
+RegionStatisticResult Base::markerAnalysisStatsData(
+  Marker* pp, const BBox& bb, Coord::CoordSystem sys)
 {
-  // up cast int cnt to double to avoid int overflow
-  double mean =0;
-  double std =0;
-  double var =0;
-  double rms =0;
-  if (cnt) {
-    mean = sum/cnt;
-    var = fabs(sum2/cnt - (sum*sum)/(cnt*cnt));
-    std = sqrt(var);
-    rms = sqrt(sum2/cnt);
+  // does not extend across mosaic boundaries; uses currentContext
+  FitsImage* ptr = isInCFits(pp->getCenter(),Coord::REF,NULL);
+  if (!ptr)
+    ptr = currentContext->cfits;
+
+  const int srcw = ptr->width();
+  FitsBound* params = ptr->getDataParams(currentContext->secMode());
+  std::vector<RegionStatisticAccumulator> accumulators(1);
+
+  Vector ll = (bb.ll*ptr->refToData).floor();
+  Vector ur = (bb.ur*ptr->refToData).ceil();
+  const int msize = int(ur[1]-ll[1])*int(ur[0]-ll[0]);
+  if (msize > 0)
+    accumulators[0].reserve(msize);
+
+  SETSIGBUS
+    for (int jj=ll[1]; jj<ur[1]; jj++) {
+      for (int ii=ll[0]; ii<ur[0]; ii++) {
+        if (ii>=params->xmin && ii<params->xmax &&
+            jj>=params->ymin && jj<params->ymax) {
+          Vector rr = Vector(ii,jj)+Vector(.5,.5);
+          Vector ss = rr*ptr->dataToRef;
+          if (pp->isIn(ss,Coord::REF)) {
+            double value = ptr->getValueDouble(long(jj)*srcw+long(ii));
+            if (isfinite(value))
+              accumulators[0].add(value,ss);
+          }
+        }
+      }
+    }
+  CLEARSIGBUS
+
+  return markerAnalysisStatsResult(pp,ptr,accumulators,sys);
+}
+
+void Base::markerAnalysisStats(Marker* pp, ostream& str, const BBox& bb,
+                               Coord::CoordSystem sys, Coord::SkyFrame sky)
+{
+  RegionStatisticResult result = markerAnalysisStatsData(pp,bb,sys);
+  FitsImage* ptr = isInCFits(pp->getCenter(),Coord::REF,NULL);
+  if (!ptr)
+    ptr = currentContext->cfits;
+  markerAnalysisStatsFormat(pp,ptr,str,result,sys,sky);
+}
+
+// for annulus regions
+RegionStatisticResult Base::markerAnalysisStatsData(
+  Marker* pp, int num, BBox* bb, Coord::CoordSystem sys)
+{
+  // does not extend across mosaic boundaries; uses currentContext
+  FitsImage* ptr = isInCFits(pp->getCenter(),Coord::REF,NULL);
+  if (!ptr)
+    ptr = currentContext->cfits;
+
+  const int srcw = ptr->width();
+  FitsBound* params = ptr->getDataParams(currentContext->secMode());
+  std::vector<RegionStatisticAccumulator> accumulators(num);
+
+  for (int kk=0; kk<num; kk++) {
+    Vector ll = (bb[kk+1].ll*ptr->refToData).floor();
+    Vector ur = (bb[kk+1].ur*ptr->refToData).ceil();
+
+    SETSIGBUS
+      for (int jj=ll[1]; jj<ur[1]; jj++) {
+        for (int ii=ll[0]; ii<ur[0]; ii++) {
+          if (ii>=params->xmin && ii<params->xmax &&
+              jj>=params->ymin && jj<params->ymax) {
+            Vector rr = Vector(ii,jj)+Vector(.5,.5);
+            Vector ss = rr*ptr->dataToRef;
+            if (pp->isIn(ss,Coord::REF,kk+1) &&
+                !pp->isIn(ss,Coord::REF,kk)) {
+              double value = ptr->getValueDouble(long(jj)*srcw+long(ii));
+              if (isfinite(value))
+                accumulators[kk].add(value,ss);
+            }
+          }
+        }
+      }
+    CLEARSIGBUS
   }
 
-  str << kk+1 << '\t' 
-      << setprecision(8)
-      << sum << '\t'
-      << cnt << '\t'
-      << setprecision(6)
-      << mean << '\t'
-      << median << '\t'
-      << min << '\t'
-      << max << '\t'
-      << var << '\t'
-      << std << '\t'
-      << rms << '\t'
-      << endl;
+  return markerAnalysisStatsResult(pp,ptr,accumulators,sys);
+}
+
+void Base::markerAnalysisStats(Marker* pp, ostream& str, int num, BBox* bb,
+                               Coord::CoordSystem sys, Coord::SkyFrame sky)
+{
+  RegionStatisticResult result = markerAnalysisStatsData(pp,num,bb,sys);
+  FitsImage* ptr = isInCFits(pp->getCenter(),Coord::REF,NULL);
+  if (!ptr)
+    ptr = currentContext->cfits;
+  markerAnalysisStatsFormat(pp,ptr,str,result,sys,sky);
+}
+
+// for panda regions
+RegionStatisticResult Base::markerAnalysisStatsData(
+  Marker* pp, int num, int na, BBox* bb, Coord::CoordSystem sys)
+{
+  // does not extend across mosaic boundaries; uses currentContext
+  FitsImage* ptr = isInCFits(pp->getCenter(),Coord::REF,NULL);
+  if (!ptr)
+    ptr = currentContext->cfits;
+
+  const int srcw = ptr->width();
+  FitsBound* params = ptr->getDataParams(currentContext->secMode());
+  std::vector<RegionStatisticAccumulator> accumulators(num*na);
+
+  for (int kk=0; kk<num; kk++) {
+    Vector ll = (bb[kk+1].ll*ptr->refToData).floor();
+    Vector ur = (bb[kk+1].ur*ptr->refToData).ceil();
+
+    for (int qq=0; qq<na; qq++) {
+      RegionStatisticAccumulator& accumulator = accumulators[kk*na+qq];
+
+      SETSIGBUS
+        for (int jj=ll[1]; jj<ur[1]; jj++) {
+          for (int ii=ll[0]; ii<ur[0]; ii++) {
+            if (ii>=params->xmin && ii<params->xmax &&
+                jj>=params->ymin && jj<params->ymax) {
+              Vector rr = Vector(ii,jj)+Vector(.5,.5);
+              Vector ss = rr*ptr->dataToRef;
+              if (pp->isIn(ss,Coord::REF,kk+1,qq) &&
+                  !pp->isIn(ss,Coord::REF,kk,qq)) {
+                double value = ptr->getValueDouble(long(jj)*srcw+long(ii));
+                if (isfinite(value))
+                  accumulator.add(value,ss);
+              }
+            }
+          }
+        }
+      CLEARSIGBUS
+    }
+  }
+
+  return markerAnalysisStatsResult(pp,ptr,accumulators,sys);
+}
+
+void Base::markerAnalysisStats(Marker* pp, ostream& str, int num, int na,
+                               BBox* bb, Coord::CoordSystem sys,
+                               Coord::SkyFrame sky)
+{
+  RegionStatisticResult result = markerAnalysisStatsData(pp,num,na,bb,sys);
+  FitsImage* ptr = isInCFits(pp->getCenter(),Coord::REF,NULL);
+  if (!ptr)
+    ptr = currentContext->cfits;
+  markerAnalysisStatsFormat(pp,ptr,str,result,sys,sky);
 }
 
 void Base::bltCut(char* xname, char* yname, Coord::Orientation axis, 

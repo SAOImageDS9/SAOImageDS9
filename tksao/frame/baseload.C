@@ -693,4 +693,5 @@ void Base::loadDone(int rr)
 
   updateColorScale();
   update(MATRIX);
+  regionStatsImageInvalidated();
 }

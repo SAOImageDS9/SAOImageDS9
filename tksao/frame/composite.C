@@ -4,6 +4,7 @@
 
 #include "composite.h"
 #include "fitsimage.h"
+#include "regionstats.h"
 
 #include <sstream>
 #include <string>
@@ -407,6 +408,50 @@ int Composite::isInRegion(const Vector& v, List<Marker>& regionMembers)
   }
 
   return operation == INTERSECTION ? found : 0;
+}
+
+int Composite::analysisStatsResult(RegionStatisticResult* result,
+				   Coord::CoordSystem sys)
+{
+  // CIAO region files commonly wrap each source shape in a one-member
+  // composite.  Such a wrapper has exactly the geometry of its member, so it
+  // can participate in the structured statistics interface without defining
+  // row semantics for genuine compound composites.
+  if (!result || members.count() != 1)
+    return 0;
+
+  Marker* member = members.head()->dup();
+  member->setComposite(fwdMatrix(),angle);
+  int status = member->analysisStatsResult(result,sys);
+  if (status) {
+    result->regionId = getId();
+    result->shape = member->getType();
+    result->center = getCenter();
+    result->background = getProperty(Marker::SOURCE) ? 0 : 1;
+    result->exclude = getProperty(Marker::INCLUDE) ? 0 : 1;
+  }
+  delete member;
+  return status;
+}
+
+int Composite::analysisStatsJob(RegionStatisticJob* job,
+				Coord::CoordSystem sys)
+{
+  if (!job || members.count() != 1)
+    return 0;
+
+  Marker* member = members.head()->dup();
+  member->setComposite(fwdMatrix(),angle);
+  int status = member->analysisStatsJob(job,sys);
+  if (status) {
+    job->seed.regionId = getId();
+    job->seed.shape = member->getType();
+    job->seed.center = getCenter();
+    job->seed.background = getProperty(Marker::SOURCE) ? 0 : 1;
+    job->seed.exclude = getProperty(Marker::INCLUDE) ? 0 : 1;
+  }
+  delete member;
+  return status;
 }
 
 void Composite::append(Marker* m)

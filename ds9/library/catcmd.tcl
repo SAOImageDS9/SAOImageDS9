@@ -142,6 +142,11 @@ proc CATSelectRows {varname src rowlist cc} {
     upvar #0 $varname var
     global $varname
 
+    if {[info exists var(regioncatalog)] && $var(regioncatalog)} {
+	RegionCatalogSelectRows $varname $src $rowlist $cc
+	return
+    }
+
     # only process from first graph
     if {$cc != 1} {
 	return

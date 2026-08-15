@@ -263,8 +263,46 @@ void BoxAnnulus::analysisStats(Coord::CoordSystem sys, Coord::SkyFrame sky)
   }
 
   parent->markerAnalysisStats(this, str, numAnnuli_-1, bb, sys, sky);
+  delete [] bb;
   str << ends;
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
+}
+
+int BoxAnnulus::analysisStatsResult(RegionStatisticResult* result,
+				    Coord::CoordSystem sys)
+{
+  if (!result)
+    return 0;
+  BBox* bb = new BBox[numAnnuli_];
+  Matrix mm = Rotate(angle) * Translate(center);
+  for (int ii=0; ii<numAnnuli_; ii++) {
+    Vector vv = annuli_[ii].abs();
+    bb[ii] = BBox(-vv * mm);
+    bb[ii].bound( vv * mm);
+    bb[ii].bound(Vector( vv[0],-vv[1]) * mm);
+    bb[ii].bound(Vector(-vv[0], vv[1]) * mm);
+  }
+  *result = parent->markerAnalysisStatsData(this,numAnnuli_-1,bb,sys);
+  delete [] bb;
+  return 1;
+}
+
+int BoxAnnulus::analysisStatsJob(RegionStatisticJob* job,
+				 Coord::CoordSystem sys)
+{
+  BBox* bb = new BBox[numAnnuli_];
+  Matrix mm = Rotate(angle) * Translate(center);
+  for (int ii=0; ii<numAnnuli_; ii++) {
+    Vector vv = annuli_[ii].abs();
+    bb[ii] = BBox(-vv * mm);
+    bb[ii].bound( vv * mm);
+    bb[ii].bound(Vector( vv[0],-vv[1]) * mm);
+    bb[ii].bound(Vector(-vv[0], vv[1]) * mm);
+  }
+  int result = parent->markerAnalysisStatsJob(
+    this,job,numAnnuli_-1,bb,sys);
+  delete [] bb;
+  return result;
 }
 
 // list
@@ -395,5 +433,3 @@ void BoxAnnulus::listSAOimage(ostream& str, int strip)
     listSAOimagePost(str, strip);
   }
 }
-
-

@@ -2979,6 +2979,7 @@ void Base::smoothCmd(int ff, int rr, int rm, double ss, double sm, double aa)
   updateColorScale();
   // for 3d, rebuffer
   update(MATRIX);
+  regionStatsImageInvalidated();
 }
 
 // backward compatibility backup
@@ -2989,6 +2990,7 @@ void Base::smoothCmd(int ff, int rr)
   updateColorScale();
   // for 3d, rebuffer
   update(MATRIX);
+  regionStatsImageInvalidated();
 }
 
 void Base::smoothDeleteCmd()
@@ -2998,6 +3000,7 @@ void Base::smoothDeleteCmd()
   updateColorScale();
   // for 3d, rebuffer
   update(MATRIX);
+  regionStatsImageInvalidated();
 }
 
 void Base::threadsCmd(int th)
@@ -3017,6 +3020,7 @@ void Base::unloadFitsCmd()
 void Base::updateFitsCmd()
 {
   update(MATRIX);
+  regionStatsImageInvalidated();
 }
 
 void Base::updateFitsCmd(int which, BBox bb)
@@ -3044,6 +3048,7 @@ void Base::updateFitsCmd(int which, BBox bb)
     rr.bound(ul);
 
     update(BASE, rr);
+    regionStatsImageInvalidated();
   }
 }
 
@@ -3082,6 +3087,7 @@ void Base::wcsAlignCmd(int which)
 
   alignWCS();
   update(MATRIX);
+  regionStatsImageInvalidated();
 }
 
 // used by backup
@@ -3091,6 +3097,7 @@ void Base::wcsAlignCmd(int which, Coord::CoordSystem sys, Coord::SkyFrame sky)
 
   alignWCS(sys, sky);
   update(MATRIX);
+  regionStatsImageInvalidated();
 }
 
 void Base::wcsAlign2Cmd(int which, Coord::CoordSystem sys, Coord::SkyFrame sky)
@@ -3103,6 +3110,7 @@ void Base::wcsAlign2Cmd(int which, Coord::CoordSystem sys, Coord::SkyFrame sky)
 
   alignWCS((FitsImage*)fitsimageptr_, sys);
   update(MATRIX);
+  regionStatsImageInvalidated();
 }
 
 void Base::wcsAlignPointerClearCmd() {
@@ -3128,6 +3136,7 @@ void Base::wcsAppendCmd(int which, int fd)
       rr->appendWCS(str);
       rr=rr->nextSlice();
     }
+    regionStatsImageInvalidated();
   }
   else
     result = TCL_ERROR;
@@ -3151,6 +3160,7 @@ void Base::wcsAppendCmd(int which, const char* fn)
       rr->appendWCS(str);
       rr=rr->nextSlice();
     }
+    regionStatsImageInvalidated();
   }
   else
     result = TCL_ERROR;
@@ -3174,6 +3184,7 @@ void Base::wcsAppendTxtCmd(int which, const char* txt)
       rr->appendWCS(str);
       rr=rr->nextSlice();
     }
+    regionStatsImageInvalidated();
   }
   else
     result = TCL_ERROR;
@@ -3185,11 +3196,13 @@ void Base::wcsResetCmd(int which)
     return;
 
   FitsImage* rr = findAllFits(which);
-  if (rr)
+  if (rr) {
     while (rr) {
       rr->resetWCS();
       rr=rr->nextSlice();
     }
+    regionStatsImageInvalidated();
+  }
   else
     result = TCL_ERROR;
 }
@@ -3212,6 +3225,7 @@ void Base::wcsReplaceCmd(int which, int fd)
       rr->replaceWCS(str);
       rr=rr->nextSlice();
     }
+    regionStatsImageInvalidated();
   }
   else
     result = TCL_ERROR;
@@ -3235,6 +3249,7 @@ void Base::wcsReplaceCmd(int which, const char* fn)
       rr->replaceWCS(str);
       rr=rr->nextSlice();
     }
+    regionStatsImageInvalidated();
   }
   else
     result = TCL_ERROR;
@@ -3258,6 +3273,7 @@ void Base::wcsReplaceTxtCmd(int which, const char* txt)
       rr->replaceWCS(str);
       rr=rr->nextSlice();
     }
+    regionStatsImageInvalidated();
   }
   else
     result = TCL_ERROR;

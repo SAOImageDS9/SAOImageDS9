@@ -42,6 +42,8 @@ public:
   void analysisPlot3d(char*, char*, Coord::CoordSystem,
 		      Marker::AnalysisMethod);
   void analysisStats(Coord::CoordSystem, Coord::SkyFrame sky);
+  int analysisStatsResult(RegionStatisticResult*, Coord::CoordSystem);
+  int analysisStatsJob(RegionStatisticJob*, Coord::CoordSystem);
 
   int isIn(const Vector& vv) {return isIn(vv, Coord::CANVAS);}
   int isIn(const Vector& vv, Coord::InternalSystem sys)

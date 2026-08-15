@@ -973,6 +973,10 @@ proc ProcessSendCatalogCmd {proc id param} {
     $proc $id "$rr\n"
 }
 
+proc CatalogCmdMake {} {
+    RegionCatalogCreate
+}
+
 proc CatalogCmdRef {ref} {
     global icat
     global cvarname

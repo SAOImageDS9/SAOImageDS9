@@ -281,6 +281,17 @@ switch $ds9(wm) {
 	set ::tk::dialog::file::showHiddenBtn 1
     }
     aqua {
+	# Tk's Aqua combobox cleanup attempts to delete its optional spacer
+	# image even when the popdown (and therefore the image) was never
+	# created.  Avoid leaking that error through command interfaces such
+	# as XPA while preserving cleanup for comboboxes that were posted.
+	proc ::ttk::combobox::AquaCleanup {cb} {
+	    set spacer $cb.spacer
+	    if {[lsearch -exact [image names] $spacer] >= 0} {
+		image delete $spacer
+	    }
+	}
+
 	::tk::unsupported::MacWindowStyle style $ds9(top) document \
 	    "closeBox fullZoom collapseBox resizable"
 

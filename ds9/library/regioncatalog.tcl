@@ -52,6 +52,7 @@ proc RegionCatalogCreate {{frame {}}} {
     set var(regioncatalog,sky) $sky
     set var(regioncatalog,generation) 0
     set var(regioncatalog,keys) {}
+    set var(regioncatalog,highlite) {}
     set var(proc,table) RegionCatalogRefreshView
     set var(proc,destroy) [list RegionCatalogDetach $varname]
     set var(show) 0
@@ -61,8 +62,8 @@ proc RegionCatalogCreate {{frame {}}} {
 
     set iregioncatalog(frame,$frame) $varname
 
-    # Region statistics catalogs display data only.  They never create catalog
-    # markers or couple table selection back to the source regions.
+    # Region statistics catalogs never create catalog markers.  Pan To uses
+    # the existing source region for its visual highlite.
     $var(tbl) configure -browsecommand [list RegionCatalogSelectCmd $varname %s %S]
     $var(top).param.bfilter configure \
 	-command [list RegionCatalogFilterDialog $varname]
@@ -693,6 +694,23 @@ proc RegionCatalogPanToRow {varname row} {
     }
     PanToFrame $var(frame) $x $y \
 	$var(regioncatalog,system) $var(regioncatalog,sky)
+
+    if {[info exists view(region_id)]} {
+	set id $view($row,$view(region_id))
+	if {[string is integer -strict $id] && $id > 0 &&
+	    ![catch {$var(frame) get marker $id property highlite} canHighlite] &&
+	    $canHighlite} {
+	    $var(frame) marker $id highlite only
+	    set var(regioncatalog,highlite) $id
+		set oldcolor [$var(frame) get marker $id color]
+        $var(frame) marker $id color red
+        after 200 [list $var(frame) marker $id color $oldcolor]
+        after 400 [list $var(frame) marker $id color red]
+        after 600 [list $var(frame) marker $id color $oldcolor]
+        after 800 [list $var(frame) marker $id color red]
+        after 1000 [list $var(frame) marker $id color $oldcolor]
+	}
+    }
 }
 
 # Plot and SAMP callbacks identify rows in the current filtered/sorted view.
@@ -811,6 +829,10 @@ proc RegionCatalogDetach {varname} {
     }
     set frame $var(frame)
     if {[info commands $frame] != {}} {
+	if {[info exists var(regioncatalog,highlite)] &&
+	    $var(regioncatalog,highlite) != {}} {
+	    catch {$frame marker $var(regioncatalog,highlite) unhighlite}
+	}
 	catch {$frame marker analysis stats callback}
     }
     if {[info exists iregioncatalog(frame,$frame)] &&

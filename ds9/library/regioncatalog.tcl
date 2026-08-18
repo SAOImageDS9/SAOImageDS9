@@ -53,6 +53,7 @@ proc RegionCatalogCreate {{frame {}}} {
     set var(regioncatalog,generation) 0
     set var(regioncatalog,keys) {}
     set var(regioncatalog,highlite) {}
+    set var(regioncatalog,blink,after) {}
     set var(proc,table) RegionCatalogRefreshView
     set var(proc,destroy) [list RegionCatalogDetach $varname]
     set var(show) 0
@@ -702,15 +703,60 @@ proc RegionCatalogPanToRow {varname row} {
 	    $canHighlite} {
 	    $var(frame) marker $id highlite only
 	    set var(regioncatalog,highlite) $id
-		set oldcolor [$var(frame) get marker $id color]
-        $var(frame) marker $id color red
-        after 200 [list $var(frame) marker $id color $oldcolor]
-        after 400 [list $var(frame) marker $id color red]
-        after 600 [list $var(frame) marker $id color $oldcolor]
-        after 800 [list $var(frame) marker $id color red]
-        after 1000 [list $var(frame) marker $id color $oldcolor]
+	    RegionCatalogBlinkStart $varname $id
 	}
     }
+}
+
+proc RegionCatalogBlinkStart {varname id} {
+    upvar #0 $varname var
+
+    RegionCatalogBlinkCancel $varname
+    if {![info exists var(regioncatalog)] ||
+	[info commands $var(frame)] == {} || ![$var(frame) has fits] ||
+	[catch {$var(frame) get marker $id color} oldcolor] || $oldcolor == {}} {
+	return
+    }
+
+    set var(regioncatalog,blink,id) $id
+    set var(regioncatalog,blink,color) $oldcolor
+    $var(frame) marker $id color red
+    foreach {delay color} [list 200 $oldcolor 400 red 600 $oldcolor \
+	800 red 1000 $oldcolor] {
+	lappend var(regioncatalog,blink,after) [after $delay \
+	    [list RegionCatalogBlinkColor $varname $id $color]]
+    }
+}
+
+proc RegionCatalogBlinkColor {varname id color} {
+    upvar #0 $varname var
+
+    if {![info exists var(regioncatalog)] ||
+	![info exists var(regioncatalog,blink,id)] ||
+	$var(regioncatalog,blink,id) != $id ||
+	[info commands $var(frame)] == {} || ![$var(frame) has fits]} {
+	return
+    }
+    catch {$var(frame) marker $id color $color}
+}
+
+proc RegionCatalogBlinkCancel {varname} {
+    upvar #0 $varname var
+
+    if {[info exists var(regioncatalog,blink,after)]} {
+	foreach token $var(regioncatalog,blink,after) {
+	    after cancel $token
+	}
+	set var(regioncatalog,blink,after) {}
+    }
+    if {[info exists var(regioncatalog,blink,id)] &&
+	[info exists var(regioncatalog,blink,color)] &&
+	[info exists var(frame)] && [info commands $var(frame)] != {}} {
+	catch {$var(frame) marker $var(regioncatalog,blink,id) color \
+	    $var(regioncatalog,blink,color)}
+    }
+    catch {unset var(regioncatalog,blink,id)}
+    catch {unset var(regioncatalog,blink,color)}
 }
 
 # Plot and SAMP callbacks identify rows in the current filtered/sorted view.
@@ -828,6 +874,7 @@ proc RegionCatalogDetach {varname} {
 	return
     }
     set frame $var(frame)
+    RegionCatalogBlinkCancel $varname
     if {[info commands $frame] != {}} {
 	if {[info exists var(regioncatalog,highlite)] &&
 	    $var(regioncatalog,highlite) != {}} {

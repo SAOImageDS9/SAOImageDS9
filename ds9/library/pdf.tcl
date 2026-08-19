@@ -306,17 +306,41 @@ proc PDFCanvasFont {font} {
 	set size [expr -$size]
     }
 
-    switch -glob -- $family {
-	*courier* {set pdfFont Courier}
-	*times* {set pdfFont Times}
-	default {set pdfFont Helvetica}
-    }
+    set bold [expr {$weight eq "bold"}]
+    set italic [expr {$slant ne "roman"}]
 
-    if {$weight == {bold}} {
-	append pdfFont -Bold
-    }
-    if {$slant != {roman}} {
-	append pdfFont -Oblique
+    switch -glob -- $family {
+	*courier* - *fixed* {
+	    set pdfFont Courier
+	    if {$bold && $italic} {
+		append pdfFont -BoldOblique
+	    } elseif {$bold} {
+		append pdfFont -Bold
+	    } elseif {$italic} {
+		append pdfFont -Oblique
+	    }
+	}
+	*times* - {*nimbus roman*} {
+	    if {$bold && $italic} {
+		set pdfFont Times-BoldItalic
+	    } elseif {$bold} {
+		set pdfFont Times-Bold
+	    } elseif {$italic} {
+		set pdfFont Times-Italic
+	    } else {
+		set pdfFont Times-Roman
+	    }
+	}
+	*helvetica* - *arial* - {*nimbus sans*} - default {
+	    set pdfFont Helvetica
+	    if {$bold && $italic} {
+		append pdfFont -BoldOblique
+	    } elseif {$bold} {
+		append pdfFont -Bold
+	    } elseif {$italic} {
+		append pdfFont -Oblique
+	    }
+	}
     }
 
     return [list $size $pdfFont]

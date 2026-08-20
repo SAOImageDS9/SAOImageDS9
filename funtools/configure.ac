@@ -1,7 +1,7 @@
 #	This file is an input file used by the GNU "autoconf" program to
 #	generate the file "configure", which is run during XPA installation
 #	to configure the system for the local environment.
-AC_INIT([funtools],[1.4.7],[saord@cfa.harvard.edu],[funtools])
+AC_INIT([funtools],[1.4.8],[saord@cfa.harvard.edu],[funtools])
 
 AC_CONFIG_HEADERS([conf.h ./gnu/conf.h ./funtest/conf.h])
 AC_CONFIG_SRCDIR([./funtools.h])

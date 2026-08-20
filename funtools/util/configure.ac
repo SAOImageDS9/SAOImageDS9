@@ -1,7 +1,7 @@
 #	This file is an input file used by the GNU "autoconf" program to
 #	generate the file "configure", which is run during XPA installation
 #	to configure the system for the local environment.
-AC_INIT(util, 1.0, saord@cfa.harvard.edu, util)
+AC_INIT(util, 1.1, saord@cfa.harvard.edu, util)
 
 AC_CONFIG_HEADERS([conf.h])
 AC_CONFIG_SRCDIR(./xalloc.h)

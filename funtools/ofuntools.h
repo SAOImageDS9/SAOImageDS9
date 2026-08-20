@@ -23,8 +23,8 @@
 
 #define FUN_MAJOR_VERSION 1
 #define FUN_MINOR_VERSION 4
-#define FUN_PATCH_LEVEL 7
-#define FUN_VERSION "1.4.7"
+#define FUN_PATCH_LEVEL 8
+#define FUN_VERSION "1.4.8"
 
 #ifndef FUNTOOLS_PRIVATE
 #include "prsetup.h"

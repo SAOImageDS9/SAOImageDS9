@@ -335,8 +335,13 @@ proc CATHistogramGenerate {varname} {
     for {set ii 1} {$ii<=$rows} {incr ii} {
 	set vv [starbase_get $var_(tbldb) $ii $colnum]
 	if {$vv != {} && [string is double $vv]} {
-	    set kk [expr {int(($vv-$min)/$width)}]
-	    if {$kk>=0 && $kk<$num} {
+	    if {$vv >= $min && $vv <= $max} {
+		set kk [expr {int(floor(($vv-$min)/$width))}]
+		# The upper bound belongs to the last bin.  Floating-point
+		# roundoff can also put values just below max in bin $num.
+		if {$kk >= $num} {
+		    set kk [expr {$num-1}]
+		}
 		lset yy $kk [expr {[lindex $yy $kk]+1}]
 	    }
 	}
@@ -351,12 +356,22 @@ proc CATHistogramGenerate {varname} {
 
 	set var_(hist) 1
 	set var_(hist,var) $vvarname
+	set var_(hist,graph) $vvar(graph,current)
+
+	set vvar(graph,ds,xdata) $xdata
+	set vvar(graph,ds,ydata) $ydata
+	set vvar(graph,ds,bar,width) $width
+	PlotExternal $vvarname xy
+	set var_(hist,ds) $vvar(graph,ds,current)
+	} else {
+	set vvar(graph,current) $var_(hist,graph)
+	set vvar(graph,ds,current) $var_(hist,ds)
+	PlotRestoreState $vvarname
     }
 
     set vvar(graph,ds,xdata) $xdata
     set vvar(graph,ds,ydata) $ydata
     set vvar(graph,ds,bar,width) $width
-    PlotExternal $vvarname xy
     PlotDataSetName $vvarname $var_(hist,col)
 
     set vvar(graph,ds,bar,border,color) $var_(graph,ds,bar,border,color)
@@ -578,4 +593,3 @@ proc CATPlotHighliteElement {varname rowlist} {
 	$vvar(1,proc,highlite) $vvarname 1 1 $result
     }
 }
-

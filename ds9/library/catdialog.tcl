@@ -98,6 +98,8 @@ proc CATDialog {varname format catalog title action} {
 
     set var(hist) 0
     set var(hist,var) {}
+    set var(hist,graph) {}
+    set var(hist,ds) {}
     set var(hist,col) {}
 
     set var(bar,num) 10
@@ -766,6 +768,11 @@ proc CATDestroy {varname} {
 	PlotDestroy $var(plot,var)
     }
 
+    # histogram window?
+    if {$var(hist)} {
+	PlotDestroy $var(hist,var)
+    }
+
     # cat header?
     set vvarname ${varname}hdr
     global $vvarname
@@ -911,4 +918,3 @@ proc UpdateCATDialogSAMP {} {
 	CATDialogUpdateSAMP $varname
     }
 }
-

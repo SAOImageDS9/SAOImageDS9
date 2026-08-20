@@ -445,6 +445,8 @@ proc CATOff {varname} {
 	PlotDestroy $var(hist,var)
 	set var(hist) 0
 	set var(hist,var) {}
+	set var(hist,graph) {}
+	set var(hist,ds) {}
 	set var(hist,col) {}
     }
 

@@ -607,6 +607,9 @@ proc RegionCatalogRefreshView {varname} {
 	if {$var(plot)} {
 	    CATPlotGenerate $varname
 	}
+	if {$var(hist)} {
+	    CATHistogramGenerate $varname
+	}
 	CATDialogUpdate $varname
     }
     RegionCatalogUpdateStatus $varname

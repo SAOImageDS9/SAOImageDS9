@@ -449,6 +449,7 @@ catalog [new]<br>
 &nbsp;&nbsp;&nbsp; [filter &lt;string&gt;]<br>
 &nbsp;&nbsp;&nbsp; [filter load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [header]<br>
+&nbsp;&nbsp;&nbsp; [histogram &lt;col&gt; &lt;numbins&gt; [&lt;min&gt; &lt;max&gt;]]<br>
 &nbsp;&nbsp;&nbsp; [location &lt;code&gt;]<br>
 &nbsp;&nbsp;&nbsp; [make]<br>
 &nbsp;&nbsp;&nbsp; [match]<br>
@@ -512,6 +513,8 @@ $xpaset -p ds9 catalog export tsv bar.tsv<br>
 $xpaset -p ds9 catalog filter '$Jmag&gt;10'<br>
 $xpaset -p ds9 catalog filter load foo.flt<br>
 $xpaset -p ds9 catalog header<br>
+$xpaset -p ds9 catalog histogram Jmag 40<br>
+$xpaset -p ds9 catalog histogram Jmag 40 0 20<br>
 $xpaset -p ds9 catalog location 500<br>
 $xpaset -p ds9 catalog make<br>
 $xpaset -p ds9 catalog match error 2 arcsec<br>

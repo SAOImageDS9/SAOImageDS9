@@ -51,6 +51,7 @@
 %token FUNCTION_
 %token HEADER_
 %token HIDE_
+%token HISTOGRAM_
 %token IMPORT_
 %token INCR_
 %token LOAD_
@@ -155,6 +156,7 @@ catalog : NEW_ {CATTool}
  | NAME_ STRING_ {ProcessCmdCVAR name $2}
  | PANTO_ yesno {ProcessCmdCVAR panto $2}
  | PLOT_ STRING_ STRING_ STRING_ STRING_ {ProcessCmdCVAR4 plot,x $2 plot,y $3 plot,xerr $4 plot,yerr $5 CATPlotGenerate}
+ | HISTOGRAM_ histogram
  | PRINT_ {ProcessCmdCVAR0 TBLCmdPrint}
  | PSKY_ skyframe {ProcessCmdCVAR psky $2 CATGenerate}
  | PSYSTEM_ wcssys {ProcessCmdCVAR psystem $2 CATGenerate}
@@ -188,6 +190,10 @@ coordinate : numeric numeric {TBLCmdCoord $1 $2 fk5}
 
 filter : LOAD_ STRING_ {TBLCmdFilterLoad $2}
  | STRING_ {ProcessCmdCVAR filter $1 CATTable}
+ ;
+
+histogram : STRING_ INT_ {ProcessCmdCVAR3 hist,col $1 bar,num $2 bar,minmax 0 CATHistogramGenerate}
+ | STRING_ INT_ numeric numeric {ProcessCmdCVAR5 hist,col $1 bar,num $2 bar,min $3 bar,max $4 bar,minmax 1 CATHistogramGenerate}
  ;
 
 match : {CatalogCmdMatch}

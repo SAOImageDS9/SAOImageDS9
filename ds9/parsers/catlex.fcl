@@ -45,6 +45,7 @@ fits	    {return $FITS_}
 function    {return $FUNCTION_}
 header	    {return $HEADER_}
 hide	    {return $HIDE_}
+histogram   {return $HISTOGRAM_}
 import	    {return $IMPORT_}
 incr	    {return $INCR_}
 load	    {return $LOAD_}

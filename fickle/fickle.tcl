@@ -2,7 +2,7 @@
 
 # $Id: fickle.tcl,v 1.6 2004/11/14 02:36:28 tang Exp $
 
-set FICKLE_VERSION 2.1
+set FICKLE_VERSION 2.2
 
 # no output()
 # no yymore()

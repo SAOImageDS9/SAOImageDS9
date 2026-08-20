@@ -1,3 +1,14 @@
+2026-08-20  Ken Glotfelty  <kglotfelty@cfa.harvard.edu>
+
+	* Released as taccle version 1.4. This is a new fork,
+	continuing maintenance of the project for SAOImageDS9 after
+	the original upstream became inactive.
+
+	* Fixed several array-index lookups (token_table, follow_table)
+	to use [set ::array(index)] instead of direct interpolation,
+	pulled forward from the copy of taccle maintained in the
+	SAOImageDS9 source tree.
+
 2005-03-17  J. Tang  <tang@jtang.org>
 
 	* Added infinite recursion detection.  It should work.

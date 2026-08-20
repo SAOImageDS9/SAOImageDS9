@@ -91,8 +91,6 @@ proc PrismDialog {varname} {
     set var(graph,ds,bar,color) white
     set var(graph,ds,bar,fill) 1
 
-    set var(plot,seq) 0
-    set var(plot,data,seq) 0
     set var(plot,mode) newplot
 
     set var(ccp,last) {}
@@ -675,9 +673,7 @@ proc PrismClear {varname} {
     set var(extnames) {}
     set var(extnum) 0
 
-    # reset plots
-    set var(plot,seq) 0
-    set var(plot,data,seq) 0
+    # reset plot mode; plot and vector names use the session-wide counter
     set var(plot,mode) newplot
 
     # header
@@ -894,26 +890,27 @@ proc PrismPlotGenerate {varname} {
     global iap
     switch $var(plot,mode) {
 	newplot {
-	    incr ${varname}(plot,seq)
-	    set vvarname plot$var(plot,seq)${varname}
+	    incr iap(unique)
+	    set vvarname plot$iap(unique)${varname}
 	}
 	newgraph -
 	newdataset {
 	    set vvarname [lindex $iap(plots) end]
 	    if {$vvarname == {}} {
-		incr ${varname}(plot,seq)
-		set vvarname plot$var(plot,seq)${varname}
+		incr iap(unique)
+		set vvarname plot$iap(unique)${varname}
 	    }
 	}
     }
     upvar #0 $vvarname vvar
     global $vvarname
 
-    set xdata ${vvarname}xx$var(plot,data,seq)${varname}
-    set ydata ${vvarname}yy$var(plot,data,seq)${varname}
-    set xedata ${vvarname}xe$var(plot,data,seq)${varname}
-    set yedata ${vvarname}ye$var(plot,data,seq)${varname}
-    incr ${varname}(plot,data,seq)
+    incr iap(unique)
+    set dataid $iap(unique)
+    set xdata ${vvarname}xx$dataid
+    set ydata ${vvarname}yy$dataid
+    set xedata ${vvarname}xe$dataid
+    set yedata ${vvarname}ye$dataid
 
     global $xdata $ydata
     if {[info command $xdata] == {}} {
@@ -1355,15 +1352,15 @@ proc PrismHistogramGenerate {varname} {
     global iap
     switch $var(plot,mode) {
 	newplot {
-	    incr ${varname}(plot,seq)
-	    set vvarname plot$var(plot,seq)${varname}
+	    incr iap(unique)
+	    set vvarname plot$iap(unique)${varname}
 	}
 	newgraph -
 	newdataset {
 	    set vvarname [lindex $iap(plots) end]
 	    if {$vvarname == {}} {
-		incr ${varname}(plot,seq)
-		set vvarname plot$var(plot,seq)${varname}
+		incr iap(unique)
+		set vvarname plot$iap(unique)${varname}
 	    }
 	}
     }
@@ -1371,9 +1368,10 @@ proc PrismHistogramGenerate {varname} {
     upvar #0 $vvarname vvar
     global $vvarname
 
-    set xdata ${vvarname}xx$var(plot,data,seq)${varname}
-    set ydata ${vvarname}yy$var(plot,data,seq)${varname}
-    incr ${varname}(plot,data,seq)
+    incr iap(unique)
+    set dataid $iap(unique)
+    set xdata ${vvarname}xx$dataid
+    set ydata ${vvarname}yy$dataid
 
     global $xdata $ydata
     if {[info command $xdata] == {}} {
@@ -1483,10 +1481,13 @@ proc PrismHistogramGenerateAscii {varname xdata ydata} {
     for {set ii 1} {$ii<=$rows} {incr ii} {
 	set vv [starbase_get $var(tbldb) $ii $colnum]
 	if {$vv != {} && [string is double $vv]} {
-	    set jj [expr ($vv-$min)/$var(bar,width)]
-
-	    set kk [expr int($jj)]
-	    if {$kk>=0 && $kk<$num} {
+	    if {$vv >= $min && $vv <= $max} {
+		set kk [expr {int(floor(($vv-$min)/$var(bar,width)))}]
+		# The upper bound belongs to the last bin.  Floating-point
+		# roundoff can also put values just below max in bin $num.
+		if {$kk >= $num} {
+		    set kk [expr {$num-1}]
+		}
 		set ww [$ydata index $kk]
 		$ydata index $kk [expr $ww+1]
 	    }

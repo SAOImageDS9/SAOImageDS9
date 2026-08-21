@@ -152,17 +152,15 @@ int GridBase::x11Line(int n, float* x, float* y)
   int w = (int)line_->width();
   if (w<1)
     w = 1;
-  switch (line_->style()) {
-  case Attribute::SOLID:
+  if (!line_->isDash()) {
     XSetLineAttributes(parent_->getDisplay(), gridGC_, w, 
 		       LineSolid, CapButt, JoinMiter);
-    break;
-  case Attribute::DASH:
+  }
+  else {
     XSetLineAttributes(parent_->getDisplay(), gridGC_, w, 
 		       LineOnOffDash, CapButt, JoinMiter);
-    char dlist[] = {8,3};
+    char dlist[] = {(char)line_->dashLength(), (char)line_->dashGap()};
     XSetDashes(parent_->getDisplay(), gridGC_, 0, dlist, 2);
-    break;
   }
 
   for (int i=0; i<n-1; i++) {
@@ -206,14 +204,12 @@ int GridBase::psLine(int n, float* x, float* y)
   }
   {
     ostringstream str;
-    switch (line_->style()) {
-    case Attribute::SOLID:
+    if (!line_->isDash()) {
       str << "[] 0 setdash" << endl << ends;
-      break;
-    case Attribute::DASH:
-      str << "[8 3] 0 setdash" << endl << ends;
-      break;
     }
+    else
+      str << '[' << line_->dashLength() << ' ' << line_->dashGap()
+	  << "] 0 setdash" << endl << ends;
     Tcl_AppendResult(parent_->getInterp(), str.str().c_str(), NULL);
   }
 
@@ -281,14 +277,12 @@ int GridBase::macosxLine(int n, float* x, float* y)
 
   macosxColor(parent_->getXColor(line_->colorName()));
   macosxWidth(line_->width());
-  switch (line_->style()) {
-  case Attribute::SOLID:
+  if (!line_->isDash()) {
     macosxDash(NULL,0);
-    break;
-  case Attribute::DASH:
-    float dlist[] = {8,3};
+  }
+  else {
+    float dlist[] = {(float)line_->dashLength(), (float)line_->dashGap()};
     macosxDash(dlist,2);
-    break;
   }
 
   Vector* v = new Vector[n];
@@ -336,14 +330,12 @@ int GridBase::win32Line(int n, float* x, float* y)
 
   win32Color(parent_->getXColor(line_->colorName()));
   win32Width(line_->width());
-  switch (line_->style()) {
-  case Attribute::SOLID:
+  if (!line_->isDash()) {
     win32Dash(NULL,0);
-    break;
-  case Attribute::DASH:
-    float dlist[] = {8,3};
+  }
+  else {
+    float dlist[] = {(float)line_->dashLength(), (float)line_->dashGap()};
     win32Dash(dlist,2);
-    break;
   }
 
   Vector v[n];

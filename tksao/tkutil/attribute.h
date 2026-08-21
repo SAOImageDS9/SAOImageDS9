@@ -19,7 +19,7 @@ class Attribute {
  private:
   Widget* parent;
 
-  Style style_;
+  int style_;
   float width_;
 
   int font_;
@@ -46,7 +46,10 @@ class Attribute {
 
   void setColour(double);
 
-  Style style() {return style_;}
+  int style() {return style_;}
+  int isDash() {return style_ != SOLID;}
+  int dashLength() {return style_ == DASH ? 8 : (style_ >> 8) & 0xff;}
+  int dashGap() {return style_ == DASH ? 3 : style_ & 0xff;}
   float width() {return width_;}
 
   int size() {return size_;}

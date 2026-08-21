@@ -14,6 +14,24 @@ Funtools.  The up-to-date version can be found
 beta releases, can be found
 <A HREF="http://hea-www.harvard.edu/RD/funtools/changelog_beta.html">here</A>.]
 
+<H2> Release 1.5.0 (new maintenance fork)</H2>
+<ul>
+<p>
+<li> Follow-up to 1.4.8 after reconciling history with the copy of
+funtools maintained in the SAOImageDS9 source tree by hand: two of the
+three files noted as deliberately untouched in 1.4.8
+(filter/tfilt.c, fitsy/fitsimage.c) have now been brought forward into
+that tree, since this fork's versions were the correct, more advanced
+ones.
+<p>
+<li> util/strtod.c (bumping the util sub-package to 1.2): picked up
+SAOImageDS9's portability include guards (`#ifdef HAVE_STRING_H` /
+`#if HAVE_STDLIB_H ... else double strtod();`) without reverting this
+fork's own ANSI-prototype cleanup or its units-suffix parsing fix
+(detecting a trailing d/r/'/" degree-or-similar unit marker), both of
+which SAOImageDS9's copy still lacks.
+</ul>
+
 <H2> Release 1.4.8 (new maintenance fork)</H2>
 <ul>
 <p>

@@ -4,7 +4,7 @@
 exec wish "$0" ${1+"$@"}
 
 # @@ Meta Begin
-# Application tkcon 2.7
+# Application tkcon 2.8
 # Meta platform     tcl
 # Meta summary      Enhanced Tk Console
 # Meta description  Enhanced Tk Console
@@ -81,7 +81,7 @@ catch {unset pkg file name version}
 namespace eval ::tkcon {
     # when modifying this line, make sure that the auto-upgrade check
     # for version still works.
-    variable VERSION "2.7.10"
+    variable VERSION "2.8"
     # The OPT variable is an array containing most of the optional
     # info to configure.  COLOR has the color data.
     variable OPT

@@ -1,3 +1,16 @@
+2026-08-20  Ken Glotfelty  <kglotfelty@cfa.harvard.edu>
+
+	* Released as tkcon version 2.8. This is a new fork, continuing
+	maintenance of the project for SAOImageDS9 after the original
+	upstream became inactive. Also aligns the previously drifted
+	version strings in tkcon.tcl (VERSION was 2.7.10) and
+	pkgIndex.tcl/configure.ac (both 2.7) to 2.8.
+
+	* tkcon.tcl: dropped the "8.4" pin from `package require Tk`,
+	which fails outright under Tcl 9 ("version conflict for
+	package Tk: have 9.0.3, need 8.4"); pulled forward from the
+	copy of tkcon maintained in the SAOImageDS9 source tree.
+
 2016-09-14  Jeff Hobbs  <jeffh@ActiveState.com>
 
 	* tkcon.tcl: Use -underline clearly to disambiguate from new 8.6.6

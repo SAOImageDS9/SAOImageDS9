@@ -2,7 +2,7 @@
 '\" Generated from file 'tkTable\&.man' by tcllib/doctools with format 'nroff'
 '\" Copyright (c) 1997-2002 Jeffrey Hobbs
 '\"
-.TH "tkTable" n 2\&.12 tkTable "TkTable extension"
+.TH "tkTable" n 2\&.13 tkTable "TkTable extension"
 .\" The -*- nroff -*- definitions below are for supplemental macros used
 .\" in Tcl/Tk manual entries.
 .\"
@@ -276,7 +276,7 @@ tkTable \- Create and manipulate table widgets
 .SH SYNOPSIS
 package require \fBTcl ?8\&.5?\fR
 .sp
-package require \fBTktable ?2\&.12?\fR
+package require \fBTktable ?2\&.13?\fR
 .sp
 \fBtable\fR \fIpathName\fR ?\fIoptions\fR?
 .sp

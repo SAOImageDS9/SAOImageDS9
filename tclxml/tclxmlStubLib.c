@@ -1,4 +1,4 @@
-/* 
+/*
  * tclxmlStubLib.c --
  *
  *	Stub object that will be statically linked into extensions that wish
@@ -51,7 +51,7 @@ const char *TclXML_InitStubs(Tcl_Interp *interp, const char *version,
      * will abort the compilation.
      */
 
-    result = Tcl_PkgRequireEx(interp, "xml::c", const version, exact,
+    result = Tcl_PkgRequireEx(interp, "xml::c", version, exact,
 		(ClientData *) &tclxmlStubsPtr);
     if (!result || !tclxmlStubsPtr) {
         return (char *) NULL;

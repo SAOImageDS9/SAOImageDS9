@@ -14,6 +14,46 @@ Funtools.  The up-to-date version can be found
 beta releases, can be found
 <A HREF="http://hea-www.harvard.edu/RD/funtools/changelog_beta.html">here</A>.]
 
+<H2> Release 1.5.0 (new maintenance fork)</H2>
+<ul>
+<p>
+<li> Follow-up to 1.4.8 after reconciling history with the copy of
+funtools maintained in the SAOImageDS9 source tree by hand: two of the
+three files noted as deliberately untouched in 1.4.8
+(filter/tfilt.c, fitsy/fitsimage.c) have now been brought forward into
+that tree, since this fork's versions were the correct, more advanced
+ones.
+<p>
+<li> util/strtod.c (bumping the util sub-package to 1.2): picked up
+SAOImageDS9's portability include guards (`#ifdef HAVE_STRING_H` /
+`#if HAVE_STDLIB_H ... else double strtod();`) without reverting this
+fork's own ANSI-prototype cleanup or its units-suffix parsing fix
+(detecting a trailing d/r/'/" degree-or-similar unit marker), both of
+which SAOImageDS9's copy still lacks.
+</ul>
+
+<H2> Release 1.4.8 (new maintenance fork)</H2>
+<ul>
+<p>
+<li> This is a new fork (funtools 1.4.8, filter 1.2, fitsy 1.1.0, util 1.1,
+wcs 3.8.8), continuing maintenance of the project for SAOImageDS9 after the
+original upstream became inactive.
+<p>
+<li> Modernized configure.ac in all five sub-packages for newer Autoconf:
+replaced the removed AC_HEADER_STDC macro with AC_CHECK_INCLUDES_DEFAULT
+plus an explicit STDC_HEADERS define, and updated AC_DEFINE calls for
+HAVE_CYGWIN/HAVE_MINGW32 to the modern 3-argument form. Refreshed
+config.guess, config.sub, and ac_c_long_long.m4 to newer versions. Pulled
+forward from the copy of funtools maintained in the SAOImageDS9 source
+tree.
+<p>
+<li> Note: a handful of other files differed in the SAOImageDS9 copy
+(filter/tfilt.c, util/strtod.c, fitsy/fitsimage.c) but were determined to
+be an older snapshot that would have regressed later fixes already in this
+fork (indexed-read filtering, ANSI prototype cleanup, and the ftOpen mode
+fix), so they were deliberately left untouched in this release.
+</ul>
+
 <H2> Patch Release 1.4.6 (internal ds9 release)</H2>
 <ul>
 <p>

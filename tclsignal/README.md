@@ -1,6 +1,17 @@
 # tclsignal
 TCL Signal Ext. Tcl 8.5/8.6 TEA compatible. Based on signal_ext version 1.4.0.1 by Michael Schwartz.
 
+Changes
+-------
+
+### 1.5.0 (2026-08-20)
+
+This is a new fork, continuing maintenance of the project for SAOImageDS9
+after the original upstream became inactive. `pkgIndex.tcl.in` now passes
+the package name to `load`, which `Tcl_PkgProvide`/stub-based loading under
+Tcl 9 requires; pulled forward from the copy of tclsignal maintained in the
+SAOImageDS9 source tree.
+
 Usage
 -----
 

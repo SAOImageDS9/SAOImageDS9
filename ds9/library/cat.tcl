@@ -237,6 +237,11 @@ proc CATTable {varname} {
 	CATPlotGenerate $varname
     }
 
+    # regenerate the histogram if needed
+    if {$var(hist)} {
+	CATHistogramGenerate $varname
+    }
+
     set nr [starbase_nrows $var(tbldb)]
     if {$nr >= $var(max) && !$var(allrows)} {
 	ARStatus $varname "$nr [msgcat::mc {rows of data have been downloaded. More may be available. You may wish to adjust the maximum allowed}]"
@@ -433,6 +438,16 @@ proc CATOff {varname} {
 	set var(plot,xerr) {}
 	set var(plot,y) {}
 	set var(plot,yerr) {}
+    }
+
+    # histogram window?
+    if {$var(hist)} {
+	PlotDestroy $var(hist,var)
+	set var(hist) 0
+	set var(hist,var) {}
+	set var(hist,graph) {}
+	set var(hist,ds) {}
+	set var(hist,col) {}
     }
 
     CATDialogUpdate $varname
@@ -821,6 +836,11 @@ proc CATUpdateWCS {} {
 	    # regenerate the plot if needed
 	    if {$var(plot)} {
 		CATPlotGenerate $varname
+	    }
+
+	    # regenerate the histogram if needed
+	    if {$var(hist)} {
+		CATHistogramGenerate $varname
 	    }
 	}
     }

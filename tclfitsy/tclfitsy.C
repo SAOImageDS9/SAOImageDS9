@@ -752,11 +752,14 @@ int TclFITSY::histogram(int argc, const char* argv[])
 
   for (int ii=0; ii<rows; ii++, ptr+=width) {
     double vv = col->value(ptr);
-    double jj = (vv-min)/barwidth;
-    //    double jj = (vv-min)/diff*num;
-    //    cerr << vv << "->" << jj << endl;
-    int kk = jj;
-    if (kk>=0 && kk<num)
+    if (vv != vv || vv < min || vv > max)
+      continue;
+
+    int kk = (vv-min)/barwidth;
+    // Include the upper bound and guard against floating-point roundoff.
+    if (kk >= num)
+      kk = num-1;
+    if (kk >= 0)
       y[kk]++;
   }
   

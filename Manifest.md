@@ -9,7 +9,7 @@ Last updated 2026-08-20
 | ds9        | 8.8        | y   |       |                                                                      |                                 |
 | fickle     | 2.2        | y   |       | https://github.com/wjoye/fickle                                      | previous upstream abandoned     |
 | fitsy      |            | y   |       |                                                                      |                                 |
-| funtools   | 1.4.8      | y   | y     | https://github.com/ericmandel/funtools                               | abandoned                       |
+| funtools   | 1.5.0      | y   | y     | https://github.com/ericmandel/funtools                               | abandoned                       |
 | openssl    | **3.2.0**  |     |       | https://github.com/openssl/openssl                                   | 4.0.0                           |
 | pdf4tcl    | 0.9.4      |     |       | https://sourceforge.net/projects/pdf4tcl/                            | 0.9.4                           |
 | scidthemes | **1.0**    |     |       | https://sourceforge.net/projects/scid/files/Scid/Additional%20Files/ | 1.0                             |

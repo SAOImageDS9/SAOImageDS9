@@ -76,9 +76,9 @@ static int ListEvents(gio, ofd, header, s, iformat, mode)
      char *mode			/* filteropen mode */
 #endif
 {
+  size_t get;			/* number of events to read */
+  size_t got;			/* number of events read */
   int i, j;			/* loop counters */
-  int get;			/* number of events to read */
-  int got;			/* number of events read */
   int left;			/* number of events left to read */
   int total;			/* total number of events in file */
   int convert;			/* whether we have to convert to native */
@@ -208,23 +208,46 @@ static int ListEvents(gio, ofd, header, s, iformat, mode)
     /* figure out how many to read this time */
     get = MIN(nev, left);
     /* read in a pile of events */
-    got=gread(gio, ebuf, evsize, get);
-    /* check for eof */
-    if( got != get ){
-      fprintf(stderr, "Warning: events ends at %d (expected %d)\n",
-		total-left, total);
-      /* we must be done */
-      left = 0;
+    if( (filter == NOFILTER) || (filter->doidx != 1) ){
+      got=gread(gio, ebuf, evsize, get);
+    } else {
+      /* indexed read */
+      idxread(filter->idx, gio, header, ebuf, evsize, get,  &got, &dofilt);
     }
+    /* if we got what we asked for ... */
+    if( got == get ){
+      /* if we are reading a set number of rows ... */
+      if( left > 0 ){
+	/* subtract the number we just got */
+	left -= got;
+	/* just in case! */
+	if( left < 0 )
+	  left = 0;
+      }
+    }
+    /* didn't get what we asked for ... */
     else{
-      left -= got;
+      /* if we are reading a set number of rows ... */
+      if( left > 0 ){
+	/* using an index => already filtering, so fewer rows are acceptable */
+	if( (filter == NOFILTER) || (filter->doidx != 1) ){
+	  /* otherwise its unexpected */
+	  gerror(stderr, "unexpected EOF reading rows\n");
+	}
+	/* ensure we stop after this iteration */
+	left = 0;
+      }
+      /* if we are reading til EOF, we just got there */
+      else{
+	left = 0;
+      }
     }
     /* filter the events through the co-process */
-    if( filter ){
+    if( (filter == NOFILTER) || (filter->doidx != 1) ){
       dofilt = FilterEvents(filter, ebuf, evsize, got, vbuf);
     }
     /* process each event in the pile */
-    for(eptr=ebuf, i=0; i<got; i++, eptr += evsize){
+    for(eptr=ebuf, i=0; i<(int)got; i++, eptr += evsize){
       /* if its not a valid event, skip it */
       if( dofilt && (vbuf[i] == 0) )
 	continue;
@@ -416,15 +439,17 @@ main(argc, argv)
     strcpy(bincols, ",bincols=(x,y)");
     strcat(mode, bincols);
   }
-  if( debug )
+  if( debug ){
     strcat(mode, ",debug=2");
-  strcat(mode, ",lexonly=1");
+    strcat(mode, ",lexonly=1");
+  }
   if( (s=getenv("FILTER_PAINT")) ){
     if( istrue(s) )
       strcat(mode, ",paint=true");
     else if( isfalse(s) )
       strcat(mode, ",paint=false");
   }
+  idxdebug(1);
 
   while( 1 ){
     *tbuf = '\0';
@@ -439,8 +464,7 @@ main(argc, argv)
 	save_pos = gtell(gio);
 	ListEvents(gio, stdout, header, tbuf, 1, mode);
 	gseek(gio, save_pos, SEEK_SET);
-      }
-      if( dispim ){
+      } else if( dispim ){
 	/* display image */
 	if( *tbuf && (*tbuf != '\n') ){
 	  fprintf(stdout, "input string: %s", tbuf);

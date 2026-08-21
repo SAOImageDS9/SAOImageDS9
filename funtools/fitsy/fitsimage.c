@@ -311,7 +311,7 @@ int ft_simpleimagewrite(filename, fits, data, pixtype)
 
     if ( fits == NULL )		return 0;
 
-    file = ftOpen(filename, "wb");
+    file = ftOpen(filename, "w");
 
     if (file == NULL) {
 	return 0;

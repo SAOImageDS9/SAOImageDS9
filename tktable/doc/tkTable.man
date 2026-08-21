@@ -3,14 +3,14 @@
           script from tcllib: dtplite -o tkTable.n nroff tkTable.man
                               dtplite -o tkTable.html html tkTable.man
 }]
-[manpage_begin tkTable n 2.12]
+[manpage_begin tkTable n 2.13]
 [keywords table widget extension]
 [category table]
 [copyright {1997-2002 Jeffrey Hobbs}]
 [moddesc {TkTable extension}]
 [titledesc {Create and manipulate table widgets}]
 [require Tcl [opt 8.5]]
-[require Tktable [opt 2.12]]
+[require Tktable [opt 2.13]]
 
 
 [description]

@@ -1073,7 +1073,14 @@ proc OpenConsole {} {
 	set ::tkcon::OPT(overrideexit) 0
 	set ::tkcon::PRIV(protocol) {tkcon hide}
 
-	tkcon::Init
+	# tkcon uses a fixed light-theme syntax palette.  On Aqua its text
+	# widget otherwise inherits the dark system background while keeping
+	# tkcon's black input foreground, making the console unreadable.
+	if {$ds9(wm) eq {aqua}} {
+	    tkcon::Init -color-bg white
+	} else {
+	    tkcon::Init
+	}
 
 	switch $ds9(wm) {
 	    x11 -

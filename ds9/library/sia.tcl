@@ -21,6 +21,17 @@ proc SIADef {} {
     set isia(mode) new
     set isia(save) 0
     set psia(registry) {https://dc.g-vo.org/__system__/tap/run/sync}
+    set isia(adql) {SELECT DISTINCT
+  r.ivoid, r.short_name, r.res_title, r.res_description,
+  r.waveband, c.standard_id, i.access_url
+FROM rr.resource AS r
+JOIN rr.capability AS c ON r.ivoid = c.ivoid
+JOIN rr.interface AS i
+  ON c.ivoid = i.ivoid AND c.cap_index = i.cap_index
+WHERE c.standard_id ILIKE 'ivo://ivoa.net/std/sia%'
+  AND i.intf_type = 'vs:paramhttp'
+ORDER BY r.res_title
+}
 
     set isia(def) { \
 			{{AKARI (ISAS/JAXA)} \
@@ -85,6 +96,7 @@ proc SIARegistryDialog {varname} {
     upvar #0 $varname var
     global $varname
     global ds9
+    global isia
 
     set var(top) ".${varname}"
     set var(mb) ".${varname}mb"
@@ -96,7 +108,7 @@ proc SIARegistryDialog {varname} {
     ARInit $varname {}
     set var(proc,exec) SIARegistryExec
     set var(proc,load) SIARegistryLoad
-    set var(proc,error) ARError
+    set var(proc,error) SIARegistryError
     set var(db) ${varname}db
     set var(alldb) ${varname}alldb
     set var(textdb) ${varname}textdb
@@ -107,6 +119,7 @@ proc SIARegistryDialog {varname} {
     set var(filter,ivoid,list) {}
     set var(description,row) 0
     set var(load,pending) 0
+    set var(adql) $isia(adql)
 
     set w $var(top)
     set mb $var(mb)
@@ -136,6 +149,21 @@ proc SIARegistryDialog {varname} {
     grid $f.title $f.text $f.apply $f.clear -padx 2 -pady 2 -sticky ew
     grid columnconfigure $f 1 -weight 1
     bind $f.text <Return> [list SIARegistryFilter $varname]
+
+    set f [ttk::labelframe $w.adql -text [msgcat::mc {ADQL Query}] -padding 2]
+    set var(adql,text) [text $f.text -height 9 -width 70 -wrap none \
+			    -font [font actual TkFixedFont] \
+			    -xscrollcommand [list $f.xscroll set] \
+			    -yscrollcommand [list $f.yscroll set]]
+    ttk::scrollbar $f.yscroll -command [list $var(adql,text) yview] \
+	-orient vertical
+    ttk::scrollbar $f.xscroll -command [list $var(adql,text) xview] \
+	-orient horizontal
+    $var(adql,text) insert 1.0 $var(adql)
+    grid $var(adql,text) $f.yscroll -sticky news
+    grid $f.xscroll -sticky news
+    grid rowconfigure $f 0 -weight 1
+    grid columnconfigure $f 0 -weight 1
 
     set f [ttk::frame $w.tbl]
     set var(tbl) [table $f.t \
@@ -194,6 +222,7 @@ proc SIARegistryDialog {varname} {
     ttk::separator $w.sstatus -orient horizontal
     pack $w.buttons $w.sstatus $w.status -side bottom -fill x
     pack $w.search -side top -fill x
+    pack $w.adql -side top -fill x
     pack $w.description -side bottom -fill x
     pack $w.tbl -side top -fill both -expand true
     bind $w <<Close>> [list SIARegistryDestroy $varname]
@@ -202,6 +231,9 @@ proc SIARegistryDialog {varname} {
 }
 
 proc SIARegistryApply {varname} {
+    upvar #0 $varname var
+
+    set var(adql) [$var(adql,text) get 1.0 end-1c]
     ARApply $varname
     ARStatus $varname [msgcat::mc {Contacting Server}]
     SIARegistryLoad $varname
@@ -213,20 +245,8 @@ proc SIARegistryLoad {varname {url {}} {query {}}} {
 
     if {$url == {}} {
 	set url $psia(registry)
-	set adql {
-	    SELECT DISTINCT
-	      r.ivoid, r.short_name, r.res_title, r.res_description,
-	      r.waveband, c.standard_id, i.access_url
-	    FROM rr.resource AS r
-	    JOIN rr.capability AS c ON r.ivoid = c.ivoid
-	    JOIN rr.interface AS i
-	      ON c.ivoid = i.ivoid AND c.cap_index = i.cap_index
-	    WHERE c.standard_id ILIKE 'ivo://ivoa.net/std/sia%'
-	      AND i.intf_type = 'vs:paramhttp'
-	    ORDER BY r.res_title
-	}
 	set query [http::formatQuery REQUEST doQuery LANG ADQL \
-		       FORMAT votable/td QUERY $adql]
+		       FORMAT votable/td QUERY $var(adql)]
     }
     upvar #0 $var(alldb) A
     catch {array unset A}
@@ -235,13 +255,82 @@ proc SIARegistryLoad {varname {url {}} {query {}}} {
 
 proc SIARegistryExec {varname} {
     upvar #0 $varname var
+    set response [http::data $var(token)]
+    set message [SIARegistryResponseError $var(token)]
+    if {$message != {}} {
+	SIARegistryError $varname $message
+	return
+    }
     VOTParse $var(alldb) $var(token)
+    if {![TBLValidDB $var(alldb)]} {
+	set message [SIARegistryResponseText $response]
+	if {$message == {}} {
+	    set message [msgcat::mc {Unable to parse response from SIA registry}]
+	}
+	SIARegistryError $varname $message
+	return
+    }
     ARDone $varname
     SIARegistryFilter $varname
     if {$var(load,pending)} {
 	set var(load,pending) 0
 	SIARegistryOpen $varname 1
     }
+}
+
+proc SIARegistryResponseError {token} {
+    set response [http::data $token]
+
+    # TAP services report ADQL errors in a VOTable INFO element, often with
+    # HTTP status 200.  Do not mistake that response for an empty result table.
+    set offset 0
+    while {[regexp -nocase -indices -start $offset {<INFO[^>]*>} \
+		$response indices]} {
+	set first [lindex $indices 0]
+	set last [lindex $indices 1]
+	set tag [string range $response $first $last]
+	if {[regexp -nocase \
+		 {name[[:space:]]*=[[:space:]]*["']QUERY_STATUS["']} $tag] &&
+	    [regexp -nocase \
+		 {value[[:space:]]*=[[:space:]]*["']ERROR["']} $tag]} {
+	    if {[regexp -nocase -indices -start [expr {$last + 1}] \
+		    {</INFO[[:space:]]*>} $response endIndices]} {
+		set message [string range $response [expr {$last + 1}] \
+			 [expr {[lindex $endIndices 0] - 1}]]
+		return [SIARegistryResponseText $message]
+	    }
+	    return [msgcat::mc {The SIA registry reported an ADQL error}]
+	}
+	set offset [expr {$last + 1}]
+    }
+
+    set code [http::ncode $token]
+    if {![string is integer -strict $code] || $code < 200 || $code >= 300} {
+	return [SIARegistryResponseText $response]
+    }
+    return {}
+}
+
+proc SIARegistryResponseText {response} {
+    set response [regsub -all -nocase {<script[^>]*>.*</script>} $response { }]
+    set response [regsub -all -nocase {<style[^>]*>.*</style>} $response { }]
+    set response [regsub -all {<[^>]*>} $response { }]
+    set response [XMLUnQuote $response]
+    return [string trim [regsub -all {[[:space:]]+} $response { }]]
+}
+
+proc SIARegistryError {varname message} {
+    upvar #0 $varname var
+
+    if {[info exists var(token)]} {
+	set serverMessage [SIARegistryResponseError $var(token)]
+	if {$serverMessage != {}} {
+	    set message $serverMessage
+	}
+    }
+    SIARegistryDescription $varname $message
+    ARError $varname $message
+    Error $message
 }
 
 proc SIARegistryFilter {varname} {

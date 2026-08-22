@@ -35,15 +35,15 @@ Attribute::~Attribute()
 
 void Attribute::setStyle(double v)
 {
-  switch ((int)v) {
-  case SOLID:
-  case DASH:
-    break;
-  default:
-    return;
+  int style = (int)v;
+  if (style != SOLID && style != DASH) {
+    int length = (style >> 8) & 0xff;
+    int gap = style & 0xff;
+    if (style < 0x0101 || style > 0xffff || !length || !gap)
+      return;
   }
 
-  style_ = (Style)((int)v);
+  style_ = style;
 }
 
 void Attribute::setWidth(double v)

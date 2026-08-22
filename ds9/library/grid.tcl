@@ -32,6 +32,7 @@ proc GridDefault {} {
     set grid(grid,color) cyan
     set grid(grid,width) 1
     set grid(grid,style) 0
+    set grid(grid,dashlist) {8 3}
     set grid(grid,gap1) {}
     set grid(grid,gap2) {}
     set grid(grid,gap3) {}
@@ -44,6 +45,7 @@ proc GridDefault {} {
     set grid(axes,color) cyan
     set grid(axes,width) 1
     set grid(axes,style) 0
+    set grid(axes,dashlist) {8 3}
     set grid(axes,type) interior
     set grid(axes,origin) lll
 
@@ -52,12 +54,14 @@ proc GridDefault {} {
     set grid(tick,color) cyan
     set grid(tick,width) 1
     set grid(tick,style) 0
+    set grid(tick,dashlist) {8 3}
 
     set grid(border) 1
 #    set grid(border,color) blue
     set grid(border,color) cyan
     set grid(border,width) 1
     set grid(border,style) 0
+    set grid(border,dashlist) {8 3}
 
     set grid(format1) {}
     set grid(format2) {}
@@ -166,6 +170,27 @@ proc GridAdjustOptions {which} {
     }
 }
 
+proc GridDashStyle {style dashlist} {
+    global grid
+
+    if {!$grid($style)} {
+	return 0
+    }
+
+    set length [lindex $grid($dashlist) 0]
+    set gap [lindex $grid($dashlist) 1]
+    if {![string is integer -strict $length] ||
+	![string is integer -strict $gap] ||
+	$length < 1 || $length > 255 || $gap < 1 || $gap > 255} {
+	error [msgcat::mc {Dash list values must be integers from 1 through 255.}]
+    }
+
+    # AST line styles are graphics-system-defined integers.  Pack the two
+    # validated bytes into the style so each grid component can carry its
+    # own dash pattern through AST's graphics callback.
+    return [expr {($length << 8) | $gap}]
+}
+
 proc GridBuildOptions {which} {
     global grid
     global current
@@ -176,13 +201,13 @@ proc GridBuildOptions {which} {
     append opt " Grid=$grid(grid),"
     append opt " Colour(grid)=[GridColor2Ast $grid(grid,color)],"
     append opt " Width(grid)=$grid(grid,width),"
-    append opt " Style(grid)=$grid(grid,style),"
+    append opt " Style(grid)=[GridDashStyle grid,style grid,dashlist],"
 
     # Axes
     append opt " DrawAxes=$grid(axes),"
     append opt " Colour(axes)=[GridColor2Ast $grid(axes,color)],"
     append opt " Width(axes)=$grid(axes,width),"
-    append opt " Style(axes)=$grid(axes,style),"
+    append opt " Style(axes)=[GridDashStyle axes,style axes,dashlist],"
 
     # Format
     if {$grid(format1) != {}} {
@@ -221,13 +246,13 @@ proc GridBuildOptions {which} {
     }
     append opt " Colour(ticks)=[GridColor2Ast $grid(tick,color)],"
     append opt " Width(ticks)=$grid(tick,width),"
-    append opt " Style(ticks)=$grid(tick,style),"
+    append opt " Style(ticks)=[GridDashStyle tick,style tick,dashlist],"
 
     # Border
     append opt " Border=$grid(border),"
     append opt " Colour(border)=[GridColor2Ast $grid(border,color)],"
     append opt " Width(border)=$grid(border,width),"
-    append opt " Style(border)=$grid(border,style),"
+    append opt " Style(border)=[GridDashStyle border,style border,dashlist],"
 
     # Labels
     append opt " Labelling=$grid(axes,type),"
@@ -656,7 +681,7 @@ proc GridDialog {} {
     $mb.grid add cascade -label [msgcat::mc {Line}] -menu $mb.grid.line
 
     ColorMenu $mb.grid.color grid grid,color GridApplyDialog
-    GridCreateLineMenu $mb.grid.line grid,width grid,style
+    GridCreateLineMenu $mb.grid.line grid,width grid,style grid,dashlist
 
     # Axes
     ThemeMenu $mb.axes
@@ -669,7 +694,7 @@ proc GridDialog {} {
     $mb.axes add cascade -label [msgcat::mc {Origin}] -menu $mb.axes.origin
 
     ColorMenu $mb.axes.color grid axes,color GridApplyDialog
-    GridCreateLineMenu $mb.axes.line axes,width axes,style
+    GridCreateLineMenu $mb.axes.line axes,width axes,style axes,dashlist
 
     ThemeMenu $mb.axes.origin
     $mb.axes.origin add radiobutton -label [msgcat::mc {Lower Left Front}] \
@@ -731,7 +756,7 @@ proc GridDialog {} {
 	-menu $mb.tick.line
 
     ColorMenu $mb.tick.color grid tick,color GridApplyDialog
-    GridCreateLineMenu $mb.tick.line tick,width tick,style
+    GridCreateLineMenu $mb.tick.line tick,width tick,style tick,dashlist
 
     # Title
     ThemeMenu $mb.title
@@ -755,7 +780,7 @@ proc GridDialog {} {
     $mb.border add cascade -label [msgcat::mc {Line}] -menu $mb.border.line
 
     ColorMenu $mb.border.color grid border,color GridApplyDialog
-    GridCreateLineMenu $mb.border.line border,width border,style
+    GridCreateLineMenu $mb.border.line border,width border,style border,dashlist
 
     # General
     set f [ttk::labelframe $w.general -text [msgcat::mc {Coordinate Grid}] -padding 2]
@@ -785,22 +810,23 @@ proc GridDialog {} {
     ttk::label $f.tgrid -text [msgcat::mc {Grid}]
     ttk::checkbutton $f.gridshow -variable grid(grid) -command GridApplyDialog
     GridCreateColorMenuButton $f.gridcolor grid,color
-    GridCreateLineMenuButton $f.gridline grid,width grid,style
+    GridCreateLineMenuButton $f.gridline grid,width grid,style grid,dashlist
 
     ttk::label $f.taxes -text [msgcat::mc {Axes}]
     ttk::checkbutton $f.axesshow -variable grid(axes) -command GridApplyDialog
     GridCreateColorMenuButton $f.axescolor axes,color
-    GridCreateLineMenuButton $f.axesline axes,width axes,style
+    GridCreateLineMenuButton $f.axesline axes,width axes,style axes,dashlist
 
     ttk::label $f.ttick -text [msgcat::mc {Tickmarks}]
     ttk::checkbutton $f.tickshow -variable grid(tick) -command GridApplyDialog
     GridCreateColorMenuButton $f.tickcolor tick,color
-    GridCreateLineMenuButton $f.tickline tick,width tick,style
+    GridCreateLineMenuButton $f.tickline tick,width tick,style tick,dashlist
 
     ttk::label $f.tborder -text [msgcat::mc {Border}]
     ttk::checkbutton $f.bordershow -variable grid(border) -command GridApplyDialog
     GridCreateColorMenuButton $f.bordercolor border,color
-    GridCreateLineMenuButton $f.borderline border,width border,style
+    GridCreateLineMenuButton $f.borderline border,width border,style \
+	border,dashlist
 
     grid $f.tcomponent $f.tshow $f.tcolor $f.tline \
 	-padx 2 -pady 2 -sticky w
@@ -1181,16 +1207,17 @@ proc GridSetWidgetState {state args} {
     }
 }
 
-proc GridCreateLineMenu {which width dash} {
+proc GridCreateLineMenu {which width dash dashlist} {
     global igrid
     global grid
 
-    WidthDashMenu $which grid $width $dash GridApplyDialog GridApplyDialog
+    WidthDashMenu $which grid $width $dash GridApplyDialog GridApplyDialog \
+	$dashlist GridApplyDialog
 }
 
-proc GridCreateLineMenuButton {which width dash} {
+proc GridCreateLineMenuButton {which width dash dashlist} {
     ttk::menubutton $which -textvariable grid($width) -menu $which.menu
-    GridCreateLineMenu $which.menu $width $dash
+    GridCreateLineMenu $which.menu $width $dash $dashlist
 }
 
 proc GridCreateColorMenuButton {which color} {
@@ -1339,7 +1366,11 @@ proc GridBackup {ch which} {
 	set skyformat [lindex $ll 2]
 	set type [lindex $ll 3]
 	set opts [$which get grid option]
-	set vars [array get grid]
+	set vars [$which get grid var]
+	if {$vars == {}} {
+	    # Grids created by older backup files do not have saved variables.
+	    set vars [array get grid]
+	}
 
 	puts $ch "$which grid create $system $sky $skyformat $type \{\"$opts\"\} \{\"$vars\"\}"
     }

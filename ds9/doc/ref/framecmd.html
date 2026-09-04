@@ -1,0 +1,1246 @@
+<!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<title>Frame Commands (Developer Reference)</title>
+</head>
+<body link="#0000FF" vlink="#551A8B" alink="#FF0000">
+<h3><img alt="" src="../sun.png" align="middle"> Frame Commands (Developer Reference)</h3>
+<blockquote>
+<p>Every DS9 frame is itself a Tcl canvas item with its own command name (e.g. <tt>Frame1</tt>, <tt>Frame2</tt>, ...; <tt>$::current(frame)</tt> always holds the name of the currently selected one &mdash; see <a href="currentarray.html">The current Array</a>). This page documents every command that name accepts &mdash; the frame-level grammar implemented by a bison/flex parser in <tt>tksao/frame/parser.Y</tt> and <tt>tksao/frame/lex.L</tt> in the DS9 source tree. It is one level below the Tcl library in <tt>ds9/library/*.tcl</tt>: most menu actions and XPA access points are themselves thin wrappers that eventually call one of these frame commands.</p>
+<p>This is developer-level documentation aimed at scripting DS9 from the <a href="command.html#tcl">-tcl</a> command line option, from a <tt>~/.ds9.ini</tt> (or <tt>~/ds9.ini</tt>) startup file (any Tcl file of that name in your home directory is automatically sourced once DS9 has finished starting up &mdash; see <tt>SourceInitFileDir</tt> in <tt>ds9/library/util.tcl</tt>), or from the <tt>tcl</tt> <a href="xpa.html">XPA</a> access point. A typical invocation looks like:</p>
+<tt>set d [$::current(frame) get zoom]<br>
+$::current(frame) pan 100 100<br>
+$::current(frame) marker create circle 256 256 20</tt>
+<p>All keywords are matched case-insensitively by the lexer (<tt>%option caseless</tt>), but are written lowercase by convention, which this page follows. <tt>get ...</tt> and <tt>has ...</tt> forms compute a value and return it as the result of the Tcl command &mdash; use <tt>set x [$::current(frame) get ...]</tt> to capture it; every other command performs an action on the frame and its Tcl return value is not meaningful. A handful of commands accept no arguments at all (e.g. <tt>center</tt>, <tt>show</tt>) and simply perform their action.</p>
+<p>Numbers written &lt;value&gt; below accept either an integer or a real number. Where a command's arguments depend on a coordinate system or sky frame given earlier in the same command, see <a href="#types">Common Parameter Types</a> for the full set of choices &mdash; that section is referenced throughout instead of being repeated for every command.</p>
+<tt><a href="#types">Common Parameter Types</a><br>
+<a href="#bg">bg</a><br>
+<a href="#bin">bin</a><br>
+<a href="#block">block</a><br>
+<a href="#center">center</a><br>
+<a href="#clear">clear</a><br>
+<a href="#clip">clip</a><br>
+<a href="#colorbar">colorbar</a><br>
+<a href="#colormap">colormap</a><br>
+<a href="#colorscale">colorscale</a><br>
+<a href="#contour">contour</a><br>
+<a href="#crop">crop</a><br>
+<a href="#crosshair">crosshair</a><br>
+<a href="#cube">cube</a><br>
+<a href="#datasec">datasec</a><br>
+<a href="#debug">debug</a><br>
+<a href="#fade">fade</a><br>
+<a href="#fitsy">fitsy</a><br>
+<a href="#get">get</a><br>
+<a href="#grid">grid</a><br>
+<a href="#has">has</a><br>
+<a href="#hide">hide</a><br>
+<a href="#highlite">highlite</a><br>
+<a href="#hls">hls</a><br>
+<a href="#hsv">hsv</a><br>
+<a href="#iis">iis</a><br>
+<a href="#iraf">iraf</a><br>
+<a href="#layer">layer</a><br>
+<a href="#load">load</a><br>
+<a href="#macosx">macosx</a><br>
+<a href="#magnifier">magnifier</a><br>
+<a href="#marker">marker</a><br>
+<a href="#mask">mask</a><br>
+<a href="#match">match</a><br>
+<a href="#multicolor">multicolor</a><br>
+<a href="#nan">nan</a><br>
+<a href="#orient">orient</a><br>
+<a href="#pan">pan</a><br>
+<a href="#panner">panner</a><br>
+<a href="#postscript">postscript</a><br>
+<a href="#precision">precision</a><br>
+<a href="#query">query</a><br>
+<a href="#region">region</a><br>
+<a href="#reset">reset</a><br>
+<a href="#reveal">reveal</a><br>
+<a href="#rgb">rgb</a><br>
+<a href="#rotate">rotate</a><br>
+<a href="#save">save</a><br>
+<a href="#show">show</a><br>
+<a href="#smooth">smooth</a><br>
+<a href="#threads">threads</a><br>
+<a href="#threed">threed</a><br>
+<a href="#unload">unload</a><br>
+<a href="#update">update</a><br>
+<a href="#version">version</a><br>
+<a href="#warp">warp</a><br>
+<a href="#wcs">wcs</a><br>
+<a href="#win32">win32</a><br>
+<a href="#zoom">zoom</a><br></tt>
+
+<h4><a name="types" id="types"></a>Common Parameter Types</h4>
+<p>These placeholders are used throughout this page instead of being spelled out in every command's syntax.</p>
+<dl>
+<dt><tt>&lt;value&gt;</tt></dt>
+<dd>A plain number, e.g. <tt>10</tt> or <tt>-3.5</tt>.</dd>
+
+<dt><tt>&lt;yesno&gt;</tt></dt>
+<dd><tt>yes</tt> (also <tt>y</tt>, <tt>on</tt>, <tt>true</tt>, or a non-zero integer) or <tt>no</tt> (also <tt>n</tt>, <tt>off</tt>, <tt>false</tt>, or <tt>0</tt>).</dd>
+
+<dt><tt>&lt;angle&gt;</tt></dt>
+<dd>A plain number in degrees, or a number suffixed with <tt>d</tt> for degrees or <tt>r</tt> for radians (e.g. <tt>90</tt>, <tt>90d</tt>, <tt>1.5708r</tt>).</dd>
+
+<dt><a name="t-coordSystem" id="t-coordSystem"></a><tt>&lt;coordSystem&gt;</tt></dt>
+<dd><tt>image</tt> | <tt>physical</tt> | <tt>amplifier</tt> | <tt>detector</tt> | <a href="#t-wcsSystem">&lt;wcsSystem&gt;</a></dd>
+
+<dt><a name="t-wcsSystem" id="t-wcsSystem"></a><tt>&lt;wcsSystem&gt;</tt></dt>
+<dd><tt>wcs</tt> (the primary/current WCS) or one of the 26 alternate WCS systems <tt>wcsa</tt> through <tt>wcsz</tt> that a FITS header may define (WCSAXES-style alternate WCS letters), or <tt>wcs0</tt> (reset/none). Used for <tt>coordSystem</tt> above, and directly by <tt>load ... mosaic</tt>, <tt>wcs</tt>, and <tt>match</tt>.</dd>
+
+<dt><a name="t-internalSystem" id="t-internalSystem"></a><tt>&lt;internalSystem&gt;</tt></dt>
+<dd><tt>canvas</tt> (screen pixels of the Tk canvas) or <tt>panner</tt> (screen pixels of the panner widget). Used where a command needs raw widget pixel coordinates rather than an image-based <tt>coordSystem</tt>.</dd>
+
+<dt><a name="t-skyFrame" id="t-skyFrame"></a><tt>&lt;skyFrame&gt;</tt></dt>
+<dd><tt>fk4</tt> (or <tt>b1950</tt>) | <tt>fk5</tt> (or <tt>j2000</tt>) | <tt>icrs</tt> (default) | <tt>galactic</tt> | <tt>ecliptic</tt>. Only meaningful when the preceding <a href="#t-coordSystem">coordSystem</a> is a WCS system; ignored otherwise. If omitted where the grammar allows it, defaults to <tt>icrs</tt>.</dd>
+
+<dt><a name="t-skyFormat" id="t-skyFormat"></a><tt>&lt;skyFormat&gt;</tt></dt>
+<dd><tt>degrees</tt> (default) | <tt>sexagesimal</tt> &mdash; how a returned sky coordinate is formatted.</dd>
+
+<dt><a name="t-skyDist" id="t-skyDist"></a><tt>&lt;skyDist&gt;</tt></dt>
+<dd><tt>degrees</tt> (default) | <tt>arcmin</tt> | <tt>arcsec</tt> &mdash; the unit of a returned or supplied angular size/distance.</dd>
+
+<dt><a name="t-coord" id="t-coord"></a><tt>&lt;coord&gt;</tt></dt>
+<dd>A coordinate pair appropriate to the coordSystem/skyFrame just given: two plain numbers (<tt>&lt;x&gt; &lt;y&gt;</tt>) for image/physical/amplifier/detector/wcs systems, or two sexagesimal strings <tt>DD:MM:SS.s DD:MM:SS.s</tt>, or an HMS/DMS pair <tt>HHhMMmSS.ss DDdMMmSS.ss</tt>, for a sky frame.</dd>
+
+<dt><a name="t-endian" id="t-endian"></a><tt>&lt;endian&gt;</tt></dt>
+<dd><tt>native</tt> (default) | <tt>big</tt> (or <tt>bigendian</tt>) | <tt>little</tt> (or <tt>littleendian</tt>).</dd>
+
+<dt><a name="t-fileNameType" id="t-fileNameType"></a><tt>&lt;fileNameType&gt;</tt></dt>
+<dd><tt>root base</tt> (default, e.g. <tt>foo</tt>) | <tt>root</tt> (e.g. <tt>foo.fits</tt>) | <tt>full base</tt> (e.g. <tt>foo</tt> with directory stripped only) | <tt>full</tt> (complete path).</dd>
+
+<dt><a name="t-layerType" id="t-layerType"></a><tt>&lt;layerType&gt;</tt></dt>
+<dd><tt>image</tt> (default) | <tt>mask</tt> &mdash; whether data being loaded becomes the frame's image data or a pixel mask layer.</dd>
+
+<dt><a name="t-shmType" id="t-shmType"></a><tt>&lt;shmType&gt;</tt></dt>
+<dd><tt>shmid</tt> (default, a System V shared memory id) | <tt>key</tt> (a System V shared memory key). Used by the <tt>shared</tt>/<tt>sshared</tt> forms of <a href="#load">load</a>/<a href="#save">save</a>.</dd>
+
+<dt><a name="t-cutMethod" id="t-cutMethod"></a><tt>&lt;cutMethod&gt;</tt></dt>
+<dd><tt>average</tt> (default) | <tt>sum</tt> | <tt>median</tt>.</dd>
+
+<dt><a name="t-scaleType" id="t-scaleType"></a><tt>&lt;scaleType&gt;</tt></dt>
+<dd><tt>linear</tt> | <tt>log</tt> | <tt>pow</tt> | <tt>sqrt</tt> | <tt>squared</tt> | <tt>asinh</tt> | <tt>sinh</tt> | <tt>histequ</tt>.</dd>
+
+<dt><a name="t-minmaxMode" id="t-minmaxMode"></a><tt>&lt;minmaxMode&gt;</tt></dt>
+<dd><tt>auto</tt> | <tt>scan</tt> | <tt>sample</tt> | <tt>datamin</tt> | <tt>irafmin</tt>.</dd>
+
+<dt><a name="t-maskType" id="t-maskType"></a><tt>&lt;maskType&gt;</tt></dt>
+<dd><tt>zero</tt> | <tt>nonzero</tt> (default) | <tt>nan</tt> | <tt>nonnan</tt> | <tt>range</tt>.</dd>
+
+<dt><a name="t-maskBlend" id="t-maskBlend"></a><tt>&lt;maskBlend&gt;</tt></dt>
+<dd><tt>source</tt> (default) | <tt>multiply</tt> | <tt>screen</tt> | <tt>overlay</tt> | <tt>darken</tt> | <tt>lighten</tt> | <tt>color-dodge</tt> | <tt>color-burn</tt> | <tt>hard-light</tt> | <tt>soft-light</tt> | <tt>difference</tt> | <tt>exclusion</tt> | <tt>hue</tt> | <tt>saturation</tt> | <tt>color</tt> | <tt>luminosity</tt>. Also used by <a href="#layer">layer</a> for image-layer blending.</dd>
+
+<dt><a name="t-pointShape" id="t-pointShape"></a><tt>&lt;pointShape&gt;</tt></dt>
+<dd><tt>circle</tt> (default) | <tt>box</tt> | <tt>diamond</tt> | <tt>cross</tt> | <tt>x</tt> | <tt>arrow</tt> | <tt>boxcircle</tt>.</dd>
+
+<dt><a name="t-analysisTask" id="t-analysisTask"></a><tt>&lt;analysisTask&gt;</tt></dt>
+<dd><tt>panda</tt> (also <tt>cpanda</tt>) | <tt>histogram</tt> | <tt>plot2d</tt> | <tt>plot3d</tt> | <tt>radial</tt> | <tt>stats</tt>.</dd>
+
+<dt><a name="t-analysisMethod" id="t-analysisMethod"></a><tt>&lt;analysisMethod&gt;</tt></dt>
+<dd><tt>average</tt> (default) | <tt>sum</tt> | <tt>median</tt>.</dd>
+
+<dt><a name="t-markerCallBack" id="t-markerCallBack"></a><tt>&lt;markerCallBack&gt;</tt></dt>
+<dd>One of: <tt>select</tt>, <tt>unselect</tt>, <tt>highlite</tt>, <tt>unhighlite</tt>, <tt>begin move</tt>, <tt>move</tt>, <tt>end move</tt>, <tt>begin edit</tt>, <tt>edit</tt>, <tt>end edit</tt>, <tt>begin rotate</tt>, <tt>rotate</tt>, <tt>end rotate</tt>, <tt>delete</tt>, <tt>text</tt>, <tt>color</tt>, <tt>width</tt>, <tt>property</tt>, <tt>font</tt>, <tt>key</tt>, <tt>update</tt> &mdash; the marker lifecycle event a <tt>callback</tt> clause fires on. Used by <a href="#marker">marker</a>'s <tt>callback=</tt> property and <tt>callback</tt>/<tt>delete callback</tt> verbs.</dd>
+
+<dt><a name="t-markerProperty" id="t-markerProperty"></a><tt>&lt;markerProperty&gt;</tt></dt>
+<dd><tt>none</tt> | <tt>select</tt> | <tt>highlite</tt> | <tt>dash</tt> | <tt>fixed</tt> | <tt>edit</tt> | <tt>move</tt> | <tt>rotate</tt> | <tt>delete</tt> | <tt>include</tt> | <tt>source</tt> | <tt>fill</tt> &mdash; one of a marker's boolean behavior flags, set with <tt>property &lt;markerProperty&gt; &lt;yesno&gt;</tt>.</dd>
+
+<dt><a name="t-pscolorspace" id="t-pscolorspace"></a><tt>&lt;pscolorspace&gt;</tt></dt>
+<dd><tt>bw</tt> | <tt>gray</tt> | <tt>rgb</tt> | <tt>cmyk</tt>. Used by <a href="#postscript">postscript</a>.</dd>
+
+<dt><a name="t-gridType" id="t-gridType"></a><tt>&lt;gridType&gt;</tt></dt>
+<dd><tt>analysis</tt> | <tt>publication</tt>. Used by <a href="#grid">grid</a>.</dd>
+
+<dt><a name="t-contourMethod" id="t-contourMethod"></a><tt>&lt;contourMethod&gt;</tt></dt>
+<dd><tt>smooth</tt> | <tt>block</tt>. Used by <a href="#contour">contour</a>.</dd>
+
+<dt><a name="t-contourClipMode" id="t-contourClipMode"></a><tt>&lt;contourClipMode&gt;</tt></dt>
+<dd><tt>minmax</tt> | <tt>zscale</tt> | <tt>zmax</tt> | <tt>user</tt>. Used by <a href="#contour">contour</a> (a subset of <a href="#t-minmaxMode">clip modes</a>, without <tt>auto</tt>/<tt>sample</tt>/<tt>datamin</tt>/<tt>irafmin</tt>).</dd>
+
+<dt><a name="t-contourClipScope" id="t-contourClipScope"></a><tt>&lt;contourClipScope&gt;</tt></dt>
+<dd><tt>global</tt> | <tt>local</tt>. Used by <a href="#contour">contour</a> and <tt>clip scope</tt>.</dd>
+
+<dt><a name="t-renderMethod" id="t-renderMethod"></a><tt>&lt;renderMethod&gt;</tt></dt>
+<dd><tt>mip</tt> | <tt>aip</tt> | <tt>fip</tt>. Used by <a href="#threed">threed</a>.</dd>
+
+<dt><a name="t-renderBackground" id="t-renderBackground"></a><tt>&lt;renderBackground&gt;</tt></dt>
+<dd><tt>none</tt> | <tt>azimuth</tt> | <tt>elevation</tt>. Used by <a href="#threed">threed</a>.</dd>
+
+<dt><a name="t-smoothFunction" id="t-smoothFunction"></a><tt>&lt;smoothFunction&gt;</tt></dt>
+<dd><tt>boxcar</tt> | <tt>tophat</tt> | <tt>gaussian</tt> | <tt>elliptic</tt>. Used by <a href="#smooth">smooth</a>.</dd>
+
+<dt><a name="t-markerFormat" id="t-markerFormat"></a><tt>&lt;markerFormat&gt;</tt></dt>
+<dd><tt>ds9</tt> (default) | <tt>xml</tt> | <tt>ciao</tt> | <tt>saotng</tt> | <tt>saoimage</tt> | <tt>pros</tt> | <tt>xy</tt> (raw x/y). The region file dialect for <a href="#marker">marker</a> load/save/list/command.</dd>
+
+<dt><a name="t-markerLayer" id="t-markerLayer"></a><tt>&lt;markerLayer&gt;</tt></dt>
+<dd>An optional word right after <tt>marker</tt>/<tt>region</tt>/<tt>get marker</tt> selecting which layer of markers to operate on: omitted (default), <tt>region</tt>, <tt>user</tt>, or <tt>pointer</tt> all mean the normal user-created region layer; <tt>catalog</tt> means catalog-overlay markers; <tt>footprint</tt> means footprint-overlay markers. See <a href="#marker">marker</a>.</dd>
+</dl>
+
+<h4><a name="bg" id="bg"></a>bg</h4>
+<p>Sets the frame's background color (shown outside the loaded image / behind transparent pixels).</p>
+<tt>Syntax:<br>
+bg color &lt;color&gt;<br>
+bg color &lt;yesno&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) bg color white<br>
+$::current(frame) bg color yes # enable using the configured bg color</tt>
+
+<h4><a name="bin" id="bin"></a>bin</h4>
+<p>Controls binning of FITS bin-table (event list) data: bin factor, bin center, binning columns, buffer size, and the binning function.</p>
+<tt>Syntax:<br>
+bin about center<br>
+bin about &lt;x&gt; &lt;y&gt;<br>
+bin buffer size &lt;value&gt;<br>
+bin cols &lt;xcol&gt; &lt;ycol&gt; &lt;zcol&gt;<br>
+bin depth &lt;value&gt;<br>
+bin factor &lt;value&gt; [&lt;value&gt;]<br>
+bin factor &lt;value&gt; [&lt;value&gt;] about &lt;x&gt; &lt;y&gt;<br>
+bin factor to &lt;value&gt; [&lt;value&gt;]<br>
+bin factor to &lt;value&gt; [&lt;value&gt;] about &lt;x&gt; &lt;y&gt;<br>
+bin filter &lt;string&gt;<br>
+bin function average|sum<br>
+bin to fit<br>
+bin to &lt;fx&gt; &lt;fy&gt; about center &lt;xcol&gt; &lt;ycol&gt; &lt;zcol&gt;<br>
+bin to &lt;fx&gt; &lt;fy&gt; about &lt;ax&gt; &lt;ay&gt; &lt;xcol&gt; &lt;ycol&gt; &lt;zcol&gt;<br>
+bin to &lt;fx&gt; &lt;fy&gt; &lt;depth&gt; &lt;dx&gt; &lt;dy&gt; about center &lt;xcol&gt; &lt;ycol&gt; &lt;zcol&gt; &lt;tcol&gt;<br>
+bin to &lt;fx&gt; &lt;fy&gt; &lt;depth&gt; &lt;dx&gt; &lt;dy&gt; about &lt;ax&gt; &lt;ay&gt; &lt;xcol&gt; &lt;ycol&gt; &lt;zcol&gt; &lt;tcol&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) bin about center<br>
+$::current(frame) bin about 512 512<br>
+$::current(frame) bin buffer size 1024<br>
+$::current(frame) bin cols detx dety time<br>
+$::current(frame) bin factor 4<br>
+$::current(frame) bin factor 4 2 about 512 512<br>
+$::current(frame) bin filter {pha > 5}<br>
+$::current(frame) bin function sum<br>
+$::current(frame) bin to fit<br>
+$::current(frame) bin to 4 4 about center detx dety time</tt>
+<p>The <tt>bin to &lt;fx&gt; &lt;fy&gt; ...</tt> forms are a legacy one-shot combination of setting the bin factor, the about-point, and the binning columns (and, in the four-column forms, a bin buffer depth) in a single call; prefer the separate <tt>bin factor</tt>/<tt>bin about</tt>/<tt>bin cols</tt>/<tt>bin depth</tt> commands above in new scripts.</p>
+
+<h4><a name="block" id="block"></a>block</h4>
+<p>Sets the block (downsample) factor used when displaying oversized images.</p>
+<tt>Syntax:<br>
+block &lt;value&gt; [&lt;value&gt;]<br>
+block to fit<br>
+block to &lt;value&gt; [&lt;value&gt;]<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) block 2<br>
+$::current(frame) block 2 4<br>
+$::current(frame) block to fit</tt>
+
+<h4><a name="center" id="center"></a>center</h4>
+<p>Recenters the frame's pan position on the image.</p>
+<tt>Syntax:<br>
+center<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) center</tt>
+
+<h4><a name="clear" id="clear"></a>clear</h4>
+<p>Clears (unloads) the frame's current image data.</p>
+<tt>Syntax:<br>
+clear<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) clear</tt>
+
+<h4><a name="clip" id="clip"></a>clip</h4>
+<p>Controls the scale limits (clip values) used to map data values to the colormap.</p>
+<tt>Syntax:<br>
+clip scope global|local<br>
+clip mode &lt;value&gt;<br>
+clip mode minmax|zscale|zmax|user<br>
+clip minmax &lt;value&gt; &lt;minmaxMode&gt;<br>
+clip minmax mode &lt;minmaxMode&gt;<br>
+clip minmax sample &lt;n&gt;<br>
+clip minmax rescan<br>
+clip user &lt;low&gt; &lt;high&gt;<br>
+clip user nan nan<br>
+clip zscale &lt;contrast&gt; &lt;samples&gt; &lt;line&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) clip scope local<br>
+$::current(frame) clip mode zscale<br>
+$::current(frame) clip mode 99.5<br>
+$::current(frame) clip minmax 100 scan<br>
+$::current(frame) clip minmax mode sample<br>
+$::current(frame) clip minmax sample 1000<br>
+$::current(frame) clip minmax rescan<br>
+$::current(frame) clip user 10 5000<br>
+$::current(frame) clip zscale 0.25 600 120</tt>
+<p>See <a href="#t-minmaxMode">&lt;minmaxMode&gt;</a> for the <tt>clip minmax</tt> mode values.</p>
+
+<h4><a name="colorbar" id="colorbar"></a>colorbar</h4>
+<p>Tags the frame's colorbar (associates a name with it; used internally when multiple frames share/lock a colorbar). Most colorbar display options live on the colorbar widget itself, not this frame-level command &mdash; see <a href="colorbar.html">Colorbar</a>.</p>
+<tt>Syntax:<br>
+colorbar tag &lt;string&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) colorbar tag mytag</tt>
+
+<h4><a name="colormap" id="colormap"></a>colormap</h4>
+<p>Low-level colormap-cell update, as used while interactively dragging contrast/bias with the pointer. Not typically needed from a script; prefer the <tt>cmap</tt>/<tt>contrast</tt>/<tt>bias</tt> Tcl-level commands for normal colormap control.</p>
+<tt>Syntax:<br>
+colormap &lt;index&gt; &lt;contrast&gt; &lt;bias&gt; &lt;width&gt; &lt;height&gt;<br>
+colormap rgb &lt;r&gt; &lt;g&gt; &lt;b&gt; &lt;contrast&gt; &lt;bias&gt; &lt;gamma&gt; &lt;width&gt; &lt;height&gt;<br>
+colormap hsv &lt;h&gt; &lt;s&gt; &lt;v&gt; &lt;contrast&gt; &lt;bias&gt; &lt;gamma&gt; &lt;width&gt; &lt;height&gt;<br>
+colormap hls &lt;h&gt; &lt;l&gt; &lt;s&gt; &lt;contrast&gt; &lt;bias&gt; &lt;gamma&gt; &lt;width&gt; &lt;height&gt;<br>
+colormap multicolor &lt;index&gt; &lt;width&gt; &lt;rfile&gt; &lt;gfile&gt; &lt;bfile&gt; &lt;height&gt;<br>
+colormap begin<br>
+colormap motion ...  # same forms as above, sent while dragging<br>
+colormap end<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) colormap begin<br>
+$::current(frame) colormap motion 200 0.5 0.5 256 1<br>
+$::current(frame) colormap end</tt>
+
+<h4><a name="colorscale" id="colorscale"></a>colorscale</h4>
+<p>Sets the scale (transfer) function applied to clipped data values before colormap lookup.</p>
+<tt>Syntax:<br>
+colorscale &lt;scaleType&gt;<br>
+colorscale log &lt;exponent&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) colorscale log<br>
+$::current(frame) colorscale sqrt<br>
+$::current(frame) colorscale log 1000</tt>
+<p>See <a href="#t-scaleType">&lt;scaleType&gt;</a>.</p>
+
+<h4><a name="contour" id="contour"></a>contour</h4>
+<p>Creates, loads, pastes, saves, or deletes the frame's contour overlay.</p>
+<tt>Syntax:<br>
+contour create &lt;colorname&gt; &lt;numlevel&gt; &lt;smooth&gt; &lt;contourMethod&gt; &lt;width&gt; &lt;dash&gt; &lt;scaleType&gt; &lt;log&gt; &lt;contourClipMode&gt; &lt;contourClipScope&gt; &lt;low&gt; &lt;high&gt; &lt;method&gt;<br>
+contour create polygon<br>
+contour dashlist &lt;len1&gt; &lt;len2&gt;<br>
+contour delete<br>
+contour delete aux<br>
+contour load &lt;filename&gt;<br>
+contour load &lt;filename&gt; &lt;colorname&gt; &lt;width&gt; &lt;yesno&gt;<br>
+contour paste &lt;filename&gt;<br>
+contour paste &lt;filename&gt; &lt;colorname&gt; &lt;width&gt; &lt;yesno&gt; [&lt;dash1&gt; &lt;dash2&gt;]<br>
+contour save &lt;filename&gt; &lt;coordSystem&gt; &lt;skyFrame&gt;<br>
+contour save aux &lt;filename&gt; &lt;coordSystem&gt; &lt;skyFrame&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) contour create green 5 1 smooth 1 0 linear 0 minmax global 10 5000 smooth<br>
+$::current(frame) contour delete<br>
+$::current(frame) contour load foo.con<br>
+$::current(frame) contour save foo.con image icrs</tt>
+<p>See <a href="#t-contourMethod">&lt;contourMethod&gt;</a>, <a href="#t-scaleType">&lt;scaleType&gt;</a>, <a href="#t-contourClipMode">&lt;contourClipMode&gt;</a>, <a href="#t-contourClipScope">&lt;contourClipScope&gt;</a>.</p>
+
+<h4><a name="crop" id="crop"></a>crop</h4>
+<p>Crops the displayed image to a sub-region, either interactively (begin/motion/end, as used while dragging the crop tool) or to an explicit box.</p>
+<tt>Syntax:<br>
+crop<br>
+crop &lt;x1&gt; &lt;y1&gt; &lt;x2&gt; &lt;y2&gt; &lt;coordSystem&gt; &lt;skyFrame&gt;<br>
+crop center &lt;coord&gt; &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;width&gt; &lt;height&gt; &lt;coordSystem&gt; &lt;skyDist&gt;<br>
+crop begin &lt;x&gt; &lt;y&gt;<br>
+crop motion &lt;x&gt; &lt;y&gt;<br>
+crop end &lt;x&gt; &lt;y&gt;<br>
+crop 3d<br>
+crop 3d &lt;low&gt; &lt;high&gt; &lt;coordSystem&gt; &lt;skyFrame&gt;<br>
+crop 3d begin &lt;x&gt; &lt;y&gt; &lt;axis&gt;<br>
+crop 3d motion &lt;x&gt; &lt;y&gt; &lt;axis&gt;<br>
+crop 3d end &lt;x&gt; &lt;y&gt; &lt;axis&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) crop<br>
+$::current(frame) crop 100 100 400 400 image icrs<br>
+$::current(frame) crop center 512 512 image icrs 200 200 image arcmin</tt>
+
+<h4><a name="crosshair" id="crosshair"></a>crosshair</h4>
+<p>Positions or toggles the frame's crosshair (used in crosshair mode to mark/sync a position across frames).</p>
+<tt>Syntax:<br>
+crosshair &lt;yesno&gt;<br>
+crosshair &lt;internalSystem&gt; &lt;x&gt; &lt;y&gt;<br>
+crosshair &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;coord&gt;<br>
+crosshair warp &lt;x&gt; &lt;y&gt;<br>
+crosshair begin motion &lt;internalSystem&gt; &lt;x&gt; &lt;y&gt;<br>
+crosshair motion &lt;internalSystem&gt; &lt;x&gt; &lt;y&gt;<br>
+crosshair begin motion &lt;coordSystem&gt; &lt;coord&gt;<br>
+crosshair motion &lt;coordSystem&gt; &lt;coord&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) crosshair yes<br>
+$::current(frame) crosshair canvas 256 256<br>
+$::current(frame) crosshair image 512 512</tt>
+
+<h4><a name="cube" id="cube"></a>cube</h4>
+<p>Sets which FITS axis is treated as the cube's "depth" (slice) axis.</p>
+<tt>Syntax:<br>
+cube axes &lt;axis&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) cube axes 3</tt>
+
+<h4><a name="datasec" id="datasec"></a>datasec</h4>
+<p>Enables or disables honoring the FITS <tt>DATASEC</tt> keyword (restricting display/analysis to the header-declared valid data section).</p>
+<tt>Syntax:<br>
+datasec &lt;yesno&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) datasec no</tt>
+
+<h4><a name="debug" id="debug"></a>debug</h4>
+<p>Internal developer flags &mdash; enables verbose bison/flex parser tracing or per-subsystem debug logging to stderr. Not useful outside of debugging DS9 itself.</p>
+<tt>Syntax:<br>
+debug &lt;yesno&gt;<br>
+debug parser &lt;yesno&gt;<br>
+debug mosaic &lt;yesno&gt;<br>
+debug perf &lt;yesno&gt;<br>
+debug wcs &lt;yesno&gt;<br>
+debug bin &lt;yesno&gt;<br>
+debug block &lt;yesno&gt;<br>
+debug compress &lt;yesno&gt;<br>
+debug crop &lt;yesno&gt;<br>
+debug gz &lt;yesno&gt;<br>
+debug rgb &lt;yesno&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) debug parser yes</tt>
+
+<h4><a name="fade" id="fade"></a>fade</h4>
+<p>Sets the frame's fade level, used while blending between two frames in fade display mode.</p>
+<tt>Syntax:<br>
+fade &lt;value&gt;<br>
+fade clear<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) fade 0.5<br>
+$::current(frame) fade clear</tt>
+
+<h4><a name="fitsy" id="fitsy"></a>fitsy</h4>
+<p>Checks whether the loaded FITS file has a named extension.</p>
+<tt>Syntax:<br>
+fitsy has ext &lt;extname&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) fitsy has ext WCSDVARR</tt>
+
+<h4><a name="get" id="get"></a>get</h4>
+<p>The general-purpose query command: <tt>get &lt;path&gt; ...</tt> computes something about the frame and returns it as the Tcl command's result, e.g. <tt>set z [$::current(frame) get zoom]</tt>. It mirrors most of the other frame commands (a plain <tt>get</tt> with no arguments returns a summary status line). Marker/region queries (<tt>get marker ...</tt>) are documented separately under <a href="#marker">marker</a>.</p>
+<table summary="" border="1" width="100%">
+<tbody>
+<tr><td><b>Syntax</b></td><td><b>Returns</b></td></tr>
+<tr><td><tt>get</tt></td><td>a one-line frame status summary</td></tr>
+<tr><td><tt>get type</tt></td><td>the frame type (<tt>base</tt>, <tt>3d</tt>, <tt>rgb</tt>, ...)</td></tr>
+<tr><td><tt>get bg color</tt></td><td>the background color</td></tr>
+<tr><td><tt>get bin depth</tt></td><td>the bin table depth axis buffer size</td></tr>
+<tr><td><tt>get bin factor</tt></td><td>the current bin factor, as <tt>&lt;x&gt; &lt;y&gt;</tt></td></tr>
+<tr><td><tt>get bin function</tt></td><td><tt>average</tt> or <tt>sum</tt></td></tr>
+<tr><td><tt>get bin buffer size</tt></td><td>the bin buffer size</td></tr>
+<tr><td><tt>get bin cursor</tt></td><td>the bin table cursor column mode</td></tr>
+<tr><td><tt>get bin filter</tt></td><td>the current bin filter expression</td></tr>
+<tr><td><tt>get bin cols</tt></td><td>the current bin columns, as <tt>&lt;xcol&gt; &lt;ycol&gt;</tt></td></tr>
+<tr><td><tt>get bin cols minmax &lt;col&gt;</tt></td><td>min/max of the named bin-table column</td></tr>
+<tr><td><tt>get bin cols dim &lt;col&gt;</tt></td><td>the dimension/width of the named bin-table column</td></tr>
+<tr><td><tt>get bin list</tt></td><td>the list of columns available for binning</td></tr>
+<tr><td><tt>get block factor</tt></td><td>the current block factor, as <tt>&lt;x&gt; &lt;y&gt;</tt></td></tr>
+<tr><td><tt>get clip</tt></td><td>the current low/high clip values</td></tr>
+<tr><td><tt>get clip &lt;contourClipMode&gt; &lt;contourClipScope&gt;</tt></td><td>low/high clip values for that mode/scope without changing the frame's current mode</td></tr>
+<tr><td><tt>get clip &lt;value&gt; &lt;contourClipScope&gt;</tt></td><td>low/high for a percentage clip at that scope</td></tr>
+<tr><td><tt>get clip scope</tt></td><td><tt>global</tt> or <tt>local</tt></td></tr>
+<tr><td><tt>get clip mode</tt></td><td>the current clip mode name</td></tr>
+<tr><td><tt>get clip minmax mode</tt></td><td>the current minmax mode (see <a href="#t-minmaxMode">&lt;minmaxMode&gt;</a>)</td></tr>
+<tr><td><tt>get clip minmax sample</tt></td><td>the minmax sample size</td></tr>
+<tr><td><tt>get clip user level</tt></td><td>the current user-clip low/high values</td></tr>
+<tr><td><tt>get clip zscale contrast</tt></td><td>the zscale contrast setting</td></tr>
+<tr><td><tt>get clip zscale sample</tt></td><td>the zscale sample size</td></tr>
+<tr><td><tt>get clip zscale line</tt></td><td>the zscale line size</td></tr>
+<tr><td><tt>get colorbar</tt></td><td>whether the colorbar is shown</td></tr>
+<tr><td><tt>get colorbar tag</tt></td><td>the colorbar's tag name</td></tr>
+<tr><td><tt>get colormap level &lt;n&gt;</tt></td><td>the raw colormap value at cell &lt;n&gt;</td></tr>
+<tr><td><tt>get colormap level &lt;n&gt; &lt;internalSystem&gt; &lt;x&gt; &lt;y&gt;</tt></td><td>same, contrast/bias derived from a screen position</td></tr>
+<tr><td><tt>get colormap level &lt;n&gt; &lt;low&gt; &lt;high&gt; &lt;scaleType&gt; &lt;exp&gt;</tt></td><td>same, from explicit clip/scale parameters</td></tr>
+<tr><td><tt>get colorscale</tt></td><td>the current <a href="#t-scaleType">&lt;scaleType&gt;</a></td></tr>
+<tr><td><tt>get colorscale log</tt></td><td>the log-scale exponent</td></tr>
+<tr><td><tt>get colorscale level &lt;n&gt; &lt;low&gt; &lt;high&gt; &lt;scaleType&gt; &lt;exp&gt;</tt></td><td>the scaled color-scale value for cell &lt;n&gt;</td></tr>
+<tr><td><tt>get contour &lt;coordSystem&gt; &lt;skyFrame&gt;</tt></td><td>contour parameters in that system</td></tr>
+<tr><td><tt>get contour clip</tt></td><td>current contour clip low/high</td></tr>
+<tr><td><tt>get contour clip mode</tt> / <tt>scope</tt></td><td>the contour clip mode/scope</td></tr>
+<tr><td><tt>get contour color</tt></td><td>the contour color name</td></tr>
+<tr><td><tt>get contour dash</tt></td><td>whether the contour is dashed</td></tr>
+<tr><td><tt>get contour dashlist</tt></td><td>the contour dash pattern</td></tr>
+<tr><td><tt>get contour level</tt></td><td>the list of contour levels</td></tr>
+<tr><td><tt>get contour number level</tt></td><td>the number of contour levels</td></tr>
+<tr><td><tt>get contour method</tt></td><td>the current <a href="#t-contourMethod">&lt;contourMethod&gt;</a></td></tr>
+<tr><td><tt>get contour colorscale</tt> / <tt>colorscale log</tt></td><td>the contour's own color-scale settings</td></tr>
+<tr><td><tt>get contour smooth</tt></td><td>the contour smoothing radius</td></tr>
+<tr><td><tt>get contour width</tt></td><td>the contour line width</td></tr>
+<tr><td><tt>get coordinates &lt;x&gt; &lt;y&gt; &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;skyFormat&gt;</tt></td><td>convert image pixel &lt;x&gt; &lt;y&gt; into the requested system</td></tr>
+<tr><td><tt>get crop &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;skyFormat&gt;</tt></td><td>the current crop box in that system</td></tr>
+<tr><td><tt>get crop center &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;skyFormat&gt; &lt;coordSystem&gt; &lt;skyDist&gt;</tt></td><td>the crop box as center+size</td></tr>
+<tr><td><tt>get crop 3d &lt;coordSystem&gt; &lt;skyFrame&gt;</tt></td><td>the current cube-axis crop range</td></tr>
+<tr><td><tt>get crosshair &lt;internalSystem&gt;</tt></td><td>crosshair position in screen pixels</td></tr>
+<tr><td><tt>get crosshair &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;skyFormat&gt;</tt></td><td>crosshair position in the requested system</td></tr>
+<tr><td><tt>get crosshair status</tt></td><td>whether the crosshair is active</td></tr>
+<tr><td><tt>get cube axes</tt></td><td>the axis currently used as the cube depth axis</td></tr>
+<tr><td><tt>get cursor &lt;internalSystem&gt;</tt></td><td>the pointer position in screen pixels</td></tr>
+<tr><td><tt>get cursor &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;skyFormat&gt;</tt></td><td>the pointer position in the requested system</td></tr>
+<tr><td><tt>get data &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;coord&gt; &lt;width&gt; &lt;height&gt; &lt;format&gt;</tt></td><td>a block of raw pixel values around a position</td></tr>
+<tr><td><tt>get data &lt;n&gt; &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;coord&gt; &lt;width&gt; &lt;height&gt; &lt;format&gt;</tt></td><td>same, for cube slice &lt;n&gt;</td></tr>
+<tr><td><tt>get data &lt;internalSystem&gt; &lt;x&gt; &lt;y&gt; &lt;width&gt; &lt;height&gt;</tt></td><td>a block of raw pixel values, screen-pixel addressed</td></tr>
+<tr><td><tt>get datasec</tt></td><td>whether <tt>DATASEC</tt> is honored (see <a href="#datasec">datasec</a>)</td></tr>
+<tr><td><tt>get fits naxes</tt></td><td>the number of FITS axes</td></tr>
+<tr><td><tt>get fits center &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;skyFormat&gt;</tt></td><td>the image center position</td></tr>
+<tr><td><tt>get fits count</tt></td><td>the number of loaded FITS images/extensions</td></tr>
+<tr><td><tt>get fits depth [&lt;n&gt;]</tt></td><td>the number of frame buffers/depth for image &lt;n&gt; (default 2)</td></tr>
+<tr><td><tt>get fits bitpix</tt></td><td>the FITS <tt>BITPIX</tt> value</td></tr>
+<tr><td><tt>get fits ext &lt;n&gt;</tt></td><td>the extension name/number for image &lt;n&gt;</td></tr>
+<tr><td><tt>get fits ext &lt;internalSystem&gt; &lt;x&gt; &lt;y&gt;</tt></td><td>the extension under a screen position (mosaics)</td></tr>
+<tr><td><tt>get fits file name &lt;fileNameType&gt; [&lt;n&gt;]</tt></td><td>the loaded file name</td></tr>
+<tr><td><tt>get fits file name &lt;fileNameType&gt; &lt;internalSystem&gt; &lt;x&gt; &lt;y&gt;</tt></td><td>the file name of the mosaic tile under a screen position</td></tr>
+<tr><td><tt>get fits header [&lt;n&gt;]</tt></td><td>the full FITS header text</td></tr>
+<tr><td><tt>get fits header keyword &lt;key&gt;</tt></td><td>a single header keyword's value</td></tr>
+<tr><td><tt>get fits header &lt;n&gt; keyword &lt;key&gt;</tt></td><td>same, from image &lt;n&gt;</td></tr>
+<tr><td><tt>get fits header wcs &lt;n&gt;</tt></td><td>the WCS-only header cards for alternate WCS &lt;n&gt;</td></tr>
+<tr><td><tt>get fits height</tt> / <tt>width</tt></td><td>the image dimensions in pixels</td></tr>
+<tr><td><tt>get fits object name</tt></td><td>the FITS <tt>OBJECT</tt> keyword</td></tr>
+<tr><td><tt>get fits size</tt></td><td>the image size as <tt>&lt;width&gt; &lt;height&gt;</tt></td></tr>
+<tr><td><tt>get fits size &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;skyDist&gt;</tt></td><td>the image size in sky units</td></tr>
+<tr><td><tt>get fits slice [&lt;n&gt;]</tt></td><td>the current cube slice number</td></tr>
+<tr><td><tt>get fits slice from image [&lt;n&gt;] &lt;coordSystem&gt;</tt></td><td>convert a cube axis value into a slice number</td></tr>
+<tr><td><tt>get fits slice to image &lt;value&gt; &lt;coordSystem&gt;</tt></td><td>convert a slice number into a cube axis value</td></tr>
+<tr><td><tt>get grid</tt> / <tt>grid option</tt> / <tt>grid var</tt></td><td>the coordinate-grid state/options/AST variables</td></tr>
+<tr><td><tt>get highlite color</tt></td><td>the highlite (selection) color</td></tr>
+<tr><td><tt>get histogram &lt;xcol&gt; &lt;ycol&gt; &lt;bins&gt;</tt></td><td>a bin-table column histogram</td></tr>
+<tr><td><tt>get horizontal cut &lt;chan1&gt; &lt;chan2&gt; &lt;x&gt; &lt;y&gt; &lt;internalSystem&gt; &lt;n&gt; &lt;cutMethod&gt;</tt></td><td>a horizontal pixel-value cut through a screen position</td></tr>
+<tr><td><tt>get horizontal cut &lt;chan1&gt; &lt;chan2&gt; &lt;x&gt; &lt;y&gt; &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;n&gt; &lt;cutMethod&gt;</tt></td><td>same, position addressed via coordSystem</td></tr>
+<tr><td><tt>get vertical cut ...</tt></td><td>same as <tt>horizontal cut</tt>, vertically</td></tr>
+<tr><td><tt>get hsv channel</tt> / <tt>hls channel</tt></td><td>the active HSV/HLS channel</td></tr>
+<tr><td><tt>get hsv system</tt> / <tt>hls system</tt> / <tt>rgb system</tt> / <tt>multicolor system</tt></td><td>the coordinate system used for the composite image's WCS</td></tr>
+<tr><td><tt>get hsv view</tt> / <tt>hls view</tt> / <tt>rgb view</tt></td><td>which channels are visible, as three <tt>&lt;yesno&gt;</tt></td></tr>
+<tr><td><tt>get iis &lt;x&gt; &lt;y&gt; &lt;w&gt; &lt;h&gt;</tt></td><td>legacy IIS frame buffer contents (see <a href="#iis">iis</a>)</td></tr>
+<tr><td><tt>get iis cursor</tt></td><td>the IIS cursor position</td></tr>
+<tr><td><tt>get iis file name [&lt;n&gt;]</tt></td><td>the IIS file name</td></tr>
+<tr><td><tt>get info &lt;title&gt; &lt;fileNameType&gt;</tt></td><td>a formatted info-panel line for the whole image</td></tr>
+<tr><td><tt>get info clip</tt></td><td>the clip values as shown in the info panel</td></tr>
+<tr><td><tt>get info &lt;internalSystem&gt; &lt;x&gt; &lt;y&gt; &lt;title&gt; &lt;fileNameType&gt;</tt></td><td>a formatted info-panel line for a screen position</td></tr>
+<tr><td><tt>get iraf align</tt></td><td>whether IRAF frame alignment is enabled</td></tr>
+<tr><td><tt>get minmax</tt></td><td>the data min/max</td></tr>
+<tr><td><tt>get layer count</tt></td><td>the number of image layers</td></tr>
+<tr><td><tt>get layer no</tt></td><td>the active layer number</td></tr>
+<tr><td><tt>get layer color [&lt;n&gt;]</tt> / <tt>blend [&lt;n&gt;]</tt> / <tt>transparency [&lt;n&gt;]</tt> / <tt>view [&lt;n&gt;]</tt></td><td>that image layer's property (layer 0/omitted = active layer)</td></tr>
+<tr><td><tt>get mask color</tt> / <tt>mark</tt> / <tt>range</tt> / <tt>system</tt> / <tt>transparency</tt> / <tt>count</tt> / <tt>blend</tt></td><td>the corresponding pixel-mask setting (see <a href="#mask">mask</a>)</td></tr>
+<tr><td><tt>get nan color</tt></td><td>the NaN-pixel display color</td></tr>
+<tr><td><tt>get orient</tt></td><td>the current orientation (see <a href="#orient">orient</a>)</td></tr>
+<tr><td><tt>get pan preserve</tt></td><td>whether pan position is preserved across new images</td></tr>
+<tr><td><tt>get pixel table &lt;internalSystem&gt; &lt;x&gt; &lt;y&gt; &lt;dim&gt; &lt;dim&gt; &lt;fmt&gt;</tt></td><td>a square of pixel values around a screen position, for the pixel table dialog</td></tr>
+<tr><td><tt>get rotate</tt></td><td>the current rotation angle</td></tr>
+<tr><td><tt>get smooth function</tt> / <tt>radius</tt> / <tt>radius minor</tt> / <tt>sigma</tt> / <tt>sigma minor</tt> / <tt>angle</tt></td><td>the corresponding smoothing parameter (see <a href="#smooth">smooth</a>)</td></tr>
+<tr><td><tt>get threads</tt></td><td>the number of render threads for this frame</td></tr>
+<tr><td><tt>get 3d view</tt> / <tt>view point</tt> / <tt>border</tt> [<tt>color</tt>] / <tt>compass</tt> [<tt>color</tt>] / <tt>highlite</tt> [<tt>color</tt>] / <tt>method</tt> / <tt>background</tt> / <tt>shade</tt> [<tt>ambient</tt>|<tt>strength</tt>|<tt>normal</tt> [<tt>strength</tt>]] / <tt>scale</tt></td><td>the corresponding 3D-frame parameter (see <a href="#threed">threed</a>)</td></tr>
+<tr><td><tt>get value &lt;internalSystem&gt; &lt;x&gt; &lt;y&gt;</tt></td><td>the raw pixel value at a screen position</td></tr>
+<tr><td><tt>get wcs</tt></td><td>the frame's current coordSystem/skyFrame</td></tr>
+<tr><td><tt>get wcs align</tt> / <tt>align pointer</tt></td><td>WCS-alignment state (see <a href="#wcs">wcs</a>)</td></tr>
+<tr><td><tt>get wcs name &lt;wcsSystem&gt;</tt></td><td>the WCSNAME of that alternate WCS</td></tr>
+<tr><td><tt>get zoom</tt></td><td>the current zoom factor</td></tr>
+</tbody>
+</table>
+<p>Example:</p>
+<tt>set z [$::current(frame) get zoom]<br>
+set minmax [$::current(frame) get minmax]<br>
+set hdr [$::current(frame) get fits header]</tt>
+
+<h4><a name="grid" id="grid"></a>grid</h4>
+<p>Creates or deletes the frame's coordinate grid overlay.</p>
+<tt>Syntax:<br>
+grid create &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;skyFormat&gt; &lt;gridType&gt; &lt;grid-option-list&gt; [&lt;label-option-list&gt;]<br>
+grid delete<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) grid create wcs fk5 degrees analysis {} {}<br>
+$::current(frame) grid delete</tt>
+<p>See <a href="#t-gridType">&lt;gridType&gt;</a>. The option-list strings are AST grid-plotting attribute lists as produced by the Grid dialog; see <a href="grid.html">Coordinate Grids</a>.</p>
+
+<h4><a name="has" id="has"></a>has</h4>
+<p>Boolean capability/state queries; each form returns <tt>yes</tt> or <tt>no</tt>.</p>
+<tt>Syntax:<br>
+has amplifier<br>
+has bg color<br>
+has bin column &lt;colname&gt;<br>
+has contour<br>
+has contour aux<br>
+has crop<br>
+has datamin<br>
+has datasec<br>
+has detector<br>
+has fits<br>
+has fits bin<br>
+has fits cube<br>
+has fits mosaic<br>
+has grid<br>
+has iis<br>
+has irafmin<br>
+has marker highlite<br>
+has marker select<br>
+has marker paste<br>
+has marker undo<br>
+has physical<br>
+has image<br>
+has smooth<br>
+has system &lt;coordSystem&gt;<br>
+has wcs &lt;coordSystem&gt;<br>
+has wcs celestial &lt;coordSystem&gt;<br>
+has wcs equatorial &lt;coordSystem&gt;<br>
+has wcs linear &lt;coordSystem&gt;<br>
+has wcs alt<br>
+has wcs 3d &lt;coordSystem&gt;<br>
+&nbsp;<br>
+Example:<br>
+set ok [$::current(frame) has fits]<br>
+set ok [$::current(frame) has wcs wcs]<br>
+set ok [$::current(frame) has marker select]</tt>
+
+<h4><a name="hide" id="hide"></a>hide</h4>
+<p>Hides the frame (removes it from the tiled/single display without deleting it).</p>
+<tt>Syntax:<br>
+hide<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) hide</tt>
+
+<h4><a name="highlite" id="highlite"></a>highlite</h4>
+<p>Shows/hides, or sets the color of, the frame's highlite border (drawn when the frame is the active one and highlite display is enabled).</p>
+<tt>Syntax:<br>
+highlite &lt;yesno&gt;<br>
+highlite color &lt;color&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) highlite yes<br>
+$::current(frame) highlite color yellow</tt>
+
+<h4><a name="hls" id="hls"></a>hls</h4>
+<p>Controls an HLS (hue/lightness/saturation) composite frame's channel selection, coordinate system, and channel visibility.</p>
+<tt>Syntax:<br>
+hls channel hue|saturation|&lt;string&gt;<br>
+hls system &lt;coordSystem&gt;<br>
+hls view &lt;yesno&gt; &lt;yesno&gt; &lt;yesno&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) hls channel hue<br>
+$::current(frame) hls system wcs<br>
+$::current(frame) hls view yes yes no</tt>
+
+<h4><a name="hsv" id="hsv"></a>hsv</h4>
+<p>Controls an HSV (hue/saturation/value) composite frame's channel selection, coordinate system, and channel visibility.</p>
+<tt>Syntax:<br>
+hsv channel hue|saturation|value|&lt;string&gt;<br>
+hsv system &lt;coordSystem&gt;<br>
+hsv view &lt;yesno&gt; &lt;yesno&gt; &lt;yesno&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) hsv channel value<br>
+$::current(frame) hsv view yes yes yes</tt>
+
+<h4><a name="iis" id="iis"></a>iis</h4>
+<p>Legacy IIS (Image Interchange System) frame-buffer protocol support, used by very old IRAF display clients. Not relevant to normal scripting.</p>
+<tt>Syntax:<br>
+iis new &lt;width&gt; &lt;height&gt;<br>
+iis erase<br>
+iis message &lt;string&gt;<br>
+iis cursor &lt;x&gt; &lt;y&gt; canvas|&lt;coordSystem&gt;<br>
+iis cursor mode &lt;yesno&gt;<br>
+iis set file name &lt;string&gt; [&lt;n&gt;]<br>
+iis set &lt;x&gt; &lt;y&gt; &lt;w&gt; &lt;h&gt;<br>
+iis update<br>
+iis wcs &lt;6 matrix values&gt; &lt;2 offset values&gt; &lt;n&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) iis new 512 512<br>
+$::current(frame) iis erase</tt>
+
+<h4><a name="iraf" id="iraf"></a>iraf</h4>
+<p>Sets whether this frame participates in IRAF-style frame-buffer alignment.</p>
+<tt>Syntax:<br>
+iraf align &lt;n&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) iraf align 1</tt>
+
+<h4><a name="layer" id="layer"></a>layer</h4>
+<p>Manages the frame's stack of image layers (the base image plus any additional loaded/mask layers), including their color, blend mode, transparency, visibility, and stacking order. Most forms take an optional leading &lt;n&gt; selecting which layer to affect (a layer number of <tt>0</tt>, or the argument omitted, means "the active layer", and setting a layer's color/blend/transparency/view also makes it the active layer). <tt>up</tt>/<tt>down</tt> swap a layer with its neighbor above/below in the stack; <tt>top</tt>/<tt>bottom</tt> move it to the front/back; the last remaining layer cannot be deleted. Distinct from the marker/region <a href="#t-markerLayer">&lt;markerLayer&gt;</a> prefix used by <a href="#marker">marker</a>/<a href="#region">region</a>.</p>
+<tt>Syntax:<br>
+layer<br>
+layer create<br>
+layer &lt;n&gt;<br>
+layer no &lt;n&gt;<br>
+layer [&lt;n&gt;] color &lt;color&gt;<br>
+layer [&lt;n&gt;] blend &lt;maskBlend&gt;<br>
+layer [&lt;n&gt;] transparency &lt;value&gt;<br>
+layer [&lt;n&gt;] view &lt;yesno&gt;<br>
+layer [&lt;n&gt;] show<br>
+layer [&lt;n&gt;] hide<br>
+layer [&lt;n&gt;] delete<br>
+layer [&lt;n&gt;] up<br>
+layer [&lt;n&gt;] down<br>
+layer [&lt;n&gt;] top<br>
+layer [&lt;n&gt;] bottom<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) layer create<br>
+$::current(frame) layer 2 color red<br>
+$::current(frame) layer 2 blend multiply<br>
+$::current(frame) layer 2 transparency 0.5<br>
+$::current(frame) layer 2 top</tt>
+<p>See <a href="#t-maskBlend">&lt;maskBlend&gt;</a>.</p>
+
+<h4><a name="load" id="load"></a>load</h4>
+<p>Low-level data loading into the frame. This is the mechanism the <tt>-fits</tt>/<tt>-array</tt>/<tt>-mosaic</tt>/... command line options and File menu ultimately call; a script would normally use those higher-level forms (see <a href="command.html">Command Line Options</a>) rather than <tt>load</tt> directly, except when it needs a data source <tt>load</tt> supports that those don't expose, such as a Tcl variable or shared memory segment.</p>
+<p>Almost every load target accepts data from one of the same handful of <b>sources</b>, given after the filename/target:</p>
+<table summary="" border="1" width="100%">
+<tbody>
+<tr><td><b>Source</b></td><td><b>Meaning</b></td></tr>
+<tr><td><tt>&lt;filename&gt; alloc &lt;title&gt;</tt></td><td>read the whole file into memory under a window titled &lt;title&gt;</td></tr>
+<tr><td><tt>&lt;filename&gt; allocgz &lt;title&gt;</tt></td><td>same, gzip-decompressing on the fly</td></tr>
+<tr><td><tt>&lt;filename&gt; channel &lt;title&gt;</tt></td><td>read from an already-open Tcl channel named &lt;filename&gt; (registered via <tt>fifo</tt>-style channel commands), window titled &lt;title&gt;</td></tr>
+<tr><td><tt>&lt;filename&gt; mmap [all|incr]</tt></td><td>memory-map the file directly (fast, no copy); the FITS-only forms additionally accept a load-completeness hint</td></tr>
+<tr><td><tt>&lt;filename1&gt; &lt;filename2&gt; smmap [all|incr]</tt></td><td>shared memory-map spanning two files (header + data)</td></tr>
+<tr><td><tt>&lt;filename&gt; mmapincr [all|incr]</tt></td><td>memory-map a file that is still being written to incrementally</td></tr>
+<tr><td><tt>&lt;filename&gt; shared &lt;shmType&gt; &lt;id&gt; [all|incr]</tt></td><td>read from a System V shared memory segment</td></tr>
+<tr><td><tt>&lt;filename&gt; sshared &lt;shmType&gt; &lt;hdrid&gt; &lt;dataid&gt; [all|incr]</tt></td><td>same, header and data in separate segments</td></tr>
+<tr><td><tt>&lt;filename&gt; socket &lt;fd&gt;</tt></td><td>read from an open socket file descriptor</td></tr>
+<tr><td><tt>&lt;filename&gt; socketgz &lt;fd&gt;</tt></td><td>same, gzip-decompressing on the fly</td></tr>
+<tr><td><tt>&lt;filename&gt; var &lt;varname&gt;</tt></td><td>read from the contents of Tcl variable &lt;varname&gt; (as set by, e.g., an XPA <tt>fits</tt> data callback), window titled &lt;filename&gt;</td></tr>
+</tbody>
+</table>
+<p>Every source form also accepts a trailing <a href="#t-layerType">&lt;layerType&gt;</a> unless noted. <tt>[all|incr]</tt> above is the <tt>incrLoad</tt> hint kept for backward compatibility and can normally be omitted.</p>
+<p>These sources combine with the following load targets:</p>
+<table summary="" border="1" width="100%">
+<tbody>
+<tr><td><b>Target</b></td><td><b>Sources accepted</b></td><td><b>Notes</b></td></tr>
+<tr><td><tt>load array &lt;source&gt;</tt></td><td>all, minus <tt>smmap</tt></td><td>a raw 2D data array (like <tt>-array</tt>)</td></tr>
+<tr><td><tt>load array rgb|hls|hsv cube &lt;source&gt;</tt></td><td>all, minus <tt>smmap</tt>/<tt>mmapincr</tt>-with-incrLoad</td><td>a raw 3-plane RGB/HLS/HSV data cube</td></tr>
+<tr><td><tt>load envi &lt;hdrfile&gt; &lt;datafile&gt; smmap</tt></td><td><tt>smmap</tt> only</td><td>an ENVI image (paired header + data file)</td></tr>
+<tr><td><tt>load fits &lt;source&gt;</tt></td><td>all, plus a two-file <tt>smmap</tt> form</td><td>a FITS image (like <tt>-fits</tt>)</td></tr>
+<tr><td><tt>load fits slice &lt;source&gt;</tt></td><td>all, plus two-file <tt>smmap</tt></td><td>one slice of a FITS cube</td></tr>
+<tr><td><tt>load fits ext cube &lt;source&gt;</tt></td><td>all except <tt>smmap</tt></td><td>a FITS cube built from multiple extensions</td></tr>
+<tr><td><tt>load fits rgb|hls|hsv image &lt;source&gt;</tt></td><td>all except <tt>smmap</tt>/<tt>sshared</tt></td><td>a FITS RGB/HLS/HSV composite image</td></tr>
+<tr><td><tt>load fits rgb|hls|hsv cube &lt;source&gt;</tt></td><td>all, plus two-file <tt>smmap</tt> and <tt>sshared</tt></td><td>a FITS RGB/HLS/HSV composite cube</td></tr>
+<tr><td><tt>load fits mosaic [iraf|wcs] &lt;source&gt;</tt></td><td>all, plus two-file <tt>smmap</tt> and <tt>sshared</tt>; wcs/wfpc2 forms require a leading <a href="#t-wcsSystem">&lt;wcsSystem&gt;</a></td><td>a single-image mosaic tile, aligned by IRAF <tt>ccdmap</tt> or by WCS</td></tr>
+<tr><td><tt>load fits mosaic image [iraf|wcs|wfpc2] &lt;source&gt;</tt></td><td>same as above</td><td>same, but only the image (not a full mosaic-aware load)</td></tr>
+<tr><td><tt>load nrrd &lt;source&gt;</tt></td><td>all except <tt>smmap</tt>/<tt>sshared</tt>/<tt>mmapincr</tt> load hint</td><td>an NRRD-format volume</td></tr>
+<tr><td><tt>load photo &lt;filename&gt; &lt;format&gt;</tt></td><td>a Tk photo image format name (e.g. <tt>gif</tt>, <tt>png</tt>) &mdash; no source suffix</td><td>like <tt>-jpeg</tt>/<tt>-png</tt>/<tt>-tiff</tt>/<tt>-gif</tt></td></tr>
+<tr><td><tt>load photo slice &lt;filename&gt; &lt;format&gt;</tt></td><td>same</td><td>load a photo image as one cube slice</td></tr>
+<tr><td><tt>load incr data &lt;x1&gt; &lt;y1&gt; &lt;x2&gt; &lt;y2&gt; &lt;n&gt;</tt></td><td>&mdash;</td><td>notify the frame that new data has arrived in a region of an incrementally-mapped file</td></tr>
+<tr><td><tt>load incr minmax &lt;x1&gt; &lt;y1&gt; &lt;x2&gt; &lt;y2&gt; &lt;n&gt;</tt></td><td>&mdash;</td><td>same, also rescanning min/max over that region</td></tr>
+<tr><td><tt>load incr end</tt></td><td>&mdash;</td><td>mark an incremental load as complete</td></tr>
+</tbody>
+</table>
+<p>Example:</p>
+<tt>$::current(frame) load fits foo.fits mmap image<br>
+$::current(frame) load fits myvar var somevar image<br>
+$::current(frame) load array foo.arr alloc "foo.arr" image<br>
+$::current(frame) load fits mosaic wcs wcs foo.fits mmap {} image<br>
+$::current(frame) load photo foo.png png</tt>
+
+<h4><a name="macosx" id="macosx"></a>macosx</h4>
+<p>macOS-specific printing hook (no-op on other platforms).</p>
+<tt>Syntax:<br>
+macosx print<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) macosx print</tt>
+
+<h4><a name="magnifier" id="magnifier"></a>magnifier</h4>
+<p>Controls the magnifier's linkage to this frame: on/off, whether it shows graphics (markers) or cursor-following, its background color, its own render size, and its zoom factor.</p>
+<tt>Syntax:<br>
+magnifier &lt;yesno&gt;<br>
+magnifier graphics &lt;yesno&gt;<br>
+magnifier cursor &lt;yesno&gt;<br>
+magnifier color &lt;color&gt;<br>
+magnifier &lt;name&gt; &lt;width&gt; &lt;height&gt;<br>
+magnifier update &lt;x&gt; &lt;y&gt;<br>
+magnifier zoom &lt;value&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) magnifier yes<br>
+$::current(frame) magnifier zoom 4<br>
+$::current(frame) magnifier graphics no</tt>
+
+<h4><a name="marker" id="marker"></a>marker</h4>
+<p>The region/marker system: creating, editing, querying, and managing the graphical shapes (circles, boxes, polygons, points, rulers, annuli, panda shapes, composites, etc.) drawn on a frame. This is what the <a href="region.html">Regions</a> menu and dialogs drive under the hood.</p>
+<p>The full command is <tt>marker &lt;markerLayer&gt; &lt;verb&gt; ...</tt> &mdash; see <a href="#t-markerLayer">&lt;markerLayer&gt;</a> for the optional layer word (normally omitted, meaning the ordinary user region layer). Coordinates given to <tt>marker create</tt> are always in canvas (on-screen) pixels, regardless of the frame's current coordinate system &mdash; convert with <tt>get coordinates</tt> first if you have image/WCS coordinates. Most other <tt>marker</tt> verbs identify an existing marker either by its integer id (as returned when it was created, or from <tt>get marker id</tt>) or by a tag name given as a string.</p>
+
+<p><b>Creating markers</b> &mdash; <tt>marker create &lt;shape&gt; ... [&lt;property&gt;=&lt;yesno&gt; ...] [color=&lt;color&gt;] [width=&lt;n&gt;] [font=&lt;string&gt;] [dashlist=&lt;n&gt; &lt;n&gt;] [text=&lt;string&gt;] [tag=&lt;string&gt; ...] [callback=&lt;markerCallBack&gt; &lt;procname&gt; &lt;data&gt; ...]</tt> &mdash; the bracketed clauses after each shape's own parameters are common to every shape and may appear in any order, any number of times (tags/callbacks accumulate).</p>
+<table summary="" border="1" width="100%">
+<tbody>
+<tr><td><b>Shape</b></td><td><b>Syntax (after <tt>marker create</tt>)</b></td></tr>
+<tr><td>circle</td><td><tt>circle &lt;x&gt; &lt;y&gt; &lt;radius&gt;</tt></td></tr>
+<tr><td>ellipse</td><td><tt>ellipse &lt;x&gt; &lt;y&gt; &lt;rx&gt; &lt;ry&gt; [&lt;angle&gt;]</tt></td></tr>
+<tr><td>box</td><td><tt>box &lt;x&gt; &lt;y&gt; &lt;width&gt; &lt;height&gt; [&lt;angle&gt;]</tt></td></tr>
+<tr><td>polygon</td><td><tt>polygon &lt;x&gt; &lt;y&gt; &lt;x2&gt; &lt;y2&gt;</tt> (a 2-vertex polygon; add vertices afterward with <tt>marker &lt;id&gt; polygon point ...</tt>)</td></tr>
+<tr><td>segment</td><td><tt>segment &lt;x&gt; &lt;y&gt; &lt;x2&gt; &lt;y2&gt;</tt></td></tr>
+<tr><td>line</td><td><tt>line &lt;x1&gt; &lt;y1&gt; &lt;x2&gt; &lt;y2&gt;</tt></td></tr>
+<tr><td>vector</td><td><tt>vector &lt;x&gt; &lt;y&gt; &lt;x2&gt; &lt;y2&gt;</tt></td></tr>
+<tr><td>text</td><td><tt>text &lt;x&gt; &lt;y&gt; [&lt;angle&gt;]</tt> (set the label with <tt>text=&lt;string&gt;</tt>)</td></tr>
+<tr><td>point</td><td><tt>&lt;pointShape&gt; point &lt;x&gt; &lt;y&gt; [&lt;pointSize&gt;]</tt> &mdash; e.g. <tt>circle point</tt>, <tt>box point</tt>, <tt>x point</tt></td></tr>
+<tr><td>ruler</td><td><tt>ruler &lt;x1&gt; &lt;y1&gt; &lt;x2&gt; &lt;y2&gt; &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;coordSystem&gt; &lt;skyDist&gt; &lt;label&gt;</tt></td></tr>
+<tr><td>compass</td><td><tt>compass &lt;x&gt; &lt;y&gt; &lt;radius&gt; &lt;coordSystem&gt; &lt;skyFrame&gt;</tt></td></tr>
+<tr><td>projection</td><td><tt>projection &lt;x1&gt; &lt;y1&gt; &lt;x2&gt; &lt;y2&gt; &lt;width&gt;</tt></td></tr>
+<tr><td>annulus</td><td><tt>annulus &lt;x&gt; &lt;y&gt; &lt;innerRadius&gt; &lt;outerRadius&gt; &lt;numAnnuli&gt;</tt></td></tr>
+<tr><td>ellipse annulus</td><td><tt>ellipseannulus &lt;x&gt; &lt;y&gt; &lt;rx&gt; &lt;ry&gt; &lt;outerRadius&gt; &lt;numAnnuli&gt; [&lt;angle&gt;]</tt></td></tr>
+<tr><td>box annulus</td><td><tt>boxannulus &lt;x&gt; &lt;y&gt; &lt;width&gt; &lt;height&gt; &lt;outerSize&gt; &lt;numAnnuli&gt; [&lt;angle&gt;]</tt></td></tr>
+<tr><td>panda (circular)</td><td><tt>cpanda &lt;x&gt; &lt;y&gt; &lt;angle1&gt; &lt;angle2&gt; &lt;numAngles&gt; &lt;innerRadius&gt; &lt;outerRadius&gt; &lt;numAnnuli&gt;</tt></td></tr>
+<tr><td>panda (elliptical)</td><td><tt>epanda &lt;x&gt; &lt;y&gt; &lt;angle1&gt; &lt;angle2&gt; &lt;numAngles&gt; &lt;rx&gt; &lt;ry&gt; &lt;outerRadius&gt; &lt;numAnnuli&gt; [&lt;angle&gt;]</tt></td></tr>
+<tr><td>panda (box)</td><td><tt>bpanda &lt;x&gt; &lt;y&gt; &lt;angle1&gt; &lt;angle2&gt; &lt;numAngles&gt; &lt;width&gt; &lt;height&gt; &lt;outerSize&gt; &lt;numAnnuli&gt; [&lt;angle&gt;]</tt></td></tr>
+<tr><td>composite</td><td><tt>composite [0|1]</tt> (an empty group marker that other markers can be added to; <tt>0</tt>=union, <tt>1</tt>=intersection, for its <tt>composite area</tt> flag)</td></tr>
+<tr><td>from template</td><td><tt>template &lt;templateName&gt; &lt;x&gt; &lt;y&gt;</tt> / <tt>template var &lt;templateName&gt; &lt;x&gt; &lt;y&gt;</tt> / <tt>template &lt;templateName&gt; &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;coord&gt;</tt> &mdash; create a marker from a region template previously saved with <tt>marker save template</tt></td></tr>
+</tbody>
+</table>
+<p>Example:</p>
+<tt>set id [$::current(frame) marker create circle 256 256 20 color=red]<br>
+$::current(frame) marker create box 100 100 40 20 45 color=green tag={mybox}<br>
+$::current(frame) marker create text 200 200 text={Hello} color=yellow<br>
+$::current(frame) marker create annulus 256 256 10 40 4</tt>
+
+<p><b>Other marker verbs</b> (<tt>&lt;id&gt;</tt> is a marker's integer id or a tag/name string; forms without a leading id apply to all selected markers):</p>
+<table summary="" border="1" width="100%">
+<tbody>
+<tr><td><b>Syntax</b></td><td><b>Action</b></td></tr>
+<tr><td><tt>marker centroid [&lt;id&gt;]</tt></td><td>recompute centroid for one/all markers</td></tr>
+<tr><td><tt>marker centroid auto &lt;yesno&gt;</tt> / <tt>radius &lt;value&gt;</tt> / <tt>iteration &lt;n&gt;</tt> / <tt>option &lt;n&gt; &lt;value&gt;</tt></td><td>configure auto-centroiding</td></tr>
+<tr><td><tt>marker color &lt;color&gt;</tt> / <tt>&lt;id&gt; color &lt;color&gt;</tt></td><td>set marker color</td></tr>
+<tr><td><tt>marker copy</tt> / <tt>&lt;id&gt; copy</tt></td><td>copy selected marker(s) to the internal clipboard</td></tr>
+<tr><td><tt>marker cut</tt> / <tt>&lt;id&gt; cut</tt></td><td>cut (copy + delete) selected marker(s)</td></tr>
+<tr><td><tt>marker paste [&lt;coordSystem&gt;]</tt></td><td>paste previously copied/cut markers</td></tr>
+<tr><td><tt>marker undo</tt></td><td>undo the last marker edit</td></tr>
+<tr><td><tt>marker command &lt;markerFormat&gt; &lt;string&gt;</tt> / <tt>command &lt;markerFormat&gt; var &lt;varname&gt;</tt></td><td>create/edit markers from a region-format command string</td></tr>
+<tr><td><tt>marker composite delete</tt></td><td>delete a composite marker's grouping (ungroup)</td></tr>
+<tr><td><tt>marker &lt;id&gt; composite global &lt;yesno&gt;</tt> / <tt>area &lt;yesno&gt;</tt> / <tt>type &lt;string&gt;</tt></td><td>composite marker's global/area/operation-type flags</td></tr>
+<tr><td><tt>marker delete [select]</tt> / <tt>&lt;id&gt; delete</tt></td><td>delete all, all-selected, or one marker</td></tr>
+<tr><td><tt>marker edit begin &lt;x&gt; &lt;y&gt; &lt;handle&gt;</tt> / <tt>motion &lt;x&gt; &lt;y&gt; &lt;handle&gt;</tt> / <tt>end</tt></td><td>interactive handle-drag edit (as used while dragging a marker's resize handle)</td></tr>
+<tr><td><tt>marker epsilon &lt;n&gt;</tt></td><td>set the hit-test tolerance (pixels) for polygon/line vertex picking</td></tr>
+<tr><td><tt>marker font &lt;string&gt;</tt> / <tt>&lt;id&gt; font &lt;string&gt;</tt></td><td>set text font, e.g. <tt>{helvetica 10 normal roman}</tt></td></tr>
+<tr><td><tt>marker highlite all</tt> / <tt>only &lt;x&gt; &lt;y&gt;</tt> / <tt>toggle &lt;x&gt; &lt;y&gt;</tt> / <tt>&lt;id&gt; highlite [only]</tt> / <tt>unhighlite all</tt> / <tt>&lt;id&gt; unhighlite</tt></td><td>highlite (pre-select) marker(s), by screen position or id</td></tr>
+<tr><td><tt>marker &lt;id&gt; analysis &lt;analysisTask&gt; &lt;yesno&gt;</tt></td><td>enable/disable an analysis task (histogram, plot, radial, stats, panda) for this marker</td></tr>
+<tr><td><tt>marker analysis stats callback [&lt;proc&gt;]</tt></td><td>set/clear the global region-stats callback</td></tr>
+<tr><td><tt>marker &lt;id&gt; angle &lt;angle&gt; [&lt;internalSystem&gt;|&lt;coordSystem&gt; &lt;skyFrame&gt;]</tt></td><td>set a shape's rotation angle</td></tr>
+<tr><td><tt>marker &lt;id&gt; annulus radius &lt;inner&gt; &lt;outer&gt; &lt;n&gt; &lt;coordSystem&gt; &lt;skyDist&gt;</tt> (also <tt>boxannulus</tt>, <tt>ellipseannulus</tt>, and a <tt>&lt;string&gt;</tt> radius-list form)</td><td>set an annulus-family shape's radii</td></tr>
+<tr><td><tt>marker &lt;id&gt; box radius &lt;w&gt; &lt;h&gt; &lt;coordSystem&gt; &lt;skyDist&gt;</tt> / <tt>circle radius ...</tt> / <tt>ellipse radius ...</tt></td><td>resize a box/circle/ellipse</td></tr>
+<tr><td><tt>marker &lt;id&gt; bpanda edit ...</tt> / <tt>cpanda edit ...</tt> / <tt>epanda edit ...</tt></td><td>set a panda shape's angles and radii in one call (as used while dragging its handles)</td></tr>
+<tr><td><tt>marker &lt;id&gt; callback &lt;markerCallBack&gt; &lt;procname&gt; &lt;data&gt;</tt> / <tt>&lt;id&gt; delete callback &lt;markerCallBack&gt; &lt;procname&gt;</tt></td><td>attach/detach a Tcl callback on a marker lifecycle event</td></tr>
+<tr><td><tt>marker &lt;id&gt; compass arrow &lt;yesno&gt; &lt;yesno&gt;</tt> / <tt>label &lt;n&gt; &lt;e&gt;</tt> / <tt>radius &lt;value&gt; &lt;coordSystem&gt; &lt;skyDist&gt;</tt> / <tt>system &lt;coordSystem&gt; &lt;skyFrame&gt;</tt></td><td>configure a compass marker</td></tr>
+<tr><td><tt>marker create annulus|boxannulus|bpanda|epanda|cpanda|ellipseannulus radius|angle &lt;dr&gt; &lt;da&gt;</tt></td><td>append one more radius/angle ring to an existing (just-created) annulus-family shape</td></tr>
+<tr><td><tt>marker create polygon|segment vertex &lt;n&gt; &lt;x&gt; &lt;y&gt;</tt> / <tt>&lt;id&gt; delete polygon|segment vertex &lt;n&gt;</tt> / <tt>&lt;id&gt; polygon|segment reset &lt;x&gt; &lt;y&gt; &lt;coordSystem&gt; &lt;skyDist&gt;</tt> / <tt>&lt;id&gt; polygon point &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;skyFormat&gt; &lt;pointlist&gt;</tt></td><td>add/remove/replace polygon or segment vertices</td></tr>
+<tr><td><tt>marker &lt;id&gt; delete annulus|boxannulus|bpanda|cpanda|epanda &lt;n&gt;</tt></td><td>remove one ring from an annulus-family shape</td></tr>
+<tr><td><tt>marker &lt;id&gt; delete tag [&lt;name&gt;|&lt;n&gt;]</tt></td><td>remove one (or the &lt;n&gt;th) tag from a marker</td></tr>
+<tr><td><tt>marker key</tt> / <tt>key &lt;x&gt; &lt;y&gt;</tt></td><td>simulate a key-triggered marker action at a position (used by the keyboard region-create shortcuts)</td></tr>
+<tr><td><tt>marker list [select] &lt;markerFormat&gt; &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;skyFormat&gt; &lt;yesno&gt; [&lt;markerProperty&gt;=&lt;yesno&gt; ...] [tag=&lt;name&gt; ...]</tt></td><td>return all (or selected) markers as region-format text; the trailing property/tag clauses filter which markers are included</td></tr>
+<tr><td><tt>marker load &lt;markerFormat&gt; &lt;filename|n&gt; [&lt;n&gt; &lt;color&gt; &lt;coordSystem&gt; &lt;skyFrame&gt;]</tt> / <tt>load fits &lt;filename&gt; [&lt;color&gt;]</tt></td><td>load regions from a file/fd, or from a FITS region extension</td></tr>
+<tr><td><tt>marker &lt;id&gt; line arrow &lt;yesno&gt; &lt;yesno&gt;</tt> / <tt>&lt;id&gt; line point &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;coord&gt; &lt;coord&gt;</tt></td><td>set a line's arrowheads / endpoints</td></tr>
+<tr><td><tt>marker move &lt;x&gt; &lt;y&gt;</tt> / <tt>&lt;id&gt; move &lt;x&gt; &lt;y&gt;</tt> / <tt>move front|back</tt> / <tt>&lt;id&gt; move front|back</tt> / <tt>move to &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;coord&gt;</tt> / <tt>&lt;id&gt; move to ...</tt></td><td>move selected marker(s), or one marker, by offset or to an absolute position, or restack front/back</td></tr>
+<tr><td><tt>marker move begin &lt;x&gt; &lt;y&gt;</tt> / <tt>motion &lt;x&gt; &lt;y&gt;</tt> / <tt>end</tt></td><td>interactive drag-move (as used while dragging a marker)</td></tr>
+<tr><td><tt>marker point shape &lt;pointShape&gt;</tt> / <tt>&lt;id&gt; point shape &lt;pointShape&gt;</tt> / <tt>&lt;id&gt; point size &lt;n&gt;</tt></td><td>change a point marker's shape/size</td></tr>
+<tr><td><tt>marker &lt;id&gt; projection &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;coord&gt; &lt;coord&gt; &lt;width&gt; &lt;coordSystem&gt; &lt;skyDist&gt;</tt></td><td>set a projection marker's endpoints and width</td></tr>
+<tr><td><tt>marker property &lt;markerProperty&gt; &lt;yesno&gt;</tt> / <tt>&lt;id&gt; property &lt;markerProperty&gt; &lt;yesno&gt;</tt> / <tt>property &lt;markerProperty&gt; &lt;yesno&gt; &lt;x&gt; &lt;y&gt;</tt></td><td>set a boolean property flag on selected marker(s), one marker, or the marker under a screen position</td></tr>
+<tr><td><tt>marker preserve &lt;yesno&gt;</tt></td><td>whether markers persist across a new image being loaded into the frame</td></tr>
+<tr><td><tt>marker &lt;id&gt; rotate begin</tt> / <tt>rotate begin &lt;x&gt; &lt;y&gt;</tt> / <tt>rotate motion &lt;x&gt; &lt;y&gt; &lt;handle&gt;</tt> / <tt>rotate end</tt></td><td>interactive rotate-drag</td></tr>
+<tr><td><tt>marker &lt;id&gt; ruler format &lt;string&gt;</tt> / <tt>ruler point ...</tt> / <tt>ruler system &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;coordSystem&gt; &lt;skyDist&gt;</tt></td><td>configure a ruler marker's distance format, endpoints, and units</td></tr>
+<tr><td><tt>marker select all</tt> / <tt>only &lt;x&gt; &lt;y&gt;</tt> / <tt>toggle [&lt;x&gt; &lt;y&gt;]</tt> / <tt>first</tt> / <tt>last</tt> / <tt>&lt;id&gt; select [only]</tt> / <tt>unselect all</tt> / <tt>&lt;id&gt; unselect</tt></td><td>select/unselect marker(s)</td></tr>
+<tr><td><tt>marker show &lt;yesno&gt;</tt> / <tt>show text &lt;yesno&gt;</tt></td><td>show/hide all markers, or just their text labels</td></tr>
+<tr><td><tt>marker save &lt;filename&gt; [select] &lt;markerFormat&gt; &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;skyFormat&gt; &lt;yesno&gt;</tt> / <tt>save template &lt;filename&gt;</tt></td><td>save all/selected markers to a region file, or save a marker as a reusable template</td></tr>
+<tr><td><tt>marker &lt;id&gt; tag &lt;name&gt;</tt> / <tt>tag &lt;name&gt;</tt> / <tt>tag edit &lt;old&gt; &lt;new&gt;</tt> / <tt>tag delete &lt;name&gt;</tt> / <tt>tag delete all</tt> / <tt>tag update &lt;name&gt;</tt></td><td>add/rename/remove tags</td></tr>
+<tr><td><tt>marker &lt;id&gt; text &lt;string&gt;</tt> / <tt>text rotate &lt;yesno&gt;</tt></td><td>set a text marker's label / whether it rotates with the shape</td></tr>
+<tr><td><tt>marker &lt;id&gt; vector arrow &lt;yesno&gt;</tt> / <tt>vector point &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;coord&gt; &lt;coordSystem&gt; &lt;skyDist&gt; &lt;magnitude&gt; &lt;angle&gt;</tt></td><td>configure a vector marker's arrowhead / endpoint+magnitude+angle</td></tr>
+<tr><td><tt>marker &lt;id&gt; width &lt;n&gt;</tt> / <tt>width &lt;n&gt;</tt> / <tt>&lt;id&gt; dashlist &lt;n&gt; &lt;n&gt;</tt> / <tt>dashlist &lt;n&gt; &lt;n&gt;</tt></td><td>set line width / dash pattern on one marker or selected marker(s)</td></tr>
+</tbody>
+</table>
+
+<p><b>Querying markers</b> &mdash; invoked as <tt>get marker &lt;markerLayer&gt; ...</tt>, not <tt>marker ...</tt>. Most forms mirror a creation/edit form above but return the value instead of setting it.</p>
+<table summary="" border="1" width="100%">
+<tbody>
+<tr><td><b>Syntax</b></td><td><b>Returns</b></td></tr>
+<tr><td><tt>get marker centroid auto</tt> / <tt>radius</tt> / <tt>iteration</tt> / <tt>option</tt></td><td>centroid auto-mode settings</td></tr>
+<tr><td><tt>get marker color</tt> / <tt>&lt;id&gt; color</tt></td><td>marker color</td></tr>
+<tr><td><tt>get marker font</tt> / <tt>&lt;id&gt; font</tt></td><td>marker font</td></tr>
+<tr><td><tt>get marker epsilon</tt></td><td>hit-test tolerance</td></tr>
+<tr><td><tt>get marker handle &lt;x&gt; &lt;y&gt;</tt></td><td>which resize handle (if any) is at a screen position</td></tr>
+<tr><td><tt>get marker id &lt;x&gt; &lt;y&gt;</tt> / <tt>&lt;name&gt; id</tt></td><td>the marker id at a screen position, or by tag/name</td></tr>
+<tr><td><tt>get marker id all</tt></td><td>ids of all markers</td></tr>
+<tr><td><tt>get marker &lt;id&gt; analysis &lt;analysisTask&gt; ...</tt></td><td>that marker's analysis-task configuration/results</td></tr>
+<tr><td><tt>get marker analysis stats all data &lt;coordSystem&gt; &lt;skyFrame&gt;</tt> / <tt>stats fields</tt></td><td>stats over all markers / the list of stats field names</td></tr>
+<tr><td><tt>get marker &lt;id&gt; angle [&lt;internalSystem&gt;|&lt;coordSystem&gt; &lt;skyFrame&gt;]</tt></td><td>rotation angle</td></tr>
+<tr><td><tt>get marker &lt;id&gt; annulus|boxannulus|ellipseannulus radius &lt;coordSystem&gt; &lt;skyDist&gt;</tt> / <tt>box|circle|ellipse radius ...</tt></td><td>the shape's radii/size</td></tr>
+<tr><td><tt>get marker &lt;id&gt; bpanda|cpanda|epanda angle [...]</tt> / <tt>radius &lt;coordSystem&gt; &lt;skyDist&gt;</tt></td><td>panda shape angles/radii</td></tr>
+<tr><td><tt>get marker &lt;id&gt; center &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;skyFormat&gt;</tt></td><td>marker center position</td></tr>
+<tr><td><tt>get marker &lt;id&gt; compass arrow</tt> / <tt>label</tt> / <tt>radius ...</tt> / <tt>system</tt></td><td>compass marker settings</td></tr>
+<tr><td><tt>get marker &lt;id&gt; composite global</tt> / <tt>area</tt> / <tt>type</tt></td><td>composite marker flags</td></tr>
+<tr><td><tt>get marker &lt;id&gt; highlite</tt> / <tt>select</tt></td><td>whether a marker is highlited/selected</td></tr>
+<tr><td><tt>get marker highlite [&lt;x&gt; &lt;y&gt;]</tt> / <tt>highlite number</tt></td><td>the highlited marker(s) / count</td></tr>
+<tr><td><tt>get marker select [&lt;x&gt; &lt;y&gt;]</tt> / <tt>select number</tt></td><td>the selected marker(s) / count</td></tr>
+<tr><td><tt>get marker &lt;id&gt; line arrow</tt> / <tt>line length &lt;coordSystem&gt; &lt;skyDist&gt;</tt> / <tt>line point ...</tt></td><td>line marker properties</td></tr>
+<tr><td><tt>get marker &lt;id&gt; map length &lt;value&gt; &lt;coordSystem&gt; &lt;skyDist&gt;</tt></td><td>convert a canvas-pixel length to a sky/image length for that marker</td></tr>
+<tr><td><tt>get marker &lt;id&gt; point shape</tt> / <tt>point size</tt></td><td>point marker shape/size</td></tr>
+<tr><td><tt>get marker &lt;id&gt; polygon point ...</tt> / <tt>polygon segment &lt;x&gt; &lt;y&gt;</tt></td><td>polygon vertex list / which segment is at a position</td></tr>
+<tr><td><tt>get marker &lt;id&gt; projection point ...</tt> / <tt>length ...</tt> / <tt>thick ...</tt></td><td>projection marker geometry</td></tr>
+<tr><td><tt>get marker &lt;id&gt; property [&lt;markerProperty&gt;]</tt> / <tt>property &lt;markerProperty&gt;</tt></td><td>a marker's (or the under-cursor marker's) property flag(s)</td></tr>
+<tr><td><tt>get marker &lt;id&gt; ruler format</tt> / <tt>length ...</tt> / <tt>point ...</tt> / <tt>system</tt></td><td>ruler marker settings</td></tr>
+<tr><td><tt>get marker &lt;id&gt; tag [&lt;n&gt;]</tt> / <tt>&lt;name&gt; tag</tt> / <tt>&lt;name&gt; tag number</tt> / <tt>tag all</tt> / <tt>tag default name</tt></td><td>a marker's tag(s), or the default tag name for new markers</td></tr>
+<tr><td><tt>get marker &lt;id&gt; text</tt> / <tt>text rotate</tt></td><td>text marker label / rotate-with-shape flag</td></tr>
+<tr><td><tt>get marker &lt;id&gt; type</tt></td><td>the marker's shape type name</td></tr>
+<tr><td><tt>get marker &lt;id&gt; vector arrow</tt> / <tt>vector length ...</tt> / <tt>vector point ...</tt></td><td>vector marker properties</td></tr>
+<tr><td><tt>get marker &lt;id&gt; width</tt> / <tt>width</tt> / <tt>&lt;id&gt; dashlist</tt> / <tt>dashlist</tt></td><td>line width / dash pattern</td></tr>
+<tr><td><tt>get marker number</tt></td><td>the total number of markers</td></tr>
+<tr><td><tt>get marker preserve</tt></td><td>whether markers persist across new images (see <tt>marker preserve</tt>)</td></tr>
+<tr><td><tt>get marker show</tt> / <tt>show text</tt></td><td>marker/label visibility</td></tr>
+</tbody>
+</table>
+
+<h4><a name="mask" id="mask"></a>mask</h4>
+<p>Controls how a loaded pixel-mask layer is interpreted and displayed.</p>
+<tt>Syntax:<br>
+mask clear<br>
+mask color &lt;color&gt;<br>
+mask mark &lt;maskType&gt;<br>
+mask mark &lt;int&gt; # backward compatibility, numeric &lt;maskType&gt;<br>
+mask range &lt;low&gt; &lt;high&gt;<br>
+mask system &lt;coordSystem&gt;<br>
+mask transparency &lt;value&gt;<br>
+mask blend &lt;maskBlend&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) mask color red<br>
+$::current(frame) mask mark nonzero<br>
+$::current(frame) mask range 1 100<br>
+$::current(frame) mask transparency 0.5</tt>
+<p>See <a href="#t-maskType">&lt;maskType&gt;</a> and <a href="#t-maskBlend">&lt;maskBlend&gt;</a>.</p>
+
+<h4><a name="match" id="match"></a>match</h4>
+<p>Cross-matches two lists of sky positions by angular separation. <tt>&lt;xvar1&gt;</tt>/<tt>&lt;yvar1&gt;</tt> and <tt>&lt;xvar2&gt;</tt>/<tt>&lt;yvar2&gt;</tt> are the names of (already-populated) Tcl variables, each holding an equal-length list of X/Y coordinate values in the coordinate system/sky frame given right after it; every position in list&nbsp;1 is compared against every position in list&nbsp;2, converting between the two sky frames first if they differ. For every pair within &lt;radius&gt; of each other, a two-element list <tt>{&lt;i&gt; &lt;j&gt;}</tt> (1-based indices into list&nbsp;1 and list&nbsp;2) is appended to the result; the full result list is stored into the Tcl variable named &lt;resultvar&gt;.</p>
+<tt>Syntax:<br>
+match &lt;xvar1&gt; &lt;yvar1&gt; &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;xvar2&gt; &lt;yvar2&gt; &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;radius&gt; &lt;coordSystem&gt; &lt;skyDist&gt; &lt;resultvar&gt;<br>
+&nbsp;<br>
+Example:<br>
+set ra1 {10.1 10.2 10.3}; set dec1 {41.1 41.2 41.3}<br>
+set ra2 {10.15 10.25 12.0}; set dec2 {41.15 41.25 43.0}<br>
+$::current(frame) match ra1 dec1 wcs fk5 ra2 dec2 wcs fk5 5 wcs arcsec matches<br>
+puts $matches # e.g. {1 1} {2 2}</tt>
+
+<h4><a name="multicolor" id="multicolor"></a>multicolor</h4>
+<p>Sets the coordinate system used for a multicolor (arbitrary N-channel) composite frame's WCS.</p>
+<tt>Syntax:<br>
+multicolor system &lt;coordSystem&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) multicolor system wcs</tt>
+
+<h4><a name="nan" id="nan"></a>nan</h4>
+<p>Sets the display color used for NaN (not-a-number) pixel values.</p>
+<tt>Syntax:<br>
+nan color &lt;color&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) nan color black</tt>
+
+<h4><a name="orient" id="orient"></a>orient</h4>
+<p>Flips the image about the X axis, Y axis, both, or resets to normal.</p>
+<tt>Syntax:<br>
+orient x<br>
+orient y<br>
+orient xy<br>
+orient none<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) orient x<br>
+$::current(frame) orient none</tt>
+
+<h4><a name="pan" id="pan"></a>pan</h4>
+<p>Pans (recenters) the frame's view, by a relative offset or to an absolute position, in image, screen, or sky coordinates.</p>
+<tt>Syntax:<br>
+pan &lt;dx&gt; &lt;dy&gt;<br>
+pan &lt;dx1&gt; &lt;dy1&gt; &lt;dx2&gt; &lt;dy2&gt;<br>
+pan canvas|panner &lt;x&gt; &lt;y&gt; # backward compatibility, same as plain &lt;dx&gt; &lt;dy&gt;<br>
+pan &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;coord&gt;<br>
+pan to &lt;x&gt; &lt;y&gt;<br>
+pan to canvas|panner &lt;x&gt; &lt;y&gt; # backward compatibility<br>
+pan to &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;coord&gt;<br>
+pan bbox &lt;x&gt; &lt;y&gt;<br>
+pan motion begin &lt;x&gt; &lt;y&gt;<br>
+pan motion &lt;x&gt; &lt;y&gt;<br>
+pan motion end &lt;x&gt; &lt;y&gt;<br>
+pan preserve &lt;yesno&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) pan 10 -10<br>
+$::current(frame) pan to 512 512<br>
+$::current(frame) pan to wcs fk5 13:29:52.698 +47:11:42.93<br>
+$::current(frame) pan preserve yes</tt>
+
+<h4><a name="panner" id="panner"></a>panner</h4>
+<p>Controls the panner's linkage to this frame: on/off, its own render size, and forcing a redraw.</p>
+<tt>Syntax:<br>
+panner &lt;yesno&gt;<br>
+panner wcs &lt;wcsSystem&gt; &lt;skyFrame&gt; # backward compatibility, no-op<br>
+panner &lt;name&gt; &lt;width&gt; &lt;height&gt;<br>
+panner update<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) panner yes<br>
+$::current(frame) panner update</tt>
+
+<h4><a name="postscript" id="postscript"></a>postscript</h4>
+<p>Sets PostScript print/export parameters for the frame.</p>
+<tt>Syntax:<br>
+postscript colorspace &lt;pscolorspace&gt;<br>
+postscript level &lt;1|2|3&gt;<br>
+postscript resolution &lt;dpi&gt;<br>
+postscript scale &lt;value&gt; # backward compatibility, no-op<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) postscript colorspace rgb<br>
+$::current(frame) postscript level 2<br>
+$::current(frame) postscript resolution 150</tt>
+<p>See <a href="#t-pscolorspace">&lt;pscolorspace&gt;</a>.</p>
+
+<h4><a name="precision" id="precision"></a>precision</h4>
+<p>Sets the number of decimal digits used when formatting coordinates/values for display: linear, degrees, HMS, DMS, angle, length-in-linear, length-in-degrees, length-in-arcmin, length-in-arcsec (in that order).</p>
+<tt>Syntax:<br>
+precision &lt;linear&gt; &lt;deg&gt; &lt;hms&gt; &lt;dms&gt; &lt;lenLinear&gt; &lt;lenDeg&gt; &lt;lenArcmin&gt; &lt;lenArcsec&gt; &lt;angle&gt;<br>
+precision &lt;linear&gt; &lt;deg&gt; &lt;hms&gt; &lt;dms&gt; &lt;lenArcmin&gt; &lt;lenArcsec&gt; # backward compatibility, leaves lenLinear/lenDeg/angle unchanged<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) precision 8 7 4 3 8 7 5 3 8<br>
+$::current(frame) precision 8 7 4 3 5 3</tt>
+<p>This mirrors the <tt>pds9(prec,*)</tt> preference settings; see <a href="ds9array.html">The ds9 Array</a>.</p>
+
+<h4><a name="query" id="query"></a>query</h4>
+<p>Forces the frame to recompute/report the value under the current pointer position (used by the value/pixel-table displays after an external change, e.g. a colormap update).</p>
+<tt>Syntax:<br>
+query cursor<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) query cursor</tt>
+
+<h4><a name="region" id="region"></a>region</h4>
+<p>Interactive rubber-band region-select/highlite box, as used while shift-dragging on the canvas to multi-select markers. To create/edit/query regions themselves, see <a href="#marker">marker</a> (a <tt>region</tt> command with the same <a href="#t-markerLayer">&lt;markerLayer&gt;</a> prefix is simply a synonym for <tt>marker</tt> in most of the Tcl library, but the frame-level <tt>region</tt> command below only implements the rubber-band select box, not full marker creation).</p>
+<tt>Syntax:<br>
+region highlite begin &lt;x&gt; &lt;y&gt;<br>
+region highlite motion &lt;x&gt; &lt;y&gt;<br>
+region highlite end<br>
+region highlite shift end<br>
+region select begin &lt;x&gt; &lt;y&gt;<br>
+region select motion &lt;x&gt; &lt;y&gt;<br>
+region select end<br>
+region select shift end<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) region select begin 100 100<br>
+$::current(frame) region select motion 200 200<br>
+$::current(frame) region select end</tt>
+
+<h4><a name="reset" id="reset"></a>reset</h4>
+<p>Resets the frame to its default state.</p>
+<tt>Syntax:<br>
+reset<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) reset</tt>
+
+<h4><a name="reveal" id="reveal"></a>reveal</h4>
+<p>Sets or clears the "reveal" wipe position used in reveal display mode, where one frame is revealed over another up to a moving boundary.</p>
+<tt>Syntax:<br>
+reveal &lt;value&gt;<br>
+reveal clear<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) reveal 400<br>
+$::current(frame) reveal clear</tt>
+
+<h4><a name="rgb" id="rgb"></a>rgb</h4>
+<p>Controls an RGB composite frame's channel selection, coordinate system, and channel visibility.</p>
+<tt>Syntax:<br>
+rgb channel &lt;string&gt;<br>
+rgb system &lt;coordSystem&gt;<br>
+rgb view &lt;yesno&gt; &lt;yesno&gt; &lt;yesno&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) rgb channel red<br>
+$::current(frame) rgb view yes no yes</tt>
+
+<h4><a name="rotate" id="rotate"></a>rotate</h4>
+<p>Rotates the frame's view.</p>
+<tt>Syntax:<br>
+rotate &lt;angle&gt; [degrees]<br>
+rotate to &lt;angle&gt; [degrees]<br>
+rotate motion begin<br>
+rotate motion &lt;angle&gt;<br>
+rotate motion end<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) rotate 90<br>
+$::current(frame) rotate to 0</tt>
+
+<h4><a name="save" id="save"></a>save</h4>
+<p>Saves the frame's data. Mirrors the sources used by <a href="#load">load</a>, but as write destinations: <tt>file &lt;filename&gt;</tt>, <tt>channel &lt;title&gt;</tt> (an open Tcl channel), or <tt>socket &lt;fd&gt;</tt>; the array/NRRD/ENVI forms additionally take an <a href="#t-endian">&lt;endian&gt;</a>.</p>
+<table summary="" border="1" width="100%">
+<tbody>
+<tr><td><b>Syntax</b></td><td><b>Saves</b></td></tr>
+<tr><td><tt>save array &lt;dest&gt; &lt;endian&gt;</tt></td><td>the raw data array</td></tr>
+<tr><td><tt>save array rgb|hls|hsv cube &lt;dest&gt; &lt;endian&gt;</tt></td><td>a raw 3-plane composite data cube</td></tr>
+<tr><td><tt>save fits [image] &lt;dest&gt;</tt></td><td>the FITS image</td></tr>
+<tr><td><tt>save fits table &lt;dest&gt;</tt></td><td>the FITS bin table</td></tr>
+<tr><td><tt>save fits slice &lt;dest&gt;</tt></td><td>the current cube slice</td></tr>
+<tr><td><tt>save fits ext cube &lt;dest&gt;</tt></td><td>a FITS cube built from all extensions</td></tr>
+<tr><td><tt>save fits mosaic image &lt;dest&gt;</tt> / <tt>save fits mosaic &lt;dest&gt; &lt;n&gt;</tt></td><td>one mosaic tile / the full mosaic (n = tile count)</td></tr>
+<tr><td><tt>save fits rgb|hls|hsv image &lt;dest&gt;</tt> / <tt>rgb|hls|hsv cube &lt;dest&gt;</tt></td><td>a FITS composite image / cube</td></tr>
+<tr><td><tt>save fits resample &lt;dest&gt;</tt></td><td>the currently displayed (zoom/rotate-resampled) image</td></tr>
+<tr><td><tt>save pixmask file|channel &lt;dest&gt;</tt> / <tt>socket &lt;fd&gt;</tt></td><td>the pixel mask layer</td></tr>
+<tr><td><tt>save nrrd &lt;dest&gt; &lt;endian&gt;</tt></td><td>an NRRD-format volume</td></tr>
+<tr><td><tt>save envi file &lt;hdrfile&gt; &lt;datafile&gt; &lt;endian&gt;</tt></td><td>an ENVI image (paired header + data file)</td></tr>
+<tr><td><tt>save photo &lt;filename&gt;</tt></td><td>the displayed image as a Tk photo-format file</td></tr>
+</tbody>
+</table>
+<p>Example:</p>
+<tt>$::current(frame) save fits file foo.fits<br>
+$::current(frame) save array file foo.arr native<br>
+$::current(frame) save photo foo.png</tt>
+
+<h4><a name="show" id="show"></a>show</h4>
+<p>Un-hides a frame previously hidden with <a href="#hide">hide</a>.</p>
+<tt>Syntax:<br>
+show<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) show</tt>
+
+<h4><a name="smooth" id="smooth"></a>smooth</h4>
+<p>Applies (or removes) a smoothing filter to the displayed image.</p>
+<tt>Syntax:<br>
+smooth &lt;smoothFunction&gt; &lt;radius&gt; &lt;radiusMinor&gt; &lt;sigma&gt; &lt;sigmaMinor&gt; &lt;angle&gt;<br>
+smooth delete<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) smooth gaussian 3 3 1.5 1.5 0<br>
+$::current(frame) smooth delete</tt>
+<p>See <a href="#t-smoothFunction">&lt;smoothFunction&gt;</a>.</p>
+
+<h4><a name="threads" id="threads"></a>threads</h4>
+<p>Sets the number of worker threads used to render this frame.</p>
+<tt>Syntax:<br>
+threads &lt;n&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) threads 4</tt>
+
+<h4><a name="threed" id="threed"></a>threed</h4>
+<p>Controls 3D-frame rendering: viewpoint, shading, borders, compass, and render method/background. Only meaningful for a frame created as a 3D frame (see <tt>-3d</tt> in <a href="command.html">Command Line Options</a>).</p>
+<tt>Syntax:<br>
+threed view &lt;az&gt; &lt;el&gt;<br>
+threed view point &lt;x&gt; &lt;y&gt; &lt;z&gt; &lt;az&gt; &lt;el&gt;<br>
+threed border &lt;yesno&gt;<br>
+threed border color &lt;color&gt;<br>
+threed compass &lt;yesno&gt;<br>
+threed compass color &lt;color&gt;<br>
+threed highlite &lt;yesno&gt;<br>
+threed highlite color &lt;color&gt;<br>
+threed method &lt;renderMethod&gt;<br>
+threed background &lt;renderBackground&gt;<br>
+threed shade &lt;yesno&gt;<br>
+threed shade ambient &lt;value&gt;<br>
+threed shade strength &lt;value&gt;<br>
+threed shade normal &lt;yesno&gt;<br>
+threed shade normal strength &lt;value&gt;<br>
+threed scale &lt;value&gt;<br>
+threed sync &lt;n&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) threed view 45 30<br>
+$::current(frame) threed method mip<br>
+$::current(frame) threed shade yes<br>
+$::current(frame) threed shade ambient 0.8</tt>
+<p>See <a href="#t-renderMethod">&lt;renderMethod&gt;</a> and <a href="#t-renderBackground">&lt;renderBackground&gt;</a>.</p>
+
+<h4><a name="unload" id="unload"></a>unload</h4>
+<p>Unloads the frame's FITS data (lower-level than <a href="#clear">clear</a>; used internally before loading new data).</p>
+<tt>Syntax:<br>
+unload<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) unload</tt>
+
+<h4><a name="update" id="update"></a>update</h4>
+<p>Forces the frame to redraw/refresh its displayed FITS data, optionally restricted to a bounding box (e.g. after data underneath has changed via a shared-memory or incremental load) and/or a specific cube slice.</p>
+<tt>Syntax:<br>
+update<br>
+update &lt;n&gt; &lt;x1&gt; &lt;y1&gt; &lt;x2&gt; &lt;y2&gt;<br>
+update fits slice &lt;n&gt;<br>
+update fits slice &lt;n1&gt; &lt;n2&gt;<br>
+update fits slice &lt;value&gt; &lt;coordSystem&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) update<br>
+$::current(frame) update 0 0 0 512 512</tt>
+
+<h4><a name="version" id="version"></a>version</h4>
+<p>Returns the frame command grammar's version string.</p>
+<tt>Syntax:<br>
+version<br>
+&nbsp;<br>
+Example:<br>
+set v [$::current(frame) version]</tt>
+
+<h4><a name="warp" id="warp"></a>warp</h4>
+<p>Moves the mouse pointer to a screen position within the frame (or to an absolute position).</p>
+<tt>Syntax:<br>
+warp &lt;x&gt; &lt;y&gt;<br>
+warp to &lt;x&gt; &lt;y&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) warp 256 256</tt>
+
+<h4><a name="wcs" id="wcs"></a>wcs</h4>
+<p>Sets the frame's active WCS system/sky-frame/format, manages alignment to another frame's WCS, and appends/replaces alternate WCS solutions from FITS header text.</p>
+<tt>Syntax:<br>
+wcs &lt;wcsSystem&gt; &lt;skyFrame&gt; &lt;skyFormat&gt;<br>
+wcs align &lt;n&gt;<br>
+wcs align &lt;n&gt; &lt;wcsSystem&gt; &lt;skyFrame&gt;<br>
+wcs align to &lt;n&gt; &lt;wcsSystem&gt; &lt;skyFrame&gt;<br>
+wcs align pointer clear<br>
+wcs reset &lt;n&gt;<br>
+wcs replace &lt;n&gt; &lt;n2|string&gt;<br>
+wcs replace text &lt;n&gt; &lt;string&gt;<br>
+wcs append &lt;n&gt; &lt;n2|string&gt;<br>
+wcs append text &lt;n&gt; &lt;string&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) wcs wcs fk5 sexagesimal<br>
+$::current(frame) wcs align 1<br>
+$::current(frame) wcs append text 0 {CRVAL1 = 10.68}</tt>
+<p>See <a href="#t-wcsSystem">&lt;wcsSystem&gt;</a>.</p>
+
+<h4><a name="win32" id="win32"></a>win32</h4>
+<p>Windows-specific printing hook (no-op on other platforms).</p>
+<tt>Syntax:<br>
+win32 print<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) win32 print</tt>
+
+<h4><a name="zoom" id="zoom"></a>zoom</h4>
+<p>Sets the frame's zoom factor, by absolute value or by zooming about a specific position.</p>
+<tt>Syntax:<br>
+zoom &lt;x&gt; &lt;y&gt;<br>
+zoom &lt;x&gt; &lt;y&gt; about &lt;ax&gt; &lt;ay&gt;<br>
+zoom &lt;x&gt; &lt;y&gt; about &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;coord&gt;<br>
+zoom to fit [&lt;margin&gt;]<br>
+zoom to &lt;x&gt; &lt;y&gt;<br>
+zoom to &lt;x&gt; &lt;y&gt; about &lt;ax&gt; &lt;ay&gt;<br>
+zoom to &lt;x&gt; &lt;y&gt; about &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;coord&gt;<br>
+&nbsp;<br>
+Example:<br>
+$::current(frame) zoom 2 2<br>
+$::current(frame) zoom to fit<br>
+$::current(frame) zoom 4 4 about 256 256</tt>
+
+</blockquote>
+</body>
+</html>

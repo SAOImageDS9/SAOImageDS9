@@ -1,0 +1,76 @@
+<!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<title>The current Array (Developer Reference)</title>
+</head>
+<body link="#0000FF" vlink="#551A8B" alink="#FF0000">
+<h3><img alt="" src="../sun.png" align="middle"> The current Array (Developer Reference)</h3>
+<blockquote>
+<p>Alongside the <a href="ds9array.html">ds9 array</a>, DS9's Tcl library keeps a second, much smaller global array, <tt>current</tt>, that tracks which frame/channel/mode is presently selected. This is the array behind the <tt>$::current(frame)</tt> handle used throughout <a href="framecmd.html">Frame Commands</a> and the <a href="command.html">Command Line Options</a> examples, e.g.:</p>
+<tt>global current<br>
+if {$current(frame) != {}} {<br>
+&nbsp;&nbsp;&nbsp; puts "current frame is $current(frame), zoom is $current(zoom)"<br>
+}</tt>
+<p>This page documents every element of <tt>current</tt>, derived from its initialization in <tt>CurrentDef</tt> (<tt>ds9/library/util.tcl</tt>) and its use across the rest of the library.</p>
+<p><b>A note on <tt>pcurrent</tt>:</b> six of the elements below (<tt>display</tt>, <tt>mode</tt>, <tt>zoom</tt>, <tt>rotate</tt>, <tt>orient</tt>, <tt>align</tt>) have a same-named counterpart in a separate global array, <tt>pcurrent</tt> &mdash; the persisted preference written to <tt>~/.ds9.ini</tt> (the Preferences dialog's radiobuttons for "default display mode," "default pointer mode," and default zoom/rotate/orientation/align settings write directly into <tt>pcurrent</tt>). <tt>current(...)</tt> itself is always the <i>live</i> value &mdash; the actual state of the currently-selected frame or the UI right now &mdash; not the saved default; use <tt>pcurrent(...)</tt> only if you specifically want to read or change the persisted startup preference. This mirrors the <tt>ds9</tt>/<tt>pds9</tt> relationship described on the <a href="ds9array.html">ds9 array</a> page.</p>
+
+<h4><a name="frame" id="frame"></a>The selected frame and its widgets</h4>
+<dl>
+<dt><tt>current(frame)</tt></dt>
+<dd>Frame command name (e.g. <tt>Frame1</tt>) or <tt>{}</tt> if no frame exists. The canvas-item command of the currently-selected frame &mdash; the handle used for every <a href="framecmd.html">frame command</a>, e.g. <tt>$::current(frame) get zoom</tt>. Set whenever the user selects a different frame (click, Tab, Frame menu, <tt>-frame</tt>/XPA <tt>frame</tt> commands, etc.); read-only in the sense that a script should change frames through those normal mechanisms rather than by assigning this variable directly, since a raw assignment would desynchronize it from the menus, panner, and info panel. Safe and common to read.</dd>
+
+<dt><tt>current(colorbar)</tt></dt>
+<dd>Canvas-item command name or <tt>{}</tt>. The colorbar item associated with the current frame: normally <tt>${current(frame)}cb</tt> (a per-frame colorbar) or the single shared item named <tt>colorbar</tt>, depending on the colorbar-display preference; <tt>{}</tt> when there is no current frame. Kept in sync with <tt>current(frame)</tt> automatically. Safe to read; not meant to be set directly.</dd>
+
+<dt><tt>current(ext)</tt></dt>
+<dd>String, usually <tt>{}</tt>. Caches the FITS extension name last used to look up a colormap level for a mosaic frame under local scaling, so repeated lookups at the same pointer position can skip redundant work. Internal; not useful to a script.</dd>
+
+<dt><tt>current(cursor)</tt></dt>
+<dd>String, a Tk cursor name, or <tt>{}</tt>. Caches the cursor most recently applied to the main canvas, so the library can skip a redundant <tt>configure -cursor</tt> call when the cursor hasn't actually changed. Internal; not useful to a script.</dd>
+</dl>
+
+<h4><a name="channel" id="channel"></a>Composite-frame channel selection</h4>
+<p>These select which channel of a multi-channel composite frame subsequent single-channel operations (e.g. colormap edits) apply to; each is mirrored from the frame itself and used to drive the RGB/HSV/HLS menu's radiobuttons.</p>
+<dl>
+<dt><tt>current(rgb)</tt></dt>
+<dd>String, one of <tt>red</tt> | <tt>green</tt> | <tt>blue</tt>; default <tt>red</tt>. The active channel of an RGB composite frame. See the <a href="framecmd.html#rgb">frame <tt>rgb</tt></a> command.</dd>
+
+<dt><tt>current(hsv)</tt></dt>
+<dd>String, one of <tt>hue</tt> | <tt>saturation</tt> | <tt>value</tt>; default <tt>hue</tt>. The active channel of an HSV composite frame. See the <a href="framecmd.html#hsv">frame <tt>hsv</tt></a> command.</dd>
+
+<dt><tt>current(hls)</tt></dt>
+<dd>String, one of <tt>hue</tt> | <tt>lightness</tt> | <tt>saturation</tt>; default <tt>hue</tt>. The active channel of an HLS composite frame. See the <a href="framecmd.html#hls">frame <tt>hls</tt></a> command.</dd>
+</dl>
+
+<h4><a name="mode" id="mode"></a>Display and pointer mode</h4>
+<dl>
+<dt><tt>current(display)</tt></dt>
+<dd>String, one of <tt>single</tt> | <tt>tile</tt> | <tt>blink</tt> | <tt>reveal</tt> | <tt>fade</tt>; default <tt>single</tt>. The frame display/layout mode, mirrored into <tt>ds9(display)</tt> (see <a href="ds9array.html#frames">the ds9 array</a>) and bound directly to the View/Frame menu's display-mode radiobuttons via <tt>-command DisplayMode</tt>. Because the menu entries invoke <tt>DisplayMode</tt> as a side effect of setting this variable, a script should call the same mechanism (or the equivalent <tt>-tile</tt>/<tt>-single</tt>/... command line option or XPA point) rather than assigning <tt>current(display)</tt> directly, which would only change the cached value without actually re-laying-out the frames.</dd>
+
+<dt><tt>current(mode)</tt></dt>
+<dd>String, one of <tt>none</tt> (default, the plain pointer) | <tt>region</tt> | <tt>crosshair</tt> | <tt>colorbar</tt> | <tt>pan</tt> | <tt>zoom</tt> | <tt>rotate</tt> | <tt>crop</tt> | <tt>catalog</tt> | <tt>footprint</tt> | <tt>examine</tt> | <tt>3d</tt> | <tt>illustrate</tt> (also transiently <tt>iexam</tt> while the interactive-examine dialog is driving it). The active Edit-menu pointer mode, i.e. what a mouse click/drag on the canvas currently does. Like <tt>current(display)</tt>, this is bound to the Edit menu's radiobuttons via <tt>-command ChangeMode</tt>; change it through the menu, the <tt>-mode</tt> command line option, or the equivalent XPA point rather than by assigning the variable directly.</dd>
+
+<dt><tt>current(mode,illustrate)</tt></dt>
+<dd>Boolean (0/1), default <tt>0</tt>. A sub-flag of Illustrate mode: <tt>1</tt> while an illustrate drawing gesture is actively in progress on the canvas, toggled back to <tt>0</tt> when it finishes. Internal; not useful to set from a script.</dd>
+</dl>
+
+<h4><a name="view" id="view"></a>Current frame's view settings</h4>
+<p>These four mirror the currently-selected frame's actual zoom/rotation/orientation/WCS-alignment, refreshed whenever the frame selection changes or the corresponding menu/dialog action runs (see <tt>UpdateZoomMenu</tt> in <tt>ds9/library/mzoom.tcl</tt>). They exist to back the Zoom/Pan menu's checkmarks and the Pan/Zoom/Rotate dialog's fields. A script that changes a frame's zoom/rotate/orient/align by calling the <a href="framecmd.html">frame command</a> directly (bypassing the menu/dialog code) should not assume these mirrors have been refreshed &mdash; query <tt>[$current(frame) get zoom]</tt> etc. directly for a value guaranteed to be current.</p>
+<dl>
+<dt><tt>current(zoom)</tt></dt>
+<dd>Two numbers <tt>{&lt;x&gt; &lt;y&gt;}</tt>, default <tt>{1 1}</tt>. Mirrors the current frame's zoom factor; see the <a href="framecmd.html#zoom">frame <tt>zoom</tt></a> command.</dd>
+
+<dt><tt>current(rotate)</tt></dt>
+<dd>Number of degrees, default <tt>0</tt>. Mirrors the current frame's rotation angle; see the <a href="framecmd.html#rotate">frame <tt>rotate</tt></a> command.</dd>
+
+<dt><tt>current(orient)</tt></dt>
+<dd>String, one of <tt>none</tt> (default) | <tt>x</tt> | <tt>y</tt> | <tt>xy</tt>. Mirrors the current frame's flip orientation; see the <a href="framecmd.html#orient">frame <tt>orient</tt></a> command.</dd>
+
+<dt><tt>current(align)</tt></dt>
+<dd>Boolean (0/1), default <tt>0</tt>. Mirrors whether the current frame's WCS is aligned to the other frames; see the <a href="framecmd.html#wcs">frame <tt>wcs</tt></a> command's <tt>align</tt> forms.</dd>
+</dl>
+
+</blockquote>
+</body>
+</html>

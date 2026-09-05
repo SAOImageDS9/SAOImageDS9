@@ -23,16 +23,18 @@ proc xmlrpcServeOnce {sock addr port} {
 }
 
 proc xmlrpcPreflightResponse {request} {
-    set header "HTTP/1.1 204 No Content\n"
-    append header "Access-Control-Allow-Origin: *\n"
-    append header "Access-Control-Allow-Methods: POST, GET, OPTIONS\n"
-    append header "Access-Control-Allow-Headers: Content-Type\n"
+    # RFC 7230 requires CRLF line endings; some HTTP clients parse this
+    # strictly and fail on bare LF
+    set header "HTTP/1.1 204 No Content\r\n"
+    append header "Access-Control-Allow-Origin: *\r\n"
+    append header "Access-Control-Allow-Methods: POST, GET, OPTIONS\r\n"
+    append header "Access-Control-Allow-Headers: Content-Type\r\n"
 
     # Private Network Access preflights require the local server to opt in.
     if {[regexp -nocase \
 	     {(^|\n)Access-Control-Request-Private-Network:[ \t]*true[ \t\r]*(\n|$)} \
 	     $request]} {
-	append header "Access-Control-Allow-Private-Network: true\n"
+	append header "Access-Control-Allow-Private-Network: true\r\n"
     }
 
     return $header
@@ -151,13 +153,19 @@ proc xmlrpcResponse {rpc} {
     # so it must not claim HTTP/1.1, which implies persistent connections
     # by default -- a keep-alive client would otherwise try to reuse a
     # socket we've already torn down and see its next request go unanswered
-    set	header "HTTP/1.0 200 OK\n"
-    append	header "Content-Type: text/xml\n"
-    append	header "Content-length: [string length $body]\n"
+    #
+    # RFC 7230 requires CRLF line endings; some HTTP clients (e.g.
+    # Haskell's http-streams, used by the hsamp SAMP hub/client library)
+    # parse this strictly and fail with a "not enough input"/incomplete
+    # parse error when given bare LF -- verified directly against a real
+    # http-streams client, which only succeeds once this is CRLF
+    set	header "HTTP/1.0 200 OK\r\n"
+    append	header "Content-Type: text/xml\r\n"
+    append	header "Content-length: [string length $body]\r\n"
     # needed for CORS
-    append	header "Access-Control-Allow-Origin: *\n"
+    append	header "Access-Control-Allow-Origin: *\r\n"
 
-    set result "$header\n$body"
+    set result "$header\r\n$body"
     return $result
 }
 
@@ -304,11 +312,12 @@ proc xmlrpcBuildRequest {method mname params} {
     }
 
     # build the header
-    set	header "POST /$method HTTP/1.0\n"
-    append	header "Content-Type: text/xml\n"
-    append	header "Content-length: [string length $body]\n"
+    # RFC 7230 requires CRLF line endings; see xmlrpcResponse for why
+    set	header "POST /$method HTTP/1.0\r\n"
+    append	header "Content-Type: text/xml\r\n"
+    append	header "Content-length: [string length $body]\r\n"
 
-    set result "$header\n$body" 
+    set result "$header\r\n$body"
     return [string trim $result]
 }
 

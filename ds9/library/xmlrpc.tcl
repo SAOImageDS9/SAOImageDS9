@@ -147,7 +147,11 @@ proc xmlrpcResponse {rpc} {
     }
 
     # build the header
-    set	header "HTTP/1.1 200 OK\n"
+    # HTTP/1.0: this server always closes the socket after one response,
+    # so it must not claim HTTP/1.1, which implies persistent connections
+    # by default -- a keep-alive client would otherwise try to reuse a
+    # socket we've already torn down and see its next request go unanswered
+    set	header "HTTP/1.0 200 OK\n"
     append	header "Content-Type: text/xml\n"
     append	header "Content-length: [string length $body]\n"
     # needed for CORS

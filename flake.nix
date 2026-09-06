@@ -1,0 +1,178 @@
+{
+  description = "SAOImageDS9, built from the vendored source tree (unix/configure && make)";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
+
+  outputs = { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-linux" ] (system:
+      let
+        pkgs = import nixpkgs { inherit system; };
+        lib = pkgs.lib;
+
+        ds9 = pkgs.stdenv.mkDerivation {
+          pname = "ds9";
+          version = "8.8b2";
+
+          # Flakes only ever see git-tracked files here, so this naturally
+          # excludes the in-tree build byproducts (*.o, *.lo, config.cache,
+          # the generated top-level Makefile, ...) that a prior manual
+          # `unix/configure && make` may have left lying around. Anything
+          # new you add (like this file) must be `git add`ed to be visible.
+          src = self;
+
+          # `zip` matters beyond convenience: without it on PATH, Tcl/Tk's
+          # configure falls back to building their own vendored "minizip"
+          # helper for zipfs support, whose make rule is broken under
+          # parallel (-j) builds.
+          nativeBuildInputs = with pkgs; [ perl which pkg-config zip ];
+
+          # Everything downstream (Tk's Xft/fontconfig detection, ds9's and
+          # tksao's libxml2 lookup, funtools' zlib) is a configure-time
+          # library check against these; nothing here is fetched at build
+          # time, it's all vendored in the source tree already.
+          buildInputs = with pkgs; [
+            libx11
+            libxext
+            libxscrnsaver
+            libxft
+            fontconfig
+            freetype
+            libxml2
+            libxslt
+            zlib
+          ];
+
+          # The top-level configure.ac hardcodes `prefix=$ac_pwd` (i.e.
+          # "wherever you ran configure from"), ignoring any --prefix
+          # flag, so we build in an ordinary scratch directory under
+          # $TMPDIR rather than in $out.
+          #
+          # A first attempt at this failed: dontPatchELF (needed to
+          # protect ds9.real's zip-appended payload, see below) also
+          # skips the normal RPATH-rewrite for tclsh9.0/wish9.0, which
+          # unlike ds9.real are genuinely dynamically linked with a real
+          # linker-baked RPATH — building outside $out left that RPATH
+          # pointing at the scratch directory, and Nix's own build-purity
+          # check refuses to ship a binary whose RPATH references a
+          # directory that stops existing once the build finishes.
+          #
+          # The fix is `make dist` (the top Makefile's own packaging
+          # target): it tars up just `ds9*` and `xpa*` from bin/ into
+          # dist/, which is exactly ds9 + the XPA CLI tools, and already
+          # excludes tclsh9.0/wish9.0/sqlite3_analyzer — nothing else in
+          # ds9's own bin/ output is needed to run it. Since those two
+          # binaries are exactly what had the forbidden RPATH reference,
+          # dropping them clears the way to build outside $out entirely.
+          dontUnpack = true;
+          dontConfigure = true;
+          dontBuild = true;
+
+          installPhase = ''
+            runHook preInstall
+
+            build="$TMPDIR/build"
+            mkdir -p "$build"
+            cp -r --preserve=mode,timestamps "$src"/. "$build"/
+            chmod -R u+w "$build"
+            cd "$build"
+            patchShebangs .
+
+            export HOME="$TMPDIR"
+            export PATH="${lib.makeBinPath [ pkgs.libxml2 pkgs.libxslt pkgs.perl pkgs.which ]}:$PATH"
+
+            # funtools' configure wants a static libz.a already sitting at
+            # $(libdir)/libz.a (see make.include); it doesn't vendor or
+            # otherwise locate zlib itself.
+            mkdir -p lib
+            cp ${pkgs.zlib.static}/lib/libz.a lib/libz.a
+            chmod u+w lib/libz.a
+
+            unix/configure \
+              --with-xml2-config=${pkgs.libxml2}/bin/xml2-config \
+              --with-xslt-config=${pkgs.libxslt}/bin/xslt-config
+
+            make JOBS=$NIX_BUILD_CORES
+            make dist
+
+            mkdir -p "$out/bin"
+            tar -xzf dist/ds9.*.tar.gz -C "$out/bin"
+            tar -xzf dist/xpa.*.tar.gz -C "$out/bin"
+
+            runHook postInstall
+          '';
+
+          # ds9's own build appends a zip archive of Tcl/Tk/ds9 library
+          # scripts directly onto the linked executable (`cat ds9base
+          # ds9.zip > ds9; zip -A ds9`) so Tcl9's zipfs support can mount
+          # it as the script library at startup. Nix's usual fixup passes
+          # (stripping, patchelf rpath-shrinking) rewrite the ELF and would
+          # truncate that appended payload, so both are disabled.
+          dontStrip = true;
+          dontPatchELF = true;
+
+          # ds9 never registers over XPA unless xpans (built alongside it
+          # into the same bin/) is already on PATH when it starts. This
+          # can't use makeWrapper's wrapProgram: it execs with `-a "$0"`
+          # to preserve argv0, but Tcl9's zipfs support finds its own
+          # appended library archive via argv0/the executable's own path,
+          # so overriding argv0 away from the real binary breaks that. A
+          # plain exec (argv0 = the real binary) keeps zipfs working.
+          #
+          # The renamed-aside binary must be named "ds9.<anything>", not
+          # ".ds9-something": ds9/library/ds9.tcl sets its own app name
+          # (used for the XPA access point, window title, prefs dir, SAMP
+          # name, ...) via
+          #   [file rootname [file tail [info nameofexecutable]]]
+          # and Tcl's `file rootname` treats a *leading* dot as the start
+          # of the extension, not a hidden-file marker, so ".ds9-wrapped"
+          # rootnames to "" — an empty XPA access-point name, which fails
+          # to register silently. "ds9.real" rootnames back to "ds9".
+          postFixup = ''
+            mv "$out/bin/ds9" "$out/bin/ds9.real"
+            {
+              echo '#!/bin/sh'
+              echo "export PATH=\"$out/bin:\$PATH\""
+              echo "exec \"$out/bin/ds9.real\" \"\$@\""
+            } > "$out/bin/ds9"
+            chmod +x "$out/bin/ds9"
+          '';
+
+          # Old vendored C89/C90/gnu99 sources; hardening flags like PIE
+          # and fortify were never part of this build and aren't worth
+          # fighting for a first working package.
+          hardeningDisable = [ "all" ];
+
+          # Every sub-package here is built --disable-shared, and the
+          # top-level Makefile is `.NOTPARALLEL` between subprojects (each
+          # subproject still uses -j $(JOBS) internally), so there's no
+          # benefit to Nix's own output-level parallelism.
+          enableParallelBuilding = false;
+
+          meta = {
+            description = "SAOImageDS9 astronomical imaging and data visualization application";
+            homepage = "https://ds9.si.edu/";
+            license = lib.licenses.gpl3Plus;
+            platforms = lib.platforms.linux;
+            mainProgram = "ds9";
+          };
+        };
+      in
+      {
+        packages.default = ds9;
+        packages.ds9 = ds9;
+
+        apps.default = flake-utils.lib.mkApp { drv = ds9; };
+
+        # For hacking on ds9/tksao by hand with the CLAUDE.md workflow
+        # (`make ds9clean ds9`, `make tksaoclean tksao ds9clean ds9`, ...)
+        # rather than building the packaged derivation above.
+        devShells.default = pkgs.mkShell {
+          inputsFrom = [ ds9 ];
+          nativeBuildInputs = ds9.nativeBuildInputs;
+          buildInputs = ds9.buildInputs;
+        };
+      });
+}

@@ -23,7 +23,7 @@ proc Backup {fn} {
     if {![BackupPreamble $fn ch dir]} {
 	return
     }
-    
+
     # EditText Dialogs
     EditTextUpdateVar
 
@@ -60,9 +60,9 @@ proc Backup {fn} {
 proc BackupPreamble {fn chname dirname} {
     upvar $chname ch
     upvar $dirname dir
-    
+
     global ds9
-    
+
     # script, always overwrite if present
     if {[catch {set ch [open $fn w]}]} {
 	Error [msgcat::mc {An error has occurred during backup}]
@@ -91,13 +91,13 @@ proc BackupPreamble {fn chname dirname} {
     puts $ch "\# current ds9 version matches the prefs version"
     puts $ch "switch -- \[string compare \$vv \[lindex \$ds9(version)\ 0\]\] {"
     puts $ch "  -1 {"
-    puts $ch "    if {\[tk_messageBox -type yesno -icon question -message \[msgcat::mc {DS9 has detected an older backup file, do you wish to continue?}\]\] == {no}} {"
+    puts $ch "    if {\[tk_messageBox -type yesno -icon question -message \[msgcat::mc {The backup file was created with an older version of DS9 and may not restore properly. Do you wish to continue anyway?}\]\] == {no}} {"
     puts $ch "      return"
     puts $ch "    }"
     puts $ch "  }"
     puts $ch "  0 {}"
     puts $ch "  1 {"
-    puts $ch "    tk_messageBox -type ok -icon warning -message \[msgcat::mc {DS9 has detected a newer version of a backup file and therefore will not process this file.}\]"
+    puts $ch "    tk_messageBox -type ok -icon warning -message \[msgcat::mc {The backup file was created with a newer version of DS9 and cannot be restored.}\]"
     puts $ch "    return"
     puts $ch "  }"
     puts $ch "}"
@@ -197,8 +197,8 @@ proc Restore {fn} {
     global prefs
     set rr $prefs(version)
 
-    # ok, this is a major kludge to fix a major booboo. 
-    # Beta versions generated backup save sets with vv set to 
+    # ok, this is a major kludge to fix a major booboo.
+    # Beta versions generated backup save sets with vv set to
     # something like '7.4b7'. We need to remove the 'b7' part.
     set src {}
     if {![catch {set ch [open "$ffn" r]}]} {
@@ -417,7 +417,7 @@ proc BackupFrameLoadMultiColor {ch which fdir rdir} {
 
 proc BackupFrameLoad {ch which fdir rdir channel} {
     set base $which$channel
-    
+
     set varname $base
     global $varname
     BackupFrameLoadParam $varname $ch $which $fdir $rdir $channel
@@ -450,7 +450,7 @@ proc BackupFrameLoadParam {varname ch which fdir rdir channel} {
     if {![info exists $varname]} {
 	return
     }
-    
+
     array set param [array get $varname]
 
     set type [$which get type]
@@ -535,7 +535,7 @@ proc BackupFrameLoadParam {varname ch which fdir rdir channel} {
 	    puts $ch "$which mask range $param(mask,low) $param(mask,high)"
 	}
     }
-    
+
     switch $param(load,type) {
 	photo {
 	    puts $ch "set loadParam(var,name) \$bcktmp"
@@ -669,7 +669,7 @@ proc BackupFrameLoadAlloc {which varname fdir rdir} {
     set param(load,type) mmapincr
     set param(file,type) fits
     # use $fn as we are not saving multiple extentions if present
-    set param(file,name) "[file join $rdir $fn]"		
+    set param(file,name) "[file join $rdir $fn]"
 }
 
 proc BackupGUI {ch} {
@@ -1017,4 +1017,4 @@ proc ProcessRestoreCmd {varname iname} {
     incr i [expr $restore::yycnt-1]
 }
 
-    
+

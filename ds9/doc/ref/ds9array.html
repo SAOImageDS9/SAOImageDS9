@@ -1,0 +1,279 @@
+<!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<title>The ds9 Array (Developer Reference)</title>
+</head>
+<body link="#0000FF" vlink="#551A8B" alink="#FF0000">
+<h3><img alt="" src="../sun.png" align="middle"> The ds9 Array (Developer Reference)</h3>
+<blockquote>
+<p>DS9's Tcl library (<tt>ds9/library/*.tcl</tt>) keeps most of the application's live state in one global array, <tt>ds9</tt>. A script running via the <a href="command.html#tcl">-tcl</a> command line option, a <tt>~/.ds9.ini</tt> (or <tt>~/ds9.ini</tt>) startup file, or the <tt>tcl</tt> <a href="xpa.html">XPA</a> access point runs in the global namespace and can read (and, for the elements marked below, usefully write) this array directly, e.g.:</p>
+<tt>global ds9<br>
+puts "there are [llength $ds9(frames)] frames, current display mode is $ds9(display)"</tt>
+<p>This page documents every element of <tt>ds9</tt> as of this checkout, derived from its initialization in <tt>ds9/library/ds9.tcl</tt> and its use across the rest of the library. Elements are grouped by what they track rather than listed alphabetically. See also <a href="currentarray.html">The current Array</a>, a smaller companion array tracking which frame/channel/mode is presently selected.</p>
+<p><b>A note on <tt>pds9</tt>:</b> user-facing preferences (background color, fonts, precision digits, confirm dialogs, SAMP/XPA startup, themes, and so on) live in a <i>separate</i> global array, <tt>pds9</tt>, which is what gets written to and read back from the preferences file. <tt>pds9</tt> is out of scope for this page. A handful of legacy element names that look like <tt>ds9(bg)</tt>, <tt>ds9(nan)</tt>, <tt>ds9(confirm)</tt>, <tt>ds9(dialog)</tt>, <tt>ds9(language)</tt>, <tt>ds9(font)</tt>, <tt>ds9(font,size)</tt>, <tt>ds9(font,style)</tt>, <tt>ds9(samp)</tt>/<tt>ds9(samp,auto)</tt>, <tt>ds9(xpa)</tt>, <tt>ds9(automarker)</tt>, <tt>ds9(backup)</tt>, <tt>ds9(display,user)</tt>, and <tt>ds9(analysis,user)</tt>/<tt>user2</tt>/<tt>user3</tt>/<tt>user4</tt> only ever exist transiently, while restoring a backup/session file saved by a very old DS9 version; <tt>FixVar</tt>/<tt>FixVarRm</tt> in <tt>ds9/library/prefs.tcl</tt> immediately migrate them into <tt>pds9</tt> (or <tt>current</tt>/<tt>panalysis</tt>) and delete them. They are not part of the live <tt>ds9</tt> array and are omitted below.</p>
+
+<h4><a name="identity" id="identity"></a>Application identity, version, and startup</h4>
+<dl>
+<dt><tt>ds9(app)</tt></dt>
+<dd>String. The running executable's base name (normally <tt>ds9</tt>), derived from <tt>argv0</tt>. Also used to build the <tt>~/.ds9.ini</tt> init-file name and the preferences file name. Read-only.</dd>
+
+<dt><tt>ds9(version)</tt></dt>
+<dd>String, e.g. <tt>8.8</tt>. The major.minor release version. Read-only.</dd>
+
+<dt><tt>ds9(version,display)</tt></dt>
+<dd>String, e.g. <tt>8.8b2</tt>. The full version string shown in the About box and title bar; may include a beta suffix. Read-only.</dd>
+
+<dt><tt>ds9(wm)</tt></dt>
+<dd>String: <tt>x11</tt>, <tt>aqua</tt>, or <tt>win32</tt> &mdash; the result of <tt>tk windowingsystem</tt>. Used throughout the library to branch on platform. Read-only.</dd>
+
+<dt><tt>ds9(root)</tt></dt>
+<dd>String, a directory path. The DS9 installation root, used to locate bundled resources such as icons (see <tt>ds9(icons,*)</tt> below). Read-only.</dd>
+
+<dt><tt>ds9(top)</tt></dt>
+<dd>Widget path, always <tt>.</tt>. The main top-level window. Read-only.</dd>
+
+<dt><tt>ds9(main)</tt></dt>
+<dd>Widget path. The main <tt>ttk::frame</tt> that fills the top-level window and contains every other widget. Internal; read-only.</dd>
+
+<dt><tt>ds9(mb)</tt></dt>
+<dd>Widget path, always <tt>.mb</tt>. The menu bar's window path. Internal; read-only.</dd>
+
+<dt><tt>ds9(visual)</tt></dt>
+<dd>String, e.g. <tt>truecolor</tt>. The X/Tk visual class in use, from <tt>winfo visual</tt>. Read-only.</dd>
+
+<dt><tt>ds9(depth)</tt></dt>
+<dd>Integer, e.g. <tt>24</tt>. The display color depth in bits, from <tt>winfo depth</tt> (normalized to 16/24 on odd depths like 15/32). Read-only.</dd>
+
+<dt><tt>ds9(scaling)</tt></dt>
+<dd>Real number, e.g. <tt>1.0</tt>. The Tk display-scaling factor used for HiDPI adjustment (computed specially per platform because <tt>tk scaling</tt> alone isn't trustworthy). Read-only.</dd>
+
+<dt><tt>ds9(threads)</tt></dt>
+<dd>Integer. The default number of render threads, initialized from the detected core count (<tt>GetNumCores</tt>); can be overridden per-frame with the <a href="framecmd.html#threads">frame <tt>threads</tt></a> command. Safe to read; not normally written after startup.</dd>
+
+<dt><tt>ds9(FTY_MAXAXES)</tt></dt>
+<dd>Integer constant, <tt>9</tt>. The maximum number of FITS axes DS9's IRAF/funtools (fty) support code will handle. Read-only.</dd>
+
+<dt><tt>ds9(prefs)</tt></dt>
+<dd>Boolean (0/1), default <tt>1</tt>. Whether the preferences file was loaded/should be honored this session; can be turned off via a command line option. Effectively read-only after startup.</dd>
+
+<dt><tt>ds9(init)</tt></dt>
+<dd>Boolean (0/1). <tt>1</tt> only while DS9 is still starting up (before the main window is fully built); used to defer handling of early macOS Open/Print document events. Not useful to a script running after startup, since it will always read <tt>0</tt> by then. Read-only.</dd>
+
+<dt><tt>ds9(themes)</tt></dt>
+<dd>List of strings. The available ttk theme names (x11/win32 only), with <tt>alt</tt> and <tt>classic</tt> filtered out. Read-only; see <tt>pds9(theme)</tt> to change the active theme.</dd>
+</dl>
+
+<h4><a name="fonts" id="fonts"></a>Fonts</h4>
+<dl>
+<dt><tt>ds9(helvetica)</tt></dt>
+<dd>String, a font family name. The sans-serif UI font family for this platform (with platform-specific fallbacks, e.g. <tt>.AppleSystemUIFont</tt> on macOS). Read-only; see <tt>pds9(font)</tt>/<tt>pds9(font,size)</tt>/<tt>pds9(font,style)</tt> to change the active UI font.</dd>
+
+<dt><tt>ds9(courier)</tt></dt>
+<dd>String, always <tt>courier</tt>. The monospace UI font family. Read-only.</dd>
+
+<dt><tt>ds9(times)</tt></dt>
+<dd>String, a font family name (<tt>serif</tt> on X11, <tt>times</tt> elsewhere). The serif UI font family. Read-only.</dd>
+</dl>
+
+<h4><a name="frames" id="frames"></a>Frames and display mode</h4>
+<dl>
+<dt><tt>ds9(frames)</tt></dt>
+<dd>List of frame command names, e.g. <tt>{Frame1 Frame2}</tt>. Every frame currently in existence, in creation order. Read-only &mdash; create/delete frames via the normal frame-management commands, not by editing this list.</dd>
+
+<dt><tt>ds9(active)</tt></dt>
+<dd>List of frame command names. The frames considered "active" for the current display/lock mode (e.g. the frames a blink or tile-lock cycles through); order matters. Read-only.</dd>
+
+<dt><tt>ds9(seq)</tt></dt>
+<dd>Integer counter, starts at <tt>1</tt>. The next sequence number to use when auto-naming a new frame (<tt>Frame&lt;seq&gt;</tt>); incremented on each new frame. Read-only in practice.</dd>
+
+<dt><tt>ds9(last)</tt></dt>
+<dd>Frame command name or <tt>{}</tt>. The previously-current frame, cached to short-circuit redundant "frame changed" work; scripts operating on <tt>current(frame)</tt> generally have no need to touch this. Internal; read-only.</dd>
+
+<dt><tt>ds9(lock)</tt></dt>
+<dd>Boolean (0/1). A general re-entrancy guard used while frame/crosshair/etc. lock updates are being propagated to other frames, to avoid recursive callbacks. Internal; do not set from a script.</dd>
+
+<dt><tt>ds9(display)</tt></dt>
+<dd>String: <tt>single</tt>, <tt>tile</tt>, <tt>blink</tt>, <tt>reveal</tt>, or <tt>fade</tt>. Mirrors <tt>current(display)</tt> &mdash; the frame display/layout mode. Read-only; change display mode via the normal <tt>current(display)</tt>-setting commands (e.g. the View/Frame menu equivalents) rather than writing this directly.</dd>
+
+<dt><tt>ds9(row)</tt></dt>
+<dd>Integer, <tt>-1</tt> when unset. The currently highlighted row in the FITS bin-table row-selection UI. Internal; read-only.</dd>
+
+<dt><tt>ds9(freeze)</tt></dt>
+<dd>Boolean (0/1). When set, suppresses frame-list/menu rebuilds that would otherwise happen while frames are being added or removed in bulk (e.g. during a mosaic load), as an optimization. Internal; do not set from a script.</dd>
+</dl>
+
+<h4><a name="mouse" id="mouse"></a>Mouse button and keyboard modifier state</h4>
+<dl>
+<dt><tt>ds9(b1)</tt>, <tt>ds9(b2)</tt>, <tt>ds9(b3)</tt></dt>
+<dd>Boolean (0/1) each. Whether mouse buttons 1/2/3 are currently held down over the main canvas. Read-only, maintained by button bindings.</dd>
+
+<dt><tt>ds9(sb1)</tt>, <tt>ds9(sb2)</tt>, <tt>ds9(sb3)</tt></dt>
+<dd>Boolean (0/1) each. Same, but for the current button state while holding Shift.</dd>
+
+<dt><tt>ds9(cb1)</tt>, <tt>ds9(cb2)</tt>, <tt>ds9(cb3)</tt></dt>
+<dd>Boolean (0/1) each. Same, but for the current button state while holding Control (or Command on macOS).</dd>
+
+<dt><tt>ds9(csb1)</tt>, <tt>ds9(csb2)</tt>, <tt>ds9(csb3)</tt></dt>
+<dd>Boolean (0/1) each. Same, but for the current button state while holding Control+Shift (or Command+Shift on macOS).</dd>
+
+<dt><tt>ds9(modifier)</tt></dt>
+<dd>Boolean (0/1). Whether a modifier key relevant to the current pointer mode is currently held. Internal; read-only.</dd>
+
+<dt><tt>ds9(ctrl)</tt></dt>
+<dd>String, either <tt>Control-</tt> or <tt>Command-</tt>. The platform-appropriate Tk event modifier prefix, used when building keyboard-shortcut event names (e.g. <tt>&lt;${ds9(ctrl)}o&gt;</tt>). Read-only.</dd>
+
+<dt><tt>ds9(shiftctrl)</tt></dt>
+<dd>String, either <tt>Shift-Control-</tt> or <tt>Shift-Command-</tt>. Same idea, for Shift+Control/Command shortcuts. Read-only.</dd>
+</dl>
+
+<h4><a name="msg" id="msg"></a>Status/error messages</h4>
+<dl>
+<dt><tt>ds9(msg)</tt></dt>
+<dd>String. The most recently posted status/error message text, shown by the message timer. Setting it directly is unusual; use the library's <tt>Error</tt>/message-posting procs instead.</dd>
+
+<dt><tt>ds9(msg,level)</tt></dt>
+<dd>String, default <tt>info</tt>. The severity of <tt>ds9(msg)</tt> (e.g. <tt>info</tt>, <tt>error</tt>), used to pick how it's displayed.</dd>
+
+<dt><tt>ds9(msg,src)</tt></dt>
+<dd>String, default <tt>tcl</tt>. Where the pending message originated from.</dd>
+
+<dt><tt>ds9(msg,timeout)</tt></dt>
+<dd>Integer milliseconds, default <tt>1000</tt>. How long the message timer waits between checks (an <tt>after</tt> interval), set up once at startup. Read-only after startup.</dd>
+</dl>
+
+<h4><a name="array" id="array"></a>Raw data array load defaults</h4>
+<p>These hold the last-used (and default) parameters for the raw-array loader (mirrors the <tt>-array</tt> command line option and the <a href="framecmd.html#load">frame <tt>load array</tt></a> command's implicit dimensions dialog); they are safe to set before invoking a raw array load to change its defaults.</p>
+<dl>
+<dt><tt>ds9(array,x)</tt>, <tt>ds9(array,y)</tt></dt>
+<dd>Integer, default <tt>512</tt> each. Default array width/height in pixels.</dd>
+
+<dt><tt>ds9(array,bitpix)</tt></dt>
+<dd>Integer, default <tt>-32</tt> (IEEE 32-bit float, FITS <tt>BITPIX</tt> convention). Default array pixel data type.</dd>
+
+<dt><tt>ds9(array,skip)</tt></dt>
+<dd>Integer, default <tt>0</tt>. Default number of leading bytes to skip (header size) before pixel data begins.</dd>
+
+<dt><tt>ds9(array,arch)</tt></dt>
+<dd>String, default <tt>bigendian</tt>. Default byte order of the raw array data.</dd>
+</dl>
+
+<h4><a name="menu" id="menu"></a>Menu layout</h4>
+<p>These record fixed indices into the Frame and Analysis menus so the library can insert/remove the dynamic per-frame and per-task menu entries at the right position. They depend on platform (menus start at index 0 on macOS, 1 elsewhere) and on the static menu items defined above them; not meaningful to change from a script.</p>
+<dl>
+<dt><tt>ds9(menu,start)</tt></dt>
+<dd>Integer, <tt>0</tt> (aqua) or <tt>1</tt> (x11/win32). Base menu index offset.</dd>
+
+<dt><tt>ds9(menu,size,frame,goto)</tt></dt>
+<dd>Integer. Menu index where the per-frame "goto" entries begin in the Frame menu.</dd>
+
+<dt><tt>ds9(menu,size,frame,active)</tt></dt>
+<dd>Integer. Menu index where the per-frame "active" checkbutton entries begin in the Frame menu.</dd>
+
+<dt><tt>ds9(menu,size,analysis)</tt></dt>
+<dd>Integer. Menu index where dynamically-loaded analysis-task entries begin in the Analysis menu.</dd>
+
+<dt><tt>ds9(menu,size,wrap)</tt></dt>
+<dd>Integer, <tt>20</tt>. How many dynamic entries are placed before wrapping into a new menu column/submenu.</dd>
+</dl>
+
+<h4><a name="ui" id="ui"></a>UI widget handles</h4>
+<p>These hold the Tk widget paths (and, for the icon directories, filesystem paths) of major pieces of the DS9 window, set once by the corresponding <tt>Create*</tt> procedure at startup. They're useful to read (e.g. to bind an event on <tt>$ds9(canvas)</tt>, or to size a dialog relative to <tt>$ds9(top)</tt>) but should not be reassigned.</p>
+<dl>
+<dt><tt>ds9(canvas)</tt></dt>
+<dd>Widget path. The main image display canvas &mdash; the Tk canvas that hosts every frame's canvas item, the panner, magnifier, colorbar, and markers. This is the single most useful handle for scripts doing custom canvas work, e.g. <tt>$ds9(canvas) itemcget $::current(frame) -width</tt> to get a frame's on-screen size.</dd>
+
+<dt><tt>ds9(canvas,bottom)</tt></dt>
+<dd>Widget path or <tt>{}</tt>. An optional frame packed below the canvas (layout-dependent).</dd>
+
+<dt><tt>ds9(image)</tt></dt>
+<dd>Widget path. The frame that directly contains the canvas.</dd>
+
+<dt><tt>ds9(header)</tt></dt>
+<dd>Widget path. The header bar frame (contains the info panel, panner, and magnifier).</dd>
+
+<dt><tt>ds9(header,sep)</tt></dt>
+<dd>Widget path. The separator below the header bar.</dd>
+
+<dt><tt>ds9(info)</tt></dt>
+<dd>Widget path. The info panel frame (coordinate/value readout).</dd>
+
+<dt><tt>ds9(info,row,image)</tt>, <tt>ds9(info,row,physical)</tt>, <tt>ds9(info,row,amplifier)</tt>, <tt>ds9(info,row,detector)</tt></dt>
+<dd>Integer grid row numbers within <tt>$ds9(info)</tt> for each coordinate-system readout line, recorded so rows can be shown/hidden as the user toggles which coordinate systems are displayed.</dd>
+
+<dt><tt>ds9(info,row,value)</tt>, <tt>ds9(info,row,value,1)</tt>, <tt>ds9(info,row,value,2)</tt>, <tt>ds9(info,row,value,3)</tt></dt>
+<dd>Integer grid row numbers within <tt>$ds9(info)</tt> for the pixel-value readout line(s) (single value, or up to three for RGB/multicolor frames).</dd>
+
+<dt><tt>ds9(magnifier)</tt></dt>
+<dd>Widget path. The magnifier panel frame.</dd>
+
+<dt><tt>ds9(magnifier,canvas)</tt></dt>
+<dd>Widget path. The magnifier's own small canvas widget.</dd>
+
+<dt><tt>ds9(magnifier,minus)</tt>, <tt>ds9(magnifier,plus)</tt></dt>
+<dd>Widget paths. The magnifier's zoom-out/zoom-in buttons.</dd>
+
+<dt><tt>ds9(panner)</tt></dt>
+<dd>Widget path. The panner panel frame.</dd>
+
+<dt><tt>ds9(panner,canvas)</tt></dt>
+<dd>Widget path. The panner's own small canvas widget.</dd>
+
+<dt><tt>ds9(panner,align)</tt></dt>
+<dd>Widget path. The panner's WCS-alignment toggle button.</dd>
+
+<dt><tt>ds9(panner,center)</tt></dt>
+<dd>Widget path. The panner's "recenter" button.</dd>
+
+<dt><tt>ds9(buttons)</tt></dt>
+<dd>Widget path. The main button-bar frame.</dd>
+
+<dt><tt>ds9(buttons,frame)</tt></dt>
+<dd>Widget path. The outer frame holding the button bar (shown/hidden as a unit).</dd>
+
+<dt><tt>ds9(buttons,aux)</tt></dt>
+<dd>Widget path. The auxiliary (analysis-task) button bar frame; per-task sub-frames are stored as <tt>ds9(buttons,aux,&lt;n&gt;)</tt>, not listed individually here.</dd>
+
+<dt><tt>ds9(buttons,sep)</tt></dt>
+<dd>Widget path. The separator above the button bar.</dd>
+
+<dt><tt>ds9(icons,top)</tt>, <tt>ds9(icons,bottom)</tt>, <tt>ds9(icons,left)</tt></dt>
+<dd>Widget paths. The icon toolbars docked at the top/bottom/left of the main window.</dd>
+
+<dt><tt>ds9(icons,top,sep)</tt>, <tt>ds9(icons,bottom,sep)</tt>, <tt>ds9(icons,left,sep)</tt></dt>
+<dd>Widget paths. The separators next to the corresponding icon toolbar.</dd>
+
+<dt><tt>ds9(icons,ui)</tt>, <tt>ds9(icons,lut)</tt>, <tt>ds9(icons,colors)</tt></dt>
+<dd>Filesystem directory paths (under <tt>$ds9(root)/icons/...</tt>) holding the toolbar-icon, colormap-preview, and named-color-swatch PNG files, respectively. Read-only.</dd>
+</dl>
+
+<h4><a name="tile" id="tile"></a>Tile drag-and-drop</h4>
+<dl>
+<dt><tt>ds9(tile,drag)</tt></dt>
+<dd>Frame command name or unset. The frame currently being dragged in tile-mode drag-and-drop reordering.</dd>
+
+<dt><tt>ds9(tile,drop)</tt></dt>
+<dd>Frame command name or <tt>{}</tt>. The frame currently under the drag as a drop target.</dd>
+
+<dt><tt>ds9(tile,drop,color)</tt></dt>
+<dd>String, a saved color name. The drop target's original highlite color, saved so it can be restored after the drop-target highlight is removed.</dd>
+</dl>
+
+<h4><a name="misc" id="misc"></a>Temporary files and OS document events</h4>
+<dl>
+<dt><tt>ds9(tmpdir)</tt></dt>
+<dd>Directory path, set by <tt>InitTempDir</tt> at startup. Where DS9 creates its own temporary files. Read-only.</dd>
+
+<dt><tt>ds9(cacert,temp)</tt></dt>
+<dd>File path or <tt>{}</tt>. A temporary extracted CA-certificate bundle path used for HTTPS connections, cleaned up on exit. Internal; read-only.</dd>
+
+<dt><tt>ds9(event,opendoc)</tt></dt>
+<dd>List, macOS only. Arguments from a macOS "open document" Apple Event received before startup finished, replayed once initialization completes. Internal; read-only.</dd>
+
+<dt><tt>ds9(event,printdoc)</tt></dt>
+<dd>List, macOS only. Same, for a "print document" Apple Event. Internal; read-only.</dd>
+</dl>
+
+</blockquote>
+</body>
+</html>

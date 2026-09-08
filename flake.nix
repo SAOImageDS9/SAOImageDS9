@@ -27,7 +27,7 @@
           # configure falls back to building their own vendored "minizip"
           # helper for zipfs support, whose make rule is broken under
           # parallel (-j) builds.
-          nativeBuildInputs = with pkgs; [ perl which pkg-config zip ];
+          nativeBuildInputs = with pkgs; [ perl which pkg-config zip makeWrapper ];
 
           # Everything downstream (Tk's Xft/fontconfig detection, ds9's and
           # tksao's libxml2 lookup, funtools' zlib) is a configure-time
@@ -115,29 +115,28 @@
 
           # ds9 never registers over XPA unless xpans (built alongside it
           # into the same bin/) is already on PATH when it starts. This
-          # can't use makeWrapper's wrapProgram: it execs with `-a "$0"`
-          # to preserve argv0, but Tcl9's zipfs support finds its own
-          # appended library archive via argv0/the executable's own path,
-          # so overriding argv0 away from the real binary breaks that. A
-          # plain exec (argv0 = the real binary) keeps zipfs working.
-          #
-          # The renamed-aside binary must be named "ds9.<anything>", not
-          # ".ds9-something": ds9/library/ds9.tcl sets its own app name
-          # (used for the XPA access point, window title, prefs dir, SAMP
-          # name, ...) via
-          #   [file rootname [file tail [info nameofexecutable]]]
-          # and Tcl's `file rootname` treats a *leading* dot as the start
-          # of the extension, not a hidden-file marker, so ".ds9-wrapped"
-          # rootnames to "" — an empty XPA access-point name, which fails
-          # to register silently. "ds9.real" rootnames back to "ds9".
+          # can't use makeWrapper's wrapProgram helper: wrapProgramShell
+          # (see nixpkgs' make-wrapper setup-hook) unconditionally passes
+          # --inherit-argv0 down to makeWrapper, generating `exec -a "$0"
+          # ...` to preserve argv0 — but Tcl9's zipfs support finds its
+          # own appended library archive via argv0/the executable's own
+          # path, so overriding argv0 away from the real binary breaks
+          # that. It also unconditionally renames the wrapped binary
+          # aside to ".ds9-wrapped", and Tcl's `file rootname` (which
+          # ds9/library/ds9.tcl uses to derive its own app name — see
+          # below) treats a *leading* dot as the start of the extension,
+          # not a hidden-file marker, rootnaming that to "" — an empty
+          # XPA access-point name, which fails to register silently.
+          # Neither problem is fixable through wrapProgram's own flags,
+          # since both behaviors are hardcoded into it rather than
+          # optional. So: do our own rename to "ds9.real" (which
+          # rootnames back to "ds9", unlike ".ds9-wrapped"), then call
+          # the lower-level makeWrapper directly, which — unlike
+          # wrapProgram — only adds -a when told to.
           postFixup = ''
             mv "$out/bin/ds9" "$out/bin/ds9.real"
-            {
-              echo '#!/bin/sh'
-              echo "export PATH=\"$out/bin:\$PATH\""
-              echo "exec \"$out/bin/ds9.real\" \"\$@\""
-            } > "$out/bin/ds9"
-            chmod +x "$out/bin/ds9"
+            makeWrapper "$out/bin/ds9.real" "$out/bin/ds9" \
+              --prefix PATH : "$out/bin"
           '';
 
           # Old vendored C89/C90/gnu99 sources; hardening flags like PIE

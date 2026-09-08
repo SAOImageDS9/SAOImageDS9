@@ -12,6 +12,49 @@
         pkgs = import nixpkgs { inherit system; };
         lib = pkgs.lib;
 
+        # The XPA CLI tools (xpaset, xpaget, xpaaccess, xpainfo, xpamb,
+        # xpans) are maintained upstream as their own project
+        # (SAOImageDS9/xpa-maintenance) and are functionally independent
+        # of ds9: they just speak the XPA wire protocol over a socket.
+        # ds9 separately embeds its own Tcl<->XPA glue (the xpacmdnew /
+        # xparec Tcl commands compiled into ds9.real) directly from this
+        # same vendored xpa/ source as part of its own build, using its
+        # own vendored Tcl — that's unaffected by this package and
+        # doesn't need to match it. xpa/configure.ac is also, unlike the
+        # top-level unix/configure.ac, a plain autoconf script with no
+        # TEA_INIT and no hardcoded prefix, so it Just Works as an
+        # ordinary standalone package.
+        xpa = pkgs.stdenv.mkDerivation {
+          pname = "xpa";
+          version = "2.2.1";
+
+          src = self;
+          dontUnpack = true;
+
+          nativeBuildInputs = with pkgs; [ which ];
+
+          # No Tcl and no X: SC_PATH_TCLCONFIG in xpa/configure.ac just
+          # skips its optional Tcl-extension build when neither is
+          # found, leaving the plain client/server C tools untouched.
+          configureFlags = [ "--with-x=no" "--disable-shared" "--enable-symbols" ];
+
+          preConfigure = ''
+            build="$TMPDIR/build"
+            mkdir -p "$build"
+            cp -r --preserve=mode,timestamps "$src"/xpa/. "$build"/
+            chmod -R u+w "$build"
+            cd "$build"
+            patchShebangs .
+          '';
+
+          meta = {
+            description = "XPA messaging system client/server tools, used by ds9 for external scripting";
+            homepage = "https://github.com/SAOImageDS9/xpa-maintenance";
+            license = lib.licenses.gpl2Plus;
+            platforms = lib.platforms.linux;
+          };
+        };
+
         ds9 = pkgs.stdenv.mkDerivation {
           pname = "ds9";
           version = "8.8b2";
@@ -60,12 +103,13 @@
           # directory that stops existing once the build finishes.
           #
           # The fix is `make dist` (the top Makefile's own packaging
-          # target): it tars up just `ds9*` and `xpa*` from bin/ into
-          # dist/, which is exactly ds9 + the XPA CLI tools, and already
-          # excludes tclsh9.0/wish9.0/sqlite3_analyzer — nothing else in
-          # ds9's own bin/ output is needed to run it. Since those two
-          # binaries are exactly what had the forbidden RPATH reference,
-          # dropping them clears the way to build outside $out entirely.
+          # target): it tars up just `ds9*` from bin/ into dist/, which
+          # excludes tclsh9.0/wish9.0/sqlite3_analyzer (and, now, the
+          # xpa* CLI tools — those come from the separate `xpa` package
+          # above instead) — nothing else in ds9's own bin/ output is
+          # needed to run it. tclsh9.0/wish9.0 were exactly what had the
+          # forbidden RPATH reference; dropping them clears the way to
+          # build outside $out entirely.
           dontUnpack = true;
           dontConfigure = true;
           dontBuild = true;
@@ -99,7 +143,6 @@
 
             mkdir -p "$out/bin"
             tar -xzf dist/ds9.*.tar.gz -C "$out/bin"
-            tar -xzf dist/xpa.*.tar.gz -C "$out/bin"
 
             runHook postInstall
           '';
@@ -113,9 +156,10 @@
           dontStrip = true;
           dontPatchELF = true;
 
-          # ds9 never registers over XPA unless xpans (built alongside it
-          # into the same bin/) is already on PATH when it starts. This
-          # can't use makeWrapper's wrapProgram helper: wrapProgramShell
+          # ds9 never registers over XPA unless xpans (now from the
+          # separate xpa package above, rather than built into this same
+          # bin/) is already on PATH when it starts. This can't use
+          # makeWrapper's wrapProgram helper: wrapProgramShell
           # (see nixpkgs' make-wrapper setup-hook) unconditionally passes
           # --inherit-argv0 down to makeWrapper, generating `exec -a "$0"
           # ...` to preserve argv0 — but Tcl9's zipfs support finds its
@@ -136,7 +180,7 @@
           postFixup = ''
             mv "$out/bin/ds9" "$out/bin/ds9.real"
             makeWrapper "$out/bin/ds9.real" "$out/bin/ds9" \
-              --prefix PATH : "$out/bin"
+              --prefix PATH : "${xpa}/bin"
           '';
 
           # Old vendored C89/C90/gnu99 sources; hardening flags like PIE
@@ -162,8 +206,10 @@
       {
         packages.default = ds9;
         packages.ds9 = ds9;
+        packages.xpa = xpa;
 
         apps.default = flake-utils.lib.mkApp { drv = ds9; };
+        apps.xpa = flake-utils.lib.mkApp { drv = xpa; exePath = "/bin/xpans"; };
 
         # For hacking on ds9/tksao by hand with the CLAUDE.md workflow
         # (`make ds9clean ds9`, `make tksaoclean tksao ds9clean ds9`, ...)

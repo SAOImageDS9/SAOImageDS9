@@ -549,8 +549,13 @@ proc samp.hub.event.unregister {msgid args} {
 	    id {
 		set id [lsearch $samp(clients) $val]
 		set samp(clients) [lreplace $samp(clients) $id $id]
-		unset samp($val,subscriptions)
-		unset samp($val,name)
+		# a hub may report a client (eg ourself) we never tracked
+		if {[info exists samp($val,subscriptions)]} {
+		    unset samp($val,subscriptions)
+		}
+		if {[info exists samp($val,name)]} {
+		    unset samp($val,name)
+		}
 	    }
 	}
     }

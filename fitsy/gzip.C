@@ -40,6 +40,14 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
   if (!ibuf || !icnt)
     return 0;
 
+  // tiles at the edge of an axis may be smaller than ZTILEn, in which
+  // case the compressor only operates on the actual pixel count, per
+  // the Tiled Image Compression Convention -- start/stop are already
+  // clipped to the real tile bounds by inflate()/inflateAdjust()
+  size_t npix = 1;
+  for (int ii=0; ii<FTY_MAXAXES; ii++)
+    npix *= (size_t)(stop[ii]-start[ii]);
+
   int ocnt = FitsCompressm<T>::tilesize_;
   char* obuf = new char[ocnt*sizeof(long long)];
   if (!obuf) {
@@ -104,7 +112,7 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
     return 0;
   }
 
-  int bytepix = zstrm.total_out/FitsCompressm<T>::tilesize_;
+  int bytepix = zstrm.total_out/npix;
 
   inflateEnd(&zstrm);
 
@@ -115,7 +123,7 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
       break;
     case 2:
       {
-	int ll = ocnt*sizeof(short);
+	size_t ll = npix*sizeof(short);
 	char* nbuf = new char[ll];
 	if (!nbuf) {
 	  internalError("Fitsy++ gzip unable to alloc.");
@@ -126,10 +134,10 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
 	char* optr = obuf+ll-1;
 	char* nptr = nbuf+ll-1;
 
-	for (int ii=0; ii<ocnt; ii++) {
+	for (size_t ii=0; ii<npix; ii++) {
 	  *nptr = *optr;
 	  nptr--;
-	  *nptr = *(optr-ocnt);
+	  *nptr = *(optr-npix);
 	  nptr--;
 
 	  optr--;
@@ -140,7 +148,7 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
       break;
     case 4:
       {
-	int ll = ocnt*sizeof(int);
+	size_t ll = npix*sizeof(int);
 	char* nbuf = new char[ll];
 	if (!nbuf) {
 	  internalError("Fitsy++ gzip unable to alloc.");
@@ -151,14 +159,14 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
 	char* optr = obuf+ll-1;
 	char* nptr = nbuf+ll-1;
 
-	for (int ii=0; ii<ocnt; ii++) {
+	for (size_t ii=0; ii<npix; ii++) {
 	  *nptr = *optr;
 	  nptr--;
-	  *nptr = *(optr-ocnt);
+	  *nptr = *(optr-npix);
 	  nptr--;
-	  *nptr = *(optr-(2*ocnt));
+	  *nptr = *(optr-(2*npix));
 	  nptr--;
-	  *nptr = *(optr-(3*ocnt));
+	  *nptr = *(optr-(3*npix));
 	  nptr--;
 
 	  optr--;
@@ -169,7 +177,7 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
       break;
     case 8:
       {
-	int ll = ocnt*sizeof(long long);
+	size_t ll = npix*sizeof(long long);
 	char* nbuf = new char[ll];
 	if (!nbuf) {
 	  internalError("Fitsy++ gzip unable to alloc.");
@@ -180,22 +188,22 @@ template <class T> int FitsGzipm<T>::compressed(T* dest, char* sptr,
 	char* optr = obuf+ll-1;
 	char* nptr = nbuf+ll-1;
 
-	for (int ii=0; ii<ocnt; ii++) {
+	for (size_t ii=0; ii<npix; ii++) {
 	  *nptr = *optr;
 	  nptr--;
-	  *nptr = *(optr-ocnt);
+	  *nptr = *(optr-npix);
 	  nptr--;
-	  *nptr = *(optr-(2*ocnt));
+	  *nptr = *(optr-(2*npix));
 	  nptr--;
-	  *nptr = *(optr-(3*ocnt));
+	  *nptr = *(optr-(3*npix));
 	  nptr--;
-	  *nptr = *(optr-(4*ocnt));
+	  *nptr = *(optr-(4*npix));
 	  nptr--;
-	  *nptr = *(optr-(5*ocnt));
+	  *nptr = *(optr-(5*npix));
 	  nptr--;
-	  *nptr = *(optr-(6*ocnt));
+	  *nptr = *(optr-(6*npix));
 	  nptr--;
-	  *nptr = *(optr-(7*ocnt));
+	  *nptr = *(optr-(7*npix));
 	  nptr--;
 
 	  optr--;

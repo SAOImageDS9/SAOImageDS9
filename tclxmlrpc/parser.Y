@@ -126,7 +126,7 @@ methodName : METHODNAME_ STRING _METHODNAME_
 {$$=xmlrpcstrcat("[list methodname ",$2,"]");}
 ;
 
-fault : FAULT_ value _FAULT_ {$$=xmlrpcstrcat("list fault ",$2,"]");}
+fault : FAULT_ value _FAULT_ {$$=xmlrpcstrcat("[list fault ",$2,"]");}
 ;
 
 params : PARAMS_ xparam _PARAMS_ {$$=xmlrpcstrcat("[list params [list ",$2,"]]");}
@@ -159,7 +159,10 @@ type : STRING {$$=xmlrpcstrcat("[list string {",xmlrpcunquote($1),"}]");}
 
 | ARRAY_ DATA_ values _DATA_ _ARRAY_ {$$=xmlrpcstrcat("[list array [list data [list ",$3,"]]]");}
 | ARRAY_ DATA_ _DATA_ _ARRAY_ {$$=xmlrpcstrcat("[list array [list data {}]]");}
+| ARRAY_ _DATA_ _ARRAY_ {$$=xmlrpcstrcat("[list array [list data {}]]");}
+| ARRAY_ _ARRAY_ {$$=xmlrpcstrcat("[list array [list data {}]]");}
 | _DATA_ _ARRAY_ {$$=xmlrpcstrcat("[list array [list data {}]]");}
+| _ARRAY_ {$$=xmlrpcstrcat("[list array [list data {}]]");}
 ;
 
 members : members member {$$=xmlrpcstrcat($1,$2);}

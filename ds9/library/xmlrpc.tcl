@@ -186,21 +186,25 @@ proc xmlrpcReadHeader {sock} {
 	    return {}
 	}
 	append buffer $buff
+	# a bare "\n\n" can legitimately occur inside the body itself (eg
+	# the blank line our own pretty-printer emits for a params-less
+	# methodCall), so we can't just prefer it over "\r\n\r\n" -- use
+	# whichever separator actually occurs earliest in the buffer
 	set nindex [string first "\n\n" $buffer]
+	set bindex [string first "\r\n\r\n" $buffer]
+	if {$bindex > 0 && ($nindex <= 0 || $bindex < $nindex)} {
+	    break
+	}
 	if {$nindex > 0} {
 	    break
 	}
-	set bindex [string first "\r\n\r\n" $buffer]
-	if {$bindex > 0} {
-	    break
-	}
     }
-    if {$nindex > 0} {
-	set header [string range $buffer 0 [expr $nindex - 1]]
-	set body [string range $buffer [expr $nindex + 2] end]
-    } elseif {$bindex > 0} {
+    if {$bindex > 0 && ($nindex <= 0 || $bindex < $nindex)} {
 	set header [string range $buffer 0 [expr $bindex - 1]]
 	set body [string range $buffer [expr $bindex + 4] end]
+    } elseif {$nindex > 0} {
+	set header [string range $buffer 0 [expr $nindex - 1]]
+	set body [string range $buffer [expr $nindex + 2] end]
     }
     return [list $header $body]
 }

@@ -48,33 +48,45 @@ off		   {return OFF_;}
 
 \<params\>         {return PARAMS_;}
 \<\/params\>       {return _PARAMS_;}
+\<params[ \t]*\/\> {return _PARAMS_;}
 
 \<param\>          {return PARAM_;}
 \<\/param\>        {return _PARAM_;}
+\<param[ \t]*\/\>  {return _PARAM_;}
 
 \<value\>          {return VALUE_;}
 \<\/value\>        {return _VALUE_;}
+\<value[ \t]*\/\>  {return _VALUE_;}
 
 \<integer\>        {return INTEGER_;}
 \<\/integer\>      {return _INTEGER_;}
+\<int\>            {return INTEGER_;}
+\<\/int\>          {return _INTEGER_;}
+\<i4\>             {return INTEGER_;}
+\<\/i4\>           {return _INTEGER_;}
 
 \<struct\>         {return STRUCT_;}
 \<\/struct\>       {return _STRUCT_;}
+\<struct[ \t]*\/\> {return _STRUCT_;}
 
 \<members\>        {return MEMBERS_;}
 \<\/members\>      {return _MEMBERS_;}
 
 \<member\>         {return MEMBER_;}
 \<\/member\>       {return _MEMBER_;}
+\<member[ \t]*\/\> {return _MEMBER_;}
 
 \<name\>           {return NAME_;}
 \<\/name\>         {return _NAME_;}
+\<name[ \t]*\/\>   {return _NAME_;}
 
 \<array\>          {return ARRAY_;}
 \<\/array\>        {return _ARRAY_;}
+\<array[ \t]*\/\>  {return _ARRAY_;}
 
 \<data\>           {return DATA_;}
 \<\/data\>         {return _DATA_;}
+\<data[ \t]*\/\>   {return _DATA_;}
 
 \<\?xml[^\?]*\?\>  {
                      int ll = strlen(yytext);
@@ -83,6 +95,13 @@ off		   {return OFF_;}
                      ptr[ll] = '\0';
                      xmlrpclval->str = ptr;
                      return HEADER;
+                   }
+
+\<string[ \t]*\/\> { // Empty String
+                     char* ptr = (char*)malloc(1);
+                     ptr[0] = '\0';
+                     xmlrpclval->str = ptr;
+                     return STRING;
                    }
 
 \<string\>[^\<]*\<\/string\> { // Quoted String 8+1+str+1+9

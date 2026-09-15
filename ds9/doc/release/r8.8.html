@@ -7,8 +7,7 @@
 <body>
 <h1 id="sun.pngsaoimageds9-version-8.8-release-notes"><img alt="" src="../sun.png" align="middle">SAOImageDS9
 Version 8.8 Release Notes</h1>
-<h2 id="beta-2">Beta 2</h2>
-<h3 id="highlights">Highlights</h3>
+<h2 id="highlights">Highlights</h2>
 <ul>
 <li><strong>Multicolor frames:</strong> Combine more than three images
 in one frame using an arbitrary number of color <code>layers</code>.
@@ -16,9 +15,9 @@ Each layer can have its own color, transparency, order, and blend
 mode.</li>
 <li><strong>Per-frame colorbars:</strong> Each frame now controls its
 own colorbar visibility, position, label placement,
-foreground/background colors, width, and other display settings.
-Colorbars can be placed on any side of the image, including the top or
-left.</li>
+foreground/background colors, width, and other display settings,
+including center position. Colorbars can be placed on any side of the
+image, including the top or left.</li>
 <li><strong>Bookmarks:</strong> Save and return to locations in an
 image, including the zoom, rotation, orientation, and data-cube
 slice.</li>
@@ -42,18 +41,55 @@ explicit intersection and union logic in composite regions and can show
 hatching to visualize the selected area. <strong>This changes previous
 behavior.</strong></li>
 <li><strong>Reveal frames:</strong> A new display mode that overlays two
-frames and wipes between them with a draggable slider, for comparing
-two images of the same field.</li>
+frames and wipes between them with a draggable slider, for comparing two
+images of the same field.</li>
+<li><strong>PDF export:</strong> Save DS9 images and plots directly as
+PDF.</li>
+<li><strong>HEALPix &amp; MOC support:</strong> Load partial HEALPix
+datasets, including Multi-Order Coverage (MOC) maps.</li>
+<li><strong>Movie scripting:</strong> Create movies from scripted DS9
+actions such as panning, zooming, region edits, and display
+changes.</li>
+<li><strong>Updated image and catalog services:</strong> The
+discontinued DSS-SAO server was removed; 2MASS, VLA, SKYVIEW, and
+catalog selections were refreshed.</li>
+<li><strong>Display improvements:</strong> Dark-mode-friendly Advanced
+View icons and additional dark themes.</li>
+<li><strong>Workflow fixes:</strong> Corrected several data-cube,
+event-file, compressed-FITS, image-export, and illustration issues.</li>
 <li><strong>Interface improvements:</strong> Adjustable panner and
 magnifier sizes, faster panning with <code>Shift+Arrow</code>, editable
 polygon vertices, new dash-list controls, and full-screen
 shortcuts.</li>
 <li><strong>Platform updates:</strong> XPA is enabled by default on
 Windows; macOS builds are universal binaries for macOS 12+; Linux is
-also available as a Flatpak.</li>
+also available as a Flatpak; DS9 moved to Tcl/Tk 9 with associated
+package and compatibility updates.</li>
+<li><strong>Developer documentation</strong>: The region
+<code>callback</code> command is now documented allowing users define
+actions to take when interacting with regions (select, move, edit,
+etc.). Additional developer docs detailing the <code>ds9</code> state
+array and the set of <code>Frame</code> commands used to interact with
+the display.</li>
 </ul>
-<h3 id="user-facing-details">User-facing details</h3>
-<h4 id="multicolor-frames-and-layers">Multicolor frames and layers</h4>
+<h2 id="bug-fixes-since-beta2">Bug fixes since Beta2</h2>
+<ul>
+<li>Bug when deleting a frame and then creating a new multi-color frame
+could cause colorbar contrast/bias to behave badly.</li>
+<li>Fixed crash if footprint server returns a single sided polygon.</li>
+<li>Fix problem reading FITS regions and WCS-TAB coordinates on
+Windows.</li>
+<li>Fix issue when using new reveal mode with more/less than exactly 2
+frames.</li>
+<li>Fix issue with using Virtual Observatory (processing empty
+responses)</li>
+<li>Fix vertical text positioning offset bug in PDF output</li>
+<li>Address several SAMP compatibility issues including self-closing
+tags and RFC 7230 CRLF compliance.</li>
+<li>Fix GZIP tile compression for partial/edge tiles</li>
+</ul>
+<h2 id="user-facing-details">User-facing details</h2>
+<h3 id="multicolor-frames-and-layers">Multicolor frames and layers</h3>
 <p><code>multicolor</code> is a new frame type for combining an
 arbitrary number of observations or filters, rather than being limited
 to RGB. Layers can be added, removed, reordered, shown, and configured
@@ -67,7 +103,7 @@ the layers below it.</p>
 <code>luminosity</code>.</p>
 <p>New <code>multicolor</code> and layer-related command-line, XPA, and
 SAMP controls are also available.</p>
-<h4 id="colorbars">Colorbars</h4>
+<h3 id="colorbars">Colorbars</h3>
 <p>Colorbars are now managed independently for each frame. New or
 expanded commands include:</p>
 <ul>
@@ -79,15 +115,21 @@ any side of the image.</li>
 labels appear.</li>
 <li><code>foreground</code> / <code>background</code> — set colorbar
 colors; use <code>Theme</code> to follow the current UI theme.</li>
+<li><code>center</code> — position the center from <code>0</code> to
+<code>1</code>; <code>0.5</code> is centered.</li>
+<li><code>width</code> — set the displayed width or height from
+<code>0</code> to <code>1</code>; <code>1</code> uses the full available
+extent.</li>
 </ul>
-<h4 id="bookmarks">Bookmarks</h4>
+<p>The CPT-CITY colormap repository URL was also updated.</p>
+<h3 id="bookmarks">Bookmarks</h3>
 <p>Press <code>m</code>, or use <code>Zoom</code> →
 <code>Bookmarks</code> → <code>Add</code>, to save the current view. A
 bookmark stores the image position, zoom, rotation, orientation, and the
 current slice in an N-dimensional data cube. Bookmarks are
 frame-specific, included in backups, and can also be controlled from the
 command line, XPA, and SAMP.</p>
-<h4 id="region-statistics-catalog">Region statistics catalog</h4>
+<h3 id="region-statistics-catalog">Region statistics catalog</h3>
 <p><code>Analysis</code> → <code>Make Catalog</code> measures all
 supported area regions in the current frame and opens a live table in
 the Catalog Tool.</p>
@@ -104,7 +146,7 @@ marker-free <code>Pan To</code>.</li>
 WCS coordinates.</li>
 <li>Initial and image-wide measurements use bounded multithreading.</li>
 </ul>
-<h4 id="reveal-frames">Reveal frames</h4>
+<h3 id="reveal-frames">Reveal frames</h3>
 <p><code>Frame</code> → <code>Reveal Frames</code> is a new display mode
 for comparing two images of the same field. Both frames are shown at
 full size, exactly overlapping, and a slider along the bottom of the
@@ -120,11 +162,11 @@ turned off with <code>Frame</code> → <code>Reveal Bar</code>.</p>
 <code>-reveal</code> on the command line, including
 <code>reveal split</code> to set the split position and
 <code>reveal bar</code> to toggle the demarcation line.</p>
-<h4 id="pixel-masks">Pixel masks</h4>
+<h3 id="pixel-masks">Pixel masks</h3>
 <p><code>save pixmask</code> writes a FITS image whose pixel values are
 region ID numbers. Pixels outside all regions, or excluded pixels, are
 written as <code>0</code>.</p>
-<h4 id="d-region-analysis">3D region analysis</h4>
+<h3 id="d-region-analysis">3D region analysis</h3>
 <p><strong>3D Surface</strong> converts pixels inside a selected region
 into a 3D data cube in a separate frame. The result updates
 automatically when the region, scaling, limits, or colormap changes.
@@ -135,7 +177,7 @@ voxel encountered along a ray. For comparison, <code>MIP</code> uses the
 maximum value along the ray and <code>AIP</code> uses the average. FIP
 can also use the new <code>3d shade</code> parameters for basic shading
 and lighting.</p>
-<h4 id="composite-regions">Composite regions</h4>
+<h3 id="composite-regions">Composite regions</h3>
 <p>DS9 now fully supports explicit CIAO region logic in ASCII and FITS
 region files.</p>
 <ul>
@@ -152,8 +194,40 @@ as unions; intersection composites use <code>&amp;&amp;</code>.</li>
 <li>The Composite Region window can display hatching to show the area
 selected by intersection or union logic.</li>
 </ul>
-<h4 id="navigation-regions-and-display">Navigation, regions, and
-display</h4>
+<h3 id="pdf-export">PDF export</h3>
+<ul>
+<li><code>Save Image</code> can save an image as PDF using
+<code>-saveimage pdf</code>.</li>
+<li>Plot export can create PDF files using
+<code>-plot export pdf</code>.</li>
+</ul>
+<p>Supporting PDF functionality was added to the plotting and packaging
+libraries.</p>
+<h3 id="healpix-and-fits">HEALPix and FITS</h3>
+<ul>
+<li>Partial HEALPix files and Multi-Order Coverage (MOC) maps are
+supported.</li>
+<li>Lossless GZIP-compressed floating-point FITS images, including files
+created by Astropy, are handled correctly. Submitted by <span
+class="citation" data-cites="timj">@timj</span></li>
+<li>Accessing specific cube-axis orderings such as <code>123</code>,
+<code>132</code>, and <code>213</code> was fixed.</li>
+</ul>
+<h3 id="movie-scripting-and-animation-output">Movie scripting and
+animation output</h3>
+<p>The movie <code>script</code> mode can turn a sequence of DS9
+instructions into a movie. Scripts can control operations such as pan,
+zoom, adding or deleting regions, and changing colormaps or scaling.</p>
+<ul>
+<li>Fixed a movie-script timing issue in which a 3D frame could be
+captured before rendering completed.</li>
+<li>MPEG output can now be created up to <code>4080x4080</code>, and a
+compression-limiting quantization issue was fixed.</li>
+<li>Fixed an intermittent skew in MPEG and animated-GIF rendering.</li>
+<li>GIF export now forces quantization to 255 colors.</li>
+</ul>
+<h3 id="navigation-regions-and-display">Navigation, regions, and
+display</h3>
 <ul>
 <li>In PAN mode, <code>Shift+Arrow</code> pans by one screen at a
 time.</li>
@@ -173,139 +247,6 @@ Default Length preference is also applied when editing regions.</li>
 <li>Plot axes no longer have an unwanted gap between the axes and the
 plotted data.</li>
 <li>Projection plot backup files now retain X-axis labels.</li>
-</ul>
-<h4 id="archives-catalogs-and-table-data">Archives, catalogs, and table
-data</h4>
-<ul>
-<li><code>Analysis</code> → <code>Archives</code>
-→<code>Search SIA Registry</code> queries a Virtual Observatory registry
-for SIA image services. The registry URL can be set in Preferences;
-command-line, XPA, and SAMP access is also available.</li>
-<li>CIAO-style TSV vector columns such as <code>sky(x,y)</code> are read
-as <code>sky_x</code> and <code>sky_y</code>. Array columns such as
-<code>R[2]</code> are expanded to <code>R_1</code> and <code>R_2</code>.
-Combined vector/array forms such as <code>sky(x,y)[2]</code> and
-<code>sky(x[2],y[2])</code> are not supported.</li>
-</ul>
-<h4 id="analysis-and-automation">Analysis and automation</h4>
-<ul>
-<li>In Advanced view, running an Analysis task displays a progress
-indicator at the lower right. Multiple simultaneous tasks show a task
-count, and tasks can be terminated from the task menu.</li>
-<li>SAMP <code>print</code> is enabled only when the destination is a
-file.</li>
-<li>SAMP <code>notes load</code> is disabled for security reasons.</li>
-</ul>
-<h4 id="movies-and-image-output">Movies and image output</h4>
-<ul>
-<li>Fixed a movie-script timing issue in which a 3D frame could be
-captured before rendering completed.</li>
-<li>MPEG output can now be created up to <code>4080x4080</code>, and a
-compression-limiting quantization issue was fixed.</li>
-<li>Fixed an intermittent skew in MPEG and animated-GIF rendering.</li>
-<li>GIF export now forces quantization to 255 colors.</li>
-</ul>
-<h4 id="platform-specific-changes">Platform-specific changes</h4>
-<ul>
-<li><strong>Windows:</strong> XPA is enabled by default. The Windows
-build now uses <code>-mconsole</code> to address standard input/output
-issues; support is ASCII-only.</li>
-<li><strong>macOS:</strong> Darwin/X11 and Aqua builds are universal
-binaries for macOS 12 and later, covering Intel (<code>x86_64</code>)
-and Apple silicon (<code>aarch64</code>). Magic Mouse and trackpad
-button mapping and click-drag behavior introduced in Beta 1 were
-fixed.</li>
-<li><strong>Linux:</strong> DS9 is available as a Flatpak. Tar packages
-also include <code>ds9.desktop</code>, <code>ds9.png</code>, and setup
-instructions in <code>ds9.readme.txt</code>.</li>
-</ul>
-<h3 id="internal-compatibility-and-maintenance-notes">Internal,
-compatibility, and maintenance notes</h3>
-<ul>
-<li>SAMP web HTTP headers were updated for newer browser security
-requirements.</li>
-<li>DS9 checks for a valid WCS before requesting WCS parameters from the
-AST library.</li>
-<li>XPA was forked and given a new version number without other source
-changes.</li>
-<li>XPA now exposes <code>nsconnect</code> to Tcl/Tk and checks whether
-<code>xpans</code> started successfully; menu state and connection
-errors now reflect failures correctly.</li>
-<li>PDF code introduced in Beta 1 was refactored.</li>
-<li>Documentation was updated for the new Beta 2 commands.</li>
-<li>OpenSSL certificate handling now prefers system certificates and
-falls back to a temporary file only when needed.</li>
-</ul>
-<hr />
-<h2 id="beta-1">Beta 1</h2>
-<h3 id="highlights-1">Highlights</h3>
-<ul>
-<li><strong>PDF export:</strong> Save DS9 images and plots directly as
-PDF.</li>
-<li><strong>HEALPix &amp; MOC support:</strong> Load partial HEALPix
-datasets, including Multi-Order Coverage (MOC) maps.</li>
-<li><strong>Movie scripting:</strong> Create movies from scripted DS9
-actions such as panning, zooming, region edits, and display
-changes.</li>
-<li><strong>Colorbar controls:</strong> Adjust colorbar width and center
-position.</li>
-<li><strong>Updated image and catalog services:</strong> The
-discontinued DSS-SAO server was removed; 2MASS, VLA, SKYVIEW, and
-catalog selections were refreshed.</li>
-<li><strong>Display improvements:</strong> Dark-mode-friendly Advanced
-View icons and additional dark themes.</li>
-<li><strong>Workflow fixes:</strong> Corrected several data-cube,
-event-file, compressed-FITS, image-export, and illustration issues.</li>
-<li><strong>Major platform update:</strong> DS9 moved to Tcl/Tk 9 with
-associated package and compatibility updates.</li>
-</ul>
-<h3 id="user-facing-details-1">User-facing details</h3>
-<h4 id="pdf-export">PDF export</h4>
-<ul>
-<li><code>Save Image</code> can save an image as PDF using
-<code>-saveimage pdf</code>.</li>
-<li>Plot export can create PDF files using
-<code>-plot export pdf</code>.</li>
-</ul>
-<p>Supporting PDF functionality was added to the plotting and packaging
-libraries.</p>
-<h4 id="healpix-and-fits">HEALPix and FITS</h4>
-<ul>
-<li>Partial HEALPix files and Multi-Order Coverage (MOC) maps are
-supported.</li>
-<li>Lossless GZIP-compressed floating-point FITS images, including files
-created by Astropy, are handled correctly.</li>
-<li>Accessing specific cube-axis orderings such as <code>123</code>,
-<code>132</code>, and <code>213</code> was fixed.</li>
-</ul>
-<h4 id="movie-scripting">Movie scripting</h4>
-<p>The new movie <code>script</code> mode can turn a sequence of DS9
-instructions into a movie. Scripts can control operations such as pan,
-zoom, adding or deleting regions, and changing colormaps or scaling.</p>
-<h4 id="colorbars-1">Colorbars</h4>
-<p>Colorbars can now be repositioned using:</p>
-<ul>
-<li><code>-center</code> — position the center from <code>0</code> to
-<code>1</code>; <code>0.5</code> is centered.</li>
-<li><code>-width</code> — set the displayed width or height from
-<code>0</code> to <code>1</code>; <code>1</code> uses the full available
-extent.</li>
-</ul>
-<p>The CPT-CITY colormap repository URL was also updated.</p>
-<h4 id="archives-surveys-and-catalogs">Archives, surveys, and
-catalogs</h4>
-<ul>
-<li>The DSS-SAO image server is no longer maintained and has been
-removed; <code>dsssao</code> now returns an error.</li>
-<li>VLA and 2MASS access was updated to newer interfaces.</li>
-<li>SKYVIEW’s survey list was refreshed.</li>
-<li>Easy-access catalog selections were updated to remove obsolete
-entries and include newer surveys.</li>
-<li>The CXC footprint service URL was updated, with VOTable handling
-extended to support both <code>POST</code> and <code>GET</code>.</li>
-</ul>
-<h4 id="display-and-interaction">Display and interaction</h4>
-<ul>
 <li>Advanced View has dark-mode-friendly icons.</li>
 <li>Updated themes add dark-mode options.</li>
 <li>Rotated ellipses and boxes are supported in Illustrate mode.</li>
@@ -319,9 +260,36 @@ current frame has no data.</li>
 <li>Graph parsing now requires an explicit <code>horizontal</code> or
 <code>vertical</code> option.</li>
 </ul>
-<h4 id="data-analysis-and-file-handling">Data analysis and file
-handling</h4>
+<h3 id="archives-catalogs-and-table-data">Archives, catalogs, and table
+data</h3>
 <ul>
+<li><code>Analysis</code> → <code>Archives</code> →
+<code>Search SIA Registry</code> queries a Virtual Observatory registry
+for SIA image services. The registry URL can be set in Preferences;
+command-line, XPA, and SAMP access is also available.</li>
+<li>CIAO-style TSV vector columns such as <code>sky(x,y)</code> are read
+as <code>sky_x</code> and <code>sky_y</code>. Array columns such as
+<code>R[2]</code> are expanded to <code>R_1</code> and <code>R_2</code>.
+Combined vector/array forms such as <code>sky(x,y)[2]</code> and
+<code>sky(x[2],y[2])</code> are not supported.</li>
+<li>The DSS-SAO image server is no longer maintained and has been
+removed; <code>dsssao</code> now returns an error.</li>
+<li>VLA and 2MASS access was updated to newer interfaces.</li>
+<li>SKYVIEW’s survey list was refreshed.</li>
+<li>Easy-access catalog selections were updated to remove obsolete
+entries and include newer surveys.</li>
+<li>The CXC footprint service URL was updated, with VOTable handling
+extended to support both <code>POST</code> and <code>GET</code>.</li>
+</ul>
+<h3 id="analysis-automation-and-file-handling">Analysis, automation, and
+file handling</h3>
+<ul>
+<li>In Advanced view, running an Analysis task displays a progress
+indicator at the lower right. Multiple simultaneous tasks show a task
+count, and tasks can be terminated from the task menu.</li>
+<li>SAMP <code>print</code> is enabled only when the destination is a
+file.</li>
+<li>SAMP <code>notes load</code> is disabled for security reasons.</li>
 <li>Event-file examination now bins data correctly at
 <code>1.0 / zoom level</code>.</li>
 <li>TIFF/JPEG export through commands such as
@@ -333,17 +301,52 @@ connection.</li>
 <li>Documentation was added for the interactive region-file
 <code>callback</code> option.</li>
 </ul>
-<h3 id="internal-packaging-and-dependency-notes">Internal, packaging,
-and dependency notes</h3>
+<h3 id="platform-specific-changes">Platform-specific changes</h3>
+<ul>
+<li><strong>Windows:</strong>
+<ul>
+<li>XPA is enabled by default. The Windows build now uses
+<code>-mconsole</code> to address standard input/output issues; support
+is ASCII-only.</li>
+<li>Packaging moved to the Inno Setup installer.</li>
+<li>DS9 now uses the Windows standard <code>APPDATA</code> folder to
+store user preferences. Windows users with preferences set will need to
+manually update them in 8.8.</li>
+</ul></li>
+<li><strong>macOS:</strong> Darwin/X11 and Aqua builds are universal
+binaries for macOS 12 and later, covering Intel (<code>x86_64</code>)
+and Apple silicon (<code>aarch64</code>).</li>
+<li><strong>Linux:</strong> DS9 is available as a Flatpak. Tar packages
+also include <code>ds9.desktop</code>, <code>ds9.png</code>, and setup
+instructions in <code>ds9.readme.txt</code>.</li>
+</ul>
+<h2 id="internal-compatibility-and-maintenance-notes">Internal,
+compatibility, and maintenance notes</h2>
 <ul>
 <li>Tcl/Tk was updated to <code>9.0.3</code>, requiring compatibility
 work across DS9 and several bundled components.</li>
+<li>Tcl/Tk 9 compatibility work covered binary-data handling, rendering,
+event loops, macOS double buffering, networking, and other runtime
+details across DS9, TCLXML, TKBLT, TKCON, TKHTML, TKSAO, TKSVG, and
+XPA.</li>
 <li>OpenSSL was updated to <code>3.6.2</code>, TLS to <code>2.0</code>,
 and <code>certifi</code> <code>2026.04.22</code> was added for
 certificate handling.</li>
 <li>HTTP support was updated for TLS 2.0 and for
 <code>Content-Disposition</code> filenames.</li>
-<li>Windows packaging moved to the Inno Setup installer.</li>
+<li>OpenSSL certificate handling now prefers system certificates and
+falls back to a temporary file only when needed.</li>
+<li>SAMP web HTTP headers were updated for newer browser security
+requirements.</li>
+<li>DS9 checks for a valid WCS before requesting WCS parameters from the
+AST library.</li>
+<li>XPA was forked and given a new version number without other source
+changes.</li>
+<li>XPA now exposes <code>nsconnect</code> to Tcl/Tk and checks whether
+<code>xpans</code> started successfully; menu state and connection
+errors now reflect failures correctly.</li>
+<li>PDF code was refactored; PDF support includes PDF4TCL
+<code>0.9.4</code> and TKBLT changes needed for PDF plots.</li>
 <li>Build files were adjusted to use the locally built
 <code>tclsh</code>.</li>
 <li>DS9, TKSAO, and TCLXML can use <code>pkg-config</code> when older
@@ -353,13 +356,16 @@ XML configuration helpers are unavailable.</li>
 <code>10.4.0</code>, and TTKTHEMES <code>3.3.0</code>.</li>
 <li><code>Manifest.md</code> was added to record package versions and
 upstream sources.</li>
-<li>GitHub Actions support was added.</li>
-<li>PDF support includes PDF4TCL <code>0.9.4</code> and TKBLT changes
-needed for PDF plots.</li>
-<li>Tcl/Tk 9 compatibility work covered binary-data handling, rendering,
-event loops, macOS double buffering, networking, and other runtime
-details across DS9, TCLXML, TKBLT, TKCON, TKHTML, TKSAO, TKSVG, and
-XPA.</li>
+<li>GitHub Actions support was added. Submitted by <span
+class="citation" data-cites="DougBurke">@DougBurke</span></li>
+<li>Documentation was updated for the new commands.</li>
+<li>The region <code>callback</code> command has been added to the
+region documentation.</li>
+<li>Three new developer docs have been added: <code>ds9arr.html</code>,
+<code>currentarray.html</code>, and <code>framecmd.html</code> providing
+developers details on the internal interface most commonly used when
+writing region callbacks and/or <code>ds9.ini</code> initialization
+scripts.</li>
 </ul>
 
 </body>

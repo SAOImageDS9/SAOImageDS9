@@ -58,7 +58,7 @@ saods9	: dirs tcl tk \
 	vector \
 	tclsignal \
 	tls tclxml tclxmlrpc \
-	tkblt tktable tkimg fitsy tclfitsy \
+	tkblt tktable tkimg fitsy tclasdf tclfitsy \
 	tkmpeg tkagif tkhtml1 tkcon \
 	tkmacosx \
 	tkdnd tksao ds9

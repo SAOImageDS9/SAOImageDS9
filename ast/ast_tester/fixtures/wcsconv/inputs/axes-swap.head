@@ -1,0 +1,24 @@
+NAXIS1  =                  100 / Dec axis (swapped)
+NAXIS2  =                   50 / Spectral axis
+NAXIS3  =                  100 / RA axis (swapped)
+NAXIS4  =                    1 / Stokes axis
+CTYPE1  = 'DEC--TAN'           / Celestial latitude at pixel axis 1
+CTYPE2  = 'WAVE    '           / Wavelength at pixel axis 2
+CTYPE3  = 'RA---TAN'           / Celestial longitude at pixel axis 3
+CTYPE4  = 'STOKES  '           / Stokes parameter at pixel axis 4
+CRVAL1  =               22.014 / Reference Dec (deg)
+CRVAL2  =            5.000E-07 / Reference wavelength (m)
+CRVAL3  =               83.633 / Reference RA (deg)
+CRVAL4  =                  1.0 / Stokes I
+CRPIX1  =               50.500 / Reference pixel
+CRPIX2  =               25.500 / Reference pixel
+CRPIX3  =               50.500 / Reference pixel
+CRPIX4  =                  1.0 / Reference pixel
+CDELT1  =            0.0002778 / Degrees/pixel
+CDELT2  =            1.000E-10 / Wavelength increment (m)
+CDELT3  =           -0.0002778 / Degrees/pixel
+CDELT4  =                  1.0 / Stokes increment
+CUNIT2  = 'm       '           / Wavelength units
+RADESYS = 'FK5     '           / Reference frame
+EQUINOX =               2000.0 / Equinox
+END

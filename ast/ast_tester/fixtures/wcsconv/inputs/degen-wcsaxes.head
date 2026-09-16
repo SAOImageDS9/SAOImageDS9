@@ -1,0 +1,21 @@
+SIMPLE  =                    T / Fits standard
+BITPIX  =                  -32 / Bits per pixel
+NAXIS   =                    1 / Number of pixel dimensions
+NAXIS1  =                 1024 / Spectral axis
+WCSAXES =                    3 / WCS has 3 axes but only 1 pixel axis
+CTYPE1  = 'WAVE    '           / Wavelength axis
+CTYPE2  = 'RA---TAN'           / Celestial longitude (degenerate)
+CTYPE3  = 'DEC--TAN'           / Celestial latitude (degenerate)
+CRVAL1  =            2.510E-06 / Reference wavelength (metres)
+CRVAL2  =              166.598 / Reference RA (deg)
+CRVAL3  =               -0.724 / Reference Dec (deg)
+CRPIX1  =                512.0 / Reference pixel
+CRPIX2  =                  0.0 / Degenerate axis
+CRPIX3  =                  0.0 / Degenerate axis
+CDELT1  =           -1.090E-09 / Wavelength increment (metres)
+CDELT2  =            3.347E-05 / Degrees/pixel
+CDELT3  =           -3.347E-05 / Degrees/pixel
+CUNIT1  = 'm       '           / Axis units
+EQUINOX =               2000.0 / Equinox
+RADESYS = 'FK5     '           / Coordinate reference frame
+END

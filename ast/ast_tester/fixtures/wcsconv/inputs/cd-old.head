@@ -1,0 +1,15 @@
+NAXIS1  =                  100 / length of data axis 1
+NAXIS2  =                  100 / length of data axis 2
+CTYPE1  = 'RA---TAN'           / Celestial longitude
+CTYPE2  = 'DEC--TAN'           / Celestial latitude
+CRVAL1  =              180.000 / Reference RA (deg)
+CRVAL2  =               45.000 / Reference Dec (deg)
+CRPIX1  =               50.500 / Reference pixel on axis 1
+CRPIX2  =               50.500 / Reference pixel on axis 2
+CD001001=        -8.3332205E-4 / Old IRAF 3-digit CD matrix
+CD001002=                  0.0 / Old IRAF 3-digit CD matrix
+CD002001=                  0.0 / Old IRAF 3-digit CD matrix
+CD002002=        0.00083332205 / Old IRAF 3-digit CD matrix
+RADECSYS= 'FK5     '           / Reference frame
+EQUINOX =               2000.0 / Equinox
+END

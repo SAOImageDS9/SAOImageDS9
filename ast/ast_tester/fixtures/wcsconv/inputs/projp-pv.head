@@ -1,0 +1,22 @@
+NAXIS1  =                  512 / length of data axis 1
+NAXIS2  =                  512 / length of data axis 2
+CTYPE1  = 'RA---TAN'           / Gnomonic projection
+CTYPE2  = 'DEC--TAN'           / Gnomonic projection
+CRVAL1  =              180.000 / Reference RA (deg)
+CRVAL2  =               45.000 / Reference Dec (deg)
+CRPIX1  =              256.500 / Reference pixel on axis 1
+CRPIX2  =              256.500 / Reference pixel on axis 2
+CD1_1   =        -8.3332205E-4 / CD matrix
+CD1_2   =                  0.0 / CD matrix
+CD2_1   =                  0.0 / CD matrix
+CD2_2   =        0.00083332205 / CD matrix
+RADECSYS= 'FK5     '           / Old-style reference frame keyword
+EQUINOX =               2000.0 / Equinox
+PROJP0  =                  0.0 / Legacy projection parameter 0
+PROJP1  =                  0.0 / Legacy projection parameter 1
+PROJP2  =                  0.0 / Legacy projection parameter 2
+PV1_0   =                  0.0 / Standard PV param (conflicts with PROJP)
+PV1_1   =                  0.0 / Standard PV param (conflicts with PROJP)
+PV1_2   =                  0.0 / Standard PV param (conflicts with PROJP)
+LONGPOLE=              180.000 / Native longitude of celestial pole
+END

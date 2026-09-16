@@ -1,0 +1,101 @@
+#!/bin/sh
+# TAP producer for WCS encoding-conversion regression tests.
+#
+# Runs wcsconverter on each case listed in fixtures/wcsconv/cases.txt (the
+# same manifest the CMake test suite reads) and checks its output two ways,
+# matching the CMake suite:
+#   - ast_astequal: a semantic (astEqual) comparison against the reference,
+#     run for every case;
+#   - compare_dumps against the reference, which passes a byte-equal line and
+#     otherwise compares tokens, treating two doubles within 4 ULP as equal.
+#     The sixth column of the manifest selects the tolerance: blank is 4 ULP,
+#     "astequal" widens it to AST's own astEQUAL for a value amplified by
+#     cancellation -- OBSALT recovered from OBSGEO-X/Y/Z is the case
+#     that needs it -- and "yes" runs no dump comparison at all.
+# One TAP result is emitted per case; a case passes only if all its applicable
+# checks pass.
+srcdir=${srcdir:-.}
+# Fixture paths in the manifest are relative to the fixture root.
+fixtures=${srcdir}/fixtures
+data=${fixtures}/wcsconv/cases.txt
+
+# As test_simplify.tap: the manifest ships, the reference files may not.
+if [ ! -f "$data" ] || [ ! -d "${fixtures}/wcsconv/expected" ]; then
+    echo "1..0 # SKIP fixtures not distributed"
+    exit 0
+fi
+
+trim() {
+    printf '%s' "$1" | sed 's/^[[:blank:]]*//; s/[[:blank:]]*$//'
+}
+
+# TAP plan: the number of data (non-blank, non-comment) lines.
+echo "1..$(grep -cvE '^[[:blank:]]*(#|$)' "$data")"
+
+idx=0
+while IFS='|' read -r name input reference encoding attrs skip rest; do
+    name=$(trim "$name")
+    case $name in ''|'#'*) continue ;; esac
+    input=$(trim "$input")
+    reference=$(trim "$reference")
+    encoding=$(trim "$encoding")
+    attrs=$(trim "$attrs")
+    skip=$(trim "$skip")
+
+    idx=$((idx + 1))
+    test="$idx - $name"
+    out=${name}.out
+    rm -f "$out"
+
+    if [ -n "$attrs" ]; then
+        ./wcsconverter "${fixtures}/${input}" "$encoding" "$out" "$attrs" \
+            > "${out}.log" 2>&1 < /dev/null
+    else
+        ./wcsconverter "${fixtures}/${input}" "$encoding" "$out" \
+            > "${out}.log" 2>&1 < /dev/null
+    fi
+
+    if [ $? -ne 0 ]; then
+        echo "not ok $test"
+        sed 's/^/# /' "${out}.log"
+        rm -f "$out" "${out}.log"
+        continue
+    fi
+
+    ok=1
+    # Dump comparison against the reference, at the tolerance the manifest asks
+    # for.  An unrecognised flag is an error rather than a silent exact
+    # comparison, matching the CMake suite.
+    tol=
+    case $skip in
+        '')       ;;
+        astequal) tol=--astequal ;;
+        yes)      ;;
+        *)  echo "Bail out! wcsconv/cases.txt: row $name has" \
+                 "skip_string_compare \"$skip\"; expected blank, astequal or yes"
+            exit 1 ;;
+    esac
+    if [ "$skip" != yes ]; then
+        if ! ./compare_dumps $tol "${fixtures}/${reference}" "$out" \
+                > "${out}.cmp" 2>&1; then
+            ok=0
+            echo "# $name: dump differs from reference"
+            sed 's/^/# /' "${out}.cmp"
+            diff -u "${fixtures}/${reference}" "$out" | sed 's/^/# /'
+        fi
+    fi
+    # Semantic comparison (always).
+    if ! ./ast_astequal "${fixtures}/${reference}" "$out" "$encoding" "$attrs" \
+            > "${out}.eq" 2>&1 < /dev/null; then
+        ok=0
+        echo "# $name: ast_astequal reported not equal to reference"
+        sed 's/^/# /' "${out}.eq"
+    fi
+
+    if [ "$ok" -eq 1 ]; then
+        echo "ok $test"
+    else
+        echo "not ok $test"
+    fi
+    rm -f "$out" "${out}.log" "${out}.cmp" "${out}.eq"
+done < "$data"

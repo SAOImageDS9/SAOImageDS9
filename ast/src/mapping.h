@@ -309,6 +309,11 @@
 *        Add astRemoveRegions.
 *     26-FEB-2010 (DSB):
 *        Added method astQuadApprox.
+*     15-AUG-2026 (TIMJ):
+*        Record the simplified state of a Mapping separately for each
+*        orientation, in the ISSIMPLE and ISSIMPLEINV flags, and select
+*        between them using the current Invert value. Setting Invert no
+*        longer clears the record.
 *--
 */
 
@@ -405,21 +410,63 @@ typedef unsigned long long int UINT_BIG;
 #endif
 
 /* Flags defining the meaning of each bit in the "flags" field of the
-   Mapping structure. */
+   Mapping structure. Note, "flags" is a char, which may be signed, so 64
+   is the largest flag value that can be added. */
 #if defined(astCLASS)         /* Protected */
-#define AST__ISSIMPLE_FLAG 1  /* Mapping has been simplified */
+#define AST__ISSIMPLE_FLAG 1  /* Mapping is simplified when not inverted */
 #define AST__FROZEN_FLAG 2    /* Mapping cannot be nominated for simplification */
 #define AST__RESTRICTED_SIMPLIFY_FLAG 4 /* Simplify should nominate only those
                                  Mappings with the ALLOW_SIMPLIFY flag set */
 #define AST__ALLOW_SIMPLIFY_FLAG 8 /* Nominate Mapping even if Simplify has
                                  been restricted */
+#define AST__ISSIMPLEINV_FLAG 16 /* Mapping is simplified when inverted */
+
+/* Simplifying a Mapping produces a Mapping equivalent to the original in
+   the orientation the original had at the time, so the two flags above
+   record the simplified state of each orientation separately and the one
+   that applies is chosen by the current value of the Invert attribute.
+   Apart from Invert a Mapping is immutable (except for Frames, which
+   report zero for IsSimple whatever these flags hold), so a simplified
+   orientation stays simplified and neither flag is ever cleared as a side
+   effect of anything else.
+
+   In particular, the many routines that set Invert only to line a Mapping
+   up for inspection and then set it back again leave the Mapping reporting
+   exactly what it reported before, which is what keeps the placement of the
+   IsSimp card in a dump a property of the Mapping tree alone.
+
+   "invert" holds 0, 1, or CHAR_MAX when unset, which defaults to 0. The
+   flag selector dereferences "this", so use it only where the null check
+   made by the three macros below has already been done. */
+#define astIsSimpleFlag(this) \
+((((AstMapping*)this)->invert==1)?AST__ISSIMPLEINV_FLAG:AST__ISSIMPLE_FLAG)
 
 #define astSetIsSimple(this) \
-((void)(this&&(((AstMapping*)this)->flags|=AST__ISSIMPLE_FLAG)))
-#define astClearIsSimple(this) \
-((void)(this&&(((AstMapping*)this)->flags&=~AST__ISSIMPLE_FLAG)))
+((void)(this&&(((AstMapping*)this)->flags|=astIsSimpleFlag(this))))
 #define astIsSimple(this) \
-(this&&((((AstMapping*)this)->flags&AST__ISSIMPLE_FLAG)!=0))
+(this&&((((AstMapping*)this)->flags&astIsSimpleFlag(this))!=0))
+
+/* Discard both records. A class needs this when it lets something change
+   that feeds its own simplification - that is, an input to the first part
+   of its astMapMerge method, the part marked "without reference to the
+   neighbouring Mappings in the list". Nothing else reads the records: a
+   Mapping is offered to astMapMerge by its neighbours whatever they hold,
+   so a change that only affects whether this Mapping merges with a
+   neighbour does not need to discard them. Discarding anyway costs only a
+   redundant simplification, never a wrong answer, so err towards it when in
+   doubt about *whether an attribute feeds simplification*.
+
+   Do not err towards it about whether the attribute changed at all. The
+   records are written out as an IsSimp card and dumps are compared card for
+   card, so clearing on a set that changes nothing makes a Mapping dump
+   differently from the way it was read. Every setter therefore clears only
+   when the value differs, which is also what lets a loader validate by
+   re-applying the value it has just read - the convention described at
+   zoommap.c:2231. An explicit astClear does change the value, to unset, and
+   clears unconditionally. */
+#define astClearIsSimple(this) \
+((void)(this&&(((AstMapping*)this)->flags&= \
+               ~(AST__ISSIMPLE_FLAG|AST__ISSIMPLEINV_FLAG))))
 
 #define astSetFrozen(this) \
 ((void)(this&&(((AstMapping*)this)->flags|=AST__FROZEN_FLAG)))

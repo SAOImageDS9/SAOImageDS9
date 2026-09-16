@@ -8,9 +8,19 @@
 /* --------------- */
 #include <stdio.h>
 
+#define NCOORD 10
+
+static void init_coords( double xin[ static NCOORD ], double yin[ static NCOORD ] ) {
+   int i;
+   for ( i = 0; i < NCOORD; i++ ) {
+      xin[ i ] = 0.1 * (double) i;
+      yin[ i ] = 0.2 * (double) i;
+   }
+}
+
 /* Main function. */
 /* ============== */
-int main( int argc, char *argv[] ) {
+int main( void ) {
 /*
 *+
 *  Name:
@@ -60,7 +70,7 @@ int main( int argc, char *argv[] ) {
 */
 
 /* Local Constants: */
-#define NCOORD 10                /* Number of coordinates to transform */
+/* Number of coordinates to transform. */
 
 /* Local Variables: */
    AstFrameSet *cvt;             /* Pointer to conversion FrameSet */
@@ -70,7 +80,6 @@ int main( int argc, char *argv[] ) {
    double xout[ NCOORD ];        /* Output coordinate array */
    double yin[ NCOORD ];         /* Input coordinate array */
    double yout[ NCOORD ];        /* Output coordinate array */
-   int i;                        /* Loop counter for coordinates */
 
 /* Begin an AST context. */
    astBegin;
@@ -84,10 +93,7 @@ int main( int argc, char *argv[] ) {
 
 /* If successful, set up some input coordinates. */
    if ( cvt != AST__NULL ) {
-      for ( i = 0; i < NCOORD; i++ ) {
-         xin[ i ] = 0.1 * (double) i;
-         yin[ i ] = 0.2 * (double) i;
-      }
+      init_coords( xin, yin );
 
 /* Display the FrameSet. */
       astShow( cvt );

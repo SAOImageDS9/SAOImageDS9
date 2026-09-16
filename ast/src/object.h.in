@@ -127,10 +127,15 @@
 *           Obtain the value of the ID attribute for an Object.
 *        astGetIdent
 *           Obtain the value of the Ident attribute for an Object.
+*        astGetKeyMap
+*           Obtain a (cloned) pointer to the Object's associated KeyMap,
+*           creating an empty KeyMap if it does not yet exist.
 *        astGetNobject
 *           Obtain the value of the Nobject attribute for an Object.
 *        astGetRefCount
 *           Obtain the value of the RefCount attribute for an Object.
+*        astHasKeyMap
+*           Does the Object already have an associated KeyMap?
 *        astSetAttrib
 *           Set the value of a specified attribute for an Object.
 *        astSetCopy
@@ -327,6 +332,26 @@
 *        Added astHasAttribute.
 *     20-SEP-2018 (DSB):
 *        Added AST__DBL_WIDTH and AST__FLT_WIDTH
+*     16-APR-2026 (DSB):
+*        Raise the near-zero floor in astEQUALS from DBL_MIN to 1.0e-12
+*        so the helper reports equality for pairs of values of order
+*        DBL_EPSILON (for example, the ulp-scale inverse-matrix residuals
+*        that drift between macOS and Linux math libraries).
+*     4-JUN-2026 (EMB):
+*        Change the AST__DBL_DIG fallback (used when DBL_DECIMAL_DIG is
+*        not exposed, e.g. a C99 build) from DBL_DIG + 3 to DBL_DIG + 2,
+*        so it equals DBL_DECIMAL_DIG for IEEE-754 binary64. Serialised
+*        output is now identical (17 significant digits) whether AST
+*        is built as C99 or C11, which keeps the test fixtures matching
+*        regardless of the compiler's default C standard.
+*     16-JUN-2026 (EMB):
+*        Added the protected astGetKeyMap method, which returns a KeyMap
+*        that may be associated with any Object as a scratch area for storing
+*        extra internal data.  May be useful to add to the public API later,
+*        though there is a danger there of users building ad-hoc data models
+*        around it; for now it is only intended for internal use.  The
+*        companion astHasKeyMap method tests whether an Object already has an
+*        associated KeyMap without creating one.
 */
 
 /* Include files. */
@@ -381,6 +406,8 @@
 
 #endif
 
+#define AST__F77API "F77API" /* A string used to indicate a call from the F77 API */
+
 /* Values returned by astThread */
 #define AST__UNLOCKED 1  /* Object is unlocked */
 #define AST__RUNNING 2   /* Object is locked by the running thread */
@@ -395,12 +422,17 @@
 /* Number of digits to use when formatting double precision floating point
    values. DBL_DIG ensures no loss when round-tripping from text to
    binary to text, but we want no loss when round-tripping from binary to
-   text to binary, so we use DBL_DECIMAL_DIG instead. If this is not
-   avaialable we use DBL_DIG but add on an extra 3 digits. */
+   text to binary, so we use DBL_DECIMAL_DIG instead. DBL_DECIMAL_DIG is
+   only exposed by <float.h> under C11 and later, so when it is not
+   available (e.g. a C99 build) we fall back to DBL_DIG + 2, which equals
+   DBL_DECIMAL_DIG for IEEE-754 binary64. Keeping the two paths equal
+   means the serialised number of digits (and hence the exact text of
+   dumped Objects) is identical regardless of the C standard AST was
+   compiled against. */
 #ifdef DBL_DECIMAL_DIG
   #define AST__DBL_DIG (DBL_DECIMAL_DIG)
 #else
-  #define AST__DBL_DIG (DBL_DIG + 3)
+  #define AST__DBL_DIG (DBL_DIG + 2)
 #endif
 
 #ifdef FLT_DECIMAL_DIG
@@ -1426,8 +1458,16 @@ int astTest##attribute##_( Ast##class *this, int *status ) { \
 
 /* Check for equality of floating point values. We cannot compare bad values
    directly because of the danger of floating point exceptions, so bad
-   values are dealt with explicitly. */
-#define astEQUALS(aa,bb,tol) (((aa)==AST__BAD)?(((bb)==AST__BAD)?1:0):(((bb)==AST__BAD)?0:(fabs((aa)-(bb))<=(tol)*astMAX((fabs(aa)+fabs(bb))*DBL_EPSILON,DBL_MIN))))
+   values are dealt with explicitly. The comparison combines a relative
+   tolerance (suitable for values that are not close to zero) with an
+   absolute floor of 1.0e-12 so that near-zero values, where the relative
+   formula degenerates to DBL_EPSILON * near-zero ~ 1e-32, still compare
+   equal under realistic arithmetic noise (for example, off-diagonal
+   residuals in the inverse of a well-conditioned matrix). The original
+   DBL_MIN floor was effectively no floor at all; this was insufficient
+   when the relative comparison was applied to values of order
+   DBL_EPSILON itself. */
+#define astEQUALS(aa,bb,tol) (((aa)==AST__BAD)?(((bb)==AST__BAD)?1:0):(((bb)==AST__BAD)?0:(fabs((aa)-(bb))<=astMAX((tol)*(fabs(aa)+fabs(bb))*DBL_EPSILON,1.0E-12))))
 #define astEQUAL(aa,bb) astEQUALS(aa,bb,1.0E5)
 
 
@@ -1516,6 +1556,9 @@ typedef struct AstObject {
    void *proxy;                  /* A pointer to an external object that
                                     acts as a foreign language proxy for the
                                     AST object */
+   struct AstKeyMap *keymap;     /* Optional KeyMap holding arbitrary data
+                                    associated with the Object, for internal
+                                    use. Created on demand by astGetKeyMap. */
 #if defined(THREAD_SAFE)
    int locker;                   /* Thread that has locked this Object */
    pthread_mutex_t mutex1;       /* Guards access to all elements of the
@@ -1542,6 +1585,7 @@ typedef struct AstClassIdentifier {
    now. */
 struct AstChannel;
 struct KeyMap;
+struct AstKeyMap;
 
 /* This table contains all information that is the same for all
    objects in the class (e.g. pointers to its virtual functions). */
@@ -1759,9 +1803,11 @@ const char *astGetAttrib_( AstObject *, const char *, int * );
 const char *astGetClass_( const AstObject *, int * );
 const char *astGetID_( AstObject *, int * );
 const char *astGetIdent_( AstObject *, int * );
+struct AstKeyMap *astGetKeyMap_( AstObject *, int * );
 int astClassCompare_( AstObjectVtab *, AstObjectVtab *, int * );
 int astGetNobject_( const AstObject *, int * );
 int astGetRefCount_( AstObject *, int * );
+int astHasKeyMap_( AstObject *, int * );
 int astTestAttrib_( AstObject *, const char *, int * );
 int astTestID_( AstObject *, int * );
 int astTestIdent_( AstObject *, int * );
@@ -1937,6 +1983,8 @@ astINVOKE(V,astGetAttrib_(astCheckObject(this),attrib,STATUS_PTR))
 #define astGetClass(this) astINVOKE(V,astGetClass_((const AstObject *)(this),STATUS_PTR))
 #define astGetID(this) astINVOKE(V,astGetID_(astCheckObject(this),STATUS_PTR))
 #define astGetIdent(this) astINVOKE(V,astGetIdent_(astCheckObject(this),STATUS_PTR))
+#define astGetKeyMap(this) astINVOKE(O,astGetKeyMap_(astCheckObject(this),STATUS_PTR))
+#define astHasKeyMap(this) astINVOKE(V,astHasKeyMap_(astCheckObject(this),STATUS_PTR))
 #define astGetNobject(this) astINVOKE(V,astGetNobject_(astCheckObject(this),STATUS_PTR))
 #define astClassCompare(class1,class2) astClassCompare_(class1,class2,STATUS_PTR)
 #define astGetRefCount(this) astINVOKE(V,astGetRefCount_(astCheckObject(this),STATUS_PTR))

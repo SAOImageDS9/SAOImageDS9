@@ -1,0 +1,77 @@
+%+
+%  Name:
+%     ast.sty
+%
+%  Purpose:
+%     AST's own additions to the Starlink LaTeX support files.
+%
+%  Description:
+%     The other files in this directory are vendored unmodified from the
+%     Starlink latexsupport component, so anything AST needs to add or
+%     override goes here instead. Loaded by sun_master.tex with
+%     \usepackage{ast}, after \documentclass{starlink} has pulled in
+%     starabbrev, starstyle and sst.
+%
+%  Licence:
+%     This program is free software: you can redistribute it and/or
+%     modify it under the terms of the GNU Lesser General Public
+%     License as published by the Free Software Foundation, either
+%     version 3 of the License, or (at your option) any later version.
+%
+%     This program is distributed in the hope that it will be useful,
+%     but WITHOUT ANY WARRANTY; without even the implied warranty of
+%     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+%     Lesser General Public License for more details.
+%
+%     You should have received a copy of the GNU Lesser General
+%     Public Licence along with this program. If not, see
+%     <http://www.gnu.org/licenses/>.
+%
+%  History:
+%     31-AUG-2026 (TIMJ):
+%        Original version. Define \htmlref for the pdflatex path.
+%-
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{ast}[2026/08/31 AST additions to the Starlink classes]
+
+%  AST's documents use three macros from LaTeX2HTML's html.sty: \htmlref,
+%  written by the addlinks script for every cross-reference in the generated
+%  .tex, and the two link commands used directly in sun_master.tex (and by
+%  starabbrev.sty's \FITSref).  Nothing loads html.sty, and the only other
+%  definition of \htmlref lives in starstyle.4ht, which tex4ht loads for the
+%  hypertext build -- so under pdflatex all three were undefined.  TeX skips
+%  an undefined macro but still typesets its arguments, so every
+%  cross-reference was printed twice, and pdflatex exited non-zero after
+%  thousands of errors while still producing a usable PDF.
+%
+%  The definitions below are html.sty's own (LaTeX2HTML 95.1), which is what
+%  these documents were written against, with the print-only behaviour of two
+%  of them widened for PDF output.  html.sty says:
+%
+%      \newcommand{\htmlref}[2]{#1}
+%      \newcommand{\htmladdnormallink}[2]{#1}
+%      \newcommand{\htmladdnormallinkfoot}[2]{#1\footnote{#2}}
+%
+%  \providecommand rather than \newcommand throughout: starstyle.4ht replaces
+%  \htmlref with \renewcommand, which needs the command to exist already, so
+%  defining these here serves the hypertext build too.
+
+%  Exactly html.sty's definition.  \hyperref is not an alternative even
+%  though the second argument is nominally a label: addlinks passes the
+%  visible text as the label as well (its label-mangling line is commented
+%  out), and the \sstlabel call that would have defined those labels is
+%  commented out too, so there is no \label to point at.
+\providecommand{\htmlref}[2]{#1}
+
+%  html.sty drops the URL here because it is writing for paper.  We are
+%  producing a PDF and starlink.cls loads hyperref, so make it a live link:
+%  the printed text is unchanged, and the URL is no longer lost.
+\providecommand{\htmladdnormallink}[2]{\href{#2}{#1}}
+
+%  As html.sty -- text plus the URL in a footnote, which is the whole point
+%  of the "foot" variant -- and likewise made clickable, with \url so a long
+%  URL can break across lines.
+\providecommand{\htmladdnormallinkfoot}[2]{\href{#2}{#1}\footnote{\url{#2}}}
+
+\endinput

@@ -1,0 +1,34 @@
+# Grid and plotter smoke tests -- pipe-delimited
+# Shared by both grid_ (unconditional, logging GRF) and plotter_ (PLplot) tests.
+# Fields: name | head | attr | fattr | box | reference | skip_text_compare
+# reference: .svg file for text-label regression diff (grid_ tests only)
+# skip_text_compare: "yes" = smoke-only, no label comparison.  Set it for a
+#                    case whose labels are not stable across platforms: with
+#                    format=gd the degree symbol is a separately positioned
+#                    glyph, and cobe's lands on a half-pixel boundary, so its
+#                    rounded x coordinate moves by one between builds that
+#                    contract a multiply and add into an FMA and builds that
+#                    do not.  Reproduce with -ffp-contract=off.
+# The attr, fattr and box columns are also the settings the legacy tcsh
+# harness passes to plotter.f, so a change here must be matched by
+# regenerating the .svg references in plot/expected/.
+aitoff | wcsconv/inputs/aitoff.head | Grid=1,tickall=0,border=1,tol=0.001 |  | 10.0 -10.0 300.0 280.0 | plot/expected/aitoff.svg |
+car1 | wcsconv/inputs/car1.head | numlabgap=0.05 | carlin=1 | 0 0 2962 562 | plot/expected/car1.svg |
+car2 | wcsconv/inputs/car2.head | numlabgap(2)=0.05,labelling=interior | carlin=1 | 0 0 2962 562 | plot/expected/car2.svg |
+car3 | wcsconv/inputs/car3.head | grid=1 |  | 0 0 400 400 | plot/expected/car3.svg |
+car4 | wcsconv/inputs/car4.head |  | carlin=1 | 0 0 951 1851 | plot/expected/car4.svg |
+car5 | wcsconv/inputs/car5.head |  |  | 0 0 951 1851 | plot/expected/car5.svg |
+car6 | wcsconv/inputs/car6.head |  |  | 0 0 5401 1741 | plot/expected/car6.svg |
+cobe | wcsconv/inputs/cobe.head | format(1)=gd,format(2)=gd,Grid=1,tickall=0,width(axes)=3 |  | 10.0 -10.0 300.0 280.0 | plot/expected/cobe.svg | yes
+hpx | wcsconv/inputs/hpx.head | border=1 |  | 0.5 0.5 300.5 200.5 | plot/expected/hpx.svg |
+origin | wcsconv/inputs/origin.head | format(1)=ghms,format(2)=gdm,edge(2)=r,tickall=0,grid=1 |  | 0 0 500 500 | plot/expected/origin.svg |
+polco | wcsconv/inputs/polco.head | Grid=1,labelling=interior,bottom(1)=0 |  | -300 -300 500 500 | plot/expected/polco.svg |
+polco2 | wcsconv/inputs/polco2.head | Grid=0,labelling=exterior,gap(1)=50 |  | -300 -300 500 500 | plot/expected/polco2.svg |
+scp | wcsconv/inputs/scp.head | Grid=1,labelling=int |  | 1.0 1.0 1500.0 1300.0 | plot/expected/scp.svg |
+serpens | wcsconv/inputs/serpens.head | border=1 |  | 0.5 0.5 150.5 120.5 | plot/expected/serpens.svg |
+specflux | wcsconv/inputs/specflux.head | system=freq,logplot=1,loggap(1)=100 |  | 1 3 1.0E-8 9 | plot/expected/specflux.svg |
+timeplot | wcsconv/inputs/timeplot.head | minticklen=0.02,majticklen=0.05,gap(2)=0.1,NumLabGap=0.05,textlabgap=0.1,size=0.9 |  | 0.046 3.0 1.008 3.3 | plot/expected/timeplot.svg |
+tnx | wcsconv/inputs/tnx.head | Grid=1,textlabgap=0.1,border=0 |  | 0.0 0.0 2048.0 4096.0 | plot/expected/tnx.svg |
+tsc | wcsconv/inputs/tsc.head | border=1 |  | 1 1 1600 1600 | plot/expected/tsc.svg |
+zpn | wcsconv/inputs/zpn.head | tol=0.0001 |  | 1 1 200.0 200.0 | plot/expected/zpn.svg |
+zpx | wcsconv/inputs/zpx.head | Grid=1,style(grid1)=2,size(textlab2)=2 |  |  | plot/expected/zpx.svg |

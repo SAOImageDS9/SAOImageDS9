@@ -1,0 +1,45 @@
+# Fixtures carried by the default `make dist`.  `make fulldist` ships
+# everything and ignores this file.
+#
+# A line ending in "/" includes every file beneath that directory.  Any other
+# line is a glob matched against the path relative to fixtures/, in which "*"
+# does not cross a "/".
+#
+# Every entry must match at least one file and every shipped fixture must match
+# an entry; `make dist` fails otherwise, so this list cannot drift from what is
+# actually distributed.
+#
+# What the default distribution is for: telling an end user whether their build
+# works.  That needs the binary tests' inputs, a plot to compare, and enough
+# real FITS headers to check that the library turns pixels into the right sky
+# coordinates.  It does not need the simplification or serialisation corpora,
+# which exist to catch library defects and say nothing about the user's
+# compiler.
+
+# This file itself.  The CMake build unpacked from a tarball reads it to tell a
+# fixture left out on purpose from one that went missing, so a distribution
+# without it would silently lose that distinction.
+DIST_MANIFEST
+
+# Inputs for the C and Fortran test programs.
+programs/
+
+# The 20 grid tests: their manifest and their SVG references.  Their head files
+# come from wcsconv/inputs/ below.
+plot/cases.txt
+plot/expected/*.svg
+
+# The header oracle corpus.  Also supplies the grid head files and the SIP
+# headers that testfitschan.c and testfitschan.f read directly.
+wcsconv/inputs/
+oracle/headers.oracle
+oracle/transform_oracle_overrides.txt
+oracle/README.md
+
+# Manifests for the families whose fixtures are not distributed.  Both suites
+# enumerate their cases from these, so without them the tests would not be
+# registered at all and the suite would report a smaller run rather than one
+# whose absent cases are reported as skipped.  A case list is a few tens of
+# kilobytes against the megabytes of fixtures it names.
+simplify/cases.txt
+wcsconv/cases.txt

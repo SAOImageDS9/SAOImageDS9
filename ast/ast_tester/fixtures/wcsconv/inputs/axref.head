@@ -1,0 +1,25 @@
+NAXIS1  =                  100 / length of data axis 1
+NAXIS2  =                  100 / length of data axis 2
+CTYPE1  = 'RA---TAN'           / Right Ascension
+CTYPE2  = 'DEC--TAN'           / Declination
+CRVAL1  =              120.000 / Reference RA (deg)
+CRVAL2  =               30.000 / Reference Dec (deg)
+CRPIX1  =               50.500 / Reference pixel on axis 1
+CRPIX2  =               50.500 / Reference pixel on axis 2
+CDELT1  =           -0.0002778 / Degrees/pixel
+CDELT2  =            0.0002778 / Degrees/pixel
+RADESYS = 'FK5     '           / Reference frame
+EQUINOX =               2000.0 / Equinox
+AXREF1  =              119.500 / Axis reference RA (deg)
+AXREF2  =               30.500 / Axis reference Dec (deg)
+CTYPE1A = 'RA---TAN'           / Alternate A: RA
+CTYPE2A = 'DEC--TAN'           / Alternate A: Dec
+CRVAL1A =              120.000 / Alternate A: reference RA (deg)
+CRVAL2A =               30.000 / Alternate A: reference Dec (deg)
+CRPIX1A =               50.500 / Alternate A: reference pixel
+CRPIX2A =               50.500 / Alternate A: reference pixel
+CDELT1A =           -0.0002778 / Alternate A: degrees/pixel
+CDELT2A =            0.0002778 / Alternate A: degrees/pixel
+AXREF1A =              119.500 / Alternate A: axis ref RA (deg)
+AXREF2A =               30.500 / Alternate A: axis ref Dec (deg)
+END

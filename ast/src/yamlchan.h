@@ -103,6 +103,7 @@ typedef struct AstYamlChan {
    int yamlencoding;      /* Output format to use when writing */
    int defenc;            /* Default yaml encoding */
    AstKeyMap *anchors;    /* KeyMap holding transient YAML anchor definitions */
+   AstKeyMap *ref_maps;   /* KeyMap caching named reference Mappings used by Find... functions */
    int gotwcs;            /* Has a complete WCS been read yet? */
    const char *objectname;/* Name of Object currently being written. */
    int objectset;         /* Is the Object currently being written set? */

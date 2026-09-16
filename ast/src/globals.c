@@ -208,6 +208,7 @@ AstGlobals *astGlobalsInit_( void ) {
       INIT( ShiftMap );
       INIT( SpecMap );
       INIT( Stc );
+      INIT( SplineMap );
       INIT( StcCatalogEntryLocation );
       INIT( StcObsDataLocation );
       INIT( SwitchMap );

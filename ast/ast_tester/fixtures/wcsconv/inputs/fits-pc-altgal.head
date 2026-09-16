@@ -1,0 +1,23 @@
+NAXIS1  =                  100 / Spatial axis
+NAXIS2  =                  100 / Spatial axis
+CTYPE1  = 'RA---TAN'          / Right Ascension
+CTYPE2  = 'DEC--TAN'          / Declination
+CRVAL1  =              180.000 / [deg] Reference RA
+CRVAL2  =               45.000 / [deg] Reference Dec
+CRPIX1  =               50.000 / Reference pixel axis 1
+CRPIX2  =               50.000 / Reference pixel axis 2
+CDELT1  =              -0.0100 / Degrees/pixel
+CDELT2  =               0.0100 / Degrees/pixel
+PC001001=                  1.0 / FITS-PC rotation matrix
+PC002002=                  1.0 / FITS-PC rotation matrix
+RADESYS = 'FK5     '          / Reference frame
+EQUINOX =              2000.0  / Equinox
+C1YPE1  = 'GLON-TAN'          / Alternate A: Galactic longitude
+C1YPE2  = 'GLAT-TAN'          / Alternate A: Galactic latitude
+C1VAL1  =              101.255 / Alternate A: Galactic lon ref
+C1VAL2  =               16.177 / Alternate A: Galactic lat ref
+C1PIX1  =               50.000 / Alternate A: CRPIX1
+C1PIX2  =               50.000 / Alternate A: CRPIX2
+C1ELT1  =              -0.0100 / Alternate A: CDELT1
+C1ELT2  =               0.0100 / Alternate A: CDELT2
+END

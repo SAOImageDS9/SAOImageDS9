@@ -216,6 +216,67 @@ f     - AST_MAPTYPE: Return the data type of a named entry in a map
 *     27-MAY-2021 (DSB):
 *         Modify astMapGet1<X> so that nval=0 is returned if the value is
 *         undefined.
+*     8-APR-2026 (TIMJ):
+*        Increase buffer size in DumpEntry to prevent overrun.
+*     8-AUG-2026 (TIMJ):
+*        Use round() rather than truncation in ConvertValue, so that
+*        negative values convert to the nearest integer rather than
+*        being rounded toward zero.
+*     8-AUG-2026 (TIMJ):
+*        Terminate astMapIterate correctly when SortBy is set. The
+*        sorted list is circular, so the walk needs the same wrap guard
+*        that astMapKey already uses.
+*     8-AUG-2026 (TIMJ):
+*        Check MapLocked before removing the entry in astMapRename, so
+*        that a refused rename leaves the KeyMap unchanged rather than
+*        discarding the entry.
+*     8-AUG-2026 (TIMJ):
+*        Range check before converting a floating point value to an
+*        integer type in ConvertValue, so that an out of range value
+*        saturates rather than producing an undefined result.
+*     8-AUG-2026 (TIMJ):
+*        Return 0 from the DtoI, DtoS, DtoB and DtoK conversion helpers
+*        for a NaN input. A NaN has no integer value, and a NaN to
+*        integer cast is undefined.
+*     8-AUG-2026 (TIMJ):
+*        Detect magnitude overflow when converting a numeric string to an
+*        integer in ConvertValue, using strtol and errno rather than a
+*        sscanf conversion whose overflow behaviour is undefined.
+*     8-AUG-2026 (TIMJ):
+*        Reject a zero length vector in astMapPut1<X>, which has no
+*        representation in a KeyMap entry, and guard against a null
+*        string pointer when dumping a scalar entry.
+*     8-AUG-2026 (TIMJ):
+*        Report failure from astMapGetElem<X> for an undefined entry,
+*        matching astMapGet0<X> and astMapGet1<X>.
+*     8-AUG-2026 (TIMJ):
+*        Use the correct unset value when reading the KyCas card in
+*        astLoadKeyMap, so that an absent card is not recorded as an
+*        explicitly set KeyCase attribute.
+*     8-AUG-2026 (TIMJ):
+*        Apply the MpLck card after reading the entries in
+*        astLoadKeyMap, so that a locked non-empty KeyMap can be read
+*        back and so that nested KeyMaps inherit the flag.
+*     8-AUG-2026 (TIMJ):
+*        Remove the per entry member number read in astLoadKeyMap. No
+*        such card is written, so the read reset the member counter
+*        before every put and gave every loaded entry the same member
+*        number.
+*     9-AUG-2026 (TIMJ):
+*        Express copied keys in the destination KeyMap's own KeyCase in
+*        astMapCopyEntry and astMapCopy, for the destination lookup and
+*        for the stored key, rather than using the source KeyMap's
+*        casing rule for both.
+*     9-AUG-2026 (TIMJ):
+*        Dump KeyMap entries in key order rather than hash table order,
+*        so that a dump is stable under repeated write and read cycles.
+*     9-AUG-2026 (TIMJ):
+*        Reject a zero length vector in astMapPut1A as well, matching
+*        astMapPut1<X> for the other data types.
+*     9-AUG-2026 (TIMJ):
+*        Report failure from astMapGetElemA for an undefined entry, so
+*        that it agrees with astMapGetElem<X> for the other data types
+*        rather than reporting success without storing a value.
 *class--
 */
 
@@ -263,7 +324,10 @@ f     - AST_MAPTYPE: Return the data type of a named entry in a map
 
 /* C header files. */
 /* --------------- */
+#include <ctype.h>
+#include <errno.h>
 #include <limits.h>
+#include <math.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <stdio.h>
@@ -494,6 +558,7 @@ static const char *MapKey( AstKeyMap *, int index, int * );
 static const char *SortByString( int, const char *, int * );
 static int CompareEntries( const void *, const void * );
 static int ConvertValue( void *, int, void *, int, int * );
+static int DumpCmp( const void *, const void * );
 static size_t GetObjSize( AstObject *, int * );
 static int HashFun( const char *, int, unsigned long *, int * );
 static int KeyCmp( const char *, const char * );
@@ -577,6 +642,7 @@ static void MapPutU( AstKeyMap *, const char *, const char *, int * );
 static void MapRemove( AstKeyMap *, const char *, int * );
 static void MapRename( AstKeyMap *, const char *, const char *, int * );
 static void NewTable( AstKeyMap *, int, int * );
+static void ReKeyMapEntry( AstKeyMap *, AstMapEntry *, const char *, int * );
 static void RemoveFromSortedList( AstKeyMap *, AstMapEntry *, int * );
 static void RemoveFromObjectList( AstKeyMap *, AstMapEntry *, int * );
 static void SortEntries( AstKeyMap *, int * );
@@ -1650,6 +1716,48 @@ static const char *ConvertKey( AstKeyMap *this, const char *skey, char *keybuf,
    return result;
 }
 
+/* Convert a double to an integer type, saturating rather than relying on
+   the undefined result of an out-of-range floating point to integer
+   cast (C11 6.3.1.4p1). A NaN has no integer value, so a NaN input
+   returns 0 rather than falling through into a NaN-to-integer cast,
+   which is itself undefined by the same clause; 0 is otherwise
+   arbitrary and only needs to be defined, not meaningful. */
+
+static int DtoI( double dval ) {
+   double r;
+   if( isnan( dval ) ) return 0;
+   r = round( dval );
+   return ( r >= (double) INT_MAX ) ? INT_MAX :
+          ( r <= (double) INT_MIN ) ? INT_MIN : (int) r;
+}
+
+static short int DtoS( double dval ) {
+   double r;
+   if( isnan( dval ) ) return 0;
+   r = round( dval );
+   return ( r >= (double) SHRT_MAX ) ? SHRT_MAX :
+          ( r <= (double) SHRT_MIN ) ? SHRT_MIN : (short int) r;
+}
+
+static unsigned char DtoB( double dval ) {
+   double r;
+   if( isnan( dval ) ) return 0;
+   r = round( dval );
+   return ( r >= (double) UCHAR_MAX ) ? UCHAR_MAX :
+          ( r <= 0.0 ) ? 0 : (unsigned char) r;
+}
+
+static int64_t DtoK( double dval ) {
+   double r;
+   if( isnan( dval ) ) return 0;
+   r = round( dval );
+
+/* INT64_MAX is not exactly representable as a double, so compare against
+   2^63 directly rather than against (double) INT64_MAX. */
+   return ( r >= 9223372036854775808.0 ) ? INT64_MAX :
+          ( r <= -9223372036854775808.0 ) ? INT64_MIN : (int64_t) r;
+}
+
 static int ConvertValue( void *raw, int raw_type, void *out, int out_type, int *status ) {
 /*
 *  Name:
@@ -1948,19 +2056,19 @@ static int ConvertValue( void *raw, int raw_type, void *out, int out_type, int *
 
 /* Consider conversion to "int". */
       if( out_type == AST__INTTYPE ) {
-         if( out ) *( (int *) out ) = (int)( dval + 0.5 );
+         if( out ) *( (int *) out ) = DtoI( dval );
 
 /* Consider conversion to "short int". */
       } else if( out_type == AST__SINTTYPE ) {
-         if( out ) *( (short int *) out ) = (int)( dval + 0.5 );
+         if( out ) *( (short int *) out ) = DtoS( dval );
 
 /* Consider conversion to "64 bit int". */
       } else if( out_type == AST__KINTTYPE ) {
-         if( out ) *( (int64_t *) out ) = (int64_t)( dval + 0.5 );
+         if( out ) *( (int64_t *) out ) = DtoK( dval );
 
 /* Consider conversion to "byte". */
       } else if( out_type == AST__BYTETYPE ) {
-         if( out ) *( (unsigned char *) out ) = (int)( dval + 0.5 );
+         if( out ) *( (unsigned char *) out ) = DtoB( dval );
 
 /* Consider conversion to "double". */
       } else if( out_type == AST__DOUBLETYPE ) {
@@ -2007,19 +2115,19 @@ static int ConvertValue( void *raw, int raw_type, void *out, int out_type, int *
 
 /* Consider conversion to "int". */
       if( out_type == AST__INTTYPE ) {
-         if( out ) *( (int *) out ) = (int)( fval + 0.5 );
+         if( out ) *( (int *) out ) = DtoI( (double) fval );
 
 /* Consider conversion to "short int". */
       } else if( out_type == AST__SINTTYPE ) {
-         if( out ) *( (short int *) out ) = (int)( fval + 0.5 );
+         if( out ) *( (short int *) out ) = DtoS( (double) fval );
 
 /* Consider conversion to "64 bit int". */
       } else if( out_type == AST__KINTTYPE ) {
-         if( out ) *( (int64_t *) out ) = (int64_t)( fval + 0.5 );
+         if( out ) *( (int64_t *) out ) = DtoK( (double) fval );
 
 /* Consider conversion to "byte". */
       } else if( out_type == AST__BYTETYPE ) {
-         if( out ) *( (unsigned char *) out ) = (int)( fval + 0.5 );
+         if( out ) *( (unsigned char *) out ) = DtoB( (double) fval );
 
 /* Consider conversion to "double". */
       } else if( out_type == AST__DOUBLETYPE ) {
@@ -2056,15 +2164,27 @@ static int ConvertValue( void *raw, int raw_type, void *out, int out_type, int *
 
 /* Consider conversion to "int". */
       if( out_type == AST__INTTYPE ) {
-         nc = 0;
-         nval = astSscanf( cval, " %d %n", &ival, &nc );
-         if( ( nval == 1 ) && ( nc >= (int) strlen( cval ) ) ) {
-            if( out ) *( (int *) out ) = ival;
+         char *end;
+         long lval;
+         int consumed;
+
+         errno = 0;
+         lval = strtol( cval, &end, 10 );
+
+/* Record whether any digits were consumed before skipping trailing
+   space. Testing this after the skip would accept an all blank string,
+   because the skip would advance "end" away from "cval" on its own. */
+         consumed = ( end != cval );
+         while( isspace( (int) *end ) ) end++;
+
+         if( consumed && errno != ERANGE && *end == '\0' &&
+             lval >= INT_MIN && lval <= INT_MAX ) {
+            if( out ) *( (int *) out ) = (int) lval;
          } else {
             nc = 0;
             nval = astSscanf( cval, " %lf %n", &dval, &nc );
             if( ( nval == 1 ) && ( nc >= (int) strlen( cval ) ) ) {
-               if( out ) *( (int *) out ) = (int) ( dval + 0.5 );
+               if( out ) *( (int *) out ) = DtoI( dval );
             } else {
                result = 0;
             }
@@ -2072,15 +2192,26 @@ static int ConvertValue( void *raw, int raw_type, void *out, int out_type, int *
 
 /* Consider conversion to "short int". */
       } else if( out_type == AST__SINTTYPE ) {
-         nc = 0;
-         nval = astSscanf( cval, " %d %n", &ival, &nc );
-         if( ( nval == 1 ) && ( nc >= (int) strlen( cval ) ) ) {
-            if( out ) *( (short int *) out ) = ival;
+         char *end;
+         long lval;
+         int consumed;
+
+         errno = 0;
+         lval = strtol( cval, &end, 10 );
+
+/* See the AST__INTTYPE case above for why "consumed" is captured before
+   the trailing space is skipped. */
+         consumed = ( end != cval );
+         while( isspace( (int) *end ) ) end++;
+
+         if( consumed && errno != ERANGE && *end == '\0' &&
+             lval >= SHRT_MIN && lval <= SHRT_MAX ) {
+            if( out ) *( (short int *) out ) = (short int) lval;
          } else {
             nc = 0;
             nval = astSscanf( cval, " %lf %n", &dval, &nc );
             if( ( nval == 1 ) && ( nc >= (int) strlen( cval ) ) ) {
-               if( out ) *( (short int *) out ) = (int) ( dval + 0.5 );
+               if( out ) *( (short int *) out ) = DtoS( dval );
             } else {
                result = 0;
             }
@@ -2088,15 +2219,26 @@ static int ConvertValue( void *raw, int raw_type, void *out, int out_type, int *
 
 /* Consider conversion to "64 bit int". */
       } else if( out_type == AST__KINTTYPE ) {
-         nc = 0;
-         nval = astSscanf( cval, " %" SCNd64 " %n", &kval, &nc );
-         if( ( nval == 1 ) && ( nc >= (int) strlen( cval ) ) ) {
-            if( out ) *( (int64_t *) out ) = kval;
+         char *end;
+         long long lval;
+         int consumed;
+
+         errno = 0;
+         lval = strtoll( cval, &end, 10 );
+
+/* See the AST__INTTYPE case above for why "consumed" is captured before
+   the trailing space is skipped. */
+         consumed = ( end != cval );
+         while( isspace( (int) *end ) ) end++;
+
+         if( consumed && errno != ERANGE && *end == '\0' &&
+             lval >= INT64_MIN && lval <= INT64_MAX ) {
+            if( out ) *( (int64_t *) out ) = (int64_t) lval;
          } else {
             nc = 0;
             nval = astSscanf( cval, " %lf %n", &dval, &nc );
             if( ( nval == 1 ) && ( nc >= (int) strlen( cval ) ) ) {
-               if( out ) *( (int64_t *) out ) = (int64_t) ( dval + 0.5 );
+               if( out ) *( (int64_t *) out ) = DtoK( dval );
             } else {
                result = 0;
             }
@@ -2104,15 +2246,26 @@ static int ConvertValue( void *raw, int raw_type, void *out, int out_type, int *
 
 /* Consider conversion to "byte". */
       } else if( out_type == AST__BYTETYPE ) {
-         nc = 0;
-         nval = astSscanf( cval, " %d %n", &ival, &nc );
-         if( ( nval == 1 ) && ( nc >= (int) strlen( cval ) ) ) {
-            if( out ) *( (unsigned char *) out ) = ival;
+         char *end;
+         long lval;
+         int consumed;
+
+         errno = 0;
+         lval = strtol( cval, &end, 10 );
+
+/* See the AST__INTTYPE case above for why "consumed" is captured before
+   the trailing space is skipped. */
+         consumed = ( end != cval );
+         while( isspace( (int) *end ) ) end++;
+
+         if( consumed && errno != ERANGE && *end == '\0' &&
+             lval >= 0 && lval <= UCHAR_MAX ) {
+            if( out ) *( (unsigned char *) out ) = (unsigned char) lval;
          } else {
             nc = 0;
             nval = astSscanf( cval, " %lf %n", &dval, &nc );
             if( ( nval == 1 ) && ( nc >= (int) strlen( cval ) ) ) {
-               if( out ) *( (unsigned char *) out ) = (int) ( dval + 0.5 );
+               if( out ) *( (unsigned char *) out ) = DtoB( dval );
             } else {
                result = 0;
             }
@@ -2491,6 +2644,70 @@ static AstMapEntry *CopyMapEntry( AstMapEntry *in, int *status ){
    return result;
 }
 
+static void ReKeyMapEntry( AstKeyMap *this, AstMapEntry *entry,
+                           const char *method, int *status ){
+/*
+*  Name:
+*     ReKeyMapEntry
+
+*  Purpose:
+*     Express a MapEntry's key in a KeyMap's own KeyCase.
+
+*  Type:
+*     Private function.
+
+*  Synopsis:
+*     #include "keymap.h"
+*     void ReKeyMapEntry( AstKeyMap *this, AstMapEntry *entry,
+*                         const char *method, int *status )
+
+*  Class Membership:
+*     KeyMap member function.
+
+*  Description:
+*     This function converts the key of the supplied MapEntry to the case
+*     required by the KeyCase attribute of the supplied KeyMap, and
+*     recomputes the entry's cached hash value to match. It is used when
+*     an entry copied out of one KeyMap is about to be stored in another,
+*     since the two KeyMaps may have different KeyCase values.
+
+*  Parameters:
+*     this
+*        Pointer to the KeyMap in which the entry is to be stored.
+*     entry
+*        Pointer to the MapEntry to be re-keyed.
+*     method
+*        Pointer to a string holding the name of the method to include in
+*        any error message.
+*     status
+*        Pointer to the inherited status variable.
+*/
+
+/* Local Variables: */
+   char keybuf[ AST__MXKEYLEN + 1 ]; /* Buffer for converted key */
+   const char *key;       /* Pointer to converted key string */
+   unsigned long hash;    /* Full width hash value */
+
+/* Check the global error status and the supplied pointers. */
+   if( !astOK || !entry || !entry->key ) return;
+
+/* Convert the key to the case required by the destination KeyMap. */
+   key = ConvertKey( this, entry->key, keybuf, AST__MXKEYLEN + 1, method,
+                     status );
+
+/* If the conversion changed the key, store the converted form and
+   recompute the cached hash value. DoubleTableSize re-buckets entries
+   using the cached hash alone, so a stale hash would file the entry
+   under the wrong bucket the next time the table grows. */
+   if( astOK && strcmp( key, entry->key ) ) {
+      entry->key = astStore( (void *) entry->key, key, strlen( key ) + 1 );
+      if( astOK ) {
+         (void) HashFun( entry->key, this->mapsize - 1, &hash, status );
+         entry->hash = hash;
+      }
+   }
+}
+
 static void CopyTableEntry( AstKeyMap *in, AstKeyMap *out, int itab, int *status ){
 /*
 *  Name:
@@ -2715,7 +2932,7 @@ static void DumpEntry( AstMapEntry *entry, AstChannel *channel, int nentry, int 
 */
 
 /* Local Variables: */
-   char buff[20];                /* Buffer for item names */
+   char buff[30];                /* Buffer for item names */
    char pbuff[100];              /* Buffer for pointer values */
    const char *com;              /* Pointer to comment string */
    int index;                    /* Index into vector valued entry */
@@ -2876,8 +3093,10 @@ static void DumpEntry( AstMapEntry *entry, AstChannel *channel, int nentry, int 
 /* Do the same for string values. */
    } else if( type == AST__STRINGTYPE ) {
       if( entry->nel == 0 ) {
-         (void) sprintf( buff, "Val%d", nentry );
-         astWriteString( channel, buff, 1, 1, ((Entry0C *)entry)->value, "Item value" );
+         if( ((Entry0C *)entry)->value ) {
+            (void) sprintf( buff, "Val%d", nentry );
+            astWriteString( channel, buff, 1, 1, ((Entry0C *)entry)->value, "Item value" );
+         }
       } else {
          com = "Item values";
          for( index = 0; index < nel; index++ ){
@@ -4164,7 +4383,8 @@ f        The global status.
    AstMapEntry *out_entry;/* Pointer to existing destination entry */
    AstObject *in_obj;     /* Pointer for source Object entry */
    AstObject *out_obj;    /* Pointer for destination Object entry */
-   const char *key;       /* Key for current entry */
+   char keybuf[ AST__MXKEYLEN + 1 ]; /* Buffer for destination-cased key */
+   const char *key;       /* Key for current entry, in destination's case */
    int i;                 /* Index into source hash table */
    int itab;              /* Index of destination hash table element */
    int keymember;         /* Identifier for key */
@@ -4183,8 +4403,10 @@ f        The global status.
 /* Loop round all entries in this element of the source hash table. */
       while( in_entry && astOK ) {
 
-/* Get its key. */
-         key = in_entry->key;
+/* Get its key, expressed in the destination KeyMap's own case. The two
+   KeyMaps may have different KeyCase values. */
+         key = ConvertKey( this, in_entry->key, keybuf, AST__MXKEYLEN + 1,
+                           "astMapCopy", status );
 
 /* Search for a destination entry with the same key. */
          itab = HashFun( key, this->mapsize - 1, &hash, status );
@@ -4200,6 +4422,7 @@ f        The global status.
                          astGetClass( this ), key, key );
             } else {
                out_entry = CopyMapEntry( in_entry, status );
+               ReKeyMapEntry( this, out_entry, "astMapCopy", status );
                out_entry = AddTableEntry( this, itab, out_entry, -1, status );
             }
 
@@ -4249,6 +4472,7 @@ f        The global status.
                keymember = out_entry->keymember;
                (void) FreeMapEntry( out_entry, status );
                out_entry = CopyMapEntry( in_entry, status );
+               ReKeyMapEntry( this, out_entry, "astMapCopy", status );
                out_entry = AddTableEntry( this, itab, out_entry, keymember, status );
             }
          }
@@ -4334,8 +4558,10 @@ f        The global status.
    AstMapEntry *out_entry;/* Pointer to existing destination entry */
    AstObject *in_obj;     /* Pointer for source Object entry */
    AstObject *out_obj;    /* Pointer for destination Object entry */
-   char keybuf[ AST__MXKEYLEN + 1 ]; /* Buffer for upper cas key */
-   const char *key;       /* Pointer to key string to use */
+   char inkeybuf[ AST__MXKEYLEN + 1 ]; /* Buffer for source-cased key */
+   char outkeybuf[ AST__MXKEYLEN + 1 ]; /* Buffer for destination-cased key */
+   const char *inkey;     /* Pointer to key string, source KeyMap's case */
+   const char *outkey;    /* Pointer to key string, destination KeyMap's case */
    int itab;              /* Index of destination hash table element */
    int keymember;         /* Identifier for key */
    int merged;            /* Were source and destination KeyMaps merged? */
@@ -4344,21 +4570,24 @@ f        The global status.
 /* Check the global error status. */
    if ( !astOK ) return;
 
-/* Convert the supplied key to upper case if required. */
-   key = ConvertKey( that, skey, keybuf, AST__MXKEYLEN + 1, "astMapCopyEntry",
-                     status );
+/* Convert the supplied key using each KeyMap's own KeyCase, since the two
+   KeyMaps may differ in that attribute. */
+   inkey = ConvertKey( that, skey, inkeybuf, AST__MXKEYLEN + 1,
+                       "astMapCopyEntry", status );
+   outkey = ConvertKey( this, skey, outkeybuf, AST__MXKEYLEN + 1,
+                        "astMapCopyEntry", status );
 
 /* Use the hash function to determine the element of the hash table in
    which the key will be stored. */
-   itab = HashFun( key, that->mapsize - 1, &hash, status );
+   itab = HashFun( inkey, that->mapsize - 1, &hash, status );
 
 /* Search the relevent table entry for the required MapEntry. */
-   in_entry = SearchTableEntry( that, itab, key, status );
+   in_entry = SearchTableEntry( that, itab, inkey, status );
 
 /* If found, search for a destination entry with the same key. */
    if( in_entry ) {
-      itab = HashFun( key, this->mapsize - 1, &hash, status );
-      out_entry = SearchTableEntry( this, itab, key, status );
+      itab = HashFun( outkey, this->mapsize - 1, &hash, status );
+      out_entry = SearchTableEntry( this, itab, outkey, status );
 
 /* If the destination KeyMap does not contain an entry with the current
    key, store a copy of the entry in the destination, or report an error
@@ -4367,9 +4596,10 @@ f        The global status.
          if( astGetMapLocked( this ) ) {
             astError( AST__BADKEY, "astMapCopyEntry(%s): Failed to copy "
                       "item \"%s\": \"%s\" is not a known item.", status,
-                      astGetClass( this ), key, key );
+                      astGetClass( this ), outkey, outkey );
          } else {
             out_entry = CopyMapEntry( in_entry, status );
+            ReKeyMapEntry( this, out_entry, "astMapCopyEntry", status );
             out_entry = AddTableEntry( this, itab, out_entry, -1, status );
          }
 
@@ -4417,10 +4647,11 @@ f        The global status.
    But retain the original keymember value since we are just changing the
    value of an existing key. */
          if( ! merged ) {
-            out_entry = RemoveTableEntry( this, itab, key, status );
+            out_entry = RemoveTableEntry( this, itab, outkey, status );
             keymember = out_entry->keymember;
             (void) FreeMapEntry( out_entry, status );
             out_entry = CopyMapEntry( in_entry, status );
+            ReKeyMapEntry( this, out_entry, "astMapCopyEntry", status );
             out_entry = AddTableEntry( this, itab, out_entry, keymember, status );
          }
       }
@@ -4910,6 +5141,16 @@ static void MapPut1##X( AstKeyMap *this, const char *skey, int size, \
 /* Check the global error status. */ \
    if ( !astOK ) return; \
 \
+/* A KeyMap entry has no representation for a zero length vector: nel of \
+   zero means the entry is a scalar. Reject the call rather than creating \
+   an entry that cannot be read back or dumped. */ \
+   if( size < 1 ) { \
+      astError( AST__NELIN, "astMapPut1" #X "(%s): Illegal vector length " \
+                "%d supplied for KeyMap entry \"%s\" - must be at least " \
+                "one.", status, astGetClass( this ), size, skey ); \
+      return; \
+   } \
+\
 /* Perform any necessary checks on the supplied value to be stored. */ \
    CHECK_##X \
 \
@@ -5071,6 +5312,16 @@ void astMapPut1AId_( AstKeyMap *this, const char *skey, int size,
 
 /* Check the global error status. */
    if ( !astOK ) return;
+
+/* A KeyMap entry has no representation for a zero length vector: nel of
+   zero means the entry is a scalar. Reject the call rather than creating
+   an entry that cannot be read back or dumped. */
+   if( size < 1 ) {
+      astError( AST__NELIN, "astMapPut1A(%s): Illegal vector length "
+                "%d supplied for KeyMap entry \"%s\" - must be at least "
+                "one.", status, astGetClass( this ), size, skey );
+      return;
+   }
 
 /* Convert the supplied key to upper case if required. */
    key = ConvertKey( this, skey, keybuf, AST__MXKEYLEN + 1, "astMapPut1A",
@@ -6916,6 +7167,11 @@ static int MapGetElem##X( AstKeyMap *this, const char *skey, int elem, \
                       "the requested data type.", status, astGetClass( this ), \
                       elem + 1, key ); \
          } \
+\
+/* An undefined entry has no value to return. Report failure, as \
+   astMapGet0<X> and astMapGet1<X> do for the same entry. */ \
+      } else { \
+         result = 0; \
       } \
 \
 /* If the KeyError attribute is non-zero, report an error if the key is not \
@@ -7128,6 +7384,11 @@ static int MapGetElemC( AstKeyMap *this, const char *skey, int l, int elem,
             strncpy( value, cvalue, l - 1 );
             value[ l - 1 ] = 0;
          }
+
+/* An undefined entry has no value to return. Report failure, as
+   astMapGet0<X> and astMapGet1<X> do for the same entry. */
+      } else {
+         result = 0;
       }
 
 /* If the KeyError attribute is non-zero, report an error if the key is not
@@ -7325,6 +7586,11 @@ int astMapGetElemAId_( AstKeyMap *this, const char *skey, int elem,
          } else {
             *value = avalue ? astMakeId( avalue ) : NULL;
          }
+
+/* An undefined entry has no value to return. Report failure, as
+   astMapGet0A and astMapGet1A do for the same entry. */
+      } else {
+         result = 0;
       }
 
 /* If the KeyError attribute is non-zero, report an error if the key is not
@@ -7663,7 +7929,6 @@ f        The global status.
    int itab;               /* Index of hash table element to use */
    int keylen;             /* Length of supplied key string */
    int keymember;          /* Identifier for new key */
-   int there;              /* Did the entry already exist in the KeyMap? */
    unsigned long hash;     /* Full width hash value */
 
 /* Check the global error status. */
@@ -7682,9 +7947,24 @@ f        The global status.
    which the old key will be stored. */
       itab = HashFun( oldkey, this->mapsize - 1, &hash, status );
 
+/* If the KeyMap is locked, renaming an entry to a key that is not
+   already present would introduce a new key, which is not allowed.
+   Check this before removing anything, so that a refused rename leaves
+   the KeyMap unchanged. */
+      if( astGetMapLocked( this ) ) {
+         int newtab = HashFun( newkey, this->mapsize - 1, &hash, status );
+         if( SearchTableEntry( this, itab, oldkey, status ) &&
+             !SearchTableEntry( this, newtab, newkey, status ) ) {
+            astError( AST__BADKEY, "astMapRename(%s): Failed to rename item "
+                      "\"%s\" in a KeyMap to \"%s\": \"%s\" is not a known "
+                      "item.", status, astGetClass( this ), oldkey, newkey,
+                      newkey );
+         }
+      }
+
 /* Search the relevent table entry for the required MapEntry. Remove it
    from the list, but do not free it. */
-      entry = RemoveTableEntry( this, itab, oldkey, status );
+      entry = astOK ? RemoveTableEntry( this, itab, oldkey, status ) : NULL;
 
 /* Skip rest if the key was not found. */
       if( entry ) {
@@ -7714,19 +7994,8 @@ f        The global status.
          if( oldent ) {
             keymember = oldent->keymember;
             oldent = FreeMapEntry( oldent, status );
-            there = 1;
          } else {
             keymember = -1;
-            there = 0;
-         }
-
-/* If the KeyMap is locked we report an error if an attempt is made to
-   introduce a new key. */
-         if( !there && astGetMapLocked( this ) ) {
-            astError( AST__BADKEY, "astMapRename(%s): Failed to rename item "
-                      "\"%s\" in a KeyMap to \"%s\": \"%s\" is not a known "
-                      "item.", status, astGetClass( this ), oldkey, newkey,
-                      newkey );
          }
 
 /* If all has gone OK, store the renamed entry at the head of the linked list
@@ -8700,7 +8969,11 @@ static const char *MapIterate( AstKeyMap *this, int reset, int *status ) {
    context to point to the next entry in the *sorted* list. */
       if( entry ) {
          key = entry->key;
-         this->iter_entry = entry->snext;
+
+/* The sorted list is circular, so stop when the walk returns to the
+   first entry rather than following the link back round. */
+         this->iter_entry = ( entry->snext == this->first ) ? NULL :
+                                                             entry->snext;
       }
    }
 
@@ -10425,6 +10698,13 @@ static void Delete( AstObject *obj, int *status ) {
    this->firstA = NULL;
 }
 
+/* Compare two entries by key, for sorting the dump into a stable order. */
+static int DumpCmp( const void *a, const void *b ) {
+   const AstMapEntry *ea = *( (const AstMapEntry * const *) a );
+   const AstMapEntry *eb = *( (const AstMapEntry * const *) b );
+   return strcmp( ea->key, eb->key );
+}
+
 /* Dump function. */
 /* -------------- */
 static void Dump( AstObject *this_object, AstChannel *channel, int *status ) {
@@ -10456,8 +10736,11 @@ static void Dump( AstObject *this_object, AstChannel *channel, int *status ) {
 
 /* Local Variables: */
    AstKeyMap *this;              /* Pointer to the KeyMap structure */
+   AstMapEntry **entries;        /* Array of pointers to entries, in key order */
    AstMapEntry *next;            /* Pointer to the next AstMapEntry to dump */
    int i;                        /* Index into hash table */
+   int j;                        /* Index into "entries" array */
+   int nent;                     /* Number of entries in the hash table */
    int nentry;                   /* Number of entries dumped so far */
    int set;                      /* Is attribute set? */
    int ival;                     /* Attribute value */
@@ -10510,20 +10793,32 @@ static void Dump( AstObject *this_object, AstChannel *channel, int *status ) {
 /* member count. */
    astWriteInt( channel, "MemCnt", 1, 1, this->member_count, "Total member count" );
 
-/* Loop round each entry in the hash table. */
+/* Gather pointers to every entry, so they can be dumped in key order
+   rather than in hash table order. Bucket order depends on the KeyMap's
+   insertion history, and since a load re-inserts entries in the order it
+   reads them, dumping in bucket order means colliding keys swap places
+   on every write and read cycle. */
+   nent = 0;
    for( i = 0; i < this->mapsize; i++ ) {
+      for( next = this->table[ i ]; next; next = next->next ) nent++;
+   }
 
-/* Get a pointer to the next KeyMap entry to dump. */
-      next = this->table[ i ];
-
-/* Loop round dumping all KeyMap entries in this element of the hash table. */
-      while( next && astOK ) {
-         DumpEntry( next, channel, ++nentry, status );
-
-/* Get a pointer to the next entry to dump. */
-         next = next->next;
-
+   entries = astMalloc( sizeof( AstMapEntry * )*(size_t) nent );
+   if( entries ) {
+      j = 0;
+      for( i = 0; i < this->mapsize; i++ ) {
+         for( next = this->table[ i ]; next; next = next->next ) {
+            entries[ j++ ] = next;
+         }
       }
+
+      qsort( entries, (size_t) nent, sizeof( AstMapEntry * ), DumpCmp );
+
+      for( j = 0; j < nent && astOK; j++ ) {
+         DumpEntry( entries[ j ], channel, ++nentry, status );
+      }
+
+      entries = astFree( entries );
    }
 }
 
@@ -10996,18 +11291,13 @@ AstKeyMap *astLoadKeyMap_( void *mem, size_t size, AstKeyMapVtab *vtab,
 
 /* KeyCase. */
 /* --------- */
-      new->keycase = astReadInt( channel, "kycas", -INT_MAX );
+      new->keycase = astReadInt( channel, "kycas", -1 );
       if ( TestKeyCase( new, status ) ) SetKeyCase( new, new->keycase, status );
 
 /* KeyError. */
 /* --------- */
       new->keyerror = astReadInt( channel, "kyerr", -INT_MAX );
       if ( TestKeyError( new, status ) ) SetKeyError( new, new->keyerror, status );
-
-/* MapLocked. */
-/* --------- */
-      new->maplocked = astReadInt( channel, "mplck", -INT_MAX );
-      if ( TestMapLocked( new, status ) ) SetMapLocked( new, new->maplocked, status );
 
 /* SortBy. */
 /* ------- */
@@ -11058,12 +11348,6 @@ AstKeyMap *astLoadKeyMap_( void *mem, size_t size, AstKeyMapVtab *vtab,
 /* Get the vector length. */
          (void) sprintf( buff, "nel%d", nentry );
          nel = astReadInt( channel, buff, 0 );
-
-/* Get the entry member number. Set the KeyMap member count to this value
-   so that the next entry added to the KeyMap will get this value as its
-   member index. */
-         (void) sprintf( buff, "mem%d", nentry );
-         new->member_count = astReadInt( channel, buff, 0 );
 
 /* First deal with integer entries. */
          if( type == AST__INTTYPE ) {
@@ -11232,6 +11516,16 @@ AstKeyMap *astLoadKeyMap_( void *mem, size_t size, AstKeyMapVtab *vtab,
 
 /* Set the final member count for the KeyMap. */
       new->member_count = astReadInt( channel, "memcnt", 0 );
+
+/* MapLocked. */
+/* --------- */
+/* This is read after the entries, because applying it beforehand would
+   cause every put made by the entry loop to be refused: the KeyMap is
+   empty at that point, so each key is a new key. Applying it here also
+   propagates the flag into any nested KeyMaps that were read as
+   entries. */
+      new->maplocked = astReadInt( channel, "mplck", -INT_MAX );
+      if ( TestMapLocked( new, status ) ) SetMapLocked( new, new->maplocked, status );
 
 /* If an error occurred, clean up by deleting the new KeyMap. */
       if ( !astOK ) new = astDelete( new );

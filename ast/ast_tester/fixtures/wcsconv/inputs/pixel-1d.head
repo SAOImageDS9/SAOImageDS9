@@ -1,0 +1,6 @@
+NAXIS1  =                  100 / Linear axis
+CTYPE1  = 'PIXEL   '          / Linear pixel
+CRVAL1  =                  0.0 / Reference value
+CRPIX1  =               50.000 / Reference pixel
+CDELT1  =                  1.0 / Pixel size
+END

@@ -1,0 +1,26 @@
+NAXIS1  =                  100 / length of data axis 1
+NAXIS2  =                  100 / length of data axis 2
+CTYPE1  = 'OFLN-TAN'           / Primary: offset longitude (becomes current)
+CTYPE2  = 'OFLT-TAN'           / Primary: offset latitude
+CRVAL1  =                0.000 / Offset at ref pixel
+CRVAL2  =                0.000 / Offset at ref pixel
+CRPIX1  =               50.500 / Reference pixel on axis 1
+CRPIX2  =               50.500 / Reference pixel on axis 2
+CDELT1  =           -0.0100000 / Degrees/pixel
+CDELT2  =            0.0100000 / Degrees/pixel
+CTYPE1A = 'RA---TAN'           / Alternate A: Right Ascension
+CTYPE2A = 'DEC--TAN'           / Alternate A: Declination
+CRVAL1A =              120.000 / Alternate A: Reference RA (deg)
+CRVAL2A =               30.000 / Alternate A: Reference Dec (deg)
+CRPIX1A =               50.500 / Alternate A: reference pixel
+CRPIX2A =               50.500 / Alternate A: reference pixel
+CDELT1A =           -0.0100000 / Alternate A: degrees/pixel
+CDELT2A =            0.0100000 / Alternate A: degrees/pixel
+SREF1A  =              120.000 / Alternate A: sky ref RA (deg)
+SREF2A  =               30.000 / Alternate A: sky ref Dec (deg)
+SREFP1A =              120.000 / Alternate A: sky ref pole RA (deg)
+SREFP2A =               90.000 / Alternate A: sky ref pole Dec (deg)
+SREFISA = 'POLE    '           / Alternate A: pole reference
+RADESYSA= 'FK5     '           / Alternate A: reference frame
+EQUINOXA=               2000.0 / Alternate A: equinox
+END

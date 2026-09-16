@@ -221,6 +221,22 @@ f     The WcsMap class does not define any new routines beyond those
 *        Improve merging of WcsMaps and PermMaps.
 *     9-NOV=2018 (DSB):
 *        Add protected LonCheck attribute.
+*     22-APR-2026 (TJ):
+*        Fix memory leak in FreePV when called with error status set.
+*        astGetNin returns 0 on error, preventing PV array cleanup.
+*     8-AUG-2026 (TIMJ):
+*        Use round() rather than (int)(x+0.5) for rounding, so that the
+*        library uses a single rounding idiom that is correct for
+*        negative values.
+*     15-AUG-2026 (TIMJ):
+*        Discard the record that the WcsMap has been simplified when
+*        FITSProj or LonCheck is set or cleared, since LonCheck changes the
+*        values the WcsMap produces and FITSProj changes how it is used.
+*     27-AUG-2026 (TIMJ):
+*        In function Map, absorb a one-ULP rounding error at the latitude
+*        limits and at the lower longitude limit, so that the validity of a
+*        WCS does not depend on whether the compiler contracts a multiply
+*        and an add into a single FMA instruction.
 *class--
 */
 
@@ -1646,14 +1662,16 @@ static void FreePV( AstWcsMap *this, int *status ) {
 *
 */
    int i;              /* Axis index */
+   int naxis;           /* Number of axes */
 
-   if( this->np ) this->np = (int *) astFree( (void *) this->np );
    if( this->p ){
-      for( i = 0; i < astGetNin( this ); i++ ){
+      naxis = ( (AstMapping *) this )->nin;
+      for( i = 0; i < naxis; i++ ){
          this->p[ i ]  = (double *) astFree( (void *) this->p[ i ] );
       }
       this->p = (double **) astFree( (void *) this->p );
    }
+   if( this->np ) this->np = (int *) astFree( (void *) this->np );
 
 /* Re-initialize the values stored in the "AstPrjPrm" structure. */
    InitPrjPrm( this, status );
@@ -2746,6 +2764,7 @@ static int Map( AstWcsMap *this, int forward, int npoint, double *in0,
 
 /* Local Variables: */
    const PrjData *prjdata;       /* Information about the projection */
+   double abslat;                /* Absolute latitude value in degrees */
    double factor;                /* Factor that scales input into radians. */
    double latitude;              /* Latitude value in degrees */
    double longhi;                /* Upper longitude limit in degrees */
@@ -2871,9 +2890,49 @@ static int Map( AstWcsMap *this, int forward, int npoint, double *in0,
    latitude ranges. This avoids (x,y) points outside the physical domain
    of the mapping being assigned valid (long,lat) values. */
             if( wcs_status == 0 ){
+               abslat = fabs( latitude );
+
+/* Absorb a one-ULP rounding error at a limit of the accepted range.  For
+   instance, a WinMap used by a FITS CAR mapping may evaluate the expression
+
+      -0.5 degree + 181*0.5 degree
+
+   as exactly 90 degrees when the compiler emits a fused multiply-add, but
+   as 90.00000000000001 degrees in older compiler modes that do not enable
+   FMA.  Thus arm64 and x86-64-v3 builds can accept the header while a
+   baseline x86-64 build rejects it.  The latter value is one representable
+   double above 90 and describes the same valid pole, rather than a point
+   outside the projection.  Clamp such values so that the validity of a WCS
+   does not depend on the compiler's contraction or target architecture.  Do
+   not admit the next representable value, which differs by more than
+   90*DBL_EPSILON.
+
+   Both latitude limits need this, because the accepted latitude range is
+   closed and so both -90 and +90 are inside it. */
+               if( abslat > 90.0 &&
+                   abslat - 90.0 <= 90.0*DBL_EPSILON ) {
+                  latitude = latitude < 0.0 ? -90.0 : 90.0;
+                  abslat = 90.0;
+               }
+
+/* The accepted longitude range is half-open, [longlo,longhi), so only its
+   lower limit needs the same treatment.  Perturbing a longitude strictly
+   below longhi by one ULP leaves it strictly below longhi, so the upper
+   limit does not decide acceptance differently on the two builds; a value
+   at or above longhi is the wrap of longlo and is clipped deliberately, to
+   stop a whole-sky grid mapping two pixels to the same meridian.
+
+   LongRange returns either [-180,180) or [0,360), so the width of the
+   range is the scale at which a longitude computed anywhere within it
+   rounds. */
+               if( docheck && !cyclic && longitude < longlo &&
+                   longlo - longitude <= ( longhi - longlo )*DBL_EPSILON ) {
+                  longitude = longlo;
+               }
+
                if( ( !docheck || cyclic || ( longitude < longhi &&
                                              longitude >= longlo ) ) &&
-                   fabs( latitude ) <= 90.0 ){
+                   abslat <= 90.0 ){
 
                   out0[ point ] = (AST__DD2R/factor)*longitude;
                   out1[ point ] = (AST__DD2R/factor)*latitude;
@@ -3661,7 +3720,7 @@ static void PermGet( AstPermMap *map, int **outperm, int **inperm,
 /* If the output axis values are different, then the output axis value
    must be copied from the input axis value. */
          } else {
-            outprm[ i ] = (int) ( op + 0.5 );
+            outprm[ i ] = (int) round( op );
          }
       }
    }
@@ -3689,7 +3748,7 @@ static void PermGet( AstPermMap *map, int **outperm, int **inperm,
             nc++;
 
          } else {
-            inprm[ i ] = (int) ( ip + 0.5 );
+            inprm[ i ] = (int) round( ip );
          }
       }
    }
@@ -4734,10 +4793,12 @@ f     AST_WRITE routine,
 *        All Frames have this attribute.
 *att-
 */
-astMAKE_CLEAR(WcsMap,FITSProj,fits_proj,-INT_MAX)
+astMAKE_CLEAR(WcsMap,FITSProj,fits_proj,(astClearIsSimple(this),-INT_MAX))
 astMAKE_GET(WcsMap,FITSProj,int,1,( ( this->fits_proj != -INT_MAX ) ?
                                        this->fits_proj : 1 ))
-astMAKE_SET(WcsMap,FITSProj,int,fits_proj,( value != 0 ))
+astMAKE_SET(WcsMap,FITSProj,int,fits_proj,(
+            ( ( value != 0 ) != this->fits_proj ) ? astClearIsSimple(this) : (void)0,
+            ( value != 0 )))
 astMAKE_TEST(WcsMap,FITSProj,( this->fits_proj != -INT_MAX ))
 
 /*
@@ -4809,10 +4870,12 @@ astMAKE_TEST(WcsMap,TPNTan,( this->tpn_tan != -INT_MAX ))
 *        All Frames have this attribute.
 *att-
 */
-astMAKE_CLEAR(WcsMap,LonCheck,loncheck,-INT_MAX)
+astMAKE_CLEAR(WcsMap,LonCheck,loncheck,(astClearIsSimple(this),-INT_MAX))
 astMAKE_GET(WcsMap,LonCheck,int,1,( ( this->loncheck != -INT_MAX ) ?
                                        this->loncheck : 1 ))
-astMAKE_SET(WcsMap,LonCheck,int,loncheck,( value != 0 ))
+astMAKE_SET(WcsMap,LonCheck,int,loncheck,(
+            ( ( value != 0 ) != this->loncheck ) ? astClearIsSimple(this) : (void)0,
+            ( value != 0 )))
 astMAKE_TEST(WcsMap,LonCheck,( this->loncheck != -INT_MAX ))
 
 /* ProjP. */

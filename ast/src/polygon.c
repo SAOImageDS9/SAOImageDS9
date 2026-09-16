@@ -124,10 +124,19 @@ f     - AST_OUTLINE<X>: Create a Polygon outlining values in a pixel array
 *        of a side (the previous length of the probing line) may not reach all
 *        the way across the polygon.
 *     9-JUN-2021 (DSB):
-*        - Function PolyWidth now works correctly for Regions that represent a "hole 
-*        in the sky" (i.e. have widths larger than 180 degrees). 
-*        - Fix bug in GetBounded (Regions on SkyFrames are all bounded), that could 
+*        - Function PolyWidth now works correctly for Regions that represent a "hole
+*        in the sky" (i.e. have widths larger than 180 degrees).
+*        - Fix bug in GetBounded (Regions on SkyFrames are all bounded), that could
 *        cause Polygons on the sky to be incorrectly negated.
+*     18-JUN-2026 (DSB):
+*        Fix bug that caused some Polygons defined on the sky to be
+*        misinterpreted by astMask. Previously, a Polygon that was
+*        supplied such that the unnegated Region represent more than half
+*        the sky was effectively inverted by astMask (but not by astTranN).
+*        The fix was to reverse the order of the supplied vertices and
+*        then set the Invert attribute when constructing the Polygon, if
+*        the supplied Polygon represents more than half the sky.
+
 *class--
 */
 
@@ -447,6 +456,7 @@ static Segment *AddToChain( Segment *, Segment *, int * );
 static Segment *NewSegment( Segment *, int, int, int, int * );
 static Segment *RemoveFromChain( Segment *, Segment *, int * );
 static double Polywidth( AstFrame *, AstLineDef **, int, int, double[ 2 ], int * );
+static double SkyArea( AstPolygon *, int * );
 static int GetBounded( AstRegion *, int * );
 static int IntCmp( const void *, const void * );
 static int RegPins( AstRegion *, AstPointSet *, AstRegion *, int **, int * );
@@ -1791,13 +1801,16 @@ static void EnsureInside( AstPolygon *this, int *status ){
 */
 
 /* Local Variables: */
+   AstFrame *fr;
    AstRegion *this_region;
    double **ptr;
    double *p;
    double *q;
+   double area;
    double tmp;
    int bounded;
    int i;
+   int issky;
    int j;
    int jmid;
    int negated;
@@ -1806,9 +1819,28 @@ static void EnsureInside( AstPolygon *this, int *status ){
 /* Check the global error status. */
    if ( !astOK ) return;
 
+/* Is the Region defined within a SkyFrame? */
+   fr = astGetRegionFrame( this );
+   issky = astIsASkyFrame( fr );
+   fr = astAnnul( fr );
+
+/* Is the Region bounded? SkyFrame Polygons need special treatment. */
+   if( !issky ){
+      bounded = astGetBounded( this );
+
+/* For a Polygon defined within a SkyFrame, both the inside and the
+   outside of the polygon will be bounded so that does not help us to
+   ensure that the unnegated Polygon represents the smaller lobe of
+   the sky. Instead, we get the area inside the Polygon. If this is less
+   than 2.PI steradians (i.e. less than half the sky), we treated it as
+   if it were bounded. */
+   } else {
+      area = SkyArea( this, status );
+      bounded = ( area < 2*AST__DPI );
+   }
+
 /* Is the unnegated Polygon unbounded? If so, we need to reverse the
    vertices. */
-   bounded = astGetBounded( this );
    negated = astGetNegated( this );
    if( ( bounded && negated ) || ( !bounded && !negated ) ) {
       this_region = (AstRegion *) this;
@@ -5431,6 +5463,104 @@ static AstMapping *Simplify( AstMapping *this_mapping, int *status ) {
    if ( !astOK ) result = astAnnul( result );
 
 /* Return the result. */
+   return result;
+}
+
+static double SkyArea( AstPolygon *this, int *status ){
+/*
+*  Name:
+*     SkyArea
+
+*  Purpose:
+*     Find the solid angle subtended by a polygon defined in a SkyFrame.
+
+*  Type:
+*     Private function.
+
+*  Synopsis:
+*     #include "polygon.h"
+*     double SkyArea( AstPolygon *this, int *status )
+
+*  Class Membership:
+*     Polygon member function
+
+*  Description:
+*     The supplied Polygon should be defined in a SkyFrame. This function
+*     returns the solid angle subtended at he centre of the sphere by the
+*     polygon, in steradians.
+
+*  Parameters:
+*     this
+*        The Polygon.
+*     status
+*        Pointer to the inherited status variable.
+
+*  Returned Value:
+*     The solid angle.
+
+*/
+
+/* Local Variables: */
+   AstRegion *this_region;
+   double **ptr;
+   double a[2];
+   double angle;
+   double b[2];
+   double c[2];
+   double result;
+   int ivert;
+   int nvert;
+
+/* Initialise. */
+   result = 0.0;
+
+/* Check the global error status. */
+   if ( !astOK ) return result;
+
+/* Get a pointer to the parent Region structure. */
+   this_region = (AstRegion *) this;
+
+/* Get a pointer to the arrays holding the coordinates at the Polygon
+   vertices. */
+   ptr = astGetPoints( this_region->points );
+
+/* Get the number of vertices. */
+   nvert = astGetNpoint( this_region->points );
+
+/* Loop round all vertices. */
+   for( ivert = 0; ivert < nvert; ivert++ ){
+      b[0] = ptr[0][ivert];
+      b[1] = ptr[1][ivert];
+
+/* Get the two adjacent vertices. */
+      if( ivert < nvert - 1 ){
+         a[0] = ptr[0][ivert+1];
+         a[1] = ptr[1][ivert+1];
+      } else {
+         a[0] = ptr[0][0];
+         a[1] = ptr[1][0];
+      }
+
+      if( ivert > 0 ){
+         c[0] = ptr[0][ivert-1];
+         c[1] = ptr[1][ivert-1];
+      } else {
+         c[0] = ptr[0][nvert-1];
+         c[1] = ptr[1][nvert-1];
+      }
+
+/* Find the angle at the current vertex, in the range 0 - 2*PI. */
+      angle = astAngle( this, a, b, c );
+      if( angle < 0.0 ) angle += 2*AST__DPI;
+
+/* Increment the total angle. */
+      result += angle;
+   }
+
+/* Calculate the solid angle subtended by the polygon. */
+   result -= (nvert-2)*AST__DPI;
+
+/* Return the area. */
    return result;
 }
 

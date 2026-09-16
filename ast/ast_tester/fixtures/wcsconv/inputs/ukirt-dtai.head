@@ -1,0 +1,16 @@
+NAXIS1  =                  100 / length of data axis 1
+NAXIS2  =                  100 / length of data axis 2
+CTYPE1  = 'RA---TAN'           / Right Ascension
+CTYPE2  = 'DEC--TAN'           / Declination
+CRVAL1  =               83.633 / Reference RA (deg)
+CRVAL2  =               22.014 / Reference Dec (deg)
+CRPIX1  =               50.500 / Reference pixel on axis 1
+CRPIX2  =               50.500 / Reference pixel on axis 2
+CDELT1  =           -0.0002778 / Degrees/pixel
+CDELT2  =            0.0002778 / Degrees/pixel
+RADESYS = 'FK5     '           / Reference frame
+EQUINOX =               2000.0 / Equinox
+TELESCOP= 'UKIRT   '           / Telescope name (enables DTAI)
+DTAI    =               37.000 / TAI-UTC (seconds)
+MJD-OBS =          59000.50000 / MJD of observation
+END

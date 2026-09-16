@@ -1,0 +1,15 @@
+SIMPLE  =                    T / Fits standard
+BITPIX  =                  -32 / Bits per pixel
+NAXIS   =                    1 / Number of dimensions
+NAXIS1  =                  100 / Spectral axis
+CTYPE1  = 'WAVE-GRI'           / Vacuum wavelength with grism dispersion
+CRVAL1  =            5.000E-07 / Reference wavelength (metres)
+CRPIX1  =                 50.0 / Reference pixel
+CDELT1  =            1.000E-10 / Wavelength increment (metres)
+CUNIT1  = 'm       '           / Axis units
+RESTFRQ =           5.996E+14  / Rest frequency (Hz)
+SPECSYS = 'BARYCENT'           / Spectral reference frame
+PV1_0   =            3.000E-06 / G: grating ruling spacing (metres)
+PV1_1   =                    1 / M: diffraction order
+PV1_2   =                  0.0 / alpha: angle of incidence (degrees)
+END

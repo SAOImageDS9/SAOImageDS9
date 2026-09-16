@@ -735,6 +735,14 @@ f     - Title: The Plot title drawn using AST_GRID
 *        has been set. Previously, the set value was used without change
 *        if Format was set, but this caused things like 5 minor gaps
 *        between major tick values 40 and 44.
+*     15-APR-2026 (TIMJ):
+*        Fix buffer overread in GrfItem when appending text suffix to
+*        the item description. astStore was called with a size larger than
+*        the source data, causing memcpy to read past the end of the
+*        string literal.
+*     24-APR-2026 (TIMJ):
+*        Use round() instead of (int)(x+0.5) for logarithmic gap rounding
+*        to avoid platform-dependent results.
 
 *class--
 */
@@ -16596,7 +16604,7 @@ static double GetTicks( AstPlot *this, int axis, double *cen, double **ticks,
 /* Find a "nice" gap size close to the current test gap size. Also find
    the number of minor tick marks to use with the nice gap size. Gaps for
    logarithmic axes are always powers of ten. */
-            log_used_gap = (int) ( log10( test_gap ) + 0.5 );
+            log_used_gap = (int) round( log10( test_gap ) );
             if( log_used_gap == 0.0 ) {
                log_used_gap = ( test_gap > 1.0 ) ? 1.0 : -1.0;
             }
@@ -16683,7 +16691,7 @@ static double GetTicks( AstPlot *this, int axis, double *cen, double **ticks,
             }
 
 /* Find the nearest power of 10 ( do not allow 10**0 (=1.0) to be used). */
-            log_used_gap = (int) ( log10( used_gap ) + 0.5 );
+            log_used_gap = (int) round( log10( used_gap ) );
             if( log_used_gap == 0.0 ) {
               log_used_gap = ( gap > 1.0 ) ? 1.0 : -1.0;
             }
@@ -18130,8 +18138,16 @@ static char *GrfItem( int item, const char *text, int *axis, int *status ){
       dlen = strlen( desc );
 
       if( text ) {
-         ret = astStore( NULL, desc, dlen + strlen( text ) + 1 );
-         if( ret ) strcpy( ret + dlen, text );
+
+/* Cannot use astStore here because the allocation size (desc + text)
+   exceeds the length of the source data (desc alone), and astStore
+   copies size bytes from the source via memcpy. Instead, allocate the
+   full buffer and copy desc and text separately. */
+         ret = astMalloc( dlen + strlen( text ) + 1 );
+         if( ret ) {
+            memcpy( ret, desc, dlen );
+            strcpy( ret + dlen, text );
+         }
       } else {
          ret = astStore( NULL, desc, dlen + 1 );
       }

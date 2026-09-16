@@ -1,0 +1,12 @@
+SIMPLE  =                    T / Fits standard
+BITPIX  =                  -32 / Bits per pixel
+NAXIS   =                    1 / Number of dimensions
+NAXIS1  =                 1024 / Length of axis
+CTYPE1  = 'FREQ-F2W'           / Non-linear: frequency sampled, expressed as wavelength
+CRVAL1  =           1.4204E+09 / Reference frequency (Hz)
+CRPIX1  =              512.500 / Reference pixel
+CDELT1  =           1.0000E+04 / Frequency increment (Hz)
+CUNIT1  = 'Hz      '           / Axis units
+RESTFRQ =           1.4204E+09 / Rest frequency (Hz)
+SPECSYS = 'BARYCENT'           / Spectral reference frame
+END

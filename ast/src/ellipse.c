@@ -65,6 +65,18 @@ f     - AST_ELLIPSEPARS: Get the geometric parameters of the Ellipse
 *     6-JAN-2014 (DSB):
 *        Ensure cached information is available in RegCentre even if no new
 *        centre is supplied.
+*     8-APR-2026 (TIMJ):
+*        Fix variable-length array parameter in astEllipseId_ prototype.
+*     9-APR-2026 (TIMJ):
+*        Change astEllipse_ parameter declarations from const double[2]
+*        to const double*. In C, array-size annotations on function
+*        parameters are purely decorative (the parameter is still a
+*        pointer), but GCC uses them as size hints for its static
+*        analyser. When a caller passes a pointer whose provenance GCC
+*        cannot prove covers 16 bytes (e.g. &this->angle, or a pointer
+*        into a dynamically-allocated block whose size is not visible),
+*        GCC emits -Wstringop-overread. Using const double* avoids the
+*        false positive without changing the ABI or semantics.
 *class--
 */
 
@@ -153,7 +165,7 @@ static int class_init = 0;       /* Virtual function table initialised? */
 /* The following functions have public prototypes only (i.e. no
    protected prototypes), so we must provide local prototypes for use
    within this module. */
-AstEllipse *astEllipseId_( void *, int, const double[2], const double[2], const double[2], void *, const char *, ... );
+AstEllipse *astEllipseId_( void *, int, const double[2], const double[2], const double *, void *, const char *, ... );
 
 /* Prototypes for Private Member Functions. */
 /* ======================================== */
@@ -2365,8 +2377,8 @@ static void Dump( AstObject *this_object, AstChannel *channel, int *status ) {
 astMAKE_ISA(Ellipse,Region)
 astMAKE_CHECK(Ellipse)
 
-AstEllipse *astEllipse_( void *frame_void, int form, const double centre[2],
-                         const double point1[2], const double point2[2],
+AstEllipse *astEllipse_( void *frame_void, int form, const double *centre,
+                         const double *point1, const double *point2,
                          AstRegion *unc, const char *options, int *status, ...) {
 /*
 *++
@@ -3025,7 +3037,6 @@ void astEllipsePars_( AstEllipse *this, double centre[2], double *a,
    (**astMEMBER(this,Ellipse,EllipsePars))( this, centre, a, b,
                                             angle, p1, p2, status );
 }
-
 
 
 

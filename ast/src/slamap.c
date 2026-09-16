@@ -119,6 +119,10 @@ f     - AST_SLAADD: Add a celestial coordinate conversion to an SlaMap
 *        Added method astSlaIsEmpty.
 *     30-NOV-2016 (DSB):
 *        Added a "narg" argumeent to astSlaAdd.
+*     2-JUL-2026 (TIMJ):
+*        Transform now returns AST__BAD for every point of a conversion
+*        that has an undefined (AST__BAD) argument, instead of propagating
+*        NaN values from the underlying PAL routines.
 
 *class--
 */
@@ -3563,6 +3567,8 @@ static AstPointSet *Transform( AstMapping *this, AstPointSet *in,
    astDECLARE_GLOBALS            /* Pointer to thread-specific global data */
    AstPointSet *result;          /* Pointer to output PointSet */
    AstSlaMap *map;               /* Pointer to SlaMap to be applied */
+   const char *argdesc[ MAX_SLA_ARGS ]; /* Argument descriptions (unused) */
+   const char *comment;          /* Conversion comment (unused) */
    double **ptr_in;              /* Pointer to input coordinate data */
    double **ptr_out;             /* Pointer to output coordinate data */
    double *alpha;                /* Pointer to longitude array */
@@ -3571,10 +3577,13 @@ static AstPointSet *Transform( AstMapping *this, AstPointSet *in,
    double *delta;                /* Pointer to latitude array */
    double *p[3];                 /* Pointers to arrays to be transformed */
    double *obs;                  /* Pointer to array holding observers position */
+   int badargs;                  /* Does the conversion have an undefined argument? */
    int cvt;                      /* Loop counter for conversions */
    int ct;                       /* Conversion type */
    int end;                      /* Termination index for conversion loop */
+   int iarg;                     /* Loop counter for conversion arguments */
    int inc;                      /* Increment for conversion loop */
+   int nargs;                    /* Number of arguments for conversion */
    int npoint;                   /* Number of points */
    int point;                    /* Loop counter for points */
    int start;                    /* Starting index for conversion loop */
@@ -3653,6 +3662,29 @@ static AstPointSet *Transform( AstMapping *this, AstPointSet *in,
 
 /* Classify the SLALIB sky coordinate conversion to be applied. */
          ct = map->cvttype[ cvt ];
+
+/* If any argument of this conversion is undefined the conversion cannot
+   be evaluated, so assign AST__BAD to both axes of every point and move
+   on to the next conversion (any subsequent conversions then simply
+   propagate the bad values).  Without this, an undefined argument (e.g.
+   an ecliptic conversion with an undefined epoch) would propagate NaNs
+   from the underlying PAL routines. */
+         (void) CvtString( ct, &comment, &nargs, argdesc, status );
+         badargs = 0;
+         for ( iarg = 0; iarg < nargs; iarg++ ) {
+            if ( args[ iarg ] == AST__BAD ) {
+               badargs = 1;
+               break;
+            }
+         }
+         if ( badargs ) {
+            for ( point = 0; point < npoint; point++ ) {
+               alpha[ point ] = AST__BAD;
+               delta[ point ] = AST__BAD;
+            }
+            continue;
+         }
+
          switch ( ct ) {
 
 /* Add E-terms of aberration. */

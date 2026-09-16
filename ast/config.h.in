@@ -41,9 +41,6 @@
 /* Define to 1 if you have the `pthread' library (-lpthread). */
 #undef HAVE_LIBPTHREAD
 
-/* Define to 1 if you have the `yaml' library (-lyaml). */
-#undef HAVE_LIBYAML
-
 /* Define to 1 if the system has the type `long double'. */
 #undef HAVE_LONG_DOUBLE
 
@@ -95,8 +92,7 @@
 /* Define to 1 if you have the `vsnprintf' function. */
 #undef HAVE_VSNPRINTF
 
-/* Define to the sub-directory in which libtool stores uninstalled libraries.
-   */
+/* Define to the sub-directory where libtool stores uninstalled libraries. */
 #undef LT_OBJDIR
 
 /* enable AST memory leak debugging functions in memory.c */
@@ -129,16 +125,10 @@
 /* The size of `long long', as computed by sizeof. */
 #undef SIZEOF_LONG_LONG
 
-/* The size of `void*', as computed by sizeof. */
-#undef SIZEOF_VOIDP
-
 /* Define to 1 if all of the C90 standard headers exist (not just the ones
    required in a freestanding environment). This macro is provided for
    backward compatibility; new code need not use it. */
 #undef STDC_HEADERS
-
-/* Type of Fortran CNF TRAIL argument */
-#undef TRAIL_TYPE
 
 /* Version number of package */
 #undef VERSION

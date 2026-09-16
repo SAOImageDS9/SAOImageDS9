@@ -77,6 +77,11 @@ f     The GrismMap class does not define any new routines beyond those
 *        Original version.
 *     10-MAY-2006 (DSB):
 *        Override astEqual.
+*     17-AUG-2026 (TIMJ):
+*        Discard the record that the GrismMap has been simplified when any of
+*        its attributes is set or cleared, since they define the
+*        transformation it performs. Done in the class's own MAKE_SET and
+*        MAKE_CLEAR macros, which every one of its attributes uses.
 *class--
 */
 
@@ -157,6 +162,7 @@ static void Clear##attribute( Ast##class *this, int *status ) { \
 \
 /* Otherwise, assign the "clear" value in the structure component. */ \
    } else { \
+      astClearIsSimple( this ); \
       this->component = (assign); \
    } \
 \
@@ -246,6 +252,7 @@ static void Set##attribute( Ast##class *this, type value, int *status ) { \
 \
 /* Otherwise, store the new value in the structure component. */ \
    } else { \
+      if( (assign) != this->component ) astClearIsSimple( this ); \
       this->component = (assign); \
    } \
 \

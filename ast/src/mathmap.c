@@ -85,6 +85,24 @@ f     The MathMap class does not define any new routines beyond those
 *        Re-implement the Equal method to avoid use of astSimplify.
 *     30-AUG-2012 (DSB):
 *        Fix bug in undocumented Gaussian noise function.
+*     16-APR-2026 (DSB):
+*        Equal(): use astEQUAL instead of raw != when comparing the
+*        compiled-expression constant operands.
+*     8-AUG-2026 (TIMJ):
+*        Use round() rather than (int)(x+0.5) for rounding, so that the
+*        library uses a single rounding idiom that is correct for
+*        negative values.
+*     15-AUG-2026 (TIMJ):
+*        Discard the record that the MathMap has been simplified when Seed,
+*        SimpFI or SimpIF is set or cleared. SimpFI and SimpIF decide
+*        whether a forward-inverse pair cancels, so a MathMap simplified
+*        before they were changed could report that there was nothing left
+*        to do.
+*     17-AUG-2026 (TIMJ):
+*        Report an error if Seed, SimpFI or SimpIF is set or cleared once the
+*        MathMap has been cloned, as SUN/210 says AST does for the attributes
+*        of any Mapping. Use the guarded astMAKE_SET1 and astMAKE_CLEAR1
+*        macros.
 *class--
 */
 
@@ -1726,8 +1744,8 @@ static int Equal( AstObject *this_object, AstObject *that_object, int *status ) 
                              code == OP_MAX ||
                              code == OP_MIN ) {
 
-                     if( this_con[ ifun ][ icon ] !=
-                         that_con[ ifun ][ icon ] ) {
+                     if( !astEQUAL( this_con[ ifun ][ icon ],
+                                    that_con[ ifun ][ icon ] ) ) {
                         result = 0;
                      } else {
                         icon++;
@@ -2542,7 +2560,7 @@ static void EvaluateFunction( Rcontext *rcontext, int npoint,
 /* Loading a variable involves obtaining the variable's index by
    consuming a constant (as above), and then copying the variable's
    values into the top of stack element. */
-            ARG_0( OP_LDVAR,    ivar = (int) ( con[ icon++ ] + 0.5 ),
+            ARG_0( OP_LDVAR,    ivar = (int) round( con[ icon++ ] ),
                                 *y = ptr_in[ ivar ][ point ] )
 
 /* System constants. */
@@ -2667,13 +2685,13 @@ static void EvaluateFunction( Rcontext *rcontext, int npoint,
    perform a 2-argument operation on the stack (as above) the required
    number of times. */
             case OP_MAX:
-               narg = (int) ( con[ icon++ ] + 0.5 );
+               narg = (int) round( con[ icon++ ] );
                for ( iarg = 0; iarg < ( narg - 1 ); iarg++ ) {
                   DO_ARG_2( *y = ( x1 >= x2 ) ? x1 : x2 )
                }
                break;
             case OP_MIN:
-               narg = (int) ( con[ icon++ ] + 0.5 );
+               narg = (int) round( con[ icon++ ] );
                for ( iarg = 0; iarg < ( narg - 1 ); iarg++ ) {
                   DO_ARG_2( *y = ( x1 <= x2 ) ? x1 : x2 )
                }
@@ -2934,7 +2952,7 @@ static void EvaluationSort( const double con[], int nsym, int symlist[],
                if ( symbol[ sym ].nargs >= 0 ) {
                   nstack += symbol[ sym ].stackincrement;
                } else {
-                  nstack -= (int) ( con[ icon++ ] + 0.5 ) - 1;
+                  nstack -= (int) round( con[ icon++ ] ) - 1;
                }
 
 /* Note the maximum size of the stack. */
@@ -5595,7 +5613,8 @@ static void ValidateSymbol( const char *method, const char *class,
    MathMap's random number generator context. Also clear the "active"
    flag, so that the generator will be re-initialised to use this seed
    when it is next invoked. */
-astMAKE_CLEAR(MathMap,Seed,rcontext.seed,( this->rcontext.seed_set = 0,
+astMAKE_CLEAR1(MathMap,Seed,rcontext.seed,( astClearIsSimple(this),
+                                           this->rcontext.seed_set = 0,
                                            this->rcontext.active = 0,
                                            DefaultSeed( &this->rcontext, status ) ))
 
@@ -5607,7 +5626,11 @@ astMAKE_GET(MathMap,Seed,int,0,this->rcontext.seed)
    context and set the context's "seed_set" flag. Also clear the "active"
    flag, so that the generator will be re-initialised to use this seed
    when it is next invoked. */
-astMAKE_SET(MathMap,Seed,int,rcontext.seed,( this->rcontext.seed_set = 1,
+astMAKE_SET1(MathMap,Seed,int,rcontext.seed,(
+                    ( !this->rcontext.seed_set ||
+                      value != this->rcontext.seed ) ?
+                                                astClearIsSimple(this) : (void)0,
+                                             this->rcontext.seed_set = 1,
                                              this->rcontext.active = 0,
                                              value ))
 
@@ -5675,14 +5698,16 @@ f     SimpFI and SimpIF attributes will be interchanged.
 *att--
 */
 /* Clear the SimpFI value by setting it to -INT_MAX. */
-astMAKE_CLEAR(MathMap,SimpFI,simp_fi,-INT_MAX)
+astMAKE_CLEAR1(MathMap,SimpFI,simp_fi,(astClearIsSimple(this),-INT_MAX))
 
 /* Supply a default of 0 if no SimpFI value has been set. */
 astMAKE_GET(MathMap,SimpFI,int,0,( ( this->simp_fi != -INT_MAX ) ?
                                    this->simp_fi : 0 ))
 
 /* Set a SimpFI value of 1 if any non-zero value is supplied. */
-astMAKE_SET(MathMap,SimpFI,int,simp_fi,( value != 0 ))
+astMAKE_SET1(MathMap,SimpFI,int,simp_fi,(
+            ( ( value != 0 ) != this->simp_fi ) ? astClearIsSimple(this) : (void)0,
+            ( value != 0 )))
 
 /* The SimpFI value is set if it is not -INT_MAX. */
 astMAKE_TEST(MathMap,SimpFI,( this->simp_fi != -INT_MAX ))
@@ -5748,14 +5773,16 @@ f     SimpFI and SimpIF attributes will be interchanged.
 *att--
 */
 /* Clear the SimpIF value by setting it to -INT_MAX. */
-astMAKE_CLEAR(MathMap,SimpIF,simp_if,-INT_MAX)
+astMAKE_CLEAR1(MathMap,SimpIF,simp_if,(astClearIsSimple(this),-INT_MAX))
 
 /* Supply a default of 0 if no SimpIF value has been set. */
 astMAKE_GET(MathMap,SimpIF,int,0,( ( this->simp_if != -INT_MAX ) ?
                                    this->simp_if : 0 ))
 
 /* Set a SimpIF value of 1 if any non-zero value is supplied. */
-astMAKE_SET(MathMap,SimpIF,int,simp_if,( value != 0 ))
+astMAKE_SET1(MathMap,SimpIF,int,simp_if,(
+            ( ( value != 0 ) != this->simp_if ) ? astClearIsSimple(this) : (void)0,
+            ( value != 0 )))
 
 /* The SimpIF value is set if it is not -INT_MAX. */
 astMAKE_TEST(MathMap,SimpIF,( this->simp_if != -INT_MAX ))
@@ -7414,7 +7441,6 @@ AstMathMap *astLoadMathMap_( void *mem, size_t size,
 /* Undefine macros local to this function. */
 #undef KEY_LEN
 }
-
 
 
 

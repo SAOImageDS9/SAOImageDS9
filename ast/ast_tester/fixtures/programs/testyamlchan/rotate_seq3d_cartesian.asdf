@@ -1,0 +1,22 @@
+#ASDF 1.0.0
+%YAML 1.1
+%TAG ! tag:stsci.edu:asdf/
+--- !core/asdf-1.1.0
+wcs: !<tag:stsci.edu:gwcs/wcs-1.0.0>
+  name: ''
+  steps:
+  - !<tag:stsci.edu:gwcs/step-1.0.0>
+    frame: !<tag:stsci.edu:gwcs/frame-1.0.0>
+      axes_names: [x, y, z]
+      axes_order: [0, 1, 2]
+      name: input
+    transform: !transform/rotate_sequence_3d-1.0.0
+      angles: [90.0]
+      axes_order: x
+      rotation_type: cartesian
+  - !<tag:stsci.edu:gwcs/step-1.0.0>
+    frame: !<tag:stsci.edu:gwcs/frame-1.0.0>
+      axes_names: [x, y, z]
+      axes_order: [0, 1, 2]
+      name: output
+    transform: null

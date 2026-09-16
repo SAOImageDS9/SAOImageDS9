@@ -1,0 +1,13 @@
+NAXIS1  =                  100 / Spatial axis
+NAXIS2  =                  100 / Spatial axis
+CTYPE1  = 'RA---SIN'          / SIN projection
+CTYPE2  = 'DEC--SIN'          / SIN projection
+CRVAL1  =              180.000 / [deg] Reference RA
+CRVAL2  =               45.000 / [deg] Reference Dec
+CRPIX1  =               50.500 / Reference pixel axis 1
+CRPIX2  =               50.500 / Reference pixel axis 2
+CDELT1  =              -0.0100 / Pixel size (deg)
+CDELT2  =               0.0100 / Pixel size (deg)
+RADESYS = 'FK5     '          / Reference frame
+EQUINOX =              2000.0  / Equinox
+END

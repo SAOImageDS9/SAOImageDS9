@@ -299,6 +299,13 @@ f     - AST_UNFORMAT: Read a formatted coordinate value for a Frame axis
 *         the crossing.
 *     25-OCT-2021 (DSB):
 *        Added astNormPoints method.
+*     19-JUN-2026 (TIMJ):
+*        Fix AxAngle: when a[axis-1] is zero and b[axis-1] is non-zero,
+*        the offset nudge was scaled by b[iaxis-1], but iaxis is left at
+*        naxes after the component loop, so it read b[naxes-1] instead of
+*        the intended b[axis-1]. This could make the nudge zero (e.g. for
+*        a=(0,0), b=(1,0) on a 2-D Frame), collapsing the offset point
+*        onto a and returning AST__BAD instead of a valid position angle.
 *class--
 */
 
@@ -1441,7 +1448,7 @@ f     AST_DISTANCE function.
             aa[ axis - 1 ] += 10000.0*DBL_EPSILON*fabs( a[ axis - 1 ] );
 
          } else if( b[ axis - 1 ] != 0.0 ) {
-            aa[ axis - 1 ] = 10000.0*DBL_EPSILON*fabs( b[ iaxis - 1 ] );
+            aa[ axis - 1 ] = 10000.0*DBL_EPSILON*fabs( b[ axis - 1 ] );
 
          } else if( mxab != 0.0 ) {
             aa[ axis - 1 ] = 10000.0*DBL_EPSILON*mxab;

@@ -116,6 +116,9 @@ f     The SwitchMap class does not define any new routines beyond those
 *     9-MAY-2006 (DSB):
 *        Check selector Mapping pointers are not NULL before calling
 *        astEqual in Equal.
+*     24-APR-2026 (TIMJ):
+*        Use round() instead of (int)(x+0.5) for selector index rounding
+*        to avoid platform-dependent results near half-integer values.
 *class--
 */
 
@@ -487,7 +490,7 @@ static AstMapping *GetRoute( AstSwitchMap *this, double sel, int *inv, int *stat
 
 /* Convert the supplied floating point selector value into an integer
    index into the array of route Mappings held in the supplied SwitchMap. */
-      rindex = (int)( sel + 0.5 ) - 1;
+      rindex = (int)( round( sel ) ) - 1;
 
 /* Return the null pointer if the index is out of range. */
       if( rindex >= 0 && rindex < this->nroute ) {
@@ -1725,7 +1728,7 @@ static AstPointSet *Transform( AstMapping *this, AstPointSet *in,
       sel = sel_ptr[ 0 ];
       for( ipoint = 0; ipoint < npoint; ipoint++,sel++ ) {
          if( *sel != AST__BAD ) {
-            rindex = (int)( *sel + 0.5 ) - 1;
+            rindex = (int)( round( *sel ) ) - 1;
             if( rindex >= 0 && rindex < nroute ) ( popmap[ rindex ] )++;
          }
       }
@@ -1784,7 +1787,7 @@ static AstPointSet *Transform( AstMapping *this, AstPointSet *in,
                k = 0;
                for( ipoint = 0; ipoint < npoint; ipoint++,sel++ ) {
                   if( *sel != AST__BAD ) {
-                     rindex = (int)( *sel + 0.5 ) - 1;
+                     rindex = (int)( round( *sel ) ) - 1;
                      if( rindex == iroute ) {
                         for( j = 0; j < ncin; j++ ) {
                            ptr1[ j ][ k ] = in_ptr[ j ][ ipoint ];
@@ -1803,7 +1806,7 @@ static AstPointSet *Transform( AstMapping *this, AstPointSet *in,
                k = 0;
                for( ipoint = 0; ipoint < npoint; ipoint++,sel++ ) {
                   if( *sel != AST__BAD ) {
-                     rindex = (int)( *sel + 0.5 ) - 1;
+                     rindex = (int)( round( *sel ) ) - 1;
                      if( rindex == iroute ) {
                         for( j = 0; j < ncout; j++ ) {
                            out_ptr[ j ][ ipoint ] = ptr2[ j ][ k ];

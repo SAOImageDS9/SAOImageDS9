@@ -17,6 +17,15 @@ package provide DS9 1.0
 # streaming - fine for this milestone, but real production code (Phase 3+)
 # should read only the tree text and the one target block's bytes instead.
 
+# ASDF's first line is a mandatory ASCII magic, "#ASDF <version>" (see the
+# asdf-standard file_layout spec). Checked before anything else so that a
+# FITS file - or any other non-ASDF file - handed to the ASDF loader is
+# told what is actually wrong, rather than failing further down with a
+# confusing "could not find ndarray" from the tree walk.
+proc AsdfIsAsdf {data} {
+    return [string equal -length 6 {#ASDF } $data]
+}
+
 proc AsdfTreeText {data} {
     set idx [string first "\xd3BLK" $data]
     if {$idx < 0} {
@@ -127,11 +136,22 @@ proc AsdfLz4DecompressPayload {payload decodedSize} {
 
 # ASDF/numpy datatype name -> FITS BITPIX, per fitsy's [xdim=...,bitpix=...]
 # array-header grammar (fitsy/parser.Y). Returns {} for unsupported types.
+#
+# -16 is not a FITS BITPIX at all - it is fitsy's own private code for
+# unsigned 16-bit (fitsy/parser.Y's compact atype rule maps 'u' to it, and
+# FitsFile::validParams in fitsy/file.C accepts it alongside the real FITS
+# values). The full set fitsy accepts is exactly {8,16,-16,32,64,-32,-64},
+# so uint32/uint64/int8/float16 have no representation here and are
+# deliberately left unmapped rather than silently coerced to a narrower or
+# differently-signed type. Real Roman arrays do hit that gap: a *_segm.asdf
+# product's roman.data is uint32, and a *_cal.asdf's roman.var_poisson is
+# float16 - see TODO.md Phase 3.
 proc AsdfDatatypeToBitpix {datatype} {
     switch -- $datatype {
 	float32 {return -32}
 	float64 {return -64}
 	int16 {return 16}
+	uint16 {return -16}
 	int32 {return 32}
 	int64 {return 64}
 	uint8 {return 8}
@@ -416,6 +436,177 @@ proc AsdfExtractWcsText {tree data {keys {wcs wcs_l2 wcs_l1}} {metaKeys wcs}} {
     return [AsdfResolveNdarrays "$header$doc" $data]
 }
 
+# --------------------------------------------------------------------
+# Header/metadata display (TODO.md Phase 3, design doc SS8 point 4).
+#
+# An ASDF file's YAML tree *is* its header, and it is already exactly the
+# right thing to show verbatim: ASDF never writes an array inline, only a
+# `source: N` reference alongside its datatype/shape, so even the 197MB
+# Roman cal file's tree is ~60KB of readable YAML. So there is no card
+# list to build and no "report arrays by shape/dtype" pass to write - the
+# format did that for us.
+#
+# The text is cached here in Tcl rather than on the C++ side because
+# nothing under tksao/ ever sees the ASDF container at all: the frame
+# receives only a raw pixel buffer through the array/var load path, with a
+# synthetic minimal FITS header that has nothing worth displaying. Keyed
+# by frame, and cleared whenever that frame is reloaded or unloaded (see
+# AsdfClearTree's callers in load.tcl and frame.tcl) so a FITS file loaded
+# over an ASDF one can never show the previous file's tree.
+
+proc AsdfSetTree {frame fn tree} {
+    global asdf
+
+    if {$frame == {}} {
+	return
+    }
+    set asdf(tree,$frame) $tree
+    set asdf(file,$frame) $fn
+}
+
+proc AsdfHasTree {frame} {
+    global asdf
+
+    return [expr {$frame != {} && [info exists asdf(tree,$frame)]}]
+}
+
+proc AsdfGetTree {frame} {
+    global asdf
+
+    if {![AsdfHasTree $frame]} {
+	return {}
+    }
+    return $asdf(tree,$frame)
+}
+
+# Closes the viewer window without dropping the cache - what the `header
+# close` command wants. DestroyHeader/DestroyHeaderOne in header.tcl only
+# know about the hd-* FITS header windows, so this is a separate teardown.
+proc AsdfDestroyHeader {frame} {
+    if {$frame == {}} {
+	return
+    }
+
+    set varname "asdf-$frame"
+    global $varname
+    if {[info exists $varname]} {
+	SimpleTextDestroy $varname
+    }
+}
+
+# Drops the cache and closes the viewer with it, so it can't keep showing
+# a file the frame no longer holds.
+proc AsdfClearTree {frame} {
+    global asdf
+
+    if {$frame == {}} {
+	return
+    }
+    unset -nocomplain asdf(tree,$frame)
+    unset -nocomplain asdf(file,$frame)
+
+    AsdfDestroyHeader $frame
+}
+
+# Shows the cached tree in the same SimpleTextDialog widget the FITS
+# header viewer uses (header.tcl's DisplayHeader), so it inherits that
+# window's Save/Print/Find machinery for free. No keyword tagging: that
+# loop tags a fixed 8-character column, which is a FITS card convention
+# with no YAML equivalent.
+proc DisplayAsdfHeader {frame} {
+    global asdf
+
+    if {![AsdfHasTree $frame]} {
+	return
+    }
+
+    set varname "asdf-$frame"
+    global $varname
+
+    SimpleTextDialog $varname [file tail $asdf(file,$frame)] 80 40 \
+	insert top $asdf(tree,$frame)
+}
+
+# Hands an extracted, self-contained GWCS document to the current frame
+# through the existing `wcs replace <which> <filename>` command. The YAML
+# travels via a temp file, deliberately not through `wcs replace text ...`:
+# that overload re-lexes its argument with tksao/frame/lex.L, whose STRING
+# token rules ("[^"]*" and {[^}]*}) have no escape mechanism and truncate on
+# the literal " { } characters every real GWCS document contains. Only the
+# temp file's name - short and delimiter-free - reaches the lexer this way.
+# See PHASE3_WCS_HANDOFF.md.
+#
+# `which` is 1-indexed: Base::findAllFits(int which) loops on `while (ptr &&
+# which)`, so 0 means "stop immediately" and always returns NULL, which
+# surfaces as an empty-message TCL_ERROR. 1 is also ds9/library/wcs.tcl's
+# own dwcs(ext) convention.
+#
+# Errors propagate to the caller rather than being swallowed here - the
+# caller decides whether a WCS failure is fatal.
+proc AsdfAttachWcs {yamltext} {
+    global current
+
+    set ch [file tempfile tmpfn]
+    fconfigure $ch -translation binary -encoding utf-8
+    puts -nonewline $ch $yamltext
+    close $ch
+
+    try {
+	$current(frame) wcs replace 1 $tmpfn
+    } finally {
+	file delete -force $tmpfn
+    }
+}
+
+# The Open/OpenDialog-facing entry point (see ds9/library/open.tcl's Open
+# switch), deliberately mirroring LoadFitsFile's {fn layer mode} signature
+# so ASDF dispatches like any other format rather than needing its own
+# path through the dialog code.
+#
+# `mode` has no ASDF meaning and is accepted only to keep that signature:
+# for FITS it selects load variants (slice, mosaic flavors) that are all
+# FITS-container concepts. The array key is Roman's fixed `roman.data`;
+# arbitrary in-file paths are Phase 4 scope.
+proc LoadAsdfFile {fn layer mode} {
+    return [AsdfLoadArray $fn data $layer]
+}
+
+# --------------------------------------------------------------------
+# Scripting surface (TODO.md Phase 3, design doc SS8 point 5) - the XPA /
+# SAMP / command-line entry point, parallel to fits.tcl's ProcessFitsCmd.
+# Grammar in ds9/parsers/asdfparser.tac + asdflex.fcl (taccle/fickle, the
+# in-tree pure-Tcl generators - nothing here goes near bison/flex).
+
+proc ProcessAsdfCmd {varname iname sock fn} {
+    upvar $varname var
+    upvar $iname i
+
+    global parse
+    set parse(sock) $sock
+    set parse(fn) $fn
+
+    asdf::YY_FLUSH_BUFFER
+    asdf::yy_scan_string [lrange $var $i end]
+    asdf::yyparse
+    incr i [expr $asdf::yycnt-1]
+}
+
+# Unlike FitsCmdLoad there is no socket/stdin variant. The container
+# reader resolves an ndarray's `source: N` against the block index written
+# at the *end* of the file, so it needs the whole file addressable, not a
+# forward-only byte stream - a piped ASDF would have to be spooled to a
+# temp file first and gains nothing over naming the file directly. Say so
+# rather than silently doing nothing when handed no filename.
+proc AsdfCmdLoad {param layer} {
+    if {$param == {}} {
+	Error [msgcat::mc {ASDF: a filename is required}]
+	return
+    }
+
+    LoadAsdfFile $param $layer {}
+    FinishLoad
+}
+
 # Loads one ndarray from an ASDF file into the current frame, via the
 # existing array/var load path. `key` is a top-level-under-"roman:" key
 # name (default "data", Roman's fixed science-array path - see design
@@ -428,10 +619,20 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
 	CreateFrame
     }
 
-    set fh [open $fn r]
-    fconfigure $fh -translation binary -encoding iso8859-1
-    set data [read $fh]
-    close $fh
+    if {[catch {
+	set fh [open $fn r]
+	fconfigure $fh -translation binary -encoding iso8859-1
+	set data [read $fh]
+	close $fh
+    } msg]} {
+	Error "[msgcat::mc {Unable to load}] $fn: $msg"
+	return 0
+    }
+
+    if {![AsdfIsAsdf $data]} {
+	Error "[msgcat::mc {ASDF: not an ASDF file}] $fn"
+	return 0
+    }
 
     set tree [AsdfTreeText $data]
     set node [AsdfFindNdarray $tree $key]
@@ -447,6 +648,16 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
 	return 0
     }
 
+    # Only rank-2 arrays map onto the array/var load path's xdim/ydim pair.
+    # Real Roman files do carry higher-rank siblings - roman.amp33 is
+    # [10,4096,128] and roman.border_ref_pix_top is [10,4,4096] - and
+    # without this check those load as a wrong 2-d shape instead of
+    # failing, since the extra axes simply fall off the end of xdim/ydim.
+    if {[llength $shapelist] != 2} {
+	Error "[msgcat::mc {ASDF: unsupported ndarray rank}] roman.$key \[[join $shapelist {, }]\]"
+	return 0
+    }
+
     set offsets [AsdfBlockIndex $data]
     set offset [lindex $offsets $source]
     if {$offset == {}} {
@@ -458,6 +669,10 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
 	Error "[msgcat::mc {ASDF}] $blk"
 	return 0
     }
+    if {$blk == {}} {
+	Error "[msgcat::mc {ASDF: no binary block at offset}] $offset"
+	return 0
+    }
     lassign $blk compression decoded
 
     # ASDF/numpy shape is [ny, nx, ...] (row-major); DS9's array header
@@ -465,6 +680,15 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
     set ydim [lindex $shapelist 0]
     set xdim [lindex $shapelist 1]
     set arch [expr {$byteorder eq "big" ? "big" : "little"}]
+
+    # fitsy's array path trusts the declared dimensions and never checks
+    # the buffer against them, so a block that decompressed short would
+    # otherwise render as real pixels followed by whatever memory follows.
+    set want [expr {$xdim * $ydim * (abs($bitpix) / 8)}]
+    if {[string length $decoded] < $want} {
+	Error "[msgcat::mc {ASDF: block too short for declared shape}] roman.$key"
+	return 0
+    }
 
     global asdfRawVar
     set asdfRawVar $decoded
@@ -479,23 +703,32 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
     set rr [ProcessLoad]
     unset -nocomplain asdfRawVar
 
-    # Phase 3 WCS attachment: best-effort, never fatal - an ASDF file with
-    # no recognized WCS subtree (or one AST can't parse) still loads its
-    # pixel data successfully with no WCS attached, per Phase 3's required
-    # fallback behavior (see PHASE3_WCS_HANDOFF.md).
+    # Cache the YAML tree for the header viewer. Deliberately after
+    # ProcessLoad, not before: ProcessLoad clears any previously cached
+    # tree for this frame (that is where every format's load funnels
+    # through), so setting it first would just be wiped.
     if {$rr} {
-	if {![catch {AsdfExtractWcsText $tree $data} yamltext] &&
-	    $yamltext ne {}} {
-	    catch {
-		set ch [file tempfile tmpfn]
-		fconfigure $ch -translation binary -encoding utf-8
-		puts -nonewline $ch $yamltext
-		close $ch
-		try {
-		    $current(frame) wcs replace 1 $tmpfn
-		} finally {
-		    file delete -force $tmpfn
-		}
+	AsdfSetTree $current(frame) $fn $tree
+    }
+
+    # Phase 3 WCS attachment: best-effort, never fatal - the pixel data is
+    # already loaded at this point and stays loaded whatever happens here.
+    #
+    # Three outcomes, deliberately distinguished rather than all swallowed
+    # by one catch. Finding no WCS subtree at all is normal and silent:
+    # Roman's *_segm.asdf segmentation products genuinely carry none. A
+    # subtree that is found but that extraction or AST then rejects (an
+    # unsupported tag or schema version, a GWCS shape yamlchan.c does not
+    # cover) is different - the frame is still usable, but say so rather
+    # than leave the user wondering why there is no WCS. Warning, not
+    # Error: it routes to ds9(msg) for XPA/SAMP callers and a non-modal
+    # notice in the GUI, which is what a non-fatal condition should do.
+    if {$rr} {
+	if {[catch {AsdfExtractWcsText $tree $data} yamltext]} {
+	    Warning "[msgcat::mc {ASDF: unable to extract WCS, loading without it}] $yamltext"
+	} elseif {$yamltext ne {}} {
+	    if {[catch {AsdfAttachWcs $yamltext} msg]} {
+		Warning "[msgcat::mc {ASDF: unable to attach WCS, loading without it}] $msg"
 	    }
 	}
     }

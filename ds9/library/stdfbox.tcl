@@ -33,6 +33,18 @@ proc InitDialogBox {} {
 			     [list {FITS} {*.FZ}] \
 			    ]
 
+    # Native ASDF loading (ASDF_NATIVE_SUPPORT_DESIGN.md). Roman products
+    # only ever use the plain .asdf extension - there is no compressed
+    # variant to list, since ASDF compresses per binary block inside the
+    # container rather than compressing the file as a whole.
+    global asdffbox
+    set asdffbox(file) {ds9.asdf}
+    set asdffbox(dir) {}
+    set asdffbox(types) [list \
+			     [list {ASDF} {*.asdf}] \
+			     [list {ASDF} {*.ASDF}] \
+			    ]
+
     global savefitsfbox
     set savefitsfbox(file) {ds9.fits}
     set savefitsfbox(dir) {}

@@ -159,6 +159,29 @@ proc AsdfDatatypeToBitpix {datatype} {
     }
 }
 
+# The ASDF datatypes fitsy cannot represent at all, paired with the
+# narrowest type it can that holds every value of them exactly. Returns {}
+# for a datatype with no lossless widening.
+#
+# Both of these occur on real Roman science arrays, and between them they
+# account for most of a *_cal.asdf: float16 is roman.err/var_poisson/
+# chisq/dumo, uint32 is roman.dq and the dq_border_ref_pix_* set. The
+# widening itself is done by `asdfconvert` (tclasdf/asdf_ext.c) - far too
+# slow over 16.7M elements in Tcl - which always emits little-endian, so
+# the caller fixes arch accordingly.
+#
+# Losslessness is the whole justification here: a narrowing or
+# sign-changing coercion (uint32 -> int32, say) would quietly alter pixel
+# values, which is worse than refusing the array. uint64 has no lossless
+# target in fitsy's set and so is deliberately absent.
+proc AsdfWidenDatatype {datatype} {
+    switch -- $datatype {
+	float16 {return float32}
+	uint32 {return int64}
+	default {return {}}
+    }
+}
+
 # Native ASDF/GWCS WCS attachment (TODO.md Phase 3). Ported from the Phase 1
 # Python spike (utils/asdf_gwcs_probe/extract_subtree.py,
 # resolve_ndarray.py) - see PHASE3_WCS_HANDOFF.md for the full design and
@@ -642,20 +665,37 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
     }
     lassign $node source datatype byteorder shapelist
 
+    set widen {}
     set bitpix [AsdfDatatypeToBitpix $datatype]
     if {$bitpix == {}} {
-	Error "[msgcat::mc {ASDF: unsupported ndarray datatype}] $datatype"
-	return 0
+	set widen [AsdfWidenDatatype $datatype]
+	if {$widen == {}} {
+	    Error "[msgcat::mc {ASDF: unsupported ndarray datatype}] $datatype"
+	    return 0
+	}
+	set bitpix [AsdfDatatypeToBitpix $widen]
     }
 
-    # Only rank-2 arrays map onto the array/var load path's xdim/ydim pair.
-    # Real Roman files do carry higher-rank siblings - roman.amp33 is
-    # [10,4096,128] and roman.border_ref_pix_top is [10,4,4096] - and
-    # without this check those load as a wrong 2-d shape instead of
-    # failing, since the extra axes simply fall off the end of xdim/ydim.
-    if {[llength $shapelist] != 2} {
-	Error "[msgcat::mc {ASDF: unsupported ndarray rank}] roman.$key \[[join $shapelist {, }]\]"
-	return 0
+    # ASDF/numpy shape is row-major, fastest-varying axis last; DS9's array
+    # header wants xdim first. Rank 3 loads as a data cube (fitsy's array
+    # grammar has zdim alongside xdim/ydim - see fitsy/parser.Y's `arr`
+    # rule), which covers roman.amp33 ([10,4096,128]) and the
+    # border_ref_pix_* set ([10,4096,4] etc). Anything else is refused
+    # rather than silently truncated: without this check the extra axes
+    # just fall off the end of xdim/ydim and the array loads at a wrong
+    # shape with no complaint.
+    switch -- [llength $shapelist] {
+	2 {
+	    lassign $shapelist ydim xdim
+	    set zdim {}
+	}
+	3 {
+	    lassign $shapelist zdim ydim xdim
+	}
+	default {
+	    Error "[msgcat::mc {ASDF: unsupported ndarray rank}] roman.$key \[[join $shapelist {, }]\]"
+	    return 0
+	}
     }
 
     set offsets [AsdfBlockIndex $data]
@@ -675,16 +715,24 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
     }
     lassign $blk compression decoded
 
-    # ASDF/numpy shape is [ny, nx, ...] (row-major); DS9's array header
-    # wants xdim/ydim (fastest-varying axis first).
-    set ydim [lindex $shapelist 0]
-    set xdim [lindex $shapelist 1]
     set arch [expr {$byteorder eq "big" ? "big" : "little"}]
+
+    if {$widen ne {}} {
+	if {[catch {asdfconvert $decoded $datatype $byteorder $widen} decoded]} {
+	    Error "[msgcat::mc {ASDF}] $decoded"
+	    return 0
+	}
+	# asdfconvert normalizes to little-endian whatever it was handed
+	set arch little
+    }
 
     # fitsy's array path trusts the declared dimensions and never checks
     # the buffer against them, so a block that decompressed short would
     # otherwise render as real pixels followed by whatever memory follows.
     set want [expr {$xdim * $ydim * (abs($bitpix) / 8)}]
+    if {$zdim ne {}} {
+	set want [expr {$want * $zdim}]
+    }
     if {[string length $decoded] < $want} {
 	Error "[msgcat::mc {ASDF: block too short for declared shape}] roman.$key"
 	return 0
@@ -696,7 +744,12 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
     set loadParam(file,type) array
     set loadParam(file,mode) {}
     set loadParam(load,type) var
-    set loadParam(file,name) "\[xdim=$xdim,ydim=$ydim,bitpix=$bitpix,arch=$arch\]"
+    set hdr "xdim=$xdim,ydim=$ydim"
+    if {$zdim ne {}} {
+	append hdr ",zdim=$zdim"
+    }
+    append hdr ",bitpix=$bitpix,arch=$arch"
+    set loadParam(file,name) "\[$hdr\]"
     set loadParam(var,name) asdfRawVar
     set loadParam(load,layer) $layer
 

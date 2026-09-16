@@ -55,6 +55,14 @@ proc OpenDialog {format {layer {}} {mode {}}} {
 	switch -- $format {
 	    mosaicimagewcs {set ok [MosaicWCSDialog sys]}
 	    mosaicwcs {set ok [MosaicWCSDialog sys]}
+	    asdf {
+		# an ASDF file holds many arrays, so ask which one - the
+		# answer rides along as the "<file>:<path>" suffix Open
+		# already knows how to take apart
+		if {[set ok [AsdfPathDialog $fn apath]]} {
+		    set fn "$fn:$apath"
+		}
+	    }
 	}
 
 	if {$ok} {

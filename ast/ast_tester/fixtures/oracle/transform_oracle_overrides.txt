@@ -1,0 +1,49 @@
+# Per-fixture overrides for check_transform_oracle.
+#
+# Round-trip lines (GRID-domain corpora: .head, .ast).  The round-trip
+# check asserts inverse(forward(P)) recovers the pixel P within an
+# absolute pixel tolerance (default 0.05 px):
+#   <relpath> off              disable the round-trip check for this fixture
+#   <relpath> <rtol> <atol>    use a looser per-fixture tolerance
+#
+# Golden lines.  The golden check compares live outputs against the
+# recorded oracle values:
+#   <relpath> golden off       skip golden comparison, both directions
+#   <relpath> golden-fwd off   skip golden comparison, forward sections
+#   <relpath> golden-inv off   skip golden comparison, inverse sections
+# Use these only for sections whose recorded values sit on a mathematical
+# singularity and are not architecture-stable; every skip needs a comment
+# explaining why.
+#
+# Blank lines and lines starting with '#' are ignored.
+
+# KNOWN ROUND-TRIP FAILURE -- INVESTIGATE.  The golden checks still pin the
+# fixture's forward and inverse outputs; only the round-trip accuracy
+# assertion is disabled.
+#
+# tnx-cheb.head: the TNX Chebyshev distortion builds a ChebyMap, which disables
+#   PolyMap's iterative inverse (it cannot represent its own Jacobian -- the
+#   derivative of a 1st-kind Chebyshev T_n is a 2nd-kind U_(n-1), which
+#   ChebyMap's storage does not support; see src/chebymap.c).  So sky->pixel
+#   returns BAD for the whole fixture (no inverse exists).
+wcsconv/inputs/tnx-cheb.head   off
+
+# The same object, reached through its dump under wcsconv/framesets/.  It has no
+# inverse for the reason above, so the round-trip cannot be asserted there
+# either.  Both entries are needed because an override is keyed on the relpath.
+wcsconv/framesets/tnx-cheb-head.ast   off
+
+# (tsc.head needs no override: its only failing pixel is a 360 deg alias in an
+#  image wider than the quad-cube period, now accepted by the alias-aware
+#  round-trip check -- inverse(forward(P)) forward-maps back to the same sky.)
+
+# neg_unitnormmap_inv_fwd_diffcentre.map: the fixture is
+# UnitNormMap(centre A)^-1 then UnitNormMap(centre B).  Its inverse chain,
+# fed the forward outputs of the sampled all-zero input, reconstructs
+# centre A as B + |A-B| * (A-B)/|A-B|.  Whether that lands on A exactly
+# (residual zero, output AST__BAD) or ~1e-16 away (output an arbitrary
+# unit-vector direction made of rounding noise) depends on the
+# architecture's rounding, so no recorded value at that point is stable:
+# x86 Linux computes BAD where the arm64 macOS generator recorded a noise
+# direction.  The forward section remains pinned by the golden check.
+simplify/neg_unitnormmap_inv_fwd_diffcentre.map   golden-inv off

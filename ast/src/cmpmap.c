@@ -161,6 +161,21 @@ f     The CmpMap class does not define any new routines beyond those
 *        cause other Mappings to change.
 *     31-JUL-2020 (DSB):
 *        Modify Simplify to honour the RESTRICTED_SIMPLIFY and ALLOW_SIMPLIFY flags.
+*     23-AUG-2026 (TIMJ):
+*        In MapMerge, when combining parallel CmpMaps in series, test whether
+*        each aligned series composition simplified before annulling the
+*        pointer being tested. The annul happened first, so the test always
+*        reported a simplification and the pair was rebuilt even when no
+*        component reduced.
+*     3-SEP-2026 (TIMJ):
+*        In Equal, explicitly expand the outer CmpMaps when astMapList
+*        declines to decompose them. MapList returns a list holding only a
+*        clone of the CmpMap itself in that case, so comparing the lists
+*        element by element called astEqual on the same pair again and
+*        recursed until the stack was exhausted. Compare copies of the
+*        resulting components so their Invert values can be set without
+*        modifying shared Mappings. Reached by any CmpMap for which
+*        astDoNotSimplify is true, such as one carrying an Ident.
 *class--
 */
 
@@ -261,6 +276,8 @@ AstCmpMap *astCmpMapId_( void *, void *, int, const char *, ... );
 /* Prototypes for Private Member Functions. */
 /* ======================================== */
 static AstMapping *CombineMaps( AstMapping *, int, AstMapping *, int, int, int * );
+static int EqualMapping( AstMapping *, int, AstMapping *, int, int * );
+static void ExpandCmpMap( AstCmpMap *, int *, AstMapping ***, int **, int * );
 static AstMapping *RemoveRegions( AstMapping *, int * );
 static AstMapping *Simplify( AstMapping *, int * );
 static AstPointSet *Transform( AstMapping *, AstPointSet *, int, AstPointSet *, int * );
@@ -288,6 +305,156 @@ static int ManageLock( AstObject *, int, int, AstObject **, int * );
 
 /* Member functions. */
 /* ================= */
+static int EqualMapping( AstMapping *this, int this_invert,
+                         AstMapping *that, int that_invert, int *status ) {
+/*
+*  Name:
+*     EqualMapping
+
+*  Purpose:
+*     Compare two Mappings in specified senses without modifying them.
+
+*  Type:
+*     Private function.
+
+*  Synopsis:
+*     #include "cmpmap.h"
+*     int EqualMapping( AstMapping *this, int this_invert,
+*                       AstMapping *that, int that_invert, int *status )
+
+*  Class Membership:
+*     CmpMap member function.
+
+*  Description:
+*     This function compares two Mappings after setting copies of them to
+*     use specified values for their Invert attributes. The supplied
+*     Mappings are not modified.
+
+*  Parameters:
+*     this
+*        Pointer to the first Mapping.
+*     this_invert
+*        The Invert value to use for the first Mapping.
+*     that
+*        Pointer to the second Mapping.
+*     that_invert
+*        The Invert value to use for the second Mapping.
+*     status
+*        Pointer to the inherited status variable.
+
+*  Returned Value:
+*     One if the Mappings are equivalent, and zero otherwise.
+
+*  Notes:
+*     - A value of zero will be returned if this function is invoked with
+*     the global status set, or if it should fail for any reason.
+*/
+
+/* Local Variables: */
+   AstMapping *that_copy;        /* Copy of the second Mapping */
+   AstMapping *this_copy;        /* Copy of the first Mapping */
+   int result;                   /* Returned result */
+
+   result = 0;
+   that_copy = NULL;
+   this_copy = NULL;
+
+   if( astOK ) {
+      this_copy = astCopy( this );
+      that_copy = astCopy( that );
+   }
+
+   if( astOK ) {
+      astSetInvert( this_copy, this_invert );
+      astSetInvert( that_copy, that_invert );
+
+      result = astEqual( this_copy, that_copy );
+   }
+
+   this_copy = astAnnul( this_copy );
+   that_copy = astAnnul( that_copy );
+
+   return astOK ? result : 0;
+}
+
+static void ExpandCmpMap( AstCmpMap *this, int *nmap,
+                          AstMapping ***map_list, int **invert_list,
+                          int *status ) {
+/*
+*  Name:
+*     ExpandCmpMap
+
+*  Purpose:
+*     Expand a CmpMap by one level for use by Equal.
+
+*  Type:
+*     Private function.
+
+*  Synopsis:
+*     #include "cmpmap.h"
+*     void ExpandCmpMap( AstCmpMap *this, int *nmap,
+*                        AstMapping ***map_list, int **invert_list,
+*                        int *status )
+
+*  Class Membership:
+*     CmpMap member function.
+
+*  Description:
+*     This function expands a CmpMap by one level even if its
+*     astDoNotSimplify method prevents MapList from doing so. Decompose
+*     supplies the component order and senses appropriate to the current
+*     Invert value, after which MapList flattens any eligible component
+*     CmpMaps in the usual way.
+
+*  Parameters:
+*     this
+*        Pointer to the CmpMap.
+*     nmap
+*        Address of an int holding the number of Mappings already in
+*        "map_list". On exit, it includes the Mappings appended by this
+*        function.
+*     map_list
+*        Address of a pointer to a dynamically allocated array of Mapping
+*        pointers. The new component Mappings are appended to this array.
+*        Each returned Mapping pointer should be annulled by the caller and
+*        the array should be freed using astFree.
+*     invert_list
+*        Address of a pointer to a dynamically allocated array of Invert
+*        values corresponding to the entries in "map_list". The array
+*        should be freed by the caller using astFree.
+*     status
+*        Pointer to the inherited status variable.
+
+*  Notes:
+*     - If this function is invoked with the global status set, no new
+*     Mappings will be appended.
+*/
+
+/* Local Variables: */
+   AstMapping *map1;             /* First component Mapping */
+   AstMapping *map2;             /* Second component Mapping */
+   int invert1;                  /* Invert value for first component */
+   int invert2;                  /* Invert value for second component */
+
+   map1 = NULL;
+   map2 = NULL;
+   invert1 = 0;
+   invert2 = 0;
+
+   if( astOK ) {
+      astDecompose( (AstMapping *) this, &map1, &map2, NULL,
+                    &invert1, &invert2 );
+
+      astMapList( map1, this->series, invert1,
+                  nmap, map_list, invert_list );
+      astMapList( map2, this->series, invert2,
+                  nmap, map_list, invert_list );
+   }
+
+   map1 = astAnnul( map1 );
+   map2 = astAnnul( map2 );
+}
+
 static int Equal( AstObject *this_object, AstObject *that_object, int *status ) {
 /*
 *  Name:
@@ -335,6 +502,7 @@ static int Equal( AstObject *this_object, AstObject *that_object, int *status ) 
    int *that_invert_list;
    int *this_invert_list;
    int i;
+   int expanded;
    int result;
    int that_inv;
    int that_nmap;
@@ -343,6 +511,7 @@ static int Equal( AstObject *this_object, AstObject *that_object, int *status ) 
 
 /* Initialise. */
    result = 0;
+   expanded = 0;
 
 /* Check the global error status. */
    if ( !astOK ) return result;
@@ -375,6 +544,33 @@ static int Equal( AstObject *this_object, AstObject *that_object, int *status ) 
          astMapList( (AstMapping *) that, that->series, astGetInvert( that ),
                      &that_nmap, &that_map_list, &that_invert_list );
 
+/* If astMapList declined to decompose both CmpMaps - which happens when
+   astDoNotSimplify returns non-zero - the parent class returns a list
+   holding nothing but a clone of the CmpMap itself. Comparing those lists
+   element by element would call astEqual on this same pair of CmpMaps
+   again, recursing until the stack is exhausted. Replace the singleton
+   lists with lists made by expanding the outer CmpMaps explicitly. */
+         if( this_nmap == 1 && that_nmap == 1 &&
+             this_map_list[ 0 ] == (AstMapping *) this &&
+             that_map_list[ 0 ] == (AstMapping *) that ) {
+
+            this_map_list[ 0 ] = astAnnul( this_map_list[ 0 ] );
+            this_map_list = astFree( this_map_list );
+            this_invert_list = astFree( this_invert_list );
+            this_nmap = 0;
+
+            that_map_list[ 0 ] = astAnnul( that_map_list[ 0 ] );
+            that_map_list = astFree( that_map_list );
+            that_invert_list = astFree( that_invert_list );
+            that_nmap = 0;
+
+            ExpandCmpMap( this, &this_nmap, &this_map_list,
+                          &this_invert_list, status );
+            ExpandCmpMap( that, &that_nmap, &that_map_list,
+                          &that_invert_list, status );
+            expanded = 1;
+         }
+
 /* Check the decompositions yielded the same number of component
    Mappings. */
          if( that_nmap == this_nmap ) {
@@ -382,19 +578,27 @@ static int Equal( AstObject *this_object, AstObject *that_object, int *status ) 
 /* Check equality of every component. */
             for( i = 0; i < this_nmap; i++ ) {
 
-/* Temporarily set the Mapping Invert flags to the required values,
-   saving the original values so that they can be re-instated later.*/
-               this_inv = astGetInvert( this_map_list[ i ] );
-               astSetInvert( this_map_list[ i ], this_invert_list[ i ] );
-               that_inv = astGetInvert( that_map_list[ i ] );
-               astSetInvert( that_map_list[ i ], that_invert_list[ i ] );
+/* The explicitly expanded lists may share component pointers, so compare
+   copies in that case. Otherwise retain the usual temporary-setting path. */
+               if( expanded ) {
+                  result = EqualMapping( this_map_list[ i ],
+                                         this_invert_list[ i ],
+                                         that_map_list[ i ],
+                                         that_invert_list[ i ], status );
+
+               } else {
+                  this_inv = astGetInvert( this_map_list[ i ] );
+                  astSetInvert( this_map_list[ i ], this_invert_list[ i ] );
+                  that_inv = astGetInvert( that_map_list[ i ] );
+                  astSetInvert( that_map_list[ i ], that_invert_list[ i ] );
 
 /* Compare the two component Mappings for equality. */
-               result = astEqual( this_map_list[ i ], that_map_list[ i ] );
+                  result = astEqual( this_map_list[ i ], that_map_list[ i ] );
 
 /* Re-instate the original Invert flags. */
-               astSetInvert( this_map_list[ i ], this_inv );
-               astSetInvert( that_map_list[ i ], that_inv );
+                  astSetInvert( this_map_list[ i ], this_inv );
+                  astSetInvert( that_map_list[ i ], that_inv );
+               }
 
 /* Leave the loop if the Mappings are not equal. */
                if( !result ) break;
@@ -1720,12 +1924,12 @@ static int MapMerge( AstMapping *this, int where, int series, int *nmap,
                            submap1 = astAnnul( submap1 );
                            submap2 = astAnnul( submap2 );
                            tmap2 = astSimplify( tmap );
-                           tmap = astAnnul( tmap );
 
 /* Note if any simplification took place. */
                            if( tmap != tmap2 ||
                                astGetInvert( tmap ) != astGetInvert( tmap2 ) )
                                            simpler = 1;
+                           tmap = astAnnul( tmap );
 
 /* Add the simplifed Mapping into the total merged Mapping (a parallel
    CmpMap). */
@@ -4845,11 +5049,6 @@ AstCmpMap *astLoadCmpMap_( void *mem, size_t size,
    same interface. */
 
 /* None. */
-
-
-
-
-
 
 
 

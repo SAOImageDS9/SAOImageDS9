@@ -1,0 +1,17 @@
+SIMPLE  =                    T / Written by IDL:  30-Jul-1997 05:35:42.00
+BITPIX  =                  -32 / Bits per pixel
+NAXIS   =                    2 / Number of dimensions
+NAXIS1  =                  300 / Length of x axis
+NAXIS2  =                  300 / Length of y axis
+CTYPE1  = 'RA---TAN'           / TAN projection
+CTYPE2  = 'DEC--TAN'           / TAN projection
+CRVAL1  =              180.000 / Reference RA (deg)
+CRVAL2  =               45.000 / Reference Dec (deg)
+CRPIX1  =              150.500 / Reference pixel
+CRPIX2  =              150.500 / Reference pixel
+CDELT1  =             -0.00100 / Degrees/pixel
+CDELT2  =              0.00100 / Degrees/pixel
+EQUINOX =               2000.0 / Equinox of coordinates
+RADESYS = 'FK5     '           / Coordinate reference frame
+PV1_0   =                  0.1 / Non-zero fiducial point offset
+END

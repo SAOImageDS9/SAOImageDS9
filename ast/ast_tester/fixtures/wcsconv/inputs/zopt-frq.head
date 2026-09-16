@@ -1,0 +1,9 @@
+NAXIS1  =                 1024 / length of data axis 1
+CTYPE1  = 'ZOPT-FRQ'           / Early draft III: redshift sampled, frequency system
+CRVAL1  =                0.001 / Reference redshift
+CRPIX1  =              512.500 / Reference pixel
+CDELT1  =            0.0000010 / Redshift increment
+CUNIT1  = '        '           / Dimensionless
+RESTFRQ =           1.4204E+09 / Rest frequency (Hz)
+SPECSYS = 'BARYCENT'           / Spectral reference frame
+END

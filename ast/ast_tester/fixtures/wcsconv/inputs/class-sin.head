@@ -1,0 +1,22 @@
+NAXIS1  =                 1024 / Spectral axis
+NAXIS2  =                  100 / Spatial axis
+NAXIS3  =                  100 / Spatial axis
+CTYPE1  = 'FREQ    '           / Frequency
+CTYPE2  = 'RA---SIN'           / Celestial longitude
+CTYPE3  = 'DEC--SIN'           / Celestial latitude
+CRVAL1  =       1.420405752E9  / Reference frequency (Hz)
+CRVAL2  =              180.000 / Reference RA (deg)
+CRVAL3  =               45.000 / Reference Dec (deg)
+CRPIX1  =              513.000 / Reference pixel
+CRPIX2  =               50.000 / Reference pixel
+CRPIX3  =               50.000 / Reference pixel
+CDELT1  =           1.0000E+06 / Frequency step (Hz)
+CDELT2  =              -0.0100 / Pixel size (deg)
+CDELT3  =               0.0100 / Pixel size (deg)
+CUNIT1  = 'Hz      '           / Frequency units
+RESTFRQ =       1.420405752E9  / [Hz] Rest frequency
+SPECSYS = 'BARYCENT'           / Barycentric
+RADESYS = 'FK5     '           / Reference frame
+EQUINOX =               2000.0 / Equinox
+MJD-OBS =            52413.590 / MJD of observation
+END

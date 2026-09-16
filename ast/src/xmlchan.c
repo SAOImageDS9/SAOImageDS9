@@ -73,6 +73,7 @@ f     The XmlChan class does not define any new routines beyond those
 
 *  Authors:
 *     DSB: David Berry (Starlink)
+*     TIMJ: Tim Jenness (Rubin Observatory)
 
 *  History:
 *     10-OCT-2003 (DSB):
@@ -91,8 +92,15 @@ f     The XmlChan class does not define any new routines beyond those
 *        In AstroCoordAreaReader, correct the way the TimeOrigin value
 *        is transferred from the main TimeFrame to the uncertainty region.
 *        This bug only manifested itself as a result of running the STC
-*        tester on a 32 bit machine, where the loss of prcision caused
+*        tester on a 32 bit machine, where the loss of prceision caused
 *        by the bug caused a test to fail.
+*     8-APR-2026 (TIMJ):
+*        In AstroCoordsReader, change the lo and hi variables from
+*        scalar doubles to 2-element arrays. They are passed to
+*        astInterval which indexes lbnd[i] for i=0..naxes-1, causing
+*        a stack buffer overflow when the positional frame has more
+*        than one axis (e.g. a SkyFrame).
+*        Fix astFree of static buffer in xmlchan.c Report function.
 *class--
 
 * Further STC work:
@@ -1330,8 +1338,8 @@ static int AstroCoordsReader( AstXmlChan *this, AstXmlElement *elem,
    const char *names[4];         /* Names of the subelements to be searched for */
    char buff[100];               /* Message buffer */
    double epoch;                 /* Epoch */
-   double hi;                    /* High limit for zero-width interval */
-   double lo;                    /* Low limit for zero-width interval */
+   double hi[2];                 /* High limits for zero-width interval */
+   double lo[2];                 /* Low limits for zero-width interval */
    double pos[2];                /* Reference spatial position */
    double rf;                    /* Rest frequency */
    int axes[2];                  /* Indices of position axes */
@@ -1606,8 +1614,10 @@ static int AstroCoordsReader( AstXmlChan *this, AstXmlElement *elem,
          }
 
 /* Do each of the other items, all of which are described by a Region. */
-         lo = 0.0;
-         hi = 0.0;
+         lo[0] = 0.0;
+         lo[1] = 0.0;
+         hi[0] = 0.0;
+         hi[1] = 0.0;
          for( i = 0; i < 5; i++ ) {
 
 /* Initialise a flag indicating that we have not yet found any non-null
@@ -1627,7 +1637,7 @@ static int AstroCoordsReader( AstXmlChan *this, AstXmlElement *elem,
                   t = (AstRegion *) o;
                   use = 1;
                } else {
-                  t = (AstRegion *) astInterval( pfrm, &lo, &hi, NULL, "", status );
+                  t = (AstRegion *) astInterval( pfrm, lo, hi, NULL, "", status );
                }
             }
 
@@ -1639,7 +1649,7 @@ static int AstroCoordsReader( AstXmlChan *this, AstXmlElement *elem,
                   r = (AstRegion *) o;
                   use = 1;
                } else {
-                  r = (AstRegion *) astInterval( tfrm, &lo, &hi, NULL, "", status );
+                  r = (AstRegion *) astInterval( tfrm, lo, hi, NULL, "", status );
                }
 
 /* If there were earlier axes, extrude the current total region into the
@@ -1663,7 +1673,7 @@ static int AstroCoordsReader( AstXmlChan *this, AstXmlElement *elem,
                   r = (AstRegion *) o;
                   use = 1;
                } else {
-                  r = (AstRegion *) astInterval( sfrm, &lo, &hi, NULL, "", status );
+                  r = (AstRegion *) astInterval( sfrm, lo, hi, NULL, "", status );
                }
 
                if( t ) {
@@ -1683,7 +1693,7 @@ static int AstroCoordsReader( AstXmlChan *this, AstXmlElement *elem,
                   r = (AstRegion *) o;
                   use = 1;
                } else {
-                  r = (AstRegion *) astInterval( rfrm, &lo, &hi, NULL, "", status );
+                  r = (AstRegion *) astInterval( rfrm, lo, hi, NULL, "", status );
                }
 
                if( t ) {
@@ -2425,8 +2435,8 @@ static int AttrValueB( AstXmlChan *this, AstXmlElement *elem, const char *name,
    int i;                        /* Loop count */
 
 /* Define the recognised true and false strings. */
-   const char *true[ 5 ] = { "true", "TRUE", "yes", "YES", "1" };
-   const char *false[ 5 ] = { "false", "FALSE", "no", "NO", "0" };
+   const char *truestr[ 5 ] = { "true", "TRUE", "yes", "YES", "1" };
+   const char *falsestr[ 5 ] = { "false", "FALSE", "no", "NO", "0" };
 
 /* Initialise. */
    result = def;
@@ -2447,7 +2457,7 @@ static int AttrValueB( AstXmlChan *this, AstXmlElement *elem, const char *name,
 /* See if the attribute value is equal to (or an abbreviation of) any of
    the true strings. */
       for( i = 0; i < 5; i++ ) {
-         if( strstr( true[ i ], value ) == true[ i ] ) {
+         if( strstr( truestr[ i ], value ) == truestr[ i ] ) {
             result = 1;
             break;
          }
@@ -2457,7 +2467,7 @@ static int AttrValueB( AstXmlChan *this, AstXmlElement *elem, const char *name,
    of the false strings. */
       if( result == -1 ) {
          for( i = 0; i < 5; i++ ) {
-            if( strstr( false[ i ], value ) == false[ i ] ) {
+            if( strstr( falsestr[ i ], value ) == falsestr[ i ] ) {
                result = 0;
                break;
             }
@@ -7855,10 +7865,10 @@ static void ReCentreAnc( AstRegion *region, int nanc, AstKeyMap **ancs, int *sta
    AstObject *o;
    AstRegion *r2;
    AstRegion *r;
-   char orgatt[ 20 ];
+   char orgatt[ 30 ];
    char orgset[ 80 ];
    char setting[ 80 ];
-   char sysatt[ 20 ];
+   char sysatt[ 30 ];
    char sysset[ 80 ];
    const char *old_unit;
    const char *time_unit;
@@ -9007,7 +9017,6 @@ static void Report( AstXmlChan *this, AstXmlElement *elem, int severity,
       text = (char *) astXmlGetTag( elem, 1 );
       astError( AST__BADIN, "astRead(%s): Failed to read %s element: %s", status,
                 astGetClass( this ), text, msg );
-      text = astFree( text );
    }
 }
 
@@ -14396,16 +14405,3 @@ AstXmlChan *astLoadXmlChan_( void *mem, size_t size,
    Note that the member function may not be the one defined here, as it may
    have been over-ridden by a derived class. However, it should still have the
    same interface. */
-
-
-
-
-
-
-
-
-
-
-
-
-

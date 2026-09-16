@@ -1,0 +1,22 @@
+NAXIS1  =                 1024 / Spectral axis
+NAXIS2  =                  100 / Spatial axis
+NAXIS3  =                  100 / Spatial axis
+CTYPE1  = 'VOPT-F2W'           / Optical velocity via frequency
+CTYPE2  = 'RA---TAN'           / Celestial longitude
+CTYPE3  = 'DEC--TAN'           / Celestial latitude
+CRVAL1  =                  0.0 / Reference velocity (m/s)
+CRVAL2  =              150.000 / Reference RA (deg)
+CRVAL3  =              -30.000 / Reference Dec (deg)
+CRPIX1  =              513.000 / Reference pixel
+CRPIX2  =               50.500 / Reference pixel
+CRPIX3  =               50.500 / Reference pixel
+CDELT1  =              1000.0  / Velocity step (m/s)
+CDELT2  =        -0.00083333   / Pixel size (deg)
+CDELT3  =         0.00083333   / Pixel size (deg)
+CUNIT1  = 'm/s     '           / Velocity units
+RADESYS = 'FK5     '           / Reference frame
+EQUINOX =               2000.0 / Equinox
+RESTFRQ =       1.420405752E9  / [Hz] Rest frequency
+SPECSYS = 'BARYCENT'           / Barycentric
+MJD-OBS =            52413.59  / MJD of observation
+END

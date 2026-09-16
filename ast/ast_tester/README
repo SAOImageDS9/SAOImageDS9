@@ -1,0 +1,118 @@
+AST tester fixtures
+===================
+
+All committed test data is below `fixtures/`.  Fixture paths in manifests
+and transform-oracle section headers are relative to that directory:
+
+* `wcsconv/inputs/` contains FITS headers and native objects used as WCS
+  conversion inputs; `wcsconv/expected/` contains generated references.
+  Conversion cases are listed in `wcsconv/cases.txt`.  Two files sit outside
+  that split on purpose: `wcsconv/inputs/dss.ast` is the reference for the
+  `dss_fits-dss_ast` case as well as the input to two others, which is what
+  makes that case a round-trip assertion; and `wcsconv/inputs/lsst.fits-wcs`
+  is a frozen copy of the `lsst_fits-wcs` output, kept as an input so that
+  regenerating the reference does not change what testgrid and testplotter
+  draw.
+* `simplify/` contains the scenario and focused `.map`/`.simp` pairs, with
+  registered cases in `simplify/cases.txt`.
+* `oracle/` contains the three transform oracles and per-fixture overrides.
+* `plot/expected/` contains SVG and PostScript references.  Plot headers,
+  attributes, frame attributes, and boxes are recorded in `plot/cases.txt`;
+  plot headers refer to their canonical copies under `wcsconv/inputs/`.
+* `programs/` contains data used by individual C and Fortran programs.
+
+CMake stages `fixtures/` unchanged below the build-tree `ast_tester/`
+directory, with one build-time copy driven by the `ast_stage_fixtures`
+target.  CTest and source-tree runs therefore both use paths beginning with
+`fixtures/`.  Test output and scratch files are written in the current
+working directory, never into the fixture tree.
+
+Adding or removing a fixture changes the glob and so triggers a CMake
+reconfigure; editing one only re-runs the copy.  Every path a manifest names
+is checked for existence at configure time, so a typo in a `cases.txt` fails
+the configure with the manifest and path named, rather than part-way through
+a ctest run.
+
+Fused multiply-add
+------------------
+
+Check a fixture or a reference against two builds, not one:
+
+    cmake -S . -B build     -DCMAKE_BUILD_TYPE=Release
+    cmake -S . -B build-fma -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_C_FLAGS=-march=x86-64-v3
+
+Baseline x86-64 has no FMA instruction, so a compiler rounds `a*b+c` twice.
+arm64 contracts it into one fused operation, clang does so by default, and gcc
+does at `-march=x86-64-v3`.  That changes results by about an ulp per operation,
+which sounds negligible and is not: where a value cancels, the difference is
+unbounded in relative terms, and where a card is written only for a non-zero
+value it changes how many lines a dump has.  Both have happened in this corpus.
+
+So a reference captured on one of those builds can fail on the other, and a
+comparison tightened on one can fail on the other.  The CI matrix runs both on
+Linux for this reason, which isolates contraction from the libm differences that
+a ubuntu-versus-macos comparison also carries.  Run both locally before trusting
+a new reference or a narrowed tolerance.
+
+Legacy installed-library test
+-----------------------------
+
+Initialize Starlink from zsh, then run the legacy tcsh script from this
+directory:
+
+    source ~/star/etc/profile
+    cd ast_tester
+    ./ast_tester -nd
+
+Omit `-nd` to display generated plots.  The script expects `gfortran` and
+the Starlink link-helper commands on `PATH`.  New PostScript files are
+written at this directory level for comparison with
+`fixtures/plot/expected/`.
+
+On macOS, `pgplot_link` emits a bare `-lSM -lICE -lX11` with no search path
+for them, so linking `plotter` needs XQuartz's library directory added:
+
+    setenv LDFLAGS "-L/opt/X11/lib"
+
+The script tests whichever AST is installed under `$AST`, so point it at an
+install of this tree: against an older installed library the reference
+comparisons legitimately differ, because the committed references are
+generated from HEAD.
+
+All three case lists are read from the same manifests the ctests use, so a
+new fixture is picked up without editing the script:
+
+* plot cases from `fixtures/plot/cases.txt`, via `plotcase.awk`, plus `sip`
+  and `sip2`, which have no manifest row but are still worth plotting;
+* conversion cases from `fixtures/wcsconv/cases.txt` and simplify cases from
+  `fixtures/simplify/cases.txt`, via `cases.awk`.
+
+Two groups of cases are run but not compared here, and the script reports
+how many of each: rows whose `skip_string_compare` column is `yes` or
+`astequal`, whose serialisation varies between platforms by more than a
+byte-level diff can accept, and simplify fixtures containing an IntraMap, which
+name a private transformation function that `simplify.c` registers with
+`astIntraReg` and `simplify.f` cannot.  ctest covers both, comparing dumps with
+`compare_dumps`, which tolerates a last-bit difference rather than requiring
+byte equality, and widens that to astEQUAL for the `astequal` rows.
+
+`doplot <case>` and `makeplot <case>` plot a single case.  The argument is
+either a name from `fixtures/plot/cases.txt`, in which case that row's
+attributes and box are used, or the name of any header under
+`fixtures/wcsconv/inputs`, or a path to a header, either of which is plotted
+with default settings.
+
+Transform oracles
+-----------------
+
+Build the generator and pass the fixture root followed by three output
+files.  Temporary output paths are recommended for review:
+
+    cmake --build build --target gen_transform_oracle
+    build/ast_tester/gen_transform_oracle ast_tester/fixtures \
+        /tmp/simplify.oracle /tmp/headers.oracle /tmp/framesets.oracle
+
+The generator recursively discovers `.head` and `.ast` inputs below the
+fixture root, and scans `simplify/` for `.map`/`.simp` pairs.  It sorts full
+fixture-root-relative paths so output is deterministic.

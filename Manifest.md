@@ -1,15 +1,16 @@
 # List of SAOImageDS9 packages
 
-Last updated 2026-08-20
+Last updated 2026-09-16
 
 | name         | version    | SAO   | dirty | upstream                                                             | latest                          |
 | ------------ | ---------- | ----- | ----- | -------------------------------------------------------------------- | ------------------------------- |
-| ast          | 9.2.14     |       |       | https://github.com/Starlink/ast                                      | 9.2.14                          |
+| ast          | 9.4.1      |       |       | https://github.com/Starlink/ast                                      | 9.4.1                           |
 | awthemes     | 10.4.0     |       |       | https://sourceforge.net/projects/tcl-awthemes/                       | 10.4.0                          |
 | ds9          | 8.8        | y     |       |                                                                      |                                 |
 | fickle       | 2.2        | y     |       | https://github.com/SAOImageDS9/fickle-maintenance                    | previous upstream abandoned     |
 | fitsy        |            | y     |       |                                                                      |                                 |
 | funtools     | 1.5.0      | y     | y     | https://github.com/SAOImageDS9/funtools-maintenance                  | abandoned                       |
+| libyaml      | 0.2.5      |       |       | https://github.com/yaml/libyaml                                      | 0.2.5                           |
 | openssl      | 3.2.0      |       |       | https://github.com/openssl/openssl                                   | 4.0.0                           |
 | pdf4tcl      | 0.9.4      |       |       | https://sourceforge.net/projects/pdf4tcl/                            | 0.9.4                           |
 | scidthemes   | 1.0        |       |       | https://sourceforge.net/projects/scid/files/Scid/Additional%20Files/ | 1.0                             |

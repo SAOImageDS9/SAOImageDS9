@@ -95,6 +95,13 @@ f     The DssMap class does not define any new routines beyond those
 *        Override astGetObjSize.
 *     10-MAY-2006 (DSB):
 *        Override astEqual.
+*     8-APR-2026 (TIMJ):
+*        Convert K&R-style function declarations to ANSI prototypes
+*        for platepos and platepix.
+*     16-APR-2026 (DSB):
+*        Equal(): use astEQUAL for the WorldCoor double-precision fields
+*        instead of raw == / != so platform ulp drift in FITS-derived
+*        header values does not cause spurious inequality.
 *class--
 */
 
@@ -277,19 +284,19 @@ static int Equal( AstObject *this_object, AstObject *that_object, int *status ) 
             this_wcs = ( struct WorldCoor *) this->wcs;
             that_wcs = ( struct WorldCoor *) that->wcs;
 
-            if( this_wcs->x_pixel_offset == that_wcs->x_pixel_offset &&
-                this_wcs->y_pixel_offset == that_wcs->y_pixel_offset &&
-                this_wcs->ppo_coeff[2] == that_wcs->ppo_coeff[2] &&
-                this_wcs->ppo_coeff[5] == that_wcs->ppo_coeff[5] &&
-                this_wcs->x_pixel_size == that_wcs->x_pixel_size &&
-                this_wcs->y_pixel_size == that_wcs->y_pixel_size &&
-                this_wcs->plate_dec == that_wcs->plate_dec &&
-                this_wcs->plate_ra == that_wcs->plate_ra ) {
+            if( astEQUAL( this_wcs->x_pixel_offset, that_wcs->x_pixel_offset ) &&
+                astEQUAL( this_wcs->y_pixel_offset, that_wcs->y_pixel_offset ) &&
+                astEQUAL( this_wcs->ppo_coeff[2], that_wcs->ppo_coeff[2] ) &&
+                astEQUAL( this_wcs->ppo_coeff[5], that_wcs->ppo_coeff[5] ) &&
+                astEQUAL( this_wcs->x_pixel_size, that_wcs->x_pixel_size ) &&
+                astEQUAL( this_wcs->y_pixel_size, that_wcs->y_pixel_size ) &&
+                astEQUAL( this_wcs->plate_dec, that_wcs->plate_dec ) &&
+                astEQUAL( this_wcs->plate_ra, that_wcs->plate_ra ) ) {
 
                 result = 1;
                 for( i = 0; i < 13; i++ ) {
-                   if( this_wcs->amd_x_coeff[i] != that_wcs->amd_x_coeff[i] ||
-                       this_wcs->amd_y_coeff[i] != that_wcs->amd_y_coeff[i] ) {
+                   if( !astEQUAL( this_wcs->amd_x_coeff[i], that_wcs->amd_x_coeff[i] ) ||
+                       !astEQUAL( this_wcs->amd_y_coeff[i], that_wcs->amd_y_coeff[i] ) ) {
                       result = 0;
                       break;
                    }
@@ -2002,7 +2009,8 @@ AstFitsChan *astDssFits_( AstDssMap *this, int *status ){
   Changed by R.F. Warren-Smith (Starlink) to make the function static. */
 
 static int
-platepos (xpix, ypix, wcs, xpos, ypos)
+platepos (double xpix, double ypix, struct WorldCoor *wcs,
+          double *xpos, double *ypos)
 
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 
@@ -2010,14 +2018,19 @@ platepos (xpix, ypix, wcs, xpos, ypos)
 /* returns 0 if successful otherwise 1 = angle too large for projection; */
 /* based on amdpos() from getimage */
 
-/* Input: */
-double	xpix;		/* x pixel number  (RA or long without rotation) */
-double	ypix;		/* y pixel number  (dec or lat without rotation) */
-struct WorldCoor *wcs;	/* WCS parameter structure */
-
-/* Output: */
-double	*xpos;		/* Right ascension or longitude in degrees */
-double	*ypos;		/* Declination or latitude in degrees */
+/*
+*  Parameters:
+*     xpix
+*        x pixel number (RA or longitude without rotation).
+*     ypix
+*        y pixel number (Dec or latitude without rotation).
+*     wcs
+*        WCS parameter structure.
+*     xpos
+*        Returned right ascension or longitude in degrees.
+*     ypos
+*        Returned declination or latitude in degrees.
+*/
 
 {
   double x, y, xmm, ymm, xmm2, ymm2, xmm3, ymm3, x2y2;
@@ -2099,7 +2112,8 @@ double	*ypos;		/* Declination or latitude in degrees */
   Changed by R.F. Warren-Smith (Starlink) to make the function static. */
 
 static int
-platepix (xpos, ypos, wcs, xpix, ypix)
+platepix (double xpos, double ypos, struct WorldCoor *wcs,
+          double *xpix, double *ypix)
 
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 
@@ -2107,14 +2121,19 @@ platepix (xpos, ypos, wcs, xpix, ypix)
 /* returns 0 if successful otherwise 1 = angle too large for projection; */
 /* based on amdinv() from getimage */
 
-/* Input: */
-double	xpos;		/* Right ascension or longitude in degrees */
-double	ypos;		/* Declination or latitude in degrees */
-struct WorldCoor *wcs;	/* WCS parameter structure */
-
-/* Output: */
-double	*xpix;		/* x pixel number  (RA or long without rotation) */
-double	*ypix;		/* y pixel number  (dec or lat without rotation) */
+/*
+*  Parameters:
+*     xpos
+*        Right ascension or longitude in degrees.
+*     ypos
+*        Declination or latitude in degrees.
+*     wcs
+*        WCS parameter structure.
+*     xpix
+*        Returned x pixel number (RA or longitude without rotation).
+*     ypix
+*        Returned y pixel number (Dec or latitude without rotation).
+*/
 
 {
   double div,xi,eta,x,y,xy,x2,y2,x2y,y2x,x3,y3,x4,y4,x2y2,cjunk,dx,dy;
@@ -2277,7 +2296,3 @@ double	*ypix;		/* y pixel number  (dec or lat without rotation) */
    Sep  5 1997  Modified by R.F. Warren-Smith (Starlink) to make the
                 platepos and platepix functions static.
  */
-
-
-
-

@@ -1,0 +1,20 @@
+NAXIS1  =                  100 / Spectral axis
+NAXIS2  =                  100 / Spatial axis
+NAXIS3  =                  100 / Spatial axis
+CTYPE1  = 'WAVE    '           / Wavelength
+CTYPE2  = 'RA---TAN'           / Celestial longitude
+CTYPE3  = 'DEC--TAN'           / Celestial latitude
+CRVAL1  =            5.000E-07 / Reference wavelength (m)
+CRVAL2  =              180.000 / Reference RA (deg)
+CRVAL3  =               45.000 / Reference Dec (deg)
+CRPIX1  =                 50.0 / Reference pixel
+CRPIX2  =                 50.5 / Reference pixel
+CRPIX3  =                 50.5 / Reference pixel
+CDELT1  =            1.000E-10 / Wavelength increment (m)
+CDELT2  =           -0.0002778 / Degrees/pixel
+CDELT3  =            0.0002778 / Degrees/pixel
+CUNIT1  = 'm       '           / Axis units
+RADESYS = 'FK5     '           / Reference frame
+EQUINOX =               2000.0 / Equinox
+CROTA3  =                 15.0 / Rotation angle (degrees)
+END

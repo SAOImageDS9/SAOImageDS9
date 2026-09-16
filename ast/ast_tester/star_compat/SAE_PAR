@@ -1,0 +1,4 @@
+*  SAE_PAR -- Global constants for the Starlink Application Environment.
+*  Minimal standalone version for building AST tests without the Starlink SAE library.
+
+      INCLUDE 'SAI_ERR'

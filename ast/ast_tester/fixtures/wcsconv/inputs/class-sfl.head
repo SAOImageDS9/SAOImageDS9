@@ -1,0 +1,23 @@
+NAXIS1  =                 1024 / Spectral axis
+NAXIS2  =                  100 / Spatial axis
+NAXIS3  =                  100 / Spatial axis
+CTYPE1  = 'FREQ    '          / Frequency
+CTYPE2  = 'GLON-SFL'          / Galactic longitude (SFL)
+CTYPE3  = 'GLAT-SFL'          / Galactic latitude (SFL)
+CRVAL1  =    1.420405752E+09   / [Hz] Reference frequency
+CRVAL2  =               0.000  / [deg] Galactic lon at origin
+CRVAL3  =               0.000  / [deg] Galactic lat at origin
+CRPIX1  =              513.000 / Reference pixel axis 1
+CRPIX2  =               50.000 / Reference pixel axis 2
+CRPIX3  =               50.000 / Reference pixel axis 3
+CDELT1  =           1.0E+06    / [Hz] Frequency step
+CDELT2  =              -0.0100 / [deg] Pixel size
+CDELT3  =               0.0100 / [deg] Pixel size
+CUNIT1  = 'Hz      '          / Spectral units
+RESTFRQ =    1.420405752E+09   / [Hz] Rest frequency
+SPECSYS = 'BARYCENT'          / Spectral reference frame
+MJD-OBS =            52413.59  / MJD of observation
+OBSGEO-X=      -5464588.868    / [m] Observatory geocentric X
+OBSGEO-Y=      -2493001.1635   / [m] Observatory geocentric Y
+OBSGEO-Z=       2150654.3527   / [m] Observatory geocentric Z
+END

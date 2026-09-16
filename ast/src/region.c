@@ -270,6 +270,9 @@ f     - AST_SHOWMESH: Display a mesh of points on the surface of a Region
 *     28-OCT-2021 (DSB):
 *        Modified astGetRegionMesh so that meshes for SkyFrame regions that cross
 *        zero longitude do not include jumps of 2.PI in logitude.
+*     24-APR-2026 (TIMJ):
+*        Use round() instead of (int)(x+0.5) for grid bound rounding
+*        to avoid platform-dependent results.
 *class--
 
 *  Implementation Notes:
@@ -6081,8 +6084,8 @@ static AstDim Mask##X( AstRegion *this, AstMapping *map, int inside, int ndim, \
       npixg = 1; \
       for ( idim = 0; idim < ndim; idim++ ) { \
          if( lbndgd[ idim ] != AST__BAD && ubndgd[ idim ] != AST__BAD ) { \
-            lbndg[ idim ] = astMAX( lbnd[ idim ], (int)( lbndgd[ idim ] + 0.5 ) - 2 ); \
-            ubndg[ idim ] = astMIN( ubnd[ idim ], (int)( ubndgd[ idim ] + 0.5 ) + 2 ); \
+            lbndg[ idim ] = astMAX( lbnd[ idim ], (int)round( lbndgd[ idim ] ) - 2 ); \
+            ubndg[ idim ] = astMIN( ubnd[ idim ], (int)round( ubndgd[ idim ] ) + 2 ); \
          } else { \
             lbndg[ idim ] = lbnd[ idim ]; \
             ubndg[ idim ] = ubnd[ idim ]; \

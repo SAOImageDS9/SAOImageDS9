@@ -1,0 +1,12 @@
+SIMPLE  =                    T / Fits standard
+BITPIX  =                  -32 / Bits per pixel
+NAXIS   =                    1 / Number of dimensions
+NAXIS1  =                 1024 / Length of axis
+CTYPE1  = 'AWAV-A2F'           / Non-linear: air wavelength sampled, expressed as frequency
+CRVAL1  =            5.000E-07 / Reference air wavelength (metres)
+CRPIX1  =              512.500 / Reference pixel
+CDELT1  =            1.000E-10 / Wavelength increment (metres)
+CUNIT1  = 'm       '           / Axis units
+RESTFRQ =           5.996E+14  / Rest frequency (Hz)
+SPECSYS = 'BARYCENT'           / Spectral reference frame
+END

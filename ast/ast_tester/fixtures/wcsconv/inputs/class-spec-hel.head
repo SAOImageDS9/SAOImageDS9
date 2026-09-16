@@ -1,0 +1,15 @@
+SIMPLE  =                    T / Fits standard
+BITPIX  =                  -32 / Bits per pixel
+NAXIS   =                    1 / Number of dimensions
+NAXIS1  =                 1024 / Spectral axis
+CTYPE1  = 'FREQ    '                   / spectral axis is frequency
+CRVAL1  =  0.000000000000E+000         / Offset frequency
+CDELT1  =  0.390625000000E+005         / Frequency resolution
+CRPIX1  =  0.578812988281E+003         /
+LINE    = '13co10'                     / Line name
+RESTFREQ=  0.110201354300E+012         / Rest frequency
+VELO-HEL=  0.250000000000E+004         / [m/s] Velocity of reference ch
+SPECSYS = 'BARYCENT'                   / Reference frame
+DELTAV  = -0.106265872717E+003         / Velocity spacing of channels
+IMAGFREQ=  0.972814604954E+011         / Image frequency
+END

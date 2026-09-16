@@ -167,8 +167,8 @@ static void SinkWrap( void (* sink)( const char * ), const char *line,
    subroutine and then invoke it. Transfer the AST error status to and
    from the subroutine's error status argument. */
    STATUS = astStatus;
-   ( ( void (*)() ) sink )( CHARACTER_ARG(CARD), INTEGER_ARG(&STATUS)
-                            TRAIL_ARG(CARD) );
+   ( ( void (*)( F77_CHARACTER_TYPE *, F77_INTEGER_TYPE *, F77_TRAIL_TYPE ) ) sink )(
+      CHARACTER_ARG(CARD), INTEGER_ARG(&STATUS) TRAIL_ARG(CARD) );
    astSetStatus( STATUS );
 }
 
@@ -234,9 +234,8 @@ static char *SourceWrap( const char *(* source)( void ), int *status ) {
    function and then invoke it. Transfer the AST error status to and
    from the subroutine's error status argument. */
    STATUS = astStatus;
-   retval = ( *(F77_INTEGER_TYPE (*)()) source )( CHARACTER_ARG(CARD),
-                                                  INTEGER_ARG(&STATUS)
-                                                  TRAIL_ARG(CARD) );
+   retval = ( *(F77_INTEGER_TYPE (*)( F77_CHARACTER_TYPE *, F77_INTEGER_TYPE *, F77_TRAIL_TYPE )) source )(
+      CHARACTER_ARG(CARD), INTEGER_ARG(&STATUS) TRAIL_ARG(CARD) );
    astSetStatus( STATUS );
 
 /* If a card was returned, make a dynamic copy of it. */
@@ -339,7 +338,8 @@ static void TabSourceWrap( void (*tabsource)( void  ),
    read the table, and store it in the FitsChan. */
    if( astOK ) {
       LSTAT = 0;
-      ( ( void (*)() ) tabsource )(
+      ( ( void (*)( F77_INTEGER_TYPE *, F77_CHARACTER_TYPE *, F77_INTEGER_TYPE *,
+                    F77_INTEGER_TYPE *, F77_INTEGER_TYPE *, F77_TRAIL_TYPE ) ) tabsource )(
            INTEGER_ARG(&THIS_ID), CHARACTER_ARG(EXTNAME), INTEGER_ARG(&EXTVER),
            INTEGER_ARG(&EXTLEVEL), INTEGER_ARG(&LSTAT) TRAIL_ARG(EXTNAME) );
    }

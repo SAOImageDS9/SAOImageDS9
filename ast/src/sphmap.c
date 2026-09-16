@@ -85,6 +85,13 @@ f     The SphMap class does not define any new routines beyond those
 *        Avoid modifying the attributes of the existing SphMap in
 *        MapMerge, since it may be in use in other contexts. Modify a
 *        copy instead.
+*     8-MAY-20206 (DSB):
+*        Fix bug in MapMerge - UnitMap that replaces back to back SphMaps
+*        was not taking account of the direction of the two SphMaps.
+*     17-AUG-2026 (TIMJ):
+*        Discard the record that the SphMap has been simplified when
+*        UnitRadius or PolarLong is set or cleared, since MapMerge consults
+*        both when deciding whether two SphMaps cancel.
 *class--
 */
 
@@ -718,6 +725,7 @@ static int MapMerge( AstMapping *this, int where, int series, int *nmap,
    int imap1;                    /* Index of first SphMap */
    int imap2;                    /* Index of second SphMap */
    int imap;                     /* Loop counter for Mappings */
+   int nax;                      /* Number of axes for simplified UnitMap */
    int result;                   /* Result value to return */
    int simpler;                  /* Mappings simplified? */
 
@@ -730,6 +738,7 @@ static int MapMerge( AstMapping *this, int where, int series, int *nmap,
 /* Further initialisation. */
    new = NULL;
    simpler = 0;
+   nax = 0;
 
 /* We will only handle the case of SphMaps in series and will consider
    merging the nominated SphMap with the Mapping which follows
@@ -749,6 +758,7 @@ static int MapMerge( AstMapping *this, int where, int series, int *nmap,
    the second in the forward direction. This combination can be
    simplified if the PolarLongitude attributes are equal.. */
          if( ( *invert_list )[ imap1 ] && !( *invert_list )[ imap2 ] ) {
+            nax = 2;
             simpler = astEQUAL( astGetPolarLong( ( *map_list )[ imap1 ] ),
                                 astGetPolarLong( ( *map_list )[ imap2 ] ) );
 
@@ -757,6 +767,7 @@ static int MapMerge( AstMapping *this, int where, int series, int *nmap,
    input vectors to the first SphMap all have unit length (as indicated by
    the UnitRadius attribute). */
          } else if( !( *invert_list )[ imap1 ] && ( *invert_list )[ imap2 ] ) {
+            nax = 3;
             simpler = astGetUnitRadius( ( *map_list )[ imap1 ] );
          }
       }
@@ -764,7 +775,7 @@ static int MapMerge( AstMapping *this, int where, int series, int *nmap,
 /* If the two SphMaps can be simplified, create a UnitMap to replace
    them. */
       if ( simpler ) {
-         new = (AstMapping *) astUnitMap( 2, "", status );
+         new = (AstMapping *) astUnitMap( nax, "", status );
 
 /* Annul the pointers to the SphMaps. */
          if ( astOK ) {
@@ -1380,9 +1391,11 @@ f     AST_CLONE
 *        All SphMaps have this attribute.
 *att--
 */
-astMAKE_CLEAR1(SphMap,UnitRadius,unitradius,-1)
+astMAKE_CLEAR1(SphMap,UnitRadius,unitradius,(astClearIsSimple(this),-1))
 astMAKE_GET(SphMap,UnitRadius,int,0,(this->unitradius == -1 ? 0 : this->unitradius))
-astMAKE_SET1(SphMap,UnitRadius,int,unitradius,( value ? 1 : 0 ))
+astMAKE_SET1(SphMap,UnitRadius,int,unitradius,(
+            ( ( value ? 1 : 0 ) != this->unitradius ) ? astClearIsSimple(this) : (void)0,
+            ( value ? 1 : 0 )))
 astMAKE_TEST(SphMap,UnitRadius,( this->unitradius != -1 ))
 
 /* PolarLong */
@@ -1420,9 +1433,11 @@ f     AST_CLONE
 *        All SphMaps have this attribute.
 *att--
 */
-astMAKE_CLEAR1(SphMap,PolarLong,polarlong,AST__BAD)
+astMAKE_CLEAR1(SphMap,PolarLong,polarlong,(astClearIsSimple(this),AST__BAD))
 astMAKE_GET(SphMap,PolarLong,double,0.0,(this->polarlong == AST__BAD ? 0.0 : this->polarlong))
-astMAKE_SET1(SphMap,PolarLong,double,polarlong,value)
+astMAKE_SET1(SphMap,PolarLong,double,polarlong,(
+            ( value != this->polarlong ) ? astClearIsSimple(this) : (void)0,
+            value))
 astMAKE_TEST(SphMap,PolarLong,( this->polarlong != AST__BAD ))
 
 /* Copy constructor. */

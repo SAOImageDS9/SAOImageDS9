@@ -101,7 +101,7 @@ TKIMGTMPFILES = \
 .NOTPARALLEL :
 .PHONY	: all dirs ds9 tclxml tclxmlrpc tclzipfs tls xpa
 .PHONY	: tkblt tclfitsy tkcon tkhtml1 tkimg tkmpeg tksvg tkagif tksao tktable
-.PHONY	: vector fitsy ast funtools openssl
+.PHONY	: vector fitsy libyaml ast funtools openssl
 
 all	: saods9
 
@@ -405,6 +405,23 @@ fitsy/Makefile :
 	$(STD) \
 	$(CACHE)
 
+#-------------------------- libyaml
+
+libyaml	: libyaml/Makefile
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C libyaml -j $(JOBS) install
+
+libyaml/Makefile :
+	@echo ""
+	@echo "*** $@ ***"
+	cd libyaml; \
+	./configure \
+	--disable-shared --enable-static \
+	$(CONFIGFLAGS) $(TARGET) \
+	$(PREFIX) \
+	$(CACHE)
+
 #-------------------------- ast
 
 ast	: ast/Makefile ast/ast.h ast/.libs/libast.a ast/.libs/libast_err.a ast/.libs/libast_pal.a ast/.libs/libast_cminpack.a
@@ -417,6 +434,7 @@ ast/Makefile :
 	$(ASTFLAGS) \
 	CPPFLAGS='-std=gnu99 -w' \
 	--without-pthreads --enable-shared=no \
+	--with-yaml=$(prefix) \
 	star_cv_cnf_trail_type=long star_cv_cnf_f2c_compatible=no \
 	$(CONFIGFLAGS) \
 	$(PREFIX)
@@ -570,7 +588,7 @@ scrub :
 .PHONY	: tkbltclean tclfitsy tkconclean tkhtml1clean tkimgclean
 .PHONY	: tkmpegclean tksvgclean tkagifclean
 .PHONY	: tktableclean xpaclean
-.PHONY	: vectorclean fitsyclean astclean funtoolsclean
+.PHONY	: vectorclean fitsyclean libyamlclean astclean funtoolsclean
 .PHONY	: tksaoclean
 
 clean	: tclclean tkclean \
@@ -676,6 +694,11 @@ fitsyclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C fitsy clean
 
+libyamlclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C libyaml clean
+
 astclean :
 	@echo ""
 	@echo "*** $@ ***"
@@ -704,7 +727,7 @@ xpaclean :
 .PHONY	: tkbltdistclean tclfitsydistclean tkcondistclean tkhtml1distclean
 .PHONY	: tkimgdistclean tkmpegdistclean tksvgdistclean tkagifdistclean
 .PHONY	: tktabledistclean xpadistclean
-.PHONY	: vectordistclean fitsydistclean
+.PHONY	: vectordistclean fitsydistclean libyamldistclean
 .PHONY	: astdistclean funtoolsdistclean
 .PHONY	: tksaodistclean
 
@@ -840,6 +863,11 @@ fitsydistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C fitsy distclean
+
+libyamldistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C libyaml distclean
 	$(RM) -f fitsy/fitsyConfig.sh
 
 funtoolsdistclean :

@@ -238,9 +238,14 @@ f     - AST_VERSION: Return the verson of the AST library being used.
 *        structure by 20 bytes. If this turns out to be problematic
 *        this facility could be controlled using a configure option.
 *     21-NOV-2019 (DSB):
-*        Include thrThread in public metrhod list, and change it so 
+*        Include thrThread in public method list, and change it so
 *        that it does not report an error if the supplied object handle
 *        is owned by a different thread.
+*     16-JUN-2026 (EMB):
+*        Add the protected astGetKeyMap method, which returns a KeyMap that
+*        may be associated with any Object for storing extra internal data.
+*        The companion astHasKeyMap method tests whether an Object already has
+*        an associated KeyMap without creating one.
 *class--
 */
 
@@ -1415,6 +1420,13 @@ f     function is invoked with STATUS set to an error value, or if it
          new->ident = astStore( NULL, this->ident, strlen( this->ident ) + 1 );
       }
 
+/* Take a deep-copy of any associated KeyMap, if any. */
+      if( this->keymap ) {
+         new->keymap = astCopy( this->keymap );
+      } else {
+         new->keymap = NULL;
+      }
+
 /* Create a new mutex for the new Object, and lock it for use by the
    current thread. */
 #ifdef THREAD_SAFE
@@ -1555,6 +1567,10 @@ f     value
 /* Free the ID strings. */
    this->id = astFree( this->id );
    this->ident = astFree( this->ident );
+
+/* Annul any associated KeyMap (the Object holds the only reference). */
+   if( this->keymap )
+      this->keymap = astAnnul( this->keymap );
 
 /* Attempt to unlock the Object and destroy its mutexes. */
 #if defined(THREAD_SAFE)
@@ -1711,6 +1727,16 @@ static void Dump( AstObject *this, AstChannel *channel, int *status ) {
    vtab = this->vtab;
    astWriteInt( channel, "Nobj", 0, 0, vtab->nobject,
                 "Count of active Objects in same class" );
+
+/* KeyMap. */
+/* ------- */
+/* Write out any associated KeyMap, but only if it exists and is not
+   empty. This keeps the external representation of Objects that have no
+   associated data (the overwhelming majority) unchanged. */
+   if( this->keymap && astMapSize( this->keymap ) > 0 ) {
+      astWriteObject( channel, "KeyMap", 1, 1, this->keymap,
+                      "KeyMap of associated data" );
+   }
 
 /* Terminate the information above with an "IsA" item for the base
    Object class. */
@@ -2332,11 +2358,21 @@ static size_t GetObjSize( AstObject *this, int *status ) {
 *-
 */
 
-/* Check the global error status. */
-   if ( !astOK ) return 0;
+/* Local Variables: */
+   size_t result;                /* Result value to return */
 
-/* Return the object size. */
-   return this->size;
+/* Check the global error status. */
+   if ( !astOK )
+      return 0;
+
+/* Start with the size of the Object structure itself, and then add on the
+   size of any associated KeyMap. */
+   result = this->size;
+   if ( this->keymap )
+      result += astGetObjSize( this->keymap );
+
+/* Return the total size. */
+   return result;
 }
 
 void *astGetProxy_( AstObject *this, int *status ) {
@@ -2381,6 +2417,121 @@ void *astGetProxy_( AstObject *this, int *status ) {
 *-
 */
    return this ? this->proxy : NULL;
+}
+
+AstKeyMap *astGetKeyMap_( AstObject *this, int *status ) {
+/*
+*+
+*  Name:
+*     astGetKeyMap
+
+*  Purpose:
+*     Get a pointer to the KeyMap associated with an Object.
+
+*  Type:
+*     Protected function.
+
+*  Synopsis:
+*     #include "object.h"
+*     AstKeyMap *astGetKeyMap( AstObject *this )
+
+*  Class Membership:
+*     Object method.
+
+*  Description:
+*     This function returns a pointer to a KeyMap that is associated with
+*     the supplied Object and which may be used to stash arbitrary
+*     additional data within the Object. If the Object does not yet have
+*     an associated KeyMap, a new, empty KeyMap is created.
+*
+*     The KeyMap is retained by the Object: it is deep-copied whenever the
+*     Object is copied (using astCopy), it is annulled when the Object is
+*     deleted, and it is written out through a Channel (as part of the
+*     Object's serialisation) only if it is not empty. This provides a
+*     general-purpose scratch area for internal use that survives copying
+*     and serialisation.
+
+*  Parameters:
+*     this
+*        Pointer to the Object.
+
+*  Returned Value:
+*     A pointer to the associated KeyMap, or NULL if an error occurs. This
+*     is a cloned pointer (a new reference to the KeyMap retained by the
+*     Object) and should be annulled by the caller when no longer needed.
+
+*  Notes:
+*     - This is a protected method, intended for internal use within the
+*     AST library only. It is deliberately not part of the public
+*     interface, partly in order to avoid becoming a rat's nest of user-
+*     supplied unstructured data.
+*     - A NULL pointer will be returned if this function is invoked with
+*     the AST error status set, or if it should fail for any reason.
+*-
+*/
+
+/* Check the global error status. */
+   if ( !astOK )
+      return NULL;
+
+/* If the Object does not yet have an associated KeyMap, create a new
+   empty one, retained by the Object. */
+   if ( !this->keymap )
+      this->keymap = astKeyMap( "", status );
+
+/* Return a a new reference to the retained KeyMap, which the caller
+   should annul when no longer needed. */
+   return astClone( this->keymap );
+}
+
+int astHasKeyMap_( AstObject *this, int *status ) {
+/*
+*+
+*  Name:
+*     astHasKeyMap
+
+*  Purpose:
+*     Does an Object already have an associated KeyMap?
+
+*  Type:
+*     Protected function.
+
+*  Synopsis:
+*     #include "object.h"
+*     int astHasKeyMap( AstObject *this )
+
+*  Class Membership:
+*     Object method.
+
+*  Description:
+*     This function reports whether the supplied Object already has an
+*     associated KeyMap (see astGetKeyMap). Unlike astGetKeyMap, it does
+*     not create a new KeyMap if none exists, so it can be used to test for
+*     the presence of stashed data without the side effect of attaching an
+*     empty KeyMap to the Object.
+
+*  Parameters:
+*     this
+*        Pointer to the Object.
+
+*  Returned Value:
+*     A non-zero value if the Object has an associated KeyMap, or zero if it
+*     does not (or if an error occurs).
+
+*  Notes:
+*     - This is a protected method, intended for internal use within the
+*     AST library only.
+*     - Zero will be returned if this function is invoked with the AST error
+*     status set, or if it should fail for any reason.
+*-
+*/
+
+/* Check the global error status. */
+   if ( !astOK )
+      return 0;
+
+/* Report whether the Object has an associated KeyMap. */
+   return ( this->keymap != NULL );
 }
 
 int astGetRefCount_( AstObject *this, int *status ) {
@@ -2962,6 +3113,12 @@ static int ManageLock( AstObject *this, int mode, int extra,
 
 /* If the operation failed, return a pointer to the failed object. */
    if( result && fail ) *fail = this;
+
+/* If the operation on "this" succeeded, perform the same operation on any
+   KeyMap associated with the Object (and, in turn, on any Objects stored
+   within that KeyMap). */
+   if( !result && this->keymap )
+      result = astManageLock( this->keymap, mode, extra, fail );
 
 /* Return the status value */
    return result;
@@ -5677,6 +5834,10 @@ AstObject *astInitObject_( void *mem, size_t size, int init,
 /* Initialise the pointer to an external object that acts as a proxy for
    the AST Object within foreign language interfaces. */
          new->proxy = NULL;
+
+/* Initialise the pointer to the optional KeyMap of associated data. This
+   is created on demand by astGetKeyMap. */
+         new->keymap = NULL;
       }
 
 /* If an error occurred, clean up by deleting the new Object. Otherwise
@@ -5836,6 +5997,10 @@ AstObject *astLoadObject_( void *mem, size_t size,
 /* Initialise the pointer to an external object that acts as a proxy for
    the AST Object within foreign language interfaces. */
       new->proxy = NULL;
+
+/* Read any associated KeyMap. This will be a NULL pointer if the external
+   representation did not include one (the usual case). */
+      new->keymap = astReadObject( channel, "keymap", NULL );
 
 /* If an error occurred, clean up by deleting the new Object. */
       if ( !astOK ) new = astDelete( new );

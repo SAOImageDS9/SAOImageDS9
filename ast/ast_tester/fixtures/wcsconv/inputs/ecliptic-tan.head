@@ -1,0 +1,11 @@
+NAXIS1  =                  100 / Spatial axis
+NAXIS2  =                  100 / Spatial axis
+CTYPE1  = 'ELON-TAN'          / Ecliptic longitude
+CTYPE2  = 'ELAT-TAN'          / Ecliptic latitude
+CRVAL1  =              200.000 / [deg] Reference ecliptic lon
+CRVAL2  =               30.000 / [deg] Reference ecliptic lat
+CRPIX1  =               50.000 / Reference pixel axis 1
+CRPIX2  =               50.000 / Reference pixel axis 2
+CDELT1  =              -0.0100 / Pixel size
+CDELT2  =               0.0100 / Pixel size
+END

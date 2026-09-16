@@ -1,0 +1,20 @@
+SIMPLE  =                    T / Fits standard
+BITPIX  =                  -32 / Bits per pixel
+NAXIS   =                    2 / Number of dimensions
+NAXIS1  =                  300 / Length of x axis
+NAXIS2  =                  300 / Length of y axis
+CTYPE1  = 'RA---TAN'           / TAN projection
+CTYPE2  = 'DEC--TAN'           / TAN projection
+CRVAL1  =              180.000 / Reference RA (deg)
+CRVAL2  =               45.000 / Reference Dec (deg)
+CRPIX1  =              150.500 / Reference pixel
+CRPIX2  =              150.500 / Reference pixel
+CDELT1  =             -0.00100 / Degrees/pixel
+CDELT2  =              0.00100 / Degrees/pixel
+EQUINOX =               2000.0 / Equinox
+RADESYS = 'FK5     '           / Coordinate reference frame
+PV1_1   =                  0.0 / All-zero distortion on longitude axis
+PV1_2   =                  0.0 / All-zero distortion on longitude axis
+PV2_1   =                  1.0 / Non-zero distortion on latitude axis
+PV2_2   =            0.0001000 / Non-zero distortion on latitude axis
+END

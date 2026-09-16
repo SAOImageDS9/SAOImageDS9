@@ -1,0 +1,11 @@
+NAXIS1  =                  360 / length of data axis 1
+NAXIS2  =                  180 / length of data axis 2
+CTYPE1  = 'GLON-GLS'           / AIPS GLS projection (= SFL)
+CTYPE2  = 'GLAT-GLS'           / AIPS GLS projection (= SFL)
+CRVAL1  =               10.000 / Reference Galactic longitude (deg)
+CRVAL2  =                5.000 / Reference Galactic latitude (deg)
+CRPIX1  =              180.500 / Reference pixel on axis 1
+CRPIX2  =               90.500 / Reference pixel on axis 2
+CDELT1  =            -0.010000 / Degrees/pixel
+CDELT2  =             0.010000 / Degrees/pixel
+END

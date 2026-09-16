@@ -171,6 +171,12 @@
 *        threads occur sequentially rather than overlapping. Without
 *        this, the flagging of memory blocks as "permanent" is spurious (this
 *        only affects anything if AST is configured --with-memdebug).
+*     8-APR-2026 (TIMJ):
+*        Fix heap-use-after-free in astStore by copying data before
+*        freeing the old block. Increase stemp buffer size in
+*        astAppendStringf.
+*     22-APR-2026 (EMB):
+*        Fix undefined behavior with pointer arithmetic in astChrSplit.
 */
 
 /* Configuration results. */
@@ -1766,7 +1772,6 @@ char **astChrSplit_( const char *str, int *n, int *status ) {
    char *w;
    const char *p;
    const char *ws;
-   int first;
    int state;
    int wl;
 
@@ -1785,16 +1790,14 @@ char **astChrSplit_( const char *str, int *n, int *status ) {
 
 /* Loop through all characters in the supplied string, including the
    terminating null. */
-   p = str - 1;
-   first = 1;
-   while( *(p++) || first ) {
-      first = 0;
+   p = str;
+   do {
 
 /* If this is the terminating null or a space, and we are currently looking
    for the end of a word, allocate memory for the new word, copy the text
    in, terminate it, extend the returned array by one element, and store
    the new word in it. */
-      if( !*p || isspace( *p ) ) {
+      if( !*p || isspace( (unsigned char)*p ) ) {
          if( state == 1 ) {
             wl = p - ws;
             w = astMalloc( wl + 1 );
@@ -1816,7 +1819,8 @@ char **astChrSplit_( const char *str, int *n, int *status ) {
             ws = p;
          }
       }
-   }
+
+   } while( *p++ );
 
 /* Return the result. */
    return result;
@@ -3076,7 +3080,7 @@ static char *ChrMatcher( const char *test, const char *end, const char *template
    char *result;
    char *sres;
    char *stest;
-   char stemp[10];
+   char stemp[24];
    const char *aaa;
    const char *aa;
    const char *a;
@@ -4123,8 +4127,8 @@ void *astStore_( void *ptr, const void *data, size_t size, int *status ) {
    necessary) and copy the data into it. */
          new = astMalloc( size );
          if ( astOK ) {
-            if ( ptr ) ptr = astFree( ptr );
             (void) memcpy( new, data, size );
+            if ( ptr ) ptr = astFree( ptr );
 
 /* If memory allocation failed, do not free the old memory but return
    a pointer to it. */

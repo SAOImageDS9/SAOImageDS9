@@ -87,6 +87,10 @@ f     only within textual output (e.g. from AST_WRITE).
 *        Added astAxisCentre.
 *     26-OCT-2016 (DSB):
 *        Added astAxisNormValues.
+*     8-AUG-2026 (TIMJ):
+*        Use round() rather than (int)(x+0.5) for rounding, so that the
+*        library uses a single rounding idiom that is correct for
+*        negative values.
 *class--
 */
 
@@ -984,7 +988,7 @@ static double AxisGap( AstAxis *this, double gap, int *ntick, int *status ) {
    of steps in the supplied gap, and then use the look-up-table in
    "table1" to find the closest acceptable gap size. Convert this gap
    size back to an absolute value by multiplying by the step size. */
-      index = (int) ( absgap / b + 0.5 ) - 1;
+      index = (int) round( absgap / b ) - 1;
       result = b * table1[ index ];
 
 /* If the target gap was negative, negate the result. */

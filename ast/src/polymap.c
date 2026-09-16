@@ -151,6 +151,29 @@ f     - AST_POLYTRAN: Fit a PolyMap inverse or forward transformation
 *     28-JUL-2025 (DSB):
 *        - Add protected virtual method astMergeShift.
 *        - Add public static method astShowPoly.
+*     2-JUL-2026 (TIMJ):
+*        The default for IterInverse is now zero if the PolyMap has
+*        unequal numbers of inputs and outputs, since an iterative
+*        inverse cannot be used in that case.  Previously such a PolyMap
+*        reported TranInverse as non-zero by default and then reported an
+*        error when the inverse transformation was used.
+*     8-AUG-2026 (TIMJ):
+*        Use round() rather than (int)(x+0.5) for rounding, so that the
+*        library uses a single rounding idiom that is correct for
+*        negative values.
+*     15-AUG-2026 (TIMJ):
+*        Discard the record that the PolyMap has been simplified when
+*        IterInverse, NiterInverse or TolInverse is set or cleared, and in
+*        the copies made by astPolyTran and astMergeShift, whose
+*        transformations are replaced after the copy is taken. The
+*        astMergeShift copy is then simplified to amalgamate coefficients
+*        referring to the same powers, which the inherited record
+*        suppressed.
+*     17-AUG-2026 (TIMJ):
+*        Report an error if IterInverse, NiterInverse or TolInverse is set or
+*        cleared once the PolyMap has been cloned, as SUN/210 says AST does
+*        for the attributes of any Mapping. Use the guarded astMAKE_SET1 and
+*        astMAKE_CLEAR1 macros.
 *class--
 */
 
@@ -227,7 +250,7 @@ astMAKE_INITGLOBALS(PolyMap)
 /* Define macros for accessing each item of thread specific global data. */
 #define class_init astGLOBAL(PolyMap,Class_Init)
 #define class_vtab astGLOBAL(PolyMap,Class_Vtab)
-#define getattrib_buff astGLOBAL(LutMap,GetAttrib_Buff)
+#define getattrib_buff astGLOBAL(PolyMap,GetAttrib_Buff)
 
 #include <pthread.h>
 
@@ -2039,7 +2062,7 @@ static AstPolyMap **GetJacobian( AstPolyMap *this, int *status ){
                for( icof = 0; icof <  ncof_row; icof++ ) {
 
 /* Get the power of input "icol" associated with the current coefficient. */
-                  power = (int)( this->power_f[ irow ][ icof ][ icol ] + 0.5 );
+                  power = (int)round( this->power_f[ irow ][ icof ][ icol ] );
 
 /* We can skip the coefficient if the power is zero. */
                   if( power > 0 ) {
@@ -4028,8 +4051,11 @@ static AstPolyMap *MergeShift( AstPolyMap *this, AstShiftMap *shift,
    shifts = astGetShifts( shift );
 
 /* Get a deep copy of the supplied PolyMap, which will be used as the
-   returned PolyMap. */
+   returned PolyMap. Discard any record that the supplied PolyMap has been
+   simplified, since the coefficients of the copy are replaced below and
+   the copy is then simplified. */
    result = astCopy( this );
+   astClearIsSimple( result );
 
 /* Delete the linear truncation in the result because it is no longer reliable. */
    if( result->lintrunc ) result->lintrunc = astAnnul( result->lintrunc );
@@ -4936,8 +4962,11 @@ f     function is invoked with STATUS set to an error value, or if it
 /* Check the inherited status. */
    if ( !astOK ) return result;
 
-/* Take a copy of the supplied PolyMap. */
+/* Take a copy of the supplied PolyMap. The copy inherits any record that
+   the supplied PolyMap has been simplified, which no longer applies once
+   one of its transformations has been replaced below. */
    result = astCopy( this );
+   astClearIsSimple( result );
 
 /* Replace the required transformation. */
    ok = ReplaceTransformation( result, forward, acc, maxacc, maxorder, lbnd,
@@ -6255,7 +6284,8 @@ static AstPointSet *Transform( AstMapping *this, AstPointSet *in,
 *     candidate input positions until an output position is found which
 *     is close to the required output position. By default, an iterative
 *     inverse is provided if, and only if, no inverse polynomial was supplied
-*     when the PolyMap was constructed.
+*     when the PolyMap was constructed and the PolyMap has equal numbers of
+*     inputs and outputs (an iterative inverse cannot be used otherwise).
 *
 *     Note, the term "inverse transformation" here refers to the inverse
 *     transformation of the original PolyMap, ignoring any subsequent
@@ -6307,11 +6337,15 @@ static AstPointSet *Transform( AstMapping *this, AstPointSet *in,
 
 *att--
 */
-astMAKE_CLEAR(PolyMap,IterInverse,iterinverse,-INT_MAX)
+astMAKE_CLEAR1(PolyMap,IterInverse,iterinverse,(astClearIsSimple(this),-INT_MAX))
 astMAKE_GET(PolyMap,IterInverse,int,0,( ( this->iterinverse == -INT_MAX ) ?
-                                          (this->ncoeff_i == 0) : this->iterinverse ))
-astMAKE_SET(PolyMap,IterInverse,int,iterinverse,
-  (((astGetNin(this)==astGetNout(this))||!value)?((value?1:0)):(astError(AST__ATTIN,"astSetIterInverse(%s):"
+                                          ( this->ncoeff_i == 0 &&
+                                            astGetNin( this ) == astGetNout( this ) ) :
+                                          this->iterinverse ))
+astMAKE_SET1(PolyMap,IterInverse,int,iterinverse,
+  (((astGetNin(this)==astGetNout(this))||!value)?
+  (( (value?1:0) != this->iterinverse ) ? astClearIsSimple(this) : (void)0,(value?1:0)):
+  (astError(AST__ATTIN,"astSetIterInverse(%s):"
   "Cannot use an iterative inverse because the %s has unequal numbers of "
   "inputs and outputs.", status, astGetClass(this),astGetClass(this)),this->iterinverse)))
 astMAKE_TEST(PolyMap,IterInverse,( this->iterinverse != -INT_MAX ))
@@ -6346,9 +6380,11 @@ astMAKE_TEST(PolyMap,IterInverse,( this->iterinverse != -INT_MAX ))
 
 *att--
 */
-astMAKE_CLEAR(PolyMap,NiterInverse,niterinverse,-INT_MAX)
+astMAKE_CLEAR1(PolyMap,NiterInverse,niterinverse,(astClearIsSimple(this),-INT_MAX))
 astMAKE_GET(PolyMap,NiterInverse,int,0,( this->niterinverse == -INT_MAX ? 4 : this->niterinverse))
-astMAKE_SET(PolyMap,NiterInverse,int,niterinverse,value)
+astMAKE_SET1(PolyMap,NiterInverse,int,niterinverse,(
+            ( value != this->niterinverse ) ? astClearIsSimple(this) : (void)0,
+            value))
 astMAKE_TEST(PolyMap,NiterInverse,( this->niterinverse != -INT_MAX ))
 
 /* TolInverse. */
@@ -6383,9 +6419,11 @@ astMAKE_TEST(PolyMap,NiterInverse,( this->niterinverse != -INT_MAX ))
 *        All PolyMaps have this attribute.
 *att--
 */
-astMAKE_CLEAR(PolyMap,TolInverse,tolinverse,AST__BAD)
+astMAKE_CLEAR1(PolyMap,TolInverse,tolinverse,(astClearIsSimple(this),AST__BAD))
 astMAKE_GET(PolyMap,TolInverse,double,0.0,( this->tolinverse == AST__BAD ? 1.0E-6 : this->tolinverse))
-astMAKE_SET(PolyMap,TolInverse,double,tolinverse,value)
+astMAKE_SET1(PolyMap,TolInverse,double,tolinverse,(
+            ( value != this->tolinverse ) ? astClearIsSimple(this) : (void)0,
+            value))
 astMAKE_TEST(PolyMap,TolInverse,( this->tolinverse != AST__BAD ))
 
 /* Copy constructor. */

@@ -1,0 +1,14 @@
+NAXIS1  =                  360 / length of data axis 1
+NAXIS2  =                  180 / length of data axis 2
+CTYPE1  = 'RA---AIT'           / Aitoff projection (theta0=0)
+CTYPE2  = 'DEC--AIT'           / Aitoff projection
+CRVAL1  =               45.000 / Reference RA (deg)
+CRVAL2  =               60.000 / High-latitude reference
+CRPIX1  =              180.500 / Reference pixel on axis 1
+CRPIX2  =               90.500 / Reference pixel on axis 2
+CDELT1  =             -0.50000 / Degrees/pixel
+CDELT2  =              0.50000 / Degrees/pixel
+RADESYS = 'FK5     '           / Reference frame
+EQUINOX =               2000.0 / Equinox
+LATPOLE =               60.000 / Native latitude of celestial pole
+END

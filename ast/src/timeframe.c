@@ -179,6 +179,9 @@ f     - AST_CURRENTTIME: Return the current system time
 *         In Overlay, only clear the results Units, Label, etc if the result
 *         and template Systems differ AND the template System has been set
 *         explicitly.
+*     24-APR-2026 (TIMJ):
+*        Use round() instead of (int)(x+0.5) for MJD day rounding
+*        to avoid platform-dependent results.
 *class--
 */
 
@@ -1702,7 +1705,7 @@ static const char *Format( AstFrame *this_frame, int axis, double value, int *st
             map = astAnnul( map );
 
 /* If no time fields will be produced, round to the nearest day. */
-            if( ndp < 0 ) mjd = (int) ( mjd + 0.5 );
+            if( ndp < 0 ) mjd = round( mjd );
 
 /* Convert the MJD into a set of numeric date fields, plus day fraction,
    and format them. */

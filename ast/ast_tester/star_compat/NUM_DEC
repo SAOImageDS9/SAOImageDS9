@@ -1,0 +1,13 @@
+*  NUM_DEC -- External declarations for Starlink NUM numeric conversion
+*  functions needed by AST Fortran tests.  Minimal standalone version.
+*
+*  NUM_DTOD  double precision -> double precision (identity)
+*  NUM_ITOD  integer -> double precision
+*  NUM_RTOD  real -> double precision
+
+      DOUBLE PRECISION NUM_DTOD
+      EXTERNAL NUM_DTOD
+      DOUBLE PRECISION NUM_ITOD
+      EXTERNAL NUM_ITOD
+      DOUBLE PRECISION NUM_RTOD
+      EXTERNAL NUM_RTOD

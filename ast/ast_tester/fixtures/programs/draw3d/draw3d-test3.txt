@@ -1,0 +1,40 @@
+#  Run with "draw3d draw3d-test3.txt"
+
+#  FITS header values
+set v1 = 332.45758056641   # CRVAL1
+set v2 = 13.6985182762146   # -CRVAL2 (note minus sign)
+
+
+
+
+
+
+set r1=0   # Third Euler angle
+
+#set verbose=F # run quietly
+
+#  Repeat the following compound command 360 times
+set repeat=360
+
+#  A compound command to draw the whole scene
+{
+
+#  sky axes (white)
+   {set line_col = 1}
+   {set text_col = 1}
+   {axes 0 0 0 1 x y z}
+   {arc 0 0 0 0 0 1 1 0 0 360}
+
+#  native axes (red)
+   {sphsys native ZYX v1 v2 r1}
+   {set line_col = 2}
+   {set text_col = 2}
+   {axes 0 0 0 1 x y z native}
+
+#  Get native long and lat of celestial pole
+   {sphtran 0 90 native yes l1 l2}
+
+#  Increment the third euler angle
+   {incr r1=1.0}
+
+}

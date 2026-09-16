@@ -11,6 +11,7 @@ Last updated 2026-09-16
 | fitsy        |            | y     |       |                                                                      |                                 |
 | funtools     | 1.5.0      | y     | y     | https://github.com/SAOImageDS9/funtools-maintenance                  | abandoned                       |
 | libyaml      | 0.2.5      |       |       | https://github.com/yaml/libyaml                                      | 0.2.5                           |
+| lz4          | 1.10.0     |       |       | https://github.com/lz4/lz4                                           | 1.10.0                          |
 | openssl      | 3.2.0      |       |       | https://github.com/openssl/openssl                                   | 4.0.0                           |
 | pdf4tcl      | 0.9.4      |       |       | https://sourceforge.net/projects/pdf4tcl/                            | 0.9.4                           |
 | scidthemes   | 1.0        |       |       | https://sourceforge.net/projects/scid/files/Scid/Additional%20Files/ | 1.0                             |

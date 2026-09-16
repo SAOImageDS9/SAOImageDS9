@@ -39,6 +39,7 @@ Last updated 2026-11-11
 | ttkthemes    | 3.3.0      |       |       | https://github.com/TkinterEP/ttkthemes/                              | 3.3.0                           |
 | vector       |            | y     |       |                                                                      |                                 |
 | xpa          | 2.2.2      | y     |       | https://github.com/SAOImageDS9/xpa-maintenance                       | 2.2.2                           |
+| zlib         | 1.3.2      |       |       | https://github.com/madler/zlib                                       | 1.3.2                           |
 | -- -- --     |            |       |       |                                                                      |                                 |
 | compilers    |            | y     |       |                                                                      |                                 |
 | macos        |            | y     |       |                                                                      |                                 |

@@ -51,37 +51,217 @@ proc AsdfBlockIndex {data} {
     return $offsets
 }
 
-# Finds the core/ndarray node for `key:` at 2-space indent (i.e. a direct
-# child of the top-level "roman:" mapping - true for Roman's data/wcs
-# products, per real-file inspection in TODO.md Phase 1). Returns a list
-# {source datatype byteorder shapelist} or {} if not found or not
-# block-sourced.
-proc AsdfFindNdarray {tree key} {
-    set start [string first "\n  $key: !core/ndarray-" $tree]
-    if {$start < 0} {
-	return {}
-    }
-    # bounded to a handful of lines - source/datatype/byteorder/shape are
-    # always this close together in practice (see utils/asdf_gwcs_probe)
-    set body [string range $tree $start [expr {$start+300}]]
+# Enumerates every block-sourced core/ndarray node in the tree, anywhere in
+# it, returning a list of
+# {path source datatype byteorder shapelist unsupported} with
+# `path` a root-relative slash path (e.g. roman/data,
+# roman/meta/wcs/steps/0/transform/forward/1/coefficients). Phase 4: this
+# replaces the Phase 2 reader's "one level under roman:, 2-space indent"
+# assumption, and backs both arbitrary-path loading and the array browser.
+#
+# A real indent walker rather than more bounded regexps, because a path
+# needs the enclosing structure, not just the node. Checked against every
+# sample file first: all core/ndarray nodes in all of them are block-style
+# mapping values - none inside a flow mapping, none as a bare sequence
+# element - with consistent 2-space indentation, so mapping keys plus
+# sequence elements is full coverage in practice. An ndarray written in
+# flow style ({source: 0, ...}) would be skipped rather than misread.
+#
+# Sequence elements get a numeric path component, which matters: a GWCS
+# document has many `coefficients` keys and only the step index tells them
+# apart. The element is pushed at indent+1 - a half level - so that a
+# following element at the same indent pops it while leaving its parent
+# key, and a deeper mapping key pops neither.
+proc AsdfEnumNdarrays {tree} {
+    set result {}
+    set stack {}
+    set seq [dict create]
+    set path {}
+    set indent -1
+    set fields [dict create]
 
-    if {![regexp {source:\s*(\d+)} $body -> source]} {
-	return {}
+    foreach line [split $tree "\n"] {
+	set line [string trimright $line]
+	set body [string trimleft $line]
+	if {$body eq {} ||
+	    [string index $body 0] eq "#" ||
+	    [string index $body 0] eq "%" ||
+	    [string range $body 0 2] eq "---" ||
+	    [string range $body 0 2] eq "..."} {
+	    continue
+	}
+	set ind [expr {[string length $line] - [string length $body]}]
+
+	if {$body eq "-" || [string range $body 0 1] eq "- "} {
+	    while {[llength $stack] &&
+		   [lindex [lindex $stack end] 0] > $ind} {
+		set stack [lrange $stack 0 end-1]
+	    }
+	    if {![dict exists $seq $ind]} {
+		dict set seq $ind 0
+	    }
+	    set idx [dict get $seq $ind]
+	    dict set seq $ind [expr {$idx + 1}]
+	    lappend stack [list [expr {$ind + 1}] $idx]
+
+	    # YAML's compact form puts the element's first key on the dash
+	    # line itself, two columns further in
+	    set body [string range $body 2 end]
+	    set ind [expr {$ind + 2}]
+	    if {$body eq {}} {
+		continue
+	    }
+	}
+
+	if {![regexp {^([A-Za-z0-9_.+-]+):(.*)$} $body -> kk vv]} {
+	    continue
+	}
+
+	# a key at or outside the pending node's own indent ends it
+	if {$path ne {} && $ind <= $indent} {
+	    AsdfEnumFlush result $path $fields
+	    set path {}
+	}
+
+	while {[llength $stack] && [lindex [lindex $stack end] 0] >= $ind} {
+	    set stack [lrange $stack 0 end-1]
+	}
+	lappend stack [list $ind $kk]
+	foreach dd [dict keys $seq] {
+	    if {$dd >= $ind} {
+		dict unset seq $dd
+	    }
+	}
+
+	if {$path ne {}} {
+	    dict set fields $kk [string trim $vv]
+	    continue
+	}
+
+	if {[string match {!core/ndarray-*} [string trim $vv]]} {
+	    set names {}
+	    foreach ee $stack {
+		lappend names [lindex $ee 1]
+	    }
+	    set path [join $names /]
+	    set indent $ind
+	    set fields [dict create]
+	}
     }
-    if {![regexp {datatype:\s*(\w+)} $body -> datatype]} {
-	return {}
+
+    if {$path ne {}} {
+	AsdfEnumFlush result $path $fields
     }
+
+    return $result
+}
+
+# Appends one enumerated node to `result` if it is block-sourced and
+# carries the fields the load path needs. An inline (`data:`) ndarray is
+# skipped rather than reported: it has no block to read, and the WCS path
+# is the only thing that consumes those (AsdfResolveNdarrays).
+proc AsdfEnumFlush {varname path fields} {
+    upvar $varname result
+
+    if {![dict exists $fields source] || ![dict exists $fields datatype] ||
+	![dict exists $fields shape]} {
+	return
+    }
+    set source [dict get $fields source]
+    set datatype [dict get $fields datatype]
+    if {![string is integer -strict $source]} {
+	return
+    }
+
     set byteorder little
-    regexp {byteorder:\s*(\w+)} $body -> byteorder
-    if {![regexp {shape:\s*\[([0-9, ]+)\]} $body -> shapetext]} {
-	return {}
+    if {[dict exists $fields byteorder]} {
+	set byteorder [dict get $fields byteorder]
+    }
+
+    if {![regexp {^\[([0-9, ]*)\]$} [dict get $fields shape] -> shapetext]} {
+	return
     }
     set shapelist {}
-    foreach s [split $shapetext ,] {
-	lappend shapelist [string trim $s]
+    foreach ss [split $shapetext ,] {
+	set ss [string trim $ss]
+	if {$ss ne {}} {
+	    lappend shapelist $ss
+	}
+    }
+    if {$shapelist eq {}} {
+	return
     }
 
-    return [list $source $datatype $byteorder $shapelist]
+    # asdf-standard's core/ndarray allows `offset` and `strides` to
+    # describe a non-contiguous view into the block, in which case the
+    # block's raw bytes are NOT the array and handing them to the array
+    # load path would render the wrong pixels with no complaint. No
+    # sample file uses either (every `offset:` in the real Roman files is
+    # a !transform/shift parameter, not an ndarray field - checked), so
+    # rather than implement striding on speculation, record it and let
+    # the caller refuse. A zero offset is just the default, spelled out.
+    set unsupported {}
+    if {[dict exists $fields strides]} {
+	lappend unsupported strides
+    }
+    if {[dict exists $fields offset] &&
+	[string trim [dict get $fields offset]] ne "0"} {
+	lappend unsupported offset
+    }
+
+    lappend result [list $path $source $datatype $byteorder $shapelist \
+			$unsupported]
+}
+
+# Looks up one enumerated node by its root-relative path. Returns
+# {source datatype byteorder shapelist} - the same shape the Phase 2
+# AsdfFindNdarray returned - or {} if there is no such path.
+proc AsdfFindNdarrayPath {tree path} {
+    foreach entry [AsdfEnumNdarrays $tree] {
+	if {[lindex $entry 0] eq $path} {
+	    return [lrange $entry 1 end]
+	}
+    }
+    return {}
+}
+
+# Turns a user-supplied key into a full path. A key containing "/" is
+# already one. A bare name means Roman's fixed top-level layout
+# (roman/data, roman/err, ...), which keeps every Phase 2/3 caller working
+# unchanged; failing that, a unique match on the last path component is
+# accepted, so a non-Roman file's `sci` resolves without the user having
+# to spell out its full nesting. An ambiguous bare name returns {} rather
+# than picking one.
+proc AsdfResolvePath {tree key} {
+    if {[string first / $key] >= 0} {
+	return $key
+    }
+
+    set entries [AsdfEnumNdarrays $tree]
+    foreach entry $entries {
+	if {[lindex $entry 0] eq "roman/$key"} {
+	    return "roman/$key"
+	}
+    }
+
+    set hits {}
+    foreach entry $entries {
+	set pp [lindex $entry 0]
+	if {[file tail $pp] eq $key} {
+	    lappend hits $pp
+	}
+    }
+    if {[llength $hits] == 1} {
+	return [lindex $hits 0]
+    }
+
+    return {}
+}
+
+# Phase 2 signature, kept because the WCS code and the probe tooling call
+# it: `key` is a direct child of the top-level "roman:" mapping.
+proc AsdfFindNdarray {tree key} {
+    return [AsdfFindNdarrayPath $tree "roman/$key"]
 }
 
 # Reads and decompresses the ASDF binary block starting at `offset`.
@@ -581,6 +761,127 @@ proc AsdfAttachWcs {yamltext} {
     }
 }
 
+# --------------------------------------------------------------------
+# Array browser (TODO.md Phase 4, design doc SS8 point 5's second option).
+#
+# pds9 offers both a "<file>:<path>" text entry and an image browser;
+# this is the browser half, for the common case of not knowing what a
+# non-Roman file contains. Cheap to build: resolving what is in a file
+# needs only the YAML tree, never any block bytes.
+
+# Every enumerated array that could actually be displayed, as
+# {path label} pairs, largest first so a file's science arrays sort above
+# its small WCS coefficient matrices - a real Roman *_cal.asdf enumerates
+# 27 ndarrays, of which 12 are 6x6 polynomial coefficients that nobody
+# wants to look at as an image. Rank and datatype are filtered by the same
+# rules AsdfLoadArray enforces, so nothing offered here can fail on
+# selection.
+proc AsdfLoadableArrays {tree} {
+    set rows {}
+    foreach entry [AsdfEnumNdarrays $tree] {
+	lassign $entry path source datatype byteorder shapelist unsupported
+
+	if {$unsupported ne {}} {
+	    continue
+	}
+
+	set rank [llength $shapelist]
+	if {$rank != 2 && $rank != 3} {
+	    continue
+	}
+	if {[AsdfDatatypeToBitpix $datatype] == {} &&
+	    [AsdfWidenDatatype $datatype] == {}} {
+	    continue
+	}
+
+	set nn 1
+	foreach ss $shapelist {
+	    set nn [expr {$nn * $ss}]
+	}
+	lappend rows [list $nn $path \
+			  "$path  \[[join $shapelist {, }]\]  $datatype"]
+    }
+
+    set result {}
+    foreach row [lsort -integer -decreasing -index 0 $rows] {
+	lappend result [list [lindex $row 1] [lindex $row 2]]
+    }
+    return $result
+}
+
+# Asks which array to load, and sets `varname` to its path. Returns 1 to
+# proceed, 0 to cancel - the same convention MosaicWCSDialog uses, since
+# OpenDialog treats them identically. A file with a single loadable array
+# selects it without prompting.
+proc AsdfPathDialog {fn varname} {
+    upvar $varname var
+
+    if {[catch {
+	set fh [open $fn r]
+	fconfigure $fh -translation binary -encoding iso8859-1
+	# the tree is everything before the first binary block, so there is
+	# no need to read a 197MB file to list what is in it
+	set data [read $fh 4000000]
+	close $fh
+    } msg]} {
+	Error "[msgcat::mc {Unable to load}] $fn: $msg"
+	return 0
+    }
+
+    if {![AsdfIsAsdf $data]} {
+	Error "[msgcat::mc {ASDF: not an ASDF file}] $fn"
+	return 0
+    }
+
+    set rows [AsdfLoadableArrays [AsdfTreeText $data]]
+    switch -- [llength $rows] {
+	0 {
+	    Error "[msgcat::mc {ASDF: no loadable arrays found}] $fn"
+	    return 0
+	}
+	1 {
+	    set var [lindex [lindex $rows 0] 0]
+	    return 1
+	}
+    }
+
+    set rr [DisplayHeaderListDialog $rows [msgcat::mc {Select Array}] 60]
+    if {$rr == {}} {
+	return 0
+    }
+
+    set var [lindex [lindex $rr 0] 0]
+    return 1
+}
+
+# Splits pds9's "<filename>:<path inside the file>" convention into the
+# two parts, returning {filename path} with an empty path when there is no
+# suffix. Matching pds9 (github.com/asdf-format/pds9) matters here: it is
+# the convention Roman users already type, and keeping it means their
+# existing muscle memory and scripts carry over to native loading.
+#
+# The split is decided by whether the part before the last colon actually
+# names an existing file, rather than by pattern-matching the text. That
+# is what makes it safe on Windows, where "C:/data/x.asdf" has a colon
+# that must not be treated as a path separator - "C" is not a file, so it
+# is not split. It also degrades sensibly: if nothing splits, the whole
+# string is treated as the filename and the caller's "unable to load"
+# error quotes it verbatim.
+proc AsdfSplitPath {fn} {
+    set colon [string last : $fn]
+    if {$colon <= 0} {
+	return [list $fn {}]
+    }
+
+    set base [string range $fn 0 [expr {$colon - 1}]]
+    set path [string range $fn [expr {$colon + 1}] end]
+    if {$path eq {} || ![file exists $base]} {
+	return [list $fn {}]
+    }
+
+    return [list $base $path]
+}
+
 # The Open/OpenDialog-facing entry point (see ds9/library/open.tcl's Open
 # switch), deliberately mirroring LoadFitsFile's {fn layer mode} signature
 # so ASDF dispatches like any other format rather than needing its own
@@ -588,10 +889,17 @@ proc AsdfAttachWcs {yamltext} {
 #
 # `mode` has no ASDF meaning and is accepted only to keep that signature:
 # for FITS it selects load variants (slice, mosaic flavors) that are all
-# FITS-container concepts. The array key is Roman's fixed `roman.data`;
-# arbitrary in-file paths are Phase 4 scope.
+# FITS-container concepts.
+#
+# `fn` may carry pds9's "<file>:<path>" suffix to name an array other than
+# the default `roman/data` - see AsdfSplitPath.
 proc LoadAsdfFile {fn layer mode} {
-    return [AsdfLoadArray $fn data $layer]
+    lassign [AsdfSplitPath $fn] base path
+    if {$path eq {}} {
+	set path data
+    }
+
+    return [AsdfLoadArray $base $path $layer]
 }
 
 # --------------------------------------------------------------------
@@ -631,9 +939,10 @@ proc AsdfCmdLoad {param layer} {
 }
 
 # Loads one ndarray from an ASDF file into the current frame, via the
-# existing array/var load path. `key` is a top-level-under-"roman:" key
-# name (default "data", Roman's fixed science-array path - see design
-# doc). Returns 1 on success, 0 on failure (matching ProcessLoad).
+# existing array/var load path. `key` is either a full root-relative path
+# (roman/dq, or any deeper path the enumerator reports) or a bare name,
+# resolved by AsdfResolvePath - default "data", i.e. Roman's fixed
+# science array. Returns 1 on success, 0 on failure (matching ProcessLoad).
 proc AsdfLoadArray {fn {key data} {layer {}}} {
     global current
     global loadParam
@@ -658,12 +967,21 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
     }
 
     set tree [AsdfTreeText $data]
-    set node [AsdfFindNdarray $tree $key]
-    if {$node == {}} {
-	Error "[msgcat::mc {ASDF: could not find ndarray}] roman.$key"
+    set path [AsdfResolvePath $tree $key]
+    if {$path == {}} {
+	Error "[msgcat::mc {ASDF: ambiguous or unknown array}] $key"
 	return 0
     }
-    lassign $node source datatype byteorder shapelist
+    set node [AsdfFindNdarrayPath $tree $path]
+    if {$node == {}} {
+	Error "[msgcat::mc {ASDF: could not find ndarray}] $path"
+	return 0
+    }
+    lassign $node source datatype byteorder shapelist unsupported
+    if {$unsupported ne {}} {
+	Error "[msgcat::mc {ASDF: unsupported ndarray view}] $path ([join $unsupported {, }])"
+	return 0
+    }
 
     set widen {}
     set bitpix [AsdfDatatypeToBitpix $datatype]
@@ -693,12 +1011,19 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
 	    lassign $shapelist zdim ydim xdim
 	}
 	default {
-	    Error "[msgcat::mc {ASDF: unsupported ndarray rank}] roman.$key \[[join $shapelist {, }]\]"
+	    Error "[msgcat::mc {ASDF: unsupported ndarray rank}] $path \[[join $shapelist {, }]\]"
 	    return 0
 	}
     }
 
     set offsets [AsdfBlockIndex $data]
+    if {$offsets == {}} {
+	# the trailing block index is optional in asdf-standard; without it
+	# the blocks would have to be walked from the first magic instead,
+	# which this reader does not do
+	Error "[msgcat::mc {ASDF: file has no block index}] $fn"
+	return 0
+    }
     set offset [lindex $offsets $source]
     if {$offset == {}} {
 	Error "[msgcat::mc {ASDF: block index out of range}] $source"
@@ -734,7 +1059,7 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
 	set want [expr {$want * $zdim}]
     }
     if {[string length $decoded] < $want} {
-	Error "[msgcat::mc {ASDF: block too short for declared shape}] roman.$key"
+	Error "[msgcat::mc {ASDF: block too short for declared shape}] $path"
 	return 0
     }
 

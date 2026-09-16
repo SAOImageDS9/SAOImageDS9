@@ -795,10 +795,67 @@ eventual Phase 2 C++ container reader — see `utils/asdf_gwcs_probe/README.md`.
     `roman.data` star positions, same amplifier-boundary band, values 0.03-0.05 against
     data whose zscale range was -0.037 to 0.451. Each array loads in ~2.6s.
 
-- [ ] Arbitrary-path support for non-Roman ASDF files: either pds9's `path:inner/path`
-      text-entry convention, or a tree-browser dialog enumerating every `core/ndarray` node
-      the container reader finds.
-- [ ] Robustness pass on the fallback path for tags/paths the reader can't resolve.
+- [x] **Arbitrary-path support — done, and both options the bullet offered, not one.**
+  - `AsdfEnumNdarrays` replaces the Phase 2 reader's "one level under `roman:`, 2-space
+    indent" assumption with a real indent walker that finds every block-sourced
+    `core/ndarray` anywhere in the tree and gives each a root-relative slash path
+    (`roman/data`, or `roman/meta/wcs/steps/0/transform/forward/0/.../coefficients`).
+    Sequence elements get a numeric component, which is not cosmetic: a GWCS document has
+    a dozen `coefficients` keys and only the step index distinguishes them. Elements are
+    pushed at a half indent level so a following element pops the previous one while
+    leaving its parent key, and a deeper mapping key pops neither.
+  - Checked the structural assumptions against every sample file *before* writing it
+    rather than after: all `core/ndarray` nodes in all 7 files are block-style mapping
+    values — none in a sequence, none in flow style — at consistent 2-space indent.
+  - **Validated two independent ways.** First against a separately-written Python
+    implementation of the same walk: byte-identical output across all 7 files, 123 nodes.
+    That shares an algorithm though, so also checked against something that does not —
+    the raw count of `!core/ndarray-` occurrences per file (27/2/23/23/16/8/24). Every
+    file matched exactly, so no node is missed or double-counted.
+  - **pds9's `<file>:<path>` convention** (`AsdfSplitPath`), so Roman users' existing
+    muscle memory and scripts carry over to native loading. The split is decided by
+    whether the text before the last colon actually names an existing file, not by
+    pattern-matching — which is what makes `C:/data/x.asdf` safe on Windows, since `C` is
+    not a file. Works everywhere a filename is accepted: File menu, `xpaset ds9 asdf`,
+    `ds9 -asdf`.
+  - A bare name still resolves as before (`data` → `roman/data`), so every Phase 2/3
+    caller is unchanged; failing that, a *unique* match on the last path component is
+    accepted (`dq` → `roman/dq`), and an ambiguous one is refused rather than guessed.
+  - **Array browser** (`AsdfPathDialog`), shown by `OpenDialog` after the file chooser,
+    reusing the existing `DisplayHeaderListDialog` widget rather than writing another one.
+    Lists path/shape/datatype, sorted by element count descending so a file's science
+    arrays sort above its 6×6 coefficient matrices — for the real cal file that is 25
+    offered out of 27 enumerated, science arrays first. Only reads the first 4MB, since
+    the tree precedes the first binary block; listing a 197MB file's contents never reads
+    its pixels. A file with exactly one loadable array is selected without prompting.
+  - Verified live for `roman/dq` (uint32→64), `roman/err` (float16→-32), the bare name
+    `dq`, `roman/amp33` (rank-3 cube, depth 10), a fully-nested WCS coefficient path
+    (6×6 float64), and a nonexistent path (clean error). `*_segm.asdf` — which could not
+    be opened at all before this session — now renders as a textbook segmentation map,
+    discrete labeled blobs on zero background, labels 0–135, positions matching the
+    starfield in `roman/data`.
+- [x] **Robustness pass — done.** Beyond the Phase 3 fallback work, three gaps the
+      path/browser work exposed:
+  - **`offset`/`strides` on a `core/ndarray` were being ignored, which is a silent-misread
+    risk, not just a missing feature.** asdf-standard lets those describe a non-contiguous
+    *view* into a block, in which case the block's raw bytes are not the array and handing
+    them to the array load path renders wrong pixels with no complaint. No real file uses
+    either — every `offset:` in the Roman files is a `!transform/shift` parameter, checked,
+    not an ndarray field — so rather than implement striding on speculation, the enumerator
+    records it and the loader refuses. Proved the refusal fires by building a synthetic
+    file: took a real `*_segm.asdf`, inserted `offset: 128` on its `roman/data` node, and
+    clawed the same number of characters back from a harmless URL value so the tree length
+    stayed byte-identical and the trailing block index remained valid. Result: `ASDF:
+    unsupported ndarray view roman/data (offset)`, while the unmodified file still loads.
+  - A file with no trailing `#ASDF BLOCK INDEX` (optional in asdf-standard) reported
+    "block index out of range", which describes a different problem. Now says the file has
+    no block index — this reader does not walk blocks from the first magic instead.
+  - The browser only offers arrays that will actually load — right rank, and a datatype
+    that is either native or losslessly widenable — so nothing listed can fail on
+    selection.
+  - Known, deliberate limitation: an ndarray written in YAML *flow* style
+    (`{source: 0, ...}`) is skipped by the enumerator rather than misread. None of the 7
+    sample files use it.
 
 ## Phase 5 — Stretch (open-ended, not scheduled)
 

@@ -1,0 +1,273 @@
+#ASDF 1.0.0
+#ASDF_STANDARD 1.5.0
+%YAML 1.1
+%TAG ! tag:stsci.edu:asdf/
+--- !core/asdf-1.1.0
+asdf_library: !core/software-1.0.0 {author: The ASDF Developers, homepage: 'http://github.com/asdf-format/asdf',
+  name: asdf, version: 3.2.0}
+history:
+  entries:
+  - !core/history_entry-1.0.0 {description: 'This file was made using pysiaf version
+      0.22.0 and the Roman Science Instrument Aperture File (SIAF) released in January
+      2022. This version of the SIAF was created using an optical model of the geometric
+      distortion from the Goddard Space Flight Center optics group. The distortion
+      reference file was tested to ensure agreement with the SIAF both in the forward
+      and inverse transforms. The forward and inverse transforms in the SIAF have
+      been separately fit to the optical distortion model, and therefore do not agree
+      exactly. Testing has shown that forward transforms of the distortion reference
+      files and SIAF agree to within machine precision, and that the roundtrip of
+      the transforms from pixel to sky to pixel agree to within 0.002 pixels.', time: ! '2024-06-14
+      05:04:03+00:00'}
+  extensions:
+  - !core/extension_metadata-1.0.0
+    extension_class: asdf.extension._manifest.ManifestExtension
+    extension_uri: asdf://asdf-format.org/core/extensions/core-1.5.0
+    software: !core/software-1.0.0 {name: asdf-astropy, version: 0.6.1}
+  - !core/extension_metadata-1.0.0
+    extension_class: asdf.extension._manifest.ManifestExtension
+    extension_uri: asdf://asdf-format.org/transform/extensions/transform-1.5.0
+    software: !core/software-1.0.0 {name: asdf-astropy, version: 0.6.1}
+  - !core/extension_metadata-1.0.0
+    extension_class: asdf.extension._manifest.ManifestExtension
+    extension_uri: asdf://stsci.edu/datamodels/roman/extensions/datamodels-1.0
+    software: !core/software-1.0.0 {name: roman_datamodels, version: 0.19.1}
+  - !core/extension_metadata-1.0.0
+    extension_class: asdf.extension._manifest.ManifestExtension
+    extension_uri: asdf://astropy.org/astropy/extensions/units-1.0.0
+    software: !core/software-1.0.0 {name: asdf-astropy, version: 0.6.1}
+roman: !<asdf://stsci.edu/datamodels/roman/tags/reference_files/distortion-1.0.0>
+  meta:
+    author: T. Desjardins
+    description: Roman WFI distortion reference file.
+    input_units: !unit/unit-1.0.0 pixel
+    instrument: {detector: WFI01, name: WFI, optical_element: F158, p_optical_element: F062|F087|F106|F129|F146|F158|F184|F213|GRISM|PRISM|DARK|}
+    origin: !<asdf://stsci.edu/datamodels/roman/tags/origin-1.0.0> STSCI
+    output_units: !unit/unit-1.0.0 arcsec
+    pedigree: GROUND
+    reftype: DISTORTION
+    telescope: !<asdf://stsci.edu/datamodels/roman/tags/telescope-1.0.0> ROMAN
+    useafter: !time/time-1.1.0 2020-01-01T00:00:00.000
+  coordinate_distortion_transform: !transform/compose-1.2.0
+    forward:
+    - !transform/compose-1.2.0
+      forward:
+      - !transform/compose-1.2.0
+        forward:
+        - !transform/concatenate-1.2.0
+          forward:
+          - &id001 !transform/shift-1.2.0
+            inputs: [x]
+            offset: 1.0
+            outputs: [y]
+          - *id001
+          inputs: [x0, x1]
+          outputs: [y0, y1]
+        - !transform/concatenate-1.2.0
+          forward:
+          - !transform/shift-1.2.0
+            inputs: [x]
+            offset: -2044.5
+            outputs: [y]
+          - !transform/shift-1.2.0
+            inputs: [x]
+            offset: -2044.5
+            outputs: [y]
+          inputs: [x0, x1]
+          outputs: [y0, y1]
+        inputs: [x0, x1]
+        outputs: [y0, y1]
+      - !transform/compose-1.2.0
+        forward:
+        - !transform/compose-1.2.0
+          forward:
+          - !transform/remap_axes-1.3.0
+            inputs: [x0, x1]
+            mapping: [0, 1, 0, 1]
+            outputs: [x0, x1, x2, x3]
+          - !transform/concatenate-1.2.0
+            forward:
+            - !transform/polynomial-1.2.0
+              coefficients: !core/ndarray-1.0.0
+                source: 0
+                datatype: float64
+                byteorder: little
+                shape: [6, 6]
+              domain:
+              - &id002 [-1, 1]
+              - *id002
+              inputs: [x, y]
+              outputs: [z]
+              window:
+              - *id002
+              - *id002
+            - !transform/polynomial-1.2.0
+              coefficients: !core/ndarray-1.0.0
+                source: 1
+                datatype: float64
+                byteorder: little
+                shape: [6, 6]
+              domain:
+              - *id002
+              - *id002
+              inputs: [x, y]
+              outputs: [z]
+              window:
+              - *id002
+              - *id002
+            inputs: [x0, y0, x1, y1]
+            outputs: [z0, z1]
+          inputs: [x0, x1]
+          inverse: !transform/compose-1.2.0
+            forward:
+            - !transform/remap_axes-1.3.0
+              inputs: [x0, x1]
+              mapping: [0, 1, 0, 1]
+              outputs: [x0, x1, x2, x3]
+            - !transform/concatenate-1.2.0
+              forward:
+              - !transform/polynomial-1.2.0
+                coefficients: !core/ndarray-1.0.0
+                  source: 2
+                  datatype: float64
+                  byteorder: little
+                  shape: [6, 6]
+                domain:
+                - *id002
+                - *id002
+                inputs: [x, y]
+                outputs: [z]
+                window:
+                - *id002
+                - *id002
+              - !transform/polynomial-1.2.0
+                coefficients: !core/ndarray-1.0.0
+                  source: 3
+                  datatype: float64
+                  byteorder: little
+                  shape: [6, 6]
+                domain:
+                - *id002
+                - *id002
+                inputs: [x, y]
+                outputs: [z]
+                window:
+                - *id002
+                - *id002
+              inputs: [x0, y0, x1, y1]
+              outputs: [z0, z1]
+            inputs: [x0, x1]
+            outputs: [z0, z1]
+          outputs: [z0, z1]
+        - !transform/compose-1.2.0
+          forward:
+          - !transform/remap_axes-1.3.0
+            inputs: [x0, x1]
+            mapping: [0, 1, 0, 1]
+            outputs: [x0, x1, x2, x3]
+          - !transform/concatenate-1.2.0
+            forward:
+            - !transform/polynomial-1.2.0
+              coefficients: !core/ndarray-1.0.0
+                source: 4
+                datatype: float64
+                byteorder: little
+                shape: [2, 2]
+              domain:
+              - *id002
+              - *id002
+              inputs: [x, y]
+              outputs: [z]
+              window:
+              - *id002
+              - *id002
+            - !transform/polynomial-1.2.0
+              coefficients: !core/ndarray-1.0.0
+                source: 5
+                datatype: float64
+                byteorder: little
+                shape: [2, 2]
+              domain:
+              - *id002
+              - *id002
+              inputs: [x, y]
+              outputs: [z]
+              window:
+              - *id002
+              - *id002
+            inputs: [x0, y0, x1, y1]
+            outputs: [z0, z1]
+          inputs: [x0, x1]
+          inverse: !transform/compose-1.2.0
+            forward:
+            - !transform/remap_axes-1.3.0
+              inputs: [x0, x1]
+              mapping: [0, 1, 0, 1]
+              outputs: [x0, x1, x2, x3]
+            - !transform/concatenate-1.2.0
+              forward:
+              - !transform/polynomial-1.2.0
+                coefficients: !core/ndarray-1.0.0
+                  source: 6
+                  datatype: float64
+                  byteorder: little
+                  shape: [2, 2]
+                domain:
+                - *id002
+                - *id002
+                inputs: [x, y]
+                outputs: [z]
+                window:
+                - *id002
+                - *id002
+              - !transform/polynomial-1.2.0
+                coefficients: !core/ndarray-1.0.0
+                  source: 7
+                  datatype: float64
+                  byteorder: little
+                  shape: [2, 2]
+                domain:
+                - *id002
+                - *id002
+                inputs: [x, y]
+                outputs: [z]
+                window:
+                - *id002
+                - *id002
+              inputs: [x0, y0, x1, y1]
+              outputs: [z0, z1]
+            inputs: [x0, x1]
+            outputs: [z0, z1]
+          outputs: [z0, z1]
+        inputs: [x0, x1]
+        outputs: [z0, z1]
+      inputs: [x0, x1]
+      outputs: [z0, z1]
+    - !transform/concatenate-1.2.0
+      forward:
+      - !transform/shift-1.2.0
+        inputs: [x]
+        offset: 1312.9491452484797
+        outputs: [y]
+      - !transform/shift-1.2.0
+        inputs: [x]
+        offset: -1040.7853726755036
+        outputs: [y]
+      inputs: [x0, x1]
+      outputs: [y0, y1]
+    inputs: [x0, x1]
+    outputs: [y0, y1]
+...
+”BLK 0                             ˚©õ„õì-;Œ6√KL        œt—gd6?ÌI€°Ñ=æêÂ<ÆÄtΩÿHﬁÚjÙ∆ºéíœ¬®#<XT?º?[mÛÉ> ,5˛ÇBíΩ¿é%=O!∏< `ÓJà<        ﬁ≈0∫bæÄ´â;r™|=P&…œ„∞ºà	(}eº                 @ ò«,ÑΩ ú:Ñ< Ë=—«h$º                        ‡Ô‘–‚§ó<(‘ÜîÙº                                 hÀéËgº                                        ”BLK 0                             n‡‚^˜ß8z¥I·        x“o´k∏ª?¿yh$'å> ¥œ1‘´°Ω Ø8Öô< ê§π¯Ù*<¥´∂ö4?å†˛«Tæ¿añ“»s`ΩpÏ‡∞§ºÊI˜¡3b<        0(Zv&s> (å˛† ìΩ‡¡5¥∑º ¿ L
+<                 È€”ëªg=LêìQ≈ƒº8aØÔº                         tﬂÙ6¶< P⁄	äº                                †Kr˛0µÁª                                        ”BLK 0                             ò-urpˇ∑˛ÓŒ¬˚Keü        ~ÍE˙˛GùøyÙ£ñ.∑Ÿ>’A,c@>©¥`€"»=øp›Äk–VΩ‹ﬂ∂å0 "@*@ËNó=ø"ﬂ‹m{Qa>]R™∞∫ΩtyÇ_IΩ        ˆBÚØ˚∞˙>#⁄50vKæœh–rÙŒ∞=˜∂’¸˝N=                !öŒ€ÔÉQ>…ﬁ|YòµòΩ∞§~•SjV=                        ˆ˙π†ËìΩ±6-J
+4=                                 VSÄF=                                        ”BLK 0                             ñ©ÿsŒHx¨k≈· ÍÈ        ı—ùgx"@≥XZ-¨%ø 6]TLJq>Äâbfn*ûΩ :¥πC _Ω∏@⁄∂ÒöøÙ‰‘Õ¶[Ò> ;‡∆¡™>hùÁ˚à¶=@£5ü_çDΩ        ÔÜxæ8ø Óˆ±Ωb>†∫#ñ´≤= 0ëüP>Ω                0[êfr%6æ∑Mëà‰Xƒ=&K>€ãA=                        @Œ_“å∂ßΩ “{/ìP=                                 Úh∫=                                        ”BLK 0                                Ø<Î ≈IIØÙ[PYR        ™LXËz∂Îø     ‡ø        ”BLK 0                                Ô[Ωñ_dy‘K4ﬁπ£é             ‡?™LXËz∂Îø        ”BLK 0                                Ø<Î ≈IIØÙ[PYR        ™LXËz∂Îø     ‡ø        ”BLK 0                                Ô[Ωñ_dy‘K4ﬁπ£é             ‡?™LXËz∂Îø        #ASDF BLOCK INDEX
+%YAML 1.1
+---
+- 9048
+- 9390
+- 9732
+- 10074
+- 10416
+- 10502
+- 10588
+- 10674
+...

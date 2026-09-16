@@ -4,7 +4,7 @@ Last updated 2026-09-16
 
 | name         | version    | SAO   | dirty | upstream                                                             | latest                          |
 | ------------ | ---------- | ----- | ----- | -------------------------------------------------------------------- | ------------------------------- |
-| ast          | 9.4.1      |       |       | https://github.com/Starlink/ast                                      | 9.4.1                           |
+| ast          | 9.4.1      |       | y     | https://github.com/Starlink/ast                                      | 9.4.1 (6)                       |
 | awthemes     | 10.4.0     |       |       | https://sourceforge.net/projects/tcl-awthemes/                       | 10.4.0                          |
 | ds9          | 8.8        | y     |       |                                                                      |                                 |
 | fickle       | 2.2        | y     |       | https://github.com/SAOImageDS9/fickle-maintenance                    | previous upstream abandoned     |
@@ -45,6 +45,7 @@ Last updated 2026-09-16
 | tkmacosx     |            | y     |       |                                                                      |                                 |
 | tkwin        |            | y     |       |                                                                      |                                 |
 | unix         |            | y     |       |                                                                      |                                 |
+| utils        |            | y     |       |                                                                      |                                 |
 | win          |            | y     |       |                                                                      |                                 |
 |              |            |       |       |                                                                      |                                 |
 
@@ -57,3 +58,10 @@ Last updated 2026-09-16
 (4) There are problems trying to use 2.1.1; stick with 2.0.1.
 
 (5) Small tweaks to work with ds9.
+
+(6) `src/yamlchan.c`: 10 ASDF/GWCS transform-tag version ceilings (`Polynomial`, `Compose`,
+`Concatenate`, `Shift`, `Remap_Axes`, `Scale`, `Divide`, `Affine`, `Constant`, `Identity`)
+raised one minor version each to match real Roman WFI ASDF data (confirmed against
+downloaded Roman Data Workshop sample files, not just theoretical), ahead of upstream. See
+`TODO.md` Phase 0/1 and `ASDF_NATIVE_SUPPORT_DESIGN.md` §7c. Revert once upstream Starlink
+ships these ceilings itself.

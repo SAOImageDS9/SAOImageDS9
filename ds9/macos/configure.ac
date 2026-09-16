@@ -70,6 +70,9 @@ TEA_LOAD_CONFIG(tclfitsy)
 TEA_PATH_CONFIG(tclsignal)
 TEA_LOAD_CONFIG(tclsignal)
 
+TEA_PATH_CONFIG(tclasdf)
+TEA_LOAD_CONFIG(tclasdf)
+
 TEA_PATH_CONFIG(tclxml)
 TEA_LOAD_CONFIG(tclxml)
 

@@ -284,12 +284,166 @@ eventual Phase 2 C++ container reader — see `utils/asdf_gwcs_probe/README.md`.
 
 ## Phase 2 — Container reader + pixel path (no WCS yet)
 
-- [ ] New ASDF container reader (magic line, YAML tree via `libyaml`, binary block index +
-      decompression) — likely `tksao/frame/fitsasdf.C` or a helper class it uses.
-- [ ] Resolve `roman.data` (Roman-specific fixed path) to its `core/ndarray` block and wire
-      the decoded buffer into the existing `Arr*`-family ingestion path
-      (`Base::loadArrAllocCmd` et al.) — no cfitsio/`fitsy` involvement.
-- [ ] Visually confirm a real Roman file's image renders in DS9, no WCS attached yet.
+**Status: done, validated against a real, full 197MB Roman file, not a synthetic one.**
+
+- [x] **Architecture pivot from the original design doc sketch, decided explicitly with the
+      user before implementing** (not a silent deviation): rather than a new C++
+      `FitsImage` subclass in `tksao/frame/` wired in via a new grammar keyword in
+      `parser.Y`/`lex.L`, this is **Tcl-driven with one small new C command**. Reasons:
+      (a) avoids any bison/flex regeneration, which carries real toolchain-version risk on
+      this checkout (this box's `bison` 3.8.2 vs. the checked-in files' stamped `2.3`,
+      exactly the class of risk CLAUDE.md warns about); (b) DS9's existing `array ... var
+      ...` load command (`fitsy/var.C`'s `FitsArrVar`, reads pixel bytes straight from a
+      Tcl global variable, no temp file) was already sitting there, fully working, and
+      reachable from Tcl with zero grammar changes — see design doc §8 point 1/2 for the
+      updated writeup.
+- [x] New ASDF container reader — `ds9/library/asdf.tcl` (magic line, YAML tree via
+      targeted `regexp`/`string first` rather than a general YAML parser — see below —
+      binary block index + per-block header via `binary scan`, decompression per codec).
+  - [x] `AsdfTreeText` — isolate the YAML tree text (everything before the first `\xd3BLK`
+        magic).
+  - [x] `AsdfBlockIndex` — parse the trailing `#ASDF BLOCK INDEX` section into a list of
+        byte offsets.
+  - [x] `AsdfFindNdarray` — locate a top-level-under-`roman:` key's `core/ndarray` node and
+        pull `source`/`datatype`/`byteorder`/`shape` via bounded regexp (not a full YAML
+        parse — deliberately narrow, matches Phase 2's fixed-path scope). Validated against
+        the real file's actual tree text before wiring into the full pipeline: correctly
+        found `source=21 datatype=float32 byteorder=little shape={4088 4088}` for
+        `roman.data`, matching independently-verified values from the Phase 1
+        `utils/asdf_gwcs_probe` tooling.
+  - [x] `AsdfReadBlock` — parse one block's header (magic/`header_size`/flags/compression/
+        allocated/used/decoded, all via `binary scan`) and dispatch decompression by codec.
+        Validated the exact header-field parsing against real captured bytes from block 21
+        of the real cal file via standalone `tclsh9.0` (not yet inside `ds9`) before trusting
+        it: got `compression=lz4 allocated=67101959 used=67101959 decoded=66846976`,
+        matching the Python-side parse from Phase 1 exactly. Caught and fixed a real bug
+        this way — an earlier draft's `binary scan ... Iu5 ...` line was wrong (a `count>1`
+        format spec fills *one* list variable, not several positional ones); simplified to
+        just what's actually used.
+  - [x] `AsdfLz4DecompressPayload` — splits the lz4 payload into ASDF's chunk framing
+        (4-byte big-endian compressed length per chunk) and calls the new
+        `asdflz4decompress` C command once per chunk.
+  - [x] `AsdfDatatypeToBitpix` — ASDF/numpy datatype name to FITS BITPIX, matching
+        `fitsy/parser.Y`'s `[xdim=...,bitpix=...]` array-header grammar (confirmed the exact
+        key spelling — `xdim`/`ydim`/`bitpix`/`arch`, `little`/`big` — by reading that
+        grammar directly, not guessing). Currently covers `float32`/`float64`/`int16`/
+        `int32`/`int64`/`uint8`; unsigned 16/32-bit are not mapped (not needed for Roman's
+        `data` array, which is `float32`) and would need fitsy's separate unsigned-handling
+        convention investigated before adding.
+  - [x] **New C command, `asdflz4decompress` — revised into its own `tclasdf/` package**
+        after the user flagged the first version's placement (a function written directly
+        into `ds9/unix/ds9.C`, registered in `SAOAppInit`). That worked, but `ds9.C` is
+        genuinely triplicated with real per-platform differences across `ds9/unix/`,
+        `ds9/macos/`, and `ds9/win/` (confirmed by diffing all three, not assumed) — meaning
+        the same ~35-line function would have needed hand-duplicating and keeping in sync
+        three times forever. Restructured as `tclasdf/`, a small standalone Tcl C extension
+        matching the project's own `vector`/`fitsy`/`tclsignal` pattern exactly (its own
+        `configure.ac`/`Makefile.in`/`tclconfig/`), so the logic exists once
+        (`tclasdf/asdf_ext.c`) and each platform's `ds9.C` only needs the same tiny 3-line
+        `Tcl_StaticPackage` registration block every other vendored package already has —
+        no large duplicated function body anywhere.
+    - Templated directly off `tclsignal/` (copied its scaffold, renamed throughout) rather
+      than starting a TEA package from scratch.
+    - **Found this environment's `aclocal` cannot regenerate `tclconfig/tcl.m4`-based
+      packages at all** — confirmed it fails identically on an untouched copy of
+      `tclsignal` itself, so it's a pre-existing toolchain quirk, not something this work
+      introduced. Worked around it by hand-adapting `tclsignal`'s own already-generated
+      `configure`/`aclocal.m4` (sed-renaming `tclsignal`→`tclasdf`) instead of regenerating
+      from `configure.ac` — safe here specifically because the only real difference from
+      `tclsignal`'s own `configure.ac` is naming (no new `AC_CHECK_LIB` logic was kept —
+      see below).
+    - lz4 itself isn't found by any TEA macro, so `make.include`'s `tclasdf` recipe passes
+      `CPPFLAGS`/`LDFLAGS`/`LIBS` explicitly on the `./configure` command line — matching
+      the precedent of `ast`'s explicit `CPPFLAGS` and `tls`'s `--with-openssl-dir`, rather
+      than adding new autoconf detection logic. (An `AC_CHECK_LIB([lz4], ...)` addition was
+      tried first but reverted, once passing the flags directly turned out to need no new
+      configure.ac logic at all, keeping the file a pure rename of `tclsignal`'s.)
+    - Hit and fixed a second, real build-system bug this surfaced: `ds9/unix/configure`
+      (and `macos`/`win`) are **checked-in, pre-generated files**, not rebuilt from
+      `configure.ac` automatically — editing `configure.ac` alone silently did nothing
+      (confirmed by the literal string `@tclasdf_LIB_SPEC@` surviving into the final
+      Makefile unexpanded). Since the same `aclocal` breakage rules out a full
+      regeneration here too, fixed it the same way: located `tclsignal`'s own
+      already-generated `TEA_PATH_CONFIG`/`TEA_LOAD_CONFIG` shell block inside
+      `ds9/unix/configure` (lines 6305–6557), duplicated and renamed it for `tclasdf`, and
+      separately added `tclasdf`'s 8 `_LIB_SPEC`/`_BIN_DIR`/etc. variable names to the
+      `ac_subst_vars` list near the top of the file (a second, easy-to-miss registration
+      point `config.status` needs independently of the shell logic that computes the
+      values — missing it was the actual cause of the unexpanded `@tclasdf_LIB_SPEC@`).
+      Caught and fixed a case-sensitivity bug in the rename along the way (`TCLSIGNAL_STUB_
+      LIB_SPEC`'s uppercase form wasn't touched by a naive lowercase-only substitution).
+      Repeated for `ds9/macos/configure`, duplicating its own `tclsignal` block the same way
+      (verified against `ds9/macos/configure.ac`'s original `TEA_PATH_CONFIG` ordering that
+      `tclsignal` was directly followed by `tclxml`, to find the correct block boundary, and
+      re-checked the new block for the same uppercase-leftover bug — none found this time).
+      `ds9/win/configure` never had `tclsignal` support to begin with (no POSIX signal
+      handling on Windows), so there was no matching block to copy there; used the adjacent
+      `fitsy` block instead (`TEA_PATH_CONFIG(fitsy)` is directly followed by
+      `TEA_PATH_CONFIG(tclasdf)` in `ds9/win/configure.ac`, so its generated block is the
+      right template — every `TEA_PATH_CONFIG`-generated block has the same shape regardless
+      of which package it names). Both `macos` and `win` also got the `ac_subst_vars`
+      registration and the cosmetic `--with-tclasdf` help-text line, mirroring `unix`. All
+      three patched `configure` files pass `bash -n` syntax checks, but **only `ds9/unix`
+      was actually build-tested** (see the real-data re-run below) — this environment has no
+      macOS or Windows cross-toolchain, so the `macos`/`win` `configure` hand-patches are
+      reasoned from the same known-working pattern but unvalidated by an actual build, same
+      caveat as every other `macos`/`win` wiring change made in this phase.
+  - [x] Build wiring, revised: `ds9/unix|macos|win/Makefile.in` each get a
+        `tclasdf_LIB_SPEC= @tclasdf_LIB_SPEC@` declaration and `$(tclasdf_LIB_SPEC)` added
+        to `EXT_SPECS`; `$(libdir)/liblz4.a` (the transitive dependency `tclasdf`'s own
+        `_LIB_SPEC` doesn't carry) stays explicit in `LLIBS` alongside `libast.a`/
+        `libfuntools.a`/`libxpa.a`, in all three platform Makefiles now, not just `unix`.
+        The earlier `-I$(includedir)` addition to `ds9/unix/Makefile.in`'s `INCLUDES` was
+        reverted — no longer needed since `ds9.C` itself doesn't include `lz4.h` anymore.
+  - [x] Hit and fixed a real Tcl 9 compatibility bug along the way: `-encoding binary` was
+        removed in Tcl 9 (`fconfigure` now errors: `"unknown encoding \"binary\": No longer
+        supported"`); the correct idiom, confirmed by checking how `load.tcl`'s own
+        `channel` load case already does it, is `-translation binary -encoding iso8859-1`.
+  - [x] Confirmed `Su`/`Iu`/`Wu` (big-endian unsigned 16/32/64-bit) is Tcl's real `binary
+        scan` syntax by reading `tcl9.0/doc/binary.n` directly rather than assuming, and
+        confirmed concatenated specs like `WuWuWu` (three 64-bit fields, one call) work via
+        a standalone round-trip test before relying on it.
+- [x] Resolve `roman.data` to its `core/ndarray` block and wire the decoded buffer into the
+      existing `Arr*`-family ingestion path — done via `FitsArrVar`/`var`, not
+      `loadArrAllocCmd`/`alloc` as originally guessed, since a Tcl-variable handoff needs no
+      temp file. No cfitsio/`fitsy` ASDF-specific parsing anywhere.
+- [x] **Visually confirmed** a real Roman file's image renders in DS9, no WCS attached yet —
+      not just "dimensions match," an actual look at the rendered pixels:
+  - Downloaded the *full* real `r0000101001001001001_0001_wfi01_f158_cal.asdf` (206,736,815
+    bytes — the earlier Phase 1 work used WCS-only sample files with no pixel data at all).
+  - `AsdfLoadArray <file> data` returned success in ~5.3 seconds; `$current(frame) get fits
+    width/height/bitpix` reported `4088 4088 -32`, matching the real file's actual
+    `roman.data` shape/datatype exactly.
+  - `$current(frame) clip mode zscale` + `zoom to fit` + `saveimage png` produced a 545KB
+    PNG (a first attempt at the default, unscaled clip limits produced a ~4KB
+    near-solid-color PNG — not a failure, just uninformative scaling, dominated by one large
+    negative outlier in the real pixel range) — **visually a recognizable WFI starfield**,
+    point sources with the expected blocky pixel-sampled PSF shape, plus a band of
+    detector-amplifier-boundary artifacts along one edge that's a known real feature of WFI
+    data, not a rendering bug.
+  - Pixel value range from `$current(frame) get minmax`: `-187169 6059.94` (raw), zscale
+    clip settled on `-0.0365814 0.451135` — both look like plausible calibrated
+    detector-count ranges, not degenerate/garbage values.
+  - **Re-ran this exact test after the `tclasdf` refactor above** (not just re-checked the
+    build) — identical result: `AsdfLoadArray` succeeded in ~5.2 seconds, same
+    `4088 4088 -32`, and `saveimage png` produced a byte-for-byte identical 545,345-byte
+    PNG to the pre-refactor run. The architecture change is a real refactor, not a
+    regression.
+
+**Known limitations, deliberately deferred, not oversights:**
+- Reads the *entire* file into a Tcl string before doing anything (`AsdfLoadArray`'s `read
+  $fh`) rather than seeking/streaming just the tree text and the one target block. Fine for
+  a 197MB proof-of-concept load taking ~5 seconds; real production code (Phase 3+) should
+  read lazily instead, particularly once files get larger or loads need to feel instant.
+- `AsdfFindNdarray`'s path resolution is hardcoded to "one level under `roman:`, no further
+  nesting" (matches `roman.data` exactly) — arbitrary/nested paths are explicitly Phase 4
+  scope (`path:inner/path` or a tree browser), not attempted here.
+- Only tested on the science `data` array of one real file. `dq`/`err`/`var_poisson` (seen
+  as siblings in the real tree during Phase 1) should parse identically in principle
+  (same `core/ndarray` shape) but haven't been tried.
+- Not tested on macOS/Windows (same caveat as every build-system change this session) —
+  `asdflz4decompress` is pure standard C against `lz4.h`, so no obvious platform-specific
+  risk, but genuinely unverified.
 
 ## Phase 3 — WCS path + Roman-native "Open ASDF"
 

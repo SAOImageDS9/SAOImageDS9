@@ -99,7 +99,7 @@ TKIMGTMPFILES = \
 #-------------------------- main
 
 .NOTPARALLEL :
-.PHONY	: all dirs ds9 tclxml tclxmlrpc tclzipfs tls xpa
+.PHONY	: all dirs ds9 tclxml tclxmlrpc tclzipfs tls xpa zlib
 .PHONY	: tkblt tclfitsy tkcon tkhtml1 tkimg tkmpeg tksvg tkagif tksao tktable
 .PHONY	: vector fitsy libyaml ast funtools openssl
 
@@ -221,6 +221,37 @@ tls/Makefile :
 	$(WITHTCL) \
 	$(PREFIX) \
 	$(STD)
+
+#-------------------------- zlib
+
+# zlib has its own hand-written configure (not autoconf) - it doesn't
+# understand VAR=value positional args, so any cross-compile CC/AR
+# override in $(CONFIGFLAGS) has to be a real shell-env prefix here,
+# not a positional argument the way the autoconf-based packages take it.
+# It also doesn't understand --exec-prefix or --config-cache, so this
+# can't just reuse $(PREFIX)/$(CACHE) like the autoconf-based packages.
+#
+# The dependency below is deliberately zlib/configure.log, not
+# zlib/Makefile: zlib's tarball ships a placeholder Makefile (just
+# "Please use ./configure first") alongside Makefile.in, and its own
+# distclean rule *recreates* that same placeholder - so keying off
+# Makefile's existence means a reconfigure after distclean would never
+# fire. configure.log is only ever written by ./configure itself and is
+# genuinely removed (not recreated) by distclean, so it's a reliable
+# sentinel for "configure has actually been run".
+
+zlib	: zlib/configure.log
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C zlib -j $(JOBS) install
+
+zlib/configure.log :
+	@echo ""
+	@echo "*** $@ ***"
+	cd zlib; \
+	$(CONFIGFLAGS) ./configure \
+	--prefix=$(prefix) --libdir=$(libdir) --includedir=$(includedir) \
+	--static
 
 #-------------------------- xpa
 
@@ -587,7 +618,7 @@ scrub :
 .PHONY	: tclxmlclean tclxmlrpcclean tlsclean
 .PHONY	: tkbltclean tclfitsy tkconclean tkhtml1clean tkimgclean
 .PHONY	: tkmpegclean tksvgclean tkagifclean
-.PHONY	: tktableclean xpaclean
+.PHONY	: tktableclean xpaclean zlibclean
 .PHONY	: vectorclean fitsyclean libyamlclean astclean funtoolsclean
 .PHONY	: tksaoclean
 
@@ -719,6 +750,11 @@ xpaclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C xpa clean
 
+zlibclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C zlib clean
+
 #-------------------------- distclean
 
 .PHONY	: dirsdistclean ds9distclean localdistclean
@@ -726,7 +762,7 @@ xpaclean :
 .PHONY	: tclxmldistclean tclxmlrpcdistclean tlsdistclean
 .PHONY	: tkbltdistclean tclfitsydistclean tkcondistclean tkhtml1distclean
 .PHONY	: tkimgdistclean tkmpegdistclean tksvgdistclean tkagifdistclean
-.PHONY	: tktabledistclean xpadistclean
+.PHONY	: tktabledistclean xpadistclean zlibdistclean
 .PHONY	: vectordistclean fitsydistclean libyamldistclean
 .PHONY	: astdistclean funtoolsdistclean
 .PHONY	: tksaodistclean
@@ -886,3 +922,8 @@ xpadistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C xpa distclean
+
+zlibdistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C zlib distclean

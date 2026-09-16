@@ -33,6 +33,7 @@ endif
 
 saods9	: dirs tcl tk \
 	openssl \
+	zlib \
 	xpa funtools libyaml ast \
 	vector fitsy \
 	tclsignal \

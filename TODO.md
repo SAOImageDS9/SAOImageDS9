@@ -65,10 +65,70 @@ truth for where things stand.
         reasoned from reading the existing `xpa`/`funtools` pattern, not build-tested. Needs
         an actual cross-build attempt on a machine with the right toolchain before trusting
         it fully.
-  - [ ] Still open: a real end-to-end `unix/configure && make` pass through the *actual*
-        dependency chain (`dirs tcl tk openssl xpa funtools libyaml ast ...`) on Linux,
-        rather than the isolated scratch-prefix validation above.
-  - [ ] Nothing has been `git add`ed or committed yet — working tree only.
+  - [x] Ran a real, full `unix/configure && make` from a completely clean tree (no prior
+        build state) through the actual dependency chain
+        (`dirs tcl tk openssl xpa funtools libyaml ast vector fitsy ... tksao ds9`) — not
+        just the isolated scratch-prefix validation above. Result: `bin/ds9` built and
+        runs (`./bin/ds9 -version` → `ds9 8.8b2`). Confirmed in the real install tree (not
+        a scratch prefix): `lib/libyaml.a` installed static-only (no `.so`); `ast/configure`
+        logged `checking for yaml_parser_initialize in libyaml... yes` against
+        `--with-yaml=$(prefix)`; `lib/libast.a` (36MB) contains the same 14
+        `yamlchan`/`YamlChan` symbols found in the earlier isolated test; and `ds9`'s final
+        link line pulls in `lib/libast.a`/`lib/libast_err.a`/`lib/libast_pal.a`/
+        `lib/libast_cminpack.a` directly alongside `libxpa.a`/`libfuntools.a`. Full log kept
+        at `full_build.log` (untracked, not committed).
+  - Noted one pre-existing, unrelated build failure surfaced during this run, not caused by
+    this work: `funtools/util`'s optional `gcat` command-line utility fails to link
+    (`ld: cannot find .../lib/libz.a: No such file or directory`) because `funtools`'s own
+    `make.include` recipe passes `--with-zlib=$(libdir)/libz.a`, but nothing in the build
+    ever actually produces `lib/libz.a` at that path — there's no `zlib` package/target
+    upstream of `funtools` in `make.include` at all. Non-fatal (the rest of `funtools`,
+    and the whole `saods9` chain through `ds9`, built fine regardless), but worth a
+    separate look — not folded into this ASDF task's scope.
+  - [ ] Nothing has been `git add`ed or committed yet beyond the WIP commit already made —
+        this build-validation pass itself hasn't been committed (there's nothing to commit
+        for it besides `full_build.log`, which shouldn't be tracked).
+- [x] Vendored `zlib` (latest tag, `1.3.2`) as a new top-level static-lib package, both as
+      the baseline codec the ASDF binary-block reader will need (design doc §9) and to fix
+      the pre-existing `funtools`/`gcat` gap above in one move — `funtools`'s own recipe
+      already expects exactly `$(libdir)/libz.a`, so no changes were needed there at all.
+  - [x] Added `zlib/` (upstream release tarball, unmodified) and a `Manifest.md` row.
+  - [x] Added a `zlib` build stanza to `make.include` (+ `zlibclean`/`zlibdistclean`,
+        `.PHONY` entries), configured `--static` (zlib's own flag spelling for
+        static-only — it has a hand-written `configure`, not autoconf, so it doesn't
+        understand `--disable-shared`/`--exec-prefix`/`--config-cache` the way the
+        autoconf-based packages do; used `--prefix=`/`--libdir=`/`--includedir=` instead of
+        the shared `$(PREFIX)`/`$(CACHE)` variables for that reason).
+  - [x] Same plain-C-library cross-compile issue as `libyaml`: added `$(CONFIGFLAGS)` for
+        `win`, but since zlib's configure doesn't parse `VAR=value` positional arguments
+        either (unlike the autoconf packages), it's placed as a literal shell-env prefix
+        (`$(CONFIGFLAGS) ./configure ...`) rather than a positional argument — the
+        positional form would have been silently ignored on `win`, same failure mode as
+        the `libyaml` fix but a different reason underneath.
+  - [x] Found and worked around a second, zlib-specific quirk: its tarball ships a
+        placeholder `Makefile` ("Please use ./configure first") *alongside* `Makefile.in`,
+        and — worse — its real `distclean` target deliberately *recreates* that same
+        placeholder. Keying the `make.include` dependency off `zlib/Makefile` (the pattern
+        every other package uses) would therefore never detect that a (re)configure is
+        needed. Fixed by keying off `zlib/configure.log` instead — written only by
+        `./configure` itself, genuinely removed (not recreated) by `distclean` — rather
+        than by deleting the shipped placeholder, so `zlib/` stays an unmodified vendored
+        copy like every other non-`dirty` package.
+  - [x] Added `zlib` to the `saods9` prerequisite list in `unix/Makefile.in`,
+        `macos/Makefile.in`, and `win/Makefile.in`, right after `openssl` and before
+        `xpa`/`funtools`.
+  - [x] Validated in isolation first (scratch prefix): `--static` installs `libz.a` only,
+        no `.so`. Then validated for real in the already-built tree from the prior full
+        build: `make zlib` installed `lib/libz.a` (static-only, confirmed no `.so`
+        anywhere in `lib/`); `make funtoolsclean funtools` rebuilt cleanly and `gcat` now
+        links successfully against `lib/libz.a` (previously the one failure in the whole
+        tree). Did not re-run a full from-scratch `unix/configure && make` after this
+        change — validated incrementally against the already-built tree instead, which
+        confirms the specific regression is fixed but doesn't re-prove the *whole* chain
+        builds clean from zero with `zlib` newly in the prerequisite order.
+  - [ ] Same caveat as `libyaml`/`ast`: no mingw or macOS cross-toolchain available here,
+        so the `win`/`macos` wiring (prerequisite list + `$(CONFIGFLAGS)` env-prefix) is
+        reasoned, not build-tested.
 - [ ] Locally patch the five remaining `MAKE_TEST` minor-version ceilings in
       `ast/src/yamlchan.c` identified above (`Polynomial`, `Compose`, `Concatenate`,
       `Shift`, `Remap_Axes`). Track as a `dirty` change in `Manifest.md` until upstream

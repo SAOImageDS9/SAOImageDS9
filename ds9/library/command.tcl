@@ -138,6 +138,7 @@ proc ProcessCommand {argv argc} {
 	    -align {incr i; ProcessAlignCmd argv i}
 	    -analysis {incr i; ProcessAnalysisCmd argv i {} {}}
 	    -array {set file(type) array}
+	    -asdf {set file(type) asdf}
 	    -asinh {set scale(type) asinh; ChangeScale}
 	    -advance -
 	    -advanced {
@@ -789,6 +790,10 @@ proc CommandLineLoadBase {item argvname iname} {
 	    # data file comes here
 	    MultiLoad $file(layer) $file(mode)
 	    LoadFitsFile $item $file(layer) $file(mode)
+	}
+	asdf {
+	    MultiLoad $file(layer) $file(mode)
+	    LoadAsdfFile $item $file(layer) $file(mode)
 	}
 	url {LoadURLFits $item $file(layer) $file(mode) 1}
 

@@ -160,6 +160,9 @@ proc ProcessLoad {{err 1}} {
     # Masks and other overlay layers do not replace the frame image.
     if {$current(frame) != {} && $loadParam(load,layer) == {}} {
 	BookmarksClearFrame $current(frame)
+	# likewise any cached ASDF tree - the frame is about to hold a
+	# different file, possibly not an ASDF one at all
+	AsdfClearTree $current(frame)
     }
 
     # restrict load type for windows

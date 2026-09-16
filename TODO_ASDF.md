@@ -551,25 +551,201 @@ eventual Phase 2 C++ container reader — see `utils/asdf_gwcs_probe/README.md`.
       `AsdfLoadArray` still loads the pixel array in ~6 seconds, `saveimage png` still
       produces the byte-for-byte identical 545,345-byte PNG Phase 2 recorded (confirming
       the WCS-attach step is purely additive, no regression to the pixel path) — and now
-      `$frame has wcs wcs` reports `1`, with `$frame get coordinates 2044 2044 wcs fk5
-      degrees` returning `269.7077160072 65.9862233765` for the image center and
-      `269.8604193977 66.0474793179` for pixel (1,1). **Independently cross-checked**
-      against the file's own embedded processing log (`S_REGION VALUES: POLYGON ICRS
-      269.986945913 ... 65.974342004`, from `romancal.assign_wcs`'s own recorded footprint)
-      — same region of sky, not just "produces some number."
-- [ ] Defined fallback behavior on failure (unsupported tag/version, non-Roman GWCS shape) —
-      report "no WCS," don't crash. (The extraction/attach step is already wrapped in a
-      `catch` in `AsdfLoadArray` so a missing/unparseable WCS doesn't block the pixel load —
-      not yet exercised against a real file that actually lacks a recognizable WCS, so
-      leaving this unchecked until that's tried.)
-- [ ] Header/metadata display: feed the YAML tree text into DS9's existing header-viewer
-      widget.
-- [ ] Tcl UI: `LoadAsdfFile`/`AsdfLoadDialog` pair, File menu/button entry, following
-      `LoadFitsFile`/`WCSLoadFile`.
-- [ ] Scripting surface: `ProcessAsdfCmd` parallel to `ProcessFitsCmd` for XPA/SAMP-driven
-      loads.
-- [ ] Test against multiple public Roman Data Workshop sample files, not just the one used
-      for design validation.
+      `$frame has wcs wcs` reports `1`.
+      - **Correction to this entry's original numbers, found when re-validating on the macOS
+        box.** It recorded `$frame get coordinates 2044 2044 wcs fk5 degrees` →
+        `269.7077160072 65.9862233765` as "the image center." That command does not take
+        image coordinates: `Base::getCoordCmd` (`basecommand.C:1428`) resolves its argument
+        as `Coord::CANVAS` via `isInCFits(vv,Coord::CANVAS,NULL)` and returns the literal
+        string `"0 0"` when the canvas point falls outside the frame. Those two figures were
+        therefore canvas-coordinate readouts, not sky coordinates of the pixels named. The
+        conclusion they supported (a real WCS, right region of sky) was still correct; the
+        numbers were mislabeled. Use `crosshair <x> <y> image` + `xpaget ds9 crosshair wcs
+        ... degrees` for an image→sky readout instead.
+      - **Re-done properly, and the result is much stronger than "same region of sky."**
+        Compared all four image corners against the file's own embedded
+        `romancal.assign_wcs` footprint (`roman.meta.wcs_info.s_region`, `POLYGON ICRS
+        269.986945544 65.974265112 269.986740134 66.097228761 269.676782229 66.097195774
+        269.680113321 65.974342049`). DS9's readout at image (-0.5,-0.5), (-0.5,4087.5),
+        (4087.5,4087.5), (4087.5,-0.5) matches all four corners to **≤0.0002 arcsec** — i.e.
+        to the rounding of DS9's own 7-decimal output, across the full 4088² field. The
+        -0.5 offset is exactly the expected 1-based-FITS vs 0-based-numpy origin convention
+        (checked by walking (0,0)/(0.5,0.5)/(1,1)/(-1,-1) and confirming the residual was a
+        constant one-pixel shift, not a divergent error). So the GWCS transform DS9 computes
+        through `AstYamlChan` is *numerically identical* to romancal's own, not an
+        approximation of it — which is the specific claim the whole project exists to make
+        against pds9's SIP-fitting approach.
+      - Pixel path re-confirmed visually on macOS: `saveimage png` renders the same
+        recognizable WFI starfield (blocky pixel-sampled PSFs, the known
+        detector-amplifier-boundary artifact band along one edge) with `get minmax` giving
+        the identical `-187169 6059.94` Phase 2 recorded. The PNG is *not* byte-identical to
+        the Linux run's 545,345 bytes (this one is 278,005) — `saveimage` captures the
+        canvas at the current window size, so that comparison is only meaningful within one
+        machine/WM, not across them.
+- [x] **Defined fallback behavior on failure — done, and exercised against real files that
+      actually hit each path, not reasoned about.** Four new downloads made this testable
+      (see the "sample files" note at the end of this phase): `*_segm.asdf` genuinely has no
+      WCS subtree at all, and `roman.amp33`/`roman.border_ref_pix_*` are genuinely rank-3.
+  - `AsdfLoadArray`'s failure paths, before this pass, either crashed with a raw Tcl error
+    or — worse — loaded silently wrong data. Each now reports a specific message and returns
+    0, confirmed by a headless harness driving the real files:
+    - Missing/unreadable file: `open`/`read` were uncaught, so a raw Tcl error escaped to
+      the caller. Now caught → `Unable to load <fn>: <reason>`.
+    - **Non-ASDF file: no magic check existed at all.** A FITS file fell through to the tree
+      walk and failed with a confusing `could not find ndarray roman.data`. New `AsdfIsAsdf`
+      checks the mandatory `#ASDF ` first-line magic up front → `ASDF: not an ASDF file`.
+    - **Rank > 2 was a real silent-corruption bug, not just a bad message.** `xdim`/`ydim`
+      are taken as `shapelist[1]`/`[0]`, so a rank-3 array's third axis just fell off the
+      end and the frame loaded as the wrong 2-d shape with no complaint — e.g. `roman.amp33`
+      (`[10,4096,128]`) would have rendered as a 4096×10 frame. Now rejected explicitly →
+      `ASDF: unsupported ndarray rank roman.amp33 [10, 4096, 128]`.
+    - `AsdfReadBlock` returning `{}` (bad block magic at the indexed offset) was `lassign`ed
+      into empty `compression`/`decoded` and loaded as an empty buffer. Now checked.
+    - Short/truncated block: fitsy's array path trusts the declared dimensions and never
+      checks the buffer against them, so a short decompression would have rendered real
+      pixels followed by whatever memory followed. Now length-checked against
+      `xdim*ydim*|bitpix|/8`.
+  - WCS attach: the single blanket `catch` that swallowed everything is replaced by three
+    distinguished outcomes — no subtree found is normal and silent (real case: `*_segm.asdf`),
+    while a subtree that IS found but that extraction or AST then rejects reports via
+    `Warning` (routes to `ds9(msg)` for XPA/SAMP, a non-modal notice in the GUI) and leaves
+    the pixel load standing. Factored the temp-file transport into `AsdfAttachWcs` so it
+    stops swallowing its own errors.
+  - Added `uint16` → BITPIX `-16`. That is not a real FITS BITPIX — it is fitsy's own
+    private code for unsigned 16-bit (`fitsy/parser.Y`'s compact `atype` rule maps `'u'` to
+    it, and `FitsFile::validParams` in `fitsy/file.C` accepts it). Read that switch directly
+    rather than assuming: the complete set fitsy accepts is exactly
+    `{8, 16, -16, 32, 64, -32, -64}`.
+  - **Real datatype gap this surfaced, not fixed — needs a decision.** `uint32` and `float16`
+    have no representation in that set, and both occur on real Roman science arrays:
+    `*_segm.asdf`'s `roman.data` (the segmentation map, the whole point of that product) is
+    `uint32`, and every `*_cal.asdf`'s `roman.var_poisson` is `float16`. They now fail
+    cleanly (`ASDF: unsupported ndarray datatype uint32`) rather than being coerced to a
+    narrower or differently-signed type, but that means **DS9 cannot display a Roman
+    segmentation map at all today**. `uint32` → BITPIX 64 is exactly lossless and `float16` →
+    `-32` is too, but converting 4088² values in pure Tcl is far too slow — both would want a
+    widening command in `tclasdf/` alongside `asdflz4decompress`. Deferred, not attempted.
+- [x] **Header/metadata display — done.** The YAML tree text goes verbatim into the same
+      `SimpleTextDialog` widget the FITS header viewer already uses (`header.tcl`'s
+      `DisplayHeader`), inheriting its Save/Print/Find menus for free.
+  - Design doc §8 point 4 anticipated needing a pass to "report block-sourced arrays by
+    shape/dtype rather than dumping them." **Not needed** — ASDF never writes an array
+    inline in the tree, only a `source: N` reference plus `datatype`/`shape`, so the tree is
+    already exactly the right thing to show. Confirmed on the real 197MB cal file: its whole
+    tree is 61,442 bytes of readable YAML.
+  - The tree is cached in Tcl (`asdf(tree,$frame)`/`asdf(file,$frame)`), not on the C++
+    side, because nothing under `tksao/` ever sees the ASDF container — the frame receives
+    only a raw pixel buffer through the array/var path, and its synthetic FITS header
+    carries nothing but the dimensions DS9 itself supplied.
+  - **Cache lifecycle, which is the part that can silently go wrong**: cleared in
+    `ProcessLoad` (`load.tcl`) alongside the existing `BookmarksClearFrame` call, under the
+    same "not a layer load" guard — that is the one place every format's load funnels
+    through, so a FITS file loaded over an ASDF frame cannot show the previous file's tree.
+    Also cleared in `ClearFrame` (`frame.tcl`) on unload. Note the ordering constraint:
+    `AsdfLoadArray` must set the cache *after* its `ProcessLoad` call, not before, or
+    `ProcessLoad` wipes it immediately. Hooking `DestroyHeader` instead would have had the
+    same problem from the other direction (`FinishLoad` → `LoadUpdate` → `DestroyHeader`
+    runs after `AsdfLoadArray` returns).
+  - Routed the `header` XPA/SAMP command surface too (`headerparser.tac` →
+    `DisplayHeaderCmd`/`CloseHeaderCmd`/`SaveHeaderCmd`), not just the File menu. The `id`
+    argument is a FITS extension number with no ASDF counterpart, so it is ignored on that
+    path rather than given an invented meaning. `header close` closes the viewer but keeps
+    the cache, so File→Header reopens it; only a reload or unload drops it.
+  - Verified live over the `tcl`/XPA entry points against the real cal file: viewer opens
+    titled with the ASDF filename holding all 61,442 characters; `xpaset -p ds9 header save
+    <fn>` writes a byte-exact 61,442-byte copy of the tree; a FITS frame still routes to the
+    FITS viewer (`hd-*` window created, ASDF window not) — no regression; and both the
+    load-over and frame-unload paths clear cache and window together.
+- [x] **Tcl UI — done, except the icon-button row (see below).** Rather than a separate
+      `AsdfLoadDialog`, ASDF plugs into the *existing* dialog machinery as just another
+      format, which turned out to need less new code than the design doc's sketch:
+  - `LoadAsdfFile {fn layer mode}` in `asdf.tcl`, deliberately mirroring `LoadFitsFile`'s
+    signature so `open.tcl`'s `Open` switch dispatches to it like any other format
+    (`asdf {LoadAsdfFile $fn $layer $mode}`). `mode` has no ASDF meaning — for FITS it
+    selects slice/mosaic variants, all FITS-container concepts — and is accepted only to
+    keep that signature.
+  - `OpenDialog` learned to pick a file box per format (`asdffbox` vs the hardcoded
+    `fitsfbox`); `asdffbox` added to `stdfbox.tcl` with `*.asdf`/`*.ASDF` only — ASDF
+    compresses per binary block *inside* the container, so unlike FITS there is no
+    `.asdf.gz`-style compressed variant to list.
+  - File → Open as → **ASDF**, at the top of that cascade (`mfile.tcl`).
+  - Verified live: the menu entry resolves to `OpenDialog asdf`, and driving the exact call
+    `OpenDialog` makes after the file chooser returns (`Open <fn> asdf {} {} wcs`) loads
+    pixels, WCS and header tree together. That last check also confirms the cache-ordering
+    fix holds through `Open`'s own trailing `FinishLoad`.
+  - [ ] **Not done: the File icon-button row** (`iconstop.tcl`). pds9 put an ASDF button
+        there, but every button in that row is `-image`-configured from a PNG in
+        `ds9/icons/ui/` *and* `ds9/icons/ui_dark/`, so this needs an actual icon asset
+        drawn to match the existing set. Left for the repo owner rather than inventing
+        artwork — the menu entry above covers the functionality meanwhile.
+- [x] **Scripting surface — done, and wider than the original bullet: XPA, SAMP/comm, and
+      the command line.**
+  - `ds9/parsers/asdfparser.tac` + `asdflex.fcl`, generated through the normal build rule
+    (`ds9/make.include`'s taccle/fickle rules) — **no bison/flex anywhere**, these are the
+    in-tree pure-Tcl generators. Grammar deliberately minimal: `asdf [new] <filename>`.
+  - **Ran the same no-op-regen toolchain check CLAUDE.md prescribes for bison, on
+    taccle/fickle, before generating anything** — regenerated the existing `fitsparser`/
+    `fitslex` from their checked-in `.tac`/`.fcl` and diffed. Result: the *only* difference
+    from the checked-in files is one comment line, the generator's own version banner
+    (`taccle (version 1.4)` vs the checked-in `1.3`, `fickle (version 2.2)` vs `2.1`) —
+    generated code byte-identical otherwise, and `fitsparser.tab.tcl` identical outright.
+    So generating here is safe. Note the new `asdfparser.tcl`/`asdflex.tcl` therefore carry
+    a `1.4`/`2.2` banner while every other checked-in parser says `1.3`/`2.1` — cosmetic
+    only, but a real inconsistency the repo owner may want to resolve by regenerating all
+    of them at once.
+  - `ProcessAsdfCmd`/`AsdfCmdLoad` in `asdf.tcl`, parallel to `ProcessFitsCmd`/
+    `FitsCmdLoad`. **One deliberate difference: no socket/stdin variant.** `FitsCmdLoad`
+    tries `LoadFitsSocket` first so `cat x.fits | xpaset ds9 fits` works; that cannot work
+    for ASDF, because resolving an ndarray's `source: N` requires the block index written
+    at the *end* of the file, so a forward-only stream would have to be spooled to a temp
+    file first and gains nothing over naming the file. Handed no filename it says so
+    (`ASDF: a filename is required`) rather than silently doing nothing.
+  - Registered in `xpa.tcl` (`xpacmdadd $xpa asdf` + `XPARcvdAsdf`, alphabetically after
+    `array`), `comm.tcl`'s `CommSet` switch (the SAMP/hv dispatch), and `command.tcl`
+    (`-asdf` option + an `asdf` branch in `CommandLineLoadBase`).
+  - Verified live: `xpaset -p ds9 asdf <file>` loads in ~3s with correct WCS;
+    `xpaset -p ds9 asdf new <file>` creates a frame first; `ds9 -asdf <file>` works from
+    the command line; and both error cases surface properly as `XPA$ERROR ASDF: a filename
+    is required` / `XPA$ERROR ASDF: not an ASDF file <fn>`. **SAMP itself was not exercised
+    against a real hub** — `comm.tcl` routes to the same `ProcessAsdfCmd` proven over XPA,
+    but that is reasoning, not a test.
+- [x] **Tested against multiple public Roman Data Workshop sample files.** Downloaded four
+      Build22 products beyond the single `f158_cal` used for design validation:
+      `f158_cal` (197MB), `grism_cal` (197MB), `prism_cal` (197MB), `f158_segm` (64MB),
+      plus the three small WCS-only files already committed under
+      `utils/asdf_gwcs_probe/sample_data/`.
+  - `grism_cal` and `prism_cal`: both load 4088×4088 float32 with a working WCS, and each
+    one's corner readout matches **its own** embedded `romancal` `s_region` to 7 decimals
+    (`269.9869459 65.9742650` vs `269.986945913 65.974265020`). Both render as recognizable
+    fields under zscale, with genuinely distinct pixel data (`minmax` `-1437 7881.56` and
+    `-13220.6 70236.4` respectively, vs `f158_cal`'s `-187169 6059.94`). So the GWCS bridge
+    generalizes across Roman product types, not just the one file that drove the design.
+  - `f158_segm`, and all three WCS-only samples: fail cleanly with specific messages
+    (`unsupported ndarray datatype uint32`, `could not find ndarray roman.data`) — no
+    crash, which is the fallback bullet above exercised on real files.
+  - **The most important finding of this pass, and it is not good news.** Enumerating every
+    top-level array in a real `*_cal.asdf` shows **only 1 of 15 is loadable today**:
+
+    | key | datatype | shape | status |
+    |---|---|---|---|
+    | `data` | float32 | [4088, 4088] | **works** |
+    | `dq` | uint32 | [4088, 4088] | unsupported datatype |
+    | `err` | float16 | [4088, 4088] | unsupported datatype |
+    | `var_poisson`, `chisq`, `dumo` | float16 | [4088, 4088] | unsupported datatype |
+    | `amp33` | uint16 | [10, 4096, 128] | rank 3 |
+    | `border_ref_pix_*` (4) | float32 | [10, 4096, 4] etc. | rank 3 |
+    | `dq_border_ref_pix_*` (4) | uint32 | [4096, 4] etc. | unsupported datatype |
+
+    This **falsifies Phase 2's recorded assumption** that "`dq`/`err`/`var_poisson` should
+    parse identically in principle (same `core/ndarray` shape)" — the shape is indeed
+    identical; the *datatype* is not, and that is what blocks them. `err` and `dq` are the
+    two arrays users want most after `data`.
+  - Fixing it is not hard, just not free: `uint32` → BITPIX 64 and `float16` → BITPIX -32
+    are both exactly lossless, but widening 16.7M values in pure Tcl is far too slow, so it
+    wants a small widening command in `tclasdf/` next to `asdflz4decompress`. Note that
+    fixing the datatype alone is not sufficient for these to be *reachable*: `LoadAsdfFile`
+    hardcodes the `data` key, so selecting a sibling array needs the Phase 4 path/browser
+    work too.
 
 ## Phase 4 — Generalize beyond Roman's fixed paths
 

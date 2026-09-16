@@ -11,6 +11,7 @@ proc Open {fn format layer mode sys} {
 
     switch -- $format {
 	fits {LoadFitsFile $fn $layer $mode}
+	asdf {LoadAsdfFile $fn $layer $mode}
 	mosaicimagewcs {LoadMosaicImageWCSFile $fn $layer $sys}
 	mosaicimageiraf {LoadMosaicImageIRAFFile $fn $layer}
 	mosaicimagewfpc2 {LoadMosaicImageWFPC2File $fn $layer}
@@ -33,8 +34,15 @@ proc Open {fn format layer mode sys} {
 proc OpenDialog {format {layer {}} {mode {}}} {
     global current
     global fitsfbox
+    global asdffbox
 
-    set fn [OpenFileDialog fitsfbox]
+    # every format here is some flavor of FITS except asdf
+    switch -- $format {
+	asdf {set fbox asdffbox}
+	default {set fbox fitsfbox}
+    }
+
+    set fn [OpenFileDialog $fbox]
 
     # just in case (could be invoked via a menu keyshortcut)
     if {$current(frame) == {}} {

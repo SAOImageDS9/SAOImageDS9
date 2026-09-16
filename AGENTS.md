@@ -45,10 +45,23 @@ regenerates every grammar in the tree and invites unrelated drift.
 
 Version sensitivity: the checked-in generated files are tied to specific
 tool versions — `parser.C` is stamped `made by GNU Bison 2.3` and
-`lex.C` `YY_FLEX 2.6.4`. macOS's stock `/usr/bin/bison` (2.3) and
-`/usr/bin/flex` (2.6.4) match exactly, so regeneration there is
-byte-identical. A Homebrew bison (3.x) on `PATH` would rewrite these
-files wholesale — keep it off the `PATH` for this build.
+`lex.C` `YY_FLEX 2.6.4`. A Homebrew bison (3.x) on `PATH` would rewrite
+these files wholesale — keep it off the `PATH` for this build.
+
+Measured on macOS 2026-09-16 by actually running the no-op regen: bison
+matches, flex does not. `/usr/bin/bison` 2.3 reproduces `parser.C`
+byte-identically. `/usr/bin/flex` reports 2.6.4 but is a different build
+from whatever produced the checked-in `lex.C` — it emits
+`size_t`/`ssize_t`/`yy_size_t` where the tracked file has `int`, a
+22-insertion/24-deletion diff of pure type-width churn. A `.Y` edit is
+safe there; a `.L` edit is not. `make parser` runs both tools, so
+regenerating only a grammar means calling `bison` directly or reverting
+`lex.C` afterwards.
+
+Note also that DS9's *own* command grammars (`ds9/parsers/*.tac`/`*.fcl`)
+are a different toolchain entirely — the vendored pure-Tcl taccle/fickle,
+driven from `ds9/make.include`. Changing a DS9 command needs no bison or
+flex; `make ds9` regenerates them.
 
 Before editing any `.Y`/`.L`, sanity-check the toolchain with a no-op
 regen: run the target with no source changes and confirm `git diff` is

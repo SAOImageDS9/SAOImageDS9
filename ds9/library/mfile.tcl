@@ -76,6 +76,9 @@ proc FileMainMenu {} {
 
     # File Open Menu
     ThemeMenu $ds9(mb).file.open
+    $ds9(mb).file.open add command -label [msgcat::mc {ASDF}] \
+	-command [list OpenDialog asdf]
+    $ds9(mb).file.open add separator
     $ds9(mb).file.open add command -label [msgcat::mc {Slice}] \
 	-command [list OpenDialog fits {} slice]
     $ds9(mb).file.open add separator

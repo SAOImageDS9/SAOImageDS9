@@ -4,7 +4,7 @@ Last updated 2026-11-11
 
 | name         | version    | SAO   | dirty | upstream                                                             | latest                          |
 | ------------ | ---------- | ----- | ----- | -------------------------------------------------------------------- | ------------------------------- |
-| ast          | 9.4.1      |       |       | https://github.com/Starlink/ast                                      | 9.5.0                           |
+| ast          | 9.4.1      |       | y     | https://github.com/Starlink/ast                                      | 9.4.1 (6)                       |
 | awthemes     | 10.4.0     |       | y     | https://sourceforge.net/projects/tcl-awthemes/                       | 10.4.0 (7)                      |
 | certifi      | 2026.10.23 |       |       | https://github.com/certifi/python-certifi                            | 2026.10.23                      |
 | ds9          | 8.8        | y     |       |                                                                      |                                 |
@@ -37,6 +37,7 @@ Last updated 2026-11-11
 | tktable      | 2.13       | y     | y     | https://github.com/SAOImageDS9/tktable-maintenance                   | previous upstream abandoned     |
 | tls          | 2.0.1      |       | y     | https://core.tcl-lang.org/tcltls/index                               | 2.0.1 (5)                       |
 | ttkthemes    | 3.3.0      |       |       | https://github.com/TkinterEP/ttkthemes/                              | 3.3.0                           |
+| utils        |            | y     |       |                                                                      |                                 |
 | vector       |            | y     |       |                                                                      |                                 |
 | xpa          | 2.2.2      | y     |       | https://github.com/SAOImageDS9/xpa-maintenance                       | 2.2.2                           |
 | zlib         | 1.3.2      |       |       | https://github.com/madler/zlib                                       | 1.3.2                           |

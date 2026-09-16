@@ -60,11 +60,14 @@ truth for where things stand.
         adding `$(CONFIGFLAGS) $(TARGET)` to its recipe, matching `xpa`/`funtools` (`ast`'s
         own recipe omits `$(TARGET)`, which looks like a pre-existing inconsistency in
         `make.include` predating this work — left alone, not this task's to fix).
-  - [ ] Unvalidated: no mingw or macOS cross-toolchain is available in this dev environment,
-        so the `win`/`macos` prerequisite-list and `$(CONFIGFLAGS)`/`$(TARGET)` fix above are
-        reasoned from reading the existing `xpa`/`funtools` pattern, not build-tested. Needs
-        an actual cross-build attempt on a machine with the right toolchain before trusting
-        it fully.
+  - [x] **macOS half now validated** (2026-09-16, on a real Mac with Xcode, not
+        cross-compiled): `macos/configure && make` builds the whole chain, `lib/libyaml.a`
+        installs static-only (zero `.dylib`/`.so` anywhere in `lib/`), and the resulting
+        `lib/libast.a` carries `yamlchan` symbols, so `--with-yaml=$(prefix)` took effect
+        on this platform too.
+  - [ ] Windows/mingw half still unvalidated: no mingw cross-toolchain here, so the `win`
+        prerequisite-list and `$(CONFIGFLAGS)`/`$(TARGET)` fix remain reasoned from the
+        existing `xpa`/`funtools` pattern rather than build-tested.
   - [x] Ran a real, full `unix/configure && make` from a completely clean tree (no prior
         build state) through the actual dependency chain
         (`dirs tcl tk openssl xpa funtools libyaml ast vector fitsy ... tksao ds9`) — not
@@ -85,9 +88,8 @@ truth for where things stand.
     upstream of `funtools` in `make.include` at all. Non-fatal (the rest of `funtools`,
     and the whole `saods9` chain through `ds9`, built fine regardless), but worth a
     separate look — not folded into this ASDF task's scope.
-  - [ ] Nothing has been `git add`ed or committed yet beyond the WIP commit already made —
-        this build-validation pass itself hasn't been committed (there's nothing to commit
-        for it besides `full_build.log`, which shouldn't be tracked).
+  - [x] Stale as written — the vendoring work is committed (`e5a01f30e` onward). Nothing
+        was ever outstanding for it beyond `full_build.log`, which is untracked by design.
 - [x] Vendored `zlib` (latest tag, `1.3.2`) as a new top-level static-lib package, both as
       the baseline codec the ASDF binary-block reader will need (design doc §9) and to fix
       the pre-existing `funtools`/`gcat` gap above in one move — `funtools`'s own recipe
@@ -126,8 +128,9 @@ truth for where things stand.
         change — validated incrementally against the already-built tree instead, which
         confirms the specific regression is fixed but doesn't re-prove the *whole* chain
         builds clean from zero with `zlib` newly in the prerequisite order.
-  - [ ] Same caveat as `libyaml`/`ast`: no mingw or macOS cross-toolchain available here,
-        so the `win`/`macos` wiring (prerequisite list + `$(CONFIGFLAGS)` env-prefix) is
+  - [x] macOS validated 2026-09-16 by a real `macos/configure && make`: `lib/libz.a`
+        installs static-only, in prerequisite order (`macos/Makefile.in` line 56).
+  - [ ] Windows/mingw wiring (prerequisite list + `$(CONFIGFLAGS)` env-prefix) still
         reasoned, not build-tested.
 - [x] Vendored `lz4` (latest tag, `1.10.0`) as a new top-level static-lib package —
       following up directly on the Phase 1 finding that real Roman ASDF files use
@@ -152,8 +155,10 @@ truth for where things stand.
         `LZ4_decompress_safe` round-trip test linked against it and passed, not just a
         successful install. Ran `make lz4clean` afterward to restore `lz4/` to a pristine
         vendored state before committing, same discipline as the other packages.
-  - [ ] Same caveat as the other packages: no mingw/macOS cross-toolchain available here,
-        so the `win`/`macos` wiring is reasoned, not build-tested.
+  - [x] macOS validated 2026-09-16: `lib/liblz4.a` builds and installs static-only from a
+        real `macos/configure && make`, and `tclasdf` links against it in the shipped
+        `SAOImageDS9.app`.
+  - [ ] Windows/mingw wiring still reasoned, not build-tested.
 - [x] Locally patched the five remaining `MAKE_TEST` minor-version ceilings in
       `ast/src/yamlchan.c` (`Remap_Axes` 1,4→1,5; `Shift` 1,3→1,4; `Compose` 1,3→1,4;
       `Concatenate` 1,3→1,4; `Polynomial` 1,2→1,3), each behind a one-line comment pointing
@@ -383,7 +388,11 @@ eventual Phase 2 C++ container reader — see `utils/asdf_gwcs_probe/README.md`.
       right template — every `TEA_PATH_CONFIG`-generated block has the same shape regardless
       of which package it names). Both `macos` and `win` also got the `ac_subst_vars`
       registration and the cosmetic `--with-tclasdf` help-text line, mirroring `unix`. All
-      three patched `configure` files pass `bash -n` syntax checks, but **only `ds9/unix`
+      three patched `configure` files pass `bash -n` syntax checks. **`ds9/macos` is now
+      build-tested too** (2026-09-16): a real macOS build expands `tclasdf_LIB_SPEC` and
+      links `lib/tclasdf1.0/libtcl9tclasdf1.0.a` into `SAOImageDS9.app`, so the hand-copied
+      `TEA_PATH_CONFIG` block and `ac_subst_vars` registration are confirmed correct there,
+      not just syntactically valid. Originally **only `ds9/unix`
       was actually build-tested** (see the real-data re-run below) — this environment has no
       macOS or Windows cross-toolchain, so the `macos`/`win` `configure` hand-patches are
       reasoned from the same known-working pattern but unvalidated by an actual build, same

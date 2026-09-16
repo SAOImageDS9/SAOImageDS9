@@ -740,14 +740,60 @@ eventual Phase 2 C++ container reader — see `utils/asdf_gwcs_probe/README.md`.
     parse identically in principle (same `core/ndarray` shape)" — the shape is indeed
     identical; the *datatype* is not, and that is what blocks them. `err` and `dq` are the
     two arrays users want most after `data`.
-  - Fixing it is not hard, just not free: `uint32` → BITPIX 64 and `float16` → BITPIX -32
-    are both exactly lossless, but widening 16.7M values in pure Tcl is far too slow, so it
-    wants a small widening command in `tclasdf/` next to `asdflz4decompress`. Note that
-    fixing the datatype alone is not sufficient for these to be *reachable*: `LoadAsdfFile`
-    hardcodes the `data` key, so selecting a sibling array needs the Phase 4 path/browser
-    work too.
+  - **Resolved — see the first Phase 4 bullet below.** Both widenings plus rank-3 cube
+    support landed, taking a `*_cal.asdf` from 1 loadable array of 15 to all 15. Note that
+    fixing the datatype alone did not make them *reachable*: `LoadAsdfFile` still hardcodes
+    the `data` key, so selecting a sibling array needs the Phase 4 path/browser work.
 
 ## Phase 4 — Generalize beyond Roman's fixed paths
+
+- [x] **Datatype widening + rank-3 cube support — done.** Closes the "only 1 of 15 arrays
+      loadable" finding from Phase 3. All 15 top-level arrays in a real `*_cal.asdf` now
+      load.
+  - New `asdfconvert` command in `tclasdf/asdf_ext.c`, alongside `asdflz4decompress` and
+    there for the same reason: too slow in Tcl over 16.7M elements. Signature
+    `asdfconvert <bytes> <fromType> <fromByteorder> <toType>`; always emits little-endian
+    so the caller passes a fixed `arch=little` rather than tracking it.
+  - Two conversions, both **exactly lossless**, which is the only reason they are
+    acceptable — a narrowing or sign-changing coercion would quietly alter pixel values:
+    - `float16` → `float32` (BITPIX -32): covers `roman.err`, `var_poisson`, `chisq`,
+      `dumo`.
+    - `uint32` → `int64` (BITPIX 64): covers `roman.dq` and the `dq_border_ref_pix_*` set.
+    `uint64` has no lossless target in fitsy's `{8,16,-16,32,64,-32,-64}` set and is
+    deliberately still unmapped.
+  - Rank-3 arrays now load as **data cubes** rather than being refused: fitsy's array
+    grammar already has `zdim` alongside `xdim`/`ydim` (`fitsy/parser.Y`'s `arr` rule), so
+    an ASDF row-major `[nz,ny,nx]` maps straight onto it. Covers `roman.amp33`
+    (`[10,4096,128]`) and the four `border_ref_pix_*` arrays. Rank 4+ is still refused
+    explicitly rather than silently truncated.
+  - **Validated exhaustively, not by spot check.** Fed **all 65,536** half-precision bit
+    patterns through `asdfconvert` and compared against Python's own `struct` `'<e'`→`'<f'`
+    conversion: 63,490 exact byte matches, plus all 2,046 NaN patterns preserved with the
+    correct sign *and* payload — zero mismatches. Signed zeros, the full subnormal range
+    (min subnormal `5.960464477539063e-08` through max subnormal `6.097555160522461e-05`),
+    min normal, max finite `65504.0`, and ±inf all confirmed individually.
+    `uint32`→`int64` checked against `struct` for 14 boundary values in **both** byteorders
+    — byte-identical, including everything above 2^31 that an `int32` coercion would have
+    corrupted. Both error paths (unsupported pair, non-multiple buffer length) reject
+    rather than misread.
+  - **Cross-checked the real-file results independently of fitsy**, by decoding each block
+    and computing min/max directly with `binary scan`, bypassing the array-load path
+    entirely. Every DS9 reading was confirmed:
+
+    | array | independent check | DS9 |
+    |---|---|---|
+    | `amp33` | genuinely all-zero (0 of 5,242,880 nonzero) | `0 0` |
+    | `border_ref_pix_top` | genuinely all-zero | `0 0` |
+    | `dq_border_ref_pix_left` | uniformly 2147483648 (2^31) | `2.14748e+09` |
+    | `dq` | min 0, max 34677763, 949739 nonzero | `0 3.46778e+07` |
+
+    That `dq_border_ref_pix_left` value is the concrete case for losslessness: a
+    `uint32`→`int32` coercion would have rendered all 16,384 of those pixels as
+    -2147483648. The two all-zero results are real properties of this simulated file, not
+    a read bug — worth knowing before anyone reads `0 0` as a failure.
+  - `roman.err` renders as a physically coherent error map: elevated error exactly at the
+    `roman.data` star positions, same amplifier-boundary band, values 0.03-0.05 against
+    data whose zscale range was -0.037 to 0.451. Each array loads in ~2.6s.
 
 - [ ] Arbitrary-path support for non-Roman ASDF files: either pds9's `path:inner/path`
       text-entry convention, or a tree-browser dialog enumerating every `core/ndarray` node

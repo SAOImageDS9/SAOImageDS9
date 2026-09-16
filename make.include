@@ -99,7 +99,7 @@ TKIMGTMPFILES = \
 #-------------------------- main
 
 .NOTPARALLEL :
-.PHONY	: all dirs ds9 tclxml tclxmlrpc tclzipfs tls xpa zlib
+.PHONY	: all dirs ds9 tclxml tclxmlrpc tclzipfs tls xpa zlib lz4
 .PHONY	: tkblt tclfitsy tkcon tkhtml1 tkimg tkmpeg tksvg tkagif tksao tktable
 .PHONY	: vector fitsy libyaml ast funtools openssl
 
@@ -252,6 +252,33 @@ zlib/configure.log :
 	$(CONFIGFLAGS) ./configure \
 	--prefix=$(prefix) --libdir=$(libdir) --includedir=$(includedir) \
 	--static
+
+#-------------------------- lz4
+
+# lz4 has no ./configure step at all - a plain hand-written Makefile, not
+# autoconf, and not even zlib's own hand-written-but-configure-shaped
+# script. Build and install straight from the top, with BUILD_SHARED=no
+# for static-only (its own spelling of that switch) and $(CONFIGFLAGS) as
+# ordinary `make` variable overrides - unlike zlib's script, a plain
+# Makefile understands CC=/AR= given this way natively, no env-prefix
+# trick required. No configure step also means no placeholder-Makefile
+# trap like zlib's and no separate "has it been configured yet" gate is
+# needed - lz4/lib's own Makefile already tracks object-file staleness,
+# same as every other already-built package's repeated `install` calls.
+#
+# Currently vendored for Phase 2's future ASDF container reader in
+# tksao (real Roman ASDF files use lz4-compressed blocks - see TODO.md
+# Phase 1), not because anything in the build consumes it yet - unlike
+# zlib (funtools/gcat) and libyaml (ast), lz4 has no consumer in this
+# tree today.
+
+lz4	:
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C lz4/lib -j $(JOBS) install \
+	$(CONFIGFLAGS) \
+	BUILD_SHARED=no BUILD_STATIC=yes \
+	PREFIX=$(prefix) LIBDIR=$(libdir) INCLUDEDIR=$(includedir)
 
 #-------------------------- xpa
 
@@ -618,7 +645,7 @@ scrub :
 .PHONY	: tclxmlclean tclxmlrpcclean tlsclean
 .PHONY	: tkbltclean tclfitsy tkconclean tkhtml1clean tkimgclean
 .PHONY	: tkmpegclean tksvgclean tkagifclean
-.PHONY	: tktableclean xpaclean zlibclean
+.PHONY	: tktableclean xpaclean zlibclean lz4clean
 .PHONY	: vectorclean fitsyclean libyamlclean astclean funtoolsclean
 .PHONY	: tksaoclean
 
@@ -755,6 +782,11 @@ zlibclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C zlib clean
 
+lz4clean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C lz4/lib clean
+
 #-------------------------- distclean
 
 .PHONY	: dirsdistclean ds9distclean localdistclean
@@ -762,7 +794,7 @@ zlibclean :
 .PHONY	: tclxmldistclean tclxmlrpcdistclean tlsdistclean
 .PHONY	: tkbltdistclean tclfitsydistclean tkcondistclean tkhtml1distclean
 .PHONY	: tkimgdistclean tkmpegdistclean tksvgdistclean tkagifdistclean
-.PHONY	: tktabledistclean xpadistclean zlibdistclean
+.PHONY	: tktabledistclean xpadistclean zlibdistclean lz4distclean
 .PHONY	: vectordistclean fitsydistclean libyamldistclean
 .PHONY	: astdistclean funtoolsdistclean
 .PHONY	: tksaodistclean
@@ -927,3 +959,8 @@ zlibdistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C zlib distclean
+
+lz4distclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C lz4/lib clean

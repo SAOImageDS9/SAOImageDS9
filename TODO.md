@@ -129,6 +129,31 @@ truth for where things stand.
   - [ ] Same caveat as `libyaml`/`ast`: no mingw or macOS cross-toolchain available here,
         so the `win`/`macos` wiring (prerequisite list + `$(CONFIGFLAGS)` env-prefix) is
         reasoned, not build-tested.
+- [x] Vendored `lz4` (latest tag, `1.10.0`) as a new top-level static-lib package —
+      following up directly on the Phase 1 finding that real Roman ASDF files use
+      `lz4`-compressed binary blocks, not `zlib`, so Phase 2's future container reader in
+      `tksao/` will need it. Unlike `zlib`/`libyaml`, this has **no consumer in the build
+      yet** — it's forward-looking infrastructure, not a fix for an existing failure.
+  - [x] `lz4` ships a plain hand-written `Makefile`, not autoconf and not even a
+        `./configure`-shaped script like `zlib`'s — no configure step exists at all.
+        Static-only is its own `BUILD_SHARED=no`/`BUILD_STATIC=yes` switch, and (unlike
+        `zlib`'s script) a plain Makefile understands `CC=`/`AR=` overrides natively, so
+        `$(CONFIGFLAGS)` is passed as an ordinary variable override, not an env-prefix
+        trick. No configure step also means no placeholder-Makefile trap and no
+        "has it been configured yet" file-gate is needed in `make.include` — `lz4/lib`'s
+        own Makefile already tracks object-file staleness like every other already-built
+        package's repeated `install` calls do.
+  - [x] Added a `lz4` build stanza to `make.include` (+ `lz4clean`/`lz4distclean`,
+        `.PHONY` entries) and `lz4` to the `saods9` prerequisite list in all three
+        `Makefile.in`s, right after `zlib`.
+  - [x] Validated in isolation first (scratch prefix): `BUILD_SHARED=no` installs
+        `liblz4.a` only, confirmed no `.so`. Then validated for real in the tree: `make
+        lz4` installed `lib/liblz4.a` + headers; a standalone `LZ4_compress_default`/
+        `LZ4_decompress_safe` round-trip test linked against it and passed, not just a
+        successful install. Ran `make lz4clean` afterward to restore `lz4/` to a pristine
+        vendored state before committing, same discipline as the other packages.
+  - [ ] Same caveat as the other packages: no mingw/macOS cross-toolchain available here,
+        so the `win`/`macos` wiring is reasoned, not build-tested.
 - [x] Locally patched the five remaining `MAKE_TEST` minor-version ceilings in
       `ast/src/yamlchan.c` (`Remap_Axes` 1,4→1,5; `Shift` 1,3→1,4; `Compose` 1,3→1,4;
       `Concatenate` 1,3→1,4; `Polynomial` 1,2→1,3), each behind a one-line comment pointing
@@ -198,8 +223,8 @@ files (in the scratchpad, not committed — see "what's not yet in the repo" bel
       needs `lz4` support, not just `zlib`, and per this project's "don't rely on whatever
       happens to be on the build machine" vendoring convention (design doc §7c/§9), that
       likely means vendoring `liblz4` the same way as `libyaml`/`zlib`, not just linking
-      the system copy this dev machine happens to have.** Not done yet — flagged for
-      whoever picks up Phase 2.
+      the system copy this dev machine happens to have.** Done — see the `lz4` vendoring
+      entry under Phase 0 above (added right after this finding prompted it).
 - [x] Write a minimal C test harness that calls `astYamlChan`/`astRead` on the resolved
       text and confirms it returns a usable `AstFrameSet` — reused as-is against all three
       real files below (`SourceFile=` pattern + the ~19 `Plot`/`Plot3D` stub functions).

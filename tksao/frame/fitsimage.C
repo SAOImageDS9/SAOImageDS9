@@ -1084,7 +1084,7 @@ void FitsImage::iisSetFileName(const char* fn)
   iisFileName = dupstr(fn);
 }
 
-void FitsImage::initWCS(FitsHead* hd)
+void FitsImage::initWCS(FitsHead* hd, const char* yamltext)
 {
   if (manageWCS_)
     clearWCS();
@@ -1132,8 +1132,13 @@ void FitsImage::initWCS(FitsHead* hd)
   // not sure if this is needed
   clearWCS();
   
+  // native ASDF/GWCS support (TODO.md Phase 3): bypass FITS card parsing
+  // entirely and build ast_ straight from the GWCS YAML subtree text
+  if (yamltext) {
+    ast_ = yaml2ast(yamltext);
+  }
   // do we have a LONG/NPOL CTYPE? Chandra ONLY
-  if (hd->find("CTYPE1") && hd->find("CTYPE2")) {
+  else if (hd->find("CTYPE1") && hd->find("CTYPE2")) {
     char* cc;
 
     cc = hd->getString("CTYPE1");
@@ -1177,7 +1182,7 @@ void FitsImage::initWCS(FitsHead* hd)
     clearWCS();
     return;
   }
-  
+
   // special case
   if (astGetI(ast_,"Naxes") == 2 &&
       astIsASkyFrame(astGetFrame(ast_,AST__CURRENT)) &&
@@ -2082,6 +2087,25 @@ int FitsImage::processKeywordsIRAF(FitsImage* fits)
 
 void FitsImage::replaceWCS(istream& str)
 {
+  // native ASDF/GWCS support (TODO.md Phase 3): sniff for YAML content
+  // (an ASDF magic/%YAML directive/bare top-level `wcs:` key - none of
+  // which is valid FITS-card syntax, so this can't false-positive) and
+  // dispatch to the GWCS bridge instead of the FITS-card scanner below.
+  streampos start = str.tellg();
+  string firstLine;
+  getline(str, firstLine);
+  str.clear();
+  str.seekg(start);
+
+  if (firstLine.compare(0,5,"#ASDF") == 0 ||
+      firstLine.compare(0,5,"%YAML") == 0 ||
+      firstLine.compare(0,4,"wcs:") == 0) {
+    ostringstream ss;
+    ss << str.rdbuf();
+    replaceWCSYaml(ss.str().c_str());
+    return;
+  }
+
   FitsHead* hh = parseWCS(str);
 
   // Process OBJECT keyword
@@ -2095,6 +2119,19 @@ void FitsImage::replaceWCS(istream& str)
 
   wcsAltHeader_ = hh;
   initWCS(wcsAltHeader_);
+}
+
+void FitsImage::replaceWCSYaml(const char* yamltext)
+{
+  FitsHead* hd = image_->head();
+  FitsHead* hh = new FitsHead(hd->naxis(0), hd->naxis(1), hd->naxis(2),
+			       hd->bitpix());
+
+  if (wcsAltHeader_)
+    delete wcsAltHeader_;
+  wcsAltHeader_ = hh;
+
+  initWCS(wcsAltHeader_, yamltext);
 }
 
 void FitsImage::reset()
@@ -3676,6 +3713,98 @@ AstFrameSet* FitsImage::fits2ast(FitsHead* hd)
   if (!wcsInv_)
     internalError("Warning: the WCS has no defined inverse. Some functionality may not be available.");
   
+  astExport(frameSet);
+  astAnnul(chan);
+  astEnd;
+
+  return frameSet;
+}
+
+// Native ASDF support (see ASDF_NATIVE_SUPPORT_DESIGN.md, TODO.md Phase 3):
+// AstYamlChan has no astPutFits-style in-memory loader, so the generic AST
+// Channel source callback is used instead (see ast/src/channel.c's
+// SourceWrap) - astChannelData/astPutChannelData is the same idiom already
+// used below by fits2TAB for astTableSource.
+namespace {
+  struct YamlSourceState {const char* text; size_t pos;};
+
+  const char* yamlSourceFunc()
+  {
+    YamlSourceState* st = (YamlSourceState*)astChannelData;
+    if (!st || st->text[st->pos] == '\0')
+      return NULL;
+
+    static string lineBuf;   // SourceWrap copies this before the next call
+    const char* start = st->text + st->pos;
+    const char* nl = strchr(start, '\n');
+    if (nl) {
+      lineBuf.assign(start, nl-start);
+      st->pos += (nl-start)+1;
+    }
+    else {
+      lineBuf.assign(start);
+      st->pos += strlen(start);
+    }
+    return lineBuf.c_str();
+  }
+}
+
+AstFrameSet* FitsImage::yaml2ast(const char* yamltext)
+{
+  // we may have an error, just reset
+  astClearStatus;
+  astBegin;
+
+  if (!yamltext) {
+    astEnd;
+    return NULL;
+  }
+
+  YamlSourceState state = {yamltext, 0};
+
+  AstYamlChan* chan = astYamlChan(yamlSourceFunc, NULL, " ");
+  if (!astOK || chan == AST__NULL) {
+    astEnd;
+    return NULL;
+  }
+
+  astPutChannelData(chan, &state);
+
+  // parse document
+  AstFrameSet* frameSet = (AstFrameSet*)astRead(chan);
+
+  // do we have anything?
+  if (!astOK || frameSet == AST__NULL ||
+      strncmp(astGetC(frameSet,"Class"), "FrameSet", 8)) {
+    astAnnul(chan);
+    astEnd;
+    return NULL;
+  }
+
+  // warn if no inverse
+  wcsInv_ = astGetI(frameSet, "TranInverse");
+  if (!wcsInv_)
+    internalError("Warning: the WCS has no defined inverse. Some functionality may not be available.");
+
+  // scanWCS() (below) populates wcs_[] - the flags hasWCS() actually
+  // queries - by reading each member FRAME's own "Ident" attribute via
+  // astGetFrame(ast_,N) and mapping ' '->primary WCS, 'A'-'Z'->alternate
+  // WCS (FITS's alternate-WCS lettering convention, set by fits2ast() via
+  // astRead(FitsChan) for FITS-derived FrameSets). A GWCS document has no
+  // such concept - none of its Frames carry an Ident at all - so without
+  // this, scanWCS() leaves wcs_[] all false despite a perfectly valid
+  // ast_ (confirmed: hasWCSEqu() alone doesn't need this, since its ii
+  // defaults to 0 regardless of Ident - but hasWCS() strictly requires
+  // it). "Ident" is a generic AstObject attribute, not Frame-specific, so
+  // it must be set on the extracted member Frame itself (astGetFrame
+  // returns a reference-counted handle to the real stored Frame, not a
+  // deep copy) - setting it on the FrameSet container instead (tried
+  // first, confirmed not to work) only tags the container object, never
+  // seen by scanWCS()'s per-Frame astGetC(ff,"Ident") calls.
+  AstFrame* curFrame = (AstFrame*)astGetFrame(frameSet, AST__CURRENT);
+  astSetC(curFrame, "Ident", " ");
+  astAnnul(curFrame);
+
   astExport(frameSet);
   astAnnul(chan);
   astEnd;

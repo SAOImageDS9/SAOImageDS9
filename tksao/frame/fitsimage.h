@@ -155,7 +155,7 @@ class FitsImage {
   void initHPX();
 
   void clearWCS();
-  void initWCS(FitsHead*);
+  void initWCS(FitsHead*, const char* yamltext =NULL);
   void scanWCS(FitsHead*);
   void wcsPhyInit(FitsHead*);
 
@@ -164,7 +164,8 @@ class FitsImage {
 
   int checkWCS(Vector&);
   int checkWCS(Vector3d&);
-  AstFrameSet* fits2ast(FitsHead*);  
+  AstFrameSet* fits2ast(FitsHead*);
+  AstFrameSet* yaml2ast(const char*);
   void ast2Fits();
 
   Vector mapLen(const Vector& v, const Matrix& mx);
@@ -419,6 +420,7 @@ class FitsImage {
   void listWCS(ostream&, Coord::CoordSystem);
   void resetWCS();
   void replaceWCS(istream&);
+  void replaceWCSYaml(const char*);
 
   void processKeywordsPhysical();
   void processKeywordsParams();

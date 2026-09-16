@@ -447,11 +447,121 @@ eventual Phase 2 C++ container reader — see `utils/asdf_gwcs_probe/README.md`.
 
 ## Phase 3 — WCS path + Roman-native "Open ASDF"
 
-- [ ] Production version of the Phase 1 bridge: locate `roman.meta.wcs`, resolve
-      block-sourced ndarrays inline, feed to `AstYamlChan`, attach the resulting
-      `AstFrameSet` the way `FitsImage::fits2ast()`/`replaceWCS()` already do.
+- [x] **Production version of the Phase 1 bridge — done, validated end-to-end against the
+      same real 197MB Roman cal file Phase 2 used, not a synthetic one.** Locates the GWCS
+      subtree, resolves block-sourced ndarrays inline, feeds the result to `AstYamlChan`,
+      and attaches the resulting `AstFrameSet` the way `FitsImage::fits2ast()`/
+      `replaceWCS()` already do for FITS files — architecture and full design writeup in
+      `PHASE3_WCS_HANDOFF.md` (written mid-task when a machine switch looked necessary;
+      superseded once that turned out unnecessary — kept for the design record and the real
+      bugs it documents).
+  - [x] **No `parser.Y`/`lex.L` changes needed, matching Phase 2's own precedent.**
+        Investigated reusing the existing `wcs replace <which> <filename>` command
+        (`Base::wcsReplaceCmd`, already wired) instead of adding a grammar keyword — the
+        *filename* overload, specifically, not `wcs replace text <which> <string>`: tracing
+        exactly how a `$frame` command reaches `tksao/frame/lex.L` (the full Tcl argv is
+        rejoined into one line and re-lexed byte-by-byte, `tksao/widget/widget.C`'s
+        `WidgetObjParse` → `Base::parse`) found that the `text` overload's `STRING` token
+        rules (`"[^"]*"`/`{[^}]*}`, no escaping) would truncate/corrupt real YAML containing
+        literal `"`/`{`/`}` — a structural problem independent of any character-encoding
+        concern, plus a real (separate, pre-existing, not fixed here) UB bug in the lexer's
+        catch-all rule (`toupper()` on a signed `char`, undefined for bytes ≥0x80). Fix:
+        write the extracted GWCS YAML to a Tcl temp file (`file tempfile`, the same idiom
+        `ds9/library/util.tcl`'s `GIFWritePhoto` already uses) and pass the *filename*
+        through instead — a short, delimiter-free string the lexer handles trivially,
+        keeping the actual YAML bytes off the grammar entirely.
+  - [x] `tksao/frame/fitsimage.{h,C}`: `yaml2ast()` (sibling to `fits2ast()`, using AST's
+        generic Channel `source` callback — `AstYamlChan` has no `astPutFits`-style
+        in-memory loader — via the same `astChannelData`/`astPutChannelData` idiom
+        `fits2TAB`/`astTableSource` already establishes in this file); `initWCS()` gained an
+        optional `yamltext` parameter (bypasses `fits2ast()`/the Chandra LONG/NPOL special
+        case entirely when set); `replaceWCS(istream&)` sniffs the stream's first line
+        (`#ASDF`/`%YAML`/bare `wcs:` — none valid FITS-card syntax, so this can't
+        false-positive) and dispatches to the new `replaceWCSYaml()` instead of
+        `parseWCS()`. `tksao/frame/basecommand.C`/`base.h`/`parser.Y`/`lex.L`: **zero
+        changes** — confirmed via `git diff` showing no delta in any of them.
+  - [x] `ds9/library/asdf.tcl`: ported the Phase 1 Python spike's subtree-extraction and
+        ndarray-resolution logic to Tcl (`AsdfExtractKeySubtree`, `AsdfAsWcsShell`,
+        `AsdfIsBareTransform`/`AsdfWrapBareTransform`, `AsdfResolveNdarrays`,
+        `AsdfBinaryFmt`/`AsdfNest`/`AsdfNestValues`, `AsdfExtractWcsText`), wired into
+        `AsdfLoadArray` as a best-effort step after the pixel load succeeds.
+    - **Real, confirmed finding, not in the original design doc**: the WCS key's location
+      is genuinely different between product types, beyond what Phase 1 already found. The
+      small WCS-only distribution products use `wcs`/`wcs_l2`/`wcs_l1` directly under
+      `roman:` at 2-space indent — but the *full* science-product `*_cal.asdf` file (the
+      one with real pixel data, downloaded for Phase 2) puts it at `roman.meta.wcs`, 4-space
+      indent, matching the design doc's original assumption exactly. `AsdfExtractWcsText`
+      tries the 2-space direct-under-`roman:` keys first, then falls back to the 4-space
+      `meta:`-nested `wcs` key.
+    - **Real embedded-ndarray finding, also not optional**: every real WCS subtree tested
+      (all 3 Phase 1 sample files, and the full cal file's `roman.meta.wcs`) contains
+      multiple block-sourced `core/ndarray` coefficient arrays (Polynomial transform
+      matrices, an Affine matrix/translation) — resolving these inline is required for
+      *any* real Roman GWCS document to parse, not a rare edge case, confirming Phase 1's
+      note about this. `AsdfResolveNdarrays` reuses `AsdfBlockIndex`/`AsdfReadBlock` (the
+      same block-decompression machinery Phase 2 built) against the *original full file's*
+      raw bytes, since block offsets are global to the file, not the extracted subtree.
+    - **Two real Tcl-regex bugs hit and fixed while writing `AsdfResolveNdarrays`**, both
+      confirmed against the real multi-hundred-line subtree, not assumed: (1) Tcl's `.`
+      matches newlines by default (unlike most other regex flavors) — a naive `.*\n` per
+      mid-line let one "line" swallow arbitrarily many real lines; fixed with `[^\n]*`. (2)
+      Tcl's regex engine picks an overall leftmost-*longest* match (POSIX semantics), not
+      Perl-style leftmost-shortest, so even a properly line-bounded `*?` non-greedy loop
+      still matched through hundreds of extra lines to a wrong, much-later `shape:`
+      occurrence; fixed with an explicit `(?!shape:)` negative lookahead so a `shape:` line
+      can never be consumed by the generic loop at all, removing the ambiguity instead of
+      relying on greediness.
+    - **The standalone document needs its own `%TAG !` directive**, mirroring Python's
+      `extract_subtree.py`'s `HEADER` constant exactly — real GWCS subtrees use YAML's
+      short-tag shorthand (`!transform/compose-1.4.0`) throughout, not just at the document
+      root, and that shorthand only expands to the full `tag:stsci.edu:asdf:...` form with
+      this directive present. Missing it produced a real, confirmed AST error ("wrong
+      prefix") on the very first real-file test.
+  - [x] **A second, distinct integration gap found and fixed, past just building `ast_`
+        correctly**: `scanWCS()` (existing code, unchanged) populates `wcs_[]` — the flags
+        `hasWCS()`/`has wcs wcs` actually query — by reading each member AST Frame's
+        `Ident` attribute and mapping FITS's alternate-WCS lettering convention (`' '` →
+        primary, `'A'`–`'Z'` → alternate), which `fits2ast()` gets for free from
+        `astRead(FitsChan)`. A GWCS document has no equivalent concept — none of its Frames
+        carry an `Ident` at all — so `ast_` was genuinely valid (confirmed via a standalone
+        AST test program reproducing the exact same source-callback mechanism outside DS9)
+        while `has wcs wcs` still reported false, silently gating off WCS-dependent UI
+        functionality even though the math worked. Fix: `yaml2ast()` explicitly sets
+        `Ident=" "` (the "primary/unlettered WCS" marker) on the FrameSet's current member
+        Frame specifically — `Ident` is a generic `AstObject` attribute, not Frame-specific,
+        so setting it on the FrameSet container itself (tried first) has no effect on the
+        member Frames `scanWCS()` actually inspects via `astGetFrame()`; it must go on the
+        extracted Frame handle itself (a reference to the real stored Frame, not a deep
+        copy).
+    - Also hit and fixed, unrelated to any of the above: `Base::findAllFits(int which)`
+      treats `which=0` as "stop immediately" (the loop condition itself is `while (ptr &&
+      which)`), always returning `NULL` — `which` is 1-indexed, matching
+      `ds9/library/wcs.tcl`'s own `dwcs(ext)` convention (`set dwcs(ext) 1`, never 0).
+      Calling `wcs replace 0 ...` silently no-ops via the bare `result = TCL_ERROR;` branch
+      with no `Tcl_AppendResult` call — an empty-message Tcl error, easy to misread as "no
+      error, but nothing happened" as opposed to "wrong argument."
+  - [x] **Validated real, independently-checkable results, not just "doesn't crash":**
+    - All 3 Phase 1 sample files (`wfi01_f158_wcs.asdf`, `grism_wcs.asdf`,
+      `new_distortion.asdf`) reproduce the *exact* `Nframe`/`astTran2` results already
+      recorded in Phase 1 above, via the new pure-Tcl extraction path feeding the same
+      `yamlchan_probe` tool — `(-1.57103, 1.15147)` / `Nframe=5`, `Nframe=4`, and
+      `(1616.98, -955.744)` / `Nframe=2` respectively (the bare-transform-wrapping path
+      exercised too, not just the common case).
+    - The real 197MB `r0000101001001001001_0001_wfi01_f158_cal.asdf` (Phase 2's file):
+      `AsdfLoadArray` still loads the pixel array in ~6 seconds, `saveimage png` still
+      produces the byte-for-byte identical 545,345-byte PNG Phase 2 recorded (confirming
+      the WCS-attach step is purely additive, no regression to the pixel path) — and now
+      `$frame has wcs wcs` reports `1`, with `$frame get coordinates 2044 2044 wcs fk5
+      degrees` returning `269.7077160072 65.9862233765` for the image center and
+      `269.8604193977 66.0474793179` for pixel (1,1). **Independently cross-checked**
+      against the file's own embedded processing log (`S_REGION VALUES: POLYGON ICRS
+      269.986945913 ... 65.974342004`, from `romancal.assign_wcs`'s own recorded footprint)
+      — same region of sky, not just "produces some number."
 - [ ] Defined fallback behavior on failure (unsupported tag/version, non-Roman GWCS shape) —
-      report "no WCS," don't crash.
+      report "no WCS," don't crash. (The extraction/attach step is already wrapped in a
+      `catch` in `AsdfLoadArray` so a missing/unparseable WCS doesn't block the pixel load —
+      not yet exercised against a real file that actually lacks a recognizable WCS, so
+      leaving this unchecked until that's tried.)
 - [ ] Header/metadata display: feed the YAML tree text into DS9's existing header-viewer
       widget.
 - [ ] Tcl UI: `LoadAsdfFile`/`AsdfLoadDialog` pair, File menu/button entry, following

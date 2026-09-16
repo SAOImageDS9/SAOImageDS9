@@ -101,7 +101,7 @@ TKIMGTMPFILES = \
 .NOTPARALLEL :
 .PHONY	: all dirs ds9 tclxml tclxmlrpc tclzipfs tls xpa zlib lz4
 .PHONY	: tkblt tclfitsy tkcon tkhtml1 tkimg tkmpeg tksvg tkagif tksao tktable
-.PHONY	: vector fitsy libyaml ast funtools openssl
+.PHONY	: vector fitsy tclasdf libyaml ast funtools openssl
 
 all	: saods9
 
@@ -463,6 +463,36 @@ fitsy/Makefile :
 	$(STD) \
 	$(CACHE)
 
+#-------------------------- tclasdf
+
+# Tcl command asdflz4decompress, used by ds9/library/asdf.tcl to decompress
+# real Roman ASDF files' lz4-compressed blocks (see TODO.md Phase 2). A
+# standalone Tcl extension (like vector/fitsy) so the logic lives once,
+# instead of being hand-duplicated across the unix/macos/win copies of
+# ds9/*/ds9.C - lz4 itself is passed in explicitly here (CPPFLAGS/LDFLAGS/
+# LIBS), the same convention already used for e.g. ast's CPPFLAGS or tls's
+# --with-openssl-dir, since no TEA macro finds a vendored library on its own.
+# no config.cache - the shared cache file doesn't know about the extra
+# CPPFLAGS/LDFLAGS/LIBS below and refuses a stale run rather than risk
+# silently reusing a different environment's results.
+
+tclasdf	: tclasdf/Makefile
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tclasdf -j $(JOBS) install
+
+tclasdf/Makefile :
+	@echo ""
+	@echo "*** $@ ***"
+	cd tclasdf; \
+	./configure \
+	$(WITHTCL) \
+	$(PREFIX) \
+	$(STD) \
+	CPPFLAGS='-I$(includedir)' \
+	LDFLAGS='-L$(libdir)' \
+	LIBS='-llz4'
+
 #-------------------------- libyaml
 
 libyaml	: libyaml/Makefile
@@ -646,7 +676,7 @@ scrub :
 .PHONY	: tkbltclean tclfitsy tkconclean tkhtml1clean tkimgclean
 .PHONY	: tkmpegclean tksvgclean tkagifclean
 .PHONY	: tktableclean xpaclean zlibclean lz4clean
-.PHONY	: vectorclean fitsyclean libyamlclean astclean funtoolsclean
+.PHONY	: vectorclean fitsyclean tclasdfclean libyamlclean astclean funtoolsclean
 .PHONY	: tksaoclean
 
 clean	: tclclean tkclean \
@@ -752,6 +782,11 @@ fitsyclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C fitsy clean
 
+tclasdfclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tclasdf clean
+
 libyamlclean :
 	@echo ""
 	@echo "*** $@ ***"
@@ -795,7 +830,7 @@ lz4clean :
 .PHONY	: tkbltdistclean tclfitsydistclean tkcondistclean tkhtml1distclean
 .PHONY	: tkimgdistclean tkmpegdistclean tksvgdistclean tkagifdistclean
 .PHONY	: tktabledistclean xpadistclean zlibdistclean lz4distclean
-.PHONY	: vectordistclean fitsydistclean libyamldistclean
+.PHONY	: vectordistclean fitsydistclean tclasdfdistclean libyamldistclean
 .PHONY	: astdistclean funtoolsdistclean
 .PHONY	: tksaodistclean
 
@@ -931,6 +966,12 @@ fitsydistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C fitsy distclean
+
+tclasdfdistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tclasdf distclean
+	$(RM) -f tclasdf/tclasdfConfig.sh
 
 libyamldistclean :
 	@echo ""

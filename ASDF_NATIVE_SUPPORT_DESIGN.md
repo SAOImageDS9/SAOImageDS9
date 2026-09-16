@@ -201,20 +201,39 @@ for a correct read.
 
 Five new/changed components, each mapped onto an existing DS9 pattern rather than a new one:
 
-1. **ASDF container reader** (new, small — e.g. `tksao/frame/fitsasdf.C` or a standalone
-   helper class used by it). Parses the magic line, hands the YAML-tree bytes to a YAML
-   parser, and separately indexes the binary blocks (magic, header fields, optional
-   zlib/bzip2/lz4 decompression, using the trailing block index when present for O(1)
-   seeking). Exposes: "get parsed tree", "resolve dotted/colon path to a node", "get raw
-   bytes for block N (decompressed)". This is the one piece of genuinely new C++ code;
-   everything else is existing DS9/AST machinery pointed at its output.
+1. **ASDF container reader** — **implemented, and Tcl-driven rather than the C++
+   `tksao/frame/fitsasdf.C` class originally sketched here.** `ds9/library/asdf.tcl` parses
+   the magic line, the YAML-tree text (via targeted `regexp`, not a full YAML parser — see
+   point 2), and the trailing block index/per-block headers directly with Tcl's `binary
+   scan`, all fast enough in pure Tcl since these are small (tree text, ~50KB; block headers,
+   54 bytes each). This deliberately avoids adding a new grammar keyword to
+   `tksao/frame/parser.Y`/`lex.L`, which would require regenerating the bison/flex output —
+   real toolchain-version risk on this checkout specifically (CLAUDE.md flags this; this
+   build machine's `bison` is 3.8.2 against the checked-in files' stamped `2.3`). The only
+   new C code is one small Tcl command, `asdflz4decompress`, wrapping `LZ4_decompress_safe`
+   from the vendored `liblz4.a` for the one part of this too slow in pure Tcl (decompressing
+   a multi-ten-MB block) — no grammar change either way. It lives in its own small package,
+   `tclasdf/` (matching `vector`/`fitsy`/`tclsignal`'s existing pattern exactly: its own
+   `configure.ac`/`Makefile.in`), rather than as a function inside `ds9/*/ds9.C` — that file
+   is genuinely triplicated with real per-platform differences across `unix`/`macos`/`win`,
+   so a package built once and registered with the same 3-line `Tcl_StaticPackage` block
+   every other vendored extension already uses avoids hand-duplicating the same C logic
+   three times. `zlib`-compressed blocks need no new code at all: Tcl 9 ships a native
+   `zlib` command.
 
-2. **Pixel-array path.** Resolve the requested path (`roman.data` for Roman; user-specified
-   `path:inner/path` for generic files, matching pds9's colon syntax) to a `core/ndarray`
-   node, pull `datatype`/`shape`/`byteorder`/`source`, decompress that block, and hand the
-   resulting buffer + explicit dims to the *existing* `Arr*`-family ingestion path
-   (`Base::loadArrAllocCmd` et al., §4) — no cfitsio/`fitsy` involvement at all, same as
-   pds9's SAMP payload today.
+2. **Pixel-array path — implemented and validated against a real, full 197MB Roman file**,
+   not a synthetic one. Resolves `roman.data` (currently hardcoded to that one Roman-fixed
+   path; the generic `path:inner/path` syntax is Phase 4 scope, not done) to its
+   `core/ndarray` node, pulls `datatype`/`shape`/`byteorder`/`source`, decompresses that
+   block (a real finding here: Roman's actual pixel blocks are `lz4`-compressed, not just
+   the small WCS coefficient blocks — see §9's `lz4` note), and hands the resulting buffer +
+   explicit dims to the *existing* `Arr*`-family ingestion path — concretely, `FitsArrVar`
+   (`fitsy/var.C`) via `$frame load array {} {[xdim=...,bitpix=...]} var <tclvar> {}`, not
+   `loadArrAllocCmd`/a temp file, since the decoded bytes are already in memory as a Tcl
+   byte-array. No cfitsio/`fitsy` ASDF-specific code at all, exactly as planned. Confirmed
+   end to end: the real `r0000101001001001001_0001_wfi01_f158_cal.asdf` science array loads
+   as a 4088×4088 float32 frame in DS9 in ~5 seconds and renders as a recognizable WFI
+   starfield under zscale. See `TODO.md` Phase 2 for the full validation record.
 
 3. **WCS path.** Locate the WCS subtree (`roman.meta.wcs` for Roman), walk it, and for every
    block-sourced `core/ndarray` reachable within it (§7b), substitute an inline YAML literal

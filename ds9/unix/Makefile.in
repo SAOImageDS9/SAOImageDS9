@@ -33,6 +33,7 @@ tkimgwindow_LIB_SPEC= @tkimgwindow_LIB_SPEC@
 
 tclfitsy_LIB_SPEC= @tclfitsy_LIB_SPEC@
 tclsignal_LIB_SPEC= @tclsignal_LIB_SPEC@
+tclasdf_LIB_SPEC= @tclasdf_LIB_SPEC@
 tclxml_LIB_SPEC	= @tclxml_LIB_SPEC@
 tclxmlrpc_LIB_SPEC= @tclxmlrpc_LIB_SPEC@
 tclzipfs_LIB_SPEC= @tclzipfs_LIB_SPEC@
@@ -113,7 +114,8 @@ EXT_SPECS = \
 	$(tifftcl_LIB_SPEC) \
 	$(zlibtcl_LIB_SPEC) \
 	$(fitsy_LIB_SPEC) \
-	$(vector_LIB_SPEC)
+	$(vector_LIB_SPEC) \
+	$(tclasdf_LIB_SPEC)
 
 CORE_SPECS = \
 	$(TK_STUB_LIB_SPEC) \
@@ -136,7 +138,8 @@ LLIBS	= \
 	$(libdir)/libast_cminpack.a \
 	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,$(EXT_LIB_PREFIX)%.a,$(tksao_LIB_SPEC)))) \
 	$(libdir)/libfuntools.a \
-	$(libdir)/libxpa.a
+	$(libdir)/libxpa.a \
+	$(libdir)/liblz4.a
 
 PREQS	= \
 	$(APPDIR) \

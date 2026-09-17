@@ -6,6 +6,7 @@ Last updated 2026-11-25
 | ------------ | ---------- | ----- | ----- | -------------------------------------------------------------------- | ------------------------------- |
 | ast          | 9.4.1      |       | y     | https://github.com/Starlink/ast                                      | 9.4.1 (6)                       |
 | awthemes     | 10.4.0     |       | y     | https://sourceforge.net/projects/tcl-awthemes/                       | 10.4.0 (7)                      |
+| bzip2        | 1.0.8      |       |       | https://sourceware.org/pub/bzip2/                                    | 1.0.8                           |
 | certifi      | 2026.10.23 |       |       | https://github.com/certifi/python-certifi                            | 2026.10.23                      |
 | ds9          | 8.8        | y     |       |                                                                      |                                 |
 | fickle       | 2.2        | y     |       | https://github.com/SAOImageDS9/fickle-maintenance                    | previous upstream abandoned     |

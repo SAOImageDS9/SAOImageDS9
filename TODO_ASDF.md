@@ -976,9 +976,10 @@ a colleague, restored on their machine — which is what decided the design belo
       block-compression codecs: `none`/`zlib`/`lz4`/`bzp2`), covering every BITPIX type plus
       `BLANK`/`BSCALE`-`BZERO`/NaN/Inf edge cases. Deliberately flat (non-Roman-nested)
       trees, since these are for Phase 4/5's arbitrary-path generalization, not a regression
-      check against the current Roman-only reader. `bzp2` isn't supported by
-      `AsdfReadBlock` yet — included anyway so broadening compression support has a real
-      fixture to build against.
+      check against the current Roman-only reader. `bzp2` was not supported by
+      `AsdfReadBlock` when these were written — included anyway so broadening compression
+      support would have a real fixture to build against, which is exactly how it played
+      out (see "bzip2 vendored" below).
   - [x] The 4 `_blank` files (integer data with a `BLANK` sentinel) are written as numpy
         masked arrays, not converted to float+NaN the way astropy's default scaling would —
         `asdf` serializes this natively as a `mask:` sibling ndarray next to `data:`
@@ -1150,6 +1151,67 @@ a colleague, restored on their machine — which is what decided the design belo
   - Unit-tested the enumerator's mask classification across all forms: scalar int, negative,
     float, `.nan`, complex, a non-numeric string, and no mask — each classified correctly as
     a usable sentinel or as unsupported.
+
+- [x] **bzip2 vendored and `bzp2` blocks supported** — the last unsupported codec, and the
+      one the fixtures were built to drive.
+  - **Vendored `bzip2/` = upstream 1.0.8 unpruned**, matching what `zlib`, `lz4` and
+    `libyaml` already do here (all three carry their upstream docs and tests). Source is
+    `https://sourceware.org/pub/bzip2/bzip2-1.0.8.tar.gz`, sha256
+    `ab5a0317...0c4a2269`, verified against the published digest before use. Keeps a future
+    version bump a plain tarball overlay. Added a small `bzip2/.gitignore` (the tarball has
+    none of its own) so its objects don't become untracked noise the way `zlib`'s are.
+  - **Three traps in bzip2's hand-written Makefile**, all documented at the build rule in
+    `make.include` rather than just worked around:
+    1. `all` is `libbz2.a bzip2 bzip2recover test` — it builds the CLI tools *and runs the
+       compression test suite*; `install` then copies tools and man pages into
+       `$(PREFIX)/bin` and `$(PREFIX)/man`. Only `libbz2.a` and `bzlib.h` are wanted, so
+       the rule builds that one target by name and places the two files itself.
+    2. `install` understands only `PREFIX`, with `lib/`/`include/`/`man/` hard-coded
+       beneath it — no `LIBDIR`/`INCLUDEDIR` the way lz4's Makefile has.
+    3. **`distclean` deletes `manual.ps`/`manual.html`/`manual.pdf`, which are tracked
+       upstream files.** So `bzip2distclean` runs `clean`, not `distclean` — the same
+       choice `lz4distclean` already made. (This is the same class of bug as the
+       `libyamldistclean` one that deleted `fitsy/fitsyConfig.sh`.)
+  - `RANLIB`: bzip2 archives with `ar cq`, which writes no symbol index, then runs
+    `$(RANLIB)`. The tree's shared `$(CONFIGFLAGS)` sets only `CC` and `AR`, so a cross
+    build would have indexed a mingw archive with the host ranlib; the rule names
+    `$(TARGET)-ranlib` where `$(TARGET)` is set, which is `win/Makefile.in` only.
+  - The `bzip2` target had to join `.PHONY` — the target name and the directory name
+    collide, so without it make would call the target up to date. (`lz4` has the same
+    collision and is already phony; this is easy to miss.)
+  - **`asdfbz2decompress`** added to `tclasdf` (now four commands), with `-lbz2` on the
+    extension's `LIBS` and `$(libdir)/libbz2.a` in all three `ds9/*/Makefile.in` link
+    lists, alongside `liblz4.a`.
+  - **The framing is *not* like lz4's, and this was checked against the fixtures rather
+    than assumed.** lz4.block has no stream format, so asdf frames it as length-prefixed
+    chunks; bzip2 does, so a `bzp2` payload is one plain stream — every fixture payload
+    starts with `BZh9` at byte 0 and `used` is the whole compressed length. So the Tcl side
+    needs no chunk loop, just `asdfbz2decompress $payload $decoded`.
+  - Used the streaming `bz_stream` API rather than one-shot `BZ2_bzBuffToBuffDecompress`,
+    for two reasons: the one-shot call takes `unsigned int` lengths, and it cannot span
+    concatenated streams. asdf's own writer emits a single stream and its reader would stop
+    at the first stream end, but tolerating a concatenation costs one re-init and means a
+    block from some other writer isn't silently truncated.
+  - **Results.** Full sweep is now **108/108** — 27/27 in each of `none`/`zlib`/`lz4`/
+    `bzp2`, up from 81/108.
+    - Every `bzp2` fixture is identical to its `none` twin on dimensions, BITPIX, `minmax`,
+      the `BLANK` card **and a SHA-256 over every pixel** read back through
+      `xpaget ds9 data` — 27/27, no differences.
+    - All **31** compressed blocks in the 27 files (the 4 `_blank` files carry a second
+      block for the mask) decode **byte-identical to Python's `bz2`**.
+    - Null handling confirmed at the pixel level, not just via `minmax` — which per the
+      Phase 5 note above cannot reveal it, since these fixtures' BLANK values are interior
+      to the data range. A known masked pixel in `short_blank` reads `blank` and an
+      unmasked one reads its value, identically for `none` and `bzp2`.
+    - Error paths, on four hand-corrupted copies: truncated payload, corrupted bit stream,
+      understated `decoded` size, and empty payload each produce a distinct message
+      (`truncated bzip2 stream`, `bzip2 decompress failed`, `bzip2 output exceeds block
+      decoded size`), leave the frame empty rather than partly filled, and don't take DS9
+      down.
+    - Roman regression clean: the 197MB cal file still loads 4088×4088 bitpix -32 with a
+      valid GWCS readout at image centre.
+  - Not done: Windows. The `bzip2` rule is written for the cross build (and fixes the
+    ranlib gap above) but, like everything after `libyaml`, is unvalidated there.
 
 ## Process notes
 

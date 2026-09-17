@@ -53,7 +53,7 @@ proc AsdfBlockIndex {data} {
 
 # Enumerates every block-sourced core/ndarray node in the tree, anywhere in
 # it, returning a list of
-# {path source datatype byteorder shapelist unsupported} with
+# {path source datatype byteorder shapelist unsupported maskscalar} with
 # `path` a root-relative slash path (e.g. roman/data,
 # roman/meta/wcs/steps/0/transform/forward/1/coefficients). Phase 4: this
 # replaces the Phase 2 reader's "one level under roman:, 2-space indent"
@@ -223,8 +223,26 @@ proc AsdfEnumFlush {varname path fields} {
 	lappend unsupported offset
     }
 
+    # A scalar `mask:` names the missing-value sentinel outright (see
+    # AsdfMaskResolve). Carry it on the entry; an ndarray mask is found
+    # separately as the node's own `<path>/mask` entry. A complex mask
+    # (asdf allows complex-1.0.0) is not a number Tcl can use as a
+    # sentinel here, so it is recorded as unsupported rather than ignored.
+    set maskscalar {}
+    if {[dict exists $fields mask]} {
+	set mv [string trim [dict get $fields mask]]
+	if {![string match {!core/ndarray-*} $mv]} {
+	    if {[string is double -strict $mv] || $mv eq {.nan} ||
+		$mv eq {.inf} || $mv eq {-.inf}} {
+		set maskscalar $mv
+	    } else {
+		lappend unsupported mask
+	    }
+	}
+    }
+
     lappend result [list $path $source $datatype $byteorder $shapelist \
-			$unsupported]
+			$unsupported $maskscalar]
 }
 
 # Looks up one enumerated node by its root-relative path. Returns
@@ -920,6 +938,88 @@ proc AsdfSplitPath {fn} {
 # no-temp-file Tcl-variable transport, but with a real header, which
 # carries BLANK for free.
 
+# Resolves an array's asdf `mask` - in either of the two forms the
+# core/ndarray schema allows - into FITS null form. Returns
+# {blank bigEndianData}, or {} when there is no mask, nothing is actually
+# masked, or the combination is not one we can represent faithfully.
+#
+# The schema's `mask` is `anyOf`: a scalar number ("that number is used to
+# represent missing values" - the FITS BLANK convention exactly), a
+# complex number, or a bool8 ndarray broadcastable to the data's shape.
+# Both numeric forms are handled here; a complex mask is flagged as
+# unsupported by AsdfEnumFlush and reported below rather than ignored.
+# Where both forms are present the ndarray wins, following the schema's
+# own "an explicit mask array ... takes precedence".
+#
+# Only datatypes with a real FITS BITPIX are eligible, since the result is
+# loaded as an actual FITS file. That excludes uint16/uint32 (they would
+# need FITS's BZERO unsigned-offset convention) and float16 - those fall
+# back to the plain array path, with a warning, rather than being loaded
+# as if they had no nulls at all.
+proc AsdfMaskResolve {tree data offsets path node decoded} {
+    lassign $node source datatype byteorder shapelist unsupported maskscalar
+
+    set masknode [AsdfFindNdarrayPath $tree "$path/mask"]
+
+    if {[lsearch -exact $unsupported mask] >= 0} {
+	Warning "[msgcat::mc {ASDF: unsupported mask form, loading without null values}] $path"
+	return {}
+    }
+    if {$masknode eq {} && $maskscalar eq {}} {
+	return {}
+    }
+
+    switch -- $datatype {
+	uint8 -
+	int16 -
+	int32 -
+	int64 -
+	float32 -
+	float64 {}
+	default {
+	    Warning "[msgcat::mc {ASDF: cannot represent null values for datatype, loading without them}] $datatype"
+	    return {}
+	}
+    }
+
+    set maskbytes {}
+    set scalar {}
+
+    if {$masknode ne {}} {
+	lassign $masknode msource mdatatype mbyteorder mshape munsupported
+	if {$munsupported ne {}} {
+	    Warning "[msgcat::mc {ASDF: unreadable mask array, loading without null values}] $path/mask"
+	    return {}
+	}
+	set moffset [lindex $offsets $msource]
+	if {$moffset eq {}} {
+	    Warning "[msgcat::mc {ASDF: mask block index out of range}] $msource"
+	    return {}
+	}
+	if {[catch {AsdfReadBlock $data $moffset} mblk] || $mblk eq {}} {
+	    Warning "[msgcat::mc {ASDF: unreadable mask block, loading without null values}] $path/mask"
+	    return {}
+	}
+	lassign $mblk mcompression maskbytes
+    } else {
+	# .nan/.inf are YAML's own float spellings; Tcl understands the
+	# bare words, so hand them over in a form expr/double accepts
+	switch -- $maskscalar {
+	    .nan {set scalar NaN}
+	    .inf {set scalar Inf}
+	    -.inf {set scalar -Inf}
+	    default {set scalar $maskscalar}
+	}
+    }
+
+    if {[catch {asdfmask $decoded $datatype $byteorder $maskbytes $scalar} rr]} {
+	Warning "[msgcat::mc {ASDF}] $rr"
+	return {}
+    }
+
+    return $rr
+}
+
 # One 80-column FITS card. Values are right-justified in columns 11-30,
 # per the standard's fixed format.
 proc AsdfFitsCard {keyword value} {
@@ -1145,37 +1245,27 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
 	return 0
     }
 
-    # A masked integer array becomes a real in-memory FITS carrying BLANK,
-    # so DS9's integer-null handling applies (see AsdfFitsHeader above).
-    # Everything else keeps the raw array/var path, which costs nothing.
+    # A masked array becomes a real in-memory FITS, so DS9's own null
+    # handling applies (see AsdfMaskResolve and AsdfFitsHeader).
+    # Unmasked arrays keep the raw array/var path, which costs nothing.
     set fitsblank {}
+    set fitsmasked 0
     if {$zdim eq {} && $widen eq {}} {
-	set fb [AsdfFitsBitpix $datatype]
-	set masknode [AsdfFindNdarrayPath $tree "$path/mask"]
-	if {$fb ne {} && $masknode ne {}} {
-	    lassign $masknode msource mdatatype mbyteorder mshape munsupported
-	    if {$munsupported eq {} && $mshape eq $shapelist} {
-		set moffset [lindex $offsets $msource]
-		if {$moffset ne {} &&
-		    ![catch {AsdfReadBlock $data $moffset} mblk] &&
-		    $mblk ne {}} {
-		    lassign $mblk mcompression mdecoded
-		    if {![catch {
-			asdfmaskblank $decoded $mdecoded $datatype $byteorder
-		    } mres] && $mres ne {}} {
-			lassign $mres fitsblank decoded
-			set bitpix $fb
-			# asdfmaskblank emits big-endian, as FITS requires
-			set arch big
-		    }
-		}
+	set mres [AsdfMaskResolve $tree $data $offsets $path $node $decoded]
+	if {$mres ne {}} {
+	    lassign $mres fitsblank decoded
+	    set fitsmasked 1
+	    # AsdfMaskResolve emits big-endian, as FITS requires
+	    set arch big
+	    if {$fitsblank ne {}} {
+		set bitpix [AsdfFitsBitpix $datatype]
 	    }
 	}
     }
 
     global asdfRawVar
 
-    if {$fitsblank ne {}} {
+    if {$fitsmasked} {
 	set asdfRawVar [AsdfFitsHeader $xdim $ydim $bitpix $fitsblank]
 	append asdfRawVar $decoded
 	set pad [expr {2880 - ([string length $asdfRawVar] % 2880)}]

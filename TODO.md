@@ -1086,6 +1086,70 @@ a colleague, restored on their machine — which is what decided the design belo
   - Roman regression clean: the 197MB cal file still loads 4088×4088 bitpix -32 with its
     corner at `269.9869455 65.9742651`, and the full 84-fixture sweep is unchanged at 63 OK
     / 21 `bzp2`.
+- [x] **Scalar `mask` support — the other form the format allows, checked against the spec
+      rather than assumed.** The user recalled ASDF also permitting a single fill value like
+      FITS `BLANK`; confirmed correct from `asdf-standard` itself.
+  - `core/ndarray`'s `mask` is `anyOf`: **a scalar number** ("that number is used to
+    represent missing values"), a `complex-1.0.0`, or a `bool8` ndarray "broadcastable to the
+    dimensions of this array". Verified in **all three** schema versions
+    (`ndarray-1.0.0`/`1.1.0`/`1.2.0`), in each of which `mask: -999` is a documented
+    example — and note the example is on **`float64`** data, so the scalar form's headline
+    use is floating point, not integer.
+  - **Why no sample file had one**: asdf's Python *writer* cannot emit it. Its ndarray
+    converter does `result["mask"] = data.mask` unconditionally, so a numpy masked array
+    always serializes as a boolean array. The reader handles the scalar form fine
+    (`NDArrayType._apply_mask` → `ma.masked_values`). So scalar masks come from other
+    writers, and a reader has to support both. Checked in the installed asdf 5.4.0 source,
+    not inferred.
+  - **Four real gaps this review exposed**, all now closed:
+    1. **Scalar mask was silently ignored** — captured as a node field and dropped, so nulls
+       displayed as the raw fill value.
+    2. **Float data + any mask was ignored.** FITS marks float nulls with NaN and the data is
+       already float, so there is no cost and no promotion — this was simply missing.
+    3. **A broadcastable-but-not-identically-shaped mask array was silently skipped**; the
+       code required an exact shape match where the spec says broadcastable. Now the
+       degenerate cases (one element per pixel, or a single element) are accepted and
+       anything else is *refused* rather than guessed at, since a wrong partial broadcast
+       would mismark real pixels.
+    4. **A complex mask fell through with no message.** Now flagged unsupported and warned.
+  - Implementation: `asdfmaskblank` generalized into `asdfmask` (one command handling both
+    mask forms and both integer and float data). Integer → `BLANK` sentinel; float → NaN
+    written into the masked pixels. A scalar mask needs no scan and no rewrite at all — it
+    *is* the sentinel. Scalar matching is exact, deliberately unlike numpy's
+    `ma.masked_values` tolerance-based comparison (a fill value is stored exactly, and exact
+    equality is what FITS `BLANK` means); a NaN scalar mask is special-cased to `isnan()`
+    the same way asdf's own reader does it.
+  - Datatypes with no real FITS BITPIX (`uint16`/`uint32`, which would need FITS's `BZERO`
+    unsigned-offset convention, and `float16`) fall back to the plain array path **with a
+    warning** rather than loading as though they had no nulls.
+- [x] **Added the `_blank_scalar` fixture set — 24 files, 6 base names × 4 codecs** (in the
+      `Tests` repo at `Tests/asdf/fixtures/`, with `Tests/asdf/make_scalar_mask_fixtures.py`).
+  - Needs its own generator precisely because asdf cannot write this form. Each output is
+    built by **re-treeing an existing fixture**: the data block is copied byte for byte and
+    only the YAML tree is rewritten and the block index recomputed. That yields all four
+    codecs — **including `lz4`, with no compressor needed** — and guarantees the pixel bytes
+    are identical to the sibling fixture.
+  - Two flavors: the four integer `*_blank_scalar` use the source FITS file's **own `BLANK`**
+    (128/256/256/256) as the scalar, so they must render identically to that FITS file; and
+    `float_blank_scalar`/`double_blank_scalar` put a scalar mask on floating point data,
+    covering the schema's headline case. The float sentinel is chosen as a value that
+    genuinely occurs (255.0, 256 pixels), so the fixture actually masks something — the
+    generator asserts this rather than trusting it.
+  - **Validated with the reference implementation, not just our reader**: every one is read
+    back with `asdf.open()` and checked for dtype preservation, exact mask positions against
+    the source FITS, and unmasked pixel equality. 24/24. A conda env (`ds9asdf`: python
+    3.12, numpy 2.5.3, astropy 8.0.1, asdf 5.4.0, lz4 4.4.5) was created for this.
+    - Note asdf hands back a lazy `NDArrayType`, not an array; the mask is applied only when
+      it is materialized, so a validator must slice it (`af["data"][:]`) or it will conclude
+      no mask is present. The first version of the check did exactly that and reported a
+      false failure.
+  - **Results through DS9**: the 12 integer scalar-mask files match the equivalent FITS
+    `BLANK` file exactly — same bitpix, and a real blank pixel reads `blank` in both. The 6
+    float ones keep bitpix -32/-64 and read `nan` at the sentinel pixel. Full sweep now 108
+    files: 81 OK, 27 `bzp2` (the expected single failure mode). Roman regression unchanged.
+  - Unit-tested the enumerator's mask classification across all forms: scalar int, negative,
+    float, `.nan`, complex, a non-numeric string, and no mask — each classified correctly as
+    a usable sentinel or as unsupported.
 
 ## Process notes
 

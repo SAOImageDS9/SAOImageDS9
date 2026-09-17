@@ -341,6 +341,7 @@ proc ButtonsFileDef {} {
 
     array set pbuttons {
 	file,open 1
+	file,open,asdf 0
 	file,open,slice 0
 	file,open,rgb,image 0
 	file,open,rgb,cube 0
@@ -435,6 +436,10 @@ proc CreateButtonsFile {} {
     ButtonButton $ds9(buttons).file.open \
 	[string tolower [msgcat::mc {Open}]] \
 	[list OpenDialog fits]
+
+    ButtonButton $ds9(buttons).file.openasdf \
+	[string tolower [msgcat::mc {Open ASDF}]] \
+	[list OpenDialog asdf]
 
     ButtonButton $ds9(buttons).file.openslice \
 	[string tolower [msgcat::mc {Open Slice}]] \
@@ -667,6 +672,7 @@ proc CreateButtonsFile {} {
 
     set buttons(file) "
         $ds9(buttons).file.open pbuttons(file,open)
+        $ds9(buttons).file.openasdf pbuttons(file,open,asdf)
         $ds9(buttons).file.openslice pbuttons(file,open,slice)
         $ds9(buttons).file.openrgbimage pbuttons(file,open,rgb,image)
         $ds9(buttons).file.openrgbcube pbuttons(file,open,rgb,cube)
@@ -813,6 +819,11 @@ proc PrefsDialogButtonbarFile {f} {
 	-variable pbuttons(file,exit) -command {UpdateButtons buttons(filew)}
 
     ThemeMenu $m.open
+    $m.open add checkbutton \
+	-label [msgcat::mc {ASDF}] \
+	-variable pbuttons(file,open,asdf) \
+	-command {UpdateButtons buttons(file)}
+    $m.open add separator
     $m.open add checkbutton \
 	-label [msgcat::mc {Slice}] \
 	-variable pbuttons(file,open,slice) \

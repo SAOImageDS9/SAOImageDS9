@@ -1010,7 +1010,15 @@ a colleague, restored on their machine — which is what decided the design belo
 
 - [ ] Broaden AST tag/version coverage as other missions' ASDF files are encountered.
 - [ ] Contribute the version-ceiling bumps (and any other fixes) upstream to Starlink rather
-      than carrying them as a permanent local patch.
+      than carrying them as a permanent local patch. Now includes a genuine portability bug,
+      not just our version ceilings: `LibYamlWriter` in `ast/src/yamlchan.c` declared its
+      size argument as `long unsigned int` while libyaml's `yaml_write_handler_t` uses
+      `size_t`. Identical on LP64 (macOS/Linux), different on **LLP64** (mingw: `long` is 32
+      bits, `size_t` 64), so `yaml_emitter_set_output` gets an incompatible function pointer.
+      Invisible until GCC 14, which promoted `-Wincompatible-pointer-types` from a warning to
+      an error - and the tree's `-w` does not suppress errors. Its sibling `LibYamlReader`
+      already used `size_t`, so the writer was simply inconsistent. Fixed locally; worth
+      sending upstream since it breaks any Windows build of AST with YAML enabled.
 - [x] **Test fixtures ready ahead of time**, living in the separate `Tests` repo (DS9's own
       test-suite checkout, `github.com/SAOImageDS9/Tests`) at `Tests/asdf/`, not in this
       repo — moved there from an initial `utils/asdf_fits_testsuite/` location once it was

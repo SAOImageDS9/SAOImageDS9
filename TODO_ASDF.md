@@ -163,25 +163,39 @@ truth for where things stand.
       silence the `__imp_` by switching the headers to static mode, but this tree links
       libxml2 dynamically on purpose. The `__imp_` reference was correct; the import library
       was what was missing.
-  - [ ] Windows/mingw beyond this point is still unvalidated — the build had not reached
-        `ast`/`tclasdf` yet. Next most likely trouble spots, in build order, all of them
-        packages whose recipes I touched or added:
-    - **`zlib`** — its hand-written configure *runs* test programs to probe features, which
-      cross-compilation cannot do, and picks flags from `uname -s`. `$(CONFIGFLAGS)` is
-      passed as an env prefix (it does not parse `VAR=value` positionally), so `CC`/`AR`
-      reach it, but whether it produces a correct mingw `libz.a` is untested.
-    - **`lz4`** — `CC`/`AR` go in as ordinary make-variable overrides, which its plain
-      Makefile honors; it may additionally want `TARGET_OS=MINGW`.
-    - **`ast`** — omits `$(TARGET)` (pre-existing, not mine), so autoconf may not realize it
-      is cross-compiling. My only change there is `--with-yaml=$(prefix)`, which links rather
-      than runs, so it should survive; note 9.4.1 hard-fails configure via `AC_MSG_ERROR`
-      if YAML is requested and not found, which makes a libyaml problem loud rather than
-      silent.
-    - **`tclasdf`** — passes `$(WITHTCL) $(PREFIX) $(STD)` plus explicit
-      `CPPFLAGS`/`LDFLAGS`/`LIBS` for lz4, and no `$(CACHE)`, unlike its `vector`/`fitsy`
-      siblings. Harmless (the cache is only an optimization and this recipe sets no `CC` or
-      aliases, so it cannot trip the check either way), left alone rather than changed
-      untested.
+  - [x] **Windows/mingw now builds clean from a completely clean directory (2026-09-17).**
+        The whole chain, `zlib lz4 bzip2 xpa funtools libyaml ast vector fitsy tclasdf ...
+        tksao ds9`, completes with no errors. That closes the longest-standing open item in
+        this file. It took four distinct fixes, none of which were visible on unix or macOS:
+    - `libyaml` + `$(CACHE)` — `build_alias' was not set in the previous run. Dropped
+      `$(CACHE)`; the latent half was worse than the reported failure (see above).
+    - `libyaml` + a bare positional triplet — a hard hang in `libtool --mode=link`, because
+      autoconf set `build_alias` too, so libtool chose the **MSYS** path-conversion function
+      and ran `cmd //c echo` on cygwin. Fixed with `--host=`.
+    - `ast` — `LibYamlWriter` declared `long unsigned int` where libyaml uses `size_t`.
+      Identical on LP64, different on LLP64, and only fatal from GCC 14, which promoted
+      `-Wincompatible-pointer-types` to an error. An upstream AST bug; fixed locally.
+    - `ds9`/`tclxml`/`tksao` — `undefined reference to __imp_xmlParserVersion`, because
+      `PKG_CHECK_MODULES` used the build machine's `pkg-config` and got cygwin's libxml2.
+      Fixed with `PKGCONFIG` in `win/Makefile.in`.
+    - The three predictions in the old version of this item were all wrong, which is worth
+      recording: `zlib` (feared for running test programs), `lz4` (suspected of wanting
+      `TARGET_OS=MINGW`) and `tclasdf` (flagged over its missing `$(CACHE)`) all built
+      without any change. `ast` was rightly suspected, but for the wrong reason - its
+      missing `$(TARGET)` turned out to be harmless here (its `config.h` still measured the
+      real compiler: `SIZEOF_LONG 4`), and the actual failure was a type signature.
+  - [ ] **Windows is built but not yet *exercised*.** A clean build says nothing about
+        whether the ASDF path works there, and several pieces are platform-sensitive in ways
+        the build cannot catch:
+    - `tclasdf`'s three codec commands - `asdfbz2decompress` and `asdflz4decompress` in
+      particular, since they are the newest and link freshly vendored libraries.
+    - Block decompression across all four codecs, i.e. the 108 `Tests/asdf/fixtures` sweep.
+    - The GWCS bridge end to end: does `libyaml` + `ast` actually read a Roman WCS on
+      Windows, and does the ground-truth corner still come out at
+      `269.986945544 65.974265112`?
+    - `asdfmask`'s byte handling and `asdfconvert`'s float16 widening - both do explicit
+      byte-order work, which is exactly where an LLP64/endianness difference would show.
+    - Backup/restore, which writes absolute paths and copies files.
   - [x] Ran a real, full `unix/configure && make` from a completely clean tree (no prior
         build state) through the actual dependency chain
         (`dirs tcl tk openssl xpa funtools libyaml ast vector fitsy ... tksao ds9`) — not

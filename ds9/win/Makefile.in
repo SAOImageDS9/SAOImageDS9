@@ -143,7 +143,8 @@ LLIBS	= \
 	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,$(EXT_LIB_PREFIX)%.a,$(tksao_LIB_SPEC)))) \
 	$(libdir)/libfuntools.a \
 	$(libdir)/libxpa.a \
-	$(libdir)/liblz4.a
+	$(libdir)/liblz4.a \
+	$(libdir)/libbz2.a
 
 PREQS	= \
 	$(APPDIR) \

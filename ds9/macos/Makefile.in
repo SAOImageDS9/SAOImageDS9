@@ -136,7 +136,8 @@ LLIBS	= \
 	$(libdir)/libyaml.a \
 	$(libdir)/libfuntools.a \
 	$(libdir)/libxpa.a \
-	$(libdir)/liblz4.a
+	$(libdir)/liblz4.a \
+	$(libdir)/libbz2.a
 
 PREQS	= \
 	$(APPDIR) \

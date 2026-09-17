@@ -968,6 +968,33 @@ a colleague, restored on their machine — which is what decided the design belo
 - [ ] Broaden AST tag/version coverage as other missions' ASDF files are encountered.
 - [ ] Contribute the version-ceiling bumps (and any other fixes) upstream to Starlink rather
       than carrying them as a permanent local patch.
+- [x] **Test fixtures ready ahead of time**, living in the separate `Tests` repo (DS9's own
+      test-suite checkout, `github.com/SAOImageDS9/Tests`) at `Tests/asdf/`, not in this
+      repo — moved there from an initial `utils/asdf_fits_testsuite/` location once it was
+      clear these are fixtures for that test suite, not this project's own dev tooling. 84
+      small ASDF files (21 of the `Tests` repo's own `fits/` sample images x 4
+      block-compression codecs: `none`/`zlib`/`lz4`/`bzp2`), covering every BITPIX type plus
+      `BLANK`/`BSCALE`-`BZERO`/NaN/Inf edge cases. Deliberately flat (non-Roman-nested)
+      trees, since these are for Phase 4/5's arbitrary-path generalization, not a regression
+      check against the current Roman-only reader. `bzp2` isn't supported by
+      `AsdfReadBlock` yet — included anyway so broadening compression support has a real
+      fixture to build against.
+  - [x] The 4 `_blank` files (integer data with a `BLANK` sentinel) are written as numpy
+        masked arrays, not converted to float+NaN the way astropy's default scaling would —
+        `asdf` serializes this natively as a `mask:` sibling ndarray next to `data:`
+        (confirmed by inspecting the written YAML, not assumed), keeping the original
+        integer dtype intact. The first pass of this fixture set got this wrong (used
+        astropy's default NaN-converting scaling for these too, silently promoting them to
+        float and defeating the point of an integer-with-nulls fixture) — caught by the
+        user asking directly "are you using the mask value?", not found independently.
+  - [x] All 84 round-trip validated against the original FITS pixel values — NaN
+        positions/values for the float files; mask positions, unmasked values, and dtype
+        preservation for the 4 masked `_blank` files — both before and after the move to
+        `Tests/asdf/` (path handling in the conversion script changed, since it now resolves
+        `fits/` as a sibling directory within the same `Tests` checkout instead of reaching
+        into this repo). Nothing has been committed in either repo yet. See
+        `Tests/asdf/README.md` for the full file/codec breakdown and regeneration
+        instructions.
 
 ## Process notes
 

@@ -357,6 +357,33 @@ uint32&nbsp; -&gt; bitpix 64 (widened)<br></tt></blockquote>
 <p>A scalar mask is matched exactly, unlike the tolerance-based comparison numpy's <tt>masked_values</tt> uses, since a fill value is stored exactly in practice. A scalar mask of NaN means that NaN pixels are the missing ones. A boolean mask array can also be displayed in its own right, as the <tt>mask</tt> path beneath the array (for example <tt>data/mask</tt>). Datatypes with no direct FITS equivalent, such as <tt>uint16</tt> and <tt>uint32</tt>, load without null marking rather than being reinterpreted, and say so.</p>
 <p>Blocks compressed with <tt>zlib</tt>, <tt>lz4</tt> or <tt>bzp2</tt> are decompressed automatically. An array described as a non-contiguous view of its block, by an <tt>offset</tt> or <tt>strides</tt> entry, is reported as unsupported rather than read incorrectly.</p>
 <p><b>WCS.</b> If the file contains a GWCS object, it is read directly and attached as the frame's WCS, giving the instrument's exact transform rather than an approximation of it. Both the Roman layouts are recognized: <tt>wcs</tt>, <tt>wcs_l1</tt> or <tt>wcs_l2</tt> directly under <tt>roman</tt>, and <tt>roman/meta/wcs</tt>. A file whose WCS is a bare transform, with no GWCS wrapper, is also accepted. If no WCS is found, or if it uses a tag or schema version that cannot be read, the image still loads and the frame simply has no WCS. See <a href="#WCS">WCS</a>.</p>
+<p>A GWCS describes one pixel grid, so it is attached only to an array whose shape matches that grid. The science array and its same-shape companions, such as <tt>dq</tt> and <tt>err</tt>, all receive it; an unrelated array from elsewhere in the tree, such as a coefficient matrix, loads without a WCS rather than being given one that does not describe it.</p>
+<p>A resampled product that carries FITS WCS keywords instead of a GWCS, as a Roman level 3 coadd does in its <tt>fitswcs_imaging</tt> node, is read through those keywords.</p>
+<p><b>Which GWCS elements are read.</b> A GWCS is a pipeline of transform steps ending in a coordinate frame, and not every element the format allows is understood. All 27 FITS-WCS sky projections are supported, together with:</p>
+<blockquote><tt>transforms: identity, shift, scale, multiplyscale, linear1d,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; affine, rotate2d, rotate3d, rotate_sequence_3d,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; remap_axes, compose, concatenate, constant, divide,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fix_inputs, polynomial, ortho_polynomial, planar2d,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; spherical_cartesian<br>
+&nbsp;<br>
+frames:&nbsp;&nbsp;&nbsp;&nbsp; frame, frame2d, celestial_frame<br>
+&nbsp;<br>
+celestial:&nbsp; icrs, fk5, fk4, fk4noeterms, galactic, supergalactic,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ecliptic<br></tt></blockquote>
+<p>That covers every transform and frame a Roman imaging product uses. The following are <b>not</b> read. In each case the array itself still loads normally, and the frame is left without a WCS rather than given a wrong one, reporting <tt>ASDF: AST could not read this WCS, loading without it</tt>.</p>
+<blockquote>
+<p><b>Spectral, temporal, composite and Stokes frames.</b> A WCS with a wavelength, frequency, time or polarization axis is not read, and the frame has no WCS.</p>
+<p><b>Lookup-table transforms</b> (<tt>tabular</tt>), the arithmetic operators <tt>add</tt>, <tt>subtract</tt>, <tt>multiply</tt> and <tt>power</tt>, and the <tt>label_mapper</tt> and <tt>regions_selector</tt> pair by which multi-slit and IFU products choose a different transform per region. One unreadable step makes the whole pipeline unreadable, so a WCS that is otherwise supported but uses any of these anywhere along it yields no WCS at all.</p>
+<p><b>The altaz frame.</b> It is nominally recognized, but no such file has yet been made to produce a usable WCS, so it should be treated as unsupported. An observed altitude and azimuth also have no display system to be read back in; see <a href="#WCS">WCS</a> for the systems that do.</p>
+<p><b>Frames are matched by their exact tag name</b>, so a more specific spelling of one listed above &#8212; one of the particular ecliptic variants, say &#8212; is not recognized as the general frame it refines.</p>
+</blockquote>
+<p>Four further limits are worth knowing, because in each of them the WCS loads rather than failing outright, so nothing announces the problem:</p>
+<blockquote>
+<p><b>An ortho_polynomial is always read as a Chebyshev</b> polynomial; the node's <tt>polynomial_type</tt> is not consulted, so a file declaring a different orthogonal basis would be read with the wrong one rather than refused.</p>
+<p><b>A Chebyshev with no explicit inverse gives no coordinate readout.</b> Nothing inverts one analytically, so unless the file supplies an <tt>inverse</tt> of its own the WCS attaches but cannot be used to report a position. Roman's distortion polynomials do supply one.</p>
+<p><b>The valid-pixel domain is not enforced.</b> A GWCS <tt>bounding_box</tt> is ignored, so coordinates are reported outside the region the transform was fitted for, where they are extrapolated and, far enough out, where the inverse stops converging and no position is reported at all.</p>
+<p><b>The zenithal_perspective projection</b> (FITS <tt>AZP</tt>) is currently misread, by roughly two degrees on a test case with known-correct parameters, and should not be relied on. No other projection is affected.</p>
+</blockquote>
 <p><b>Header.</b> <b>File&nbsp;&#8594;&nbsp;Header</b> displays the file's YAML tree, which is an ASDF file's equivalent of a FITS header. Arrays appear there by datatype and shape, as ASDF stores them, not as pixel values.</p>
 <p><b>Backup.</b> A backup save set copies the ASDF file into its directory and reloads from it, so the exact WCS and the tree are preserved and the save set remains portable. See <a href="backup.html">Backup</a>.</p>
 <p><b><a name="nrrd" id="nrrd"></a>NRRD (Nearly Raw Raster Data)</b><br></p>

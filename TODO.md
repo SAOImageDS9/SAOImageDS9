@@ -65,9 +65,56 @@ truth for where things stand.
         installs static-only (zero `.dylib`/`.so` anywhere in `lib/`), and the resulting
         `lib/libast.a` carries `yamlchan` symbols, so `--with-yaml=$(prefix)` took effect
         on this platform too.
-  - [ ] Windows/mingw half still unvalidated: no mingw cross-toolchain here, so the `win`
-        prerequisite-list and `$(CONFIGFLAGS)`/`$(TARGET)` fix remain reasoned from the
-        existing `xpa`/`funtools` pattern rather than build-tested.
+  - [x] **Windows/mingw: first real cross-build attempt (2026-09-17) found a genuine bug in
+        this stanza, now fixed.** `libyaml/Makefile` passed **both** `$(CACHE)` and
+        `$(CONFIGFLAGS) $(TARGET)`, and those are mutually exclusive — `libyaml` was the only
+        package in `make.include` combining them. Symptom on `win/`:
+        ```
+        configure: error: `build_alias' was not set in the previous run
+        configure: error: `CC' was not set in the previous run
+        configure: error: changes in the environment can compromise the build
+        ```
+    - Why: the shared `$(prefix)/config.cache` is written by the `$(CACHE)`-using packages
+      (`vector`, `fitsy`, `tkblt`, tcl/tk …), which inherit the cross toolchain via
+      `--with-tcl`/`--with-tk` and therefore never set `build_alias`/`host_alias`/
+      `target_alias`/`CC`. A configure run that *does* set them then aborts on cache load.
+      Verified against the macOS cache directly: it records `ac_cv_env_CC_set=` and
+      `ac_cv_env_build_alias_set=` **empty**. On macOS/unix `$(CONFIGFLAGS)` and `$(TARGET)`
+      are both empty so `libyaml`'s run also set nothing — consistent, which is exactly why
+      this could never reproduce here.
+    - The tree already encoded the rule and I missed it: every cross-flagged package
+      (`xpa`, `funtools`, `ast`) omits `$(CACHE)`, and there is a literal `# no config.cache`
+      comment above the `xpa` stanza. The libyaml stanza was modeled on `vector`/`fitsy`
+      (which use `$(CACHE)`) and then had `$(CONFIGFLAGS) $(TARGET)` added on top.
+    - **The latent second half was worse than the reported failure**: had libyaml's configure
+      *succeeded* with `$(CACHE)` on a cross build, it would have written `CC` and the
+      aliases into the shared cache and broken every `$(CACHE)`-using package afterwards
+      with the mirror-image error. Nobody hit that only because libyaml fails first.
+    - Fix: drop `$(CACHE)`, with a comment recording the invariant so it is not re-added.
+      Re-audited `make.include` programmatically afterwards — no package combines them now.
+      Rebuilt `libyaml` from a `distclean`'d pristine state on macOS: configures with no cache
+      warning, installs the same 396,912-byte static-only `libyaml.a`, and the
+      libyaml→ast→`yamlchan` chain still reads a real GWCS (corner unchanged at
+      `269.9869455 65.9742651`).
+  - [ ] Windows/mingw beyond this point is still unvalidated — the build had not reached
+        `ast`/`tclasdf` yet. Next most likely trouble spots, in build order, all of them
+        packages whose recipes I touched or added:
+    - **`zlib`** — its hand-written configure *runs* test programs to probe features, which
+      cross-compilation cannot do, and picks flags from `uname -s`. `$(CONFIGFLAGS)` is
+      passed as an env prefix (it does not parse `VAR=value` positionally), so `CC`/`AR`
+      reach it, but whether it produces a correct mingw `libz.a` is untested.
+    - **`lz4`** — `CC`/`AR` go in as ordinary make-variable overrides, which its plain
+      Makefile honors; it may additionally want `TARGET_OS=MINGW`.
+    - **`ast`** — omits `$(TARGET)` (pre-existing, not mine), so autoconf may not realize it
+      is cross-compiling. My only change there is `--with-yaml=$(prefix)`, which links rather
+      than runs, so it should survive; note 9.4.1 hard-fails configure via `AC_MSG_ERROR`
+      if YAML is requested and not found, which makes a libyaml problem loud rather than
+      silent.
+    - **`tclasdf`** — passes `$(WITHTCL) $(PREFIX) $(STD)` plus explicit
+      `CPPFLAGS`/`LDFLAGS`/`LIBS` for lz4, and no `$(CACHE)`, unlike its `vector`/`fitsy`
+      siblings. Harmless (the cache is only an optimization and this recipe sets no `CC` or
+      aliases, so it cannot trip the check either way), left alone rather than changed
+      untested.
   - [x] Ran a real, full `unix/configure && make` from a completely clean tree (no prior
         build state) through the actual dependency chain
         (`dirs tcl tk openssl xpa funtools libyaml ast vector fitsy ... tksao ds9`) — not

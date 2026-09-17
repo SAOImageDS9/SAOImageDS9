@@ -11,7 +11,7 @@
 // ASDF read path that are too slow to do in Tcl over millions of elements.
 //   asdflz4decompress - decompress one lz4 block chunk
 //   asdfconvert       - widen an ndarray to a datatype fitsy can represent
-//   asdfmaskblank     - resolve a masked integer array to FITS BLANK form
+//   asdfmask          - resolve an asdf mask to FITS BLANK / NaN form
 
 #include <stdint.h>
 #include <string.h>
@@ -183,31 +183,38 @@ static int AsdfConvertCmd(void* clientData, Tcl_Interp* interp,
   return TCL_OK;
 }
 
-// asdf serializes a numpy masked array as an explicit boolean `mask:`
-// ndarray beside the data, where FITS marks nulls with a BLANK keyword
-// naming a sentinel *value*. This converts the former to the latter so
-// that DS9's existing integer-null machinery does the work: FitsData
-// keeps the native integer storage and only substitutes NAN at the
-// getValueFloat() boundary, and minmax skips blank pixels
-// (tksao/frame/fitsdata.C). No promotion to float anywhere.
+// asdf-standard's core/ndarray lets `mask` be either an explicit boolean
+// ndarray OR a scalar number, in which case "that number is used to
+// represent missing values" - which is precisely the FITS BLANK
+// convention. Both forms are documented in every schema version
+// (ndarray-1.0.0/1.1.0/1.2.0) and the scalar form is the schema's own
+// headline example, on float64 data. Note asdf's Python library only
+// *reads* the scalar form; its writer always emits a boolean array. So
+// files carrying a scalar mask come from other writers, and a reader has
+// to handle both.
 //
-// Returns {blank bigEndianData}, or {} when nothing is masked. FITS is
-// big-endian, so the data is byte-swapped here as part of the same pass
-// the mask scan already needs.
+// This maps either form onto what FITS already does, so DS9's existing
+// machinery does the work with no promotion of integer data to float:
+//   integer data -> a BLANK sentinel value. FitsData keeps native integer
+//                   storage and substitutes NAN only at the
+//                   getValueFloat() boundary; minmax skips blank pixels.
+//   float data   -> NaN written into the masked pixels directly, which is
+//                   the FITS convention for float nulls and costs nothing
+//                   since the data is already floating point.
 //
-// Choosing the sentinel, in order of preference:
-//  1. If every masked pixel holds the same value AND no *unmasked* pixel
-//     holds it, that value is BLANK and the data is unchanged. This is the
-//     exact case a FITS->ASDF conversion produces (the mask was computed
-//     as data == BLANK), so the original BLANK is recovered losslessly.
-//  2. Otherwise pick the type's extreme value, provided no unmasked pixel
-//     uses it, and write it into the masked pixels. Still integer - the
-//     point of the whole exercise - but it does alter those pixels, which
-//     were undefined by construction anyway.
-//  3. If neither extreme is free, refuse rather than corrupt a real value.
+// Returns {blank bigEndianData}: `blank` is the BLANK value for an integer
+// type, or empty for a float type (where NaN carries the information
+// instead). Output is always big-endian because the caller hands it to
+// DS9 as a real FITS file. {} means nothing was masked.
+//
+// Scalar matching is exact, deliberately unlike numpy's
+// ma.masked_values(), which matches within rtol=1e-5/atol=1e-8. A fill
+// value is stored exactly in practice, and exact equality is both
+// predictable and what FITS BLANK means. A scalar mask of NaN is special
+// cased the same way asdf's reader does it: it means "NaN values are
+// missing", so the test is isnan() rather than equality.
 
-static int AsdfLoadInt(const unsigned char* pp, int sz, int isSigned, int big,
-			int64_t* out)
+static int64_t AsdfLoadInt(const unsigned char* pp, int sz, int isSigned, int big)
 {
   uint64_t uu = 0;
   for (int ii = 0; ii < sz; ii++) {
@@ -221,116 +228,174 @@ static int AsdfLoadInt(const unsigned char* pp, int sz, int isSigned, int big,
       uu |= ~((sign << 1) - 1);
   }
 
-  *out = (int64_t)uu;
-  return 1;
+  return (int64_t)uu;
 }
 
-static int AsdfMaskBlankCmd(void* clientData, Tcl_Interp* interp,
-			     int objc, Tcl_Obj* const objv[])
+static void AsdfStoreBE(unsigned char* dd, uint64_t uu, int sz)
 {
-  if (objc != 5) {
-    Tcl_WrongNumArgs(interp, 1, objv, "data mask datatype byteorder");
+  for (int bb = 0; bb < sz; bb++)
+    dd[sz - 1 - bb] = (unsigned char)(uu >> (8 * bb));
+}
+
+static int AsdfMaskCmd(void* clientData, Tcl_Interp* interp,
+			int objc, Tcl_Obj* const objv[])
+{
+  if (objc != 6) {
+    Tcl_WrongNumArgs(interp, 1, objv, "data datatype byteorder mask scalar");
     return TCL_ERROR;
   }
 
-  Tcl_Size dataLen, maskLen;
+  Tcl_Size dataLen;
   unsigned char* data = Tcl_GetByteArrayFromObj(objv[1], &dataLen);
-  unsigned char* mask = Tcl_GetByteArrayFromObj(objv[2], &maskLen);
-  const char* type = Tcl_GetString(objv[3]);
-  const char* order = Tcl_GetString(objv[4]);
+  const char* type = Tcl_GetString(objv[2]);
+  const char* order = Tcl_GetString(objv[3]);
+
+  Tcl_Size maskLen = 0;
+  unsigned char* mask = NULL;
+  if (Tcl_GetCharLength(objv[4]) > 0)
+    mask = Tcl_GetByteArrayFromObj(objv[4], &maskLen);
+
+  int haveScalar = Tcl_GetCharLength(objv[5]) > 0;
+  double scalar = 0.0;
+  if (haveScalar && Tcl_GetDoubleFromObj(interp, objv[5], &scalar) != TCL_OK)
+    return TCL_ERROR;
+
+  if ((mask == NULL) == (haveScalar == 0)) {
+    Tcl_SetObjResult(interp, Tcl_NewStringObj(
+      "asdfmask: exactly one of mask or scalar must be given", -1));
+    return TCL_ERROR;
+  }
 
   int big = !strcmp(order, "big");
 
-  int sz, isSigned;
-  int64_t tmin, tmax;
+  int sz, isFloat, isSigned = 0;
+  int64_t tmin = 0, tmax = 0;
   if (!strcmp(type, "uint8")) {
-    sz = 1; isSigned = 0; tmin = 0; tmax = 255;
+    sz = 1; isFloat = 0; isSigned = 0; tmin = 0; tmax = 255;
   }
   else if (!strcmp(type, "int16")) {
-    sz = 2; isSigned = 1; tmin = -32768; tmax = 32767;
+    sz = 2; isFloat = 0; isSigned = 1; tmin = -32768; tmax = 32767;
   }
   else if (!strcmp(type, "int32")) {
-    sz = 4; isSigned = 1; tmin = -2147483648LL; tmax = 2147483647LL;
+    sz = 4; isFloat = 0; isSigned = 1; tmin = -2147483648LL; tmax = 2147483647LL;
   }
   else if (!strcmp(type, "int64")) {
-    sz = 8; isSigned = 1; tmin = INT64_MIN; tmax = INT64_MAX;
+    sz = 8; isFloat = 0; isSigned = 1; tmin = INT64_MIN; tmax = INT64_MAX;
+  }
+  else if (!strcmp(type, "float32")) {
+    sz = 4; isFloat = 1;
+  }
+  else if (!strcmp(type, "float64")) {
+    sz = 8; isFloat = 1;
   }
   else {
     Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-      "asdfmaskblank: unsupported datatype %s", type));
+      "asdfmask: unsupported datatype %s", type));
     return TCL_ERROR;
   }
 
-  if (dataLen != maskLen * sz) {
+  if (dataLen % sz) {
     Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-      "asdfmaskblank: data length %" TCL_SIZE_MODIFIER "d does not match %"
-      TCL_SIZE_MODIFIER "d mask elements of %d bytes", dataLen, maskLen, sz));
+      "asdfmask: data length %" TCL_SIZE_MODIFIER "d is not a multiple of %d",
+      dataLen, sz));
     return TCL_ERROR;
   }
 
-  Tcl_Size nn = maskLen;
-  int64_t common = 0;
-  Tcl_Size nmasked = 0;
-  int uniq = 1;
-  int commonUsed = 0, minUsed = 0, maxUsed = 0;
+  Tcl_Size nn = dataLen / sz;
 
-  for (Tcl_Size ii = 0; ii < nn; ii++) {
-    int64_t vv;
-    AsdfLoadInt(data + ii * sz, sz, isSigned, big, &vv);
-    if (mask[ii]) {
-      if (!nmasked)
-	common = vv;
-      else if (vv != common)
-	uniq = 0;
-      nmasked++;
-    }
-    else {
-      if (vv == tmin) minUsed = 1;
-      if (vv == tmax) maxUsed = 1;
-    }
+  // The mask must be broadcastable to the data's shape. Only the
+  // degenerate cases are accepted here: one element per pixel, or a
+  // single element covering everything. Anything else is refused rather
+  // than guessed at, since getting a partial broadcast wrong would
+  // mismark real pixels.
+  if (mask && maskLen != nn && maskLen != 1) {
+    Tcl_SetObjResult(interp, Tcl_ObjPrintf(
+      "asdfmask: mask of %" TCL_SIZE_MODIFIER "d elements is not broadcastable to %"
+      TCL_SIZE_MODIFIER "d pixels", maskLen, nn));
+    return TCL_ERROR;
   }
 
-  if (!nmasked) {
-    Tcl_SetObjResult(interp, Tcl_NewListObj(0, NULL));
-    return TCL_OK;
-  }
+  int scalarIsNan = haveScalar && scalar != scalar;
 
-  // a second pass is only needed to test the candidate itself
-  if (uniq) {
+  // decide what is masked, and for integers pick the BLANK value
+  int64_t blank = 0;
+  int rewrite = 0;
+  int haveBlank = 0;
+
+  if (!isFloat) {
+    int64_t iscalar = (int64_t)scalar;
+    int64_t common = 0;
+    Tcl_Size nmasked = 0;
+    int uniq = 1, commonUsed = 0, minUsed = 0, maxUsed = 0;
+
     for (Tcl_Size ii = 0; ii < nn; ii++) {
-      if (mask[ii])
-	continue;
-      int64_t vv;
-      AsdfLoadInt(data + ii * sz, sz, isSigned, big, &vv);
-      if (vv == common) {
-	commonUsed = 1;
-	break;
+      int64_t vv = AsdfLoadInt(data + ii * sz, sz, isSigned, big);
+      int mm = mask ? (maskLen == 1 ? mask[0] : mask[ii]) != 0 : (vv == iscalar);
+      if (mm) {
+	if (!nmasked)
+	  common = vv;
+	else if (vv != common)
+	  uniq = 0;
+	nmasked++;
+      }
+      else {
+	if (vv == tmin) minUsed = 1;
+	if (vv == tmax) maxUsed = 1;
+	if (vv == common && nmasked) commonUsed = 1;
       }
     }
-  }
 
-  int64_t blank;
-  int rewrite;
-  if (uniq && !commonUsed) {
-    blank = common;
-    rewrite = 0;
-  }
-  else {
-    int64_t c0 = isSigned ? tmin : tmax;
-    int64_t c1 = isSigned ? tmax : tmin;
-    int u0 = isSigned ? minUsed : maxUsed;
-    int u1 = isSigned ? maxUsed : minUsed;
-
-    if (!u0)
-      blank = c0;
-    else if (!u1)
-      blank = c1;
-    else {
-      Tcl_SetObjResult(interp, Tcl_NewStringObj(
-        "asdfmaskblank: no unused value available for BLANK", -1));
-      return TCL_ERROR;
+    if (!nmasked) {
+      Tcl_SetObjResult(interp, Tcl_NewListObj(0, NULL));
+      return TCL_OK;
     }
-    rewrite = 1;
+
+    // a scalar mask names the sentinel outright, so there is nothing to
+    // choose and nothing to rewrite
+    if (haveScalar) {
+      blank = iscalar;
+      haveBlank = 1;
+      rewrite = 0;
+    }
+    else {
+      // recheck commonUsed properly - the single pass above can miss an
+      // unmasked occurrence that precedes the first masked pixel
+      commonUsed = 0;
+      if (uniq) {
+	for (Tcl_Size ii = 0; ii < nn; ii++) {
+	  int mm = (maskLen == 1 ? mask[0] : mask[ii]) != 0;
+	  if (mm)
+	    continue;
+	  if (AsdfLoadInt(data + ii * sz, sz, isSigned, big) == common) {
+	    commonUsed = 1;
+	    break;
+	  }
+	}
+      }
+
+      if (uniq && !commonUsed) {
+	blank = common;
+	rewrite = 0;
+      }
+      else {
+	int64_t c0 = isSigned ? tmin : tmax;
+	int64_t c1 = isSigned ? tmax : tmin;
+	int u0 = isSigned ? minUsed : maxUsed;
+	int u1 = isSigned ? maxUsed : minUsed;
+
+	if (!u0)
+	  blank = c0;
+	else if (!u1)
+	  blank = c1;
+	else {
+	  Tcl_SetObjResult(interp, Tcl_NewStringObj(
+	    "asdfmask: no unused value available for BLANK", -1));
+	  return TCL_ERROR;
+	}
+	rewrite = 1;
+      }
+      haveBlank = 1;
+    }
   }
 
   Tcl_Obj* out = Tcl_NewByteArrayObj(NULL, dataLen);
@@ -338,25 +403,67 @@ static int AsdfMaskBlankCmd(void* clientData, Tcl_Interp* interp,
   if (!dst) {
     Tcl_DecrRefCount(out);
     Tcl_SetObjResult(interp,
-		     Tcl_NewStringObj("asdfmaskblank: out of memory", -1));
+		     Tcl_NewStringObj("asdfmask: out of memory", -1));
     return TCL_ERROR;
   }
 
-  for (Tcl_Size ii = 0; ii < nn; ii++) {
-    int64_t vv;
-    if (rewrite && mask[ii])
-      vv = blank;
-    else
-      AsdfLoadInt(data + ii * sz, sz, isSigned, big, &vv);
+  Tcl_Size nmaskedOut = 0;
 
-    uint64_t uu = (uint64_t)vv;
+  for (Tcl_Size ii = 0; ii < nn; ii++) {
+    const unsigned char* ss = data + ii * sz;
     unsigned char* dd = dst + ii * sz;
-    for (int bb = 0; bb < sz; bb++)
-      dd[sz - 1 - bb] = (unsigned char)(uu >> (8 * bb));
+
+    if (isFloat) {
+      uint64_t raw = 0;
+      for (int bb = 0; bb < sz; bb++) {
+	unsigned char cc = big ? ss[bb] : ss[sz - 1 - bb];
+	raw = (raw << 8) | cc;
+      }
+
+      int mm;
+      if (mask)
+	mm = (maskLen == 1 ? mask[0] : mask[ii]) != 0;
+      else if (sz == 4) {
+	float ff;
+	uint32_t r32 = (uint32_t)raw;
+	memcpy(&ff, &r32, 4);
+	mm = scalarIsNan ? (ff != ff) : (ff == (float)scalar);
+      }
+      else {
+	double ff;
+	memcpy(&ff, &raw, 8);
+	mm = scalarIsNan ? (ff != ff) : (ff == scalar);
+      }
+
+      if (mm) {
+	raw = (sz == 4) ? 0x7fc00000ULL : 0x7ff8000000000000ULL;
+	nmaskedOut++;
+      }
+
+      AsdfStoreBE(dd, raw, sz);
+    }
+    else {
+      int64_t vv = AsdfLoadInt(ss, sz, isSigned, big);
+      int mm = mask ? (maskLen == 1 ? mask[0] : mask[ii]) != 0
+		    : (vv == (int64_t)scalar);
+      if (mm) {
+	nmaskedOut++;
+	if (rewrite)
+	  vv = blank;
+      }
+      AsdfStoreBE(dd, (uint64_t)vv, sz);
+    }
+  }
+
+  if (!nmaskedOut) {
+    Tcl_DecrRefCount(out);
+    Tcl_SetObjResult(interp, Tcl_NewListObj(0, NULL));
+    return TCL_OK;
   }
 
   Tcl_Obj* res[2];
-  res[0] = Tcl_NewWideIntObj((Tcl_WideInt)blank);
+  res[0] = haveBlank ? Tcl_NewWideIntObj((Tcl_WideInt)blank)
+		     : Tcl_NewStringObj("", -1);
   res[1] = out;
   Tcl_SetObjResult(interp, Tcl_NewListObj(2, res));
   return TCL_OK;
@@ -375,7 +482,7 @@ int Tclasdf_Init(Tcl_Interp* interp)
 
   Tcl_CreateObjCommand(interp, "asdfconvert", AsdfConvertCmd, NULL, NULL);
 
-  Tcl_CreateObjCommand(interp, "asdfmaskblank", AsdfMaskBlankCmd, NULL, NULL);
+  Tcl_CreateObjCommand(interp, "asdfmask", AsdfMaskCmd, NULL, NULL);
 
   return TCL_OK;
 }

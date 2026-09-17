@@ -274,18 +274,25 @@ DS9's region code.
    genuinely non-square. A fix would mean carrying per-axis scale through `mapLenFromRef`,
    which is a much wider change than this project; `lock frame wcs` already does handle it
    (F-3), so the machinery exists.
-6. **The GWCS is attached to arrays it does not describe.** *Found by F-8, and this one is a
-   bug in this project's own code, not pre-existing DS9.* `AsdfLoadArray`
-   (`ds9/library/asdf.tcl:1336-1344`) calls `AsdfAttachWcs` unconditionally on whatever array
-   was just loaded, with no check that the array's grid is the one the WCS describes. So
-   `roman/amp33` (128×4096, a reference-pixel region) and the four `border_ref_pix_*` arrays
-   report the **science array's** sky coordinates: `roman/data` and `roman/amp33` both answer
-   `269.981972490569 66.035639172244` at `image(64,2048)`. This is worse than having no WCS,
-   because the values are in-footprint and therefore plausible. Same-grid siblings
-   (`err`, `dq`, `var_poisson`, `chisq`, `dumo`, all 4088²) are correct and *should* keep it,
-   so the fix is a shape guard, not removing the attach. Note R6 blocks the principled
-   version: AST drops `bounding_box`, so the WCS's own declared domain is unavailable and the
-   guard has to compare against the science array's shape read from the YAML tree.
+6. **~~The GWCS is attached to arrays it does not describe.~~ FIXED.** *Found by F-8; was a
+   bug in this project's own code, not pre-existing DS9.* `AsdfLoadArray` called
+   `AsdfAttachWcs` unconditionally on whatever array was loaded, so `roman/amp33` (128×4096
+   reference pixels) and the four `border_ref_pix_*` arrays reported the **science array's**
+   sky coordinates — `roman/data` and `roman/amp33` both answered
+   `269.981972490569 66.035639172244` at `image(64,2048)`. Worse than no WCS, because the
+   values are in-footprint and so look plausible.
+   Fixed with a grid guard: `AsdfWcsGridShape` resolves the science array via the loader's
+   existing `AsdfResolvePath ... data` convention, and `AsdfSameGrid` compares the *trailing
+   two* dimensions — trailing rather than exact so a 2-D WCS still covers each plane of a
+   same-grid rank-3 stack. R6 is why the grid has to come from the tree at all: AST drops
+   `bounding_box`, so the transform carries no domain of its own.
+   Verified: the six same-grid arrays (`data`, `err`, `dq`, `var_poisson`, `chisq`, `dumo`)
+   keep the WCS with identical readouts; the five off-grid arrays load with pixels intact and
+   no WCS. Grid mismatch is deliberately **silent** — it is the normal result of loading a
+   reference-pixel array, and `Warning` would turn a successful load into `XPA$ERROR` for an
+   xpaset caller. Only the surprising case, being unable to identify the WCS's grid at all,
+   warns; that is also the case where an exact-match guard could wrongly drop a good WCS
+   (a non-Roman file whose science array is not called `data`).
 7. **The array browser offers WCS internals as loadable images.** A real `*_cal.asdf`
    enumerates 25 loadable arrays, of which 10 are `roman/meta/wcs/.../coefficients` and
    `.../matrix` blocks (6×6 and 2×2 float64) — genuine `core/ndarray`s, but nobody wants to

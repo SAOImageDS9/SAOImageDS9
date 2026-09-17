@@ -23,10 +23,10 @@ Detail lives in the phase sections below; this is the map.
   see Phase 0. **It has not been run there** — see open items.
 - **A real test suite** in the sibling `Tests` repo, wired into its `io.sh`.
 
-### The AST bugs — three fixed locally, one open
+### The AST bugs — four fixed locally, one open
 
 All in `ast/src/yamlchan.c` unless noted. `ast` is already marked `dirty` in `Manifest.md`.
-**All four are upstream Starlink code, not ours**, and all four should go upstream together
+**All five are upstream Starlink code, not ours**, and all five should go upstream together
 with the 10 pre-existing `MAKE_TEST` version-ceiling bumps.
 
 1. **`LibYamlWriter` signature — FIXED (`8064e7408`).** Declared its size argument
@@ -43,7 +43,15 @@ with the 10 pre-existing `MAKE_TEST` version-ceiling bumps.
    `outa = offset`, overwrote it with `outa = 2*offset`, and never assigned `outb` before
    passing `&outb` to `astWinMap()`. Every `linear1d` was built from stack garbage:
    arbitrary and not reproducible.
-4. **`zenithal_perspective` maps to the wrong projection — NOT FIXED.**
+4. **`GetTime()` tested the wrong string for its epoch prefix — FIXED (see below).** Each
+   branch read `strncasecmp( format, "B", 1 )` where it plainly meant `value` — asking
+   whether the *value* already carries the prefix. Since `"jyear"` itself begins with a
+   `j`, every branch was dead, so an equinox of `2000.0` reached `astUnformat()` with the
+   TimeFrame's default format and was read as **MJD 2000, i.e. 1864** — about 1.8 degrees
+   of precession from J2000. Affected `byear`, `jyear` and `jd`; `mjd` escaped only because
+   it is the default. This is why the FK4/FK5/ecliptic frame fixtures were silently
+   *wrong* rather than failing outright.
+5. **`zenithal_perspective` maps to the wrong projection — NOT FIXED.**
    `ReadSkyProjection()` sends it to `AST__SZP` with `pv1=mu, pv2=gamma`, but AZP and SZP
    are different projections and SZP's 2nd/3rd parameters are phi_c/theta_c. Out by ~6500"
    with demonstrably correct parameters. AST *does* have `AST__AZP`, so this needs an
@@ -51,13 +59,18 @@ with the 10 pre-existing `MAKE_TEST` version-ceiling bumps.
 
 ### Open items, roughly in priority order
 
-1. **The five remaining frame fixtures** — `fk4`, `fk4noeterms`, `fk5`, `ecliptic`, `altaz`.
-   A fixture problem, not a reader one: `yamlchan.c` requires `frame_attributes` per frame
-   (FK4/FK4NOETERMS need `obstime`+`equinox`, FK5/ECLIPTIC `equinox`, ALTAZ
-   `location`+`obstime`), which is why ICRS/GALACTIC/SUPERGALACTIC worked at once. The
-   fixtures supply them as `!time/time-1.1.0` and `earthlocation` objects but AST still
-   declines, so that serialization is wrong. `GetTime()` wants `value`/`format`/`scale`;
-   `ReadEarthLocation()` is the other half.
+1. **`altaz` is the only frame fixture still failing.** FK4, FK4NOETERMS, FK5 and ECLIPTIC
+   are fixed and verified. AZEL needs both `location` (an `earthlocation` holding x/y/z
+   Quantities in metres) and `obstime`, and something in that serialization is still not
+   right — it builds no FrameSet. Known so far: `GetQuantity()` reads `unit` with `Get0C`,
+   i.e. as a plain string rather than a tagged `!unit/unit-1.0.0` scalar (the fixture now
+   does that); `ReadEarthLocation()` also takes an optional `ellipsoid` defaulting to
+   WGS84; and `MAKE_TEST(EarthLocation, astropy/coordinates/earthlocation, 1, 0)` builds
+   the odd expected class `astropy/coordinates/earthlocation/EarthLocation`, which
+   nonetheless still prefix-matches the real tag because `strncasecmp` only compares up to
+   the version dash — so that is *not* the problem. Lowest priority of the open items: an
+   AzEl WCS is not something a Roman product contains, and DS9 has no azel display system
+   to read it back in either.
 2. **Seven GWCS primitives still uncovered** — `polynomial`, `ortho_polynomial`,
    `planar2d`, `divide`, `fix_inputs`, `spherical_cartesian`, `rotate_sequence_3d`. All need
    dimensional plumbing (2→1 or 2↔3) rather than the flat 2→2 the existing fixtures use.

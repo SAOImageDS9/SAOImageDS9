@@ -1402,6 +1402,20 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
 		# normal: this array is simply not on the WCS's grid
 	    } elseif {[catch {AsdfAttachWcs $yamltext} msg]} {
 		Warning "[msgcat::mc {ASDF: unable to attach WCS, loading without it}] $msg"
+	    } elseif {![$current(frame) has wcs wcs]} {
+		# `wcs replace` does not report failure: when AstYamlChan cannot
+		# build a FrameSet - an unknown tag, a schema version past
+		# yamlchan.c's MAKE_TEST ceilings, a GWCS shape it has no path
+		# for - it returns cleanly and simply leaves the frame with no
+		# WCS. Without this check that is completely silent, which is
+		# the one outcome the three branches above were written to
+		# avoid. Found by WCS_TEST_PLAN I-5.
+		#
+		# `has wcs wcs` is the right probe: 1 on a working GWCS frame,
+		# 0 when none was built. `has wcs alt` is not - it reads 1 in
+		# both cases, because replaceWCSYaml sets wcsAltHeader_
+		# regardless (R2 in the test plan).
+		Warning "[msgcat::mc {ASDF: AST could not read this WCS, loading without it}] $path"
 	    }
 	}
     }

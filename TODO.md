@@ -1328,9 +1328,41 @@ closed, 41 TODO -> 27**, now 54 PASS / 3 GAP.
       (6×6 and 2×2 float64). Genuine `core/ndarray`s, but nobody wants to display a
       polynomial coefficient matrix. They already sort last. (This also reconciles the
       "15 top-level arrays" figure recorded in Phase 3/4 with today's 25.)
-- [ ] Remaining plan sections, 27 cells: A (2), B (3), D (3), E (4), G (2), H (4), I (3),
-      J (4), plus C-6-adjacent none. Thinnest coverage is now E (coordinate grid) and H
-      (persistence).
+- [x] **Sections A, B, D, E, G, H, I, J finished (2026-09-17) - 21 more cells closed.**
+      The plan is now **76 PASS / 3 GAP / 1 TODO**; the only cell left is J-4, which needs a
+      Build22 coadd/`_asn` product that is not downloaded.
+  - Highlights: `image(-0.5,-0.5)` now reproduces the `s_region` corner **exactly to 9 dp**
+    at the raised precision, not just to 0.0002"; contours on a `block 4` frame map through
+    the blocked WCS to 0.00000000"; contour copy/paste across frames is exact; region
+    templates (both `resetWCS0` callers) leave the WCS untouched; `wcs replace` then
+    `wcs reset` hands the GWCS back exactly; three ASDF frames each restore their own array
+    with the right pixels; and the five sky frames were checked against an independent
+    rotation (galactic 0.014", ecliptic 0.027") rather than just for parser acceptance.
+  - Two cells needed synthetic files because the real products are not downloaded: J-3's
+    rank-4 refusal (a `[4,4,2,2]` array; the real 331MB uncal ramp should re-confirm it) and
+    I-5's unreadable GWCS.
+  - **A-5 is worth knowing beyond "it extrapolates":** outside the detector the *inverse*
+    also stops converging. `image(-10000,-10000)` round-trips back to `(-8751, -8952)`,
+    ~1250 px out, and at 1e6 it diverges entirely. So R6's missing `bounding_box` costs
+    reliability in both directions, not just domain checking.
+  - Three cells are inherently not scriptable and are recorded as such rather than guessed:
+    `iexam`'s click (B-4), the pixel table's hover (B-5), and glyph-level grid label
+    legibility (E-5). In each case the underlying value path was verified instead - and for
+    B-5 the non-population was confirmed generic by reproducing it on a FITS frame.
+- [x] **I-5 found a real diagnostic gap, now fixed.** `$frame wcs replace` returns *cleanly*
+      when AstYamlChan cannot build a FrameSet (unknown tag, version past yamlchan.c's
+      MAKE_TEST ceilings), leaving the frame with no WCS and **no message at all** - the one
+      outcome the three branches in `AsdfLoadArray` were written to avoid, and contrary to
+      that code's own comment. Now checks `has wcs wcs` after attaching and warns.
+      `has wcs alt` would not work as the probe: it reads 1 either way, because
+      `replaceWCSYaml` sets `wcsAltHeader_` regardless (R2). Verified the warning fires only
+      for the unreadable-GWCS case and stays silent for no-WCS-subtree, a good GWCS, and a
+      grid mismatch.
+- [ ] J-4 - Build22 coadd / `_asn` products, needs a download.
+- [ ] Rough edge left alone: a WCS-only `*_wcs.asdf` has no science array, so loading one of
+      its coefficient matrices by explicit path warns `cannot tell which array the WCS
+      describes`. Correct outcome, noisy message, and it reaches xpaset as `XPA$ERROR`.
+      Narrowing it means recognising that the array lives inside the WCS subtree.
 
 ## Process notes
 

@@ -87,6 +87,20 @@ Gotchas learned while running this:
   comment lines silently drops a third of C-7's shapes.
 - **zsh eats `:r`.** `"$F:roman/data"` expands the `:r` as a history modifier and silently
   loads `<basename-without-extension>oman/data`. Use a literal path for `<file>:<path>` specs.
+- **An abandoned `iexam` wedges DS9 completely.** `iexam` blocks the event loop waiting for a
+  click, and while it is pending *every* XPA request fails with `no response from server
+  during handshake` — so you cannot synthesize the click afterwards, and pre-arming one with
+  `after` does not help either. Killing the `xpaget` client does not release DS9; only a real
+  click or a restart does. Do not start an `iexam` from a script.
+- **The info panel takes *canvas* coordinates.** `UpdateInfoBox` is fed the crosshair's canvas
+  position, so a crosshair set to an image pixel that is off the visible view leaves the panel
+  showing its previous value. `zoom to fit` first, or you will read staleness as a bug.
+- **Compare saved images by content, not size.** Uncompressed TIFF is the same byte length
+  whatever is drawn in it (1438476 B here either way), so a size check passes vacuously.
+- **Sanity-check that a test measured anything at all.** Two runs here reported a clean
+  "PASS" from zero measurements — once because `frame frame <n>` silently failed so both
+  halves of a comparison ran on the same frame, once because a shell heredoc ate the `$`
+  in every Tcl snippet. Assert a non-zero sample count before printing a verdict.
 
 Test files live in `utils/asdf_gwcs_probe/sample_data/` (the four large Build22 products are
 untracked; see `.git/info/exclude`).
@@ -101,9 +115,9 @@ untracked; see `.git/info/exclude`).
 |---|---|---|---|---|
 | A-1 | Forward, all four corners | `crosshair <x> <y> image` + `xpaget crosshair wcs icrs degrees` | matches `s_region` ≤0.0002″ | **PASS** |
 | A-2 | Inverse (sky→pixel) | feed A-1's output back via `crosshair <ra> <dec> wcs icrs` | returns the original pixel within 0.01 px | **PASS** (2044 → 2043.9988) |
-| A-3 | Round-trip at detector corners | repeat A-2 at all four corners, not just centre | error stays ≤0.01 px (R7: distortion is worst at the edges) | TODO |
+| A-3 | Round-trip at detector corners | repeat A-2 at all four corners, not just centre | error stays ≤0.01 px (R7: distortion is worst at the edges) | **PASS** — worst 1.5e-3 px at the corners against 3.3e-7 px at centre, exactly the R5/R7 pattern. At the raised precision, `image(-0.5,-0.5)` now reproduces the `s_region` corner **exactly to 9 dp**, not just to ≤0.0002″ |
 | A-4 | Sky frames agree | read one pixel as icrs / fk5 / galactic / ecliptic | mutually consistent under standard conversion | **PASS** (spot) |
-| A-5 | Outside the detector | query pixel (−10000, −10000) | document behaviour — R6 means it will extrapolate, not refuse | TODO |
+| A-5 | Outside the detector | query pixel (−10000, −10000) | document behaviour — R6 means it will extrapolate, not refuse | **PASS** (documented) — extrapolates silently, as R6 predicts. Worth knowing how badly: the *inverse* also stops converging out there. `image(-10000,-10000)` → sky → back lands at `(-8751, -8952)`, ~1250 px out; at 1e6 it diverges completely. So outside the detector both directions are unreliable, not just unvalidated |
 | A-6 | Grism and prism products | repeat A-1 on each `*_cal.asdf` | each matches **its own** `s_region` | **PASS** |
 
 ### B. Readout and panning
@@ -112,9 +126,9 @@ untracked; see `.git/info/exclude`).
 |---|---|---|---|---|
 | B-1 | Pan to sky | `pan to <ra> <dec> wcs icrs`, read back | returns the requested coordinate | **PASS** (exact to 7 dp) |
 | B-2 | Pan readback in image coords | `xpaget ds9 pan image` after B-1 | consistent with A-2 | **PASS** |
-| B-3 | Info panel readout | GUI: hover, check the WCS row | live sky coordinates, correct sky frame | TODO (GUI) |
-| B-4 | `iexam` coordinate | `iexam coordinate wcs icrs degrees` | same value as crosshair at that point | TODO |
-| B-5 | Pixel table | `pixeltable yes`, hover | opens, no crash, coordinates sane | TODO (GUI) |
+| B-3 | Info panel readout | GUI: hover, check the WCS row | live sky coordinates, correct sky frame | **PASS** — read the panel's own `infobox(wcs,x/y/sys)` textvariables. `CrosshairTo` (crosshair.tcl:49) calls `UpdateInfoBox`, so an XPA crosshair move does drive it. Panel agrees with `crosshair wcs icrs sexagesimal` to **0.0006″** at five positions, and reports `ICRS`. The residual is last-digit rounding between the two formatters (`.7214` vs `.7213`), not a coordinate difference. NB the position must be *on the visible canvas* — `UpdateInfoBox` takes canvas coords, so a crosshair placed outside the view leaves the panel stale, which is easy to misread as a bug |
+| B-4 | `iexam` coordinate | `iexam coordinate wcs icrs degrees` | same value as crosshair at that point | **PASS** for the value path, interactive half **not scriptable**. `iexam.tcl:242` is `$frame get coordinates $x $y $sys $sky $skyformat` on *canvas* coords; that agrees with the crosshair to 0.000000″ at four canvas points. The click itself cannot be driven: `iexam` blocks DS9's event loop, so while it is pending every other XPA request fails the handshake — and an abandoned `iexam` leaves DS9 unreachable over XPA until someone clicks (see §3) |
+| B-5 | Pixel table | `pixeltable yes`, hover | opens, no crash, coordinates sane | **PASS** for "opens, no crash"; the hover half is not scriptable. The dialog opens and DS9 stays alive, but an XPA-driven crosshair never populates it: `CrosshairTo` calls `UpdateColormapLevelMosaic` and `UpdateInfoBox` but **not** `UpdatePixelTableDialog` or `UpdateGraphsData`, while the interactive callback just above it calls all four. Confirmed generic — a plain FITS TAN frame behaves identically — so it is unrelated to GWCS and cannot be closed without a real hover |
 
 ### C. Regions
 
@@ -139,9 +153,9 @@ untracked; see `.git/info/exclude`).
 |---|---|---|---|---|
 | D-1 | Generate | `contour levels {...}` + `contour yes` | renders without error | **PASS** |
 | D-2 | Save in wcs | `contour save <fn> wcs icrs` | writes sky coordinates | **PASS** |
-| D-3 | Load back | `contour load <fn>` | overlays on the same sky position | TODO |
-| D-4 | Copy/paste between frames | `contour copy` on ASDF frame, `contour paste wcs` on another | lands on the same sky | TODO |
-| D-5 | Contour + blocking | block 4, regenerate | contours track the blocked WCS | TODO |
+| D-3 | Load back | `contour load <fn>` | overlays on the same sky position | **PASS** — blocked to 4 first per D-6. 7568 icrs vertices saved; reloaded as an overlay and read back via `contour convert` (442 polygons, 7235 vertices), every recovered vertex within **0.00016″** of a file vertex. NB `contour load` makes an *auxiliary* overlay, so `contour save` will not echo it back — `contour convert` is the way to read it |
+| D-4 | Copy/paste between frames | `contour copy` on ASDF frame, `contour paste wcs` on another | lands on the same sky | **PASS** — copied from the ASDF frame, `contour paste wcs` onto the TAN frame, converted to regions: **0.00000000″** from the source vertices |
+| D-5 | Contour + blocking | block 4, regenerate | contours track the blocked WCS | **PASS** — exact. Saved the same contours in both `image` and `icrs` on a `block 4` frame; pushing the image vertices through the blocked WCS reproduces the icrs file to **0.00000000″** over 41 sampled vertices |
 | D-6 | **Practicality note** | contouring raw 4088² float32 at 3 levels produced a **3.19M-line** file | block or smooth first; document the guidance | **PASS** (observed) |
 
 ### E. Coordinate grid
@@ -149,11 +163,11 @@ untracked; see `.git/info/exclude`).
 | ID | Test | How | Expect | Status |
 |---|---|---|---|---|
 | E-1 | Grid on | `grid yes` | renders curved grid lines reflecting the distortion | **PASS** (no crash) |
-| E-2 | Each system/sky frame | `grid system wcs`, `grid sky <frame>` | labels and lines correct per frame — **pin down exact syntax, my first attempt was rejected by the parser** | TODO |
+| E-2 | Each system/sky frame | `grid system wcs`, `grid sky <frame>` | labels and lines correct per frame | **PASS** — syntax resolved (the plan's earlier note was wrong; `grid system`/`grid sky`/`grid skyformat` are all accepted and read back). Verified the frames *mean* what they say against an independent rotation: galactic to 0.014″, ecliptic to 0.027″, fk5 vs icrs 0.020″; and all five frames round-trip through DS9 back to icrs to ≤1.5e-5″. fk4's offset here is only ~0.006°, not the ~0.7° one might expect for B1950 — correct at RA~270/dec~66, where the `m` and `n·sinα·tanδ` precession terms nearly cancel |
 | E-3 | Analysis vs publication | `grid type {analysis,publication}` | both render | **PASS** (no crash) |
-| E-4 | Grid after blocking | block 4, grid on | grid tracks the blocked WCS | TODO |
-| E-5 | Grid label format | `grid skyformat {degrees,sexagesimal}`, gaps, formats | labels legible and correct | TODO |
-| E-6 | Grid in a saved image | `saveimage png` with grid on | grid present and correct in the output | TODO |
+| E-4 | Grid after blocking | block 4, grid on | grid tracks the blocked WCS | **PASS** — renders at block 1 and block 4 with distinct output; the blocked WCS itself is proven exact by D-5 |
+| E-5 | Grid label format | `grid skyformat {degrees,sexagesimal}`, gaps, formats | labels legible and correct | **PASS** — `skyformat degrees`/`sexagesimal`, `grid grid gap1`, `grid format1 d.4`, `grid numerics no/yes` all accepted and each changes the raster. Glyph-level legibility is not machine-checkable here (no OCR) |
+| E-6 | Grid in a saved image | `saveimage png` with grid on | grid present and correct in the output | **PASS** — see H-8; grid on vs off differs by content hash in png, jpeg and tiff |
 
 ### F. Multi-frame match and lock
 
@@ -182,8 +196,8 @@ known triggers of `FitsImage::resetWCS()` are `FitsImage::block()` (both overloa
 | G-3 | `crop` in image and in wcs coords, then `crop reset` | WCS kept | **PASS** |
 | G-4 | `wcs reset` | **restores the GWCS** (for an ASDF frame the GWCS *is* the file's WCS, not an override) | **PASS** |
 | G-5 | `datasec`, `rotate`, `orient` | WCS kept | **PASS** |
-| G-6 | Marker ops that call `resetWCS0()` | WCS kept | TODO |
-| G-7 | `wcs replace` a FITS WCS onto an ASDF frame, then `wcs reset` | replacement wins, then GWCS returns | TODO |
+| G-6 | Marker ops that call `resetWCS0()` | WCS kept | **PASS** — the two callers are the region *template* paths (`frmarker.C:860` `createTemplate`, and `:6244` savetemplate), both of which do `initWCS0(center)` … `resetWCS0()`. `regions savetemplate`, `regions template <f>`, and `regions template <f> at <ra> <dec>` all leave the readout at **0.000000000″** drift |
+| G-7 | `wcs replace` a FITS WCS onto an ASDF frame, then `wcs reset` | replacement wins, then GWCS returns | **PASS** — a plain TAN with CRVAL 270.0/66.0 at CRPIX 2044.5 takes over exactly (0.000000″ from its own CRVAL), and `wcs reset` restores the GWCS to **0.000000000″** of baseline |
 | G-8 | Full sequence, then re-check A-1 | corner identical to baseline | **PASS** |
 
 ### H. Persistence
@@ -192,12 +206,12 @@ known triggers of `FitsImage::resetWCS()` are `FitsImage::block()` (both overloa
 |---|---|---|---|
 | H-1 | Backup → restore | pixels, WCS, YAML tree, cmap/scale all identical | **PASS** |
 | H-2 | Backup portability | relocate the save set, delete the original `.asdf`, restore | identical | **PASS** |
-| H-3 | Backup with several ASDF frames | each frame restores its own array/path | TODO — note each frame gets its own copy of the file, so *n* frames = *n* copies |
-| H-4 | Backup with `pds9(backup)` off | references absolute paths instead of copying | TODO |
-| H-5 | Backup mixing ASDF and FITS frames | both restore correctly | TODO |
+| H-3 | Backup with several ASDF frames | each frame restores its own array/path | **PASS** — three frames (`data`/`err`/`dq`) restore with correct shape, exact WCS, **and the right pixels** (0.253382 / 0.0379333 / 0). Shape and WCS alone cannot tell those three apart, so the pixel value is the check that matters. Confirms the *n* frames = *n* copies cost concretely: **620.2 MB** of save set for three frames of one 197MB file |
+| H-4 | Backup with `pds9(backup)` off | references absolute paths instead of copying | **PASS** — with it on, 206.8 MB and a relative `LoadAsdfFile ./b.bck.dir/Frame1/….asdf:roman/data`; with it off, **0.0 MB**, no copy, and an absolute `LoadAsdfFile /Users/kjg/…/sample_data/….asdf` |
+| H-5 | Backup mixing ASDF and FITS frames | both restore correctly | **PASS** — 4088² GWCS frame and a 4200² TAN frame in one save set, both back at 0.000000000″ drift |
 | H-6 | FITS frame with a replaced WCS still round-trips | regression guard on the `WCSBackup` change | **PASS** (restores to exact CRVAL) |
 | H-7 | **Save frame as FITS** | **WCS is lost** — the saved file has only `SIMPLE/BITPIX/NAXIS*`, no WCS cards | **GAP** (confirmed) |
-| H-8 | `saveimage` (png/jpeg/tiff) with grid on | rendered output carries the grid | TODO |
+| H-8 | `saveimage` (png/jpeg/tiff) with grid on | rendered output carries the grid | **PASS** — all three formats differ by SHA-256 with the grid on vs off. Compare by *content*, not size: uncompressed TIFF is 1438476 B either way, so a size check passes vacuously |
 
 ### I. Fallback and negative cases
 
@@ -207,17 +221,17 @@ known triggers of `FitsImage::resetWCS()` are `FitsImage::block()` (both overloa
 | I-2 | Sky query on a WCS-less frame | empty result, no crash | **PASS** (after the `VectorStr` fix) |
 | I-3 | Non-ASDF file | `ASDF: not an ASDF file` | **PASS** |
 | I-4 | Unsupported datatype / rank / view | specific message, no crash | **PASS** |
-| I-5 | GWCS with a tag or version AST cannot read | loads pixels, `Warning`, no WCS | TODO — needs a synthetic file |
-| I-6 | Grid / regions / contours on a WCS-less frame | degrade cleanly, no crash | TODO |
-| I-7 | `match frame wcs` when one frame has no WCS | no crash; defined behaviour | TODO |
+| I-5 | GWCS with a tag or version AST cannot read | loads pixels, `Warning`, no WCS | **PASS**, after fixing a real gap this test found. Synthetic file with `gwcs/wcs`, `step`, `frame2d` and `transform/identity` all at 99.9.9. Pixels loaded and no WCS was attached, but it was **completely silent** — `wcs replace` returns cleanly when AstYamlChan cannot build a FrameSet, so the `Warning` branch the code was written to provide never fired. Now checks `has wcs wcs` after attaching and warns. (`has wcs alt` would not work: it reads 1 either way, per R2.) |
+| I-6 | Grid / regions / contours on a WCS-less frame | degrade cleanly, no crash | **PASS** — nine operations on a WCS-less ASDF frame (grid on in wcs *and* image systems, `grid sky icrs`, image regions, listing regions as wcs, contour generate, `contour save wcs`, `saveimage png`) all survive. Loading an *icrs* region is the only one that objects, with a clean `Bad Coordinate mapping, unable to create some regions` |
+| I-7 | `match frame wcs` when one frame has no WCS | no crash; defined behaviour | **PASS** — `match frame wcs`, `lock frame wcs`, `match crosshair wcs` and `lock crosshair wcs` between a GWCS frame and a WCS-less one all return without error and are no-ops; panning the WCS-less frame afterwards is fine. (This is the path that used to segfault before the `vector/vectorstr.C` NULL guard.) |
 
 ### J. Coverage across real data
 
 | ID | Test | Status |
 |---|---|---|
 | J-1 | `f158_cal`, `grism_cal`, `prism_cal`, `f158_segm` | **PASS** (load + WCS) |
-| J-2 | The three WCS-only products, incl. the bare-transform distortion file | **PASS** via the probe; TODO in-app |
-| J-3 | `*_uncal.asdf` (331MB, 4-D ramp) | TODO — expect rank-4 refusal; confirms the message |
+| J-2 | The three WCS-only products, incl. the bare-transform distortion file | **PASS** — probe *and* in-app. In-app all three correctly refuse to load as images with `ASDF: ambiguous or unknown array data`: they carry no science array, only WCS internals (20/16/8 enumerable ndarrays, all coefficient matrices; `AsdfIsBareTransform` is true for all three). Their arrays *are* reachable by explicit path — a 6×6 `…/coefficients` loads as bitpix −64 and correctly gets no WCS |
+| J-3 | `*_uncal.asdf` (331MB, 4-D ramp) | **PASS** via a synthetic stand-in — the real uncal file is not downloaded, so a synthetic `[4,4,2,2]` uint8 array exercises the same rank check: `ASDF: unsupported ndarray rank data [4, 4, 2, 2]`, frame left empty, DS9 alive. Worth re-running against the real 4-D ramp when it is available |
 | J-4 | Coadd / `_asn` products from Build22 | TODO |
 | J-5 | Every array within one `*_cal.asdf` (all 15) | **PASS** (load); WCS attach on siblings **PASS** |
 | J-6 | A non-Roman ASDF file | **PASS** — `Tests/asdf/fixtures`, 27 flat-tree images × all 4 codecs: 108/108 load, dimensions and `minmax` both matching DS9's own reading of the source FITS. Caught a real enumerator bug (nested `mask:` ndarray); see `TODO.md` Phase 5 |
@@ -293,7 +307,14 @@ DS9's region code.
    xpaset caller. Only the surprising case, being unable to identify the WCS's grid at all,
    warns; that is also the case where an exact-match guard could wrongly drop a good WCS
    (a non-Roman file whose science array is not called `data`).
-7. **The array browser offers WCS internals as loadable images.** A real `*_cal.asdf`
+7. **A WCS-only file warns when you load its internals.** `AsdfWcsGridShape` cannot resolve a
+   science array in a file that has none (the three `*_wcs.asdf` products), so loading one of
+   their coefficient matrices by explicit path emits `cannot tell which array the WCS
+   describes`. The outcome is right — a 6×6 coefficient matrix must not get a sky WCS — but
+   the message is noise there, and it reaches an `xpaset` caller as `XPA$ERROR`. Narrowing it
+   would mean recognising that the loaded array lives *inside* the WCS subtree; left alone
+   rather than adding a heuristic. See J-2.
+8. **The array browser offers WCS internals as loadable images.** A real `*_cal.asdf`
    enumerates 25 loadable arrays, of which 10 are `roman/meta/wcs/.../coefficients` and
    `.../matrix` blocks (6×6 and 2×2 float64) — genuine `core/ndarray`s, but nobody wants to
    display a polynomial coefficient matrix. Cosmetic; they sort last already.

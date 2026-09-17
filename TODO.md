@@ -5,6 +5,162 @@ document's §11, with concrete engineering steps under each. Check items off as 
 add findings inline rather than in a separate log, so this file stays the single source of
 truth for where things stand.
 
+## Current state — read this first (as of 2026-09-17)
+
+A summary written deliberately for someone (or some future session) picking this up cold.
+Detail lives in the phase sections below; this is the map.
+
+### What works today
+
+- **Phases 0–4 and Backup/restore: complete.** Reading Roman ASDF natively — arbitrary
+  array paths, all four block codecs (`none`/`zlib`/`lz4`/`bzp2`), both mask forms with FITS
+  integer-null semantics, GWCS via AST, header viewer, XPA/SAMP/CLI, menus, buttonbar, docs,
+  portable backup/restore.
+- **`WCS_TEST_PLAN.md` is fully executed: 77 PASS / 3 GAP / 0 TODO.**
+- **L3 coadds work**, via a `fitswcs_imaging` → FITS-card translation in `asdf.tcl`
+  (`f59e6a180`) plus `FitsImage::wcsCards_` in tksao so the cards survive `resetWCS()`.
+- **Windows/mingw builds clean from a clean tree** (`7d722dbef`). Four fixes were needed;
+  see Phase 0. **It has not been run there** — see open items.
+- **A real test suite** in the sibling `Tests` repo, wired into its `io.sh`.
+
+### The AST bugs — three fixed locally, one open
+
+All in `ast/src/yamlchan.c` unless noted. `ast` is already marked `dirty` in `Manifest.md`.
+**All four are upstream Starlink code, not ours**, and all four should go upstream together
+with the 10 pre-existing `MAKE_TEST` version-ceiling bumps.
+
+1. **`LibYamlWriter` signature — FIXED (`8064e7408`).** Declared its size argument
+   `long unsigned int` where libyaml's `yaml_write_handler_t` uses `size_t`. Identical on
+   LP64, different on LLP64 (mingw: `long` is 32 bits), and only *fatal* from GCC 14, which
+   promoted `-Wincompatible-pointer-types` to an error. Its sibling `LibYamlReader` already
+   used `size_t`. Breaks any Windows build of AST with YAML enabled.
+2. **Both HEALPix projections were dead code — FIXED (`a78206bf2`).**
+   `ReadSkyProjection()` has `/healpix-` and `/healpix_polar-` branches, but
+   `IsASkyProjection()` ORs six family recognizers (conic, cylindrical, pseudo-conic,
+   pseudo-cylindrical, quad-cube, zenithal) and HEALPix is in none of them, so neither tag
+   was ever recognized and both loaded with no WCS.
+3. **`ReadLinear1d()` read an uninitialized variable — FIXED (`2cf57a92a`).** It set
+   `outa = offset`, overwrote it with `outa = 2*offset`, and never assigned `outb` before
+   passing `&outb` to `astWinMap()`. Every `linear1d` was built from stack garbage:
+   arbitrary and not reproducible.
+4. **`zenithal_perspective` maps to the wrong projection — NOT FIXED.**
+   `ReadSkyProjection()` sends it to `AST__SZP` with `pv1=mu, pv2=gamma`, but AZP and SZP
+   are different projections and SZP's 2nd/3rd parameters are phi_c/theta_c. Out by ~6500"
+   with demonstrably correct parameters. AST *does* have `AST__AZP`, so this needs an
+   upstream decision about the right mapping rather than a local patch.
+
+### Open items, roughly in priority order
+
+1. **The five remaining frame fixtures** — `fk4`, `fk4noeterms`, `fk5`, `ecliptic`, `altaz`.
+   A fixture problem, not a reader one: `yamlchan.c` requires `frame_attributes` per frame
+   (FK4/FK4NOETERMS need `obstime`+`equinox`, FK5/ECLIPTIC `equinox`, ALTAZ
+   `location`+`obstime`), which is why ICRS/GALACTIC/SUPERGALACTIC worked at once. The
+   fixtures supply them as `!time/time-1.1.0` and `earthlocation` objects but AST still
+   declines, so that serialization is wrong. `GetTime()` wants `value`/`format`/`scale`;
+   `ReadEarthLocation()` is the other half.
+2. **Seven GWCS primitives still uncovered** — `polynomial`, `ortho_polynomial`,
+   `planar2d`, `divide`, `fix_inputs`, `spherical_cartesian`, `rotate_sequence_3d`. All need
+   dimensional plumbing (2→1 or 2↔3) rather than the flat 2→2 the existing fixtures use.
+   For the two polynomials, copy the node shape from a real Roman WCS rather than guessing.
+3. **Windows is built but never *exercised*.** The codec commands, the 154-baseline sweep,
+   the GWCS bridge against a real Roman file, `asdfmask`/`asdfconvert` byte-order work, and
+   backup/restore are all unvalidated there. See Phase 0's open item for the list.
+4. **Send the three AST fixes upstream** and report the fourth.
+5. **H-7: saving an ASDF frame as FITS loses the WCS.** Needs a product decision —
+   approximate cards with a warning, or keep refusing. See `WCS_TEST_PLAN.md` §6.
+6. **R9/R10**, both generic DS9 rather than ours but far more visible on Roman: region
+   *angles* use one image-wide rotation, and angular *lengths* use one scalar scale while
+   the Roman GWCS is ~2% anisotropic. `WCS_TEST_PLAN.md` §1 has the measurements.
+7. **R6: AST drops `bounding_box`**, so nothing enforces the valid-pixel domain, and the
+   inverse also stops converging outside the detector (A-5).
+8. Smaller: an ASDF icon for the top icon row (needs PNG artwork for `ds9/icons/ui/` and
+   `ui_dark/`); `uint16`/`uint32` masked arrays would need the FITS `BZERO` convention; the
+   array browser offers WCS-internal coefficient matrices as loadable images.
+
+### Things that are expensive to rediscover
+
+The full lists are in **`WCS_TEST_PLAN.md` §3** (DS9/XPA gotchas) and
+**`Tests/asdf/README.md`** (fixture and GWCS gotchas). The few that matter most:
+
+- **Nearly every GWCS failure presents identically as "no WCS."** A wrong tag version, a
+  missing key, a bad indent, an unrecognized class — all the same symptom. The fastest way
+  in is to bisect down to a fixture whose transform is nothing but
+  `!transform/identity-1.4.0 {n_dims: 2}` and add pieces back.
+- **`axis_physical_types` is effectively mandatory** on both frames, despite reading as
+  optional metadata. Without it AST builds no FrameSet at all.
+- **Frame tags need the authority prefix**, `tag:astropy.org:astropy/coordinates/frames/...`.
+  Dropping it silently yields no WCS.
+- **DS9 feeds its image coordinate straight into the GWCS**, with no 1-based/0-based
+  correction — the opposite of what the FITS↔gwcs convention difference suggests.
+- **Raise `prefs precision` before measuring anything.** The default truncates degrees at
+  7 dp, which was the binding constraint on several test-plan numbers.
+- **zsh eats `:r`**: `"$F:roman/data"` silently loads `<basename-minus-extension>oman/data`.
+- **`frame frame <n>` is a parse error, not a frame switch** — it is `frame <n>`. With
+  `xpaset -p` the error is easy to miss, and two of my own test runs reported a clean PASS
+  from zero measurements because of this class of mistake. Assert a non-zero sample count.
+- **An abandoned `iexam` wedges DS9 against all XPA** until a real click; only a restart
+  clears it. Do not start one from a script.
+
+### Where things live
+
+- **Reader**: `ds9/library/asdf.tcl` (the bulk), `tclasdf/asdf_ext.c` (four C commands:
+  `asdflz4decompress`, `asdfbz2decompress`, `asdfconvert`, `asdfmask`),
+  `tksao/frame/fitsimage.{h,C}` (`yaml2ast`, `replaceWCSYaml`/`wcsYaml_`,
+  `replaceWCSCards`/`wcsCards_`).
+- **Tests** are a **separate git repo** at `Tests/` (`github.com/SAOImageDS9/Tests`) — commit
+  there separately. `asdf.sh` drives them, `io.sh` lists them, baselines are `.sav` next to
+  each fixture, and files are found with `find` so new ones are picked up automatically.
+  Three fixture families: `asdf/fixtures/` (108 container), `asdf/gwcs/` (27 projections,
+  25 verified), `asdf/transform/` + `asdf/frames/` (19, 13 verified). Four generators live
+  in `asdf/`.
+- **Sample data**: `utils/asdf_gwcs_probe/sample_data/`. The large Roman files and the L3
+  coadd are in `.git/info/exclude` (local-only, never committed) and are re-downloadable
+  from the Build22 example data. That host **serves GET but refuses HEAD**, so `curl -I`
+  misleadingly 403s.
+- **Running the suite** needs `ds9` and the XPA tools on `PATH` under the name `ds9`; on
+  macOS the binary is `bin/SAOImageDS9.app/Contents/MacOS/ds9`, so a small wrapper on
+  `PATH` is the easy way.
+
+### This session's commits, for orientation
+
+Main repo, newest first. `Tests` is a separate repo with its own history.
+
+```
+2cf57a92a AST: ReadLinear1d built its WinMap from an uninitialized variable
+a78206bf2 AST: make both HEALPix sky projections reachable
+924864b74 Find a top-level wcs key, not just Roman's indents
+7d722dbef Windows/mingw builds clean from a clean tree
+b612f0743 win: name the target's pkg-config so libxml2 resolves to mingw
+8064e7408 Fix AST's LibYamlWriter signature for LLP64 (Windows build)
+0d81beff2 Set the Info panel filename for ASDF loads, naming the array too
+f59e6a180 Read L3 coadd WCS by translating fitswcs_imaging to FITS cards
+1364a1bb9 WCS test plan J-4: L3 coadds load pixels but get no WCS
+28e4a4c97 WCS test plan: finish sections A/B/D/E/G/H/I/J, 21 more cells
+fc9541661 Don't attach the GWCS to arrays it does not describe
+6ef19d4ce WCS test plan: execute sections C and F, 14 cells closed
+799e810c4 Fix Windows libyaml hang: --host=, not a bare positional triplet
+b9563cd2e Vendor bzip2 1.0.8 and support ASDF bzp2 block compression
+3d252d94f Add ASDF to the File buttonbar and its Preferences entry
+```
+
+`Tests` repo:
+
+```
+2f62e22 Add fixtures for the GWCS transforms and frames, 13 of 19 verified
+4ddb81d GWCS fixtures: 25 of 27 projections now verified against their twin
+5de04ef Add one ASDF fixture per GWCS sky projection, 7 verified
+f711229 Add asdf.sh, wired into io.sh, with per-file baselines
+```
+
+Every commit message here is deliberately long and carries the reasoning, the measurements
+and the rejected alternatives. If this summary is ever thinner than you need,
+`git show <sha>` is the fuller record.
+
+### Nothing has been pushed
+
+Neither repo has been pushed to any remote. All the work described here is local commits
+only; pushing is a deliberate decision that has not been taken.
+
 ## Phase 0 — Build foundation (vendoring)
 
 - [x] Vendor the latest upstream AST release. Latest tag as of 2026-09-16 is **v9.4.1**

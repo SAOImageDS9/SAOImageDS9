@@ -505,7 +505,7 @@ static int Get1I( AstKeyMap *, const char *, int, int, int *, int *, int * );
 static int GetChoice( AstKeyMap *, const char *, const char *, int, int, int * );
 static int IsA( AstKeyMap *, const char *, int * );
 static int LibYamlReader( void *, yaml_char_t *, size_t, size_t * );
-static int LibYamlWriter( void *, yaml_char_t *, long unsigned int );
+static int LibYamlWriter( void *, yaml_char_t *, size_t );
 static int ReadBaseFrame( AstKeyMap *, AstSkyFrame *, int * );
 static int SimplifyAsdf( AstYamlChan *, AstKeyMap **, int *);
 static int Use( AstYamlChan *, int, int, int * );
@@ -6355,7 +6355,7 @@ static int LibYamlReader( void *data, yaml_char_t *buffer, size_t size,
 }
 
 static int LibYamlWriter( void *data, yaml_char_t *buffer,
-                          long unsigned int size ){
+                          size_t size ){
 /*
 *  Name:
 *     LibYamlWriter
@@ -6369,7 +6369,7 @@ static int LibYamlWriter( void *data, yaml_char_t *buffer,
 *  Synopsis:
 *     #include "yamlchan.h"
 *     int LibYamlWriter( void *data, yaml_char_t *buffer,
-*                        long unsigned int size )
+*                        size_t size )
 
 *  Class Membership:
 *     YamlChan member function.

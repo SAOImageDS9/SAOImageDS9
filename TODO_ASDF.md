@@ -1057,6 +1057,19 @@ a colleague, restored on their machine — which is what decided the design belo
       an error - and the tree's `-w` does not suppress errors. Its sibling `LibYamlReader`
       already used `size_t`, so the writer was simply inconsistent. Fixed locally; worth
       sending upstream since it breaks any Windows build of AST with YAML enabled.
+  - **Second AST bug, found by the GWCS projection fixtures: both HEALPix branches are dead
+    code.** `ReadSkyProjection()` has handlers for `/healpix-` and `/healpix_polar-`, but
+    `IsASkyProjection()` ORs six family recognizers - conic, cylindrical, pseudo-conic,
+    pseudo-cylindrical, quad-cube, zenithal - and HEALPix belongs to none of them. So
+    neither tag was ever recognized as a sky projection, the handlers were unreachable, and
+    any ASDF file using either loaded its pixels with no WCS at all. Fixed locally by naming
+    both in `IsASkyProjection()`; `healpix` then agrees with its 1904-66 twin to 0.027".
+  - **Third, not fixed - `zenithal_perspective` is mapped to the wrong projection.**
+    `ReadSkyProjection()` maps it to `AST__SZP` with `pv1=mu, pv2=gamma`. AZP and SZP are
+    different projections and SZP's second and third parameters are phi_c/theta_c, so the
+    result is out by ~6500" even with demonstrably correct parameters. Left alone because
+    it needs an upstream decision about which AST projection AZP should map to (AST has
+    `AST__AZP`), not a local patch.
 - [x] **Test fixtures ready ahead of time**, living in the separate `Tests` repo (DS9's own
       test-suite checkout, `github.com/SAOImageDS9/Tests`) at `Tests/asdf/`, not in this
       repo — moved there from an initial `utils/asdf_fits_testsuite/` location once it was

@@ -71,14 +71,19 @@ with the 10 pre-existing `MAKE_TEST` version-ceiling bumps.
    the version dash — so that is *not* the problem. Lowest priority of the open items: an
    AzEl WCS is not something a Roman product contains, and DS9 has no azel display system
    to read it back in either.
-2. **Seven GWCS primitives still uncovered** — `polynomial`, `ortho_polynomial`,
-   `planar2d`, `divide`, `fix_inputs`, `spherical_cartesian`, `rotate_sequence_3d`. All need
-   dimensional plumbing (2→1 or 2↔3) rather than the flat 2→2 the existing fixtures use.
-   For the two polynomials, copy the node shape from a real Roman WCS rather than guessing.
+2. **`ortho_polynomial` builds a WCS but reads nothing back.** `has wcs wcs` is 1, yet
+   DS9 gives no readout: AST supplies no inverse for a ChebyMap, and plain `polynomial`
+   only escapes this because AST inverts a degree-1 one itself. This is a finding, not a
+   bug to chase — it explains the large explicit `inverse:` blocks the real Roman
+   distortion polynomials carry, and the fixture records `expect_readout: no` in its own
+   metadata so the absence is stated rather than silent. Worth revisiting only if a Roman
+   product ever ships a Chebyshev *without* an inverse. Every other GWCS primitive is now
+   covered; `fix_inputs` warns "no defined inverse" while still returning the right
+   numbers, which is also not a failure.
 3. **Windows is built but never *exercised*.** The codec commands, the 154-baseline sweep,
    the GWCS bridge against a real Roman file, `asdfmask`/`asdfconvert` byte-order work, and
    backup/restore are all unvalidated there. See Phase 0's open item for the list.
-4. **Send the three AST fixes upstream** and report the fourth.
+4. **Send the four AST fixes upstream** and report the fifth (`zenithal_perspective`).
 5. **H-7: saving an ASDF frame as FITS loses the WCS.** Needs a product decision —
    approximate cards with a warning, or keep refusing. See `WCS_TEST_PLAN.md` §6.
 6. **R9/R10**, both generic DS9 rather than ours but far more visible on Roman: region
@@ -124,8 +129,8 @@ The full lists are in **`WCS_TEST_PLAN.md` §3** (DS9/XPA gotchas) and
   there separately. `asdf.sh` drives them, `io.sh` lists them, baselines are `.sav` next to
   each fixture, and files are found with `find` so new ones are picked up automatically.
   Three fixture families: `asdf/fixtures/` (108 container), `asdf/gwcs/` (27 projections,
-  25 verified), `asdf/transform/` + `asdf/frames/` (19, 13 verified). Four generators live
-  in `asdf/`.
+  25 verified), `asdf/transform/` + `asdf/frames/` (26, 22 verified exactly). 161 baselines
+  in all. Four generators live in `asdf/`.
 - **Sample data**: `utils/asdf_gwcs_probe/sample_data/`. The large Roman files and the L3
   coadd are in `.git/info/exclude` (local-only, never committed) and are re-downloadable
   from the Build22 example data. That host **serves GET but refuses HEAD**, so `curl -I`
@@ -139,6 +144,8 @@ The full lists are in **`WCS_TEST_PLAN.md` §3** (DS9/XPA gotchas) and
 Main repo, newest first. `Tests` is a separate repo with its own history.
 
 ```
+3fddb73c3 AST: GetTime tested the wrong string for its epoch prefix
+438935616 TODO: a handoff summary at the top, and point the agent docs at it
 2cf57a92a AST: ReadLinear1d built its WinMap from an uninitialized variable
 a78206bf2 AST: make both HEALPix sky projections reachable
 924864b74 Find a top-level wcs key, not just Roman's indents
@@ -159,6 +166,8 @@ b9563cd2e Vendor bzip2 1.0.8 and support ASDF bzp2 block compression
 `Tests` repo:
 
 ```
+2b64c50 Add the last seven GWCS transforms; 22 of 26 verified
+a5cbf83 Fix four of the five frame fixtures; 16 of 19 now verified
 2f62e22 Add fixtures for the GWCS transforms and frames, 13 of 19 verified
 4ddb81d GWCS fixtures: 25 of 27 projections now verified against their twin
 5de04ef Add one ASDF fixture per GWCS sky projection, 7 verified

@@ -784,6 +784,43 @@ proc DisplayAsdfHeader {frame} {
 #
 # Errors propagate to the caller rather than being swallowed here - the
 # caller decides whether a WCS failure is fatal.
+# Which pixel grid does the file's GWCS actually describe?
+#
+# A GWCS sits in the tree beside the science array it maps, and says nothing
+# about its own domain that we can read: R6 in WCS_TEST_PLAN.md - AST drops
+# `bounding_box` entirely, so the transform we get back carries no hint of
+# the pixel extent it is valid over. So the grid has to come from the tree,
+# and the science array is the obvious source. Reuse AsdfResolvePath's
+# existing convention for what "data" means (roman/data first, else any
+# uniquely matching */data) rather than inventing a second rule.
+#
+# Returns the science array's shape, or {} if there is no resolvable one.
+proc AsdfWcsGridShape {tree} {
+    set path [AsdfResolvePath $tree data]
+    if {$path eq {}} {
+	return {}
+    }
+    set node [AsdfFindNdarrayPath $tree $path]
+    if {$node eq {}} {
+	return {}
+    }
+    lassign $node source datatype byteorder shapelist unsupported
+    return $shapelist
+}
+
+# Two shapes share a pixel grid if their *trailing two* dimensions agree.
+# Trailing rather than exact, because a 2-D WCS legitimately describes each
+# plane of a rank-3 stack of the same grid: shape is row-major with the
+# fastest axis last, so [nplane, ydim, xdim] and [ydim, xdim] are the same
+# grid. That still rejects roman/amp33 ([10, 4096, 128]) and the
+# border_ref_pix_* set, whose trailing dims are nothing like [4088, 4088].
+proc AsdfSameGrid {a b} {
+    if {[llength $a] < 2 || [llength $b] < 2} {
+	return 0
+    }
+    return [expr {[lrange $a end-1 end] eq [lrange $b end-1 end]}]
+}
+
 proc AsdfAttachWcs {yamltext} {
     global current
 
@@ -1337,7 +1374,33 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
 	if {[catch {AsdfExtractWcsText $tree $data} yamltext]} {
 	    Warning "[msgcat::mc {ASDF: unable to extract WCS, loading without it}] $yamltext"
 	} elseif {$yamltext ne {}} {
-	    if {[catch {AsdfAttachWcs $yamltext} msg]} {
+	    # Two more outcomes, because the file having a usable WCS does
+	    # not mean it describes *this* array. Attaching it regardless is
+	    # worse than attaching nothing: the coordinates land inside the
+	    # science array's footprint and so look entirely plausible -
+	    # roman/amp33 (128x4096 reference pixels) read back the same sky
+	    # position as roman/data at the same pixel index. Same-grid
+	    # siblings (err, dq, var_poisson, chisq, dumo) must keep the WCS,
+	    # which is why this is a grid check rather than "only the science
+	    # array gets a WCS".
+	    #
+	    # The two cases get different severities on purpose:
+	    #
+	    #   - Grid mismatch is silent. It is the normal, expected result
+	    #     of loading a reference-pixel array, the user has done
+	    #     nothing wrong, and the shapes are right there in the array
+	    #     browser. It also keeps a successful load from returning
+	    #     XPA$ERROR, which is what Warning does to an xpaset caller.
+	    #   - Not being able to identify the WCS's grid at all *is*
+	    #     surprising, and it is the case where this guard might be
+	    #     dropping a WCS that would have been fine - a non-Roman file
+	    #     whose science array is not called "data". Say so.
+	    set ref [AsdfWcsGridShape $tree]
+	    if {$ref eq {}} {
+		Warning "[msgcat::mc {ASDF: cannot tell which array the WCS describes, loading without it}] $path"
+	    } elseif {![AsdfSameGrid $shapelist $ref]} {
+		# normal: this array is simply not on the WCS's grid
+	    } elseif {[catch {AsdfAttachWcs $yamltext} msg]} {
 		Warning "[msgcat::mc {ASDF: unable to attach WCS, loading without it}] $msg"
 	    }
 	}

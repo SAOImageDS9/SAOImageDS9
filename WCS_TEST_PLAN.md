@@ -28,6 +28,8 @@ differences drive the whole matrix; each test below traces to one.
 | **R6** | AST **drops `bounding_box`** entirely (`yamlchan.c` has no code path for it). | The GWCS valid-pixel domain is not enforced; coordinates far outside the detector extrapolate silently rather than being rejected. |
 | **R7** | Roman's distortion is **strongly non-linear** across a 4088² detector. | Anything assuming local linearity (compass, rulers, region radii/angles far from the reference point) can drift in a way a TAN WCS would not show. |
 | **R8** | There is **no FITS-card serialization** of a GWCS. | Exporting the frame to FITS cannot carry the WCS. *Confirmed:* see G-5. |
+| **R9** | DS9 maps region **angles** with a single image-wide rotation — `Base::mapAngleFromRef` (`frmap.C:9`) adds `getWCSRotation(sys,sky)`, evaluated once per image, not at the region's own position. | A rotated region's angle written in sky coordinates is the *field-centre* value wherever the region sits. Generic to DS9, not GWCS-specific — but the error scales with field size × sin(dec), so Roman shows a **0.587°** true local-north spread (±0.29° error at the edges) where an 800² TAN frame at dec 47 shows only 0.060°. Self-consistent inside DS9 (C-8 round-trips exactly); it bites when handing a region file to another tool. *Measured, C-8.* |
+| **R10** | DS9 converts pixel **lengths** to angular units with a single scalar scale, but the Roman GWCS is genuinely **anisotropic**. | Measured at field centre: x = 0.1103417″/px, y = 0.1082827″/px — a ratio of **1.019**, varying 1.014–1.024 across the detector. DS9 reports 0.1082829″/px, i.e. the dec-axis value, so angular radii and ruler lengths understate x-direction extents by ~2% (0.84″ = 7.7 px on a 400 px radius). A TAN FITS frame is exactly 1.00000 isotropic, so this is invisible there. Corroborated three independent ways: direct central-difference measurement, the file's own `s_region` footprint (0.3101°·cos 66°/4088 = 0.1111″/px in x vs 0.1229°/4088 = 0.1082″/px in y), and DS9's own anisotropic zoom under `lock frame wcs` (F-3). *Measured, C-9.* |
 
 ---
 
@@ -63,6 +65,28 @@ Gotchas learned while running this:
   which is easy to misread as "the feature under test crashed".
 - `get coordinates` takes **canvas** coordinates, not image. For image→sky use
   `crosshair <x> <y> image` + `xpaget ds9 crosshair wcs <sky> <format>`.
+- **Raise the output precision first.** DS9's default `precision` is `8 7 4 3 8 7 5 3 8`, and
+  at 7 decimals on degrees the print truncation dominates several of these tests — the
+  original C-6 measurement was limited by it. `xpaset -p ds9 prefs precision 12 12 7 6 12 12
+  10 8 12` moves the floor well below the real errors: the same circle round-trip that read
+  0.004 px now resolves to 2.3e-5 px. Every number in this document was taken at the raised
+  precision.
+- **Four XPA forms that fail quietly or confusingly**, each of which cost real time here:
+  - `frame frame <n>` is a **parse error, not a frame switch** — and with `xpaset -p` the
+    error is easy to miss, leaving every subsequent measurement on the wrong frame. It is
+    just `frame <n>`. An early C-12 run "passed" with a perfect 0.00000000″ for exactly this
+    reason; always assert `xpaget ds9 frame` after switching.
+  - `regions command` needs the shape **braced**: `regions command "{circle 2000 2000 40}"`.
+    Unbraced it is a parse error.
+  - `crop wcs <sky> <format> <unit>` takes all three tokens or none — `crop wcs icrs degrees`
+    is a parse error.
+  - `lock block` takes **yes/no**, not a coordinate system; `lock block wcs` errors and
+    leaves the lock off.
+- **Annotation shapes serialize with a leading `# `** (`vector`, `ruler`, `compass`,
+  `projection`, `segment`, and `text` when it carries properties). A region parser that skips
+  comment lines silently drops a third of C-7's shapes.
+- **zsh eats `:r`.** `"$F:roman/data"` expands the `:r` as a history modifier and silently
+  loads `<basename-without-extension>oman/data`. Use a literal path for `<file>:<path>` specs.
 
 Test files live in `utils/asdf_gwcs_probe/sample_data/` (the four large Build22 products are
 untracked; see `.git/info/exclude`).
@@ -99,15 +123,15 @@ untracked; see `.git/info/exclude`).
 | C-1 | image → wcs → image round-trip | create `circle 1000 1500 40` image; list as wcs; list as image | returns exactly `circle(1000,1500,40)` | **PASS** |
 | C-2 | Radius in angular units | list in wcs | `4.331"` ≈ 40 px × 0.1083″/px | **PASS** |
 | C-3 | All sky frames | `regions sky {icrs,fk5,galactic,ecliptic}` | all four list plausibly and convert consistently | **PASS** |
-| C-4 | All output formats | `-format {ds9,ciao,saotng,pros,xy,xml}` | each emits sky coordinates without error | **PASS** (xml TODO) |
-| C-5 | Save/load round-trip, degrees | `regions skyformat degrees`, save, delete, load | position ≤0.01 px, radius ≤0.01 px | TODO |
+| C-4 | All output formats | `-format {ds9,ciao,saotng,pros,xy,xml}` | each emits sky coordinates without error | **PASS** (xml too: VOTABLE, 3600 B, `unit="deg" ref="icrs"`, no error) |
+| C-5 | Save/load round-trip, degrees | `regions skyformat degrees`, save, delete, load | position ≤0.01 px, radius ≤0.01 px | **PASS** (worst 4.7e-4 px over circle/ellipse/box/polygon) |
 | C-6 | Save/load round-trip, sexagesimal | as C-5 with `skyformat sexagesimal` | ≤0.05 px — **sexagesimal truncation dominates** | **PASS** (1000.0001, 1500.0041, r 39.997) |
-| C-7 | Every shape | circle, ellipse, box, polygon, annulus, panda, epanda, bpanda, line, vector, text, point, ruler, compass, projection, segment | each round-trips image→wcs→image | TODO |
-| C-8 | Rotated shapes | box/ellipse with a non-zero angle, round-trip via wcs | angle preserved; check against R7 at field edges | TODO |
-| C-9 | Ruler in angular units | ruler between two pixels, read length in arcsec | matches the great-circle separation of its endpoints | TODO |
-| C-10 | Compass orientation | compass region in wcs | N/E arrows point correctly; compare centre vs corner (R7) | TODO |
-| C-11 | Region centroid | `regions centroid` on a source | converges, position stays sane in wcs | TODO |
-| C-12 | Load a region file written from a FITS frame | same sky area, load onto the ASDF frame | lands on the same sky position | TODO |
+| C-7 | Every shape | circle, ellipse, box, polygon, annulus, panda, epanda, bpanda, line, vector, text, point, ruler, compass, projection, segment | each round-trips image→wcs→image | **PASS** 16/16 (≤5.4e-5 px). Note: `panda`/`epanda`/`bpanda` with a *full* 0–360 range come back as 360–720 — geometrically identical, and a FITS TAN frame does exactly the same, so generic DS9 angle non-normalization, not GWCS |
+| C-8 | Rotated shapes | box/ellipse with a non-zero angle, round-trip via wcs | angle preserved; check against R7 at field edges | **PASS** for round-trip (angle exact to 6 dp; worst 1.1e-3 px at corners vs 2.5e-7 px at centre, per R5). **But see R9** — the *sky* angle written out is the same everywhere |
+| C-9 | Ruler in angular units | ruler between two pixels, read length in arcsec | matches the great-circle separation of its endpoints | **GAP** — see R10. DS9 uses one scalar scale (the dec-axis one); a 400 px length is reported 0.84″ (7.7 px) short of the true separation along x. The ruler's own readout has no XPA accessor (`Ruler::distToStr` is canvas-only), so this was measured on the shared length conversion via circle radii |
+| C-10 | Compass orientation | compass region in wcs | N/E arrows point correctly; compare centre vs corner (R7) | **PASS** — and notably *not* subject to R9: `compass.C:322-331` derives N/E by stepping ±δ in dec/RA from the compass's **own centre** and mapping back to pixels, so it is locally correct. Round-trips at centre and all four corners |
+| C-11 | Region centroid | `regions centroid` on a source | converges, position stays sane in wcs | **PASS** (iteration 30, radius 10; moved 2.64 px, stayed inside the footprint) |
+| C-12 | Load a region file written from a FITS frame | same sky area, load onto the ASDF frame | lands on the same sky position | **PASS** — needed a purpose-built 4200² TAN frame on the same field. Cross-frame agreement 1.3e-5″ (1.2e-4 px) both directions, and a region at the TAN frame's CRPIX lands on ASDF `image(2000.0000, 2000.0000)` |
 
 ### D. Contours
 
@@ -137,13 +161,13 @@ untracked; see `.git/info/exclude`).
 |---|---|---|---|---|
 | F-1 | `match frame wcs`, ASDF↔ASDF | two ASDF frames, pan one, match | separation 0.0000″ | **PASS** |
 | F-2 | `match frame wcs`, ASDF↔FITS | ASDF frame + FITS frame with a TAN WCS | FITS frame pans to the same sky | **PASS** (exact) |
-| F-3 | `lock frame wcs` | set lock, then pan/zoom one frame | the other tracks continuously | TODO |
+| F-3 | `lock frame wcs` | set lock, then pan/zoom one frame | the other tracks continuously | **PASS** — 0.000000″ at four pan targets incl. the footprint corner. Zoom tracks too, and *anisotropically*: ASDF zoom 1 → TAN zoom `0.981544 1.00034`, the 1.9% of R10, which frame lock therefore handles correctly even though region lengths do not |
 | F-4 | `crosshair match wcs` | crosshair in frame 1, match | identical sky in frame 2 | **PASS** |
-| F-5 | `lock crosshair wcs` | set lock, move crosshair | other frame tracks live | TODO |
-| F-6 | `match crop wcs` / `lock crop wcs` | crop one frame | other crops to the same sky region | TODO |
-| F-7 | `lock scale/colorbar/bin/block/smooth` | with ASDF frames | unrelated to WCS but should not disturb it | TODO |
-| F-8 | `match slice wcs` / cube lock | uses a rank-3 ASDF array as a cube | slices align — note these cubes have no spectral WCS | TODO |
-| F-9 | Frames from different Roman products | f158 + grism + prism, `match frame wcs` | all three land on the same sky | TODO |
+| F-5 | `lock crosshair wcs` | set lock, move crosshair | other frame tracks live | **PASS** — 0.000000″ at centre and two far corners |
+| F-6 | `match crop wcs` / `lock crop wcs` | crop one frame | other crops to the same sky region | **PASS** for `crop match wcs` (worst 0.049″ centre, sizes to 0.15%, four crops incl. 3000²). `crop lock wcs` **not reachable via XPA** — an XPA-set crop does not propagate; verified identical FITS↔FITS, so it is interactive-only and generic, not a GWCS issue |
+| F-7 | `lock scale/colorbar/bin/block/smooth` | with ASDF frames | unrelated to WCS but should not disturb it | **PASS** — scale/colorbar/smooth/block all propagate and leave the sky readout bit-identical (drift 0.000000000″ after restore). `block` is the important one: it exercises the `wcsYaml_` fix across frames. `bin` n/a (image, not a binned table). NB `lock block` takes yes/no, not `wcs` |
+| F-8 | `match slice wcs` / cube lock | uses a rank-3 ASDF array as a cube | slices align — note these cubes have no spectral WCS | **PASS** for `lock slice image` (tracks 1/3/5/10) and `match slice image`. `match slice wcs` is a **no-op** (frame stays on slice 1) — expected, there is no third-axis WCS to match on. Used `roman/amp33` [10,4096,128]. **This test also turned up a real bug — see §6.5** |
+| F-9 | Frames from different Roman products | f158 + grism + prism, `match frame wcs` | all three land on the same sky | **PASS** — worst 0.000104″ across `match frame wcs`, `lock frame wcs` over two pan targets, and `lock crosshair wcs`. The three products' field centres agree to 1.6e-3″ intrinsically |
 
 ### G. Operations that rebuild the image or the WCS
 
@@ -211,12 +235,22 @@ Derived from measurements, not guessed:
 
 | Quantity | Tolerance | Basis |
 |---|---|---|
-| Forward transform vs `s_region` | ≤0.0002″ | measured; limited by DS9's 7-decimal output |
+| Forward transform vs `s_region` | ≤0.0002″ | measured at the default precision |
 | Sky→pixel round-trip | ≤0.01 px | measured 1.2e-3 px (R5) |
-| Region round-trip, degrees | ≤0.01 px | inversion error only |
+| Region round-trip, degrees | ≤0.01 px | measured 2.3e-5 px at centre, 1.1e-3 px at the corners |
 | Region round-trip, sexagesimal | ≤0.05 px | measured 0.004 px; truncation dominates |
+| Region save/load round-trip | ≤0.01 px | measured 4.7e-4 px (C-5) |
+| Region file across frames (ASDF↔TAN) | ≤0.01 px | measured 1.2e-4 px (C-12) |
 | Blocked-frame coordinates | exact to 7 dp vs the equivalent unblocked pixel | measured |
-| `match frame wcs` separation | 0.0000″ | measured |
+| `match frame wcs` separation | 0.0000″ same product; ≤0.001″ across products | measured 0.000104″ f158/grism/prism (F-9) |
+| `crop match wcs` centre | ≤0.05″ | measured 0.049″ (F-6) |
+| Region angle round-trip | exact to 6 dp | measured; but see R9 for the sky-space value |
+
+Note that several of these are now bounded by the GWCS's numerical inverse (R5) rather than by
+print precision, which was not true before the `prefs precision` change described in §3. The
+FITS TAN control frame round-trips the same shapes at ~1.8e-8 px, i.e. about three orders of
+magnitude tighter — a useful reminder that these tolerances are a property of GWCS, not of
+DS9's region code.
 
 ---
 
@@ -232,7 +266,30 @@ Derived from measurements, not guessed:
    so coordinates outside the detector extrapolate silently. Pre-existing in `yamlchan.c`.
 3. **R3 — no alternate WCS letters.** `wcsa`…`wcsz` are empty on an ASDF frame.
 4. **Cube WCS.** Rank-3 ASDF arrays load as cubes, but the GWCS is 2-D; there is no third-axis
-   WCS, so slice coordinates are pixel-only.
+   WCS, so slice coordinates are pixel-only. `match slice wcs` is consequently a no-op (F-8).
+5. **R10 — anisotropic pixel scale is not represented in angular lengths.** A `circle(...,40)`
+   on a Roman frame lists as `4.331315"` but actually spans 4.41″ in x and 4.33″ in y. Affects
+   region radii, ruler/projection lengths, and anything reading region sizes in angular units.
+   Not ASDF-specific code — it is DS9's one-scalar length conversion meeting a WCS that is
+   genuinely non-square. A fix would mean carrying per-axis scale through `mapLenFromRef`,
+   which is a much wider change than this project; `lock frame wcs` already does handle it
+   (F-3), so the machinery exists.
+6. **The GWCS is attached to arrays it does not describe.** *Found by F-8, and this one is a
+   bug in this project's own code, not pre-existing DS9.* `AsdfLoadArray`
+   (`ds9/library/asdf.tcl:1336-1344`) calls `AsdfAttachWcs` unconditionally on whatever array
+   was just loaded, with no check that the array's grid is the one the WCS describes. So
+   `roman/amp33` (128×4096, a reference-pixel region) and the four `border_ref_pix_*` arrays
+   report the **science array's** sky coordinates: `roman/data` and `roman/amp33` both answer
+   `269.981972490569 66.035639172244` at `image(64,2048)`. This is worse than having no WCS,
+   because the values are in-footprint and therefore plausible. Same-grid siblings
+   (`err`, `dq`, `var_poisson`, `chisq`, `dumo`, all 4088²) are correct and *should* keep it,
+   so the fix is a shape guard, not removing the attach. Note R6 blocks the principled
+   version: AST drops `bounding_box`, so the WCS's own declared domain is unavailable and the
+   guard has to compare against the science array's shape read from the YAML tree.
+7. **The array browser offers WCS internals as loadable images.** A real `*_cal.asdf`
+   enumerates 25 loadable arrays, of which 10 are `roman/meta/wcs/.../coefficients` and
+   `.../matrix` blocks (6×6 and 2×2 float64) — genuine `core/ndarray`s, but nobody wants to
+   display a polynomial coefficient matrix. Cosmetic; they sort last already.
 
 ## 7. Out of scope
 

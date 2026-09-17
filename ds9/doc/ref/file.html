@@ -20,6 +20,7 @@
 <a href="#FITSRGB">FITS RGB</a><br>
 <a href="#SplitFITS">Split FITS</a><br>
 <a href="#array">Array</a><br>
+<a href="#asdf">ASDF</a><br>
 <a href="#nrrd">NRRD</a><br>
 <a href="#envi">ENVI</a><br>
 <a href="#gif">GIF</a><br>
@@ -321,6 +322,37 @@ $ds9 -array bar.arr[array(i512l)]&nbsp; # load 512x512 long, intel</tt>
 <tt>Example:<br>
 $export DS9_ARRAY='[dim=256,bitpix=-32]'<br>
 $ds9 -array foo.arr # load 256x256 float<br></tt></blockquote>
+<p><b><a name="asdf" id="asdf"></a>ASDF (Advanced Scientific Data Format)</b></p>
+ASDF files are supported natively, with no external Python installation required. An ASDF file is a human-readable YAML tree followed by a sequence of binary blocks. Any array in the tree, large or small, is a <tt>core/ndarray</tt> node naming the block that holds it, its datatype, and its shape.
+<p>Because an ASDF file may contain many arrays, the one to display is named by appending a colon and a path within the file. Selecting an array from a dialog is usually easier: <b>File&nbsp;&#8594;&nbsp;Open&nbsp;as&nbsp;&#8594;&nbsp;ASDF</b> lists every array the file contains, largest first.</p>
+<p>If no path is given, <tt>roman/data</tt> is used. A path containing no '/' is looked up as <tt>roman/&lt;name&gt;</tt> first, and failing that as any uniquely matching path; an ambiguous name is reported as an error rather than guessed at.</p>
+<blockquote><tt>Syntax:<br>
+filename<br>
+filename:path<br>
+&nbsp;<br>
+where<br>
+path: a root-relative path to a core/ndarray node, with sequence<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; elements numbered from 0<br></tt>
+<tt>Example:<br>
+$ds9 -asdf foo.asdf # roman/data<br>
+$ds9 -asdf foo.asdf:roman/dq<br>
+$ds9 -asdf foo.asdf:err # roman/err<br>
+$ds9 -asdf foo.asdf:roman/meta/wcs/steps/0/transform/forward/0/coefficients<br></tt></blockquote>
+<p>Two and three dimensional arrays are supported; a three dimensional array loads as a data cube. ASDF shapes are row major, so a shape of <tt>[nz,ny,nx]</tt> becomes a cube of <tt>nx</tt> by <tt>ny</tt> by <tt>nz</tt>.</p>
+<p>Datatypes are mapped as follows. <tt>float16</tt> and <tt>uint32</tt> have no equivalent pixel depth, so they are widened to one that represents every value exactly; no datatype is ever narrowed or re-signed.</p>
+<blockquote><tt>uint8&nbsp;&nbsp; -&gt; bitpix 8<br>
+int16&nbsp;&nbsp; -&gt; bitpix 16<br>
+uint16&nbsp; -&gt; bitpix -16<br>
+int32&nbsp;&nbsp; -&gt; bitpix 32<br>
+int64&nbsp;&nbsp; -&gt; bitpix 64<br>
+float32 -&gt; bitpix -32<br>
+float64 -&gt; bitpix -64<br>
+float16 -&gt; bitpix -32 (widened)<br>
+uint32&nbsp; -&gt; bitpix 64 (widened)<br></tt></blockquote>
+<p>Blocks compressed with <tt>zlib</tt> or <tt>lz4</tt> are decompressed automatically. An array described as a non-contiguous view of its block, by an <tt>offset</tt> or <tt>strides</tt> entry, is reported as unsupported rather than read incorrectly.</p>
+<p><b>WCS.</b> If the file contains a GWCS object, it is read directly and attached as the frame's WCS, giving the instrument's exact transform rather than an approximation of it. Both the Roman layouts are recognized: <tt>wcs</tt>, <tt>wcs_l1</tt> or <tt>wcs_l2</tt> directly under <tt>roman</tt>, and <tt>roman/meta/wcs</tt>. A file whose WCS is a bare transform, with no GWCS wrapper, is also accepted. If no WCS is found, or if it uses a tag or schema version that cannot be read, the image still loads and the frame simply has no WCS. See <a href="#WCS">WCS</a>.</p>
+<p><b>Header.</b> <b>File&nbsp;&#8594;&nbsp;Header</b> displays the file's YAML tree, which is an ASDF file's equivalent of a FITS header. Arrays appear there by datatype and shape, as ASDF stores them, not as pixel values.</p>
+<p><b>Backup.</b> A backup save set copies the ASDF file into its directory and reloads from it, so the exact WCS and the tree are preserved and the save set remains portable. See <a href="backup.html">Backup</a>.</p>
 <p><b><a name="nrrd" id="nrrd"></a>NRRD (Nearly Raw Raster Data)</b><br></p>
 Images in NRRD are supported directly. Encodings supported: <tt>raw, gzip<br></tt><br>
 <tt>Syntax:<br>

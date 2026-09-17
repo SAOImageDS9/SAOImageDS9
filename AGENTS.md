@@ -4,6 +4,12 @@ This repo is built from this top-level directory. A full build takes
 10+ minutes, so prefer the targeted rebuild commands below whenever
 possible instead of rebuilding everything from scratch.
 
+**Working on the native ASDF support?** Read `TODO.md`'s "Current state —
+read this first" section at the top before anything else. It carries what
+works, the four upstream AST bugs (three patched locally in
+`ast/src/yamlchan.c`), the open items in priority order, and the failure
+modes that cost the most to rediscover. `Tests/` is a separate git repo.
+
 ## Rebuilding after code changes
 
 - Changed files under `tksao/` (the C++ canvas-item rendering code:

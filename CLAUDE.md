@@ -16,7 +16,7 @@ The two directories with actual DS9-specific application code are:
 
 This checkout is the `asdf_support` branch, adding native ASDF/GWCS reading to DS9.
 **Read `TODO.md`'s "Current state — read this first" section at the top before doing
-anything on this project.** It carries what works, the four upstream AST bugs (three
+anything on this project.** It carries what works, the five upstream AST bugs (four
 patched locally), the open items in priority order, and the failure modes that are
 expensive to rediscover — chiefly that almost every GWCS problem presents identically as
 "no WCS", so bisecting to a bare `transform: identity` fixture is the fastest diagnosis.

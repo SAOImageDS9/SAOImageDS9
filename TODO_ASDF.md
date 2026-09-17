@@ -866,6 +866,56 @@ eventual Phase 2 C++ container reader — see `utils/asdf_gwcs_probe/README.md`.
     (`{source: 0, ...}`) is skipped by the enumerator rather than misread. None of the 7
     sample files use it.
 
+## Backup/restore
+
+Checked on request after Phase 4. A backup must be **portable** — written here, handed to
+a colleague, restored on their machine — which is what decided the design below.
+
+- [x] **ASDF frames now round-trip exactly.** Before: pixels and GUI state survived but the
+      WCS and the ASDF metadata were silently lost. After: every measured field is identical
+      across backup → quit → restore (`size/bitpix`, `minmax`, `has wcs wcs`, the 61,442-byte
+      YAML tree, the sky corner to 7 decimals, cmap and scale).
+  - Cause of the original loss: `BackupFrameLoadAlloc` saw `file,type array` and wrote the
+    frame out as FITS (`ds9.fits`, 66MB). That keeps pixels but cannot keep a GWCS — it has
+    no FITS-card representation to convert into — nor the YAML tree.
+  - Fix: `AsdfLoadArray` records `loadParam(asdf,file)`/`(asdf,path)`, which
+    `ProcessLoadSaveParams` already persists per frame for free, and `BackupFrameLoadParam`
+    uses them to emit `LoadAsdfFile <file>:<path>` instead of the FITS conversion. New
+    `BackupAsdfFile` copies the `.asdf` into the backup dir, deliberately mirroring
+    `BackupFrameLoadMMap` including honoring `pds9(backup)` — so the backup carries the real
+    file rather than a path that only exists on the machine that wrote it. Falls back to the
+    FITS conversion if the source file is gone, so pixels survive even then.
+  - **Portability verified for real, not assumed**: copied the backup to a different
+    directory, *deleted the original source file*, and restored — everything came back
+    identical.
+  - A second, separate bug fixed on the way: `WCSBackup` (`ds9/library/wcs.tcl`) took its
+    alternate-WCS branch whenever `has wcs alt` was true, which an ASDF frame reports
+    (`replaceWCSYaml` sets `wcsAltHeader_`) even though it has no cards to write. That wrote
+    a **1-byte** `ds9.wcs` and made the restore run `wcs replace text 1 {}` *after* the frame
+    loaded, replacing a good WCS with nothing. Now skipped when the header is empty.
+    Confirmed the genuine FITS alternate-WCS path is unaffected: a replaced TAN WCS still
+    writes 973 real bytes and restores to exactly its `CRVAL` (100, 20).
+- [x] **Found and fixed a real Phase 3 bug this exposed, wider than backup: blocking dropped
+      the GWCS entirely.** `Frame1 block to 1 1` — a *no-op* 1×1 block — left the frame with
+      no WCS at all. Bisecting the restore script with probes located it precisely: the WCS
+      was present immediately after `LoadAsdfFile` and gone ten lines later.
+  - `FitsImage::resetWCS()` rebuilds the WCS whenever the image is rebuilt, deliberately
+    discarding `wcsAltHeader_` and re-deriving from the image header. That is right for a
+    user-supplied `wcs replace` override. But an ASDF frame's GWCS is the file's *own* WCS,
+    not an override — it only went through the override mechanism as transport — and the
+    image header has no WCS cards to fall back on, so the frame ended up with nothing.
+  - Fix: `FitsImage` keeps the GWCS document itself in a new `wcsYaml_` member (the
+    symmetric counterpart of the FITS path's cards living on in the header it re-reads), and
+    `resetWCS()` reapplies it.
+  - Verified the result is numerically correct, not merely present: at block 2×2 the frame
+    halves to 2044² and image (-0.5,-0.5) reads `269.9870207 65.9742353`, which is exactly
+    the unblocked (-1.5,-1.5) position to the 7th decimal — i.e. the block factor is applied
+    to the GWCS correctly, one blocked pixel being two unblocked.
+- Also fixed, pre-existing and unrelated to ASDF — see commit `2902603bd`: streaming a
+  `VectorStr` with NULL members segfaults, so asking any WCS-less frame for a sky coordinate
+  took DS9 down. Reachable from stock DS9 (`xpaset ds9 array` + `xpaget ds9 crosshair wcs`),
+  no ASDF involved.
+
 ## Phase 5 — Stretch (open-ended, not scheduled)
 
 - [ ] Broaden AST tag/version coverage as other missions' ASDF files are encountered.

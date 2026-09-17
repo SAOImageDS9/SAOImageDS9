@@ -1256,6 +1256,67 @@ a colleague, restored on their machine — which is what decided the design belo
   - Not done: Windows. The `bzip2` rule is written for the cross build (and fixes the
     ranlib gap above) but, like everything after `libyaml`, is unvalidated there.
 
+## WCS test plan execution
+
+Running `WCS_TEST_PLAN.md` section by section. Sections C and F done 2026-09-17: **14 cells
+closed, 41 TODO -> 27**, now 54 PASS / 3 GAP.
+
+- [x] **Section C — Regions (8 cells).** C-4 (xml), C-5, C-7, C-8, C-10, C-11, C-12 PASS;
+      C-9 is a GAP. All 16 shapes round-trip image->wcs->image; save/load 4.7e-4 px;
+      cross-frame region files land on the exact detector pixel.
+- [x] **Section F — Multi-frame match and lock (6 cells).** F-3, F-5, F-6, F-7, F-8, F-9
+      PASS. Three different Roman products (f158/grism/prism) match to 0.000104″. The
+      `block` lock is the notable one — it exercises the `wcsYaml_` fix across frames and
+      leaves the sky readout bit-identical.
+- [x] **Raised the output precision first, on the user's tip** — `prefs precision`. The
+      default `8 7 4 3 8 7 5 3 8` truncates at 7 dp on degrees, which had been the binding
+      constraint on several measurements (the old C-6 number, 0.004 px, was print noise).
+      At `12 12 7 6 12 12 10 8 12` the same circle round-trip resolves to 2.3e-5 px, so these
+      tolerances are now bounded by the GWCS numerical inverse rather than by formatting.
+      Recorded in the plan's §3.
+- [x] **Two new risks, both quantified against a purpose-built FITS TAN control frame** so
+      that "GWCS problem" and "generic DS9 behaviour" stay distinguishable:
+  - **R9 — region angles use one image-wide rotation.** `Base::mapAngleFromRef`
+    (`tksao/frame/frmap.C:9`) adds `getWCSRotation(sys,sky)`, evaluated per *image*, not at
+    the region's position. A rotated box writes the field-centre sky angle wherever it sits.
+    Generic — an 800² TAN frame does the same — but the error goes as field size × sin(dec),
+    so Roman's true local-north spread is **0.587°** (±0.29° at the edges) against 0.060° on
+    the TAN frame. Self-consistent inside DS9; it bites on export. *Compass is exempt* —
+    `compass.C:322-331` steps ±δ in dec/RA from its own centre, so it is locally correct.
+  - **R10 — angular lengths use one scalar scale; the Roman GWCS is ~2% anisotropic.**
+    Centre: x 0.1103417″/px vs y 0.1082827″/px, ratio 1.019, varying 1.014–1.024 across the
+    detector. DS9 reports the dec-axis value, so a 400 px radius is 0.84″ (7.7 px) short of
+    the true separation along x. The TAN control is exactly 1.00000 isotropic, so this is
+    invisible on ordinary data. Corroborated three ways — direct central differences, the
+    file's own `s_region` footprint, and DS9's own *anisotropic* zoom under `lock frame wcs`
+    (ASDF zoom 1 -> TAN zoom `0.981544 1.00034`), which shows the machinery to handle it
+    already exists elsewhere in DS9.
+- [ ] **BUG (ours, not DS9's): the GWCS is attached to arrays it does not describe.** Found by
+      F-8. `AsdfLoadArray` (`ds9/library/asdf.tcl:1336-1344`) calls `AsdfAttachWcs`
+      unconditionally on whatever array was loaded, with no check that the array's grid is the
+      one the WCS describes. So `roman/amp33` (128×4096, reference pixels) and the four
+      `border_ref_pix_*` arrays report the **science array's** sky coordinates — `roman/data`
+      and `roman/amp33` both answer `269.981972490569 66.035639172244` at `image(64,2048)`.
+      Worse than no WCS, because the values are in-footprint and so look plausible.
+  - Same-grid siblings (`err`, `dq`, `var_poisson`, `chisq`, `dumo`, all 4088²) are correct
+    and must keep it, so the fix is a shape guard, not removing the attach.
+  - R6 blocks the principled version: AST drops `bounding_box`, so the WCS's declared domain
+    is unavailable. The guard therefore has to compare the loaded array's shape against the
+    science array's shape read from the YAML tree — `<prefix>/data` alongside the
+    `<prefix>/meta/wcs` subtree that `AsdfExtractWcsText` already locates.
+  - Needs a decision on the non-Roman/flat-tree case, where there is no `data` sibling to
+    compare against: attach only on an exact match (safe, may drop legitimate WCSs), or
+    attach unless there is a positive mismatch (current behaviour, keeps the bug for
+    unrelated-shape arrays).
+- [ ] Also noticed, cosmetic: the array browser offers **25** loadable arrays for a real
+      `*_cal.asdf`, of which 10 are `roman/meta/wcs/.../coefficients` and `.../matrix` blocks
+      (6×6 and 2×2 float64). Genuine `core/ndarray`s, but nobody wants to display a
+      polynomial coefficient matrix. They already sort last. (This also reconciles the
+      "15 top-level arrays" figure recorded in Phase 3/4 with today's 25.)
+- [ ] Remaining plan sections, 27 cells: A (2), B (3), D (3), E (4), G (2), H (4), I (3),
+      J (4), plus C-6-adjacent none. Thinnest coverage is now E (coordinate grid) and H
+      (persistence).
+
 ## Process notes
 
 - Share the design doc (and the §7c finding in particular) with the `asdf-format/pds9`/

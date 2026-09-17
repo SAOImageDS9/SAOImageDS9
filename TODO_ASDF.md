@@ -139,6 +139,30 @@ truth for where things stand.
       byte-identical to before, and a from-scratch `git clean -xdf libyaml && make libyaml`
       reinstalls the same 396,912-byte static-only `libyaml.a` with
       `to_host_file_cmd=func_convert_file_noop`.
+  - [x] **Third Windows failure, at the final link: `undefined reference to
+        __imp_xmlParserVersion`.** Not ASDF-related - it reproduced on master, and was
+        triggered by a cygwin update. Diagnosed from the tree rather than the log.
+    - `__imp_` is the Windows DLL-import decoration, and `xmlParserVersion` is a libxml2
+      *global variable* - ld can often auto-import a function but not data, which is why
+      this symbol and not a function was the one to fail.
+    - Chain: `ds9/win/configure` is handed no `--host` (its rule uses `$(CACHE)`, which is
+      mutually exclusive with it), so autoconf leaves `ac_tool_prefix` empty and the
+      `AC_PATH_TOOL` behind `PKG_CHECK_MODULES([XML2],[libxml-2.0])` falls through to the
+      plain `pkg-config`. On cygwin that reads `/usr/lib/pkgconfig` and returns the
+      **cygwin** libxml2, whose import library is for `cygxml2-2.dll`. The build actually
+      wants the mingw one - `ds9/win/Makefile.in` ships `libxml2-2.dll` out of the mingw
+      sys-root. The cygwin update presumably installed/refreshed cygwin's libxml2-devel so
+      that its `.pc` began shadowing the mingw one.
+    - Fix: a `PKGCONFIG = PKG_CONFIG=$(TARGET)-pkg-config` in `win/Makefile.in`, passed to
+      the three packages that call `PKG_CHECK_MODULES` (ds9, tclxml, tksao). Checked that
+      `PKG_CONFIG` is **not** a precious variable in any of their generated configures
+      (`ac_env_PKG_CONFIG_set` absent), so unlike `CC`/`AR` it is not written into the
+      shared `config.cache` and cannot trip the `$(CACHE)` environment check - which is why
+      this could not simply be folded into `$(CONFIGFLAGS)`.
+    - Explicitly *not* the fix: tclxml's `--with-xml-static` (`-DLIBXML_STATIC`). That would
+      silence the `__imp_` by switching the headers to static mode, but this tree links
+      libxml2 dynamically on purpose. The `__imp_` reference was correct; the import library
+      was what was missing.
   - [ ] Windows/mingw beyond this point is still unvalidated — the build had not reached
         `ast`/`tclasdf` yet. Next most likely trouble spots, in build order, all of them
         packages whose recipes I touched or added:

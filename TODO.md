@@ -1291,8 +1291,8 @@ closed, 41 TODO -> 27**, now 54 PASS / 3 GAP.
     file's own `s_region` footprint, and DS9's own *anisotropic* zoom under `lock frame wcs`
     (ASDF zoom 1 -> TAN zoom `0.981544 1.00034`), which shows the machinery to handle it
     already exists elsewhere in DS9.
-- [ ] **BUG (ours, not DS9's): the GWCS is attached to arrays it does not describe.** Found by
-      F-8. `AsdfLoadArray` (`ds9/library/asdf.tcl:1336-1344`) calls `AsdfAttachWcs`
+- [x] **BUG (ours, not DS9's): the GWCS is attached to arrays it does not describe — FIXED.**
+      Found by F-8. `AsdfLoadArray` (`ds9/library/asdf.tcl:1336-1344`) calls `AsdfAttachWcs`
       unconditionally on whatever array was loaded, with no check that the array's grid is the
       one the WCS describes. So `roman/amp33` (128×4096, reference pixels) and the four
       `border_ref_pix_*` arrays report the **science array's** sky coordinates — `roman/data`
@@ -1304,10 +1304,25 @@ closed, 41 TODO -> 27**, now 54 PASS / 3 GAP.
     is unavailable. The guard therefore has to compare the loaded array's shape against the
     science array's shape read from the YAML tree — `<prefix>/data` alongside the
     `<prefix>/meta/wcs` subtree that `AsdfExtractWcsText` already locates.
-  - Needs a decision on the non-Roman/flat-tree case, where there is no `data` sibling to
-    compare against: attach only on an exact match (safe, may drop legitimate WCSs), or
-    attach unless there is a positive mismatch (current behaviour, keeps the bug for
-    unrelated-shape arrays).
+  - The user chose the exact-shape-match guard, so: `AsdfWcsGridShape` resolves the science
+    array through the loader's existing `AsdfResolvePath ... data` convention (roman/data
+    first, else any uniquely matching */data) rather than inventing a second rule, and
+    `AsdfSameGrid` compares the **trailing two** dimensions. Trailing rather than strictly
+    exact because a 2-D WCS legitimately describes each plane of a same-grid rank-3 stack
+    ([nplane, ydim, xdim] vs [ydim, xdim]); that still rejects amp33's [10, 4096, 128].
+    Unit-tested over 8 shape pairs.
+  - The two failure cases got different severities on purpose. Grid mismatch is **silent**:
+    it is the normal result of loading a reference-pixel array, the shapes are visible in the
+    browser, and `Warning` would make a *successful* load return `XPA$ERROR` to an xpaset
+    caller. Being unable to identify the grid at all does warn - that is the surprising case,
+    and the one where exact-match could wrongly drop a WCS that used to work (a non-Roman
+    file whose science array is not named `data`). That asymmetry is the one judgement call
+    here and is easy to flip if it proves wrong.
+  - Verified: six same-grid arrays (`data`/`err`/`dq`/`var_poisson`/`chisq`/`dumo`) keep the
+    WCS with identical readouts; five off-grid arrays (`amp33`, four `border_ref_pix_*`) load
+    with pixels intact and no WCS, emitting nothing. No regressions: ground-truth corner still
+    `269.9869455 65.9742651`, `block 2` then `block 1` still round-trips the GWCS exactly,
+    backup/restore still preserves it exactly, and all 108 `Tests/asdf` fixtures still load.
 - [ ] Also noticed, cosmetic: the array browser offers **25** loadable arrays for a real
       `*_cal.asdf`, of which 10 are `roman/meta/wcs/.../coefficients` and `.../matrix` blocks
       (6×6 and 2×2 float64). Genuine `core/ndarray`s, but nobody wants to display a

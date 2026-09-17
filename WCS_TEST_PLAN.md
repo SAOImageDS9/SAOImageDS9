@@ -48,8 +48,15 @@ For the Build22 L3 coadd `r00001_p_v01001001001001_270p65x69y48_f158_coadd.asdf`
 `ra_center=269.6395821835357`, `dec_center=65.99501049470986`, `orientat=0.36041781306266785`.
 Those agree with the coadd's own `crpix=[12099.5,-88700.5]`, `crval=[270.0,64.60237300651187]`,
 `cdelt`, `pc` and `gnomonic`: deprojecting by hand as a plain TAN at 0-based pixel
-`(2499.5, 2499.5)` reproduces `ra_center`/`dec_center` to **0.000000″**. So the coadd's WCS
-parameters are correct and trivially readable; only the tag that packages them is unsupported.
+`(2499.5, 2499.5)` reproduces `ra_center`/`dec_center` to **0.000000″**.
+
+One caveat about that manifest, learned the hard way: **`orientat` is not the position angle
+of the +y axis.** Its value, `+0.36041781306`, is exactly −ΔRA from the projection centre
+(`269.6395821835 − 270.0 = −0.3604178165`) to ten significant figures, which no position
+angle would match identically. The true local-north PA at a point offset by ΔRA at dec 66 is
+ΔRA·sin(dec) = −0.3293°, and DS9 measures −0.3257° — i.e. DS9 is right and tracks meridian
+convergence; it is the `orientat` field that does not mean what its name suggests. Do not
+treat a mismatch against it as a WCS failure.
   The −0.5 offset is the 1-based-FITS vs 0-based-numpy origin convention.
 - `roman/data`: 4088×4088 float32, `minmax = -187169 6059.94`.
 - Pixel scale ≈ 0.1083″/px (a 40 px radius lists as `4.331"`).
@@ -242,7 +249,7 @@ known triggers of `FitsImage::resetWCS()` are `FitsImage::block()` (both overloa
 | J-1 | `f158_cal`, `grism_cal`, `prism_cal`, `f158_segm` | **PASS** (load + WCS) |
 | J-2 | The three WCS-only products, incl. the bare-transform distortion file | **PASS** — probe *and* in-app. In-app all three correctly refuse to load as images with `ASDF: ambiguous or unknown array data`: they carry no science array, only WCS internals (20/16/8 enumerable ndarrays, all coefficient matrices; `AsdfIsBareTransform` is true for all three). Their arrays *are* reachable by explicit path — a 6×6 `…/coefficients` loads as bitpix −64 and correctly gets no WCS |
 | J-3 | `*_uncal.asdf` (331MB, 4-D ramp) | **PASS** via a synthetic stand-in — the real uncal file is not downloaded, so a synthetic `[4,4,2,2]` uint8 array exercises the same rank check: `ASDF: unsupported ndarray rank data [4, 4, 2, 2]`, frame left empty, DS9 alive. Worth re-running against the real 4-D ramp when it is available |
-| J-4 | Coadd / `_asn` products from Build22 | **GAP** (confirmed, see §6.2b) — pixels load, WCS does not. The L3 coadd's WCS is a single `!<tag:stsci.edu:gwcs/fitswcs_imaging-1.0.0>` node that `yamlchan.c` has no handler for, so all five same-grid arrays (`data`, `context`, `err`, `weight`, `var_poisson`, 5000²) load with correct pixels and no WCS. The `_asn.json` is a metadata manifest, not an image — nothing for DS9 to open. Surfaced by the warning added for I-5; before that it was silent |
+| J-4 | Coadd / `_asn` products from Build22 | **PASS** — was a GAP (§6.2b), now fixed by translating `fitswcs_imaging` to FITS cards. All six science-grid arrays (`data`, `context`, `err`, `weight`, `var_poisson`, `var_rnoise`) load 5000² with the WCS at **0.00000000″** from the `_asn.json` centre, including `context` at `[1,5000,5000]` via the trailing-dims rule. Pixel scale 0.054983″/px against a declared 0.055 (0.03%), and anisotropy **0.03%** — a resampled L3 product is isotropic, so R10 does not apply to coadds. `match frame wcs` between the L3 coadd and the L2 exposure it was built from is exact. Survives block/smooth/crop and backup/restore. The `_asn.json` itself is a metadata manifest, not an image |
 | J-5 | Every array within one `*_cal.asdf` (all 15) | **PASS** (load); WCS attach on siblings **PASS** |
 | J-6 | A non-Roman ASDF file | **PASS** — `Tests/asdf/fixtures`, 27 flat-tree images × all 4 codecs: 108/108 load, dimensions and `minmax` both matching DS9's own reading of the source FITS. Caught a real enumerator bug (nested `mask:` ndarray); see `TODO.md` Phase 5 |
 | J-7 | `bzp2`-compressed blocks | **PASS** — bzip2 1.0.8 vendored and wired in; 27/27 load. Each `bzp2` fixture is identical to its `none` twin on dimensions, BITPIX, `minmax`, the `BLANK` card and a SHA-256 of every pixel. 31/31 decoded blocks byte-identical to Python's `bz2`. Truncated, corrupt, over-long and empty payloads each give a distinct error and leave the frame empty |
@@ -286,19 +293,27 @@ DS9's region code.
    project set out to avoid, but is defensible for export specifically, since FITS cannot
    represent the exact transform at all. Needs a decision: approximate-with-a-warning, or
    keep refusing.
-2b. **`gwcs/fitswcs_imaging-1.0.0` is unsupported, so L3 coadds get no WCS.** *Found by J-4.*
-   Build22 coadd products express their WCS as one `fitswcs_imaging` node bundling `crpix`,
-   `crval`, `cdelt`, `pc` and a `gnomonic` projection, rather than the explicit
-   `compose`/`shift`/`polynomial`/`gnomonic` chain the L2 `*_cal.asdf` files use.
-   `ast/src/yamlchan.c` has no path for that tag, and `wcs replace` fails silently (which is
-   why the I-5 fix mattered: without it this looked like "coadds just have no WCS").
-   Two ways out, and the cheap one is attractive: (a) add a `fitswcs_imaging` handler to
-   `yamlchan.c` — a C change to a vendored, already-`dirty` package, and a candidate to
-   contribute upstream alongside the version-ceiling bumps; or (b) because these really are
-   FITS-WCS parameters, synthesize FITS cards from them in `asdf.tcl` and use DS9's ordinary
-   FITS WCS path, with no AST change at all. Unlike H-7/R8 there is no approximation
-   involved either way — this transform *is* a TAN. Note the node also carries an explicit
-   `bounding_box` (intervals `[-0.5, 4999.5]`), which R6 would discard.
+2b. **~~`gwcs/fitswcs_imaging-1.0.0` is unsupported, so L3 coadds get no WCS.~~ FIXED.**
+   *Found by J-4.* Build22 coadds express their WCS as one `fitswcs_imaging` node bundling
+   `crpix`, `crval`, `cdelt`, `pc` and a `gnomonic` projection, rather than the explicit
+   `compose`/`shift`/`polynomial`/`gnomonic` chain the L2 files use, and `yamlchan.c` has no
+   path for that tag — `wcs replace` returned cleanly with no WCS (which is why the I-5 fix
+   mattered: without it this looked like "coadds just have no WCS").
+   Fixed without touching AST: `AsdfFitsWcsImagingCards` translates the node into ordinary
+   FITS cards (`CRPIX`/`CRVAL`/`CTYPE`/`CUNIT`/`CD`/`RADESYS`) and DS9's own FITS WCS path
+   takes it from there. No approximation is involved — unlike H-7/R8, this transform really
+   is a TAN. Two conversions matter: CRPIX is 1-based in FITS but 0-based in gwcs (the node's
+   own `bounding_box` runs `[-0.5, n-0.5]`), and `CD_ij = cdelt_i · pc_ij`.
+   It also needed a small `tksao` addition, because `resetWCS()` deletes `wcsAltHeader_` by
+   design: cards pushed through plain `wcs replace` were correct but vanished on the first
+   `block`. `FitsImage::wcsCards_` remembers them and `resetWCS()` re-parses them, exactly
+   mirroring what `wcsYaml_` already does for the GWCS path. Ordinary `wcs replace` keeps its
+   existing user-override semantics (verified: still dropped by a block cycle, still cleared
+   by `wcs reset`); the ASDF path is distinguished by an `#ASDF-FITS-WCS` sentinel line, the
+   same trick `replaceWCS` already uses to spot YAML.
+   Only equatorial frames (`icrs`/`fk5`/`fk4`) and `gnomonic` are translated; anything else
+   declines rather than emit a CTYPE it has not been tested against. The node's explicit
+   `bounding_box` is still discarded (R6).
 3. **R6 — `bounding_box` is dropped by AST.** The GWCS valid domain is not enforced anywhere,
    so coordinates outside the detector extrapolate silently. Pre-existing in `yamlchan.c`.
 4. **R3 — no alternate WCS letters.** `wcsa`…`wcsz` are empty on an ASDF frame.

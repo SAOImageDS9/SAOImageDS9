@@ -104,6 +104,7 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
 
   wcsAltHeader_ =NULL;
   wcsYaml_ =NULL;
+  wcsCards_ =NULL;
   wfpc2Header_ =NULL;
   wcs0Header_ =NULL;
 
@@ -166,6 +167,8 @@ FitsImage::~FitsImage()
     delete wcsAltHeader_;
   if (wcsYaml_)
     delete [] wcsYaml_;
+  if (wcsCards_)
+    delete [] wcsCards_;
   if (wfpc2Header_)
     delete wfpc2Header_;
   if (wcs0Header_)
@@ -1240,6 +1243,14 @@ void FitsImage::resetWCS()
 
   if (wfpc2Header_)
     initWCS(wfpc2Header_);
+  else if (wcsCards_) {
+    // Same reasoning as wcsYaml_ below, for the fitswcs_imaging case:
+    // these cards are the file's own WCS, so re-parse and re-apply them
+    // rather than letting the wcsAltHeader_ reset above discard them.
+    istringstream ss(wcsCards_);
+    wcsAltHeader_ = parseWCS(ss);
+    initWCS(wcsAltHeader_);
+  }
   else
     // For an ASDF frame the GWCS is the file's own WCS, not a user
     // override, so unlike wcsAltHeader_ above it must survive this reset -
@@ -2104,6 +2115,17 @@ void FitsImage::replaceWCS(istream& str)
   str.clear();
   str.seekg(start);
 
+  // Note the order: "#ASDF-FITS-WCS" also starts with "#ASDF", so the
+  // longer sentinel has to be tested first. This one means "FITS WCS cards
+  // synthesized from the file's own WCS" rather than a user override - see
+  // replaceWCSCards.
+  if (firstLine.compare(0,14,"#ASDF-FITS-WCS") == 0) {
+    ostringstream ss;
+    ss << str.rdbuf();
+    replaceWCSCards(ss.str().c_str());
+    return;
+  }
+
   if (firstLine.compare(0,5,"#ASDF") == 0 ||
       firstLine.compare(0,5,"%YAML") == 0 ||
       firstLine.compare(0,4,"wcs:") == 0) {
@@ -2125,6 +2147,36 @@ void FitsImage::replaceWCS(istream& str)
     delete wcsAltHeader_;
 
   wcsAltHeader_ = hh;
+  initWCS(wcsAltHeader_);
+}
+
+// FITS WCS cards that came from the *file*, not from a user override.
+//
+// Some ASDF products express their WCS as a gwcs/fitswcs_imaging node - a
+// plain FITS TAN in all but spelling (crpix/crval/cdelt/pc + gnomonic) -
+// which AstYamlChan has no handler for. ds9/library/asdf.tcl translates
+// that node into ordinary FITS cards and sends them here.
+//
+// This is deliberately *not* plain replaceWCS(). That path treats its cards
+// as a user override and resetWCS() drops them, which is correct for
+// `wcs replace` but wrong here: the same reasoning as wcsYaml_ applies, so
+// the cards have to outlive a reset or a `block` silently loses the WCS
+// (the image header carries no WCS cards of its own to fall back on). So
+// keep the card text and re-parse it in resetWCS(), exactly as wcsYaml_ is
+// remembered and re-applied.
+void FitsImage::replaceWCSCards(const char* cards)
+{
+  istringstream ss(cards);
+  FitsHead* hh = parseWCS(ss);
+
+  if (wcsAltHeader_)
+    delete wcsAltHeader_;
+  wcsAltHeader_ = hh;
+
+  if (wcsCards_)
+    delete [] wcsCards_;
+  wcsCards_ = dupstr(cards);
+
   initWCS(wcsAltHeader_);
 }
 

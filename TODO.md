@@ -1329,7 +1329,7 @@ closed, 41 TODO -> 27**, now 54 PASS / 3 GAP.
       polynomial coefficient matrix. They already sort last. (This also reconciles the
       "15 top-level arrays" figure recorded in Phase 3/4 with today's 25.)
 - [x] **Sections A, B, D, E, G, H, I, J finished (2026-09-17) - 21 more cells closed.**
-      With J-4 added below, the plan is now **fully executed: 76 PASS / 4 GAP / 0 TODO**.
+      With J-4 added below, the plan is now **fully executed: 77 PASS / 3 GAP / 0 TODO**.
   - Highlights: `image(-0.5,-0.5)` now reproduces the `s_region` corner **exactly to 9 dp**
     at the raised precision, not just to 0.0002"; contours on a `block 4` frame map through
     the blocked WCS to 0.00000000"; contour copy/paste across frames is exact; region
@@ -1388,16 +1388,44 @@ closed, 41 TODO -> 27**, now 54 PASS / 3 GAP.
     pixel (2499.5, 2499.5) reproduces those to **0.000000 arcsec**. (My first attempt was
     mirrored about crval1 - a sign error in my own atan2, not a file inconsistency: the
     declination matched to 10 dp throughout.)
-  - Two ways to fix, and the cheap one is attractive:
-    - (a) add a `fitswcs_imaging` handler to `yamlchan.c` - a C change to a vendored,
-      already-`dirty` package, and a natural candidate to contribute upstream alongside the
-      version-ceiling bumps.
-    - (b) since these genuinely *are* FITS-WCS parameters, synthesize FITS cards from them
-      in `asdf.tcl` and use DS9's ordinary FITS WCS path, with no AST change at all.
-    Unlike H-7/R8 there is no approximation either way - this transform *is* a TAN. Needs a
-    decision on which route.
-  - The node also carries an explicit `bounding_box` (`[-0.5, 4999.5]`), which R6 discards -
-    so even once read, the valid-domain information would still be lost.
+  - **Fixed (option 2, the user's choice): translate the node to FITS cards in `asdf.tcl`.**
+    `AsdfFitsWcsImagingCards` emits `CRPIX`/`CRVAL`/`CTYPE`/`CUNIT`/`CD`/`RADESYS` and DS9's
+    own FITS WCS path takes it from there. No AST change. Two conversions matter and both
+    were verified against ground truth: **CRPIX is 1-based in FITS but 0-based in gwcs** (the
+    node's own `bounding_box` runs `[-0.5, n-0.5]`, which is the 0-based range), and
+    **`CD_ij = cdelt_i * pc_ij`**. Only `gnomonic` and the equatorial frames
+    (`icrs`/`fk5`/`fk4`) are translated; anything else declines rather than emit an untested
+    CTYPE.
+  - **It needed one small tksao addition, which is worth knowing about.** Cards pushed
+    through plain `wcs replace` were *correct* but vanished on the first `block` - by design:
+    `resetWCS()` deletes `wcsAltHeader_` because `wcs replace` is a user override. Measured
+    it rather than assuming: replace gave the right sky, `block 2` gave nothing, `block 1`
+    did not bring it back. So `FitsImage::wcsCards_` now remembers the card text and
+    `resetWCS()` re-parses it, exactly mirroring `wcsYaml_`. The ASDF path is distinguished
+    from a user override by an `#ASDF-FITS-WCS` sentinel first line - the same trick
+    `replaceWCS()` already uses to spot YAML, so no grammar change and no new subcommand
+    (which matters: touching the tksao `.L` would have hit the flex-reproducibility problem
+    in CLAUDE.md).
+    - Regression-checked explicitly that ordinary `wcs replace` is **unchanged**: the
+      override still applies, is still dropped by a block cycle, and `wcs reset` still
+      restores the GWCS.
+  - **Results.** All six science-grid arrays (`data`, `context`, `err`, `weight`,
+    `var_poisson`, `var_rnoise`) load 5000^2 with the WCS at **0.00000000"** from the
+    `_asn.json` centre - `context` included, at `[1,5000,5000]`, via the trailing-dims rule
+    in `AsdfSameGrid`. Pixel scale 0.054983"/px against a declared 0.055, and anisotropy only
+    **0.03%**, so R10 does not apply to resampled L3 products the way it does to L2. Survives
+    block 2/4/1, smooth and crop, and backup/restore. `match frame wcs` between the L3 coadd
+    and the L2 exposure it was built from is exact (0.000000") - a combination that simply
+    did not work before. No regressions: L2 ground truth unchanged, 108/108 fixtures, and
+    the three warning cases (unreadable / no-subtree / grid-mismatch) all still behave.
+  - **A trap in the ground truth itself:** `asn.json`'s `orientat` is *not* the position
+    angle of the +y axis. Its value `+0.36041781306` is exactly -dRA from the projection
+    centre (`269.6395821835 - 270.0`) to ten significant figures, which no position angle
+    would match identically. The real local-north PA there is dRA*sin(dec) = -0.3293 deg and
+    DS9 measures -0.3257 deg, i.e. DS9 correctly tracks meridian convergence and the field
+    does not mean what its name suggests. My first run scored this as a FAIL against DS9;
+    recorded in the plan's §2 so the next reader does not repeat it.
+  - Still lost: the node's explicit `bounding_box` (`[-0.5, 4999.5]`), which R6 discards.
 - [ ] Rough edge left alone: a WCS-only `*_wcs.asdf` has no science array, so loading one of
       its coefficient matrices by explicit path warns `cannot tell which array the WCS
       describes`. Correct outcome, noisy message, and it reaches xpaset as `XPA$ERROR`.

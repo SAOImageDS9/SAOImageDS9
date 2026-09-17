@@ -196,11 +196,11 @@ known triggers of `FitsImage::resetWCS()` are `FitsImage::block()` (both overloa
 | J-3 | `*_uncal.asdf` (331MB, 4-D ramp) | TODO — expect rank-4 refusal; confirms the message |
 | J-4 | Coadd / `_asn` products from Build22 | TODO |
 | J-5 | Every array within one `*_cal.asdf` (all 15) | **PASS** (load); WCS attach on siblings **PASS** |
-| J-6 | A non-Roman ASDF file | **PASS** — `Tests/asdf/fixtures`, 21 flat-tree images × 3 supported codecs: 63/63 load, dimensions and `minmax` both 63/63 against DS9's own reading of the source FITS. Caught a real enumerator bug (nested `mask:` ndarray); see `TODO.md` Phase 5 |
-| J-7 | `bzp2`-compressed blocks | **GAP** — all 21 fail with `unsupported ASDF block compression: bzp2`, as designed; fixture set exists for adding it |
-| J-8 | Masked-array (`BLANK`) fixtures, boolean-array mask | **PASS** — all 4 × 3 codecs load with the integer BITPIX retained (8/16/32/64), null pixels reported as `blank`, and pixel rows byte-identical to DS9's reading of the source FITS. `data/mask` also loads in its own right |
-| J-9 | Scalar mask, integer data (`*_blank_scalar`) | **PASS** — 4 × 3 codecs, bitpix and the readout at a real blank pixel both identical to the equivalent FITS `BLANK` file |
-| J-10 | Scalar mask, float data (the schema's headline case) | **PASS** — `float`/`double` × 3 codecs, bitpix stays −32/−64 and the sentinel pixel reads `nan` |
+| J-6 | A non-Roman ASDF file | **PASS** — `Tests/asdf/fixtures`, 27 flat-tree images × all 4 codecs: 108/108 load, dimensions and `minmax` both matching DS9's own reading of the source FITS. Caught a real enumerator bug (nested `mask:` ndarray); see `TODO.md` Phase 5 |
+| J-7 | `bzp2`-compressed blocks | **PASS** — bzip2 1.0.8 vendored and wired in; 27/27 load. Each `bzp2` fixture is identical to its `none` twin on dimensions, BITPIX, `minmax`, the `BLANK` card and a SHA-256 of every pixel. 31/31 decoded blocks byte-identical to Python's `bz2`. Truncated, corrupt, over-long and empty payloads each give a distinct error and leave the frame empty |
+| J-8 | Masked-array (`BLANK`) fixtures, boolean-array mask | **PASS** — all 4 × 4 codecs load with the integer BITPIX retained (8/16/32/64), null pixels reported as `blank`, and pixel rows byte-identical to DS9's reading of the source FITS. `data/mask` also loads in its own right |
+| J-9 | Scalar mask, integer data (`*_blank_scalar`) | **PASS** — 4 × 4 codecs, bitpix and the readout at a real blank pixel both identical to the equivalent FITS `BLANK` file |
+| J-10 | Scalar mask, float data (the schema's headline case) | **PASS** — `float`/`double` × 4 codecs, bitpix stays −32/−64 and the sentinel pixel reads `nan` |
 | J-11 | Malformed / unrepresentable masks | **PASS** (unit) — complex and non-numeric masks are flagged unsupported and warned about; a mask array not broadcastable to the data is refused; datatypes with no FITS equivalent fall back with a warning |
 
 ---

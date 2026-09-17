@@ -99,7 +99,7 @@ TKIMGTMPFILES = \
 #-------------------------- main
 
 .NOTPARALLEL :
-.PHONY	: all dirs ds9 tclxml tclxmlrpc tclzipfs tls xpa zlib lz4
+.PHONY	: all dirs ds9 tclxml tclxmlrpc tclzipfs tls xpa zlib lz4 bzip2
 .PHONY	: tkblt tclfitsy tkcon tkhtml1 tkimg tkmpeg tksvg tkagif tksao tktable
 .PHONY	: vector fitsy tclasdf libyaml ast funtools openssl
 
@@ -279,6 +279,50 @@ lz4	:
 	$(CONFIGFLAGS) \
 	BUILD_SHARED=no BUILD_STATIC=yes \
 	PREFIX=$(prefix) LIBDIR=$(libdir) INCLUDEDIR=$(includedir)
+
+#-------------------------- bzip2
+
+# bzip2, like lz4, has no ./configure at all - a plain hand-written
+# Makefile, so $(CONFIGFLAGS) works as ordinary `make` variable overrides
+# and no "has it been configured yet" gate is needed.
+#
+# Three things about that Makefile mean this can't just be `make install`
+# the way lz4 is:
+#
+#   1. Its `all` target is `libbz2.a bzip2 bzip2recover test` - it builds
+#      the command-line tools and *runs the compression test suite*. Its
+#      `install` depends on the tools, then copies them and their man
+#      pages into $(PREFIX)/bin and $(PREFIX)/man. None of that is wanted
+#      here: the only consumer is tclasdf, which needs libbz2.a and
+#      bzlib.h and nothing else. So build the `libbz2.a` target by name
+#      and place the two files directly.
+#   2. `install` understands only PREFIX, with lib/, include/ and man/
+#      hard-coded beneath it - there is no LIBDIR/INCLUDEDIR the way lz4's
+#      Makefile has, so it could not be pointed at $(libdir)/$(includedir)
+#      even if the tools were wanted.
+#   3. Its `distclean` does `rm -f manual.ps manual.html manual.pdf`, and
+#      all three of those are *tracked upstream files* shipped in the
+#      tarball - so `make -C bzip2 distclean` would delete vendored
+#      source. bzip2distclean below therefore runs `clean`, not
+#      `distclean` (same as lz4distclean already does).
+#
+# RANLIB: bzip2 builds libbz2.a with `ar cq`, which does not write a
+# symbol index, and then runs $(RANLIB) to add one. The tree's shared
+# $(CONFIGFLAGS) sets only CC and AR, so a cross build would index a
+# mingw archive with the host ranlib; $(TARGET) is set only by
+# win/Makefile.in, so name the matching ranlib there and nowhere else.
+#
+# Vendored for ASDF's bzp2 block compression (see TODO.md Phase 5 and
+# Tests/asdf/fixtures/bzp2/). Like lz4, nothing else in this tree
+# consumes it.
+
+bzip2	:
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C bzip2 -j $(JOBS) libbz2.a \
+	$(CONFIGFLAGS) $(if $(TARGET),RANLIB=$(TARGET)-ranlib,)
+	cp -p bzip2/libbz2.a $(libdir)/.
+	cp -p bzip2/bzlib.h $(includedir)/.
 
 #-------------------------- xpa
 
@@ -465,13 +509,15 @@ fitsy/Makefile :
 
 #-------------------------- tclasdf
 
-# Tcl command asdflz4decompress, used by ds9/library/asdf.tcl to decompress
-# real Roman ASDF files' lz4-compressed blocks (see TODO.md Phase 2). A
+# Tcl commands used by ds9/library/asdf.tcl - among them asdflz4decompress
+# and asdfbz2decompress, which decompress lz4 and bzp2 ASDF blocks (see
+# TODO.md Phases 2 and 5; real Roman files use lz4). A
 # standalone Tcl extension (like vector/fitsy) so the logic lives once,
 # instead of being hand-duplicated across the unix/macos/win copies of
-# ds9/*/ds9.C - lz4 itself is passed in explicitly here (CPPFLAGS/LDFLAGS/
-# LIBS), the same convention already used for e.g. ast's CPPFLAGS or tls's
-# --with-openssl-dir, since no TEA macro finds a vendored library on its own.
+# ds9/*/ds9.C - lz4 and bzip2 are passed in explicitly here (CPPFLAGS/
+# LDFLAGS/LIBS), the same convention already used for e.g. ast's CPPFLAGS or
+# tls's --with-openssl-dir, since no TEA macro finds a vendored library on
+# its own.
 # no config.cache - the shared cache file doesn't know about the extra
 # CPPFLAGS/LDFLAGS/LIBS below and refuses a stale run rather than risk
 # silently reusing a different environment's results.
@@ -491,7 +537,7 @@ tclasdf/Makefile :
 	$(STD) \
 	CPPFLAGS='-I$(includedir)' \
 	LDFLAGS='-L$(libdir)' \
-	LIBS='-llz4'
+	LIBS='-llz4 -lbz2'
 
 #-------------------------- libyaml
 
@@ -688,7 +734,7 @@ scrub :
 .PHONY	: tclxmlclean tclxmlrpcclean tlsclean
 .PHONY	: tkbltclean tclfitsy tkconclean tkhtml1clean tkimgclean
 .PHONY	: tkmpegclean tksvgclean tkagifclean
-.PHONY	: tktableclean xpaclean zlibclean lz4clean
+.PHONY	: tktableclean xpaclean zlibclean lz4clean bzip2clean
 .PHONY	: vectorclean fitsyclean tclasdfclean libyamlclean astclean funtoolsclean
 .PHONY	: tksaoclean
 
@@ -835,6 +881,11 @@ lz4clean :
 	@echo "*** $@ ***"
 	$(MAKE) -C lz4/lib clean
 
+bzip2clean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C bzip2 clean
+
 #-------------------------- distclean
 
 .PHONY	: dirsdistclean ds9distclean localdistclean
@@ -842,7 +893,7 @@ lz4clean :
 .PHONY	: tclxmldistclean tclxmlrpcdistclean tlsdistclean
 .PHONY	: tkbltdistclean tclfitsydistclean tkcondistclean tkhtml1distclean
 .PHONY	: tkimgdistclean tkmpegdistclean tksvgdistclean tkagifdistclean
-.PHONY	: tktabledistclean xpadistclean zlibdistclean lz4distclean
+.PHONY	: tktabledistclean xpadistclean zlibdistclean lz4distclean bzip2distclean
 .PHONY	: vectordistclean fitsydistclean tclasdfdistclean libyamldistclean
 .PHONY	: astdistclean funtoolsdistclean
 .PHONY	: tksaodistclean
@@ -1017,3 +1068,10 @@ lz4distclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C lz4/lib clean
+
+# `clean`, not `distclean` - bzip2's distclean deletes manual.ps/html/pdf,
+# which are tracked upstream files (see the bzip2 build rule above).
+bzip2distclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C bzip2 clean

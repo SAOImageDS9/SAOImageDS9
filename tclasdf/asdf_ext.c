@@ -7,16 +7,20 @@
 // package rather than code in ds9/*/ds9.C so the logic exists once instead
 // of being hand-duplicated across the unix/macos/win copies of that file.
 //
-// Three commands, all here for the same reason: they are the parts of the
-// ASDF read path that are too slow to do in Tcl over millions of elements.
+// Four commands, all here for the same reason: they are the parts of the
+// ASDF read path that are too slow to do in Tcl over millions of elements,
+// or need a codec Tcl has no binding for.
 //   asdflz4decompress - decompress one lz4 block chunk
+//   asdfbz2decompress - decompress one whole bzp2 block payload
 //   asdfconvert       - widen an ndarray to a datatype fitsy can represent
 //   asdfmask          - resolve an asdf mask to FITS BLANK / NaN form
 
 #include <stdint.h>
+#include <limits.h>
 #include <string.h>
 #include <tcl.h>
 #include <lz4.h>
+#include <bzlib.h>
 
 // One chunk of ASDF's lz4 block compression: a leading 4-byte little-endian
 // uncompressed-size prefix (python-lz4's lz4.block convention) followed by
@@ -51,6 +55,122 @@ static int Asdflz4DecompressCmd(void* clientData, Tcl_Interp* interp,
     Tcl_DecrRefCount(result);
     Tcl_SetObjResult(interp,
 		     Tcl_NewStringObj("asdflz4decompress: lz4 decompress failed",-1));
+    return TCL_ERROR;
+  }
+
+  Tcl_SetObjResult(interp, result);
+  return TCL_OK;
+}
+
+// ASDF's bzp2 block compression. Unlike lz4 (which has no stream format,
+// so asdf frames it as length-prefixed chunks) a bzp2 block payload is one
+// plain bzip2 stream - verified against Tests/asdf/fixtures/bzp2/, whose
+// payloads start with the "BZh9" magic at byte 0 and whose `used` header
+// field is the whole compressed length. So this command takes the entire
+// payload, not a chunk, and the caller passes the block header's `decoded`
+// size, which is the exact expected output length.
+//
+// The streaming API is used rather than the one-shot
+// BZ2_bzBuffToBuffDecompress for two reasons: that one takes `unsigned int`
+// lengths, and it cannot span concatenated streams. asdf's own writer emits
+// a single stream (Python's BZ2Compressor), and its reader would likewise
+// stop at the first stream end, but tolerating a concatenation costs one
+// re-init here and means a block from another writer isn't silently
+// truncated - the same reason the lz4 path loops over chunks.
+static int Asdfbz2DecompressCmd(void* clientData, Tcl_Interp* interp,
+				int objc, Tcl_Obj* const objv[])
+{
+  if (objc != 3) {
+    Tcl_WrongNumArgs(interp, 1, objv, "payload decodedsize");
+    return TCL_ERROR;
+  }
+
+  Tcl_Size srcLen;
+  unsigned char* src = Tcl_GetByteArrayFromObj(objv[1], &srcLen);
+
+  Tcl_WideInt decodedSize;
+  if (Tcl_GetWideIntFromObj(interp, objv[2], &decodedSize) != TCL_OK)
+    return TCL_ERROR;
+  if (decodedSize < 0) {
+    Tcl_SetObjResult(interp,
+		     Tcl_NewStringObj("asdfbz2decompress: negative size",-1));
+    return TCL_ERROR;
+  }
+
+  Tcl_Obj* result = Tcl_NewByteArrayObj(NULL, (Tcl_Size)decodedSize);
+  unsigned char* dst = Tcl_SetByteArrayLength(result, (Tcl_Size)decodedSize);
+
+  // bz_stream counts in unsigned int, so a >4GB block (none exist today,
+  // but nothing in the format forbids one) has to be fed in slices. Track
+  // progress with Tcl_Size and hand bzip2 at most UINT_MAX at a time.
+  bz_stream strm;
+  memset(&strm, 0, sizeof(strm));
+  if (BZ2_bzDecompressInit(&strm, 0, 0) != BZ_OK) {
+    Tcl_DecrRefCount(result);
+    Tcl_SetObjResult(interp,
+		     Tcl_NewStringObj("asdfbz2decompress: init failed",-1));
+    return TCL_ERROR;
+  }
+
+  Tcl_Size inDone = 0, outDone = 0;
+  const char* err = NULL;
+  int done = 0;
+
+  while (!done) {
+    Tcl_Size inLeft = srcLen - inDone;
+    Tcl_Size outLeft = (Tcl_Size)decodedSize - outDone;
+
+    strm.next_in = (char*)(src + inDone);
+    strm.avail_in = inLeft > (Tcl_Size)UINT_MAX ? UINT_MAX : (unsigned)inLeft;
+    strm.next_out = (char*)(dst + outDone);
+    strm.avail_out = outLeft > (Tcl_Size)UINT_MAX ? UINT_MAX : (unsigned)outLeft;
+
+    unsigned inBefore = strm.avail_in, outBefore = strm.avail_out;
+    int rc = BZ2_bzDecompress(&strm);
+
+    inDone += inBefore - strm.avail_in;
+    outDone += outBefore - strm.avail_out;
+
+    if (rc == BZ_STREAM_END) {
+      if (inDone >= srcLen || outDone >= (Tcl_Size)decodedSize) {
+	done = 1;
+      } else {
+	// A concatenated stream follows: finish this one and start the next.
+	BZ2_bzDecompressEnd(&strm);
+	memset(&strm, 0, sizeof(strm));
+	if (BZ2_bzDecompressInit(&strm, 0, 0) != BZ_OK) {
+	  err = "asdfbz2decompress: bzip2 re-init failed";
+	  done = 1;
+	}
+      }
+      continue;
+    }
+
+    if (rc != BZ_OK) {
+      err = "asdfbz2decompress: bzip2 decompress failed";
+      break;
+    }
+
+    // BZ_OK means "not finished yet". If it also made no progress, then
+    // the payload disagrees with the block header's decoded size: either
+    // the input ran out early, or the stream wants to emit more than
+    // `decoded` bytes.
+    if (inBefore == strm.avail_in && outBefore == strm.avail_out) {
+      err = outDone >= (Tcl_Size)decodedSize
+	? "asdfbz2decompress: bzip2 output exceeds block decoded size"
+	: "asdfbz2decompress: truncated bzip2 stream";
+      break;
+    }
+  }
+
+  BZ2_bzDecompressEnd(&strm);
+
+  if (!err && outDone != (Tcl_Size)decodedSize)
+    err = "asdfbz2decompress: short bzip2 decompress";
+
+  if (err) {
+    Tcl_DecrRefCount(result);
+    Tcl_SetObjResult(interp, Tcl_NewStringObj(err,-1));
     return TCL_ERROR;
   }
 
@@ -478,6 +598,9 @@ int Tclasdf_Init(Tcl_Interp* interp)
     return TCL_ERROR;
 
   Tcl_CreateObjCommand(interp, "asdflz4decompress", Asdflz4DecompressCmd,
+			NULL, NULL);
+
+  Tcl_CreateObjCommand(interp, "asdfbz2decompress", Asdfbz2DecompressCmd,
 			NULL, NULL);
 
   Tcl_CreateObjCommand(interp, "asdfconvert", AsdfConvertCmd, NULL, NULL);

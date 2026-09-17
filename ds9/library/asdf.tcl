@@ -321,6 +321,9 @@ proc AsdfReadBlock {data offset} {
 	lz4 {
 	    return [list lz4 [AsdfLz4DecompressPayload $payload $decoded]]
 	}
+	bzp2 {
+	    return [list bzp2 [asdfbz2decompress $payload $decoded]]
+	}
 	default {
 	    error "unsupported ASDF block compression: $compression"
 	}
@@ -329,9 +332,11 @@ proc AsdfReadBlock {data offset} {
 
 # ASDF's lz4 framing (see asdf/_compression.py upstream, and TODO.md
 # Phase 1): the payload is a sequence of chunks, each preceded by its own
-# 4-byte big-endian compressed length. asdflz4decompress (ds9/unix/ds9.C)
-# handles one chunk (which itself carries a leading 4-byte little-endian
-# decoded-size prefix, python-lz4's own convention).
+# 4-byte big-endian compressed length. asdflz4decompress (tclasdf) handles
+# one chunk (which itself carries a leading 4-byte little-endian
+# decoded-size prefix, python-lz4's own convention). bzp2 above needs no
+# such loop - unlike lz4.block, bzip2 has a stream format, so an asdf bzp2
+# payload is one plain bzip2 stream and asdfbz2decompress takes all of it.
 proc AsdfLz4DecompressPayload {payload decodedSize} {
     set out {}
     set pos 0

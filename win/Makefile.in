@@ -41,7 +41,7 @@ DS9APP	=SAOImageDS9\ $(DS9_VERSION)
 
 saods9	: dirs tcl tk \
 	openssl \
-	zlib lz4 \
+	zlib lz4 bzip2 \
 	xpa funtools libyaml ast \
 	vector fitsy tclasdf \
 	tls tclxml tclxmlrpc \

@@ -495,6 +495,20 @@ tclasdf/Makefile :
 
 #-------------------------- libyaml
 
+# no config.cache
+#
+# $(CACHE) and $(CONFIGFLAGS)/$(TARGET) are mutually exclusive, and every
+# other package in this file obeys that: the cross-flagged ones (xpa,
+# funtools, ast) all omit $(CACHE), and the ones that use $(CACHE)
+# (vector, fitsy, tkblt, ...) inherit the toolchain via --with-tcl/--with-tk
+# instead of naming it. The shared $(prefix)/config.cache is written by
+# those latter runs, which never set build_alias/host_alias/target_alias or
+# CC, so a configure that *does* set them then aborts on load with
+# "`build_alias' was not set in the previous run ... changes in the
+# environment can compromise the build". libyaml had both and broke the
+# win/ cross build exactly that way - and, worse, had it succeeded first it
+# would have written those variables into the shared cache and broken every
+# $(CACHE)-using package with the mirror-image error.
 libyaml	: libyaml/Makefile
 	@echo ""
 	@echo "*** $@ ***"
@@ -507,8 +521,7 @@ libyaml/Makefile :
 	./configure \
 	--disable-shared --enable-static \
 	$(CONFIGFLAGS) $(TARGET) \
-	$(PREFIX) \
-	$(CACHE)
+	$(PREFIX)
 
 #-------------------------- ast
 

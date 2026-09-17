@@ -990,7 +990,6 @@ libyamldistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C libyaml distclean
-	$(RM) -f fitsy/fitsyConfig.sh
 
 funtoolsdistclean :
 	@echo ""

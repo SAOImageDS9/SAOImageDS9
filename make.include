@@ -555,6 +555,35 @@ tclasdf/Makefile :
 # win/ cross build exactly that way - and, worse, had it succeeded first it
 # would have written those variables into the shared cache and broken every
 # $(CACHE)-using package with the mirror-image error.
+#
+# --host=$(TARGET), not a bare positional $(TARGET). Every other cross-flagged
+# package here passes the triplet positionally, and autoconf's handling of a
+# bare positional arg is to set *all three* of build_alias, host_alias and
+# target_alias to it (configure: "you should use --build, --host, --target").
+# Setting build_alias is the problem: configure then believes it is running
+# *on* mingw rather than on cygwin, and libtool picks its path-conversion
+# function from $build --
+#
+#   case $host in *-*-mingw*) case $build in *-*-mingw*) # actually msys
+#     lt_cv_to_host_file_cmd=func_convert_file_msys_to_w32
+#
+# -- whose body is `( cmd //c echo "$1" ) | $SED ...`. The `//c` is an MSYS
+# path-mangling artifact; on cygwin it reaches cmd.exe verbatim, cmd sees no
+# /c switch, opens an interactive session and blocks on stdin, and the $SED
+# on the far end of that pipe waits forever. That is a hard hang at
+# `libtool --mode=link`, with a stuck sed and no further output.
+#
+# With build left to be guessed (cygwin), libtool instead selects
+# func_convert_file_cygwin_to_w32 (`cygpath -m`) and func_convert_file_noop,
+# and never invokes cmd at all. The $(if $(TARGET),...) guard keeps this a
+# no-op on unix/macos, where $(TARGET) is undefined.
+#
+# Only libyaml needs this: it is the one package that both sets host and uses
+# libtool. ast uses libtool but never passes the triplet (so its $host stays
+# cygwin and the mingw branch is never taken), and xpa/funtools pass it but
+# have no libtool to mislead. Their bare positional args are still wrong in
+# the same way - they make cross_compiling=no for a cross build - but they
+# configure and build today, so they are left alone rather than churned.
 libyaml	: libyaml/Makefile
 	@echo ""
 	@echo "*** $@ ***"
@@ -566,7 +595,7 @@ libyaml/Makefile :
 	cd libyaml; \
 	./configure \
 	--disable-shared --enable-static \
-	$(CONFIGFLAGS) $(TARGET) \
+	$(CONFIGFLAGS) $(if $(TARGET),--host=$(TARGET),) \
 	$(PREFIX)
 
 #-------------------------- ast

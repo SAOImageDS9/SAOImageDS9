@@ -1329,8 +1329,7 @@ closed, 41 TODO -> 27**, now 54 PASS / 3 GAP.
       polynomial coefficient matrix. They already sort last. (This also reconciles the
       "15 top-level arrays" figure recorded in Phase 3/4 with today's 25.)
 - [x] **Sections A, B, D, E, G, H, I, J finished (2026-09-17) - 21 more cells closed.**
-      The plan is now **76 PASS / 3 GAP / 1 TODO**; the only cell left is J-4, which needs a
-      Build22 coadd/`_asn` product that is not downloaded.
+      With J-4 added below, the plan is now **fully executed: 76 PASS / 4 GAP / 0 TODO**.
   - Highlights: `image(-0.5,-0.5)` now reproduces the `s_region` corner **exactly to 9 dp**
     at the raised precision, not just to 0.0002"; contours on a `block 4` frame map through
     the blocked WCS to 0.00000000"; contour copy/paste across frames is exact; region
@@ -1358,7 +1357,47 @@ closed, 41 TODO -> 27**, now 54 PASS / 3 GAP.
       `replaceWCSYaml` sets `wcsAltHeader_` regardless (R2). Verified the warning fires only
       for the unreadable-GWCS case and stays silent for no-WCS-subtree, a good GWCS, and a
       grid mismatch.
-- [ ] J-4 - Build22 coadd / `_asn` products, needs a download.
+- [x] **J-4 done - and it found the biggest coverage gap yet: L3 coadds get no WCS.**
+      Downloaded `r00001_p_v01001001001001_270p65x69y48_f158_coadd.asdf` (113.6 MB) and its
+      `_asn.json` (1.1 KB) from the Build22 example data. Both added to
+      `.git/info/exclude`; the coadd is large and re-downloadable, and the json is listed
+      only so nothing in the batch gets committed by accident (it is small enough to track
+      if wanted).
+  - First, a correction to the plan's framing: **`_asn` is not an image**. It is a JSON
+    association manifest - skycell geometry plus the list of member exposures (this one
+    names the `f158_cal.asdf` already in the tree). Nothing for DS9 to open. The testable
+    artifact is the `*_coadd.asdf`.
+  - The coadd's arrays all load correctly: `data`, `context`, `err`, `weight`,
+    `var_poisson`, `var_rnoise`, all 5000x5000 (`context` is `[1,5000,5000]`, so rank 3 with
+    trailing dims equal to the science grid - the exact case the trailing-two-dims rule in
+    `AsdfSameGrid` was written for). Much of the skycell reads `nan` with `weight` 0, which
+    is right: one input exposure into a 5000^2 tile.
+  - **But no WCS.** The coadd expresses its WCS as a single
+    `!<tag:stsci.edu:gwcs/fitswcs_imaging-1.0.0>` node bundling `crpix`, `crval`, `cdelt`,
+    `pc` and a `gnomonic` projection, instead of the explicit
+    `compose`/`shift`/`polynomial`/`gnomonic` chain the L2 `*_cal.asdf` files use.
+    `ast/src/yamlchan.c` has no handler for that tag.
+  - **The I-5 fix earned its keep immediately.** `wcs replace` fails silently on this, so
+    before this morning's `has wcs wcs` check the coadd would simply have appeared to have
+    no WCS, with no clue why. Instead it now says
+    `ASDF: AST could not read this WCS, loading without it roman/data`.
+  - **The parameters themselves are fine**, which makes this the easiest gap in the plan to
+    close. The `_asn.json` is independent ground truth (`ra_center=269.6395821835357`,
+    `dec_center=65.99501049470986`, `orientat=0.36041781306266785`, 0.055"/px), and
+    deprojecting the coadd's own crpix/crval/cdelt/pc by hand as a plain TAN at 0-based
+    pixel (2499.5, 2499.5) reproduces those to **0.000000 arcsec**. (My first attempt was
+    mirrored about crval1 - a sign error in my own atan2, not a file inconsistency: the
+    declination matched to 10 dp throughout.)
+  - Two ways to fix, and the cheap one is attractive:
+    - (a) add a `fitswcs_imaging` handler to `yamlchan.c` - a C change to a vendored,
+      already-`dirty` package, and a natural candidate to contribute upstream alongside the
+      version-ceiling bumps.
+    - (b) since these genuinely *are* FITS-WCS parameters, synthesize FITS cards from them
+      in `asdf.tcl` and use DS9's ordinary FITS WCS path, with no AST change at all.
+    Unlike H-7/R8 there is no approximation either way - this transform *is* a TAN. Needs a
+    decision on which route.
+  - The node also carries an explicit `bounding_box` (`[-0.5, 4999.5]`), which R6 discards -
+    so even once read, the valid-domain information would still be lost.
 - [ ] Rough edge left alone: a WCS-only `*_wcs.asdf` has no science array, so loading one of
       its coefficient matrices by explicit path warns `cannot tell which array the WCS
       describes`. Correct outcome, noisy message, and it reaches xpaset as `XPA$ERROR`.

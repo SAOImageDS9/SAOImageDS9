@@ -8361,10 +8361,17 @@ static AstMapping *ReadLinear1d( AstKeyMap *km, int *status ){
 
 /* Ortherwise, create a corresponding winmap. */
       } else {
+/* A 1-D WinMap maps the interval [ina,inb] linearly onto [outa,outb], so
+   picking x=0 and x=1 gives y = slope*x + offset directly.
+
+   The previous code assigned "outa" twice - the second store, 2*offset,
+   overwriting the correct one - and never assigned "outb" at all, so the
+   WinMap was built from an uninitialized stack value. The resulting mapping
+   was arbitrary, and not even reproducible. */
          ina = 0.0;
          outa = offset;
-         inb = offset/slope;
-         outa = 2*offset;
+         inb = 1.0;
+         outb = slope + offset;
          result = (AstMapping *) astWinMap( 1, &ina, &inb, &outa, &outb,
                                             " ", status );
       }

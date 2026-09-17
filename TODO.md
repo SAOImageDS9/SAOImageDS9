@@ -996,6 +996,54 @@ a colleague, restored on their machine — which is what decided the design belo
         `Tests/asdf/README.md` for the full file/codec breakdown and regeneration
         instructions.
 
+- [x] **Ran the 84 fixtures through the real reader (2026-09-17) — and they immediately
+      earned their keep by catching a silent-misread bug in the Phase 4 enumerator.**
+  - **The bug**: asdf serializes a numpy masked array as a `mask:` ndarray *nested inside*
+    the `data:` one, with the parent's own `datatype`/`shape` following *after* that nested
+    block. `AsdfEnumNdarrays` collected every key inside a pending ndarray as a field of
+    that one node, so the two got merged last-write-wins and `data` came back carrying the
+    **mask's** `source:`. Loading `roman`-less `data` therefore read the boolean mask block
+    as if it were the image.
+    - Two different consequences, from one root cause: `char_blank` is `uint8`, and a
+      `bool8` mask is also 1 byte/element, so 256×256 comes to the same 65536 bytes — the
+      length check **passes** and it silently displays the mask. `short/int/long_blank` are
+      wider, so the mask block is too short and the length check **catches** it with a clean
+      error. The uint8 case is the dangerous one and is exactly the sort of thing only a
+      fixture with a real masked array would find.
+  - **Fix**: the enumerator's single pending node becomes a *stack*, so a nested
+    `core/ndarray` pushes its own node instead of leaking fields into its parent. `data` now
+    reports `source=0` and the mask appears as its own path, `data/mask`.
+  - Also mapped `bool8` → BITPIX 8 (a direct, exact mapping — `bool8` is one byte per
+    element in both numpy and asdf-standard), so a mask is viewable rather than rejected.
+    `data/mask` loads as 256×256 bitpix 8, minmax `0 1`, and the array browser offers both.
+  - **Regression guard worth keeping**: per file, the number of nodes the enumerator reports
+    must equal the raw count of `!core/ndarray-` occurrences in the tree text. That is
+    algorithm-independent, it would have caught this bug (the old code enumerated 1 node per
+    `_blank` file where the raw count is 2), and it now holds for all 28 files checked
+    (7 Roman + 21 fixtures, 148 nodes, zero mismatches).
+  - **Results of the full run**, using DS9's own reading of the source FITS images as the
+    reference rather than re-deriving expected values:
+    - **63/63 of the `none`/`zlib`/`lz4` fixtures load, with dimensions matching 63/63 and
+      `minmax` matching 63/63** — pixel values identical to what DS9 renders from the
+      original FITS, across all 21 images × 3 supported codecs.
+    - All 21 `bzp2` files fail with a single clean message, `unsupported ASDF block
+      compression: bzp2` — the expected outcome, and the fixture set now gives bzip2 support
+      something concrete to be built against.
+    - 12 `bitpix` differences (4 base names × 3 codecs), all `_bscale`, all correct: the
+      fixtures store BSCALE/BZERO-resolved physical values as float where FITS stores raw
+      integers plus the keywords. `minmax` matches, which is the part that matters.
+  - **The fixture README's expectation is now out of date, in a good way.** It says these
+    flat trees "will **not** be found" by the reader, which was true of the Phase 2/3
+    Roman-only path it was written against. Phase 4's enumerator resolves a bare `data` via
+    its unique-last-component rule, so all 21 load without a Roman-style path. Worth
+    correcting in `Tests/asdf/README.md` when that repo is next touched.
+  - Not addressed, and a genuine open question rather than an oversight: **the mask is not
+    applied to the data**. `data` loads with the `BLANK` sentinel values in place, so those
+    pixels display as whatever the sentinel is rather than as blank. Applying it would mean
+    promoting integers to float+NaN, which is exactly what the fixture was built to avoid.
+    DS9's own FITS path has `BLANK` handling; wiring the ASDF `mask:` sibling into it is a
+    separate piece of work.
+
 ## Process notes
 
 - Share the design doc (and the §7c finding in particular) with the `asdf-format/pds9`/

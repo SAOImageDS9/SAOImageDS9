@@ -163,6 +163,7 @@ class FitsImage {
 
   FitsHead* wcsAltHeader_; // alt wcs header
   char* wcsYaml_; // ASDF/GWCS wcs document, if the wcs came from one
+  char* wcsCards_; // ASDF-derived FITS wcs cards, if the wcs came from one
   FitsHead* wfpc2Header_; // wcs header for wfpc2
   FitsHead* wcs0Header_;
 
@@ -497,6 +498,7 @@ class FitsImage {
   void resetWCS();
   void replaceWCS(istream&);
   void replaceWCSYaml(const char*);
+  void replaceWCSCards(const char*);
 
   void processKeywordsPhysical();
   void processKeywordsParams();

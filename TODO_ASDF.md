@@ -1064,7 +1064,15 @@ a colleague, restored on their machine — which is what decided the design belo
     neither tag was ever recognized as a sky projection, the handlers were unreachable, and
     any ASDF file using either loaded its pixels with no WCS at all. Fixed locally by naming
     both in `IsASkyProjection()`; `healpix` then agrees with its 1904-66 twin to 0.027".
-  - **Third, not fixed - `zenithal_perspective` is mapped to the wrong projection.**
+  - **Third AST bug, also from the fixtures: `ReadLinear1d()` read an uninitialized
+    variable.** It set `outa = offset`, then immediately overwrote it with `outa = 2*offset`,
+    and never assigned `outb` at all before passing `&outb` to `astWinMap()`. So every
+    `linear1d` transform was built from whatever was on the stack - arbitrary, and not even
+    reproducible run to run. Fixed locally with the obvious 1-D WinMap corners (x=0 ->
+    offset, x=1 -> slope+offset); `linear1d` then lands exactly on its closed-form expected
+    value. This one is a plain coding error rather than a design gap, so it should be an easy
+    sell upstream.
+  - **Fourth, not fixed - `zenithal_perspective` is mapped to the wrong projection.**
     `ReadSkyProjection()` maps it to `AST__SZP` with `pv1=mu, pv2=gamma`. AZP and SZP are
     different projections and SZP's second and third parameters are phi_c/theta_c, so the
     result is out by ~6500" even with demonstrably correct parameters. Left alone because

@@ -114,11 +114,19 @@ ostream& operator<<(ostream& os, const VectorStr& vv)
   if (!sep)
     sep = ' ';
 
+  // c[] is NULL on a default-constructed VectorStr, which is what
+  // FitsImage::mapFromRef() returns for a frame with no WCS. Streaming a
+  // NULL char* is undefined behavior - libc++ calls strlen on it - and
+  // segfaulted for real: `xpaget ds9 crosshair wcs icrs degrees` on any
+  // WCS-less frame, reachable from a plain `xpaset ds9 array` load.
+  const char* c0 = vv.c[0] ? vv.c[0] : "";
+  const char* c1 = vv.c[1] ? vv.c[1] : "";
+
   unsigned char unit = (unsigned char)os.iword(Vector::unit);
   if (!unit)
-    os << vv.c[0] << sep << vv.c[1];
+    os << c0 << sep << c1;
   else
-    os << vv.c[0] << unit << sep << vv.c[1] << unit;
+    os << c0 << unit << sep << c1 << unit;
 
   // reset unit
   os.iword(Vector::unit) = '\0';
@@ -213,11 +221,16 @@ ostream& operator<<(ostream& os, const VectorStr3d& vv)
   if (!sep)
     sep = ' ';
 
+  // same NULL-on-default-construction hazard as VectorStr above
+  const char* c0 = vv.c[0] ? vv.c[0] : "";
+  const char* c1 = vv.c[1] ? vv.c[1] : "";
+  const char* c2 = vv.c[2] ? vv.c[2] : "";
+
   unsigned char unit = (unsigned char)os.iword(Vector::unit);
   if (!unit)
-    os << vv.c[0] << sep << vv.c[1] << sep << vv.c[2];
+    os << c0 << sep << c1 << sep << c2;
   else
-    os << vv.c[0] << unit << sep << vv.c[1] << unit << sep << vv.c[2] << unit;
+    os << c0 << unit << sep << c1 << unit << sep << c2 << unit;
 
   // reset unit
   os.iword(Vector::unit) = '\0';

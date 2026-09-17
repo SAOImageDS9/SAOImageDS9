@@ -642,9 +642,24 @@ proc AsdfResolveNdarrays {text data} {
 #    the design doc's original roman.meta.wcs assumption, confirmed
 #    against a real full science-product "*_cal.asdf" file.
 proc AsdfExtractWcsText {tree data {keys {wcs wcs_l2 wcs_l1}} {metaKeys wcs}} {
+    # Indents to try, in order. Two-space first because that is where every
+    # real Roman product keeps it (`roman:` then `  meta:` ... or `  wcs:`),
+    # so the common case still matches on the first attempt.
+    #
+    # The empty indent - a `wcs:` key at the very top of a flat tree - was
+    # missing until fixtures for the sky projections turned up:
+    # Phase 4 generalized the *array* lookup away from Roman's fixed
+    # indents (AsdfEnumNdarrays walks the whole tree) but left the *WCS*
+    # lookup pinned to them, so a perfectly legal flat GWCS file loaded its
+    # pixels and silently got no WCS at all.
     set subtree {}
-    foreach key $keys {
-	set subtree [AsdfExtractKeySubtree $tree $key]
+    foreach indent {"  " ""} {
+	foreach key $keys {
+	    set subtree [AsdfExtractKeySubtree $tree $key $indent]
+	    if {$subtree ne {}} {
+		break
+	    }
+	}
 	if {$subtree ne {}} {
 	    break
 	}

@@ -198,7 +198,7 @@ known triggers of `FitsImage::resetWCS()` are `FitsImage::block()` (both overloa
 | J-5 | Every array within one `*_cal.asdf` (all 15) | **PASS** (load); WCS attach on siblings **PASS** |
 | J-6 | A non-Roman ASDF file | **PASS** — `Tests/asdf/fixtures`, 21 flat-tree images × 3 supported codecs: 63/63 load, dimensions and `minmax` both 63/63 against DS9's own reading of the source FITS. Caught a real enumerator bug (nested `mask:` ndarray); see `TODO.md` Phase 5 |
 | J-7 | `bzp2`-compressed blocks | **GAP** — all 21 fail with `unsupported ASDF block compression: bzp2`, as designed; fixture set exists for adding it |
-| J-8 | Masked-array (`BLANK`) fixtures | **PASS** for loading `data` and `data/mask` separately. **GAP**: the mask is not *applied*, so sentinel pixels display as their sentinel value rather than blank |
+| J-8 | Masked-array (`BLANK`) fixtures | **PASS** — all 4 × 3 codecs load with the integer BITPIX retained (8/16/32/64), null pixels reported as `blank`, and pixel rows byte-identical to DS9's reading of the source FITS. `data/mask` also loads in its own right |
 
 ---
 

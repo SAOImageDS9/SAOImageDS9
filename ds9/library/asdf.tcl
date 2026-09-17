@@ -897,6 +897,73 @@ proc AsdfSplitPath {fn} {
     return [list $base $path]
 }
 
+# --------------------------------------------------------------------
+# Masked integer arrays -> the FITS integer-null convention.
+#
+# asdf represents a numpy masked array as an explicit boolean `mask:`
+# ndarray beside the data; FITS marks nulls with a BLANK keyword naming a
+# sentinel *value*. Translating the former into the latter lets DS9's
+# existing machinery do the work, and it is already exactly right:
+# FitsData keeps the native integer storage and substitutes NAN only at
+# the getValueFloat() boundary, while minmax skips blank pixels
+# (tksao/frame/fitsdata.C). So the integers are retained and the null
+# pixels are *known*, with nothing promoted to float - the cheap fix of
+# casting to float/double is specifically what this avoids.
+#
+# The array/var load path cannot carry a BLANK: fitsy's array-header
+# grammar has no such keyword (fitsy/parser.Y's `arr` rule is
+# xdim/ydim/zdim/dim/bitpix/skip/arch only), and adding one would mean
+# regenerating fitsy's flex scanner, which this checkout's flex cannot
+# reproduce byte-identically (see CLAUDE.md). So instead of loading a raw
+# array we hand DS9 a genuine minimal FITS file built in memory and load
+# it through FitsFitsVar (Base::loadFitsVarCmd) - the same
+# no-temp-file Tcl-variable transport, but with a real header, which
+# carries BLANK for free.
+
+# One 80-column FITS card. Values are right-justified in columns 11-30,
+# per the standard's fixed format.
+proc AsdfFitsCard {keyword value} {
+    set card [format "%-8s= %20s" $keyword $value]
+    return [format "%-80s" [string range $card 0 79]]
+}
+
+# A minimal FITS primary header for a 2-d image, padded to the 2880-byte
+# block size. `blank` is optional; when given it is emitted as the BLANK
+# keyword, which is only meaningful for a positive (integer) BITPIX.
+proc AsdfFitsHeader {xdim ydim bitpix {blank {}}} {
+    set cards {}
+    append cards [AsdfFitsCard SIMPLE T]
+    append cards [AsdfFitsCard BITPIX $bitpix]
+    append cards [AsdfFitsCard NAXIS 2]
+    append cards [AsdfFitsCard NAXIS1 $xdim]
+    append cards [AsdfFitsCard NAXIS2 $ydim]
+    if {$blank ne {} && $bitpix > 0} {
+	append cards [AsdfFitsCard BLANK $blank]
+    }
+    append cards [format "%-80s" END]
+
+    set pad [expr {2880 - ([string length $cards] % 2880)}]
+    if {$pad != 2880} {
+	append cards [string repeat " " $pad]
+    }
+    return $cards
+}
+
+# Integer ASDF datatypes that map onto a real FITS BITPIX directly, i.e.
+# without needing the BZERO offset trick FITS uses for unsigned types.
+# uint16/uint32 would need BZERO 32768 / 2147483648 and are deliberately
+# absent: no sample file has a masked one, and guessing at that convention
+# untested is worse than falling back.
+proc AsdfFitsBitpix {datatype} {
+    switch -- $datatype {
+	uint8 {return 8}
+	int16 {return 16}
+	int32 {return 32}
+	int64 {return 64}
+	default {return {}}
+    }
+}
+
 # The Open/OpenDialog-facing entry point (see ds9/library/open.tcl's Open
 # switch), deliberately mirroring LoadFitsFile's {fn layer mode} signature
 # so ASDF dispatches like any other format rather than needing its own
@@ -1078,20 +1145,65 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
 	return 0
     }
 
-    global asdfRawVar
-    set asdfRawVar $decoded
-
-    set loadParam(file,type) array
-    set loadParam(file,mode) {}
-    set loadParam(load,type) var
-    set hdr "xdim=$xdim,ydim=$ydim"
-    if {$zdim ne {}} {
-	append hdr ",zdim=$zdim"
+    # A masked integer array becomes a real in-memory FITS carrying BLANK,
+    # so DS9's integer-null handling applies (see AsdfFitsHeader above).
+    # Everything else keeps the raw array/var path, which costs nothing.
+    set fitsblank {}
+    if {$zdim eq {} && $widen eq {}} {
+	set fb [AsdfFitsBitpix $datatype]
+	set masknode [AsdfFindNdarrayPath $tree "$path/mask"]
+	if {$fb ne {} && $masknode ne {}} {
+	    lassign $masknode msource mdatatype mbyteorder mshape munsupported
+	    if {$munsupported eq {} && $mshape eq $shapelist} {
+		set moffset [lindex $offsets $msource]
+		if {$moffset ne {} &&
+		    ![catch {AsdfReadBlock $data $moffset} mblk] &&
+		    $mblk ne {}} {
+		    lassign $mblk mcompression mdecoded
+		    if {![catch {
+			asdfmaskblank $decoded $mdecoded $datatype $byteorder
+		    } mres] && $mres ne {}} {
+			lassign $mres fitsblank decoded
+			set bitpix $fb
+			# asdfmaskblank emits big-endian, as FITS requires
+			set arch big
+		    }
+		}
+	    }
+	}
     }
-    append hdr ",bitpix=$bitpix,arch=$arch"
-    set loadParam(file,name) "\[$hdr\]"
-    set loadParam(var,name) asdfRawVar
-    set loadParam(load,layer) $layer
+
+    global asdfRawVar
+
+    if {$fitsblank ne {}} {
+	set asdfRawVar [AsdfFitsHeader $xdim $ydim $bitpix $fitsblank]
+	append asdfRawVar $decoded
+	set pad [expr {2880 - ([string length $asdfRawVar] % 2880)}]
+	if {$pad != 2880} {
+	    append asdfRawVar [string repeat "\x00" $pad]
+	}
+
+	set loadParam(file,type) fits
+	set loadParam(file,mode) {}
+	set loadParam(load,type) var
+	set loadParam(file,name) [file tail $fn]
+	set loadParam(var,name) asdfRawVar
+	set loadParam(load,layer) $layer
+    } else {
+	set asdfRawVar $decoded
+
+	set loadParam(file,type) array
+	set loadParam(file,mode) {}
+	set loadParam(load,type) var
+	set hdr "xdim=$xdim,ydim=$ydim"
+	if {$zdim ne {}} {
+	    append hdr ",zdim=$zdim"
+	}
+	append hdr ",bitpix=$bitpix,arch=$arch"
+	set loadParam(file,name) "\[$hdr\]"
+	set loadParam(var,name) asdfRawVar
+	set loadParam(load,layer) $layer
+    }
 
     # Provenance for Backup. ProcessLoadSaveParams persists the whole
     # loadParam array per frame, so these ride along for free and let

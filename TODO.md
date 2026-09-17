@@ -1037,12 +1037,55 @@ a colleague, restored on their machine — which is what decided the design belo
     Roman-only path it was written against. Phase 4's enumerator resolves a bare `data` via
     its unique-last-component rule, so all 21 load without a Roman-style path. Worth
     correcting in `Tests/asdf/README.md` when that repo is next touched.
-  - Not addressed, and a genuine open question rather than an oversight: **the mask is not
-    applied to the data**. `data` loads with the `BLANK` sentinel values in place, so those
-    pixels display as whatever the sentinel is rather than as blank. Applying it would mean
-    promoting integers to float+NaN, which is exactly what the fixture was built to avoid.
-    DS9's own FITS path has `BLANK` handling; wiring the ASDF `mask:` sibling into it is a
-    separate piece of work.
+- [x] **Null pixels now follow the FITS integer-null convention — integers retained, nulls
+      known, nothing promoted to float.**
+  - DS9's existing machinery was already exactly right and needed no change:
+    `FitsDatam<T>` keeps native integer storage and substitutes `NAN` only at the
+    `getValueFloat()` boundary, and the min/max scan `continue`s past blank pixels
+    (`tksao/frame/fitsdata.C`, ~12 sites). The whole job was *transport*: getting a `BLANK`
+    value in.
+  - **The array/var path cannot carry one.** fitsy's array-header grammar is
+    `xdim`/`ydim`/`zdim`/`dim`/`bitpix`/`skip`/`arch` only (`fitsy/parser.Y`'s `arr` rule;
+    confirmed there is no `blank` token in `fitsy/lex.L` either), and adding one would mean
+    regenerating fitsy's flex scanner — which this checkout's flex cannot reproduce
+    byte-identically. So that route was rejected, not overlooked.
+  - **Route taken instead, with no grammar changes at all**: build a genuine minimal FITS
+    in memory (`SIMPLE`/`BITPIX`/`NAXIS`/`NAXIS1`/`NAXIS2`/`BLANK`/`END`, 2880-padded) and
+    load it through `FitsFitsVar`/`Base::loadFitsVarCmd` — the same no-temp-file
+    Tcl-variable transport the array path already uses, but with a real header. Only masked
+    integer arrays take it; everything else keeps the raw array path, so there is no cost to
+    the common case.
+  - New `asdfmaskblank` in `tclasdf/asdf_ext.c` does the mask→sentinel resolution and the
+    byte-swap to FITS big-endian in one pass (too slow in Tcl over millions of elements).
+    Sentinel choice, in order:
+    1. If every masked pixel holds the same value **and no unmasked pixel holds it**, that
+       is `BLANK` and the data is left untouched. This is the exact case a FITS→ASDF
+       conversion produces, so the original `BLANK` is recovered losslessly — verified: the
+       fixtures' `BLANK` values are 128/256/256/256 and those come back.
+    2. Otherwise an unused extreme of the type, written into the masked pixels (min for
+       signed, max for unsigned — `0` is too commonly real data to prefer for unsigned).
+    3. If neither extreme is free, refuse rather than blank a genuine value.
+  - Mapped integer datatypes to real FITS BITPIX (`uint8`→8, `int16`→16, `int32`→32,
+    `int64`→64). `uint16`/`uint32` are deliberately absent: they would need FITS's
+    `BZERO` unsigned-offset convention, no sample file has a masked one, and guessing at it
+    untested is worse than falling back to the array path.
+  - **Validated against DS9's own reading of the source FITS as the reference.** All 4
+    `_blank` files × 3 supported codecs: BITPIX matches exactly (8/16/32/64 — no float
+    promotion), null pixels report `blank` just as the FITS does, and sampled pixel rows are
+    **byte-identical** to the FITS. Before this, a null pixel read back as its raw sentinel
+    (`128`) instead of `blank`.
+    - Worth recording *how* this was observed: the fixtures' `BLANK` values are all
+      **interior** to the data range, so `minmax` and `bitpix` are identical either way —
+      the full 84-file sweep shows **zero** diff before vs after. Only a pixel-level probe
+      at a known blank coordinate reveals it. A test that only compared minmax would have
+      called this feature working when it was not.
+    - All five branches of the sentinel logic unit-tested directly, including the two subtle
+      ones: a masked value that also occurs unmasked is rejected as `BLANK` (so a real pixel
+      is never blanked), and a type with both extremes in use errors out rather than
+      corrupting data.
+  - Roman regression clean: the 197MB cal file still loads 4088×4088 bitpix -32 with its
+    corner at `269.9869455 65.9742651`, and the full 84-fixture sweep is unchanged at 63 OK
+    / 21 `bzp2`.
 
 ## Process notes
 

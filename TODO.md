@@ -96,6 +96,49 @@ truth for where things stand.
       warning, installs the same 396,912-byte static-only `libyaml.a`, and the
       libyaml→ast→`yamlchan` chain still reads a real GWCS (corner unchanged at
       `269.9869455 65.9742651`).
+  - [x] **Second Windows libyaml failure, same root cause family: a hard hang at
+        `libtool --mode=link`.** Reported as stuck with a running `sed` and no further
+        output. Diagnosed from a tar of the user's configured tree, not guessed — two of my
+        first hypotheses (a lost `--disable-shared`, an anomalous `max_cmd_len`) were wrong
+        and the tree disproved them: `build_libtool_libs=no`, every cross tool correctly
+        resolved to `x86_64-w64-mingw32-*`, and `max_cmd_len=8192` is just libtool's
+        hardcoded punt for Windows hosts.
+    - The tell was in the tree's own `libtool`: `to_host_file_cmd=func_convert_file_msys_to_w32`
+      and `to_tool_file_cmd=func_convert_file_msys_to_w32` — **MSYS** functions on a
+      **cygwin** box. `config.status` showed why: `build='x86_64-w64-mingw32'`,
+      `build_os='mingw32'`.
+    - Chain, each link read off the user's own files: `configure:1196` handles a bare
+      positional arg as `: "${build_alias=$ac_option} ${host_alias=$ac_option}
+      ${target_alias=$ac_option}"` — it sets **all three**, `build_alias` included. The rule
+      passed `$(TARGET)` positionally, so configure believed it was *running on* mingw.
+      `configure:5108` then picks libtool's path-conversion function from `$build`
+      (`*-*-mingw*` → "# actually msys"), and `libtool:3370` is
+      `` `( cmd //c echo "$1" ) 2>/dev/null | $SED ...` ``. `//c` is an MSYS path-mangling
+      artifact; on cygwin it reaches `cmd.exe` verbatim, cmd sees no `/c`, opens an
+      interactive session and blocks on stdin, and the `$SED` on the far end of that pipe
+      waits forever. Hence a stuck `sed` and silence.
+    - Fix: `--host=$(TARGET)` instead of the bare triplet, so `build` is guessed as cygwin
+      and libtool selects `func_convert_file_cygwin_to_w32` (`cygpath -m`) plus
+      `func_convert_file_noop` — no `cmd` invocation anywhere. Written as
+      `$(if $(TARGET),--host=$(TARGET),)` so it stays a no-op on unix/macos and needs no
+      `win/configure` re-run, the same guard idiom used for bzip2's `RANLIB`.
+    - **Only libyaml needed it**, and it is worth recording why the others are safe: it is
+      the one package that both sets `host` and uses libtool. `ast` uses libtool but never
+      passes the triplet, so its `$host` stays cygwin and the mingw branch is never taken;
+      `xpa`/`funtools` pass it but have no libtool to mislead. Their bare positional args
+      are still wrong in the same way — they make `cross_compiling=no` for a cross build —
+      but they configure and build today, so they were left alone rather than churned.
+    - Also confirmed dead: the `CFLAGS=-DYAML_DECLARE_STATIC` workaround found online cannot
+      do anything here. `libyaml/include/yaml.h:29` tests `__MINGW32__` *before* `_WIN32`,
+      and mingw-w64 defines it even for x86_64, so `YAML_DECLARE(type)` is plain `type` and
+      the whole `YAML_DECLARE_STATIC`/`EXPORT`/`dllimport` ladder is unreachable on this
+      toolchain. That advice is for MSVC. Worse, passing `CFLAGS=` to configure *replaces*
+      `-g -O2` — visible in the reported link line, which is how it was clear the tree had
+      been hand-configured.
+    - macOS regression checked: the guard expands to nothing, the configure line is
+      byte-identical to before, and a from-scratch `git clean -xdf libyaml && make libyaml`
+      reinstalls the same 396,912-byte static-only `libyaml.a` with
+      `to_host_file_cmd=func_convert_file_noop`.
   - [ ] Windows/mingw beyond this point is still unvalidated — the build had not reached
         `ast`/`tclasdf` yet. Next most likely trouble spots, in build order, all of them
         packages whose recipes I touched or added:

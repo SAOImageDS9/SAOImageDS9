@@ -5054,21 +5054,30 @@ static double GetTime( AstKeyMap *km, const char *name, AstFrame *frm,
 
 /* If the format is specified, ensure the string includes any prefix
    required by the TimeFrame. */
+/* The second test in each branch is on "value", not "format" -- it asks
+   whether the value string already carries the prefix. Testing "format"
+   instead, as this code used to, makes every branch dead: "jyear" itself
+   begins with a "j", so strncasecmp(format,"J",1) is 0 and the prefix is
+   never prepended. An equinox of "2000.0" then reaches astUnformat with the
+   TimeFrame's default format and is read as MJD 2000, i.e. 1864 -- about 1.8
+   degrees of precession away from J2000, which is what the ASDF frame
+   fixtures measured. Same for byear and jd; only mjd was unaffected, and
+   only because MJD is the default. */
    if( format ) {
       if( !strcmp( format, "byear" ) &&
-          strncasecmp( format, "B", 1 ) ){
+          strncasecmp( value, "B", 1 ) ){
          sprintf( vbuf, "B%s", value );
          value = vbuf;
       } else if( !strcmp( format, "jyear" ) &&
-                 strncasecmp( format, "J", 1 ) ){
+                 strncasecmp( value, "J", 1 ) ){
          sprintf( vbuf, "J%s", value );
          value = vbuf;
       } else if( !strcmp( format, "jd" ) &&
-                 strncasecmp( format, "JD", 2 ) ){
+                 strncasecmp( value, "JD", 2 ) ){
          sprintf( vbuf, "JD %s", value );
          value = vbuf;
       } else if( !strcmp( format, "mjd" ) &&
-                 strncasecmp( format, "MJD", 2 ) ){
+                 strncasecmp( value, "MJD", 3 ) ){
          sprintf( vbuf, "MJD %s", value );
          value = vbuf;
       }

@@ -795,6 +795,213 @@ proc DisplayAsdfHeader {frame} {
 # uniquely matching */data) rather than inventing a second rule.
 #
 # Returns the science array's shape, or {} if there is no resolvable one.
+# --------------------------------------------------------------------
+# gwcs/fitswcs_imaging -> FITS WCS cards (WCS_TEST_PLAN J-4).
+#
+# Build22 L3 coadd products express their WCS as a single
+# `!<tag:stsci.edu:gwcs/fitswcs_imaging-1.0.0>` node holding crpix, crval,
+# cdelt, pc and a projection, instead of the explicit
+# compose/shift/polynomial/gnomonic chain the L2 *_cal.asdf files use.
+# yamlchan.c has no handler for that tag, so AST returns no FrameSet and the
+# coadd loads with no WCS at all.
+#
+# But that node *is* a FITS WCS, spelled differently - so rather than
+# teaching AST a new tag, translate it into ordinary FITS cards and let DS9's
+# own FITS WCS path handle it. There is no approximation anywhere in this:
+# unlike the H-7 save-as-FITS problem, this transform really is a TAN.
+
+# The indent of a line, in spaces.
+proc AsdfLineIndent {line} {
+    regexp {^( *)} $line -> pad
+    return [string length $pad]
+}
+
+# Every number in a string, in order. Used only on `data:` payload lines,
+# which hold nothing else.
+proc AsdfNumberList {str} {
+    return [regexp -all -inline -- \
+		{[-+]?[0-9]*\.?[0-9]+(?:[eE][-+]?[0-9]+)?} $str]
+}
+
+# The body of the `gwcs/fitswcs_imaging` node in `yamltext`, or {}.
+proc AsdfFitsWcsImagingBody {yamltext} {
+    set lines [split $yamltext "\n"]
+    set n [llength $lines]
+    set start -1
+    for {set i 0} {$i < $n} {incr i} {
+	if {[string match {*gwcs/fitswcs_imaging*} [lindex $lines $i]]} {
+	    set start $i
+	    break
+	}
+    }
+    if {$start < 0} {
+	return {}
+    }
+    set base [AsdfLineIndent [lindex $lines $start]]
+    set out {}
+    for {set j [expr {$start + 1}]} {$j < $n} {incr j} {
+	set line [lindex $lines $j]
+	if {[string trim $line] eq {}} {
+	    continue
+	}
+	if {[AsdfLineIndent $line] <= $base} {
+	    break
+	}
+	lappend out $line
+    }
+    return [join $out "\n"]
+}
+
+# The inline ndarray payload belonging to `key` within a node body, as a
+# flat row-major list of numbers.
+#
+# asdf writes a small inline ndarray two different ways depending on rank -
+# `data: [a, b]` for a vector, but a bare `data:` followed by `- [a, b]`
+# rows for a matrix - so both shapes are handled. Returns {} if the key is
+# absent, or if its ndarray is block-backed (`source:`) rather than inline,
+# which is why the scan stops at the next key at or above `key`'s own indent
+# instead of running on and picking up a later key's data.
+proc AsdfInlineNdarray {body key} {
+    set lines [split $body "\n"]
+    set n [llength $lines]
+    set ki -1
+    for {set i 0} {$i < $n} {incr i} {
+	if {[regexp "^ *$key:(\[ \]|\$)" [lindex $lines $i]]} {
+	    set ki $i
+	    break
+	}
+    }
+    if {$ki < 0} {
+	return {}
+    }
+    set kind [AsdfLineIndent [lindex $lines $ki]]
+    for {set j [expr {$ki + 1}]} {$j < $n} {incr j} {
+	set line [lindex $lines $j]
+	if {[string trim $line] eq {}} {
+	    continue
+	}
+	if {[AsdfLineIndent $line] <= $kind} {
+	    break
+	}
+	if {![regexp {^ *data:(.*)$} $line -> rest]} {
+	    continue
+	}
+	if {[string trim $rest] ne {}} {
+	    return [AsdfNumberList $rest]
+	}
+	set out {}
+	for {set k [expr {$j + 1}]} {$k < $n} {incr k} {
+	    set row [lindex $lines $k]
+	    if {![regexp {^ *- *\[} $row]} {
+		break
+	    }
+	    foreach v [AsdfNumberList $row] {
+		lappend out $v
+	    }
+	}
+	return $out
+    }
+    return {}
+}
+
+# RADESYS/CTYPE pair for the document's celestial frame. Only the
+# equatorial frames are translated: galactic and ecliptic would need
+# GLON/GLAT or ELON/ELAT CTYPEs, and emitting an equatorial CTYPE for one of
+# those would be silently wrong, so they fall through to {} and the caller
+# declines to synthesize.
+proc AsdfCelestialRadesys {yamltext} {
+    if {![regexp {coordinates/frames/([a-z0-9]+)-} $yamltext -> frame]} {
+	return {}
+    }
+    switch -- $frame {
+	icrs {return ICRS}
+	fk5 {return FK5}
+	fk4 {return FK4}
+	default {return {}}
+    }
+}
+
+# FITS WCS cards equivalent to the document's fitswcs_imaging node, or {}
+# if it has none or carries anything this does not translate exactly.
+proc AsdfFitsWcsImagingCards {yamltext} {
+    set body [AsdfFitsWcsImagingBody $yamltext]
+    if {$body eq {}} {
+	return {}
+    }
+
+    # Only gnomonic (TAN). Every other projection would need its own CTYPE
+    # code, and guessing one untested is worse than declining.
+    if {![regexp {projection: *!transform/([a-z_0-9]+)-} $body -> proj]} {
+	return {}
+    }
+    if {$proj ne "gnomonic"} {
+	return {}
+    }
+
+    set radesys [AsdfCelestialRadesys $yamltext]
+    if {$radesys eq {}} {
+	return {}
+    }
+
+    set crpix [AsdfInlineNdarray $body crpix]
+    set crval [AsdfInlineNdarray $body crval]
+    set cdelt [AsdfInlineNdarray $body cdelt]
+    set pc [AsdfInlineNdarray $body pc]
+    if {[llength $crpix] != 2 || [llength $crval] != 2 ||
+	[llength $cdelt] != 2 || [llength $pc] != 4} {
+	return {}
+    }
+
+    # Two conversions, and both matter:
+    #
+    #  - CRPIX is 1-based in FITS but 0-based in gwcs (the node's own
+    #    bounding_box runs [-0.5, n-0.5], which is the 0-based range), so
+    #    add 1. Off by one here puts the whole image one pixel out.
+    #  - FITS CDi_j folds cdelt into the matrix: CD_ij = cdelt_i * pc_ij.
+    #    Emitting CDELTi + PCi_j instead would be just as valid FITS, but
+    #    the CD form is what every reader handles without argument.
+    lassign $crpix cx cy
+    lassign $crval rv1 rv2
+    lassign $cdelt d1 d2
+    lassign $pc p11 p12 p21 p22
+
+    set cards {}
+    append cards [AsdfFitsCard CRPIX1 [expr {$cx + 1}]]
+    append cards [AsdfFitsCard CRPIX2 [expr {$cy + 1}]]
+    append cards [AsdfFitsCard CRVAL1 $rv1]
+    append cards [AsdfFitsCard CRVAL2 $rv2]
+    append cards [AsdfFitsCard CTYPE1 {'RA---TAN'}]
+    append cards [AsdfFitsCard CTYPE2 {'DEC--TAN'}]
+    append cards [AsdfFitsCard CUNIT1 {'deg'}]
+    append cards [AsdfFitsCard CUNIT2 {'deg'}]
+    append cards [AsdfFitsCard CD1_1 [expr {$d1 * $p11}]]
+    append cards [AsdfFitsCard CD1_2 [expr {$d1 * $p12}]]
+    append cards [AsdfFitsCard CD2_1 [expr {$d2 * $p21}]]
+    append cards [AsdfFitsCard CD2_2 [expr {$d2 * $p22}]]
+    append cards [AsdfFitsCard RADESYS "'$radesys'"]
+    return $cards
+}
+
+# Hand synthesized cards to FitsImage::replaceWCSCards. The sentinel first
+# line is what tells replaceWCS() these are the file's own WCS rather than a
+# user override, so that resetWCS() re-applies them instead of dropping them
+# - the same distinction wcsYaml_ already makes for the GWCS path.
+proc AsdfAttachWcsCards {cards} {
+    global current
+
+    set ch [file tempfile tmpfn]
+    fconfigure $ch -translation binary -encoding utf-8
+    puts $ch "#ASDF-FITS-WCS"
+    puts -nonewline $ch $cards
+    close $ch
+
+    try {
+	$current(frame) wcs replace 1 $tmpfn
+    } finally {
+	file delete -force $tmpfn
+    }
+}
+
 proc AsdfWcsGridShape {tree} {
     set path [AsdfResolvePath $tree data]
     if {$path eq {}} {
@@ -1396,11 +1603,14 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
 	    #     dropping a WCS that would have been fine - a non-Roman file
 	    #     whose science array is not called "data". Say so.
 	    set ref [AsdfWcsGridShape $tree]
+	    set cards [AsdfFitsWcsImagingCards $yamltext]
 	    if {$ref eq {}} {
 		Warning "[msgcat::mc {ASDF: cannot tell which array the WCS describes, loading without it}] $path"
 	    } elseif {![AsdfSameGrid $shapelist $ref]} {
 		# normal: this array is simply not on the WCS's grid
-	    } elseif {[catch {AsdfAttachWcs $yamltext} msg]} {
+	    } elseif {$cards ne {} && [catch {AsdfAttachWcsCards $cards} msg]} {
+		Warning "[msgcat::mc {ASDF: unable to attach WCS, loading without it}] $msg"
+	    } elseif {$cards eq {} && [catch {AsdfAttachWcs $yamltext} msg]} {
 		Warning "[msgcat::mc {ASDF: unable to attach WCS, loading without it}] $msg"
 	    } elseif {![$current(frame) has wcs wcs]} {
 		# `wcs replace` does not report failure: when AstYamlChan cannot

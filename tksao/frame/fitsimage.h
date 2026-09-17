@@ -130,6 +130,7 @@ class FitsImage {
   int wcsXPH_;
 
   FitsHead* wcsAltHeader_; // alt wcs header
+  char* wcsYaml_; // ASDF/GWCS wcs document, if the wcs came from one
   FitsHead* wfpc2Header_; // wcs header for wfpc2
   FitsHead* wcs0Header_;
 

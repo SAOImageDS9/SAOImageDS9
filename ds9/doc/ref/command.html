@@ -18,6 +18,7 @@
 <a href="#align">align</a><br>
 <a href="#analysis">analysis</a><br>
 <a href="#array">array</a><br>
+<a href="#asdf">asdf</a><br>
 <a href="#asinh">asinh</a><br>
 <a href="#backup">backup</a><br>
 <a href="#bin">bin</a><br>
@@ -280,6 +281,21 @@ $ds9 -analysis text {This is text}<br></tt>
 Example:<br>
 $ds9 -array foo.arr[dim=512,bitpix=-32,endian=little]<br>
 $cat foo.arr | ds9 -array -[dim=512,bitpix=-32,endian=little]<br></tt>
+<p><b><a name="asdf" id="asdf"></a>asdf</b></p>
+<p>Load an image array from an ASDF file into the current frame. The array
+to load may be named by appending a colon and a path within the file. If no
+path is given, <tt>roman/data</tt> is used. A bare name is looked up as
+<tt>roman/&lt;name&gt;</tt>, and failing that as any uniquely matching path.
+If the file contains a GWCS object, it is read and attached as the frame's
+WCS; if it does not, the image still loads with no WCS. See <a href=
+"file.html#asdf">ASDF</a>.<br></p>
+<tt>Syntax:<br>
+-asdf &lt;filename&gt;[:&lt;path&gt;]<br>
+&nbsp;<br>
+Example:<br>
+$ds9 -asdf foo.asdf<br>
+$ds9 -asdf foo.asdf:roman/dq<br>
+$ds9 -asdf foo.asdf:roman/err<br></tt>
 <p><b><a name="asinh" id="asinh"></a></b><b>asinh</b></p>
 <p>Select ASINH scale function for the current frame.</p>
 <tt>Syntax:<br>

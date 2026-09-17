@@ -76,9 +76,16 @@ proc AsdfEnumNdarrays {tree} {
     set result {}
     set stack {}
     set seq [dict create]
-    set path {}
-    set indent -1
-    set fields [dict create]
+
+    # A *stack* of ndarray nodes being collected, innermost last, each
+    # {path indent fields}. It has to be a stack rather than one node
+    # because a core/ndarray may contain another: asdf serializes a numpy
+    # masked array as a `mask:` ndarray nested inside the `data:` one, and
+    # the parent's own datatype/shape follow *after* that nested block.
+    # Collecting into a single node merged the two, last write winning, so
+    # `data` came back carrying the mask's `source:` - loading the mask as
+    # if it were the image. Caught by Tests/asdf's *_blank fixtures.
+    set pending {}
 
     foreach line [split $tree "\n"] {
 	set line [string trimright $line]
@@ -117,10 +124,13 @@ proc AsdfEnumNdarrays {tree} {
 	    continue
 	}
 
-	# a key at or outside the pending node's own indent ends it
-	if {$path ne {} && $ind <= $indent} {
-	    AsdfEnumFlush result $path $fields
-	    set path {}
+	# a key at or outside a collecting node's own indent ends it, and
+	# ends everything nested inside it too
+	while {[llength $pending] &&
+	       $ind <= [lindex [lindex $pending end] 1]} {
+	    set top [lindex $pending end]
+	    set pending [lrange $pending 0 end-1]
+	    AsdfEnumFlush result [lindex $top 0] [lindex $top 2]
 	}
 
 	while {[llength $stack] && [lindex [lindex $stack end] 0] >= $ind} {
@@ -133,24 +143,28 @@ proc AsdfEnumNdarrays {tree} {
 	    }
 	}
 
-	if {$path ne {}} {
-	    dict set fields $kk [string trim $vv]
-	    continue
-	}
-
 	if {[string match {!core/ndarray-*} [string trim $vv]]} {
 	    set names {}
 	    foreach ee $stack {
 		lappend names [lindex $ee 1]
 	    }
-	    set path [join $names /]
-	    set indent $ind
-	    set fields [dict create]
+	    lappend pending [list [join $names /] $ind [dict create]]
+	    continue
+	}
+
+	# an ordinary key belongs to the innermost node still collecting
+	if {[llength $pending]} {
+	    set top [lindex $pending end]
+	    set ff [lindex $top 2]
+	    dict set ff $kk [string trim $vv]
+	    lset pending end [list [lindex $top 0] [lindex $top 1] $ff]
 	}
     }
 
-    if {$path ne {}} {
-	AsdfEnumFlush result $path $fields
+    while {[llength $pending]} {
+	set top [lindex $pending end]
+	set pending [lrange $pending 0 end-1]
+	AsdfEnumFlush result [lindex $top 0] [lindex $top 2]
     }
 
     return $result
@@ -335,6 +349,7 @@ proc AsdfDatatypeToBitpix {datatype} {
 	int32 {return 32}
 	int64 {return 64}
 	uint8 {return 8}
+	bool8 {return 8}
 	default {return {}}
     }
 }

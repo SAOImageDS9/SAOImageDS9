@@ -277,7 +277,10 @@ Five new/changed components, each mapped onto an existing DS9 pattern rather tha
 - Compression: at minimum zlib (already linked elsewhere in the DS9/cfitsio/fitsy stack)
   needs to be wired to the new block reader; bzip2/lz4 block support can be deferred until a
   file using them is actually seen in practice — `log`/error clearly if an unsupported codec
-  is hit rather than silently misreading.
+  is hit rather than silently misreading. *(Outcome: all three are supported. lz4 came
+  first, in Phase 2 — real Roman products use it. bzip2 followed in Phase 5, vendored as
+  `bzip2/` and reached through `asdfbz2decompress`; see `TODO.md`. The clear-error path was
+  built anyway and is what `bzp2` files hit until then.)*
 - No changes anticipated to `tk9.0`/`tcl9.0`/`fitsy`/`funtools` — this is additive.
 
 ## 10. What this does *not* replace

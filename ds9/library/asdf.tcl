@@ -1512,6 +1512,29 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
 	}
     }
 
+    # What the Info panel, the filename display and `xpaget ds9 file` show.
+    #
+    # FitsImage::setNames() truncates the name at the first '[', that being
+    # fitsy's array-spec delimiter - so the array branch below, whose whole
+    # name used to be "[xdim=...,ydim=...]", left every one of those blank.
+    # Putting the label in front of the spec fixes it.
+    #
+    # The label names the array as well as the file, because that is the
+    # question a multi-array format actually raises: a Roman *_cal.asdf has
+    # 15 loadable arrays of identical shape and WCS, so "which one am I
+    # looking at?" is otherwise unanswerable from the UI.
+    #
+    # It uses the *tail* of the path, not the whole path, and that is not
+    # cosmetic: the default `pds9(infobox,filenametype)` is "root base",
+    # which runs the name through FitsImage::root() - and that walks back to
+    # the last '/' and keeps only what follows. A full `roman/data` label
+    # therefore reads as a directory and the panel shows a bare "data",
+    # losing the filename that is the whole point. The tail is also still a
+    # form AsdfResolvePath accepts on the way in, so the label stays a
+    # usable load spec; the fully-qualified path remains visible in the
+    # header viewer for the nested cases where the tail is ambiguous.
+    set dispname "[file tail $fn]:[file tail $path]"
+
     global asdfRawVar
 
     if {$fitsmasked} {
@@ -1525,7 +1548,7 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
 	set loadParam(file,type) fits
 	set loadParam(file,mode) {}
 	set loadParam(load,type) var
-	set loadParam(file,name) [file tail $fn]
+	set loadParam(file,name) $dispname
 	set loadParam(var,name) asdfRawVar
 	set loadParam(load,layer) $layer
     } else {
@@ -1539,7 +1562,7 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
 	    append hdr ",zdim=$zdim"
 	}
 	append hdr ",bitpix=$bitpix,arch=$arch"
-	set loadParam(file,name) "\[$hdr\]"
+	set loadParam(file,name) "$dispname\[$hdr\]"
 	set loadParam(var,name) asdfRawVar
 	set loadParam(load,layer) $layer
     }

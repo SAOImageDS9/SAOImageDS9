@@ -39,7 +39,17 @@ Reference values, independently checked, for `r0000101001001001001_0001_wfi01_f1
 
 - The file's own `romancal.assign_wcs` footprint, `roman/meta/wcs_info/s_region`:
   `POLYGON ICRS 269.986945544 65.974265112 269.986740134 66.097228761 269.676782229 66.097195774 269.680113321 65.974342049`
-- DS9 image coordinate `(-0.5,-0.5)` → `269.9869455 65.9742651` (matches corner 1 to ≤0.0002″).
+- DS9 image coordinate `(-0.5,-0.5)` → `269.9869455 65.9742651`. At the raised `precision`
+  of §3 this now reproduces `s_region` corner 1 **exactly to 9 dp**, not merely to ≤0.0002″.
+
+For the Build22 L3 coadd `r00001_p_v01001001001001_270p65x69y48_f158_coadd.asdf`, the matching
+`_asn.json` is independent ground truth — it declares the skycell WCS directly:
+`nx=ny=5000`, `pixel_scale=1.5277777777777777e-05` deg (0.055″/px),
+`ra_center=269.6395821835357`, `dec_center=65.99501049470986`, `orientat=0.36041781306266785`.
+Those agree with the coadd's own `crpix=[12099.5,-88700.5]`, `crval=[270.0,64.60237300651187]`,
+`cdelt`, `pc` and `gnomonic`: deprojecting by hand as a plain TAN at 0-based pixel
+`(2499.5, 2499.5)` reproduces `ra_center`/`dec_center` to **0.000000″**. So the coadd's WCS
+parameters are correct and trivially readable; only the tag that packages them is unsupported.
   The −0.5 offset is the 1-based-FITS vs 0-based-numpy origin convention.
 - `roman/data`: 4088×4088 float32, `minmax = -187169 6059.94`.
 - Pixel scale ≈ 0.1083″/px (a 40 px radius lists as `4.331"`).
@@ -232,7 +242,7 @@ known triggers of `FitsImage::resetWCS()` are `FitsImage::block()` (both overloa
 | J-1 | `f158_cal`, `grism_cal`, `prism_cal`, `f158_segm` | **PASS** (load + WCS) |
 | J-2 | The three WCS-only products, incl. the bare-transform distortion file | **PASS** — probe *and* in-app. In-app all three correctly refuse to load as images with `ASDF: ambiguous or unknown array data`: they carry no science array, only WCS internals (20/16/8 enumerable ndarrays, all coefficient matrices; `AsdfIsBareTransform` is true for all three). Their arrays *are* reachable by explicit path — a 6×6 `…/coefficients` loads as bitpix −64 and correctly gets no WCS |
 | J-3 | `*_uncal.asdf` (331MB, 4-D ramp) | **PASS** via a synthetic stand-in — the real uncal file is not downloaded, so a synthetic `[4,4,2,2]` uint8 array exercises the same rank check: `ASDF: unsupported ndarray rank data [4, 4, 2, 2]`, frame left empty, DS9 alive. Worth re-running against the real 4-D ramp when it is available |
-| J-4 | Coadd / `_asn` products from Build22 | TODO |
+| J-4 | Coadd / `_asn` products from Build22 | **GAP** (confirmed, see §6.2b) — pixels load, WCS does not. The L3 coadd's WCS is a single `!<tag:stsci.edu:gwcs/fitswcs_imaging-1.0.0>` node that `yamlchan.c` has no handler for, so all five same-grid arrays (`data`, `context`, `err`, `weight`, `var_poisson`, 5000²) load with correct pixels and no WCS. The `_asn.json` is a metadata manifest, not an image — nothing for DS9 to open. Surfaced by the warning added for I-5; before that it was silent |
 | J-5 | Every array within one `*_cal.asdf` (all 15) | **PASS** (load); WCS attach on siblings **PASS** |
 | J-6 | A non-Roman ASDF file | **PASS** — `Tests/asdf/fixtures`, 27 flat-tree images × all 4 codecs: 108/108 load, dimensions and `minmax` both matching DS9's own reading of the source FITS. Caught a real enumerator bug (nested `mask:` ndarray); see `TODO.md` Phase 5 |
 | J-7 | `bzp2`-compressed blocks | **PASS** — bzip2 1.0.8 vendored and wired in; 27/27 load. Each `bzp2` fixture is identical to its `none` twin on dimensions, BITPIX, `minmax`, the `BLANK` card and a SHA-256 of every pixel. 31/31 decoded blocks byte-identical to Python's `bz2`. Truncated, corrupt, over-long and empty payloads each give a distinct error and leave the frame empty |
@@ -276,19 +286,32 @@ DS9's region code.
    project set out to avoid, but is defensible for export specifically, since FITS cannot
    represent the exact transform at all. Needs a decision: approximate-with-a-warning, or
    keep refusing.
-2. **R6 — `bounding_box` is dropped by AST.** The GWCS valid domain is not enforced anywhere,
+2b. **`gwcs/fitswcs_imaging-1.0.0` is unsupported, so L3 coadds get no WCS.** *Found by J-4.*
+   Build22 coadd products express their WCS as one `fitswcs_imaging` node bundling `crpix`,
+   `crval`, `cdelt`, `pc` and a `gnomonic` projection, rather than the explicit
+   `compose`/`shift`/`polynomial`/`gnomonic` chain the L2 `*_cal.asdf` files use.
+   `ast/src/yamlchan.c` has no path for that tag, and `wcs replace` fails silently (which is
+   why the I-5 fix mattered: without it this looked like "coadds just have no WCS").
+   Two ways out, and the cheap one is attractive: (a) add a `fitswcs_imaging` handler to
+   `yamlchan.c` — a C change to a vendored, already-`dirty` package, and a candidate to
+   contribute upstream alongside the version-ceiling bumps; or (b) because these really are
+   FITS-WCS parameters, synthesize FITS cards from them in `asdf.tcl` and use DS9's ordinary
+   FITS WCS path, with no AST change at all. Unlike H-7/R8 there is no approximation
+   involved either way — this transform *is* a TAN. Note the node also carries an explicit
+   `bounding_box` (intervals `[-0.5, 4999.5]`), which R6 would discard.
+3. **R6 — `bounding_box` is dropped by AST.** The GWCS valid domain is not enforced anywhere,
    so coordinates outside the detector extrapolate silently. Pre-existing in `yamlchan.c`.
-3. **R3 — no alternate WCS letters.** `wcsa`…`wcsz` are empty on an ASDF frame.
-4. **Cube WCS.** Rank-3 ASDF arrays load as cubes, but the GWCS is 2-D; there is no third-axis
+4. **R3 — no alternate WCS letters.** `wcsa`…`wcsz` are empty on an ASDF frame.
+5. **Cube WCS.** Rank-3 ASDF arrays load as cubes, but the GWCS is 2-D; there is no third-axis
    WCS, so slice coordinates are pixel-only. `match slice wcs` is consequently a no-op (F-8).
-5. **R10 — anisotropic pixel scale is not represented in angular lengths.** A `circle(...,40)`
+6. **R10 — anisotropic pixel scale is not represented in angular lengths.** A `circle(...,40)`
    on a Roman frame lists as `4.331315"` but actually spans 4.41″ in x and 4.33″ in y. Affects
    region radii, ruler/projection lengths, and anything reading region sizes in angular units.
    Not ASDF-specific code — it is DS9's one-scalar length conversion meeting a WCS that is
    genuinely non-square. A fix would mean carrying per-axis scale through `mapLenFromRef`,
    which is a much wider change than this project; `lock frame wcs` already does handle it
    (F-3), so the machinery exists.
-6. **~~The GWCS is attached to arrays it does not describe.~~ FIXED.** *Found by F-8; was a
+7. **~~The GWCS is attached to arrays it does not describe.~~ FIXED.** *Found by F-8; was a
    bug in this project's own code, not pre-existing DS9.* `AsdfLoadArray` called
    `AsdfAttachWcs` unconditionally on whatever array was loaded, so `roman/amp33` (128×4096
    reference pixels) and the four `border_ref_pix_*` arrays reported the **science array's**
@@ -307,14 +330,14 @@ DS9's region code.
    xpaset caller. Only the surprising case, being unable to identify the WCS's grid at all,
    warns; that is also the case where an exact-match guard could wrongly drop a good WCS
    (a non-Roman file whose science array is not called `data`).
-7. **A WCS-only file warns when you load its internals.** `AsdfWcsGridShape` cannot resolve a
+8. **A WCS-only file warns when you load its internals.** `AsdfWcsGridShape` cannot resolve a
    science array in a file that has none (the three `*_wcs.asdf` products), so loading one of
    their coefficient matrices by explicit path emits `cannot tell which array the WCS
    describes`. The outcome is right — a 6×6 coefficient matrix must not get a sky WCS — but
    the message is noise there, and it reaches an `xpaset` caller as `XPA$ERROR`. Narrowing it
    would mean recognising that the loaded array lives *inside* the WCS subtree; left alone
    rather than adding a heuristic. See J-2.
-8. **The array browser offers WCS internals as loadable images.** A real `*_cal.asdf`
+9. **The array browser offers WCS internals as loadable images.** A real `*_cal.asdf`
    enumerates 25 loadable arrays, of which 10 are `roman/meta/wcs/.../coefficients` and
    `.../matrix` blocks (6×6 and 2×2 float64) — genuine `core/ndarray`s, but nobody wants to
    display a polynomial coefficient matrix. Cosmetic; they sort last already.

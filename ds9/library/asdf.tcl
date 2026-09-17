@@ -1078,6 +1078,16 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
     set loadParam(var,name) asdfRawVar
     set loadParam(load,layer) $layer
 
+    # Provenance for Backup. ProcessLoadSaveParams persists the whole
+    # loadParam array per frame, so these ride along for free and let
+    # backup.tcl reload from the ASDF file itself. Without them a backup
+    # falls back to BackupFrameLoadAlloc's FITS conversion, which keeps
+    # the pixels but silently drops both the GWCS - it has no FITS-card
+    # representation to convert into - and the YAML tree. Absolute,
+    # because a backup may be written from any working directory.
+    set loadParam(asdf,file) [file normalize $fn]
+    set loadParam(asdf,path) $path
+
     set rr [ProcessLoad]
     unset -nocomplain asdfRawVar
 

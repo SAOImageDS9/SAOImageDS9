@@ -104,6 +104,7 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   wcsXPH_ =0;
 
   wcsAltHeader_ =NULL;
+  wcsYaml_ =NULL;
   wfpc2Header_ =NULL;
   wcs0Header_ =NULL;
 
@@ -166,6 +167,8 @@ FitsImage::~FitsImage()
 
   if (wcsAltHeader_)
     delete wcsAltHeader_;
+  if (wcsYaml_)
+    delete [] wcsYaml_;
   if (wfpc2Header_)
     delete wfpc2Header_;
   if (wcs0Header_)
@@ -1241,7 +1244,11 @@ void FitsImage::resetWCS()
   if (wfpc2Header_)
     initWCS(wfpc2Header_);
   else
-    initWCS(image_->head());
+    // For an ASDF frame the GWCS is the file's own WCS, not a user
+    // override, so unlike wcsAltHeader_ above it must survive this reset -
+    // otherwise blocking silently leaves the frame with no WCS at all,
+    // since the image header carries no WCS cards to fall back on.
+    initWCS(image_->head(), wcsYaml_);
 
   // apply block factor
   if (ast_) {
@@ -2133,6 +2140,16 @@ void FitsImage::replaceWCSYaml(const char* yamltext)
   if (wcsAltHeader_)
     delete wcsAltHeader_;
   wcsAltHeader_ = hh;
+
+  // Remember the document itself, not just the resulting AstFrameSet.
+  // resetWCS() rebuilds the WCS from scratch whenever the image is
+  // rebuilt - blocking is the common trigger, and even a no-op
+  // `block to 1 1` does it - and it has no FITS cards to rebuild a GWCS
+  // from. The FITS path survives that because its cards live on in the
+  // header it re-reads; this is the equivalent for YAML.
+  if (wcsYaml_)
+    delete [] wcsYaml_;
+  wcsYaml_ = dupstr(yamltext);
 
   initWCS(wcsAltHeader_, yamltext);
 }

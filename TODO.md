@@ -23,10 +23,10 @@ Detail lives in the phase sections below; this is the map.
   see Phase 0. **It has not been run there** — see open items.
 - **A real test suite** in the sibling `Tests` repo, wired into its `io.sh`.
 
-### The AST bugs — four fixed locally, one open
+### The AST bugs — four fixed locally, three open
 
 All in `ast/src/yamlchan.c` unless noted. `ast` is already marked `dirty` in `Manifest.md`.
-**All five are upstream Starlink code, not ours**, and all five should go upstream together
+**All seven are upstream Starlink code, not ours**, and all should go upstream together
 with the 10 pre-existing `MAKE_TEST` version-ceiling bumps.
 
 1. **`LibYamlWriter` signature — FIXED (`8064e7408`).** Declared its size argument
@@ -56,6 +56,24 @@ with the 10 pre-existing `MAKE_TEST` version-ceiling bumps.
    are different projections and SZP's 2nd/3rd parameters are phi_c/theta_c. Out by ~6500"
    with demonstrably correct parameters. AST *does* have `AST__AZP`, so this needs an
    upstream decision about the right mapping rather than a local patch.
+6. **`ortho_polynomial` ignores `polynomial_type` on read — NOT FIXED.** `ReadPoly()` is
+   called with `isortho=1` and goes straight to `astChebyMap()`; the node's
+   `polynomial_type` field is never read on input, only ever *written*
+   (`Store0C(..., "polynomial_type", ..., "chebyshev", ...)`). So a file declaring a
+   different orthogonal basis is read as a Chebyshev with the wrong basis functions rather
+   than refused — the same silent-wrongness class as bug 4. AST's own prologue is honest
+   that it supports "ortho_polynomial (chebyshev only)"; the gap is that nothing enforces
+   it. **Not verified against the schema**: no astropy or asdf-transform-schemas install is
+   available here, so whether the schema's enum actually offers other bases (legendre,
+   hermite) was not confirmed — check that before filing.
+7. **The `ecliptic` frame may be keyed on a spelling astropy never writes — NOT FIXED.**
+   `MAKE_TEST` compares the whole class string up to the version dash, so
+   `IsAEcliptic()` matches only `astropy/coordinates/frames/ecliptic`. AST's prologue
+   instead claims `barycentricmeanecliptic`, which would *not* match that test. Our
+   fixture uses `ecliptic-1.0.0` and verifies, so the handler works — but possibly on a tag
+   no real file contains, in which case real ecliptic products get no WCS. Needs one
+   astropy-written ecliptic file to settle, which is also why this is listed as suspected
+   rather than confirmed.
 
 ### Open items, roughly in priority order
 
@@ -83,7 +101,8 @@ with the 10 pre-existing `MAKE_TEST` version-ceiling bumps.
 3. **Windows is built but never *exercised*.** The codec commands, the 154-baseline sweep,
    the GWCS bridge against a real Roman file, `asdfmask`/`asdfconvert` byte-order work, and
    backup/restore are all unvalidated there. See Phase 0's open item for the list.
-4. **Send the four AST fixes upstream** and report the fifth (`zenithal_perspective`).
+4. **Send the four AST fixes upstream** and report the three open ones
+   (`zenithal_perspective`, the `ortho_polynomial` basis, the `ecliptic` tag spelling).
 5. **H-7: saving an ASDF frame as FITS loses the WCS.** Needs a product decision —
    approximate cards with a warning, or keep refusing. See `WCS_TEST_PLAN.md` §6.
 6. **R9/R10**, both generic DS9 rather than ours but far more visible on Roman: region

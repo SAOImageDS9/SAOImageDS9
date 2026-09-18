@@ -16,7 +16,10 @@ Detail lives in the phase sections below; this is the map.
   array paths, all four block codecs (`none`/`zlib`/`lz4`/`bzp2`), both mask forms with FITS
   integer-null semantics, GWCS via AST, header viewer, XPA/SAMP/CLI, menus, buttonbar, docs,
   portable backup/restore.
-- **`WCS_TEST_PLAN.md` is fully executed: 77 PASS / 3 GAP / 0 TODO.**
+- **`WCS_TEST_PLAN.md` is fully executed: 76 PASS / 1 GAP / 1 BY DESIGN** across its 78
+  matrix rows (counted from the rows themselves; the older "77 PASS / 3 GAP" tally
+  totalled 80 and had drifted). The one remaining GAP is C-9, the ruler in angular
+  units, which is R10. H-7 is the BY DESIGN one — see below.
 - **L3 coadds work**, via a `fitswcs_imaging` → FITS-card translation in `asdf.tcl`
   (`f59e6a180`) plus `FitsImage::wcsCards_` in tksao so the cards survive `resetWCS()`.
 - **All three platforms are validated**, not just built: the 185-fixture suite passes on
@@ -226,7 +229,7 @@ is a finding about the ecosystem rather than a defect.
     they become PolyMaps with no WinMap involved. To reproduce: build AST with
     `-fsanitize=address`, build `yamlchan_probe` against it, and read a fixture whose
     transform concatenates two planar2ds. The upstream clone's
-    `ISSUE-1-winmap-overread.md` carries that as its primary reproducer.
+    `AST_ISSUES.md` carries that as issue 1's primary reproducer.
 
     Two fixtures were affected and both are rebuilt to shapes that are clean under ASan:
     `Tests/asdf/transform/fix_inputs.asdf` and `Tests/asdf/transform/planar2d.asdf`, each
@@ -263,14 +266,12 @@ is a finding about the ecosystem rather than a defect.
    same patch, since the first makes the second reachable. Of the open ones, **bug 11 (the
    `winmap.c` overread) should go first**: it is a memory error with an ASan trace, and it
    silently produces different WCS results on different platforms.
-4. **H-7: saving an ASDF frame as FITS loses the WCS.** Needs a product decision —
-   approximate cards with a warning, or keep refusing. See `WCS_TEST_PLAN.md` §6.
-5. **R9/R10**, both generic DS9 rather than ours but far more visible on Roman: region
+4. **R9/R10**, both generic DS9 rather than ours but far more visible on Roman: region
    *angles* use one image-wide rotation, and angular *lengths* use one scalar scale while
    the Roman GWCS is ~2% anisotropic. `WCS_TEST_PLAN.md` §1 has the measurements.
-6. **R6: AST drops `bounding_box`**, so nothing enforces the valid-pixel domain, and the
+5. **R6: AST drops `bounding_box`**, so nothing enforces the valid-pixel domain, and the
    inverse also stops converging outside the detector (A-5).
-7. Smaller: an ASDF icon for the top icon row (needs PNG artwork for `ds9/icons/ui/` and
+6. Smaller: an ASDF icon for the top icon row (needs PNG artwork for `ds9/icons/ui/` and
    `ui_dark/`); `uint16`/`uint32` masked arrays would need the FITS `BZERO` convention; the
    array browser offers WCS-internal coefficient matrices as loadable images.
 
@@ -393,11 +394,13 @@ Not yet looked at: `fixtures/oracle` (6 files, `check_transform_oracle.c`),
 corpus is the one most worth mining for DS9's own FITS-WCS behaviour, since it is 476 real
 headers and DS9's entire WCS layer is AST FitsChan — but nothing there is ASDF-specific.
 
-Three findings have no patch and are drafted as issues in the clone root:
-`ISSUE-1-winmap-overread.md` (bug 11, with the ASan trace and a self-contained fixture),
-`ISSUE-2-unsupported-projection-error.md` (ZPN/NCP/GLS/TPN have no writer branch, and the
-NULL return surfaces as `astIsAObject(<NULL>)` rather than naming the projection), and
-`ISSUE-3-observed-celestial-frames.md` (bug 8).
+Three findings have no patch and are written up in **`AST_ISSUES.md`** in this repo,
+ready to paste into upstream issues: the `winmap.c` overread (bug 11, with the ASan trace
+and a self-contained fixture), the confusing error for a projection with no ASDF class
+(ZPN/NCP/GLS/TPN have no writer branch, and the NULL return surfaces as
+`astIsAObject(<NULL>)` rather than naming the projection), and the four unrecognised
+observed frames (bug 8). They live in this repo rather than the clone because the clone is
+excluded from git and disposable.
 
 Two things to know before building the clone: it has no `configure` (the repo ships
 `CMakeLists.txt` and a `bootstrap` needing autotools), so use cmake — there is an

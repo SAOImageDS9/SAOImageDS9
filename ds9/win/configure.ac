@@ -55,9 +55,6 @@ TEA_LOAD_CONFIG(vector)
 TEA_PATH_CONFIG(fitsy)
 TEA_LOAD_CONFIG(fitsy)
 
-TEA_PATH_CONFIG(tclasdf)
-TEA_LOAD_CONFIG(tclasdf)
-
 TEA_PATH_CONFIG(tifftcl)
 TEA_LOAD_CONFIG(tifftcl)
 

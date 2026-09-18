@@ -719,6 +719,15 @@ proc BackupFrameLoadAlloc {which varname fdir rdir} {
 	    }
 	}
 	nrrd {$which save fits image file \"$ffn\"}
+	asdf {
+	    # Only reached when the ASDF file itself is gone -
+	    # BackupFrameLoad tries BackupAsdfFile first and returns on
+	    # success. The pixels are then all there is left to keep, so
+	    # write them as FITS like every other branch here; the WCS and
+	    # the YAML tree are lost with the file, which is exactly why
+	    # reloading from the file is preferred whenever it still exists.
+	    $which save fits image file \"$ffn\"
+	}
 	photo {
 	    switch -- [$which get type] {
 		base -

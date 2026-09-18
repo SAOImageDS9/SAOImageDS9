@@ -55,7 +55,7 @@ saods9	: dirs tcl tk \
 	openssl \
 	zlib lz4 bzip2 \
 	xpa funtools libyaml ast \
-	vector fitsy tclasdf \
+	vector fitsy \
 	tclsignal \
 	tls tclxml tclxmlrpc \
 	tkblt tclfitsy tktable tkimg \

@@ -45,6 +45,7 @@ arcsec		{return ARCSEC_;}
 array		{return ARRAY_;}
 arrow		{return ARROW_;}
 area		{return AREA_;}
+asdf		{return ASDF_;}
 asinh		{return ASINH_;}
 ast		{return AST_;}
 auto		{return AUTO_;}

@@ -23,7 +23,7 @@ Detail lives in the phase sections below; this is the map.
   see Phase 0. **It has not been run there** — see open items.
 - **A real test suite** in the sibling `Tests` repo, wired into its `io.sh`.
 
-### The AST bugs — seven fixed locally, three open
+### The AST bugs — seven fixed locally, one more fixed upstream-only, two open
 
 All in `ast/src/yamlchan.c` unless noted. `ast` is already marked `dirty` in `Manifest.md`.
 **All are upstream Starlink code, not ours**, and all should go upstream together. Item 9
@@ -51,11 +51,21 @@ is a finding about the ecosystem rather than a defect.
    of precession from J2000. Affected `byear`, `jyear` and `jd`; `mjd` escaped only because
    it is the default. This is why the FK4/FK5/ecliptic frame fixtures were silently
    *wrong* rather than failing outright.
-5. **`zenithal_perspective` maps to the wrong projection — NOT FIXED.**
-   `ReadSkyProjection()` sends it to `AST__SZP` with `pv1=mu, pv2=gamma`, but AZP and SZP
-   are different projections and SZP's 2nd/3rd parameters are phi_c/theta_c. Out by ~6500"
-   with demonstrably correct parameters. AST *does* have `AST__AZP`, so this needs an
-   upstream decision about the right mapping rather than a local patch.
+5. **`zenithal_perspective` maps to the wrong projection — FIXED, but only in the
+   upstream clone so far.** `ReadSkyProjection()` sends it to `AST__SZP` with
+   `pv1=mu, pv2=gamma`; those are AZP's PV2_1/PV2_2, while SZP's 2nd and 3rd parameters
+   are phi_c/theta_c, so gamma arrives as phi_c. The writer has the matching half: there
+   are **two `type == AST__SZP` branches**, and the second — the one writing mu and gamma
+   for `zenithal_perspective` — is unreachable, so `AST__AZP` was simply never wired up on
+   either side. The fix is one token in each place: `AST__AZP`.
+
+   Verified by round trip in the upstream clone: build an AZP WCS from FITS cards through
+   a FitsChan, write it as ASDF, read it back, and the sky positions agree exactly. On
+   master the write fails instead. AST's own 2444-test suite still passes.
+
+   **Not yet applied to the vendored `ast/`.** Doing so should turn
+   `Tests/asdf/gwcs/zenithal_perspective.asdf` from the one projection that is out by
+   ~6500″ into a verified one (26 of 27), which means regenerating that baseline.
 6. **`ortho_polynomial` ignored `polynomial_type` on read — FIXED.** `ReadPoly()` is
    called with `isortho=1` and went straight to `astChebyMap()`; the field was never read
    on input, only ever *written*. The schema makes it **required** with enum
@@ -323,6 +333,43 @@ The full lists are in **`WCS_TEST_PLAN.md` §3** (DS9/XPA gotchas) and
 - **Running the suite** needs `ds9` and the XPA tools on `PATH` under the name `ds9`; on
   macOS the binary is `bin/SAOImageDS9.app/Contents/MacOS/ds9`, so a small wrapper on
   `PATH` is the easy way.
+
+### Upstream AST patches, ready to send
+
+`ast_upstream/` is a clone of `github.com/Starlink/ast` (excluded from this repo's git via
+`.git/info/exclude`), with one branch per issue off `master` at 9cf7f8ff. Every branch
+builds with cmake and passes AST's own suite, **2444 tests, 100%**, and each one that can
+be tested at runtime adds a `test_*` to `ast_tester/testyamlchan.c` plus a plain-YAML
+fixture under `ast_tester/fixtures/programs/testyamlchan/` — that directory is covered by
+a `programs/` line in `fixtures/DIST_MANIFEST`, so nothing needs registering. Each test
+was confirmed to fail without its fix.
+
+```
+fix/yamlchan-libyaml-writer-size-t      LLP64 build break (no runtime test possible)
+fix/yamlchan-healpix-unreachable        + test_healpix_projections, 2 fixtures
+fix/yamlchan-linear1d-uninitialised     + test_linear1d
+fix/yamlchan-gettime-epoch-prefix       + test_jyear_equinox
+fix/yamlchan-ortho-polynomial-basis     + test_ortho_polynomial_basis, 2 fixtures
+fix/yamlchan-schema-version-ceilings    55 ceilings + test_current_schema_versions
+fix/yamlchan-earthlocation-dispatch     + test_earthlocation
+fix/yamlchan-zenithal-perspective-azp   + test_zenithal_perspective_roundtrip
+```
+
+Note the ceilings branch raises **55**, not the 45 we applied here: the vendored copy
+already carried 10 earlier bumps.
+
+Three findings have no patch and are drafted as issues in the clone root:
+`ISSUE-1-winmap-overread.md` (bug 11, with the ASan trace and a self-contained fixture),
+`ISSUE-2-unsupported-projection-error.md` (ZPN/NCP/GLS/TPN have no writer branch, and the
+NULL return surfaces as `astIsAObject(<NULL>)` rather than naming the projection), and
+`ISSUE-3-observed-celestial-frames.md` (bug 8).
+
+Two things to know before building the clone: it has no `configure` (the repo ships
+`CMakeLists.txt` and a `bootstrap` needing autotools), so use cmake — there is an
+`astbuild` conda env with cmake and libyaml. And **a program linking the shared libast
+must define `astPutErr_`**, or AST's error delivery calls through a null pointer and any
+reported error looks like a segfault. That cost real time here: it made two non-crashes
+look like crashes.
 
 ### This session's commits, for orientation
 

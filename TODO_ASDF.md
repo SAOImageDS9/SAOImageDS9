@@ -22,10 +22,78 @@ Detail lives in the phase sections below; this is the map.
   units, which is R10. H-7 is the BY DESIGN one — see below.
 - **L3 coadds work**, via a `fitswcs_imaging` → FITS-card translation in `asdf.tcl`
   (`f59e6a180`) plus `FitsImage::wcsCards_` in tksao so the cards survive `resetWCS()`.
+- **The container reader is C++**, in `fitsy/asdf.{h,C}` — see "The C++ port" below.
 - **All three platforms are validated**, not just built: the 185-fixture suite passes on
   macOS, Linux and Windows/mingw. Windows needed four build fixes (`7d722dbef`); see
-  Phase 0.
-- **A real test suite** in the sibling `Tests` repo, wired into its `io.sh`.
+  Phase 0. **The C++ port has only been run on macOS so far** — Linux and Windows still
+  need a pass.
+- **A real test suite** in the sibling `Tests` repo, wired into its `io.sh`. 186 fixtures
+  now: `arrays/int16_cube3` was added with the port, see below.
+
+### The C++ port (2026-09-18)
+
+The container reader moved out of Tcl and into `fitsy/asdf.{h,C}`, which is where the
+design doc always put it (§8.1 — the Tcl version was a deliberate detour, taken to avoid
+regenerating `tksao/frame/lex.C`). Two classes: `FitsAsdfFile` for the container (magic
+line, YAML tree, ndarray enumeration, block reads, all four codecs) and
+`FitsAsdf : FitsFile` for one named array (widening, mask → BLANK/NaN, its own
+`FitsHead`). The frame reaches it through a new `load asdf {name} {file} {path} layer`
+command, exactly as `load nrrd mmap` reaches `FitsNRRDMMap`.
+
+`ds9/library/asdf.tcl` lost 725 lines and kept 202: what is left is the GWCS subtree
+extraction and the UI/scripting plumbing. It reaches the same C++ reader for the tree
+text, the array listing and a single block through `fitsy asdf tree|arrays|block`, added
+to `tclfitsy` — so the format has one implementation, not one for pixels and another for
+metadata.
+
+Worth not re-deriving:
+
+- **The file is no longer read whole.** The Tcl reader had to hold all of it in a Tcl
+  string to reach a block, so a 197MB Roman product cost ~197MB of byte array plus a
+  second copy for the decoded block. `FitsAsdf` seeks.
+- **The flex risk that motivated the Tcl detour is characterized, not fatal.**
+  `/usr/bin/bison` 2.3 reproduces the checked-in `parser.C` byte-identically. The local
+  flex differs from whatever produced `lex.C` only by a 45-line skeleton type-width churn,
+  always the same 13 hunks — so: regenerate, reverse-apply that no-op diff hunk by hunk,
+  and the result carries nothing but the new keyword's DFA tables. Verified by diffing
+  before installing it. Adding the token alphabetically renumbers every token, which is
+  why `parser.C`'s diff is ~11k lines for a one-line grammar change; that is inherent to
+  bison, not a sign anything went wrong.
+- **A cube needs a next-slice reader, and nothing tested that.** DS9 presents a rank-3
+  array as a chain of one-plane images: `Context::load` asks for `nhdu()-1` of them, and
+  the new `MemType` fell through that switch's `default`, leaving a NULL that
+  `next->isValid()` dereferenced — an outright segfault on `roman/amp33`. `FitsAsdfNext`
+  fixes it. The suite had one rank-3 fixture, `arrays/int16_plane1`, and it is depth 1,
+  which never asks for a slice at all and passed throughout. `arrays/int16_cube3` (three
+  planes, each offset by 10000) is the regression test; its planes were verified against
+  an identically-shaped FITS cube, per-slice, through `scale limits`.
+- **`tclasdf/` is gone.** `asdflz4decompress`, `asdfbz2decompress`, `asdfconvert` and
+  `asdfmask` existed only for the parts of the Tcl path too slow in Tcl; all four are
+  inside `fitsy/asdf.C` now. Removing the package meant unwinding it from six places
+  besides the directory itself: the build order in `{unix,macos,win}/Makefile.in`, the
+  target/clean/distclean rules in `make.include`, `tclasdf_LIB_SPEC` in each
+  `ds9/*/Makefile.in`, `TEA_PATH_CONFIG`/`TEA_LOAD_CONFIG` in each `ds9/*/configure.ac`
+  **and the ~255-line block each of those generated into `ds9/*/configure`** (hand-edited,
+  since there is no autoconf on this box — the same way the block was added), the
+  `Tcl_StaticPackage` registration in each `ds9/*/ds9.C`, and the `Manifest.md` row.
+  `liblz4`/`libbz2` stay: fitsy's reader is their consumer now.
+- **A trailing length-1 axis is already collapsed.** `arrays/int16_plane1` is shape
+  `[1, 64, 64]` and loads with `NAXIS = 2` and no `NAXIS3` - `FitsHead(w,h,d,bitpix)`
+  writes `NAXIS` as `depth>1 ? 3 : 2`, so depth 1 never produces a third axis and never
+  opens the Cube panel. Checked on the synthetic header itself, not inferred. Only a
+  genuine depth > 1 array (`int16_cube3`, `roman/amp33`) is a cube.
+- **The Cube panel is sticky.** `LoadUpdate` opens it when `has fits cube` and nothing
+  ever closes it, so after one cube every later load in that session still shows it -
+  identical for FITS, and easy to mistake for "everything is opening as a cube".
+- **`xpaget data image x y 1 1` always reads slice 1**, for FITS as much as for ASDF. It
+  is the wrong probe for per-slice verification; `scale limits` under `scale mode minmax`
+  is a right one.
+- **A crashed ds9 leaves `~/<title>.auto` behind**, and the next instance with that title
+  opens a modal "Found Auto Backup, restore?" (`AutoSaveRestore`) that nothing can
+  dismiss from a script: it registers with XPA and then answers nothing. `xpaaccess`
+  says yes, every `xpaset` says "no response from server during handshake". Delete the
+  file. Relatedly, `set pds9(confirm) 0` through the `tcl` entry point stops `Error`/
+  `Warning` from opening dialogs at all.
 
 ### Masks
 
@@ -376,10 +444,13 @@ The full lists are in **`WCS_TEST_PLAN.md` §3** (DS9/XPA gotchas) and
 
 ### Where things live
 
-- **Reader**: `ds9/library/asdf.tcl` (the bulk), `tclasdf/asdf_ext.c` (four C commands:
-  `asdflz4decompress`, `asdfbz2decompress`, `asdfconvert`, `asdfmask`),
-  `tksao/frame/fitsimage.{h,C}` (`yaml2ast`, `replaceWCSYaml`/`wcsYaml_`,
-  `replaceWCSCards`/`wcsCards_`).
+- **Reader**: `fitsy/asdf.{h,C}` (the container and the pixel path — the bulk),
+  `ds9/library/asdf.tcl` (the GWCS subtree extraction and the UI/scripting plumbing),
+  `tclfitsy/tclfitsy.C` (`fitsy asdf tree|arrays|block`, the Tcl door into the same
+  reader), `tksao/frame/{fitsimage,base,frame,context}.{h,C}` and
+  `tksao/frame/parser.Y`+`lex.L` (the `load asdf` command, `FitsImageAsdf`,
+  `FitsImageAsdfNext`), plus `tksao/frame/fitsimage.{h,C}`'s `yaml2ast`,
+  `replaceWCSYaml`/`wcsYaml_` and `replaceWCSCards`/`wcsCards_` for the WCS.
 - **Tests** are a **separate git repo** at `Tests/` (`github.com/SAOImageDS9/Tests`) — commit
   there separately. `asdf.sh` drives them, `io.sh` lists them, baselines are `.sav` next to
   each fixture, and files are found with `find` so new ones are picked up automatically.

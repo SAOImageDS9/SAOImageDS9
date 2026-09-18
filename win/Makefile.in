@@ -65,7 +65,7 @@ saods9	: dirs tcl tk \
 	xpa funtools libyaml ast \
 	vector \
 	tls tclxml tclxmlrpc \
-	tkblt tktable tkimg fitsy tclasdf tclfitsy \
+	tkblt tktable tkimg fitsy tclfitsy \
 	tkmpeg tkagif tkhtml1 tkcon \
 	tkwin \
 	tkdnd tksao ds9

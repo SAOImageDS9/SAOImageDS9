@@ -7,10 +7,10 @@ package provide DS9 1.0
 proc DisplayHeaderMenu {} {
     global current
 
-    # An ASDF-loaded frame has no FITS header worth showing: its pixels
-    # arrived through the array/var load path, whose synthetic header
-    # carries only the dimensions DS9 itself supplied. The file's real
-    # metadata is its YAML tree, cached by ds9/library/asdf.tcl.
+    # An ASDF-loaded frame has no FITS header worth showing: FitsAsdf
+    # (fitsy/asdf.C) builds it, so it carries only the dimensions, BITPIX
+    # and BLANK the array itself implied. The file's real metadata is its
+    # YAML tree, cached by ds9/library/asdf.tcl.
     if {[AsdfHasTree $current(frame)]} {
 	DisplayAsdfHeader $current(frame)
 	return

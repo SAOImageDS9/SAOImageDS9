@@ -307,6 +307,15 @@ The full lists are in **`WCS_TEST_PLAN.md` §3** (DS9/XPA gotchas) and
     what turned AST bugs 6–9 from suspicion into measurement. Write test files with
     `all_array_storage="inline"`, since AST reads only inline ndarrays and `asdf.tcl`'s
     `AsdfResolveNdarrays` (which does that job in DS9) is not in the path when probing.
+- **Never let the build re-run autotools on a vendored package.** `ast` and `libyaml` are
+  the only two that use automake, and neither declares `AM_MAINTAINER_MODE`, so automake's
+  rebuild rules are always live: a checkout's arbitrary mtimes can leave `configure.ac`
+  looking newer than `configure`, and the build then tries to regenerate it with whatever
+  autotools are installed and fails. Both rules in `make.include` now `touch` the whole
+  generated set so the rules cannot fire. **Reconfiguring the package instead is the wrong
+  fix** — it rewrote ~7000 lines of tracked `configure`/`aclocal.m4`/`Makefile.in` and had
+  to be reverted (`187aa9c4b`). Everything else vendored here is TEA or plain autoconf,
+  which emits no such rules.
 - **An abandoned `iexam` wedges DS9 against all XPA** until a real click; only a restart
   clears it. Do not start one from a script.
 

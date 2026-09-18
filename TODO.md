@@ -459,10 +459,19 @@ Every commit message here is deliberately long and carries the reasoning, the me
 and the rejected alternatives. If this summary is ever thinner than you need,
 `git show <sha>` is the fuller record.
 
-### Nothing has been pushed
+### What is pushed, and where
 
-Neither repo has been pushed to any remote. All the work described here is local commits
-only; pushing is a deliberate decision that has not been taken.
+- **Main repo** → `https://github.com/kglotfelty/SAOImageDS9`, branch `asdf_support`, last pushed at
+  `8636e142f TODO: AST bug 11's real trigger, and the sweep that finds it`, with **3 local commit(s) ahead** of that. This is a
+  personal fork, not `SAOImageDS9/SAOImageDS9`; nothing has gone to the DS9 project itself.
+- **`Tests`** → `github.com/SAOImageDS9/Tests`, branch `master`, pushed and **up to date**
+  at `d86f746 planar2d: the other fixture that read past a buffer`. Note this one is the project's own repo, not a fork.
+- **`ast_upstream/`** → nothing pushed. All nine branches are local, with no upstream
+  tracking ref; the PRs and the `AST_ISSUES.md` issues are the user's to open.
+
+Check rather than assume: `git log --oneline origin/asdf_support..HEAD` here, and
+`git log --oneline @{u}..HEAD` in `Tests`. This section replaces an earlier one claiming
+nothing had been pushed anywhere, which stopped being true once the fork was pushed to.
 
 ## Phase 0 — Build foundation (vendoring)
 

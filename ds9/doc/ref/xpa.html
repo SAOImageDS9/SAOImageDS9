@@ -310,6 +310,7 @@ WCS; if it does not, the image still loads with no WCS. See <a href=
 not be piped in. Resolving an array requires the block index stored at the
 end of an ASDF file, so a filename is required.</p>
 <p>A <tt>mask</tt> loads the array into the frame's mask layer instead of as the image, so a quality array can be laid over the science array it belongs to. The mask is thresholded by the settings in <b>Analysis&nbsp;&#8594;&nbsp;Mask Parameters</b>, whose default marks every non-zero pixel &#8212; which is what a data-quality array wants. The same thing is reachable from that dialog's <b>File&nbsp;&#8594;&nbsp;Open&nbsp;as&nbsp;&#8594;&nbsp;ASDF</b>.</p>
+<p>In an RGB, HLS or HSV frame the array is loaded into the frame's current channel, and in a 3D or multi-color frame as that frame expects, exactly as a FITS image would be. Select the channel first &#8212; with <tt>-rgb&nbsp;channel&nbsp;red</tt> or the equivalent for the other frame types.</p>
 <tt>Syntax:<br>
 asdf [new|mask] &lt;filename&gt;[:&lt;path&gt;]<br>
 &nbsp;<br>

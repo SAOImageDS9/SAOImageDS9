@@ -336,15 +336,17 @@ path is given, <tt>roman/data</tt> is used. A bare name is looked up as
 If the file contains a GWCS object, it is read and attached as the frame's
 WCS; if it does not, the image still loads with no WCS. See <a href=
 "file.html#asdf">ASDF</a>.<br></p>
+<p>A <tt>mask</tt> loads the array into the frame's mask layer instead of as the image, so a quality array can be laid over the science array it belongs to. The mask is thresholded by the settings in <b>Analysis&nbsp;&#8594;&nbsp;Mask Parameters</b>, whose default marks every non-zero pixel &#8212; which is what a data-quality array wants. The same thing is reachable from that dialog's <b>File&nbsp;&#8594;&nbsp;Open&nbsp;as&nbsp;&#8594;&nbsp;ASDF</b>.</p>
 <tt>Syntax:<br>
-asdf [new] &lt;filename&gt;[:&lt;path&gt;]<br>
+asdf [new|mask] &lt;filename&gt;[:&lt;path&gt;]<br>
 &nbsp;<br>
 Example:<br>
 ds9.set(string command, string url)<br>
 asdf foo.asdf<br>
 asdf new foo.asdf<br>
 asdf foo.asdf:roman/dq<br>
-asdf foo.asdf:roman/err<br></tt>
+asdf foo.asdf:roman/err<br>
+asdf mask foo.asdf:roman/dq<br></tt>
 <p><b><a name="backup" id="backup"></a>backup</b></p>
 <p>Create a backup save set.</p>
 <tt>Syntax:<br>

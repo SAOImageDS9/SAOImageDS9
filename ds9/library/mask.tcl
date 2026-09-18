@@ -136,6 +136,9 @@ proc MaskDialog {} {
 	-command MaskDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     ThemeMenu $mb.file.open
+    $mb.file.open add command -label [msgcat::mc {ASDF}] \
+	-command [list OpenDialog asdf mask]
+    $mb.file.open add separator
     $mb.file.open add command -label [msgcat::mc {Mosaic WCS}] \
 	-command [list OpenDialog mosaicimagewcs mask]
     $mb.file.open add command -label [msgcat::mc {Mosaic WCS Segment}] \

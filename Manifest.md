@@ -19,7 +19,6 @@ Last updated 2026-11-11
 | scidthemes   | 1.0        |       |       | https://sourceforge.net/projects/scid/files/Scid/Additional%20Files/ | 1.0                             |
 | taccle       | 1.4        | y     |       | https://github.com/SAOImageDS9/taccle-maintenance                    | previous upstream abandoned     |
 | tcl9.0       | 9.0.4      |       | y     | https://github.com/tcltk/tcl                                         | 9.1.0 (9.0.4 on 9.0 branch) (6) |
-| tclasdf      |            | y     |       |                                                                      |                                 |
 | tclfitsy     |            | y     |       |                                                                      |                                 |
 | tcllib       | 2.0        |       |       | https://github.com/tcltk/tcllib                                      | 2.0                             |
 | tclsignal    | 1.5.0      | y     |       | https://github.com/SAOImageDS9/tclsignal-maintenance                 | 1.5.0                           |

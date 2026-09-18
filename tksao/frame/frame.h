@@ -128,6 +128,8 @@ class Frame : public FrameBase {
   void loadNRRDSocketCmd(int, const char*, LayerType);
   void loadNRRDVarCmd(const char*, const char*, LayerType);
 
+  void loadAsdfCmd(const char*, const char*, const char*, LayerType);
+
   void loadMosaicImageAllocCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
   void loadMosaicImageAllocGZCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
   void loadMosaicImageChannelCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);

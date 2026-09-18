@@ -4,263 +4,54 @@
 
 package provide DS9 1.0
 
-# Native ASDF support (see ASDF_NATIVE_SUPPORT_DESIGN.md, TODO.md Phase 2).
+# Native ASDF support (see ASDF_NATIVE_SUPPORT_DESIGN.md, TODO.md).
 #
-# This is the pixel-array half only: locate one block-sourced core/ndarray
-# node in an ASDF file's YAML tree, decompress its binary block, and hand
-# the decoded buffer to DS9's existing array/var load path (fitsy's
-# FitsArrVar - see fitsy/var.C) - no cfitsio/fitsy ASDF-specific parsing,
-# no new FitsImage subclass. The WCS half (Phase 1's AST/YamlChan bridge)
-# is not wired in here yet - that is Phase 3.
+# The container itself - the magic line, the YAML tree, the block layout
+# and headers, the codecs, the ndarray enumeration, the datatype mapping
+# and the mask resolution - is read in C++, in fitsy/asdf.C, the way every
+# other format DS9 reads is. What is left here is the part that
+# is genuinely text manipulation: lifting a GWCS subtree out of the tree
+# and reshaping it into a standalone document AST will accept, and the
+# UI/scripting plumbing around it.
 #
-# Deliberately reads the whole file into memory rather than seeking/
-# streaming - fine for this milestone, but real production code (Phase 3+)
-# should read only the tree text and the one target block's bytes instead.
-
-# ASDF's first line is a mandatory ASCII magic, "#ASDF <version>" (see the
-# asdf-standard file_layout spec). Checked before anything else so that a
-# FITS file - or any other non-ASDF file - handed to the ASDF loader is
-# told what is actually wrong, rather than failing further down with a
-# confusing "could not find ndarray" from the tree walk.
-proc AsdfIsAsdf {data} {
-    return [string equal -length 6 {#ASDF } $data]
-}
-
-proc AsdfTreeText {data} {
-    set idx [string first "\xd3BLK" $data]
-    if {$idx < 0} {
-	return $data
-    }
-    return [string range $data 0 [expr {$idx-1}]]
-}
-
-# Returns a list of byte offsets, one per ASDF binary block, read from the
-# file's trailing "#ASDF BLOCK INDEX" section.
-proc AsdfBlockIndex {data} {
-    set idx [string first "#ASDF BLOCK INDEX" $data]
-    if {$idx < 0} {
-	return {}
-    }
-    set tail [string range $data $idx end]
-    set offsets {}
-    foreach line [split $tail "\n"] {
-	if {[regexp {^\s*-\s*(\d+)\s*$} $line -> off]} {
-	    lappend offsets $off
-	}
-    }
-    return $offsets
-}
-
-# Enumerates every block-sourced core/ndarray node in the tree, anywhere in
-# it, returning a list of
-# {path source datatype byteorder shapelist unsupported maskscalar} with
-# `path` a root-relative slash path (e.g. roman/data,
-# roman/meta/wcs/steps/0/transform/forward/1/coefficients). Phase 4: this
-# replaces the Phase 2 reader's "one level under roman:, 2-space indent"
-# assumption, and backs both arbitrary-path loading and the array browser.
+# Two doors into that C++ reader:
 #
-# A real indent walker rather than more bounded regexps, because a path
-# needs the enclosing structure, not just the node. Checked against every
-# sample file first: all core/ndarray nodes in all of them are block-style
-# mapping values - none inside a flow mapping, none as a bare sequence
-# element - with consistent 2-space indentation, so mapping keys plus
-# sequence elements is full coverage in practice. An ndarray written in
-# flow style ({source: 0, ...}) would be skipped rather than misread.
+#   `$frame load asdf {name} {file} {path} layer' - the pixel path. The
+#   frame builds a FitsAsdf (fitsy/asdf.C) which seeks to the array's
+#   block, decompresses it, widens a datatype fitsy cannot hold, resolves
+#   an asdf mask onto FITS BLANK/NaN, and hands the frame a synthetic
+#   header. No temp file, no Tcl byte array, and the file is never read
+#   whole - which is the point, since a Roman *_cal.asdf is ~200MB and
+#   used to be slurped into a Tcl string in its entirety.
 #
-# Sequence elements get a numeric path component, which matters: a GWCS
-# document has many `coefficients` keys and only the step index tells them
-# apart. The element is pushed at indent+1 - a half level - so that a
-# following element at the same indent pops it while leaving its parent
-# key, and a deeper mapping key pops neither.
-proc AsdfEnumNdarrays {tree} {
-    set result {}
-    set stack {}
-    set seq [dict create]
+#   `fitsy asdf tree|arrays|block <file>' - the metadata path, through
+#   tclfitsy. Same C++ reader, so there is one implementation of the
+#   format rather than one for pixels and another for everything else.
 
-    # A *stack* of ndarray nodes being collected, innermost last, each
-    # {path indent fields}. It has to be a stack rather than one node
-    # because a core/ndarray may contain another: asdf serializes a numpy
-    # masked array as a `mask:` ndarray nested inside the `data:` one, and
-    # the parent's own datatype/shape follow *after* that nested block.
-    # Collecting into a single node merged the two, last write winning, so
-    # `data` came back carrying the mask's `source:` - loading the mask as
-    # if it were the image. Caught by Tests/asdf's *_blank fixtures.
-    set pending {}
-
-    foreach line [split $tree "\n"] {
-	set line [string trimright $line]
-	set body [string trimleft $line]
-	if {$body eq {} ||
-	    [string index $body 0] eq "#" ||
-	    [string index $body 0] eq "%" ||
-	    [string range $body 0 2] eq "---" ||
-	    [string range $body 0 2] eq "..."} {
-	    continue
-	}
-	set ind [expr {[string length $line] - [string length $body]}]
-
-	if {$body eq "-" || [string range $body 0 1] eq "- "} {
-	    while {[llength $stack] &&
-		   [lindex [lindex $stack end] 0] > $ind} {
-		set stack [lrange $stack 0 end-1]
-	    }
-	    if {![dict exists $seq $ind]} {
-		dict set seq $ind 0
-	    }
-	    set idx [dict get $seq $ind]
-	    dict set seq $ind [expr {$idx + 1}]
-	    lappend stack [list [expr {$ind + 1}] $idx]
-
-	    # YAML's compact form puts the element's first key on the dash
-	    # line itself, two columns further in
-	    set body [string range $body 2 end]
-	    set ind [expr {$ind + 2}]
-	    if {$body eq {}} {
-		continue
-	    }
-	}
-
-	if {![regexp {^([A-Za-z0-9_.+-]+):(.*)$} $body -> kk vv]} {
-	    continue
-	}
-
-	# a key at or outside a collecting node's own indent ends it, and
-	# ends everything nested inside it too
-	while {[llength $pending] &&
-	       $ind <= [lindex [lindex $pending end] 1]} {
-	    set top [lindex $pending end]
-	    set pending [lrange $pending 0 end-1]
-	    AsdfEnumFlush result [lindex $top 0] [lindex $top 2]
-	}
-
-	while {[llength $stack] && [lindex [lindex $stack end] 0] >= $ind} {
-	    set stack [lrange $stack 0 end-1]
-	}
-	lappend stack [list $ind $kk]
-	foreach dd [dict keys $seq] {
-	    if {$dd >= $ind} {
-		dict unset seq $dd
-	    }
-	}
-
-	if {[string match {!core/ndarray-*} [string trim $vv]]} {
-	    set names {}
-	    foreach ee $stack {
-		lappend names [lindex $ee 1]
-	    }
-	    lappend pending [list [join $names /] $ind [dict create]]
-	    continue
-	}
-
-	# an ordinary key belongs to the innermost node still collecting
-	if {[llength $pending]} {
-	    set top [lindex $pending end]
-	    set ff [lindex $top 2]
-	    dict set ff $kk [string trim $vv]
-	    lset pending end [list [lindex $top 0] [lindex $top 1] $ff]
-	}
-    }
-
-    while {[llength $pending]} {
-	set top [lindex $pending end]
-	set pending [lrange $pending 0 end-1]
-	AsdfEnumFlush result [lindex $top 0] [lindex $top 2]
-    }
-
-    return $result
+# Every block backed core/ndarray in `fn', as a list of
+#   {path source datatype byteorder shapelist unsupported maskscalar bitpix}
+# `path' is root relative (roman/data,
+# roman/meta/wcs/steps/0/transform/forward/1/coefficients); `unsupported'
+# names the reasons the array cannot be read as pixels, empty when there
+# are none; `bitpix' is what the loader would use after any lossless
+# widening, empty for a datatype it cannot represent.
+#
+# Raises if `fn' is not an ASDF file or cannot be read.
+proc AsdfArrays {fn} {
+    return [fitsy asdf arrays $fn]
 }
 
-# Appends one enumerated node to `result` if it is block-sourced and
-# carries the fields the load path needs. An inline (`data:`) ndarray is
-# skipped rather than reported: it has no block to read, and the WCS path
-# is the only thing that consumes those (AsdfResolveNdarrays).
-proc AsdfEnumFlush {varname path fields} {
-    upvar $varname result
-
-    if {![dict exists $fields source] || ![dict exists $fields datatype] ||
-	![dict exists $fields shape]} {
-	return
-    }
-    set source [dict get $fields source]
-    set datatype [dict get $fields datatype]
-    if {![string is integer -strict $source]} {
-	return
-    }
-
-    # No default here on purpose. The ndarray schema's `dependencies` make
-    # shape, datatype and byteorder all mandatory whenever `source` is
-    # present, so a block-backed array with no byteorder can only come from
-    # a malformed file - and picking an order for it silently byte-swaps
-    # every pixel when the guess is wrong, which is worse than refusing.
-    # (An inline `data:` array legitimately has no byteorder, but this proc
-    # never sees one: the `source` test above drops those.) Recorded just
-    # below, alongside the other reasons an entry cannot be loaded.
-    set byteorder {}
-    if {[dict exists $fields byteorder]} {
-	set byteorder [dict get $fields byteorder]
-    }
-
-    if {![regexp {^\[([0-9, ]*)\]$} [dict get $fields shape] -> shapetext]} {
-	return
-    }
-    set shapelist {}
-    foreach ss [split $shapetext ,] {
-	set ss [string trim $ss]
-	if {$ss ne {}} {
-	    lappend shapelist $ss
-	}
-    }
-    if {$shapelist eq {}} {
-	return
-    }
-
-    # asdf-standard's core/ndarray allows `offset` and `strides` to
-    # describe a non-contiguous view into the block, in which case the
-    # block's raw bytes are NOT the array and handing them to the array
-    # load path would render the wrong pixels with no complaint. No
-    # sample file uses either (every `offset:` in the real Roman files is
-    # a !transform/shift parameter, not an ndarray field - checked), so
-    # rather than implement striding on speculation, record it and let
-    # the caller refuse. A zero offset is just the default, spelled out.
-    set unsupported {}
-    if {$byteorder eq {}} {
-	lappend unsupported byteorder
-    }
-    if {[dict exists $fields strides]} {
-	lappend unsupported strides
-    }
-    if {[dict exists $fields offset] &&
-	[string trim [dict get $fields offset]] ne "0"} {
-	lappend unsupported offset
-    }
-
-    # A scalar `mask:` names the missing-value sentinel outright (see
-    # AsdfMaskResolve). Carry it on the entry; an ndarray mask is found
-    # separately as the node's own `<path>/mask` entry. A complex mask
-    # (asdf allows complex-1.0.0) is not a number Tcl can use as a
-    # sentinel here, so it is recorded as unsupported rather than ignored.
-    set maskscalar {}
-    if {[dict exists $fields mask]} {
-	set mv [string trim [dict get $fields mask]]
-	if {![string match {!core/ndarray-*} $mv]} {
-	    if {[string is double -strict $mv] || $mv eq {.nan} ||
-		$mv eq {.inf} || $mv eq {-.inf}} {
-		set maskscalar $mv
-	    } else {
-		lappend unsupported mask
-	    }
-	}
-    }
-
-    lappend result [list $path $source $datatype $byteorder $shapelist \
-			$unsupported $maskscalar]
+# The file's YAML tree text: everything before the first binary block.
+proc AsdfTree {fn} {
+    return [fitsy asdf tree $fn]
 }
 
-# Looks up one enumerated node by its root-relative path. Returns
-# {source datatype byteorder shapelist} - the same shape the Phase 2
-# AsdfFindNdarray returned - or {} if there is no such path.
-proc AsdfFindNdarrayPath {tree path} {
-    foreach entry [AsdfEnumNdarrays $tree] {
+# Looks up one enumerated node by its root-relative path in an
+# AsdfArrays result. Returns the entry minus its path -
+# {source datatype byteorder shapelist unsupported maskscalar bitpix} -
+# or {} if there is no such path.
+proc AsdfFindNdarrayPath {entries path} {
+    foreach entry $entries {
 	if {[lindex $entry 0] eq $path} {
 	    return [lrange $entry 1 end]
 	}
@@ -270,17 +61,15 @@ proc AsdfFindNdarrayPath {tree path} {
 
 # Turns a user-supplied key into a full path. A key containing "/" is
 # already one. A bare name means Roman's fixed top-level layout
-# (roman/data, roman/err, ...), which keeps every Phase 2/3 caller working
-# unchanged; failing that, a unique match on the last path component is
-# accepted, so a non-Roman file's `sci` resolves without the user having
-# to spell out its full nesting. An ambiguous bare name returns {} rather
-# than picking one.
-proc AsdfResolvePath {tree key} {
+# (roman/data, roman/err, ...); failing that, a unique match on the last
+# path component is accepted, so a non-Roman file's `sci` resolves
+# without the user having to spell out its full nesting. An ambiguous
+# bare name returns {} rather than picking one.
+proc AsdfResolvePath {entries key} {
     if {[string first / $key] >= 0} {
 	return $key
     }
 
-    set entries [AsdfEnumNdarrays $tree]
     foreach entry $entries {
 	if {[lindex $entry 0] eq "roman/$key"} {
 	    return "roman/$key"
@@ -299,116 +88,6 @@ proc AsdfResolvePath {tree key} {
     }
 
     return {}
-}
-
-# Phase 2 signature, kept because the WCS code and the probe tooling call
-# it: `key` is a direct child of the top-level "roman:" mapping.
-proc AsdfFindNdarray {tree key} {
-    return [AsdfFindNdarrayPath $tree "roman/$key"]
-}
-
-# Reads and decompresses the ASDF binary block starting at `offset`.
-# Returns {compression decodedBytes}, or {} on a parse error.
-proc AsdfReadBlock {data offset} {
-    if {[string range $data $offset [expr {$offset+3}]] != "\xd3BLK"} {
-	return {}
-    }
-    binary scan [string range $data [expr {$offset+4}] [expr {$offset+5}]] Su hdrsize
-    set hdr [string range $data [expr {$offset+6}] [expr {$offset+6+$hdrsize-1}]]
-
-    set compression [string trimright [string range $hdr 4 7] "\x00"]
-    binary scan [string range $hdr 8 31] WuWuWu allocated used decoded
-
-    set payloadStart [expr {$offset+6+$hdrsize}]
-    set payload [string range $data $payloadStart [expr {$payloadStart+$used-1}]]
-
-    switch -- $compression {
-	{} {
-	    return [list {} [string range $payload 0 [expr {$decoded-1}]]]
-	}
-	zlib {
-	    return [list zlib [zlib decompress $payload]]
-	}
-	lz4 {
-	    return [list lz4 [AsdfLz4DecompressPayload $payload $decoded]]
-	}
-	bzp2 {
-	    return [list bzp2 [asdfbz2decompress $payload $decoded]]
-	}
-	default {
-	    error "unsupported ASDF block compression: $compression"
-	}
-    }
-}
-
-# ASDF's lz4 framing (see asdf/_compression.py upstream, and TODO.md
-# Phase 1): the payload is a sequence of chunks, each preceded by its own
-# 4-byte big-endian compressed length. asdflz4decompress (tclasdf) handles
-# one chunk (which itself carries a leading 4-byte little-endian
-# decoded-size prefix, python-lz4's own convention). bzp2 above needs no
-# such loop - unlike lz4.block, bzip2 has a stream format, so an asdf bzp2
-# payload is one plain bzip2 stream and asdfbz2decompress takes all of it.
-proc AsdfLz4DecompressPayload {payload decodedSize} {
-    set out {}
-    set pos 0
-    set len [string length $payload]
-    while {$pos < $len && [string length $out] < $decodedSize} {
-	binary scan [string range $payload $pos [expr {$pos+3}]] Iu chunklen
-	incr pos 4
-	set chunk [string range $payload $pos [expr {$pos+$chunklen-1}]]
-	incr pos $chunklen
-	append out [asdflz4decompress $chunk]
-    }
-    return $out
-}
-
-# ASDF/numpy datatype name -> FITS BITPIX, per fitsy's [xdim=...,bitpix=...]
-# array-header grammar (fitsy/parser.Y). Returns {} for unsupported types.
-#
-# -16 is not a FITS BITPIX at all - it is fitsy's own private code for
-# unsigned 16-bit (fitsy/parser.Y's compact atype rule maps 'u' to it, and
-# FitsFile::validParams in fitsy/file.C accepts it alongside the real FITS
-# values). The full set fitsy accepts is exactly {8,16,-16,32,64,-32,-64},
-# so uint32/uint64/int8/float16 have no representation here and are
-# deliberately left unmapped rather than silently coerced to a narrower or
-# differently-signed type. Real Roman arrays do hit that gap: a *_segm.asdf
-# product's roman.data is uint32, and a *_cal.asdf's roman.var_poisson is
-# float16 - see TODO.md Phase 3.
-proc AsdfDatatypeToBitpix {datatype} {
-    switch -- $datatype {
-	float32 {return -32}
-	float64 {return -64}
-	int16 {return 16}
-	uint16 {return -16}
-	int32 {return 32}
-	int64 {return 64}
-	uint8 {return 8}
-	bool8 {return 8}
-	default {return {}}
-    }
-}
-
-# The ASDF datatypes fitsy cannot represent at all, paired with the
-# narrowest type it can that holds every value of them exactly. Returns {}
-# for a datatype with no lossless widening.
-#
-# Both of these occur on real Roman science arrays, and between them they
-# account for most of a *_cal.asdf: float16 is roman.err/var_poisson/
-# chisq/dumo, uint32 is roman.dq and the dq_border_ref_pix_* set. The
-# widening itself is done by `asdfconvert` (tclasdf/asdf_ext.c) - far too
-# slow over 16.7M elements in Tcl - which always emits little-endian, so
-# the caller fixes arch accordingly.
-#
-# Losslessness is the whole justification here: a narrowing or
-# sign-changing coercion (uint32 -> int32, say) would quietly alter pixel
-# values, which is worse than refusing the array. uint64 has no lossless
-# target in fitsy's set and so is deliberately absent.
-proc AsdfWidenDatatype {datatype} {
-    switch -- $datatype {
-	float16 {return float32}
-	uint32 {return int64}
-	default {return {}}
-    }
 }
 
 # Native ASDF/GWCS WCS attachment (TODO.md Phase 3). Ported from the Phase 1
@@ -518,9 +197,9 @@ proc AsdfWrapBareTransform {subtree} {
 
 # ASDF/numpy datatype+byteorder -> a Tcl `binary scan` format spec (see
 # tcl9.0/doc/binary.n: lowercase little-endian/uppercase big-endian, `u`
-# suffix unsigned, `r`/`R` float32, `q`/`Q` float64 - the same convention
-# already established for AsdfReadBlock's header parsing above). Returns
-# {} for unsupported types.
+# suffix unsigned, `r`/`R` float32, `q`/`Q` float64). Returns {} for
+# unsupported types. Used only on the small inline coefficient arrays a
+# GWCS subtree carries, never on pixels.
 proc AsdfBinaryFmt {datatype byteorder count} {
     set big [expr {$byteorder eq "big"}]
     switch -- $datatype {
@@ -580,13 +259,12 @@ proc AsdfNestValues {decoded datatype byteorder shapelist indent} {
 
 # Rewrites every block-sourced `!core/ndarray-*` node in `text` (a GWCS
 # subtree, already extracted/renamed/wrapped) as an inline `data:` literal,
-# using `data`'s (the FULL raw file's) real decoded block bytes - AST's
+# reading each one's real block bytes out of `fn` as it goes - AST's
 # YamlChan only accepts inline ndarrays, never block-sourced ones (design
 # doc SS7b). Real Roman GWCS documents always use block-sourced ndarrays,
 # even for tiny coefficient matrices - this is required, not an edge case
 # (TODO.md Phase 1). Mirrors resolve_ndarray.py's resolve().
-proc AsdfResolveNdarrays {text data} {
-    set offsets [AsdfBlockIndex $data]
+proc AsdfResolveNdarrays {text fn} {
     # Two Tcl-regex-specific gotchas fixed here, both confirmed the hard
     # way against a real multi-hundred-line GWCS subtree, not assumed:
     # (1) Tcl's "." matches newlines too, unlike most other regex flavors
@@ -627,8 +305,7 @@ proc AsdfResolveNdarrays {text data} {
 	    lappend shapelist [string trim $s]
 	}
 
-	set offset [lindex $offsets $source]
-	lassign [AsdfReadBlock $data $offset] compression decoded
+	set decoded [fitsy asdf block $fn $source]
 	set dataRepr [AsdfNestValues $decoded $datatype $byteorder \
 			  $shapelist $indent]
 
@@ -643,7 +320,8 @@ proc AsdfResolveNdarrays {text data} {
 # YAML document from the file's tree text, trying each candidate key in
 # turn (the key name/nesting isn't fixed across Roman product types -
 # TODO.md Phase 1). Returns {} if none of the candidate keys are found.
-# `data` is the full raw file bytes (needed to resolve embedded ndarrays).
+# `fn` is the ASDF file, needed to resolve the subtree's own embedded
+# ndarrays back into inline literals.
 #
 # Two real, confirmed shapes, tried in order:
 #  - `keys`, at 2-space indent directly under "roman:" - the small
@@ -652,7 +330,7 @@ proc AsdfResolveNdarrays {text data} {
 #  - `metaKeys`, at 4-space indent nested under "roman: {meta: {...}}" -
 #    the design doc's original roman.meta.wcs assumption, confirmed
 #    against a real full science-product "*_cal.asdf" file.
-proc AsdfExtractWcsText {tree data {keys {wcs wcs_l2 wcs_l1}} {metaKeys wcs}} {
+proc AsdfExtractWcsText {tree fn {keys {wcs wcs_l2 wcs_l1}} {metaKeys wcs}} {
     # Indents to try, in order. Two-space first because that is where every
     # real Roman product keeps it (`roman:` then `  meta:` ... or `  wcs:`),
     # so the common case still matches on the first attempt.
@@ -660,7 +338,7 @@ proc AsdfExtractWcsText {tree data {keys {wcs wcs_l2 wcs_l1}} {metaKeys wcs}} {
     # The empty indent - a `wcs:` key at the very top of a flat tree - was
     # missing until fixtures for the sky projections turned up:
     # Phase 4 generalized the *array* lookup away from Roman's fixed
-    # indents (AsdfEnumNdarrays walks the whole tree) but left the *WCS*
+    # indents (the ndarray enumerator walks the whole tree) but left the *WCS*
     # lookup pinned to them, so a perfectly legal flat GWCS file loaded its
     # pixels and silently got no WCS at all.
     set subtree {}
@@ -700,7 +378,7 @@ proc AsdfExtractWcsText {tree data {keys {wcs wcs_l2 wcs_l1}} {metaKeys wcs}} {
     # this directive. Mirrors extract_subtree.py's HEADER constant exactly.
     set header "#ASDF 1.0.0\n%YAML 1.1\n%TAG ! tag:stsci.edu:asdf/\n--- !core/asdf-1.1.0\n"
 
-    return [AsdfResolveNdarrays "$header$doc" $data]
+    return [AsdfResolveNdarrays "$header$doc" $fn]
 }
 
 # --------------------------------------------------------------------
@@ -713,13 +391,14 @@ proc AsdfExtractWcsText {tree data {keys {wcs wcs_l2 wcs_l1}} {metaKeys wcs}} {
 # list to build and no "report arrays by shape/dtype" pass to write - the
 # format did that for us.
 #
-# The text is cached here in Tcl rather than on the C++ side because
-# nothing under tksao/ ever sees the ASDF container at all: the frame
-# receives only a raw pixel buffer through the array/var load path, with a
-# synthetic minimal FITS header that has nothing worth displaying. Keyed
-# by frame, and cleared whenever that frame is reloaded or unloaded (see
-# AsdfClearTree's callers in load.tcl and frame.tcl) so a FITS file loaded
-# over an ASDF one can never show the previous file's tree.
+# Cached per frame rather than re-read on demand: the C++ reader can hand
+# back a tree any time (`fitsy asdf tree'), but the *frame* is what the
+# viewer is asked about, and a frame remembers which file it came from
+# only through this cache. Cleared whenever that frame is reloaded or
+# unloaded (see AsdfClearTree's callers in load.tcl and frame.tcl), so a
+# FITS file loaded over an ASDF one can never show the previous file's
+# tree. The frame's own header is synthetic - the dimensions and BITPIX
+# FitsAsdf gave it, plus BLANK - and has nothing worth displaying.
 
 proc AsdfSetTree {frame fn tree} {
     global asdf
@@ -1028,12 +707,12 @@ proc AsdfAttachWcsCards {cards} {
     }
 }
 
-proc AsdfWcsGridShape {tree} {
-    set path [AsdfResolvePath $tree data]
+proc AsdfWcsGridShape {entries} {
+    set path [AsdfResolvePath $entries data]
     if {$path eq {}} {
 	return {}
     }
-    set node [AsdfFindNdarrayPath $tree $path]
+    set node [AsdfFindNdarrayPath $entries $path]
     if {$node eq {}} {
 	return {}
     }
@@ -1084,10 +763,11 @@ proc AsdfAttachWcs {yamltext} {
 # wants to look at as an image. Rank and datatype are filtered by the same
 # rules AsdfLoadArray enforces, so nothing offered here can fail on
 # selection.
-proc AsdfLoadableArrays {tree} {
+proc AsdfLoadableArrays {entries} {
     set rows {}
-    foreach entry [AsdfEnumNdarrays $tree] {
-	lassign $entry path source datatype byteorder shapelist unsupported
+    foreach entry $entries {
+	lassign $entry path source datatype byteorder shapelist \
+	    unsupported maskscalar bitpix
 
 	if {$unsupported ne {}} {
 	    continue
@@ -1097,8 +777,11 @@ proc AsdfLoadableArrays {tree} {
 	if {$rank != 2 && $rank != 3} {
 	    continue
 	}
-	if {[AsdfDatatypeToBitpix $datatype] == {} &&
-	    [AsdfWidenDatatype $datatype] == {}} {
+
+	# an empty bitpix is the reader's own answer for "no BITPIX holds
+	# this datatype, and no lossless widening does either", so there
+	# is no second copy of that table here
+	if {$bitpix eq {}} {
 	    continue
 	}
 
@@ -1124,24 +807,12 @@ proc AsdfLoadableArrays {tree} {
 proc AsdfPathDialog {fn varname} {
     upvar $varname var
 
-    if {[catch {
-	set fh [open $fn r]
-	fconfigure $fh -translation binary -encoding iso8859-1
-	# the tree is everything before the first binary block, so there is
-	# no need to read a 197MB file to list what is in it
-	set data [read $fh 4000000]
-	close $fh
-    } msg]} {
-	Error "[msgcat::mc {Unable to load}] $fn: $msg"
+    if {[catch {AsdfArrays $fn} entries]} {
+	Error "[msgcat::mc {Unable to load}] $fn: $entries"
 	return 0
     }
 
-    if {![AsdfIsAsdf $data]} {
-	Error "[msgcat::mc {ASDF: not an ASDF file}] $fn"
-	return 0
-    }
-
-    set rows [AsdfLoadableArrays [AsdfTreeText $data]]
+    set rows [AsdfLoadableArrays $entries]
     switch -- [llength $rows] {
 	0 {
 	    Error "[msgcat::mc {ASDF: no loadable arrays found}] $fn"
@@ -1191,59 +862,37 @@ proc AsdfSplitPath {fn} {
 }
 
 # --------------------------------------------------------------------
-# Masked integer arrays -> the FITS integer-null convention.
+# Masked arrays -> the FITS null conventions.
 #
-# asdf represents a numpy masked array as an explicit boolean `mask:`
-# ndarray beside the data; FITS marks nulls with a BLANK keyword naming a
-# sentinel *value*. Translating the former into the latter lets DS9's
-# existing machinery do the work, and it is already exactly right:
-# FitsData keeps the native integer storage and substitutes NAN only at
-# the getValueFloat() boundary, while minmax skips blank pixels
-# (tksao/frame/fitsdata.C). So the integers are retained and the null
-# pixels are *known*, with nothing promoted to float - the cheap fix of
-# casting to float/double is specifically what this avoids.
+# asdf represents a numpy masked array as an explicit boolean `mask`
+# ndarray beside the data, and the core/ndarray schema also allows a
+# scalar `mask` naming the sentinel value outright. Both are resolved in
+# C++ (asdfApplyMask in fitsy/asdf.C): an integer array keeps its native
+# storage and gets a BLANK keyword, a float array gets NaN written into
+# the masked pixels. Nothing is promoted to float, which is the whole
+# point - FitsData substitutes NAN only at the getValueFloat() boundary
+# and minmax skips blank pixels (tksao/frame/fitsdata.C).
 #
-# The array/var load path cannot carry a BLANK: fitsy's array-header
-# grammar has no such keyword (fitsy/parser.Y's `arr` rule is
-# xdim/ydim/zdim/dim/bitpix/skip/arch only), and adding one would mean
-# regenerating fitsy's flex scanner, which this checkout's flex cannot
-# reproduce byte-identically (see CLAUDE.md). So instead of loading a raw
-# array we hand DS9 a genuine minimal FITS file built in memory and load
-# it through FitsFitsVar (Base::loadFitsVarCmd) - the same
-# no-temp-file Tcl-variable transport, but with a real header, which
-# carries BLANK for free.
+# Building the header in C++ is also what retired the in-memory FITS file
+# this used to synthesize: fitsy's array-spec grammar has no BLANK
+# keyword, so the only way to carry one through the array loader was to
+# wrap the pixels in a whole FITS file and hand that over instead.
+# FitsAsdf makes its own FitsHead and appends the card.
 
-# Resolves an array's asdf `mask` - in either of the two forms the
-# core/ndarray schema allows - into FITS null form. Returns
-# {blank bigEndianData}, or {} when there is no mask, nothing is actually
-# masked, or the combination is not one we can represent faithfully.
-#
-# The schema's `mask` is `anyOf`: a scalar number ("that number is used to
-# represent missing values" - the FITS BLANK convention exactly), a
-# complex number, or a bool8 ndarray broadcastable to the data's shape.
-# Both numeric forms are handled here; a complex mask is flagged as
-# unsupported by AsdfEnumFlush and reported below rather than ignored.
-# Where both forms are present the ndarray wins, following the schema's
-# own "an explicit mask array ... takes precedence".
-#
-# Only datatypes with a real FITS BITPIX are eligible, since the result is
-# loaded as an actual FITS file. That excludes uint16/uint32 (they would
-# need FITS's BZERO unsigned-offset convention) and float16 - those fall
-# back to the plain array path, with a warning, rather than being loaded
-# as if they had no nulls at all.
-proc AsdfMaskResolve {tree data offsets path node decoded} {
-    lassign $node source datatype byteorder shapelist unsupported maskscalar
-
-    set masknode [AsdfFindNdarrayPath $tree "$path/mask"]
-
-    if {[lsearch -exact $unsupported mask] >= 0} {
-	Warning "[msgcat::mc {ASDF: unsupported mask form, loading without null values}] $path"
-	return {}
-    }
+# The mask cases the reader declines, warned about here rather than left
+# silent: the array does load, but without its null values, and that is
+# worth saying. Everything else - picking the sentinel, the broadcast
+# rules, NaN for floats - happens in C++ and needs nothing from here.
+proc AsdfMaskWarn {entries path datatype maskscalar} {
+    set masknode [AsdfFindNdarrayPath $entries "$path/mask"]
     if {$masknode eq {} && $maskscalar eq {}} {
-	return {}
+	return
     }
 
+    # Only the datatypes with a real FITS BITPIX are eligible. That
+    # excludes uint16 (it would need FITS's BZERO unsigned-offset
+    # convention) and anything that had to be widened, since its BITPIX
+    # is no longer the datatype the mask was written against.
     switch -- $datatype {
 	uint8 -
 	int16 -
@@ -1253,46 +902,16 @@ proc AsdfMaskResolve {tree data offsets path node decoded} {
 	float64 {}
 	default {
 	    Warning "[msgcat::mc {ASDF: cannot represent null values for datatype, loading without them}] $datatype"
-	    return {}
+	    return
 	}
     }
-
-    set maskbytes {}
-    set scalar {}
 
     if {$masknode ne {}} {
 	lassign $masknode msource mdatatype mbyteorder mshape munsupported
 	if {$munsupported ne {}} {
 	    Warning "[msgcat::mc {ASDF: unreadable mask array, loading without null values}] $path/mask"
-	    return {}
-	}
-	set moffset [lindex $offsets $msource]
-	if {$moffset eq {}} {
-	    Warning "[msgcat::mc {ASDF: mask block index out of range}] $msource"
-	    return {}
-	}
-	if {[catch {AsdfReadBlock $data $moffset} mblk] || $mblk eq {}} {
-	    Warning "[msgcat::mc {ASDF: unreadable mask block, loading without null values}] $path/mask"
-	    return {}
-	}
-	lassign $mblk mcompression maskbytes
-    } else {
-	# .nan/.inf are YAML's own float spellings; Tcl understands the
-	# bare words, so hand them over in a form expr/double accepts
-	switch -- $maskscalar {
-	    .nan {set scalar NaN}
-	    .inf {set scalar Inf}
-	    -.inf {set scalar -Inf}
-	    default {set scalar $maskscalar}
 	}
     }
-
-    if {[catch {asdfmask $decoded $datatype $byteorder $maskbytes $scalar} rr]} {
-	Warning "[msgcat::mc {ASDF}] $rr"
-	return {}
-    }
-
-    return $rr
 }
 
 # One 80-column FITS card. Values are right-justified in columns 11-30,
@@ -1300,43 +919,6 @@ proc AsdfMaskResolve {tree data offsets path node decoded} {
 proc AsdfFitsCard {keyword value} {
     set card [format "%-8s= %20s" $keyword $value]
     return [format "%-80s" [string range $card 0 79]]
-}
-
-# A minimal FITS primary header for a 2-d image, padded to the 2880-byte
-# block size. `blank` is optional; when given it is emitted as the BLANK
-# keyword, which is only meaningful for a positive (integer) BITPIX.
-proc AsdfFitsHeader {xdim ydim bitpix {blank {}}} {
-    set cards {}
-    append cards [AsdfFitsCard SIMPLE T]
-    append cards [AsdfFitsCard BITPIX $bitpix]
-    append cards [AsdfFitsCard NAXIS 2]
-    append cards [AsdfFitsCard NAXIS1 $xdim]
-    append cards [AsdfFitsCard NAXIS2 $ydim]
-    if {$blank ne {} && $bitpix > 0} {
-	append cards [AsdfFitsCard BLANK $blank]
-    }
-    append cards [format "%-80s" END]
-
-    set pad [expr {2880 - ([string length $cards] % 2880)}]
-    if {$pad != 2880} {
-	append cards [string repeat " " $pad]
-    }
-    return $cards
-}
-
-# Integer ASDF datatypes that map onto a real FITS BITPIX directly, i.e.
-# without needing the BZERO offset trick FITS uses for unsigned types.
-# uint16/uint32 would need BZERO 32768 / 2147483648 and are deliberately
-# absent: no sample file has a masked one, and guessing at that convention
-# untested is worse than falling back.
-proc AsdfFitsBitpix {datatype} {
-    switch -- $datatype {
-	uint8 {return 8}
-	int16 {return 16}
-	int32 {return 32}
-	int64 {return 64}
-	default {return {}}
-    }
 }
 
 # The Open/OpenDialog-facing entry point (see ds9/library/open.tcl's Open
@@ -1395,11 +977,13 @@ proc AsdfCmdLoad {param layer} {
     FinishLoad
 }
 
-# Loads one ndarray from an ASDF file into the current frame, via the
-# existing array/var load path. `key` is either a full root-relative path
-# (roman/dq, or any deeper path the enumerator reports) or a bare name,
-# resolved by AsdfResolvePath - default "data", i.e. Roman's fixed
-# science array. Returns 1 on success, 0 on failure (matching ProcessLoad).
+# Loads one ndarray from an ASDF file into the current frame, through the
+# frame's own `load asdf' command - the C++ container reader in
+# fitsy/asdf.C, reached the same way `load fits mmap' reaches the FITS
+# one. `key` is either a full root-relative path (roman/dq, or any deeper
+# path the enumerator reports) or a bare name, resolved by
+# AsdfResolvePath - default "data", i.e. Roman's fixed science array.
+# Returns 1 on success, 0 on failure (matching ProcessLoad).
 proc AsdfLoadArray {fn {key data} {layer {}}} {
     global current
     global loadParam
@@ -1408,33 +992,34 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
 	CreateFrame
     }
 
-    if {[catch {
-	set fh [open $fn r]
-	fconfigure $fh -translation binary -encoding iso8859-1
-	set data [read $fh]
-	close $fh
-    } msg]} {
-	Error "[msgcat::mc {Unable to load}] $fn: $msg"
+    if {[catch {AsdfArrays $fn} entries]} {
+	Error "[msgcat::mc {Unable to load}] $fn: $entries"
+	return 0
+    }
+    if {[catch {AsdfTree $fn} tree]} {
+	Error "[msgcat::mc {Unable to load}] $fn: $tree"
 	return 0
     }
 
-    if {![AsdfIsAsdf $data]} {
-	Error "[msgcat::mc {ASDF: not an ASDF file}] $fn"
-	return 0
-    }
-
-    set tree [AsdfTreeText $data]
-    set path [AsdfResolvePath $tree $key]
+    set path [AsdfResolvePath $entries $key]
     if {$path == {}} {
 	Error "[msgcat::mc {ASDF: ambiguous or unknown array}] $key"
 	return 0
     }
-    set node [AsdfFindNdarrayPath $tree $path]
+    set node [AsdfFindNdarrayPath $entries $path]
     if {$node == {}} {
 	Error "[msgcat::mc {ASDF: could not find ndarray}] $path"
 	return 0
     }
-    lassign $node source datatype byteorder shapelist unsupported
+    lassign $node source datatype byteorder shapelist unsupported \
+	maskscalar bitpix
+
+    # Everything a user can get wrong about an array is checked here, not
+    # left to the C++ reader, even though it enforces the same rules
+    # itself - it has to, since it is what actually reads the block.
+    # ProcessLoad discards the frame command's own error text, so a
+    # refusal raised down there would reach the user as a bare "Unable to
+    # load"; these are the messages anyone actually sees.
     if {[lsearch -exact $unsupported byteorder] >= 0} {
 	Error "[msgcat::mc {ASDF: ndarray has no byteorder}] $path"
 	return 0
@@ -1443,172 +1028,60 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
 	Error "[msgcat::mc {ASDF: unsupported ndarray view}] $path ([join $unsupported {, }])"
 	return 0
     }
-
-    set widen {}
-    set bitpix [AsdfDatatypeToBitpix $datatype]
     if {$bitpix == {}} {
-	set widen [AsdfWidenDatatype $datatype]
-	if {$widen == {}} {
-	    Error "[msgcat::mc {ASDF: unsupported ndarray datatype}] $datatype"
-	    return 0
-	}
-	set bitpix [AsdfDatatypeToBitpix $widen]
+	Error "[msgcat::mc {ASDF: unsupported ndarray datatype}] $datatype"
+	return 0
     }
 
-    # ASDF/numpy shape is row-major, fastest-varying axis last; DS9's array
-    # header wants xdim first. Rank 3 loads as a data cube (fitsy's array
-    # grammar has zdim alongside xdim/ydim - see fitsy/parser.Y's `arr`
-    # rule), which covers roman.amp33 ([10,4096,128]) and the
-    # border_ref_pix_* set ([10,4096,4] etc). Anything else is refused
-    # rather than silently truncated: without this check the extra axes
-    # just fall off the end of xdim/ydim and the array loads at a wrong
-    # shape with no complaint.
+    # Rank 3 loads as a data cube, which covers roman/amp33
+    # ([10,4096,128]) and the border_ref_pix_* set ([10,4096,4] etc).
+    # Anything else is refused rather than silently truncated.
     switch -- [llength $shapelist] {
-	2 {
-	    lassign $shapelist ydim xdim
-	    set zdim {}
-	}
-	3 {
-	    lassign $shapelist zdim ydim xdim
-	}
+	2 -
+	3 {}
 	default {
 	    Error "[msgcat::mc {ASDF: unsupported ndarray rank}] $path \[[join $shapelist {, }]\]"
 	    return 0
 	}
     }
 
-    set offsets [AsdfBlockIndex $data]
-    if {$offsets == {}} {
-	# the trailing block index is optional in asdf-standard; without it
-	# the blocks would have to be walked from the first magic instead,
-	# which this reader does not do
-	Error "[msgcat::mc {ASDF: file has no block index}] $fn"
-	return 0
-    }
-    set offset [lindex $offsets $source]
-    if {$offset == {}} {
-	Error "[msgcat::mc {ASDF: block index out of range}] $source"
-	return 0
-    }
+    AsdfMaskWarn $entries $path $datatype $maskscalar
 
-    if {[catch {AsdfReadBlock $data $offset} blk]} {
-	Error "[msgcat::mc {ASDF}] $blk"
-	return 0
-    }
-    if {$blk == {}} {
-	Error "[msgcat::mc {ASDF: no binary block at offset}] $offset"
-	return 0
-    }
-    lassign $blk compression decoded
-
-    set arch [expr {$byteorder eq "big" ? "big" : "little"}]
-
-    if {$widen ne {}} {
-	if {[catch {asdfconvert $decoded $datatype $byteorder $widen} decoded]} {
-	    Error "[msgcat::mc {ASDF}] $decoded"
-	    return 0
-	}
-	# asdfconvert normalizes to little-endian whatever it was handed
-	set arch little
-    }
-
-    # fitsy's array path trusts the declared dimensions and never checks
-    # the buffer against them, so a block that decompressed short would
-    # otherwise render as real pixels followed by whatever memory follows.
-    set want [expr {$xdim * $ydim * (abs($bitpix) / 8)}]
-    if {$zdim ne {}} {
-	set want [expr {$want * $zdim}]
-    }
-    if {[string length $decoded] < $want} {
-	Error "[msgcat::mc {ASDF: block too short for declared shape}] $path"
-	return 0
-    }
-
-    # A masked array becomes a real in-memory FITS, so DS9's own null
-    # handling applies (see AsdfMaskResolve and AsdfFitsHeader).
-    # Unmasked arrays keep the raw array/var path, which costs nothing.
-    set fitsblank {}
-    set fitsmasked 0
-    if {$zdim eq {} && $widen eq {}} {
-	set mres [AsdfMaskResolve $tree $data $offsets $path $node $decoded]
-	if {$mres ne {}} {
-	    lassign $mres fitsblank decoded
-	    set fitsmasked 1
-	    # AsdfMaskResolve emits big-endian, as FITS requires
-	    set arch big
-	    if {$fitsblank ne {}} {
-		set bitpix [AsdfFitsBitpix $datatype]
-	    }
-	}
-    }
-
-    # What the Info panel, the filename display and `xpaget ds9 file` show.
-    #
-    # FitsImage::setNames() truncates the name at the first '[', that being
-    # fitsy's array-spec delimiter - so the array branch below, whose whole
-    # name used to be "[xdim=...,ydim=...]", left every one of those blank.
-    # Putting the label in front of the spec fixes it.
+    # What the Info panel, the filename display and `xpaget ds9 file`
+    # show.
     #
     # The label names the array as well as the file, because that is the
-    # question a multi-array format actually raises: a Roman *_cal.asdf has
-    # 15 loadable arrays of identical shape and WCS, so "which one am I
-    # looking at?" is otherwise unanswerable from the UI.
+    # question a multi-array format actually raises: a Roman *_cal.asdf
+    # has 15 loadable arrays of identical shape and WCS, so "which one am
+    # I looking at?" is otherwise unanswerable from the UI.
     #
     # It uses the *tail* of the path, not the whole path, and that is not
     # cosmetic: the default `pds9(infobox,filenametype)` is "root base",
-    # which runs the name through FitsImage::root() - and that walks back to
-    # the last '/' and keeps only what follows. A full `roman/data` label
-    # therefore reads as a directory and the panel shows a bare "data",
-    # losing the filename that is the whole point. The tail is also still a
-    # form AsdfResolvePath accepts on the way in, so the label stays a
-    # usable load spec; the fully-qualified path remains visible in the
-    # header viewer for the nested cases where the tail is ambiguous.
+    # which runs the name through FitsImage::root() - and that walks back
+    # to the last '/' and keeps only what follows. A full `roman/data`
+    # label therefore reads as a directory and the panel shows a bare
+    # "data", losing the filename that is the whole point. The tail is
+    # also still a form AsdfResolvePath accepts on the way in, so the
+    # label stays a usable load spec; the fully-qualified path remains
+    # visible in the header viewer for the nested cases where the tail is
+    # ambiguous.
     set dispname "[file tail $fn]:[file tail $path]"
 
-    global asdfRawVar
-
-    if {$fitsmasked} {
-	set asdfRawVar [AsdfFitsHeader $xdim $ydim $bitpix $fitsblank]
-	append asdfRawVar $decoded
-	set pad [expr {2880 - ([string length $asdfRawVar] % 2880)}]
-	if {$pad != 2880} {
-	    append asdfRawVar [string repeat "\x00" $pad]
-	}
-
-	set loadParam(file,type) fits
-	set loadParam(file,mode) {}
-	set loadParam(load,type) var
-	set loadParam(file,name) $dispname
-	set loadParam(var,name) asdfRawVar
-	set loadParam(load,layer) $layer
-    } else {
-	set asdfRawVar $decoded
-
-	set loadParam(file,type) array
-	set loadParam(file,mode) {}
-	set loadParam(load,type) var
-	set hdr "xdim=$xdim,ydim=$ydim"
-	if {$zdim ne {}} {
-	    append hdr ",zdim=$zdim"
-	}
-	append hdr ",bitpix=$bitpix,arch=$arch"
-	set loadParam(file,name) "$dispname\[$hdr\]"
-	set loadParam(var,name) asdfRawVar
-	set loadParam(load,layer) $layer
-    }
-
-    # Provenance for Backup. ProcessLoadSaveParams persists the whole
-    # loadParam array per frame, so these ride along for free and let
-    # backup.tcl reload from the ASDF file itself. Without them a backup
-    # falls back to BackupFrameLoadAlloc's FITS conversion, which keeps
-    # the pixels but silently drops both the GWCS - it has no FITS-card
-    # representation to convert into - and the YAML tree. Absolute,
+    # Provenance for Backup rides along in the same array:
+    # ProcessLoadSaveParams persists loadParam per frame, so backup.tcl
+    # can reload from the ASDF file itself rather than from a FITS
+    # conversion that would keep the pixels but drop both the GWCS - it
+    # has no FITS-card representation - and the YAML tree. Absolute,
     # because a backup may be written from any working directory.
+    set loadParam(file,type) asdf
+    set loadParam(file,mode) {}
+    set loadParam(load,type) asdf
+    set loadParam(file,name) $dispname
+    set loadParam(load,layer) $layer
     set loadParam(asdf,file) [file normalize $fn]
     set loadParam(asdf,path) $path
 
     set rr [ProcessLoad]
-    unset -nocomplain asdfRawVar
 
     # Cache the YAML tree for the header viewer. Deliberately after
     # ProcessLoad, not before: ProcessLoad clears any previously cached
@@ -1618,44 +1091,47 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
 	AsdfSetTree $current(frame) $fn $tree
     }
 
-    # Phase 3 WCS attachment: best-effort, never fatal - the pixel data is
-    # already loaded at this point and stays loaded whatever happens here.
+    # WCS attachment: best-effort, never fatal - the pixel data is
+    # already loaded at this point and stays loaded whatever happens
+    # here.
     #
-    # Three outcomes, deliberately distinguished rather than all swallowed
-    # by one catch. Finding no WCS subtree at all is normal and silent:
-    # Roman's *_segm.asdf segmentation products genuinely carry none. A
-    # subtree that is found but that extraction or AST then rejects (an
-    # unsupported tag or schema version, a GWCS shape yamlchan.c does not
-    # cover) is different - the frame is still usable, but say so rather
-    # than leave the user wondering why there is no WCS. Warning, not
-    # Error: it routes to ds9(msg) for XPA/SAMP callers and a non-modal
-    # notice in the GUI, which is what a non-fatal condition should do.
+    # Three outcomes, deliberately distinguished rather than all
+    # swallowed by one catch. Finding no WCS subtree at all is normal and
+    # silent: Roman's *_segm.asdf segmentation products genuinely carry
+    # none. A subtree that is found but that extraction or AST then
+    # rejects (an unsupported tag or schema version, a GWCS shape
+    # yamlchan.c does not cover) is different - the frame is still
+    # usable, but say so rather than leave the user wondering why there
+    # is no WCS. Warning, not Error: it routes to ds9(msg) for XPA/SAMP
+    # callers and a non-modal notice in the GUI, which is what a
+    # non-fatal condition should do.
     if {$rr} {
-	if {[catch {AsdfExtractWcsText $tree $data} yamltext]} {
+	if {[catch {AsdfExtractWcsText $tree $fn} yamltext]} {
 	    Warning "[msgcat::mc {ASDF: unable to extract WCS, loading without it}] $yamltext"
 	} elseif {$yamltext ne {}} {
 	    # Two more outcomes, because the file having a usable WCS does
-	    # not mean it describes *this* array. Attaching it regardless is
-	    # worse than attaching nothing: the coordinates land inside the
-	    # science array's footprint and so look entirely plausible -
-	    # roman/amp33 (128x4096 reference pixels) read back the same sky
-	    # position as roman/data at the same pixel index. Same-grid
-	    # siblings (err, dq, var_poisson, chisq, dumo) must keep the WCS,
-	    # which is why this is a grid check rather than "only the science
-	    # array gets a WCS".
+	    # not mean it describes *this* array. Attaching it regardless
+	    # is worse than attaching nothing: the coordinates land inside
+	    # the science array's footprint and so look entirely plausible
+	    # - roman/amp33 (128x4096 reference pixels) read back the same
+	    # sky position as roman/data at the same pixel index. Same-grid
+	    # siblings (err, dq, var_poisson, chisq, dumo) must keep the
+	    # WCS, which is why this is a grid check rather than "only the
+	    # science array gets a WCS".
 	    #
 	    # The two cases get different severities on purpose:
 	    #
-	    #   - Grid mismatch is silent. It is the normal, expected result
-	    #     of loading a reference-pixel array, the user has done
-	    #     nothing wrong, and the shapes are right there in the array
-	    #     browser. It also keeps a successful load from returning
-	    #     XPA$ERROR, which is what Warning does to an xpaset caller.
+	    #   - Grid mismatch is silent. It is the normal, expected
+	    #     result of loading a reference-pixel array, the user has
+	    #     done nothing wrong, and the shapes are right there in the
+	    #     array browser. It also keeps a successful load from
+	    #     returning XPA$ERROR, which is what Warning does to an
+	    #     xpaset caller.
 	    #   - Not being able to identify the WCS's grid at all *is*
 	    #     surprising, and it is the case where this guard might be
-	    #     dropping a WCS that would have been fine - a non-Roman file
-	    #     whose science array is not called "data". Say so.
-	    set ref [AsdfWcsGridShape $tree]
+	    #     dropping a WCS that would have been fine - a non-Roman
+	    #     file whose science array is not called "data". Say so.
+	    set ref [AsdfWcsGridShape $entries]
 	    set cards [AsdfFitsWcsImagingCards $yamltext]
 	    if {$ref eq {}} {
 		Warning "[msgcat::mc {ASDF: cannot tell which array the WCS describes, loading without it}] $path"
@@ -1666,18 +1142,19 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
 	    } elseif {$cards eq {} && [catch {AsdfAttachWcs $yamltext} msg]} {
 		Warning "[msgcat::mc {ASDF: unable to attach WCS, loading without it}] $msg"
 	    } elseif {![$current(frame) has wcs wcs]} {
-		# `wcs replace` does not report failure: when AstYamlChan cannot
-		# build a FrameSet - an unknown tag, a schema version past
-		# yamlchan.c's MAKE_TEST ceilings, a GWCS shape it has no path
-		# for - it returns cleanly and simply leaves the frame with no
-		# WCS. Without this check that is completely silent, which is
-		# the one outcome the three branches above were written to
-		# avoid. Found by WCS_TEST_PLAN I-5.
+		# `wcs replace` does not report failure: when AstYamlChan
+		# cannot build a FrameSet - an unknown tag, a schema
+		# version past yamlchan.c's MAKE_TEST ceilings, a GWCS
+		# shape it has no path for - it returns cleanly and simply
+		# leaves the frame with no WCS. Without this check that is
+		# completely silent, which is the one outcome the three
+		# branches above were written to avoid. Found by
+		# WCS_TEST_PLAN I-5.
 		#
-		# `has wcs wcs` is the right probe: 1 on a working GWCS frame,
-		# 0 when none was built. `has wcs alt` is not - it reads 1 in
-		# both cases, because replaceWCSYaml sets wcsAltHeader_
-		# regardless (R2 in the test plan).
+		# `has wcs wcs` is the right probe: 1 on a working GWCS
+		# frame, 0 when none was built. `has wcs alt` is not - it
+		# reads 1 in both cases, because replaceWCSYaml sets
+		# wcsAltHeader_ regardless (R2 in the test plan).
 		Warning "[msgcat::mc {ASDF: AST could not read this WCS, loading without it}] $path"
 	    }
 	}

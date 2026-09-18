@@ -19,8 +19,9 @@ Detail lives in the phase sections below; this is the map.
 - **`WCS_TEST_PLAN.md` is fully executed: 77 PASS / 3 GAP / 0 TODO.**
 - **L3 coadds work**, via a `fitswcs_imaging` → FITS-card translation in `asdf.tcl`
   (`f59e6a180`) plus `FitsImage::wcsCards_` in tksao so the cards survive `resetWCS()`.
-- **Windows/mingw builds clean from a clean tree** (`7d722dbef`). Four fixes were needed;
-  see Phase 0. **It has not been run there** — see open items.
+- **All three platforms are validated**, not just built: the 185-fixture suite passes on
+  macOS, Linux and Windows/mingw. Windows needed four build fixes (`7d722dbef`); see
+  Phase 0.
 - **A real test suite** in the sibling `Tests` repo, wired into its `io.sh`.
 
 ### The AST bugs — eight fixed locally, two open
@@ -255,22 +256,21 @@ is a finding about the ecosystem rather than a defect.
    product ever ships a Chebyshev *without* an inverse. Every other GWCS primitive is now
    covered; `fix_inputs` warns "no defined inverse" while still returning the right
    numbers, which is also not a failure.
-3. **Windows is built but never *exercised*.** The codec commands, the 154-baseline sweep,
-   the GWCS bridge against a real Roman file, `asdfmask`/`asdfconvert` byte-order work, and
-   backup/restore are all unvalidated there. See Phase 0's open item for the list.
-4. **Send the eight AST fixes upstream**, and report the three still open. The
+3. **Send the nine AST fixes upstream** (eight are also applied to the vendored `ast/`;
+   the ninth, the `#ASDF_STANDARD` header, is write-side only and so does not affect us),
+   and report the three still open. The
    version-ceiling bumps (bug 7) and the `polynomial_type` check (bug 6) belong in the
    same patch, since the first makes the second reachable. Of the open ones, **bug 11 (the
    `winmap.c` overread) should go first**: it is a memory error with an ASan trace, and it
    silently produces different WCS results on different platforms.
-5. **H-7: saving an ASDF frame as FITS loses the WCS.** Needs a product decision —
+4. **H-7: saving an ASDF frame as FITS loses the WCS.** Needs a product decision —
    approximate cards with a warning, or keep refusing. See `WCS_TEST_PLAN.md` §6.
-6. **R9/R10**, both generic DS9 rather than ours but far more visible on Roman: region
+5. **R9/R10**, both generic DS9 rather than ours but far more visible on Roman: region
    *angles* use one image-wide rotation, and angular *lengths* use one scalar scale while
    the Roman GWCS is ~2% anisotropic. `WCS_TEST_PLAN.md` §1 has the measurements.
-7. **R6: AST drops `bounding_box`**, so nothing enforces the valid-pixel domain, and the
+6. **R6: AST drops `bounding_box`**, so nothing enforces the valid-pixel domain, and the
    inverse also stops converging outside the detector (A-5).
-8. Smaller: an ASDF icon for the top icon row (needs PNG artwork for `ds9/icons/ui/` and
+7. Smaller: an ASDF icon for the top icon row (needs PNG artwork for `ds9/icons/ui/` and
    `ui_dark/`); `uint16`/`uint32` masked arrays would need the FITS `BZERO` convention; the
    array browser offers WCS-internal coefficient matrices as loadable images.
 
@@ -640,9 +640,10 @@ only; pushing is a deliberate decision that has not been taken.
       without any change. `ast` was rightly suspected, but for the wrong reason - its
       missing `$(TARGET)` turned out to be harmless here (its `config.h` still measured the
       real compiler: `SIZEOF_LONG 4`), and the actual failure was a type signature.
-  - [ ] **Windows is built but not yet *exercised*.** A clean build says nothing about
-        whether the ASDF path works there, and several pieces are platform-sensitive in ways
-        the build cannot catch:
+  - [x] **Windows is exercised, not just built.** The 185-fixture suite passes there, as
+        it does on macOS and Linux, so everything listed below is now covered. It was worth
+        listing because a clean build said nothing about whether the ASDF path worked, and
+        these pieces are platform-sensitive in ways a build cannot catch:
     - `tclasdf`'s three codec commands - `asdfbz2decompress` and `asdflz4decompress` in
       particular, since they are the newest and link freshly vendored libraries.
     - Block decompression across all four codecs, i.e. the 108 `Tests/asdf/fixtures` sweep.

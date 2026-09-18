@@ -6,7 +6,7 @@ possible instead of rebuilding everything from scratch.
 
 **Working on the native ASDF support?** Read `TODO.md`'s "Current state —
 read this first" section at the top before anything else. It carries what
-works, the ten upstream AST bugs (seven patched locally in
+works, the eleven upstream AST bugs (seven patched locally in
 `ast/src/yamlchan.c`), the open items in priority order, and the failure
 modes that cost the most to rediscover. `Tests/` is a separate git repo.
 

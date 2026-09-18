@@ -23,7 +23,7 @@ Detail lives in the phase sections below; this is the map.
   see Phase 0. **It has not been run there** — see open items.
 - **A real test suite** in the sibling `Tests` repo, wired into its `io.sh`.
 
-### The AST bugs — seven fixed locally, two open
+### The AST bugs — seven fixed locally, three open
 
 All in `ast/src/yamlchan.c` unless noted. `ast` is already marked `dirty` in `Manifest.md`.
 **All are upstream Starlink code, not ours**, and all should go upstream together. Item 9
@@ -168,6 +168,55 @@ is a finding about the ecosystem rather than a defect.
     (`4.678568 0.6750098`) even though `degrees` was requested. DS9 has no azel display
     system, so the SkyFrame's format is never set for it.
 
+
+11. **Heap overread in `winmap.c`'s `MapMerge` — NOT FIXED, and it is a memory bug, so
+    treat it as the most serious of the open ones.** Found because
+    `Tests/asdf/transform/fix_inputs.asdf` behaved differently on macOS and Linux from
+    identical bytes: macOS built the WCS and warned "the WCS has no defined inverse",
+    while Linux failed with
+
+        astInitCmpMap(CmpMap): The number of output coordinates per point (2) for the
+        first Mapping supplied does not match the number of input coordinates (1) for
+        the second Mapping.
+        Error occurred when reading an ASDF 'concatenate' object.
+
+    AddressSanitizer names it exactly — a heap-buffer-overflow, READ of 8 bytes 0 bytes
+    past a 32-byte (4-double) allocation, at **`winmap.c:1352` in `MapMerge`**, on a
+    buffer allocated by `WinTerms` at `winmap.c:3657`, reached from
+    `ReadConcatenate` -> `astSimplify` -> CmpMap/ShiftMap/WinMap `MapMerge`.
+
+    The mechanism. When a WinMap has a parallel CmpMap as a series neighbour, this
+    merger converts the WinMap into two WinMaps, one per CmpMap component, by splitting
+    the scale and zero terms `astWinTerms` returned:
+
+        (void) astWinTerms( oldwm, 0, &a, &b );        /* return value DISCARDED */
+        ...
+        nin  = cmlow ? astGetNout( mc[0] ) : astGetNin( mc[0] );
+        ...      (newwm ->a)[i] = a[i];
+        nin2 = cmlow ? astGetNout( mc[1] ) : astGetNin( mc[1] );
+        ...      (newwm2->a)[i] = a[i + nin];          /* <- overreads */
+
+    `astWinTerms` returns the number of axes, which is the length of both arrays, and
+    the caller throws it away; nothing then ties `nin + nin2` to that length. Instrumented,
+    the failing case is **`nax=1` with `nin=nin2=1`**: a one-axis WinMap against a parallel
+    CmpMap of two 2-in/1-out MatrixMaps (`CmpMap Nin=4 Nout=2`), which cannot be a series
+    neighbour of a 1-axis WinMap at all. So the real defect is upstream of the read — the
+    merger is reached with an incompatible pair — and the overread is how it manifests.
+
+    **Do not "fix" it by guarding the split alone.** Tried: adding `if( nin + nin2 == nax )`
+    stops the overread, and macOS then fails *exactly* the way Linux does, so there is a
+    second problem behind it and the guard only removes the accident that was hiding it.
+    Reverted rather than shipped. That experiment is the useful part of this entry: **the
+    macOS success was reading uninitialized heap**, so Linux's error is the honest outcome
+    and any "it works on macOS" conclusion about this shape is worthless.
+
+    To reproduce: build AST with `-fsanitize=address`, build `yamlchan_probe` against it,
+    and run it on a fixture whose transform is a `concatenate` of **two** `fix_inputs`,
+    each wrapping a `planar2d`. One `fix_inputs` is clean; it takes two planar2ds in a
+    parallel CmpMap to trigger. `Tests/asdf/transform/fix_inputs.asdf` was rebuilt to the
+    one-`fix_inputs` shape for exactly that reason, so the suite no longer asserts a value
+    that depends on what follows a buffer in memory.
+
 ### Open items, roughly in priority order
 
 1. **`altaz` now works** — see AST bug 10. It had nothing to do with the serialization
@@ -191,10 +240,11 @@ is a finding about the ecosystem rather than a defect.
 3. **Windows is built but never *exercised*.** The codec commands, the 154-baseline sweep,
    the GWCS bridge against a real Roman file, `asdfmask`/`asdfconvert` byte-order work, and
    backup/restore are all unvalidated there. See Phase 0's open item for the list.
-4. **Send the seven AST fixes upstream.** The version-ceiling bumps (bug 7) and the
-   `polynomial_type` check (bug 6) belong in the same patch, since the first makes the
-   second reachable. Report the two still open: `zenithal_perspective` and the four
-   unrecognized observed frames.
+4. **Send the seven AST fixes upstream**, and report the three still open. The
+   version-ceiling bumps (bug 7) and the `polynomial_type` check (bug 6) belong in the
+   same patch, since the first makes the second reachable. Of the open ones, **bug 11 (the
+   `winmap.c` overread) should go first**: it is a memory error with an ASan trace, and it
+   silently produces different WCS results on different platforms.
 5. **H-7: saving an ASDF frame as FITS loses the WCS.** Needs a product decision —
    approximate cards with a warning, or keep refusing. See `WCS_TEST_PLAN.md` §6.
 6. **R9/R10**, both generic DS9 rather than ours but far more visible on Roman: region
@@ -235,6 +285,13 @@ The full lists are in **`WCS_TEST_PLAN.md` §3** (DS9/XPA gotchas) and
     point, which is the only way to see a forward transform whose inverse does not exist.
     Build it with the line in its own header comment; it reads a fixture `.asdf`
     directly, block and all.
+  - **AddressSanitizer on AST turns "platform-dependent" into a line number.** A
+    `make -C ast CFLAGS="-g -O1 -fsanitize=address -fno-omit-frame-pointer" libast.la`
+    (touch `ast/src/*.c` first — a CFLAGS change alone does not trigger a rebuild) plus a
+    probe linked with the same flags found AST bug 11 in one run, after code reading had
+    gone down two wrong paths. Rebuild clean afterwards and re-copy to `lib/`, or the next
+    link fails on missing `__asan_*` symbols. Mixing sanitized and plain objects in the
+    archive is what produces that error.
   - **A conda env with the real thing**: `/Users/kjg/miniforge/envs/ds9asdf` has astropy
     8.0.1, asdf 5.4.0 and gwcs 1.0.3 (`conda` is at `/Users/kjg/miniforge`, and its
     `bin/conda` shebang needs invoking through `bin/python3.12` explicitly). Use it to

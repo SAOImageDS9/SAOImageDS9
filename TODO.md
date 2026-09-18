@@ -370,10 +370,28 @@ fix/yamlchan-ortho-polynomial-basis     + test_ortho_polynomial_basis, 2 fixture
 fix/yamlchan-schema-version-ceilings    55 ceilings + test_current_schema_versions
 fix/yamlchan-earthlocation-dispatch     + test_earthlocation
 fix/yamlchan-zenithal-perspective-azp   + test_zenithal_perspective_roundtrip
+fix/yamlchan-asdf-standard-header       + test_asdf_standard_header
 ```
 
 Note the ceilings branch raises **55**, not the 45 we applied here: the vendored copy
 already carried 10 earlier bumps.
+
+**What else in AST's suite was worth running.** Two things, and both paid off:
+
+- **The whole suite under AddressSanitizer** — 2444 tests, and they pass with **zero ASan
+  reports**, including the 828-fixture `simplify` corpus and the 476-fixture `wcsconv`
+  corpus. So AST bug 11 is not something its own corpora reach: our GWCS shapes get into a
+  simplify path nothing there exercises, which is why it survived. Also means there is no
+  other latent memory bug of that kind sitting in those corpora, which is worth knowing
+  given DS9 calls `astSimplify` on every GWCS read and FitsChan on every FITS image.
+- **`ast_tester/asdftest.py`**, which compares YamlChan's output against the `gwcs` package
+  and is **not wired into ctest at all** — it needs asdf and gwcs, so a normal build never
+  runs it. Running it found the missing `#ASDF_STANDARD` header (the 9th branch above).
+
+Not yet looked at: `fixtures/oracle` (6 files, `check_transform_oracle.c`),
+`fixtures/serialisation` (27, `compare_dumps.c`) and `fixtures/plot` (21). The wcsconv
+corpus is the one most worth mining for DS9's own FITS-WCS behaviour, since it is 476 real
+headers and DS9's entire WCS layer is AST FitsChan — but nothing there is ASDF-specific.
 
 Three findings have no patch and are drafted as issues in the clone root:
 `ISSUE-1-winmap-overread.md` (bug 11, with the ASan trace and a self-contained fixture),

@@ -289,13 +289,19 @@ path is given, <tt>roman/data</tt> is used. A bare name is looked up as
 If the file contains a GWCS object, it is read and attached as the frame's
 WCS; if it does not, the image still loads with no WCS. See <a href=
 "file.html#asdf">ASDF</a>.<br></p>
+<p>The generic <a href="#mask">-mask</a> switch applies here as it does to the other
+formats, so a quality array can be laid over the science array it belongs to. The mask is
+thresholded by the settings in <b>Analysis&nbsp;&#8594;&nbsp;Mask Parameters</b>, whose
+default marks every non-zero pixel &#8212; which is what a data-quality array wants.</p>
 <tt>Syntax:<br>
 -asdf &lt;filename&gt;[:&lt;path&gt;]<br>
+-asdf -mask &lt;filename&gt;[:&lt;path&gt;] -nomask<br>
 &nbsp;<br>
 Example:<br>
 $ds9 -asdf foo.asdf<br>
 $ds9 -asdf foo.asdf:roman/dq<br>
-$ds9 -asdf foo.asdf:roman/err<br></tt>
+$ds9 -asdf foo.asdf:roman/err<br>
+$ds9 -asdf foo.asdf:roman/data -asdf -mask foo.asdf:roman/dq -nomask</tt>
 <p><b><a name="asinh" id="asinh"></a></b><b>asinh</b></p>
 <p>Select ASINH scale function for the current frame.</p>
 <tt>Syntax:<br>

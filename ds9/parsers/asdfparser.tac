@@ -6,6 +6,7 @@
 
 %start command
 
+%token MASK_
 %token NEW_
 
 %%
@@ -14,15 +15,19 @@
 command : asdf 
  ;
 
-asdf: new filename {AsdfCmdLoad $2 {}}
+asdf: opts filename {AsdfCmdLoad $2 $1}
 ;
 
 filename : {set _ {}}
  | STRING_ {set _ $1}
  ;
 
-new :
- | NEW_ {CreateFrame}
+# "mask" loads the array into the mask layer instead of as the image,
+# matching `nrrd mask' and `array mask'. The layer rides through
+# AsdfCmdLoad to LoadAsdfFile, which already takes one.
+opts : {set _ {}}
+ | NEW_ {CreateFrame; set _ {}}
+ | MASK_ {set _ mask}
  ;
  
 %%

@@ -5369,7 +5369,11 @@ static int IsA( AstKeyMap *km, const char *class, int *status ) {
             result = IsANDArray( km_class, status );
          }
 
-      } else if( !strncmp( km_class, "astropy/coordinates/earthlocation/", 34 ) ) {
+/* No trailing "/" here: astropy writes an EarthLocation as
+   "astropy/coordinates/earthlocation-<version>", with no class component, so
+   requiring the slash made this branch unreachable and IsAEarthLocation dead
+   code. Comparing the 33 characters without it matches both spellings. */
+      } else if( !strncmp( km_class, "astropy/coordinates/earthlocation", 33 ) ) {
          if( !strcmp( "earthlocation", class ) ){
             result = IsAEarthLocation( km_class, status );
          }
@@ -5486,7 +5490,7 @@ MAKE_TEST(Spherical_Cartesian,gwcs,1,3)
 MAKE_TEST(Identity,asdf/transform,1,4)
 /* SAOImageDS9 local patch (see TODO.md Phase 0): ceiling raised one minor version to match real Roman ASDF data; upstream AST 9.4.1 hasn't caught up yet. */
 MAKE_TEST(Scale,asdf/transform,1,4)
-MAKE_TEST(MultiplyScale,asdf/transform,1,0)
+MAKE_TEST(MultiplyScale,asdf/transform,1,2)
 /* SAOImageDS9 local patch (see TODO.md Phase 0): ceilings raised one minor version each to match real Roman ASDF data; upstream AST 9.4.1 hasn't caught up yet. */
 MAKE_TEST(Remap_Axes,asdf/transform,1,5)
 MAKE_TEST(Shift,asdf/transform,1,4)
@@ -5496,56 +5500,56 @@ MAKE_TEST(Concatenate,asdf/transform,1,4)
 MAKE_TEST(Constant,asdf/transform,1,6)
 /* SAOImageDS9 local patch (see TODO.md Phase 0): ceiling raised one minor version to match real Roman ASDF data; upstream AST 9.4.1 hasn't caught up yet. */
 MAKE_TEST(Divide,asdf/transform,1,4)
-MAKE_TEST(Fix_Inputs,asdf/transform,1,2)
+MAKE_TEST(Fix_Inputs,asdf/transform,1,4)
 /* SAOImageDS9 local patch (see TODO.md Phase 0): ceiling raised one minor version to match real Roman ASDF data; upstream AST 9.4.1 hasn't caught up yet. */
 MAKE_TEST(Affine,asdf/transform,1,5)
-MAKE_TEST(Rotate2d,asdf/transform,1,3)
+MAKE_TEST(Rotate2d,asdf/transform,1,5)
 MAKE_TEST(Rotate_Sequence_3d,asdf/transform,1,3)
-MAKE_TEST(Rotate3d,asdf/transform,1,3)
-MAKE_TEST(Linear1d,asdf/transform,1,0)
-MAKE_TEST(Ortho_Polynomial,asdf/transform,1,0)
-MAKE_TEST(Planar2d,asdf/transform,1,0)
+MAKE_TEST(Rotate3d,asdf/transform,1,5)
+MAKE_TEST(Linear1d,asdf/transform,1,2)
+MAKE_TEST(Ortho_Polynomial,asdf/transform,1,2)
+MAKE_TEST(Planar2d,asdf/transform,1,2)
 /* SAOImageDS9 local patch (see TODO.md Phase 0): ceiling raised one minor version to match real Roman ASDF data; upstream AST 9.4.1 hasn't caught up yet. */
 MAKE_TEST(Polynomial,asdf/transform,1,3)
-MAKE_TEST(Conic_Equal_Area,asdf/transform,1,3)
-MAKE_TEST(Conic_Equidistant,asdf/transform,1,3)
-MAKE_TEST(Conic_Orthomorphic,asdf/transform,1,3)
-MAKE_TEST(Conic_Perspective,asdf/transform,1,3)
-MAKE_TEST(Cylindrical_Equal_Area,asdf/transform,1,3)
-MAKE_TEST(Cylindrical_Perspective,asdf/transform,1,3)
-MAKE_TEST(Mercator,asdf/transform,1,2)
-MAKE_TEST(Plate_Carree,asdf/transform,1,2)
-MAKE_TEST(Healpix,asdf/transform,1,2)
-MAKE_TEST(Healpix_Polar,asdf/transform,1,2)
-MAKE_TEST(Bonne_Equal_Area,asdf/transform,1,3)
-MAKE_TEST(PolyConic,asdf/transform,1,2)
-MAKE_TEST(Hammer_Aitoff,asdf/transform,1,2)
-MAKE_TEST(Molleweide,asdf/transform,1,2)
-MAKE_TEST(Parabolic,asdf/transform,1,2)
-MAKE_TEST(Sanson_Flamsteed,asdf/transform,1,2)
-MAKE_TEST(Cobe_Quad_Spherical_Cube,asdf/transform,1,2)
-MAKE_TEST(Quad_Spherical_Cube,asdf/transform,1,2)
-MAKE_TEST(Tangential_Spherical_Cube,asdf/transform,1,2)
-MAKE_TEST(Airy,asdf/transform,1,2)
-MAKE_TEST(Gnomonic,asdf/transform,1,2)
-MAKE_TEST(Slant_Orthographic,asdf/transform,1,2)
-MAKE_TEST(Slant_Zenithal_Perspective,asdf/transform,1,2)
-MAKE_TEST(Stereographic,asdf/transform,1,2)
-MAKE_TEST(Zenithal_Equal_Area,asdf/transform,1,2)
-MAKE_TEST(Zenithal_Equidistant,asdf/transform,1,2)
-MAKE_TEST(Zenithal_Perspective,asdf/transform,1,3)
-MAKE_TEST(Fk4,astropy/coordinates/frames,1,0)
-MAKE_TEST(Fk4Noeterms,astropy/coordinates/frames,1,0)
-MAKE_TEST(Fk5,astropy/coordinates/frames,1,0)
+MAKE_TEST(Conic_Equal_Area,asdf/transform,1,5)
+MAKE_TEST(Conic_Equidistant,asdf/transform,1,5)
+MAKE_TEST(Conic_Orthomorphic,asdf/transform,1,5)
+MAKE_TEST(Conic_Perspective,asdf/transform,1,5)
+MAKE_TEST(Cylindrical_Equal_Area,asdf/transform,1,5)
+MAKE_TEST(Cylindrical_Perspective,asdf/transform,1,5)
+MAKE_TEST(Mercator,asdf/transform,1,4)
+MAKE_TEST(Plate_Carree,asdf/transform,1,4)
+MAKE_TEST(Healpix,asdf/transform,1,4)
+MAKE_TEST(Healpix_Polar,asdf/transform,1,4)
+MAKE_TEST(Bonne_Equal_Area,asdf/transform,1,5)
+MAKE_TEST(PolyConic,asdf/transform,1,4)
+MAKE_TEST(Hammer_Aitoff,asdf/transform,1,4)
+MAKE_TEST(Molleweide,asdf/transform,1,4)
+MAKE_TEST(Parabolic,asdf/transform,1,4)
+MAKE_TEST(Sanson_Flamsteed,asdf/transform,1,4)
+MAKE_TEST(Cobe_Quad_Spherical_Cube,asdf/transform,1,4)
+MAKE_TEST(Quad_Spherical_Cube,asdf/transform,1,4)
+MAKE_TEST(Tangential_Spherical_Cube,asdf/transform,1,4)
+MAKE_TEST(Airy,asdf/transform,1,4)
+MAKE_TEST(Gnomonic,asdf/transform,1,4)
+MAKE_TEST(Slant_Orthographic,asdf/transform,1,4)
+MAKE_TEST(Slant_Zenithal_Perspective,asdf/transform,1,4)
+MAKE_TEST(Stereographic,asdf/transform,1,4)
+MAKE_TEST(Zenithal_Equal_Area,asdf/transform,1,4)
+MAKE_TEST(Zenithal_Equidistant,asdf/transform,1,4)
+MAKE_TEST(Zenithal_Perspective,asdf/transform,1,5)
+MAKE_TEST(Fk4,astropy/coordinates/frames,1,2)
+MAKE_TEST(Fk4Noeterms,astropy/coordinates/frames,1,2)
+MAKE_TEST(Fk5,astropy/coordinates/frames,1,2)
 MAKE_TEST(Ecliptic,astropy/coordinates/frames,1,0)
 MAKE_TEST(Altaz,astropy/coordinates/frames,1,0)
-MAKE_TEST(Galactic,astropy/coordinates/frames,1,0)
+MAKE_TEST(Galactic,astropy/coordinates/frames,1,2)
 MAKE_TEST(SuperGalactic,astropy/coordinates/frames,1,0)
-MAKE_TEST(Icrs,astropy/coordinates/frames,1,1)
-MAKE_TEST(Time,asdf/time,1,1)
-MAKE_TEST(EarthLocation,astropy/coordinates/earthlocation,1,0)
-MAKE_TEST(Quantity,asdf/unit,1,1)
-MAKE_TEST(NDArray,asdf/core,1,1)
+MAKE_TEST(Icrs,astropy/coordinates/frames,1,3)
+MAKE_TEST(Time,asdf/time,1,4)
+MAKE_TEST(EarthLocation,astropy/coordinates/earthlocation,1,2)
+MAKE_TEST(Quantity,asdf/unit,1,3)
+MAKE_TEST(NDArray,asdf/core,1,2)
 #undef MAKE_TEST
 
 
@@ -5611,10 +5615,10 @@ static int IsA##Class( const char *class, int *status ){ \
 
 
 
-MAKE_TEST(Frame,gwcs,1,0,
+MAKE_TEST(Frame,gwcs,1,2,
           IsACelestial_Frame(class,status)||
           IsAFrame2d(class,status))
-MAKE_TEST(Baseframe,astropy/coordinates/frames,1,0,
+MAKE_TEST(Baseframe,astropy/coordinates/frames,1,2,
           IsAFk4(class,status)||
           IsAFk4Noeterms(class,status)||
           IsAFk5(class,status)||
@@ -8868,12 +8872,28 @@ static AstMapping *ReadPoly( AstYamlChan *this, AstKeyMap *km, int isortho,
    int ndim;
    int ndimd;
    int ndimw;
+   const char *polytype;
 
 /* Initialise */
    result = NULL;
 
 /* Check inherited status */
    if( !astOK ) return result;
+
+/* An ortho_polynomial names its basis in the mandatory "polynomial_type"
+   field, which the ASDF schema allows to be "chebyshev", "legendre" or
+   "hermite". Only Chebyshev is supported (astChebyMap below), so check the
+   field rather than assuming it: reading a Legendre or Hermite polynomial as
+   a Chebyshev evaluates entirely different basis functions and so produces a
+   plausible but wrong Mapping, with nothing to indicate it. */
+   if( isortho ) {
+      polytype = Get0C( km, "polynomial_type", 1, "chebyshev", status );
+      if( astOK && polytype && strcasecmp( polytype, "chebyshev" ) ) {
+         astError( AST__BYAML, "astRead(YamlChan): The '%s' polynomial_type "
+                   "of an ASDF ortho_polynomial is not supported by AST "
+                   "(only 'chebyshev' is).", status, polytype );
+      }
+   }
 
 /* The coefficients array may be stored in a vector-valued Quantity or in an
    NDarray or in an array of arrays. None of these are primitive and so

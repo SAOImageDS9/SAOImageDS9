@@ -218,12 +218,22 @@ is a finding about the ecosystem rather than a defect.
     macOS success was reading uninitialized heap**, so Linux's error is the honest outcome
     and any "it works on macOS" conclusion about this shape is worthless.
 
-    To reproduce: build AST with `-fsanitize=address`, build `yamlchan_probe` against it,
-    and run it on a fixture whose transform is a `concatenate` of **two** `fix_inputs`,
-    each wrapping a `planar2d`. One `fix_inputs` is clean; it takes two planar2ds in a
-    parallel CmpMap to trigger. `Tests/asdf/transform/fix_inputs.asdf` was rebuilt to the
-    one-`fix_inputs` shape for exactly that reason, so the suite no longer asserts a value
-    that depends on what follows a buffer in memory.
+    **The trigger is two `planar2d`s in a parallel CmpMap.** Each becomes
+    `CmpMap(MatrixMap(2->1), ShiftMap(1))`, and two of those in parallel leave a one-axis
+    WinMap beside a parallel CmpMap of two 2-in/1-out MatrixMaps. `fix_inputs` reached it
+    only because each half wrapped one; `polynomial` and `ortho_polynomial` do not, because
+    they become PolyMaps with no WinMap involved. To reproduce: build AST with
+    `-fsanitize=address`, build `yamlchan_probe` against it, and read a fixture whose
+    transform concatenates two planar2ds. The upstream clone's
+    `ISSUE-1-winmap-overread.md` carries that as its primary reproducer.
+
+    Two fixtures were affected and both are rebuilt to shapes that are clean under ASan:
+    `Tests/asdf/transform/fix_inputs.asdf` and `Tests/asdf/transform/planar2d.asdf`, each
+    now pairing one of the primitive with a unit scale. **Finding the second one cost an
+    extra round trip through the user**, because the first was fixed on report rather than
+    by auditing: an ASan sweep of all 185 fixtures is cheap (a loop over
+    `yamlchan_probe`), found both, and now reports 0 of 185. Re-run it after adding any
+    fixture that combines 2-in/1-out transforms; `Tests/asdf/README.md` says how.
 
 ### Open items, roughly in priority order
 

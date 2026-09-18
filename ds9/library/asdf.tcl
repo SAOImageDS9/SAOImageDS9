@@ -187,7 +187,15 @@ proc AsdfEnumFlush {varname path fields} {
 	return
     }
 
-    set byteorder little
+    # No default here on purpose. The ndarray schema's `dependencies` make
+    # shape, datatype and byteorder all mandatory whenever `source` is
+    # present, so a block-backed array with no byteorder can only come from
+    # a malformed file - and picking an order for it silently byte-swaps
+    # every pixel when the guess is wrong, which is worse than refusing.
+    # (An inline `data:` array legitimately has no byteorder, but this proc
+    # never sees one: the `source` test above drops those.) Recorded just
+    # below, alongside the other reasons an entry cannot be loaded.
+    set byteorder {}
     if {[dict exists $fields byteorder]} {
 	set byteorder [dict get $fields byteorder]
     }
@@ -215,6 +223,9 @@ proc AsdfEnumFlush {varname path fields} {
     # rather than implement striding on speculation, record it and let
     # the caller refuse. A zero offset is just the default, spelled out.
     set unsupported {}
+    if {$byteorder eq {}} {
+	lappend unsupported byteorder
+    }
     if {[dict exists $fields strides]} {
 	lappend unsupported strides
     }
@@ -1424,6 +1435,10 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
 	return 0
     }
     lassign $node source datatype byteorder shapelist unsupported
+    if {[lsearch -exact $unsupported byteorder] >= 0} {
+	Error "[msgcat::mc {ASDF: ndarray has no byteorder}] $path"
+	return 0
+    }
     if {$unsupported ne {}} {
 	Error "[msgcat::mc {ASDF: unsupported ndarray view}] $path ([join $unsupported {, }])"
 	return 0

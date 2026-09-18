@@ -595,6 +595,18 @@ libyaml	: libyaml/Makefile
 libyaml/Makefile :
 	@echo ""
 	@echo "*** $@ ***"
+# A git checkout gives every file an arbitrary mtime, and libyaml's
+# configure.ac has no AM_MAINTAINER_MODE, so automake's rebuild rules are
+# always live: whenever configure.ac or a Makefile.am looks newer than what
+# it generates, the build tries to re-run aclocal/autoconf/automake with
+# whatever autotools happen to be installed, and fails. Touching all of them
+# together makes each generated file no older than its inputs, which is what
+# those rules test, so none of them fire. Done before configure so that
+# configure's own products (Makefile, config.h, stamp-h1) end up newest.
+	cd libyaml; touch configure.ac Makefile.am include/Makefile.am \
+	src/Makefile.am tests/Makefile.am aclocal.m4 configure config.h.in \
+	include/config.h.in Makefile.in include/Makefile.in src/Makefile.in \
+	tests/Makefile.in
 	cd libyaml; \
 	./configure \
 	--disable-shared --enable-static \

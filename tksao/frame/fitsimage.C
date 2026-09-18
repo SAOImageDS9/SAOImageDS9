@@ -20,6 +20,7 @@
 #include "socket.h"
 #include "socketgz.h"
 #include "var.h"
+#include "asdf.h"
 #include "order.h"
 #include "iis.h"
 #include "hist.h"
@@ -604,6 +605,25 @@ FitsImageNRRDVar::FitsImageNRRDVar(Context* cx, Tcl_Interp* pp,
 {
   fits_ = new FitsNRRDVar(pp, var, fn);
   process(fn,id);
+}
+
+// ASDF
+
+FitsImageAsdf::FitsImageAsdf(Context* cx, Tcl_Interp* pp,
+			     const char* fn, const char* path,
+			     const char* name, int id)
+  : FitsImage(cx, pp)
+{
+  fits_ = new FitsAsdf(fn, path);
+  process(name, id);
+}
+
+FitsImageAsdfNext::FitsImageAsdfNext(Context* cx, Tcl_Interp* pp,
+				     const char* name, FitsFile* prev, int id)
+  : FitsImage(cx, pp)
+{
+  fits_ = new FitsAsdfNext(prev);
+  process(name, id);
 }
 
 // Photo

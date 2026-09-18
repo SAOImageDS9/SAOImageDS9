@@ -799,6 +799,26 @@ public:
   FitsImageNRRDVar(Context*, Tcl_Interp*, const char*, const char*, int);
 };
 
+// ASDF
+//
+// One class, not the usual per-transport family: ASDF is not a streamable
+// format - an ndarray names its data by block index and the blocks are
+// reached by walking them - so FitsAsdf does its own seeking with stdio
+// (fitsy/asdf.C). The name is separate from the file name because it also
+// carries the in-file array path, which is what tells two arrays of the
+// same shape in one file apart.
+
+class FitsImageAsdf : public FitsImage {
+public:
+  FitsImageAsdf(Context*, Tcl_Interp*,
+		const char*, const char*, const char*, int);
+};
+
+class FitsImageAsdfNext : public FitsImage {
+public:
+  FitsImageAsdfNext(Context*, Tcl_Interp*, const char*, FitsFile*, int);
+};
+
 // Photo
 
 class FitsImagePhoto : public FitsImage {

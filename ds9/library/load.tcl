@@ -175,7 +175,8 @@ proc ProcessLoad {{err 1}} {
 		allocgz -
 		channel -
 		var -
-		photo {}
+		photo -
+		asdf {}
 
 		mmap -
 		mmapincr {
@@ -267,6 +268,21 @@ proc ProcessLoad {{err 1}} {
 		     $loadParam(load,type) \
 		     $loadParam(var,name) \
 		     $loadParam(load,layer)
+	    }
+	    asdf {
+		# No load,type of its own to pass along, and no file,mode:
+		# ASDF is not a streamable format - an ndarray names its
+		# data by block index and the blocks are reached by walking
+		# them - so the reader always seeks the file itself (see
+		# fitsy/asdf.C) and there is no alloc/mmap/var/socket
+		# family to choose from. The extra argument is the array
+		# path inside the container, which the display name only
+		# abbreviates.
+		$current(frame) load $loadParam(file,type) \
+		    \{$loadParam(file,name)\} \
+		    \{$loadParam(asdf,file)\} \
+		    \{$loadParam(asdf,path)\} \
+		    $loadParam(load,layer)
 	    }
 	    photo {
 		$current(frame) load $loadParam(file,type) \

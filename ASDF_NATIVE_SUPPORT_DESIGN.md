@@ -201,39 +201,61 @@ for a correct read.
 
 Five new/changed components, each mapped onto an existing DS9 pattern rather than a new one:
 
-1. **ASDF container reader** — **implemented, and Tcl-driven rather than the C++
-   `tksao/frame/fitsasdf.C` class originally sketched here.** `ds9/library/asdf.tcl` parses
-   the magic line, the YAML-tree text (via targeted `regexp`, not a full YAML parser — see
-   point 2), and the trailing block index/per-block headers directly with Tcl's `binary
-   scan`, all fast enough in pure Tcl since these are small (tree text, ~50KB; block headers,
-   54 bytes each). This deliberately avoids adding a new grammar keyword to
-   `tksao/frame/parser.Y`/`lex.L`, which would require regenerating the bison/flex output —
-   real toolchain-version risk on this checkout specifically (CLAUDE.md flags this; this
-   build machine's `bison` is 3.8.2 against the checked-in files' stamped `2.3`). The only
-   new C code is one small Tcl command, `asdflz4decompress`, wrapping `LZ4_decompress_safe`
-   from the vendored `liblz4.a` for the one part of this too slow in pure Tcl (decompressing
-   a multi-ten-MB block) — no grammar change either way. It lives in its own small package,
-   `tclasdf/` (matching `vector`/`fitsy`/`tclsignal`'s existing pattern exactly: its own
-   `configure.ac`/`Makefile.in`), rather than as a function inside `ds9/*/ds9.C` — that file
-   is genuinely triplicated with real per-platform differences across `unix`/`macos`/`win`,
-   so a package built once and registered with the same 3-line `Tcl_StaticPackage` block
-   every other vendored extension already uses avoids hand-duplicating the same C logic
-   three times. `zlib`-compressed blocks need no new code at all: Tcl 9 ships a native
-   `zlib` command.
+1. **ASDF container reader** — **implemented in C++, as originally sketched here.**
+   `fitsy/asdf.{h,C}` holds it: `FitsAsdfFile` opens the file, checks the magic line, reads
+   the YAML-tree text, enumerates every `core/ndarray` node in it with a real indent walker
+   (not regexps), and reads/decompresses one binary block on demand. It never reads the
+   whole file — it seeks. Block offsets come from walking the blocks by their own
+   `allocated` sizes rather than from the trailing `#ASDF BLOCK INDEX`, which
+   asdf-standard makes optional; that removes a failure mode rather than adding a fallback.
+   All four codecs are here: `none`, plus `zlib`, `lz4` (chunk-framed, python-lz4's
+   convention) and `bzp2` against the vendored `libz`/`liblz4`/`libbz2`.
+
+   The first implementation was Tcl instead (`ds9/library/asdf.tcl`, parsing with `regexp`
+   and `binary scan`), taken to avoid a new grammar keyword in
+   `tksao/frame/parser.Y`/`lex.L` and the bison/flex regeneration risk CLAUDE.md flags.
+   That risk turned out to be measurable rather than fatal: `/usr/bin/bison` 2.3 reproduces
+   the checked-in `parser.C` byte-identically, and the local flex differs from whatever
+   produced `lex.C` only by a characterized 45-line skeleton type-width churn, so a
+   regenerated `lex.C` can have that churn reverted hunk by hunk and carry nothing but the
+   real change. The Tcl reader also had to hold the *entire* file in a Tcl string to reach
+   a block, which for a 197MB Roman product is 197MB of Tcl byte array plus a second copy
+   for the decoded block.
+
+   `tclasdf/`, the small C package holding `asdflz4decompress`, `asdfbz2decompress`,
+   `asdfconvert` and `asdfmask`, existed only to do the parts of that Tcl path too slow in
+   Tcl. All four are inside `fitsy/asdf.C` now, so the package has been removed — with it
+   go a `configure`/`Makefile.in` pair, a `TEA_PATH_CONFIG` block hand-copied into each of
+   the three `ds9/*/configure` scripts, and a `Tcl_StaticPackage` registration in each of
+   the three `ds9/*/ds9.C` files. `liblz4` and `libbz2` stay vendored and linked: fitsy's
+   reader is their consumer now.
 
 2. **Pixel-array path — implemented and validated against a real, full 197MB Roman file**,
-   not a synthetic one. Resolves `roman.data` (currently hardcoded to that one Roman-fixed
-   path; the generic `path:inner/path` syntax is Phase 4 scope, not done) to its
-   `core/ndarray` node, pulls `datatype`/`shape`/`byteorder`/`source`, decompresses that
-   block (a real finding here: Roman's actual pixel blocks are `lz4`-compressed, not just
-   the small WCS coefficient blocks — see §9's `lz4` note), and hands the resulting buffer +
-   explicit dims to the *existing* `Arr*`-family ingestion path — concretely, `FitsArrVar`
-   (`fitsy/var.C`) via `$frame load array {} {[xdim=...,bitpix=...]} var <tclvar> {}`, not
-   `loadArrAllocCmd`/a temp file, since the decoded bytes are already in memory as a Tcl
-   byte-array. No cfitsio/`fitsy` ASDF-specific code at all, exactly as planned. Confirmed
-   end to end: the real `r0000101001001001001_0001_wfi01_f158_cal.asdf` science array loads
-   as a 4088×4088 float32 frame in DS9 in ~5 seconds and renders as a recognizable WFI
-   starfield under zscale. See `TODO.md` Phase 2 for the full validation record.
+   not a synthetic one, and now through a `FitsFile` of its own rather than the array
+   loader. `FitsAsdf` resolves an arbitrary root-relative path (`roman/data`, `roman/dq`,
+   or any deeper path the enumerator reports), decompresses that block (a real finding
+   here: Roman's actual pixel blocks are `lz4`-compressed, not just the small WCS
+   coefficient blocks — see §9's `lz4` note), widens a datatype fitsy cannot represent
+   (`float16`→`float32`, `uint32`→`int64`, both exactly), resolves an asdf mask onto the
+   FITS null conventions, and builds its own `FitsHead`. The frame reaches it through
+   `load asdf {name} {file} {path} layer`, the same way `load nrrd mmap` reaches
+   `FitsNRRDMMap`, and a rank-3 array chains per-plane `FitsAsdfNext` objects exactly as
+   the FITS cube readers do.
+
+   Unlike every other reader in `fitsy/`, this one is not split into per-transport
+   subclasses (alloc/mmap/var/share/socket). ASDF is not streamable — an ndarray names its
+   data by block *index* — so the reader must seek, and plain stdio seeks on every
+   platform, including Windows, where `FitsMMap` is a no-op.
+
+   Building its own header is also what retired an earlier workaround: fitsy's array-spec
+   grammar has no `BLANK` keyword, so carrying a mask through the array loader meant
+   synthesizing a whole in-memory FITS file around the pixels. `FitsAsdf` appends the card.
+
+   What stays in Tcl is the part that really is text manipulation: lifting a GWCS subtree
+   out of the tree and reshaping it into a standalone document AST will accept. It reaches
+   the same C++ reader for what it needs through `fitsy asdf tree|arrays|block` (added to
+   `tclfitsy`), so the container format has one implementation rather than one for pixels
+   and another for everything else.
 
 3. **WCS path.** Locate the WCS subtree (`roman.meta.wcs` for Roman), walk it, and for every
    block-sourced `core/ndarray` reachable within it (§7b), substitute an inline YAML literal

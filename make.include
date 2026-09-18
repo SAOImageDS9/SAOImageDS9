@@ -101,7 +101,7 @@ TKIMGTMPFILES = \
 .NOTPARALLEL :
 .PHONY	: all dirs ds9 tclxml tclxmlrpc tclzipfs tls xpa zlib lz4 bzip2
 .PHONY	: tkblt tclfitsy tkcon tkhtml1 tkimg tkmpeg tksvg tkagif tksao tktable
-.PHONY	: vector fitsy tclasdf libyaml ast funtools openssl
+.PHONY	: vector fitsy libyaml ast funtools openssl
 
 all	: saods9
 
@@ -268,11 +268,9 @@ zlib/configure.log :
 # needed - lz4/lib's own Makefile already tracks object-file staleness,
 # same as every other already-built package's repeated `install` calls.
 #
-# Currently vendored for Phase 2's future ASDF container reader in
-# tksao (real Roman ASDF files use lz4-compressed blocks - see TODO.md
-# Phase 1), not because anything in the build consumes it yet - unlike
-# zlib (funtools/gcat) and libyaml (ast), lz4 has no consumer in this
-# tree today.
+# Vendored for the ASDF container reader in fitsy (fitsy/asdf.C) - real
+# Roman ASDF files use lz4-compressed blocks, see TODO.md Phase 1. That
+# reader is lz4's only consumer in this tree.
 
 lz4	:
 	@echo ""
@@ -295,7 +293,8 @@ lz4	:
 #      the command-line tools and *runs the compression test suite*. Its
 #      `install` depends on the tools, then copies them and their man
 #      pages into $(PREFIX)/bin and $(PREFIX)/man. None of that is wanted
-#      here: the only consumer is tclasdf, which needs libbz2.a and
+#      here: the only consumer is fitsy's ASDF reader, which needs
+#      libbz2.a and
 #      bzlib.h and nothing else. So build the `libbz2.a` target by name
 #      and place the two files directly.
 #   2. `install` understands only PREFIX, with lib/, include/ and man/
@@ -314,9 +313,9 @@ lz4	:
 # mingw archive with the host ranlib; $(TARGET) is set only by
 # win/Makefile.in, so name the matching ranlib there and nowhere else.
 #
-# Vendored for ASDF's bzp2 block compression (see TODO.md Phase 5 and
-# Tests/asdf/fixtures/bzp2/). Like lz4, nothing else in this tree
-# consumes it.
+# Vendored for ASDF's bzp2 block compression (see fitsy/asdf.C, TODO.md
+# Phase 5 and Tests/asdf/fixtures/bzp2/). Like lz4, that reader is its
+# only consumer in this tree.
 
 bzip2	:
 	@echo ""
@@ -509,38 +508,6 @@ fitsy/Makefile :
 	$(PREFIX) \
 	$(STD) \
 	$(CACHE)
-
-#-------------------------- tclasdf
-
-# Tcl commands used by ds9/library/asdf.tcl - among them asdflz4decompress
-# and asdfbz2decompress, which decompress lz4 and bzp2 ASDF blocks (see
-# TODO.md Phases 2 and 5; real Roman files use lz4). A
-# standalone Tcl extension (like vector/fitsy) so the logic lives once,
-# instead of being hand-duplicated across the unix/macos/win copies of
-# ds9/*/ds9.C - lz4 and bzip2 are passed in explicitly here (CPPFLAGS/
-# LDFLAGS/LIBS), the same convention already used for e.g. ast's CPPFLAGS or
-# tls's --with-openssl-dir, since no TEA macro finds a vendored library on
-# its own.
-# no config.cache - the shared cache file doesn't know about the extra
-# CPPFLAGS/LDFLAGS/LIBS below and refuses a stale run rather than risk
-# silently reusing a different environment's results.
-
-tclasdf	: tclasdf/Makefile
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tclasdf -j $(JOBS) install
-
-tclasdf/Makefile :
-	@echo ""
-	@echo "*** $@ ***"
-	cd tclasdf; \
-	./configure \
-	$(WITHTCL) \
-	$(PREFIX) \
-	$(STD) \
-	CPPFLAGS='-I$(includedir)' \
-	LDFLAGS='-L$(libdir)' \
-	LIBS='-llz4 -lbz2'
 
 #-------------------------- libyaml
 
@@ -779,7 +746,7 @@ scrub :
 .PHONY	: tkbltclean tclfitsy tkconclean tkhtml1clean tkimgclean
 .PHONY	: tkmpegclean tksvgclean tkagifclean
 .PHONY	: tktableclean xpaclean zlibclean lz4clean bzip2clean
-.PHONY	: vectorclean fitsyclean tclasdfclean libyamlclean astclean funtoolsclean
+.PHONY	: vectorclean fitsyclean libyamlclean astclean funtoolsclean
 .PHONY	: tksaoclean
 
 clean	: tclclean tkclean \
@@ -885,11 +852,6 @@ fitsyclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C fitsy clean
 
-tclasdfclean :
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tclasdf clean
-
 libyamlclean :
 	@echo ""
 	@echo "*** $@ ***"
@@ -938,7 +900,7 @@ bzip2clean :
 .PHONY	: tkbltdistclean tclfitsydistclean tkcondistclean tkhtml1distclean
 .PHONY	: tkimgdistclean tkmpegdistclean tksvgdistclean tkagifdistclean
 .PHONY	: tktabledistclean xpadistclean zlibdistclean lz4distclean bzip2distclean
-.PHONY	: vectordistclean fitsydistclean tclasdfdistclean libyamldistclean
+.PHONY	: vectordistclean fitsydistclean libyamldistclean
 .PHONY	: astdistclean funtoolsdistclean
 .PHONY	: tksaodistclean
 
@@ -1074,12 +1036,6 @@ fitsydistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C fitsy distclean
-
-tclasdfdistclean :
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tclasdf distclean
-	$(RM) -f tclasdf/tclasdfConfig.sh
 
 libyamldistclean :
 	@echo ""

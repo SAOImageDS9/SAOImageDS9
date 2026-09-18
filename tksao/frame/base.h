@@ -130,7 +130,8 @@ public:
   enum UpdateType {MATRIX, BASE, BASEONLY, PIXMAP, NOUPDATE};
 
   enum MemType {ALLOC, ALLOCGZ, CHANNEL, MMAP, SMMAP, MMAPINCR, 
-		SHARE, SSHARE, SOCKET, SOCKETGZ, VAR, HIST, POST, PHOTO};
+		SHARE, SSHARE, SOCKET, SOCKETGZ, VAR, HIST, POST, PHOTO,
+		ASDF};
   enum MosaicType {NOMOSAIC, IRAF, WCSMOSAIC};
   enum LayerType {IMG, MASK};
   enum CutMethod {SUM,AVERAGE,MEDIAN};
@@ -871,6 +872,8 @@ public:
   virtual void loadNRRDShareCmd(ShmType, int, const char*, LayerType);
   virtual void loadNRRDSocketCmd(int, const char*, LayerType);
   virtual void loadNRRDVarCmd(const char*, const char*, LayerType);
+
+  virtual void loadAsdfCmd(const char*, const char*, const char*, LayerType);
 
   virtual void loadPhotoCmd(const char*, const char*);
   virtual void loadSlicePhotoCmd(const char*, const char*);

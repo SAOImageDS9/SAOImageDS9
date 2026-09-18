@@ -6353,6 +6353,7 @@ fi
     vars="
 		   util.C
 		   alloc.C
+		   asdf.C
 		   allocgz.C
 		   analysis.C
 		   block.C
@@ -6439,6 +6440,7 @@ fi
     vars="
 		   util.h
 		   alloc.h
+		   asdf.h
 		   allocgz.h
 		   analysis.h
 		   block.h

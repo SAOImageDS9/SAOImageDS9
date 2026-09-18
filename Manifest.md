@@ -17,7 +17,6 @@ Last updated 2026-09-17
 | pdf4tcl      | 0.9.4      |       |       | https://sourceforge.net/projects/pdf4tcl/                            | 0.9.4                           |
 | scidthemes   | 1.0        |       |       | https://sourceforge.net/projects/scid/files/Scid/Additional%20Files/ | 1.0                             |
 | taccle       | 1.4        | y     |       | https://github.com/SAOImageDS9/taccle-maintenance                    | previous upstream abandoned     |
-| tclasdf      |            | y     |       |                                                                      |                                 |
 | tcl9.0       | 9.0.3      |       |       | https://github.com/tcltk/tcl                                         | 9.0.3                           |
 | tclfitsy     |            | y     |       |                                                                      |                                 |
 | tcllib       | 1.2        |       |       | https://github.com/tcltk/tcllib                                      | 2.0                             |

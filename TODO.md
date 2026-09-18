@@ -27,6 +27,28 @@ Detail lives in the phase sections below; this is the map.
   Phase 0.
 - **A real test suite** in the sibling `Tests` repo, wired into its `io.sh`.
 
+### Masks
+
+An ASDF array can be loaded into a frame's mask layer, so a quality array can be laid over
+the science array it belongs to — `roman/dq` over `roman/data` being the case this was
+built for. Reachable three ways, all verified by comparing rendered PNGs before and after
+(the mask is only observable in the render; the frame keeps reporting the *image* as its
+file, which is correct for an overlay):
+
+- **Analysis → Mask Parameters → File → Open as → ASDF** (`mask.tcl`). The dialog's own
+  Open menu lists the formats a mask can come from, and ASDF was missing from it; that
+  was a one-line menu entry, since `OpenDialog`'s dispatch already handled `asdf` and
+  `layer == mask` independently.
+- **XPA/SAMP `asdf mask <file>[:<path>]`**, added to the grammar as an `opts` alternative
+  the way `nrrd` and `array` do it. `AsdfCmdLoad` and `LoadAsdfFile` already took a layer
+  and passed it through, so nothing below the parser changed.
+- **`-asdf -mask <file>[:<path>] -nomask`** on the command line, which already worked: the
+  generic `-mask` switch sets `file(layer)` for whatever format follows. Verified to
+  produce a render byte-identical to the XPA route.
+
+`mask mark`'s default is NONZERO, which is exactly what a data-quality array wants, so a
+dq mask needs no threshold set by hand.
+
 ### The AST bugs — eight fixed locally, two open
 
 All in `ast/src/yamlchan.c` unless noted. `ast` is already marked `dirty` in `Manifest.md`.

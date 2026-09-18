@@ -1,2 +1,3 @@
 set STRING_ 257
-set NEW_ 258
+set MASK_ 258
+set NEW_ 259

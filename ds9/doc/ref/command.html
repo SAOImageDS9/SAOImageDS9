@@ -293,6 +293,7 @@ WCS; if it does not, the image still loads with no WCS. See <a href=
 formats, so a quality array can be laid over the science array it belongs to. The mask is
 thresholded by the settings in <b>Analysis&nbsp;&#8594;&nbsp;Mask Parameters</b>, whose
 default marks every non-zero pixel &#8212; which is what a data-quality array wants.</p>
+<p>In an RGB, HLS or HSV frame the array is loaded into the frame's current channel, and in a 3D or multi-color frame as that frame expects, exactly as a FITS image would be. Select the channel first &#8212; with <tt>-rgb&nbsp;channel&nbsp;red</tt> or the equivalent for the other frame types.</p>
 <tt>Syntax:<br>
 -asdf &lt;filename&gt;[:&lt;path&gt;]<br>
 -asdf -mask &lt;filename&gt;[:&lt;path&gt;] -nomask<br>
@@ -301,7 +302,8 @@ Example:<br>
 $ds9 -asdf foo.asdf<br>
 $ds9 -asdf foo.asdf:roman/dq<br>
 $ds9 -asdf foo.asdf:roman/err<br>
-$ds9 -asdf foo.asdf:roman/data -asdf -mask foo.asdf:roman/dq -nomask</tt>
+$ds9 -asdf foo.asdf:roman/data -asdf -mask foo.asdf:roman/dq -nomask<br>
+$ds9 -rgb -rgb channel red -asdf r.asdf -rgb channel green -asdf g.asdf</tt>
 <p><b><a name="asinh" id="asinh"></a></b><b>asinh</b></p>
 <p>Select ASINH scale function for the current frame.</p>
 <tt>Syntax:<br>

@@ -202,7 +202,17 @@ is a finding about the ecosystem rather than a defect.
    the Roman GWCS is ~2% anisotropic. `WCS_TEST_PLAN.md` §1 has the measurements.
 7. **R6: AST drops `bounding_box`**, so nothing enforces the valid-pixel domain, and the
    inverse also stops converging outside the detector (A-5).
-8. Smaller: an ASDF icon for the top icon row (needs PNG artwork for `ds9/icons/ui/` and
+8. **A block-backed ndarray with no `byteorder` is guessed, not refused.** `AsdfEnumFlush`
+   defaults to little-endian when the field is absent. That is right for an inline `data:`
+   array, which needs no byteorder — but the ndarray schema's `dependencies` make `shape`,
+   `datatype` and `byteorder` all mandatory whenever `source:` is present, so for a
+   block-backed array the field can only be missing in a malformed file, and guessing
+   silently produces byte-swapped pixels. Measured with `Tests/asdf/arrays/int16_no_byteorder`
+   (hand-written, since asdf will not emit one): a big-endian payload reads 2015 as -8441
+   and 4095 as -241. Refusing when `source` is present would be a one-line change and
+   safer; left alone because it is a behaviour decision rather than a defect, and the
+   fixture pins what currently happens either way.
+9. Smaller: an ASDF icon for the top icon row (needs PNG artwork for `ds9/icons/ui/` and
    `ui_dark/`); `uint16`/`uint32` masked arrays would need the FITS `BZERO` convention; the
    array browser offers WCS-internal coefficient matrices as loadable images.
 
@@ -254,9 +264,11 @@ The full lists are in **`WCS_TEST_PLAN.md` §3** (DS9/XPA gotchas) and
 - **Tests** are a **separate git repo** at `Tests/` (`github.com/SAOImageDS9/Tests`) — commit
   there separately. `asdf.sh` drives them, `io.sh` lists them, baselines are `.sav` next to
   each fixture, and files are found with `find` so new ones are picked up automatically.
-  Three fixture families: `asdf/fixtures/` (108 container), `asdf/gwcs/` (27 projections,
-  25 verified), `asdf/transform/` + `asdf/frames/` (26, 22 verified exactly). 161 baselines
-  in all. Four generators live in `asdf/`.
+  Four fixture families: `asdf/fixtures/` (108 container), `asdf/gwcs/` (27 projections,
+  25 verified), `asdf/transform/` + `asdf/frames/` (26, 23 verified exactly), and
+  `asdf/arrays/` (24 atypical ndarray descriptions — byte order, `offset`/`strides` views,
+  odd ranks, and the dtypes the mapping table claims). 185 baselines in all. Five
+  generators live in `asdf/`.
 - **Sample data**: `utils/asdf_gwcs_probe/sample_data/`. The large Roman files and the L3
   coadd are in `.git/info/exclude` (local-only, never committed) and are re-downloadable
   from the Build22 example data. That host **serves GET but refuses HEAD**, so `curl -I`

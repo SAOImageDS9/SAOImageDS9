@@ -49,6 +49,28 @@ file, which is correct for an overlay):
 `mask mark`'s default is NONZERO, which is exactly what a data-quality array wants, so a
 dq mask needs no threshold set by hand.
 
+### RGB, HLS, HSV, 3D and multi-color frames
+
+An ASDF array loads into the current channel of an RGB/HLS/HSV frame, and into a 3D or
+multi-color frame, exactly as a FITS image does. **XPA and SAMP always worked** — verified
+before changing anything, all four frame types, every channel.
+
+**The command line did not**, and the failure was silent. `CommandLineLoad` dispatches on
+the *current frame's type*, and only `base` and `multicolor` route to
+`CommandLineLoadBase` — the one proc that had an `asdf` case. `CommandLineLoadRGB`,
+`CommandLineLoadT` (hls/hsv) and `CommandLineLoad3D` each carry their own
+`switch -- $file(type)` listing every format they accept, and `asdf` was in none of them,
+so the filename fell through with no load and **no error**. Each now has an `asdf` case
+mirroring its own `fits` case (3D wraps it in `MultiLoad`, the others do not).
+
+Two things this turned up that are worth not re-deriving:
+
+- **`multicolor` was never broken.** It routes through `CommandLineLoadBase`, so it
+  already had the case. Its "a second load makes a second frame" behaviour is identical
+  for FITS, i.e. it is `MultiLoad`'s general behaviour and not an ASDF gap.
+- **A GUI route working tells you nothing about the CLI.** The GUI goes through `Open`,
+  which never touches these three procs. That is exactly how this stayed hidden.
+
 ### The AST bugs — eight fixed locally, two open
 
 All in `ast/src/yamlchan.c` unless noted. `ast` is already marked `dirty` in `Manifest.md`.

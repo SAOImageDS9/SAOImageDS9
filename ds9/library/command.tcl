@@ -901,6 +901,7 @@ proc CommandLineLoadRGB {item argvname iname} {
 
     switch -- $file(type) {
 	fits {LoadFitsFile $item {} $file(mode)}
+	asdf {LoadAsdfFile $item {} $file(mode)}
 	url {LoadURLFits $item {} $file(mode) 0}
 
 	rgbimage {
@@ -1006,6 +1007,7 @@ proc CommandLineLoadT {item argvname iname} {
 
     switch -- $file(type) {
 	fits {LoadFitsFile $item {} $file(mode)}
+	asdf {LoadAsdfFile $item {} $file(mode)}
 	url {LoadURLFits $item {} $file(mode) 0}
 
 	rgbimage {
@@ -1108,6 +1110,10 @@ proc CommandLineLoad3D {item argvname iname} {
 	fits {
 	    MultiLoad {} $file(mode)
 	    LoadFitsFile $item {} $file(mode)
+	}
+	asdf {
+	    MultiLoad {} $file(mode)
+	    LoadAsdfFile $item {} $file(mode)
 	}
 	url {LoadURLFits $item {} $file(mode) 1}
 

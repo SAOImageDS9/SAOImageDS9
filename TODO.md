@@ -371,9 +371,21 @@ look like crashes.
 
 ### This session's commits, for orientation
 
-Main repo, newest first. `Tests` is a separate repo with its own history.
+Main repo, newest first. `Tests` is a separate repo with its own history, and the
+`ast_upstream/` clone has its own branches (see above).
 
 ```
+831c4e3b3 AST: zenithal_perspective is AZP, not SZP
+927255699 TODO: the upstream AST branches, and zenithal_perspective solved
+ebeba58f6 libyaml: reconfigure to fix timestamps
+3cda8fc3f TODO: AST bug 11, a heap overread in winmap.c's MapMerge
+4e5d25e70 Refuse an ndarray with no byteorder instead of guessing one
+d01cfa592 TODO: a fourth fixture family, and the byteorder-default question
+5c8860baf AST: raise 45 version ceilings, and fix what that exposed
+556c9465b Measure the GWCS gaps against real astropy instead of guessing
+fe7c005c6 Document what of a GWCS is read, and what is not
+11f09650d Agent docs: five AST bugs, four patched
+890936e85 TODO: refresh the handoff now that every GWCS primitive is covered
 3fddb73c3 AST: GetTime tested the wrong string for its epoch prefix
 438935616 TODO: a handoff summary at the top, and point the agent docs at it
 2cf57a92a AST: ReadLinear1d built its WinMap from an uninitialized variable
@@ -387,21 +399,20 @@ f59e6a180 Read L3 coadd WCS by translating fitswcs_imaging to FITS cards
 1364a1bb9 WCS test plan J-4: L3 coadds load pixels but get no WCS
 28e4a4c97 WCS test plan: finish sections A/B/D/E/G/H/I/J, 21 more cells
 fc9541661 Don't attach the GWCS to arrays it does not describe
-6ef19d4ce WCS test plan: execute sections C and F, 14 cells closed
-799e810c4 Fix Windows libyaml hang: --host=, not a bare positional triplet
-b9563cd2e Vendor bzip2 1.0.8 and support ASDF bzp2 block compression
-3d252d94f Add ASDF to the File buttonbar and its Preferences entry
 ```
 
 `Tests` repo:
 
 ```
+d66ab57 zenithal_perspective verified: 26 of 27 projections
+d524a88 fix_inputs: use a shape that does not read past a buffer
+9dc5eea int16_no_byteorder is now refused, not guessed
+b21ff65 Add 24 fixtures for atypical ndarray descriptions
+4cda1f7 altaz works: 23 of 26 transforms and frames verified
+f2f9cab Exercise the asdf command from command.sh, xpa.sh and samp.sh
 2b64c50 Add the last seven GWCS transforms; 22 of 26 verified
 a5cbf83 Fix four of the five frame fixtures; 16 of 19 now verified
 2f62e22 Add fixtures for the GWCS transforms and frames, 13 of 19 verified
-4ddb81d GWCS fixtures: 25 of 27 projections now verified against their twin
-5de04ef Add one ASDF fixture per GWCS sky projection, 7 verified
-f711229 Add asdf.sh, wired into io.sh, with per-file baselines
 ```
 
 Every commit message here is deliberately long and carries the reasoning, the measurements

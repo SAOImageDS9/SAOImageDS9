@@ -23,12 +23,11 @@ Detail lives in the phase sections below; this is the map.
   see Phase 0. **It has not been run there** — see open items.
 - **A real test suite** in the sibling `Tests` repo, wired into its `io.sh`.
 
-### The AST bugs — four fixed locally, five open
+### The AST bugs — seven fixed locally, two open
 
 All in `ast/src/yamlchan.c` unless noted. `ast` is already marked `dirty` in `Manifest.md`.
-**All nine are upstream Starlink code, not ours**, and all should go upstream together
-with the 10 pre-existing `MAKE_TEST` version-ceiling bumps — which items 7 and 8 show are
-not cosmetic.
+**All are upstream Starlink code, not ours**, and all should go upstream together. Item 9
+is a finding about the ecosystem rather than a defect.
 
 1. **`LibYamlWriter` signature — FIXED (`8064e7408`).** Declared its size argument
    `long unsigned int` where libyaml's `yaml_write_handler_t` uses `size_t`. Identical on
@@ -57,47 +56,73 @@ not cosmetic.
    are different projections and SZP's 2nd/3rd parameters are phi_c/theta_c. Out by ~6500"
    with demonstrably correct parameters. AST *does* have `AST__AZP`, so this needs an
    upstream decision about the right mapping rather than a local patch.
-6. **`ortho_polynomial` ignores `polynomial_type` on read — NOT FIXED, CONFIRMED.**
-   `ReadPoly()` is called with `isortho=1` and goes straight to `astChebyMap()`; the
-   node's `polynomial_type` is never read on input, only ever *written*
-   (`Store0C(..., "polynomial_type", ..., "chebyshev", ...)`). The schema makes the field
-   **required** and its enum is `[chebyshev, legendre, hermite]` — checked in
-   `asdf_transform_schemas`, in all three of `ortho_polynomial-1.0.0/1.1.0/1.2.0`. So a
-   legendre or hermite polynomial is read with the wrong basis functions rather than
-   refused: the same silent-wrongness class as bug 4.
-   **Measured**, with three fixtures identical but for that one field, one degree-2 term
-   (`c[2][0] = 1`, so the value is `10 + f2(x)`) and `yamlchan_probe` at x = 0.3:
+6. **`ortho_polynomial` ignored `polynomial_type` on read — FIXED.** `ReadPoly()` is
+   called with `isortho=1` and went straight to `astChebyMap()`; the field was never read
+   on input, only ever *written*. The schema makes it **required** with enum
+   `[chebyshev, legendre, hermite]` (checked in `asdf_transform_schemas`, all three of
+   `ortho_polynomial-1.0.0/1.1.0/1.2.0`), so a legendre or hermite polynomial was read with
+   entirely different basis functions — the same silent-wrongness class as bug 4.
+   Measured before the fix, with three fixtures identical but for that one field and a
+   single degree-2 term (`c[2][0] = 1`, value `10 + f2(x)`), at x = 0.3:
 
-   | declared | correct | AST returns |
+   | declared | correct | AST returned |
    |---|---|---|
    | chebyshev, `T2 = 2x²−1` | 9.180° | 9.17999° |
    | legendre, `P2 = (3x²−1)/2` | 9.635° | 9.17999° |
    | hermite, `H2 = 4x²−2` | 8.360° | 9.17999° |
 
-   AST's own prologue is honest that it supports "ortho_polynomial (chebyshev only)"; the
-   gap is that nothing enforces it. Fixtures in the scratchpad as `basis_*.asdf`; the
-   generator snippet is worth re-deriving from `make_gwcs_transform_fixtures.py`'s
-   `ortho_extra` if this is filed.
+   Fixed by reading the field in `ReadPoly()` and erroring unless it is `chebyshev`,
+   naming the basis. **Deliberately lenient when the field is absent** (defaults to
+   chebyshev): that only ever turns a silently-wrong read into an error, never a working
+   read into one. Verified after the fix on files written by astropy itself — a Legendre2D
+   is refused by name, a Chebyshev2D still reads, and plain `polynomial` is untouched.
+   **This had to be fixed together with bug 7**: before the ceiling bump a real astropy
+   `ortho_polynomial-1.2.0` was rejected on version, so bumping alone would have converted
+   a loud failure into a quiet wrong answer.
 7. **The `MAKE_TEST` minor-version ceilings put most celestial frames out of reach —
-   NOT FIXED. This is the most consequential of the open ones.** `MAKE_TEST` errors when
-   `minor > Minor`, and the frame ceilings are `Fk4/Fk4Noeterms/Fk5/Galactic/SuperGalactic
-   = 1.0`, `Icrs = 1.1`. **astropy 8.0.1 writes `fk5-1.2.0`, `fk4-1.2.0`,
-   `fk4noeterms-1.2.0` and `galactic-1.2.0`** — all rejected outright, with
-   *"unsupported minor version number 2"*. Measured with `yamlchan_probe` on files written
-   by astropy itself, and the tag does not depend on the asdf-standard version passed to
-   `write_to` (1.3.0, 1.4.0 and 1.5.0 all produced `fk5-1.2.0`).
+   FIXED, 45 ceilings raised.** `MAKE_TEST` errors when `minor > Minor`, and the frame
+   ceilings were `Fk4/Fk4Noeterms/Fk5/Galactic/SuperGalactic = 1.0`, `Icrs = 1.1`, while
+   **astropy 8.0.1 writes `fk5-1.2.0`, `fk4-1.2.0`, `fk4noeterms-1.2.0` and
+   `galactic-1.2.0`** — all rejected outright with *"unsupported minor version number 2"*.
+   The tag does not depend on the asdf-standard version passed to `write_to` (1.3.0,
+   1.4.0 and 1.5.0 all produced `fk5-1.2.0`), so there was no way to write a readable one.
 
-   The practical result: **ICRS is the only celestial frame that works with a file a
-   current astropy wrote**, and `icrs-1.1.0` sits exactly *at* the ceiling with no
-   headroom, while `icrs-1.2.0` and `-1.3.0` already exist in the schema set. All three
-   real Roman sample files use `icrs-1.1.0`, which is the only reason none of this has
-   bitten. Astropy 8.0.1 still emits `icrs-1.1.0` at every asdf-standard version from
-   1.2.0 to 1.6.0, so there is no immediate break — but one schema bump on the one frame
-   that matters would stop Roman WCS loading entirely. This is the strongest argument for
-   getting the ceiling bumps upstream rather than carrying them locally.
+   Every ceiling is now the newest version shipped by the installed
+   `asdf-transform-schemas` 0.6.0, `asdf-coordinates-schemas` 0.5.1, `asdf-wcs-schemas`
+   0.5.0 and `asdf-standard` 1.5.0. **Not raised blindly**: each of the 45 schemas was
+   diffed between the old ceiling and the new version, normalising `id`/`tag` lines and
+   `$ref` version strings. 36 were textually identical apart from those; the other 9
+   (`baseframe`, `earthlocation`, `fk4`, `fk4noeterms`, `fk5`, `frame`, `ndarray`,
+   `quantity`, `time`) changed only by dropping a `$ref` in favour of a `tag:` constraint,
+   by making `frame`'s `unit` an `anyOf` (*more* permissive), or by adding optional
+   properties — `quantity`'s `datatype`, and `time`'s extended `format` enum plus a new
+   `base_format`. None alters the meaning of a field the reader uses.
 
-   Incidental: the error text reads *"unsupported minor version number 2 (should be at
-   least 0)"*, where it means **at most**.
+   Verified after the bump against files written by astropy itself, comparing DS9's ICRS
+   readout with astropy's own conversion of the same position:
+
+   | frame | astropy | DS9 | Δ |
+   |---|---|---|---|
+   | icrs | 10.0000000 20.0000000 | 10.0000000 20.0000000 | exact |
+   | fk5 | 9.9999915 19.9999985 | 9.9999915 19.9999985 | exact |
+   | fk4 | 10.6589673 20.2738672 | 10.6589781 20.2738582 | 0.039″ |
+   | fk4noeterms | 10.6589653 20.2738922 | 10.6589761 20.2738832 | 0.039″ |
+   | galactic | 254.2849436 −9.7822288 | 254.2849436 −9.7822284 | 0.0014″ |
+
+   FK4 landing at 10.659/20.274 rather than 10/20 is what proves the B1950 equinox is
+   actually being honoured; a dropped equinox would be over half a degree out, not 0.04″.
+   That residual is the known SLALIB-vs-ERFA difference in the FK4 model, not a reading
+   error.
+
+   Note `icrs-1.1.0` — what every real Roman file uses — had been sitting exactly *at* the
+   old ceiling with no headroom, while `icrs-1.2.0` and `-1.3.0` already existed. Astropy
+   8.0.1 still emits `icrs-1.1.0` at every asdf-standard version from 1.2.0 to 1.6.0, so
+   nothing was broken yet; one bump on that one frame would have stopped Roman WCS loading
+   entirely. **Re-run the ceiling check whenever the schema packages move** — the
+   comparison is mechanical and worth automating if this recurs.
+
+   Incidental, not fixed: the error text reads *"unsupported minor version number 2 (should
+   be at least 0)"*, where it means **at most**.
 8. **Four astropy-writable frames are not recognized at all — NOT FIXED.** `gcrs`,
    `cirs`, `tete` and `precessedgeocentric` all serialize fine from astropy but have no
    recognizer, so `ReadCelestialFrame()` rejects them with *"has class ... which is not of
@@ -116,19 +141,44 @@ not cosmetic.
    tag at all, and it is also why the `altaz` fixture had no reference serialization to be
    checked against.
 
+10. **The `earthlocation` dispatch branch was unreachable — FIXED. This was the altaz
+    mystery.** `IsA()` dispatches on a class prefix, and its branch read
+    `strncmp( km_class, "astropy/coordinates/earthlocation/", 34 )` — **with a trailing
+    slash**. Astropy writes an EarthLocation as
+    `astropy/coordinates/earthlocation-1.2.0`, with no class component at all (confirmed by
+    serializing one), so the branch could never be entered and `IsAEarthLocation()` was
+    dead code. Exactly the same shape as bug 2: a working handler nothing could reach.
+    Comparing 33 characters instead, without the slash, matches both spellings.
+
+    **This is what had defeated the altaz fixture all along**, and it is worth recording
+    that the earlier hypothesis in this file was wrong: the `MAKE_TEST` prefix match *does*
+    work (it compares only up to the version dash), so `IsAEarthLocation` was never the
+    problem — the caller was. The observable was the misleading part: the error named the
+    *frame* (`Property 'location' ... is not of the required class 'earthlocation'`), so
+    the search kept going to the serialization of the location rather than to the branch
+    that decides whether to look at it.
+
+    With this fixed, the altaz fixture reads (`nframe = 2`) and converts **correctly**:
+    for its site and epoch, AzEl (16°,16°) should be ICRS 268.061422 +38.675185 by
+    astropy's own reckoning, and DS9 reports 268.062201 +38.675213 — 2.8″ in RA and 0.1″
+    in Dec, the expected AST-vs-astropy level for an AzEl conversion, where refraction,
+    UT1 and polar-motion defaults differ.
+
+    One loose end, cosmetic and left alone: DS9 prints that readout in **radians**
+    (`4.678568 0.6750098`) even though `degrees` was requested. DS9 has no azel display
+    system, so the SkyFrame's format is never set for it.
+
 ### Open items, roughly in priority order
 
-1. **`altaz` — closed as not worth pursuing.** The fixture builds no FrameSet, but the
-   reason it resisted is now clear: **astropy 8.0.1 cannot serialize an AltAz frame to
-   ASDF at all**, so there was never a reference serialization to match and the fixture was
-   necessarily invented. See AST bug 9. Ruled out along the way, and still worth knowing:
-   `GetQuantity()` reads `unit` with `Get0C`, so a plain string rather than a tagged
-   `!unit/unit-1.0.0` scalar; `ReadEarthLocation()` takes an optional `ellipsoid`
-   defaulting to WGS84; and `MAKE_TEST(EarthLocation, astropy/coordinates/earthlocation,
-   1, 0)` builds the odd class `astropy/coordinates/earthlocation/EarthLocation`, which
-   still prefix-matches the real tag because `strncasecmp` compares only to the version
-   dash — so that was never the problem. Leave the fixture in place as documentation of
-   the attempt; do not spend more on it.
+1. **`altaz` now works** — see AST bug 10. It had nothing to do with the serialization
+   of `location` or `obstime`; the `earthlocation` dispatch branch in `IsA()` required a
+   trailing slash that astropy's tag does not have, so the handler was unreachable. The
+   fixture reads and converts to within 2.8″ of astropy's own AzEl→ICRS. Remaining and
+   deliberately not chased: DS9 prints an azel readout in radians, since it has no azel
+   display system. Note that **astropy cannot serialize an AltAz frame to ASDF at all**
+   (bug 9), so this fixture is still synthetic and no real product exercises the path —
+   but the `earthlocation` half of the fix matters on its own, since astropy *can* write
+   an EarthLocation.
 2. **`ortho_polynomial` builds a WCS but reads nothing back.** `has wcs wcs` is 1, yet
    DS9 gives no readout: AST supplies no inverse for a ChebyMap, and plain `polynomial`
    only escapes this because AST inverts a degree-1 one itself. This is a finding, not a
@@ -141,9 +191,10 @@ not cosmetic.
 3. **Windows is built but never *exercised*.** The codec commands, the 154-baseline sweep,
    the GWCS bridge against a real Roman file, `asdfmask`/`asdfconvert` byte-order work, and
    backup/restore are all unvalidated there. See Phase 0's open item for the list.
-4. **Send the four AST fixes upstream**, together with the version-ceiling bumps (AST
-   bug 7 — the one with real consequences), and report the rest: `zenithal_perspective`,
-   the `ortho_polynomial` basis, and the four unrecognized observed frames.
+4. **Send the seven AST fixes upstream.** The version-ceiling bumps (bug 7) and the
+   `polynomial_type` check (bug 6) belong in the same patch, since the first makes the
+   second reachable. Report the two still open: `zenithal_perspective` and the four
+   unrecognized observed frames.
 5. **H-7: saving an ASDF frame as FITS loses the WCS.** Needs a product decision —
    approximate cards with a warning, or keep refusing. See `WCS_TEST_PLAN.md` §6.
 6. **R9/R10**, both generic DS9 rather than ours but far more visible on Roman: region

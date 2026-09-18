@@ -2,6 +2,15 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+**Read `AGENTS.md` as well, before doing anything non-trivial.** It is the
+working-knowledge companion to this file: the same build commands, plus what
+this checkout does that surprises you — how to keep ds9 from blocking on modal
+dialogs, the auto-recovery files a crashed ds9 leaves behind that wedge the
+next run, the seven places across the `unix`/`macos`/`win` trees a vendored
+package is wired into, how to regenerate a flex scanner without burying the
+change, why a header edit needs a `clean`, and how to run and extend the
+`Tests/` suites. Most of it was learned the expensive way.
+
 ## Project overview
 
 SAOImageDS9 is an astronomical imaging and data visualization application (FITS images/binary tables, frame buffers, region manipulation, scaling/colormaps, XPA/SAMP interop). This checkout root also vendors ~30 third-party libraries it builds against (Tcl/Tk 9.0, Tk extensions, AST, funtools, XPA, openssl, etc.) — see `Manifest.md` for the full list of bundled packages, their versions, and upstream links. Packages marked `y` under "SAO" are maintained/forked by the DS9 team; `dirty` means locally patched beyond upstream.

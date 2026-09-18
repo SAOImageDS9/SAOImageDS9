@@ -10154,8 +10154,11 @@ static AstMapping *ReadSkyProjection( AstKeyMap *km, int *status ){
       } else if( strstr( km_class, "/zenithal_equidistant-" ) ) {
          type = AST__ARC;
 
+/* zenithal_perspective is AZP, not SZP: its mu and gamma are AZP's PV2_1
+   and PV2_2, where SZP's 2nd and 3rd parameters are phi_c and theta_c, so
+   reading it as SZP feeds gamma in as phi_c. */
       } else if( strstr( km_class, "/zenithal_perspective-" ) ) {
-         type = AST__SZP;
+         type = AST__AZP;
          pv[ 1 ] = Get0D( km, "mu", 1, 0.0, status );
          pv[ 2 ] = Get0D( km, "gamma", 1, 0.0, status );
          maxm = 2;
@@ -17048,7 +17051,9 @@ static AstKeyMap *WriteWcsMap( AstYamlChan *this, AstWcsMap *map,
    } else if( type == AST__ARC ){
       class = "asdf/transform/zenithal_equidistant-1.2.0";
 
-   } else if( type == AST__SZP ){
+/* AST__AZP, not a second AST__SZP branch: as written this one could never
+   be reached, and its parameters are AZP's. */
+   } else if( type == AST__AZP ){
       class = "asdf/transform/zenithal_perspective-1.3.0";
       astMapPut0D( km_pv, "mu", astGetPV( map, ilat, 1 ), NULL );
       astMapPut0D( km_pv, "gamma", astGetPV( map, ilat, 2 ), NULL );

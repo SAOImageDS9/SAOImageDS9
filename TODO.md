@@ -23,7 +23,7 @@ Detail lives in the phase sections below; this is the map.
   see Phase 0. **It has not been run there** — see open items.
 - **A real test suite** in the sibling `Tests` repo, wired into its `io.sh`.
 
-### The AST bugs — seven fixed locally, one more fixed upstream-only, two open
+### The AST bugs — eight fixed locally, two open
 
 All in `ast/src/yamlchan.c` unless noted. `ast` is already marked `dirty` in `Manifest.md`.
 **All are upstream Starlink code, not ours**, and all should go upstream together. Item 9
@@ -51,21 +51,19 @@ is a finding about the ecosystem rather than a defect.
    of precession from J2000. Affected `byear`, `jyear` and `jd`; `mjd` escaped only because
    it is the default. This is why the FK4/FK5/ecliptic frame fixtures were silently
    *wrong* rather than failing outright.
-5. **`zenithal_perspective` maps to the wrong projection — FIXED, but only in the
-   upstream clone so far.** `ReadSkyProjection()` sends it to `AST__SZP` with
-   `pv1=mu, pv2=gamma`; those are AZP's PV2_1/PV2_2, while SZP's 2nd and 3rd parameters
-   are phi_c/theta_c, so gamma arrives as phi_c. The writer has the matching half: there
-   are **two `type == AST__SZP` branches**, and the second — the one writing mu and gamma
-   for `zenithal_perspective` — is unreachable, so `AST__AZP` was simply never wired up on
-   either side. The fix is one token in each place: `AST__AZP`.
+5. **`zenithal_perspective` mapped to the wrong projection — FIXED.**
+   `ReadSkyProjection()` sent it to `AST__SZP` with `pv1=mu, pv2=gamma`; those are AZP's
+   PV2_1/PV2_2, while SZP's 2nd and 3rd parameters are phi_c/theta_c, so gamma arrived as
+   phi_c. The writer had the matching half: **two `type == AST__SZP` branches**, the second
+   — writing mu and gamma for `zenithal_perspective` — unreachable, so `AST__AZP` was never
+   wired up in either direction. One token in each place.
 
-   Verified by round trip in the upstream clone: build an AZP WCS from FITS cards through
-   a FitsChan, write it as ASDF, read it back, and the sky positions agree exactly. On
-   master the write fails instead. AST's own 2444-test suite still passes.
-
-   **Not yet applied to the vendored `ast/`.** Doing so should turn
-   `Tests/asdf/gwcs/zenithal_perspective.asdf` from the one projection that is out by
-   ~6500″ into a verified one (26 of 27), which means regenerating that baseline.
+   Verified twice. Upstream, by a round trip: an AZP WCS built from FITS cards through a
+   FitsChan, written as ASDF and read back, gives identical sky positions (and the write
+   fails outright without the change). Locally, against the fixture's own twin:
+   `Tests/asdf/gwcs/zenithal_perspective.asdf` was **4195″ (1.17°)** from
+   `Tests/wcs/1904-66_AZP.fits` and is now **0.0250″**, which is the same FK5→ICRS frame
+   bias every other projection in that set shows. That makes it 26 of 27 verified.
 6. **`ortho_polynomial` ignored `polynomial_type` on read — FIXED.** `ReadPoly()` is
    called with `isortho=1` and went straight to `astChebyMap()`; the field was never read
    on input, only ever *written*. The schema makes it **required** with enum
@@ -250,7 +248,7 @@ is a finding about the ecosystem rather than a defect.
 3. **Windows is built but never *exercised*.** The codec commands, the 154-baseline sweep,
    the GWCS bridge against a real Roman file, `asdfmask`/`asdfconvert` byte-order work, and
    backup/restore are all unvalidated there. See Phase 0's open item for the list.
-4. **Send the seven AST fixes upstream**, and report the three still open. The
+4. **Send the eight AST fixes upstream**, and report the three still open. The
    version-ceiling bumps (bug 7) and the `polynomial_type` check (bug 6) belong in the
    same patch, since the first makes the second reachable. Of the open ones, **bug 11 (the
    `winmap.c` overread) should go first**: it is a memory error with an ASan trace, and it

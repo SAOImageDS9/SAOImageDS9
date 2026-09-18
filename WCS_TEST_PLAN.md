@@ -227,7 +227,7 @@ known triggers of `FitsImage::resetWCS()` are `FitsImage::block()` (both overloa
 | H-4 | Backup with `pds9(backup)` off | references absolute paths instead of copying | **PASS** — with it on, 206.8 MB and a relative `LoadAsdfFile ./b.bck.dir/Frame1/….asdf:roman/data`; with it off, **0.0 MB**, no copy, and an absolute `LoadAsdfFile /Users/kjg/…/sample_data/….asdf` |
 | H-5 | Backup mixing ASDF and FITS frames | both restore correctly | **PASS** — 4088² GWCS frame and a 4200² TAN frame in one save set, both back at 0.000000000″ drift |
 | H-6 | FITS frame with a replaced WCS still round-trips | regression guard on the `WCSBackup` change | **PASS** (restores to exact CRVAL) |
-| H-7 | **Save frame as FITS** | **WCS is lost** — the saved file has only `SIMPLE/BITPIX/NAXIS*`, no WCS cards | **GAP** (confirmed) |
+| H-7 | **Save frame as FITS** | **WCS is omitted** — the saved file has only `SIMPLE/BITPIX/NAXIS*`, no WCS cards | **BY DESIGN** (see §6) |
 | H-8 | `saveimage` (png/jpeg/tiff) with grid on | rendered output carries the grid | **PASS** — all three formats differ by SHA-256 with the grid on vs off. Compare by *content*, not size: uncompressed TIFF is 1438476 B either way, so a size check passes vacuously |
 
 ### I. Fallback and negative cases
@@ -287,12 +287,13 @@ DS9's region code.
 
 ## 6. Known gaps
 
-1. **H-7 — saving an ASDF frame as FITS loses the WCS.** Confirmed: only
-   `SIMPLE/BITPIX/NAXIS/NAXIS1/NAXIS2`. Root cause is R8. A fix would mean writing
-   *approximate* cards via `astWrite(FitsChan)` — which is exactly the SIP approximation this
-   project set out to avoid, but is defensible for export specifically, since FITS cannot
-   represent the exact transform at all. Needs a decision: approximate-with-a-warning, or
-   keep refusing.
+1. **~~H-7 — saving an ASDF frame as FITS loses the WCS.~~ DECIDED: omitting it is
+   correct.** The saved file carries only `SIMPLE/BITPIX/NAXIS/NAXIS1/NAXIS2`, and that is
+   the intended behaviour. The alternative was writing *approximate* cards via
+   `astWrite(FitsChan)`, which is the SIP approximation this project set out to avoid;
+   silently handing someone a FITS file whose WCS is close but not the instrument's is
+   worse than handing them one with no WCS at all. No change needed. Root cause is
+   still R8.
 2b. **~~`gwcs/fitswcs_imaging-1.0.0` is unsupported, so L3 coadds get no WCS.~~ FIXED.**
    *Found by J-4.* Build22 coadds express their WCS as one `fitswcs_imaging` node bundling
    `crpix`, `crval`, `cdelt`, `pc` and a `gnomonic` projection, rather than the explicit

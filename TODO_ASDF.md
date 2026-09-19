@@ -23,10 +23,9 @@ Detail lives in the phase sections below; this is the map.
 - **L3 coadds work**, via a `fitswcs_imaging` → FITS-card translation in `asdf.tcl`
   (`f59e6a180`) plus `FitsImage::wcsCards_` in tksao so the cards survive `resetWCS()`.
 - **The container reader is C++**, in `fitsy/asdf.{h,C}` — see "The C++ port" below.
-- **All three platforms are validated**, not just built: the 185-fixture suite passes on
+- **All three platforms are validated**, not just built: the fixture suite passes on
   macOS, Linux and Windows/mingw. Windows needed four build fixes (`7d722dbef`); see
-  Phase 0. **The C++ port has only been run on macOS so far** — Linux and Windows still
-  need a pass.
+  Phase 0, and one more for the C++ port (`601ff9737`) — see below.
 - **A real test suite** in the sibling `Tests` repo, wired into its `io.sh`. 186 fixtures
   now: `arrays/int16_cube3` was added with the port, see below.
 
@@ -88,6 +87,16 @@ Worth not re-deriving:
 - **`xpaget data image x y 1 1` always reads slice 1**, for FITS as much as for ASDF. It
   is the wrong probe for per-slice verification; `scale limits` under `scale mode minmax`
   is a right one.
+- **Windows found one portability bug the other two platforms cannot.**
+  `include/bzlib.h` includes `<windows.h>` under `_WIN32`, whose `rpcndr.h` typedefs
+  `byte` and then uses a bare `byte` in `wtypesbase.h`/`objidl.h`/`oaidl.h` and more.
+  C++17 has `std::byte`, so with a using-directive for `std` already in effect every one
+  of those is ambiguous and mingw's gcc dies inside `windows.h`, before reaching any of
+  our code. Fixed by including the codec headers before `<string>`/`<vector>` and before
+  any fitsy header — the fitsy half matters too, since `card.h` carries its own
+  `using namespace std` and both `head.h` and `file.h` reach it. `file.h` declares
+  `parseNRRD(istream&)` unqualified, so the directive must still precede `asdf.h`, which
+  pins the order from both ends. `fitsy/asdf.C` says so at the top; do not tidy it.
 - **A crashed ds9 leaves `~/<title>.auto` behind**, and the next instance with that title
   opens a modal "Found Auto Backup, restore?" (`AutoSaveRestore`) that nothing can
   dismiss from a script: it registers with XPA and then answers nothing. `xpaaccess`

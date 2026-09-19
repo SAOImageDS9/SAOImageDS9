@@ -61,9 +61,27 @@ Last updated 2026-09-17
 
 (5) Small tweaks to work with ds9.
 
-(6) `src/yamlchan.c`: 10 ASDF/GWCS transform-tag version ceilings (`Polynomial`, `Compose`,
-`Concatenate`, `Shift`, `Remap_Axes`, `Scale`, `Divide`, `Affine`, `Constant`, `Identity`)
-raised one minor version each to match real Roman WFI ASDF data (confirmed against
-downloaded Roman Data Workshop sample files, not just theoretical), ahead of upstream. See
-`TODO.md` Phase 0/1 and `ASDF_NATIVE_SUPPORT_DESIGN.md` §7c. Revert once upstream Starlink
-ships these ceilings itself.
+(6) `src/yamlchan.c`: eight local fixes for reading ASDF/GWCS, all of them upstream
+Starlink defects rather than DS9 adaptations, and all confirmed against real Roman Data
+Workshop files and astropy-written fixtures rather than reasoned about:
+
+  - **45 `MAKE_TEST` version ceilings raised**, transform *and* frame tags. Started as ten
+    transform tags for Roman WFI data; the frame ceilings turned out to matter more, since
+    astropy 8.0.1 writes `fk5-1.2.0`/`fk4-1.2.0`/`galactic-1.2.0` against a ceiling of 1.0
+    and every celestial frame was refused outright.
+  - `LibYamlWriter`'s size argument declared `long unsigned int` where libyaml uses
+    `size_t` — identical on LP64, fatal on LLP64, so no Windows build with YAML enabled.
+  - both HEALPix projections unreachable: `ReadSkyProjection` has the branches but
+    `IsASkyProjection` recognizes neither tag.
+  - `ReadLinear1d` passed an uninitialized `outb` to `astWinMap`.
+  - `GetTime` tested `format` where it meant `value`, so every epoch prefix branch was
+    dead and an equinox of 2000.0 was read as MJD 2000 — about 1.8 degrees of precession.
+  - `zenithal_perspective` mapped to `AST__SZP` with AZP's parameters; `AST__AZP` was
+    unreachable in both directions. 4195″ of error on the fixture, now 0.0250″.
+  - `ortho_polynomial` ignored the required `polynomial_type`, so legendre and hermite
+    were read with Chebyshev basis functions.
+  - the `earthlocation` tag prefix compared 33 characters against a shorter string.
+
+Nine upstream branches carrying these are prepared in `ast_upstream/`; three further
+findings are written up in `AST_ISSUES.md` and not patched. See `TODO.md`'s "The AST bugs"
+section and `ASDF_NATIVE_SUPPORT_DESIGN.md` §7c. Revert as upstream Starlink takes them.

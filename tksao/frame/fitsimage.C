@@ -2140,6 +2140,15 @@ void FitsImage::replaceWCS(istream& str)
   // synthesized from the file's own WCS" rather than a user override - see
   // replaceWCSCards.
   if (firstLine.compare(0,14,"#ASDF-FITS-WCS") == 0) {
+    // Step over the sentinel itself. It is a marker for this function, not
+    // a card: parseWCS would take "#ASDF-FITS-WCS" as a keyword, find
+    // neither '=' nor a quoted value, and append a junk real under it -
+    // and replaceWCSCards caches the text in wcsCards_, so resetWCS() then
+    // re-parsed that line on every rebuild. Unlike the YAML branch below,
+    // where the "#ASDF" magic is a required part of the document, here it
+    // has to come off.
+    string skip;
+    getline(str, skip);
     ostringstream ss;
     ss << str.rdbuf();
     replaceWCSCards(ss.str().c_str());
@@ -2184,6 +2193,8 @@ void FitsImage::replaceWCS(istream& str)
 // (the image header carries no WCS cards of its own to fall back on). So
 // keep the card text and re-parse it in resetWCS(), exactly as wcsYaml_ is
 // remembered and re-applied.
+// `cards' is card text only - replaceWCS() strips the #ASDF-FITS-WCS
+// sentinel before calling, because this text is both parsed and cached.
 void FitsImage::replaceWCSCards(const char* cards)
 {
   istringstream ss(cards);

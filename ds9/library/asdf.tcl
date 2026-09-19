@@ -1083,11 +1083,21 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
 
     set rr [ProcessLoad]
 
+    # Everything below is about the frame's *image*, so none of it applies
+    # to a mask: a mask is an overlay, and the frame keeps reporting the
+    # image as its file (which is correct). Caching the mask's tree would
+    # make the header viewer show the mask product instead of the
+    # displayed one - or, if the image came from FITS, replace a real FITS
+    # header with an ASDF tree - and attaching the mask's WCS would move
+    # the displayed image's coordinates. Both were live bugs: a mask from
+    # a same-grid file really did overwrite the frame's WCS.
+    set isimage [expr {$layer eq {}}]
+
     # Cache the YAML tree for the header viewer. Deliberately after
     # ProcessLoad, not before: ProcessLoad clears any previously cached
     # tree for this frame (that is where every format's load funnels
     # through), so setting it first would just be wiped.
-    if {$rr} {
+    if {$rr && $isimage} {
 	AsdfSetTree $current(frame) $fn $tree
     }
 
@@ -1105,7 +1115,7 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
     # is no WCS. Warning, not Error: it routes to ds9(msg) for XPA/SAMP
     # callers and a non-modal notice in the GUI, which is what a
     # non-fatal condition should do.
-    if {$rr} {
+    if {$rr && $isimage} {
 	if {[catch {AsdfExtractWcsText $tree $fn} yamltext]} {
 	    Warning "[msgcat::mc {ASDF: unable to extract WCS, loading without it}] $yamltext"
 	} elseif {$yamltext ne {}} {

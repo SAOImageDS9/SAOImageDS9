@@ -25,6 +25,7 @@
 #include <lz4.h>
 #include <bzlib.h>
 
+#include <new>
 #include <string>
 #include <vector>
 using namespace std;
@@ -607,8 +608,15 @@ static int asdfLz4(const char* src, size_t srcLen, char* dst, size_t dstLen,
     const unsigned char* cc = (const unsigned char*)src+inAt;
     size_t want = (size_t)cc[0] | ((size_t)cc[1]<<8) |
       ((size_t)cc[2]<<16) | ((size_t)cc[3]<<24);
-    if (outAt+want > dstLen) {
+    // written as a subtraction so a huge `want' cannot wrap the sum
+    if (want > dstLen-outAt) {
       err = "lz4 output exceeds block decoded size";
+      return 0;
+    }
+    // LZ4_decompress_safe counts in int, so a chunk past INT_MAX would be
+    // handed a negative length and read wildly out of bounds
+    if (clen-4 > (size_t)INT_MAX || want > (size_t)INT_MAX) {
+      err = "lz4 chunk too large";
       return 0;
     }
 
@@ -740,9 +748,21 @@ char* FitsAsdfFile::block(int source, size_t* size)
     return NULL;
   }
 
+  // Both sizes come straight off disk, so a malformed or hostile file can
+  // put anything in them. Every use below - the end-of-file test, two
+  // allocations, and the codec calls - has to be safe for the whole 64 bit
+  // range rather than trusting them to be sane.
   long long payload = off + 6 + (long long)hdrsize;
-  if (payload + (long long)used > fileSize_) {
+  if (payload > fileSize_ || used > (unsigned long long)(fileSize_-payload)) {
     setError("block %d runs past the end of the file", source);
+    return NULL;
+  }
+  // `decoded' is not bounded by the file - that is the point of
+  // compression - so it only has to be addressable here, and the
+  // allocation below reports failure rather than throwing.
+  if (decoded > (unsigned long long)SIZE_MAX) {
+    setError("block %d declares %llu bytes, more than this build can "
+	     "address", source, decoded);
     return NULL;
   }
   if (ASDF_SEEK(stream_, payload, SEEK_SET)) {
@@ -750,7 +770,11 @@ char* FitsAsdfFile::block(int source, size_t* size)
     return NULL;
   }
 
-  char* dst = new char[(size_t)decoded];
+  char* dst = new (std::nothrow) char[(size_t)decoded];
+  if (!dst) {
+    setError("unable to allocate %llu bytes for block %d", decoded, source);
+    return NULL;
+  }
 
   if (!*comp) {
     // uncompressed: the payload *is* the array
@@ -763,7 +787,12 @@ char* FitsAsdfFile::block(int source, size_t* size)
     return dst;
   }
 
-  char* src = new char[(size_t)used];
+  char* src = new (std::nothrow) char[(size_t)used];
+  if (!src) {
+    delete [] dst;
+    setError("unable to allocate %llu bytes for block %d", used, source);
+    return NULL;
+  }
   if (fread(src, 1, (size_t)used, stream_) != used) {
     delete [] src;
     delete [] dst;
@@ -775,14 +804,21 @@ char* FitsAsdfFile::block(int source, size_t* size)
   int ok = 0;
 
   if (!strcmp(comp,"zlib")) {
-    uLongf dlen = (uLongf)decoded;
-    int rc = uncompress((Bytef*)dst, &dlen, (const Bytef*)src, (uLong)used);
-    if (rc != Z_OK)
-      err = "zlib decompress failed";
-    else if (dlen != (uLongf)decoded)
-      err = "short zlib decompress";
-    else
-      ok = 1;
+    // zlib counts in uLong, which is `unsigned long' - 32 bits on Windows,
+    // so this is a real truncation risk there and not a theoretical one
+    if (used > (unsigned long long)ULONG_MAX ||
+	decoded > (unsigned long long)ULONG_MAX)
+      err = "block too large for zlib";
+    else {
+      uLongf dlen = (uLongf)decoded;
+      int rc = uncompress((Bytef*)dst, &dlen, (const Bytef*)src, (uLong)used);
+      if (rc != Z_OK)
+	err = "zlib decompress failed";
+      else if (dlen != (uLongf)decoded)
+	err = "short zlib decompress";
+      else
+	ok = 1;
+    }
   }
   else if (!strcmp(comp,"lz4"))
     ok = asdfLz4(src, (size_t)used, dst, (size_t)decoded, err);
@@ -975,7 +1011,14 @@ static int asdfApplyMask(char* data, size_t dataLen, const char* datatype,
     tmin = -2147483648LL; tmax = 2147483647LL;
   }
   else if (!strcmp(datatype,"int64")) {
-    sz = 8; isFloat = 0; isSigned = 1; tmin = INT64_MIN; tmax = INT64_MAX;
+    // Not INT64_MIN/MAX. tmin/tmax are only ever used as BLANK candidates
+    // (and to ask whether an unmasked pixel already holds one), and FITS
+    // carries BLANK as an int the whole way down - FitsImageHDU::blank_
+    // and FitsData::blank_ are both int - so a wider sentinel would be
+    // truncated on the way in and then stop comparing equal to the very
+    // pixels it was chosen to mark. For every other type here the full
+    // range already fits, so this is the only one that has to be clamped.
+    sz = 8; isFloat = 0; isSigned = 1; tmin = INT_MIN; tmax = INT_MAX;
   }
   else if (!strcmp(datatype,"float32")) {
     sz = 4; isFloat = 1;
@@ -1032,7 +1075,13 @@ static int asdfApplyMask(char* data, size_t dataLen, const char* datatype,
 
     if (haveScalar) {
       // a scalar mask names the sentinel outright, so there is nothing to
-      // choose and nothing to rewrite
+      // choose and nothing to rewrite - but it still has to be a value
+      // FITS can carry, and there is no second choice available if it is
+      // not, since rewriting the pixels would discard what the file said
+      if (iscalar < INT_MIN || iscalar > INT_MAX) {
+	err = "scalar mask value is outside the FITS BLANK range";
+	return 0;
+      }
       *blank = iscalar;
       *hasBlank = 1;
     }
@@ -1052,7 +1101,10 @@ static int asdfApplyMask(char* data, size_t dataLen, const char* datatype,
 	}
       }
 
-      if (uniq && !commonUsed)
+      // The masked pixels' own value is the first choice - it needs no
+      // rewrite - but only if FITS can hold it; otherwise fall through to
+      // the candidates, which are in range by construction.
+      if (uniq && !commonUsed && common >= INT_MIN && common <= INT_MAX)
 	*blank = common;
       else {
 	int64_t c0 = isSigned ? tmin : tmax;
@@ -1287,7 +1339,24 @@ int FitsAsdf::build(const char* path)
   // Checked here because nothing below ever checks the buffer against the
   // dimensions: a short block would otherwise render as real pixels
   // followed by whatever memory follows.
-  size_t want = (size_t)xdim*ydim*zdim*(abs(bitpix)/8);
+  //
+  // Computed with a division test rather than a bare product: each
+  // dimension is separately allowed up to INT_MAX above, so three of them
+  // times the pixel size overflows size_t easily, and a wrapped `want'
+  // turns this check into the opposite of what it is for - a tiny buffer
+  // would sail through it.
+  size_t psize = (size_t)(abs(bitpix)/8);
+  size_t want = psize;
+  int dims[3] = {xdim, ydim, zdim};
+  for (int ii=0; ii<3; ii++) {
+    if (want > SIZE_MAX/(size_t)dims[ii]) {
+      delete [] buf;
+      asdfError_ = string("ndarray is too large to address ") + path;
+      return 0;
+    }
+    want *= (size_t)dims[ii];
+  }
+
   if (len < want) {
     delete [] buf;
     asdfError_ = string("block too short for declared shape ") + path;
@@ -1311,8 +1380,18 @@ int FitsAsdf::build(const char* path)
 
     if (mn && !mn->unsupported_) {
       mask = asdf_->block(mn->source_, &maskLen);
-      // an unreadable mask is not fatal: the pixels are fine, and the
-      // array loads without nulls
+      if (!mask) {
+	// Not fatal - the pixels are fine and the array loads without
+	// nulls - but not silent either, or a corrupt mask block looks
+	// exactly like a file that simply has no mask. The Tcl side warns
+	// about masks it can see are unsupported from the tree alone; only
+	// here can a *runtime* failure be reported. Same channel and same
+	// "Warning:" prefix convention as fitsimage.C's no-inverse notice.
+	string mm = string("Warning: ASDF: unreadable mask block, loading "
+			   "without null values: ") +
+	  (asdf_->error() ? asdf_->error() : "unknown");
+	internalError(mm.c_str());
+      }
     }
 
     if (mask || nn->hasMaskScalar_) {
@@ -1320,6 +1399,11 @@ int FitsAsdf::build(const char* path)
       asdfApplyMask(buf, want, datatype, big, mask, maskLen,
 		    mask ? 0 : nn->hasMaskScalar_, nn->maskScalar_,
 		    &hasBlank, &blank, err);
+      if (!err.empty()) {
+	string mm = string("Warning: ASDF: ") + err +
+	  ", loading without null values";
+	internalError(mm.c_str());
+      }
     }
 
     if (mask)

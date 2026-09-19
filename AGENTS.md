@@ -259,6 +259,28 @@ and comparing sha256 of before/after captures makes render changes and
 clean round-trips objectively verifiable. Shut down with
 `./bin/xpaset -p ds9 exit`.
 
+### Windows: `<windows.h>` and `using namespace std`
+
+`include/bzlib.h` includes `<windows.h>` under `_WIN32`. That header's
+`rpcndr.h` does `typedef unsigned char byte` and then *uses* a bare
+`byte` in `wtypesbase.h`, `objidl.h`, `oaidl.h` and a dozen more places.
+C++17 has `std::byte`, so if any using-directive for `std` is in effect
+when those headers are parsed, every one of those uses is ambiguous and
+mingw's gcc emits pages of `reference to 'byte' is ambiguous`.
+
+So in a C++ file, **include `bzlib.h` (or anything else that reaches
+`windows.h`) before `<string>`/`<vector>` and before any fitsy header**.
+The fitsy part is the trap: `fitsy/card.h` carries its own
+`using namespace std`, and `head.h` and `file.h` both pull it in, so
+including one fitsy header first is enough to trigger this even if the
+file never writes a using-directive of its own. `fitsy/asdf.C` has a
+comment at the top saying as much; don't tidy that include block.
+
+Two related things: `windows.h` also macro-izes `min`, `max`, `small`
+and friends, so check a new file for those identifiers; and this whole
+class of breakage is invisible on macOS and Linux, where `bzlib.h`
+includes no such thing.
+
 ## Running the test suites (`Tests/`, a separate git repo)
 
 Each suite is a shell script driven by XPA; `io.sh` and `all.sh` group

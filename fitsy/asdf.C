@@ -2,6 +2,18 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+// The include order below is load bearing on Windows and must not be
+// tidied. bzlib.h includes <windows.h> under _WIN32, whose rpcndr.h does
+// `typedef unsigned char byte' and then uses a bare `byte' in wtypesbase.h,
+// objidl.h and a dozen more places. C++17 has std::byte, so if any
+// using-directive for std is in effect when those headers are parsed,
+// every one of those uses is ambiguous and the build dies with pages of
+// "reference to `byte' is ambiguous". The codec headers therefore come
+// first, before <string>/<vector> and before anything in fitsy - note
+// that card.h, which head.h and file.h both pull in, carries its own
+// `using namespace std', so including a fitsy header first is enough to
+// trigger it.
+
 #include <stdarg.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -9,13 +21,13 @@
 #include <string.h>
 #include <limits.h>
 
-#include <string>
-#include <vector>
-using namespace std;
-
 #include <zlib.h>
 #include <lz4.h>
 #include <bzlib.h>
+
+#include <string>
+#include <vector>
+using namespace std;
 
 #include "asdf.h"
 #include "head.h"

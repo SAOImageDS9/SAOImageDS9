@@ -314,7 +314,15 @@ Four things that cost time to rediscover:
 - **Sanity-check a new reader against FITS before calling it a bug.**
   Most "this behaves oddly" moments this session were DS9 behaving that
   way for FITS too — the sticky Cube panel, the slice-1 probe. Load the
-  equivalent FITS file and compare before digging.
+  equivalent FITS file and compare before digging. Do check the control,
+  though: "FITS does it too" is only evidence if the test itself is
+  sound, and one of mine was not (see `block` below).
+- **`block <n>` is relative, `block to <n>` is absolute**, and `frame new`
+  inherits the current factor. So `block 2; block 1` leaves the factor at
+  2, and a fresh frame may not start at 1 — which is a good way to
+  measure something entirely different from what you meant. With
+  `block to 2` then `block to 1` from a known factor, sky position
+  round-trips exactly, which makes it a usable `resetWCS()` check.
 
 ## Testing C++ in isolation
 

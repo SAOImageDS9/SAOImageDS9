@@ -137,10 +137,16 @@ Two testing notes from it:
 - **`xpaset ... tcl` evaluates a line at a time.** A `;`-separated one-liner fails with
   `wrong # args`; send a newline-separated script. It also returns nothing, so a value
   has to come back through a file.
-- **Sky position does not survive a `block 2`/`block 1` round trip** — not for ASDF, not
-  for GWCS, not for plain FITS cards. It is DS9's own blocking behaviour, so it is no use
-  as a WCS-persistence check; ask whether the frame still `has wcs` and whether the cards
-  are intact instead.
+- **`block <n>` is relative; `block to <n>` is absolute.** The grammar
+  (`ds9/parsers/blockparser.tac`) is `numeric {Block $1 $1}` against
+  `TO_ blockTo {ProcessCmdSet block factor ...}`, so `block 2` then `block 1` multiplies
+  by 2 and then by 1 and leaves the factor at **2**, not 1. `frame new` also inherits the
+  current frame's factor, so a fresh frame is not necessarily at 1. Between them these
+  produced a confident and completely wrong measurement here — that sky position does not
+  survive a block round trip for any WCS source. It does: with `block to 2` then
+  `block to 1`, from a known starting factor, plain FITS cards, a GWCS ASDF and the L3
+  coadd's synthesized cards all return the identical sky position. That round trip is
+  therefore a good `resetWCS()` persistence check, which is what it was reached for.
 
 ### Masks
 

@@ -250,7 +250,13 @@ symbolizes the frames.
 
 Errors surface as `XPA$ERROR ...` on the `xpaset` call. To capture
 richer results, have the sent Tcl write to a file rather than trying to
-read a return value. Useful handles: `$::current(frame)` is the frame's
+read a return value — `xpaset ... tcl` returns nothing at all. It also
+evaluates what it receives **a line at a time**, so a `;`-separated
+one-liner fails with `wrong # args`; send a newline-separated script:
+
+```
+printf 'set ch [open /tmp/out w]\nputs $ch [$current(frame) get fits size]\nclose $ch\n' | ./bin/xpaset ds9 tcl
+``` Useful handles: `$::current(frame)` is the frame's
 canvas-item command (e.g. `Frame1` — a canvas item, *not* a window, so
 `winfo` does not work on it); its on-screen size comes from
 `$::ds9(canvas) itemcget $::current(frame) -width`. For visual checks,

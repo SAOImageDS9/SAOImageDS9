@@ -26,8 +26,10 @@ Detail lives in the phase sections below; this is the map.
 - **All three platforms are validated**, not just built: the fixture suite passes on
   macOS, Linux and Windows/mingw. Windows needed four build fixes (`7d722dbef`); see
   Phase 0, and one more for the C++ port (`601ff9737`) — see below.
-- **A real test suite** in the sibling `Tests` repo, wired into its `io.sh`. 186 fixtures
-  now: `arrays/int16_cube3` was added with the port, see below.
+- **A real test suite** in the sibling `Tests` repo, wired into its `io.sh`. 192 fixtures:
+  `arrays/int16_cube3` came with the port and the six under `asdf/malformed/` with the
+  review fixes. `asdf.sh` also has a `mask` phase now, for the frame state a single-file
+  probe cannot see.
 
 ### The C++ port (2026-09-18)
 
@@ -103,6 +105,42 @@ Worth not re-deriving:
   says yes, every `xpaset` says "no response from server during handshake". Delete the
   file. Relatedly, `set pds9(confirm) 0` through the `tcl` entry point stops `Error`/
   `Warning` from opening dialogs at all.
+
+### The review pass (2026-09-19)
+
+Six findings against the port, all reproduced before being fixed (`1264369ed`). The two
+worth remembering as *classes* of mistake rather than as individual bugs:
+
+- **A layered load ran the image's post-load work.** `AsdfLoadArray` attached the WCS and
+  cached the YAML tree against `$current(frame)` whatever layer had just been loaded, so
+  an ASDF mask from a same-grid file moved the displayed image's coordinates and made the
+  header viewer show the mask product — or, over a FITS image, show YAML for a file with
+  a real FITS header. Everything after `ProcessLoad` is image-only now. The general
+  lesson: `layer` is consulted on the way *in* to the load and was then forgotten, and
+  nothing downstream re-checks it.
+- **`BLANK` is an `int` all the way down** — `FitsImageHDU::blank_` and `FitsData::blank_`
+  both — so an `int64` sentinel outside that range was truncated and stopped matching the
+  pixels it marked, turning nulls back into data. The port inherited this from the Tcl
+  version and I kept it deliberately for parity; parity with a broken behaviour was the
+  wrong call. `int64` now takes its BLANK candidates from the `int` extremes, a masked
+  value that does not fit falls through to them, and a scalar mask that does not fit is
+  declined rather than truncated.
+
+The rest: block sizes and the shape product are overflow-checked (they come straight off
+disk, and `uLong` is 32-bit on Windows); the `#ASDF-FITS-WCS` sentinel is stripped before
+the cards are parsed and cached, instead of being taken as a keyword on every
+`resetWCS()`; and mask decode failures reach the user through `internalError` rather than
+being dropped.
+
+Two testing notes from it:
+
+- **`xpaset ... tcl` evaluates a line at a time.** A `;`-separated one-liner fails with
+  `wrong # args`; send a newline-separated script. It also returns nothing, so a value
+  has to come back through a file.
+- **Sky position does not survive a `block 2`/`block 1` round trip** — not for ASDF, not
+  for GWCS, not for plain FITS cards. It is DS9's own blocking behaviour, so it is no use
+  as a WCS-persistence check; ask whether the frame still `has wcs` and whether the cards
+  are intact instead.
 
 ### Masks
 

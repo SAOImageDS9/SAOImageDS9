@@ -148,6 +148,35 @@ Two testing notes from it:
   coadd's synthesized cards all return the identical sky position. That round trip is
   therefore a good `resetWCS()` persistence check, which is what it was reached for.
 
+### A default array is not always called `data`
+
+`-asdf file.asdf` with no `:path` used to resolve only `data`, `roman/<key>` or a unique
+tail match, and refuse anything else with *"ambiguous or unknown array data"*. A file whose
+single array is called something else — `picture`, in the report that turned this up — was
+refused from the command line **while opening fine through File → Open As → ASDF**, because
+`AsdfPathDialog` has always taken the sole loadable array and nothing else knew that rule.
+`AsdfDefaultPath` now applies it everywhere: prefer `data`, else the only loadable array,
+else say so. A key the caller *did* supply is still resolved strictly — guessing a
+different array because the requested one is absent would load the wrong pixels silently.
+Fixture: `arrays/named_picture`.
+
+This is the third instance of the same shape of bug — the GUI route works and a
+non-GUI route quietly does something else (see also the `CommandLineLoad` gap, and the mask
+layer running the image's post-load work). **When adding an ASDF entry point, check what
+the dialog path already does that the new one will not.**
+
+### Channel-last image arrays are not cubes, and cannot be auto-detected
+
+The same file exposed a second thing, unfixed and probably unfixable by guessing. Its array
+is `[333, 151, 4]` — an RGBA picture, 333 high by 151 wide by 4 channels — and the rank-3
+rule reads `(nplane, ny, nx)`, FITS cube order, so it loads as a 4×151 image of 333 planes.
+Correct per row-major, useless in fact.
+
+A "trailing dimension of 3 or 4 means channels" heuristic **would break real Roman data**:
+`roman/border_ref_pix_left` is `[10, 4096, 4]` and is not RGBA. DS9's own precedent for
+FITS is that the user declares an RGB cube (`-rgbcube`) rather than DS9 guessing, so the
+options are an explicit spelling on the ASDF side or nothing. Left alone deliberately.
+
 ### Tables — analysed, not started
 
 ASDF files also carry tables: Roman source catalogues, and per-product metadata tables (the

@@ -1629,7 +1629,7 @@ proc cube::yyparse {} {
                     57 { CubeCmdCoord $1 $2 }
                     58 { CubeCmdAxis $2 }
                     59 { ProcessCmdSet cube lock,axes $2 LockAxesCurrent }
-                    60 { ProcessCmdSet cube axes $1 }
+                    60 { ProcessCmdSet cube axes $1 CubeAxes }
                     61 { set _ 123 }
                     62 { set _ 132 }
                     63 { set _ 213 }

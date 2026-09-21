@@ -66,7 +66,7 @@ cube : OPEN_
  ;
 
 order : LOCK_ yesno {ProcessCmdSet cube lock,axes $2 LockAxesCurrent}
- | orderAxes {ProcessCmdSet cube axes $1}
+ | orderAxes {ProcessCmdSet cube axes $1 CubeAxes}
  ;
 
 orderAxes : 123_ {set _ 123}

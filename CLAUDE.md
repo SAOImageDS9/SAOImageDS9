@@ -30,10 +30,11 @@ patched locally), the open items in priority order, and the failure modes that a
 expensive to rediscover — chiefly that almost every GWCS problem presents identically as
 "no WCS", so bisecting to a bare `transform: identity` fixture is the fastest diagnosis.
 
-Companions: `ASDF_NATIVE_SUPPORT_DESIGN.md` (design), `WCS_TEST_PLAN.md` (the WCS test
-matrix and the DS9/XPA gotchas in its §3), and `Tests/asdf/README.md` (the fixtures, their
-generators, and the GWCS-specific gotchas). `Tests/` is a **separate git repo** — commit
-there separately.
+Companions: `ASDF_NATIVE_SUPPORT_DESIGN.md` (design of the image/WCS half, which is
+done), `ASDF_TABLES_DESIGN.md` (analysis of the *table* half — Prism and Catalogs — which
+is not started), `WCS_TEST_PLAN.md` (the WCS test matrix and the DS9/XPA gotchas in its
+§3), and `Tests/asdf/README.md` (the fixtures, their generators, and the GWCS-specific
+gotchas). `Tests/` is a **separate git repo** — commit there separately.
 
 ## Build commands
 

@@ -148,6 +148,28 @@ Two testing notes from it:
   coadd's synthesized cards all return the identical sky position. That round trip is
   therefore a good `resetWCS()` persistence check, which is what it was reached for.
 
+### Tables — analysed, not started
+
+ASDF files also carry tables: Roman source catalogues, and per-product metadata tables (the
+L3 coadd holds 18). `ASDF_TABLES_DESIGN.md` is the analysis. The headline, so it does not
+have to be rediscovered:
+
+- **The catalog surface is far cheaper than Prism**, which is the reverse of the intuition.
+  Catalog readers are pluggable — `CATLoadFn` calls `$reader $db $fn` — and `catfits.tcl`,
+  the whole FITS-table catalog integration, is 45 lines. Prism's *import* path takes the
+  identical reader contract, so one `ASDFRead {t fn}` filling a starbase array serves both,
+  and every downstream feature (symbols, filter, sort, region export, match, plot,
+  histogram) is already written against that array.
+- **Real Roman tables are `astropy/table/table-1.3.0`, one block per column** — not the
+  structured-ndarray form. Zero structured dtypes across all eight sample files, so
+  `arrays/struct2d` should stay refused rather than driving the design.
+- **The container reader already finds the data**: 136 of the coadd's 146 enumerated nodes
+  are table columns, with correct paths, datatypes and shapes. Nothing in `fitsy/asdf.C`
+  needs to change to *locate* a table.
+- **The blocker is test data.** Every table in our samples is one-row metadata; the coadd's
+  `source_catalog` key is pipeline log text. A real Roman `*_cat.asdf` needs downloading
+  before any of this is worth building.
+
 ### Masks
 
 An ASDF array can be loaded into a frame's mask layer, so a quality array can be laid over

@@ -165,17 +165,33 @@ non-GUI route quietly does something else (see also the `CommandLineLoad` gap, a
 layer running the image's post-load work). **When adding an ASDF entry point, check what
 the dialog path already does that the new one will not.**
 
-### Channel-last image arrays are not cubes, and cannot be auto-detected
+### Channel-last image arrays — DS9 already handles this, no ASDF work needed
 
-The same file exposed a second thing, unfixed and probably unfixable by guessing. Its array
-is `[333, 151, 4]` — an RGBA picture, 333 high by 151 wide by 4 channels — and the rank-3
-rule reads `(nplane, ny, nx)`, FITS cube order, so it loads as a 4×151 image of 333 planes.
-Correct per row-major, useless in fact.
+The same file exposed a second thing. Its array is `[333, 151, 4]` — an RGBA picture, 333
+high by 151 wide by 4 channels — and the rank-3 rule reads `(nplane, ny, nx)`, FITS cube
+order, so it first appears as a 4×151 image of 333 planes. Correct per row-major, useless
+in fact.
 
-A "trailing dimension of 3 or 4 means channels" heuristic **would break real Roman data**:
-`roman/border_ref_pix_left` is `[10, 4096, 4]` and is not RGBA. DS9's own precedent for
-FITS is that the user declares an RGB cube (`-rgbcube`) rather than DS9 guessing, so the
-options are an explicit spelling on the ASDF side or nothing. Left alone deliberately.
+**The answer is DS9's existing axis reordering**, not anything in the ASDF reader:
+Cube → Axes Order in the GUI, `cube order 231` / `cube axes 231` / a bare `cube 231` in the
+grammar (`cubeparser.tac`, one of 123/132/213/231/312/321 — no spaces). For `[333,151,4]`,
+`231` gives a 151×333 image of 4 planes, which renders the picture correctly. Note the
+setting is a *global preference* that survives across loads, so a file loaded after one
+reorder comes out already reordered.
+
+Do **not** add an auto-detect heuristic. "Trailing dimension of 3 or 4 means channels"
+would break real Roman data: `roman/border_ref_pix_left` is `[10, 4096, 4]` and is not
+RGBA. DS9's precedent for FITS is the same — the user declares an RGB cube (`-rgbcube`)
+rather than DS9 guessing.
+
+**Caveat, and it is upstream DS9, not ours:** `cube order`/`cube axes` is a *no-op over XPA
+and the command line*. `cubeparser.tac:69` is `ProcessCmdSet cube axes $1` with no callback
+argument, so it sets `cube(axes)` and never calls `CubeAxes`, which is what the menu's
+radiobuttons invoke. Confirmed on a plain FITS cube with no ASDF involved: after
+`xpaset ds9 cube order 231`, `xpaget ds9 cube axes` reports 231 while size and depth are
+unchanged; calling `CubeAxes` by hand then applies it. This branch has never touched
+`cube.tcl` or `cubeparser.tac` (the only diff against master is the taccle version banner
+in the generated `.tcl`).
 
 ### Tables — analysed, not started
 

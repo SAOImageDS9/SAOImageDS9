@@ -33,7 +33,11 @@ void Grid3d::doit(RenderMode rm)
     RotateY3d(pp->az_) * 
     RotateX3d(pp->el_);
 
-  matrix_ = pp->widgetToCanvas;
+  // x11 rendering draws into the frame's own local pixmap, so the
+  // canvas-wide tile position offset in widgetToCanvas must not be
+  // applied there (it would shift geometry outside that local pixmap
+  // for any frame not at canvas origin, e.g. in Tile mode)
+  matrix_ = (rm == X11) ? Matrix() : pp->widgetToCanvas;
   pixmap_ = pp->pixmap;
   gridGC_ = pp->gridGC_;
   renderMode_ = rm;

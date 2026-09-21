@@ -317,6 +317,9 @@ Four things that cost time to rediscover:
   equivalent FITS file and compare before digging. Do check the control,
   though: "FITS does it too" is only evidence if the test itself is
   sound, and one of mine was not (see `block` below).
+- **`timeout` exists on this Mac at `$HOME/local/bin/timeout`** — a shell script
+  standing in for the GNU tool, which macOS does not ship. Put it on `PATH` before
+  wrapping anything that can hang, e.g. a ds9 launch in a loop.
 - **`block <n>` is relative, `block to <n>` is absolute**, and `frame new`
   inherits the current factor. So `block 2; block 1` leaves the factor at
   2, and a fresh frame may not start at 1 — which is a good way to

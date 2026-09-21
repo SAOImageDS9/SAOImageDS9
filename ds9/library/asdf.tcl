@@ -90,6 +90,33 @@ proc AsdfResolvePath {entries key} {
     return {}
 }
 
+# Which array to load when the caller named none - a bare `-asdf file.asdf',
+# with no ":path" suffix and nothing chosen in a dialog.
+#
+# Prefers `data': that is Roman's fixed science array and what every Roman
+# product uses, so the common case is unchanged. Failing that, a file with
+# exactly one loadable array is unambiguous, so take it.
+#
+# That second rule is not new - AsdfPathDialog has always applied it, which
+# is precisely the problem it fixes here. A one-array file whose array is
+# called something else (`picture', say) opened fine through File -> Open
+# As -> ASDF and was refused from the command line with "ambiguous or
+# unknown array data", because only the dialog knew the rule. Returns {}
+# when there is no single obvious choice, and the caller says so.
+proc AsdfDefaultPath {entries} {
+    set pp [AsdfResolvePath $entries data]
+    if {$pp ne {}} {
+	return $pp
+    }
+
+    set rows [AsdfLoadableArrays $entries]
+    if {[llength $rows] == 1} {
+	return [lindex [lindex $rows 0] 0]
+    }
+
+    return {}
+}
+
 # Native ASDF/GWCS WCS attachment (TODO.md Phase 3). Ported from the Phase 1
 # Python spike (utils/asdf_gwcs_probe/extract_subtree.py,
 # resolve_ndarray.py) - see PHASE3_WCS_HANDOFF.md for the full design and
@@ -934,10 +961,9 @@ proc AsdfFitsCard {keyword value} {
 # the default `roman/data` - see AsdfSplitPath.
 proc LoadAsdfFile {fn layer mode} {
     lassign [AsdfSplitPath $fn] base path
-    if {$path eq {}} {
-	set path data
-    }
 
+    # An empty path means the caller named no array, which is NOT the same
+    # as asking for one called `data' - see AsdfDefaultPath.
     return [AsdfLoadArray $base $path $layer]
 }
 
@@ -984,7 +1010,7 @@ proc AsdfCmdLoad {param layer} {
 # path the enumerator reports) or a bare name, resolved by
 # AsdfResolvePath - default "data", i.e. Roman's fixed science array.
 # Returns 1 on success, 0 on failure (matching ProcessLoad).
-proc AsdfLoadArray {fn {key data} {layer {}}} {
+proc AsdfLoadArray {fn {key {}} {layer {}}} {
     global current
     global loadParam
 
@@ -1001,10 +1027,25 @@ proc AsdfLoadArray {fn {key data} {layer {}}} {
 	return 0
     }
 
-    set path [AsdfResolvePath $entries $key]
-    if {$path == {}} {
-	Error "[msgcat::mc {ASDF: ambiguous or unknown array}] $key"
-	return 0
+    # A key the caller actually supplied is resolved strictly - guessing at
+    # a different array because the requested one is absent would load the
+    # wrong pixels silently. Only an absent key gets the default rule.
+    if {$key eq {}} {
+	set path [AsdfDefaultPath $entries]
+	if {$path == {}} {
+	    if {[AsdfLoadableArrays $entries] eq {}} {
+		Error "[msgcat::mc {ASDF: no loadable arrays found}] $fn"
+	    } else {
+		Error "[msgcat::mc {ASDF: no default array, name one as file.asdf:path}] $fn"
+	    }
+	    return 0
+	}
+    } else {
+	set path [AsdfResolvePath $entries $key]
+	if {$path == {}} {
+	    Error "[msgcat::mc {ASDF: ambiguous or unknown array}] $key"
+	    return 0
+	}
     }
     set node [AsdfFindNdarrayPath $entries $path]
     if {$node == {}} {

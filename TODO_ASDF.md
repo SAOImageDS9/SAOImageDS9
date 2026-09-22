@@ -326,6 +326,48 @@ for zenithal projections including gnomonic/TAN. That is exactly the tag
 and `FitsImage::wcsCards_` can both go — and #88's version is more general than ours, which
 only ever handled gnomonic.
 
+### PR #91 reshaped after the overlap review (2026-09-22)
+
+`fix/yamlchan-asdf-all` rebuilt from master as **seven** commits, dropping what upstream
+already has. The previous nine-commit version is kept as `fix/yamlchan-asdf-all-v1`
+(`a0d20e89`); **#91 needs a force-push** to pick this up.
+
+    40ca59ee  use size_t in LibYamlWriter to match libyaml
+    ce5b21a2  recognise the two HEALPix sky projections
+    739c7c73  test the value, not the format, for an epoch prefix in GetTime
+    0c8410cb  read and write zenithal_perspective as AZP, not SZP
+    ffa5c34a  reject ortho_polynomial bases other than Chebyshev
+    51586d68  declare the ASDF standard version when writing
+    0221358d  accept core/ndarray-1.2.0, and say "at most" when that is meant
+
+Dropped: **linear1d** (theirs is strictly better — it also fixes the property name) and
+**earthlocation** (equivalent). The 53-ceiling commit is replaced by the last one above,
+which keeps only the single ceiling #88 does not raise. `src/yamlchan.c` goes from 174
+changed lines to 56, and the fixtures from 8 to 5.
+
+`libyaml-writer-size-t` is kept but deliberately **first**, so it can be dropped in one
+step if #67 lands — that is the only PR that also fixes it.
+
+The reduced ceiling commit needed a new test: the old `current_schema_versions` fixture
+depends on the fk5/identity bumps we withdrew, so it would fail. `ndarray_1_2.asdf` is an
+affine whose matrix and translation are inline `core/ndarray-1.2.0` with every other tag at
+a version master already accepts, isolating that one ceiling. Confirmed both ways — it
+fails without the bump ("unsupported minor version number 2") and passes with it.
+
+Two things the reshaping turned up in our own work:
+
+- **Our error-text fix was half done.** `"should be at least %d"` appears twice, in the
+  plain and the subclass form of `MAKE_TEST`; the original commit changed only the first.
+  Both are fixed now.
+- **`core/ndarray-1.2.0` is unexercised by any file we hold.** Every sample and fixture is
+  1.0.0 or 1.1.0. The bump is justified from the published schema rather than from data, so
+  the maintainer may reasonably decline it — worth saying so when offering it.
+
+Verification: each of the seven builds and passes `testyamlchan` on its own, and the tip
+passes the full suite, **2444/2444**. Against #88, only the last commit now conflicts in
+`src/yamlchan.c` (it was three before); the rest conflict only in `ast_tester/testyamlchan.c`,
+which #88 restructured.
+
 ### The AST bugs — eight fixed locally, two open
 
 All in `ast/src/yamlchan.c` unless noted. `ast` is already marked `dirty` in `Manifest.md`.

@@ -259,6 +259,30 @@ Two things this turned up that are worth not re-deriving:
 - **A GUI route working tells you nothing about the CLI.** The GUI goes through `Open`,
   which never touches these three procs. That is exactly how this stayed hidden.
 
+### The upstream AST branches
+
+`ast_upstream/` carries the nine fixes in two shapes, so the maintainer can take whichever
+suits:
+
+- **Nine single-issue branches**, `fix/yamlchan-*`, each one commit off `master` with its
+  own regression test and fixtures. One PR per issue.
+- **`fix/yamlchan-asdf-all`**, the same nine commits on one branch, in the order
+  libyaml → healpix → linear1d → gettime → azp → ortho → earthlocation →
+  asdf-standard-header → ceilings. One PR to cherry-pick from, which avoids nine
+  overlapping PRs against the same two files.
+
+The nine are deliberately **independent**: every branch's test fixtures use schema versions
+`master` already accepts, so no commit depends on the ceilings bump and any subset can be
+taken in any order. Verified by building and running the yamlchan test at *each* of the
+nine commits — all pass individually — plus the full `ctest` at the tip: **2444/2444**, with
+all 16 yamlchan tests. `src/yamlchan.c` never conflicted (the fixes are in different
+functions); only `ast_tester/testyamlchan.c` did, and only because each commit appends a
+declaration, a call and a function in the same three places.
+
+Build tools are not on this box by default. `mamba create -n astbuild cmake pkg-config yaml`
+then `cmake -S ast_upstream -B <dir> -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DBUILD_TESTING=ON`
+is enough; conda lives at `$HOME/miniforge`.
+
 ### The AST bugs — eight fixed locally, two open
 
 All in `ast/src/yamlchan.c` unless noted. `ast` is already marked `dirty` in `Manifest.md`.

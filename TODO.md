@@ -283,6 +283,49 @@ Build tools are not on this box by default. `mamba create -n astbuild cmake pkg-
 then `cmake -S ast_upstream -B <dir> -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DBUILD_TESTING=ON`
 is enough; conda lives at `$HOME/miniforge`.
 
+### Overlap with upstream AST PRs (reviewed 2026-09-22)
+
+Our nine are PR **#91**. Checked against every open PR on Starlink/ast; the ones that
+matter are **#66** (embray, misc YamlChan fixes), **#88** (= #66's 13 commits **plus** two
+adding `fitswcs_imaging`) and **#67** (embray, libfyaml backend). #80/#81 are timj's
+cmpmap/ChebyMap work and touch no yamlchan at all.
+
+| our fix | status |
+|---|---|
+| 1 LibYamlWriter `size_t` | **duplicated by #67**, which renames it `AstYamlWriter` and uses `size_t` |
+| 2 HEALPix recognizers | **unique** — `IsASkyProjection` still omits both in #66/#67/#88 |
+| 3 ReadLinear1d | **duplicated by #88, and theirs is better** — see below |
+| 4 GetTime epoch prefix | **unique** — all three still test `format`, not `value` |
+| 5 zenithal_perspective → AZP | **unique** — `AST__AZP` appears nowhere in any PR |
+| 6 ortho_polynomial basis | **unique** — `polynomial_type` still write-only everywhere |
+| 7 MAKE_TEST ceilings | **duplicated by #88** — we raise 53, they raise 52, and they overlap on all but `NDArray` |
+| 8 earthlocation prefix | **duplicated by #88**, equivalently (they keep the `-`, we match both spellings) |
+| 9 ASDF standard header | **unique** — no PR emits `#ASDF_STANDARD` |
+
+**Withdraw our linear1d commit.** Theirs fixes a second bug we missed: the ASDF property is
+`intercept`, not `offset`, so master was reading the default 0 for every linear1d. Our
+fixture sets *both* `intercept: 0.0` and `offset: 7.0`, so it passes against `offset` and
+**fails against their fix** — verified by building #88 with our test and fixture only:
+`linear1d(0): got 0 expected 7`. Ours is not merely redundant, it would break their build.
+
+**The ceilings need a merge, not a choice.** Only two classes differ: they set
+`Concatenate` 1.6 where we set 1.4 (take theirs), and we set `NDArray` 1.2 where they leave
+1.1 (the one line of ours worth keeping). They also add `Fitswcs_Imaging`, which master
+lacks.
+
+**If #88 lands first**, `src/yamlchan.c` conflicts only for those three duplicates; the
+other six conflict solely in `ast_tester/testyamlchan.c`, which #88 restructured heavily —
+mechanical test-registration conflicts, not semantic ones. `libyaml-writer-size-t` applies
+clean.
+
+**#88 also makes a DS9 workaround retirable.** It reads *and* writes
+`gwcs/fitswcs_imaging` natively, via the full shift/affine/scale/projection chain, correct
+for zenithal projections including gnomonic/TAN. That is exactly the tag
+`AsdfFitsWcsImagingCards` translates to FITS cards by hand for L3 coadds
+(`ds9/library/asdf.tcl`). When #88 lands and the vendored AST is updated, that translation
+and `FitsImage::wcsCards_` can both go — and #88's version is more general than ours, which
+only ever handled gnomonic.
+
 ### The AST bugs — eight fixed locally, two open
 
 All in `ast/src/yamlchan.c` unless noted. `ast` is already marked `dirty` in `Manifest.md`.

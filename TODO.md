@@ -326,27 +326,31 @@ for zenithal projections including gnomonic/TAN. That is exactly the tag
 and `FitsImage::wcsCards_` can both go — and #88's version is more general than ours, which
 only ever handled gnomonic.
 
-### PR #91 reshaped after the overlap review (2026-09-22)
+### PR #91: reshaped, then fixed for the sanitizer CI (2026-09-22)
 
-`fix/yamlchan-asdf-all` rebuilt from master as **seven** commits, dropping what upstream
-already has. The previous nine-commit version is kept as `fix/yamlchan-asdf-all-v1`
-(`a0d20e89`); **#91 needs a force-push** to pick this up.
+`fix/yamlchan-asdf-all` rebuilt from master, dropping what upstream already has, then
+rebased onto `2ceb7207` (the 9.5.0 release) with an eighth commit for the sanitizer CI
+failure. **#91 needs a force-push** to pick this up. Earlier shapes are kept as
+`fix/yamlchan-asdf-all-v1` (`a0d20e89`, nine commits) and `-v2` (`0221358d`, seven).
 
-    40ca59ee  use size_t in LibYamlWriter to match libyaml
-    ce5b21a2  recognise the two HEALPix sky projections
-    739c7c73  test the value, not the format, for an epoch prefix in GetTime
-    0c8410cb  read and write zenithal_perspective as AZP, not SZP
-    ffa5c34a  reject ortho_polynomial bases other than Chebyshev
-    51586d68  declare the ASDF standard version when writing
-    0221358d  accept core/ndarray-1.2.0, and say "at most" when that is meant
+    45187854  use size_t in LibYamlWriter to match libyaml
+    6bfc6bc9  compare the pointers, not what they point at, in SimplifyAsdf
+    5addf248  recognise the two HEALPix sky projections
+    a17d6078  test the value, not the format, for an epoch prefix in GetTime
+    22ad5b7a  read and write zenithal_perspective as AZP, not SZP
+    551adbc7  reject ortho_polynomial bases other than Chebyshev
+    5a6f0d63  declare the ASDF standard version when writing
+    1d761bb2  accept core/ndarray-1.2.0, and say "at most" when that is meant
+
+The **first two** are duplicates of fixes in other open PRs, and are deliberately at the
+front so both can be dropped in one step: `size_t` is also fixed by #67, and `SimplifyAsdf`
+by #88.
 
 Dropped: **linear1d** (theirs is strictly better — it also fixes the property name) and
 **earthlocation** (equivalent). The 53-ceiling commit is replaced by the last one above,
 which keeps only the single ceiling #88 does not raise. `src/yamlchan.c` goes from 174
 changed lines to 56, and the fixtures from 8 to 5.
 
-`libyaml-writer-size-t` is kept but deliberately **first**, so it can be dropped in one
-step if #67 lands — that is the only PR that also fixes it.
 
 The reduced ceiling commit needed a new test: the old `current_schema_versions` fixture
 depends on the fk5/identity bumps we withdrew, so it would fail. `ndarray_1_2.asdf` is an
@@ -363,10 +367,110 @@ Two things the reshaping turned up in our own work:
   1.0.0 or 1.1.0. The bump is justified from the published schema rather than from data, so
   the maintainer may reasonably decline it — worth saying so when offering it.
 
-Verification: each of the seven builds and passes `testyamlchan` on its own, and the tip
-passes the full suite, **2444/2444**. Against #88, only the last commit now conflicts in
-`src/yamlchan.c` (it was three before); the rest conflict only in `ast_tester/testyamlchan.c`,
-which #88 restructured.
+#### The sanitizer CI failure (2026-09-22)
+
+The first CI run on the reshaped branch failed three jobs — every `Debug` + `sanitizers=ON`
+job in `cmake.yaml`, plus the matching autotools `make check` — with exit code 8. The
+earlier local ASan runs missed it because CI uses `-fsanitize=address,undefined` and they
+used `address` alone; reproducing it needed the CI configure line exactly:
+
+    cmake -B build -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=ON \
+      -DAST_BUILD_FORTRAN=OFF -DAST_ENABLE_SANITIZERS=ON \
+      -DAST_WITH_PTHREADS=ON -DAST_C_STANDARD=11
+
+(cmake and libyaml come from the `astbuild` conda env.)
+
+The failure is a heap overread in `SimplifyAsdf`, reached from `WriteFrameSet` by
+`test_zenithal_perspective_roundtrip` — **our** test, but **not our bug**. The three
+cancellation passes each end with
+
+    nkm = ( pw - km_list );
+    while( *pw < *pkm ){        /* should be: while( pw < pkm ) */
+
+which compares the pointed-at KeyMap pointers instead of the walking pointers, and reads
+`km_list[nkm]` off the end. It is in master at `2ceb7207` and in #67; **#88 already fixes
+all three**, identically. No existing test reached the fillgaps path, so our round trip is
+simply the first thing to get there.
+
+**Rebasing does not resolve it** — master moved to `2ceb7207` while this was being looked
+at, but those three commits are only 9.5.0 release notes. Only #88 has the fix, and #88 is
+not merged.
+
+#### The second CI failure: distcheck (2026-09-22)
+
+The same run also failed the one autotools job that carries `dist: true`. Not the
+sanitizer bug — the other ubuntu/gcc job runs `make check` too and passed. `make distcheck`
+asserts that a build tree is empty after `make distclean`:
+
+    ERROR: files left in build directory after distclean:
+    ./ast_tester/asdf_header.asdf
+    ./ast_tester/azp_roundtrip.asdf
+
+Both are written by tests this branch adds, and neither was in `ast_tester/Makefile.am`'s
+`CLEANFILES` — where the six sibling outputs (`divide_roundtrip.asdf`,
+`sphmap_roundtrip.asdf`, `lsst_wcs.asdf`, `tanSipWcs.asdf`, `nativetest.yaml`,
+`yamltest.asdf`) already are. **Any new test that writes a file has to be added there**,
+and only the `dist` job catches the omission.
+
+Each name was added in the commit that introduces its test, so the commits stay
+independently green.
+
+Verification: each of the **eight** builds and passes `testyamlchan` on its own under
+`address,undefined`, and the tip passes the full suite, **2444/2444**, with zero sanitizer
+diagnostics. The distclean leftover check was reproduced separately with autotools (conda
+env `astauto`: autoconf, automake, libtool, yaml), confirming both files are gone after
+`make distclean` with the fix. Against #88, the `SimplifyAsdf` and `ndarray` commits conflict in
+`src/yamlchan.c`; the rest conflict only in `ast_tester/testyamlchan.c`, which #88
+restructured.
+
+### A new AST bug: GetTime reads three uninitialised pointers (2026-09-22)
+
+Found while checking the `AST_ISSUES.md` findings against the open PRs. Not written up in
+`AST_ISSUES.md`, because unlike the three there it has an obvious patch and belongs in a
+PR.
+
+`GetTime` (yamlchan.c) declares
+
+    const char *value;
+    const char *format;
+    const char *scale;
+
+and leaves all three uninitialised. It sets them on two of its four paths — the entry is a
+string, or the entry is an object that `IsA(..., "time")` accepts. On the other two it
+reports an error and then **falls through** to the shared tail, which does
+
+    if( format ) { ... strncasecmp( value, ... ) ... }
+    nc = astUnformat( tfrm, 0, value, &result );
+    if( nc != strlen( value ) && astOK ) {
+
+so a failed read dereferences whatever is on the stack.
+
+The reachable trigger is a `celestial_frame` whose `frame_attributes` does not carry the
+time `ReadBaseFrame` asks for. That call is unguarded:
+
+- `equinox` is read for **fk4, fk4noeterms, fk5 and ecliptic**
+- `obstime` is read for **fk4, fk4noeterms and altaz**
+
+so a minimal GWCS with `frame_attributes: {}` and an fk5 frame is enough. astropy always
+writes an equinox for these frames, which is why no sample file hits it, but a hand-written
+or trimmed GWCS does.
+
+ASan at PR #80's head (df00bff4), reading an fk5 frame with empty `frame_attributes`:
+
+    astRead(YamlChan): The format of the Time object 'equinox' is not supported by AST.
+    ERROR: AddressSanitizer: stack-use-after-scope
+    READ of size 5 ...
+        #1 in GetTime yamlchan.c:5081
+        #2 in ReadBaseFrame yamlchan.c:7095
+        #3 in ReadCelestialFrame yamlchan.c:7199
+
+`value` pointed into a caller stack frame that had already returned.
+
+Present in master, #88, #67 **and our own branch** — nobody initialises them. Our
+`739c7c73` makes the window slightly wider rather than narrower: it moves the `strncasecmp`
+from `format` onto `value`, so the uninitialised read now happens a few lines earlier. The
+fix is small (initialise to NULL and return `AST__BAD` on the error paths instead of
+falling through) and would sit naturally as an eighth commit on the PR #91 branch.
 
 ### The AST bugs — eight fixed locally, two open
 

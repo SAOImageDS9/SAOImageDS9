@@ -481,11 +481,273 @@ proc AsdfClearTree {frame} {
     AsdfDestroyHeader $frame
 }
 
+# Scan a line for the end of its top level key, tracking quotes and flow
+# collections so a ':' inside "http://x", '{a: b}' or a quoted string is not
+# mistaken for one. Returns the index of the ':' or -1.
+#
+# `stName' is an array carrying the two things that outlive a line: the flow
+# collection depth, and whether a quoted scalar is still open. Either one
+# above/!= its resting value means the next line continues this node rather
+# than starting a new one. A quoted scalar really can run over several lines
+# -- a Roman cal file's `cal_logs' is a flow sequence of them -- so losing
+# the quote state at the newline would let a bracket or colon inside the log
+# text be read as structure.
+proc AsdfScanLine {line stName} {
+    upvar 1 $stName st
+
+    set key -1
+    set nn [string length $line]
+
+    for {set ii 0} {$ii < $nn} {incr ii} {
+	set cc [string index $line $ii]
+
+	switch -- $st(quote) {
+	    {'} {
+		# YAML doubles a single quote to escape it
+		if {$cc eq {'}} {
+		    if {[string index $line [expr {$ii+1}]] eq {'}} {
+			incr ii
+		    } else {
+			set st(quote) {}
+		    }
+		}
+		continue
+	    }
+	    {"} {
+		if {$cc eq "\\"} {
+		    incr ii
+		} elseif {$cc eq {"}} {
+		    set st(quote) {}
+		}
+		continue
+	    }
+	}
+
+	switch -- $cc {
+	    {'} -
+	    {"} {set st(quote) $cc}
+	    {[} -
+	    "\{" {incr st(depth)}
+	    {]} -
+	    "\}" {if {$st(depth) > 0} {incr st(depth) -1}}
+	    {:} {
+		# A key's colon is followed by whitespace or ends the line,
+		# which is what separates it from the ones in a tag or a URI.
+		if {$key < 0 && $st(depth) == 0} {
+		    set next [string index $line [expr {$ii+1}]]
+		    if {$next eq {} || $next eq { }} {
+			set key $ii
+		    }
+		}
+	    }
+	    {#} {
+		# A comment starts only at the start of a line or after a
+		# space; anything else is an ordinary character.
+		if {$st(depth) == 0 && ($ii == 0 ||
+			[string index $line [expr {$ii-1}]] eq { })} {
+		    return $key
+		}
+	    }
+	}
+    }
+
+    # A quoted scalar that is still open at the end of the line continues on
+    # the next one; a plain one does not, so only the quote state persists.
+    return $key
+}
+
+# One column of guide for an ancestor level: a bar while that ancestor still
+# has siblings below, a gap once it does not.
+proc AsdfGuide {more aa} {
+    if {[dict exists $more $aa] && [dict get $more $aa]} {
+	return "\u2502  "
+    }
+    return "   "
+}
+
+# Draws an ASDF tree's YAML with box drawing guides, so the nesting of a
+# deep tree (roman/meta/wcs/steps/0/transform/forward/1/... is routine) can
+# be read at a glance instead of counted in spaces.
+#
+# The guides are derived from the YAML's own indentation rather than from a
+# parse: this is a viewer, and a full parser is a dependency the reader
+# deliberately does without. Two things make indentation alone insufficient,
+# and both are handled:
+#
+#   - a flow collection the emitter wrapped over several lines, whose
+#     continuation looks exactly like a mapping ("name: asdf, version: 5.4.0}")
+#   - a plain scalar folded over several lines, whose continuation is just
+#     more indented text
+#
+# Both become continuations of the node above rather than nodes of their own.
+# Anything the heuristic does misread costs a misplaced guide, never a lost
+# line: every input line appears in the output exactly once.
+proc AsdfPrettyTree {txt} {
+    set lines [split [string trimright $txt "\n"] "\n"]
+
+    # --- pass 1: classify each line, and give the nodes a depth ----------
+    #
+    # `stack' holds one {column kind} per open level. A sequence entry at the
+    # same column as the mapping key that introduced it ("steps:" then "- ")
+    # is a child of it, not a sibling, which is the one place YAML's
+    # indentation does not line up with its structure.
+    set items {}
+    set stack {}
+    array set st {depth 0 quote {}}
+    set preamble 1
+
+    foreach line $lines {
+	set ind [string length [lindex [regexp -inline {^ *} $line] 0]]
+	set body [string range $line $ind end]
+
+	# The directives, the document start and the document end frame the
+	# tree rather than living in it.
+	if {$preamble} {
+	    if {[string match {---*} $body] || $body eq {}} {
+		lappend items [list preamble $line 0]
+		if {[string match {---*} $body]} {
+		    set preamble 0
+		}
+		continue
+	    }
+	    if {[string match {#*} $body] || [string match {%*} $body]} {
+		lappend items [list preamble $line 0]
+		continue
+	    }
+	    set preamble 0
+	}
+
+	if {$body eq {...} || $body eq {}} {
+	    lappend items [list preamble $line 0]
+	    continue
+	}
+
+	set wasopen [expr {$st(depth) > 0 || $st(quote) ne {}}]
+	set key [AsdfScanLine $body st]
+
+	set isseq [expr {$body eq {-} || [string match {- *} $body]}]
+	if {$wasopen || (!$isseq && $key < 0)} {
+	    lappend items [list cont $body 0]
+	    continue
+	}
+
+	if {$isseq} {
+	    # A sequence entry replaces the entry before it at the same
+	    # column, and takes the next index; anything deeper just closes.
+	    set idx 0
+	    while {[llength $stack]} {
+		lassign [lindex $stack end] col kind previdx
+		if {$col > $ind || ($col == $ind && $kind eq {seq})} {
+		    if {$col == $ind && $kind eq {seq}} {
+			set idx [expr {$previdx + 1}]
+		    }
+		    set stack [lrange $stack 0 end-1]
+		} else {
+		    break
+		}
+	    }
+	    lappend stack [list $ind seq $idx]
+
+	    # The tee already says "list entry", so the YAML dash is dropped
+	    # and the index put in its place: it is what names the entry in
+	    # an array path (steps/0/transform/forward/1) and so is the part
+	    # worth reading.
+	    set rest [string trimleft [string range $body 1 end]]
+	    set body "\[$idx\][expr {$rest eq {} ? {} : " $rest"}]"
+	} else {
+	    while {[llength $stack]} {
+		lassign [lindex $stack end] col kind
+		if {$col >= $ind} {
+		    set stack [lrange $stack 0 end-1]
+		} else {
+		    break
+		}
+	    }
+	    lappend stack [list $ind map 0]
+	}
+
+	lappend items [list node $body [expr {[llength $stack] - 1}]]
+    }
+
+    # --- pass 2: a node is the last of its level until a later sibling
+    # turns up before the level closes ------------------------------------
+    #
+    # Read backwards, so "is there a sibling after me" is already known:
+    # `pending' holds, per level, whether a node at that level has been seen
+    # since the last shallower one. A shallower node closes every level below
+    # it, which is what stops a nephew counting as a sibling.
+    set nn [llength $items]
+    set last [lrepeat $nn 0]
+    array set pending {}
+
+    for {set ii [expr {$nn - 1}]} {$ii >= 0} {incr ii -1} {
+	lassign [lindex $items $ii] kind body level
+	if {$kind ne {node}} {
+	    continue
+	}
+	lset last $ii [expr {![info exists pending($level)]}]
+	foreach deeper [array names pending] {
+	    if {$deeper > $level} {
+		unset pending($deeper)
+	    }
+	}
+	set pending($level) 1
+    }
+
+    # --- emit -------------------------------------------------------------
+    #
+    # `more' records, per level, whether the node opened there still has a
+    # siblings to come; that is what decides between a vertical bar and a
+    # gap in the columns its descendants draw through.
+    set out {}
+    set more {}
+    set lastlevel 0
+    set lastmore 0
+
+    for {set ii 0} {$ii < $nn} {incr ii} {
+	lassign [lindex $items $ii] kind body level
+	set islast [lindex $last $ii]
+
+	switch -- $kind {
+	    preamble {
+		lappend out $body
+	    }
+	    node {
+		set pfx {}
+		for {set aa 0} {$aa < $level} {incr aa} {
+		    append pfx [AsdfGuide $more $aa]
+		}
+		append pfx [expr {$islast ? "└─ " : "├─ "}]
+		lappend out "$pfx$body"
+		dict set more $level [expr {!$islast}]
+		set lastlevel $level
+		set lastmore [expr {!$islast}]
+	    }
+	    cont {
+		# Continuations hang under the node they belong to, past the
+		# tee, so a wrapped value reads as part of its own line.
+		set pfx {}
+		for {set aa 0} {$aa < $lastlevel} {incr aa} {
+		    append pfx [AsdfGuide $more $aa]
+		}
+		append pfx [expr {$lastmore ? "│  " : "   "}]
+		lappend out "$pfx  $body"
+	    }
+	}
+    }
+
+    return "[join $out \n]\n"
+}
+
 # Shows the cached tree in the same SimpleTextDialog widget the FITS
 # header viewer uses (header.tcl's DisplayHeader), so it inherits that
 # window's Save/Print/Find machinery for free. No keyword tagging: that
 # loop tags a fixed 8-character column, which is a FITS card convention
 # with no YAML equivalent.
+#
+# What is displayed is the drawn tree, not the raw YAML. The cache keeps
+# the YAML, so `header save' (SaveHeaderCmd, which reads AsdfGetTree) still
+# writes the file's own text; only this window is decorated.
 proc DisplayAsdfHeader {frame} {
     global asdf
 
@@ -497,7 +759,7 @@ proc DisplayAsdfHeader {frame} {
     global $varname
 
     SimpleTextDialog $varname [file tail $asdf(file,$frame)] 80 40 \
-	insert top $asdf(tree,$frame)
+	insert top [AsdfPrettyTree $asdf(tree,$frame)]
 }
 
 # Hands an extracted, self-contained GWCS document to the current frame

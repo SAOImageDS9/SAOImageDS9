@@ -706,7 +706,9 @@ is a finding about the ecosystem rather than a defect.
    numbers, which is also not a failure.
 3. **Send the nine AST fixes upstream** (eight are also applied to the vendored `ast/`;
    the ninth, the `#ASDF_STANDARD` header, is write-side only and so does not affect us),
-   and report the three still open. The
+   and report the three still open. The `SimplifyAsdf` pointer fix PR #91 picked up for
+   its CI is applied to the vendored copy as well, for consistency rather than need:
+   that is the ASDF *write* path, and DS9 only reads. The
    version-ceiling bumps (bug 7) and the `polynomial_type` check (bug 6) belong in the
    same patch, since the first makes the second reachable. Of the open ones, **bug 11 (the
    `winmap.c` overread) should go first**: it is a memory error with an ASan trace, and it

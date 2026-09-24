@@ -355,28 +355,9 @@ void Composite::updateCoords(const Matrix& mx)
 
 int Composite::isIn(const Vector& v)
 {
-  if (!bbox.isIn(v))
-    return 0;
-
-  int found = 0;
-  Marker* mk=members.head();
-  while (mk) {
-    Marker* m = mk->dup();
-    m->setComposite(fwdMatrix(), angle);
-    int inside = m->isIn(v);
-    int area = m->hasArea();
-    delete m;
-
-    if (operation == UNION && inside)
-      return 1;
-    if (operation == INTERSECTION && (!area || !inside))
-      return 0;
-    found = 1;
-
-    mk=mk->next();
-  }
-
-  return operation == INTERSECTION ? found : 0;
+  // Same include/exclude-aware combination as isInArea: excluded members
+  // are always holes, regardless of operation.
+  return isInArea(v);
 }
 
 void Composite::copyRegionMembers(List<Marker>& result)
@@ -395,15 +376,26 @@ int Composite::isInRegion(const Vector& v, List<Marker>& regionMembers)
   if (!bbox.isIn(v))
     return 0;
 
-  int found = 0;
   Marker* m=regionMembers.head();
   while (m) {
-    int inside = m->isIn(v);
-    if (operation == UNION && inside)
-      return 1;
-    if (operation == INTERSECTION && (!m->hasArea() || !inside))
-      return 0;
-    found = 1;
+    if (!m->getProperty(Marker::INCLUDE)) {
+      if (m->hasArea() && m->isIn(v))
+	return 0;
+    }
+    m=m->next();
+  }
+
+  int found = 0;
+  m=regionMembers.head();
+  while (m) {
+    if (m->getProperty(Marker::INCLUDE)) {
+      int inside = m->isIn(v);
+      if (operation == UNION && inside)
+	return 1;
+      if (operation == INTERSECTION && (!m->hasArea() || !inside))
+	return 0;
+      found = 1;
+    }
     m=m->next();
   }
 

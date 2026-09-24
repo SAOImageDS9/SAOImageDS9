@@ -22,6 +22,39 @@ Why these three are issues and not patches:
 Issue 1 is the one with real consequences: it is a memory error, and it made a
 WCS read succeed on macOS and fail on Linux from identical bytes.
 
+## Overlap with open AST work (reviewed 2026-09-22)
+
+None of the three is addressed by any open issue or pull request.
+
+Upstream master has moved from 9cf7f8ff to df70b7fb (eleven commits, now
+9.5.0), but none of them touch `yamlchan.c`, `winmap.c` or `cmpmap.c`, so
+everything below still measures the same.
+
+| # | status against open work |
+|---|---|
+| 1 | no open PR touches `winmap.c` — the file is byte-identical in master, #88 and #67. #80 rewrites `CmpMap::MapMerge`'s probe bookkeeping, which is two frames up the failing stack, and #83 is a different `MapMerge` defect. **Rebuilt #80's head (df00bff4) with ASan: both reproducers still overread**, same stack, only the `cmpmap.c` line numbers shifted (3776 → 3990, 1641 → 1656) |
+| 2 | #88 extracts the projection chain into a new `WcsMapAsdfClass()` helper but keeps `class = NULL` and the caller's unchecked use. It also adds a **second** call site, in the new `fitswcs_imaging` writer, with no `if( class )` guard at all — unreachable today, because only `ReadFitswcsImaging` sets the proxy and it can only have come from a file with a supported class, but it removes the guard the older path at least has |
+| 3 | the `MAKE_TEST(Baseframe, ...)` list is identical in master, #88 and #67 |
+
+Two things to fold into the text before filing:
+
+- Issue 2's chain should be described against #88's `WcsMapAsdfClass()`, since
+  that PR is likely to land first.
+- Issue 3 has a **write-side mirror that makes it a plain round-trip bug, not
+  just a feature gap**. `WriteAsdfBaseFrame` (yamlchan.c:13759 of the vendored
+  copy) writes `AST__ECLIPTIC` as
+  `astropy/coordinates/frames/barycentricmeanecliptic-1.0.0`, but the reader's
+  `IsAEcliptic` matches only `astropy/coordinates/frames/ecliptic`, so **AST
+  cannot read back an ecliptic SkyFrame it wrote itself**. Confirmed in both
+  directions: the writer's output was inspected, and feeding the reader a
+  `celestial_frame` carrying that class gives the same "not of the required
+  class 'baseframe'" error quoted below. `altaz` and `supergalactic` round
+  trip; `AST__GAPPT` has no branch and so writes as NULL, the same shape as
+  issue 2.
+
+A fourth finding turned up during this review and is **not** written up here,
+because it is patchable rather than a design question — see `TODO.md`.
+
 ---
 
 ## YamlChan: heap-buffer-overflow in winmap.c MapMerge when simplifying
@@ -199,8 +232,8 @@ CmpMap to trigger.
 
 ## YamlChan: writing a projection with no ASDF class reports a confusing error
 
-`WriteAsdfWcsMap` (yamlchan.c, around line 16970) maps each AST projection type
-to an ASDF transform class, ending in
+`WriteWcsMap` (yamlchan.c, the chain ending at line 17078 of upstream master)
+maps each AST projection type to an ASDF transform class, ending in
 
 ```c
    } else {

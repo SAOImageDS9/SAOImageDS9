@@ -79,7 +79,11 @@ class BaseEllipse : public BaseMarker {
   int isIn(const Vector& vv)
   {return isIn(vv, Coord::CANVAS);}
   int isIn(const Vector& vv, Coord::InternalSystem sys)
-  {return isIn(vv,sys,numAnnuli_-1) && (numAnnuli_==1 || !isIn(vv,sys,0));}
+  {
+    Vector pp = bckMap(vv,sys);
+    return isInRef(pp,numAnnuli_-1) && (numAnnuli_==1 || !isInRef(pp,0)) &&
+      isInAngle(pp);
+  }
   int isIn(const Vector& vv, Coord::InternalSystem sys, int nn)
   {return isInRef(bckMap(vv,sys),nn);}
   virtual int isIn(const Vector& vv, Coord::InternalSystem sys, int nn, int aa)
@@ -87,7 +91,11 @@ class BaseEllipse : public BaseMarker {
 
   // valid for non-fixed only
   int isIn(const Vector& vv, const Matrix& bck)
-  {return isIn(vv,bck,numAnnuli_-1) && (numAnnuli_==1 || !isIn(vv,bck,0));}
+  {
+    Vector pp = vv*bck;
+    return isInRef(pp,numAnnuli_-1) && (numAnnuli_==1 || !isInRef(pp,0)) &&
+      isInAngle(pp);
+  }
   int isIn(const Vector& vv, const Matrix& bck, int nn)
   {return isInRef(vv*bck,nn);}
 };

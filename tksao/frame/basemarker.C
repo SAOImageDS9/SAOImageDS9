@@ -188,6 +188,18 @@ int BaseMarker::isInAngle(Vector& vv, int nn)
   return aa>=angles_[nn] && aa<angles_[nn+1];
 }
 
+// whole-shape angle test: is vv within the overall [startAng_,stopAng_) span,
+// ie any of the panda's angular wedges. For non-panda shapes startAng_/
+// stopAng_ default to a full 0..2pi circle, so this is always true.
+int BaseMarker::isInAngle(Vector& vv)
+{
+  double aa = -vv.angle();
+  while (aa<startAng_)
+    aa += M_TWOPI;
+
+  return aa>=startAng_ && aa<=stopAng_;
+}
+
 void BaseMarker::sortAngles()
 {
   // first, all angles 0<=ang<2_PI

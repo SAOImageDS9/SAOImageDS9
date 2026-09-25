@@ -31,6 +31,7 @@ protected:
   void addAngle(double);
   void deleteAngle(int);
   int isInAngle(Vector&, int);
+  int isInAngle(Vector&);
 
   Matrix fwdMatrix();
   Matrix bckMatrix();

@@ -1,0 +1,12 @@
+SIMPLE  =                    T / Fits standard
+BITPIX  =                  -32 / Bits per pixel
+NAXIS   =                    1 / Number of dimensions
+NAXIS1  =                 1024 / Length of axis
+CTYPE1  = 'VELO-LSR'           / AIPS convention: velocity in LSR frame
+CRVAL1  =                  0.0 / Reference velocity (m/s)
+CRPIX1  =              512.500 / Reference pixel
+CDELT1  =              1000.00 / Velocity increment (m/s)
+CUNIT1  = 'm/s     '           / Axis units
+RESTFREQ=           1.4204E+09 / Rest frequency (Hz)
+SPECSYS = 'LSRK    '           / Spectral reference frame
+END

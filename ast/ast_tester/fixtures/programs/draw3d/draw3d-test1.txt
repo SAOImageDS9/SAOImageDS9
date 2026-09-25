@@ -1,0 +1,57 @@
+#  Run with "draw3d draw3d-test1.txt"
+
+set r1=0   # Lon origin
+set r2=0   # Lat origin
+set r6=5   # Vertical length
+set r7=5   # Horizontal length
+
+set verbose=F # run quietly
+
+#  Repeat the following compound command 400 times
+set repeat=100
+
+#  A compound command to draw the whole scene
+{
+
+#  Draw the axes and the quadrant arcs as thin white lines
+   {set line_col=1}
+   {set line_wid=1}
+   {axes}
+   {quad}
+
+#  The great circles will be draw as fat lines
+   {set line_wid=8}
+
+#  Increment the parameters holding the length of the great circles
+   {incr r6=0.8 r7=0.8}
+
+# Draw great circle arcs, horizontal first, in red
+   {set line_col=-1}
+   {offset2 r1 r2 pa=90 length=r6 newlon=r3 newlat=r4 newpa=r5}
+   {set line_col=2}
+
+   {great r1 r2 r3 r4}
+
+   {incr r5=90}
+   {offset2 r3 r4 pa=r5 length=r7 newlon=r8 newlat=r9}
+   {great r3 r4 r8 r9 radius=1}
+
+   {incr r5=-180}
+   {offset2 r3 r4 pa=r5 length=r7 newlon=r8 newlat=r9}
+   {great r3 r4 r8 r9}
+
+# Draw great circle arcs, vertical first, in green
+   {set line_col=-1}
+   {offset2 r1 r2 pa=0 length=r7 newlon=r3 newlat=r4 newpa=r5}
+   {set line_col=3}
+
+   {great r1 r2 r3 r4}
+
+   {incr r5=90}
+   {offset2 r3 r4 pa=r5 length=r6 newlon=r8 newlat=r9}
+   {great r3 r4 r8 r9}
+
+   {incr r5=-180}
+   {offset2 r3 r4 pa=r5 length=r6 newlon=r8 newlat=r9}
+   {great r3 r4 r8 r9}
+}

@@ -104,6 +104,18 @@ f     - AST_TIMEADD: Add a time coordinate conversion to an TimeMap
 *        - Fix bug in MapMerge that prevented adjacent TAITOUTC and UTCTOTAI
 *        conversions cancelling out.
 *        - Add DTAI argument for TTTOTDB and TDBTOTT.
+*     19-JUN-2026 (TIMJ):
+*        Fix astDat inverse (TAI->UTC) branch for the pre-1972
+*        "rubber second" eras. The forward law is dTAI = a + b*(utc-t0)
+*        with b in seconds/day, so inverting tai = utc + dTAI/SPD gives a
+*        divisor of (1 + b/SPD), not the (1 + b) or (1 + 10*b) literals
+*        previously used (e.g. 1.001296, 1.02592, and the anomalous
+*        1.01296). The old divisors were wrong by a units factor and
+*        leaked ~164 ms on a UTC->TAI->UTC round trip near MJD 40000.
+*        Also fix the 1966-01-01 era inverse branch, whose intercept
+*        constant was 4.2131700 (copied from the 1968 era) instead of the
+*        4.3131700 used by the matching forward branch, leaking ~0.1 s on
+*        round trip at MJD 39500.
 *class--
 */
 
@@ -1652,71 +1664,71 @@ double astDat_( double in, int forward, int *status ){
 /* 1968 February 1 */
       } else if( in >= 39887.0 + ( 4.2131700
                                   + ( 39887.0 - 39126.0 )*0.002592 )/SPD ){
-         result = -( 4.2131700 + ( in - 39126.0 )*0.002592 )/1.02592;
+         result = -( 4.2131700 + ( in - 39126.0 )*0.002592 )/( 1.0 + 0.002592/SPD );
 
 /* 1966 January 1 */
       } else if( in >= 39126.0 + ( 4.3131700
                                   + ( 39126.0 - 39126.0 )*0.002592 )/SPD ){
-         result = -( 4.2131700 + ( in - 39126.0 )*0.002592 )/1.02592;
+         result = -( 4.3131700 + ( in - 39126.0 )*0.002592 )/( 1.0 + 0.002592/SPD );
 
 /* 1965 September 1 */
       } else if( in >= 39004.0 + ( 3.8401300
                                   + ( 39004.0 - 38761.0 )*0.001296 )/SPD ){
-         result = -( 3.8401300 + ( in - 38761.0 )*0.001296 )/1.001296;
+         result = -( 3.8401300 + ( in - 38761.0 )*0.001296 )/( 1.0 + 0.001296/SPD );
 
 /* 1965 July 1 */
       } else if( in >= 38942.0 + ( 3.7401300
                                   + ( 38942.0 - 38761.0 )*0.001296 )/SPD ){
-         result = -( 3.7401300 + ( in - 38761.0 )*0.001296 )/1.01296;
+         result = -( 3.7401300 + ( in - 38761.0 )*0.001296 )/( 1.0 + 0.001296/SPD );
 
 /* 1965 March 1 */
       } else if( in >= 38820.0 + ( 3.6401300
                                   + ( 38820.0 - 38761.0 )*0.001296 )/SPD ){
-         result = -( 3.6401300 + ( in - 38761.0 )*0.001296 )/1.001296;
+         result = -( 3.6401300 + ( in - 38761.0 )*0.001296 )/( 1.0 + 0.001296/SPD );
 
 /* 1965 January 1 */
       } else if( in >= 38761.0 + ( 3.5401300
                                    + ( 38761.0 - 38761.0 )*0.001296 )/SPD ){
-         result = -( 3.5401300 + ( in - 38761.0 )*0.001296 )/1.001296;
+         result = -( 3.5401300 + ( in - 38761.0 )*0.001296 )/( 1.0 + 0.001296/SPD );
 
 /* 1964 September 1 */
       } else if( in >= 38639.0 + ( 3.4401300
                                    + ( 38639.0 - 38761.0 )*0.001296 )/SPD ){
-         result = -( 3.4401300 + ( in - 38761.0 )*0.001296 )/1.001296;
+         result = -( 3.4401300 + ( in - 38761.0 )*0.001296 )/( 1.0 + 0.001296/SPD );
 
 /* 1964 April 1 */
       } else if( in >= 38486.0 + ( 3.3401300
                                    + ( 38486.0 - 38761.0 )*0.001296 )/SPD ){
-         result = -( 3.3401300 + ( in - 38761.0 )*0.001296 )/1.001296;
+         result = -( 3.3401300 + ( in - 38761.0 )*0.001296 )/( 1.0 + 0.001296/SPD );
 
 /* 1964 January 1 */
       } else if( in >= 38395.0 + ( 3.2401300
                                    + ( 38395.0 - 38761.0 )*0.001296 )/SPD ){
-         result = -( 3.2401300 + ( in - 38761.0 )*0.001296 )/1.001296;
+         result = -( 3.2401300 + ( in - 38761.0 )*0.001296 )/( 1.0 + 0.001296/SPD );
 
 /* 1963 November 1 */
       } else if( in >= 38334.0 + ( 1.9458580
                                    + ( 38334.0 - 37665.0 )*0.0011232 )/SPD ){
-         result = -( 1.9458580 + ( in - 37665.0 )*0.0011232 )/1.0011232;
+         result = -( 1.9458580 + ( in - 37665.0 )*0.0011232 )/( 1.0 + 0.0011232/SPD );
 
 /* 1962 January 1 */
       } else if( in >= 37665.0 + ( 1.8458580
                                    + ( 37665.0 - 37665.0 )*0.0011232 )/SPD ){
-         result = -( 1.8458580 + ( in - 37665.0 )*0.0011232 )/1.0011232;
+         result = -( 1.8458580 + ( in - 37665.0 )*0.0011232 )/( 1.0 + 0.0011232/SPD );
 
 /* 1961 August 1 */
       } else if( in >= 37512.0 + ( 1.3728180
                                    + ( 37512.0 - 37300.0 )*0.001296 )/SPD ){
-         result = -( 1.3728180 + ( in - 37300.0 )*0.001296 )/1.001296;
+         result = -( 1.3728180 + ( in - 37300.0 )*0.001296 )/( 1.0 + 0.001296/SPD );
 
 /* 1961 January 1 */
       } else if( in >= 37300.0 + ( 1.4228180
                                    + ( 37300.0 - 37300.0 )*0.001296 )/SPD ){
-         result = -( 1.4228180 + ( in - 37300.0 )*0.001296 )/1.001296;
+         result = -( 1.4228180 + ( in - 37300.0 )*0.001296 )/( 1.0 + 0.001296/SPD );
 
 /* Before that */
       } else {
-         result = -( 1.4178180 + ( in - 37300.0 )*0.001296 )/1.001296;
+         result = -( 1.4178180 + ( in - 37300.0 )*0.001296 )/( 1.0 + 0.001296/SPD );
       }
    }
 

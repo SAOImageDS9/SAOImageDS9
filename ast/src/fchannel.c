@@ -288,7 +288,7 @@ void astSinkWrap_( void (* sink)( const char * ), const char *line, int *status 
    subroutine and then invoke it. Transfer the AST error status to and
    from the subroutine's error status argument. */
    STATUS = astStatus;
-   ( *(void (*)()) sink )( INTEGER_ARG(&STATUS) );
+   ( *(void (*)( F77_INTEGER_TYPE * )) sink )( INTEGER_ARG(&STATUS) );
    astSetStatus( STATUS );
 
 /* Clear the outgoing line pointer. */
@@ -356,7 +356,7 @@ char *astSourceWrap_( const char *(* source)( void ), int *status ) {
    subroutine and then invoke it. Transfer the AST error status to and
    from the subroutine's error status argument. */
    STATUS = astStatus;
-   ( *(void (*)()) source )( INTEGER_ARG(&STATUS) );
+   ( *(void (*)( F77_INTEGER_TYPE * )) source )( INTEGER_ARG(&STATUS) );
    astSetStatus( STATUS );
 
 /* This should result in a pointer to a dynamic string containing the

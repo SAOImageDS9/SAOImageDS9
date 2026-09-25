@@ -55,6 +55,7 @@ extern "C" {
 
   int Signal_ext_Init(Tcl_Interp*);
 
+
   int Tkmacosx_Init(Tcl_Interp*);
 }
 
@@ -280,7 +281,7 @@ int SAOAppInit(Tcl_Interp *interp)
   // Signal_Ext
   if (Signal_ext_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
-  Tcl_StaticPackage (interp, "signal", Signal_ext_Init, 
+  Tcl_StaticPackage (interp, "signal", Signal_ext_Init,
 		     (Tcl_PackageInitProc*)NULL);
 
   // Tkmacosx

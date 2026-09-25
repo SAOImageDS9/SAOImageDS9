@@ -29,6 +29,7 @@ proc CommSet {fn paramlist {safemode 0}} {
 	    align {ProcessAlignCmd param i}
 	    analysis {ProcessAnalysisCmd param i {} $fn}
 	    array {ProcessArrayCmd param i {} $fn}
+	    asdf {ProcessAsdfCmd param i {} $fn}
 	    bg -
 	    background {
 		# backward compatibility prefs

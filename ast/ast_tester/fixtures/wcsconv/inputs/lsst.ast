@@ -1,0 +1,352 @@
+Begin FrameSet
+#   Title = "ICRS coordinates; gnomonic projection"
+#   Naxes = 2
+#   Domain = "SKY"
+#   Epoch = 2000
+#   Lbl1 = "Right ascension"
+#   Lbl2 = "Declination"
+#   System = "ICRS"
+#   Uni1 = "hh:mm:ss.s"
+#   Uni2 = "ddd:mm:ss"
+#   Dir1 = 0
+#   Bot2 = -1.5707963267948966
+#   Top2 = 1.5707963267948966
+ IsA Frame
+    Nframe = 5
+#   Base = 1
+    Currnt = 5
+    Lnk2 = 1
+    Lnk3 = 2
+    Lnk4 = 3
+    Lnk5 = 4
+    Frm1 =
+       Begin Frame
+#         Title = "2-d coordinate system"
+          Naxes = 2
+          Domain = "PIXELS"
+#         Lbl1 = "Axis 1"
+#         Lbl2 = "Axis 2"
+          Ax1 =
+             Begin Axis
+             End Axis
+          Ax2 =
+             Begin Axis
+             End Axis
+       End Frame
+    Frm2 =
+       Begin Frame
+#         Title = "2-d coordinate system"
+          Naxes = 2
+          Domain = "NORMEDPIXELS"
+#         Lbl1 = "Axis 1"
+#         Lbl2 = "Axis 2"
+          Ax1 =
+             Begin Axis
+             End Axis
+          Ax2 =
+             Begin Axis
+             End Axis
+       End Frame
+    Frm3 =
+       Begin Frame
+#         Title = "2-d coordinate system"
+          Naxes = 2
+          Domain = "INTERMEDIATE0"
+#         Lbl1 = "Axis 1"
+#         Lbl2 = "Axis 2"
+          Ax1 =
+             Begin Axis
+             End Axis
+          Ax2 =
+             Begin Axis
+             End Axis
+       End Frame
+    Frm4 =
+       Begin Frame
+#         Title = "2-d coordinate system"
+          Naxes = 2
+          Domain = "IWC"
+#         Lbl1 = "Axis 1"
+#         Lbl2 = "Axis 2"
+          Ax1 =
+             Begin Axis
+             End Axis
+          Ax2 =
+             Begin Axis
+             End Axis
+       End Frame
+    Frm5 =
+       Begin SkyFrame
+          Ident = " "
+       IsA Object
+#         Title = "ICRS coordinates; gnomonic projection"
+          Naxes = 2
+#         Domain = "SKY"
+#         Epoch = 2000
+#         Lbl1 = "Right ascension"
+#         Lbl2 = "Declination"
+          System = "ICRS"
+          AlSys = "ICRS"
+#         Uni1 = "hh:mm:ss.s"
+#         Uni2 = "ddd:mm:ss"
+#         Dir1 = 0
+#         Bot2 = -1.5707963267948966
+#         Top2 = 1.5707963267948966
+          Ax1 =
+             Begin SkyAxis
+             End SkyAxis
+          Ax2 =
+             Begin SkyAxis
+             End SkyAxis
+       IsA Frame
+          Proj = "gnomonic"
+#         SkyTol = 0.001
+          SRefIs = "Ignored"
+          SRef1 = 0.93073584964951706
+          SRef2 = -0.48994978249425891
+       End SkyFrame
+    Map2 =
+       Begin PolyMap
+          Nin = 2
+       IsA Mapping
+          MPF1 = 1
+          MPF2 = 1
+          NCF1 = 3
+          NCF2 = 3
+          CF1 = -1
+          CF2 = 0.00049127978383689509
+          CF3 = 0
+          CF4 = -1
+          CF5 = 0
+          CF6 = 0.00050012503125781451
+          PF3 = 1
+          PF6 = 1
+          PF9 = 1
+          PF12 = 1
+          IterInv = 1
+          NiterInv = 10
+          TolInv = 9.9999999999999995e-08
+       End PolyMap
+    Map3 =
+       Begin PolyMap
+          Nin = 2
+       IsA Mapping
+          MPF1 = 5
+          MPF2 = 5
+          NCF1 = 21
+          NCF2 = 21
+          CF1 = -0.28442541183584946
+          CF2 = 0.025196410450119774
+          CF3 = 0.10850740257872329
+          CF4 = -1.8117214171184971e-05
+          CF5 = -2.5411973475688556e-05
+          CF6 = -2.7055625077518308e-05
+          CF7 = 5.9561505359004041e-06
+          CF8 = 4.3469327876298142e-06
+          CF9 = -1.9295976474719754e-06
+          CF10 = 8.9276781617670002e-06
+          CF11 = -3.0253037572317978e-06
+          CF12 = -3.1691916359221918e-06
+          CF13 = -2.5343291201044216e-06
+          CF14 = 2.5103885008176705e-06
+          CF15 = -3.3353885943820633e-06
+          CF16 = 7.0231915037332632e-07
+          CF17 = 4.433637931327871e-06
+          CF18 = 1.9014913722005829e-06
+          CF19 = 1.4071986461672182e-08
+          CF20 = 4.0071804654658158e-07
+          CF21 = 1.2864360459629361e-07
+          CF22 = -0.11865465113108672
+          CF23 = 0.11043904923265806
+          CF24 = -0.024679579661590779
+          CF25 = -2.7450540092086099e-05
+          CF26 = -1.7393341912958501e-05
+          CF27 = -3.6787946682862772e-06
+          CF28 = 1.0470311024552662e-05
+          CF29 = -7.0809073268373886e-07
+          CF30 = 1.5779574342544132e-07
+          CF31 = 5.7811785237108776e-07
+          CF32 = -4.2622855209830129e-06
+          CF33 = -2.1386278247017794e-06
+          CF34 = -2.9383420175814586e-06
+          CF35 = -2.5116133254473027e-07
+          CF36 = -1.3619505424895891e-06
+          CF37 = 1.3034570560858815e-06
+          CF38 = 3.6229356255468614e-06
+          CF39 = 6.205160891544347e-07
+          CF40 = 1.3650773593104822e-06
+          CF41 = 3.5979635479701857e-06
+          CF42 = 2.1174941282631594e-07
+          PF3 = 1
+          PF6 = 1
+          PF7 = 2
+          PF9 = 1
+          PF10 = 1
+          PF12 = 2
+          PF13 = 3
+          PF15 = 2
+          PF16 = 1
+          PF17 = 1
+          PF18 = 2
+          PF20 = 3
+          PF21 = 4
+          PF23 = 3
+          PF24 = 1
+          PF25 = 2
+          PF26 = 2
+          PF27 = 1
+          PF28 = 3
+          PF30 = 4
+          PF31 = 5
+          PF33 = 4
+          PF34 = 1
+          PF35 = 3
+          PF36 = 2
+          PF37 = 2
+          PF38 = 3
+          PF39 = 1
+          PF40 = 4
+          PF42 = 5
+          PF45 = 1
+          PF48 = 1
+          PF49 = 2
+          PF51 = 1
+          PF52 = 1
+          PF54 = 2
+          PF55 = 3
+          PF57 = 2
+          PF58 = 1
+          PF59 = 1
+          PF60 = 2
+          PF62 = 3
+          PF63 = 4
+          PF65 = 3
+          PF66 = 1
+          PF67 = 2
+          PF68 = 2
+          PF69 = 1
+          PF70 = 3
+          PF72 = 4
+          PF73 = 5
+          PF75 = 4
+          PF76 = 1
+          PF77 = 3
+          PF78 = 2
+          PF79 = 2
+          PF80 = 3
+          PF81 = 1
+          PF82 = 4
+          PF84 = 5
+          IterInv = 1
+          NiterInv = 10
+          TolInv = 9.9999999999999995e-08
+       End PolyMap
+    Map4 =
+       Begin UnitMap
+          Nin = 2
+       IsA Mapping
+       End UnitMap
+    Map5 =
+       Begin CmpMap
+          Nin = 2
+       IsA Mapping
+          MapA =
+             Begin UnitMap
+                Nin = 2
+                IsSimp = 1
+             IsA Mapping
+             End UnitMap
+          MapB =
+             Begin CmpMap
+                Nin = 2
+             IsA Mapping
+                InvA = 1
+                MapA =
+                   Begin CmpMap
+                      Nin = 2
+                      Invert = 1
+                   IsA Mapping
+                      InvA = 1
+                      MapA =
+                         Begin SphMap
+                            Nin = 3
+                            Nout = 2
+                         IsA Mapping
+                            UntRd = 1
+                            PlrLg = 0.93073584964951761
+                         End SphMap
+                      MapB =
+                         Begin CmpMap
+                            Nin = 3
+                            Nout = 2
+                         IsA Mapping
+                            InvA = 1
+                            MapA =
+                               Begin MatrixMap
+                                  Nin = 3
+                               IsA Mapping
+                                  M0 = -0.28105200045586293
+                                  M1 = -0.80205963974196071
+                                  M2 = 0.52698207496721727
+                                  M3 = -0.3774344917398868
+                                  M4 = 0.59724394873200359
+                                  M5 = 0.70770252942041767
+                                  M6 = -0.88235649115582016
+                                  M7 = 0
+                                  M8 = -0.47058157902237213
+                                  IM0 = -0.28105200045586293
+                                  IM1 = -0.3774344917398868
+                                  IM2 = -0.88235649115582016
+                                  IM3 = -0.80205963974196071
+                                  IM4 = 0.59724394873200359
+                                  IM5 = 0
+                                  IM6 = 0.52698207496721727
+                                  IM7 = 0.70770252942041767
+                                  IM8 = -0.47058157902237213
+                                  Form = "Full"
+                               End MatrixMap
+                            MapB =
+                               Begin CmpMap
+                                  Nin = 3
+                                  Nout = 2
+                               IsA Mapping
+                                  MapA =
+                                     Begin SphMap
+                                        Nin = 3
+                                        Nout = 2
+                                        Invert = 1
+                                     IsA Mapping
+                                        UntRd = 1
+                                        PlrLg = 0
+                                     End SphMap
+                                  MapB =
+                                     Begin CmpMap
+                                        Nin = 2
+                                     IsA Mapping
+                                        MapA =
+                                           Begin WcsMap
+                                              Nin = 2
+                                              Invert = 1
+                                           IsA Mapping
+                                              Type = "TAN"
+                                           End WcsMap
+                                        MapB =
+                                           Begin ZoomMap
+                                              Nin = 2
+                                           IsA Mapping
+                                              Zoom = 57.295779513082323
+                                           End ZoomMap
+                                     End CmpMap
+                               End CmpMap
+                         End CmpMap
+                   End CmpMap
+                MapB =
+                   Begin UnitMap
+                      Nin = 2
+                      IsSimp = 1
+                   IsA Mapping
+                   End UnitMap
+             End CmpMap
+       End CmpMap
+ End FrameSet
+

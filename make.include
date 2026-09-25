@@ -99,9 +99,9 @@ TKIMGTMPFILES = \
 #-------------------------- main
 
 .NOTPARALLEL :
-.PHONY	: all dirs ds9 tclxml tclxmlrpc tclzipfs tls xpa
+.PHONY	: all dirs ds9 tclxml tclxmlrpc tclzipfs tls xpa zlib lz4 bzip2
 .PHONY	: tkblt tclfitsy tkcon tkhtml1 tkimg tkmpeg tksvg tkagif tksao tktable
-.PHONY	: vector fitsy ast funtools openssl
+.PHONY	: vector fitsy libyaml ast funtools openssl
 
 all	: saods9
 
@@ -131,6 +131,7 @@ ds9/$(OS)/Makefile :
 	./configure \
 	$(WITHTK) \
   	--with-xml2-config=$(XML2CONFIG) \
+	$(PKGCONFIG) \
 	$(PREFIX) \
 	$(STD) \
 	$(CACHE)
@@ -181,6 +182,7 @@ tclxml/Makefile :
 	$(WITHTCL) \
   	--with-xml2-config=$(XML2CONFIG) \
 	--with-xslt-config=$(XSLTCONFIG) \
+	$(PKGCONFIG) \
 	$(PREFIX) \
 	$(STDSTUBS) \
 	$(CACHE)
@@ -221,6 +223,107 @@ tls/Makefile :
 	$(WITHTCL) \
 	$(PREFIX) \
 	$(STD)
+
+#-------------------------- zlib
+
+# zlib has its own hand-written configure (not autoconf) - it doesn't
+# understand VAR=value positional args, so any cross-compile CC/AR
+# override in $(CONFIGFLAGS) has to be a real shell-env prefix here,
+# not a positional argument the way the autoconf-based packages take it.
+# It also doesn't understand --exec-prefix or --config-cache, so this
+# can't just reuse $(PREFIX)/$(CACHE) like the autoconf-based packages.
+#
+# The dependency below is deliberately zlib/configure.log, not
+# zlib/Makefile: zlib's tarball ships a placeholder Makefile (just
+# "Please use ./configure first") alongside Makefile.in, and its own
+# distclean rule *recreates* that same placeholder - so keying off
+# Makefile's existence means a reconfigure after distclean would never
+# fire. configure.log is only ever written by ./configure itself and is
+# genuinely removed (not recreated) by distclean, so it's a reliable
+# sentinel for "configure has actually been run".
+
+zlib	: zlib/configure.log
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C zlib -j $(JOBS) install
+
+zlib/configure.log :
+	@echo ""
+	@echo "*** $@ ***"
+	cd zlib; \
+	$(CONFIGFLAGS) ./configure \
+	--prefix=$(prefix) --libdir=$(libdir) --includedir=$(includedir) \
+	--static
+
+#-------------------------- lz4
+
+# lz4 has no ./configure step at all - a plain hand-written Makefile, not
+# autoconf, and not even zlib's own hand-written-but-configure-shaped
+# script. Build and install straight from the top, with BUILD_SHARED=no
+# for static-only (its own spelling of that switch) and $(CONFIGFLAGS) as
+# ordinary `make` variable overrides - unlike zlib's script, a plain
+# Makefile understands CC=/AR= given this way natively, no env-prefix
+# trick required. No configure step also means no placeholder-Makefile
+# trap like zlib's and no separate "has it been configured yet" gate is
+# needed - lz4/lib's own Makefile already tracks object-file staleness,
+# same as every other already-built package's repeated `install` calls.
+#
+# Vendored for the ASDF container reader in fitsy (fitsy/asdf.C) - real
+# Roman ASDF files use lz4-compressed blocks, see TODO.md Phase 1. That
+# reader is lz4's only consumer in this tree.
+
+lz4	:
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C lz4/lib -j $(JOBS) install \
+	$(CONFIGFLAGS) \
+	BUILD_SHARED=no BUILD_STATIC=yes \
+	PREFIX=$(prefix) LIBDIR=$(libdir) INCLUDEDIR=$(includedir)
+
+#-------------------------- bzip2
+
+# bzip2, like lz4, has no ./configure at all - a plain hand-written
+# Makefile, so $(CONFIGFLAGS) works as ordinary `make` variable overrides
+# and no "has it been configured yet" gate is needed.
+#
+# Three things about that Makefile mean this can't just be `make install`
+# the way lz4 is:
+#
+#   1. Its `all` target is `libbz2.a bzip2 bzip2recover test` - it builds
+#      the command-line tools and *runs the compression test suite*. Its
+#      `install` depends on the tools, then copies them and their man
+#      pages into $(PREFIX)/bin and $(PREFIX)/man. None of that is wanted
+#      here: the only consumer is fitsy's ASDF reader, which needs
+#      libbz2.a and
+#      bzlib.h and nothing else. So build the `libbz2.a` target by name
+#      and place the two files directly.
+#   2. `install` understands only PREFIX, with lib/, include/ and man/
+#      hard-coded beneath it - there is no LIBDIR/INCLUDEDIR the way lz4's
+#      Makefile has, so it could not be pointed at $(libdir)/$(includedir)
+#      even if the tools were wanted.
+#   3. Its `distclean` does `rm -f manual.ps manual.html manual.pdf`, and
+#      all three of those are *tracked upstream files* shipped in the
+#      tarball - so `make -C bzip2 distclean` would delete vendored
+#      source. bzip2distclean below therefore runs `clean`, not
+#      `distclean` (same as lz4distclean already does).
+#
+# RANLIB: bzip2 builds libbz2.a with `ar cq`, which does not write a
+# symbol index, and then runs $(RANLIB) to add one. The tree's shared
+# $(CONFIGFLAGS) sets only CC and AR, so a cross build would index a
+# mingw archive with the host ranlib; $(TARGET) is set only by
+# win/Makefile.in, so name the matching ranlib there and nowhere else.
+#
+# Vendored for ASDF's bzp2 block compression (see fitsy/asdf.C, TODO.md
+# Phase 5 and Tests/asdf/fixtures/bzp2/). Like lz4, that reader is its
+# only consumer in this tree.
+
+bzip2	:
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C bzip2 -j $(JOBS) libbz2.a \
+	$(CONFIGFLAGS) $(if $(TARGET),RANLIB=$(TARGET)-ranlib,)
+	cp -p bzip2/libbz2.a $(libdir)/.
+	cp -p bzip2/bzlib.h $(includedir)/.
 
 #-------------------------- xpa
 
@@ -367,6 +470,7 @@ tksao/Makefile :
 	./configure \
 	$(WITHTK) \
   	--with-xml2-config=$(XML2CONFIG) \
+	$(PKGCONFIG) \
 	$(PREFIX) \
 	$(STD) \
 	$(CACHE)
@@ -405,6 +509,77 @@ fitsy/Makefile :
 	$(STD) \
 	$(CACHE)
 
+#-------------------------- libyaml
+
+# no config.cache
+#
+# $(CACHE) and $(CONFIGFLAGS)/$(TARGET) are mutually exclusive, and every
+# other package in this file obeys that: the cross-flagged ones (xpa,
+# funtools, ast) all omit $(CACHE), and the ones that use $(CACHE)
+# (vector, fitsy, tkblt, ...) inherit the toolchain via --with-tcl/--with-tk
+# instead of naming it. The shared $(prefix)/config.cache is written by
+# those latter runs, which never set build_alias/host_alias/target_alias or
+# CC, so a configure that *does* set them then aborts on load with
+# "`build_alias' was not set in the previous run ... changes in the
+# environment can compromise the build". libyaml had both and broke the
+# win/ cross build exactly that way - and, worse, had it succeeded first it
+# would have written those variables into the shared cache and broken every
+# $(CACHE)-using package with the mirror-image error.
+#
+# --host=$(TARGET), not a bare positional $(TARGET). Every other cross-flagged
+# package here passes the triplet positionally, and autoconf's handling of a
+# bare positional arg is to set *all three* of build_alias, host_alias and
+# target_alias to it (configure: "you should use --build, --host, --target").
+# Setting build_alias is the problem: configure then believes it is running
+# *on* mingw rather than on cygwin, and libtool picks its path-conversion
+# function from $build --
+#
+#   case $host in *-*-mingw*) case $build in *-*-mingw*) # actually msys
+#     lt_cv_to_host_file_cmd=func_convert_file_msys_to_w32
+#
+# -- whose body is `( cmd //c echo "$1" ) | $SED ...`. The `//c` is an MSYS
+# path-mangling artifact; on cygwin it reaches cmd.exe verbatim, cmd sees no
+# /c switch, opens an interactive session and blocks on stdin, and the $SED
+# on the far end of that pipe waits forever. That is a hard hang at
+# `libtool --mode=link`, with a stuck sed and no further output.
+#
+# With build left to be guessed (cygwin), libtool instead selects
+# func_convert_file_cygwin_to_w32 (`cygpath -m`) and func_convert_file_noop,
+# and never invokes cmd at all. The $(if $(TARGET),...) guard keeps this a
+# no-op on unix/macos, where $(TARGET) is undefined.
+#
+# Only libyaml needs this: it is the one package that both sets host and uses
+# libtool. ast uses libtool but never passes the triplet (so its $host stays
+# cygwin and the mingw branch is never taken), and xpa/funtools pass it but
+# have no libtool to mislead. Their bare positional args are still wrong in
+# the same way - they make cross_compiling=no for a cross build - but they
+# configure and build today, so they are left alone rather than churned.
+libyaml	: libyaml/Makefile
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C libyaml -j $(JOBS) install
+
+libyaml/Makefile :
+	@echo ""
+	@echo "*** $@ ***"
+# A git checkout gives every file an arbitrary mtime, and libyaml's
+# configure.ac has no AM_MAINTAINER_MODE, so automake's rebuild rules are
+# always live: whenever configure.ac or a Makefile.am looks newer than what
+# it generates, the build tries to re-run aclocal/autoconf/automake with
+# whatever autotools happen to be installed, and fails. Touching all of them
+# together makes each generated file no older than its inputs, which is what
+# those rules test, so none of them fire. Done before configure so that
+# configure's own products (Makefile, config.h, stamp-h1) end up newest.
+	cd libyaml; touch configure.ac Makefile.am include/Makefile.am \
+	src/Makefile.am tests/Makefile.am aclocal.m4 configure config.h.in \
+	include/config.h.in Makefile.in include/Makefile.in src/Makefile.in \
+	tests/Makefile.in
+	cd libyaml; \
+	./configure \
+	--disable-shared --enable-static \
+	$(CONFIGFLAGS) $(if $(TARGET),--host=$(TARGET),) \
+	$(PREFIX)
+
 #-------------------------- ast
 
 ast	: ast/Makefile ast/ast.h ast/.libs/libast.a ast/.libs/libast_err.a ast/.libs/libast_pal.a ast/.libs/libast_cminpack.a
@@ -417,6 +592,7 @@ ast/Makefile :
 	$(ASTFLAGS) \
 	CPPFLAGS='-std=gnu99 -w' \
 	--without-pthreads --enable-shared=no \
+	--with-yaml=$(prefix) \
 	star_cv_cnf_trail_type=long star_cv_cnf_f2c_compatible=no \
 	$(CONFIGFLAGS) \
 	$(PREFIX)
@@ -569,8 +745,8 @@ scrub :
 .PHONY	: tclxmlclean tclxmlrpcclean tlsclean
 .PHONY	: tkbltclean tclfitsy tkconclean tkhtml1clean tkimgclean
 .PHONY	: tkmpegclean tksvgclean tkagifclean
-.PHONY	: tktableclean xpaclean
-.PHONY	: vectorclean fitsyclean astclean funtoolsclean
+.PHONY	: tktableclean xpaclean zlibclean lz4clean bzip2clean
+.PHONY	: vectorclean fitsyclean libyamlclean astclean funtoolsclean
 .PHONY	: tksaoclean
 
 clean	: tclclean tkclean \
@@ -676,6 +852,11 @@ fitsyclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C fitsy clean
 
+libyamlclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C libyaml clean
+
 astclean :
 	@echo ""
 	@echo "*** $@ ***"
@@ -696,6 +877,21 @@ xpaclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C xpa clean
 
+zlibclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C zlib clean
+
+lz4clean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C lz4/lib clean
+
+bzip2clean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C bzip2 clean
+
 #-------------------------- distclean
 
 .PHONY	: dirsdistclean ds9distclean localdistclean
@@ -703,8 +899,8 @@ xpaclean :
 .PHONY	: tclxmldistclean tclxmlrpcdistclean tlsdistclean
 .PHONY	: tkbltdistclean tclfitsydistclean tkcondistclean tkhtml1distclean
 .PHONY	: tkimgdistclean tkmpegdistclean tksvgdistclean tkagifdistclean
-.PHONY	: tktabledistclean xpadistclean
-.PHONY	: vectordistclean fitsydistclean
+.PHONY	: tktabledistclean xpadistclean zlibdistclean lz4distclean bzip2distclean
+.PHONY	: vectordistclean fitsydistclean libyamldistclean
 .PHONY	: astdistclean funtoolsdistclean
 .PHONY	: tksaodistclean
 
@@ -840,7 +1036,11 @@ fitsydistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C fitsy distclean
-	$(RM) -f fitsy/fitsyConfig.sh
+
+libyamldistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C libyaml distclean
 
 funtoolsdistclean :
 	@echo ""
@@ -858,3 +1058,20 @@ xpadistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C xpa distclean
+
+zlibdistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C zlib distclean
+
+lz4distclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C lz4/lib clean
+
+# `clean`, not `distclean` - bzip2's distclean deletes manual.ps/html/pdf,
+# which are tracked upstream files (see the bzip2 build rule above).
+bzip2distclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C bzip2 clean

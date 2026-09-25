@@ -131,8 +131,11 @@ LLIBS	= \
 	$(libdir)/libast_err.a \
 	$(libdir)/libast_pal.a \
 	$(libdir)/libast_cminpack.a \
+	$(libdir)/libyaml.a \
 	$(libdir)/libfuntools.a \
-	$(libdir)/libxpa.a
+	$(libdir)/libxpa.a \
+	$(libdir)/liblz4.a \
+	$(libdir)/libbz2.a
 
 PREQS	= \
 	$(APPDIR) \

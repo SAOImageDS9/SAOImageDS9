@@ -1,0 +1,15 @@
+NAXIS1  =                  100 / Spatial axis
+NAXIS2  =                  100 / Spatial axis
+CTYPE1  = 'RA---TAN'          / Right Ascension
+CTYPE2  = 'DEC--TAN'          / Declination
+CRVAL1  =              180.000 / [deg] Reference RA
+CRVAL2  =               45.000 / [deg] Reference Dec
+CRPIX1  =               50.000 / Reference pixel axis 1
+CRPIX2  =               50.000 / Reference pixel axis 2
+CD1_1   =         -0.010000000 / Asymmetric CD matrix
+CD1_2   =         -0.002000000 / Small off-diagonal
+CD2_1   =          0.008000000 / Large off-diagonal (asymmetric)
+CD2_2   =          0.010000000 / Asymmetric CD matrix
+RADESYS = 'FK5     '          / Reference frame
+EQUINOX =              2000.0  / Equinox
+END

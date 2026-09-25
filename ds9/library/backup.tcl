@@ -495,6 +495,33 @@ proc BackupFrameLoadParam {varname ch which fdir rdir channel} {
 	3d {}
     }
 
+    # Native ASDF frames (ds9/library/asdf.tcl) record their source file
+    # and in-file array path in loadParam. Reload from that rather than
+    # from the FITS conversion below: the conversion preserves the pixels
+    # but silently loses the GWCS, which has no FITS-card form, and the
+    # YAML tree the header viewer shows. Reloading also restores both
+    # exactly, since the ASDF file is the original source of truth.
+    if {[info exists param(asdf,file)]} {
+	if {[BackupAsdfFile param $fdir $rdir]} {
+	    # mask settings must precede the load, same as the ProcessLoad
+	    # path below - AsdfLoadArray consumes them via ProcessLoad
+	    switch $param(load,layer) {
+		mask {
+		    puts $ch "MaskDialog"
+		    puts $ch "$which mask color $param(mask,color)"
+		    puts $ch "$which mask mark $param(mask,mark)"
+		    puts $ch "$which mask range $param(mask,low) $param(mask,high)"
+		}
+	    }
+	    puts $ch [list LoadAsdfFile \
+			  "$param(asdf,file):$param(asdf,path)" \
+			  $param(load,layer) {}]
+	    return
+	}
+	# source file is gone - fall through to the FITS conversion so the
+	# pixels at least survive, minus the WCS and the tree
+    }
+
     switch $param(load,type) {
 	mmap -
 	mmapincr -
@@ -551,6 +578,46 @@ proc BackupFrameLoadParam {varname ch which fdir rdir channel} {
 	    puts $ch "image delete \$bcktmp"
 	}
     }
+}
+
+# Puts a frame's source ASDF file into the backup and rewrites
+# param(asdf,file) to however the restore script should name it.
+# Deliberately mirrors BackupFrameLoadMMap below, including honoring
+# pds9(backup): a backup is meant to be portable - written here, handed to
+# a colleague, restored on their machine - so with that preference set the
+# file itself is copied in rather than referenced by an absolute path that
+# only exists on this machine. Returns 0 when the source is gone, so the
+# caller can fall back to a FITS conversion.
+proc BackupAsdfFile {varname fdir rdir} {
+    upvar $varname param
+
+    global pds9
+
+    set fn $param(asdf,file)
+    if {![file exists $fn]} {
+	return 0
+    }
+
+    if {$pds9(backup)} {
+	# look for sym links
+	switch [file type $fn] {
+	    file {}
+	    link {set fn [file join [file dirname $fn] [file readlink $fn]]}
+	    default {
+		return 0
+	    }
+	}
+
+	set src [lindex [file split $fn] end]
+	if {![file exists [file join $fdir $src]]} {
+	    if {[catch {file copy $fn $fdir}]} {
+		return 0
+	    }
+	}
+	set param(asdf,file) "$rdir/$src"
+    }
+
+    return 1
 }
 
 proc BackupFrameLoadMMap {varname fdir rdir} {
@@ -652,6 +719,15 @@ proc BackupFrameLoadAlloc {which varname fdir rdir} {
 	    }
 	}
 	nrrd {$which save fits image file \"$ffn\"}
+	asdf {
+	    # Only reached when the ASDF file itself is gone -
+	    # BackupFrameLoad tries BackupAsdfFile first and returns on
+	    # success. The pixels are then all there is left to keep, so
+	    # write them as FITS like every other branch here; the WCS and
+	    # the YAML tree are lost with the file, which is exactly why
+	    # reloading from the file is preferred whenever it still exists.
+	    $which save fits image file \"$ffn\"
+	}
 	photo {
 	    switch -- [$which get type] {
 		base -

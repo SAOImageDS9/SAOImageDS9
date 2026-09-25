@@ -20,6 +20,7 @@
 <a href="#FITSRGB">FITS RGB</a><br>
 <a href="#SplitFITS">Split FITS</a><br>
 <a href="#array">Array</a><br>
+<a href="#asdf">ASDF</a><br>
 <a href="#nrrd">NRRD</a><br>
 <a href="#envi">ENVI</a><br>
 <a href="#gif">GIF</a><br>
@@ -321,6 +322,71 @@ $ds9 -array bar.arr[array(i512l)]&nbsp; # load 512x512 long, intel</tt>
 <tt>Example:<br>
 $export DS9_ARRAY='[dim=256,bitpix=-32]'<br>
 $ds9 -array foo.arr # load 256x256 float<br></tt></blockquote>
+<p><b><a name="asdf" id="asdf"></a>ASDF (Advanced Scientific Data Format)</b></p>
+ASDF files are supported natively, with no external Python installation required. An ASDF file is a human-readable YAML tree followed by a sequence of binary blocks. Any array in the tree, large or small, is a <tt>core/ndarray</tt> node naming the block that holds it, its datatype, and its shape.
+<p>Because an ASDF file may contain many arrays, the one to display is named by appending a colon and a path within the file. Selecting an array from a dialog is usually easier: <b>File&nbsp;&#8594;&nbsp;Open&nbsp;as&nbsp;&#8594;&nbsp;ASDF</b> lists every array the file contains, largest first.</p>
+<p>If no path is given, <tt>roman/data</tt> is used. A path containing no '/' is looked up as <tt>roman/&lt;name&gt;</tt> first, and failing that as any uniquely matching path; an ambiguous name is reported as an error rather than guessed at.</p>
+<blockquote><tt>Syntax:<br>
+filename<br>
+filename:path<br>
+&nbsp;<br>
+where<br>
+path: a root-relative path to a core/ndarray node, with sequence<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; elements numbered from 0<br></tt>
+<tt>Example:<br>
+$ds9 -asdf foo.asdf # roman/data<br>
+$ds9 -asdf foo.asdf:roman/dq<br>
+$ds9 -asdf foo.asdf:err # roman/err<br>
+$ds9 -asdf foo.asdf:roman/meta/wcs/steps/0/transform/forward/0/coefficients<br></tt></blockquote>
+<p>Two and three dimensional arrays are supported; a three dimensional array loads as a data cube. ASDF shapes are row major, so a shape of <tt>[nz,ny,nx]</tt> becomes a cube of <tt>nx</tt> by <tt>ny</tt> by <tt>nz</tt>.</p>
+<p>Datatypes are mapped as follows. <tt>float16</tt> and <tt>uint32</tt> have no equivalent pixel depth, so they are widened to one that represents every value exactly; no datatype is ever narrowed or re-signed.</p>
+<blockquote><tt>uint8&nbsp;&nbsp; -&gt; bitpix 8<br>
+int16&nbsp;&nbsp; -&gt; bitpix 16<br>
+uint16&nbsp; -&gt; bitpix -16<br>
+int32&nbsp;&nbsp; -&gt; bitpix 32<br>
+int64&nbsp;&nbsp; -&gt; bitpix 64<br>
+float32 -&gt; bitpix -32<br>
+float64 -&gt; bitpix -64<br>
+float16 -&gt; bitpix -32 (widened)<br>
+uint32&nbsp; -&gt; bitpix 64 (widened)<br></tt></blockquote>
+<p><b>Null pixels.</b> An ASDF array may mark undefined pixels with a <tt>mask</tt>, in either of the two forms the format allows: a <b>scalar number</b>, which is the value standing for missing data and so corresponds directly to the FITS <tt>BLANK</tt> keyword, or a <b>boolean array</b> the same shape as the data. Both are supported, and both are mapped onto what FITS already does, so that no data is altered to represent them:</p>
+<blockquote>
+<p>For <b>integer</b> data the result is a <tt>BLANK</tt> sentinel. The array keeps its native integer type, null pixels are reported as <tt>blank</tt>, and they are excluded from the min/max scan. Integer data is never promoted to floating point in order to represent nulls. Given a boolean array, if every masked pixel holds the same value and no unmasked pixel holds it, that value becomes <tt>BLANK</tt> and the pixels are left untouched; otherwise an unused extreme value of the type is used instead.</p>
+<p>For <b>floating point</b> data the null pixels are set to NaN, which is the FITS convention for them and costs nothing since the data is already floating point.</p>
+</blockquote>
+<p>A scalar mask is matched exactly, unlike the tolerance-based comparison numpy's <tt>masked_values</tt> uses, since a fill value is stored exactly in practice. A scalar mask of NaN means that NaN pixels are the missing ones. A boolean mask array can also be displayed in its own right, as the <tt>mask</tt> path beneath the array (for example <tt>data/mask</tt>). Datatypes with no direct FITS equivalent, such as <tt>uint16</tt> and <tt>uint32</tt>, load without null marking rather than being reinterpreted, and say so.</p>
+<p>Blocks compressed with <tt>zlib</tt>, <tt>lz4</tt> or <tt>bzp2</tt> are decompressed automatically. An array described as a non-contiguous view of its block, by an <tt>offset</tt> or <tt>strides</tt> entry, is reported as unsupported rather than read incorrectly &#8212; the block holds the whole array the view was taken from, so its bytes are not the view's pixels. An array that names no <tt>byteorder</tt> is refused for the same reason rather than assumed to be one order or the other: the field is required alongside <tt>source</tt>, so its absence means a malformed file, and guessing would silently byte-swap every pixel.</p>
+<p><b>WCS.</b> If the file contains a GWCS object, it is read directly and attached as the frame's WCS, giving the instrument's exact transform rather than an approximation of it. Both the Roman layouts are recognized: <tt>wcs</tt>, <tt>wcs_l1</tt> or <tt>wcs_l2</tt> directly under <tt>roman</tt>, and <tt>roman/meta/wcs</tt>. A file whose WCS is a bare transform, with no GWCS wrapper, is also accepted. If no WCS is found, or if it uses a tag or schema version that cannot be read, the image still loads and the frame simply has no WCS. See <a href="#WCS">WCS</a>.</p>
+<p>A GWCS describes one pixel grid, so it is attached only to an array whose shape matches that grid. The science array and its same-shape companions, such as <tt>dq</tt> and <tt>err</tt>, all receive it; an unrelated array from elsewhere in the tree, such as a coefficient matrix, loads without a WCS rather than being given one that does not describe it.</p>
+<p>A resampled product that carries FITS WCS keywords instead of a GWCS, as a Roman level 3 coadd does in its <tt>fitswcs_imaging</tt> node, is read through those keywords.</p>
+<p><b>Which GWCS elements are read.</b> A GWCS is a pipeline of transform steps ending in a coordinate frame, and not every element the format allows is understood. All 27 FITS-WCS sky projections are supported, together with:</p>
+<blockquote><tt>transforms: identity, shift, scale, multiplyscale, linear1d,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; affine, rotate2d, rotate3d, rotate_sequence_3d,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; remap_axes, compose, concatenate, constant, divide,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fix_inputs, polynomial, ortho_polynomial, planar2d,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; spherical_cartesian<br>
+&nbsp;<br>
+frames:&nbsp;&nbsp;&nbsp;&nbsp; frame, frame2d, celestial_frame<br>
+&nbsp;<br>
+celestial:&nbsp; icrs, fk5, fk4, fk4noeterms, galactic, supergalactic,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ecliptic, altaz<br></tt></blockquote>
+<p>An <tt>altaz</tt> frame needs an observatory location and an observation time, and converts correctly to within a few arcseconds, but its readout is reported in radians rather than degrees because there is no azel display system to format it; see <a href="#WCS">WCS</a> for the systems there are. The first five celestial frames are checked against files written by astropy itself, and against astropy's own conversion of the same position to ICRS: FK5 and Galactic agree exactly, and the FK4 pair to 0.04&Prime;, which is a difference between AST's and astropy's FK4 models rather than a reading error. ICRS is the frame Roman products use. <tt>supergalactic</tt> and <tt>ecliptic</tt> are read in the same way, but a current astropy cannot write either to ASDF at all, so no real file exercises them.</p>
+<p>That covers every transform and frame a Roman imaging product uses. The following are <b>not</b> read. In each case the array itself still loads normally, and the frame is left without a WCS rather than given a wrong one, reporting <tt>ASDF: AST could not read this WCS, loading without it</tt>.</p>
+<blockquote>
+<p><b>Spectral, temporal, composite and Stokes frames.</b> A WCS with a wavelength, frequency, time or polarization axis is not read, and the frame has no WCS.</p>
+<p><b>Lookup-table transforms</b> (<tt>tabular</tt>), the arithmetic operators <tt>add</tt>, <tt>subtract</tt>, <tt>multiply</tt> and <tt>power</tt>, and the <tt>label_mapper</tt> and <tt>regions_selector</tt> pair by which multi-slit and IFU products choose a different transform per region. One unreadable step makes the whole pipeline unreadable, so a WCS that is otherwise supported but uses any of these anywhere along it yields no WCS at all.</p>
+<p><b>The observed and intermediate celestial frames</b> &#8212; <tt>gcrs</tt>, <tt>cirs</tt>, <tt>tete</tt> and <tt>precessedgeocentric</tt>. These a current astropy does write, so a file may well contain one, but the reader does not recognize them.</p>
+<p><b>An orthogonal polynomial in any basis but Chebyshev.</b> An <tt>ortho_polynomial</tt> may declare <tt>polynomial_type</tt> of <tt>chebyshev</tt>, <tt>legendre</tt> or <tt>hermite</tt>; only Chebyshev is supported, and the other two are refused by name. They evaluate entirely different basis functions &#8212; on one degree-2 term the three give 9.180&deg;, 9.635&deg; and 8.360&deg; &#8212; so reading one as another would be wrong rather than approximate.</p>
+<p><b>A tag whose minor version is newer than the reader knows</b>, even when the change does not affect anything read from it. The accepted versions were raised to match the schema set current as of this writing, so a file from a current astropy is read; but a later schema revision will be refused again until they are raised to match it, which is a version check rather than anything wrong with the file.</p>
+</blockquote>
+<p>Three further limits are worth knowing, because in each of them the WCS loads rather than failing outright, so nothing announces the problem:</p>
+<blockquote>
+<p><b>A Chebyshev with no explicit inverse gives no coordinate readout.</b> Nothing inverts one analytically, so unless the file supplies an <tt>inverse</tt> of its own the WCS attaches but cannot be used to report a position. Roman's distortion polynomials do supply one.</p>
+<p><b>The valid-pixel domain is not enforced.</b> A GWCS <tt>bounding_box</tt> is ignored, so coordinates are reported outside the region the transform was fitted for, where they are extrapolated and, far enough out, where the inverse stops converging and no position is reported at all.</p>
+<p><b>The zenithal_perspective projection</b> (FITS <tt>AZP</tt>) is currently misread, by roughly two degrees on a test case with known-correct parameters, and should not be relied on. No other projection is affected.</p>
+</blockquote>
+<p><b>Header.</b> <b>File&nbsp;&#8594;&nbsp;Header</b> displays the file's YAML tree, which is an ASDF file's equivalent of a FITS header. Arrays appear there by datatype and shape, as ASDF stores them, not as pixel values.</p>
+<p><b>Backup.</b> A backup save set copies the ASDF file into its directory and reloads from it, so the exact WCS and the tree are preserved and the save set remains portable. See <a href="backup.html">Backup</a>.</p>
 <p><b><a name="nrrd" id="nrrd"></a>NRRD (Nearly Raw Raster Data)</b><br></p>
 Images in NRRD are supported directly. Encodings supported: <tt>raw, gzip<br></tt><br>
 <tt>Syntax:<br>

@@ -60,6 +60,7 @@
 #include "specframe.h"
 #include "specmap.h"
 #include "sphmap.h"
+#include "splinemap.h"
 #include "stc.h"
 #include "stccatalogentrylocation.h"
 #include "stcobsdatalocation.h"
@@ -218,6 +219,7 @@ typedef struct AstGlobals {
    AstStcResourceProfileGlobals	StcResourceProfile;
    AstStcSearchLocationGlobals StcSearchLocation;
    AstStcsChanGlobals StcsChan;
+   AstSplineMapGlobals SplineMap;
 } AstGlobals;
 
 

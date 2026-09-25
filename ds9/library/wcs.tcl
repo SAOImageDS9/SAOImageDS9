@@ -131,16 +131,32 @@ proc LayoutWCSInfoBox {which} {
 proc WCSBackup {ch which fdir rdir} {
     # simple case
     puts $ch "$which wcs [$which get wcs]"
-    if {[$which has wcs alt]} {
-	set fn $fdir/ds9.wcs
-	set rfn $rdir/ds9.wcs
 
-	catch {file delete -force $fn}
-	WCSSaveFile $fn "[$which get fits header wcs 1]"
-	puts $ch "WCSLoadFile $rfn"
-	puts $ch "$which wcs replace text 1 \\\{\[WCSFromVar\]\\\}"
-	puts $ch "RealizeDS9"
+    if {![$which has wcs alt]} {
+	return
     }
+
+    # An alternate WCS is only restorable this way if it has FITS cards to
+    # write. A frame whose WCS came from ASDF/GWCS reports `has wcs alt` -
+    # FitsImage::replaceWCSYaml sets wcsAltHeader_ - but has no cards to
+    # serialize, since the WCS lives in the AstFrameSet. Writing an empty
+    # ds9.wcs here would make the restore run `wcs replace text 1 {}`
+    # *after* the frame loaded, replacing a perfectly good WCS with
+    # nothing. Those frames restore their WCS by reloading the ASDF file
+    # instead - see BackupAsdfFile in ds9/library/backup.tcl.
+    set hh [$which get fits header wcs 1]
+    if {[string trim $hh] eq {}} {
+	return
+    }
+
+    set fn $fdir/ds9.wcs
+    set rfn $rdir/ds9.wcs
+
+    catch {file delete -force $fn}
+    WCSSaveFile $fn $hh
+    puts $ch "WCSLoadFile $rfn"
+    puts $ch "$which wcs replace text 1 \\\{\[WCSFromVar\]\\\}"
+    puts $ch "RealizeDS9"
 }
 
 proc WCSDialog {} {

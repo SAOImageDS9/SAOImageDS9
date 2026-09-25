@@ -222,6 +222,26 @@ void Base::loadNRRDVarCmd(const char* ch, const char* fn, LayerType ll)
   loadDone(currentContext->load(VAR, fn, img));
 }
 
+// *** ASDF ***
+
+// `fn' is the container, `path' the array inside it, and `name' what the
+// frame reports as its file - "<file>:<array>", which is the question a
+// multi array format actually raises (a Roman *_cal.asdf holds 15 loadable
+// arrays of identical shape and WCS).
+void Base::loadAsdfCmd(const char* fn, const char* path, const char* name,
+		       LayerType ll)
+{
+  unloadFits();
+  FitsImage* img = new FitsImageAsdf(currentContext, interp, fn, path,
+				     name, 1);
+  if (!img->isValid() && img->fitsFile()) {
+    const char* mm = img->fitsFile()->errorMessage();
+    if (mm)
+      Tcl_AppendResult(interp, "ASDF: ", mm, NULL);
+  }
+  loadDone(currentContext->load(ASDF, name, img));
+}
+
 // *** Photo ***
 
 void Base::loadPhotoCmd(const char* ph, const char* fn)

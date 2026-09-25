@@ -1,0 +1,9 @@
+NAXIS1  =                 1024 / length of data axis 1
+CTYPE1  = 'FREQ-WAV'           / Early draft III: frequency sampled, wavelength system
+CRVAL1  =           1.4204E+09 / Reference frequency (Hz)
+CRPIX1  =              512.500 / Reference pixel
+CDELT1  =           1.0000E+04 / Frequency increment (Hz)
+CUNIT1  = 'Hz      '           / Axis units
+RESTFRQ =           1.4204E+09 / Rest frequency (Hz)
+SPECSYS = 'BARYCENT'           / Spectral reference frame
+END

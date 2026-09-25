@@ -695,7 +695,7 @@ $::current(frame) layer 2 top</tt>
 
 <h4><a name="load" id="load"></a>load</h4>
 <p>Low-level data loading into the frame. This is the mechanism the <tt>-fits</tt>/<tt>-array</tt>/<tt>-mosaic</tt>/... command line options and File menu ultimately call; a script would normally use those higher-level forms (see <a href="command.html">Command Line Options</a>) rather than <tt>load</tt> directly, except when it needs a data source <tt>load</tt> supports that those don't expose, such as a Tcl variable or shared memory segment.</p>
-<p>Almost every load target accepts data from one of the same handful of <b>sources</b>, given after the filename/target:</p>
+<p>Almost every load target accepts data from one of the same handful of <b>sources</b>, given after the filename/target (<tt>load asdf</tt> is the exception &mdash; see below):</p>
 <table summary="" border="1" width="100%">
 <tbody>
 <tr><td><b>Source</b></td><td><b>Meaning</b></td></tr>
@@ -719,6 +719,7 @@ $::current(frame) layer 2 top</tt>
 <tr><td><b>Target</b></td><td><b>Sources accepted</b></td><td><b>Notes</b></td></tr>
 <tr><td><tt>load array &lt;source&gt;</tt></td><td>all, minus <tt>smmap</tt></td><td>a raw 2D data array (like <tt>-array</tt>)</td></tr>
 <tr><td><tt>load array rgb|hls|hsv cube &lt;source&gt;</tt></td><td>all, minus <tt>smmap</tt>/<tt>mmapincr</tt>-with-incrLoad</td><td>a raw 3-plane RGB/HLS/HSV data cube</td></tr>
+<tr><td><tt>load asdf &lt;name&gt; &lt;filename&gt; &lt;path&gt;</tt></td><td>none &mdash; it reads the file itself</td><td>one array out of an ASDF file (like <tt>-asdf</tt>)</td></tr>
 <tr><td><tt>load envi &lt;hdrfile&gt; &lt;datafile&gt; smmap</tt></td><td><tt>smmap</tt> only</td><td>an ENVI image (paired header + data file)</td></tr>
 <tr><td><tt>load fits &lt;source&gt;</tt></td><td>all, plus a two-file <tt>smmap</tt> form</td><td>a FITS image (like <tt>-fits</tt>)</td></tr>
 <tr><td><tt>load fits slice &lt;source&gt;</tt></td><td>all, plus two-file <tt>smmap</tt></td><td>one slice of a FITS cube</td></tr>
@@ -735,9 +736,18 @@ $::current(frame) layer 2 top</tt>
 <tr><td><tt>load incr end</tt></td><td>&mdash;</td><td>mark an incremental load as complete</td></tr>
 </tbody>
 </table>
+<p><tt>load asdf</tt> takes no source. ASDF is not a streamable format &mdash; an array
+names its data by binary-block index, and the blocks are reached by walking them from the
+start of the file &mdash; so the reader seeks the file itself and there is no
+alloc/mmap/var/socket choice to make. Its three arguments are the name the frame should
+report (conventionally <tt>&lt;file&gt;:&lt;array&gt;</tt>, since one ASDF file holds many
+arrays), the file to read, and the root-relative path of the array inside it
+(<tt>roman/data</tt>, <tt>roman/dq</tt>, ...). A trailing
+<a href="#t-layerType">&lt;layerType&gt;</a> works as it does everywhere else.</p>
 <p>Example:</p>
 <tt>$::current(frame) load fits foo.fits mmap image<br>
 $::current(frame) load fits myvar var somevar image<br>
+$::current(frame) load asdf {r0001_cal.asdf:data} {/data/r0001_cal.asdf} {roman/data} image<br>
 $::current(frame) load array foo.arr alloc "foo.arr" image<br>
 $::current(frame) load fits mosaic wcs wcs foo.fits mmap {} image<br>
 $::current(frame) load photo foo.png png</tt>

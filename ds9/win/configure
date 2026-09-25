@@ -4941,7 +4941,6 @@ fi
 fi
 
 
-
     #
     # Ok, lets find the tifftcl configuration
     # First, look for one uninstalled.

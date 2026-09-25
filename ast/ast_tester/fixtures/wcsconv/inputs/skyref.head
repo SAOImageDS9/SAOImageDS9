@@ -1,0 +1,18 @@
+NAXIS1  =                  100 / length of data axis 1
+NAXIS2  =                  100 / length of data axis 2
+CTYPE1  = 'RA---TAN'           / Celestial longitude
+CTYPE2  = 'DEC--TAN'           / Celestial latitude
+CRVAL1  =                  0.0 / Offset RA at ref pixel (deg)
+CRVAL2  =                  0.0 / Offset Dec at ref pixel (deg)
+CRPIX1  =               50.500 / Reference pixel on axis 1
+CRPIX2  =               50.500 / Reference pixel on axis 2
+CDELT1  =           -0.0002778 / Degrees/pixel
+CDELT2  =            0.0002778 / Degrees/pixel
+RADESYS = 'FK5     '           / Reference frame
+EQUINOX =               2000.0 / Equinox of coordinates
+SREF1   =              120.000 / Sky reference RA (deg)
+SREF2   =               30.000 / Sky reference Dec (deg)
+SREFP1  =              120.000 / Sky reference pole RA (deg)
+SREFP2  =               90.000 / Sky reference pole Dec (deg)
+SREFIS  = 'ORIGIN  '           / Sky reference is origin of offsets
+END

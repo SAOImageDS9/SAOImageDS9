@@ -1,6 +1,6 @@
 AST Library
 -----------
-   A new release (V9.2.14) of the Starlink AST (astrometry) library is
+   A new release (V9.4.1) of the Starlink AST (astrometry) library is
 now available.
 
    AST provides a comprehensive range of facilities for attaching
@@ -16,6 +16,325 @@ environment-independent.
 
 Main Changes in this Version
 ----------------------------
+
+This release only makes changes to the new out-of-Starlink build system to fix
+some issues with the distribution tar file noticed during the conda build.
+In particular the ast_err.h/AST_ERR files are now included in the distribution
+as was previously the case.
+A linking fix has also been adopted that was a standalone patch for the
+conda feedstock.
+
+Main Changes in V9.4.0
+----------------------
+
+*** IMPORTANT - a change that may break existing code ***
+
+- Changing an attribute of a Mapping that has been cloned or included in
+  another Object now reports an error, for every Mapping class. SUN/210
+  ("Changing Attributes of a Mapping") has always stated that Mappings are
+  immutable in that situation, and that AST reports an error if the rule is
+  broken, but the rule was only enforced by some classes. It is now enforced
+  by all of them, so code that changed one of the attributes below through a
+  pointer to a shared Mapping used to succeed silently and will now fail with
+  the AST__IMMUT error status:
+
+     IntraMap    IntraFlag
+     MathMap     Seed, SimpFI, SimpIF
+     PolyMap     IterInverse, NiterInverse, TolInverse
+     SplineMap   InvNiter, InvTol, OutUnit
+
+  ZoomMap, GrismMap, PcdMap, LutMap and SphMap already enforced it and are
+  unchanged.
+
+  The rule exists to protect against code changing a mapping that has already
+  been stored elsewhere, such as in a CmpMap, and unexpectedly changing how
+  that CmpMap behaves.
+
+  If your code reports AST__IMMUT after this change, set the attribute before
+  the Mapping is shared - that is, before it is passed to a constructor such
+  as astCmpMap or astFrameSet, and before any astClone of it is taken. If you
+  need to change an attribute of a Mapping that is already shared, take an
+  astCopy of it and change the copy.
+
+  The Invert attribute is not subject to the rule and can still be changed at
+  any time.
+
+- The IsSimp item written to a Channel when a Mapping is saved now appears on
+  exactly those Mappings that astSimplify produced, rather than depending on
+  which parts of a Mapping tree happened to have been inspected beforehand.
+  Historically the serialization format from this library has not been
+  guaranteed to be byte-for-byte reproducible but we are working towards
+  making the serialized form more reproducible to aid in testing and potential
+  ports to other languages.
+
+Other changes in behaviour
+--------------------------
+
+- The KeyMap class now writes the entries of a KeyMap to a Channel in key
+  order. The order previously followed the internal hash table, so two
+  KeyMaps holding identical content could be written out differently
+  depending on the order in which their entries had been added, and a KeyMap
+  did not necessarily survive a write/read cycle unchanged. Code that
+  compares saved KeyMaps byte for byte will see a different, but now stable,
+  ordering. The SortBy attribute is unaffected - it has never influenced the
+  order in which entries are saved.
+
+- Floating point values are now rounded to integers using round() throughout
+  the library, in place of casts of the form (int)(x+0.5). Such a cast
+  truncates towards zero, so negative values were rounded up by one. The
+  visible consequences are in the KeyMap class, where an entry holding -2.0
+  read as an integer used to be returned as -1, and in the FitsChan class,
+  where negative grism interference orders were corrupted.
+
+- The test used within AST for equality of two floating point values now
+  applies an absolute tolerance of 1.0E-12 alongside the existing relative
+  tolerance, whichever is the larger. The absolute floor was previously
+  DBL_MIN, which is small enough to have no effect, so two values that were
+  themselves of the order of the double precision epsilon were reported as
+  unequal however close together they were. Comparisons of values of order
+  unity are unchanged. The main effect is that the Equal methods of the
+  Mapping classes no longer report two Mappings as different because of
+  residuals at the level of the last few bits, which can differ between
+  platforms.
+
+New features
+------------
+
+- The YamlChan class can now read, evaluate and write the ASDF "divide"
+  transform, and can read and write the ASDF/GWCS "spherical_cartesian"
+  transform.
+
+- A new protected method astGetKeyMap has been added to the Object class,
+  which returns a KeyMap that is associated with the Object and created on
+  demand. A companion method astHasKeyMap tests whether such a KeyMap
+  already exists, without creating one.
+
+- Added a new README.md file to provide simple instructions on how to build
+  and test the library.
+
+- Added an experimental PLplot graphics library plugin, covering both the
+  2-dimensional grf interface and the 3-dimensional grf3d interface, to
+  allow graphics testing without requiring PGPLOT. The text bounding boxes
+  on Linux are not as accurate as those from PGPLOT due to a limitation of
+  the PLplot API.
+
+- Clarified the license situation by removing historical files. This library
+  is licensed with the Gnu Lesser General Public License.
+
+Bug fixes
+---------
+
+- Many bugs have been fixed in the FitsChan class, most of them found by the
+  greatly expanded test suite. Those that are visible to a user of the class
+  are:
+  - Fractional seconds in a DATE-OBS value were read without regard to the
+    width of the field, so leading zeros were lost and a value such as
+    "...T08:38:39.087" was read as 0.87 seconds. This put an error of up to
+    a second into the Epoch of the FrameSet read from the header.
+  - A negative grism interference order in PVi_1 was rounded towards zero,
+    so an order of -1 became degenerate and the header was rejected, while
+    an order of -2 silently gave the wrong dispersion.
+  - A WCSAXES value written by a floating point formatter as marginally less
+    than an integer was truncated rather than rounded.
+  - When a WCS was read from a header containing repeated keywords (for
+    instance a header holding the cards of two HDUs), only some of the
+    duplicates were consumed, leaving a partial and self-inconsistent WCS
+    description behind. Every copy of a repeated keyword is now consumed.
+  - Legacy six-digit CDjjjiii cards were read and discarded under every
+    encoding, but only translated into PCj_i under FITS-IRAF. They are now
+    left untouched, and so survive in the output, under the other encodings.
+  - Ecliptic axes labelled ELON/ELAT were not recognized.
+  - Reading a FITS-CLASS header failed if alternate axis descriptions were
+    present, and RESTFREQ was mishandled for Galactic coordinates.
+  - Precision was lost when the SpecFrame reference position (RefRA and
+    RefDec) was derived from a header, because the values were formatted
+    using the default number of digits.
+  - 64-bit integer keyword values did not survive being written to and read
+    back from a Channel.
+  - Wide floating point values could be written one column to the right of
+    the intended field, and, in some cases, a number was converted to a
+    string with a leading space.
+  - Writing a FrameSet containing a SIP distortion could produce a header
+    that no FITS-WCS reader can use. If the inverse transformation was
+    undefined at the reference point, the SIP coefficients were written
+    without any CTYPE, CRPIX or CD cards, and astWrite reported success. In
+    addition, the Mapping following the SIP polynomial was tested for
+    linearity over a box centred on the SIP reference point rather than over
+    the image, with FitsTol applied in the output space of that Mapping
+    rather than in pixels, so a Mapping that was far from linear over the
+    image could be accepted. The test is now made over the region the
+    Mapping is actually used for, a SIP description without a usable
+    reference pixel is rejected and the Mapping is instead fitted directly,
+    and astWrite reports failure rather than writing a header holding only
+    alternate axis descriptions when the primary descriptions could not be
+    produced.
+
+  Also fixed are a null pointer dereference and several buffer overruns and
+  memory leaks (in PCFromStore, in WATCoeffs when reading TNX Chebyshev
+  headers, on error paths, and when reading ill-conditioned headers), an
+  out-of-bounds read when scaling the inverse coefficients of a PolyMap on
+  the SIP write path, a null pointer dereference when a non-linear Mapping
+  was written with a FitsTol too tight for the linear fit to succeed, use of
+  the input rather than the output axis count when writing SIP keywords for
+  a non-square Mapping, and double application of the spectral unit factor
+  to CDELT when writing FITS-CLASS.
+
+- A bug has been fixed in astMask that caused a Polygon defined on the sky
+  and enclosing more than half the sky to be effectively negated. astMask
+  and astTranN now agree for such a Polygon.
+
+- A bug has been fixed in the simplification of two back-to-back SphMaps
+  that cancel: the replacement UnitMap always had two axes, whereas the
+  Cartesian to spherical to Cartesian case requires three.
+
+- A bug has been fixed in the astRate method of the Mapping class that
+  caused AST__BAD to be returned at x0 = 0 for a Mapping defined only over a
+  narrow domain, such as a ChebyMap covering [-1,1]. A separate fix corrects
+  an out-of-date array index used when astRate checks whether the gradient
+  over the previous interval was also constant.
+
+- Several classes did not compare equal to themselves, or compared equal
+  when they should not have done. Two identical SpecFluxFrames now compare
+  equal; the UnitNormMap class has gained an Equal method, so two
+  UnitNormMaps with the same centre now compare equal instead of only when
+  they are the same object; and two PermMaps that feed an axis from the same
+  constant slot now compare the constant values, which previously could
+  cause astSimplify to merge two PermMaps that are not equivalent.
+
+- Comparing two CmpMaps that may not be decomposed, such as CmpMaps that
+  carry an Ident attribute, recursed without limit until the stack was
+  exhausted. The comparison now expands the outer level of each CmpMap
+  itself, and compares copies of the components so that the Invert values
+  of Mappings shared with other Objects are left untouched.
+
+- When astSimplify replaces a WinMap that has unit scale factors by a
+  ShiftMap, a shift term that is zero to within the tolerance used for the
+  scale factors is now treated as zero. A shift that had been merged past a
+  MatrixMap could carry a rounding residue of the order of 1E-16, and since
+  a ShiftMap only writes a non-zero shift to a Channel, the same Mapping
+  was saved with a different number of items depending on whether the
+  compiler used a fused multiply-add instruction.
+
+- A bug has been fixed in the astDat method of the TimeMap class. The
+  inverse (TAI to UTC) branch of the pre-1972 "rubber second" model used
+  divisors that omitted a factor of the number of seconds in a day, leaking
+  about 164 ms on a UTC to TAI to UTC round trip near MJD 40000.
+
+- The LSRK, LSRD, Local Group and Galactic velocity calculations in the
+  SpecMap class no longer round the source RA and Dec to single precision
+  before use, recovering about 20 mas of angular precision and about 1 mm/s
+  of velocity.
+
+- A bug has been fixed in the astAxAngle method of the Frame class that
+  caused AST__BAD to be returned for some degenerate configurations, such as
+  a reference point at the origin with the offset point on the axis being
+  measured.
+
+- Several bugs have been fixed in the KeyMap class:
+  - astMapPut1<X> now reports an error if given a zero-length vector.
+    Previously this created an entry that claimed to be a scalar but held a
+    null pointer, which could crash astWrite.
+  - astMapGetElem<X> now reports failure for an undefined entry, rather than
+    reporting success without storing anything in the supplied buffer.
+    astMapGet0<X> and astMapGet1<X> already did so.
+  - A refused astMapRename no longer discards the entry, leaving the KeyMap
+    holding neither the old key nor the new one.
+  - astMapIterate no longer iterates for ever when the SortBy attribute is
+    set.
+  - Keys copied between two KeyMaps with different KeyCase settings are now
+    looked up and stored using the destination KeyMap's KeyCase.
+  - A locked (MapLocked) KeyMap containing entries can now be written to a
+    Channel and read back. Previously the read failed and returned a null
+    Object.
+  - A KeyMap with KeyCase unset no longer acquires it as a set attribute
+    after being written to a Channel and read back.
+  - Converting a stored floating point value to an integer type now
+    saturates at the limits of that type instead of relying on undefined
+    behaviour, a NaN converts to zero, and a numeric string too large for
+    the requested type is treated like any other unparsable string instead
+    of wrapping silently.
+
+- Several bugs have been fixed in the YamlChan class: the angle units used
+  when writing an AST SphMap to YAML were wrong, reading the null frame in
+  the final step of a GWCS pipeline reported a spurious error, and various
+  other problems in ASDF WCS parsing have been corrected.
+
+- Some double values in an STC-S description were formatted without using
+  the Channel's own format, so the output could vary between platforms.
+
+- Three fixes made in later releases of wcslib have been applied to the
+  vendored copy: an uninitialised bound used when checking the validity of
+  the reverse ZPN transformation for polynomials of degree less than two, a
+  boundary condition in the reverse AIT transformation that was too weak and
+  so allowed some invalid pixel coordinates to produce world coordinates,
+  and a more robust method of detecting exact multiples of 90 degrees in the
+  internal sine and cosine functions.
+
+- Many instances of memory corruption and undefined behaviour have been
+  found and fixed using the new C test suite together with the address,
+  leak and undefined-behaviour sanitizers. These include a
+  heap-use-after-free in astStore when the source and destination overlap
+  (which caused astConvert to fail for some Frames), a stack buffer overflow
+  when reading an STC-S AstroCoords description for a multi-axis positional
+  frame, a buffer over-read when the Plot class builds the name of a
+  graphical item, a spurious astFree of a static buffer while reporting an
+  XmlChan error, an uninitialised read in astMapSplit for a MatrixMap
+  containing bad matrix elements, a stack overrun in YamlChan, a read one
+  byte beyond the end of the string passed to AST_ADDMOCSTRING from Fortran,
+  and assorted buffer overruns and memory leaks in the FitsChan, FitsTable,
+  MocChan and PermMap classes.
+
+Testing and build changes
+-------------------------
+
+- Added a new experimental build system based on CMake. This build system
+  has not been tested for installations and currently exists primarily to
+  simplify testing without any Starlink software installed. The Fortran
+  interface is built only if the AST_BUILD_FORTRAN option is enabled.
+- Converted many Fortran test files to C. Both the C and the remaining
+  Fortran tests in ast_tester are now run by "make check" in the Autotools
+  build as well as by the CMake build. The Fortran tests no longer need the
+  Starlink ERR, CHR, CNF, PSX and PRM libraries, since minimal replacements
+  for the routines they use are provided in ast_tester/star_compat.
+- The Autotools build no longer requires a Starlink installation. A new
+  bootstrap.local script supplies the few Starlink autoconf macros that
+  configure.ac uses, the Starlink fork of automake is no longer needed, and
+  out-of-source (VPATH) builds and "make distcheck" work. The Fortran REAL
+  return convention is now measured by configure rather than guessed, and
+  libyaml detection has been improved.
+- The documentation (SUN/210 and SUN/211) can now be built outside a
+  Starlink tree. The prologue extraction is done by the starprolog Python
+  package when it is available, falling back to the Starlink getatt and
+  prolat tools otherwise, and the Starlink LaTeX support files are now
+  vendored so that a plain TeX Live installation can typeset the PDFs. The
+  hypertext (.htx) documents still need the Starlink star2html tool and are
+  built only when it is present, or can be omitted with the new
+  --disable-hyperdocs configure option. In a build outside a Starlink tree
+  the documentation is built only when --with-stardocs is given.
+- The distribution built by "make dist" now ships a cut-down set of the test
+  fixtures, sufficient to check that a build works, and the tests that use
+  the missing fixtures are skipped. A new "make fulldist" target ships the
+  complete fixture corpus for verifying a release. A release tarball now
+  includes the PDF documentation.
+- The test suite has been extended with new regression harnesses that
+  compare the results of astTran<X> against stored reference data, check
+  that astSimplify produces the expected Mapping for a large corpus of
+  stored Mappings, and compare FITS round trips and Plot output against
+  reference files.
+- Added a logging graphics plugin that records the drawing calls made by the
+  Plot class and can write them out as SVG, so that graphical output can be
+  compared against reference files without a graphics library being present.
+
+Main Changes in V9.3.0
+----------------------
+
+- A new subclass of Mapping, a SplineMap, has been added, which
+  represents a 2-in, 2-out Mapping defined by a pair of two-dimensional
+  B-spline surfaces.
+
+
+Main Changes in V9.2.14
+-----------------------
 
 - A bug that could cause astMapSplit to enter an infinite loop has been
   fixed.

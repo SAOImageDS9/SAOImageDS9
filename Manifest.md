@@ -1,15 +1,18 @@
 # List of SAOImageDS9 packages
 
-Last updated 2026-08-20
+Last updated 2026-09-17
 
 | name         | version    | SAO   | dirty | upstream                                                             | latest                          |
 | ------------ | ---------- | ----- | ----- | -------------------------------------------------------------------- | ------------------------------- |
-| ast          | 9.2.14     |       |       | https://github.com/Starlink/ast                                      | 9.2.14                          |
+| ast          | 9.4.1      |       | y     | https://github.com/Starlink/ast                                      | 9.4.1 (6)                       |
 | awthemes     | 10.4.0     |       |       | https://sourceforge.net/projects/tcl-awthemes/                       | 10.4.0                          |
+| bzip2        | 1.0.8      |       |       | https://sourceware.org/pub/bzip2/                                    | 1.0.8                           |
 | ds9          | 8.8        | y     |       |                                                                      |                                 |
 | fickle       | 2.2        | y     |       | https://github.com/SAOImageDS9/fickle-maintenance                    | previous upstream abandoned     |
 | fitsy        |            | y     |       |                                                                      |                                 |
 | funtools     | 1.5.0      | y     | y     | https://github.com/SAOImageDS9/funtools-maintenance                  | abandoned                       |
+| libyaml      | 0.2.5      |       |       | https://github.com/yaml/libyaml                                      | 0.2.5                           |
+| lz4          | 1.10.0     |       |       | https://github.com/lz4/lz4                                           | 1.10.0                          |
 | openssl      | 3.2.0      |       |       | https://github.com/openssl/openssl                                   | 4.0.0                           |
 | pdf4tcl      | 0.9.4      |       |       | https://sourceforge.net/projects/pdf4tcl/                            | 0.9.4                           |
 | scidthemes   | 1.0        |       |       | https://sourceforge.net/projects/scid/files/Scid/Additional%20Files/ | 1.0                             |
@@ -36,6 +39,7 @@ Last updated 2026-08-20
 | ttkthemes    | 3.3.0      |       |       | https://github.com/TkinterEP/ttkthemes/                              | 3.3.0                           |
 | vector       |            | y     |       |                                                                      |                                 |
 | xpa          | 2.2.1      | y     | y     | https://github.com/SAOImageDS9/xpa-maintenance                       | 2.2.1                           |
+| zlib         | 1.3.2      |       |       | https://github.com/madler/zlib                                       | 1.3.2                           |
 | -- -- --     |            |       |       |                                                                      |                                 |
 | compilers    |            | y     |       |                                                                      |                                 |
 | macos        |            | y     |       |                                                                      |                                 |
@@ -43,6 +47,7 @@ Last updated 2026-08-20
 | tkmacosx     |            | y     |       |                                                                      |                                 |
 | tkwin        |            | y     |       |                                                                      |                                 |
 | unix         |            | y     |       |                                                                      |                                 |
+| utils        |            | y     |       |                                                                      |                                 |
 | win          |            | y     |       |                                                                      |                                 |
 |              |            |       |       |                                                                      |                                 |
 
@@ -55,3 +60,28 @@ Last updated 2026-08-20
 (4) There are problems trying to use 2.1.1; stick with 2.0.1.
 
 (5) Small tweaks to work with ds9.
+
+(6) `src/yamlchan.c`: eight local fixes for reading ASDF/GWCS, all of them upstream
+Starlink defects rather than DS9 adaptations, and all confirmed against real Roman Data
+Workshop files and astropy-written fixtures rather than reasoned about:
+
+  - **45 `MAKE_TEST` version ceilings raised**, transform *and* frame tags. Started as ten
+    transform tags for Roman WFI data; the frame ceilings turned out to matter more, since
+    astropy 8.0.1 writes `fk5-1.2.0`/`fk4-1.2.0`/`galactic-1.2.0` against a ceiling of 1.0
+    and every celestial frame was refused outright.
+  - `LibYamlWriter`'s size argument declared `long unsigned int` where libyaml uses
+    `size_t` — identical on LP64, fatal on LLP64, so no Windows build with YAML enabled.
+  - both HEALPix projections unreachable: `ReadSkyProjection` has the branches but
+    `IsASkyProjection` recognizes neither tag.
+  - `ReadLinear1d` passed an uninitialized `outb` to `astWinMap`.
+  - `GetTime` tested `format` where it meant `value`, so every epoch prefix branch was
+    dead and an equinox of 2000.0 was read as MJD 2000 — about 1.8 degrees of precession.
+  - `zenithal_perspective` mapped to `AST__SZP` with AZP's parameters; `AST__AZP` was
+    unreachable in both directions. 4195″ of error on the fixture, now 0.0250″.
+  - `ortho_polynomial` ignored the required `polynomial_type`, so legendre and hermite
+    were read with Chebyshev basis functions.
+  - the `earthlocation` tag prefix compared 33 characters against a shorter string.
+
+Nine upstream branches carrying these are prepared in `ast_upstream/`; three further
+findings are written up in `AST_ISSUES.md` and not patched. See `TODO.md`'s "The AST bugs"
+section and `ASDF_NATIVE_SUPPORT_DESIGN.md` §7c. Revert as upstream Starlink takes them.

@@ -107,6 +107,12 @@ f     - AST_SPECADD: Add a spectral coordinate conversion to an SpecMap
 *        Check for Infs as well as NaNs.
 *     1-DEC-2016 (DSB):
 *        Added a "narg" argumeent to astSpecAdd.
+*     19-JUN-2026 (TIMJ):
+*        Remove the (float) casts on the RA/Dec arguments passed to
+*        palRvlsrk/palRvlsrd/palRvlg/palRvgalc in the LSRK/LSRD/LG/Galactic
+*        velocity helpers. The pal routines are double precision; the casts
+*        were a hangover from the single-precision SLALIB REAL signatures
+*        and lost ~20 mas of angular precision (~1 mm/s of velocity).
 
 *class--
 */
@@ -1761,11 +1767,11 @@ static double GalVel( double ra, double dec, FrameDef *def, int *status ) {
 
 /* Get the component away from the source, of the velocity of the sun
    relative to the dynamic LSR (in km/s). */
-   s1 = (double) palRvlsrd( (float) ra, (float) dec );
+   s1 = palRvlsrd( ra, dec );
 
 /* Get the component away from the source, of the velocity of the
    dynamic LSR relative to the galactic centre (in km/s). */
-   s2 = (double) palRvgalc( (float) ra, (float) dec );
+   s2 = palRvgalc( ra, dec );
 
 /* Return the total velocity of the galactic centre away from the source,
    relative to the sun, in m/s. */
@@ -1977,7 +1983,7 @@ static double LgVel( double ra, double dec, FrameDef *def, int *status ) {
 
 /* Return the component away from the source, of the velocity of the
    local group relative to the sun (in m/s). */
-   return -1000.0*palRvlg( (float) ra, (float) dec );
+   return -1000.0*palRvlg( ra, dec );
 }
 
 static double LsrdVel( double ra, double dec, FrameDef *def, int *status ) {
@@ -2027,7 +2033,7 @@ static double LsrdVel( double ra, double dec, FrameDef *def, int *status ) {
    relative to the dynamical LSR (in m/s). This can also be thought of as the
    velocity of the LSR towards the source relative to the sun. Return the
    negated value (i.e. velocity of lsrd *away from* the source. */
-   return -1000.0*palRvlsrd( (float) ra, (float) dec );
+   return -1000.0*palRvlsrd( ra, dec );
 }
 
 static double LsrkVel( double ra, double dec, FrameDef *def, int *status ) {
@@ -2077,7 +2083,7 @@ static double LsrkVel( double ra, double dec, FrameDef *def, int *status ) {
    relative to the kinematic LSR (in m/s). This can also be thought of as the
    velocity of the LSR towards the source relative to the sun. Return the
    negated value (i.e. velocity of lsrk *away from* the source. */
-   return -1000.0*palRvlsrk( (float) ra, (float) dec );
+   return -1000.0*palRvlsrk( ra, dec );
 }
 
 static int MapMerge( AstMapping *this, int where, int series, int *nmap,

@@ -349,10 +349,7 @@ const char *astPRJrev_errmsg[] = {
 
 /*==========================================================================*/
 
-int astPRJset(pcode, prj)
-
-const char pcode[4];
-struct AstPrjPrm *prj;
+int astPRJset(const char pcode[4], struct AstPrjPrm *prj)
 
 {
    /* Set pointers to the forward and reverse projection routines. */
@@ -422,11 +419,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astPRJfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astPRJfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    return prj->astPRJfwd(phi, theta, prj, x, y);
@@ -434,11 +427,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astPRJrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astPRJrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    return prj->astPRJrev(x, y, prj, phi, theta);
@@ -471,9 +460,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astAZPrev().
 *===========================================================================*/
 
-int astAZPset(prj)
-
-struct AstPrjPrm *prj;
+int astAZPset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "AZP");
@@ -514,11 +501,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astAZPfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astAZPfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    double a, b, cphi, cthe, r, s, t;
@@ -572,11 +555,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astAZPrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astAZPrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    double a, b, r, s, t, ycosg;
@@ -653,9 +632,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astSZPrev().
 *===========================================================================*/
 
-int astSZPset(prj)
-
-struct AstPrjPrm *prj;
+int astSZPset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "SZP");
@@ -693,11 +670,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astSZPfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astSZPfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    double a, b, cphi, cthe, s, sphi, t;
@@ -752,11 +725,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astSZPrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astSZPrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    double a, b, c, d, r2, sth1, sth2, sthe, sxy, t, x1, xp, y1, yp, z;
@@ -839,9 +808,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astTANrev().
 *===========================================================================*/
 
-int astTANset(prj)
-
-struct AstPrjPrm *prj;
+int astTANset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "TAN");
@@ -859,11 +826,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astTANfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astTANfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    double r, s;
@@ -890,11 +853,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astTANrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astTANrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    double r;
@@ -931,9 +890,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astSTGrev().
 *===========================================================================*/
 
-int astSTGset(prj)
-
-struct AstPrjPrm *prj;
+int astSTGset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "STG");
@@ -958,11 +915,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astSTGfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astSTGfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    double r, s;
@@ -985,11 +938,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astSTGrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astSTGrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    double r;
@@ -1031,9 +980,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astSINrev().
 *===========================================================================*/
 
-int astSINset(prj)
-
-struct AstPrjPrm *prj;
+int astSINset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "SIN");
@@ -1056,11 +1003,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astSINfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astSINfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    double cphi, cthe, sphi, t, z;
@@ -1108,11 +1051,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astSINrev (x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astSINrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    const double tol = 1.0e-13;
@@ -1221,9 +1160,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astARCrev().
 *===========================================================================*/
 
-int astARCset(prj)
-
-struct AstPrjPrm *prj;
+int astARCset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "ARC");
@@ -1248,11 +1185,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astARCfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astARCfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    double r;
@@ -1270,11 +1203,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astARCrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astARCrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    double r;
@@ -1315,9 +1244,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astZPNrev().
 *===========================================================================*/
 
-int astZPNset(prj)
-
-struct AstPrjPrm *prj;
+int astZPNset(struct AstPrjPrm *prj)
 
 {
    int   i, j, k, plen;
@@ -1338,7 +1265,12 @@ struct AstPrjPrm *prj;
 
    prj->n = k;
 
-   if (k >= 3) {
+   if (k < 2) {
+      /* No point of inflection for polynomials of degree < 2. */
+      prj->w[0] = PI;
+      prj->w[1] = 0.0;
+
+   } else {
       /* Find the point of inflection closest to the pole. */
       zd1 = 0.0;
       d1  = prj->p[1];
@@ -1400,11 +1332,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astZPNfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astZPNfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    int   j;
@@ -1434,11 +1362,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astZPNrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astZPNrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    int   i, j, k;
@@ -1563,9 +1487,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astZEArev().
 *===========================================================================*/
 
-int astZEAset(prj)
-
-struct AstPrjPrm *prj;
+int astZEAset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "ZEA");
@@ -1590,11 +1512,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astZEAfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astZEAfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    double r;
@@ -1612,11 +1530,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astZEArev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astZEArev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    double r, s;
@@ -1674,9 +1588,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astAIRrev().
 *===========================================================================*/
 
-int astAIRset(prj)
-
-struct AstPrjPrm *prj;
+int astAIRset(struct AstPrjPrm *prj)
 
 {
    const double tol = 1.0e-4;
@@ -1714,11 +1626,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astAIRfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astAIRfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    double cxi, r, txi, xi;
@@ -1750,11 +1658,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astAIRrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astAIRrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    int   j;
@@ -1849,9 +1753,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astCYPrev().
 *===========================================================================*/
 
-int astCYPset(prj)
-
-struct AstPrjPrm *prj;
+int astCYPset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "CYP");
@@ -1899,11 +1801,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astCYPfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astCYPfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    double s;
@@ -1925,11 +1823,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astCYPrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astCYPrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    double eta;
@@ -1984,9 +1878,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astCEArev().
 *===========================================================================*/
 
-int astCEAset(prj)
-
-struct AstPrjPrm *prj;
+int astCEAset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "CEA");
@@ -2021,11 +1913,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astCEAfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astCEAfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    if (prj->flag != WCS__CEA) {
@@ -2040,11 +1928,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astCEArev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astCEArev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    double s;
@@ -2085,9 +1969,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astCARrev().
 *===========================================================================*/
 
-int astCARset(prj)
-
-struct AstPrjPrm *prj;
+int astCARset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "CAR");
@@ -2112,11 +1994,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astCARfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astCARfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    if (prj->flag != WCS__CAR) {
@@ -2131,11 +2009,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astCARrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astCARrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    if (prj->flag != WCS__CAR) {
@@ -2165,9 +2039,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astMERrev().
 *===========================================================================*/
 
-int astMERset(prj)
-
-struct AstPrjPrm *prj;
+int astMERset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "MER");
@@ -2192,11 +2064,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astMERfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astMERfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    if (prj->flag != WCS__MER) {
@@ -2215,11 +2083,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astMERrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astMERrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    if (prj->flag != WCS__MER) {
@@ -2249,9 +2113,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astSFLrev().
 *===========================================================================*/
 
-int astSFLset(prj)
-
-struct AstPrjPrm *prj;
+int astSFLset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "SFL");
@@ -2276,11 +2138,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astSFLfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astSFLfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    if (prj->flag != WCS__SFL) {
@@ -2295,11 +2153,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astSFLrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astSFLrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    double w;
@@ -2338,9 +2192,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astPARrev().
 *===========================================================================*/
 
-int astPARset(prj)
-
-struct AstPrjPrm *prj;
+int astPARset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "PAR");
@@ -2369,11 +2221,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astPARfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astPARfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    double s;
@@ -2391,11 +2239,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astPARrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astPARrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    double s, t;
@@ -2444,9 +2288,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astMOLrev().
 *===========================================================================*/
 
-int astMOLset(prj)
-
-struct AstPrjPrm *prj;
+int astMOLset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "MOL");
@@ -2470,11 +2312,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astMOLfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astMOLfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    int   j;
@@ -2518,11 +2356,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astMOLrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astMOLrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    double s, y0, z;
@@ -2590,9 +2424,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astAITrev().
 *===========================================================================*/
 
-int astAITset(prj)
-
-struct AstPrjPrm *prj;
+int astAITset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "AIT");
@@ -2615,11 +2447,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astAITfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astAITfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    double cthe, w;
@@ -2638,11 +2466,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astAITrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astAITrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    double s, u, xp, yp, z;
@@ -2653,12 +2477,12 @@ double *phi, *theta;
    }
 
    u = 1.0 - x*x*prj->w[2] - y*y*prj->w[1];
-   if (u < 0.0) {
-      if (u < -tol) {
+   if (u < 0.5) {
+      if (u < 0.5-tol) {
          return 2;
       }
 
-      u = 0.0;
+      u = 0.5;
    }
 
    z = sqrt(u);
@@ -2708,9 +2532,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astCOPrev().
 *===========================================================================*/
 
-int astCOPset(prj)
-
-struct AstPrjPrm *prj;
+int astCOPset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "COP");
@@ -2745,11 +2567,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astCOPfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astCOPfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    double a, r, s, t;
@@ -2779,11 +2597,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astCOPrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astCOPrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    double a, dy, r;
@@ -2837,9 +2651,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astCOErev().
 *===========================================================================*/
 
-int astCOEset(prj)
-
-struct AstPrjPrm *prj;
+int astCOEset(struct AstPrjPrm *prj)
 
 {
    double theta1, theta2;
@@ -2878,11 +2690,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astCOEfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astCOEfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    double a, r;
@@ -2906,11 +2714,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astCOErev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astCOErev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    double a, dy, r, w;
@@ -2975,9 +2779,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astCODrev().
 *===========================================================================*/
 
-int astCODset(prj)
-
-struct AstPrjPrm *prj;
+int astCODset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "COD");
@@ -3009,11 +2811,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astCODfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astCODfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    double a, r;
@@ -3033,11 +2831,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astCODrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astCODrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    double a, dy, r;
@@ -3089,9 +2883,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astCOOrev().
 *===========================================================================*/
 
-int astCOOset(prj)
-
-struct AstPrjPrm *prj;
+int astCOOset(struct AstPrjPrm *prj)
 
 {
    double cos1, cos2, tan1, tan2, theta1, theta2;
@@ -3137,11 +2929,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astCOOfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astCOOfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    double a, r;
@@ -3169,11 +2957,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astCOOrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astCOOrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    double a, dy, r;
@@ -3226,9 +3010,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astBONrev().
 *===========================================================================*/
 
-int astBONset(prj)
-
-struct AstPrjPrm *prj;
+int astBONset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "BON");
@@ -3253,11 +3035,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astBONfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astBONfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    double a, r;
@@ -3282,11 +3060,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astBONrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astBONrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    double a, cthe, dy, r;
@@ -3339,9 +3113,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astPCOrev().
 *===========================================================================*/
 
-int astPCOset(prj)
-
-struct AstPrjPrm *prj;
+int astPCOset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "PCO");
@@ -3368,11 +3140,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astPCOfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astPCOfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    double a, cthe, cotthe, sthe;
@@ -3399,11 +3167,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astPCOrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astPCOrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    int   j;
@@ -3498,9 +3262,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astTSCrev().
 *===========================================================================*/
 
-int astTSCset(prj)
-
-struct AstPrjPrm *prj;
+int astTSCset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "TSC");
@@ -3525,11 +3287,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astTSCfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astTSCfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    int   face;
@@ -3626,11 +3384,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astTSCrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astTSCrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    double l, m, n, xf, yf;
@@ -3718,9 +3472,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astCSCrev().
 *===========================================================================*/
 
-int astCSCset(prj)
-
-struct AstPrjPrm *prj;
+int astCSCset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "CSC");
@@ -3745,11 +3497,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astCSCfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astCSCfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    int   face;
@@ -3881,11 +3629,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astCSCrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astCSCrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    int   face;
@@ -4041,9 +3785,7 @@ double *phi, *theta;
 *      prj->astPRJrev  Pointer to astQSCrev().
 *===========================================================================*/
 
-int astQSCset(prj)
-
-struct AstPrjPrm *prj;
+int astQSCset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "QSC");
@@ -4068,11 +3810,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astQSCfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astQSCfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    int   face;
@@ -4248,11 +3986,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astQSCrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astQSCrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    int   direct, face;
@@ -4452,9 +4186,7 @@ double *phi, *theta;
 
 *===========================================================================*/
 
-int astHPXset(prj)
-
-struct AstPrjPrm *prj;
+int astHPXset(struct AstPrjPrm *prj)
 
 {
    strcpy(prj->code, "HPX");
@@ -4490,11 +4222,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astHPXfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astHPXfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
    double abssin, sigma, sinthe, phic;
@@ -4540,11 +4268,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astHPXrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astHPXrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
    double absy, sigma, t, yr, xc;
@@ -4633,9 +4357,7 @@ double *phi, *theta;
 *      prj->astPRJrev Pointer to astXPHrev().
 *===========================================================================*/
 
-int astXPHset(prj)
-
-struct AstPrjPrm *prj;
+int astXPHset(struct AstPrjPrm *prj)
 
 {
   strcpy(prj->code, "XPH");
@@ -4666,11 +4388,7 @@ struct AstPrjPrm *prj;
 
 /*--------------------------------------------------------------------------*/
 
-int astXPHfwd(phi, theta, prj, x, y)
-
-const double phi, theta;
-struct AstPrjPrm *prj;
-double *x, *y;
+int astXPHfwd(double phi, double theta, struct AstPrjPrm *prj, double *x, double *y)
 
 {
   double abssin, chi, eta, psi, sigma, sinthe, xi;
@@ -4747,11 +4465,7 @@ double *x, *y;
 
 /*--------------------------------------------------------------------------*/
 
-int astXPHrev(x, y, prj, phi, theta)
-
-const double x, y;
-struct AstPrjPrm *prj;
-double *phi, *theta;
+int astXPHrev(double x, double y, struct AstPrjPrm *prj, double *phi, double *theta)
 
 {
   double abseta, eta, eta1, sigma, xi, xi1, xr, yr;

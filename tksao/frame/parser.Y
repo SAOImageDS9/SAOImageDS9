@@ -133,6 +133,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token ARRAY_
 %token ARROW_
 %token AREA_
+%token ASDF_
 %token ASINH_
 %token AST_
 %token AUTO_
@@ -1547,6 +1548,7 @@ iiscursor: INT INT CANVAS_
 	;
 
 load	: ARRAY_ loadArr
+	| ASDF_ loadAsdf
         | ENVI_ loadENVI
 	| FITS_ loadFits
 	| INCR_ loadIncr
@@ -1848,6 +1850,13 @@ loadNRRD : STRING ALLOC_ STRING layerType
 	{fr->loadNRRDSocketCmd($3, $1, (Base::LayerType)$4);}
 	| STRING VAR_ STRING layerType
 	{fr->loadNRRDVarCmd($3, $1, (Base::LayerType)$4);}
+	;
+
+/* <name> <filename> <array path>. The name is separate because it is
+   "<file>:<array>" - an ASDF file holds many arrays, so the file name
+   alone does not say what is displayed. */
+loadAsdf : STRING STRING STRING layerType
+	{fr->loadAsdfCmd($2, $3, $1, (Base::LayerType)$4);}
 	;
 
 loadPhoto: /* empty */ STRING STRING {fr->loadPhotoCmd($1,$2);}

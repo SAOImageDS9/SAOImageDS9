@@ -1,4 +1,7 @@
 ## Process this file with automake to produce Makefile.in
+SUBDIRS = ast_tester
+
+ACLOCAL_AMFLAGS = -I m4
 
 # First declare various groups of files.  These were initially extracted
 # from the grp.make file, as constructed by the SDT newdev command
@@ -57,6 +60,7 @@ GRP_C_ROUTINES = \
     src/specframe.c \
     src/specmap.c \
     src/sphmap.c \
+    src/splinemap.c \
     src/stc.c \
     src/stccatalogentrylocation.c \
     src/stcobsdatalocation.c \
@@ -131,6 +135,7 @@ F_C_ROUTINES = \
     src/fspecframe.c \
     src/fspecmap.c \
     src/fsphmap.c \
+    src/fsplinemap.c \
     src/fstc.c \
     src/fstccatalogentrylocation.c \
     src/fstcobsdatalocation.c \
@@ -154,15 +159,21 @@ endif
 
 # Header files which contribute to the "ast.h" file, organised to correspond
 # with the class hierarchy.
-AST_H_FILES = \
+AST_H_FILES_HEAD = \
     src/xml.h \
     wcslib/wcstrig.h \
     wcslib/proj.h \
     src/memory.h \
     src/error.h \
     src/globals.h \
-    src/unit.h \
-    ast_err.h \
+    src/unit.h
+
+# ast_err.h belongs here (between src/unit.h and src/version.h) in the ast.h
+# assembly order, but it is generated from ast_err.msg and must not be
+# distributed.  It is therefore omitted from the distributable AST_H_FILES
+# list and spliced into the makeh command line at this position by the ast.h
+# rule below.
+AST_H_FILES_TAIL = \
     src/version.h \
     src/object.h \
        src/keymap.h \
@@ -176,6 +187,7 @@ AST_H_FILES = \
           src/dssmap.h \
           src/grismmap.h \
           src/intramap.h \
+          src/splinemap.h \
           src/lutmap.h \
           src/mathmap.h \
           src/matrixmap.h \
@@ -233,6 +245,11 @@ AST_H_FILES = \
           src/stcschan.h \
           src/xmlchan.h
 
+# The full set of distributable class headers that contribute to ast.h.  The
+# generated ast_err.h is not part of this list (see above); it is injected in
+# the correct position by the ast.h rule when invoking makeh.
+AST_H_FILES = $(AST_H_FILES_HEAD) $(AST_H_FILES_TAIL)
+
 # All the (C) include files required to build the library.
 GRP_C_INCLUDE_FILES = \
     $(AST_H_FILES) \
@@ -260,12 +277,11 @@ if !NOFORTRAN
 F_C_INCLUDE_FILES = \
     src/c2f77.h
 
-# The following list should include AST_PAR, but that must not be
-# distributed, and so it is listed separately in
+# This list should also include AST_PAR and AST_ERR, but those are generated
+# and must not be distributed, so they are listed separately in
 # nodist_libast_la_SOURCES below.
 GRP_F_INCLUDE_FILES = \
-    GRF_PAR \
-    AST_ERR
+    GRF_PAR
 
 else
 F_C_INCLUDE_FILES =
@@ -582,16 +598,15 @@ CMINPACK_FILES = \
     cminpack/lmpar.c \
     cminpack/qrsolv.c
 
-bin_SCRIPTS = ast_link
-dist_bin_SCRIPTS = ast_link_adam
+# Scripts are not distributed by default, on the grounds that they might be
+# derived objects.  ast_link, ast_link_adam and ast_cpp are exactly that --
+# configure generates all three (see AC_CONFIG_FILES) -- so they must not be
+# distributed: ast_link_adam alone bakes in the --with-external-pal,
+# --with-external-cminpack and --without-yaml choices of whoever ran
+# `make dist'.  makeh is a real source file and does ship.
+bin_SCRIPTS = ast_link ast_link_adam
 noinst_SCRIPTS = ast_cpp
 dist_noinst_SCRIPTS = $(srcdir)/makeh
-# Scripts are not distributed by default (since they might be derived objects)
-# Add these to the distribution below.  In fact, it would be useful
-# and straightforward  to make ast_link{,_adam} derived, since they
-# could then have installation directories painlessly edited in to
-# them.  This might be a requirement for scripts which supported
-# linking against shared libraries.
 
 # Headers required by library users.  Both of the following lines
 # indicate headers which are installed.
@@ -603,12 +618,35 @@ cinclude_HEADERS = src/grf.h src/grf3d.h
 endif
 
 # Following are generated, so should not be distributed.
+if STARLINK_BUILD
+# Starlink's automake handles _MESSAGES; build rules come from STAR_MESSGEN.
 if !NOFORTRAN
 include_MESSAGES = AST_ERR ast_err.h
 nodist_cinclude_HEADERS = ast.h AST_PAR
 else
 include_MESSAGES = ast_err.h
 nodist_cinclude_HEADERS = ast.h
+endif
+else  # standalone
+if !NOFORTRAN
+nodist_cinclude_HEADERS = ast.h AST_PAR
+else
+nodist_cinclude_HEADERS = ast.h
+endif
+endif
+
+# nodist_include_HEADERS is built up below from independent conditions; a base
+# definition is needed so that all '+=' operations are valid in every condition.
+nodist_include_HEADERS =
+
+# In standalone mode, install the generated error-facility headers to includedir.
+# This is analogous to what include_MESSAGES does in Starlink mode.
+if !STARLINK_BUILD
+if !NOFORTRAN
+nodist_include_HEADERS += AST_ERR ast_err.h
+else
+nodist_include_HEADERS += ast_err.h
+endif
 endif
 
 # Also install headers in main include directory for the benefit of
@@ -618,10 +656,10 @@ endif
 if TOPINCLUDE
 if !NOFORTRAN
 include_HEADERS = GRF_PAR src/grf.h src/grf3d.h
-nodist_include_HEADERS = ast.h AST_PAR
+nodist_include_HEADERS += ast.h AST_PAR
 else
 include_HEADERS = src/grf.h src/grf3d.h
-nodist_include_HEADERS = ast.h
+nodist_include_HEADERS += ast.h
 endif
 endif
 
@@ -648,18 +686,29 @@ lib_LTLIBRARIES = \
     libast_grf_2.0.la \
     libast_grf_3.2.la \
     libast_grf_5.6.la \
+    libast_grf_log.la \
     libast_pgplot.la \
     libast_pgplot3d.la
 
+# These are required to be defined for automake's parsing;
+# If building with the Starlink macros defined these will
+# be replaced with the correct paths used by the Starlink
+# environment; otherwise a sensible system path
+stardocsdir = @stardocsdir@
+starnewsdir = @starnewsdir@
 stardocs_DATA = @STAR_LATEX_DOCUMENTATION@
 dist_starnews_DATA = ast.news
-dist_pkgdata_DATA = COPYING COPYING.LESSER COPYING.LIB
+dist_pkgdata_DATA = COPYING
 
 if !NOYAML
 yaml = -DYAML
 else
 yaml =
 endif
+
+# Ensure generated headers in the build tree (object.h, version.h, f77.h)
+# are found in out-of-source builds.
+AM_CPPFLAGS = -I$(top_builddir)/src -I$(srcdir)/src
 
 if !NOTHREADS
 threadsafe = -DTHREAD_SAFE
@@ -699,8 +748,7 @@ libast_la_SOURCES = \
     $(GRP_C_INCLUDE_FILES) \
     $(F_C_INCLUDE_FILES) \
     $(GRP_F_INCLUDE_FILES) \
-    $(WCSLIB_FILES) \
-    ast_err.h
+    $(WCSLIB_FILES)
 libast_la_LDFLAGS = -version-info @version_info@
 
 # Ensure libast links against libraries containing functions used within
@@ -709,15 +757,15 @@ libast_la_LDFLAGS = -version-info @version_info@
 # library instead. Do the same for cminpack
 if EXTERNAL_PAL
 if EXTERNAL_CMINPACK
-libast_la_LIBADD =  -lpal -lcminpack
+libast_la_LIBADD =  -lpal -lcminpack $(LIBM)
 else
-libast_la_LIBADD = -lpal libast_cminpack.la
+libast_la_LIBADD = -lpal libast_cminpack.la $(LIBM)
 endif
 else
 if EXTERNAL_CMINPACK
-libast_la_LIBADD =  libast_pal.la -lcminpack
+libast_la_LIBADD =  libast_pal.la -lcminpack $(LIBM)
 else
-libast_la_LIBADD = libast_pal.la libast_cminpack.la
+libast_la_LIBADD = libast_pal.la libast_cminpack.la $(LIBM)
 endif
 endif
 
@@ -728,9 +776,13 @@ endif
 if !NOFORTRAN
 nodist_libast_la_SOURCES = \
     ast.h \
-    AST_PAR
+    ast_err.h \
+    AST_PAR \
+    AST_ERR
 else
-nodist_libast_la_SOURCES = ast.h
+nodist_libast_la_SOURCES = \
+    ast.h \
+    ast_err.h
 endif
 
 #  The default error reporting module.
@@ -765,6 +817,11 @@ libast_grf_3_2_la_LDFLAGS = -version-info @version_info@
 libast_grf_5_6_la_SOURCES = src/grf_5.6.c
 libast_grf_5_6_la_LDFLAGS = -version-info @version_info@
 
+#  The graphics module that logs 2D graphics operations (optionally as SVG).
+#  Used by the testgrid test program to capture astGrid output for comparison.
+libast_grf_log_la_SOURCES = src/grf_log.c src/grf_log.h
+libast_grf_log_la_LDFLAGS = -version-info @version_info@
+
 #  The graphics module that uses PGPLOT for 2D graphical output.
 libast_pgplot_la_SOURCES = $(GRF_PGPLOT_SOURCES)
 libast_pgplot_la_LDFLAGS = -version-info @version_info@
@@ -776,14 +833,15 @@ libast_pgplot3d_la_LDFLAGS = -version-info @version_info@
 #  Positional astronomy libraries.
 libast_pal_la_SOURCES = $(PAL_FILES)
 libast_pal_la_LDFLAGS = -version-info @version_info@
+libast_pal_la_LIBADD = $(LIBM)
 
 #  Cminpack
 libast_cminpack_la_SOURCES = $(CMINPACK_FILES)
 libast_cminpack_la_LDFLAGS = -version-info @version_info@
 
 # The following files are built by the targets in this makefile.
-MAINTAINERCLEANFILES = src/version.h builddocs addversion \
-	ast.h $(DOCUMENTATION_PRODUCTS)
+MAINTAINERCLEANFILES = src/version.h ast_err.h AST_ERR builddocs addversion \
+	ast.h stamp-docs $(DOCUMENTATION_PRODUCTS)
 if !NOFORTRAN
 CLEANFILES = AST_PAR ast.h
 else
@@ -792,13 +850,16 @@ endif
 
 # Special cases start here
 
+# Unconditional base so that '+=' works in all nested conditions below.
+noinst_PROGRAMS =
+
 # The AST_PAR include file is produced by compiling the astbad.c
 # program and editing its output into the ast_par.source file (while
 # also changing the "E" exponent character to a "D").  The astbad.c
 # and ast_par.source must be distributed (the generation of the
 # AST__BAD value must be done on the build host) but not installed.
 if !NOFORTRAN
-noinst_PROGRAMS = astbad$(EXEEXT)
+noinst_PROGRAMS += astbad$(EXEEXT)
 astbad_SOURCES = src/astbad.c src/pointset.h
 AST_PAR: $(srcdir)/ast_par.source astbad$(EXEEXT)
 	ASTBAD=`./astbad$(EXEEXT) AST__BAD` && \
@@ -810,19 +871,96 @@ AST_PAR: $(srcdir)/ast_par.source astbad$(EXEEXT)
 	    $(srcdir)/ast_par.source >$@
 endif
 
-# ast_link is generated from ast_link.in; ast_link_adam does not
-# need configuration, and so is not mentioned in AC_CONFIG_FILES within
-# configure.ac, and so is not distributed automatically.
+# In standalone mode, build messgen from source to generate the error-facility
+# headers (ast_err.h and AST_ERR) from ast_err.msg.  Starlink builds get both
+# the binary and the rules from the STAR_MESSGEN macro and automake's
+# _MESSAGES primary instead, so neither is declared here.
 #
-# makeh is required in order to build ast.h after distribution (see below).
-EXTRA_DIST = $(srcdir)/ast_par.source sun210_figures sun211_figures pal erfa cminpack
+# Not called MESSGEN: STAR_MESSGEN substitutes a variable of that name, and
+# assigning to it here would override configure's own value -- which automake
+# reports on every Starlink bootstrap as "MESSGEN was already defined in
+# condition TRUE".
+#
+# messgen translates ast_err.msg into ast_err.h and AST_ERR, and the
+# translation is machine independent, so the two files are generated here and
+# then distributed (see EXTRA_DIST below). A build from a tarball uses what
+# was shipped and needs neither messgen nor ast_err.msg, which is what makes
+# it cross compilable: nothing has to be run on the build machine.
+#
+# Where messgen does run, it runs as soon as it is built, so it is built with
+# the compiler for the build machine rather than with $(CC) -- which in a
+# cross compilation produces executables that cannot run here. That puts it
+# outside automake's program rules, so it is named in EXTRA_DIST and
+# CLEANFILES by hand.
+if !STARLINK_BUILD
+if PREDIST_BUILD
+AST_MESSGEN = star_compat/messgen
+CLEANFILES += $(AST_MESSGEN)
+
+$(AST_MESSGEN): $(srcdir)/star_compat/messgen.c
+	$(AM_V_at)$(MKDIR_P) star_compat
+	$(AM_V_GEN)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(LDFLAGS_FOR_BUILD) \
+	    -o $@ $(srcdir)/star_compat/messgen.c
+
+ast_err.h AST_ERR: $(srcdir)/ast_err.msg $(AST_MESSGEN)
+	$(AST_MESSGEN) -cF $(srcdir)/ast_err.msg
+endif
+endif
+
+# Extra files and directories that should be included in the source dist
+# but may not be directly listed as build target dependencies.
+#
+# cminpack/ is an object-output dir in a VPATH build, so don't dist it as a
+# whole directory (that ships the built objects too); just extra_dist its
+# non-source files.
+EXTRA_DIST = $(srcdir)/ast_par.source $(srcdir)/ast_err.msg \
+    sun210_figures sun211_figures pal erfa \
+    $(srcdir)/build-aux/tap-driver.sh \
+    $(srcdir)/cminpack/CopyrightMINPACK.txt \
+    $(srcdir)/cminpack/README.md \
+    $(srcdir)/star_compat/messgen.c \
+    $(srcdir)/star_compat/starlink_compat.m4 \
+    $(srcdir)/star_compat/latexsupport/README.md \
+    $(srcdir)/star_compat/latexsupport/ast.sty \
+    $(srcdir)/star_compat/latexsupport/sst.sty \
+    $(srcdir)/star_compat/latexsupport/starabbrev.sty \
+    $(srcdir)/star_compat/latexsupport/starlink.cls \
+    $(srcdir)/star_compat/latexsupport/starstyle.sty
+
+# Starlink automake adds these automatically; GNU automake needs the list.
+if !STARLINK_BUILD
+EXTRA_DIST += $(stardocs_DATA)
+endif
+
+# Distribute files required by CMake build.  Everything in cmake/ is a build
+# input, so the dist-hook below ships the whole directory rather than naming
+# each file -- a list here has to be extended every time a helper is added,
+# and nothing catches it when it is not.
+EXTRA_DIST += \
+    CMakeLists.txt \
+    version.number
+
+# The error-facility headers, generated above before distribution. No
+# $(srcdir) prefix: they are made in the build tree, and automake's distdir
+# rule looks there first, as it does for src/version.h.
+EXTRA_DIST += ast_err.h AST_ERR
+
+# The autotools build doesn't detect plplot yet, so the plplot grf
+# backend is never built here (but it is built by CMake); for now ensure
+# the sources for it are included; likewise ast_test.c
+EXTRA_DIST += \
+    ast_test.c \
+    src/grf_plplot.c \
+    src/grf3d_plplot.c \
+    src/pl3d.h
 
 # ast.h depends on the error-facility files.  ast.h _could_ be made
 # before distribution, but since it's generated from other distributed
 # files, it's more robust to distribute makeh and make ast.h on the
 # build host.
-ast.h: $(AST_H_FILES) ast_err.h $(srcdir)/makeh config.h
-	@PERL@ $(srcdir)/makeh -s $(srcdir) $(AST_H_FILES) >$@
+ast.h: $(AST_H_FILES_HEAD) ast_err.h $(AST_H_FILES_TAIL) $(srcdir)/makeh config.h
+	@PERL@ $(srcdir)/makeh -s $(srcdir) -b $(top_builddir) \
+	    $(AST_H_FILES_HEAD) ast_err.h $(AST_H_FILES_TAIL) >$@
 
 # AST_ERR and ast_err.h are `generated source files', and so must be
 # generated before any other compilations are done.  Note that these
@@ -838,10 +976,16 @@ ast.h: $(AST_H_FILES) ast_err.h $(srcdir)/makeh config.h
 # version.h is included by object.h, and thus indirectly by most modules.
 # It's most straightforward to build it at the beginning.
 if !NOFORTRAN
-BUILT_SOURCES = AST_ERR ast_err.h src/version.h
+BUILT_SOURCES = AST_ERR ast_err.h src/version.h ast.h
 else
-BUILT_SOURCES = ast_err.h src/version.h
+BUILT_SOURCES = ast_err.h src/version.h ast.h
 endif
+
+# Ensure the main library is built before check-recursive descends into
+# ast_tester (which links against it).  Without this, a cold `make check`
+# from a fresh out-of-source build would fail because check only guarantees
+# BUILT_SOURCES are ready before recursing.
+check-recursive: all-am
 
 #  Form a second link to the main object library (static and shared). This
 #  is used when a second pass through the library is needed during linking
@@ -866,6 +1010,11 @@ install-exec-hook: libast.la
 	   sed -e 's/libast\./libast_pass2\./g' libast.la > libast_pass2.la; \
 	fi
 
+# Remove the second-link libast_pass2.* files and links created by
+# install-exec-hook.
+uninstall-hook:
+	rm -f $(DESTDIR)$(libdir)/libast_pass2.*
+
 # Make pre-distribution files.  These are files which are required for
 # building the distribution, but are not themselves distributed.
 # The source files here should be mentioned in STAR_PREDIST_SOURCES in
@@ -876,42 +1025,234 @@ install-exec-hook: libast.la
 @PREDIST@    -e 's,@PACKAGE_VERSION_MINOR\@,$(PACKAGE_VERSION_MINOR),' \
 @PREDIST@    -e 's,@PACKAGE_VERSION_RELEASE\@,$(PACKAGE_VERSION_RELEASE),' \
 @PREDIST@    -e 's,@PERL\@,$(PERL),' \
+@PREDIST@    -e 's,@STARPROLOG\@,$(STARPROLOG),' \
+@PREDIST@    -e 's,@PROLAT\@,$(PROLAT),' \
+@PREDIST@    -e 's,@PDFLATEX\@,$(PDFLATEX),' \
 @PREDIST@    -e 's,@STARLINK\@,$(STARLINK),'
 
-@PREDIST@src/version.h: src/version.h.in configure.ac
-@PREDIST@	rm -f $@; $(predist_subs) src/version.h.in >$@
-@PREDIST@builddocs: builddocs.in configure.ac
-@PREDIST@	rm -f $@; $(predist_subs) builddocs.in >$@; chmod +x $@
-@PREDIST@addversion: addversion.in configure.ac
-@PREDIST@	rm -f $@; $(predist_subs) addversion.in >$@; chmod +x $@
+# Makefile is the honest prerequisite for these -- it carries the version and
+# the tool paths that predist_subs substitutes, which $(srcdir)/configure.ac
+# did not -- but it is regenerated by any config.status run, and rewriting
+# the outputs then would be expensive for nothing: version.h reaches almost
+# every source file through object.h, and builddocs drives two pdflatex
+# passes over each of the two manuals.  Replace each output only when its
+# content really changed.  The recipes therefore run on every make, at the
+# cost of one sed over a small file when there is nothing to do.
+@PREDIST@src/version.h: $(srcdir)/src/version.h.in Makefile
+@PREDIST@	$(predist_subs) $(srcdir)/src/version.h.in >$@.tmp
+@PREDIST@	if cmp -s $@.tmp $@; then rm -f $@.tmp; else mv -f $@.tmp $@; fi
+@PREDIST@builddocs: $(srcdir)/builddocs.in Makefile
+@PREDIST@	$(predist_subs) $(srcdir)/builddocs.in >$@.tmp
+@PREDIST@	if cmp -s $@.tmp $@; then rm -f $@.tmp; \
+@PREDIST@	else mv -f $@.tmp $@; chmod +x $@; fi
+@PREDIST@addversion: $(srcdir)/addversion.in Makefile
+@PREDIST@	$(predist_subs) $(srcdir)/addversion.in >$@.tmp
+@PREDIST@	if cmp -s $@.tmp $@; then rm -f $@.tmp; \
+@PREDIST@	else mv -f $@.tmp $@; chmod +x $@; fi
+CLEANFILES += src/version.h.tmp builddocs.tmp addversion.tmp
 
-# Documentation
-@PREDIST@$(PAPER_DOCUMENTATION): sun211_figures builddocs addversion
-@PREDIST@	./builddocs
+# One invocation produces both manuals. Force the shared stamp when any
+# output is missing, so parallel make also handles deleted outputs only once.
+@PREDIST@missing_docs = $(filter-out $(wildcard $(PAPER_DOCUMENTATION)),$(PAPER_DOCUMENTATION))
+@PREDIST@.PHONY: force-docs
+@PREDIST@stamp-docs: $(if $(missing_docs),force-docs)
+@PREDIST@stamp-docs: builddocs addversion ast_link ast_link_adam \
+@PREDIST@    $(GRP_C_ROUTINES) src/fchannel.c $(srcdir)/sun_master.tex \
+@PREDIST@    $(srcdir)/getatt $(srcdir)/doincludes $(srcdir)/selectfc \
+@PREDIST@    $(srcdir)/addlinks $(srcdir)/addcopyright \
+@PREDIST@    $(wildcard $(srcdir)/star_compat/latexsupport/*.sty) \
+@PREDIST@    $(srcdir)/star_compat/latexsupport/starlink.cls \
+@PREDIST@    $(wildcard $(srcdir)/sun210_figures/*.pdf $(srcdir)/sun211_figures/*.pdf)
+@PREDIST@	./builddocs "$(srcdir)"
+@PREDIST@	touch $@
+@PREDIST@$(PAPER_DOCUMENTATION): stamp-docs
+@PREDIST@	@test -f $@
 
-# The contents of the sun211_figures directory is identical to that
-# sun210_figures
-sun211_figures: sun210_figures
-	$(LN_S) sun210_figures sun211_figures
+if !STARLINK_BUILD
+# Starlink automake supplies the equivalent .tex.htx_tar rule itself; this is
+# that rule, written out per document.  star2html's exit status is ignored
+# because it can fail harmlessly, so the test for the .htx directory is what
+# decides whether the run worked.  A <doc>.htx_tar.extras file, if present,
+# lists files to add to the directory before it is rolled up.
+@PREDIST@sun210.htx_tar: sun210.tex
+@PREDIST@	- $(STAR2HTML) $(STAR2HTML_FLAGS) $<
+@PREDIST@	test -d sun210.htx
+@PREDIST@	if test -f sun210.htx_tar.extras; then \
+@PREDIST@	  for f in `cat sun210.htx_tar.extras`; do \
+@PREDIST@	    test -f "$$f" && cp "$$f" sun210.htx || true; \
+@PREDIST@	  done; else :; fi
+@PREDIST@	tar cf $@ sun210.htx
+@PREDIST@sun211.htx_tar: sun211.tex
+@PREDIST@	- $(STAR2HTML) $(STAR2HTML_FLAGS) $<
+@PREDIST@	test -d sun211.htx
+@PREDIST@	if test -f sun211.htx_tar.extras; then \
+@PREDIST@	  for f in `cat sun211.htx_tar.extras`; do \
+@PREDIST@	    test -f "$$f" && cp "$$f" sun211.htx || true; \
+@PREDIST@	  done; else :; fi
+@PREDIST@	tar cf $@ sun211.htx
+
+# star2html leaves directories behind, which CLEANFILES cannot remove.
+clean-local:
+	-rm -rf sun210.htx sun211.htx
+endif
+
+# The documents come with the distribution, so per the GNU standards `clean'
+# preserves them and only `maintainer-clean' removes them; see
+# MAINTAINERCLEANFILES above.  Sweeping them into CLEANFILES would make an
+# ordinary `make clean' cost two more pdflatex passes over sun_master.tex.
 
 # Installation check
 
-TESTS = ast_test
-check_PROGRAMS = ast_test
-ast_test_SOURCES = ast_test.c
+noinst_LTLIBRARIES =
 
 test: install
 	cd ast_tester && STARLINK=@STARLINK@ PGPLOT_DIR=@STARLINK@/bin FFLAGS="@STAR_FFLAGS_TEST@" ./ast_tester -nd
 
-#ast_test_LDADD = `ast_link`
-# Expand ast_link to avoid libast_pass2, which causes problems for Solaris
-ast_test_LDADD = @LIBPAL@ @LIBCMINPACK@ libast.la libast_grf_3.2.la libast_grf_5.6.la libast_grf_2.0.la libast_grf3d.la libast_err.la -lm
 
-#  Need to include latex support files in the distribution tar ball so
-#  that the docs can be built from the tex source files. Requires environment
-#  variable STARLATEXSUPPORT to be deined. Is there a better way to do this?
+#  A release tarball has always carried the LaTeX class and style files at its
+#  top level, beside the generated .tex, so the documents can be re-typeset
+#  from the tarball alone.  Keep doing that, taking them from the vendored
+#  copies in the tree (see star_compat/latexsupport/README.md) rather than from
+#  a Starlink installation named by an environment variable.
+LATEX_SUPPORT_FILES = starlink.cls starabbrev.sty starstyle.sty sst.sty ast.sty
+
 dist-hook:
-	cp -p $(STARLATEXSUPPORT)/starlink.cls $(distdir)/
-	cp -p $(STARLATEXSUPPORT)/starabbrev.sty $(distdir)/
-	cp -p $(STARLATEXSUPPORT)/starstyle.sty $(distdir)/
-	cp -p $(STARLATEXSUPPORT)/sst.sty $(distdir)/
+	for f in $(LATEX_SUPPORT_FILES); do \
+	    cp -p $(srcdir)/star_compat/latexsupport/$$f $(distdir)/ || exit 1; \
+	done
+	@list=`cd "$(srcdir)" && find cmake -type f ! -name '.*'`; \
+	for rel in $$list; do \
+	    $(MKDIR_P) "$(distdir)/`dirname $$rel`"; \
+	    cp -p "$(srcdir)/$$rel" "$(distdir)/$$rel" || exit 1; \
+	done
+#  src/f77.h and src/object.h are generated by configure from the .h.in files
+#  beside them, and what it substitutes describes whoever ran `make dist' --
+#  the Fortran ABI types in f77.h, the --with-pthreads setting in object.h.
+#  They arrive here only because they are listed among libast's sources, whose
+#  order is load-bearing for the ast.h rule and so is left alone; drop them
+#  from the tarball instead, leaving the templates that configure reads.
+#
+#  src/version.h stays: its rule is guarded by @PREDIST@, so an unpacked
+#  tarball has no way to remake it and must carry the generated file.
+	rm -f $(distdir)/src/f77.h $(distdir)/src/object.h
+	$(MAKE) $(AM_MAKEFLAGS) distdir="$(distdir)" dist-check-tracked
+
+#  The lists above say what to ship; this checks what actually arrived.  Every
+#  file git tracks under cmake/, ast_tester/ and src/, bar the exclusions below,
+#  must be in the tarball -- otherwise the tarball configures and then fails to
+#  build, which is how cmake/run_simplify_noop_test.cmake and
+#  ast_tester/testimmutable.c each survived as far as a full distcheck before
+#  anyone noticed.  Checking every tracked file, rather than the extensions the
+#  dist-hook patterns happen to match, is what makes this catch a kind of file
+#  nobody thought of.
+#
+#  This runs as the last step of the top-level dist-hook, which automake
+#  invokes after the subdirectories have staged their own files, so
+#  ast_tester/ is complete by now.  It is skipped where there is no git
+#  checkout to ask, which is why it is a guard on `make dist' and not a
+#  guarantee about an arbitrary tarball.
+#  What deliberately does not ship: developer tooling, the coverage harness and
+#  the class templates a new AST class is copied from, none of which either
+#  build system needs.  src/version.h.in is the predist source for src/version.h,
+#  which ships in generated form instead.  Stated as exclusions rather than
+#  inclusions on purpose -- a file that is neither excluded here nor
+#  distributed fails the check, so leaving one out becomes a decision instead
+#  of an oversight.
+DIST_CHECK_EXCLUDE = \
+    ':!*.gitignore' \
+    ':!src/ftemplateclass.c' \
+    ':!src/grf_null.c' \
+    ':!src/stcschan-demo*.c' \
+    ':!src/templateclass.c' \
+    ':!src/templateclass.h' \
+    ':!src/version.h.in' \
+    ':!ast_tester/coverage' \
+    ':!ast_tester/asdftest.py' \
+    ':!ast_tester/ast_tester' \
+    ':!ast_tester/doplot' \
+    ':!ast_tester/makeplot' \
+    ':!ast_tester/maketest' \
+    ':!ast_tester/moctohtml' \
+    ':!ast_tester/simplify_pathways.md' \
+    ':!ast_tester/fixtures/*'
+
+# The full test corpus, for verifying a release rather than for shipping one.
+# A distinct archive name so that a full tarball is never mistaken for the
+# release artifact.
+#
+# Overriding distdir on the command line is what renames the archive.  If a
+# future automake computes the archive name independently of distdir, fall back
+# to running dist and renaming the result.
+fulldist:
+	$(MAKE) AST_DIST_FULL=1 distdir=$(PACKAGE)-$(VERSION)-full dist
+
+.PHONY: fulldist
+
+#  Two checks, because the two kinds of file fail differently.  A source file
+#  must always ship: leaving one out makes the tarball configure and then fail to
+#  build, which is how testimmutable.c and run_simplify_noop_test.cmake each
+#  survived to a full distcheck.  A fixture may be left out on purpose, so what
+#  matters there is that the tarball and DIST_MANIFEST agree, in both directions
+#  -- a file shipped without an entry and an entry matching nothing are both
+#  errors, so the fixture set stays a stated decision rather than an oversight.
+dist-check-tracked:
+	@test -d "$(top_srcdir)/.git" || exit 0; \
+	tracked=`cd "$(top_srcdir)" && \
+	    git ls-files cmake ast_tester src $(DIST_CHECK_EXCLUDE)`; \
+	missing=; \
+	for rel in $$tracked; do \
+	    test -e "$(distdir)/$$rel" || missing="$$missing $$rel"; \
+	done; \
+	if test -n "$$missing"; then \
+	    echo "make dist: tracked files missing from the distribution:" >&2; \
+	    for rel in $$missing; do echo "    $$rel" >&2; done; \
+	    echo "Add them to EXTRA_DIST, or widen the dist-hook patterns." >&2; \
+	    exit 1; \
+	fi
+	@test -d "$(top_srcdir)/.git" || exit 0; \
+	if test "x$(AST_DIST_FULL)" = x1; then \
+	    expected=`cd "$(top_srcdir)" && git ls-files 'ast_tester/fixtures/*' \
+	        | sed 's|^ast_tester/||'`; \
+	else \
+	    expected=`cd "$(top_srcdir)/ast_tester" && \
+	        $(SHELL) ./dist-fixtures.sh fixtures/DIST_MANIFEST` || exit 1; \
+	fi; \
+	missing=; \
+	for rel in $$expected; do \
+	    test -e "$(distdir)/ast_tester/$$rel" || missing="$$missing $$rel"; \
+	done; \
+	if test -n "$$missing"; then \
+	    echo "make dist: fixtures missing from the distribution:" >&2; \
+	    for rel in $$missing; do echo "    $$rel" >&2; done; \
+	    exit 1; \
+	fi; \
+	got=`mktemp "$${TMPDIR:-/tmp}/ast_got.XXXXXX"`; \
+	want=`mktemp "$${TMPDIR:-/tmp}/ast_want.XXXXXX"`; \
+	( cd "$(distdir)/ast_tester" && find fixtures -type f ! -name '.*' \
+	    ! -name DIST_TIER ) | sort > "$$got"; \
+	printf '%s\n' $$expected | sort > "$$want"; \
+	extra=`comm -23 "$$got" "$$want"`; \
+	rm -f "$$got" "$$want"; \
+	if test -n "$$extra"; then \
+	    echo "make dist: fixtures shipped but not in DIST_MANIFEST:" >&2; \
+	    for rel in $$extra; do echo "    $$rel" >&2; done; \
+	    exit 1; \
+	fi
+
+.PHONY: dist-check-tracked
+
+# `make distcheck` reconfigures a throw-away build from scratch, so re-pass the
+# compilers and libyaml location this build was configured with.
+AM_DISTCHECK_CONFIGURE_FLAGS = \
+    CC='$(CC)' \
+    F77='$(F77)' \
+    YAML_CFLAGS='$(YAML_CFLAGS)' \
+    YAML_LIBS='$(YAML_LIBS)'
+
+# The tarball has to be buildable with CMake too, but that is a property of the
+# tarball rather than of `make dist': requiring CMake in order to cut a release
+# would be backwards, since nothing CMake needs is generated at distribution
+# time -- unlike the autotools half-built state, CMake regenerates everything
+# from CMakeLists.txt.  That check therefore lives in CI, where both toolchains
+# are present anyway; see .github/workflows/autotools.yaml.  What guards
+# `make dist' here is dist-check-tracked above, which needs only git.

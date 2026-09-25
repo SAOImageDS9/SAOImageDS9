@@ -1,0 +1,110 @@
+#!/bin/sh
+# TAP producer for serialisation round-trip regression tests.
+#
+# Reads each native-encoded fixture and writes it straight back; the output
+# must reproduce the input.  Reading and re-writing a dump is the identity, so
+# any difference is a serialisation defect.
+#
+# This is the only family that can see one.  Both simplify families call
+# astSimplify after reading, and astSimplify re-sets IsSimple on every node it
+# visits, so a record a loader dropped is put back before anything compares it.
+#
+# The fixtures are the two halves of every pair in fixtures/simplify/cases.txt
+# plus every other native-encoded fixture in the tree, found by search so a new
+# one is picked up without editing this script.  A pair the distribution did not
+# carry is reported as a skipped row: the manifest ships even when its fixtures
+# do not, so being listed is not evidence of being present.  fixtures/wcsconv/expected/ is
+# deliberately excluded: those references are FITS-encoded, so reading one back
+# needs a FitsChan and the encoding it was written with, which is what
+# test_wcsconverter.tap already does.
+#
+# The leading run of comment lines is dropped from both sides before comparing.
+# A fixture may carry a hand-written header saying what it is for -- see
+# wcsconv/inputs/degen1.ast -- and that is documentation for a reader, not part
+# of the object; a dump cannot reproduce it and should not have to.  Nothing
+# else is normalised: every line from the first Begin onwards, comments
+# included, must match byte for byte.
+srcdir=${srcdir:-.}
+fixtures=${srcdir}/fixtures
+cases=${fixtures}/simplify/cases.txt
+
+# The simplify half of the corpus may not be distributed; the glob half then
+# finds only the .ast fixtures that were.  Reading a missing manifest must not
+# be an error here, so stand in an empty one and let the count below decide.
+test -f "$cases" || cases=/dev/null
+
+trim() {
+    printf '%s' "$1" | sed 's/^[[:blank:]]*//; s/[[:blank:]]*$//'
+}
+
+# Build the fixture list first, so the TAP plan can be announced up front.
+# Paths are relative to the fixture root, matching the manifest.
+#
+# Collected into a file by a top-level loop rather than captured in a $( ):
+# macOS /bin/sh is bash 3.2, whose $( ) parser matches parentheses naively, so
+# the ")" ending a case pattern closes the substitution early and the following
+# ";;" is a syntax error.  The other producers here keep their loop at top level
+# too; tools/test-tap-portability.sh enforces it.
+# An explicit template: BSD mktemp, which is what macOS ships, requires one.
+listfile=$(mktemp "${TMPDIR:-/tmp}/ast_roundtrip.XXXXXX")
+trap 'rm -f "$listfile"' EXIT
+
+while IFS='|' read -r name input reference rest; do
+    name=$(trim "$name")
+    case $name in ''|'#'*) continue ;; esac
+    input=$(trim "$input")
+    reference=$(trim "$reference")
+    echo "$input" >> "$listfile"
+    test "$reference" = "$input" || echo "$reference" >> "$listfile"
+done < "$cases"
+
+( cd "$fixtures" && find programs serialisation wcsconv/framesets \
+    -type f -name '*.ast' 2>/dev/null ) >> "$listfile"
+
+n=$(grep -c . "$listfile" || true)
+if [ "$n" -eq 0 ]; then
+    echo "1..0 # SKIP fixtures not distributed"
+    exit 0
+fi
+echo "1..$n"
+
+# Strip the leading run of comment lines.  Only the leading run goes: a comment
+# after the first Begin is part of the dump and must still be reproduced.
+strip_header() {
+    awk 'started || !/^#/ { started = 1; print }' "$1"
+}
+
+idx=0
+grep . "$listfile" | while IFS= read -r rel; do
+    idx=$((idx + 1))
+    test="$idx - $rel"
+    out=roundtrip_$(echo "$rel" | tr '/.' '__').out
+
+    # The manifests ship even where their fixtures do not, so a listed fixture
+    # may simply be absent from a cut-down distribution.  Report that as a
+    # skipped row rather than a failure, mirroring the DISABLED test the CMake
+    # suite registers for the same fixture.
+    if [ ! -f "${fixtures}/${rel}" ]; then
+        echo "ok $test # SKIP fixture not distributed"
+        continue
+    fi
+
+    if ! ./roundtrip "${fixtures}/${rel}" "$out" > "${out}.log" 2>&1 \
+            < /dev/null; then
+        echo "not ok $test"
+        sed 's/^/# /' "${out}.log"
+        rm -f "$out" "${out}.log"
+        continue
+    fi
+
+    strip_header "${fixtures}/${rel}" > "${out}.ref"
+    strip_header "$out"               > "${out}.new"
+    if diff -u "${out}.ref" "${out}.new" > "${out}.diff" 2>&1; then
+        echo "ok $test"
+    else
+        echo "not ok $test"
+        echo "# $rel: reading it and writing it back did not reproduce it"
+        sed 's/^/# /' "${out}.diff"
+    fi
+    rm -f "$out" "${out}.log" "${out}.ref" "${out}.new" "${out}.diff"
+done

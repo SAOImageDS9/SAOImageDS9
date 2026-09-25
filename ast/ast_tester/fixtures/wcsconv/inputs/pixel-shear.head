@@ -1,0 +1,13 @@
+NAXIS1  =                  100 / Linear axis
+NAXIS2  =                  100 / Linear axis
+CTYPE1  = 'PIXEL   '          / Linear pixel
+CTYPE2  = 'PIXEL   '          / Linear pixel
+CRVAL1  =                  0.0 / Reference value
+CRVAL2  =                  0.0 / Reference value
+CRPIX1  =               50.000 / Reference pixel axis 1
+CRPIX2  =               50.000 / Reference pixel axis 2
+CD1_1   =                  1.0 / Asymmetric shear
+CD1_2   =                  0.1 / Small off-diagonal
+CD2_1   =                 -0.8 / Large off-diagonal (asymmetric)
+CD2_2   =                  1.0 / Asymmetric shear
+END

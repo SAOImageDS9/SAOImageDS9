@@ -819,6 +819,9 @@ int Context::load(Base::MemType which, const char* fn,
     case Base::VAR:
       next = new FitsImageFitsNextVar(this, parent_->interp, fn, ptr->fitsFile(), ii+1);
       break;
+    case Base::ASDF:
+      next = new FitsImageAsdfNext(this, parent_->interp, fn, ptr->fitsFile(), ii+1);
+      break;
     case Base::POST:
       next = new FitsImageFitsNextPost(this, parent_->interp, img, ptr->baseFile(), ii+1);
       break;

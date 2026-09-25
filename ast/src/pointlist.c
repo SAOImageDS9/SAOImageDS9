@@ -72,6 +72,9 @@ f     The PointList class does not define any new routines beyond those
 *        Move methods astGetEnclosure and astSetEnclosure to Region class.
 *     8-JUL-2009 (DSB):
 *        In Transform, use "ptr2", not "ptr", if we are creating a mask.
+*     24-APR-2026 (TIMJ):
+*        Use round() instead of (int)(x+0.5) for grid index rounding
+*        to avoid platform-dependent results.
 *class--
 
 *  Implementation Deficiencies:
@@ -907,7 +910,7 @@ static AstDim Mask##X( AstRegion *this, AstMapping *map, int inside, int ndim, \
          vlen = 1; \
          ii = 0; \
          for( j = 0; j < ndim; j++ ) { \
-            ii += vlen*( (int)( ptr2[ j ][ i ] + 0.5 ) - lbnd[ j ] ); \
+            ii += vlen*( (int)round( ptr2[ j ][ i ] ) - lbnd[ j ] ); \
             vlen *= ubnd[ j ] - lbnd[ j ] + 1; \
          }  \
          iv[ i ] = ii; \

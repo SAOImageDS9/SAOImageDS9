@@ -30,8 +30,8 @@ corresponding region ID.</li>
 <li><strong>3D Surface region analysis:</strong> View the pixel values
 inside a 2D region as an automatically updated 3D data cube.</li>
 <li><strong>New 3D ray tracing:</strong> <code>FIP</code> (First
-Intensity Point) rendering displays the first finite, non-zero voxel
-along each ray and can add basic shading and lighting.</li>
+Intensity Projection) rendering displays the first finite, non-zero
+voxel along each ray and can add basic shading and lighting.</li>
 <li><strong>Virtual Observatory image search:</strong>
 <code>Analysis</code> → <code>Archives</code> →
 <code>Search SIA Registry</code> finds Simple Image Access (SIA)
@@ -76,7 +76,8 @@ the display.</li>
 <ul>
 <li>Bug when deleting a frame and then creating a new multi-color frame
 could cause colorbar contrast/bias to behave badly.</li>
-<li>Fixed crash if footprint server returns a single sided polygon.</li>
+<li>Fixed crash if footprint server returns a single sided
+“polygon”.</li>
 <li>Fix problem reading FITS regions and WCS-TAB coordinates on
 Windows.</li>
 <li>Fix issue when using new reveal mode with more/less than exactly 2
@@ -86,7 +87,13 @@ responses)</li>
 <li>Fix vertical text positioning offset bug in PDF output</li>
 <li>Address several SAMP compatibility issues including self-closing
 tags and RFC 7230 CRLF compliance.</li>
-<li>Fix GZIP tile compression for partial/edge tiles</li>
+<li>Fix GZIP tile compression for partial/edge tiles.</li>
+<li>Fix regression in coordinate grid rendering (X11, tile mode with
+&gt;2 frames)</li>
+<li>Fix <code>cube order</code> command; the GUI action worked but not
+CLI, XPA, and SAMP.</li>
+<li>Fix colorbars when switching from tile/grid to single frame
+display.</li>
 </ul>
 <h2 id="user-facing-details">User-facing details</h2>
 <h3 id="multicolor-frames-and-layers">Multicolor frames and layers</h3>

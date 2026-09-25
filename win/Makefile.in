@@ -20,6 +20,26 @@ TKFLAGS		= @TKFLAGS@
 
 CONFIGFLAGS	=CC=$(TARGET)-gcc AR=$(TARGET)-ar
 
+# pkg-config for the *target*, not the build machine.
+#
+# The packages below that call PKG_CHECK_MODULES - ds9, tclxml, tksao -
+# are configured without --host (they use $(CACHE), which is mutually
+# exclusive with it), so autoconf leaves ac_tool_prefix empty and its
+# AC_PATH_TOOL falls through to the plain `pkg-config'. On cygwin that
+# reads /usr/lib/pkgconfig and hands back the *cygwin* libxml2, whose
+# import library is for cygxml2-2.dll - so the mingw link fails with
+# `undefined reference to __imp_xmlParserVersion', xmlParserVersion being
+# a libxml2 global that ld cannot auto-import the way it often can a
+# function. The mingw libxml2 is what this build actually wants: see
+# ds9/win/Makefile.in, which ships libxml2-2.dll out of the mingw
+# sys-root.
+#
+# Naming the target's pkg-config fixes it at the source. PKG_CONFIG is
+# not a precious variable in any of these configures, so unlike CC/AR it
+# does not get written into the shared config.cache and cannot trip the
+# `changes in the environment' check that $(CACHE) enforces.
+PKGCONFIG	= PKG_CONFIG=$(TARGET)-pkg-config
+
 ASTFLAGS	= CFLAGS=-DCMINPACK_NO_DLL
 XPAFLAGS	= CFLAGS=-DSTATIC_BUILD
 TLSFLAGS	="CFLAGS=-DNO_IDEA=1 -DNO_RC5=1"

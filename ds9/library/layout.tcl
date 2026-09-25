@@ -888,6 +888,13 @@ proc LayoutFrameOne {} {
 #    $ds9(canvas) raise $current(frame)
 
     # colorbar
+    # the loop above resyncs the shared colorbar(...) globals to each
+    # active frame in turn to size its colorbar, so by now they reflect
+    # whichever frame was iterated last, not necessarily current(frame).
+    # resync to current(frame) before deciding whether to show its
+    # colorbar, or a disabled current colorbar can get shown (with
+    # stale leftover geometry) based on another frame's setting.
+    ColorbarGlobalSetFromFrame $current(frame)
     if {$view(colorbar) && $colorbar(show)} {
 	$current(colorbar) show
 	LayoutRaise $current(colorbar)

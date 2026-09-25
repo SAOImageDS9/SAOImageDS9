@@ -735,8 +735,13 @@ The full lists are in **`WCS_TEST_PLAN.md` §3** (DS9/XPA gotchas) and
   optional metadata. Without it AST builds no FrameSet at all.
 - **Frame tags need the authority prefix**, `tag:astropy.org:astropy/coordinates/frames/...`.
   Dropping it silently yields no WCS.
-- **DS9 feeds its image coordinate straight into the GWCS**, with no 1-based/0-based
-  correction — the opposite of what the FITS↔gwcs convention difference suggests.
+- **GWCS is 0-based, DS9 image coordinates are 1-based**, and `FitsImage::yaml2ast` is
+  where the two are reconciled — it adds a Frame one pixel off the GWCS detector Frame
+  and makes it the base. Until 2026-09-25 it did not, and the `gwcs/` fixtures were
+  generated with `-CRPIX` to cancel the error out, so the suite could not see it. Use
+  `astAddFrame`, not `astRemapFrame`: the latter simplifies, and on a GWCS containing a
+  non-invertible MatrixMap (any `planar2d`) that simplification fails outright and the
+  frame ends up with no WCS.
 - **Raise `prefs precision` before measuring anything.** The default truncates degrees at
   7 dp, which was the binding constraint on several test-plan numbers.
 - **zsh eats `:r`**: `"$F:roman/data"` silently loads `<basename-minus-extension>oman/data`.

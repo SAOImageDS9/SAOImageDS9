@@ -3886,6 +3886,70 @@ AstFrameSet* FitsImage::yaml2ast(const char* yamltext)
   if (!wcsInv_)
     internalError("Warning: the WCS has no defined inverse. Some functionality may not be available.");
 
+  // GWCS pixel coordinates are 0-based; DS9's image coordinates are
+  // 1-based.
+  //
+  // For a FITS file this never comes up: astRead(FitsChan) gives a
+  // FrameSet whose base Frame is GRID, which is already 1-based, so
+  // wcsTran() can hand DS9's image coordinate straight to astTran2().
+  // A GWCS document's input Frame is the detector frame, which follows
+  // the numpy/gwcs convention where the first pixel is 0 - the Roman L2
+  // cal files say so in their own bounding_box, whose interval on a
+  // 4088-pixel axis is [-0.5, 4087.5]. Feeding a 1-based coordinate to
+  // that transform reads the WCS of the next pixel over, on every axis.
+  //
+  // So add a Frame that *is* DS9's image coordinate system, one pixel
+  // off the GWCS detector Frame, and make it the base. The ShiftMap's
+  // forward direction converts the original (GWCS, 0-based) coordinates
+  // to the new (DS9, 1-based) ones, so the offset is +1 and astTran2()
+  // undoes it on the way in.
+  //
+  // astAddFrame rather than astRemapFrame, which is the obvious choice
+  // and is wrong: remapping simplifies the Mapping it builds, and for a
+  // GWCS whose chain contains a non-invertible MatrixMap - any planar2d,
+  // and so anything built on one - that simplification fails outright
+  // with "astMtrMult(MatrixMap): Cannot find the product of 2 MatrixMaps
+  // - the second MatrixMap has no forward transformation", leaving the
+  // frame with no WCS at all. Adding a Frame leaves the existing Mapping
+  // graph untouched and merely prepends the shift.
+  //
+  // astAddFrame also makes the new Frame current, which would leave
+  // base == current and every transformation an identity, so the
+  // original Current index has to be put back.
+  //
+  // Every input axis gets the shift, not just the first two: a GWCS's
+  // input Frame is pixel coordinates throughout, and the higher axes
+  // wcsTran() supplies from Context::slice() are 1-based in the same way
+  // (slice_[] starts at 1, and context.C offsets with slice_[jj]-1).
+  //
+  // The FITS-card path cannot reach this. replaceWCS() sends anything
+  // starting "#ASDF-FITS-WCS" to replaceWCSCards() instead, and those
+  // cards already carry the correction as CRPIX+1 (AsdfFitsWcsImagingCards
+  // in ds9/library/asdf.tcl).
+  {
+    int nin = astGetI(frameSet, "Nin");
+    if (astOK && nin > 0) {
+      int icur = astGetI(frameSet, "Current");
+      AstFrame* base = (AstFrame*)astGetFrame(frameSet, AST__BASE);
+      AstFrame* nf = (AstFrame*)astCopy(base);
+
+      double* shift = new double[nin];
+      for (int ii=0; ii<nin; ii++)
+	shift[ii] = 1;
+      AstShiftMap* sm = astShiftMap(nin, shift, " ");
+      delete [] shift;
+
+      if (astOK && sm != AST__NULL && nf != AST__NULL) {
+	astAddFrame(frameSet, AST__BASE, sm, nf);
+	if (astOK) {
+	  astSetI(frameSet, "Base", astGetI(frameSet, "Nframe"));
+	  astSetI(frameSet, "Current", icur);
+	}
+      }
+      astAnnul(base);
+    }
+  }
+
   // scanWCS() (below) populates wcs_[] - the flags hasWCS() actually
   // queries - by reading each member FRAME's own "Ident" attribute via
   // astGetFrame(ast_,N) and mapping ' '->primary WCS, 'A'-'Z'->alternate

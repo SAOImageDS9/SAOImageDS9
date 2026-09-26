@@ -43,6 +43,82 @@ when a header moved. The same applies one level down: after touching
 anything in `fitsy/`, run `make fitsy` (which also reinstalls its headers
 into `include/`) before rebuilding `tksao`.
 
+### A branch switch or rebase breaks the vendored builds
+
+A checkout gives every *tracked* file a fresh mtime while *untracked*
+build products keep theirs, so after a `git rebase`, `git checkout` of
+another branch, or any operation that rewrites the working tree, several
+vendored packages are left in a state where `make` does the wrong thing.
+Two distinct failures, both seen on one rebase of `asdf_support` onto
+`master`:
+
+```
+make -C zlib -j 24 install
+make[1]: *** No rule to make target `install'.  Stop.
+```
+
+`zlib/Makefile` is **tracked**, as a 100-byte stub that only says "Please
+use ./configure first"; zlib's `configure` overwrites it. The checkout
+restored the stub, but `zlib/configure.log` — the sentinel the
+`zlib/configure.log :` rule keys on — is untracked and survived, so make
+considered zlib configured and never re-ran it.
+
+```
+make[2]: *** [config.h.in] Error 127
+make: *** [libyaml] Error 2
+```
+
+`Error 127` is "command not found": automake's rebuild rules fired and
+tried to run `autoheader`. `libyaml` and `ast` are the two vendored
+packages using automake, neither declares `AM_MAINTAINER_MODE`, so those
+rules are always live (see TODO.md). `make.include`'s `libyaml/Makefile`
+and `ast/Makefile` rules already `touch` the whole generated set to stop
+exactly this — but **those rules have no prerequisites**, so an existing
+`libyaml/Makefile` skips the rule, touch and all.
+
+That is the shape of both failures: the step that would repair the state
+is skipped *because* the state is half-repaired.
+
+The fix is to make each generated file no older than its inputs, which is
+what automake's rules test. Touch the inputs and generated set together,
+then make `configure`'s own products newest:
+
+```
+rm -f zlib/configure.log
+for p in libyaml ast; do
+  ( cd $p || exit
+    for f in configure.ac aclocal.m4 configure Makefile.am Makefile.in \
+             config.h.in include/config.h.in include/Makefile.am \
+             include/Makefile.in src/Makefile.am src/Makefile.in \
+             tests/Makefile.am tests/Makefile.in; do
+      if [ -e "$f" ]; then touch "$f"; fi
+    done )
+done
+sleep 2
+for p in libyaml ast; do
+  ( cd $p && find . \( -name Makefile -o -name config.status \
+      -o -name config.h -o -name stamp-h1 \) -print0 | xargs -0 touch )
+done
+```
+
+The `if [ -e ]` is not decoration: the two packages do not have the same
+layout, and **`touch` creates a file that is not there**. `ast` uses a
+single top-level `Makefile.am`, so a blanket
+`touch src/Makefile.am src/Makefile.in` plants two empty untracked files
+in `ast/src/` that automake has no business finding. Doing exactly that
+is what prompted this note. (`libyaml/config.h.in` being zero bytes is
+*not* such a file — it is tracked and genuinely empty; libyaml's real
+header is `include/config.h`.)
+
+**Do not "fix" this by reconfiguring `ast`.** That rewrites ~7000 lines
+of tracked `configure`/`aclocal.m4`/`Makefile.in` and had to be reverted
+once already (`187aa9c4b`); TODO.md records it.
+
+Expect `zlib/Makefile` and `zlib/zconf.h` to show as modified afterwards
+(`#if HAVE_UNISTD_H-0` becomes `#if 1`). That is zlib's configure writing
+over tracked files, it is normal in this tree, and it is not something to
+commit.
+
 ## Parser/lexer changes (bison/flex)
 
 Several `tksao` subsystems (e.g. `tksao/frame/parser.Y` + `lex.L`) have

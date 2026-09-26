@@ -131,6 +131,7 @@ ds9/$(OS)/Makefile :
 	./configure \
 	$(WITHTK) \
   	--with-xml2-config=$(XML2CONFIG) \
+	$(PKGCONFIG) \
 	$(PREFIX) \
 	$(STD) \
 	$(CACHE)
@@ -181,6 +182,7 @@ tclxml/Makefile :
 	$(WITHTCL) \
   	--with-xml2-config=$(XML2CONFIG) \
 	--with-xslt-config=$(XSLTCONFIG) \
+	$(PKGCONFIG) \
 	$(PREFIX) \
 	$(STDSTUBS) \
 	$(CACHE)
@@ -367,6 +369,7 @@ tksao/Makefile :
 	./configure \
 	$(WITHTK) \
   	--with-xml2-config=$(XML2CONFIG) \
+	$(PKGCONFIG) \
 	$(PREFIX) \
 	$(STD) \
 	$(CACHE)

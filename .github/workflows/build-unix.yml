@@ -79,3 +79,41 @@ jobs:
             dist/ds9.${{ matrix.os }}.*.tar.gz
             dist/xpa.${{ matrix.os }}.*.tar.gz
         retention-days: 2
+
+  macos-universal:
+    defaults:
+      run:
+        shell: bash
+
+    name: macOS Universal
+    needs: check-builds
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # 6.0.2
+
+    - name: Download arm64 tarballs
+      uses: actions/download-artifact@v8
+      with:
+        name: binary-macos-latest
+        path: inputs/arm64
+
+    - name: Download x86_64 tarballs
+      uses: actions/download-artifact@v8
+      with:
+        name: binary-macos-15-intel
+        path: inputs/x86_64
+
+    - name: Make universal tarballs
+      run: |
+        .github/scripts/make-universal-tar.sh inputs/arm64 inputs/x86_64 dist
+
+    - name: Upload universal tarballs
+      uses: actions/upload-artifact@v7
+      with:
+        name: binary-macos-universal
+        path: |
+            dist/ds9.macos-universal.*.tar.gz
+            dist/xpa.macos-universal.*.tar.gz
+        retention-days: 2

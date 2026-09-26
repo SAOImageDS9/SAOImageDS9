@@ -23,13 +23,19 @@ jobs:
 
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
+    outputs:
+      # Disk image name without the .dmg extension, e.g. "SAOImageDS9 8.8rc1".
+      # Both matrix legs produce the same value.
+      dmg_base: ${{ steps.rename.outputs.dmg_base }}
     strategy:
       matrix:
         include:
           - name: macOS Latest ARM
             os: macos-latest
+            arch: arm64
           - name: macOS 15 Intel
             os: macos-15-intel
+            arch: x86_64
 
     steps:
     - name: Checkout Code
@@ -57,10 +63,68 @@ jobs:
         export LDFLAGS="-mmacosx-version-min=12.0"
         make && make dist
 
+    # Both builds produce the same file name, and an unarchived upload is
+    # named after its file, so tag each disk image with its architecture.
+    - name: Rename disk image
+      id: rename
+      env:
+        ARCH: ${{ matrix.arch }}
+      run: |
+        shopt -s nullglob
+        dmgs=(dist/SAOImage*.dmg)
+        if [[ ${#dmgs[@]} -ne 1 ]]; then
+          echo "error: expected exactly one disk image in dist/, found ${#dmgs[@]}" >&2
+          exit 1
+        fi
+        base="$(basename "${dmgs[0]}" .dmg)"
+        mv "${dmgs[0]}" "dist/${base}-${ARCH}.dmg"
+        echo "dmg_base=${base}" >> "$GITHUB_OUTPUT"
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v7
       with:
-        name: binary-${{ matrix.os }}
-        path: dist/SAOImage*dmg
+        path: dist/SAOImage*-${{ matrix.arch }}.dmg
+        archive: false
+        retention-days: 2
+
+  universal:
+    defaults:
+      run:
+        shell: bash
+
+    name: macOS Universal
+    needs: check-builds
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # 6.0.2
+
+    - name: Download arm64 disk image
+      uses: actions/download-artifact@v8
+      with:
+        name: ${{ needs.check-builds.outputs.dmg_base }}-arm64.dmg
+        path: inputs
+
+    - name: Download x86_64 disk image
+      uses: actions/download-artifact@v8
+      with:
+        name: ${{ needs.check-builds.outputs.dmg_base }}-x86_64.dmg
+        path: inputs
+
+    - name: Make universal disk image
+      env:
+        DMG_BASE: ${{ needs.check-builds.outputs.dmg_base }}
+      run: |
+        mkdir -p dist
+        .github/scripts/make-universal-dmg.sh \
+          "inputs/${DMG_BASE}-arm64.dmg" \
+          "inputs/${DMG_BASE}-x86_64.dmg" \
+          "dist/${DMG_BASE}.dmg"
+
+    - name: Upload universal disk image
+      uses: actions/upload-artifact@v7
+      with:
+        path: dist/SAOImage*.dmg
         archive: false
         retention-days: 2

@@ -3455,8 +3455,14 @@ static FitsFile* fits2OpenExt(FitsFile* orig, const char* extname,
       ext->extver() == extver && ext->extlevel() == extlevel)
     return ext;
 
-  if (ext)
+  // ~FitsFile does not release the underlying handle -- only done()
+  // does. This one opened the file itself (by name, above), so it owns
+  // its handle and must close it; see the matching done() in the
+  // caller for the success path.
+  if (ext) {
+    ext->done();
     delete ext;
+  }
   return NULL;
 }
 
@@ -3494,6 +3500,13 @@ static void fits2TAB(AstFitsChan* chan, const char* extname,
   }
 
   FitsFile* ext = fits2OpenExt(orig, extname, extver, extlevel);
+
+  // Only an ext that fits2OpenExt() opened by name owns its own handle
+  // and may be done() below. The fits2NextHDU() fallback chain instead
+  // *shares* orig's handle (FitsMosaicNextStream copies prev->stream()),
+  // so closing any link of it would close the parent image's handle out
+  // from under it -- or double-close one Context::load() already closed.
+  int extOwnsHandle = ext ? 1 : 0;
 
   if (!ext) {
     // fallback: walk forward from the parent's current position
@@ -3602,8 +3615,11 @@ static void fits2TAB(AstFitsChan* chan, const char* extname,
   astPutTable(chan, table, extname);
 
   astEnd; // now, clean up memory
-  if (ext)
+  if (ext) {
+    if (extOwnsHandle)
+      ext->done();
     delete ext;
+  }
 
   *status = 1;
 }

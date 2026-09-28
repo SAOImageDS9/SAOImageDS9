@@ -50,7 +50,13 @@ template <> size_t FitsStream<FILE*>::read(char* where, size_t size)
 
 template <> void FitsStream<FILE*>::close()
 {
-  fclose(stream_);
+  // NB: idempotent -- done() may be reached more than once for the same
+  // object (eg Context::load() closes a freshly loaded image, and a
+  // caller may close again on its own cleanup path)
+  if (stream_) {
+    fclose(stream_);
+    stream_ = 0;
+  }
 }
 
 // Socket
@@ -230,7 +236,11 @@ template <> size_t FitsStream<gzFile>::read(char* where, size_t size)
 
 template <> void FitsStream<gzFile>::close()
 {
-  gzclose(stream_);
+  // NB: idempotent -- see FitsStream<FILE*>::close()
+  if (stream_) {
+    gzclose(stream_);
+    stream_ = 0;
+  }
 }
 
 template<class T> FitsHead* FitsStream<T>::headRead()

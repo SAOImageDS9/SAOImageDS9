@@ -852,6 +852,12 @@ void Base::fitsyHasExtCmd(const char* fn)
   else
     Tcl_AppendResult(interp, "0", NULL);
 
+  // NB: ~FitsFile does not release the underlying handle -- only done()
+  // does (a no-op for the mmap backends, a real close() for the
+  // FitsStream<T> ones). Without this the AllocGZ probe above leaks a
+  // gzFile on every load, and Windows then refuses to unlink the file
+  // until ds9 exits.
+  ext->done();
   delete ext;
   return;
 }

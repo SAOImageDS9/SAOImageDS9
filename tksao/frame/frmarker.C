@@ -5179,8 +5179,10 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color)
 				      FitsFile::NOFLUSH, 1);
 #endif
     if (!mkfits || !mkfits->isValid() || !mkfits->isBinTable()) {
-      if (mkfits)
+      if (mkfits) {
+	mkfits->close();
 	delete mkfits;
+      }
       result = TCL_ERROR;
       return;
     }
@@ -5224,16 +5226,20 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color)
   
   // manatory columns x and y
   if (!x || !y) {
-    if (mkfits)
+    if (mkfits) {
+      mkfits->close();
       delete mkfits;
+    }
     result = TCL_ERROR;
     return;
   }
 
   // and width should be the same
   if (((FitsBinColumn*)x)->repeat() != ((FitsBinColumn*)y)->repeat()) {
-    if (mkfits)
+    if (mkfits) {
+      mkfits->close();
       delete mkfits;
+    }
     result = TCL_ERROR;
     return;
   }
@@ -5448,8 +5454,10 @@ void Base::markerLoadFitsCmd(const char* fn, const char* color)
     }
   }
 
-  if (mkfits)
+  if (mkfits) {
+    mkfits->close();
     delete mkfits;
+  }
 }
 
 void Base::markerMoveCmd(const Vector& v)

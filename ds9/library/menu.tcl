@@ -85,10 +85,104 @@ proc ThemeMenu {w} {
 	    menu $w
 	    ThemeConfigMenu $w
 	}
-	aqua {menu $w}
+	aqua {
+	    menu $w
+	    AquaMenuDeferCommands $w
+	}
     }
 
     return $w
+}
+
+# macOS 27+ (Aqua): menu item actions are now delivered from inside the
+# CFRunLoop, while Tcl is already waiting for events. Any nested event
+# loop run by the menu command (tkwait, i.e. every modal dialog) then
+# runs in Tcl's events-only runloop mode, never sees window server events,
+# and hangs. Work around this by deferring every menu -command until the
+# menu action has returned. Use 'after 0', not 'after idle': a new timer
+# wakes the blocked runloop, an idle handler does not.
+
+proc AquaMenuDeferCommands {w} {
+    set real "::AquaMenu$w"
+    rename $w $real
+    interp alias {} $w {} AquaMenuProxy $real
+    bind $w <Destroy> [list AquaMenuDestroy %W $w]
+}
+
+proc AquaMenuDestroy {win w} {
+    # tk clones menus (menubars, cascades) and adds the original's
+    # pathname to each clone's bindtags, so this also fires when a
+    # clone is destroyed. only act for the original.
+    if {$win ne $w} {
+	return
+    }
+
+    # the real widget command is removed by tk
+    if {[llength [interp alias {} $w]]} {
+	interp alias {} $w {}
+    }
+}
+
+proc AquaMenuProxy {real args} {
+    switch -glob -- [lindex $args 0] {
+	add {
+	    # add type ?option value ...?
+	    set args [concat [lrange $args 0 1] \
+			  [AquaMenuDeferOpts [lrange $args 2 end]]]
+	}
+	insert {
+	    # insert index type ?option value ...?
+	    set args [concat [lrange $args 0 2] \
+			  [AquaMenuDeferOpts [lrange $args 3 end]]]
+	}
+	entryconf* {
+	    # entryconfigure index ?option value ...?
+	    if {[llength $args] > 3} {
+		set args [concat [lrange $args 0 1] \
+			      [AquaMenuDeferOpts [lrange $args 2 end]]]
+	    }
+	}
+	inv* {
+	    # a scripted invoke is not affected by the bug, and callers
+	    # expect the command to have run (and its result) on return.
+	    # native menu selections bypass this proxy and stay deferred.
+	    global aquamenu
+	    incr aquamenu(invoke)
+	    try {
+		return [uplevel 1 [list $real {*}$args]]
+	    } finally {
+		incr aquamenu(invoke) -1
+	    }
+	}
+    }
+    return [uplevel 1 [list $real {*}$args]]
+}
+
+proc AquaMenuDeferOpts {opts} {
+    if {[llength $opts] % 2} {
+	# malformed, let tk report the error
+	return $opts
+    }
+
+    set rr {}
+    foreach {key val} $opts {
+	if {$key eq {-command} && $val ne {} \
+		&& ![string match {AquaMenuDefer *} $val]} {
+	    set val [list AquaMenuDefer $val]
+	}
+	lappend rr $key $val
+    }
+    return $rr
+}
+
+proc AquaMenuDefer {cmd} {
+    global aquamenu
+
+    if {[info exists aquamenu(invoke)] && $aquamenu(invoke) > 0} {
+	return [uplevel #0 $cmd]
+    }
+    after 0 $cmd
+    return
 }
 
 proc ThemeConfigFgBg {w} {

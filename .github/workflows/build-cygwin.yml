@@ -223,15 +223,16 @@ jobs:
             zlib0
             zstd
 
-      # 4. Windows Server 2025 runner images apply workspace ACLs that
-      # deny changing permissions on newly-created directories, which
-      # makes Cygwin's `cp -p`/`cp -a` (used throughout the Tcl/Tk
-      # Makefiles) fail with "Permission denied". Grant full control
-      # recursively so cp can preserve permissions without editing
-      # every Makefile.
-      - name: Allow Cygwin to preserve file permissions
-        shell: pwsh
-        run: icacls "${{ github.workspace }}" /grant "*S-1-1-0:(OI)(CI)F" /T /C /Q
+      # 4. On the current windows-latest image, Cygwin's ACL-based
+      # permission emulation on the D: drive rejects chmod on
+      # newly-created directories, so cp -p/-a (used throughout the
+      # Tcl/Tk Makefiles) fails with "Permission denied" even when the
+      # NTFS ACLs grant full control. Disable ACL emulation for
+      # cygdrive mounts so chmod becomes a no-op instead of erroring,
+      # avoiding the need to touch every Makefile.
+      - name: Disable ACL support for Cygwin drive mounts
+        shell: bash -eo pipefail {0}
+        run: echo 'none /cygdrive cygdrive binary,posix=0,noacl 0 0' >> /etc/fstab
 
       # 5. Build inside Cygwin
       - name: Run Cygwin Script

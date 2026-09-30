@@ -223,7 +223,17 @@ jobs:
             zlib0
             zstd
 
-      # 4. Build inside Cygwin
+      # 4. Windows Server 2025 runner images apply workspace ACLs that
+      # deny changing permissions on newly-created directories, which
+      # makes Cygwin's `cp -p`/`cp -a` (used throughout the Tcl/Tk
+      # Makefiles) fail with "Permission denied". Grant full control
+      # recursively so cp can preserve permissions without editing
+      # every Makefile.
+      - name: Allow Cygwin to preserve file permissions
+        shell: pwsh
+        run: icacls "${{ github.workspace }}" /grant "*S-1-1-0:(OI)(CI)F" /T /C /Q
+
+      # 5. Build inside Cygwin
       - name: Run Cygwin Script
         # Use the absolute path to Cygwin bash to avoid accidentally
         # picking up  Git-for-Windows bash from the PATH.

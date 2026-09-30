@@ -226,7 +226,7 @@ jobs:
       # 4. Build inside Cygwin
       - name: Run Cygwin Script
         # Use the absolute path to Cygwin bash to avoid accidentally
-        # picking up Git-for-Windows bash from the PATH.
+        # picking up  Git-for-Windows bash from the PATH.
         shell: bash -eo pipefail {0}
         run: |
           # Need to && cmds and tack on echo to avoid windows newlines

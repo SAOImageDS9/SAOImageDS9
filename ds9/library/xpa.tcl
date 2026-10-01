@@ -1194,8 +1194,8 @@ proc XPARcvdFile {xpa cdata param buf len} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
+	    {Windows NT} -
 	    Darwin {ProcessFileCmd param i {} [xparec $xpa datachan] {}}
-	    {Windows NT} {ProcessFileCmd param i {} dummy {}}
 	}
     }
     XPACatchError $xpa
@@ -1246,8 +1246,8 @@ proc XPASendGIF {xpa cdata param} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
+	    {Windows NT} -
 	    Darwin {ProcessSendGIFCmd {} {} $param [xparec $xpa datachan] {}}
-	    {Windows NT} {ProcessSendGIFCmd {} {} $param dummy {}}
 	}
     }
     XPACatchError $xpa
@@ -1261,8 +1261,8 @@ proc XPARcvdGIF {xpa cdata param buf len} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
+	    {Windows NT} -
 	    Darwin {ProcessGIFCmd param i [xparec $xpa datachan] {}}
-	    {Windows NT} {ProcessGIFCmd param i dummy {}}
 	}
     }
     XPACatchError $xpa
@@ -1470,8 +1470,8 @@ proc XPASendJPEG {xpa cdata param} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
+	    {Windows NT} -
 	    Darwin {ProcessSendJPEGCmd {} {} $param [xparec $xpa datachan] {}}
-	    {Windows NT} {ProcessSendJPEGCmd {} {} $param dummy {}}
 	}
     }
     XPACatchError $xpa
@@ -1485,8 +1485,8 @@ proc XPARcvdJPEG {xpa cdata param buf len} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
+	    {Windows NT} -
 	    Darwin {ProcessJPEGCmd param i [xparec $xpa datachan] {}}
-	    {Windows NT} {ProcessJPEGCmd param i dummy {}}
 	}
     }
     XPACatchError $xpa
@@ -1679,8 +1679,8 @@ proc XPARcvdMultiFrame {xpa cdata param buf len} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
+	    {Windows NT} -
 	    Darwin {ProcessMultiFrameCmd param i [xparec $xpa datachan] {}}
-	    {Windows NT} {ProcessMultiFrameCmd param i dummy {}}
 	}
     }
     XPACatchError $xpa
@@ -1835,8 +1835,8 @@ proc XPASendPNG {xpa cdata param} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
+	    {Windows NT} -
 	    Darwin {ProcessSendPNGCmd {} {} $param [xparec $xpa datachan] {}}
-	    {Windows NT} {ProcessSendPNGCmd {} {} $param dummy {}}
 	}
     }
     XPACatchError $xpa
@@ -1850,8 +1850,8 @@ proc XPARcvdPNG {xpa cdata param buf len} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
+	    {Windows NT} -
 	    Darwin {ProcessPNGCmd param i [xparec $xpa datachan] {}}
-	    {Windows NT} {ProcessPNGCmd param i dummy {}}
 	}
     }
     XPACatchError $xpa
@@ -2281,8 +2281,8 @@ proc XPASendTIFF {xpa cdata param} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
+	    {Windows NT} -
 	    Darwin {ProcessSendTIFFCmd {} {} $param [xparec $xpa datachan] {}}
-	    {Windows NT} {ProcessSendTIFFCmd {} {} $param dummy {}}
 	}
     }
     XPACatchError $xpa
@@ -2296,8 +2296,8 @@ proc XPARcvdTIFF {xpa cdata param buf len} {
 	global tcl_platform
 	switch $tcl_platform(os) {
 	    Linux -
+	    {Windows NT} -
 	    Darwin {ProcessTIFFCmd param i [xparec $xpa datachan] {}}
-	    {Windows NT} {ProcessTIFFCmd param i dummy {}}
 	}
     }
     XPACatchError $xpa

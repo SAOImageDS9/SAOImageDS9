@@ -352,6 +352,11 @@
 *        around it; for now it is only intended for internal use.  The
 *        companion astHasKeyMap method tests whether an Object already has an
 *        associated KeyMap without creating one.
+*     16-SEP-2026 (TIMJ):
+*        Scale the operands by DBL_EPSILON before applying the tolerance
+*        multiplier in astEQUALS. Applying the multiplier first overflows
+*        to infinity for operands near the top of the range, which made
+*        every comparison against such a value report equality.
 */
 
 /* Include files. */
@@ -1466,8 +1471,10 @@ int astTest##attribute##_( Ast##class *this, int *status ) { \
    residuals in the inverse of a well-conditioned matrix). The original
    DBL_MIN floor was effectively no floor at all; this was insufficient
    when the relative comparison was applied to values of order
-   DBL_EPSILON itself. */
-#define astEQUALS(aa,bb,tol) (((aa)==AST__BAD)?(((bb)==AST__BAD)?1:0):(((bb)==AST__BAD)?0:(fabs((aa)-(bb))<=astMAX((tol)*(fabs(aa)+fabs(bb))*DBL_EPSILON,1.0E-12))))
+   DBL_EPSILON itself. The operands are scaled down by DBL_EPSILON before
+   the multiplier is applied, since multiplying first overflows to
+   infinity for operands near the top of the range. */
+#define astEQUALS(aa,bb,tol) (((aa)==AST__BAD)?(((bb)==AST__BAD)?1:0):(((bb)==AST__BAD)?0:(fabs((aa)-(bb))<=astMAX((tol)*((fabs(aa)+fabs(bb))*DBL_EPSILON),1.0E-12))))
 #define astEQUAL(aa,bb) astEQUALS(aa,bb,1.0E5)
 
 

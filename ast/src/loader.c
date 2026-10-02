@@ -188,6 +188,7 @@ if ( !strcmp( class, #name ) ) return (AstLoaderType *) astLoad##name##_
    LOAD(WcsMap);
    LOAD(WinMap);
    LOAD(XmlChan);
+   LOAD(YamlChan);
    LOAD(XphMap);
    LOAD(ZoomMap);
 

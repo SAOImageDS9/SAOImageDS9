@@ -273,6 +273,12 @@ f     - AST_SHOWMESH: Display a mesh of points on the surface of a Region
 *     24-APR-2026 (TIMJ):
 *        Use round() instead of (int)(x+0.5) for grid bound rounding
 *        to avoid platform-dependent results.
+*     9-SEP-2026 (TIMJ):
+*        GetDefUnc: give an axis on which the bounding box is a point at
+*        zero a non-zero uncertainty width, using the absolute floor
+*        astEQUAL applies near zero. The width was 1.0E-6 of the axis
+*        value, which is zero there, and a zero-width uncertainty made a
+*        PointList report its own points as outside.
 *class--
 
 *  Implementation Notes:
@@ -3558,13 +3564,18 @@ static AstRegion *GetDefUnc( AstRegion *this, int *status ) {
    astRegBaseBox2( this, lbnd, ubnd );
 
 /* Create a Box covering 1.0E-6 of this bounding box, centred on the
-   centre of the box. */
+   centre of the box. An axis on which the bounding box has zero width
+   gets 1.0E-6 of the axis value instead, and an axis that is constant at
+   zero gets the absolute floor astEQUAL applies to values near zero, so
+   that the uncertainty never has zero width and a membership test at the
+   Region's own points cannot fail. */
    if( astOK ) {
       for( i = 0; i < nax; i++ ) {
          if( ubnd[ i ] != DBL_MAX && lbnd[ i ] != -DBL_MAX ) {
             hw = fabs( 0.5E-6*(  ubnd[ i ] - lbnd[ i ] ) );
             c = 0.5*(  ubnd[ i ] + lbnd[ i ] );
             if( hw == 0.0 ) hw = c*0.5E-6;
+            if( hw == 0.0 ) hw = 0.5E-12;
             ubnd[ i ] = c + hw;
             lbnd[ i ] = c - hw;
          } else {

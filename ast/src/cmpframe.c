@@ -195,6 +195,14 @@ f     The CmpFrame class does not define any new routines beyond those
 *     24-APR-2026 (TIMJ):
 *        Use round() instead of (int)(x+0.5) for grid size rounding
 *        to avoid platform-dependent results.
+*     9-SEP-2026 (TIMJ):
+*        NormBox: give the second component's probe PermMap the second
+*        component's axis count and an explicit output permutation. It had
+*        the first component's count, so a CmpFrame whose components differ
+*        in size reported AST__NCPIN from any Region bounds query, and its
+*        forward transformation put the second component's position on the
+*        first component's axes. Record in the prologue that a CmpFrame does
+*        not extend a box for a component's singularity.
 *class--
 */
 
@@ -5876,6 +5884,19 @@ static void NormBox( AstFrame *this_frame, double lbnd[], double ubnd[],
 *        set all bad if the point is outside the box.
 *     status
 *        Pointer to the inherited status variable.
+
+*  Notes:
+*     - Each component Frame is given a probe Mapping that expands a
+*     position on that component's axes into a full CmpFrame position,
+*     applies "reg", and extracts the component's axes again. The probe
+*     supplies AST__BAD on the other component's axes, and a Region used as
+*     "reg" maps any position holding AST__BAD to AST__BAD, so a component's
+*     singularity test never sees a position inside the box. A CmpFrame
+*     therefore does not extend the box for a singularity in either
+*     component: the bounds it returns are those it was given. Testing
+*     whether a Region on a CmpFrame contains a component's singular point
+*     cannot in general be decomposed by component, since the Region need
+*     not be a product of per-component Regions.
 */
 
 /* Local Variables: */
@@ -5893,6 +5914,7 @@ static void NormBox( AstFrame *this_frame, double lbnd[], double ubnd[],
    double *vl;
    double *vu;
    int *inperm;
+   int *outperm;
    int axis;
    int naxes1;
    int naxes;
@@ -5915,7 +5937,8 @@ static void NormBox( AstFrame *this_frame, double lbnd[], double ubnd[],
    vl = astMalloc( sizeof( double ) * (size_t) naxes );
    vu = astMalloc( sizeof( double ) * (size_t) naxes );
    inperm = astMalloc( sizeof( int ) * (size_t) naxes );
-   if( inperm ) {
+   outperm = astMalloc( sizeof( int ) * (size_t) naxes );
+   if( inperm && outperm ) {
 
 /* Permute the coordinates using the CmpFrame's axis permutation array
    to put them into the order required internally (i.e. by the two
@@ -5955,11 +5978,17 @@ static void NormBox( AstFrame *this_frame, double lbnd[], double ubnd[],
    relevant (permuted) coordinate values for normalisation. */
       astNormBox( this->frame1, vl, vu, m4 );
 
-/* Create a PermMap with a forward transformation which copies the upper
-   inputs to the same outputs, and supplied AST__BAD for the other
-   outputs. */
-      for( axis = 0; axis < naxes - naxes1; axis++ ) inperm[ axis ] = naxes1 + axis;
-      pm3 = astPermMap( naxes1, inperm, naxes, NULL, NULL, "", status );
+/* Create a PermMap with a forward transformation which copies its
+   "naxes - naxes1" inputs to the upper outputs, and supplies AST__BAD for
+   the lower outputs (a negative permutation value with no constants array
+   yields AST__BAD). Its inverse copies the upper inputs to the outputs. */
+      for( axis = 0; axis < naxes1; axis++ ) outperm[ axis ] = -1;
+      for( axis = 0; axis < naxes - naxes1; axis++ ) {
+         inperm[ axis ] = naxes1 + axis;
+         outperm[ naxes1 + axis ] = axis;
+      }
+      pm3 = astPermMap( naxes - naxes1, inperm, naxes, outperm, NULL, "",
+                        status );
 
 /* Put it in front of the Mapping created above, then invert it and add
    it at the end. */
@@ -5990,6 +6019,7 @@ static void NormBox( AstFrame *this_frame, double lbnd[], double ubnd[],
       m6 = astAnnul( m6 );
    }
    inperm = astFree( inperm );
+   outperm = astFree( outperm );
    vl = astFree( vl );
    vu = astFree( vu );
 }

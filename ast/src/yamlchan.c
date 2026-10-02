@@ -97,7 +97,7 @@ f     The YamlChan class does not define any new routines beyond those
 *        - Adapt to newer versions of ASDF transform schemas.
 *        - Add support for the gwcs/spherical_cartesian transform.
 *     20-APR-2026 (TIMJ):
-*        Fix buffer overread in LibYamlWriter where astStore copied one
+*        Fix buffer overread in AstYamlWriter where astStore copied one
 *        byte past the end of the source buffer.
 *     22-APR-2026 (EMB):
 *        - Add support for the asdf/transform/divide transform.
@@ -106,15 +106,46 @@ f     The YamlChan class does not define any new routines beyond those
 *        - Fix missing degree to radian conversion in ReadRotateSequence3d.
 *        - Fix handling of rotation_type parameter in ReadRotateSequence3d.
 *        - Fix handling of null transform in the final WCS step.
+*     3-JUL-2026 (EMB):
+*        Refactor YAML backend access through yaml_backend.h abstraction
+*        layer to support both libyaml and libfyaml.
+*     15-JUL-2026 (EMB):
+*        Fixed memory leak in GetRefMap.
 *     8-AUG-2026 (TIMJ):
 *        Use round() rather than (int)(x+0.5) for rounding, so that the
 *        library uses a single rounding idiom that is correct for
 *        negative values.
+*     16-SEP-2026 (EMB):
+*        - Fix a crash and a spurious error that could occur when writing
+*        certain WCS objects to ASDF, caused by mishandling of degree/radian
+*        unit conversions when simplifying the transform chain.
+*        - Fix reading of the ASDF linear1d transform, which used the wrong
+*        property name and constructed an incorrect Mapping.
+*        - Fix reading and writing of observer earth locations, which failed
+*        to recognise the earthlocation class and wrote scalar quantities in a
+*        form that could not be read back.
+*        - Fix serialisation of a YamlChan object itself: it was missing from
+*        the AST object loader and had an out-of-bounds array access when
+*        dumping a channel that uses the NATIVE encoding.
+*     29-SEP-2026 (EMB):
+*        Add support for reading and writing the gwcs/fitswcs_imaging
+*        transform. A fitswcs_imaging that was read from ASDF is written
+*        back out as a fitswcs_imaging; other Mappings are not.
 *class--
 */
 
 /* Module Macros. */
 /* ============== */
+/* The Ident given to a Mapping read from a GWCS fitswcs_imaging transform,
+   which prevents it from being simplified. */
+#define FITSWCS_IDENT "fitswcs_imaging"
+
+/* The units used by the inputs or outputs of the Mapping returned by
+   ReadSkyProjection. ASDF sky projections use degrees, whereas the AST
+   WcsMap at the heart of the Mapping uses radians. */
+#define UNIT_DEG 0
+#define UNIT_RAD 1
+
 /* Set the name of the class we are implementing. This indicates to
    the header files that define class interfaces that they should make
    "protected" symbols available. */
@@ -141,6 +172,22 @@ f     The YamlChan class does not define any new routines beyond those
 /* YAML tag prefix for all gWCS objects */
 #define GWCS_TAG STSCI_TAG"gwcs/"
 
+/* Check the result of an astYamlEmit* call and report an error if it
+   failed. YAML_BACKEND is defined by the build system when a YAML backend
+   is compiled in. */
+#if defined( YAML_BACKEND )
+#define EMIT_CHECK(this_, emitter_, status_, call) \
+   do { \
+      if( !(call) ) { \
+         astError( AST__LYAML, "astWrite(%s): Failed to emit YAML " \
+                   "event.", (status_), astGetClass( this_ ) ); \
+         AstYamlEmitterError( (emitter_), (status_) ); \
+      } \
+   } while( 0 )
+#else
+#define EMIT_CHECK(this_, emitter_, status_, call)
+#endif
+
 /* YAML tag prefix for astropy objects. */
 #define ASTROPY_TAG "tag:astropy.org:"
 
@@ -149,6 +196,13 @@ f     The YamlChan class does not define any new routines beyond those
 
 /* The ASDF version header. */
 #define ASDF_HEADER "#ASDF 1.0.0"
+
+/* The ASDF standard version the written tags belong to. Without this line a
+   reader has to assume the oldest standard, whose tag set does not include
+   the tags written here, and the whole tree comes back untagged. 1.5.0 is the
+   version whose tag set matches what this class writes: its core/asdf is
+   1.1.0 (see ROOT_TAG) and its core/ndarray is 1.0.0. */
+#define ASDF_STANDARD_HEADER "#ASDF_STANDARD 1.5.0"
 
 /* The major version numbers required by this module for the two
    supported STSci schemas (gwcs/ and asdf/transform/). */
@@ -215,52 +269,6 @@ static const char *DIVIDE_1D_INV[] = { "p", "r" };
                          "configured without YAML support.", status, \
                          Method );
 
-/* Emit a YAML event and report an error if it fails. */
-#if defined( YAML )
-static int TraceOutput = 0;
-static int nest_depth = 0;
-static int nest_type[ 100 ];
-#define EMIT \
-   if( TraceOutput && astOK ) { \
-      for( int kk = 0; kk < nest_depth; kk++ ) printf(" "); \
-      printf("Emitting %s ", YamlEventType(event) ); \
-      if( event.type == YAML_SCALAR_EVENT ) { \
-         printf("('%s') ", (char *) event.data.scalar.value ); \
-      } else if( event.type == YAML_SEQUENCE_START_EVENT ) { \
-         nest_type[ nest_depth++ ] = 1; \
-         if( event.data.sequence_start.tag ) \
-            printf("(%s) ", (char *) event.data.sequence_start.tag ); \
-      } else if( event.type == YAML_MAPPING_START_EVENT ) { \
-         nest_type[ nest_depth++ ] = 0; \
-         if( event.data.mapping_start.tag ) \
-            printf("(%s) ", (char *) event.data.mapping_start.tag ); \
-      } else if( event.type == YAML_SEQUENCE_END_EVENT ) { \
-         if( nest_depth == 0 ) { \
-            astError( AST__INTER, "astWrite(YamlChan): yaml nesting " \
-                      "error (too many _END_ events).", status ); \
-         } else if( nest_type[ --nest_depth ] != 1 ) { \
-            astError( AST__INTER, "astWrite(YamlChan): yaml nesting " \
-                      "error (SEQUENCE_END where MAPPING_END expected).",  \
-                      status ); \
-         } \
-      } else if( event.type == YAML_MAPPING_END_EVENT ) { \
-         if( nest_depth == 0 ) { \
-            astError( AST__INTER, "astWrite(YamlChan): yaml nesting " \
-                      "error (too many _END_ events).", status ); \
-         } else if( nest_type[ --nest_depth ] != 0 ) { \
-            astError( AST__INTER, "astWrite(YamlChan): yaml nesting " \
-                      "error (MAPPING_END where SEQUENCE_END expected).",  \
-                      status ); \
-         } \
-      } \
-      printf("\n"); \
-   } \
-   if( !yaml_emitter_emit( emitter, &event ) ){ \
-      astError( AST__LYAML, "astWrite(%s): Failed to emit libyaml " \
-                "%s", status, astGetClass( this ), YamlEventType(event) ); \
-      LibYamlEmitterError( emitter, status ); \
-   }
-#endif
 
 /* Include files. */
 /* ============== */
@@ -312,14 +320,7 @@ static int nest_type[ 100 ];
 #include <stdint.h>
 #include <inttypes.h>
 
-/* Include the libyaml header if it is available. Otherwise, define
-   local stubs for the selected definitions in yaml.h */
-#if defined( YAML )
-#include <yaml.h>
-#else
-typedef int yaml_parser_t;
-typedef int yaml_event_t;
-#endif
+#include "yaml_backend.h"
 
 /* Module Variables. */
 /* ================= */
@@ -335,7 +336,7 @@ static AstObject *(* parent_read)( AstChannel *, int * );
 
 /* Text values used to represent YamlEncoding values externally. These
    should be in the order defined by the associated constants above. */
-static const char *xencod[1] = { ASDF_STRING };
+static const char *xencod[] = { ASDF_STRING, NATIVE_STRING };
 
 /* Address of this static variable is used as a unique identifier for
    member of this class. */
@@ -357,7 +358,7 @@ astMAKE_INITGLOBALS(YamlChan)
 #define getattrib_buff astGLOBAL(YamlChan,GetAttrib_Buff)
 #define class_init astGLOBAL(YamlChan,Class_Init)
 #define class_vtab astGLOBAL(YamlChan,Class_Vtab)
-#if defined( YAML )
+#if defined( YAML_BACKEND )
 #define lines_written astGLOBAL(YamlChan,Lines_Written)
 #endif
 
@@ -373,7 +374,7 @@ static int class_init = 0;       /* Virtual function table initialised? */
 /* Buffer returned by GetAttrib. */
 static char getattrib_buff[ GETATTRIB_BUFF_LEN + 1 ];
 
-#if defined( YAML )
+#if defined( YAML_BACKEND )
 
 /* Number of lines written to the output. */
 static int lines_written = 0;
@@ -402,7 +403,7 @@ AstYamlChan *astYamlChanId_( const char *(* source)( void ),
 
 /* Prototypes for Private Member Functions. */
 /* ======================================== */
-#if defined( YAML )
+#if defined( YAML_BACKEND )
 
 static AstFrame *ReadFrame( AstKeyMap *, int, AstMapping **, int *status );
 static AstFrameSet *ReadWcs( AstYamlChan *, AstKeyMap *, int * );
@@ -410,8 +411,8 @@ static AstObject *ReadNative( AstYamlChan *, AstKeyMap *, int * );
 static AstKeyMap *AddR2D( AstYamlChan *, AstKeyMap **, int, int, int, int * );
 static AstKeyMap *Get0A( AstKeyMap *, const char *, int, AstKeyMap *, const char *, int * );
 static AstKeyMap *IsAsdfTransform( AstYamlChan *, AstCmpMap *, AstObject *, const char *, AstCmpMap **, int * );
-static AstKeyMap *ReadValues( AstYamlChan *, yaml_parser_t *, int * );
-static AstKeyMap *ReadYAMLMapping( AstYamlChan *, yaml_parser_t *, int * );
+static AstKeyMap *ReadValues( AstYamlChan *, AstYamlParser *, int * );
+static AstKeyMap *ReadYAMLMapping( AstYamlChan *, AstYamlParser *, int * );
 static AstKeyMap *StartAsdfKeyMap( AstYamlChan *, int, const char *, int * );
 static AstKeyMap *StartAsdfTransform( AstYamlChan *, AstObject *, const char *, const char *, int * );
 static AstKeyMap *StoreKeyMap( AstYamlChan *, const char *, AstKeyMap *, AstKeyMap **, int * );
@@ -448,7 +449,9 @@ static AstKeyMap *WriteUnitMap( AstYamlChan *, AstUnitMap *, AstObject *, const 
 static AstKeyMap *WriteWcsMap( AstYamlChan *, AstWcsMap *, AstObject *, const char *,  int *);
 static AstKeyMap *WriteWinMap( AstYamlChan *, AstWinMap *, AstObject *, const char *, int *);
 static AstKeyMap *WriteAsdfDivide( AstYamlChan *, AstMapping *, AstMapping *, AstObject *, const char *, int * );
+static AstKeyMap *WriteAsdfFitswcsImaging( AstYamlChan *, double *, double *, double *, double *, AstWcsMap *, AstObject *, const char *, int * );
 static AstKeyMap *WriteAsdfSphericalCartesian( AstYamlChan *, int, AstObject *, const char *, int *);
+static const char *WcsMapAsdfClass( AstWcsMap *, AstKeyMap *, int * );
 static AstKeyMap *WriteSphMap( AstYamlChan *, AstSphMap *, AstObject *, const char *, int *);
 static AstKeyMap *WriteZoomMap( AstYamlChan *, AstZoomMap *, AstObject *, const char *,  int *);
 static AstKeyMap* WriteCmpMap( AstYamlChan *, AstCmpMap *, AstObject *, const char *, int *);
@@ -458,6 +461,7 @@ static AstMapping *ReadCompose( AstYamlChan *, AstKeyMap *, int * );
 static AstMapping *ReadConcatenate( AstYamlChan *, AstKeyMap *, int * );
 static AstMapping *ReadConstant( AstKeyMap *, int * );
 static AstMapping *ReadDivide( AstYamlChan *, AstKeyMap *, int * );
+static AstMapping *ReadFitswcsImaging( AstYamlChan *, AstKeyMap *, int * );
 static AstMapping *ReadFixInputs( AstYamlChan *, AstKeyMap *, int * );
 static AstMapping *ReadIdentity( AstKeyMap *, int * );
 static AstMapping *ReadLinear1d( AstKeyMap *, int * );
@@ -472,7 +476,7 @@ static AstMapping *ReadRotate3d( AstKeyMap *, int * );
 static AstMapping *ReadRotateSequence3d( AstKeyMap *, int * );
 static AstMapping *ReadScale( AstKeyMap *, int * );
 static AstMapping *ReadShift( AstKeyMap *, int * );
-static AstMapping *ReadSkyProjection( AstKeyMap *, int * );
+static AstMapping *ReadSkyProjection( AstKeyMap *, int, int, int * );
 static AstMapping *ReadSphericalCartesian( AstKeyMap *, int * );
 static AstMapping *ReadTransform( AstYamlChan *, AstKeyMap *, int * );
 static AstObject *YamlToAst( AstYamlChan *, AstKeyMap *, int * );
@@ -483,7 +487,7 @@ static const char *Get0C( AstKeyMap *, const char *, int, const char *, int * );
 static const char *GetAsdfClass( AstKeyMap *, int * );
 static const char *GetNativeClass( AstKeyMap *, int * );
 static const char *GetName( AstYamlChan *, const char *, AstMapping *, int * );
-static const char *YamlEventType( yaml_event_t );
+static const char *YamlEventType( int );
 static double *GetQuantityV( AstYamlChan *, AstKeyMap *, const char *, const char *, int, int, int *, int *,  int * );
 static double *GetSequence( AstYamlChan *, AstKeyMap *, const char *, int, int, int *, int *, int *status );
 static double *ReadNDArray( AstYamlChan *, AstKeyMap *, int, int *, int *, int * );
@@ -494,8 +498,8 @@ static double GetTime( AstKeyMap *, const char *, AstFrame *, int * );
 static int FindAffine( int, int *, AstMapping **, int *, int * );
 static int FindDivide( AstYamlChan *, int, int *, AstMapping **, int *, int * );
 static int FindRotate3d( int, int *, AstMapping **, int *, int * );
-static int FindSphericalCartesian( int, int *, AstMapping **, int *, int * );
 static void CompactMapList( int *, AstMapping **, int * );
+static void CopyProxyKeyMap( AstMapping *, AstKeyMap *, int * );
 static void Delete( AstObject *, int * );
 static AstMathMap *GetRefMap( AstYamlChan *, const char *, int * );
 static int Get0I( AstKeyMap *, const char *, int, int, int * );
@@ -504,27 +508,27 @@ static int Get1D( AstKeyMap *, const char *, int, int, double *, int *, int * );
 static int Get1I( AstKeyMap *, const char *, int, int, int *, int *, int * );
 static int GetChoice( AstKeyMap *, const char *, const char *, int, int, int * );
 static int IsA( AstKeyMap *, const char *, int * );
-static int LibYamlReader( void *, yaml_char_t *, size_t, size_t * );
-static int LibYamlWriter( void *, yaml_char_t *, size_t );
+static int AstYamlReader( void *, unsigned char *, size_t, size_t * );
+static int AstYamlWriter( void *, unsigned char *, size_t );
 static int ReadBaseFrame( AstKeyMap *, AstSkyFrame *, int * );
 static int SimplifyAsdf( AstYamlChan *, AstKeyMap **, int *);
 static int Use( AstYamlChan *, int, int, int * );
 static void Deuler( const char *, double *, double[3][3], int * );
 static void ExpandAsdf( AstYamlChan *, AstKeyMap *, int, int *, AstKeyMap ***, int * );
 static void GetUCD( int, const char **, const char ** );
-static void LibYamlEmitterError( yaml_emitter_t *, int * );
-static void LibYamlParserError( yaml_parser_t *, int * );
+static void AstYamlEmitterError( AstYamlEmitter *, int * );
+static void AstYamlParserError( AstYamlParser *, int * );
 static void PutIntoKeyMap( AstKeyMap *, const char *, int, void *, int * );
 static void ReadEarthLocation( AstKeyMap *, AstFrame *, int * );
 static void ReadStep( AstYamlChan *, AstKeyMap *, int, int, AstMapping **, AstFrame **, AstMapping **, int * );
 static void ReadYAMLAlias( AstYamlChan *, AstKeyMap *, const char *, const char *, int * );
-static void ReadYAMLEvent( AstYamlChan *, yaml_parser_t *, yaml_event_t *, AstKeyMap *, const char *, int * );
-static void ReadYAMLItem( AstYamlChan *, yaml_parser_t *, AstKeyMap *, const char *, int * );
-static void ReadYAMLSequence( AstYamlChan *, AstKeyMap *, const char *, yaml_parser_t *, int * );
+static void ReadYAMLEvent( AstYamlChan *, AstYamlParser *, AstYamlEvent *, AstKeyMap *, const char *, int * );
+static void ReadYAMLItem( AstYamlChan *, AstYamlParser *, AstKeyMap *, const char *, int * );
+static void ReadYAMLSequence( AstYamlChan *, AstKeyMap *, const char *, AstYamlParser *, int * );
 static void SetNotAsdf( AstCmpMap *, int * );
-static void EndYamlDoc( AstYamlChan *, yaml_emitter_t *, int * );
-static void StartYamlDoc( AstYamlChan *, yaml_emitter_t *, int * );
-static void StartYamlMapping( AstYamlChan *, const char *, const char *, yaml_emitter_t *, int * );
+static void EndYamlDoc( AstYamlChan *, AstYamlEmitter *, int * );
+static void StartYamlDoc( AstYamlChan *, AstYamlEmitter *, int * );
+static void StartYamlMapping( AstYamlChan *, const char *, const char *, AstYamlEmitter *, int * );
 static void Store0C( AstYamlChan *, const char *, int, AstKeyMap *, const char *, const char *, int * );
 static void Store0D( AstYamlChan *, const char *, AstKeyMap *, double, int * );
 static void Store0I( AstYamlChan *, const char *, AstKeyMap *, int, int * );
@@ -532,16 +536,16 @@ static void Store1C( AstYamlChan *, const char *, int, AstKeyMap *, int, const c
 static void Store1D( AstYamlChan *, const char *, AstKeyMap *, int, const double *, int * );
 static void Store1I( AstYamlChan *, const char *, AstKeyMap *, int, const int *, int * );
 static void StoreAnchor( AstYamlChan *, const char *, AstKeyMap *, const char *, int * );
-static void StoreYaml0C( AstYamlChan *, const char *, int, yaml_emitter_t *, int, const char *, const char *, int * );
-static void StoreYaml0D( AstYamlChan *, const char *, yaml_emitter_t *, int, double, int * );
-static void StoreYaml0I( AstYamlChan *, const char *, yaml_emitter_t *, int, int, int * );
-static void StoreYaml0K( AstYamlChan *, const char *, yaml_emitter_t *, int, int64_t, int * );
-static void StoreYaml1C( AstYamlChan *, const char *, int, yaml_emitter_t *, int, const char *[], const char *, int * );
-static void StoreYaml1D( AstYamlChan *, const char *, yaml_emitter_t *, int, const double *, int * );
-static void StoreYaml1I( AstYamlChan *, const char *, yaml_emitter_t *, int, const int *, int * );
+static void StoreYaml0C( AstYamlChan *, const char *, int, AstYamlEmitter *, int, const char *, const char *, int * );
+static void StoreYaml0D( AstYamlChan *, const char *, AstYamlEmitter *, int, double, int * );
+static void StoreYaml0I( AstYamlChan *, const char *, AstYamlEmitter *, int, int, int * );
+static void StoreYaml0K( AstYamlChan *, const char *, AstYamlEmitter *, int, int64_t, int * );
+static void StoreYaml1C( AstYamlChan *, const char *, int, AstYamlEmitter *, int, const char *[], const char *, int * );
+static void StoreYaml1D( AstYamlChan *, const char *, AstYamlEmitter *, int, const double *, int * );
+static void StoreYaml1I( AstYamlChan *, const char *, AstYamlEmitter *, int, const int *, int * );
 static void WriteValues( AstYamlChan *, const char *key, AstKeyMap *, int * );
-static void WriteYamlEntry( AstYamlChan *, AstKeyMap *, const char *, const char *, const char *, yaml_emitter_t *, int * );
-static void WriteYamlObject( AstYamlChan *, const char *, AstKeyMap *, yaml_emitter_t *, int * );
+static void WriteYamlEntry( AstYamlChan *, AstKeyMap *, const char *, const char *, const char *, AstYamlEmitter *, int * );
+static void WriteYamlObject( AstYamlChan *, const char *, AstKeyMap *, AstYamlEmitter *, int * );
 static void WriteBegin( AstChannel *, const char *, const char *, int * );
 static void WriteDouble( AstChannel *, const char *, int, int, double, const char *, int * );
 static void WriteEnd( AstChannel *, const char *, int * );
@@ -557,6 +561,7 @@ static void GetNextData( AstChannel *, int, char **, char **, int * );
 MAKE_PROTO(Wcs)
 MAKE_PROTO(Step)
 MAKE_PROTO(Celestial_Frame)
+MAKE_PROTO(Fitswcs_Imaging)
 MAKE_PROTO(Frame2d)
 MAKE_PROTO(Identity)
 MAKE_PROTO(Scale)
@@ -986,6 +991,7 @@ static void Delete( AstObject *this_object, int *status ) {
 */
    AstYamlChan *this = (AstYamlChan *) this_object;
    if( this->ref_maps ) this->ref_maps = astAnnul( this->ref_maps );
+   this->readbuf = astFree( this->readbuf );
 }
 
 static AstMathMap *GetRefMap( AstYamlChan *this, const char *key, int *status ) {
@@ -1049,14 +1055,15 @@ static AstMathMap *GetRefMap( AstYamlChan *this, const char *key, int *status ) 
    } else if( !strcmp( key, REFMAP_DIVIDE_1D ) ) {
       ref = (AstMathMap *) astMathMap( 2, 1, 1, DIVIDE_1D_FWD, 2, DIVIDE_1D_INV,
                                        "simpfi=0,simpif=0", status );
-      astMapPut0A( this->ref_maps, key, (AstObject *) ref, NULL );
+      obj = (AstObject *) ref;
+      astMapPut0A( this->ref_maps, key, obj, NULL );
 
    } else if( astOK ) {
       astError( AST__INTER, "GetRefMap(YamlChan): unknown reference map "
                 "key \"%s\"", status, key );
    }
 
-/* astMapGet0A returned a new reference — annul it so the cache owns the
+/* astMapGet0A returned a new reference; annul it so the cache owns the
    only reference and we return a borrowed pointer. */
    if( obj )
       astAnnul( obj );
@@ -1143,7 +1150,7 @@ void astInitYamlChanVtab_(  AstYamlChanVtab *vtab, const char *name, int *status
    parent_read = channel->Read;
    channel->Read = Read;
 
-#if defined( YAML )
+#if defined( YAML_BACKEND )
    channel->GetNextData = GetNextData;
    channel->WriteBegin = WriteBegin;
    channel->WriteIsA = WriteIsA;
@@ -1223,15 +1230,15 @@ static AstObject *Read( AstChannel *this_channel, int *status ) {
 */
 
 
-/* Check libyaml is available. */
-#if !defined( YAML )
+/* Check that a YAML backend is available. */
+#if !defined( YAML_BACKEND )
    YAML_ERR("Read")
    return NULL;
 #else
 
 /* Local Variables: */
    AstObject *new;
-   yaml_parser_t parser;
+   AstYamlParser parser;
    AstYamlChan *this;
    AstKeyMap *values;
 
@@ -1260,15 +1267,21 @@ static AstObject *Read( AstChannel *this_channel, int *status ) {
 /* Indicate we have not yet determined the default yaml encoding. */
    this->defenc = UNKNOWN_ENCODING;
 
-/* Initialize a libyaml parser */
-   if( !yaml_parser_initialize( &parser ) ){
-      astError( AST__LYAML, "astRead(%s): Failed to initialize libyaml "
-                "parser", status, astGetClass( this ) );
-      LibYamlParserError( &parser, status );
+/* Initialize the YAML parser. */
+   if( !astYamlParserInitialize( &parser ) ){
+      /* LCOV_EXCL_START */
+      astError( AST__LYAML, "astRead(%s): Failed to initialize " YAML_BACKEND
+                " parser", status, astGetClass( this ) );
+      AstYamlParserError( &parser, status );
+      /* LCOV_EXCL_STOP */
 
-/* Register the source function with the parser. */
+/* Register the source function with the parser. Start with an empty line
+   buffer so the first read fetches a fresh line (any remainder left by an
+   earlier, possibly aborted, read is discarded). */
    } else {
-      yaml_parser_set_input( &parser, LibYamlReader, this );
+      this->readlen = 0;
+      this->readoff = 0;
+      astYamlParserSetInput( &parser, AstYamlReader, this );
 
 /* Read the YAML object from the external source, parse it, and
    create a KeyMap containing the parsed values. This will set the
@@ -1277,7 +1290,7 @@ static AstObject *Read( AstChannel *this_channel, int *status ) {
       values = ReadValues( this, &parser, status );
 
 /* Delete the parser. */
-      yaml_parser_delete( &parser );
+      astYamlParserDelete( &parser );
    }
 
 /* Create an AST object from the KeyMap. */
@@ -1828,8 +1841,8 @@ static int Write( AstChannel *this_channel, AstObject *obj, int *status ) {
 *     reason.
 */
 
-/* Check libyaml is available. */
-#if !defined( YAML )
+/* Check that a YAML backend is available. */
+#if !defined( YAML_BACKEND )
    YAML_ERR("Write")
    return 0;
 #else
@@ -1840,8 +1853,7 @@ static int Write( AstChannel *this_channel, AstObject *obj, int *status ) {
    const char *key;
    int enc;
    int ret;
-   yaml_emitter_t *emitter;
-   yaml_event_t event;
+   AstYamlEmitter *emitter;
 
 /* Initialise. */
    ret = 0;
@@ -1877,8 +1889,7 @@ static int Write( AstChannel *this_channel, AstObject *obj, int *status ) {
       ret = 1;
 
 /* End the anonymous yaml mapping. */
-      yaml_mapping_end_event_initialize( &event );
-      EMIT
+      EMIT_CHECK(this, emitter, status, astYamlEmitMappingEnd( emitter ));
 
 /* End the yaml document and delete the libyaml emitter. */
       EndYamlDoc( this, emitter, status );
@@ -1936,9 +1947,9 @@ static int Write( AstChannel *this_channel, AstObject *obj, int *status ) {
 #endif
 }
 
-/* Member functions that are only available if libyaml is available. */
-/* ================================================================= */
-#if defined( YAML )
+/* Member functions that are only available if a YAML backend is available. */
+/* ========================================================================= */
+#if defined( YAML_BACKEND )
 
 static AstKeyMap *AddR2D( AstYamlChan *this, AstKeyMap **km, int r2d,
                           int before, int nax, int *status ){
@@ -2139,7 +2150,7 @@ static void Deuler( const char *order, double *angles, double rmat[3][3],
    }
 }
 
-static void EndYamlDoc( AstYamlChan *this, yaml_emitter_t *emitter,
+static void EndYamlDoc( AstYamlChan *this, AstYamlEmitter *emitter,
                         int *status ) {
 /*
 *  Name:
@@ -2153,7 +2164,7 @@ static void EndYamlDoc( AstYamlChan *this, yaml_emitter_t *emitter,
 
 *  Synopsis:
 *     #include "Yamlchan.h"
-*     void EndYamlDoc( AstYamlChan *this, yaml_emitter_t *emitter,
+*     void EndYamlDoc( AstYamlChan *this, AstYamlEmitter *emitter,
 *                      int *status )
 
 *  Description:
@@ -2168,23 +2179,18 @@ static void EndYamlDoc( AstYamlChan *this, yaml_emitter_t *emitter,
 *        Pointer to the inherited status variable.
 */
 
-/* Local Variables: */
-   yaml_event_t event;
-
 /* Create and emit the DOCUMENT-END event. */
    if( astOK ) {
-      yaml_document_end_event_initialize( &event, 0 );
-      EMIT
+      EMIT_CHECK(this, emitter, status, astYamlEmitDocumentEnd( emitter, 0 ));
    }
 
 /* Create and emit the STREAM-END event. */
    if( astOK ) {
-      yaml_stream_end_event_initialize( &event );
-      EMIT
+      EMIT_CHECK(this, emitter, status, astYamlEmitStreamEnd( emitter ));
    }
 
 /* Delete the emitter. */
-   yaml_emitter_delete( emitter );
+   astYamlEmitterDelete( emitter );
 
 /* Nullify the emitter pointer in the YamlChan structure. */
    this->emitter = NULL;
@@ -2340,6 +2346,51 @@ static void ExpandAsdf( AstYamlChan *this, AstKeyMap *km,
    }
 }
 
+static void CopyProxyKeyMap( AstMapping *map, AstKeyMap *km, int *status ){
+/*
+*  Name:
+*     CopyProxyKeyMap
+
+*  Purpose:
+*     Store a summary of an equivalent ASDF transform in a Mapping.
+
+*  Type:
+*     Private function.
+
+*  Synopsis:
+*     #include "yamlchan.h"
+*     void CopyProxyKeyMap( AstMapping *map, AstKeyMap *km, int *status )
+
+*  Description:
+*     This function copies the contents of the supplied KeyMap, which holds
+*     a "PROXY_TYPE" summary of an equivalent ASDF transform, into the KeyMap
+*     associated with the supplied Mapping. The various WriteProxy... functions
+*     look for such a summary when deciding how to write the Mapping out as an
+*     ASDF transform.
+
+*  Parameters:
+*     map
+*        Pointer to the Mapping in which the summary is to be stored.
+*     km
+*        Pointer to the KeyMap holding the summary. The caller retains
+*        ownership of this pointer.
+*     status
+*        Pointer to the inherited status variable.
+*/
+
+/* Local Variables: */
+   AstKeyMap *ikm;
+
+/* Check the global error status. */
+   if( !astOK )
+      return;
+
+/* Copy the summary into the Mapping's associated KeyMap. */
+   ikm = astGetKeyMap( map );
+   astMapCopy( ikm, km );
+   ikm = astAnnul( ikm );
+}
+
 static int FindAffine( int series, int *nmap, AstMapping **map_list,
                        int *invert_list, int *status ){
 /*
@@ -2492,9 +2543,9 @@ static int FindAffine( int series, int *nmap, AstMapping **map_list,
             map_list[ imap ] = astAnnul( map_list[ imap ] );
             map_list[ imap + 1 ] = astAnnul( map_list[ imap + 1 ] );
 
-/* Store the KeyMap as the proxy pointer in the new CmpMap. Note the
-   KeyMap pointer is not cloned, so we must not annull it in this function. */
-            astSetProxy( new, km );
+/* Store a summary of the affine in the new CmpMap's associated KeyMap. */
+            CopyProxyKeyMap( (AstMapping *) new, km, status );
+            km = astAnnul( km );
 
 /* Store the new CmpMap pointer in place of the first Note, we do not use
    astClone here, we must not then annull "new" in this */
@@ -2733,9 +2784,9 @@ static int FindRotate3d( int series, int *nmap, AstMapping **map_list,
                map_list[ imap + 1 ] = astAnnul( map_list[ imap + 1 ] );
                map_list[ imap + 2 ] = astAnnul( map_list[ imap + 2 ] );
 
-/* Store the KeyMap as the proxy pointer in the new CmpMap. Note the
-   KeyMap pointer is not clone, so we must not annull it in this function. */
-               astSetProxy( new, km );
+/* Store a summary of the rotate3d in the new CmpMap's associated KeyMap. */
+               CopyProxyKeyMap( (AstMapping *) new, km, status );
+               km = astAnnul( km );
 
 /* Store the new CmpMap pointer in place of the first Note, we do not use
    astClone here, we must not then annull "new" in this */
@@ -2760,133 +2811,6 @@ static int FindRotate3d( int series, int *nmap, AstMapping **map_list,
    if( result ) CompactMapList( nmap, map_list, invert_list );
 
 /* Return the Mapping */
-   return result;
-}
-
-static int FindSphericalCartesian( int series, int *nmap, AstMapping **map_list,
-                                   int *invert_list, int *status ){
-/*
-*  Name:
-*     FindSphericalCartesian
-
-*  Purpose:
-*     Search a list of Mappings for a sequence corresponding to an ASDF
-*     gwcs/spherical_cartesian transform.
-
-*  Type:
-*     Private function.
-
-*  Synopsis:
-*     #include "yamlchan.h"
-*     int FindSphericalCartesian( int series, int *nmap, AstMapping **map_list,
-*                                 int *invert_list, int *status )
-
-*  Class Membership:
-*     YamlChan member function
-
-*  Description:
-*     This function searches the supplied list of Mappings for sequences
-*     that correspond to a gwcs/spherical_cartesian. If no matching
-*     sequence is found, 0 is returned and the list is left unchanged.
-*     If one or more matching sequences are found, 1 is returned and the
-*     list is changed so that each whole sequence is contained in a single
-*     element. Each such element is a CmpMap with its proxy pointer set
-*     to a KeyMap with a "SPHERICAL_TO_CARTESIAN" integer entry.
-*
-*     Two patterns are recognised:
-*     - spherical_to_cartesian: ZoomMap(Nin=2, Zoom=DD2R, not inverted)
-*       followed by SphMap (inverted).
-*     - cartesian_to_spherical: SphMap (not inverted) followed by
-*       ZoomMap(Nout=2, Zoom=DR2D, not inverted).
-
-*  Parameters:
-*     series
-*        If non-zero, the Mappings are applied in series (only series
-*        combinations are checked).
-*     nmap
-*        Address of the number of Mappings in the list, updated on exit.
-*     map_list
-*        Array of Mapping pointers, updated on exit.
-*     invert_list
-*        Array of invert flags, updated on exit.
-*     status
-*        Pointer to the inherited status variable.
-
-*  Returned Value:
-*     Non-zero if a matching sequence was found, zero otherwise.
-
-*/
-
-/* Local Variables: */
-   AstCmpMap *new;
-   AstKeyMap *km;
-   double zoom;
-   int imap;
-   int oldinv0;
-   int oldinv1;
-   int result;
-   int s2c;
-
-/* Initialise */
-   result = 0;
-
-/* Check inherited status. Only series combinations make sense. */
-   if( !astOK || !series ) return result;
-
-/* Loop through the Mappings in the list, stopping before the last since
-   we need at least two Mappings for a match. */
-   for( imap = 0; imap < *nmap - 1; imap++ ) {
-      s2c = -1;
-
-/* Check for spherical_to_cartesian: ZoomMap(Nin=2, Zoom~DD2R, !inv)
-   followed by SphMap(inv). */
-      if( astIsAZoomMap( map_list[ imap ] ) && !invert_list[ imap ] &&
-          astIsASphMap( map_list[ imap + 1 ] ) && invert_list[ imap + 1 ] ) {
-         zoom = astGetZoom( map_list[ imap ] );
-         if( astGetNin( map_list[ imap ] ) == 2 &&
-             fabs( zoom - AST__DD2R ) < 1.0E-12 ) {
-            s2c = 1;
-         }
-
-/* Check for cartesian_to_spherical: SphMap(!inv) followed by
-   ZoomMap(Nout=2, Zoom~DR2D, !inv). */
-      } else if( astIsASphMap( map_list[ imap ] ) && !invert_list[ imap ] &&
-                 astIsAZoomMap( map_list[ imap + 1 ] ) && !invert_list[ imap + 1 ] ) {
-         zoom = astGetZoom( map_list[ imap + 1 ] );
-         if( astGetNout( map_list[ imap + 1 ] ) == 2 &&
-             fabs( zoom - AST__DR2D ) < 1.0E-8 ) {
-            s2c = 0;
-         }
-      }
-
-/* If a matching pair was found, package it as a CmpMap with a proxy KeyMap. */
-      if( s2c >= 0 ) {
-         km = astKeyMap( " ", status );
-         astMapPut0C( km, "PROXY_TYPE", "spherical_cartesian", NULL );
-         astMapPut0I( km, "SPHERICAL_TO_CARTESIAN", s2c, NULL );
-
-         oldinv0 = astGetInvert( map_list[ imap ] );
-         oldinv1 = astGetInvert( map_list[ imap + 1 ] );
-         astSetInvert( map_list[ imap ], invert_list[ imap ] );
-         astSetInvert( map_list[ imap + 1 ], invert_list[ imap + 1 ] );
-         new = astCmpMap( map_list[ imap ], map_list[ imap + 1 ], 1, " ", status );
-         astSetInvert( map_list[ imap ], oldinv0 );
-         astSetInvert( map_list[ imap + 1 ], oldinv1 );
-
-         astSetProxy( new, km );
-
-         map_list[ imap ] = astAnnul( map_list[ imap ] );
-         map_list[ imap + 1 ] = astAnnul( map_list[ imap + 1 ] );
-         map_list[ imap ] = (AstMapping *) new;
-
-         imap++;
-         result = 1;
-      }
-   }
-
-/* Compact the list to remove nullified slots. */
-   if( result ) CompactMapList( nmap, map_list, invert_list );
-
    return result;
 }
 
@@ -2917,9 +2841,8 @@ static int FindDivide( AstYamlChan *this, int series, int *nmap,
 *     matching sequence is found, 0 is returned and the list is left
 *     unchanged. If one or more matching sequences are found, 1 is returned
 *     and the list is changed so that each whole sequence is contained in a
-*     single element. Each such element is a CmpMap with its proxy pointer
-*     set to a KeyMap with "IS_DIVIDE", "DIVIDE_MAPA" and "DIVIDE_MAPB"
-*     entries.
+*     single element. Each such element is a CmpMap whose associated KeyMap
+*     holds "PROXY_TYPE", "DIVIDE_MAPA" and "DIVIDE_MAPB" entries.
 *
 *     The divide pattern is a 4-element series chain (as produced by
 *     ReadDivide) consisting of:
@@ -3064,7 +2987,6 @@ static int FindDivide( AstYamlChan *this, int series, int *nmap,
 /* Build the proxy KeyMap. */
       km = astKeyMap( " ", status );
       astMapPut0C( km, "PROXY_TYPE", "divide", NULL );
-      astMapPut0I( km, "IS_DIVIDE", 1, NULL );
       astMapPut0A( km, "DIVIDE_MAPA", mapa_clone, NULL );
       astMapPut0A( km, "DIVIDE_MAPB", mapb_clone, NULL );
       mapa_clone = astAnnul( mapa_clone );
@@ -3091,8 +3013,9 @@ static int FindDivide( AstYamlChan *this, int series, int *nmap,
          astSetInvert( map_list[ imap + i ], oldinv[ i ] );
       }
 
-/* Attach the proxy KeyMap to the packed CmpMap. */
-      astSetProxy( new, km );
+/* Store a summary of the divide in the packed CmpMap's associated KeyMap. */
+      CopyProxyKeyMap( (AstMapping *) new, km, status );
+      km = astAnnul( km );
 
 /* Annul the four individual mapping pointers and replace the first
    with the packed CmpMap.  Leave the other three as NULL (they will
@@ -4483,7 +4406,7 @@ static double GetQuantity( AstKeyMap *km, const char *name, const char *unit,
 *        KeyMap entry to use.
 *     unit
 *        A string describing the units in which the Quantity value is to
-*        be returned. An error is reported if the QUantity cannot be
+*        be returned. An error is reported if the Quantity cannot be
 *        converted to these units. No conversion occurrs if this is NULL.
 *     usedef
 *        Return the supplied default value without error if the name is
@@ -5054,15 +4977,6 @@ static double GetTime( AstKeyMap *km, const char *name, AstFrame *frm,
 
 /* If the format is specified, ensure the string includes any prefix
    required by the TimeFrame. */
-/* The second test in each branch is on "value", not "format" -- it asks
-   whether the value string already carries the prefix. Testing "format"
-   instead, as this code used to, makes every branch dead: "jyear" itself
-   begins with a "j", so strncasecmp(format,"J",1) is 0 and the prefix is
-   never prepended. An equinox of "2000.0" then reaches astUnformat with the
-   TimeFrame's default format and is read as MJD 2000, i.e. 1864 -- about 1.8
-   degrees of precession away from J2000, which is what the ASDF frame
-   fixtures measured. Same for byear and jd; only mjd was unaffected, and
-   only because MJD is the default. */
    if( format ) {
       if( !strcmp( format, "byear" ) &&
           strncasecmp( value, "B", 1 ) ){
@@ -5238,11 +5152,13 @@ static int IsA( AstKeyMap *km, const char *class, int *status ) {
             result = IsAFrame2d( km_class, status );
          } else if( !strcmp( "spherical_cartesian", class ) ){
             result = IsASpherical_Cartesian( km_class, status );
+         } else if( !strcmp( "fitswcs_imaging", class ) ){
+            result = IsAFitswcs_Imaging( km_class, status );
 /* the gwcs/ namespace also defines some transforms that inherit
-   the asdf/transform/transform- so handle that case here; currently the only
-   one supported is also spherical_cartesian */
+   the asdf/transform/transform- so handle that case here. */
          } else if( !strcmp( "transform", class ) ){
-            result = IsASpherical_Cartesian( km_class, status );
+            result = IsASpherical_Cartesian( km_class, status ) ||
+                     IsAFitswcs_Imaging( km_class, status );
          }
 
       } else if( !strncmp( km_class, "asdf/transform/", 15 ) ) {
@@ -5369,11 +5285,7 @@ static int IsA( AstKeyMap *km, const char *class, int *status ) {
             result = IsANDArray( km_class, status );
          }
 
-/* No trailing "/" here: astropy writes an EarthLocation as
-   "astropy/coordinates/earthlocation-<version>", with no class component, so
-   requiring the slash made this branch unreachable and IsAEarthLocation dead
-   code. Comparing the 33 characters without it matches both spellings. */
-      } else if( !strncmp( km_class, "astropy/coordinates/earthlocation", 33 ) ) {
+      } else if( !strncmp( km_class, "astropy/coordinates/earthlocation-", 34 ) ) {
          if( !strcmp( "earthlocation", class ) ){
             result = IsAEarthLocation( km_class, status );
          }
@@ -5465,7 +5377,7 @@ static int IsA##Class( const char *class, int *status ){ \
             } else if( minor > Minor ){ \
                astError( AST__BASDF, "astRead(YamlChan): ASDF class (%s) " \
                          "unsupported minor version number %d (should be " \
-                         "at least %d).", status, class, minor, Minor ); \
+                         "at most %d).", status, class, minor, Minor ); \
             } \
    \
          } else {  \
@@ -5481,27 +5393,27 @@ static int IsA##Class( const char *class, int *status ){ \
    return result; \
 }
 
+/* Exclude MAKE_TEST expansions from coverage reports since it
+ * can't meaningfully report which parts of the macro expansion
+ * are uncovered: */
+
+/* LCOV_EXCL_BR_START */
 MAKE_TEST(Wcs,gwcs,1,4)
 MAKE_TEST(Step,gwcs,1,3)
 MAKE_TEST(Celestial_Frame,gwcs,1,2)
+MAKE_TEST(Fitswcs_Imaging,gwcs,1,0)
 MAKE_TEST(Frame2d,gwcs,1,2)
 MAKE_TEST(Spherical_Cartesian,gwcs,1,3)
-/* SAOImageDS9 local patch (see TODO.md Phase 0): ceiling raised one minor version to match real Roman ASDF data; upstream AST 9.4.1 hasn't caught up yet. */
 MAKE_TEST(Identity,asdf/transform,1,4)
-/* SAOImageDS9 local patch (see TODO.md Phase 0): ceiling raised one minor version to match real Roman ASDF data; upstream AST 9.4.1 hasn't caught up yet. */
 MAKE_TEST(Scale,asdf/transform,1,4)
 MAKE_TEST(MultiplyScale,asdf/transform,1,2)
-/* SAOImageDS9 local patch (see TODO.md Phase 0): ceilings raised one minor version each to match real Roman ASDF data; upstream AST 9.4.1 hasn't caught up yet. */
 MAKE_TEST(Remap_Axes,asdf/transform,1,5)
 MAKE_TEST(Shift,asdf/transform,1,4)
 MAKE_TEST(Compose,asdf/transform,1,4)
-MAKE_TEST(Concatenate,asdf/transform,1,4)
-/* SAOImageDS9 local patch (see TODO.md Phase 0): ceiling raised one minor version to match real Roman ASDF data; upstream AST 9.4.1 hasn't caught up yet. */
+MAKE_TEST(Concatenate,asdf/transform,1,6)
 MAKE_TEST(Constant,asdf/transform,1,6)
-/* SAOImageDS9 local patch (see TODO.md Phase 0): ceiling raised one minor version to match real Roman ASDF data; upstream AST 9.4.1 hasn't caught up yet. */
 MAKE_TEST(Divide,asdf/transform,1,4)
 MAKE_TEST(Fix_Inputs,asdf/transform,1,4)
-/* SAOImageDS9 local patch (see TODO.md Phase 0): ceiling raised one minor version to match real Roman ASDF data; upstream AST 9.4.1 hasn't caught up yet. */
 MAKE_TEST(Affine,asdf/transform,1,5)
 MAKE_TEST(Rotate2d,asdf/transform,1,5)
 MAKE_TEST(Rotate_Sequence_3d,asdf/transform,1,3)
@@ -5509,7 +5421,6 @@ MAKE_TEST(Rotate3d,asdf/transform,1,5)
 MAKE_TEST(Linear1d,asdf/transform,1,2)
 MAKE_TEST(Ortho_Polynomial,asdf/transform,1,2)
 MAKE_TEST(Planar2d,asdf/transform,1,2)
-/* SAOImageDS9 local patch (see TODO.md Phase 0): ceiling raised one minor version to match real Roman ASDF data; upstream AST 9.4.1 hasn't caught up yet. */
 MAKE_TEST(Polynomial,asdf/transform,1,3)
 MAKE_TEST(Conic_Equal_Area,asdf/transform,1,5)
 MAKE_TEST(Conic_Equidistant,asdf/transform,1,5)
@@ -5550,6 +5461,7 @@ MAKE_TEST(Time,asdf/time,1,4)
 MAKE_TEST(EarthLocation,astropy/coordinates/earthlocation,1,2)
 MAKE_TEST(Quantity,asdf/unit,1,3)
 MAKE_TEST(NDArray,asdf/core,1,2)
+/* LCOV_EXCL_BR_STOP */
 #undef MAKE_TEST
 
 
@@ -5596,7 +5508,7 @@ static int IsA##Class( const char *class, int *status ){ \
                } else if( minor < Minor ){ \
                   astError( AST__BASDF, "astRead(YamlChan): ASDF class (%s) " \
                             "unsupported minor version number %d (should be " \
-                            "at least %d).", status, class, minor, Minor ); \
+                            "at most %d).", status, class, minor, Minor ); \
                } \
 \
             } else { \
@@ -5615,10 +5527,11 @@ static int IsA##Class( const char *class, int *status ){ \
 
 
 
-MAKE_TEST(Frame,gwcs,1,2,
+/* LCOV_EXCL_BR_START */
+MAKE_TEST(Frame,gwcs,1,0,
           IsACelestial_Frame(class,status)||
           IsAFrame2d(class,status))
-MAKE_TEST(Baseframe,astropy/coordinates/frames,1,2,
+MAKE_TEST(Baseframe,astropy/coordinates/frames,1,0,
           IsAFk4(class,status)||
           IsAFk4Noeterms(class,status)||
           IsAFk5(class,status)||
@@ -5627,6 +5540,7 @@ MAKE_TEST(Baseframe,astropy/coordinates/frames,1,2,
           IsAGalactic(class,status)||
           IsASuperGalactic(class,status)||
           IsAIcrs(class,status))
+/* LCOV_EXCL_BR_STOP */
 #undef MAKE_TEST
 
 
@@ -5660,15 +5574,16 @@ static int IsATransform( const char *class, int *status ){
           IsAPlanar2d( class, status ) ||
           IsAPolynomial( class, status ) ||
           IsASkyProjection( class, status ) ||
-          IsASpherical_Cartesian( class, status );
+          IsASpherical_Cartesian( class, status ) ||
+          IsAFitswcs_Imaging( class, status );
 }
 
 static int IsASkyProjection( const char *class, int *status ){
-/* The two HEALPix projections belong to none of the six families above, so
-   without naming them here they are never recognized as sky projections at
-   all - which makes the /healpix- and /healpix_polar- branches of
-   ReadSkyProjection() dead code, and any ASDF file using either load with no
-   WCS. */
+
+/* The two HEALPix projections are in none of the six families below, so
+   without naming them here they are never recognised as sky projections and
+   the /healpix- and /healpix_polar- branches of ReadSkyProjection() cannot
+   be reached. */
    return IsAConic( class, status ) ||
           IsACylindrical( class, status ) ||
           IsAHealpix( class, status ) ||
@@ -5797,7 +5712,6 @@ static AstKeyMap *IsAsdfTransform( AstYamlChan *this, AstCmpMap *map,
    int old_inv0;
    int old_inv1;
    int series;
-   void *proxy;
 
 /* Initialise returned values. */
    ret = NULL;
@@ -5813,22 +5727,14 @@ static AstKeyMap *IsAsdfTransform( AstYamlChan *this, AstCmpMap *map,
    to a single ASDF transform, return immediately. The "proxy" pointer
    provided by the AstObject class is subverted here to provide an
    indication of whether the CmpMap has been checked. If the proxy pointer
-   associated with the supplied CmpMap is NULL (the default), then it has
-   not previously been checked. If the proxy pointer is equal to the value
-   of macro NOTASDF, then it has been checked and found not to be equivalent
-   to an ASDF transform. If the proxy pointer has any other value, the
-   CmpMap has been checked and has been found to be equivalent to an ASDF
-   transform. The proxy pointer value will then be a pointer to a KeyMap
-   holding the properties of the equivalent ASDF transform. */
-   proxy = astGetProxy( map );
-   if( proxy == NOTASDF ) {
+   is equal to the value of macro NOTASDF, then it has been checked and
+   found not to be equivalent to an ASDF transform. Note, a CmpMap that is
+   equivalent to an ASDF transform is flagged differently, by storing a
+   summary of the transform in its associated KeyMap (see CopyProxyKeyMap);
+   such CmpMaps are written out by WriteMapping before they reach this
+   function. */
+   if( astGetProxy( map ) == NOTASDF ) {
       return ret;
-
-/* If the supplied CmpMap has already been checked and is equivalent
-   to a single ASDF transform, write out the equivalent ASDF transform
-   and return. This annulls the KeyMap pointer. */
-   } else if( proxy ){
-      ret = WriteProxy( this, (AstMapping *) map, mapinv, name, status );
 
 /* If the supplied CmpMap has not been checked, we check it now. */
    } else {
@@ -5844,8 +5750,7 @@ static AstKeyMap *IsAsdfTransform( AstYamlChan *this, AstCmpMap *map,
                   &nmap, &map_list, &invert_list );
 
 /* Now search the list for sequences that match an equivalent ASDF
-   transform. Currently we check for affine, rotate3d, spherical_cartesian
-   and divide.
+   transform. Currently we check for affine, rotate3d and divide.
 
    If no matching sequence is found, 0 will be returned and the list will be
    left unchanged. If one or more matching sequences are found, 1 will be
@@ -5855,7 +5760,6 @@ static AstKeyMap *IsAsdfTransform( AstYamlChan *this, AstCmpMap *map,
    properties of the equivalent ASDF transform. */
       changed  = FindRotate3d( series, &nmap, map_list, invert_list, status );
       changed |= FindAffine( series, &nmap, map_list, invert_list, status );
-      changed |= FindSphericalCartesian( series, &nmap, map_list, invert_list, status );
       changed |= FindDivide( this, series, &nmap, map_list, invert_list, status );
 
 /* If the list was changed, the supplied CmpMap either is, or contains,
@@ -6198,100 +6102,112 @@ static AstMapping *IsPolyMap( AstMapping *map, int *status ){
    return result;
 }
 
-static void LibYamlEmitterError( yaml_emitter_t *emitter, int *status ){
+static void AstYamlEmitterError( AstYamlEmitter *emitter, int *status ){ /* LCOV_EXCL_START */
 /*
 *  Name:
-*     LibYamlEmitterError
+*     AstYamlEmitterError
 
 *  Purpose:
-*     Emit AST error messages describing the most recent libyaml error.
+*     Emit AST error messages describing the most recent YAML emitter error.
 
 *  Type:
 *     Private function.
 
 *  Synopsis:
 *     #include "yamlchan.h"
-*     void LibYamlEmitterError( yaml_emitter_t *emitter, int *status )
+*     void AstYamlEmitterError( AstYamlEmitter *emitter, int *status )
 
 *  Class Membership:
 *     YamlChan member function.
 
 *  Description:
-*     This function reports a set of error messages (using astError) that
-*     describe the most recent libyaml error.
+*     This function reports an error message (using astError) that
+*     describes the most recent YAML backend emitter error.
 
 *  Parameters:
 *     emitter
-*        Pointer to the libyaml emitter.
+*        Pointer to the YAML emitter.
 *     status
 *        Pointer to the global status
 
 */
    if( emitter ) {
-      astError( *status, "libyaml says '%s'", status, emitter->problem );
+      astError( *status, YAML_BACKEND " emitter: %s", status,
+                astYamlEmitterGetError( emitter ) );
    }
-}
+} /* LCOV_EXCL_STOP */
 
-static void LibYamlParserError( yaml_parser_t *parser, int *status ){
+static void AstYamlParserError( AstYamlParser *parser, int *status ){
 /*
 *  Name:
-*     LibYamlParserError
+*     AstYamlParserError
 
 *  Purpose:
-*     Emit AST error messages describing the most recent libyaml error.
+*     Emit AST error messages describing the most recent YAML parser error.
 
 *  Type:
 *     Private function.
 
 *  Synopsis:
 *     #include "yamlchan.h"
-*     void LibYamlParserError( yaml_parser_t *parser, int *status )
+*     void AstYamlParserError( AstYamlParser *parser, int *status )
 
 *  Class Membership:
 *     YamlChan member function.
 
 *  Description:
-*     This function reports a set of error messages (using astError) that
-*     describe the most recent libyaml error.
+*     This function reports an error message (using astError) that
+*     describes the most recent YAML backend parser error.  The message
+*     includes a line and column number when the backend provides one.
 
 *  Parameters:
 *     parser
-*        Pointer to the libyaml parser.
+*        Pointer to the YAML parser.
 *     status
 *        Pointer to the global status
 
 */
 
    if( parser ) {
-      astError( *status, "libyaml says '%s'", status, parser->problem );
-      astError( *status, "near: '%s'", status, parser->context );
+      int line, col;
+      const char *msg = astYamlParserGetError( parser, &line, &col );
+      if( line >= 0 ) {
+         astError( *status, YAML_BACKEND " parser: %s at line %d, column %d",
+                   status, msg, line + 1, col + 1 );
+      } else {
+         astError( *status, YAML_BACKEND " parser: %s", status, msg );
+      }
    }
 
 }
 
-static int LibYamlReader( void *data, yaml_char_t *buffer, size_t size,
+static int AstYamlReader( void *data, unsigned char *buffer, size_t size,
                           size_t *size_read ){
 /*
 *  Name:
-*     LibYamlReader
+*     AstYamlReader
 
 *  Purpose:
-*     Called by libyaml to read a line of text from the source.
+*     Called by the YAML parser to read text from the source.
 
 *  Type:
 *     Private function.
 
 *  Synopsis:
 *     #include "yamlchan.h"
-*     int LibYamlReader( void *data, yaml_char_t *buffer, size_t size,
+*     int AstYamlReader( void *data, unsigned char *buffer, size_t size,
                          size_t *size_read )
 
 *  Class Membership:
 *     YamlChan member function.
 
 *  Description:
-*     This function is called by libyaml to read a line of text from the
-*     source.
+*     This function is called by the active YAML backend (libyaml or
+*     libfyaml) to read text from the source. It returns up to "size"
+*     bytes per call, reading complete lines from the parent Channel class
+*     and handing each one out in as many chunks as the parser requests.
+*     This lets it feed parsers that ask for arbitrarily small amounts of
+*     input, without requiring a whole line to fit in the supplied buffer.
 
 *  Parameters:
 *     data
@@ -6313,72 +6229,82 @@ static int LibYamlReader( void *data, yaml_char_t *buffer, size_t size,
    AstYamlChan * this;
    char *text;
    int *status;
-   int result;
+   size_t navail;
+   size_t nchunk;
 
 /* Initialise */
-   result = 0;
    *size_read = 0;
-   buffer[ 0 ] = 0;
 
 /* Get the AST status pointer */
    status = astGetStatusPtr;
 
 /* Check the status is good. */
-   if( !astOK ) return result;
+   if( !astOK ) return 0;
 
 /* Get a pointer to the YamlChan */
    this = (AstYamlChan *) data;
 
+/* If the current line has been completely handed out, fetch the next line
+   from the source. */
+   if( this->readoff >= this->readlen ) {
+
 /* Invoke the source function from the parent Channel class until we get
-   a non-blank line of text. . */
-   text = astGetNextText( this );
-   while( astOK && text && strlen( text ) == 0 ) {
-      text = astFree( text );
+   a non-blank line of text. */
       text = astGetNextText( this );
-   }
-
-/* If successful... */
-   if( astOK ) {
-      result = 1;
-
-/* If there is any text to return... */
-      if( text ) {
-
-/* Check the text will fit in the supplied buffer. Report an error if
-   not. Allow room for a newline character to ba appended to the end. */
-         *size_read = strlen( text ) + 1;
-         if( *size_read > size ) {
-            result = 0;
-            *size_read = 0;
-            buffer[ 0 ] = 0;
-            astError( AST__TRUNC, "astRead(yamlchan): Input text is too "
-                      "long for the libyaml buffer:", status );
-            astError( AST__TRUNC, "'%.50s'", status, text );
-
-/* If so, copy the text into the buffer. */
-         } else {
-            memcpy( buffer, text, *size_read );
-
-/* Append a newline character (stripped by astGetNextText but required by
-   libyaml). */
-            buffer[ *size_read - 1 ] = '\n';
-         }
+      while( astOK && text && strlen( text ) == 0 ) {
+         text = astFree( text );
+         text = astGetNextText( this );
       }
+
+/* On error, abandon the read. */
+      if( !astOK ) {
+         text = astFree( text );
+         return 0;
+      }
+
+/* A NULL pointer marks the end of the input. Leave "size_read" holding
+   zero, which signals EOF to the parser. */
+      if( !text )
+         return 1;
+
+/* Copy the line into the YamlChan's line buffer, appending the newline
+   that astGetNextText strips off (both YAML backends expect newline
+   terminated lines). The buffer grows as needed and is reused between
+   lines. */
+      navail = strlen( text );
+      this->readbuf = astGrow( this->readbuf, navail + 1, sizeof( char ) );
+      if( astOK ) {
+         memcpy( this->readbuf, text, navail );
+         this->readbuf[ navail ] = '\n';
+         this->readlen = navail + 1;
+         this->readoff = 0;
+      }
+      text = astFree( text );
+
+      if( !astOK )
+         return 0;
    }
 
-   text = astFree( text );
+/* Hand out as much of the current line as will fit in the supplied buffer,
+   remembering how much is left for the next call. */
+   navail = this->readlen - this->readoff;
+   nchunk = ( size < navail ) ? size : navail;
+   memcpy( buffer, this->readbuf + this->readoff, nchunk );
+   this->readoff += nchunk;
+   *size_read = nchunk;
 
 /* If required echo the yaml as it is read. */
-   if( astGetVerboseRead(this) ) printf( "%.*s", (int) *size_read, buffer );
+   if( astGetVerboseRead( this ) )
+      printf( "%.*s", (int) nchunk, buffer );
 
-   return result;
+   return 1;
 }
 
-static int LibYamlWriter( void *data, yaml_char_t *buffer,
+static int AstYamlWriter( void *data, unsigned char *buffer,
                           size_t size ){
 /*
 *  Name:
-*     LibYamlWriter
+*     AstYamlWriter
 
 *  Purpose:
 *     Called by libyaml to write a line of text to the sink.
@@ -6388,7 +6314,7 @@ static int LibYamlWriter( void *data, yaml_char_t *buffer,
 
 *  Synopsis:
 *     #include "yamlchan.h"
-*     int LibYamlWriter( void *data, yaml_char_t *buffer,
+*     int AstYamlWriter( void *data, unsigned char *buffer,
 *                        size_t size )
 
 *  Class Membership:
@@ -7683,6 +7609,7 @@ static AstMapping *ReadDivide( AstYamlChan *this, AstKeyMap *km, int *status ){
    AstCmpMap *t1;
    AstCmpMap *t2;
    AstKeyMap *map_kms[2];
+   AstKeyMap *pkm;
    AstMapping *mapa;
    AstMapping *mapb;
    AstMapping *mm1d;
@@ -7802,6 +7729,18 @@ static AstMapping *ReadDivide( AstYamlChan *this, AstKeyMap *km, int *status ){
          if( abmap ) abmap = astAnnul( abmap );
          if( intrlvmap ) intrlvmap = astAnnul( intrlvmap );
          if( divmap ) divmap = astAnnul( divmap );
+      }
+
+/* Store a summary of the equivalent ASDF divide in the KeyMap associated
+   with the returned Mapping. On write-back this lets WriteMapping emit the
+   divide directly (via WriteProxyDivide) without re-running the structural
+   matching in FindDivide. */
+      if( result ){
+         pkm = astGetKeyMap( result );
+         astMapPut0C( pkm, "PROXY_TYPE", "divide", NULL );
+         astMapPut0A( pkm, "DIVIDE_MAPA", mapa, NULL );
+         astMapPut0A( pkm, "DIVIDE_MAPB", mapb, NULL );
+         pkm = astAnnul( pkm );
       }
 
       if( mapa ) mapa = astAnnul( mapa );
@@ -8343,7 +8282,7 @@ static AstMapping *ReadLinear1d( AstKeyMap *km, int *status ){
    AstMapping *result;
    double ina;
    double inb;
-   double offset;
+   double intercept;
    double outa;
    double outb;
    double slope;
@@ -8362,9 +8301,9 @@ static AstMapping *ReadLinear1d( AstKeyMap *km, int *status ){
 /* Create the returned Mapping. */
    } else {
 
-/* Get the slope and offset. Report an error if the slope is zero. */
+/* Get the slope and intercept. Report an error if the slope is zero. */
       slope = Get0D( km, "slope", 0, AST__BAD, status );
-      offset = Get0D( km, "offset", 0, AST__BAD, status );
+      intercept = Get0D( km, "intercept", 0, AST__BAD, status );
       if( slope == 0.0 ) {
          if( astOK ) {
             astError( AST__BYAML, "astRead(YamlChan): Supplied ASDF "
@@ -8372,19 +8311,14 @@ static AstMapping *ReadLinear1d( AstKeyMap *km, int *status ){
                       status );
          }
 
-/* Ortherwise, create a corresponding winmap. */
+/* Otherwise, create a corresponding WinMap. The linear1d transform is
+   y = slope*x + intercept, so map the window [0,1] on the input onto the
+   window [intercept, slope+intercept] on the output. */
       } else {
-/* A 1-D WinMap maps the interval [ina,inb] linearly onto [outa,outb], so
-   picking x=0 and x=1 gives y = slope*x + offset directly.
-
-   The previous code assigned "outa" twice - the second store, 2*offset,
-   overwriting the correct one - and never assigned "outb" at all, so the
-   WinMap was built from an uninitialized stack value. The resulting mapping
-   was arbitrary, and not even reproducible. */
          ina = 0.0;
-         outa = offset;
          inb = 1.0;
-         outb = slope + offset;
+         outa = intercept;
+         outb = slope + intercept;
          result = (AstMapping *) astWinMap( 1, &ina, &inb, &outa, &outb,
                                             " ", status );
       }
@@ -8881,11 +8815,11 @@ static AstMapping *ReadPoly( AstYamlChan *this, AstKeyMap *km, int isortho,
    if( !astOK ) return result;
 
 /* An ortho_polynomial names its basis in the mandatory "polynomial_type"
-   field, which the ASDF schema allows to be "chebyshev", "legendre" or
-   "hermite". Only Chebyshev is supported (astChebyMap below), so check the
-   field rather than assuming it: reading a Legendre or Hermite polynomial as
-   a Chebyshev evaluates entirely different basis functions and so produces a
-   plausible but wrong Mapping, with nothing to indicate it. */
+   field, which may be "chebyshev", "legendre" or "hermite". Only Chebyshev
+   is supported (astChebyMap below), so check rather than assume: the other
+   two bases have entirely different basis functions, so reading one as a
+   Chebyshev would give a plausible but wrong Mapping. A missing field is
+   taken as Chebyshev so that files which omit it are unaffected. */
    if( isortho ) {
       polytype = Get0C( km, "polynomial_type", 1, "chebyshev", status );
       if( astOK && polytype && strcasecmp( polytype, "chebyshev" ) ) {
@@ -10057,7 +9991,8 @@ static AstMapping *ReadShift( AstKeyMap *km, int *status ){
    return result;
 }
 
-static AstMapping *ReadSkyProjection( AstKeyMap *km, int *status ){
+static AstMapping *ReadSkyProjection( AstKeyMap *km, int inunit, int outunit,
+                                      int *status ){
 /*
 *  Name:
 *     ReadSkyProjection
@@ -10070,7 +10005,8 @@ static AstMapping *ReadSkyProjection( AstKeyMap *km, int *status ){
 
 *  Synopsis:
 *     #include "yamlchan.h"
-*     AstMapping *ReadSkyProjection( AstKeyMap *km, int *status )
+*     AstMapping *ReadSkyProjection( AstKeyMap *km, int inunit, int outunit,
+*                                    int *status )
 
 *  Class Membership:
 *     YamlChan member function
@@ -10078,15 +10014,26 @@ static AstMapping *ReadSkyProjection( AstKeyMap *km, int *status ){
 *  Description:
 *     This function creates an AST Mapping from the YAML stored in the
 *     supplied KeyMap.
+*
+*     The projection itself is a WcsMap, which works in radians. A ZoomMap
+*     is included at either end of it only if the caller asks for degrees at
+*     that end, so a caller that works in radians gets the bare WcsMap.
 
 *  Parameters:
 *     km
 *        Pointer to the KeyMap. Its contents must represent an ASDF skyprojection.
+*     inunit
+*        The units used by the inputs of the returned Mapping: UNIT_DEG (as
+*        used by ASDF) or UNIT_RAD (as used by an AST WcsMap).
+*     outunit
+*        The units used by the outputs of the returned Mapping, as for
+*        "inunit".
 *     status
 *        Pointer to the inherited status variable.
 
 *  Returned Value:
-*     A pointer to the new Mapping.
+*     A pointer to the new Mapping. This is the WcsMap itself if radians are
+*     requested at both ends.
 */
 
 /* Local Variables: */
@@ -10154,9 +10101,6 @@ static AstMapping *ReadSkyProjection( AstKeyMap *km, int *status ){
       } else if( strstr( km_class, "/zenithal_equidistant-" ) ) {
          type = AST__ARC;
 
-/* zenithal_perspective is AZP, not SZP: its mu and gamma are AZP's PV2_1
-   and PV2_2, where SZP's 2nd and 3rd parameters are phi_c and theta_c, so
-   reading it as SZP feeds gamma in as phi_c. */
       } else if( strstr( km_class, "/zenithal_perspective-" ) ) {
          type = AST__AZP;
          pv[ 1 ] = Get0D( km, "mu", 1, 0.0, status );
@@ -10264,22 +10208,27 @@ static AstMapping *ReadSkyProjection( AstKeyMap *km, int *status ){
                    dir, km_class );
       }
 
-/* ASDF uses degrees for all inputs and outputs of a sky projection, but
-   AST uses radians. Put a ZoomMap at each end of the WcsMap (in series)
-   to do the conversions. Flag these using astSetAllowSimplify so that
-   they can merge into their neighbours during a subsequent restricted
-   simplification. */
-      zm = astZoomMap( 2, AST__DD2R, " ", status );
-      astSetAllowSimplify( zm );
-      temp = astCmpMap( zm, result, 1, " ", status );
-      (void) astAnnul( result );
-      result = (AstMapping *) temp;
+/* The WcsMap works in radians, so put a ZoomMap in series at either end at
+   which the caller asked for degrees. Flag these using astSetAllowSimplify
+   so that they can merge into their neighbours during a subsequent
+   restricted simplification. */
+      if( inunit == UNIT_DEG ) {
+         zm = astZoomMap( 2, AST__DD2R, " ", status );
+         astSetAllowSimplify( zm );
+         temp = astCmpMap( zm, result, 1, " ", status );
+         zm = astAnnul( zm );
+         (void) astAnnul( result );
+         result = (AstMapping *) temp;
+      }
 
-      astInvert( zm );
-      temp = astCmpMap( result, zm, 1, " ", status );
-      zm = astAnnul( zm );
-      (void) astAnnul( result );
-      result = (AstMapping *) temp;
+      if( outunit == UNIT_DEG ) {
+         zm = astZoomMap( 2, AST__DR2D, " ", status );
+         astSetAllowSimplify( zm );
+         temp = astCmpMap( result, zm, 1, " ", status );
+         zm = astAnnul( zm );
+         (void) astAnnul( result );
+         result = (AstMapping *) temp;
+      }
 
 /* Free resources. */
       km_class = astFree( (void *) km_class );
@@ -10390,6 +10339,289 @@ static AstMapping *ReadSphericalCartesian( AstKeyMap *km, int *status ){
       result = astAnnul( result );
       astError( astStatus, "Error occurred when reading an ASDF "
                 "'spherical_cartesian' object.", status );
+   }
+
+/* Return the Mapping. */
+   return result;
+}
+
+static AstMapping *ReadFitswcsImaging( AstYamlChan *this, AstKeyMap *km,
+                                       int *status ){
+/*
+*  Name:
+*     ReadFitswcsImaging
+
+*  Purpose:
+*     Read an AST Mapping from a KeyMap holding an ASDF fitswcs_imaging
+*     transform.
+
+*  Type:
+*     Private function.
+
+*  Synopsis:
+*     #include "yamlchan.h"
+*     AstMapping *ReadFitswcsImaging( AstYamlChan *this, AstKeyMap *km,
+*                                     int *status )
+
+*  Class Membership:
+*     YamlChan member function
+
+*  Description:
+*     This function creates an AST Mapping from the YAML stored in the
+*     supplied KeyMap, which should hold a GWCS fitswcs_imaging transform.
+*     This packages a FITS-compatible imaging WCS as the series combination
+*     of a shift (-crpix), a linear transformation (the pc matrix), a
+*     per-axis scale (cdelt), a sky projection, and a rotation from native
+*     to celestial spherical coordinates (from crval, with the native
+*     longitude of the celestial pole, currently hard-coded to be 180 degrees,
+*     as is appropriate for the zenithal projections such as gnomonic/TAN).
+*
+*     The forward transformation goes from pixel coordinates to celestial
+*     coordinates (in degrees), matching the gwcs.fitswcs.FITSImagingWCSTransform
+*     model from Python:
+*
+*        Shift(-crpix) | Affine(pc) | Scale(cdelt) | projection
+*                      | RotateNative2Celestial(crval, lonpole=180)
+
+*  Parameters:
+*     this
+*        Pointer to the YamlChan.
+*     km
+*        Pointer to the KeyMap. Its contents must represent an ASDF
+*        fitswcs_imaging transform.
+*     status
+*        Pointer to the inherited status variable.
+
+*  Returned Value:
+*     A pointer to the new Mapping.
+
+*  Notes:
+*     - TODO: The native longitude of the celestial pole is currently fixed
+*     at 180 degrees. This is correct for zenithal projections (which includes
+*     the common gnomonic/TAN case), but not for other projection families, for
+*     which GWCS computes a projection-dependent value. Reading such a
+*     transform back into the exact same Mapping is left as a future
+*     enhancement.
+*/
+
+/* Local Variables: */
+   AstKeyMap *pkm;
+   AstKeyMap *subkm;
+   AstMapping *n2cmap;        /* MatrixMap that applies "n2cmat" */
+   AstMapping *pcmap;
+   AstMapping *proj;          /* The sky projection (a bare WcsMap) */
+   AstMapping *result;
+   AstMapping *rot;           /* Native -> celestial rotation, as a Mapping */
+   AstMapping *scale;
+   AstMapping *shift;
+   AstMapping *sphfwd;        /* Cartesian -> spherical (radians) */
+   AstMapping *sphinv;        /* Spherical (radians) -> Cartesian */
+   AstMapping *tmp;
+   AstMapping *zmin;          /* Degrees -> radians */
+   AstMapping *zmout;         /* Radians -> degrees */
+   double *cdelt;
+   double *crpix;
+   double *crval;
+   double *pc;
+   double n2cmat[ 9 ];        /* Native -> celestial rotation matrix (3x3) */
+   double negcrpix[ 2 ];
+   double phi;                /* ZXZ Euler angles defining "n2cmat" */
+   double psi;
+   double theta;
+   int dims[ 2 ];
+   int ndim;
+
+/* Initialise */
+   result = NULL;
+   cdelt = NULL;
+   crpix = NULL;
+   crval = NULL;
+   pc = NULL;
+
+/* Check inherited status */
+   if( !astOK )
+      return result;
+
+/* Report an error if the supplied KeyMap does not represent an ASDF
+   fitswcs_imaging transform. */
+   if( !IsA( km, "fitswcs_imaging", status ) ) {
+      astError( AST__BYAML, "astRead(YamlChan): Expected KeyMap to hold "
+                "an ASDF fitswcs_imaging transform but got a %s", status,
+                GetAsdfClass( km, status ) );
+      return result;
+   }
+
+/* Read the four numeric parameters. Each is stored as an ndarray: crpix,
+   crval and cdelt are 1-D arrays of length 2, and pc is a 2x2 matrix.
+   Note: ReadNDArray returns ndim==0 (with the length in dims[0]) for a flat
+   inline numeric array such as the 1-D crpix/crval/cdelt vectors, so only the
+   length is checked for these. */
+   subkm = Get0A( km, "crpix", 0, NULL, NULL, status );
+   crpix = ReadNDArray( this, subkm, 1, &ndim, dims, status );
+   subkm = astAnnul( subkm );
+   if( astOK && dims[ 0 ] != 2 ){
+      astError( AST__BYAML, "astRead(YamlChan): 'crpix' in an ASDF "
+                "fitswcs_imaging transform must be a 1-D array of length 2.",
+                status );
+   }
+
+   subkm = Get0A( km, "crval", 0, NULL, NULL, status );
+   crval = ReadNDArray( this, subkm, 1, &ndim, dims, status );
+   subkm = astAnnul( subkm );
+   if( astOK && dims[ 0 ] != 2 ){
+      astError( AST__BYAML, "astRead(YamlChan): 'crval' in an ASDF "
+                "fitswcs_imaging transform must be a 1-D array of length 2.",
+                status );
+   }
+
+   subkm = Get0A( km, "cdelt", 0, NULL, NULL, status );
+   cdelt = ReadNDArray( this, subkm, 1, &ndim, dims, status );
+   subkm = astAnnul( subkm );
+   if( astOK && dims[ 0 ] != 2 ){
+      astError( AST__BYAML, "astRead(YamlChan): 'cdelt' in an ASDF "
+                "fitswcs_imaging transform must be a 1-D array of length 2.",
+                status );
+   }
+
+   subkm = Get0A( km, "pc", 0, NULL, NULL, status );
+   pc = ReadNDArray( this, subkm, 2, &ndim, dims, status );
+   subkm = astAnnul( subkm );
+   if( astOK && ( ndim != 2 || dims[ 0 ] != 2 || dims[ 1 ] != 2 ) ){
+      astError( AST__BYAML, "astRead(YamlChan): 'pc' in an ASDF "
+                "fitswcs_imaging transform must be a 2x2 matrix.", status );
+   }
+
+/* Shift to subtract crpix from the pixel coordinates. */
+   if( astOK ){
+      negcrpix[ 0 ] = -crpix[ 0 ];
+      negcrpix[ 1 ] = -crpix[ 1 ];
+   }
+
+   shift = (AstMapping *) astShiftMap( 2, negcrpix, " ", status );
+
+/* The pc matrix (a full 2x2 matrix). */
+   pcmap = (AstMapping *) astMatrixMap( 2, 2, 0, pc, " ", status );
+
+/* The per-axis cdelt scale (a diagonal 2x2 matrix). */
+   scale = (AstMapping *) astMatrixMap( 2, 2, 1, cdelt, " ", status );
+
+/* The sky projection, which maps intermediate world coordinates to native
+   spherical coordinates. Reuse the general sky projection reader, so any
+   projection class it supports can be used. */
+   subkm = Get0A( km, "projection", 0, NULL, NULL, status );
+   proj = ReadSkyProjection( subkm, UNIT_RAD, UNIT_RAD, status );
+   subkm = astAnnul( subkm );
+
+/* Form the 3x3 matrix "n2cmat" that rotates native spherical coordinates to
+   celestial coordinates. This is the GWCS/astropy RotateNative2Celestial
+   model, a ZXZ Euler rotation with angles phi = lonpole - pi/2,
+   theta = lat - pi/2 and psi = -(pi/2 + lon), where lon and lat are crval and
+   the native longitude of the celestial pole (lonpole) is 180 degrees.
+   palDeuler returns the matrix for those angles. */
+   if( astOK ){
+      phi = AST__DPIBY2; /* lonpole - pi/2 */
+      theta = ( crval[ 1 ] * AST__DD2R ) - AST__DPIBY2; /* lat - pi/2 */
+      psi = -( AST__DPIBY2 + ( crval[ 0 ] * AST__DD2R ) ); /* -(pi/2 + lon) */
+      palDeuler( "ZXZ", phi, theta, psi, (double (*)[3]) n2cmat );
+   }
+
+/* The intermediate world coordinates produced by "scale" are in degrees,
+   whereas the WcsMap takes radians, so convert between the two. */
+   zmin = (AstMapping *) astZoomMap( 2, AST__DD2R, " ", status );
+
+/* The matrix rotates unit Cartesian vectors, but the WcsMap produces native
+   spherical coordinates in radians. So precede the matrix with an inverted
+   SphMap (spherical to Cartesian) and follow it with a SphMap (Cartesian to
+   spherical), the same pattern used by ReadRotate3d. The resulting celestial
+   coordinates are then converted to the degrees used by the ASDF frame. */
+   sphinv = (AstMapping *) astSphMap( " ", status );
+   astInvert( sphinv );
+
+   n2cmap = (AstMapping *) astMatrixMap( 3, 3, 0, n2cmat, " ", status );
+   sphfwd = (AstMapping *) astSphMap( " ", status );
+   zmout = (AstMapping *) astZoomMap( 2, AST__DR2D, " ", status );
+
+   rot = (AstMapping *) astCmpMap( sphinv, n2cmap, 1, " ", status );
+   tmp = (AstMapping *) astCmpMap( rot, sphfwd, 1, " ", status );
+   (void) astAnnul( rot );
+   rot = tmp;
+   tmp = (AstMapping *) astCmpMap( rot, zmout, 1, " ", status );
+   (void) astAnnul( rot );
+   rot = tmp;
+
+   (void) astAnnul( sphinv );
+   (void) astAnnul( n2cmap );
+   (void) astAnnul( sphfwd );
+   (void) astAnnul( zmout );
+
+/* Combine all the steps in series: shift, pc, scale, degrees to radians,
+   projection, rotation. */
+   result = (AstMapping *) astCmpMap( shift, pcmap, 1, " ", status );
+   tmp = (AstMapping *) astCmpMap( result, scale, 1, " ", status );
+   (void) astAnnul( result );
+   result = tmp;
+   tmp = (AstMapping *) astCmpMap( result, zmin, 1, " ", status );
+   (void) astAnnul( result );
+   result = tmp;
+   tmp = (AstMapping *) astCmpMap( result, proj, 1, " ", status );
+   (void) astAnnul( result );
+   result = tmp;
+   tmp = (AstMapping *) astCmpMap( result, rot, 1, " ", status );
+   (void) astAnnul( result );
+   result = tmp;
+
+/* Simplify the whole chain. This merges the unit conversions into their
+   neighbours (for instance the degrees to radians ZoomMap into the cdelt
+   scale), which would otherwise be applied as separate steps every time the
+   Mapping is used. This must be done before the summary and the Ident
+   are attached below. Even though the Ident prevents further simplification
+   with the fitswcs's neighbors, it can still be simplified internally quite
+   a bit which is nice. */
+   if( astOK ){
+      tmp = astSimplify( result );
+      (void) astAnnul( result );
+      result = tmp;
+   }
+
+/* Store a summary of the fitswcs_imaging, holding its parameters exactly as
+   read, in the KeyMap associated with the returned Mapping. On write this
+   lets WriteMapping emit the Mapping as a fitswcs_imaging again (via
+   WriteProxyFitswcsImaging). "proj" is the WcsMap itself, so it can be
+   stored as the projection directly.
+
+   A Mapping with a set Ident is not simplified (see astDoNotSimplify), so
+   also set an Ident. This keeps the returned CmpMap, and so the summary,
+   intact when the WCS FrameSet is simplified. */
+   if( astOK ){
+      pkm = astGetKeyMap( result );
+      astMapPut0C( pkm, "PROXY_TYPE", "fitswcs_imaging", NULL );
+      astMapPut1D( pkm, "FITSWCS_CRPIX", 2, crpix, NULL );
+      astMapPut1D( pkm, "FITSWCS_CRVAL", 2, crval, NULL );
+      astMapPut1D( pkm, "FITSWCS_CDELT", 2, cdelt, NULL );
+      astMapPut1D( pkm, "FITSWCS_PC", 4, pc, NULL );
+      astMapPut0A( pkm, "FITSWCS_PROJ", proj, NULL );
+      pkm = astAnnul( pkm );
+
+      astSetIdent( result, FITSWCS_IDENT );
+   }
+
+/* Free resources. */
+   (void) astAnnul( shift );
+   (void) astAnnul( pcmap );
+   (void) astAnnul( scale );
+   (void) astAnnul( zmin );
+   (void) astAnnul( proj );
+   (void) astAnnul( rot );
+   crpix = astFree( crpix );
+   crval = astFree( crval );
+   cdelt = astFree( cdelt );
+   pc = astFree( pc );
+
+/* If an error occurred, report the context. */
+   if( !astOK ) {
+      result = astAnnul( result );
+      astError( astStatus, "Error occurred when reading an ASDF "
+                "'fitswcs_imaging' object.", status );
    }
 
 /* Return the Mapping. */
@@ -10606,7 +10838,7 @@ static AstMapping *ReadTransform( AstYamlChan *this, AstKeyMap *km, int *status 
       class = GetAsdfClass( km, status );
       if( class ) {
          if( IsASkyProjection( class, status ) ){
-            result = ReadSkyProjection( km, status );
+            result = ReadSkyProjection( km, UNIT_DEG, UNIT_DEG, status );
          } else if( IsAIdentity( class, status ) ){
             result = ReadIdentity( km, status );
          } else if( IsAScale( class, status ) ){
@@ -10645,6 +10877,8 @@ static AstMapping *ReadTransform( AstYamlChan *this, AstKeyMap *km, int *status 
             result = ReadPolynomial( this, km, status );
          } else if( IsASpherical_Cartesian( class, status ) ){
             result = ReadSphericalCartesian( km, status );
+         } else if( IsAFitswcs_Imaging( class, status ) ){
+            result = ReadFitswcsImaging( this, km, status );
          } else if( astOK ) {
             astError( AST__BYAML, "astRead(YamlChan): The '%s' class of "
                       "ASDF transform is not currently supported by AST.",
@@ -10798,7 +11032,7 @@ static AstMapping *ReadTransform( AstYamlChan *this, AstKeyMap *km, int *status 
    return result;
 }
 
-static AstKeyMap *ReadValues( AstYamlChan *this, yaml_parser_t *parser, int *status ) {
+static AstKeyMap *ReadValues( AstYamlChan *this, AstYamlParser *parser, int *status ) {
 /*
 *  Name:
 *     ReadValues
@@ -10811,7 +11045,7 @@ static AstKeyMap *ReadValues( AstYamlChan *this, yaml_parser_t *parser, int *sta
 
 *  Synopsis:
 *     #include "yamlchan.h"
-*     AstKeyMap *ReadValues( AstYamlChan *this, yaml_parser_t *parser, int *status )
+*     AstKeyMap *ReadValues( AstYamlChan *this, AstYamlParser *parser, int *status )
 
 *  Class Membership:
 *     YamlChan member function
@@ -10836,7 +11070,7 @@ static AstKeyMap *ReadValues( AstYamlChan *this, yaml_parser_t *parser, int *sta
 
 /* Local Variables: */
    AstKeyMap *result;
-   yaml_event_t  event;
+   AstYamlEvent  event;
    int state;
 
 /* Initialise */
@@ -10853,11 +11087,12 @@ static AstKeyMap *ReadValues( AstYamlChan *this, yaml_parser_t *parser, int *sta
    while( astOK && !this->gotwcs ) {
 
 /* Get the next yaml event. */
-      if( !yaml_parser_parse( parser, &event )) {
-         astError( AST__LYAML, "astRead(%s): Error %d occurred calling "
-                   "libyaml function '%s':", status, astGetClass( this),
-                   parser->error, "yaml_parser_parse" );
-         LibYamlParserError( parser, status );
+      if( !astYamlParserParse( parser, &event )) {
+         /* LCOV_EXCL_START */
+         astError( AST__LYAML, "astRead(%s): " YAML_BACKEND " parse error:",
+                   status, astGetClass( this ) );
+         AstYamlParserError( parser, status );
+         /* LCOV_EXCL_STOP */
 
 /* State zero: look for the "stream start" event. */
       } else if( state == 0 ) {
@@ -10910,7 +11145,7 @@ static AstKeyMap *ReadValues( AstYamlChan *this, yaml_parser_t *parser, int *sta
 
 /* Once the stream-end has happened, we have nothing more to do so
    delete the event and break out of the loop. */
-         yaml_event_delete( &event );
+         astYamlEventDelete( &event );
          break;
 
 /* Should never happen. */
@@ -10921,7 +11156,7 @@ static AstKeyMap *ReadValues( AstYamlChan *this, yaml_parser_t *parser, int *sta
       }
 
 /* Delete th event before getting the next event. */
-      yaml_event_delete( &event );
+      astYamlEventDelete( &event );
    }
 
 /* Sanity check. */
@@ -11176,8 +11411,8 @@ static void ReadYAMLAlias( AstYamlChan *this, AstKeyMap *km, const char *id,
    }
 }
 
-static void ReadYAMLEvent( AstYamlChan *this, yaml_parser_t *parser,
-                           yaml_event_t *event, AstKeyMap *km, const char *id,
+static void ReadYAMLEvent( AstYamlChan *this, AstYamlParser *parser,
+                           AstYamlEvent *event, AstKeyMap *km, const char *id,
                            int *status ){
 /*
 *  Name:
@@ -11191,8 +11426,8 @@ static void ReadYAMLEvent( AstYamlChan *this, yaml_parser_t *parser,
 
 *  Synopsis:
 *     #include "yamlchan.h"
-*     void ReadYAMLEvent( AstYamlChan *this, yaml_parser_t *parser,
-*                         yaml_event_t *event, AstKeyMap *km, const char *id,
+*     void ReadYAMLEvent( AstYamlChan *this, AstYamlParser *parser,
+*                         AstYamlEvent *event, AstKeyMap *km, const char *id,
 *                         int *status )
 
 *  Class Membership:
@@ -11236,10 +11471,10 @@ static void ReadYAMLEvent( AstYamlChan *this, yaml_parser_t *parser,
 
 /* New item is a Mapping... */
    if( event->type == YAML_MAPPING_START_EVENT ) {
-      anchor = (char *) event->data.mapping_start.anchor;
+      anchor = (char *) event->anchor;
 
 /* Get the YAML class of the object stored in the YAML Mapping. */
-      class = (char *) event->data.mapping_start.tag;
+      class = (char *) event->tag;
       if( class ) {
          class = astStore( NULL, class, strlen( class ) + 1 );
 
@@ -11283,8 +11518,8 @@ static void ReadYAMLEvent( AstYamlChan *this, yaml_parser_t *parser,
 
 /* New item is a scalar... */
    } else if( event->type == YAML_SCALAR_EVENT ) {
-      anchor = (char *) event->data.scalar.anchor;
-      text = (char *) event->data.scalar.value;
+      anchor = (char *) event->anchor;
+      text = (char *) event->value;
       dval = astChr2Double( text );
       if( dval != AST__BAD ) {
          if( strstr( text, "." ) ){
@@ -11312,7 +11547,7 @@ static void ReadYAMLEvent( AstYamlChan *this, yaml_parser_t *parser,
 
 /* New item is a sequence... */
    } else if( event->type == YAML_SEQUENCE_START_EVENT ) {
-      anchor = (char *) event->data.sequence_start.anchor;
+      anchor = (char *) event->anchor;
 
 /* Read the sequence values into the KeyMap. This consumes subsequent events
    up to and including the "sequence end" event corresponding to the
@@ -11322,13 +11557,13 @@ static void ReadYAMLEvent( AstYamlChan *this, yaml_parser_t *parser,
 /* New item is an alias (i.e. a reference to a previously defined anchor). */
    } else if( event->type == YAML_ALIAS_EVENT ) {
       anchor = NULL;
-      ReadYAMLAlias( this, km, id, (char *) event->data.alias.anchor, status );
+      ReadYAMLAlias( this, km, id, (char *) event->anchor, status );
 
 /* Report an error for any unsupported YAML event types. */
    } else {
       astError( AST__YAML, "astRead(%s): Cannot interpret the "
                 "supplied YAML text: Unexpected item of type '%s'.", status,
-                astGetClass(this),  YamlEventType( *event )  );
+                astGetClass(this), YamlEventType( event->type ) );
    }
 
 /* If the event had an associated anchor, associate the anchor with the
@@ -11336,7 +11571,7 @@ static void ReadYAMLEvent( AstYamlChan *this, yaml_parser_t *parser,
    StoreAnchor( this, (char *) anchor, km, id, status );
 }
 
-static void ReadYAMLItem( AstYamlChan *this, yaml_parser_t *parser,
+static void ReadYAMLItem( AstYamlChan *this, AstYamlParser *parser,
                           AstKeyMap *km, const char *id, int *status ){
 /*
 *  Name:
@@ -11350,7 +11585,7 @@ static void ReadYAMLItem( AstYamlChan *this, yaml_parser_t *parser,
 
 *  Synopsis:
 *     #include "yamlchan.h"
-*     void ReadYAMLItem( AstYamlChan *this, yaml_parser_t *parser,
+*     void ReadYAMLItem( AstYamlChan *this, AstYamlParser *parser,
 *                        AstKeyMap *km, const char *id, int *status )
 
 *  Class Membership:
@@ -11376,17 +11611,18 @@ static void ReadYAMLItem( AstYamlChan *this, yaml_parser_t *parser,
 */
 
 /* Local Variables: */
-   yaml_event_t  event;
+   AstYamlEvent  event;
 
 /* Check the global error status. */
    if ( !astOK ) return;
 
 /* Get the next event from the parser. */
-   if( !yaml_parser_parse( parser, &event ) ) {
-      astError( AST__LYAML, "astRead(%s): Error %d occurred calling "
-                "libyaml function '%s':", status, astGetClass( this),
-                parser->error, "yaml_parser_parse" );
-      LibYamlParserError( parser, status );
+   if( !astYamlParserParse( parser, &event ) ) {
+      /* LCOV_EXCL_START */
+      astError( AST__LYAML, "astRead(%s): " YAML_BACKEND " parse error:",
+                status, astGetClass( this ) );
+      AstYamlParserError( parser, status );
+      /* LCOV_EXCL_STOP */
 
 /* Read data indicated by the event into the KeyMap. */
    } else {
@@ -11394,10 +11630,10 @@ static void ReadYAMLItem( AstYamlChan *this, yaml_parser_t *parser,
    }
 
 /* Delete the event. */
-   yaml_event_delete( &event );
+   astYamlEventDelete( &event );
 }
 
-static AstKeyMap *ReadYAMLMapping( AstYamlChan *this, yaml_parser_t *parser, int *status ){
+static AstKeyMap *ReadYAMLMapping( AstYamlChan *this, AstYamlParser *parser, int *status ){
 /*
 *  Name:
 *     ReadYAMLMapping
@@ -11410,7 +11646,7 @@ static AstKeyMap *ReadYAMLMapping( AstYamlChan *this, yaml_parser_t *parser, int
 
 *  Synopsis:
 *     #include "yamlchan.h"
-*     AstKeyMap *ReadYAMLMapping( AstYamlChan *this, yaml_parser_t *parser, int *status )
+*     AstKeyMap *ReadYAMLMapping( AstYamlChan *this, AstYamlParser *parser, int *status )
 
 *  Class Membership:
 *     YamlChan member function
@@ -11435,7 +11671,7 @@ static AstKeyMap *ReadYAMLMapping( AstYamlChan *this, yaml_parser_t *parser, int
 /* Local Variables: */
    AstKeyMap *result;
    char *id;
-   yaml_event_t  event;
+   AstYamlEvent  event;
 
 /* Initialise */
    result = NULL;
@@ -11453,15 +11689,16 @@ static AstKeyMap *ReadYAMLMapping( AstYamlChan *this, yaml_parser_t *parser, int
    while( astOK && !this->gotwcs ) {
 
 /* Read the next event. */
-      if( !yaml_parser_parse( parser, &event ) ) {
-         astError( AST__LYAML, "astRead(%s): Error %d occurred calling "
-                   "libyaml function '%s':", status, astGetClass( this),
-                   parser->error, "yaml_parser_parse" );
-         LibYamlParserError( parser, status );
+      if( !astYamlParserParse( parser, &event ) ) {
+         /* LCOV_EXCL_START */
+         astError( AST__LYAML, "astRead(%s): " YAML_BACKEND " parse error:",
+                   status, astGetClass( this ) );
+         AstYamlParserError( parser, status );
+         /* LCOV_EXCL_STOP */
 
 /* Read the id for the next item */
       } else if( event.type == YAML_SCALAR_EVENT ) {
-         id = (char *) event.data.scalar.value;
+         id = (char *) event.value;
          if( !id ) {
             astError( AST__YAML, "astRead(%s): Cannot interpret the "
                       "supplied YAML text:  blank scalar name encountered.",
@@ -11476,6 +11713,7 @@ static AstKeyMap *ReadYAMLMapping( AstYamlChan *this, yaml_parser_t *parser, int
 
 /* End the Mapping */
       } else if( event.type == YAML_MAPPING_END_EVENT ) {
+         astYamlEventDelete( &event );
          break;
 
 /* Unexpected events. */
@@ -11486,7 +11724,7 @@ static AstKeyMap *ReadYAMLMapping( AstYamlChan *this, yaml_parser_t *parser, int
       }
 
 /* Delete the event before getting the next one from the parser. */
-      yaml_event_delete( &event );
+      astYamlEventDelete( &event );
    }
 
 /* Remove the entry used to track the previously added key (see
@@ -11501,7 +11739,7 @@ static AstKeyMap *ReadYAMLMapping( AstYamlChan *this, yaml_parser_t *parser, int
 }
 
 static void ReadYAMLSequence( AstYamlChan *this, AstKeyMap *km, const char *id,
-                              yaml_parser_t *parser, int *status ) {
+                              AstYamlParser *parser, int *status ) {
 /*
 *  Name:
 *     ReadYAMLSequence
@@ -11515,7 +11753,7 @@ static void ReadYAMLSequence( AstYamlChan *this, AstKeyMap *km, const char *id,
 *  Synopsis:
 *     #include "yamlchan.h"
 *     void ReadYAMLSequence( AstYamlChan *this, AstKeyMap *km, const char *id,
-*                            yaml_parser_t *parser, int *status )
+*                            AstYamlParser *parser, int *status )
 
 *  Class Membership:
 *     YamlChan member function
@@ -11577,7 +11815,7 @@ static void ReadYAMLSequence( AstYamlChan *this, AstKeyMap *km, const char *id,
    int ival;
    int nval;
    int type;
-   yaml_event_t  event;
+   AstYamlEvent  event;
 
 /* Check the global error status. */
    if ( !astOK ) return;
@@ -11600,14 +11838,14 @@ static void ReadYAMLSequence( AstYamlChan *this, AstKeyMap *km, const char *id,
    while( astOK ) {
 
 /* Read the next event. */
-      if( !yaml_parser_parse( parser, &event ) ) {
-         astError( AST__LYAML, "astRead(%s): Error %d occurred calling "
-                   "libyaml function '%s':", status, astGetClass( this),
-                   parser->error, "yaml_parser_parse" );
-         LibYamlParserError( parser, status );
+      if( !astYamlParserParse( parser, &event ) ) {
+         astError( AST__LYAML, "astRead(%s): " YAML_BACKEND " parse error:",
+                   status, astGetClass( this ) );
+         AstYamlParserError( parser, status );
 
 /* End the Sequence */
       } else if( event.type == YAML_SEQUENCE_END_EVENT ) {
+         astYamlEventDelete( &event );
          break;
 
 /* Read the next sequence value and store it in the staging post KeyMap. */
@@ -11660,7 +11898,7 @@ static void ReadYAMLSequence( AstYamlChan *this, AstKeyMap *km, const char *id,
       }
 
 /* Delete the event before getting the next one from the parser. */
-      yaml_event_delete( &event );
+      astYamlEventDelete( &event );
    }
 
 /* If an entry with the supplied id already exists in the supplied
@@ -12042,6 +12280,12 @@ static int SimplifyAsdf( AstYamlChan *this, AstKeyMap **km, int *status ){
                ret = 1;           /* Some simplification has taken place */
                fillgaps = 1;      /* Shuffle down to fill vacated slots */
                nr2d_removed += 2; /* Increment no. of removed conversions */
+
+/* The current transform has been removed, so it must not be treated as the
+   "preceding" transform on the next pass (otherwise a third adjacent
+   conversion would try to cancel against this now-NULL slot). Mark it
+   neutral. */
+               r2d = 0;
             }
 
 /* Likewise, if the current transform is used to convert from degrees
@@ -12054,6 +12298,10 @@ static int SimplifyAsdf( AstYamlChan *this, AstKeyMap **km, int *status ){
                ret = 1;
                fillgaps = 1;
                nr2d_removed += 2;
+
+/* As above, mark this removed transform neutral so it is not used as the
+   preceding transform on the next pass. */
+               r2d = 0;
             }
          }
 
@@ -12348,7 +12596,7 @@ static AstKeyMap *StartAsdfTransform( AstYamlChan *this, AstObject *mapinv,
    return ret;
 }
 
-static void StartYamlDoc( AstYamlChan *this, yaml_emitter_t *emitter,
+static void StartYamlDoc( AstYamlChan *this, AstYamlEmitter *emitter,
                           int *status ) {
 /*
 *  Name:
@@ -12362,7 +12610,7 @@ static void StartYamlDoc( AstYamlChan *this, yaml_emitter_t *emitter,
 
 *  Synopsis:
 *     #include "Yamlchan.h"
-*     void StartYamlDoc( AstYamlChan *this, yaml_emitter_t *emitter,
+*     void StartYamlDoc( AstYamlChan *this, AstYamlEmitter *emitter,
 *                        int *status )
 
 *  Description:
@@ -12380,43 +12628,44 @@ static void StartYamlDoc( AstYamlChan *this, yaml_emitter_t *emitter,
 
 /* Local Variables: */
    int enc;
-   yaml_event_t event;
-   yaml_tag_directive_t tag;
-   yaml_version_directive_t yaml_version = { 1, 1 };
+   const char *tag_prefix;
 
 /* Check the global error status. */
    if ( !astOK ) return;
 
-/* Initialise the libyaml emitter. */
-   if( !yaml_emitter_initialize( emitter ) ){
-      astError( AST__LYAML, "astWrite(%s): Failed to initialize libyaml "
-                "emitter", status, astGetClass( this ) );
-      LibYamlEmitterError( emitter, status );
+/* Initialise the YAML emitter. */
+   if( !astYamlEmitterInitialize( emitter ) ){
+      /* LCOV_EXCL_START */
+      astError( AST__LYAML, "astWrite(%s): Failed to initialize " YAML_BACKEND
+                " emitter", status, astGetClass( this ) );
+      AstYamlEmitterError( emitter, status );
+      /* LCOV_EXCL_STOP */
 
-/* If OK, register the sink function with the emitter, set the indent
-   increment and select Unix-style line breaks. */
+/* If OK, register the sink function with the emitter and set the indent
+   increment. */
    } else {
-      yaml_emitter_set_output( emitter, LibYamlWriter, this );
-      yaml_emitter_set_indent( emitter, astGetIndent( this ) );
-      yaml_emitter_set_break( emitter, YAML_LN_BREAK );
+      astYamlEmitterSetOutput( emitter, AstYamlWriter, this );
+      astYamlEmitterSetIndent( emitter, astGetIndent( this ) );
    }
 
 /* Create and emit the STREAM-START event. */
    if( astOK ) {
-      yaml_stream_start_event_initialize( &event, YAML_UTF8_ENCODING );
-      EMIT
+      EMIT_CHECK(this, emitter, status, astYamlEmitStreamStart( emitter ));
    }
 
-/* Write the comment required by ASDF (libyaml cannot emit comments so we
-   need to format and write the line directly using our sink function). */
-   tag.handle = (yaml_char_t *) "!";
+/* Write the comment required by ASDF (the YAML backend cannot emit comments
+   so we need to format and write the line directly using our sink function).
+   Also determine the tag prefix for the DOCUMENT-START event. */
    enc = astGetYamlEncoding( this );
+   tag_prefix = NULL;
    if( enc == ASDF_ENCODING ) {
-      LibYamlWriter( this, (yaml_char_t *) ASDF_HEADER, strlen(ASDF_HEADER) );
-      tag.prefix = (yaml_char_t *) ASDF_TAG;
+      AstYamlWriter( this, (unsigned char *) ASDF_HEADER, strlen(ASDF_HEADER) );
+      AstYamlWriter( this, (unsigned char *) ASDF_STANDARD_HEADER,
+                     strlen(ASDF_STANDARD_HEADER) );
+      tag_prefix = ASDF_TAG;
 
    } else if( enc == NATIVE_ENCODING ) {
-      tag.prefix = (yaml_char_t *) AST_TAG;
+      tag_prefix = AST_TAG;
 
    } else if( astOK ) {
       astError( AST__INTER, "astWrite(YamlChan): Unsupported encoding (%d) "
@@ -12425,9 +12674,8 @@ static void StartYamlDoc( AstYamlChan *this, yaml_emitter_t *emitter,
 
 /* Create and emit the DOCUMENT-START event. */
    if( astOK ) {
-      yaml_document_start_event_initialize( &event, &yaml_version, &tag,
-                                            &tag + 1, 0 );
-      EMIT
+      EMIT_CHECK(this, emitter, status,
+                 astYamlEmitDocumentStart( emitter, 1, 1, "!", tag_prefix ));
    }
 
 /* Store the emitter pointer in the YamlChan structure so that the
@@ -12436,7 +12684,7 @@ static void StartYamlDoc( AstYamlChan *this, yaml_emitter_t *emitter,
 }
 
 static void StartYamlMapping( AstYamlChan *this, const char *key, const char *tag,
-                              yaml_emitter_t *emitter, int *status ) {
+                              AstYamlEmitter *emitter, int *status ) {
 /*
 *  Name:
 *     StartYamlMapping
@@ -12450,7 +12698,7 @@ static void StartYamlMapping( AstYamlChan *this, const char *key, const char *ta
 *  Synopsis:
 *     #include "Yamlchan.h"
 *     void StartYamlMapping( AstYamlChan *this, const char *key, const char *tag,
-*                            yaml_emitter_t *emitter, int *status )
+*                            AstYamlEmitter *emitter, int *status )
 
 *  Description:
 *     This function emits yaml events describing a new yaml mapping.
@@ -12476,17 +12724,16 @@ static void StartYamlMapping( AstYamlChan *this, const char *key, const char *ta
 /* Local Variables: */
    const char *fulltag;
    int nc;
-   yaml_event_t event;
 
 /* Check the global error status. */
    if ( !astOK ) return;
 
 /* Emit a scalar string holding the supplied key (if any). */
    if( key ) {
-      yaml_scalar_event_initialize( &event, NULL, (yaml_char_t *) YAML_STR_TAG,
-                                    (yaml_char_t *) key, strlen(key), 1, 0,
-                                    YAML_PLAIN_SCALAR_STYLE);
-      EMIT
+      EMIT_CHECK(this, emitter, status,
+                 astYamlEmitScalar( emitter, NULL, YAML_STR_TAG,
+                                    key, strlen(key), 1, 0,
+                                    AST_YAML_STYLE_PLAIN ));
    }
 
 /* Construct the full tag unless a full tag was supplied. */
@@ -12506,9 +12753,9 @@ static void StartYamlMapping( AstYamlChan *this, const char *key, const char *ta
 
 /* Emit the start mapping event. */
    if( astOK ) {
-      yaml_mapping_start_event_initialize( &event, NULL, (yaml_char_t *) fulltag,
-                                           (tag==NULL), YAML_BLOCK_MAPPING_STYLE );
-      EMIT
+      EMIT_CHECK(this, emitter, status,
+                 astYamlEmitMappingStart( emitter, NULL, fulltag,
+                                          (tag==NULL), AST_YAML_STYLE_BLOCK ));
    }
 
 /* Free resources. */
@@ -12516,7 +12763,7 @@ static void StartYamlMapping( AstYamlChan *this, const char *key, const char *ta
 }
 
 static void StartYamlSequence( AstYamlChan *this, const char *key, const char *tag,
-                               yaml_emitter_t *emitter, int *status ) {
+                               AstYamlEmitter *emitter, int *status ) {
 /*
 *  Name:
 *     StartYamlSequence
@@ -12530,7 +12777,7 @@ static void StartYamlSequence( AstYamlChan *this, const char *key, const char *t
 *  Synopsis:
 *     #include "Yamlchan.h"
 *     void StartYamlSequence( AstYamlChan *this, const char *key, const char *tag,
-*                             yaml_emitter_t *emitter, int *status )
+*                             AstYamlEmitter *emitter, int *status )
 
 *  Description:
 *     This function emits yaml events describing a new yaml sequence.
@@ -12554,17 +12801,16 @@ static void StartYamlSequence( AstYamlChan *this, const char *key, const char *t
 /* Local Variables: */
    const char *fulltag;
    int nc;
-   yaml_event_t event;
 
 /* Check the global error status. */
    if ( !astOK ) return;
 
 /* Emit a scalar string holding the supplied key. */
    if( key ) {
-      yaml_scalar_event_initialize( &event, NULL, (yaml_char_t *) YAML_STR_TAG,
-                                    (yaml_char_t *) key, strlen(key), 1, 0,
-                                    YAML_PLAIN_SCALAR_STYLE);
-      EMIT
+      EMIT_CHECK(this, emitter, status,
+                 astYamlEmitScalar( emitter, NULL, YAML_STR_TAG,
+                                    key, strlen(key), 1, 0,
+                                    AST_YAML_STYLE_PLAIN ));
    }
 
 /* Construct the full tag unless a full tag was supplied. */
@@ -12576,9 +12822,9 @@ static void StartYamlSequence( AstYamlChan *this, const char *key, const char *t
 
 /* Emit the start sequence event. */
    if( astOK ) {
-      yaml_sequence_start_event_initialize( &event, NULL, (yaml_char_t *) fulltag,
-                                            (tag==NULL), YAML_BLOCK_SEQUENCE_STYLE );
-      EMIT;
+      EMIT_CHECK(this, emitter, status,
+                 astYamlEmitSequenceStart( emitter, NULL, fulltag,
+                                           (tag==NULL), AST_YAML_STYLE_BLOCK ));
    }
 
 /* Free resources. */
@@ -12669,7 +12915,7 @@ static void Store0C( AstYamlChan *this, const char *key, int quote,
 }
 
 static void StoreYaml0C( AstYamlChan *this, const char *key, int quote,
-                         yaml_emitter_t *emitter, int set,
+                         AstYamlEmitter *emitter, int set,
                          const char *value, const char *tag, int *status ){
 /*
 *  Name:
@@ -12684,7 +12930,7 @@ static void StoreYaml0C( AstYamlChan *this, const char *key, int quote,
 *  Synopsis:
 *     #include "Yamlchan.h"
 *     void StoreYaml0C( AstYamlChan *this, const char *key, int quote,
-*                       yaml_emitter_t *emitter, int set, const char *value,
+*                       AstYamlEmitter *emitter, int set, const char *value,
 *                       const char *tag, int *status )
 
 *  Description:
@@ -12717,18 +12963,17 @@ static void StoreYaml0C( AstYamlChan *this, const char *key, int quote,
 /* Local Variables: */
    const char *fulltag;
    int nc;
-   yaml_event_t event;
-   yaml_scalar_style_t style;
+   AstYamlStyle style;
 
 /* Check the global error status. */
    if ( !astOK ) return;
 
-/* Libyaml does not support writing comments, so for the moment all we
-   can do is return without action if "set" is zero. */
+/* The YAML backend does not support writing comments, so for the moment
+   all we can do is return without action if "set" is zero. */
    if( !set ) return;
 
 /* Choose the style for the scalar values. */
-   style = quote ? YAML_SINGLE_QUOTED_SCALAR_STYLE : YAML_PLAIN_SCALAR_STYLE;
+   style = quote ? AST_YAML_STYLE_SINGLE_QUOTED : AST_YAML_STYLE_PLAIN;
 
 /* Construct the full tag unless a full tag was supplied. */
    if( tag && strncmp( tag, "tag:", 4 ) ) {
@@ -12738,16 +12983,17 @@ static void StoreYaml0C( AstYamlChan *this, const char *key, int quote,
    }
 
 /* Emit a scalar string holding the supplied key. */
-   yaml_scalar_event_initialize( &event, NULL, NULL, (yaml_char_t *) key,
-                                 strlen(key), 1, 0, YAML_PLAIN_SCALAR_STYLE);
-   EMIT
+   EMIT_CHECK(this, emitter, status,
+              astYamlEmitScalar( emitter, NULL, NULL,
+                                 key, strlen(key), 1, 0,
+                                 AST_YAML_STYLE_PLAIN ));
 
 /* Emit a scalar string holding the value. */
    if( astOK ) {
-      yaml_scalar_event_initialize( &event, NULL, (yaml_char_t *) fulltag,
-                                    (yaml_char_t *) value, strlen(value),
-                                    (tag==NULL), (tag==NULL), style );
-      EMIT
+      EMIT_CHECK(this, emitter, status,
+                 astYamlEmitScalar( emitter, NULL, fulltag,
+                                    value, strlen(value),
+                                    (tag==NULL), (tag==NULL), style ));
    }
 
 /* Free resources. */
@@ -13067,7 +13313,7 @@ static void Store1I( AstYamlChan *this, const char *key,
 }
 
 static void StoreYaml0D( AstYamlChan *this, const char *key,
-                         yaml_emitter_t *emitter, int set, double value,
+                         AstYamlEmitter *emitter, int set, double value,
                          int *status ){
 /*
 *  Name:
@@ -13082,7 +13328,7 @@ static void StoreYaml0D( AstYamlChan *this, const char *key,
 *  Synopsis:
 *     #include "Yamlchan.h"
 *     void StoreYaml0D( AstYamlChan *this, const char *key,
-*                       yaml_emitter_t *emitter, int set, double value,
+*                       AstYamlEmitter *emitter, int set, double value,
 *                       int *status )
 
 *  Description:
@@ -13107,33 +13353,34 @@ static void StoreYaml0D( AstYamlChan *this, const char *key,
 
 /* Local Variables: */
    char buff[ 100 ];
-   yaml_event_t event;
 
 /* Check the global error status. */
    if ( !astOK ) return;
 
-/* Libyaml does not support writing comments, so for the moment all we
-   can do is return without action if "set" is zero. */
+/* The YAML backend does not support writing comments, so for the moment
+   all we can do is return without action if "set" is zero. */
    if( !set ) return;
 
 /* Emit a scalar string holding the supplied key, if any. */
    if( key ) {
-      yaml_scalar_event_initialize( &event, NULL, NULL, (yaml_char_t *) key,
-                                    strlen(key), 1, 1, YAML_PLAIN_SCALAR_STYLE);
-      EMIT
+      EMIT_CHECK(this, emitter, status,
+                 astYamlEmitScalar( emitter, NULL, NULL,
+                                    key, strlen(key), 1, 1,
+                                    AST_YAML_STYLE_PLAIN ));
    }
 
 /* Format and store the value as a YAML scalar. */
    if( astOK ) {
       FmtDouble( value, sizeof(buff), buff );
-      yaml_scalar_event_initialize( &event, NULL, NULL, (yaml_char_t *) buff,
-                                    strlen(buff), 1, 1, YAML_PLAIN_SCALAR_STYLE );
-      EMIT
+      EMIT_CHECK(this, emitter, status,
+                 astYamlEmitScalar( emitter, NULL, NULL,
+                                    buff, strlen(buff), 1, 1,
+                                    AST_YAML_STYLE_PLAIN ));
    }
 }
 
 static void StoreYaml0I( AstYamlChan *this, const char *key,
-                         yaml_emitter_t *emitter, int set, int value,
+                         AstYamlEmitter *emitter, int set, int value,
                          int *status ){
 /*
 *  Name:
@@ -13148,7 +13395,7 @@ static void StoreYaml0I( AstYamlChan *this, const char *key,
 *  Synopsis:
 *     #include "Yamlchan.h"
 *     void StoreYaml0I( AstYamlChan *this, const char *key,
-*                       yaml_emitter_t *emitter, int set, int value,
+*                       AstYamlEmitter *emitter, int set, int value,
 *                       int *status )
 
 *  Description:
@@ -13173,36 +13420,34 @@ static void StoreYaml0I( AstYamlChan *this, const char *key,
 
 /* Local Variables: */
    char buff[ 100 ];
-   yaml_event_t event;
 
 /* Check the global error status. */
    if ( !astOK ) return;
 
-/* Libyaml does not support writing comments, so for the moment all we
-   can do is return without action if "set" is zero. */
+/* The YAML backend does not support writing comments, so for the moment
+   all we can do is return without action if "set" is zero. */
    if( !set ) return;
 
 /* Emit a scalar string holding the supplied key, if any. */
    if( key ) {
-
-/* If the value is a default, turn the whole line into a comment by
-   pre-pending "#" to the key name. */
-      yaml_scalar_event_initialize( &event, NULL, NULL, (yaml_char_t *) key,
-                                    strlen(key), 1, 1, YAML_PLAIN_SCALAR_STYLE);
-      EMIT
+      EMIT_CHECK(this, emitter, status,
+                 astYamlEmitScalar( emitter, NULL, NULL,
+                                    key, strlen(key), 1, 1,
+                                    AST_YAML_STYLE_PLAIN ));
    }
 
 /* Format and store the value as a YAML scalar. */
    if( astOK ) {
       (void) sprintf( buff, "%d", value );
-      yaml_scalar_event_initialize( &event, NULL, NULL, (yaml_char_t *) buff,
-                                    strlen(buff), 1, 1, YAML_PLAIN_SCALAR_STYLE );
-      EMIT
+      EMIT_CHECK(this, emitter, status,
+                 astYamlEmitScalar( emitter, NULL, NULL,
+                                    buff, strlen(buff), 1, 1,
+                                    AST_YAML_STYLE_PLAIN ));
    }
 }
 
 static void StoreYaml0K( AstYamlChan *this, const char *key,
-                         yaml_emitter_t *emitter, int set, int64_t value,
+                         AstYamlEmitter *emitter, int set, int64_t value,
                          int *status ){
 /*
 *  Name:
@@ -13217,7 +13462,7 @@ static void StoreYaml0K( AstYamlChan *this, const char *key,
 *  Synopsis:
 *     #include "Yamlchan.h"
 *     void StoreYaml0K( AstYamlChan *this, const char *key,
-*                       yaml_emitter_t *emitter, int set, int64_t value,
+*                       AstYamlEmitter *emitter, int set, int64_t value,
 *                       int *status )
 
 *  Description:
@@ -13242,33 +13487,34 @@ static void StoreYaml0K( AstYamlChan *this, const char *key,
 
 /* Local Variables: */
    char buff[ 100 ];
-   yaml_event_t event;
 
 /* Check the global error status. */
    if ( !astOK ) return;
 
-/* Libyaml does not support writing comments, so for the moment all we
-   can do is return without action if "set" is zero. */
+/* The YAML backend does not support writing comments, so for the moment
+   all we can do is return without action if "set" is zero. */
    if( !set ) return;
 
 /* Emit a scalar string holding the supplied key, if any. */
    if( key ) {
-      yaml_scalar_event_initialize( &event, NULL, NULL, (yaml_char_t *) key,
-                                    strlen(key), 1, 1, YAML_PLAIN_SCALAR_STYLE);
-      EMIT
+      EMIT_CHECK(this, emitter, status,
+                 astYamlEmitScalar( emitter, NULL, NULL,
+                                    key, strlen(key), 1, 1,
+                                    AST_YAML_STYLE_PLAIN ));
    }
 
 /* Format and store the value as a YAML scalar. */
    if( astOK ) {
       (void) sprintf( buff, "%" PRId64, value );
-      yaml_scalar_event_initialize( &event, NULL, NULL, (yaml_char_t *) buff,
-                                    strlen(buff), 1, 1, YAML_PLAIN_SCALAR_STYLE );
-      EMIT
+      EMIT_CHECK(this, emitter, status,
+                 astYamlEmitScalar( emitter, NULL, NULL,
+                                    buff, strlen(buff), 1, 1,
+                                    AST_YAML_STYLE_PLAIN ));
    }
 }
 
 static void StoreYaml1C( AstYamlChan *this, const char *key, int quote,
-                         yaml_emitter_t *emitter, int nval, const char *values[],
+                         AstYamlEmitter *emitter, int nval, const char *values[],
                          const char *tag, int *status ){
 /*
 *  Name:
@@ -13283,7 +13529,7 @@ static void StoreYaml1C( AstYamlChan *this, const char *key, int quote,
 *  Synopsis:
 *     #include "Yamlchan.h"
 *     void StoreYaml1C( AstYamlChan *this, const char *key, int quote,
-*                       yaml_emitter_t *emitter, int nval, const char *values[],
+*                       AstYamlEmitter *emitter, int nval, const char *values[],
 *                       const char *tag, int *status )
 
 *  Description:
@@ -13317,25 +13563,25 @@ static void StoreYaml1C( AstYamlChan *this, const char *key, int quote,
    const char **pv;
    int ival;
    int nc;
-   yaml_event_t event;
-   yaml_scalar_style_t style;
+   AstYamlStyle style;
 
 /* Check the global error status. */
    if ( !astOK ) return;
 
 /* Choose the style for the scalar values. */
-   style = quote ? YAML_SINGLE_QUOTED_SCALAR_STYLE : YAML_PLAIN_SCALAR_STYLE;
+   style = quote ? AST_YAML_STYLE_SINGLE_QUOTED : AST_YAML_STYLE_PLAIN;
 
 /* Emit a scalar string holding the supplied key. */
-   yaml_scalar_event_initialize( &event, NULL, NULL, (yaml_char_t *) key,
-                                 strlen(key), 1, 1, YAML_PLAIN_SCALAR_STYLE);
-   EMIT
+   EMIT_CHECK(this, emitter, status,
+              astYamlEmitScalar( emitter, NULL, NULL,
+                                 key, strlen(key), 1, 1,
+                                 AST_YAML_STYLE_PLAIN ));
 
 /* Start a YAML sequence. */
    if( astOK ) {
-      yaml_sequence_start_event_initialize( &event, NULL, NULL, 1,
-                                            YAML_FLOW_SEQUENCE_STYLE );
-      EMIT
+      EMIT_CHECK(this, emitter, status,
+                 astYamlEmitSequenceStart( emitter, NULL, NULL, 1,
+                                           AST_YAML_STYLE_FLOW ));
    }
 
 /* Construct the full tag unless a full tag was supplied. */
@@ -13348,22 +13594,21 @@ static void StoreYaml1C( AstYamlChan *this, const char *key, int quote,
 /* Emit a scalar string holding each value. */
    pv = values;
    for( ival = 0; ival < nval && astOK; ival++,pv++ ) {
-      yaml_scalar_event_initialize( &event, NULL, (yaml_char_t *) fulltag,
-                                    (yaml_char_t *) *pv, strlen(*pv),
-                                    (tag==NULL), (tag==NULL), style );
-      EMIT
+      EMIT_CHECK(this, emitter, status,
+                 astYamlEmitScalar( emitter, NULL, fulltag,
+                                    *pv, strlen(*pv),
+                                    (tag==NULL), (tag==NULL), style ));
    }
 
 /* End the YAML sequence. */
-   yaml_sequence_end_event_initialize( &event );
-   EMIT
+   EMIT_CHECK(this, emitter, status, astYamlEmitSequenceEnd( emitter ));
 
 /* Free the dynamically allocated string holding the full tag. */
    if( tag != fulltag ) fulltag = astFree( (void *) fulltag );
 }
 
 static void StoreYaml1D( AstYamlChan *this, const char *key,
-                         yaml_emitter_t *emitter, int nval,
+                         AstYamlEmitter *emitter, int nval,
                          const double *values, int *status ){
 /*
 *  Name:
@@ -13378,7 +13623,7 @@ static void StoreYaml1D( AstYamlChan *this, const char *key,
 *  Synopsis:
 *     #include "Yamlchan.h"
 *     void StoreYaml1D( AstYamlChan *this, const char *key,
-*                       yaml_emitter_t *emitter, int nval,
+*                       AstYamlEmitter *emitter, int nval,
 *                       const double *values, int *status )
 
 *  Description:
@@ -13404,41 +13649,41 @@ static void StoreYaml1D( AstYamlChan *this, const char *key,
    char buff[ 100 ];
    const double *pv;
    int ival;
-   yaml_event_t event;
 
 /* Check the global error status. */
    if ( !astOK ) return;
 
 /* Emit a scalar string holding the supplied key, if any. */
    if( key ) {
-      yaml_scalar_event_initialize( &event, NULL, NULL, (yaml_char_t *) key,
-                                    strlen(key), 1, 1, YAML_PLAIN_SCALAR_STYLE);
-      EMIT
+      EMIT_CHECK(this, emitter, status,
+                 astYamlEmitScalar( emitter, NULL, NULL,
+                                    key, strlen(key), 1, 1,
+                                    AST_YAML_STYLE_PLAIN ));
    }
 
 /* Start a YAML sequence. */
    if( astOK ) {
-      yaml_sequence_start_event_initialize( &event, NULL, NULL, 1,
-                                            YAML_FLOW_SEQUENCE_STYLE );
-      EMIT
+      EMIT_CHECK(this, emitter, status,
+                 astYamlEmitSequenceStart( emitter, NULL, NULL, 1,
+                                           AST_YAML_STYLE_FLOW ));
    }
 
 /* Emit a scalar string holding each value. */
    pv = values;
    for( ival = 0; ival < nval && astOK; ival++,pv++ ) {
       FmtDouble( *pv, sizeof(buff), buff );
-      yaml_scalar_event_initialize( &event, NULL, NULL, (yaml_char_t *) buff,
-                                    strlen(buff), 1, 1, YAML_PLAIN_SCALAR_STYLE );
-      EMIT
+      EMIT_CHECK(this, emitter, status,
+                 astYamlEmitScalar( emitter, NULL, NULL,
+                                    buff, strlen(buff), 1, 1,
+                                    AST_YAML_STYLE_PLAIN ));
    }
 
 /* End the YAML sequence. */
-   yaml_sequence_end_event_initialize( &event );
-   EMIT
+   EMIT_CHECK(this, emitter, status, astYamlEmitSequenceEnd( emitter ));
 }
 
 static void StoreYaml1I( AstYamlChan *this, const char *key,
-                         yaml_emitter_t *emitter, int nval,
+                         AstYamlEmitter *emitter, int nval,
                          const int *values, int *status ){
 /*
 *  Name:
@@ -13453,7 +13698,7 @@ static void StoreYaml1I( AstYamlChan *this, const char *key,
 *  Synopsis:
 *     #include "Yamlchan.h"
 *     void StoreYaml1I( AstYamlChan *this, const char *key,
-*                       yaml_emitter_t *emitter, int nval,
+*                       AstYamlEmitter *emitter, int nval,
 *                       const int *values, int *status )
 
 *  Description:
@@ -13479,37 +13724,37 @@ static void StoreYaml1I( AstYamlChan *this, const char *key,
    char buff[ 100 ];
    const int *pv;
    int ival;
-   yaml_event_t event;
 
 /* Check the global error status. */
    if ( !astOK ) return;
 
 /* Emit a scalar string holding the supplied key, if any. */
    if( key ) {
-      yaml_scalar_event_initialize( &event, NULL, NULL, (yaml_char_t *) key,
-                                    strlen(key), 1, 1, YAML_PLAIN_SCALAR_STYLE);
-      EMIT
+      EMIT_CHECK(this, emitter, status,
+                 astYamlEmitScalar( emitter, NULL, NULL,
+                                    key, strlen(key), 1, 1,
+                                    AST_YAML_STYLE_PLAIN ));
    }
 
 /* Start a YAML sequence. */
    if( astOK ) {
-      yaml_sequence_start_event_initialize( &event, NULL, NULL, 1,
-                                            YAML_FLOW_SEQUENCE_STYLE );
-      EMIT
+      EMIT_CHECK(this, emitter, status,
+                 astYamlEmitSequenceStart( emitter, NULL, NULL, 1,
+                                           AST_YAML_STYLE_FLOW ));
    }
 
 /* Emit a scalar string holding each value. */
    pv = values;
    for( ival = 0; ival < nval && astOK; ival++,pv++ ) {
       (void) sprintf( buff, "%d", *pv );
-      yaml_scalar_event_initialize( &event, NULL, NULL, (yaml_char_t *) buff,
-                                    strlen(buff), 1, 1, YAML_PLAIN_SCALAR_STYLE );
-      EMIT
+      EMIT_CHECK(this, emitter, status,
+                 astYamlEmitScalar( emitter, NULL, NULL,
+                                    buff, strlen(buff), 1, 1,
+                                    AST_YAML_STYLE_PLAIN ));
    }
 
 /* End the YAML sequence. */
-   yaml_sequence_end_event_initialize( &event );
-   EMIT
+   EMIT_CHECK(this, emitter, status, astYamlEmitSequenceEnd( emitter ));
 }
 
 static AstKeyMap *StoreKeyMap( AstYamlChan *this, const char *key,
@@ -14959,9 +15204,14 @@ static AstKeyMap *WriteAsdfQuantity( AstYamlChan *this, int ndim, const int *dim
 /* Create the returned KeyMap and store the appropriate ASDF tag. */
    ret = StartAsdfKeyMap( this, 0, "asdf/unit/quantity-1.1.0", status );
 
-/* Write out the ND-array. */
-   km = WriteAsdfNdArray( this, ndim, dims, vals, status );
-   ret = StoreKeyMap( this, "value", ret, &km, status );
+/* Write out the value. ndim=0 is written as a scalar value;
+   an array is written as an ndarray. */
+   if( ndim == 0 ) {
+      Store0D( this, "value", ret, vals[ 0 ], status );
+   } else {
+      km = WriteAsdfNdArray( this, ndim, dims, vals, status );
+      ret = StoreKeyMap( this, "value", ret, &km, status );
+   }
 
 /* Write out the units. */
    Store0C( this, "unit", 0, ret, units, NULL, status );
@@ -15842,52 +16092,70 @@ static AstKeyMap *WriteMapping( AstYamlChan *this, AstMapping *map,
 */
 
 /* Local Variables: */
+   AstKeyMap *km;
    AstKeyMap *ret;
 
 /* Initialise */
    ret = NULL;
 
 /* Check the global error status. */
-   if ( !astOK ) return ret;
+   if ( !astOK )
+      return ret;
 
-/* Currently, only the following classes of AST Mapping can be converted to
+/* If the Mapping carries a summary of an equivalent ASDF transform in its
+   associated KeyMap, because it was created by reading such a transform
+   (e.g. ReadAffine) or by the structural matching performed by
+   IsAsdfTransform (e.g. FindAffine), write that transform out directly,
+   skipping any further structural analysis. */
+   if( astHasKeyMap( map ) ) {
+      km = astGetKeyMap( map );
+      if( astMapHasKey( km, "PROXY_TYPE" ) ) {
+         ret = WriteProxy( this, map, mapinv, name, status );
+      }
+      km = astAnnul( km );
+   }
+
+/* Otherwise, only the following classes of AST Mapping can be converted to
    ASDF Yaml. */
-   if( astIsACmpMap( map ) ) {
-      ret = WriteCmpMap( this, (AstCmpMap *) map, mapinv, name, status );
+   if( !ret ) {
+      if( astIsACmpMap( map ) ) {
+         ret = WriteCmpMap( this, (AstCmpMap *) map, mapinv, name, status );
 
-   } else if( astIsATranMap( map ) ) {
-      ret = WriteTranMap( this, (AstTranMap *) map, mapinv, name, status );
+      } else if( astIsATranMap( map ) ) {
+         ret = WriteTranMap( this, (AstTranMap *) map, mapinv, name, status );
 
-   } else if( astIsAUnitMap( map ) ) {
-      ret = WriteUnitMap( this, (AstUnitMap *) map, mapinv, name, status );
+      } else if( astIsAUnitMap( map ) ) {
+         ret = WriteUnitMap( this, (AstUnitMap *) map, mapinv, name, status );
 
-   } else if( astIsAZoomMap( map ) ) {
-      ret = WriteZoomMap( this, (AstZoomMap *) map, mapinv, name, status );
+      } else if( astIsAZoomMap( map ) ) {
+         ret = WriteZoomMap( this, (AstZoomMap *) map, mapinv, name, status );
 
-   } else if( astIsAShiftMap( map ) ) {
-      ret = WriteShiftMap( this, (AstShiftMap *) map, mapinv, name, status );
+      } else if( astIsAShiftMap( map ) ) {
+         ret = WriteShiftMap( this, (AstShiftMap *) map, mapinv, name, status );
 
-   } else if( astIsAWinMap( map ) ) {
-      ret = WriteWinMap( this, (AstWinMap *) map, mapinv, name, status );
+      } else if( astIsAWinMap( map ) ) {
+         ret = WriteWinMap( this, (AstWinMap *) map, mapinv, name, status );
 
-   } else if( astIsAMatrixMap( map ) ) {
-      ret = WriteMatrixMap( this, (AstMatrixMap *) map, mapinv, name, status );
+      } else if( astIsAMatrixMap( map ) ) {
+         ret = WriteMatrixMap( this, (AstMatrixMap *) map, mapinv, name, status );
 
-   } else if( astIsAPermMap( map ) ) {
-      ret = WritePermMap( this, (AstPermMap *) map, mapinv, name, status );
+      } else if( astIsAPermMap( map ) ) {
+         ret = WritePermMap( this, (AstPermMap *) map, mapinv, name, status );
 
-   } else if( astIsAPolyMap( map ) ) {
-      ret = WritePolyMap( this, (AstPolyMap *) map, mapinv, name, status );
+      } else if( astIsAPolyMap( map ) ) {
+         ret = WritePolyMap( this, (AstPolyMap *) map, mapinv, name, status );
 
-   } else if( astIsAWcsMap( map ) ) {
-      ret = WriteWcsMap( this, (AstWcsMap *) map, mapinv, name, status );
+      } else if( astIsAWcsMap( map ) ) {
+         ret = WriteWcsMap( this, (AstWcsMap *) map, mapinv, name, status );
 
-   } else if( astIsASphMap( map ) ) {
-      ret = WriteSphMap( this, (AstSphMap *) map, mapinv, name, status );
+      } else if( astIsASphMap( map ) ) {
+         ret = WriteSphMap( this, (AstSphMap *) map, mapinv, name, status );
+      }
    }
 
 /* Annul the returned object if an error occurred. */
-   if( !astOK ) ret = astAnnul( ret );
+   if( !astOK )
+      ret = astAnnul( ret );
 
 /* Return the answer. */
    return ret;
@@ -16453,17 +16721,6 @@ static AstKeyMap *WriteProxyAffine( AstYamlChan *this, AstKeyMap *km,
    return ret;
 }
 
-static AstKeyMap *WriteProxySphericalCartesian( AstYamlChan *this, AstKeyMap *km,
-                                               AstMapping *map, AstObject *mapinv,
-                                               const char *name, int *status ) {
-   int s2c;
-   AstKeyMap *ret = NULL;
-   if( astMapGet0I( km, "SPHERICAL_TO_CARTESIAN", &s2c ) ) {
-      ret = WriteAsdfSphericalCartesian( this, s2c, mapinv, name, status );
-   }
-   return ret;
-}
-
 static AstKeyMap *WriteProxyDivide( AstYamlChan *this, AstKeyMap *km,
                                     AstMapping *map, AstObject *mapinv,
                                     const char *name, int *status ) {
@@ -16478,6 +16735,40 @@ static AstKeyMap *WriteProxyDivide( AstYamlChan *this, AstKeyMap *km,
    }
    if( oa ) oa = astAnnul( oa );
    if( ob ) ob = astAnnul( ob );
+   return ret;
+}
+
+static AstKeyMap *WriteProxyFitswcsImaging( AstYamlChan *this, AstKeyMap *km,
+                                            AstMapping *map, AstObject *mapinv,
+                                            const char *name, int *status ) {
+   AstObject *oproj = NULL;
+   AstKeyMap *ret = NULL;
+   double cdelt[ 2 ];
+   double crpix[ 2 ];
+   double crval[ 2 ];
+   double pc[ 4 ];
+   int nval;
+
+/* The stored parameters describe the forward (pixel to celestial)
+   transformation, so an inverted Mapping is left to be written out in some
+   other way. */
+   if( astGetInvert( map ) )
+      return ret;
+
+/* The Ident set by ReadFitswcsImaging only protects the Mapping from
+   simplification, so do not write it out as the transform name. */
+   if( name && !strcmp( name, FITSWCS_IDENT ) )
+      name = NULL;
+
+   if( astMapGet1D( km, "FITSWCS_CRPIX", 2, &nval, crpix ) &&
+       astMapGet1D( km, "FITSWCS_CRVAL", 2, &nval, crval ) &&
+       astMapGet1D( km, "FITSWCS_CDELT", 2, &nval, cdelt ) &&
+       astMapGet1D( km, "FITSWCS_PC", 4, &nval, pc ) &&
+       astMapGet0A( km, "FITSWCS_PROJ", &oproj ) ) {
+      ret = WriteAsdfFitswcsImaging( this, crpix, crval, cdelt, pc,
+                                     (AstWcsMap *) oproj, mapinv, name, status );
+   }
+   if( oproj ) oproj = astAnnul( oproj );
    return ret;
 }
 
@@ -16500,24 +16791,25 @@ static AstKeyMap *WriteProxy( AstYamlChan *this, AstMapping *map, AstObject *map
 
 *  Description:
 *     This function creates and returns a new KeyMap holding the full ASDF
-*     description of an ASDF transform that is summarised in a KeyMap stored
-*     as the proxy pointer in a supplied Mapping.
+*     description of an ASDF transform that is summarised in the KeyMap
+*     associated with a supplied Mapping.
 *
-*     Each Find... function (FindRotate3d, FindAffine, etc.) stores a
-*     "PROXY_TYPE" string in the proxy KeyMap identifying which ASDF
-*     transform type was found. WriteProxy looks up that tag in the
-*     proxy_writers dispatch table and calls the corresponding handler.
-*     To add support for a new proxy type, add a Find... function that
-*     stores the appropriate PROXY_TYPE, a WriteProxy* handler, and an
-*     entry in the table below.
+*     The summary holds a "PROXY_TYPE" string identifying which ASDF
+*     transform type the Mapping is equivalent to. It is stored either by
+*     the Read... functions when reading such a transform (e.g. ReadAffine)
+*     or by the Find... functions when matching the structure of a hand-built
+*     Mapping (e.g. FindAffine). WriteProxy looks up that tag in the
+*     proxy_writers dispatch table and calls the corresponding handler. To
+*     add support for a new proxy type, store the appropriate PROXY_TYPE, add
+*     a WriteProxy* handler, and add an entry in the table below.
 
 *  Parameters:
 *     this
 *        Pointer to the YamlChan.
 *     map
-*        Pointer to a Mapping that has a proxy KeyMap holding a summary
-*        of the ASDF transform to write out. The KeyMap is deleted and
-*        the proxy pointer reset by this function.
+*        Pointer to a Mapping whose associated KeyMap holds a summary of the
+*        ASDF transform to write out. The summary is left unchanged so that
+*        the Mapping can be written out again if required.
 *     mapinv
 *        Pointer to an optional custom inverse mapping. The forward
 *        transformation of the supplied mapping (if any) is used to define
@@ -16532,8 +16824,8 @@ static AstKeyMap *WriteProxy( AstYamlChan *this, AstMapping *map, AstObject *map
 
 *  Returned Value:
 *     A new KeyMap containing the full ASDF description of the transform
-*     summarised in the proxy KeyMap of the supplied Mapping, or NULL if
-*     there is no proxy.
+*     summarised in the associated KeyMap of the supplied Mapping, or NULL
+*     if the Mapping has no such summary.
 
 *  Notes:
 *     - A NULL pointer will be returned if this function is invoked
@@ -16546,10 +16838,10 @@ static AstKeyMap *WriteProxy( AstYamlChan *this, AstMapping *map, AstObject *map
       const char *type;
       ProxyWriter writer;
    } proxy_writers[] = {
-      { "rotate3d",            WriteProxyRotate3d            },
-      { "affine",              WriteProxyAffine              },
-      { "spherical_cartesian", WriteProxySphericalCartesian  },
-      { "divide",              WriteProxyDivide              },
+      { "rotate3d",        WriteProxyRotate3d       },
+      { "affine",          WriteProxyAffine         },
+      { "divide",          WriteProxyDivide         },
+      { "fitswcs_imaging", WriteProxyFitswcsImaging },
    };
    static const int nwriters = sizeof(proxy_writers)/sizeof(proxy_writers[0]);
 
@@ -16558,7 +16850,6 @@ static AstKeyMap *WriteProxy( AstYamlChan *this, AstMapping *map, AstObject *map
    AstKeyMap *ret;
    const char *proxy_type;
    int i;
-   void *proxy;
 
 /* Assume failure. */
    ret = NULL;
@@ -16566,38 +16857,36 @@ static AstKeyMap *WriteProxy( AstYamlChan *this, AstMapping *map, AstObject *map
 /* Check the global error status. */
    if ( !astOK ) return ret;
 
-/* Get the proxy KeyMap. */
-   proxy = astGetProxy( map );
-   if( proxy ) {
-      km = (AstKeyMap *) proxy;
+/* If the Mapping has no associated KeyMap, there is no summary to write. */
+   if( !astHasKeyMap( map ) )
+      return ret;
+
+/* Get the Mapping's associated KeyMap, which should hold a summary of an
+   equivalent ASDF transform. */
+   km = astGetKeyMap( map );
 
 /* Look up the PROXY_TYPE tag and dispatch to the appropriate handler. */
-      proxy_type = NULL;
-      if( astMapGet0C( km, "PROXY_TYPE", &proxy_type ) ) {
-         const char *resolved_name = GetName( this, name, map, status );
-         for( i = 0; i < nwriters; i++ ) {
-            if( !strcmp( proxy_type, proxy_writers[ i ].type ) ) {
-               ret = proxy_writers[ i ].writer( this, km, map, mapinv,
-                                                resolved_name, status );
-               break;
-            }
+   proxy_type = NULL;
+   if( astMapGet0C( km, "PROXY_TYPE", &proxy_type ) ) {
+      const char *resolved_name = GetName( this, name, map, status );
+      for( i = 0; i < nwriters; i++ ) {
+         if( !strcmp( proxy_type, proxy_writers[ i ].type ) ) {
+            ret = proxy_writers[ i ].writer( this, km, map, mapinv,
+                                             resolved_name, status );
+            break;
          }
-         if( i == nwriters ) {
-            astError( AST__INTER, "WriteProxy(YamlChan): proxy KeyMap has "
-                      "unrecognised PROXY_TYPE \"%s\" -- was it added to the "
-                      "proxy_writers table? (internal AST programming error)",
-                      status, proxy_type );
-         }
-      } else {
-         astError( AST__INTER, "WriteProxy(YamlChan): proxy KeyMap has no "
-                   "PROXY_TYPE entry -- did the Find<Transform> function "
-                   "forget to set it? (internal AST programming error)",
-                   status );
       }
-
-/* Annull the KeyMap and reset the proxy pointer to NULL. */
-      astSetProxy( map, astAnnul( km ) );
+      if( i == nwriters ) {
+         astError( AST__INTER, "WriteProxy(YamlChan): KeyMap has "
+                   "unrecognised PROXY_TYPE \"%s\" -- was it added to the "
+                   "proxy_writers table? (internal AST programming error)",
+                   status, proxy_type );
+      }
    }
+
+/* Annul our reference to the KeyMap. The summary is retained by the Mapping
+   so it can be written out again if required. */
+   km = astAnnul( km );
 
 /* Return the answer. */
    return ret;
@@ -16908,22 +17197,21 @@ static void WriteValues( AstYamlChan *this, const char *key, AstKeyMap *obj,
 */
 
 /* Local Variables: */
-   yaml_emitter_t emitter_data;
-   yaml_emitter_t *emitter = &emitter_data;
-   yaml_event_t event;
+   AstYamlEmitter emitter_data;
+   AstYamlEmitter *emitter = &emitter_data;
 
 /* Check the global error status. */
    if ( !astOK ) return;
 
-/* Initialize a libyaml emitter. */
+/* Initialize the YAML emitter and start the document. */
    StartYamlDoc( this, emitter, status );
 
 /* Create and emit the start of the root node - a mapping of type
    given by macro ROOT_TAG. */
    if( astOK ) {
-      yaml_mapping_start_event_initialize( &event, NULL, (yaml_char_t *) ROOT_TAG,
-                                           0, YAML_BLOCK_MAPPING_STYLE );
-      EMIT
+      EMIT_CHECK(this, emitter, status,
+                 astYamlEmitMappingStart( emitter, NULL, ROOT_TAG,
+                                          0, AST_YAML_STYLE_BLOCK ));
    }
 
 /* Write out the top-level object stored in the KeyMap. */
@@ -16931,94 +17219,63 @@ static void WriteValues( AstYamlChan *this, const char *key, AstKeyMap *obj,
 
 /* Create and emit the end of the root node. */
    if( astOK ) {
-      yaml_mapping_end_event_initialize( &event );
-      EMIT
+      EMIT_CHECK(this, emitter, status, astYamlEmitMappingEnd( emitter ));
    }
 
 /* End the document and delete the emitter */
    EndYamlDoc( this, emitter, status );
 }
 
-static AstKeyMap *WriteWcsMap( AstYamlChan *this, AstWcsMap *map,
-                               AstObject *mapinv, const char *name,
-                               int *status ) {
+static const char *WcsMapAsdfClass( AstWcsMap *map, AstKeyMap *km_pv,
+                                    int *status ){
 /*
 *  Name:
-*     WriteWcsMap
+*     WcsMapAsdfClass
 
 *  Purpose:
-*     Write an AST WcsMap to a KeyMap.
+*     Get the ASDF projection class and parameters for a WcsMap.
 
 *  Type:
 *     Private function.
 
 *  Synopsis:
-*     #include "Yamlchan.h"
-*     AstKeyMap *WriteWcsMap( AstYamlChan *this, AstWcsMap *map,
-*                             AstObject *mapinv, const char *name,
-*                             int *status )
+*     #include "yamlchan.h"
+*     const char *WcsMapAsdfClass( AstWcsMap *map, AstKeyMap *km_pv,
+*                                  int *status )
+
+*  Class Membership:
+*     YamlChan member function
 
 *  Description:
-*     This function converts an AST WcsMap to a set of ASDF properties
-*     stored in a KeyMap.
+*     This function returns the ASDF transform class string corresponding to
+*     the projection type of the supplied WcsMap, and stores any associated
+*     projection parameters (keyed by their ASDF names) in the supplied
+*     KeyMap.
 
 *  Parameters:
-*     this
-*        Pointer to the YamlChan.
 *     map
-*        Pointer to the WcsMap that is to be written.
-*     mapinv
-*        Pointer to an optional custom inverse mapping. The forward
-*        transformation of the supplied mapping (if any) is used to define
-*        the inverse operation of the ASDF transform.  It may be an AST
-*        Mapping or a KeyMap holding a description of an ASDF transform.
-*     name
-*        The string to use as the "name" property of the resultiung ASDF
-*        transform. If NULL, the value is derived from the attributes of
-*        "map".
+*        Pointer to the WcsMap.
+*     km_pv
+*        Pointer to a KeyMap in which to store the projection parameters
+*        (each keyed by its ASDF parameter name).
 *     status
 *        Pointer to the inherited status variable.
 
 *  Returned Value:
-*     The KeyMap holding the ASDF properties, or NULL (without error) if the
-*     conversion was not possible.
-
+*     A pointer to a static string holding the ASDF class, or NULL if the
+*     projection type is not supported by ASDF.
 */
 
 /* Local Variables: */
-   AstKeyMap *km_comp;
-   AstKeyMap *km_conc;
-   AstKeyMap *km_proj;
-   AstKeyMap *km_pv;
-   AstKeyMap *ret;
-   AstPermMap *pm;
-   AstUnitMap *um;
    const char *class;
-   int *outperm;
-   int iin;
    int ilat;
-   int ilon;
-   int iout;
-   int nax;
-   int pix2sky;
    int type;
 
-/* Initialise */
-   ret = NULL;
-
 /* Check the global error status. */
-   if ( !astOK ) return ret;
+   if( !astOK ) return NULL;
 
-/* Get the number of inputs and outputs (which are equal). */
-   nax = astGetNin( map );
-
-/* Get the zero-based index of the longitude and latitude axes. */
-   ilon = astGetWcsAxis( map, 0 );
+/* Get the zero-based index of the latitude axis. */
    ilat = astGetWcsAxis( map, 1 );
-
-/* Create a KeyMap to hold the projection parameters, using the ASDF
-   parameter name as the key. */
-   km_pv = astKeyMap( " ", status );
 
 /* Get the projection type. */
    type = astGetWcsType( map );
@@ -17051,8 +17308,6 @@ static AstKeyMap *WriteWcsMap( AstYamlChan *this, AstWcsMap *map,
    } else if( type == AST__ARC ){
       class = "asdf/transform/zenithal_equidistant-1.2.0";
 
-/* AST__AZP, not a second AST__SZP branch: as written this one could never
-   be reached, and its parameters are AZP's. */
    } else if( type == AST__AZP ){
       class = "asdf/transform/zenithal_perspective-1.3.0";
       astMapPut0D( km_pv, "mu", astGetPV( map, ilat, 1 ), NULL );
@@ -17132,6 +17387,94 @@ static AstKeyMap *WriteWcsMap( AstYamlChan *this, AstWcsMap *map,
    } else {
       class = NULL;
    }
+
+/* Return the class. */
+   return class;
+}
+
+static AstKeyMap *WriteWcsMap( AstYamlChan *this, AstWcsMap *map,
+                               AstObject *mapinv, const char *name,
+                               int *status ) {
+/*
+*  Name:
+*     WriteWcsMap
+
+*  Purpose:
+*     Write an AST WcsMap to a KeyMap.
+
+*  Type:
+*     Private function.
+
+*  Synopsis:
+*     #include "Yamlchan.h"
+*     AstKeyMap *WriteWcsMap( AstYamlChan *this, AstWcsMap *map,
+*                             AstObject *mapinv, const char *name,
+*                             int *status )
+
+*  Description:
+*     This function converts an AST WcsMap to a set of ASDF properties
+*     stored in a KeyMap.
+
+*  Parameters:
+*     this
+*        Pointer to the YamlChan.
+*     map
+*        Pointer to the WcsMap that is to be written.
+*     mapinv
+*        Pointer to an optional custom inverse mapping. The forward
+*        transformation of the supplied mapping (if any) is used to define
+*        the inverse operation of the ASDF transform.  It may be an AST
+*        Mapping or a KeyMap holding a description of an ASDF transform.
+*     name
+*        The string to use as the "name" property of the resultiung ASDF
+*        transform. If NULL, the value is derived from the attributes of
+*        "map".
+*     status
+*        Pointer to the inherited status variable.
+
+*  Returned Value:
+*     The KeyMap holding the ASDF properties, or NULL (without error) if the
+*     conversion was not possible.
+
+*/
+
+/* Local Variables: */
+   AstKeyMap *km_comp;
+   AstKeyMap *km_conc;
+   AstKeyMap *km_proj;
+   AstKeyMap *km_pv;
+   AstKeyMap *ret;
+   AstPermMap *pm;
+   AstUnitMap *um;
+   const char *class;
+   int *outperm;
+   int iin;
+   int ilat;
+   int ilon;
+   int iout;
+   int nax;
+   int pix2sky;
+
+/* Initialise */
+   ret = NULL;
+
+/* Check the global error status. */
+   if ( !astOK ) return ret;
+
+/* Get the number of inputs and outputs (which are equal). */
+   nax = astGetNin( map );
+
+/* Get the zero-based index of the longitude and latitude axes. */
+   ilon = astGetWcsAxis( map, 0 );
+   ilat = astGetWcsAxis( map, 1 );
+
+/* Create a KeyMap to hold the projection parameters, using the ASDF
+   parameter name as the key. */
+   km_pv = astKeyMap( " ", status );
+
+/* Get the ASDF projection class and parameters corresponding to the
+   WcsMap projection type. */
+   class = WcsMapAsdfClass( map, km_pv, status );
 
 /* Check the projection class is supported by ASDF. */
    if( class ) {
@@ -17365,7 +17708,7 @@ static AstKeyMap *WriteWinMap( AstYamlChan *this, AstWinMap *map, AstObject *map
 }
 
 static void WriteYamlObject( AstYamlChan *this, const char *key, AstKeyMap *obj,
-                             yaml_emitter_t *emitter, int *status ) {
+                             AstYamlEmitter *emitter, int *status ) {
 /*
 *  Name:
 *     WriteYamlObject
@@ -17379,7 +17722,7 @@ static void WriteYamlObject( AstYamlChan *this, const char *key, AstKeyMap *obj,
 *  Synopsis:
 *     #include "yamlchan.h"
 *     void WriteYamlObject( AstYamlChan *this, const char *key, AstKeyMap *obj,
-*                           yaml_emitter_t *emitter,  int *status )
+*                           AstYamlEmitter *emitter,  int *status )
 
 *  Class Membership:
 *     YamlChan member function
@@ -17449,7 +17792,6 @@ static void WriteYamlObject( AstYamlChan *this, const char *key, AstKeyMap *obj,
    int ientry;
    int isseq;
    int nentry;
-   yaml_event_t event;
 
 /* Check the global error status. */
    if ( !astOK ) return;
@@ -17487,20 +17829,19 @@ static void WriteYamlObject( AstYamlChan *this, const char *key, AstKeyMap *obj,
       }
    }
 
-/* Create and emit the end of the yaml sequence or mapping. */
+/* Emit the end of the yaml sequence or mapping. */
    if( astOK ) {
       if( isseq ){
-         yaml_sequence_end_event_initialize( &event );
+         EMIT_CHECK(this, emitter, status, astYamlEmitSequenceEnd( emitter ));
       } else {
-         yaml_mapping_end_event_initialize( &event );
+         EMIT_CHECK(this, emitter, status, astYamlEmitMappingEnd( emitter ));
       }
-      EMIT
    }
 }
 
 static void WriteYamlEntry( AstYamlChan *this, AstKeyMap *km, const char *kmkey,
                             const char *base, const char *yamlkey,
-                            yaml_emitter_t *emitter, int *status ){
+                            AstYamlEmitter *emitter, int *status ){
 /*
 *  Name:
 *     WriteYamlEntry
@@ -17516,7 +17857,7 @@ static void WriteYamlEntry( AstYamlChan *this, AstKeyMap *km, const char *kmkey,
 *     #include "Yamlchan.h"
 *     void WriteYamlEntry( AstYamlChan *this, AstKeyMap *km, const char *kmkey,
 *                          const char *base, const char *yamlkey,
-*                          yaml_emitter_t *emitter, int *status )
+*                          AstYamlEmitter *emitter, int *status )
 
 *  Description:
 *     This function writes out a single entry in a KeyMap, using the
@@ -17561,7 +17902,6 @@ static void WriteYamlEntry( AstYamlChan *this, AstKeyMap *km, const char *kmkey,
    int quote;
    int type;
    size_t clen;
-   yaml_event_t event;
 
 /* Check the global error status. */
    if ( !astOK ) return;
@@ -17649,10 +17989,9 @@ static void WriteYamlEntry( AstYamlChan *this, AstKeyMap *km, const char *kmkey,
          }
          ovals = astFree( ovals );
 
-/* Create and emit the end of the yaml sequence. */
+/* Emit the end of the yaml sequence. */
          if( astOK ) {
-            yaml_sequence_end_event_initialize( &event );
-            EMIT
+            EMIT_CHECK(this, emitter, status, astYamlEmitSequenceEnd( emitter ));
          }
 
       } else if( astOK ) {
@@ -17890,20 +18229,17 @@ static void WriteEnd( AstChannel *this_channel, const char *class, int *status )
 
 /* Local Variables: */
    AstYamlChan *this;
-   yaml_event_t event;
-   yaml_emitter_t *emitter;
+   AstYamlEmitter *emitter;
 
 /* Check the global error status. */
    if ( !astOK ) return;
 
-/* Get a pointer to the emitter from the YamlChan structure, as required
-   by the EMIT macro. */
+/* Get a pointer to the emitter from the YamlChan structure. */
    this = (AstYamlChan*) this_channel;
    emitter = this->emitter;
 
-/* Create and emit the end of the yaml mapping. */
-   yaml_mapping_end_event_initialize( &event );
-   EMIT
+/* Emit the end of the yaml mapping. */
+   EMIT_CHECK(this, emitter, status, astYamlEmitMappingEnd( emitter ));
 }
 
 static void WriteInt( AstChannel *this_channel, const char *name, int set, int helpful,
@@ -18464,6 +18800,113 @@ static void WriteString( AstChannel *this_channel, const char *name, int set,
    }
 }
 
+static AstKeyMap *WriteAsdfFitswcsImaging( AstYamlChan *this, double *crpix,
+                                           double *crval, double *cdelt,
+                                           double *pc, AstWcsMap *wcsmap,
+                                           AstObject *mapinv, const char *name,
+                                           int *status ) {
+/*
+*  Name:
+*     WriteAsdfFitswcsImaging
+
+*  Purpose:
+*     Write a GWCS fitswcs_imaging transform to a KeyMap.
+
+*  Type:
+*     Private function.
+
+*  Synopsis:
+*     #include "yamlchan.h"
+*     AstKeyMap *WriteAsdfFitswcsImaging( AstYamlChan *this, double *crpix,
+*                                         double *crval, double *cdelt,
+*                                         double *pc, AstWcsMap *wcsmap,
+*                                         AstObject *mapinv, const char *name,
+*                                         int *status )
+
+*  Description:
+*     This function writes a GWCS fitswcs_imaging transform to a KeyMap,
+*     using the supplied crpix, crval, cdelt and pc values (each as an
+*     ASDF ndarray) and the supplied WcsMap (as the sky projection).
+
+*  Parameters:
+*     this
+*        Pointer to the YamlChan.
+*     crpix
+*        The 2-element pixel coordinate of the reference point.
+*     crval
+*        The 2-element celestial coordinate of the reference point (degrees).
+*     cdelt
+*        The 2-element coordinate scale factors.
+*     pc
+*        The 2x2 linear transformation matrix, in row-major order.
+*     wcsmap
+*        Pointer to the WcsMap defining the sky projection. Its Invert flag
+*        defines the projection direction.
+*     mapinv
+*        Pointer to an optional custom inverse mapping. May be NULL.
+*     name
+*        Pointer to an optional string to store as the "name" property. May
+*        be NULL.
+*     status
+*        Pointer to the inherited status variable.
+
+*  Returned Value:
+*     The new KeyMap, or NULL if the object could not be converted.
+*/
+
+/* Local Variables: */
+   AstKeyMap *km;
+   AstKeyMap *km_pv;
+   AstKeyMap *ret;
+   const char *class;
+   int dims[ 2 ];
+
+/* Initialise */
+   ret = NULL;
+
+/* Check the global error status. */
+   if ( !astOK ) return ret;
+
+/* Create the returned KeyMap and store the properties of the base
+   transform class. */
+   ret = StartAsdfTransform( this, mapinv, name, "gwcs/fitswcs_imaging-1.0.0",
+                             status );
+
+/* Write out crpix, crval and cdelt as 1D ND-arrays. */
+   dims[ 0 ] = 2;
+   km = WriteAsdfNdArray( this, 1, dims, crpix, status );
+   ret = StoreKeyMap( this, "crpix", ret, &km, status );
+
+   km = WriteAsdfNdArray( this, 1, dims, crval, status );
+   ret = StoreKeyMap( this, "crval", ret, &km, status );
+
+   km = WriteAsdfNdArray( this, 1, dims, cdelt, status );
+   ret = StoreKeyMap( this, "cdelt", ret, &km, status );
+
+/* Write out the pc matrix as a 2x2 ND-array. */
+   dims[ 0 ] = 2;
+   dims[ 1 ] = 2;
+   km = WriteAsdfNdArray( this, 2, dims, pc, status );
+   ret = StoreKeyMap( this, "pc", ret, &km, status );
+
+/* Write out the sky projection as a bare ASDF projection. Its class and
+   parameters come from the WcsMap, and its direction from the WcsMap's
+   Invert flag (a pixel->sky WcsMap is an inverted WcsMap). */
+   km_pv = astKeyMap( " ", status );
+   class = WcsMapAsdfClass( wcsmap, km_pv, status );
+   km = WriteAsdfProjection( this, class, astGetInvert( wcsmap ), km_pv, NULL,
+                             NULL, status );
+   ret = StoreKeyMap( this, "projection", ret, &km, status );
+   km_pv = astAnnul( km_pv );
+
+/* Annul the returned object if an error occurred. */
+   if( !astOK )
+      ret = astAnnul( ret );
+
+/* Return the answer. */
+   return ret;
+}
+
 static AstKeyMap *WriteAsdfDivide( AstYamlChan *this,
                                    AstMapping *mapa, AstMapping *mapb,
                                    AstObject *mapinv, const char *name,
@@ -18836,68 +19279,68 @@ static AstKeyMap *WriteZoomMap( AstYamlChan *this, AstZoomMap *map,
    return ret;
 }
 
-static const char *YamlEventType( yaml_event_t e ){
+static const char *YamlEventType( int type ){
 /*
 *  Name:
 *     YamlEventType
 
 *  Purpose:
-*     Return a string descripion of a YAML event type.
+*     Return a string description of a YAML event type.
 
 *  Type:
 *     Private function.
 
 *  Synopsis:
 *     #include "yamlchan.h"
-*     const char *YamlEventType( yaml_event_t e )
+*     const char *YamlEventType( int type )
 
 *  Class Membership:
 *     YamlChan member function
 
 *  Description:
 *     This functions returns a pointer to a static const string holding a
-*     text description of the type of the supplied yaml event.
+*     text description of the supplied yaml event type integer.
 
 *  Parameters:
-*     e
-*        The yaml event
+*     type
+*        The yaml event type (one of the YAML_*_EVENT constants).
 */
 
 /* Local Variables: */
    static const char *result = NULL;
 
 /* Compare the integer event type against each known value. */
-   if( e.type == YAML_NO_EVENT ){
+   if( type == YAML_NO_EVENT ){
       result = "YAML_NO_EVENT";
 
-   } else if( e.type == YAML_STREAM_START_EVENT ){
+   } else if( type == YAML_STREAM_START_EVENT ){
       result = "YAML_STREAM_START_EVENT";
 
-   } else if( e.type == YAML_STREAM_END_EVENT ){
+   } else if( type == YAML_STREAM_END_EVENT ){
       result = "YAML_STREAM_END_EVENT";
 
-   } else if( e.type == YAML_DOCUMENT_START_EVENT ){
+   } else if( type == YAML_DOCUMENT_START_EVENT ){
       result = "YAML_DOCUMENT_START_EVENT";
 
-   } else if( e.type == YAML_DOCUMENT_END_EVENT ){
+   } else if( type == YAML_DOCUMENT_END_EVENT ){
       result = "YAML_DOCUMENT_END_EVENT";
 
-   } else if( e.type == YAML_ALIAS_EVENT ){
+   } else if( type == YAML_ALIAS_EVENT ){
       result = "YAML_ALIAS_EVENT";
 
-   } else if( e.type == YAML_SCALAR_EVENT ){
+   } else if( type == YAML_SCALAR_EVENT ){
       result = "YAML_SCALAR_EVENT";
 
-   } else if( e.type == YAML_SEQUENCE_START_EVENT ){
+   } else if( type == YAML_SEQUENCE_START_EVENT ){
       result = "YAML_SEQUENCE_START_EVENT";
 
-   } else if( e.type == YAML_SEQUENCE_END_EVENT ){
+   } else if( type == YAML_SEQUENCE_END_EVENT ){
       result = "YAML_SEQUENCE_END_EVENT";
 
-   } else if( e.type == YAML_MAPPING_START_EVENT ){
+   } else if( type == YAML_MAPPING_START_EVENT ){
       result = "YAML_MAPPING_START_EVENT";
 
-   } else if( e.type == YAML_MAPPING_END_EVENT ){
+   } else if( type == YAML_MAPPING_END_EVENT ){
       result = "YAML_MAPPING_END_EVENT";
 
    } else {
@@ -19914,6 +20357,9 @@ AstYamlChan *astInitYamlChan_( void *mem, size_t size, int init,
       new->gotwcs = 0;
       new->defenc = UNKNOWN_ENCODING;
       new->obj = NULL;
+      new->readbuf = NULL;
+      new->readlen = 0;
+      new->readoff = 0;
 
 /* If an error occurred, clean up by deleting the new object. */
       if ( !astOK ) new = astDelete( new );
@@ -20076,6 +20522,9 @@ AstYamlChan *astLoadYamlChan_( void *mem, size_t size,
       new->gotwcs = 0;
       new->defenc = UNKNOWN_ENCODING;
       new->obj = NULL;
+      new->readbuf = NULL;
+      new->readlen = 0;
+      new->readoff = 0;
    }
 
 /* If an error occurred, clean up by deleting the new YamlChan. */

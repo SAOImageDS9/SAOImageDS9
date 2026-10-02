@@ -4,7 +4,7 @@ Last updated 2026-09-17
 
 | name         | version    | SAO   | dirty | upstream                                                             | latest                          |
 | ------------ | ---------- | ----- | ----- | -------------------------------------------------------------------- | ------------------------------- |
-| ast          | 9.4.1      |       | y     | https://github.com/Starlink/ast                                      | 9.4.1 (6)                       |
+| ast          | 9.5.0      |       | y     | https://github.com/Starlink/ast                                      | 9.5.0 (6)                       |
 | awthemes     | 10.4.0     |       |       | https://sourceforge.net/projects/tcl-awthemes/                       | 10.4.0                          |
 | bzip2        | 1.0.8      |       |       | https://sourceware.org/pub/bzip2/                                    | 1.0.8                           |
 | ds9          | 8.8        | y     |       |                                                                      |                                 |

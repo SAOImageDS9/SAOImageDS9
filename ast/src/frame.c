@@ -306,6 +306,13 @@ f     - AST_UNFORMAT: Read a formatted coordinate value for a Frame axis
 *        the intended b[axis-1]. This could make the nudge zero (e.g. for
 *        a=(0,0), b=(1,0) on a 2-D Frame), collapsing the offset point
 *        onto a and returning AST__BAD instead of a valid position angle.
+*     16-SEP-2026 (TIMJ):
+*        Derive the NormUnit value from the Unit value the Frame reports
+*        rather than from the Unit stored in the Axis, so that a class
+*        which over-rides astGetUnit - SkyFrame, SpecFrame, TimeFrame and
+*        FluxFrame all do - has a NormUnit that is a simplification of the
+*        units it reports. A Unit set on the Axis itself is still
+*        normalised by the Axis method.
 *class--
 */
 
@@ -322,6 +329,7 @@ f     - AST_UNFORMAT: Read a formatted coordinate value for a Frame axis
 #define TITLE_BUFF_LEN 100       /* Max length of default title string */
 #define GETATTRIB_BUFF_LEN 50    /* Max length of string returned by GetAttrib */
 #define ASTFMTDECIMALYR_BUFF_LEN 50    /* Max length of string returned by GetAttrib */
+#define GETNORMUNIT_BUFF_LEN 127  /* Max length of normalised Unit string */
 #define ASTFORMATID_MAX_STRINGS 50     /* Number of string values buffer by astFormatID*/
 
 
@@ -770,7 +778,8 @@ static AstSkyFrame *skyframe;
    globals->Label_Buff[ 0 ] = 0; \
    globals->Symbol_Buff[ 0 ] = 0; \
    globals->Title_Buff[ 0 ] = 0; \
-   globals->AstFmtDecimalYr_Buff[ 0 ] = 0;
+   globals->AstFmtDecimalYr_Buff[ 0 ] = 0; \
+   globals->GetNormUnit_Buff[ 0 ] = 0;
 
 /* Create the function that initialises global data for this module. */
 astMAKE_INITGLOBALS(Frame)
@@ -785,6 +794,7 @@ astMAKE_INITGLOBALS(Frame)
 #define symbol_buff astGLOBAL(Frame,Symbol_Buff)
 #define title_buff astGLOBAL(Frame,Title_Buff)
 #define astfmtdecimalyr_buff astGLOBAL(Frame,AstFmtDecimalYr_Buff)
+#define getnormunit_buff astGLOBAL(Frame,GetNormUnit_Buff)
 
 
 
@@ -815,6 +825,7 @@ static char title_buff[ TITLE_BUFF_LEN + 1 ];
 
 /* Buffer for result string */
 static char astfmtdecimalyr_buff[ ASTFMTDECIMALYR_BUFF_LEN + 1 ];
+static char getnormunit_buff[ GETNORMUNIT_BUFF_LEN + 1 ];
 
 
 /* Define the class virtual function table and its initialisation flag
@@ -13038,9 +13049,104 @@ MAKE_TEST(Unit)
 *     applies.
 *att--
 */
-/* This simply provides an interface to the Axis methods for accessing
-   the NormUnit string. */
-MAKE_GET(NormUnit,const char *,NULL,0,0)
+static const char *NormUnitString( AstFrame *this, int axis, int *status ) {
+/*
+*  Name:
+*     NormUnitString
+
+*  Purpose:
+*     Return the normalised form of the Unit value a Frame reports for an
+*     axis.
+
+*  Type:
+*     Private function.
+
+*  Synopsis:
+*     #include "frame.h"
+*     const char *NormUnitString( AstFrame *this, int axis, int *status )
+
+*  Class Membership:
+*     Frame member function.
+
+*  Description:
+*     This function returns the Unit value that the Frame reports for the
+*     given axis, simplified where that is possible.
+*
+*     It exists because the NormUnit value has to be derived from the Unit
+*     value the Frame reports, which is not necessarily the Unit value
+*     stored in the Axis. SkyFrame, SpecFrame, TimeFrame and FluxFrame each
+*     over-ride astGetUnit and report units of their own while leaving the
+*     Axis Unit unset, so normalising the Axis Unit would describe a
+*     different quantity from the one the caller sees.
+*
+*     Not every Unit value can be simplified: a blank Unit has nothing to
+*     normalise, and a SkyFrame axis describes its values with a sexagesimal
+*     format such as "ddd:mm:ss". Such a value is returned unchanged, which
+*     is the documented value of the NormUnit attribute when no
+*     simplification can be performed. See astNormUnit.
+
+*  Parameters:
+*     this
+*        Pointer to the Frame.
+*     axis
+*        The number of the axis (zero-based) for which information is
+*        required. This is the axis index as supplied by the caller, before
+*        any axis permutation is applied, since astGetUnit performs its own
+*        validation and permutation.
+*     status
+*        Pointer to the inherited status variable.
+
+*  Returned Value:
+*     A pointer to a null-terminated string containing the normalised Unit
+*     value.
+
+*  Notes:
+*     - The returned pointer points to a static memory buffer. The contents
+*     of this buffer will be over-written on each invocation of this
+*     function, so a copy of the returned string should be taken if it will
+*     be needed later.
+*     - A NULL pointer will be returned if this function is invoked with the
+*     global error status set, or if it should fail for any reason.
+*/
+
+/* Local Variables: */
+   astDECLARE_GLOBALS
+   const char *norm;
+   const char *result;
+   size_t nc;
+
+/* Check the global error status. */
+   if ( !astOK ) return NULL;
+
+/* Get a pointer to the thread specific global data structure. */
+   astGET_GLOBALS(this);
+
+   result = NULL;
+   norm = astNormUnit( astGetUnit( this, axis ) );
+   if( norm ) {
+      nc = strlen( norm );
+      if( nc > GETNORMUNIT_BUFF_LEN ) {
+         astError( AST__FMTER, "astGetNormUnit(%s): Internal buffer "
+                   "overflow while normalising the units string '%s' "
+                   "- result exceeds %d characters.", status,
+                   astGetClass( this ), norm, GETNORMUNIT_BUFF_LEN );
+
+/* Copy with the length checked just above rather than with strcpy, so that
+   the bound is explicit to a reader and to a static analyser. */
+      } else {
+         memcpy( getnormunit_buff, norm, nc + 1 );
+         result = getnormunit_buff;
+      }
+      norm = astFree( (void *) norm );
+   }
+
+   return result;
+}
+
+/* An Axis that carries a Unit of its own has that normalised by the Axis
+   method; otherwise the Unit this Frame reports is normalised above.
+   astTestAxisNormUnit reports whether the Axis Unit has been set. */
+MAKE_GET(NormUnit,const char *,NULL,1,NormUnitString(this,old_axis,status))
 
 /*
 *att++

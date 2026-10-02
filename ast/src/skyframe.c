@@ -361,6 +361,13 @@ f     - AST_SKYOFFSETMAP: Obtain a Mapping from absolute to offset coordinates
 *         great circle contains the crossing.
 *     30-JUL-2024 (GSB):
 *         Check for possible acos parameter out of range in astLineDef.
+*     21-SEP-2026 (TIMJ):
+*         Over-ride astGetNormUnit so that the Axis normalises the Unit a
+*         SkyFrame reports, with the same temporary Format value that
+*         astGetUnit uses.
+*     22-SEP-2026 (TIMJ):
+*         NormBox: treat the pole test as failed if astTran2 reports an
+*         error, rather than reading the values it did not write.
 *class--
 */
 
@@ -984,6 +991,7 @@ static const char *GetAttrib( AstObject *, const char *, int * );
 static const char *GetDomain( AstFrame *, int * );
 static const char *GetFormat( AstFrame *, int, int * );
 static const char *GetLabel( AstFrame *, int, int * );
+static const char *GetNormUnit( AstFrame *, int, int * );
 static const char *GetProjection( AstSkyFrame *, int * );
 static const char *GetSymbol( AstFrame *, int, int * );
 static const char *GetTitle( AstFrame *, int * );
@@ -4338,6 +4346,99 @@ static AstSystemType GetAlignSystem( AstFrame *this_frame, int *status ) {
    return result;
 }
 
+static const char *GetNormUnit( AstFrame *this_frame, int axis, int *status ) {
+/*
+*  Name:
+*     GetNormUnit
+
+*  Purpose:
+*     Obtain a pointer to the NormUnit string for a SkyFrame axis.
+
+*  Type:
+*     Private function.
+
+*  Synopsis:
+*     #include "skyframe.h"
+*     const char *GetNormUnit( AstFrame *this_frame, int axis )
+
+*  Class Membership:
+*     SkyFrame member function (over-rides the astGetNormUnit method
+*     inherited from the Frame class).
+
+*  Description:
+*     This function returns a pointer to the NormUnit string for a
+*     specified axis of a SkyFrame.
+*
+*     The Unit value a SkyFrame reports is the Unit value its Axis reports,
+*     so the Axis is asked to normalise it. The Axis is the only thing that
+*     knows whether the Unit describes the fields of a sexagesimal format,
+*     such as "hh mm ss", rather than naming a unit; the parent method would
+*     hand such a description to the units parser.
+*
+*     Like the Unit value, the NormUnit value may depend on the Format and
+*     Digits values, so temporary values for those are set here if they have
+*     not been set explicitly.
+
+*  Parameters:
+*     this
+*        Pointer to the SkyFrame.
+*     axis
+*        The number of the axis (zero-based) for which information is required.
+
+*  Returned Value:
+*     A pointer to a null-terminated string containing the NormUnit value.
+
+*  Notes:
+*     -  A NULL pointer will be returned if this function is invoked with the
+*     global error status set, or if it should fail for any reason.
+*/
+
+/* Local Variables: */
+   AstAxis *ax;                  /* Pointer to Axis object */
+   AstSkyFrame *this;            /* Pointer to the SkyFrame structure */
+   const char *result;           /* Pointer value to return */
+   int digits_set;               /* Axis Digits attribute set? */
+   int format_set;               /* Format attribute set? */
+
+/* Check the global error status. */
+   if ( !astOK ) return NULL;
+
+/* Obtain a pointer to the SkyFrame structure. */
+   this = (AstSkyFrame *) this_frame;
+
+/* Validate the axis index. */
+   (void) astValidateAxis( this, axis, 1, "astGetNormUnit" );
+
+/* Set a temporary Format value if none has been set, using the member
+   functions of this class and its parent rather than the object's methods,
+   for the reason given in GetUnit. */
+   format_set = (*parent_testformat)( this_frame, axis, status );
+   if ( !format_set ) {
+      (*parent_setformat)( this_frame, axis, GetFormat( this_frame, axis, status ), status );
+   }
+
+/* Obtain a pointer to the Axis, over-riding any Digits value it has not had
+   set, as the Frame class does when reading an Axis attribute. */
+   ax = astGetAxis( this, axis );
+   digits_set = astTestAxisDigits( ax );
+   if ( !digits_set ) astSetAxisDigits( ax, astGetDigits( this ) );
+
+/* Ask the Axis to normalise the Unit it reports. */
+   result = astGetAxisNormUnit( ax );
+
+/* Clear the attributes which were temporarily over-ridden above, and annul
+   the Axis pointer. */
+   if ( !digits_set ) astClearAxisDigits( ax );
+   ax = astAnnul( ax );
+   if ( !format_set ) (*parent_clearformat)( this_frame, axis, status );
+
+/* If an error occurred, clear the returned value. */
+   if ( !astOK ) result = NULL;
+
+/* Return the result. */
+   return result;
+}
+
 static AstSystemType GetSystem( AstFrame *this_frame, int *status ) {
 /*
 *  Name:
@@ -4931,6 +5032,7 @@ void astInitSkyFrameVtab_(  AstSkyFrameVtab *vtab, const char *name, int *status
    frame->GetFormat = GetFormat;
    parent_getlabel = frame->GetLabel;
    frame->GetLabel = GetLabel;
+   frame->GetNormUnit = GetNormUnit;
    parent_getsymbol = frame->GetSymbol;
    frame->GetSymbol = GetSymbol;
    parent_gettitle = frame->GetTitle;
@@ -7232,6 +7334,12 @@ static void NormBox( AstFrame *this_frame, double lbnd[], double ubnd[],
          y[ 1 ] = 0.0;
       }
       astTran2( reg, 2, x, y, 1, xo, yo );
+
+/* The tested values are only defined if the transformation succeeded. */
+      if( !astOK ) {
+         xo[ 0 ] = AST__BAD;
+         xo[ 1 ] = AST__BAD;
+      }
 
 /* If the box includes the north pole... */
       if( xo[ 0 ] != AST__BAD ) {

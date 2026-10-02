@@ -593,6 +593,7 @@
 #define AST__FRAME_TITLE_BUFF_LEN 100       /* Max length of default title string */
 #define AST__FRAME_GETATTRIB_BUFF_LEN 50    /* Max length of string returned by GetAttrib */
 #define AST__FRAME_ASTFMTDECIMALYR_BUFF_LEN 50    /* Max length of string returned by GetAttrib */
+#define AST__FRAME_GETNORMUNIT_BUFF_LEN 127  /* Max length of normalised Unit string */
 #define AST__FRAME_ASTFORMATID_MAX_STRINGS 50     /* Number of string values buffer by astFormatID*/
 
 #endif
@@ -853,6 +854,7 @@ typedef struct AstFrameGlobals {
    char Symbol_Buff[ AST__FRAME_SYMBOL_BUFF_LEN + 1 ];
    char Title_Buff[ AST__FRAME_TITLE_BUFF_LEN + 1 ];
    char AstFmtDecimalYr_Buff[ AST__FRAME_ASTFMTDECIMALYR_BUFF_LEN + 1 ];
+   char GetNormUnit_Buff[ AST__FRAME_GETNORMUNIT_BUFF_LEN + 1 ];
 } AstFrameGlobals;
 
 #endif

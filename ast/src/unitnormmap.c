@@ -45,6 +45,28 @@ c     The UnitNormMap class does not define any new functions beyond those
 f     The UnitNormMap class does not define any new routines beyond those
 *     which are applicable to all Mappings.
 
+*  Notes:
+*     - Both transformations are discontinuous at the centre. The forward
+*     transformation tests whether the supplied position coincides with the
+*     centre, and the inverse tests whether the supplied norm is zero; each
+*     test is exact, because a position that differs from the centre by any
+*     representable amount does have a direction, and reporting it is more
+*     useful than discarding it.
+*     - A consequence is that a Mapping which computes a position close to a
+*     UnitNormMap's centre, rather than supplying one directly, may not give
+*     the same result on every platform. Composing the inverse of one
+*     UnitNormMap with the forward transformation of another whose centre is
+*     the position the first one reconstructs is the case to watch: the
+*     reconstruction is a multiply-add, and a compiler is free to contract it
+*     into a fused multiply-add, which rounds once instead of twice. Where the
+*     unfused arithmetic lands exactly on the second centre the fused
+*     arithmetic can land a few ulp away, so one build reports no direction
+*     while the other reports a direction derived from that residue. The fused
+*     result is the correctly rounded one; neither is a defect, but a caller
+*     that needs the same answer everywhere should avoid depending on an exact
+*     coincidence with the centre, or build with floating-point contraction
+*     disabled.
+
 *  Copyright:
 *     Copyright (C) 2016 University of Washington
 
@@ -84,6 +106,10 @@ f     The UnitNormMap class does not define any new routines beyond those
 *        Fix heap buffer over-read in Equal: the centre array has one
 *        element per uninverted axis (min of Nin and Nout), so comparing
 *        two inverted UnitNormMaps must not loop up to the inverted Nin.
+*     8-SEP-2026 (TIMJ):
+*        Record that both transformations are discontinuous at the centre,
+*        and that a composition which reconstructs a position on another
+*        UnitNormMap's centre is sensitive to floating-point contraction.
 *class--
 */
 

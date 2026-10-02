@@ -117,6 +117,11 @@ f     only within textual output (e.g. from AST_WRITE).
 *        Override astAxisNormValues.
 *     7-NOV-2016 (DSB):
 *        Ensure astAxisNormValues ignores bad axis values.
+*     21-SEP-2026 (TIMJ):
+*        Over-ride astGetAxisNormUnit so that a Unit which describes the
+*        axis values, such as "hh mm ss", is not handed to the units
+*        parser. DHmsUnit reports which of its results are such
+*        descriptions.
 *class--
 */
 
@@ -167,6 +172,7 @@ static size_t (* parent_getobjsize)( AstObject *, int * );
 static const char *(* parent_getattrib)( AstObject *, const char *, int * );
 static const char *(* parent_getaxislabel)( AstAxis *, int * );
 static const char *(* parent_getaxissymbol)( AstAxis *, int * );
+static const char *(* parent_getaxisnormunit)( AstAxis *, int * );
 static const char *(* parent_getaxisunit)( AstAxis *, int * );
 static int (* parent_testattrib)( AstObject *, const char *, int * );
 static int (*parent_getaxisdirection)( AstAxis *this, int * );
@@ -248,10 +254,11 @@ static const char *GetAttrib( AstObject *, const char *, int * );
 static const char *GetAxisFormat( AstAxis *, int * );
 static const char *GetAxisInternalUnit( AstAxis *, int * );
 static const char *GetAxisLabel( AstAxis *, int * );
+static const char *GetAxisNormUnit( AstAxis *, int * );
 static const char *GetAxisSymbol( AstAxis *, int * );
 static const char *GetAxisUnit( AstAxis *, int * );
 static const char *DHmsFormat( const char *, int, double, int * );
-static const char *DHmsUnit( const char *, int, int, int * );
+static const char *DHmsUnit( const char *, int, int, int *, int * );
 static double AxisGap( AstAxis *, double, int *, int * );
 static double AxisDistance( AstAxis *, double, double, int * );
 static double AxisOffset( AstAxis *, double, double, int * );
@@ -2269,7 +2276,8 @@ static double DHmsGap( const char *fmt, int digs, double gap, int *ntick, int *s
 #undef BUFF_LEN
 }
 
-static const char *DHmsUnit( const char *fmt, int digs, int output, int *status ) {
+static const char *DHmsUnit( const char *fmt, int digs, int output, int *descr,
+                             int *status ) {
 /*
 *  Name:
 *     DHmsUnit
@@ -2282,7 +2290,8 @@ static const char *DHmsUnit( const char *fmt, int digs, int output, int *status 
 
 *  Synopsis:
 *     #include "skyaxis.h"
-*     const char *DHmsUnit( const char *fmt, int digs, int output, int *status )
+*     const char *DHmsUnit( const char *fmt, int digs, int output, int *descr,
+*                           int *status )
 
 *  Class Membership:
 *     SkyAxis member function.
@@ -2313,6 +2322,12 @@ static const char *DHmsUnit( const char *fmt, int digs, int output, int *status 
 *        If zero, the returned string will be in a form suitable for
 *        describing a suggested input format, which will subsequently
 *        be read using AxisUnformat.
+*     descr
+*        Pointer to an int in which to return a flag indicating that the
+*        returned string describes the axis values, as in "ddd:mm:ss" or
+*        "minutes of time", rather than naming a unit, as in "degrees". A
+*        description is not a units expression and cannot be parsed as one.
+*        A NULL pointer may be supplied if this is not required.
 *     status
 *        Pointer to the inherited status variable.
 
@@ -2347,6 +2362,7 @@ static const char *DHmsUnit( const char *fmt, int digs, int output, int *status 
 
 /* Initialise. */
    result = NULL;
+   if ( descr ) *descr = 0;
 
 /* Check the global error status. */
    if ( !astOK ) return result;
@@ -2374,9 +2390,11 @@ static const char *DHmsUnit( const char *fmt, int digs, int output, int *status 
 
       } else if ( output && !dh && min && !sec ) {
          result = as_time ? "minutes of time" : "arcminutes";
+         if ( descr && as_time ) *descr = 1;
 
       } else if ( output && !dh && !min && sec ) {
          result = as_time ? "seconds of time" : "arcseconds";
+         if ( descr && as_time ) *descr = 1;
 
 /* If there is more than one field present, or we want to describe how
    to supply formatted input, then we will generate a units string of
@@ -2384,6 +2402,7 @@ static const char *DHmsUnit( const char *fmt, int digs, int output, int *status 
    similar. Initialise the output character count and the character to
    be used to represent decimal places. */
       } else {
+         if ( descr ) *descr = 1;
          pos = 0;
          dpchar = 'd';
 
@@ -3073,6 +3092,95 @@ static const char *GetAxisLabel( AstAxis *this_axis, int *status ) {
    return result;
 }
 
+static const char *GetAxisNormUnit( AstAxis *this_axis, int *status ) {
+/*
+*  Name:
+*     GetAxisNormUnit
+
+*  Purpose:
+*     Obtain a pointer to the NormUnit string for a SkyAxis.
+
+*  Type:
+*     Private function.
+
+*  Synopsis:
+*     #include "skyaxis.h"
+*     const char *GetAxisNormUnit( AstAxis *this )
+
+*  Class Membership:
+*     SkyAxis member function (over-rides the astGetAxisNormUnit method
+*     inherited from the Axis class).
+
+*  Description:
+*     This function returns a pointer to the NormUnit string for a SkyAxis.
+*
+*     A SkyAxis with no Unit of its own describes its axis values rather
+*     than naming a unit for them, reporting for instance "ddd:mm:ss" or
+*     "minutes of time" as its Unit. Such a description is not a units
+*     expression and has no normalised form, so the NormUnit value is the
+*     Unit value itself. This has to be decided here because these
+*     descriptions contain spaces, which the units parser reads as
+*     multiplication: "hh mm ss" would otherwise be reported as "hh*mm*s".
+*
+*     Any other Unit value, whether set explicitly or a unit named by the
+*     SkyAxis itself such as "degrees", is a units expression which the
+*     parent method normalises.
+
+*  Parameters:
+*     this
+*        Pointer to the SkyAxis.
+
+*  Returned Value:
+*     Pointer to a null terminated string containing the NormUnit value.
+
+*  Notes:
+*     - The returned pointer points to a static memory buffer. The contents
+*     of this buffer will be over-written on each invocation of this
+*     function, so a copy of the returned string should be taken if it will
+*     be needed later.
+*     - A NULL pointer will be returned if this function is invoked with
+*     the global error status set, or if it should fail for any reason.
+*/
+
+/* Local Variables: */
+   const char *fmt;              /* Pointer to format specifier */
+   const char *result;           /* Pointer to result string */
+   int descr;                    /* Unit describes the axis values? */
+
+/* Check the global error status. */
+   if ( !astOK ) return NULL;
+
+/* Initialise */
+   result = NULL;
+
+/* If the Unit attribute is set, or the format specifier is a C format
+   specifier (in which case the Unit is "rad"), the Unit is a units
+   expression. */
+   if ( astTestAxisUnit( this_axis ) ) {
+      result = (*parent_getaxisnormunit)( this_axis, status );
+
+   } else {
+      fmt = GetAxisFormat( this_axis, status );
+      if ( astOK ) {
+         if ( fmt[ 0 ] == '%' ) {
+            result = (*parent_getaxisnormunit)( this_axis, status );
+
+/* Otherwise the Unit either describes the axis values, in which case it is
+   returned unchanged, or names a unit such as "degrees", which the parent
+   method normalises. */
+         } else {
+            result = DHmsUnit( fmt, astGetAxisDigits( this_axis ), 1, &descr,
+                               status );
+            if ( !descr ) result = (*parent_getaxisnormunit)( this_axis,
+                                                              status );
+         }
+      }
+   }
+
+/* Return the result. */
+   return result;
+}
+
 static const char *GetAxisSymbol( AstAxis *this_axis, int *status ) {
 /*
 *  Name:
@@ -3234,7 +3342,8 @@ static const char *GetAxisUnit( AstAxis *this_axis, int *status ) {
          if( fmt[ 0 ] == '%' ) {
             result = "rad";
          } else {
-            result = DHmsUnit( fmt, astGetAxisDigits( this_axis ), 1, status );
+            result = DHmsUnit( fmt, astGetAxisDigits( this_axis ), 1, NULL,
+                               status );
          }
       }
    }
@@ -3343,6 +3452,8 @@ void astInitSkyAxisVtab_(  AstSkyAxisVtab *vtab, const char *name, int *status )
    axis->GetAxisLabel = GetAxisLabel;
    parent_getaxissymbol = axis->GetAxisSymbol;
    axis->GetAxisSymbol = GetAxisSymbol;
+   parent_getaxisnormunit = axis->GetAxisNormUnit;
+   axis->GetAxisNormUnit = GetAxisNormUnit;
    parent_getaxisunit = axis->GetAxisUnit;
    axis->GetAxisUnit = GetAxisUnit;
 

@@ -77,6 +77,11 @@ f     - AST_ELLIPSEPARS: Get the geometric parameters of the Ellipse
 *        into a dynamically-allocated block whose size is not visible),
 *        GCC emits -Wstringop-overread. Using const double* avoids the
 *        false positive without changing the ABI or semantics.
+*     8-SEP-2026 (TIMJ):
+*        RegBaseMesh: accumulate the axis 2 bounds with astAxDistance asked
+*        about axis 2, not axis 1. astAxDistance dispatches to the Axis, so on
+*        a Frame whose two axes normalise differently the axis 2 limits were
+*        measured by axis 1's rule. Circle and Polygon already pass 1 and 2.
 *class--
 */
 
@@ -1149,7 +1154,7 @@ static AstPointSet *RegBaseMesh( AstRegion *this_region, int *status ){
                   ubx = dist;
                }
 
-               dist =  astAxDistance( frm, 1, this->centre[ 1 ], p2[ 1 ] );
+               dist =  astAxDistance( frm, 2, this->centre[ 1 ], p2[ 1 ] );
                if( dist < lby ) {
                   lby = dist;
                } else if( dist > uby ) {

@@ -740,15 +740,41 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
   int naxes2 = astGetI(astGetFrame(cvt,AST__CURRENT),"Naxes");
 
   Vector center2 = fits2->center();
+  Vector ll2 = center2 - Vector(10,10);
+  Vector ur2 = center2 + Vector(10,10);
   if (fits2->isHPX()) {
     Vector cc = wcsTran(context, cvt, fits1->center(), 0);
     if (!isnan(cc[0]) && !isinf(cc[0]) &&
-	!isnan(cc[1]) && !isinf(cc[1]))
+	!isnan(cc[1]) && !isinf(cc[1])) {
       center2 = cc;
+
+      // A fixed +/-10 pixel probe box (sized for two images with
+      // comparable plate scales) can span a genuinely non-linear
+      // region of the HPX projection once the two images' pixel
+      // scales differ greatly (e.g. a small WCS image aligned to an
+      // all-sky MOC/HEALPIX map, where the whole of fits1 can cover
+      // only a few fits2 pixels). Size the probe box to fits1's own
+      // footprint, mapped into fits2's pixel space, instead.
+      Vector half = Vector(fits1->width(), fits1->height())/2.;
+      Vector corner[4] = {
+	Vector(-half[0],-half[1]), Vector( half[0],-half[1]),
+	Vector(-half[0], half[1]), Vector( half[0], half[1])
+      };
+
+      BBox bb(cc);
+      for (int ii=0; ii<4; ii++) {
+	Vector pp = wcsTran(context, cvt, fits1->center()+corner[ii], 0);
+	if (!isnan(pp[0]) && !isinf(pp[0]) &&
+	    !isnan(pp[1]) && !isinf(pp[1]))
+	  bb.bound(pp);
+      }
+      bb.expand(bb.size()*.1 + Vector(2,2));
+
+      ll2 = bb.ll;
+      ur2 = bb.ur;
+    }
   }
 
-  Vector ll2 = center2 - Vector(10,10);
-  Vector ur2 = center2 + Vector(10,10);
   double ll[4];
   ll[0] =ll2[0];
   ll[1] =ll2[1];

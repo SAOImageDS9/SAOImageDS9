@@ -91,6 +91,13 @@ f     only within textual output (e.g. from AST_WRITE).
 *        Use round() rather than (int)(x+0.5) for rounding, so that the
 *        library uses a single rounding idiom that is correct for
 *        negative values.
+*     16-SEP-2026 (TIMJ):
+*        Normalise the Unit value with astNormUnit, so that a Unit which is
+*        not a units expression is returned unchanged rather than reported
+*        as an error. This is the documented value of the NormUnit
+*        attribute when no simplification can be performed, and it covers
+*        both a blank Unit and the sexagesimal formats used by some Axis
+*        classes.
 *class--
 */
 
@@ -1574,8 +1581,9 @@ static const char *GetAxisNormUnit( AstAxis *this, int *status ){
 /* Get a pointer to the thread specific global data structure. */
    astGET_GLOBALS(this);
 
-/* Get the Axis Unit attrribute and normalise it. */
-   result = astUnitNormaliser( astGetAxisUnit( this ) );
+/* Get the Axis Unit attribute and normalise it. A Unit value that is not a
+   units expression is returned unchanged; see astNormUnit. */
+   result = astNormUnit( astGetAxisUnit( this ) );
 
 /* If successful, check that the resulting string will fit in the buffer.
    If not, report an error. */

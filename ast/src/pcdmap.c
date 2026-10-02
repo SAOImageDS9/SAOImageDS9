@@ -99,6 +99,12 @@ f     The PcdMap class does not define any new routines beyond those
 *        zero by a UnitMap without reference to any neighbour, so a PcdMap
 *        simplified before Disco was changed could report that there was
 *        nothing left to do.
+*     8-SEP-2026 (TIMJ):
+*        PcdZoom: use the zoom factor the merge list applies, taking the
+*        reciprocal when the neighbouring ZoomMap is used inverted. Zoom is
+*        the stored factor regardless of Invert, so swapping a PcdMap past an
+*        inverted ZoomMap produced a forward ZoomMap of the original factor
+*        and a PcdMap derived from it, which is not the composition supplied.
 *class--
 */
 
@@ -2365,8 +2371,13 @@ static void PcdZoom( AstMapping **maps, int *inverts, int ipc, int *status ){
    old_zinv = astGetInvert( zm );
    astSetInvert( zm, inverts[ 1 - ipc ] );
 
-/* Get the zoom factor from the ZoomMap. */
+/* Get the zoom factor from the ZoomMap. Unlike the PcdMap attributes read
+   below, Zoom is the stored factor whatever the Invert flag says: it is
+   ZoomMap's Transform that takes the reciprocal when the Mapping is applied
+   inverted. So the temporary Invert setting above has no effect here, and the
+   factor the merge list actually applies has to be formed explicitly. */
    zoom = astGetZoom( zm );
+   if( inverts[ 1 - ipc ] ) zoom = 1.0/zoom;
 
 /* Get the distortion coefficient from the PcdMap. */
    disco = astGetDisco( pm );

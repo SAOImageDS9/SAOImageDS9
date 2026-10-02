@@ -136,6 +136,9 @@ f     - AST_OUTLINE<X>: Create a Polygon outlining values in a pixel array
 *        The fix was to reverse the order of the supplied vertices and
 *        then set the Invert attribute when constructing the Polygon, if
 *        the supplied Polygon represents more than half the sky.
+*     8-SEP-2026 (TIMJ):
+*        Simplify: check the second axis of each transformed vertex for
+*        AST__BAD, as the first axis has always been checked.
 
 *class--
 */
@@ -5403,7 +5406,9 @@ static AstMapping *Simplify( AstMapping *this_mapping, int *status ) {
             if( ( *(p++) = *(q++) ) == AST__BAD ) ok = 0;
          }
          q = ptr2[ 1 ];
-         for( iv = 0; iv < nv; iv++ ) *(p++) = *(q++);
+         for( iv = 0; iv < nv; iv++ ) {
+            if( ( *(p++) = *(q++) ) == AST__BAD ) ok = 0;
+         }
 
 /* Create a new Polygon using these transformed vertices. */
          if( ok ) {

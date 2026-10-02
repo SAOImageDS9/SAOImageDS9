@@ -759,11 +759,14 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
   ur[1] =ur2[1];
   ur[2] =context->slice(2);
   ur[3] =context->slice(3);
-  
+
   int ss = (naxes1+1)*naxes2;
   double* fit = new double[ss];
   double tol = 1;
-  if (astLinearApprox(cvt, ll, ur, tol, fit) != AST__BAD)
+  // astLinearApprox() returns non-zero on success; on failure it sets
+  // fit[] to AST__BAD, so checking "!= AST__BAD" against the int return
+  // value is always true and silently accepts a bad/degenerate fit.
+  if (astLinearApprox(cvt, ll, ur, tol, fit) != 0)
     rr = Translate(.5, .5) *
       Matrix(fit[naxes2], fit[naxes2+naxes1],
   		fit[naxes2+1], fit[naxes2+naxes1+1],

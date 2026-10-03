@@ -101,6 +101,11 @@ proc CreateXPA {} {
 	XPASendArray {} {} \
 	XPARcvdArray {} "fillbuf=false"
 
+    xpacmdadd $xpa asdf \
+	{} \
+	{} {} {} \
+	XPARcvdAsdf {} "fillbuf=false"
+
     xpacmdadd $xpa background \
 	{} \
 	XPASendBg {} {} \
@@ -1291,6 +1296,13 @@ proc XPARcvdGrid {xpa cdata param buf len} {
     XPADebug "XPARcvdGrid" $param
     InitError xpa
     catch {set i 0; ProcessGridCmd param i}
+    XPACatchError $xpa
+}
+
+proc XPARcvdAsdf {xpa cdata param buf len} {
+    XPADebug "XPARcvdAsdf" $param
+    InitError xpa
+    catch {set i 0; ProcessAsdfCmd param i {} {}}
     XPACatchError $xpa
 }
 

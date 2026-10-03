@@ -445,6 +445,25 @@ void Frame::loadNRRDVarCmd(const char* ch, const char* fn, LayerType ll)
   }
 }
 
+// *** ASDF ***
+
+void Frame::loadAsdfCmd(const char* fn, const char* path, const char* name,
+			LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadAsdfCmd(fn, path, name, ll);
+    break;
+  case MASK:
+    Context* cc = loadMask();
+    if (!cc)
+      return;
+    FitsImage* img = new FitsImageAsdf(cc, interp, fn, path, name, 1);
+    loadDone(cc->load(ASDF, name, img));
+    break;
+  }
+}
+
 // *** Mosaic Image ***
 
 void Frame::loadMosaicImageAllocCmd(MosaicType type, Coord::CoordSystem sys,

@@ -566,7 +566,7 @@ astINVOKE(V,astGetAxisSymbol_(astCheckAxis(this),STATUS_PTR))
 #define astGetAxisUnit(this) \
 astINVOKE(V,astGetAxisUnit_(astCheckAxis(this),STATUS_PTR))
 #define astGetAxisNormUnit(this) \
-astINVOKE(V,astGetAxisInternalUnit_(astCheckAxis(this),STATUS_PTR))
+astINVOKE(V,astGetAxisNormUnit_(astCheckAxis(this),STATUS_PTR))
 #define astGetAxisInternalUnit(this) \
 astINVOKE(V,astGetAxisInternalUnit_(astCheckAxis(this),STATUS_PTR))
 #define astSetAxisDigits(this,digits) \

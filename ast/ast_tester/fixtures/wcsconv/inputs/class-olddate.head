@@ -1,0 +1,25 @@
+NAXIS1  =                 1024 / Spectral axis
+NAXIS2  =                  100 / Spatial axis
+NAXIS3  =                  100 / Spatial axis
+CTYPE1  = 'FREQ    '          / Frequency
+CTYPE2  = 'RA---TAN'          / Right Ascension
+CTYPE3  = 'DEC--TAN'          / Declination
+CRVAL1  =    1.420405752E+09   / [Hz] Reference frequency
+CRVAL2  =              180.000 / [deg] Reference RA
+CRVAL3  =               45.000 / [deg] Reference Dec
+CRPIX1  =              513.000 / Reference pixel axis 1
+CRPIX2  =               50.000 / Reference pixel axis 2
+CRPIX3  =               50.000 / Reference pixel axis 3
+CDELT1  =           1.0E+06    / [Hz] Frequency step
+CDELT2  =              -0.0100 / [deg] Pixel size
+CDELT3  =               0.0100 / [deg] Pixel size
+CUNIT1  = 'Hz      '          / Spectral units
+RESTFRQ =    1.420405752E+09   / [Hz] Rest frequency
+SPECSYS = 'BARYCENT'          / Spectral reference frame
+RADESYS = 'FK5     '          / Reference frame
+EQUINOX =              2000.0  / Equinox
+MJD-OBS =            48000.0   / MJD of observation (1990-05-19)
+OBSGEO-X=      -5464588.868    / [m] Observatory geocentric X
+OBSGEO-Y=      -2493001.1635   / [m] Observatory geocentric Y
+OBSGEO-Z=       2150654.3527   / [m] Observatory geocentric Z
+END

@@ -211,7 +211,24 @@ static void ast_resample_uinterp##X( int ndim, \
    de-reference one level of pointer compared to the C case. */ \
    STATUS = astStatus; \
    nbad4 = 0; \
-   ( *ast_resample_FINTERP )( INTEGER_ARG(&ndim), \
+   ( *( void(*)( \
+                 F77_INTEGER_TYPE *, \
+                 F77_INTEGER_TYPE *, \
+                 F77_INTEGER_TYPE *, \
+                 F77_##Ftype##_TYPE *, \
+                 F77_##Ftype##_TYPE *, \
+                 F77_INTEGER_TYPE *, \
+                 F77_INTEGER_TYPE *, \
+                 F77_DOUBLE_TYPE *, \
+                 F77_DOUBLE_TYPE *, \
+                 F77_INTEGER_TYPE *, \
+                 F77_##Ftype##_TYPE *, \
+                 F77_##Ftype##_TYPE *, \
+                 F77_##Ftype##_TYPE *, \
+                 F77_INTEGER_TYPE *, \
+                 F77_INTEGER_TYPE * \
+               )) ast_resample_FINTERP )( \
+                              INTEGER_ARG(&ndim), \
                               INTEGER_ARRAY_ARG(lbnd4), \
                               INTEGER_ARRAY_ARG(ubnd4), \
                               Ftype##_ARRAY_ARG(in), \
@@ -269,7 +286,13 @@ static void ast_resample_ukern1( double offset, const double params[],
    function via the stored pointer. */
    status = astGetStatusPtr;
    STATUS = astStatus;
-   ( *ast_resample_FINTERP )( DOUBLE_ARG(&offset),
+   ( *( void(*)(
+      F77_DOUBLE_TYPE *,
+      F77_DOUBLE_TYPE *,
+      F77_INTEGER_TYPE *,
+      F77_DOUBLE_TYPE *,
+      F77_INTEGER_TYPE *
+   )) ast_resample_FINTERP )( DOUBLE_ARG(&offset),
                               DOUBLE_ARRAY_ARG(params),
                               INTEGER_ARG(&flags),
                               DOUBLE_ARG(value),
@@ -1157,7 +1180,24 @@ static void ast_resample_uinterp8##X( int ndim, \
    pass to FORTRAN has to be a contiguous 2-d array, so we must \
    de-reference one level of pointer compared to the C case. */ \
    STATUS = astStatus; \
-   ( *ast_resample_FINTERP )( INTEGER_ARG(&ndim), \
+   ( *( void(*)( \
+                 F77_INTEGER_TYPE *, \
+                 F77_INTEGER8_TYPE *, \
+                 F77_INTEGER8_TYPE *, \
+                 F77_##Ftype##_TYPE *, \
+                 F77_##Ftype##_TYPE *, \
+                 F77_INTEGER8_TYPE *, \
+                 F77_INTEGER8_TYPE *, \
+                 F77_DOUBLE_TYPE *, \
+                 F77_DOUBLE_TYPE *, \
+                 F77_INTEGER_TYPE *, \
+                 F77_##Ftype##_TYPE *, \
+                 F77_##Ftype##_TYPE *, \
+                 F77_##Ftype##_TYPE *, \
+                 F77_INTEGER8_TYPE *, \
+                 F77_INTEGER_TYPE * \
+	       )) ast_resample_FINTERP )( \
+                              INTEGER_ARG(&ndim), \
                               INTEGER8_ARRAY_ARG(lbnd), \
                               INTEGER8_ARRAY_ARG(ubnd), \
                               Ftype##_ARRAY_ARG(in), \

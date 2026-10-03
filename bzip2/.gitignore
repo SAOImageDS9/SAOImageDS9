@@ -1,0 +1,12 @@
+# Build products. bzip2 ships as a plain tarball with no .gitignore of its
+# own, so without this its objects show up as untracked noise the way
+# zlib's already do. Nothing here is upstream; a future tarball overlay
+# won't overwrite it.
+*.o
+libbz2.a
+bzip2
+bzip2recover
+
+# `make test` artifacts (not run by this tree's build, but cheap to cover)
+*.rb2
+*.tst

@@ -22,6 +22,7 @@ class TclFITSY {
   TclFITSY(Tcl_Interp*);
   ~TclFITSY();
 
+  int asdf(int, const char*[]);
   int dir(int, const char*[]);
   int open(int, const char*[]);
   int close(int, const char*[]);

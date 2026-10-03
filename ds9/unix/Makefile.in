@@ -134,9 +134,12 @@ LLIBS	= \
 	$(libdir)/libast_err.a \
 	$(libdir)/libast_pal.a \
 	$(libdir)/libast_cminpack.a \
+	$(libdir)/libyaml.a \
 	$(subst /$(space),/,$(patsubst -L%,%/,$(patsubst -l%,$(EXT_LIB_PREFIX)%.a,$(tksao_LIB_SPEC)))) \
 	$(libdir)/libfuntools.a \
-	$(libdir)/libxpa.a
+	$(libdir)/libxpa.a \
+	$(libdir)/liblz4.a \
+	$(libdir)/libbz2.a
 
 PREQS	= \
 	$(APPDIR) \

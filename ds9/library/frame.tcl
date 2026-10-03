@@ -2465,6 +2465,7 @@ proc ClearFrame {which} {
     }
 
     DestroyHeader $which
+    AsdfClearTree $which
     $which clear
 
     # after unload

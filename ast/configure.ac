@@ -7,12 +7,19 @@ dnl   1.5.  It should work with autoconf versions 2.50 or better, and
 dnl   automake 1.6 or better.
 
 dnl   Initialisation: package name and version number
-m4_define([v_maj], [9])
-m4_define([v_min], [2])
-m4_define([v_mic], [14])
-m4_define([project_version], [v_maj.v_min.v_mic])
+dnl   Keep the canonical version in version.number so CMake and Autotools
+dnl   both read the same value.
+m4_define([project_version], m4_esyscmd_s([tr -d '\n' < version.number]))
+m4_define([v_maj], m4_esyscmd_s([awk -F. 'NR==1 {print $1}' version.number]))
+m4_define([v_min], m4_esyscmd_s([awk -F. 'NR==1 {print $2}' version.number]))
+m4_define([v_mic], m4_esyscmd_s([awk -F. 'NR==1 {print $3}' version.number]))
 AC_INIT([ast],[project_version],[starlink@jiscmail.ac.uk])
+dnl   Expose individual version components for src/version.h.in substitution.
+AC_SUBST([PACKAGE_VERSION_MAJOR], [v_maj])
+AC_SUBST([PACKAGE_VERSION_MINOR], [v_min])
+AC_SUBST([PACKAGE_VERSION_RELEASE], [v_mic])
 AC_CONFIG_AUX_DIR([build-aux])
+AC_CONFIG_MACRO_DIR([m4])
 
 dnl   Shared library versioning
 m4_define([lt_cur], [m4_eval(v_maj + v_min)])
@@ -24,10 +31,22 @@ AC_SUBST([version_info])
 dnl   Require autoconf-2.50 at least
 AC_PREREQ([2.69])
 dnl   Require Starlink automake
-AM_INIT_AUTOMAKE([1.8.2-starlink subdir-objects])
+AM_INIT_AUTOMAKE(m4_esyscmd([
+  if command -v starconf >/dev/null 2>&1; then
+    echo "1.8.2-starlink subdir-objects"
+  else
+    echo "foreign subdir-objects"
+  fi
+]))
 
 dnl   Sanity-check: name a file in the source directory
 AC_CONFIG_SRCDIR([ast_link.in])
+
+dnl   Detect starconf: if present we're building inside Starlink infrastructure.
+dnl   Used to decide whether to generate component.xml and whether to link
+dnl   Fortran tests against real Starlink libraries vs standalone stubs.
+AC_PATH_PROG([STARCONF], [starconf], [no])
+AM_CONDITIONAL([STARLINK_BUILD], [test "x$STARCONF" != "xno"])
 
 #   Checks for programs
 AC_PROG_CC
@@ -134,6 +153,30 @@ AC_SUBST(FORTRAN, $use_fortran)
 if test "$use_fortran" = "1"; then
 AC_PROG_FC
 AC_FC_LIBRARY_LDFLAGS
+dnl  Automake uses F77/FFLAGS for .f files (Fortran 77 fixed form).
+dnl  Point F77 at the same compiler as FC.
+AC_PROG_F77
+
+dnl  Probe for optional Fortran flags; not all compilers support them.
+AST_FFLAGS_EXTRA=
+if test -n "$F77"; then
+  AC_LANG_PUSH([Fortran 77])
+  for flag in -fallow-argument-mismatch -fno-range-check -Wno-real-constant-widening; do
+    AC_MSG_CHECKING([whether $F77 accepts $flag])
+    ast_save_FFLAGS=$FFLAGS
+    FFLAGS="$FFLAGS $flag"
+    AC_COMPILE_IFELSE([AC_LANG_SOURCE([
+          program test
+          end
+    ])],
+      [AC_MSG_RESULT([yes])
+       AST_FFLAGS_EXTRA="$AST_FFLAGS_EXTRA $flag"],
+      [AC_MSG_RESULT([no])])
+    FFLAGS=$ast_save_FFLAGS
+  done
+  AC_LANG_POP([Fortran 77])
+fi
+AC_SUBST([AST_FFLAGS_EXTRA])
 fi
 
 #  Prepare a version of STAR_FFLAGS with -I... removed
@@ -165,17 +208,98 @@ fi
 AM_CONDITIONAL(NOTHREADS, test x$use_pthreads = x0)
 AC_SUBST(THREADS, $use_pthreads)
 
-#  Conditional defining whether we build with YAML support.
+#  libast and libast_pal call math functions, so on platforms where those
+#  live in a library of their own the shared objects have to name it. The
+#  third argument keeps -lm out of LIBS: it belongs to the two libraries
+#  that need it, and is added to their LIBADD in Makefile.am.
+AC_CHECK_LIB([m], [sin], [LIBM=-lm], [LIBM=])
+AC_SUBST([LIBM])
+
+#  star_compat/messgen is compiled and then run during the build, so it has
+#  to be an executable for the build machine and not for the host. Take the
+#  compiler for it, and its flags, from the conventional *_FOR_BUILD
+#  variables, which the user can set; when the build is not a cross
+#  compilation the host compiler is the build compiler.
+AC_ARG_VAR([CC_FOR_BUILD],
+           [C compiler for programs that are run on the build machine])
+AC_ARG_VAR([CFLAGS_FOR_BUILD],
+           [C compiler flags for programs that are run on the build machine])
+AC_ARG_VAR([LDFLAGS_FOR_BUILD],
+           [linker flags for programs that are run on the build machine])
+if test "x$CC_FOR_BUILD" = x; then
+   if test "x$cross_compiling" = xyes; then
+      AC_CHECK_PROGS([CC_FOR_BUILD], [gcc clang cc], [cc])
+   else
+      CC_FOR_BUILD=$CC
+      test "x$CFLAGS_FOR_BUILD" = x && CFLAGS_FOR_BUILD=$CFLAGS
+      test "x$LDFLAGS_FOR_BUILD" = x && LDFLAGS_FOR_BUILD=$LDFLAGS
+   fi
+fi
+
+#  Conditional defining whether we build with YAML support. libyaml is
+#  looked for on the compiler's default search paths, unless it is told
+#  where to look: either --with-yaml=DIR, for an installation with the
+#  usual DIR/include and DIR/lib layout, or the YAML_CFLAGS and YAML_LIBS
+#  variables, for anything more awkward.
+AC_ARG_VAR([YAML_CFLAGS], [C compiler flags for libyaml, e.g. -I/opt/foo/include])
+AC_ARG_VAR([YAML_LIBS], [linker flags for libyaml, e.g. -L/opt/foo/lib -lyaml])
 AC_ARG_WITH([yaml],
-            [ --without-yaml   Build package without YAML support],
-        if test "$withval" = "yes"; then
-           use_yaml="1"
-        else
-           use_yaml="0"
-        fi,
-        use_yaml="1")
+            [AS_HELP_STRING([--with-yaml@<:@=DIR@:>@],
+                            [Build package with YAML support, taking libyaml
+                             from DIR/include and DIR/lib if DIR is given
+                             @<:@default=yes@:>@])],
+        [yaml_explicit="1"],
+        [with_yaml="yes"; yaml_explicit="0"])
+
+#  Setting either variable by hand is as much a request for YAML support as
+#  --with-yaml is, so treat it the same when the search comes up empty.
+if test -n "$YAML_CFLAGS" || test -n "$YAML_LIBS"; then
+    yaml_explicit="1"
+fi
+
+use_yaml="1"
+case $with_yaml in
+    no)
+        use_yaml="0" ;;
+    yes) ;;
+    *)
+        test -z "$YAML_CFLAGS" && YAML_CFLAGS="-I$with_yaml/include"
+        test -z "$YAML_LIBS" && YAML_LIBS="-L$with_yaml/lib -lyaml" ;;
+esac
+
 if test "$use_yaml" = "1"; then
-AC_CHECK_LIB([yaml], [yaml_parser_initialize], ,[use_yaml="0"])
+    test -z "$YAML_LIBS" && YAML_LIBS="-lyaml"
+
+#  Both the header and the library have to be usable with these flags in
+#  place, so probe with them applied. They are left applied afterwards on
+#  success, since the whole package is then built against libyaml.
+    yaml_save_CPPFLAGS="$CPPFLAGS"
+    yaml_save_LIBS="$LIBS"
+    CPPFLAGS="$CPPFLAGS $YAML_CFLAGS"
+    LIBS="$YAML_LIBS $LIBS"
+
+    AC_CHECK_HEADER([yaml.h], [], [use_yaml="0"])
+    if test "$use_yaml" = "1"; then
+        AC_MSG_CHECKING([for yaml_parser_initialize in libyaml])
+        AC_LINK_IFELSE([AC_LANG_CALL([], [yaml_parser_initialize])],
+                       [AC_MSG_RESULT([yes])],
+                       [AC_MSG_RESULT([no]); use_yaml="0"])
+    fi
+
+    if test "$use_yaml" = "0"; then
+        CPPFLAGS="$yaml_save_CPPFLAGS"
+        LIBS="$yaml_save_LIBS"
+        YAML_CFLAGS=""
+        YAML_LIBS=""
+
+#  Having been told explicitly to build with libyaml, quietly building
+#  without it is never what the user wanted.
+        if test "$yaml_explicit" = "1"; then
+            AC_MSG_ERROR([libyaml could not be found, but YAML support was
+requested via --with-yaml, YAML_CFLAGS or YAML_LIBS. Use --without-yaml to
+build without YAML support.])
+        fi
+    fi
 fi
 AM_CONDITIONAL(NOYAML, test x$use_yaml = x0)
 AC_SUBST(YAML, $use_yaml)
@@ -254,6 +378,9 @@ STAR_CNF_F2C_COMPATIBLE
 
 # Determine the type of Fortran character string lengths.
 STAR_CNF_TRAIL_TYPE
+
+# Determine the symbol for the Fortran blank common block.
+STAR_CNF_BLANK_COMMON
 fi
 
 #   Declare the message file.
@@ -299,21 +426,77 @@ int main() {
 #   satisfy these targets, so give a non-null value
 #   for the second argument, to suppress automatic generation of
 #   rules.
-STAR_LATEX_DOCUMENTATION([sun210 sun211], [sun210.pdf sun210.tex sun211.pdf sun211.tex sun210.htx_tar sun211.htx_tar])
-STAR_PREDIST_SOURCES(sun_master.tex)
+#
+#   Prologue extraction prefers starprolog, falling back to getatt/prolat.
+#   Typesetting needs TeX plus the class and style files vendored in
+#   star_compat/latexsupport.  The .htx_tar hypertext products
+#   additionally need the Starlink star2html program, so they are built only
+#   when it is available; a build without it still produces the PDFs, which is
+#   what nearly every reader wants.  Historically the hypertext was always
+#   included, so warn rather than pass over it silently.
+#
+#   Only a pre-distribution tree can build any of this.  An unpacked
+#   distribution has no rules for the documents, so there the set is fixed by
+#   what was shipped rather than by what the host happens to have installed.
 STAR_CHECK_PROGS(star2html)
+AC_ARG_VAR([STARPROLOG], [starprolog command, optionally with arguments])
+AS_IF([test -z "$STARPROLOG"], [AC_PATH_PROG([STARPROLOG], [starprolog])])
+AC_ARG_VAR([PDFLATEX], [pdflatex command])
+AC_ARG_ENABLE([hyperdocs],
+    [AS_HELP_STRING([--disable-hyperdocs],
+        [omit the .htx_tar hypertext documentation even when star2html is
+         available])],
+    [], [enable_hyperdocs=yes])
+
+STAR_PREDIST_SOURCES(sun_master.tex)
+
+ast_documentation="sun210.pdf sun210.tex sun211.pdf sun211.tex"
+if test "x$enable_hyperdocs" = xno; then
+    AC_MSG_NOTICE([hypertext documentation disabled by request])
+elif test -n "$PREDIST"; then
+    for ast_htx in sun210.htx_tar sun211.htx_tar; do
+        if test -f "$srcdir/$ast_htx"; then
+            ast_documentation="$ast_documentation $ast_htx"
+        fi
+    done
+elif test -x "$STAR2HTML"; then
+    ast_documentation="$ast_documentation sun210.htx_tar sun211.htx_tar"
+elif test "x$STARCONF" != "xno"; then
+#  Ordinary standalone builds do not request documentation.
+    AC_MSG_WARN([star2html not found: building PDF documentation only, with
+no .htx_tar hypertext. A full release has historically included it.])
+fi
+
+STAR_LATEX_DOCUMENTATION([sun210 sun211], [$ast_documentation])
 STAR_CHECK_PROGS(prolat, sst)   # prolat is part of SST
+if test -n "$STAR@&t@_LATEX_DOCUMENTATION" && test -z "$PREDIST"; then
+    AS_IF([test -z "$PDFLATEX"], [AC_PATH_PROG([PDFLATEX], [pdflatex])])
+    AS_IF([test -z "$PDFLATEX"],
+        [AC_MSG_ERROR([documentation requires pdflatex; use --without-stardocs to omit it])])
+    AS_IF([test -z "$STARPROLOG" && test ! -x "$PROLAT" &&
+           test ! -x "$SST_DIR/prolat"],
+        [AC_MSG_ERROR([documentation requires starprolog (preferred) or prolat; set STARPROLOG or use --without-stardocs])])
+fi
 
 AC_CONFIG_HEADERS(config.h)
 
-AC_CONFIG_FILES(Makefile component.xml ast_link ast_link_adam src/object.h)
+AC_CONFIG_FILES(Makefile ast_link ast_link_adam ast_tester/Makefile src/object.h)
 if test "$use_fortran" = "1"; then
 AC_CONFIG_FILES(src/f77.h)
+fi
+
+if test "x$STARCONF" != "xno"; then
+AC_CONFIG_FILES(component.xml)
 fi
 
 AC_CONFIG_FILES([ast_cpp], [chmod +x ast_cpp])
 #   Following are files which are substituted by the Makefile at
 #   distribution time, rather than by configure.  They are not distributed.
 STAR_PREDIST_SOURCES(src/version.h.in builddocs.in addversion.in)
+
+#  ast_err.h and AST_ERR are among those files: messgen's translation of
+#  ast_err.msg is machine independent, so they are generated here and
+#  shipped, and only a pre-distribution tree needs the rules that make them.
+AM_CONDITIONAL([PREDIST_BUILD], [test -z "$PREDIST"])
 
 AC_OUTPUT

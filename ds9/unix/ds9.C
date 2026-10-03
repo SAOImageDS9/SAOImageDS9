@@ -53,6 +53,7 @@ extern "C" {
   int Tclxmlrpc_Init(Tcl_Interp*);
 
   int Signal_ext_Init(Tcl_Interp*);
+
 }
 
 // currently use relative path
@@ -251,7 +252,7 @@ int SAOAppInit(Tcl_Interp *interp)
   // Signal_Ext
   if (Signal_ext_Init(interp) == TCL_ERROR)
     return TCL_ERROR;
-  Tcl_StaticPackage (interp, "signal", Signal_ext_Init, 
+  Tcl_StaticPackage (interp, "signal", Signal_ext_Init,
 		     (Tcl_PackageInitProc*)NULL);
 
   return TCL_OK;

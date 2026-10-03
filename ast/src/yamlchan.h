@@ -67,8 +67,8 @@
 #include <stddef.h>
 #endif
 
-#if defined( YAML )
-#include <yaml.h>
+#if defined( YAML ) || defined( FYAML )
+#include "yaml_backend.h"
 #endif
 
 
@@ -103,16 +103,20 @@ typedef struct AstYamlChan {
    int yamlencoding;      /* Output format to use when writing */
    int defenc;            /* Default yaml encoding */
    AstKeyMap *anchors;    /* KeyMap holding transient YAML anchor definitions */
+   AstKeyMap *ref_maps;   /* KeyMap caching named reference Mappings used by Find... functions */
    int gotwcs;            /* Has a complete WCS been read yet? */
    const char *objectname;/* Name of Object currently being written. */
    int objectset;         /* Is the Object currently being written set? */
    int write_isa;         /* Is the next "isA" really needed? */
    AstKeyMap *obj;        /* KeyMap holding the NATIVE object being read */
    int index;             /* Index of next item to read from "obj" */
+   char *readbuf;         /* Buffer holding the current input line plus newline */
+   size_t readlen;        /* Number of bytes of the current line in readbuf */
+   size_t readoff;        /* Number of bytes of readbuf already handed out */
 
-#if defined( YAML )
-   yaml_emitter_t emitter_data; /* The body of a yaml emitter */
-   yaml_emitter_t *emitter;     /* Pointer to the above yaml emitter */
+#if defined( YAML ) || defined( FYAML )
+   AstYamlEmitter emitter_data; /* The body of a yaml emitter */
+   AstYamlEmitter *emitter;     /* Pointer to the above yaml emitter */
 #endif
 
 } AstYamlChan;

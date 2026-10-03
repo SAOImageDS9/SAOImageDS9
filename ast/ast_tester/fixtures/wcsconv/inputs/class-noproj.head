@@ -1,0 +1,25 @@
+SIMPLE  =                    T / Fits standard
+BITPIX  =                  -32 / Bits per pixel
+NAXIS   =                    3 / Number of dimensions
+NAXIS1  =                 1024 / Spectral axis
+NAXIS2  =                    1 / Spatial axis
+NAXIS3  =                    1 / Spatial axis
+CTYPE1  = 'FREQ    '           / Frequency (spectral first, axspec=0)
+CTYPE2  = 'RA--    '           / RA with blank projection (CLASS style)
+CTYPE3  = 'DEC-    '           / Dec with blank projection (CLASS style)
+CRVAL1  =  0.000000000000E+000 / Offset frequency
+CRVAL2  =               40.738 / Reference RA (deg)
+CRVAL3  =               62.933 / Reference Dec (deg)
+CRPIX1  =              512.500 / Reference pixel
+CRPIX2  =                  0.5 / Reference pixel
+CRPIX3  =                  0.5 / Reference pixel
+CDELT1  =  0.390625000000E+005 / Frequency resolution
+CDELT2  =              -0.0100 / Pixel size (deg)
+CDELT3  =               0.0100 / Pixel size (deg)
+EQUINOX =               2000.0 / Equinox
+RADESYS = 'FK5     '           / Reference frame
+RESTFREQ=  0.110201354300E+012 / [Hz] Rest frequency
+VELO-OBS=  0.250000000000E+004 / [m/s] Topocentric velocity
+DELTAV  = -0.106265872717E+003 / [m/s] Velocity spacing
+IMAGFREQ=  0.972814604954E+011 / [Hz] Image frequency
+END

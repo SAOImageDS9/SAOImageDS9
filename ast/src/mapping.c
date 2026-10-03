@@ -437,6 +437,38 @@ f     - AST_TRANN: Transform N-dimensional coordinates
 *        This avoids it continuing to check extremely large interval sizes
 *        that may give a very low range of gradients because of numerical
 *        problems.
+*     19-JUN-2026 (TIMJ):
+*        Fix Rate so that it returns the correct derivative at x0=0 for
+*        Mappings defined only over a narrow domain. The initial interval
+*        size was seeded at 1.0 when x0 was zero; after the first tenfold
+*        increase the sampled points lay several units from x0, outside
+*        the domain of e.g. a ChebyMap on [-1,1], so FindGradient always
+*        failed and AST__BAD was returned. The zero-x0 seed now uses the
+*        same small step as the non-zero case and the loop grows it as
+*        needed.
+*     19-JUN-2026 (TIMJ):
+*        Fix Rate: the zero-range "previous interval also zero" checks
+*        indexed the range array by the loop counter (iin) rather than the
+*        store index (itop/ibot). These diverge when an interval is
+*        skipped because FindGradient failed, so the check could read an
+*        array slot that was never written for the current search. Index
+*        by the store index instead.
+*     8-AUG-2026 (TIMJ):
+*        Use round() rather than (int)(x+0.5) for rounding, so that the
+*        library uses a single rounding idiom that is correct for
+*        negative values.
+*     15-AUG-2026 (TIMJ):
+*        Record the simplified state of a Mapping separately for each
+*        orientation, selecting between the two records using the current
+*        Invert value, rather than holding a single record that setting
+*        Invert clears. Simplification does depend on the orientation, but
+*        clearing the record on every set meant that the many routines that
+*        set Invert only to line a Mapping up for inspection, and then set
+*        it back again, left the Mapping reporting that it needed
+*        re-simplifying. Which nodes of a Mapping tree carried an IsSimp
+*        card in a dump therefore depended on which of them had been
+*        inspected, and two Mappings reported as equal by astEqual could
+*        dump differently as a result.
 *class--
 */
 
@@ -2309,7 +2341,7 @@ static void GlobalBounds( MapData *mapdata, double *lbnd, double *ubnd,
    "minsame", and at least 30% of the total number of local minima
    found. */
                if ( ( nsame_min >= minsame ) &&
-                    ( nsame_min >= (int) ( 0.3f * (float) nmin + 0.5f ) ) ) {
+                    ( nsame_min >= (int) round( 0.3f * (float) nmin ) ) ) {
                   done_min = 1;
                }
             }
@@ -2404,7 +2436,7 @@ static void GlobalBounds( MapData *mapdata, double *lbnd, double *ubnd,
 
 /* Test for a satisfactory global maximum estimate. */
                if ( ( nsame_max >= minsame ) &&
-                    ( nsame_max >= (int) ( 0.3f * (float) nmax + 0.5 ) ) ) {
+                    ( nsame_max >= (int) round( 0.3f * (float) nmax ) ) ) {
                   done_max = 1;
                }
             }
@@ -9005,8 +9037,16 @@ static double Rate( AstMapping *this, double *at, int ax1, int ax2,
    greatest reliability is used to define the returned gradient.
 
    The initial estimate of the interval size is a fixed small fraction of
-   the supplied "x0" value, or 1.0 if "x0" is zero. */
-      h0 = ( x0 != 0.0 ) ? DBL_EPSILON*1.0E9*fabs( x0 ) : 1.0;
+   the supplied "x0" value. When "x0" is zero there is no value to scale,
+   so use the same small absolute step rather than 1.0: seeding with 1.0
+   meant that, after the first tenfold increase below, the sampled points
+   were several units away from "x0" and so fell outside the domain of any
+   Mapping defined only over a narrow range (e.g. a ChebyMap on [-1,1]).
+   The gradient then could not be found and AST__BAD was returned even
+   though the derivative is well defined at x0=0. Starting small and
+   letting the loop below grow the interval as needed works for both
+   restricted and unrestricted Mappings. */
+      h0 = ( x0 != 0.0 ) ? DBL_EPSILON*1.0E9*fabs( x0 ) : DBL_EPSILON*1.0E9;
 
 /* Attempt to find the mean gradient, and the range of gradients, within
    an interval of size "h0" centred on "x0". If this cannot be done,
@@ -9068,8 +9108,11 @@ static double Rate( AstMapping *this, double *at, int ax1, int ax2,
    interval also had zero range. Otherwise, it's probably just a numerical
    fluke. If the previous interval also had a range of zero, we can forget
    the rest of the algorithm since the supplied transformation is linear
-   and we now have its gradient. So leave the loop. */
-               } else if( range == 0.0 && y[ iin - 1 ] == 0 ) {
+   and we now have its gradient. So leave the loop. Index the range array
+   by the store index "itop" (not the loop counter "iin"), since "itop"
+   only advances when a value is actually stored - the two diverge if any
+   interval was skipped because FindGradient failed. */
+               } else if( range == 0.0 && y[ itop - 1 ] == 0 ) {
                   iret = itop;
                   break;
                }
@@ -9104,7 +9147,7 @@ static double Rate( AstMapping *this, double *at, int ax1, int ax2,
                   iret = ibot;
                } else if( range > minrange ){
                   break;
-               } else if( range == 0.0 && y[ iin + 1 ] == 0 ) {
+               } else if( range == 0.0 && y[ ibot + 1 ] == 0 ) {
                   iret = ibot;
                   break;
                }
@@ -23226,7 +23269,7 @@ f     performed with the AST_INVERT routine.
 astMAKE_CLEAR(Mapping,Invert,invert,CHAR_MAX)
 astMAKE_GET(Mapping,Invert,int,0,( ( this->invert == CHAR_MAX ) ?
                                    0 : this->invert ))
-astMAKE_SET(Mapping,Invert,int,invert,(astClearIsSimple(this),(value!=0)))
+astMAKE_SET(Mapping,Invert,int,invert,(value!=0))
 astMAKE_TEST(Mapping,Invert,( this->invert != CHAR_MAX ))
 
 /*
@@ -23298,6 +23341,12 @@ c     astSimplify
 f     AST_SIMPLIFY
 *     method will immediately return the Mapping unchanged if the IsSimple
 *     attribute indicates that the Mapping has already been simplified.
+*
+*     Simplification applies to the Mapping in the orientation it had when
+*     it was simplified, since the inverse of a Mapping may simplify
+*     differently. Inverting a simplified Mapping therefore resets IsSimple
+*     to zero, and restoring the original Invert value restores it to
+*     non-zero.
 
 *  Applicability:
 *     Mapping
@@ -24083,6 +24132,8 @@ AstMapping *astLoadMapping_( void *mem, size_t size,
 
 /* IsSimple. */
 /* --------- */
+/* The card describes the Mapping in the orientation in which it was
+   written out, which is the orientation set up above. */
       if( astReadInt( channel, "issimp", 0 ) ) astSetIsSimple(new);
 
 

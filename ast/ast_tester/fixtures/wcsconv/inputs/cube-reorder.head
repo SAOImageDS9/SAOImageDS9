@@ -1,0 +1,24 @@
+SIMPLE  =                    T / Fits standard
+BITPIX  =                  -32 / Bits per pixel
+NAXIS   =                    3 / Number of dimensions
+NAXIS1  =                 1024 / Spectral axis
+NAXIS2  =                  100 / Spatial axis
+NAXIS3  =                  100 / Spatial axis
+CTYPE1  = 'WAVE    '           / Wavelength axis FIRST (non-standard order)
+CTYPE2  = 'RA---TAN'           / Celestial longitude at axis 2
+CTYPE3  = 'DEC--TAN'           / Celestial latitude at axis 3
+CRVAL1  =            5.000E-07 / Reference wavelength (metres)
+CRVAL2  =              180.000 / Reference RA (deg)
+CRVAL3  =               45.000 / Reference Dec (deg)
+CRPIX1  =              512.000 / Reference pixel
+CRPIX2  =               50.000 / Reference pixel
+CRPIX3  =               50.000 / Reference pixel
+CDELT1  =            1.000E-10 / Wavelength increment (metres)
+CDELT2  =             -0.00100 / Degrees/pixel
+CDELT3  =              0.00100 / Degrees/pixel
+CUNIT1  = 'm       '           / Axis units
+EQUINOX =               2000.0 / Equinox
+RADESYS = 'FK5     '           / Coordinate reference frame
+RESTFRQ =           5.996E+14  / Rest frequency (Hz)
+SPECSYS = 'BARYCENT'           / Spectral reference frame
+END

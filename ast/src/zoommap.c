@@ -73,6 +73,12 @@ f     The ZoomMap class does not define any new routines beyond those
 *     31-JUL-2020 (DSB):
 *        MapMerge improved to allow ZoomMaps to merge with neighbouring
 *        MatrixMaps, WinMaps and ShiftMaps.
+*     17-AUG-2026 (TIMJ):
+*        Discard the record that the ZoomMap has been simplified when Zoom is
+*        set or cleared. MapMerge replaces a ZoomMap whose Zoom is one by a
+*        UnitMap without reference to any neighbour, so a ZoomMap simplified
+*        before Zoom was changed could report that there was nothing left to
+*        do.
 *class--
 */
 
@@ -1689,13 +1695,14 @@ f     AST_CLONE
 /* This ia a double value with a value of 0.0 when undefined but
    yielding a default of 1.0. Setting it explicitly to 0.0 is not
    permitted except via astClearZoom. */
-astMAKE_CLEAR1(ZoomMap,Zoom,zoom,0.0)
+astMAKE_CLEAR1(ZoomMap,Zoom,zoom,(astClearIsSimple(this),0.0))
 astMAKE_GET(ZoomMap,Zoom,double,1.0,( ( this->zoom == 0.0 ) ?
                                       1.0 : this->zoom ))
 
 /* Check for an attempt to set a value of zero and report an error if
    necessary (leaving the Zoom value unchanged). */
 astMAKE_SET1(ZoomMap,Zoom,double,zoom,(
+            ( value != this->zoom ) ? astClearIsSimple(this) : (void)0,
             ( value != 0.0 ) ?
             value :
             ( astError( AST__ZOOMI,

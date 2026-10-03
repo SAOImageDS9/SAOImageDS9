@@ -1,0 +1,11 @@
+NAXIS1  =                  100 / length of data axis 1
+NAXIS2  =                  100 / length of data axis 2
+CTYPE1  = 'XLON-TAN'           / Unknown 1-char celestial system
+CTYPE2  = 'XLAT-TAN'           / Unknown 1-char celestial system
+CRVAL1  =              180.000 / Reference longitude (deg)
+CRVAL2  =               45.000 / Reference latitude (deg)
+CRPIX1  =               50.500 / Reference pixel on axis 1
+CRPIX2  =               50.500 / Reference pixel on axis 2
+CDELT1  =           -0.0002778 / Degrees/pixel
+CDELT2  =            0.0002778 / Degrees/pixel
+END

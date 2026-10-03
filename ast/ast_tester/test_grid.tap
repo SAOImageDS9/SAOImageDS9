@@ -1,0 +1,73 @@
+#!/bin/sh
+# TAP producer for astGrid regression tests.
+#
+# Runs testgrid (which uses the logging GRF module to emit an SVG) on each
+# case listed in fixtures/plot/cases.txt (the same manifest the CMake suite
+# reads).
+# Unless the case is flagged skip_text_compare, the <text> elements of the
+# produced SVG are compared (sorted) against the reference SVG -- this pins
+# label content and position while ignoring platform-dependent grid-line
+# tessellation, matching cmake/run_grid_test.cmake.
+#
+# Emits TAP so automake reports one result per case.
+srcdir=${srcdir:-.}
+# Fixture paths in the manifest are relative to the fixture root.
+fixtures=${srcdir}/fixtures
+data=${fixtures}/plot/cases.txt
+
+trim() {
+    printf '%s' "$1" | sed 's/^[[:blank:]]*//; s/[[:blank:]]*$//'
+}
+
+# TAP plan: the number of data (non-blank, non-comment) lines.
+echo "1..$(grep -cvE '^[[:blank:]]*(#|$)' "$data")"
+
+idx=0
+while IFS='|' read -r name head attr fattr box reference skip rest; do
+    name=$(trim "$name")
+    case $name in ''|'#'*) continue ;; esac
+    head=$(trim "$head")
+    attr=$(trim "$attr")
+    fattr=$(trim "$fattr")
+    box=$(trim "$box")
+    reference=$(trim "$reference")
+    skip=$(trim "$skip")
+
+    # testgrid expects non-empty attribute arguments; pass a single space
+    # for an empty column, as the CMake driver does.
+    [ -n "$attr" ] || attr=' '
+    [ -n "$fattr" ] || fattr=' '
+
+    idx=$((idx + 1))
+    test="$idx - $name"
+    out=grid_${name}.svg
+    rm -f "$out"
+
+    # $box is intentionally unquoted so its (space-separated) coordinates
+    # become separate arguments; empty means "auto".
+    ./testgrid "${fixtures}/${head}" "$attr" "$fattr" "$out" $box \
+        > "${out}.log" 2>&1 < /dev/null
+    if [ $? -ne 0 ]; then
+        echo "not ok $test"
+        sed 's/^/# /' "${out}.log"
+        rm -f "$out" "${out}.log"
+        continue
+    fi
+
+    if [ "$skip" = yes ] || [ -z "$reference" ]; then
+        echo "ok $test"
+        echo "# $name: SVG text comparison skipped"
+        rm -f "$out" "${out}.log"
+        continue
+    fi
+
+    grep '^<text ' "$out" | sort > "${out}.got"
+    grep '^<text ' "${fixtures}/${reference}" | sort > "${out}.ref"
+    if diff -u "${out}.ref" "${out}.got" > "${out}.diff" 2>&1; then
+        echo "ok $test"
+    else
+        echo "not ok $test"
+        sed 's/^/# /' "${out}.diff"
+    fi
+    rm -f "$out" "${out}.log" "${out}.got" "${out}.ref" "${out}.diff"
+done < "$data"

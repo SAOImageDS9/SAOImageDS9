@@ -45,6 +45,28 @@ c     The UnitNormMap class does not define any new functions beyond those
 f     The UnitNormMap class does not define any new routines beyond those
 *     which are applicable to all Mappings.
 
+*  Notes:
+*     - Both transformations are discontinuous at the centre. The forward
+*     transformation tests whether the supplied position coincides with the
+*     centre, and the inverse tests whether the supplied norm is zero; each
+*     test is exact, because a position that differs from the centre by any
+*     representable amount does have a direction, and reporting it is more
+*     useful than discarding it.
+*     - A consequence is that a Mapping which computes a position close to a
+*     UnitNormMap's centre, rather than supplying one directly, may not give
+*     the same result on every platform. Composing the inverse of one
+*     UnitNormMap with the forward transformation of another whose centre is
+*     the position the first one reconstructs is the case to watch: the
+*     reconstruction is a multiply-add, and a compiler is free to contract it
+*     into a fused multiply-add, which rounds once instead of twice. Where the
+*     unfused arithmetic lands exactly on the second centre the fused
+*     arithmetic can land a few ulp away, so one build reports no direction
+*     while the other reports a direction derived from that residue. The fused
+*     result is the correctly rounded one; neither is a defect, but a caller
+*     that needs the same answer everywhere should avoid depending on an exact
+*     coincidence with the centre, or build with floating-point contraction
+*     disabled.
+
 *  Copyright:
 *     Copyright (C) 2016 University of Washington
 
@@ -78,6 +100,16 @@ f     The UnitNormMap class does not define any new routines beyond those
 *        UnitNormMap but "Nout" for an inverted UnitNormMap. Previously,
 *        it was always assumed to be Nin, which lead to a memory leak in
 *        the Copy function, etc.
+*     6-MAY-2026 (TJ):
+*        Added Equal method to allow astEqual comparisons.
+*     29-JUN-2026 (TJ):
+*        Fix heap buffer over-read in Equal: the centre array has one
+*        element per uninverted axis (min of Nin and Nout), so comparing
+*        two inverted UnitNormMaps must not loop up to the inverted Nin.
+*     8-SEP-2026 (TIMJ):
+*        Record that both transformations are discontinuous at the centre,
+*        and that a composition which reconstructs a position on another
+*        UnitNormMap's centre is sensitive to floating-point contraction.
 *class--
 */
 
@@ -183,10 +215,88 @@ static int MapMerge( AstMapping *, int, int, int *, AstMapping ***, int **, int 
 static void Copy( const AstObject *, AstObject *, int * );
 static void Delete( AstObject *, int * );
 static void Dump( AstObject *, AstChannel *, int * );
+static int Equal( AstObject *, AstObject *, int * );
 static int GetIsLinear( AstMapping *, int * );
 
 /* Member functions. */
 /* ================= */
+static int Equal( AstObject *this_object, AstObject *that_object, int *status ) {
+/*
+*  Name:
+*     Equal
+
+*  Purpose:
+*     Test if two UnitNormMaps are equivalent.
+
+*  Type:
+*     Private function.
+
+*  Synopsis:
+*     #include "unitnormmap.h"
+*     int Equal( AstObject *this, AstObject *that, int *status )
+
+*  Class Membership:
+*     UnitNormMap member function (over-rides the astEqual protected
+*     method inherited from the astMapping class).
+
+*  Description:
+*     This function returns a boolean result (0 or 1) to indicate whether
+*     two UnitNormMaps are equivalent.
+*/
+
+/* Local Variables: */
+   AstUnitNormMap *that;
+   AstUnitNormMap *this;
+   int i;
+   int nc;
+   int nin;
+   int result;
+
+/* Initialise. */
+   result = 0;
+
+/* Check the global error status. */
+   if ( !astOK ) return result;
+
+/* Obtain pointers to the two UnitNormMap structures. */
+   this = (AstUnitNormMap *) this_object;
+   that = (AstUnitNormMap *) that_object;
+
+/* Check the second object is a UnitNormMap. */
+   if( astIsAUnitNormMap( that ) ) {
+
+/* Check Invert flags match. */
+      if( astGetInvert( this ) == astGetInvert( that ) ) {
+
+/* Check dimensionality matches. */
+         nin = astGetNin( this );
+         if( nin == astGetNin( that ) ) {
+
+/* The centre array holds one element per axis of the uninverted Mapping,
+   i.e. the smaller of Nin and Nout. Using Nin directly would over-run the
+   array for an inverted UnitNormMap (where Nin is the larger N+1 value). */
+            nc = astGetNout( this );
+            if( nin < nc ) nc = nin;
+
+/* Compare centre arrays element-by-element. */
+            result = 1;
+            for( i = 0; i < nc; i++ ) {
+               if( !astEQUAL( this->centre[ i ], that->centre[ i ] ) ) {
+                  result = 0;
+                  break;
+               }
+            }
+         }
+      }
+   }
+
+/* If an error occurred, clear the result value. */
+   if ( !astOK ) result = 0;
+
+/* Return the result. */
+   return result;
+}
+
 static int GetMappingType( AstMapping *map, int *status ) {
 /*
 *
@@ -576,6 +686,7 @@ void astInitUnitNormMapVtab_(  AstUnitNormMapVtab *vtab, const char *name, int *
    AstMappingVtab *mapping = (AstMappingVtab *) vtab;
    parent_getobjsize = object->GetObjSize;
    object->GetObjSize = GetObjSize;
+   object->Equal = Equal;
 
    parent_transform = mapping->Transform;
    mapping->Transform = Transform;

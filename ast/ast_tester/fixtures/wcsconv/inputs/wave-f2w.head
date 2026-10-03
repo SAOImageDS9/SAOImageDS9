@@ -1,0 +1,20 @@
+NAXIS1  =                 1024 / Spectral axis
+NAXIS2  =                  100 / Spatial axis
+NAXIS3  =                  100 / Spatial axis
+CTYPE1  = 'WAVE-F2W'           / Wavelength via frequency
+CTYPE2  = 'GLON-TAN'           / Galactic longitude
+CTYPE3  = 'GLAT-TAN'           / Galactic latitude
+CRVAL1  =         2.1106114E-1 / Reference wavelength (m)
+CRVAL2  =               45.000 / Reference Gal lon (deg)
+CRVAL3  =                5.000 / Reference Gal lat (deg)
+CRPIX1  =              513.000 / Reference pixel
+CRPIX2  =               50.500 / Reference pixel
+CRPIX3  =               50.500 / Reference pixel
+CDELT1  =         1.4868E-4    / Wavelength step (m)
+CDELT2  =        -0.00083333   / Pixel size (deg)
+CDELT3  =         0.00083333   / Pixel size (deg)
+CUNIT1  = 'm       '           / Wavelength units
+RESTFRQ =       1.420405752E9  / [Hz] Rest frequency
+SPECSYS = 'BARYCENT'           / Barycentric
+MJD-OBS =            52413.59  / MJD of observation
+END

@@ -1,0 +1,19 @@
+SIMPLE  =                    T / Fits standard
+BITPIX  =                  -32 / Bits per pixel
+NAXIS   =                    2 / Number of axes
+NAXIS1  =                  100 / length of data axis 1
+NAXIS2  =                  100 / length of data axis 2
+CTYPE1  = 'OFLN-TAN'           / Offset longitude
+CTYPE2  = 'OFLT-TAN'           / Offset latitude
+CRVAL1  =                0.000 / Reference offset lon (deg)
+CRVAL2  =                0.000 / Reference offset lat (deg)
+CRPIX1  =               50.500 / Reference pixel
+CRPIX2  =               50.500 / Reference pixel
+CDELT1  =              -0.0100 / Pixel size (deg)
+CDELT2  =               0.0100 / Pixel size (deg)
+RADESYS = 'FK5     '           / Reference frame
+EQUINOX =               2000.0 / Equinox
+SREFRA  =              180.000 / [deg] Sky reference RA
+SREFDEC =               45.000 / [deg] Sky reference Dec
+SREFIS  = 'ORIGIN  '           / Sky reference is origin
+END

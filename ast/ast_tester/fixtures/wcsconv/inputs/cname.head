@@ -1,0 +1,18 @@
+NAXIS1  =                  100 / length of data axis 1
+NAXIS2  =                  100 / length of data axis 2
+CTYPE1  = 'RA---TAN'           / Celestial longitude
+CTYPE2  = 'DEC--TAN'           / Celestial latitude
+CRVAL1  =              120.000 / Reference RA (deg)
+CRVAL2  =               30.000 / Reference Dec (deg)
+CRPIX1  =               50.500 / Reference pixel on axis 1
+CRPIX2  =               50.500 / Reference pixel on axis 2
+CDELT1  =           -0.0002778 / Degrees/pixel
+CDELT2  =            0.0002778 / Degrees/pixel
+CNAME1  = 'Right Ascension'    / Axis name for axis 1
+CNAME2  = 'Declination'        / Axis name for axis 2
+RADESYS = 'FK5     '           / Reference frame
+EQUINOX =               2000.0 / Equinox of coordinates
+MJD-AVG =          58000.50000 / Average MJD of observation
+DATE-OBS= '15/06/98'           / Old-format date (dd/mm/yy)
+TIMESYS = 'TAI     '           / Time scale
+END

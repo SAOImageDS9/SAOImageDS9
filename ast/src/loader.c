@@ -50,6 +50,7 @@
 #include "specframe.h"
 #include "specmap.h"
 #include "sphmap.h"
+#include "splinemap.h"
 #include "tranmap.h"
 #include "selectormap.h"
 #include "switchmap.h"
@@ -175,6 +176,7 @@ if ( !strcmp( class, #name ) ) return (AstLoaderType *) astLoad##name##_
    LOAD(SpecFrame);
    LOAD(SpecMap);
    LOAD(SphMap);
+   LOAD(SplineMap);
    LOAD(SelectorMap);
    LOAD(SwitchMap);
    LOAD(Table);
@@ -186,6 +188,7 @@ if ( !strcmp( class, #name ) ) return (AstLoaderType *) astLoad##name##_
    LOAD(WcsMap);
    LOAD(WinMap);
    LOAD(XmlChan);
+   LOAD(YamlChan);
    LOAD(XphMap);
    LOAD(ZoomMap);
 

@@ -111,6 +111,9 @@ f     The Box class does not define any new routines beyond those
 *        Updated Simplify method of determination of Polygon vertex order
 *        when the current frame is a SkyFrame to check whether the central
 *        point is inside (since SkyFrame regions are always bounded).
+*     8-SEP-2026 (TIMJ):
+*        Simplify: accumulate the slice verdict over every constant-fed
+*        PermMap input, rather than letting the last one decide.
 *class--
 */
 
@@ -3808,10 +3811,13 @@ static AstMapping *Simplify( AstMapping *this_mapping, int *status ) {
                lb = newbox->centre[ ic ] - newbox->extent[ ic ];
                ub = newbox->centre[ ic ] + newbox->extent[ ic ];
 
+/* Each constant-fed input is a separate plane that the slice must lie in,
+   so any one of them falling outside the Box empties the intersection.
+   Accumulate the verdict rather than replacing it. */
                if( closed == neg ) {
-                  isNull = ( k <= lb || k >= ub );
+                  if( k <= lb || k >= ub ) isNull = 1;
                } else {
-                  isNull = ( k < lb || k > ub );
+                  if( k < lb || k > ub ) isNull = 1;
                }
 
 /* If this input is fed the constant AST__BAD (i.e. does not depend on any of

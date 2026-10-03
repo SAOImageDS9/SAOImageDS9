@@ -1,0 +1,18 @@
+*  CNF_PAR -- Public constants for the CNF (C/Fortran interface) system.
+*  Minimal standalone version for 64-bit systems (pointer size = 8 bytes).
+*
+*  CNF_PVAL converts a PSX integer pointer value to a C pointer for use
+*  with Fortran's %val() construct.  On 64-bit systems the return type
+*  must be INTEGER*8 to hold the full pointer.
+
+*  Function to convert an INTEGER pointer value to a C pointer.
+      INTEGER*8 CNF_PVAL
+      EXTERNAL CNF_PVAL
+
+*  Function to convert a %LOC reference to an INTEGER.
+      INTEGER CNF_PREG
+      EXTERNAL CNF_PREG
+
+*  Cast INTEGER to correct size for trailing character-length arguments.
+      INTEGER*8 CNF_CVAL
+      EXTERNAL CNF_CVAL

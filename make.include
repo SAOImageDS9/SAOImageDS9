@@ -586,53 +586,55 @@ ast	: ast/Makefile ast/ast.h ast/.libs/libast.a ast/.libs/libast_err.a ast/.libs
 
 # AST 9.5.0's yamlchan.c picks its YAML backend from command-line defines that
 # upstream's m4/ast_yaml.m4 supplies through configure. The `configure' checked
-# in here predates that macro, so the defines are passed by hand instead, which
-# also pins the backend to the libyaml this tree vendors rather than letting a
-# libfyaml on the build host be chosen. Without them YAML_BACKEND is undefined,
-# every astRead on a YamlChan returns NULL, and ASDF/GWCS reading silently stops
-# working. (-DYAML itself the old configure already supplies when it finds
-# libyaml; only the backend name is missing.)
+# in here predates that macro, so the define is passed by hand, which also pins
+# the backend to the libyaml this tree vendors rather than letting a libfyaml on
+# the build host be chosen. Without it YAML_BACKEND is undefined, every astRead
+# on a YamlChan returns NULL, and ASDF/GWCS reading silently stops working.
+# (-DYAML itself the old configure already supplies when it finds libyaml; only
+# the backend name is missing.)
 #
-# The sed is not decoration. YAML_BACKEND has to reach the compiler as a string
-# literal, so ast/Makefile must contain \"libyaml\" - the shell that runs the
-# compile strips one layer. Passing the backslashes through configure does not
-# work: it rewrites precious variables as it substitutes them, and every
-# escaping tried came out either unescaped ("libyaml", which the shell eats,
-# leaving a bare identifier) or doubled. Letting configure write the plain form
-# and escaping it afterwards is the one step that is predictable.
+# It goes on the `make' command line, not through configure. YAML_BACKEND has to
+# reach the compiler as a string literal, so the quotes must survive to the
+# shell that runs the compile. Two routes do not work:
 #
-# Order matters: the sed has to come after the touch, and Makefile has to end
-# up newer than Makefile.in and config.status. Otherwise automake's own
-# `Makefile: Makefile.in config.status' rule fires on the next make, rebuilds
-# Makefile from config.status, and silently undoes the escaping. The grep is
-# there because that failure is invisible - the build just reverts to a bare
-# identifier and stops compiling.
+#   - passing it in configure's CPPFLAGS: configure rewrites precious variables
+#     as it substitutes them, and the quotes come out either stripped (leaving
+#     a bare identifier, which does not compile) or doubled
+#   - escaping it in ast/Makefile afterwards with sed: automake's own
+#     `Makefile: Makefile.in config.status' rule re-runs config.status on the
+#     next make and regenerates Makefile, discarding the edit. Whether it fires
+#     depends on file timestamps, so this passed on macOS and failed on
+#     cygwin/mingw, where the regeneration happened and the Windows build broke
+#     with "expected ')' before 'libyaml'".
+#
+# A command-line variable overrides whatever is in the Makefile and is immune to
+# the regeneration, so it does not depend on timestamps at all. It replaces
+# configure's CPPFLAGS wholesale, so it has to carry what configure put there:
+# the standard/warning flags, and the include path --with-yaml adds.
+ASTCPPFLAGS	= CPPFLAGS='-std=gnu99 -w -DYAML_BACKEND=\"libyaml\" -I$(includedir)'
+
 ast/Makefile :
 	@echo ""
 	@echo "*** $@ ***"
 	cd ast; \
 	./configure \
 	$(ASTFLAGS) \
-	CPPFLAGS='-std=gnu99 -w -DYAML_BACKEND="libyaml"' \
+	CPPFLAGS='-std=gnu99 -w' \
 	--without-pthreads --enable-shared=no \
 	--with-yaml=$(prefix) \
 	star_cv_cnf_trail_type=long star_cv_cnf_f2c_compatible=no \
 	$(CONFIGFLAGS) \
 	$(PREFIX)
 	cd ast; touch configure.ac aclocal.m4 configure Makefile.am Makefile.in config.h.in
-	cd ast; sed -i.bak 's|-DYAML_BACKEND="libyaml"|-DYAML_BACKEND=\\"libyaml\\"|' Makefile; \
-	rm -f Makefile.bak; touch Makefile config.status config.h stamp-h1; \
-	grep -q 'YAML_BACKEND=\\"libyaml' Makefile || \
-	{ echo "ast: YAML_BACKEND escaping did not apply" >&2; exit 1; }
 
 ast/ast.h :
 	@echo ""
 	@echo "*** $@ ***"
-	$(MAKE) -C ast -j ast.h
-	$(MAKE) -C ast -j $(JOBS) libast.la
-	$(MAKE) -C ast -j $(JOBS) libast_err.la
-	$(MAKE) -C ast -j $(JOBS) libast_pal.la
-	$(MAKE) -C ast -j $(JOBS) libast_cminpack.la
+	$(MAKE) -C ast -j ast.h $(ASTCPPFLAGS)
+	$(MAKE) -C ast -j $(JOBS) libast.la $(ASTCPPFLAGS)
+	$(MAKE) -C ast -j $(JOBS) libast_err.la $(ASTCPPFLAGS)
+	$(MAKE) -C ast -j $(JOBS) libast_pal.la $(ASTCPPFLAGS)
+	$(MAKE) -C ast -j $(JOBS) libast_cminpack.la $(ASTCPPFLAGS)
 	cp ast/ast.h $(includedir)/.
 	cp ast/src/grf.h $(includedir)/.
 	cp ast/src/grf3d.h $(includedir)/.
@@ -644,7 +646,7 @@ ast/ast.h :
 ast/.libs/libast.a :
 	@echo ""
 	@echo "*** $@ ***"
-	$(MAKE) -C ast -j ast.h
+	$(MAKE) -C ast -j ast.h $(ASTCPPFLAGS)
 	cp ast/ast.h $(includedir)/.
 	cp ast/grf.h $(includedir)/.
 	cp ast/grf3d.h $(includedir)/.
@@ -652,19 +654,19 @@ ast/.libs/libast.a :
 ast/.libs/libast_err.a :
 	@echo ""
 	@echo "*** $@ ***"
-	$(MAKE) -C ast -j $(JOBS) libast_err.la
+	$(MAKE) -C ast -j $(JOBS) libast_err.la $(ASTCPPFLAGS)
 	cp ast/.libs/libast_err.a $(libdir)/.
 
 ast/.libs/libast_pal.a :
 	@echo ""
 	@echo "*** $@ ***"
-	$(MAKE) -C ast -j $(JOBS) libast_pal.la
+	$(MAKE) -C ast -j $(JOBS) libast_pal.la $(ASTCPPFLAGS)
 	cp ast/.libs/libast_pal.a $(libdir)/.
 
 ast/.libs/libast_cminpack.a :
 	@echo ""
 	@echo "*** $@ ***"
-	$(MAKE) -C ast -j $(JOBS) libast_cminpack.la
+	$(MAKE) -C ast -j $(JOBS) libast_cminpack.la $(ASTCPPFLAGS)
 	cp ast/.libs/libast_cminpack.a $(libdir)/.
 
 #-------------------------- funtools

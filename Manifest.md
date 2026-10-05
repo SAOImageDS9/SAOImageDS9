@@ -1,6 +1,6 @@
 # List of SAOImageDS9 packages
 
-Last updated 2026-08-20
+Last updated 2026-10-05
 
 | name         | version    | SAO   | dirty | upstream                                                             | latest                          |
 | ------------ | ---------- | ----- | ----- | -------------------------------------------------------------------- | ------------------------------- |
@@ -35,7 +35,7 @@ Last updated 2026-08-20
 | tls          | 2.0        |       | y     | https://core.tcl-lang.org/tcltls/index                               | 2.0 (5)                         |
 | ttkthemes    | 3.3.0      |       |       | https://github.com/TkinterEP/ttkthemes/                              | 3.3.0                           |
 | vector       |            | y     |       |                                                                      |                                 |
-| xpa          | 2.2.1      | y     | y     | https://github.com/SAOImageDS9/xpa-maintenance                       | 2.2.1                           |
+| xpa          | 2.2.2      | y     |       | https://github.com/SAOImageDS9/xpa-maintenance                       | 2.2.2                           |
 | -- -- --     |            |       |       |                                                                      |                                 |
 | compilers    |            | y     |       |                                                                      |                                 |
 | macos        |            | y     |       |                                                                      |                                 |

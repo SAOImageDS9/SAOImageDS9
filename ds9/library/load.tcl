@@ -172,19 +172,23 @@ proc ProcessLoad {{err 1}} {
 		allocgz -
 		channel -
 		var -
-		photo {}
+		photo -
+		socket -
+		socketgz {}
 
 		mmap -
 		mmapincr {
-		    set loadParam(load,type) allocgz
+		    # nrrd has no allocgz loader
+		    switch -- $loadParam(file,type) {
+			nrrd {set loadParam(load,type) alloc}
+			default {set loadParam(load,type) allocgz}
+		    }
 		    set loadParam(file,fn) $loadParam(file,name)
 		}
 
 		smmap -
 		shared -
-		sshared -
-		socket -
-		socketgz {Error "[msgcat::mc {This function is not currently supported for this port.}]"}
+		sshared {Error "[msgcat::mc {This function is not currently supported for this port.}]"}
 	    }
 	}
     }

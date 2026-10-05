@@ -27,12 +27,12 @@
 # ast 9.2.14
 # funtools 1.5.0
 # zlib 1.2.8
-# xpa 2.2.1
+# xpa 2.2.2
 # libxslt 1.1.29
 # openssl 1.0.2u
 
 DS9_VERSION	= 8.8
-XPA_VERSION	= 2.2.1
+XPA_VERSION	= 2.2.2
 TCL_VERSION	= 9.0
 TCL_MAJOR_VERSION = $(firstword $(subst ., ,$(TCL_VERSION)))
 

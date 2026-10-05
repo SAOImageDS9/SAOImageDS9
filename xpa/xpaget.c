@@ -157,6 +157,17 @@ main(argc, argv)
 
   /* we only send to stdout */
   fds[0] = fileno(stdout);
+#if HAVE_MINGW32
+  /*
+   * The Windows C runtime opens stdout in text mode by default.  FITS and
+   * other binary data must not undergo LF to CR/LF translation when
+   * written by XPAGetFd().
+   */
+  if( setmode(fds[0], O_BINARY) == -1 ){
+    perror("XPA$ERROR: could not set stdout to binary mode");
+    exit(1);
+  }
+#endif
 
 again:
   /* if we are in server mode, we might have to read a line from stdin

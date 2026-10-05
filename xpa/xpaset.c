@@ -86,6 +86,17 @@ main(argc, argv)
 
   /* read from stdin */
   fd = fileno(stdin);
+#if HAVE_MINGW32
+  /*
+   * The Windows C runtime opens stdin in text mode by default.  FITS and
+   * other binary data must not undergo CR/LF translation or Ctrl-Z EOF
+   * handling while being passed to XPASetFd().
+   */
+  if( setmode(fd, O_BINARY) == -1 ){
+    perror("XPA$ERROR: could not set stdin to binary mode");
+    exit(1);
+  }
+#endif
 
   /* we want the args in the same order in which they arrived, and
      gnu getopt sometimes changes things without this */

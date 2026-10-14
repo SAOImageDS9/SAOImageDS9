@@ -150,6 +150,7 @@ frame/fitscompress.C
 frame/fitsdata.C
 frame/fitsenvi.C
 frame/fitshealpix.C
+frame/fitshpxreproj.C
 frame/fitsimage.C
 frame/fitsmap.C
 frame/fitsmask.C

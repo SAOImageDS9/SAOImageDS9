@@ -70,9 +70,11 @@ key		{RET(KEY_)}
 layout		{RET(LAYOUT_)}
 little   	{RET(LITTLE_)}
 littleendian	{RET(LITTLEENDIAN_)}
+lon0		{RET(LON0_)}
 nested		{RET(NESTED_)}
 north		{RET(NORTH_)}
 order		{RET(ORDER_)}
+proj		{RET(PROJ_)}
 quad		{RET(QUAD_)}
 ring		{RET(RING_)}
 skip		{RET(SKIP_)}

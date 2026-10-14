@@ -13,6 +13,8 @@
 #define GOTOFILT(x) {yyclearin; ffFilter(x);}
 #define GOTOARR(x) {yyclearin; ffArray(x);}
 
+#include <stdlib.h>
+
 #include "file.h"
 #include "hpx.h"
 
@@ -60,9 +62,11 @@ extern void ffArray(int);
 %token LAYOUT_
 %token LITTLE_
 %token LITTLEENDIAN_
+%token LON0_
 %token NESTED_
 %token NORTH_
 %token ORDER_
+%token PROJ_
 %token QUAD_
 %token RING_
 %token SKIP_
@@ -272,6 +276,17 @@ hpx	: SYSTEM_ '=' hpxSystem
 	| LAYOUT_ '=' hpxLayout
 	| COL_ '=' INT {ff->setpHPXColumn($3);}
 	| QUAD_ '=' INT {ff->setpHPXQuad($3);}
+	| PROJ_ '=' STRING {ff->setpHPXProj($3);}
+	| LON0_ '=' INT {ff->setpHPXLon0($3);}
+	| LON0_ '=' STRING
+	{
+	  // reals lex as STRING (e.g. -60.5)
+	  char* end;
+	  double lon0 = strtod($3, &end);
+	  if (end == $3 || *end)
+	    YYERROR;
+	  ff->setpHPXLon0(lon0);
+	}
 	;
 
 hpxSystem : EQUATORIAL_ {ff->setpHPXSystem(FitsHPX::EQU);}

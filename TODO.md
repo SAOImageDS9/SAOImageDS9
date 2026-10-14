@@ -153,43 +153,57 @@ and use `lon=` for the centre longitude instead.
   image saved from the prototype, so it is in the existing `data` command
   path (`Base::getDataValuesCmd`), not in the HEALPix code.
 
-### Phase 2: Real option plumbing
+### Phase 2: Real option plumbing -- in progress 2026-10-14
 
-- [ ] Move `FitsHPXReproj` into `tksao/frame/fitshpxreproj.{C,h}`. Add the
-      new file to the source list next to `frame/fitshealpix.C` in
-      **both** `tksao/configure.ac` and the checked-in `tksao/configure`
-      (~line 6345). Don't run autoconf: the checked-in file is from
-      2.71 and the 2.73 in `$HOME/local/bin` rewrites it (see AGENTS.md).
-      Then `rm tksao/Makefile` before rebuilding so configure reruns.
-- [ ] Replace the `DS9_HPX_PROJ`/`DS9_HPX_LON` env vars with the parsed
-      options below.
-
-- [ ] `fitsy/file.h/.C`: add `pHPXProj_` (+ getter/setter) and
-      `pHPXLon_` (centre longitude in degrees, default 0; the existing
-      `quad` only steps by 90 deg). Default for `pHPXProj_` is "none",
-      meaning use today's behaviour: HPX, or XPH when
-      `layout=north|south`.
-- [ ] `fitsy/lex.L` + `fitsy/parser.Y`: new keywords
-      `proj=ait|mol|car|sfl|par|cea` and `lon=<real>`. Keep
-      `layout=north|south` as the way to get XPH (backwards
-      compatibility). Accepting `proj=hpx|xph` as well would be a
-      convenience, but then decide what `proj=hpx,layout=north` means.
-  - [ ] Regenerate on this Mac: `/usr/bin/bison` (2.3) and
-        `/usr/bin/flex` (2.6.4) match the checked-in `fitsy/parser.C` and
-        `fitsy/lex.C`. (Don't do it on the Linux box: its bison 3.8.2
-        rewrites the whole file.) Do the no-op check from AGENTS.md first:
-        `cd fitsy && make parser` with no edits, `git diff` must be empty.
-  - [ ] Use the narrow `parser` target in `fitsy/Makefile` (it runs both
-        bison and flex), not `parsers`.
-  - [ ] Rebuild: `fitsy` is its own library, so
-        `make fitsyclean fitsy tksaoclean tksao ds9clean ds9`.
-        (AGENTS.md only lists the tksao/ds9 cases.)
+- [x] Moved `FitsHPXReproj` into `tksao/frame/fitshpxreproj.{C,h}`;
+      added to the source lists in `tksao/configure.ac` and the
+      checked-in `tksao/configure` by hand; `rm tksao/Makefile` and
+      rebuilt (configure needs the original `PKG_CONFIG_PATH`, see
+      AGENTS.md). Projection codes now match exactly (`strcmp`), not by
+      prefix.
+- [x] Replaced the `DS9_HPX_PROJ`/`DS9_HPX_LON` env vars with the parsed
+      options.
+- [x] `fitsy/file.h/.C`: `pHPXProj_` (string, default NULL = today's
+      behaviour: HPX, or XPH with `layout=north|south`) and `pHPXLon0_`
+      (degrees, default 0).
+- [x] `fitsy/lex.L` + `fitsy/parser.Y`: keywords `proj` and `lon0`.
+  - Named `lon0`, not `lon`: every bracket keyword is reserved
+    (case-insensitive) inside `[...]`, so `lon` would have broken e.g.
+    `[bin=lon,lat]` for a table with a LON column.
+  - `proj=<STRING>` is stored as given; `tksao` upper-cases it and an
+    unknown code makes the load fail. `proj=hpx` is the default
+    behaviour. Projection names are not lexer keywords, so `car`,
+    `par`, ... stay usable as extension/column names.
+  - `lon0=<INT>` or `lon0=<STRING>` parsed with `strtod` (the lexer
+    returns reals like `-60.5` as STRING). `+60.5` doesn't lex as one
+    token and falls through to a parse error (filter), same as other
+    numeric options.
+  - Regenerated with this Mac's tools: bison 2.3 (`parser.C`/`.H`
+    otherwise byte-identical) and Xcode flex. The no-op check showed
+    Xcode flex is **not** byte-identical with the checked-in `lex.C`
+    and its output doesn't compile against the checked-in
+    `fitsy/FlexLexer.h`, so `fitsy/FlexLexer.h` is now Xcode's (plus
+    the local public `begin(int,int)`) and `nrrdlex.C`/`envilex.C` were
+    regenerated too (`make parser nrrdparser enviparser`; their parsers
+    came out identical). Expect skeleton-only churn in the three
+    `lex.C` files. Details in AGENTS.md.
+  - [x] Rebuild: `make fitsyclean fitsy tksaoclean tksao ds9clean ds9`.
+- [x] `Tests/hpxproj.sh` uses `proj=`/`lon0=`; adds checks for
+      `proj=hpx`, case-insensitivity, unknown `proj=` failing to load,
+      and a real `lon0=-60.5` (CRVAL1 299.5). All pass, plus the exact
+      `reproject` comparisons.
+- [x] Filename-parsing regression: the bracket expressions from
+      `Tests/parse.sh`, plus filters containing `=` (`[pha=5]`,
+      `[pha=1:10]`, `[pha=3:8,pi>10]`), load with the expected bin
+      columns and filter text. (Not compared against a pre-change
+      build.)
+- [x] Docs: `ds9/doc/ref/file.html`, "FITS HEALPIX Table": description,
+      `proj=`/`lon0=` in the parameter list, two examples.
+- [ ] Release-notes entry: 8.8 is released and there's no
+      `ds9/doc/release/r8.9.html` yet; needs the next version decided.
 - [ ] Optional Tcl side: a preference or command-line option for the
       default HEALPix projection (there is no Tcl UI for the HEALPix
       options today; everything goes through the filename brackets).
-- [ ] Docs: `ds9/doc/ref/file.html`, "FITS HEALPIX Table" section; add
-      `proj=` / `lon=` to the syntax and parameter lists.
-- [ ] Release-notes entry.
 
 ### Phase 3: Testing
 

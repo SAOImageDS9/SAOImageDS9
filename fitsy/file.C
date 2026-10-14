@@ -129,6 +129,8 @@ FitsFile::FitsFile()
   pHPXLayout_ =-1;
   pHPXColumn_ =-1;
   pHPXQuad_ =-1;
+  pHPXProj_ =NULL;
+  pHPXLon0_ =0;
 
   pCRPIX3_ =1;
   pCRVAL3_ =1;
@@ -184,6 +186,9 @@ FitsFile::~FitsFile()
 
   if (pBinZ_)
     delete [] pBinZ_;
+
+  if (pHPXProj_)
+    delete [] pHPXProj_;
 }
 
 // Compare the data layout described by two headers.
@@ -373,6 +378,14 @@ void FitsFile::setpExt(const char* n)
     delete [] pExt_;
 
   pExt_ = dupstr(n);
+}
+
+void FitsFile::setpHPXProj(const char* pp)
+{
+  if (pHPXProj_)
+    delete [] pHPXProj_;
+
+  pHPXProj_ = dupstr(pp);
 }
 
 void FitsFile::setpBinX(const char* x)

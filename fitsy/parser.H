@@ -60,18 +60,20 @@
      LAYOUT_ = 276,
      LITTLE_ = 277,
      LITTLEENDIAN_ = 278,
-     NESTED_ = 279,
-     NORTH_ = 280,
-     ORDER_ = 281,
-     QUAD_ = 282,
-     RING_ = 283,
-     SKIP_ = 284,
-     SOUTH_ = 285,
-     SYSTEM_ = 286,
-     UNKNOWN_ = 287,
-     XDIM_ = 288,
-     YDIM_ = 289,
-     ZDIM_ = 290
+     LON0_ = 279,
+     NESTED_ = 280,
+     NORTH_ = 281,
+     ORDER_ = 282,
+     PROJ_ = 283,
+     QUAD_ = 284,
+     RING_ = 285,
+     SKIP_ = 286,
+     SOUTH_ = 287,
+     SYSTEM_ = 288,
+     UNKNOWN_ = 289,
+     XDIM_ = 290,
+     YDIM_ = 291,
+     ZDIM_ = 292
    };
 #endif
 /* Tokens.  */
@@ -96,25 +98,27 @@
 #define LAYOUT_ 276
 #define LITTLE_ 277
 #define LITTLEENDIAN_ 278
-#define NESTED_ 279
-#define NORTH_ 280
-#define ORDER_ 281
-#define QUAD_ 282
-#define RING_ 283
-#define SKIP_ 284
-#define SOUTH_ 285
-#define SYSTEM_ 286
-#define UNKNOWN_ 287
-#define XDIM_ 288
-#define YDIM_ 289
-#define ZDIM_ 290
+#define LON0_ 279
+#define NESTED_ 280
+#define NORTH_ 281
+#define ORDER_ 282
+#define PROJ_ 283
+#define QUAD_ 284
+#define RING_ 285
+#define SKIP_ 286
+#define SOUTH_ 287
+#define SYSTEM_ 288
+#define UNKNOWN_ 289
+#define XDIM_ 290
+#define YDIM_ 291
+#define ZDIM_ 292
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 32 "parser.Y"
+#line 34 "parser.Y"
 {
   float real;
   int integer;
@@ -122,7 +126,7 @@ typedef union YYSTYPE
   void* ptr;
 }
 /* Line 1529 of yacc.c.  */
-#line 126 "parser.H"
+#line 130 "parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

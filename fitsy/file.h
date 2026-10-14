@@ -63,6 +63,8 @@ protected:
   int pHPXLayout_;
   int pHPXColumn_;
   int pHPXQuad_;
+  char* pHPXProj_;           // reprojection code (AIT, MOL, ...) or NULL
+  double pHPXLon0_;          // reprojection centre longitude [deg]
 
   double pCRPIX3_;           // WCS_3 axis params
   double pCRVAL3_;
@@ -173,12 +175,16 @@ public:
   int pHPXLayout() {return pHPXLayout_;}
   int pHPXColumn() {return pHPXColumn_;}
   int pHPXQuad() {return pHPXQuad_;}
+  const char* pHPXProj() {return pHPXProj_;}
+  double pHPXLon0() {return pHPXLon0_;}
 
   void setpHPXOrder(int oo) {pHPXOrder_ = oo;}
   void setpHPXSystem(int ss) {pHPXSystem_ = ss;}
   void setpHPXLayout(int ll) {pHPXLayout_ = ll;}
   void setpHPXColumn(int cc) {pHPXColumn_ = cc-1;}
   void setpHPXQuad(int qq) {pHPXQuad_ = qq-1;}
+  void setpHPXProj(const char*);
+  void setpHPXLon0(double ll) {pHPXLon0_ = ll;}
 
   double pCRPIX3() {return pCRPIX3_;}
   double pCRVAL3() {return pCRVAL3_;}

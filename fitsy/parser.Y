@@ -102,7 +102,7 @@ command	: filename
 	| filename hpxs
 	| filename hpxs sect
 	| filename sect hpxs
-	| filename '[' extb hpxs ']'
+	| filename '[' extb hpxsb ']'
 
         | filename arrs
         | filename arrs sect

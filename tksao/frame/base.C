@@ -704,6 +704,68 @@ void Base::calcAlignWCS(FitsImage* fits1,
   }
 }
 
+// Local linear approximation of map's forward transform at cc, by
+// central differences of +/-0.5 input pixel along the first two input
+// axes. fit[] is filled in astLinearApprox() layout. Returns 0 if any
+// point is off the sky, or if the one-sided gradients disagree (the
+// probe straddles a discontinuity such as a projection seam).
+static int localLinearApprox(AstMapping* map, int nin, int nout,
+			     const double* cc, double* fit)
+{
+  const int np = 5; // c, c-dx, c+dx, c-dy, c+dy
+  const double hh = .5;
+  double in[4*np];
+  double out[4*np];
+  if (nin<2 || nin>4 || nout<2 || nout>4)
+    return 0;
+
+  for (int ii=0; ii<nin; ii++)
+    for (int pp=0; pp<np; pp++)
+      in[ii*np+pp] = cc[ii];
+  in[0*np+1] -= hh;
+  in[0*np+2] += hh;
+  in[1*np+3] -= hh;
+  in[1*np+4] += hh;
+
+  astTranN(map, np, nin, np, in, 1, nout, np, out);
+  if (!astOK) {
+    astClearStatus;
+    return 0;
+  }
+  for (int ii=0; ii<nout*np; ii++)
+    if (!(fabs(out[ii]) < FLT_MAX))
+      return 0;
+
+  // one-sided gradients along x and y, for the first two output axes
+  for (int dd=0; dd<2; dd++) {
+    int lo = 1+2*dd;
+    int hi = 2+2*dd;
+    double back[2], fwd[2];
+    for (int oo=0; oo<2; oo++) {
+      back[oo] = (out[oo*np+0]-out[oo*np+lo])/hh;
+      fwd[oo] = (out[oo*np+hi]-out[oo*np+0])/hh;
+    }
+    double nb = sqrt(back[0]*back[0]+back[1]*back[1]);
+    double nf = sqrt(fwd[0]*fwd[0]+fwd[1]*fwd[1]);
+    double dg = sqrt((fwd[0]-back[0])*(fwd[0]-back[0]) +
+		     (fwd[1]-back[1])*(fwd[1]-back[1]));
+    if (dg > .5*(nb>nf ? nb : nf))
+      return 0;
+  }
+
+  for (int oo=0; oo<nout; oo++) {
+    double gx = (out[oo*np+2]-out[oo*np+1])/(2*hh);
+    double gy = (out[oo*np+4]-out[oo*np+3])/(2*hh);
+    fit[oo] = out[oo*np+0] - gx*cc[0] - gy*cc[1];
+    for (int ii=0; ii<nin; ii++)
+      fit[nout+oo*nin+ii] = 0;
+    fit[nout+oo*nin+0] = gx;
+    fit[nout+oo*nin+1] = gy;
+  }
+
+  return 1;
+}
+
 Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2, 
 			  Coord::CoordSystem sys1, Coord::CoordSystem sys2,
 			  Coord::SkyFrame sky)
@@ -743,9 +805,10 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
   Vector ll2 = center2 - Vector(10,10);
   Vector ur2 = center2 + Vector(10,10);
   if (fits2->isHPX()) {
+    // off-sky points come back as AST__BAD (-DBL_MAX), which is finite,
+    // so test with checkWCS() rather than isnan()/isinf()
     Vector cc = wcsTran(context, cvt, fits1->center(), 0);
-    if (!isnan(cc[0]) && !isinf(cc[0]) &&
-	!isnan(cc[1]) && !isinf(cc[1])) {
+    if (fits2->checkWCS(cc)) {
       center2 = cc;
 
       // A fixed +/-10 pixel probe box (sized for two images with
@@ -764,8 +827,7 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
       BBox bb(cc);
       for (int ii=0; ii<4; ii++) {
 	Vector pp = wcsTran(context, cvt, fits1->center()+corner[ii], 0);
-	if (!isnan(pp[0]) && !isinf(pp[0]) &&
-	    !isnan(pp[1]) && !isinf(pp[1]))
+	if (fits2->checkWCS(pp))
 	  bb.bound(pp);
       }
       bb.expand(bb.size()*.1 + Vector(2,2));
@@ -788,19 +850,61 @@ Matrix Base::calcAlignWCS(FitsImage* fits1, FitsImage* fits2,
 
   int ss = (naxes1+1)*naxes2;
   double* fit = new double[ss];
+  double* loc = new double[ss];
+
+  // local linear approximation at the probe centre, used to scale the
+  // tolerance and as the fallback when no fit within tolerance exists
+  double cc[4];
+  cc[0] = (ll[0]+ur[0])/2.;
+  cc[1] = (ll[1]+ur[1])/2.;
+  cc[2] = ll[2];
+  cc[3] = ll[3];
+  int locOK = localLinearApprox((AstMapping*)cvt, naxes1, naxes2, cc, loc);
+
+  // tol is in fits1 pixels. When fits2's pixels are much coarser than
+  // fits1's, a fit can't place fits2 better than about half a fits2
+  // pixel anyway, and a fixed 1 pixel rejects ordinary projection
+  // curvature across the probe box. Use half a fits2 pixel, in fits1
+  // pixels (from the local Jacobian), but never less than 1.
   double tol = 1;
+  if (locOK) {
+    double det = loc[naxes2]*loc[naxes2+naxes1+1] -
+      loc[naxes2+1]*loc[naxes2+naxes1];
+    double half = .5*sqrt(fabs(det));
+    if (half > tol)
+      tol = half;
+  }
+
   // astLinearApprox() returns non-zero on success; on failure it sets
   // fit[] to AST__BAD, so checking "!= AST__BAD" against the int return
   // value is always true and silently accepts a bad/degenerate fit.
+  double* use = NULL;
   if (astLinearApprox(cvt, ll, ur, tol, fit) != 0)
+    use = fit;
+  else {
+    astClearStatus;
+    if (locOK) {
+      use = loc;
+      Tcl_SetVar2(interp, "ds9", "msg", "WCS alignment: no linear fit between the frames within tolerance; using a local approximation at the centre, so alignment is approximate away from it.", TCL_GLOBAL_ONLY);
+      Tcl_SetVar2(interp, "ds9", "msg,level", "warning", TCL_GLOBAL_ONLY);
+    }
+    else {
+      Tcl_SetVar2(interp, "ds9", "msg", "WCS alignment failed: no linear mapping between the frames (e.g. the region spans a projection seam); the frames are not scaled or rotated to match.", TCL_GLOBAL_ONLY);
+      Tcl_SetVar2(interp, "ds9", "msg,level", "warning", TCL_GLOBAL_ONLY);
+    }
+  }
+
+  if (use)
     rr = Translate(.5, .5) *
-      Matrix(fit[naxes2], fit[naxes2+naxes1],
-  		fit[naxes2+1], fit[naxes2+naxes1+1],
-  		fit[0], fit[1]) *
+      Matrix(use[naxes2], use[naxes2+naxes1],
+  		use[naxes2+1], use[naxes2+naxes1+1],
+  		use[0], use[1]) *
       Translate(-.5, -.5);
 
   if (fit)
     delete [] fit;
+  if (loc)
+    delete [] loc;
 
   astEnd; // now, clean up memory
 

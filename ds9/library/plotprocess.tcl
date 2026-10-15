@@ -201,6 +201,59 @@ proc ProcessSendPlotCmd {proc id param {sock {}} {fn {}}} {
     plotsend::yyparse
 }
 
+# commands that operate on an existing plot
+proc PlotCmdCheck {} {
+    global cvarname
+
+    if {$cvarname == {}} {
+	Error [msgcat::mc {Unable to process plot command: no plot exists}]
+	return 0
+    }
+    return 1
+}
+
+proc PlotCmdCVAR0 {cmd} {
+    if {[PlotCmdCheck]} {
+	ProcessCmdCVAR0 $cmd
+    }
+}
+
+proc PlotCmdCVAR {key value {cmd {}}} {
+    if {[PlotCmdCheck]} {
+	ProcessCmdCVAR $key $value $cmd
+    }
+}
+
+proc PlotCmdCVAR2 {key value key2 value2 {cmd {}}} {
+    if {[PlotCmdCheck]} {
+	ProcessCmdCVAR2 $key $value $key2 $value2 $cmd
+    }
+}
+
+proc PlotCmdCVAROpt {cmd opt} {
+    if {[PlotCmdCheck]} {
+	ProcessCmdCVAROpt $cmd $opt
+    }
+}
+
+proc PlotSendCmdCVAR {cmd} {
+    if {[PlotCmdCheck]} {
+	ProcessSendCmdCVAR $cmd
+    }
+}
+
+proc PlotSendCmdCVARGet {key} {
+    if {[PlotCmdCheck]} {
+	ProcessSendCmdCVARGet $key
+    }
+}
+
+proc PlotSendCmdCVARGetYesNo {key} {
+    if {[PlotCmdCheck]} {
+	ProcessSendCmdCVARGetYesNo $key
+    }
+}
+
 proc PlotCmdRef {ref} {
     global iap
     global cvarname
@@ -303,6 +356,10 @@ proc PlotCmdAnalysisPlotStdin {which} {
 }
 
 proc PlotCmdData {dim} {
+    if {![PlotCmdCheck]} {
+	return
+    }
+
     global parse
     global cvarname
     upvar #0 $cvarname cvar
@@ -329,6 +386,10 @@ proc PlotCmdData {dim} {
 }
 
 proc PlotCmdLoad {fn dim} {
+    if {![PlotCmdCheck]} {
+	return
+    }
+
     global cvarname
     
     if {$fn != {}} {
@@ -339,7 +400,17 @@ proc PlotCmdLoad {fn dim} {
 
 proc PlotCmdSave {fn} {
     global cvarname
-    
+
+    if {$cvarname == {}} {
+	Error [msgcat::mc {Unable to save plot data: no plot exists}]
+	return
+    }
+    upvar #0 $cvarname cvar
+    if {![info exists cvar(graph,ds,xdata)] || $cvar(graph,ds,xdata) == {}} {
+	Error [msgcat::mc {Unable to save plot data: plot has no data}]
+	return
+    }
+
     if {$fn != {}} {
 	PlotSaveDataFile $cvarname $fn
 	FileLast apdatafbox $fn
@@ -347,6 +418,10 @@ proc PlotCmdSave {fn} {
 }
 
 proc PlotCmdBackup {fn} {
+    if {![PlotCmdCheck]} {
+	return
+    }
+
     global cvarname
     
     if {$fn != {}} {
@@ -365,6 +440,10 @@ proc PlotCmdRestore {fn} {
 }
 
 proc PlotCmdUpdateElement {which value} {
+    if {![PlotCmdCheck]} {
+	return
+    }
+
     global cvarname
     upvar #0 $cvarname cvar
 
@@ -373,6 +452,10 @@ proc PlotCmdUpdateElement {which value} {
 }
 
 proc PlotCmdFontStyle {which value} {
+    if {![PlotCmdCheck]} {
+	return
+    }
+
     global cvarname
     upvar #0 $cvarname cvar
 
@@ -394,6 +477,10 @@ proc PlotCmdFontStyle {which value} {
 }
 
 proc PlotCmdExport {format fn} {
+    if {![PlotCmdCheck]} {
+	return
+    }
+
     global cvarname
     upvar #0 $cvarname cvar
 

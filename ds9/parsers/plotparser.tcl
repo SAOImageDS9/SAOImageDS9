@@ -5802,7 +5802,7 @@ proc plot::yyparse {} {
                     18 { set _ $1 }
                     19 { set _ $1 }
                     21 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
-                    28 { ProcessCmdCVAR0 PlotGUI }
+                    28 { PlotCmdCVAR0 PlotGUI }
                     30 { PlotCmdSave $2 }
                     31 { PlotCmdRef $2 }
                     32 { PlotCmdData $2 }
@@ -5810,28 +5810,28 @@ proc plot::yyparse {} {
                     35 { PlotCmdRestore $2 }
                     38 { ProcessCmdCVAR0 PlotDestroy }
                     39 { ProcessCmdCVAR0 PlotDestroy }
-                    40 { ProcessCmdCVAR mode $2 PlotChangeMode }
-                    41 { ProcessCmdCVAROpt PlotAddGraph $3 }
-                    42 { ProcessCmdCVAR graph,current $3 PlotCurrentGraph }
-                    43 { ProcessCmdCVAR graph,current $3 PlotCurrentGraph }
-                    44 { ProcessCmdCVAR0 PlotDeleteGraphCurrent }
-                    45 { ProcessCmdCVAR canvas,layout $2 PlotChangeLayout }
-                    46 { ProcessCmdCVAR canvas,layout,strip,scale $4 PlotChangeLayout }
-                    48 { ProcessCmdCVAR canvas,foreground $2 PlotUpdateCanvasElement }
-                    49 { ProcessCmdCVAR canvas,background $2 PlotUpdateAllElement }
-                    50 { ProcessCmdCVAR canvas,grid,color $3 PlotUpdateCanvasElement }
-                    51 { ProcessCmdCVAR canvas,theme $2 PlotUpdateAllElement }
-                    52 { ProcessCmdCVAR graph,ds,current $3 PlotCurrentDataSet }
-                    53 { ProcessCmdCVAR graph,ds,current $2 PlotCurrentDataSet }
-                    54 { ProcessCmdCVAR graph,ds,current $3 PlotCurrentDataSet }
-                    55 { ProcessCmdCVAR graph,ds,current $2 PlotCurrentDataSet }
-                    56 { ProcessCmdCVAR graph,ds,current $2 PlotCurrentDataSet }
-                    58 { ProcessCmdCVAR0 PlotDeleteDataSetCurrent }
-                    59 { ProcessCmdCVAR0 PlotDeleteDataSetAll }
-                    60 { ProcessCmdCVAR stats $2 PlotStats }
-                    61 { ProcessCmdCVAR list $2 PlotList }
+                    40 { PlotCmdCVAR mode $2 PlotChangeMode }
+                    41 { PlotCmdCVAROpt PlotAddGraph $3 }
+                    42 { PlotCmdCVAR graph,current $3 PlotCurrentGraph }
+                    43 { PlotCmdCVAR graph,current $3 PlotCurrentGraph }
+                    44 { PlotCmdCVAR0 PlotDeleteGraphCurrent }
+                    45 { PlotCmdCVAR canvas,layout $2 PlotChangeLayout }
+                    46 { PlotCmdCVAR canvas,layout,strip,scale $4 PlotChangeLayout }
+                    48 { PlotCmdCVAR canvas,foreground $2 PlotUpdateCanvasElement }
+                    49 { PlotCmdCVAR canvas,background $2 PlotUpdateAllElement }
+                    50 { PlotCmdCVAR canvas,grid,color $3 PlotUpdateCanvasElement }
+                    51 { PlotCmdCVAR canvas,theme $2 PlotUpdateAllElement }
+                    52 { PlotCmdCVAR graph,ds,current $3 PlotCurrentDataSet }
+                    53 { PlotCmdCVAR graph,ds,current $2 PlotCurrentDataSet }
+                    54 { PlotCmdCVAR graph,ds,current $3 PlotCurrentDataSet }
+                    55 { PlotCmdCVAR graph,ds,current $2 PlotCurrentDataSet }
+                    56 { PlotCmdCVAR graph,ds,current $2 PlotCurrentDataSet }
+                    58 { PlotCmdCVAR0 PlotDeleteDataSetCurrent }
+                    59 { PlotCmdCVAR0 PlotDeleteDataSetAll }
+                    60 { PlotCmdCVAR stats $2 PlotStats }
+                    61 { PlotCmdCVAR list $2 PlotList }
                     65 { PlotCmdUpdateElement graph,ds,show $2 }
-                    66 { ProcessCmdCVAROpt PlotDataSetName $2 }
+                    66 { PlotCmdCVAROpt PlotDataSetName $2 }
                     69 { PlotCmdNew $3; PlotCmdLine $4 $5 $6 $7 }
                     70 { PlotCmdNew $3; PlotCmdLine $5 $6 $7 $8 }
                     71 { PlotCmdNew $3; PlotCmdBar $5 $6 $7 $8 }
@@ -5949,7 +5949,7 @@ proc plot::yyparse {} {
                     185 { set _ tabloid }
                     186 { set _ poster }
                     187 { set _ a4 }
-                    188 { ProcessCmdCVAR0 PlotPostScript }
+                    188 { PlotCmdCVAR0 PlotPostScript }
                     189 { ProcessCmdSet ps dest $2 }
                     190 { ProcessCmdSet ps cmd $2 }
                     191 { ProcessCmdSet ps filename $2 }
@@ -5969,15 +5969,15 @@ proc plot::yyparse {} {
                     205 { set _ column }
                     206 { set _ grid }
                     207 { set _ strip }
-                    208 { ProcessCmdCVAR "$1,family" $3 PlotUpdateCanvasElement }
-                    209 { ProcessCmdCVAR "$1,family" $3 PlotUpdateCanvasElement }
-                    210 { ProcessCmdCVAR "$1,size" $3 PlotUpdateCanvasElement }
-                    211 { ProcessCmdCVAR "$1,weight" $3 PlotUpdateCanvasElement }
-                    212 { ProcessCmdCVAR "$1,slant" $3 PlotUpdateCanvasElement }
+                    208 { PlotCmdCVAR "$1,family" $3 PlotUpdateCanvasElement }
+                    209 { PlotCmdCVAR "$1,family" $3 PlotUpdateCanvasElement }
+                    210 { PlotCmdCVAR "$1,size" $3 PlotUpdateCanvasElement }
+                    211 { PlotCmdCVAR "$1,weight" $3 PlotUpdateCanvasElement }
+                    212 { PlotCmdCVAR "$1,slant" $3 PlotUpdateCanvasElement }
                     213 { PlotCmdFontStyle $1 $3 }
-                    214 { ProcessCmdCVAR "$1,size" $3 PlotUpdateCanvasElement }
-                    215 { ProcessCmdCVAR "$1,weight" $3 PlotUpdateCanvasElement }
-                    216 { ProcessCmdCVAR "$1,slant" $3 PlotUpdateCanvasElement }
+                    214 { PlotCmdCVAR "$1,size" $3 PlotUpdateCanvasElement }
+                    215 { PlotCmdCVAR "$1,weight" $3 PlotUpdateCanvasElement }
+                    216 { PlotCmdCVAR "$1,slant" $3 PlotUpdateCanvasElement }
                     217 { PlotCmdFontStyle $1 $3 }
                     218 { set _ graph,title }
                     219 { set _ canvas,axis,title }
@@ -5986,24 +5986,24 @@ proc plot::yyparse {} {
                     222 { set _ canvas,legend,title }
                     223 { global cvarname; PlotDupDataSet $cvarname }
                     224 { global cvarname; PlotDupDataSet $cvarname }
-                    225 { ProcessCmdCVAR "graph,axis,$1,grid" $3 PlotChangeAxis }
-                    226 { ProcessCmdCVAR "graph,axis,$1,log" $3 PlotChangeAxis }
-                    227 { ProcessCmdCVAR "graph,axis,$1,flip" $3 PlotChangeAxis }
-                    228 { ProcessCmdCVAR "graph,axis,$1,auto" $3 PlotChangeAxis }
-                    229 { ProcessCmdCVAR "graph,axis,$1,min" $3 PlotChangeAxis }
-                    230 { ProcessCmdCVAR "graph,axis,$1,max" $3 PlotChangeAxis }
-                    231 { ProcessCmdCVAR "graph,axis,$1,format" $3 PlotChangeAxis }
-                    232 { ProcessCmdCVAR graph,legend $1 PlotChangeLegend }
-                    233 { ProcessCmdCVAR graph,legend,position $2 PlotChangeLegend }
+                    225 { PlotCmdCVAR "graph,axis,$1,grid" $3 PlotChangeAxis }
+                    226 { PlotCmdCVAR "graph,axis,$1,log" $3 PlotChangeAxis }
+                    227 { PlotCmdCVAR "graph,axis,$1,flip" $3 PlotChangeAxis }
+                    228 { PlotCmdCVAR "graph,axis,$1,auto" $3 PlotChangeAxis }
+                    229 { PlotCmdCVAR "graph,axis,$1,min" $3 PlotChangeAxis }
+                    230 { PlotCmdCVAR "graph,axis,$1,max" $3 PlotChangeAxis }
+                    231 { PlotCmdCVAR "graph,axis,$1,format" $3 PlotChangeAxis }
+                    232 { PlotCmdCVAR graph,legend $1 PlotChangeLegend }
+                    233 { PlotCmdCVAR graph,legend,position $2 PlotChangeLegend }
                     234 { set _ right }
                     235 { set _ left }
                     236 { set _ top }
                     237 { set _ bottom }
                     238 { set _ plotarea }
-                    239 { ProcessCmdCVAR graph,title $1 PlotChangeTitle }
-                    240 { ProcessCmdCVAR "graph,axis,$1,title" $2 PlotChangeTitle }
-                    241 { ProcessCmdCVAR "graph,axis,$1,title" $2 PlotChangeTitle }
-                    242 { ProcessCmdCVAR graph,legend,title $2 PlotChangeTitle }
+                    239 { PlotCmdCVAR graph,title $1 PlotChangeTitle }
+                    240 { PlotCmdCVAR "graph,axis,$1,title" $2 PlotChangeTitle }
+                    241 { PlotCmdCVAR "graph,axis,$1,title" $2 PlotChangeTitle }
+                    242 { PlotCmdCVAR graph,legend,title $2 PlotChangeTitle }
                     243 { set _ x }
                     244 { set _ x }
                     245 { set _ y }
@@ -6014,21 +6014,21 @@ proc plot::yyparse {} {
                     250 { set _ xyex }
                     251 { set _ xyey }
                     252 { set _ xyexey }
-                    254 { ProcessCmdCVAR "graph,axis,$2,log" $3 PlotChangeAxis }
-                    255 { ProcessCmdCVAR "graph,axis,$2,flip" $3 PlotChangeAxis }
-                    256 { ProcessCmdCVAR "graph,axis,$2,format" $3 PlotChangeAxis }
-                    261 { ProcessCmdCVAR "graph,axis,$1,grid" $2 PlotChangeAxis }
-                    262 { ProcessCmdCVAR graph,axis,x,grid $1; ProcessCmdCVAR graph,axis,y,grid $1 PlotChangeAxis }
-                    263 { ProcessCmdCVAR "graph,axis,$1,auto" $3 PlotChangeAxis }
-                    264 { ProcessCmdCVAR "graph,axis,$1,min" $3 PlotChangeAxis }
-                    265 { ProcessCmdCVAR "graph,axis,$1,max" $3 PlotChangeAxis }
-                    266 { ProcessCmdCVAR graph,title $2 PlotChangeAxis }
-                    267 { ProcessCmdCVAR "graph,axis,$1,title" $2 PlotChangeAxis }
-                    268 { ProcessCmdCVAR graph,legend,title $2 PlotChangeLegend }
-                    271 { ProcessCmdCVAR "graph,axis,x,log" 0; ProcessCmdCVAR "graph,axis,y,log" 0 PlotChangeAxis }
-                    272 { ProcessCmdCVAR "graph,axis,x,log" 0; ProcessCmdCVAR "graph,axis,y,log" 1 PlotChangeAxis }
-                    273 { ProcessCmdCVAR "graph,axis,x,log" 1; ProcessCmdCVAR "graph,axis,y,log" 0 PlotChangeAxis }
-                    274 { ProcessCmdCVAR "graph,axis,x,log" 1; ProcessCmdCVAR "graph,axis,y,log" 1 PlotChangeAxis }
+                    254 { PlotCmdCVAR "graph,axis,$2,log" $3 PlotChangeAxis }
+                    255 { PlotCmdCVAR "graph,axis,$2,flip" $3 PlotChangeAxis }
+                    256 { PlotCmdCVAR "graph,axis,$2,format" $3 PlotChangeAxis }
+                    261 { PlotCmdCVAR "graph,axis,$1,grid" $2 PlotChangeAxis }
+                    262 { PlotCmdCVAR2 graph,axis,x,grid $1 graph,axis,y,grid $1 PlotChangeAxis }
+                    263 { PlotCmdCVAR "graph,axis,$1,auto" $3 PlotChangeAxis }
+                    264 { PlotCmdCVAR "graph,axis,$1,min" $3 PlotChangeAxis }
+                    265 { PlotCmdCVAR "graph,axis,$1,max" $3 PlotChangeAxis }
+                    266 { PlotCmdCVAR graph,title $2 PlotChangeAxis }
+                    267 { PlotCmdCVAR "graph,axis,$1,title" $2 PlotChangeAxis }
+                    268 { PlotCmdCVAR graph,legend,title $2 PlotChangeLegend }
+                    271 { PlotCmdCVAR2 "graph,axis,x,log" 0 "graph,axis,y,log" 0 PlotChangeAxis }
+                    272 { PlotCmdCVAR2 "graph,axis,x,log" 0 "graph,axis,y,log" 1 PlotChangeAxis }
+                    273 { PlotCmdCVAR2 "graph,axis,x,log" 1 "graph,axis,y,log" 0 PlotChangeAxis }
+                    274 { PlotCmdCVAR2 "graph,axis,x,log" 1 "graph,axis,y,log" 1 PlotChangeAxis }
                     275 { PlotCmdUpdateElement graph,ds,line,shape,symbol $2 }
                     276 { PlotCmdUpdateElement graph,ds,line,width $3 }
                     277 { PlotCmdUpdateElement graph,ds,line,dash $3 }

@@ -202,6 +202,12 @@ pipe open), which made every wrapped XPA call look slow. It now
 redirects the timer's output; if timings look padded to the timeout
 value, check that the fix is still in place.
 
+Scripts that start ds9 in the background (e.g. `xpa.sh`, which also
+leaves it running when you run a single section) hand ds9 their stdout.
+Piping such a script (`./xpa.sh fits | grep ...`) then hangs after
+`DONE` until ds9 exits; redirect to a file instead, and shut ds9 down
+with `xpaset -p DS9Test exit` afterwards.
+
 Some scripts call other scripts by bare name (e.g. `nrrd.sh` runs
 `full.sh`), so for those put `Tests/` itself on the `PATH` too:
 `PATH="$PWD:$PWD/../bin:$HOME/local/bin:$PATH"`.

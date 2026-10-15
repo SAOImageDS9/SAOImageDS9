@@ -2903,8 +2903,10 @@ Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   setWCSSysSkyFrame(sys,sky);
 
   Vector out = wcsTran(context_, ast_, in, 1);
-  if (!astOK || !checkWCS(out))
+  if (!astOK || !checkWCS(out)) {
+    astEnd;
     return Vector();
+  }
 
   astNorm(ast_, out.v);
   astEnd;
@@ -2924,8 +2926,10 @@ VectorStr FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   setWCSSysSkyFrame(sys,sky);
   
   Vector out = wcsTran(context_, ast_, in, 1);
-  if (!astOK || !checkWCS(out))
+  if (!astOK || !checkWCS(out)) {
+    astEnd;
     return VectorStr();
+  }
 
   setWCSFormat(sys,sky,format);
   astNorm(ast_, out.v);
@@ -2960,8 +2964,10 @@ Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   setWCSSysSkyFrame(sys,sky);
 
   Vector3d out = wcsTran(context_, ast_, in, 1);
-  if (!astOK || !checkWCS(out))
+  if (!astOK || !checkWCS(out)) {
+    astEnd;
     return Vector3d();
+  }
   astNorm(ast_, out.v);
   astEnd;
   
@@ -2980,8 +2986,10 @@ VectorStr3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   setWCSSysSkyFrame(sys,sky);
   
   Vector3d out = wcsTran(context_, ast_, in, 1);
-  if (!astOK || !checkWCS(out))
+  if (!astOK || !checkWCS(out)) {
+    astEnd;
     return VectorStr3d();
+  }
 
   setWCSFormat(sys,sky,format);
   astNorm(ast_, out.v);

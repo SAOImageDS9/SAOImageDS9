@@ -394,8 +394,34 @@ an option.
      centres, plus a polar TAN of the MOC); added to `Tests/hpxproj.sh`.
      AST already blanks ARC beyond 180 deg and invalid conic regions.
    - Docs: `ds9/doc/ref/file.html`.
-1. Keep the HPX intermediate resident; add `recentre()` and a frame
-   command to call it (`$frame hpx recentre`) for testing over XPA.
+1. **Done 2026-10-16.** Keep the HPX intermediate resident; recentre.
+   - `FitsHPXReproj` now owns the `FitsHPX`. Zenithal and conic windows
+     keep it (native byte order, swapped once); all-sky images still free
+     it after building. Freed with the frame.
+   - `FitsHPXReproj::recentre(lon, lat)` rebuilds the header and
+     resamples at the same size and pixel scale; `nativeAt(pixel)` gives
+     the map's own lon/lat through the window's WCS (so no ds9 sky-frame
+     conversion, and it works for XLON). Conics recentre the meridian
+     and keep their reference latitude.
+   - `FitsImage::hpxRecentre()` swaps the data and calls `load()` like
+     `nextBin()`; `Context::hpxFinish()` redoes `loadInit`/`loadFinish`
+     (which rebuilds the WCS via `block()` -> `resetWCS()`), like
+     `binFinish()`; then `updateBin(Matrix())` resets the pan to the
+     image centre and redraws (identity matrix: crosshair and regions
+     are not remapped yet, step 2).
+   - Frame command `$frame update fits center [lon lat]`, built from
+     existing lexer keywords so only `tksao/frame/parser.Y` changed;
+     regenerated with bison alone (byte-identical tool), not `make
+     parser`, which would also run flex. Reach it through the tcl XPA
+     access point. Errors: "not a HEALPix zenithal/conic window",
+     "unable to recentre".
+   - nside 8192 (`acis_all_sky_gal.hpx`), TAN `fov=10` (1404x1404):
+     load 14.4 s, each recentre 0.22-0.24 s, 7.1 GB resident, back to
+     0.4 GB after `frame delete`. The pan lands within half a pixel of
+     the tangent point (ds9's usual centring of even-sized images).
+   - `Tests/hpxproj.sh`: recentre on explicit lon/lat and on the pan,
+     size kept, conic latitude kept, AIT refused; recentred images
+     match `reproject` exactly.
 2. Synchronous re-centre on pan release, with crosshair, pan and
    contour handling and global scale limits. Regions deferred.
 3. Region remapping.

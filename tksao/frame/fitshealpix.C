@@ -86,14 +86,77 @@ void FitsImage::initHPX()
   if (proj && strcasecmp(proj,"HPX")) {
     char* upper = toUpper(proj);
 
+    // FitsHPXReproj takes ownership of hpx (keeps it for recentring)
     FitsHPX* hpx = new FitsHPX(fits_, order, coord, FitsHPX::EQUATOR, col, 0);
     if (hpx->isValid())
       hpx_ = new FitsHPXReproj(hpx, upper, fits_->pHPXLon0(),
 			       fits_->pHPXLat0(), fits_->pHPXFov());
-    delete hpx;
+    else
+      delete hpx;
     delete [] upper;
     return;
   }
 
   hpx_ = new FitsHPX(fits_, order, coord, layout, col, quad);
+}
+
+// Recentre a resampled HEALPix window (zenithal or conic). Like
+// nextBin(), rebuild the image from the new data; the caller finishes
+// with Context::hpxFinish(). Returns 0 if this isn't a window or the
+// centre is invalid.
+int FitsImage::hpxRecentre(double lon, double lat)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (!rr || !rr->canRecentre())
+    return 0;
+
+  if (!rr->recentre(lon, lat))
+    return 0;
+
+  if (manageBlock_) {
+    if (block_)
+      delete block_;
+    if (blockdata_)
+      delete blockdata_;
+  }
+  manageBlock_ =0;
+  block_ = base_;
+  blockdata_ = basedata_;
+
+  if (manageAnalysis_) {
+    if (analysis_)
+      delete analysis_;
+    if (analysisdata_)
+      delete analysisdata_;
+  }
+  manageAnalysis_ =0;
+  analysis_ = block_;
+  analysisdata_ = blockdata_;
+
+  load();
+  return 1;
+}
+
+// Recentre on the sky position at ref (REF coords, e.g. the pan cursor)
+int FitsImage::hpxRecentreRef(const Vector& ref)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (!rr || !rr->canRecentre())
+    return 0;
+
+  double lon, lat;
+  if (!rr->nativeAt(ref * refToImage, &lon, &lat))
+    return 0;
+
+  // conics keep their reference latitude; only the meridian follows
+  if (rr->isConic())
+    lat = rr->lat();
+
+  return hpxRecentre(lon, lat);
+}
+
+int FitsImage::isHPXWindow()
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  return rr && rr->canRecentre();
 }

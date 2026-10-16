@@ -249,6 +249,27 @@ void Context::binFinish()
   loadFinish();
 }
 
+// After FitsImage::hpxRecentre() has rebuilt the data, redo the load
+// steps (WCS, sections, analysis), as binFinish() does for bin.
+void Context::hpxFinish()
+{
+  if (DebugPerf)
+    cerr << "Context::hpxFinish()" << endl;
+
+  if (!fits)
+    return;
+
+  loadInit(1, Base::NOMOSAIC,Coord::WCS);
+  cfits = fits;
+
+  // params in DATA coords 0-n
+  iparams.set(0,naxis_[2]);
+  cparams.set(0,naxis_[2]);
+
+  resetSecMode();
+  loadFinish();
+}
+
 int Context::block()
 {
   if (DebugPerf)

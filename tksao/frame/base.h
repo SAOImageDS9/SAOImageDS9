@@ -1045,6 +1045,8 @@ public:
   virtual int checkRefreshFits(int* reload)
     {return checkRefreshContext(context, reload, 1);}
   void updateFitsCmd();
+  void updateFitsCenterCmd();
+  void updateFitsCenterCmd(const Vector&);
   void updateFitsCmd(int, BBox);
   void unloadFitsCmd();
 

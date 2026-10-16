@@ -485,8 +485,41 @@ an option.
      listing is identical, ids and selection are kept; regions parked at
      a far centre come back with their ids, selection and properties
      when panning back. Default loads/parsing unchanged.
-   - Untested: catalog and footprint layers (same code path), and region
-     dialogs/analysis plots staying attached (needs the GUI).
+   - Parked regions vs deletion (fixed 2026-10-16): parked regions aren't
+     in any marker list, so deleting regions used to leave their parked
+     copies, which came back on the next recentre ("zombies"), and the
+     catalog tool regenerating while parked (it deletes by tag and
+     re-creates) produced duplicates. `Base::hpxParkedDelete` now drops
+     matching parked entries from `markerDeleteAllCmd(0)` (`marker
+     delete [all]`), `markerDeleteCmd(tag)` and `markerDeleteCmd(id)`, in
+     the current layer; `delete=0` regions are kept.
+   - Regions created where the window can't place them (fixed
+     2026-10-16): ds9 drops a region whose coordinates don't map, which on
+     a window just means "not in this window": a region file loaded, or
+     the catalog regenerated, while looking elsewhere was lost.
+     `Base::hpxParseParked` (DS9 format, windows only): parse as usual; if
+     `createMarker()` reported unplaceable regions (`hpxMapErrs_`), undo
+     that parse and redo it statement by statement (with the global and
+     coordinate-system context in effect; `||` composite continuations
+     joined; '#'-prefixed shapes kept), parking the ones that fail (id
+     -1: they get a new id when placed). Their callbacks are in the text.
+     `hpxRestoring_` keeps the recentre's own re-creation out of this
+     path.
+   - Parked entries keep a copy of their callbacks and highlite state, so
+     a catalog marker parked by a recentre keeps its table link; entries
+     parked at creation keep the callbacks parsed from their text (a bug
+     overwrote them with an empty list; fixed).
+   - Listing for the remap is done at 12-digit precision (ds9's default 7
+     changed the last digit on a round trip).
+   - Catalogs tested (`Tests/hpxproj.sh`, local `catfits/cellout.fits` on
+     a TAN window of the MOC, no network): positions, ids and
+     `{cattool.N}` tags kept through a recentre and through park/restore;
+     highliting a marker still selects its table row (CATHighliteCB)
+     after a recentre, after park/restore, and after regenerating while
+     parked; regenerating while parked gives exactly one marker per row.
+   - Still untested: the footprint layer (needs a saved footprint file:
+     the footprint tool queries CXC/HLA), and region dialogs/analysis
+     plots staying attached (GUI).
    - Restored parked regions are appended, so the region order can change.
    - **Aux contours** (loaded from files): each image keeps a sky copy
      (`FitsImage::hpxAux()`: per ContourLevel, polylines of the map's own

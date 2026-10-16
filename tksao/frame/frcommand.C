@@ -388,6 +388,10 @@ void FrameBase::zoomToFitCmd(double ss)
   // with even number pixels, it will be shifted
 
   if (keyContext->fits) {
+    // a HEALPix window first becomes its whole fov at a fitting resolution
+    if (keyContext->fits->isHPXWindow())
+      hpxRecentre(HPXFIT, ss, 0);
+
     centerImage();
 
     Vector tt = imageSize(keyContext->secMode());

@@ -113,7 +113,7 @@ class FitsHPXNativeView : public FitsFile {
 };
 
 FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
-			     double lat, double fov)
+			     double lat, double fov, int dispW, int dispH)
 {
   // we own hpx from here on
   hpx_ = hpx;
@@ -185,13 +185,32 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
   planeW_ = width;
   planeH_ = height;
 
-  // windows: cap the size by coarsening the pixels (nearest-neighbour
-  // still gives real HEALPix values, it just samples them more sparsely)
+  // A window starts display-sized: HEALPix pixels (zoom 1 shows them
+  // 1:1, as for any image), twice the frame per axis, within the fov.
+  // Zooming out later rebuilds it coarser and wider (Base::hpxAutoRefresh).
+  // Without a display size, it covers the whole fov.
   coarse_ = 0;
+  int ww = (int)ceil(width/pix_) + 2;
+  int hh = (int)ceil(height/pix_) + 2;
   if (HPXReprojInfo[ii].kind != ALLSKY) {
-    double big = width > height ? width : height;
-    if (ceil(big/pix_) + 2 > HPX_WINDOW_MAX) {
+    if (dispW > 0 && dispH > 0) {
+      if (ww > 2*dispW)
+	ww = 2*dispW;
+      if (hh > 2*dispH)
+	hh = 2*dispH;
+    }
+    // cap the size by coarsening the pixels (nearest-neighbour still
+    // gives real HEALPix values, it just samples them more sparsely)
+    if (ww > HPX_WINDOW_MAX-2 || hh > HPX_WINDOW_MAX-2) {
+      double big = (ww > hh ? ww : hh)*pix_;
+      double p0 = pix_;
       pix_ = big/(HPX_WINDOW_MAX - 4);
+      ww = (int)ceil(ww*p0/pix_);
+      hh = (int)ceil(hh*p0/pix_);
+      if (ww > HPX_WINDOW_MAX-2)
+	ww = HPX_WINDOW_MAX-2;
+      if (hh > HPX_WINDOW_MAX-2)
+	hh = HPX_WINDOW_MAX-2;
       coarse_ = 1;
     }
   }
@@ -200,8 +219,8 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
   // meridian. When lon is a multiple of 90 that meridian is a polar
   // facet seam in HPX, the HPX grid position is an exact .5 tie, and
   // nearest-neighbour can round into the gap between facets.
-  pWidth_ = (int)ceil(width/pix_) + 2;
-  pHeight_ = (int)ceil(height/pix_) + 2;
+  pWidth_ = ww;
+  pHeight_ = hh;
   pWidth_ += pWidth_ % 2;
   pHeight_ += pHeight_ % 2;
 

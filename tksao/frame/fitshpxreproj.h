@@ -45,7 +45,7 @@ class FitsHPXReproj : public FitsFile {
 
  public:
   FitsHPXReproj(FitsFile*, const char*, double lon, double lat,
-		double fov);
+		double fov, int dispW =0, int dispH =0);
   ~FitsHPXReproj();
 
   // recentre a window on (lon, lat) [deg, the map's own sky system];
@@ -56,6 +56,8 @@ class FitsHPXReproj : public FitsFile {
 	      const double* centre);
   double pix() {return pix_;}
   double pixHPX() {return pixHPX_;}
+  double planeW() {return planeW_;}
+  double planeH() {return planeH_;}
   // the largest window at pixel size pix (fov extent, HPX_WINDOW_MAX)
   void maxSize(double pix, int* ww, int* hh);
   // the window already shows its whole projection plane (fov)

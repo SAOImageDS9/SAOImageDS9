@@ -1058,7 +1058,7 @@ public:
   void updateFitsCmd();
   void updateFitsCenterCmd();
   void updateFitsCenterCmd(const Vector&);
-  enum HPXMode {HPXPAN, HPXCENTER, HPXPANTO};
+  enum HPXMode {HPXPAN, HPXCENTER, HPXPANTO, HPXFIT};
   const char* hpxRecentre(HPXMode, double, double);
   void hpxAutoRefresh();
   void hpxWindowGeometry(FitsImage*, double*, int*, int*);

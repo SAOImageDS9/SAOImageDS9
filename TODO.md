@@ -459,8 +459,7 @@ an option.
    - `Tests/hpxproj.sh` covers all of the above.
    - Not done: regions (step 3), and aux contours loaded from files
      (same problem as regions).
-3. **Done 2026-10-16** (regions; aux contours still open). Region
-   remapping on recentre.
+3. **Done 2026-10-16.** Region and aux contour remapping on recentre.
    - Regions (user, catalog and footprint layers) are listed one at a
      time in the map's own sky system (DS9 format, degrees, with
      properties) while the old WCS is still in place
@@ -489,11 +488,21 @@ an option.
    - Untested: catalog and footprint layers (same code path), and region
      dialogs/analysis plots staying attached (needs the GUI).
    - Restored parked regions are appended, so the region order can change.
-   - **Aux contours** (loaded from files) are still not remapped: they are
-     polylines in REF coords with only an affine `updateCoords(Matrix)`.
-     Remapping vertex by vertex through the sky is straightforward, but
-     vertices the new window can't place need their own parking to
-     survive later recentres.
+   - **Aux contours** (loaded from files): each image keeps a sky copy
+     (`FitsImage::hpxAux()`: per ContourLevel, polylines of the map's own
+     lon/lat). `Context::hpxSaveAuxContours` converts any level not yet
+     in the copy (its geometry is still complete in the current window)
+     and drops levels that were deleted; `Context::hpxRestoreAuxContours`
+     rebuilds every level's polylines from the copy in the new window,
+     splitting lines where a vertex can't be placed or where consecutive
+     vertices land more than 1/4 of the window apart (a jump across a
+     seam or edge). Because the copy is authoritative, parts that fall off
+     one window come back in later ones. Uses the map's own system, so it
+     works for XLON/XLAT maps too.
+   - Verified: a recentred view's aux contours render pixel-identically
+     to a fresh load at that centre with the same contour file, and after
+     a far recentre (everything off the window) and back they render
+     identically to the start.
 4. Async, (a) above, only if measurements say it's needed.
 
 ## Open questions / risks

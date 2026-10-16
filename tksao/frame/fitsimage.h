@@ -61,6 +61,15 @@ class WCSState {
 // A region of a HEALPix window that the current window can't place
 // (e.g. more than 90 deg from a TAN centre): kept as its listing, in the
 // map's own sky system, and retried when the window is recentred.
+// A contour level loaded from a file (aux contour) on a HEALPix window,
+// kept as polylines in the map's own sky system: lon, lat pairs [deg].
+// The window's own vertices are rebuilt from this on every recentre, so
+// parts a window can't place aren't lost.
+struct HPXAuxLevel {
+  const void* level;   // the ContourLevel it belongs to
+  std::vector< std::vector<double> > lines;
+};
+
 struct HPXParked {
   int layer;           // 0 user, 1 catalog, 2 footprint
   int id;
@@ -85,6 +94,7 @@ class FitsImage {
   FitsData* hpxGlobal_;     // whole-map clip data for a HEALPix window
   FitsBound hpxGlobalBound_;
   std::vector<HPXParked> hpxParked_; // regions the window can't place
+  std::vector<HPXAuxLevel> hpxAux_;  // aux contours, in sky coords
 
   // base
   FitsFile* base_;
@@ -181,6 +191,7 @@ class FitsImage {
   int hpxRecentrePan(double lon, double lat);
   int hpxSkyFrame(Coord::SkyFrame*);
   std::vector<HPXParked>& hpxParked() {return hpxParked_;}
+  std::vector<HPXAuxLevel>& hpxAux() {return hpxAux_;}
   int hpxNativeFromSky(const Vector& vv, Coord::CoordSystem, Coord::SkyFrame,
 		       double* lon, double* lat);
  protected:

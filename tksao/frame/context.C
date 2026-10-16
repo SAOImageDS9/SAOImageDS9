@@ -270,6 +270,118 @@ void Context::hpxFinish()
   loadFinish();
 }
 
+// Aux contours (loaded from files) on a HEALPix window. Their vertices
+// are in REF coords, and a recentred window's old-to-new mapping isn't
+// affine, so they go through the sky. Before the rebuild, any level not
+// yet in the image's sky copy is converted (its geometry is still
+// complete in the current window); levels that have been deleted are
+// dropped from the copy.
+void Context::hpxSaveAuxContours(FitsImage* ptr)
+{
+  std::vector<HPXAuxLevel>& store = ptr->hpxAux();
+
+  // drop levels that no longer exist
+  for (size_t ii=0; ii<store.size(); ) {
+    int found =0;
+    if (auxcontours_.head())
+      do
+	if (auxcontours_.current() == store[ii].level)
+	  found =1;
+      while (!found && auxcontours_.next());
+    if (found)
+      ii++;
+    else
+      store.erase(store.begin()+ii);
+  }
+
+  if (!hasAuxContour_ || !auxcontours_.head())
+    return;
+
+  do {
+    ContourLevel* cl = auxcontours_.current();
+    int known =0;
+    for (size_t ii=0; ii<store.size(); ii++)
+      if (store[ii].level == cl)
+	known =1;
+    if (known)
+      continue;
+
+    HPXAuxLevel al;
+    al.level = cl;
+    List<Contour>& lc = cl->lcontour();
+    if (lc.head())
+      do {
+	std::vector<double> line;
+	List<Vertex>& lv = lc.current()->lvertex();
+	if (lv.head())
+	  do {
+	    double lon, lat;
+	    if (ptr->hpxNativeAtRef(lv.current()->vector, &lon, &lat)) {
+	      line.push_back(lon);
+	      line.push_back(lat);
+	    }
+	    else if (line.size()) {
+	      // a vertex off the sky: break the line
+	      if (line.size() >= 4)
+		al.lines.push_back(line);
+	      line.clear();
+	    }
+	  } while (lv.next());
+	if (line.size() >= 4)
+	  al.lines.push_back(line);
+      } while (lc.next());
+    store.push_back(al);
+  } while (auxcontours_.next());
+}
+
+// After the rebuild: regenerate each level's polylines from the sky copy
+// in the new window. Lines are split where a vertex can't be placed, or
+// where consecutive vertices land far apart (a jump across the
+// projection's seam or edge), so nothing is drawn across the image.
+void Context::hpxRestoreAuxContours(FitsImage* ptr)
+{
+  std::vector<HPXAuxLevel>& store = ptr->hpxAux();
+  double jump = .25*(ptr->width() > ptr->height() ?
+		     ptr->width() : ptr->height());
+
+  for (size_t ii=0; ii<store.size(); ii++) {
+    ContourLevel* cl = (ContourLevel*)store[ii].level;
+    List<Contour>& lc = cl->lcontour();
+    lc.deleteAll();
+
+    for (size_t jj=0; jj<store[ii].lines.size(); jj++) {
+      std::vector<double>& line = store[ii].lines[jj];
+      Contour* cc = new Contour(cl);
+      Vector prev;
+      int nn =0;
+      for (size_t kk=0; kk+1<line.size(); kk+=2) {
+	Vector rr;
+	int ok = ptr->hpxRefAt(line[kk], line[kk+1], &rr);
+	if (ok && nn && (rr-prev).length() > jump)
+	  ok =0;
+	if (!ok) {
+	  // break the line here
+	  if (nn >= 2)
+	    lc.append(cc);
+	  else
+	    delete cc;
+	  cc = new Contour(cl);
+	  nn =0;
+	  if (!ptr->hpxRefAt(line[kk], line[kk+1], &rr))
+	    continue;
+	}
+	cc->lvertex().append(new Vertex(rr));
+	prev = rr;
+	nn++;
+      }
+      if (nn >= 2)
+	lc.append(cc);
+      else
+	delete cc;
+    }
+  }
+}
+
 int Context::block()
 {
   if (DebugPerf)

@@ -7121,3 +7121,134 @@ void Base::win32Markers(List<Marker>* ml)
   }
 }
 #endif
+
+// HEALPix window recentring: regions are remapped through the sky. The
+// old-to-new pixel mapping isn't affine (a new tangent point), so
+// updateMarkerCoords(Matrix) can't do it. Each region is listed in the
+// map's own sky system while the old WCS is still in place, then
+// re-created from that listing in the new window, taking over the old
+// marker's id, selection, callbacks and analysis state.
+
+static List<Marker>* hpxLayer(List<Marker>* uu, List<Marker>* cc,
+			      List<Marker>* ff, int ll)
+{
+  switch (ll) {
+  case 0:
+    return uu;
+  case 1:
+    return cc;
+  default:
+    return ff;
+  }
+}
+
+// List every region (all three layers) in sky; text[ll] gets one entry
+// per marker of layer ll, in order; count[ll] how many.
+void Base::hpxListMarkers(Coord::SkyFrame sky, std::vector<std::string>* text,
+			  int* count)
+{
+  for (int ll=0; ll<3; ll++) {
+    List<Marker>* lst =
+      hpxLayer(&userMarkers, &catalogMarkers, &footprintMarkers, ll);
+    count[ll] = 0;
+    Marker* mm = lst->head();
+    while (mm) {
+      ostringstream str;
+      markerListHeader(str);
+      str << setseparator(',');
+      coord.listCoordSystem(str, Coord::WCS, sky, keyContext->fits);
+      str << endl;
+      mm->list(str, Coord::WCS, sky, Coord::DEGREES, 0, 0);
+      text[ll].push_back(str.str());
+      count[ll]++;
+      mm = mm->next();
+    }
+  }
+}
+
+// After the window has been rebuilt: replace the first count[ll] markers
+// of each layer (the ones listed by hpxListMarkers) with re-creations
+// from their listings, then retry regions parked by earlier recentres.
+// Regions the new window can't place are parked with the image.
+void Base::hpxRestoreMarkers(FitsImage* ptr, Coord::SkyFrame sky,
+			     std::vector<std::string>* text, int* count)
+{
+  List<Marker>* save = markers;
+
+  // keep "Bad Coordinate mapping" warnings for parked regions out of
+  // ds9(msg), and the new markers' ids out of the command result
+  const char* m0 = Tcl_GetVar2(interp, "ds9", "msg", TCL_GLOBAL_ONLY);
+  const char* l0 = Tcl_GetVar2(interp, "ds9", "msg,level", TCL_GLOBAL_ONLY);
+  std::string msg0 = m0 ? m0 : "";
+  std::string lvl0 = l0 ? l0 : "";
+
+  std::vector<HPXParked> parked;
+  parked.swap(ptr->hpxParked());
+
+  for (int ll=0; ll<3; ll++) {
+    markers = hpxLayer(&userMarkers, &catalogMarkers, &footprintMarkers, ll);
+
+    // detach the old markers
+    std::vector<Marker*> old;
+    for (int ii=0; ii<count[ll] && markers->head(); ii++) {
+      Marker* mm = markers->head();
+      markers->extractNext(mm);
+      if (ll == 0)
+	regionStatsRegionDeleted(mm->getId());
+      old.push_back(mm);
+    }
+
+    // re-create them; new markers are appended after any that were
+    // created meanwhile, so collect them from the tail
+    for (size_t ii=0; ii<old.size(); ii++) {
+      int n0 = markers->count();
+      markerCommandCmd(DS9, text[ll][ii].c_str());
+      if (markers->count() > n0) {
+	Marker* nn = markers->tail();
+	if (ll == 0)
+	  regionStatsRegionDeleted(nn->getId());
+	nn->adoptState(*old[ii]);
+	if (ll == 0)
+	  regionStatsRegionAdded(nn);
+      }
+      else {
+	HPXParked pp;
+	pp.layer = ll;
+	pp.id = old[ii]->getId();
+	pp.selected = old[ii]->isSelected();
+	pp.text = text[ll][ii];
+	ptr->hpxParked().push_back(pp);
+      }
+      // the callbacks now belong to the new marker (or are dropped with
+      // a parked one); don't fire DELETECB
+      old[ii]->deleteCBs();
+      delete old[ii];
+    }
+  }
+
+  // retry regions parked earlier
+  for (size_t ii=0; ii<parked.size(); ii++) {
+    markers = hpxLayer(&userMarkers, &catalogMarkers, &footprintMarkers,
+		       parked[ii].layer);
+    int n0 = markers->count();
+    markerCommandCmd(DS9, parked[ii].text.c_str());
+    if (markers->count() > n0) {
+      Marker* nn = markers->tail();
+      if (parked[ii].layer == 0)
+	regionStatsRegionDeleted(nn->getId());
+      nn->setId(parked[ii].id);
+      if (parked[ii].selected)
+	nn->select();
+      if (parked[ii].layer == 0)
+	regionStatsRegionAdded(nn);
+    }
+    else
+      ptr->hpxParked().push_back(parked[ii]);
+  }
+
+  markers = save;
+  Tcl_ResetResult(interp);
+  Tcl_SetVar2(interp, "ds9", "msg", msg0.c_str(), TCL_GLOBAL_ONLY);
+  Tcl_SetVar2(interp, "ds9", "msg,level", lvl0.c_str(), TCL_GLOBAL_ONLY);
+  update(PIXMAP);
+}

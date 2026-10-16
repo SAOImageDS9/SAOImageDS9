@@ -5,6 +5,9 @@
 #ifndef __fitsimage_h__
 #define __fitsimage_h__
 
+#include <string>
+#include <vector>
+
 #include "vector.h"
 #include "vector3d.h"
 #include "vectorstr.h"
@@ -55,6 +58,16 @@ class WCSState {
   Coord::SkyFrame wcsSkyFrame_; // current state of ast_
 };
 
+// A region of a HEALPix window that the current window can't place
+// (e.g. more than 90 deg from a TAN centre): kept as its listing, in the
+// map's own sky system, and retried when the window is recentred.
+struct HPXParked {
+  int layer;           // 0 user, 1 catalog, 2 footprint
+  int id;
+  int selected;
+  std::string text;
+};
+
 class FitsImage {
   friend class Base;
 
@@ -71,6 +84,7 @@ class FitsImage {
   FitsFile* hpx_;           // healpix
   FitsData* hpxGlobal_;     // whole-map clip data for a HEALPix window
   FitsBound hpxGlobalBound_;
+  std::vector<HPXParked> hpxParked_; // regions the window can't place
 
   // base
   FitsFile* base_;
@@ -165,6 +179,8 @@ class FitsImage {
   int hpxRefAt(double lon, double lat, Vector* ref);
   int hpxNeedsRecentre(const Vector& ref);
   int hpxRecentrePan(double lon, double lat);
+  int hpxSkyFrame(Coord::SkyFrame*);
+  std::vector<HPXParked>& hpxParked() {return hpxParked_;}
   int hpxNativeFromSky(const Vector& vv, Coord::CoordSystem, Coord::SkyFrame,
 		       double* lon, double* lat);
  protected:

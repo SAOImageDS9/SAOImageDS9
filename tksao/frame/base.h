@@ -5,6 +5,9 @@
 #ifndef __base_h__
 #define __base_h__
 
+#include <string>
+#include <vector>
+
 #include <set>
 
 #include "widget.h"
@@ -1043,6 +1046,9 @@ public:
   const char* hpxRecentre(HPXMode, double, double);
   void hpxAutoRecentre();
   int hpxPanTo(const Vector&, Coord::CoordSystem, Coord::SkyFrame);
+  void hpxListMarkers(Coord::SkyFrame, std::vector<std::string>*, int*);
+  void hpxRestoreMarkers(FitsImage*, Coord::SkyFrame,
+			 std::vector<std::string>*, int*);
   void updateFitsCmd(int, BBox);
   void unloadFitsCmd();
 

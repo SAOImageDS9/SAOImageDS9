@@ -459,7 +459,41 @@ an option.
    - `Tests/hpxproj.sh` covers all of the above.
    - Not done: regions (step 3), and aux contours loaded from files
      (same problem as regions).
-3. Region remapping.
+3. **Done 2026-10-16** (regions; aux contours still open). Region
+   remapping on recentre.
+   - Regions (user, catalog and footprint layers) are listed one at a
+     time in the map's own sky system (DS9 format, degrees, with
+     properties) while the old WCS is still in place
+     (`Base::hpxListMarkers`), then, after the window is rebuilt, the old
+     markers are detached and each is re-created from its listing
+     (`Base::hpxRestoreMarkers`, via `markerCommandCmd`). ds9's own
+     sky<->pixel handling of sizes and angles does the remap, which a
+     Matrix can't (not affine).
+   - The new marker takes over the old one's id, selection, callbacks
+     and analysis flags (`Marker::adoptState`), and the old one's
+     callbacks are dropped before it is deleted, so DELETECB doesn't
+     fire and open region dialogs stay attached. Region stats are moved
+     to the restored id.
+   - A region the new window can't place (e.g. >90 deg from a TAN
+     centre) is parked with the image (`FitsImage::hpxParked()`: layer,
+     id, selection, listing) and retried on every later recentre; its
+     "Bad Coordinate mapping" warning is suppressed, and the new
+     markers' ids are kept out of the command result. Parked regions
+     lose their callbacks.
+   - Not for XLON/XLAT maps (no sky system to go through): their
+     regions stay in image coords.
+   - Verified (`Tests/hpxproj.sh`): after a recentre the galactic region
+     listing is identical, ids and selection are kept; regions parked at
+     a far centre come back with their ids, selection and properties
+     when panning back. Default loads/parsing unchanged.
+   - Untested: catalog and footprint layers (same code path), and region
+     dialogs/analysis plots staying attached (needs the GUI).
+   - Restored parked regions are appended, so the region order can change.
+   - **Aux contours** (loaded from files) are still not remapped: they are
+     polylines in REF coords with only an affine `updateCoords(Matrix)`.
+     Remapping vertex by vertex through the sky is straightforward, but
+     vertices the new window can't place need their own parking to
+     survive later recentres.
 4. Async, (a) above, only if measurements say it's needed.
 
 ## Open questions / risks

@@ -81,14 +81,15 @@ void FitsImage::initHPX()
 
   // Another projection (proj=AIT, MOL, ...; proj=HPX is the default):
   // build the HPX image and resample it. layout/quad only describe the
-  // HPX intermediate, so they are ignored; lon0 sets the centre.
+  // HPX intermediate, so they are ignored; lon0/lat0/fov set the window.
   const char* proj = fits_->pHPXProj();
   if (proj && strcasecmp(proj,"HPX")) {
     char* upper = toUpper(proj);
 
     FitsHPX* hpx = new FitsHPX(fits_, order, coord, FitsHPX::EQUATOR, col, 0);
     if (hpx->isValid())
-      hpx_ = new FitsHPXReproj(hpx, upper, fits_->pHPXLon0());
+      hpx_ = new FitsHPXReproj(hpx, upper, fits_->pHPXLon0(),
+			       fits_->pHPXLat0(), fits_->pHPXFov());
     delete hpx;
     delete [] upper;
     return;

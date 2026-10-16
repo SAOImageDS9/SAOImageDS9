@@ -10,21 +10,61 @@
 #include "util.h"
 #include "wcsast.h"
 
-// full extent of the projection plane in degrees (default PVs)
+#define R2D (180./M_PI)
+
+// ALLSKY: full extent of the projection plane in degrees (default PVs);
+//   centred on (lon0, 0); lat0 and fov are ignored.
+// ZENITHAL: centred on (lon0, lat0); fov is the angular diameter on the
+//   sky, default fov0, at most fovmax.
+// CONIC: reference latitude theta_a = lat0 (default 45); fov is the
+//   width of the square image in the projection plane, default fov0.
+enum HPXReprojKind {ALLSKY, ZENITHAL, CONIC};
+
 static struct {
   const char* code;
+  HPXReprojKind kind;
   double width;
   double height;
+  double fov0;
+  double fovmax;
 } HPXReprojInfo[] = {
-  {"AIT", 4*M_SQRT2*180/M_PI, 2*M_SQRT2*180/M_PI},
-  {"MOL", 4*M_SQRT2*180/M_PI, 2*M_SQRT2*180/M_PI},
-  {"CAR", 360, 180},
-  {"SFL", 360, 180},
-  {"GLS", 360, 180},
-  {"PAR", 360, 180},
-  {"CEA", 360, 2*180/M_PI},
-  {NULL, 0, 0}
+  {"AIT", ALLSKY, 4*M_SQRT2*R2D, 2*M_SQRT2*R2D, 0, 0},
+  {"MOL", ALLSKY, 4*M_SQRT2*R2D, 2*M_SQRT2*R2D, 0, 0},
+  {"CAR", ALLSKY, 360, 180, 0, 0},
+  {"SFL", ALLSKY, 360, 180, 0, 0},
+  {"GLS", ALLSKY, 360, 180, 0, 0},
+  {"PAR", ALLSKY, 360, 180, 0, 0},
+  {"CEA", ALLSKY, 360, 2*R2D, 0, 0},
+  {"TAN", ZENITHAL, 0, 0, 90, 170},
+  {"SIN", ZENITHAL, 0, 0, 180, 180},
+  {"STG", ZENITHAL, 0, 0, 180, 340},
+  {"ARC", ZENITHAL, 0, 0, 360, 360},
+  {"ZEA", ZENITHAL, 0, 0, 360, 360},
+  {"COP", CONIC, 0, 0, 360, 720},
+  {"COE", CONIC, 0, 0, 360, 720},
+  {"COD", CONIC, 0, 0, 360, 720},
+  {"COO", CONIC, 0, 0, 360, 720},
+  {"BON", CONIC, 0, 0, 360, 720},
+  {NULL, ALLSKY, 0, 0, 0, 0}
 };
+
+// Projection-plane radius [deg] at angular distance rr [deg] from the
+// centre of a zenithal projection (Calabretta & Greisen 2002, sec 5.1).
+static double zenithalRadius(const char* code, double rr)
+{
+  double tt = rr/R2D;
+  if (!strcmp(code,"TAN"))
+    return R2D*tan(tt);
+  if (!strcmp(code,"SIN"))
+    return R2D*sin(tt);
+  if (!strcmp(code,"STG"))
+    return 2*R2D*tan(tt/2);
+  if (!strcmp(code,"ARC"))
+    return rr;
+  if (!strcmp(code,"ZEA"))
+    return 2*R2D*sin(tt/2);
+  return rr;
+}
 
 static AstFrameSet* hpxReprojAst(FitsHead* hd)
 {
@@ -49,7 +89,8 @@ static AstFrameSet* hpxReprojAst(FitsHead* hd)
   return fs;
 }
 
-FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon)
+FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
+			     double lat, double fov)
 {
   FitsHead* src = hpx->head();
   if (!src || !hpx->data())
@@ -74,13 +115,60 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon)
   // meridian. When lon is a multiple of 90 that meridian is a polar
   // facet seam in HPX, the HPX grid position is an exact .5 tie, and
   // nearest-neighbour can round into the gap between facets.
-  pWidth_ = (int)ceil(HPXReprojInfo[ii].width/pix) + 2;
-  pHeight_ = (int)ceil(HPXReprojInfo[ii].height/pix) + 2;
+  double width = HPXReprojInfo[ii].width;
+  double height = HPXReprojInfo[ii].height;
+  double crval2 = 0;
+  double pv21 = NAN;
+  switch (HPXReprojInfo[ii].kind) {
+  case ALLSKY:
+    break;
+  case ZENITHAL:
+  case CONIC:
+    {
+      if (isnan(fov) || fov <= 0)
+	fov = HPXReprojInfo[ii].fov0;
+      if (fov > HPXReprojInfo[ii].fovmax)
+	fov = HPXReprojInfo[ii].fovmax;
+
+      if (HPXReprojInfo[ii].kind == ZENITHAL) {
+	if (isnan(lat))
+	  lat = 0;
+	if (lat < -90 || lat > 90)
+	  return;
+	crval2 = lat;
+	width = height = 2*zenithalRadius(HPXReprojInfo[ii].code, fov/2);
+      }
+      else {
+	// theta_a = 0 is degenerate for conics
+	if (isnan(lat))
+	  lat = 45;
+	if (lat <= -90 || lat >= 90 || lat == 0)
+	  return;
+	pv21 = lat;
+	// the conics' reference point is at theta_a; Bonne's is at 0
+	crval2 = strcmp(HPXReprojInfo[ii].code,"BON") ? lat : 0;
+	width = height = fov;
+      }
+    }
+    break;
+  }
+
+  pWidth_ = (int)ceil(width/pix) + 2;
+  pHeight_ = (int)ceil(height/pix) + 2;
   pWidth_ += pWidth_ % 2;
   pHeight_ += pHeight_ % 2;
 
-  initHeader(hpx, HPXReprojInfo[ii].code, lon, nside, pix,
-	     (pWidth_+1)/2., (pHeight_+1)/2.);
+  // Nudge the reference pixel by a tiny, different amount on each axis.
+  // A centred grid puts pixel centres exactly on lines of symmetry (the
+  // central row/column, and the diagonals of a polar zenithal view),
+  // which can coincide with HPX facet seams; there the HPX grid position
+  // is an exact .5 tie and nearest-neighbour can pick the wrong side or
+  // a gap. The offset moves every pixel centre off those lines.
+  double crpix1 = (pWidth_+1)/2. + .001;
+  double crpix2 = (pHeight_+1)/2. + .0007;
+
+  initHeader(hpx, HPXReprojInfo[ii].code, lon, crval2, pv21, nside, pix,
+	     crpix1, crpix2);
 
   int iw = hpx->head()->naxis(0);
   int ih = hpx->head()->naxis(1);
@@ -146,7 +234,7 @@ FitsHPXReproj::~FitsHPXReproj()
 }
 
 void FitsHPXReproj::initHeader(FitsFile* hpx, const char* pcode, double lon,
-			       int nside, double pix,
+			       double lat, double pv21, int nside, double pix,
 			       double crpix1, double crpix2)
 {
   FitsHead* src = hpx->head();
@@ -176,7 +264,9 @@ void FitsHPXReproj::initHeader(FitsFile* hpx, const char* pcode, double lon,
   while (lon >= 360)
     lon -= 360;
   head_->appendReal("CRVAL1", lon, 15, "[deg] Longitude at the reference point");
-  head_->appendReal("CRVAL2", 0., 15, "[deg] Latitude at the reference point");
+  head_->appendReal("CRVAL2", lat, 15, "[deg] Latitude at the reference point");
+  if (!isnan(pv21))
+    head_->appendReal("PV2_1", pv21, 15, "[deg] Conic/Bonne reference latitude");
 
   {
     // FitsCard::setComment() writes "= ", so build the card directly

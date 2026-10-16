@@ -2,6 +2,7 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include <math.h>
 #include <tcl.h>
 
 #include <iostream>
@@ -127,6 +128,8 @@ FitsFile::FitsFile()
   pHPXQuad_ =-1;
   pHPXProj_ =NULL;
   pHPXLon0_ =0;
+  pHPXLat0_ =NAN;
+  pHPXFov_ =NAN;
 
   pCRPIX3_ =1;
   pCRVAL3_ =1;

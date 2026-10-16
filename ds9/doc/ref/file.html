@@ -190,6 +190,8 @@ $ ds9 foo.fits # load FITS bin table, bin on rawx, rawy<br></tt></blockquote>
 At load time, the user may provide just a file name or a file name along with FITS extension name/number, image section specification, and Healpix parameters. DS9 will automatically convert a FITS HEALPIX binary or ascii table into a 2D image for display. FITS extension names and parameters are case insensitive. The users may specify a number of parameters on how to construct the image. Any table with keyword PIXTYPE=HEALPIX or NSIDE=x will be processed as an HEALPIX image. Space MOC/partial HEALPIX binary tables using ORDERING=NUNIQ and a UNIQ or NPIX index column will also be displayed as HEALPIX images. The following FITS keywords will be used if present and not overwritten by a command line option: NSIDE, COORDSYS, ORDER, MOCORD_S, MOCORDER, HPXMOC.<br>
 <br>
 By default the image uses the HEALPix (HPX) projection, where each HEALPix pixel is exactly one image pixel. With <tt>proj</tt>, the map is instead resampled into another all-sky projection: Hammer-Aitoff (ait), Mollweide (mol), Plate Carree (car), Sanson-Flamsteed (sfl or gls), parabolic (par) or Lambert cylindrical equal area (cea). The resampling is nearest-neighbour, so every image pixel holds a real HEALPix pixel value; the image pixel size matches the HEALPix pixel size, and pixels outside the projection are blank. <tt>lon0</tt> sets the longitude at the centre of the image. <tt>layout</tt> and <tt>quad</tt> only apply to the HPX/XPH image and are ignored when <tt>proj</tt> is used.<br>
+<br>
+The zenithal projections, gnomonic (tan), orthographic (sin), stereographic (stg), zenithal equidistant (arc) and zenithal equal area (zea), show part of the sky around a centre point: <tt>lon0</tt> and <tt>lat0</tt> set the centre, and <tt>fov</tt> sets the width of the square image as an angle on the sky (default 90 degrees for tan, 180 for sin and stg, 360 for arc and zea; tan is limited to 170). The conic projections, perspective (cop), equal area (coe), equidistant (cod) and orthomorphic (coo), and Bonne's projection (bon), use <tt>lat0</tt> as their reference latitude (default 45; 0 is not allowed) and <tt>lon0</tt> as the central meridian; for these, <tt>fov</tt> is the width of the image in the projection plane, in degrees (default 360). <tt>lat0</tt> and <tt>fov</tt> are ignored by the all-sky projections.<br>
 <blockquote><tt>Syntax:<br>
 filename<br>
 filename[ext]<br>
@@ -215,8 +217,10 @@ hpx:<br>
 [col=&lt;column number&gt;] # defaut 1<br>
 [quad=&lt;quadurant number&gt;] # (1-4) default 1<br>
 [system=equatorial|galactic|ecliptic|unknown] # default unknown<br>
-[proj=hpx|ait|mol|car|sfl|gls|par|cea] # default hpx<br>
+[proj=hpx|ait|mol|car|sfl|gls|par|cea|tan|sin|stg|arc|zea|cop|coe|cod|coo|bon] # default hpx<br>
 [lon0=&lt;degrees&gt;] # centre longitude, with proj; default 0<br>
+[lat0=&lt;degrees&gt;] # centre latitude (zenithal, default 0) or reference latitude (conic, default 45)<br>
+[fov=&lt;degrees&gt;] # image width, zenithal and conic only<br>
 <br>
 Example:<br>
 $ds9 foo.fits # default load<br>
@@ -224,7 +228,10 @@ $ds9 foo.fits[1] # load first extension<br>
 $ds9 foo.fits[order=ring,layout=equatorial,col=1,quad=1,system=unknown]<br>
 $ds9 foo.fits[1,order=nested] # first extension, nested order<br>
 $ds9 foo.fits[proj=ait] # Hammer-Aitoff<br>
-$ds9 foo.fits[proj=mol,lon0=180] # Mollweide, centred on longitude 180</tt><br></blockquote>
+$ds9 foo.fits[proj=mol,lon0=180] # Mollweide, centred on longitude 180<br>
+$ds9 foo.fits[proj=tan,lon0=83.6,lat0=22,fov=20] # gnomonic, 20 degrees across<br>
+$ds9 foo.fits[proj=zea,lat0=90] # zenithal equal area, centred on the north pole<br>
+$ds9 foo.fits[proj=coe,lat0=30] # conic equal area, reference latitude 30</tt><br></blockquote>
 <p><b><a name="FITSDataCube" id="FITSDataCube"></a>FITS Cube</b></p>
 A FITS Cube is a FITS image which contains more than 2 axes (NAXES&gt;2). DS9 will automatically detect if a cube is present and will load all additional images. In addition, individual images can be loaded one at a time into a cube. DS9 will display the Cube dialog box which allows the user to select which 2 image to be displayed.
 <p><b><a name="FITSMultipleExtensionDataCube" id="FITSMultipleExtensionDataCube"></a>FITS Multiple Extension Cube</b></p>

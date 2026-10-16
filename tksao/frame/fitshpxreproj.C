@@ -122,6 +122,8 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
   info_ = -1;
   nside_ = 0;
   pix_ = 0;
+  pixHPX_ = 0;
+  planeW_ = planeH_ = 0;
   coarse_ = 0;
   crpix1_ = crpix2_ = 0;
   lon_ = lat_ = 0;
@@ -152,6 +154,7 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
 
   // match the HEALPix pixel size, sqrt(4pi/(12 nside^2))
   pix_ = sqrt(M_PI/3.)*180./M_PI/nside_;
+  pixHPX_ = pix_;
 
   double width = HPXReprojInfo[ii].width;
   double height = HPXReprojInfo[ii].height;
@@ -177,6 +180,10 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
     }
     break;
   }
+
+  // the full extent of the window's projection plane [deg]
+  planeW_ = width;
+  planeH_ = height;
 
   // windows: cap the size by coarsening the pixels (nearest-neighbour
   // still gives real HEALPix values, it just samples them more sparsely)
@@ -207,7 +214,7 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
   crpix1_ = (pWidth_+1)/2. + .001;
   crpix2_ = (pHeight_+1)/2. + .0007;
 
-  if (!build(lon, lat)) {
+  if (!build(lon, lat, NULL)) {
     release();
     return;
   }
@@ -251,7 +258,80 @@ int FitsHPXReproj::isConic()
 
 int FitsHPXReproj::recentre(double lon, double lat)
 {
-  return canRecentre() ? build(lon, lat) : 0;
+  return canRecentre() ? build(lon, lat, NULL) : 0;
+}
+
+void FitsHPXReproj::maxSize(double pix, int* ww, int* hh)
+{
+  if (pix < pixHPX_)
+    pix = pixHPX_;
+  *ww = (int)ceil(planeW_/pix) + 2;
+  *hh = (int)ceil(planeH_/pix) + 2;
+  if (*ww > HPX_WINDOW_MAX)
+    *ww = HPX_WINDOW_MAX;
+  if (*hh > HPX_WINDOW_MAX)
+    *hh = HPX_WINDOW_MAX;
+}
+
+// Rebuild a window with a new pixel size and size: pix [deg] (never finer
+// than the HEALPix pixel), ww x hh pixels, clamped to the projection's
+// extent (fov) and HPX_WINDOW_MAX. If centre (lon, lat [deg]) is given,
+// the window is shifted across the projection plane so that point is at
+// its centre (a conic, whose reference latitude is fixed, follows a pan
+// this way). Restores the old geometry on failure.
+int FitsHPXReproj::reshape(double lon, double lat, double pix, int ww, int hh,
+			   const double* centre)
+{
+  if (!canRecentre())
+    return 0;
+
+  double opix = pix_;
+  int ow = pWidth_;
+  int oh = pHeight_;
+  double ocr1 = crpix1_;
+  double ocr2 = crpix2_;
+  int ocoarse = coarse_;
+
+  pix_ = pix > pixHPX_ ? pix : pixHPX_;
+  int mw = (int)ceil(planeW_/pix_) + 2;
+  int mh = (int)ceil(planeH_/pix_) + 2;
+  if (ww > mw)
+    ww = mw;
+  if (hh > mh)
+    hh = mh;
+  // still capped: keep the angular extent, with coarser pixels
+  if (ww > HPX_WINDOW_MAX-2 || hh > HPX_WINDOW_MAX-2) {
+    double p0 = pix_;
+    double big = (ww > hh ? ww : hh)*p0;
+    pix_ = big/(HPX_WINDOW_MAX - 4);
+    ww = (int)ceil(ww*p0/pix_);
+    hh = (int)ceil(hh*p0/pix_);
+    if (ww > HPX_WINDOW_MAX-2)
+      ww = HPX_WINDOW_MAX-2;
+    if (hh > HPX_WINDOW_MAX-2)
+      hh = HPX_WINDOW_MAX-2;
+  }
+  if (ww < 2)
+    ww = 2;
+  if (hh < 2)
+    hh = 2;
+  // even, see the constructor
+  pWidth_ = ww + ww % 2;
+  pHeight_ = hh + hh % 2;
+  crpix1_ = (pWidth_+1)/2. + .001;
+  crpix2_ = (pHeight_+1)/2. + .0007;
+  coarse_ = pix_ > pixHPX_*(1+1e-9);
+
+  if (!build(lon, lat, centre)) {
+    pix_ = opix;
+    pWidth_ = ow;
+    pHeight_ = oh;
+    crpix1_ = ocr1;
+    crpix2_ = ocr2;
+    coarse_ = ocoarse;
+    return 0;
+  }
+  return 1;
 }
 
 int FitsHPXReproj::nativeAt(const Vector& img, double* lon, double* lat)
@@ -357,8 +437,9 @@ int FitsHPXReproj::fromSky(const char* attrs, double lon, double lat,
 }
 
 // Build the target header for centre (lon, lat) and resample the HPX
-// intermediate into it. On success, replaces head_ and data_.
-int FitsHPXReproj::build(double lon, double lat)
+// intermediate into it; if centre is given, shift the window so that sky
+// point is at its centre. On success, replaces head_ and data_.
+int FitsHPXReproj::build(double lon, double lat, const double* centre)
 {
   const char* code = HPXReprojInfo[info_].code;
   double crval2 = 0;
@@ -383,6 +464,32 @@ int FitsHPXReproj::build(double lon, double lat)
 
   FitsHead* src = hpx_->head();
   FitsHead* hd = initHeader(src, code, lon, crval2, pv21);
+
+  if (centre) {
+    // where the point lands with the current CRPIX, then shift CRPIX so
+    // it lands at the window's centre
+    int moved = 0;
+    astClearStatus;
+    astBegin;
+    AstFrameSet* fs = hpxReprojAst(hd);
+    if (fs) {
+      double ll = centre[0]/R2D;
+      double bb = centre[1]/R2D;
+      double xx, yy;
+      astTran2(fs, 1, &ll, &bb, 0, &xx, &yy);
+      if (astOK && xx != AST__BAD && yy != AST__BAD) {
+	crpix1_ += (pWidth_+1)/2. + .001 - xx;
+	crpix2_ += (pHeight_+1)/2. + .0007 - yy;
+	moved = 1;
+      }
+    }
+    astClearStatus;
+    astEnd;
+    if (moved) {
+      delete hd;
+      hd = initHeader(src, code, lon, crval2, pv21);
+    }
+  }
 
   int iw = src->naxis(0);
   int ih = src->naxis(1);
@@ -495,8 +602,8 @@ FitsHead* FitsHPXReproj::initHeader(FitsHead* src, const char* pcode,
   }
   if (coarse_) {
     char card[81];
-    snprintf(card, 81, "HISTORY Pixels coarsened to %.6g deg to keep the window <= %d px",
-	     pix_, HPX_WINDOW_MAX);
+    snprintf(card, 81, "HISTORY Pixel size %.6g deg, coarser than the HEALPix %.6g deg",
+	     pix_, pixHPX_);
     memset(card+strlen(card), ' ', 80-strlen(card));
     hd->cardins(card, NULL);
   }

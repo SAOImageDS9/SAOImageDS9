@@ -1052,7 +1052,8 @@ public:
   void updateFitsCenterCmd(const Vector&);
   enum HPXMode {HPXPAN, HPXCENTER, HPXPANTO};
   const char* hpxRecentre(HPXMode, double, double);
-  void hpxAutoRecentre();
+  void hpxAutoRefresh();
+  void hpxWindowGeometry(FitsImage*, double*, int*, int*);
   int hpxPanTo(const Vector&, Coord::CoordSystem, Coord::SkyFrame);
   void hpxListMarkers(Coord::SkyFrame, std::vector<std::string>*, int*);
   void hpxRestoreMarkers(FitsImage*, Coord::SkyFrame,
@@ -1739,7 +1740,7 @@ public:
   virtual void panToCmd(const Vector&, Coord::CoordSystem, Coord::SkyFrame) =0;
   virtual void panBeginCmd(const Vector&) =0;
   virtual void panMotionCmd(const Vector&) =0;
-  void panEndCmd(const Vector& vv) {panMotionCmd(vv); hpxAutoRecentre();}
+  void panEndCmd(const Vector& vv) {panMotionCmd(vv); hpxAutoRefresh();}
   virtual void panBBoxCmd(const Vector&) =0;
   void panPreserveCmd(int r) {preservePan = r;}
   void rotateCmd(double);

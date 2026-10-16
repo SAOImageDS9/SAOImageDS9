@@ -549,6 +549,33 @@ an option.
      to size the window from the frame and zoom (sketch above); the cap
      is the safety net. `Tests/hpxproj.sh`: MOC full-sky ARC capped at
      4094^2, exact against `reproject` at the coarse pixel size.
+   - **Windows follow the zoom (2026-10-16).** The cap alone lost too
+     much resolution. A window is now rebuilt for the display: pixels as
+     fine as one screen pixel at the current zoom, never finer than the
+     HEALPix pixel (beyond that ds9 magnifies real pixels), and twice the
+     visible area in each axis, clamped to the fov and HPX_WINDOW_MAX
+     (`Base::hpxWindowGeometry`, `FitsHPXReproj::reshape`). After a
+     rebuild the zoom is scaled by new/old pixel size, so the on-screen
+     scale doesn't change.
+     - Triggers (`Base::hpxAutoRefresh`, after every pan and zoom
+       command, never during a drag): the wanted pixel size differs by
+       more than 1.5x, the visible area no longer fits a window that could
+       be bigger, or the pan point is more than 1/4 of the window from
+       its centre.
+     - Conics keep their reference latitude and slide the window across
+       the projection plane to the pan point (CRPIX shift in
+       `FitsHPXReproj::build`), so vertical pans work too; a conic window
+       showing its whole plane isn't rebuilt on pan.
+     - `update fits center` (explicit) keeps the current geometry.
+     - The initial window is still fov-based (capped); the first zoom or
+       pan adapts it.
+     - nside 8192 COP, 1000x622 frame: zoom x4 -> 0.022 deg pixels,
+       2000 px, 0.27 s; zoom x4 again -> 0.0072 deg (HEALPix), 1538 px,
+       zoom 1.30, 0.19 s; pan 20 deg up 0.13 s; zoom x0.05 -> 0.11 deg;
+       memory steady at 7.2 GB.
+     - `Tests/hpxproj.sh`: zoom in -> HEALPix resolution, on-screen scale
+       kept, exact against `reproject`; zoom out -> coarser, window <= 2x
+       the frame; conic whole-plane vs zoomed-in pans.
 4. Async, (a) above, only if measurements say it's needed.
 
 ## Open questions / risks

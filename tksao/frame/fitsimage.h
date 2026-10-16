@@ -186,6 +186,14 @@ class FitsImage {
   void initHPX();
  public:
   int hpxRecentre(double lon, double lat);
+  int hpxReshape(double lon, double lat, double pix, int ww, int hh,
+		 const double* centre);
+  void hpxReload();
+  double hpxPixel();
+  double hpxPixelHPX();
+  void hpxMaxSize(double pix, int* ww, int* hh);
+  int hpxIsConic();
+  double hpxLat();
   FitsData* hpxGlobalData();
   int hpxRecentreRef(const Vector& ref);
   int isHPXWindow();

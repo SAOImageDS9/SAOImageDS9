@@ -3104,16 +3104,35 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat)
     hpxListMarkers(msky, mtext, mcount);
   currentContext->hpxSaveAuxContours(ptr);
 
+  // Automatic rebuilds (pan, pan to) also fit the window to the display:
+  // pixels as fine as one screen pixel at the current zoom (never finer
+  // than HEALPix's) and twice the visible area. A zenithal window is
+  // centred on the target; a conic keeps its reference latitude and
+  // slides its window across the projection to the target.
+  double opix = ptr->hpxPixel();
+  double npix = opix;
   int ok =0;
   switch (mode) {
-  case HPXPAN:
-    ok = ptr->hpxRecentreRef(cursor);
-    break;
   case HPXCENTER:
     ok = ptr->hpxRecentre(lon, lat);
     break;
+  case HPXPAN:
+    if (!pan)
+      break;
+    lon = plon;
+    lat = plat;
+    // fall through
   case HPXPANTO:
-    ok = ptr->hpxRecentrePan(lon, lat);
+    {
+      int ww, hh;
+      hpxWindowGeometry(ptr, &npix, &ww, &hh);
+      double cc[2] = {lon, lat};
+      if (ptr->hpxIsConic())
+	ok = ptr->hpxReshape(lon, ptr->hpxLat(), npix, ww, hh, cc);
+      else
+	ok = ptr->hpxReshape(lon, lat, npix, ww, hh, NULL);
+      npix = ptr->hpxPixel();
+    }
     break;
   }
   if (!ok)
@@ -3122,9 +3141,14 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat)
   currentContext->hpxFinish();
   currentContext->contourUpdateFV();
 
+  // keep the on-screen scale when the pixel size changed
+  if (opix > 0 && npix != opix) {
+    zoom_[0] *= npix/opix;
+    zoom_[1] *= npix/opix;
+  }
+
   // pan: an explicit centre is panned to; otherwise keep the same sky
-  // position (the centre for a zenithal window; for a conic, which only
-  // follows in longitude, this keeps the vertical position)
+  // position
   Vector rr;
   if (mode != HPXPAN) {
     if (ptr->hpxRefAt(lon, lat, &rr))
@@ -3144,12 +3168,64 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat)
   return NULL;
 }
 
-// After a pan has been applied (never during a drag), rebuild a HEALPix
-// window once the pan point has moved far enough from its centre.
-void Base::hpxAutoRecentre()
+// The window geometry wanted for the current display: pixel size [deg]
+// one screen pixel at the current zoom (never finer than HEALPix's), and
+// twice the visible area in pixels (the 2x padding lets short pans show
+// data without a rebuild). FitsHPXReproj::reshape clamps it.
+void Base::hpxWindowGeometry(FitsImage* ptr, double* pix, int* ww, int* hh)
+{
+  double pp = ptr->hpxPixel();
+  double ph = ptr->hpxPixelHPX();
+  double zz = fabs(zoom_[0]) > fabs(zoom_[1]) ? fabs(zoom_[0]) : fabs(zoom_[1]);
+  if (zz <= 0)
+    zz = 1;
+  double screen = pp/zz;           // [deg] per screen pixel now
+  *pix = screen > ph ? screen : ph;
+  *ww = (int)ceil(2*options->width*screen / *pix);
+  *hh = (int)ceil(2*options->height*screen / *pix);
+
+  // no bigger than the projection allows
+  int mw = *ww, mh = *hh;
+  ptr->hpxMaxSize(*pix, &mw, &mh);
+  if (*ww > mw)
+    *ww = mw;
+  if (*hh > mh)
+    *hh = mh;
+}
+
+// After a pan or zoom has been applied (never during a drag), rebuild a
+// HEALPix window when the display wants a different window: the pixel
+// size wanted at this zoom differs by more than 1.5x (zoomed in or out),
+// the visible area no longer fits (zoomed out, frame resized) and the
+// window could be bigger, or the pan point has moved more than 1/4 of the
+// window from its centre.
+void Base::hpxAutoRefresh()
 {
   FitsImage* ptr = currentContext->fits;
-  if (ptr && ptr->hpxNeedsRecentre(cursor))
+  if (!ptr || !ptr->isHPXWindow())
+    return;
+
+  double pix;
+  int ww, hh;
+  hpxWindowGeometry(ptr, &pix, &ww, &hh);
+  double pp = ptr->hpxPixel();
+  double zz = fabs(zoom_[0]) > fabs(zoom_[1]) ? fabs(zoom_[0]) : fabs(zoom_[1]);
+
+  int need = 0;
+  if (pix > 1.5*pp || pix < pp/1.5)
+    need = 1;
+  else {
+    // coverage: how much of the window is visible, in window pixels
+    double vw = zz > 0 ? options->width/zz : ptr->width();
+    double vh = zz > 0 ? options->height/zz : ptr->height();
+    if ((vw > .9*ptr->width() && ww > ptr->width()+2) ||
+	(vh > .9*ptr->height() && hh > ptr->height()+2))
+      need = 1;
+  }
+  if (!need && ptr->hpxNeedsRecentre(cursor))
+    need = 1;
+
+  if (need)
     hpxRecentre(HPXPAN, 0, 0);
 }
 
@@ -3434,12 +3510,14 @@ void Base::zoomCmd(const Vector& z)
   zoom_[0] *= az[0];
   zoom_[1] *= az[1];
   update(MATRIX);
+  hpxAutoRefresh();
 }
 
 void Base::zoomToCmd(const Vector& z)
 {
   zoom_ = ((Vector&)z).abs();
   update(MATRIX);
+  hpxAutoRefresh();
 }
 
 // FrameRGB

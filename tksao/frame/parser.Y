@@ -891,6 +891,7 @@ binTo	: FIT_ {fr->binToFitCmd();}
 block	: numeric {fr->blockCmd(Vector($1,$1));}
         | numeric numeric {fr->blockCmd(Vector($1,$2));}
         | TO_ blockTo
+        | NAN_ ZERO_ yesno {fr->blockNanZeroCmd($3);}
 	;
 
 blockTo : FIT_ {fr->blockToFitCmd();}
@@ -1173,6 +1174,7 @@ getBinCols : /* empty */ {fr->getBinColsCmd();}
 	;
 
 getBlock : FACTOR_  {fr->getBlockCmd();}
+	| NAN_ ZERO_ {fr->getBlockNanZeroCmd();}
 	;
 
 getClip	: {fr->getClipCmd();}

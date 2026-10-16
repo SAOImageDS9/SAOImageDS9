@@ -89,6 +89,7 @@ Context::Context()
   binDepth_ = 1;
 
   blockFactor_ = Vector(1,1);
+  blockNanZero_ =0;
 
   doSmooth_ =0;
   smoothFunction_ =GAUSSIAN;

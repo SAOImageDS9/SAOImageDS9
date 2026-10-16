@@ -96,6 +96,9 @@ proc AnalysisMainMenu {} {
 	-variable block(factor) -value {16 16} -command ChangeBlock
     $ds9(mb).analysis.block add radiobutton -label "[msgcat::mc {Block}] 32" \
 	-variable block(factor) -value {32 32} -command ChangeBlock
+    $ds9(mb).analysis.block add separator
+    $ds9(mb).analysis.block add checkbutton -label [msgcat::mc {Treat NaN as 0}] \
+	-variable block(nan,zero) -command ChangeBlockNanZero
 
     ThemeMenu $ds9(mb).analysis.image
     #~ $ds9(mb).analysis.image add command \
@@ -199,6 +202,9 @@ proc PrefsDialogAnalysisMenu {w} {
 	-variable pblock(factor) -value {16 16}
     $m.block add radiobutton -label "[msgcat::mc {Block}] 32" \
 	-variable pblock(factor) -value {32 32}
+    $m.block add separator
+    $m.block add checkbutton -label [msgcat::mc {Treat NaN as 0}] \
+	-variable pblock(nan,zero)
 
     pack $f -side top -fill both -expand true
 }

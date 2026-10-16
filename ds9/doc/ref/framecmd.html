@@ -224,16 +224,18 @@ $::current(frame) bin to 4 4 about center detx dety time</tt>
 <p>The <tt>bin to &lt;fx&gt; &lt;fy&gt; ...</tt> forms are a legacy one-shot combination of setting the bin factor, the about-point, and the binning columns (and, in the four-column forms, a bin buffer depth) in a single call; prefer the separate <tt>bin factor</tt>/<tt>bin about</tt>/<tt>bin cols</tt>/<tt>bin depth</tt> commands above in new scripts.</p>
 
 <h4><a name="block" id="block"></a>block</h4>
-<p>Sets the block (downsample) factor used when displaying oversized images.</p>
+<p>Sets the block (downsample) factor used when displaying oversized images. <tt>block nan zero</tt> controls how NaN pixels are summed: off (the default), any NaN in a block makes the blocked pixel NaN; on, NaNs are skipped, and the blocked pixel is NaN only when every contributing pixel is NaN.</p>
 <tt>Syntax:<br>
 block &lt;value&gt; [&lt;value&gt;]<br>
 block to fit<br>
 block to &lt;value&gt; [&lt;value&gt;]<br>
+block nan zero &lt;yesno&gt;<br>
 &nbsp;<br>
 Example:<br>
 $::current(frame) block 2<br>
 $::current(frame) block 2 4<br>
-$::current(frame) block to fit</tt>
+$::current(frame) block to fit<br>
+$::current(frame) block nan zero yes</tt>
 
 <h4><a name="center" id="center"></a>center</h4>
 <p>Recenters the frame's pan position on the image.</p>
@@ -453,6 +455,7 @@ $::current(frame) fitsy has ext WCSDVARR</tt>
 <tr><td><tt>get bin cols dim &lt;col&gt;</tt></td><td>the dimension/width of the named bin-table column</td></tr>
 <tr><td><tt>get bin list</tt></td><td>the list of columns available for binning</td></tr>
 <tr><td><tt>get block factor</tt></td><td>the current block factor, as <tt>&lt;x&gt; &lt;y&gt;</tt></td></tr>
+<tr><td><tt>get block nan zero</tt></td><td>1 if NaNs are treated as 0 when blocking, else 0</td></tr>
 <tr><td><tt>get clip</tt></td><td>the current low/high clip values</td></tr>
 <tr><td><tt>get clip &lt;contourClipMode&gt; &lt;contourClipScope&gt;</tt></td><td>low/high clip values for that mode/scope without changing the frame's current mode</td></tr>
 <tr><td><tt>get clip &lt;value&gt; &lt;contourClipScope&gt;</tt></td><td>low/high for a percentage clip at that scope</td></tr>

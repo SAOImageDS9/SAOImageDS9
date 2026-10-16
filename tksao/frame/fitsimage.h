@@ -34,6 +34,7 @@ typedef struct {
   FitsData* basedata;
   FitsFile* block;
   Vector blockFactor;
+  int nanZero;
 } t_block_arg;
 
 typedef struct {

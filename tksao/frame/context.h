@@ -60,6 +60,7 @@ class Context {
   int binDepth_;
 
   Vector blockFactor_;
+  int blockNanZero_;
 
   int doSmooth_;
   SmoothFunction smoothFunction_;
@@ -207,6 +208,8 @@ class Context {
   Vector setBlockFactor(const Vector&);
   Vector setBlockToFactor(const Vector&);
   const Vector& blockFactor() {return blockFactor_;}
+  void setBlockNanZero(int nz) {blockNanZero_ = nz;}
+  int blockNanZero() {return blockNanZero_;}
 
   // params in DATA coords 0-n
   void setCrop3dParams();

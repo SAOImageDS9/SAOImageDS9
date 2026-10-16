@@ -3231,6 +3231,7 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat)
   int mcount[3] = {0,0,0};
   if (remap)
     hpxListMarkers(msky, mtext, mcount);
+  currentContext->hpxSaveAuxContours(ptr);
 
   int ok =0;
   switch (mode) {
@@ -3265,6 +3266,7 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat)
 
   if (remap)
     hpxRestoreMarkers(ptr, msky, mtext, mcount);
+  currentContext->hpxRestoreAuxContours(ptr);
 
   // not FrameBase::updateBin(), which would reset the pan to the centre
   Base::updateBin(Matrix());

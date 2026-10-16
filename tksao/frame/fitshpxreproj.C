@@ -87,9 +87,10 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon)
   size_t inSize = (size_t)iw*ih;
   size_t outSize = (size_t)pWidth_*pHeight_;
 
-  // input in native byte order
-  float* in = new float[inSize];
-  memcpy(in, (char*)hpx->data()+hpx->dataSkip(), inSize*sizeof(float));
+  // input in native byte order. Swap the HPX data in place rather than
+  // copying it: at high nside the HPX image is gigabytes (6.7 GB at
+  // nside 8192), and the caller deletes it right after this.
+  float* in = (float*)((char*)hpx->data()+hpx->dataSkip());
   if (hpx->byteswap())
     swapData(in, inSize);
 
@@ -123,7 +124,6 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon)
   astClearStatus;
   astEnd;
 
-  delete [] in;
   if (!data_) {
     delete [] out;
     return;

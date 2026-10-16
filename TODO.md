@@ -536,6 +536,19 @@ an option.
      to a fresh load at that centre with the same contour file, and after
      a far recentre (everything off the window) and back they render
      identically to the start.
+   - **Window size cap (2026-10-16).** `acis_all_sky_gal.hpx[proj=cop]`
+     appeared to hang: the default conic window (fov 360 plane deg) at
+     the nside-8192 pixel size was ~50300^2 pixels (2.5G, 10 GB), ~2 min
+     per build, ~27 GB peak while recentring (old + new + HPX). Zenithal
+     and conic windows are now capped at 4096 px per axis
+     (`HPX_WINDOW_MAX`, fitshpxreproj.C) by coarsening the pixel size;
+     nearest-neighbour still gives real HEALPix values, just sampled more
+     sparsely, and a `HISTORY` card says so. Same map: COP and default
+     TAN now 4094^2, recentre 1.4-1.5 s, 7.2 GB steady. All-sky
+     projections are not capped (one-off loads). The proper fix is still
+     to size the window from the frame and zoom (sketch above); the cap
+     is the safety net. `Tests/hpxproj.sh`: MOC full-sky ARC capped at
+     4094^2, exact against `reproject` at the coarse pixel size.
 4. Async, (a) above, only if measurements say it's needed.
 
 ## Open questions / risks

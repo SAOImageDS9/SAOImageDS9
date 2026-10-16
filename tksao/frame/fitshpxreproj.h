@@ -26,7 +26,8 @@ class FitsHPXReproj : public FitsFile {
   int hpxNative_;      // hpx_ data already swapped to native order
   int info_;           // index into the projection table
   int nside_;
-  double pix_;         // [deg] HEALPix pixel size
+  double pix_;         // [deg] pixel size: HEALPix's, or coarser
+  int coarse_;         // pixels coarsened to cap the window size
   double crpix1_;
   double crpix2_;
   double lon_;         // current centre (lat_ = theta_a for conics)

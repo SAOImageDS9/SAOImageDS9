@@ -12,6 +12,12 @@
 
 #define R2D (180./M_PI)
 
+// Largest window (zenithal/conic) per axis, in pixels. At the HEALPix
+// pixel size a wide window at high nside is enormous (a 360 deg conic at
+// nside 8192 is ~50000^2 pixels, 10 GB and ~2 min per recentre), so such
+// windows use coarser pixels instead. 4096^2 floats is 64 MB and ~0.8 s.
+#define HPX_WINDOW_MAX 4096
+
 // ALLSKY: full extent of the projection plane in degrees (default PVs);
 //   centred on (lon0, 0); lat0 and fov are ignored.
 // ZENITHAL: centred on (lon0, lat0); fov is the angular diameter on the
@@ -116,6 +122,7 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
   info_ = -1;
   nside_ = 0;
   pix_ = 0;
+  coarse_ = 0;
   crpix1_ = crpix2_ = 0;
   lon_ = lat_ = 0;
 
@@ -169,6 +176,17 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
       width = height = fov;
     }
     break;
+  }
+
+  // windows: cap the size by coarsening the pixels (nearest-neighbour
+  // still gives real HEALPix values, it just samples them more sparsely)
+  coarse_ = 0;
+  if (HPXReprojInfo[ii].kind != ALLSKY) {
+    double big = width > height ? width : height;
+    if (ceil(big/pix_) + 2 > HPX_WINDOW_MAX) {
+      pix_ = big/(HPX_WINDOW_MAX - 4);
+      coarse_ = 1;
+    }
   }
 
   // Keep the size even so no pixel centre falls exactly on the central
@@ -472,6 +490,13 @@ FitsHead* FitsHPXReproj::initHeader(FitsHead* src, const char* pcode,
     char card[81];
     snprintf(card, 81, "HISTORY Resampled from HEALPix NSIDE=%d to %s, nearest neighbour",
 	     nside_, pcode);
+    memset(card+strlen(card), ' ', 80-strlen(card));
+    hd->cardins(card, NULL);
+  }
+  if (coarse_) {
+    char card[81];
+    snprintf(card, 81, "HISTORY Pixels coarsened to %.6g deg to keep the window <= %d px",
+	     pix_, HPX_WINDOW_MAX);
     memset(card+strlen(card), ' ', 80-strlen(card));
     hd->cardins(card, NULL);
   }

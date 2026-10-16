@@ -1037,6 +1037,8 @@ public:
   void sliceCmd(double, Coord::CoordSystem);
 
   void updateFitsCmd();
+  void updateFitsCenterCmd();
+  void updateFitsCenterCmd(const Vector&);
   void updateFitsCmd(int, BBox);
   void unloadFitsCmd();
 

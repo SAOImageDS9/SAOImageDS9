@@ -118,6 +118,7 @@ class Context {
   Matrix bin(const Vector&);
   Matrix binCenter();
   Matrix binCursor();
+  void hpxFinish();
 
   int block();
   void bltHist(char*, char*, int);

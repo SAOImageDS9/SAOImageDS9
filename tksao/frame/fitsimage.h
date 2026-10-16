@@ -154,6 +154,11 @@ class FitsImage {
   void initENVI();
   void initBin();
   void initHPX();
+ public:
+  int hpxRecentre(double lon, double lat);
+  int hpxRecentreRef(const Vector& ref);
+  int isHPXWindow();
+ protected:
 
   void clearWCS();
   void initWCS(FitsHead*);

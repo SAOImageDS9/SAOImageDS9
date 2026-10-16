@@ -3052,6 +3052,43 @@ void Base::updateFitsCmd()
   regionStatsImageInvalidated();
 }
 
+// Recentre a resampled HEALPix window (zenithal/conic) on the current
+// pan position, or on (lon, lat) [deg, the map's own sky system].
+// Markers and the crosshair are not remapped yet.
+void Base::updateFitsCenterCmd()
+{
+  FitsImage* ptr = currentContext->fits;
+  if (!ptr || !ptr->isHPXWindow()) {
+    Tcl_AppendResult(interp, " not a HEALPix zenithal/conic window", NULL);
+    result = TCL_ERROR;
+    return;
+  }
+  if (!ptr->hpxRecentreRef(cursor)) {
+    Tcl_AppendResult(interp, " unable to recentre", NULL);
+    result = TCL_ERROR;
+    return;
+  }
+  currentContext->hpxFinish();
+  updateBin(Matrix());
+}
+
+void Base::updateFitsCenterCmd(const Vector& vv)
+{
+  FitsImage* ptr = currentContext->fits;
+  if (!ptr || !ptr->isHPXWindow()) {
+    Tcl_AppendResult(interp, " not a HEALPix zenithal/conic window", NULL);
+    result = TCL_ERROR;
+    return;
+  }
+  if (!ptr->hpxRecentre(vv[0], vv[1])) {
+    Tcl_AppendResult(interp, " unable to recentre", NULL);
+    result = TCL_ERROR;
+    return;
+  }
+  currentContext->hpxFinish();
+  updateBin(Matrix());
+}
+
 void Base::updateFitsCmd(int which, BBox bb)
 {
   // Note: bb is in IMAGE coords

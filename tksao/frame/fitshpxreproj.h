@@ -5,6 +5,8 @@
 #ifndef __fitshpxreproj_h__
 #define __fitshpxreproj_h__
 
+#include <math.h>
+
 #include "vector.h"
 #include "file.h"
 
@@ -27,13 +29,16 @@ class FitsHPXReproj : public FitsFile {
   int info_;           // index into the projection table
   int nside_;
   double pix_;         // [deg] pixel size: HEALPix's, or coarser
+  double pixHPX_;      // [deg] HEALPix pixel size
+  double planeW_;      // [deg] full extent of the window's projection
+  double planeH_;      //   plane (fov), limits the window size
   int coarse_;         // pixels coarsened to cap the window size
   double crpix1_;
   double crpix2_;
   double lon_;         // current centre (lat_ = theta_a for conics)
   double lat_;
 
-  int build(double lon, double lat);
+  int build(double lon, double lat, const double* centre);
   FitsHead* initHeader(FitsHead*, const char*, double, double, double);
   void swapData(float*, size_t);
   void release();
@@ -47,6 +52,16 @@ class FitsHPXReproj : public FitsFile {
   // returns 0 if this is not a window or the centre is invalid
   int canRecentre();
   int recentre(double lon, double lat);
+  int reshape(double lon, double lat, double pix, int ww, int hh,
+	      const double* centre);
+  double pix() {return pix_;}
+  double pixHPX() {return pixHPX_;}
+  // the largest window at pixel size pix (fov extent, HPX_WINDOW_MAX)
+  void maxSize(double pix, int* ww, int* hh);
+  // the window already shows its whole projection plane (fov)
+  int fullPlane() {
+    return pWidth_ >= (int)ceil(planeW_/pix_) + 1 &&
+      pHeight_ >= (int)ceil(planeH_/pix_) + 1;}
 
   // the map's own (lon, lat) [deg] at image pixel img, and back
   int nativeAt(const Vector& img, double* lon, double* lat);

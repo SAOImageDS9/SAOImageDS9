@@ -115,6 +115,29 @@ int FitsImage::hpxRecentre(double lon, double lat)
   if (!rr->recentre(lon, lat))
     return 0;
 
+  hpxReload();
+  return 1;
+}
+
+// Rebuild with a new pixel size and size (see FitsHPXReproj::reshape)
+int FitsImage::hpxReshape(double lon, double lat, double pix, int ww, int hh,
+			  const double* centre)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (!rr || !rr->canRecentre())
+    return 0;
+
+  if (!rr->reshape(lon, lat, pix, ww, hh, centre))
+    return 0;
+
+  hpxReload();
+  return 1;
+}
+
+// The window's data changed: rebuild the image like nextBin() does; the
+// caller finishes with Context::hpxFinish()
+void FitsImage::hpxReload()
+{
   if (manageBlock_) {
     if (block_)
       delete block_;
@@ -136,7 +159,37 @@ int FitsImage::hpxRecentre(double lon, double lat)
   analysisdata_ = blockdata_;
 
   load();
-  return 1;
+}
+
+double FitsImage::hpxPixel()
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  return rr ? rr->pix() : 0;
+}
+
+double FitsImage::hpxPixelHPX()
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  return rr ? rr->pixHPX() : 0;
+}
+
+void FitsImage::hpxMaxSize(double pix, int* ww, int* hh)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (rr)
+    rr->maxSize(pix, ww, hh);
+}
+
+int FitsImage::hpxIsConic()
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  return rr ? rr->isConic() : 0;
+}
+
+double FitsImage::hpxLat()
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  return rr ? rr->lat() : 0;
 }
 
 // Recentre on the sky position at ref (REF coords, e.g. the pan cursor)
@@ -182,12 +235,16 @@ int FitsImage::hpxRefAt(double lon, double lat, Vector* ref)
 
 // Has the pan point (REF coords) moved far enough from the window's
 // centre to rebuild the window around it? More than a quarter of the
-// window, so short pans never re-render. A conic only follows the pan
-// in longitude, so only horizontal distance counts.
+// window, so short pans never re-render.
 int FitsImage::hpxNeedsRecentre(const Vector& ref)
 {
   FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
   if (!rr || !rr->canRecentre())
+    return 0;
+
+  // a conic only moves its window across a fixed projection, so once
+  // the window shows all of it there is nothing to gain
+  if (rr->isConic() && rr->fullPlane())
     return 0;
 
   Vector img = ref * refToImage;
@@ -195,11 +252,7 @@ int FitsImage::hpxNeedsRecentre(const Vector& ref)
   double hh = height();
   double dx = fabs(img[0] - (ww+1)/2.);
   double dy = fabs(img[1] - (hh+1)/2.);
-  if (dx > .25*ww)
-    return 1;
-  if (!rr->isConic() && dy > .25*hh)
-    return 1;
-  return 0;
+  return dx > .25*ww || dy > .25*hh;
 }
 
 // Recentre for a pan to (lon, lat): a zenithal window centres there; a

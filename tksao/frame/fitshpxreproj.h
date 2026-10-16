@@ -22,6 +22,7 @@
 class FitsHPXReproj : public FitsFile {
  private:
   FitsFile* hpx_;      // HPX intermediate, kept for windows
+  FitsFile* view_;     // hpx_ data seen as native byte order
   int hpxNative_;      // hpx_ data already swapped to native order
   int info_;           // index into the projection table
   int nside_;
@@ -46,10 +47,21 @@ class FitsHPXReproj : public FitsFile {
   int canRecentre();
   int recentre(double lon, double lat);
 
-  // the map's own (lon, lat) [deg] at image pixel img
+  // the map's own (lon, lat) [deg] at image pixel img, and back
   int nativeAt(const Vector& img, double* lon, double* lat);
+  int pixelAt(double lon, double lat, Vector* img);
+
+  // convert (lon, lat) [deg] in the AST sky system given by attrs (e.g.
+  // "System=FK5,Equinox=J2000") to the map's own system; 0 if the map
+  // has no celestial system (XLON/XLAT)
+  int fromSky(const char* attrs, double lon, double lat,
+	      double* olon, double* olat);
 
   int isConic();
+
+  // the kept HPX intermediate in native byte order (windows only), for
+  // whole-map statistics
+  FitsFile* hpxView() {return view_;}
   double lon() {return lon_;}
   double lat() {return lat_;}
 };

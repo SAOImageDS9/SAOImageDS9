@@ -89,11 +89,29 @@ static AstFrameSet* hpxReprojAst(FitsHead* hd)
   return fs;
 }
 
+// The kept HPX intermediate's data, already byte-swapped to native order
+// in place, seen as a FitsFile that says so (the FitsHPX itself still
+// reports its original byte order). Doesn't own anything.
+class FitsHPXNativeView : public FitsFile {
+ public:
+  FitsHPXNativeView(FitsFile* src) {
+    head_ = src->head();
+    manageHead_ = 0;
+    data_ = src->data();
+    dataSize_ = src->dataSize();
+    dataSkip_ = src->dataSkip();
+    byteswap_ = 0;
+    endian_ = lsb() ? LITTLE : BIG;
+    valid_ = 1;
+  }
+};
+
 FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
 			     double lat, double fov)
 {
   // we own hpx from here on
   hpx_ = hpx;
+  view_ = NULL;
   hpxNative_ = 0;
   info_ = -1;
   nside_ = 0;
@@ -180,6 +198,8 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
   // the HPX intermediate; all-sky images free it now.
   if (HPXReprojInfo[ii].kind == ALLSKY)
     release();
+  else
+    view_ = new FitsHPXNativeView(hpx_);
 
   valid_ = 1;
 }
@@ -193,6 +213,9 @@ FitsHPXReproj::~FitsHPXReproj()
 
 void FitsHPXReproj::release()
 {
+  if (view_)
+    delete view_;
+  view_ = NULL;
   if (hpx_)
     delete hpx_;
   hpx_ = NULL;
@@ -236,6 +259,77 @@ int FitsHPXReproj::nativeAt(const Vector& img, double* lon, double* lat)
 	*lon += 360;
       while (*lon >= 360)
 	*lon -= 360;
+      rr = 1;
+    }
+  }
+  astClearStatus;
+  astEnd;
+  return rr;
+}
+
+int FitsHPXReproj::pixelAt(double lon, double lat, Vector* img)
+{
+  if (!head_)
+    return 0;
+
+  int rr = 0;
+  astClearStatus;
+  astBegin;
+  AstFrameSet* fs = hpxReprojAst(head_);
+  if (fs) {
+    double ll = lon/R2D;
+    double bb = lat/R2D;
+    double xx, yy;
+    astTran2(fs, 1, &ll, &bb, 0, &xx, &yy);
+    if (astOK && xx != AST__BAD && yy != AST__BAD) {
+      *img = Vector(xx, yy);
+      rr = 1;
+    }
+  }
+  astClearStatus;
+  astEnd;
+  return rr;
+}
+
+int FitsHPXReproj::fromSky(const char* attrs, double lon, double lat,
+			   double* olon, double* olat)
+{
+  if (!head_)
+    return 0;
+
+  // the map's own system, from the CTYPE prefix
+  char* ctype = head_->getString("CTYPE1");
+  const char* native = NULL;
+  if (ctype) {
+    if (!strncmp(ctype,"GLON",4))
+      native = "System=GALACTIC";
+    else if (!strncmp(ctype,"RA--",4))
+      native = "System=ICRS";
+    else if (!strncmp(ctype,"ELON",4))
+      native = "System=ECLIPTIC,Equinox=J2000";
+  }
+  if (!native)
+    return 0;
+
+  int rr = 0;
+  astClearStatus;
+  astBegin;
+  AstSkyFrame* nat = astSkyFrame("%s", native);
+  AstSkyFrame* usr = astSkyFrame("%s", attrs);
+  AstFrameSet* cvt = (AstFrameSet*)astConvert(usr, nat, "");
+  if (astOK && cvt != AST__NULL) {
+    double ll = lon/R2D;
+    double bb = lat/R2D;
+    double out[2];
+    astTran2(cvt, 1, &ll, &bb, 1, out, out+1);
+    if (astOK && out[0] != AST__BAD && out[1] != AST__BAD) {
+      astNorm(nat, out);
+      *olon = out[0]*R2D;
+      *olat = out[1]*R2D;
+      while (*olon < 0)
+	*olon += 360;
+      while (*olon >= 360)
+	*olon -= 360;
       rr = 1;
     }
   }

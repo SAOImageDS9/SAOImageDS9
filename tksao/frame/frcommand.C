@@ -227,6 +227,7 @@ void FrameBase::panCmd(const Vector& v1, const Vector& v2)
 
   setBinCursor();
   update(MATRIX);
+  hpxAutoRecentre();
 }
 
 void FrameBase::panCmd(const Vector& vv)
@@ -237,6 +238,7 @@ void FrameBase::panCmd(const Vector& vv)
 
   setBinCursor();
   update(MATRIX);
+  hpxAutoRecentre();
 }
 
 void FrameBase::panCmd(const Vector& vv, Coord::CoordSystem sys,
@@ -251,6 +253,7 @@ void FrameBase::panCmd(const Vector& vv, Coord::CoordSystem sys,
   
   setBinCursor();
   update(MATRIX);
+  hpxAutoRecentre();
 }
 
 void FrameBase::panToCmd(const Vector& vv)
@@ -259,11 +262,16 @@ void FrameBase::panToCmd(const Vector& vv)
 
   setBinCursor();
   update(MATRIX);
+  hpxAutoRecentre();
 }
 
 void FrameBase::panToCmd(const Vector& vv, Coord::CoordSystem sys,
 			 Coord::SkyFrame sky)
 {
+  // a HEALPix window rebuilds around far targets itself
+  if (hpxPanTo(vv, sys, sky))
+    return;
+
   if (!currentContext->cfits)
     return;
 
@@ -271,6 +279,7 @@ void FrameBase::panToCmd(const Vector& vv, Coord::CoordSystem sys,
 
   setBinCursor();
   update(MATRIX);
+  hpxAutoRecentre();
 }
 
 void FrameBase::panBBoxCmd(const Vector& vv)
@@ -284,6 +293,7 @@ void FrameBase::panBBoxCmd(const Vector& vv)
 
   setBinCursor();
   update(MATRIX);
+  hpxAutoRecentre();
 }
 
 void FrameBase::panBeginCmd(const Vector& vv)

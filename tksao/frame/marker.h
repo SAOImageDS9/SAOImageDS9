@@ -374,6 +374,8 @@ protected:
   void disableCB() {doCB = 0;}
   void deleteCBs();
   void adoptState(const Marker&);
+  const List<CallBack>& getCallBacks() {return callbacks;}
+  void setCallBacks(const List<CallBack>& cb) {callbacks = cb;}
 
   virtual void analysis(AnalysisTask, int) {}
   virtual void analysisHistogram(char*, char*, int) {}

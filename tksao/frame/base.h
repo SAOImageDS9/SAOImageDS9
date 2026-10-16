@@ -1057,6 +1057,10 @@ public:
   void hpxListMarkers(Coord::SkyFrame, std::vector<std::string>*, int*);
   void hpxRestoreMarkers(FitsImage*, Coord::SkyFrame,
 			 std::vector<std::string>*, int*);
+  void hpxParkedDelete(int, const char*);
+  int hpxParseParked(const std::string&);
+  int hpxRestoring_;   // re-creating regions after a recentre
+  int hpxMapErrs_;     // regions createMarker() couldn't place
   void updateFitsCmd(int, BBox);
   void unloadFitsCmd();
 

@@ -422,8 +422,43 @@ an option.
    - `Tests/hpxproj.sh`: recentre on explicit lon/lat and on the pan,
      size kept, conic latitude kept, AIT refused; recentred images
      match `reproject` exactly.
-2. Synchronous re-centre on pan release, with crosshair, pan and
-   contour handling and global scale limits. Regions deferred.
+2. **Done 2026-10-16.** Live, synchronous recentring. Regions deferred.
+   - Trigger: after a pan is applied, never during a drag:
+     `panEndCmd` (drag release), the `FrameBase` `pan`/`pan to`/
+     `pan bbox` commands (click, XPA, panner, frame locking). The window
+     is rebuilt once the pan point is more than 1/4 of the window from
+     its centre (conics: horizontal distance only).
+   - `pan to <sky>` on a window converts the target with a plain AST
+     SkyFrame-to-SkyFrame conversion (map system from the CTYPE prefix)
+     and, if it is outside the window or far away, rebuilds there
+     directly. Going through the window's WCS put far targets at
+     nonsense positions (a point >90 deg from a TAN centre). Converting
+     via ds9's own frameset gave wrong answers too (its SkyFrame isn't a
+     plain sky system), hence fresh SkyFrames. Frame locking sends
+     `pan to` in WCS, so locked windows follow.
+   - `Base::hpxRecentre(mode, lon, lat)`: modes HPXPAN (on the pan),
+     HPXCENTER (`update fits center lon lat`; conic lat = new theta_a),
+     HPXPANTO (pan to a sky position; conics keep theta_a). The pan and
+     crosshair keep their sky positions (`Base::updateBin()` is called
+     directly, since `FrameBase::updateBin()` resets the pan to the
+     centre, which would lose a conic's vertical position); contours are
+     regenerated with `contourUpdateFV()`, as `setSlice()` does.
+   - Global scale limits: a window clips on the whole map. `FitsImage`
+     keeps a persistent `FitsDatam<float>` over the kept HPX
+     intermediate (through a native-byte-order view, since the FitsHPX
+     still reports swapped data); `FitsData` caches its scan/zscale/
+     autocut, so the whole-map pass happens once per load (+4 s at
+     nside 8192) and recentres stay ~0.23 s. `min()/max()/low()/high()`
+     and the string getters read it; min/max *positions* aren't
+     reported for windows (they'd be HPX coords).
+   - Verified: limits equal the whole-map HPX load (minmax and zscale)
+     and don't change on recentre; a recentred view with contours renders
+     byte-identically to a fresh load at that centre; default HPX loads
+     and filename parsing still byte-identical to the Phase 3 record.
+     `moc.sh` still fails here only because PR #378 isn't merged.
+   - `Tests/hpxproj.sh` covers all of the above.
+   - Not done: regions (step 3), and aux contours loaded from files
+     (same problem as regions).
 3. Region remapping.
 4. Async, (a) above, only if measurements say it's needed.
 

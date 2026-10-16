@@ -119,6 +119,8 @@ class Context {
   Matrix binCenter();
   Matrix binCursor();
   void hpxFinish();
+  void hpxSaveAuxContours(FitsImage*);
+  void hpxRestoreAuxContours(FitsImage*);
 
   int block();
   void bltHist(char*, char*, int);

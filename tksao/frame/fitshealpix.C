@@ -267,3 +267,22 @@ FitsData* FitsImage::hpxGlobalData()
 			      vv->head()->naxis(1));
   return hpxGlobal_;
 }
+
+// The ds9 sky frame matching the map's own system; 0 for XLON/XLAT
+int FitsImage::hpxSkyFrame(Coord::SkyFrame* sky)
+{
+  if (!isHPXWindow() || !image_ || !image_->head())
+    return 0;
+  char* ctype = image_->head()->getString("CTYPE1");
+  if (!ctype)
+    return 0;
+  if (!strncmp(ctype,"GLON",4))
+    *sky = Coord::GALACTIC;
+  else if (!strncmp(ctype,"RA--",4))
+    *sky = Coord::ICRS;
+  else if (!strncmp(ctype,"ELON",4))
+    *sky = Coord::ECLIPTIC;
+  else
+    return 0;
+  return 1;
+}

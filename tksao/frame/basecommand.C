@@ -3223,6 +3223,15 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat)
   int pan = ptr->hpxNativeAtRef(cursor, &plon, &plat);
   int cross = ptr->hpxNativeAtRef(crosshair, &clon, &clat);
 
+  // regions, listed while the old WCS is still in place (not for
+  // XLON/XLAT maps, which have no sky system to go through)
+  Coord::SkyFrame msky;
+  int remap = ptr->hpxSkyFrame(&msky);
+  std::vector<std::string> mtext[3];
+  int mcount[3] = {0,0,0};
+  if (remap)
+    hpxListMarkers(msky, mtext, mcount);
+
   int ok =0;
   switch (mode) {
   case HPXPAN:
@@ -3253,6 +3262,9 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat)
     cursor = rr;
   if (cross && ptr->hpxRefAt(clon, clat, &rr))
     crosshair = rr;
+
+  if (remap)
+    hpxRestoreMarkers(ptr, msky, mtext, mcount);
 
   // not FrameBase::updateBin(), which would reset the pan to the centre
   Base::updateBin(Matrix());

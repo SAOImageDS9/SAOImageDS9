@@ -33,12 +33,14 @@ extern void ffArray(int);
 
 %union {
   float real;
+  double dbl;
   int integer;
   char str[2048];
   void* ptr;
 }
 
 %type <integer> endian
+%type <dbl> hpxReal
 
 %token <integer> INT
 %token <str> STRING
@@ -57,11 +59,13 @@ extern void ffArray(int);
 %token ECLIPTIC_
 %token ENDIAN_
 %token EQUATORIAL_
+%token FOV_
 %token GALACTIC_
 %token KEY_
 %token LAYOUT_
 %token LITTLE_
 %token LITTLEENDIAN_
+%token LAT0_
 %token LON0_
 %token NESTED_
 %token NORTH_
@@ -277,15 +281,19 @@ hpx	: SYSTEM_ '=' hpxSystem
 	| COL_ '=' INT {ff->setpHPXColumn($3);}
 	| QUAD_ '=' INT {ff->setpHPXQuad($3);}
 	| PROJ_ '=' STRING {ff->setpHPXProj($3);}
-	| LON0_ '=' INT {ff->setpHPXLon0($3);}
-	| LON0_ '=' STRING
+	| LON0_ '=' hpxReal {ff->setpHPXLon0($3);}
+	| LAT0_ '=' hpxReal {ff->setpHPXLat0($3);}
+	| FOV_ '=' hpxReal {ff->setpHPXFov($3);}
+	;
+
+// reals lex as STRING (e.g. -60.5)
+hpxReal	: INT {$$ = $1;}
+	| STRING
 	{
-	  // reals lex as STRING (e.g. -60.5)
 	  char* end;
-	  double lon0 = strtod($3, &end);
-	  if (end == $3 || *end)
+	  $$ = strtod($1, &end);
+	  if (end == $1 || *end)
 	    YYERROR;
-	  ff->setpHPXLon0(lon0);
 	}
 	;
 

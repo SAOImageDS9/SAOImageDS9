@@ -69,8 +69,8 @@ RING / NESTED / NUNIQ / partial maps alike, and it works for any projection
 in AST's table, not just AIT/MOL. Only the whole-sky ones make sense for
 this feature, though (AIT, MOL, CAR, SFL/GLS, PAR, CEA, plus the existing
 HPX/XPH). Zenithal and conic projections (TAN, SIN, COE, ...) can't show
-the full sky and would need a centre latitude and a field size, so leave
-them out for now.
+the full sky and need a centre latitude and a field size; they were
+added later as static windows (Phase 4, step 0).
 
 ### Where the code goes
 
@@ -372,11 +372,28 @@ an option.
 
 **Suggested order.**
 
-0. Static zenithal/conic (no live update): `proj=tan,lon0=..,lat0=..`
-   plus a size option (e.g. `fov=`, degrees). Small change to
-   `FitsHPXReproj` (centre latitude, size, `PV2_*` for conics); it
-   exercises the WCS, the resample and the tests without any of the
-   live machinery, and is useful on its own.
+0. **Done 2026-10-16.** Static zenithal/conic windows:
+   - `proj=tan|sin|stg|arc|zea` centred on `lon0=`/`lat0=` (default 0),
+     `fov=` = angular diameter of the square image (defaults TAN 90,
+     SIN/STG 180, ARC/ZEA 360; TAN capped at 170), converted to plane
+     size with each projection's radial formula.
+   - `proj=cop|coe|cod|coo|bon`: `lat0=` is the reference latitude
+     theta_a (`PV2_1`, default 45; 0 is rejected as degenerate),
+     `lon0=` the central meridian, `fov=` the plane width (default 360).
+     CRVAL2 = theta_a for the conics, 0 for Bonne (its reference point).
+   - New bracket keywords `lat0` and `fov` (`fitsy`); lon0/lat0/fov share
+     one `hpxReal` rule. `lat0`/`fov` are ignored by the all-sky
+     projections. Invalid `lat0` (|lat0| > 90, conic 0) fails the load.
+   - The reference pixel is nudged by (.001, .0007) px. A polar TAN view
+     (`lat0=90,lon0=45`) put pixel centres exactly on the HPX polar
+     facet seams along the image diagonals (exact .5 ties, 20 pixels
+     different from `reproject`); the even-size rule only covers the
+     central row/column. Unequal offsets move pixel centres off every
+     line of symmetry.
+   - All ten match `reproject_from_healpix` exactly (wmap at various
+     centres, plus a polar TAN of the MOC); added to `Tests/hpxproj.sh`.
+     AST already blanks ARC beyond 180 deg and invalid conic regions.
+   - Docs: `ds9/doc/ref/file.html`.
 1. Keep the HPX intermediate resident; add `recentre()` and a frame
    command to call it (`$frame hpx recentre`) for testing over XPA.
 2. Synchronous re-centre on pan release, with crosshair, pan and

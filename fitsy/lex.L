@@ -65,11 +65,13 @@ dims		{RET(DIMS_)}
 ecliptic	{RET(ECLIPTIC_)}
 endian          {RET(ENDIAN_)}
 equatorial	{RET(EQUATORIAL_)}
+fov		{RET(FOV_)}
 galactic	{RET(GALACTIC_)}
 key		{RET(KEY_)}
 layout		{RET(LAYOUT_)}
 little   	{RET(LITTLE_)}
 littleendian	{RET(LITTLEENDIAN_)}
+lat0		{RET(LAT0_)}
 lon0		{RET(LON0_)}
 nested		{RET(NESTED_)}
 north		{RET(NORTH_)}

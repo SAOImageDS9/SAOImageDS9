@@ -7,19 +7,22 @@
 
 #include "file.h"
 
-// Resample a built FitsHPX image (HPX/XPH layout) into another all-sky
-// projection through AST. Nearest-neighbour only, so every output pixel
+// Resample a built FitsHPX image (HPX/XPH layout) into another
+// projection through AST: all-sky (AIT, MOL, CAR, ...), zenithal (TAN,
+// SIN, ...) centred on (lon, lat) with angular diameter fov, or conic
+// (COE, COD, ...) with reference latitude lat. Nearest-neighbour only, so every output pixel
 // is a real HEALPix pixel value; pixels outside the projection come out
 // NaN. The constructor byte-swaps the FitsHPX's data in place, so the
 // FitsHPX must not be used afterwards (FitsImage::initHPX deletes it).
 class FitsHPXReproj : public FitsFile {
  private:
-  void initHeader(FitsFile*, const char*, double, int, double, double,
-		  double);
+  void initHeader(FitsFile*, const char*, double, double, double, int,
+		  double, double, double);
   void swapData(float*, size_t);
 
  public:
-  FitsHPXReproj(FitsFile*, const char*, double);
+  FitsHPXReproj(FitsFile*, const char*, double lon, double lat,
+		double fov);
   ~FitsHPXReproj();
 };
 

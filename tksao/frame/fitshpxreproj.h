@@ -10,7 +10,8 @@
 // Resample a built FitsHPX image (HPX/XPH layout) into another all-sky
 // projection through AST. Nearest-neighbour only, so every output pixel
 // is a real HEALPix pixel value; pixels outside the projection come out
-// NaN.
+// NaN. The constructor byte-swaps the FitsHPX's data in place, so the
+// FitsHPX must not be used afterwards (FitsImage::initHPX deletes it).
 class FitsHPXReproj : public FitsFile {
  private:
   void initHeader(FitsFile*, const char*, double, int, double, double,

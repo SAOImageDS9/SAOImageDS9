@@ -254,6 +254,136 @@ and use `lon=` for the centre longitude instead.
   box is centred on the seam (`box(180,-50,30,15,0)`). Same family as the
   `data`-command crash above; flagged together as a separate task.
 
+### Phase 4 (proposal, not started): zenithal and conic projections
+
+Sketch from 2026-10-16. Nothing here is implemented.
+
+**Idea.** Zenithal projections (TAN, SIN, ARC, ZEA, STG, ...) can't show
+the whole sky, so render a *window*: the tangent point is the current
+pan position, the pixel size is the HEALPix pixel size at the tangent
+point, and the window is the frame size (at the current zoom) padded
+2x on each axis. When the user pans, re-centre and re-render.
+
+**Feasibility: yes. Speed is not the problem; overlays are.**
+
+- Cost, measured on this branch (one core, exact nearest-neighbour,
+  `tol=0`): the MOC (nside 1024) to MOL, 16M output pixels, takes
+  ~0.7 s, about 45 ns/pixel, plus ~0.35 s to build the HPX
+  intermediate. A 1000x900 frame padded 2x is ~3.6M pixels: ~0.15 s
+  per re-render. Fine to do synchronously on pan release.
+- The HPX intermediate would stay resident (built once per load)
+  instead of being freed after resampling; that is the ~0.35 s part.
+  At very high nside it is the memory limit already noted below.
+- Stress test, `/Users/kjg/acis_all_sky_gal.hpx` (nside 8192, partial
+  NESTED, 17M rows, galactic; 64 GB Mac): default HPX load 17.9 s,
+  40960x40960, peak 7.1 GB; `proj=ait` 65.5 s, 45288x22646, peak
+  17.2 GB. The resample ran at the same ~45 ns/pixel, so a
+  frame-sized window would still re-render in ~0.15 s at nside 8192.
+  But keeping a 6.7 GB HPX intermediate resident (and 18 s to build it)
+  is the real cost at this size. Option: skip the intermediate and look
+  pixels up straight from the table (HEALPix ang2pix on the sky
+  position; binary search on the sorted PIXEL column for partial maps,
+  UNIQ for MOCs). That needs ang2pix in C, which AST doesn't provide.
+- Fixed 2026-10-16, independent of Phase 4: `FitsHPXReproj` copied the
+  whole HPX image to byte-swap it, though the intermediate is deleted
+  right after. It now swaps in place: the nside-8192 AIT peak went from
+  17.2 GB to 10.9 GB, same time. A full-sky AIT at nside 8192 is also a
+  4 GB image that nobody can see at full resolution, which is another
+  argument for windowed rendering even for AIT/MOL at high nside.
+- **AST is not thread-safe here** (`ast/` is configured
+  `--without-pthreads`) and the main thread uses it constantly, so
+  worker threads can't call AST. See "Async" below for options.
+- The hard part is that every re-render gives the image a new pixel
+  grid and WCS, and the old-to-new pixel mapping is *not* affine
+  (different tangent point). Everything ds9 keeps in image
+  coordinates has to be remapped through the sky (see "Swap").
+
+**Precedent in ds9: binned event tables.** Panning a binned table only
+records the new centre (`FrameBase::panCmd` -> `setBinCursor()`); a bin
+command then rebuilds the image around it (`FitsImage::nextBin()`,
+`fitsbin.C`) and `Base::updateBin(Matrix)` shifts the crosshair,
+markers and contours by the returned affine matrix. A live HEALPix view
+would follow the same shape: pan sets the cursor, a "re-centre" step
+rebuilds the window, then overlays are remapped. Unlike bin, ds9 should
+trigger the re-centre itself on pan release (`PanRelease` in
+`panzoom.tcl`) rather than wait for a menu command.
+
+**Design sketch.**
+
+1. *Options.* `proj=tan|sin|arc|zea|stg|...` plus `lat0=` alongside the
+   existing `lon0=` for the initial centre (default: the map's 0,0, or
+   the centre of the data for partial maps and MOCs).
+2. *Class.* `FitsHPXView : FitsFile` owns the resident `FitsHPX` and
+   the current window (data + header). `recentre(lon, lat, w, h)`
+   rebuilds the target header (CRVAL = tangent point, CDELT = HEALPix
+   pixel size, NAXIS = w x h) and resamples, reusing the
+   `FitsHPXReproj` code. Window size is capped (e.g. 4096^2), and
+   capped by the projection's valid region (TAN diverges at 90 deg, so
+   limit it to ~70 deg from the centre; SIN to a hemisphere; ARC/ZEA
+   can reach the whole sky).
+3. *Trigger.* Re-centre on pan release, `pan to`, zoom change and frame
+   resize, but only when the visible area has left the inner part of
+   the window (hysteresis), not on every release. While dragging, the
+   2x padding is what the user sees, so short drags never re-render.
+4. *Swap.* Like `nextBin()`: replace the data and header, rebuild
+   base/block/analysis/image, rebuild `ast_`, then:
+   - crosshair: old image -> sky -> new image (one point, easy)
+   - pan: the new tangent point is the image centre
+   - contours: regenerate (they're derived data)
+   - regions: the hard part. `updateMarkerCoords()` takes an affine
+     Matrix; here each vertex/centre must go through the sky, and
+     sizes and angles change with the projection. Options: list the
+     regions in WCS and recreate them, or add a sky-based remap to the
+     marker classes. Needs a closer look before committing to this.
+   - scale limits: compute minmax (and probably zscale) once from the
+     full map, otherwise the display brightness jumps on every pan.
+5. *Async, if synchronous turns out too slow* (big frames x high nside):
+   - (a) Chunk on the main thread: resample in row strips from
+     `Tcl_DoWhenIdle`/timer callbacks (`astResampleF` can fill a
+     sub-region via its `lbnd`/`ubnd` arguments), cancel when a new pan
+     arrives. No threads, keeps the UI responsive. Recommended first.
+   - (b) Threads without AST: evaluate the mapping with AST on the main
+     thread on a coarse grid (e.g. every 16 pixels), then let worker
+     threads interpolate pixel positions and do the nearest-neighbour
+     lookups, with cells that straddle an HPX facet seam handled
+     exactly. This is what `astResample`'s `tol` does internally.
+     Follow `Frame3d`'s detach pattern: `fillImageDetach()`, a 125 ms
+     `Tcl_CreateTimerHandler` poll of per-thread `done` flags, and an
+     `abort` flag (`frame3d.C`).
+   - (c) Rebuilding AST with pthreads: the biggest change, since AST
+     then locks each object to one thread. Not recommended.
+
+**Conic projections** (COE, COD, COO, COP, BON) are built around a
+latitude band (`PV2_1` = theta_a, plus a half-width), so re-centring
+them on every pan isn't natural. Suggest conics stay static: a fixed
+window from `lon0=`/`lat0=`, with the band from the centre latitude or
+an option.
+
+**Other things to decide.**
+
+- The panner shows only the current window, so it can't be used to
+  jump across the sky. A low-res all-sky overview in the panner would
+  be a separate feature.
+- `save fits` and `saveimage` save the current window only.
+- `frame lock wcs`: panning another frame re-centres this one too,
+  which is probably what users want, but it multiplies re-renders.
+- Frame matching uses one linear fit (see PR #378); that is a good fit
+  for a zenithal window, better than for all-sky AIT/MOL.
+
+**Suggested order.**
+
+0. Static zenithal/conic (no live update): `proj=tan,lon0=..,lat0=..`
+   plus a size option (e.g. `fov=`, degrees). Small change to
+   `FitsHPXReproj` (centre latitude, size, `PV2_*` for conics); it
+   exercises the WCS, the resample and the tests without any of the
+   live machinery, and is useful on its own.
+1. Keep the HPX intermediate resident; add `recentre()` and a frame
+   command to call it (`$frame hpx recentre`) for testing over XPA.
+2. Synchronous re-centre on pan release, with crosshair, pan and
+   contour handling and global scale limits. Regions deferred.
+3. Region remapping.
+4. Async, (a) above, only if measurements say it's needed.
+
 ## Open questions / risks
 
 - **HPX gaps in MOC images:** `FitsHPX::buildMOC()` fills its image with

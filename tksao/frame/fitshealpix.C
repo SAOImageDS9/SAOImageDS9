@@ -6,6 +6,8 @@
 #include <math.h>
 
 #include "fitsimage.h"
+#include "base.h"
+#include "context.h"
 #include "hpx.h"
 #include "fitshpxreproj.h"
 #include "util.h"
@@ -92,7 +94,9 @@ void FitsImage::initHPX()
     FitsHPX* hpx = new FitsHPX(fits_, order, coord, FitsHPX::EQUATOR, col, 0);
     if (hpx->isValid())
       hpx_ = new FitsHPXReproj(hpx, upper, fits_->pHPXLon0(),
-			       fits_->pHPXLat0(), fits_->pHPXFov());
+			       fits_->pHPXLat0(), fits_->pHPXFov(),
+			       context_->parent_->getWidth(),
+			       context_->parent_->getHeight());
     else
       delete hpx;
     delete [] upper;
@@ -184,6 +188,20 @@ int FitsImage::hpxIsConic()
 {
   FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
   return rr ? rr->isConic() : 0;
+}
+
+double FitsImage::hpxLon()
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  return rr ? rr->lon() : 0;
+}
+
+// full extent of the window's projection plane (fov) [deg]
+void FitsImage::hpxPlane(double* ww, double* hh)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  *ww = rr ? rr->planeW() : 0;
+  *hh = rr ? rr->planeH() : 0;
 }
 
 double FitsImage::hpxLat()

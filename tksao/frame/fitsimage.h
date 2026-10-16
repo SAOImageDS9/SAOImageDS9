@@ -194,6 +194,8 @@ class FitsImage {
   void hpxMaxSize(double pix, int* ww, int* hh);
   int hpxIsConic();
   double hpxLat();
+  double hpxLon();
+  void hpxPlane(double* ww, double* hh);
   FitsData* hpxGlobalData();
   int hpxRecentreRef(const Vector& ref);
   int isHPXWindow();

@@ -3183,39 +3183,108 @@ void Base::updateFitsCmd()
 
 // Recentre a resampled HEALPix window (zenithal/conic) on the current
 // pan position, or on (lon, lat) [deg, the map's own sky system].
-// Markers and the crosshair are not remapped yet.
 void Base::updateFitsCenterCmd()
 {
-  FitsImage* ptr = currentContext->fits;
-  if (!ptr || !ptr->isHPXWindow()) {
-    Tcl_AppendResult(interp, " not a HEALPix zenithal/conic window", NULL);
+  const char* err = hpxRecentre(HPXPAN, 0, 0);
+  if (err) {
+    Tcl_AppendResult(interp, err, NULL);
     result = TCL_ERROR;
-    return;
   }
-  if (!ptr->hpxRecentreRef(cursor)) {
-    Tcl_AppendResult(interp, " unable to recentre", NULL);
-    result = TCL_ERROR;
-    return;
-  }
-  currentContext->hpxFinish();
-  updateBin(Matrix());
 }
 
 void Base::updateFitsCenterCmd(const Vector& vv)
 {
+  const char* err = hpxRecentre(HPXCENTER, vv[0], vv[1]);
+  if (err) {
+    Tcl_AppendResult(interp, err, NULL);
+    result = TCL_ERROR;
+  }
+}
+
+// Rebuild a HEALPix window, mode:
+//   HPXPAN     around the current pan position
+//   HPXCENTER  centred on (lon, lat) (for a conic, lat is its new
+//              reference latitude), then pan there
+//   HPXPANTO   for a pan to (lon, lat): centred there (a conic keeps its
+//              reference latitude), then pan there
+// (lon, lat) are in the map's own sky system [deg]. Like a slice change,
+// the data under the frame changes: the load steps rerun (WCS, clip),
+// contours are regenerated, and the pan and crosshair go back to the same
+// sky positions in the new image. Regions are not remapped yet.
+// Returns NULL, or an error message.
+const char* Base::hpxRecentre(HPXMode mode, double lon, double lat)
+{
   FitsImage* ptr = currentContext->fits;
-  if (!ptr || !ptr->isHPXWindow()) {
-    Tcl_AppendResult(interp, " not a HEALPix zenithal/conic window", NULL);
-    result = TCL_ERROR;
-    return;
+  if (!ptr || !ptr->isHPXWindow())
+    return " not a HEALPix zenithal/conic window";
+
+  // sky positions to restore afterwards
+  double plon, plat, clon, clat;
+  int pan = ptr->hpxNativeAtRef(cursor, &plon, &plat);
+  int cross = ptr->hpxNativeAtRef(crosshair, &clon, &clat);
+
+  int ok =0;
+  switch (mode) {
+  case HPXPAN:
+    ok = ptr->hpxRecentreRef(cursor);
+    break;
+  case HPXCENTER:
+    ok = ptr->hpxRecentre(lon, lat);
+    break;
+  case HPXPANTO:
+    ok = ptr->hpxRecentrePan(lon, lat);
+    break;
   }
-  if (!ptr->hpxRecentre(vv[0], vv[1])) {
-    Tcl_AppendResult(interp, " unable to recentre", NULL);
-    result = TCL_ERROR;
-    return;
-  }
+  if (!ok)
+    return " unable to recentre";
+
   currentContext->hpxFinish();
-  updateBin(Matrix());
+  currentContext->contourUpdateFV();
+
+  // pan: an explicit centre is panned to; otherwise keep the same sky
+  // position (the centre for a zenithal window; for a conic, which only
+  // follows in longitude, this keeps the vertical position)
+  Vector rr;
+  if (mode != HPXPAN) {
+    if (ptr->hpxRefAt(lon, lat, &rr))
+      cursor = rr;
+  }
+  else if (pan && ptr->hpxRefAt(plon, plat, &rr))
+    cursor = rr;
+  if (cross && ptr->hpxRefAt(clon, clat, &rr))
+    crosshair = rr;
+
+  // not FrameBase::updateBin(), which would reset the pan to the centre
+  Base::updateBin(Matrix());
+  return NULL;
+}
+
+// After a pan has been applied (never during a drag), rebuild a HEALPix
+// window once the pan point has moved far enough from its centre.
+void Base::hpxAutoRecentre()
+{
+  FitsImage* ptr = currentContext->fits;
+  if (ptr && ptr->hpxNeedsRecentre(cursor))
+    hpxRecentre(HPXPAN, 0, 0);
+}
+
+// A pan to a sky position on a HEALPix window. Convert the target to the
+// map's own system directly (not through the window's WCS, which can't
+// place points outside the window) and, if it is outside the window or
+// far from its centre, rebuild the window there. Returns 1 if handled.
+int Base::hpxPanTo(const Vector& vv, Coord::CoordSystem sys,
+		   Coord::SkyFrame sky)
+{
+  FitsImage* ptr = currentContext->fits;
+  double lon, lat;
+  if (!ptr || !ptr->hpxNativeFromSky(vv, sys, sky, &lon, &lat))
+    return 0;
+
+  Vector rr;
+  if (ptr->hpxRefAt(lon, lat, &rr) && !ptr->hpxNeedsRecentre(rr))
+    return 0;
+
+  return hpxRecentre(HPXPANTO, lon, lat) ? 0 : 1;
 }
 
 void Base::updateFitsCmd(int which, BBox bb)

@@ -1047,6 +1047,10 @@ public:
   void updateFitsCmd();
   void updateFitsCenterCmd();
   void updateFitsCenterCmd(const Vector&);
+  enum HPXMode {HPXPAN, HPXCENTER, HPXPANTO};
+  const char* hpxRecentre(HPXMode, double, double);
+  void hpxAutoRecentre();
+  int hpxPanTo(const Vector&, Coord::CoordSystem, Coord::SkyFrame);
   void updateFitsCmd(int, BBox);
   void unloadFitsCmd();
 
@@ -1725,7 +1729,7 @@ public:
   virtual void panToCmd(const Vector&, Coord::CoordSystem, Coord::SkyFrame) =0;
   virtual void panBeginCmd(const Vector&) =0;
   virtual void panMotionCmd(const Vector&) =0;
-  void panEndCmd(const Vector& vv) {panMotionCmd(vv);}
+  void panEndCmd(const Vector& vv) {panMotionCmd(vv); hpxAutoRecentre();}
   virtual void panBBoxCmd(const Vector&) =0;
   void panPreserveCmd(int r) {preservePan = r;}
   void rotateCmd(double);

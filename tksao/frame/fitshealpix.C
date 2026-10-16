@@ -3,11 +3,13 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include <string.h>
+#include <math.h>
 
 #include "fitsimage.h"
 #include "hpx.h"
 #include "fitshpxreproj.h"
 #include "util.h"
+#include "wcsast.h"
 
 void FitsImage::initHPX()
 {
@@ -159,4 +161,109 @@ int FitsImage::isHPXWindow()
 {
   FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
   return rr && rr->canRecentre();
+}
+
+// the map's own (lon, lat) [deg] at ref (REF coords), and back
+int FitsImage::hpxNativeAtRef(const Vector& ref, double* lon, double* lat)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  return rr ? rr->nativeAt(ref * refToImage, lon, lat) : 0;
+}
+
+int FitsImage::hpxRefAt(double lon, double lat, Vector* ref)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  Vector img;
+  if (!rr || !rr->pixelAt(lon, lat, &img))
+    return 0;
+  *ref = img * imageToRef;
+  return 1;
+}
+
+// Has the pan point (REF coords) moved far enough from the window's
+// centre to rebuild the window around it? More than a quarter of the
+// window, so short pans never re-render. A conic only follows the pan
+// in longitude, so only horizontal distance counts.
+int FitsImage::hpxNeedsRecentre(const Vector& ref)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (!rr || !rr->canRecentre())
+    return 0;
+
+  Vector img = ref * refToImage;
+  double ww = width();
+  double hh = height();
+  double dx = fabs(img[0] - (ww+1)/2.);
+  double dy = fabs(img[1] - (hh+1)/2.);
+  if (dx > .25*ww)
+    return 1;
+  if (!rr->isConic() && dy > .25*hh)
+    return 1;
+  return 0;
+}
+
+// Recentre for a pan to (lon, lat): a zenithal window centres there; a
+// conic only follows in longitude and keeps its reference latitude.
+int FitsImage::hpxRecentrePan(double lon, double lat)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (!rr || !rr->canRecentre())
+    return 0;
+  return hpxRecentre(lon, rr->isConic() ? rr->lat() : lat);
+}
+
+// Convert a sky position vv [deg] in (sys, sky) to the map's own sky
+// system, as a pure sky-to-sky conversion. The window's own WCS can't be
+// used for this: a target outside the window (e.g. more than 90 deg from
+// a TAN centre) has no sensible pixel position. Returns 0 if the map has
+// no celestial system (XLON/XLAT) or the conversion fails.
+int FitsImage::hpxNativeFromSky(const Vector& vv, Coord::CoordSystem sys,
+				Coord::SkyFrame sky, double* lon, double* lat)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (!rr || !rr->canRecentre() || !hasWCSCel(sys))
+    return 0;
+
+  // as wcsSkyFrame()
+  const char* attrs;
+  switch (sky) {
+  case Coord::FK4:
+    attrs = "System=FK4,Equinox=B1950";
+    break;
+  case Coord::FK5:
+    attrs = "System=FK5,Equinox=J2000";
+    break;
+  case Coord::ICRS:
+    attrs = "System=ICRS";
+    break;
+  case Coord::GALACTIC:
+    attrs = "System=GALACTIC";
+    break;
+  case Coord::ECLIPTIC:
+    attrs = "System=ECLIPTIC,Equinox=J2000";
+    break;
+  default:
+    return 0;
+  }
+
+  return rr->fromSky(attrs, vv[0], vv[1], lon, lat);
+}
+
+// Whole-map clip data for a HEALPix window: one persistent FitsDatam over
+// the kept HPX intermediate, so its cached statistics (scan, zscale,
+// autocut) survive recentring and the scale limits don't jump.
+FitsData* FitsImage::hpxGlobalData()
+{
+  if (hpxGlobal_)
+    return hpxGlobal_;
+
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (!rr || !rr->hpxView())
+    return NULL;
+
+  FitsFile* vv = rr->hpxView();
+  hpxGlobal_ = new FitsDatam<float>(vv, interp_);
+  hpxGlobalBound_ = FitsBound(0, 0, vv->head()->naxis(0),
+			      vv->head()->naxis(1));
+  return hpxGlobal_;
 }

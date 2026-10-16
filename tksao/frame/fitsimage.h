@@ -70,6 +70,8 @@ class FitsImage {
   FitsFile* post_;          // fits post processing
   FitsFile* hist_;          // fits bin
   FitsFile* hpx_;           // healpix
+  FitsData* hpxGlobal_;     // whole-map clip data for a HEALPix window
+  FitsBound hpxGlobalBound_;
 
   // base
   FitsFile* base_;
@@ -157,8 +159,15 @@ class FitsImage {
   void initHPX();
  public:
   int hpxRecentre(double lon, double lat);
+  FitsData* hpxGlobalData();
   int hpxRecentreRef(const Vector& ref);
   int isHPXWindow();
+  int hpxNativeAtRef(const Vector& ref, double* lon, double* lat);
+  int hpxRefAt(double lon, double lat, Vector* ref);
+  int hpxNeedsRecentre(const Vector& ref);
+  int hpxRecentrePan(double lon, double lat);
+  int hpxNativeFromSky(const Vector& vv, Coord::CoordSystem, Coord::SkyFrame,
+		       double* lon, double* lat);
  protected:
 
   void clearWCS();
@@ -497,24 +506,31 @@ class FitsImage {
   float getValueFloat(long i) {return data_->getValueFloat(i);}
   double getValueDouble(long i) {return data_->getValueDouble(i);}
 
-  void setClip(double l, double h) {data_->setClip(l,h);}
+  // clip statistics: a HEALPix window uses the whole map (hpxGlobal_),
+  // so the scale limits don't change as the window is recentred; its
+  // min/max positions are in HPX coords, so they aren't reported
+  FitsData* clipData() {return hpxGlobal_ ? hpxGlobal_ : data_;}
+  void setClip(double l, double h)
+  {data_->setClip(l,h); if (hpxGlobal_) hpxGlobal_->setClip(l,h);}
 
-  const char* getMin() {return data_ ? data_->getMin() : NULL;}
+  const char* getMin() {return clipData() ? clipData()->getMin() : NULL;}
   const char* getMinX() {return data_ ? data_->getMinX() : NULL;}
   const char* getMinY() {return data_ ? data_->getMinY() : NULL;}
-  const char* getMax() {return data_ ? data_->getMax() : NULL;}
+  const char* getMax() {return clipData() ? clipData()->getMax() : NULL;}
   const char* getMaxX() {return data_ ? data_->getMaxX() : NULL;}
   const char* getMaxY() {return data_ ? data_->getMaxY() : NULL;}
-  const char* getLow() {return data_ ? data_->getLow() : NULL;}
-  const char* getHigh() {return data_ ? data_->getHigh() : NULL;}
+  const char* getLow() {return clipData() ? clipData()->getLow() : NULL;}
+  const char* getHigh() {return clipData() ? clipData()->getHigh() : NULL;}
 
-  double min() {return data_ ? data_->min() : 0;}
-  Vector minXY() {return data_ ? data_->minXY() : Vector();}
-  double max() {return data_ ? data_->max() : 0;}
-  Vector maxXY() {return data_ ? data_->maxXY() : Vector();}
+  double min() {return clipData() ? clipData()->min() : 0;}
+  Vector minXY()
+  {return (data_ && !hpxGlobal_) ? data_->minXY() : Vector();}
+  double max() {return clipData() ? clipData()->max() : 0;}
+  Vector maxXY()
+  {return (data_ && !hpxGlobal_) ? data_->maxXY() : Vector();}
 
-  double low() {return data_ ? data_->low() : 0;}
-  double high() {return data_ ? data_->high() : 0;}
+  double low() {return clipData() ? clipData()->low() : 0;}
+  double high() {return clipData() ? clipData()->high() : 0;}
 
   void updateClip(FrScale* fr, pthread_t* thread, t_clip_arg* targ);
 

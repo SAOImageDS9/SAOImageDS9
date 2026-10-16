@@ -567,8 +567,22 @@ an option.
        `FitsHPXReproj::build`), so vertical pans work too; a conic window
        showing its whole plane isn't rebuilt on pan.
      - `update fits center` (explicit) keeps the current geometry.
-     - The initial window is still fov-based (capped); the first zoom or
-       pan adapts it.
+     - The initial window is display-sized too (2026-10-16): HEALPix
+       pixels (zoom 1 shows them 1:1, ds9's usual meaning) and twice the
+       frame per axis, within the fov; `initHPX()` passes the frame size
+       (`Base::getWidth/getHeight`) to the constructor. `fov` is now the
+       limit on how far a window can extend. nside 8192 COP/TAN: 2000x1244
+       at 0.0072 deg instead of a capped 4094^2 at 0.088 deg; load ~18 s
+       (the HPX build and whole-map statistics), no slow first build.
+     - Zoom to fit on a window first rebuilds it as the whole fov at the
+       pixel size that fits the frame (`HPXFIT`), then fits: one step to
+       the whole projection (nside 8192 COP: 624 px at 0.58 deg, 0.09 s)
+       instead of fitting the current window and doubling.
+     - HPX_WINDOW_MAX now only matters for frames > 2048 px or without a
+       display size.
+     - `Tests/hpxproj.sh` fixes the frame at 800x600 (window sizes depend
+       on it) and checks the display-sized start, zoom to fit, zoom in to
+       HEALPix resolution and zoom out.
      - nside 8192 COP, 1000x622 frame: zoom x4 -> 0.022 deg pixels,
        2000 px, 0.27 s; zoom x4 again -> 0.0072 deg (HEALPix), 1538 px,
        zoom 1.30, 0.19 s; pan 20 deg up 0.13 s; zoom x0.05 -> 0.11 deg;

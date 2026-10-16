@@ -3207,6 +3207,8 @@ void Base::updateFitsCenterCmd(const Vector& vv)
 //              reference latitude), then pan there
 //   HPXPANTO   for a pan to (lon, lat): centred there (a conic keeps its
 //              reference latitude), then pan there
+//   HPXFIT     for zoom to fit: the whole projection plane (fov), at the
+//              pixel size that fits it in the frame (lon = the fit factor)
 // (lon, lat) are in the map's own sky system [deg]. Like a slice change,
 // the data under the frame changes: the load steps rerun (WCS, clip),
 // contours are regenerated, and the pan and crosshair go back to the same
@@ -3245,6 +3247,25 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat)
   case HPXCENTER:
     ok = ptr->hpxRecentre(lon, lat);
     break;
+  case HPXFIT:
+    {
+      double pw, ph;
+      ptr->hpxPlane(&pw, &ph);
+      double ss = lon > 0 ? lon : 1;
+      double fx = pw/options->width;
+      double fy = ph/options->height;
+      npix = (fx > fy ? fx : fy)/ss;
+      if (npix < ptr->hpxPixelHPX())
+	npix = ptr->hpxPixelHPX();
+      int ww = (int)ceil(pw/npix) + 2;
+      int hh = (int)ceil(ph/npix) + 2;
+      ok = ptr->hpxReshape(ptr->hpxLon(), ptr->hpxLat(), npix, ww, hh, NULL);
+      npix = ptr->hpxPixel();
+      // zoom to fit sets the zoom and pan itself
+      opix = npix;
+      pan = 0;
+    }
+    break;
   case HPXPAN:
     if (!pan)
       break;
@@ -3279,7 +3300,7 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat)
   // pan: an explicit centre is panned to; otherwise keep the same sky
   // position
   Vector rr;
-  if (mode != HPXPAN) {
+  if (mode == HPXCENTER || mode == HPXPANTO) {
     if (ptr->hpxRefAt(lon, lat, &rr))
       cursor = rr;
   }

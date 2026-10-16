@@ -15,6 +15,8 @@
 #include "coord.h"
 #include "file.h"
 #include "head.h"
+#include "list.h"
+#include "callback.h"
 
 // WCS ' ','A' to 'Z', WCS0
 #define MULTWCS 27
@@ -74,7 +76,9 @@ struct HPXParked {
   int layer;           // 0 user, 1 catalog, 2 footprint
   int id;
   int selected;
+  int highlited;
   std::string text;
+  List<CallBack> callbacks;   // e.g. a catalog marker's table link
 };
 
 class FitsImage {

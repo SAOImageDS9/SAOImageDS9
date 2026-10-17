@@ -94,9 +94,11 @@ proc PolygonApply {varname} {
 
     set points [string trim [$var(pointtxt) get 1.0 end]]
     if {$points != [string trim $var(points)]} {
-	regsub -all "\n" $points " " points
+	regsub -all "\n" $points " " var(newpoints)
+	# pass by variable: a literal string is limited to 4096 chars
 	$var(frame) marker $var(id) polygon point \
-	    $var(system) $var(sky) $var(skyformat) "\{$points\}"
+	    $var(system) $var(sky) $var(skyformat) var ${varname}(newpoints)
+	unset var(newpoints)
 	MarkerBaseApply $varname
     } else {
 	MarkerBaseCenterRotate $varname

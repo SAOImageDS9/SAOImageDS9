@@ -5840,6 +5840,21 @@ void Base::markerPolygonPointCmd(int id, const char* value,
   result = TCL_ERROR;
 }
 
+void Base::markerPolygonPointVarCmd(int id, const char* var,
+				    Coord::CoordSystem sys, Coord::SkyFrame sky,
+				    Coord::SkyFormat format)
+{
+  // read the point list from a Tcl variable, avoiding the parser's
+  // FRBUFSIZE limit on STRING tokens
+  const char* value = Tcl_GetVar(interp, var, TCL_GLOBAL_ONLY|TCL_LEAVE_ERR_MSG);
+  if (!value) {
+    result = TCL_ERROR;
+    return;
+  }
+
+  markerPolygonPointCmd(id, value, sys, sky, format);
+}
+
 void Base::markerPolygonResetCmd(int id, const Vector& size, 
 				 Coord::CoordSystem sys, Coord::DistFormat dist)
 {

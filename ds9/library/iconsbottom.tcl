@@ -226,6 +226,8 @@ proc ConfigureIconsBottomFrame {} {
     $mb.layout.m entryconfig 3 -image $icons(currentdisplay,fade)
     $mb.layout.m entryconfig 4 -image $icons(currentdisplay,reveal)
 
+    IconMenuButtonCB $mb.layout current display write
+
     $mb.add configure \
 	-image [image create photo -file "$ds9(icons,ui)/frame_add.png"]
 

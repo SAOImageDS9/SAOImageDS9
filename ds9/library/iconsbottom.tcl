@@ -93,6 +93,8 @@ proc CreateIconsBottomBlock {} {
     ConfigureIconsBottomBlock
 
     pack $mb.blockincrease $mb.blockone $mb.blockdecrease -side left -fill x
+    # gap to separate this group from the previous one
+    pack configure $mb.blockincrease -padx {8 0}
 }
 
 proc ConfigureIconsBottomBlock {} {
@@ -131,6 +133,8 @@ proc CreateIconsBottomZoom {} {
     ConfigureIconsBottomZoom
 
     pack $mb.zoomincrease $mb.zoomone $mb.zoomdecrease -side left -fill x
+    # gap to separate this group from the previous one
+    pack configure $mb.zoomincrease -padx {8 0}
 }
 
 
@@ -198,6 +202,8 @@ proc CreateIconsBottomFrame {} {
 
     pack $mb.add $mb.del $mb.first $mb.prev $mb.layout $mb.next $mb.last \
 	-side left -fill x
+    # gap to separate this group from the previous one
+    pack configure $mb.add -padx {8 0}
 }
 
 
@@ -271,6 +277,8 @@ proc CreateIconsBottomView {} {
     ConfigureIconsBottomView
 
     pack $mb.vertgraph $mb.horzgraph $mb.colorbar -side left -fill x
+    # gap to separate this group from the previous one
+    pack configure $mb.vertgraph -padx {8 0}
 }
 
 proc ConfigureIconsBottomView {} {

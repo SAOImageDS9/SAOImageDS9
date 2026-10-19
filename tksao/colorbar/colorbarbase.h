@@ -164,6 +164,7 @@ class ColorbarBase : public Widget {
   virtual void getColorbarCmd() =0;
   virtual void getColormapCmd() =0;
   virtual void getColormapNameCmd(int) =0;
+  virtual void getColormapRGBCmd(const char*, int) {}
   virtual void getColormapFileNameCmd(int) =0;
   virtual void getColormapFileNameCmd(const char*) =0;
   virtual void getContrastCmd() =0;

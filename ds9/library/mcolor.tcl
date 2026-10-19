@@ -10,6 +10,7 @@ proc ColorMainMenu {} {
     global colorbar
     global icolorbar
     global ds9
+    global view
 
     ThemeMenu $ds9(mb).color
     foreach cmap $icolorbar(default,cmaps) {
@@ -63,6 +64,75 @@ proc ColorMainMenu {} {
     $ds9(mb).color add separator
     $ds9(mb).color add command -label [msgcat::mc {Colormap Parameters}] \
 	-command ColormapDialog
+
+    UpdateColormapMenuSwatches
+    trace remove variable view(icons) write UpdateColormapMenuSwatches
+    trace add variable view(icons) write UpdateColormapMenuSwatches
+}
+
+# Colormap swatches, shown next to each colormap name in the menus
+
+# returns a small photo image of the colormap, created on first use
+proc ColormapSwatch {cmap} {
+    global icolorbar
+
+    if {![info exists icolorbar(swatch,$cmap)]} {
+	set ww $icolorbar(swatch,width)
+	set hh $icolorbar(swatch,height)
+	if {[catch {colorbar get colormap rgb "\{$cmap\}" $ww} rgb]} {
+	    return {}
+	}
+	set img [image create photo -width $ww -height $hh]
+	$img put [list $rgb] -to 0 0 $ww $hh
+	set icolorbar(swatch,$cmap) $img
+    }
+    return $icolorbar(swatch,$cmap)
+}
+
+# add or remove swatches on every colormap menu, according to view(icons)
+proc UpdateColormapMenuSwatches {args} {
+    global ds9
+    global icolorbar
+
+    set mms [list $ds9(mb).color]
+    if {[winfo exists $icolorbar(mb).colormap]} {
+	lappend mms $icolorbar(mb).colormap
+    }
+
+    foreach mm $mms {
+	ColormapMenuSwatches $mm
+	foreach cc [winfo children $mm] {
+	    ColormapMenuSwatches $cc
+	}
+    }
+}
+
+proc ColormapMenuSwatches {mm} {
+    global view
+
+    if {[winfo class $mm] != {Menu}} {
+	return
+    }
+    set last [$mm index end]
+    if {$last == {} || $last == {none}} {
+	return
+    }
+
+    for {set ii 0} {$ii<=$last} {incr ii} {
+	if {[$mm type $ii] != {radiobutton}} {
+	    continue
+	}
+	if {[$mm entrycget $ii -variable] != {colorbar(map)}} {
+	    continue
+	}
+
+	if {$view(icons)} {
+	    set img [ColormapSwatch [$mm entrycget $ii -value]]
+	    $mm entryconfigure $ii -image $img -compound left
+	} else {
+	    $mm entryconfigure $ii -image {} -compound none
+	}
+    }
 }
 
 proc ColorMainMenuExternal {which} {

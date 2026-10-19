@@ -226,6 +226,10 @@ proc ColorbarDef {} {
                 ]
     set icolorbar(user,cmaps) {}
 
+    # colormap menu swatches
+    set icolorbar(swatch,width) 64
+    set icolorbar(swatch,height) 12
+
     # used for Color{Button|Motion|Release}3
     set icolorbar(frame) {}
     set icolorbar(colorbar) {}
@@ -1005,7 +1009,7 @@ proc LoadColormapFile {fn} {
     # add to menu
     $ds9(mb).color.user add radiobutton \
 	-label $cmap \
-	-variable colorbar(map) \
+	-variable colorbar(map) -value $cmap \
 	-command [list ChangeColormapName $cmap]
 
     if {[winfo exists $icolorbar(top)]} {
@@ -1015,6 +1019,7 @@ proc LoadColormapFile {fn} {
 	    -command [list ChangeColormapName $cmap]
     }
 
+    UpdateColormapMenuSwatches
     ChangeColormapName $cmap
 }
 
@@ -1804,6 +1809,7 @@ proc ColormapDialog {} {
     ColormapDialogExternal scm
     ColormapDialogExternal solar
     ColormapDialogExternal user
+    UpdateColormapMenuSwatches
 
     $mb.colormap add separator
     $mb.colormap add checkbutton \

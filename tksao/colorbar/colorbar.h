@@ -67,6 +67,7 @@ class Colorbar : public ColorbarBase {
   void getColorbarCmd();
   void getColormapCmd();
   void getColormapNameCmd(int);
+  void getColormapRGBCmd(const char*, int);
   void getColormapFileNameCmd(int);
   void getColormapFileNameCmd(const char*);
   void getContrastCmd();

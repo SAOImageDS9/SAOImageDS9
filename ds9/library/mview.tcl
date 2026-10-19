@@ -422,11 +422,11 @@ proc UpdateViewMenu {} {
     switch $view(layout) {
 	horizontal -
 	vertical {
+	    # no icon bars, but icons still controls the colormap menu swatches
 	    foreach mm $menus {
 		$ds9(mb).view entryconfig [msgcat::mc "$mm"] -state normal
 	    }
-	    $ds9(mb).view entryconfig [msgcat::mc {Icons}] -state disabled
-	    $ds9(buttons).view.icons configure -state disabled
+	    $ds9(buttons).view.icons configure -state normal
 	    CheckButtonCB $ds9(buttons).view.icons view icons write
 	}
 	basic {

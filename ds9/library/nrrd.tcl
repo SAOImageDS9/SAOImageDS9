@@ -23,7 +23,9 @@ proc ImportNRRDFile {fn layer} {
 	set loadParam(file,name) $fn
     }
 
-    ProcessLoad
+    if {[ProcessLoad]} {
+	RecentAdd nrrd $fn layer $layer
+    }
 }
 
 proc ImportNRRDAlloc {path fn layer} {

@@ -15,7 +15,9 @@ proc ImportArrayFile {fn layer} {
 
     # check for stdin/gz
     ConvertArrayFile
-    ProcessLoad
+    if {[ProcessLoad]} {
+	RecentAdd array $fn layer $layer
+    }
 }
 
 proc ImportArrayAlloc {path fn layer} {

@@ -14,7 +14,9 @@ proc LoadMosaicImageWCSFile {fn layer sys} {
     set loadParam(load,layer) $layer
 
     ConvertFitsFile
-    ProcessLoad
+    if {[ProcessLoad]} {
+	RecentAdd mosaicimagewcs $fn layer $layer sys $sys
+    }
 }
 
 proc LoadMosaicImageWCSAlloc {path fn layer sys} {

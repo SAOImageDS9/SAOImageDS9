@@ -28,7 +28,9 @@ proc LoadRGBImageFile {fn} {
     set loadParam(load,layer) {}
 
     ConvertFitsFile
-    ProcessLoad
+    if {[ProcessLoad]} {
+	RecentAdd rgbimage $fn
+    }
 }
 
 proc LoadRGBImageAlloc {path fn} {

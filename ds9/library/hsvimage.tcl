@@ -28,7 +28,9 @@ proc LoadHSVImageFile {fn} {
     set loadParam(load,layer) {}
 
     ConvertFitsFile
-    ProcessLoad
+    if {[ProcessLoad]} {
+	RecentAdd hsvimage $fn
+    }
 }
 
 proc LoadHSVImageAlloc {path fn} {

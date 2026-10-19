@@ -14,7 +14,9 @@ proc LoadMosaicImageIRAFFile {fn layer} {
     set loadParam(load,layer) $layer
 
     ConvertFitsFile
-    ProcessLoad
+    if {[ProcessLoad]} {
+	RecentAdd mosaicimageiraf $fn layer $layer
+    }
 }
 
 proc LoadMosaicImageIRAFAlloc {path fn layer} {

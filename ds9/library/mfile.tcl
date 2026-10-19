@@ -14,6 +14,8 @@ proc FileMainMenu {} {
 	-command [list OpenDialog fits] -accelerator "${ds9(ctrl)}O"
     $ds9(mb).file add cascade -label [msgcat::mc {Open as}] \
 	-menu $ds9(mb).file.open
+    $ds9(mb).file add cascade -label [msgcat::mc {Open Recent}] \
+	-menu $ds9(mb).file.recent
     $ds9(mb).file add command -label [msgcat::mc {Save}] \
 	-command [list SaveDialog fits] -accelerator "${ds9(ctrl)}S"
     $ds9(mb).file add cascade -label [msgcat::mc {Save as}] \
@@ -73,6 +75,9 @@ proc FileMainMenu {} {
 	}
 	aqua {}
     }
+
+    # File Open Recent Menu
+    RecentMainMenu
 
     # File Open Menu
     ThemeMenu $ds9(mb).file.open

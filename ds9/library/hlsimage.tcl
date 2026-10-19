@@ -28,7 +28,9 @@ proc LoadHLSImageFile {fn} {
     set loadParam(load,layer) {}
 
     ConvertFitsFile
-    ProcessLoad
+    if {[ProcessLoad]} {
+	RecentAdd hlsimage $fn
+    }
 }
 
 proc LoadHLSImageAlloc {path fn} {

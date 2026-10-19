@@ -14,7 +14,9 @@ proc LoadMosaicImageWFPC2File {fn layer} {
     set loadParam(load,layer) $layer
 
     ConvertFitsFile
-    ProcessLoad
+    if {[ProcessLoad]} {
+	RecentAdd mosaicimagewfpc2 $fn layer $layer
+    }
 }
 
 proc LoadMosaicImageWFPC2Alloc {path fn layer} {

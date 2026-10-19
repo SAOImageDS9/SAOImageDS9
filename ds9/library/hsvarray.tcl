@@ -36,7 +36,9 @@ proc ImportHSVArrayFile {fn} {
 
     # check for stdin/gz
     ConvertArrayFile
-    ProcessLoad
+    if {[ProcessLoad]} {
+	RecentAdd hsvarray $fn
+    }
 }
 
 proc ImportHSVArrayAlloc {path fn} {

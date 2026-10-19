@@ -81,7 +81,11 @@ proc LoadURLFits {url layer mode multi} {
     ParseURL $url r
     switch -- $r(scheme) {
 	ftp {LoadURLFitsFTP $r(authority) $r(path) $layer $mode $multi}
-	file {LoadURLFitsFile $r(path) $layer $mode $multi}
+	file {
+	    if {[LoadURLFitsFile $r(path) $layer $mode $multi]} {
+		RecentAdd fits $r(path) layer $layer mode $mode
+	    }
+	}
 	http -
 	https -
 	default {LoadURLFitsHTTP $url $layer $mode $multi}
@@ -125,7 +129,7 @@ proc LoadURLFitsFile {fn layer mode multi} {
     if {$multi} {
 	MultiLoad $layer $mode
     }
-    ProcessLoad
+    return [ProcessLoad]
 }
 
 proc LoadURLFitsHTTP {url layer mode multi} {

@@ -28,7 +28,9 @@ proc LoadHLSCubeFile {fn} {
     set loadParam(load,layer) {}
 
     ConvertFitsFile
-    ProcessLoad
+    if {[ProcessLoad]} {
+	RecentAdd hlscube $fn
+    }
 }
 
 proc LoadHLSCubeAlloc {path fn} {

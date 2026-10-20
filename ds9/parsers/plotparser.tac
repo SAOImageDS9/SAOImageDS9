@@ -162,7 +162,7 @@ plot : line
 # backward compatibility
  | SCATTER_ scatter
  | ERROR_ errorr
- | GUI_ {ProcessCmdCVAR0 PlotGUI}
+ | GUI_ {PlotCmdCVAR0 PlotGUI}
  
 # File Menu
  | LOAD_ load
@@ -182,44 +182,44 @@ plot : line
  | STRING_ CLOSE_ {ProcessCmdCVAR0 PlotDestroy}
 
  # Edit Menu
- | MODE_ mode {ProcessCmdCVAR mode $2 PlotChangeMode}
+ | MODE_ mode {PlotCmdCVAR mode $2 PlotChangeMode}
 
  # Canvas Menu
- | ADD_ GRAPH_ graph {ProcessCmdCVAROpt PlotAddGraph $3}
- | CURRENT_ GRAPH_ INT_ {ProcessCmdCVAR graph,current $3 PlotCurrentGraph}
+ | ADD_ GRAPH_ graph {PlotCmdCVAROpt PlotAddGraph $3}
+ | CURRENT_ GRAPH_ INT_ {PlotCmdCVAR graph,current $3 PlotCurrentGraph}
 # backward compatibility
- | SELECT_ GRAPH_ INT_ {ProcessCmdCVAR graph,current $3 PlotCurrentGraph}
- | DELETE_ GRAPH_ {ProcessCmdCVAR0 PlotDeleteGraphCurrent}
- | LAYOUT_ layout {ProcessCmdCVAR canvas,layout $2 PlotChangeLayout}
- | LAYOUT_ STRIP_ SCALE_ numeric {ProcessCmdCVAR canvas,layout,strip,scale $4 PlotChangeLayout}
+ | SELECT_ GRAPH_ INT_ {PlotCmdCVAR graph,current $3 PlotCurrentGraph}
+ | DELETE_ GRAPH_ {PlotCmdCVAR0 PlotDeleteGraphCurrent}
+ | LAYOUT_ layout {PlotCmdCVAR canvas,layout $2 PlotChangeLayout}
+ | LAYOUT_ STRIP_ SCALE_ numeric {PlotCmdCVAR canvas,layout,strip,scale $4 PlotChangeLayout}
  | FONT_ fontt
- | FOREGROUND_ STRING_ {ProcessCmdCVAR canvas,foreground $2 PlotUpdateCanvasElement}
- | BACKGROUND_ STRING_ {ProcessCmdCVAR canvas,background $2 PlotUpdateAllElement}
- | GRID_ COLOR_ STRING_ {ProcessCmdCVAR canvas,grid,color $3 PlotUpdateCanvasElement}
- | THEME_ yesno {ProcessCmdCVAR canvas,theme $2 PlotUpdateAllElement}
+ | FOREGROUND_ STRING_ {PlotCmdCVAR canvas,foreground $2 PlotUpdateCanvasElement}
+ | BACKGROUND_ STRING_ {PlotCmdCVAR canvas,background $2 PlotUpdateAllElement}
+ | GRID_ COLOR_ STRING_ {PlotCmdCVAR canvas,grid,color $3 PlotUpdateCanvasElement}
+ | THEME_ yesno {PlotCmdCVAR canvas,theme $2 PlotUpdateAllElement}
 
  # Graph Menu
- | CURRENT_ DATASET_ INT_ {ProcessCmdCVAR graph,ds,current $3 PlotCurrentDataSet}
- | CURRENT_ INT_ {ProcessCmdCVAR graph,ds,current $2 PlotCurrentDataSet}
+ | CURRENT_ DATASET_ INT_ {PlotCmdCVAR graph,ds,current $3 PlotCurrentDataSet}
+ | CURRENT_ INT_ {PlotCmdCVAR graph,ds,current $2 PlotCurrentDataSet}
 # backward compatibility
- | SELECT_ DATASET_ INT_ {ProcessCmdCVAR graph,ds,current $3 PlotCurrentDataSet}
+ | SELECT_ DATASET_ INT_ {PlotCmdCVAR graph,ds,current $3 PlotCurrentDataSet}
  # backward compatibility
- | SELECT_ INT_ {ProcessCmdCVAR graph,ds,current $2 PlotCurrentDataSet}
+ | SELECT_ INT_ {PlotCmdCVAR graph,ds,current $2 PlotCurrentDataSet}
  # backward compatibility
- | DATASET_ INT_ {ProcessCmdCVAR graph,ds,current $2 PlotCurrentDataSet}
+ | DATASET_ INT_ {PlotCmdCVAR graph,ds,current $2 PlotCurrentDataSet}
  | DUPLICATE_ duplicate
- | DELETE_ DATASET_ {ProcessCmdCVAR0 PlotDeleteDataSetCurrent}
+ | DELETE_ DATASET_ {PlotCmdCVAR0 PlotDeleteDataSetCurrent}
  # backward compatibility
- | CLEAR_ {ProcessCmdCVAR0 PlotDeleteDataSetAll}
- | STATISTICS_ yesno {ProcessCmdCVAR stats $2 PlotStats}
- | LIST_ yesno {ProcessCmdCVAR list $2 PlotList}
+ | CLEAR_ {PlotCmdCVAR0 PlotDeleteDataSetAll}
+ | STATISTICS_ yesno {PlotCmdCVAR stats $2 PlotStats}
+ | LIST_ yesno {PlotCmdCVAR list $2 PlotList}
  | AXIS_ axis
  | LEGEND_ legend
  | TITLE_ title
 
  # Data Menu
  | SHOW_ yesno {PlotCmdUpdateElement graph,ds,show $2}
- | NAME_ STRING_ {ProcessCmdCVAROpt PlotDataSetName $2}
+ | NAME_ STRING_ {PlotCmdCVAROpt PlotDataSetName $2}
 
  # backward compatibility
  | GRAPH_ oldGraph
@@ -408,7 +408,7 @@ pageSize : LETTER_ {set _ letter}
  | A4_ {set _ a4}
  ;
  
-print : {ProcessCmdCVAR0 PlotPostScript}
+print : {PlotCmdCVAR0 PlotPostScript}
  | DESTINATION_ printDest {ProcessCmdSet ps dest $2}
  | COMMAND_ STRING_ {ProcessCmdSet ps cmd $2}
  | FILENAME_ STRING_ {ProcessCmdSet ps filename $2}
@@ -441,17 +441,17 @@ layout: ROW_ {set _ row}
  | STRIP_ {set _ strip}
  ;
 
-fontt : fontType FONT_ font {ProcessCmdCVAR "$1,family" $3 PlotUpdateCanvasElement}
+fontt : fontType FONT_ font {PlotCmdCVAR "$1,family" $3 PlotUpdateCanvasElement}
 # backward compatibility
- | fontType FAMILY_ font {ProcessCmdCVAR "$1,family" $3 PlotUpdateCanvasElement}
- | fontType FONTSIZE_ INT_ {ProcessCmdCVAR "$1,size" $3 PlotUpdateCanvasElement}
- | fontType FONTWEIGHT_ fontWeight {ProcessCmdCVAR "$1,weight" $3 PlotUpdateCanvasElement}
- | fontType FONTSLANT_ fontSlant {ProcessCmdCVAR "$1,slant" $3 PlotUpdateCanvasElement}
+ | fontType FAMILY_ font {PlotCmdCVAR "$1,family" $3 PlotUpdateCanvasElement}
+ | fontType FONTSIZE_ INT_ {PlotCmdCVAR "$1,size" $3 PlotUpdateCanvasElement}
+ | fontType FONTWEIGHT_ fontWeight {PlotCmdCVAR "$1,weight" $3 PlotUpdateCanvasElement}
+ | fontType FONTSLANT_ fontSlant {PlotCmdCVAR "$1,slant" $3 PlotUpdateCanvasElement}
 # backward compatibility
  | fontType FONTSTYLE_ fontStyle {PlotCmdFontStyle $1 $3}
- | fontType SIZE_ INT_ {ProcessCmdCVAR "$1,size" $3 PlotUpdateCanvasElement}
- | fontType WEIGHT_ fontWeight {ProcessCmdCVAR "$1,weight" $3 PlotUpdateCanvasElement}
- | fontType SLANT_ fontSlant {ProcessCmdCVAR "$1,slant" $3 PlotUpdateCanvasElement}
+ | fontType SIZE_ INT_ {PlotCmdCVAR "$1,size" $3 PlotUpdateCanvasElement}
+ | fontType WEIGHT_ fontWeight {PlotCmdCVAR "$1,weight" $3 PlotUpdateCanvasElement}
+ | fontType SLANT_ fontSlant {PlotCmdCVAR "$1,slant" $3 PlotUpdateCanvasElement}
  | fontType STYLE_ fontStyle {PlotCmdFontStyle $1 $3}
  ;
 
@@ -467,17 +467,17 @@ duplicate : {global cvarname; PlotDupDataSet $cvarname}
  | INT_ {global cvarname; PlotDupDataSet $cvarname}
  ;
 
-axis : xy GRID_ yesno {ProcessCmdCVAR "graph,axis,$1,grid" $3 PlotChangeAxis}
- | xy LOG_ yesno {ProcessCmdCVAR "graph,axis,$1,log" $3 PlotChangeAxis}
- | xy FLIP_ yesno {ProcessCmdCVAR "graph,axis,$1,flip" $3 PlotChangeAxis}
- | xy AUTO_ yesno {ProcessCmdCVAR "graph,axis,$1,auto" $3 PlotChangeAxis}
- | xy MIN_ numeric {ProcessCmdCVAR "graph,axis,$1,min" $3 PlotChangeAxis}
- | xy MAX_ numeric {ProcessCmdCVAR "graph,axis,$1,max" $3 PlotChangeAxis}
- | xy FORMAT_ STRING_ {ProcessCmdCVAR "graph,axis,$1,format" $3 PlotChangeAxis}
+axis : xy GRID_ yesno {PlotCmdCVAR "graph,axis,$1,grid" $3 PlotChangeAxis}
+ | xy LOG_ yesno {PlotCmdCVAR "graph,axis,$1,log" $3 PlotChangeAxis}
+ | xy FLIP_ yesno {PlotCmdCVAR "graph,axis,$1,flip" $3 PlotChangeAxis}
+ | xy AUTO_ yesno {PlotCmdCVAR "graph,axis,$1,auto" $3 PlotChangeAxis}
+ | xy MIN_ numeric {PlotCmdCVAR "graph,axis,$1,min" $3 PlotChangeAxis}
+ | xy MAX_ numeric {PlotCmdCVAR "graph,axis,$1,max" $3 PlotChangeAxis}
+ | xy FORMAT_ STRING_ {PlotCmdCVAR "graph,axis,$1,format" $3 PlotChangeAxis}
  ;
 
-legend : yesno {ProcessCmdCVAR graph,legend $1 PlotChangeLegend}
- | POSITION_ legendPos {ProcessCmdCVAR graph,legend,position $2 PlotChangeLegend}
+legend : yesno {PlotCmdCVAR graph,legend $1 PlotChangeLegend}
+ | POSITION_ legendPos {PlotCmdCVAR graph,legend,position $2 PlotChangeLegend}
  ;
  
 legendPos : RIGHT_ {set _ right}
@@ -487,11 +487,11 @@ legendPos : RIGHT_ {set _ right}
  | PLOTAREA_ {set _ plotarea}
  ;
 
-title : STRING_ {ProcessCmdCVAR graph,title $1 PlotChangeTitle}
- | xy STRING_ {ProcessCmdCVAR "graph,axis,$1,title" $2 PlotChangeTitle}
+title : STRING_ {PlotCmdCVAR graph,title $1 PlotChangeTitle}
+ | xy STRING_ {PlotCmdCVAR "graph,axis,$1,title" $2 PlotChangeTitle}
 # backward compatibility
- | xyaxis STRING_ {ProcessCmdCVAR "graph,axis,$1,title" $2 PlotChangeTitle}
- | LEGEND_ STRING_ {ProcessCmdCVAR graph,legend,title $2 PlotChangeTitle}
+ | xyaxis STRING_ {PlotCmdCVAR "graph,axis,$1,title" $2 PlotChangeTitle}
+ | LEGEND_ STRING_ {PlotCmdCVAR graph,legend,title $2 PlotChangeTitle}
  ;
 
 # Support
@@ -514,37 +514,37 @@ dim : XY_ {set _ xy}
 # backward compatibility
 # Really old stuff
 oldGraph : GRID_ oldGraphGrid
- | LOG_ xy yesno {ProcessCmdCVAR "graph,axis,$2,log" $3 PlotChangeAxis}
- | FLIP_ xy yesno {ProcessCmdCVAR "graph,axis,$2,flip" $3 PlotChangeAxis}
- | FORMAT_ xy STRING_ {ProcessCmdCVAR "graph,axis,$2,format" $3 PlotChangeAxis}
+ | LOG_ xy yesno {PlotCmdCVAR "graph,axis,$2,log" $3 PlotChangeAxis}
+ | FLIP_ xy yesno {PlotCmdCVAR "graph,axis,$2,flip" $3 PlotChangeAxis}
+ | FORMAT_ xy STRING_ {PlotCmdCVAR "graph,axis,$2,format" $3 PlotChangeAxis}
  | RANGE_ oldGraphRange
  | LABELS_ oldGraphLabels
  | TYPE_ oldGraphType
  | SCALE_ oldGraphScale
  ;
 
-oldGraphGrid : xy yesno {ProcessCmdCVAR "graph,axis,$1,grid" $2 PlotChangeAxis}
- | yesno {ProcessCmdCVAR graph,axis,x,grid $1; ProcessCmdCVAR graph,axis,y,grid $1 PlotChangeAxis}
+oldGraphGrid : xy yesno {PlotCmdCVAR "graph,axis,$1,grid" $2 PlotChangeAxis}
+ | yesno {PlotCmdCVAR2 graph,axis,x,grid $1 graph,axis,y,grid $1 PlotChangeAxis}
  ;
 
-oldGraphRange : xy AUTO_ yesno {ProcessCmdCVAR "graph,axis,$1,auto" $3 PlotChangeAxis}
- | xy MIN_ numeric {ProcessCmdCVAR "graph,axis,$1,min" $3 PlotChangeAxis}
- | xy MAX_ numeric {ProcessCmdCVAR "graph,axis,$1,max" $3 PlotChangeAxis}
+oldGraphRange : xy AUTO_ yesno {PlotCmdCVAR "graph,axis,$1,auto" $3 PlotChangeAxis}
+ | xy MIN_ numeric {PlotCmdCVAR "graph,axis,$1,min" $3 PlotChangeAxis}
+ | xy MAX_ numeric {PlotCmdCVAR "graph,axis,$1,max" $3 PlotChangeAxis}
  ;
 
-oldGraphLabels : TITLE_ STRING_ {ProcessCmdCVAR graph,title $2 PlotChangeAxis}
- | xyaxis STRING_ {ProcessCmdCVAR "graph,axis,$1,title" $2 PlotChangeAxis}
- | LEGEND_ STRING_ {ProcessCmdCVAR graph,legend,title $2 PlotChangeLegend}
+oldGraphLabels : TITLE_ STRING_ {PlotCmdCVAR graph,title $2 PlotChangeAxis}
+ | xyaxis STRING_ {PlotCmdCVAR "graph,axis,$1,title" $2 PlotChangeAxis}
+ | LEGEND_ STRING_ {PlotCmdCVAR graph,legend,title $2 PlotChangeLegend}
  ;
 
 oldGraphType : LINE_
  | BAR_
  ;
 
-oldGraphScale : LINEARLINEAR_ {ProcessCmdCVAR "graph,axis,x,log" 0; ProcessCmdCVAR "graph,axis,y,log" 0 PlotChangeAxis}
- | LINEARLOG_ {ProcessCmdCVAR "graph,axis,x,log" 0; ProcessCmdCVAR "graph,axis,y,log" 1 PlotChangeAxis}
- | LOGLINEAR_ {ProcessCmdCVAR "graph,axis,x,log" 1; ProcessCmdCVAR "graph,axis,y,log" 0 PlotChangeAxis}
- | LOGLOG_ {ProcessCmdCVAR "graph,axis,x,log" 1; ProcessCmdCVAR "graph,axis,y,log" 1 PlotChangeAxis}
+oldGraphScale : LINEARLINEAR_ {PlotCmdCVAR2 "graph,axis,x,log" 0 "graph,axis,y,log" 0 PlotChangeAxis}
+ | LINEARLOG_ {PlotCmdCVAR2 "graph,axis,x,log" 0 "graph,axis,y,log" 1 PlotChangeAxis}
+ | LOGLINEAR_ {PlotCmdCVAR2 "graph,axis,x,log" 1 "graph,axis,y,log" 0 PlotChangeAxis}
+ | LOGLOG_ {PlotCmdCVAR2 "graph,axis,x,log" 1 "graph,axis,y,log" 1 PlotChangeAxis}
  ;
 
 oldLine : DISCRETE_ linesymbol {PlotCmdUpdateElement graph,ds,line,shape,symbol $2}

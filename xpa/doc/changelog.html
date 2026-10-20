@@ -6,6 +6,21 @@
 <center><h3>XPA ChangeLog</h3></center>
 
 
+<h3> Public Release 2.2.2 (October, 2026)</h3>
+<ul>
+<li> Updated Windows xpaset to read stdin in binary mode, so binary data (eg FITS
+  files) is no longer corrupted by CR/LF translation or Ctrl-Z end-of-file handling.
+<li> Updated Windows xpaget to write stdout in binary mode, so binary data is
+  no longer corrupted by LF to CR/LF translation.
+<li> Updated Windows xpaaccess to write stdout in binary mode, so its "yes"/"no"
+  answer no longer ends in a carriage return that breaks shell comparisons.
+<li> Updated Windows XPASetFd() to no longer apply socket calls to a C runtime
+  input file descriptor, which is not a Winsock socket.
+<li> Updated the Tcl/Tk documentation: datachan and cmdchan are unavailable only
+  in Cygwin builds, not in native Windows builds.
+</ul>
+
+
 <h3> Public Release 2.2.1 (August, 2026)</h3>
 <ul>
 <li> Updated Windows to correctly build with `-mconsole` flag (link not compile flag), except

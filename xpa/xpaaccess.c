@@ -84,6 +84,15 @@ main(argc, argv)
     exit(0);
   }
 
+#if HAVE_MINGW32
+  /*
+   * The Windows C runtime opens stdout in text mode by default, so "yes"
+   * would be written as "yes\r\n" and fail shell comparisons such as
+   * [ `xpaaccess ds9` = yes ].
+   */
+  setmode(fileno(stdout), O_BINARY);
+#endif
+
   /* start with no mode flag */
   *mode = '\0';
 

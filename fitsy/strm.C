@@ -5,7 +5,9 @@
 #include <string.h>
 #include <stdio.h>
 
-#ifndef __WIN32
+#ifdef __WIN32
+#include <winsock2.h>
+#else
 #include <sys/socket.h>
 #endif
 
@@ -61,8 +63,6 @@ template <> void FitsStream<FILE*>::close()
 
 // Socket
 
-#ifndef __WIN32
-
 template <> size_t FitsStream<int>::read(char* where, size_t size)
 {
   // size_t size is unsigned
@@ -79,20 +79,9 @@ template <> size_t FitsStream<int>::read(char* where, size_t size)
   return rr;
 }
 
-#else
-
-template <> size_t FitsStream<int>::read(char* where, size_t size)
-{
-  return 0;
-}
-
-#endif
-
 template <> void FitsStream<int>::close() {}
 
 // gzStream
-
-#ifndef __WIN32
 
 template <> size_t FitsStream<gzStream>::read(char* where, size_t size)
 {
@@ -128,7 +117,7 @@ template <> size_t FitsStream<gzStream>::read(char* where, size_t size)
     do {
       if (((z_stream*)stream_)->avail_in == 0) {
 	((z_stream*)stream_)->next_in = stream_->buf;
-	int aa = recv(stream_->id , stream_->buf, B4KB, 0);
+	int aa = recv(stream_->id , (char*)stream_->buf, B4KB, 0);
 	if (aa<0)
 	  return rr;
 
@@ -185,16 +174,6 @@ template <> void FitsStream<gzStream>::close()
 	   << " avail_out " << ((z_stream*)stream_)->avail_out << endl;
   }
 }
-
-#else
-
-template <> size_t FitsStream<gzStream>::read(char* where, size_t size)
-{
-  return 0;
-}
-template <> void FitsStream<gzStream>::close() {}
-
-#endif
 
 // Tcl_Channel
 

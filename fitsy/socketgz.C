@@ -2,13 +2,15 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include "socketgz.h"
-#include "util.h"
-
-#ifndef __WIN32
-
+#ifdef __WIN32
+#include <winsock2.h>
+#else
 #include <sys/types.h>
 #include <sys/socket.h>
+#endif
+
+#include "socketgz.h"
+#include "util.h"
 
 #define ASCII_FLAG   0x01 /* bit 0 set: file probably ascii text */
 #define HEAD_CRC     0x02 /* bit 1 set: header CRC present */
@@ -37,7 +39,7 @@ FitsSocketGZ::FitsSocketGZ(int s, const char* ext)
   stream_->buf = new unsigned char[B4KB];
 
   // magic bytes
-  if (recv(stream_->id , stream_->header, 2, 0) != 2) {
+  if (recv(stream_->id , (char*)stream_->header, 2, 0) != 2) {
     internalError("Fitsy++ socketgz can't read magic bytes in header");
     return;
   }
@@ -61,7 +63,7 @@ FitsSocketGZ::FitsSocketGZ(int s, const char* ext)
     unsigned char buf[128];
 
     // method/flags
-    if (recv(stream_->id , buf, 2, 0) != 2) {
+    if (recv(stream_->id , (char*)buf, 2, 0) != 2) {
       internalError("Fitsy++ socketgz can't read method/flags bytes in header");
       return;
     }
@@ -74,14 +76,14 @@ FitsSocketGZ::FitsSocketGZ(int s, const char* ext)
     }
 
     // Discard time, xflags and OS code
-    if (recv(stream_->id , buf, 6, 0) != 6) {
+    if (recv(stream_->id , (char*)buf, 6, 0) != 6) {
       internalError("Fitsy++ socketgz can't read time/xflags/os bytes in header");
       return;
     }
 
     // skip the extra field
     if ((flags & EXTRA_FIELD) != 0) {
-      if (recv(stream_->id , buf, 2, 0) != 2) {
+      if (recv(stream_->id , (char*)buf, 2, 0) != 2) {
 	internalError("Fitsy++ socketgz can't read extra field length bytes in header");
 	return;
       }
@@ -89,7 +91,7 @@ FitsSocketGZ::FitsSocketGZ(int s, const char* ext)
       int len  =  buf[0];
       len += buf[1]<<8;
 
-      if (recv(stream_->id , buf, len, 0) != len) {
+      if (recv(stream_->id , (char*)buf, len, 0) != len) {
 	internalError("Fitsy++ socketgz can't read extra field bytes in header");
 	return;
       }
@@ -97,17 +99,17 @@ FitsSocketGZ::FitsSocketGZ(int s, const char* ext)
 
     // skip the original file name
     if ((flags & ORIG_NAME) != 0) { 
-      while (recv(stream_->id , buf, 1, 0) == 1 && buf[0] != 0) ;
+      while (recv(stream_->id , (char*)buf, 1, 0) == 1 && buf[0] != 0) ;
     }
 
     // skip the .gz file comment
     if ((flags & COMMENT) != 0) {
-      while (recv(stream_->id , buf, 1, 0) == 1 && buf[0] != 0) ;
+      while (recv(stream_->id , (char*)buf, 1, 0) == 1 && buf[0] != 0) ;
     }
 
     // skip the header crc
     if ((flags & HEAD_CRC) != 0) {
-      if (recv(stream_->id , buf, 2, 0) != 2) {
+      if (recv(stream_->id , (char*)buf, 2, 0) != 2) {
 	internalError("Fitsy++ socketgz can't read header crc bytes in header");
 	return;
       }
@@ -129,14 +131,3 @@ FitsSocketGZ::~FitsSocketGZ()
     delete stream_;
   stream_ = NULL;
 }
-
-#else
-
-FitsSocketGZ::FitsSocketGZ(int s, const char* ext)
-{
-  valid_ =0;
-}
-
-FitsSocketGZ::~FitsSocketGZ() {}
-
-#endif

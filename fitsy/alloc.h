@@ -10,7 +10,7 @@
 class FitsAlloc : public virtual FitsStream<FILE*> {
 public:
   FitsAlloc(const char*);
-  virtual ~FitsAlloc() {}
+  virtual ~FitsAlloc();
 };
 
 class FitsFitsAlloc : public FitsAlloc, public FitsFitsStream<FILE*> {

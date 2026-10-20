@@ -2,13 +2,15 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
-#include "outsocket.h"
-#include "util.h"
-
-#ifndef __WIN32
-
+#ifdef __WIN32
+#include <winsock2.h>
+#else
 #include <sys/types.h>
 #include <sys/socket.h>
+#endif
+
+#include "outsocket.h"
+#include "util.h"
 
 #include "file.h"
 
@@ -25,8 +27,7 @@ int OutFitsSocket::write(char* where, size_t size)
   size_t rr =0;
   int r;
   do {
-    r = (ss>B4KB) ? B4KB : ss;
-    send(id_, where+rr, r, 0);
+    r = send(id_, where+rr, (ss>B4KB) ? B4KB : ss, 0);
     if (r == -1) {
       internalError("Fitsy++ outsocket write error");
       return -1;
@@ -64,7 +65,7 @@ OutFitsSocketGZ::OutFitsSocketGZ(int s)
   // dump simple header
   unsigned char header[10] =
     {0x1f,0x8b,0x08,0x00,0x00,0x00,0x00,0x00,0x00,0x03};
-  send(id_, header, 10, 0);
+  send(id_, (char*)header, 10, 0);
   
   stream_->next_out = buf_;
   stream_->avail_out = B4KB;
@@ -133,7 +134,7 @@ int OutFitsSocketGZ::deflategz(int flush)
     unsigned char* d = buf_;
 
     while (s>0) {
-      int r = send(id_, d, s, 0);
+      int r = send(id_, (char*)d, s, 0);
 
       if (r == -1) {
 	internalError("Fitsy++ outsocket deflate send error");
@@ -159,42 +160,7 @@ void OutFitsSocketGZ::putlong(unsigned long l)
   // dump in LSB order
   for (int n = 0; n < 4; n++) {
     unsigned char foo = (int)(l & 0xff);
-    send(id_, &foo, 1, 0);
+    send(id_, (char*)&foo, 1, 0);
     l >>= 8;
   }
 }
-
-#else
-
-OutFitsSocket::OutFitsSocket(int s)
-{
-  id_ = s;
-  valid_ = 0;
-}
-
-int OutFitsSocket::write(char* where, size_t size)
-{
-  return 0;
-}
-
-OutFitsSocketGZ::OutFitsSocketGZ(int s)
-{
-  id_ = s;
-  valid_ = 0;
-}
-
-OutFitsSocketGZ::~OutFitsSocketGZ() {}
-
-int OutFitsSocketGZ::write(char* where, size_t size)
-{
-  return 0;
-}
-
-int OutFitsSocketGZ::deflategz(int flush)
-{
-  return 0;
-}
-
-void OutFitsSocketGZ::putlong(unsigned long l) {}
-
-#endif

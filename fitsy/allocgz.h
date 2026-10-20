@@ -11,7 +11,7 @@
 class FitsAllocGZ : public virtual FitsStream<gzFile> {
 public:
   FitsAllocGZ(const char*);
-  virtual ~FitsAllocGZ() {}
+  virtual ~FitsAllocGZ();
 };
 
 class FitsFitsAllocGZ : public FitsAllocGZ, public FitsFitsStream<gzFile> {

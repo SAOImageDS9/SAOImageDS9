@@ -30,4 +30,14 @@ FitsAlloc::FitsAlloc(const char* fn)
   valid_ = stream_ ? 1 : 0;
 }
 
+FitsAlloc::~FitsAlloc()
+{
+  // a failed load is never done(), so close it here, otherwise the file
+  // stays open (and on Windows, locked against deletion). A valid
+  // stream may still be shared by a FitsMosaicNext* built from this one
+  // (see tclfitsy dir), so leave that to done().
+  if (!valid_)
+    close();
+}
+
 

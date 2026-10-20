@@ -4,24 +4,13 @@
 
 #include "socket.h"
 
-#ifndef __WIN32
-
-FitsSocket::FitsSocket(int s, const char* ext) 
+FitsSocket::FitsSocket(int s, const char* ext)
 {
   parse(ext);
   if (!valid_)
     return;
-  
+
   stream_ = s;
 
   valid_ = stream_ ? 1 : 0;
 }
-
-#else
-
-FitsSocket::FitsSocket(int s, const char* ext) 
-{
-  valid_ = 0;
-}
-
-#endif

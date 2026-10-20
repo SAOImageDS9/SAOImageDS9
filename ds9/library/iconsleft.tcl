@@ -191,7 +191,7 @@ proc ConfigureIconsLeftMarkerShape {} {
     $mb.shape.m entryconfig 4 -image $icons(markershape,polygon)
     $mb.shape.m entryconfig 5 -image $icons(markershape,text)
 
-
+    IconMenuButtonCB $mb.shape marker shape write
 }
 
 

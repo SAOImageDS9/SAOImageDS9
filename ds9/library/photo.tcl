@@ -34,7 +34,9 @@ proc ImportPhotoFile {fn mode} {
     # mask not supported
     set loadParam(load,layer) {}
 
-    ProcessLoad
+    if {[ProcessLoad]} {
+	RecentAdd photo $fn mode $mode
+    }
 
     image delete $ph
 }

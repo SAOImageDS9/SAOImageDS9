@@ -14,7 +14,9 @@ proc ImportENVIFile {hdr fn} {
     set loadParam(file,header) $hdr
     set loadParam(load,layer) {}
 
-    ProcessLoad
+    if {[ProcessLoad]} {
+	RecentAdd envi $hdr data $fn
+    }
 }
 
 proc ExportENVIFile {hdr fn opt} {

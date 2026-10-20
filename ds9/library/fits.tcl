@@ -23,7 +23,9 @@ proc LoadFitsFile {fn layer mode} {
     } else {
 	set mmap 0
     }
-    ProcessLoad
+    if {[ProcessLoad]} {
+	RecentAdd fits $fn layer $layer mode $mode
+    }
 
     # now autoload markers
     if {$pds9(automarker) && $mmap} {

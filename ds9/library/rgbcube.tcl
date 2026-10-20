@@ -28,7 +28,9 @@ proc LoadRGBCubeFile {fn} {
     set loadParam(load,layer) {}
 
     ConvertFitsFile
-    ProcessLoad
+    if {[ProcessLoad]} {
+	RecentAdd rgbcube $fn
+    }
 }
 
 proc LoadRGBCubeAlloc {path fn} {

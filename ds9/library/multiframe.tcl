@@ -20,6 +20,9 @@ proc LoadMultiFrameFile {fn} {
     }
 
     LoadMultiFrameAlloc $path $fn
+    if {$path == {}} {
+	RecentAdd multiframe $fn
+    }
 }
 
 proc LoadMultiFrameSocket {sock fn} {

@@ -36,7 +36,9 @@ proc ImportRGBArrayFile {fn} {
 
     # check for stdin/gz
     ConvertArrayFile
-    ProcessLoad
+    if {[ProcessLoad]} {
+	RecentAdd rgbarray $fn
+    }
 }
 
 proc ImportRGBArrayAlloc {path fn} {

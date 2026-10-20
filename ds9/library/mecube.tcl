@@ -16,7 +16,9 @@ proc LoadMECubeFile {fn} {
     set loadParam(load,layer) {}
 
     ConvertFitsFile
-    ProcessLoad
+    if {[ProcessLoad]} {
+	RecentAdd mecube $fn
+    }
 }
 
 proc LoadMECubeAlloc {path fn} {

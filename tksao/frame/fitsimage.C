@@ -3241,7 +3241,10 @@ void FitsImage::wcsPhyInit(FitsHead* hd)
     int ss = (naxes1+1)*naxes2;
     double* fit = new double[ss];
     double tol = 1;
-    if (astLinearApprox(ast_, ll, ur, tol, fit) != AST__BAD) {
+    // astLinearApprox() returns non-zero on success; on failure it sets
+    // fit[] to AST__BAD, so comparing the int return value to AST__BAD
+    // is always true and silently accepts a bad/degenerate fit.
+    if (astLinearApprox(ast_, ll, ur, tol, fit) != 0) {
       keyLTMV = 1;
       imageToPhysical =  Matrix(fit[naxes2], fit[naxes2+naxes1],
 				fit[naxes2+1], fit[naxes2+naxes1+1],

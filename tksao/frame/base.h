@@ -1578,6 +1578,8 @@ public:
   void markerPolygonDeleteVertexCmd(int, int);
   void markerPolygonPointCmd(int, const char*, Coord::CoordSystem,
 			     Coord::SkyFrame, Coord::SkyFormat);
+  void markerPolygonPointVarCmd(int, const char*, Coord::CoordSystem,
+				Coord::SkyFrame, Coord::SkyFormat);
   void markerPolygonResetCmd(int, const Vector&, Coord::CoordSystem, Coord::DistFormat);
   void markerPreserveCmd(int r) {preserveMarkers = r;}
   void markerPropertyCmd(unsigned short, int);

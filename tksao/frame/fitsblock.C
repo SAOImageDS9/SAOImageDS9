@@ -54,6 +54,7 @@ void FitsImage::block()
       targ->basedata = basedata_;
       targ->block = block_;
       targ->blockFactor = blockFactor;
+      targ->nanZero = context_->blockNanZero();
 
       blockproc(targ);
     }
@@ -117,6 +118,7 @@ void FitsImage::block(pthread_t* thread)
       targ->basedata = basedata_;
       targ->block = block_;
       targ->blockFactor = blockFactor;
+      targ->nanZero = context_->blockNanZero();
 
       int result = pthread_create(thread, NULL, blockproc, targ);
       if (result)
@@ -145,6 +147,7 @@ void* blockproc(void* tt)
   FitsData* basedata = targ->basedata;
   FitsFile* block = targ->block;
   Vector blockFactor = targ->blockFactor;
+  int nanZero = targ->nanZero;
 
   Matrix mm = Scale(1/blockFactor[0],1/blockFactor[1]);
   int srcw = base->head()->naxis(0);
@@ -156,12 +159,34 @@ void* blockproc(void* tt)
   case -64:
     {
       double* dest=(double*)block->data();
-      for (int jj=0; jj<srch; jj++) {
-	for (int ii=0; ii<srcw; ii++) {
-	  Vector cc = Vector(ii,jj)*mm;
-	  if (cc[0]>=0 && cc[0]<ww && cc[1]>=0 && cc[1]<hh) {
-	    double vv = basedata->getValueDouble(jj*srcw+ii);
-	    *(dest+(int(cc[1])*ww + int(cc[0]))) += vv;
+      if (!nanZero) {
+	for (int jj=0; jj<srch; jj++) {
+	  for (int ii=0; ii<srcw; ii++) {
+	    Vector cc = Vector(ii,jj)*mm;
+	    if (cc[0]>=0 && cc[0]<ww && cc[1]>=0 && cc[1]<hh) {
+	      double vv = basedata->getValueDouble(jj*srcw+ii);
+	      *(dest+(int(cc[1])*ww + int(cc[0]))) += vv;
+	    }
+	  }
+	}
+      }
+      else {
+	// skip NaNs; a pixel with no finite contributions stays NaN
+	for (long kk=0; kk<(long)ww*hh; kk++)
+	  dest[kk] = NAN;
+	for (int jj=0; jj<srch; jj++) {
+	  for (int ii=0; ii<srcw; ii++) {
+	    Vector cc = Vector(ii,jj)*mm;
+	    if (cc[0]>=0 && cc[0]<ww && cc[1]>=0 && cc[1]<hh) {
+	      double vv = basedata->getValueDouble(jj*srcw+ii);
+	      if (isnan(vv))
+		continue;
+	      double* dd = dest+(int(cc[1])*ww + int(cc[0]));
+	      if (isnan(*dd))
+		*dd = vv;
+	      else
+		*dd += vv;
+	    }
 	  }
 	}
       }
@@ -170,12 +195,34 @@ void* blockproc(void* tt)
   default:
     {
       float* dest=(float*)block->data();
-      for (int jj=0; jj<srch; jj++) {
-	for (int ii=0; ii<srcw; ii++) {
-	  Vector cc = Vector(ii,jj)*mm;
-	  if (cc[0]>=0 && cc[0]<ww && cc[1]>=0 && cc[1]<hh) {
-	    float vv = basedata->getValueFloat(jj*srcw+ii);
-	    *(dest+(int(cc[1])*ww + int(cc[0]))) += vv;
+      if (!nanZero) {
+	for (int jj=0; jj<srch; jj++) {
+	  for (int ii=0; ii<srcw; ii++) {
+	    Vector cc = Vector(ii,jj)*mm;
+	    if (cc[0]>=0 && cc[0]<ww && cc[1]>=0 && cc[1]<hh) {
+	      float vv = basedata->getValueFloat(jj*srcw+ii);
+	      *(dest+(int(cc[1])*ww + int(cc[0]))) += vv;
+	    }
+	  }
+	}
+      }
+      else {
+	// skip NaNs; a pixel with no finite contributions stays NaN
+	for (long kk=0; kk<(long)ww*hh; kk++)
+	  dest[kk] = NAN;
+	for (int jj=0; jj<srch; jj++) {
+	  for (int ii=0; ii<srcw; ii++) {
+	    Vector cc = Vector(ii,jj)*mm;
+	    if (cc[0]>=0 && cc[0]<ww && cc[1]>=0 && cc[1]<hh) {
+	      float vv = basedata->getValueFloat(jj*srcw+ii);
+	      if (isnan(vv))
+		continue;
+	      float* dd = dest+(int(cc[1])*ww + int(cc[0]));
+	      if (isnan(*dd))
+		*dd = vv;
+	      else
+		*dd += vv;
+	    }
 	  }
 	}
       }

@@ -674,8 +674,10 @@ public:
   // Block Commands
   void blockCmd(const Vector&);
   void blockToCmd(const Vector&);
+  void blockNanZeroCmd(int);
   virtual void blockToFitCmd() =0;
   void getBlockCmd();
+  void getBlockNanZeroCmd();
 
   // Clip Commands
   virtual void clipScopeCmd(FrScale::ClipScope);

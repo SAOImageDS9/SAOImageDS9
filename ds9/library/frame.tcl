@@ -238,6 +238,7 @@ proc CreateNameNumberFrame {which type} {
 	    $which bin depth $bin(depth)
 	    $which bin buffer size $bin(buffersize)
 
+	    $which block nan zero $block(nan,zero)
 	    $which block to $block(factor)
 
 	    $which cube axes $cube(axes)
@@ -270,6 +271,7 @@ proc CreateNameNumberFrame {which type} {
 		$which bin depth $bin(depth)
 		$which bin buffer size $bin(buffersize)
 
+		$which block nan zero $block(nan,zero)
 		$which block to $block(factor)
 
 		$which cube axes $cube(axes)
@@ -304,6 +306,7 @@ proc CreateNameNumberFrame {which type} {
 		$which bin depth $bin(depth)
 		$which bin buffer size $bin(buffersize)
 
+		$which block nan zero $block(nan,zero)
 		$which block to $block(factor)
 
 		$which cube axes $cube(axes)
@@ -338,6 +341,7 @@ proc CreateNameNumberFrame {which type} {
 		$which bin depth $bin(depth)
 		$which bin buffer size $bin(buffersize)
 
+		$which block nan zero $block(nan,zero)
 		$which block to $block(factor)
 
 		$which cube axes $cube(axes)

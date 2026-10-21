@@ -261,6 +261,14 @@ void Base::blockToCmd(const Vector& bb)
   updateBlock(vv);
 }
 
+void Base::blockNanZeroCmd(int which)
+{
+  currentContext->setBlockNanZero(which);
+  currentContext->block();
+  currentContext->analysis();
+  updateBlock(Vector(1,1));
+}
+
 void Base::centerCmd()
 {
   centerImage();
@@ -979,6 +987,14 @@ void Base::getBlockCmd()
   ostringstream str;
   str << currentContext->blockFactor() << ends;
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
+}
+
+void Base::getBlockNanZeroCmd()
+{
+  if (currentContext->blockNanZero())
+    Tcl_AppendResult(interp, "1", NULL);
+  else
+    Tcl_AppendResult(interp, "0", NULL);
 }
 
 void Base::getClipCmd()

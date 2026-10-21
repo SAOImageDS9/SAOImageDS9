@@ -14,6 +14,7 @@ proc BlockDef {} {
 
     set block(lock) 0
     set block(factor) {1 1}
+    set block(nan,zero) 0
 
     array set pblock [array get block]
 }
@@ -35,6 +36,17 @@ proc ChangeBlock {} {
 
     if {$current(frame) != {}} {
 	EvalLockCurrent lock,block [list $current(frame) block to $block(factor)]
+	UpdateBlock
+    }
+}
+
+proc ChangeBlockNanZero {} {
+    global block
+    global current
+
+    if {$current(frame) != {}} {
+	EvalLockCurrent lock,block \
+	    [list $current(frame) block nan zero $block(nan,zero)]
 	UpdateBlock
     }
 }
@@ -122,6 +134,9 @@ proc BlockDialog {} {
 	-variable block(factor) -value {16 16} -command ChangeBlock
     $mb.block add radiobutton -label "[msgcat::mc {Block}] 32" \
  	-variable block(factor) -value {32 32} -command ChangeBlock
+    $mb.block add separator
+    $mb.block add checkbutton -label [msgcat::mc {Treat NaN as 0}] \
+	-variable block(nan,zero) -command ChangeBlockNanZero
 
     # Param
     set f [ttk::frame $w.param]
@@ -214,6 +229,7 @@ proc UpdateBlockMenu {} {
 
     if {$current(frame) != {}} {
 	set block(factor) [$current(frame) get block factor]
+	set block(nan,zero) [$current(frame) get block nan zero]
     }
 }
 
@@ -230,8 +246,10 @@ proc MatchBlock {which} {
     global rgb
  
     set factor [$which get block factor]
+    set nanzero [$which get block nan zero]
     foreach ff $ds9(frames) {
 	if {$ff != $which} {
+	    EvalLock lock,block $ff [list $ff block nan zero $nanzero]
 	    EvalLock lock,block $ff [list $ff block to $factor]
 	}
     }
@@ -267,6 +285,8 @@ proc BlockBackup {ch which} {
 proc BlockBackupBase {ch which} {
     set factor [$which get block factor]
     puts $ch "$which block to $factor"
+    set nanzero [$which get block nan zero]
+    puts $ch "$which block nan zero $nanzero"
 }
 
 proc BlockBackupMultiColor {ch which} {

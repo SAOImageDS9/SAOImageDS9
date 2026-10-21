@@ -98,6 +98,10 @@ scale	    {return $SCALE_}
 scatter	    {return $SCATTER_}
 scross	    {return $SCROSS_}
 select	    {return $SELECT_}
+selectbox   {return $SELECTBOX_}
+selectcircle {return $SELECTCIRCLE_}
+selectfreehand {return $SELECTFREEHAND_}
+selectpolygon {return $SELECTPOLYGON_}
 shape	    {return $SHAPE_}
 show	    {return $SHOW_}
 size	    {return $SIZE_}

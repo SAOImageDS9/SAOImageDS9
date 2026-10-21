@@ -113,6 +113,18 @@ proc PlotDialog {varname wtt {theme true}} {
     $var(mb).edit add radiobutton -label [msgcat::mc {Zoom}] \
 	-variable ${varname}(mode) -value zoom \
 	-command [list PlotChangeMode $varname]
+    $var(mb).edit add radiobutton -label [msgcat::mc {Select Box}] \
+	-variable ${varname}(mode) -value selectbox \
+	-command [list PlotChangeMode $varname]
+    $var(mb).edit add radiobutton -label [msgcat::mc {Select Circle}] \
+	-variable ${varname}(mode) -value selectcircle \
+	-command [list PlotChangeMode $varname]
+    $var(mb).edit add radiobutton -label [msgcat::mc {Select Polygon}] \
+	-variable ${varname}(mode) -value selectpolygon \
+	-command [list PlotChangeMode $varname]
+    $var(mb).edit add radiobutton -label [msgcat::mc {Select Freehand}] \
+	-variable ${varname}(mode) -value selectfreehand \
+	-command [list PlotChangeMode $varname]
 
     # Canvas
     ThemeMenu $var(mb).canvas

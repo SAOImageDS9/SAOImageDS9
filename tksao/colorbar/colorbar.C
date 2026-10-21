@@ -291,6 +291,37 @@ void Colorbar::getColormapFileNameCmd(int id)
   result = TCL_ERROR;
 }
 
+void Colorbar::getColormapRGBCmd(const char* str, int count)
+{
+  // sample named colormap, ignoring bias/contrast/invert
+  // returns a list of #rrggbb, suitable for a Tk photo image
+  if (count<1) {
+    Tcl_AppendResult(interp, " invalid count.", NULL);
+    result = TCL_ERROR;
+    return;
+  }
+
+  ColorMapInfo* ptr = cmaps.begin();
+  while (ptr) {
+    if (!strcmp(ptr->name(),str)) {
+      for (int ii=0; ii<count; ii++) {
+	char buf[8];
+	snprintf(buf, 8, "#%02x%02x%02x",
+		 ptr->getRedChar(ii,count),
+		 ptr->getGreenChar(ii,count),
+		 ptr->getBlueChar(ii,count));
+	Tcl_AppendElement(interp, buf);
+      }
+      return;
+    }
+    ptr = ptr->next();
+  }
+
+  // if we got this far, we did not find it, bail out
+  Tcl_AppendResult(interp, " colormap not found.", NULL);
+  result = TCL_ERROR;
+}
+
 void Colorbar::getColormapFileNameCmd(const char* str)
 {
   ColorMapInfo* ptr = cmaps.begin();

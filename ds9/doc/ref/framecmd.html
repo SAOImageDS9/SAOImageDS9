@@ -284,6 +284,15 @@ colorbar tag &lt;string&gt;<br>
 &nbsp;<br>
 Example:<br>
 $::current(frame) colorbar tag mytag</tt>
+<p><b>Colorbar item: <tt>get colormap rgb</tt></b><br>
+Not a frame command &mdash; this is sent to a colorbar canvas item, such as the default <tt>colorbar</tt> item (which holds every built-in and user-loaded colormap) or a frame's own colorbar (<tt>${::current(frame)}cb</tt>). The colorbar grammar is in <tt>tksao/colorbar/parser.Y</tt>. It samples the named colormap at &lt;count&gt; evenly spaced points and returns a Tcl list of <tt>#rrggbb</tt> colors. The current bias, contrast and invert settings are ignored, so the result shows the colormap itself. Enclose the name in braces so that names such as <tt>a</tt>, <tt>b</tt> or names containing spaces are passed through intact. Returns an error if no colormap of that name is loaded. DS9 uses this to draw the colormap swatches in the Color menu.</p>
+<tt>Syntax:<br>
+colorbar get colormap rgb &lt;name&gt; &lt;count&gt;<br>
+&nbsp;<br>
+Example:<br>
+set rgb [colorbar get colormap rgb {{viridis}} 64]<br>
+set img [image create photo -width 64 -height 12]<br>
+$img put [list $rgb] -to 0 0 64 12</tt>
 
 <h4><a name="colormap" id="colormap"></a>colormap</h4>
 <p>Low-level colormap-cell update, as used while interactively dragging contrast/bias with the pointer. Not typically needed from a script; prefer the <tt>cmap</tt>/<tt>contrast</tt>/<tt>bias</tt> Tcl-level commands for normal colormap control.</p>

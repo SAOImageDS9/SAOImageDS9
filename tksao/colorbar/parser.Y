@@ -168,6 +168,9 @@ get	: /* empty */ {cb->getCmd();}
         | BIAS_ {cb->getBiasCmd();}
 	| COLORBAR_ {cb->getColorbarCmd();}
 	| COLORMAP_ {cb->getColormapCmd();}
+	| COLORMAP_ RGB_ STRING INT {cb->getColormapRGBCmd($3,$4);}
+	| COLORMAP_ RGB_ 'a' INT {cb->getColormapRGBCmd("a",$4);}
+	| COLORMAP_ RGB_ 'b' INT {cb->getColormapRGBCmd("b",$4);}
 	| CONTRAST_ {cb->getContrastCmd();}
 	| FILE_ NAME_ {cb->getCurrentFileNameCmd();}
 	| FILE_ NAME_ INT {cb->getColormapFileNameCmd($3);}

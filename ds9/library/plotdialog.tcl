@@ -48,6 +48,10 @@ proc PlotDialog {varname wtt {theme true}} {
     Toplevel $var(top) $var(mb) 7 $wtt [list PlotDestroy $varname]
     wm geometry $var(top) "600x500"
 
+    # graphs are placed in here, below the icon bar
+    set var(main) [ttk::frame $var(top).main]
+    pack $var(main) -side top -fill both -expand true
+
     $var(mb) add cascade -label [msgcat::mc {File}] -menu $var(mb).file
     $var(mb) add cascade -label [msgcat::mc {Edit}] -menu $var(mb).edit
     $var(mb) add cascade -label [msgcat::mc {Control Panel}] -menu $var(mb).gui
@@ -300,6 +304,8 @@ proc PlotDialog {varname wtt {theme true}} {
     bind $var(top) <<Close>> [list PlotDestroy $varname]
     bind $var(top) <<PageSetup>> PSPageSetup
     bind $var(top) <<Print>> [list PlotPSPrint $varname]
+
+    PlotIconsCreate $varname
 }
 
 proc PlotDataFormatDialog {xarname} {
@@ -670,12 +676,19 @@ proc PlotExportPhoto {varname fn format} {
 
     set geom [MacOSPhotoFix $var(top) 0 0]
 
-    set rr [catch {image create photo -format window -data $var(top)} ph]
+    set rr [catch {image create photo -format window -data $var(top)} tph]
     if {$rr} {
 	MacOSPhotoRestore $var(top) $geom
 	Error [msgcat::mc {An error has occurred while creating}]
 	return
     }
+
+    # crop off the icon bar
+    set yy [winfo y $var(main)]
+    set ph [image create photo]
+    $ph copy $tph -from 0 $yy [winfo width $var(main)] \
+	[expr $yy+[winfo height $var(main)]]
+    image delete $tph
 
     try {
 	switch -- $format {

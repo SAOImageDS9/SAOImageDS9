@@ -1120,11 +1120,11 @@ proc PlotPDF {varname fn} {
 
     update
 
-    set width [winfo width $var(top)]
-    set height [winfo height $var(top)]
+    set width [winfo width $var(main)]
+    set height [winfo height $var(main)]
     if {$width <= 1 || $height <= 1} {
-	set width [winfo reqwidth $var(top)]
-	set height [winfo reqheight $var(top)]
+	set width [winfo reqwidth $var(main)]
+	set height [winfo reqheight $var(main)]
     }
 
     set cmyk [expr {$pps(color) == "cmyk" ? 1 : 0}]
@@ -1145,8 +1145,8 @@ proc PlotPDF {varname fn} {
 	$pdf setFillColor $bg
 	$pdf rectangle 0 0 $width $height -filled 1 -stroke 0
 
-	set topx [winfo rootx $var(top)]
-	set topy [winfo rooty $var(top)]
+	set topx [winfo rootx $var(main)]
+	set topy [winfo rooty $var(main)]
 	foreach cc $var(graphs) {
 	    set gr $var($cc,graph)
 	    if {![winfo exists $gr]} {

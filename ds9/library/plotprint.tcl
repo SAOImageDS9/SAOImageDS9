@@ -231,8 +231,8 @@ proc PlotPostScriptMulti {varname} {
     }
 
     # Prolog
-    set width [expr [winfo width $var(top)]*$ps(scale)/100./$ds9(scaling)]
-    set height [expr [winfo height $var(top)]*$ps(scale)/100./$ds9(scaling)]
+    set width [expr [winfo width $var(main)]*$ps(scale)/100./$ds9(scaling)]
+    set height [expr [winfo height $var(main)]*$ps(scale)/100./$ds9(scaling)]
     set prolog [eval $var([lindex $var(graphs) 0],graph) postscript output \
 		    "$options -width $width -height $height"]
 
@@ -305,8 +305,8 @@ proc PlotEPSMulti {varname fn} {
     set options { -greyscale no -landscape false -paperwidth 0 -paperheight 0}
 
     # Prolog
-    set width [winfo width $var(top)]
-    set height [winfo height $var(top)]
+    set width [winfo width $var(main)]
+    set height [winfo height $var(main)]
     set prolog [eval $var([lindex $var(graphs) 0],graph) postscript output \
 		    "$options -width $width -height $height"]
 

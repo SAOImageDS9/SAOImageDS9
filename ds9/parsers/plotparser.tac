@@ -97,6 +97,10 @@ package provide DS9 1.0
 %token SCATTER_
 %token SCROSS_
 %token SELECT_
+%token SELECTBOX_
+%token SELECTCIRCLE_
+%token SELECTFREEHAND_
+%token SELECTPOLYGON_
 %token SHAPE_
 %token SHOW_
 %token SIZE_
@@ -426,6 +430,10 @@ printColor : RGB_ {set _ rgb}
  
 mode : POINTER_ {set _ pointer}
  | ZOOM_ {set _ zoom}
+ | SELECTBOX_ {set _ selectbox}
+ | SELECTCIRCLE_ {set _ selectcircle}
+ | SELECTPOLYGON_ {set _ selectpolygon}
+ | SELECTFREEHAND_ {set _ selectfreehand}
  ;
 
 graph : {set _ line}

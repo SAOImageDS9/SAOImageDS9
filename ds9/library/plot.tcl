@@ -445,11 +445,19 @@ proc PlotChangeMode {varname} {
     set nn 1
     set first [lindex $var(graphs) 0]
     foreach cc $var(graphs) {
+	PlotSelectUnbind $varname $cc
 	switch $var(mode) {
 	    pointer {
 		blt::RemoveBindTag $var($cc,graph) zoom-$var($cc,graph)
 		bind $var($cc,graph) <1> \
 		    [list PlotButtonInvoke $varname $cc $nn %x %y]
+	    }
+	    selectbox -
+	    selectcircle -
+	    selectpolygon -
+	    selectfreehand {
+		blt::RemoveBindTag $var($cc,graph) zoom-$var($cc,graph)
+		PlotSelectBind $varname $cc $nn $var(mode)
 	    }
 	    zoom {
 		bind $var($cc,graph) <1> {}
@@ -472,6 +480,272 @@ proc PlotChangeMode {varname} {
 	    }
 	}
     }
+}
+
+# Region selection: select every point inside a box, circle, polygon
+# or freehand outline drawn on the graph. Shift adds to the current
+# region selection. For box, circle and freehand a click without a
+# drag falls back to the pointer-mode single point pick. Polygons are
+# built by clicking vertices and closed with a double-click; Escape
+# cancels.
+proc PlotSelectBind {varname cc nn shape} {
+    upvar #0 $varname var
+    global $varname
+
+    set g $var($cc,graph)
+    set var($cc,select,shape) $shape
+    switch $shape {
+	selectpolygon {
+	    bind $g <ButtonPress-1> \
+		[list PlotSelectPolygonVertex $varname $cc %x %y 0]
+	    bind $g <Shift-ButtonPress-1> \
+		[list PlotSelectPolygonVertex $varname $cc %x %y 1]
+	    bind $g <Motion> [list PlotSelectMotion $varname $cc %x %y]
+	    bind $g <Double-ButtonPress-1> \
+		[list PlotSelectFinish $varname $cc $nn %x %y]
+	}
+	default {
+	    bind $g <ButtonPress-1> \
+		[list PlotSelectStart $varname $cc %x %y 0]
+	    bind $g <Shift-ButtonPress-1> \
+		[list PlotSelectStart $varname $cc %x %y 1]
+	    bind $g <B1-Motion> [list PlotSelectMotion $varname $cc %x %y]
+	    bind $g <ButtonRelease-1> \
+		[list PlotSelectFinish $varname $cc $nn %x %y]
+	}
+    }
+    bind $g <KeyPress-Escape> [list PlotSelectCancel $varname $cc]
+}
+
+proc PlotSelectUnbind {varname cc} {
+    upvar #0 $varname var
+    global $varname
+
+    set g $var($cc,graph)
+    foreach ev {<ButtonPress-1> <Shift-ButtonPress-1> <B1-Motion> \
+		    <ButtonRelease-1> <Motion> <Double-ButtonPress-1> \
+		    <KeyPress-Escape>} {
+	bind $g $ev {}
+    }
+    PlotSelectCancel $varname $cc
+}
+
+proc PlotSelectCancel {varname cc} {
+    upvar #0 $varname var
+    global $varname
+
+    set g $var($cc,graph)
+    if {[$g marker exists selectOutline]} {
+	$g marker delete selectOutline
+    }
+    unset -nocomplain var($cc,select,pts)
+}
+
+proc PlotSelectStart {varname cc xx yy add} {
+    upvar #0 $varname var
+    global $varname
+
+    set var($cc,select,pts) [list $xx $yy]
+    set var($cc,select,add) $add
+}
+
+proc PlotSelectPolygonVertex {varname cc xx yy add} {
+    upvar #0 $varname var
+    global $varname
+
+    if {![info exists var($cc,select,pts)]} {
+	PlotSelectStart $varname $cc $xx $yy $add
+	# for Escape
+	focus $var($cc,graph)
+    } else {
+	lappend var($cc,select,pts) $xx $yy
+    }
+    PlotSelectOutline $varname $cc $var($cc,select,pts)
+}
+
+proc PlotSelectMotion {varname cc xx yy} {
+    upvar #0 $varname var
+    global $varname
+
+    if {![info exists var($cc,select,pts)]} {
+	return
+    }
+
+    set pts $var($cc,select,pts)
+    switch $var($cc,select,shape) {
+	selectbox {
+	    lassign $pts x0 y0
+	    set pts [list $x0 $y0 $xx $y0 $xx $yy $x0 $yy]
+	}
+	selectcircle {
+	    lassign $pts x0 y0
+	    set pts [PlotSelectCirclePoly $x0 $y0 \
+			 [expr {hypot($xx-$x0,$yy-$y0)}]]
+	}
+	selectpolygon {
+	    # rubber band to the cursor
+	    lappend pts $xx $yy
+	}
+	selectfreehand {
+	    # skip sub-pixel jitter
+	    if {abs($xx-[lindex $pts end-1]) < 2 && \
+		    abs($yy-[lindex $pts end]) < 2} {
+		return
+	    }
+	    lappend var($cc,select,pts) $xx $yy
+	    set pts $var($cc,select,pts)
+	}
+    }
+    PlotSelectOutline $varname $cc $pts
+}
+
+# screen coords polygon approximating a circle
+proc PlotSelectCirclePoly {x0 y0 rr} {
+    set pts {}
+    set nn 64
+    for {set ii 0} {$ii<$nn} {incr ii} {
+	set aa [expr {2*3.14159265358979*$ii/$nn}]
+	# axis invtransform requires integer pixels
+	lappend pts [expr {round($x0+$rr*cos($aa))}] \
+	    [expr {round($y0+$rr*sin($aa))}]
+    }
+    return $pts
+}
+
+# draw a closed outline given screen coords
+proc PlotSelectOutline {varname cc pts} {
+    upvar #0 $varname var
+    global $varname
+
+    set g $var($cc,graph)
+    lappend pts [lindex $pts 0] [lindex $pts 1]
+    set coords {}
+    foreach {xx yy} $pts {
+	lappend coords [$g xaxis invtransform $xx] [$g yaxis invtransform $yy]
+    }
+
+    if {[$g marker exists selectOutline]} {
+	$g marker configure selectOutline -coords $coords
+    } else {
+	$g marker create line selectOutline -coords $coords \
+	    -dashes 4 -linewidth 1 \
+	    -mapx [lindex [$g xaxis use] 0] -mapy [lindex [$g yaxis use] 0]
+    }
+}
+
+proc PlotSelectFinish {varname cc nn xx yy} {
+    upvar #0 $varname var
+    global $varname
+
+    if {![info exists var($cc,select,pts)]} {
+	return
+    }
+    set g $var($cc,graph)
+    set shape $var($cc,select,shape)
+    set pts $var($cc,select,pts)
+    set add $var($cc,select,add)
+    PlotSelectCancel $varname $cc
+
+    lassign $pts x0 y0
+    switch $shape {
+	selectbox -
+	selectcircle -
+	selectfreehand {
+	    # treat a tiny drag as a click
+	    if {abs($xx-$x0) < 3 && abs($yy-$y0) < 3 && [llength $pts] <= 4} {
+		set var($cc,select,rows) {}
+		PlotButtonInvoke $varname $cc $nn $xx $yy
+		return
+	    }
+	}
+	selectpolygon {
+	    # the double-click's first press already added the last vertex
+	    if {[llength $pts] < 6} {
+		return
+	    }
+	}
+    }
+
+    if {[llength $var($cc,dss)] == 0 || !$var($cc,$nn,show)} {
+	return
+    }
+
+    set xmin [expr {min($x0,$xx)}]
+    set xmax [expr {max($x0,$xx)}]
+    set ymin [expr {min($y0,$yy)}]
+    set ymax [expr {max($y0,$yy)}]
+    set r2 [expr {($xx-$x0)**2 + ($yy-$y0)**2}]
+
+    set xv $var($cc,$nn,xdata)
+    set yv $var($cc,$nn,ydata)
+    global $xv $yv
+
+    # test in screen coords so shapes match what was drawn, even for
+    # log axes. graph element indices start at 0
+    set xlog [$g xaxis cget -log]
+    set ylog [$g yaxis cget -log]
+    set rows {}
+    set ii -1
+    foreach x [$xv range] y [$yv range] {
+	incr ii
+	# skip NaN, Inf, and <= 0 on log axes. Filter here rather than
+	# catch, since transform errors on NaN and a caught error still
+	# leaves errorInfo set, which XPACatchError reports
+	if {$x != $x || $y != $y || abs($x) == Inf || abs($y) == Inf || \
+		($xlog && $x <= 0) || ($ylog && $y <= 0)} {
+	    continue
+	}
+	set sx [$g xaxis transform $x]
+	set sy [$g yaxis transform $y]
+	switch $shape {
+	    selectbox {
+		set in [expr {$sx >= $xmin && $sx <= $xmax && \
+				  $sy >= $ymin && $sy <= $ymax}]
+	    }
+	    selectcircle {
+		set in [expr {($sx-$x0)**2 + ($sy-$y0)**2 <= $r2}]
+	    }
+	    selectpolygon -
+	    selectfreehand {
+		set in [PlotSelectInPolygon $sx $sy $pts]
+	    }
+	}
+	if {$in} {
+	    lappend rows $ii
+	}
+    }
+
+    if {$add && [info exists var($cc,select,rows)]} {
+	set rows [lsort -integer -unique [concat $var($cc,select,rows) $rows]]
+    }
+    set var($cc,select,rows) $rows
+
+    $var($cc,proc,highlite) $varname $cc $nn $rows
+
+    if {$var(callback) != {}} {
+	# callback rows start at 1
+	set rr {}
+	foreach ii $rows {
+	    lappend rr [expr {$ii+1}]
+	}
+	eval "$var(callback) [list $rr] $cc"
+    }
+}
+
+# even-odd ray casting; pts is a flat x y list, implicitly closed
+proc PlotSelectInPolygon {xx yy pts} {
+    set in 0
+    set xj [lindex $pts end-1]
+    set yj [lindex $pts end]
+    foreach {xi yi} $pts {
+	if {(($yi > $yy) != ($yj > $yy)) && \
+		($xx < ($xj-$xi)*($yy-$yi)/double($yj-$yi) + $xi)} {
+	    set in [expr {!$in}]
+	}
+	set xj $xi
+	set yj $yi
+    }
+    return $in
 }
 
 proc PlotAxisFormat {varname axis w nn} {

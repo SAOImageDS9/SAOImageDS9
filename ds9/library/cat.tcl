@@ -136,6 +136,8 @@ proc CATExec {varname} {
 
     VOTParse $var(catdb) $var(token)
     ARDone $varname
+    # row numbers refer to the old catalog
+    set var(filter) [TBLRowFilterStrip $var(filter)]
     CATLoadDone $varname
 }
 
@@ -396,6 +398,34 @@ proc CATLoadFn {varname fn reader} {
 }
 
 # Other procedures
+
+proc CATFilterSelected {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    # region catalogs are rebuilt on refresh, row numbers aren't stable
+    if {[info exists var(regioncatalog)] && $var(regioncatalog)} {
+	return
+    }
+    if {![TBLValidDB $var(tbldb)]} {
+	return
+    }
+
+    set rows [TBLSelectedSrcRows $varname]
+    if {[llength $rows] == 0} {
+	return
+    }
+    set var(filter) [TBLRowFilterSet $var(filter) $rows]
+    $var(proc,table) $varname
+}
+
+proc CATClearFilter {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set var(filter) {}
+    $var(proc,table) $varname
+}
 
 proc CATOff {varname} {
     upvar #0 $varname var

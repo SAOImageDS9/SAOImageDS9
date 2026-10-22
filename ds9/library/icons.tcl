@@ -25,6 +25,8 @@ proc ConfigureIcons {} {
     ConfigureIconsBottom
 
     ConfigureIconsPanner
+
+    PlotIconsImages
 }
 
 proc IconButtonToggleCmd {varname id cmd} {

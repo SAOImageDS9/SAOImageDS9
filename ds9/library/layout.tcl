@@ -524,6 +524,7 @@ proc LayoutView {} {
     LayoutFrames
 
     UpdateViewMenu
+    PlotIconsLayoutAll
 }
 
 proc LayoutViewInit {} {

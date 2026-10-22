@@ -119,6 +119,8 @@ FONT = {
     'S': ['.##', '#..', '.#.', '..#', '##.'],
     'N': ['#..#', '##.#', '#.##', '#..#', '#..#'],
     'G': ['.###', '#...', '#.##', '#..#', '.##.'],
+    'D': ['##.', '#.#', '#.#', '#.#', '##.'],
+    'F': ['###', '#..', '##.', '#..', '#..'],
 }
 
 
@@ -508,6 +510,62 @@ def _():
 def _():
     return (rect(4, 4, 16, 18, 2, fill=TINT) + path('M8 2 V6 M16 2 V6') +
             path('M8 11 H16 M8 15 H16 M8 19 H12'))
+
+
+# -- plot window ------------------------------------------------------------
+
+@icon('save_as_pdf')
+def _():
+    return file_badge('PDF')
+
+
+@icon('plot_stats')
+def _():
+    return path('M18 7 V4 H6 L12.5 12 L6 20 H18 V17')
+
+
+@icon('plot_gui')
+def _():
+    out = ''
+    for y, x in ((6, 15), (12, 8), (18, 13)):
+        out += path('M3 %d H21' % y)
+        out += circle(x, y, 2.5, SA, fill='fill="{acc}"')
+    return out
+
+
+def marquee(shape):
+    """Dashed selection outline around a few accent data points."""
+    dash = ('fill="none" stroke="{ink}" stroke-width="1.6" '
+            'stroke-dasharray="2.5 2" stroke-linejoin="round"')
+    pts = dot(9, 12, 1.6, '{acc}') + dot(13, 8.5, 1.6, '{acc}') + \
+        dot(14.5, 13, 1.6, '{acc}')
+    return shape(dash) + pts
+
+
+icon('select_box')(lambda: marquee(
+    lambda st: rect(3, 4, 18, 16, 0, st, fill=TINT)))
+icon('select_circle')(lambda: marquee(
+    lambda st: circle(12, 12, 9, st, fill=TINT)))
+
+
+def _select_poly(st):
+    vv = ((3, 9), (11, 3), (21, 8), (17, 21), (5, 18))
+    d = 'M' + ' L'.join('%g %g' % v for v in vv) + ' Z'
+    return (fpath(d, '{tint}', 'fill-opacity="{tint_op}"') + path(d, st) +
+            ''.join(rect(x - 1.5, y - 1.5, 3, 3, 0.5, 'fill="{ink}"')
+                    for x, y in vv))
+
+
+def _select_freehand(st):
+    # a lasso: an irregular loop with a trailing cord
+    d = smooth_closed([(5, 7), (10, 3.5), (17, 4), (21, 9), (18.5, 14),
+                       (13, 16), (9, 18), (5, 15), (3, 11)])
+    return (fpath(d, '{tint}', 'fill-opacity="{tint_op}"') + path(d, st) +
+            path('M6.5 16.5 C5 19 6 22 9 21.5'))
+
+
+icon('select_polygon')(lambda: marquee(_select_poly))
+icon('select_freehand')(lambda: marquee(_select_freehand))
 
 
 # -- top bar: colour / scale -----------------------------------------------

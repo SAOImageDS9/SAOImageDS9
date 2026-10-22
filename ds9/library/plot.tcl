@@ -918,7 +918,7 @@ proc PlotLayoutCanvas {varname} {
 		set var($cc,tx) [expr $xx*$z1]
 		set var($cc,ty) [expr $yy*$z2]
 
-		place $var($cc,graph) -in $var(top) \
+		place $var($cc,graph) -in $var(main) \
 		    -relwidth $z1 -relheight $z2 \
 		    -relx [expr $xx*$z1] -rely [expr $yy*$z2] \
 		    -anchor nw
@@ -937,7 +937,7 @@ proc PlotLayoutCanvas {varname} {
 		set var($cc,tx) [expr $ii*$zz]
 		set var($cc,ty) 0
 
-		place $var($cc,graph) -in $var(top) \
+		place $var($cc,graph) -in $var(main) \
 		    -relwidth $zz -relheight 1 \
 		    -relx [expr $ii*$zz] -rely .5 \
 		    -anchor w
@@ -951,7 +951,7 @@ proc PlotLayoutCanvas {varname} {
 		set var($cc,tx) 0
 		set var($cc,ty) [expr $ii*$zz]
 
-		place $var($cc,graph) -in $var(top) \
+		place $var($cc,graph) -in $var(main) \
 		    -relwidth 1 -relheight $zz \
 		    -relx .5 -rely [expr $ii*$zz] \
 		    -anchor n
@@ -975,14 +975,14 @@ proc PlotLayoutCanvas {varname} {
 		    set var($cc,tx) 0
 		    set var($cc,ty) 0
 
-		    place $var($cc,graph) -in $var(top) \
+		    place $var($cc,graph) -in $var(main) \
 			-relwidth 1 -relheight $z1 \
 			-x 0 -y 0
 		} else {
 		    set var($cc,tx) 0
 		    set var($cc,ty) [expr ($ii-1)*$z2 + $z1]
 
-		    place $var($cc,graph) -in $var(top) \
+		    place $var($cc,graph) -in $var(main) \
 			-relwidth 1 -relheight $z2 \
 			-relx .5 -rely [expr $ii*$z2 + $z1] \
 			-anchor s

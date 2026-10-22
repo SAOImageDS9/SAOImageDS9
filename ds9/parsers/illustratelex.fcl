@@ -32,6 +32,7 @@ circle		{return $CIRCLE_}
 ellipse		{return $ELLIPSE_}
 box		{return $BOX_}
 polygon		{return $POLYGON_}
+freehand	{return $FREEHAND_}
 line		{return $LINE_}
 text		{return $TEXT_}
 image		{return $IMAGE_}

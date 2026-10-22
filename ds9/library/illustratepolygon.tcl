@@ -413,3 +413,81 @@ proc IllustratePolygonEditCB {id} {
 
 
 
+
+# Freehand: collect the drag in canvas coords, draw it as a canvas line,
+# and on release create a normal polygon graphic from it. Shares the
+# trace simplification and tolerance preference with freehand regions.
+
+proc IllustrateFreehandBegin {xx yy} {
+    global ds9
+    global illustrate
+    global iillustrate
+
+    # a lost button-up can leave a stale outline behind
+    $ds9(canvas) delete illfreehand
+
+    set iillustrate(freehand) [list $xx $yy]
+    set iillustrate(motion) freehand
+
+    # not tagged graphic, so it can never be found or selected
+    $ds9(canvas) create line $xx $yy $xx $yy -tags illfreehand \
+	-fill cyan -width $illustrate(width)
+}
+
+proc IllustrateFreehandMotion {xx yy} {
+    global ds9
+    global iillustrate
+
+    # skip sub-pixel jitter
+    set jj [expr {min(2,[MarkerFreehandTolerance])}]
+    if {abs($xx-[lindex $iillustrate(freehand) end-1]) < $jj &&
+	abs($yy-[lindex $iillustrate(freehand) end]) < $jj} {
+	return
+    }
+    lappend iillustrate(freehand) $xx $yy
+    $ds9(canvas) coords illfreehand $iillustrate(freehand)
+}
+
+proc IllustrateFreehandEnd {} {
+    global ds9
+    global illustrate
+    global iillustrate
+
+    $ds9(canvas) delete illfreehand
+
+    set trace $iillustrate(freehand)
+    unset iillustrate(freehand)
+
+    # a click or a nearly straight stroke makes a default polygon,
+    # like a click with the polygon shape
+    set pts [MarkerFreehandSimplify $trace [MarkerFreehandTolerance]]
+    if {[MarkerFreehandSmall $trace 4] || [llength $pts] < 6} {
+	lassign $trace xx yy
+	set id [IllustratePolygonCreate \
+		    [list $xx $yy $xx $yy $xx $yy $xx $yy] \
+		    $illustrate(color) $illustrate(fill) \
+		    $illustrate(width) $illustrate(dash)]
+	IllustratePolygonDefault $id
+    } else {
+	set id [IllustratePolygonCreate $pts \
+		    $illustrate(color) $illustrate(fill) \
+		    $illustrate(width) $illustrate(dash)]
+    }
+
+    IllustrateSaveUndo create $id
+    IllustrateUpdateHandle $id
+}
+
+proc IllustrateFreehandCancel {} {
+    global ds9
+    global iillustrate
+
+    # only while a freehand drag is in progress
+    if {![info exists iillustrate(motion)] ||
+	$iillustrate(motion) ne {freehand}} {
+	return
+    }
+    $ds9(canvas) delete illfreehand
+    unset -nocomplain iillustrate(freehand)
+    set iillustrate(motion) none
+}

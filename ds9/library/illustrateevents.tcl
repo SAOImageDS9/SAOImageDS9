@@ -183,6 +183,7 @@ proc IllustrateDoMotion {xx yy cursor} {
 
 proc IllustrateButton {xx yy} {
     global ds9
+    global illustrate
     global iillustrate
 
     # let others know that the mouse is down
@@ -271,6 +272,12 @@ proc IllustrateButton {xx yy} {
     # if something selected, unselect
     if {[llength $iillustrate(selection)]} {
 	IllustrateSelectNone
+	return
+    }
+
+    # freehand: collect the drag, create a polygon on release
+    if {$illustrate(shape) eq {freehand}} {
+	IllustrateFreehandBegin $xx $yy
 	return
     }
 
@@ -434,6 +441,8 @@ proc IllustrateButtonMotion {xx yy} {
 		$iillustrate(motion,xx) $iillustrate(motion,yy) \
 		$xx $yy
 	}
+
+	freehand {IllustrateFreehandMotion $xx $yy}
     }
 }
 
@@ -511,6 +520,8 @@ proc IllustrateButtonRelease {xx yy} {
 		IllustrateAddToSelection $id
 	    }
 	}
+
+	freehand {IllustrateFreehandEnd}
     }
 
     unset iillustrate(id)
@@ -597,6 +608,8 @@ proc IllustrateKey {K A xx yy} {
 		IllustrateDeleteSelect
 	    }
 	}
+
+	Escape {IllustrateFreehandCancel}
 
 	Up -
 	k {

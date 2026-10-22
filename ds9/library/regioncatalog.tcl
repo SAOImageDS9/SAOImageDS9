@@ -77,7 +77,10 @@ proc RegionCatalogCreate {{frame {}}} {
     $var(mb).file entryconfig [msgcat::mc {Filter}] \
 	-command [list RegionCatalogRefreshView $varname]
 
-    foreach item {{Retrieve} {Cancel} {Clear} {Show} {Edit} {Copy to Regions} \
+    $var(mb).file entryconfig [msgcat::mc {Clear Filter}] \
+	-command [list RegionCatalogClearFilter $varname]
+
+    foreach item {{Retrieve} {Cancel} {Clear} {Filter Selected} {Show} {Edit} {Copy to Regions} \
 	{Update from Current Frame} {Update from Current Crosshair}} {
 	catch {$var(mb).file entryconfig [msgcat::mc $item] -state disabled}
     }
@@ -799,6 +802,12 @@ proc RegionCatalogSelectRows {varname src rowlist cc} {
 	plot {SAMPSendTableRowListCmd $varname $rows}
     }
     RegionCatalogPanToRow $varname [lindex $rows 0]
+}
+
+proc RegionCatalogClearFilter {varname} {
+    upvar #0 $varname var
+    set var(filter) {}
+    RegionCatalogRefreshView $varname
 }
 
 proc RegionCatalogFilterDialog {varname} {

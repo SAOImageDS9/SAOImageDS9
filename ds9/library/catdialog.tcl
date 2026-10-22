@@ -146,6 +146,10 @@ proc CATDialog {varname format catalog title action} {
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Filter}] \
 	-command [list CATTable $varname]
+    $mb.file add command -label [msgcat::mc {Filter Selected}] \
+	-command [list CATFilterSelected $varname]
+    $mb.file add command -label [msgcat::mc {Clear Filter}] \
+	-command [list CATClearFilter $varname]
     $mb.file add command -label [msgcat::mc {Clear}] \
 	-command [list CATOff $varname]
     $mb.file add separator
@@ -375,6 +379,8 @@ proc CATDialog {varname format catalog title action} {
     ttk::entry $f.filter -textvariable ${varname}(filter) -width 50
     ttk::button $f.bfilter -text [msgcat::mc {Edit}] \
 	-command [list TBLEditDialog $varname filter $var(catdb)]
+    ttk::button $f.sfilter -text [msgcat::mc {Selected}] \
+	-command [list CATFilterSelected $varname]
 
     ttk::label $f.msort -text [msgcat::mc {Sort}]
     set var(sortmenu) [ttk::menubutton $f.sort \
@@ -405,7 +411,7 @@ proc CATDialog {varname format catalog title action} {
 	[list CATColsCmd $varname]
     CoordMenuEnable $f.pcoord.menu $varname psystem psky {}
 
-    grid $f.mfilter $f.filter - - $f.bfilter \
+    grid $f.mfilter $f.filter - - $f.bfilter $f.sfilter \
 	-padx 2 -pady 2 -sticky w
     grid $f.msort $f.sort $f.isort $f.dsort \
 	-padx 2 -pady 2 -sticky w
@@ -558,6 +564,16 @@ proc CATDialogUpdate {varname} {
     # do we have a db?
     if {[TBLValidDB $var(tbldb)]} {
 	$var(mb).file entryconfig [msgcat::mc {Filter}] -state normal
+	if {[info exists var(regioncatalog)] && $var(regioncatalog)} {
+	    $var(mb).file entryconfig [msgcat::mc {Filter Selected}] \
+		-state disabled
+	    $var(top).param.sfilter configure -state disabled
+	} else {
+	    $var(mb).file entryconfig [msgcat::mc {Filter Selected}] \
+		-state normal
+	    $var(top).param.sfilter configure -state normal
+	}
+	$var(mb).file entryconfig [msgcat::mc {Clear Filter}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Clear}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Plot}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Histogram}] -state normal
@@ -571,6 +587,9 @@ proc CATDialogUpdate {varname} {
 	$var(top).buttons.histogram configure -state normal
     } else {
 	$var(mb).file entryconfig [msgcat::mc {Filter}] -state disabled
+	$var(mb).file entryconfig [msgcat::mc {Filter Selected}] -state disabled
+	$var(mb).file entryconfig [msgcat::mc {Clear Filter}] -state disabled
+	$var(top).param.sfilter configure -state disabled
 	$var(mb).file entryconfig [msgcat::mc {Clear}] -state disabled
 	$var(mb).file entryconfig [msgcat::mc {Plot}] -state disabled
 	$var(mb).file entryconfig [msgcat::mc {Histogram}] -state disabled

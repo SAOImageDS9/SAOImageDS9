@@ -279,8 +279,53 @@ void Base::createPolygonCmd(const List<Vertex>& list,
 			    const List<Tag>& tag, const List<CallBack>& cb)
 {
   createMarker(new Polygon(this, list,
-			   color, dash, width, font, text, 
+			   color, dash, width, font, text,
 			   prop, comment, tag, cb));
+}
+
+void Base::createPolygonCanvasVarCmd(const char* var,
+				     const char* color, int* dash,
+				     int width, const char* font,
+				     const char* text, unsigned short prop,
+				     const char* comment,
+				     const List<Tag>& tag,
+				     const List<CallBack>& cb)
+{
+  // vertex list in CANVAS coords, read from a Tcl variable to avoid the
+  // parser's FRBUFSIZE limit on STRING tokens
+  Tcl_Obj* obj = Tcl_GetVar2Ex(interp, var, NULL,
+			       TCL_GLOBAL_ONLY|TCL_LEAVE_ERR_MSG);
+  if (!obj) {
+    result = TCL_ERROR;
+    return;
+  }
+
+  Tcl_Size cnt;
+  Tcl_Obj** objv;
+  if (Tcl_ListObjGetElements(interp, obj, &cnt, &objv) != TCL_OK) {
+    result = TCL_ERROR;
+    return;
+  }
+  if (cnt%2 || cnt<6) {
+    Tcl_AppendResult(interp, "polygon requires at least three X Y pairs",
+		     NULL);
+    result = TCL_ERROR;
+    return;
+  }
+
+  List<Vertex> list;
+  for (Tcl_Size ii=0; ii<cnt; ii+=2) {
+    double xx, yy;
+    if (Tcl_GetDoubleFromObj(interp, objv[ii], &xx) != TCL_OK ||
+	Tcl_GetDoubleFromObj(interp, objv[ii+1], &yy) != TCL_OK) {
+      result = TCL_ERROR;
+      return;
+    }
+    list.append(new Vertex(mapToRef(Vector(xx,yy),Coord::CANVAS)));
+  }
+
+  createPolygonCmd(list, color, dash, width, font, text,
+		   prop, comment, tag, cb);
 }
 
 void Base::contourCreatePolygonCmd()

@@ -117,6 +117,7 @@ proc MarkerDef {} {
     set pmarker(compass,radius) 40
     set pmarker(polygon,width) 20
     set pmarker(polygon,height) 20
+    set pmarker(freehand,tolerance) 0.5
     set pmarker(projection,thick) 0
     set pmarker(point,size) 11
     set pmarker(segment,length) 20
@@ -330,6 +331,7 @@ proc MarkerCreate {which x y} {
 	{x point} -
 	{arrow point} -
 	{boxcircle point} {MarkerCreateShape $which $x $y}
+	freehand {MarkerFreehandBegin $which $x $y}
 	default {
 	    if {![$which has wcs celestial wcs]} {
 		Error "[msgcat::mc {Unable to create FOV Region, celestial WCS Required}]"
@@ -487,6 +489,8 @@ proc MarkerMotion {which x y} {
 
 	region -
 	shiftregion {$which region select motion $x $y}
+
+	freehand {MarkerFreehandMotion $which $x $y}
     }
 }
 
@@ -565,6 +569,7 @@ proc MarkerRelease {which x y} {
 	}
 	region {$which region select end}
 	shiftregion {$which region select shift end}
+	freehand {MarkerFreehandEnd $which}
     }
     set imarker(motion) none
     set imarker(handle) -1
@@ -633,12 +638,16 @@ proc MarkerDouble {which x y} {
     }
 }
 
-proc MarkerCreateShape {which x y} {
+proc MarkerCreateShape {which x y {shape {}}} {
     global marker
     global imarker
     global pmarker
     global current
     global wcs
+
+    if {$shape eq {}} {
+	set shape $marker(shape)
+    }
 
     # for compass/ruler
     global ed
@@ -647,8 +656,8 @@ proc MarkerCreateShape {which x y} {
     AdjustCoordSystem ed system
     set ed(dformat) $pmarker(dformat)
 
-    set cmd "$which marker create $marker(shape) $x $y"
-    switch -- $marker(shape) {
+    set cmd "$which marker create $shape $x $y"
+    switch -- $shape {
 	circle {append cmd " 0"}
 	annulus {append cmd " .001 .002 $pmarker(annulus,annuli)"}
 	panda {append cmd " $pmarker(panda,ang1) $pmarker(panda,ang2) $pmarker(panda,angnum) .001 .002 $pmarker(panda,annuli)"}
@@ -674,20 +683,7 @@ proc MarkerCreateShape {which x y} {
 	{arrow point} -
 	{boxcircle point} {append cmd " $pmarker(point,size)"}
     }
-    append cmd " color = $marker(color)"
-    append cmd " fill = $marker(fill)"
-    append cmd " width = $marker(width)"
-    append cmd " dash = $marker(dash)"
-    append cmd " dashlist = [lindex $marker(dashlist) 0] [lindex $marker(dashlist) 1]"
-    append cmd " font = \{\"$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\"\}"
-
-    append cmd " fixed = $marker(fixed)"
-    append cmd " edit = $marker(edit)"
-    append cmd " move = $marker(move)"
-    append cmd " rotate = $marker(rotate)"
-    append cmd " delete = $marker(delete)"
-    append cmd " include = $marker(include)"
-    append cmd " source = $marker(source)"
+    append cmd [MarkerCreateProps]
 
     $which marker unselect all
 
@@ -696,7 +692,7 @@ proc MarkerCreateShape {which x y} {
     set imarker(x) $x
     set imarker(y) $y
 
-    switch -- $marker(shape) {
+    switch -- $shape {
 	circle -
 	annulus -
 	panda -
@@ -720,6 +716,239 @@ proc MarkerCreateShape {which x y} {
 	    $which marker $imarker(id) edit begin $imarker(handle)
 	}
     }
+}
+
+proc MarkerCreateProps {} {
+    global marker
+
+    set cmd " color = $marker(color)"
+    append cmd " fill = $marker(fill)"
+    append cmd " width = $marker(width)"
+    append cmd " dash = $marker(dash)"
+    append cmd " dashlist = [lindex $marker(dashlist) 0] [lindex $marker(dashlist) 1]"
+    append cmd " font = \{\"$marker(font) $marker(font,size) $marker(font,weight) $marker(font,slant)\"\}"
+
+    append cmd " fixed = $marker(fixed)"
+    append cmd " edit = $marker(edit)"
+    append cmd " move = $marker(move)"
+    append cmd " rotate = $marker(rotate)"
+    append cmd " delete = $marker(delete)"
+    append cmd " include = $marker(include)"
+    append cmd " source = $marker(source)"
+    return $cmd
+}
+
+# Freehand: collect the drag in canvas coords, draw it as a canvas line
+# over the frame, and on release create a normal polygon from it.
+
+proc MarkerFreehandBegin {which x y} {
+    global ds9
+    global marker
+    global imarker
+    global ifreehand
+
+    # a lost button-up can leave a stale outline behind
+    $ds9(canvas) delete freehand
+
+    set ifreehand [list $x $y]
+    set imarker(x) $x
+    set imarker(y) $y
+    set imarker(motion) freehand
+
+    # disabled so it never becomes the canvas 'current' item
+    $ds9(canvas) create line $x $y $x $y -tags freehand \
+	-fill cyan -width $marker(width) -state disabled
+    MarkerFreehandMagnifier $which $x $y
+}
+
+proc MarkerFreehandMotion {which x y} {
+    global ds9
+    global ifreehand
+
+    # skip sub-pixel jitter, but the magnifier still follows the cursor
+    set jj [expr {min(2,[MarkerFreehandTolerance])}]
+    if {abs($x-[lindex $ifreehand end-1]) < $jj &&
+	abs($y-[lindex $ifreehand end]) < $jj} {
+	MarkerFreehandMagnifier $which $x $y
+	return
+    }
+    lappend ifreehand $x $y
+    $ds9(canvas) coords freehand $ifreehand
+    MarkerFreehandMagnifier $which $x $y
+}
+
+# Mirror the trace onto the magnifier canvas. The magnifier shows the
+# frame's canvas view scaled by its zoom about the cursor (see
+# Base::updateMagnifierMatrices), so canvas coords map with just a
+# translate and scale. Not valid for 3d frames, which are skipped.
+proc MarkerFreehandMagnifier {which x y} {
+    global ds9
+    global marker
+    global view
+    global pmagnifier
+    global imagnifier
+    global ifreehand
+
+    set mc $ds9(magnifier,canvas)
+    $mc delete freehand
+
+    if {!$view(magnifier) || !$pmagnifier(region) ||
+	![info exists ifreehand] || [$which get type] == {3d}} {
+	return
+    }
+
+    # magnifier image is anchored nw at its item coords
+    lassign [$mc coords magnifier] ox oy
+    set zz $pmagnifier(zoom)
+    set cx [expr {$ox+int($imagnifier(size,x)/2.)}]
+    set cy [expr {$oy+int($imagnifier(size,y)/2.)}]
+
+    set pts {}
+    foreach {px py} $ifreehand {
+	lappend pts [expr {($px-$x)*$zz+$cx}] [expr {($py-$y)*$zz+$cy}]
+    }
+    # a line item needs two points
+    if {[llength $pts] < 4} {
+	lappend pts {*}$pts
+    }
+    $mc create line $pts -tags freehand -fill cyan -width $marker(width)
+}
+
+proc MarkerFreehandEnd {which} {
+    global ds9
+    global marker
+    global imarker
+    global ifreehand
+
+    $ds9(canvas) delete freehand
+    $ds9(magnifier,canvas) delete freehand
+
+    # treat a tiny trace as a click: default polygon, like other shapes.
+    # Use the trace's extent, not start-to-end distance -- a closed
+    # loop ends where it started. A nearly straight stroke simplifies to
+    # two vertices and lands here too.
+    set pts [MarkerFreehandSimplify $ifreehand [MarkerFreehandTolerance]]
+    if {[MarkerFreehandSmall $ifreehand 4] || [llength $pts] < 6} {
+	MarkerCreateShape $which $imarker(x) $imarker(y) polygon
+	$which marker edit end
+	MarkerDefault $which
+    } else {
+	$which marker unselect all
+	set ifreehand $pts
+	set imarker(id) [eval "$which marker create polygon canvas \
+	    var ifreehand [MarkerCreateProps]"]
+    }
+
+    # createMarker prints no id on a coordinate-mapping error or while
+    # building a composite, so the result may be empty
+    if {[string is integer -strict $imarker(id)] && $imarker(id)>=0} {
+	if {$marker(centroid,auto)} {
+	    $which marker centroid $imarker(id)
+	}
+	MarkerReleaseCB $which
+    }
+
+    unset ifreehand
+    set imarker(id) -1
+    set imarker(x) -1
+    set imarker(y) -1
+}
+
+proc MarkerFreehandCancel {} {
+    global ds9
+    global imarker
+    global ifreehand
+
+    # only while a freehand drag is in progress; any other drag must
+    # still see its own release
+    if {$imarker(motion) ne {freehand}} {
+	return
+    }
+    $ds9(canvas) delete freehand
+    $ds9(magnifier,canvas) delete freehand
+    unset -nocomplain ifreehand
+    set imarker(motion) none
+}
+
+# max distance, in screen pixels, a dropped trace point may lie from the
+# simplified outline; 0 keeps every recorded point
+proc MarkerFreehandTolerance {} {
+    global pmarker
+
+    if {[string is double -strict $pmarker(freehand,tolerance)] &&
+	$pmarker(freehand,tolerance) >= 0} {
+	return $pmarker(freehand,tolerance)
+    }
+    return 0.5
+}
+
+proc MarkerFreehandSmall {pts tol} {
+    set x0 [lindex $pts 0]
+    set x1 $x0
+    set y0 [lindex $pts 1]
+    set y1 $y0
+    foreach {x y} $pts {
+	set x0 [expr {min($x0,$x)}]
+	set x1 [expr {max($x1,$x)}]
+	set y0 [expr {min($y0,$y)}]
+	set y1 [expr {max($y1,$y)}]
+    }
+    return [expr {($x1-$x0) < $tol && ($y1-$y0) < $tol}]
+}
+
+# Douglas-Peucker in canvas pixels; every vertex becomes an edit handle
+# and a serialized coordinate, so a raw trace (hundreds of points) is
+# unusable. Also drops a closing point that duplicates the first.
+proc MarkerFreehandSimplify {pts tol} {
+    set nn [expr {[llength $pts]/2}]
+    if {$nn < 3} {
+	return $pts
+    }
+    set keep [lrepeat $nn 0]
+    lset keep 0 1
+    lset keep end 1
+    set stack [list [list 0 [expr {$nn-1}]]]
+    while {[llength $stack]} {
+	lassign [lindex $stack end] ii jj
+	set stack [lrange $stack 0 end-1]
+	lassign [lrange $pts [expr {2*$ii}] [expr {2*$ii+1}]] ax ay
+	lassign [lrange $pts [expr {2*$jj}] [expr {2*$jj+1}]] bx by
+	set dx [expr {$bx-$ax}]
+	set dy [expr {$by-$ay}]
+	set ll [expr {hypot($dx,$dy)}]
+	set dmax -1
+	set kk -1
+	for {set mm [expr {$ii+1}]} {$mm < $jj} {incr mm} {
+	    lassign [lrange $pts [expr {2*$mm}] [expr {2*$mm+1}]] px py
+	    if {$ll > 0} {
+		set dd [expr {abs($dx*($ay-$py)-($ax-$px)*$dy)/$ll}]
+	    } else {
+		set dd [expr {hypot($px-$ax,$py-$ay)}]
+	    }
+	    if {$dd > $dmax} {
+		set dmax $dd
+		set kk $mm
+	    }
+	}
+	if {$dmax > $tol} {
+	    lset keep $kk 1
+	    lappend stack [list $ii $kk] [list $kk $jj]
+	}
+    }
+
+    set rr {}
+    for {set mm 0} {$mm < $nn} {incr mm} {
+	if {[lindex $keep $mm]} {
+	    lappend rr {*}[lrange $pts [expr {2*$mm}] [expr {2*$mm+1}]]
+	}
+    }
+    # polygon closes itself
+    if {[llength $rr] > 6 &&
+	abs([lindex $rr 0]-[lindex $rr end-1]) < 2 &&
+	abs([lindex $rr 1]-[lindex $rr end]) < 2} {
+	set rr [lrange $rr 0 end-2]
+    }
+    return $rr
 }
 
 proc MarkerDefault {which} {

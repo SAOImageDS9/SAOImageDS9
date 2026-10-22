@@ -87,6 +87,8 @@ proc RegionMainMenu {} {
 	-variable marker(shape) -value box
     $ds9(mb).region.shape add radiobutton -label [msgcat::mc {Polygon}] \
 	-variable marker(shape) -value polygon
+    $ds9(mb).region.shape add radiobutton -label [msgcat::mc {Freehand}] \
+	-variable marker(shape) -value freehand
     $ds9(mb).region.shape add separator
     $ds9(mb).region.shape add radiobutton -label [msgcat::mc {Line}] \
 	-variable marker(shape) -value line
@@ -254,6 +256,8 @@ proc PrefsDialogRegionMenu {w} {
 	-variable pmarker(shape) -value box
     $m.shape add radiobutton -label [msgcat::mc {Polygon}] \
 	-variable pmarker(shape) -value polygon
+    $m.shape add radiobutton -label [msgcat::mc {Freehand}] \
+	-variable pmarker(shape) -value freehand
     $m.shape add separator
     $m.shape add radiobutton -label [msgcat::mc {Line}] \
 	-variable pmarker(shape) -value line
@@ -502,6 +506,18 @@ proc PrefsDialogRegion {} {
     grid $f.title $f.width $f.unit -padx 2 -pady 2 -sticky w
     grid $f.title2 $f.height $f.unit2 -padx 2 -pady 2 -sticky w
 
+    # Freehand
+    set f [ttk::labelframe $w.region.freehand -text [msgcat::mc {Freehand}]]
+
+    ttk::label $f.title -text [msgcat::mc {Tolerance}]
+    ttk::entry $f.tol -textvariable pmarker(freehand,tolerance) -width 10
+    ttk::label $f.unit -text [msgcat::mc {Pixels}]
+    ttk::label $f.help \
+	-text [msgcat::mc {Smaller keeps more points; 0 keeps all}]
+
+    grid $f.title $f.tol $f.unit -padx 2 -pady 2 -sticky w
+    grid $f.help - - -padx 2 -pady 2 -sticky w
+
     # Projection
     set f [ttk::labelframe $w.region.projection -text [msgcat::mc {Projection}]]
 
@@ -524,7 +540,8 @@ proc PrefsDialogRegion {} {
 	$w.region.dformat $w.region.epsilon \
 	$w.region.centroid $w.region.plot \
 	$w.region.circle $w.region.ellipse \
-	$w.region.box $w.region.polygon $w.region.projection $w.region.point \
+	$w.region.box $w.region.polygon $w.region.freehand \
+	$w.region.projection $w.region.point \
 	-side top -fill both -expand true
 }
 
@@ -744,6 +761,7 @@ proc ButtonsRegionDef {} {
 	region,ellipse 0
 	region,box 0
 	region,polygon 0
+	region,freehand 0
 	region,line 0
 	region,vector 0
 	region,projection 0
@@ -805,6 +823,9 @@ proc CreateButtonsRegion {} {
     RadioButton $ds9(buttons).region.polygon \
 	[string tolower [msgcat::mc {Polygon}]] \
 	marker shape polygon {}
+    RadioButton $ds9(buttons).region.freehand \
+	[string tolower [msgcat::mc {Freehand}]] \
+	marker shape freehand {}
     RadioButton $ds9(buttons).region.line \
 	[string tolower [msgcat::mc {Line}]] \
 	marker shape line {}
@@ -911,6 +932,7 @@ proc CreateButtonsRegion {} {
         $ds9(buttons).region.ellipse pbuttons(region,ellipse)
         $ds9(buttons).region.box pbuttons(region,box)
         $ds9(buttons).region.polygon pbuttons(region,polygon)
+        $ds9(buttons).region.freehand pbuttons(region,freehand)
         $ds9(buttons).region.line pbuttons(region,line)
         $ds9(buttons).region.vector pbuttons(region,vector)
         $ds9(buttons).region.projection pbuttons(region,projection)
@@ -1035,6 +1057,9 @@ proc PrefsDialogButtonbarRegion {f} {
 	-command {UpdateButtons buttons(region)}
     $m.shape add checkbutton -label [msgcat::mc {Polygon}] \
 	-variable pbuttons(region,polygon) \
+	-command {UpdateButtons buttons(region)}
+    $m.shape add checkbutton -label [msgcat::mc {Freehand}] \
+	-variable pbuttons(region,freehand) \
 	-command {UpdateButtons buttons(region)}
     $m.shape add separator
     $m.shape add checkbutton -label [msgcat::mc {Line}] \

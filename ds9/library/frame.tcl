@@ -1619,6 +1619,8 @@ proc KeyFrame {which K A xx yy} {
 		Delete -
 		BackSpace {MarkerDeleteKey $which $xx $yy}
 
+		Escape {MarkerFreehandCancel}
+
 		Up -
 		k {MarkerArrowKey $which 0 -1}
 		Down -

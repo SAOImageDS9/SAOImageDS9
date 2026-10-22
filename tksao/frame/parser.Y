@@ -2239,6 +2239,11 @@ markerCreate :
             Vector($4,$5),
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
+	| POLYGON_ CANVAS_ VAR_ STRING
+	    markerProperties
+	{fr->createPolygonCanvasVarCmd($4,
+	    currentColor,currentDash,currentWidth,currentFont,
+	    currentText,currentProps,NULL,taglist,cblist);}
 	| SEGMENT_ numeric numeric
 	    numeric numeric
 	    markerProperties

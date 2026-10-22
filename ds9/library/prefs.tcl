@@ -291,6 +291,15 @@ proc SavePrefs {} {
     puts $ch "array set pmarker \{ [array get pmarker] \}"
     puts $ch {array set marker [array get pmarker]}
 
+    # Illustrate
+
+    global illustrate
+    global pillustrate
+    puts $ch "global illustrate"
+    puts $ch "global pillustrate"
+    puts $ch "array set pillustrate \{ [array get pillustrate] \}"
+    puts $ch {array set illustrate [array get pillustrate]}
+
     # WCS
 
     global wcs

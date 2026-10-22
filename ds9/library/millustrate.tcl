@@ -129,7 +129,7 @@ proc PrefsDialogIllustrate {} {
     set f [ttk::labelframe $w.illustrate.circle -text [msgcat::mc {Circle}]]
 
     ttk::label $f.title -text [msgcat::mc {Radius}]
-    ttk::entry $f.radius -textvariable pmarker(circle,radius) -width 10
+    ttk::entry $f.radius -textvariable pillustrate(circle,radius) -width 10
     ttk::label $f.unit -text [msgcat::mc {Pixels}]
    
     grid $f.title $f.radius $f.unit -padx 2 -pady 2 -sticky w
@@ -138,11 +138,11 @@ proc PrefsDialogIllustrate {} {
     set f [ttk::labelframe $w.illustrate.ellipse -text [msgcat::mc {Ellipse}]]
 
     ttk::label $f.title -text "Radius 1"
-    ttk::entry $f.radius1 -textvariable pmarker(ellipse,radius1) -width 10 
+    ttk::entry $f.radius1 -textvariable pillustrate(ellipse,radius1) -width 10 
     ttk::label $f.unit -text [msgcat::mc {Pixels}]
     
     ttk::label $f.title2 -text "Radius 2"
-    ttk::entry $f.radius2 -textvariable pmarker(ellipse,radius2) -width 10 
+    ttk::entry $f.radius2 -textvariable pillustrate(ellipse,radius2) -width 10 
     ttk::label $f.unit2 -text [msgcat::mc {Pixels}]
 
     grid $f.title $f.radius1 $f.unit -padx 2 -pady 2 -sticky w
@@ -152,11 +152,11 @@ proc PrefsDialogIllustrate {} {
     set f [ttk::labelframe $w.illustrate.box -text [msgcat::mc {Box}]]
 
     ttk::label $f.title -text "Size 1"
-    ttk::entry $f.radius1 -textvariable pmarker(box,radius1) -width 10 
+    ttk::entry $f.radius1 -textvariable pillustrate(box,radius1) -width 10 
     ttk::label $f.unit -text [msgcat::mc {Pixels}]
     
     ttk::label $f.title2 -text "Size 2"
-    ttk::entry $f.radius2 -textvariable pmarker(box,radius2) -width 10 
+    ttk::entry $f.radius2 -textvariable pillustrate(box,radius2) -width 10 
     ttk::label $f.unit2 -text [msgcat::mc {Pixels}]
 
     grid $f.title $f.radius1 $f.unit -padx 2 -pady 2 -sticky w
@@ -166,11 +166,11 @@ proc PrefsDialogIllustrate {} {
     set f [ttk::labelframe $w.illustrate.polygon -text [msgcat::mc {Polygon}]]
 
     ttk::label $f.title -text "Width"
-    ttk::entry $f.width -textvariable pmarker(polygon,width) -width 10 
+    ttk::entry $f.width -textvariable pillustrate(polygon,width) -width 10 
     ttk::label $f.unit -text [msgcat::mc {Image}]
     
     ttk::label $f.title2 -text "Height"
-    ttk::entry $f.height -textvariable pmarker(polygon,height) -width 10 
+    ttk::entry $f.height -textvariable pillustrate(polygon,height) -width 10 
     ttk::label $f.unit2 -text [msgcat::mc {Image}]
 
     grid $f.title $f.width $f.unit -padx 2 -pady 2 -sticky w

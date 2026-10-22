@@ -522,7 +522,7 @@ proc IllustrateCmdSend {} {
 
     set rr "[IllustrateListHeader]\n"
     foreach id [$ds9(canvas) find withtag {graphic}] {
-	IllustrateList rr $id
+	append rr "[IllustrateList $id]\n"
     }
 
     ProcessSend $parse(proc) $parse(id) $parse(sock) $parse(fn) {.seg} $rr

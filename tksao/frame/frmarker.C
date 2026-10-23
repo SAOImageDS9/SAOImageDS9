@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <fstream>
+#include <iterator>
 #include <map>
 #include <new>
 #include <pthread.h>
@@ -875,6 +876,7 @@ void Base::createTemplate(const Vector& center, istream& str)
 Marker* Base::createMarker(Marker* m)
 {
   if (maperr) {
+    hpxMapErrs_++;
     Tcl_SetVar2(interp, "ds9", "msg", "Bad Coordinate mapping, unable to create some region(s).", TCL_GLOBAL_ONLY);
     Tcl_SetVar2(interp, "ds9", "msg,level", "warning", TCL_GLOBAL_ONLY);
     delete m;
@@ -4152,6 +4154,7 @@ void Base::markerDeleteCallBackCmd(int id, CallBack::Type cb,
 
 void Base::markerDeleteCmd(const char* tag)
 {
+  hpxParkedDelete(-1, tag);
   RegionStatsUpdateGuard regionStatsUpdate(this);
   undoMarkers->deleteAll();
   Marker* mm = markers->head();
@@ -4176,6 +4179,7 @@ void Base::markerDeleteCmd(const char* tag)
 
 void Base::markerDeleteCmd(int id)
 {
+  hpxParkedDelete(id, NULL);
   undoMarkers->deleteAll();
   Marker* mm = markers->head();
   while (mm) {
@@ -4200,6 +4204,8 @@ void Base::markerDeleteCmd(int id)
 
 void Base::markerDeleteAllCmd(int select)
 {
+  if (!select)
+    hpxParkedDelete(-1, NULL);
   RegionStatsUpdateGuard regionStatsUpdate(this);
   undoMarkers->deleteAll();
   Marker* mm = markers->head();
@@ -6925,6 +6931,23 @@ void Base::parseMarker(MarkerFormat fm, istream& str)
   switch (fm) {
   case DS9: 
     {
+      // a HEALPix window parks regions it can't place, see
+      // hpxParseParked()
+      FitsImage* ptr = currentContext->fits;
+      if (!hpxRestoring_ && ptr && ptr->isHPXWindow()) {
+	std::string all((std::istreambuf_iterator<char>(str)),
+			std::istreambuf_iterator<char>());
+	if (hpxParseParked(all))
+	  break;
+	// nothing to park: parse as usual
+	istringstream istr(all);
+	mkFlexLexer* ll = new mkFlexLexer(&istr);
+	mkparse(this, ll);
+	delete ll;
+	resetCompositeMarker();
+	break;
+      }
+
       mkFlexLexer* ll = new mkFlexLexer(&str);
       mkparse(this, ll);
       delete ll;
@@ -7121,3 +7144,314 @@ void Base::win32Markers(List<Marker>* ml)
   }
 }
 #endif
+
+// HEALPix window recentring: regions are remapped through the sky. The
+// old-to-new pixel mapping isn't affine (a new tangent point), so
+// updateMarkerCoords(Matrix) can't do it. Each region is listed in the
+// map's own sky system while the old WCS is still in place, then
+// re-created from that listing in the new window, taking over the old
+// marker's id, selection, callbacks and analysis state.
+
+static List<Marker>* hpxLayer(List<Marker>* uu, List<Marker>* cc,
+			      List<Marker>* ff, int ll)
+{
+  switch (ll) {
+  case 0:
+    return uu;
+  case 1:
+    return cc;
+  default:
+    return ff;
+  }
+}
+
+// List every region (all three layers) in sky; text[ll] gets one entry
+// per marker of layer ll, in order; count[ll] how many.
+void Base::hpxListMarkers(Coord::SkyFrame sky, std::vector<std::string>* text,
+			  int* count)
+{
+  // list at full precision, so repeated recentres don't drift by the
+  // last printed digit
+  int pp[9] = {precLinear_, precDeg_, precHMS_, precDMS_, precLenLinear_,
+	       precLenDeg_, precArcmin_, precArcsec_, precAngle_};
+  precCmd(12, 12, 12, 12, 12, 12, 12, 12, 12);
+
+  for (int ll=0; ll<3; ll++) {
+    List<Marker>* lst =
+      hpxLayer(&userMarkers, &catalogMarkers, &footprintMarkers, ll);
+    count[ll] = 0;
+    Marker* mm = lst->head();
+    while (mm) {
+      ostringstream str;
+      markerListHeader(str);
+      str << setseparator(',');
+      coord.listCoordSystem(str, Coord::WCS, sky, keyContext->fits);
+      str << endl;
+      mm->list(str, Coord::WCS, sky, Coord::DEGREES, 0, 0);
+      text[ll].push_back(str.str());
+      count[ll]++;
+      mm = mm->next();
+    }
+  }
+
+  precCmd(pp[0], pp[1], pp[2], pp[3], pp[4], pp[5], pp[6], pp[7], pp[8]);
+}
+
+// After the window has been rebuilt: replace the first count[ll] markers
+// of each layer (the ones listed by hpxListMarkers) with re-creations
+// from their listings, then retry regions parked by earlier recentres.
+// Regions the new window can't place are parked with the image.
+void Base::hpxRestoreMarkers(FitsImage* ptr, Coord::SkyFrame sky,
+			     std::vector<std::string>* text, int* count)
+{
+  List<Marker>* save = markers;
+
+  // keep "Bad Coordinate mapping" warnings for parked regions out of
+  // ds9(msg), and the new markers' ids out of the command result
+  const char* m0 = Tcl_GetVar2(interp, "ds9", "msg", TCL_GLOBAL_ONLY);
+  const char* l0 = Tcl_GetVar2(interp, "ds9", "msg,level", TCL_GLOBAL_ONLY);
+  std::string msg0 = m0 ? m0 : "";
+  std::string lvl0 = l0 ? l0 : "";
+
+  std::vector<HPXParked> parked;
+  parked.swap(ptr->hpxParked());
+  hpxRestoring_ =1;
+
+  for (int ll=0; ll<3; ll++) {
+    markers = hpxLayer(&userMarkers, &catalogMarkers, &footprintMarkers, ll);
+
+    // detach the old markers
+    std::vector<Marker*> old;
+    for (int ii=0; ii<count[ll] && markers->head(); ii++) {
+      Marker* mm = markers->head();
+      markers->extractNext(mm);
+      if (ll == 0)
+	regionStatsRegionDeleted(mm->getId());
+      old.push_back(mm);
+    }
+
+    // re-create them; new markers are appended after any that were
+    // created meanwhile, so collect them from the tail
+    for (size_t ii=0; ii<old.size(); ii++) {
+      int n0 = markers->count();
+      markerCommandCmd(DS9, text[ll][ii].c_str());
+      if (markers->count() > n0) {
+	Marker* nn = markers->tail();
+	if (ll == 0)
+	  regionStatsRegionDeleted(nn->getId());
+	nn->adoptState(*old[ii]);
+	if (ll == 0)
+	  regionStatsRegionAdded(nn);
+      }
+      else {
+	HPXParked pp;
+	pp.layer = ll;
+	pp.id = old[ii]->getId();
+	pp.selected = old[ii]->isSelected();
+	pp.highlited = old[ii]->isHighlited();
+	pp.text = text[ll][ii];
+	pp.callbacks = old[ii]->getCallBacks();
+	ptr->hpxParked().push_back(pp);
+      }
+      // the callbacks now belong to the new marker (or are dropped with
+      // a parked one); don't fire DELETECB
+      old[ii]->deleteCBs();
+      delete old[ii];
+    }
+  }
+
+  // retry regions parked earlier
+  hpxRestoring_ =1;
+  for (size_t ii=0; ii<parked.size(); ii++) {
+    markers = hpxLayer(&userMarkers, &catalogMarkers, &footprintMarkers,
+		       parked[ii].layer);
+    int n0 = markers->count();
+    markerCommandCmd(DS9, parked[ii].text.c_str());
+    if (markers->count() > n0) {
+      Marker* nn = markers->tail();
+      if (parked[ii].layer == 0)
+	regionStatsRegionDeleted(nn->getId());
+      if (parked[ii].id >= 0)
+	nn->setId(parked[ii].id);
+      // callbacks first, so a select/highlite callback re-syncs (e.g. the
+      // catalog table). Regions parked at creation (hpxParseParked) carry
+      // theirs in the listing, already parsed: don't overwrite them.
+      if (parked[ii].callbacks.count())
+	nn->setCallBacks(parked[ii].callbacks);
+      if (parked[ii].selected)
+	nn->select();
+      if (parked[ii].highlited)
+	nn->highlite();
+      if (parked[ii].layer == 0)
+	regionStatsRegionAdded(nn);
+    }
+    else
+      ptr->hpxParked().push_back(parked[ii]);
+  }
+
+  hpxRestoring_ =0;
+  markers = save;
+  Tcl_ResetResult(interp);
+  Tcl_SetVar2(interp, "ds9", "msg", msg0.c_str(), TCL_GLOBAL_ONLY);
+  Tcl_SetVar2(interp, "ds9", "msg,level", lvl0.c_str(), TCL_GLOBAL_ONLY);
+  update(PIXMAP);
+}
+
+// Regions parked by a HEALPix window (see hpxRestoreMarkers) aren't in
+// any marker list, so deleting regions must drop the matching parked
+// ones too, or they would come back on the next recentre. In the current
+// layer: by id (id >= 0), by tag, or all (id < 0, no tag). Like the
+// visible ones, regions with delete=0 are kept.
+void Base::hpxParkedDelete(int id, const char* tag)
+{
+  FitsImage* ptr = currentContext->fits;
+  if (!ptr)
+    return;
+
+  int layer = (markers == &userMarkers) ? 0 :
+    (markers == &catalogMarkers) ? 1 : 2;
+  std::vector<HPXParked>& pp = ptr->hpxParked();
+  for (size_t ii=0; ii<pp.size(); ) {
+    int match = pp[ii].layer == layer &&
+      pp[ii].text.find("delete=0") == std::string::npos;
+    if (match && id >= 0)
+      match = pp[ii].id == id;
+    if (match && tag)
+      match = pp[ii].text.find(std::string("tag={")+tag+"}") !=
+	std::string::npos;
+    if (match)
+      pp.erase(pp.begin()+ii);
+    else
+      ii++;
+  }
+}
+
+// DS9-format regions loaded or created on a HEALPix window (a region file,
+// the catalog tool regenerating its markers, ...) may include some the
+// current window can't place. ds9 would drop them; a window parks them
+// instead, so they appear once the window is recentred near them.
+// Parse all of it first; if createMarker() reported unplaceable regions,
+// undo this parse and redo it one statement at a time, each with the
+// global/coordinate-system context in effect, parking those that fail.
+// Returns 1 if it parsed the text (0: no window, nothing to park).
+int Base::hpxParseParked(const std::string& all)
+{
+  FitsImage* ptr = currentContext->fits;
+  if (!ptr || !ptr->isHPXWindow())
+    return 0;
+
+  int layer = (markers == &userMarkers) ? 0 :
+    (markers == &catalogMarkers) ? 1 : 2;
+
+  const char* m0 = Tcl_GetVar2(interp, "ds9", "msg", TCL_GLOBAL_ONLY);
+  const char* l0 = Tcl_GetVar2(interp, "ds9", "msg,level", TCL_GLOBAL_ONLY);
+  std::string msg0 = m0 ? m0 : "";
+  std::string lvl0 = l0 ? l0 : "";
+
+  // first pass, as usual
+  int n0 = markers->count();
+  int e0 = hpxMapErrs_;
+  {
+    istringstream istr(all);
+    mkFlexLexer* ll = new mkFlexLexer(&istr);
+    mkparse(this, ll);
+    delete ll;
+    resetCompositeMarker();
+  }
+  if (hpxMapErrs_ == e0)
+    return 1;
+
+  // some couldn't be placed: undo this parse
+  while (markers->count() > n0) {
+    Marker* mm = markers->tail();
+    markers->extractNext(mm);
+    if (markers == &userMarkers)
+      regionStatsRegionDeleted(mm->getId());
+    mm->deleteCBs();
+    delete mm;
+  }
+
+  // split into statements, keeping the context lines
+  std::string header;
+  ostringstream hstr;
+  markerListHeader(hstr);
+  header = hstr.str();
+  std::string ctxGlobal, ctxSys;
+  std::vector<std::string> stmts, ctx;
+  istringstream lines(all);
+  std::string line, pending;
+  while (std::getline(lines, line)) {
+    // trim
+    size_t a = line.find_first_not_of(" \t\r");
+    if (a == std::string::npos)
+      continue;
+    std::string tt = line.substr(a);
+
+    if (!pending.empty()) {
+      pending += "\n" + tt;
+      if (tt.size() < 2 || tt.compare(tt.size()-2, 2, "||")) {
+	stmts.push_back(pending);
+	ctx.push_back(ctxGlobal + ctxSys);
+	pending.clear();
+      }
+      continue;
+    }
+    if (!tt.compare(0, 6, "global")) {
+      ctxGlobal += tt + "\n";
+      continue;
+    }
+    // a bare coordinate system line: fk5, galactic, image, wcsa, ...
+    if (tt.find_first_of("(#;= ") == std::string::npos) {
+      ctxSys = tt + "\n";
+      continue;
+    }
+    // comments, except the shapes ds9 writes behind a '#'
+    if (tt[0] == '#') {
+      size_t b = tt.find_first_not_of("# ");
+      std::string rest = b == std::string::npos ? "" : tt.substr(b);
+      const char* shapes[] = {"text(", "composite(", "vector(", "ruler(",
+			      "compass(", "projection(", "segment(", NULL};
+      int shape =0;
+      for (int ii=0; shapes[ii]; ii++)
+	if (!rest.compare(0, strlen(shapes[ii]), shapes[ii]))
+	  shape =1;
+      if (!shape)
+	continue;
+    }
+    if (tt.size() >= 2 && !tt.compare(tt.size()-2, 2, "||")) {
+      pending = tt;
+      continue;
+    }
+    stmts.push_back(tt);
+    ctx.push_back(ctxGlobal + ctxSys);
+  }
+  if (!pending.empty()) {
+    stmts.push_back(pending);
+    ctx.push_back(ctxGlobal + ctxSys);
+  }
+
+  for (size_t ii=0; ii<stmts.size(); ii++) {
+    std::string text = header + ctx[ii] + stmts[ii] + "\n";
+    int nn = markers->count();
+    int ee = hpxMapErrs_;
+    istringstream istr(text);
+    mkFlexLexer* ll = new mkFlexLexer(&istr);
+    mkparse(this, ll);
+    delete ll;
+    resetCompositeMarker();
+    if (markers->count() == nn && hpxMapErrs_ != ee) {
+      HPXParked pp;
+      pp.layer = layer;
+      pp.id = -1;
+      pp.selected = 0;
+      pp.highlited = 0;
+      pp.text = text;
+      ptr->hpxParked().push_back(pp);
+    }
+  }
+
+  // parked regions aren't an error here
+  Tcl_SetVar2(interp, "ds9", "msg", msg0.c_str(), TCL_GLOBAL_ONLY);
+  Tcl_SetVar2(interp, "ds9", "msg,level", lvl0.c_str(), TCL_GLOBAL_ONLY);
+  return 1;
+}

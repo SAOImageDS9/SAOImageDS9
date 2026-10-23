@@ -2,6 +2,7 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+#include <math.h>
 #include <tcl.h>
 
 #include <iostream>
@@ -125,6 +126,10 @@ FitsFile::FitsFile()
   pHPXLayout_ =-1;
   pHPXColumn_ =-1;
   pHPXQuad_ =-1;
+  pHPXProj_ =NULL;
+  pHPXLon0_ =0;
+  pHPXLat0_ =NAN;
+  pHPXFov_ =NAN;
 
   pCRPIX3_ =1;
   pCRVAL3_ =1;
@@ -169,6 +174,9 @@ FitsFile::~FitsFile()
 
   if (pBinZ_)
     delete [] pBinZ_;
+
+  if (pHPXProj_)
+    delete [] pHPXProj_;
 }
 
 void FitsFile::parse(const char* fn)
@@ -239,6 +247,14 @@ void FitsFile::setpExt(const char* n)
     delete [] pExt_;
 
   pExt_ = dupstr(n);
+}
+
+void FitsFile::setpHPXProj(const char* pp)
+{
+  if (pHPXProj_)
+    delete [] pHPXProj_;
+
+  pHPXProj_ = dupstr(pp);
 }
 
 void FitsFile::setpBinX(const char* x)

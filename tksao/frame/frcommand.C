@@ -227,6 +227,7 @@ void FrameBase::panCmd(const Vector& v1, const Vector& v2)
 
   setBinCursor();
   update(MATRIX);
+  hpxAutoRefresh();
 }
 
 void FrameBase::panCmd(const Vector& vv)
@@ -237,6 +238,7 @@ void FrameBase::panCmd(const Vector& vv)
 
   setBinCursor();
   update(MATRIX);
+  hpxAutoRefresh();
 }
 
 void FrameBase::panCmd(const Vector& vv, Coord::CoordSystem sys,
@@ -251,6 +253,7 @@ void FrameBase::panCmd(const Vector& vv, Coord::CoordSystem sys,
   
   setBinCursor();
   update(MATRIX);
+  hpxAutoRefresh();
 }
 
 void FrameBase::panToCmd(const Vector& vv)
@@ -259,11 +262,16 @@ void FrameBase::panToCmd(const Vector& vv)
 
   setBinCursor();
   update(MATRIX);
+  hpxAutoRefresh();
 }
 
 void FrameBase::panToCmd(const Vector& vv, Coord::CoordSystem sys,
 			 Coord::SkyFrame sky)
 {
+  // a HEALPix window rebuilds around far targets itself
+  if (hpxPanTo(vv, sys, sky))
+    return;
+
   if (!currentContext->cfits)
     return;
 
@@ -271,6 +279,7 @@ void FrameBase::panToCmd(const Vector& vv, Coord::CoordSystem sys,
 
   setBinCursor();
   update(MATRIX);
+  hpxAutoRefresh();
 }
 
 void FrameBase::panBBoxCmd(const Vector& vv)
@@ -284,6 +293,7 @@ void FrameBase::panBBoxCmd(const Vector& vv)
 
   setBinCursor();
   update(MATRIX);
+  hpxAutoRefresh();
 }
 
 void FrameBase::panBeginCmd(const Vector& vv)
@@ -330,6 +340,7 @@ void FrameBase::zoomAboutCmd(const Vector& zz, const Vector& vv)
 
   setBinCursor();
   update(MATRIX);
+  hpxAutoRefresh();
 }
 
 void FrameBase::zoomAboutCmd(const Vector& z, const Vector& vv, 
@@ -344,6 +355,7 @@ void FrameBase::zoomAboutCmd(const Vector& z, const Vector& vv,
     setBinCursor();
   }
   update(MATRIX);
+  hpxAutoRefresh();
 }
 
 void FrameBase::zoomToAboutCmd(const Vector& z, const Vector& vv)
@@ -354,6 +366,7 @@ void FrameBase::zoomToAboutCmd(const Vector& z, const Vector& vv)
 
   setBinCursor();
   update(MATRIX);
+  hpxAutoRefresh();
 }
 
 void FrameBase::zoomToAboutCmd(const Vector& z, const Vector& vv, 
@@ -366,6 +379,7 @@ void FrameBase::zoomToAboutCmd(const Vector& z, const Vector& vv,
     setBinCursor();
   }
   update(MATRIX);
+  hpxAutoRefresh();
 }
 
 void FrameBase::zoomToFitCmd(double ss)
@@ -374,6 +388,10 @@ void FrameBase::zoomToFitCmd(double ss)
   // with even number pixels, it will be shifted
 
   if (keyContext->fits) {
+    // a HEALPix window first becomes its whole fov at a fitting resolution
+    if (keyContext->fits->isHPXWindow())
+      hpxRecentre(HPXFIT, ss, 0);
+
     centerImage();
 
     Vector tt = imageSize(keyContext->secMode());
@@ -388,6 +406,7 @@ void FrameBase::zoomToFitCmd(double ss)
     double zz = calcZoom(tt,Vector(options->width,options->height)) * ss;
     zoom_ = Vector(zz,zz);
     update(MATRIX);
+    hpxAutoRefresh();
   }
 }
 

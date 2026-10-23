@@ -55,23 +55,27 @@
      ECLIPTIC_ = 271,
      ENDIAN_ = 272,
      EQUATORIAL_ = 273,
-     GALACTIC_ = 274,
-     KEY_ = 275,
-     LAYOUT_ = 276,
-     LITTLE_ = 277,
-     LITTLEENDIAN_ = 278,
-     NESTED_ = 279,
-     NORTH_ = 280,
-     ORDER_ = 281,
-     QUAD_ = 282,
-     RING_ = 283,
-     SKIP_ = 284,
-     SOUTH_ = 285,
-     SYSTEM_ = 286,
-     UNKNOWN_ = 287,
-     XDIM_ = 288,
-     YDIM_ = 289,
-     ZDIM_ = 290
+     FOV_ = 274,
+     GALACTIC_ = 275,
+     KEY_ = 276,
+     LAYOUT_ = 277,
+     LITTLE_ = 278,
+     LITTLEENDIAN_ = 279,
+     LAT0_ = 280,
+     LON0_ = 281,
+     NESTED_ = 282,
+     NORTH_ = 283,
+     ORDER_ = 284,
+     PROJ_ = 285,
+     QUAD_ = 286,
+     RING_ = 287,
+     SKIP_ = 288,
+     SOUTH_ = 289,
+     SYSTEM_ = 290,
+     UNKNOWN_ = 291,
+     XDIM_ = 292,
+     YDIM_ = 293,
+     ZDIM_ = 294
    };
 #endif
 /* Tokens.  */
@@ -91,38 +95,43 @@
 #define ECLIPTIC_ 271
 #define ENDIAN_ 272
 #define EQUATORIAL_ 273
-#define GALACTIC_ 274
-#define KEY_ 275
-#define LAYOUT_ 276
-#define LITTLE_ 277
-#define LITTLEENDIAN_ 278
-#define NESTED_ 279
-#define NORTH_ 280
-#define ORDER_ 281
-#define QUAD_ 282
-#define RING_ 283
-#define SKIP_ 284
-#define SOUTH_ 285
-#define SYSTEM_ 286
-#define UNKNOWN_ 287
-#define XDIM_ 288
-#define YDIM_ 289
-#define ZDIM_ 290
+#define FOV_ 274
+#define GALACTIC_ 275
+#define KEY_ 276
+#define LAYOUT_ 277
+#define LITTLE_ 278
+#define LITTLEENDIAN_ 279
+#define LAT0_ 280
+#define LON0_ 281
+#define NESTED_ 282
+#define NORTH_ 283
+#define ORDER_ 284
+#define PROJ_ 285
+#define QUAD_ 286
+#define RING_ 287
+#define SKIP_ 288
+#define SOUTH_ 289
+#define SYSTEM_ 290
+#define UNKNOWN_ 291
+#define XDIM_ 292
+#define YDIM_ 293
+#define ZDIM_ 294
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 32 "parser.Y"
+#line 34 "parser.Y"
 {
   float real;
+  double dbl;
   int integer;
   char str[2048];
   void* ptr;
 }
 /* Line 1529 of yacc.c.  */
-#line 126 "parser.H"
+#line 135 "parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

@@ -486,6 +486,8 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   colorbartag =NULL;
 
   markers = &userMarkers;
+  hpxRestoring_ =0;
+  hpxMapErrs_ =0;
   undoMarkers = &undoUserMarkers;
   pasteMarkers = &pasteUserMarkers;
   undoMarkerType = NONE;

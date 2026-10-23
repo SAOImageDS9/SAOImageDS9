@@ -35,6 +35,7 @@ set CIRCLE_ 290
 set ELLIPSE_ 291
 set BOX_ 292
 set POLYGON_ 293
-set LINE_ 294
-set TEXT_ 295
-set IMAGE_ 296
+set FREEHAND_ 294
+set LINE_ 295
+set TEXT_ 296
+set IMAGE_ 297

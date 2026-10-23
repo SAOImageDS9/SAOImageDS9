@@ -67,6 +67,8 @@ proc IllustrateMainMenu {} {
 	-variable illustrate(shape) -value box
     $ds9(mb).illustrate.shape add radiobutton -label [msgcat::mc {Polygon}] \
 	-variable illustrate(shape) -value polygon
+    $ds9(mb).illustrate.shape add radiobutton -label [msgcat::mc {Freehand}] \
+	-variable illustrate(shape) -value freehand
     $ds9(mb).illustrate.shape add radiobutton -label [msgcat::mc {Line}] \
 	-variable illustrate(shape) -value line
     $ds9(mb).illustrate.shape add radiobutton -label [msgcat::mc {Text}] \
@@ -106,6 +108,8 @@ proc PrefsDialogIllustrateMenu {w} {
 	-variable pillustrate(shape) -value box
     $m.shape add radiobutton -label [msgcat::mc {Polygon}] \
 	-variable pillustrate(shape) -value polygon
+    $m.shape add radiobutton -label [msgcat::mc {Freehand}] \
+	-variable pillustrate(shape) -value freehand
     $m.shape add radiobutton -label [msgcat::mc {Line}] \
 	-variable pillustrate(shape) -value line
     $m.shape add radiobutton -label [msgcat::mc {Text}] \
@@ -190,6 +194,7 @@ proc ButtonsIllustrateDef {} {
 	illustrate,ellipse 0
 	illustrate,box 0
 	illustrate,polygon 0
+	illustrate,freehand 0
 	illustrate,line 0
 	illustrate,text 0
 	illustrate,all 1
@@ -227,6 +232,8 @@ proc CreateButtonsIllustrate {} {
 	[string tolower [msgcat::mc {Box}]] illustrate shape box {}
     RadioButton $ds9(buttons).illustrate.polygon \
 	[string tolower [msgcat::mc {Polygon}]] illustrate shape polygon {}
+    RadioButton $ds9(buttons).illustrate.freehand \
+	[string tolower [msgcat::mc {Freehand}]] illustrate shape freehand {}
     RadioButton $ds9(buttons).illustrate.line \
 	[string tolower [msgcat::mc {Line}]] illustrate shape line {}
     RadioButton $ds9(buttons).illustrate.text \
@@ -274,6 +281,7 @@ proc CreateButtonsIllustrate {} {
         $ds9(buttons).illustrate.ellipse pbuttons(illustrate,ellipse)
         $ds9(buttons).illustrate.box pbuttons(illustrate,box)
         $ds9(buttons).illustrate.polygon pbuttons(illustrate,polygon)
+        $ds9(buttons).illustrate.freehand pbuttons(illustrate,freehand)
         $ds9(buttons).illustrate.line pbuttons(illustrate,line)
         $ds9(buttons).illustrate.text pbuttons(illustrate,text)
         $ds9(buttons).illustrate.all pbuttons(illustrate,all)
@@ -371,6 +379,9 @@ proc PrefsDialogButtonbarIllustrate {f} {
 	-command {UpdateButtons buttons(illustrate)}
     $m.shape add checkbutton -label [msgcat::mc {Polygon}] \
 	-variable pbuttons(illustrate,polygon) \
+	-command {UpdateButtons buttons(illustrate)}
+    $m.shape add checkbutton -label [msgcat::mc {Freehand}] \
+	-variable pbuttons(illustrate,freehand) \
 	-command {UpdateButtons buttons(illustrate)}
     $m.shape add checkbutton -label [msgcat::mc {Line}] \
 	-variable pbuttons(illustrate,line) \

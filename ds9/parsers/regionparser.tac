@@ -91,6 +91,7 @@
 %token ELLIPSE_
 %token BOX_
 %token POLYGON_
+%token FREEHAND_
 %token POINT_
 %token LINE_
 %token VECTOR_
@@ -316,6 +317,7 @@ shape : CIRCLE_ {set _ circle}
  | ELLIPSE_ {set _ ellipse}
  | BOX_ {set _ box}
  | POLYGON_ {set _ polygon}
+ | FREEHAND_ {set _ freehand}
  | LINE_ {set _ line}
  | VECTOR_ {set _ vector}
  | PROJECTION_ {set _ projection}

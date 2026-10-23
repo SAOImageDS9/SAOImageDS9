@@ -1143,6 +1143,10 @@ public:
 			const char*, int*, int, const char*, 
 			const char*, unsigned short, const char*,
 			const List<Tag>&, const List<CallBack>& cb);
+  void createPolygonCanvasVarCmd(const char*,
+			const char*, int*, int, const char*,
+			const char*, unsigned short, const char*,
+			const List<Tag>&, const List<CallBack>& cb);
   void createSegmentCmd(const Vector&, 
 			const Vector&,
 			const char*, int*, int, const char*, 

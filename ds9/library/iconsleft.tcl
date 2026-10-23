@@ -151,6 +151,7 @@ proc CreateIconsLeftMarkerShape {} {
     IconMenuButton $mb.shape [msgcat::mc {Ellipse}] marker shape ellipse {}
     IconMenuButton $mb.shape [msgcat::mc {Box}] marker shape box {}
     IconMenuButton $mb.shape [msgcat::mc {Polygon}] marker shape polygon {}
+    IconMenuButton $mb.shape [msgcat::mc {Freehand}] marker shape freehand {}
     IconMenuButton $mb.shape [msgcat::mc {Text}] marker shape text {}
 
     ConfigureIconsLeftMarkerShape
@@ -178,6 +179,8 @@ proc ConfigureIconsLeftMarkerShape {} {
 	[image create photo -file "$ds9(icons,ui)/box.png"]
     set icons(markershape,polygon) \
 	[image create photo -file "$ds9(icons,ui)/poly.png"]
+    set icons(markershape,freehand) \
+	[image create photo -file "$ds9(icons,ui)/freehand.png"]
     set icons(markershape,text) \
 	[image create photo -file "$ds9(icons,ui)/text.png"]
     # special case
@@ -189,7 +192,8 @@ proc ConfigureIconsLeftMarkerShape {} {
     $mb.shape.m entryconfig 2 -image $icons(markershape,ellipse)
     $mb.shape.m entryconfig 3 -image $icons(markershape,box)
     $mb.shape.m entryconfig 4 -image $icons(markershape,polygon)
-    $mb.shape.m entryconfig 5 -image $icons(markershape,text)
+    $mb.shape.m entryconfig 5 -image $icons(markershape,freehand)
+    $mb.shape.m entryconfig 6 -image $icons(markershape,text)
 
     IconMenuButtonCB $mb.shape marker shape write
 }

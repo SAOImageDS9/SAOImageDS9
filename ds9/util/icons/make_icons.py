@@ -354,6 +354,15 @@ def _():
     return fpath(d, '{tint}', 'fill-opacity="{tint_op}"') + path(d)
 
 
+@icon('freehand')
+def _():
+    # an irregular, wobbly hand-drawn loop
+    d = smooth_closed([(3.5, 11), (6.5, 5.5), (12, 4.5), (15, 6),
+                       (19.5, 4.5), (20.5, 10), (18, 15), (19, 19.5),
+                       (12, 19.5), (6, 19)])
+    return fpath(d, '{tint}', 'fill-opacity="{tint_op}"') + path(d)
+
+
 @icon('text')
 def _():
     return (path('M5 7 V4 H19 V7', S.replace('"2"', '"2.4"')) +

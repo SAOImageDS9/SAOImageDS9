@@ -184,6 +184,11 @@ proc CATTable {varname} {
     # clear the selection
     $var(tbl) selection clear all
 
+    # clear plot highlites, row indices are about to change
+    if {$var(plot)} {
+	CATPlotHighliteElement $varname {}
+    }
+
     # clear regions
     if {[info commands $var(frame)] != {}} {
 	if {[$var(frame) has fits]} {

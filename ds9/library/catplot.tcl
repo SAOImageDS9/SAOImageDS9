@@ -590,6 +590,8 @@ proc CATPlotHighliteElement {varname rowlist} {
     }
 
     if {[info exists vvar(1,graph)]} {
+	# keep region select (shift-add) in sync
+	set vvar(1,select,rows) $result
 	$vvar(1,proc,highlite) $vvarname 1 1 $result
     }
 }

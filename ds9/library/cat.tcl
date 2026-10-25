@@ -948,7 +948,7 @@ proc PrefsDialogCatalog {} {
 
     ttk::label $f.ftitle -text [msgcat::mc {Font}]
     FontMenuButton $f.font pcat sym,font sym,font,size \
-	sym,font,weight, sym,font,slant {}
+	sym,font,weight sym,font,slant {}
 
     ThemeMenu $f.svr.menu
 

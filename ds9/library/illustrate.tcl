@@ -52,6 +52,7 @@ proc IllustrateDef {} {
     set pillustrate(box,radius2) 40
     set pillustrate(polygon,width) 20
     set pillustrate(polygon,height) 20
+    set pillustrate(freehand,tolerance) 0.5
 }
 
 # Mode

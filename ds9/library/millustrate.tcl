@@ -180,8 +180,20 @@ proc PrefsDialogIllustrate {} {
     grid $f.title $f.width $f.unit -padx 2 -pady 2 -sticky w
     grid $f.title2 $f.height $f.unit2 -padx 2 -pady 2 -sticky w
 
+    # Freehand
+    set f [ttk::labelframe $w.illustrate.freehand -text [msgcat::mc {Freehand}]]
+
+    ttk::label $f.title -text [msgcat::mc {Tolerance}]
+    ttk::entry $f.tol -textvariable pillustrate(freehand,tolerance) -width 10
+    ttk::label $f.unit -text [msgcat::mc {Pixels}]
+    ttk::label $f.help \
+	-text [msgcat::mc {Smaller keeps more points; 0 keeps all}]
+
+    grid $f.title $f.tol $f.unit -padx 2 -pady 2 -sticky w
+    grid $f.help - - -padx 2 -pady 2 -sticky w
+
     pack $w.illustrate.circle $w.illustrate.ellipse $w.illustrate.box \
-	$w.illustrate.polygon \
+	$w.illustrate.polygon $w.illustrate.freehand \
 	-side top -fill both -expand true
 }
 

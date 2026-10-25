@@ -416,7 +416,8 @@ proc IllustratePolygonEditCB {id} {
 
 # Freehand: collect the drag in canvas coords, draw it as a canvas line,
 # and on release create a normal polygon graphic from it. Shares the
-# trace simplification and tolerance preference with freehand regions.
+# trace simplification with freehand regions, but has its own tolerance
+# preference.
 
 proc IllustrateFreehandBegin {xx yy} {
     global ds9
@@ -439,7 +440,7 @@ proc IllustrateFreehandMotion {xx yy} {
     global iillustrate
 
     # skip sub-pixel jitter
-    set jj [expr {min(2,[MarkerFreehandTolerance])}]
+    set jj [expr {min(2,[IllustrateFreehandTolerance])}]
     if {abs($xx-[lindex $iillustrate(freehand) end-1]) < $jj &&
 	abs($yy-[lindex $iillustrate(freehand) end]) < $jj} {
 	return
@@ -460,7 +461,7 @@ proc IllustrateFreehandEnd {} {
 
     # a click or a nearly straight stroke makes a default polygon,
     # like a click with the polygon shape
-    set pts [MarkerFreehandSimplify $trace [MarkerFreehandTolerance]]
+    set pts [MarkerFreehandSimplify $trace [IllustrateFreehandTolerance]]
     if {[MarkerFreehandSmall $trace 4] || [llength $pts] < 6} {
 	lassign $trace xx yy
 	set id [IllustratePolygonCreate \
@@ -476,6 +477,18 @@ proc IllustrateFreehandEnd {} {
 
     IllustrateSaveUndo create $id
     IllustrateUpdateHandle $id
+}
+
+# max distance, in screen pixels, a dropped trace point may lie from the
+# simplified outline; 0 keeps every recorded point
+proc IllustrateFreehandTolerance {} {
+    global pillustrate
+
+    if {[string is double -strict $pillustrate(freehand,tolerance)] &&
+	$pillustrate(freehand,tolerance) >= 0} {
+	return $pillustrate(freehand,tolerance)
+    }
+    return 0.5
 }
 
 proc IllustrateFreehandCancel {} {

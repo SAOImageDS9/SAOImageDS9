@@ -686,6 +686,9 @@ proc FixPrefsVarOld {} {
     # 8.3
 
     # 8.8
+    # typo in catalog prefs font menu
+    FixVarRm {pcat(sym,font,weight,)}
+
     global colorbar
     global pcolorbar
     if {![info exists pcolorbar(center)]} {

@@ -463,7 +463,7 @@ fontt : fontType FONT_ font {PlotCmdCVAR "$1,family" $3 PlotUpdateCanvasElement}
  | fontType STYLE_ fontStyle {PlotCmdFontStyle $1 $3}
  ;
 
-fontType : TITLE_ {set _ graph,title}
+fontType : TITLE_ {set _ canvas,title}
  | LABELS_ {set _ canvas,axis,title}
  | NUMBERS_ {set _ canvas,axis,font}
  | LEGEND_ {set _ canvas,legend,font}

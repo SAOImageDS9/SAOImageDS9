@@ -6043,7 +6043,7 @@ proc plot::yyparse {} {
                     219 { PlotCmdCVAR "$1,weight" $3 PlotUpdateCanvasElement }
                     220 { PlotCmdCVAR "$1,slant" $3 PlotUpdateCanvasElement }
                     221 { PlotCmdFontStyle $1 $3 }
-                    222 { set _ graph,title }
+                    222 { set _ canvas,title }
                     223 { set _ canvas,axis,title }
                     224 { set _ canvas,axis,font }
                     225 { set _ canvas,legend,font }

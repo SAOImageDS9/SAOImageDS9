@@ -96,6 +96,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %type <integer> fileNameType
 %type <integer> smoothFunction
 %type <integer> pointShape
+%type <integer> lineEnd
 %type <integer> pointSize
 %type <integer> endian
 %type <integer> renderMethod
@@ -143,6 +144,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token B1950_
 %token BACK_
 %token BACKGROUND_
+%token BAR_
 %token BASE_
 %token BBOX_
 %token BEGIN_
@@ -169,6 +171,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token CENTER_
 %token CENTROID_
 %token CHANNEL_
+%token CHEVRON_
 %token CIRCLE_
 %token CIAO_
 %token CLEAR_
@@ -342,6 +345,10 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token OFF_
 %token ON_
 %token ONLY_
+%token OPENARROW_
+%token OPENBOX_
+%token OPENCIRCLE_
+%token OPENTRIANGLE_
 %token OPTION_
 %token ORIENT_
 %token OVERLAY_
@@ -431,6 +438,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token THICK_
 %token TOP_
 %token TRANSPARENCY_
+%token TRIANGLE_
 %token TO_
 %token TOGGLE_
 %token TOPHAT_
@@ -764,6 +772,21 @@ incrLoad: /*backward compatibility*/ {}
 layerType : /* empty */ {$$ = Base::IMG;}
 	| IMAGE_ {$$ = Base::IMG;}
 	| MASK_ {$$ = Base::MASK;}
+	;
+
+// a bare INT is the original syntax, any non zero value is an arrow
+lineEnd	: INT {$$ = $1 ? Marker::ARROW : Marker::NOEND;}
+	| NONE_ {$$ = Marker::NOEND;}
+	| ARROW_ {$$ = Marker::ARROW;}
+	| OPENARROW_ {$$ = Marker::OPENARROW;}
+	| CHEVRON_ {$$ = Marker::CHEVRON;}
+	| CIRCLE_ {$$ = Marker::CIRCLE;}
+	| OPENCIRCLE_ {$$ = Marker::OPENCIRCLE;}
+	| BOX_ {$$ = Marker::BOX;}
+	| OPENBOX_ {$$ = Marker::OPENBOX;}
+	| TRIANGLE_ {$$ = Marker::TRIANGLE;}
+	| OPENTRIANGLE_ {$$ = Marker::OPENTRIANGLE;}
+	| BAR_ {$$ = Marker::BAR;}
 	;
 
 pointShape: /* empty */ {$$ = Point::CIRCLE;}
@@ -1954,6 +1977,8 @@ marker	: CENTROID_ markerCentroid
 	| INT COLOR_ STRING {fr->markerColorCmd($1,$3);}
 	| INT COMPASS_ ARROW_ yesno yesno
 	{fr->markerCompassArrowCmd($1,$4,$5);}
+	| INT COMPASS_ END_ lineEnd lineEnd
+	{fr->markerCompassArrowCmd($1,$4,$5);}
 	| INT COMPASS_ LABEL_ STRING STRING
 	{fr->markerCompassLabelCmd($1,$4,$5);}
 	| INT COMPASS_ RADIUS_ numeric coordSystem skyDist
@@ -2054,6 +2079,7 @@ marker	: CENTROID_ markerCentroid
 	| INT HIGHLITE_ ONLY_{fr->markerHighliteOnlyCmd($1);}
 
 	| INT LINE_ ARROW_ yesno yesno {fr->markerLineArrowCmd($1,$4,$5);}
+	| INT LINE_ END_ lineEnd lineEnd {fr->markerLineArrowCmd($1,$4,$5);}
 	| INT LINE_ POINT_ coordSystem skyFrame coord coord
 	{fr->markerLineCmd($1, Vector($6), Vector($7),
 	    (Coord::CoordSystem)$4, (Coord::SkyFrame)$5);}
@@ -2109,6 +2135,7 @@ marker	: CENTROID_ markerCentroid
 	| INT UNSELECT_ {fr->markerUnselectCmd($1);}
 
 	| INT VECTOR_ ARROW_ yesno {fr->markerVectorArrowCmd($1,$4);}
+	| INT VECTOR_ END_ lineEnd {fr->markerVectorArrowCmd($1,$4);}
 	| INT VECTOR_ POINT_ coordSystem skyFrame coord
 	    coordSystem skyDist numeric angle
 	{fr->markerVectorCmd($1, Vector($6), (Coord::CoordSystem)$4, (Coord::SkyFrame)$5,
@@ -2509,6 +2536,7 @@ markerGet : CENTROID_ markerGetCentroid
 	{fr->getMarkerCircleRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
 	| INT COLOR_ {fr->getMarkerColorCmd($1);}
 	| INT COMPASS_ ARROW_ {fr->getMarkerCompassArrowCmd($1);}
+	| INT COMPASS_ END_ {fr->getMarkerCompassEndCmd($1);}
 	| INT COMPASS_ LABEL_ {fr->getMarkerCompassLabelCmd($1);}
 	| INT COMPASS_ RADIUS_ coordSystem skyDist
 	{fr->getMarkerCompassRadiusCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
@@ -2537,6 +2565,7 @@ markerGet : CENTROID_ markerGetCentroid
 	| INT FONT_ {fr->getMarkerFontCmd($1);}
 	| INT HIGHLITE_ {fr->getMarkerHighlitedCmd($1);}
 	| INT LINE_ ARROW_ {fr->getMarkerLineArrowCmd($1);}
+	| INT LINE_ END_ {fr->getMarkerLineEndCmd($1);}
 	| INT LINE_ LENGTH_ coordSystem skyDist
 	{fr->getMarkerLineLengthCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
 	| INT LINE_ POINT_ coordSystem skyFrame skyFormat
@@ -2577,6 +2606,7 @@ markerGet : CENTROID_ markerGetCentroid
 	| INT TYPE_ {fr->getMarkerTypeCmd($1);}
 
 	| INT VECTOR_ ARROW_ {fr->getMarkerVectorArrowCmd($1);}
+	| INT VECTOR_ END_ {fr->getMarkerVectorEndCmd($1);}
 	| INT VECTOR_ LENGTH_ coordSystem skyDist
 	{fr->getMarkerVectorLengthCmd($1, (Coord::CoordSystem)$4, (Coord::DistFormat)$5);}
 	| INT VECTOR_ POINT_ coordSystem skyFrame skyFormat

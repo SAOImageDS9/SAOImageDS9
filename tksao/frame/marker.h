@@ -21,6 +21,12 @@
 
 #define POINTSIZE 11
 
+// line end geometry, in unscaled units (see Marker::lineEndShape)
+#define LINEENDTIP 6      // length of arrow, end of line to tip
+#define LINEENDHALF 3     // radius of circle, half size of box/triangle/bar
+#define LINEENDSCALE 1.5
+#define LINEENDMAX 16     // max vertices, also number used for a circle
+
 class Base;
 class FitsImage;
 class Vector;
@@ -49,9 +55,23 @@ public:
   enum AnalysisTask {STATS,PLOT2D,PLOT3D,RADIAL,PANDA,HISTOGRAM};
   enum AnalysisMethod {SUM,AVERAGE,MEDIAN};
 
+  // Line endings (line, vector, compass). NOEND and ARROW must stay 0 and
+  // 1, they are the original region file values. A bare name is filled,
+  // OPEN* is the outline of the same shape.
+  enum LineEnd {NOEND=0, ARROW=1, OPENARROW, CHEVRON, CIRCLE, OPENCIRCLE,
+		BOX, OPENBOX, TRIANGLE, OPENTRIANGLE, BAR};
+
+  static LineEnd validLineEnd(int);
+  static const char* lineEndName(int);
+  static const char* lineEndListStr(int);
+  static int lineEndFromName(const char*);
+
  private:
-  Vector* arrow2D(const Vector&, const Vector&, Coord::InternalSystem);
-  Vector* arrow3D(const Vector&, const Vector&, Coord::InternalSystem);
+  int lineEndShape(LineEnd, Vector*);
+  Vector* lineEnd2D(const Vector&, const Vector&, Coord::InternalSystem,
+		    Vector*, int);
+  Vector* lineEnd3D(const Vector&, const Vector&, Coord::InternalSystem,
+		    Vector*, int);
 
 protected:
   int id;
@@ -94,7 +114,8 @@ protected:
   Marker* previous_;
   Marker* next_;
 
-  Vector* arrow(const Vector&, const Vector&, Coord::InternalSystem);
+  Vector* lineEnd(const Vector&, const Vector&, Coord::InternalSystem,
+		  LineEnd, int*);
 
   char* XMLCol[XMLNUMCOL];
 
@@ -118,7 +139,8 @@ protected:
   virtual void renderX(Drawable, Coord::InternalSystem, RenderMode) =0;
   virtual void renderXInclude(Drawable drawable, Coord::InternalSystem, RenderMode mode);
   virtual void renderXText(Drawable, Coord::InternalSystem, RenderMode);
-  void renderXArrow(Drawable, const Vector&, const Vector&, Coord::InternalSystem, GC);
+  void renderXLineEnd(Drawable, const Vector&, const Vector&,
+		      Coord::InternalSystem, RenderMode, LineEnd);
   void renderXHandles(Drawable);
   virtual GC renderXGC(RenderMode);
   virtual void renderXLineDash(GC);
@@ -127,7 +149,8 @@ protected:
   virtual void renderPS(PSColorSpace mode) =0;
   virtual void renderPSInclude(PSColorSpace);
   virtual void renderPSText(PSColorSpace);
-  void renderPSArrow(const Vector&, const Vector&, Coord::InternalSystem);
+  void renderPSLineEnd(PSColorSpace, const Vector&, const Vector&,
+		       Coord::InternalSystem, LineEnd);
   virtual void renderPSGC(PSColorSpace);
   virtual void renderPSLineDash();
   void renderPSLineNoDash();
@@ -136,7 +159,8 @@ protected:
   virtual void renderWIN32() =0;
   virtual void renderWIN32Include();
   virtual void renderWIN32Text();
-  void renderWIN32Arrow(const Vector&, const Vector&, Coord::InternalSystem);
+  void renderWIN32LineEnd(const Vector&, const Vector&,
+			  Coord::InternalSystem, LineEnd);
   virtual void renderWIN32GC();
   virtual void renderWIN32LineDash();
   void renderWIN32LineNoDash();
@@ -149,7 +173,10 @@ protected:
 
   void setMatrices(Coord::InternalSystem, Matrix*, Matrix*);
   double calcAngle();
-  Vector modifyArrow(const Vector&, const Vector&, Coord::InternalSystem);
+  Vector modifyLineEnd(const Vector&, const Vector&, Coord::InternalSystem,
+		       LineEnd);
+  double lineEndSize();
+  double lineEndExtent();
   virtual void updateHandles() =0;
   virtual void calcAllBBox();
 

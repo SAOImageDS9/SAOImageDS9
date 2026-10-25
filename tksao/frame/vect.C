@@ -84,7 +84,7 @@ void Vect::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     if (conj)
       str << ' ' << listConjunction(conj);
 
-    str << " vector=" << p2Arrow;
+    str << " vector=" << lineEndListStr(p2Arrow);
     listProperties(str, 0);
   }
 }
@@ -104,7 +104,7 @@ void Vect::listXML(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   XMLRow(XMLR,(char*)pstr.str().c_str());
 
   XMLRowAng(sys,sky);
-  XMLRow(XMLPARAM,p2Arrow);
+  XMLRow(XMLPARAM,(char*)lineEndListStr(p2Arrow));
 
   XMLRowProps(ptr,sys);
   XMLRowEnd(str);

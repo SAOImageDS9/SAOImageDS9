@@ -19,6 +19,16 @@ static int xmlRead (void * context, char * buffer, int len)
   return str->gcount();
 }
 
+static int xmlLineEnd(const char* str)
+{
+  int ss = Marker::lineEndFromName(str);
+  if (ss >= 0)
+    return ss;
+
+  // historically, any non zero value was an arrow
+  return atoi(str) ? Marker::ARROW : Marker::NOEND;
+}
+
 static int xmlClose (void * context)
 {
   return 1;
@@ -621,9 +631,9 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
     int arrow1 =1;
     int arrow2 =1;
     if (param) 
-      arrow1 = atoi(param);
+      arrow1 = xmlLineEnd(param);
     if (param2)
-      arrow2 = atoi(param2);
+      arrow2 = xmlLineEnd(param2);
     createLineCmd(xmlPoint(ptr, xv, yv, vsys, vsky, vformat, 0),
 		  xmlPoint(ptr, xv, yv, vsys, vsky, vformat, 1),
 		  arrow1, arrow2,
@@ -633,7 +643,7 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
   else if (STRCMP(shape, "vector", 6)) {
     int arrow =1;
     if (param) 
-      arrow = atoi(param);
+      arrow = xmlLineEnd(param);
     createVectCmd(xmlPoint(ptr, x, y, sys, sky, format),
 		  ptr->mapLenToRef(atof(r), rsys, rdist), 
 		  xmlAngle(ang, angsign, angoffset, angformat,
@@ -727,10 +737,10 @@ void Base::xmlParseTR(char** cols, int* id, char** unit, char** ref,
       param3 = (char*)param3def;
     int arrow1 =1;
     if (param4) 
-      arrow1 = atoi(param4);
+      arrow1 = xmlLineEnd(param4);
     int arrow2 =1;
     if (param5)
-      arrow2 = atoi(param5);
+      arrow2 = xmlLineEnd(param5);
       
     createCompassCmd(xmlPoint(ptr, x, y, sys, sky, format),
 		     ptr->mapLenToRef(atof(r), rsys, rdist), 

@@ -20,8 +20,8 @@ private:
 
   char* northText;
   char* eastText;
-  int northArrow;
-  int eastArrow;
+  LineEnd northArrow;
+  LineEnd eastArrow;
 
 private:
   void renderX(Drawable, Coord::InternalSystem, RenderMode);
@@ -71,8 +71,8 @@ public:
   Coord::SkyFrame getSkyFrame() {return skyFrame;}
   const char* getNorthText() {return northText;}
   const char* getEastText() {return eastText;}
-  int getNorthArrow() {return northArrow;}
-  int getEastArrow() {return eastArrow;}
+  LineEnd getNorthArrow() {return northArrow;}
+  LineEnd getEastArrow() {return eastArrow;}
 
   void list(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat, int, int);
   void listXML(ostream&, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);

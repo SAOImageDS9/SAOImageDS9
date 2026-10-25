@@ -32,9 +32,9 @@ Usage: polygon x1 y1 x2 y2 x3 y3 ...# fill=[0|1]</tt></p>
 Usage: point x y # point=[circle|box|diamond|cross|x|arrow|boxcircle] [size]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; circle point x y&nbsp;</tt></p>
 <p><tt>Line<br>
-Usage: line x1 y1 x2 y2 # line=[0|1] [0|1]</tt></p>
+Usage: line x1 y1 x2 y2 # line=&lt;end&gt; &lt;end&gt;</tt></p>
 <p><tt>Vector<br>
-Usage: vector x1 y1 length angle # vector=[0|1]</tt></p>
+Usage: vector x1 y1 length angle # vector=&lt;end&gt;</tt></p>
 <p><tt>Segment<br>
 Usage: segment x1 y1 x2 y2 x3 y3 ...</tt></p>
 <p><tt>Text<br>
@@ -43,7 +43,7 @@ Usage: text x y # text={Your Text Here}<br>
 <p><tt>Ruler<br>
 Usage: ruler x1 y1 x2 y2 # ruler=[pixels|degrees|arcmin|arcsec] [format={format string}]<br></tt></p>
 <p><tt>Compass<br>
-Usage: compass x1 y1 length # compass=&lt;coordinate system&gt; &lt;north label&gt; &lt;east label&gt; [0|1] [0|1]</tt></p>
+Usage: compass x1 y1 length # compass=&lt;coordinate system&gt; &lt;north label&gt; &lt;east label&gt; &lt;end&gt; &lt;end&gt;</tt></p>
 <p><tt>Projection<br>
 Usage: projection x1 y1 x2 y2 width</tt></p>
 <p><tt>Annulus<br>
@@ -145,8 +145,10 @@ When the region is selected the text <code>Hello World from region 1</code> is d
 <p>Circle, ellipse, box, and polygon regions may be rendered with outline or solid color fill. To indicate fill, use the fill property. A '1' indicates fill, '0' indicates no outline.</p>
 <tt>Example: circle(100,100,20) # fill=1</tt>
 <p><b>Line</b></p>
-<p>The line region may be rendered with arrows, one at each end. To indicate arrows, use the line property. A '1' indicates an arrow, '0' indicates no arrow.</p>
-<tt>Example: line(100,100,200,200) # line=1 1</tt>
+<p>The line region may be rendered with a line ending at each end. Use the line property to set the ending for the first and second point. The same endings may be used for the vector property and for the north and east ends of the compass property.</p>
+<p>A '0' (or <tt>none</tt>) indicates no ending, and a '1' (or <tt>arrow</tt>) a filled arrow, as in earlier versions. The other endings are <tt>openarrow</tt>, <tt>chevron</tt>, <tt>circle</tt>, <tt>opencircle</tt>, <tt>box</tt>, <tt>openbox</tt>, <tt>triangle</tt>, <tt>opentriangle</tt>, and <tt>bar</tt>. A bare name is filled, and the <tt>open</tt> form is drawn as an outline. A <tt>chevron</tt> is an open V shaped arrow head, a <tt>triangle</tt> is a reversed arrow with its base at the end of the line, and a <tt>bar</tt> is a short line across the end of the line. Outlines are always drawn solid, even when the line is dashed.</p>
+<tt>Example: line(100,100,200,200) # line=1 1<br>
+Example: line(100,100,200,200) # line=opencircle chevron</tt>
 <p><b>Ruler</b></p>
 <p>The ruler region may display information in 'pixels', 'degrees', 'arcmin', or 'arcsec'. Use the ruler property to indicate which format to display distances in.</p>
 <p>The format of the distance can be defined via a format string, which is any valid string for use in printf() to display an integer or real value (i.e. %d, %e, %f), and may be quoted with " or ' or {}. For best results, use {}.</p>

@@ -48,13 +48,13 @@ void Ruler::renderX(Drawable drawable, Coord::InternalSystem sys, RenderMode mod
   Vector aa = parent->mapFromRef(p1,sys);
   Vector bb = parent->mapFromRef(p2,sys);
   Vector cc = parent->mapFromRef(p3,sys);
-  Vector dd = modifyArrow(p2,p1,sys);
-  Vector ee = modifyArrow(p1,p2,sys);
+  Vector dd = modifyLineEnd(p2,p1,sys,ARROW);
+  Vector ee = modifyLineEnd(p1,p2,sys,ARROW);
 
   // line
   XDrawLine(display, drawable, lgc, dd[0], dd[1], ee[0], ee[1]);
-  renderXArrow(drawable, p2, p1, sys, lgc);
-  renderXArrow(drawable, p1, p2, sys, lgc);
+  renderXLineEnd(drawable, p2, p1, sys, mode, ARROW);
+  renderXLineEnd(drawable, p1, p2, sys, mode, ARROW);
 
   // axes
   renderXLineDash(lgc);
@@ -107,8 +107,8 @@ void Ruler::renderPS(PSColorSpace mode)
   Vector aa = parent->mapFromRef(p1,Coord::CANVAS);
   Vector bb = parent->mapFromRef(p2,Coord::CANVAS);
   Vector cc = parent->mapFromRef(p3,Coord::CANVAS);
-  Vector dd = modifyArrow(p2,p1,Coord::CANVAS);
-  Vector ee = modifyArrow(p1,p2,Coord::CANVAS);
+  Vector dd = modifyLineEnd(p2,p1,Coord::CANVAS,ARROW);
+  Vector ee = modifyLineEnd(p1,p2,Coord::CANVAS,ARROW);
 
   // line
   {
@@ -119,8 +119,8 @@ void Ruler::renderPS(PSColorSpace mode)
 	<< parent->TkCanvasPs(ee) << ' '
 	<< "lineto  stroke" << endl << ends;
     Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
-    renderPSArrow(p2,p1,Coord::CANVAS);
-    renderPSArrow(p1,p2,Coord::CANVAS);
+    renderPSLineEnd(mode,p2,p1,Coord::CANVAS,ARROW);
+    renderPSLineEnd(mode,p1,p2,Coord::CANVAS,ARROW);
   }
 
   // axes
@@ -191,13 +191,13 @@ void Ruler::renderWIN32()
   Vector aa = parent->mapFromRef(p1,Coord::CANVAS);
   Vector bb = parent->mapFromRef(p2,Coord::CANVAS);
   Vector cc = parent->mapFromRef(p3,Coord::CANVAS);
-  Vector dd = modifyArrow(p2,p1,Coord::CANVAS);
-  Vector ee = modifyArrow(p1,p2,Coord::CANVAS);
+  Vector dd = modifyLineEnd(p2,p1,Coord::CANVAS,ARROW);
+  Vector ee = modifyLineEnd(p1,p2,Coord::CANVAS,ARROW);
 
   // line
   win32DrawLine(dd,ee);
-  renderWIN32Arrow(p2,p1,Coord::CANVAS);
-  renderWIN32Arrow(p1,p2,Coord::CANVAS);
+  renderWIN32LineEnd(p2,p1,Coord::CANVAS,ARROW);
+  renderWIN32LineEnd(p1,p2,Coord::CANVAS,ARROW);
 
   // axes
   renderWIN32LineDash();

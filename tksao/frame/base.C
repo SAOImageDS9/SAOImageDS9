@@ -130,6 +130,21 @@ static int PdfSetLineWidth(Tcl_Interp* interp, Tcl_Obj* pdfObj, double width)
   return PdfMethod(interp, pdfObj, "setLineWidth", 1, args);
 }
 
+static int PdfSetLineJoin(Tcl_Interp* interp, Tcl_Obj* pdfObj, int join)
+{
+  // pdf4tcl has no public line join method; emit the PDF 'j' operator
+  // through the object's own [my], as its canvas renderer does for
+  // -joinstyle
+  ostringstream str;
+  str << "apply {{pdf join} {"
+      << "set my [info object namespace $pdf]::my; "
+      << "$my EndTextObj; "
+      << "$my Pdfoutcmd $join j"
+      << "}} " << Tcl_GetString(pdfObj) << ' ' << join << ends;
+
+  return Tcl_EvalEx(interp, str.str().c_str(), -1, TCL_EVAL_GLOBAL);
+}
+
 static int PdfSetLineDash(Tcl_Interp* interp, Tcl_Obj* pdfObj,
 			  const std::vector<double>& pattern, double offset)
 {
@@ -1868,6 +1883,10 @@ int Base::pdfVectorLayers(Tcl_Obj* pdfObj)
     else if (tok == "setlinewidth" && stack.size() >= 1) {
       double width = stack.back(); stack.pop_back();
       rr = PdfSetLineWidth(interp, pdfObj, width);
+    }
+    else if (tok == "setlinejoin" && stack.size() >= 1) {
+      int join = (int)stack.back(); stack.pop_back();
+      rr = PdfSetLineJoin(interp, pdfObj, join);
     }
     else if (tok == "setgray" && stack.size() >= 1) {
       double gray = stack.back(); stack.pop_back();

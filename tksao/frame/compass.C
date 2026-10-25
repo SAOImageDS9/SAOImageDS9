@@ -37,8 +37,8 @@ Compass::Compass(Base* p, const Vector& ctr,
 
   northText = dupstr(n);
   eastText = dupstr(e);
-  northArrow = na;
-  eastArrow = ea;
+  northArrow = validLineEnd(na);
+  eastArrow = validLineEnd(ea);
 
   strcpy(type_,"compass");
   handle = new Vector[3];
@@ -67,13 +67,13 @@ void Compass::renderX(Drawable drawable, Coord::InternalSystem sys, RenderMode m
   Vector ee = parent->mapFromRef(pp2,sys);
 
   if (northArrow) {
-    bb = modifyArrow(center,p1,sys);
-    renderXArrow(drawable, center, p1, sys, lgc);
+    bb = modifyLineEnd(center,p1,sys,northArrow);
+    renderXLineEnd(drawable, center, p1, sys, mode, northArrow);
   }
 
   if (eastArrow) {
-    cc = modifyArrow(center,p2,sys);
-    renderXArrow(drawable, center, p2, sys, lgc);
+    cc = modifyLineEnd(center,p2,sys,eastArrow);
+    renderXLineEnd(drawable, center, p2, sys, mode, eastArrow);
   }
 
   XDrawLine(display, drawable, lgc, aa[0], aa[1], bb[0], bb[1]);
@@ -140,13 +140,13 @@ void Compass::renderPS(PSColorSpace mode)
   Vector ee = parent->mapFromRef(pp2,Coord::CANVAS);
 
   if (northArrow) {
-    bb = modifyArrow(center,p1,Coord::CANVAS);
-    renderPSArrow(center,p1,Coord::CANVAS);
+    bb = modifyLineEnd(center,p1,Coord::CANVAS,northArrow);
+    renderPSLineEnd(mode,center,p1,Coord::CANVAS,northArrow);
   }
 
   if (eastArrow) {
-    cc = modifyArrow(center,p2,Coord::CANVAS);
-    renderPSArrow(center,p2,Coord::CANVAS);
+    cc = modifyLineEnd(center,p2,Coord::CANVAS,eastArrow);
+    renderPSLineEnd(mode,center,p2,Coord::CANVAS,eastArrow);
   }
 
   {
@@ -267,13 +267,13 @@ void Compass::renderWIN32()
   Vector ee = parent->mapFromRef(pp2,Coord::CANVAS);
 
   if (northArrow) {
-    bb = modifyArrow(center,p1,Coord::CANVAS);
-    renderWIN32Arrow(center,p1,Coord::CANVAS);
+    bb = modifyLineEnd(center,p1,Coord::CANVAS,northArrow);
+    renderWIN32LineEnd(center,p1,Coord::CANVAS,northArrow);
   }
 
   if (eastArrow) {
-    cc = modifyArrow(center,p2,Coord::CANVAS);
-    renderWIN32Arrow(center,p2,Coord::CANVAS);
+    cc = modifyLineEnd(center,p2,Coord::CANVAS,eastArrow);
+    renderWIN32LineEnd(center,p2,Coord::CANVAS,eastArrow);
   }
 
   win32DrawLine(aa,bb);
@@ -384,6 +384,10 @@ void Compass::calcAllBBox()
   }
 
   Marker::calcAllBBox();
+
+  // make room for line ends, which reach past the end points
+  if (northArrow || eastArrow)
+    allBBox.expand(lineEndExtent() + 2*lineWidth);
 }
 
 void Compass::edit(const Vector& v, int h)
@@ -457,8 +461,8 @@ void Compass::setRadius(double r)
 
 void Compass::setArrows(int n, int e)
 {
-  northArrow = n;
-  eastArrow = e;
+  northArrow = validLineEnd(n);
+  eastArrow = validLineEnd(e);
 
   updateBBox();
   doCallBack(CallBack::EDITCB);
@@ -504,7 +508,7 @@ void Compass::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
     str << " compass=";
     coord.listCoordSystem(str, coordSystem, skyFrame, ptr);
     str << " {" << northText << "} {" << eastText << "} " 
-	<< northArrow << ' ' << eastArrow;
+	<< lineEndListStr(northArrow) << ' ' << lineEndListStr(eastArrow);
     listProperties(str, 0);
   }
 }
@@ -529,8 +533,8 @@ void Compass::listXML(ostream& str, Coord::CoordSystem sys,
 
   XMLRow(XMLPARAM2,northText);
   XMLRow(XMLPARAM3,eastText);
-  XMLRow(XMLPARAM4,northArrow);
-  XMLRow(XMLPARAM5,eastArrow);
+  XMLRow(XMLPARAM4,(char*)lineEndListStr(northArrow));
+  XMLRow(XMLPARAM5,(char*)lineEndListStr(eastArrow));
 
   XMLRowProps(ptr,sys);
   XMLRowEnd(str);

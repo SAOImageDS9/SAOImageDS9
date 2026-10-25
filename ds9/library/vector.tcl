@@ -19,7 +19,7 @@ proc VectorDialog {varname} {
     # variables
     MarkerBaseDistInit $varname
 
-    set var(arrow) [$var(frame) get marker $var(id) vector arrow]
+    set var(arrow) [$var(frame) get marker $var(id) vector end]
 
     # procs
     set var(which) vector
@@ -70,10 +70,9 @@ proc VectorDialog {varname} {
     ttk::entry $f.angle -textvariable ${varname}(angle) -width 13
     ttk::label $f.uangle -text [msgcat::mc {Degrees}]
 
-    # Arrow
-    ttk::label $f.tarrow -text [msgcat::mc {Arrow}]
-    ttk::checkbutton $f.arrow -variable ${varname}(arrow) \
-	-command "VectorArrow $varname"
+    # Line End
+    ttk::label $f.tarrow -text [msgcat::mc {End}]
+    MarkerBaseLineEndButton $f.arrow $varname arrow VectorArrow
 
     grid $f.tpt $f.x $f.y $f.upt -padx 2 -pady 2 -sticky w
     grid $f.tdist $f.dist $f.udist -padx 2 -pady 2 -sticky w
@@ -107,7 +106,7 @@ proc VectorArrow {varname} {
     upvar #0 $varname var
     global $varname
 
-    $var(frame) marker $var(id) vector arrow $var(arrow)
+    $var(frame) marker $var(id) vector end $var(arrow)
 }
 
 # callbacks

@@ -28,8 +28,8 @@ public:
 
   virtual Marker* dup() {return new Vect(*this);}
 
-  int getArrow() {return p2Arrow;}
-  void setArrow(int w) {p2Arrow = w ? 1 : 0;}
+  LineEnd getArrow() {return p2Arrow;}
+  void setArrow(int w) {p2Arrow = validLineEnd(w); updateBBox();}
 
   void setPoints(const Vector& pt, double mag, double ang);
 

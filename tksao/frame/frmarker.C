@@ -1955,6 +1955,22 @@ void Base::getMarkerCompassArrowCmd(int id)
   }
 }
 
+void Base::getMarkerCompassEndCmd(int id)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      Tcl_AppendResult(interp,
+		       Marker::lineEndName(((Compass*)mm)->getNorthArrow()),
+		       " ",
+		       Marker::lineEndName(((Compass*)mm)->getEastArrow()),
+		       NULL);
+      return;
+    }
+    mm=mm->next();
+  }
+}
+
 void Base::getMarkerCompassLabelCmd(int id)
 {
   Marker* mm=markers->head();
@@ -2287,6 +2303,22 @@ void Base::getMarkerLineArrowCmd(int id)
 	Tcl_AppendResult(interp, " 1", NULL);
       else
 	Tcl_AppendResult(interp, " 0", NULL);
+      return;
+    }
+    mm=mm->next();
+  }
+}
+
+void Base::getMarkerLineEndCmd(int id)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      Tcl_AppendResult(interp,
+		       Marker::lineEndName(((Line*)mm)->getP1Arrow()),
+		       " ",
+		       Marker::lineEndName(((Line*)mm)->getP2Arrow()),
+		       NULL);
       return;
     }
     mm=mm->next();
@@ -3012,6 +3044,19 @@ void Base::getMarkerVectorArrowCmd(int id)
 	Tcl_AppendResult(interp, "1", NULL);
       else
 	Tcl_AppendResult(interp, "0", NULL);
+      return;
+    }
+    mm=mm->next();
+  }
+}
+
+void Base::getMarkerVectorEndCmd(int id)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      Tcl_AppendResult(interp,
+		       Marker::lineEndName(((Vect*)mm)->getArrow()), NULL);
       return;
     }
     mm=mm->next();

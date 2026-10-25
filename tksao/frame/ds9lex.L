@@ -51,12 +51,14 @@ arcmin		{return ARCMIN_;}
 arcsec		{return ARCSEC_;}
 arrow		{return ARROW_;}
 b1950		{return B1950_;}
+bar		{return BAR_;}
 background	{return BACKGROUND_;}
 begin		{return BEGIN_;}
 box		{return BOX_;}
 boxcircle	{return BOXCIRCLE_;}
 bpanda		{return BPANDA_;}
 callback	{return CALLBACK_;}
+chevron		{return CHEVRON_;}
 cir[c][l][e]	{return CIRCLE_;}
 circle3d	{return CIRCLE3D_;}
 color		{return COLOR_;}
@@ -99,8 +101,13 @@ linear		{return LINEAR_;}
 move		{return MOVE_;}
 n		{return N_;}
 no		{return NO_;}
+none		{return NONE_;}
 off		{return OFF_;}
 on		{return ON_;}
+openarrow	{return OPENARROW_;}
+openbox		{return OPENBOX_;}
+opencircle	{return OPENCIRCLE_;}
+opentriangle	{return OPENTRIANGLE_;}
 panda		{return CPANDA_;}
 physical	{return PHYSICAL_;}
 pie		{return PIE_;}
@@ -120,6 +127,7 @@ text		{return TEXT_;}
 textangle	{return TEXTANGLE_;}
 textrotate	{return TEXTROTATE_;}
 tile		{return TILE_;}
+triangle	{return TRIANGLE_;}
 true		{return TRUE_;}
 vector		{return VECTOR_;}
 version		{return VERSION_;}

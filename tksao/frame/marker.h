@@ -175,7 +175,8 @@ protected:
   double calcAngle();
   Vector modifyLineEnd(const Vector&, const Vector&, Coord::InternalSystem,
 		       LineEnd);
-  static double lineEndExtent();
+  double lineEndSize();
+  double lineEndExtent();
   virtual void updateHandles() =0;
   virtual void calcAllBBox();
 

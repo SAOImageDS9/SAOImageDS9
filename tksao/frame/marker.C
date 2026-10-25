@@ -1199,12 +1199,21 @@ double Marker::calcAngle()
 
 // Line ends are built in the original arrow's frame: the end of the line
 // is at (0,LINEENDTIP), the line runs back along -y, and the shape is
-// scaled by LINEENDSCALE when it is mapped onto the line.
+// scaled by LINEENDSCALE*lineEndSize() when it is mapped onto the line.
+
+double Marker::lineEndSize()
+{
+  // grow line ends with the line width, by half the extra width: fixed
+  // size lets wide lines swamp the end (open ends fill in), while linear
+  // makes it far too big. width 1 is unchanged
+  double ww = lineWidth>1 ? lineWidth : 1;
+  return 1+(ww-1)/2;
+}
 
 double Marker::lineEndExtent()
 {
   // farthest any line end reaches from the end of the line (box corner)
-  return LINEENDHALF*sqrt(2.)*LINEENDSCALE;
+  return LINEENDHALF*sqrt(2.)*LINEENDSCALE*lineEndSize();
 }
 
 Vector Marker::modifyLineEnd(const Vector& p1, const Vector& p2, 
@@ -1230,6 +1239,8 @@ Vector Marker::modifyLineEnd(const Vector& p1, const Vector& p2,
   default:
     break;
   }
+
+  inset *= lineEndSize();
 
   Vector aa = parent->mapFromRef(p1,sys);
   Vector bb = parent->mapFromRef(p2,sys);
@@ -1322,7 +1333,7 @@ Vector* Marker::lineEnd2D(const Vector& p1, const Vector& p2,
 
   Vector dd = (aa-bb).normalize();
   Matrix mm = Translate(0,-LINEENDTIP) * 
-    Scale(LINEENDSCALE) * 
+    Scale(LINEENDSCALE*lineEndSize()) * 
     Rotate(-M_PI/2) * 
     Rotate(-dd.angle()) * 
     Translate(bb);
@@ -1356,7 +1367,7 @@ Vector* Marker::lineEnd3D(const Vector& p1, const Vector& p2,
   Matrix3d rr(rx,ry,rz);
   Matrix3d mm = 
     Translate3d(0,0,-LINEENDTIP) *
-    Scale3d(LINEENDSCALE) *
+    Scale3d(LINEENDSCALE*lineEndSize()) *
     rr.invert() *
     Translate3d(bb);
 

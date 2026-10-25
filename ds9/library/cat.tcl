@@ -1040,7 +1040,7 @@ proc CatalogCmdRef {ref} {
     if {$ref == "cxc"} {
 	set ref csc
     }
-    set rr cat${ref}
+    set rr [CatalogCmdVarname $ref]
     set id [lsearch $icat(cats) $rr]
 
     # look for reference in current list
@@ -1063,7 +1063,8 @@ proc CatalogCmdRetrieve {ref} {
     }
 
     # look for reference in current list
-    if {[lsearch $icat(cats) cat${ref}] < 0} {
+    set varname [CatalogCmdVarname $ref]
+    if {[lsearch $icat(cats) $varname] < 0} {
 	# see if its from our list of cats
 	foreach mm $icat(def) {
 	    set ll [lindex $mm 0]
@@ -1078,8 +1079,24 @@ proc CatalogCmdRetrieve {ref} {
 	}
 
 	# not a default, assume other name
-	CATDialog cat${ref} cds $ref $ref sync
+	# all vizier ids contain a '/', so 'csc2.1' is likely a typo
+	if {[string first {/} $ref] < 0 && [string first {.} $ref] >= 0} {
+	    set alt [string map {. {}} $ref]
+	    foreach mm $icat(def) {
+		if {[lindex $mm 0] != {-} && "cat${alt}" == [lindex $mm 1]} {
+		    Error "[msgcat::mc {Unknown catalog}] '$ref', [msgcat::mc {did you mean}] '$alt'?"
+		    return
+		}
+	    }
+	}
+	CATDialog $varname cds $ref $ref sync
     }
+}
+
+# vizier ids may contain '.', ie J/other/RAA/12.345,
+# which is not valid in a window path
+proc CatalogCmdVarname {ref} {
+    return [string map {. _} cat${ref}]
 }
 
 proc CatalogCmdLoad {fn reader} {

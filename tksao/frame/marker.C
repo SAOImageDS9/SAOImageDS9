@@ -782,36 +782,48 @@ void Marker::initFonts(const char* ff)
     Tk_FreeFont(psfont_);
   psfont_ = NULL;
 
-  const char* dd = "helvetica 9 roman normal";
+  const char* dd = "helvetica 10 normal roman";
   if (!ff)
     ff = dd;
 
   psfont_ = Tk_GetFont(parent->interp, parent->tkwin, ff);
 
   // determine tkfont from psfont
-  string x(ff);
-  istringstream str(x);
-  char family[16] = "";
+  // font is a tcl list: family size weight slant
+  // family may be braced, ie {DejaVu Sans}
+  string family;
   int size = 0;
-  char weight[16] = "";
-  char slant[16] = "";
+  string weight;
+  string slant;
 
-  str >> family >> size >> weight >> slant;
+  Tcl_Size argc = 0;
+  const char** argv = NULL;
+  if (Tcl_SplitList(NULL, ff, &argc, &argv) == TCL_OK) {
+    if (argc > 0)
+      family = argv[0];
+    if (argc > 1)
+      size = atoi(argv[1]);
+    if (argc > 2)
+      weight = argv[2];
+    if (argc > 3)
+      slant = argv[3];
+    Tcl_Free((char*)argv);
+  }
 
   // old regions files will not have a slant
-  if (strncmp(slant,"roma",4) && strncmp(slant,"ital",4))
-    strcpy(slant,"roman");
+  if (strncmp(slant.c_str(),"roma",4) && strncmp(slant.c_str(),"ital",4))
+    slant = "roman";
 
 #ifdef MAC_OSX_TK
   size *= parent->getDisplayRatio();
 #endif
 
   char* ptr =NULL;
-  if (!strncmp(family,"helvetica",4))
+  if (!strncmp(family.c_str(),"helvetica",4))
     ptr = parent->options->helvetica;
-  else if (!strncmp(family,"times",4))
+  else if (!strncmp(family.c_str(),"times",4))
     ptr = parent->options->times;
-  else if (!strncmp(family,"courier",4))
+  else if (!strncmp(family.c_str(),"courier",4))
     ptr = parent->options->courier;
   else
     ptr = parent->options->helvetica;

@@ -1344,6 +1344,7 @@ public:
   void getMarkerColorCmd(const char*);
   void getMarkerColorCmd(int);
   void getMarkerCompassArrowCmd(int);
+  void getMarkerCompassEndCmd(int);
   void getMarkerCompassLabelCmd(int);
   void getMarkerCompassRadiusCmd(int, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerCompassSystemCmd(int);
@@ -1372,6 +1373,7 @@ public:
   void getMarkerIdAllCmd();
   void getMarkerLineCmd(int, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
   void getMarkerLineArrowCmd(int);
+  void getMarkerLineEndCmd(int);
   void getMarkerLineLengthCmd(int, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerLineWidthCmd();
   void getMarkerLineWidthCmd(int);
@@ -1419,6 +1421,7 @@ public:
   void getMarkerTypeCmd(int);
   void getMarkerVectorCmd(int, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
   void getMarkerVectorArrowCmd(int);
+  void getMarkerVectorEndCmd(int);
   void getMarkerVectorLengthCmd(int, Coord::CoordSystem, Coord::DistFormat);
 
   void hasMarkerHighlitedCmd();

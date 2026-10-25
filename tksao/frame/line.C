@@ -8,8 +8,8 @@
 Line::Line(Base* p, const Vector& ptr1, const Vector& ptr2)
   : BaseLine(p, ptr1, ptr2)
 {
-  p1Arrow = 0;
-  p2Arrow = 0;
+  p1Arrow = NOEND;
+  p2Arrow = NOEND;
 
   strcpy(type_,"line");
   handle = new Vector[2];
@@ -26,8 +26,8 @@ Line::Line(Base* p, const Vector& ptr1, const Vector& ptr2,
 	   const List<Tag>& tg, const List<CallBack>& cb) 
   : BaseLine(p, ptr1, ptr2, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb)
 {
-  p1Arrow = a1;
-  p2Arrow = a2;
+  p1Arrow = validLineEnd(a1);
+  p2Arrow = validLineEnd(a2);
 
   strcpy(type_,"line");
   handle = new Vector[2];
@@ -44,21 +44,20 @@ Line::Line(const Line& a) : BaseLine(a)
 
 void Line::renderX(Drawable drawable, Coord::InternalSystem sys, RenderMode mode)
 {
-  GC lgc = renderXGC(mode);
-
   Vector aa = parent->mapFromRef(p1,sys);
   Vector bb = parent->mapFromRef(p2,sys);
 
   if (p1Arrow) {
-    aa = modifyArrow(p2,p1,sys);
-    renderXArrow(drawable,p2,p1,sys,lgc);
+    aa = modifyLineEnd(p2,p1,sys,p1Arrow);
+    renderXLineEnd(drawable,p2,p1,sys,mode,p1Arrow);
   }
 
   if (p2Arrow) {
-    bb = modifyArrow(p1,p2,sys);
-    renderXArrow(drawable,p1,p2,sys,lgc);
+    bb = modifyLineEnd(p1,p2,sys,p2Arrow);
+    renderXLineEnd(drawable,p1,p2,sys,mode,p2Arrow);
   }
 
+  GC lgc = renderXGC(mode);
   XDrawLine(display, drawable, lgc, aa[0], aa[1], bb[0], bb[1]);
 }
 
@@ -70,13 +69,13 @@ void Line::renderPS(PSColorSpace mode)
   Vector bb = parent->mapFromRef(p2,Coord::CANVAS);
 
   if (p1Arrow) {
-    aa = modifyArrow(p2,p1,Coord::CANVAS);
-    renderPSArrow(p2,p1,Coord::CANVAS);
+    aa = modifyLineEnd(p2,p1,Coord::CANVAS,p1Arrow);
+    renderPSLineEnd(mode,p2,p1,Coord::CANVAS,p1Arrow);
   }
 
   if (p2Arrow) {
-    bb = modifyArrow(p1,p2,Coord::CANVAS);
-    renderPSArrow(p1,p2,Coord::CANVAS);
+    bb = modifyLineEnd(p1,p2,Coord::CANVAS,p2Arrow);
+    renderPSLineEnd(mode,p1,p2,Coord::CANVAS,p2Arrow);
   }
 
   ostringstream str;
@@ -99,13 +98,13 @@ void Line::renderWIN32()
   Vector bb = parent->mapFromRef(p2,Coord::CANVAS);
 
   if (p1Arrow) {
-    aa = modifyArrow(p2,p1,Coord::CANVAS);
-    renderWIN32Arrow(p2,p1,Coord::CANVAS);
+    aa = modifyLineEnd(p2,p1,Coord::CANVAS,p1Arrow);
+    renderWIN32LineEnd(p2,p1,Coord::CANVAS,p1Arrow);
   }
 
   if (p2Arrow) {
-    bb = modifyArrow(p1,p2,Coord::CANVAS);
-    renderWIN32Arrow(p1,p2,Coord::CANVAS);
+    bb = modifyLineEnd(p1,p2,Coord::CANVAS,p2Arrow);
+    renderWIN32LineEnd(p1,p2,Coord::CANVAS,p2Arrow);
   }
 
   win32DrawLine(aa,bb);
@@ -124,10 +123,19 @@ void Line::updateHandles()
   handle[1] = parent->mapFromRef(p2,Coord::CANVAS);
 }
 
+void Line::calcAllBBox()
+{
+  Marker::calcAllBBox();
+
+  // make room for line ends, which reach past the end points
+  if (p1Arrow || p2Arrow)
+    allBBox.expand(lineEndExtent() + 2*lineWidth);
+}
+
 void Line::setArrows(int w1, int w2)
 {
-  p1Arrow = w1 ? 1 : 0;
-  p2Arrow = w2 ? 1 : 0;
+  p1Arrow = validLineEnd(w1);
+  p2Arrow = validLineEnd(w2);
   updateBBox();
 }
 
@@ -199,7 +207,8 @@ void Line::listPost(ostream& str, int conj, int strip)
     if (conj)
       str << ' ' << listConjunction(conj);
 
-    str << " # line=" << p1Arrow << ' ' << p2Arrow;
+    str << " # line=" << lineEndListStr(p1Arrow) << ' '
+	<< lineEndListStr(p2Arrow);
 
     listProperties(str, 0);
   }
@@ -223,8 +232,8 @@ void Line::listXML(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
   XMLRow(XMLSHAPE,type_);
 
   XMLRowPoint(ptr,sys,sky,format,vv,2);
-  XMLRow(XMLPARAM,p1Arrow);
-  XMLRow(XMLPARAM2,p2Arrow);
+  XMLRow(XMLPARAM,(char*)lineEndListStr(p1Arrow));
+  XMLRow(XMLPARAM2,(char*)lineEndListStr(p2Arrow));
 
   XMLRowProps(ptr,sys);
   XMLRowEnd(str);

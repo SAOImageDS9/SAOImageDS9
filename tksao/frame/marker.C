@@ -311,18 +311,44 @@ void Marker::renderXText(Drawable drawable, Coord::InternalSystem sys, RenderMod
   }
 }
 
-void Marker::renderXArrow(Drawable drawable, const Vector& p1, 
-			  const Vector& p2, Coord::InternalSystem sys, GC lgc)
+void Marker::renderXLineEnd(Drawable drawable, const Vector& p1,
+			    const Vector& p2, Coord::InternalSystem sys,
+			    RenderMode mode, LineEnd style)
 {
-  Vector* vv = arrow(p1,p2,sys);
-  XPoint dd[6];
-  for (int ii=0; ii<6; ii++) {
+  int cnt;
+  Vector* vv = lineEnd(p1,p2,sys,style,&cnt);
+  if (!vv)
+    return;
+
+  XPoint dd[LINEENDMAX+1];
+  for (int ii=0; ii<cnt; ii++) {
     dd[ii].x = (short)vv[ii][0];
     dd[ii].y = (short)vv[ii][1];
   }
-
-  XFillPolygon(display, drawable, lgc, dd, 6, Nonconvex, CoordModeOrigin);
   delete [] vv;
+
+  GC lgc = renderXGC(mode);
+  switch (style) {
+  case ARROW:
+  case CIRCLE:
+  case BOX:
+  case TRIANGLE:
+    XFillPolygon(display, drawable, lgc, dd, cnt, Nonconvex, CoordModeOrigin);
+    return;
+  case OPENARROW:
+  case OPENCIRCLE:
+  case OPENBOX:
+  case OPENTRIANGLE:
+    dd[cnt++] = dd[0];
+    break;
+  default:
+    break;
+  }
+
+  // outlines are always solid, even on a dashed marker
+  renderXLineNoDash(lgc);
+  XDrawLines(display, drawable, lgc, dd, cnt, CoordModeOrigin);
+  renderXGC(mode);
 }
 
 void Marker::renderXHandles(Drawable drawable)
@@ -430,18 +456,54 @@ void Marker::renderPSText(PSColorSpace mode)
   }
 }
 
-void Marker::renderPSArrow(const Vector& p1, const Vector& p2, 
-			   Coord::InternalSystem sys)
+void Marker::renderPSLineEnd(PSColorSpace mode, const Vector& p1,
+			     const Vector& p2, Coord::InternalSystem sys,
+			     LineEnd style)
 {
-  Vector* vv = arrow(p1,p2,sys);
+  int cnt;
+  Vector* vv = lineEnd(p1,p2,sys,style,&cnt);
+  if (!vv)
+    return;
+
+  int filled = 0;
+  int closed = 0;
+  switch (style) {
+  case ARROW:
+  case CIRCLE:
+  case BOX:
+  case TRIANGLE:
+    filled = 1;
+    break;
+  case OPENARROW:
+  case OPENCIRCLE:
+  case OPENBOX:
+  case OPENTRIANGLE:
+    closed = 1;
+    break;
+  default:
+    break;
+  }
+
+  // outlines are always solid, even on a dashed marker
+  if (!filled)
+    renderPSLineNoDash();
+
   ostringstream str;
   str << "newpath " << endl
       << parent->TkCanvasPs(vv[0]) << " moveto" << endl;
-  for (int ii=1; ii<6; ii++)
+  for (int ii=1; ii<cnt; ii++)
       str << parent->TkCanvasPs(vv[ii]) << " lineto" << endl;
-  str << "closepath fill" << endl << ends;
+  if (filled)
+    str << "closepath fill" << endl << ends;
+  else if (closed)
+    str << "closepath stroke" << endl << ends;
+  else
+    str << "stroke" << endl << ends;
   Tcl_AppendResult(parent->interp, (char*)str.str().c_str(), NULL);
   delete [] vv;
+
+  if (!filled)
+    renderPSGC(mode);
 }
 
 void Marker::renderPSGC(PSColorSpace mode)
@@ -514,16 +576,40 @@ void Marker::renderWIN32Text()
   }
 }
 
-void Marker::renderWIN32Arrow(const Vector& p1, const Vector& p2, 
-			      Coord::InternalSystem sys)
+void Marker::renderWIN32LineEnd(const Vector& p1, const Vector& p2, 
+				Coord::InternalSystem sys, LineEnd style)
 {
-  Vector* vv = arrow(p1,p2,sys);
-  Vector dd[6];
-  for (int ii=0; ii<6; ii++)
-    dd[ii] = vv[ii];
+  int cnt;
+  Vector* vv = lineEnd(p1,p2,sys,style,&cnt);
+  if (!vv)
+    return;
 
-  win32FillPolygon(dd,6);
+  Vector dd[LINEENDMAX+1];
+  for (int ii=0; ii<cnt; ii++)
+    dd[ii] = vv[ii];
   delete [] vv;
+
+  switch (style) {
+  case ARROW:
+  case CIRCLE:
+  case BOX:
+  case TRIANGLE:
+    win32FillPolygon(dd,cnt);
+    return;
+  case OPENARROW:
+  case OPENCIRCLE:
+  case OPENBOX:
+  case OPENTRIANGLE:
+    dd[cnt++] = dd[0];
+    break;
+  default:
+    break;
+  }
+
+  // outlines are always solid, even on a dashed marker
+  renderWIN32LineNoDash();
+  win32DrawLines(dd,cnt);
+  renderWIN32GC();
 }
 
 void Marker::renderWIN32GC()
@@ -1103,65 +1189,145 @@ double Marker::calcAngle()
   }
 }
 
-Vector Marker::modifyArrow(const Vector& p1, const Vector& p2, 
-			   Coord::InternalSystem sys)
+// Line ends are built in the original arrow's frame: the end of the line
+// is at (0,LINEENDTIP), the line runs back along -y, and the shape is
+// scaled by LINEENDSCALE when it is mapped onto the line.
+
+double Marker::lineEndExtent()
 {
-  const int tip = 6;  // length from end of line to tip of arrow
-  
+  // farthest any line end reaches from the end of the line (box corner)
+  return LINEENDHALF*sqrt(2.)*LINEENDSCALE;
+}
+
+Vector Marker::modifyLineEnd(const Vector& p1, const Vector& p2, 
+			     Coord::InternalSystem sys, LineEnd style)
+{
+  // distance from end of line to where the line meets the line end
+  double inset = 0;
+  switch (style) {
+  case ARROW:
+    inset = LINEENDTIP;
+    break;
+  case OPENARROW:
+  case TRIANGLE:
+  case OPENTRIANGLE:
+    inset = LINEENDTIP*LINEENDSCALE;
+    break;
+  case CIRCLE:
+  case OPENCIRCLE:
+  case BOX:
+  case OPENBOX:
+    inset = LINEENDHALF*LINEENDSCALE;
+    break;
+  default:
+    break;
+  }
+
   Vector aa = parent->mapFromRef(p1,sys);
   Vector bb = parent->mapFromRef(p2,sys);
+  if (!inset)
+    return bb;
 
   Vector nn = (bb-aa).normalize();
   double ll = (bb-aa).length();
-  return nn * Scale(ll-tip) * Translate(aa);
+  return nn * Scale(ll-inset) * Translate(aa);
 }
 
-Vector* Marker::arrow(const Vector& p1, const Vector& p2,
-		      Coord::InternalSystem sys)
+int Marker::lineEndShape(LineEnd style, Vector* vv)
 {
+  const int tip = LINEENDTIP; // length from end of line to tip of arrow
+  const int tail = 2; // length from end of line to tails of arrow
+  const int wc = 2;   // width of arrow at end of line
+  const int wt = 3;   // width of arrow at tails
+  const int hh = LINEENDHALF; // radius of circle, half size of box
+
+  switch (style) {
+  case NOEND:
+    return 0;
+  case ARROW:
+  case OPENARROW:
+    vv[0] = Vector(0, tip);
+    vv[1] = Vector(-wc, 0);
+    vv[2] = Vector(-wt, -tail);
+    vv[3] = Vector(0, 0);
+    vv[4] = Vector(wt, -tail);
+    vv[5] = Vector(wc, 0);
+    return 6;
+  case CHEVRON:
+    vv[0] = Vector(-wt, -tail);
+    vv[1] = Vector(0, tip);
+    vv[2] = Vector(wt, -tail);
+    return 3;
+  case CIRCLE:
+  case OPENCIRCLE:
+    for (int ii=0; ii<LINEENDMAX; ii++) {
+      double aa = 2*M_PI*ii/LINEENDMAX;
+      vv[ii] = Vector(hh*cos(aa), tip+hh*sin(aa));
+    }
+    return LINEENDMAX;
+  case BOX:
+  case OPENBOX:
+    vv[0] = Vector(-hh, tip-hh);
+    vv[1] = Vector(hh, tip-hh);
+    vv[2] = Vector(hh, tip+hh);
+    vv[3] = Vector(-hh, tip+hh);
+    return 4;
+  case TRIANGLE:
+  case OPENTRIANGLE:
+    // reversed arrow: base across the end of the line
+    vv[0] = Vector(-hh, tip);
+    vv[1] = Vector(hh, tip);
+    vv[2] = Vector(0, 0);
+    return 3;
+  case BAR:
+    vv[0] = Vector(-hh, tip);
+    vv[1] = Vector(hh, tip);
+    return 2;
+  }
+
+  return 0;
+}
+
+Vector* Marker::lineEnd(const Vector& p1, const Vector& p2,
+			Coord::InternalSystem sys, LineEnd style, int* cnt)
+{
+  Vector vv[LINEENDMAX];
+  *cnt = lineEndShape(style, vv);
+  if (!*cnt)
+    return NULL;
+
   switch (parent->frameType()) {
   case Base::F2D:
-    return arrow2D(p1,p2,sys);
+    return lineEnd2D(p1,p2,sys,vv,*cnt);
   case Base::F3D:
-    return arrow3D(p1,p2,sys);
+    return lineEnd3D(p1,p2,sys,vv,*cnt);
   }
+
+  return NULL;
 }
 
-Vector* Marker::arrow2D(const Vector& p1, const Vector& p2,
-			Coord::InternalSystem sys)
+Vector* Marker::lineEnd2D(const Vector& p1, const Vector& p2,
+			  Coord::InternalSystem sys, Vector* vv, int cnt)
 {
   Vector aa = ((FrameBase*)parent)->mapFromRef(p1,sys);
   Vector bb = ((FrameBase*)parent)->mapFromRef(p2,sys);
 
-  const int tip = 6;  // length from end of line to tip of arrow
-  const int tail = 2; // length from end of line to tails of arrow
-  const int wc = 2;   // width of arrow at end of line
-  const int wt = 3;   // width of arrow at tails
-
-  Vector vv[6];
-  vv[0] = Vector(0, tip);
-  vv[1] = Vector(-wc, 0);
-  vv[2] = Vector(-wt, -tail);
-  vv[3] = Vector(0, 0);
-  vv[4] = Vector(wt, -tail);
-  vv[5] = Vector(wc, 0);
-
   Vector dd = (aa-bb).normalize();
-  Matrix mm = Translate(0,-tip) * 
-    Scale(1.5) * 
+  Matrix mm = Translate(0,-LINEENDTIP) * 
+    Scale(LINEENDSCALE) * 
     Rotate(-M_PI/2) * 
     Rotate(-dd.angle()) * 
     Translate(bb);
 
-  Vector* ww = new Vector[6];
-  for (int ii=0; ii<6; ii++)
+  Vector* ww = new Vector[cnt];
+  for (int ii=0; ii<cnt; ii++)
     ww[ii] = vv[ii]*mm;
 
   return ww;
 }
 
-Vector* Marker::arrow3D(const Vector& p1, const Vector& p2,
-			Coord::InternalSystem sys)
+Vector* Marker::lineEnd3D(const Vector& p1, const Vector& p2,
+			  Coord::InternalSystem sys, Vector* vv, int cnt)
 {
   Vector p3;
   if (((p2-p1)[0]) == 0)
@@ -1173,20 +1339,7 @@ Vector* Marker::arrow3D(const Vector& p1, const Vector& p2,
   Vector3d bb = ((Frame3dBase*)parent)->mapFromRef3d(p2,sys);
   Vector3d cc = ((Frame3dBase*)parent)->mapFromRef3d(p3,sys);
 
-  const int tip = 6;  // length from end of line to tip of arrow
-  const int tail = 2; // length from end of line to tails of arrow
-  const int wc = 2;   // width of arrow at end of line
-  const int wt = 3;   // width of arrow at tails
-
   // build in Y-Z plane, align on z axis
-  Vector3d vv[6];
-  vv[0] = Vector3d(0,0,tip);
-  vv[1] = Vector3d(0,-wc,0);
-  vv[2] = Vector3d(0,-wt,-tail);
-  vv[3] = Vector3d(0,0,0);
-  vv[4] = Vector3d(0,wt,-tail);
-  vv[5] = Vector3d(0,wc,0);
-
   Vector3d l1 = (aa-bb).normalize();
   Vector3d l2 = (aa-cc).normalize();
   Vector3d rz = -l1;
@@ -1194,16 +1347,57 @@ Vector* Marker::arrow3D(const Vector& p1, const Vector& p2,
   Vector3d ry = cross(rz,rx);
   Matrix3d rr(rx,ry,rz);
   Matrix3d mm = 
-    Translate3d(0,0,-tip) *
-    Scale3d(1.5) *
+    Translate3d(0,0,-LINEENDTIP) *
+    Scale3d(LINEENDSCALE) *
     rr.invert() *
     Translate3d(bb);
 
-  Vector* ww = new Vector[6];
-  for (int ii=0; ii<6; ii++)
-    ww[ii] = vv[ii]*mm;
+  Vector* ww = new Vector[cnt];
+  for (int ii=0; ii<cnt; ii++)
+    ww[ii] = Vector3d(0,vv[ii][0],vv[ii][1])*mm;
 
   return ww;
+}
+
+static const char* lineEndName_[] = {
+  "none", "arrow", "openarrow", "chevron", "circle", "opencircle",
+  "box", "openbox", "triangle", "opentriangle", "bar"
+};
+
+Marker::LineEnd Marker::validLineEnd(int ss)
+{
+  if (ss >= NOEND && ss <= BAR)
+    return (LineEnd)ss;
+
+  // historically, any non zero value was an arrow
+  return ss ? ARROW : NOEND;
+}
+
+const char* Marker::lineEndName(int ss)
+{
+  return lineEndName_[validLineEnd(ss)];
+}
+
+const char* Marker::lineEndListStr(int ss)
+{
+  // keep 0/1 so older readers still understand none/arrow
+  switch (validLineEnd(ss)) {
+  case NOEND:
+    return "0";
+  case ARROW:
+    return "1";
+  default:
+    return lineEndName(ss);
+  }
+}
+
+int Marker::lineEndFromName(const char* str)
+{
+  for (int ii=NOEND; ii<=BAR; ii++)
+    if (!strncmp(str, lineEndName_[ii], 32))
+      return ii;
+
+  return -1;
 }
 
 void Marker::analysisXYEEResult(char* xname, char* yname, 

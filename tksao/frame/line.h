@@ -9,8 +9,8 @@
 
 class Line : public BaseLine {
 protected:
-  int p1Arrow;
-  int p2Arrow;
+  LineEnd p1Arrow;
+  LineEnd p2Arrow;
 
 protected:
   void renderX(Drawable, Coord::InternalSystem, RenderMode);
@@ -20,6 +20,7 @@ protected:
 #endif
 
   void updateHandles();
+  void calcAllBBox();
 
 public:
   Line(Base* p, const Vector& ptr1, const Vector& ptr2);
@@ -35,8 +36,8 @@ public:
   virtual Marker* dup() {return new Line(*this);}
 
   void setArrows(int,int);
-  int getP1Arrow() {return p1Arrow;}
-  int getP2Arrow() {return p2Arrow;}
+  LineEnd getP1Arrow() {return p1Arrow;}
+  LineEnd getP2Arrow() {return p2Arrow;}
 
   void analysis(AnalysisTask, int);
   void analysisPlot2d(char*, char*, char*, char*, 

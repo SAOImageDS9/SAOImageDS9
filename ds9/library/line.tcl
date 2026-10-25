@@ -15,9 +15,9 @@ proc LineDialog {varname} {
     }
 
     # variables
-    set arrows [$var(frame) get marker $var(id) line arrow]
-    set var(p1arrow) [lindex $arrows 0]
-    set var(p2arrow) [lindex $arrows 1]
+    set ends [$var(frame) get marker $var(id) line end]
+    set var(p1arrow) [lindex $ends 0]
+    set var(p2arrow) [lindex $ends 1]
 
     # procs
     set var(which) line
@@ -41,12 +41,10 @@ proc LineDialog {varname} {
 
     set f $var(top).param
 
-    # Arrows
-    ttk::label $f.tarrow -text [msgcat::mc {Arrow}]
-    ttk::checkbutton $f.p1arrow -variable ${varname}(p1arrow) \
-	-text [msgcat::mc {Left}] -command "LineArrow $varname"
-    ttk::checkbutton $f.p2arrow -variable ${varname}(p2arrow) \
-	-text [msgcat::mc {Right}] -command "LineArrow $varname"
+    # Line Ends
+    ttk::label $f.tarrow -text [msgcat::mc {Ends}]
+    MarkerBaseLineEndButton $f.p1arrow $varname p1arrow LineArrow
+    MarkerBaseLineEndButton $f.p2arrow $varname p2arrow LineArrow
 
     grid $f.tarrow $f.p1arrow $f.p2arrow -padx 2 -pady 2 -sticky w
 }
@@ -69,7 +67,7 @@ proc LineArrow {varname} {
     upvar #0 $varname var
     global $varname
 
-    $var(frame) marker $var(id) line arrow $var(p1arrow) $var(p2arrow)
+    $var(frame) marker $var(id) line end $var(p1arrow) $var(p2arrow)
 }
 
 # callbacks

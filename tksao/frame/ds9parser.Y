@@ -162,6 +162,7 @@ static Coord::SkyFrame checkWCSSky();
 %type <integer> property
 %type <integer> callBack
 %type <integer> pointShape
+%type <integer> lineEnd
 %type <integer> numberof
 
 %token <integer> INT
@@ -187,12 +188,14 @@ static Coord::SkyFrame checkWCSSky();
 %token ARCSEC_
 %token ARROW_
 %token B1950_
+%token BAR_
 %token BACKGROUND_
 %token BEGIN_
 %token BOX_
 %token BOXCIRCLE_
 %token BPANDA_
 %token CALLBACK_
+%token CHEVRON_
 %token CIRCLE_
 %token CIRCLE3D_
 %token COLOR_
@@ -234,8 +237,13 @@ static Coord::SkyFrame checkWCSSky();
 %token MOVE_
 %token N_
 %token NO_
+%token NONE_
 %token OFF_
 %token ON_
+%token OPENARROW_
+%token OPENBOX_
+%token OPENCIRCLE_
+%token OPENTRIANGLE_
 %token PHYSICAL_
 %token PIE_
 %token PIXELS_
@@ -254,6 +262,7 @@ static Coord::SkyFrame checkWCSSky();
 %token TEXTANGLE_
 %token TEXTROTATE_
 %token TILE_
+%token TRIANGLE_
 %token TRUE_
 %token VECTOR_
 %token VERSION_
@@ -682,19 +691,19 @@ globalProperty : property '=' yesno
 	  globalPoint = localPoint = $3;
 	  globalPointSize = localPointSize = $4;
 	}
-	| LINE_ '=' INT INT 
+	| LINE_ '=' lineEnd lineEnd
 	{
 	  globalLine1 = localLine1 = $3;
 	  globalLine2 = localLine2 = $4;
 	}
-	| VECTOR_ '=' INT {globalVector = localVector = $3;}
+	| VECTOR_ '=' lineEnd {globalVector = localVector = $3;}
 	| COMPOSITE_ '=' INT
 	{
 	  globalComposite = localComposite = $3;
 	}
 	| RULER_ '=' globalRuler {}
         | FORMAT_ '=' STRING {strncpy(globalRulerDistSpec,$3,32);}
-	| COMPASS_ '=' globalCompass STRING STRING INT INT
+	| COMPASS_ '=' globalCompass STRING STRING lineEnd lineEnd
 	{
 	  strncpy(globalCompassNorth,$4,80);
 	  strncpy(globalCompassEast,$5,80);
@@ -865,12 +874,12 @@ localProperty : property '=' yesno {setProps(&localProps,$1,$3);}
 
 	| POINT_ '=' pointShape {localPoint = $3;}
 	| POINT_ '=' pointShape INT {localPoint = $3; localPointSize = $4;}
-	| LINE_ '=' INT INT {localLine1=$3; localLine2=$4;}
-	| VECTOR_ '=' INT {localVector=$3;}
+	| LINE_ '=' lineEnd lineEnd {localLine1=$3; localLine2=$4;}
+	| VECTOR_ '=' lineEnd {localVector=$3;}
 	| COMPOSITE_ '=' INT {localComposite=$3;}
 	| RULER_ '=' localRuler
         | FORMAT_ '=' STRING {strncpy(localRulerDistSpec,$3,32);}
-	| COMPASS_ '=' localCompass STRING STRING INT INT
+	| COMPASS_ '=' localCompass STRING STRING lineEnd lineEnd
 	{
 	  strncpy(localCompassNorth,$4,80);
 	  strncpy(localCompassEast,$5,80);
@@ -1048,6 +1057,21 @@ pointShape : CIRCLE_ {$$ = Point::CIRCLE;}
 	| X_ {$$ = Point::EX;}
 	| ARROW_ {$$ = Point::ARROW;}
 	| BOXCIRCLE_ {$$ = Point::BOXCIRCLE;}
+	;
+
+// a bare INT is the original syntax, any non zero value is an arrow
+lineEnd : INT {$$ = $1 ? Marker::ARROW : Marker::NOEND;}
+	| NONE_ {$$ = Marker::NOEND;}
+	| ARROW_ {$$ = Marker::ARROW;}
+	| OPENARROW_ {$$ = Marker::OPENARROW;}
+	| CHEVRON_ {$$ = Marker::CHEVRON;}
+	| CIRCLE_ {$$ = Marker::CIRCLE;}
+	| OPENCIRCLE_ {$$ = Marker::OPENCIRCLE;}
+	| BOX_ {$$ = Marker::BOX;}
+	| OPENBOX_ {$$ = Marker::OPENBOX;}
+	| TRIANGLE_ {$$ = Marker::TRIANGLE;}
+	| OPENTRIANGLE_ {$$ = Marker::OPENTRIANGLE;}
+	| BAR_ {$$ = Marker::BAR;}
 	;
 
 include	: '+' {setProps(&localProps, Marker::INCLUDE, 1);}

@@ -15,7 +15,7 @@ proc CompassDialog {varname} {
     }
 
     # variables
-    set arrows [$var(frame) get marker $var(id) compass arrow]
+    set arrows [$var(frame) get marker $var(id) compass end]
     set var(narrow) [lindex $arrows 0]
     set var(earrow) [lindex $arrows 1]
 
@@ -42,12 +42,10 @@ proc CompassDialog {varname} {
     # Labels
     ttk::label $f.ntitle -text [msgcat::mc {North}]
     ttk::entry $f.north -textvariable ${varname}(north) -width 13
-    ttk::checkbutton $f.narrow -variable ${varname}(narrow) \
-	-text [msgcat::mc {Arrow}] -command "CompassArrow $varname"
+    MarkerBaseLineEndButton $f.narrow $varname narrow CompassArrow
     ttk::label $f.etitle -text [msgcat::mc {East}]
     ttk::entry $f.east -textvariable ${varname}(east) -width 13
-    ttk::checkbutton $f.earrow -variable ${varname}(earrow) \
-	-text [msgcat::mc {Arrow}] -command "CompassArrow $varname"
+    MarkerBaseLineEndButton $f.earrow $varname earrow CompassArrow
 
     grid $f.ntitle $f.north $f.narrow -padx 2 -pady 2 -sticky w
     grid $f.etitle $f.east $f.earrow -padx 2 -pady 2 -sticky w
@@ -75,7 +73,7 @@ proc CompassArrow {varname} {
     upvar #0 $varname var
     global $varname
 
-    $var(frame) marker $var(id) compass arrow $var(narrow) $var(earrow)
+    $var(frame) marker $var(id) compass end $var(narrow) $var(earrow)
 }
 
 # callbacks

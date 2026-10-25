@@ -55,6 +55,7 @@ azimuth         {return AZIMUTH_;}
 b1950		{return B1950_;}
 back		{return BACK_;}
 background	{return BACKGROUND_;}
+bar		{return BAR_;}
 base		{return BASE_;}
 bbox		{return BBOX_;}
 begin		{return BEGIN_;}
@@ -81,6 +82,7 @@ celestial	{return CELESTIAL_;}
 center		{return CENTER_;}
 centroid	{return CENTROID_;}
 channel		{return CHANNEL_;}
+chevron		{return CHEVRON_;}
 ciao		{return CIAO_;}
 circle		{return CIRCLE_;}
 clear		{return CLEAR_;}
@@ -260,6 +262,10 @@ object		{return OBJECT_;}
 off		{return OFF_;}
 on		{return ON_;}
 only		{return ONLY_;}
+openarrow	{return OPENARROW_;}
+openbox		{return OPENBOX_;}
+opencircle	{return OPENCIRCLE_;}
+opentriangle	{return OPENTRIANGLE_;}
 option		{return OPTION_;}
 orient		{return ORIENT_;}
 overlay		{return OVERLAY_;}
@@ -351,6 +357,7 @@ threshold	{return THRESHOLD_;}
 thick		{return THICK_;}
 top		{return TOP_;}
 transparency	{return TRANSPARENCY_;}
+triangle	{return TRIANGLE_;}
 to		{return TO_;}
 toggle		{return TOGGLE_;}
 tophat		{return TOPHAT_;}

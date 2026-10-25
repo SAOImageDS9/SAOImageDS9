@@ -92,3 +92,47 @@ proc MarkerBaseLineEditCB {varname {dummy {}}} {
     set var(x2) [lindex $p 2]
     set var(y2) [lindex $p 3]
 }
+
+# Line ends, shared by line, vector and compass
+
+proc MarkerBaseLineEndList {} {
+    return [list \
+		none [msgcat::mc {None}] \
+		arrow [msgcat::mc {Arrow}] \
+		openarrow [msgcat::mc {Open Arrow}] \
+		chevron [msgcat::mc {Chevron}] \
+		circle [msgcat::mc {Circle}] \
+		opencircle [msgcat::mc {Open Circle}] \
+		box [msgcat::mc {Box}] \
+		openbox [msgcat::mc {Open Box}] \
+		triangle [msgcat::mc {Triangle}] \
+		opentriangle [msgcat::mc {Open Triangle}] \
+		bar [msgcat::mc {Bar}] \
+	       ]
+}
+
+proc MarkerBaseLineEndButton {w varname which cmd} {
+    upvar #0 $varname var
+    global $varname
+
+    ttk::menubutton $w -textvariable ${varname}($which,msg) -menu $w.menu
+    ThemeMenu $w.menu
+    foreach {vv msg} [MarkerBaseLineEndList] {
+	$w.menu add radiobutton -label $msg \
+	    -variable ${varname}($which) -value $vv \
+	    -command [list MarkerBaseLineEndMenu $varname $which $cmd]
+    }
+    MarkerBaseLineEndMsg $varname $which
+}
+
+proc MarkerBaseLineEndMenu {varname which cmd} {
+    MarkerBaseLineEndMsg $varname $which
+    $cmd $varname
+}
+
+proc MarkerBaseLineEndMsg {varname which} {
+    upvar #0 $varname var
+    global $varname
+
+    set var($which,msg) [dict get [MarkerBaseLineEndList] $var($which)]
+}

@@ -345,8 +345,12 @@ void Marker::renderXLineEnd(Drawable drawable, const Vector& p1,
     break;
   }
 
-  // outlines are always solid, even on a dashed marker
-  renderXLineNoDash(lgc);
+  // outlines are always solid, even on a dashed marker, and use round
+  // joins: miter joins turn the sharp corners into long spikes on wide
+  // lines, and X11 bevels some corners instead (below 11 degrees), so
+  // the shape can come out lopsided
+  int ww = (highlited && canHighlite()) ? lineWidth*2 : lineWidth;
+  XSetLineAttributes(display, lgc, ww, LineSolid, CapButt, JoinRound);
   XDrawLines(display, drawable, lgc, dd, cnt, CoordModeOrigin);
   renderXGC(mode);
 }
@@ -484,11 +488,13 @@ void Marker::renderPSLineEnd(PSColorSpace mode, const Vector& p1,
     break;
   }
 
-  // outlines are always solid, even on a dashed marker
+  // outlines are always solid, even on a dashed marker, with round joins
   if (!filled)
     renderPSLineNoDash();
 
   ostringstream str;
+  if (!filled)
+    str << "1 setlinejoin" << endl;
   str << "newpath " << endl
       << parent->TkCanvasPs(vv[0]) << " moveto" << endl;
   for (int ii=1; ii<cnt; ii++)
@@ -496,9 +502,11 @@ void Marker::renderPSLineEnd(PSColorSpace mode, const Vector& p1,
   if (filled)
     str << "closepath fill" << endl << ends;
   else if (closed)
-    str << "closepath stroke" << endl << ends;
+    str << "closepath stroke" << endl
+	<< "0 setlinejoin" << endl << ends;
   else
-    str << "stroke" << endl << ends;
+    str << "stroke" << endl
+	<< "0 setlinejoin" << endl << ends;
   Tcl_AppendResult(parent->interp, (char*)str.str().c_str(), NULL);
   delete [] vv;
 

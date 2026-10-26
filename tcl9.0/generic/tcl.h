@@ -52,10 +52,10 @@ extern "C" {
 #if TCL_MAJOR_VERSION == 9
 #   define TCL_MINOR_VERSION	0
 #   define TCL_RELEASE_LEVEL	TCL_FINAL_RELEASE
-#   define TCL_RELEASE_SERIAL	3
+#   define TCL_RELEASE_SERIAL	4
 
 #   define TCL_VERSION		"9.0"
-#   define TCL_PATCH_LEVEL	"9.0.3"
+#   define TCL_PATCH_LEVEL	"9.0.4"
 #endif /* TCL_MAJOR_VERSION */
 
 #if defined(RC_INVOKED)
@@ -323,14 +323,11 @@ typedef unsigned TCL_WIDE_INT_TYPE	Tcl_WideUInt;
 
 #if TCL_MAJOR_VERSION < 9
 # ifndef Tcl_Size
-    typedef int Tcl_Size;
+#   define Tcl_Size int
+#   define Tcl_ObjCmdProc2 Tcl_ObjCmdProc
+#   define Tcl_CmdObjTraceProc2 Tcl_CmdObjTraceProc
+#   define _TCLSIZEHANDLED
 # endif
-# ifndef TCL_SIZE_MAX
-#   define TCL_SIZE_MAX ((int)(((unsigned int)-1)>>1))
-# endif
-# ifndef TCL_SIZE_MODIFIER
-#   define TCL_SIZE_MODIFIER ""
-#endif
 #else
     typedef ptrdiff_t Tcl_Size;
 #   define TCL_SIZE_MAX ((Tcl_Size)(((size_t)-1)>>1))
@@ -601,8 +598,6 @@ typedef void (Tcl_FreeProc) (void *blockPtr);
 #define Tcl_FileFreeProc Tcl_FreeProc
 #define Tcl_EncodingFreeProc Tcl_FreeProc
 #else
-#define Tcl_ObjCmdProc2 Tcl_ObjCmdProc
-#define Tcl_CmdObjTraceProc2 Tcl_CmdObjTraceProc
 typedef void (Tcl_FreeProc) (char *blockPtr);
 #endif
 typedef int (Tcl_LibraryInitProc) (Tcl_Interp *interp);
@@ -627,6 +622,7 @@ typedef void (Tcl_FinalizeNotifierProc) (void *clientData);
 typedef void (Tcl_MainLoopProc) (void);
 
 /* Abstract List functions */
+#if TCL_MAJOR_VERSION > 8
 typedef Tcl_Size (Tcl_ObjTypeLengthProc) (struct Tcl_Obj *listPtr);
 typedef int (Tcl_ObjTypeIndexProc) (Tcl_Interp *interp, struct Tcl_Obj *listPtr,
 	Tcl_Size index, struct Tcl_Obj** elemObj);
@@ -644,6 +640,7 @@ typedef int (Tcl_ObjTypeReplaceProc) (Tcl_Interp *interp,
 	Tcl_Size numToInsert, struct Tcl_Obj *const insertObjs[]);
 typedef int (Tcl_ObjTypeInOperatorProc) (Tcl_Interp *interp,
 	struct Tcl_Obj *valueObj, struct Tcl_Obj *listObj, int *boolResult);
+#endif
 
 #ifndef TCL_NO_DEPRECATED
 #   define Tcl_PackageInitProc Tcl_LibraryInitProc
@@ -707,10 +704,6 @@ typedef struct Tcl_ObjType {
 	   a,0,0,0,0,0,0,0	/* Tcl 9 Version 1 */
 #   define TCL_OBJTYPE_V2(a,b,c,d,e,f,g,h) sizeof(Tcl_ObjType),  \
 	   a,b,c,d,e,f,g,h	/* Tcl 9 - AbstractLists */
-#else
-#   define TCL_OBJTYPE_V0 /* just empty */
-#   define TCL_OBJTYPE_V1(a) /* just empty */
-#   define TCL_OBJTYPE_V2(a,b,c,d,e,f,g,h) /* just empty */
 #endif
 
 /*
@@ -734,10 +727,12 @@ typedef union Tcl_ObjInternalRep {	/* The internal representation: */
 	void *ptr;		/*     not used internally any more. */
 	unsigned long value;
     } ptrAndLongRep;
+#if TCL_MAJOR_VERSION > 8
     struct {			/*   - use for pointer and length reps */
 	void *ptr;
 	Tcl_Size size;
     } ptrAndSize;
+#endif
 } Tcl_ObjInternalRep;
 
 /*
@@ -868,8 +863,10 @@ typedef struct {
 				 * change a command's namespace; use
 				 * TclRenameCommand or Tcl_Eval (of 'rename')
 				 * to do that. */
+#if TCL_MAJOR_VERSION > 8
     Tcl_ObjCmdProc2 *objProc2;	/* Command's object2-based function. */
     void *objClientData2;	/* ClientData for object2 proc. */
+#endif
 } Tcl_CmdInfo;
 
 /*
@@ -2289,9 +2286,11 @@ typedef Tcl_Size (Tcl_ArgvGenFuncProc)(void *clientData, Tcl_Interp *interp,
  * Constants for special Tcl_Size-typed values, see TIP #494
  */
 
+#if TCL_MAJOR_VERSION > 8
 #define TCL_IO_FAILURE	((Tcl_Size)-1)
 #define TCL_AUTO_LENGTH	((Tcl_Size)-1)
 #define TCL_INDEX_NONE  ((Tcl_Size)-1)
+#endif
 
 /*
  *----------------------------------------------------------------------------
@@ -2611,6 +2610,13 @@ TclBounceRefCount(
 	(*((tablePtr)->createProc))(tablePtr, (const char *)(key), newPtr)
 
 #endif /* RC_INVOKED */
+
+#ifdef _TCLSIZEHANDLED
+#   undef _TCLSIZEHANDLED
+#   undef Tcl_CmdObjTraceProc2
+#   undef Tcl_ObjCmdProc2
+#   undef Tcl_Size
+#endif
 
 /*
  * end block for C++

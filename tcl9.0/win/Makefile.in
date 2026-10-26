@@ -100,7 +100,7 @@ COMPILE_DEBUG_FLAGS =
 
 SRC_DIR			= @srcdir@
 ROOT_DIR		= @srcdir@/..
-TOP_DIR			= $(shell cd @srcdir@/..; pwd -W 2>/dev/null || pwd -P)
+TOP_DIR			= $(shell cd '@srcdir@/..'; pwd -W 2>/dev/null || pwd -P)
 BUILD_DIR		= @builddir@
 GENERIC_DIR		= $(TOP_DIR)/generic
 WIN_DIR			= $(TOP_DIR)/win
@@ -561,7 +561,7 @@ ${TCL_ZIP_FILE}:  ${ZIP_INSTALL_OBJS} ${DDE_DLL_FILE} ${REG_DLL_FILE}
 	)
 	(zip=`(realpath '${NATIVE_ZIP}' || readlink -m '${NATIVE_ZIP}') 2>/dev/null || \
 	  (echo '${NATIVE_ZIP}' | sed "s?^\./?$$(pwd)/?")`; \
-	  cd ${TCL_VFS_ROOT} && \
+	  cd '${TCL_VFS_ROOT}' && \
 	  $$zip ${ZIP_PROG_OPTIONS} ../${TCL_ZIP_FILE} ${ZIP_PROG_VFSSEARCH} >/dev/null && \
 	  echo "${TCL_ZIP_FILE} successful created with $$zip" && \
 	  cd ..)
@@ -726,13 +726,18 @@ tclPkgConfig.${OBJEXT}: tclPkgConfig.c
 		-DBUILD_tcl \
 		@DEPARG@ $(CC_OBJNAME)
 
+# tclDate.h dependencies:
+tclClock.${OBJEXT}: tclClock.c tclDate.h
+tclClockFmt.${OBJEXT}: tclClockFmt.c tclDate.h
+tclDate.${OBJEXT}: tclDate.c tclDate.h
+
 tclEvent.${OBJEXT}: tclEvent.c tclUuid.h
 
 tclTest.${OBJEXT}: tclTest.c tclUuid.h
 
 $(TOP_DIR)/manifest.uuid:
 	printf "git-" >$(TOP_DIR)/manifest.uuid
-	(cd $(TOP_DIR); git rev-parse HEAD >>$(TOP_DIR)/manifest.uuid || \
+	(cd '$(TOP_DIR)'; git rev-parse HEAD >>$(TOP_DIR)/manifest.uuid || \
 	    (printf "svn-r" >$(TOP_DIR)/manifest.uuid ; \
 	    svn info --show-item last-changed-revision >>$(TOP_DIR)/manifest.uuid) || \
 	    printf "unknown" >$(TOP_DIR)/manifest.uuid)
@@ -790,7 +795,8 @@ deflate.$(HOST_OBJEXT):
 	$(HOST_CC) -o $@ -I$(ZLIB_DIR) -c $(ZLIB_DIR)/deflate.c
 
 ioapi.$(HOST_OBJEXT):
-	$(HOST_CC) -o $@ -I$(ZLIB_DIR) -I$(ZLIB_DIR)/contrib/minizip -c $(ZLIB_DIR)/contrib/minizip/ioapi.c
+	$(HOST_CC) -o $@ -DMINIZIP_FOPEN_NO_64=1 -I$(ZLIB_DIR) -I$(ZLIB_DIR)/contrib/minizip -c \
+		$(ZLIB_DIR)/contrib/minizip/ioapi.c
 
 iowin32.$(HOST_OBJEXT):
 	$(HOST_CC) -o $@ -I$(ZLIB_DIR) -I$(ZLIB_DIR)/contrib/minizip -c $(ZLIB_DIR)/contrib/minizip/iowin32.c
@@ -820,7 +826,8 @@ zutil.$(HOST_OBJEXT):
 	$(HOST_CC) -o $@ -I$(ZLIB_DIR) -c $(ZLIB_DIR)/zutil.c
 
 minizip.$(HOST_OBJEXT):
-	$(HOST_CC) -o $@ -I$(ZLIB_DIR) -I$(ZLIB_DIR)/contrib/minizip -c $(ZLIB_DIR)/contrib/minizip/minizip.c
+	$(HOST_CC) -o $@ -DMINIZIP_FOPEN_NO_64=1 -DHAVE_DIRENT_H=1 -I$(ZLIB_DIR) -I$(ZLIB_DIR)/contrib/minizip -c \
+		$(ZLIB_DIR)/contrib/minizip/minizip.c
 
 minizip${HOST_EXEEXT}: $(MINIZIP_OBJS)
 	$(HOST_CC) -o $@ $(MINIZIP_OBJS)
@@ -946,16 +953,16 @@ install-libraries: libraries install-tzdata install-msgs
 		  $(ROOT_DIR)/library/cookiejar/*.gz; do \
 	    $(COPY) "$$j" "$(SCRIPT_INSTALL_DIR)/cookiejar0.2"; \
 	    done;
-	@echo "Installing package http 2.10.1 as a Tcl Module";
-	@$(COPY) $(ROOT_DIR)/library/http/http.tcl "$(MODULE_INSTALL_DIR)/9.0/http-2.10.1.tm";
+	@echo "Installing package http 2.10.2 as a Tcl Module";
+	@$(COPY) $(ROOT_DIR)/library/http/http.tcl "$(MODULE_INSTALL_DIR)/9.0/http-2.10.2.tm";
 	@echo "Installing package opt 0.4.10";
 	@for j in $(ROOT_DIR)/library/opt/*.tcl; do \
 	    $(COPY) "$$j" "$(SCRIPT_INSTALL_DIR)/opt0.4"; \
 	    done;
 	@echo "Installing package msgcat 1.7.1 as a Tcl Module";
 	@$(COPY) $(ROOT_DIR)/library/msgcat/msgcat.tcl "$(MODULE_INSTALL_DIR)/9.0/msgcat-1.7.1.tm";
-	@echo "Installing package tcltest 2.5.10 as a Tcl Module";
-	@$(COPY) $(ROOT_DIR)/library/tcltest/tcltest.tcl "$(MODULE_INSTALL_DIR)/9.0/tcltest-2.5.10.tm";
+	@echo "Installing package tcltest 2.5.11 as a Tcl Module";
+	@$(COPY) $(ROOT_DIR)/library/tcltest/tcltest.tcl "$(MODULE_INSTALL_DIR)/9.0/tcltest-2.5.11.tm";
 	@echo "Installing package platform 1.1.0 as a Tcl Module";
 	@$(COPY) $(ROOT_DIR)/library/platform/platform.tcl "$(MODULE_INSTALL_DIR)/9.0/platform-1.1.0.tm";
 	@echo "Installing package platform::shell 1.1.4 as a Tcl Module";
@@ -996,7 +1003,7 @@ install-doc: doc
 	@for i in $(TOP_DIR)/doc/*.n; do \
 	    $(SHELL) $(UNIX_DIR)/installManPage $(MAN_FLAGS) $$i "$(MANN_INSTALL_DIR)"; \
 	done
- 
+
 install-headers:
 	@for i in "$(INCLUDE_INSTALL_DIR)"; \
 	    do \
@@ -1008,14 +1015,13 @@ install-headers:
 		fi; \
 	    done;
 	@echo "Installing header files to $(INCLUDE_INSTALL_DIR)/";
-	@for i in $(GENERIC_DIR)/tcl.h $(GENERIC_DIR)/tclDecls.h \
-		$(GENERIC_DIR)/tclOO.h $(GENERIC_DIR)/tclOODecls.h \
-		$(GENERIC_DIR)/tclPlatDecls.h \
-		$(GENERIC_DIR)/tclTomMath.h \
-		$(GENERIC_DIR)/tclTomMathDecls.h \
-		$(TOMMATH_DIR)/tommath.h ; \
+	@for i in "$(GENERIC_DIR)/tcl.h" "$(GENERIC_DIR)/tclDecls.h" \
+		"$(GENERIC_DIR)/tclOO.h" "$(GENERIC_DIR)/tclOODecls.h" \
+		"$(GENERIC_DIR)/tclPlatDecls.h" \
+		"$(GENERIC_DIR)/tclTomMath.h" \
+		"$(GENERIC_DIR)/tclTomMathDecls.h"; \
 	    do \
-	    $(COPY) $$i "$(INCLUDE_INSTALL_DIR)"; \
+	    $(COPY) "$$i" "$(INCLUDE_INSTALL_DIR)"; \
 	    done;
 
 # Optional target to install private headers
@@ -1051,7 +1057,7 @@ test-tcl: tcltest
 # Useful target to launch a built tclsh with the proper path,...
 runtest: tcltest
 	@TCL_LIBRARY="$(LIBRARY_DIR)"; export TCL_LIBRARY; \
-	$(WINE) ./$(TCLSH) $(TESTFLAGS) -load "$(TEST_LOAD_FACILITIES)" $(SCRIPT)
+	$(WINE) ./$(TCLSH) $(SCRIPT) $(TESTFLAGS) -load "$(TEST_LOAD_FACILITIES)"
 
 # This target can be used to run tclsh from the build directory via
 # `make shell SCRIPT=foo.tcl`
@@ -1103,75 +1109,73 @@ distclean: distclean-packages clean
 PKG_DIR			= ./pkgs
 
 packages:
-	@builddir=`$(CYGPATH) $$(pwd -P)`; \
-	for i in $(PKGS_DIR)/*; do \
-	  if [ -d $$i ] ; then \
+	@builddir="`$(CYGPATH) "$$(pwd -P)"`"; \
+	for i in '$(PKGS_DIR)'/*/; do \
 	    if [ -x $$i/configure ] ; then \
 	      pkg=`basename $$i`; \
-	      mkdir -p $(PKG_DIR)/$$pkg; \
-	      if [ ! -f $(PKG_DIR)/$$pkg/Makefile ]; then \
-		( cd $(PKG_DIR)/$$pkg; \
+	      mkdir -p '$(PKG_DIR)'/$$pkg; \
+	      if [ ! -f '$(PKG_DIR)'/$$pkg/Makefile ]; then \
+		( cd '$(PKG_DIR)'/$$pkg; \
 		  echo "Configuring package '$$i' wd = `$(CYGPATH) $$(pwd -P)`"; \
 		  $$i/configure --with-tcl=$$builddir --with-tclinclude=$(GENERIC_DIR_NATIVE) $(PKG_CFG_ARGS) --enable-shared; ) \
 	      fi ; \
 	      echo "Building package '$$pkg'"; \
-	      ( cd $(PKG_DIR)/$$pkg; $(MAKE); ) \
+	      ( cd '$(PKG_DIR)'/$$pkg; $(MAKE); ) \
 	    fi; \
-	  fi; \
 	done; \
-	cd $$builddir
+	cd "$$builddir"
 
 install-packages: packages
 	@builddir=`pwd -P`; \
-	for i in $(PKGS_DIR)/*; do \
+	for i in '$(PKGS_DIR)'/*; do \
 	  if [ -d $$i ]; then \
 	    pkg=`basename $$i`; \
-	    if [ -f $(PKG_DIR)/$$pkg/Makefile ]; then \
+	    if [ -f '$(PKG_DIR)'/$$pkg/Makefile ]; then \
 		echo "Installing package '$$pkg'"; \
-		( cd $(PKG_DIR)/$$pkg; $(MAKE) install "DESTDIR=$(INSTALL_ROOT)"; ) \
+		( cd '$(PKG_DIR)'/$$pkg; $(MAKE) install "DESTDIR=$(INSTALL_ROOT)"; ) \
 	    fi; \
 	  fi; \
 	done; \
-	cd $$builddir
+	cd "$$builddir"
 
 test-packages: tcltest packages
 	@builddir=`pwd -P`; \
 	for i in $(PKGS_DIR)/*; do \
 	  if [ -d $$i ]; then \
 	    pkg=`basename $$i`; \
-	    if [ -f $(PKG_DIR)/$$pkg/Makefile ]; then \
+	    if [ -f '$(PKG_DIR)'/$$pkg/Makefile ]; then \
 		echo "Testing package '$$pkg'"; \
-		( cd $(PKG_DIR)/$$pkg; $(MAKE) "LD_LIBRARY_PATH=$$builddir:${LD_LIBRARY_PATH}" "TCL_LIBRARY=${TCL_BUILDTIME_LIBRARY}" "TCLLIBPATH=$$builddir/pkgs" test "TCLSH_PROG=$$builddir/${TCLSH}"; ) \
+		( cd '$(PKG_DIR)'/$$pkg; $(MAKE) "LD_LIBRARY_PATH=$$builddir:${LD_LIBRARY_PATH}" "TCL_LIBRARY=${TCL_BUILDTIME_LIBRARY}" "TCLLIBPATH=$$builddir/pkgs" test "TCLSH_PROG=$$builddir/${TCLSH}"; ) \
 	    fi; \
 	  fi; \
 	done; \
-	cd $$builddir
+	cd "$$builddir"
 
 clean-packages:
 	@builddir=`pwd -P`; \
-	for i in $(PKGS_DIR)/*; do \
+	for i in '$(PKGS_DIR)'/*; do \
 	  if [ -d $$i ]; then \
 	    pkg=`basename $$i`; \
-	    if [ -f $(PKG_DIR)/$$pkg/Makefile ]; then \
-		( cd $(PKG_DIR)/$$pkg; $(MAKE) clean; ) \
+	    if [ -f '$(PKG_DIR)'/$$pkg/Makefile ]; then \
+		( cd '$(PKG_DIR)'/$$pkg; $(MAKE) clean; ) \
 	    fi; \
 	  fi; \
 	done; \
-	cd $$builddir
+	cd "$$builddir"
 
 distclean-packages:
 	@builddir=`pwd -P`; \
 	for i in $(PKGS_DIR)/*; do \
 	  if [ -d $$i ]; then \
 	    pkg=`basename $$i`; \
-	    if [ -f $(PKG_DIR)/$$pkg/Makefile ]; then \
-		( cd $(PKG_DIR)/$$pkg; $(MAKE) distclean; ) \
+	    if [ -f '$(PKG_DIR)'/$$pkg/Makefile ]; then \
+		( cd '$(PKG_DIR)'/$$pkg; $(MAKE) distclean; ) \
 	    fi; \
 	    cd $$builddir; \
-	    rm -rf $(PKG_DIR)/$$pkg; \
+	    rm -rf '$(PKG_DIR)'/$$pkg; \
 	  fi; \
 	done; \
-	rm -rf $(PKG_DIR)
+	rm -rf '$(PKG_DIR)'
 
 #
 # Regenerate the stubs files.

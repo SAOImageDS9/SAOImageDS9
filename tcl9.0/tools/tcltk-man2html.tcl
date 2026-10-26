@@ -185,7 +185,6 @@ proc parse_command_line {} {
 	puts "using Tcl source directory [file join $tcltkdir $tcldir]"
     }
 
-
     if {$build_tk} {
 	# Find Tk (firstly using glob pattern / backwards compatible way)
 	set tkdir [lindex [lsort [glob -nocomplain -tails -type d \
@@ -786,7 +785,9 @@ try {
 		    if {[string trim $line] eq ""} continue
 		    if {[string match #* $line]} continue
 		    lassign $line dir name
-		    lappend packageDirNameMap $dir $name
+		    dict append packageDirNameMap [string tolower $dir] $name
+		    dict append packageDirNameMap [string toupper $dir] $name
+		    dict append packageDirNameMap [string totitle $dir] $name
 		}
 	    } finally {
 		close $f

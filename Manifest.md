@@ -14,14 +14,14 @@ Last updated 2026-10-26
 | pdf4tcl      | 0.9.4      |       |       | https://sourceforge.net/projects/pdf4tcl/                            | 0.9.4                           |
 | scidthemes   | 1.0        |       |       | https://sourceforge.net/projects/scid/files/Scid/Additional%20Files/ | 1.0                             |
 | taccle       | 1.4        | y     |       | https://github.com/SAOImageDS9/taccle-maintenance                    | previous upstream abandoned     |
-| tcl9.0       | 9.0.3      |       |       | https://github.com/tcltk/tcl                                         | 9.1.0 (9.0.4 on 9.0 branch)     |
+| tcl9.0       | 9.0.4      |       |       | https://github.com/tcltk/tcl                                         | 9.1.0 (9.0.4 on 9.0 branch)     |
 | tclfitsy     |            | y     |       |                                                                      |                                 |
 | tcllib       | 1.2        |       |       | https://github.com/tcltk/tcllib                                      | 2.0                             |
 | tclsignal    | 1.5.0      | y     |       | https://github.com/SAOImageDS9/tclsignal-maintenance                 | 1.5.0                           |
 | tclxml       | 3.2        | y     | y     | https://tclxml.sourceforge.net/tclxml.html                           | forked from 3.2                 |
 | tclxmlrpc    | 1.0        | y     |       |                                                                      |                                 |
 | ~~tclzipfs~~ | ~~1.0.1~~  | ~~y~~ |       | ~~https://github.com/wjoye/tclzipfs~~                                | ~~?not sure if incl. in 9?~~    |
-| tk9.0        | 9.0.3      |       |       | https://github.com/tcltk/tk                                          | 9.1.0 (9.0.4 on 9.0 branch)     |
+| tk9.0        | 9.0.4      |       |       | https://github.com/tcltk/tk                                          | 9.1.0 (9.0.4 on 9.0 branch)     |
 | tkagif       | 1.1        | y     |       | https://github.com/SAOImageDS9/tkagif-maintenance                    | 1.1                             |
 | tkblt        | 3.3        | y     | y     | https://github.com/SAOImageDS9/tkblt-maintenance                     | previous upstream abandoned (1) |
 | tkcon        | 2.8        | y     | y     | https://github.com/SAOImageDS9/tkcon-maintenance                     | previous upstream abandoned     |

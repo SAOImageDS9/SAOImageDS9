@@ -700,7 +700,7 @@ typedef struct TkMainInfo {
 				 * Tcl's version of [update] after Tk is shut
 				 * down, in case it's a Tcl_ObjCmdProc2 */
 #endif
-    unsigned int ttkNbTabsStickBit;
+    unsigned int nbTabPosition, nbTabPlacement;
 				/* Information used by ttk::notebook. */
     int troughInnerX, troughInnerY, troughInnerWidth, troughInnerHeight;
 				/* Information used by ttk::scale. */
@@ -1264,7 +1264,9 @@ MODULE_SCOPE Tcl_Command TkMakeEnsemble(Tcl_Interp *interp,
 			    const char *nsname, const char *name,
 			    void *clientData, const TkEnsemble *map);
 MODULE_SCOPE double	TkScalingLevel(Tk_Window tkwin);
-MODULE_SCOPE int	TkObjIsEmpty(Tcl_Obj *objPtr);
+MODULE_SCOPE int	TkFormatDouble(char *buffer, size_t size,
+			    const char *format, double value);
+MODULE_SCOPE bool	TkObjIsEmpty(Tcl_Obj *objPtr);
 MODULE_SCOPE int	TkInitTkCmd(Tcl_Interp *interp,
 			    void *clientData);
 MODULE_SCOPE int	TkInitFontchooser(Tcl_Interp *interp,
@@ -1319,10 +1321,6 @@ MODULE_SCOPE void	TkpCopyRegion(TkRegion dst, TkRegion src);
 
 #if !defined(__cplusplus) && !defined(c_plusplus)
 # define c_class class
-#endif
-
-#if defined(_WIN32) && !defined(STATIC_BUILD) && (TCL_MAJOR_VERSION < 9) && defined(TCL_MINOR_VERSION)
-#   define tcl_CreateFileHandler reserved9
 #endif
 
 MODULE_SCOPE  void       Icu_Init(Tcl_Interp* interp);

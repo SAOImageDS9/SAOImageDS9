@@ -18,7 +18,6 @@
 #include <wtypes.h>
 #include <shobjidl.h>
 #include <shlguid.h>
-#include <shellapi.h>
 #include "tkWinIco.h"
 /*
  * These next two defines are only valid on Win2K/XP+.
@@ -380,7 +379,7 @@ static void		GetMinSize(WmInfo *wmPtr,
 static TkWindow *	GetTopLevel(HWND hwnd);
 static void		InitWm(void);
 static int		InstallColormaps(HWND hwnd, int message,
-			    int isForemost);
+			    bool isForemost);
 static void		InvalidateSubTree(TkWindow *winPtr, Colormap colormap);
 static void		InvalidateSubTreeDepth(TkWindow *winPtr);
 static int		ParseGeometry(Tcl_Interp *interp, const char *string,
@@ -752,7 +751,7 @@ WinSetIcon(
 	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
 		"window \"%s\" isn't a top-level window", Tk_PathName(tkw)));
 	Tcl_SetErrorCode(interp, "TK", "LOOKUP", "TOPLEVEL", Tk_PathName(tkw),
-		NULL);
+		(char *)NULL);
 	return TCL_ERROR;
     }
     if (Tk_WindowId(tkw) == None) {
@@ -2805,7 +2804,7 @@ Tk_WmObjCmd(
 	Tcl_SetObjResult(interp, Tcl_ObjPrintf(
 		"window \"%s\" isn't a top-level window", winPtr->pathName));
 	Tcl_SetErrorCode(interp, "TK", "LOOKUP", "TOPLEVEL", winPtr->pathName,
-		NULL);
+		(char *)NULL);
 	return TCL_ERROR;
     }
 
@@ -3223,7 +3222,7 @@ WmAttributesCmd(
 			"can't set fullscreen attribute for \"%s\":"
 			" override-redirect flag is set", winPtr->pathName));
 		Tcl_SetErrorCode(interp, "TK", "WM", "ATTR",
-			"OVERRIDE_REDIRECT", NULL);
+			"OVERRIDE_REDIRECT", (char *)NULL);
 		return TCL_ERROR;
 	    }
 
@@ -3409,9 +3408,9 @@ WmColormapwindowsCmd(
      */
 
     if (wmPtr == winPtr->dispPtr->foregroundWmPtr) {
-	InstallColormaps(wmPtr->wrapper, WM_QUERYNEWPALETTE, 1);
+	InstallColormaps(wmPtr->wrapper, WM_QUERYNEWPALETTE, true);
     } else {
-	InstallColormaps(wmPtr->wrapper, WM_PALETTECHANGED, 0);
+	InstallColormaps(wmPtr->wrapper, WM_PALETTECHANGED, false);
     }
     return TCL_OK;
 }
@@ -3620,11 +3619,17 @@ WmForgetCmd(
 {
     Tk_Window frameWin = (Tk_Window) winPtr;
 
-    if (Tk_IsTopLevel(frameWin)) {
+    /*
+     * Tk ticket c77b426d: avoid panic on usage after wm forget
+     */
+
+    if (Tk_IsTopLevel(frameWin) && Tk_IsManageable(frameWin)) {
 	Tk_UnmapWindow(frameWin);
 	winPtr->flags &= ~(TK_TOP_HIERARCHY|TK_TOP_LEVEL|TK_HAS_WRAPPER|TK_WIN_MANAGED);
-	Tk_MakeWindowExist((Tk_Window)winPtr->parentPtr);
-	RemapWindows(winPtr, Tk_GetHWND(winPtr->parentPtr->window));
+	if (winPtr->parentPtr) {
+	    Tk_MakeWindowExist((Tk_Window)winPtr->parentPtr);
+	    RemapWindows(winPtr, Tk_GetHWND(winPtr->parentPtr->window));
+	}
 
 	/*
 	 * Make sure wm no longer manages this window
@@ -4207,7 +4212,7 @@ WmIconifyCmd(
 		"can't iconify \"%s\": override-redirect flag is set",
 		winPtr->pathName));
 	Tcl_SetErrorCode(interp, "TK", "WM", "ICONIFY", "OVERRIDE_REDIRECT",
-		NULL);
+		(char *)NULL);
 	return TCL_ERROR;
     }
     if (wmPtr->containerPtr != NULL) {
@@ -5363,7 +5368,7 @@ WmStateCmd(
 			"can't iconify \"%s\": override-redirect flag is set",
 			winPtr->pathName));
 		Tcl_SetErrorCode(interp, "TK", "WM", "STATE",
-			"OVERRIDE_REDIRECT", NULL);
+			"OVERRIDE_REDIRECT", (char *)NULL);
 		return TCL_ERROR;
 	    }
 	    if (wmPtr->containerPtr != NULL) {
@@ -5371,7 +5376,7 @@ WmStateCmd(
 			"can't iconify \"%s\": it is a transient",
 			winPtr->pathName));
 		Tcl_SetErrorCode(interp, "TK", "WM", "STATE", "TRANSIENT",
-			NULL);
+			(char *)NULL);
 		return TCL_ERROR;
 	    }
 	    TkpWmSetState(winPtr, IconicState);
@@ -6958,9 +6963,9 @@ TkWmAddToColormapWindows(
      */
 
     if (topPtr->wmInfoPtr == winPtr->dispPtr->foregroundWmPtr) {
-	InstallColormaps(topPtr->wmInfoPtr->wrapper, WM_QUERYNEWPALETTE, 1);
+	InstallColormaps(topPtr->wmInfoPtr->wrapper, WM_QUERYNEWPALETTE, true);
     } else {
-	InstallColormaps(topPtr->wmInfoPtr->wrapper, WM_PALETTECHANGED, 0);
+	InstallColormaps(topPtr->wmInfoPtr->wrapper, WM_PALETTECHANGED, false);
     }
 }
 
@@ -7357,7 +7362,7 @@ InstallColormaps(
 				 * should be installed. */
     int message,		/* Either WM_PALETTECHANGED or
 				 * WM_QUERYNEWPALETTE */
-    int isForemost)		/* 1 if window is foremost, else 0 */
+    bool isForemost)		/* true if window is foremost, else false */
 {
     Tcl_Size i;
     HDC dc;
@@ -7938,11 +7943,11 @@ WmProc(
 
     case WM_PALETTECHANGED:
 	result = InstallColormaps(hwnd, WM_PALETTECHANGED,
-		hwnd == (HWND) wParam);
+		hwnd == (HWND)wParam);
 	goto done;
 
     case WM_QUERYNEWPALETTE:
-	result = InstallColormaps(hwnd, WM_QUERYNEWPALETTE, TRUE);
+	result = InstallColormaps(hwnd, WM_QUERYNEWPALETTE, true);
 	goto done;
 
     case WM_SETTINGCHANGE:

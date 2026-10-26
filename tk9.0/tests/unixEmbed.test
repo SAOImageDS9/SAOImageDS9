@@ -5,6 +5,13 @@
 # Copyright © 1998-1999 Scriptics Corporation.
 # All rights reserved.
 
+# NOTES
+#
+# * This test file is specific for the unix platform. This includes macOS.
+#   Tests that are platform-indifferent go into the test file embed.test.
+# * This test file is skipped entirely on non-unix platforms.
+#
+
 #
 # TESTFILE INITIALIZATION
 #
@@ -90,7 +97,7 @@ test unixEmbed-1.5 {Tk_UseWindow procedure, creating Container records} -constra
     childTkProcess eval {
 	destroy {*}[winfo children .]
 	toplevel .t -use $w
-	list [testembed] [expr [lindex [lindex [testembed all] 0] 0] - $w]
+	list [testembed] [expr {[lindex [lindex [testembed all] 0] 0] - $w}]
     }
 } -cleanup {
     deleteWindows
@@ -1042,7 +1049,7 @@ test unixEmbed-7.2a {TkpRedirectKeyEvent procedure, don't forward keystroke widt
 } -result {{} {{key b}}}
 
 test unixEmbed-8.1 {TkpClaimFocus procedure} -constraints {
-    unix notAqua failsOnUbuntu failsOnXQuartz
+    unix notAqua failsOnCILinux failsOnXQuartz
 } -setup {
     deleteWindows
 } -body {

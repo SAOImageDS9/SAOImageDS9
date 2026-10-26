@@ -2750,22 +2750,26 @@ Tcl_FSGetCwd(
 	    TclFSGetCwdProc2 *proc2 = (TclFSGetCwdProc2 *) fsPtr->getCwdProc;
 
 	    retCd = proc2(tsdPtr->cwdClientData);
-	    if (retCd == NULL && interp != NULL) {
-		Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-			"error getting working directory name: %s",
-			Tcl_PosixError(interp)));
+	    if (retCd == NULL) {
+		if (interp != NULL) {
+		    Tcl_SetObjResult(interp,
+			Tcl_ObjPrintf(
+			    "error getting working directory name: %s",
+			    Tcl_PosixError(interp)));
+		}
+		retVal = NULL;
+	    } else {
+		if (retCd == tsdPtr->cwdClientData) {
+		    goto cdDidNotChange;
+		}
+
+		/*
+		 * Looks like a new current directory.
+		 */
+
+		retVal = fsPtr->internalToNormalizedProc(retCd);
+		Tcl_IncrRefCount(retVal);
 	    }
-
-	    if (retCd == tsdPtr->cwdClientData) {
-		goto cdDidNotChange;
-	    }
-
-	    /*
-	     * Looks like a new current directory.
-	     */
-
-	    retVal = fsPtr->internalToNormalizedProc(retCd);
-	    Tcl_IncrRefCount(retVal);
 	}
 
 	if (retVal == NULL) {
@@ -3907,10 +3911,11 @@ TclGetPathType(
     type = TclFSNonnativePathType(path, pathLen, filesystemPtrPtr,
 	    driveNameLengthPtr, driveNameRef);
 
-    if (type != TCL_PATH_ABSOLUTE) {
+    if (type == TCL_PATH_RELATIVE) {
 	type = TclpGetNativePathType(pathPtr, driveNameLengthPtr,
 		driveNameRef);
-	if ((type == TCL_PATH_ABSOLUTE) && (filesystemPtrPtr != NULL)) {
+	/* Bug 1215dca78f - If not relative, need to update owning FS. */
+	if ((type != TCL_PATH_RELATIVE) && (filesystemPtrPtr != NULL)) {
 	    *filesystemPtrPtr = &tclNativeFilesystem;
 	}
     }
@@ -4005,6 +4010,7 @@ TclFSNonnativePathType(
 		    Tcl_Obj *vol;
 		    Tcl_Size len;
 		    const char *strVol;
+		    bool matched = false;
 
 		    numVolumes--;
 		    Tcl_ListObjIndex(NULL, thisFsVolumes, numVolumes, &vol);
@@ -4014,6 +4020,16 @@ TclFSNonnativePathType(
 		    }
 		    if (strncmp(strVol, path, len) == 0) {
 			type = TCL_PATH_ABSOLUTE;
+			matched = true;
+		    } else if (len > 2 && strVol[len - 1] == '/' &&
+			       strVol[len - 2] == ':' &&
+			       strncmp(strVol, path, len - 2) == 0) {
+			matched = true;
+			type = TCL_PATH_VOLUME_RELATIVE;
+			len--;
+			Tcl_SetObjLength(vol, len);
+		    }
+		    if (matched) {
 			if (filesystemPtrPtr != NULL) {
 			    *filesystemPtrPtr = fsRecPtr->fsPtr;
 			}
@@ -4028,7 +4044,7 @@ TclFSNonnativePathType(
 		    }
 		}
 		Tcl_DecrRefCount(thisFsVolumes);
-		if (type == TCL_PATH_ABSOLUTE) {
+		if (type != TCL_PATH_RELATIVE) {
 		    /*
 		     * No need to examine additional filesystems.
 		     */

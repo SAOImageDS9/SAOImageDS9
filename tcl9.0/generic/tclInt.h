@@ -149,7 +149,7 @@
 #if defined(__STDC__) && __STDC__ >= 202311L
 #include <stddef.h>
 #define TCL_UNREACHABLE()	unreachable()
-#elif defined(__GNUC__)
+#elif defined(__GNUC__) && ((__GNUC__ == 4 && __GNUC_MINOR__ >= 5) || __GNUC__ >= 5 || defined(__clang__))
 #define TCL_UNREACHABLE()	__builtin_unreachable()
 #elif defined(_MSC_VER)
 #define TCL_UNREACHABLE()	__assume(0)
@@ -168,6 +168,13 @@
 #define TCL_FALLTHROUGH()	((void) 0)
 #endif
 #endif // TCL_FALLTHROUGH
+
+#if (TCL_MAJOR_VERSION < 9) && !defined(Tcl_Size)
+#   define Tcl_Size int
+#   define Tcl_ObjCmdProc2 Tcl_ObjCmdProc
+#   define Tcl_CmdObjTraceProc2 Tcl_CmdObjTraceProc
+#   define _TCLSIZEHANDLED
+# endif
 
 /*
  * The following procedures allow namespaces to be customized to support
@@ -1077,11 +1084,7 @@ typedef void (ProcErrorProc)(Tcl_Interp *interp, Tcl_Obj *procNameObj);
 typedef struct Trace {
     Tcl_Size level;		/* Only trace commands at nesting level less
 				 * than or equal to this. */
-#if TCL_MAJOR_VERSION > 8
     Tcl_CmdObjTraceProc2 *proc;	/* Procedure to call to trace command. */
-#else
-    Tcl_CmdObjTraceProc *proc;	/* Procedure to call to trace command. */
-#endif
     void *clientData;		/* Arbitrary value to pass to proc. */
     struct Trace *nextPtr;	/* Next in list of traces for this interp. */
     int flags;			/* Flags governing the trace - see
@@ -1192,7 +1195,7 @@ TclObjTypeGetElements(
     return proc(interp, objPtr, objCPtr, objVPtr);
 }
 
-static inline Tcl_Obj*
+static inline Tcl_Obj *
 TclObjTypeSetElement(
     Tcl_Interp *interp,
     Tcl_Obj *objPtr,
@@ -1507,10 +1510,10 @@ typedef struct ContLineLoc {
 typedef Tcl_Obj * (GetFrameInfoValueProc)(void *clientData);
 typedef struct {
     const char *name;		/* Name of this field. */
-    GetFrameInfoValueProc *proc;/* Function to generate a Tcl_Obj* from the
+    GetFrameInfoValueProc *proc;/* Function to generate a Tcl_Obj * from the
 				 * clientData, or just use the clientData
 				 * directly (after casting) if NULL. */
-    void *clientData;		/* Context for above function, or Tcl_Obj* if
+    void *clientData;		/* Context for above function, or Tcl_Obj * if
 				 * proc field is NULL. */
 } ExtraFrameInfoField;
 typedef struct {
@@ -2254,7 +2257,7 @@ typedef struct Interp {
 				 * Proc structure for a procedure. The values
 				 * are "struct ExtCmdLoc*". (See
 				 * tclCompile.h) */
-    Tcl_HashTable *lineLABCPtr;	/* Tcl_Obj* (by exact pointer) -> CFWordBC* */
+    Tcl_HashTable *lineLABCPtr;	/* Tcl_Obj * (by exact pointer) -> CFWordBC* */
     Tcl_HashTable *lineLAPtr;	/* This table remembers for each argument of a
 				 * command on the execution stack the index of
 				 * the argument in the command, and the
@@ -3459,6 +3462,8 @@ MODULE_SCOPE double	TclFloor(const void *a);
 MODULE_SCOPE void	TclFormatNaN(double value, char *buffer);
 MODULE_SCOPE int	TclFSFileAttrIndex(Tcl_Obj *pathPtr,
 			    const char *attributeName, int *indexPtr);
+MODULE_SCOPE Tcl_Obj *	TclFSJoinPathHelper(Tcl_Obj *pathPtr, Tcl_Size objc,
+			    Tcl_Obj *const objv[], int forceRelative);
 MODULE_SCOPE Tcl_Command TclNRCreateCommandInNs(Tcl_Interp *interp,
 			    const char *cmdName, Tcl_Namespace *nsPtr,
 			    Tcl_ObjCmdProc *proc, Tcl_ObjCmdProc *nreProc,
@@ -3532,8 +3537,8 @@ MODULE_SCOPE Tcl_Obj *	TclListObjCopy(Tcl_Interp *interp, Tcl_Obj *listPtr);
 MODULE_SCOPE int	TclListObjAppendElements(Tcl_Interp *interp,
 			    Tcl_Obj *toObj, Tcl_Size elemCount,
 			    Tcl_Obj *const elemObjv[]);
-MODULE_SCOPE int	TclListObjAppendIfAbsent(Tcl_Interp *interp,
-			    Tcl_Obj *toObj, Tcl_Obj *elem);
+MODULE_SCOPE int	TclListObjInsertIfAbsent(Tcl_Interp *interp,
+			    Tcl_Obj *toObj, Tcl_Obj *elem, Tcl_Size index);
 MODULE_SCOPE Tcl_Obj *	TclListObjRange(Tcl_Interp *interp, Tcl_Obj *listPtr,
 			    Tcl_Size fromIdx, Tcl_Size toIdx);
 MODULE_SCOPE Tcl_Obj *	TclLsetList(Tcl_Interp *interp, Tcl_Obj *listPtr,
@@ -3572,15 +3577,15 @@ MODULE_SCOPE int	TclProcessReturn(Tcl_Interp *interp,
 			    int code, int level, Tcl_Obj *returnOpts);
 MODULE_SCOPE void	TclUndoRefCount(Tcl_Obj *objPtr);
 MODULE_SCOPE int	TclpObjLstat(Tcl_Obj *pathPtr, Tcl_StatBuf *buf);
-MODULE_SCOPE Tcl_Obj *	TclpTempFileName(void);
-MODULE_SCOPE Tcl_Obj *	TclpTempFileNameForLibrary(Tcl_Interp *interp,
-			    Tcl_Obj* pathPtr);
-MODULE_SCOPE Tcl_Obj *	TclNewArithSeriesObj(Tcl_Interp *interp,
+MODULE_SCOPE Tcl_Obj *TclpTempFileName(void);
+MODULE_SCOPE Tcl_Obj *TclpTempFileNameForLibrary(Tcl_Interp *interp,
+			    Tcl_Obj *pathPtr);
+MODULE_SCOPE Tcl_Obj *TclNewArithSeriesObj(Tcl_Interp *interp,
 			    int useDoubles, Tcl_Obj *startObj, Tcl_Obj *endObj,
 			    Tcl_Obj *stepObj, Tcl_Obj *lenObj);
-MODULE_SCOPE Tcl_Obj *	TclNewFSPathObj(Tcl_Obj *dirPtr, const char *addStrRep,
+MODULE_SCOPE Tcl_Obj *TclNewFSPathObj(Tcl_Obj *dirPtr, const char *addStrRep,
 			    Tcl_Size len);
-MODULE_SCOPE Tcl_Obj *	TclNewNamespaceObj(Tcl_Namespace *namespacePtr);
+MODULE_SCOPE Tcl_Obj *TclNewNamespaceObj(Tcl_Namespace *namespacePtr);
 MODULE_SCOPE void	TclpAlertNotifier(void *clientData);
 MODULE_SCOPE void *	TclpNotifierData(void);
 MODULE_SCOPE void	TclpServiceModeHook(int mode);
@@ -4317,7 +4322,7 @@ TclScaleTime(
 		    && ((objPtr)->bytes != &tclEmptyString)) {		\
 		Tcl_Free((objPtr)->bytes);				\
 	    }								\
-	    (objPtr)->length = TCL_INDEX_NONE;				\
+	    (objPtr)->length = -1;				\
 	    TclFreeObjStorage(objPtr);					\
 	    TclIncrObjsFreed();						\
 	} else {							\
@@ -4636,7 +4641,7 @@ MODULE_SCOPE const TclFileAttrProcs	tclpFileAttrProcs[];
 
 /* Token growth tuning, default to the general value. */
 #ifndef TCL_MIN_TOKEN_GROWTH
-#define TCL_MIN_TOKEN_GROWTH TCL_MIN_GROWTH/sizeof(Tcl_Token)
+#define TCL_MIN_TOKEN_GROWTH (TCL_MIN_GROWTH/sizeof(Tcl_Token))
 #endif
 
 static inline void
@@ -4653,16 +4658,16 @@ TclGrowParseTokenArray(
 	    oldPtr = NULL;
 	}
 	newPtr = (Tcl_Token *)Tcl_AttemptRealloc((char *) oldPtr,
-		allocated * sizeof(Tcl_Token));
+		(size_t)allocated * sizeof(Tcl_Token));
 	if (newPtr == NULL) {
-	    allocated = needed + append + TCL_MIN_TOKEN_GROWTH;
+	    allocated = needed + append + (Tcl_Size)TCL_MIN_TOKEN_GROWTH;
 	    newPtr = (Tcl_Token *)Tcl_Realloc((char *) oldPtr,
-		    allocated * sizeof(Tcl_Token));
+		    (size_t)allocated * sizeof(Tcl_Token));
 	}
 	parsePtr->tokensAvailable = allocated;
 	if (oldPtr == NULL) {
 	    memcpy(newPtr, parsePtr->staticTokens,
-		    parsePtr->numTokens * sizeof(Tcl_Token));
+		    (size_t)parsePtr->numTokens * sizeof(Tcl_Token));
 	}
 	parsePtr->tokenPtr = newPtr;
     }
@@ -4827,7 +4832,7 @@ MODULE_SCOPE Tcl_LibraryInitProc Tcl_ABSListTest_Init;
  * MODULE_SCOPE void	TclNewIntObj(Tcl_Obj *objPtr, Tcl_WideInt w);
  * MODULE_SCOPE void	TclNewDoubleObj(Tcl_Obj *objPtr, double d);
  * MODULE_SCOPE void	TclNewStringObj(Tcl_Obj *objPtr, const char *s, Tcl_Size len);
- * MODULE_SCOPE void	TclNewLiteralStringObj(Tcl_Obj*objPtr, const char *sLiteral);
+ * MODULE_SCOPE void	TclNewLiteralStringObj(Tcl_Obj *objPtr, const char *sLiteral);
  *
  *----------------------------------------------------------------
  */
@@ -5173,6 +5178,13 @@ typedef struct NRE_callback {
 #else
 #define TCL_MAC_EMPTY_FILE(name)
 #endif /* MAC_OSX_TCL */
+
+#ifdef _TCLSIZEHANDLED
+#   undef _TCLSIZEHANDLED
+#   undef Tcl_Size
+#   undef Tcl_ObjCmdProc2
+#   undef Tcl_CmdObjTraceProc2
+#endif
 
 /*
  * Other externals.

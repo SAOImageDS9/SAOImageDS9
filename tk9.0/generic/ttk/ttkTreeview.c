@@ -1156,7 +1156,7 @@ static TreeCell *GetCellListFromObj(
 	}
     }
 
-    cells = (TreeCell *) ckalloc(n * sizeof(TreeCell));
+    cells = (TreeCell *)ckalloc(n * sizeof(TreeCell));
     for (i = 0; i < n; ++i) {
 	if (GetCellFromObj(interp, tv, elements[i], 0, NULL, &cells[i]) != TCL_OK) {
 	    ckfree(cells);
@@ -2055,6 +2055,13 @@ static Ttk_State ItemState(Treeview *tv, TreeItem *item)
     }
     if (item != tv->tree.focus) {
 	state &= ~TTK_STATE_FOCUS;
+    }
+
+    if (!(tv->core.state & TTK_STATE_FOCUS) &&
+	(item->state & TTK_STATE_SELECTED)) {
+	state |= TTK_STATE_BACKGROUND;
+    } else {
+	state &= ~TTK_STATE_BACKGROUND;
     }
     return state;
 }

@@ -146,23 +146,43 @@ TkGetServerInfo(
     TCL_UNUSED(Tk_Window))		/* Token for window; this selects a particular
 				 * display and server. */
 {
-    static char buffer[32]; /* Empty string means not initialized yet. */
+    char buffer[80];
     OSVERSIONINFOW os;
+    typedef int(__stdcall getVersionProc)(void *);
 
-    if (!buffer[0]) {
-	GetVersionExW(&os);
-	/* Write the first character last, preventing multi-thread issues. */
-	snprintf(buffer+1, sizeof(buffer)-1, "indows %d.%d %d %s", (int)os.dwMajorVersion,
-		(int)os.dwMinorVersion, (int)os.dwBuildNumber,
-#ifdef _WIN64
-		"Win64"
-#else
-		"Win32"
-#endif
-	);
-	buffer[0] = 'W';
+    /*
+     * Not a performance critical so don't bother with static cache and MT
+     * synchronization
+     */
+
+    /*
+     * GetVersionExW will not return the "real" Windows version so use
+     * RtlGetVersion if available and falling back.
+     */
+    HMODULE handle = GetModuleHandleW(L"NTDLL"); /* No need to free this */
+    getVersionProc *getVersion =
+	(getVersionProc *)(void *)GetProcAddress(handle, "RtlGetVersion");
+
+    os.dwOSVersionInfoSize = sizeof(os);
+    if (getVersion == NULL || getVersion(&os) != 0) {
+	/* Should never happen but ... */
+	if (!GetVersionExW(&os)) {
+	    memset(&os, 0, sizeof(os));
+	}
     }
-    Tcl_AppendResult(interp, buffer, NULL);
+    if (os.dwMajorVersion == 10 &&
+	os.dwBuildNumber >= 22000) {
+	os.dwMajorVersion = 11;
+    }
+    snprintf(buffer, sizeof(buffer), "Windows %d.%d %d %s",
+	(int)os.dwMajorVersion, (int)os.dwMinorVersion, (int)os.dwBuildNumber,
+#ifdef _WIN64
+	"Win64"
+#else
+	"Win32"
+#endif
+    );
+    Tcl_AppendResult(interp, buffer, (char *)NULL);
 }
 
 /*
@@ -469,7 +489,7 @@ TkWinDisplayChanged(
      */
 
     screen->ext_data = (XExtData *)INT2PTR(GetDeviceCaps(dc, PLANES));
-    screen->root_depth = GetDeviceCaps(dc, BITSPIXEL) * PTR2INT(screen->ext_data);
+    screen->root_depth = (int)(GetDeviceCaps(dc, BITSPIXEL) * PTR2INT(screen->ext_data));
 
     if (screen->root_visual != NULL) {
 	ckfree(screen->root_visual);
@@ -553,7 +573,7 @@ TkpOpenDisplay(
     display = XkbOpenDisplay(display_name, NULL, NULL, NULL, NULL, NULL);
     TkWinDisplayChanged(display);
 
-    tsdPtr->winDisplay =(TkDisplay *) ckalloc(sizeof(TkDisplay));
+    tsdPtr->winDisplay =(TkDisplay *)ckalloc(sizeof(TkDisplay));
     memset(tsdPtr->winDisplay, 0, sizeof(TkDisplay));
     tsdPtr->winDisplay->display = display;
     tsdPtr->updatingClipboard = FALSE;
@@ -754,7 +774,7 @@ TkWinChildProc(
     WPARAM wParam,
     LPARAM lParam)
 {
-    LRESULT result;
+    LRESULT result = 0;
 
     switch (message) {
     case WM_INPUTLANGCHANGE:
@@ -866,7 +886,7 @@ TkTranslateWinEvent(
 	TkWindow *winPtr = (TkWindow *) Tk_HWNDToWindow(hwnd);
 
 	if (winPtr) {
-	    TkWinClipboardRender(winPtr->dispPtr, wParam);
+	    TkWinClipboardRender(winPtr->dispPtr, (UINT)wParam);
 	}
 	return 1;
     }
@@ -1219,7 +1239,7 @@ GenerateXEvent(
 
 	    event.x.type = KeyPress;
 	    event.x.xany.send_event = -1;
-	    event.x.xkey.keycode = wParam;
+	    event.x.xkey.keycode = (unsigned)wParam;
 	    GetTranslatedKey(&event.key, (message == WM_KEYDOWN) ? WM_CHAR :
 		    WM_SYSCHAR);
 	    break;
@@ -1233,7 +1253,7 @@ GenerateXEvent(
 	     */
 
 	    event.x.type = KeyRelease;
-	    event.x.xkey.keycode = wParam;
+	    event.x.xkey.keycode = (unsigned)wParam;
 	    event.key.nbytes = 0;
 	    break;
 
@@ -1309,7 +1329,7 @@ GenerateXEvent(
 	case WM_UNICHAR: {
 	    event.x.type = KeyPress;
 	    event.x.xany.send_event = -3;
-	    event.x.xkey.keycode = wParam;
+	    event.x.xkey.keycode = (unsigned)wParam;
 	    event.key.nbytes = 0;
 	    Tk_QueueWindowEvent(&event.x, TCL_QUEUE_TAIL);
 	    event.x.type = KeyRelease;
@@ -1643,7 +1663,7 @@ HandleIMEComposition(
     n = ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, NULL, 0);
 
     if (n > 0) {
-	WCHAR *buff = (WCHAR *) ckalloc(n);
+	WCHAR *buff = (WCHAR *)ckalloc(n);
 	TkWindow *winPtr;
 	XEvent event;
 	int i;

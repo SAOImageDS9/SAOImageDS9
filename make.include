@@ -28,7 +28,7 @@
 # zlib 1.2.8
 # xpa 2.2.2
 # libxslt 1.1.29
-# openssl 1.0.2u
+# openssl 3.6.2
 
 DS9_VERSION	= 8.8
 XPA_VERSION	= 2.2.2

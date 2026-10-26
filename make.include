@@ -97,7 +97,7 @@ TKIMGTMPFILES = \
 #-------------------------- main
 
 .NOTPARALLEL :
-.PHONY	: all dirs ds9 tclxml tclxmlrpc tclzipfs tls xpa
+.PHONY	: all dirs ds9 tclxml tclxmlrpc tls xpa
 .PHONY	: tkblt tclfitsy tkcon tkhtml1 tkimg tkmpeg tkagif tksao tktable
 .PHONY	: vector fitsy ast funtools openssl
 

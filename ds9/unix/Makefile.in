@@ -35,12 +35,7 @@ tclfitsy_LIB_SPEC= @tclfitsy_LIB_SPEC@
 tclsignal_LIB_SPEC= @tclsignal_LIB_SPEC@
 tclxml_LIB_SPEC	= @tclxml_LIB_SPEC@
 tclxmlrpc_LIB_SPEC= @tclxmlrpc_LIB_SPEC@
-tclzipfs_LIB_SPEC= @tclzipfs_LIB_SPEC@
 tls_LIB_SPEC	=@tls_LIB_SPEC@
-
-ifeq ($(TCL_MAJOR_VERSION),9)
-tclzipfs_LIB_SPEC =
-endif
 
 tkblt_LIB_SPEC	= @tkblt_LIB_SPEC@
 tkhtml1_LIB_SPEC= @tkhtml1_LIB_SPEC@
@@ -95,7 +90,6 @@ EXT_SPECS = \
 	$(tclsignal_LIB_SPEC) \
 	$(tclxml_LIB_SPEC) \
 	$(tclxmlrpc_LIB_SPEC) \
-	$(tclzipfs_LIB_SPEC) \
 	$(tls_LIB_SPEC) \
 	$(tkblt_LIB_SPEC) \
 	$(tkhtml1_LIB_SPEC) \

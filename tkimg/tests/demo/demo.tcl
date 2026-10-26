@@ -147,33 +147,35 @@ proc show_animated_gif {w data} {
 proc toolhelpInit { w { bgColor yellow } { fgColor black } } {
     global topWidget
 
-    # Create Toolbar help window with a simple label in it.
-    if { [winfo exists $w] } {
-	destroy $w
-    }
-    toplevel $w
-    set topWidget $w
-    label $w.l -text "This is toolhelp" -bg $bgColor -fg $fgColor -relief ridge
-    pack $w.l
-    wm overrideredirect $w true
+    set topWidget(w) $w
+    set topWidget(bgColor) $bgColor
+    set topWidget(fgColor) $fgColor
     catch  {
-        ::tk::unsupported::MacWindowStyle style $w help none
+       ::tk::unsupported::MacWindowStyle style $w help none
     }
-    wm geometry $w [format "+%d+%d" -100 -100]
 }
 
 proc toolhelpShow { x y str } {
     global topWidget
 
-    $topWidget.l configure -text $str
-    raise $topWidget
-    wm geometry $topWidget [format "+%d+%d" $x [expr $y +10]]
+    if { [winfo exists $topWidget(w)] } {
+	destroy $topWidget(w)
+    }
+    toplevel $topWidget(w)
+    # Create Toolbar help window with a simple label in it.
+    label $topWidget(w).l -text $str -bg $topWidget(bgColor) -fg $topWidget(fgColor) -relief ridge
+    pack $topWidget(w).l
+    wm overrideredirect $topWidget(w) true
+    wm geometry $topWidget(w) [format "+%d+%d" $x [expr $y +10]]
+    raise $topWidget(w)
 }
 
 proc toolhelpHide {} {
     global topWidget
 
-    wm geometry $topWidget [format "+%d+%d" -100 -100]
+    if { [winfo exists $topWidget(w)] } {
+	destroy $topWidget(w)
+    }
 }
 
 proc toolhelpAddBinding { w str } {

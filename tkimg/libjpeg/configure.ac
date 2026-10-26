@@ -7,7 +7,7 @@ dnl
 # TEA compliant.
 #--------------------------------------------------------------------
 
-AC_INIT([jpegtcl],[9.6.0])
+AC_INIT([jpegtcl],[10.0.0])
 
 TEA_INIT([3.9])
 
@@ -170,8 +170,6 @@ TEA_MAKE_LIB
 # __CHANGE__
 # Add platform libs to LIBS or SHLIB_LD_LIBS as necessary.
 #--------------------------------------------------------------------
-
-SHLIB_LD_LIBS="${SHLIB_LD_LIBS} \${TCL_LIBS}"
 
 #--------------------------------------------------------------------
 # Find tclsh so that we can run pkg_mkIndex to generate the pkgIndex.tcl

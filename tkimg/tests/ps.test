@@ -93,7 +93,7 @@ namespace eval ::ps::test {
         } -cleanup {
             image delete i
         } -constraints {
-            Tk87 Ghostscript
+            Tk9 Ghostscript
         } -result {0 0}
 
         test ps-2.2 {Read photo from file using single -zoom value} -setup {
@@ -102,7 +102,7 @@ namespace eval ::ps::test {
             image create photo i -file $inFile -format [list $fmt -zoom 2.0]
             imageSize i
         } -constraints {
-            Tk87 Ghostscript
+            Tk9 Ghostscript
         } -result [refSize2]
 
         test ps-2.2 {Read photo from file using two -zoom values} -setup {
@@ -111,7 +111,7 @@ namespace eval ::ps::test {
             image create photo i -file $inFile -format [list $fmt -zoom 2 2.0]
             imageSize i
         } -constraints {
-            Tk87 Ghostscript
+            Tk9 Ghostscript
         } -result [refSize2]
 
         # PS does not support writing.

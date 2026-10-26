@@ -1,0 +1,19 @@
+/* XPM */
+static char * img[] = {
+"40 7 9 1",
+"  s None c None",
+". c #000000",
+"# c #0000ff",
+"a c #ff00ff",
+"b c #00ff00",
+"c c #ff0000",
+"d c #00ffff",
+"e c #ffffff",
+"f c #ffff00",
+"cccccbbbbb#####dddddaaaaafffff.....eeeee",
+"cccccbbbbb#####dddddaaaaafffff.....eeeee",
+"cccccbbbbb#####dddddaaaaafffff.....eeeee",
+"cccccbbbbb#####dddddaaaaafffff.....eeeee",
+"cccccbbbbb#####dddddaaaaafffff.....eeeee",
+"cccccbbbbb#####dddddaaaaafffff.....eeeee",
+"cccccbbbbb#####dddddaaaaafffff.....eeeee"};

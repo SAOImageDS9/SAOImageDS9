@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>tiff2rgba &#8212; LibTIFF 4.7.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b849a4e9" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=0a676766" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=9f25de62"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <title>tiff2rgba &#8212; LibTIFF 4.7.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=34905f61" />
+    <script src="../_static/documentation_options.js?v=2edf0659"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="tiffcmp" href="tiffcmp.html" />
     <link rel="prev" title="tiff2ps" href="tiff2ps.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="tiff2ps.html" title="tiff2ps"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../tools.html" accesskey="U">TIFF Tools Overview</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tiff2rgba</a></li> 
       </ul>
@@ -40,13 +40,13 @@
           <div class="body" role="main">
             
   <section id="tiff2rgba">
-<h1>tiff2rgba<a class="headerlink" href="#tiff2rgba" title="Permalink to this heading">¶</a></h1>
+<h1>tiff2rgba<a class="headerlink" href="#tiff2rgba" title="Link to this heading">¶</a></h1>
 <section id="synopsis">
-<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this heading">¶</a></h2>
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Link to this heading">¶</a></h2>
 <p><strong>tiff2rgba</strong> [ <em>options</em> ] <em>input.tif</em> <em>output.tif</em></p>
 </section>
 <section id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">¶</a></h2>
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading">¶</a></h2>
 <p><strong class="program">tiff2rgba</strong> converts a wide variety of TIFF images into an RGBA TIFF image.  This
 includes the ability to translate different color spaces and photometric
 interpretation into RGBA, support for alpha blending, and translation
@@ -64,10 +64,10 @@ for transform exotic TIFF files into a form ingestible by almost any TIFF
 supporting software.</p>
 </section>
 <section id="options">
-<h2>Options<a class="headerlink" href="#options" title="Permalink to this heading">¶</a></h2>
+<h2>Options<a class="headerlink" href="#options" title="Link to this heading">¶</a></h2>
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-tiff2rgba-c">
-<span class="sig-name descname"><span class="pre">-c</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-tiff2rgba-c" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">-c</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-tiff2rgba-c" title="Link to this definition">¶</a></dt>
 <dd><p>Specify a compression scheme to use when writing image data:
 <strong class="command">-c none</strong> for no compression (the default),
 <strong class="command">-c packbits</strong> for the PackBits compression algorithm,
@@ -78,7 +78,7 @@ supporting software.</p>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-tiff2rgba-r">
-<span class="sig-name descname"><span class="pre">-r</span></span><span class="sig-prename descclassname"> <span class="pre">striprows</span></span><a class="headerlink" href="#cmdoption-tiff2rgba-r" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">-r</span></span><span class="sig-prename descclassname"> <span class="pre">striprows</span></span><a class="headerlink" href="#cmdoption-tiff2rgba-r" title="Link to this definition">¶</a></dt>
 <dd><p>Write data with a specified number of rows per strip;
 by default the number of rows/strip is selected so that each strip
 is approximately 8 kilobytes.</p>
@@ -86,7 +86,7 @@ is approximately 8 kilobytes.</p>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-tiff2rgba-b">
-<span class="sig-name descname"><span class="pre">-b</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-tiff2rgba-b" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">-b</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-tiff2rgba-b" title="Link to this definition">¶</a></dt>
 <dd><p>Process the image one block (strip/tile) at a time instead of by reading
 the whole image into memory at once.  This may be necessary for very large
 images on systems with limited RAM.</p>
@@ -94,28 +94,28 @@ images on systems with limited RAM.</p>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-tiff2rgba-n">
-<span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-tiff2rgba-n" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-tiff2rgba-n" title="Link to this definition">¶</a></dt>
 <dd><p>Drop the alpha component from the output file, producing a pure RGB file.
 Currently this does not work if the <a class="reference internal" href="#cmdoption-tiff2rgba-b"><code class="xref std std-option docutils literal notranslate"><span class="pre">-b</span></code></a> flag is also in effect.</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-tiff2rgba-B">
-<span class="sig-name descname"><span class="pre">-B</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-tiff2rgba-B" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">-B</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-tiff2rgba-B" title="Link to this definition">¶</a></dt>
 <dd><p>Use this value as the background when doing alpha compositing (dropping the
 alpha component).</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-tiff2rgba-M">
-<span class="sig-name descname"><span class="pre">-M</span></span><span class="sig-prename descclassname"> <span class="pre">size</span></span><a class="headerlink" href="#cmdoption-tiff2rgba-M" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">-M</span></span><span class="sig-prename descclassname"> <span class="pre">size</span></span><a class="headerlink" href="#cmdoption-tiff2rgba-M" title="Link to this definition">¶</a></dt>
 <dd><p>Set maximum memory allocation size (in MiB). The default is 256MiB.
 Set to 0 to disable the limit.</p>
 </dd></dl>
 
 </section>
 <section id="see-also">
-<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this heading">¶</a></h2>
+<h2>See also<a class="headerlink" href="#see-also" title="Link to this heading">¶</a></h2>
 <p><a class="reference internal" href="tiff2bw.html"><span class="doc">tiff2bw</span></a> (1),
 <a class="reference internal" href="../functions/TIFFReadRGBAImage.html"><span class="doc">TIFFReadRGBAImage</span></a> (3tiff),
 <a class="reference internal" href="../functions/libtiff.html"><span class="doc">libtiff</span></a> (3tiff),</p>
@@ -127,7 +127,7 @@ Set to 0 to disable the limit.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="../index.html">Table of Contents</a></h3>
@@ -159,7 +159,7 @@ Set to 0 to disable the limit.</p>
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -167,13 +167,13 @@ Set to 0 to disable the limit.</p>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -185,14 +185,14 @@ Set to 0 to disable the limit.</p>
         <li class="right" >
           <a href="tiff2ps.html" title="tiff2ps"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../tools.html" >TIFF Tools Overview</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">tiff2rgba</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-    &#169; Copyright 1988-2022, LibTIFF contributors.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+    &#169; Copyright 1988-2025, LibTIFF contributors.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

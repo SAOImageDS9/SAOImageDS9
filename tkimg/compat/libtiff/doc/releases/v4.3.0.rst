@@ -77,7 +77,7 @@ Tools changes
 
 * :program:`tiffsplit`: exit with :c:macro:`EXIT_FAILURE` if there are extra args on the command line
 
-* :program:`tiffcmp`: fix comparaison with pixels that are fractional number of bytes (#53)
+* :program:`tiffcmp`: fix comparison with pixels that are fractional number of bytes (#53)
 
 Contributed software changes
 ----------------------------

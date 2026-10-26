@@ -30,7 +30,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "tiffio.h"
+#include "strip.h"
 
 int write_strips(TIFF *tif, const tdata_t array, const tsize_t size)
 {
@@ -102,7 +102,7 @@ int read_strips(TIFF *tif, const tdata_t array, const tsize_t size)
             fprintf(stderr, "Can't read strip %" PRIu32 ".\n", strip);
             return -1;
         }
-        if (memcmp(buf, (char *)array + offset, bufsize) != 0)
+        if (memcmp(buf, (char *)array + offset, (size_t)bufsize) != 0)
         {
             fprintf(stderr, "Wrong data read for strip %" PRIu32 ".\n", strip);
             _TIFFfree(buf);
@@ -275,36 +275,4 @@ openfailure:
             name, width, length, rowsperstrip, compression, bps, spp,
             sampleformat, planarconfig, photometric);
     return -1;
-}
-
-int write_scanlines(TIFF *tif, const tdata_t array, const tsize_t size)
-{
-    uint32_t length, row;
-    tsize_t scanlinesize, offset;
-    (void)size;
-
-    if (!TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &length))
-    {
-        fprintf(stderr, "Can't get tag %d.\n", TIFFTAG_IMAGELENGTH);
-        return -1;
-    }
-
-    scanlinesize = TIFFScanlineSize(tif);
-    if (!scanlinesize)
-    {
-        fprintf(stderr, "Wrong size of scanline.\n");
-        return -1;
-    }
-
-    for (offset = 0, row = 0; row < length; offset += scanlinesize, row++)
-    {
-        if (TIFFWriteScanline(tif, (char *)array + offset, row, 0) == -1)
-        {
-            fprintf(stderr, "Can't write image data at row %" PRIu32 ".\n",
-                    row);
-            return -1;
-        }
-    }
-
-    return 0;
 }

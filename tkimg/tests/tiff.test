@@ -31,7 +31,7 @@ namespace eval ::tiff::test {
             catch {image delete i}
         } -body {
             image create photo i -file $inFile
-            i data -format $fmt
+            i data -format [list $fmt -byteorder littleendian]
         } -cleanup {
             image delete i
         } -result $imgdata
@@ -40,7 +40,7 @@ namespace eval ::tiff::test {
             catch {image delete i}
         } -body {
             image create photo i -data $imgdata
-            i data -format $fmt
+            i data -format [list $fmt -byteorder littleendian]
         } -cleanup {
             image delete i
         } -result $imgdata
@@ -50,7 +50,7 @@ namespace eval ::tiff::test {
         } -body {
             image create photo i
             i put $imgdata
-            i data -format $fmt
+            i data -format [list $fmt -byteorder littleendian]
         } -cleanup {
             image delete i
         } -result $imgdata
@@ -60,7 +60,7 @@ namespace eval ::tiff::test {
         } -body {
             image create photo i
             i put $imgdata -format $fmt
-            i data -format $fmt
+            i data -format [list $fmt -byteorder littleendian]
         } -cleanup {
             image delete i
         } -result $imgdata
@@ -85,7 +85,7 @@ namespace eval ::tiff::test {
         } -cleanup {
             image delete i
         } -constraints {
-            Tk87
+            Tk9
         } -result {0 0}
 
         test tiff-2.2 {Read photo from file with resolution information} -setup {
@@ -96,7 +96,7 @@ namespace eval ::tiff::test {
         } -cleanup {
             image delete i
         } -constraints {
-            Tk87
+            Tk9
         } -result [refResolution]
 
 
@@ -112,7 +112,7 @@ namespace eval ::tiff::test {
             image delete j
             file delete -force $outFile
         } -constraints {
-            Tk87
+            Tk9
         } -result 1
 
         # Write photo to string using "i data -format" already tested in tiff-1.X tests.
@@ -131,7 +131,7 @@ namespace eval ::tiff::test {
             image delete j
             file delete -force $outFile
         } -constraints {
-            Tk87
+            Tk9
         } -result [list [refResolution] [refResolution]]
 
 
@@ -236,7 +236,7 @@ namespace eval ::tiff::test {
             image delete i
             file delete -force $outFile
         } -constraints {
-            Tk87
+            Tk9
         } -returnCodes {
             error
         } -result "Invalid resolution value \"-100\" specified for x resolution."
@@ -250,7 +250,7 @@ namespace eval ::tiff::test {
             image delete i
             file delete -force $outFile
         } -constraints {
-            Tk87
+            Tk9
         } -returnCodes {
             error
         } -result "Invalid resolution value \"12cm\" specified for x resolution."
@@ -264,7 +264,7 @@ namespace eval ::tiff::test {
             image delete i
             file delete -force $outFile
         } -constraints {
-            Tk87
+            Tk9
         } -returnCodes {
             error
         } -result "Invalid resolution value \"12cm\" specified for y resolution."

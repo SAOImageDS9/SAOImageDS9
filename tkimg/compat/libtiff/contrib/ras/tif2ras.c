@@ -47,7 +47,7 @@
 typedef int boolean;
 #define True (1)
 #define False (0)
-#define CVT(x) (((x)*255) / ((1L << 16) - 1))
+#define CVT(x) (((x) * 255) / ((1 << 16) - 1))
 
 boolean Verbose = False;
 char *pname; /* program name (used for error messages) */

@@ -47,11 +47,13 @@
 #define CopyField(tag, v)                                                      \
     if (TIFFGetField(in, tag, &v))                                             \
     TIFFSetField(out, tag, v)
+#define CopyFieldFloat(tag, v)                                                 \
+    if (TIFFGetField(in, tag, &v))                                             \
+    TIFFSetField(out, tag, (double)(v))
 
 #ifndef howmany
-#define howmany(x, y) (((x) + ((y)-1)) / (y))
+#define howmany(x, y) (((uint32_t)(x) + (uint32_t)(y) - 1U) / (uint32_t)(y))
 #endif
-#define roundup(x, y) (howmany(x, y) * ((uint32_t)(y)))
 
 #define LumaRed ycbcrCoeffs[0]
 #define LumaGreen ycbcrCoeffs[1]
@@ -62,9 +64,9 @@ uint32_t rowsperstrip = (uint32_t)-1;
 
 uint16_t horizSubSampling = 2; /* YCbCr horizontal subsampling */
 uint16_t vertSubSampling = 2;  /* YCbCr vertical subsampling */
-float ycbcrCoeffs[3] = {.299F, .587F, .114F};
+float ycbcrCoeffs[3] = {.299f, .587f, .114f};
 /* default coding range is CCIR Rec 601-1 with no headroom/footroom */
-float refBlackWhite[6] = {0.F, 255.F, 128.F, 255.F, 128.F, 255.F};
+float refBlackWhite[6] = {0.f, 255.f, 128.f, 255.f, 128.f, 255.f};
 
 static int tiffcvt(TIFF *in, TIFF *out);
 static void usage(int code);
@@ -97,19 +99,19 @@ int main(int argc, char *argv[])
                     usage(EXIT_FAILURE);
                 break;
             case 'h':
-                horizSubSampling = atoi(optarg);
+                horizSubSampling = (uint16_t)atoi(optarg);
                 if (horizSubSampling != 1 && horizSubSampling != 2 &&
                     horizSubSampling != 4)
                     usage(EXIT_FAILURE);
                 break;
             case 'v':
-                vertSubSampling = atoi(optarg);
+                vertSubSampling = (uint16_t)atoi(optarg);
                 if (vertSubSampling != 1 && vertSubSampling != 2 &&
                     vertSubSampling != 4)
                     usage(EXIT_FAILURE);
                 break;
             case 'r':
-                rowsperstrip = atoi(optarg);
+                rowsperstrip = (uint32_t)atoi(optarg);
                 break;
             case 'z': /* CCIR Rec 601-1 w/ headroom/footroom */
                 refBlackWhite[0] = 16.;
@@ -122,6 +124,9 @@ int main(int argc, char *argv[])
             case '?':
                 usage(EXIT_FAILURE);
                 /*NOTREACHED*/
+                break;
+            default:
+                break;
         }
     if (argc - optind < 2)
         usage(EXIT_FAILURE);
@@ -138,15 +143,15 @@ int main(int argc, char *argv[])
             {
                 if (!tiffcvt(in, out) || !TIFFWriteDirectory(out))
                 {
-                    (void)TIFFClose(out);
-                    (void)TIFFClose(in);
+                    TIFFClose(out);
+                    TIFFClose(in);
                     return (1);
                 }
             } while (TIFFReadDirectory(in));
-            (void)TIFFClose(in);
+            TIFFClose(in);
         }
     }
-    (void)TIFFClose(out);
+    TIFFClose(out);
     return (EXIT_SUCCESS);
 }
 
@@ -161,13 +166,13 @@ static float *setupLuma(float c)
     float *v = (float *)_TIFFmalloc(256 * sizeof(float));
     int i;
     for (i = 0; i < 256; i++)
-        v[i] = c * i;
+        v[i] = c * (float)i;
     return (v);
 }
 
 static unsigned V2Code(float f, float RB, float RW, int CR)
 {
-    unsigned int c = (unsigned int)((((f) * (RW - RB) / CR) + RB) + .5);
+    unsigned int c = (unsigned int)((((f) * (RW - RB) / (float)CR) + RB) + .5f);
     return (c > 255 ? 255 : c);
 }
 
@@ -176,9 +181,9 @@ static void setupLumaTables(void)
     lumaRed = setupLuma(LumaRed);
     lumaGreen = setupLuma(LumaGreen);
     lumaBlue = setupLuma(LumaBlue);
-    D1 = 1.F / (2.F - 2.F * LumaBlue);
-    D2 = 1.F / (2.F - 2.F * LumaRed);
-    Yzero = V2Code(0, refBlackWhite[0], refBlackWhite[1], 255);
+    D1 = 1.f / (2.f - 2.f * LumaBlue);
+    D2 = 1.f / (2.f - 2.f * LumaRed);
+    Yzero = (int)V2Code(0, refBlackWhite[0], refBlackWhite[1], 255);
 }
 
 static void cvtClump(unsigned char *op, uint32_t *raster, uint32_t ch,
@@ -198,22 +203,25 @@ static void cvtClump(unsigned char *op, uint32_t *raster, uint32_t ch,
             Y = lumaRed[TIFFGetR(RGB)] + lumaGreen[TIFFGetG(RGB)] +
                 lumaBlue[TIFFGetB(RGB)];
             /* accumulate chrominance */
-            Cb += (TIFFGetB(RGB) - Y) * D1;
-            Cr += (TIFFGetR(RGB) - Y) * D2;
+            Cb += ((float)TIFFGetB(RGB) - Y) * D1;
+            Cr += ((float)TIFFGetR(RGB) - Y) * D2;
             /* emit luminence */
-            *op++ = V2Code(Y, refBlackWhite[0], refBlackWhite[1], 255);
+            *op++ = (unsigned char)V2Code(Y, refBlackWhite[0], refBlackWhite[1],
+                                          255);
         }
         for (; j < horizSubSampling; j++)
-            *op++ = Yzero;
+            *op++ = (unsigned char)Yzero;
     }
     for (; k < vertSubSampling; k++)
     {
         for (j = 0; j < horizSubSampling; j++)
-            *op++ = Yzero;
+            *op++ = (unsigned char)Yzero;
     }
     /* emit sampled chrominance values */
-    *op++ = V2Code(Cb / (ch * cw), refBlackWhite[2], refBlackWhite[3], 127);
-    *op++ = V2Code(Cr / (ch * cw), refBlackWhite[4], refBlackWhite[5], 127);
+    *op++ = (unsigned char)V2Code(Cb / ((float)ch * (float)cw),
+                                  refBlackWhite[2], refBlackWhite[3], 127);
+    *op++ = (unsigned char)V2Code(Cr / ((float)ch * (float)cw),
+                                  refBlackWhite[4], refBlackWhite[5], 127);
 }
 #undef LumaRed
 #undef LumaGreen
@@ -224,12 +232,60 @@ static void cvtClump(unsigned char *op, uint32_t *raster, uint32_t ch,
  * Convert a strip of RGB data to YCbCr and
  * sample to generate the output data.
  */
-static void cvtStrip(unsigned char *op, uint32_t *raster, uint32_t nrows,
-                     uint32_t width)
+static int checkedRoundup32(TIFF *tif, uint32_t *result, uint32_t value,
+                            uint16_t multiple, const char *where)
+{
+    uint64_t rounded64;
+    uint32_t rounded32;
+
+    if (multiple == 0)
+        return 0;
+    rounded64 = _TIFFAdd64(tif, value, (uint64_t)multiple - 1U, where);
+    if (rounded64 == 0 && value != 0)
+        return 0;
+    rounded64 = _TIFFMultiply64(tif, rounded64 / multiple, multiple, where);
+    rounded32 = _TIFFCastUInt64ToUInt32(tif, rounded64, where);
+    if ((rounded64 == 0 && value != 0) || (rounded32 == 0 && rounded64 != 0))
+        return 0;
+    *result = rounded32;
+    return 1;
+}
+
+static tmsize_t computeYCbCrStripSize(TIFF *tif, uint32_t rows, uint32_t width,
+                                      const char *where)
+{
+    uint64_t luma64 = _TIFFMultiply64(tif, rows, width, where);
+    uint64_t subsampling64 =
+        _TIFFMultiply64(tif, horizSubSampling, vertSubSampling, where);
+    uint64_t chroma_samples64;
+    uint64_t chroma64;
+    uint64_t total64;
+    tmsize_t total;
+
+    if ((luma64 == 0 && rows != 0 && width != 0) || subsampling64 == 0)
+        return 0;
+    chroma_samples64 = luma64 / subsampling64;
+    chroma64 = _TIFFMultiply64(tif, chroma_samples64, 2, where);
+    total64 = _TIFFAdd64(tif, luma64, chroma64, where);
+    total = _TIFFCastUInt64ToSSize(tif, total64, where);
+    if ((chroma64 == 0 && chroma_samples64 != 0) ||
+        (total64 == 0 && (luma64 != 0 || chroma64 != 0)) ||
+        (total == 0 && total64 != 0))
+        return 0;
+    return total;
+}
+
+static int cvtStrip(TIFF *tif, unsigned char *op, uint32_t *raster,
+                    uint32_t nrows, uint32_t width)
 {
     uint32_t x;
     int clumpSize = vertSubSampling * horizSubSampling + 2;
     uint32_t *tp;
+    tmsize_t row_advance =
+        _TIFFComputeRowOffset(tif, width, vertSubSampling, "raster row offset");
+
+    if (row_advance == 0 && width != 0 && vertSubSampling != 0)
+        return 0;
 
     for (; nrows >= vertSubSampling; nrows -= vertSubSampling)
     {
@@ -245,7 +301,7 @@ static void cvtStrip(unsigned char *op, uint32_t *raster, uint32_t nrows,
             cvtClump(op, tp, vertSubSampling, x, width);
             op += clumpSize;
         }
-        raster -= vertSubSampling * width;
+        raster -= row_advance;
     }
     if (nrows > 0)
     {
@@ -259,6 +315,7 @@ static void cvtStrip(unsigned char *op, uint32_t *raster, uint32_t nrows,
         if (x > 0)
             cvtClump(op, tp, nrows, x, width);
     }
+    return 1;
 }
 
 static int cvtRaster(TIFF *tif, uint32_t *raster, uint32_t width,
@@ -268,22 +325,51 @@ static int cvtRaster(TIFF *tif, uint32_t *raster, uint32_t width,
     tstrip_t strip = 0;
     tsize_t cc, acc;
     unsigned char *buf;
-    uint32_t rwidth = roundup(width, horizSubSampling);
-    uint32_t rheight = roundup(height, vertSubSampling);
-    uint32_t nrows = (rowsperstrip > rheight ? rheight : rowsperstrip);
-    uint32_t rnrows = roundup(nrows, vertSubSampling);
+    uint32_t rwidth;
+    uint32_t rheight;
+    uint32_t nrows;
+    uint32_t rnrows;
 
-    cc = (tsize_t)rnrows * rwidth +
-         2 * ((rnrows * rwidth) / (horizSubSampling * vertSubSampling));
+    if (!checkedRoundup32(tif, &rwidth, width, horizSubSampling,
+                          "rounded raster width") ||
+        !checkedRoundup32(tif, &rheight, height, vertSubSampling,
+                          "rounded raster height"))
+        return 0;
+    nrows = (rowsperstrip > rheight ? rheight : rowsperstrip);
+    if (nrows == 0)
+        return 0;
+    if (!checkedRoundup32(tif, &rnrows, nrows, vertSubSampling,
+                          "rounded strip height"))
+        return 0;
+
+    cc = computeYCbCrStripSize(tif, rnrows, rwidth, "YCbCr strip size");
+    if (cc == 0)
+        return 0;
     buf = (unsigned char *)_TIFFmalloc(cc);
     // FIXME unchecked malloc
     for (y = height; (int32_t)y > 0; y -= nrows)
     {
         uint32_t nr = (y > nrows ? nrows : y);
-        cvtStrip(buf, raster + (y - 1) * width, nr, width);
-        nr = roundup(nr, vertSubSampling);
-        acc = (tsize_t)nr * rwidth +
-              2 * ((nr * rwidth) / (horizSubSampling * vertSubSampling));
+        tmsize_t raster_offset =
+            _TIFFComputeRowOffset(tif, width, y - 1, "raster row offset");
+        if ((raster_offset == 0 && y != 1 && width != 0) ||
+            !cvtStrip(tif, buf, raster + raster_offset, nr, width))
+        {
+            _TIFFfree(buf);
+            return 0;
+        }
+        if (!checkedRoundup32(tif, &nr, nr, vertSubSampling,
+                              "rounded strip height"))
+        {
+            _TIFFfree(buf);
+            return 0;
+        }
+        acc = computeYCbCrStripSize(tif, nr, rwidth, "YCbCr strip size");
+        if (acc == 0)
+        {
+            _TIFFfree(buf);
+            return 0;
+        }
         if (!TIFFWriteEncodedStrip(tif, strip++, buf, acc))
         {
             _TIFFfree(buf);
@@ -303,14 +389,19 @@ static int tiffcvt(TIFF *in, TIFF *out)
     char *stringv;
     uint32_t longv;
     int result;
-    size_t pixel_count;
+    uint64_t pixel_count64;
+    tmsize_t pixel_count;
 
     TIFFGetField(in, TIFFTAG_IMAGEWIDTH, &width);
     TIFFGetField(in, TIFFTAG_IMAGELENGTH, &height);
-    pixel_count = width * height;
+    pixel_count64 =
+        _TIFFMultiply64(in, width, height, "raster buffer pixel count");
+    pixel_count =
+        _TIFFCastUInt64ToSSize(in, pixel_count64, "raster buffer pixel count");
 
-    /* XXX: Check the integer overflow. */
-    if (!width || !height || pixel_count / width != height)
+    /* Check for integer overflow or implausibly large image dimensions. */
+    if (!width || !height || pixel_count == 0 ||
+        pixel_count > (tmsize_t)(INT32_MAX / sizeof(uint32_t)))
     {
         TIFFError(TIFFFileName(in),
                   "Malformed input file; "
@@ -325,7 +416,7 @@ static int tiffcvt(TIFF *in, TIFF *out)
     if (raster == 0)
     {
         TIFFError(TIFFFileName(in),
-                  "Failed to allocate buffer (%" TIFF_SIZE_FORMAT
+                  "Failed to allocate buffer (%" TIFF_SSIZE_FORMAT
                   " elements of %" TIFF_SIZE_FORMAT " each)",
                   pixel_count, sizeof(uint32_t));
         return (0);
@@ -348,13 +439,13 @@ static int tiffcvt(TIFF *in, TIFF *out)
     CopyField(TIFFTAG_FILLORDER, shortv);
     TIFFSetField(out, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT);
     TIFFSetField(out, TIFFTAG_SAMPLESPERPIXEL, 3);
-    CopyField(TIFFTAG_XRESOLUTION, floatv);
-    CopyField(TIFFTAG_YRESOLUTION, floatv);
+    CopyFieldFloat(TIFFTAG_XRESOLUTION, floatv);
+    CopyFieldFloat(TIFFTAG_YRESOLUTION, floatv);
     CopyField(TIFFTAG_RESOLUTIONUNIT, shortv);
     TIFFSetField(out, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
     {
         char buf[2048];
-        char *cp = strrchr(TIFFFileName(in), '/');
+        const char *cp = strrchr(TIFFFileName(in), '/');
         snprintf(buf, sizeof(buf), "YCbCr conversion of %s",
                  cp ? cp + 1 : TIFFFileName(in));
         TIFFSetField(out, TIFFTAG_IMAGEDESCRIPTION, buf);

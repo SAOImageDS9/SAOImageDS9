@@ -51,7 +51,7 @@ static char sccsid[] = "@(#)ras2tif.c 1.2 90/03/06";
 typedef int boolean;
 #define True (1)
 #define False (0)
-#define SCALE(x) (((x) * ((1L << 16) - 1)) / 255)
+#define SCALE(x) (((x) * ((1 << 16) - 1)) / 255)
 
 boolean Verbose = False;
 boolean dummyinput = False;

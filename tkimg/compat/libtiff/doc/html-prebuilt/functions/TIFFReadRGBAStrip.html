@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>TIFFReadRGBAStrip &#8212; LibTIFF 4.7.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b849a4e9" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=0a676766" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=9f25de62"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <title>TIFFReadRGBAStrip &#8212; LibTIFF 4.7.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=34905f61" />
+    <script src="../_static/documentation_options.js?v=2edf0659"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="TIFFReadRGBATile" href="TIFFReadRGBATile.html" />
     <link rel="prev" title="TIFFReadRGBAImage" href="TIFFReadRGBAImage.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="TIFFReadRGBAImage.html" title="TIFFReadRGBAImage"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../functions.html" accesskey="U">TIFF Functions Overview</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">TIFFReadRGBAStrip</a></li> 
       </ul>
@@ -40,32 +40,32 @@
           <div class="body" role="main">
             
   <section id="tiffreadrgbastrip">
-<h1>TIFFReadRGBAStrip<a class="headerlink" href="#tiffreadrgbastrip" title="Permalink to this heading">¶</a></h1>
+<h1>TIFFReadRGBAStrip<a class="headerlink" href="#tiffreadrgbastrip" title="Link to this heading">¶</a></h1>
 <section id="synopsis">
-<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this heading">¶</a></h2>
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Link to this heading">¶</a></h2>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;tiffio.h&gt;</span>
 </pre></div>
 </div>
 <dl class="c function">
 <dt class="sig sig-object c" id="c.TIFFReadRGBAStrip">
-<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFReadRGBAStrip</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">TIFF</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">tif</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">row</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">raster</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFReadRGBAStrip" title="Permalink to this definition">¶</a><br /></dt>
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFReadRGBAStrip</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">TIFF</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">tif</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">row</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">raster</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFReadRGBAStrip" title="Link to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="c function">
 <dt class="sig sig-object c" id="c.TIFFReadRGBAStripExt">
-<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFReadRGBAStripExt</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">TIFF</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">tif</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">row</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">raster</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n"><span class="pre">stop_on_error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFReadRGBAStripExt" title="Permalink to this definition">¶</a><br /></dt>
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFReadRGBAStripExt</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">TIFF</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">tif</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">row</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">raster</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n"><span class="pre">stop_on_error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFReadRGBAStripExt" title="Link to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 </section>
 <section id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">¶</a></h2>
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading">¶</a></h2>
 <p><a class="reference internal" href="#c.TIFFReadRGBAStrip" title="TIFFReadRGBAStrip"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFReadRGBAStrip()</span></code></a> reads a single strip of a strip-based image
 into memory, storing the result in the user supplied RGBA <em>raster</em>.
 The raster is assumed to be an array of <code class="docutils literal notranslate"><span class="pre">ImageWidth</span></code> × <code class="docutils literal notranslate"><span class="pre">RowsPerStrip</span></code>
 32-bit entries, where <code class="docutils literal notranslate"><span class="pre">ImageWidth</span></code> is the width of the image
 (<code class="xref c c-macro docutils literal notranslate"><span class="pre">TIFFTAG_IMAGEWIDTH</span></code>) and <code class="docutils literal notranslate"><span class="pre">RowsPerStrip</span></code> is the maximum lines
 in a strip (<code class="xref c c-macro docutils literal notranslate"><span class="pre">TIFFTAG_ROWSPERSTRIP</span></code>).</p>
-<p><a class="reference internal" href="#c.TIFFReadRGBAStripExt" title="TIFFReadRGBAStripExt"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFReadRGBAStripExt()</span></code></a> provides the paramater <cite>stop_on_error</cite>.
+<p><a class="reference internal" href="#c.TIFFReadRGBAStripExt" title="TIFFReadRGBAStripExt"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFReadRGBAStripExt()</span></code></a> provides the parameter <cite>stop_on_error</cite>.
 Its behaviour is described at <a class="reference internal" href="TIFFReadRGBAImage.html"><span class="doc">TIFFReadRGBAImage</span></a>.</p>
 <p>The <em>row</em> value should be the row of the first row in the strip
 (<em>strip</em> × <code class="docutils literal notranslate"><span class="pre">RowsPerStrip</span></code>, zero based).</p>
@@ -83,26 +83,23 @@ without Associated Alpha matting information have a constant Alpha of 1.0
 are converted to RGBA values.</p>
 </section>
 <section id="notes">
-<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this heading">¶</a></h2>
-<p>Samples must be either 1, 2, 4, 8, or 16 bits.
-Colorimetric samples/pixel must be either 1, 3, or 4 (i.e. <code class="docutils literal notranslate"><span class="pre">SamplesPerPixel</span></code>
-- <code class="docutils literal notranslate"><span class="pre">ExtraSamples</span></code>).</p>
-<p>Palette image colormaps that appear to be incorrectly written as 8-bit values
-are automatically scaled to 16-bits.</p>
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading">¶</a></h2>
 <p><a class="reference internal" href="#c.TIFFReadRGBAStrip" title="TIFFReadRGBAStrip"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFReadRGBAStrip()</span></code></a> is just a wrapper around the more general
 <a class="reference internal" href="TIFFRGBAImage.html"><span class="doc">TIFFRGBAImage</span></a> facilities.  It's main advantage over the similar
 <a class="reference internal" href="TIFFReadRGBAImage.html#c.TIFFReadRGBAImage" title="TIFFReadRGBAImage"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFReadRGBAImage()</span></code></a> function is that for large images a single
 buffer capable of holding the whole image doesn't need to be allocated,
 only enough for one strip.  The <a class="reference internal" href="TIFFReadRGBATile.html#c.TIFFReadRGBATile" title="TIFFReadRGBATile"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFReadRGBATile()</span></code></a> function
 does a similar operation for tiled images.</p>
+<p>For general notes see
+<a class="reference internal" href="TIFFRGBAImage.html#tiffrgbaimage-restriction-notes"><span class="std std-ref">TIFFRGBImage notes</span></a>.</p>
 </section>
 <section id="return-values">
-<h2>Return values<a class="headerlink" href="#return-values" title="Permalink to this heading">¶</a></h2>
+<h2>Return values<a class="headerlink" href="#return-values" title="Link to this heading">¶</a></h2>
 <p>1 is returned if the image was successfully read and converted.
 Otherwise, 0 is returned if an error was encountered.</p>
 </section>
 <section id="diagnostics">
-<h2>Diagnostics<a class="headerlink" href="#diagnostics" title="Permalink to this heading">¶</a></h2>
+<h2>Diagnostics<a class="headerlink" href="#diagnostics" title="Link to this heading">¶</a></h2>
 <p>All error messages are directed to the <a class="reference internal" href="TIFFError.html#c.TIFFErrorExtR" title="TIFFErrorExtR"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFErrorExtR()</span></code></a> routine.</p>
 <p><code class="docutils literal notranslate"><span class="pre">&quot;Sorry,</span> <span class="pre">can</span> <span class="pre">not</span> <span class="pre">handle</span> <span class="pre">%d-bit</span> <span class="pre">pictures&quot;</span></code>:</p>
 <blockquote>
@@ -162,7 +159,7 @@ RGB.</p>
 </div></blockquote>
 </section>
 <section id="see-also">
-<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this heading">¶</a></h2>
+<h2>See also<a class="headerlink" href="#see-also" title="Link to this heading">¶</a></h2>
 <p><a class="reference internal" href="TIFFOpen.html"><span class="doc">TIFFOpen</span></a> (3tiff),
 <a class="reference internal" href="TIFFRGBAImage.html"><span class="doc">TIFFRGBAImage</span></a> (3tiff),
 <a class="reference internal" href="TIFFReadRGBAImage.html"><span class="doc">TIFFReadRGBAImage</span></a> (3tiff),
@@ -176,7 +173,7 @@ RGB.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="../index.html">Table of Contents</a></h3>
@@ -210,7 +207,7 @@ RGB.</p>
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -218,13 +215,13 @@ RGB.</p>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -236,14 +233,14 @@ RGB.</p>
         <li class="right" >
           <a href="TIFFReadRGBAImage.html" title="TIFFReadRGBAImage"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../functions.html" >TIFF Functions Overview</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">TIFFReadRGBAStrip</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-    &#169; Copyright 1988-2022, LibTIFF contributors.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+    &#169; Copyright 1988-2025, LibTIFF contributors.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

@@ -39,12 +39,12 @@
 
 #include "tiffio.h"
 
-int test(const char *mode, int tiled, int height)
+static int test(const char *mode, int tiled, int height)
 {
     const char *filename = "defer_strile_writing.tif";
     TIFF *tif;
     int i;
-    int ret = 0;
+    tmsize_t ret = 0;
     (void)ret;
 
     tif = TIFFOpen(filename, mode);
@@ -142,7 +142,7 @@ int test(const char *mode, int tiled, int height)
         {
             unsigned char tilebuffer[256];
             memset(tilebuffer, (unsigned char)j, 256);
-            ret = TIFFWriteEncodedTile(tif, j, tilebuffer, 256);
+            ret = TIFFWriteEncodedTile(tif, (uint32_t)j, tilebuffer, 256);
             assert(ret == 256);
         }
     }
@@ -151,7 +151,7 @@ int test(const char *mode, int tiled, int height)
         for (i = 0; i < height; i++)
         {
             unsigned char c = (unsigned char)i;
-            ret = TIFFWriteEncodedStrip(tif, i, &c, 1);
+            ret = TIFFWriteEncodedStrip(tif, (uint32_t)i, &c, 1);
             assert(ret == 1);
 
             if (i == 1 && height > 100000)
@@ -178,7 +178,7 @@ int test(const char *mode, int tiled, int height)
                 unsigned char tilebuffer[256];
                 unsigned char expected_c = (unsigned char)j;
                 memset(tilebuffer, 0, 256);
-                ret = TIFFReadEncodedTile(tif, j, tilebuffer, 256);
+                ret = TIFFReadEncodedTile(tif, (uint32_t)j, tilebuffer, 256);
                 assert(ret == 256);
                 if (tilebuffer[0] != expected_c ||
                     tilebuffer[255] != expected_c)
@@ -201,7 +201,7 @@ int test(const char *mode, int tiled, int height)
             {
                 unsigned char c = 0;
                 unsigned char expected_c = (unsigned char)j;
-                ret = TIFFReadEncodedStrip(tif, j, &c, 1);
+                ret = TIFFReadEncodedStrip(tif, (uint32_t)j, &c, 1);
                 assert(ret == 1);
                 if (c != expected_c)
                 {
@@ -219,7 +219,7 @@ int test(const char *mode, int tiled, int height)
     return 0;
 }
 
-int main()
+int main(void)
 {
     int tiled;
     for (tiled = 0; tiled <= 1; tiled++)

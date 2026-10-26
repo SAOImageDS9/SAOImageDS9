@@ -24,10 +24,10 @@
 #define TIFFTCL_MAJOR_VERSION   4
 #define TIFFTCL_MINOR_VERSION   7
 #define TIFFTCL_RELEASE_LEVEL   TCL_RELEASE
-#define TIFFTCL_RELEASE_SERIAL  0
+#define TIFFTCL_RELEASE_SERIAL  2
 
-#define TIFFTCL_VERSION         "4.7.0"
-#define TIFFTCL_PATCH_LEVEL     "4.7.0"
+#define TIFFTCL_VERSION         "4.7.2"
+#define TIFFTCL_PATCH_LEVEL     "4.7.2"
 
 /*
  * Used to block the rest of this header file from resource compilers so

@@ -1,5 +1,5 @@
 /* deflate.h -- internal compression state
- * Copyright (C) 1995-2024 Jean-loup Gailly
+ * Copyright (C) 1995-2026 Jean-loup Gailly
  * For conditions of distribution and use, see copyright notice in zlib.h
  */
 
@@ -8,7 +8,7 @@
    subject to change. Applications should only use zlib.h.
  */
 
-/* @(#) $Id: deflate.h 815 2024-01-31 21:05:52Z obermeier $ */
+/* @(#) $Id$ */
 
 #ifndef DEFLATE_H
 #define DEFLATE_H
@@ -271,6 +271,9 @@ typedef struct internal_state {
     /* Number of valid bits in bi_buf.  All bits above the last valid bit
      * are always zero.
      */
+    int bi_used;
+    /* Last number of used bits when going to a byte boundary.
+     */
 
     ulg high_water;
     /* High water mark offset in window for initialized bytes -- bytes above
@@ -278,6 +281,9 @@ typedef struct internal_state {
      * longest match routines access bytes past the input.  This is then
      * updated to the new high water mark.
      */
+
+    int slid;
+    /* True if the hash table has been slid since it was cleared. */
 
 } FAR deflate_state;
 

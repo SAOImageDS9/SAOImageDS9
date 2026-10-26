@@ -55,6 +55,10 @@ Options
 
   Set the initial TIFF directory to *#*.
 
+.. option:: -W
+
+  Warn about unknown tags.
+
 See also
 --------
 

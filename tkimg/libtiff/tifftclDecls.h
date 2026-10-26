@@ -370,6 +370,12 @@ TIFFTCLAPI tmsize_t	_TIFFMultiplySSize(TIFF *tiffptr, tmsize_t a,
 /* 164 */
 TIFFTCLAPI void		TIFFWarningExt(thandle_t h, const char *a,
 				const char *b, ...);
+/* 165 */
+TIFFTCLAPI void		TIFFWarningExtR(TIFF *tiff, const char *a,
+				const char *b, ...);
+/* 166 */
+TIFFTCLAPI void		TIFFErrorExtR(TIFF *tiff, const char *a,
+				const char *b, ...);
 
 typedef struct TifftclStubs {
     int magic;
@@ -540,6 +546,8 @@ typedef struct TifftclStubs {
     int (*tIFFInitSGILog) (TIFF *tiffptr, int a); /* 162 */
     tmsize_t (*_TIFFMultiplySSizePtr) (TIFF *tiffptr, tmsize_t a, tmsize_t b, const char *c); /* 163 */
     void (*tIFFWarningExt) (thandle_t h, const char *a, const char *b, ...); /* 164 */
+    void (*tIFFWarningExtR) (TIFF * tif, const char *a, const char *b, ...); /* 165 */
+    void (*tIFFErrorExtR) (TIFF * tif, const char *a, const char *b, ...); /* 166 */
 } TifftclStubs;
 
 #ifdef __cplusplus
@@ -846,6 +854,10 @@ TIFFTCLAPI const TifftclStubs *tifftclStubsPtr;
 	(tifftclStubsPtr->_TIFFMultiplySSizePtr) /* 163 */
 #define TIFFWarningExt \
 	(tifftclStubsPtr->tIFFWarningExt) /* 164 */
+#define TIFFWarningExtR \
+	(tifftclStubsPtr->tIFFWarningExtR) /* 165 */
+#define TIFFErrorExtR \
+	(tifftclStubsPtr->tIFFErrorExtR) /* 166 */
 
 #endif /* defined(USE_TIFFTCL_STUBS) */
 

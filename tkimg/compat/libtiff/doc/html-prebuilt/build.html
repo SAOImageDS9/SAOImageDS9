@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Building the TIFF Software Distribution &#8212; LibTIFF 4.7.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b849a4e9" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinxdoc.css?v=0a676766" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=9f25de62"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <title>Building the TIFF Software Distribution &#8212; LibTIFF 4.7.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinxdoc.css?v=34905f61" />
+    <script src="_static/documentation_options.js?v=2edf0659"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Terminology" href="terms.html" />
     <link rel="prev" title="TIFF Test Images" href="images.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="images.html" title="TIFF Test Images"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Building the TIFF Software Distribution</a></li> 
       </ul>
     </div>  
@@ -39,14 +39,15 @@
           <div class="body" role="main">
             
   <section id="building-the-tiff-software-distribution">
-<h1>Building the TIFF Software Distribution<a class="headerlink" href="#building-the-tiff-software-distribution" title="Permalink to this heading">¶</a></h1>
-<a class="reference internal image-reference" href="_images/cramps.gif"><img alt="cramps" src="_images/cramps.gif" style="width: 159px;" /></a>
+<h1>Building the TIFF Software Distribution<a class="headerlink" href="#building-the-tiff-software-distribution" title="Link to this heading">¶</a></h1>
+<a class="reference internal image-reference" href="_images/cramps.gif"><img alt="cramps" src="_images/cramps.gif" style="width: 159px;" />
+</a>
 <p>This chapter contains step-by-step instructions on how to configure
 and build the TIFF software distribution. The software is most
 easily built on a UNIX system, but with a little bit of work it can
 easily be built and used on other non-UNIX platforms.</p>
 <section id="building-on-all-systems-with-cmake">
-<h2>Building on all systems with CMake<a class="headerlink" href="#building-on-all-systems-with-cmake" title="Permalink to this heading">¶</a></h2>
+<h2>Building on all systems with CMake<a class="headerlink" href="#building-on-all-systems-with-cmake" title="Link to this heading">¶</a></h2>
 <p>CMake may be used to
 generate build files for most common build systems and IDEs, and
 supports all UNIX-like systems as well as Windows. See
@@ -83,7 +84,7 @@ targets will always be available:</p>
 </pre></div>
 </div>
 <section id="build-trees">
-<h3>Build Trees<a class="headerlink" href="#build-trees" title="Permalink to this heading">¶</a></h3>
+<h3>Build Trees<a class="headerlink" href="#build-trees" title="Link to this heading">¶</a></h3>
 <p>There are two schemes for configuring and building the software. If
 you intend to build the software for only one target system, you
 can configure the software so that it is built in the same
@@ -122,12 +123,12 @@ recommended)</p></li>
 </ul>
 </section>
 <section id="generators">
-<h3>Generators<a class="headerlink" href="#generators" title="Permalink to this heading">¶</a></h3>
+<h3>Generators<a class="headerlink" href="#generators" title="Link to this heading">¶</a></h3>
 <p>The default generator for UNIX is <code class="docutils literal notranslate"><span class="pre">Unix</span> <span class="pre">Makefiles</span></code>, and on Windows is
 <code class="docutils literal notranslate"><span class="pre">NMake</span> <span class="pre">Makefiles</span></code> or <code class="docutils literal notranslate"><span class="pre">MSBuild</span></code> depending upon the setup.
 Run <strong class="command">cmake --help</strong> to list all the
 generators available for your platform.  For example, to use the Ninja
-<a class="reference external" href="https://martine.github.io/ninja/">build system</a> on UNIX or
+<a class="reference external" href="https://ninja-build.org/">build system</a> on UNIX or
 Windows:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>-G<span class="w"> </span>Ninja
 cmake<span class="w"> </span>--build<span class="w"> </span>.
@@ -150,7 +151,7 @@ solution file with the Visual Studio IDE as well as building on the
 command-line.</p>
 </section>
 <section id="configuration-options">
-<h3>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this heading">¶</a></h3>
+<h3>Configuration Options<a class="headerlink" href="#configuration-options" title="Link to this heading">¶</a></h3>
 <p>The configuration process is critical to the proper compilation,
 installation, and operation of the
 software. The <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> script runs a series of tests to
@@ -174,7 +175,7 @@ options in addition. Standard installation related options are shown
 below.</p>
 <blockquote>
 <div><table class="docutils align-default" id="id9">
-<caption><span class="caption-text">Installation options</span><a class="headerlink" href="#id9" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Installation options</span><a class="headerlink" href="#id9" title="Link to this table">¶</a></caption>
 <colgroup>
 <col style="width: 40.0%" />
 <col style="width: 60.0%" />
@@ -240,13 +241,13 @@ for <a class="reference external" href="http://www.cmake.org/cmake/help/latest/m
 which may be set.</p>
 </section>
 <section id="configuring-optional-packages-support">
-<h3>Configuring Optional Packages/Support<a class="headerlink" href="#configuring-optional-packages-support" title="Permalink to this heading">¶</a></h3>
+<h3>Configuring Optional Packages/Support<a class="headerlink" href="#configuring-optional-packages-support" title="Link to this heading">¶</a></h3>
 <p>The TIFF software comes with several packages that are installed
 only as needed, or only if specifically configured at the time the
 configure script is run. Packages can be configured via the
 <strong class="program">cmake</strong> commandline parameters.</p>
 <section id="static-shared-objects-support">
-<h4>Static/Shared Objects Support<a class="headerlink" href="#static-shared-objects-support" title="Permalink to this heading">¶</a></h4>
+<h4>Static/Shared Objects Support<a class="headerlink" href="#static-shared-objects-support" title="Link to this heading">¶</a></h4>
 <p><code class="docutils literal notranslate"><span class="pre">BUILD_SHARED_LIBS[=ON|OFF]</span></code>:</p>
 <blockquote>
 <div><p>Build shared libraries (default is <code class="docutils literal notranslate"><span class="pre">ON</span></code>)</p>
@@ -266,10 +267,20 @@ same program.</p>
 </div></blockquote>
 </section>
 <section id="jpeg-support">
-<h4>JPEG Support<a class="headerlink" href="#jpeg-support" title="Permalink to this heading">¶</a></h4>
+<h4>JPEG Support<a class="headerlink" href="#jpeg-support" title="Link to this heading">¶</a></h4>
 <p><code class="docutils literal notranslate"><span class="pre">jpeg[=ON|OFF]</span></code></p>
 <blockquote>
 <div><p>Enable IJG JPEG library usage (required for JPEG compression, enabled by default)</p>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">jpeg-prefer-standard[=ON|OFF]</span></code></p>
+<blockquote>
+<div><p>Prefer standard JPEG library over libjpeg-turbo (default is <code class="docutils literal notranslate"><span class="pre">OFF</span></code>)</p>
+<p>By default, the CMake script will first attempt to find libjpeg-turbo
+using its CONFIG file, which is more reliable and cross-platform. If
+libjpeg-turbo is not found via CONFIG, it falls back to using the
+Find module to locate any JPEG library. Setting this option to <code class="docutils literal notranslate"><span class="pre">ON</span></code>
+will skip the libjpeg-turbo CONFIG search and go directly to the
+Find module, which may find a different JPEG implementation.</p>
 </div></blockquote>
 <p><code class="docutils literal notranslate"><span class="pre">JPEG_INCLUDE_DIR=DIR</span></code>:</p>
 <blockquote>
@@ -289,7 +300,7 @@ automatically disabled. If you want specify the exact paths to
 library binary and headers, use above options for that.</p>
 </section>
 <section id="zip-support">
-<h4>ZIP Support<a class="headerlink" href="#zip-support" title="Permalink to this heading">¶</a></h4>
+<h4>ZIP Support<a class="headerlink" href="#zip-support" title="Link to this heading">¶</a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">ZIP</span></code> support enables support for the handling of TIFF
 images with deflate-encoded data (enabled by default if
 available). Support for deflate-encoded data requires the freely
@@ -299,7 +310,7 @@ Mark Adler; this software is available at <a class="reference external" href="ht
 </section>
 </section>
 <section id="building-on-a-unix-system-with-autoconf">
-<h2>Building on a UNIX System with Autoconf<a class="headerlink" href="#building-on-a-unix-system-with-autoconf" title="Permalink to this heading">¶</a></h2>
+<h2>Building on a UNIX System with Autoconf<a class="headerlink" href="#building-on-a-unix-system-with-autoconf" title="Link to this heading">¶</a></h2>
 <p>To build the software on a UNIX system you need to first run the
 <strong class="program">configure</strong> shell script that is located in the top level of the
 source directory. This script probes the target system for
@@ -323,7 +334,7 @@ and then <strong class="command">make install</strong> to do the installation; f
 should be &quot;make-able&quot; in each directory:</p>
 <blockquote>
 <div><table class="docutils align-default" id="id10">
-<caption><span class="caption-text">Make targets</span><a class="headerlink" href="#id10" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Make targets</span><a class="headerlink" href="#id10" title="Link to this table">¶</a></caption>
 <colgroup>
 <col style="width: 40.0%" />
 <col style="width: 60.0%" />
@@ -356,7 +367,7 @@ should be &quot;make-able&quot; in each directory:</p>
 <strong class="program">configure</strong> script must be run again to create the <code class="file docutils literal notranslate"><span class="pre">Makefile</span></code>
 and other make-related files.</p>
 <section id="id1">
-<h3>Build Trees<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<h3>Build Trees<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
 <p>There are two schemes for configuring and building the software. If
 you intend to build the software for only one target system, you
 can configure the software so that it is built in the same
@@ -391,7 +402,7 @@ multiple systems</p></li>
 </ul>
 </section>
 <section id="id2">
-<h3>Configuration Options<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+<h3>Configuration Options<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
 <p>The configuration process is critical to the proper compilation,
 installation, and operation of the software. The configure script
 runs a series of tests to decide whether or not the target system
@@ -413,13 +424,13 @@ options are shown below.</p>
 <p>Installation directories:</p>
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-prefix">
-<span class="sig-name descname"><span class="pre">--prefix</span></span><span class="sig-prename descclassname"><span class="pre">=PREFIX</span></span><a class="headerlink" href="#cmdoption-configure-prefix" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--prefix</span></span><span class="sig-prename descclassname"><span class="pre">=PREFIX</span></span><a class="headerlink" href="#cmdoption-configure-prefix" title="Link to this definition">¶</a></dt>
 <dd><p>install architecture-independent files in <em>PREFIX</em> [<code class="file docutils literal notranslate"><span class="pre">/usr/local</span></code>]</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-exec-prefix">
-<span class="sig-name descname"><span class="pre">--exec-prefix</span></span><span class="sig-prename descclassname"><span class="pre">=EPREFIX</span></span><a class="headerlink" href="#cmdoption-configure-exec-prefix" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--exec-prefix</span></span><span class="sig-prename descclassname"><span class="pre">=EPREFIX</span></span><a class="headerlink" href="#cmdoption-configure-exec-prefix" title="Link to this definition">¶</a></dt>
 <dd><p>install architecture-dependent files in <em>EPREFIX</em> [<code class="file docutils literal notranslate"><span class="pre">PREFIX</span></code>]</p>
 </dd></dl>
 
@@ -430,131 +441,131 @@ for instance <code class="docutils literal notranslate"><span class="pre">--pref
 <p>Fine tuning of the installation directories:</p>
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-bindir">
-<span class="sig-name descname"><span class="pre">--bindir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-bindir" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--bindir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-bindir" title="Link to this definition">¶</a></dt>
 <dd><p>user executables [<code class="file docutils literal notranslate"><span class="pre">EPREFIX/bin</span></code>]</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-sbindir">
-<span class="sig-name descname"><span class="pre">--sbindir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-sbindir" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--sbindir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-sbindir" title="Link to this definition">¶</a></dt>
 <dd><p>system admin executables [<code class="file docutils literal notranslate"><span class="pre">EPREFIX/sbin</span></code>]</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-libexecdir">
-<span class="sig-name descname"><span class="pre">--libexecdir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-libexecdir" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--libexecdir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-libexecdir" title="Link to this definition">¶</a></dt>
 <dd><p>program executables [<code class="file docutils literal notranslate"><span class="pre">EPREFIX/libexec</span></code>]</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-sysconfdir">
-<span class="sig-name descname"><span class="pre">--sysconfdir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-sysconfdir" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--sysconfdir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-sysconfdir" title="Link to this definition">¶</a></dt>
 <dd><p>read-only single-machine data [<code class="file docutils literal notranslate"><span class="pre">PREFIX/etc</span></code>]</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-sharedstatedir">
-<span class="sig-name descname"><span class="pre">--sharedstatedir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-sharedstatedir" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--sharedstatedir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-sharedstatedir" title="Link to this definition">¶</a></dt>
 <dd><p>modifiable architecture-independent data [<code class="file docutils literal notranslate"><span class="pre">PREFIX/com</span></code>]</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-localstatedir">
-<span class="sig-name descname"><span class="pre">--localstatedir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-localstatedir" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--localstatedir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-localstatedir" title="Link to this definition">¶</a></dt>
 <dd><p>modifiable single-machine data [<code class="file docutils literal notranslate"><span class="pre">PREFIX/var</span></code>]</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-libdir">
-<span class="sig-name descname"><span class="pre">--libdir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-libdir" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--libdir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-libdir" title="Link to this definition">¶</a></dt>
 <dd><p>object code libraries [<code class="file docutils literal notranslate"><span class="pre">EPREFIX/lib</span></code>]</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-includedir">
-<span class="sig-name descname"><span class="pre">--includedir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-includedir" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--includedir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-includedir" title="Link to this definition">¶</a></dt>
 <dd><p>C header files [<code class="file docutils literal notranslate"><span class="pre">PREFIX/include</span></code>]</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-oldincludedir">
-<span class="sig-name descname"><span class="pre">--oldincludedir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-oldincludedir" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--oldincludedir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-oldincludedir" title="Link to this definition">¶</a></dt>
 <dd><p>C header files for non-gcc [<code class="file docutils literal notranslate"><span class="pre">/usr/include</span></code>]</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-datarootdir">
-<span class="sig-name descname"><span class="pre">--datarootdir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-datarootdir" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--datarootdir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-datarootdir" title="Link to this definition">¶</a></dt>
 <dd><p>read-only architecture-independent data root [<code class="file docutils literal notranslate"><span class="pre">PREFIX/share</span></code>]</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-datadir">
-<span class="sig-name descname"><span class="pre">--datadir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-datadir" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--datadir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-datadir" title="Link to this definition">¶</a></dt>
 <dd><p>read-only architecture-independent data [<code class="file docutils literal notranslate"><span class="pre">DATAROOTDIR</span></code>]</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-localedir">
-<span class="sig-name descname"><span class="pre">--localedir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-localedir" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--localedir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-localedir" title="Link to this definition">¶</a></dt>
 <dd><p>locale-dependent data [<code class="file docutils literal notranslate"><span class="pre">DATAROOTDIR/locale</span></code>]</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-mandir">
-<span class="sig-name descname"><span class="pre">--mandir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-mandir" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--mandir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-mandir" title="Link to this definition">¶</a></dt>
 <dd><p>man documentation [<code class="file docutils literal notranslate"><span class="pre">DATAROOTDIR/man</span></code>]</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-docdir">
-<span class="sig-name descname"><span class="pre">--docdir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-docdir" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--docdir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-docdir" title="Link to this definition">¶</a></dt>
 <dd><p>documentation root [<code class="file docutils literal notranslate"><span class="pre">DATAROOTDIR/doc/tiff</span></code>]</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-htmldir">
-<span class="sig-name descname"><span class="pre">--htmldir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-htmldir" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--htmldir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-htmldir" title="Link to this definition">¶</a></dt>
 <dd><p>html documentation [<code class="file docutils literal notranslate"><span class="pre">DOCDIR</span></code>]</p>
 </dd></dl>
 
 <p>Program names:</p>
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-program-prefix">
-<span class="sig-name descname"><span class="pre">--program-prefix</span></span><span class="sig-prename descclassname"><span class="pre">=PREFIX</span></span><a class="headerlink" href="#cmdoption-configure-program-prefix" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--program-prefix</span></span><span class="sig-prename descclassname"><span class="pre">=PREFIX</span></span><a class="headerlink" href="#cmdoption-configure-program-prefix" title="Link to this definition">¶</a></dt>
 <dd><p>prepend <em>PREFIX</em> to installed program names</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-program-suffix">
-<span class="sig-name descname"><span class="pre">--program-suffix</span></span><span class="sig-prename descclassname"><span class="pre">=SUFFIX</span></span><a class="headerlink" href="#cmdoption-configure-program-suffix" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--program-suffix</span></span><span class="sig-prename descclassname"><span class="pre">=SUFFIX</span></span><a class="headerlink" href="#cmdoption-configure-program-suffix" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p>append <em>SUFFIX</em> to installed program names</p>
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-program-transform-name">
-<span class="sig-name descname"><span class="pre">--program-transform-name</span></span><span class="sig-prename descclassname"><span class="pre">=PROGRAM</span></span><a class="headerlink" href="#cmdoption-configure-program-transform-name" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--program-transform-name</span></span><span class="sig-prename descclassname"><span class="pre">=PROGRAM</span></span><a class="headerlink" href="#cmdoption-configure-program-transform-name" title="Link to this definition">¶</a></dt>
 <dd><p>run <strong class="command">sed</strong> <em>PROGRAM</em> on installed program names</p>
 </dd></dl>
 
 </section>
 <section id="id3">
-<h3>Configuring Optional Packages/Support<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
+<h3>Configuring Optional Packages/Support<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
 <p>The TIFF software comes with several packages that are installed
 only as needed, or only if specifically configured at the time the
 configure script is run. Packages can be configured via the
 <strong class="program">configure</strong> script commandline parameters.</p>
 <section id="id4">
-<h4>Static/Shared Objects Support<a class="headerlink" href="#id4" title="Permalink to this heading">¶</a></h4>
+<h4>Static/Shared Objects Support<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h4>
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-enable-shared">
-<span class="sig-name descname"><span class="pre">--enable-shared</span></span><span class="sig-prename descclassname"><span class="pre">[=PKGS]</span></span><a class="headerlink" href="#cmdoption-configure-enable-shared" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--enable-shared</span></span><span class="sig-prename descclassname"><span class="pre">[=PKGS]</span></span><a class="headerlink" href="#cmdoption-configure-enable-shared" title="Link to this definition">¶</a></dt>
 <dd><p>Build shared libraries [enabled]</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-enable-static">
-<span class="sig-name descname"><span class="pre">--enable-static</span></span><span class="sig-prename descclassname"><span class="pre">[=PKGS]</span></span><a class="headerlink" href="#cmdoption-configure-enable-static" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--enable-static</span></span><span class="sig-prename descclassname"><span class="pre">[=PKGS]</span></span><a class="headerlink" href="#cmdoption-configure-enable-static" title="Link to this definition">¶</a></dt>
 <dd><p>Build static libraries [enabled]</p>
 <p>These options control whether or not to configure the software
 to build a shared and static binaries for the TIFF library. Use of
@@ -566,7 +577,7 @@ By default both types of binaries are configured.</p>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-enable-rpath">
-<span class="sig-name descname"><span class="pre">--enable-rpath</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-configure-enable-rpath" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--enable-rpath</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-configure-enable-rpath" title="Link to this definition">¶</a></dt>
 <dd><p>Enable runtime linker paths (<code class="docutils literal notranslate"><span class="pre">-R</span></code> libtool option)</p>
 <p>Add library directories (see other options below) to the TIFF
 library run-time linker path.</p>
@@ -574,7 +585,7 @@ library run-time linker path.</p>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-enable-ld-version-script">
-<span class="sig-name descname"><span class="pre">--enable-ld-version-script</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-configure-enable-ld-version-script" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--enable-ld-version-script</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-configure-enable-ld-version-script" title="Link to this definition">¶</a></dt>
 <dd><p>Enable linker version script [yes]</p>
 <p>Add shared library symbol versioning on ELF-based systems (e.g.
 Linux and FreeBSD) which use the GNU linker. This is needed if
@@ -584,22 +595,22 @@ same program.</p>
 
 </section>
 <section id="id5">
-<h4>JPEG Support<a class="headerlink" href="#id5" title="Permalink to this heading">¶</a></h4>
+<h4>JPEG Support<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h4>
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-disable-jpeg">
-<span class="sig-name descname"><span class="pre">--disable-jpeg</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-configure-disable-jpeg" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--disable-jpeg</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-configure-disable-jpeg" title="Link to this definition">¶</a></dt>
 <dd><p>Disable IJG JPEG library usage (required for JPEG compression, enabled by default)</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-with-jpeg-include-dir">
-<span class="sig-name descname"><span class="pre">--with-jpeg-include-dir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-with-jpeg-include-dir" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--with-jpeg-include-dir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-with-jpeg-include-dir" title="Link to this definition">¶</a></dt>
 <dd><p>Location of IJG JPEG library headers</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-configure-with-jpeg-lib-dir">
-<span class="sig-name descname"><span class="pre">--with-jpeg-lib-dir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-with-jpeg-lib-dir" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">--with-jpeg-lib-dir</span></span><span class="sig-prename descclassname"><span class="pre">=DIR</span></span><a class="headerlink" href="#cmdoption-configure-with-jpeg-lib-dir" title="Link to this definition">¶</a></dt>
 <dd><p>Location of IJG JPEG library binary)</p>
 </dd></dl>
 
@@ -614,7 +625,7 @@ automatically disabled. If you want specify the exact paths to
 library binary and headers, use above switches for that.</p>
 </section>
 <section id="id7">
-<h4>ZIP Support<a class="headerlink" href="#id7" title="Permalink to this heading">¶</a></h4>
+<h4>ZIP Support<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">ZIP</span></code> support enables support for the handling of
 TIFF images with deflate-encoded data. Support for deflate-encoded
 data requires the freely available <code class="docutils literal notranslate"><span class="pre">zlib</span></code> distribution
@@ -625,7 +636,7 @@ enabled automatically if <code class="docutils literal notranslate"><span class=
 </section>
 </section>
 <section id="building-the-software-on-other-systems">
-<h2>Building the Software on Other Systems<a class="headerlink" href="#building-the-software-on-other-systems" title="Permalink to this heading">¶</a></h2>
+<h2>Building the Software on Other Systems<a class="headerlink" href="#building-the-software-on-other-systems" title="Link to this heading">¶</a></h2>
 <p>This section contains information that might be useful if you are
 working on a non-UNIX system that is not directly supported. All
 library-related files described below are located in the
@@ -680,7 +691,7 @@ emulation routines from the <code class="file docutils literal notranslate"><spa
 necessary to manually do this work on a non-UNIX system.</p>
 </section>
 <section id="testing-the-software">
-<h2>Testing the software<a class="headerlink" href="#testing-the-software" title="Permalink to this heading">¶</a></h2>
+<h2>Testing the software<a class="headerlink" href="#testing-the-software" title="Link to this heading">¶</a></h2>
 <p>Assuming you have working versions of <a class="reference internal" href="tools/tiffgt.html"><span class="doc">tiffgt</span></a>, you can now use
 it to view any of the sample images available for testing, or try
 <a class="reference internal" href="tools/tiffinfo.html"><span class="doc">tiffinfo</span></a> to display the file metadata.  See the
@@ -695,11 +706,11 @@ tiffcmp<span class="w"> </span>cramps.tif<span class="w"> </span>x.tif
 correctly).</p>
 </section>
 <section id="libtiff-source-files">
-<h2>LibTIFF source files<a class="headerlink" href="#libtiff-source-files" title="Permalink to this heading">¶</a></h2>
+<h2>LibTIFF source files<a class="headerlink" href="#libtiff-source-files" title="Link to this heading">¶</a></h2>
 <p>The following files make up the core library:</p>
 <blockquote>
 <div><table class="docutils align-default" id="id11">
-<caption><span class="caption-text">Core library source files</span><a class="headerlink" href="#id11" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Core library source files</span><a class="headerlink" href="#id11" title="Link to this table">¶</a></caption>
 <colgroup>
 <col style="width: 25.0%" />
 <col style="width: 75.0%" />
@@ -880,7 +891,7 @@ correctly).</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="index.html">Table of Contents</a></h3>
@@ -934,7 +945,7 @@ correctly).</p>
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -942,13 +953,13 @@ correctly).</p>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -960,13 +971,13 @@ correctly).</p>
         <li class="right" >
           <a href="images.html" title="TIFF Test Images"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Building the TIFF Software Distribution</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-    &#169; Copyright 1988-2022, LibTIFF contributors.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+    &#169; Copyright 1988-2025, LibTIFF contributors.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

@@ -1,15 +1,15 @@
 [comment {-*- tcl -*- doctools}]
-[manpage_begin img n 2.0]
+[manpage_begin img n 2.1]
 
 [moddesc Img]
 [titledesc {Introduction to Img}]
-[copyright {1995-2024 Jan Nijtmans <nijtmans@users.sourceforge.net>}]
-[copyright {2002-2024 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
-[copyright {2003-2024 Paul Obermeier <obermeier@users.sourceforge.net>}]
-[require Img [opt 2.0]]
+[copyright {1995-2026 Jan Nijtmans <nijtmans@users.sourceforge.net>}]
+[copyright {2002-2026 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
+[copyright {2003-2026 Paul Obermeier <obermeier@users.sourceforge.net>}]
+[require Img [opt 2.1.2]]
 [description]
 
-[package Img] is a collection of format handlers for the [package Tk] [uri https://www.tcl.tk/man/tcl9.0/TkCmd/photo.html photo] image type.
+[package Img] is a collection of format handlers for the [package Tk] [uri https://www.tcl-lang.org/man/tcl9.0/TkCmd/photo.html photo] image type.
 [para]
 Sources and binaries of [package Img] are available at [uri https://sourceforge.net/projects/tkimg/ SourceForge].
 [para]
@@ -40,7 +40,7 @@ Windows icon format.
 See [cmd img-ico].
 
 [def [term jpeg]]
-Joint Picture Experts Group format.
+Joint Picture Experts Group format. Based on libjpeg 9f.
 See [cmd img-jpeg].
 
 [def [term pcx]]
@@ -54,7 +54,7 @@ type, this is a new image type for [package Tk].
 See [cmd img-pixmap].
 
 [def [term png]]
-Portable Network Graphics format.
+Portable Network Graphics format. Based on libpng 1.6.47.
 See [cmd img-png].
 
 [def [term ppm]]
@@ -83,7 +83,7 @@ Truevision Targa format.
 See [cmd img-tga].
 
 [def [term tiff]]
-Tagged Image File Format.
+Tagged Image File Format. Based on libtiff 4.7.0.
 See [cmd img-tiff].
 
 [def [term window]]
@@ -168,7 +168,7 @@ If you need to know the number of pages, use code like in the following example:
 [section {Image Metadata}]
 
 Some image formats support an individual set of metadata dictionary keys.
-See the [package Tk] [uri https://www.tcl.tk/man/tcl9.0/TkCmd/photo.html photo] image command for more information regarding image metadata.
+See the [package Tk] [uri https://www.tcl-lang.org/man/tcl9.0/TkCmd/photo.html photo] image command for more information regarding image metadata.
 [para]
 This support is enabled, if [package Img] is linked against [package Tk] 8.7 or newer.
 [para]
@@ -211,7 +211,7 @@ Resolution values specified with any of the above options overwrite the correspo
 
 [enum]
 The  resolution values can be specified as double values as documented with function
-[uri https://www.tcl.tk/man/tcl9.0/TkLib/GetPixels.html Tk_GetPixels].
+[uri https://www.tcl-lang.org/man/tcl9.0/TkLib/GetPixels.html Tk_GetPixels].
 [list_end]
 
 Example resolution specifications:
@@ -234,7 +234,7 @@ img write out.png -format {png -resolution 300i 200c}
 Some image formats support pixel values greater than storable in 8-bit integers.
 [list_begin itemized]
 [item]
-The following formats support 16-bit integer pixel values: [cmd img-dted], [cmd img-ppm].
+The following formats support 16-bit integer pixel values: [cmd img-dted], [cmd img-ppm] [cmd img-raw].
 [item]
 The following formats support floating point pixel values: [cmd img-flir], [cmd img-raw].
 [list_end]
@@ -258,7 +258,7 @@ In Tk 8.7 a new format handler structure ([type Tk_PhotoImageFormatVersion3]) wa
 to handle the new metadata information.
 All old handlers ([type Tk_PhotoImageFormat]) are called before calling the new Format3 handlers.
 [para]
-See manual page of function [uri https://www.tcl.tk/man/tcl9.0/TkLib/CrtPhImgFmt.html Tk_CreatePhotoImageFormat]
+See manual page of function [uri https://www.tcl-lang.org/man/tcl9.0/TkLib/CrtPhImgFmt.html Tk_CreatePhotoImageFormat]
 for a detailed description of the handler struture and matching functions.
 [para]
 

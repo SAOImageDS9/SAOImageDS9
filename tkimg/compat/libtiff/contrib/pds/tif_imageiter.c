@@ -240,9 +240,7 @@ int TIFFImageIterGet(TIFFImageIter *img, void *udata, uint32_t w, uint32_t h)
     return (*img->get)(img, udata, w, h);
 }
 
-TIFFImageIterEnd(TIFFImageIter *img)
-{ /* Nothing to free... ? */
-}
+TIFFImageIterEnd(TIFFImageIter *img) { /* Nothing to free... ? */ }
 
 /*
  * Read the specified image into an ABGR-format raster.

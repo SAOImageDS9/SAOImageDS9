@@ -23,16 +23,25 @@
 # OF THIS SOFTWARE.
 
 add_executable(tiff-bi tiff-bi.c)
+set_target_properties(tiff-bi PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(tiff-bi tiff tiff_port)
 
 add_executable(tiff-grayscale tiff-grayscale.c)
-target_link_libraries(tiff-grayscale tiff tiff_port CMath::CMath)
+set_target_properties(tiff-grayscale PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(tiff-grayscale tiff tiff_port ${CMath_LIBRARIES})
 
 add_executable(tiff-palette tiff-palette.c)
+set_target_properties(tiff-palette PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(tiff-palette tiff tiff_port)
 
 add_executable(tiff-rgb tiff-rgb.c)
-target_link_libraries(tiff-rgb tiff tiff_port CMath::CMath)
+set_target_properties(tiff-rgb PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(tiff-rgb tiff tiff_port ${CMath_LIBRARIES})
+
+# Apply C++ compatibility mode to all contrib/dbs targets if enabled
+foreach(target tiff-bi tiff-grayscale tiff-palette tiff-rgb)
+  tiff_target_compile_as_cxx(${target})
+endforeach()
 
 if(WEBP_SUPPORT AND EMSCRIPTEN)
   # Emscripten is pretty finnicky about linker flags.

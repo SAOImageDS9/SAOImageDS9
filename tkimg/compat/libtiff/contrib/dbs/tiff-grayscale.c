@@ -34,7 +34,7 @@
 #define HEIGHT WIDTH
 
 char *programName;
-void Usage();
+void Usage(void);
 
 int main(int argc, char **argv)
 {
@@ -74,14 +74,14 @@ int main(int argc, char **argv)
     }
 
     cmsize = nchunks * nchunks;
-    gray = (uint16_t *)malloc(cmsize * sizeof(uint16_t));
+    gray = (uint16_t *)malloc((size_t)cmsize * sizeof(uint16_t));
 
     gray[0] = 3000;
     for (i = 1; i < cmsize; i++)
         gray[i] = (uint16_t)(-log10((double)i / (cmsize - 1)) * 1000);
 
     refblackwhite[0] = 0.0;
-    refblackwhite[1] = (float)((1L << bits_per_pixel) - 1);
+    refblackwhite[1] = (float)((1UL << bits_per_pixel) - 1);
 
     if ((tif = TIFFOpen(argv[3], "w")) == NULL)
     {
@@ -102,7 +102,7 @@ int main(int argc, char **argv)
     TIFFSetField(tif, TIFFTAG_TRANSFERFUNCTION, gray);
     TIFFSetField(tif, TIFFTAG_RESOLUTIONUNIT, RESUNIT_NONE);
 
-    scan_line = (unsigned char *)malloc(WIDTH / (8 / bits_per_pixel));
+    scan_line = (unsigned char *)malloc((size_t)(WIDTH / (8 / bits_per_pixel)));
 
     for (i = 0; i < HEIGHT; i++)
     {
@@ -113,21 +113,25 @@ int main(int argc, char **argv)
             switch (bits_per_pixel)
             {
                 case 8:
-                    scan_line[k++] = gray_index;
+                    scan_line[k++] = (unsigned char)gray_index;
                     j++;
                     break;
                 case 4:
-                    scan_line[k++] = (gray_index << 4) + gray_index;
+                    scan_line[k++] =
+                        (unsigned char)((gray_index << 4) + gray_index);
                     j += 2;
                     break;
                 case 2:
-                    scan_line[k++] = (gray_index << 6) + (gray_index << 4) +
-                                     (gray_index << 2) + gray_index;
+                    scan_line[k++] =
+                        (unsigned char)((gray_index << 6) + (gray_index << 4) +
+                                        (gray_index << 2) + gray_index);
                     j += 4;
+                    break;
+                default:
                     break;
             }
         }
-        TIFFWriteScanline(tif, scan_line, i, 0);
+        TIFFWriteScanline(tif, scan_line, (uint32_t)i, 0);
     }
 
     free(scan_line);
@@ -135,7 +139,7 @@ int main(int argc, char **argv)
     return 0;
 }
 
-void Usage()
+void Usage(void)
 {
     fprintf(stderr, "Usage: %s -depth (8 | 4 | 2) tiff-image\n", programName);
     exit(0);

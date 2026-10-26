@@ -342,7 +342,7 @@ Tools changes
 
 * :file:`tools/tiffdump.c` (:c:func:`ReadDirectory`): Remove :c:type:`uint32` cast to
   :c:func:`_TIFFmalloc` argument which resulted in Coverity report.
-  Added more mutiplication overflow checks.
+  Added more multiplication overflow checks.
 
 Contributed software changes
 ----------------------------

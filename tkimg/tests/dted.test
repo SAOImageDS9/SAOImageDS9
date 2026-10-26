@@ -83,7 +83,7 @@ namespace eval ::dted::test {
         } -cleanup {
             image delete i
         } -constraints {
-            Tk87
+            Tk9
         } -result {0 0}
 
         # DTED does not support writing.

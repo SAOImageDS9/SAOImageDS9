@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>TIFFRGBAImage &#8212; LibTIFF 4.7.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b849a4e9" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=0a676766" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=9f25de62"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <title>TIFFRGBAImage &#8212; LibTIFF 4.7.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=34905f61" />
+    <script src="../_static/documentation_options.js?v=2edf0659"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="TIFFSetDirectory" href="TIFFSetDirectory.html" />
     <link rel="prev" title="TIFFReadTile" href="TIFFReadTile.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="TIFFReadTile.html" title="TIFFReadTile"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../functions.html" accesskey="U">TIFF Functions Overview</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">TIFFRGBAImage</a></li> 
       </ul>
@@ -40,49 +40,49 @@
           <div class="body" role="main">
             
   <section id="tiffrgbaimage">
-<h1>TIFFRGBAImage<a class="headerlink" href="#tiffrgbaimage" title="Permalink to this heading">¶</a></h1>
+<h1>TIFFRGBAImage<a class="headerlink" href="#tiffrgbaimage" title="Link to this heading">¶</a></h1>
 <section id="synopsis">
-<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this heading">¶</a></h2>
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Link to this heading">¶</a></h2>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;tiffio.h&gt;</span>
 </pre></div>
 </div>
 <dl class="c type">
 <dt class="sig sig-object c" id="c.TIFFRGBValue">
-<span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFRGBValue</span></span></span><a class="headerlink" href="#c.TIFFRGBValue" title="Permalink to this definition">¶</a><br /></dt>
+<span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFRGBValue</span></span></span><a class="headerlink" href="#c.TIFFRGBValue" title="Link to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="c type">
 <dt class="sig sig-object c" id="c.TIFFRGBAImage">
-<span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">_TIFFRGBAImage</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFRGBAImage</span></span></span><a class="headerlink" href="#c.TIFFRGBAImage" title="Permalink to this definition">¶</a><br /></dt>
+<span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">_TIFFRGBAImage</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFRGBAImage</span></span></span><a class="headerlink" href="#c.TIFFRGBAImage" title="Link to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="c function">
 <dt class="sig sig-object c" id="c.TIFFRGBAImageOK">
-<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFRGBAImageOK</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">TIFF</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">tif</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n"><span class="pre">emsg</span></span><span class="p"><span class="pre">[</span></span><span class="m"><span class="pre">1024</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFRGBAImageOK" title="Permalink to this definition">¶</a><br /></dt>
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFRGBAImageOK</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">TIFF</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">tif</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n"><span class="pre">emsg</span></span><span class="p"><span class="pre">[</span></span><span class="m"><span class="pre">1024</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFRGBAImageOK" title="Link to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="c function">
 <dt class="sig sig-object c" id="c.TIFFRGBAImageBegin">
-<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFRGBAImageBegin</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.TIFFRGBAImage" title="TIFFRGBAImage"><span class="n"><span class="pre">TIFFRGBAImage</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">img</span></span>, <span class="n"><span class="pre">TIFF</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">tif</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n"><span class="pre">stopOnError</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n"><span class="pre">emsg</span></span><span class="p"><span class="pre">[</span></span><span class="m"><span class="pre">1024</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFRGBAImageBegin" title="Permalink to this definition">¶</a><br /></dt>
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFRGBAImageBegin</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.TIFFRGBAImage" title="TIFFRGBAImage"><span class="n"><span class="pre">TIFFRGBAImage</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">img</span></span>, <span class="n"><span class="pre">TIFF</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">tif</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n"><span class="pre">stopOnError</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="n"><span class="pre">emsg</span></span><span class="p"><span class="pre">[</span></span><span class="m"><span class="pre">1024</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFRGBAImageBegin" title="Link to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="c function">
 <dt class="sig sig-object c" id="c.TIFFRGBAImageGet">
-<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFRGBAImageGet</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.TIFFRGBAImage" title="TIFFRGBAImage"><span class="n"><span class="pre">TIFFRGBAImage</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">img</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">raster</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">width</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">height</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFRGBAImageGet" title="Permalink to this definition">¶</a><br /></dt>
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFRGBAImageGet</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.TIFFRGBAImage" title="TIFFRGBAImage"><span class="n"><span class="pre">TIFFRGBAImage</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">img</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">raster</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">width</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n"><span class="pre">height</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFRGBAImageGet" title="Link to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="c function">
 <dt class="sig sig-object c" id="c.TIFFRGBAImageEnd">
-<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFRGBAImageEnd</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.TIFFRGBAImage" title="TIFFRGBAImage"><span class="n"><span class="pre">TIFFRGBAImage</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">img</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFRGBAImageEnd" title="Permalink to this definition">¶</a><br /></dt>
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFRGBAImageEnd</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.TIFFRGBAImage" title="TIFFRGBAImage"><span class="n"><span class="pre">TIFFRGBAImage</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">img</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFRGBAImageEnd" title="Link to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 </section>
 <section id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">¶</a></h2>
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading">¶</a></h2>
 <p>The routines described here provide a high-level interface through which
 TIFF images may be read into memory.
 Images may be strip- or tile-based and have a variety of different
-characteristics: bits/sample, samples/pixel, photometric, etc.
+characteristics: bits/sample, samples/pixel, photometric, orientation, etc.
 Decoding state is encapsulated in a <a class="reference internal" href="#c.TIFFRGBAImage" title="TIFFRGBAImage"><code class="xref c c-type docutils literal notranslate"><span class="pre">TIFFRGBAImage</span></code></a>
 structure making it possible to capture state for multiple images
 and quickly switch between them.
@@ -111,7 +111,7 @@ If the raster dimensions are smaller than the image, the image data
 is cropped to the raster bounds.
 If the raster height is greater than that of the image, then the
 image data are placed in the lower part of the raster.
-(Note that the raster is assume to be organized such that the pixel
+(Note that the raster is assumed to be organized such that the pixel
 at location (<em>x</em>, <em>y</em>) is <em>raster</em> [ <em>y</em> × <em>width</em> + <em>x</em> ];
 with the raster origin in the <em>lower-left hand corner</em>.)</p>
 <p>Raster pixels are 8-bit packed red, green, blue, alpha samples.
@@ -131,11 +131,11 @@ then an error will terminate the operation; otherwise
 possible data in the image have been requested.</p>
 </section>
 <section id="alternate-raster-formats">
-<h2>Alternate raster formats<a class="headerlink" href="#alternate-raster-formats" title="Permalink to this heading">¶</a></h2>
+<h2>Alternate raster formats<a class="headerlink" href="#alternate-raster-formats" title="Link to this heading">¶</a></h2>
 <p>To use the core support for reading and processing  TIFF images, but
 write the resulting raster data in a different format one need only
 override the &quot;put methods&quot; used to store raster data.
-These methods are are defined in the <a class="reference internal" href="#c.TIFFRGBAImage" title="TIFFRGBAImage"><code class="xref c c-type docutils literal notranslate"><span class="pre">TIFFRGBAImage</span></code></a>
+These methods are defined in the <a class="reference internal" href="#c.TIFFRGBAImage" title="TIFFRGBAImage"><code class="xref c c-type docutils literal notranslate"><span class="pre">TIFFRGBAImage</span></code></a>
 structure and initially setup by <a class="reference internal" href="#c.TIFFRGBAImageBegin" title="TIFFRGBAImageBegin"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFRGBAImageBegin()</span></code></a>
 to point to routines that pack raster data in the default
 ABGR pixel format.
@@ -149,7 +149,7 @@ For example one can convert data to colormap indices for display on a
 colormap display.</p>
 </section>
 <section id="simultaneous-raster-store-and-display">
-<h2>Simultaneous raster store and display<a class="headerlink" href="#simultaneous-raster-store-and-display" title="Permalink to this heading">¶</a></h2>
+<h2>Simultaneous raster store and display<a class="headerlink" href="#simultaneous-raster-store-and-display" title="Link to this heading">¶</a></h2>
 <p>It is simple to display an image as it is being read into memory
 by overriding the put methods as described above for supporting
 alternate raster formats.
@@ -179,7 +179,7 @@ update the display as the raster is being filled:</p>
 variable <code class="xref c c-var docutils literal notranslate"><span class="pre">putContig</span></code>.)</p>
 </section>
 <section id="supporting-additional-tiff-formats">
-<h2>Supporting additional TIFF formats<a class="headerlink" href="#supporting-additional-tiff-formats" title="Permalink to this heading">¶</a></h2>
+<h2>Supporting additional TIFF formats<a class="headerlink" href="#supporting-additional-tiff-formats" title="Link to this heading">¶</a></h2>
 <p>The <a class="reference internal" href="#c.TIFFRGBAImage" title="TIFFRGBAImage"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFRGBAImage()</span></code></a> routines support the most commonly
 encountered flavors of TIFF.  It is possible to extend this support by
 overriding the &quot;get method&quot; invoked by <a class="reference internal" href="#c.TIFFRGBAImageGet" title="TIFFRGBAImageGet"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFRGBAImageGet()</span></code></a>
@@ -189,21 +189,36 @@ of an existing get method and modify it to suit the needs of an
 application.</p>
 </section>
 <section id="notes">
-<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this heading">¶</a></h2>
-<p>Samples must be either 1, 2, 4, 8, or 16 bits.
+<span id="tiffrgbaimage-restriction-notes"></span><h2>Notes<a class="headerlink" href="#notes" title="Link to this heading">¶</a></h2>
+<p>In C++ the <em>stopOnError</em> parameter defaults to 0.</p>
+<p><code class="docutils literal notranslate"><span class="pre">SamplesPerPixel</span></code> must be either 1, 2, 4, 8, or 16 bits.
 Colorimetric samples/pixel must be either 1, 3, or 4 (i.e.
-<code class="docutils literal notranslate"><span class="pre">SamplesPerPixel</span></code> -<code class="docutils literal notranslate"><span class="pre">ExtraSamples</span></code>).</p>
+<code class="docutils literal notranslate"><span class="pre">SamplesPerPixel</span></code> minus <code class="docutils literal notranslate"><span class="pre">ExtraSamples</span></code>).</p>
 <p>Palette image colormaps that appear to be incorrectly written
 as 8-bit values are automatically scaled to 16-bits.</p>
+<p>Within the <a class="reference internal" href="#c.TIFFRGBAImage" title="TIFFRGBAImage"><code class="xref c c-type docutils literal notranslate"><span class="pre">TIFFRGBAImage</span></code></a> structure the TIFF orientation
+and also the required orientation in the raster can be defined.
+However, the lower level <a class="reference internal" href="#c.TIFFRGBAImageGet" title="TIFFRGBAImageGet"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFRGBAImageGet()</span></code></a> functions
+- also called by <a class="reference internal" href="TIFFReadRGBAImage.html#c.TIFFReadRGBAImage" title="TIFFReadRGBAImage"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFReadRGBAImage()</span></code></a> and <a class="reference internal" href="TIFFReadRGBAImage.html#c.TIFFReadRGBAImageOriented" title="TIFFReadRGBAImageOriented"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFReadRGBAImageOriented()</span></code></a> -
+can mirror the image orientations across both axes, but cannot rotate them.
+Therefore, images with a TIFF orientation of 5 (LeftTop) to 8 (LeftBottom)
+are not stored correctly in the raster, as this would require an additional
+rotation of 90 degrees and an exchange of width and height dimension.</p>
+<p>If an alpha channel is used in an image, there are two common representations
+that are available: straight (unassociated) alpha and premultiplied (associated)
+alpha, which is specified by the value of ExtraSamples tag.
+For files with unassociated alpha, the <a class="reference internal" href="#c.TIFFRGBAImage" title="TIFFRGBAImage"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFRGBAImage()</span></code></a> reading routines
+multiply the RGB values by the alpha channel values before saving them in the raster.
+The other TIFFReadxxx (like <a class="reference internal" href="TIFFReadScanline.html#c.TIFFReadScanline" title="TIFFReadScanline"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFReadScanline()</span></code></a>) functions do not do this.</p>
 </section>
 <section id="return-values">
-<h2>Return values<a class="headerlink" href="#return-values" title="Permalink to this heading">¶</a></h2>
+<h2>Return values<a class="headerlink" href="#return-values" title="Link to this heading">¶</a></h2>
 <p>All routines return 1 if the operation was successful.
 Otherwise, 0 is returned if an error was encountered and
 <em>stopOnError</em> is zero.</p>
 </section>
 <section id="diagnostics">
-<h2>Diagnostics<a class="headerlink" href="#diagnostics" title="Permalink to this heading">¶</a></h2>
+<h2>Diagnostics<a class="headerlink" href="#diagnostics" title="Link to this heading">¶</a></h2>
 <p>All error messages are directed to the <a class="reference internal" href="TIFFError.html#c.TIFFErrorExtR" title="TIFFErrorExtR"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFErrorExtR()</span></code></a> routine.</p>
 <p><code class="docutils literal notranslate"><span class="pre">&quot;Sorry,</span> <span class="pre">can</span> <span class="pre">not</span> <span class="pre">handle</span> <span class="pre">%d-bit</span> <span class="pre">pictures&quot;</span></code>:</p>
 <blockquote>
@@ -265,11 +280,12 @@ data to 8-bit RGB.</p>
 </div></blockquote>
 </section>
 <section id="see-also">
-<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this heading">¶</a></h2>
+<h2>See also<a class="headerlink" href="#see-also" title="Link to this heading">¶</a></h2>
 <p><a class="reference internal" href="TIFFOpen.html"><span class="doc">TIFFOpen</span></a> (3tiff),
 <a class="reference internal" href="TIFFReadRGBAImage.html"><span class="doc">TIFFReadRGBAImage</span></a> (3tiff),
 <a class="reference internal" href="TIFFReadRGBAStrip.html"><span class="doc">TIFFReadRGBAStrip</span></a> (3tiff),
 <a class="reference internal" href="TIFFReadRGBATile.html"><span class="doc">TIFFReadRGBATile</span></a> (3tiff),
+<a class="reference internal" href="TIFFcolor.html"><span class="doc">TIFFcolor</span></a> (3tiff),
 <a class="reference internal" href="libtiff.html"><span class="doc">libtiff</span></a> (3tiff)</p>
 </section>
 </section>
@@ -279,7 +295,7 @@ data to 8-bit RGB.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="../index.html">Table of Contents</a></h3>
@@ -316,7 +332,7 @@ data to 8-bit RGB.</p>
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -324,13 +340,13 @@ data to 8-bit RGB.</p>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -342,14 +358,14 @@ data to 8-bit RGB.</p>
         <li class="right" >
           <a href="TIFFReadTile.html" title="TIFFReadTile"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../functions.html" >TIFF Functions Overview</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">TIFFRGBAImage</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-    &#169; Copyright 1988-2022, LibTIFF contributors.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+    &#169; Copyright 1988-2025, LibTIFF contributors.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

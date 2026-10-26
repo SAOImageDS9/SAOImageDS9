@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Changes in TIFF v3.5.7 &#8212; LibTIFF 4.7.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b849a4e9" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=0a676766" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=9f25de62"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <title>Changes in TIFF v3.5.7 &#8212; LibTIFF 4.7.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=34905f61" />
+    <script src="../_static/documentation_options.js?v=2edf0659"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Changes in TIFF v3.5.6beta" href="v3.5.6beta.html" />
     <link rel="prev" title="Changes in TIFF v3.6.0" href="v3.6.0.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="v3.6.0.html" title="Changes in TIFF v3.6.0"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Release history</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="historical.html" accesskey="U">Old release history</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Changes in TIFF v3.5.7</a></li> 
@@ -41,12 +41,12 @@
           <div class="body" role="main">
             
   <section id="changes-in-tiff-v3-5-7">
-<h1>Changes in TIFF v3.5.7<a class="headerlink" href="#changes-in-tiff-v3-5-7" title="Permalink to this heading">¶</a></h1>
+<h1>Changes in TIFF v3.5.7<a class="headerlink" href="#changes-in-tiff-v3-5-7" title="Link to this heading">¶</a></h1>
 <table class="docutils align-default" id="id1">
-<caption><span class="caption-text">References</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">References</span><a class="headerlink" href="#id1" title="Link to this table">¶</a></caption>
 <tbody>
 <tr class="row-odd"><td><p>Current Version</p></td>
-<td><p>v3.5.7 (<a class="reference external" href="https://gitlab.com/libtiff/libtiff/-/tags/Release-v3-5-7">tag Release-v3-5-7</a>)</p></td>
+<td><p>v3.5.7 (<a class="extlink-tag reference external" href="https://gitlab.com/libtiff/libtiff/-/tags/Release-v3-5-7">tag Release-v3-5-7</a>)</p></td>
 </tr>
 <tr class="row-even"><td><p>Previous Version</p></td>
 <td><p><a class="reference internal" href="v3.5.6beta.html"><span class="doc">v3.5.6beta</span></a></p></td>
@@ -65,7 +65,7 @@ If you don't find something listed here, then it was not done in this
 timeframe, or it was not considered important enough to be mentioned.
 The following information is located here:</p>
 <section id="software-configuration-changes">
-<h2>Software configuration changes<a class="headerlink" href="#software-configuration-changes" title="Permalink to this heading">¶</a></h2>
+<h2>Software configuration changes<a class="headerlink" href="#software-configuration-changes" title="Link to this heading">¶</a></h2>
 <ul>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/libtiff.def</span></code>: Brent Roman submitted new version adding
 several missing entry points.  Also add a few other entry points
@@ -78,9 +78,9 @@ providing for MacOS X support.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">configure/config.site</span></code>: modified to check if <code class="docutils literal notranslate"><span class="pre">-lm</span></code> is needed for
 <code class="docutils literal notranslate"><span class="pre">MACHDEPLIBS</span></code> if not supplied by <code class="file docutils literal notranslate"><span class="pre">config.site</span></code>.  Needed for Darwin.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tiff.h</span></code>: Applied hack to try and resolve the problem
-with the <code class="file docutils literal notranslate"><span class="pre">inttypes.h</span></code> include file on AIX. (bug <a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=39">Remote Sensing bugzilla #39 [no longer available]</a>)</p></li>
+with the <code class="file docutils literal notranslate"><span class="pre">inttypes.h</span></code> include file on AIX. (bug <a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=39">Remote Sensing bugzilla #39 [no longer available]</a>)</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">configure</span></code>, <code class="file docutils literal notranslate"><span class="pre">*Makefile.in</span></code>: Various changes to improve configuration
-for HP/UX specifically, and also in general.  (bug <a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=40">Remote Sensing bugzilla #40 [no longer available]</a>) They include:</p>
+for HP/UX specifically, and also in general.  (bug <a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=40">Remote Sensing bugzilla #40 [no longer available]</a>) They include:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>Try to handle <strong class="program">/usr/bin/sh</strong> instead of <strong class="program">/bin/sh</strong> where necessary.</p></li>
@@ -96,18 +96,18 @@ for HP/UX specifically, and also in general.  (bug <a class="reference external"
 <li><p><code class="file docutils literal notranslate"><span class="pre">configure</span></code>, <code class="file docutils literal notranslate"><span class="pre">libtiff/Makefile.in</span></code>: Modified to build DSOs properly
 on Darwin thanks to <a class="reference external" href="mailto:rpk&#37;&#52;&#48;alum&#46;mit&#46;edu">Robert Krajewski</a> and
 <a class="reference external" href="mailto:fujiik&#37;&#52;&#48;jlcuxf&#46;kek&#46;jp">Keisuke Fujii</a>.</p></li>
-<li><p><code class="file docutils literal notranslate"><span class="pre">configure</span></code>, <code class="file docutils literal notranslate"><span class="pre">libtiff/Makefile.in</span></code>: applied OpenBSD patches as per bug <a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=61">Remote Sensing bugzilla #61 [no longer available]</a>.</p></li>
-<li><p><code class="file docutils literal notranslate"><span class="pre">Makefile.in</span></code>: added <code class="docutils literal notranslate"><span class="pre">DESTDIR</span></code> support as per bug <a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=60">Remote Sensing bugzilla #60 [no longer available]</a>.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">configure</span></code>, <code class="file docutils literal notranslate"><span class="pre">libtiff/Makefile.in</span></code>: applied OpenBSD patches as per bug <a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=61">Remote Sensing bugzilla #61 [no longer available]</a>.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">Makefile.in</span></code>: added <code class="docutils literal notranslate"><span class="pre">DESTDIR</span></code> support as per bug <a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=60">Remote Sensing bugzilla #60 [no longer available]</a>.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_jpeg.c</span></code>: Define <code class="xref c c-macro docutils literal notranslate"><span class="pre">HAVE_BOOLEAN</span></code> on windows if <code class="file docutils literal notranslate"><span class="pre">RPCNDR.H</span></code>
 has been included.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">man/Makefile.in</span></code>: add <a class="reference internal" href="../functions/TIFFOpen.html#c.TIFFClientOpen" title="TIFFClientOpen"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFClientOpen()</span></code></a> link as per debian submitted
-bug <a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=66">Remote Sensing bugzilla #66 [no longer available]</a>.</p></li>
+bug <a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=66">Remote Sensing bugzilla #66 [no longer available]</a>.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/Makefile.in</span></code>: Fixed <code class="docutils literal notranslate"><span class="pre">&#64;DSOSUB_VERSION</span></code> to be <code class="docutils literal notranslate"><span class="pre">&#64;DSOSUF_VERSION&#64;</span></code>
 in two places.</p></li>
 </ul>
 </section>
 <section id="library-changes">
-<h2>Library changes<a class="headerlink" href="#library-changes" title="Permalink to this heading">¶</a></h2>
+<h2>Library changes<a class="headerlink" href="#library-changes" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p><code class="file docutils literal notranslate"><span class="pre">tif_fax3.c</span></code>: keep <code class="xref c c-var docutils literal notranslate"><span class="pre">rw_mode</span></code> flag internal to fax3 state to remember
 whether we are encoding or decoding.  This is to ensure graceful
@@ -136,10 +136,10 @@ specialized conversion routines, especially for reading LogLuv files.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">tif_getimage.c</span></code>: Added support for 16bit minisblack/miniswhite
 images in RGBA interface.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_dirinfo.c</span></code>: removed duplicate <code class="xref c c-macro docutils literal notranslate"><span class="pre">TIFFTAG_PHOTOSHOP</span></code> as per
-bug <a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=44">Remote Sensing bugzilla #44 [no longer available]</a>.</p></li>
+bug <a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=44">Remote Sensing bugzilla #44 [no longer available]</a>.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_dirwrite.c</span></code>: Added support for <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">TIFF_VARIABLE2</span></code> in the
 case of writing <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">TIFF_BYTE</span></code>/<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">TIFF_SBYTE</span></code> fields as per
-bug <a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=43">Remote Sensing bugzilla #43 [no longer available]</a>.</p></li>
+bug <a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=43">Remote Sensing bugzilla #43 [no longer available]</a>.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_dirinfo.c</span></code>: Modified the <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">TIFF_BYTE</span></code> definition for
 <code class="xref c c-macro docutils literal notranslate"><span class="pre">TIFFTAG_PHOTOSHOP</span></code> to use a writecount of <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">TIFF_VARIABLE2</span></code> (-3) to
 force use of <code class="xref c c-type docutils literal notranslate"><span class="pre">uint32</span></code> counts instead of <span class="c-expr sig sig-inline c"><span class="kt">short</span></span> counts.</p></li>
@@ -147,38 +147,38 @@ force use of <code class="xref c c-type docutils literal notranslate"><span clas
 <li><p>Integrated experimental OJPEG support from Scott Marovich of HP.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_open.c</span></code>: Seek back to zero after failed read, before writing header.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tiff.h</span></code>, <code class="file docutils literal notranslate"><span class="pre">libtiff/tif_fax3.c</span></code>: added check for <code class="xref c c-macro docutils literal notranslate"><span class="pre">__LP64__</span></code>
-when checking for 64 bit architectures as per bugzilla bug <a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=67">Remote Sensing bugzilla #67 [no longer available]</a>.</p></li>
+when checking for 64 bit architectures as per bugzilla bug <a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=67">Remote Sensing bugzilla #67 [no longer available]</a>.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_getimage.c</span></code>: Use <code class="xref c c-func docutils literal notranslate"><span class="pre">memmove()</span></code> instead of <code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFmemcpy()</span></code>
 in <a class="reference internal" href="../functions/TIFFReadRGBATile.html#c.TIFFReadRGBATile" title="TIFFReadRGBATile"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFReadRGBATile()</span></code></a> to avoid issues in cases of overlapping
-buffers.  See bug <a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=69">Remote Sensing bugzilla #69 [no longer available]</a> in Bugzilla.</p></li>
+buffers.  See bug <a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=69">Remote Sensing bugzilla #69 [no longer available]</a> in Bugzilla.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_getimage.c</span></code>: Don't complain for CMYK (separated)
-images with more than four samples per pixel as per bug <a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=73">Remote Sensing bugzilla #73 [no longer available]</a>.</p></li>
+images with more than four samples per pixel as per bug <a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=73">Remote Sensing bugzilla #73 [no longer available]</a>.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_getimage.c</span></code>: relax handling of contig case where
-there are extra samples that are supposed to be ignored as per bug <a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=75">Remote Sensing bugzilla #75 [no longer available]</a>.  This
+there are extra samples that are supposed to be ignored as per bug <a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=75">Remote Sensing bugzilla #75 [no longer available]</a>.  This
 should now work for 8bit greyscale or paletted images.</p></li>
-<li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_packbits.c</span></code>: fixed memory overrun error as per bug <a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=77">Remote Sensing bugzilla #77 [no longer available]</a>.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_packbits.c</span></code>: fixed memory overrun error as per bug <a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=77">Remote Sensing bugzilla #77 [no longer available]</a>.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_getimage.c</span></code>: Fixed problem with reading strips or
 tiles that don't start on a tile boundary.  Fix contributed by
-Josep Vallverdu (from HP), and further described in bug <a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=47">Remote Sensing bugzilla #47 [no longer available]</a>.</p></li>
+Josep Vallverdu (from HP), and further described in bug <a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=47">Remote Sensing bugzilla #47 [no longer available]</a>.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtif/tif_fax3.c</span></code>: Removed <code class="docutils literal notranslate"><span class="pre">#ifdef</span> <span class="pre">PURIFY</span></code> logic, and modified to
 always use the &quot;safe&quot; version, even if there is a very slight
-cost in performance as per bug <a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=54">Remote Sensing bugzilla #54 [no longer available]</a>.</p></li>
+cost in performance as per bug <a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=54">Remote Sensing bugzilla #54 [no longer available]</a>.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_lzw.c</span></code>: added dummy <code class="xref c c-func docutils literal notranslate"><span class="pre">LZWSetupEncode()</span></code> to report an
 error about LZW not being available.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_dir.c</span></code>: propagate failure to initialize compression
 back from <a class="reference internal" href="../functions/TIFFSetField.html#c.TIFFSetField" title="TIFFSetField"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFSetField()</span></code></a> as an error status, so applications can
 detect failure.</p></li>
-<li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_lzw.c</span></code>: Avoid MS VC++ 5.0 optimization bug as per bug <a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=78">Remote Sensing bugzilla #78 [no longer available]</a>.</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_lzw.c</span></code>: Avoid MS VC++ 5.0 optimization bug as per bug <a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=78">Remote Sensing bugzilla #78 [no longer available]</a>.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_dirwrite.c</span></code>: added <a class="reference internal" href="../functions/TIFFWriteDirectory.html#c.TIFFRewriteDirectory" title="TIFFRewriteDirectory"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFRewriteDirectory()</span></code></a> function.
 Updated <a class="reference internal" href="../functions/TIFFWriteDirectory.html#c.TIFFWriteDirectory" title="TIFFWriteDirectory"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFWriteDirectory()</span></code></a> man page to include <a class="reference internal" href="../functions/TIFFWriteDirectory.html#c.TIFFRewriteDirectory" title="TIFFRewriteDirectory"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFRewriteDirectory()</span></code></a>.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tiff.h</span></code>: I have created <code class="xref c c-macro docutils literal notranslate"><span class="pre">COMPRESSION_CCITT_T4</span></code>,
 <code class="xref c c-macro docutils literal notranslate"><span class="pre">COMPRESSION_CCITT_T6</span></code>, <code class="xref c c-macro docutils literal notranslate"><span class="pre">TIFFTAG_T4OPTIONS</span></code> and <code class="xref c c-macro docutils literal notranslate"><span class="pre">TIFFTAG_T6OPTIONS</span></code> aliases
-in keeping with TIFF 6.0 standard in <code class="file docutils literal notranslate"><span class="pre">tiff.h</span></code> as per bug <a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=83">Remote Sensing bugzilla #83 [no longer available]</a>.</p></li>
-<li><p>Added <code class="xref c c-macro docutils literal notranslate"><span class="pre">PHOTOMETRIC_ITULAB</span></code> as per bug <a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=90">Remote Sensing bugzilla #90 [no longer available]</a>.</p></li>
+in keeping with TIFF 6.0 standard in <code class="file docutils literal notranslate"><span class="pre">tiff.h</span></code> as per bug <a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=83">Remote Sensing bugzilla #83 [no longer available]</a>.</p></li>
+<li><p>Added <code class="xref c c-macro docutils literal notranslate"><span class="pre">PHOTOMETRIC_ITULAB</span></code> as per bug <a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=90">Remote Sensing bugzilla #90 [no longer available]</a>.</p></li>
 </ul>
 </section>
 <section id="tools-changes">
-<h2>Tools changes<a class="headerlink" href="#tools-changes" title="Permalink to this heading">¶</a></h2>
+<h2>Tools changes<a class="headerlink" href="#tools-changes" title="Link to this heading">¶</a></h2>
 <ul>
 <li><p>Brent Roman contributed updated <strong class="program">tiffcp</strong> utility (and <code class="file docutils literal notranslate"><span class="pre">tiffcp.1</span></code>)
 with support for extracting subimages with the <code class="docutils literal notranslate"><span class="pre">,n</span></code> syntax, and also
@@ -188,7 +188,7 @@ Bruce A. Mallett, including a faster encoder, fixes for level
 2 PostScript, and support for the imagemask operator.</p></li>
 <li><p>fax2ps.c: Helge (libtiff at oldach.net) submitted fix
 that corrects behaviour for non-Letter paper
-sizes. (bug <a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=35">Remote Sensing bugzilla #35 [no longer available]</a>) It fixes two problems:</p>
+sizes. (bug <a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=35">Remote Sensing bugzilla #35 [no longer available]</a>) It fixes two problems:</p>
 <p>Without  scaling (&quot;<code class="docutils literal notranslate"><span class="pre">-S</span></code>&quot;) the fax is now centered on the page size specified
 with &quot;<code class="docutils literal notranslate"><span class="pre">-H</span></code>&quot; and/or &quot;<code class="docutils literal notranslate"><span class="pre">-W</span></code>&quot;. Before, <strong class="program">fax2ps</strong> was using an obscure and practically
 useless algorithm to allocate the image relative to Letter sized paper
@@ -202,22 +202,22 @@ to packbits from LZW since LZW isn't generally available.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">tiff2rgba.c</span></code>: added &quot;<code class="docutils literal notranslate"><span class="pre">-n</span></code>&quot; flag to avoid emitting alpha component. Also added
 a man page for <strong class="program">tiff2rgba</strong>.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">tiffcmp.c</span></code>: Fixed multi samples per pixel support for <code class="xref c c-func docutils literal notranslate"><span class="pre">ContigCompare()</span></code>
-as per bug <a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=53">Remote Sensing bugzilla #53 [no longer available]</a>.
+as per bug <a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=53">Remote Sensing bugzilla #53 [no longer available]</a>.
 Updated bug section of tiffcmp.1 to note tiled file issues.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_getimage.c</span></code>: Fixed so that failure is properly
 reported by <code class="xref c c-func docutils literal notranslate"><span class="pre">gtTileContig()</span></code>, <code class="xref c c-func docutils literal notranslate"><span class="pre">gtStripContig()</span></code>, <code class="xref c c-func docutils literal notranslate"><span class="pre">gtTileSeparate()</span></code> and
-<code class="xref c c-func docutils literal notranslate"><span class="pre">gtStripSeparate()</span></code> as per bug <a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=51">Remote Sensing bugzilla #51 [no longer available]</a>.</p></li>
+<code class="xref c c-func docutils literal notranslate"><span class="pre">gtStripSeparate()</span></code> as per bug <a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=51">Remote Sensing bugzilla #51 [no longer available]</a>.</p></li>
 </ul>
 </section>
 <section id="contributed-software-changes">
-<h2>Contributed software changes<a class="headerlink" href="#contributed-software-changes" title="Permalink to this heading">¶</a></h2>
+<h2>Contributed software changes<a class="headerlink" href="#contributed-software-changes" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Fixed distribution to include <code class="file docutils literal notranslate"><span class="pre">contrib/addtiffo/tif_ovrcache.c</span></code>
 and <code class="file docutils literal notranslate"><span class="pre">contrib/addtiffo/tif_ovrcache.h</span></code>.</p></li>
 </ul>
 </section>
 <section id="lzw-compression-kit-changes">
-<h2>LZW compression kit changes<a class="headerlink" href="#lzw-compression-kit-changes" title="Permalink to this heading">¶</a></h2>
+<h2>LZW compression kit changes<a class="headerlink" href="#lzw-compression-kit-changes" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Rewrote lzw patching process so that is required to enable full
 LZW support is to drop the <code class="file docutils literal notranslate"><span class="pre">tif_lzw.c</span></code> from the
@@ -235,7 +235,7 @@ not LZW compression.</p></li>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="../index.html">Table of Contents</a></h3>
@@ -268,7 +268,7 @@ not LZW compression.</p></li>
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -276,13 +276,13 @@ not LZW compression.</p></li>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -294,15 +294,15 @@ not LZW compression.</p></li>
         <li class="right" >
           <a href="v3.6.0.html" title="Changes in TIFF v3.6.0"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Release history</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="historical.html" >Old release history</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Changes in TIFF v3.5.7</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-    &#169; Copyright 1988-2022, LibTIFF contributors.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+    &#169; Copyright 1988-2025, LibTIFF contributors.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

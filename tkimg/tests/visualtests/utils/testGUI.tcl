@@ -77,7 +77,8 @@ proc ui_initToolhelp { w { bgColor yellow } { fgColor black } } {
     pack $w.l
     wm overrideredirect $w true
     if {[string equal [tk windowingsystem] aqua]}  {
-        ::tk::unsupported::MacWindowStyle style $w help none
+        # Not available in Tk 9.1 and newer.
+        catch { ::tk::unsupported::MacWindowStyle style $w help none }
     }
     wm geometry $w [format "+%d+%d" -100 -100]
 }

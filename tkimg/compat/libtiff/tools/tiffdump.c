@@ -25,6 +25,9 @@
 #include "libport.h"
 #include "tif_config.h"
 
+#include <limits.h>
+#include <math.h> /* for isfinite() */
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -78,8 +81,7 @@ static const char sbytefmt[] = "%s%" PRId8;   /* SBYTE */
 static const char shortfmtd[] = "%s%" PRIu16; /* SHORT */
 static const char shortfmth[] = "%s%#" PRIx16;
 static const char sshortfmtd[] = "%s%" PRId16; /* SSHORT */
-static const char sshortfmth[] = "%s%#" PRIx16;
-static const char longfmtd[] = "%s%" PRIu32; /* LONG */
+static const char longfmtd[] = "%s%" PRIu32;   /* LONG */
 static const char longfmth[] = "%s%#" PRIx32;
 static const char slongfmtd[] = "%s%" PRId32; /* SLONG */
 static const char slongfmth[] = "%s%#" PRIx32;
@@ -101,7 +103,7 @@ extern int optind;
 extern char *optarg;
 #endif
 
-void usage()
+static void usage(void)
 {
     fprintf(stderr, "\nDisplay directory information from TIFF files\n\n");
     fprintf(stderr, "usage: %s [-h] [-o offset] [-m maxitems] file.tif ...\n",
@@ -115,6 +117,7 @@ int main(int argc, char *argv[])
     int multiplefiles = (argc > 1);
     int c;
     uint64_t diroff = 0;
+    long v;
     hex_mode = 0;
     bigendian = (*(char *)&one == 0);
 
@@ -127,10 +130,16 @@ int main(int argc, char *argv[])
                 hex_mode = 1;
                 break;
             case 'o':
-                diroff = (uint64_t)strtoul(optarg, NULL, 0);
+                v = strtol(optarg, NULL, 0);
+                if (v < 0)
+                    usage();
+                diroff = (uint64_t)v;
                 break;
             case 'm':
-                maxitems = strtoul(optarg, NULL, 0);
+                v = strtol(optarg, NULL, 0);
+                if (v < 0)
+                    usage();
+                maxitems = (uint32_t)v;
                 break;
             default:
                 usage();
@@ -157,10 +166,8 @@ int main(int argc, char *argv[])
     return (EXIT_SUCCESS);
 }
 
-#define ord(e) ((int)e)
-
 static uint64_t ReadDirectory(int, unsigned, uint64_t);
-static void ReadError(char *);
+static void ReadError(const char *);
 static void Error(const char *, ...);
 static void Fatal(const char *, ...);
 
@@ -204,9 +211,9 @@ static void dump(int fd, uint64_t diroff)
         if (swabflag)
             TIFFSwabLong(&hdr.classic.tiff_diroff);
         printf("Magic: %#x <%s-endian> Version: %#x <%s>\n",
-               hdr.classic.tiff_magic,
-               hdr.classic.tiff_magic == TIFF_BIGENDIAN ? "big" : "little", 42,
-               "ClassicTIFF");
+               (unsigned)hdr.classic.tiff_magic,
+               hdr.classic.tiff_magic == TIFF_BIGENDIAN ? "big" : "little",
+               (unsigned)42, "ClassicTIFF");
         if (diroff == 0)
             diroff = hdr.classic.tiff_diroff;
     }
@@ -222,11 +229,13 @@ static void dump(int fd, uint64_t diroff)
             TIFFSwabShort(&hdr.big.tiff_unused);
             TIFFSwabLong8(&hdr.big.tiff_diroff);
         }
-        printf("Magic: %#x <%s-endian> Version: %#x <%s>\n", hdr.big.tiff_magic,
-               hdr.big.tiff_magic == TIFF_BIGENDIAN ? "big" : "little", 43,
-               "BigTIFF");
-        printf("OffsetSize: %#x Unused: %#x\n", hdr.big.tiff_offsetsize,
-               hdr.big.tiff_unused);
+        printf("Magic: %#x <%s-endian> Version: %#x <%s>\n",
+               (unsigned)hdr.big.tiff_magic,
+               hdr.big.tiff_magic == TIFF_BIGENDIAN ? "big" : "little",
+               (unsigned)43, "BigTIFF");
+        printf("OffsetSize: %#x Unused: %#x\n",
+               (unsigned)hdr.big.tiff_offsetsize,
+               (unsigned)hdr.big.tiff_unused);
         if (diroff == 0)
             diroff = hdr.big.tiff_diroff;
         bigtiff = 1;
@@ -246,7 +255,7 @@ static void dump(int fd, uint64_t diroff)
         }
         {
             size_t alloc_size;
-            alloc_size = TIFFSafeMultiply(tmsize_t, (count_visited_dir + 1),
+            alloc_size = TIFFSafeMultiply(size_t, (count_visited_dir + 1),
                                           sizeof(uint64_t));
             if (alloc_size == 0)
             {
@@ -311,6 +320,8 @@ static uint64_t ReadDirectory(int fd, unsigned int ix, uint64_t off)
     void *dirmem = NULL;
     uint64_t nextdiroff = 0;
     uint32_t n;
+    tmsize_t nread;
+    tmsize_t dirsize;
     uint8_t *dp;
 
     if (off == 0) /* no more directories */
@@ -349,20 +360,39 @@ static uint64_t ReadDirectory(int fd, unsigned int ix, uint64_t off)
         dircount = (uint16_t)dircount64;
         direntrysize = 20;
     }
-    dirmem = _TIFFmalloc(TIFFSafeMultiply(tmsize_t, dircount, direntrysize));
+    dirsize =
+        _TIFFMultiplySSize(NULL, dircount, direntrysize, "directory size");
+    if (dirsize == 0 && dircount != 0)
+    {
+        Fatal("Integer overflow reading TIFF directory");
+        goto done;
+    }
+
+    if (dirsize > INT_MAX)
+    {
+        Fatal("TIFF directory too large");
+        goto done;
+    }
+
+    dirmem = _TIFFmalloc(dirsize);
     if (dirmem == NULL)
     {
         Fatal("No space for TIFF directory");
         goto done;
     }
-    n = read(fd, (char *)dirmem, dircount * direntrysize);
-    if (n != dircount * direntrysize)
+
+    nread = (tmsize_t)read(fd, (char *)dirmem, (uint32_t)dirsize);
+    if (nread < 0 || nread != dirsize)
     {
-        n /= direntrysize;
+        if (nread <= 0)
+            n = 0;
+        else
+            n = (uint32_t)((tmsize_t)nread / direntrysize);
+
         Error("Could only read %" PRIu32 " of %" PRIu16
               " entries in directory at offset %" PRIu64,
               n, dircount, off);
-        dircount = n;
+        dircount = (uint16_t)n;
         nextdiroff = 0;
     }
     else
@@ -397,7 +427,8 @@ static uint64_t ReadDirectory(int fd, unsigned int ix, uint64_t off)
         uint64_t count;
         uint64_t datasize;
         int datafits;
-        void *datamem;
+        void *datamem = NULL;
+        void *datavalptr = NULL;
         uint64_t dataoffset;
         int datatruncated;
         int datasizeoverflow;
@@ -434,11 +465,11 @@ static uint64_t ReadDirectory(int fd, unsigned int ix, uint64_t off)
         if (type >= NWIDTHS)
             typewidth = 0;
         else
-            typewidth = datawidth[type];
-        datasize = TIFFSafeMultiply(tmsize_t, count, typewidth);
+            typewidth = (uint16_t)datawidth[type];
+        datasize = TIFFSafeMultiply(uint64_t, count, typewidth);
         datasizeoverflow = (typewidth > 0 && datasize / typewidth != count);
         datafits = 1;
-        datamem = dp;
+        datavalptr = (void *)dp;
         dataoffset = 0;
         datatruncated = 0;
         if (!bigtiff)
@@ -447,7 +478,6 @@ static uint64_t ReadDirectory(int fd, unsigned int ix, uint64_t off)
             {
                 uint32_t dataoffset32;
                 datafits = 0;
-                datamem = NULL;
                 dataoffset32 = *(uint32_t *)dp;
                 if (swabflag)
                     TIFFSwabLong(&dataoffset32);
@@ -460,7 +490,6 @@ static uint64_t ReadDirectory(int fd, unsigned int ix, uint64_t off)
             if (datasizeoverflow || datasize > 8)
             {
                 datafits = 0;
-                datamem = NULL;
                 memcpy(&dataoffset, dp, sizeof(uint64_t));
                 if (swabflag)
                     TIFFSwabLong8(&dataoffset);
@@ -470,19 +499,27 @@ static uint64_t ReadDirectory(int fd, unsigned int ix, uint64_t off)
         if (datasizeoverflow || datasize > 0x10000)
         {
             datatruncated = 1;
-            count = 0x10000 / typewidth;
-            datasize = TIFFSafeMultiply(tmsize_t, count, typewidth);
+            count = (uint64_t)(0x10000 / typewidth);
+            datasize = TIFFSafeMultiply(uint64_t, count, typewidth);
         }
         if (count > maxitems)
         {
             datatruncated = 1;
             count = maxitems;
-            datasize = TIFFSafeMultiply(tmsize_t, count, typewidth);
+            datasize = TIFFSafeMultiply(uint64_t, count, typewidth);
         }
-        if (!datafits)
+
+        /* Values within IFD-buffer 'dirmem' are either 2 byte-aligned for
+         * ClassicTIFF, or 4-byte aligned for BigTIFF.
+         * Thus, to be on the safe side for "unaligned memory access", the data
+         * values need to be freshly aligned in an extra allocated buffer for
+         * the values.
+         * BTW: malloc() gets memory aligned for every data type.
+         */
+        datamem = _TIFFmalloc((tmsize_t)datasize);
+        if (datamem)
         {
-            datamem = _TIFFmalloc(datasize);
-            if (datamem)
+            if (!datafits)
             {
                 if (_TIFF_lseek_f(fd, (_TIFF_off_t)dataoffset, 0) !=
                     (_TIFF_off_t)dataoffset)
@@ -491,7 +528,7 @@ static uint64_t ReadDirectory(int fd, unsigned int ix, uint64_t off)
                     _TIFFfree(datamem);
                     datamem = NULL;
                 }
-                else if (read(fd, datamem, (size_t)datasize) !=
+                else if (read(fd, datamem, (TIFFIOSize_t)datasize) !=
                          (tmsize_t)datasize)
                 {
                     Error("Read error accessing tag %u value", tag);
@@ -500,8 +537,14 @@ static uint64_t ReadDirectory(int fd, unsigned int ix, uint64_t off)
                 }
             }
             else
-                Error("No space for data for tag %u", tag);
+            {
+                /* Align values from IFD-buffer */
+                memcpy(datamem, datavalptr, (size_t)datasize);
+            }
         }
+        else
+            Error("No space for data for tag %u", tag);
+
         if (datamem)
         {
             if (swabflag)
@@ -527,9 +570,20 @@ static uint64_t ReadDirectory(int fd, unsigned int ix, uint64_t off)
                         break;
                     case TIFF_RATIONAL:
                     case TIFF_SRATIONAL:
-                        TIFFSwabArrayOfLong((uint32_t *)datamem,
-                                            (tmsize_t)count * 2);
+                    {
+                        tmsize_t count_s = _TIFFCastUInt64ToSSize(
+                            NULL, count, "rational word count");
+                        tmsize_t word_count = _TIFFMultiplySSize(
+                            NULL, count_s, 2, "rational word count");
+                        if ((count_s == 0 && count != 0) ||
+                            (word_count == 0 && count_s != 0))
+                        {
+                            Error("Integer overflow swabbing tag %u", tag);
+                            break;
+                        }
+                        TIFFSwabArrayOfLong((uint32_t *)datamem, word_count);
                         break;
+                    }
                     case TIFF_DOUBLE:
                     case TIFF_LONG8:
                     case TIFF_SLONG8:
@@ -537,16 +591,21 @@ static uint64_t ReadDirectory(int fd, unsigned int ix, uint64_t off)
                         TIFFSwabArrayOfLong8((uint64_t *)datamem,
                                              (tmsize_t)count);
                         break;
+                    default:
+                        break;
                 }
             }
-            PrintData(stdout, type, (uint32_t)count, datamem);
+            /* Silence Coverity Scan warning about tainted_data: Passing tainted
+             * expression *datamem to PrintData, which uses it as a divisor or
+             * modulus. False positive because division by zero is checked in
+             * PrintData(). */
+            /* coverity[tainted_data:SUPPRESS] */
+            PrintData(stdout, type, (uint32_t)count, (unsigned char *)datamem);
             if (datatruncated)
                 printf(" ...");
-            if (!datafits)
-            {
-                _TIFFfree(datamem);
-                datamem = NULL;
-            }
+
+            _TIFFfree(datamem);
+            datamem = NULL;
         }
         printf(">\n");
     }
@@ -714,7 +773,7 @@ static void PrintASCII(FILE *fd, uint32_t cc, const unsigned char *cp)
 static void PrintData(FILE *fd, uint16_t type, uint32_t count,
                       unsigned char *data)
 {
-    char *sep = "";
+    const char *sep = "";
 
     switch (type)
     {
@@ -745,8 +804,14 @@ static void PrintData(FILE *fd, uint16_t type, uint32_t count,
         {
             int16_t *wp = (int16_t *)data;
             while (count-- > 0)
-                fprintf(fd, hex_mode ? sshortfmth : sshortfmtd, sep, *wp++),
-                    sep = " ";
+            {
+                int16_t val = *wp++;
+                if (hex_mode)
+                    fprintf(fd, "%s%#x", sep, (unsigned int)val);
+                else
+                    fprintf(fd, sshortfmtd, sep, val);
+                sep = " ";
+            }
             break;
         }
         case TIFF_LONG:
@@ -763,8 +828,14 @@ static void PrintData(FILE *fd, uint16_t type, uint32_t count,
         {
             int32_t *lp = (int32_t *)data;
             while (count-- > 0)
-                fprintf(fd, hex_mode ? slongfmth : slongfmtd, sep, *lp++),
-                    sep = " ";
+            {
+                int32_t val = *lp++;
+                if (hex_mode)
+                    fprintf(fd, slongfmth, sep, (uint32_t)val);
+                else
+                    fprintf(fd, slongfmtd, sep, val);
+                sep = " ";
+            }
             break;
         }
         case TIFF_LONG8:
@@ -799,8 +870,14 @@ static void PrintData(FILE *fd, uint16_t type, uint32_t count,
             while (count-- > 0)
             {
                 if (lp[1] == 0)
-                    fprintf(fd, "%sNan (%" PRIu32 "/%" PRIu32 ")", sep, lp[0],
-                            lp[1]);
+                {
+                    if (lp[0] == 0)
+                        fprintf(fd, "%sNan (%" PRIu32 "/%" PRIu32 ")", sep,
+                                lp[0], lp[1]);
+                    else
+                        fprintf(fd, "%sInf (%" PRIu32 "/%" PRIu32 ")", sep,
+                                lp[0], lp[1]);
+                }
                 else
                     fprintf(fd, rationalfmt, sep,
                             (double)lp[0] / (double)lp[1]);
@@ -829,7 +906,7 @@ static void PrintData(FILE *fd, uint16_t type, uint32_t count,
         {
             float *fp = (float *)data;
             while (count-- > 0)
-                fprintf(fd, floatfmt, sep, *fp++), sep = " ";
+                fprintf(fd, floatfmt, sep, (double)*fp++), sep = " ";
             break;
         }
         case TIFF_DOUBLE:
@@ -860,17 +937,34 @@ static void PrintData(FILE *fd, uint16_t type, uint32_t count,
             }
             break;
         }
+        default:
+            break;
     }
 }
 
-static void ReadError(char *what) { Fatal("Error while reading %s", what); }
+static void ReadError(const char *what)
+{
+    Fatal("Error while reading %s", what);
+}
 
 #include <stdarg.h>
 
 static void vError(FILE *fd, const char *fmt, va_list ap)
 {
     fprintf(fd, "%s: ", curfile);
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#elif defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#endif
     vfprintf(fd, fmt, ap);
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic pop
+#elif defined(__clang__)
+#pragma clang diagnostic pop
+#endif
     fprintf(fd, ".\n");
 }
 

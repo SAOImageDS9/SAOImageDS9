@@ -1,34 +1,34 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>LibTIFF Coverage of the TIFF 6.0 Specification &#8212; LibTIFF 4.7.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b849a4e9" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=0a676766" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=9f25de62"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <title>LibTIFF Coverage of the TIFF 6.0 Specification &#8212; LibTIFF 4.7.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=34905f61" />
+    <script src="../_static/documentation_options.js?v=2edf0659"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="LibTIFF Coverage of the BigTIFF Specification" href="coverage-bigtiff.html" />
-    <link rel="prev" title="BigTIFF Design" href="bigtiff.html" /> 
+    <link rel="next" title="BigTIFF Design" href="bigtiff.html" />
+    <link rel="prev" title="DRAFT TIFF Technical Note #2" href="technote2.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="coverage-bigtiff.html" title="LibTIFF Coverage of the BigTIFF Specification"
+          <a href="bigtiff.html" title="BigTIFF Design"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="bigtiff.html" title="BigTIFF Design"
+          <a href="technote2.html" title="DRAFT TIFF Technical Note #2"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">TIFF File Format Specification</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">LibTIFF Coverage of the TIFF 6.0 Specification</a></li> 
       </ul>
@@ -40,14 +40,14 @@
           <div class="body" role="main">
             
   <section id="libtiff-coverage-of-the-tiff-6-0-specification">
-<h1>LibTIFF Coverage of the TIFF 6.0 Specification<a class="headerlink" href="#libtiff-coverage-of-the-tiff-6-0-specification" title="Permalink to this heading">¶</a></h1>
+<h1>LibTIFF Coverage of the TIFF 6.0 Specification<a class="headerlink" href="#libtiff-coverage-of-the-tiff-6-0-specification" title="Link to this heading">¶</a></h1>
 <p>The library is capable of dealing with images that are written to
 follow the 5.0 or 6.0 TIFF spec.  There is also considerable support
 for some of the more esoteric portions of the 6.0 TIFF spec.</p>
 <section id="baseline">
-<h2>Baseline<a class="headerlink" href="#baseline" title="Permalink to this heading">¶</a></h2>
+<h2>Baseline<a class="headerlink" href="#baseline" title="Link to this heading">¶</a></h2>
 <table class="docutils align-default" id="id1">
-<caption><span class="caption-text">Core requirements</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Core requirements</span><a class="headerlink" href="#id1" title="Link to this table">¶</a></caption>
 <colgroup>
 <col style="width: 20.0%" />
 <col style="width: 80.0%" />
@@ -163,7 +163,7 @@ updated.</p>
 <p>In addition, the library supports some optional compression algorithms
 that are, in some cases, of dubious value.</p>
 <table class="docutils align-default" id="id2">
-<caption><span class="caption-text">Compression algorithms</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Compression algorithms</span><a class="headerlink" href="#id2" title="Link to this table">¶</a></caption>
 <colgroup>
 <col style="width: 20.0%" />
 <col style="width: 80.0%" />
@@ -205,8 +205,10 @@ consult the materials available at
 </div>
 <p>The following table shows the tags that are recognized
 and how they are used by the library.  If no use is indicated,
-then the library reads and writes the tag, but does not use it internally.
-For the meaning of the tags look in <a class="reference external" href="https://www.awaresystems.be/imaging/tiff/tifftags.html">https://www.awaresystems.be/imaging/tiff/tifftags.html</a></p>
+then the library reads and writes the tag, but does not use it internally.</p>
+<p>Apart of the TIFF 6.0 specification the meaning of tags can be found on various places
+in the internet. For example:
+<a class="reference external" href="https://www.loc.gov/preservation/digital/formats/content/tiff_tags.shtml">https://www.loc.gov/preservation/digital/formats/content/tiff_tags.shtml</a></p>
 <p><code class="file docutils literal notranslate"><span class="pre">libtiff</span></code> supports also many private tags allocated for organizations that wish to
 store additional information in a TIFF file.
 Tags for TIFF/EP and for Digital Negative (DNG) Specification 1.1.0
@@ -221,9 +223,9 @@ tags and the library does not recognize them except when the
 tag has been previously set to the relevant compression scheme.</p>
 </section>
 <section id="tags-recognized-by-libtiff">
-<h2>Tags Recognized by LibTIFF<a class="headerlink" href="#tags-recognized-by-libtiff" title="Permalink to this heading">¶</a></h2>
+<h2>Tags Recognized by LibTIFF<a class="headerlink" href="#tags-recognized-by-libtiff" title="Link to this heading">¶</a></h2>
 <table class="docutils align-default" id="id3">
-<caption><span class="caption-text">Tags used by libtiff</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Tags used by libtiff</span><a class="headerlink" href="#id3" title="Link to this table">¶</a></caption>
 <colgroup>
 <col style="width: 41.7%" />
 <col style="width: 8.3%" />
@@ -1022,10 +1024,10 @@ subvolume &quot;tiling&quot; of a volume of data.</p>
 Consult the TIFF 6.0 specification and <a class="reference internal" href="index.html"><span class="doc">TIFF File Format Specification</span></a>.</p>
 </section>
 <section id="codecs-compression">
-<h2>Codecs / Compression<a class="headerlink" href="#codecs-compression" title="Permalink to this heading">¶</a></h2>
+<h2>Codecs / Compression<a class="headerlink" href="#codecs-compression" title="Link to this heading">¶</a></h2>
 <p>The following tags are used by codecs.</p>
 <table class="docutils align-default" id="id4">
-<caption><span class="caption-text">Codec / Compression Tags used by libtiff</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Codec / Compression Tags used by libtiff</span><a class="headerlink" href="#id4" title="Link to this table">¶</a></caption>
 <colgroup>
 <col style="width: 41.7%" />
 <col style="width: 8.3%" />
@@ -1127,15 +1129,15 @@ a revised JPEG-in-TIFF scheme (revised over the appendix that was
 part of the TIFF 6.0 specification).</p>
 </section>
 <section id="exif-gps-custom-ifds">
-<h2>EXIF / GPS Custom IFDs<a class="headerlink" href="#exif-gps-custom-ifds" title="Permalink to this heading">¶</a></h2>
+<h2>EXIF / GPS Custom IFDs<a class="headerlink" href="#exif-gps-custom-ifds" title="Link to this heading">¶</a></h2>
 <p>In addition to the standard TIFF tags, <code class="file docutils literal notranslate"><span class="pre">libtiff</span></code> has predefined IFDs
 (image file directories) with the tags for EXIF (version 2.32) and EXIF-GPS
 as custom directories.
 For reading / writing of this IFDs refer to <a class="reference internal" href="../functions/TIFFCustomDirectory.html"><span class="doc">TIFFCustomDirectory</span></a>.</p>
 <section id="exif-custom-tags">
-<h3>EXIF Custom Tags<a class="headerlink" href="#exif-custom-tags" title="Permalink to this heading">¶</a></h3>
+<h3>EXIF Custom Tags<a class="headerlink" href="#exif-custom-tags" title="Link to this heading">¶</a></h3>
 <table class="docutils align-default" id="id5">
-<caption><span class="caption-text">EXIF 2.32 Tags used by libtiff</span><a class="headerlink" href="#id5" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">EXIF 2.32 Tags used by libtiff</span><a class="headerlink" href="#id5" title="Link to this table">¶</a></caption>
 <colgroup>
 <col style="width: 41.7%" />
 <col style="width: 8.3%" />
@@ -1560,9 +1562,9 @@ In addition, while &quot;Count=Any&quot;, only 1 count should be used.</p></td>
 </table>
 </section>
 <section id="gps-custom-tags">
-<h3>GPS Custom Tags<a class="headerlink" href="#gps-custom-tags" title="Permalink to this heading">¶</a></h3>
+<h3>GPS Custom Tags<a class="headerlink" href="#gps-custom-tags" title="Link to this heading">¶</a></h3>
 <table class="docutils align-default" id="id6">
-<caption><span class="caption-text">GPS 2.32 Tags used by libtiff</span><a class="headerlink" href="#id6" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">GPS 2.32 Tags used by libtiff</span><a class="headerlink" href="#id6" title="Link to this table">¶</a></caption>
 <colgroup>
 <col style="width: 41.7%" />
 <col style="width: 8.3%" />
@@ -1748,7 +1750,7 @@ In addition, while &quot;Count=Any&quot;, only 1 count should be used.</p></td>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="../index.html">Table of Contents</a></h3>
@@ -1769,13 +1771,13 @@ In addition, while &quot;Count=Any&quot;, only 1 count should be used.</p></td>
   </div>
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="bigtiff.html"
-                          title="previous chapter">BigTIFF Design</a></p>
+    <p class="topless"><a href="technote2.html"
+                          title="previous chapter">DRAFT TIFF Technical Note #2</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="coverage-bigtiff.html"
-                          title="next chapter">LibTIFF Coverage of the BigTIFF Specification</a></p>
+    <p class="topless"><a href="bigtiff.html"
+                          title="next chapter">BigTIFF Design</a></p>
   </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
@@ -1784,7 +1786,7 @@ In addition, while &quot;Count=Any&quot;, only 1 count should be used.</p></td>
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -1792,32 +1794,32 @@ In addition, while &quot;Count=Any&quot;, only 1 count should be used.</p></td>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="coverage-bigtiff.html" title="LibTIFF Coverage of the BigTIFF Specification"
+          <a href="bigtiff.html" title="BigTIFF Design"
              >next</a> |</li>
         <li class="right" >
-          <a href="bigtiff.html" title="BigTIFF Design"
+          <a href="technote2.html" title="DRAFT TIFF Technical Note #2"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >TIFF File Format Specification</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">LibTIFF Coverage of the TIFF 6.0 Specification</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-    &#169; Copyright 1988-2022, LibTIFF contributors.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+    &#169; Copyright 1988-2025, LibTIFF contributors.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

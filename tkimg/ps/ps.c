@@ -8,8 +8,8 @@
  * For a list of available format options see function ParseFormatOpts
  * and the documentation img-ps.
  *
- * Copyright (c) 1997-2024 Jan Nijtmans    <nijtmans@users.sourceforge.net>
- * Copyright (c) 2002-2024 Andreas Kupries <andreas_kupries@users.sourceforge.net>
+ * Copyright (c) 1997-2025 Jan Nijtmans    <nijtmans@users.sourceforge.net>
+ * Copyright (c) 2002-2025 Andreas Kupries <andreas_kupries@users.sourceforge.net>
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.

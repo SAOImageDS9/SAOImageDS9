@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pal2rgb &#8212; LibTIFF 4.7.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b849a4e9" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=0a676766" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=9f25de62"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <title>pal2rgb &#8212; LibTIFF 4.7.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=34905f61" />
+    <script src="../_static/documentation_options.js?v=2edf0659"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="ppm2tiff" href="ppm2tiff.html" />
     <link rel="prev" title="fax2tiff" href="fax2tiff.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="fax2tiff.html" title="fax2tiff"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../tools.html" accesskey="U">TIFF Tools Overview</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">pal2rgb</a></li> 
       </ul>
@@ -40,23 +40,23 @@
           <div class="body" role="main">
             
   <section id="pal2rgb">
-<h1>pal2rgb<a class="headerlink" href="#pal2rgb" title="Permalink to this heading">¶</a></h1>
+<h1>pal2rgb<a class="headerlink" href="#pal2rgb" title="Link to this heading">¶</a></h1>
 <section id="synopsis">
-<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this heading">¶</a></h2>
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Link to this heading">¶</a></h2>
 <p><strong>pal2rgb</strong> [ <em>options</em> ] <em>input.tif</em> <em>output.tif</em></p>
 </section>
 <section id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">¶</a></h2>
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading">¶</a></h2>
 <p><strong class="program">pal2rgb</strong> converts a palette color image to a full color image by
 applying the colormap of the palette image to each sample to generate a full color
 RGB image.</p>
 </section>
 <section id="options">
-<h2>Options<a class="headerlink" href="#options" title="Permalink to this heading">¶</a></h2>
+<h2>Options<a class="headerlink" href="#options" title="Link to this heading">¶</a></h2>
 <p>Options that affect the interpretation of input data are:</p>
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-pal2rgb-C">
-<span class="sig-name descname"><span class="pre">-C</span></span><span class="sig-prename descclassname"> <span class="pre">numentries</span></span><a class="headerlink" href="#cmdoption-pal2rgb-C" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">-C</span></span><span class="sig-prename descclassname"> <span class="pre">numentries</span></span><a class="headerlink" href="#cmdoption-pal2rgb-C" title="Link to this definition">¶</a></dt>
 <dd><p>This option overrides the default behavior of <strong class="program">pal2rgb</strong>
 in determining whether or not
 colormap entries contain 16-bit or 8-bit values.
@@ -76,7 +76,7 @@ bits for colormap entries:
 <p>Options that affect the output file format are:</p>
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-pal2rgb-p">
-<span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"> <span class="pre">planarconfig</span></span><a class="headerlink" href="#cmdoption-pal2rgb-p" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"> <span class="pre">planarconfig</span></span><a class="headerlink" href="#cmdoption-pal2rgb-p" title="Link to this definition">¶</a></dt>
 <dd><p>Explicitly select the planar configuration used in organizing
 data samples in the output image:
 <strong class="command">-p contig</strong> for samples packed contiguously, and
@@ -86,7 +86,7 @@ By default samples are packed.</p>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-pal2rgb-c">
-<span class="sig-name descname"><span class="pre">-c</span></span><span class="sig-prename descclassname"> <span class="pre">compress</span></span><a class="headerlink" href="#cmdoption-pal2rgb-c" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">-c</span></span><span class="sig-prename descclassname"> <span class="pre">compress</span></span><a class="headerlink" href="#cmdoption-pal2rgb-c" title="Link to this definition">¶</a></dt>
 <dd><p>Use the specified compression algorithm to encoded image data
 in the output file:
 <strong class="command">-c packbits</strong> for Macintosh Packbits,
@@ -100,7 +100,7 @@ file's compression algorithm is used.</p>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-pal2rgb-r">
-<span class="sig-name descname"><span class="pre">-r</span></span><span class="sig-prename descclassname"> <span class="pre">striprows</span></span><a class="headerlink" href="#cmdoption-pal2rgb-r" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">-r</span></span><span class="sig-prename descclassname"> <span class="pre">striprows</span></span><a class="headerlink" href="#cmdoption-pal2rgb-r" title="Link to this definition">¶</a></dt>
 <dd><p>Explicitly specify the number of rows in each strip of the
 output file. If the <a class="reference internal" href="#cmdoption-pal2rgb-r"><code class="xref std std-option docutils literal notranslate"><span class="pre">-r</span></code></a>
 option is not specified, a number is selected such that each
@@ -109,11 +109,11 @@ output strip has approximately 8 kilobytes of data in it.</p>
 
 </section>
 <section id="bugs">
-<h2>Bugs<a class="headerlink" href="#bugs" title="Permalink to this heading">¶</a></h2>
+<h2>Bugs<a class="headerlink" href="#bugs" title="Link to this heading">¶</a></h2>
 <p>Only 8-bit images are handled.</p>
 </section>
 <section id="see-also">
-<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this heading">¶</a></h2>
+<h2>See also<a class="headerlink" href="#see-also" title="Link to this heading">¶</a></h2>
 <p><a class="reference internal" href="tiffinfo.html"><span class="doc">tiffinfo</span></a> (1),
 <a class="reference internal" href="tiffcp.html"><span class="doc">tiffcp</span></a> (1),
 <a class="reference internal" href="tiffmedian.html"><span class="doc">tiffmedian</span></a> (1),
@@ -126,7 +126,7 @@ output strip has approximately 8 kilobytes of data in it.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="../index.html">Table of Contents</a></h3>
@@ -159,7 +159,7 @@ output strip has approximately 8 kilobytes of data in it.</p>
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -167,13 +167,13 @@ output strip has approximately 8 kilobytes of data in it.</p>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -185,14 +185,14 @@ output strip has approximately 8 kilobytes of data in it.</p>
         <li class="right" >
           <a href="fax2tiff.html" title="fax2tiff"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../tools.html" >TIFF Tools Overview</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">pal2rgb</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-    &#169; Copyright 1988-2022, LibTIFF contributors.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+    &#169; Copyright 1988-2025, LibTIFF contributors.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

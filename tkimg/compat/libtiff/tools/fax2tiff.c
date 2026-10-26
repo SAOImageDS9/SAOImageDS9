@@ -53,7 +53,7 @@
 #endif
 
 #define TIFFhowmany8(x)                                                        \
-    (((x)&0x07) ? ((uint32_t)(x) >> 3) + 1 : (uint32_t)(x) >> 3)
+    (((x) & 0x07) ? ((uint32_t)(x) >> 3) + 1 : (uint32_t)(x) >> 3)
 
 TIFF *faxTIFF;
 char *rowbuf;
@@ -89,11 +89,11 @@ int main(int argc, char *argv[])
     int compression_out = COMPRESSION_CCITTFAX3;
     int fillorder_in = FILLORDER_LSB2MSB;
     int fillorder_out = FILLORDER_LSB2MSB;
-    uint32_t group3options_in = 0;  /* 1d-encoded */
-    uint32_t group3options_out = 0; /* 1d-encoded */
-    uint32_t group4options_in = 0;  /* compressed */
-    uint32_t group4options_out = 0; /* compressed */
-    uint32_t defrowsperstrip = (uint32_t)0;
+    uint32_t group3options_in = 0u;  /* 1d-encoded */
+    uint32_t group3options_out = 0u; /* 1d-encoded */
+    uint32_t group4options_in = 0u;  /* compressed */
+    uint32_t group4options_out = 0u; /* compressed */
+    uint32_t defrowsperstrip = 0u;
     uint32_t rowsperstrip;
     int photometric_in = PHOTOMETRIC_MINISWHITE;
     int photometric_out = PHOTOMETRIC_MINISWHITE;
@@ -124,13 +124,13 @@ int main(int argc, char *argv[])
                 group4options_in |= GROUP4OPT_UNCOMPRESSED;
                 break;
             case '1': /* input is 1d-encoded (g3 only) */
-                group3options_in &= ~GROUP3OPT_2DENCODING;
+                group3options_in &= ~(uint32_t)GROUP3OPT_2DENCODING;
                 break;
             case '2': /* input is 2d-encoded (g3 only) */
                 group3options_in |= GROUP3OPT_2DENCODING;
                 break;
             case 'P': /* input has not-aligned EOL (g3 only) */
-                group3options_in &= ~GROUP3OPT_FILLBITS;
+                group3options_in &= ~(uint32_t)GROUP3OPT_FILLBITS;
                 break;
             case 'A': /* input has aligned EOL (g3 only) */
                 group3options_in |= GROUP3OPT_FILLBITS;
@@ -173,7 +173,7 @@ int main(int argc, char *argv[])
                 group4options_out |= GROUP4OPT_UNCOMPRESSED;
                 break;
             case '5': /* generate 1d-encoded output (g3 only) */
-                group3options_out &= ~GROUP3OPT_2DENCODING;
+                group3options_out &= ~(uint32_t)GROUP3OPT_2DENCODING;
                 break;
             case '6': /* generate 2d-encoded output (g3 only) */
                 group3options_out |= GROUP3OPT_2DENCODING;
@@ -203,10 +203,10 @@ int main(int argc, char *argv[])
                 group3options_out |= GROUP3OPT_FILLBITS;
                 break;
             case 'p': /* generate not EOL-aligned output (g3 only) */
-                group3options_out &= ~GROUP3OPT_FILLBITS;
+                group3options_out &= ~(uint32_t)GROUP3OPT_FILLBITS;
                 break;
             case 'r': /* rows/strip */
-                defrowsperstrip = atol(optarg);
+                defrowsperstrip = (uint32_t)atol(optarg);
                 break;
             case 's': /* stretch image by dup'ng scanlines */
                 stretch = 1;
@@ -229,13 +229,16 @@ int main(int argc, char *argv[])
             case '?':
                 usage(EXIT_FAILURE);
                 /*NOTREACHED*/
+                break;
+            default:
+                break;
         }
     npages = argc - optind;
     if (npages < 1)
         usage(EXIT_FAILURE);
 
-    rowbuf = _TIFFmalloc(TIFFhowmany8(xsize));
-    refbuf = _TIFFmalloc(TIFFhowmany8(xsize));
+    rowbuf = (char *)_TIFFmalloc(TIFFhowmany8(xsize));
+    refbuf = (char *)_TIFFmalloc(TIFFhowmany8(xsize));
     if (rowbuf == NULL || refbuf == NULL)
     {
         TIFFClose(out);
@@ -285,7 +288,7 @@ int main(int argc, char *argv[])
     TIFFSetField(faxTIFF, TIFFTAG_FILLORDER, fillorder_in);
     TIFFSetField(faxTIFF, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
     TIFFSetField(faxTIFF, TIFFTAG_PHOTOMETRIC, photometric_in);
-    TIFFSetField(faxTIFF, TIFFTAG_YRESOLUTION, resY);
+    TIFFSetField(faxTIFF, TIFFTAG_YRESOLUTION, (double)resY);
     TIFFSetField(faxTIFF, TIFFTAG_RESOLUTIONUNIT, RESUNIT_INCH);
 
     /* NB: this must be done after directory info is setup */
@@ -308,7 +311,7 @@ int main(int argc, char *argv[])
         client_data.fd = fileno(in);
 #endif
         TIFFSetClientdata(faxTIFF, client_data.fh);
-        TIFFSetFileName(faxTIFF, (const char *)argv[optind]);
+        TIFFSetFileName(faxTIFF, argv[optind]);
         TIFFSetField(out, TIFFTAG_IMAGEWIDTH, xsize);
         TIFFSetField(out, TIFFTAG_BITSPERSAMPLE, 1);
         TIFFSetField(out, TIFFTAG_COMPRESSION, compression_out);
@@ -345,7 +348,7 @@ int main(int argc, char *argv[])
         if (!stretch)
         {
             TIFFGetField(faxTIFF, TIFFTAG_YRESOLUTION, &resY);
-            TIFFSetField(out, TIFFTAG_YRESOLUTION, resY);
+            TIFFSetField(out, TIFFTAG_YRESOLUTION, (double)resY);
         }
         else
             TIFFSetField(out, TIFFTAG_YRESOLUTION, 196.);
@@ -398,7 +401,7 @@ int copyFaxFile(TIFF *tifin, TIFF *tifout)
         TIFFError(tifin->tif_name, "Empty input file");
         return (0);
     }
-    tifin->tif_rawdata = _TIFFmalloc(tifin->tif_rawdatasize);
+    tifin->tif_rawdata = (uint8_t *)_TIFFmalloc(tifin->tif_rawdatasize);
     if (tifin->tif_rawdata == NULL)
     {
         TIFFError(tifin->tif_name, "Not enough memory");
@@ -415,19 +418,21 @@ int copyFaxFile(TIFF *tifin, TIFF *tifout)
 
     (*tifin->tif_setupdecode)(tifin);
     (*tifin->tif_predecode)(tifin, (tsample_t)0);
-    tifin->tif_row = 0;
+    tifin->tif_dir.td_row = 0;
     badfaxlines = 0;
     badfaxrun = 0;
 
     _TIFFmemset(refbuf, 0, linesize);
     row = 0;
     badrun = 0; /* current run of bad lines */
+    tmsize_t lastcc = tifin->tif_rawcc;
     while (tifin->tif_rawcc > 0)
     {
-        ok = (*tifin->tif_decoderow)(tifin, (tdata_t)rowbuf, linesize, 0);
+        ok = (*tifin->tif_decoderow)(tifin, (uint8_t *)rowbuf, linesize, 0);
         if (ok < 1)
         {
-            if (compression_in == COMPRESSION_CCITTFAX4)
+            if (compression_in == COMPRESSION_CCITTFAX4 ||
+                tifin->tif_rawcc == lastcc)
             {
                 /* This is probably EOFB, but if it's corrupt data, then we
                  * can't continue, anyway. */
@@ -445,7 +450,8 @@ int copyFaxFile(TIFF *tifin, TIFF *tifout)
             badrun = 0;
             _TIFFmemcpy(refbuf, rowbuf, linesize);
         }
-        tifin->tif_row++;
+        tifin->tif_dir.td_row++;
+        lastcc = tifin->tif_rawcc;
 
         if (TIFFWriteScanline(tifout, rowbuf, row, 0) < 0)
         {
@@ -468,7 +474,7 @@ int copyFaxFile(TIFF *tifin, TIFF *tifout)
     if (badrun > badfaxrun)
         badfaxrun = badrun;
     _TIFFfree(tifin->tif_rawdata);
-    return (row);
+    return ((int)row);
 }
 
 static const char usage_info[] =

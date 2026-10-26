@@ -1,3 +1,4 @@
+'\" t
 .\" Man page generated from reStructuredText.
 .
 .
@@ -27,36 +28,34 @@ level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .in \\n[rst2man-indent\\n[rst2man-indent-level]]u
 ..
-.TH "TIFFGETFIELD" "3tiff" "Sep 11, 2024" "4.7" "LibTIFF"
+.TH "TIFFGETFIELD" "3tiff" "Jun 27, 2026" "4.7" "LibTIFF"
 .SH NAME
 TIFFGetField \- get the value(s) of a tag in an open TIFF file
 .SH SYNOPSIS
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 #include <tiffio.h>
 #include <stdarg.h>
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .INDENT 0.0
 .TP
-.B int  TIFFGetField(TIFF  *tif, ttag_t  tag, \&...) 
+.B int TIFFGetField(TIFF *tif, uint32_t tag, \&...) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B int  TIFFVGetField(TIFF  *tif, ttag_t  tag, va_list  ap) 
+.B int TIFFVGetField(TIFF *tif, uint32_t tag, va_list ap) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B int  TIFFGetFieldDefaulted(TIFF  *tif, ttag_t  tag, \&...) 
+.B int TIFFGetFieldDefaulted(TIFF *tif, uint32_t tag, \&...) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B int  TIFFVGetFieldDefaulted(TIFF  *tif, ttag_t  tag, va_list  ap) 
+.B int TIFFVGetFieldDefaulted(TIFF *tif, uint32_t tag, va_list ap) 
 .UNINDENT
 .SH DESCRIPTION
 .sp
@@ -92,9 +91,8 @@ information on the meaning of each tag and their possible values.
 .INDENT 3.5
 .SH TAG PROPERTIES
 .TS
-center;
-|l|l|l|l|.
-_
+box center;
+l|l|l|l.
 T{
 Tag name
 T}	T{
@@ -110,7 +108,7 @@ T{
 T}	T{
 1
 T}	T{
-const  char**
+const char**
 T}	T{
 T}
 _
@@ -146,9 +144,9 @@ T{
 T}	T{
 3
 T}	T{
-const  uint16_t**
+const uint16_t**
 T}	T{
-1  <<  BitsPerSample arrays
+1 << BitsPerSample arrays
 T}
 _
 T{
@@ -174,7 +172,7 @@ T{
 T}	T{
 1
 T}	T{
-const  char**
+const char**
 T}	T{
 T}
 _
@@ -192,7 +190,7 @@ T{
 T}	T{
 1
 T}	T{
-const  char**
+const char**
 T}	T{
 T}
 _
@@ -201,7 +199,7 @@ T{
 T}	T{
 1
 T}	T{
-const  char**
+const char**
 T}	T{
 T}
 _
@@ -219,7 +217,7 @@ T{
 T}	T{
 2
 T}	T{
-uint16_t*, const  uint16_t**
+uint16_t*, const uint16_t**
 T}	T{
 count, types array
 T}
@@ -285,7 +283,7 @@ T{
 T}	T{
 1
 T}	T{
-const  char**
+const char**
 T}	T{
 T}
 _
@@ -294,7 +292,7 @@ T{
 T}	T{
 2
 T}	T{
-const  uint32_t*, const  void**
+const uint32_t*, const void**
 T}	T{
 count, profile data‡
 T}
@@ -313,7 +311,7 @@ T{
 T}	T{
 1
 T}	T{
-const  char**
+const char**
 T}	T{
 T}
 _
@@ -340,7 +338,7 @@ T{
 T}	T{
 1
 T}	T{
-const  char**
+const char**
 T}	T{
 T}
 _
@@ -378,7 +376,7 @@ T{
 T}	T{
 2
 T}	T{
-uint32_t*, const  void**
+uint32_t*, const void**
 T}	T{
 count, tables
 T}
@@ -398,7 +396,7 @@ T{
 T}	T{
 1
 T}	T{
-const  char**
+const char**
 T}	T{
 T}
 _
@@ -434,7 +432,7 @@ T{
 T}	T{
 1
 T}	T{
-const  char**
+const char**
 T}	T{
 T}
 _
@@ -452,7 +450,7 @@ T{
 T}	T{
 1
 T}	T{
-const  char**
+const char**
 T}	T{
 T}
 _
@@ -479,7 +477,7 @@ T{
 T}	T{
 2
 T}	T{
-uint32_t*, const  void**
+uint32_t*, const void**
 T}	T{
 count, data
 T}
@@ -507,7 +505,7 @@ T{
 T}	T{
 1
 T}	T{
-const  float**
+const float**
 T}	T{
 6\-entry array
 T}
@@ -517,7 +515,7 @@ T{
 T}	T{
 1
 T}	T{
-const  float**
+const float**
 T}	T{
 6\-entry array
 T}
@@ -536,7 +534,7 @@ T{
 T}	T{
 2
 T}	T{
-uint32_t*, const  void**
+uint32_t*, const void**
 T}	T{
 count, data
 T}
@@ -591,7 +589,7 @@ T{
 T}	T{
 1
 T}	T{
-const  char**
+const char**
 T}	T{
 T}
 _
@@ -609,7 +607,7 @@ T{
 T}	T{
 1
 T}	T{
-const  uint64_t**
+const uint64_t**
 T}	T{
 T}
 _
@@ -618,7 +616,7 @@ T{
 T}	T{
 1
 T}	T{
-const  uint64_t**
+const uint64_t**
 T}	T{
 T}
 _
@@ -636,7 +634,7 @@ T{
 T}	T{
 2
 T}	T{
-uint16_t*, const  uint64_t**
+uint16_t*, const uint64_t**
 T}	T{
 count, offsets array
 T}
@@ -646,7 +644,7 @@ T{
 T}	T{
 1
 T}	T{
-const  char**
+const char**
 T}	T{
 T}
 _
@@ -664,7 +662,7 @@ T{
 T}	T{
 1
 T}	T{
-const  uint64_t**
+const uint64_t**
 T}	T{
 T}
 _
@@ -691,7 +689,7 @@ T{
 T}	T{
 1
 T}	T{
-const  uint64_t**
+const uint64_t**
 T}	T{
 T}
 _
@@ -709,9 +707,9 @@ T{
 T}	T{
 1 or 3\(dg
 T}	T{
-const  uint16_t**
+const uint16_t**
 T}	T{
-1  <<  BitsPerSample entry arrays
+1 << BitsPerSample entry arrays
 T}
 _
 T{
@@ -719,7 +717,7 @@ T{
 T}	T{
 1
 T}	T{
-const  float**
+const float**
 T}	T{
 2\-entry array
 T}
@@ -729,7 +727,7 @@ T{
 T}	T{
 2
 T}	T{
-uint32_t*, const  void**
+uint32_t*, const void**
 T}	T{
 count, data
 T}
@@ -757,7 +755,7 @@ T{
 T}	T{
 1
 T}	T{
-const  float**
+const float**
 T}	T{
 3\-entry array
 T}
@@ -797,7 +795,6 @@ T}	T{
 float*
 T}	T{
 T}
-_
 .TE
 .UNINDENT
 .UNINDENT
@@ -811,7 +808,7 @@ three arrays are returned.
 The contents of this field are quite complex.  See
 \(dqThe ICC Profile Format Specification\(dq,
 Annex B.3 \(dqEmbedding ICC Profiles in TIFF Files\(dq (available at
-\fI\%http://www.color.org\fP) for an explanation.
+\X'tty: link http://www.color.org'\fI\%http://www.color.org\fP\X'tty: link') for an explanation.
 .UNINDENT
 .SH AUTOREGISTERED TAGS
 .sp
@@ -823,8 +820,7 @@ and \fBASCII\fP string from the tag 36867 you can use the following code:
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 uint32_t  count;
 void    *data;
 
@@ -832,8 +828,7 @@ TIFFGetField(tiff, 33424, &count, &data);
 printf(\(dqTag %d: %d, count %d\en\(dq, 33424, *(uint32_t *)data, count);
 TIFFGetField(tiff, 36867, &count, &data);
 printf(\(dqTag %d: %s, count %d\en\(dq, 36867, (char *)data, count);
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .SH RETURN VALUES
@@ -861,6 +856,6 @@ An unknown tag was supplied.
 .SH AUTHOR
 LibTIFF contributors
 .SH COPYRIGHT
-1988-2022, LibTIFF contributors
+1988-2025, LibTIFF contributors
 .\" Generated by docutils manpage writer.
 .

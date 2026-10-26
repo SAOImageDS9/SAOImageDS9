@@ -46,7 +46,6 @@ if { $tcl_platform(platform) eq "windows" } {
 }
 
 ui_init "testFull.tcl: Read/Write (Full Images)" "+320+30"
-SetFileTypes
 
 set canvId [drawTestCanvas $version]
 

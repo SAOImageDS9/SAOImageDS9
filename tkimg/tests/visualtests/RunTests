@@ -1,4 +1,5 @@
 set opts(Verbose) false
+set opts(Delete)  true
 set opts(Auto)    ""
 
 set useFileList [list]
@@ -16,9 +17,10 @@ proc PrintUsage { progName { msg "" } } {
     puts "Run the test programs."
     puts ""
     puts "Options:"
-    puts "  --help   : Display this usage message and exit."
-    puts "  --verbose: Show the detailed results of the tests. (Default: No)"
-    puts "  --auto   : Run tests in automatic mode. Default: No"
+    puts "  --help    : Display this usage message and exit."
+    puts "  --verbose : Show the detailed results of the tests. (Default: No)"
+    puts "  --auto    : Run tests in automatic mode. Default: No"
+    puts "  --nodelete: Do not delete test output files. (Default: Yes)"
     puts ""
 }
 
@@ -88,6 +90,8 @@ while { $curArg < $argc } {
             set opts(Verbose) true
         } elseif { $curOpt eq "auto" } {
             set opts(Auto) "auto"
+        } elseif { $curOpt eq "nodelete" } {
+            set opts(Delete) false
         } elseif { $curOpt eq "help" } {
             PrintUsage $argv0
             exit 1
@@ -108,7 +112,11 @@ if { [llength $useFileList] == 0 } {
 }
 
 foreach f $useFileList {
+    catch { file mkdir testOut }
     RunTest $f
+    if { $opts(Delete) } {
+        catch { file delete -force testOut }
+    }
 }
 
 exit 0

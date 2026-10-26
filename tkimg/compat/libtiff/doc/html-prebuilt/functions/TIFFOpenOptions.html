@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>TIFFOpenOptions &#8212; LibTIFF 4.7.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b849a4e9" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=0a676766" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=9f25de62"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <title>TIFFOpenOptions &#8212; LibTIFF 4.7.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=34905f61" />
+    <script src="../_static/documentation_options.js?v=2edf0659"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="TIFFPrintDirectory" href="TIFFPrintDirectory.html" />
     <link rel="prev" title="TIFFOpen" href="TIFFOpen.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="TIFFOpen.html" title="TIFFOpen"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../functions.html" accesskey="U">TIFF Functions Overview</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">TIFFOpenOptions</a></li> 
       </ul>
@@ -40,50 +40,55 @@
           <div class="body" role="main">
             
   <section id="tiffopenoptions">
-<h1>TIFFOpenOptions<a class="headerlink" href="#tiffopenoptions" title="Permalink to this heading">¶</a></h1>
+<h1>TIFFOpenOptions<a class="headerlink" href="#tiffopenoptions" title="Link to this heading">¶</a></h1>
 <section id="synopsis">
-<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this heading">¶</a></h2>
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Link to this heading">¶</a></h2>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;tiffio.h&gt;</span>
 </pre></div>
 </div>
 <dl class="c type">
 <dt class="sig sig-object c" id="c.TIFFOpenOptions">
-<span class="k"><span class="pre">typedef</span></span><span class="w"> </span><a class="reference internal" href="#c.TIFFOpenOptions" title="TIFFOpenOptions"><span class="n"><span class="pre">TIFFOpenOptions</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFOpenOptions</span></span></span><a class="headerlink" href="#c.TIFFOpenOptions" title="Permalink to this definition">¶</a><br /></dt>
+<span class="k"><span class="pre">typedef</span></span><span class="w"> </span><a class="reference internal" href="#c.TIFFOpenOptions" title="TIFFOpenOptions"><span class="n"><span class="pre">TIFFOpenOptions</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFOpenOptions</span></span></span><a class="headerlink" href="#c.TIFFOpenOptions" title="Link to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="c function">
 <dt class="sig sig-object c" id="c.TIFFOpenOptionsAlloc">
-<a class="reference internal" href="#c.TIFFOpenOptions" title="TIFFOpenOptions"><span class="n"><span class="pre">TIFFOpenOptions</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">TIFFOpenOptionsAlloc</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFOpenOptionsAlloc" title="Permalink to this definition">¶</a><br /></dt>
+<a class="reference internal" href="#c.TIFFOpenOptions" title="TIFFOpenOptions"><span class="n"><span class="pre">TIFFOpenOptions</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">TIFFOpenOptionsAlloc</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFOpenOptionsAlloc" title="Link to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="c function">
 <dt class="sig sig-object c" id="c.TIFFOpenOptionsFree">
-<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFOpenOptionsFree</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.TIFFOpenOptions" title="TIFFOpenOptions"><span class="n"><span class="pre">TIFFOpenOptions</span></span></a><span class="p"><span class="pre">*</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFOpenOptionsFree" title="Permalink to this definition">¶</a><br /></dt>
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFOpenOptionsFree</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.TIFFOpenOptions" title="TIFFOpenOptions"><span class="n"><span class="pre">TIFFOpenOptions</span></span></a><span class="p"><span class="pre">*</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFOpenOptionsFree" title="Link to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="c function">
 <dt class="sig sig-object c" id="c.TIFFOpenOptionsSetMaxSingleMemAlloc">
-<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFOpenOptionsSetMaxSingleMemAlloc</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.TIFFOpenOptions" title="TIFFOpenOptions"><span class="n"><span class="pre">TIFFOpenOptions</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">opts</span></span>, <span class="n"><span class="pre">tmsize_t</span></span><span class="w"> </span><span class="n"><span class="pre">max_single_mem_alloc</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFOpenOptionsSetMaxSingleMemAlloc" title="Permalink to this definition">¶</a><br /></dt>
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFOpenOptionsSetMaxSingleMemAlloc</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.TIFFOpenOptions" title="TIFFOpenOptions"><span class="n"><span class="pre">TIFFOpenOptions</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">opts</span></span>, <span class="n"><span class="pre">tmsize_t</span></span><span class="w"> </span><span class="n"><span class="pre">max_single_mem_alloc</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFOpenOptionsSetMaxSingleMemAlloc" title="Link to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="c function">
 <dt class="sig sig-object c" id="c.TIFFOpenOptionsSetMaxCumulatedMemAlloc">
-<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFOpenOptionsSetMaxCumulatedMemAlloc</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.TIFFOpenOptions" title="TIFFOpenOptions"><span class="n"><span class="pre">TIFFOpenOptions</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">opts</span></span>, <span class="n"><span class="pre">tmsize_t</span></span><span class="w"> </span><span class="n"><span class="pre">max_cumulated_mem_alloc</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFOpenOptionsSetMaxCumulatedMemAlloc" title="Permalink to this definition">¶</a><br /></dt>
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFOpenOptionsSetMaxCumulatedMemAlloc</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.TIFFOpenOptions" title="TIFFOpenOptions"><span class="n"><span class="pre">TIFFOpenOptions</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">opts</span></span>, <span class="n"><span class="pre">tmsize_t</span></span><span class="w"> </span><span class="n"><span class="pre">max_cumulated_mem_alloc</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFOpenOptionsSetMaxCumulatedMemAlloc" title="Link to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="c function">
 <dt class="sig sig-object c" id="c.TIFFOpenOptionsSetErrorHandlerExtR">
-<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFOpenOptionsSetErrorHandlerExtR</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.TIFFOpenOptions" title="TIFFOpenOptions"><span class="n"><span class="pre">TIFFOpenOptions</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">opts</span></span>, <a class="reference internal" href="TIFFError.html#c.TIFFErrorHandlerExtR" title="TIFFErrorHandlerExtR"><span class="n"><span class="pre">TIFFErrorHandlerExtR</span></span></a><span class="w"> </span><span class="n"><span class="pre">handler</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">errorhandler_user_data</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFOpenOptionsSetErrorHandlerExtR" title="Permalink to this definition">¶</a><br /></dt>
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFOpenOptionsSetErrorHandlerExtR</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.TIFFOpenOptions" title="TIFFOpenOptions"><span class="n"><span class="pre">TIFFOpenOptions</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">opts</span></span>, <a class="reference internal" href="TIFFError.html#c.TIFFErrorHandlerExtR" title="TIFFErrorHandlerExtR"><span class="n"><span class="pre">TIFFErrorHandlerExtR</span></span></a><span class="w"> </span><span class="n"><span class="pre">handler</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">errorhandler_user_data</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFOpenOptionsSetErrorHandlerExtR" title="Link to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="c function">
 <dt class="sig sig-object c" id="c.TIFFOpenOptionsSetWarningHandlerExtR">
-<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFOpenOptionsSetWarningHandlerExtR</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.TIFFOpenOptions" title="TIFFOpenOptions"><span class="n"><span class="pre">TIFFOpenOptions</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">opts</span></span>, <a class="reference internal" href="TIFFError.html#c.TIFFErrorHandlerExtR" title="TIFFErrorHandlerExtR"><span class="n"><span class="pre">TIFFErrorHandlerExtR</span></span></a><span class="w"> </span><span class="n"><span class="pre">handler</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">warnhandler_user_data</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFOpenOptionsSetWarningHandlerExtR" title="Permalink to this definition">¶</a><br /></dt>
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFOpenOptionsSetWarningHandlerExtR</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.TIFFOpenOptions" title="TIFFOpenOptions"><span class="n"><span class="pre">TIFFOpenOptions</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">opts</span></span>, <a class="reference internal" href="TIFFError.html#c.TIFFErrorHandlerExtR" title="TIFFErrorHandlerExtR"><span class="n"><span class="pre">TIFFErrorHandlerExtR</span></span></a><span class="w"> </span><span class="n"><span class="pre">handler</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">warnhandler_user_data</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFOpenOptionsSetWarningHandlerExtR" title="Link to this definition">¶</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.TIFFOpenOptionsSetWarnAboutUnknownTags">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFOpenOptionsSetWarnAboutUnknownTags</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#c.TIFFOpenOptions" title="TIFFOpenOptions"><span class="n"><span class="pre">TIFFOpenOptions</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">opts</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n"><span class="pre">warn_about_unknown_tags</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFOpenOptionsSetWarnAboutUnknownTags" title="Link to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 </section>
 <section id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">¶</a></h2>
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading">¶</a></h2>
 <p><a class="reference internal" href="#c.TIFFOpenOptions" title="TIFFOpenOptions"><code class="xref c c-type docutils literal notranslate"><span class="pre">TIFFOpenOptions</span></code></a> is an opaque structure which can be passed
 to the TIFF open&quot;Ext&quot; functions to define some <code class="docutils literal notranslate"><span class="pre">libtiff</span></code> internal settings.
 The settings are the maximum single memory allocation limit and
@@ -123,9 +128,13 @@ The <em>errorhandler_user_data</em> argument may be NULL.</p>
 <p><a class="reference internal" href="#c.TIFFOpenOptionsSetWarningHandlerExtR" title="TIFFOpenOptionsSetWarningHandlerExtR"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFOpenOptionsSetWarningHandlerExtR()</span></code></a> works like
 <a class="reference internal" href="#c.TIFFOpenOptionsSetErrorHandlerExtR" title="TIFFOpenOptionsSetErrorHandlerExtR"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFOpenOptionsSetErrorHandlerExtR()</span></code></a> but for the warning handler,
 which is invoked through  <a class="reference internal" href="TIFFWarning.html#c.TIFFWarningExtR" title="TIFFWarningExtR"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFWarningExtR()</span></code></a></p>
+<p><a class="reference internal" href="#c.TIFFOpenOptionsSetWarnAboutUnknownTags" title="TIFFOpenOptionsSetWarnAboutUnknownTags"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFOpenOptionsSetWarnAboutUnknownTags()</span></code></a> sets whether libtiff should
+emit a warning when encountering a unknown tag. This function has been added in
+libtiff 4.7.1 and the default value is FALSE (change of behaviour compared to
+earlier versions).</p>
 </section>
 <section id="example">
-<h2>Example<a class="headerlink" href="#example" title="Permalink to this heading">¶</a></h2>
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading">¶</a></h2>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;tiffio.h&quot;</span>
 
 <span class="k">typedef</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">MyErrorHandlerUserDataStruct</span>
@@ -161,11 +170,11 @@ which is invoked through  <a class="reference internal" href="TIFFWarning.html#c
 </div>
 </section>
 <section id="note">
-<h2>Note<a class="headerlink" href="#note" title="Permalink to this heading">¶</a></h2>
+<h2>Note<a class="headerlink" href="#note" title="Link to this heading">¶</a></h2>
 <p>This functionality was introduced with libtiff 4.5.</p>
 </section>
 <section id="see-also">
-<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this heading">¶</a></h2>
+<h2>See also<a class="headerlink" href="#see-also" title="Link to this heading">¶</a></h2>
 <p><a class="reference internal" href="libtiff.html"><span class="doc">libtiff</span></a> (3tiff),
 <a class="reference internal" href="TIFFOpen.html"><span class="doc">TIFFOpen</span></a> (3tiff),
 <a class="reference internal" href="TIFFError.html"><span class="doc">TIFFError</span></a> (3tiff),
@@ -178,7 +187,7 @@ which is invoked through  <a class="reference internal" href="TIFFWarning.html#c
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="../index.html">Table of Contents</a></h3>
@@ -211,7 +220,7 @@ which is invoked through  <a class="reference internal" href="TIFFWarning.html#c
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -219,13 +228,13 @@ which is invoked through  <a class="reference internal" href="TIFFWarning.html#c
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -237,14 +246,14 @@ which is invoked through  <a class="reference internal" href="TIFFWarning.html#c
         <li class="right" >
           <a href="TIFFOpen.html" title="TIFFOpen"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../functions.html" >TIFF Functions Overview</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">TIFFOpenOptions</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-    &#169; Copyright 1988-2022, LibTIFF contributors.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+    &#169; Copyright 1988-2025, LibTIFF contributors.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

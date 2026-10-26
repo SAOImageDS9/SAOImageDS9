@@ -11,7 +11,7 @@ set fmtList [list \
         [list ".pcx"   "pcx"  ""] \
         [list ".png"   "png"  ""] \
         [list ".ppm"   "ppm"  ""] \
-        [list ".raw"   "raw"  "-useheader true -nchan 3"] \
+        [list ".raw"   "raw"  "-useheader true -withalpha false"] \
         [list ".rgb"   "sgi"  ""] \
         [list ".ras"   "sun"  ""] \
         [list ".tga"   "tga"  ""] \

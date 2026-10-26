@@ -23,7 +23,7 @@
 
 #define HDIB HANDLE
 #define IS_WIN30_DIB(lpbi) ((*(LPDWORD)(lpbi)) == sizeof(BITMAPINFOHEADER))
-#define CVT(x) (((x)*255L) / ((1L << 16) - 1))
+#define CVT(x) (((x) * 255) / ((1 << 16) - 1))
 
 static HDIB CreateDIB(DWORD dwWidth, DWORD dwHeight, WORD wBitCount);
 static LPSTR FindDIBBits(LPSTR lpDIB);
@@ -85,7 +85,7 @@ HDIB LoadTIFFinDIB(LPSTR lpFileName)
     TIFFGetField(tif, TIFFTAG_ROWSPERSTRIP, &RowsPerStrip);
     TIFFGetField(tif, TIFFTAG_PHOTOMETRIC, &PhotometricInterpretation);
 
-    LineSize = TIFFScanlineSize(tif); // Number of byte in ine line
+    LineSize = TIFFScanlineSize(tif); // Number of byte in one line
 
     SamplePerPixel = (int)(LineSize / imageWidth);
 
@@ -161,7 +161,7 @@ HDIB LoadTIFFinDIB(LPSTR lpFileName)
 
         // read the tiff lines and save them in the DIB
         // with RGB mode, we have to change the order of the 3 samples RGB
-        <=> BGR for (row = 0; row < imageLength; row += RowsPerStrip)
+        <= > BGR for (row = 0; row < imageLength; row += RowsPerStrip)
         {
             nrow = (row + RowsPerStrip > imageLength ? imageLength - row
                                                      : RowsPerStrip);

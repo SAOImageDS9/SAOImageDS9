@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Modifying The TIFF Library &#8212; LibTIFF 4.7.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b849a4e9" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinxdoc.css?v=0a676766" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=9f25de62"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <title>Modifying The TIFF Library &#8212; LibTIFF 4.7.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinxdoc.css?v=34905f61" />
+    <script src="_static/documentation_options.js?v=2edf0659"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Defining New TIFF Tags" href="addingtags.html" />
     <link rel="prev" title="_TIFFRewriteField" href="functions/_TIFFRewriteField.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="functions/_TIFFRewriteField.html" title="_TIFFRewriteField"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Modifying The TIFF Library</a></li> 
       </ul>
     </div>  
@@ -39,14 +39,15 @@
           <div class="body" role="main">
             
   <section id="modifying-the-tiff-library">
-<h1>Modifying The TIFF Library<a class="headerlink" href="#modifying-the-tiff-library" title="Permalink to this heading">¶</a></h1>
-<a class="reference internal image-reference" href="_images/dave.gif"><img alt="dave" src="_images/dave.gif" style="width: 107px;" /></a>
+<h1>Modifying The TIFF Library<a class="headerlink" href="#modifying-the-tiff-library" title="Link to this heading">¶</a></h1>
+<a class="reference internal image-reference" href="_images/dave.gif"><img alt="dave" src="_images/dave.gif" style="width: 107px;" />
+</a>
 <p>This chapter provides information about the internal structure of
 the library, how to control the configuration when building it, and
 how to add new support to the library.
 The following sections are found in this chapter:</p>
 <section id="library-configuration">
-<h2>Library Configuration<a class="headerlink" href="#library-configuration" title="Permalink to this heading">¶</a></h2>
+<h2>Library Configuration<a class="headerlink" href="#library-configuration" title="Link to this heading">¶</a></h2>
 <p>Information on compiling the library is given <a class="reference internal" href="build.html"><span class="doc">Building the TIFF Software Distribution</span></a>
 elsewhere in this documentation.
 This section describes the low-level mechanisms used to control
@@ -90,9 +91,9 @@ packages that are not distributed with LibTIFF.</p>
 <p>Support for JPEG compression is controlled by <code class="xref c c-macro docutils literal notranslate"><span class="pre">JPEG_SUPPORT</span></code>.
 The JPEG codec that comes with LibTIFF is designed for
 use with release 5 or later of the Independent JPEG Group's freely
-available software distribution.
-This software can be retrieved from the directory
-<a class="reference external" href="ftp://ftp.uu.net/graphics/jpeg">ftp://ftp.uu.net/graphics/jpeg</a>.</p>
+available software distribution.</p>
+<p>This software can be retrieved from
+<a class="reference external" href="https://ijg.org/">https://ijg.org/</a> or as an alternative from <a class="reference external" href="https://libjpeg-turbo.org/">https://libjpeg-turbo.org/</a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Enabling JPEG support automatically enables support for
@@ -102,31 +103,31 @@ the TIFF 6.0 colorimetry and YCbCr-related tags.</p>
 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DEFLATE_SUPPORT</span></code>.
 The deflate codec that comes with LibTIFF is designed
 for use with version 0.99 or later of the freely available
-<code class="docutils literal notranslate"><span class="pre">libz</span></code> library written by Jean-loup Gailly and Mark Adler.
-The data format used by this library is described
-in the files
-<a class="reference external" href="ftp://ftp.uu.net/pub/archiving/zip/doc/zlib-3.1.doc">ftp://ftp.uu.net/pub/archiving/zip/doc/zlib-3.1.doc</a>,
-and
-<a class="reference external" href="ftp://ftp.uu.net/pub/archiving/zip/doc/deflate-1.1.doc">ftp://ftp.uu.net/pub/archiving/zip/doc/deflate-1.1.doc</a>,
-available in the directory
-<a class="reference external" href="ftp://ftp.uu.net/pub/archiving/zip/doc">ftp://ftp.uu.net/pub/archiving/zip/doc</a>..
-The library can be retried from the directory
-<a class="reference external" href="ftp://ftp.uu.net/pub/archiving/zip/zlib">ftp://ftp.uu.net/pub/archiving/zip/zlib</a>
-(or try <a class="reference external" href="ftp://quest.jpl.nasa.gov/beta/zlib/">ftp://quest.jpl.nasa.gov/beta/zlib/</a>).</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p><strong>The deflate algorithm is experimental.  Do not expect
-to exchange files using this compression scheme;
-it is included only because the similar, and more common,
-LZW algorithm is claimed to be governed by licensing restrictions.</strong></p>
+<code class="docutils literal notranslate"><span class="pre">libz</span></code> library written by Jean-loup Gailly and Mark Adler.</p>
+<p>The data format used by the zlib library is described by RFCs (Request for
+Comments) 1950 to 1952 in the files <a class="reference external" href="http://tools.ietf.org/html/rfc1950">http://tools.ietf.org/html/rfc1950</a>
+(zlib format), rfc1951 (deflate format) and rfc1952 (gzip format).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">libz</span></code> library can be fetched from <a class="reference external" href="https://www.zlib.net/">https://www.zlib.net/</a>,
+and <code class="docutils literal notranslate"><span class="pre">libdeflate</span></code> from  <a class="reference external" href="https://github.com/ebiggers/libdeflate">https://github.com/ebiggers/libdeflate</a></p>
+<p>Other codec libraries supported by LibTIFF are:</p>
+<ul>
+<li><p>JBIG:    <a class="reference external" href="https://www.cl.cam.ac.uk/~mgk25/jbigkit/">https://www.cl.cam.ac.uk/~mgk25/jbigkit/</a></p></li>
+<li><p>ESRI Lerc: <a class="reference external" href="https://github.com/Esri/lerc">https://github.com/Esri/lerc</a></p></li>
+<li><p>LZMA2:   <a class="reference external" href="https://tukaani.org/xz/">https://tukaani.org/xz/</a></p></li>
+<li><div class="line-block">
+<div class="line">ZSTD:  info at <a class="reference external" href="https://facebook.github.io/zstd/">https://facebook.github.io/zstd/</a></div>
+<div class="line">and can be retrieved from <a class="reference external" href="https://github.com/facebook/zstd">https://github.com/facebook/zstd</a></div>
 </div>
+</li>
+<li><p>WebP:  <a class="reference external" href="https://developers.google.com/speed/webp">https://developers.google.com/speed/webp</a></p></li>
+</ul>
 <p>By default <code class="file docutils literal notranslate"><span class="pre">tiffconf.h</span></code> defines
 <code class="xref c c-macro docutils literal notranslate"><span class="pre">COLORIMETRY_SUPPORT</span></code>,
 <code class="xref c c-macro docutils literal notranslate"><span class="pre">YCBCR_SUPPORT</span></code>,
 and
 <code class="xref c c-macro docutils literal notranslate"><span class="pre">CMYK_SUPPORT</span></code>.</p>
 <table class="docutils align-default" id="id1">
-<caption><span class="caption-text"><code class="file docutils literal notranslate"><span class="pre">tiffconf.h</span></code> defines</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text"><code class="file docutils literal notranslate"><span class="pre">tiffconf.h</span></code> defines</span><a class="headerlink" href="#id1" title="Link to this table">¶</a></caption>
 <colgroup>
 <col style="width: 20.0%" />
 <col style="width: 80.0%" />
@@ -153,19 +154,50 @@ and
 <td><p>2-bit encoding scheme used by NeXT (compression 32766)</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">OJPEG_SUPPORT</span></code></p></td>
-<td><p>obsolete JPEG scheme defined in the 6.0 spec (compression 6)</p></td>
+<td><p>obsolete JPEG scheme defined in the 6.0 spec (compression 6)
+(requires JPEG library with old JPEG support)</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">JPEG_SUPPORT</span></code></p></td>
-<td><p>current JPEG scheme defined in TTN2 (compression 7)</p></td>
+<td><p>current JPEG scheme defined in TTN2 (compression 7)
+(requires JPEG library)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">JBIG_SUPPORT</span></code></p></td>
+<td><p>current JBIG (compression 9=T85, 10=43 and 34661=ISO)
+(requires JBIG-KIT library)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">LERC_SUPPORT</span></code></p></td>
+<td><p>current LERC (compression 34887)
+(requires LERC and Zlib library)</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZIP_SUPPORT</span></code></p></td>
-<td><p>experimental Deflate scheme (compression 32946)</p></td>
+<td><p>experimental Deflate scheme (compression 32946)
+(requires Zlib)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">LIBDEFLATE_SUPPORT</span></code></p></td>
+<td><p>support libdeflate enhanced compression (compression 32946)
+(requires libdeflate and Zlib)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">LZMA_SUPPORT</span></code></p></td>
+<td><p>Lempel–Ziv–Markov chain algorithm (LZMA2) (compression 34925)
+(requires liblzma)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZSTD_SUPPORT</span></code></p></td>
+<td><p>ZStandard (ZSTD) deflate like scheme
+(compression 50000 - not registered in Adobe-maintained registry)
+(requires zstd library)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">WEBP_SUPPORT</span></code></p></td>
+<td><p>WebP raster graphic compression support
+(compression 50001 - not registered in Adobe-maintained registry)
+(requires webp library)</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">PIXARLOG_SUPPORT</span></code></p></td>
-<td><p>Pixar's compression scheme for high-resolution color images (compression 32909)</p></td>
+<td><p>Pixar's compression scheme for high-resolution color images
+(compression 32909) (requires Zlib)</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">SGILOG_SUPPORT</span></code></p></td>
-<td><p>SGI's compression scheme for high-resolution color images (compression 34676 and 34677)</p></td>
+<td><p>SGI's compression scheme for high-resolution color images
+(compression 34676 and 34677)</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">COLORIMETRY_SUPPORT</span></code></p></td>
 <td><p>support for the TIFF 6.0 colorimetry tags</p></td>
@@ -187,7 +219,7 @@ available at
 </table>
 </section>
 <section id="general-portability-comments">
-<h2>General Portability Comments<a class="headerlink" href="#general-portability-comments" title="Permalink to this heading">¶</a></h2>
+<h2>General Portability Comments<a class="headerlink" href="#general-portability-comments" title="Link to this heading">¶</a></h2>
 <p>This software is developed on Silicon Graphics UNIX
 systems (big-endian, MIPS CPU, 32-bit ints,
 IEEE floating point).
@@ -221,7 +253,7 @@ definition, which must be set to the appropriate value in <code class="file docu
 by the build system.</p>
 <p>The following defines control general portability:</p>
 <table class="docutils align-default" id="id2">
-<caption><span class="caption-text">Portability defines</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Portability defines</span><a class="headerlink" href="#id2" title="Link to this table">¶</a></caption>
 <colgroup>
 <col style="width: 20.0%" />
 <col style="width: 80.0%" />
@@ -266,7 +298,7 @@ Note that <code class="file docutils literal notranslate"><span class="pre">tiff
 1 (<code class="xref c c-macro docutils literal notranslate"><span class="pre">BSDTYPES</span></code> is not defined).</p>
 </section>
 <section id="types-and-portability">
-<h2>Types and Portability<a class="headerlink" href="#types-and-portability" title="Permalink to this heading">¶</a></h2>
+<h2>Types and Portability<a class="headerlink" href="#types-and-portability" title="Link to this heading">¶</a></h2>
 <p>The software makes extensive use of C typedefs to promote portability.
 Two sets of typedefs are used, one for communication with clients
 of the library and one for internal data structures and parsing of the
@@ -274,7 +306,7 @@ TIFF format.  There are interactions between these two to be careful
 of, but for the most part you should be able to deal with portability
 purely by fiddling with the following machine-dependent typedefs:</p>
 <table class="docutils align-default" id="id3">
-<caption><span class="caption-text">Portability typedefs</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Portability typedefs</span><a class="headerlink" href="#id3" title="Link to this table">¶</a></caption>
 <colgroup>
 <col style="width: 20.0%" />
 <col style="width: 60.0%" />
@@ -311,95 +343,22 @@ purely by fiddling with the following machine-dependent typedefs:</p>
 <td><p>32-bit signed integer</p></td>
 <td><p><code class="file docutils literal notranslate"><span class="pre">tiff.h</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref c c-type docutils literal notranslate"><span class="pre">dblparam_t</span></code></p></td>
-<td><p>promoted type for floats</p></td>
-<td><p><code class="file docutils literal notranslate"><span class="pre">tiffcomp.h</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref c c-type docutils literal notranslate"><span class="pre">uint64_t</span></code></p></td>
+<td><p>64-bit unsigned integer</p></td>
+<td><p><code class="file docutils literal notranslate"><span class="pre">tiff.h</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref c c-type docutils literal notranslate"><span class="pre">int64_t</span></code></p></td>
+<td><p>64-bit signed integer</p></td>
+<td><p><code class="file docutils literal notranslate"><span class="pre">tiff.h</span></code></p></td>
 </tr>
 </tbody>
 </table>
-<p>(to clarify <code class="xref c c-type docutils literal notranslate"><span class="pre">dblparam_t</span></code>, it is the type that float parameters are
-promoted to when passed by value in a function call.)</p>
-<p>The following typedefs are used throughout the library and interfaces
-to refer to certain objects whose size is dependent on the TIFF image
-structure:</p>
-<table class="docutils align-default" id="id4">
-<caption><span class="caption-text">TIFF image typedefs</span><a class="headerlink" href="#id4" title="Permalink to this table">¶</a></caption>
-<colgroup>
-<col style="width: 33.3%" />
-<col style="width: 33.3%" />
-<col style="width: 33.3%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Typedef</p></th>
-<th class="head"><p>Type</p></th>
-<th class="head"><p>Description</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="xref c c-type docutils literal notranslate"><span class="pre">ttag_t</span></code></p></td>
-<td><p><span class="c-expr sig sig-inline c"><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span></span></p></td>
-<td><p>directory tag</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref c c-type docutils literal notranslate"><span class="pre">tdir_t</span></code></p></td>
-<td><p><code class="xref c c-type docutils literal notranslate"><span class="pre">uint16_t</span></code></p></td>
-<td><p>directory index</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref c c-type docutils literal notranslate"><span class="pre">tsample_t</span></code></p></td>
-<td><p><code class="xref c c-type docutils literal notranslate"><span class="pre">uint16_t</span></code></p></td>
-<td><p>sample number</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref c c-type docutils literal notranslate"><span class="pre">tstrip_t</span></code></p></td>
-<td><p><code class="xref c c-type docutils literal notranslate"><span class="pre">uint32_t</span></code></p></td>
-<td><p>strip number</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref c c-type docutils literal notranslate"><span class="pre">ttile_t</span></code></p></td>
-<td><p><code class="xref c c-type docutils literal notranslate"><span class="pre">uint32_t</span></code></p></td>
-<td><p>tile number</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref c c-type docutils literal notranslate"><span class="pre">tsize_t</span></code></p></td>
-<td><p><code class="xref c c-type docutils literal notranslate"><span class="pre">int32_t</span></code></p></td>
-<td><p>i/o size in bytes</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref c c-type docutils literal notranslate"><span class="pre">tdata_t</span></code></p></td>
-<td><p><span class="c-expr sig sig-inline c"><span class="kt">void</span><span class="p">*</span></span></p></td>
-<td><p>image data ref</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref c c-type docutils literal notranslate"><span class="pre">thandle_t</span></code></p></td>
-<td><p><span class="c-expr sig sig-inline c"><span class="kt">void</span><span class="p">*</span></span></p></td>
-<td><p>client data handle</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref c c-type docutils literal notranslate"><span class="pre">toff_t</span></code></p></td>
-<td><p><code class="xref c c-type docutils literal notranslate"><span class="pre">int32_t</span></code></p></td>
-<td><p>file offset (should be off_t)</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref c c-type docutils literal notranslate"><span class="pre">tidata_t</span></code></p></td>
-<td><p><span class="c-expr sig sig-inline c"><span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="p">*</span></span></p></td>
-<td><p>internal image data</p></td>
-</tr>
-</tbody>
-</table>
-<p>Note that <code class="xref c c-type docutils literal notranslate"><span class="pre">tstrip_t</span></code>, <code class="xref c c-type docutils literal notranslate"><span class="pre">ttile_t</span></code>, and <code class="xref c c-type docutils literal notranslate"><span class="pre">tsize_t</span></code>
-are constrained to be
-no more than 32-bit quantities by 32-bit fields they are stored
-in in the TIFF image.  Likewise <code class="xref c c-type docutils literal notranslate"><span class="pre">tsample_t</span></code> is limited by the 16-bit
-field used to store the <code class="docutils literal notranslate"><span class="pre">SamplesPerPixel</span></code> tag.  <code class="xref c c-type docutils literal notranslate"><span class="pre">tdir_t</span></code>
-constrains
-the maximum number of IFDs that may appear in an image and may
-be an arbitrary size (without penalty).  <code class="xref c c-type docutils literal notranslate"><span class="pre">ttag_t</span></code> must be either
-<span class="c-expr sig sig-inline c"><span class="kt">int</span></span>, <span class="c-expr sig sig-inline c"><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span></span>, pointer, or <span class="c-expr sig sig-inline c"><span class="kt">double</span></span>
-because the library uses a varargs
-interface and ANSI C restricts the type of the parameter before an
-ellipsis to be a promoted type.  <code class="xref c c-type docutils literal notranslate"><span class="pre">toff_t</span></code> is defined as
-<code class="xref c c-type docutils literal notranslate"><span class="pre">int32_t</span></code> because
-TIFF file offsets are (unsigned) 32-bit quantities.  A signed
-value is used because some interfaces return -1 on error (sigh).
-Finally, note that <code class="xref c c-type docutils literal notranslate"><span class="pre">tidata_t</span></code> is used internally to the library to
-manipulate internal data.  User-specified data references are
-passed as opaque handles and only cast at the lowest layers where
-their type is presumed.</p>
+<p>Most of the previously used type definitions that refer to
+specific objects are deprecated.
+For more information about typedefs see <a class="reference internal" href="functions/libtiff.html#datatypes"><span class="std std-ref">Data Types</span></a>.</p>
 </section>
 <section id="general-comments">
-<h2>General Comments<a class="headerlink" href="#general-comments" title="Permalink to this heading">¶</a></h2>
+<h2>General Comments<a class="headerlink" href="#general-comments" title="Link to this heading">¶</a></h2>
 <p>The library is designed to hide as much of the details of TIFF from
 applications as
 possible.  In particular, TIFF directories are read in their entirety
@@ -408,7 +367,7 @@ available to a user and certain tag data may be maintained that a user
 does not care about (e.g. transfer function tables).</p>
 </section>
 <section id="adding-new-builtin-codecs">
-<h2>Adding New Builtin Codecs<a class="headerlink" href="#adding-new-builtin-codecs" title="Permalink to this heading">¶</a></h2>
+<h2>Adding New Builtin Codecs<a class="headerlink" href="#adding-new-builtin-codecs" title="Link to this heading">¶</a></h2>
 <p>To add builtin support for a new compression algorithm, you can either
 use the &quot;tag-extension&quot; trick to override the handling of the
 TIFF Compression tag (see <a class="reference internal" href="addingtags.html"><span class="doc">Defining New TIFF Tags</span></a>),
@@ -455,7 +414,7 @@ encoded or decoded if the image is organized with <code class="docutils literal 
 If <code class="docutils literal notranslate"><span class="pre">PlanarConfig=1</span></code> (interleaved), then sample will always be 0.</p>
 </section>
 <section id="other-comments">
-<h2>Other Comments<a class="headerlink" href="#other-comments" title="Permalink to this heading">¶</a></h2>
+<h2>Other Comments<a class="headerlink" href="#other-comments" title="Link to this heading">¶</a></h2>
 <p>The library handles most I/O buffering.  There are two data buffers
 when decoding data: a raw data buffer that holds all the data in a
 strip, and a user-supplied scanline buffer that compression schemes
@@ -505,7 +464,7 @@ the portability of your TIFF files.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="index.html">Table of Contents</a></h3>
@@ -539,7 +498,7 @@ the portability of your TIFF files.</p>
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -547,13 +506,13 @@ the portability of your TIFF files.</p>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -565,13 +524,13 @@ the portability of your TIFF files.</p>
         <li class="right" >
           <a href="functions/_TIFFRewriteField.html" title="_TIFFRewriteField"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Modifying The TIFF Library</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-    &#169; Copyright 1988-2022, LibTIFF contributors.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+    &#169; Copyright 1988-2025, LibTIFF contributors.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

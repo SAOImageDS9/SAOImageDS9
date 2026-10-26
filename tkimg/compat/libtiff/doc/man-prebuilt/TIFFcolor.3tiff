@@ -27,39 +27,37 @@ level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .in \\n[rst2man-indent\\n[rst2man-indent-level]]u
 ..
-.TH "TIFFCOLOR" "3tiff" "Sep 11, 2024" "4.7" "LibTIFF"
+.TH "TIFFCOLOR" "3tiff" "Jun 27, 2026" "4.7" "LibTIFF"
 .SH NAME
 TIFFcolor \- color conversion routines
 .SH SYNOPSIS
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 #include <tiffio.h>
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .INDENT 0.0
 .TP
-.B int  TIFFYCbCrToRGBInit(TIFFYCbCrToRGB  *ycbcr, float  *luma, float  *refBlackWhite) 
+.B int TIFFYCbCrToRGBInit(TIFFYCbCrToRGB *ycbcr, float *luma, float *refBlackWhite) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B void  TIFFYCbCrtoRGB(TIFFYCbCrToRGB  *ycbcr, uint32_t  Y, int32_t  Cb, int32_t  Cr, uint32_t  *R, uint32_t  *G, uint32_t  *B) 
+.B void TIFFYCbCrtoRGB(TIFFYCbCrToRGB *ycbcr, uint32_t Y, int32_t Cb, int32_t Cr, uint32_t *R, uint32_t *G, uint32_t *B) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B int  TIFFCIELabToRGBInit(TIFFCIELabToRGB  *cielab, const  TIFFDisplay  *displayw, float  *refWhite) 
+.B int TIFFCIELabToRGBInit(TIFFCIELabToRGB *cielab, const TIFFDisplay *displayw, float *refWhite) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B void  TIFFCIELabToXYZ(TIFFCIELabToRGB  *cielab, uint32_t  L, int32_t  a, int32_t  b, float  *X, float  *Y, float  *Z) 
+.B void TIFFCIELabToXYZ(TIFFCIELabToRGB *cielab, uint32_t L, int32_t a, int32_t b, float *X, float *Y, float *Z) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B void  TIFFXYZToRGB(TIFFCIELabToRGB  *cielab, float  X, float  Y, float  Z, uint32_t  *R, uint32_t  *G, uint32_t  *B) 
+.B void TIFFXYZToRGB(TIFFCIELabToRGB *cielab, float X, float Y, float Z, uint32_t *R, uint32_t *G, uint32_t *B) 
 .UNINDENT
 .SH DESCRIPTION
 .sp
@@ -71,14 +69,24 @@ itself. In particular, these routines used in the \fI\%TIFFRGBAImage\fP
 interface.
 .sp
 \fI\%TIFFYCbCrToRGBInit()\fP used to initialize \fIYCbCr\fP to \fIRGB\fP
-conversion state. Allocating and freeing of the \fIycbcr\fP structure
-belongs to programmer.  \fBTIFFYCbCrToRGB\fP is defined in
-\fBtiffio.h\fP as:
+conversion state.
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+The calling program is responsible for allocating and releasing the required
+buffer for the structure \fBTIFFYCbCrToRGB\fP and its required tables,
+pointed to by \fIycbcr\fP\&. The pointers to these tables are stored in the
+structure \fBTIFFYCbCrToRGB\fP, which is located at the beginning
+of that buffer. Thus, this memory has to be allocated as shown in the example below.
+.UNINDENT
+.UNINDENT
+.sp
+\fBTIFFYCbCrToRGB\fP is defined in \fBtiffio.h\fP as:
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 typedef struct {                /* YCbCr\->RGB support */
         TIFFRGBValue* clamptab; /* range clamping table */
         int*          Cr_r_tab;
@@ -87,8 +95,7 @@ typedef struct {                /* YCbCr\->RGB support */
         int32_t*      Cb_g_tab;
         int32_t*      Y_tab;
 } TIFFYCbCrToRGB;
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
@@ -106,13 +113,12 @@ understand the the technique:
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 float *luma, *refBlackWhite;
 uint16_t hs, vs;
 
 /* Initialize structures */
-ycbcr = (TIFFYCbCrToRGB*)
+TIFFYCbCrToRGB *ycbcr = (TIFFYCbCrToRGB*)
     _TIFFmalloc(TIFFroundup(sizeof(TIFFYCbCrToRGB), sizeof(long))
         + 4*256*sizeof(TIFFRGBValue)
         + 2*256*sizeof(int)
@@ -140,8 +146,7 @@ for each pixel in image {
 
 /* Free state structure */
 _TIFFfree(ycbcr);
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
@@ -150,8 +155,7 @@ _TIFFfree(ycbcr);
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 #define CIELABTORGB_TABLE_RANGE 1500
 
 typedef struct {                                /* CIE Lab 1976\->RGB support */
@@ -163,8 +167,7 @@ typedef struct {                                /* CIE Lab 1976\->RGB support */
     float    Yg2g[CIELABTORGB_TABLE_RANGE + 1]; /* Conversion of Yg to g */
     float    Yb2b[CIELABTORGB_TABLE_RANGE + 1]; /* Conversion of Yb to b */
 } TIFFCIELabToRGB;
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
@@ -172,8 +175,7 @@ typedef struct {                                /* CIE Lab 1976\->RGB support */
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 typedef struct {
     float d_mat[3][3]; /* XYZ \-> luminance matrix */
     float d_YCR;       /* Light o/p for reference white */
@@ -189,8 +191,7 @@ typedef struct {
     float d_gammaG;
     float d_gammaB;
 } TIFFDisplay;
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
@@ -198,8 +199,7 @@ For example, one can use sRGB device, which has the following parameters:
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 TIFFDisplay display_sRGB = {
     {   /* XYZ \-> luminance matrix */
         {  3.2410F, \-1.5374F, \-0.4986F },
@@ -211,8 +211,7 @@ TIFFDisplay display_sRGB = {
     1.0F, 1.0F, 1.0F,       /* Residual light o/p for black pixel */
     2.4F, 2.4F, 2.4F,       /* Gamma values for the three guns */
 };
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
@@ -223,15 +222,13 @@ using following formulae:
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 refWhite_Y = 100.0
 
 refWhite_X = whitePoint_x / whitePoint_y * refWhite_Y
 
 refWhite_Z = (1.0 \- whitePoint_x \- whitePoint_y) / whitePoint_y * refWhite_X
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .sp
@@ -242,8 +239,7 @@ and at the second step we will convert \fICIE XYZ\fP to \fIRGB\fP using
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 float   *whitePoint;
 float   refWhite[3];
 
@@ -281,8 +277,7 @@ for each pixel in image {
 
 /* Don\(aqt forget to free the state structure */
 _TIFFfree(cielab);
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .SH SEE ALSO
@@ -292,6 +287,6 @@ _TIFFfree(cielab);
 .SH AUTHOR
 LibTIFF contributors
 .SH COPYRIGHT
-1988-2022, LibTIFF contributors
+1988-2025, LibTIFF contributors
 .\" Generated by docutils manpage writer.
 .

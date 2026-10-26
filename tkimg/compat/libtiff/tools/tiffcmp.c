@@ -24,6 +24,7 @@
 
 #include "libport.h"
 #include "tif_config.h"
+#include "tiffiop.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -97,6 +98,8 @@ int main(int argc, char *argv[])
                 usage(2);
                 /*NOTREACHED*/
                 break;
+            default:
+                break;
         }
     if (argc - optind < 2)
         usage(2);
@@ -105,7 +108,10 @@ int main(int argc, char *argv[])
         return (2);
     tif2 = TIFFOpen(argv[optind + 1], "r");
     if (tif2 == NULL)
+    {
+        TIFFClose(tif1);
         return (2);
+    }
     dirnum = 0;
     while (tiffcmp(tif1, tif2))
     {
@@ -154,17 +160,17 @@ static void usage(int code)
         goto bad;                                                              \
     }
 
-static int CheckShortTag(TIFF *, TIFF *, int, char *);
-static int CheckShort2Tag(TIFF *, TIFF *, int, char *);
-static int CheckShortArrayTag(TIFF *, TIFF *, int, char *);
-static int CheckLongTag(TIFF *, TIFF *, int, char *);
-static int CheckFloatTag(TIFF *, TIFF *, int, char *);
-static int CheckStringTag(TIFF *, TIFF *, int, char *);
+static int CheckShortTag(TIFF *, TIFF *, int, const char *);
+static int CheckShort2Tag(TIFF *, TIFF *, int, const char *);
+static int CheckShortArrayTag(TIFF *, TIFF *, int, const char *);
+static int CheckLongTag(TIFF *, TIFF *, int, const char *);
+static int CheckFloatTag(TIFF *, TIFF *, int, const char *);
+static int CheckStringTag(TIFF *, TIFF *, int, const char *);
 
 static int tiffcmp(TIFF *tif1, TIFF *tif2)
 {
     uint16_t config1, config2;
-    tsize_t size1;
+    tsize_t size1, size2;
     uint32_t row;
     tsample_t s;
     unsigned char *buf1, *buf2;
@@ -185,17 +191,48 @@ static int tiffcmp(TIFF *tif1, TIFF *tif2)
     (void)TIFFGetField(tif1, TIFFTAG_PLANARCONFIG, &config1);
     (void)TIFFGetField(tif2, TIFFTAG_PLANARCONFIG, &config2);
     buf1 = (unsigned char *)_TIFFmalloc(size1 = TIFFScanlineSize(tif1));
-    buf2 = (unsigned char *)_TIFFmalloc(TIFFScanlineSize(tif2));
+    buf2 = (unsigned char *)_TIFFmalloc(size2 = TIFFScanlineSize(tif2));
     if (buf1 == NULL || buf2 == NULL)
     {
         fprintf(stderr, "No space for scanline buffers\n");
         exit(2);
     }
-    if (config1 != config2 && bitspersample != 8 && samplesperpixel > 1)
+    if (config1 != config2)
     {
-        fprintf(stderr, "Can't handle different planar configuration w/ "
-                        "different bits/sample\n");
-        goto bad;
+        if (bitspersample != 8 && samplesperpixel > 1)
+        {
+            fprintf(stderr, "Can't handle different planar configuration w/ "
+                            "different bits/sample\n");
+            goto bad;
+        }
+
+        /* buffer size validation */
+        tsize_t contig_size, separate_size;
+
+        if (config1 == PLANARCONFIG_CONTIG)
+        {
+            contig_size = size1;
+            separate_size = size2;
+        }
+        else
+        {
+            contig_size = size2;
+            separate_size = size1;
+        }
+
+        {
+            tmsize_t contig_min =
+                _TIFFMultiplySSize(tif1, imagewidth, samplesperpixel,
+                                   "mixed planar scanline size");
+            if (contig_min == 0 && imagewidth != 0 && samplesperpixel != 0)
+                goto bad;
+            if (contig_size < contig_min || separate_size < (tsize_t)imagewidth)
+            {
+                fprintf(stderr, "Inconsistent scanline size for mixed planar "
+                                "configuration\n");
+                goto bad;
+            }
+        }
     }
 #define pack(a, b) ((a) << 8) | (b)
     switch (pack(config1, config2))
@@ -250,6 +287,8 @@ static int tiffcmp(TIFF *tif1, TIFF *tif2)
                                  -1) if (ContigCompare(-1, row, buf1, buf2,
                                                        size1) < 0) goto bad1;
             }
+            break;
+        default:
             break;
     }
     if (buf1)
@@ -362,7 +401,7 @@ static int ContigCompare(int sample, uint32_t row, unsigned char *p1,
     uint32_t pix;
     int samples_to_test;
 
-    if (memcmp(p1, p2, size) == 0)
+    if (memcmp(p1, p2, (size_t)size) == 0)
         return 0;
 
     samples_to_test = (sample == -1) ? samplesperpixel : 1;
@@ -450,9 +489,11 @@ static int ContigCompare(int sample, uint32_t row, unsigned char *p1,
 
                     for (s = 0; s < samples_to_test; s++)
                     {
-                        if (fabs(*pix1 - *pix2) < 0.000000000001)
+                        if (fabs((double)*pix1 - (double)*pix2) <
+                            0.000000000001)
                         {
-                            PrintFloatDiff(row, sample, pix, *pix1, *pix2);
+                            PrintFloatDiff(row, sample, pix, (double)*pix1,
+                                           (double)*pix2);
                         }
 
                         pix1++;
@@ -497,12 +538,12 @@ static void PrintIntDiff(uint32_t row, int sample, uint32_t pix, uint32_t w1,
             for (; mask2 && pix < imagewidth;
                  mask2 >>= bitspersample, s -= bitspersample, pix++)
             {
-                if ((w1 & mask2) ^ (w2 & mask2))
+                if ((w1 & (uint32_t)mask2) ^ (w2 & (uint32_t)mask2))
                 {
                     printf("Scanline %" PRIu32 ", pixel %" PRIu32
                            ", sample %d: %01" PRIx32 " %01" PRIx32 "\n",
-                           row, pix, sample, (w1 >> s) & mask1,
-                           (w2 >> s) & mask1);
+                           row, pix, sample, (w1 >> s) & (uint32_t)mask1,
+                           (w2 >> s) & (uint32_t)mask1);
                     if (--stopondiff == 0)
                         exit(1);
                 }
@@ -565,8 +606,8 @@ static int SeparateCompare(int reversed, int sample, uint32_t row,
     {
         if (*cp1 != *p2)
         {
-            printf("Scanline %" PRIu32 ", pixel %" PRIu32 ", sample %d: ", row,
-                   pixel, sample);
+            printf("Scanline %" PRIu32 ", pixel %d, sample %d: ", row, pixel,
+                   sample);
             if (reversed)
                 printf("%02x %02x\n", *p2, *cp1);
             else
@@ -579,23 +620,30 @@ static int SeparateCompare(int reversed, int sample, uint32_t row,
     return 0;
 }
 
-static int checkTag(TIFF *tif1, TIFF *tif2, int tag, char *name, void *p1,
+static int checkTag(TIFF *tif1, TIFF *tif2, int tag, const char *name, void *p1,
                     void *p2)
 {
+    int r1, r2;
 
-    if (TIFFGetField(tif1, tag, p1))
+    r1 = TIFFGetField(tif1, (uint32_t)tag, p1);
+    if (r1)
     {
-        if (!TIFFGetField(tif2, tag, p2))
+        r2 = TIFFGetField(tif2, (uint32_t)tag, p2);
+        if (!r2)
         {
             printf("%s tag appears only in %s\n", name, TIFFFileName(tif1));
             return (0);
         }
         return (1);
     }
-    else if (TIFFGetField(tif2, tag, p2))
+    else
     {
-        printf("%s tag appears only in %s\n", name, TIFFFileName(tif2));
-        return (0);
+        r2 = TIFFGetField(tif2, (uint32_t)tag, p2);
+        if (r2)
+        {
+            printf("%s tag appears only in %s\n", name, TIFFFileName(tif2));
+            return (0);
+        }
     }
     return (-1);
 }
@@ -609,23 +657,45 @@ static int checkTag(TIFF *tif1, TIFF *tif2, int tag, char *name, void *p1,
                 case -1:                                                       \
                     return (1);                                                \
                 printf(fmt, name, v1, v2);                                     \
+                break;                                                         \
+            default:                                                           \
+                break;                                                         \
         }                                                                      \
         return (0);                                                            \
     }
 
-static int CheckShortTag(TIFF *tif1, TIFF *tif2, int tag, char *name)
+#define CHECK_FLOAT(cmp, fmt)                                                  \
+    {                                                                          \
+        switch (checkTag(tif1, tif2, tag, name, &v1, &v2))                     \
+        {                                                                      \
+            case 1:                                                            \
+                if (cmp)                                                       \
+                case -1:                                                       \
+                    return (1);                                                \
+                printf(fmt, name, (double)v1, (double)v2);                     \
+                break;                                                         \
+            default:                                                           \
+                break;                                                         \
+        }                                                                      \
+        return (0);                                                            \
+    }
+
+static int CheckShortTag(TIFF *tif1, TIFF *tif2, int tag, const char *name)
 {
     uint16_t v1, v2;
     CHECK(v1 == v2, "%s: %" PRIu16 " %" PRIu16 "\n");
 }
 
-static int CheckShort2Tag(TIFF *tif1, TIFF *tif2, int tag, char *name)
+static int CheckShort2Tag(TIFF *tif1, TIFF *tif2, int tag, const char *name)
 {
     uint16_t v11, v12, v21, v22;
+    int r1, r2;
 
-    if (TIFFGetField(tif1, tag, &v11, &v12))
+    r1 = TIFFGetField(tif1, (uint32_t)tag, &v11, &v12);
+    if (r1)
     {
-        if (!TIFFGetField(tif2, tag, &v21, &v22))
+        r2 = TIFFGetField(tif2, (uint32_t)tag, &v21, &v22);
+        if (!r2)
         {
             printf("%s tag appears only in %s\n", name, TIFFFileName(tif1));
             return (0);
@@ -635,31 +705,42 @@ static int CheckShort2Tag(TIFF *tif1, TIFF *tif2, int tag, char *name)
         printf("%s: <%" PRIu16 ",%" PRIu16 "> <%" PRIu16 ",%" PRIu16 ">\n",
                name, v11, v12, v21, v22);
     }
-    else if (TIFFGetField(tif2, tag, &v21, &v22))
-        printf("%s tag appears only in %s\n", name, TIFFFileName(tif2));
     else
-        return (1);
+    {
+        r2 = TIFFGetField(tif2, (uint32_t)tag, &v21, &v22);
+        if (r2)
+            printf("%s tag appears only in %s\n", name, TIFFFileName(tif2));
+        else
+            return (1);
+    }
     return (0);
 }
 
-static int CheckShortArrayTag(TIFF *tif1, TIFF *tif2, int tag, char *name)
+static int CheckShortArrayTag(TIFF *tif1, TIFF *tif2, int tag, const char *name)
 {
     uint16_t n1, *a1;
     uint16_t n2, *a2;
+    int r1, r2;
 
-    if (TIFFGetField(tif1, tag, &n1, &a1))
+    r1 = TIFFGetField(tif1, (uint32_t)tag, &n1, &a1);
+    if (r1)
     {
-        if (!TIFFGetField(tif2, tag, &n2, &a2))
+        r2 = TIFFGetField(tif2, (uint32_t)tag, &n2, &a2);
+        if (!r2)
         {
             printf("%s tag appears only in %s\n", name, TIFFFileName(tif1));
             return (0);
         }
         if (n1 == n2)
         {
-            char *sep;
+            const char *sep;
             uint16_t i;
+            tmsize_t array_bytes = _TIFFMultiplySSize(
+                tif1, n1, sizeof(uint16_t), "short array tag size");
 
-            if (memcmp(a1, a2, n1 * sizeof(uint16_t)) == 0)
+            if (array_bytes == 0 && n1 != 0)
+                return (0);
+            if (memcmp(a1, a2, (size_t)array_bytes) == 0)
                 return (1);
             printf("%s: value mismatch, <%" PRIu16 ":", name, n1);
             sep = "";
@@ -675,26 +756,30 @@ static int CheckShortArrayTag(TIFF *tif1, TIFF *tif2, int tag, char *name)
             printf("%s: %" PRIu16 " items in %s, %" PRIu16 " items in %s", name,
                    n1, TIFFFileName(tif1), n2, TIFFFileName(tif2));
     }
-    else if (TIFFGetField(tif2, tag, &n2, &a2))
-        printf("%s tag appears only in %s\n", name, TIFFFileName(tif2));
     else
-        return (1);
+    {
+        r2 = TIFFGetField(tif2, (uint32_t)tag, &n2, &a2);
+        if (r2)
+            printf("%s tag appears only in %s\n", name, TIFFFileName(tif2));
+        else
+            return (1);
+    }
     return (0);
 }
 
-static int CheckLongTag(TIFF *tif1, TIFF *tif2, int tag, char *name)
+static int CheckLongTag(TIFF *tif1, TIFF *tif2, int tag, const char *name)
 {
     uint32_t v1, v2;
     CHECK(v1 == v2, "%s: %" PRIu32 " %" PRIu32 "\n");
 }
 
-static int CheckFloatTag(TIFF *tif1, TIFF *tif2, int tag, char *name)
+static int CheckFloatTag(TIFF *tif1, TIFF *tif2, int tag, const char *name)
 {
     float v1, v2;
-    CHECK(v1 == v2, "%s: %g %g\n");
+    CHECK_FLOAT(TIFF_FLOAT_EQ(v1, v2), "%s: %g %g\n");
 }
 
-static int CheckStringTag(TIFF *tif1, TIFF *tif2, int tag, char *name)
+static int CheckStringTag(TIFF *tif1, TIFF *tif2, int tag, const char *name)
 {
     char *v1, *v2;
     CHECK(strcmp(v1, v2) == 0, "%s: \"%s\" \"%s\"\n");

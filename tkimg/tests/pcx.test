@@ -83,7 +83,7 @@ namespace eval ::pcx::test {
         } -cleanup {
             image delete i
         } -constraints {
-            Tk87
+            Tk9
         } -result {0 0}
 
         test pcx-2.2 {Read photo from file with resolution information} -setup {
@@ -94,7 +94,7 @@ namespace eval ::pcx::test {
         } -cleanup {
             image delete i
         } -constraints {
-            Tk87
+            Tk9
         } -result [refResolution]
 
 
@@ -110,7 +110,7 @@ namespace eval ::pcx::test {
             image delete j
             file delete -force $outFile
         } -constraints {
-            Tk87
+            Tk9
         } -result 1
 
         # Write photo to string using "i data -format" already tested in pcx-1.X tests.
@@ -130,7 +130,7 @@ namespace eval ::pcx::test {
             image delete j
             file delete -force $outFile
         } -constraints {
-            Tk87
+            Tk9
         } -result [list [refResolution] [refResolution]]
 
 
@@ -203,7 +203,7 @@ namespace eval ::pcx::test {
             image delete i
             file delete -force $outFile
         } -constraints {
-            Tk87
+            Tk9
         } -returnCodes {
             error
         } -result "Invalid resolution value \"-100\" specified for x resolution."
@@ -217,7 +217,7 @@ namespace eval ::pcx::test {
             image delete i
             file delete -force $outFile
         } -constraints {
-            Tk87
+            Tk9
         } -returnCodes {
             error
         } -result "Invalid resolution value \"12cm\" specified for x resolution."
@@ -231,7 +231,7 @@ namespace eval ::pcx::test {
             image delete i
             file delete -force $outFile
         } -constraints {
-            Tk87
+            Tk9
         } -returnCodes {
             error
         } -result "Invalid resolution value \"12cm\" specified for y resolution."

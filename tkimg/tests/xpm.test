@@ -14,7 +14,7 @@ namespace eval ::xpm::test {
 
     set fmt     "xpm"
     set ext     "xpm"
-    set inFile  "testimgs/img.$ext"
+    set inFile  "testimgs/img-$::tcl_platform(byteOrder).$ext"
     set outFile "testimgs/img_out.$ext"
 
     set imgdataFile [readFile $inFile]
@@ -90,7 +90,7 @@ namespace eval ::xpm::test {
         } -cleanup {
             image delete i
         } -constraints {
-            Tk87
+            Tk9
         } -result {0 0}
 
 
@@ -106,7 +106,7 @@ namespace eval ::xpm::test {
             image delete j
             file delete -force $outFile
         } -constraints {
-            Tk87
+            Tk9
         } -result 1
 
         # Write photo to string using "i data -format" already tested in xpm-1.X tests.

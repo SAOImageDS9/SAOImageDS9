@@ -1,58 +1,48 @@
-# Test program for the img::raw package.
-# Create an image using standard Tk methods and using the img::raw extension.
-#
-# Method 1: Using [format "#%02X%02X%02X"]
-# Method 2: Using [binary format] and RAW format
-
 package require Tk
 package require img::raw
 
 puts "Using [expr $tcl_platform(pointerSize) *8]-bit Tcl [info patchlevel], Tk $::tk_patchLevel, img::raw [package require img::raw]"
+catch { file mkdir testOut }
 
-set w 256
-set h 256
+set imgFile [file join ".." "rawimgs" "byte-4chan-td.raw"]
 
-set img1 [image create photo -width $w -height $h]
-label .l1 -image $img1
+# Read a RAW file into a photo image.
+set imgRGBA [image create photo -file $imgFile]
 
-set img2 [image create photo -width $w -height $h]
-label .l2 -image $img2
+# Read a RAW file into a photo image using option "-withalpha 0".
+set imgRGB [image create photo -file $imgFile -format [list RAW -withalpha 0 -verbose true]]
 
-label .msg -text \
-    [format "Using img::raw %s on %s with Tcl %s-%dbit" \
-    [package version img::raw] $::tcl_platform(os) \
-    [info patchlevel] [expr $::tcl_platform(pointerSize) * 8]]
-
-grid .l1  -row 0 -column 0
-grid .l2  -row 0 -column 1
-grid .msg -row 1 -column 0 -columnspan 2
-update
-
-
-set startTime [clock clicks -milliseconds]
-for { set y 0 } { $y < $h } { incr y } {
-    set rowList [list]
-    for { set x 0 } { $x < $w } { incr x } {
-        set val $y
-        lappend rowList [format "#%02X%02X%02X" $val $val $val]
+# Write RAW RGBA file using different -scanorder and -withalpha option values.
+set row 0
+foreach withalpha [list 0 1] {
+    foreach scanorder [list "TopDown" "BottomUp"] {
+        set outFile [file join "testOut" "raw-so-${scanorder}-alpha-${withalpha}.raw"]
+        $imgRGBA write $outFile -format [list RAW -scanorder $scanorder -withalpha $withalpha -verbose ON]
+        set img(rgba-$scanorder-$withalpha) [image create photo -file $outFile] 
+        set imgScaled [image create photo]
+        $imgScaled copy $img(rgba-$scanorder-$withalpha) -zoom 25
+        label .img(rgba-$scanorder-$withalpha) -image $imgScaled -compound top -relief ridge \
+              -text "rgba -scanorder $scanorder -withalpha $withalpha" -background magenta
+        grid .img(rgba-$scanorder-$withalpha) -row $row -column 0 -padx 2 -pady 4 -sticky ew
+        incr row
     }
-    $img1 put [list $rowList] -to 0 $y
 }
-set endTime [clock clicks -milliseconds]
-puts [format "Standard method: %.2f seconds" [expr ($endTime - $startTime) / 1000.0]]
 
-set startTime [clock clicks -milliseconds]
-for { set y 0 } { $y < $h } { incr y } {
-    set rowList [list]
-    for { set x 0 } { $x < $w } { incr x } {
-        set val $y
-        lappend rowList $val $val $val
+# Write RAW RGB file using different -scanorder and -withalpha option values.
+set row 0
+foreach withalpha [list 0 1] {
+    foreach scanorder [list "TopDown" "BottomUp"] {
+	set outFile [file join "testOut" "raw-so-${scanorder}-alpha-${withalpha}.raw"]
+	$imgRGB write $outFile -format [list RAW -scanorder $scanorder -withalpha $withalpha -verbose 1]
+	set img(rgb-$scanorder-$withalpha) [image create photo -file $outFile] 
+        set imgScaled [image create photo]
+        $imgScaled copy $img(rgb-$scanorder-$withalpha) -zoom 25
+	label .img(rgb-$scanorder-$withalpha) -image $imgScaled -compound top -relief ridge \
+	      -text "rgb -scanorder $scanorder -withalpha $withalpha" -background magenta
+	grid .img(rgb-$scanorder-$withalpha) -row $row -column 1 -padx 2 -pady 4 -sticky ew
+	incr row
     }
-    $img2 put [binary format "cu*" $rowList] -to 0 $y \
-        -format "RAW -useheader 0 -width $w -height 1 -nchan 3 -pixeltype byte"
 }
-set endTime [clock clicks -milliseconds]
-puts [format "Using img::raw : %.2f seconds" [expr ($endTime - $startTime) / 1000.0]]
 
 bind . <Escape> exit
 

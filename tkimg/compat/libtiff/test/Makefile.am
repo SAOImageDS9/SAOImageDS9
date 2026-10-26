@@ -93,7 +93,7 @@ if TIFF_TESTS
 check_PROGRAMS = \
 	ascii_tag long_tag short_tag strip_rw rewrite custom_dir custom_dir_EXIF_231 \
 	defer_strile_loading defer_strile_writing test_directory test_IFD_enlargement test_open_options \
-	test_append_to_strip test_ifd_loop_detection testtypes test_signed_tags $(JPEG_DEPENDENT_CHECK_PROG) $(STATIC_CHECK_PROGS)
+	test_append_to_strip test_ifd_loop_detection test_RGBAImage testtypes test_signed_tags $(JPEG_DEPENDENT_CHECK_PROG) $(STATIC_CHECK_PROGS)
 endif
 
 # Test scripts to execute
@@ -176,6 +176,7 @@ BASE_TESTSCRIPTS = \
 	tiff2rgba-rgb-3c-8b.sh \
 	testfax4.sh \
 	testfax3_bug_513.sh \
+	testfax3_bug54_1dnoEOL.sh \
 	testdeflatelaststripextradata.sh
 
 TESTSCRIPTS =$(BASE_TESTSCRIPTS) \
@@ -199,6 +200,7 @@ REFFILES = \
 	refs/o-tiff2ps-PS3.ps \
 	refs/o-testfax4.tiff \
 	refs/o-testfax3_bug_513.tiff \
+	refs/o-testfax3_bug54_1dnoEOL.tiff \
 	refs/o-deflate-last-strip-extra-data.tiff
 
 # This list should contain all of the TIFF files in the 'images'
@@ -248,6 +250,7 @@ IMAGES_EXTRA_DIST = \
 	images/test_ifd_loop_subifd.tif \
 	images/webp_lossless_rgba_alpha_fully_opaque.tif \
 	images/32bpp-None-jpeg.tiff \
+	images/testfax3_bug54_1dnoEOL.tif \
 	$(PNMIMAGES) \
 	$(TIFFIMAGES)
 
@@ -257,11 +260,11 @@ test_signed_tags_SOURCES = test_signed_tags.c
 test_signed_tags_LDADD = $(LIBTIFF)
 ascii_tag_SOURCES = ascii_tag.c
 ascii_tag_LDADD = $(LIBTIFF)
-long_tag_SOURCES = long_tag.c check_tag.c
+long_tag_SOURCES = long_tag.c check_tag.c check_tag.h
 long_tag_LDADD = $(LIBTIFF)
-short_tag_SOURCES = short_tag.c check_tag.c
+short_tag_SOURCES = short_tag.c check_tag.c check_tag.h
 short_tag_LDADD = $(LIBTIFF)
-strip_rw_SOURCES = strip_rw.c strip.c test_arrays.c test_arrays.h
+strip_rw_SOURCES = strip_rw.c strip.c strip.h test_arrays.c test_arrays.h
 strip_rw_LDADD = $(LIBTIFF)
 rewrite_SOURCES = rewrite_tag.c
 rewrite_LDADD = $(LIBTIFF)
@@ -301,6 +304,8 @@ test_append_to_strip_LDADD = $(LIBTIFF)
 test_ifd_loop_detection_CFLAGS = -DSOURCE_DIR=\"@srcdir@\"
 test_ifd_loop_detection_SOURCES = test_ifd_loop_detection.c
 test_ifd_loop_detection_LDADD = $(LIBTIFF)
+test_RGBAImage_SOURCES = test_RGBAImage.c
+test_RGBAImage_LDADD = $(LIBTIFF)
 
 AM_CPPFLAGS = -I$(top_srcdir)/libtiff
 

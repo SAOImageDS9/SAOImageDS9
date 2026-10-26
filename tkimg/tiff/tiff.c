@@ -8,9 +8,9 @@
  * For a list of available format options see function ParseFormatOpts
  * and the documentation img-tiff.
  *
- * Copyright (c) 1997-2024 Jan Nijtmans    <nijtmans@users.sourceforge.net>
- * Copyright (c) 2002-2024 Andreas Kupries <andreas_kupries@users.sourceforge.net>
- * Copyright (c) 2003-2024 Paul Obermeier  <obermeier@users.sourceforge.net>
+ * Copyright (c) 1997-2025 Jan Nijtmans    <nijtmans@users.sourceforge.net>
+ * Copyright (c) 2002-2025 Andreas Kupries <andreas_kupries@users.sourceforge.net>
+ * Copyright (c) 2003-2025 Paul Obermeier  <obermeier@users.sourceforge.net>
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -680,17 +680,17 @@ static int CommonRead(
         }
     }
 
-#ifdef WORDS_BIGENDIAN
+if (!tkimg_IsIntel()) {
     block.offset[0] = 3;
     block.offset[1] = 2;
     block.offset[2] = 1;
     block.offset[3] = 0;
-#else
+} else {
     block.offset[0] = 0;
     block.offset[1] = 1;
     block.offset[2] = 2;
     block.offset[3] = 3;
-#endif
+}
     block.pixelSize = sizeof (uint32_t);
 
     TIFFGetField(tif, TIFFTAG_IMAGEWIDTH,  &w);

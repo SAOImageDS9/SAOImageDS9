@@ -58,13 +58,6 @@ static int checkcmap(int n, uint16_t *r, uint16_t *g, uint16_t *b)
     return (8);
 }
 
-#define CopyField(tag, v)                                                      \
-    if (TIFFGetField(in, tag, &v))                                             \
-    TIFFSetField(out, tag, v)
-#define CopyField3(tag, v1, v2, v3)                                            \
-    if (TIFFGetField(in, tag, &v1, &v2, &v3))                                  \
-    TIFFSetField(out, tag, v1, v2, v3)
-
 static uint16_t compression = (uint16_t)-1;
 static uint16_t predictor = 0;
 static int quality = 75; /* JPEG quality */
@@ -108,7 +101,7 @@ int main(int argc, char *argv[])
                     usage(EXIT_FAILURE);
                 break;
             case 'r': /* rows/strip */
-                rowsperstrip = atoi(optarg);
+                rowsperstrip = (uint32_t)atoi(optarg);
                 break;
             case 'h':
                 usage(EXIT_SUCCESS);
@@ -116,6 +109,9 @@ int main(int argc, char *argv[])
             case '?':
                 usage(EXIT_FAILURE);
                 /*NOTREACHED*/
+                break;
+            default:
+                break;
         }
     if (argc - optind != 2)
         usage(EXIT_FAILURE);
@@ -126,14 +122,14 @@ int main(int argc, char *argv[])
         shortv != PHOTOMETRIC_PALETTE)
     {
         fprintf(stderr, "%s: Expecting a palette image.\n", argv[optind]);
-        (void)TIFFClose(in);
+        TIFFClose(in);
         return (EXIT_FAILURE);
     }
     if (!TIFFGetField(in, TIFFTAG_COLORMAP, &rmap, &gmap, &bmap))
     {
         fprintf(stderr, "%s: No colormap (not a valid palette image).\n",
                 argv[optind]);
-        (void)TIFFClose(in);
+        TIFFClose(in);
         return (EXIT_FAILURE);
     }
     bitspersample = 0;
@@ -142,14 +138,14 @@ int main(int argc, char *argv[])
     {
         fprintf(stderr, "%s: Sorry, can only handle 8-bit images.\n",
                 argv[optind]);
-        (void)TIFFClose(in);
+        TIFFClose(in);
         return (EXIT_FAILURE);
     }
     out = TIFFOpen(argv[optind + 1], "w");
     if (out == NULL)
     {
-        (void)TIFFClose(in);
-        return (EXIT_FAILURE);
+        TIFFClose(in);
+        return EXIT_FAILURE;
     }
     cpTags(in, out);
     TIFFGetField(in, TIFFTAG_IMAGEWIDTH, &imagewidth);
@@ -174,6 +170,8 @@ int main(int argc, char *argv[])
             if (predictor != 0)
                 TIFFSetField(out, TIFFTAG_PREDICTOR, predictor);
             break;
+        default:
+            break;
     }
     TIFFSetField(out, TIFFTAG_PHOTOMETRIC, photometric);
     TIFFSetField(out, TIFFTAG_SAMPLESPERPIXEL, 3);
@@ -192,7 +190,7 @@ int main(int argc, char *argv[])
 
         for (i = (1 << bitspersample) - 1; i >= 0; i--)
         {
-#define CVT(x) (((x)*255) / ((1L << 16) - 1))
+#define CVT(x) ((uint16_t)((((x) * 255) / ((1 << 16) - 1))))
             rmap[i] = CVT(rmap[i]);
             gmap[i] = CVT(gmap[i]);
             bmap[i] = CVT(bmap[i]);
@@ -200,8 +198,8 @@ int main(int argc, char *argv[])
     }
     {
         unsigned char *ibuf, *obuf;
-        register unsigned char *pp;
-        register uint32_t x;
+        unsigned char *pp;
+        uint32_t x;
         tmsize_t tss_in = TIFFScanlineSize(in);
         tmsize_t tss_out = TIFFScanlineSize(out);
         if (tss_out / tss_in < 3)
@@ -256,14 +254,16 @@ int main(int argc, char *argv[])
                         goto done;
                 }
                 break;
+            default:
+                break;
         }
         _TIFFfree(ibuf);
         _TIFFfree(obuf);
     }
 done:
-    (void)TIFFClose(in);
-    (void)TIFFClose(out);
-    return (EXIT_SUCCESS);
+    TIFFClose(in);
+    TIFFClose(out);
+    return EXIT_SUCCESS;
 }
 
 static int processCompressOptions(char *opt)
@@ -293,14 +293,14 @@ static int processCompressOptions(char *opt)
     {
         char *cp = strchr(opt, ':');
         if (cp)
-            predictor = atoi(cp + 1);
+            predictor = (uint16_t)atoi(cp + 1);
         compression = COMPRESSION_LZW;
     }
     else if (strneq(opt, "zip", 3))
     {
         char *cp = strchr(opt, ':');
         if (cp)
-            predictor = atoi(cp + 1);
+            predictor = (uint16_t)atoi(cp + 1);
         compression = COMPRESSION_ADOBE_DEFLATE;
     }
     else
@@ -311,12 +311,12 @@ static int processCompressOptions(char *opt)
 #define CopyField(tag, v)                                                      \
     if (TIFFGetField(in, tag, &v))                                             \
     TIFFSetField(out, tag, v)
+#define CopyFieldFloat(tag, v)                                                 \
+    if (TIFFGetField(in, tag, &v))                                             \
+    TIFFSetField(out, tag, (double)(v))
 #define CopyField2(tag, v1, v2)                                                \
     if (TIFFGetField(in, tag, &v1, &v2))                                       \
     TIFFSetField(out, tag, v1, v2)
-#define CopyField3(tag, v1, v2, v3)                                            \
-    if (TIFFGetField(in, tag, &v1, &v2, &v3))                                  \
-    TIFFSetField(out, tag, v1, v2, v3)
 #define CopyField4(tag, v1, v2, v3, v4)                                        \
     if (TIFFGetField(in, tag, &v1, &v2, &v3, &v4))                             \
     TIFFSetField(out, tag, v1, v2, v3, v4)
@@ -359,7 +359,7 @@ static void cpTag(TIFF *in, TIFF *out, uint16_t tag, uint16_t count,
             if (count == 1)
             {
                 float floatv;
-                CopyField(tag, floatv);
+                CopyFieldFloat(tag, floatv);
             }
             else if (count == (uint16_t)-1)
             {
@@ -385,10 +385,22 @@ static void cpTag(TIFF *in, TIFF *out, uint16_t tag, uint16_t count,
                 CopyField(tag, doubleav);
             }
             break;
+        case TIFF_NOTYPE:
+        case TIFF_BYTE:
+        case TIFF_SBYTE:
+        case TIFF_UNDEFINED:
+        case TIFF_SSHORT:
+        case TIFF_SLONG:
+        case TIFF_SRATIONAL:
+        case TIFF_FLOAT:
+        case TIFF_IFD:
+        case TIFF_LONG8:
+        case TIFF_SLONG8:
+        case TIFF_IFD8:
         default:
             TIFFError(TIFFFileName(in),
-                      "Data type %d is not supported, tag %d skipped.", tag,
-                      type);
+                      "Data type %u is not supported, tag %d skipped.", type,
+                      tag);
     }
 }
 
@@ -460,16 +472,16 @@ static void cpTags(TIFF *in, TIFF *out)
     {
         if (p->tag == TIFFTAG_GROUP3OPTIONS)
         {
-            uint16_t compression;
-            if (!TIFFGetField(in, TIFFTAG_COMPRESSION, &compression) ||
-                compression != COMPRESSION_CCITTFAX3)
+            uint16_t local_compression;
+            if (!TIFFGetField(in, TIFFTAG_COMPRESSION, &local_compression) ||
+                local_compression != COMPRESSION_CCITTFAX3)
                 continue;
         }
         if (p->tag == TIFFTAG_GROUP4OPTIONS)
         {
-            uint16_t compression;
-            if (!TIFFGetField(in, TIFFTAG_COMPRESSION, &compression) ||
-                compression != COMPRESSION_CCITTFAX4)
+            uint16_t local_compression;
+            if (!TIFFGetField(in, TIFFTAG_COMPRESSION, &local_compression) ||
+                local_compression != COMPRESSION_CCITTFAX4)
                 continue;
         }
         cpTag(in, out, p->tag, p->count, p->type);

@@ -27,6 +27,7 @@ TIFF Functions Overview
     functions/TIFFFieldWriteCount
     functions/TIFFFlush
     functions/TIFFGetField
+    functions/TIFFGetMaxCompressionRatio
     functions/TIFFmemory
     functions/TIFFMergeFieldInfo
     functions/TIFFOpen

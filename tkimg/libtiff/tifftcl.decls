@@ -412,5 +412,11 @@ declare 163 {
 declare 164 {
     void TIFFWarningExt(thandle_t h, const char *a, const char *b, ...)
 }
+declare 165 {
+    void TIFFWarningExtR(TIFF *, const char *, const char *, ...)
+}
+declare 166 {
+    void TIFFErrorExtR(TIFF * tif, const char *a, const char *b, ...)
+}
 
 #########################################################################

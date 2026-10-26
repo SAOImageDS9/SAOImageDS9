@@ -151,4 +151,6 @@ foreach fmt $fmtList ext $extList {
     image delete $img
 }
 
+catch { file delete -force "testOut" }
+
 exit 0

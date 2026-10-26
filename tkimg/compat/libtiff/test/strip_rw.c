@@ -35,16 +35,8 @@
 #include <unistd.h>
 #endif
 
+#include "strip.h"
 #include "test_arrays.h"
-#include "tiffio.h"
-
-extern int create_image_striped(const char *, uint32_t, uint32_t, uint32_t,
-                                uint16_t, uint16_t, uint16_t, uint16_t,
-                                uint16_t, uint16_t, const tdata_t,
-                                const tsize_t);
-extern int read_image_striped(const char *, uint32_t, uint32_t, uint32_t,
-                              uint16_t, uint16_t, uint16_t, uint16_t, uint16_t,
-                              uint16_t, const tdata_t, const tsize_t);
 
 const char *filename = "strip_test.tiff";
 
@@ -71,7 +63,7 @@ int main(int argc, char **argv)
     if (create_image_striped(filename, XSIZE * YSIZE, 1, rowsperstrip,
                              compression, spp, bps, photometric, sampleformat,
                              planarconfig, (const tdata_t)byte_array1,
-                             byte_array1_size) < 0)
+                             (tsize_t)byte_array1_size) < 0)
     {
         fprintf(stderr, "Can't create TIFF file %s.\n", filename);
         goto failure;
@@ -79,7 +71,7 @@ int main(int argc, char **argv)
     if (read_image_striped(filename, XSIZE * YSIZE, 1, rowsperstrip,
                            compression, spp, bps, photometric, sampleformat,
                            planarconfig, (const tdata_t)byte_array1,
-                           byte_array1_size) < 0)
+                           (tsize_t)byte_array1_size) < 0)
     {
         fprintf(stderr, "Can't read TIFF file %s.\n", filename);
         goto failure;
@@ -89,7 +81,7 @@ int main(int argc, char **argv)
     if (create_image_striped(filename, 1, XSIZE * YSIZE, rowsperstrip,
                              compression, spp, bps, photometric, sampleformat,
                              planarconfig, (const tdata_t)byte_array1,
-                             byte_array1_size) < 0)
+                             (tsize_t)byte_array1_size) < 0)
     {
         fprintf(stderr, "Can't create TIFF file %s.\n", filename);
         goto failure;
@@ -97,7 +89,7 @@ int main(int argc, char **argv)
     if (read_image_striped(filename, 1, XSIZE * YSIZE, rowsperstrip,
                            compression, spp, bps, photometric, sampleformat,
                            planarconfig, (const tdata_t)byte_array1,
-                           byte_array1_size) < 0)
+                           (tsize_t)byte_array1_size) < 0)
     {
         fprintf(stderr, "Can't read TIFF file %s.\n", filename);
         goto failure;
@@ -116,14 +108,16 @@ int main(int argc, char **argv)
 
     if (create_image_striped(filename, XSIZE, YSIZE, rowsperstrip, compression,
                              spp, bps, photometric, sampleformat, planarconfig,
-                             (const tdata_t)byte_array1, byte_array1_size) < 0)
+                             (const tdata_t)byte_array1,
+                             (tsize_t)byte_array1_size) < 0)
     {
         fprintf(stderr, "Can't create TIFF file %s.\n", filename);
         goto failure;
     }
     if (read_image_striped(filename, XSIZE, YSIZE, rowsperstrip, compression,
                            spp, bps, photometric, sampleformat, planarconfig,
-                           (const tdata_t)byte_array1, byte_array1_size) < 0)
+                           (const tdata_t)byte_array1,
+                           (tsize_t)byte_array1_size) < 0)
     {
         fprintf(stderr, "Can't read TIFF file %s.\n", filename);
         goto failure;
@@ -133,14 +127,16 @@ int main(int argc, char **argv)
     rowsperstrip = YSIZE;
     if (create_image_striped(filename, XSIZE, YSIZE, rowsperstrip, compression,
                              spp, bps, photometric, sampleformat, planarconfig,
-                             (const tdata_t)byte_array1, byte_array1_size) < 0)
+                             (const tdata_t)byte_array1,
+                             (tsize_t)byte_array1_size) < 0)
     {
         fprintf(stderr, "Can't create TIFF file %s.\n", filename);
         goto failure;
     }
     if (read_image_striped(filename, XSIZE, YSIZE, rowsperstrip, compression,
                            spp, bps, photometric, sampleformat, planarconfig,
-                           (const tdata_t)byte_array1, byte_array1_size) < 0)
+                           (const tdata_t)byte_array1,
+                           (tsize_t)byte_array1_size) < 0)
     {
         fprintf(stderr, "Can't read TIFF file %s.\n", filename);
         goto failure;

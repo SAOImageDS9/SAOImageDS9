@@ -33,6 +33,7 @@
 #include <unistd.h>
 #endif
 
+#include "tiff_tools.h"
 #include "tiffio.h"
 #include "tiffiop.h"
 
@@ -47,11 +48,13 @@
 #define CopyField(tag, v)                                                      \
     if (TIFFGetField(in, tag, &v))                                             \
     TIFFSetField(out, tag, v)
+#define CopyFieldFloat(tag, v)                                                 \
+    if (TIFFGetField(in, tag, &v))                                             \
+    TIFFSetField(out, tag, (double)(v))
 
 #ifndef howmany
-#define howmany(x, y) (((x) + ((y)-1)) / (y))
+#define howmany(x, y) (((x) + ((y) - 1)) / (y))
 #endif
-#define roundup(x, y) (howmany(x, y) * ((uint32_t)(y)))
 
 static uint16_t compression = COMPRESSION_PACKBITS;
 static uint32_t rowsperstrip = (uint32_t)-1;
@@ -80,7 +83,8 @@ int main(int argc, char *argv[])
         switch (c)
         {
             case 'M':
-                maxMalloc = (tmsize_t)strtoul(optarg, NULL, 0) << 20;
+                if (!TIFFToolsParseMemoryLimitMiB(optarg, &maxMalloc))
+                    usage(EXIT_FAILURE);
                 break;
             case 'b':
                 process_by_block = 1;
@@ -102,11 +106,11 @@ int main(int argc, char *argv[])
                 break;
 
             case 'r':
-                rowsperstrip = atoi(optarg);
+                rowsperstrip = (uint32_t)atoi(optarg);
                 break;
 
             case 't':
-                rowsperstrip = atoi(optarg);
+                rowsperstrip = (uint32_t)atoi(optarg);
                 break;
 
             case 'B':
@@ -128,6 +132,8 @@ int main(int argc, char *argv[])
             case '?':
                 usage(EXIT_FAILURE);
                 /*NOTREACHED*/
+                break;
+            default:
                 break;
         }
 
@@ -156,17 +162,17 @@ int main(int argc, char *argv[])
             {
                 if (!tiffcvt(in, out) || !TIFFWriteDirectory(out))
                 {
-                    (void)TIFFClose(out);
-                    (void)TIFFClose(in);
+                    TIFFClose(out);
+                    TIFFClose(in);
                     TIFFOpenOptionsFree(opts);
                     return (1);
                 }
             } while (TIFFReadDirectory(in));
-            (void)TIFFClose(in);
+            TIFFClose(in);
         }
     }
     TIFFOpenOptionsFree(opts);
-    (void)TIFFClose(out);
+    TIFFClose(out);
     return (EXIT_SUCCESS);
 }
 
@@ -179,7 +185,7 @@ static int cvt_by_tile(TIFF *in, TIFF *out)
     uint32_t row, col;
     uint32_t *wrk_line;
     int ok = 1;
-    uint32_t rastersize, wrk_linesize;
+    tmsize_t raster_pixels, rastersize, wrk_linesize;
 
     TIFFGetField(in, TIFFTAG_IMAGEWIDTH, &width);
     TIFFGetField(in, TIFFTAG_IMAGELENGTH, &height);
@@ -191,19 +197,27 @@ static int cvt_by_tile(TIFF *in, TIFF *out)
         return (0);
     }
 
+    /*
+     * tile_height is used as a divisor in the overflow check below.
+     * Validate it before performing the reverse calculation.
+     */
+    if (tile_height == 0)
+    {
+        TIFFError(TIFFFileName(in), "Invalid zero tile length");
+        exit(EXIT_FAILURE);
+    }
     TIFFSetField(out, TIFFTAG_TILEWIDTH, tile_width);
     TIFFSetField(out, TIFFTAG_TILELENGTH, tile_height);
 
     /*
      * Allocate tile buffer
      */
-    rastersize = tile_width * tile_height * sizeof(uint32_t);
-    if (tile_width != (rastersize / tile_height) / sizeof(uint32_t))
-    {
-        TIFFError(TIFFFileName(in),
-                  "Integer overflow when calculating raster buffer");
+    raster_pixels = _TIFFMultiplySSize(in, (tmsize_t)tile_width,
+                                       (tmsize_t)tile_height, "raster buffer");
+    rastersize = _TIFFMultiplySSize(in, raster_pixels, sizeof(uint32_t),
+                                    "raster buffer");
+    if (raster_pixels == 0 || rastersize == 0)
         exit(EXIT_FAILURE);
-    }
     raster = (uint32_t *)_TIFFmalloc(rastersize);
     if (raster == 0)
     {
@@ -215,13 +229,10 @@ static int cvt_by_tile(TIFF *in, TIFF *out)
      * Allocate a scanline buffer for swapping during the vertical
      * mirroring pass.
      */
-    wrk_linesize = tile_width * sizeof(uint32_t);
-    if (tile_width != wrk_linesize / sizeof(uint32_t))
-    {
-        TIFFError(TIFFFileName(in),
-                  "Integer overflow when calculating wrk_line buffer");
+    wrk_linesize = _TIFFMultiplySSize(in, (tmsize_t)tile_width,
+                                      sizeof(uint32_t), "wrk_line buffer");
+    if (wrk_linesize == 0)
         exit(EXIT_FAILURE);
-    }
     wrk_line = (uint32_t *)_TIFFmalloc(wrk_linesize);
     if (!wrk_line)
     {
@@ -250,7 +261,7 @@ static int cvt_by_tile(TIFF *in, TIFF *out)
              * we should rearrange it here.
              */
 #if HOST_BIGENDIAN
-            TIFFSwabArrayOfLong(raster, tile_width * tile_height);
+            TIFFSwabArrayOfLong(raster, raster_pixels);
 #endif
 
             /*
@@ -261,21 +272,35 @@ static int cvt_by_tile(TIFF *in, TIFF *out)
             {
                 uint32_t *top_line, *bottom_line;
 
-                top_line = raster + tile_width * i_row;
-                bottom_line = raster + tile_width * (tile_height - i_row - 1);
+                tmsize_t top_offset = _TIFFComputeRowOffset(
+                    in, tile_width, i_row, "tile row offset");
+                uint32_t bottom_row = tile_height - i_row - 1;
+                tmsize_t bottom_offset = _TIFFComputeRowOffset(
+                    in, tile_width, bottom_row, "tile row offset");
+                if ((top_offset == 0 && i_row != 0) ||
+                    (bottom_offset == 0 && bottom_row != 0))
+                {
+                    ok = 0;
+                    break;
+                }
 
-                _TIFFmemcpy(wrk_line, top_line, 4 * tile_width);
-                _TIFFmemcpy(top_line, bottom_line, 4 * tile_width);
-                _TIFFmemcpy(bottom_line, wrk_line, 4 * tile_width);
+                top_line = raster + top_offset;
+                bottom_line = raster + bottom_offset;
+
+                _TIFFmemcpy(wrk_line, top_line, wrk_linesize);
+                _TIFFmemcpy(top_line, bottom_line, wrk_linesize);
+                _TIFFmemcpy(bottom_line, wrk_line, wrk_linesize);
             }
+
+            if (!ok)
+                break;
 
             /*
              * Write out the result in a tile.
              */
 
             if (TIFFWriteEncodedTile(out, TIFFComputeTile(out, col, row, 0, 0),
-                                     raster,
-                                     4 * tile_width * tile_height) == -1)
+                                     raster, rastersize) == -1)
             {
                 ok = 0;
                 break;
@@ -297,7 +322,7 @@ static int cvt_by_strip(TIFF *in, TIFF *out)
     uint32_t row;
     uint32_t *wrk_line;
     int ok = 1;
-    uint32_t rastersize, wrk_linesize;
+    tmsize_t raster_pixels, rastersize, wrk_linesize;
 
     TIFFGetField(in, TIFFTAG_IMAGEWIDTH, &width);
     TIFFGetField(in, TIFFTAG_IMAGELENGTH, &height);
@@ -308,18 +333,27 @@ static int cvt_by_strip(TIFF *in, TIFF *out)
         return (0);
     }
 
+    /*
+     * rowsperstrip is used as a divisor in the overflow check below.
+     * Validate it before performing the reverse calculation.
+     */
+    if (rowsperstrip == 0)
+    {
+        TIFFError(TIFFFileName(in), "Invalid zero rows per strip");
+        exit(EXIT_FAILURE);
+    }
+
     TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, rowsperstrip);
 
     /*
      * Allocate strip buffer
      */
-    rastersize = width * rowsperstrip * sizeof(uint32_t);
-    if (width != (rastersize / rowsperstrip) / sizeof(uint32_t))
-    {
-        TIFFError(TIFFFileName(in),
-                  "Integer overflow when calculating raster buffer");
+    raster_pixels =
+        _TIFFMultiplySSize(in, width, rowsperstrip, "raster buffer");
+    rastersize = _TIFFMultiplySSize(in, raster_pixels, sizeof(uint32_t),
+                                    "raster buffer");
+    if (raster_pixels == 0 || rastersize == 0)
         exit(EXIT_FAILURE);
-    }
     raster = (uint32_t *)_TIFFmalloc(rastersize);
     if (raster == 0)
     {
@@ -331,13 +365,10 @@ static int cvt_by_strip(TIFF *in, TIFF *out)
      * Allocate a scanline buffer for swapping during the vertical
      * mirroring pass.
      */
-    wrk_linesize = width * sizeof(uint32_t);
-    if (width != wrk_linesize / sizeof(uint32_t))
-    {
-        TIFFError(TIFFFileName(in),
-                  "Integer overflow when calculating wrk_line buffer");
+    wrk_linesize =
+        _TIFFMultiplySSize(in, width, sizeof(uint32_t), "wrk_line buffer");
+    if (wrk_linesize == 0)
         exit(EXIT_FAILURE);
-    }
     wrk_line = (uint32_t *)_TIFFmalloc(wrk_linesize);
     if (!wrk_line)
     {
@@ -364,16 +395,16 @@ static int cvt_by_strip(TIFF *in, TIFF *out)
          * we should rearrange it here.
          */
 #if HOST_BIGENDIAN
-        TIFFSwabArrayOfLong(raster, width * rowsperstrip);
+        TIFFSwabArrayOfLong(raster, raster_pixels);
 #endif
 
         /*
          * Figure out the number of scanlines actually in this strip.
          */
         if (row + rowsperstrip > height)
-            rows_to_write = height - row;
+            rows_to_write = (int)(height - row);
         else
-            rows_to_write = rowsperstrip;
+            rows_to_write = (int)rowsperstrip;
 
         /*
          * For some reason the TIFFReadRGBAStrip() function chooses the
@@ -383,24 +414,44 @@ static int cvt_by_strip(TIFF *in, TIFF *out)
         for (i_row = 0; i_row < rows_to_write / 2; i_row++)
         {
             uint32_t *top_line, *bottom_line;
+            uint32_t bottom_row = (uint32_t)(rows_to_write - i_row - 1);
+            tmsize_t top_offset = _TIFFComputeRowOffset(
+                in, width, (uint32_t)i_row, "raster row offset");
+            tmsize_t bottom_offset = _TIFFComputeRowOffset(
+                in, width, bottom_row, "raster row offset");
 
-            top_line = raster + width * i_row;
-            bottom_line = raster + width * (rows_to_write - i_row - 1);
+            if ((top_offset == 0 && i_row != 0) ||
+                (bottom_offset == 0 && bottom_row != 0))
+            {
+                ok = 0;
+                break;
+            }
 
-            _TIFFmemcpy(wrk_line, top_line, 4 * width);
-            _TIFFmemcpy(top_line, bottom_line, 4 * width);
-            _TIFFmemcpy(bottom_line, wrk_line, 4 * width);
+            top_line = raster + top_offset;
+            bottom_line = raster + bottom_offset;
+
+            _TIFFmemcpy(wrk_line, top_line, wrk_linesize);
+            _TIFFmemcpy(top_line, bottom_line, wrk_linesize);
+            _TIFFmemcpy(bottom_line, wrk_line, wrk_linesize);
         }
+
+        if (!ok)
+            break;
 
         /*
          * Write out the result in a strip
          */
-
-        if (TIFFWriteEncodedStrip(out, row / rowsperstrip, raster,
-                                  4 * rows_to_write * width) == -1)
         {
-            ok = 0;
-            break;
+            tmsize_t write_size = _TIFFMultiplySSize(in, (tmsize_t)wrk_linesize,
+                                                     (tmsize_t)rows_to_write,
+                                                     "strip write buffer size");
+            if (write_size == 0 ||
+                TIFFWriteEncodedStrip(out, row / rowsperstrip, raster,
+                                      write_size) == -1)
+            {
+                ok = 0;
+                break;
+            }
         }
     }
 
@@ -424,14 +475,14 @@ static int cvt_whole_image(TIFF *in, TIFF *out)
     uint32_t *raster;       /* retrieve RGBA image */
     uint32_t width, height; /* image width & height */
     uint32_t row;
-    size_t pixel_count;
+    uint64_t pixel_count64;
+    tmsize_t pixel_count;
+    tmsize_t raster_bytes;
 
     TIFFGetField(in, TIFFTAG_IMAGEWIDTH, &width);
     TIFFGetField(in, TIFFTAG_IMAGELENGTH, &height);
-    pixel_count = width * height;
 
-    /* XXX: Check the integer overflow. */
-    if (!width || !height || pixel_count / width != height)
+    if (!width || !height)
     {
         TIFFError(
             TIFFFileName(in),
@@ -440,13 +491,27 @@ static int cvt_whole_image(TIFF *in, TIFF *out)
             width, height);
         return 0;
     }
-    if (maxMalloc != 0 &&
-        (tmsize_t)pixel_count * (tmsize_t)sizeof(uint32_t) > maxMalloc)
+
+    pixel_count64 = _TIFFMultiply64(in, width, height, "raster buffer size");
+    if (pixel_count64 == 0)
+        return 0;
+
+    pixel_count =
+        _TIFFCastUInt64ToSSize(in, pixel_count64, "raster buffer size");
+    if (pixel_count == 0)
+        return 0;
+
+    raster_bytes = _TIFFMultiplySSize(in, pixel_count, sizeof(uint32_t),
+                                      "raster buffer size");
+    if (raster_bytes == 0)
+        return 0;
+
+    if (maxMalloc != 0 && raster_bytes > maxMalloc)
     {
         TIFFError(TIFFFileName(in),
                   "Raster size %" TIFF_SIZE_FORMAT
                   " over memory limit (%" TIFF_SSIZE_FORMAT "), try -b option.",
-                  pixel_count * sizeof(uint32_t), maxMalloc);
+                  (size_t)raster_bytes, maxMalloc);
         return 0;
     }
 
@@ -460,7 +525,7 @@ static int cvt_whole_image(TIFF *in, TIFF *out)
         TIFFError(TIFFFileName(in),
                   "Failed to allocate buffer (%" TIFF_SIZE_FORMAT
                   " elements of %" TIFF_SIZE_FORMAT " each)",
-                  pixel_count, sizeof(uint32_t));
+                  (size_t)pixel_count, sizeof(uint32_t));
         return (0);
     }
 
@@ -477,7 +542,7 @@ static int cvt_whole_image(TIFF *in, TIFF *out)
      * we should rearrange it here.
      */
 #if HOST_BIGENDIAN
-    TIFFSwabArrayOfLong(raster, width * height);
+    TIFFSwabArrayOfLong(raster, pixel_count);
 #endif
 
     /*
@@ -485,7 +550,7 @@ static int cvt_whole_image(TIFF *in, TIFF *out)
      */
     if (no_alpha)
     {
-        size_t count = pixel_count;
+        tmsize_t count = pixel_count;
         unsigned char *src, *dst;
 
         src = dst = (unsigned char *)raster;
@@ -494,11 +559,17 @@ static int cvt_whole_image(TIFF *in, TIFF *out)
             /* do alpha compositing */
             const int src_alpha = src[3];
             const int background_contribution = background * (0xFF - src_alpha);
-            *(dst++) = (*(src)*src_alpha + background_contribution) / 0xFF;
+            *(dst++) =
+                (unsigned char)((*(src)*src_alpha + background_contribution) /
+                                0xFF);
             src++;
-            *(dst++) = (*(src)*src_alpha + background_contribution) / 0xFF;
+            *(dst++) =
+                (unsigned char)((*(src)*src_alpha + background_contribution) /
+                                0xFF);
             src++;
-            *(dst++) = (*(src)*src_alpha + background_contribution) / 0xFF;
+            *(dst++) =
+                (unsigned char)((*(src)*src_alpha + background_contribution) /
+                                0xFF);
             src++;
             src++;
             count--;
@@ -513,26 +584,44 @@ static int cvt_whole_image(TIFF *in, TIFF *out)
         unsigned char *raster_strip;
         int rows_to_write;
         int bytes_per_pixel;
+        tmsize_t raster_rowbytes;
+        tmsize_t raster_offset;
+        tmsize_t write_size;
 
         if (no_alpha)
         {
-            raster_strip = ((unsigned char *)raster) + 3 * row * width;
             bytes_per_pixel = 3;
         }
         else
         {
-            raster_strip = (unsigned char *)(raster + row * width);
             bytes_per_pixel = 4;
         }
+        raster_rowbytes = _TIFFMultiplySSize(
+            in, (tmsize_t)width, bytes_per_pixel, "raster row size");
+        if (raster_rowbytes == 0)
+        {
+            _TIFFfree(raster);
+            return 0;
+        }
+        raster_offset = _TIFFComputeRowOffset(in, raster_rowbytes, row,
+                                              "raster row offset");
+        if (raster_offset == 0 && row != 0)
+        {
+            _TIFFfree(raster);
+            return 0;
+        }
+        raster_strip = ((unsigned char *)raster) + raster_offset;
 
         if (row + rowsperstrip > height)
-            rows_to_write = height - row;
+            rows_to_write = (int)(height - row);
         else
-            rows_to_write = rowsperstrip;
+            rows_to_write = (int)rowsperstrip;
 
-        if (TIFFWriteEncodedStrip(out, row / rowsperstrip, raster_strip,
-                                  bytes_per_pixel * rows_to_write * width) ==
-            -1)
+        write_size = _TIFFMultiplySSize(in, raster_rowbytes, rows_to_write,
+                                        "strip write buffer size");
+        if (write_size == 0 ||
+            TIFFWriteEncodedStrip(out, row / rowsperstrip, raster_strip,
+                                  write_size) == -1)
         {
             _TIFFfree(raster);
             return 0;
@@ -577,8 +666,8 @@ static int tiffcvt(TIFF *in, TIFF *out)
         TIFFSetField(out, TIFFTAG_EXTRASAMPLES, 1, v);
     }
 
-    CopyField(TIFFTAG_XRESOLUTION, floatv);
-    CopyField(TIFFTAG_YRESOLUTION, floatv);
+    CopyFieldFloat(TIFFTAG_XRESOLUTION, floatv);
+    CopyFieldFloat(TIFFTAG_YRESOLUTION, floatv);
     CopyField(TIFFTAG_RESOLUTIONUNIT, shortv);
     TIFFSetField(out, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
     TIFFSetField(out, TIFFTAG_SOFTWARE, TIFFGetVersion());

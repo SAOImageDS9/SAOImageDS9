@@ -8,7 +8,7 @@
  * For a list of available format options see function ParseFormatOpts
  * and the documentation img-ico.
  *
- * Copyright (c) 2001-2024 Paul Obermeier <obermeier@users.sourceforge.net>
+ * Copyright (c) 2001-2025 Paul Obermeier <obermeier@users.sourceforge.net>
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES. 
@@ -26,7 +26,6 @@
  */
 
 #include "init.c"
-
 
 /* #define DEBUG_LOCAL */
 
@@ -106,6 +105,11 @@ static Boln readUByte (tkimg_Stream *handle, UByte *b)
    for Visual Studio versions <= 2010 */
 #pragma optimize("g", off)
 #endif
+static UShort convertUShort (const unsigned char *buf)
+{
+    return (buf[0] | (buf[1] << 8));
+}
+
 static Boln readUShort (tkimg_Stream *handle, UShort *s)
 {
     unsigned char buf[2];
@@ -113,13 +117,18 @@ static Boln readUShort (tkimg_Stream *handle, UShort *s)
     if (2 != tkimg_Read(handle, (char *)buf, 2)) {
         return FALSE;
     }
-    *s = buf[0] | (buf[1] << 8);
+    *s = convertUShort (buf);
     return TRUE;
 }
 
 /* Read 4 bytes, representing a unsigned 32 bit integer in the form
    <LowByte, HighByte>, from a file and convert them into the current
    machine's format. */
+
+static UInt convertUInt (const unsigned char *buf)
+{
+    return (buf[0] | (buf[1] << 8) | (buf[2] << 16) | ((UInt)buf[3] << 24));
+}
 
 static Boln readUInt (tkimg_Stream *handle, UInt *i)
 {
@@ -128,7 +137,7 @@ static Boln readUInt (tkimg_Stream *handle, UInt *i)
     if (4 != tkimg_Read(handle, (char *)buf, 4)) {
         return FALSE;
     }
-    *i = buf[0] | (buf[1] << 8) | (buf[2] << 16) | ((unsigned int)buf[3] << 24);
+    *i = convertUInt (buf);
     return TRUE;
 }
 #if _MSG_VER && _MSC_VER <= 1600
@@ -245,6 +254,7 @@ static Boln readIcoHeader (tkimg_Stream *handle, ICOHEADER *th)
             return FALSE;
         }
         th->entries[i].nColors = (nColors == 0? 256: nColors);
+
 #ifdef DEBUG_LOCAL
         printf ("Icon %d:\n", i);
         printf ("  Width     : %d\n", th->entries[i].width);
@@ -291,21 +301,32 @@ static Boln writeIcoHeader (tkimg_Stream *handle, ICOHEADER *th)
     return TRUE;
 }
 
-static Boln readInfoHeader (tkimg_Stream *handle, INFOHEADER *ih)
+static Boln readInfoHeader (Tcl_Interp *interp, tkimg_Stream *handle, INFOHEADER *ih)
 {
-    if (!readUInt   (handle, &ih->size) ||
-        !readUInt   (handle, &ih->width) ||
-        !readUInt   (handle, &ih->height) ||
-        !readUShort (handle, &ih->nPlanes) ||
-        !readUShort (handle, &ih->nBitsPerPixel) ||
-        !readUInt   (handle, &ih->compression) ||
-        !readUInt   (handle, &ih->imageSize) ||
-        !readUInt   (handle, &ih->xPixelsPerM) ||
-        !readUInt   (handle, &ih->yPixelsPerM) ||
-        !readUInt   (handle, &ih->nColorsUsed) ||
-        !readUInt   (handle, &ih->nColorsImportant)) {
+    unsigned char buf[40];
+
+    if (40 != tkimg_Read(handle, (char *)buf, 40)) {
+        Tcl_SetObjResult (interp, Tcl_ObjPrintf (
+                "Cannot read %d bytes for icon header.", 40));
         return FALSE;
     }
+    if (memcmp (buf, "\x89PNG\r\n\32\n\0\0\0\rIHDR", 16) == 0) {
+        Tcl_SetObjResult (interp, Tcl_ObjPrintf ("PNG images currently not supported."));
+        return FALSE;
+    }
+
+    ih->size             = convertUInt   (buf +  0);
+    ih->width            = convertUInt   (buf +  4);
+    ih->height           = convertUInt   (buf +  8);
+    ih->nPlanes          = convertUShort (buf + 12);
+    ih->nBitsPerPixel    = convertUShort (buf + 14);
+    ih->compression      = convertUInt   (buf + 16);
+    ih->imageSize        = convertUInt   (buf + 20);
+    ih->xPixelsPerM      = convertUInt   (buf + 24);
+    ih->yPixelsPerM      = convertUInt   (buf + 28);
+    ih->nColorsUsed      = convertUInt   (buf + 32);
+    ih->nColorsImportant = convertUInt   (buf + 36);
+
 #ifdef DEBUG_LOCAL
     printf("Info header:\n");
     printf("Size: %d\n", ih->size);
@@ -770,8 +791,7 @@ static int CommonRead(
     }
 
     /* Read Info header and color map */
-    if (!readInfoHeader (handle, &infoHeader)) {
-        Tcl_AppendResult(interp, "Error reading info header", (char *)NULL);
+    if (!readInfoHeader (interp, handle, &infoHeader)) {
         errorFlag = TCL_ERROR;
         goto error;
     }
@@ -784,6 +804,12 @@ static int CommonRead(
     }
 
     if (infoHeader.nBitsPerPixel != 24 && infoHeader.nBitsPerPixel != 32) {
+        if (icoHeader.entries[opts.pageIndex].nColors < 0 ||
+            icoHeader.entries[opts.pageIndex].nColors > 256) {
+            tkimg_snprintf(msgStr, 1024, "Invalid number of colors (%d)",
+                           icoHeader.entries[opts.pageIndex].nColors);
+            Tcl_AppendResult(interp, msgStr, (char *)NULL);
+        }
         if (!readColorMap (handle, icoHeader.entries[opts.pageIndex].nColors, colorMap)) {
             Tcl_AppendResult(interp, "Error reading color map", (char *)NULL);
             errorFlag = TCL_ERROR;

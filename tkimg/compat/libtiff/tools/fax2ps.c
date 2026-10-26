@@ -82,7 +82,7 @@ static void printruns(unsigned char *buf, uint32_t *runs, uint32_t *erun,
                  {'g', 'q', 64},  {'h', 'r', 32},  {'i', 's', 16},
                  {'j', 't', 8},   {'k', 'u', 4},   {'l', 'v', 2},
                  {'m', 'w', 1}};
-    static char *svalue =
+    static const char *svalue =
         " !\"#$&'*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abc";
     int colormode = 1; /* 0 for white, 1 for black */
     uint32_t runlength = 0;
@@ -207,7 +207,7 @@ static void emitFont(FILE *fd)
         fprintf(fd, "%s\n", fontPrologue[i]);
 }
 
-void printTIF(TIFF *tif, uint16_t pageNumber)
+static void printTIF(TIFF *tif, uint16_t pageNumber)
 {
     uint32_t w, h;
     uint16_t unit, compression;
@@ -221,28 +221,30 @@ void printTIF(TIFF *tif, uint16_t pageNumber)
         compression < COMPRESSION_CCITTRLE ||
         compression > COMPRESSION_CCITT_T6)
         return;
-    if (!TIFFGetField(tif, TIFFTAG_XRESOLUTION, &xres) || !xres)
+    if (!TIFFGetField(tif, TIFFTAG_XRESOLUTION, &xres) ||
+        TIFF_FLOAT_EQ(xres, 0.0f))
     {
         TIFFWarning(TIFFFileName(tif), "No x-resolution, assuming %g dpi",
-                    defxres);
+                    (double)defxres);
         xres = defxres;
     }
-    if (!TIFFGetField(tif, TIFFTAG_YRESOLUTION, &yres) || !yres)
+    if (!TIFFGetField(tif, TIFFTAG_YRESOLUTION, &yres) ||
+        TIFF_FLOAT_EQ(yres, 0.0f))
     {
         TIFFWarning(TIFFFileName(tif), "No y-resolution, assuming %g lpi",
-                    defyres);
+                    (double)defyres);
         yres = defyres; /* XXX */
     }
     if (TIFFGetField(tif, TIFFTAG_RESOLUTIONUNIT, &unit) &&
         unit == RESUNIT_CENTIMETER)
     {
-        xres *= 2.54F;
-        yres *= 2.54F;
+        xres *= 2.54f;
+        yres *= 2.54f;
     }
-    if (pageWidth == 0)
-        pageWidth = w / xres;
-    if (pageHeight == 0)
-        pageHeight = h / yres;
+    if (TIFF_FLOAT_EQ(pageWidth, 0.0f))
+        pageWidth = (float)w / xres;
+    if (TIFF_FLOAT_EQ(pageHeight, 0.0f))
+        pageHeight = (float)h / yres;
 
     printf("%%!PS-Adobe-3.0\n");
     printf("%%%%Creator: fax2ps\n");
@@ -252,7 +254,7 @@ void printTIF(TIFF *tif, uint16_t pageNumber)
     creation_time = time(0);
     printf("%%%%CreationDate: %s", ctime(&creation_time));
     printf("%%%%Origin: 0 0\n");
-    printf("%%%%BoundingBox: 0 0 %u %u\n", (int)(pageWidth * points),
+    printf("%%%%BoundingBox: 0 0 %d %d\n", (int)(pageWidth * points),
            (int)(pageHeight * points)); /* XXX */
     printf("%%%%Pages: (atend)\n");
     printf("%%%%EndComments\n");
@@ -266,19 +268,21 @@ void printTIF(TIFF *tif, uint16_t pageNumber)
     printf("%%%%Page: \"%u\" %u\n", pageNumber, pageNumber);
     printf("/$pageTop save def gsave\n");
     if (scaleToPage)
-        scale = pageHeight / (h / yres) < pageWidth / (w / xres)
-                    ? pageHeight / (h / yres)
-                    : pageWidth / (w / xres);
-    printf("%g %g translate\n", points * (pageWidth - scale * w / xres) * half,
-           points *
-               (scale * h / yres + (pageHeight - scale * h / yres) * half));
-    printf("%g %g scale\n", points / xres * scale, -points / yres * scale);
+        scale = pageHeight / ((float)h / yres) < pageWidth / ((float)w / xres)
+                    ? pageHeight / ((float)h / yres)
+                    : pageWidth / ((float)w / xres);
+    printf("%g %g translate\n",
+           (double)(points * (pageWidth - scale * (float)w / xres) * half),
+           (double)(points * (scale * (float)h / yres +
+                              (pageHeight - scale * (float)h / yres) * half)));
+    printf("%g %g scale\n", (double)(points / xres * scale),
+           (double)(-points / yres * scale));
     printf("0 setgray\n");
     TIFFSetField(tif, TIFFTAG_FAXFILLFUNC, printruns);
     ns = TIFFNumberOfStrips(tif);
     row = 0;
     for (s = 0; s < ns; s++)
-        (void)TIFFReadEncodedStrip(tif, s, (tdata_t)NULL, (tsize_t)-1);
+        (void)TIFFReadEncodedStrip(tif, s, NULL, -1);
     printf("p\n");
     printf("grestore $pageTop restore\n");
     totalPages++;
@@ -286,7 +290,7 @@ void printTIF(TIFF *tif, uint16_t pageNumber)
 
 #define GetPageNumber(tif) TIFFGetField(tif, TIFFTAG_PAGENUMBER, &pn, &ptotal)
 
-int findPage(TIFF *tif, uint16_t pageNumber)
+static int findPage(TIFF *tif, uint16_t pageNumber)
 {
     uint16_t pn = (uint16_t)-1;
     uint16_t ptotal = (uint16_t)-1;
@@ -301,7 +305,8 @@ int findPage(TIFF *tif, uint16_t pageNumber)
         return (TIFFSetDirectory(tif, (tdir_t)(pageNumber - 1)));
 }
 
-void fax2ps(TIFF *tif, uint16_t npages, uint16_t *pages, char *filename)
+static void fax2ps(TIFF *tif, uint16_t npages, uint16_t *pages,
+                   const char *filename)
 {
     if (npages > 0)
     {
@@ -364,7 +369,7 @@ int main(int argc, char **argv)
             case 'p': /* print specific page */
                 pageNumber = (uint16_t)atoi(optarg);
                 if (pages)
-                    pages = (uint16_t *)realloc(pages, (npages + 1) *
+                    pages = (uint16_t *)realloc(pages, (size_t)(npages + 1) *
                                                            sizeof(uint16_t));
                 else
                     pages = (uint16_t *)malloc(sizeof(uint16_t));
@@ -394,6 +399,9 @@ int main(int argc, char **argv)
             case '?':
                 free(pages);
                 usage(EXIT_FAILURE);
+                break;
+            default:
+                break;
         }
     if (npages > 0)
         qsort(pages, npages, sizeof(uint16_t), pcompar);
@@ -420,6 +428,8 @@ int main(int argc, char **argv)
         FILE *fd;
         char buf[16 * 1024];
 
+        /* Silence Coverity Scan warning about insecure temporary file name. */
+        /* coverity[secure_temp:SUPPRESS] */
         fd = tmpfile();
         if (fd == NULL)
         {
@@ -430,9 +440,9 @@ int main(int argc, char **argv)
 #if defined(HAVE_SETMODE) && defined(O_BINARY)
         setmode(fileno(stdin), O_BINARY);
 #endif
-        while ((n = read(fileno(stdin), buf, sizeof(buf))) > 0)
+        while ((n = (int)read(fileno(stdin), buf, sizeof(buf))) > 0)
         {
-            if (write(fileno(fd), buf, n) != n)
+            if (write(fileno(fd), buf, (TIFFIOSize_t)n) != n)
             {
                 fclose(fd);
                 fprintf(stderr, "Could not copy stdin to temporary file.\n");
@@ -442,7 +452,9 @@ int main(int argc, char **argv)
         }
         _TIFF_lseek_f(fileno(fd), 0, SEEK_SET);
 #if defined(_WIN32) && defined(USE_WIN32_FILEIO)
-        tif = TIFFFdOpen(_get_osfhandle(fileno(fd)), "temp", "r");
+        /* Avoid compiler warnings by using successive casts. */
+        tif = TIFFFdOpen((int)(intptr_t)(HANDLE)_get_osfhandle(fileno(fd)),
+                         "temp", "r");
 #else
         tif = TIFFFdOpen(fileno(fd), "temp", "r");
 #endif
@@ -456,7 +468,7 @@ int main(int argc, char **argv)
         fclose(fd);
     }
     printf("%%%%Trailer\n");
-    printf("%%%%Pages: %u\n", totalPages);
+    printf("%%%%Pages: %d\n", totalPages);
     printf("%%%%EOF\n");
 
     free(pages);

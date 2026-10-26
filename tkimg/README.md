@@ -240,11 +240,12 @@ https://tkimg.sourceforge.net/RefMan/toc.html
 
 The following platforms are regularly tested:
 
+* Darwin          (gcc)
+* IRIX 6.5        (gcc)
 * Linux           (gcc)
 * Raspberry Pi OS (gcc)
 * RiscV Debian    (gcc)
 * Windows         (MSys/MinGW, Visual Studio C++)
-* Darwin          (gcc)
 
 Other machines and OS's should work, too.
 

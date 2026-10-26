@@ -25,7 +25,7 @@ ext_source_user = None
 # -- Project information -----------------------------------------------------
 
 project = 'LibTIFF'
-copyright = '1988-2022, LibTIFF contributors'
+copyright = '1988-2025, LibTIFF contributors'
 author = 'LibTIFF contributors'
 
 # The full version, including alpha/beta/rc tags
@@ -137,6 +137,7 @@ man_pages = [
     ('functions/TIFFFieldWriteCount', 'TIFFFieldWriteCount', 'get number of values to be written to field', author, '3tiff'),
     ('functions/TIFFFlush', 'TIFFFlush', 'flush pending writes to an open TIFF file', author, '3tiff'),
     ('functions/TIFFGetField', 'TIFFGetField', 'get the value(s) of a tag in an open TIFF file', author, '3tiff'),
+    ('functions/TIFFGetMaxCompressionRatio', 'TIFFGetMaxCompressionRatio', 'return maximum compression ratio for current codec', author, '3tiff'),
     ('functions/TIFFmemory', 'TIFFmemory', 'memory management-related functions for use with TIFF files', author, '3tiff'),
     ('functions/TIFFMergeFieldInfo', 'TIFFMergeFieldInfo', 'add application-defined TIFF tags to the list of known libtiff tags', author, '3tiff'),
     ('functions/TIFFOpen', 'TIFFOpen', 'open a TIFF file for reading or writing', author, '3tiff'),

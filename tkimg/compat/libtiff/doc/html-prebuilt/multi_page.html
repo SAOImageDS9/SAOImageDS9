@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Multi Page / Multi Image TIFF &#8212; LibTIFF 4.7.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b849a4e9" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinxdoc.css?v=0a676766" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=9f25de62"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <title>Multi Page / Multi Image TIFF &#8212; LibTIFF 4.7.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinxdoc.css?v=34905f61" />
+    <script src="_static/documentation_options.js?v=2edf0659"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="TIFF Functions Overview" href="functions.html" />
     <link rel="prev" title="Using The TIFF Library" href="libtiff.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="libtiff.html" title="Using The TIFF Library"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Multi Page / Multi Image TIFF</a></li> 
       </ul>
     </div>  
@@ -39,7 +39,7 @@
           <div class="body" role="main">
             
   <section id="multi-page-multi-image-tiff">
-<h1>Multi Page / Multi Image TIFF<a class="headerlink" href="#multi-page-multi-image-tiff" title="Permalink to this heading">¶</a></h1>
+<h1>Multi Page / Multi Image TIFF<a class="headerlink" href="#multi-page-multi-image-tiff" title="Link to this heading">¶</a></h1>
 <p>There may be more than one <a class="reference internal" href="terms.html#imagefiledirectory"><span class="std std-ref">Image File Directory (IFD)</span></a>
 in a TIFF file. Each IFD defines a <a class="reference internal" href="terms.html#subfile"><span class="std std-ref">subfile</span></a>.</p>
 <p>One potential use of <em>subfiles</em> is to describe related images,
@@ -55,10 +55,10 @@ of a main-IFD. Such child images provide extra information for the parent image
 - such as a subsampled version of the parent image.
 SubIFD chains are rarely supported.
 For SubIFD refer also to
-<a class="reference external" href="https://www.awaresystems.be/imaging/tiff/specification/TIFFPM6.pdf">Adobe PageMaker® 6.0 TIFF Technical Notes</a></p></li>
+<a class="reference external" href="https://download.osgeo.org/libtiff/doc/TIFFPM6.pdf">Adobe PageMaker® 6.0 TIFF Technical Notes</a></p></li>
 </ol>
 <section id="sub-ifd-chains">
-<span id="subifdaccess"></span><h2>Sub IFD chains<a class="headerlink" href="#sub-ifd-chains" title="Permalink to this heading">¶</a></h2>
+<span id="subifdaccess"></span><h2>Sub IFD chains<a class="headerlink" href="#sub-ifd-chains" title="Link to this heading">¶</a></h2>
 <p>In the case of several SubIFDs of a main image, there are two possibilities
 that are not even mutually exclusive.</p>
 <ol class="loweralpha simple">
@@ -80,7 +80,7 @@ always starts with the first main-IFD and thus is able to reset
 the SubIFD reading chain to the main-IFD chain.</p>
 </section>
 <section id="writing-multi-page-tiff">
-<h2>Writing Multi Page TIFF<a class="headerlink" href="#writing-multi-page-tiff" title="Permalink to this heading">¶</a></h2>
+<h2>Writing Multi Page TIFF<a class="headerlink" href="#writing-multi-page-tiff" title="Link to this heading">¶</a></h2>
 <p>The following example code shows how to write multi-page TIFF
 as main-IFD chain and as SubIFD chain.
 <code class="docutils literal notranslate"><span class="pre">libtiff</span></code> writes SubIFDs as an array of IFDs that are not chained
@@ -183,7 +183,7 @@ additionally, as Adobe PageMaker® 6.0 TIFF Technical Notes suggests.</p>
 </div>
 </section>
 <section id="reading-multi-page-tiff">
-<h2>Reading Multi Page TIFF<a class="headerlink" href="#reading-multi-page-tiff" title="Permalink to this heading">¶</a></h2>
+<h2>Reading Multi Page TIFF<a class="headerlink" href="#reading-multi-page-tiff" title="Link to this heading">¶</a></h2>
 <p>For a reading example see code of <cite>tools/tiffinfo.c</cite> or below:</p>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Reading of multi-page and SubIFD images (subfiles) */</span>
 <span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">tiff</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TIFFOpen</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">)))</span>
@@ -227,11 +227,11 @@ additionally, as Adobe PageMaker® 6.0 TIFF Technical Notes suggests.</p>
 </div>
 </section>
 <section id="see-also">
-<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this heading">¶</a></h2>
+<h2>See also<a class="headerlink" href="#see-also" title="Link to this heading">¶</a></h2>
 <p><a class="reference internal" href="terms.html"><span class="doc">Terminology</span></a>,
 <a class="reference internal" href="functions/TIFFSetDirectory.html"><span class="doc">TIFFSetDirectory</span></a> (3tiff),
 <a class="reference internal" href="functions/TIFFWriteDirectory.html"><span class="doc">TIFFWriteDirectory</span></a> (3tiff),
-<a class="reference external" href="https://www.awaresystems.be/imaging/tiff/specification/TIFFPM6.pdf">Adobe PageMaker® 6.0 TIFF Technical Notes</a>,
+<a class="reference external" href="https://download.osgeo.org/libtiff/doc/TIFFPM6.pdf">Adobe PageMaker® 6.0 TIFF Technical Notes</a>,
 <a class="reference external" href="https://stackoverflow.com/questions/11959617/in-a-tiff-create-a-sub-ifd-with-thumbnail-libtiff">Example from StackOverflow</a></p>
 </section>
 </section>
@@ -241,7 +241,7 @@ additionally, as Adobe PageMaker® 6.0 TIFF Technical Notes suggests.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="index.html">Table of Contents</a></h3>
@@ -273,7 +273,7 @@ additionally, as Adobe PageMaker® 6.0 TIFF Technical Notes suggests.</p>
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -281,13 +281,13 @@ additionally, as Adobe PageMaker® 6.0 TIFF Technical Notes suggests.</p>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -299,13 +299,13 @@ additionally, as Adobe PageMaker® 6.0 TIFF Technical Notes suggests.</p>
         <li class="right" >
           <a href="libtiff.html" title="Using The TIFF Library"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Multi Page / Multi Image TIFF</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-    &#169; Copyright 1988-2022, LibTIFF contributors.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+    &#169; Copyright 1988-2025, LibTIFF contributors.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

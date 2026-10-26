@@ -1,6 +1,6 @@
 namespace eval imgtest {
 
-    namespace export haveTk86 haveTk87
+    namespace export haveTk86 haveTk9
     namespace export haveGs
     namespace export refSize refSize2 refResolution
     namespace export imageInit imageFinish imageCleanup
@@ -34,15 +34,19 @@ namespace eval imgtest {
         return [expr [_versionCompare "8.6" $::tk_patchLevel] <= 0]
     }
 
-    proc haveTk87 {} {
-        return [expr [_versionCompare "8.7" $::tk_patchLevel] <= 0]
+    proc haveTk9 {} {
+        return [expr [_versionCompare "9" $::tk_patchLevel] <= 0]
     }
 
     proc haveGs {} {
         set gsCmds [list "gs" "gswin64c.exe" "gswin32c.exe"]
         foreach gsCmd $gsCmds {
             if { [auto_execok $gsCmd] ne "" } {
-                return true
+                # Have ghostscript command. Check, if it is working.
+                set catchVal [catch { exec $gsCmd --version } retVal]
+                if { $catchVal == 0 } { 
+                    return true
+                }
             }
         }
         return false
@@ -165,7 +169,7 @@ namespace eval imgtest {
 namespace import -force imgtest::*
 
 tcltest::testConstraint Tk86 [haveTk86]
-tcltest::testConstraint Tk87 [haveTk87]
+tcltest::testConstraint Tk9  [haveTk9]
 
 tcltest::testConstraint Ghostscript [haveGs]
 tcltest::testConstraint PDF [expr 0]

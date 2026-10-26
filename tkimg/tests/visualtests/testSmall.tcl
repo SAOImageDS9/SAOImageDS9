@@ -46,7 +46,6 @@ if { $tcl_platform(platform) eq "windows" } {
 }
 
 ui_init "testSmall.tcl: Read/Write (Different small sizes)" "+320+30"
-SetFileTypes
 
 P ""
 StartErrorCount

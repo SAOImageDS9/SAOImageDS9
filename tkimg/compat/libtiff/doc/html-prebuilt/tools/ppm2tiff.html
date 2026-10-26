@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>ppm2tiff &#8212; LibTIFF 4.7.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b849a4e9" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=0a676766" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=9f25de62"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <title>ppm2tiff &#8212; LibTIFF 4.7.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=34905f61" />
+    <script src="../_static/documentation_options.js?v=2edf0659"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="raw2tiff" href="raw2tiff.html" />
     <link rel="prev" title="pal2rgb" href="pal2rgb.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="pal2rgb.html" title="pal2rgb"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../tools.html" accesskey="U">TIFF Tools Overview</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">ppm2tiff</a></li> 
       </ul>
@@ -40,11 +40,11 @@
           <div class="body" role="main">
             
   <section id="ppm2tiff">
-<h1>ppm2tiff<a class="headerlink" href="#ppm2tiff" title="Permalink to this heading">¶</a></h1>
+<h1>ppm2tiff<a class="headerlink" href="#ppm2tiff" title="Link to this heading">¶</a></h1>
 <p>Synopsis</p>
 <p><strong>ppm2tiff</strong> [ <em>options</em> ] [ <em>input.ppm</em> ] <em>output.tif</em></p>
 <section id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">¶</a></h2>
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading">¶</a></h2>
 <p><strong class="program">ppm2tiff</strong> converts a file in the PPM, PGM and PBM image formats to
 TIFF.  By default, the TIFF image is created with data samples packed
 (<code class="docutils literal notranslate"><span class="pre">PlanarConfiguration=1</span></code>), compressed with the Packbits algorithm
@@ -57,10 +57,10 @@ tag is set to 1 (min-is-black), otherwise it is set to 2 (RGB).</p>
 will read from the standard input.</p>
 </section>
 <section id="options">
-<h2>Options<a class="headerlink" href="#options" title="Permalink to this heading">¶</a></h2>
+<h2>Options<a class="headerlink" href="#options" title="Link to this heading">¶</a></h2>
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-ppm2tiff-c">
-<span class="sig-name descname"><span class="pre">-c</span></span><span class="sig-prename descclassname"> <span class="pre">compress</span></span><a class="headerlink" href="#cmdoption-ppm2tiff-c" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">-c</span></span><span class="sig-prename descclassname"> <span class="pre">compress</span></span><a class="headerlink" href="#cmdoption-ppm2tiff-c" title="Link to this definition">¶</a></dt>
 <dd><p>Specify a compression scheme to use when writing image data:
 <strong class="command">-c none</strong> for no compression,
 <strong class="command">-c packbits</strong> for PackBits compression (will be used by default),
@@ -73,21 +73,21 @@ will read from the standard input.</p>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-ppm2tiff-r">
-<span class="sig-name descname"><span class="pre">-r</span></span><span class="sig-prename descclassname"> <span class="pre">striprows</span></span><a class="headerlink" href="#cmdoption-ppm2tiff-r" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">-r</span></span><span class="sig-prename descclassname"> <span class="pre">striprows</span></span><a class="headerlink" href="#cmdoption-ppm2tiff-r" title="Link to this definition">¶</a></dt>
 <dd><p>Write data with a specified number of rows per strip; by default the number of
 rows/strip is selected so that each strip is approximately 8 kilobytes.</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-ppm2tiff-R">
-<span class="sig-name descname"><span class="pre">-R</span></span><span class="sig-prename descclassname"> <span class="pre">resolution</span></span><a class="headerlink" href="#cmdoption-ppm2tiff-R" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">-R</span></span><span class="sig-prename descclassname"> <span class="pre">resolution</span></span><a class="headerlink" href="#cmdoption-ppm2tiff-R" title="Link to this definition">¶</a></dt>
 <dd><p>Mark the resultant image to have the specified X and Y resolution (in
 dots/inch).</p>
 </dd></dl>
 
 </section>
 <section id="see-also">
-<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this heading">¶</a></h2>
+<h2>See also<a class="headerlink" href="#see-also" title="Link to this heading">¶</a></h2>
 <p><a class="reference internal" href="tiffinfo.html"><span class="doc">tiffinfo</span></a> (1),
 <a class="reference internal" href="tiffcp.html"><span class="doc">tiffcp</span></a> (1),
 <a class="reference internal" href="tiffmedian.html"><span class="doc">tiffmedian</span></a> (1),
@@ -100,7 +100,7 @@ dots/inch).</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="../index.html">Table of Contents</a></h3>
@@ -131,7 +131,7 @@ dots/inch).</p>
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -139,13 +139,13 @@ dots/inch).</p>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -157,14 +157,14 @@ dots/inch).</p>
         <li class="right" >
           <a href="pal2rgb.html" title="pal2rgb"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../tools.html" >TIFF Tools Overview</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">ppm2tiff</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-    &#169; Copyright 1988-2022, LibTIFF contributors.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+    &#169; Copyright 1988-2025, LibTIFF contributors.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

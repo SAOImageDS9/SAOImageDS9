@@ -16,7 +16,7 @@ Last updated 2026-10-26
 | taccle       | 1.4        | y     |       | https://github.com/SAOImageDS9/taccle-maintenance                    | previous upstream abandoned     |
 | tcl9.0       | 9.0.4      |       |       | https://github.com/tcltk/tcl                                         | 9.1.0 (9.0.4 on 9.0 branch)     |
 | tclfitsy     |            | y     |       |                                                                      |                                 |
-| tcllib       | 1.2        |       |       | https://github.com/tcltk/tcllib                                      | 2.0                             |
+| tcllib       | 2.0        |       |       | https://github.com/tcltk/tcllib                                      | 2.0                             |
 | tclsignal    | 1.5.0      | y     |       | https://github.com/SAOImageDS9/tclsignal-maintenance                 | 1.5.0                           |
 | tclxml       | 3.2        | y     | y     | https://tclxml.sourceforge.net/tclxml.html                           | forked from 3.2                 |
 | tclxmlrpc    | 1.0        | y     |       |                                                                      |                                 |

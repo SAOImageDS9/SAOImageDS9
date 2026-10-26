@@ -30,7 +30,7 @@ Last updated 2026-10-26
 | tklib        | 0.9        |       |       | https://github.com/tcltk/tklib                                       | 0.9                             |
 | tkmpeg       | 1.1        | y     |       | https://github.com/SAOImageDS9/tkmpeg-maintenance                    | 1.1                             |
 | tksao        |            | y     |       |                                                                      |                                 |
-| **tksvg**    | 0.7.2      |       | y     | https://github.com/wjoye/tksvg                                       | 0.7.2 (3)                       |
+| ~~tksvg~~    | ~~0.7.2~~  |       | ~~y~~ | ~~https://github.com/wjoye/tksvg~~                                   | removed (3)                     |
 | tktable      | 2.13       | y     | y     | https://github.com/SAOImageDS9/tktable-maintenance                   | previous upstream abandoned     |
 | tls          | 2.0        |       | y     | https://core.tcl-lang.org/tcltls/index                               | 2.0.1 (5)                       |
 | ttkthemes    | 3.3.0      |       |       | https://github.com/TkinterEP/ttkthemes/                              | 3.3.0                           |
@@ -50,7 +50,7 @@ Last updated 2026-10-26
 
 (2) There was a newer tkhtml3, https://wiki.tcl-lang.org/page/tkhtml3, but seems to have disappeared.
 
-(3) There is a newer version https://github.com/tcltk-depot/tksvg , v 0.17 but not sure how this works and plays with tcl/tk9
+(3) Removed: Tk 9 has built-in SVG support (the core "svg" photo format), so tksvg is no longer needed. Upstream is now https://github.com/tcltk-depot/tksvg (v0.17), which is a no-op on Tk 9.
 
 (4) There are problems trying to use 2.1.1; stick with 2.0.1. 2.1.2 (2026-09-05) is untested.
 

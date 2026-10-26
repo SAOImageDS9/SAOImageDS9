@@ -3,7 +3,6 @@
 # tcllib 1.20
 # tklib .7
 
-# tksvg 0.7.2
 # awthemes 10.3.0
 # ttkthemes 3.2.2
 # scidthemes 0.9.3
@@ -100,7 +99,7 @@ TKIMGTMPFILES = \
 
 .NOTPARALLEL :
 .PHONY	: all dirs ds9 tclxml tclxmlrpc tclzipfs tls xpa
-.PHONY	: tkblt tclfitsy tkcon tkhtml1 tkimg tkmpeg tksvg tkagif tksao tktable
+.PHONY	: tkblt tclfitsy tkcon tkhtml1 tkimg tkmpeg tkagif tksao tktable
 .PHONY	: vector fitsy ast funtools openssl
 
 all	: saods9
@@ -497,23 +496,6 @@ funtools/configure :
 	cd funtools; \
 	./mkconfigure
 
-#-------------------------- tksvg
-
-tksvg	: tksvg/Makefile
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tksvg -j $(JOBS) install
-
-tksvg/Makefile :
-	@echo ""
-	@echo "*** $@ ***"
-	cd tksvg; \
-	./configure \
-	$(WITHTK) \
-	$(PREFIX) \
-	$(STD) \
-	$(CACHE)
-
 #-------------------------- tktable
 
 # no parallel
@@ -571,7 +553,7 @@ scrub :
 .PHONY	: opensslclean
 .PHONY	: tclxmlclean tclxmlrpcclean tlsclean
 .PHONY	: tkbltclean tclfitsy tkconclean tkhtml1clean tkimgclean
-.PHONY	: tkmpegclean tksvgclean tkagifclean
+.PHONY	: tkmpegclean tkagifclean
 .PHONY	: tktableclean xpaclean
 .PHONY	: vectorclean fitsyclean astclean funtoolsclean
 .PHONY	: tksaoclean
@@ -580,7 +562,7 @@ clean	: tclclean tkclean \
 	opensslclean \
 	tlsclean tclxmlclean tclxmlrpc xpaclean \
 	tkbltclean tclfitsy tkconclean tktableclean tkimgclean \
-	tkmpegclean tksvgclean tkagifclean tkhtml1clean \
+	tkmpegclean tkagifclean tkhtml1clean \
 	vectorclean fitsyclean astclean funtoolsclean ds9clean \
 	tksaoclean osclean dirsclean localclean scrub
 
@@ -654,11 +636,6 @@ tkmpegclean:
 	@echo "*** $@ ***"
 	$(MAKE) -C tkmpeg clean
 
-tksvgclean:
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tksvg clean
-
 tkagifclean:
 	@echo ""
 	@echo "*** $@ ***"
@@ -705,7 +682,7 @@ xpaclean :
 .PHONY	: openssldistclean
 .PHONY	: tclxmldistclean tclxmlrpcdistclean tlsdistclean
 .PHONY	: tkbltdistclean tclfitsydistclean tkcondistclean tkhtml1distclean
-.PHONY	: tkimgdistclean tkmpegdistclean tksvgdistclean tkagifdistclean
+.PHONY	: tkimgdistclean tkmpegdistclean tkagifdistclean
 .PHONY	: tktabledistclean xpadistclean
 .PHONY	: vectordistclean fitsydistclean
 .PHONY	: astdistclean funtoolsdistclean
@@ -717,7 +694,7 @@ distclean : tcldistclean tkdistclean \
 	  tlsdistclean tclxmldistclean tclxmlrpcdistclean xpadistclean \
 	  tkbltdistclean tclfitsydistclean tktabledistclean \
 	  tkcondistclean tkimgdistclean \
-	  tkmpegdistclean tksvgdistclean tkagifdistclean tkhtml1distclean \
+	  tkmpegdistclean tkagifdistclean tkhtml1distclean \
 	  vectordistclean fitsydistclean astdistclean \
 	  vectordistclean fitsydistclean astdistclean \
 	  funtoolsdistclean ds9distclean \
@@ -809,12 +786,6 @@ tkmpegdistclean:
 	@echo "*** $@ ***"
 	$(MAKE) -C tkmpeg distclean
 	$(RM) -f tkmpeg/tkmpegConfig.sh
-
-tksvgdistclean:
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tksvg distclean
-	$(RM) -f tksvg/tksvgConfig.sh
 
 tkagifdistclean:
 	@echo ""

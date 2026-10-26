@@ -215,6 +215,9 @@ if test "${TCL_MAJOR_VERSION}" -gt 8 -a x"${with_tcl8}" = x; then
 	ZIPFS_BUILD=0
 	THREAD_ZIP_FILE=
     fi
+else
+    ZIPFS_BUILD=0
+    THREAD_ZIP_FILE=
 fi
 
 # Do checking message here to not mess up interleaved configure output

@@ -432,6 +432,7 @@ proc DeleteFrame {which} {
     global current
     global contour
     global marker
+    global tile
 
     if {$which == {}} {
 	return
@@ -458,6 +459,9 @@ proc DeleteFrame {which} {
     # delete canvas colorbar
     catch {$ds9(canvas) delete ${which}cb}
     ColorbarFrameDelete $which
+
+    # tile span pin; frame names are reused
+    unset -nocomplain tile(span,$which)
 
     # delete canvas graphs
     catch {GraphsDelete $which}

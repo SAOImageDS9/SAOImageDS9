@@ -2640,15 +2640,26 @@ $ds9 -tiff foo.tiff<br>
 $cat foo.fits | ds9 -tiff -</tt>
 <p><b><a name="tile" id="tile"></a>tile</b></p>
 <p>Controls the tile display mode.</p>
+<p>Grid mode <tt>span</tt> (Manual Layout in the Tile Parameters dialog)
+lays frames out on a grid of <tt>span size</tt> columns and rows. A frame
+given a block of cells with <tt>grid span</tt> (top-left column and row,
+then the number of columns and rows it covers) is placed, and keeps that
+block. All other frames flow, in frame order, into the free cells around
+placed frames; the grid grows along the grid direction when they run
+out of room. <tt>grid span</tt> and <tt>grid span none</tt> act on the
+current frame, and <tt>grid span none</tt> lets it flow again.</p>
 <tt>Syntax:<br>
 -tile []<br>
 &nbsp;&nbsp;&nbsp; [yes|no]<br>
 &nbsp;&nbsp;&nbsp; [mode grid|column|row]<br>
 &nbsp;&nbsp;&nbsp; [grid]<br>
-&nbsp;&nbsp;&nbsp; [grid mode automatic|manual]<br>
+&nbsp;&nbsp;&nbsp; [grid mode automatic|manual|span]<br>
 &nbsp;&nbsp;&nbsp; [grid direction x|y]<br>
 &nbsp;&nbsp;&nbsp; [grid layout &lt;col&gt; &lt;row&gt;]<br>
 &nbsp;&nbsp;&nbsp; [grid gap &lt;pixels&gt;]<br>
+&nbsp;&nbsp;&nbsp; [grid span &lt;col&gt; &lt;row&gt; &lt;colspan&gt; &lt;rowspan&gt;]<br>
+&nbsp;&nbsp;&nbsp; [grid span none]<br>
+&nbsp;&nbsp;&nbsp; [grid span size &lt;col&gt; &lt;row&gt;]<br>
 &nbsp;&nbsp;&nbsp; [row]<br>
 &nbsp;&nbsp;&nbsp; [column]<br>
 &nbsp;<br>
@@ -2661,6 +2672,10 @@ $ds9 -tile grid mode manual<br>
 $ds9 -tile grid direction x<br>
 $ds9 -tile grid layout 5 5<br>
 $ds9 -tile grid gap 10<br>
+$ds9 -tile grid mode span<br>
+$ds9 -tile grid span size 3 2<br>
+$ds9 -tile grid span 1 1 2 2<br>
+$ds9 -tile grid span none<br>
 $ds9 -tile row<br>
 $ds9 -tile column</tt>
 <p><b><a name="title" id="title"></a>title</b></p>

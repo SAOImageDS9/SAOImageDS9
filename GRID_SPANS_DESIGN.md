@@ -159,56 +159,66 @@ size only changes through paths that validate it.
   entry into span mode, seed them from the automatic `numx`/`numy` for the
   current active-frame count (minimum 1×1).
 
-### 3. Block state: an ordered list, filled in frame order
+### 3. Placed (pinned) frames and flowing frames
 
-`tile(span,blocks)` is an ordered list of blocks, each
-`{col row colspan rowspan}` (1-based col/row of the block's top-left cell,
-plus its width/height in cells). **The Nth active frame goes in the Nth
-block**, the same rule `automatic`/`manual` use for cells. Manual Layout
-only changes the *shape* of the slots, never which frame goes where, so
-every existing frame operation behaves as it does in the other modes:
-Frame > Move First/Back/Forward/Last, showing and hiding frames (Frame >
-Active), new frames and deleted frames all take effect on screen at once.
+A frame that has been placed or resized by hand (dragged in the editor,
+or set with `tile grid span ...`) is **pinned**: `tile(span,$ff)` holds its
+block `{col row colspan rowspan}` (1-based col/row of the top-left cell,
+plus width/height in cells), and it keeps that block no matter what
+happens to the other frames. Every other active frame **flows**: in
+`ds9(active)` order, each takes the next free 1×1 cell around the pinned
+blocks. So Frame > Move, show/hide, new and deleted frames all take
+effect on screen at once, and only the flowing frames move.
 
-(The first implementation keyed blocks by frame name, `tile(span,FrameN)`.
-That made reordering and show/hide invisible in this mode. Changes made in
-the main GUI seemed to do nothing until the user left Manual Layout, so
-it was replaced.)
+Example: Frame21 pinned 2×2, then Frame22 moved to First. Frame21 stays
+put, Frame22 takes the first free cell, everything else shifts along one
+cell, and Frame20 ends up in the cell Frame22 left.
 
-- **Per session only, not a preference.** `TileSpanDef` sets
-  `tile(span,blocks)` after `TileDef`'s `tile` → `ptile` copy, so it never
-  reaches prefs.
+`tile(span,blocks)` is derived: one block per active frame, recomputed by
+`TileSpanLayout` on every layout. It is not user state.
+
+How this model was reached: the first version pinned every frame by name,
+so Frame > Move and show/hide did nothing visible in this mode. The second
+version flowed every frame through an ordered list of blocks, so moving
+one frame shifted pinned-looking blocks onto other frames. KJG: any frame
+that has been manually positioned or resized should always keep that
+location/size; the other frames flow around it.
+
+- **Unpinning:** double-click a frame in the editor, or
+  `tile grid span none` for the current frame. Reset unpins every frame.
+- **Hidden pinned frames** keep their pin but don't hold their cells
+  while hidden, so flowing frames may use them. When the frame is shown
+  again it gets its block back and the flowing frames move around it.
+- **Conflicting pins:** a pin that no longer fits the grid, or overlaps
+  an active pinned frame earlier in `ds9(active)` (e.g. a frame shown
+  again after its cells were pinned by another frame), is dropped and that
+  frame flows.
+- **Per session only, not a preference.** Pins and the span grid size are
+  created after `TileDef`'s `tile` → `ptile` copy, so they never reach
+  prefs.
 - **Backup/Restore: no extra plumbing.** `BackupGUI` dumps
-  `array get tile` (`ds9/library/backup.tcl:795-797`), so
-  `tile(span,col/row/blocks)` are saved and restored as-is.
-- **Frames beyond the blocks** get new blocks from auto-assignment (§4).
-- **Blocks beyond the frames** (after hiding or deleting frames) are kept,
-  shown in the editor as dashed outlines. Showing a frame again fills them
-  back up. Deleting a frame never shrinks the grid. They are only
-  placeholders: they are never in the way of a frame's block. Moving or
-  resizing a frame's block over them, setting a span from XPA, or
-  shrinking the grid drops whichever ones are covered or no longer fit
-  (`TileSpanPrune`). An earlier version treated them as occupied, so after
-  hiding frames in a full grid nothing could be moved or resized.
+  `array get tile` after the per-frame blocks, and restore recreates
+  frames under their original names, so `tile(span,FrameN)` pins land on
+  the right frames.
+- **Frame delete:** `unset -nocomplain tile(span,$ff)` in `DeleteFrame`,
+  because frame names are reused (`frame 3` recreates `Frame3`).
 
 ### 4. Auto-assignment for new/unassigned frames
 
 Users will rarely want to hand-place every frame. Policy:
 
-1. Keep each block that fits the grid and doesn't overlap an earlier
-   block; drop any that don't. That only happens for state edited by hand,
-   since every write path validates (§6).
-2. While there are fewer blocks than active frames, append a 1×1 block in
-   the first free cell, scanning in the `tile(grid,dir)` direction: `x` =
-   row-major, `y` = column-major. This repurposes the Direction control
-   instead of leaving it dead in span mode.
+1. Mark the cells of every active pinned frame (dropping conflicting pins,
+   §3).
+2. Each flowing frame, in `ds9(active)` order, takes the first free 1×1
+   cell, scanning in the `tile(grid,dir)` direction: `x` = row-major, `y`
+   = column-major. This repurposes the Direction control instead of
+   leaving it dead in span mode.
 3. **No free cell → grow the grid** along the fill direction: `dir x` adds
    a row (`tile(span,row)++`, like text wrapping onto a new line), `dir y`
-   adds a column (`tile(span,col)++`). One added row/column always
-   provides at least one free cell, so placement then succeeds. Growing
-   shrinks every existing block's on-screen size; that is expected.
+   adds a column (`tile(span,col)++`). Growing shrinks every block's
+   on-screen size; that is expected. The grid never shrinks on its own.
 
-Auto-assignment (`TileSpanAssign`, `ds9/library/tilespan.tcl`) runs from
+Flow (`TileSpanLayout`, `ds9/library/tilespan.tcl`) runs from
 the `span` arm of `LayoutFrame`/`LayoutFrameNone`, just before the rects
 are computed. Every path that changes frames or mode (frame new/delete,
 activation, mode switch, Restore, canvas resize) funnels through there, and
@@ -259,13 +269,13 @@ canvas). That needs two changes:
 
 ### 6. Invariants and where they are enforced
 
-Invariants for `tile(span,blocks)`:
+Invariants for the pinned frames that are active:
 
 - `col, row, colspan, rowspan` are integers ≥ 1;
-- every block is in bounds: `col+colspan-1 <= tile(span,col)` and
+- every pinned block is in bounds: `col+colspan-1 <= tile(span,col)` and
   `row+rowspan-1 <= tile(span,row)`;
-- no two blocks holding a frame overlap. Empty blocks never overlap a
-  frame's block or each other; `TileSpanPrune` drops any that would.
+- no two pinned blocks overlap. Flowing frames never conflict, because
+  they are placed around the pins on every layout.
 
 All of them are checked by one shared proc (`TileSpanCheck`) used by
 **every write path**:
@@ -278,10 +288,9 @@ All of them are checked by one shared proc (`TileSpanCheck`) used by
 | Mini-canvas drag/resize (§7)                | reject the move live             |
 | Auto-assignment / grow (§4)                 | valid by construction            |
 
-**Shrinking the grid is rejected** (not clamped) if a block that holds a
-frame would fall outside the new size; the user must first move/resize
-those blocks. Empty blocks that no longer fit are simply dropped
-(`TileSpanResize`).
+**Shrinking the grid is rejected** (not clamped) if a pinned frame would
+fall outside the new size. Flowing frames never block a shrink; if they
+no longer fit, the grid grows again along the Direction.
 
 Because the XPA set rules need validation, they call a dedicated proc
 rather than `ProcessCmdSet`.
@@ -352,6 +361,7 @@ commands, so set and get are symmetric:
 tile grid mode span                          ; # new tile(grid,mode) value
 tile grid span <col> <row> <colspan> <rowspan>  ; # set current frame's block
 tile grid span size <cols> <rows>            ; # set span grid size
+tile grid span none                          ; # unpin current frame
 ```
 
 Scripting several frames is `frame 3; tile grid span 1 1 2 2; frame 4; ...`.
@@ -381,9 +391,9 @@ already saves all spans via `array get tile` (§3).
 
 ### 9. Interaction with existing features
 
-- **Frame > Move / `MoveFrameToFramePosition`**: unchanged code, and
-  because the Nth frame fills the Nth block (§3) it moves the frame on
-  screen in span mode exactly as it does in the other modes.
+- **Frame > Move / `MoveFrameToFramePosition`**: unchanged code. In span
+  mode it reorders the flowing frames on screen; pinned frames stay put
+  (§3).
 - **Tab/Shift-Tab (`NextFrame`/`PrevFrame`)**: keep following
   `ds9(active)` order, consistent with leaving Frame > Move alone.
 - **Preferences**: only `tile(grid,mode)` itself could ever be a saved
@@ -436,6 +446,8 @@ are review recommendations adopted where KJG didn't decide):
   been and not be gated by the grid mode").
 - **XPA get**: returns the block the current frame occupies (KJG); the set command
   likewise takes no frame argument and acts on the current frame.
-- **Inactive frames**: hold no block; frames shift into blocks in order,
-  as in Manual mode. Spare blocks stay, empty.
+- **Pinned vs flowing** (KJG): frames placed or resized by hand keep
+  their location and size; all others flow around them (§3).
+- **Inactive frames**: hold no cells while hidden; a pinned frame gets
+  its block back when shown again.
 - **Tab/Shift-Tab order**: unchanged (`ds9(active)` order).

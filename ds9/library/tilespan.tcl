@@ -5,13 +5,14 @@
 package provide DS9 1.0
 
 # Tile grid "Manual Layout" (tile(grid,mode) span)
-#  a tile(span,col) x tile(span,row) grid holding an ordered list of
-#  blocks, tile(span,blocks), each {col row colspan rowspan}, 1-based.
-#  Like every other tile mode, the Nth active frame goes in the Nth block,
-#  so moving, showing, hiding, adding and deleting frames all work as
-#  usual. Blocks beyond the number of active frames are kept, empty, but
-#  only as placeholders: they never get in the way of a frame's block and
-#  are dropped wherever a frame's block is moved over them (TileSpanPrune)
+#  a tile(span,col) x tile(span,row) grid. A frame that has been placed or
+#  resized by hand is pinned: tile(span,$ff) is its block
+#  {col row colspan rowspan}, 1-based, and it keeps that block whatever
+#  happens to the other frames. All other active frames flow, in
+#  ds9(active) order, into the free 1x1 cells around the pinned blocks, so
+#  moving, showing, hiding, adding and deleting frames work as usual.
+#  tile(span,blocks) is derived: one block per active frame, recomputed on
+#  every layout by TileSpanLayout.
 
 proc TileSpanDef {} {
     global tile
@@ -29,7 +30,7 @@ proc TileSpanActive {} {
     return [expr {$tile(mode) == {grid} && $tile(grid,mode) == {span}}]
 }
 
-# varname is tile, or the dialog's working copy dtile
+# varname is tile, or the dialog's copy dtile
 proc TileSpanSeed {{varname tile}} {
     upvar #0 $varname var
     global ds9
@@ -61,7 +62,7 @@ proc TileSpanFits {ss ncol nrow} {
     return [expr {$col+$colspan-1 <= $ncol && $row+$rowspan-1 <= $nrow}]
 }
 
-# returns the id already occupying any cell of ss, or {}
+# returns the frame already occupying any cell of ss, or {}
 proc TileSpanHit {occvar ss} {
     upvar $occvar occ
 
@@ -76,13 +77,13 @@ proc TileSpanHit {occvar ss} {
     return {}
 }
 
-proc TileSpanMark {occvar ss id} {
+proc TileSpanMark {occvar ss ff} {
     upvar $occvar occ
 
     lassign $ss col row colspan rowspan
     for {set jj $row} {$jj<$row+$rowspan} {incr jj} {
 	for {set ii $col} {$ii<$col+$colspan} {incr ii} {
-	    set occ($ii,$jj) $id
+	    set occ($ii,$jj) $ff
 	}
     }
 }
@@ -114,23 +115,16 @@ proc TileSpanFree {occvar ncol nrow dir} {
     return {}
 }
 
-# name of block idx for messages: the frame in it, or an empty block
-proc TileSpanName {idx} {
-    global ds9
-
-    set ff [lindex $ds9(active) $idx]
-    if {$ff != {}} {
-	return "[msgcat::mc {Frame}] [string range $ff 5 end]"
-    }
-    return "[msgcat::mc {empty block}] [expr $idx+1]"
+proc TileSpanName {ff} {
+    return "[msgcat::mc {Frame}] [string range $ff 5 end]"
 }
 
-# make sure there is a valid block for every active frame: drop blocks
-#  that don't fit or overlap an earlier one, then add 1x1 blocks in the
-#  first free cell, growing the grid along dir (default tile(grid,dir)).
-#  No changes if everything is already valid. varname is tile, or the
-#  dialog's working copy dtile
-proc TileSpanAssign {{varname tile} {dir {}}} {
+# compute var(span,blocks), one block per active frame: pinned frames keep
+#  their block (a pin that no longer fits, or overlaps an earlier pinned
+#  frame, is dropped and the frame flows again); the others flow into the
+#  first free cell in dir (default tile(grid,dir)) order, growing the grid
+#  along dir if needed. varname is tile, or the dialog's copy dtile
+proc TileSpanLayout {{varname tile} {dir {}}} {
     upvar #0 $varname var
     global ds9
     global tile
@@ -141,16 +135,23 @@ proc TileSpanAssign {{varname tile} {dir {}}} {
 
     TileSpanSeed $varname
 
-    set blocks {}
-    foreach ss $var(span,blocks) {
-	if {[TileSpanFits $ss $var(span,col) $var(span,row)] &&
-	    [TileSpanHit occ $ss] == {}} {
-	    TileSpanMark occ $ss [llength $blocks]
-	    lappend blocks $ss
+    foreach ff $ds9(active) {
+	if {[info exists var(span,$ff)]} {
+	    if {[TileSpanFits $var(span,$ff) $var(span,col) $var(span,row)] &&
+		[TileSpanHit occ $var(span,$ff)] == {}} {
+		TileSpanMark occ $var(span,$ff) $ff
+	    } else {
+		unset var(span,$ff)
+	    }
 	}
     }
 
-    while {[llength $blocks] < [llength $ds9(active)]} {
+    set blocks {}
+    foreach ff $ds9(active) {
+	if {[info exists var(span,$ff)]} {
+	    lappend blocks $var(span,$ff)
+	    continue
+	}
 	while {[set cell [TileSpanFree occ $var(span,col) $var(span,row) $dir]] == {}} {
 	    switch -- $dir {
 		x {incr var(span,row)}
@@ -158,17 +159,29 @@ proc TileSpanAssign {{varname tile} {dir {}}} {
 	    }
 	}
 	set ss [list {*}$cell 1 1]
-	TileSpanMark occ $ss [llength $blocks]
+	TileSpanMark occ $ss $ff
 	lappend blocks $ss
     }
-
     set var(span,blocks) $blocks
 }
 
-# check that the blocks holding a frame fit a ncol x nrow grid and do not
-#  overlap each other (empty blocks are not checked, see TileSpanPrune).
-#  Returns {} or an error message
-proc TileSpanCheck {blocks ncol nrow} {
+# pins (array ff -> block) of the active frames, except frame skip
+proc TileSpanPins {varname pinsvar {skip {}}} {
+    upvar #0 $varname var
+    upvar $pinsvar pins
+    global ds9
+
+    foreach ff $ds9(active) {
+	if {$ff != $skip && [info exists var(span,$ff)]} {
+	    set pins($ff) $var(span,$ff)
+	}
+    }
+}
+
+# check that pins (array ff -> block) fit a ncol x nrow grid and do not
+#  overlap. Returns {} or an error message
+proc TileSpanCheck {pinsvar ncol nrow} {
+    upvar $pinsvar pins
     global ds9
 
     if {![string is integer -strict $ncol] || $ncol<1 ||
@@ -176,84 +189,63 @@ proc TileSpanCheck {blocks ncol nrow} {
 	return "[msgcat::mc {Invalid grid size}]: $ncol x $nrow"
     }
 
-    set ii 0
-    foreach ss [lrange $blocks 0 [llength $ds9(active)]-1] {
+    foreach ff $ds9(active) {
+	if {![info exists pins($ff)]} {
+	    continue
+	}
+	set ss $pins($ff)
 	if {![TileSpanFits $ss $ncol $nrow]} {
-	    return "[TileSpanName $ii] \{$ss\} [msgcat::mc {does not fit in}] $ncol x $nrow"
+	    return "[TileSpanName $ff] \{$ss\} [msgcat::mc {does not fit in}] $ncol x $nrow"
 	}
 	set hit [TileSpanHit occ $ss]
 	if {$hit != {}} {
-	    return "[TileSpanName $hit] [msgcat::mc {and}] [TileSpanName $ii] [msgcat::mc {overlap}]"
+	    return "[TileSpanName $hit] [msgcat::mc {and}] [TileSpanName $ff] [msgcat::mc {overlap}]"
 	}
-	TileSpanMark occ $ss $ii
-	incr ii
+	TileSpanMark occ $ss $ff
     }
     return {}
 }
 
-# keep the blocks holding a frame; keep empty blocks only where they still
-#  fit and are not covered by a frame's block or an earlier empty block
-proc TileSpanPrune {blocks ncol nrow} {
-    global ds9
-
-    set num [llength $ds9(active)]
-    set rr [lrange $blocks 0 $num-1]
-    set ii 0
-    foreach ss $rr {
-	TileSpanMark occ $ss $ii
-	incr ii
-    }
-    foreach ss [lrange $blocks $num end] {
-	if {[TileSpanFits $ss $ncol $nrow] && [TileSpanHit occ $ss] == {}} {
-	    TileSpanMark occ $ss [llength $rr]
-	    lappend rr $ss
-	}
-    }
-    return $rr
-}
-
-# blocks for a new ncol x nrow grid size: blocks holding a frame must still
-#  fit, empty ones that don't are dropped. Returns {blocks err}
-proc TileSpanResize {blocks ncol nrow} {
-    set err [TileSpanCheck $blocks $ncol $nrow]
-    if {$err != {}} {
-	return [list $blocks $err]
-    }
-    return [list [TileSpanPrune $blocks $ncol $nrow] {}]
-}
-
 # Process Cmds
 
-# block of the current frame
+# pin the current frame to a block
 proc ProcessTileSpanCmd {col row colspan rowspan} {
     global current
     global tile
     global ds9
 
-    set idx [lsearch $ds9(active) $current(frame)]
-    if {$idx == -1} {
+    if {[lsearch $ds9(active) $current(frame)] == -1} {
 	Error [msgcat::mc {No current frame}]
 	return
     }
 
-    TileSpanAssign
-    set blocks [lreplace $tile(span,blocks) $idx $idx \
-		    [list $col $row $colspan $rowspan]]
-    set err [TileSpanCheck $blocks $tile(span,col) $tile(span,row)]
+    TileSpanSeed
+    TileSpanPins tile pins $current(frame)
+    set pins($current(frame)) [list $col $row $colspan $rowspan]
+    set err [TileSpanCheck pins $tile(span,col) $tile(span,row)]
     if {$err != {}} {
 	Error $err
 	return
     }
 
-    set tile(span,blocks) [TileSpanPrune $blocks $tile(span,col) $tile(span,row)]
+    set tile(span,$current(frame)) $pins($current(frame))
+    DisplayMode
+}
+
+# unpin the current frame, it flows again
+proc ProcessTileSpanNoneCmd {} {
+    global current
+    global tile
+
+    unset -nocomplain tile(span,$current(frame))
     DisplayMode
 }
 
 proc ProcessTileSpanSizeCmd {ncol nrow} {
     global tile
 
-    TileSpanAssign
-    lassign [TileSpanResize $tile(span,blocks) $ncol $nrow] blocks err
+    TileSpanPins tile pins
+    set err [TileSpanCheck pins $ncol $nrow]
     if {$err != {}} {
 	Error $err
 	return
@@ -261,10 +253,10 @@ proc ProcessTileSpanSizeCmd {ncol nrow} {
 
     set tile(span,col) $ncol
     set tile(span,row) $nrow
-    set tile(span,blocks) $blocks
     DisplayMode
 }
 
+# the block the current frame occupies
 proc ProcessSendTileSpanCmd {} {
     global parse
     global current
@@ -289,19 +281,25 @@ proc ProcessSendTileSpanSizeCmd {} {
 
 # Dialog
 #  the Tile Parameters dialog shows a copy of tile in dtile:
-#  dtile(span,col/row/blocks), plus entry text in dtile(span,ecol/erow)
-#  that is only accepted once it validates. Like the rest of the dialog,
-#  every accepted drag, size change or reset is applied at once
-#  (TileApplyDialog), and the copy is refreshed whenever the layout changes
+#  dtile(span,col/row), the pins dtile(span,$ff), the derived
+#  dtile(span,blocks), plus entry text in dtile(span,ecol/erow) that is only
+#  accepted once it validates. Every accepted drag, unpin, size change or
+#  reset is applied at once (TileApplyDialog), and the copy is refreshed
+#  whenever the layout changes
 
 proc TileSpanDialogInit {} {
     global tile
     global dtile
 
+    foreach nn [array names dtile span,Frame*] {
+	unset dtile($nn)
+    }
+    foreach nn [array names tile span,Frame*] {
+	set dtile($nn) $tile($nn)
+    }
     set dtile(span,col) $tile(span,col)
     set dtile(span,row) $tile(span,row)
-    set dtile(span,blocks) $tile(span,blocks)
-    TileSpanAssign dtile $dtile(dir)
+    TileSpanLayout dtile $dtile(dir)
 
     set dtile(span,ecol) $dtile(span,col)
     set dtile(span,erow) $dtile(span,row)
@@ -325,8 +323,7 @@ proc TileSpanDialogCreate {w} {
     set itile(span,canvas) [canvas $f.c -width $itile(span,width) \
 				-height $itile(span,height) \
 				-highlightthickness 0]
-    ttk::label $f.help \
-	-text [msgcat::mc {Drag a block to move it, drag its corner to resize}]
+    ttk::label $f.help -justify left -text [msgcat::mc "Drag a frame to place it, drag its corner to resize it.\nPlaced frames stay put, the rest flow around them.\nDouble-click a placed frame to let it flow again."]
 
     grid $f.tcol x $f.trow x -padx 2 -pady 2 -sticky w
     grid $f.col $f.tx $f.row $f.reset -padx 2 -pady 2 -sticky w
@@ -340,6 +337,7 @@ proc TileSpanDialogCreate {w} {
 
     $f.c bind block <ButtonPress-1> [list TileSpanDialogPress %x %y move]
     $f.c bind handle <ButtonPress-1> [list TileSpanDialogPress %x %y resize]
+    $f.c bind block <Double-ButtonPress-1> TileSpanDialogUnpin
     bind $f.c <B1-Motion> [list TileSpanDialogMotion %x %y]
     bind $f.c <ButtonRelease-1> TileSpanDialogRelease
 }
@@ -388,39 +386,35 @@ proc TileSpanDialogDraw {} {
 	}
     }
 
-    # blocks, labeled with the frame that fills them
-    set idx 0
-    foreach ss $dtile(span,blocks) {
+    # frames: placed (pinned) ones solid, flowing ones dashed
+    foreach ff $ds9(active) ss $dtile(span,blocks) {
 	lassign $ss col row colspan rowspan
 	set x0 [expr ($col-1)*$cw+2]
 	set y0 [expr ($row-1)*$ch+2]
 	set x1 [expr ($col+$colspan-1)*$cw-3]
 	set y1 [expr ($row+$rowspan-1)*$ch-3]
 
-	# empty blocks are placeholders: outline only, not draggable
-	set ff [lindex $ds9(active) $idx]
-	if {$ff == {}} {
-	    $c create rectangle $x0 $y0 $x1 $y1 \
-		-outline [ThemeTreeForeground] -dash {4 2}
-	    incr idx
-	    continue
-	} elseif {$ff == $current(frame)} {
+	if {$ff == $current(frame)} {
 	    set bg [ThemeSelectedBackground]
 	    set fg [ThemeSelectedForeground]
-	    set txt [string range $ff 5 end]
 	} else {
 	    set bg [ThemeBackground]
 	    set fg [ThemeForeground]
-	    set txt [string range $ff 5 end]
+	}
+	if {[info exists dtile(span,$ff)]} {
+	    set dash {}
+	    set width 2
+	} else {
+	    set dash {4 2}
+	    set width 1
 	}
 
-	$c create rectangle $x0 $y0 $x1 $y1 \
-	    -fill $bg -outline $fg -tags [list block $idx]
+	$c create rectangle $x0 $y0 $x1 $y1 -fill $bg -outline $fg \
+	    -dash $dash -width $width -tags [list block $ff]
 	$c create text [expr ($x0+$x1)/2] [expr ($y0+$y1)/2] \
-	    -text $txt -fill $fg -tags [list block $idx]
+	    -text [string range $ff 5 end] -fill $fg -tags [list block $ff]
 	$c create rectangle [expr $x1-8] [expr $y1-8] $x1 $y1 \
-	    -fill $fg -outline $fg -tags [list handle $idx]
-	incr idx
+	    -fill $fg -outline $fg -tags [list handle $ff]
     }
 }
 
@@ -436,28 +430,35 @@ proc TileSpanDialogCell {x y} {
     return [list $col $row]
 }
 
-proc TileSpanDialogPress {x y op} {
-    global itile
+# the block frame ff currently occupies
+proc TileSpanDialogBlock {ff} {
     global dtile
+    global ds9
 
-    set idx [lindex [$itile(span,canvas) gettags current] 1]
-    lassign [lindex $dtile(span,blocks) $idx] col row
-    lassign [TileSpanDialogCell $x $y] pc pr
-    set itile(span,drag) [list $idx $op [expr $pc-$col] [expr $pr-$row]]
+    return [lindex $dtile(span,blocks) [lsearch $ds9(active) $ff]]
 }
 
-# snap to the cell under the pointer; reject anything that would overlap
+proc TileSpanDialogPress {x y op} {
+    global itile
+
+    set ff [lindex [$itile(span,canvas) gettags current] 1]
+    lassign [TileSpanDialogBlock $ff] col row
+    lassign [TileSpanDialogCell $x $y] pc pr
+    set itile(span,drag) [list $ff $op [expr $pc-$col] [expr $pr-$row]]
+}
+
+# snap to the cell under the pointer, pinning the frame there. Only
+#  placed frames are in the way, flowing frames move around it
 proc TileSpanDialogMotion {x y} {
     global itile
     global dtile
-    global ds9
 
     if {![info exists itile(span,drag)] || $itile(span,drag) == {}} {
 	return
     }
 
-    lassign $itile(span,drag) idx op dc dr
-    set old [lindex $dtile(span,blocks) $idx]
+    lassign $itile(span,drag) ff op dc dr
+    set old [TileSpanDialogBlock $ff]
     lassign $old col row colspan rowspan
     lassign [TileSpanDialogCell $x $y] pc pr
 
@@ -473,25 +474,18 @@ proc TileSpanDialogMotion {x y} {
     }
 
     set ss [list $col $row $colspan $rowspan]
-    if {$ss == $old} {
+    if {$ss == $old && [info exists dtile(span,$ff)]} {
 	return
     }
 
-    # only blocks holding a frame are in the way
-    set ii 0
-    foreach s2 [lrange $dtile(span,blocks) 0 [llength $ds9(active)]-1] {
-	if {$ii != $idx} {
-	    TileSpanMark occ $s2 $ii
-	}
-	incr ii
-    }
-    if {[TileSpanHit occ $ss] != {}} {
+    TileSpanPins dtile pins $ff
+    set pins($ff) $ss
+    if {[TileSpanCheck pins $dtile(span,col) $dtile(span,row)] != {}} {
 	return
     }
 
-    set dtile(span,blocks) [TileSpanPrune \
-				[lreplace $dtile(span,blocks) $idx $idx $ss] \
-				$dtile(span,col) $dtile(span,row)]
+    set dtile(span,$ff) $ss
+    TileSpanLayout dtile $dtile(dir)
     set itile(span,moved) 1
     TileSpanDialogDraw
 }
@@ -507,7 +501,21 @@ proc TileSpanDialogRelease {} {
     }
 }
 
-# accept the Columns x Rows entries only if every occupied block still fits
+# double-click: the frame is no longer placed, it flows again
+proc TileSpanDialogUnpin {} {
+    global itile
+    global dtile
+
+    set itile(span,drag) {}
+    set ff [lindex [$itile(span,canvas) gettags current] 1]
+    if {[info exists dtile(span,$ff)]} {
+	unset dtile(span,$ff)
+	TileSpanLayout dtile $dtile(dir)
+	TileApplyDialog
+    }
+}
+
+# accept the Columns x Rows entries only if every placed frame still fits
 proc TileSpanDialogSize {} {
     global dtile
 
@@ -519,8 +527,8 @@ proc TileSpanDialogSize {} {
 	return
     }
 
-    lassign [TileSpanResize $dtile(span,blocks) \
-		 $dtile(span,ecol) $dtile(span,erow)] blocks err
+    TileSpanPins dtile pins
+    set err [TileSpanCheck pins $dtile(span,ecol) $dtile(span,erow)]
     if {$err != {}} {
 	set dtile(span,ecol) $dtile(span,col)
 	set dtile(span,erow) $dtile(span,row)
@@ -530,20 +538,19 @@ proc TileSpanDialogSize {} {
 
     set dtile(span,col) $dtile(span,ecol)
     set dtile(span,row) $dtile(span,erow)
-    set dtile(span,blocks) $blocks
+    TileSpanLayout dtile $dtile(dir)
     TileSpanDialogDraw
     TileApplyDialog
 }
 
-# one 1x1 block per active frame, in Direction order
+# no frame placed: everything flows
 proc TileSpanDialogReset {} {
     global dtile
 
-    set dtile(span,blocks) {}
-    TileSpanAssign dtile $dtile(dir)
-
-    set dtile(span,ecol) $dtile(span,col)
-    set dtile(span,erow) $dtile(span,row)
+    foreach nn [array names dtile span,Frame*] {
+	unset dtile($nn)
+    }
+    TileSpanLayout dtile $dtile(dir)
     TileSpanDialogDraw
     TileApplyDialog
 }
@@ -553,15 +560,20 @@ proc TileSpanDialogApply {} {
     global tile
     global dtile
 
-    set err [TileSpanCheck $dtile(span,blocks) \
-		 $dtile(span,col) $dtile(span,row)]
+    TileSpanPins dtile pins
+    set err [TileSpanCheck pins $dtile(span,col) $dtile(span,row)]
     if {$err != {}} {
 	Error $err
 	return 0
     }
 
+    foreach nn [array names tile span,Frame*] {
+	unset tile($nn)
+    }
+    foreach nn [array names dtile span,Frame*] {
+	set tile($nn) $dtile($nn)
+    }
     set tile(span,col) $dtile(span,col)
     set tile(span,row) $dtile(span,row)
-    set tile(span,blocks) $dtile(span,blocks)
     return 1
 }

@@ -65,40 +65,42 @@ array set tile::table {
   18:271,target 34
   27:0 reduce
   15:y,target 29
-  40:264,target 23
   17:263 shift
   6:0,target 6
-  28:264,target 30
+  19:273,target 38
+  28:264,target 31
   2:0 reduce
   6:264 reduce
   26:264 reduce
   24:0 reduce
+  41:0,target 23
   45:0 reduce
-  33:0,target 27
+  33:0,target 28
   10:0,target 16
   35:264 reduce
-  0:273,target 10
   8:264,target 20
+  44:263 shift
   21:0 reduce
-  44:264 reduce
+  41:264,target 23
+  8:283,target 20
   14:264 reduce
   9:266,target 21
-  29:264,target 32
+  29:264,target 33
   30:264,target 22
   3:264 reduce
   23:264 reduce
+  38:0 reduce
   3:0,target 2
-  14:279 goto
+  14:280 goto
   32:263 shift
-  18:283,target 36
-  45:0,target 25
+  45:0,target 26
   14:0 reduce
-  29:0,target 32
+  29:0,target 33
   30:0,target 22
   22:0,target 17
-  41:263 shift
   14:0,target 7
   35:0 reduce
+  41:264 reduce
   31:264,target 24
   0:257 shift
   11:264 reduce
@@ -114,42 +116,45 @@ array set tile::table {
   19:263 shift
   0:266 shift
   20:264 reduce
-  9:281,target 24
   0:269 shift
+  8:276,target 19
   0:272 shift
-  0:273 shift
   8:264 reduce
+  0:274 shift
   6:0 reduce
+  19:273 shift
   28:264 reduce
   0:264,target 10
-  0:276 goto
   8:267 shift
-  19:274 shift
   0:277 goto
   8:268 shift
+  19:275 shift
   0:278 goto
   8:270 shift
-  0:280 goto
+  0:279 goto
   7:0,target 15
   28:0 reduce
+  0:281 goto
   0:0,target 10
   8:272 shift
   37:263 shift
-  8:275 shift
-  37:263,target 41
+  8:276 shift
+  37:263,target 42
   21:264,target 18
-  34:0,target 28
+  34:0,target 29
   3:0 reduce
-  26:0,target 31
-  8:282 goto
+  18:276,target 35
+  26:0,target 32
   0:262,target 6
+  8:283 goto
   11:0,target 11
-  15:284,target 30
+  46:264 reduce
   10:264,target 16
-  14:279,target 25
+  46:0 reduce
+  14:280,target 25
   16:263 shift
+  0:281,target 14
   8:272,target 18
-  44:264,target 26
   1:264,target 1
   0:0 reduce
   5:264 reduce
@@ -158,57 +163,58 @@ array set tile::table {
   0:259,target 3
   25:264 shift
   22:0 reduce
-  33:264,target 27
-  38:263,target 42
+  33:264,target 28
+  9:274,target 23
   22:264,target 17
   34:264 reduce
-  0:278,target 13
+  0:278,target 12
   8:270,target 17
   4:0,target 5
   0:257,target 1
   11:264,target 11
   43:263 shift
   40:0 reduce
-  39:0 reduce
+  46:0,target 25
   16:263,target 31
+  38:0,target 27
   31:0,target 24
-  45:264,target 25
+  45:264,target 26
   23:0,target 19
   2:264,target 4
-  0:276,target 11
   8:267,target 15
-  19:274,target 38
   2:264 reduce
-  34:264,target 28
+  34:264,target 29
   22:264 reduce
-  15:x,target 28
   36:0 reduce
+  15:x,target 28
+  39:263,target 43
   23:264,target 19
   9:269,target 22
+  0:274,target 10
   31:264 reduce
   12:264,target 12
   12:0 reduce
   17:263,target 32
   33:0 reduce
-  40:264 reduce
+  39:263 shift
+  46:264,target 25
   3:264,target 2
   8:0,target 20
   1:0,target 1
   10:264 reduce
   0:272,target 9
+  35:264,target 30
   7:0 reduce
-  35:264,target 29
   18:265,target 33
-  41:263,target 43
   29:0 reduce
   30:0 reduce
-  35:0,target 29
-  27:0,target 33
+  35:0,target 30
+  27:0,target 34
   20:0,target 14
   24:264,target 13
   12:0,target 12
   18:265 shift
-  8:282,target 20
+  18:284,target 36
   7:264 reduce
   18:271 shift
   4:0 reduce
@@ -216,40 +222,39 @@ array set tile::table {
   27:264 reduce
   15:X shift
   15:Y shift
-  18:275 shift
+  18:276 shift
   26:0 reduce
   4:264,target 5
   36:264 reduce
-  18:283 goto
+  18:284 goto
   36:264,target 21
   1:0 reduce
   42:263,target 44
   45:264 reduce
   23:0 reduce
-  25:264,target 39
-  44:0 reduce
+  25:264,target 40
   5:0,target 3
+  9:282,target 24
   14:264,target 8
-  40:0,target 23
-  39:0,target 9
+  40:0,target 9
   4:264 reduce
   19:263,target 37
   24:0,target 13
   20:0 reduce
   24:264 reduce
   5:264,target 3
+  41:0 reduce
   15:x shift
   15:y shift
-  8:275,target 19
   33:264 reduce
-  15:284 goto
   43:263,target 45
-  26:264,target 31
+  15:285 goto
+  26:264,target 32
+  15:285,target 30
   42:263 shift
-  32:263,target 40
+  32:263,target 41
   12:264 reduce
   15:Y,target 27
-  18:275,target 35
   0:261,target 5
   13:0 accept
   2:0,target 4
@@ -257,65 +262,67 @@ array set tile::table {
   6:264,target 6
   21:264 reduce
   34:0 reduce
-  44:0,target 26
+  38:264,target 27
   36:0,target 21
-  0:280,target 14
-  28:0,target 30
+  0:279,target 13
+  28:0,target 31
+  44:263,target 46
   21:0,target 18
   9:266 shift
   13:0,target 0
   29:264 reduce
   30:264 reduce
   8:0 reduce
-  27:264,target 33
+  27:264,target 34
   10:0 reduce
   0:258,target 2
   9:269 shift
   31:0 reduce
-  9:273 shift
-  38:263 shift
-  9:273,target 23
-  0:277,target 12
+  9:274 shift
+  38:264 reduce
+  0:277,target 11
   8:268,target 16
-  9:281 goto
+  19:275,target 39
   5:0 reduce
+  9:282 goto
 }
 
 array set tile::rules {
-  9,l 278
-  11,l 280
-  32,l 284
-  6,l 277
-  28,l 283
-  3,l 276
-  25,l 282
-  0,l 285
-  22,l 282
-  18,l 281
-  15,l 280
-  12,l 280
-  33,l 284
-  7,l 278
-  29,l 283
+  9,l 279
+  11,l 281
+  32,l 285
+  6,l 278
+  28,l 284
+  3,l 277
+  25,l 283
+  0,l 286
+  22,l 283
+  18,l 282
+  15,l 281
+  12,l 281
+  33,l 285
+  7,l 279
+  29,l 284
   30,l 284
-  4,l 277
-  26,l 282
-  1,l 276
-  23,l 282
-  19,l 281
-  20,l 282
-  16,l 280
-  13,l 280
-  8,l 279
-  10,l 280
-  31,l 284
-  5,l 277
+  4,l 278
+  26,l 283
+  1,l 277
+  23,l 283
+  19,l 282
+  20,l 283
+  16,l 281
+  13,l 281
+  34,l 285
+  8,l 280
+  10,l 281
+  31,l 285
+  5,l 278
   27,l 283
-  2,l 276
-  24,l 282
-  21,l 282
-  17,l 281
-  14,l 280
+  2,l 277
+  24,l 283
+  21,l 283
+  17,l 282
+  14,l 281
 }
 
 array set tile::rules {
@@ -349,81 +356,85 @@ array set tile::rules {
   5,dc 1
   21,dc 2
   13,dc 2
-  27,dc 1
+  27,dc 2
   4,dc 1
   19,dc 1
   20,dc 0
+  34,dc 1
 }
 
 array set tile::rules {
-  7,line 54
-  4,line 49
-  1,line 44
-  31,line 87
-  27,line 81
-  24,line 76
-  21,line 73
-  17,line 67
-  14,line 62
-  11,line 59
-  9,line 55
-  6,line 51
-  3,line 46
-  33,line 89
-  29,line 83
-  30,line 86
-  26,line 78
-  23,line 75
-  19,line 69
-  20,line 72
-  16,line 64
-  13,line 61
-  10,line 58
+  7,line 55
+  4,line 50
+  34,line 91
+  1,line 45
+  31,line 88
+  27,line 80
+  24,line 77
+  21,line 74
+  17,line 68
+  14,line 63
+  11,line 60
+  9,line 56
+  6,line 52
+  3,line 47
+  33,line 90
+  29,line 84
+  30,line 85
+  26,line 79
+  23,line 76
+  19,line 70
+  20,line 73
+  16,line 65
+  13,line 62
+  10,line 59
   8,e 1
-  8,line 54
-  5,line 50
-  2,line 45
-  32,line 88
-  28,line 82
-  25,line 77
-  22,line 74
-  18,line 68
-  15,line 63
-  12,line 60
+  8,line 55
+  5,line 51
+  2,line 46
+  32,line 89
+  28,line 83
+  25,line 78
+  22,line 75
+  18,line 69
+  15,line 64
+  12,line 61
 }
 
 array set tile::lr1_table {
-  35 {{29 {0 264} 1}}
+  35 {{30 {0 264} 1}}
   36 {{21 {0 264} 2}}
-  14,trans {{279 25}}
+  14,trans {{280 25}}
   33,trans {}
   37 {{25 {0 264} 2}}
-  38 {{26 {0 264} 2}}
-  40 {{23 {0 264} 3}}
-  39 {{9 0 3}}
-  41 {{25 {0 264} 3}}
-  18,trans {{265 33} {271 34} {275 35} {283 36}}
+  38 {{27 {0 264} 2}}
+  40 {{9 0 3}}
+  39 {{26 {0 264} 2}}
+  41 {{23 {0 264} 3}}
+  18,trans {{265 33} {271 34} {276 35} {284 36}}
   1,trans {}
-  42 {{26 {0 264} 3}}
-  37,trans {{263 41}}
-  43 {{25 {0 264} 4}}
-  44 {{26 {0 264} 4}}
-  45 {{25 {0 264} 5}}
+  37,trans {{263 42}}
+  42 {{25 {0 264} 3}}
+  43 {{26 {0 264} 3}}
+  44 {{25 {0 264} 4}}
+  45 {{26 {0 264} 4}}
   23,trans {}
   5,trans {}
+  46 {{25 {0 264} 5}}
   42,trans {{263 44}}
   27,trans {}
-  9,trans {{266 21} {269 22} {273 23} {281 24}}
+  9,trans {{266 21} {269 22} {274 23} {282 24}}
+  46,trans {}
   13,trans {}
-  32,trans {{263 40}}
+  32,trans {{263 41}}
   17,trans {{263 32}}
-  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {266 7} {269 8} {272 9} {273 10} {276 11} {277 12} {278 13} {280 14}}
+  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {266 7} {269 8} {272 9} {274 10} {277 11} {278 12} {279 13} {281 14}}
   36,trans {}
   22,trans {}
   4,trans {}
-  41,trans {{263 43}}
+  41,trans {}
   26,trans {}
-  8,trans {{267 15} {268 16} {270 17} {272 18} {275 19} {282 20}}
+  8,trans {{267 15} {268 16} {270 17} {272 18} {276 19} {283 20}}
   45,trans {}
   12,trans {}
   31,trans {}
@@ -432,16 +443,16 @@ array set tile::lr1_table {
   21,trans {}
   3,trans {}
   40,trans {}
-  39,trans {}
+  39,trans {{263 43}}
   10 {{16 {0 264} 1}}
   11 {{11 {0 264} 1}}
-  25,trans {{264 39}}
+  25,trans {{264 40}}
   12 {{12 {0 264} 1}}
   7,trans {}
-  44,trans {}
+  44,trans {{263 46}}
   13 {{0 0 1}}
   14 {{7 0 1} {9 0 1} {8 264 0}}
-  15 {{22 {0 264} 1} {30 {0 264} 0} {31 {0 264} 0} {32 {0 264} 0} {33 {0 264} 0}}
+  15 {{22 {0 264} 1} {31 {0 264} 0} {32 {0 264} 0} {33 {0 264} 0} {34 {0 264} 0}}
   11,trans {}
   30,trans {}
   29,trans {}
@@ -449,11 +460,11 @@ array set tile::lr1_table {
   0 {{0 0 0} {7 0 0} {9 0 0} {10 {0 264} 0} {11 {0 264} 0} {12 {0 264} 0} {13 {0 264} 0} {14 {0 264} 0} {15 {0 264} 0} {16 {0 264} 0} {1 {0 264} 0} {2 {0 264} 0} {3 {0 264} 0} {4 {0 264} 0} {5 {0 264} 0} {6 {0 264} 0}}
   17 {{23 {0 264} 1}}
   1 {{1 {0 264} 1}}
-  18 {{21 {0 264} 1} {27 {0 264} 0} {28 {0 264} 0} {29 {0 264} 0}}
+  18 {{21 {0 264} 1} {28 {0 264} 0} {29 {0 264} 0} {30 {0 264} 0}}
   2 {{4 {0 264} 1}}
-  19 {{25 {0 264} 1} {26 {0 264} 1}}
+  19 {{25 {0 264} 1} {26 {0 264} 1} {27 {0 264} 1}}
   20 {{14 {0 264} 2}}
-  15,trans {{X 26} {Y 27} {x 28} {y 29} {284 30}}
+  15,trans {{X 26} {Y 27} {x 28} {y 29} {285 30}}
   34,trans {}
   3 {{2 {0 264} 1}}
   21 {{18 {0 264} 1}}
@@ -462,38 +473,40 @@ array set tile::lr1_table {
   5 {{3 {0 264} 1}}
   23 {{19 {0 264} 1}}
   20,trans {}
-  19,trans {{263 37} {274 38}}
+  19,trans {{263 37} {273 38} {275 39}}
   6 {{6 {0 264} 1}}
   2,trans {}
   24 {{13 {0 264} 2}}
-  38,trans {{263 42}}
+  38,trans {}
   7 {{15 {0 264} 1}}
   25 {{9 0 2}}
-  8 {{14 {0 264} 1} {20 {0 264} 0} {21 {0 264} 0} {22 {0 264} 0} {23 {0 264} 0} {24 {0 264} 0} {25 {0 264} 0} {26 {0 264} 0}}
-  26 {{31 {0 264} 1}}
+  8 {{14 {0 264} 1} {20 {0 264} 0} {21 {0 264} 0} {22 {0 264} 0} {23 {0 264} 0} {24 {0 264} 0} {25 {0 264} 0} {26 {0 264} 0} {27 {0 264} 0}}
+  26 {{32 {0 264} 1}}
   9 {{13 {0 264} 1} {17 {0 264} 0} {18 {0 264} 0} {19 {0 264} 0}}
-  27 {{33 {0 264} 1}}
+  27 {{34 {0 264} 1}}
   24,trans {}
   6,trans {}
-  28 {{30 {0 264} 1}}
+  28 {{31 {0 264} 1}}
   43,trans {{263 45}}
-  29 {{32 {0 264} 1}}
+  29 {{33 {0 264} 1}}
   30 {{22 {0 264} 2}}
   31 {{24 {0 264} 2}}
   32 {{23 {0 264} 2}}
   10,trans {}
   28,trans {}
-  33 {{27 {0 264} 1}}
-  34 {{28 {0 264} 1}}
+  33 {{28 {0 264} 1}}
+  34 {{29 {0 264} 1}}
 }
 
 array set tile::token_id_table {
+  286,t 1
+  286 start'
   280,title {}
   279,title {}
   264,line 16
   270,t 0
   269,t 0
-  276,line 43
+  276,line 31
   265,title AUTOMATIC
   284,title {}
   274,t 0
@@ -506,9 +519,9 @@ array set tile::token_id_table {
   278,t 1
   257,line 7
   262,t 0
-  285,line 90
-  274,title SIZE
-  X,line 86
+  285,line 87
+  274,title ROW
+  X,line 88
   283,t 1
   270,line 25
   269,line 24
@@ -517,15 +530,15 @@ array set tile::token_id_table {
   266,t 0
   y,title {}
   278,title {}
-  282,line 71
+  282,line 67
   error error
   271,t 0
   264,title string
   266,line 21
   283,title {}
-  y,line 87
-  278,line 53
-  error,line 42
+  y,line 89
+  278,line 49
+  error,line 43
   275,t 0
   268,title GAP
   258,t 0
@@ -537,7 +550,7 @@ array set tile::token_id_table {
   280,t 1
   279,t 1
   275,line 30
-  273,title ROW
+  273,title NONE
   263,t 0
   259,line 9
   260,line 10
@@ -548,14 +561,15 @@ array set tile::token_id_table {
   272,line 27
   267,t 0
   263,title integer
-  284,line 85
+  284,line 82
   282,title {}
   272,t 0
   268,line 23
   267,title DIRECTION
+  286,title {}
   257 YES_
-  281,line 66
-  276,t 1
+  281,line 58
+  276,t 0
   258 NO_
   259,t 0
   259 ON_
@@ -568,17 +582,17 @@ array set tile::token_id_table {
   262 FALSE_
   281,t 1
   263 INT_
-  x,line 85
-  277,line 48
+  x,line 87
+  277,line 44
   257,title YES
   264 STRING_
   264,t 0
-  276,title {}
+  276,title SPAN
   265 AUTOMATIC_
   262,line 12
   266 COLUMN_
-  285,t 1
   Y,title {}
+  285,t 1
   267 DIRECTION_
   0,t 0
   0 {$}
@@ -593,38 +607,39 @@ array set tile::token_id_table {
   271 MANUAL_
   272 MODE_
   258,line 8
+  286,line 92
   273,t 0
-  273 ROW_
+  273 NONE_
   266,title COLUMN
+  Y,line 90
   285,title {}
-  Y,line 88
-  274 SIZE_
-  275 SPAN_
+  274 ROW_
+  275 SIZE_
   271,line 26
-  276 yes
+  276 SPAN_
   x,t 0
   x x
   277,t 1
-  277 no
+  277 yes
   271,title MANUAL
   y y
-  283,line 80
-  278 command
+  283,line 72
+  278 no
   261,t 0
-  280 tile
-  279 @PSEUDO1
-  281 tileMode
+  280 @PSEUDO1
+  279 command
+  281 tile
   267,line 22
   282,t 1
-  282 tileGrid
-  275,title SPAN
-  283 tileGridMode
+  282 tileMode
+  275,title SIZE
+  283 tileGrid
   265,t 0
   X,title {}
-  284 tileGridDir
-  280,line 57
+  284 tileGridMode
+  280,line 55
   279,line 54
-  285 start'
+  285 tileGridDir
   261,title TRUE
 }
 
@@ -745,13 +760,14 @@ proc tile::yyparse {} {
                     24 { ProcessCmdSet tile grid,gap $2 DisplayMode }
                     25 { ProcessTileSpanCmd $2 $3 $4 $5 }
                     26 { ProcessTileSpanSizeCmd $3 $4 }
-                    27 { set _ automatic }
-                    28 { set _ manual }
-                    29 { set _ span }
-                    30 { set _ x }
+                    27 { ProcessTileSpanNoneCmd }
+                    28 { set _ automatic }
+                    29 { set _ manual }
+                    30 { set _ span }
                     31 { set _ x }
-                    32 { set _ y }
+                    32 { set _ x }
                     33 { set _ y }
+                    34 { set _ y }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

@@ -1264,7 +1264,7 @@ proc LayoutFrame {} {
 		    }
 		}
 		span {
-		    TileSpanAssign
+		    TileSpanLayout
 		    TileRect $tile(span,col) $tile(span,row)
 		}
 	    }
@@ -1301,7 +1301,7 @@ proc LayoutFrameNone {} {
 		    }
 		}
 		span {
-		    TileSpanAssign
+		    TileSpanLayout
 		    TileRectNone $tile(span,col) $tile(span,row)
 		}
 	    }

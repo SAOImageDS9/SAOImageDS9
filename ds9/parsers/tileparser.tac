@@ -16,6 +16,7 @@
 %token LAYOUT_
 %token MANUAL_
 %token MODE_
+%token NONE_
 %token ROW_
 %token SIZE_
 %token SPAN_
@@ -49,6 +50,7 @@ tileGrid : {ProcessCmdSet tile mode grid DisplayMode}
  | GAP_ INT_ {ProcessCmdSet tile grid,gap $2 DisplayMode}
  | SPAN_ INT_ INT_ INT_ INT_ {ProcessTileSpanCmd $2 $3 $4 $5}
  | SPAN_ SIZE_ INT_ INT_ {ProcessTileSpanSizeCmd $3 $4}
+ | SPAN_ NONE_ {ProcessTileSpanNoneCmd}
  ;
 
 tileGridMode : AUTOMATIC_ {set _ automatic}

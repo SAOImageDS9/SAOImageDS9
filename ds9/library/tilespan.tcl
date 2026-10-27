@@ -281,20 +281,37 @@ proc ProcessSendTileSpanSizeCmd {} {
 
 # Canvas geometry
 #  TileRectCells keeps the grid of the last tile layout in itile(cells):
-#  {x0 y0 cellwidth cellheight gap ncol nrow span}, where span says whether
-#  it was a Manual Layout. It is empty when the last layout was not tiled.
+#  {x0 y0 cellwidth cellheight gap ncol nrow span width height}, where span
+#  says whether it was a Manual Layout and width x height is the area the
+#  grid fills. It is empty when the last layout was not tiled.
 #  Cells are the full tile rects; with multiple colorbars a frame sits
 #  inset in its cell, its colorbar/graphs take the rest.
 
+# the stored grid, or the same area divided into ncol x nrow cells (as
+#  TileRectCells would): {x0 y0 cellwidth cellheight gap ncol nrow}
+proc TileSpanCanvasGrid {{ncol {}} {nrow {}}} {
+    global itile
+
+    lassign $itile(cells) x0 y0 cw ch gap nc nr span width height
+    if {$ncol != {} && ($ncol != $nc || $nrow != $nr)} {
+	set cw [expr int(($width-($gap*($ncol-1)))/$ncol)]
+	set ch [expr int(($height-($gap*($nrow-1)))/$nrow)]
+	set nc $ncol
+	set nr $nrow
+    }
+    return [list $x0 $y0 $cw $ch $gap $nc $nr]
+}
+
 # 1-based grid cell under canvas coords x,y, clamped to the grid; a point
-#  in a gap belongs to the cell before it. {} if not tiled
-proc TileSpanCanvasCell {x y} {
+#  in a gap belongs to the cell before it. ncol x nrow overrides the stored
+#  grid size. {} if not tiled
+proc TileSpanCanvasCell {x y {ncol {}} {nrow {}}} {
     global itile
 
     if {$itile(cells) == {}} {
 	return {}
     }
-    lassign $itile(cells) x0 y0 cw ch gap ncol nrow
+    lassign [TileSpanCanvasGrid $ncol $nrow] x0 y0 cw ch gap ncol nrow
 
     set col [expr int(floor(($x-$x0)/double($cw+$gap)))+1]
     set row [expr int(floor(($y-$y0)/double($ch+$gap)))+1]
@@ -304,14 +321,15 @@ proc TileSpanCanvasCell {x y} {
 }
 
 # canvas rect {x1 y1 x2 y2} covered by block {col row colspan rowspan},
-#  matching what TileRectCells gives a frame. {} if not tiled
-proc TileSpanCanvasRect {ss} {
+#  matching what TileRectCells gives a frame. ncol x nrow overrides the
+#  stored grid size. {} if not tiled
+proc TileSpanCanvasRect {ss {ncol {}} {nrow {}}} {
     global itile
 
     if {$itile(cells) == {}} {
 	return {}
     }
-    lassign $itile(cells) x0 y0 cw ch gap
+    lassign [TileSpanCanvasGrid $ncol $nrow] x0 y0 cw ch gap
     lassign $ss col row colspan rowspan
 
     set x1 [expr $x0 + ($cw+$gap)*($col-1)]
@@ -364,11 +382,14 @@ proc TileSpanEditBlock {ed ff} {
     return [lindex $var(span,blocks) [lsearch $ds9(active) $ff]]
 }
 
-# op is move (body) or resize (corner handle)
-proc TileSpanEditPress {ed w x y op} {
+# op is move (body) or resize (corner handle). The frame is taken from
+#  the current item of surface w, unless given as ff
+proc TileSpanEditPress {ed w x y op {ff {}}} {
     global itile
 
-    set ff [TileSpanEditFrame $w]
+    if {$ff == {}} {
+	set ff [TileSpanEditFrame $w]
+    }
     if {$ff == {}} {
 	return
     }
@@ -438,12 +459,14 @@ proc TileSpanEditRelease {ed} {
 }
 
 # double-click: the frame is no longer placed, it flows again
-proc TileSpanEditUnpin {ed w} {
+proc TileSpanEditUnpin {ed w {ff {}}} {
     global itile
     upvar #0 $itile(edit,$ed,var) var
 
     set itile(edit,$ed,drag) {}
-    set ff [TileSpanEditFrame $w]
+    if {$ff == {}} {
+	set ff [TileSpanEditFrame $w]
+    }
     if {[info exists var(span,$ff)]} {
 	unset var(span,$ff)
 	$itile(edit,$ed,layout)
@@ -657,11 +680,17 @@ proc TileSpanDialogLayout {} {
 
 # validate the dialog copy and copy it into tile. Returns 0 on error
 proc TileSpanDialogApply {} {
-    global tile
-    global dtile
+    return [TileSpanCopyToTile dtile]
+}
 
-    TileSpanPins dtile pins
-    set err [TileSpanCheck pins $dtile(span,col) $dtile(span,row)]
+# validate an editor's copy (pins, grid size) and copy it into tile.
+#  Returns 0 on error
+proc TileSpanCopyToTile {varname} {
+    upvar #0 $varname var
+    global tile
+
+    TileSpanPins $varname pins
+    set err [TileSpanCheck pins $var(span,col) $var(span,row)]
     if {$err != {}} {
 	Error $err
 	return 0
@@ -670,10 +699,26 @@ proc TileSpanDialogApply {} {
     foreach nn [array names tile span,Frame*] {
 	unset tile($nn)
     }
-    foreach nn [array names dtile span,Frame*] {
-	set tile($nn) $dtile($nn)
+    foreach nn [array names var span,Frame*] {
+	set tile($nn) $var($nn)
     }
-    set tile(span,col) $dtile(span,col)
-    set tile(span,row) $dtile(span,row)
+    set tile(span,col) $var(span,col)
+    set tile(span,row) $var(span,row)
     return 1
+}
+
+# editor copy from tile: pins, grid size, then re-flow it
+proc TileSpanCopyFromTile {varname {dir {}}} {
+    upvar #0 $varname var
+    global tile
+
+    foreach nn [array names var span,Frame*] {
+	unset var($nn)
+    }
+    foreach nn [array names tile span,Frame*] {
+	set var($nn) $tile($nn)
+    }
+    set var(span,col) $tile(span,col)
+    set var(span,row) $tile(span,row)
+    TileSpanLayout $varname $dir
 }

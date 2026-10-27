@@ -782,8 +782,10 @@ proc LayoutFrames {} {
 
     ColorbarCurrentToGlobal
 
-    # keep an open Tile Parameters dialog showing the current layout
+    # keep an open Tile Parameters dialog, and the Layout mode overlay,
+    #  showing the current layout
     UpdateTileDialog
+    TileCanvasUpdate
 }
 
 proc LayoutFramesNone {} {
@@ -1333,7 +1335,7 @@ proc TileRectCells {numx numy x0 y0 width height xxvar yyvar wwvar hhvar} {
     # keep the grid, so canvas coords can be mapped to cells
     #  (TileSpanCanvasCell, TileSpanCanvasRect)
     set itile(cells) [list $x0 $y0 $cw $ch $tile(grid,gap) $numx $numy \
-			  [TileSpanActive]]
+			  [TileSpanActive] $width $height]
 
     # span mode: each active frame covers its block of cells
     if {[TileSpanActive]} {

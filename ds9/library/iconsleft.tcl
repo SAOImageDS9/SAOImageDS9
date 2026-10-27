@@ -70,6 +70,8 @@ proc CreateIconsLeftMode {} {
 	current mode 3d ChangeMode
     IconMenuButton $mb.mode [msgcat::mc {Illustrate}] \
 	current mode illustrate ChangeMode
+    IconMenuButton $mb.mode [msgcat::mc {Layout}] \
+	current mode layout ChangeMode
 
     ConfigureIconsLeftMode
 
@@ -112,6 +114,8 @@ proc ConfigureIconsLeftMode {} {
 	[image create photo -file "$ds9(icons,ui)/edit_3d.png" ]
     set icons(currentmode,illustrate) \
 	[image create photo -file "$ds9(icons,ui)/edit_illustrate.png" ]
+    set icons(currentmode,layout) \
+	[image create photo -file "$ds9(icons,ui)/frame_tile_params.png" ]
     # special case
     set icons(currentmode,default) $icons(currentmode,examine)
 
@@ -128,6 +132,7 @@ proc ConfigureIconsLeftMode {} {
     $mb.mode.m entryconfig 10 -image $icons(currentmode,examine)
     $mb.mode.m entryconfig 11 -image $icons(currentmode,3d)
     $mb.mode.m entryconfig 12 -image $icons(currentmode,illustrate)
+    $mb.mode.m entryconfig 13 -image $icons(currentmode,layout)
 
     $mb.mode configure -image $icons(currentmode,$current(mode))
 

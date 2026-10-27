@@ -430,9 +430,10 @@ already saves all spans via `array get tile` (§3).
 
 ## Option B revisited: editing the layout on the main canvas
 
-Status: feasibility review and task sketch only; nothing implemented.
-Written after option A (the dialog editor), the pinned/flowing model (§3)
-and the live dialog (§7) were in place.
+Status: implemented on branch `tile-layout-canvas` (see "As built"
+at the end of this section). The review below was written first, after
+option A (the dialog editor), the pinned/flowing model (§3) and the live
+dialog (§7) were in place.
 
 **Verdict: feasible, all Tcl/Tk, no tksao (C++) changes.** It is more
 work than the dialog editor, and the risk is moderate. The risk is in
@@ -527,6 +528,43 @@ not matter.
 
 Steps 1–2 are worth doing even if B is deferred, because they keep the
 dialog editor reusable. Steps 3–5 are the core of B.
+
+### As built
+
+- **Code:** `ds9/library/tilecanvas.tcl` (the mode, overlay, hit-testing),
+  the shared editor `TileSpanEdit*` and geometry helpers
+  `TileSpanCanvasGrid/Cell/Rect` in `tilespan.tcl`, and copy helpers
+  `TileSpanCopyToTile` / `TileSpanCopyFromTile` used by both editors.
+  `itile(cells)` also records the area the grid fills, so the overlay can
+  preview a grid that grows mid-drag.
+- **Entry points:** Edit > Layout, the left icon bar mode menu (reusing the
+  `frame_tile_params` icon), a `layout` button in the button bar (off by
+  default, enabled in Preferences > Buttons > Edit), and `mode layout` from
+  the command line, XPA and SAMP. Not added as a startup preference mode.
+- **Entering outside Manual Layout** (the open decision): the mode switches
+  to a tile display with `tile(grid,mode) span`, like the dialog radio.
+- **Bindings:** `ChangeMode` suspends canvas and frame/colorbar/graph
+  bindings (as for Illustrate) and installs canvas-level ones;
+  `TileCanvasUpdate`, run after every layout and `UpdateDS9`, unbinds
+  frames created while in the mode. Escape returns to the preferred mode
+  (`pcurrent(mode)`).
+- **Overlay:** outline-only Tk items tagged `tilecanvas`, black under a
+  color so they show on any image: current frame cyan, pinned yellow solid,
+  flowing white dashed, each with a number badge and a resize handle;
+  empty cells as faint dashed outlines. Hit-testing uses the geometry, not
+  item tags, so nothing filled has to cover the image (macOS Tk cannot draw
+  translucent fills).
+- **Saving and printing:** `SaveImagePhoto` and both PostScript paths in
+  `print.tcl` hide the overlay for the duration; a PNG saved in Layout mode
+  is byte-identical to one saved outside it.
+- **Behavior detail:** a press whose drag is refused everywhere (e.g. only
+  onto a pinned frame) counts as a click and selects that frame, as in the
+  dialog editor.
+- **Verified:** enter/exit and binding swap (all frames, including new and
+  restored ones), click/move/resize/refused overlap/unpin, frames only move
+  on release, multiple colorbars on and off, an open dialog mirroring
+  canvas edits, Backup/Restore while in the mode, and the Tests repo
+  `mode` and `tile` sections (`command.sh`, `xpa.sh`, `samp.sh`).
 
 ## Decisions
 

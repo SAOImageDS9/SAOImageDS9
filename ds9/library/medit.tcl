@@ -49,6 +49,8 @@ proc EditMainMenu {} {
 	-variable current(mode) -value 3d -command ChangeMode
     $ds9(mb).edit add radiobutton -label [msgcat::mc {Illustrate}] \
 	-variable current(mode) -value illustrate -command ChangeMode
+    $ds9(mb).edit add radiobutton -label [msgcat::mc {Layout}] \
+	-variable current(mode) -value layout -command ChangeMode
 
     switch $ds9(wm) {
 	x11 -
@@ -142,6 +144,7 @@ proc ButtonsEditDef {} {
 	edit,examine 1
 	edit,3d 1
 	edit,illustrate 1
+	edit,layout 0
 	edit,prefs 0
     }
 }
@@ -201,6 +204,9 @@ proc CreateButtonsEdit {} {
     RadioButton $ds9(buttons).edit.illustrate \
 	[string tolower [msgcat::mc {Illustrate}]] \
 	current mode illustrate ChangeMode
+    RadioButton $ds9(buttons).edit.layout \
+	[string tolower [msgcat::mc {Layout}]] \
+	current mode layout ChangeMode
 
     ButtonButton $ds9(buttons).edit.prefs \
 	[string tolower [msgcat::mc {Preferences}]] PrefsDialog
@@ -223,6 +229,7 @@ proc CreateButtonsEdit {} {
         $ds9(buttons).edit.examine pbuttons(edit,examine)
         $ds9(buttons).edit.3d pbuttons(edit,3d)
         $ds9(buttons).edit.illustrate pbuttons(edit,illustrate)
+        $ds9(buttons).edit.layout pbuttons(edit,layout)
         $ds9(buttons).edit.prefs pbuttons(edit,prefs)
     "
 }
@@ -289,6 +296,9 @@ proc PrefsDialogButtonbarEdit {f} {
     $m add checkbutton -label [msgcat::mc {Illustrate}] \
 	-variable pbuttons(edit,illustrate) \
 	-command {UpdateButtons buttons(illustrate)}
+    $m add checkbutton -label [msgcat::mc {Layout}] \
+	-variable pbuttons(edit,layout) \
+	-command {UpdateButtons buttons(edit)}
     $m add separator
     $m add checkbutton -label [msgcat::mc {Preferences}] \
 	-variable pbuttons(edit,prefs) \

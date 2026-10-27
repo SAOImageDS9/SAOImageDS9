@@ -15,3 +15,5 @@ set LAYOUT_ 270
 set MANUAL_ 271
 set MODE_ 272
 set ROW_ 273
+set SIZE_ 274
+set SPAN_ 275

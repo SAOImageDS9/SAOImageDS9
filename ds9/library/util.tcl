@@ -250,6 +250,7 @@ proc UpdateDS9 {} {
     UpdatePanZoomDialog
     UpdateCrosshairDialog
     UpdateCropDialog
+    UpdateTileDialog
     UpdateScaleDialog
     UpdateColorDialog
     UpdateWCSDialog

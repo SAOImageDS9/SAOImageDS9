@@ -113,6 +113,8 @@ proc TileDef {} {
     set tile(grid,gap) 4
 
     array set ptile [array get tile]
+
+    TileSpanDef
 }
 
 proc ViewDef {} {
@@ -773,6 +775,9 @@ proc LayoutFrames {} {
     }
 
     ColorbarCurrentToGlobal
+
+    # keep an open Tile Parameters dialog showing the current layout
+    UpdateTileDialog
 }
 
 proc LayoutFramesNone {} {
@@ -832,7 +837,8 @@ proc LayoutFramesOneOrMore {} {
 	single {LayoutFrameOne}
 	reveal {LayoutFrameReveal}
 	tile {
-	    if {[llength $ds9(active)] > 1} {
+	    # a lone frame in span mode stays in its block
+	    if {[llength $ds9(active)] > 1 || [TileSpanActive]} {
 		if {$view(multi)} {
 		    LayoutFrame
 		} else {
@@ -1257,6 +1263,10 @@ proc LayoutFrame {} {
 			TileRect $tile(grid,col) $tile(grid,row)
 		    }
 		}
+		span {
+		    TileSpanAssign
+		    TileRect $tile(span,col) $tile(span,row)
+		}
 	    }
 	}
     }
@@ -1290,6 +1300,64 @@ proc LayoutFrameNone {} {
 			TileRectNone $tile(grid,col) $tile(grid,row)
 		    }
 		}
+		span {
+		    TileSpanAssign
+		    TileRectNone $tile(span,col) $tile(span,row)
+		}
+	    }
+	}
+    }
+}
+
+# per frame rects, indexed by position in ds9(active), for a numx x numy
+#  grid inside the x0,y0 width x height area
+proc TileRectCells {numx numy x0 y0 width height xxvar yyvar wwvar hhvar} {
+    global ds9
+    global tile
+
+    upvar $xxvar xx
+    upvar $yyvar yy
+    upvar $wwvar ww
+    upvar $hhvar hh
+
+    set cw [expr int(($width-($tile(grid,gap)*($numx-1)))/$numx)]
+    set ch [expr int(($height-($tile(grid,gap)*($numy-1)))/$numy)]
+
+    # span mode: the Nth frame covers the Nth block of cells
+    if {[TileSpanActive]} {
+	set nn 0
+	foreach ff $ds9(active) {
+	    lassign [lindex $tile(span,blocks) $nn] col row colspan rowspan
+	    set xx($nn) [expr $x0 + ($cw+$tile(grid,gap))*($col-1)]
+	    set yy($nn) [expr $y0 + ($ch+$tile(grid,gap))*($row-1)]
+	    set ww($nn) [expr $cw*$colspan + $tile(grid,gap)*($colspan-1)]
+	    set hh($nn) [expr $ch*$rowspan + $tile(grid,gap)*($rowspan-1)]
+	    incr nn
+	}
+	return
+    }
+
+    switch $tile(grid,dir) {
+	x {
+	    for {set jj 0} {$jj<$numy} {incr jj} {
+		for {set ii 0} {$ii<$numx} {incr ii} {
+		    set nn [expr $jj*$numx + $ii]
+		    set xx($nn) [expr $x0 + ($cw+$tile(grid,gap))*$ii]
+		    set yy($nn) [expr $y0 + ($ch+$tile(grid,gap))*$jj]
+		    set ww($nn) $cw
+		    set hh($nn) $ch
+		}
+	    }
+	}
+	y {
+	    for {set ii 0} {$ii<$numx} {incr ii} {
+		for {set jj 0} {$jj<$numy} {incr jj} {
+		    set nn [expr $ii*$numy + $jj]
+		    set xx($nn) [expr $x0 + ($cw+$tile(grid,gap))*$ii]
+		    set yy($nn) [expr $y0 + ($ch+$tile(grid,gap))*$jj]
+		    set ww($nn) $cw
+		    set hh($nn) $ch
+		}
 	    }
 	}
     }
@@ -1302,36 +1370,15 @@ proc TileRect {numx numy} {
     global view
     global colorbar
 
-    set ww [expr int(([winfo width  $ds9(canvas)]-($tile(grid,gap)*($numx-1)))/$numx)]
-    set hh [expr int(([winfo height $ds9(canvas)]-($tile(grid,gap)*($numy-1)))/$numy)]
-
-    switch $tile(grid,dir) {
-	x {
-	    for {set jj 0} {$jj<$numy} {incr jj} {
-		for {set ii 0} {$ii<$numx} {incr ii} {
-		    set nn [expr $jj*$numx + $ii]
-		    set xx($nn) [expr ($ww+$tile(grid,gap))*$ii]
-		    set yy($nn) [expr ($hh+$tile(grid,gap))*$jj]
-		}
-	    }
-	}
-	y {
-	    for {set ii 0} {$ii<$numx} {incr ii} {
-		for {set jj 0} {$jj<$numy} {incr jj} {
-		    set nn [expr $ii*$numy + $jj]
-		    set xx($nn) [expr ($ww+$tile(grid,gap))*$ii]
-		    set yy($nn) [expr ($hh+$tile(grid,gap))*$jj]
-		}
-	    }
-	}
-    }
+    TileRectCells $numx $numy 0 0 \
+	[winfo width $ds9(canvas)] [winfo height $ds9(canvas)] xx yy ww hh
 
     set ii 0
     foreach ff $ds9(active) {
 	ColorbarGlobalSetFromFrame $ff
 	LayoutColorbarAdjust
-	set fw $ww
-	set fh $hh
+	set fw $ww($ii)
+	set fh $hh($ii)
 
 	# frame
 	LayoutFrameAdjust fw fh
@@ -1345,7 +1392,7 @@ proc TileRect {numx numy} {
 
 	# colorbar
 	if {$view(colorbar) && $colorbar(show)} {
-	    LayoutColorbar ${ff}cb $xx($ii) $yy($ii) $ww $hh
+	    LayoutColorbar ${ff}cb $xx($ii) $yy($ii) $ww($ii) $hh($ii)
 	    ${ff}cb show
 	    LayoutRaise ${ff}cb
 #	    $ds9(canvas) raise ${ff}cb
@@ -1353,12 +1400,12 @@ proc TileRect {numx numy} {
 
 	# graphs
 	if {$view(graph,horz)} {
-	    LayoutGraphHorz $ff $xx($ii) $yy($ii) $ww $hh
+	    LayoutGraphHorz $ff $xx($ii) $yy($ii) $ww($ii) $hh($ii)
 	    UpdateGraphAxis $ff horz
 	    GraphShow $ff horz
 	}
 	if {$view(graph,vert)} {
-	    LayoutGraphVert $ff $xx($ii) $yy($ii) $ww $hh
+	    LayoutGraphVert $ff $xx($ii) $yy($ii) $ww($ii) $hh($ii)
 	    UpdateGraphAxis $ff vert
 	    GraphShow $ff vert
 	}
@@ -1387,38 +1434,16 @@ proc TileRectNone {numx numy} {
     LayoutFrameOriginAdjust fx fy
     LayoutFrameAdjust fw fh
     
-    set ww [expr int(($fw-($tile(grid,gap)*($numx-1)))/$numx)]
-    set hh [expr int(($fh-($tile(grid,gap)*($numy-1)))/$numy)]
-
-    switch $tile(grid,dir) {
-	x {
-	    for {set jj 0} {$jj<$numy} {incr jj} {
-		for {set ii 0} {$ii<$numx} {incr ii} {
-		    set nn [expr $jj*$numx + $ii]
-		    set xx($nn) [expr $fx + ($ww+$tile(grid,gap))*$ii]
-		    set yy($nn) [expr $fy + ($hh+$tile(grid,gap))*$jj]
-		}
-	    }
-	}
-	y {
-	    for {set ii 0} {$ii<$numx} {incr ii} {
-		for {set jj 0} {$jj<$numy} {incr jj} {
-		    set nn [expr $ii*$numy + $jj]
-		    set xx($nn) [expr $fx + ($ww+$tile(grid,gap))*$ii]
-		    set yy($nn) [expr $fy + ($hh+$tile(grid,gap))*$jj]
-		}
-	    }
-	}
-    }
+    TileRectCells $numx $numy $fx $fy $fw $fh xx yy ww hh
 
     # frames
     set ii 0
     set cnt [expr $numx*$numy]
     foreach ff $ds9(active) {
 	# sanity check
-	if {$xx($ii)>=0 && $yy($ii)>=0 && $ww>=0 && $hh>=0} {
+	if {$xx($ii)>=0 && $yy($ii)>=0 && $ww($ii)>=0 && $hh($ii)>=0} {
 	    $ff configure -x $xx($ii) -y $yy($ii) \
-		-width $ww -height $hh -anchor nw
+		-width $ww($ii) -height $hh($ii) -anchor nw
 	    $ff show
 	    LayoutRaise $ff
 #	    $ds9(canvas) raise $ff

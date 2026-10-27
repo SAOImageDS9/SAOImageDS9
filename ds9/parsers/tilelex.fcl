@@ -16,6 +16,8 @@ layout		{return $LAYOUT_}
 manual		{return $MANUAL_}
 mode		{return $MODE_}
 row		{return $ROW_}
+size		{return $SIZE_}
+span		{return $SPAN_}
 
 #include yesno.fin
 #include int.fin

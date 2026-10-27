@@ -3,3 +3,5 @@ set GAP_ 258
 set GRID_ 259
 set LAYOUT_ 260
 set MODE_ 261
+set SIZE_ 262
+set SPAN_ 263

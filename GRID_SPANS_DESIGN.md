@@ -311,8 +311,14 @@ When selected:
   `tile(span,col)` / `tile(span,row)` (via `dtile`), not
   `tile(grid,col/row)`. A size is accepted on Return/focus-out only if
   every block still fits (§6); otherwise it reverts with an error.
-- A Reset button puts every active frame back into a 1×1 cell in
-  Direction order.
+- A Reset button unpins every frame, so they all flow in Direction order.
+- Clicking a frame (press and release without dragging) makes it the
+  current frame in the main window (`GotoFrame`); a drag does not change
+  the current frame. Double-click unpins.
+- Growing the grid from the editor (a drag or unpin that makes the flow
+  run out of cells) also updates the Columns/Rows entries
+  (`TileSpanDialogLayout`). Otherwise stale entry text would be taken as
+  a resize on the next focus-out and shrink the grid back.
 - The Direction radio stays visible and sets the auto-assignment scan /
   grow direction (§4).
 - The dialog grows a plain `tk::canvas` (not a `tksao` frame — this is a

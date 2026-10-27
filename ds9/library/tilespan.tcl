@@ -299,10 +299,7 @@ proc TileSpanDialogInit {} {
     }
     set dtile(span,col) $tile(span,col)
     set dtile(span,row) $tile(span,row)
-    TileSpanLayout dtile $dtile(dir)
-
-    set dtile(span,ecol) $dtile(span,col)
-    set dtile(span,erow) $dtile(span,row)
+    TileSpanDialogLayout
 }
 
 proc TileSpanDialogCreate {w} {
@@ -485,19 +482,24 @@ proc TileSpanDialogMotion {x y} {
     }
 
     set dtile(span,$ff) $ss
-    TileSpanLayout dtile $dtile(dir)
+    TileSpanDialogLayout
     set itile(span,moved) 1
     TileSpanDialogDraw
 }
 
-# apply once per drag, not on every motion event
+# apply once per drag, not on every motion event. A click without a drag
+#  makes that frame the current frame
 proc TileSpanDialogRelease {} {
     global itile
 
+    set ff [lindex $itile(span,drag) 0]
     set itile(span,drag) {}
     if {[info exists itile(span,moved)] && $itile(span,moved)} {
 	set itile(span,moved) 0
 	TileApplyDialog
+    } elseif {$ff != {}} {
+	GotoFrame $ff
+	TileSpanDialogDraw
     }
 }
 
@@ -510,7 +512,7 @@ proc TileSpanDialogUnpin {} {
     set ff [lindex [$itile(span,canvas) gettags current] 1]
     if {[info exists dtile(span,$ff)]} {
 	unset dtile(span,$ff)
-	TileSpanLayout dtile $dtile(dir)
+	TileSpanDialogLayout
 	TileApplyDialog
     }
 }
@@ -538,7 +540,7 @@ proc TileSpanDialogSize {} {
 
     set dtile(span,col) $dtile(span,ecol)
     set dtile(span,row) $dtile(span,erow)
-    TileSpanLayout dtile $dtile(dir)
+    TileSpanDialogLayout
     TileSpanDialogDraw
     TileApplyDialog
 }
@@ -550,9 +552,20 @@ proc TileSpanDialogReset {} {
     foreach nn [array names dtile span,Frame*] {
 	unset dtile($nn)
     }
-    TileSpanLayout dtile $dtile(dir)
+    TileSpanDialogLayout
     TileSpanDialogDraw
     TileApplyDialog
+}
+
+# re-flow the dialog copy; the grid may grow, so keep the Columns x Rows
+#  entries in step (stale entry text would otherwise be taken as a resize
+#  on the next focus-out)
+proc TileSpanDialogLayout {} {
+    global dtile
+
+    TileSpanLayout dtile $dtile(dir)
+    set dtile(span,ecol) $dtile(span,col)
+    set dtile(span,erow) $dtile(span,row)
 }
 
 # validate the dialog copy and copy it into tile. Returns 0 on error

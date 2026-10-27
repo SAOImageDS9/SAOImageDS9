@@ -104,6 +104,8 @@ proc TileDef {} {
 
     set itile(top) .tile
     set itile(mb) .tilemb
+    # grid of the last tile layout, see TileRectCells
+    set itile(cells) {}
 
     set tile(mode) grid
     set tile(grid,row) 10
@@ -721,9 +723,13 @@ proc LayoutFrames {} {
     global ds9
     global current
     global tile
+    global itile
     global view
     global colorbar
     
+    # set again by TileRectCells if this layout is tiled
+    set itile(cells) {}
+
     # turn off default colorbar
     colorbar hide
 
@@ -1314,6 +1320,7 @@ proc LayoutFrameNone {} {
 proc TileRectCells {numx numy x0 y0 width height xxvar yyvar wwvar hhvar} {
     global ds9
     global tile
+    global itile
 
     upvar $xxvar xx
     upvar $yyvar yy
@@ -1323,7 +1330,12 @@ proc TileRectCells {numx numy x0 y0 width height xxvar yyvar wwvar hhvar} {
     set cw [expr int(($width-($tile(grid,gap)*($numx-1)))/$numx)]
     set ch [expr int(($height-($tile(grid,gap)*($numy-1)))/$numy)]
 
-    # span mode: the Nth frame covers the Nth block of cells
+    # keep the grid, so canvas coords can be mapped to cells
+    #  (TileSpanCanvasCell, TileSpanCanvasRect)
+    set itile(cells) [list $x0 $y0 $cw $ch $tile(grid,gap) $numx $numy \
+			  [TileSpanActive]]
+
+    # span mode: each active frame covers its block of cells
     if {[TileSpanActive]} {
 	set nn 0
 	foreach ff $ds9(active) {

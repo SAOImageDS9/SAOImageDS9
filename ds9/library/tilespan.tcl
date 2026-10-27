@@ -279,8 +279,181 @@ proc ProcessSendTileSpanSizeCmd {} {
     $parse(proc) $parse(id) "$tile(span,col) $tile(span,row)\n"
 }
 
+# Canvas geometry
+#  TileRectCells keeps the grid of the last tile layout in itile(cells):
+#  {x0 y0 cellwidth cellheight gap ncol nrow span}, where span says whether
+#  it was a Manual Layout. It is empty when the last layout was not tiled.
+#  Cells are the full tile rects; with multiple colorbars a frame sits
+#  inset in its cell, its colorbar/graphs take the rest.
+
+# 1-based grid cell under canvas coords x,y, clamped to the grid; a point
+#  in a gap belongs to the cell before it. {} if not tiled
+proc TileSpanCanvasCell {x y} {
+    global itile
+
+    if {$itile(cells) == {}} {
+	return {}
+    }
+    lassign $itile(cells) x0 y0 cw ch gap ncol nrow
+
+    set col [expr int(floor(($x-$x0)/double($cw+$gap)))+1]
+    set row [expr int(floor(($y-$y0)/double($ch+$gap)))+1]
+    set col [expr max(1,min($col,$ncol))]
+    set row [expr max(1,min($row,$nrow))]
+    return [list $col $row]
+}
+
+# canvas rect {x1 y1 x2 y2} covered by block {col row colspan rowspan},
+#  matching what TileRectCells gives a frame. {} if not tiled
+proc TileSpanCanvasRect {ss} {
+    global itile
+
+    if {$itile(cells) == {}} {
+	return {}
+    }
+    lassign $itile(cells) x0 y0 cw ch gap
+    lassign $ss col row colspan rowspan
+
+    set x1 [expr $x0 + ($cw+$gap)*($col-1)]
+    set y1 [expr $y0 + ($ch+$gap)*($row-1)]
+    set x2 [expr $x1 + $cw*$colspan + $gap*($colspan-1)]
+    set y2 [expr $y1 + $ch*$rowspan + $gap*($rowspan-1)]
+    return [list $x1 $y1 $x2 $y2]
+}
+
+# Editor
+#  dragging, resizing, pinning and unpinning frames on a drawn grid,
+#  independent of where the grid is drawn. An editor ed (the Tile
+#  Parameters dialog is "dialog") works on a copy of tile in the array
+#  itile(edit,$ed,var) and is driven through four procs it registers:
+#    cell x y  -> {col row}, the grid cell under surface coords x,y
+#    layout    -  re-flow the copy (TileSpanLayout on it, plus any upkeep)
+#    draw      -  redraw the surface from the copy
+#    apply     -  validate the copy, copy it into tile and relayout
+#  Surface items for a frame carry the frame name (FrameN) as a tag, plus
+#  "block" for the body or "handle" for the resize corner.
+
+proc TileSpanEditRegister {ed var cell layout draw apply} {
+    global itile
+
+    set itile(edit,$ed,var) $var
+    set itile(edit,$ed,cell) $cell
+    set itile(edit,$ed,layout) $layout
+    set itile(edit,$ed,draw) $draw
+    set itile(edit,$ed,apply) $apply
+    set itile(edit,$ed,drag) {}
+    set itile(edit,$ed,moved) 0
+}
+
+# the frame a surface item belongs to
+proc TileSpanEditFrame {w} {
+    foreach tag [$w gettags current] {
+	if {[regexp {^Frame[0-9]+$} $tag]} {
+	    return $tag
+	}
+    }
+    return {}
+}
+
+# the block frame ff currently occupies in editor ed's copy
+proc TileSpanEditBlock {ed ff} {
+    global itile
+    global ds9
+    upvar #0 $itile(edit,$ed,var) var
+
+    return [lindex $var(span,blocks) [lsearch $ds9(active) $ff]]
+}
+
+# op is move (body) or resize (corner handle)
+proc TileSpanEditPress {ed w x y op} {
+    global itile
+
+    set ff [TileSpanEditFrame $w]
+    if {$ff == {}} {
+	return
+    }
+    lassign [TileSpanEditBlock $ed $ff] col row
+    lassign [$itile(edit,$ed,cell) $x $y] pc pr
+    set itile(edit,$ed,drag) [list $ff $op [expr $pc-$col] [expr $pr-$row]]
+    set itile(edit,$ed,moved) 0
+}
+
+# snap to the cell under the pointer, pinning the frame there. Only
+#  placed frames are in the way, flowing frames move around it
+proc TileSpanEditMotion {ed x y} {
+    global itile
+    upvar #0 $itile(edit,$ed,var) var
+
+    if {$itile(edit,$ed,drag) == {}} {
+	return
+    }
+
+    lassign $itile(edit,$ed,drag) ff op dc dr
+    set old [TileSpanEditBlock $ed $ff]
+    lassign $old col row colspan rowspan
+    lassign [$itile(edit,$ed,cell) $x $y] pc pr
+
+    switch -- $op {
+	move {
+	    set col [expr max(1,min($pc-$dc,$var(span,col)-$colspan+1))]
+	    set row [expr max(1,min($pr-$dr,$var(span,row)-$rowspan+1))]
+	}
+	resize {
+	    set colspan [expr max(1,$pc-$col+1)]
+	    set rowspan [expr max(1,$pr-$row+1)]
+	}
+    }
+
+    set ss [list $col $row $colspan $rowspan]
+    if {$ss == $old && [info exists var(span,$ff)]} {
+	return
+    }
+
+    TileSpanPins $itile(edit,$ed,var) pins $ff
+    set pins($ff) $ss
+    if {[TileSpanCheck pins $var(span,col) $var(span,row)] != {}} {
+	return
+    }
+
+    set var(span,$ff) $ss
+    $itile(edit,$ed,layout)
+    set itile(edit,$ed,moved) 1
+    $itile(edit,$ed,draw)
+}
+
+# apply once per drag, not on every motion event. A click without a drag
+#  makes that frame the current frame
+proc TileSpanEditRelease {ed} {
+    global itile
+
+    set ff [lindex $itile(edit,$ed,drag) 0]
+    set itile(edit,$ed,drag) {}
+    if {$itile(edit,$ed,moved)} {
+	set itile(edit,$ed,moved) 0
+	$itile(edit,$ed,apply)
+    } elseif {$ff != {}} {
+	GotoFrame $ff
+	$itile(edit,$ed,draw)
+    }
+}
+
+# double-click: the frame is no longer placed, it flows again
+proc TileSpanEditUnpin {ed w} {
+    global itile
+    upvar #0 $itile(edit,$ed,var) var
+
+    set itile(edit,$ed,drag) {}
+    set ff [TileSpanEditFrame $w]
+    if {[info exists var(span,$ff)]} {
+	unset var(span,$ff)
+	$itile(edit,$ed,layout)
+	$itile(edit,$ed,apply)
+    }
+}
+
 # Dialog
-#  the Tile Parameters dialog shows a copy of tile in dtile:
+#  the Tile Parameters dialog is editor "dialog" on its mini canvas. It
+#  shows a copy of tile in dtile:
 #  dtile(span,col/row), the pins dtile(span,$ff), the derived
 #  dtile(span,blocks), plus entry text in dtile(span,ecol/erow) that is only
 #  accepted once it validates. Every accepted drag, unpin, size change or
@@ -332,11 +505,15 @@ proc TileSpanDialogCreate {w} {
 	bind $ee <FocusOut> TileSpanDialogSize
     }
 
-    $f.c bind block <ButtonPress-1> [list TileSpanDialogPress %x %y move]
-    $f.c bind handle <ButtonPress-1> [list TileSpanDialogPress %x %y resize]
-    $f.c bind block <Double-ButtonPress-1> TileSpanDialogUnpin
-    bind $f.c <B1-Motion> [list TileSpanDialogMotion %x %y]
-    bind $f.c <ButtonRelease-1> TileSpanDialogRelease
+    TileSpanEditRegister dialog dtile TileSpanDialogCell \
+	TileSpanDialogLayout TileSpanDialogDraw TileApplyDialog
+
+    $f.c bind block <ButtonPress-1> [list TileSpanEditPress dialog %W %x %y move]
+    $f.c bind handle <ButtonPress-1> \
+	[list TileSpanEditPress dialog %W %x %y resize]
+    $f.c bind block <Double-ButtonPress-1> [list TileSpanEditUnpin dialog %W]
+    bind $f.c <B1-Motion> [list TileSpanEditMotion dialog %x %y]
+    bind $f.c <ButtonRelease-1> [list TileSpanEditRelease dialog]
 }
 
 # show the span editor or the manual Layout box, per dtile(mode)
@@ -425,96 +602,6 @@ proc TileSpanDialogCell {x y} {
     set col [expr max(1,min($col,$dtile(span,col)))]
     set row [expr max(1,min($row,$dtile(span,row)))]
     return [list $col $row]
-}
-
-# the block frame ff currently occupies
-proc TileSpanDialogBlock {ff} {
-    global dtile
-    global ds9
-
-    return [lindex $dtile(span,blocks) [lsearch $ds9(active) $ff]]
-}
-
-proc TileSpanDialogPress {x y op} {
-    global itile
-
-    set ff [lindex [$itile(span,canvas) gettags current] 1]
-    lassign [TileSpanDialogBlock $ff] col row
-    lassign [TileSpanDialogCell $x $y] pc pr
-    set itile(span,drag) [list $ff $op [expr $pc-$col] [expr $pr-$row]]
-}
-
-# snap to the cell under the pointer, pinning the frame there. Only
-#  placed frames are in the way, flowing frames move around it
-proc TileSpanDialogMotion {x y} {
-    global itile
-    global dtile
-
-    if {![info exists itile(span,drag)] || $itile(span,drag) == {}} {
-	return
-    }
-
-    lassign $itile(span,drag) ff op dc dr
-    set old [TileSpanDialogBlock $ff]
-    lassign $old col row colspan rowspan
-    lassign [TileSpanDialogCell $x $y] pc pr
-
-    switch -- $op {
-	move {
-	    set col [expr max(1,min($pc-$dc,$dtile(span,col)-$colspan+1))]
-	    set row [expr max(1,min($pr-$dr,$dtile(span,row)-$rowspan+1))]
-	}
-	resize {
-	    set colspan [expr max(1,$pc-$col+1)]
-	    set rowspan [expr max(1,$pr-$row+1)]
-	}
-    }
-
-    set ss [list $col $row $colspan $rowspan]
-    if {$ss == $old && [info exists dtile(span,$ff)]} {
-	return
-    }
-
-    TileSpanPins dtile pins $ff
-    set pins($ff) $ss
-    if {[TileSpanCheck pins $dtile(span,col) $dtile(span,row)] != {}} {
-	return
-    }
-
-    set dtile(span,$ff) $ss
-    TileSpanDialogLayout
-    set itile(span,moved) 1
-    TileSpanDialogDraw
-}
-
-# apply once per drag, not on every motion event. A click without a drag
-#  makes that frame the current frame
-proc TileSpanDialogRelease {} {
-    global itile
-
-    set ff [lindex $itile(span,drag) 0]
-    set itile(span,drag) {}
-    if {[info exists itile(span,moved)] && $itile(span,moved)} {
-	set itile(span,moved) 0
-	TileApplyDialog
-    } elseif {$ff != {}} {
-	GotoFrame $ff
-	TileSpanDialogDraw
-    }
-}
-
-# double-click: the frame is no longer placed, it flows again
-proc TileSpanDialogUnpin {} {
-    global itile
-    global dtile
-
-    set itile(span,drag) {}
-    set ff [lindex [$itile(span,canvas) gettags current] 1]
-    if {[info exists dtile(span,$ff)]} {
-	unset dtile(span,$ff)
-	TileSpanDialogLayout
-	TileApplyDialog
-    }
 }
 
 # accept the Columns x Rows entries only if every placed frame still fits

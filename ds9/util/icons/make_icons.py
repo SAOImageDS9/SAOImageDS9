@@ -776,6 +776,15 @@ def _():
             apath('M12 2 V22') + dot(12, 12, 3, '{acc}'))
 
 
+@icon('frame_tile_params')
+def _():
+    # Tile Parameters: a 3x2 grid where one frame spans a 2x2 block
+    block = 'M5 4 H15 V20 H5 A2 2 0 0 1 3 18 V6 A2 2 0 0 1 5 4 Z'
+    return (rect(3, 4, 18, 16, 2, fill=TINT) +
+            fpath(block, '{acc}', 'fill-opacity=".3"') +
+            path('M15 4 V20 M15 12 H21') + apath(block))
+
+
 # -- bottom bar: view toggles ----------------------------------------------
 
 @icon('view_vertical')

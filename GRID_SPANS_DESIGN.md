@@ -358,6 +358,10 @@ region modes) about a new mode and reusing whatever hit-testing the frame
 canvas item does for its border, and the `tile(grid,gap)`-pixel gutter
 between frames is a narrow target to grab.
 
+Option A has since been built (Manual Layout editor in the Tile
+Parameters dialog). Option B was reviewed again afterwards; see
+"Option B revisited" below.
+
 ### 8. Command-line / XPA scripting
 
 Span commands act on the **current frame**, like most DS9 per-frame
@@ -421,7 +425,108 @@ already saves all spans via `array get tile` (§3).
 4. `TileDialog` "Manual Layout" radio + mini canvas editor (§7 A).
 5. Docs: `doc/ref/command.html`, `doc/ref/xpa.html`, `doc/ref/samp.html`
    (all document `tile grid`).
-6. (Later, optional) direct manipulation on the main canvas (§7 B).
+6. (Later, optional) direct manipulation on the main canvas (§7 B; see
+   "Option B revisited").
+
+## Option B revisited: editing the layout on the main canvas
+
+Status: feasibility review and task sketch only; nothing implemented.
+Written after option A (the dialog editor), the pinned/flowing model (§3)
+and the live dialog (§7) were in place.
+
+**Verdict: feasible, all Tcl/Tk, no tksao (C++) changes.** It is more
+work than the dialog editor, and the risk is moderate. The risk is in
+event bindings and drawing order, not layout math. The data model,
+`TileSpanLayout` / `TileSpanCheck` / `TileSpanPins` (already parametrized
+on `tile` or a working copy) and the live dialog carry over unchanged.
+So does most of the editor's behavior (snap, live overlap rejection,
+pin on drag, unpin on double-click, click to select); only the drawing
+surface changes.
+
+### Precedents already in ds9
+
+- **Ctrl-drag in tile mode reorders frames on the canvas.**
+  `ControlButton1Frame`, `Motion1Frame` and `Release1Frame`
+  (`ds9/library/frame.tcl`, around line 1068) use `FindFrameAt` for
+  hit-testing, mark the drop target with the frame's own red highlight
+  (`UpdateTileDropTarget` / `ClearTileDropTarget`), and call
+  `MoveFrameToFramePosition` on release. Grabbing a frame on the main
+  canvas and dropping it is an established gesture.
+- **Illustrate mode is the template for an edit mode.** It is an Edit
+  menu mode, but `ChangeMode` (`ds9/library/util.tcl`, around line 1137)
+  swaps the canvas bindings for its own (`UnBindEventsCanvas`,
+  `IllustrateModeBegin` / `IllustrateModeEnd`) and draws ordinary Tk
+  canvas items over the frames.
+- **Tk overlays on the canvas already exist.** The reveal slider and bar
+  are canvas items placed over frames. `LayoutRaise` lowers frames below
+  items tagged `graphic`, so overlays can stay on top.
+- **Cell geometry is already computed.** `TileRectCells` produces every
+  cell rect on each layout, both with multiple colorbars and with the
+  inset grid used when they are off. It only needs to be kept for the
+  overlay to use.
+
+### Recommended shape
+
+A new **Edit > Layout mode**, modeled on Illustrate. While it's on:
+
+- frame mouse bindings are suspended, which avoids adding a new arm to the
+  ~34 `switch -- $current(mode)` statements across the library;
+- a Tk overlay is drawn on the canvas: a faint cell grid, one outline per
+  frame (solid = pinned, dashed = flowing), the frame number, and a
+  corner resize handle;
+- a drag moves a ghost outline that snaps to cells, with dashed previews
+  of where the flowing frames will land. The real frames are laid out
+  once, on release, so large sessions stay responsive;
+- click selects a frame, double-click unpins it, and Esc or picking
+  another mode leaves.
+
+The handles sit inside each frame's outline, so the narrow
+`tile(grid,gap)` gutter between frames (the original concern above) does
+not matter.
+
+### Risks and open decisions
+
+| Item | Notes |
+|---|---|
+| Saved images and printing | Overlay items would show up in `saveimage` and PostScript output; hide them for the duration, as `RevealSliderSuspend` does for the slider. |
+| Drawing order | Any relayout raises the frames; redraw and raise the overlay at the end of `LayoutFrames` (the hook `UpdateTileDialog` already uses). |
+| Entering the mode outside Manual Layout | Switch to Manual Layout automatically (like the dialog radio) or grey out the menu item. **Open (KJG).** |
+| Grid size | No natural on-canvas control for columns × rows. Suggest leaving it to the dialog and XPA in v1; on-canvas +/- controls could follow. |
+| Existing Ctrl-drag | Still works in Manual Layout but only reorders flowing frames. In Layout mode a plain drag replaces it. |
+| Effort | Roughly 1.5–2× the dialog editor, mostly binding plumbing and overlay polish rather than new logic. |
+
+### Task sketch
+
+1. **Factor the editor logic.** Separate the drag/snap/pin/unpin logic in
+   `ds9/library/tilespan.tcl` from the dialog's canvas, so one editor can
+   drive either surface (dialog grid or main canvas) through a small
+   cell-mapping interface. No behavior change; testable with the existing
+   dialog.
+2. **Keep the cell geometry.** Have `TileRectCells` store each cell rect
+   and the current arrangement so the overlay can map pointer positions to
+   cells.
+3. **Add the mode.** Edit menu entry, preferences entry, the `mode`
+   grammar (`mode layout` over XPA), and `ChangeMode` enter/exit that
+   suspends and restores frame bindings (copying Illustrate). Optionally
+   an icon in the left icon bar.
+4. **Draw the overlay.** Grid, outlines, frame numbers and handles in
+   theme colors; redrawn and raised from `LayoutFrames`; removed when
+   leaving the mode or when the display is not a Manual Layout tile.
+5. **Mouse handling.** Press/drag/release with ghost previews, live
+   overlap rejection, apply on release, click to select, double-click to
+   unpin, Esc to exit, cursors.
+6. **Saved images and printing.** Hide the overlay while `saveimage`,
+   print and PostScript run.
+7. **Single shared colorbar.** Check the overlay against the inset grid
+   used when View > Multiple Colorbars is off.
+8. **Keep the dialog in sync.** Both editors mirror `tile`; confirm that
+   a canvas edit updates an open dialog and vice versa.
+9. **Tests and docs.** `mode layout` in the Tests repo
+   (`command.sh`, `xpa.sh`, `samp/mode.samp`), the reference pages, and
+   this document.
+
+Steps 1–2 are worth doing even if B is deferred, because they keep the
+dialog editor reusable. Steps 3–5 are the core of B.
 
 ## Decisions
 

@@ -104,10 +104,10 @@ show :
  | ALL_ {ActiveFrameAll}
  ;
 
-move : FIRST_ {FirstFrame}
- | LAST_ {LastFrame}
- | BACK_ {PrevFrame}
- | FORWARD_ {NextFrame}
+move : FIRST_ {MoveFirstFrame}
+ | LAST_ {MoveLastFrame}
+ | BACK_ {MovePrevFrame}
+ | FORWARD_ {MoveNextFrame}
  ;
 
 lock : coordsys {set _ $1}

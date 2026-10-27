@@ -87,7 +87,11 @@ proc TBLFltSort {varname src dest} {
     # filters are evaluated in their own namespace, so column names
     # can't clobber our locals
     set ns ::TBLFltContext
-    catch {namespace delete $ns}
+    # don't use catch here: it leaves errorInfo set, which xpa/samp
+    # report as a failure
+    if {[namespace exists $ns]} {
+	namespace delete $ns
+    }
     namespace eval $ns {}
 
     set kk 0

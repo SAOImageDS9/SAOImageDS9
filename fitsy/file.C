@@ -12,6 +12,10 @@ using namespace std;
 #include "file.h"
 #include "util.h"
 
+#include <limits.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+
 // extention parser
 #undef yyFlexLexer
 #define yyFlexLexer ffFlexLexer
@@ -142,10 +146,18 @@ FitsFile::FitsFile()
   pzmax_ =0;
   pbvalid_ =0;
   pblock_ =1;
+
+  refName_ =NULL;
+  refDev_ =0;
+  refIno_ =0;
+  refSize_ =0;
 }
 
 FitsFile::~FitsFile()
 {
+  if (refName_)
+    delete [] refName_;
+
   if (manageHead_ && head_)
     delete head_;
 
@@ -169,6 +181,84 @@ FitsFile::~FitsFile()
 
   if (pBinZ_)
     delete [] pBinZ_;
+}
+
+// Verify that the header backing this file still describes the same data
+// layout that was parsed at load time. Headers of mmap'd/shared data point
+// directly into the mapped memory, so an in-place rewrite shows up here.
+// Returns NULL if compatible, else a description of the change.
+static const char* checkRefreshHead(FitsHead* hd)
+{
+  if (!hd)
+    return NULL;
+
+  FitsHead fresh(hd->cards(), hd->headbytes(), FitsHead::EXTERNAL);
+  if (!fresh.isValid() || fresh.headbytes() != hd->headbytes())
+    return "header size has changed";
+  if (fresh.bitpix() != hd->bitpix())
+    return "data type (BITPIX) has changed";
+  if (fresh.naxes() != hd->naxes())
+    return "number of axes (NAXIS) has changed";
+  for (int ii=0; ii<hd->naxes(); ii++)
+    if (fresh.naxis(ii) != hd->naxis(ii))
+      return "image dimensions have changed";
+
+  return NULL;
+}
+
+// Remember which file is mapped and how much of it the mapping needs, so a
+// later refresh can verify the file before touching the mapped memory.
+void FitsFile::setRefreshFile(const char* fn, unsigned long dev,
+			      unsigned long ino, size_t size)
+{
+  if (refName_)
+    delete [] refName_;
+  refName_ =NULL;
+
+  if (fn) {
+#ifndef __WIN32
+    char buf[PATH_MAX];
+    if (realpath(fn, buf))
+      fn = buf;
+#endif
+    refName_ = dupstr(fn);
+  }
+  refDev_ = dev;
+  refIno_ = ino;
+  refSize_ = size;
+}
+
+void FitsFile::setRefreshFile(FitsFile* prev)
+{
+  setRefreshFile(prev->refName_, prev->refDev_, prev->refIno_,
+		 prev->refSize_);
+}
+
+// Returns NULL if the data can be safely redisplayed in place,
+// else a description of what changed.
+const char* FitsFile::checkRefresh()
+{
+#ifndef __WIN32
+  // Touching mapped pages past the end of a truncated file raises SIGBUS,
+  // so check the file before the header is re-read from the map.
+  if (refName_) {
+    struct stat info;
+    if (stat(refName_, &info) < 0)
+      return "file no longer exists";
+    if ((unsigned long)info.st_dev != refDev_ ||
+	(unsigned long)info.st_ino != refIno_)
+      return "file has been replaced rather than rewritten in place";
+    if ((size_t)info.st_size < refSize_)
+      return "file size has shrunk";
+  }
+#endif
+
+  if (primary_ && primary_ != head_) {
+    const char* err = checkRefreshHead(primary_);
+    if (err)
+      return err;
+  }
+  return checkRefreshHead(head_);
 }
 
 void FitsFile::parse(const char* fn)

@@ -80,6 +80,11 @@ protected:
   int pbvalid_;
   int pblock_;
 
+  char* refName_;            // mapped file, for refresh checks
+  unsigned long refDev_;     // device/inode of mapped file
+  unsigned long refIno_;
+  size_t refSize_;           // min file size needed by the mapping
+
 protected:
   void parse(const char*);
   void parseNRRD(istream&);
@@ -88,6 +93,8 @@ protected:
   int findEnd(const char*);
   void setByteSwap();
   int saveFitsHeaderCards(OutFitsStream&, int, int);
+  void setRefreshFile(const char*, unsigned long, unsigned long, size_t);
+  void setRefreshFile(FitsFile*);
 
 public:
   FitsFile();
@@ -99,6 +106,7 @@ public:
   virtual char* page(char* ptr, size_t r) {return ptr;}
   virtual void resetpage() {}
   void error(const char*);
+  const char* checkRefresh();
   void* data() {return data_;}
   size_t dataSize() {return dataSize_;}
   size_t dataSkip() {return dataSkip_;}

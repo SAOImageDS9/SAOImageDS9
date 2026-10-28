@@ -3046,14 +3046,50 @@ void Base::unloadFitsCmd()
   update(MATRIX);
 }
 
+// Refresh is meant for real-time capture: the data is rewritten in place
+// (mmap or shared memory) and simply redisplayed. That is only safe if the
+// layout still matches what was parsed at load time, so verify it first.
+int Base::checkRefreshContext(Context* cx)
+{
+  FitsImage* ptr = cx->fits;
+  while (ptr) {
+    FitsFile* ff = ptr->fitsFile();
+    if (ff) {
+      const char* volatile err = "data changed while being checked";
+      SETSIGBUS
+      err = ff->checkRefresh();
+      CLEARSIGBUS
+
+      if (err) {
+	const char* fn = ptr->getFileName(ROOTBASE);
+	Tcl_AppendResult(interp, "Unable to refresh ", fn ? fn : "image",
+			 ": ", err, ". Refresh requires the new image to have "
+			 "the same size, dimensions, and data type; "
+			 "please reload the image instead.", NULL);
+	result = TCL_ERROR;
+	return 0;
+      }
+    }
+    ptr = ptr->nextMosaic();
+  }
+
+  return 1;
+}
+
 void Base::updateFitsCmd()
 {
+  if (!checkRefreshFits())
+    return;
+
   update(MATRIX);
   regionStatsImageInvalidated();
 }
 
 void Base::updateFitsCmd(int which, BBox bb)
 {
+  if (!checkRefreshFits())
+    return;
+
   // Note: bb is in IMAGE coords
   FitsImage* ptr = currentContext->fits;
   if (which > 0) {

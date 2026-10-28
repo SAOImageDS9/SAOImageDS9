@@ -46,6 +46,14 @@ FrameA::~FrameA()
     delete [] contrast;
 }
 
+int FrameA::checkRefreshFits()
+{
+  for (int ii=0; ii<contextCount; ii++)
+    if (!checkRefreshContext(&context[ii]))
+      return 0;
+  return 1;
+}
+
 void FrameA::alignWCS()
 {
   if (!wcsAlign_ || !(keyContext->fits) || !keyContext->fits->hasWCS(wcsSystem_)) {

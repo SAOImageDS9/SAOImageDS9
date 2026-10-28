@@ -505,7 +505,9 @@ proc UpdateAllFrame {} {
 
 proc UpdateFrame {which} {
     if {$which != {}} {
-	$which update
+	if {[catch {$which update} rr]} {
+	    Error $rr
+	}
     }
 }
 

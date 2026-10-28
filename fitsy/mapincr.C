@@ -160,6 +160,8 @@ void FitsMapIncr::found()
 
   // seek to next hdu, even if we are internal paging
   seek_ += head_->databytes();
+  // the file must extend at least through this data segment
+  refSize_ = seek_;
   // data starts after any page boundary
   data_ = mapdata_+offset;
 
@@ -645,6 +647,7 @@ FitsArrMapIncr::FitsArrMapIncr()
     return;
 
   seek_ = mmsize;
+  refSize_ = mmsize;
   data_ = mmdata + pSkip_;
 
   dataSize_ = mapsize_;
@@ -686,6 +689,7 @@ FitsMosaicNextMapIncr::FitsMosaicNextMapIncr(FitsFile* p)
   FitsMapIncr* prev = (FitsMapIncr*)p;
 
   pName_ = dupstr(prev->pName());
+  setRefreshFile(prev);
   filesize_ = prev->filesize();
   seek_ = prev->seek();
 

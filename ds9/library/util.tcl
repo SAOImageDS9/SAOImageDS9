@@ -1278,6 +1278,15 @@ proc PrefsBgColor {} {
     }
 }
 
+proc PrefsBaseColor {} {
+    global ds9
+
+    $ds9(canvas) configure -bg [CanvasBackground]
+    if {$ds9(canvas,bottom) != {}} {
+	ttk::style configure Base.TFrame -background [CanvasBackground]
+    }
+}
+
 proc PrefsNanColor {} {
     global ds9
     global pds9

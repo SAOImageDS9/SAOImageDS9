@@ -155,6 +155,8 @@ proc DS9Def {} {
 
     set pds9(bg) white
     set pds9(bg,use) 0
+    set pds9(base) white
+    set pds9(base,use) 0
     set pds9(nan) white
 
     set pds9(confirm) 1

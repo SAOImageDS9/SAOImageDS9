@@ -291,9 +291,19 @@ proc PrefsDialogGeneral {} {
 	-variable pds9(bg,use) \
 	-command PrefsBgColor
 
+    ttk::label $f.tbase -text [msgcat::mc {Base Color}]
+    ColorMenuButton $f.base pds9 base PrefsBaseColor
+
+    ttk::checkbutton $f.ubase -text \
+	[msgcat::mc {Use base color instead of theme color}] \
+	-variable pds9(base,use) \
+	-command PrefsBaseColor
+
     grid $f.tnan $f.nan -padx 2 -pady 2 -sticky w
     grid $f.tbg $f.bg -padx 2 -pady 2 -sticky w
     grid $f.ubg - -padx 2 -pady 2 -sticky w
+    grid $f.tbase $f.base -padx 2 -pady 2 -sticky w
+    grid $f.ubase - -padx 2 -pady 2 -sticky w
 
     # Dialog Box
     set f [ttk::labelframe $w.general.box -text [msgcat::mc {Dialog Box}]]

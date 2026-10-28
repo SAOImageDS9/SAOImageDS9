@@ -1036,8 +1036,9 @@ public:
   void sliceCmd(int, int);
   void sliceCmd(double, Coord::CoordSystem);
 
-  int checkRefreshContext(Context*);
-  virtual int checkRefreshFits() {return checkRefreshContext(context);}
+  int checkRefreshContext(Context*, int*, int);
+  virtual int checkRefreshFits(int* reload)
+    {return checkRefreshContext(context, reload, 1);}
   void updateFitsCmd();
   void updateFitsCmd(int, BBox);
   void unloadFitsCmd();

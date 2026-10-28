@@ -60,7 +60,7 @@ public:
   FrameA(Tcl_Interp*, Tk_Canvas, Tk_Item*, int =3);
   virtual ~FrameA();
 
-  int checkRefreshFits();
+  int checkRefreshFits(int*);
 
   virtual void colormapCmd(float, float, float, float, float, float, int, int);
   void getInfoCmd(const Vector&, Coord::InternalSystem, char*,

@@ -46,10 +46,11 @@ FrameA::~FrameA()
     delete [] contrast;
 }
 
-int FrameA::checkRefreshFits()
+int FrameA::checkRefreshFits(int* reload)
 {
+  // reloading a single channel is not supported
   for (int ii=0; ii<contextCount; ii++)
-    if (!checkRefreshContext(&context[ii]))
+    if (!checkRefreshContext(&context[ii], reload, 0))
       return 0;
   return 1;
 }

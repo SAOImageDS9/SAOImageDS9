@@ -10,6 +10,7 @@
 #include "context.h"
 #include "fitsimage.h"
 #include "mmap.h"
+#include "mmapincr.h"
 #include "allocgz.h"
 #include "outfile.h"
 #include "outchannel.h"
@@ -3049,18 +3050,41 @@ void Base::unloadFitsCmd()
 // Refresh is meant for real-time capture: the data is rewritten in place
 // (mmap or shared memory) and simply redisplayed. That is only safe if the
 // layout still matches what was parsed at load time, so verify it first.
-int Base::checkRefreshContext(Context* cx)
+// If instead the file was replaced, or its data moved within the file, but
+// the new image has the same layout, set reload: the caller must reload the
+// file rather than redisplay it. That is only possible if canReload.
+int Base::checkRefreshContext(Context* cx, int* reload, int canReload)
 {
   FitsImage* ptr = cx->fits;
   while (ptr) {
     FitsFile* ff = ptr->fitsFile();
     if (ff) {
+      volatile FitsFile::RefreshStatus rr = FitsFile::REFRESHERROR;
       const char* volatile err = "data changed while being checked";
       SETSIGBUS
-      err = ff->checkRefresh();
+      const char* msg;
+      rr = ff->checkRefresh(&msg);
+      err = msg;
+      if (rr == FitsFile::REFRESHSTALE) {
+	// the mapping is out of date, read the image as it is now
+	FitsFitsMMapIncr now(ff->refSpec(), FitsFile::RELAXIMAGE);
+	if (!now.isValid() || !now.head())
+	  rr = FitsFile::REFRESHERROR;
+	else if ((msg = FitsFile::compareLayout(ff->head(), now.head()))) {
+	  rr = FitsFile::REFRESHERROR;
+	  err = msg;
+	}
+      }
       CLEARSIGBUS
 
-      if (err) {
+      if (rr == FitsFile::REFRESHSTALE) {
+	if (canReload && !cx->fits->nextMosaic())
+	  *reload = 1;
+	else
+	  rr = FitsFile::REFRESHERROR;
+      }
+
+      if (rr == FitsFile::REFRESHERROR) {
 	const char* fn = ptr->getFileName(ROOTBASE);
 	Tcl_AppendResult(interp, "Unable to refresh ", fn ? fn : "image",
 			 ": ", err, ". Refresh requires the new image to have "
@@ -3078,8 +3102,13 @@ int Base::checkRefreshContext(Context* cx)
 
 void Base::updateFitsCmd()
 {
-  if (!checkRefreshFits())
+  int reload = 0;
+  if (!checkRefreshFits(&reload))
     return;
+  if (reload) {
+    Tcl_AppendResult(interp, "reload", NULL);
+    return;
+  }
 
   update(MATRIX);
   regionStatsImageInvalidated();
@@ -3087,8 +3116,13 @@ void Base::updateFitsCmd()
 
 void Base::updateFitsCmd(int which, BBox bb)
 {
-  if (!checkRefreshFits())
+  int reload = 0;
+  if (!checkRefreshFits(&reload))
     return;
+  if (reload) {
+    Tcl_AppendResult(interp, "reload", NULL);
+    return;
+  }
 
   // Note: bb is in IMAGE coords
   FitsImage* ptr = currentContext->fits;

@@ -554,5 +554,7 @@ proc UpdateCmd {{which {}} {x1 {}} {y1 {}} {x2 {}} {y2 {}}} {
     }
     if {[catch {$current(frame) update $which $x1 $y1 $x2 $y2} rr]} {
 	Error $rr
+    } elseif {$rr == {reload}} {
+	RefreshReloadFrame $current(frame)
     }
 }

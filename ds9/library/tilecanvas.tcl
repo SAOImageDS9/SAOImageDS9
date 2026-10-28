@@ -12,8 +12,9 @@ package provide DS9 1.0
 #  dashed, each with its frame number and a resize handle. This is editor
 #  "canvas" (see TileSpanEdit* in tilespan.tcl) working on a copy of tile
 #  in ctile, so a drag only moves outlines; the frames move on release.
-#  Keys: + / - add or remove a column, Control + / - add or remove a row,
-#  Escape leaves the mode.
+#  Keys: Right / Left add or remove a column, Down / Up add or remove a
+#  row, Escape leaves the mode. Each ends with break: the main window also
+#  binds keys (Escape leaves full screen), so they must not go further.
 #  Items are found by geometry (itile(cells)), not by tags, so the overlay
 #  can stay outline-only and never hides image pixels.
 
@@ -77,9 +78,9 @@ proc TileCanvasBindEvents {} {
     bind $c <B1-Motion> [list TileSpanEditMotion canvas %x %y]
     bind $c <ButtonRelease-1> [list TileSpanEditRelease canvas]
     bind $c <Double-Button-1> [list TileCanvasUnpin %x %y]
-    bind $c <Escape> TileCanvasExit
+    bind $c <Escape> {TileCanvasExit; break}
     foreach {ev dc dr} [TileCanvasKeys] {
-	bind $c $ev [list TileCanvasResize $dc $dr]
+	bind $c $ev "[list TileCanvasResize $dc $dr]; break"
     }
 }
 
@@ -96,14 +97,11 @@ proc TileCanvasUnBindEvents {} {
     }
 }
 
-# grid size keys: event, columns to add, rows to add. + is shifted = on
-#  many keyboards, so = counts as + too
+# grid size keys: event, columns to add, rows to add
 proc TileCanvasKeys {} {
     return {
-	<plus> 1 0 <equal> 1 0 <KP_Add> 1 0
-	<minus> -1 0 <KP_Subtract> -1 0
-	<Control-plus> 0 1 <Control-equal> 0 1 <Control-KP_Add> 0 1
-	<Control-minus> 0 -1 <Control-KP_Subtract> 0 -1
+	<Right> 1 0 <Left> -1 0
+	<Down> 0 1 <Up> 0 -1
     }
 }
 

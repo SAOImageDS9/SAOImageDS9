@@ -12,6 +12,8 @@ package provide DS9 1.0
 #  dashed, each with its frame number and a resize handle. This is editor
 #  "canvas" (see TileSpanEdit* in tilespan.tcl) working on a copy of tile
 #  in ctile, so a drag only moves outlines; the frames move on release.
+#  Keys: + / - add or remove a column, Control + / - add or remove a row,
+#  Escape leaves the mode.
 #  Items are found by geometry (itile(cells)), not by tags, so the overlay
 #  can stay outline-only and never hides image pixels.
 
@@ -76,6 +78,9 @@ proc TileCanvasBindEvents {} {
     bind $c <ButtonRelease-1> [list TileSpanEditRelease canvas]
     bind $c <Double-Button-1> [list TileCanvasUnpin %x %y]
     bind $c <Escape> TileCanvasExit
+    foreach {ev dc dr} [TileCanvasKeys] {
+	bind $c $ev [list TileCanvasResize $dc $dr]
+    }
 }
 
 proc TileCanvasUnBindEvents {} {
@@ -85,6 +90,20 @@ proc TileCanvasUnBindEvents {} {
     foreach ev {<Enter> <Leave> <Motion> <Button-1> <B1-Motion>
 	<ButtonRelease-1> <Double-Button-1> <Escape>} {
 	bind $c $ev {}
+    }
+    foreach {ev dc dr} [TileCanvasKeys] {
+	bind $c $ev {}
+    }
+}
+
+# grid size keys: event, columns to add, rows to add. + is shifted = on
+#  many keyboards, so = counts as + too
+proc TileCanvasKeys {} {
+    return {
+	<plus> 1 0 <equal> 1 0 <KP_Add> 1 0
+	<minus> -1 0 <KP_Subtract> -1 0
+	<Control-plus> 0 1 <Control-equal> 0 1 <Control-KP_Add> 0 1
+	<Control-minus> 0 -1 <Control-KP_Subtract> 0 -1
     }
 }
 
@@ -156,6 +175,43 @@ proc TileCanvasRect {ss} {
 
 proc TileCanvasLayout {} {
     TileSpanLayout ctile
+}
+
+# add (or with a negative count remove) columns dc and rows dr. Removing
+#  is refused if a placed frame would no longer fit, and has no effect if
+#  the flowing frames need the room back (the grid grows to fit them)
+proc TileCanvasResize {dc dr} {
+    global ctile
+    global itile
+
+    if {![TileCanvasOn] || $itile(edit,canvas,drag) != {}} {
+	return
+    }
+
+    set ncol [expr $ctile(span,col)+$dc]
+    set nrow [expr $ctile(span,row)+$dr]
+    if {$ncol<1 || $nrow<1} {
+	bell
+	return
+    }
+
+    TileSpanPins ctile pins
+    set err [TileSpanCheck pins $ncol $nrow]
+    if {$err != {}} {
+	Error $err
+	return
+    }
+
+    set old [list $ctile(span,col) $ctile(span,row)]
+    set ctile(span,col) $ncol
+    set ctile(span,row) $nrow
+    TileSpanLayout ctile
+    if {[list $ctile(span,col) $ctile(span,row)] == $old} {
+	bell
+	return
+    }
+
+    TileCanvasApply
 }
 
 proc TileCanvasApply {} {

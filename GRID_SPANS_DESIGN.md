@@ -557,6 +557,12 @@ dialog editor reusable. Steps 3–5 are the core of B.
 - **Saving and printing:** `SaveImagePhoto` and both PostScript paths in
   `print.tcl` hide the overlay for the duration; a PNG saved in Layout mode
   is byte-identical to one saved outside it.
+- **Grid size keys** (KJG): `+` / `-` add or remove a column, Control
+  `+` / `-` add or remove a row (`=` and the keypad keys work too, since
+  `+` is shifted `=` on many keyboards). Removing is refused with an
+  error if a placed frame would no longer fit, and just beeps if the
+  flowing frames need the room back (the grid would grow along the
+  Direction straight back to the same size).
 - **Behavior detail:** a press whose drag is refused everywhere (e.g. only
   onto a pinned frame) counts as a click and selects that frame, as in the
   dialog editor.

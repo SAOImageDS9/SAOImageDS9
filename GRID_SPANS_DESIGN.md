@@ -567,6 +567,10 @@ dialog editor reusable. Steps 3–5 are the core of B.
   `break` the key went on to zoom the current frame too. Every Layout
   mode key binding now ends in `break`, Escape included (the main window
   uses Escape to leave full screen).
+- **Gap keys** (KJG): Page Up / Page Down widen or narrow the gap between
+  frames (`tile(grid,gap)`, the same value as `tile grid gap` and the
+  dialog's Gap entry) by one pixel. It stops at 0, and stops growing once
+  a cell is 16 pixels or less, so the frames can't be squeezed to nothing.
 - **Behavior detail:** a press whose drag is refused everywhere (e.g. only
   onto a pinned frame) counts as a click and selects that frame, as in the
   dialog editor.

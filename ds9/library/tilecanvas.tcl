@@ -13,7 +13,8 @@ package provide DS9 1.0
 #  "canvas" (see TileSpanEdit* in tilespan.tcl) working on a copy of tile
 #  in ctile, so a drag only moves outlines; the frames move on release.
 #  Keys: Right / Left add or remove a column, Down / Up add or remove a
-#  row, Escape leaves the mode. Each ends with break: the main window also
+#  row, Page Up / Page Down widen or narrow the gap between frames,
+#  Escape leaves the mode. Each ends with break: the main window also
 #  binds keys (Escape leaves full screen), so they must not go further.
 #  Items are found by geometry (itile(cells)), not by tags, so the overlay
 #  can stay outline-only and never hides image pixels.
@@ -79,8 +80,8 @@ proc TileCanvasBindEvents {} {
     bind $c <ButtonRelease-1> [list TileSpanEditRelease canvas]
     bind $c <Double-Button-1> [list TileCanvasUnpin %x %y]
     bind $c <Escape> {TileCanvasExit; break}
-    foreach {ev dc dr} [TileCanvasKeys] {
-	bind $c $ev "[list TileCanvasResize $dc $dr]; break"
+    foreach {ev cmd} [TileCanvasKeys] {
+	bind $c $ev "$cmd; break"
     }
 }
 
@@ -92,16 +93,17 @@ proc TileCanvasUnBindEvents {} {
 	<ButtonRelease-1> <Double-Button-1> <Escape>} {
 	bind $c $ev {}
     }
-    foreach {ev dc dr} [TileCanvasKeys] {
+    foreach {ev cmd} [TileCanvasKeys] {
 	bind $c $ev {}
     }
 }
 
-# grid size keys: event, columns to add, rows to add
+# grid keys: event, command
 proc TileCanvasKeys {} {
     return {
-	<Right> 1 0 <Left> -1 0
-	<Down> 0 1 <Up> 0 -1
+	<Right> {TileCanvasResize 1 0} <Left> {TileCanvasResize -1 0}
+	<Down> {TileCanvasResize 0 1} <Up> {TileCanvasResize 0 -1}
+	<Prior> {TileCanvasGap 1} <Next> {TileCanvasGap -1}
     }
 }
 
@@ -210,6 +212,27 @@ proc TileCanvasResize {dc dr} {
     }
 
     TileCanvasApply
+}
+
+# widen (or with a negative count narrow) the gap between frames by dg
+#  pixels. It stops at 0, and stops growing once the cells are tiny
+proc TileCanvasGap {dg} {
+    global tile
+    global itile
+
+    if {![TileCanvasOn] || $itile(edit,canvas,drag) != {}} {
+	return
+    }
+
+    lassign $itile(cells) x0 y0 cw ch
+    set gap [expr $tile(grid,gap)+$dg]
+    if {$gap<0 || ($dg>0 && ($cw<=16 || $ch<=16))} {
+	bell
+	return
+    }
+
+    set tile(grid,gap) $gap
+    DisplayMode
 }
 
 proc TileCanvasApply {} {

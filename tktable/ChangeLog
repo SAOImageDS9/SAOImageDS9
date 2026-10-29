@@ -1,3 +1,10 @@
+2026-10-29  Ken Glotfelty  <kglotfelty@cfa.harvard.edu>
+
+	* generic/tkTable.c (BuildInfoCommand): make static. The global
+	symbol clashed with tcltls 2.x, which defines its own
+	BuildInfoCommand, when both are linked statically into one
+	executable (SAOImageDS9).
+
 2026-08-20  Ken Glotfelty  <kglotfelty@cfa.harvard.edu>
 
 	* Released as Tktable version 2.13. This is a new fork,

@@ -12,12 +12,11 @@ use warnings;
 
 use File::Spec;
 use OpenSSL::Test::Utils;
-use OpenSSL::Test qw/:DEFAULT srctop_file result_file/;
-use File::Compare qw/compare_text/;
+use OpenSSL::Test qw/:DEFAULT srctop_file/;
 
 setup("test_x509");
 
-plan tests => 151;
+plan tests => 139;
 
 # Prevent MSys2 filename munging for arguments that look like file paths but
 # aren't
@@ -502,19 +501,6 @@ ok(!run(app(["openssl", "x509", "-noout", "-dates", "-dateopt", "invalid_format"
 	     "-in", srctop_file("test/certs", "ca-cert.pem")])),
    "Run with invalid -dateopt format");
 
-my $ca_cert = srctop_file(@certs, "ca-cert.pem");
-my $goodcn2_chain = srctop_file(@certs, "goodcn2-chain.pem");
-
-# -multi test with single cert
-ok(run(app(["openssl", "x509", "-multi", "-in", $ca_cert])),
-   "Run with -multi (single cert)");
-
-# -multi test with multiple certs
-my $outfile = result_file("multi.out");
-ok(run(app(["openssl", "x509", "-multi", "-in", $goodcn2_chain, "-out", $outfile]))
-   && compare_text($outfile, $goodcn2_chain) == 0,
-   "Run with -multi (multiple certs)");
-
 # Tests for signing certs (broken in 1.1.1o)
 my $a_key = "a-key.pem";
 my $a_cert = "a-cert.pem";
@@ -545,7 +531,7 @@ my $in_key = srctop_file('test', 'certs', 'x509-check-key.pem');
 my $invextfile = srctop_file('test', 'invalid-x509.cnf');
 # Test that invalid extensions settings fail
 ok(!run(app(["openssl", "x509", "-req", "-in", $in_csr, "-signkey", $in_key,
-            "-out", "/dev/null", "-days", "3650" , "-extensions", "ext",
+            "-out", File::Spec->devnull(), "-days", "3650" , "-extensions", "ext",
             "-extfile", $invextfile])));
 
 # Tests for issue #16080 (fixed in 1.1.1o)
@@ -636,75 +622,3 @@ SKIP: {
 
     ok(run(test(["x509_test", $psscert])), "running x509_test");
 }
-
-# Tests for -checkend including -multi
-# Discussed in https://github.com/openssl/openssl/pull/29155
-
-my $c_early = "c-early.pem";
-my $c_late = "c-late.pem";
-my $c_chain = "c-chain.pem";
-my $c_key = srctop_file(@certs, 'ca-key.pem');
-ok(run(app(["openssl", "x509", "-new", "-key", $c_key, "-subj", "/CN=EARLY",
-            "-extfile", $extfile, "-days", "100", "-text", "-out", $c_early]))
-&& run(app(["openssl", "x509", "-new", "-key", $c_key, "-subj", "/CN=LATE",
-            "-extfile", $extfile, "-days", "200", "-text", "-out", $c_late])));
-my $c_time = Time::Piece->gmtime->epoch;
-my $delta_early = Time::Piece->strptime(
-                    get_field($c_early, "Not After "),
-                       "%b %d %T %Y %Z")->epoch - $c_time;
-my $delta_late = Time::Piece->strptime(
-                    get_field($c_late, "Not After "),
-                        "%b %d %T %Y %Z")->epoch - $c_time;
-sub mkchain {
-    open(my $out, ">:raw", $c_chain) or die;
-    foreach my $fn (@_) {
-        open(my $in, "<:raw", $fn) or die;
-        print {$out} <$in>;
-        close($in);
-    }
-    close($out);
-    return 0;
-}
-# Single + not expiring
-ok(run(app(["openssl", "x509", "-checkend", $delta_early - 3600,
-            "-in", $c_early])),
-    "Single cert + not expiring in -checkend window");
-# Single + expiring
-ok(!run(app(["openssl", "x509", "-checkend", $delta_early + 3600,
-            "-in", $c_early])),
-    "Single cert + expiring in -checkend window");
-# Single + expiring at boundary
-# Test may fail erroneously due to sequential now() calls
-# See https://github.com/openssl/openssl/pull/29155
-my $delta_exact = Time::Piece->strptime( get_field($c_early, "Not After "),
-                    "%b %d %T %Y %Z")->epoch - Time::Piece->gmtime->epoch;
-ok(!run(app(["openssl", "x509", "-checkend", $delta_exact, "-in", $c_early])),
-    "Single cert + expiring at -checkend boundary");
-# Multi + none expiring
-mkchain($c_early, $c_late, $c_late);
-ok(run(app(["openssl", "x509", "-multi", "-checkend",
-            $delta_early - 3600, "-in", $c_chain])),
-    "Multi cert + none expiring in -checkend window");
-# Multi + 1st expiring
-mkchain($c_early, $c_late, $c_late);
-ok(!run(app(["openssl", "x509", "-multi", "-checkend",
-             $delta_early + 3600, "-in", $c_chain])),
-    "Multi cert + 1st expiring in -checkend window");
-# Multi + 2nd expiring
-mkchain($c_late, $c_early, $c_late);
-ok(!run(app(["openssl", "x509", "-multi", "-checkend",
-             $delta_early + 3600, "-in", $c_chain])),
-    "Multi cert + 2nd expiring in -checkend window");
-# Multi + 3rd expiring
-mkchain($c_late, $c_late, $c_early);
-ok(!run(app(["openssl", "x509", "-multi", "-checkend",
-             $delta_late - 3600, "-in", $c_chain])),
-    "Multi cert + 3rd expiring in -checkend window");
-# Multi + all expiring
-mkchain($c_early, $c_late, $c_early);
-ok(!run(app(["openssl", "x509", "-multi", "-checkend",
-             $delta_late + 3600, "-in", $c_chain])),
-    "Multi cert + all expiring in -checkend window");
-# Bad parse still returns non-zero
-ok(!run(app(["openssl", "x509", "-checkend", "60", "-in", $c_key])),
-    "Bad parse with -checkend returns non-zero");

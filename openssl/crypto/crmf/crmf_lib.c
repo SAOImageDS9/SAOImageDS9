@@ -1,5 +1,5 @@
 /*-
- * Copyright 2007-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2007-2026 The OpenSSL Project Authors. All Rights Reserved.
  * Copyright Nokia 2007-2018
  * Copyright Siemens AG 2015-2019
  *
@@ -26,11 +26,19 @@
  * cases increases its link count) in the parent and so both should be freed up.
  */
 
-#include "crmf_local.h"
 #include <openssl/asn1t.h>
+
+#include "crmf_local.h"
 #include "internal/constant_time.h"
-#include "internal/sizes.h" /* for OSSL_MAX_NAME_SIZE */
-#include "crypto/x509.h" /* for ossl_x509_check_private_key() */
+#include "internal/sizes.h"
+#include "crypto/evp.h"
+#include "crypto/x509.h"
+
+/* explicit #includes not strictly needed since implied by the above: */
+#include <openssl/crmf.h>
+#include <openssl/err.h>
+#include <openssl/evp.h>
+#include <openssl/cms.h>
 
 /*-
  * atyp = Attribute Type
@@ -758,6 +766,7 @@ unsigned char *OSSL_CRMF_ENCRYPTEDVALUE_decrypt(const OSSL_CRMF_ENCRYPTEDVALUE *
     EVP_CIPHER *cipher = NULL; /* used cipher */
     int cikeysize = 0; /* key size from cipher */
     unsigned char *iv = NULL; /* initial vector for symmetric encryption */
+    int iv_len; /* iv length */
     unsigned char *out = NULL; /* decryption output buffer */
     int n, ret = 0;
     EVP_PKEY_CTX *pkctx = NULL; /* private key context */
@@ -812,11 +821,12 @@ unsigned char *OSSL_CRMF_ENCRYPTEDVALUE_decrypt(const OSSL_CRMF_ENCRYPTEDVALUE *
     } else {
         goto end;
     }
-    if ((iv = OPENSSL_malloc(EVP_CIPHER_get_iv_length(cipher))) == NULL)
+    iv_len = EVP_CIPHER_get_iv_length(cipher);
+    if ((iv = OPENSSL_malloc(iv_len)) == NULL)
         goto end;
-    if (ASN1_TYPE_get_octetstring(enc->symmAlg->parameter, iv,
-            EVP_CIPHER_get_iv_length(cipher))
-        != EVP_CIPHER_get_iv_length(cipher)) {
+    if (enc->symmAlg->parameter == NULL
+        || ASN1_TYPE_get_octetstring(enc->symmAlg->parameter, iv, iv_len)
+            != iv_len) {
         ERR_raise(ERR_LIB_CRMF, CRMF_R_MALFORMED_IV);
         goto end;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2019-2026 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
@@ -371,8 +371,8 @@ int ossl_provider_info_add_to_store(OSSL_LIB_CTX *libctx,
     if (!CRYPTO_THREAD_write_lock(store->lock))
         return 0;
     if (store->provinfosz == 0) {
-        store->provinfo = OPENSSL_calloc(BUILTINS_BLOCK_SIZE,
-            sizeof(*store->provinfo));
+        store->provinfo = OPENSSL_zalloc(sizeof(*store->provinfo)
+            * BUILTINS_BLOCK_SIZE);
         if (store->provinfo == NULL)
             goto err;
         store->provinfosz = BUILTINS_BLOCK_SIZE;
@@ -380,8 +380,8 @@ int ossl_provider_info_add_to_store(OSSL_LIB_CTX *libctx,
         OSSL_PROVIDER_INFO *tmpbuiltins;
         size_t newsz = store->provinfosz + BUILTINS_BLOCK_SIZE;
 
-        tmpbuiltins = OPENSSL_realloc_array(store->provinfo,
-            newsz, sizeof(*store->provinfo));
+        tmpbuiltins = OPENSSL_realloc(store->provinfo,
+            sizeof(*store->provinfo) * newsz);
         if (tmpbuiltins == NULL)
             goto err;
         store->provinfo = tmpbuiltins;
@@ -1118,7 +1118,7 @@ static int provider_init(OSSL_PROVIDER *prov)
         cnt++; /* One for the terminating item */
 
         /* Allocate one extra item for the "library" name */
-        prov->error_strings = OPENSSL_calloc(cnt + 1, sizeof(ERR_STRING_DATA));
+        prov->error_strings = OPENSSL_zalloc(sizeof(ERR_STRING_DATA) * (cnt + 1));
         if (prov->error_strings == NULL)
             goto end;
 
@@ -1668,10 +1668,10 @@ int OSSL_PROVIDER_available(OSSL_LIB_CTX *libctx, const char *name)
 
     prov = ossl_provider_find(libctx, name, 0);
     if (prov != NULL) {
-        if (!CRYPTO_THREAD_read_lock(prov->flag_lock))
-            return 0;
-        available = prov->flag_activated;
-        CRYPTO_THREAD_unlock(prov->flag_lock);
+        if (CRYPTO_THREAD_read_lock(prov->flag_lock)) {
+            available = prov->flag_activated;
+            CRYPTO_THREAD_unlock(prov->flag_lock);
+        }
         ossl_provider_free(prov);
     }
     return available;

@@ -120,8 +120,8 @@ static int dane_ctx_enable(struct dane_ctx_st *dctx)
     if (dctx->mdevp != NULL)
         return 1;
 
-    mdevp = OPENSSL_calloc(n, sizeof(*mdevp));
-    mdord = OPENSSL_calloc(n, sizeof(*mdord));
+    mdevp = OPENSSL_zalloc(n * sizeof(*mdevp));
+    mdord = OPENSSL_zalloc(n * sizeof(*mdord));
 
     if (mdord == NULL || mdevp == NULL) {
         OPENSSL_free(mdord);
@@ -228,12 +228,12 @@ static int dane_mtype_set(struct dane_ctx_st *dctx,
         uint8_t *mdord;
         int n = ((int)mtype) + 1;
 
-        mdevp = OPENSSL_realloc_array(dctx->mdevp, n, sizeof(*mdevp));
+        mdevp = OPENSSL_realloc(dctx->mdevp, n * sizeof(*mdevp));
         if (mdevp == NULL)
             return -1;
         dctx->mdevp = mdevp;
 
-        mdord = OPENSSL_realloc_array(dctx->mdord, n, sizeof(*mdord));
+        mdord = OPENSSL_realloc(dctx->mdord, n * sizeof(*mdord));
         if (mdord == NULL)
             return -1;
         dctx->mdord = mdord;
@@ -823,7 +823,6 @@ SSL *ossl_ssl_connection_new_int(SSL_CTX *ctx, SSL *user_ssl,
     s->ext.ocsp.exts = NULL;
     s->ext.ocsp.resp = NULL;
     s->ext.ocsp.resp_len = 0;
-    s->ext.ocsp.resp_ex = NULL;
 
     if (!SSL_CTX_up_ref(ctx))
         goto err;
@@ -1490,20 +1489,14 @@ void ossl_ssl_connection_free(SSL *ssl)
     OPENSSL_free(s->ext.tuples);
     OPENSSL_free(s->ext.peer_supportedgroups);
     sk_X509_EXTENSION_pop_free(s->ext.ocsp.exts, X509_EXTENSION_free);
-
 #ifndef OPENSSL_NO_OCSP
-    OPENSSL_free(s->ext.ocsp.resp);
-    s->ext.ocsp.resp = NULL;
-    s->ext.ocsp.resp_len = 0;
-
     sk_OCSP_RESPID_pop_free(s->ext.ocsp.ids, OCSP_RESPID_free);
-    sk_OCSP_RESPONSE_pop_free(s->ext.ocsp.resp_ex, OCSP_RESPONSE_free);
-    s->ext.ocsp.resp_ex = NULL;
 #endif
 #ifndef OPENSSL_NO_CT
     SCT_LIST_free(s->scts);
     OPENSSL_free(s->ext.scts);
 #endif
+    OPENSSL_free(s->ext.ocsp.resp);
     OPENSSL_free(s->ext.alpn);
     OPENSSL_free(s->ext.tls13_cookie);
     if (s->clienthello != NULL)
@@ -5233,6 +5226,31 @@ SSL *SSL_dup(SSL *s)
         || !dup_ca_names(&retsc->client_ca_names, sc->client_ca_names))
         goto err;
 
+    if (sc->server_cert_type != NULL) {
+        OPENSSL_free(retsc->server_cert_type);
+        retsc->server_cert_type = OPENSSL_memdup(sc->server_cert_type,
+            sc->server_cert_type_len);
+        if (retsc->server_cert_type == NULL)
+            goto err;
+        retsc->server_cert_type_len = sc->server_cert_type_len;
+    }
+
+    if (sc->client_cert_type != NULL) {
+        OPENSSL_free(retsc->client_cert_type);
+        retsc->client_cert_type = OPENSSL_memdup(sc->client_cert_type,
+            sc->client_cert_type_len);
+        if (retsc->client_cert_type == NULL)
+            goto err;
+        retsc->client_cert_type_len = sc->client_cert_type_len;
+    }
+
+#ifndef OPENSSL_NO_CT
+    retsc->ct_validation_callback = sc->ct_validation_callback;
+    retsc->ct_validation_callback_arg = sc->ct_validation_callback_arg;
+#endif
+
+    retsc->ext.status_type = sc->ext.status_type;
+
     return ret;
 
 err:
@@ -5467,6 +5485,7 @@ SSL_CTX *SSL_get_SSL_CTX(const SSL *ssl)
 SSL_CTX *SSL_set_SSL_CTX(SSL *ssl, SSL_CTX *ctx)
 {
     CERT *new_cert;
+    uint32_t *new_valid_flags = NULL;
     SSL_CONNECTION *sc = SSL_CONNECTION_FROM_SSL_ONLY(ssl);
 
     /* TODO(QUIC FUTURE): Add support for QUIC */
@@ -5491,6 +5510,34 @@ SSL_CTX *SSL_set_SSL_CTX(SSL *ssl, SSL_CTX *ctx)
      */
     if (!ossl_assert(sc->sid_ctx_length <= sizeof(sc->sid_ctx)))
         goto err;
+
+    /*
+     * |valid_flags| is sized from the number of signature algorithm slots of
+     * the SSL_CTX the connection was created from, so it must be resized for
+     * the replacement context.
+     *
+     * The built-in slots are indexed by the fixed SSL_PKEY_* constants and so
+     * mean the same thing in either context. They are preserved because they
+     * may already hold peer signature algorithm state which does not depend
+     * on the SSL_CTX. A provider slot index is instead a position in one
+     * context's provider list, so the same index denotes a different
+     * algorithm here and the old value cannot be carried over. They are reset
+     * rather than recomputed: recomputing them means recomputing the shared
+     * signature algorithms against the replacement context, which would let
+     * its preferences take effect on an established connection.
+     */
+    if (sc->s3.tmp.valid_flags != NULL) {
+        /* Should never happen: ssl_cert_new() enforces this */
+        if (!ossl_assert(new_cert->ssl_pkey_num >= SSL_PKEY_NUM))
+            goto err;
+        new_valid_flags = OPENSSL_zalloc(new_cert->ssl_pkey_num
+            * sizeof(*new_valid_flags));
+        if (new_valid_flags == NULL)
+            goto err;
+        memcpy(new_valid_flags, sc->s3.tmp.valid_flags,
+            SSL_PKEY_NUM * sizeof(*new_valid_flags));
+    }
+
     if (!SSL_CTX_up_ref(ctx))
         goto err;
 
@@ -5507,12 +5554,18 @@ SSL_CTX *SSL_set_SSL_CTX(SSL *ssl, SSL_CTX *ctx)
 
     ssl_cert_free(sc->cert);
     sc->cert = new_cert;
+    sc->ssl_pkey_num = new_cert->ssl_pkey_num;
+    if (new_valid_flags != NULL) {
+        OPENSSL_free(sc->s3.tmp.valid_flags);
+        sc->s3.tmp.valid_flags = new_valid_flags;
+    }
     SSL_CTX_free(ssl->ctx); /* decrement reference count */
     ssl->ctx = ctx;
 
     return ssl->ctx;
 
 err:
+    OPENSSL_free(new_valid_flags);
     ssl_cert_free(new_cert);
     return NULL;
 }
@@ -6400,56 +6453,39 @@ static int ct_extract_ocsp_response_scts(SSL_CONNECTION *s)
 {
 #ifndef OPENSSL_NO_OCSP
     int scts_extracted = 0;
+    const unsigned char *p;
     OCSP_BASICRESP *br = NULL;
     OCSP_RESPONSE *rsp = NULL;
     STACK_OF(SCT) *scts = NULL;
-    int ret;
-    int i, j;
+    int i;
 
-    if (s->ext.ocsp.resp_ex == NULL)
+    if (s->ext.ocsp.resp == NULL || s->ext.ocsp.resp_len == 0)
         goto err;
 
-    for (j = 0; j < sk_OCSP_RESPONSE_num(s->ext.ocsp.resp_ex); j++) {
-        rsp = sk_OCSP_RESPONSE_value(s->ext.ocsp.resp_ex, j);
-        if (rsp == NULL)
+    p = s->ext.ocsp.resp;
+    rsp = d2i_OCSP_RESPONSE(NULL, &p, (int)s->ext.ocsp.resp_len);
+    if (rsp == NULL)
+        goto err;
+
+    br = OCSP_response_get1_basic(rsp);
+    if (br == NULL)
+        goto err;
+
+    for (i = 0; i < OCSP_resp_count(br); ++i) {
+        OCSP_SINGLERESP *single = OCSP_resp_get0(br, i);
+
+        if (single == NULL)
+            continue;
+
+        scts = OCSP_SINGLERESP_get1_ext_d2i(single, NID_ct_cert_scts, NULL, NULL);
+        scts_extracted = ct_move_scts(&s->scts, scts, SCT_SOURCE_OCSP_STAPLED_RESPONSE);
+        if (scts_extracted < 0)
             goto err;
-
-        br = OCSP_response_get1_basic(rsp);
-        if (br == NULL)
-            goto err;
-
-        for (i = 0; i < OCSP_resp_count(br); ++i) {
-            OCSP_SINGLERESP *single = OCSP_resp_get0(br, i);
-
-            if (single == NULL)
-                continue;
-
-            scts = OCSP_SINGLERESP_get1_ext_d2i(single,
-                NID_ct_cert_scts, NULL, NULL);
-            if (scts == NULL) {
-                scts_extracted = -1;
-                goto err;
-            }
-
-            ret = ct_move_scts(&s->scts, scts,
-                SCT_SOURCE_OCSP_STAPLED_RESPONSE);
-
-            SCT_LIST_free(scts);
-
-            if (ret < 0) {
-                scts_extracted = -1;
-                goto err;
-            }
-
-            scts_extracted += ret;
-        }
-
-        OCSP_BASICRESP_free(br);
-        /* to assure that is not freed twice */
-        br = NULL;
     }
 err:
+    SCT_LIST_free(scts);
     OCSP_BASICRESP_free(br);
+    OCSP_RESPONSE_free(rsp);
     return scts_extracted;
 #else
     /* Behave as if no OCSP response exists */
@@ -6851,7 +6887,7 @@ int SSL_client_hello_get1_extensions_present(SSL *s, int **out, size_t *outlen)
         *outlen = 0;
         return 1;
     }
-    if ((present = OPENSSL_malloc_array(num, sizeof(*present))) == NULL)
+    if ((present = OPENSSL_malloc(sizeof(*present) * num)) == NULL)
         return 0;
     for (i = 0; i < sc->clienthello->pre_proc_exts_len; i++) {
         ext = sc->clienthello->pre_proc_exts + i;
@@ -7004,8 +7040,10 @@ static int nss_keylog_int(const char *prefix,
      */
     prefix_len = strlen(prefix);
     out_len = prefix_len + (2 * parameter_1_len) + (2 * parameter_2_len) + 3;
-    if ((out = cursor = OPENSSL_malloc(out_len)) == NULL)
+    if ((out = cursor = OPENSSL_malloc(out_len)) == NULL) {
+        SSLfatal(sc, SSL_AD_INTERNAL_ERROR, ERR_R_CRYPTO_LIB);
         return 0;
+    }
 
     memcpy(cursor, prefix, prefix_len);
     cursor += prefix_len;
@@ -7097,7 +7135,7 @@ int ssl_cache_cipherlist(SSL_CONNECTION *s, PACKET *cipher_suites, int sslv2form
          * slightly over allocate because we won't store those. But that isn't a
          * problem.
          */
-        raw = OPENSSL_malloc_array(numciphers, TLS_CIPHER_LEN);
+        raw = OPENSSL_malloc(numciphers * TLS_CIPHER_LEN);
         s->s3.tmp.ciphers_raw = raw;
         if (raw == NULL) {
             SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_CRYPTO_LIB);
@@ -7304,7 +7342,7 @@ __owur unsigned int ssl_get_max_send_fragment(const SSL_CONNECTION *sc)
         return GET_MAX_FRAGMENT_LENGTH(sc->session);
 
     /* return current SSL connection setting */
-    return (unsigned int)sc->max_send_fragment;
+    return sc->max_send_fragment;
 }
 
 __owur unsigned int ssl_get_split_send_fragment(const SSL_CONNECTION *sc)
@@ -7316,10 +7354,10 @@ __owur unsigned int ssl_get_split_send_fragment(const SSL_CONNECTION *sc)
 
     /* else limit |split_send_fragment| to current |max_send_fragment| */
     if (sc->split_send_fragment > sc->max_send_fragment)
-        return (unsigned int)sc->max_send_fragment;
+        return sc->max_send_fragment;
 
     /* return current SSL connection setting */
-    return (unsigned int)sc->split_send_fragment;
+    return sc->split_send_fragment;
 }
 
 int SSL_stateless(SSL *s)

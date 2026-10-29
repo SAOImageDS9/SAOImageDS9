@@ -1,5 +1,5 @@
 /*
- * Copyright 2009-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2009-2026 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
@@ -63,16 +63,15 @@ CMS_RecipientInfo *CMS_add0_recipient_password(CMS_ContentInfo *cms,
     if (wrap_nid <= 0)
         wrap_nid = NID_id_alg_PWRI_KEK;
 
+    if (pbe_nid <= 0)
+        pbe_nid = NID_id_pbkdf2;
+
     /* Get from enveloped data */
     if (kekciph == NULL)
         kekciph = ec->cipher;
 
     if (kekciph == NULL) {
         ERR_raise(ERR_LIB_CMS, CMS_R_NO_CIPHER);
-        return NULL;
-    }
-    if ((EVP_CIPHER_get_flags(kekciph) & EVP_CIPH_FLAG_AEAD_CIPHER) != 0) {
-        ERR_raise(ERR_LIB_CMS, CMS_R_UNSUPPORTED_KEK_ALGORITHM);
         return NULL;
     }
     if (wrap_nid != NID_id_alg_PWRI_KEK) {
@@ -138,7 +137,7 @@ CMS_RecipientInfo *CMS_add0_recipient_password(CMS_ContentInfo *cms,
         ERR_raise(ERR_LIB_CMS, ERR_R_ASN1_LIB);
         goto err;
     }
-    ri->encoded_type = ri->type = CMS_RECIPINFO_PASS;
+    ri->type = CMS_RECIPINFO_PASS;
 
     pwri = ri->d.pwri;
     pwri->cms_ctx = cms_ctx;
@@ -205,7 +204,7 @@ static int kek_unwrap_key(unsigned char *out, size_t *outlen,
     unsigned char *tmp;
     int outl, rv = 0;
 
-    if (blocklen <= 0)
+    if (blocklen < 4)
         return 0;
 
     if (inlen < 2 * (size_t)blocklen) {
@@ -229,12 +228,12 @@ static int kek_unwrap_key(unsigned char *out, size_t *outlen,
         || !EVP_DecryptUpdate(ctx, tmp, &outl,
             tmp + inlen - blocklen, blocklen)
         /* Can now decrypt first n - 1 blocks */
-        || !EVP_DecryptUpdate(ctx, tmp, &outl, in, (int)(inlen - blocklen))
+        || !EVP_DecryptUpdate(ctx, tmp, &outl, in, inlen - blocklen)
 
         /* Reset IV to original value */
         || !EVP_DecryptInit_ex(ctx, NULL, NULL, NULL, NULL)
         /* Decrypt again */
-        || !EVP_DecryptUpdate(ctx, tmp, &outl, tmp, (int)inlen))
+        || !EVP_DecryptUpdate(ctx, tmp, &outl, tmp, inlen))
         goto err;
     /* Check check bytes */
     if (((tmp[1] ^ tmp[4]) & (tmp[2] ^ tmp[5]) & (tmp[3] ^ tmp[6])) != 0xff) {
@@ -292,8 +291,8 @@ static int kek_wrap_key(unsigned char *out, size_t *outlen,
                 <= 0)
             return 0;
         /* Encrypt twice */
-        if (!EVP_EncryptUpdate(ctx, out, &dummy, out, (int)olen)
-            || !EVP_EncryptUpdate(ctx, out, &dummy, out, (int)olen))
+        if (!EVP_EncryptUpdate(ctx, out, &dummy, out, olen)
+            || !EVP_EncryptUpdate(ctx, out, &dummy, out, olen))
             return 0;
     }
 
@@ -316,6 +315,7 @@ int ossl_cms_RecipientInfo_pwri_crypt(const CMS_ContentInfo *cms,
     EVP_CIPHER *kekcipher;
     unsigned char *key = NULL;
     size_t keylen;
+    size_t key_alloc_len = 0;
     const CMS_CTX *cms_ctx = ossl_cms_get0_cmsctx(cms);
 
     ec = ossl_cms_get0_env_enc_content(cms);
@@ -368,6 +368,11 @@ int ossl_cms_RecipientInfo_pwri_crypt(const CMS_ContentInfo *cms,
 
     /* Finish password based key derivation to setup key in "ctx" */
 
+    if (algtmp == NULL) {
+        ERR_raise_data(ERR_LIB_CMS, CMS_R_INVALID_KEY_ENCRYPTION_PARAMETER,
+            "Missing KeyDerivationAlgorithm");
+        goto err;
+    }
     if (!EVP_PBE_CipherInit_ex(algtmp->algorithm,
             (char *)pwri->pass, (int)pwri->passlen,
             algtmp->parameter, kekctx, en_de,
@@ -387,15 +392,17 @@ int ossl_cms_RecipientInfo_pwri_crypt(const CMS_ContentInfo *cms,
 
         if (key == NULL)
             goto err;
+        key_alloc_len = keylen;
 
         if (!kek_wrap_key(key, &keylen, ec->key, ec->keylen, kekctx, cms_ctx))
             goto err;
         pwri->encryptedKey->data = key;
-        pwri->encryptedKey->length = (int)keylen;
+        pwri->encryptedKey->length = keylen;
     } else {
         key = OPENSSL_malloc(pwri->encryptedKey->length);
         if (key == NULL)
             goto err;
+        key_alloc_len = (size_t)pwri->encryptedKey->length;
         if (!kek_unwrap_key(key, &keylen,
                 pwri->encryptedKey->data,
                 pwri->encryptedKey->length, kekctx)) {
@@ -415,7 +422,7 @@ err:
     EVP_CIPHER_CTX_free(kekctx);
 
     if (!r)
-        OPENSSL_free(key);
+        OPENSSL_clear_free(key, key_alloc_len);
     X509_ALGOR_free(kekalg);
 
     return r;

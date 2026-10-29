@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2014-2026 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
@@ -18,6 +18,7 @@ BIGNUM *bn_wexpand(BIGNUM *a, int words);
 BIGNUM *bn_expand2(BIGNUM *a, int words);
 
 void bn_correct_top(BIGNUM *a);
+int bn_set_top_fixed(BIGNUM *a, int words);
 
 /*
  * Determine the modified width-(w+1) Non-Adjacent Form (wNAF) of 'scalar'.
@@ -140,7 +141,7 @@ int s390x_crt(BIGNUM *r, const BIGNUM *i, const BIGNUM *p, const BIGNUM *q,
 #endif
 
 int ossl_bn_mont_ctx_set(BN_MONT_CTX *ctx, const BIGNUM *modulus, int ri,
-    const unsigned char *rr, int rrlen,
+    const unsigned char *rr, size_t rrlen,
     uint32_t nlo, uint32_t nhi);
 
 int ossl_bn_mont_ctx_eq(const BN_MONT_CTX *m1, const BN_MONT_CTX *m2);

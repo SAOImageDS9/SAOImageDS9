@@ -1,11 +1,17 @@
 /*
- * Copyright 2013-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2013-2026 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
  * in the file LICENSE in the source distribution or at
  * https://www.openssl.org/source/license.html
  */
+
+/*
+ * Low level key APIs (DH etc) are deprecated for public use, but still ok for
+ * internal use.
+ */
+#include "internal/deprecated.h"
 
 #include "internal/cryptlib.h"
 #include <openssl/asn1t.h>
@@ -210,10 +216,12 @@ static int cms_kek_cipher(unsigned char **pout, size_t *poutlen,
     size_t keklen;
     int rv = 0;
     unsigned char *out = NULL;
+    size_t out_alloc_len = 0;
     int outlen;
+    size_t outsize;
 
     keklen = EVP_CIPHER_CTX_get_key_length(kari->ctx);
-    if (keklen > EVP_MAX_KEY_LENGTH || inlen > INT_MAX)
+    if (keklen > EVP_MAX_KEY_LENGTH)
         return 0;
     /* Derive KEK */
     if (EVP_PKEY_derive(kari->pctx, kek, &keklen) <= 0)
@@ -222,11 +230,18 @@ static int cms_kek_cipher(unsigned char **pout, size_t *poutlen,
     if (!EVP_CipherInit_ex(kari->ctx, NULL, NULL, kek, NULL, enc))
         goto err;
     /* obtain output length of ciphered key */
-    if (!EVP_CipherUpdate(kari->ctx, NULL, &outlen, in, (int)inlen))
+    if (!EVP_CipherUpdate(kari->ctx, NULL, &outlen, in, inlen))
         goto err;
-    out = OPENSSL_malloc(outlen);
+    /*
+     * On its integrity-failure paths that primitive writes and cleanses up to
+     * inlen bytes of the output buffer. Size the buffer for that worst case so
+     * a failed unwrap cannot write past the allocation.
+     */
+    outsize = (size_t)outlen < inlen ? inlen : (size_t)outlen;
+    out = OPENSSL_malloc(outsize);
     if (out == NULL)
         goto err;
+    out_alloc_len = (size_t)outlen;
     if (!EVP_CipherUpdate(kari->ctx, out, &outlen, in, (int)inlen))
         goto err;
     *pout = out;
@@ -236,7 +251,7 @@ static int cms_kek_cipher(unsigned char **pout, size_t *poutlen,
 err:
     OPENSSL_cleanse(kek, keklen);
     if (!rv)
-        OPENSSL_free(out);
+        OPENSSL_clear_free(out, out_alloc_len);
     EVP_CIPHER_CTX_reset(kari->ctx);
     /* FIXME: WHY IS kari->pctx freed here?  /RL */
     EVP_PKEY_CTX_free(kari->pctx);
@@ -343,7 +358,7 @@ int ossl_cms_RecipientInfo_kari_init(CMS_RecipientInfo *ri, X509 *recip,
     ri->d.kari = M_ASN1_new_of(CMS_KeyAgreeRecipientInfo);
     if (ri->d.kari == NULL)
         return 0;
-    ri->encoded_type = ri->type = CMS_RECIPINFO_AGREE;
+    ri->type = CMS_RECIPINFO_AGREE;
 
     kari = ri->d.kari;
     kari->version = 3;
@@ -406,6 +421,67 @@ int ossl_cms_RecipientInfo_kari_init(CMS_RecipientInfo *ri, X509 *recip,
     return 1;
 }
 
+static int cms_wrap_init(CMS_KeyAgreeRecipientInfo *kari,
+    const EVP_CIPHER *cipher)
+{
+    const CMS_CTX *cms_ctx = kari->cms_ctx;
+    EVP_CIPHER_CTX *ctx = kari->ctx;
+    const EVP_CIPHER *kekcipher;
+    EVP_CIPHER *fetched_kekcipher;
+    const char *kekcipher_name;
+    int keylen;
+    int ret;
+
+    /* If a suitable wrap algorithm is already set nothing to do */
+    kekcipher = EVP_CIPHER_CTX_get0_cipher(ctx);
+    if (kekcipher != NULL) {
+        if (EVP_CIPHER_CTX_get_mode(ctx) != EVP_CIPH_WRAP_MODE)
+            return 0;
+        return 1;
+    }
+    if (cipher == NULL)
+        return 0;
+    keylen = EVP_CIPHER_get_key_length(cipher);
+    if ((EVP_CIPHER_get_flags(cipher) & EVP_CIPH_FLAG_GET_WRAP_CIPHER) != 0) {
+        ret = EVP_CIPHER_meth_get_ctrl(cipher)(NULL, EVP_CTRL_GET_WRAP_CIPHER,
+            0, &kekcipher);
+        if (ret <= 0)
+            return 0;
+
+        if (kekcipher != NULL) {
+            if (EVP_CIPHER_get_mode(kekcipher) != EVP_CIPH_WRAP_MODE)
+                return 0;
+            kekcipher_name = EVP_CIPHER_get0_name(kekcipher);
+            goto enc;
+        }
+    }
+
+    /*
+     * Pick a cipher based on content encryption cipher. If it is DES3 use
+     * DES3 wrap otherwise use AES wrap similar to key size.
+     */
+#ifndef OPENSSL_NO_DES
+    if (EVP_CIPHER_get_type(cipher) == NID_des_ede3_cbc)
+        kekcipher_name = SN_id_smime_alg_CMS3DESwrap;
+    else
+#endif
+        if (keylen <= 16)
+        kekcipher_name = SN_id_aes128_wrap;
+    else if (keylen <= 24)
+        kekcipher_name = SN_id_aes192_wrap;
+    else
+        kekcipher_name = SN_id_aes256_wrap;
+enc:
+    fetched_kekcipher = EVP_CIPHER_fetch(ossl_cms_ctx_get0_libctx(cms_ctx),
+        kekcipher_name,
+        ossl_cms_ctx_get0_propq(cms_ctx));
+    if (fetched_kekcipher == NULL)
+        return 0;
+    ret = EVP_EncryptInit_ex(ctx, fetched_kekcipher, NULL, NULL, NULL);
+    EVP_CIPHER_free(fetched_kekcipher);
+    return ret;
+}
+
 /* Encrypt content key in key agreement recipient info */
 
 int ossl_cms_RecipientInfo_kari_encrypt(const CMS_ContentInfo *cms,
@@ -425,7 +501,7 @@ int ossl_cms_RecipientInfo_kari_encrypt(const CMS_ContentInfo *cms,
     reks = kari->recipientEncryptedKeys;
     ec = ossl_cms_get0_env_enc_content(cms);
     /* Initialise wrap algorithm parameters */
-    if (!ossl_cms_RecipientInfo_wrap_init(ri, ec->cipher))
+    if (!cms_wrap_init(kari, ec->cipher))
         return 0;
     /*
      * If no originator key set up initialise for ephemeral key the public key
@@ -458,7 +534,7 @@ int ossl_cms_RecipientInfo_kari_encrypt(const CMS_ContentInfo *cms,
         if (!cms_kek_cipher(&enckey, &enckeylen, ec->key, ec->keylen,
                 kari, 1))
             return 0;
-        ASN1_STRING_set0(rek->encryptedKey, enckey, (int)enckeylen);
+        ASN1_STRING_set0(rek->encryptedKey, enckey, enckeylen);
     }
 
     return 1;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2001-2026 The OpenSSL Project Authors. All Rights Reserved.
  * Copyright (c) 2002, Oracle and/or its affiliates. All rights reserved
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
@@ -167,8 +167,8 @@ static int prime_field_tests(void)
     const BIGNUM *scalars[4];
 #endif
     unsigned char buf[100];
-    size_t len;
-    int k, r = 0;
+    size_t len, r = 0;
+    int k;
 
     if (!TEST_ptr(ctx = BN_CTX_new())
         || !TEST_ptr(p = BN_new())
@@ -1421,471 +1421,56 @@ err:
 }
 
 static const unsigned char p521_named[] = {
-    0x06,
-    0x05,
-    0x2b,
-    0x81,
-    0x04,
-    0x00,
-    0x23,
+    0x06, 0x05, 0x2b, 0x81, 0x04, 0x00, 0x23
 };
 
 static const unsigned char p521_explicit[] = {
-    0x30,
-    0x82,
-    0x01,
-    0xc3,
-    0x02,
-    0x01,
-    0x01,
-    0x30,
-    0x4d,
-    0x06,
-    0x07,
-    0x2a,
-    0x86,
-    0x48,
-    0xce,
-    0x3d,
-    0x01,
-    0x01,
-    0x02,
-    0x42,
-    0x01,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0x30,
-    0x81,
-    0x9f,
-    0x04,
-    0x42,
-    0x01,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xfc,
-    0x04,
-    0x42,
-    0x00,
-    0x51,
-    0x95,
-    0x3e,
-    0xb9,
-    0x61,
-    0x8e,
-    0x1c,
-    0x9a,
-    0x1f,
-    0x92,
-    0x9a,
-    0x21,
-    0xa0,
-    0xb6,
-    0x85,
-    0x40,
-    0xee,
-    0xa2,
-    0xda,
-    0x72,
-    0x5b,
-    0x99,
-    0xb3,
-    0x15,
-    0xf3,
-    0xb8,
-    0xb4,
-    0x89,
-    0x91,
-    0x8e,
-    0xf1,
-    0x09,
-    0xe1,
-    0x56,
-    0x19,
-    0x39,
-    0x51,
-    0xec,
-    0x7e,
-    0x93,
-    0x7b,
-    0x16,
-    0x52,
-    0xc0,
-    0xbd,
-    0x3b,
-    0xb1,
-    0xbf,
-    0x07,
-    0x35,
-    0x73,
-    0xdf,
-    0x88,
-    0x3d,
-    0x2c,
-    0x34,
-    0xf1,
-    0xef,
-    0x45,
-    0x1f,
-    0xd4,
-    0x6b,
-    0x50,
-    0x3f,
-    0x00,
-    0x03,
-    0x15,
-    0x00,
-    0xd0,
-    0x9e,
-    0x88,
-    0x00,
-    0x29,
-    0x1c,
-    0xb8,
-    0x53,
-    0x96,
-    0xcc,
-    0x67,
-    0x17,
-    0x39,
-    0x32,
-    0x84,
-    0xaa,
-    0xa0,
-    0xda,
-    0x64,
-    0xba,
-    0x04,
-    0x81,
-    0x85,
-    0x04,
-    0x00,
-    0xc6,
-    0x85,
-    0x8e,
-    0x06,
-    0xb7,
-    0x04,
-    0x04,
-    0xe9,
-    0xcd,
-    0x9e,
-    0x3e,
-    0xcb,
-    0x66,
-    0x23,
-    0x95,
-    0xb4,
-    0x42,
-    0x9c,
-    0x64,
-    0x81,
-    0x39,
-    0x05,
-    0x3f,
-    0xb5,
-    0x21,
-    0xf8,
-    0x28,
-    0xaf,
-    0x60,
-    0x6b,
-    0x4d,
-    0x3d,
-    0xba,
-    0xa1,
-    0x4b,
-    0x5e,
-    0x77,
-    0xef,
-    0xe7,
-    0x59,
-    0x28,
-    0xfe,
-    0x1d,
-    0xc1,
-    0x27,
-    0xa2,
-    0xff,
-    0xa8,
-    0xde,
-    0x33,
-    0x48,
-    0xb3,
-    0xc1,
-    0x85,
-    0x6a,
-    0x42,
-    0x9b,
-    0xf9,
-    0x7e,
-    0x7e,
-    0x31,
-    0xc2,
-    0xe5,
-    0xbd,
-    0x66,
-    0x01,
-    0x18,
-    0x39,
-    0x29,
-    0x6a,
-    0x78,
-    0x9a,
-    0x3b,
-    0xc0,
-    0x04,
-    0x5c,
-    0x8a,
-    0x5f,
-    0xb4,
-    0x2c,
-    0x7d,
-    0x1b,
-    0xd9,
-    0x98,
-    0xf5,
-    0x44,
-    0x49,
-    0x57,
-    0x9b,
-    0x44,
-    0x68,
-    0x17,
-    0xaf,
-    0xbd,
-    0x17,
-    0x27,
-    0x3e,
-    0x66,
-    0x2c,
-    0x97,
-    0xee,
-    0x72,
-    0x99,
-    0x5e,
-    0xf4,
-    0x26,
-    0x40,
-    0xc5,
-    0x50,
-    0xb9,
-    0x01,
-    0x3f,
-    0xad,
-    0x07,
-    0x61,
-    0x35,
-    0x3c,
-    0x70,
-    0x86,
-    0xa2,
-    0x72,
-    0xc2,
-    0x40,
-    0x88,
-    0xbe,
-    0x94,
-    0x76,
-    0x9f,
-    0xd1,
-    0x66,
-    0x50,
-    0x02,
-    0x42,
-    0x01,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xff,
-    0xfa,
-    0x51,
-    0x86,
-    0x87,
-    0x83,
-    0xbf,
-    0x2f,
-    0x96,
-    0x6b,
-    0x7f,
-    0xcc,
-    0x01,
-    0x48,
-    0xf7,
-    0x09,
-    0xa5,
-    0xd0,
-    0x3b,
-    0xb5,
-    0xc9,
-    0xb8,
-    0x89,
-    0x9c,
-    0x47,
-    0xae,
-    0xbb,
-    0x6f,
-    0xb7,
-    0x1e,
-    0x91,
-    0x38,
-    0x64,
-    0x09,
-    0x02,
-    0x01,
-    0x01,
+    0x30, 0x82, 0x01, 0xc3, 0x02, 0x01, 0x01, 0x30, 0x4d, 0x06,
+    0x07, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x01, 0x01, 0x02, 0x42,
+    0x01, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x30, 0x81, 0x9f, 0x04,
+    0x42, 0x01, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfc, 0x04, 0x42, 0x00,
+    0x51, 0x95, 0x3e, 0xb9, 0x61, 0x8e, 0x1c, 0x9a, 0x1f, 0x92,
+    0x9a, 0x21, 0xa0, 0xb6, 0x85, 0x40, 0xee, 0xa2, 0xda, 0x72,
+    0x5b, 0x99, 0xb3, 0x15, 0xf3, 0xb8, 0xb4, 0x89, 0x91, 0x8e,
+    0xf1, 0x09, 0xe1, 0x56, 0x19, 0x39, 0x51, 0xec, 0x7e, 0x93,
+    0x7b, 0x16, 0x52, 0xc0, 0xbd, 0x3b, 0xb1, 0xbf, 0x07, 0x35,
+    0x73, 0xdf, 0x88, 0x3d, 0x2c, 0x34, 0xf1, 0xef, 0x45, 0x1f,
+    0xd4, 0x6b, 0x50, 0x3f, 0x00, 0x03, 0x15, 0x00, 0xd0, 0x9e,
+    0x88, 0x00, 0x29, 0x1c, 0xb8, 0x53, 0x96, 0xcc, 0x67, 0x17,
+    0x39, 0x32, 0x84, 0xaa, 0xa0, 0xda, 0x64, 0xba, 0x04, 0x81,
+    0x85, 0x04, 0x00, 0xc6, 0x85, 0x8e, 0x06, 0xb7, 0x04, 0x04,
+    0xe9, 0xcd, 0x9e, 0x3e, 0xcb, 0x66, 0x23, 0x95, 0xb4, 0x42,
+    0x9c, 0x64, 0x81, 0x39, 0x05, 0x3f, 0xb5, 0x21, 0xf8, 0x28,
+    0xaf, 0x60, 0x6b, 0x4d, 0x3d, 0xba, 0xa1, 0x4b, 0x5e, 0x77,
+    0xef, 0xe7, 0x59, 0x28, 0xfe, 0x1d, 0xc1, 0x27, 0xa2, 0xff,
+    0xa8, 0xde, 0x33, 0x48, 0xb3, 0xc1, 0x85, 0x6a, 0x42, 0x9b,
+    0xf9, 0x7e, 0x7e, 0x31, 0xc2, 0xe5, 0xbd, 0x66, 0x01, 0x18,
+    0x39, 0x29, 0x6a, 0x78, 0x9a, 0x3b, 0xc0, 0x04, 0x5c, 0x8a,
+    0x5f, 0xb4, 0x2c, 0x7d, 0x1b, 0xd9, 0x98, 0xf5, 0x44, 0x49,
+    0x57, 0x9b, 0x44, 0x68, 0x17, 0xaf, 0xbd, 0x17, 0x27, 0x3e,
+    0x66, 0x2c, 0x97, 0xee, 0x72, 0x99, 0x5e, 0xf4, 0x26, 0x40,
+    0xc5, 0x50, 0xb9, 0x01, 0x3f, 0xad, 0x07, 0x61, 0x35, 0x3c,
+    0x70, 0x86, 0xa2, 0x72, 0xc2, 0x40, 0x88, 0xbe, 0x94, 0x76,
+    0x9f, 0xd1, 0x66, 0x50, 0x02, 0x42, 0x01, 0xff, 0xff, 0xff,
+    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+    0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfa,
+    0x51, 0x86, 0x87, 0x83, 0xbf, 0x2f, 0x96, 0x6b, 0x7f, 0xcc,
+    0x01, 0x48, 0xf7, 0x09, 0xa5, 0xd0, 0x3b, 0xb5, 0xc9, 0xb8,
+    0x89, 0x9c, 0x47, 0xae, 0xbb, 0x6f, 0xb7, 0x1e, 0x91, 0x38,
+    0x64, 0x09, 0x02, 0x01, 0x01
 };
 
 /*
@@ -1972,7 +1557,7 @@ static int check_named_curve_test(int id)
     if (!TEST_int_eq(EC_GROUP_check_named_curve(group, 0, NULL), nid))
         goto err;
 
-    if (!TEST_size_t_eq(EC_GROUP_set_seed(group, invalid_seed, invalid_seed_len),
+    if (!TEST_int_eq(EC_GROUP_set_seed(group, invalid_seed, invalid_seed_len),
             invalid_seed_len))
         goto err;
 
@@ -1992,7 +1577,7 @@ static int check_named_curve_test(int id)
             goto err;
     }
     /* Pass if the seed is unknown (as it is optional) */
-    if (!TEST_size_t_eq(EC_GROUP_set_seed(group, NULL, 0), 1)
+    if (!TEST_int_eq(EC_GROUP_set_seed(group, NULL, 0), 1)
         || !TEST_int_eq(EC_GROUP_check_named_curve(group, 0, NULL), nid))
         goto err;
 
@@ -2301,7 +1886,7 @@ static int check_named_curve_from_ecparameters(int id)
      * An invalid seed in the parameters should be ignored: expect a "named"
      * group.
      */
-    if (!TEST_size_t_eq(EC_GROUP_set_seed(tmpg, invalid_seed, invalid_seed_len),
+    if (!TEST_int_eq(EC_GROUP_set_seed(tmpg, invalid_seed, invalid_seed_len),
             invalid_seed_len)
         || !TEST_ptr(other_params = *p_next++ = EC_GROUP_get_ecparameters(tmpg, NULL))
         || !TEST_ptr(tgroup = *g_next++ = EC_GROUP_new_from_ecparameters(other_params))
@@ -2317,7 +1902,7 @@ static int check_named_curve_from_ecparameters(int id)
      * A null seed in the parameters should be ignored, as it is optional:
      * expect a "named" group.
      */
-    if (!TEST_size_t_eq(EC_GROUP_set_seed(tmpg, NULL, 0), 1)
+    if (!TEST_int_eq(EC_GROUP_set_seed(tmpg, NULL, 0), 1)
         || !TEST_ptr(other_params = *p_next++ = EC_GROUP_get_ecparameters(tmpg, NULL))
         || !TEST_ptr(tgroup = *g_next++ = EC_GROUP_new_from_ecparameters(other_params))
         || !TEST_int_ne((tnid = EC_GROUP_get_curve_name(tgroup)), NID_undef)
@@ -2875,7 +2460,7 @@ err:
 }
 
 static int do_test_custom_explicit_fromdata(EC_GROUP *group, BN_CTX *ctx,
-    unsigned char *gen, size_t gen_size)
+    unsigned char *gen, int gen_size)
 {
     int ret = 0, i_out;
     EVP_PKEY_CTX *pctx = NULL;
@@ -3100,8 +2685,7 @@ err:
  */
 static int custom_generator_test(int id)
 {
-    int ret = 0, nid;
-    size_t bsize;
+    int ret = 0, nid, bsize;
     EC_GROUP *group = NULL;
     EC_POINT *G2 = NULL, *Q1 = NULL, *Q2 = NULL;
     BN_CTX *ctx = NULL;
@@ -3120,7 +2704,7 @@ static int custom_generator_test(int id)
         goto err;
 
     /* expected byte length of encoded points */
-    bsize = ((size_t)EC_GROUP_get_degree(group) + 7) / 8;
+    bsize = (EC_GROUP_get_degree(group) + 7) / 8;
     bsize = 1 + 2 * bsize; /* UNCOMPRESSED_POINT format */
 
     if (!TEST_ptr(k = BN_CTX_get(ctx))
@@ -3134,14 +2718,14 @@ static int custom_generator_test(int id)
         /* Q1 := kG */
         || !TEST_true(EC_POINT_mul(group, Q1, k, NULL, NULL, ctx))
         /* pull out the bytes of that */
-        || !TEST_size_t_eq(EC_POINT_point2oct(group, Q1,
-                               POINT_CONVERSION_UNCOMPRESSED, NULL,
-                               0, ctx),
+        || !TEST_int_eq(EC_POINT_point2oct(group, Q1,
+                            POINT_CONVERSION_UNCOMPRESSED, NULL,
+                            0, ctx),
             bsize)
         || !TEST_ptr(b1 = OPENSSL_malloc(bsize))
-        || !TEST_size_t_eq(EC_POINT_point2oct(group, Q1,
-                               POINT_CONVERSION_UNCOMPRESSED, b1,
-                               bsize, ctx),
+        || !TEST_int_eq(EC_POINT_point2oct(group, Q1,
+                            POINT_CONVERSION_UNCOMPRESSED, b1,
+                            bsize, ctx),
             bsize)
         /* new generator is G2 := 2G */
         || !TEST_true(EC_POINT_dbl(group, G2, EC_GROUP_get0_generator(group),
@@ -3153,14 +2737,14 @@ static int custom_generator_test(int id)
         || !TEST_true(BN_rshift1(k, k))
         /* Q2 := k/2 G2 */
         || !TEST_true(EC_POINT_mul(group, Q2, k, NULL, NULL, ctx))
-        || !TEST_size_t_eq(EC_POINT_point2oct(group, Q2,
-                               POINT_CONVERSION_UNCOMPRESSED, NULL,
-                               0, ctx),
+        || !TEST_int_eq(EC_POINT_point2oct(group, Q2,
+                            POINT_CONVERSION_UNCOMPRESSED, NULL,
+                            0, ctx),
             bsize)
         || !TEST_ptr(b2 = OPENSSL_malloc(bsize))
-        || !TEST_size_t_eq(EC_POINT_point2oct(group, Q2,
-                               POINT_CONVERSION_UNCOMPRESSED, b2,
-                               bsize, ctx),
+        || !TEST_int_eq(EC_POINT_point2oct(group, Q2,
+                            POINT_CONVERSION_UNCOMPRESSED, b2,
+                            bsize, ctx),
             bsize)
         /* Q1 = kG = k/2 G2 = Q2 should hold */
         || !TEST_mem_eq(b1, bsize, b2, bsize))
@@ -3189,7 +2773,7 @@ err:
  */
 static int custom_params_test(int id)
 {
-    int ret = 0, nid;
+    int ret = 0, nid, bsize;
     const char *curve_name = NULL;
     EC_GROUP *group = NULL, *altgroup = NULL;
     EC_POINT *G2 = NULL, *Q1 = NULL, *Q2 = NULL;
@@ -3203,13 +2787,10 @@ static int custom_params_test(int id)
     EC_KEY *eckey1 = NULL, *eckey2 = NULL;
     EVP_PKEY *pkey1 = NULL, *pkey2 = NULL;
     EVP_PKEY_CTX *pctx1 = NULL, *pctx2 = NULL, *dctx = NULL;
-    size_t sslen, t, bsize;
+    size_t sslen, t;
     unsigned char *pub1 = NULL, *pub2 = NULL;
     OSSL_PARAM_BLD *param_bld = NULL;
     OSSL_PARAM *params1 = NULL, *params2 = NULL;
-    const unsigned char *export = NULL;
-    size_t export_size = 0;
-    EVP_SKEY *skey = NULL;
 
     /* Do some setup */
     nid = curves[id].nid;
@@ -3241,7 +2822,7 @@ static int custom_params_test(int id)
 #endif
 
     /* expected byte length of encoded points */
-    bsize = ((size_t)EC_GROUP_get_degree(group) + 7) / 8;
+    bsize = (EC_GROUP_get_degree(group) + 7) / 8;
     bsize = 1 + 2 * bsize; /* UNCOMPRESSED_POINT format */
 
     /* extract parameters from built-in curve */
@@ -3251,14 +2832,14 @@ static int custom_params_test(int id)
         || !TEST_true(EC_POINT_dbl(group, G2,
             EC_GROUP_get0_generator(group), ctx))
         /* pull out the bytes of that */
-        || !TEST_size_t_eq(EC_POINT_point2oct(group, G2,
-                               POINT_CONVERSION_UNCOMPRESSED,
-                               NULL, 0, ctx),
+        || !TEST_int_eq(EC_POINT_point2oct(group, G2,
+                            POINT_CONVERSION_UNCOMPRESSED,
+                            NULL, 0, ctx),
             bsize)
         || !TEST_ptr(buf1 = OPENSSL_malloc(bsize))
-        || !TEST_size_t_eq(EC_POINT_point2oct(group, G2,
-                               POINT_CONVERSION_UNCOMPRESSED,
-                               buf1, bsize, ctx),
+        || !TEST_int_eq(EC_POINT_point2oct(group, G2,
+                            POINT_CONVERSION_UNCOMPRESSED,
+                            buf1, bsize, ctx),
             bsize)
         || !TEST_ptr(z = EC_GROUP_get0_order(group))
         || !TEST_ptr(cof = EC_GROUP_get0_cofactor(group)))
@@ -3296,27 +2877,27 @@ static int custom_params_test(int id)
         /* Q1 := kG on group */
         || !TEST_true(EC_POINT_mul(group, Q1, k, NULL, NULL, ctx))
         /* pull out the bytes of that */
-        || !TEST_size_t_eq(EC_POINT_point2oct(group, Q1,
-                               POINT_CONVERSION_UNCOMPRESSED,
-                               NULL, 0, ctx),
+        || !TEST_int_eq(EC_POINT_point2oct(group, Q1,
+                            POINT_CONVERSION_UNCOMPRESSED,
+                            NULL, 0, ctx),
             bsize)
-        || !TEST_size_t_eq(EC_POINT_point2oct(group, Q1,
-                               POINT_CONVERSION_UNCOMPRESSED,
-                               buf1, bsize, ctx),
+        || !TEST_int_eq(EC_POINT_point2oct(group, Q1,
+                            POINT_CONVERSION_UNCOMPRESSED,
+                            buf1, bsize, ctx),
             bsize)
         /* k := k/2 */
         || !TEST_true(BN_rshift1(k, k))
         /* Q2 := k/2 G2 on altgroup */
         || !TEST_true(EC_POINT_mul(altgroup, Q2, k, NULL, NULL, ctx))
         /* pull out the bytes of that */
-        || !TEST_size_t_eq(EC_POINT_point2oct(altgroup, Q2,
-                               POINT_CONVERSION_UNCOMPRESSED,
-                               NULL, 0, ctx),
+        || !TEST_int_eq(EC_POINT_point2oct(altgroup, Q2,
+                            POINT_CONVERSION_UNCOMPRESSED,
+                            NULL, 0, ctx),
             bsize)
         || !TEST_ptr(buf2 = OPENSSL_malloc(bsize))
-        || !TEST_size_t_eq(EC_POINT_point2oct(altgroup, Q2,
-                               POINT_CONVERSION_UNCOMPRESSED,
-                               buf2, bsize, ctx),
+        || !TEST_int_eq(EC_POINT_point2oct(altgroup, Q2,
+                            POINT_CONVERSION_UNCOMPRESSED,
+                            buf2, bsize, ctx),
             bsize)
         /* Q1 = kG = k/2 G2 = Q2 should hold */
         || !TEST_mem_eq(buf1, bsize, buf2, bsize))
@@ -3342,27 +2923,27 @@ static int custom_params_test(int id)
      * define a provider key in the built-in group.
      */
     if (!TEST_true(EC_POINT_mul(group, Q1, priv1, NULL, NULL, ctx))
-        || !TEST_size_t_eq(EC_POINT_point2oct(group, Q1,
-                               POINT_CONVERSION_UNCOMPRESSED,
-                               NULL, 0, ctx),
+        || !TEST_int_eq(EC_POINT_point2oct(group, Q1,
+                            POINT_CONVERSION_UNCOMPRESSED,
+                            NULL, 0, ctx),
             bsize)
         || !TEST_ptr(pub1 = OPENSSL_malloc(bsize))
-        || !TEST_size_t_eq(EC_POINT_point2oct(group, Q1,
-                               POINT_CONVERSION_UNCOMPRESSED,
-                               pub1, bsize, ctx),
+        || !TEST_int_eq(EC_POINT_point2oct(group, Q1,
+                            POINT_CONVERSION_UNCOMPRESSED,
+                            pub1, bsize, ctx),
             bsize))
         goto err;
 
     /* retrieve bytes for pub2 for later */
     if (!TEST_ptr(Q = EC_KEY_get0_public_key(eckey2))
-        || !TEST_size_t_eq(EC_POINT_point2oct(altgroup, Q,
-                               POINT_CONVERSION_UNCOMPRESSED,
-                               NULL, 0, ctx),
+        || !TEST_int_eq(EC_POINT_point2oct(altgroup, Q,
+                            POINT_CONVERSION_UNCOMPRESSED,
+                            NULL, 0, ctx),
             bsize)
         || !TEST_ptr(pub2 = OPENSSL_malloc(bsize))
-        || !TEST_size_t_eq(EC_POINT_point2oct(altgroup, Q,
-                               POINT_CONVERSION_UNCOMPRESSED,
-                               pub2, bsize, ctx),
+        || !TEST_int_eq(EC_POINT_point2oct(altgroup, Q,
+                            POINT_CONVERSION_UNCOMPRESSED,
+                            pub2, bsize, ctx),
             bsize))
         goto err;
 
@@ -3381,15 +2962,15 @@ static int custom_params_test(int id)
         || !TEST_int_eq(EVP_PKEY_derive_init(pctx1), 1)
         || !TEST_int_eq(EVP_PKEY_derive_set_peer(pctx1, pkey2), 1)
         || !TEST_int_eq(EVP_PKEY_derive(pctx1, NULL, &sslen), 1)
-        || !TEST_size_t_gt(bsize, sslen)
+        || !TEST_int_gt(bsize, sslen)
         || !TEST_int_eq(EVP_PKEY_derive(pctx1, buf1, &sslen), 1))
         goto err;
     if (!TEST_ptr(pctx2 = EVP_PKEY_CTX_new(pkey2, NULL))
         || !TEST_int_eq(EVP_PKEY_derive_init(pctx2), 1)
         || !TEST_int_eq(EVP_PKEY_derive_set_peer(pctx2, pkey1), 1)
         || !TEST_int_eq(EVP_PKEY_derive(pctx2, NULL, &t), 1)
-        || !TEST_size_t_gt(bsize, t)
-        || !TEST_size_t_le(sslen, t)
+        || !TEST_int_gt(bsize, t)
+        || !TEST_int_le(sslen, t)
         || !TEST_int_eq(EVP_PKEY_derive(pctx2, buf2, &t), 1))
         goto err;
 
@@ -3441,29 +3022,16 @@ static int custom_params_test(int id)
         || !TEST_ptr(dctx = EVP_PKEY_CTX_dup(pctx1))
         || !TEST_int_eq(EVP_PKEY_derive_set_peer_ex(dctx, pkey2, 1), 1)
         || !TEST_int_eq(EVP_PKEY_derive(dctx, NULL, &t), 1)
-        || !TEST_size_t_gt(bsize, t)
-        || !TEST_size_t_le(sslen, t)
+        || !TEST_int_gt(bsize, t)
+        || !TEST_int_le(sslen, t)
         || !TEST_int_eq(EVP_PKEY_derive(dctx, buf1, &t), 1)
         /* compare with previous result */
         || !TEST_mem_eq(buf1, t, buf2, sslen))
         goto err;
 
-    /* compute keyexchange once more using the EVP_SKEY export */
-    EVP_PKEY_CTX_free(pctx1);
-    if (!TEST_ptr(pctx1 = EVP_PKEY_CTX_new(pkey1, NULL))
-        || !TEST_int_eq(EVP_PKEY_derive_init(pctx1), 1)
-        || !TEST_int_eq(EVP_PKEY_derive_set_peer(pctx1, pkey2), 1)
-        || !TEST_ptr(skey = EVP_PKEY_derive_SKEY(pctx1, NULL, OSSL_SKEY_TYPE_GENERIC,
-                         NULL, t, NULL))
-        || !TEST_int_eq(EVP_SKEY_get0_raw_key(skey, &export, &export_size), 1)
-        /* compare with previous result */
-        || !TEST_mem_eq(export, export_size, buf2, sslen))
-        goto err;
-
     ret = 1;
 
 err:
-    EVP_SKEY_free(skey);
     BN_CTX_end(ctx);
     BN_CTX_free(ctx);
     OSSL_PARAM_BLD_free(param_bld);
@@ -3533,14 +3101,14 @@ err:
 int setup_tests(void)
 {
     crv_len = EC_get_builtin_curves(NULL, 0);
-    if (!TEST_ptr(curves = OPENSSL_malloc_array(crv_len, sizeof(*curves)))
+    if (!TEST_ptr(curves = OPENSSL_malloc(sizeof(*curves) * crv_len))
         || !TEST_true(EC_get_builtin_curves(curves, crv_len)))
         return 0;
 
     ADD_TEST(parameter_test);
     ADD_TEST(ossl_parameter_test);
     ADD_TEST(cofactor_range_test);
-    ADD_ALL_TESTS(cardinality_test, (int)crv_len);
+    ADD_ALL_TESTS(cardinality_test, crv_len);
     ADD_TEST(prime_field_tests);
 #ifndef OPENSSL_NO_EC2M
     ADD_TEST(hybrid_point_encoding_test);
@@ -3548,16 +3116,16 @@ int setup_tests(void)
     ADD_ALL_TESTS(char2_curve_test, OSSL_NELEM(char2_curve_tests));
 #endif
     ADD_ALL_TESTS(nistp_single_test, OSSL_NELEM(nistp_tests_params));
-    ADD_ALL_TESTS(internal_curve_test, (int)crv_len);
-    ADD_ALL_TESTS(internal_curve_test_method, (int)crv_len);
+    ADD_ALL_TESTS(internal_curve_test, crv_len);
+    ADD_ALL_TESTS(internal_curve_test_method, crv_len);
     ADD_TEST(group_field_test);
-    ADD_ALL_TESTS(check_named_curve_test, (int)crv_len);
-    ADD_ALL_TESTS(check_named_curve_lookup_test, (int)crv_len);
-    ADD_ALL_TESTS(check_ec_key_field_public_range_test, (int)crv_len);
-    ADD_ALL_TESTS(check_named_curve_from_ecparameters, (int)crv_len);
-    ADD_ALL_TESTS(ec_point_hex2point_test, (int)crv_len);
-    ADD_ALL_TESTS(custom_generator_test, (int)crv_len);
-    ADD_ALL_TESTS(custom_params_test, (int)crv_len);
+    ADD_ALL_TESTS(check_named_curve_test, crv_len);
+    ADD_ALL_TESTS(check_named_curve_lookup_test, crv_len);
+    ADD_ALL_TESTS(check_ec_key_field_public_range_test, crv_len);
+    ADD_ALL_TESTS(check_named_curve_from_ecparameters, crv_len);
+    ADD_ALL_TESTS(ec_point_hex2point_test, crv_len);
+    ADD_ALL_TESTS(custom_generator_test, crv_len);
+    ADD_ALL_TESTS(custom_params_test, crv_len);
     ADD_TEST(ec_d2i_publickey_test);
     return 1;
 }

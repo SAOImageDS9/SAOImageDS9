@@ -1,5 +1,5 @@
 #! /usr/bin/env perl
-# Copyright 2013-2025 The OpenSSL Project Authors. All Rights Reserved.
+# Copyright 2013-2026 The OpenSSL Project Authors. All Rights Reserved.
 #
 # Licensed under the Apache License 2.0 (the "License").  You may not use
 # this file except in compliance with the License.  You can obtain a copy
@@ -8,10 +8,10 @@
 
 
 # ====================================================================
-# Written by Andy Polyakov, @dot-asm, initially for use in the OpenSSL
+# Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
-# details see https://github.com/dot-asm/cryptogams/.
+# details see http://www.openssl.org/~appro/cryptogams/.
 # ====================================================================
 
 # Multi-buffer AES-NI procedures process several independent buffers
@@ -78,6 +78,13 @@ if (!$avx && $win64 && ($flavour =~ /masm/ || $ENV{ASM} =~ /ml64/) &&
 
 if (!$avx && `$ENV{CC} -v 2>&1` =~ /((?:clang|LLVM) version|.*based on LLVM) ([0-9]+\.[0-9]+)/) {
 	$avx = ($2>=3.0) + ($2>3.0);
+}
+
+if (!$avx && `$ENV{CC} -x c /dev/null -dM -E|grep __clang_major__`
+	=~ /#define __clang_major__.([0-9]+)/) {
+	if ($1) {
+		$avx = ($1>=11); #icx started with clang 11
+	}
 }
 
 open OUT,"| \"$^X\" \"$xlate\" $flavour \"$output\""

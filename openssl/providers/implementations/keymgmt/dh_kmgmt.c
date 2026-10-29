@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2019-2026 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
@@ -26,6 +26,7 @@
 #include "crypto/dh.h"
 #include "internal/fips.h"
 #include "internal/sizes.h"
+#include "fips/fipsindicator.h"
 
 static OSSL_FUNC_keymgmt_new_fn dh_newdata;
 static OSSL_FUNC_keymgmt_free_fn dh_freedata;
@@ -334,9 +335,6 @@ static ossl_inline int dh_get_params(void *key, OSSL_PARAM params[])
         if (p->return_size == 0)
             return 0;
     }
-    if ((p = OSSL_PARAM_locate(params, OSSL_PKEY_PARAM_SECURITY_CATEGORY)) != NULL)
-        if (!OSSL_PARAM_set_int(p, 0))
-            return 0;
 
     return ossl_dh_params_todata(dh, NULL, params)
         && ossl_dh_key_todata(dh, NULL, params, 1);
@@ -346,7 +344,6 @@ static const OSSL_PARAM dh_params[] = {
     OSSL_PARAM_int(OSSL_PKEY_PARAM_BITS, NULL),
     OSSL_PARAM_int(OSSL_PKEY_PARAM_SECURITY_BITS, NULL),
     OSSL_PARAM_int(OSSL_PKEY_PARAM_MAX_SIZE, NULL),
-    OSSL_PARAM_int(OSSL_PKEY_PARAM_SECURITY_CATEGORY, NULL),
     OSSL_PARAM_octet_string(OSSL_PKEY_PARAM_ENCODED_PUBLIC_KEY, NULL, 0),
     DH_IMEXPORTABLE_PARAMETERS,
     DH_IMEXPORTABLE_PUBLIC_KEY,
@@ -732,7 +729,7 @@ static void *dh_gen(void *genctx, OSSL_CALLBACK *osslcb, void *cbarg)
         && gctx->ffc_params == NULL) {
         /* Select a named group if there is not one already */
         if (gctx->group_nid == NID_undef)
-            gctx->group_nid = ossl_dh_get_named_group_uid_from_size((int)gctx->pbits);
+            gctx->group_nid = ossl_dh_get_named_group_uid_from_size(gctx->pbits);
         if (gctx->group_nid == NID_undef)
             return NULL;
         dh = ossl_dh_new_by_nid_ex(gctx->libctx, gctx->group_nid);
@@ -774,12 +771,12 @@ static void *dh_gen(void *genctx, OSSL_CALLBACK *osslcb, void *cbarg)
              * group based on pbits.
              */
             if (gctx->gen_type == DH_PARAMGEN_TYPE_GENERATOR)
-                ret = DH_generate_parameters_ex(dh, (int)gctx->pbits,
+                ret = DH_generate_parameters_ex(dh, gctx->pbits,
                     gctx->generator, gencb);
             else
                 ret = ossl_dh_generate_ffc_parameters(dh, gctx->gen_type,
-                    (int)gctx->pbits,
-                    (int)gctx->qbits, gencb);
+                    gctx->pbits, gctx->qbits,
+                    gencb);
             if (ret <= 0)
                 goto end;
         }
@@ -797,10 +794,8 @@ static void *dh_gen(void *genctx, OSSL_CALLBACK *osslcb, void *cbarg)
 #ifdef FIPS_MODULE
         if (!ossl_fips_self_testing()) {
             ret = ossl_dh_check_pairwise(dh, 0);
-            if (ret <= 0) {
-                ossl_set_error_state(OSSL_SELF_TEST_TYPE_PCT);
+            if (ret <= 0)
                 goto end;
-            }
         }
 #endif /* FIPS_MODULE */
     }
@@ -874,7 +869,9 @@ const OSSL_DISPATCH ossl_dh_keymgmt_functions[] = {
     { OSSL_FUNC_KEYMGMT_EXPORT, (void (*)(void))dh_export },
     { OSSL_FUNC_KEYMGMT_EXPORT_TYPES, (void (*)(void))dh_export_types },
     { OSSL_FUNC_KEYMGMT_DUP, (void (*)(void))dh_dup },
-    OSSL_DISPATCH_END
+    OSSL_FIPS_IND_APPROVED_DISPATCH(OSSL_FUNC_KEYMGMT_GEN_GET_PARAMS,
+        OSSL_FUNC_KEYMGMT_GEN_GETTABLE_PARAMS)
+        OSSL_DISPATCH_END
 };
 
 /* For any DH key, we use the "DH" algorithms regardless of sub-type. */
@@ -908,5 +905,7 @@ const OSSL_DISPATCH ossl_dhx_keymgmt_functions[] = {
     { OSSL_FUNC_KEYMGMT_QUERY_OPERATION_NAME,
         (void (*)(void))dhx_query_operation_name },
     { OSSL_FUNC_KEYMGMT_DUP, (void (*)(void))dh_dup },
-    OSSL_DISPATCH_END
+    OSSL_FIPS_IND_APPROVED_DISPATCH(OSSL_FUNC_KEYMGMT_GEN_GET_PARAMS,
+        OSSL_FUNC_KEYMGMT_GEN_GETTABLE_PARAMS)
+        OSSL_DISPATCH_END
 };

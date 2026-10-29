@@ -84,56 +84,6 @@ static int set_multi_opts(unsigned long *flags, const char *arg,
     const NAME_EX_TBL *in_tbl);
 int app_init(long mesgwin);
 
-int chopup_args(ARGS *arg, char *buf)
-{
-    int quoted;
-    char c = '\0', *p = NULL;
-
-    arg->argc = 0;
-    if (arg->size == 0) {
-        arg->size = 20;
-        arg->argv = app_malloc(sizeof(*arg->argv) * arg->size, "argv space");
-    }
-
-    for (p = buf;;) {
-        /* Skip whitespace. */
-        while (*p && isspace(_UC(*p)))
-            p++;
-        if (*p == '\0')
-            break;
-
-        /* The start of something good :-) */
-        if (arg->argc >= arg->size) {
-            char **tmp;
-
-            arg->size += 20;
-            tmp = OPENSSL_realloc_array(arg->argv,
-                arg->size, sizeof(*arg->argv));
-            if (tmp == NULL)
-                return 0;
-            arg->argv = tmp;
-        }
-        quoted = *p == '\'' || *p == '"';
-        if (quoted)
-            c = *p++;
-        arg->argv[arg->argc++] = p;
-
-        /* now look for the end of this */
-        if (quoted) {
-            while (*p && *p != c)
-                p++;
-            *p++ = '\0';
-        } else {
-            while (*p && !isspace(_UC(*p)))
-                p++;
-            if (*p)
-                *p++ = '\0';
-        }
-    }
-    arg->argv[arg->argc] = NULL;
-    return 1;
-}
-
 #ifndef APP_INIT
 int app_init(long mesgwin)
 {
@@ -1107,9 +1057,12 @@ int load_key_certs_crls(const char *uri, int format, int maybe_stdin,
                 if (ok)
                     pcert = NULL;
             } else if (pcerts != NULL) {
-                ok = X509_add_cert(*pcerts,
-                    OSSL_STORE_INFO_get1_CERT(info),
-                    X509_ADD_FLAG_DEFAULT);
+                X509 *cert = OSSL_STORE_INFO_get1_CERT(info);
+
+                ok = cert != NULL
+                    && X509_add_cert(*pcerts, cert, X509_ADD_FLAG_DEFAULT);
+                if (!ok)
+                    X509_free(cert);
             }
             ncerts += ok;
             break;
@@ -1119,7 +1072,11 @@ int load_key_certs_crls(const char *uri, int format, int maybe_stdin,
                 if (ok)
                     pcrl = NULL;
             } else if (pcrls != NULL) {
-                ok = sk_X509_CRL_push(*pcrls, OSSL_STORE_INFO_get1_CRL(info));
+                X509_CRL *crl = OSSL_STORE_INFO_get1_CRL(info);
+
+                ok = crl != NULL && sk_X509_CRL_push(*pcrls, crl);
+                if (!ok)
+                    X509_CRL_free(crl);
             }
             ncrls += ok;
             break;
@@ -1602,7 +1559,7 @@ int save_serial(const char *serialfile, const char *suffix,
     BIO *out = NULL;
     int ret = 0;
     ASN1_INTEGER *ai = NULL;
-    size_t j;
+    int j;
 
     if (suffix == NULL)
         j = strlen(serialfile);
@@ -1650,7 +1607,7 @@ int rotate_serial(const char *serialfile, const char *new_suffix,
     const char *old_suffix)
 {
     char buf[2][BSIZE];
-    size_t i, j;
+    int i, j;
 
     i = strlen(serialfile) + strlen(old_suffix);
     j = strlen(serialfile) + strlen(new_suffix);
@@ -1731,11 +1688,18 @@ CA_DB *load_index(const char *dbfile, DB_ATTR *db_attr)
         goto err;
 
 #ifndef OPENSSL_NO_POSIX_IO
-    BIO_get_fp(in, &dbfp);
-    if (fstat(fileno(dbfp), &dbst) == -1) {
-        ERR_raise_data(ERR_LIB_SYS, errno,
-            "calling fstat(%s)", dbfile);
-        goto err;
+    if (BIO_get_fp(in, &dbfp) > 0 && dbfp != NULL) {
+        if (fstat(fileno(dbfp), &dbst) == -1) {
+            ERR_raise_data(ERR_LIB_SYS, errno,
+                "calling fstat(%s)", dbfile);
+            goto err;
+        }
+    } else {
+        if (stat(dbfile, &dbst) == -1) {
+            ERR_raise_data(ERR_LIB_SYS, errno,
+                "calling stat(%s)", dbfile);
+            goto err;
+        }
     }
 #endif
 
@@ -1765,8 +1729,14 @@ CA_DB *load_index(const char *dbfile, DB_ATTR *db_attr)
     }
 
     retdb->dbfname = OPENSSL_strdup(dbfile);
-    if (retdb->dbfname == NULL)
+    if (retdb->dbfname == NULL) {
+        TXT_DB_free(retdb->db);
+        retdb->db = NULL;
+        OPENSSL_free(retdb);
+        retdb = NULL;
+        ERR_raise_data(ERR_LIB_SYS, errno, "Out of memory while copying filename: %s", dbfile);
         goto err;
+    }
 
 #ifndef OPENSSL_NO_POSIX_IO
     retdb->dbst = dbst;
@@ -1814,7 +1784,7 @@ int save_index(const char *dbfile, const char *suffix, CA_DB *db)
     BIO *out;
     int j;
 
-    j = (int)(strlen(dbfile) + strlen(suffix));
+    j = strlen(dbfile) + strlen(suffix);
     if (j + 6 >= BSIZE) {
         BIO_printf(bio_err, "File name too long\n");
         goto err;
@@ -1859,7 +1829,7 @@ int rotate_index(const char *dbfile, const char *new_suffix,
     const char *old_suffix)
 {
     char buf[5][BSIZE];
-    size_t i, j;
+    int i, j;
 
     i = strlen(dbfile) + strlen(old_suffix);
     j = strlen(dbfile) + strlen(new_suffix);
@@ -2046,7 +2016,7 @@ X509_NAME *parse_name(const char *cp, int chtype, int canmulti,
             continue;
         }
         if (!X509_NAME_add_entry_by_NID(n, nid, chtype,
-                valstr, (int)strlen((char *)valstr),
+                valstr, strlen((char *)valstr),
                 -1, ismulti ? -1 : 0)) {
             ERR_print_errors(bio_err);
             BIO_printf(bio_err,
@@ -2769,12 +2739,12 @@ static int WIN32_rename(const char *from, const char *to)
             goto err;
         tto = tfrom + flen;
 #if !defined(_WIN32_WCE) || _WIN32_WCE >= 101
-        if (!MultiByteToWideChar(CP_ACP, 0, from, (int)flen, (WCHAR *)tfrom, (int)flen))
+        if (!MultiByteToWideChar(CP_ACP, 0, from, flen, (WCHAR *)tfrom, flen))
 #endif
             for (i = 0; i < flen; i++)
                 tfrom[i] = (TCHAR)from[i];
 #if !defined(_WIN32_WCE) || _WIN32_WCE >= 101
-        if (!MultiByteToWideChar(CP_ACP, 0, to, (int)tlen, (WCHAR *)tto, (int)tlen))
+        if (!MultiByteToWideChar(CP_ACP, 0, to, tlen, (WCHAR *)tto, tlen))
 #endif
             for (i = 0; i < tlen; i++)
                 tto[i] = (TCHAR)to[i];
@@ -3052,18 +3022,21 @@ BIO *dup_bio_out(int format)
 {
     BIO *b = BIO_new_fp(stdout,
         BIO_NOCLOSE | (FMT_istext(format) ? BIO_FP_TEXT : 0));
+    void *prefix = NULL;
+
+    if (b == NULL)
+        return NULL;
 
 #ifdef OPENSSL_SYS_VMS
-    if (b != NULL && FMT_istext(format)) {
-        BIO *btmp = BIO_new(BIO_f_linebuffer());
-
-        if (btmp == NULL) {
-            BIO_free(b);
-            return NULL;
-        }
-        b = BIO_push(btmp, b);
-    }
+    if (FMT_istext(format))
+        b = BIO_push(BIO_new(BIO_f_linebuffer()), b);
 #endif
+
+    if (FMT_istext(format)
+        && (prefix = getenv("HARNESS_OSSL_PREFIX")) != NULL) {
+        b = BIO_push(BIO_new(BIO_f_prefix()), b);
+        BIO_set_prefix(b, prefix);
+    }
 
     return b;
 }
@@ -3074,15 +3047,8 @@ BIO *dup_bio_err(int format)
         BIO_NOCLOSE | (FMT_istext(format) ? BIO_FP_TEXT : 0));
 
 #ifdef OPENSSL_SYS_VMS
-    if (b != NULL && FMT_istext(format)) {
-        BIO *btmp = BIO_new(BIO_f_linebuffer());
-
-        if (btmp == NULL) {
-            BIO_free(b);
-            return NULL;
-        }
-        b = BIO_push(btmp, b);
-    }
+    if (b != NULL && FMT_istext(format))
+        b = BIO_push(BIO_new(BIO_f_linebuffer()), b);
 #endif
     return b;
 }
@@ -3265,7 +3231,7 @@ int mem_bio_to_file(BIO *in, const char *filename, int format, int private)
     out = bio_open_owner(filename, format, private);
     if (out == NULL)
         goto end;
-    rv = BIO_write(out, mem_buffer->data, (int)mem_buffer->length);
+    rv = BIO_write(out, mem_buffer->data, mem_buffer->length);
     if (rv < 0 || (size_t)rv != mem_buffer->length)
         BIO_printf(bio_err, "Error writing to output file: '%s'\n", filename);
     else
@@ -3466,7 +3432,7 @@ OSSL_PARAM *app_params_new_from_opts(STACK_OF(OPENSSL_STRING) *opts,
     if (opts == NULL)
         return NULL;
 
-    params = OPENSSL_calloc(sz + 1, sizeof(OSSL_PARAM));
+    params = OPENSSL_zalloc(sizeof(OSSL_PARAM) * (sz + 1));
     if (params == NULL)
         return NULL;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2016-2026 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
@@ -18,7 +18,6 @@
 #include "internal/ssl_unwrap.h"
 #include "../ssl_local.h"
 #include "statem_local.h"
-#include <openssl/ocsp.h>
 
 static int final_renegotiate(SSL_CONNECTION *s, unsigned int context, int sent);
 static int init_server_name(SSL_CONNECTION *s, unsigned int context);
@@ -577,7 +576,7 @@ int tls_collect_extensions(SSL_CONNECTION *s, PACKET *packet,
         custom_ext_init(&s->cert->custext);
 
     num_exts = OSSL_NELEM(ext_defs) + (exts != NULL ? exts->meths_count : 0);
-    raw_extensions = OPENSSL_calloc(num_exts, sizeof(*raw_extensions));
+    raw_extensions = OPENSSL_zalloc(num_exts * sizeof(*raw_extensions));
     if (raw_extensions == NULL) {
         SSLfatal(s, SSL_AD_INTERNAL_ERROR, ERR_R_CRYPTO_LIB);
         return 0;
@@ -606,7 +605,12 @@ int tls_collect_extensions(SSL_CONNECTION *s, PACKET *packet,
             SSLfatal(s, SSL_AD_ILLEGAL_PARAMETER, SSL_R_BAD_EXTENSION);
             goto err;
         }
-        idx = (unsigned int)(thisex - raw_extensions);
+
+        /* The server must tolerate the unknown extension and complete. */
+        if (thisex == NULL)
+            continue;
+
+        idx = thisex - raw_extensions;
         /*-
          * Check that we requested this extension (if appropriate). Requests can
          * be sent in the ClientHello and CertificateRequest. Unsolicited
@@ -636,17 +640,15 @@ int tls_collect_extensions(SSL_CONNECTION *s, PACKET *packet,
                 SSL_R_UNSOLICITED_EXTENSION);
             goto err;
         }
-        if (thisex != NULL) {
-            thisex->data = extension;
-            thisex->present = 1;
-            thisex->type = type;
-            thisex->received_order = i++;
-            if (s->ext.debug_cb)
-                s->ext.debug_cb(SSL_CONNECTION_GET_USER_SSL(s), !s->server,
-                    thisex->type, PACKET_data(&thisex->data),
-                    (int)PACKET_remaining(&thisex->data),
-                    s->ext.debug_arg);
-        }
+        thisex->data = extension;
+        thisex->present = 1;
+        thisex->type = type;
+        thisex->received_order = i++;
+        if (s->ext.debug_cb)
+            s->ext.debug_cb(SSL_CONNECTION_GET_USER_SSL(s), !s->server,
+                thisex->type, PACKET_data(&thisex->data),
+                (int)PACKET_remaining(&thisex->data),
+                s->ext.debug_arg);
     }
 
     if (init) {
@@ -1093,9 +1095,6 @@ static int init_status_request(SSL_CONNECTION *s, unsigned int context)
         OPENSSL_free(s->ext.ocsp.resp);
         s->ext.ocsp.resp = NULL;
         s->ext.ocsp.resp_len = 0;
-
-        sk_OCSP_RESPONSE_pop_free(s->ext.ocsp.resp_ex, OCSP_RESPONSE_free);
-        s->ext.ocsp.resp_ex = NULL;
     }
 
     return 1;

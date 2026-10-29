@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2001-2026 The OpenSSL Project Authors. All Rights Reserved.
  * Copyright (c) 2002, Oracle and/or its affiliates. All rights reserved
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
@@ -213,6 +213,17 @@ int ossl_ec_scalar_mul_ladder(const EC_GROUP *group, EC_POINT *r,
         goto err;
     }
 
+    /*
+     * Constant-timeness of this copy depends on the caller: BN_copy() moves
+     * scalar->top words unless |scalar| is flagged BN_FLG_CONSTTIME (in which
+     * case scalar->dmax words are moved).  Secret scalars are therefore
+     * expected to arrive either BN_FLG_CONSTTIME or fixed-top, so that their
+     * top is a public, value-independent width and the copy length does not
+     * leak their magnitude.  ECDSA satisfies this via
+     * ossl_bn_priv_rand_range_fixed_top().  The fixed-top pinning below makes
+     * the subsequent arithmetic constant time regardless, but cannot
+     * retroactively fix the copy length here.
+     */
     if (!BN_copy(k, scalar)) {
         ERR_raise(ERR_LIB_EC, ERR_R_BN_LIB);
         goto err;
@@ -231,7 +242,33 @@ int ossl_ec_scalar_mul_ladder(const EC_GROUP *group, EC_POINT *r,
         }
     }
 
+    /*
+     * |k| may still carry a top that depends on the value of the secret
+     * scalar: callers pass either a fixed-top BIGNUM (e.g. the ECDSA nonce)
+     * or a minimal-top one (e.g. SM2), and BN_copy() above preserves that
+     * top.  Pin |k| to a fixed number of words (matching the group
+     * cardinality) so that the additions below run in constant time,
+     * independently of the bit length of the scalar.  Otherwise the work
+     * done by BN_add()/BN_uadd() depends on the operand tops and leaks the
+     * magnitude of the secret scalar.
+     */
+    if (!bn_set_top_fixed(k, group_top)) {
+        ERR_raise(ERR_LIB_EC, ERR_R_BN_LIB);
+        goto err;
+    }
+
     if (!BN_add(lambda, k, cardinality)) {
+        ERR_raise(ERR_LIB_EC, ERR_R_BN_LIB);
+        goto err;
+    }
+    /*
+     * |lambda| = scalar + cardinality may or may not have produced a carry
+     * into an extra word depending on the secret scalar.  Pin its top to one
+     * word above the group top so that the second addition, which consumes
+     * |lambda|, is likewise constant time and so that the BN_is_bit_set()
+     * below always inspects a defined word.
+     */
+    if (!bn_set_top_fixed(lambda, group_top + 1)) {
         ERR_raise(ERR_LIB_EC, ERR_R_BN_LIB);
         goto err;
     }
@@ -502,11 +539,11 @@ int ossl_ec_wNAF_mul(const EC_GROUP *group, EC_POINT *r, const BIGNUM *scalar,
 
     totalnum = num + numblocks;
 
-    wsize = OPENSSL_malloc_array(totalnum, sizeof(wsize[0]));
-    wNAF_len = OPENSSL_malloc_array(totalnum, sizeof(wNAF_len[0]));
+    wsize = OPENSSL_malloc(totalnum * sizeof(wsize[0]));
+    wNAF_len = OPENSSL_malloc(totalnum * sizeof(wNAF_len[0]));
     /* include space for pivot */
-    wNAF = OPENSSL_malloc_array(totalnum + 1, sizeof(wNAF[0]));
-    val_sub = OPENSSL_malloc_array(totalnum, sizeof(val_sub[0]));
+    wNAF = OPENSSL_malloc((totalnum + 1) * sizeof(wNAF[0]));
+    val_sub = OPENSSL_malloc(totalnum * sizeof(val_sub[0]));
 
     /* Ensure wNAF is initialised in case we end up going to err */
     if (wNAF != NULL)
@@ -527,7 +564,7 @@ int ossl_ec_wNAF_mul(const EC_GROUP *group, EC_POINT *r, const BIGNUM *scalar,
         wsize[i] = EC_window_bits_for_scalar_size(bits);
         num_val += (size_t)1 << (wsize[i] - 1);
         wNAF[i + 1] = NULL; /* make sure we always have a pivot */
-        wNAF[i] = bn_compute_wNAF((i < num ? scalars[i] : scalar), (int)wsize[i],
+        wNAF[i] = bn_compute_wNAF((i < num ? scalars[i] : scalar), wsize[i],
             &wNAF_len[i]);
         if (wNAF[i] == NULL)
             goto err;
@@ -557,7 +594,7 @@ int ossl_ec_wNAF_mul(const EC_GROUP *group, EC_POINT *r, const BIGNUM *scalar,
              * use the window size for which we have precomputation
              */
             wsize[num] = pre_comp->w;
-            tmp_wNAF = bn_compute_wNAF(scalar, (int)wsize[num], &tmp_len);
+            tmp_wNAF = bn_compute_wNAF(scalar, wsize[num], &tmp_len);
             if (!tmp_wNAF)
                 goto err;
 
@@ -648,7 +685,7 @@ int ossl_ec_wNAF_mul(const EC_GROUP *group, EC_POINT *r, const BIGNUM *scalar,
      * 'val_sub[i]' is a pointer to the subarray for the i-th point, or to a
      * subarray of 'pre_comp->points' if we already have precomputation.
      */
-    val = OPENSSL_malloc_array(num_val + 1, sizeof(val[0]));
+    val = OPENSSL_malloc((num_val + 1) * sizeof(val[0]));
     if (val == NULL)
         goto err;
     val[num_val] = NULL; /* pivot element */
@@ -704,9 +741,7 @@ int ossl_ec_wNAF_mul(const EC_GROUP *group, EC_POINT *r, const BIGNUM *scalar,
 
     r_is_at_infinity = 1;
 
-    if (max_len > INT_MAX)
-        goto err;
-    for (k = (int)(max_len - 1); k >= 0; k--) {
+    for (k = max_len - 1; k >= 0; k--) {
         if (!r_is_at_infinity) {
             if (!EC_POINT_dbl(group, r, r, ctx))
                 goto err;
@@ -878,7 +913,7 @@ int ossl_ec_wNAF_precompute_mult(EC_GROUP *group, BN_CTX *ctx)
     num = pre_points_per_block * numblocks; /* number of points to compute
                                              * and store */
 
-    points = OPENSSL_malloc_array(num + 1, sizeof(*points));
+    points = OPENSSL_malloc(sizeof(*points) * (num + 1));
     if (points == NULL)
         goto err;
 

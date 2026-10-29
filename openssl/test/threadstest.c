@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2016-2026 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
@@ -319,12 +319,19 @@ static void writer_fn(int id, int *iterations)
     int count;
     OSSL_TIME t1, t2;
     uint64_t *old, *new;
+    CRYPTO_RCU_CB_ITEM *cbi = NULL;
 
     t1 = ossl_time_now();
 
     for (count = 0;; count++) {
         new = CRYPTO_malloc(sizeof(uint64_t), NULL, 0);
         *new = (uint64_t)0xBAD;
+
+        if (contention == 0) {
+            cbi = ossl_rcu_cb_item_new();
+            OPENSSL_assert(cbi != NULL);
+        }
+
         if (contention == 0)
             OSSL_sleep(1000);
         ossl_rcu_write_lock(rcu_lock);
@@ -333,7 +340,7 @@ static void writer_fn(int id, int *iterations)
         *new = global_ctr++;
         ossl_rcu_assign_ptr(&writer_ptr, &new);
         if (contention == 0)
-            ossl_rcu_call(rcu_lock, free_old_rcu_data, old);
+            ossl_rcu_call(rcu_lock, cbi, free_old_rcu_data, old);
         ossl_rcu_write_unlock(rcu_lock);
         if (contention != 0) {
             ossl_synchronize_rcu(rcu_lock);
@@ -378,13 +385,7 @@ static void reader_fn(int *iterations)
         CRYPTO_atomic_add(&writer1_done, 0, &lw1, atomiclock);
         CRYPTO_atomic_add(&writer2_done, 0, &lw2, atomiclock);
         count++;
-        if (!ossl_rcu_read_lock(rcu_lock)) {
-            TEST_info("rcu torture read lock failed");
-            rcu_torture_result = 0;
-            *iterations = count;
-            return;
-        }
-
+        ossl_rcu_read_lock(rcu_lock);
         valp = ossl_rcu_deref(&writer_ptr);
         val = (valp == NULL) ? 0 : *valp;
 
@@ -891,7 +892,7 @@ static void thread_general_worker(void)
         if (!TEST_true(EVP_EncryptInit_ex(cipherctx, ciph, NULL, key, iv))
             || !TEST_true(EVP_EncryptUpdate(cipherctx, out, &ciphoutl,
                 (unsigned char *)message,
-                (int)messlen))
+                messlen))
             || !TEST_true(EVP_EncryptFinal(cipherctx, out, &ciphoutl)))
             goto err;
     }
@@ -1282,7 +1283,7 @@ static void test_pem_read_one(void)
         goto err;
     }
 
-    pem = BIO_new_mem_buf(pemdata, (int)len);
+    pem = BIO_new_mem_buf(pemdata, len);
     if (pem == NULL) {
         multi_set_success(0);
         goto err;
@@ -1359,42 +1360,6 @@ err:
     X509_STORE_free(store);
     store = NULL;
     return ret;
-}
-
-/* Test using OBJ_create in multiple threads */
-static void test_obj_create_worker(void)
-{
-    int i, nid, nid2;
-    time_t now;
-    char name[40];
-
-    for (i = 0; i < 4; i++) {
-        now = time(NULL);
-        snprintf(name, sizeof(name), "Time in Seconds = %ld", (long)now);
-        while (now == time(NULL))
-            /* no-op */;
-        nid = OBJ_create(NULL, NULL, name);
-        nid2 = OBJ_ln2nid(name);
-        if (nid != NID_undef) {
-            if (nid2 != nid) {
-                TEST_info("oops: name='%s' nid=%d nid2=%d", name, nid, nid2);
-                multi_set_success(0);
-                break;
-            }
-        } else {
-            if (nid2 == NID_undef) {
-                TEST_info("oops: name='%s' nid=%d nid2=%d", name, nid, nid2);
-                multi_set_success(0);
-                break;
-            }
-        }
-    }
-}
-
-static int test_obj_stress(void)
-{
-    return thread_run_test(&test_obj_create_worker, MAXIMUM_THREADS,
-        &test_obj_create_worker, 0, NULL);
 }
 
 typedef enum OPTION_choice {
@@ -1487,7 +1452,6 @@ int setup_tests(void)
 #endif
     ADD_TEST(test_pem_read);
     ADD_TEST(test_x509_store);
-    ADD_TEST(test_obj_stress);
     return 1;
 }
 

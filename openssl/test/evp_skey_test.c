@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2024-2026 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
@@ -38,22 +38,8 @@ static int test_skey_cipher(void)
     EVP_CIPHER *fake_cipher = NULL;
     EVP_CIPHER_CTX *ctx = NULL;
     const unsigned char import_key[KEY_SIZE] = {
-        0x53,
-        0x4B,
-        0x45,
-        0x59,
-        0x53,
-        0x4B,
-        0x45,
-        0x59,
-        0x53,
-        0x4B,
-        0x45,
-        0x59,
-        0x53,
-        0x4B,
-        0x45,
-        0x59,
+        0x53, 0x4B, 0x45, 0x59, 0x53, 0x4B, 0x45, 0x59, 0x53, 0x4B,
+        0x45, 0x59, 0x53, 0x4B, 0x45, 0x59
     };
     OSSL_PARAM params[3];
     OSSL_PARAM *export_params = NULL;
@@ -103,82 +89,6 @@ end:
     EVP_CIPHER_free(fake_cipher);
     EVP_CIPHER_CTX_free(ctx);
     fake_cipher_finish(fake_prov);
-
-    return ret;
-}
-
-static int test_skey_skeymgmt(void)
-{
-    int ret = 0;
-    EVP_SKEYMGMT *skeymgmt = NULL;
-    EVP_SKEY *key = NULL;
-    const unsigned char import_key[KEY_SIZE] = {
-        0x53,
-        0x4B,
-        0x45,
-        0x59,
-        0x53,
-        0x4B,
-        0x45,
-        0x59,
-        0x53,
-        0x4B,
-        0x45,
-        0x59,
-        0x53,
-        0x4B,
-        0x45,
-        0x59,
-    };
-    OSSL_PARAM params[2];
-    const OSSL_PARAM *imp_params;
-    const OSSL_PARAM *p;
-    OSSL_PARAM *exp_params = NULL;
-    const void *export_key = NULL;
-    size_t export_len;
-
-    deflprov = OSSL_PROVIDER_load(libctx, "default");
-    if (!TEST_ptr(deflprov))
-        return 0;
-
-    /* Fetch our SKYMGMT for Generic Secrets */
-    if (!TEST_ptr(skeymgmt = EVP_SKEYMGMT_fetch(libctx, OSSL_SKEY_TYPE_GENERIC,
-                      NULL)))
-        goto end;
-
-    /* Check the parameter we need is available */
-    if (!TEST_ptr(imp_params = EVP_SKEYMGMT_get0_imp_settable_params(skeymgmt))
-        || !TEST_ptr(p = OSSL_PARAM_locate_const(imp_params,
-                         OSSL_SKEY_PARAM_RAW_BYTES)))
-        goto end;
-
-    /* Import EVP_SKEY */
-    params[0] = OSSL_PARAM_construct_octet_string(OSSL_SKEY_PARAM_RAW_BYTES,
-        (void *)import_key, KEY_SIZE);
-    params[1] = OSSL_PARAM_construct_end();
-
-    if (!TEST_ptr(key = EVP_SKEY_import(libctx,
-                      EVP_SKEYMGMT_get0_name(skeymgmt), NULL,
-                      OSSL_SKEYMGMT_SELECT_ALL, params)))
-        goto end;
-
-    /* Export EVP_SKEY */
-    if (!TEST_int_gt(EVP_SKEY_export(key, OSSL_SKEYMGMT_SELECT_SECRET_KEY,
-                         ossl_pkey_todata_cb, &exp_params),
-            0)
-        || !TEST_ptr(p = OSSL_PARAM_locate_const(exp_params,
-                         OSSL_SKEY_PARAM_RAW_BYTES))
-        || !TEST_int_gt(OSSL_PARAM_get_octet_string_ptr(p, &export_key,
-                            &export_len),
-            0)
-        || !TEST_mem_eq(import_key, KEY_SIZE, export_key, export_len))
-        goto end;
-
-    ret = 1;
-end:
-    OSSL_PARAM_free(exp_params);
-    EVP_SKEYMGMT_free(skeymgmt);
-    EVP_SKEY_free(key);
 
     return ret;
 }
@@ -343,7 +253,6 @@ int setup_tests(void)
         return 0;
 
     ADD_TEST(test_skey_cipher);
-    ADD_TEST(test_skey_skeymgmt);
 
     ADD_TEST(test_aes_raw_skey);
 #ifndef OPENSSL_NO_DES

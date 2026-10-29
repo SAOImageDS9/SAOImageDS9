@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2016-2026 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
@@ -43,11 +43,13 @@ static int tls_dump_puts(BIO *bp, const char *str);
 #define BIO_TYPE_MEMPACKET_TEST 0x81
 #define BIO_TYPE_ALWAYS_RETRY 0x82
 #define BIO_TYPE_MAYBE_RETRY (0x83 | BIO_TYPE_FILTER)
+#define BIO_TYPE_NO_RETRY_ZERO (0x84 | BIO_TYPE_FILTER)
 
 static BIO_METHOD *method_tls_dump = NULL;
 static BIO_METHOD *meth_mem = NULL;
 static BIO_METHOD *meth_always_retry = NULL;
 static BIO_METHOD *meth_maybe_retry = NULL;
+static BIO_METHOD *meth_no_retry_zero = NULL;
 static int retry_err = -1;
 
 /* Note: Not thread safe! */
@@ -249,7 +251,7 @@ static int tls_dump_gets(BIO *bio, char *buf, int size)
 
 static int tls_dump_puts(BIO *bio, const char *str)
 {
-    return tls_dump_write(bio, str, (int)strlen(str));
+    return tls_dump_write(bio, str, strlen(str));
 }
 
 struct mempacket_st {
@@ -618,7 +620,7 @@ int mempacket_test_inject(BIO *bio, const char *in, int inl, int pktnum,
          */
         if (duprec && i != 2) {
             memcpy(thispkt->data, in + len, inl - len);
-            thispkt->len = inl - (int)len;
+            thispkt->len = inl - len;
         } else {
             memcpy(thispkt->data, in, inl);
             thispkt->len = inl;
@@ -746,7 +748,7 @@ static int mempacket_test_gets(BIO *bio, char *buf, int size)
 
 static int mempacket_test_puts(BIO *bio, const char *str)
 {
-    return mempacket_test_write(bio, str, (int)strlen(str));
+    return mempacket_test_write(bio, str, strlen(str));
 }
 
 static int always_retry_new(BIO *bi);
@@ -856,6 +858,10 @@ static int maybe_retry_new(BIO *bi);
 static int maybe_retry_free(BIO *a);
 static int maybe_retry_write(BIO *b, const char *in, int inl);
 static long maybe_retry_ctrl(BIO *b, int cmd, long num, void *ptr);
+static int no_retry_zero_new(BIO *bi);
+static int no_retry_zero_free(BIO *a);
+static int no_retry_zero_write(BIO *b, const char *in, int inl);
+static long no_retry_zero_ctrl(BIO *b, int cmd, long num, void *ptr);
 
 const BIO_METHOD *bio_s_maybe_retry(void)
 {
@@ -939,6 +945,61 @@ static long maybe_retry_ctrl(BIO *bio, int cmd, long num, void *ptr)
         /* fall through */
     default:
         return BIO_ctrl(BIO_next(bio), cmd, num, ptr);
+    }
+}
+
+const BIO_METHOD *bio_s_no_retry_zero(void)
+{
+    if (meth_no_retry_zero == NULL) {
+        if (!TEST_ptr(meth_no_retry_zero = BIO_meth_new(BIO_TYPE_NO_RETRY_ZERO,
+                          "No Retry Zero"))
+            || !TEST_true(BIO_meth_set_write(meth_no_retry_zero,
+                no_retry_zero_write))
+            || !TEST_true(BIO_meth_set_ctrl(meth_no_retry_zero,
+                no_retry_zero_ctrl))
+            || !TEST_true(BIO_meth_set_create(meth_no_retry_zero,
+                no_retry_zero_new))
+            || !TEST_true(BIO_meth_set_destroy(meth_no_retry_zero,
+                no_retry_zero_free)))
+            return NULL;
+    }
+    return meth_no_retry_zero;
+}
+
+void bio_s_no_retry_zero_free(void)
+{
+    BIO_meth_free(meth_no_retry_zero);
+}
+
+static int no_retry_zero_new(BIO *bio)
+{
+    BIO_set_init(bio, 1);
+    return 1;
+}
+
+static int no_retry_zero_free(BIO *bio)
+{
+    BIO_set_data(bio, NULL);
+    BIO_set_init(bio, 0);
+    return 1;
+}
+
+static int no_retry_zero_write(BIO *bio, const char *in, int inl)
+{
+    BIO_clear_retry_flags(bio);
+    return 0;
+}
+
+static long no_retry_zero_ctrl(BIO *bio, int cmd, long num, void *ptr)
+{
+    BIO *next = BIO_next(bio);
+
+    switch (cmd) {
+    case BIO_CTRL_FLUSH:
+        return next == NULL ? 1 : BIO_ctrl(next, cmd, num, ptr);
+
+    default:
+        return next == NULL ? 0 : BIO_ctrl(next, cmd, num, ptr);
     }
 }
 
@@ -1415,7 +1476,7 @@ int create_ssl_connection_ex(SSL *serverssl, SSL *clientssl, int want,
      */
     for (i = 0; i < 2; i++) {
         if (SSL_read_ex(clientssl, &buf, sizeof(buf), &readbytes) > 0) {
-            if (!TEST_size_t_eq(readbytes, 0))
+            if (!TEST_ulong_eq(readbytes, 0))
                 return 0;
         } else if (!TEST_int_eq(SSL_get_error(clientssl, 0),
                        SSL_ERROR_WANT_READ)) {

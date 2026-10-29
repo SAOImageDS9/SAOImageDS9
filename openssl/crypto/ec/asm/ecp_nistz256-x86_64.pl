@@ -1,5 +1,5 @@
 #! /usr/bin/env perl
-# Copyright 2014-2025 The OpenSSL Project Authors. All Rights Reserved.
+# Copyright 2014-2026 The OpenSSL Project Authors. All Rights Reserved.
 # Copyright (c) 2014, Intel Corporation. All Rights Reserved.
 # Copyright (c) 2015 CloudFlare, Inc.
 #
@@ -17,7 +17,7 @@
 # S.Gueron and V.Krasnov, "Fast Prime Field Elliptic Curve Cryptography with
 #                          256 Bit Primes"
 
-# Further optimization by <https://github.com/dot-asm>:
+# Further optimization by <appro@openssl.org>:
 #
 #		this/original	with/without -DECP_NISTZ256_ASM(*)
 # Opteron	+15-49%		+150-195%
@@ -78,6 +78,14 @@ if (!$addx && `$ENV{CC} -v 2>&1` =~ /((?:clang|LLVM) version|.*based on LLVM) ([
 	my $ver = $2 + $3/100.0;	# 3.1->3.01, 3.10->3.10
 	$avx = ($ver>=3.0) + ($ver>=3.01);
 	$addx = ($ver>=3.03);
+}
+
+if (!$addx && `$ENV{CC} -x c /dev/null -dM -E|grep __clang_major__`
+	=~ /#define __clang_major__.([0-9]+)/) {
+	if ($1) {
+		$avx = ($1>=11); #icx started with clang 11
+		$addx = ($1>=11);
+	}
 }
 
 $code.=<<___;
@@ -3051,7 +3059,7 @@ ___
 # reloading them, pointers, would create undesired dependencies on
 # effective addresses calculation paths. In other words it's too done
 # to favour out-of-order execution logic.
-#						<https://github.com/dot-asm>
+#						<appro@openssl.org>
 
 my ($r_ptr,$a_ptr,$b_org,$b_ptr)=("%rdi","%rsi","%rdx","%rbx");
 my ($acc0,$acc1,$acc2,$acc3,$acc4,$acc5,$acc6,$acc7)=map("%r$_",(8..15));

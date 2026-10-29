@@ -441,7 +441,8 @@ static int aes_ocb_get_ctx_params(void *vctx, OSSL_PARAM params[])
             ERR_raise(ERR_LIB_PROV, PROV_R_INVALID_IV_LENGTH);
             return 0;
         }
-        if (!OSSL_PARAM_set_octet_string_or_ptr(p, ctx->base.oiv, ctx->base.ivlen)) {
+        if (!OSSL_PARAM_set_octet_string(p, ctx->base.oiv, ctx->base.ivlen)
+            && !OSSL_PARAM_set_octet_ptr(p, &ctx->base.oiv, ctx->base.ivlen)) {
             ERR_raise(ERR_LIB_PROV, PROV_R_FAILED_TO_SET_PARAMETER);
             return 0;
         }
@@ -452,7 +453,8 @@ static int aes_ocb_get_ctx_params(void *vctx, OSSL_PARAM params[])
             ERR_raise(ERR_LIB_PROV, PROV_R_INVALID_IV_LENGTH);
             return 0;
         }
-        if (!OSSL_PARAM_set_octet_string_or_ptr(p, ctx->base.iv, ctx->base.ivlen)) {
+        if (!OSSL_PARAM_set_octet_string(p, ctx->base.iv, ctx->base.ivlen)
+            && !OSSL_PARAM_set_octet_ptr(p, &ctx->base.iv, ctx->base.ivlen)) {
             ERR_raise(ERR_LIB_PROV, PROV_R_FAILED_TO_SET_PARAMETER);
             return 0;
         }
@@ -507,8 +509,25 @@ static int aes_ocb_cipher(void *vctx, unsigned char *out, size_t *outl,
     if (!ossl_prov_is_running())
         return 0;
 
+    /* NULL input indicates Final, which must generate or check the tag. */
+    if (in == NULL)
+        return aes_ocb_block_final(vctx, out, outl, outsize);
+
     if (outsize < inl) {
         ERR_raise(ERR_LIB_PROV, PROV_R_OUTPUT_BUFFER_TOO_SMALL);
+        return 0;
+    }
+
+    /*
+     * Mirror the streaming handler: refuse if the key has not been set,
+     * and push the buffered IV into the OCB context before any data is
+     * processed.  Without this, CRYPTO_ocb128_encrypt/decrypt runs with
+     * Offset_0 = 0 regardless of the caller's IV -- catastrophic
+     * (key, nonce) reuse, and a subsequent EVP_*Final_ex() emits a tag
+     * that is a function of (key, iv) only.
+     */
+    if (!ctx->key_set || !update_iv(ctx)) {
+        ERR_raise(ERR_LIB_PROV, PROV_R_CIPHER_OPERATION_FAILED);
         return 0;
     }
 

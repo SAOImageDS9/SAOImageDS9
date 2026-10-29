@@ -22,7 +22,7 @@ unsigned char *OPENSSL_asc2uni(const char *asc, int asclen,
     unsigned char *unitmp;
 
     if (asclen == -1)
-        asclen = (int)strlen(asc);
+        asclen = strlen(asc);
     if (asclen < 0)
         return NULL;
     ulen = asclen * 2 + 2;
@@ -82,7 +82,7 @@ unsigned char *OPENSSL_utf82uni(const char *asc, int asclen,
     unsigned long utf32chr = 0;
 
     if (asclen == -1)
-        asclen = (int)strlen(asc);
+        asclen = strlen(asc);
 
     for (ulen = 0, i = 0; i < asclen; i += j) {
         j = UTF8_getc((const unsigned char *)asc + i, asclen - i, &utf32chr);
@@ -185,6 +185,8 @@ char *OPENSSL_uni2utf8(const unsigned char *uni, int unilen)
 
     /* string must contain an even number of bytes */
     if (unilen & 1)
+        return NULL;
+    if (unilen < 0)
         return NULL;
 
     for (asclen = 0, i = 0; i < unilen;) {

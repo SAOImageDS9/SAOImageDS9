@@ -1,5 +1,5 @@
 /*
- * Copyright 1998-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 1998-2026 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
@@ -292,6 +292,7 @@ DEFINE_RUN_ONCE_STATIC(ossl_comp_brotli_init)
 #define LIBBROTLIDEC "brotlidec"
 #endif
 
+    ERR_set_mark();
     brotli_encode_dso = DSO_load(NULL, LIBBROTLIENC, NULL, 0);
     if (brotli_encode_dso != NULL) {
         p_encode_init = (encode_init_ft)DSO_bind_func(brotli_encode_dso, "BrotliEncoderCreateInstance");
@@ -318,9 +319,12 @@ DEFINE_RUN_ONCE_STATIC(ossl_comp_brotli_init)
         || p_decode_stream == NULL || p_decode_has_more == NULL || p_decode_end == NULL
         || p_decode_error == NULL || p_decode_error_string == NULL || p_decode_is_finished == NULL
         || p_decode_oneshot == NULL) {
+        ERR_clear_last_mark();
         ossl_comp_brotli_cleanup();
         return 0;
     }
+    /* Do not leave errors behind on success. */
+    ERR_pop_to_mark();
 #endif
     return 1;
 }
@@ -553,10 +557,10 @@ static int bio_brotli_read(BIO *b, char *out, int outl)
          * No data in input buffer try to read some in, if an error then
          * return the total data read.
          */
-        ret = BIO_read(next, ctx->decode.buf, (int)ctx->decode.bufsize);
+        ret = BIO_read(next, ctx->decode.buf, ctx->decode.bufsize);
         if (ret <= 0) {
             /* Total data read */
-            int tot = outl - (int)ctx->decode.avail_out;
+            int tot = outl - ctx->decode.avail_out;
 
             BIO_copy_next_retry(b);
             if (ret < 0)
@@ -608,10 +612,10 @@ static int bio_brotli_write(BIO *b, const char *in, int inl)
     for (;;) {
         /* If data in output buffer write it first */
         while (ctx->encode.count > 0) {
-            ret = BIO_write(next, ctx->encode.ptr, (int)ctx->encode.count);
+            ret = BIO_write(next, ctx->encode.ptr, ctx->encode.count);
             if (ret <= 0) {
                 /* Total data written */
-                int tot = inl - (int)ctx->encode.avail_in;
+                int tot = inl - ctx->encode.avail_in;
 
                 BIO_copy_next_retry(b);
                 if (ret < 0)
@@ -664,7 +668,7 @@ static int bio_brotli_flush(BIO *b)
     for (;;) {
         /* If data in output buffer write it first */
         while (ctx->encode.count > 0) {
-            ret = BIO_write(next, ctx->encode.ptr, (int)ctx->encode.count);
+            ret = BIO_write(next, ctx->encode.ptr, ctx->encode.count);
             if (ret <= 0) {
                 BIO_copy_next_retry(b);
                 return ret;

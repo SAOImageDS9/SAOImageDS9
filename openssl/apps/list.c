@@ -1,5 +1,5 @@
 /*
- * Copyright 1995-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 1995-2026 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
@@ -846,7 +846,7 @@ static void list_tls_groups(int version, int all)
 {
     SSL_CTX *ctx = NULL;
     STACK_OF(OPENSSL_CSTRING) *groups;
-    int i, num;
+    size_t i, num;
 
     if ((groups = sk_OPENSSL_CSTRING_new_null()) == NULL) {
         BIO_printf(bio_err, "ERROR: Memory allocation\n");
@@ -1333,28 +1333,19 @@ static void list_store_loaders(void)
         stores);
     sk_OSSL_STORE_LOADER_sort(stores);
     for (i = 0; i < sk_OSSL_STORE_LOADER_num(stores); i++) {
-        const OSSL_STORE_LOADER *l = sk_OSSL_STORE_LOADER_value(stores, i);
+        const OSSL_STORE_LOADER *m = sk_OSSL_STORE_LOADER_value(stores, i);
         STACK_OF(OPENSSL_CSTRING) *names = NULL;
 
-        if (select_name != NULL && !OSSL_STORE_LOADER_is_a(l, select_name))
+        if (select_name != NULL && !OSSL_STORE_LOADER_is_a(m, select_name))
             continue;
 
         names = sk_OPENSSL_CSTRING_new(name_cmp);
-        if (names != NULL && OSSL_STORE_LOADER_names_do_all(l, collect_names, names)) {
+        if (names != NULL && OSSL_STORE_LOADER_names_do_all(m, collect_names, names)) {
             BIO_printf(bio_out, "  ");
             print_names(bio_out, names);
 
             BIO_printf(bio_out, " @ %s\n",
-                OSSL_PROVIDER_get0_name(OSSL_STORE_LOADER_get0_provider(l)));
-
-            if (verbose) {
-                const char *desc = OSSL_STORE_LOADER_get0_description(l);
-
-                if (desc != NULL)
-                    BIO_printf(bio_out, "    description: %s\n", desc);
-                print_param_types("settable operation parameters",
-                    OSSL_STORE_LOADER_settable_ctx_params(l), 4);
-            }
+                OSSL_PROVIDER_get0_name(OSSL_STORE_LOADER_get0_provider(m)));
         }
         sk_OPENSSL_CSTRING_free(names);
     }
@@ -1498,6 +1489,9 @@ static void list_disabled(void)
 #endif
 #ifdef OPENSSL_NO_DSA
     BIO_puts(bio_out, "DSA\n");
+#endif
+#ifdef OPENSSL_NO_SIPHASH
+    BIO_puts(bio_out, "SIPHASH\n");
 #endif
 #if defined(OPENSSL_NO_DTLS)
     BIO_puts(bio_out, "DTLS\n");

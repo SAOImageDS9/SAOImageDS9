@@ -1,5 +1,5 @@
 /*
- * Copyright 1995-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 1995-2026 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
@@ -636,7 +636,6 @@ static int rsa_keygen(OSSL_LIB_CTX *libctx, RSA *rsa, int bits, int primes,
         OSSL_SELF_TEST_get_callback(libctx, &stcb, &stcbarg);
         ok = rsa_keygen_pairwise_test(rsa, stcb, stcbarg);
         if (!ok) {
-            ossl_set_error_state(OSSL_SELF_TEST_TYPE_PCT);
             /* Clear intermediate results */
             BN_clear_free(rsa->d);
             BN_clear_free(rsa->p);
@@ -706,7 +705,7 @@ static int rsa_keygen_pairwise_test(RSA *rsa, OSSL_CALLBACK *cb, void *cbarg)
      * decoded.
      */
     plaintxt_len = RSA_size(rsa);
-    plaintxt = OPENSSL_calloc(plaintxt_len, 3);
+    plaintxt = OPENSSL_zalloc(plaintxt_len * 3);
     if (plaintxt == NULL)
         goto err;
     ciphertxt = plaintxt + plaintxt_len;

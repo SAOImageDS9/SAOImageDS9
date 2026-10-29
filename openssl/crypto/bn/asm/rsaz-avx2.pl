@@ -1,5 +1,5 @@
 #! /usr/bin/env perl
-# Copyright 2013-2025 The OpenSSL Project Authors. All Rights Reserved.
+# Copyright 2013-2026 The OpenSSL Project Authors. All Rights Reserved.
 # Copyright (c) 2012, Intel Corporation. All Rights Reserved.
 #
 # Licensed under the Apache License 2.0 (the "License").  You may not use
@@ -26,7 +26,7 @@
 #     on AVX2 capable x86_64 platforms",
 #     http://rt.openssl.org/Ticket/Display.html?id=2850&user=guest&pass=guest
 #
-# +13% improvement over original submission by <https://github.com/dot-asm>
+# +13% improvement over original submission by <appro@openssl.org>
 #
 # rsa2048 sign/sec	OpenSSL 1.0.1	scalar(*)	this
 # 2.3GHz Haswell	621		765/+23%	1113/+79%
@@ -71,6 +71,14 @@ if (!$avx && `$ENV{CC} -v 2>&1` =~ /((?:clang|LLVM) version|based on LLVM) ([0-9
 	my $ver = $2 + $3/100.0;	# 3.1->3.01, 3.10->3.10
 	$avx = ($ver>=3.0) + ($ver>=3.01);
 	$addx = ($ver>=3.03);
+}
+
+if (!$avx && `$ENV{CC} -x c /dev/null -dM -E|grep __clang_major__`
+	=~ /#define __clang_major__.([0-9]+)/) {
+	if ($1) {
+		$addx = ($1>=11); #icx started with clang 11
+		$avx = ($1>=11);
+	}
 }
 
 open OUT,"| \"$^X\" \"$xlate\" $flavour \"$output\""

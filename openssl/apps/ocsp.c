@@ -470,11 +470,15 @@ int ocsp_main(int argc, char **argv)
             if (issuer == NULL)
                 goto end;
             if (issuers == NULL) {
-                if ((issuers = sk_X509_new_null()) == NULL)
+                if ((issuers = sk_X509_new_null()) == NULL) {
+                    X509_free(issuer);
                     goto end;
+                }
             }
-            if (!sk_X509_push(issuers, issuer))
+            if (!sk_X509_push(issuers, issuer)) {
+                X509_free(issuer);
                 goto end;
+            }
             break;
         case OPT_CERT:
             reset_unknown();
@@ -705,7 +709,8 @@ redo_accept:
             if (res == 1) {
                 resp = OCSP_response_create(OCSP_RESPONSE_STATUS_MALFORMEDREQUEST,
                     NULL);
-                send_ocsp_response(cbio, resp);
+                if (resp != NULL)
+                    send_ocsp_response(cbio, resp);
             }
             goto done_resp;
         }
@@ -807,16 +812,18 @@ done_resp:
         BIO_free(derbio);
     }
 
-    i = OCSP_response_status(resp);
-    if (i != OCSP_RESPONSE_STATUS_SUCCESSFUL) {
-        BIO_printf(out, "Responder Error: %s (%d)\n",
-            OCSP_response_status_str(i), i);
-        if (!ignore_err)
-            goto end;
-    }
+    if (resp != NULL) {
+        i = OCSP_response_status(resp);
+        if (i != OCSP_RESPONSE_STATUS_SUCCESSFUL) {
+            BIO_printf(out, "Responder Error: %s (%d)\n",
+                OCSP_response_status_str(i), i);
+            if (!ignore_err)
+                goto end;
+        }
 
-    if (resp_text)
-        OCSP_RESPONSE_print(out, resp, 0);
+        if (resp_text)
+            OCSP_RESPONSE_print(out, resp, 0);
+    }
 
     /* If running as responder don't verify our own response */
     if (cbio != NULL) {

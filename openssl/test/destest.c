@@ -1,5 +1,5 @@
 /*
- * Copyright 1995-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 1995-2026 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
@@ -195,46 +195,10 @@ static unsigned char cbc_iv[8] = {
  */
 /* static char cbc_data[40]="7654321 Now is the time for \0001"; */
 static unsigned char cbc_data[40] = {
-    0x37,
-    0x36,
-    0x35,
-    0x34,
-    0x33,
-    0x32,
-    0x31,
-    0x20,
-    0x4E,
-    0x6F,
-    0x77,
-    0x20,
-    0x69,
-    0x73,
-    0x20,
-    0x74,
-    0x68,
-    0x65,
-    0x20,
-    0x74,
-    0x69,
-    0x6D,
-    0x65,
-    0x20,
-    0x66,
-    0x6F,
-    0x72,
-    0x20,
-    0x00,
-    0x31,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
+    0x37, 0x36, 0x35, 0x34, 0x33, 0x32, 0x31, 0x20, 0x4E, 0x6F,
+    0x77, 0x20, 0x69, 0x73, 0x20, 0x74, 0x68, 0x65, 0x20, 0x74,
+    0x69, 0x6D, 0x65, 0x20, 0x66, 0x6F, 0x72, 0x20, 0x00, 0x31,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
 static unsigned char cbc_ok[32] = {
@@ -251,73 +215,17 @@ static unsigned char cbc2_key[8] = {
     0xf0, 0xe1, 0xd2, 0xc3, 0xb4, 0xa5, 0x96, 0x87
 };
 static unsigned char xcbc_ok[32] = {
-    0x86,
-    0x74,
-    0x81,
-    0x0D,
-    0x61,
-    0xA4,
-    0xA5,
-    0x48,
-    0xB9,
-    0x93,
-    0x03,
-    0xE1,
-    0xB8,
-    0xBB,
-    0xBD,
-    0xBD,
-    0x64,
-    0x30,
-    0x0B,
-    0xB9,
-    0x06,
-    0x65,
-    0x81,
-    0x76,
-    0x04,
-    0x1D,
-    0x77,
-    0x62,
-    0x17,
-    0xCA,
-    0x2B,
-    0xD2,
+    0x86, 0x74, 0x81, 0x0D, 0x61, 0xA4, 0xA5, 0x48, 0xB9, 0x93,
+    0x03, 0xE1, 0xB8, 0xBB, 0xBD, 0xBD, 0x64, 0x30, 0x0B, 0xB9,
+    0x06, 0x65, 0x81, 0x76, 0x04, 0x1D, 0x77, 0x62, 0x17, 0xCA,
+    0x2B, 0xD2
 };
 #else
 static unsigned char xcbc_ok[32] = {
-    0x84,
-    0x6B,
-    0x29,
-    0x14,
-    0x85,
-    0x1E,
-    0x9A,
-    0x29,
-    0x54,
-    0x73,
-    0x2F,
-    0x8A,
-    0xA0,
-    0xA6,
-    0x11,
-    0xC1,
-    0x15,
-    0xCD,
-    0xC2,
-    0xD7,
-    0x95,
-    0x1B,
-    0x10,
-    0x53,
-    0xA6,
-    0x3C,
-    0x5E,
-    0x03,
-    0xB2,
-    0x1A,
-    0xA3,
-    0xC4,
+    0x84, 0x6B, 0x29, 0x14, 0x85, 0x1E, 0x9A, 0x29, 0x54, 0x73,
+    0x2F, 0x8A, 0xA0, 0xA6, 0x11, 0xC1, 0x15, 0xCD, 0xC2, 0xD7,
+    0x95, 0x1B, 0x10, 0x53, 0xA6, 0x3C, 0x5E, 0x03, 0xB2, 0x1A,
+    0xA3, 0xC4
 };
 #endif
 
@@ -473,13 +381,13 @@ static int test_des_cbc(void)
     memset(cbc_out, 0, sizeof(cbc_out));
     memset(cbc_in, 0, sizeof(cbc_in));
     memcpy(iv3, cbc_iv, sizeof(cbc_iv));
-    DES_ncbc_encrypt(cbc_data, cbc_out, (long)(cbc_data_len + 1), &ks,
+    DES_ncbc_encrypt(cbc_data, cbc_out, cbc_data_len + 1, &ks,
         &iv3, DES_ENCRYPT);
     if (!TEST_mem_eq(cbc_out, 32, cbc_ok, 32))
         return 0;
 
     memcpy(iv3, cbc_iv, sizeof(cbc_iv));
-    DES_ncbc_encrypt(cbc_out, cbc_in, (long)(cbc_data_len + 1), &ks,
+    DES_ncbc_encrypt(cbc_out, cbc_in, cbc_data_len + 1, &ks,
         &iv3, DES_DECRYPT);
     return TEST_mem_eq(cbc_in, cbc_data_len, cbc_data, cbc_data_len);
 }
@@ -497,12 +405,12 @@ static int test_des_ede_cbc(void)
     memset(cbc_out, 0, sizeof(cbc_out));
     memset(cbc_in, 0, sizeof(cbc_in));
     memcpy(iv3, cbc_iv, sizeof(cbc_iv));
-    DES_xcbc_encrypt(cbc_data, cbc_out, (long)n, &ks, &iv3, &cbc2_key, &cbc3_key,
+    DES_xcbc_encrypt(cbc_data, cbc_out, n, &ks, &iv3, &cbc2_key, &cbc3_key,
         DES_ENCRYPT);
     if (!TEST_mem_eq(cbc_out, sizeof(xcbc_ok), xcbc_ok, sizeof(xcbc_ok)))
         return 0;
     memcpy(iv3, cbc_iv, sizeof(cbc_iv));
-    DES_xcbc_encrypt(cbc_out, cbc_in, (long)n, &ks, &iv3, &cbc2_key, &cbc3_key,
+    DES_xcbc_encrypt(cbc_out, cbc_in, n, &ks, &iv3, &cbc2_key, &cbc3_key,
         DES_DECRYPT);
     return TEST_mem_eq(cbc_data, n, cbc_data, n);
 }
@@ -528,13 +436,13 @@ static int test_ede_cbc(void)
 
     DES_ede3_cbc_encrypt(cbc_data, cbc_out, 16L, &ks, &ks2, &ks3, &iv3,
         DES_ENCRYPT);
-    DES_ede3_cbc_encrypt(&cbc_data[16], &cbc_out[16], (long)(i - 16), &ks, &ks2,
+    DES_ede3_cbc_encrypt(&cbc_data[16], &cbc_out[16], i - 16, &ks, &ks2,
         &ks3, &iv3, DES_ENCRYPT);
     if (!TEST_mem_eq(cbc_out, n, cbc3_ok, n))
         return 0;
 
     memcpy(iv3, cbc_iv, sizeof(cbc_iv));
-    DES_ede3_cbc_encrypt(cbc_out, cbc_in, (long)i, &ks, &ks2, &ks3, &iv3,
+    DES_ede3_cbc_encrypt(cbc_out, cbc_in, i, &ks, &ks2, &ks3, &iv3,
         DES_DECRYPT);
     return TEST_mem_eq(cbc_in, i, cbc_data, i);
 }
@@ -550,7 +458,7 @@ static int test_input_align(int i)
     memcpy(iv, cbc_iv, sizeof(cbc_iv));
     if (!TEST_int_eq(DES_set_key_checked(&cbc_key, &ks), 0))
         return 0;
-    DES_ncbc_encrypt(&cbc_data[i], cbc_out, (long)n, &ks, &iv, DES_ENCRYPT);
+    DES_ncbc_encrypt(&cbc_data[i], cbc_out, n, &ks, &iv, DES_ENCRYPT);
     return 1;
 }
 
@@ -565,7 +473,7 @@ static int test_output_align(int i)
     memcpy(iv, cbc_iv, sizeof(cbc_iv));
     if (!TEST_int_eq(DES_set_key_checked(&cbc_key, &ks), 0))
         return 0;
-    DES_ncbc_encrypt(cbc_data, &cbc_out[i], (long)n, &ks, &iv, DES_ENCRYPT);
+    DES_ncbc_encrypt(cbc_data, &cbc_out[i], n, &ks, &iv, DES_ENCRYPT);
     return 1;
 }
 
@@ -590,7 +498,7 @@ static int test_des_pcbc(void)
     unsigned char cbc_in[40];
     unsigned char cbc_out[40];
     DES_key_schedule ks;
-    const int n = (int)(strlen((char *)cbc_data) + 1);
+    const int n = strlen((char *)cbc_data) + 1;
 
     if (!TEST_int_eq(DES_set_key_checked(&cbc_key, &ks), 0))
         return 0;
@@ -773,7 +681,7 @@ static int test_des_cbc_cksum(void)
     unsigned char cret[8];
 
     DES_set_key_checked(&cbc_key, &ks);
-    cs = DES_cbc_cksum(cbc_data, &cret, (long)strlen((char *)cbc_data), &ks,
+    cs = DES_cbc_cksum(cbc_data, &cret, strlen((char *)cbc_data), &ks,
         &cbc_iv);
     if (!TEST_cs_eq(cs, cbc_cksum_ret))
         return 0;

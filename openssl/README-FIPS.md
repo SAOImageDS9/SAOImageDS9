@@ -18,7 +18,7 @@ See <https://www.openssl.org/source/> for information related to OpenSSL
 FIPS certificates and Security Policies.
 
 Newer OpenSSL Releases that include security or bug fixes can be used to build
-all other components (such as the core APIs, TLS and the default, base and
+all other components (such as the core API's, TLS and the default, base and
 legacy providers) without any restrictions, but the FIPS provider must be built
 as specified in the Security Policy (normally with a different version of the
 source code).
@@ -32,11 +32,15 @@ Installing the FIPS provider
 ============================
 
 In order to be FIPS compliant you must only use FIPS validated source code.
-Refer to <https://www.openssl.org/source/> for information related to
+Refer to <https://openssl-library.org/source/> for information related to
 which versions are FIPS validated. The instructions given below build OpenSSL
-just using the FIPS validated source code.  Any FIPS validated version may be
-used with any other openssl library.  Please see <https://www.openssl.org/source/>
-To determine which FIPS validated library version may be appropriate for you.
+just using the FIPS validated source code.  A FIPS provider built from any
+validated version may be used together with an OpenSSL library built from any
+supported release from OpenSSL 3.0 onwards; provider compatibility is
+maintained backward and forward across these releases, including future major
+release series, for as long as the module remains supported.  Please see
+<https://openssl-library.org/source/>
+to determine which FIPS validated library version may be appropriate for you.
 
 If you want to use a validated FIPS provider, but also want to use the latest
 OpenSSL release to build everything else, then refer to the next section.
@@ -109,19 +113,19 @@ which versions are FIPS validated. For this example we use OpenSSL 3.1.2.
 Download and build the latest release of OpenSSL
 ------------------------------------------------
 
-We use OpenSSL 3.6.0 here, (but you could also use the latest 3.6.X)
+We use OpenSSL 3.5.0 here, (but you could also use the latest 3.5.X)
 
-    $ wget https://www.openssl.org/source/openssl-3.6.0.tar.gz
-    $ tar -xf openssl-3.6.0.tar.gz
-    $ cd openssl-3.6.0
+    $ wget https://www.openssl.org/source/openssl-3.5.0.tar.gz
+    $ tar -xf openssl-3.5.0.tar.gz
+    $ cd openssl-3.5.0
     $ ./Configure enable-fips
     $ make
 
 Use the OpenSSL FIPS provider for testing
 -----------------------------------------
 
-We do this by replacing the artifact for the OpenSSL 3.6.0 FIPS provider.
-Note that the OpenSSL 3.6.0 FIPS provider has not been validated
+We do this by replacing the artifact for the OpenSSL 3.5.0 FIPS provider.
+Note that the OpenSSL 3.5.0 FIPS provider has not been validated
 so it must not be used for FIPS purposes.
 
     $ cp ../openssl-3.1.2/providers/fips.so providers/.
@@ -147,7 +151,7 @@ Copy the FIPS provider artifacts (`fips.so` & `fipsmodule.cnf`) to known locatio
 Check that the correct FIPS provider is being used
 --------------------------------------------------
 
-    $ cd ../openssl-3.6.0
+    $ cd ../openssl-3.5.0
     $./util/wrap.pl -fips apps/openssl list -provider-path providers \
     -provider fips -providers
 
@@ -155,7 +159,7 @@ Check that the correct FIPS provider is being used
     Providers:
       base
         name: OpenSSL Base Provider
-        version: 3.6.0
+        version: 3.5.0
         status: active
       fips
         name: OpenSSL FIPS Provider
@@ -168,7 +172,7 @@ Using the FIPS Module in applications
 Documentation about using the FIPS module is available on the [fips_module(7)]
 manual page.
 
- [fips_module(7)]: https://docs.openssl.org/master/man7/fips_module
+ [fips_module(7)]: https://www.openssl.org/docs/manmaster/man7/fips_module.html
 
 Entropy Source
 ==============

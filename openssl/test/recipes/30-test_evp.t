@@ -1,5 +1,5 @@
 #! /usr/bin/env perl
-# Copyright 2015-2025 The OpenSSL Project Authors. All Rights Reserved.
+# Copyright 2015-2026 The OpenSSL Project Authors. All Rights Reserved.
 #
 # Licensed under the Apache License 2.0 (the "License").  You may not use
 # this file except in compliance with the License.  You can obtain a copy
@@ -34,7 +34,6 @@ my $no_siv = disabled("siv");
 my $no_argon2 = disabled("argon2");
 my $no_ml_dsa = disabled("ml-dsa");
 my $no_ml_kem = disabled("ml-kem");
-my $no_lms = disabled("lms");
 
 # Default config depends on if the legacy module is built or not
 my $defaultcnf = $no_legacy ? 'default.cnf' : 'default-and-legacy.cnf';
@@ -66,6 +65,7 @@ my @files = qw(
                 evpmd_sha.txt
                 evppbe_pbkdf2.txt
                 evppkey_kdf_hkdf.txt
+                evppkey_kdf_tls1_prf_fips.txt
                 evppkey_rsa.txt
                 evppkey_rsa_common.txt
                 evppkey_rsa_kem.txt
@@ -81,6 +81,7 @@ push @files, qw(
                 evpmac_cmac_des.txt
                ) unless $no_des;
 push @files, qw(
+                evppkey_slh_dsa_keygen.txt
                 evppkey_slh_dsa_siggen.txt
                 evppkey_slh_dsa_sigver.txt
                ) unless $no_slh_dsa;
@@ -125,12 +126,8 @@ push @files, qw(
                 evppkey_ml_kem_keygen.txt
                 evppkey_ml_kem_encap_decap.txt
                ) unless $no_ml_kem;
-push @files, qw(
-                evppkey_lms_sigver.txt
-               ) unless $no_lms;
-push @files, qw(
-                evppkey_ecdsa_rfc6979.txt
-               ) unless $no_ec;
+push @files, qw(evppkey_mlx_kem_ecx.txt) unless ($no_ml_kem || $no_ecx);
+push @files, qw(evppkey_mlx_kem_ec.txt) unless ($no_ml_kem || $no_ec);
 
 # A list of tests that only run with the default provider
 # (i.e. The algorithms are not present in the fips provider)
@@ -171,6 +168,7 @@ my @defltfiles = qw(
                      evppkey_kdf_tls1_prf.txt
                     );
 push @defltfiles, qw(evppkey_brainpool.txt) unless $no_ec;
+push @defltfiles, qw(evppkey_ecdsa_rfc6979.txt) unless $no_ec;
 push @defltfiles, qw(evppkey_ecx_kem.txt) unless $no_ecx;
 push @defltfiles, qw(evppkey_dsa_rfc6979.txt) unless $no_dsa;
 push @defltfiles, qw(evppkey_sm2.txt) unless $no_sm2;

@@ -28,7 +28,7 @@ proc TileCanvasBegin {} {
     global itile
 
     UnBindEventsCanvas
-    UnBindEventsCanvasItems
+    TileCanvasUnBindItems
     TileCanvasBindEvents
 
     set itile(canvas,handle) 12
@@ -53,7 +53,29 @@ proc TileCanvasEnd {} {
     $ds9(canvas) delete tilecanvas
     TileCanvasUnBindEvents
     BindEventsCanvas
-    BindEventsCanvasItems
+    TileCanvasBindItems
+}
+
+# every frame, not just the active ones: a frame hidden while the mode is
+#  on must get its bindings back, and showing a frame does not rebind it
+proc TileCanvasUnBindItems {} {
+    global ds9
+
+    foreach ff $ds9(frames) {
+	UnBindEventsFrame $ff
+	UnBindEventsColorbar ${ff}cb
+	UnBindEventsGraph $ff
+    }
+}
+
+proc TileCanvasBindItems {} {
+    global ds9
+
+    foreach ff $ds9(frames) {
+	BindEventsFrame $ff
+	BindEventsColorbar ${ff}cb
+	BindEventsGraph $ff
+    }
 }
 
 # Escape: back to the preferred edit mode
@@ -110,14 +132,24 @@ proc TileCanvasKeys {} {
 # after every layout (and UpdateDS9): refresh the copy and the overlay
 proc TileCanvasUpdate {} {
     global current
+    global tile
     global itile
 
     if {$current(mode) != {layout}} {
 	return
     }
 
+    # the display left Manual Layout (Single, Blink, another grid mode...):
+    #  nothing left to edit, so leave the mode rather than keep the frames
+    #  unbound with no overlay
+    if {$current(display) != {tile} || $tile(mode) != {grid} ||
+	$tile(grid,mode) != {span}} {
+	TileCanvasExit
+	return
+    }
+
     # frames created while in the mode come with their own bindings
-    UnBindEventsCanvasItems
+    TileCanvasUnBindItems
 
     # mid-drag the copy is ahead of tile, just keep the overlay on top
     if {[info exists itile(edit,canvas,drag)] &&

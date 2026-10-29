@@ -46,8 +46,9 @@ to compile both separately then install them with the compatible TCL versions.
 OpenSSL
 -------
 
-This package is compatible with OpenSSL v1.1.1 or later, though 3.2 or later is
-preferred. See http://www.openssl.org/. Please note that there are a few API
+This package is compatible with OpenSSL v1.1.1 or later including the 3.x and
+4.0 releases. OpenSSL 3.2 or later is preferred on Windows.
+See http://www.openssl.org/. Please note that there are a few API
 incompatibilities between OpenSSL 1.1.1 and 3.x, so if this extension is built
 against OpenSSL 1.1.1 it is not binary compatible with OpenSSL 3.x or vice
 versa.
@@ -139,7 +140,7 @@ TLS 1.4.1    Copyright (C) 2000 Ajuba Solutions
 TLS 1.6      Copyright (C) 2008 ActiveState Software Inc.
 TLS 1.7      Copyright (C) 2016 Matt Newman, Ajuba Solutions, ActiveState
                                 Software Inc, Roy Keene <tcltls@rkeene.org>
-TLS 1.8-2.0  Copyright (C) 2023-2024 Brian O'Hagan
+TLS 1.8-2.0  Copyright (C) 2023-2026 Brian O'Hagan
 
 Acknowledgments
 ===============

@@ -3,7 +3,7 @@
           script from tcllib: dtplite -o tls.n nroff tls.man
                               dtplite -o tls.html html tls.man
 }]
-[manpage_begin tls n 2.0b2]
+[manpage_begin tls n 2.0.1]
 [category tls]
 [copyright {1999 Matt Newman}]
 [copyright {2004 Starfish Systems}]
@@ -13,7 +13,7 @@
 [see_also http socket [uri https://www.openssl.org/ OpenSSL]]
 [titledesc {binding to the OpenSSL library for encrypted socket and I/O channel communications}]
 [require Tcl 8.5-]
-[require tls 2.0b2]
+[require tls 2.0.1]
 [description]
 
 This extension provides TCL script access to Secure Socket Layer (SSL)
@@ -204,6 +204,7 @@ See the [cmd tls::protocols] command for supported protocols.
 [opt_def -ssl3 [arg bool]]
 Enable use of SSL v3. The default is [const false]. Starting in TclTLS 1.8,
 use of SSL v3 if only available via a compile time option.
+OpenSSL 4.0+ no longer supports SSL v3, so this may not have any effect.
 See the [cmd tls::protocols] command for supported protocols.
 
 [opt_def -tls1 [arg bool]]

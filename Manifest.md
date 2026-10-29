@@ -32,7 +32,7 @@ Last updated 2026-10-26
 | tksao        |            | y     |       |                                                                      |                                 |
 | ~~tksvg~~    | ~~0.7.2~~  |       | ~~y~~ | ~~https://github.com/wjoye/tksvg~~                                   | removed (3)                     |
 | tktable      | 2.13       | y     | y     | https://github.com/SAOImageDS9/tktable-maintenance                   | previous upstream abandoned     |
-| tls          | 2.0        |       | y     | https://core.tcl-lang.org/tcltls/index                               | 2.0.1 (5)                       |
+| tls          | 2.0.1      |       | y     | https://core.tcl-lang.org/tcltls/index                               | 2.0.1 (5)                       |
 | ttkthemes    | 3.3.0      |       |       | https://github.com/TkinterEP/ttkthemes/                              | 3.3.0                           |
 | vector       |            | y     |       |                                                                      |                                 |
 | xpa          | 2.2.2      | y     |       | https://github.com/SAOImageDS9/xpa-maintenance                       | 2.2.2                           |
@@ -54,6 +54,6 @@ Last updated 2026-10-26
 
 (4) Upgraded from 2.0.1. Earlier problems were reported with 2.1.1, but 2.1.2 gives byte-identical saveimage jpeg/tiff output to 2.0.1 on Linux. Local changes: tkimg*Config.sh export for gif/jpeg/png/tiff/window, and the Tcl_Size typedef removed from base/tkimgDecls.h.
 
-(5) Small tweaks to work with ds9.
+(5) tls: exports tlsConfig.sh (TEA_EXPORT_CONFIG) and adds `package provide Tls` to library/tls.tcl. The earlier acinclude.m4 static-LIBEXT tweak is upstream as of 2.0.1. The BuildInfoCommand static-link clash with tktable is fixed on the tktable side (made static there) instead of renaming it in tls.
 
 (6) pkgs/thread3.0.6: backported the Thread 3.0.7 fix that sets ZIPFS_BUILD=0 when configured with --with-tcl8; without it the macOS framework build fails looking for a native Tcl 9 tclsh.

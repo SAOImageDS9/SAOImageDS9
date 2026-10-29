@@ -100,7 +100,7 @@
 <!-- tls.n
    -->
 <body><div class="doctools">
-<h1 class="doctools_title">tls(n) 2.0b2 tls &quot;Tcl TLS extension&quot;</h1>
+<h1 class="doctools_title">tls(n) 2.0.1 tls &quot;Tcl TLS extension&quot;</h1>
 <div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
 <p>tls - binding to the OpenSSL library for encrypted socket and I/O channel communications</p>
 </div>
@@ -139,7 +139,7 @@
 <div class="doctools_synopsis">
 <ul class="doctools_requirements">
 <li>package require <b class="pkgname">Tcl 8.5-</b></li>
-<li>package require <b class="pkgname">tls 2.0b2</b></li>
+<li>package require <b class="pkgname">tls 2.0.1</b></li>
 </ul>
 <ul class="doctools_syntax">
 <li><a href="#1"><b class="cmd">tls::init</b> <span class="opt">?<i class="arg">-option</i>?</span> <span class="opt">?<i class="arg">value</i>?</span> <span class="opt">?<i class="arg">-option value ...</i>?</span></a></li>
@@ -311,6 +311,7 @@ See the <b class="cmd">tls::protocols</b> command for supported protocols.</p></
 <dt><b class="option">-ssl3</b> <i class="arg">bool</i></dt>
 <dd><p>Enable use of SSL v3. The default is <b class="const">false</b>. Starting in TclTLS 1.8,
 use of SSL v3 if only available via a compile time option.
+OpenSSL 4.0+ no longer supports SSL v3, so this may not have any effect.
 See the <b class="cmd">tls::protocols</b> command for supported protocols.</p></dd>
 <dt><b class="option">-tls1</b> <i class="arg">bool</i></dt>
 <dd><p>Enable use of TLS v1. Starting in TclTLS 2.0, the default is <b class="const">false</b>.

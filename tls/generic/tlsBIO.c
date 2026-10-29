@@ -103,6 +103,10 @@ static int BioOutput(BIO *bio, const char *buf, int bufLen) {
     dprintf("[chan=%p] BioOutput(bio=%p, buf=%p, len=%d)", (void *)chan,
 	(void *) bio, buf, bufLen);
 
+    if (Tcl_Eof(chan)) {
+	return 0;
+    }
+
     BIO_clear_retry_flags(bio);
     Tcl_SetErrno(0);
 
@@ -123,7 +127,7 @@ static int BioOutput(BIO *bio, const char *buf, int bufLen) {
 	    Tcl_SetErrno(ECONNRESET);
 	    BIO_set_flags(bio, BIO_FLAGS_IN_EOF);
 
-	} else {
+	} else if (BIOShouldRetry(tclErrno)) {
 	    dprintf("Got 0 from Tcl_WriteRaw, and EOF is not set; ret = 0");
 	    BIO_set_retry_write(bio);
 
@@ -132,6 +136,7 @@ static int BioOutput(BIO *bio, const char *buf, int bufLen) {
 	}
 
     } else {
+	/* EPIPE or ECONNRESET mean peer is gone */
 	dprintf("We got some kind of I/O error");
 
 	if (BIOShouldRetry(tclErrno)) {
@@ -140,6 +145,7 @@ static int BioOutput(BIO *bio, const char *buf, int bufLen) {
 
 	} else {
 	    dprintf("Unexpected error: %i=%s", tclErrno, Tcl_ErrnoMsg(tclErrno));
+	    BIO_set_flags(bio, BIO_FLAGS_IN_EOF);
 	}
     }
 
@@ -167,7 +173,7 @@ static int BioOutput(BIO *bio, const char *buf, int bufLen) {
  */
 
 static int BioInput(BIO *bio, char *buf, int bufLen) {
-    Tcl_Size ret = 0;
+    Tcl_Size ret;
     int is_eof, tclErrno, is_blocked;
     State *statePtr = (State *) BIO_get_data(bio);
     Tcl_Channel chan = Tls_GetParent(statePtr, 0);
@@ -175,7 +181,7 @@ static int BioInput(BIO *bio, char *buf, int bufLen) {
     dprintf("[chan=%p] BioInput(bio=%p, buf=%p, len=%d)", (void *) chan,
 	(void *) bio, buf, bufLen);
 
-    if (buf == NULL || bufLen <= 0) {
+    if (buf == NULL || bufLen <= 0 || Tcl_Eof(chan)) {
 	return 0;
     }
 
@@ -184,7 +190,6 @@ static int BioInput(BIO *bio, char *buf, int bufLen) {
 
     /* Read data from underlying channel */
     ret = Tcl_ReadRaw(chan, buf, (Tcl_Size) bufLen);
-
     is_eof = Tcl_Eof(chan);
     tclErrno = Tcl_GetErrno();
     is_blocked = Tcl_InputBlocked(chan);
@@ -201,8 +206,8 @@ static int BioInput(BIO *bio, char *buf, int bufLen) {
 	    Tcl_SetErrno(ECONNRESET);
 	    BIO_set_flags(bio, BIO_FLAGS_IN_EOF);
 
-	} else if (is_blocked) {
-	    dprintf("Got input blocked from Tcl_ReadRaw. Setting retry read flag");
+	} else if (BIOShouldRetry(tclErrno)) {
+	    dprintf("Got 0 from Tcl_ReadRaw, and EOF is not set; ret = 0");
 	    BIO_set_retry_read(bio);
 	}
 
@@ -215,6 +220,7 @@ static int BioInput(BIO *bio, char *buf, int bufLen) {
 
 	} else {
 	    dprintf("Unexpected error: %i=%s", tclErrno, Tcl_ErrnoMsg(tclErrno));
+	    BIO_set_flags(bio, BIO_FLAGS_IN_EOF);
 	}
     }
 
@@ -312,7 +318,8 @@ static long BioCtrl(BIO *bio, int cmd, long num, void *ptr) {
 		ret = 0;
 		break;
 	case BIO_CTRL_GET_CLOSE:
-		/* man - Get the close on BIO_free() flag set by BIO_CTRL_SET_CLOSE. Implements BIO_get_close. */
+		/* man - Get the close on BIO_free() flag set by BIO_CTRL_SET_CLOSE.
+\		 * Implements BIO_get_close. */
 		dprintf("Got BIO_CTRL_CLOSE");
 		/* Returns BIO_CLOSE, BIO_NOCLOSE, or <0 for failure. */
 		ret = BIO_get_shutdown(bio);
@@ -325,7 +332,8 @@ static long BioCtrl(BIO *bio, int cmd, long num, void *ptr) {
 		ret = 1;
 		break;
 	case BIO_CTRL_PENDING:
-		/* opt - Return number of bytes in chan waiting to be read. Implements BIO_pending. */
+		/* opt - Return number of bytes in chan waiting to be read.
+		   Implements BIO_pending. */
 		dprintf("Got BIO_CTRL_PENDING");
 		/* Return the amount of pending data or 0 for error. */
 		ret = ((chan) ? Tcl_InputBuffered(chan) : 0);
@@ -334,9 +342,19 @@ static long BioCtrl(BIO *bio, int cmd, long num, void *ptr) {
 	case BIO_CTRL_FLUSH:
 		/* opt - Flush any buffered output. Implements BIO_flush. */
 		dprintf("Got BIO_CTRL_FLUSH");
-		/* Use Tcl_WriteRaw instead of Tcl_Flush to operate on right chan in stack. */
-		/* Returns 1 for success, <=0 for error/retry. */
-		ret = ((chan) && (Tcl_WriteRaw(chan, "", 0) >= 0) ? 1 : -1);
+		/* Use Tcl_WriteRaw instead of Tcl_Flush to operate on right
+		 * chan in stack. Returns 1 for success, <=0 for error/retry. */
+		if (!Tcl_Eof(chan) && !BIO_test_flags(bio, BIO_FLAGS_IN_EOF)) {
+		    ret = (long) Tcl_WriteRaw(chan, "", 0);
+		    if (Tcl_Eof(chan) || (ret < 0 && !BIOShouldRetry(Tcl_GetErrno()))) {
+			BIO_set_flags(bio, BIO_FLAGS_IN_EOF);
+			ret = -1;
+		    } else {
+			ret = 1;
+		    }
+		} else {
+		    ret = 1;
+		}
 		break;
 	case BIO_CTRL_DUP:
 		/* man - extra stuff for 'duped' BIO. Implements BIO_dup_state. */
@@ -344,7 +362,8 @@ static long BioCtrl(BIO *bio, int cmd, long num, void *ptr) {
 		ret = 1;
 		break;
 	case BIO_CTRL_WPENDING:
-		/* opt - Return number of bytes in chan still to be written. Implements BIO_wpending. */
+		/* opt - Return number of bytes in chan still to be written.
+		 * Implements BIO_wpending. */
 		dprintf("Got BIO_CTRL_WPENDING");
 		/* Return the amount of pending data or 0 for error */
 		ret = ((chan) ? Tcl_OutputBuffered(chan) : 0);

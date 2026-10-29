@@ -183,11 +183,7 @@ AC_DEFUN([TCLTLS_SSL_OPENSSL], [
 		if test "$TCLEXT_TLS_STATIC_SSL" == 'no'; then
 			LIBEXT=${SHLIB_SUFFIX}
 		else
-			if test "${TEA_PLATFORM}" == 'unix'; then
-				LIBEXT='.a'
-			else
-				LIBEXT='.a'
-			fi
+			LIBEXT='.a'
 		fi
 
 		if test -f "${openssllibdir}/libssl${LIBEXT}"; then
@@ -259,18 +255,12 @@ AC_DEFUN([TCLTLS_SSL_OPENSSL], [
 		fi
 	fi
 	if test -z "$TCLTLS_SSL_LIBS"; then
-		if test "$TCLEXT_TLS_STATIC_SSL" == 'yes'; then
-			if test "${TEA_PLATFORM}" == 'unix'; then
-				LIBEXT='.a'
-			else
-				LIBEXT='.a'
-			fi
-			TCLTLS_SSL_LIBS="$SSL_LIBS_PATH -lssl${LIBEXT} -lcrypto${LIBEXT}"
-		else
-			TCLTLS_SSL_LIBS="$SSL_LIBS_PATH -lssl -lcrypto"
-		fi
+		TCLTLS_SSL_LIBS="$SSL_LIBS_PATH -lssl -lcrypto"
 	fi
-	
+
+	AC_MSG_CHECKING([for libs])
+	AC_MSG_RESULT($libdir)
+
 	dnl Set for static libraries
 	if test "$TCLEXT_TLS_STATIC_SSL" == 'yes'; then
 		system="`uname -s`"
@@ -282,7 +272,22 @@ AC_DEFUN([TCLTLS_SSL_OPENSSL], [
 			CYGWIN_*|MINGW32_*|MINGW64_*|MSYS_*)
 				TCLTLS_SSL_LIBS="-Wl,-Bstatic $TCLTLS_SSL_LIBS -Wl,-Bdynamic";;
 			Darwin*)
-				TCLTLS_SSL_LIBS="${openssllibdir}/libssl.a ${openssllibdir}/libcrypto.a ${openssllibdir}/../libz.a";;
+				# Mac requires path for static linking
+				if test -n "${openssllibdir}" -a -f "${openssllibdir}/libssl.a"; then
+					TCLTLS_SSL_LIBS="${openssllibdir}/libssl.a ${openssllibdir}/libcrypto.a"
+				elif test -f "${libdir}/libssl.a"; then
+					TCLTLS_SSL_LIBS="${libdir}/libssl.a ${libdir}/libcrypto.a"
+				else
+					AC_MSG_ERROR([Unable to locate OpenSSL static libraries])
+				fi
+				# Some installations (like MacPorts) also require libz
+				if test -f "${openssllibdir}/../libz.a"; then
+					TCLTLS_SSL_LIBS="$TCLTLS_SSL_LIBS ${openssllibdir}/../libz.a"
+				elif test -f "${openssllibdir}/libz.a"; then
+					TCLTLS_SSL_LIBS="$TCLTLS_SSL_LIBS ${openssllibdir}/libz.a"
+				elif test -f "${libdir}/libz.a"; then
+					TCLTLS_SSL_LIBS="$TCLTLS_SSL_LIBS ${libdir}/libz.a"
+				fi;;
 			HP-UX*)
 				TCLTLS_SSL_LIBS="-Wl,-a,archive $TCLTLS_SSL_LIBS -Wl,-a,shared_archive";;
 			IRIX*)
@@ -302,4 +307,21 @@ AC_DEFUN([TCLTLS_SSL_OPENSSL], [
 	AC_ARG_VAR([TCLTLS_SSL_CFLAGS], [C compiler flags for OpenSSL])
 	AC_ARG_VAR([TCLTLS_SSL_INCLUDES], [C compiler include paths for OpenSSL])
 	AC_ARG_VAR([TCLTLS_SSL_LIBS], [libraries to pass to the linker for OpenSSL])
+])
+
+#-------------------------------------------------------------------------
+# TEA_PROG_DTPLITE
+#
+#	Do we have a usable dtplite program to use in document generation?
+#
+# Results
+#	Sets up DTPLITE
+#
+#-------------------------------------------------------------------------
+
+AC_DEFUN(TEA_PROG_DTPLITE, [
+    AC_PATH_TOOL([DTPLITE], [dtplite], [:])
+    if test "x$DTPLITE" = "x:"; then
+	AC_PATH_TOOL([DTPLITE], [dtplite.tcl], [:])
+    fi
 ])

@@ -472,10 +472,13 @@ proc Release3Canvas {x y} {
     }
 }
 
+# every frame, not just the active ones: a frame hidden while events are
+#  off (Illustrate mode, freeze) must get its bindings back, and showing
+#  a frame does not rebind it
 proc UnBindEventsCanvasItems {} {
     global ds9
 
-    foreach ff $ds9(active) {
+    foreach ff $ds9(frames) {
 	UnBindEventsFrame $ff
 	UnBindEventsColorbar ${ff}cb
 	UnBindEventsGraph $ff
@@ -485,7 +488,7 @@ proc UnBindEventsCanvasItems {} {
 proc BindEventsCanvasItems {} {
     global ds9
 
-    foreach ff $ds9(active) {
+    foreach ff $ds9(frames) {
 	BindEventsFrame $ff
 	BindEventsColorbar ${ff}cb
 	BindEventsGraph $ff

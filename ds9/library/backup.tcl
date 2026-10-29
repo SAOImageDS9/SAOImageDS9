@@ -283,6 +283,7 @@ proc Restore {fn} {
     cd $cd
 
     # and update it
+    PrefsBaseColor
     LayoutView
     UpdateActiveFrames
     ChangeMode

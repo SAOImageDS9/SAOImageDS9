@@ -163,7 +163,7 @@ proc CreateCanvas {} {
 			 -height $canvas(height) \
 			 -highlightthickness 0 \
 			 -insertofftime 0 \
-			 -bg [ThemeTreeBackground] \
+			 -bg [CanvasBackground] \
 			]
     grid rowconfigure $ds9(image) 0 -weight 1
     grid columnconfigure $ds9(image) 0 -weight 1
@@ -172,11 +172,12 @@ proc CreateCanvas {} {
     # extra space for window tab
     set ds9(canvas,bottom) {}
     if {$canvas(gap,bottom)>0} {
-	# set background style to TreeView, not TFrame
+	# set background style to match the canvas, not TFrame
+	ttk::style configure Base.TFrame -background [CanvasBackground]
 	set ds9(canvas,bottom) [ttk::frame $ds9(image).b \
 				    -width 1 \
 				    -height $canvas(gap,bottom) \
-				    -style Tree.TFrame \
+				    -style Base.TFrame \
 				   ]
 	grid $ds9(canvas,bottom) -row 1 -column 0 -sticky ew
     }
@@ -193,8 +194,8 @@ proc CreateCanvas {} {
 
 proc ThemeConfigCanvas {w} {
     global ds9
-    
-    $w configure -bg [ThemeTreeBackground]
+
+    PrefsBaseColor
 
     $w itemconfigure colorbar -fg [ColorbarForeground]
     $w itemconfigure colorbar -bg [ColorbarBackground]
@@ -212,6 +213,17 @@ proc ThemeConfigCanvas {w} {
 	global $varname
 	ThemeConfigGraph [subst $${varname}(horz)]
 	ThemeConfigGraph [subst $${varname}(vert)]
+    }
+}
+
+# the canvas shows through the gaps between frames
+proc CanvasBackground {} {
+    global pds9
+
+    if {$pds9(base,use)} {
+	return $pds9(base)
+    } else {
+	return [ThemeTreeBackground]
     }
 }
 

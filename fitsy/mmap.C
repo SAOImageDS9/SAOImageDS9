@@ -49,6 +49,8 @@ FitsMMap::FitsMMap(const char* fn)
   if ((long)mapdata_ == -1)
     return;
 
+  setRefreshFile(fn, info.st_dev, info.st_ino, mapsize_);
+
   // so far, so good
   valid_ = 1;
 }

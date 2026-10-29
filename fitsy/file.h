@@ -22,6 +22,7 @@ public:
   enum ScanMode {RELAXIMAGE, EXACTIMAGE, RELAXTABLE, EXACTTABLE};
   enum ArchType {NATIVE,BIG,LITTLE};
   enum EncodingType {RAW,ASCII,HEX,GZIP,BZ2,BIP,BIL,BSQ};
+  enum RefreshStatus {REFRESHOK, REFRESHSTALE, REFRESHERROR};
 
 protected:
   FitsHead* primary_;        // pointer to primary header
@@ -80,6 +81,12 @@ protected:
   int pbvalid_;
   int pblock_;
 
+  char* refName_;            // mapped file, for refresh checks
+  char* refSpec_;            // absolute file spec, to re-read on refresh
+  unsigned long refDev_;     // device/inode of mapped file
+  unsigned long refIno_;
+  size_t refSize_;           // min file size needed by the mapping
+
 protected:
   void parse(const char*);
   void parseNRRD(istream&);
@@ -88,6 +95,8 @@ protected:
   int findEnd(const char*);
   void setByteSwap();
   int saveFitsHeaderCards(OutFitsStream&, int, int);
+  void setRefreshFile(const char*, unsigned long, unsigned long, size_t);
+  void setRefreshFile(FitsFile*);
 
 public:
   FitsFile();
@@ -99,6 +108,9 @@ public:
   virtual char* page(char* ptr, size_t r) {return ptr;}
   virtual void resetpage() {}
   void error(const char*);
+  RefreshStatus checkRefresh(const char**);
+  const char* refSpec() {return refSpec_;}
+  static const char* compareLayout(FitsHead*, FitsHead*);
   void* data() {return data_;}
   size_t dataSize() {return dataSize_;}
   size_t dataSkip() {return dataSkip_;}

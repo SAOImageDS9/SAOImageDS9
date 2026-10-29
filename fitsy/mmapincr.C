@@ -41,6 +41,7 @@ FitsMMapIncr::FitsMMapIncr(const char* fn)
     return;
 
   filesize_ = info.st_size;
+  setRefreshFile(fn, info.st_dev, info.st_ino, 0);
 
   // so far, so good
   valid_ = 1;

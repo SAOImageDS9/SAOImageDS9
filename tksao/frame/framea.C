@@ -46,6 +46,15 @@ FrameA::~FrameA()
     delete [] contrast;
 }
 
+int FrameA::checkRefreshFits(int* reload)
+{
+  // reloading a single channel is not supported
+  for (int ii=0; ii<contextCount; ii++)
+    if (!checkRefreshContext(&context[ii], reload, 0))
+      return 0;
+  return 1;
+}
+
 void FrameA::alignWCS()
 {
   if (!wcsAlign_ || !(keyContext->fits) || !keyContext->fits->hasWCS(wcsSystem_)) {

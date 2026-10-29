@@ -12,6 +12,10 @@ using namespace std;
 #include "file.h"
 #include "util.h"
 
+#include <limits.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+
 // extention parser
 #undef yyFlexLexer
 #define yyFlexLexer ffFlexLexer
@@ -142,10 +146,21 @@ FitsFile::FitsFile()
   pzmax_ =0;
   pbvalid_ =0;
   pblock_ =1;
+
+  refName_ =NULL;
+  refSpec_ =NULL;
+  refDev_ =0;
+  refIno_ =0;
+  refSize_ =0;
 }
 
 FitsFile::~FitsFile()
 {
+  if (refName_)
+    delete [] refName_;
+  if (refSpec_)
+    delete [] refSpec_;
+
   if (manageHead_ && head_)
     delete head_;
 
@@ -169,6 +184,125 @@ FitsFile::~FitsFile()
 
   if (pBinZ_)
     delete [] pBinZ_;
+}
+
+// Compare the data layout described by two headers.
+// Returns NULL if the same, else a description of the difference.
+const char* FitsFile::compareLayout(FitsHead* was, FitsHead* now)
+{
+  if (now->bitpix() != was->bitpix())
+    return "data type (BITPIX) has changed";
+  if (now->naxes() != was->naxes())
+    return "number of axes (NAXIS) has changed";
+  for (int ii=0; ii<was->naxes(); ii++)
+    if (now->naxis(ii) != was->naxis(ii))
+      return "image dimensions have changed";
+
+  return NULL;
+}
+
+// Remember which file is mapped and how much of it the mapping needs, so a
+// later refresh can verify the file before touching the mapped memory.
+// Called after parse(), with the original file spec.
+void FitsFile::setRefreshFile(const char* spec, unsigned long dev,
+			      unsigned long ino, size_t size)
+{
+  if (refName_)
+    delete [] refName_;
+  refName_ =NULL;
+  if (refSpec_)
+    delete [] refSpec_;
+  refSpec_ =NULL;
+
+  if (pName_) {
+    const char* fn = pName_;
+#ifndef __WIN32
+    char buf[PATH_MAX];
+    if (realpath(pName_, buf))
+      fn = buf;
+#endif
+    refName_ = dupstr(fn);
+
+    // same spec (extension etc), but absolute, in case the cwd changes
+    size_t ll = strlen(pName_);
+    if (spec && !strncmp(spec, pName_, ll)) {
+      refSpec_ = new char[strlen(fn)+strlen(spec+ll)+1];
+      strcpy(refSpec_, fn);
+      strcat(refSpec_, spec+ll);
+    }
+    else
+      refSpec_ = dupstr(spec);
+  }
+  refDev_ = dev;
+  refIno_ = ino;
+  refSize_ = size;
+}
+
+void FitsFile::setRefreshFile(FitsFile* prev)
+{
+  if (refName_)
+    delete [] refName_;
+  if (refSpec_)
+    delete [] refSpec_;
+
+  refName_ = dupstr(prev->refName_);
+  refSpec_ = dupstr(prev->refSpec_);
+  refDev_ = prev->refDev_;
+  refIno_ = prev->refIno_;
+  refSize_ = prev->refSize_;
+}
+
+// Can the mapped data simply be redisplayed?
+//  REFRESHOK: yes, the layout on disk is unchanged
+//  REFRESHSTALE: no, the mapping no longer matches the file (it was
+//    replaced, or the data moved), but the new image may still be
+//    compatible; the caller must read refSpec() afresh to decide
+//  REFRESHERROR: no, the layout has changed
+// For anything but OK, msg describes why.
+FitsFile::RefreshStatus FitsFile::checkRefresh(const char** msg)
+{
+  *msg = NULL;
+
+#ifndef __WIN32
+  // Touching mapped pages past the end of a truncated file raises SIGBUS,
+  // so check the file before the header is re-read from the map.
+  if (refName_) {
+    struct stat info;
+    if (stat(refName_, &info) < 0) {
+      *msg = "file no longer exists";
+      return REFRESHERROR;
+    }
+    if ((unsigned long)info.st_dev != refDev_ ||
+	(unsigned long)info.st_ino != refIno_) {
+      *msg = "file has been replaced";
+      return REFRESHSTALE;
+    }
+    if ((size_t)info.st_size < refSize_) {
+      *msg = "file size has shrunk";
+      return REFRESHSTALE;
+    }
+  }
+#endif
+
+  // Headers of mmap'd/shared data point directly into the mapped memory,
+  // so an in-place rewrite shows up when they are re-parsed.
+  FitsHead* hds[2] = {primary_ != head_ ? primary_ : NULL, head_};
+  for (int ii=0; ii<2; ii++) {
+    FitsHead* hd = hds[ii];
+    if (!hd)
+      continue;
+
+    FitsHead now(hd->cards(), hd->headbytes(), FitsHead::EXTERNAL);
+    if (!now.isValid() || now.headbytes() != hd->headbytes()) {
+      // the data has moved within the file
+      *msg = "header size has changed";
+      return refSpec_ ? REFRESHSTALE : REFRESHERROR;
+    }
+    if ((*msg = compareLayout(hd, &now)))
+      return REFRESHERROR;
+  }
+
+  return REFRESHOK;
 }
 
 void FitsFile::parse(const char* fn)

@@ -505,7 +505,58 @@ proc UpdateAllFrame {} {
 
 proc UpdateFrame {which} {
     if {$which != {}} {
-	$which update
+	if {[catch {$which update} rr]} {
+	    Error $rr
+	} elseif {$rr == {reload}} {
+	    RefreshReloadFrame $which
+	}
+    }
+}
+
+# Refresh found the file was replaced, or its data moved within the file,
+# but the new image has the same layout. Reload it as originally loaded,
+# keeping the current view and regions.
+proc RefreshReloadFrame {which} {
+    global current
+    global loadParam
+
+    upvar #0 $which saved
+    if {![info exists saved(load,type)]} {
+	Error "[msgcat::mc {Unable to refresh}]: [msgcat::mc {please reload the image instead}]"
+	return
+    }
+
+    set cur $current(frame)
+    set current(frame) $which
+
+    set slices {}
+    set naxes [$which get fits naxes]
+    for {set axis 2} {$axis < $naxes} {incr axis} {
+	lappend slices [$which get fits slice $axis]
+    }
+    set pan [$which get pan preserve]
+    set markers [$which get marker preserve]
+    $which pan preserve yes
+    $which marker preserve yes
+
+    array set loadParam [array get saved]
+    set ok [ProcessLoad]
+
+    $which pan preserve $pan
+    $which marker preserve $markers
+
+    if {$ok} {
+	set axis 2
+	foreach slice $slices {
+	    $which update fits slice $axis $slice
+	    incr axis
+	}
+	FinishLoad
+    }
+
+    set current(frame) $cur
+    if {$cur != $which} {
+	UpdateDS9
     }
 }
 

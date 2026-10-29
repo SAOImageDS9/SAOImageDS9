@@ -432,6 +432,7 @@ proc DeleteFrame {which} {
     global current
     global contour
     global marker
+    global tile
 
     if {$which == {}} {
 	return
@@ -458,6 +459,9 @@ proc DeleteFrame {which} {
     # delete canvas colorbar
     catch {$ds9(canvas) delete ${which}cb}
     ColorbarFrameDelete $which
+
+    # tile span pin; frame names are reused
+    unset -nocomplain tile(span,$which)
 
     # delete canvas graphs
     catch {GraphsDelete $which}
@@ -2217,7 +2221,8 @@ proc DisplayMode {} {
 	    } else {
 		switch -- $tile(grid,mode) {
 		    automatic {set ds9(display) single}
-		    manual {set ds9(display) $current(display)}
+		    manual -
+		    span {set ds9(display) $current(display)}
 		}
 	    }
 	}
@@ -2573,18 +2578,14 @@ proc TileDialog {} {
 
     Toplevel $w $mb 6 [msgcat::mc {Tile Parameters}] TileDestroyDialog
 
-    set dtile(mode) $tile(grid,mode)
-    set dtile(dir) $tile(grid,dir)
-    set dtile(row) $tile(grid,row)
-    set dtile(col) $tile(grid,col)
-    set dtile(gap) $tile(grid,gap)
+    # the dialog is live: every change applies at once, and the dialog is
+    #  refreshed from tile whenever the layout changes (UpdateTileDialog)
+    TileDialogFromTile
 
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
 
     ThemeMenu $mb.file
-    $mb.file add command -label [msgcat::mc {Apply}] -command TileApplyDialog
-    $mb.file add separator
     $mb.file add command -label [msgcat::mc {Close}] \
 	-command TileDestroyDialog -accelerator "${ds9(ctrl)}W"
 
@@ -2593,17 +2594,19 @@ proc TileDialog {} {
     # Grid
     set f [ttk::labelframe $w.grid -text [msgcat::mc {Grid}] -padding 2]
     ttk::radiobutton $f.auto -text [msgcat::mc {Automatic}] \
-	-variable dtile(mode) -value automatic
+	-variable dtile(mode) -value automatic -command TileApplyDialog
     ttk::radiobutton $f.manual -text [msgcat::mc {Manual}] \
-	-variable dtile(mode) -value manual
-    grid $f.auto $f.manual -padx 2 -pady 2 -sticky w
+	-variable dtile(mode) -value manual -command TileApplyDialog
+    ttk::radiobutton $f.span -text [msgcat::mc {Manual Layout}] \
+	-variable dtile(mode) -value span -command TileApplyDialog
+    grid $f.auto $f.manual $f.span -padx 2 -pady 2 -sticky w
 
     # Grid Direction
     set f [ttk::labelframe $w.dir -text [msgcat::mc {Direction}] -padding 2]
     ttk::radiobutton $f.x -text [msgcat::mc {X}] \
-	-variable dtile(dir) -value x
+	-variable dtile(dir) -value x -command TileApplyDialog
     ttk::radiobutton $f.y -text [msgcat::mc {Y}] \
-	-variable dtile(dir) -value y
+	-variable dtile(dir) -value y -command TileApplyDialog
     grid $f.x $f.y -padx 2 -pady 2 -sticky w
 
     # Layout
@@ -2615,30 +2618,43 @@ proc TileDialog {} {
     ttk::entry $f.row -textvariable dtile(row) -width 6
     grid $f.tcol x $f.trow -padx 2 -pady 2 -sticky w
     grid $f.col $f.tx $f.row -padx 2 -pady 2 -sticky w
+    foreach ee [list $f.col $f.row] {
+	bind $ee <Return> TileDialogEntry
+	bind $ee <FocusOut> TileDialogEntry
+    }
+
+    # Manual Layout
+    TileSpanDialogCreate $w
 
     # Gap
     set f [ttk::labelframe $w.gap -text [msgcat::mc {Gap}] -padding 2]
     ttk::entry $f.gap -textvariable dtile(gap) -width 6
     ttk::label $f.ugap -text [msgcat::mc {Pixels}]
     grid $f.gap - $f.ugap -padx 2 -pady 2 -sticky w
+    bind $f.gap <Return> TileDialogEntry
+    bind $f.gap <FocusOut> TileDialogEntry
 
     # Buttons
     set f [ttk::frame $w.buttons]
-    ttk::button $f.apply -text [msgcat::mc {Apply}] -command TileApplyDialog
     ttk::button $f.close -text [msgcat::mc {Close}] -command TileDestroyDialog
-    pack $f.apply $f.close -side left -expand true -padx 2 -pady 4
+    pack $f.close -side left -expand true -padx 2 -pady 4
 
     # Fini
     grid $w.grid -sticky news
     grid $w.dir -sticky news
     grid $w.layout -sticky news
+    grid $w.span -sticky news
     grid $w.gap -sticky news
     grid $w.buttons -sticky ew
     grid rowconfigure $w 0 -weight 1
     grid rowconfigure $w 1 -weight 1
     grid rowconfigure $w 2 -weight 1
     grid rowconfigure $w 3 -weight 1
+    grid rowconfigure $w 4 -weight 1
     grid columnconfigure $w 0 -weight 1
+
+    # only one of Layout / Manual Layout is shown
+    TileSpanDialogMode
 
     bind $w <<Close>> TileDestroyDialog
 }
@@ -2654,9 +2670,24 @@ proc TileDestroyDialog {} {
     }
 }
 
+# dtile -> tile, then relayout. Called for every change made in the dialog
 proc TileApplyDialog {} {
     global tile
     global dtile
+
+    foreach {key min} {col 1 row 1 gap 0} {
+	if {![string is integer -strict $dtile($key)] || $dtile($key)<$min} {
+	    set msg "[msgcat::mc {Invalid value}]: $dtile($key)"
+	    TileDialogFromTile
+	    Error $msg
+	    return
+	}
+    }
+
+    if {$dtile(mode) == {span} && ![TileSpanDialogApply]} {
+	TileDialogFromTile
+	return
+    }
 
     set tile(mode) grid
     set tile(grid,mode) $dtile(mode)
@@ -2666,6 +2697,45 @@ proc TileApplyDialog {} {
     set tile(grid,gap) $dtile(gap)
 
     DisplayMode
+}
+
+# Return/FocusOut in an entry: apply only if something changed
+proc TileDialogEntry {} {
+    global tile
+    global dtile
+
+    if {![info exists dtile(col)]} {
+	return
+    }
+    if {$dtile(col) != $tile(grid,col) || $dtile(row) != $tile(grid,row) ||
+	$dtile(gap) != $tile(grid,gap)} {
+	TileApplyDialog
+    }
+}
+
+proc TileDialogFromTile {} {
+    global tile
+    global dtile
+
+    set dtile(mode) $tile(grid,mode)
+    set dtile(dir) $tile(grid,dir)
+    set dtile(row) $tile(grid,row)
+    set dtile(col) $tile(grid,col)
+    set dtile(gap) $tile(grid,gap)
+    TileSpanDialogInit
+}
+
+# layout changed (from the dialog, menus, command line, frames added...):
+#  make the dialog show the current state
+proc UpdateTileDialog {} {
+    global itile
+
+    if {![info exists itile(top)] || ![winfo exists $itile(top)]} {
+	return
+    }
+
+    TileDialogFromTile
+    TileSpanDialogMode
 }
 
 # Process Cmds

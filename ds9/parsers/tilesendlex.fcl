@@ -12,6 +12,8 @@ gap		{return $GAP_}
 grid		{return $GRID_}
 layout		{return $LAYOUT_}
 mode		{return $MODE_}
+size		{return $SIZE_}
+span		{return $SPAN_}
 
 #include ws.fin
 

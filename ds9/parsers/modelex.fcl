@@ -23,6 +23,7 @@ footprint   {return $FOOTPRINT_}
 examine	    {return $EXAMINE_}
 3d	    {return $3D_}
 illustrate  {return $ILLUSTRATE_}
+layout	    {return $LAYOUT_}
 illustration {return $ILLUSTRATE_}
 
 #include string.fin

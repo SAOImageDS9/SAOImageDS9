@@ -16,7 +16,10 @@
 %token LAYOUT_
 %token MANUAL_
 %token MODE_
+%token NONE_
 %token ROW_
+%token SIZE_
+%token SPAN_
 
 %%
 
@@ -45,10 +48,14 @@ tileGrid : {ProcessCmdSet tile mode grid DisplayMode}
  | DIRECTION_ tileGridDir {ProcessCmdSet tile grid,dir $2 DisplayMode}
  | LAYOUT_ INT_ INT_ {ProcessCmdSet tile grid,col $2; ProcessCmdSet tile grid,row $3; ProcessCmdSet tile grid,mode manual DisplayMode}
  | GAP_ INT_ {ProcessCmdSet tile grid,gap $2 DisplayMode}
+ | SPAN_ INT_ INT_ INT_ INT_ {ProcessTileSpanCmd $2 $3 $4 $5}
+ | SPAN_ SIZE_ INT_ INT_ {ProcessTileSpanSizeCmd $3 $4}
+ | SPAN_ NONE_ {ProcessTileSpanNoneCmd}
  ;
 
 tileGridMode : AUTOMATIC_ {set _ automatic}
  | MANUAL_ {set _ manual}
+ | SPAN_ {set _ span}
  ;
 
 tileGridDir : 'x' {set _ x}

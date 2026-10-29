@@ -178,9 +178,11 @@ proc PostScript {} {
 
     # now invoke canvas postscript command
     RevealSliderSuspend
+    TileCanvasSuspend
     if {[catch {eval $ds9(canvas) postscript $options} rr]} {
 	Error "[msgcat::mc {A postscript generation error has occurred}] $rr"
     }
+    TileCanvasResume
     RevealSliderResume
 
     switch -- $ps(dest) {
@@ -249,9 +251,11 @@ proc EPS {fn} {
 
     # now invoke canvas postscript command
     RevealSliderSuspend
+    TileCanvasSuspend
     if {[catch {eval $ds9(canvas) postscript $options} rr]} {
 	Error "[msgcat::mc {A postscript generation error has occurred}] $rr"
     }
+    TileCanvasResume
     RevealSliderResume
 
     # delete bg

@@ -9,6 +9,8 @@
 %token GRID_
 %token LAYOUT_
 %token MODE_
+%token SIZE_
+%token SPAN_
 
 %%
 
@@ -21,6 +23,8 @@ grid : MODE_ {ProcessSendCmdGet tile grid,mode}
  | DIRECTION_ {ProcessSendCmdGet tile grid,dir}
  | LAYOUT_ {ProcessSendCmdGet2 tile grid,col grid,row}
  | GAP_ {ProcessSendCmdGet tile grid,gap}
+ | SPAN_ {ProcessSendTileSpanCmd}
+ | SPAN_ SIZE_ {ProcessSendTileSpanSizeCmd}
  ;
 
 %%

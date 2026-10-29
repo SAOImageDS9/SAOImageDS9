@@ -14,4 +14,7 @@ set GRID_ 269
 set LAYOUT_ 270
 set MANUAL_ 271
 set MODE_ 272
-set ROW_ 273
+set NONE_ 273
+set ROW_ 274
+set SIZE_ 275
+set SPAN_ 276

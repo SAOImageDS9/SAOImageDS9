@@ -20,6 +20,7 @@ proc CurrentDef {} {
     set current(display) single
     set current(mode) none
     set current(mode,illustrate) 0
+    set current(mode,layout) 0
     set current(zoom) {1 1}
     set current(rotate) 0
     set current(orient) none
@@ -250,6 +251,8 @@ proc UpdateDS9 {} {
     UpdatePanZoomDialog
     UpdateCrosshairDialog
     UpdateCropDialog
+    UpdateTileDialog
+    TileCanvasUpdate
     UpdateScaleDialog
     UpdateColorDialog
     UpdateWCSDialog
@@ -1133,12 +1136,22 @@ proc ChangeMode {} {
 	BindEventsCanvasItems
     }
 
+    # tile layout
+    if {$current(mode,layout)} {
+	set current(mode,layout) 0
+	TileCanvasEnd
+    }
+
     switch -- $current(mode) {
 	illustrate {
 	    set current(mode,illustrate) 1
 	    UnBindEventsCanvas
 	    UnBindEventsCanvasItems
 	    IllustrateModeBegin
+	}
+	layout {
+	    set current(mode,layout) 1
+	    TileCanvasBegin
 	}
 	default {}
     }
@@ -1165,7 +1178,8 @@ proc ChangeMode {} {
 	examine {SetCursor target}
 	iexam {}
 	3d -
-	illustrate {SetCursor {}}
+	illustrate -
+	layout {SetCursor {}}
     }
 }
 

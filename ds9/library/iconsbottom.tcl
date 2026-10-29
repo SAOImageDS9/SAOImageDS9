@@ -176,6 +176,9 @@ proc CreateIconsBottomFrame {} {
 	-direction above -takefocus 0
     tooltip::tooltip $mb.layout [msgcat::mc {Frame Layout}]
 
+    ttk::button $mb.tileparams -takefocus 0 -command TileDialog
+    tooltip::tooltip $mb.tileparams [msgcat::mc {Tile Parameters}]
+
     ttk::button $mb.next -takefocus 0 -command NextFrame
     tooltip::tooltip $mb.next [msgcat::mc {Goto Next Frame}]
 
@@ -200,8 +203,8 @@ proc CreateIconsBottomFrame {} {
     trace add variable current(display) write [list IconMenuButtonCB $mb.layout]
     IconMenuButtonCB $mb.layout current display write
 
-    pack $mb.add $mb.del $mb.first $mb.prev $mb.layout $mb.next $mb.last \
-	-side left -fill x
+    pack $mb.add $mb.del $mb.first $mb.prev $mb.layout $mb.tileparams \
+	$mb.next $mb.last -side left -fill x
     # gap to separate this group from the previous one
     pack configure $mb.add -padx {8 0}
 }
@@ -245,6 +248,9 @@ proc ConfigureIconsBottomFrame {} {
 
     $mb.prev configure \
 	-image [image create photo -file "$ds9(icons,ui)/frame_prev.png"]
+
+    $mb.tileparams configure \
+	-image [image create photo -file "$ds9(icons,ui)/frame_tile_params.png"]
 
     $mb.next configure \
 	-image [image create photo -file "$ds9(icons,ui)/frame_next.png"]

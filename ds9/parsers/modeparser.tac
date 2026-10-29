@@ -20,6 +20,7 @@
 %token EXAMINE_
 %token 3D_
 %token ILLUSTRATE_
+%token LAYOUT_
 
 %%
 
@@ -43,6 +44,7 @@ item : NONE_ {set _ none}
  | EXAMINE_ {set _ examine}
  | 3D_ {set _ 3d}
  | ILLUSTRATE_ {set _ illustrate}
+ | LAYOUT_ {set _ layout}
 # backward compatibilty
  | POINTER_ {set _ region}
  ;

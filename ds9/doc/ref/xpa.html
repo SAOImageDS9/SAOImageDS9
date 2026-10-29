@@ -1837,8 +1837,16 @@ $xpaset -p ds9 minmax mode scan<br>
 $xpaset -p ds9 minmax interval 100<br></tt> $xpaset -p ds9 minmax rescan<br>
 <p><b><a name="mode" id="mode"></a>mode</b></p>
 <p>Controls the first mouse button mode.</p>
+<p><tt>layout</tt> edits the tile Manual Layout (<a href="#tile">tile</a>
+grid mode <tt>span</tt>) directly on the display, switching to that
+display first if needed: drag a frame to place it, drag its lower right
+corner to resize it, click a frame to make it current, double-click a
+placed frame to let it flow again, press the Right or Left arrow to add
+or remove a column and the Down or Up arrow to add or remove a row, press
+Page Up or Page Down to widen or narrow the gap between frames, and
+press Escape to leave the mode.</p>
 <tt>Syntax:<br>
-mode [none|region|crosshair|colorbar|pan|zoom|rotate|catalog|examine|3d]<br>
+mode [none|region|crosshair|colorbar|pan|zoom|rotate|catalog|examine|3d|layout]<br>
 &nbsp;<br>
 Example:<br>
 $xpaget ds9 mode<br>
@@ -3133,15 +3141,26 @@ $cat foo.tiff | xpaset ds9 tiff new<br>
 $cat foo.tiff | xpaset ds9 tiff slice</tt>
 <p><b><a name="tile" id="tile"></a>tile</b></p>
 <p>Controls the tile display mode.</p>
+<p>Grid mode <tt>span</tt> (Manual Layout in the Tile Parameters dialog)
+lays frames out on a grid of <tt>span size</tt> columns and rows. A frame
+given a block of cells with <tt>grid span</tt> (top-left column and row,
+then the number of columns and rows it covers) is placed, and keeps that
+block. All other frames flow, in frame order, into the free cells around
+placed frames; the grid grows along the grid direction when they run
+out of room. <tt>grid span</tt> and <tt>grid span none</tt> act on the
+current frame, and <tt>grid span none</tt> lets it flow again.</p>
 <tt>Syntax:<br>
 tile []<br>
 &nbsp;&nbsp;&nbsp; [yes|no]<br>
 &nbsp;&nbsp;&nbsp; [mode grid|column|row]<br>
 &nbsp;&nbsp;&nbsp; [grid]<br>
-&nbsp;&nbsp;&nbsp; [grid mode automatic|manual]<br>
+&nbsp;&nbsp;&nbsp; [grid mode automatic|manual|span]<br>
 &nbsp;&nbsp;&nbsp; [grid direction x|y]<br>
 &nbsp;&nbsp;&nbsp; [grid layout &lt;col&gt; &lt;row&gt;]<br>
 &nbsp;&nbsp;&nbsp; [grid gap &lt;pixels&gt;]<br>
+&nbsp;&nbsp;&nbsp; [grid span &lt;col&gt; &lt;row&gt; &lt;colspan&gt; &lt;rowspan&gt;]<br>
+&nbsp;&nbsp;&nbsp; [grid span none]<br>
+&nbsp;&nbsp;&nbsp; [grid span size &lt;col&gt; &lt;row&gt;]<br>
 &nbsp;&nbsp;&nbsp; [row]<br>
 &nbsp;&nbsp;&nbsp; [column]<br>
 &nbsp;<br>
@@ -3152,6 +3171,8 @@ $xpaget ds9 tile grid mode<br>
 $xpaget ds9 tile grid direction<br>
 $xpaget ds9 tile grid layout<br>
 $xpaget ds9 tile grid gap<br>
+$xpaget ds9 tile grid span<br>
+$xpaget ds9 tile grid span size<br>
 <br>
 $xpaset -p ds9 tile<br>
 $xpaset -p ds9 tile yes<br>
@@ -3161,6 +3182,10 @@ $xpaset -p ds9 tile grid mode manual<br>
 $xpaset -p ds9 tile grid direction x<br>
 $xpaset -p ds9 tile grid layout 5 5<br>
 $xpaset -p ds9 tile grid gap 10<br>
+$xpaset -p ds9 tile grid mode span<br>
+$xpaset -p ds9 tile grid span size 3 2<br>
+$xpaset -p ds9 tile grid span 1 1 2 2<br>
+$xpaset -p ds9 tile grid span none<br>
 $xpaset -p ds9 tile row<br>
 $xpaset -p ds9 tile column</tt>
 <p><b><a name="update" id="update"></a>update</b></p>

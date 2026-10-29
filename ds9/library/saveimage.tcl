@@ -99,7 +99,9 @@ proc SaveImagePhoto {fn format} {
 
     set geom [MacOSPhotoFix $ds9(top) 0 1]
 
+    TileCanvasSuspend
     set rr [catch {image create photo -format window -data $ds9(canvas)} ph]
+    TileCanvasResume
     if {$rr} {
 	MacOSPhotoRestore $ds9(top) $geom
 	Error [msgcat::mc {An error has occurred while creating}]

@@ -38,7 +38,7 @@ saods9	: dirs tcl tk \
 	tclsignal \
 	$(TCLZIPFS) tls tclxml tclxmlrpc \
 	tkblt tclfitsy tktable tkimg \
-	tkmpeg tksvg tkagif tkhtml1 tkcon \
+	tkmpeg tkagif tkhtml1 tkcon \
 	tksao ds9
 
 tcl	: tcl$(TCL_VERSION)/unix/Makefile

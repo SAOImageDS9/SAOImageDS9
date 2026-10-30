@@ -84,7 +84,7 @@ namespace eval ::ico::test {
         } -cleanup {
             image delete i
         } -constraints {
-            Tk87
+            Tk9
         } -result {0 0}
 
 
@@ -100,7 +100,7 @@ namespace eval ::ico::test {
             image delete j
             file delete -force $outFile
         } -constraints {
-            Tk87
+            Tk9
         } -result 1
 
         # Write photo to string using "i data -format" already tested in ico-1.X tests.

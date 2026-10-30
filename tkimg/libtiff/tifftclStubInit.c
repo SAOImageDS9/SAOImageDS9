@@ -241,6 +241,8 @@ const TifftclStubs tifftclStubs = {
 #endif /* !LOGLUV_SUPPORT */
     _TIFFMultiplySSize, /* 163 */
     TIFFWarningExt, /* 164 */
+    TIFFWarningExtR, /* 165 */
+    TIFFErrorExtR, /* 166 */
 };
 
 /* !END!: Do not edit above this line. */

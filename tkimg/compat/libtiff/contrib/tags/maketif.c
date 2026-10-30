@@ -14,7 +14,7 @@ void WriteImage(TIFF *tif);
 
 void main()
 {
-    TIFF *tif = (TIFF *)0; /* TIFF-level descriptor */
+    TIFF *tif = NULL; /* TIFF-level descriptor */
 
     tif = XTIFFOpen("newtif.tif", "w");
     if (!tif)

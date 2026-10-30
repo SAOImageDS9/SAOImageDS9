@@ -87,7 +87,7 @@ namespace eval ::jpeg::test {
         } -cleanup {
             image delete i
         } -constraints {
-            Tk87
+            Tk9
         } -result {0 0}
 
         test jpeg-2.2 {Read photo from file with resolution information} -setup {
@@ -98,7 +98,7 @@ namespace eval ::jpeg::test {
         } -cleanup {
             image delete i
         } -constraints {
-            Tk87
+            Tk9
         } -result [refResolution]
 
 
@@ -114,7 +114,7 @@ namespace eval ::jpeg::test {
             image delete j
             file delete -force $outFile
         } -constraints {
-            Tk87
+            Tk9
         } -result [list [refSize] [refSize]]
 
         # Write photo to string using "i data -format" already tested in jpeg-1.X tests.
@@ -133,7 +133,7 @@ namespace eval ::jpeg::test {
             image delete j
             file delete -force $outFile
         } -constraints {
-            Tk87
+            Tk9
         } -result [list [refResolution] [refResolution]]
 
         test jpeg-5.1 {Read photo from file using invalid option \"-invalidoption\"} -setup {

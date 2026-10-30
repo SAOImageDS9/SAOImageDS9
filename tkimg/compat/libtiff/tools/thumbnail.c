@@ -35,6 +35,7 @@
 #endif
 
 #include "tiffio.h"
+#include "tiffiop.h"
 
 #ifndef EXIT_SUCCESS
 #define EXIT_SUCCESS 0
@@ -47,7 +48,7 @@
 
 #ifndef TIFFhowmany8
 #define TIFFhowmany8(x)                                                        \
-    (((x)&0x07) ? ((uint32_t)(x) >> 3) + 1 : (uint32_t)(x) >> 3)
+    ((int)((((x) & 0x07) ? ((uint32_t)(x) >> 3) + 1 : (uint32_t)(x) >> 3)))
 #endif
 
 typedef enum
@@ -68,7 +69,7 @@ static uint8_t *thumbnail;
 
 static int cpIFD(TIFF *, TIFF *);
 static int generateThumbnail(TIFF *, TIFF *);
-static void initScale();
+static void initScale(void);
 static void usage(int code);
 
 #if !HAVE_DECL_OPTARG
@@ -81,16 +82,23 @@ int main(int argc, char *argv[])
     TIFF *in;
     TIFF *out;
     int c;
+    long v;
 
     while ((c = getopt(argc, argv, "w:h:c:")) != -1)
     {
         switch (c)
         {
             case 'w':
-                tnw = strtoul(optarg, NULL, 0);
+                v = strtol(optarg, NULL, 0);
+                if (v < 0)
+                    usage(EXIT_FAILURE);
+                tnw = (uint32_t)v;
                 break;
             case 'h':
-                tnh = strtoul(optarg, NULL, 0);
+                v = strtol(optarg, NULL, 0);
+                if (v < 0)
+                    usage(EXIT_FAILURE);
+                tnh = (uint32_t)v;
                 break;
             case 'c':
                 contrast = streq(optarg, "exp50")    ? EXP50
@@ -116,7 +124,13 @@ int main(int argc, char *argv[])
     if (in == NULL)
         return 2;
 
-    thumbnail = (uint8_t *)_TIFFmalloc(tnw * tnh);
+    uint32_t thumbsize =
+        _TIFFMultiply32(NULL, tnw, tnh, "allocating thumbnail buffer");
+
+    if (thumbsize == 0)
+        return EXIT_FAILURE;
+
+    thumbnail = (uint8_t *)_TIFFmalloc(thumbsize);
     if (!thumbnail)
     {
         TIFFError(TIFFFileName(in),
@@ -134,24 +148,24 @@ int main(int argc, char *argv[])
             if (!cpIFD(in, out) || !TIFFWriteDirectory(out))
                 goto bad;
         } while (TIFFReadDirectory(in));
-        (void)TIFFClose(in);
+        TIFFClose(in);
     }
-    (void)TIFFClose(out);
+    TIFFClose(out);
     return EXIT_SUCCESS;
 bad:
-    (void)TIFFClose(out);
+    TIFFClose(out);
     return EXIT_FAILURE;
 }
 
 #define CopyField(tag, v)                                                      \
     if (TIFFGetField(in, tag, &v))                                             \
     TIFFSetField(out, tag, v)
+#define CopyFieldFloat(tag, v)                                                 \
+    if (TIFFGetField(in, tag, &v))                                             \
+    TIFFSetField(out, tag, (double)(v))
 #define CopyField2(tag, v1, v2)                                                \
     if (TIFFGetField(in, tag, &v1, &v2))                                       \
     TIFFSetField(out, tag, v1, v2)
-#define CopyField3(tag, v1, v2, v3)                                            \
-    if (TIFFGetField(in, tag, &v1, &v2, &v3))                                  \
-    TIFFSetField(out, tag, v1, v2, v3)
 #define CopyField4(tag, v1, v2, v3, v4)                                        \
     if (TIFFGetField(in, tag, &v1, &v2, &v3, &v4))                             \
     TIFFSetField(out, tag, v1, v2, v3, v4)
@@ -206,7 +220,7 @@ static void cpTag(TIFF *in, TIFF *out, uint16_t tag, uint16_t count,
             if (count == 1)
             {
                 float floatv;
-                CopyField(tag, floatv);
+                CopyFieldFloat(tag, floatv);
             }
             else if (count == (uint16_t)-1)
             {
@@ -238,10 +252,19 @@ static void cpTag(TIFF *in, TIFF *out, uint16_t tag, uint16_t count,
             CopyField(tag, ifd8);
         }
         break;
+        case TIFF_NOTYPE:
+        case TIFF_BYTE:
+        case TIFF_SBYTE:
+        case TIFF_UNDEFINED:
+        case TIFF_SSHORT:
+        case TIFF_SLONG:
+        case TIFF_SRATIONAL:
+        case TIFF_FLOAT:
+        case TIFF_IFD:
         default:
             TIFFError(TIFFFileName(in),
-                      "Data type %d is not supported, tag %d skipped.", tag,
-                      type);
+                      "Data type %u is not supported, tag %d skipped.", type,
+                      tag);
     }
 }
 
@@ -347,7 +370,12 @@ static int cpStrips(TIFF *in, TIFF *out)
         tstrip_t s, ns = TIFFNumberOfStrips(in);
         uint64_t *bytecounts;
 
-        TIFFGetField(in, TIFFTAG_STRIPBYTECOUNTS, &bytecounts);
+        if (!TIFFGetField(in, TIFFTAG_STRIPBYTECOUNTS, &bytecounts))
+        {
+            TIFFError(TIFFFileName(in), "Strip byte counts are missing.");
+            _TIFFfree(buf);
+            return 0;
+        }
         for (s = 0; s < ns; s++)
         {
             if (bytecounts[s] > (uint64_t)bufsize)
@@ -384,7 +412,12 @@ static int cpTiles(TIFF *in, TIFF *out)
         ttile_t t, nt = TIFFNumberOfTiles(in);
         uint64_t *bytecounts;
 
-        TIFFGetField(in, TIFFTAG_TILEBYTECOUNTS, &bytecounts);
+        if (!TIFFGetField(in, TIFFTAG_TILEBYTECOUNTS, &bytecounts))
+        {
+            TIFFError(TIFFFileName(in), "Tile byte counts are missing.");
+            _TIFFfree(buf);
+            return 0;
+        }
         for (t = 0; t < nt; t++)
         {
             if (bytecounts[t] > (uint64_t)bufsize)
@@ -438,7 +471,7 @@ static uint32_t *rowoff;      /* row offset for stepping */
 static uint8_t cmap[256];     /* colormap indexes */
 static uint8_t bits[256];     /* count of bits set */
 
-static void setupBitsTables()
+static void setupBitsTables(void)
 {
     int i;
     for (i = 0; i < 256; i++)
@@ -460,13 +493,13 @@ static void setupBitsTables()
             n++;
         if (i & 0x80)
             n++;
-        bits[i] = n;
+        bits[i] = (uint8_t)n;
     }
 }
 
 static int clamp(float v, int low, int high)
 {
-    return (v < low ? low : v > high ? high : (int)v);
+    return (v<(float)low ? low : v>(float) high ? high : (int)v);
 }
 
 #ifndef M_E
@@ -483,7 +516,7 @@ static void expFill(float pct[], uint32_t p, uint32_t n)
         pct[i] = 0.;
 }
 
-static void setupCmap()
+static void setupCmap(void)
 {
     float pct[256]; /* known to be large enough */
     uint32_t i;
@@ -512,41 +545,54 @@ static void setupCmap()
             for (i = 1; i < 256; i++)
                 pct[i] = 1 - ((float)i) / (256 - 1);
             break;
+        default:
+            break;
     }
     switch (photometric)
     {
         case PHOTOMETRIC_MINISWHITE:
             for (i = 0; i < 256; i++)
-                cmap[i] = clamp(255 * pct[(256 - 1) - i], 0, 255);
+                cmap[i] = (uint8_t)clamp(255 * pct[(256 - 1) - i], 0, 255);
             break;
         case PHOTOMETRIC_MINISBLACK:
             for (i = 0; i < 256; i++)
-                cmap[i] = clamp(255 * pct[i], 0, 255);
+                cmap[i] = (uint8_t)clamp(255 * pct[i], 0, 255);
+            break;
+        default:
             break;
     }
 }
 
-static void initScale()
+static void initScale(void)
 {
-    src0 = (uint8_t *)_TIFFmalloc(sizeof(uint8_t) * tnw);
-    src1 = (uint8_t *)_TIFFmalloc(sizeof(uint8_t) * tnw);
-    src2 = (uint8_t *)_TIFFmalloc(sizeof(uint8_t) * tnw);
-    rowoff = (uint32_t *)_TIFFmalloc(sizeof(uint32_t) * tnw);
+    src0 =
+        (uint8_t *)_TIFFCheckMalloc(NULL, tnw, sizeof(uint8_t), "scale table");
+    src1 =
+        (uint8_t *)_TIFFCheckMalloc(NULL, tnw, sizeof(uint8_t), "scale table");
+    src2 =
+        (uint8_t *)_TIFFCheckMalloc(NULL, tnw, sizeof(uint8_t), "scale table");
+    rowoff = (uint32_t *)_TIFFCheckMalloc(NULL, tnw, sizeof(uint32_t),
+                                          "scale table");
+    if (src0 == NULL || src1 == NULL || src2 == NULL || rowoff == NULL)
+    {
+        TIFFError("thumbnail", "Can't allocate space for scale tables");
+        exit(EXIT_FAILURE);
+    }
     filterWidth = 0;
     stepDstWidth = stepSrcWidth = 0;
     setupBitsTables();
 }
 
 /*
- * Calculate the horizontal accumulation parameteres
+ * Calculate the horizontal accumulation parameters
  * according to the widths of the src and dst images.
  */
 static void setupStepTables(uint32_t sw)
 {
     if (stepSrcWidth != sw || stepDstWidth != tnw)
     {
-        int step = sw;
-        int limit = tnw;
+        int step = (int)sw;
+        int limit = (int)tnw;
         int err = 0;
         uint32_t sx = 0;
         uint32_t x;
@@ -562,15 +608,15 @@ static void setupStepTables(uint32_t sw)
                 sx++;
             }
             rowoff[x] = sx0 >> 3;
-            fw = sx - sx0; /* width */
+            fw = (int)(sx - sx0); /* width */
             b = (fw < 8) ? (uint8_t)(0xff << (8 - fw)) : (uint8_t)0xff;
-            src0[x] = b >> (sx0 & 7);
-            fw -= 8 - (sx0 & 7);
+            src0[x] = (uint8_t)(b >> (sx0 & 7));
+            fw -= (int)(8 - (sx0 & 7));
             if (fw < 0)
                 fw = 0;
-            src1[x] = fw >> 3;
+            src1[x] = (uint8_t)(fw >> 3);
             fw -= (fw >> 3) << 3;
-            src2[x] = 0xff << (8 - fw);
+            src2[x] = (uint8_t)(0xff << (8 - fw));
         }
         stepSrcWidth = sw;
         stepDstWidth = tnw;
@@ -620,7 +666,15 @@ static void setrow(uint8_t *row, uint32_t nrows, const uint8_t *rows[])
             }
             acc += bits[*src & mask1];
         }
-        *row++ = cmap[(255 * acc) / area];
+        if (255 * acc / area < 256)
+        {
+            *row++ = cmap[(255 * acc) / area];
+        }
+        else
+        {
+            fprintf(stderr, "acc=%u, area=%u\n", acc, area);
+            *row++ = cmap[0];
+        }
     }
 }
 
@@ -632,8 +686,8 @@ static void setrow(uint8_t *row, uint32_t nrows, const uint8_t *rows[])
  */
 static void setImage1(const uint8_t *br, uint32_t rw, uint32_t rh)
 {
-    int step = rh;
-    int limit = tnh;
+    int step = (int)rh;
+    int limit = (int)tnh;
     int err = 0;
     int bpr = TIFFhowmany8(rw);
     int sy = 0;
@@ -643,8 +697,17 @@ static void setImage1(const uint8_t *br, uint32_t rw, uint32_t rh)
     {
         const uint8_t *rows[256];
         uint32_t nrows = 1;
-        fprintf(stderr, "bpr=%d, sy=%d, bpr*sy=%d\n", bpr, sy, bpr * sy);
-        rows[0] = br + bpr * sy;
+        tmsize_t row_offset = _TIFFComputeRowOffset(NULL, bpr, (uint32_t)sy,
+                                                    "thumbnail row offset");
+        if (row_offset == 0 && sy != 0 && bpr != 0)
+        {
+            TIFFError("thumbnail",
+                      "Integer overflow detected while calculating row offset");
+            exit(EXIT_FAILURE);
+        }
+        fprintf(stderr, "bpr=%d, sy=%d, bpr*sy=%" TIFF_SSIZE_FORMAT "\n", bpr,
+                sy, row_offset);
+        rows[0] = br + row_offset;
         err += step;
         while (err >= limit)
         {
@@ -652,12 +715,23 @@ static void setImage1(const uint8_t *br, uint32_t rw, uint32_t rh)
             sy++;
             if (err >= limit)
             {
-                /* We should perhaps error loudly, but I can't make sense of
-                 * that */
-                /* code... */
-                if (nrows == 256)
-                    break;
-                rows[nrows++] = br + bpr * sy;
+                /* Cap at 256 rows but keep draining err so the Bresenham
+                 * accumulator stays in [0, limit).  A premature break here
+                 * would leave err >= limit and cause it to grow by
+                 * (step - 255*limit) each outer iteration, overflowing. */
+                if (nrows < 256)
+                {
+                    row_offset = _TIFFComputeRowOffset(NULL, bpr, (uint32_t)sy,
+                                                       "thumbnail row offset");
+                    if (row_offset == 0 && sy != 0 && bpr != 0)
+                    {
+                        TIFFError("thumbnail",
+                                  "Integer overflow detected while calculating "
+                                  "row offset");
+                        exit(EXIT_FAILURE);
+                    }
+                    rows[nrows++] = br + row_offset;
+                }
             }
         }
         setrow(row, nrows, rows);
@@ -690,7 +764,12 @@ static int generateThumbnail(TIFF *in, TIFF *out)
     if (spp != 1 || bps != 1)
         return 0;
     rowsize = TIFFScanlineSize(in);
-    rastersize = sh * rowsize;
+    rastersize = _TIFFMultiplySSize(in, rowsize, sh, "raster buffer size");
+    if (rastersize == 0 || (uint64_t)rastersize > (uint64_t)INT32_MAX - 3U)
+    {
+        TIFFError(TIFFFileName(in), "Image is too large to fit in memory");
+        return 0;
+    }
     fprintf(stderr, "rastersize=%u\n", (unsigned int)rastersize);
     /* +3 : add a few guard bytes since setrow() can read a bit */
     /* outside buffer */
@@ -707,7 +786,16 @@ static int generateThumbnail(TIFF *in, TIFF *out)
     for (s = 0; s < ns; s++)
     {
         (void)TIFFReadEncodedStrip(in, s, rp, -1);
-        rp += rps * rowsize;
+        {
+            tmsize_t strip_offset =
+                _TIFFComputeRowOffset(in, rowsize, rps, "strip buffer offset");
+            if (strip_offset == 0 && rps != 0 && rowsize != 0)
+            {
+                _TIFFfree(raster);
+                return 0;
+            }
+            rp += strip_offset;
+        }
     }
     TIFFGetField(in, TIFFTAG_PHOTOMETRIC, &photometric);
     setupCmap();
@@ -729,8 +817,14 @@ static int generateThumbnail(TIFF *in, TIFF *out)
     cpTag(in, out, TIFFTAG_HOSTCOMPUTER, (uint16_t)-1, TIFF_ASCII);
     diroff[0] = 0UL;
     TIFFSetField(out, TIFFTAG_SUBIFD, 1, diroff);
-    return (TIFFWriteEncodedStrip(out, 0, thumbnail, tnw * tnh) != -1 &&
-            TIFFWriteDirectory(out) != -1);
+    {
+        uint32_t thumbsize =
+            _TIFFMultiply32(out, tnw, tnh, "thumbnail strip size");
+        if (thumbsize == 0)
+            return 0;
+        return (TIFFWriteEncodedStrip(out, 0, thumbnail, thumbsize) != -1 &&
+                TIFFWriteDirectory(out) != -1);
+    }
 }
 
 const char *usage_info[] = {

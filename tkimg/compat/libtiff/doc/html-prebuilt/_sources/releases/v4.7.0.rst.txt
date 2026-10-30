@@ -189,7 +189,7 @@ Bug fixes:
 - thumbnail: address Coverity scan issues
 - tiffcp: Add check for limitMalloc return to fix Coverity 1603334
 - tiffcp: preserve TIFFTAG_REFERENCEBLACKWHITE when doing YCbCr JPEG -> YCbCr JPEG
-- tiffcp: replace PHOTOMETRIC_YCBCR with PHOTOMETRIC_RGB when outputing to compression != JPEG (refs :issue:`571`)
+- tiffcp: replace PHOTOMETRIC_YCBCR with PHOTOMETRIC_RGB when outputting to compression != JPEG (refs :issue:`571`)
 - tiffcp: do not copy tags YCBCRCOEFFICIENTS, YCBCRSUBSAMPLING, YCBCRPOSITIONING,
   REFERENCEBLACKWHITE. Only set YCBCRSUBSAMPLING when generating YCbCr JPEG
 - tiffcp: Check also codec of input image, not only from output image (fixes :issue:`606`)

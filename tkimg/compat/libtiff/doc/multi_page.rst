@@ -18,7 +18,7 @@ There are two mechanisms for storing multiple images in a TIFF file:
     - such as a subsampled version of the parent image. 
     SubIFD chains are rarely supported.
     For SubIFD refer also to
-    `Adobe PageMaker® 6.0 TIFF Technical Notes <https://www.awaresystems.be/imaging/tiff/specification/TIFFPM6.pdf>`_
+    `Adobe PageMaker® 6.0 TIFF Technical Notes <https://download.osgeo.org/libtiff/doc/TIFFPM6.pdf>`_
 
 .. _SubIFDAccess:
 
@@ -209,5 +209,5 @@ See also
 :doc:`terms`,
 :doc:`/functions/TIFFSetDirectory` (3tiff),
 :doc:`/functions/TIFFWriteDirectory` (3tiff),
-`Adobe PageMaker® 6.0 TIFF Technical Notes <https://www.awaresystems.be/imaging/tiff/specification/TIFFPM6.pdf>`_,
+`Adobe PageMaker® 6.0 TIFF Technical Notes <https://download.osgeo.org/libtiff/doc/TIFFPM6.pdf>`_,
 `Example from StackOverflow <https://stackoverflow.com/questions/11959617/in-a-tiff-create-a-sub-ifd-with-thumbnail-libtiff>`_

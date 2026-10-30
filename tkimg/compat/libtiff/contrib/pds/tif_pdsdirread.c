@@ -51,7 +51,7 @@
 
 #define IGNORE 0 /* tag placeholder used below */
 
-#if HAVE_IEEEFP
+#ifdef HAVE_IEEEFP
 #define TIFFCvtIEEEFloatToNative(tif, n, fp)
 #define TIFFCvtIEEEDoubleToNative(tif, n, dp)
 #else

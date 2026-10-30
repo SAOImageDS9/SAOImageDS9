@@ -51,15 +51,6 @@ proc PrintMachineInfo {} {
     P  "Img version : [package version Img]"
 }
 
-proc SetFileTypes { } {
-    global fInfo env
-
-    set fInfo(suf) ".tga"
-    set fInfo(fmt) "targa"
-    set fInfo(vsn) "int"
-    set fInfo(modfmt) 0
-}
-
 proc StartErrorCount {} {
     set ::gErrorCount 0
 }

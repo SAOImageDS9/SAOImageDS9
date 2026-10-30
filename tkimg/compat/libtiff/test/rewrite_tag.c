@@ -41,8 +41,7 @@
 
 const uint32_t rows_per_strip = 1;
 
-int test_packbits()
-
+static int test_packbits(void)
 {
     TIFF *tif;
     int i;
@@ -99,7 +98,7 @@ int test_packbits()
 
     for (i = 0; i < length; i++)
     {
-        if (!TIFFWriteEncodedStrip(tif, i, buf, 10))
+        if (!TIFFWriteEncodedStrip(tif, (uint32_t)i, buf, 10))
         {
             fprintf(stderr, "Can't write image data.\n");
             goto failure;
@@ -144,8 +143,8 @@ failure:
 /************************************************************************/
 /*                            rewrite_test()                            */
 /************************************************************************/
-int rewrite_test(const char *filename, uint32_t width, int length, int bigtiff,
-                 uint64_t base_value)
+static int rewrite_test(const char *filename, uint32_t width, int length,
+                        int bigtiff, uint64_t base_value)
 
 {
     TIFF *tif;
@@ -155,7 +154,7 @@ int rewrite_test(const char *filename, uint32_t width, int length, int bigtiff,
     uint64_t *upd_rowoffset = NULL;
     uint64_t *upd_bytecount = NULL;
 
-    buf = calloc(1, width);
+    buf = (unsigned char *)calloc(1, width);
     assert(buf);
 
     /* Test whether we can write tags. */
@@ -209,7 +208,7 @@ int rewrite_test(const char *filename, uint32_t width, int length, int bigtiff,
 
     for (i = 0; i < length; i++)
     {
-        if (TIFFWriteScanline(tif, buf, i, 0) == -1)
+        if (TIFFWriteScanline(tif, buf, (uint32_t)i, 0) == -1)
         {
             fprintf(stderr, "Can't write image data.\n");
             goto failure;
@@ -239,9 +238,10 @@ int rewrite_test(const char *filename, uint32_t width, int length, int bigtiff,
         goto failure;
     }
 
-    upd_rowoffset = (uint64_t *)_TIFFmalloc(sizeof(uint64_t) * length);
+    upd_rowoffset =
+        (uint64_t *)_TIFFmalloc((tmsize_t)(sizeof(uint64_t) * (size_t)length));
     for (i = 0; i < length; i++)
-        upd_rowoffset[i] = base_value + i * width;
+        upd_rowoffset[i] = base_value + (uint32_t)i * width;
 
     if (!_TIFFRewriteField(tif, TIFFTAG_STRIPOFFSETS, TIFF_LONG8, length,
                            upd_rowoffset))
@@ -253,7 +253,8 @@ int rewrite_test(const char *filename, uint32_t width, int length, int bigtiff,
     _TIFFfree(upd_rowoffset);
     upd_rowoffset = NULL;
 
-    upd_bytecount = (uint64_t *)_TIFFmalloc(sizeof(uint64_t) * length);
+    upd_bytecount =
+        (uint64_t *)_TIFFmalloc((tmsize_t)(sizeof(uint64_t) * (size_t)length));
     for (i = 0; i < length; i++)
         upd_bytecount[i] = 100 + (uint64_t)i * width;
 
@@ -287,15 +288,15 @@ int rewrite_test(const char *filename, uint32_t width, int length, int bigtiff,
 
     for (i = 0; i < length; i++)
     {
-        uint64_t expect = base_value + i * width;
+        uint64_t expect = base_value + (uint32_t)i * width;
 
         if (rowoffset[i] != expect)
         {
             fprintf(stderr,
-                    "%s:STRIPOFFSETS[%d]: Got %X:%08X instead of %X:%08X.\n",
-                    filename, i, (int)(rowoffset[i] >> 32),
-                    (int)(rowoffset[i] & 0xFFFFFFFF), (int)(expect >> 32),
-                    (int)(expect & 0xFFFFFFFF));
+                    "%s:STRIPOFFSETS[%u]: Got %X:%08X instead of %X:%08X.\n",
+                    filename, (unsigned)i, (unsigned)(rowoffset[i] >> 32),
+                    (unsigned)(rowoffset[i] & 0xFFFFFFFF),
+                    (unsigned)(expect >> 32), (unsigned)(expect & 0xFFFFFFFF));
             goto failure;
         }
     }
@@ -313,10 +314,10 @@ int rewrite_test(const char *filename, uint32_t width, int length, int bigtiff,
         if (rowbytes[i] != expect)
         {
             fprintf(stderr,
-                    "%s:STRIPBYTECOUNTS[%d]: Got %X:%08X instead of %X:%08X.\n",
-                    filename, i, (int)(rowbytes[i] >> 32),
-                    (int)(rowbytes[i] & 0xFFFFFFFF), (int)(expect >> 32),
-                    (int)(expect & 0xFFFFFFFF));
+                    "%s:STRIPBYTECOUNTS[%u]: Got %X:%08X instead of %X:%08X.\n",
+                    filename, (unsigned)i, (unsigned)(rowbytes[i] >> 32),
+                    (unsigned)(rowbytes[i] & 0xFFFFFFFF),
+                    (unsigned)(expect >> 32), (unsigned)(expect & 0xFFFFFFFF));
             goto failure;
         }
     }

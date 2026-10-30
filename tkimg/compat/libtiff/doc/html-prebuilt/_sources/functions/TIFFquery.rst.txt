@@ -20,9 +20,9 @@ Synopsis
 
 .. c:function:: uint32_t TIFFCurrentRow(TIFF* tif)
 
-.. c:function:: tstrip_t TIFFCurrentStrip(TIFF* tif)
+.. c:function:: uint32_t TIFFCurrentStrip(TIFF* tif)
 
-.. c:function:: ttile_t TIFFCurrentTile(TIFF* tif)
+.. c:function:: uint32_t TIFFCurrentTile(TIFF* tif)
 
 .. c:function:: int TIFFFileno(TIFF* tif)
 

@@ -6,7 +6,7 @@ catch { file mkdir testOut }
 
 set imgFile [file join ".." "sourceimgs" "tree.rgba"]
 
-# Read a SGI file into a photo images.
+# Read a SGI file into a photo image.
 set imgRGBA [image create photo -file $imgFile]
 
 # Read a SGI file into a photo image using option "-withalpha 0".

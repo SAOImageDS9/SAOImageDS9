@@ -49,6 +49,9 @@
 #define CopyField(tag, v)                                                      \
     if (TIFFGetField(in, tag, &v))                                             \
     TIFFSetField(out, tag, v)
+#define CopyFieldFloat(tag, v)                                                 \
+    if (TIFFGetField(in, tag, &v))                                             \
+    TIFFSetField(out, tag, (double)(v))
 
 uint32_t imagewidth;
 uint32_t imagelength;
@@ -64,9 +67,9 @@ static int fsdither(TIFF *in, TIFF *out)
 {
     unsigned char *outline, *inputline, *inptr;
     short *thisline, *nextline, *tmpptr;
-    register unsigned char *outptr;
-    register short *thisptr, *nextptr;
-    register uint32_t i, j;
+    unsigned char *outptr;
+    short *thisptr, *nextptr;
+    uint32_t i, j;
     uint32_t imax, jmax;
     int lastline, lastpixel;
     int bit;
@@ -87,6 +90,11 @@ static int fsdither(TIFF *in, TIFF *out)
         fprintf(stderr, "Out of memory.\n");
         goto skip_on_error;
     }
+    if (imagewidth > TIFFScanlineSize(in))
+    {
+        fprintf(stderr, "Image width exceeds scanline size.\n");
+        goto skip_on_error;
+    }
 
     /*
      * Get first line
@@ -98,7 +106,7 @@ static int fsdither(TIFF *in, TIFF *out)
     nextptr = nextline;
     for (j = 0; j < imagewidth; ++j)
         *nextptr++ = *inptr++;
-    for (i = 1; i < imagelength; ++i)
+    for (i = 0; i < imagelength; ++i)
     {
         tmpptr = thisline;
         thisline = nextline;
@@ -116,7 +124,7 @@ static int fsdither(TIFF *in, TIFF *out)
         bit = 0x80;
         for (j = 0; j < imagewidth; ++j)
         {
-            register int v;
+            int v;
 
             lastpixel = (j == jmax);
             v = *thisptr++;
@@ -126,7 +134,7 @@ static int fsdither(TIFF *in, TIFF *out)
                 v = 255;
             if (v > threshold)
             {
-                *outptr |= bit;
+                *outptr |= (unsigned char)bit;
                 v -= 255;
             }
             bit >>= 1;
@@ -136,17 +144,18 @@ static int fsdither(TIFF *in, TIFF *out)
                 bit = 0x80;
             }
             if (!lastpixel)
-                thisptr[0] += v * 7 / 16;
+                thisptr[0] = (short)(thisptr[0] + v * 7 / 16);
             if (!lastline)
             {
                 if (j != 0)
-                    nextptr[-1] += v * 3 / 16;
-                *nextptr++ += v * 5 / 16;
+                    nextptr[-1] = (short)(nextptr[-1] + v * 3 / 16);
+                *nextptr = (short)(*nextptr + v * 5 / 16);
+                nextptr++;
                 if (!lastpixel)
-                    nextptr[0] += v / 16;
+                    nextptr[0] = (short)(nextptr[0] + v / 16);
             }
         }
-        if (TIFFWriteScanline(out, outline, i - 1, 0) < 0)
+        if (TIFFWriteScanline(out, outline, i, 0) < 0)
             goto skip_on_error;
     }
     goto exit_label;
@@ -173,7 +182,7 @@ static void processG3Options(char *cp)
         {
             cp++;
             if (strneq(cp, "1d", 2))
-                group3options &= ~GROUP3OPT_2DENCODING;
+                group3options &= ~(uint32_t)GROUP3OPT_2DENCODING;
             else if (strneq(cp, "2d", 2))
                 group3options |= GROUP3OPT_2DENCODING;
             else if (strneq(cp, "fill", 4))
@@ -201,14 +210,14 @@ static int processCompressOptions(char *opt)
     {
         char *cp = strchr(opt, ':');
         if (cp)
-            predictor = atoi(cp + 1);
+            predictor = (uint16_t)atoi(cp + 1);
         compression = COMPRESSION_LZW;
     }
     else if (strneq(opt, "zip", 3))
     {
         char *cp = strchr(opt, ':');
         if (cp)
-            predictor = atoi(cp + 1);
+            predictor = (uint16_t)atoi(cp + 1);
         compression = COMPRESSION_ADOBE_DEFLATE;
     }
     else
@@ -246,7 +255,7 @@ int main(int argc, char *argv[])
                     usage(EXIT_FAILURE);
                 break;
             case 'r': /* rows/strip */
-                rowsperstrip = atoi(optarg);
+                rowsperstrip = (uint32_t)atoi(optarg);
                 break;
             case 't':
                 threshold = atoi(optarg);
@@ -262,6 +271,8 @@ int main(int argc, char *argv[])
             case '?':
                 usage(EXIT_FAILURE);
                 /*NOTREACHED*/
+                break;
+            default:
                 break;
         }
     if (argc - optind < 2)
@@ -289,39 +300,48 @@ int main(int argc, char *argv[])
         TIFFClose(in);
         return (EXIT_FAILURE);
     }
-    CopyField(TIFFTAG_IMAGEWIDTH, imagewidth);
-    TIFFGetField(in, TIFFTAG_IMAGELENGTH, &imagelength);
-    TIFFSetField(out, TIFFTAG_IMAGELENGTH, imagelength - 1);
-    TIFFSetField(out, TIFFTAG_BITSPERSAMPLE, 1);
-    TIFFSetField(out, TIFFTAG_SAMPLESPERPIXEL, 1);
-    TIFFSetField(out, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
-    TIFFSetField(out, TIFFTAG_COMPRESSION, compression);
-    if (fillorder)
-        TIFFSetField(out, TIFFTAG_FILLORDER, fillorder);
-    else
-        CopyField(TIFFTAG_FILLORDER, shortv);
-    snprintf(thing, sizeof(thing), "Dithered B&W version of %s", argv[optind]);
-    TIFFSetField(out, TIFFTAG_IMAGEDESCRIPTION, thing);
-    CopyField(TIFFTAG_PHOTOMETRIC, shortv);
-    CopyField(TIFFTAG_ORIENTATION, shortv);
-    CopyField(TIFFTAG_XRESOLUTION, floatv);
-    CopyField(TIFFTAG_YRESOLUTION, floatv);
-    CopyField(TIFFTAG_RESOLUTIONUNIT, shortv);
-    rowsperstrip = TIFFDefaultStripSize(out, rowsperstrip);
-    TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, rowsperstrip);
-    switch (compression)
+
+    do
     {
-        case COMPRESSION_CCITTFAX3:
-            TIFFSetField(out, TIFFTAG_GROUP3OPTIONS, group3options);
-            break;
-        case COMPRESSION_LZW:
-        case COMPRESSION_ADOBE_DEFLATE:
-        case COMPRESSION_DEFLATE:
-            if (predictor)
-                TIFFSetField(out, TIFFTAG_PREDICTOR, predictor);
-            break;
-    }
-    fsdither(in, out);
+        CopyField(TIFFTAG_IMAGEWIDTH, imagewidth);
+        TIFFGetField(in, TIFFTAG_IMAGELENGTH, &imagelength);
+        TIFFSetField(out, TIFFTAG_IMAGELENGTH, imagelength - 1);
+        TIFFSetField(out, TIFFTAG_BITSPERSAMPLE, 1);
+        TIFFSetField(out, TIFFTAG_SAMPLESPERPIXEL, 1);
+        TIFFSetField(out, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
+        TIFFSetField(out, TIFFTAG_COMPRESSION, compression);
+        if (fillorder)
+            TIFFSetField(out, TIFFTAG_FILLORDER, fillorder);
+        else
+            CopyField(TIFFTAG_FILLORDER, shortv);
+        snprintf(thing, sizeof(thing), "Dithered B&W version of %s",
+                 argv[optind]);
+        TIFFSetField(out, TIFFTAG_IMAGEDESCRIPTION, thing);
+        CopyField(TIFFTAG_PHOTOMETRIC, shortv);
+        CopyField(TIFFTAG_ORIENTATION, shortv);
+        CopyFieldFloat(TIFFTAG_XRESOLUTION, floatv);
+        CopyFieldFloat(TIFFTAG_YRESOLUTION, floatv);
+        CopyField(TIFFTAG_RESOLUTIONUNIT, shortv);
+        rowsperstrip = TIFFDefaultStripSize(out, rowsperstrip);
+        TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, rowsperstrip);
+        switch (compression)
+        {
+            case COMPRESSION_CCITTFAX3:
+                TIFFSetField(out, TIFFTAG_GROUP3OPTIONS, group3options);
+                break;
+            case COMPRESSION_LZW:
+            case COMPRESSION_ADOBE_DEFLATE:
+            case COMPRESSION_DEFLATE:
+                if (predictor)
+                    TIFFSetField(out, TIFFTAG_PREDICTOR, predictor);
+                break;
+            default:
+                break;
+        }
+        fsdither(in, out);
+        TIFFWriteDirectory(out);
+    } while (TIFFReadDirectory(in));
+
     TIFFClose(in);
     TIFFClose(out);
     return (EXIT_SUCCESS);

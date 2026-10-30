@@ -71,9 +71,6 @@
 /* libjpeg-turbo >= 3.0 dual mode enabled */
 #undef HAVE_JPEGTURBO_DUAL_MODE_8_12
 
-/* Define to 1 if you have the <memory.h> header file. */
-#undef HAVE_MEMORY_H
-
 /* Define to 1 if you have the `mmap' function. */
 #undef HAVE_MMAP
 
@@ -94,6 +91,9 @@
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdio.h> header file. */
+#undef HAVE_STDIO_H
 
 /* Define to 1 if you have the <stdlib.h> header file. */
 #undef HAVE_STDLIB_H
@@ -132,6 +132,9 @@
 /* Support JPEG compression (requires IJG JPEG library) */
 #undef JPEG_SUPPORT
 
+/* Define to 1 when building a static libtiff with LERC enabled. */
+#undef LERC_STATIC
+
 /* Support lerc compression */
 #undef LERC_SUPPORT
 
@@ -159,7 +162,7 @@
 /* Support NeXT 2-bit RLE algorithm */
 #undef NEXT_SUPPORT
 
-/* Support Old JPEG compresson (read-only) */
+/* Support Old JPEG compression (read-only) */
 #undef OJPEG_SUPPORT
 
 /* Name of package */
@@ -196,7 +199,9 @@
 /* The size of `size_t', as computed by sizeof. */
 #undef SIZEOF_SIZE_T
 
-/* Define to 1 if you have the ANSI C header files. */
+/* Define to 1 if all of the C90 standard headers exist (not just the ones
+   required in a freestanding environment). This macro is provided for
+   backward compatibility; new code need not use it. */
 #undef STDC_HEADERS
 
 /* Support strip chopping (whether or not to convert single-strip uncompressed
@@ -217,9 +222,6 @@
 
 /* Signed size type */
 #undef TIFF_SSIZE_T
-
-/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
-#undef TIME_WITH_SYS_TIME
 
 /* Define to 1 if your <sys/time.h> declares `struct tm'. */
 #undef TM_IN_SYS_TIME
@@ -253,11 +255,6 @@
 
 /* Support zstd compression */
 #undef ZSTD_SUPPORT
-
-/* Enable large inode numbers on Mac OS X 10.5.  */
-#ifndef _DARWIN_USE_64_BIT_INODE
-# define _DARWIN_USE_64_BIT_INODE 1
-#endif
 
 /* Number of bits in a file offset, on hosts where this is settable. */
 #undef _FILE_OFFSET_BITS

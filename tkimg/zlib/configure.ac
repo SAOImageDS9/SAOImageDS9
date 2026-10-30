@@ -7,7 +7,7 @@ dnl
 # TEA compliant.
 #--------------------------------------------------------------------
 
-AC_INIT([zlibtcl],[1.3.1])
+AC_INIT([zlibtcl],[1.3.2])
 
 TEA_INIT([3.9])
 
@@ -155,7 +155,6 @@ TEA_MAKE_LIB
 # Add platform libs to LIBS or SHLIB_LD_LIBS as necessary.
 #--------------------------------------------------------------------
 
-SHLIB_LD_LIBS="${SHLIB_LD_LIBS} \${TCL_LIBS}"
 
 #--------------------------------------------------------------------
 # Find tclsh so that we can run pkg_mkIndex to generate the pkgIndex.tcl

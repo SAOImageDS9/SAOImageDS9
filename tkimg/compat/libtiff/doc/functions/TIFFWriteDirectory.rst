@@ -57,7 +57,9 @@ is incomplete, but you will at least get all the valid data in the file
 before that.  When the file is complete, just use
 :c:func:`TIFFWriteDirectory` as usual to finish it off cleanly.
 
-The :c:func:`TIFFSetWriteOffset` sets the current write offset.
+The :c:func:`TIFFSetWriteOffset` sets the current write offset for image data
+(i.e.pixels). The offset for writing the directory (:ref:`IFD <ImageFileDirectory>`)
+data is not affected.
 This should only be used to set the offset to a known previous location
 (very carefully), or to 0 so that the next write gets appended to the end
 of the file.

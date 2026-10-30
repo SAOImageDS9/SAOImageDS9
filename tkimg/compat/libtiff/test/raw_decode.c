@@ -114,9 +114,9 @@ static int check_rgba_pixel(int pixel, int min_red, int max_red, int min_green,
     fprintf(stderr,
             "Got R=%d (expected %d..%d), G=%d (expected %d..%d), B=%d "
             "(expected %d..%d), A=%d (expected %d..%d)\n",
-            TIFFGetR(rgba), min_red, max_red, TIFFGetG(rgba), min_green,
-            max_green, TIFFGetB(rgba), min_blue, max_blue, TIFFGetA(rgba),
-            min_alpha, max_alpha);
+            (int)TIFFGetR(rgba), min_red, max_red, (int)TIFFGetG(rgba),
+            min_green, max_green, (int)TIFFGetB(rgba), min_blue, max_blue,
+            (int)TIFFGetA(rgba), min_alpha, max_alpha);
     return 1;
 }
 
@@ -124,7 +124,7 @@ int main(int argc, char **argv)
 {
     TIFF *tif;
     static const char *srcfilerel = "images/quad-tile.jpg.tiff";
-    char *srcdir = NULL;
+    const char *srcdir = NULL;
     char srcfile[1024];
     unsigned short h, v;
     int status;
@@ -173,7 +173,7 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-    buffer = (unsigned char *)malloc(sz);
+    buffer = (unsigned char *)malloc((size_t)sz);
 
     /*
      * Read a tile in decompressed form, but still YCbCr subsampled.
@@ -209,7 +209,7 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-    buffer = (unsigned char *)malloc(sz);
+    buffer = (unsigned char *)malloc((size_t)sz);
 
     szout = TIFFReadEncodedTile(tif, 9, buffer, sz);
     if (szout != sz)
@@ -229,9 +229,11 @@ int main(int argc, char **argv)
      * Hence, use ranges of expected values.  The ranges may need to be
      * widened over time as more versions of libjpeg appear.
      */
-    pixel_status |= check_rgb_pixel(0, 15, 18, 0, 0, 18, 41, buffer);
-    pixel_status |= check_rgb_pixel(64, 0, 0, 0, 0, 0, 2, buffer);
-    pixel_status |= check_rgb_pixel(512, 5, 6, 34, 36, 182, 196, buffer);
+    pixel_status |=
+        (unsigned int)check_rgb_pixel(0, 15, 18, 0, 0, 18, 41, buffer);
+    pixel_status |= (unsigned int)check_rgb_pixel(64, 0, 0, 0, 0, 0, 2, buffer);
+    pixel_status |=
+        (unsigned int)check_rgb_pixel(512, 5, 6, 34, 36, 182, 196, buffer);
 
     free(buffer);
 
@@ -243,7 +245,7 @@ int main(int argc, char **argv)
     tif = TIFFOpen(srcfile, "r");
 
     sz = 128 * 128 * sizeof(uint32_t);
-    rgba_buffer = (uint32_t *)malloc(sz);
+    rgba_buffer = (uint32_t *)malloc((size_t)sz);
 
     if (!TIFFReadRGBATile(tif, 1 * 128, 2 * 128, rgba_buffer))
     {
@@ -257,12 +259,12 @@ int main(int argc, char **argv)
      * accomplish it from the YCbCr subsampled buffer ourselves in which
      * case the results may be subtly different but similar.
      */
-    pixel_status |=
-        check_rgba_pixel(0, 15, 18, 0, 0, 18, 41, 255, 255, rgba_buffer);
-    pixel_status |=
-        check_rgba_pixel(64, 0, 0, 0, 0, 0, 2, 255, 255, rgba_buffer);
-    pixel_status |=
-        check_rgba_pixel(512, 5, 6, 34, 36, 182, 196, 255, 255, rgba_buffer);
+    pixel_status |= (unsigned int)check_rgba_pixel(0, 15, 18, 0, 0, 18, 41, 255,
+                                                   255, rgba_buffer);
+    pixel_status |= (unsigned int)check_rgba_pixel(64, 0, 0, 0, 0, 0, 2, 255,
+                                                   255, rgba_buffer);
+    pixel_status |= (unsigned int)check_rgba_pixel(512, 5, 6, 34, 36, 182, 196,
+                                                   255, 255, rgba_buffer);
 
     free(rgba_buffer);
     TIFFClose(tif);

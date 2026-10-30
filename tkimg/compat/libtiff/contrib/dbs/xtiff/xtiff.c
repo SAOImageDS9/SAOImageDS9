@@ -71,7 +71,7 @@
 
 #define TIFF_GAMMA "2.2" /* default gamma from the TIFF 5.0 spec */
 #define ROUND(x) (uint16_t)((x) + 0.5)
-#define SCALE(x, s) (((x)*65535L) / (s))
+#define SCALE(x, s) (((x) * 65535L) / (s))
 #define MCHECK(m)                                                              \
     if (!m)                                                                    \
     {                                                                          \

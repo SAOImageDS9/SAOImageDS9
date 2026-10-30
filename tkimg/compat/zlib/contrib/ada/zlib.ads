@@ -25,7 +25,7 @@
 --  covered by the  GNU Public License.                                     --
 ------------------------------------------------------------------------------
 
---  $Id: zlib.ads 815 2024-01-31 21:05:52Z obermeier $
+--  $Id: zlib.ads,v 1.26 2004/09/06 06:53:19 vagul Exp $
 
 with Ada.Streams;
 

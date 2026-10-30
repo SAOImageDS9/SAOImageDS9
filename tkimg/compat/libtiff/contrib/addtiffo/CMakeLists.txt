@@ -23,7 +23,11 @@
 # OF THIS SOFTWARE.
 
 add_executable(addtiffo addtiffo.c tif_overview.c tif_ovrcache.c tif_ovrcache.h)
+set_target_properties(addtiffo PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(addtiffo tiff tiff_port)
+
+# Apply C++ compatibility mode if enabled
+tiff_target_compile_as_cxx(addtiffo)
 
 if(WEBP_SUPPORT AND EMSCRIPTEN)
   # Emscripten is pretty finnicky about linker flags.

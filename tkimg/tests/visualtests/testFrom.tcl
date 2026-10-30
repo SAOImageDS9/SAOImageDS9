@@ -46,7 +46,6 @@ if { $tcl_platform(platform) eq "windows" } {
 }
 
 ui_init "testFrom.tcl: Read/Write (Using -from option)" "+320+30"
-SetFileTypes
 
 set canvId [drawTestCanvas $version]
 

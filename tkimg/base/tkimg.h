@@ -24,7 +24,11 @@
 #    define tkimg_vsnprintf vsnprintf
 #endif /* _MSC_VER_ */
 
-#if defined(__MINGW32__)
+#if defined(__MINGW32__) && !defined(__aarch64__) && !defined(__clang__)
+/* Builtin versions only needed for mingw64 (gcc/msvcrt).
+ * See bug #118 "Stack smashing detected on MSYS2/Clang64" for details
+ * and test script.
+ */
 #    define SETJMP(jbuf)        __builtin_setjmp(jbuf)
 #    define LONGJMP(jbuf, code) __builtin_longjmp(jbuf, code)
 #else

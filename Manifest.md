@@ -26,7 +26,7 @@ Last updated 2026-10-26
 | tkblt        | 3.3        | y     | y     | https://github.com/SAOImageDS9/tkblt-maintenance                     | previous upstream abandoned (1) |
 | tkcon        | 2.8        | y     | y     | https://github.com/SAOImageDS9/tkcon-maintenance                     | previous upstream abandoned     |
 | tkhtml1      | 1.1        | y     | y     | https://github.com/SAOImageDS9/tkhtml1-maintenance                   | previous upstream abandoned (2) |
-| **tkimg**    | 2.0.1      |       |       | https://sourceforge.net/projects/tkimg/                              | 2.1.2 (4)                       |
+| **tkimg**    | 2.1.2      |       | y     | https://sourceforge.net/projects/tkimg/                              | 2.1.2 (4)                       |
 | tklib        | 0.9        |       |       | https://github.com/tcltk/tklib                                       | 0.9                             |
 | tkmpeg       | 1.1        | y     |       | https://github.com/SAOImageDS9/tkmpeg-maintenance                    | 1.1                             |
 | tksao        |            | y     |       |                                                                      |                                 |
@@ -52,6 +52,6 @@ Last updated 2026-10-26
 
 (3) Removed: Tk 9 has built-in SVG support (the core "svg" photo format), so tksvg is no longer needed. Upstream is now https://github.com/tcltk-depot/tksvg (v0.17), which is a no-op on Tk 9.
 
-(4) There are problems trying to use 2.1.1; stick with 2.0.1. 2.1.2 (2026-09-05) is untested.
+(4) Upgraded from 2.0.1. Earlier problems were reported with 2.1.1, but 2.1.2 gives byte-identical saveimage jpeg/tiff output to 2.0.1 on Linux. Local changes: tkimg*Config.sh export for gif/jpeg/png/tiff/window, and the Tcl_Size typedef removed from base/tkimgDecls.h.
 
 (5) Small tweaks to work with ds9.

@@ -59,7 +59,7 @@
  */
 #include "tiffiop.h"
 
-#if HAVE_IEEEFP
+#ifdef HAVE_IEEEFP
 #define TIFFCvtNativeToIEEEFloat(tif, n, fp)
 #define TIFFCvtNativeToIEEEDouble(tif, n, dp)
 #else
@@ -620,7 +620,7 @@ static int TIFFWriteShortTable(TIFF *tif, ttag_t tag, TIFFDirEntry *dir,
     dir->tdir_tag = tag;
     dir->tdir_type = (short)TIFF_SHORT;
     /* XXX -- yech, fool TIFFWriteData */
-    dir->tdir_count = (uint32_t)(1L << tif->tif_dir.td_bitspersample);
+    dir->tdir_count = (uint32_t)(1UL << tif->tif_dir.td_bitspersample);
     off = tif->tif_dataoff;
     for (i = 0; i < n; i++)
         if (!TIFFWriteData(tif, dir, (char *)table[i]))
@@ -878,7 +878,7 @@ out:
 static int TIFFWriteTransferFunction(TIFF *tif, TIFFDirEntry *dir)
 {
     TIFFDirectory *td = &tif->tif_dir;
-    tsize_t n = (1L << td->td_bitspersample) * sizeof(uint16_t);
+    tsize_t n = (1UL << td->td_bitspersample) * sizeof(uint16_t);
     uint16_t **tf = td->td_transferfunction;
     int ncols;
 

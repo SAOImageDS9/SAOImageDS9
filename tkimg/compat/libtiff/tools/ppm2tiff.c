@@ -26,6 +26,7 @@
 #include "tif_config.h"
 
 #include <ctype.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -106,7 +107,7 @@ static void pack_bytes(unsigned char *buf, unsigned int smpls, uint16_t bps)
     for (s = 0; smpls > s; s++)
     {
 
-        t <<= bps;
+        t = (uint16_t)(t << bps);
         t |= (uint16_t)buf[in++];
 
         bits += bps;
@@ -114,11 +115,11 @@ static void pack_bytes(unsigned char *buf, unsigned int smpls, uint16_t bps)
         if (8 <= bits)
         {
             bits -= 8;
-            buf[out++] = (t >> bits) & 0xFF;
+            buf[out++] = (unsigned char)((t >> bits) & 0xFF);
         }
     }
     if (0 != bits)
-        buf[out] = (t << (8 - bits)) & 0xFF;
+        buf[out] = (unsigned char)((t << (8 - bits)) & 0xFF);
 }
 
 static void pack_words(unsigned char *buf, unsigned int smpls, uint16_t bps)
@@ -147,20 +148,20 @@ static void pack_words(unsigned char *buf, unsigned int smpls, uint16_t bps)
         {
 
             bits -= 16;
-            buf[out++] = (t >> (bits + 8));
-            buf[out++] = (t >> (bits + 0));
+            buf[out++] = (unsigned char)(t >> (bits + 8));
+            buf[out++] = (unsigned char)(t >> (bits + 0));
         }
     }
     if (0 != bits)
     {
         t <<= 16 - bits;
 
-        buf[out++] = (t >> (16 + 8));
-        buf[out++] = (t >> (16 + 0));
+        buf[out++] = (unsigned char)(t >> (0 + 8));
+        buf[out++] = (unsigned char)(t >> (0 + 0));
     }
 }
 
-static void BadPPM(char *file)
+static void BadPPM(const char *file)
 {
     fprintf(stderr, "%s: Not a PPM file.\n", file);
     exit(EXIT_FAILURE);
@@ -180,14 +181,18 @@ int main(int argc, char *argv[])
     double resolution = -1;
     unsigned char *buf = NULL;
     tmsize_t linebytes = 0;
-    int pbm;
+    /* Initialize to suppress false positive MSVC warning.
+     * Variable is always initialized in switch below, or BadPPM() exits. */
+    int pbm = 0;
     uint16_t spp = 1;
     uint16_t bpp = 8;
     void (*pack_func)(unsigned char *buf, unsigned int smpls, uint16_t bps);
+    tmsize_t sample_count = 0;
+    unsigned int pack_samples = 0;
     TIFF *out;
     FILE *in;
     unsigned int w, h, prec, row;
-    char *infile;
+    const char *infile;
     int c;
 #if !HAVE_DECL_OPTARG
     extern int optind;
@@ -208,7 +213,7 @@ int main(int argc, char *argv[])
                     usage(EXIT_FAILURE);
                 break;
             case 'r': /* rows/strip */
-                rowsperstrip = atoi(optarg);
+                rowsperstrip = (uint32_t)atoi(optarg);
                 break;
             case 'R': /* resolution */
                 resolution = atof(optarg);
@@ -219,6 +224,9 @@ int main(int argc, char *argv[])
             case '?':
                 usage(EXIT_FAILURE);
                 /*NOTREACHED*/
+                break;
+            default:
+                break;
         }
 
     if (optind + 2 < argc)
@@ -381,19 +389,32 @@ int main(int argc, char *argv[])
         case COMPRESSION_CCITTFAX3:
             TIFFSetField(out, TIFFTAG_GROUP3OPTIONS, g3opts);
             break;
+        default:
+            break;
     }
+    sample_count = multiply_ms(spp, w);
+    if (sample_count == 0 || sample_count > UINT_MAX)
+    {
+        fprintf(stderr, "%s: sample count overflow\n", infile);
+        TIFFClose(out);
+        exit(EXIT_FAILURE);
+    }
+    pack_samples = (unsigned int)sample_count;
+
     if (pbm)
     {
-        /* if round-up overflows, result will be zero, OK */
-        linebytes = (multiply_ms(spp, w) + (8 - 1)) / 8;
+        if (sample_count > TIFF_TMSIZE_T_MAX - (8 - 1))
+            linebytes = 0;
+        else
+            linebytes = (sample_count + (8 - 1)) / 8;
     }
     else if (bpp <= 8)
     {
-        linebytes = multiply_ms(spp, w);
+        linebytes = sample_count;
     }
     else
     {
-        linebytes = multiply_ms(2 * spp, w);
+        linebytes = multiply_ms(2, sample_count);
     }
     if (rowsperstrip == (uint32_t)-1)
     {
@@ -407,14 +428,14 @@ int main(int argc, char *argv[])
     if (linebytes == 0)
     {
         fprintf(stderr, "%s: scanline size overflow\n", infile);
-        (void)TIFFClose(out);
+        TIFFClose(out);
         exit(EXIT_FAILURE);
     }
     scanline_size = TIFFScanlineSize(out);
     if (scanline_size == 0)
     {
         /* overflow - TIFFScanlineSize already printed a message */
-        (void)TIFFClose(out);
+        TIFFClose(out);
         exit(EXIT_FAILURE);
     }
     if (scanline_size < linebytes)
@@ -424,7 +445,7 @@ int main(int argc, char *argv[])
     if (buf == NULL)
     {
         fprintf(stderr, "%s: Not enough memory\n", infile);
-        (void)TIFFClose(out);
+        TIFFClose(out);
         exit(EXIT_FAILURE);
     }
     if (resolution > 0)
@@ -435,18 +456,18 @@ int main(int argc, char *argv[])
     }
     for (row = 0; row < h; row++)
     {
-        if (fread(buf, linebytes, 1, in) != 1)
+        if (fread(buf, (size_t)linebytes, 1u, in) != 1u)
         {
             fprintf(stderr, "%s: scanline %u: Read error.\n", infile, row);
             break;
         }
-        pack_func(buf, w * spp, bpp);
+        pack_func(buf, pack_samples, bpp);
         if (TIFFWriteScanline(out, buf, row, 0) < 0)
             break;
     }
     if (in != stdin)
         fclose(in);
-    (void)TIFFClose(out);
+    TIFFClose(out);
     if (buf)
         _TIFFfree(buf);
     return (EXIT_SUCCESS);
@@ -461,7 +482,7 @@ static void processG3Options(char *cp)
         {
             cp++;
             if (strneq(cp, "1d", 2))
-                g3opts &= ~GROUP3OPT_2DENCODING;
+                g3opts &= ~(uint32_t)GROUP3OPT_2DENCODING;
             else if (strneq(cp, "2d", 2))
                 g3opts |= GROUP3OPT_2DENCODING;
             else if (strneq(cp, "fill", 4))
@@ -485,7 +506,7 @@ static int processCompressOptions(char *opt)
         compression = COMPRESSION_JPEG;
         while (cp)
         {
-            if (isdigit((int)cp[1]))
+            if (isdigit((unsigned char)cp[1]))
                 quality = atoi(cp + 1);
             else if (cp[1] == 'r')
                 jpegcolormode = JPEGCOLORMODE_RAW;
@@ -508,14 +529,14 @@ static int processCompressOptions(char *opt)
     {
         char *cp = strchr(opt, ':');
         if (cp)
-            predictor = atoi(cp + 1);
+            predictor = (uint16_t)atoi(cp + 1);
         compression = COMPRESSION_LZW;
     }
     else if (strneq(opt, "zip", 3))
     {
         char *cp = strchr(opt, ':');
         if (cp)
-            predictor = atoi(cp + 1);
+            predictor = (uint16_t)atoi(cp + 1);
         compression = COMPRESSION_ADOBE_DEFLATE;
     }
     else

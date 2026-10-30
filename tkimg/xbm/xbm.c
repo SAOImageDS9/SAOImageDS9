@@ -8,8 +8,8 @@
  * For a list of available format options see function ParseFormatOpts
  * and the documentation img-xbm.
  *
- * Copyright (c) 1995-2024 Jan Nijtmans    <nijtmans@users.sourceforge.net>
- * Copyright (c) 2001-2024 Paul Obermeier  <obermeier@users.sourceforge.net>
+ * Copyright (c) 1995-2025 Jan Nijtmans    <nijtmans@users.sourceforge.net>
+ * Copyright (c) 2001-2025 Paul Obermeier  <obermeier@users.sourceforge.net>
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.

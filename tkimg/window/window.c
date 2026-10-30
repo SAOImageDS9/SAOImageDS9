@@ -7,12 +7,14 @@
  *
  * This handler does not provide additional configuration options.
  *
- * Copyright (c) 1995-2024 Jan Nijtmans    <nijtmans@users.sourceforge.net>
+ * Copyright (c) 1995-2025 Jan Nijtmans    <nijtmans@users.sourceforge.net>
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
  *
  */
+
+#include <string.h>
 
 /*
  * Generic initialization code, parameterized via CPACKAGE and PACKAGE.
@@ -293,10 +295,12 @@ static int StringRead(
 #endif
     unsigned char *p;
 #ifdef X_GetImage
-    Tk_ErrorHandler     handle;
+    Tk_ErrorHandler handle;
 #endif
     int green, blue;
     int result = TCL_OK;
+
+    memset(&block, 0, sizeof (Tk_PhotoImageBlock)); 
 
     name = Tcl_GetString(dataObj);
 
@@ -333,10 +337,11 @@ static int StringRead(
 
 #ifdef X_GetImage
     handle = Tk_CreateErrorHandler(Tk_Display(tkwin), BadMatch,
-            X_GetImage, -1, xerrorhandler, (ClientData) tkwin);
+                 X_GetImage, -1, xerrorhandler, (ClientData) tkwin);
 #endif
 
 #if !defined(_WIN32)
+    cdata.colors = NULL;
     /*
      * Generate an XImage from the window.  We can then read pixel
      * values out of the XImage.
@@ -359,6 +364,7 @@ static int StringRead(
     ximage = TkWinGetDrawableDC(Tk_Display(tkwin), Tk_WindowId(tkwin), &DCi);
 
     if ( ! CaptureWindow (&grab, tkwin)) {
+        TkWinReleaseDrawableDC(Tk_WindowId(tkwin), ximage, &DCi);
         Tcl_AppendResult(interp, "Window \"", name, "\" cannot be grabbed", (char *) NULL);
         return TCL_ERROR;
     }
@@ -369,7 +375,8 @@ static int StringRead(
 #endif
 
     if (Tk_PhotoExpand(interp, imageHandle, destX + width, destY + height) == TCL_ERROR) {
-        return TCL_ERROR;
+        result = TCL_ERROR;
+        goto done;
     }
 
 #if !defined(_WIN32)
@@ -386,7 +393,8 @@ static int StringRead(
     cdata.colors = (XColor *) attemptckalloc(sizeof(XColor) * ncolors);
     if (cdata.colors == NULL) {
         Tcl_AppendResult (interp, "Unable to allocate memory for image data.", (char *) NULL);
-        return TCL_ERROR;
+        result = TCL_ERROR;
+        goto done;
     }
 
     cdata.ncolors = ncolors;
@@ -446,7 +454,8 @@ static int StringRead(
     block.pixelPtr = (unsigned char *) attemptckalloc((unsigned) nBytes);
     if (block.pixelPtr == NULL) {
         Tcl_AppendResult (interp, "Unable to allocate memory for image data.", (char *) NULL);
-        return TCL_ERROR;
+        result = TCL_ERROR;
+        goto done;
     }
 
     p = block.pixelPtr;
@@ -486,13 +495,18 @@ static int StringRead(
         result = TCL_ERROR;
     }
 
+    done:
 #if !defined(_WIN32)
     XDestroyImage(ximage);
-    ckfree((char *) cdata.colors);
+    if (cdata.colors) {
+        ckfree((char *) cdata.colors);
+    }
 #else
     DeleteObject(grab.hbm);
     TkWinReleaseDrawableDC(Tk_WindowId(tkwin), ximage, &DCi);
 #endif
-    ckfree((char *) block.pixelPtr);
+    if (block.pixelPtr) {
+        ckfree((char *) block.pixelPtr);
+    }
     return result;
 }

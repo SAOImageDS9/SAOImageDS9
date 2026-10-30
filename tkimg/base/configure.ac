@@ -6,7 +6,7 @@ dnl
 # TEA compliant configure script for package 'tkimg'.
 #--------------------------------------------------------------------
 
-AC_INIT([tkimg],[2.0.1])
+AC_INIT([tkimg],[2.1.2])
 
 TEA_INIT([3.9])
 

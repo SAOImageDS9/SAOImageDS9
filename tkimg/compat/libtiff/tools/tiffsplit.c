@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "tiff_tools.h"
 #include "tiffio.h"
 
 #ifndef EXIT_SUCCESS
@@ -41,6 +42,9 @@
 #define CopyField(tag, v)                                                      \
     if (TIFFGetField(in, tag, &v))                                             \
     TIFFSetField(out, tag, v)
+#define CopyFieldFloat(tag, v)                                                 \
+    if (TIFFGetField(in, tag, &v))                                             \
+    TIFFSetField(out, tag, (double)(v))
 #define CopyField2(tag, v1, v2)                                                \
     if (TIFFGetField(in, tag, &v1, &v2))                                       \
     TIFFSetField(out, tag, v1, v2)
@@ -66,6 +70,8 @@ static int cpStrips(TIFF *, TIFF *);
 static int cpTiles(TIFF *, TIFF *);
 
 static void usage(int);
+
+#define MAXFILES 9999999U
 
 /**
  * This custom malloc function enforce a maximum allocation size
@@ -116,15 +122,8 @@ int main(int argc, char *argv[])
         switch (c)
         {
             case 'M':
-                maxMalloc = (tmsize_t)strtoul(optarg, NULL, 0) << 20;
-                if ((maxMalloc == 0) && (optarg[0] != '0'))
-                {
-                    fprintf(stderr,
-                            "tiffsplit: Error: Option -M was not followed by a "
-                            "number but <%s>\n",
-                            optarg);
+                if (!TIFFToolsParseMemoryLimitMiB(optarg, &maxMalloc))
                     usage(EXIT_FAILURE);
-                }
                 break;
             case '?':
                 usage(EXIT_SUCCESS);
@@ -137,6 +136,13 @@ int main(int argc, char *argv[])
     c = argc - optind;
     if (c < 1 || c > 2)
         usage(EXIT_FAILURE);
+
+    if (c > 1 && strlen(argv[optind + 1]) > sizeof(fname) - 8)
+    {
+        fprintf(stderr, "tiffsplit: filename too long\n");
+        return EXIT_FAILURE;
+    }
+
     if (c > 1)
     {
         strncpy(fname, argv[optind + 1], sizeof(fname));
@@ -165,7 +171,7 @@ int main(int argc, char *argv[])
         newfilename();
 
         path_len = strlen(fname) + sizeof(TIFF_SUFFIX);
-        path = (char *)limitMalloc(path_len);
+        path = (char *)limitMalloc((tmsize_t)path_len);
         if (!path)
         {
             fprintf(stderr,
@@ -190,6 +196,7 @@ int main(int argc, char *argv[])
             TIFFOpenOptionsFree(opts);
             return (EXIT_FAILURE);
         }
+        printf("%s\n", path);
         _TIFFfree(path);
         if (!tiffcp(in, out))
         {
@@ -204,7 +211,7 @@ int main(int argc, char *argv[])
     } while (TIFFReadDirectory(in));
 
     TIFFOpenOptionsFree(opts);
-    (void)TIFFClose(in);
+    TIFFClose(in);
 
     return (EXIT_SUCCESS);
 }
@@ -212,8 +219,7 @@ int main(int argc, char *argv[])
 static void newfilename(void)
 {
     static int first = 1;
-    static long lastTurn;
-    static long fnum;
+    static unsigned int fnum;
     static short defname;
     static char *fpnt;
 
@@ -232,7 +238,6 @@ static void newfilename(void)
         }
         first = 0;
     }
-#define MAXFILES 17576
     if (fnum == MAXFILES)
     {
         if (!defname || fname[0] == 'z')
@@ -243,38 +248,8 @@ static void newfilename(void)
         fname[0]++;
         fnum = 0;
     }
-    if (fnum % 676 == 0)
-    {
-        if (fnum != 0)
-        {
-            /*
-             * advance to next letter every 676 pages
-             * condition for 'z'++ will be covered above
-             */
-            fpnt[0]++;
-        }
-        else
-        {
-            /*
-             * set to 'a' if we are on the very first file
-             */
-            fpnt[0] = 'a';
-        }
-        /*
-         * set the value of the last turning point
-         */
-        lastTurn = fnum;
-    }
-    /*
-     * start from 0 every 676 times (provided by lastTurn)
-     * this keeps us within a-z boundaries
-     */
-    fpnt[1] = (char)((fnum - lastTurn) / 26) + 'a';
-    /*
-     * cycle last letter every file, from a-z, then repeat
-     */
-    fpnt[2] = (char)(fnum % 26) + 'a';
     fnum++;
+    snprintf(fpnt, 8, "%07u", fnum);
 }
 
 static int tiffcp(TIFF *in, TIFF *out)
@@ -310,15 +285,15 @@ static int tiffcp(TIFF *in, TIFF *out)
     CopyField(TIFFTAG_ORIENTATION, shortv);
     CopyField(TIFFTAG_MINSAMPLEVALUE, shortv);
     CopyField(TIFFTAG_MAXSAMPLEVALUE, shortv);
-    CopyField(TIFFTAG_XRESOLUTION, floatv);
-    CopyField(TIFFTAG_YRESOLUTION, floatv);
+    CopyFieldFloat(TIFFTAG_XRESOLUTION, floatv);
+    CopyFieldFloat(TIFFTAG_YRESOLUTION, floatv);
     CopyField(TIFFTAG_GROUP3OPTIONS, longv);
     CopyField(TIFFTAG_GROUP4OPTIONS, longv);
     CopyField(TIFFTAG_RESOLUTIONUNIT, shortv);
     CopyField(TIFFTAG_PLANARCONFIG, shortv);
     CopyField(TIFFTAG_ROWSPERSTRIP, longv);
-    CopyField(TIFFTAG_XPOSITION, floatv);
-    CopyField(TIFFTAG_YPOSITION, floatv);
+    CopyFieldFloat(TIFFTAG_XPOSITION, floatv);
+    CopyFieldFloat(TIFFTAG_YPOSITION, floatv);
     CopyField(TIFFTAG_IMAGEDEPTH, longv);
     CopyField(TIFFTAG_TILEDEPTH, longv);
     CopyField(TIFFTAG_SAMPLEFORMAT, shortv);

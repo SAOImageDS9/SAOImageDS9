@@ -30,7 +30,7 @@ set fmtList [list \
     "img" "pcx"  ".pcx" ""                                      \
     "img" "png"  ".png" ""                                      \
     "img" "ppm"  ".ppm" ""                                      \
-    "img" "raw"  ".raw" "-useheader true -nchan 3"              \
+    "img" "raw"  ".raw" "-useheader true -withalpha false"      \
     "img" "sgi"  ".rgb" ""                                      \
     "img" "sun"  ".ras" ""                                      \
     "img" "tga"  ".tga" ""                                      \

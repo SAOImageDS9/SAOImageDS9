@@ -24,8 +24,8 @@ dnl OF THIS SOFTWARE.
 
 dnl Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.64)
-AC_INIT([LibTIFF Software],[4.7.0],[tiff@lists.osgeo.org],[tiff])
+AC_PREREQ([2.71])
+AC_INIT([LibTIFF Software],[4.7.2],[tiff@lists.osgeo.org],[tiff])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR(m4)
 AC_LANG(C)
@@ -41,7 +41,7 @@ dnl Versioning.
 dnl Don't fill the ALPHA_VERSION field, if not applicable.
 LIBTIFF_MAJOR_VERSION=4
 LIBTIFF_MINOR_VERSION=7
-LIBTIFF_MICRO_VERSION=0
+LIBTIFF_MICRO_VERSION=2
 LIBTIFF_ALPHA_VERSION=
 LIBTIFF_VERSION=$LIBTIFF_MAJOR_VERSION.$LIBTIFF_MINOR_VERSION.$LIBTIFF_MICRO_VERSION$LIBTIFF_ALPHA_VERSION
 dnl This (LIBTIFF_RELEASE_DATE) is used to set the #define TIFFLIB_VERSION in tiffvers.h.
@@ -77,9 +77,9 @@ dnl  5. If any interfaces have been added since the last public release, then
 dnl     increment age.
 dnl  6. If any interfaces have been removed since the last public release,
 dnl     then set age to 0.                                
-LIBTIFF_CURRENT=7
+LIBTIFF_CURRENT=9
 LIBTIFF_REVISION=0
-LIBTIFF_AGE=1
+LIBTIFF_AGE=3
 LIBTIFF_VERSION_INFO=$LIBTIFF_CURRENT:$LIBTIFF_REVISION:$LIBTIFF_AGE
 
 # This is a special hack for OpenBSD and MirOS systems. The dynamic linker
@@ -104,8 +104,8 @@ AC_SUBST(LIBTIFF_VERSION_INFO)
 AC_SUBST(LIBTIFF_RELEASE_DATE)
 
 dnl Checks for programs.
-AC_PROG_CC_C99
-AM_PROG_CC_C_O
+AC_PROG_CC
+AM_PROG_CC_C_O  # Necessary if objects are placed in subdirectories.
 
 dnl We want warnings. As many warnings as possible.
 VL_PROG_CC_WARNINGS()
@@ -192,7 +192,7 @@ AC_C_CONST
 AC_C_BIGENDIAN
 AC_TYPE_OFF_T
 AC_TYPE_SIZE_T
-AC_HEADER_TIME
+
 AC_STRUCT_TM
 
 dnl If the `fseeko' function is available, define `HAVE_FSEEKO'. Define
@@ -614,12 +614,12 @@ dnl ---------------------------------------------------------------------------
 
 AC_ARG_ENABLE(old-jpeg,
 	      AS_HELP_STRING([--disable-old-jpeg],
-			     [disable support for Old JPEG compresson (read-only, enabled by default)]),
+			     [disable support for Old JPEG compression (read-only, enabled by default)]),
 	      [HAVE_OJPEG=${enableval}], [HAVE_OJPEG=yes])
 
 if test "$HAVE_JPEG" = "yes" -a "$HAVE_OJPEG" = "yes" ; then
   AC_DEFINE(OJPEG_SUPPORT, 1,
-	    [Support Old JPEG compresson (read-only)])
+	    [Support Old JPEG compression (read-only)])
 else
   HAVE_OJPEG=no
 fi
@@ -687,14 +687,6 @@ dnl Check for liblerc.
 dnl ---------------------------------------------------------------------------
 
 HAVE_LERC=no
-STATIC_LERC=no
-
-if test "$enable_static" = "no"; then
-    static_lerc=no
-else
-    static_lerc=yes
-fi
-AM_CONDITIONAL([STATIC_LERC], [ test "$static_lerc" = yes ])
 
 AC_ARG_ENABLE(lerc,
       AS_HELP_STRING([--disable-lerc],
@@ -746,6 +738,9 @@ if test "$HAVE_LERC" = "yes" ; then
     LIBDIR="-R $with_lerc_lib_dir $LIBDIR"
   fi
 
+  if test "$enable_static" != "no"; then
+    AC_DEFINE([LERC_STATIC], 1, [Define to 1 when building a static libtiff with LERC enabled.])
+  fi
 fi
 
 AM_CONDITIONAL(HAVE_LERC, test "$HAVE_LERC" = 'yes')
@@ -1262,7 +1257,7 @@ LOC_MSG([  Pixar log-format algorithm:         ${HAVE_PIXARLOG}])
 LOC_MSG([  JPEG support:                       ${HAVE_JPEG}])
 LOC_MSG([  Old JPEG support:                   ${HAVE_OJPEG}])
 if test "$HAVE_JPEGTURBO_DUAL_MODE_8_12" = "yes"; then
-    LOC_MSG([  JPEG 8/12 bit dual mode:            ${HAVE_JPEGTURBO_DUAL_MODE_8_12} (libjpeg turbo >= 2.2 dual mode)])
+    LOC_MSG([  JPEG 8/12 bit dual mode:            ${HAVE_JPEGTURBO_DUAL_MODE_8_12} (libjpeg turbo >= 3.0 dual mode)])
 else
     LOC_MSG([  JPEG 8/12 bit dual mode:            ${HAVE_JPEG12}])
 fi

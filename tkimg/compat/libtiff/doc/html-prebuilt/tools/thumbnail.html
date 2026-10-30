@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>thumbnail &#8212; LibTIFF 4.7.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b849a4e9" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=0a676766" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=9f25de62"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <title>thumbnail &#8212; LibTIFF 4.7.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=34905f61" />
+    <script src="../_static/documentation_options.js?v=2edf0659"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="tiff2bw" href="tiff2bw.html" />
     <link rel="prev" title="rgb2ycbcr" href="rgb2ycbcr.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="rgb2ycbcr.html" title="rgb2ycbcr"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../tools.html" accesskey="U">TIFF Tools Overview</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">thumbnail</a></li> 
       </ul>
@@ -40,13 +40,13 @@
           <div class="body" role="main">
             
   <section id="thumbnail">
-<h1>thumbnail<a class="headerlink" href="#thumbnail" title="Permalink to this heading">¶</a></h1>
+<h1>thumbnail<a class="headerlink" href="#thumbnail" title="Link to this heading">¶</a></h1>
 <section id="synopsis">
-<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this heading">¶</a></h2>
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Link to this heading">¶</a></h2>
 <p><strong>thumbnail</strong> [ <em>options</em> ] <em>input.tif</em> <em>output.tif</em></p>
 </section>
 <section id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">¶</a></h2>
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading">¶</a></h2>
 <p><strong class="program">thumbnail</strong> is a program written to show how one might use the
 <code class="docutils literal notranslate"><span class="pre">SubIFD</span></code> tag (#330) to store thumbnail images.
 <strong class="program">thumbnail</strong>
@@ -59,22 +59,22 @@ Pixels are calculated by sampling and filtering the input image
 with each pixel value passed through a contrast curve.</p>
 </section>
 <section id="options">
-<h2>Options<a class="headerlink" href="#options" title="Permalink to this heading">¶</a></h2>
+<h2>Options<a class="headerlink" href="#options" title="Link to this heading">¶</a></h2>
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-thumbnail-w">
-<span class="sig-name descname"><span class="pre">-w</span></span><span class="sig-prename descclassname"> <span class="pre">width</span></span><a class="headerlink" href="#cmdoption-thumbnail-w" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">-w</span></span><span class="sig-prename descclassname"> <span class="pre">width</span></span><a class="headerlink" href="#cmdoption-thumbnail-w" title="Link to this definition">¶</a></dt>
 <dd><p>Specify the width of thumbnail images in pixels.</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-thumbnail-h">
-<span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"> <span class="pre">height</span></span><a class="headerlink" href="#cmdoption-thumbnail-h" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"> <span class="pre">height</span></span><a class="headerlink" href="#cmdoption-thumbnail-h" title="Link to this definition">¶</a></dt>
 <dd><p>Specify the height of thumbnail images in pixels.</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-thumbnail-c">
-<span class="sig-name descname"><span class="pre">-c</span></span><span class="sig-prename descclassname"> <span class="pre">contrast</span></span><a class="headerlink" href="#cmdoption-thumbnail-c" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">-c</span></span><span class="sig-prename descclassname"> <span class="pre">contrast</span></span><a class="headerlink" href="#cmdoption-thumbnail-c" title="Link to this definition">¶</a></dt>
 <dd><p>Specify a contrast curve to apply in generating the thumbnail images.
 By default pixels values are passed through a linear contrast curve
 that simply maps the pixel value ranges.  Alternative curves are:</p>
@@ -112,11 +112,11 @@ that simply maps the pixel value ranges.  Alternative curves are:</p>
 
 </section>
 <section id="bugs">
-<h2>Bugs<a class="headerlink" href="#bugs" title="Permalink to this heading">¶</a></h2>
+<h2>Bugs<a class="headerlink" href="#bugs" title="Link to this heading">¶</a></h2>
 <p>There are no options to control the format of the saved thumbnail images.</p>
 </section>
 <section id="see-also">
-<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this heading">¶</a></h2>
+<h2>See also<a class="headerlink" href="#see-also" title="Link to this heading">¶</a></h2>
 <p><a class="reference internal" href="tiffdump.html"><span class="doc">tiffdump</span></a> (1),
 <a class="reference internal" href="tiffgt.html"><span class="doc">tiffgt</span></a> (1),
 <a class="reference internal" href="tiffinfo.html"><span class="doc">tiffinfo</span></a> (1),
@@ -129,7 +129,7 @@ that simply maps the pixel value ranges.  Alternative curves are:</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="../index.html">Table of Contents</a></h3>
@@ -162,7 +162,7 @@ that simply maps the pixel value ranges.  Alternative curves are:</p>
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -170,13 +170,13 @@ that simply maps the pixel value ranges.  Alternative curves are:</p>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -188,14 +188,14 @@ that simply maps the pixel value ranges.  Alternative curves are:</p>
         <li class="right" >
           <a href="rgb2ycbcr.html" title="rgb2ycbcr"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../tools.html" >TIFF Tools Overview</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">thumbnail</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-    &#169; Copyright 1988-2022, LibTIFF contributors.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+    &#169; Copyright 1988-2025, LibTIFF contributors.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

@@ -29,7 +29,9 @@ Author List
  * Jeremy Maitin-Shepard
  * John Bowler
  * Jon Creighton
+ * Joost Nieuwenhuijse
  * Kyle Bentley
+ * Luis Caro Campos
  * Martin Storsjö
  * Owen Rudge
  * Philip Lowman

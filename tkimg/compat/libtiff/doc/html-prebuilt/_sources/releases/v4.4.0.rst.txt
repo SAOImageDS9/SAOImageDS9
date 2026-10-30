@@ -44,7 +44,7 @@ New/improved functionalities:
 * :c:func:`TIFFIsBigTiff` function added.
 * Functions :c:func:`TIFFFieldSetGetSize` and :c:func:`TIFFieldSetGetCountSize` added.
 * :c:func:`LZWDecode`: major speed improvements (~30% faster)
-* Predictor 2 (horizontal differenciation): support 64-bit
+* Predictor 2 (horizontal differentiation): support 64-bit
 * Support libjpeg 9d
 
 Bug fixes:

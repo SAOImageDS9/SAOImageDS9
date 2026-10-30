@@ -2,10 +2,10 @@
 
 [moddesc Img]
 [titledesc "[vset FORMATFULLNAME] ([vset FORMATNAME])"]
-[copyright {1995-2024 Jan Nijtmans <nijtmans@users.sourceforge.net>}]
-[copyright {2002-2024 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
-[copyright {2003-2024 Paul Obermeier <obermeier@users.sourceforge.net>}]
-[require img::[vset FORMATNAME] [opt 2.0]]
+[copyright {1995-2026 Jan Nijtmans <nijtmans@users.sourceforge.net>}]
+[copyright {2002-2026 Andreas Kupries <andreas_kupries@users.sourceforge.net>}]
+[copyright {2003-2026 Paul Obermeier <obermeier@users.sourceforge.net>}]
+[require img::[vset FORMATNAME] [opt 2.1.2]]
 [description]
 
 [cmd "package require img::[vset FORMATNAME]"]
@@ -19,7 +19,7 @@ that it supports files containing raster images in the
 [vset FORMATFULLNAME] ([vset FORMATNAME]). More specifically
 
 [package img::[vset FORMATNAME]] extends [package Tk]'s
-[uri https://www.tcl.tk/man/tcl9.0/TkCmd/photo.html photo] image type.
+[uri https://www.tcl-lang.org/man/tcl9.0/TkCmd/photo.html photo] image type.
 
 [para]
 

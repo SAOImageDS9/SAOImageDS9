@@ -27,95 +27,93 @@ level margin: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .\" new: \\n[rst2man-indent\\n[rst2man-indent-level]]
 .in \\n[rst2man-indent\\n[rst2man-indent-level]]u
 ..
-.TH "TIFFOPEN" "3tiff" "Sep 11, 2024" "4.7" "LibTIFF"
+.TH "TIFFOPEN" "3tiff" "Jun 27, 2026" "4.7" "LibTIFF"
 .SH NAME
 TIFFOpen \- open a TIFF file for reading or writing
 .SH SYNOPSIS
 .INDENT 0.0
 .INDENT 3.5
 .sp
-.nf
-.ft C
+.EX
 #include <tiffio.h>
-.ft P
-.fi
+.EE
 .UNINDENT
 .UNINDENT
 .INDENT 0.0
 .TP
-.B TIFF  *TIFFOpen(const  char  *filename, const  char  *mode) 
+.B TIFF *TIFFOpen(const char *filename, const char *mode) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B TIFF  *TIFFOpenW(const  wchar_t  *name, const  char  *mode) 
+.B TIFF *TIFFOpenW(const wchar_t *name, const char *mode) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B TIFF  *TIFFFdOpen(const  int  fd, const  char  *filename, const  char  *mode) 
+.B TIFF *TIFFFdOpen(const int fd, const char *filename, const char *mode) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B TIFF  *TIFFOpenExt(const  char  *filename, const  char  *mode, \fI\%TIFFOpenOptions\fP  *opts) 
+.B TIFF *TIFFOpenExt(const char *filename, const char *mode, \fI\%TIFFOpenOptions\fP *opts) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B TIFF  *TIFFOpenWExt(const  wchar_t  *name, const  char  *mode, \fI\%TIFFOpenOptions\fP  *opts) 
+.B TIFF *TIFFOpenWExt(const wchar_t *name, const char *mode, \fI\%TIFFOpenOptions\fP *opts) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B TIFF  *TIFFFdOpenExt(const  int  fd, const  char  *filename, const  char  *mode, \fI\%TIFFOpenOptions\fP  *opts) 
+.B TIFF *TIFFFdOpenExt(const int fd, const char *filename, const char *mode, \fI\%TIFFOpenOptions\fP *opts) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B const  char  *TIFFSetFileName(TIFF  *tif) 
+.B const char *TIFFSetFileName(TIFF *tif) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B int  TIFFSetFileno(TIFF  *tif, int  fd) 
+.B int TIFFSetFileno(TIFF *tif, int fd) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B int  TIFFSetMode(TIFF  *tif, int  mode) 
+.B int TIFFSetMode(TIFF *tif, int mode) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B typedef  tsize_t  (*TIFFReadWriteProc)(thandle_t,  tdata_t,  tsize_t) 
+.B typedef tmsize_t (*TIFFReadWriteProc)(thandle_t, void*, tmsize_t) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B typedef  toff_t  (*TIFFSeekProc)(thandle_t,  toff_t,  int) 
+.B typedef toff_t (*TIFFSeekProc)(thandle_t, toff_t, int) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B typedef  int  (*TIFFCloseProc)(thandle_t) 
+.B typedef int (*TIFFCloseProc)(thandle_t) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B typedef  toff_t  (*TIFFSizeProc)(thandle_t) 
+.B typedef toff_t (*TIFFSizeProc)(thandle_t) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B typedef  int  (*TIFFMapFileProc)(thandle_t,  tdata_t*,  toff_t*) 
+.B typedef int (*TIFFMapFileProc)(thandle_t, void **base, toff_t *size) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B typedef  void  (*TIFFUnmapFileProc)(thandle_t,  tdata_t,  toff_t) 
+.B typedef void (*TIFFUnmapFileProc)(thandle_t, void *base, toff_t size) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B TIFF  *TIFFClientOpen(const  char  *filename, const  char  *mode, thandle_t  clientdata, \fI\%TIFFReadWriteProc\fP  readproc, \fI\%TIFFReadWriteProc\fP  writeproc, \fI\%TIFFSeekProc\fP  seekproc, \fI\%TIFFCloseProc\fP  closeproc, \fI\%TIFFSizeProc\fP  sizeproc, \fI\%TIFFMapFileProc\fP  mapproc, \fI\%TIFFUnmapFileProc\fP  unmapproc) 
+.B TIFF *TIFFClientOpen(const char *filename, const char *mode, thandle_t clientdata, \fI\%TIFFReadWriteProc\fP readproc, \fI\%TIFFReadWriteProc\fP writeproc, \fI\%TIFFSeekProc\fP seekproc, \fI\%TIFFCloseProc\fP closeproc, \fI\%TIFFSizeProc\fP sizeproc, \fI\%TIFFMapFileProc\fP mapproc, \fI\%TIFFUnmapFileProc\fP unmapproc) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B TIFF  *TIFFClientOpenExt(const  char  *filename, const  char  *mode, thandle_t  clientdata, \fI\%TIFFReadWriteProc\fP  readproc, \fI\%TIFFReadWriteProc\fP  writeproc, \fI\%TIFFSeekProc\fP  seekproc, \fI\%TIFFCloseProc\fP  closeproc, \fI\%TIFFSizeProc\fP  sizeproc, \fI\%TIFFMapFileProc\fP  mapproc, \fI\%TIFFUnmapFileProc\fP  unmapproc, \fI\%TIFFOpenOptions\fP  *opts) 
+.B TIFF *TIFFClientOpenExt(const char *filename, const char *mode, thandle_t clientdata, \fI\%TIFFReadWriteProc\fP readproc, \fI\%TIFFReadWriteProc\fP writeproc, \fI\%TIFFSeekProc\fP seekproc, \fI\%TIFFCloseProc\fP closeproc, \fI\%TIFFSizeProc\fP sizeproc, \fI\%TIFFMapFileProc\fP mapproc, \fI\%TIFFUnmapFileProc\fP unmapproc, \fI\%TIFFOpenOptions\fP *opts) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B thandle_t  TIFFClientdata(TIFF  *tif) 
+.B thandle_t TIFFClientdata(TIFF *tif) 
 .UNINDENT
 .INDENT 0.0
 .TP
-.B thandle_t  TIFFSetClientdata(TIFF  *tif, thandle_t  newvalue) 
+.B thandle_t TIFFSetClientdata(TIFF *tif, thandle_t newvalue) 
 .UNINDENT
 .SH DESCRIPTION
 .sp
@@ -166,7 +164,8 @@ To alter these values, or to define values for additional fields,
 .sp
 \fI\%TIFFFdOpen()\fP is like \fI\%TIFFOpen()\fP except that it opens a
 TIFF file given an open file descriptor \fIfd\fP\&.
-The file\(aqs name and mode must reflect that of the open descriptor.
+The mode must reflect that of the open descriptor. The file name is used for
+warning and error messages.
 Even for write\-only mode, \fBlibtiff\fP needs read permissions because
 some of its functions need to read back the partially written TIFF file.
 The object associated with the file descriptor \fBmust support random access\fP\&.
@@ -211,6 +210,17 @@ and write data at the current file position.
 memory; c.f. \fBmmap()\fP (2) and \fBmunmap()\fP (2).
 The \fIclientdata\fP parameter is an opaque \(dqhandle\(dq passed to the client\-specified
 routines passed as parameters to \fI\%TIFFClientOpen()\fP\&.
+.sp
+\fBNOTE:\fP
+.INDENT 0.0
+.INDENT 3.5
+In contrast to the return values of \fBmmap()\fP (2) and \fBmunmap()\fP (2),
+the return values of \fImapproc\fP and \fIunmapproc\fP must be:
+TRUE for success and FALSE to indicate an error.
+\fBlibtiff\fP built in functions \fB_tiffMapProc()\fP and \fB_tiffUnmapProc()\fP
+can be found in tif_unix.c as well as in tif_win32.c.
+.UNINDENT
+.UNINDENT
 .sp
 \fI\%TIFFClientOpenExt()\fP (added in libtiff 4.5) is like \fI\%TIFFClientOpen()\fP,
 but options argument \fIopts\fP like for \fI\%TIFFOpenExt()\fP can be passed.
@@ -467,6 +477,6 @@ This is a limitation of the library.
 .SH AUTHOR
 LibTIFF contributors
 .SH COPYRIGHT
-1988-2022, LibTIFF contributors
+1988-2025, LibTIFF contributors
 .\" Generated by docutils manpage writer.
 .

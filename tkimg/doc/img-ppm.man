@@ -1,7 +1,7 @@
 [comment {-*- tcl -*- doctools}]
 [vset FORMATNAME ppm]
 [vset FORMATFULLNAME {Portable pixmap format}]
-[manpage_begin img-[vset FORMATNAME] n 2.0]
+[manpage_begin img-[vset FORMATNAME] n 2.1]
 
 [include format-header.inc]
 

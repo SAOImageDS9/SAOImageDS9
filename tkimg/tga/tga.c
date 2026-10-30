@@ -8,7 +8,7 @@
  * For a list of available format options see function ParseFormatOpts
  * and the documentation img-tga.
  *
- * Copyright (c) 2000-2024 Paul Obermeier <obermeier@users.sourceforge.net>
+ * Copyright (c) 2000-2025 Paul Obermeier <obermeier@users.sourceforge.net>
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.

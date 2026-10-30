@@ -245,13 +245,13 @@ Library changes
 
 * :file:`libtiff/tif_lzw.c`: update dec_bitsleft at beginning of
   LZWDecode(), and update tif_rawcc at end of LZWDecode(). This
-  is needed to properly work with the latest chnges in
+  is needed to properly work with the latest changes in
   tif_read.c in CHUNKY_STRIP_READ_SUPPORT mode.
 
 * :file:`libtiff/tif_pixarlog.c`: :c:func:`PixarLogDecode`: resync :c:member:`tif_rawcp`
   with :c:member:`next_in` and :c:member:`tif_rawcc` with :c:member:`avail_in` at beginning and end
   of function, similarly to what is done in :c:func:`LZWDecode`. Likely
-  needed so that it works properly with latest chnges in
+  needed so that it works properly with latest changes in
   :file:`tif_read.c` in :c:macro:`CHUNKY_STRIP_READ_SUPPORT` mode. But untested...
 
 * :file:`libtiff/tif_getimage.c`: :c:func:`initYCbCrConversion`: add basic

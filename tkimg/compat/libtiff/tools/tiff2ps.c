@@ -24,6 +24,8 @@
 
 #include "libport.h"
 #include "tif_config.h"
+#include "tiff_tools.h"
+#include "tiffiop.h"
 
 #include <math.h>
 #include <stdio.h>
@@ -243,6 +245,15 @@ tsize_t Ascii85EncodeBlock(uint8_t *ascii85_p, unsigned f_eod,
                            const uint8_t *raw_p, tsize_t raw_l);
 #endif
 
+#define CHECK_DOUBLE_TO_INT32(functionName, paraString, val)                   \
+    if (val < INT32_MIN || val > INT32_MAX)                                    \
+    {                                                                          \
+        TIFFError("Error in " functionName,                                    \
+                  " %s = %f, which is out of int32_t range. Aborting",         \
+                  paraString, val);                                            \
+        return (-1);                                                           \
+    }
+
 static void usage(int);
 
 /**
@@ -287,7 +298,8 @@ int main(int argc, char *argv[])
         switch (c)
         {
             case 'M':
-                maxMalloc = (tmsize_t)strtoul(optarg, NULL, 0) << 20;
+                if (!TIFFToolsParseMemoryLimitMiB(optarg, &maxMalloc))
+                    usage(EXIT_FAILURE);
                 break;
             case 'b':
                 bottommargin = atof(optarg);
@@ -447,6 +459,9 @@ int main(int argc, char *argv[])
                 break;
             case '?':
                 usage(EXIT_FAILURE);
+                break;
+            default:
+                break;
         }
 
     if (useImagemask == TRUE)
@@ -460,7 +475,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    if (pageWidth && (maxPageWidth > pageWidth))
+    if ((!TIFF_DOUBLE_EQ(pageWidth, 0.0)) && (maxPageWidth > pageWidth))
     {
         TIFFError("-W", "Max viewport width cannot exceed page width");
         exit(EXIT_FAILURE);
@@ -643,8 +658,8 @@ static int checkImage(TIFF *tif)
     return (1);
 }
 
-#define PS_UNIT_SIZE 72.0F
-#define PSUNITS(npix, res) ((npix) * (PS_UNIT_SIZE / (res)))
+#define PS_UNIT_SIZE 72.0f
+#define PSUNITS(npix, res) ((float)(npix) * (PS_UNIT_SIZE / (float)(res)))
 
 static const char RGBcolorimage[] = "\
 /bwproc {\n\
@@ -675,12 +690,27 @@ static const char RGBcolorimage[] = "\
  *
  * It is claimed to be part of some future revision of the EPS spec.
  */
-static void PhotoshopBanner(FILE *fd, uint32_t w, uint32_t h, int bs, int nc,
-                            const char *startline)
+static void TIFF_ATTRIBUTE((__format__(__printf__, 6, 0)))
+    PhotoshopBanner(FILE *fd, uint32_t w, uint32_t h, tmsize_t bs, int nc,
+                    const char *startline)
 {
-    fprintf(fd, "%%ImageData: %" PRIu32 " %" PRIu32 " %" PRIu16 " %d 0 %d 2 \"",
+    fprintf(fd,
+            "%%ImageData: %" PRIu32 " %" PRIu32 " %" PRIu16
+            " %d 0 %" TIFF_SSIZE_FORMAT " 2 \"",
             w, h, bitspersample, nc, bs);
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#elif defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#endif
     fprintf(fd, startline, nc);
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic pop
+#elif defined(__clang__)
+#pragma clang diagnostic pop
+#endif
     fprintf(fd, "\"\n");
 }
 
@@ -694,7 +724,7 @@ static void PhotoshopBanner(FILE *fd, uint32_t w, uint32_t h, int bs, int nc,
 static void setupPageState(TIFF *tif, uint32_t *pw, uint32_t *ph, double *pprw,
                            double *pprh)
 {
-    float xres = 0.0F, yres = 0.0F;
+    float xres = 0.0f, yres = 0.0f;
 
     TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, pw);
     TIFFGetField(tif, TIFFTAG_IMAGELENGTH, ph);
@@ -705,15 +735,15 @@ static void setupPageState(TIFF *tif, uint32_t *pw, uint32_t *ph, double *pprw,
      * Calculate printable area.
      */
     if (!TIFFGetField(tif, TIFFTAG_XRESOLUTION, &xres) ||
-        fabs(xres) < 0.0000001)
+        fabs((double)xres) < 0.0000001)
         xres = PS_UNIT_SIZE;
     if (!TIFFGetField(tif, TIFFTAG_YRESOLUTION, &yres) ||
-        fabs(yres) < 0.0000001)
+        fabs((double)yres) < 0.0000001)
         yres = PS_UNIT_SIZE;
     switch (res_unit)
     {
         case RESUNIT_CENTIMETER:
-            xres *= 2.54F, yres *= 2.54F;
+            xres *= 2.54f, yres *= 2.54f;
             break;
         case RESUNIT_INCH:
             break;
@@ -732,14 +762,14 @@ static void setupPageState(TIFF *tif, uint32_t *pw, uint32_t *ph, double *pprw,
     /* This is a hack to deal with images that have no meaningful Resolution
      * Size but may have x and/or y resolutions of 1 pixel per undefined unit.
      */
-    if ((xres > 1.0) && (xres != PS_UNIT_SIZE))
-        *pprw = PSUNITS(*pw, xres);
+    if ((xres > 1.0f) && (!TIFF_FLOAT_EQ(xres, PS_UNIT_SIZE)))
+        *pprw = (double)PSUNITS(*pw, xres);
     else
-        *pprw = PSUNITS(*pw, PS_UNIT_SIZE);
-    if ((yres > 1.0) && (yres != PS_UNIT_SIZE))
-        *pprh = PSUNITS(*ph, yres);
+        *pprw = (double)PSUNITS(*pw, PS_UNIT_SIZE);
+    if ((yres > 1.0f) && (!TIFF_FLOAT_EQ(yres, PS_UNIT_SIZE)))
+        *pprh = (double)PSUNITS(*ph, yres);
     else
-        *pprh = PSUNITS(*ph, PS_UNIT_SIZE);
+        *pprh = (double)PSUNITS(*ph, PS_UNIT_SIZE);
 }
 
 static int isCCITTCompression(TIFF *tif)
@@ -756,7 +786,7 @@ static tsize_t tf_bytesperrow;
 static tsize_t ps_bytesperrow;
 static uint32_t tf_rowsperstrip;
 static uint32_t tf_numberstrips;
-static char *hex = "0123456789abcdef";
+static const char *hex = "0123456789abcdef";
 
 /*
  * Pagewidth and pageheight are the output size in points,
@@ -767,20 +797,21 @@ static char *hex = "0123456789abcdef";
  * Only one of maxPageHeight or maxPageWidth can be used.
  * These are global variables unfortunately.
  */
-int get_subimage_count(double pagewidth, double pageheight, double imagewidth,
-                       double imageheight, int *ximages, int *yimages,
-                       int rotation, double scale)
+static int get_subimage_count(double pagewidth, double pageheight,
+                              double imagewidth, double imageheight,
+                              int *ximages, int *yimages, int rotation,
+                              double scale)
 {
     int pages = 1;
     double splitheight = 0; /* Requested Max Height in points */
     double splitwidth = 0;  /* Requested Max Width in points */
     double overlap = 0;     /* Repeated edge width in points */
 
-    splitheight = maxPageHeight * PS_UNIT_SIZE;
-    splitwidth = maxPageWidth * PS_UNIT_SIZE;
-    overlap = splitOverlap * PS_UNIT_SIZE;
-    pagewidth *= PS_UNIT_SIZE;
-    pageheight *= PS_UNIT_SIZE;
+    splitheight = maxPageHeight * (double)PS_UNIT_SIZE;
+    splitwidth = maxPageWidth * (double)PS_UNIT_SIZE;
+    overlap = splitOverlap * (double)PS_UNIT_SIZE;
+    pagewidth *= (double)PS_UNIT_SIZE;
+    pageheight *= (double)PS_UNIT_SIZE;
 
     if ((imagewidth < 1.0) || (imageheight < 1.0))
     {
@@ -797,7 +828,7 @@ int get_subimage_count(double pagewidth, double pageheight, double imagewidth,
                 if (imageheight >
                     splitheight) /* More than one vertical image segment */
                 {
-                    if (pagewidth)
+                    if (!TIFF_DOUBLE_EQ(pagewidth, 0.0))
                         *ximages = (int)ceil((scale * imagewidth) /
                                              (pagewidth - overlap));
                     else
@@ -808,7 +839,7 @@ int get_subimage_count(double pagewidth, double pageheight, double imagewidth,
                 }
                 else
                 {
-                    if (pagewidth)
+                    if (!TIFF_DOUBLE_EQ(pagewidth, 0.0))
                         *ximages = (int)ceil(
                             (scale * imagewidth) /
                             (pagewidth - overlap)); /* Max horz pages needed */
@@ -826,7 +857,7 @@ int get_subimage_count(double pagewidth, double pageheight, double imagewidth,
                         *ximages = (int)ceil(
                             (scale * imagewidth) /
                             (splitwidth - overlap)); /* Max horz pages needed */
-                        if (pageheight)
+                        if (!TIFF_DOUBLE_EQ(pageheight, 0.0))
                             *yimages = (int)ceil(
                                 (scale * imageheight) /
                                 (pageheight -
@@ -837,7 +868,7 @@ int get_subimage_count(double pagewidth, double pageheight, double imagewidth,
                     else
                     {
                         *ximages = 1; /* Max vert pages needed */
-                        if (pageheight)
+                        if (!TIFF_DOUBLE_EQ(pageheight, 0.0))
                             *yimages = (int)ceil(
                                 (scale * imageheight) /
                                 (pageheight -
@@ -863,7 +894,7 @@ int get_subimage_count(double pagewidth, double pageheight, double imagewidth,
                     *yimages = (int)ceil(
                         (scale * imagewidth) /
                         (splitheight - overlap)); /* Max vert pages needed */
-                    if (pagewidth)
+                    if (!TIFF_DOUBLE_EQ(pagewidth, 0.0))
                         *ximages = (int)ceil(
                             (scale * imageheight) /
                             (pagewidth - overlap)); /* Max horz pages needed */
@@ -873,7 +904,7 @@ int get_subimage_count(double pagewidth, double pageheight, double imagewidth,
                 else
                 {
                     *yimages = 1; /* Max vert pages needed */
-                    if (pagewidth)
+                    if (!TIFF_DOUBLE_EQ(pagewidth, 0.0))
                         *ximages = (int)ceil(
                             (scale * imageheight) /
                             (pagewidth - overlap)); /* Max horz pages needed */
@@ -887,7 +918,7 @@ int get_subimage_count(double pagewidth, double pageheight, double imagewidth,
                 {
                     if (imageheight > splitwidth)
                     {
-                        if (pageheight)
+                        if (!TIFF_DOUBLE_EQ(pageheight, 0.0))
                             *yimages = (int)ceil(
                                 (scale * imagewidth) /
                                 (pageheight -
@@ -900,7 +931,7 @@ int get_subimage_count(double pagewidth, double pageheight, double imagewidth,
                     }
                     else
                     {
-                        if (pageheight)
+                        if (!TIFF_DOUBLE_EQ(pageheight, 0.0))
                             *yimages = (int)ceil(
                                 (scale * imagewidth) /
                                 (pageheight -
@@ -944,9 +975,9 @@ int exportMaskedImage(FILE *fp, double pagewidth, double pageheight,
     double overlap = 0;     /* Repeated edge width in points */
     double subimage_height = 0.0;
 
-    splitheight = maxPageHeight * PS_UNIT_SIZE;
-    splitwidth = maxPageWidth * PS_UNIT_SIZE;
-    overlap = splitOverlap * PS_UNIT_SIZE;
+    splitheight = (double)maxPageHeight * (double)PS_UNIT_SIZE;
+    splitwidth = (double)maxPageWidth * (double)PS_UNIT_SIZE;
+    overlap = (double)splitOverlap * (double)PS_UNIT_SIZE;
     xscale = scale * imagewidth;
     yscale = scale * imageheight;
 
@@ -1109,7 +1140,8 @@ int exportMaskedImage(FILE *fp, double pagewidth, double pageheight,
 int psRotateImage(FILE *fd, int rotation, double pswidth, double psheight,
                   double left_offset, double bottom_offset)
 {
-    if ((left_offset != 0.0) || (bottom_offset != 0))
+    if ((!TIFF_DOUBLE_EQ(left_offset, 0.0)) ||
+        (!TIFF_DOUBLE_EQ(bottom_offset, 0.0)))
         fprintf(fd, "%f %f translate\n", left_offset, bottom_offset);
 
     /* Exchange width and height for 90/270 rotations */
@@ -1186,32 +1218,36 @@ int psScaleImage(FILE *fd, double scale, int rotation, int center,
         {
             case 0:
                 fprintf(fd, "%f %f translate\n",
-                        left_offset ? left_offset : 0.0,
-                        bottom_offset ? bottom_offset
-                                      : reqheight - (psheight * scale));
+                        (!TIFF_DOUBLE_EQ(left_offset, 0.0)) ? left_offset : 0.0,
+                        (!TIFF_DOUBLE_EQ(bottom_offset, 0.0))
+                            ? bottom_offset
+                            : reqheight - (psheight * scale));
                 fprintf(fd, "%f %f scale\n", pswidth * scale, psheight * scale);
                 break;
             case 90:
                 fprintf(fd, "%f %f translate\n",
-                        left_offset ? left_offset : 0.0,
-                        bottom_offset ? bottom_offset
-                                      : reqheight - (pswidth * scale));
+                        (!TIFF_DOUBLE_EQ(left_offset, 0.0)) ? left_offset : 0.0,
+                        (!TIFF_DOUBLE_EQ(bottom_offset, 0.0))
+                            ? bottom_offset
+                            : reqheight - (pswidth * scale));
                 fprintf(fd, "%f %f scale\n1 0 translate 90 rotate\n",
                         psheight * scale, pswidth * scale);
                 break;
             case 180:
                 fprintf(fd, "%f %f translate\n",
-                        left_offset ? left_offset : 0.0,
-                        bottom_offset ? bottom_offset
-                                      : reqheight - (psheight * scale));
+                        (!TIFF_DOUBLE_EQ(left_offset, 0.0)) ? left_offset : 0.0,
+                        (!TIFF_DOUBLE_EQ(bottom_offset, 0.0))
+                            ? bottom_offset
+                            : reqheight - (psheight * scale));
                 fprintf(fd, "%f %f scale\n1 1 translate 180 rotate\n",
                         pswidth * scale, psheight * scale);
                 break;
             case 270:
                 fprintf(fd, "%f %f translate\n",
-                        left_offset ? left_offset : 0.0,
-                        bottom_offset ? bottom_offset
-                                      : reqheight - (pswidth * scale));
+                        (!TIFF_DOUBLE_EQ(left_offset, 0.0)) ? left_offset : 0.0,
+                        (!TIFF_DOUBLE_EQ(bottom_offset, 0.0))
+                            ? bottom_offset
+                            : reqheight - (pswidth * scale));
                 fprintf(fd, "%f %f scale\n0 1 translate 270 rotate\n",
                         psheight * scale, pswidth * scale);
                 break;
@@ -1238,8 +1274,8 @@ int psPageSize(FILE *fd, int rotation, double pgwidth, double pgheight,
     double new_width;
     double new_height;
 
-    splitheight = maxPageHeight * PS_UNIT_SIZE;
-    splitwidth = maxPageWidth * PS_UNIT_SIZE;
+    splitheight = (double)maxPageHeight * (double)PS_UNIT_SIZE;
+    splitwidth = (double)maxPageWidth * (double)PS_UNIT_SIZE;
 
     switch (rotation)
     {
@@ -1247,14 +1283,29 @@ int psPageSize(FILE *fd, int rotation, double pgwidth, double pgheight,
         case 180:
             if ((splitheight > 0) || (splitwidth > 0))
             {
-                if (pgwidth != 0 || pgheight != 0)
+                if (!TIFF_DOUBLE_EQ(pgwidth, 0.0) ||
+                    !TIFF_DOUBLE_EQ(pgheight, 0.0))
                 {
-                    xscale = reqwidth / (splitwidth ? splitwidth : pswidth);
-                    yscale = reqheight / (splitheight ? splitheight : psheight);
+                    xscale = reqwidth / ((!TIFF_DOUBLE_EQ(splitwidth, 0.0))
+                                             ? splitwidth
+                                             : pswidth);
+                    yscale = reqheight / ((!TIFF_DOUBLE_EQ(splitheight, 0.0))
+                                              ? splitheight
+                                              : psheight);
                     scale = (xscale < yscale) ? xscale : yscale;
                 }
-                new_width = splitwidth ? splitwidth : scale * pswidth;
-                new_height = splitheight ? splitheight : scale * psheight;
+                new_width = (!TIFF_DOUBLE_EQ(splitwidth, 0.0))
+                                ? splitwidth
+                                : scale * pswidth;
+                new_height = (!TIFF_DOUBLE_EQ(splitheight, 0.0))
+                                 ? splitheight
+                                 : scale * psheight;
+                /* Check for resonable range of double parameters representing
+                 * integer values, before casting to int32_t.
+                 * On error return(-1). */
+                CHECK_DOUBLE_TO_INT32("psPageSize", "new_width", new_width);
+                CHECK_DOUBLE_TO_INT32("psPageSize", "new_height", new_height);
+
                 if (strlen(pageOrientation))
                     fprintf(fd, "%%%%PageOrientation: %s\n", pageOrientation);
                 else
@@ -1271,8 +1322,14 @@ int psPageSize(FILE *fd, int rotation, double pgwidth, double pgheight,
             }
             else /* No viewport defined with -H or -W */
             {
-                if ((pgwidth == 0) && (pgheight == 0)) /* Image not scaled */
+                if (TIFF_DOUBLE_EQ(pgwidth, 0.0) &&
+                    TIFF_DOUBLE_EQ(pgheight, 0.0)) /* Image not scaled */
                 {
+                    /* Check for resonable range of double parameters
+                     * representing integer values, before casting to int32_t.
+                     * On error return(-1). */
+                    CHECK_DOUBLE_TO_INT32("psPageSize", "pswidth", pswidth);
+                    CHECK_DOUBLE_TO_INT32("psPageSize", "psheight", psheight);
                     if (strlen(pageOrientation))
                         fprintf(fd, "%%%%PageOrientation: %s\n",
                                 pageOrientation);
@@ -1291,6 +1348,11 @@ int psPageSize(FILE *fd, int rotation, double pgwidth, double pgheight,
                 }
                 else /* Image scaled */
                 {
+                    /* Check for resonable range of double parameters
+                     * representing integer values, before casting to int32_t.
+                     * On error return(-1). */
+                    CHECK_DOUBLE_TO_INT32("psPageSize", "reqwidth", reqwidth);
+                    CHECK_DOUBLE_TO_INT32("psPageSize", "reqheight", reqheight);
                     if (strlen(pageOrientation))
                         fprintf(fd, "%%%%PageOrientation: %s\n",
                                 pageOrientation);
@@ -1313,14 +1375,28 @@ int psPageSize(FILE *fd, int rotation, double pgwidth, double pgheight,
         case 270:
             if ((splitheight > 0) || (splitwidth > 0))
             {
-                if (pgwidth != 0 || pgheight != 0)
+                if (!TIFF_DOUBLE_EQ(pgwidth, 0.0) ||
+                    !TIFF_DOUBLE_EQ(pgheight, 0.0))
                 {
-                    xscale = reqwidth / (splitwidth ? splitwidth : pswidth);
-                    yscale = reqheight / (splitheight ? splitheight : psheight);
+                    xscale = reqwidth / ((!TIFF_DOUBLE_EQ(splitwidth, 0.0))
+                                             ? splitwidth
+                                             : pswidth);
+                    yscale = reqheight / ((!TIFF_DOUBLE_EQ(splitheight, 0.0))
+                                              ? splitheight
+                                              : psheight);
                     scale = (xscale < yscale) ? xscale : yscale;
                 }
-                new_width = splitwidth ? splitwidth : scale * psheight;
-                new_height = splitheight ? splitheight : scale * pswidth;
+                new_width = (!TIFF_DOUBLE_EQ(splitwidth, 0.0))
+                                ? splitwidth
+                                : scale * psheight;
+                new_height = (!TIFF_DOUBLE_EQ(splitheight, 0.0))
+                                 ? splitheight
+                                 : scale * pswidth;
+                /* Check for resonable range of double parameters representing
+                 * integer values, before casting to int32_t.
+                 * On error return(-1). */
+                CHECK_DOUBLE_TO_INT32("psPageSize", "new_width", new_width);
+                CHECK_DOUBLE_TO_INT32("psPageSize", "new_height", new_height);
 
                 if (strlen(pageOrientation))
                     fprintf(fd, "%%%%PageOrientation: %s\n", pageOrientation);
@@ -1338,8 +1414,14 @@ int psPageSize(FILE *fd, int rotation, double pgwidth, double pgheight,
             }
             else
             {
-                if ((pgwidth == 0) && (pgheight == 0)) /* Image not scaled */
+                if (TIFF_DOUBLE_EQ(pgwidth, 0.0) &&
+                    TIFF_DOUBLE_EQ(pgheight, 0.0)) /* Image not scaled */
                 {
+                    /* Check for resonable range of double parameters
+                     * representing integer values, before casting to int32_t.
+                     * On error return(-1). */
+                    CHECK_DOUBLE_TO_INT32("psPageSize", "pswidth", pswidth);
+                    CHECK_DOUBLE_TO_INT32("psPageSize", "psheight", psheight);
                     if (strlen(pageOrientation))
                         fprintf(fd, "%%%%PageOrientation: %s\n",
                                 pageOrientation);
@@ -1358,6 +1440,11 @@ int psPageSize(FILE *fd, int rotation, double pgwidth, double pgheight,
                 }
                 else /* Image scaled */
                 {
+                    /* Check for resonable range of double parameters
+                     * representing integer values, before casting to int32_t.
+                     * On error return(-1). */
+                    CHECK_DOUBLE_TO_INT32("psPageSize", "reqwidth", reqwidth);
+                    CHECK_DOUBLE_TO_INT32("psPageSize", "reqheight", reqheight);
                     if (strlen(pageOrientation))
                         fprintf(fd, "%%%%PageOrientation: %s\n",
                                 pageOrientation);
@@ -1463,11 +1550,11 @@ int psStart(FILE *fd, int npages, int auto_rotate, int *rotation, double *scale,
     double page_width = 0.0, page_height = 0.0;
 
     /* Splitheight and splitwidth are in inches */
-    splitheight = maxPageHeight * PS_UNIT_SIZE;
-    splitwidth = maxPageWidth * PS_UNIT_SIZE;
+    splitheight = (double)maxPageHeight * (double)PS_UNIT_SIZE;
+    splitwidth = (double)maxPageWidth * (double)PS_UNIT_SIZE;
 
-    page_width = pgwidth * PS_UNIT_SIZE;
-    page_height = pgheight * PS_UNIT_SIZE;
+    page_width = (double)pgwidth * (double)PS_UNIT_SIZE;
+    page_height = (double)pgheight * (double)PS_UNIT_SIZE;
 
     /* If user has specified a page width and height and requested the
      * image to be auto-rotated to fit on that media, we match the
@@ -1476,7 +1563,8 @@ int psStart(FILE *fd, int npages, int auto_rotate, int *rotation, double *scale,
      * maxPageHeight since this makes life way too complicated. */
     if (auto_rotate)
     {
-        if ((splitheight != 0) || (splitwidth != 0))
+        if ((!TIFF_DOUBLE_EQ(splitheight, 0.0)) ||
+            (!TIFF_DOUBLE_EQ(splitwidth, 0.0)))
         {
             TIFFError("psStart",
                       "Auto-rotate is incompatible with page splitting ");
@@ -1487,8 +1575,10 @@ int psStart(FILE *fd, int npages, int auto_rotate, int *rotation, double *scale,
         maxsource = (pswidth >= psheight) ? pswidth : psheight;
         maxtarget = (reqwidth >= reqheight) ? reqwidth : reqheight;
 
-        if (((maxsource == pswidth) && (maxtarget != reqwidth)) ||
-            ((maxsource == psheight) && (maxtarget != reqheight)))
+        if (((TIFF_DOUBLE_EQ(maxsource, pswidth)) &&
+             (!TIFF_DOUBLE_EQ(maxtarget, reqwidth))) ||
+            ((TIFF_DOUBLE_EQ(maxsource, psheight)) &&
+             (!TIFF_DOUBLE_EQ(maxtarget, reqheight))))
         { /* optimal orientation does not match input orientation */
             *rotation = 90;
             xscale = (reqwidth - left_offset) / psheight;
@@ -1509,7 +1599,16 @@ int psStart(FILE *fd, int npages, int auto_rotate, int *rotation, double *scale,
          * and optimal orientation.
          */
         if (!npages)
+        {
+            /* Check for resonable range of double parameters representing
+             * integer values, before casting to int32_t within PSHead().
+             * On error return(-1). */
+            CHECK_DOUBLE_TO_INT32("psStart", "reqwidth", reqwidth);
+            CHECK_DOUBLE_TO_INT32("psStart", "reqheight", reqheight);
+            CHECK_DOUBLE_TO_INT32("psStart", "ox", ox);
+            CHECK_DOUBLE_TO_INT32("psStart", "oy", oy);
             PSHead(fd, reqwidth, reqheight, ox, oy);
+        }
 
         return (0);
     }
@@ -1522,14 +1621,18 @@ int psStart(FILE *fd, int npages, int auto_rotate, int *rotation, double *scale,
     {
         case 0:
         case 180:
-            if ((splitheight != 0) || (splitwidth != 0))
+            if ((!TIFF_DOUBLE_EQ(splitheight, 0.0)) ||
+                (!TIFF_DOUBLE_EQ(splitwidth, 0.0)))
             { /* Viewport clipped to maxPageHeight or maxPageWidth */
-                if ((page_width != 0) || (page_height != 0)) /* Image scaled */
+                if ((!TIFF_DOUBLE_EQ(page_width, 0.0)) ||
+                    (!TIFF_DOUBLE_EQ(page_height, 0.0))) /* Image scaled */
                 {
                     xscale = (reqwidth - left_offset) /
-                             (page_width ? page_width : pswidth);
+                             ((!TIFF_DOUBLE_EQ(page_width, 0.0)) ? page_width
+                                                                 : pswidth);
                     yscale = (reqheight - bottom_offset) /
-                             (page_height ? page_height : psheight);
+                             ((!TIFF_DOUBLE_EQ(page_height, 0.0)) ? page_height
+                                                                  : psheight);
                     *scale = (xscale < yscale) ? xscale : yscale;
                     /*
                     if (*scale > 1.0)
@@ -1539,12 +1642,17 @@ int psStart(FILE *fd, int npages, int auto_rotate, int *rotation, double *scale,
                 else /* Image clipped but not scaled */
                     *scale = 1.0;
 
-                view_width = splitwidth ? splitwidth : *scale * pswidth;
-                view_height = splitheight ? splitheight : *scale * psheight;
+                view_width = (!TIFF_DOUBLE_EQ(splitwidth, 0.0))
+                                 ? splitwidth
+                                 : *scale * pswidth;
+                view_height = (!TIFF_DOUBLE_EQ(splitheight, 0.0))
+                                  ? splitheight
+                                  : *scale * psheight;
             }
             else /* Viewport not clipped to maxPageHeight or maxPageWidth */
             {
-                if ((page_width != 0) || (page_height != 0))
+                if ((!TIFF_DOUBLE_EQ(page_width, 0.0)) ||
+                    (!TIFF_DOUBLE_EQ(page_height, 0.0)))
                 { /* Image scaled  */
                     xscale = (reqwidth - left_offset) / pswidth;
                     yscale = (reqheight - bottom_offset) / psheight;
@@ -1564,9 +1672,11 @@ int psStart(FILE *fd, int npages, int auto_rotate, int *rotation, double *scale,
             break;
         case 90:
         case 270:
-            if ((splitheight != 0) || (splitwidth != 0))
+            if ((!TIFF_DOUBLE_EQ(splitheight, 0.0)) ||
+                (!TIFF_DOUBLE_EQ(splitwidth, 0.0)))
             { /* Viewport clipped to maxPageHeight or maxPageWidth */
-                if ((page_width != 0) || (page_height != 0)) /* Image scaled */
+                if ((!TIFF_DOUBLE_EQ(page_width, 0.0)) ||
+                    (!TIFF_DOUBLE_EQ(page_height, 0.0))) /* Image scaled */
                 {
                     xscale = (reqwidth - left_offset) / psheight;
                     yscale = (reqheight - bottom_offset) / pswidth;
@@ -1578,12 +1688,17 @@ int psStart(FILE *fd, int npages, int auto_rotate, int *rotation, double *scale,
                 }
                 else /* Image clipped but not scaled */
                     *scale = 1.0;
-                view_width = splitwidth ? splitwidth : *scale * psheight;
-                view_height = splitheight ? splitheight : *scale * pswidth;
+                view_width = (!TIFF_DOUBLE_EQ(splitwidth, 0.0))
+                                 ? splitwidth
+                                 : *scale * psheight;
+                view_height = (!TIFF_DOUBLE_EQ(splitheight, 0.0))
+                                  ? splitheight
+                                  : *scale * pswidth;
             }
             else /* Viewport not clipped to maxPageHeight or maxPageWidth */
             {
-                if ((page_width != 0) || (page_height != 0)) /* Image scaled */
+                if ((!TIFF_DOUBLE_EQ(page_width, 0.0)) ||
+                    (!TIFF_DOUBLE_EQ(page_height, 0.0))) /* Image scaled */
                 {
                     xscale = (reqwidth - left_offset) / psheight;
                     yscale = (reqheight - bottom_offset) / pswidth;
@@ -1607,8 +1722,25 @@ int psStart(FILE *fd, int npages, int auto_rotate, int *rotation, double *scale,
     }
 
     if (!npages)
-        PSHead(fd, (page_width ? page_width : view_width),
-               (page_height ? page_height : view_height), ox, oy);
+    {
+        double pw =
+            ((!TIFF_DOUBLE_EQ(page_width, 0.0)) ? page_width : view_width);
+        const char *pwStr =
+            ((!TIFF_DOUBLE_EQ(page_width, 0.0)) ? "page_width" : "view_width");
+        double ph =
+            ((!TIFF_DOUBLE_EQ(page_height, 0.0)) ? page_height : view_height);
+        const char *phStr =
+            ((!TIFF_DOUBLE_EQ(page_height, 0.0)) ? "page_height"
+                                                 : "view_height");
+        /* Check for resonable range of double parameters representing
+         * integer values, before casting to int32_t within PSHead().
+         * On error return(-1). */
+        CHECK_DOUBLE_TO_INT32("psStart", pwStr, pw);
+        CHECK_DOUBLE_TO_INT32("psStart", phStr, ph);
+        CHECK_DOUBLE_TO_INT32("psStart", "ox", ox);
+        CHECK_DOUBLE_TO_INT32("psStart", "oy", oy);
+        PSHead(fd, pw, ph, ox, oy);
+    }
 
     *scale = (xscale < yscale) ? xscale : yscale;
     if (*scale > 1.0)
@@ -1622,27 +1754,29 @@ int get_viewport(double pgwidth, double pgheight, double pswidth,
                  int rotation)
 {
     /* Only one of maxPageHeight or maxPageWidth can be specified */
-    if (maxPageHeight !=
-        0) /* Clip the viewport to maxPageHeight on each page */
+    if (!TIFF_DOUBLE_EQ(
+            maxPageHeight,
+            0.0)) /* Clip the viewport to maxPageHeight on each page */
     {
-        if (pgheight != 0 && pgheight < maxPageHeight)
-            *view_height = pgheight * PS_UNIT_SIZE;
+        if (!TIFF_DOUBLE_EQ(pgheight, 0.0) && pgheight < maxPageHeight)
+            *view_height = (double)pgheight * (double)PS_UNIT_SIZE;
         else
-            *view_height = maxPageHeight * PS_UNIT_SIZE;
+            *view_height = (double)maxPageHeight * (double)PS_UNIT_SIZE;
         /*
          * if (res_unit == RESUNIT_CENTIMETER)
-         * *view_height /= 2.54F;
+         * *view_height /= 2.54f;
          */
     }
     else
     {
-        if (pgheight != 0) /* User has set PageHeight with -h flag */
+        if (!TIFF_DOUBLE_EQ(pgheight,
+                            0.0)) /* User has set PageHeight with -h flag */
         {
-            *view_height =
-                pgheight *
-                PS_UNIT_SIZE; /* Postscript size for Page Height in inches */
+            *view_height = (double)pgheight *
+                           (double)PS_UNIT_SIZE; /* Postscript size for Page
+                                                    Height in inches */
             /* if (res_unit == RESUNIT_CENTIMETER)
-             *  *view_height /= 2.54F;
+             *  *view_height /= 2.54f;
              */
         }
         else /* If no width or height are specified, use the original size from
@@ -1661,25 +1795,29 @@ int get_viewport(double pgwidth, double pgheight, double pswidth,
             }
     }
 
-    if (maxPageWidth != 0) /* Clip the viewport to maxPageWidth on each page */
+    if (!TIFF_DOUBLE_EQ(
+            maxPageWidth,
+            0.0)) /* Clip the viewport to maxPageWidth on each page */
     {
-        if (pgwidth != 0 && pgwidth < maxPageWidth)
-            *view_width = pgwidth * PS_UNIT_SIZE;
+        if (!TIFF_DOUBLE_EQ(pgwidth, 0.0) && pgwidth < maxPageWidth)
+            *view_width = (double)pgwidth * (double)PS_UNIT_SIZE;
         else
-            *view_width = maxPageWidth * PS_UNIT_SIZE;
+            *view_width = (double)maxPageWidth * (double)PS_UNIT_SIZE;
         /* if (res_unit == RESUNIT_CENTIMETER)
-         *  *view_width /= 2.54F;
+         *  *view_width /= 2.54f;
          */
     }
     else
     {
-        if (pgwidth != 0) /* User has set PageWidth with -w flag */
+        if (!TIFF_DOUBLE_EQ(pgwidth,
+                            0.0)) /* User has set PageWidth with -w flag */
         {
             *view_width =
-                pgwidth *
-                PS_UNIT_SIZE; /* Postscript size for Page Width in inches */
+                (double)pgwidth *
+                (double)
+                    PS_UNIT_SIZE; /* Postscript size for Page Width in inches */
             /* if (res_unit == RESUNIT_CENTIMETER)
-             * *view_width /= 2.54F;
+             * *view_width /= 2.54f;
              */
         }
         else /* If no width or height are specified, use the original size from
@@ -1717,8 +1855,8 @@ int TIFF2PS(FILE *fd, TIFF *tif, double pgwidth, double pgheight, double lm,
         psheight; /* Original raw image width and height in points */
     double view_width, view_height; /* Viewport width and height in points */
     double scale = 1.0;
-    double left_offset = lm * PS_UNIT_SIZE;
-    double bottom_offset = bm * PS_UNIT_SIZE;
+    double left_offset = (double)lm * (double)PS_UNIT_SIZE;
+    double bottom_offset = (double)bm * (double)PS_UNIT_SIZE;
     uint32_t subfiletype;
     uint16_t *sampleinfo;
     static int npages = 0;
@@ -1757,6 +1895,8 @@ int TIFF2PS(FILE *fd, TIFF *tif, double pgwidth, double pgheight, double lm,
                 case 4:
                     photometric = PHOTOMETRIC_SEPARATED;
                     break;
+                default:
+                    break;
             }
         }
 
@@ -1786,11 +1926,14 @@ int TIFF2PS(FILE *fd, TIFF *tif, double pgwidth, double pgheight, double lm,
             tf_bytesperrow = TIFFScanlineSize(tif);
 
             /* Set viewport clipping and scaling options */
-            if ((maxPageHeight) || (maxPageWidth) || (pgwidth != 0) ||
-                (pgheight != 0))
+            if ((!TIFF_DOUBLE_EQ(maxPageHeight, 0.0)) ||
+                (!TIFF_DOUBLE_EQ(maxPageWidth, 0.0)) ||
+                (!TIFF_DOUBLE_EQ(pgwidth, 0.0)) ||
+                (!TIFF_DOUBLE_EQ(pgheight, 0.0)))
             {
-                if ((maxPageHeight) ||
-                    (maxPageWidth)) /* used -H or -W  option */
+                if ((!TIFF_DOUBLE_EQ(maxPageHeight, 0.0)) ||
+                    (!TIFF_DOUBLE_EQ(maxPageWidth,
+                                     0.0))) /* used -H or -W  option */
                 {
                     if (psMaskImage(fd, tif, rotation_g, center, &npages,
                                     pixwidth, pixheight, left_offset,
@@ -1800,7 +1943,8 @@ int TIFF2PS(FILE *fd, TIFF *tif, double pgwidth, double pgheight, double lm,
                 }
                 else /* N.B. Setting maxPageHeight no longer sets pgheight */
                 {
-                    if (pgwidth != 0 || pgheight != 0)
+                    if (!TIFF_DOUBLE_EQ(pgwidth, 0.0) ||
+                        !TIFF_DOUBLE_EQ(pgheight, 0.0))
                     {
                         /* User did not specify a maximum page height or width
                          * using -H or -W flag but did use -h or -w flag to
@@ -2003,7 +2147,7 @@ static void PS_Lvl2colorspace(FILE *fd, TIFF *tif)
         /*
          * Convert colormap to 8-bits values.
          */
-#define CVT(x) (((x)*255) / ((1L << 16) - 1))
+#define CVT(x) ((uint16_t)(((x) * 255) / ((1 << 16) - 1)))
         for (i = 0; i < num_colors; i++)
         {
             rmap[i] = CVT(rmap[i]);
@@ -2205,6 +2349,8 @@ static int PS_Lvl2ImageDict(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
              */
             fputs("  /Decode [0 1 0 1 0 1 0 1]\n", fd);
             break;
+        default:
+            break;
     }
     fputs("  /DataSource", fd);
     if (planarconfiguration == PLANARCONFIG_SEPARATE && samplesperpixel > 1)
@@ -2405,7 +2551,7 @@ static void PS_FlipBytes(unsigned char *buf, tsize_t count)
 
 #define MAXLINE 36
 
-int PS_Lvl2page(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
+static int PS_Lvl2page(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
 {
     uint16_t fillorder;
     int use_rawdata, tiled_image, breaklen = MAXLINE;
@@ -2432,12 +2578,22 @@ int PS_Lvl2page(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
     if (tiled_image)
     {
         num_chunks = TIFFNumberOfTiles(tif);
-        TIFFGetField(tif, TIFFTAG_TILEBYTECOUNTS, &bc);
+        if (!TIFFGetField(tif, TIFFTAG_TILEBYTECOUNTS, &bc))
+        {
+            TIFFError(filename,
+                      "Can't read bytecounts of tiles at PS_Lvl2page()");
+            return (FALSE);
+        }
     }
     else
     {
         num_chunks = TIFFNumberOfStrips(tif);
-        TIFFGetField(tif, TIFFTAG_STRIPBYTECOUNTS, &bc);
+        if (!TIFFGetField(tif, TIFFTAG_STRIPBYTECOUNTS, &bc))
+        {
+            TIFFError(filename,
+                      "Can't read bytecounts of strips at PS_Lvl2page()");
+            return (FALSE);
+        }
     }
 
     if (use_rawdata)
@@ -2465,6 +2621,7 @@ int PS_Lvl2page(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
 #if defined(EXP_ASCII85ENCODER)
     if (ascii85_g)
     {
+        tmsize_t ascii85_size;
         /*
          * Allocate a buffer to hold the ASCII85 encoded data.  Note
          * that it is allocated with sufficient room to hold the
@@ -2474,7 +2631,22 @@ int PS_Lvl2page(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
          * 5*chunk_size/4.
          */
 
-        ascii85_p = limitMalloc((chunk_size + (chunk_size / 2)) + 8);
+        ascii85_size =
+            _TIFFAddSSize(tif, chunk_size, chunk_size / 2, "ASCII85 buffer");
+        if (ascii85_size == 0 && chunk_size != 0)
+        {
+            _TIFFfree(buf_data);
+            TIFFError(filename, "Cannot allocate ASCII85 encoding buffer.");
+            return (FALSE);
+        }
+        ascii85_size = _TIFFAddSSize(tif, ascii85_size, 8, "ASCII85 buffer");
+        if (ascii85_size == 0)
+        {
+            _TIFFfree(buf_data);
+            TIFFError(filename, "Cannot allocate ASCII85 encoding buffer.");
+            return (FALSE);
+        }
+        ascii85_p = (uint8_t *)limitMalloc(ascii85_size);
 
         if (!ascii85_p)
         {
@@ -2545,16 +2717,21 @@ int PS_Lvl2page(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
                 switch (ncomps)
                 {
                     case 1:
-                        buf_data[j++] = buf_data[i] + adjust;
+                        buf_data[j++] = (unsigned char)(buf_data[i] + adjust);
                         break;
                     case 2:
-                        buf_data[j++] = buf_data[i] + adjust;
-                        buf_data[j++] = buf_data[i + 1] + adjust;
+                        buf_data[j++] = (unsigned char)(buf_data[i] + adjust);
+                        buf_data[j++] =
+                            (unsigned char)(buf_data[i + 1] + adjust);
                         break;
                     case 3:
-                        buf_data[j++] = buf_data[i] + adjust;
-                        buf_data[j++] = buf_data[i + 1] + adjust;
-                        buf_data[j++] = buf_data[i + 2] + adjust;
+                        buf_data[j++] = (unsigned char)(buf_data[i] + adjust);
+                        buf_data[j++] =
+                            (unsigned char)(buf_data[i + 1] + adjust);
+                        buf_data[j++] =
+                            (unsigned char)(buf_data[i + 2] + adjust);
+                        break;
+                    default:
                         break;
                 }
             }
@@ -2567,7 +2744,7 @@ int PS_Lvl2page(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
             ascii85_l = Ascii85EncodeBlock(ascii85_p, 1, buf_data, byte_count);
 
             if (ascii85_l > 0)
-                fwrite(ascii85_p, ascii85_l, 1, fd);
+                fwrite(ascii85_p, (size_t)ascii85_l, 1, fd);
 #else
             for (cp = buf_data; byte_count > 0; byte_count--)
                 Ascii85Put(*cp++, fd);
@@ -2615,14 +2792,34 @@ int PS_Lvl2page(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
 
 void PSpage(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
 {
-    char *imageOp = "image";
+    const char *imageOp = "image";
 
     if (useImagemask && (bitspersample == 1))
         imageOp = "imagemask";
 
     if ((level2 || level3) && PS_Lvl2page(fd, tif, w, h))
         return;
-    ps_bytesperrow = tf_bytesperrow - (extrasamples * bitspersample / 8) * w;
+    {
+        uint64_t extra_sample_bits =
+            _TIFFMultiply64(tif, extrasamples, bitspersample, "PS row size");
+        uint64_t extra_sample_bytes = extra_sample_bits / 8;
+        uint64_t extra_row_bytes =
+            _TIFFMultiply64(tif, extra_sample_bytes, w, "PS row size");
+        tmsize_t extra_row_size =
+            _TIFFCastUInt64ToSSize(tif, extra_row_bytes, "PS row size");
+        if ((extra_sample_bits == 0 && extrasamples != 0 &&
+             bitspersample != 0) ||
+            (extra_row_bytes == 0 && extra_sample_bytes != 0 && w != 0) ||
+            (extra_row_size == 0 && extra_row_bytes != 0) ||
+            extra_row_size > tf_bytesperrow)
+        {
+            TIFFError(
+                TIFFFileName(tif),
+                "Integer overflow detected while calculating PS row size");
+            return;
+        }
+        ps_bytesperrow = tf_bytesperrow - extra_row_size;
+    }
     switch (photometric)
     {
         case PHOTOMETRIC_RGB:
@@ -2654,8 +2851,19 @@ void PSpage(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
         case PHOTOMETRIC_PALETTE:
             fprintf(fd, "%s", RGBcolorimage);
             PhotoshopBanner(fd, w, h, 1, 3, "false 3 colorimage");
-            fprintf(fd, "/scanLine %" TIFF_SSIZE_FORMAT " string def\n",
-                    ps_bytesperrow * 3);
+            {
+                tmsize_t palette_row_size = _TIFFMultiplySSize(
+                    tif, ps_bytesperrow, 3, "palette row size");
+                if (palette_row_size == 0 && ps_bytesperrow != 0)
+                {
+                    TIFFError(TIFFFileName(tif),
+                              "Integer overflow detected while calculating "
+                              "palette row size");
+                    return;
+                }
+                fprintf(fd, "/scanLine %" TIFF_SSIZE_FORMAT " string def\n",
+                        palette_row_size);
+            }
             fprintf(fd, "%" PRIu32 " %" PRIu32 " 8\n", w, h);
             fprintf(fd, "[%" PRIu32 " 0 0 -%" PRIu32 " 0 %" PRIu32 "]\n", w, h,
                     h);
@@ -2665,7 +2873,19 @@ void PSpage(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
             break;
         case PHOTOMETRIC_MINISBLACK:
         case PHOTOMETRIC_MINISWHITE:
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#elif defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#endif
             PhotoshopBanner(fd, w, h, 1, 1, imageOp);
+#if defined(__GNUC__) && !defined(__clang__)
+#pragma GCC diagnostic pop
+#elif defined(__clang__)
+#pragma clang diagnostic pop
+#endif
             fprintf(fd, "/scanLine %" TIFF_SSIZE_FORMAT " string def\n",
                     ps_bytesperrow);
             fprintf(fd, "%" PRIu32 " %" PRIu32 " %" PRIu16 "\n", w, h,
@@ -2675,6 +2895,8 @@ void PSpage(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
             fprintf(fd, "{currentfile scanLine readhexstring pop} bind\n");
             fprintf(fd, "%s\n", imageOp);
             PSDataBW(fd, tif, w, h);
+            break;
+        default:
             break;
     }
     putc('\n', fd);
@@ -2694,7 +2916,6 @@ void PSColorContigPreamble(FILE *fd, uint32_t w, uint32_t h, int nc)
 void PSColorSeparatePreamble(FILE *fd, uint32_t w, uint32_t h, int nc)
 {
     int i;
-
     PhotoshopBanner(fd, w, h, ps_bytesperrow, nc, "true %d colorimage");
     for (i = 0; i < nc; i++)
         fprintf(fd, "/line%d %" TIFF_SSIZE_FORMAT " string def\n", i,
@@ -2716,7 +2937,7 @@ void PSColorSeparatePreamble(FILE *fd, uint32_t w, uint32_t h, int nc)
 static inline void puthex(unsigned int c, FILE *fd)
 {
     putc(hex[((c) >> 4) & 0xf], fd);
-    putc(hex[(c)&0xf], fd);
+    putc(hex[(c) & 0xf], fd);
 }
 
 void PSDataColorContig(FILE *fd, TIFF *tif, uint32_t w, uint32_t h, int nc)
@@ -2774,7 +2995,7 @@ void PSDataColorContig(FILE *fd, TIFF *tif, uint32_t w, uint32_t h, int nc)
                 adjust = 255 - cp[nc];
                 for (int i = 0; i < nc; ++i)
                 {
-                    c = *cp++ + adjust;
+                    c = (unsigned char)(*cp++ + adjust);
                     puthex(c, fd);
                 }
                 cp += es;
@@ -2816,7 +3037,7 @@ void PSDataColorSeparate(FILE *fd, TIFF *tif, uint32_t w, uint32_t h, int nc)
         TIFFError(filename, "No space for scanline buffer");
         return;
     }
-    maxs = (samplesperpixel > nc ? nc : samplesperpixel);
+    maxs = (uint16_t)(samplesperpixel > nc ? nc : samplesperpixel);
     for (row = 0; row < h; row++)
     {
         for (s = 0; s < maxs; s++)
@@ -2877,7 +3098,7 @@ void PSDataPalette(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
     if (checkcmap(tif, 1 << bitspersample, rmap, gmap, bmap) == 16)
     {
         int i;
-#define CVT(x) ((unsigned short)(((x)*255) / ((1U << 16) - 1)))
+#define CVT(x) ((unsigned short)(((x) * 255) / ((1 << 16) - 1)))
         for (i = (1 << bitspersample) - 1; i >= 0; i--)
         {
             rmap[i] = CVT(rmap[i]);
@@ -2933,6 +3154,8 @@ void PSDataPalette(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
                     c >>= 1;
                     PUTRGBHEX(c, fd);
                     break;
+                default:
+                    break;
             }
         }
     }
@@ -2963,11 +3186,12 @@ void PSDataBW(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
     }
 
     // FIXME
-    memset(tf_buf, 0, stripsize);
+    memset(tf_buf, 0, (size_t)stripsize);
 
 #if defined(EXP_ASCII85ENCODER)
     if (ascii85_g)
     {
+        tmsize_t ascii85_size;
         /*
          * Allocate a buffer to hold the ASCII85 encoded data.  Note
          * that it is allocated with sufficient room to hold the
@@ -2977,7 +3201,22 @@ void PSDataBW(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
          * 5*stripsize/4.
          */
 
-        ascii85_p = limitMalloc((stripsize + (stripsize / 2)) + 8);
+        ascii85_size =
+            _TIFFAddSSize(tif, stripsize, stripsize / 2, "ASCII85 buffer");
+        if (ascii85_size == 0 && stripsize != 0)
+        {
+            _TIFFfree(tf_buf);
+            TIFFError(filename, "Cannot allocate ASCII85 encoding buffer.");
+            return;
+        }
+        ascii85_size = _TIFFAddSSize(tif, ascii85_size, 8, "ASCII85 buffer");
+        if (ascii85_size == 0)
+        {
+            _TIFFfree(tf_buf);
+            TIFFError(filename, "Cannot allocate ASCII85 encoding buffer.");
+            return;
+        }
+        ascii85_p = (uint8_t *)limitMalloc(ascii85_size);
 
         if (!ascii85_p)
         {
@@ -3004,7 +3243,7 @@ void PSDataBW(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
         if (photometric == PHOTOMETRIC_MINISWHITE)
         {
             for (cp += cc; --cp >= tf_buf;)
-                *cp = ~*cp;
+                *cp = (unsigned char)~*cp;
             cp++;
         }
         /*
@@ -3024,7 +3263,7 @@ void PSDataBW(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
                 for (i = 0; i < (cc - 1); i += 2)
                 {
                     adjust = 255 - cp[i + 1];
-                    cp[i / 2] = cp[i] + adjust;
+                    cp[i / 2] = (unsigned char)(cp[i] + adjust);
                 }
                 cc /= 2;
             }
@@ -3032,7 +3271,7 @@ void PSDataBW(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
             ascii85_l = Ascii85EncodeBlock(ascii85_p, 1, cp, cc);
 
             if (ascii85_l > 0)
-                fwrite(ascii85_p, ascii85_l, 1, fd);
+                fwrite(ascii85_p, (size_t)ascii85_l, 1, fd);
 #else
             while (cc-- > 0)
                 Ascii85Put(*cp++, fd);
@@ -3055,7 +3294,7 @@ void PSDataBW(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
                      * where Cback = 1.
                      */
                     adjust = 255 - cp[1];
-                    c = *cp++ + adjust;
+                    c = (unsigned char)(*cp++ + adjust);
                     puthex(c, fd);
                     cp++, cc--;
                 }
@@ -3091,7 +3330,8 @@ void PSDataBW(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
 void PSRawDataBW(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
 {
     uint64_t *bc;
-    uint32_t bufsize;
+    uint64_t max_bytecount;
+    tmsize_t bufsize;
     int breaklen = MAXLINE;
     tmsize_t cc;
     uint16_t fillorder;
@@ -3107,19 +3347,26 @@ void PSRawDataBW(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
     (void)w;
     (void)h;
     TIFFGetFieldDefaulted(tif, TIFFTAG_FILLORDER, &fillorder);
-    TIFFGetField(tif, TIFFTAG_STRIPBYTECOUNTS, &bc);
+    if (!TIFFGetField(tif, TIFFTAG_STRIPBYTECOUNTS, &bc))
+    {
+        TIFFError(filename, "Can't read bytecounts of strips at PSRawDataBW()");
+        return;
+    }
 
     /*
      * Find largest strip:
      */
 
-    bufsize = (uint32_t)bc[0];
+    max_bytecount = bc[0];
 
     for (s = 0; ++s < tf_numberstrips;)
     {
-        if (bc[s] > bufsize)
-            bufsize = (uint32_t)bc[s];
+        if (bc[s] > max_bytecount)
+            max_bytecount = bc[s];
     }
+    bufsize = _TIFFCastUInt64ToSSize(tif, max_bytecount, "PSRawDataBW");
+    if (bufsize == 0 && max_bytecount != 0)
+        return;
 
     tf_buf = (unsigned char *)limitMalloc(bufsize);
     if (tf_buf == NULL)
@@ -3131,6 +3378,7 @@ void PSRawDataBW(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
 #if defined(EXP_ASCII85ENCODER)
     if (ascii85_g)
     {
+        tmsize_t ascii85_size;
         /*
          * Allocate a buffer to hold the ASCII85 encoded data.  Note
          * that it is allocated with sufficient room to hold the
@@ -3140,7 +3388,22 @@ void PSRawDataBW(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
          * 5*bufsize/4.
          */
 
-        ascii85_p = limitMalloc((bufsize + (bufsize / 2)) + 8);
+        ascii85_size =
+            _TIFFAddSSize(tif, bufsize, bufsize / 2, "ASCII85 buffer");
+        if (ascii85_size == 0 && bufsize != 0)
+        {
+            _TIFFfree(tf_buf);
+            TIFFError(filename, "Cannot allocate ASCII85 encoding buffer.");
+            return;
+        }
+        ascii85_size = _TIFFAddSSize(tif, ascii85_size, 8, "ASCII85 buffer");
+        if (ascii85_size == 0)
+        {
+            _TIFFfree(tf_buf);
+            TIFFError(filename, "Cannot allocate ASCII85 encoding buffer.");
+            return;
+        }
+        ascii85_p = (uint8_t *)limitMalloc(ascii85_size);
 
         if (!ascii85_p)
         {
@@ -3180,7 +3443,7 @@ void PSRawDataBW(FILE *fd, TIFF *tif, uint32_t w, uint32_t h)
             ascii85_l = Ascii85EncodeBlock(ascii85_p, 1, tf_buf, cc);
 
             if (ascii85_l > 0)
-                fwrite(ascii85_p, ascii85_l, 1, fd);
+                fwrite(ascii85_p, (size_t)ascii85_l, 1, fd);
 #else
             for (cp = tf_buf; cc > 0; cc--)
                 Ascii85Put(*cp++, fd);
@@ -3207,7 +3470,8 @@ static char *Ascii85Encode(unsigned char *raw)
     static char encoded[6];
     uint32_t word;
 
-    word = (((raw[0] << 8) + raw[1]) << 16) + (raw[2] << 8) + raw[3];
+    word =
+        (uint32_t)((((raw[0] << 8) + raw[1]) << 16) + (raw[2] << 8) + raw[3]);
     if (word != 0L)
     {
         uint32_t q;
@@ -3216,12 +3480,12 @@ static char *Ascii85Encode(unsigned char *raw)
         q = word / (85L * 85 * 85 * 85); /* actually only a byte */
         encoded[0] = (char)(q + '!');
 
-        word -= q * (85L * 85 * 85 * 85);
-        q = word / (85L * 85 * 85);
+        word -= q * (uint32_t)(85L * 85 * 85 * 85);
+        q = word / (uint32_t)(85L * 85 * 85);
         encoded[1] = (char)(q + '!');
 
-        word -= q * (85L * 85 * 85);
-        q = word / (85 * 85);
+        word -= q * (uint32_t)(85L * 85 * 85);
+        q = word / (uint32_t)(85 * 85);
         encoded[2] = (char)(q + '!');
 
         w1 = (uint16_t)(word - q * (85L * 85));
@@ -3267,7 +3531,7 @@ void Ascii85Flush(FILE *fd)
         char *res;
         _TIFFmemset(&ascii85buf[ascii85count], 0, 3);
         res = Ascii85Encode(ascii85buf);
-        fwrite(res[0] == 'z' ? "!!!!" : res, ascii85count + 1, 1, fd);
+        fwrite(res[0] == 'z' ? "!!!!" : res, (size_t)(ascii85count + 1), 1, fd);
     }
     fputs("~>\n", fd);
 }
@@ -3331,10 +3595,10 @@ tsize_t Ascii85EncodeBlock(uint8_t *ascii85_p, unsigned f_eod,
 
         for (; raw_l > 3; raw_l -= 4)
         {
-            val32 = (uint32_t) * (++raw_p) << 24;
-            val32 += (uint32_t) * (++raw_p) << 16;
-            val32 += (uint32_t) * (++raw_p) << 8;
-            val32 += (uint32_t) * (++raw_p);
+            val32 = (uint32_t)*(++raw_p) << 24;
+            val32 += (uint32_t)*(++raw_p) << 16;
+            val32 += (uint32_t)*(++raw_p) << 8;
+            val32 += (uint32_t)*(++raw_p);
 
             if (val32 == 0) /* Special case */
             {
@@ -3379,12 +3643,12 @@ tsize_t Ascii85EncodeBlock(uint8_t *ascii85_p, unsigned f_eod,
             tsize_t len; /* Output this many bytes */
 
             len = raw_l + 1;
-            val32 = (uint32_t) * ++raw_p << 24; /* Prime the pump */
+            val32 = (uint32_t)*++raw_p << 24; /* Prime the pump */
 
             if (--raw_l > 0)
-                val32 += *(++raw_p) << 16;
+                val32 += (uint32_t)(*(++raw_p) << 16);
             if (--raw_l > 0)
-                val32 += *(++raw_p) << 8;
+                val32 += (uint32_t)(*(++raw_p) << 8);
 
             val32 /= 85;
 

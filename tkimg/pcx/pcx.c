@@ -8,7 +8,7 @@
  * For a list of available format options see function ParseFormatOpts
  * and the documentation img-pcx.
  *
- * Copyright (c) 2001-2024 Paul Obermeier <obermeier@users.sourceforge.net>
+ * Copyright (c) 2001-2025 Paul Obermeier <obermeier@users.sourceforge.net>
  *
  * See the file "license.terms" for information on usage and redistribution
  * of this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -139,6 +139,7 @@ static void printImgInfo (PCXHEADER *ph, const char *fileName, const char *msg)
     char str[256];
     Int width, height;
     Short hdpi, vdpi;
+    Short bytesperline;
 
     outChan = Tcl_GetStdChannel (TCL_STDOUT);
     if (!outChan) {
@@ -148,13 +149,14 @@ static void printImgInfo (PCXHEADER *ph, const char *fileName, const char *msg)
     height = qtohs (ph->y2) - qtohs (ph->y1) + 1;
     hdpi = qtohs (ph->hdpi);
     vdpi = qtohs (ph->vdpi);
+    bytesperline = qtohs (ph->bytesperline);
 
     tkimg_snprintf(str, 256, "%s %s\n", msg, fileName);                                   IMGOUT;
     tkimg_snprintf(str, 256, "\tSize in pixel     : %d x %d\n", width, height);           IMGOUT;
     tkimg_snprintf(str, 256, "\tDots per inch     : %d x %d\n", hdpi, vdpi);              IMGOUT;
     tkimg_snprintf(str, 256, "\tNumber of channels: %d\n", ph->planes);                   IMGOUT;
     tkimg_snprintf(str, 256, "\tBits per pixel    : %d\n", ph->bpp);                      IMGOUT;
-    tkimg_snprintf(str, 256, "\tBytes per line    : %d\n", ph->bytesperline);             IMGOUT;
+    tkimg_snprintf(str, 256, "\tBytes per line    : %d\n", bytesperline);                 IMGOUT;
     tkimg_snprintf(str, 256, "\tRLE compression   : %s\n", ph->compression? "yes": "no"); IMGOUT;
     Tcl_Flush(outChan);
 }

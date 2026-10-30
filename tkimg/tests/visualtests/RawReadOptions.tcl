@@ -32,9 +32,9 @@ set imgNone [image create photo -file $imgFile -format [list RAW -map none -verb
 
 set imgFile [file join ".." "sourceimgs" "gray-NoHeader.raw"]
 set imgNoHead1 [image create photo -file $imgFile -format [list RAW -useheader false -verbose true \
-                -width 256 -height 256 -nchan 1 -byteorder Intel -scanorder TopDown -pixeltype float ]]
+                -width 256 -height 256 -numchan 1 -byteorder Intel -scanorder TopDown -pixeltype float ]]
 set imgNoHead2 [image create photo -file $imgFile -format [list RAW -useheader false -verbose true \
-                -width 256 -height 256 -nchan 1 -byteorder Intel -scanorder BottomUp -pixeltype float ]]
+                -width 256 -height 256 -numchan 1 -byteorder Intel -scanorder BottomUp -pixeltype float ]]
 
 label .imgPlain  -image $imgPlain  -compound top -relief ridge -text "RAW"
 label .imgGamma2 -image $imgGamma2 -compound top -relief ridge -text "RAW -gamma 2.0"

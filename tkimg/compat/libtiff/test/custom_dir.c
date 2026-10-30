@@ -50,15 +50,15 @@ const uint16_t rows_per_strip = 1;
 const uint16_t planarconfig = PLANARCONFIG_CONTIG;
 
 static TIFFField customFields[] = {
-    {TIFFTAG_IMAGEWIDTH, -1, -1, TIFF_ASCII, 0, TIFF_SETGET_ASCII,
-     TIFF_SETGET_UNDEFINED, FIELD_CUSTOM, 1, 0, "Custom1", NULL},
-    {TIFFTAG_DOTRANGE, -1, -1, TIFF_ASCII, 0, TIFF_SETGET_ASCII,
-     TIFF_SETGET_UNDEFINED, FIELD_CUSTOM, 1, 0, "Custom2", NULL},
+    {TIFFTAG_IMAGEWIDTH, -1, -1, TIFF_ASCII, 0, TIFF_SETGET_ASCII, FIELD_CUSTOM,
+     1, 0, "Custom1", NULL},
+    {TIFFTAG_DOTRANGE, -1, -1, TIFF_ASCII, 0, TIFF_SETGET_ASCII, FIELD_CUSTOM,
+     1, 0, "Custom2", NULL},
 };
 
 static TIFFFieldArray customFieldArray = {tfiatOther, 0, 2, customFields};
 
-int main()
+int main(void)
 {
     TIFF *tif;
     unsigned char buf[SPP] = {0, 127, 255};

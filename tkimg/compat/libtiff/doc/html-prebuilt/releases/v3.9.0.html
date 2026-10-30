@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Changes in TIFF v3.9.0 &#8212; LibTIFF 4.7.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b849a4e9" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=0a676766" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=9f25de62"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <title>Changes in TIFF v3.9.0 &#8212; LibTIFF 4.7.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=34905f61" />
+    <script src="../_static/documentation_options.js?v=2edf0659"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Changes in TIFF v3.9.0beta" href="v3.9.0beta.html" />
     <link rel="prev" title="Changes in TIFF v3.9.1" href="v3.9.1.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="v3.9.1.html" title="Changes in TIFF v3.9.1"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Release history</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="historical.html" accesskey="U">Old release history</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Changes in TIFF v3.9.0</a></li> 
@@ -41,12 +41,12 @@
           <div class="body" role="main">
             
   <section id="changes-in-tiff-v3-9-0">
-<h1>Changes in TIFF v3.9.0<a class="headerlink" href="#changes-in-tiff-v3-9-0" title="Permalink to this heading">¶</a></h1>
+<h1>Changes in TIFF v3.9.0<a class="headerlink" href="#changes-in-tiff-v3-9-0" title="Link to this heading">¶</a></h1>
 <table class="docutils align-default" id="id1">
-<caption><span class="caption-text">References</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">References</span><a class="headerlink" href="#id1" title="Link to this table">¶</a></caption>
 <tbody>
 <tr class="row-odd"><td><p>Current Version</p></td>
-<td><p>v3.9.0 (<a class="reference external" href="https://gitlab.com/libtiff/libtiff/-/tags/Release-v3-9-0">tag Release-v3-9-0</a>)</p></td>
+<td><p>v3.9.0 (<a class="extlink-tag reference external" href="https://gitlab.com/libtiff/libtiff/-/tags/Release-v3-9-0">tag Release-v3-9-0</a>)</p></td>
 </tr>
 <tr class="row-even"><td><p>Previous Version</p></td>
 <td><p><a class="reference internal" href="v3.9.0beta.html"><span class="doc">v3.9.0beta</span></a></p></td>
@@ -65,7 +65,7 @@ find something listed here, then it was not done in this timeframe, or
 it was not considered important enough to be mentioned.  The following
 information is located here:</p>
 <section id="major-changes">
-<h2>Major changes<a class="headerlink" href="#major-changes" title="Permalink to this heading">¶</a></h2>
+<h2>Major changes<a class="headerlink" href="#major-changes" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>All of the major changes since 3.8.0 were incorporated in
 the v3.9.0beta release.  This is a stable release from a
@@ -76,7 +76,7 @@ series of releases.</p></li>
 </ul>
 </section>
 <section id="software-configuration-changes">
-<h2>Software configuration changes<a class="headerlink" href="#software-configuration-changes" title="Permalink to this heading">¶</a></h2>
+<h2>Software configuration changes<a class="headerlink" href="#software-configuration-changes" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Updated autotools: Autoconf 2.64, Automake 1.11, libtool
 2.2.6.</p></li>
@@ -90,14 +90,14 @@ type but libtiff 4.0 does.</p></li>
 </ul>
 </section>
 <section id="library-changes">
-<h2>Library changes<a class="headerlink" href="#library-changes" title="Permalink to this heading">¶</a></h2>
+<h2>Library changes<a class="headerlink" href="#library-changes" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/Makefile.am</span></code>, <code class="file docutils literal notranslate"><span class="pre">libtiff/Makefile.v</span></code>: Do not distribute
 <code class="file docutils literal notranslate"><span class="pre">tiffconf.h</span></code>, remove <code class="file docutils literal notranslate"><span class="pre">tif_config.h</span></code>/<code class="file docutils literal notranslate"><span class="pre">tiffconf.h</span></code> during cleaning. As
-per bug <a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=1573">Remote Sensing bugzilla #1573 [no longer available]</a></p></li>
+per bug <a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=1573">Remote Sensing bugzilla #1573 [no longer available]</a></p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">tif_dirinfo.c</span></code>: <code class="xref c c-func docutils literal notranslate"><span class="pre">_TIFFMergeFields()</span></code> now only merges in
 field definitions that are missing.  Existing definitions are
-silently ignored.  (<a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=1585">Remote Sensing bugzilla #1585 [no longer available]</a>)</p></li>
+silently ignored.  (<a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=1585">Remote Sensing bugzilla #1585 [no longer available]</a>)</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">tif_write.c</span></code>: Rip out the fancy logic in
 <code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFAppendToStrip()</span></code> for establishing if an existing tile can
 be rewritten to the same location by comparing the current
@@ -118,14 +118,14 @@ reading last.  (highlighted by gdal
 <code class="file docutils literal notranslate"><span class="pre">autotest/gcore/tif_write.py</span></code> test 7.)</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">tif_predict.c</span></code>: use working buffer in <code class="xref c c-func docutils literal notranslate"><span class="pre">PredictorEncodeTile()</span></code>
 to avoid modifying callers buffer.
-<a class="reference external" href="http://trac.osgeo.org/gdal/ticket/1965">GDAL trac #1965</a></p></li>
+<a class="extlink-gdal-trac reference external" href="http://trac.osgeo.org/gdal/ticket/1965">GDAL trac #1965</a></p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">tif_predict.c</span></code>, <code class="file docutils literal notranslate"><span class="pre">tif_predict.h</span></code>, <code class="file docutils literal notranslate"><span class="pre">tif_lzw.c</span></code>, <code class="file docutils literal notranslate"><span class="pre">tif_zip.c</span></code>: Improvements so
 that predictor based encoding and decoding works in read-write
 update mode properly.
-<a class="reference external" href="http://trac.osgeo.org/gdal/ticket/1948">GDAL trac #1948</a></p></li>
+<a class="extlink-gdal-trac reference external" href="http://trac.osgeo.org/gdal/ticket/1948">GDAL trac #1948</a></p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">configure.com</span></code>, <code class="file docutils literal notranslate"><span class="pre">libtiff/tif_vms.c</span></code>: Better OpenVMS
 support. Patches from Alexey Chupahin.</p></li>
-<li><p><code class="file docutils literal notranslate"><span class="pre">tif_fax3.c</span></code>: fix leak of <code class="docutils literal notranslate"><span class="pre">FAXCS</span></code> state (per bug <a class="reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=1603">Remote Sensing bugzilla #1603 [no longer available]</a>).</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">tif_fax3.c</span></code>: fix leak of <code class="docutils literal notranslate"><span class="pre">FAXCS</span></code> state (per bug <a class="extlink-bugzilla-rs reference external" href="http://bugzilla.remotesensing.org/show_bug.cgi?id=1603">Remote Sensing bugzilla #1603 [no longer available]</a>).</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">tif_fax3.c</span></code>: Make <code class="xref c c-func docutils literal notranslate"><span class="pre">find0span()</span></code> and <code class="xref c c-func docutils literal notranslate"><span class="pre">find1span()</span></code> non-inline
 to make MSVC 6.0 compiler happy.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">tif_codec.c</span></code>: Avoid <code class="xref c c-macro docutils literal notranslate"><span class="pre">NULL</span></code> pointer dereferencing for exotic
@@ -137,23 +137,23 @@ remember why this was important.</p></li>
 double tags.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">tif_dirread.c</span></code>: Fix unchecked <code class="xref c c-func docutils literal notranslate"><span class="pre">malloc()</span></code> result.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_lzw.c</span></code>: Properly zero out the codetable. As
-per bug <a class="reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=1929">MapTools bugzilla #1929</a></p></li>
+per bug <a class="extlink-bugzilla reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=1929">MapTools bugzilla #1929</a></p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_lzw.c</span></code>: Properly zero out the string
-table. Fixes <a class="reference external" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2008-2327">CVE-2008-2327</a> security issue.</p></li>
+table. Fixes <a class="extlink-cve reference external" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2008-2327">CVE-2008-2327</a> security issue.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_jbig.c</span></code>: Support the JBIG-KIT 2.0
 (compatibility with the older versions retained).</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_getimage.c</span></code>, <code class="file docutils literal notranslate"><span class="pre">tiffio.h</span></code>: removed all use of
 <code class="docutils literal notranslate"><span class="pre">UaToAa</span></code> and <code class="docutils literal notranslate"><span class="pre">Bitmap16to8</span></code> arrays in <a class="reference internal" href="../functions/TIFFRGBAImage.html#c.TIFFRGBAImage" title="TIFFRGBAImage"><code class="xref c c-struct docutils literal notranslate"><span class="pre">TIFFRGBAImage</span></code></a> structure to
 restore ABI compatibility.  These were just an attempt to
 speed up processing with precalculated tables.
-<a class="reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=1979">MapTools bugzilla #1979</a></p></li>
+<a class="extlink-bugzilla reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=1979">MapTools bugzilla #1979</a></p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_codec.c</span></code>: Avoid printing <code class="docutils literal notranslate"><span class="pre">c-&gt;name</span></code> if it does not exist.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_getimage.c</span></code>, <code class="file docutils literal notranslate"><span class="pre">tiffio.h</span></code>: More ABI corrections.
 Removed <code class="docutils literal notranslate"><span class="pre">SubsamplingHor/Ver</span></code> from <a class="reference internal" href="../functions/TIFFRGBAImage.html#c.TIFFRGBAImage" title="TIFFRGBAImage"><code class="xref c c-struct docutils literal notranslate"><span class="pre">TIFFRGBAImage</span></code></a> structure.
-<a class="reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=1980">MapTools bugzilla #1980</a></p></li>
+<a class="extlink-bugzilla reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=1980">MapTools bugzilla #1980</a></p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_jpeg.c</span></code>: Avoid errors if the application
 writes a full strip for the last partial strip in a jpeg
-compressed file.  <a class="reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=1981">MapTools bugzilla #1981</a></p></li>
+compressed file.  <a class="extlink-bugzilla reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=1981">MapTools bugzilla #1981</a></p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tiffio.h</span></code>: GCC will now validate format
 specifications for <a class="reference internal" href="../functions/TIFFError.html#c.TIFFError" title="TIFFError"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFError()</span></code></a>, <a class="reference internal" href="../functions/TIFFError.html#c.TIFFErrorExt" title="TIFFErrorExt"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFErrorExt()</span></code></a>, <a class="reference internal" href="../functions/TIFFWarning.html#c.TIFFWarning" title="TIFFWarning"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFWarning()</span></code></a>,
 and <a class="reference internal" href="../functions/TIFFWarning.html#c.TIFFWarningExt" title="TIFFWarningExt"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFWarningExt()</span></code></a> in order to reveal bugs.  Cleaned up
@@ -163,25 +163,25 @@ resulting warnings throughout for 32 bit build only.</p></li>
 can use it when necessary.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_predict.c</span></code>: Add support for 32bit integer
 horz. predictors.
-<a class="reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=1911">MapTools bugzilla #1911</a></p></li>
+<a class="extlink-bugzilla reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=1911">MapTools bugzilla #1911</a></p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_luv.c</span></code>: Fix handling of tiled logluv images.
-<a class="reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=2005">MapTools bugzilla #2005</a></p></li>
+<a class="extlink-bugzilla reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=2005">MapTools bugzilla #2005</a></p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_write.c</span></code>: do not override the planar
 configuration to be contig for one sample files if planar
 configuration is already set.
-<a class="reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=2057">MapTools bugzilla #2057</a></p></li>
+<a class="extlink-bugzilla reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=2057">MapTools bugzilla #2057</a></p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_lzw.c</span></code>: Fix buffer underflow bug.
-<a class="reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=2065">MapTools bugzilla #2065</a></p></li>
+<a class="extlink-bugzilla reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=2065">MapTools bugzilla #2065</a></p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_luv.c</span></code>: correct return codes from <code class="docutils literal notranslate"><span class="pre">encoderow</span></code> to
 be 1 on success instead of zero.
-<a class="reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=2069">MapTools bugzilla #2069</a></p></li>
+<a class="extlink-bugzilla reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=2069">MapTools bugzilla #2069</a></p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">libtiff/tif_print.c</span></code> (<a class="reference internal" href="../functions/TIFFPrintDirectory.html#c.TIFFPrintDirectory" title="TIFFPrintDirectory"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFPrintDirectory()</span></code></a>): Applied patch
 for &quot;tag error may cause segfault in tif_print.c.&quot;
-<a class="reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=1896">MapTools bugzilla #1896</a></p></li>
+<a class="extlink-bugzilla reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=1896">MapTools bugzilla #1896</a></p></li>
 </ul>
 </section>
 <section id="tools-changes">
-<h2>Tools changes<a class="headerlink" href="#tools-changes" title="Permalink to this heading">¶</a></h2>
+<h2>Tools changes<a class="headerlink" href="#tools-changes" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p><code class="file docutils literal notranslate"><span class="pre">tools/tiff2pdf.c</span></code>: Fixed setting of alpha value per report
 on list.</p></li>
@@ -201,13 +201,13 @@ rotating the image by 90, 180, 270, and 'auto' has been added.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">tools/tiffsplit.c</span></code>: fix <code class="docutils literal notranslate"><span class="pre">sampleformat</span></code> to be <code class="xref c c-type docutils literal notranslate"><span class="pre">shortv</span></code> instead
 of <code class="xref c c-type docutils literal notranslate"><span class="pre">longv</span></code>.</p></li>
 <li><p><code class="file docutils literal notranslate"><span class="pre">tools/rgb2ycbcr.c</span></code>, <code class="file docutils literal notranslate"><span class="pre">tools/tiff2rgba.c</span></code>: Applied patch for
-<a class="reference external" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-2347">CVE-2009-2347</a> libtiff: integer overflows in various
+<a class="extlink-cve reference external" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2009-2347">CVE-2009-2347</a> libtiff: integer overflows in various
 inter-color space conversion tools.
-<a class="reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=2079">MapTools bugzilla #2079</a></p></li>
+<a class="extlink-bugzilla reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=2079">MapTools bugzilla #2079</a></p></li>
 </ul>
 </section>
 <section id="contributed-software-changes">
-<h2>Contributed software changes<a class="headerlink" href="#contributed-software-changes" title="Permalink to this heading">¶</a></h2>
+<h2>Contributed software changes<a class="headerlink" href="#contributed-software-changes" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>None</p></li>
 </ul>
@@ -219,7 +219,7 @@ inter-color space conversion tools.
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="../index.html">Table of Contents</a></h3>
@@ -252,7 +252,7 @@ inter-color space conversion tools.
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -260,13 +260,13 @@ inter-color space conversion tools.
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -278,15 +278,15 @@ inter-color space conversion tools.
         <li class="right" >
           <a href="v3.9.1.html" title="Changes in TIFF v3.9.1"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Release history</a> &#187;</li>
           <li class="nav-item nav-item-2"><a href="historical.html" >Old release history</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Changes in TIFF v3.9.0</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-    &#169; Copyright 1988-2022, LibTIFF contributors.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+    &#169; Copyright 1988-2025, LibTIFF contributors.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

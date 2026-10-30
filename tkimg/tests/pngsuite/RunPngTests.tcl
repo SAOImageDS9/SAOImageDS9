@@ -2,6 +2,7 @@ package require Tk
 
 set useImg      false
 set useVerbose  false
+set useDelete   true
 set useReadProc 1
 
 # See http://www.schaik.com/pngsuite/pngsuite_xxx_png.html
@@ -39,14 +40,15 @@ proc PrintUsageAndExit { progName } {
     puts "The results of the tests are written into directory \"$::logDir\"."
     puts ""
     puts "Options:"
-    puts "--help   : Print this help message and exit."
-    puts "--verbose: Print each file being checked onto stdout."
-    puts "--img    : Load Img extension on startup."
-    puts "--proc   : Specify read procedure. Default: 1"
-    puts "           1: Uses \"image create photo -file \$fileName\""
-    puts "           2: Uses \"set ph \[image create photo\] \; \$ph read \$fileName\""
-    puts "           3: Uses \"image create photo -data \$imgData\""
-    puts "           4: Uses \"set ph \[image create photo\] \; \$ph put \$imgData\""
+    puts "--help    : Print this help message and exit."
+    puts "--verbose : Print each file being checked onto stdout."
+    puts "--nodelete: Do not delete test output files. (Default: Yes)"
+    puts "--img     : Load Img extension on startup."
+    puts "--proc    : Specify read procedure. Default: 1"
+    puts "            1: Uses \"image create photo -file \$fileName\""
+    puts "            2: Uses \"set ph \[image create photo\] \; \$ph read \$fileName\""
+    puts "            3: Uses \"image create photo -data \$imgData\""
+    puts "            4: Uses \"set ph \[image create photo\] \; \$ph put \$imgData\""
     exit 1
 }
 
@@ -151,6 +153,8 @@ while { $curArg < $argc } {
         set useImg true
     } elseif { $curParam eq "-verbose" } {
         set useVerbose true
+    } elseif { $curParam eq "-nodelete" } {
+        set useDelete false
     } elseif { $curParam eq "-help" } {
         PrintUsageAndExit $argv0
     } elseif { $curParam eq "-proc" } {
@@ -226,6 +230,10 @@ foreach testDir $testDirs {
     puts "Log written to file $logFileName"
     puts "$countAll files checked: $countOk files correct. $countFail files corrupted."
     puts ""
+}
+
+if { $useDelete } {
+    catch { file delete -force $logDir }
 }
 
 if { $countFail == [llength $corruptedFiles] && $foundIncorrectCorruptedFile == false } {

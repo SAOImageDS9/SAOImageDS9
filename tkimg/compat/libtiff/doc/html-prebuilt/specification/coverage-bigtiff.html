@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>LibTIFF Coverage of the BigTIFF Specification &#8212; LibTIFF 4.7.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b849a4e9" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=0a676766" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=9f25de62"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <title>LibTIFF Coverage of the BigTIFF Specification &#8212; LibTIFF 4.7.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=34905f61" />
+    <script src="../_static/documentation_options.js?v=2edf0659"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="TIFF Test Images" href="../images.html" />
-    <link rel="prev" title="LibTIFF Coverage of the TIFF 6.0 Specification" href="coverage.html" /> 
+    <link rel="prev" title="BigTIFF Design" href="bigtiff.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -26,9 +26,9 @@
           <a href="../images.html" title="TIFF Test Images"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="coverage.html" title="LibTIFF Coverage of the TIFF 6.0 Specification"
+          <a href="bigtiff.html" title="BigTIFF Design"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">TIFF File Format Specification</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">LibTIFF Coverage of the BigTIFF Specification</a></li> 
       </ul>
@@ -40,30 +40,31 @@
           <div class="body" role="main">
             
   <section id="libtiff-coverage-of-the-bigtiff-specification">
-<h1>LibTIFF Coverage of the BigTIFF Specification<a class="headerlink" href="#libtiff-coverage-of-the-bigtiff-specification" title="Permalink to this heading">¶</a></h1>
+<h1>LibTIFF Coverage of the BigTIFF Specification<a class="headerlink" href="#libtiff-coverage-of-the-bigtiff-specification" title="Link to this heading">¶</a></h1>
 <p>Since LibTIFF version 4.0.0, the BigTIFF format specification has been implemented within LibTIFF.
-BigTIFF is a backward-compatible extension to the <a class="reference external" href="http://www.awaresystems.be/imaging/tiff.html">TIFF</a>
-file format.</p>
+BigTIFF is a backward-compatible extension to the TIFF file format.</p>
 <p>BigTIFF logically extends the original TIFF file format (referred to as 'ClassicTIFF' from now on).
 The BigTIFF specification is the result of work by a variety of parties on the LibTIFF mailing list, including
 the then current LibTIFF maintainers, Joris Van Damme and Adobe staff. The BigTIFF specification has not yet
 been officially approved by the TIFF specification owner (Adobe), but implementation within LibTIFF
-could accelerate that process.  For more information on the BigTIFF file format, we recommend AWare Systems'
-<a class="reference external" href="http://www.awaresystems.be/imaging/tiff/bigtiff.html">BigTIFF page</a>.</p>
+could accelerate that process.  For more information on the BigTIFF file format, for example see <a class="reference internal" href="bigtiff.html"><span class="doc">BigTIFF Design</span></a>.
+Another overview and some further links can be found at
+<a class="reference external" href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000328.shtml">https://www.loc.gov/preservation/digital/formats/fdd/fdd000328.shtml</a>.</p>
 <p>BigTIFF is especially useful for people and vendors that are confronted with very large images, and
 still seek to use an open, simple, and extendable format. This requirement is frequently encountered in the
 geospatial field, but also concerns large format scanners, medical imaging and other fields.</p>
 <p>The LibTiff BigTIFF support was made possible by four sponsors funding the project. The programming work was
-primarily done by <a class="reference external" href="http://www.awaresystems.be/index.html">Joris Van Damme (AWare Systems)</a>.
-The sponsors for the BigTIFF support work in LibTIFF, in alphabetical order:</p>
+primarily done by Joris Van Damme (AWare Systems) from 2004 to 2008.</p>
+<p>The sponsors for the BigTIFF support work in LibTIFF, in alphabetical order:</p>
 <table class="docutils align-default" id="id1">
-<caption><span class="caption-text">Sponsors</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Sponsors</span><a class="headerlink" href="#id1" title="Link to this table">¶</a></caption>
 <colgroup>
 <col style="width: 20.0%" />
 <col style="width: 80.0%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><a class="reference internal image-reference" href="../_images/esri.png"><img alt="ESRI" src="../_images/esri.png" style="width: 100%;" /></a>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="../_images/esri.png"><img alt="ESRI" src="../_images/esri.png" style="width: 100%;" />
+</a>
 </td>
 <td><p><a class="reference external" href="http://www.esri.com/">ESRI</a> has been giving customers around the world the power to
 think and plan geographically since 1969.  As the leader in GIS, ESRI applies innovative technologies to help
@@ -71,15 +72,17 @@ organizations create, analyze, and visualize information for more informed decis
 a million desktops and thousands of servers, ESRI applications are the foundation of the world's mapping and
 spatial analysis infrastructure.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal image-reference" href="../_images/leica.png"><img alt="Leica Geosystems Geospatial Imaging" src="../_images/leica.png" style="width: 100%;" /></a>
+<tr class="row-even"><td><a class="reference internal image-reference" href="../_images/leica.png"><img alt="Leica Geosystems Geospatial Imaging" src="../_images/leica.png" style="width: 100%;" />
+</a>
 </td>
-<td><p><a class="reference external" href="http://gi.leica-geosystems.com/default.aspx">Leica Geosystems Geospatial Imaging</a> offers a
+<td><p>'Leica Geosystems Geospatial Imaging' offers a
 range of workflow solutions for photogrammetry, mapping, remote sensing, catalog management and exploitation
 of geospatial imagery. Enterprise organizations use this imagery as the basis for generating information for
 both education and decision making processes. Those who use Leica Geosystems products every day trust them
 for their precision, seamless integration, interoperability and superior customer support.</p></td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal image-reference" href="../_images/safe.png"><img alt="Safe Software" src="../_images/safe.png" style="width: 100%;" /></a>
+<tr class="row-odd"><td><a class="reference internal image-reference" href="../_images/safe.png"><img alt="Safe Software" src="../_images/safe.png" style="width: 100%;" />
+</a>
 </td>
 <td><p><a class="reference external" href="http://www.safe.com/">Safe Software</a> is the maker of FME, a powerful spatial ETL (Extract,
 Transform and Load) tool that enables true data interoperability. FME manages the translation,
@@ -87,9 +90,10 @@ transformation, integration and web-based distribution of geospatial data in 200
 database formats. Safe Software's FME technology is also embedded in numerous market-leading GIS and
 ETL applications.</p></td>
 </tr>
-<tr class="row-even"><td><a class="reference internal image-reference" href="../_images/weogeo.png"><img alt="WeoGeo" src="../_images/weogeo.png" style="width: 100%;" /></a>
+<tr class="row-even"><td><a class="reference internal image-reference" href="../_images/weogeo.png"><img alt="WeoGeo" src="../_images/weogeo.png" style="width: 100%;" />
+</a>
 </td>
-<td><p><a class="reference external" href="http://www.weogeo.com/">WeoGeo</a> is a web-based data management resource for the geospatial
+<td><p>'WeoGeo' is a web-based data management resource for the geospatial
 industry that allows the free market exchange of mapping related imagery products, featuring an innovative
 solution that efficiently manages digital mapping files of any size. With an intuitive user interface
 and the scalable power of Amazon Web Services (AWS), geospatial professionals can view, sort, search,
@@ -104,12 +108,12 @@ and share complex, high volume maps quickly and effectively.</p></td>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="coverage.html"
-                          title="previous chapter">LibTIFF Coverage of the TIFF 6.0 Specification</a></p>
+    <p class="topless"><a href="bigtiff.html"
+                          title="previous chapter">BigTIFF Design</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
@@ -123,7 +127,7 @@ and share complex, high volume maps quickly and effectively.</p></td>
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -131,13 +135,13 @@ and share complex, high volume maps quickly and effectively.</p></td>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -147,16 +151,16 @@ and share complex, high volume maps quickly and effectively.</p></td>
           <a href="../images.html" title="TIFF Test Images"
              >next</a> |</li>
         <li class="right" >
-          <a href="coverage.html" title="LibTIFF Coverage of the TIFF 6.0 Specification"
+          <a href="bigtiff.html" title="BigTIFF Design"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >TIFF File Format Specification</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">LibTIFF Coverage of the BigTIFF Specification</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-    &#169; Copyright 1988-2022, LibTIFF contributors.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+    &#169; Copyright 1988-2025, LibTIFF contributors.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

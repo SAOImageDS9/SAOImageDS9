@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Changes in TIFF v4.0.10 &#8212; LibTIFF 4.7.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b849a4e9" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=0a676766" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=9f25de62"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <title>Changes in TIFF v4.0.10 &#8212; LibTIFF 4.7.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=34905f61" />
+    <script src="../_static/documentation_options.js?v=2edf0659"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Changes in TIFF v4.0.9" href="v4.0.9.html" />
     <link rel="prev" title="Changes in TIFF v4.1.0" href="v4.1.0.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="v4.1.0.html" title="Changes in TIFF v4.1.0"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Release history</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Changes in TIFF v4.0.10</a></li> 
       </ul>
@@ -40,12 +40,12 @@
           <div class="body" role="main">
             
   <section id="changes-in-tiff-v4-0-10">
-<h1>Changes in TIFF v4.0.10<a class="headerlink" href="#changes-in-tiff-v4-0-10" title="Permalink to this heading">¶</a></h1>
+<h1>Changes in TIFF v4.0.10<a class="headerlink" href="#changes-in-tiff-v4-0-10" title="Link to this heading">¶</a></h1>
 <table class="docutils align-default" id="id1">
-<caption><span class="caption-text">References</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">References</span><a class="headerlink" href="#id1" title="Link to this table">¶</a></caption>
 <tbody>
 <tr class="row-odd"><td><p>Current Version</p></td>
-<td><p>v4.0.10 (<a class="reference external" href="https://gitlab.com/libtiff/libtiff/-/tags/v4.0.10">tag v4.0.10</a>)</p></td>
+<td><p>v4.0.10 (<a class="extlink-tag reference external" href="https://gitlab.com/libtiff/libtiff/-/tags/v4.0.10">tag v4.0.10</a>)</p></td>
 </tr>
 <tr class="row-even"><td><p>Previous Version</p></td>
 <td><p><a class="reference internal" href="v4.0.9.html"><span class="doc">v4.0.9</span></a></p></td>
@@ -67,7 +67,7 @@ find something listed here, then it was not done in this timeframe, or
 it was not considered important enough to be mentioned.  The following
 information is located here:</p>
 <section id="major-changes">
-<h2>Major changes<a class="headerlink" href="#major-changes" title="Permalink to this heading">¶</a></h2>
+<h2>Major changes<a class="headerlink" href="#major-changes" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>The libtiff source repository is changed from CVS to Git and the master libtiff source repository is now at
 <a class="reference external" href="https://gitlab.com/libtiff/libtiff">Gitlab</a>.
@@ -75,7 +75,7 @@ This is the first release to be made from the new Git repository.</p></li>
 </ul>
 </section>
 <section id="software-configuration-changes">
-<h2>Software configuration changes<a class="headerlink" href="#software-configuration-changes" title="Permalink to this heading">¶</a></h2>
+<h2>Software configuration changes<a class="headerlink" href="#software-configuration-changes" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>Minimum CMake version is now v2.8.11 for the CMake-based build.</p></li>
 <li><p>Libwebp will be automatically detected and used by configure/cmake if present.</p></li>
@@ -83,7 +83,7 @@ This is the first release to be made from the new Git repository.</p></li>
 </ul>
 </section>
 <section id="library-changes">
-<h2>Library changes<a class="headerlink" href="#library-changes" title="Permalink to this heading">¶</a></h2>
+<h2>Library changes<a class="headerlink" href="#library-changes" title="Link to this heading">¶</a></h2>
 <ul>
 <li><p>Added ZSTD compression codec.
 <a class="reference external" href="https://github.com/facebook/zstd">Zstandard</a> or zstd as
@@ -104,7 +104,7 @@ ms. File size is 42735936 for zip, and 42586822 for zstd. Similar
 findings on other images.</p>
 <p>On a 25894×16701 16bit image:</p>
 <table class="docutils align-default" id="id2">
-<caption><span class="caption-text">Compressor Relative Performance</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Compressor Relative Performance</span><a class="headerlink" href="#id2" title="Link to this table">¶</a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>Compressor</p></th>
 <th class="head"><p>Compression time</p></th>
@@ -147,7 +147,7 @@ and the calculated total PSNR are provided here.  It can be seen
 that WebP provided excellent encode and decode performance, and
 the compressed file size was very small:</p>
 <table class="docutils align-default" id="id3">
-<caption><span class="caption-text">Compressor Relative Performance</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<caption><span class="caption-text">Compressor Relative Performance</span><a class="headerlink" href="#id3" title="Link to this table">¶</a></caption>
 <thead>
 <tr class="row-odd"><th class="head"><p>Compressor</p></th>
 <th class="head"><p>Compression</p></th>
@@ -206,11 +206,11 @@ by the libtiff project and is not officially registered with Adobe
 since Adobe's registration function is defunct.</p>
 </li>
 <li><p><a class="reference internal" href="../functions/TIFFPrintDirectory.html#c.TIFFPrintDirectory" title="TIFFPrintDirectory"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFPrintDirectory()</span></code></a>: fix null pointer dereference on corrupted
-file. Fixes <a class="reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=2770">Bug 2770 - NULL Pointer Dereference in tiffinfo.c with crafted TIFF
+file. Fixes <a class="extlink-bugzilla reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=2770">Bug 2770 - NULL Pointer Dereference in tiffinfo.c with crafted TIFF
 image</a>.</p></li>
 <li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">_TIFFVGetField()</span></code>: fix heap out-of-bounds access when requesting
 <code class="docutils literal notranslate"><span class="pre">TIFFTAG_NUMBEROFINKS</span></code> on a EXIF
-directory. Fixes <a class="reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=2765">Bug 2765 - Heap Out-Of-Bounds Memory Access - 68122422</a>.
+directory. Fixes <a class="extlink-bugzilla reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=2765">Bug 2765 - Heap Out-Of-Bounds Memory Access - 68122422</a>.
 Reported by Google Autofuzz project.</p></li>
 <li><p>Fix a memory leak in <code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFStreamOpen()</span></code>. <code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFStreamOpen()</span></code> allocates a
 new <code class="docutils literal notranslate"><span class="pre">tiff{o,i}s_data</span></code>, but if <a class="reference internal" href="../functions/TIFFOpen.html#c.TIFFClientOpen" title="TIFFClientOpen"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFClientOpen()</span></code></a> fails then that struct is
@@ -226,23 +226,23 @@ when a TIFF document has &gt;= 65535 directories and terminating with an
 error.</p>
 </li>
 <li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">ChopUpSingleUncompressedStrip()</span></code>: avoid memory exhaustion
-(<a class="reference external" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-11613">CVE-2017-11613</a>).  In <code class="xref c c-func docutils literal notranslate"><span class="pre">ChopUpSingleUncompressedStrip()</span></code>, if the
+(<a class="extlink-cve reference external" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-11613">CVE-2017-11613</a>).  In <code class="xref c c-func docutils literal notranslate"><span class="pre">ChopUpSingleUncompressedStrip()</span></code>, if the
 computed number of strips is big enough and we are in read only
 mode, validate that the file size is consistent with that number of
 strips to avoid useless attempts at allocating a lot of memory for
 the <code class="xref c c-member docutils literal notranslate"><span class="pre">td_stripbytecount</span></code> and <code class="xref c c-member docutils literal notranslate"><span class="pre">td_stripoffset</span></code>
-arrays. Fixes <a class="reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=2724">Bug 2724 - memory exhaustion in ChopUpSingleUncompressedStrip</a>.</p></li>
+arrays. Fixes <a class="extlink-bugzilla reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=2724">Bug 2724 - memory exhaustion in ChopUpSingleUncompressedStrip</a>.</p></li>
 <li><p>Port code: Add <code class="xref c c-func docutils literal notranslate"><span class="pre">strtol()</span></code>, <code class="xref c c-func docutils literal notranslate"><span class="pre">strtoll()</span></code> and <code class="xref c c-func docutils literal notranslate"><span class="pre">strtoull()</span></code>. Also update
 <code class="xref c c-func docutils literal notranslate"><span class="pre">strtoul()</span></code>.  All use the same implementation from NetBSD libc.</p></li>
-<li><p>Fix for <a class="reference external" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-7456">CVE-2018-7456</a> &quot;NULL pointer dereference in
+<li><p>Fix for <a class="extlink-cve reference external" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-7456">CVE-2018-7456</a> &quot;NULL pointer dereference in
 <a class="reference internal" href="../functions/TIFFPrintDirectory.html#c.TIFFPrintDirectory" title="TIFFPrintDirectory"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFPrintDirectory()</span></code></a>&quot;.</p></li>
 <li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFWriteDirectorySec()</span></code>: avoid
-assertion. Fixes <a class="reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=Bug 2795 - There is a reachable assertion abort in function TIFFWriteDirectorySec() of libtiff 4.0.9. A crafted input will lead to remote denial of attack. (:cve:`2018-10963">MapTools bugzilla #Bug 2795 - There is a reachable assertion abort in function
+assertion. Fixes <a class="extlink-bugzilla reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=Bug 2795 - There is a reachable assertion abort in function TIFFWriteDirectorySec() of libtiff 4.0.9. A crafted input will lead to remote denial of attack. (:cve:`2018-10963">MapTools bugzilla #Bug 2795 - There is a reachable assertion abort in function
 TIFFWriteDirectorySec() of libtiff 4.0.9. A crafted input will lead
 to remote denial of attack. (:cve:`2018-10963</a>)
 &lt;2795&gt;`.</p></li>
 <li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">LZWDecodeCompat()</span></code>: fix potential index-out-of-bounds
-write. Fixes <a class="reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=Bug 2780 - A heap-buffer-overflow in function LZWDecodeCompat in libtiff4.0.9 (:cve:`2018-8905">MapTools bugzilla #Bug
+write. Fixes <a class="extlink-bugzilla reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=Bug 2780 - A heap-buffer-overflow in function LZWDecodeCompat in libtiff4.0.9 (:cve:`2018-8905">MapTools bugzilla #Bug
 2780 - A heap-buffer-overflow in function LZWDecodeCompat in
 libtiff4.0.9 (:cve:`2018-8905</a>)
 &lt;2780&gt;`.
@@ -258,10 +258,10 @@ applications define their own warning and error handlers.</p>
 tree codec whose source is
 at <a class="reference external" href="https://github.com/OSGeo/gdal/blob/master/gdal/frmts/gtiff/tif_lerc.c">https://github.com/OSGeo/gdal/blob/master/gdal/frmts/gtiff/tif_lerc.c</a>.</p></li>
 <li><p>Fix libtiff 4.0.8 regression when reading LZW-compressed strips with scanline API
-Fixes <a class="reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=2800">Bug 2800 - Regression: Opening a tiff file with v4.0.9 gives an error with LZWDecode</a>.</p></li>
+Fixes <a class="extlink-bugzilla reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=2800">Bug 2800 - Regression: Opening a tiff file with v4.0.9 gives an error with LZWDecode</a>.</p></li>
 <li><p><a class="reference internal" href="../functions/TIFFstrip.html#c.TIFFSetupStrips" title="TIFFSetupStrips"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFSetupStrips()</span></code></a>: avoid potential <code class="xref c c-type docutils literal notranslate"><span class="pre">uint32</span></code> overflow on 32-bit
 systems with large number of strips.  Probably relates
-to <a class="reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=Bug 2788 - Heap Buffer Overflow in TIFFWriteScanline of tif_write.c (:cve:`2018-10779">MapTools bugzilla #Bug
+to <a class="extlink-bugzilla reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=Bug 2788 - Heap Buffer Overflow in TIFFWriteScanline of tif_write.c (:cve:`2018-10779">MapTools bugzilla #Bug
 2788 - Heap Buffer Overflow in TIFFWriteScanline of tif_write.c
 (:cve:`2018-10779</a>)
 &lt;2788&gt;`.</p></li>
@@ -280,24 +280,24 @@ provided to <code class="xref c c-func docutils literal notranslate"><span class
 </ul>
 </section>
 <section id="tools-changes">
-<h2>Tools changes<a class="headerlink" href="#tools-changes" title="Permalink to this heading">¶</a></h2>
+<h2>Tools changes<a class="headerlink" href="#tools-changes" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p><strong class="program">tiff2pdf</strong>: Fix
-<a class="reference external" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-9935">CVE-2017-9935</a>, <a class="reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=2704">Bug
+<a class="extlink-cve reference external" href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2017-9935">CVE-2017-9935</a>, <a class="extlink-bugzilla reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=2704">Bug
 2704 - There is a heap based buffer overflow in the tiff2pdf tool of
 the libtiff library. A crafted TIFF document can lead to a heap
 based buffer overflow resulting in multiple damages.</a>.</p></li>
 <li><p><strong class="program">pal2rgb</strong>: Add workaround to pal2rgb buffer overflow.</p></li>
 <li><p><strong class="program">tiffset</strong>: Add support for <code class="xref c c-macro docutils literal notranslate"><span class="pre">LONG8</span></code>, <code class="xref c c-macro docutils literal notranslate"><span class="pre">SLONG8</span></code> and <code class="xref c c-macro docutils literal notranslate"><span class="pre">IFD8</span></code> field types</p></li>
 <li><p><strong class="program">tiff2bw</strong>: avoid null pointer dereference in case of out of memory
-situation. Fixes <a class="reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=Bug 2819 - There is a NULL pointer dereference at function LZWDecode in libtiff 4.0.9 (:cve:`2018-18661">MapTools bugzilla #Bug
+situation. Fixes <a class="extlink-bugzilla reference external" href="http://bugzilla.maptools.org/show_bug.cgi?id=Bug 2819 - There is a NULL pointer dereference at function LZWDecode in libtiff 4.0.9 (:cve:`2018-18661">MapTools bugzilla #Bug
 2819 - There is a NULL pointer dereference at function LZWDecode in
 libtiff 4.0.9 (:cve:`2018-18661</a>)
 &lt;2819&gt;`.</p></li>
 </ul>
 </section>
 <section id="contributed-software-changes">
-<h2>Contributed software changes<a class="headerlink" href="#contributed-software-changes" title="Permalink to this heading">¶</a></h2>
+<h2>Contributed software changes<a class="headerlink" href="#contributed-software-changes" title="Link to this heading">¶</a></h2>
 <p>None</p>
 </section>
 </section>
@@ -307,7 +307,7 @@ libtiff 4.0.9 (:cve:`2018-18661</a>)
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="../index.html">Table of Contents</a></h3>
@@ -340,7 +340,7 @@ libtiff 4.0.9 (:cve:`2018-18661</a>)
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -348,13 +348,13 @@ libtiff 4.0.9 (:cve:`2018-18661</a>)
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -366,14 +366,14 @@ libtiff 4.0.9 (:cve:`2018-18661</a>)
         <li class="right" >
           <a href="v4.1.0.html" title="Changes in TIFF v4.1.0"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="index.html" >Release history</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Changes in TIFF v4.0.10</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-    &#169; Copyright 1988-2022, LibTIFF contributors.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+    &#169; Copyright 1988-2025, LibTIFF contributors.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

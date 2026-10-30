@@ -313,7 +313,7 @@
 
 	* bmp/bmp.c: 1. Added read parser for 16 and 32 bit formats. Needed
 	                when reading images from the Windows clipboard.
-			(See http://wiki.tcl.tk/15647 for example)
+			(See http://wiki.tcl-lang.org/15647 for example)
 	             2. Corrected previous rleBuf fix.
 
 2006-06-01  Jan Nijtmans <nijtmans@users.sourceforge.net>

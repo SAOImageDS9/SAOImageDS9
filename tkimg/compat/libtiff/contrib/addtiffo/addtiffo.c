@@ -59,13 +59,11 @@
  * New
  */
 
+#include "tif_ovrcache.h"
 #include "tiffio.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-void TIFFBuildOverviews(TIFF *, int, int *, int, const char *,
-                        int (*)(double, void *), void *);
 
 /************************************************************************/
 /*                                main()                                */

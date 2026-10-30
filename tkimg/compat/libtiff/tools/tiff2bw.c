@@ -45,7 +45,7 @@
 #endif
 
 /* x% weighting -> fraction of full color */
-#define PCT(x) (((x)*256 + 50) / 100)
+#define PCT(x) (((x) * 256 + 50) / 100)
 int RED = PCT(30);   /* 30% */
 int GREEN = PCT(59); /* 59% */
 int BLUE = PCT(11);  /* 11% */
@@ -55,21 +55,23 @@ static int processCompressOptions(char *);
 
 static void compresscontig(unsigned char *out, unsigned char *rgb, uint32_t n)
 {
-    register int v, red = RED, green = GREEN, blue = BLUE;
+    int v, red = RED, green = GREEN, blue = BLUE;
 
     while (n-- > 0)
     {
         v = red * (*rgb++);
         v += green * (*rgb++);
         v += blue * (*rgb++);
-        *out++ = v >> 8;
+        *out++ = (unsigned char)(v >> 8);
     }
 }
 
 static void compresssep(unsigned char *out, unsigned char *r, unsigned char *g,
                         unsigned char *b, uint32_t n)
 {
-    register uint32_t red = RED, green = GREEN, blue = BLUE;
+    uint32_t red = (uint32_t)RED;
+    uint32_t green = (uint32_t)GREEN;
+    uint32_t blue = (uint32_t)BLUE;
 
     while (n-- > 0)
         *out++ =
@@ -89,7 +91,7 @@ static int checkcmap(TIFF *tif, int n, uint16_t *r, uint16_t *g, uint16_t *b)
 static void compresspalette(unsigned char *out, unsigned char *data, uint32_t n,
                             uint16_t *rmap, uint16_t *gmap, uint16_t *bmap)
 {
-    register int v, red = RED, green = GREEN, blue = BLUE;
+    int v, red = RED, green = GREEN, blue = BLUE;
 
     while (n-- > 0)
     {
@@ -97,7 +99,7 @@ static void compresspalette(unsigned char *out, unsigned char *data, uint32_t n,
         v = red * rmap[ix];
         v += green * gmap[ix];
         v += blue * bmap[ix];
-        *out++ = v >> 8;
+        *out++ = (unsigned char)(v >> 8);
     }
 }
 
@@ -121,8 +123,8 @@ int main(int argc, char *argv[])
     uint16_t *green;
     uint16_t *blue;
     tsize_t rowsize;
-    register uint32_t row;
-    register tsample_t s;
+    uint32_t row;
+    tsample_t s;
     unsigned char *inbuf, *outbuf;
     char thing[1024];
     int c;
@@ -144,7 +146,7 @@ int main(int argc, char *argv[])
                     usage(EXIT_FAILURE);
                 break;
             case 'r': /* rows/strip */
-                rowsperstrip = atoi(optarg);
+                rowsperstrip = (uint32_t)atoi(optarg);
                 break;
             case 'R':
                 RED = PCT(atoi(optarg));
@@ -162,6 +164,8 @@ int main(int argc, char *argv[])
             case '?':
                 usage(EXIT_FAILURE);
                 /*NOTREACHED*/
+                break;
+            default:
                 break;
         }
     if (argc - optind < 2)
@@ -229,6 +233,8 @@ int main(int argc, char *argv[])
                 if (predictor != 0)
                     TIFFSetField(out, TIFFTAG_PREDICTOR, predictor);
                 break;
+            default:
+                break;
         }
     }
     TIFFSetField(out, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_MINISBLACK);
@@ -257,7 +263,7 @@ int main(int argc, char *argv[])
             if (checkcmap(in, 1 << bitspersample, red, green, blue) == 16)
             {
                 int i;
-#define CVT(x) (((x)*255L) / ((1L << 16) - 1))
+#define CVT(x) ((uint16_t)(((x) * 255) / ((1 << 16) - 1)))
                 for (i = (1 << bitspersample) - 1; i >= 0; i--)
                 {
                     red[i] = CVT(red[i]);
@@ -311,15 +317,31 @@ int main(int argc, char *argv[])
             for (row = 0; row < h; row++)
             {
                 for (s = 0; s < 3; s++)
-                    if (TIFFReadScanline(in, inbuf + s * rowsize, row, s) < 0)
+                {
+                    tmsize_t plane_offset = _TIFFComputeRowOffset(
+                        in, rowsize, s, "sample plane offset");
+                    if ((plane_offset == 0 && s != 0 && rowsize != 0) ||
+                        TIFFReadScanline(in, inbuf + plane_offset, row, s) < 0)
                         goto tiff2bw_error;
-                compresssep(outbuf, inbuf, inbuf + rowsize, inbuf + 2 * rowsize,
-                            w);
+                }
+                {
+                    tmsize_t plane1_offset = _TIFFComputeRowOffset(
+                        in, rowsize, 1, "sample plane offset");
+                    tmsize_t plane2_offset = _TIFFComputeRowOffset(
+                        in, rowsize, 2, "sample plane offset");
+                    if ((plane1_offset == 0 && rowsize != 0) ||
+                        (plane2_offset == 0 && rowsize != 0))
+                        goto tiff2bw_error;
+                    compresssep(outbuf, inbuf, inbuf + plane1_offset,
+                                inbuf + plane2_offset, w);
+                }
                 if (TIFFWriteScanline(out, outbuf, row, 0) < 0)
                     break;
             }
             break;
         }
+        default:
+            break;
     }
 #undef pack
     if (inbuf)
@@ -369,14 +391,14 @@ static int processCompressOptions(char *opt)
     {
         char *cp = strchr(opt, ':');
         if (cp)
-            predictor = atoi(cp + 1);
+            predictor = (uint16_t)atoi(cp + 1);
         compression = COMPRESSION_LZW;
     }
     else if (strneq(opt, "zip", 3))
     {
         char *cp = strchr(opt, ':');
         if (cp)
-            predictor = atoi(cp + 1);
+            predictor = (uint16_t)atoi(cp + 1);
         compression = COMPRESSION_ADOBE_DEFLATE;
     }
     else
@@ -387,12 +409,12 @@ static int processCompressOptions(char *opt)
 #define CopyField(tag, v)                                                      \
     if (TIFFGetField(in, tag, &v))                                             \
     TIFFSetField(out, tag, v)
+#define CopyFieldFloat(tag, v)                                                 \
+    if (TIFFGetField(in, tag, &v))                                             \
+    TIFFSetField(out, tag, (double)(v))
 #define CopyField2(tag, v1, v2)                                                \
     if (TIFFGetField(in, tag, &v1, &v2))                                       \
     TIFFSetField(out, tag, v1, v2)
-#define CopyField3(tag, v1, v2, v3)                                            \
-    if (TIFFGetField(in, tag, &v1, &v2, &v3))                                  \
-    TIFFSetField(out, tag, v1, v2, v3)
 #define CopyField4(tag, v1, v2, v3, v4)                                        \
     if (TIFFGetField(in, tag, &v1, &v2, &v3, &v4))                             \
     TIFFSetField(out, tag, v1, v2, v3, v4)
@@ -435,7 +457,7 @@ static void cpTag(TIFF *in, TIFF *out, uint16_t tag, uint16_t count,
             if (count == 1)
             {
                 float floatv;
-                CopyField(tag, floatv);
+                CopyFieldFloat(tag, floatv);
             }
             else if (count == (uint16_t)-1)
             {
@@ -461,10 +483,22 @@ static void cpTag(TIFF *in, TIFF *out, uint16_t tag, uint16_t count,
                 CopyField(tag, doubleav);
             }
             break;
+        case TIFF_NOTYPE:
+        case TIFF_BYTE:
+        case TIFF_SBYTE:
+        case TIFF_UNDEFINED:
+        case TIFF_SSHORT:
+        case TIFF_SLONG:
+        case TIFF_SRATIONAL:
+        case TIFF_FLOAT:
+        case TIFF_IFD:
+        case TIFF_LONG8:
+        case TIFF_SLONG8:
+        case TIFF_IFD8:
         default:
             TIFFError(TIFFFileName(in),
-                      "Data type %d is not supported, tag %d skipped.", tag,
-                      type);
+                      "Data type %u is not supported, tag %u skipped.",
+                      (unsigned)type, (unsigned)tag);
     }
 }
 
@@ -522,16 +556,16 @@ static void cpTags(TIFF *in, TIFF *out)
     {
         if (p->tag == TIFFTAG_GROUP3OPTIONS)
         {
-            uint16_t compression;
-            if (!TIFFGetField(in, TIFFTAG_COMPRESSION, &compression) ||
-                compression != COMPRESSION_CCITTFAX3)
+            uint16_t local_compression;
+            if (!TIFFGetField(in, TIFFTAG_COMPRESSION, &local_compression) ||
+                local_compression != COMPRESSION_CCITTFAX3)
                 continue;
         }
         if (p->tag == TIFFTAG_GROUP4OPTIONS)
         {
-            uint16_t compression;
-            if (!TIFFGetField(in, TIFFTAG_COMPRESSION, &compression) ||
-                compression != COMPRESSION_CCITTFAX4)
+            uint16_t local_compression;
+            if (!TIFFGetField(in, TIFFTAG_COMPRESSION, &local_compression) ||
+                local_compression != COMPRESSION_CCITTFAX4)
                 continue;
         }
         cpTag(in, out, p->tag, p->count, p->type);

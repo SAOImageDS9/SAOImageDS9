@@ -41,9 +41,9 @@
 
 #include "tiffio.h"
 
-int main()
+int main(void)
 {
-    int ret;
+    tmsize_t ret;
     TIFF *tif = TIFFOpen("test_append_to_strip.tif", "w");
     if (tif == NULL)
     {
@@ -67,7 +67,7 @@ int main()
     {
         char c = (char)row;
         int strip = (row < 5) ? 0 : 1;
-        ret = TIFFWriteRawStrip(tif, strip, &c, 1);
+        ret = TIFFWriteRawStrip(tif, (uint32_t)strip, &c, 1);
         assert(ret == 1);
     }
     (void)ret;
@@ -97,7 +97,7 @@ int main()
     for (row = 0; row < 9; ++row)
     {
         char c;
-        TIFFReadScanline(tif, &c, row, 0);
+        TIFFReadScanline(tif, &c, (uint32_t)row, 0);
         if (c != row)
         {
             fprintf(

@@ -96,7 +96,7 @@ Bug fixes:
 
 * tif_ojpeg.c: checking for division by zero (fixes :issue:`554`).
 
-* LZWDecode(): avoid crash when trying to read again from a strip whith
+* LZWDecode(): avoid crash when trying to read again from a strip with
   a missing end-of-information marker (fixes :issue:`548`).
 
 * Fixed runtime error: applying zero offset to null pointer
@@ -126,7 +126,7 @@ Bug fixes:
 * :file:`tif_ojpeg.c`: fix :issue:`554` by checking for division by zero
   in OJPEGWriteHeaderInfo().
 
-* LZWDecode(): avoid crash when trying to read again from a strip whith
+* LZWDecode(): avoid crash when trying to read again from a strip with
   a missing end-of-information marker (:issue:`548`).
 
 Documentation

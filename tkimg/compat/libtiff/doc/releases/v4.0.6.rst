@@ -48,7 +48,7 @@ Library changes
 
 * Fixes to avoid undefined behaviour of signed types (C
   standard compliance).
-* Fixes to avoid possible isses when casting to unsigned char.
+* Fixes to avoid possible issues when casting to unsigned char.
 * Fixes to avoid undefined behaviour with shifts.
 * Fix generation of output with 16 bit or 32 bit integer, when
   byte swapping is needed, in horizontal predictor (:bugzilla:`2521`).

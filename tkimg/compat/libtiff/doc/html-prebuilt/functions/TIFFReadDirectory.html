@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>TIFFReadDirectory &#8212; LibTIFF 4.7.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b849a4e9" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=0a676766" />
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=9f25de62"></script>
-    <script src="../_static/doctools.js?v=888ff710"></script>
-    <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+    <title>TIFFReadDirectory &#8212; LibTIFF 4.7.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinxdoc.css?v=34905f61" />
+    <script src="../_static/documentation_options.js?v=2edf0659"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="TIFFReadEncodedStrip" href="TIFFReadEncodedStrip.html" />
     <link rel="prev" title="TIFFquery" href="TIFFquery.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="TIFFquery.html" title="TIFFquery"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../functions.html" accesskey="U">TIFF Functions Overview</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">TIFFReadDirectory</a></li> 
       </ul>
@@ -40,27 +40,27 @@
           <div class="body" role="main">
             
   <section id="tiffreaddirectory">
-<h1>TIFFReadDirectory<a class="headerlink" href="#tiffreaddirectory" title="Permalink to this heading">¶</a></h1>
+<h1>TIFFReadDirectory<a class="headerlink" href="#tiffreaddirectory" title="Link to this heading">¶</a></h1>
 <section id="synopsis">
-<h2>Synopsis<a class="headerlink" href="#synopsis" title="Permalink to this heading">¶</a></h2>
+<h2>Synopsis<a class="headerlink" href="#synopsis" title="Link to this heading">¶</a></h2>
 <div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;tiffio.h&gt;</span>
 </pre></div>
 </div>
 <dl class="c function">
 <dt class="sig sig-object c" id="c.TIFFReadDirectory">
-<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFReadDirectory</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">TIFF</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">tif</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFReadDirectory" title="Permalink to this definition">¶</a><br /></dt>
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TIFFReadDirectory</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">TIFF</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">tif</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.TIFFReadDirectory" title="Link to this definition">¶</a><br /></dt>
 <dd></dd></dl>
 
 </section>
 <section id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">¶</a></h2>
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading">¶</a></h2>
 <p>Read the next directory in the specified file and make it the current
 directory. Applications only need to call <a class="reference internal" href="#c.TIFFReadDirectory" title="TIFFReadDirectory"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFReadDirectory()</span></code></a>
 to read multiple subfiles in a single TIFF file—(the first directory
 in a file is automatically read when <a class="reference internal" href="TIFFOpen.html#c.TIFFOpen" title="TIFFOpen"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFOpen()</span></code></a> is called.</p>
 </section>
 <section id="notes">
-<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this heading">¶</a></h2>
+<h2>Notes<a class="headerlink" href="#notes" title="Link to this heading">¶</a></h2>
 <p>If the library is compiled with <code class="xref c c-macro docutils literal notranslate"><span class="pre">STRIPCHOP_SUPPORT</span></code> enabled, then
 images that have a single uncompressed strip or tile of data are
 automatically treated as if they were made up of multiple strips or tiles of
@@ -70,13 +70,13 @@ strips&quot; is visible to the application through the number of strips [tiles]
 returned by <a class="reference internal" href="TIFFstrip.html#c.TIFFNumberOfStrips" title="TIFFNumberOfStrips"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFNumberOfStrips()</span></code></a> [<a class="reference internal" href="TIFFtile.html#c.TIFFNumberOfTiles" title="TIFFNumberOfTiles"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFNumberOfTiles()</span></code></a>].</p>
 </section>
 <section id="return-values">
-<h2>Return values<a class="headerlink" href="#return-values" title="Permalink to this heading">¶</a></h2>
+<h2>Return values<a class="headerlink" href="#return-values" title="Link to this heading">¶</a></h2>
 <p>If the next directory was successfully read, 1 is returned. Otherwise, 0 is
 returned if an error was encountered, or if there are no more directories to
 be read.</p>
 </section>
 <section id="diagnostics">
-<h2>Diagnostics<a class="headerlink" href="#diagnostics" title="Permalink to this heading">¶</a></h2>
+<h2>Diagnostics<a class="headerlink" href="#diagnostics" title="Link to this heading">¶</a></h2>
 <p>All error messages are directed to the <a class="reference internal" href="TIFFError.html#c.TIFFErrorExtR" title="TIFFErrorExtR"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFErrorExtR()</span></code></a> routine.
 Likewise, warning messages are directed to the <a class="reference internal" href="TIFFWarning.html#c.TIFFWarningExtR" title="TIFFWarningExtR"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFWarningExtR()</span></code></a> routine.</p>
 <p><code class="docutils literal notranslate"><span class="pre">Seek</span> <span class="pre">error</span> <span class="pre">accessing</span> <span class="pre">TIFF</span> <span class="pre">directory</span></code>:</p>
@@ -170,7 +170,7 @@ the missing value based on the file size.</p>
 </div></blockquote>
 </section>
 <section id="see-also">
-<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this heading">¶</a></h2>
+<h2>See also<a class="headerlink" href="#see-also" title="Link to this heading">¶</a></h2>
 <p><a class="reference internal" href="TIFFOpen.html"><span class="doc">TIFFOpen</span></a> (3tiff),
 <a class="reference internal" href="TIFFCreateDirectory.html"><span class="doc">TIFFCreateDirectory</span></a> (3tiff),
 <a class="reference internal" href="TIFFCustomDirectory.html"><span class="doc">TIFFCustomDirectory</span></a> (3tiff),
@@ -187,7 +187,7 @@ the missing value based on the file size.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="../index.html">Table of Contents</a></h3>
@@ -221,7 +221,7 @@ the missing value based on the file size.</p>
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="../search.html" method="get">
@@ -229,13 +229,13 @@ the missing value based on the file size.</p>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -247,14 +247,14 @@ the missing value based on the file size.</p>
         <li class="right" >
           <a href="TIFFquery.html" title="TIFFquery"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../functions.html" >TIFF Functions Overview</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">TIFFReadDirectory</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-    &#169; Copyright 1988-2022, LibTIFF contributors.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+    &#169; Copyright 1988-2025, LibTIFF contributors.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

@@ -49,8 +49,6 @@ Proposed procedure
 References to previous contributions to the discussion
 ------------------------------------------------------
 https://gitlab.com/libtiff/libtiff/-/issues/580 and related merge request, 
-https://www.asmail.be/msg0054917226.html, 
-https://www.asmail.be/msg0055015786.html, 
 https://gitlab.com/libtiff/libtiff/-/merge_requests/569,
 and discussion in https://gitlab.com/libtiff/libtiff/-/merge_requests/581
 

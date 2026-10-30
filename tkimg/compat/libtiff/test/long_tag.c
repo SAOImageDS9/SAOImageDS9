@@ -36,8 +36,7 @@
 #endif
 
 #include "tiffio.h"
-
-extern int CheckLongField(TIFF *, ttag_t, uint32_t);
+#include "tifftest.h"
 
 const char *filename = "long_test.tiff";
 

@@ -67,5 +67,5 @@ Contributed software changes
 * :file:`contrib/dbs/xtiff` was made to compile
 * :file:`contrib/mac-mpw` is new support for compiling the software on
   a Macintosh under MPW
-* :file:`contrib/tags` is information on how to use the tag extenion
+* :file:`contrib/tags` is information on how to use the tag extension
   facilities; consult :file:`contrib/tags/README` for details

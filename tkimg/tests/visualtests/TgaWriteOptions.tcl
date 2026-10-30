@@ -6,7 +6,7 @@ catch { file mkdir testOut }
 
 set imgFile [file join ".." "sourceimgs" "tree.tga"]
 
-# Read a Targa file into a photo images.
+# Read a Targa file into a photo image.
 set imgRGBA [image create photo -file $imgFile]
 
 # Read a Targa file into a photo image using option "-withalpha 0".
@@ -16,7 +16,7 @@ set imgRGB [image create photo -file $imgFile -format [list TGA -matte 0 -verbos
 set row 0
 foreach withalpha [list 0 1] {
     foreach compr [list "none" "rle"] {
-	set outFile [file join "testOut" "tga-compr-${compr}-alpha-${withalpha}.rgba"]
+	set outFile [file join "testOut" "tga-compr-${compr}-alpha-${withalpha}.tga"]
 	$imgRGBA write $outFile -format [list TGA -compression $compr -withalpha $withalpha -verbose ON]
 	set img(rgba-$compr-$withalpha) [image create photo -file $outFile] 
 	label .img(rgba-$compr-$withalpha) -image $img(rgba-$compr-$withalpha) -compound top -relief ridge \
@@ -30,7 +30,7 @@ foreach withalpha [list 0 1] {
 set row 0
 foreach withalpha [list 0 1] {
     foreach compr [list "none" "rle"] {
-	set outFile [file join "testOut" "tga-compr-${compr}-alpha-${withalpha}.rgb"]
+	set outFile [file join "testOut" "tga-compr-${compr}-alpha-${withalpha}.tga"]
 	$imgRGB write $outFile -format [list TGA -compression $compr -withalpha $withalpha -verbose 1]
 	set img(rgb-$compr-$withalpha) [image create photo -file $outFile] 
 	label .img(rgb-$compr-$withalpha) -image $img(rgb-$compr-$withalpha) -compound top -relief ridge \

@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Using The TIFF Library &#8212; LibTIFF 4.7.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b849a4e9" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinxdoc.css?v=0a676766" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=9f25de62"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
-    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <title>Using The TIFF Library &#8212; LibTIFF 4.7.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinxdoc.css?v=34905f61" />
+    <script src="_static/documentation_options.js?v=2edf0659"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Multi Page / Multi Image TIFF" href="multi_page.html" />
     <link rel="prev" title="Terminology" href="terms.html" /> 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="terms.html" title="Terminology"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Using The TIFF Library</a></li> 
       </ul>
     </div>  
@@ -39,8 +39,9 @@
           <div class="body" role="main">
             
   <section id="using-the-tiff-library">
-<h1>Using The TIFF Library<a class="headerlink" href="#using-the-tiff-library" title="Permalink to this heading">¶</a></h1>
-<a class="reference internal image-reference" href="_images/cat.gif"><img alt="cat" src="_images/cat.gif" style="width: 113px;" /></a>
+<h1>Using The TIFF Library<a class="headerlink" href="#using-the-tiff-library" title="Link to this heading">¶</a></h1>
+<a class="reference internal image-reference" href="_images/cat.gif"><img alt="cat" src="_images/cat.gif" style="width: 113px;" />
+</a>
 <p><code class="docutils literal notranslate"><span class="pre">libtiff</span></code> is a set of C functions (a library) that support
 the manipulation of TIFF image files.
 The library requires an ANSI C compilation environment for building
@@ -63,15 +64,8 @@ everything a developer needs to know about the library or about TIFF.
 Detailed information on the interfaces to the library are given in
 the <a class="reference internal" href="functions.html"><span class="doc">TIFF Functions Overview</span></a> that accompany this software.
 An alphabetic list of all the public functions with a brief description can be found at <a class="reference internal" href="functions/libtiff.html#list-of-routines"><span class="std std-ref">List of routines</span></a></p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>The following hyperlink does no more work, at least no libtiff introduction:</p>
-<p>Michael Still has also written a useful introduction to libtiff for the
-IBM DeveloperWorks site available at
-<a class="reference external" href="http://www.ibm.com/developerworks/linux/library/l-libtiff">http://www.ibm.com/developerworks/linux/library/l-libtiff</a>.</p>
-</div>
 <section id="how-to-tell-which-version-you-have">
-<h2>How to tell which version you have<a class="headerlink" href="#how-to-tell-which-version-you-have" title="Permalink to this heading">¶</a></h2>
+<h2>How to tell which version you have<a class="headerlink" href="#how-to-tell-which-version-you-have" title="Link to this heading">¶</a></h2>
 <p>The software version can be found by looking at the file named
 <code class="file docutils literal notranslate"><span class="pre">VERSION</span></code>
 that is located at the top of the source tree; the precise alpha number
@@ -92,7 +86,7 @@ define <code class="xref c c-macro docutils literal notranslate"><span class="pr
 version compatibility at compile time.</p>
 </section>
 <section id="library-datatypes">
-<h2>Library Datatypes<a class="headerlink" href="#library-datatypes" title="Permalink to this heading">¶</a></h2>
+<h2>Library Datatypes<a class="headerlink" href="#library-datatypes" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">libtiff</span></code> defines a portable programming interface through the
 use of a set of C type definitions.
 These definitions, defined in in the files <code class="file docutils literal notranslate"><span class="pre">tiff.h</span></code> and
@@ -104,7 +98,7 @@ To insure portable code and correct operation, applications that use
 prototypes for the library API.</p>
 </section>
 <section id="memory-management">
-<h2>Memory Management<a class="headerlink" href="#memory-management" title="Permalink to this heading">¶</a></h2>
+<h2>Memory Management<a class="headerlink" href="#memory-management" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">libtiff</span></code> uses a machine-specific set of routines for managing
 dynamically allocated memory.
 <a class="reference internal" href="functions/TIFFmemory.html#c._TIFFmalloc" title="_TIFFmalloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">_TIFFmalloc()</span></code></a>, <a class="reference internal" href="functions/TIFFmemory.html#c._TIFFrealloc" title="_TIFFrealloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">_TIFFrealloc()</span></code></a>, and <a class="reference internal" href="functions/TIFFmemory.html#c._TIFFfree" title="_TIFFfree"><code class="xref c c-func docutils literal notranslate"><span class="pre">_TIFFfree()</span></code></a>
@@ -128,7 +122,7 @@ TIFF handle
 (see  <a class="reference internal" href="functions/TIFFOpenOptions.html#c.TIFFOpenOptionsSetMaxCumulatedMemAlloc" title="TIFFOpenOptionsSetMaxCumulatedMemAlloc"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFOpenOptionsSetMaxCumulatedMemAlloc()</span></code></a> and <a class="reference internal" href="functions/TIFFOpen.html#c.TIFFOpenExt" title="TIFFOpenExt"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFOpenExt()</span></code></a>).</p>
 </section>
 <section id="error-handling">
-<h2>Error Handling<a class="headerlink" href="#error-handling" title="Permalink to this heading">¶</a></h2>
+<h2>Error Handling<a class="headerlink" href="#error-handling" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">libtiff</span></code> handles most errors by returning an invalid/erroneous
 value when returning from a function call.
 Various diagnostic messages may also be generated by the library.
@@ -141,7 +135,7 @@ and warning handler can be set. Please refer to <a class="reference internal" hr
 and <a class="reference internal" href="functions/TIFFOpenOptions.html"><span class="doc">TIFFOpenOptions</span></a>.</p>
 </section>
 <section id="basic-file-handling">
-<h2>Basic File Handling<a class="headerlink" href="#basic-file-handling" title="Permalink to this heading">¶</a></h2>
+<h2>Basic File Handling<a class="headerlink" href="#basic-file-handling" title="Link to this heading">¶</a></h2>
 <p>The library is modeled after the normal UNIX stdio library.
 For example, to read from an existing TIFF image the
 file must first be opened:</p>
@@ -200,7 +194,7 @@ are allowed to request per call can be set with
 </div>
 </section>
 <section id="tiff-directories">
-<h2>TIFF Directories<a class="headerlink" href="#tiff-directories" title="Permalink to this heading">¶</a></h2>
+<h2>TIFF Directories<a class="headerlink" href="#tiff-directories" title="Link to this heading">¶</a></h2>
 <p>TIFF supports the storage of multiple images in a single file.
 Each image has an associated data structure termed a <em>directory</em>
 that houses all the information about the format and content of the
@@ -253,7 +247,7 @@ be called to print a formatted description of the contents of
 the current directory; consult the manual page for complete details.</p>
 </section>
 <section id="tiff-tags">
-<h2>TIFF Tags<a class="headerlink" href="#tiff-tags" title="Permalink to this heading">¶</a></h2>
+<h2>TIFF Tags<a class="headerlink" href="#tiff-tags" title="Link to this heading">¶</a></h2>
 <p>Image-related information such as the image width and height, number
 of samples, orientation, colorimetric information, etc.
 are stored in each image
@@ -289,7 +283,7 @@ the <a class="reference internal" href="functions/TIFFGetField.html#c.TIFFGetFie
 and calling conventions required for each tag supported by the library.</p>
 </section>
 <section id="tiff-compression-schemes">
-<h2>TIFF Compression Schemes<a class="headerlink" href="#tiff-compression-schemes" title="Permalink to this heading">¶</a></h2>
+<h2>TIFF Compression Schemes<a class="headerlink" href="#tiff-compression-schemes" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">libtiff</span></code> includes support for a wide variety of
 data compression schemes.
 In normal operation a compression scheme is automatically used when
@@ -304,7 +298,7 @@ This interface can also be used to override the core-library
 implementation for a compression scheme.</p>
 </section>
 <section id="byte-order">
-<h2>Byte Order<a class="headerlink" href="#byte-order" title="Permalink to this heading">¶</a></h2>
+<h2>Byte Order<a class="headerlink" href="#byte-order" title="Link to this heading">¶</a></h2>
 <p>The TIFF specification says, and has always said, that
 <em>a correct TIFF
 reader must handle images in big-endian and little-endian byte order</em>.
@@ -316,7 +310,7 @@ an existing file, in which case it is written in the byte order
 specified in the file).</p>
 </section>
 <section id="data-placement">
-<h2>Data Placement<a class="headerlink" href="#data-placement" title="Permalink to this heading">¶</a></h2>
+<h2>Data Placement<a class="headerlink" href="#data-placement" title="Link to this heading">¶</a></h2>
 <p>The TIFF specification requires that all information except an
 8-byte header can be placed anywhere in a file.
 In particular, it is perfectly legitimate for directory information
@@ -331,7 +325,7 @@ of data in a file; image data is typically written before directory
 information.</p>
 </section>
 <section id="tiffrgbaimage-support">
-<h2>TIFFRGBAImage Support<a class="headerlink" href="#tiffrgbaimage-support" title="Permalink to this heading">¶</a></h2>
+<h2>TIFFRGBAImage Support<a class="headerlink" href="#tiffrgbaimage-support" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">libtiff</span></code> provides a high-level interface for reading image
 data from a TIFF file.  This interface handles the details of
 data organization and format for a wide variety of TIFF files;
@@ -444,7 +438,7 @@ of an application that makes use of the <a class="reference internal" href="func
 support.</p>
 </section>
 <section id="scanline-based-image-i-o">
-<h2>Scanline-based Image I/O<a class="headerlink" href="#scanline-based-image-i-o" title="Permalink to this heading">¶</a></h2>
+<h2>Scanline-based Image I/O<a class="headerlink" href="#scanline-based-image-i-o" title="Link to this heading">¶</a></h2>
 <p>The simplest interface provided by <code class="docutils literal notranslate"><span class="pre">libtiff</span></code> is a
 scanline-oriented interface that can be used to read TIFF
 images that have their image data organized in strips
@@ -473,7 +467,7 @@ is assumed to be organized in strips, the following might be used:</p>
 <span class="w">    </span><span class="n">TIFF</span><span class="o">*</span><span class="w"> </span><span class="n">tif</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TIFFOpen</span><span class="p">(</span><span class="s">&quot;myfile.tif&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">tif</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">imagelength</span><span class="p">;</span>
-<span class="w">        </span><span class="n">tdata_t</span><span class="w"> </span><span class="n">buf</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">;</span>
 <span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">row</span><span class="p">;</span>
 
 <span class="w">        </span><span class="n">TIFFGetField</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span><span class="w"> </span><span class="n">TIFFTAG_IMAGELENGTH</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">imagelength</span><span class="p">);</span>
@@ -498,7 +492,7 @@ to handle either case one might use the following instead:</p>
 <span class="w">    </span><span class="n">TIFF</span><span class="o">*</span><span class="w"> </span><span class="n">tif</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TIFFOpen</span><span class="p">(</span><span class="s">&quot;myfile.tif&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">tif</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">imagelength</span><span class="p">;</span>
-<span class="w">        </span><span class="n">tdata_t</span><span class="w"> </span><span class="n">buf</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">;</span>
 <span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">row</span><span class="p">;</span>
 
 <span class="w">        </span><span class="n">TIFFGetField</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span><span class="w"> </span><span class="n">TIFFTAG_IMAGELENGTH</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">imagelength</span><span class="p">);</span>
@@ -507,10 +501,10 @@ to handle either case one might use the following instead:</p>
 <span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">config</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">PLANARCONFIG_CONTIG</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">row</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">row</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">imagelength</span><span class="p">;</span><span class="w"> </span><span class="n">row</span><span class="o">++</span><span class="p">)</span>
 <span class="w">                </span><span class="n">TIFFReadScanline</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span><span class="w"> </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">row</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
-<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">config</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">planarconfig_separate</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">config</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">PLANARCONFIG_SEPARATE</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">nsamples</span><span class="p">;</span>
 
-<span class="w">            </span><span class="n">tiffgetfield</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span><span class="w"> </span><span class="n">tifftag_samplesperpixel</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">nsamples</span><span class="p">);</span>
+<span class="w">            </span><span class="n">TIFFGetField</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span><span class="w"> </span><span class="n">TIFFTAG_SAMPLESPERPIXEL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">nsamples</span><span class="p">);</span>
 <span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nsamples</span><span class="p">;</span><span class="w"> </span><span class="n">s</span><span class="o">++</span><span class="p">)</span>
 <span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">row</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">row</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">imagelength</span><span class="p">;</span><span class="w"> </span><span class="n">row</span><span class="o">++</span><span class="p">)</span>
 <span class="w">                    </span><span class="n">TIFFReadScanline</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span><span class="w"> </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">row</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">);</span>
@@ -534,7 +528,7 @@ random access to data within strips (something that is not supported
 by the library when strips are compressed).</p>
 </section>
 <section id="strip-oriented-image-i-o">
-<h2>Strip-oriented Image I/O<a class="headerlink" href="#strip-oriented-image-i-o" title="Permalink to this heading">¶</a></h2>
+<h2>Strip-oriented Image I/O<a class="headerlink" href="#strip-oriented-image-i-o" title="Link to this heading">¶</a></h2>
 <p>The strip-oriented interfaces provided by the library provide
 access to entire strips of data.  Unlike the scanline-oriented
 calls, data can be read or written compressed or uncompressed.
@@ -547,12 +541,12 @@ to data within strips.</p>
 <span class="p">{</span>
 <span class="w">    </span><span class="n">TIFF</span><span class="o">*</span><span class="w"> </span><span class="n">tif</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TIFFOpen</span><span class="p">(</span><span class="s">&quot;myfile.tif&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">tif</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">tdata_t</span><span class="w"> </span><span class="n">buf</span><span class="p">;</span>
-<span class="w">        </span><span class="n">tstrip_t</span><span class="w"> </span><span class="n">strip</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">strip</span><span class="p">;</span>
 
 <span class="w">        </span><span class="n">buf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_TIFFmalloc</span><span class="p">(</span><span class="n">TIFFStripSize</span><span class="p">(</span><span class="n">tif</span><span class="p">));</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">strip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">strip</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">tiffnumberofstrips</span><span class="p">(</span><span class="n">tif</span><span class="p">);</span><span class="w"> </span><span class="n">strip</span><span class="o">++</span><span class="p">)</span>
-<span class="w">            </span><span class="n">tiffreadencodedstrip</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span><span class="w"> </span><span class="n">strip</span><span class="p">,</span><span class="w"> </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">tsize_t</span><span class="p">)</span><span class="w"> </span><span class="mi">-1</span><span class="p">);</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">strip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">strip</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">TIFFNumberOfStrips</span><span class="p">(</span><span class="n">tif</span><span class="p">);</span><span class="w"> </span><span class="n">strip</span><span class="o">++</span><span class="p">)</span>
+<span class="w">            </span><span class="n">TIFFReadEncodedStrip</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span><span class="w"> </span><span class="n">strip</span><span class="p">,</span><span class="w"> </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">tmsize_t</span><span class="p">)</span><span class="w"> </span><span class="mi">-1</span><span class="p">);</span>
 <span class="w">        </span><span class="n">_TIFFfree</span><span class="p">(</span><span class="n">buf</span><span class="p">);</span>
 <span class="w">        </span><span class="n">TIFFClose</span><span class="p">(</span><span class="n">tif</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
@@ -577,15 +571,15 @@ a file:</p>
 <span class="p">{</span>
 <span class="w">    </span><span class="n">TIFF</span><span class="o">*</span><span class="w"> </span><span class="n">tif</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TIFFOpen</span><span class="p">(</span><span class="s">&quot;myfile.tif&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">tif</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">tdata_t</span><span class="w"> </span><span class="n">buf</span><span class="p">;</span>
-<span class="w">        </span><span class="n">tstrip_t</span><span class="w"> </span><span class="n">strip</span><span class="p">;</span>
-<span class="w">        </span><span class="kt">uint32_t</span><span class="o">*</span><span class="w"> </span><span class="n">bc</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">strip</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="o">*</span><span class="n">bc</span><span class="p">;</span>
 <span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">stripsize</span><span class="p">;</span>
 
 <span class="w">        </span><span class="n">TIFFGetField</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span><span class="w"> </span><span class="n">TIFFTAG_STRIPBYTECOUNTS</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">bc</span><span class="p">);</span>
 <span class="w">        </span><span class="n">stripsize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bc</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
 <span class="w">        </span><span class="n">buf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_TIFFmalloc</span><span class="p">(</span><span class="n">stripsize</span><span class="p">);</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">strip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">strip</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">tiffnumberofstrips</span><span class="p">(</span><span class="n">tif</span><span class="p">);</span><span class="w"> </span><span class="n">strip</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">strip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">strip</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">TIFFNumberOfStrips</span><span class="p">(</span><span class="n">tif</span><span class="p">);</span><span class="w"> </span><span class="n">strip</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">bc</span><span class="p">[</span><span class="n">strip</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">stripsize</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">                </span><span class="n">buf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_TIFFrealloc</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">bc</span><span class="p">[</span><span class="n">strip</span><span class="p">]);</span>
 <span class="w">                </span><span class="n">stripsize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bc</span><span class="p">[</span><span class="n">strip</span><span class="p">];</span>
@@ -603,7 +597,7 @@ physically stored in the file; this may be different from the
 logical ordering expected by an application.</p>
 </section>
 <section id="tile-oriented-image-i-o">
-<h2>Tile-oriented Image I/O<a class="headerlink" href="#tile-oriented-image-i-o" title="Permalink to this heading">¶</a></h2>
+<h2>Tile-oriented Image I/O<a class="headerlink" href="#tile-oriented-image-i-o" title="Link to this heading">¶</a></h2>
 <p>Tiles of data may be read and written in a manner similar to strips.
 With this interface, an image is
 broken up into a set of rectangular areas that may have dimensions
@@ -629,7 +623,7 @@ code of the following sort might be used:</p>
 <span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">imageWidth</span><span class="p">,</span><span class="w"> </span><span class="n">imageLength</span><span class="p">;</span>
 <span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">tileWidth</span><span class="p">,</span><span class="w"> </span><span class="n">tileLength</span><span class="p">;</span>
 <span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">;</span>
-<span class="w">        </span><span class="n">tdata_t</span><span class="w"> </span><span class="n">buf</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">;</span>
 
 <span class="w">        </span><span class="n">TIFFGetField</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span><span class="w"> </span><span class="n">TIFFTAG_IMAGEWIDTH</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">imageWidth</span><span class="p">);</span>
 <span class="w">        </span><span class="n">TIFFGetField</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span><span class="w"> </span><span class="n">TIFFTAG_IMAGELENGTH</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">imageLength</span><span class="p">);</span>
@@ -638,7 +632,7 @@ code of the following sort might be used:</p>
 <span class="w">        </span><span class="n">buf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_TIFFmalloc</span><span class="p">(</span><span class="n">TIFFTileSize</span><span class="p">(</span><span class="n">tif</span><span class="p">));</span>
 <span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">imagelength</span><span class="p">;</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">tilelength</span><span class="p">)</span>
 <span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">imagewidth</span><span class="p">;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">tilewidth</span><span class="p">)</span>
-<span class="w">                </span><span class="n">tiffreadtile</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span><span class="w"> </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">                </span><span class="n">TIFFReadTile</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span><span class="w"> </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
 <span class="w">        </span><span class="n">_TIFFfree</span><span class="p">(</span><span class="n">buf</span><span class="p">);</span>
 <span class="w">        </span><span class="n">TIFFClose</span><span class="p">(</span><span class="n">tif</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
@@ -656,12 +650,12 @@ and written with <a class="reference internal" href="functions/TIFFWriteEncodedT
 <span class="p">{</span>
 <span class="w">    </span><span class="n">TIFF</span><span class="o">*</span><span class="w"> </span><span class="n">tif</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TIFFOpen</span><span class="p">(</span><span class="s">&quot;myfile.tif&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;r&quot;</span><span class="p">);</span>
 <span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">tif</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">tdata_t</span><span class="w"> </span><span class="n">buf</span><span class="p">;</span>
-<span class="w">        </span><span class="n">ttile_t</span><span class="w"> </span><span class="n">tile</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">tile</span><span class="p">;</span>
 
 <span class="w">        </span><span class="n">buf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_TIFFmalloc</span><span class="p">(</span><span class="n">TIFFTileSize</span><span class="p">(</span><span class="n">tif</span><span class="p">));</span>
-<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">tile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">tile</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">tiffnumberoftiles</span><span class="p">(</span><span class="n">tif</span><span class="p">);</span><span class="w"> </span><span class="n">tile</span><span class="o">++</span><span class="p">)</span>
-<span class="w">            </span><span class="n">tiffreadencodedtile</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span><span class="w"> </span><span class="n">tile</span><span class="p">,</span><span class="w"> </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">tsize_t</span><span class="p">)</span><span class="w"> </span><span class="mi">-1</span><span class="p">);</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">tile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">tile</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">TIFFNumberOfTiles</span><span class="p">(</span><span class="n">tif</span><span class="p">);</span><span class="w"> </span><span class="n">tile</span><span class="o">++</span><span class="p">)</span>
+<span class="w">            </span><span class="n">TIFFReadEncodedTile</span><span class="p">(</span><span class="n">tif</span><span class="p">,</span><span class="w"> </span><span class="n">tile</span><span class="p">,</span><span class="w"> </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">tmsize_t</span><span class="p">)</span><span class="w"> </span><span class="mi">-1</span><span class="p">);</span>
 <span class="w">        </span><span class="n">_TIFFfree</span><span class="p">(</span><span class="n">buf</span><span class="p">);</span>
 <span class="w">        </span><span class="n">TIFFClose</span><span class="p">(</span><span class="n">tif</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
@@ -669,8 +663,41 @@ and written with <a class="reference internal" href="functions/TIFFWriteEncodedT
 </pre></div>
 </div>
 </section>
+<section id="re-entrancy-and-thread-safety">
+<h2>Re-entrancy and Thread Safety<a class="headerlink" href="#re-entrancy-and-thread-safety" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Libtiff</span></code> contains no static state except for the registered error /
+warning handler.
+All data for an opened TIFF file is encapsulated via the TIFF handle
+returned by <a class="reference internal" href="functions/TIFFOpen.html#c.TIFFOpen" title="TIFFOpen"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFOpen()</span></code></a>. Only the error handlers
+<a class="reference internal" href="functions/TIFFError.html#c.TIFFError" title="TIFFError"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFError()</span></code></a> and <a class="reference internal" href="functions/TIFFError.html#c.TIFFErrorExt" title="TIFFErrorExt"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFErrorExt()</span></code></a>,
+(as well as <a class="reference internal" href="functions/TIFFWarning.html#c.TIFFWarning" title="TIFFWarning"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFWarning()</span></code></a> and <a class="reference internal" href="functions/TIFFWarning.html#c.TIFFWarningExt" title="TIFFWarningExt"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFWarningExt()</span></code></a>)
+use TIFF handle independent, common error handler functions.</p>
+<p><a class="reference internal" href="functions/TIFFError.html#c.TIFFErrorHandlerExtR" title="TIFFErrorHandlerExtR"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFErrorHandlerExtR()</span></code></a> and <a class="reference internal" href="functions/TIFFWarning.html#c.TIFFWarningHandlerExtR" title="TIFFWarningHandlerExtR"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFWarningHandlerExtR()</span></code></a>
+(introduced in <code class="docutils literal notranslate"><span class="pre">libtiff</span></code> 4.5) offer the option of registering
+a separate error handler for each TIFF handle.
+This error handler is called via the TIFF handle and is therefore
+re-entrant, which means that it is naturally thread-safe.</p>
+<p>These handlers can already be set before opening a TIFF file using the
+<a class="reference internal" href="functions/TIFFOpenOptions.html#c.TIFFOpenOptionsSetErrorHandlerExtR" title="TIFFOpenOptionsSetErrorHandlerExtR"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFOpenOptionsSetErrorHandlerExtR()</span></code></a> and
+<a class="reference internal" href="functions/TIFFOpenOptions.html#c.TIFFOpenOptionsSetWarningHandlerExtR" title="TIFFOpenOptionsSetWarningHandlerExtR"><code class="xref c c-func docutils literal notranslate"><span class="pre">TIFFOpenOptionsSetWarningHandlerExtR()</span></code></a> functions, respectively.</p>
+<p>This allows multiple TIFF files to be processed simultaneously
+with multiple threads, with each thread having its own TIFF file.
+It is not possible (safe) to edit a single TIFF file with multiple
+threads at the same time.</p>
+</section>
+<section id="multi-page-multi-image-tiff">
+<h2>Multi Page / Multi Image TIFF<a class="headerlink" href="#multi-page-multi-image-tiff" title="Link to this heading">¶</a></h2>
+<p>TIFF images can contain more than one image or page and each image can
+have sub-images. Furthermore, additional information about an image
+can be put into <em>custom</em> TIFF directories, such as EXIF or GPS.
+Writing TIFF files with more than one directory (IFD) is not easy
+because some side effects need to be known.
+How to read and write multi page TIFF files using <code class="docutils literal notranslate"><span class="pre">libtiff</span></code> is explained
+in <a class="reference internal" href="multi_page.html"><span class="doc">Multi Page / Multi Image TIFF</span></a>.
+For custom directories refer to <a class="reference internal" href="functions/TIFFCustomDirectory.html"><span class="doc">TIFFCustomDirectory</span></a>.</p>
+</section>
 <section id="other-stuff">
-<h2>Other Stuff<a class="headerlink" href="#other-stuff" title="Permalink to this heading">¶</a></h2>
+<h2>Other Stuff<a class="headerlink" href="#other-stuff" title="Link to this heading">¶</a></h2>
 <p>Some other stuff will almost certainly go here...</p>
 </section>
 </section>
@@ -680,7 +707,7 @@ and written with <a class="reference internal" href="functions/TIFFWriteEncodedT
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
   <div>
     <h3><a href="index.html">Table of Contents</a></h3>
@@ -700,6 +727,8 @@ and written with <a class="reference internal" href="functions/TIFFWriteEncodedT
 <li><a class="reference internal" href="#scanline-based-image-i-o">Scanline-based Image I/O</a></li>
 <li><a class="reference internal" href="#strip-oriented-image-i-o">Strip-oriented Image I/O</a></li>
 <li><a class="reference internal" href="#tile-oriented-image-i-o">Tile-oriented Image I/O</a></li>
+<li><a class="reference internal" href="#re-entrancy-and-thread-safety">Re-entrancy and Thread Safety</a></li>
+<li><a class="reference internal" href="#multi-page-multi-image-tiff">Multi Page / Multi Image TIFF</a></li>
 <li><a class="reference internal" href="#other-stuff">Other Stuff</a></li>
 </ul>
 </li>
@@ -723,7 +752,7 @@ and written with <a class="reference internal" href="functions/TIFFWriteEncodedT
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
@@ -731,13 +760,13 @@ and written with <a class="reference internal" href="functions/TIFFWriteEncodedT
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
+</search>
 <script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -749,13 +778,13 @@ and written with <a class="reference internal" href="functions/TIFFWriteEncodedT
         <li class="right" >
           <a href="terms.html" title="Terminology"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">LibTIFF 4.7.0 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">LibTIFF 4.7.2 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Using The TIFF Library</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-    &#169; Copyright 1988-2022, LibTIFF contributors.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+    &#169; Copyright 1988-2025, LibTIFF contributors.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
     </div>
   </body>
 </html>

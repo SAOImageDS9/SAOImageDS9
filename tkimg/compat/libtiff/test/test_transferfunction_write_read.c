@@ -64,14 +64,15 @@ const uint16_t *ptfR2;
  * Pointer ptf0, ptf1, ptf2 are initialized to the first array element of
  * each transfer function.
  */
-int setup_transfer_functions(void)
+static int setup_transfer_functions(void)
 {
     if (pTransferFunctionData)
         _TIFFfree(pTransferFunctionData);
 
     /* Setup array with some more values to shift start of the three arrays. */
     nSamplesPerTransferFunction = ((uint32_t)1 << bps);
-    pTransferFunctionData = _TIFFmalloc(3 * (tmsize_t)nSamplesPerTransferFunction * sizeof(uint16_t));
+    pTransferFunctionData = (uint16_t *)_TIFFmalloc(
+        (tmsize_t)(3 * (size_t)nSamplesPerTransferFunction * sizeof(uint16_t)));
     if (!pTransferFunctionData)
         return 1;
 
@@ -93,7 +94,7 @@ int setup_transfer_functions(void)
  * TIFF **ptif returns the TIFF pointer.
  * The function returns a bit-field with one bit set for each successfully read transfer function.
  */
-int read_check_transferfunctions(TIFF **ptif, const char *filename, int blnClose, const uint16_t *ptfx0,
+static int read_check_transferfunctions(TIFF **ptif, const char *filename, int blnClose, const uint16_t *ptfx0,
                                  const uint16_t *ptfx1, const uint16_t *ptfx2)
 {
     /* Test reading of transfer functions */
@@ -113,11 +114,11 @@ int read_check_transferfunctions(TIFF **ptif, const char *filename, int blnClose
     }
     else
     {
-        if (ptfR0 != NULL && !_TIFFmemcmp(ptfx0, ptfR0, nSamplesPerTransferFunction * sizeof(uint16_t)))
+        if (ptfR0 != NULL && !_TIFFmemcmp(ptfx0, ptfR0, (tmsize_t)((size_t)nSamplesPerTransferFunction * sizeof(uint16_t))))
             retval += 1;
-        if (ptfR1 != NULL && !_TIFFmemcmp(ptfx1, ptfR1, nSamplesPerTransferFunction * sizeof(uint16_t)))
+        if (ptfR1 != NULL && !_TIFFmemcmp(ptfx1, ptfR1, (tmsize_t)((size_t)nSamplesPerTransferFunction * sizeof(uint16_t))))
             retval += 2;
-        if (ptfR2 != NULL && !_TIFFmemcmp(ptfx2, ptfR2, nSamplesPerTransferFunction * sizeof(uint16_t)))
+        if (ptfR2 != NULL && !_TIFFmemcmp(ptfx2, ptfR2, (tmsize_t)((size_t)nSamplesPerTransferFunction * sizeof(uint16_t))))
             retval += 4;
     }
 
@@ -143,12 +144,15 @@ failure:
  * Only if blnCloseFile is true, the file is closed.
  * TIFF **ptif returns the pointer to the opened TIFF file.
  */
-int write_basic_IFD_data(TIFF **ptif, const char *filename, int wrtTransferFunction, int nExtraSamples,
+static int write_basic_IFD_data(TIFF **ptif, const char *filename, int wrtTransferFunction, int nExtraSamples,
                          int blnCloseFile)
 {
     unsigned char buf[3] = {0, 127, 255};
     int retval = 0;
     uint8_t *bufLine = NULL;
+    uint16_t extraSamples[4] = {EXTRASAMPLE_UNSPECIFIED, EXTRASAMPLE_UNSPECIFIED, EXTRASAMPLE_UNSPECIFIED,
+                                EXTRASAMPLE_UNSPECIFIED};
+    size_t bufLen;
     TIFF *tif = TIFFOpen(filename, "w");
     *ptif = tif;
     if (!tif)
@@ -205,8 +209,6 @@ int write_basic_IFD_data(TIFF **ptif, const char *filename, int wrtTransferFunct
     }
 
     /* Set ExtraSamples thus SamplesPerPixel for transfer functions is reduced by one. */
-    uint16_t extraSamples[4] = {EXTRASAMPLE_UNSPECIFIED, EXTRASAMPLE_UNSPECIFIED, EXTRASAMPLE_UNSPECIFIED,
-                                EXTRASAMPLE_UNSPECIFIED};
     if (nExtraSamples > 0 && nExtraSamples < 4)
     {
         if (!TIFFSetField(tif, TIFFTAG_EXTRASAMPLES, nExtraSamples, extraSamples))
@@ -227,8 +229,8 @@ int write_basic_IFD_data(TIFF **ptif, const char *filename, int wrtTransferFunct
     }
 
     /* Setup buffer for image line */
-    size_t bufLen = (size_t)width * spp * (bps + 7) / 8;
-    bufLine = _TIFFmalloc(bufLen);
+    bufLen = (size_t)width * spp * (size_t)(bps + 7) / 8;
+    bufLine = (uint8_t *)_TIFFmalloc((tmsize_t)bufLen);
     if (!bufLine)
     {
         fprintf(stderr, "write_basic_IFD_data(): Can't allocate bufLine buffer.\n");
@@ -240,7 +242,7 @@ int write_basic_IFD_data(TIFF **ptif, const char *filename, int wrtTransferFunct
     /* Write dummy pixel data. */
     for (int i = 0; i < length; i++)
     {
-        if (TIFFWriteScanline(tif, bufLine, i, 0) == -1)
+        if (TIFFWriteScanline(tif, bufLine, (uint32_t)i, 0) == -1)
         {
             fprintf(stderr, "write_basic_IFD_data(): Can't write image data.\n");
             GOTOFAILURE(1);
@@ -263,7 +265,7 @@ failure:
 } /*-- write_basic_IFD_data() --*/
 
 /*==== main() ====*/
-int main()
+int main(void)
 {
 
     const char *filename = "test_transferfunction_write_read.tif";

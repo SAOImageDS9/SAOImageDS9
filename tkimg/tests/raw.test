@@ -13,12 +13,19 @@ namespace eval ::raw::test {
     namespace import ::tcltest::*
 
     set fmt     "raw"
-    set fmtDef  "-useheader true -nchan 3"
+    set fmtDef  "-useheader true -withalpha false"
     set ext     "raw"
     set inFile  "testimgs/img.$ext"
     set outFile "testimgs/img_out.$ext"
 
     set imgdata [readFile $inFile]
+    if { $::tcl_platform(byteOrder) eq "bigEndian" } {
+        # RAW images are always written in native byte-order.
+        # Reference images are in Intel (little-endian) byte-order,
+        # so we change the byte-order string for comparison on
+        # big-endian machines.
+        set imgdata [string map {"Intel   " "Motorola"} $imgdata]
+    }
 
     test raw-0.1 {package require img::raw} -setup {
     } -body {
@@ -85,7 +92,7 @@ namespace eval ::raw::test {
         } -cleanup {
             image delete i
         } -constraints {
-            Tk87
+            Tk9
         } -result {0 0}
 
 
@@ -101,7 +108,7 @@ namespace eval ::raw::test {
             image delete j
             file delete -force $outFile
         } -constraints {
-            Tk87
+            Tk9
         } -result 1
 
         # Write photo to string using "i data -format" already tested in raw-1.X tests.
@@ -112,7 +119,7 @@ namespace eval ::raw::test {
             image create photo i -file $inFile -format [list $fmt -invalidoption 1]
         } -returnCodes {
             error
-        } -result "bad format option \"-invalidoption\": must be -verbose, -useheader, -width, -height, -nchan, -byteorder, -scanorder, -pixeltype, -skipbytes, -map, -min, -max, -gamma, -saturation, -cutoff, -printagc, -uuencode, or -nomap"
+        } -result "bad format option \"-invalidoption\": must be -verbose, -useheader, -withalpha, -width, -height, -numchan, -byteorder, -scanorder, -pixeltype, -skipbytes, -map, -min, -max, -gamma, -saturation, -cutoff, -printagc, -uuencode, -nomap, or -nchan"
 
         test raw-5.2 {Read photo from file using option without value} -setup {
             catch {image delete i}
@@ -140,7 +147,7 @@ namespace eval ::raw::test {
             file delete -force $outFile
         } -returnCodes {
             error
-        } -result "bad format option \"-invalidoption\": must be -verbose, -useheader, -nchan, or scanorder"
+        } -result "bad format option \"-invalidoption\": must be -verbose, -useheader, -nchan, -withalpha, or -scanorder"
 
         test raw-5.5 {Write photo to file using option without value} -setup {
             catch {image delete i}

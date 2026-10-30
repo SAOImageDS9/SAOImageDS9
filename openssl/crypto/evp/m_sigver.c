@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2006-2026 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
@@ -139,7 +139,9 @@ static int do_sigver_init(EVP_MD_CTX *ctx, EVP_PKEY_CTX **pctx,
          * iteration we're on.
          */
         EVP_SIGNATURE_free(signature);
+        signature = NULL;
         EVP_KEYMGMT_free(tmp_keymgmt);
+        tmp_keymgmt = NULL;
 
         switch (iter) {
         case 1:
@@ -434,10 +436,6 @@ int EVP_DigestSignUpdate(EVP_MD_CTX *ctx, const void *data, size_t dsize)
 
 legacy:
     if (pctx != NULL) {
-        if (pctx->pmeth == NULL) {
-            ERR_raise(ERR_LIB_EVP, EVP_R_INITIALIZATION_ERROR);
-            return 0;
-        }
         /* do_sigver_init() checked that |digest_custom| is non-NULL */
         if (pctx->flag_call_digest_custom
             && !ctx->pctx->pmeth->digest_custom(ctx->pctx, ctx))
@@ -729,7 +727,7 @@ legacy:
         vctx = 0;
     if (ctx->flags & EVP_MD_CTX_FLAG_FINALISE) {
         if (vctx) {
-            r = pctx->pmeth->verifyctx(pctx, sig, (int)siglen, ctx);
+            r = pctx->pmeth->verifyctx(pctx, sig, siglen, ctx);
             ctx->flags |= EVP_MD_CTX_FLAG_FINALISED;
         } else
             r = EVP_DigestFinal_ex(ctx, md, &mdlen);
@@ -743,7 +741,7 @@ legacy:
         }
         if (vctx)
             r = tmp_ctx->pctx->pmeth->verifyctx(tmp_ctx->pctx,
-                sig, (int)siglen, tmp_ctx);
+                sig, siglen, tmp_ctx);
         else
             r = EVP_DigestFinal_ex(tmp_ctx, md, &mdlen);
         EVP_MD_CTX_free(tmp_ctx);

@@ -410,6 +410,11 @@ static int expect_quic_cs(const SSL *s, QCTX *ctx)
     return expect_quic_as(s, ctx, QCTX_C | QCTX_S);
 }
 
+static int expect_quic_cl(const SSL *s, QCTX *ctx)
+{
+    return expect_quic_as(s, ctx, QCTX_C | QCTX_L);
+}
+
 static int expect_quic_csl(const SSL *s, QCTX *ctx)
 {
     return expect_quic_as(s, ctx, QCTX_C | QCTX_S | QCTX_L);
@@ -680,6 +685,9 @@ QUIC_NEEDS_LOCK
 static void quic_unref_port_bios(QUIC_PORT *port)
 {
     BIO *b;
+
+    if (port == NULL)
+        return;
 
     b = ossl_quic_port_get_net_rbio(port);
     BIO_free_all(b);
@@ -1501,36 +1509,6 @@ static int quic_shutdown_peer_wait(void *arg)
     return ossl_quic_channel_is_term_any(qc->ch);
 }
 
-/*
- * This function deals with local shutdown.
- * Function must consider those scenarios:
- *    - blocking mode (1)
- *    - non-blocking mode (2)
- *    - non-blocking mode with assistance from SSL_poll() (3)
- * (1) The function completes shutdown then returns back to caller.
- * To complete shutdown we must do:
- *    - flush all streams, unless we got SSL_SHUTDOWN_FLAG_NO_STREAM_FLUSH,
- *      which means the connection is closed without waiting for streams
- *      to deliver data written by application.
- *    - let remote peer know local application is going to close connection,
- *      unless we got SSL_SHUTDOWN_FLAG_WAIT_PEER in which case we await
- *      until remote peer closes the connection
- *    - wait for peer to confirm connection close
- *
- * (2) The function does not block waiting for streams to be flushed
- * nor for peer to close connection (when running with SSL_SHUTDOWN_FLAG_WAIT_PEER)
- * Application is supposed to call SSL_shutdown() repeatedly as long as
- * function returns 0 which indicates the operation is still in progress.
- *
- * (3) In this case application uses SSL_poll() to wait for completion
- * of each step of shutdown process. Application calls SSL_shutdown()
- * to start with connection shutdown. The function does not block.
- * Application then uses SSL_poll() on connection object to monitor
- * progress of shutdown. The SSL_poll() indicates progress by signaling
- * SSL_POLL_EVENT_EC event. Application must check connection object
- * for error. If no error is indicated, then application must call
- * SSL_shutdown() to move to the next stop in shutdown process.
- */
 QUIC_TAKES_LOCK
 int ossl_quic_conn_shutdown(SSL *s, uint64_t flags,
     const SSL_SHUTDOWN_EX_ARGS *args,
@@ -1555,19 +1533,6 @@ int ossl_quic_conn_shutdown(SSL *s, uint64_t flags,
     if (ossl_quic_channel_is_terminated(ctx.qc->ch)) {
         qctx_unlock(&ctx);
         return 1;
-    }
-
-    if (!wait_peer) {
-        /*
-         * Set shutdown reason now when local application wants to do
-         * active close (does not waant to wait for peer to close th
-         * connection). The reason will be sent to peer with connection
-         * close notification as soon as streams will be flushed.
-         */
-        if (args != NULL) {
-            ossl_quic_channel_set_tcause(ctx.qc->ch, args->quic_error_code,
-                args->quic_reason);
-        }
     }
 
     /* Phase 1: Stream Flushing */
@@ -1861,6 +1826,7 @@ static int create_channel(QUIC_CONNECTION *qc, SSL_CTX *ctx)
     if (qc->port == NULL) {
         QUIC_RAISE_NON_NORMAL_ERROR(NULL, ERR_R_INTERNAL_ERROR, NULL);
         ossl_quic_engine_free(qc->engine);
+        qc->engine = NULL;
         return 0;
     }
 
@@ -1868,7 +1834,9 @@ static int create_channel(QUIC_CONNECTION *qc, SSL_CTX *ctx)
     if (qc->ch == NULL) {
         QUIC_RAISE_NON_NORMAL_ERROR(NULL, ERR_R_INTERNAL_ERROR, NULL);
         ossl_quic_port_free(qc->port);
+        qc->port = NULL;
         ossl_quic_engine_free(qc->engine);
+        qc->engine = NULL;
         return 0;
     }
 
@@ -3206,10 +3174,8 @@ static size_t ossl_quic_pending_int(const SSL *s, int check_channel)
     }
 
     if (check_channel)
-        /* We care about boolean result here only */
         avail = ossl_quic_stream_recv_pending(ctx.xso->stream,
                     /*include_fin=*/1)
-                > 0
             || ossl_quic_channel_has_pending(ctx.qc->ch)
             || ossl_quic_channel_is_term_any(ctx.qc->ch);
     else
@@ -3683,6 +3649,33 @@ err:
 }
 
 QUIC_TAKES_LOCK
+static int qc_getset_max_pending_channels(QCTX *ctx, uint32_t class_,
+    uint64_t *p_value_out, uint64_t *p_value_in)
+{
+    int ret = 0;
+    uint64_t value_out = 0;
+
+    qctx_lock(ctx);
+
+    if (class_ == SSL_VALUE_CLASS_GENERIC && ctx->is_listener) {
+        value_out = ossl_quic_port_get_max_pending_channels(ctx->ql->port);
+        if (p_value_in != NULL)
+            ossl_quic_port_set_max_pending_channels(ctx->ql->port, *p_value_in);
+        ret = 1;
+    } else {
+        QUIC_RAISE_NON_NORMAL_ERROR(ctx, SSL_R_UNSUPPORTED_CONFIG_VALUE_CLASS, NULL);
+        ret = 0;
+    }
+
+    qctx_unlock(ctx);
+
+    if (ret && p_value_out != NULL)
+        *p_value_out = value_out;
+
+    return ret;
+}
+
+QUIC_TAKES_LOCK
 static int qc_get_stream_avail(QCTX *ctx, uint32_t class_,
     int is_uni, int is_remote,
     uint64_t *value)
@@ -3817,6 +3810,8 @@ static int expect_quic_for_value(SSL *s, QCTX *ctx, uint32_t id)
     case SSL_VALUE_STREAM_WRITE_BUF_USED:
     case SSL_VALUE_STREAM_WRITE_BUF_AVAIL:
         return expect_quic_cs(s, ctx);
+    case SSL_VALUE_QUIC_MAX_PENDING_CONNS:
+        return expect_quic_cl(s, ctx);
     default:
         return expect_quic_conn_only(s, ctx);
     }
@@ -3838,6 +3833,8 @@ int ossl_quic_get_value_uint(SSL *s, uint32_t class_, uint32_t id,
     switch (id) {
     case SSL_VALUE_QUIC_IDLE_TIMEOUT:
         return qc_getset_idle_timeout(&ctx, class_, value, NULL);
+    case SSL_VALUE_QUIC_MAX_PENDING_CONNS:
+        return qc_getset_max_pending_channels(&ctx, class_, value, NULL);
 
     case SSL_VALUE_QUIC_STREAM_BIDI_LOCAL_AVAIL:
         return qc_get_stream_avail(&ctx, class_, /*uni=*/0, /*remote=*/0, value);
@@ -3884,6 +3881,8 @@ int ossl_quic_set_value_uint(SSL *s, uint32_t class_, uint32_t id,
 
     case SSL_VALUE_EVENT_HANDLING_MODE:
         return qc_getset_event_handling(&ctx, class_, NULL, &value);
+    case SSL_VALUE_QUIC_MAX_PENDING_CONNS:
+        return qc_getset_max_pending_channels(&ctx, class_, NULL, &value);
 
     default:
         return QUIC_RAISE_NON_NORMAL_ERROR(&ctx,
@@ -3946,15 +3945,7 @@ SSL *ossl_quic_accept_stream(SSL *s, uint64_t flags)
 
     qsm = ossl_quic_channel_get_qsm(ctx.qc->ch);
 
-    if ((flags & SSL_ACCEPT_STREAM_UNI) && !(flags & SSL_ACCEPT_STREAM_BIDI)) {
-        qs = ossl_quic_stream_map_find_in_accept_queue(qsm, 1);
-    } else if ((flags & SSL_ACCEPT_STREAM_BIDI)
-        && !(flags & SSL_ACCEPT_STREAM_UNI)) {
-        qs = ossl_quic_stream_map_find_in_accept_queue(qsm, 0);
-    } else {
-        qs = ossl_quic_stream_map_peek_accept_queue(qsm);
-    }
-
+    qs = ossl_quic_stream_map_peek_accept_queue(qsm);
     if (qs == NULL) {
         if (qctx_blocking(&ctx)
             && (flags & SSL_ACCEPT_STREAM_NO_BLOCK) == 0) {
@@ -4061,14 +4052,14 @@ static void quic_classify_stream(QUIC_CONNECTION *qc,
     uint64_t *app_error_code)
 {
     int local_init;
-    uint64_t final_size;
+    uint64_t scratch_pad; /* throw away value */
 
     local_init = (ossl_quic_stream_is_server_init(qs) == qc->as_server);
 
     if (app_error_code != NULL)
         *app_error_code = UINT64_MAX;
     else
-        app_error_code = &final_size; /* throw away value */
+        app_error_code = &scratch_pad;
 
     if (!ossl_quic_stream_is_bidi(qs) && local_init != is_write) {
         /*
@@ -4101,7 +4092,7 @@ static void quic_classify_stream(QUIC_CONNECTION *qc,
         *app_error_code = !is_write
             ? qs->peer_reset_stream_aec
             : qs->peer_stop_sending_aec;
-    } else if (is_write && ossl_quic_sstream_get_final_size(qs->sstream, &final_size)) {
+    } else if (is_write && qs->have_final_size) {
         /*
          * Stream has been finished. Stream reset takes precedence over this for
          * the write case as peer may not have received all data.
@@ -4345,7 +4336,7 @@ SSL *ossl_quic_new_listener(SSL_CTX *ctx, uint64_t flags)
 
     if ((ql = OPENSSL_zalloc(sizeof(*ql))) == NULL) {
         QUIC_RAISE_NON_NORMAL_ERROR(NULL, ERR_R_CRYPTO_LIB, NULL);
-        goto err;
+        return NULL;
     }
 
 #if defined(OPENSSL_THREADS)
@@ -4393,8 +4384,8 @@ SSL *ossl_quic_new_listener(SSL_CTX *ctx, uint64_t flags)
     return &ql->obj.ssl;
 
 err:
-    if (ql != NULL)
-        ossl_quic_engine_free(ql->engine);
+    ossl_quic_port_free(ql->port);
+    ossl_quic_engine_free(ql->engine);
 
 #if defined(OPENSSL_THREADS)
     ossl_crypto_mutex_free(&ql->mutex);
@@ -4541,7 +4532,7 @@ SSL *ossl_quic_new_from_listener(SSL *ssl, uint64_t flags)
 #endif
 
     /* Create the handshake layer. */
-    qc->tls = ossl_ssl_connection_new_int(ql->obj.ssl.ctx, NULL, TLS_method());
+    qc->tls = ossl_ssl_connection_new_int(ql->obj.ssl.ctx, &qc->obj.ssl, TLS_method());
     if (qc->tls == NULL || (sc = SSL_CONNECTION_FROM_SSL(qc->tls)) == NULL) {
         QUIC_RAISE_NON_NORMAL_ERROR(NULL, ERR_R_INTERNAL_ERROR, NULL);
         goto err;
@@ -4962,6 +4953,11 @@ int ossl_quic_set_peer_token(SSL_CTX *ctx, BIO_ADDR *peer,
         ossl_quic_free_peer_token(old);
     }
     lh_QUIC_TOKEN_insert(c->cache, tok);
+    if (lh_QUIC_TOKEN_error(c->cache)) {
+        ossl_quic_free_peer_token(tok);
+        ossl_crypto_mutex_unlock(c->mutex);
+        return 0;
+    }
 
     ossl_crypto_mutex_unlock(c->mutex);
     return 1;
@@ -5025,7 +5021,7 @@ size_t ossl_quic_get_accept_connection_queue_len(SSL *ssl)
 
     qctx_lock(&ctx);
 
-    ret = (int)ossl_quic_port_get_num_incoming_channels(ctx.ql->port);
+    ret = ossl_quic_port_get_num_incoming_channels(ctx.ql->port);
 
     qctx_unlock(&ctx);
     return ret;
@@ -5275,8 +5271,7 @@ QUIC_NEEDS_LOCK
 static int test_poll_event_is(QUIC_CONNECTION *qc, int is_uni)
 {
     return ossl_quic_stream_map_get_accept_queue_len(ossl_quic_channel_get_qsm(qc->ch),
-               is_uni)
-        > 0;
+        is_uni);
 }
 
 /* Do we have the OS (outgoing: stream) condition? */
@@ -5452,6 +5447,19 @@ QUIC_CHANNEL *ossl_quic_conn_get_channel(SSL *s)
         return NULL;
 
     return ctx.qc->ch;
+}
+
+QUIC_PORT *ossl_quic_listener_get_port(SSL *s)
+{
+    QCTX ctx;
+
+    /*
+     * expect listerner only
+     */
+    if (!expect_quic_listener(s, &ctx))
+        return NULL;
+
+    return ctx.ql->port;
 }
 
 int ossl_quic_set_diag_title(SSL_CTX *ctx, const char *title)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2019-2026 The OpenSSL Project Authors. All Rights Reserved.
  * Copyright (c) 2019, Oracle and/or its affiliates.  All rights reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
@@ -64,7 +64,7 @@ typedef struct {
 
 struct ossl_method_store_st {
     OSSL_LIB_CTX *ctx;
-    SPARSE_ARRAY_OF(ALGORITHM) * algs;
+    SPARSE_ARRAY_OF(ALGORITHM) *algs;
     /*
      * Lock to protect the |algs| array from concurrent writing, when
      * individual implementations or queries are inserted.  This is used
@@ -590,7 +590,7 @@ void ossl_method_store_do_all(OSSL_METHOD_STORE *store,
             return;
 
         tmpalgs = sk_ALGORITHM_new_reserve(NULL,
-            (int)ossl_sa_ALGORITHM_num(store->algs));
+            ossl_sa_ALGORITHM_num(store->algs));
         if (tmpalgs == NULL) {
             ossl_property_unlock(store);
             return;
@@ -741,7 +741,7 @@ fin:
     OSSL_TRACE_BEGIN(QUERY)
     {
         char buf[512];
-        size_t size;
+        int size;
 
         size = ossl_property_list_to_string(NULL, pq, buf, 512);
         BIO_printf(trc_out, "method store query with properties %s "

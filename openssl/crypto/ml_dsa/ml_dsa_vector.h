@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2024-2026 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
@@ -8,6 +8,7 @@
  */
 
 #include <assert.h>
+#include <openssl/crypto.h>
 #include "ml_dsa_poly.h"
 
 struct vector_st {
@@ -31,16 +32,7 @@ static ossl_inline ossl_unused void vector_init(VECTOR *v, POLY *polys, size_t n
 
 static ossl_inline ossl_unused int vector_alloc(VECTOR *v, size_t num_polys)
 {
-    v->poly = OPENSSL_malloc_array(num_polys, sizeof(POLY));
-    if (v->poly == NULL)
-        return 0;
-    v->num_poly = num_polys;
-    return 1;
-}
-
-static ossl_inline ossl_unused int vector_secure_alloc(VECTOR *v, size_t num_polys)
-{
-    v->poly = OPENSSL_secure_malloc_array(num_polys, sizeof(POLY));
+    v->poly = OPENSSL_malloc(num_polys * sizeof(POLY));
     if (v->poly == NULL)
         return 0;
     v->num_poly = num_polys;
@@ -50,13 +42,6 @@ static ossl_inline ossl_unused int vector_secure_alloc(VECTOR *v, size_t num_pol
 static ossl_inline ossl_unused void vector_free(VECTOR *v)
 {
     OPENSSL_free(v->poly);
-    v->poly = NULL;
-    v->num_poly = 0;
-}
-
-static ossl_inline ossl_unused void vector_secure_free(VECTOR *v, size_t rank)
-{
-    OPENSSL_secure_clear_free(v->poly, rank * sizeof(POLY));
     v->poly = NULL;
     v->num_poly = 0;
 }
@@ -169,6 +154,7 @@ vector_expand_mask(VECTOR *out, const uint8_t *rho_prime, size_t rho_prime_len,
         poly_expand_mask(out->poly + i, derived_seed, sizeof(derived_seed),
             gamma1, h_ctx, md);
     }
+    OPENSSL_cleanse(derived_seed, sizeof(derived_seed));
 }
 
 /* Scale back previously rounded value */

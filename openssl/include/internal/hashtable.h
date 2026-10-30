@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2024-2026 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
@@ -160,7 +160,7 @@ typedef struct ht_config_st {
 /* Same as HT_SET_KEY_STRING_CASE but also takes length of the string. */
 #define HT_SET_KEY_STRING_CASE_N(key, member, value, len)                                         \
     do {                                                                                          \
-        if ((size_t)len < sizeof((key)->keyfields.member))                                        \
+        if (len < sizeof((key)->keyfields.member))                                                \
             ossl_ht_strcase((key)->keyfields.member, value, len);                                 \
         else                                                                                      \
             ossl_ht_strcase((key)->keyfields.member, value, sizeof((key)->keyfields.member) - 1); \
@@ -272,7 +272,7 @@ static void ossl_unused ossl_ht_strcase(char *tgt, const char *src, int len)
     if (src == NULL)
         return;
 
-    for (i = 0; src[i] != '\0' && i < len; i++)
+    for (i = 0; i < len && src[i] != '\0'; i++)
         tgt[i] = case_adjust & src[i];
 }
 
@@ -289,7 +289,7 @@ void ossl_ht_free(HT *htable);
 /*
  * Lock the table for reading
  */
-int ossl_ht_read_lock(HT *htable);
+void ossl_ht_read_lock(HT *htable);
 
 /*
  * Lock the table for writing

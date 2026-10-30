@@ -1,5 +1,5 @@
 /*
- * Copyright 1995-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 1995-2026 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
  * this file except in compliance with the License.  You can obtain a copy
@@ -285,6 +285,8 @@ int enc_main(int argc, char **argv)
                 goto opthelp;
             if (k)
                 n *= 1024;
+            if (n > INT_MAX)
+                goto opthelp;
             bsize = (int)n;
             break;
         case OPT_K:
@@ -608,7 +610,7 @@ int enc_main(int argc, char **argv)
                 /* not needed if HASH_UPDATE() is fixed : */
                 int islen = (sptr != NULL ? saltlen : 0);
 
-                if (!PKCS5_PBKDF2_HMAC(str, (int)str_len, sptr, islen,
+                if (!PKCS5_PBKDF2_HMAC(str, str_len, sptr, islen,
                         iter, dgst, iklen + ivlen, tmpkeyiv)) {
                     BIO_printf(bio_err, "PKCS5_PBKDF2_HMAC failed\n");
                     goto end;
@@ -622,7 +624,7 @@ int enc_main(int argc, char **argv)
                                     "deprecated key derivation used.\n"
                                     "Using -iter or -pbkdf2 would be better.\n");
                 if (!EVP_BytesToKey(cipher, dgst, sptr,
-                        (unsigned char *)str, (int)str_len,
+                        (unsigned char *)str, str_len,
                         1, key, iv)) {
                     BIO_printf(bio_err, "EVP_BytesToKey failed\n");
                     goto end;
@@ -714,7 +716,7 @@ int enc_main(int argc, char **argv)
 
             skey = EVP_SKEY_import(app_get0_libctx(), EVP_SKEYMGMT_get0_name(mgmt),
                 app_get0_propq(), OSSL_SKEYMGMT_SELECT_ALL, params);
-            OSSL_PARAM_free(params);
+            app_params_free(params);
             if (skey == NULL) {
                 BIO_printf(bio_err, "Error creating opaque key object for skeymgmt %s\n",
                     skeymgmt ? skeymgmt : EVP_CIPHER_name(cipher));
@@ -833,7 +835,6 @@ static void show_ciphers(const OBJ_NAME *name, void *arg)
     cipher = EVP_get_cipherbyname(name->name);
     if (cipher == NULL
         || (EVP_CIPHER_get_flags(cipher) & EVP_CIPH_FLAG_AEAD_CIPHER) != 0
-        || (EVP_CIPHER_get_flags(cipher) & EVP_CIPH_FLAG_ENC_THEN_MAC) != 0
         || EVP_CIPHER_get_mode(cipher) == EVP_CIPH_XTS_MODE)
         return;
 
@@ -851,7 +852,7 @@ static int set_hex(const char *in, unsigned char *out, int size)
     unsigned char j;
 
     i = size * 2;
-    n = (int)strlen(in);
+    n = strlen(in);
     if (n > i) {
         BIO_printf(bio_err, "hex string is too long, ignoring excess\n");
         n = i; /* ignore exceeding part */

@@ -43,7 +43,6 @@ my @config = ( );
 my $provname = 'default';
 my $dsaallow = '1';
 my $no_pqc = 0;
-my $no_hkdf_fixed = 0;
 
 my $datadir = srctop_dir("test", "recipes", "80-test_cms_data");
 my $smdir    = srctop_dir("test", "smime-certs");
@@ -54,7 +53,7 @@ my ($no_des, $no_dh, $no_dsa, $no_ec, $no_ec2m, $no_rc2, $no_zlib)
 
 $no_rc2 = 1 if disabled("legacy");
 
-plan tests => 36;
+plan tests => 38;
 
 ok(run(test(["pkcs7_test"])), "test pkcs7");
 
@@ -69,8 +68,6 @@ unless ($no_fips) {
     $old_fips = 1 if $dsaallow != '0';
     run(test(["fips_version_test", "-config", $provconf, "<3.5.0"]),
         capture => 1, statusvar => \$no_pqc);
-    run(test(["fips_version_test", "-config", $provconf, "<3.6.0"]),
-        capture => 1, statusvar => \$no_hkdf_fixed);
 }
 
 $ENV{OPENSSL_TEST_LIBCTX} = "1";
@@ -363,17 +360,6 @@ my @smime_cms_tests = (
         "-inform", "PEM",
         "-secretkey", "000102030405060708090A0B0C0D0E0F",
         "-secretkeyid", "C0FEE0" ],
-      \&final_compare
-    ],
-
-    [ "enveloped content test streaming PEM format, AES-128-GCM cipher and AES-128-CBC KEK cipher, password",
-      [ "{cmd1}", @prov, "-encrypt", "-in", $smcont, "-outform", "PEM", "-aes-128-gcm",
-        "-kekcipher", "aes-128-cbc",
-        "-stream", "-out", "{output}.cms",
-        "-pwri_password", "test" ],
-      [ "{cmd2}", "-decrypt", "-in", "{output}.cms", "-out", "{output}.txt",
-        "-inform", "PEM",
-        "-pwri_password", "test" ],
       \&final_compare
     ],
 
@@ -810,6 +796,18 @@ sub zero_compare {
     return (-e "$opts{output}.txt" && -z "$opts{output}.txt");
 }
 
+sub read_file_text {
+    my ($file) = @_;
+    open(my $fh, "<", $file) or return undef;
+    binmode $fh;
+    local $/;
+    my $data = <$fh>;
+    close($fh);
+    # Normalise line endings as -out is written in text mode on Windows.
+    $data =~ s/\r\n/\n/g if defined $data;
+    return $data;
+}
+
 subtest "CMS => PKCS#7 compatibility tests\n" => sub {
     plan tests => scalar @smime_pkcs7_tests;
 
@@ -1016,6 +1014,56 @@ subtest "CMS Decrypt message encrypted with OpenSSL 1.1.1\n" => sub {
            && compare_text($smcont, $out) == 0,
            "Decrypt message from OpenSSL 1.1.1");
     }
+};
+
+subtest "CMS parse authenticatedData authAttrs and unauthAttrs\n" => sub {
+    plan tests => 3;
+
+    # BouncyCastle authenticatedData (HMAC-SHA256, KEK) carrying both an
+    # authenticated and an unauthenticated attribute. Per RFC 5652 these are
+    # SET OF Attribute, so with the CMS_AuthenticatedData template fixed to use
+    # X509_ATTRIBUTE they are rendered as attributes (object:/set:) rather than
+    # as an X509_ALGOR (algorithm:/parameter:) they were misparsed into before.
+    my $exit = 0;
+    my $dump = join "\n",
+               run(app(["openssl", "cms", @defaultprov, "-cmsout", "-noout",
+                        "-print", "-inform", "PEM",
+                        "-in", catfile($datadir, "authenticated_attrs.pem")]),
+                   capture => 1,
+                   statusvar => $exit);
+
+    is($exit, 0, "parse authenticatedData with attributes");
+    ok($dump =~ /authAttrs:.*?object:.*?1\.3\.6\.1\.4\.1\.5949\.99\.1.*?UTF8STRING:auth-attr-value/s,
+       "authAttrs parsed as SET OF Attribute");
+    ok($dump =~ /unauthAttrs:.*?object:.*?1\.3\.6\.1\.4\.1\.5949\.99\.2.*?UTF8STRING:unauth-attr-value/s,
+       "unauthAttrs parsed as SET OF Attribute");
+};
+
+subtest "CMS decrypt authEnvelopedData with authenticated attributes\n" => sub {
+    plan tests => 4;
+
+    # BouncyCastle AES-128-GCM authEnvelopedData (KEK) carrying authAttrs;
+    # a clean decrypt confirms the authAttrs are verified as the AEAD AAD.
+    1 while unlink "authattrs.txt";
+    ok(run(app(["openssl", "cms", @defaultprov, "-decrypt", "-inform", "PEM",
+                "-secretkey", "000102030405060708090A0B0C0D0E0F",
+                "-secretkeyid", "C0FEE0",
+                "-in", catfile($datadir, "authenveloped_attrs.pem"),
+                "-out", "authattrs.txt" ])),
+       "decrypt authEnvelopedData with authAttrs");
+    is(read_file_text("authattrs.txt"), "Hello AuthEnvelopedData world\n",
+       "decrypted authEnvelopedData plaintext matches expected");
+
+    # A flipped authAttrs byte must fail the tag check and leave -out empty.
+    1 while unlink "bad_authattrs.txt";
+    ok(!run(app(["openssl", "cms", @defaultprov, "-decrypt", "-inform", "PEM",
+                 "-secretkey", "000102030405060708090A0B0C0D0E0F",
+                 "-secretkeyid", "C0FEE0",
+                 "-in", catfile($datadir, "bad_authenveloped_attrs.pem"),
+                 "-out", "bad_authattrs.txt" ])),
+       "reject authEnvelopedData with tampered authAttrs");
+    ok(!-s "bad_authattrs.txt",
+       "tampered authEnvelopedData leaks no plaintext to -out");
 };
 
 subtest "CAdES <=> CAdES consistency tests\n" => sub {
@@ -1260,6 +1308,23 @@ subtest "CMS code signing test" => sub {
                     "-content", $smcont])),
        "fail verify CMS signature with code signing certificate for purpose smime_sign");
 };
+
+# Regression test for PKCS7_verify() ownership handling when
+# digestAlgorithms is an empty SET.
+# The malformed structure must fail cleanly without crashing or
+# triggering use-after-free behaviour.
+with({ exit_checker => sub { return shift == 4; } },
+    sub {
+        ok(run(app([
+                'openssl', 'smime',
+                '-verify',
+                '-noverify',
+                '-in',
+                srctop_file('test', 'smime-eml',
+                            'pkcs7-empty-digest-set.eml'),
+            ])),
+           "Check empty digestAlgorithms SET is handled safely");
+    });
 
 # Test case for missing MD algorithm (must not segfault)
 
@@ -1548,97 +1613,21 @@ subtest "SLH-DSA tests for CMS" => sub {
     }
 };
 
-subtest "sign and verify with multiple keys" => sub {
-    plan tests => 7;
+# Regression test for NULL dereference in PWRI decrypt path
+# when optional keyDerivationAlgorithm is omitted.
+subtest "PWRI missing keyDerivationAlgorithm regression" => sub {
+    plan tests => 1;
 
-    my $smrsa2 = catfile($smdir, "smrsa2.pem");
-    my $sig1 = "sig1.cms";
-    my $out1 = "out1.txt";
-    my $sig2 = "sig2.cms";
-    my $out2 = "out2.txt";
-
-    ok(run(app(['openssl', 'cms',
-                @defaultprov,
-                '-sign', '-in', $smcont,
-                '-nodetach',
-                '-signer', $smrsa1,
-                '-out', $sig1, '-outform', 'DER',
-               ])),
-       "sign with first key");
-    ok(run(app(['openssl', 'cms',
-                @defaultprov,
-                '-verify', '-in', $sig1, '-inform', 'DER',
-                '-CAfile', $smrsa1, '-partial_chain',
-                '-out', $out1,
-               ])),
-       "verify single signature");
-    is(compare($smcont, $out1), 0, "compare original message with verified message");
-
-    ok(run(app(['openssl', 'cms',
-                @defaultprov,
-                '-resign', '-in', $sig1, '-inform', 'DER',
-                '-signer', $smrsa2,
-                '-out', $sig2, '-outform', 'DER',
-               ])),
-       "resign with second key");
-
-    # because the smrsa2 signature cannot be verified, overall verification fails
-    ok(!run(app(['openssl', 'cms',
-                 @defaultprov,
-                 '-verify', '-in', $sig2, '-inform', 'DER',
-                 '-CAfile', $smrsa1, '-partial_chain',
-                 '-out', $out2,
-                ])),
-       "try to verify two signatures with only rsa1");
-
-    # because both signatures can be verified, overall verification succeeds
-    ok(run(app(['openssl', 'cms',
-                @defaultprov,
-                '-verify', '-in', $sig2, '-inform', 'DER',
-                '-CAfile', $smroot,
-                '-out', $out2,
-               ])),
-       "verify both signature signatures with root");
-    is(compare($smcont, $out2), 0, "compare original message with verified message");
+    with({ exit_checker => sub { return shift == 4; } }, sub {
+        ok(run(app([
+            "openssl", "cms", @prov,
+            "-decrypt",
+            "-inform", "DER",
+            "-in",
+            srctop_file('test', 'cms-msg', 'missing-kdf.der'),
+            "-out", "pwri-out.txt",
+            "-pwri_password", "secret"])),
+        "missing keyDerivationAlgorithm is rejected");
+    });
 };
 
-subtest "ML-KEM KEMRecipientInfo tests for CMS" => sub {
-    plan tests => 5;
-
-    SKIP: {
-        skip "ML-KEM is not supported in this build", 5
-            if disabled("ml-kem") || $no_hkdf_fixed;
-
-        ok(run(app(["openssl", "cms", @prov, "-encrypt", "-in", $smcont,
-                    "-out", "mlkem512.cms",
-                    "-recip", catfile($smdir, "sm_mlkem512.pem"),
-                    "-aes-256-gcm", "-keyid" ])),
-           "CMS encrypt with ML-KEM-512 and default KDF");
-
-        ok(run(app(["openssl", "cms", @prov, "-decrypt", "-in", "mlkem512.cms",
-                    "-out", "mlkem512.txt", "-recip", catfile($smdir, "sm_mlkem512.pem")]))
-           && compare_text($smcont, "mlkem512.txt") == 0,
-           "CMS decrypt with ML-KEM-512 and default KDF");
-
-        ok(run(app(["openssl", "cms", @prov, "-encrypt", "-in", $smcont,
-                    "-out", "mlkem512_mlkem768.cms",
-                    "-recip", catfile($smdir, "sm_mlkem512.pem"),
-                    "-recip_kdf", "HKDF-SHA512",
-                    "-recip", catfile($smdir, "sm_mlkem768.pem"),
-                    "-recip_ukm", "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
-                    "-aes-256-gcm", "-keyid" ])),
-           "CMS encrypt to multiple with ML-KEM and explicit KDF and UKM");
-
-        ok(run(app(["openssl", "cms", @prov, "-decrypt", "-in", "mlkem512_mlkem768.cms",
-                    "-out", "mlkem512-2.txt",
-                    "-recip", catfile($smdir, "sm_mlkem512.pem")]))
-           && compare_text($smcont, "mlkem512-2.txt") == 0,
-           "CMS decrypt with ML-KEM-512 and explicit KDF");
-
-        ok(run(app(["openssl", "cms", @prov, "-decrypt", "-in", "mlkem512_mlkem768.cms",
-                    "-out", "mlkem768-2.txt",
-                    "-recip", catfile($smdir, "sm_mlkem768.pem")]))
-           && compare_text($smcont, "mlkem768-2.txt") == 0,
-           "CMS decrypt with ML-KEM-768 and using UKM");
-    }
-};

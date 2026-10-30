@@ -1,5 +1,5 @@
 #! /usr/bin/env perl
-# Copyright 2011-2025 The OpenSSL Project Authors. All Rights Reserved.
+# Copyright 2011-2026 The OpenSSL Project Authors. All Rights Reserved.
 #
 # Licensed under the Apache License 2.0 (the "License").  You may not use
 # this file except in compliance with the License.  You can obtain a copy
@@ -8,10 +8,10 @@
 
 
 # ====================================================================
-# Written by Andy Polyakov, @dot-asm, initially for use in the OpenSSL
+# Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
-# details see https://github.com/dot-asm/cryptogams/.
+# details see http://www.openssl.org/~appro/cryptogams/.
 # ====================================================================
 
 # August 2011.
@@ -67,6 +67,13 @@ if (!$addx && $win64 && ($flavour =~ /masm/ || $ENV{ASM} =~ /ml64/) &&
 if (!$addx && `$ENV{CC} -v 2>&1` =~ /((?:clang|LLVM) version|.*based on LLVM) ([0-9]+)\.([0-9]+)/) {
 	my $ver = $2 + $3/100.0;	# 3.1->3.01, 3.10->3.10
 	$addx = ($ver>=3.03);
+}
+
+if (!$addx && `$ENV{CC} -x c /dev/null -dM -E|grep __clang_major__`
+	=~ /#define __clang_major__.([0-9]+)/) {
+	if ($1) {
+		$addx = ($1>=11); #icx started with clang 11
+	}
 }
 
 # int bn_mul_mont_gather5(
@@ -3584,7 +3591,7 @@ $code.=<<___;
 .Linc:
 	.long	0,0, 1,1
 	.long	2,2, 2,2
-.asciz	"Montgomery Multiplication with scatter/gather for x86_64, CRYPTOGAMS by <https://github.com/dot-asm>"
+.asciz	"Montgomery Multiplication with scatter/gather for x86_64, CRYPTOGAMS by <appro\@openssl.org>"
 .previous
 ___
 

@@ -27,7 +27,8 @@
 # zlib 1.3.2 (tkimg)
 # xpa 2.2.2
 # libxslt (system, via xslt-config)
-# openssl 3.6.2
+# openssl 3.5.9 (LTS)
+# certifi 2026.10.23
 
 DS9_VERSION	= 8.8
 XPA_VERSION	= 2.2.2

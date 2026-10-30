@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2017-2026 The OpenSSL Project Authors. All Rights Reserved.
  * Copyright (c) 2017, Oracle and/or its affiliates.  All rights reserved.
  *
  * Licensed under the Apache License 2.0 (the "License").  You may not use
@@ -109,7 +109,7 @@ static int test_int_lhash(void)
         }
 
     /* num_items */
-    if (!TEST_size_t_eq((size_t)lh_int_num_items(h), n_int_tests))
+    if (!TEST_int_eq((size_t)lh_int_num_items(h), n_int_tests))
         goto end;
 
     /* retrieve */
@@ -257,7 +257,7 @@ static int test_int_hashtable(void)
     }
 
     /* num_items */
-    if (!TEST_size_t_eq(ossl_ht_count(ht), n_int_tests))
+    if (!TEST_int_eq((size_t)ossl_ht_count(ht), n_int_tests))
         goto end;
 
     /* foreach, no arg */
@@ -277,7 +277,7 @@ static int test_int_hashtable(void)
 
     /* filter */
     list = ossl_ht_filter(ht, 64, int_filter_all, NULL);
-    if (!TEST_size_t_eq(list->list_len, n_int_tests))
+    if (!TEST_int_eq((size_t)list->list_len, n_int_tests))
         goto end;
     ossl_ht_value_list_free(list);
 
@@ -448,7 +448,7 @@ static int test_hashtable_stress(int idx)
     }
 
     /* make sure we stored everything */
-    if (!TEST_size_t_eq(ossl_ht_count(h), n))
+    if (!TEST_int_eq((size_t)ossl_ht_count(h), n))
         goto end;
 
     /* delete or get in a different order */
@@ -544,7 +544,11 @@ static void hashtable_mt_free(HT_VALUE *v)
     int pending_delete;
     int ret;
 
-    CRYPTO_atomic_load_int(&m->pending_delete, &pending_delete, worker_lock);
+    if (!TEST_true(CRYPTO_atomic_load_int(&m->pending_delete, &pending_delete,
+            worker_lock))) {
+        free_failure = 1;
+        return;
+    }
 
     if (shutting_down == 1)
         return;
@@ -601,8 +605,7 @@ static void do_mt_hash_work(void)
         }
         switch (behavior) {
         case DO_LOOKUP:
-            if (!ossl_ht_read_lock(m_ht))
-                break;
+            ossl_ht_read_lock(m_ht);
             m = ossl_ht_mt_TEST_MT_ENTRY_get(m_ht, TO_HT_KEY(&key), &v);
             if (m != NULL && m != expected_m) {
                 worker_exits[num] = "Read unexpected value from hashtable";

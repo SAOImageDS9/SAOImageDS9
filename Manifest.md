@@ -6,11 +6,12 @@ Last updated 2026-10-26
 | ------------ | ---------- | ----- | ----- | -------------------------------------------------------------------- | ------------------------------- |
 | ast          | 9.2.14     |       |       | https://github.com/Starlink/ast                                      | 9.5.0                           |
 | awthemes     | 10.4.0     |       |       | https://sourceforge.net/projects/tcl-awthemes/                       | 10.4.0                          |
+| certifi      | 2026.10.23 |       |       | https://github.com/certifi/python-certifi                            | 2026.10.23                      |
 | ds9          | 8.8        | y     |       |                                                                      |                                 |
 | fickle       | 2.2        | y     |       | https://github.com/SAOImageDS9/fickle-maintenance                    | previous upstream abandoned     |
 | fitsy        |            | y     |       |                                                                      |                                 |
 | funtools     | 1.5.0      | y     | y     | https://github.com/SAOImageDS9/funtools-maintenance                  | abandoned                       |
-| openssl      | 3.6.2      |       |       | https://github.com/openssl/openssl                                   | 4.1.0                           |
+| openssl      | 3.5.9      |       |       | https://github.com/openssl/openssl                                   | 4.1.0 (3.5.9 on 3.5 LTS)        |
 | pdf4tcl      | 0.9.4      |       |       | https://sourceforge.net/projects/pdf4tcl/                            | 0.9.4                           |
 | scidthemes   | 1.0        |       |       | https://sourceforge.net/projects/scid/files/Scid/Additional%20Files/ | 1.0                             |
 | taccle       | 1.4        | y     |       | https://github.com/SAOImageDS9/taccle-maintenance                    | previous upstream abandoned     |

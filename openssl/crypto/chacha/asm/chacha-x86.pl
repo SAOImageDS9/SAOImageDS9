@@ -1,5 +1,5 @@
 #! /usr/bin/env perl
-# Copyright 2016-2025 The OpenSSL Project Authors. All Rights Reserved.
+# Copyright 2016-2026 The OpenSSL Project Authors. All Rights Reserved.
 #
 # Licensed under the Apache License 2.0 (the "License").  You may not use
 # this file except in compliance with the License.  You can obtain a copy
@@ -8,10 +8,10 @@
 
 #
 # ====================================================================
-# Written by Andy Polyakov, @dot-asm, initially for use in the OpenSSL
+# Written by Andy Polyakov <appro@openssl.org> for the OpenSSL
 # project. The module is, however, dual licensed under OpenSSL and
 # CRYPTOGAMS licenses depending on where you obtain it. For further
-# details see https://github.com/dot-asm/cryptogams/.
+# details see http://www.openssl.org/~appro/cryptogams/.
 # ====================================================================
 #
 # January 2015
@@ -63,6 +63,10 @@ $ymm=1 if ($xmm && !$ymm && $ARGV[0] eq "win32" &&
 $ymm=1 if ($xmm && !$ymm &&
 		`$ENV{CC} -v 2>&1` =~ /((?:clang|LLVM) version|based on LLVM) ([0-9]+\.[0-9]+)/ &&
 		$2>=3.0);	# first version supporting AVX
+
+$ymm=1 if ($xmm && !$ymm &&
+		`$ENV{CC} -x c /dev/null -dM -E|grep __clang_major__` =~ /#define __clang_major__.([0-9]+)/ &&
+		$1>=11); #icx started with clang 11
 
 $a="eax";
 ($b,$b_)=("ebx","ebp");
@@ -785,7 +789,7 @@ sub SSSE3ROUND {	# critical path is 20 "SIMD ticks" per round
 &data_word(0,-1,-1,-1);
 &align	(64);
 }
-&asciz	("ChaCha20 for x86, CRYPTOGAMS by <https://github.com/dot-asm>");
+&asciz	("ChaCha20 for x86, CRYPTOGAMS by <appro\@openssl.org>");
 
 if ($ymm) {
 my ($xa,$xa_,$xb,$xb_,$xc,$xc_,$xd,$xd_)=map("xmm$_",(0..7));

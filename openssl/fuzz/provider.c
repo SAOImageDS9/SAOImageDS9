@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2025 The OpenSSL Project Authors. All Rights Reserved.
+ * Copyright 2023-2026 The OpenSSL Project Authors. All Rights Reserved.
  *
  * Licensed under the Apache License 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,8 +32,11 @@
     {                                                                    \
         STACK_OF(evp) *obj_stack = stack;                                \
                                                                          \
-        if (sk_##evp##_push(obj_stack, obj) > 0)                         \
-            evp##_up_ref(obj);                                           \
+        if (!evp##_up_ref(obj))                                          \
+            return;                                                      \
+                                                                         \
+        if (sk_##evp##_push(obj_stack, obj) <= 0)                        \
+            evp##_free(obj);                                             \
     }                                                                    \
     static void init_##name(OSSL_LIB_CTX *libctx)                        \
     {                                                                    \
@@ -214,7 +217,7 @@ static int read_octet_string(const uint8_t **buf, size_t *len, char **res)
 
     *res = (char *)*buf;
 
-    r = (int)(ptr - *buf);
+    r = ptr - *buf;
     *len -= r;
     *buf = ptr;
 
@@ -269,7 +272,7 @@ static OSSL_PARAM *fuzz_params(OSSL_PARAM *param, const uint8_t **buf, size_t *l
     for (p = param; p != NULL && p->key != NULL; p++)
         p_num++;
 
-    fuzzed_parameters = OPENSSL_calloc(p_num + 1, sizeof(OSSL_PARAM));
+    fuzzed_parameters = OPENSSL_zalloc(sizeof(OSSL_PARAM) * (p_num + 1));
     p = fuzzed_parameters;
 
     for (; param != NULL && param->key != NULL; param++) {
@@ -408,8 +411,7 @@ static int do_evp_cipher(const EVP_CIPHER *evp_cipher, const OSSL_PARAM param[])
         return 0;
     }
 
-    if (!EVP_EncryptUpdate(ctx, outbuf, &outlen, (const unsigned char *)intext,
-            (int)strlen(intext))) {
+    if (!EVP_EncryptUpdate(ctx, outbuf, &outlen, (const unsigned char *)intext, strlen(intext))) {
         /* Error */
         EVP_CIPHER_CTX_free(ctx);
         return 0;

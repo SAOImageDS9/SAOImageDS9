@@ -174,7 +174,7 @@ static int pkcs7_encode_rinfo(PKCS7_RECIP_INFO *ri,
     if (EVP_PKEY_encrypt(pctx, ek, &eklen, key, keylen) <= 0)
         goto err;
 
-    ASN1_STRING_set0(ri->enc_key, ek, (int)eklen);
+    ASN1_STRING_set0(ri->enc_key, ek, eklen);
     ek = NULL;
 
     ret = 1;
@@ -203,13 +203,6 @@ static int pkcs7_decrypt_rinfo(unsigned char **pek, int *peklen,
     if (EVP_PKEY_decrypt_init(pctx) <= 0)
         goto err;
 
-    if (EVP_PKEY_is_a(pkey, "RSA"))
-        /* upper layer pkcs7 code incorrectly assumes that a successful RSA
-         * decryption means that the key matches ciphertext (which never
-         * was the case, implicit rejection or not), so to make it work
-         * disable implicit rejection for RSA keys */
-        EVP_PKEY_CTX_ctrl_str(pctx, "rsa_pkcs1_implicit_rejection", "0");
-
     ret = evp_pkey_decrypt_alloc(pctx, &ek, &eklen, fixlen,
         ri->enc_key->data, ri->enc_key->length);
     if (ret <= 0)
@@ -219,7 +212,7 @@ static int pkcs7_decrypt_rinfo(unsigned char **pek, int *peklen,
 
     OPENSSL_clear_free(*pek, *peklen);
     *pek = ek;
-    *peklen = (int)eklen;
+    *peklen = eklen;
 
 err:
     EVP_PKEY_CTX_free(pctx);
@@ -998,7 +991,7 @@ int PKCS7_SIGNER_INFO_sign(PKCS7_SIGNER_INFO *si)
 
     EVP_MD_CTX_free(mctx);
 
-    ASN1_STRING_set0(si->enc_digest, abuf, (int)siglen);
+    ASN1_STRING_set0(si->enc_digest, abuf, siglen);
 
     return 1;
 
@@ -1207,7 +1200,7 @@ PKCS7_ISSUER_AND_SERIAL *PKCS7_get_issuer_and_serial(PKCS7 *p7, int idx)
     rsk = p7->d.signed_and_enveloped->recipientinfo;
     if (rsk == NULL)
         return NULL;
-    if (sk_PKCS7_RECIP_INFO_num(rsk) <= idx)
+    if (idx < 0 || sk_PKCS7_RECIP_INFO_num(rsk) <= idx)
         return NULL;
     ri = sk_PKCS7_RECIP_INFO_value(rsk, idx);
     return ri->issuer_and_serial;

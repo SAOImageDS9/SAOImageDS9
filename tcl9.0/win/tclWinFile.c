@@ -30,8 +30,7 @@
  * on the proleptic Gregorian calendar) and the Posix epoch (1970-01-01).
  */
 
-#define POSIX_EPOCH_AS_FILETIME	\
-	((long long) 116444736 * (long long) 1000000000)
+#define POSIX_EPOCH_AS_FILETIME 116444736000000000LL
 
 /*
  * Declarations for 'link' related information. This information should come
@@ -180,6 +179,18 @@ static int		WinLink(const WCHAR *LinkSource,
 static int		WinSymLinkDirectory(const WCHAR *LinkDirectory,
 			    const WCHAR *LinkTarget);
 MODULE_SCOPE void	tclWinDebugPanic(const char *format, ...);
+
+/*
+ * Check if a Windows error code is one that might be returned for
+ * non-existent files
+ */
+static inline int
+IsNoSuchFileError(DWORD winError)
+{
+    return (winError == ERROR_FILE_NOT_FOUND ||
+	    winError == ERROR_PATH_NOT_FOUND ||
+	    winError == ERROR_INVALID_NAME);
+}
 
 /*
  *--------------------------------------------------------------------
@@ -1047,7 +1058,7 @@ TclpMatchInDirectory(
 	    DWORD err = GetLastError();
 
 	    Tcl_DStringFree(&ds);
-	    if (err == ERROR_FILE_NOT_FOUND) {
+	    if (IsNoSuchFileError(err)) {
 		/*
 		 * We used our 'pattern' above, and matched nothing. This
 		 * means we just return TCL_OK, indicating no results found.
@@ -2306,7 +2317,7 @@ ToCTime(
     convertedTime.HighPart = (LONG) fileTime.dwHighDateTime;
 
     return (__time64_t) ((convertedTime.QuadPart -
-	    (long long) POSIX_EPOCH_AS_FILETIME) / (long long) 10000000);
+	    POSIX_EPOCH_AS_FILETIME) / 10000000);
 }
 
 /*

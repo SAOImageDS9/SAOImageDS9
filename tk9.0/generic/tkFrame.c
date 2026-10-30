@@ -788,7 +788,7 @@ FrameWidgetObjCmd(
 			    "can't modify %s option after widget is created",
 			    arg));
 		    Tcl_SetErrorCode(interp, "TK", "FRAME", "CREATE_ONLY",
-			    NULL);
+			    (char *)NULL);
 		    result = TCL_ERROR;
 		    goto done;
 		}
@@ -1652,6 +1652,8 @@ DisplayFrame(
 	    (unsigned) (Tk_Height(tkwin) - 2 * highlightWidth),
 	    highlightWidth, highlightWidth);
     Tk_FreePixmap(framePtr->display, pixmap);
+#else
+    Tk_ClipDrawableToRect(framePtr->display, pixmap, 0, 0, -1, -1);
 #endif /* TK_NO_DOUBLE_BUFFERING */
 }
 

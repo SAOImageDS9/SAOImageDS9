@@ -4,6 +4,41 @@ changes to the Tcl source code at
 
 > [Tcl Source Code](https://core.tcl-lang.org/tcl/timeline)
 
+Release Tcl 9.0.4 arises from the check-in with tag `core-9-0-4`.
+
+Tcl patch releases have the primary purpose of delivering bug fixes
+to the userbase.
+
+# Bug fixes
+ - [unsupported commands should not be available in safe interpreters](https://core.tcl-lang.org/tcl/tktview/82d12c)
+ - [Check for -municode doesn't work on WSL](https://core.tcl-lang.org/tcl/tktview/632710)
+ - [configure --enable-man-compression error](https://core.tcl-lang.org/tcl/tktview/886549)
+ - [nmake: rmdir and mkdir are picked from cygwin if available](https://core.tcl-lang.org/tcl/tktview/be40b7)
+ - [lseq: has incorrect results in edge cases](https://core.tcl-lang.org/tcl/tktview/999b69)
+ - [lseq: "count" error persists across calls](https://core.tcl-lang.org/tcl/tktview/8d1fc7)
+ - [lseq: Remove the ability to pass expressions as numeric values in the lseq command.](https://core.tcl-lang.org/tips/doc/trunk/tip/746.md)
+ - [Performance regression in expr in/ni operators](https://core.tcl-lang.org/tcl/info/8994c9)
+ - [Uninitialized memory access in setting script limits](https://core.tcl-lang.org/tcl/info/f7495f)
+ - [Crash when defining const if namespace does not exist](https://core.tcl-lang.org/tcl/info/4b22d8)
+ - [Glob errors with -directory option and patterns containing absolute paths (Windows)](https://core.tcl-lang.org/tcl/info/b0682c)
+ - [Glob errors with -directory option with trailing backslash (Windows)](https://core.tcl-lang.org/tcl/info/b0682c)
+ - [File normalization inconsistency for glob result (Windows)](https://core.tcl-lang.org/tcl/info/108904)
+ - [Avoid ClockClientData typedef redefinition](https://core.tcl-lang.org/tcl/info/4724f3)
+ - [Building sqlite3 for tcl8 redefines typedef](https://core.tcl-lang.org/tcl/info/ad08bc)
+ - [Inconsistent file join with volume-relative arguments](https://core.tcl-lang.org/tcl/info/1215dc)
+ - [mind PTHREAD_NULL as sentinel value vs legitimate pthread_t arg](https://core.tcl-lang.org/tcl/info/673f2d)
+ - [fileevent poor performance due to shimmering](https://core.tcl-lang.org/tcl/info/7da6c2)
+
+# Updated bundled packages, libraries, standards, data
+ - autoconf 2.73
+ - http 2.10.2
+ - Itcl 4.3.8
+ - sqlite3 3.53.0
+ - tcltest 2.5.11
+ - Thread 3.0.6
+ - tzdata 2026b
+ - zlib 1.3.2
+
 Release Tcl 9.0.3 arises from the check-in with tag `core-9-0-3`.
 
 Tcl patch releases have the primary purpose of delivering bug fixes
@@ -20,6 +55,8 @@ to the userbase.
  - [Windows: Install pkgconfig](https://core.tcl-lang.org/tcl/tktview/1cf49a)
  - [Non-existent variables are ignored if re is {}](https://core.tcl-lang.org/tcl/tktview/cb03e5)
  - [bug in single-argument 'max' with bignums](https://core.tcl-lang.org/tcl/tktview/8dd280)
+ - [Windows static builds: package require registry dde fails in child interpreters](https://core.tcl-lang.org/tcl/tktview/4f06d7)
+ - [Windows static builds: registry command is available in main interpreter without package require](https://core.tcl-lang.org/tcl/tktview/6094de)
 
 # Updated bundled packages, libraries, standards, data
  - Itcl 4.3.5
@@ -251,11 +288,3 @@ writing Tcl scripts.
  - abstract and singleton classes
  - configurable properties
  - `method -export`, `method -unexport`
-
-# Known bugs
- - [changed behaviour wrt command names, namespaces and resolution](https://core.tcl-lang.org/tcl/tktview/f14b33)
- - [windows dos device paths inconsistencies and missing functionality](https://core.tcl-lang.org/tcl/tktview/d8f121)
- - [load library (dll) from zipfs-library causes a leak in temporary folder](https://core.tcl-lang.org/tcl/tktview/a8e4f7)
- - [lsearch -sorted -inline -subindices incorrect result](https://core.tcl-lang.org/tcl/tktview/bc4ac0)
- - ["No error" when load fails due to a missing secondary DLL](https://core.tcl-lang.org/tcl/tktview/66aa81c90a)
-

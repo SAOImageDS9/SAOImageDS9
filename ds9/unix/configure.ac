@@ -76,11 +76,6 @@ TEA_LOAD_CONFIG(tclxml)
 TEA_PATH_CONFIG(tclxmlrpc)
 TEA_LOAD_CONFIG(tclxmlrpc)
 
-if test "${TCL_MAJOR_VERSION}" -lt 9; then
-    TEA_PATH_CONFIG(tclzipfs)
-    TEA_LOAD_CONFIG(tclzipfs)
-fi
-
 TEA_PATH_CONFIG(tls)
 TEA_LOAD_CONFIG(tls)
 

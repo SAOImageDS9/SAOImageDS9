@@ -74,51 +74,6 @@ static const Tcl_HashKeyType ClockFmtScnStorageHashKeyType = {
  *----------------------------------------------------------------------
  */
 
-static inline void
-Clock_str2int_no(
-    int *out,
-    const char *p,
-    const char *e,
-    int sign)
-{
-    /* assert(e <= p + 10); */
-    int val = 0;
-
-    /* overflow impossible for 10 digits ("9..9"), so no needs to check at all */
-    while (p < e) {				/* never overflows */
-	val = val * 10 + (*p++ - '0');
-    }
-    if (sign < 0) {
-	val = -val;
-    }
-    *out = val;
-}
-
-static inline void
-Clock_str2wideInt_no(
-    Tcl_WideInt *out,
-    const char *p,
-    const char *e,
-    int sign)
-{
-    /* assert(e <= p + 18); */
-    Tcl_WideInt val = 0;
-
-    /* overflow impossible for 18 digits ("9..9"), so no needs to check at all */
-    while (p < e) {				/* never overflows */
-	val = val * 10 + (*p++ - '0');
-    }
-    if (sign < 0) {
-	val = -val;
-    }
-    *out = val;
-}
-
-/* int & Tcl_WideInt overflows may happens here (expected case) */
-#if (defined(__GNUC__) || defined(__GNUG__)) && !defined(__clang__)
-# pragma GCC optimize("no-trapv")
-#endif
-
 static inline int
 Clock_str2int(
     int *out,
@@ -126,36 +81,50 @@ Clock_str2int(
     const char *e,
     int sign)
 {
+    char last;
     int val = 0;
-    /* overflow impossible for 10 digits ("9..9"), so no needs to check before */
-    const char *eNO = p + 10;
 
-    if (eNO > e) {
-	eNO = e;
+    if (e - p > 10) {           /* definitely overflows */
+	return TCL_ERROR;
     }
-    while (p < eNO) {				/* never overflows */
+
+    /*
+     * Overflow impossible for max 9 digits ("9..9"),
+     * or for 10 digits if it starts with 1 ("19..9").
+     */
+    if (e - p <= 9 || *p <= '1' ) {
+	while (p < e) {
+	    val = val * 10 + (*p++ - '0');
+	}
+	*out = (sign >= 0) ? val : -val;
+	return TCL_OK;
+    }
+
+    /* 10 digits and it may overflow at last char */
+    e--;
+    while (p < e) {
 	val = val * 10 + (*p++ - '0');
     }
+    last = *p - '0';
     if (sign >= 0) {
-	while (p < e) {				/* check for overflow */
-	    int prev = val;
-
-	    val = val * 10 + (*p++ - '0');
-	    if (val / 10 < prev) {
-		return TCL_ERROR;
-	    }
+	if ( (val > INT_MAX / 10)
+	  || ((val == INT_MAX / 10) && (last > INT_MAX % 10))
+	) {
+	    return TCL_ERROR;   /* overflow*/
 	}
+	val = val * 10 + last;
     } else {
 	val = -val;
-	while (p < e) {				/* check for overflow */
-	    int prev = val;
-
-	    val = val * 10 - (*p++ - '0');
-	    if (val / 10 > prev) {
-		return TCL_ERROR;
-	    }
+	if ( (val < INT_MIN / 10)
+	  || ((val == INT_MIN / 10) && ((INT_MIN % 10 < 0) ?
+		(last > -(INT_MIN % 10)) : (last > 10-(INT_MIN % 10))
+	  ))
+	) {
+	    return TCL_ERROR;   /* overflow*/
 	}
+	val = val * 10 - last;
     }
+
     *out = val;
     return TCL_OK;
 }
@@ -167,36 +136,50 @@ Clock_str2wideInt(
     const char *e,
     int sign)
 {
+    char last;
     Tcl_WideInt val = 0;
-    /* overflow impossible for 18 digits ("9..9"), so no needs to check before */
-    const char *eNO = p + 18;
 
-    if (eNO > e) {
-	eNO = e;
+    if (e - p > 19) {           /* definitely overflows */
+	return TCL_ERROR;
     }
-    while (p < eNO) {				/* never overflows */
+
+    /*
+     * Overflow impossible for max 18 digits ("9..9"),
+     * or for 19 digits if it starts with 8 ("89..9").
+     */
+    if (e - p <= 18 || *p <= '8' ) {
+	while (p < e) {
+	    val = val * 10 + (*p++ - '0');
+	}
+	*out = (sign >= 0) ? val : -val;
+	return TCL_OK;
+    }
+
+    /* 19 digits and it may overflow at last char */
+    e--;
+    while (p < e) {
 	val = val * 10 + (*p++ - '0');
     }
+    last = *p - '0';
     if (sign >= 0) {
-	while (p < e) {				/* check for overflow */
-	    Tcl_WideInt prev = val;
-
-	    val = val * 10 + (*p++ - '0');
-	    if (val / 10 < prev) {
-		return TCL_ERROR;
-	    }
+	if ( (val > WIDE_MAX / 10)
+	  || ((val == WIDE_MAX / 10) && (last > WIDE_MAX % 10))
+	) {
+	    return TCL_ERROR;   /* overflow*/
 	}
+	val = val * 10 + last;
     } else {
 	val = -val;
-	while (p < e) {				/* check for overflow */
-	    Tcl_WideInt prev = val;
-
-	    val = val * 10 - (*p++ - '0');
-	    if (val / 10 > prev) {
-		return TCL_ERROR;
-	    }
+	if ( (val < WIDE_MIN / 10)
+	  || ((val == WIDE_MIN / 10) && ((WIDE_MIN % 10 < 0) ?
+		(last > -(WIDE_MIN % 10)) : (last > 10-(WIDE_MIN % 10))
+	  ))
+	) {
+	    return TCL_ERROR;   /* overflow*/
 	}
+	val = val * 10 - last;
     }
+
     *out = val;
     return TCL_OK;
 }
@@ -210,10 +193,6 @@ TclAtoWIe(
 {
     return Clock_str2wideInt(out, p, e, sign);
 }
-
-#if (defined(__GNUC__) || defined(__GNUG__)) && !defined(__clang__)
-# pragma GCC reset_options
-#endif
 
 /*
  *----------------------------------------------------------------------
@@ -559,8 +538,8 @@ ClockFmtScnStorageAllocProc(
     ClockFmtScnStorage *fss;
     const char *string = (const char *) keyPtr;
     Tcl_HashEntry *hPtr;
-    unsigned size = strlen(string) + 1;
-    unsigned allocsize = sizeof(ClockFmtScnStorage) + sizeof(Tcl_HashEntry);
+    size_t size = strlen(string) + 1;
+    size_t allocsize = sizeof(ClockFmtScnStorage) + sizeof(Tcl_HashEntry);
 
     allocsize += size;
     if (size > sizeof(hPtr->key)) {
@@ -645,11 +624,11 @@ ClockFmtScnStorageDelete(
  */
 
 static const Tcl_ObjType ClockFmtObjType = {
-    "clock-format",			/* name */
-    ClockFmtObj_FreeInternalRep,	/* freeIntRepProc */
-    ClockFmtObj_DupInternalRep,		/* dupIntRepProc */
-    ClockFmtObj_UpdateString,		/* updateStringProc */
-    ClockFmtObj_SetFromAny,		/* setFromAnyProc */
+    "clock-format",
+    ClockFmtObj_FreeInternalRep,
+    ClockFmtObj_DupInternalRep,
+    ClockFmtObj_UpdateString,
+    ClockFmtObj_SetFromAny,
     TCL_OBJTYPE_V0
 };
 
@@ -1380,7 +1359,7 @@ static TclStrIdxTree *
 ClockMCGetMultiListIdxTree(
     ClockFmtScnCmdArgs *opts,
     int	mcKey,
-    int *mcKeys)
+    const int *mcKeys)
 {
     TclStrIdxTree * idxTree;
     Tcl_Obj *objPtr = TclClockMCGetIdx(opts, mcKey);
@@ -1481,11 +1460,11 @@ static int
 StaticListSearch(
     ClockFmtScnCmdArgs *opts,
     DateInfo *info,
-    const char **lst,
+    const char *const *lst,
     int *val)
 {
     size_t len;
-    const char **s = lst;
+    const char *const *s = lst;
 
     while (*s != NULL) {
 	len = strlen(*s);
@@ -1535,7 +1514,7 @@ ClockScnToken_Month_Proc(
 {
 #if 0
 /* currently unused, test purposes only */
-    static const char * months[] = {
+    static const char *const months[] = {
 	/* full */
 	"January", "February", "March",
 	"April",   "May",      "June",
@@ -1552,7 +1531,7 @@ ClockScnToken_Month_Proc(
     }
     yyMonth = (val % 12) + 1;
 #else
-    static int monthsKeys[] = {MCLIT_MONTHS_FULL, MCLIT_MONTHS_ABBREV, 0};
+    static const int monthsKeys[] = {MCLIT_MONTHS_FULL, MCLIT_MONTHS_ABBREV, 0};
 
     int ret, val;
     int minLen, maxLen;
@@ -1583,7 +1562,7 @@ ClockScnToken_DayOfWeek_Proc(
     DateInfo *info,
     const ClockScanToken *tok)
 {
-    static int dowKeys[] = {MCLIT_DAYS_OF_WEEK_ABBREV, MCLIT_DAYS_OF_WEEK_FULL, 0};
+    static const int dowKeys[] = {MCLIT_DAYS_OF_WEEK_ABBREV, MCLIT_DAYS_OF_WEEK_FULL, 0};
 
     int ret, val;
     int minLen, maxLen;
@@ -1715,9 +1694,9 @@ ClockScnToken_LocaleERA_Proc(
     }
 
     if (val & 1) {
-	yydate.isBce = 0;
+	yydate.flags &= ~CLF_BCE;
     } else {
-	yydate.isBce = 1;
+	yydate.flags |= CLF_BCE;
     }
 
     return TCL_OK;
@@ -1976,8 +1955,7 @@ ClockScnToken_StarDate_Proc(
     /* Build a date from year and fraction. */
 
     yydate.year = year + RODDENBERRY;
-    yydate.isBce = 0;
-    yydate.gregorian = 1;
+    yydate.flags &= ~(CLF_BCE|CLF_BGREG);
 
     if (TclIsGregorianLeapYear(&yydate)) {
 	fractYear *= 366;
@@ -2490,19 +2468,13 @@ TclClockScan(
 		p = yyInput;
 		x = p + size;
 		if (map->type == CTOKT_INT) {
-		    if (size <= 10) {
-			Clock_str2int_no(IntFieldAt(info, map->offs),
-				p, x, sign);
-		    } else if (Clock_str2int(
+		    if (Clock_str2int(
 			    IntFieldAt(info, map->offs), p, x, sign) != TCL_OK) {
 			goto overflow;
 		    }
 		    p = x;
 		} else {
-		    if (size <= 18) {
-			Clock_str2wideInt_no(
-				WideFieldAt(info, map->offs), p, x, sign);
-		    } else if (Clock_str2wideInt(
+		    if (Clock_str2wideInt(
 			    WideFieldAt(info, map->offs), p, x, sign) != TCL_OK) {
 			goto overflow;
 		    }
@@ -3002,7 +2974,7 @@ ClockFmtToken_LocaleERA_Proc(
     const char *s;
     Tcl_Size len;
 
-    if (dateFmt->date.isBce) {
+    if (dateFmt->date.flags & CLF_BCE) {
 	mcObj = TclClockMCGet(opts, MCLIT_BCE);
     } else {
 	mcObj = TclClockMCGet(opts, MCLIT_CE);

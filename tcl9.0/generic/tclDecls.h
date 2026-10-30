@@ -1637,10 +1637,10 @@ EXTERN int		Tcl_ZlibInflate(Tcl_Interp *interp, int format,
 				Tcl_Obj *data, Tcl_Size buffersize,
 				Tcl_Obj *gzipHeaderDictObj);
 /* 612 */
-EXTERN unsigned int	Tcl_ZlibCRC32(unsigned int crc,
-				const unsigned char *buf, Tcl_Size len);
+EXTERN unsigned		Tcl_ZlibCRC32(unsigned crc, const unsigned char *buf,
+				Tcl_Size len);
 /* 613 */
-EXTERN unsigned int	Tcl_ZlibAdler32(unsigned int adler,
+EXTERN unsigned		Tcl_ZlibAdler32(unsigned adler,
 				const unsigned char *buf, Tcl_Size len);
 /* 614 */
 EXTERN int		Tcl_ZlibStreamInit(Tcl_Interp *interp, int mode,
@@ -1693,7 +1693,7 @@ EXTERN void		Tcl_ZlibStreamSetCompressionDictionary(
 /* 631 */
 EXTERN Tcl_Channel	Tcl_OpenTcpServerEx(Tcl_Interp *interp,
 				const char *service, const char *host,
-				unsigned int flags, int backlog,
+				unsigned flags, int backlog,
 				Tcl_TcpAcceptProc *acceptProc,
 				void *callbackData);
 /* 632 */
@@ -2500,8 +2500,8 @@ typedef struct TclStubs {
     void (*tcl_BackgroundException) (Tcl_Interp *interp, int code); /* 609 */
     int (*tcl_ZlibDeflate) (Tcl_Interp *interp, int format, Tcl_Obj *data, int level, Tcl_Obj *gzipHeaderDictObj); /* 610 */
     int (*tcl_ZlibInflate) (Tcl_Interp *interp, int format, Tcl_Obj *data, Tcl_Size buffersize, Tcl_Obj *gzipHeaderDictObj); /* 611 */
-    unsigned int (*tcl_ZlibCRC32) (unsigned int crc, const unsigned char *buf, Tcl_Size len); /* 612 */
-    unsigned int (*tcl_ZlibAdler32) (unsigned int adler, const unsigned char *buf, Tcl_Size len); /* 613 */
+    unsigned (*tcl_ZlibCRC32) (unsigned crc, const unsigned char *buf, Tcl_Size len); /* 612 */
+    unsigned (*tcl_ZlibAdler32) (unsigned adler, const unsigned char *buf, Tcl_Size len); /* 613 */
     int (*tcl_ZlibStreamInit) (Tcl_Interp *interp, int mode, int format, int level, Tcl_Obj *dictObj, Tcl_ZlibStream *zshandle); /* 614 */
     Tcl_Obj * (*tcl_ZlibStreamGetCommandName) (Tcl_ZlibStream zshandle); /* 615 */
     int (*tcl_ZlibStreamEof) (Tcl_ZlibStream zshandle); /* 616 */
@@ -2519,7 +2519,7 @@ typedef struct TclStubs {
     void * (*tcl_FindSymbol) (Tcl_Interp *interp, Tcl_LoadHandle handle, const char *symbol); /* 628 */
     int (*tcl_FSUnloadFile) (Tcl_Interp *interp, Tcl_LoadHandle handlePtr); /* 629 */
     void (*tcl_ZlibStreamSetCompressionDictionary) (Tcl_ZlibStream zhandle, Tcl_Obj *compressionDictionaryObj); /* 630 */
-    Tcl_Channel (*tcl_OpenTcpServerEx) (Tcl_Interp *interp, const char *service, const char *host, unsigned int flags, int backlog, Tcl_TcpAcceptProc *acceptProc, void *callbackData); /* 631 */
+    Tcl_Channel (*tcl_OpenTcpServerEx) (Tcl_Interp *interp, const char *service, const char *host, unsigned flags, int backlog, Tcl_TcpAcceptProc *acceptProc, void *callbackData); /* 631 */
     int (*tclZipfs_Mount) (Tcl_Interp *interp, const char *zipname, const char *mountPoint, const char *passwd); /* 632 */
     int (*tclZipfs_Unmount) (Tcl_Interp *interp, const char *mountPoint); /* 633 */
     Tcl_Obj * (*tclZipfs_TclLibrary) (void); /* 634 */
@@ -3964,9 +3964,9 @@ extern const TclStubs *tclStubsPtr;
 #define Tcl_AddObjErrorInfo(interp, message, length) \
 	Tcl_AppendObjToErrorInfo(interp, Tcl_NewStringObj(message, length))
 #define Tcl_Eval(interp, objPtr) \
-	Tcl_EvalEx(interp, objPtr, TCL_INDEX_NONE, 0)
+	Tcl_EvalEx(interp, objPtr, -1, 0)
 #define Tcl_GlobalEval(interp, objPtr) \
-	Tcl_EvalEx(interp, objPtr, TCL_INDEX_NONE, TCL_EVAL_GLOBAL)
+	Tcl_EvalEx(interp, objPtr, -1, TCL_EVAL_GLOBAL)
 #define Tcl_GetStringResult(interp) Tcl_GetString(Tcl_GetObjResult(interp))
 #define Tcl_SetResult(interp, result, freeProc) \
 	do { \
@@ -3985,7 +3985,7 @@ extern const TclStubs *tclStubsPtr;
 #if defined(USE_TCL_STUBS)
 #   if defined(_WIN32) && defined(_WIN64) && TCL_MAJOR_VERSION < 9
 #	undef Tcl_GetTime
-/* Handle Win64 tk.dll being loaded in Cygwin64 (only needed for Tcl 8). */
+/* Handle Win64 tk.dll being loaded in Cygwin (only needed for Tcl 8). */
 #	define Tcl_GetTime(t) \
 		do { \
 		    struct { \
@@ -4000,13 +4000,12 @@ extern const TclStubs *tclStubsPtr;
 		    *(t) = _t.now; \
 		} while (0)
 #   endif
-#   if defined(__CYGWIN__) && defined(TCL_WIDE_INT_IS_LONG)
-/* On Cygwin64, long is 64-bit while on Win64 long is 32-bit. Therefore
- * we have to make sure that all stub entries on Cygwin64 follow the
- * Win64 signature. Cygwin64 stubbed extensions cannot use those stub
+#   ifdef __CYGWIN__
+/* On Cygwin, long is 64-bit while on Win64 long is 32-bit. Therefore
+ * we have to make sure that all stub entries on Cygwin follow the
+ * Win64 signature. Cygwin stubbed extensions cannot use those stub
  * entries any more, they should use the 64-bit alternatives where
- * possible. Tcl 9 must find a better solution, but that cannot be done
- * without introducing a binary incompatibility.
+ * possible.
  */
 #	undef Tcl_GetLongFromObj
 #	undef Tcl_ExprLong

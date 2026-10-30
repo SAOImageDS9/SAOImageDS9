@@ -4,6 +4,43 @@ changes to the Tk source code at
 
 > [Tk Source Code](https://core.tcl-lang.org/tk/)
 
+Release Tk 9.0.4 arises from the check-in with tag `core-9-0-4`.
+
+Tk 9.0.4 continues the Tk 9.0 series of releases.  The Tk 9.0 series
+does not support Tcl 8.6.  The Tk 9.0 series extends the Tcl 9.0 series.
+To make use of Tk 9.0.4, first a Tcl 9.0 release must be present.
+As new Tk features are developed, expect them to appear in Tk 9, but not
+necessarily in Tk 8.
+
+Tk patch releases have the primary purpose of delivering bug fixes
+to the userbase.
+
+# Bug fixes
+ - [Improve the look of the ttk::spinbox widgets in the built-in themes](https://core.tcl-lang.org/tk/tktview/4d2baa)
+ - [SVG rendering: Correctly paint stroke leftover path](https://core.tcl-lang.org/tk/tktview/c51a56)
+ - [Error in ::tk::spinbox::ButtonUp on MacOS](https://core.tcl-lang.org/tk/tktview/fe5549])
+ - [crash in text sync subcommand](https://core.tcl-lang.org/tk/tktview/8e4fb0])
+ - [Random semantic color values on macOS 10.15.6 Catalina](https://core.tcl-lang.org/tk/tktview/544140])
+ - [Widgets on aqua no longer receive <Deactivate> events](https://core.tcl-lang.org/tk/tktview/9654e3])
+ - [X11: crash by wm forget on menu](https://core.tcl-lang.org/tk/tktview/c77b42)
+ - [fails to build with glibc 2.43](https://core.tcl-lang.org/tk/tktview/5d2061)
+ - [Pointer warp relative to the screen's root window fails if the Tk root window is withdrawn](https://core.tcl-lang.org/tk/tktview/e2418c)
+ - [Directory library/demos unexpectedly embedded into tcl9tk9x.dll](https://core.tcl-lang.org/tk/tktview/6a9bae)
+ - [Use the native selection colors for listbox and ttk::treeview widgets on aqua](https://core.tcl-lang.org/tk/tktview/c6292f)
+ - [ttk::entry placeholder length computation confuses string length and character length](https://core.tcl-lang.org/tk/tktview/992d6f)
+ - [crash with invalid data in [image create photo]](https://core.tcl-lang.org/tk/tktview/f0b3fa)
+ - [Segfault under Windows when executing test file menu.test with "-singleproc 0"](https://core.tcl-lang.org/tk/tktview/d8f964)
+ - [Check recursive menu usage to avoid crash](https://core.tcl-lang.org/tk/info/7f67bb40)
+ - [Get rid of the ugly Motif-style cascade arrows on X11](https://core.tcl-lang.org/tk/info/aca9953f)
+ - ["wm forget ." segfaults](https://core.tcl-lang.org/tk/info/8c362075)
+ - [macOS/aqua: <Map> events are generated for windows that are already mapped, and wish crashes](https://core.tcl-lang.org/tk/info/d4d89d13)
+ - [Block cursor in text widget may hide the character underneath](https://core.tcl-lang.org/tk/info/556606)
+ - [Flip ttk::notebook tab states "first" and "last" for "-tabplacement e*|s*"](https://core.tcl-lang.org/tk/info/011533)
+ - [tk image photo svg: nanosvg "Basic style sheets support" #284](https://core.tcl-lang.org/tk/info/c8c8b724)
+ - [Error in ::tk::ScrollByUnits](https://core.tcl-lang.org/tk/info/082a30)
+ - [Tk_FindPhoto crash](https://core.tcl-lang.org/tk/info/0beaef)
+ - [scale, spinbox and place format floating-point values using the LC_NUMERIC locale](https://core.tcl-lang.org/tk/info/348b48)
+
 Release Tk 9.0.3 arises from the check-in with tag `core-9-0-3`.
 
 Tk 9.0.3 continues the Tk 9.0 series of releases.  The Tk 9.0 series
@@ -40,6 +77,7 @@ to the userbase.
  - [Aqua: avoid use-after-free during RefocusGrabWindow()](https://core.tcl-lang.org/tk/info/6da885)
  - [Aqua: ttk::notebook tabs](https://core.tcl-lang.org/tk/info/cf296a)
  - [Fix crash on exit due to faulty asm code in DllMain](https://core.tcl-lang.org/tk/info/44b34c)
+ - [::tk::startOfCluster (and friends) only understand ICU locale syntax](https://core.tcl-lang.org/tk/info/095db8)
 
 Release Tk 9.0.2 arises from the check-in with tag `core-9-0-2`.
 

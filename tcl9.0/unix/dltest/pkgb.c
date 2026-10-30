@@ -16,6 +16,9 @@
 #if defined(_WIN32) && defined(_MSC_VER)
 #   define snprintf _snprintf
 #endif
+#if TCL_MAJOR_VERSION < 9
+#   define Tcl_Size int
+#endif
 
 /*
  *----------------------------------------------------------------------
@@ -87,7 +90,7 @@ Pkgb_UnsafeObjCmd(
     (void)objc;
     (void)objv;
 
-    return Tcl_EvalEx(interp, "list unsafe command invoked", TCL_INDEX_NONE, TCL_EVAL_GLOBAL);
+    return Tcl_EvalEx(interp, "list unsafe command invoked", -1, TCL_EVAL_GLOBAL);
 }
 
 static int
@@ -137,7 +140,7 @@ Pkgb_Init(
 {
     int code;
 
-    if (Tcl_InitStubs(interp, "8.5-", 0) == NULL) {
+    if (Tcl_InitStubs(interp, "8.6-", 0) == NULL) {
 	return TCL_ERROR;
     }
     code = Tcl_PkgProvide(interp, "pkgb", "2.3");
@@ -174,7 +177,7 @@ Pkgb_SafeInit(
 {
     int code;
 
-    if (Tcl_InitStubs(interp, "8.5-", 0) == NULL) {
+    if (Tcl_InitStubs(interp, "8.6-", 0) == NULL) {
 	return TCL_ERROR;
     }
     code = Tcl_PkgProvide(interp, "pkgb", "2.3");

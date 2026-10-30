@@ -1081,7 +1081,15 @@ TclJoinPath(
 		}
 	    }
 
-	    if (length > 0 && ptr[length -1] != '/') {
+	    /*
+	     * The check against //zipfs: is required when joining relative
+	     * zipfs paths. For example, [file join c:/ //zipfs:foo]. See
+	     * [1215dca7] or tests filename-9.25.{3,4}. Unfortunately, bit
+	     * of a hack but Tcl lacks VFS abstractions to generalize this.
+	     * Happy to be proven wrong.
+	     */
+	    if (length > 0 && ptr[length - 1] != '/' &&
+		(length != 8 || strcmp(ptr, "//zipfs:"))) {
 		Tcl_AppendToObj(res, &separator, 1);
 		(void)TclGetStringFromObj(res, &length);
 	    }
@@ -1245,8 +1253,9 @@ TclNewFSPathObj(
 {
     FsPath *fsPathPtr;
     Tcl_Obj *pathPtr;
-    const char *p;
+#ifndef _WIN32
     int state = 0, count = 0;
+#endif
 
     /*
      * This comment is kept from the days of tilde expansion because
@@ -1288,12 +1297,22 @@ TclNewFSPathObj(
     PATHFLAGS(pathPtr) = TCLPATH_APPENDED;
     TclInvalidateStringRep(pathPtr);
 
+#ifdef _WIN32
+    /*
+     * On Windows, paths are case insensitive but normalization means the
+     * path should match the exact case of the on-disk file entry. Since we
+     * do not know whether that is the case at this point, mark the path
+     * as needing normalization. Bug [108904173c]
+     */
+    PATHFLAGS(pathPtr) |= TCLPATH_NEEDNORM;
+#else
     /*
      * Look for path components made up of only "."
      * This is overly conservative analysis to keep simple. It may mark some
      * things as needing more aggressive normalization that don't actually
      * need it. No harm done.
      */
+    const char *p;
     for (p = addStrRep; len > 0; p++, len--) {
 	switch (state) {
 	case 0:		/* So far only "." since last dirsep or start */
@@ -1327,6 +1346,7 @@ TclNewFSPathObj(
     if (len == 0 && count) {
 	PATHFLAGS(pathPtr) |= TCLPATH_NEEDNORM;
     }
+#endif
 
     return pathPtr;
 }
@@ -1599,8 +1619,8 @@ Tcl_FSGetTranslatedPath(
 		return NULL;
 	    }
 
-	    retObj = Tcl_FSJoinToPath(translatedCwdPtr, 1,
-		    &srcFsPathPtr->normPathPtr);
+	    retObj = TclFSJoinPathHelper(translatedCwdPtr, 1,
+		    &srcFsPathPtr->normPathPtr, 1);
 	    Tcl_IncrRefCount(srcFsPathPtr->translatedPathPtr = retObj);
 	    translatedCwdIrPtr = TclFetchInternalRep(translatedCwdPtr, &fsPathType);
 	    if (translatedCwdIrPtr) {

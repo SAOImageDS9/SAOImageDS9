@@ -1,11 +1,11 @@
-# tcl 9.0.3
-# tk 9.0.3
-# tcllib 1.20
-# tklib .7
+# tcl 9.0.4
+# tk 9.0.4
+# tcllib 2.0
+# tklib 0.9
 
-# awthemes 10.3.0
-# ttkthemes 3.2.2
-# scidthemes 0.9.3
+# awthemes 10.4.0
+# ttkthemes 3.3.0
+# scidthemes 1.0
 
 # fickle 2.2
 # taccle 1.4
@@ -13,7 +13,6 @@
 # tclsignal 1.5.0
 # tclxml 3.2
 # tclxmlrpc 1.0
-# tclzipfs 1.0.1
 # tls 2.0
 # tkagif 1.1
 # tkblt 3.3
@@ -25,10 +24,10 @@
 
 # ast 9.2.14
 # funtools 1.5.0
-# zlib 1.2.8
+# zlib 1.3.2 (tkimg)
 # xpa 2.2.2
-# libxslt 1.1.29
-# openssl 1.0.2u
+# libxslt (system, via xslt-config)
+# openssl 3.6.2
 
 DS9_VERSION	= 8.8
 XPA_VERSION	= 2.2.2
@@ -98,7 +97,7 @@ TKIMGTMPFILES = \
 #-------------------------- main
 
 .NOTPARALLEL :
-.PHONY	: all dirs ds9 tclxml tclxmlrpc tclzipfs tls xpa
+.PHONY	: all dirs ds9 tclxml tclxmlrpc tls xpa
 .PHONY	: tkblt tclfitsy tkcon tkhtml1 tkimg tkmpeg tkagif tksao tktable
 .PHONY	: vector fitsy ast funtools openssl
 

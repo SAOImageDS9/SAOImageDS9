@@ -43,6 +43,11 @@ typedef struct PrivateVariableMapping PrivateVariableMapping;
 typedef struct ProcedureMethod ProcedureMethod;
 typedef struct PropertyStorage PropertyStorage;
 
+#if (TCL_MAJOR_VERSION < 9) && !defined(Tcl_Size)
+#   define Tcl_Size int
+#   define _TCLSIZEHANDLED
+# endif
+
 /*
  * The data that needs to be stored per method. This record is used to collect
  * information about all sorts of methods, including forwards, constructors
@@ -643,17 +648,12 @@ MODULE_SCOPE void	TclOOStashContext(Tcl_Obj *objPtr,
 			    CallContext *contextPtr);
 MODULE_SCOPE void	TclOOSetupVariableResolver(Tcl_Namespace *nsPtr);
 MODULE_SCOPE int	TclOOUnexportMethods(Class *clsPtr, ...);
-MODULE_SCOPE Tcl_Obj *	TclOOGetAllObjectProperties(Object *oPtr,
-			    int writable);
 MODULE_SCOPE Tcl_Obj *	TclOOGetPropertyList(PropertyList *propList);
 MODULE_SCOPE void	TclOOReleasePropertyStorage(PropertyStorage *propsPtr);
 MODULE_SCOPE void	TclOOInstallReadableProperties(PropertyStorage *props,
 			    Tcl_Size objc, Tcl_Obj *const objv[]);
 MODULE_SCOPE void	TclOOInstallWritableProperties(PropertyStorage *props,
 			    Tcl_Size objc, Tcl_Obj *const objv[]);
-MODULE_SCOPE int	TclOOInstallStdPropertyImpls(void *useInstance,
-			    Tcl_Interp *interp, Tcl_Obj *propName,
-			    int readable, int writable);
 MODULE_SCOPE void	TclOORegisterProperty(Class *clsPtr,
 			    Tcl_Obj *propName, int mayRead, int mayWrite);
 MODULE_SCOPE void	TclOORegisterInstanceProperty(Object *oPtr,
@@ -737,6 +737,11 @@ MODULE_SCOPE void	TclOORegisterInstanceProperty(Object *oPtr,
  */
 #define OO_ERROR(interp, code) \
     Tcl_SetErrorCode((interp), "TCL", "OO", #code, (char *)NULL)
+
+#ifdef _TCLSIZEHANDLED
+#   undef _TCLSIZEHANDLED
+#   undef Tcl_Size
+#endif
 
 #endif /* TCL_OO_INTERNAL_H */
 

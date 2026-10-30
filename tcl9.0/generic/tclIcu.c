@@ -283,7 +283,7 @@ static struct {
 TCL_DECLARE_MUTEX(icu_mutex);
 
 /* Options used by multiple normalization functions */
-static const char *normalizationForms[] = {"nfc", "nfd", "nfkc", "nfkd", NULL};
+static const char *const normalizationForms[] = {"nfc", "nfd", "nfkc", "nfkd", NULL};
 typedef enum { MODE_NFC, MODE_NFD, MODE_NFKC, MODE_NFKD } NormalizationMode;
 
 
@@ -296,7 +296,7 @@ FunctionNotAvailableError(
     if (interp) {
 	Tcl_SetObjResult(interp, Tcl_NewStringObj(
 		"ICU function not available", TCL_AUTO_LENGTH));
-	Tcl_SetErrorCode(interp, "TCL", "ICU", "UNSUPPORTED_OP", NULL);
+	Tcl_SetErrorCode(interp, "TCL", "ICU", "UNSUPPORTED_OP", (char *)NULL);
     }
     return TCL_ERROR;
 }
@@ -318,7 +318,7 @@ IcuError(
 		message ? ". " : "",
 		code,
 		codeMessage ? codeMessage : ""));
-	Tcl_SetErrorCode(interp, "TCL", "ICU", codeMessage, NULL);
+	Tcl_SetErrorCode(interp, "TCL", "ICU", codeMessage, (char *)NULL);
     }
     return TCL_ERROR;
 }
@@ -1003,7 +1003,7 @@ static int IcuParseConvertOptions(
 
     /* Use GetIndexFromObj for option parsing so -failindex can be added later */
 
-    static const char *optNames[] = {"-profile", "-failindex", NULL};
+    static const char *const optNames[] = {"-profile", "-failindex", NULL};
     enum { OPT_PROFILE, OPT_FAILINDEX } opt;
     int i;
     int strict = 1;
@@ -1166,7 +1166,7 @@ IcuNormalizeObjCmd(
     int objc,			/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    static const char *optNames[] = {"-profile", "-mode", NULL};
+    static const char *const optNames[] = {"-profile", "-mode", NULL};
     enum { OPT_PROFILE, OPT_MODE } opt;
 
     if (objc < 2) {
@@ -1340,7 +1340,7 @@ TclIcuInit(
     if (icu_fns.nopen == 0) {
 	int i = 0;
 	Tcl_Obj *nameobj;
-	static const char *iculibs[] = {
+	static const char * const iculibs[] = {
 #if defined(_WIN32)
 #  define DLLNAME "icu%s%s.dll"
 	    "icuuc??.dll", /* Windows, user-provided */

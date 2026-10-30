@@ -10,18 +10,18 @@ Last updated 2026-10-26
 | fickle       | 2.2        | y     |       | https://github.com/SAOImageDS9/fickle-maintenance                    | previous upstream abandoned     |
 | fitsy        |            | y     |       |                                                                      |                                 |
 | funtools     | 1.5.0      | y     | y     | https://github.com/SAOImageDS9/funtools-maintenance                  | abandoned                       |
-| openssl      | 3.2.0      |       |       | https://github.com/openssl/openssl                                   | 4.1.0                           |
+| openssl      | 3.6.2      |       |       | https://github.com/openssl/openssl                                   | 4.1.0                           |
 | pdf4tcl      | 0.9.4      |       |       | https://sourceforge.net/projects/pdf4tcl/                            | 0.9.4                           |
 | scidthemes   | 1.0        |       |       | https://sourceforge.net/projects/scid/files/Scid/Additional%20Files/ | 1.0                             |
 | taccle       | 1.4        | y     |       | https://github.com/SAOImageDS9/taccle-maintenance                    | previous upstream abandoned     |
-| tcl9.0       | 9.0.3      |       |       | https://github.com/tcltk/tcl                                         | 9.1.0 (9.0.4 on 9.0 branch)     |
+| tcl9.0       | 9.0.4      |       | y     | https://github.com/tcltk/tcl                                         | 9.1.0 (9.0.4 on 9.0 branch) (6) |
 | tclfitsy     |            | y     |       |                                                                      |                                 |
-| tcllib       | 1.2        |       |       | https://github.com/tcltk/tcllib                                      | 2.0                             |
+| tcllib       | 2.0        |       |       | https://github.com/tcltk/tcllib                                      | 2.0                             |
 | tclsignal    | 1.5.0      | y     |       | https://github.com/SAOImageDS9/tclsignal-maintenance                 | 1.5.0                           |
 | tclxml       | 3.2        | y     | y     | https://tclxml.sourceforge.net/tclxml.html                           | forked from 3.2                 |
 | tclxmlrpc    | 1.0        | y     |       |                                                                      |                                 |
 | ~~tclzipfs~~ | ~~1.0.1~~  | ~~y~~ |       | ~~https://github.com/wjoye/tclzipfs~~                                | ~~?not sure if incl. in 9?~~    |
-| tk9.0        | 9.0.3      |       |       | https://github.com/tcltk/tk                                          | 9.1.0 (9.0.4 on 9.0 branch)     |
+| tk9.0        | 9.0.4      |       |       | https://github.com/tcltk/tk                                          | 9.1.0 (9.0.4 on 9.0 branch)     |
 | tkagif       | 1.1        | y     |       | https://github.com/SAOImageDS9/tkagif-maintenance                    | 1.1                             |
 | tkblt        | 3.3        | y     | y     | https://github.com/SAOImageDS9/tkblt-maintenance                     | previous upstream abandoned (1) |
 | tkcon        | 2.8        | y     | y     | https://github.com/SAOImageDS9/tkcon-maintenance                     | previous upstream abandoned     |
@@ -55,3 +55,5 @@ Last updated 2026-10-26
 (4) Upgraded from 2.0.1. Earlier problems were reported with 2.1.1, but 2.1.2 gives byte-identical saveimage jpeg/tiff output to 2.0.1 on Linux. Local changes: tkimg*Config.sh export for gif/jpeg/png/tiff/window, and the Tcl_Size typedef removed from base/tkimgDecls.h.
 
 (5) Small tweaks to work with ds9.
+
+(6) pkgs/thread3.0.6: backported the Thread 3.0.7 fix that sets ZIPFS_BUILD=0 when configured with --with-tcl8; without it the macOS framework build fails looking for a native Tcl 9 tclsh.

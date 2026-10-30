@@ -6,8 +6,8 @@
  *
  * Copyright © 2001-2009 Apple Inc.
  * Copyright © 2005-2009 Daniel A. Steffen <das@users.sourceforge.net>
- * Copyright © 2015 Kevin Walzer/WordTech Communications LLC.
- * Copyright © 2015 Marc Culler.
+ * Copyright © 2015 Kevin Walzer
+ * Copyright © 2015 Marc Culler
  *
  * See the file "license.terms" for information on usage and redistribution of
  * this file, and for a DISCLAIMER OF ALL WARRANTIES.
@@ -74,6 +74,9 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
 
 		TkMacOSXAssignNewKeyWindow(NULL, NULL);
 	    }
+	}
+	if (winPtr && Tk_IsMapped(winPtr)) {
+	    GenerateActivateEvents(winPtr, false);
 	}
     }
     /*
@@ -291,6 +294,9 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
 
 - (void) windowBecameVisible: (NSNotification *) notification
 {
+    if ([NSApp tkWillExit]) {
+	return;
+    }
     NSWindow *window = [notification object];
     TkWindow *winPtr = TkMacOSXGetTkWindow(window);
     if (winPtr) {
@@ -307,6 +313,9 @@ extern NSString *NSWindowDidOrderOffScreenNotification;
 
 - (void) windowMapped: (NSNotification *) notification
 {
+    if ([NSApp tkWillExit]) {
+	return;
+    }
     NSWindow *w = [notification object];
     TkWindow *winPtr = TkMacOSXGetTkWindow(w);
 
@@ -410,12 +419,16 @@ static void RefocusGrabWindow(void *data) {
      */
 
     for (NSWindow *win in [NSApp windows]) {
+	if (! [win isKindOfClass:[TKWindow class]]) {
+	    continue;
+	}
 	TkWindow *winPtr = TkMacOSXGetTkWindow(win);
 	if (!winPtr || !winPtr->wmInfoPtr) {
 	    continue;
 	}
 	if (winPtr->wmInfoPtr->hints.initial_state == WithdrawnState) {
 	    [win orderOut:NSApp];
+	    [[win contentView] setOnScreen:NO];
 	}
 	if (winPtr->dispPtr->grabWinPtr == winPtr) {
 	    Tcl_Preserve(winPtr);
@@ -535,6 +548,7 @@ static void RefocusGrabWindow(void *data) {
  *----------------------------------------------------------------------
  */
 // This stub is no longer used, but is expected by the stub mechanism.
+#undef TkpWillDrawWidget
 int
 TkpWillDrawWidget(Tk_Window tkwin) {
     (void) tkwin;
@@ -1025,8 +1039,18 @@ ExposeRestrictProc(
 }
 - (void) updateLayer {
     CGContextRef context = self.tkLayerBitmapContext;
-    static bool initialized = NO;
     if (context && ![NSApp tkWillExit]) {
+	/*
+	 * If this ContentView is off screen, Run any pending widget
+	 * display procs before updating the layer.
+	 */
+
+	if (! [self onScreen]) {
+	    //printf("Running event loop.\n");
+	    while(Tcl_DoOneEvent(TCL_IDLE_EVENTS)){}
+	    [self setOnScreen:YES];
+	}
+
 	/*
 	 * Create a CGImage by copying (probably using copy-on-write) the
 	 * bitmap data of the CGBitmapContext that we have been using for
@@ -1039,16 +1063,6 @@ ExposeRestrictProc(
 	CGImageRef newImg = CGBitmapContextCreateImage(context);
 	self.layer.contents = (__bridge id) newImg;
 	CGImageRelease(newImg); // will quickly leak memory if this is missing
-
-	/*
-	 * Run any pending widget display procs as part of the update.
-	 * Without this there are black flashes when a window opens.
-	 */
-
-	if (!initialized) {
-	    while(Tcl_DoOneEvent(TCL_IDLE_EVENTS)){}
-	    initialized = YES;
-	}
     }
 }
 
@@ -1201,7 +1215,7 @@ ExposeRestrictProc(
  * light and dark mode or changes the accent color. The implementation
  * generates two virtual events.  The first is either <<LightAqua>> or
  * <<DarkAqua>>, depending on the view's current effective appearance.  The
- * second is <<AppearnceChanged>> and has a data string describing the
+ * second is <<AppearanceChanged>> and has a data string describing the
  * effective appearance of the view and the current accent and highlight
  * colors.
  */
@@ -1352,19 +1366,25 @@ static const char *const accentNames[] = {
 }
 
 -(void) resetTkLayerBitmapContext {
-    static CGColorSpaceRef colorspace = NULL;
-    if (colorspace == NULL) {
-	colorspace = CGColorSpaceCreateDeviceRGB();
-	CGColorSpaceRetain(colorspace);
-    }
+    NSScreen *screen = [[self window] screen];
+    NSNumber *screenNumber = [[screen deviceDescription]
+				 objectForKey:@"NSScreenNumber"];
+    CGDirectDisplayID displayID = [screenNumber unsignedIntValue];
+    CGColorSpaceRef colorspace = CGDisplayCopyColorSpace(displayID);
     CGContextRef newCtx = CGBitmapContextCreate(
 	    NULL, self.layer.contentsScale * self.frame.size.width,
-	    self.layer.contentsScale * self.frame.size.height, 8, 0, colorspace,
-	    kCGBitmapByteOrder32Big | kCGImageAlphaNoneSkipLast // will also need to specify this when capturing
+	    self.layer.contentsScale * self.frame.size.height, 8, 0,
+	    colorspace,
+	    // will also need to specify this when capturing
+	    kCGBitmapByteOrder32Big | kCGImageAlphaNoneSkipLast
     );
-    CGContextScaleCTM(newCtx, self.layer.contentsScale, self.layer.contentsScale);
+    // CGDisplayCopyColorSpace retains the colorspace.
+    CGColorSpaceRelease(colorspace);
+    CGContextScaleCTM(newCtx, self.layer.contentsScale,
+		      self.layer.contentsScale);
 #if 0
-    fprintf(stderr, "rTkLBC %.1f %s %p %p %ld\n", (float)self.layer.contentsScale,
+    fprintf(stderr, "rTkLBC %.1f %s %p %p %ld\n",
+	    (float)self.layer.contentsScale,
 	    NSStringFromSize(self.frame.size).UTF8String, colorspace, newCtx,
 	    self.tkLayerBitmapContext ?
 	    (long)CFGetRetainCount(self.tkLayerBitmapContext) : INT_MIN);

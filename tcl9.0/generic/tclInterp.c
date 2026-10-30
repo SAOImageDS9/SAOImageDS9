@@ -157,9 +157,7 @@ typedef struct {
 
 /*
  * Limit callbacks handled by scripts are modelled as structures which are
- * stored in hashes indexed by a two-word key. Note that the type of the
- * 'type' field in the key is not int; this is to make sure that things are
- * likely to work properly on 64-bit architectures.
+ * stored in hashes indexed by a two-word key.
  */
 
 typedef struct {
@@ -175,11 +173,19 @@ typedef struct {
 				 * table. */
 } ScriptLimitCallback;
 
+/*
+ * ScriptLimitCallbackKey is the key used in the hash table storing callbacks.
+ * Such hash table keys must NOT have any pad bytes and therefore the "type"
+ * field is defined as intptr_t. Its real type is int but that introduces
+ * trailing pad bytes resulting in valgrind errors. intptr_t is always (?)
+ * same size as a pointer and will not have this padding issue. Details at
+ * https://core.tcl-lang.org/tcl/info/f7495f63c01ea800
+ */
 typedef struct {
     Tcl_Interp *interp;		/* The interpreter that the limit callback was
 				 * attached to. This is not the interpreter
 				 * that the callback runs in! */
-    long type;			/* The type of callback that this is. */
+    intptr_t type;		/* The type of callback that this is. */
 } ScriptLimitCallbackKey;
 
 /*
@@ -336,8 +342,8 @@ Tcl_Init(
      * pre-init and init scripts are running. The real version of this struct
      * is in tclPkg.c.
      */
-    typedef struct PkgName_ {
-	struct PkgName_ *nextPtr;/* Next in list of package names being
+    typedef struct PkgNameStruct {
+	struct PkgNameStruct *nextPtr;/* Next in list of package names being
 				 * initialized. */
 	char name[4];		/* Enough space for "tcl". The *real* version
 				 * of this structure uses a flex array. */
@@ -449,6 +455,14 @@ Tcl_Init(
 "		continue\n"
 "	    }\n"
 "	    unset -nocomplain tclDefaultLibrary\n"
+#if defined(_WIN32) && defined(STATIC_BUILD)
+"	    package ifneeded registry 1.3.7 {\n"
+"	        load {} Registry; package provide registry 1.3.7\n"
+"	    }\n"
+"	    package ifneeded dde 1.4.6 {\n"
+"	        load {} Dde; package provide dde 1.4.6\n"
+"	    }\n"
+#endif
 "	    return\n"
 "	}\n"
 "	lappend dirs $tcl_library\n"
@@ -3094,7 +3108,7 @@ ChildInvokeHidden(
     Tcl_Size objc,		/* Number of arguments. */
     Tcl_Obj *const objv[])	/* Argument objects. */
 {
-    int result;
+    int result = TCL_OK;
 
     if (Tcl_IsSafe(interp)) {
 	Tcl_SetObjResult(interp, Tcl_NewStringObj(
@@ -3103,6 +3117,9 @@ ChildInvokeHidden(
 	Tcl_SetErrorCode(interp, "TCL", "OPERATION", "INTERP", "UNSAFE",
 		(char *)NULL);
 	return TCL_ERROR;
+    }
+    if (objc < 1) {
+	Tcl_Panic("need at least one word: hidden command name");
     }
 
     Tcl_Preserve(childInterp);
@@ -3997,7 +4014,7 @@ Tcl_LimitSetTime(
     Interp *iPtr = (Interp *) interp;
     Tcl_Time nextMoment;
 
-    memcpy(&iPtr->limit.time, timeLimitPtr, sizeof(Tcl_Time));
+    iPtr->limit.time = *timeLimitPtr;
     if (iPtr->limit.timeEvent != NULL) {
 	Tcl_DeleteTimerHandler(iPtr->limit.timeEvent);
     }
@@ -4081,7 +4098,7 @@ Tcl_LimitGetTime(
 {
     Interp *iPtr = (Interp *) interp;
 
-    memcpy(timeLimitPtr, &iPtr->limit.time, sizeof(Tcl_Time));
+    *timeLimitPtr = iPtr->limit.time;
 }
 
 /*
@@ -4328,7 +4345,7 @@ TclRemoveScriptLimitCallbacks(
     while (hashPtr != NULL) {
 	keyPtr = (ScriptLimitCallbackKey *)
 		Tcl_GetHashKey(&iPtr->limit.callbacks, hashPtr);
-	Tcl_LimitRemoveHandler(keyPtr->interp, keyPtr->type,
+	Tcl_LimitRemoveHandler(keyPtr->interp, (int) keyPtr->type,
 		CallScriptLimitCallback, Tcl_GetHashValue(hashPtr));
 	hashPtr = Tcl_NextHashEntry(&search);
     }
@@ -4408,8 +4425,7 @@ InheritLimitsFromParent(
     }
     if (parentPtr->limit.active & TCL_LIMIT_TIME) {
 	childPtr->limit.active |= TCL_LIMIT_TIME;
-	memcpy(&childPtr->limit.time, &parentPtr->limit.time,
-		sizeof(Tcl_Time));
+	childPtr->limit.time = parentPtr->limit.time;
 	childPtr->limit.timeGranularity = parentPtr->limit.timeGranularity;
     }
 }

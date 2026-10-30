@@ -23,10 +23,6 @@ WITHTCL 	= --with-tcl=$(prefix)/tcl$(TCL_VERSION)/unix
 WITHTK  	= --with-tk=$(prefix)/tk$(TCL_VERSION)/unix $(WITHTCL)
 CACHE		= --config-cache --cache-file=$(prefix)/config.cache
 
-ifneq ($(TCL_MAJOR_VERSION),9)
-TCLZIPFS	= tclzipfs
-endif
-
 #--------------------------build
 
 .PHONY	: saods9 tcl tk
@@ -36,7 +32,7 @@ saods9	: dirs tcl tk \
 	xpa funtools ast \
 	vector fitsy \
 	tclsignal \
-	$(TCLZIPFS) tls tclxml tclxmlrpc \
+	tls tclxml tclxmlrpc \
 	tkblt tclfitsy tktable tkimg \
 	tkmpeg tkagif tkhtml1 tkcon \
 	tksao ds9
@@ -70,23 +66,6 @@ tk$(TCL_VERSION)/unix/Makefile :
 	--disable-shared --enable-symbols \
 	$(CACHE)
 
-#-------------------------- tclzipfs
-
-tclzipfs: tclzipfs/Makefile
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tclzipfs install
-
-tclzipfs/Makefile :
-	@echo ""
-	@echo "*** $@ ***"
-	cd tclzipfs; \
-	./configure \
-	$(WITHTCL) \
-	$(PREFIX) \
-	$(STD) \
-	$(CACHE)
-
 #-------------------------- tclsignal
 
 tclsignal: tclsignal/Makefile
@@ -106,7 +85,7 @@ tclsignal/Makefile :
 
 #--------------------------clean
 
-.PHONY	: tclclean tkclean osclean tclzipfsclean tclsignalclean
+.PHONY	: tclclean tkclean osclean tclsignalclean
 
 tclclean :
 	@echo ""
@@ -118,12 +97,7 @@ tkclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/unix clean
 
-osclean : tclzipfsclean tclsignalclean
-
-tclzipfsclean:
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tclzipfs clean
+osclean : tclsignalclean
 
 tclsignalclean :
 	@echo ""
@@ -133,7 +107,7 @@ tclsignalclean :
 #--------------------------distclean
 
 .PHONY	: tcldistclean tkdistclean
-.PHONY	: osdistclean tclzipfsdistclean tclsignaldistclean
+.PHONY	: osdistclean tclsignaldistclean
 
 tcldistclean :
 	@echo ""
@@ -145,13 +119,7 @@ tkdistclean :
 	@echo "*** $@ ***"
 	$(MAKE) -C tk$(TCL_VERSION)/unix distclean
 
-osdistclean : tclzipfsdistclean tclsignaldistclean
-
-tclzipfsdistclean:
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tclzipfs distclean
-	rm -f tclzipfs/tclzipfsConfig.sh
+osdistclean : tclsignaldistclean
 
 tclsignaldistclean :
 	@echo ""

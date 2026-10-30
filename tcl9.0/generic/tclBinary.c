@@ -518,9 +518,9 @@ MakeByteArray(
 	    if (demandProper) {
 		if (interp) {
 		    Tcl_SetObjResult(interp, Tcl_ObjPrintf(
-			    "expected byte sequence but character %"
-			    TCL_Z_MODIFIER "u was '%1s' (U+%06X)",
-			    dst - byteArrayPtr->bytes, src, ch));
+			    "expected code point values below 0xff but value at byte offset %"
+			    TCL_Z_MODIFIER "u was 0x%x",
+			    dst - byteArrayPtr->bytes, ch));
 		    Tcl_SetErrorCode(interp, "TCL", "VALUE", "BYTES", (char *)NULL);
 		}
 		Tcl_Free(byteArrayPtr);
@@ -2839,14 +2839,16 @@ BinaryEncodeUu(
 	}
 	*cursor++ = UueDigits[lineLen];
 	for (i = 0 ; i < lineLen ; i++) {
-	    n <<= 8;
+	    /* Left shift cast to unsigned type to prevent UB on overflow */
+	    n = (Tcl_Size)((size_t)n << 8);
 	    n |= data[offset++];
 	    for (bits += 8; bits > 6 ; bits -= 6) {
 		*cursor++ = UueDigits[(n >> (bits - 6)) & 0x3F];
 	    }
 	}
 	if (bits > 0) {
-	    n <<= 8;
+	    /* Left shift cast to unsigned type to prevent UB on overflow */
+	    n = (Tcl_Size)((size_t)n << 8);
 	    *cursor++ = UueDigits[(n >> (bits + 2)) & 0x3F];
 	    bits = 0;
 	}

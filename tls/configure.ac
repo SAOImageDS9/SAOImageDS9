@@ -16,7 +16,7 @@ dnl	to configure the system for the local environment.
 # so that we create the export library with the dll.
 #-----------------------------------------------------------------------
 
-AC_INIT([tls],[2.0])
+AC_INIT([tls],[2.0.1])
 
 #--------------------------------------------------------------------
 # Call TEA_INIT as the first TEA_ macro to set up initial vars.
@@ -198,6 +198,12 @@ TEA_PROG_TCLSH
 
 TEA_EXPORT_CONFIG([tls])
 #AC_SUBST(SAMPLE_VAR)
+
+# -------------------------------------------------------------------
+# Find a usable dtplite (from tcllib) to use in document generation.
+# -------------------------------------------------------------------
+
+TEA_PROG_DTPLITE
 
 #--------------------------------------------------------------------
 # Specify files to substitute AC variables in. You may alternatively

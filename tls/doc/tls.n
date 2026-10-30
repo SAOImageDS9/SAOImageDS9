@@ -4,7 +4,7 @@
 '\" Copyright (c) 2004 Starfish Systems
 '\" Copyright (c) 2024 Brian O'Hagan
 '\"
-.TH "tls" n 2\&.0b2 tls "Tcl TLS extension"
+.TH "tls" n 2\&.0\&.1 tls "Tcl TLS extension"
 .\" The -*- nroff -*- definitions below are for supplemental macros used
 .\" in Tcl/Tk manual entries.
 .\"
@@ -278,7 +278,7 @@ tls \- binding to the OpenSSL library for encrypted socket and I/O channel commu
 .SH SYNOPSIS
 package require \fBTcl 8\&.5-\fR
 .sp
-package require \fBtls 2\&.0b2\fR
+package require \fBtls 2\&.0\&.1\fR
 .sp
 \fBtls::init\fR ?\fI-option\fR? ?\fIvalue\fR? ?\fI-option value \&.\&.\&.\fR?
 .sp
@@ -486,6 +486,7 @@ See the \fBtls::protocols\fR command for supported protocols\&.
 \fB-ssl3\fR \fIbool\fR
 Enable use of SSL v3\&. The default is \fBfalse\fR\&. Starting in TclTLS 1\&.8,
 use of SSL v3 if only available via a compile time option\&.
+OpenSSL 4\&.0+ no longer supports SSL v3, so this may not have any effect\&.
 See the \fBtls::protocols\fR command for supported protocols\&.
 .TP
 \fB-tls1\fR \fIbool\fR

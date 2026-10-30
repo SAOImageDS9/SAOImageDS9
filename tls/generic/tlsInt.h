@@ -41,7 +41,7 @@
 
 /* Handle TCL 8.6 CONST changes */
 #ifndef CONST86
-#   if TCL_MAJOR_VERSION > 8
+#   if TCL_MAJOR_VERSION > 8 || (TCL_MAJOR_VERSION == 8 && TCL_MINOR_VERSION > 5)
 #	define CONST86 const
 #   else
 #	define CONST86
@@ -51,20 +51,20 @@
 /*
  * Backwards compatibility for size type change
  */
-#if TCL_MAJOR_VERSION < 9 && TCL_MINOR_VERSION < 7
-#include <limits.h>
-#ifndef TCL_SIZE_MAX
-#define TCL_SIZE_MAX INT_MAX
-#endif
+#if TCL_MAJOR_VERSION == 8 && TCL_MINOR_VERSION < 7
+    #include <limits.h>
+    #ifndef TCL_SIZE_MAX
+    #define TCL_SIZE_MAX INT_MAX
+    #endif
 
-#ifndef Tcl_Size
-    typedef int Tcl_Size;
-#endif
+    #ifndef Tcl_Size
+	typedef int Tcl_Size;
+    #endif
 
-#define TCL_SIZE_MODIFIER ""
-#define Tcl_GetSizeIntFromObj Tcl_GetIntFromObj
-#define Tcl_NewSizeIntObj     Tcl_NewIntObj
-#define Tcl_NewSizeIntFromObj Tcl_NewWideIntObj
+    #define TCL_SIZE_MODIFIER ""
+    #define Tcl_GetSizeIntFromObj Tcl_GetIntFromObj
+    #define Tcl_NewSizeIntObj     Tcl_NewIntObj
+    #define Tcl_NewSizeIntFromObj Tcl_NewWideIntObj
 #endif
 
 #ifndef JOIN
@@ -180,6 +180,7 @@
 #define TLS_TCL_FASTPATH	(1<<6)	/* The parent channel is being used
 					 * directly by the SSL library. */
 #define TLS_TCL_EOF		(1<<7)	/* At EOF. Can't read, but can write. */
+#define TLS_TCL_CLOSED		(1<<8)	/* Chan closed. Can't write, but can read. */
 
 /* Set timer delay */
 #define TLS_TCL_DELAY (5)

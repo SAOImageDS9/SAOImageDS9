@@ -4,7 +4,7 @@
 # Copyright (C) 1997-2000 Matt Newman <matt@novadigm.com>
 #
 
-package provide Tls 2.0
+package provide Tls 2.0.1
 
 
 namespace eval tls {

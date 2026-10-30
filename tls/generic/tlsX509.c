@@ -34,8 +34,8 @@
  *
  *-----------------------------------------------------------------------------
  */
-Tcl_Obj *String_to_Hex(unsigned char* input, int ilen) {
-    unsigned char *iptr = input;
+Tcl_Obj *String_to_Hex(const unsigned char *input, int ilen) {
+    const unsigned char *iptr = input;
     Tcl_Obj *resultObj = Tcl_NewByteArrayObj(NULL, 0);
     unsigned char *data = Tcl_SetByteArrayLength(resultObj, (Tcl_Size)ilen*2);
     unsigned char *dptr = &data[0];
@@ -107,10 +107,14 @@ Tcl_Obj *Tls_x509Extensions(Tcl_Interp *interp, X509 *cert) {
     if ((exts = X509_get0_extensions(cert)) != NULL) {
 	for (int i=0; i < X509_get_ext_count(cert); i++) {
 	    X509_EXTENSION *ex = sk_X509_EXTENSION_value(exts, i);
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
 	    ASN1_OBJECT *obj = X509_EXTENSION_get_object(ex);
+#else
+	    const ASN1_OBJECT *obj = X509_EXTENSION_get_object(ex);
+#endif
 	    /* ASN1_OCTET_STRING *data = X509_EXTENSION_get_data(ex); */
 	    int critical = X509_EXTENSION_get_critical(ex);
-	    LAPPEND_BOOL(interp, resultObj, OBJ_nid2ln(OBJ_obj2nid(obj)), critical);
+	    LAPPEND_BOOL(interp, resultObj, OBJ_nid2ln(OBJ_obj2nid((const ASN1_OBJECT *)obj)), critical);
 	}
     }
     return resultObj;
@@ -135,8 +139,7 @@ Tcl_Obj *Tls_x509Identifier(const ASN1_OCTET_STRING *astring) {
     Tcl_Obj *resultObj = NULL;
 
     if (astring != NULL) {
-	resultObj = String_to_Hex((unsigned char *)ASN1_STRING_get0_data(astring),
-	    ASN1_STRING_length(astring));
+	resultObj = String_to_Hex(ASN1_STRING_get0_data(astring), ASN1_STRING_length(astring));
     }
     return resultObj;
 }
@@ -389,16 +392,16 @@ Tcl_Obj *Tls_x509ExtKeyUsage(Tcl_Interp *interp, X509 *cert, uint32_t xflags) {
  *-----------------------------------------------------------------------------
  */
 Tcl_Obj *Tls_x509CrlDp(Tcl_Interp *interp, X509 *cert) {
-    STACK_OF(DIST_POINT) *crl;
+    STACK_OF(DIST_POINT) *dps;
     Tcl_Obj *resultObj = Tcl_NewListObj(0, NULL);
 
     if (resultObj == NULL) {
 	return NULL;
     }
 
-    if ((crl = (STACK_OF(DIST_POINT) *)X509_get_ext_d2i(cert, NID_crl_distribution_points, NULL, NULL)) != NULL) {
-	for (int i=0; i < sk_DIST_POINT_num(crl); i++) {
-	    DIST_POINT *dp = sk_DIST_POINT_value(crl, i);
+    if ((dps = (STACK_OF(DIST_POINT) *)X509_get_ext_d2i(cert, NID_crl_distribution_points, NULL, NULL)) != NULL) {
+	for (int i=0; i < sk_DIST_POINT_num(dps); i++) {
+	    DIST_POINT *dp = sk_DIST_POINT_value(dps, i);
 	    DIST_POINT_NAME *distpoint = dp->distpoint;
 
 	    if (distpoint->type == 0) {
@@ -406,9 +409,14 @@ Tcl_Obj *Tls_x509CrlDp(Tcl_Interp *interp, X509 *cert) {
 		for (int j = 0; j < sk_GENERAL_NAME_num(distpoint->name.fullname); j++) {
 		    GENERAL_NAME *gen = sk_GENERAL_NAME_value(distpoint->name.fullname, j);
 		    int type;
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
 		    ASN1_STRING *uri = (ASN1_STRING *)GENERAL_NAME_get0_value(gen, &type);
-		    if (type == GEN_URI) {
-			LAPPEND_STR(interp, resultObj, (char *) NULL, (char *) ASN1_STRING_get0_data(uri), (Tcl_Size) ASN1_STRING_length(uri));
+#else
+		    const ASN1_STRING *uri = (const ASN1_STRING *)GENERAL_NAME_get0_value(gen, &type);
+#endif
+		    if (type == GEN_URI || type == GEN_DNS) {
+			LAPPEND_STR(interp, resultObj, (char *) NULL,
+			    (char *) ASN1_STRING_get0_data(uri), (Tcl_Size) ASN1_STRING_length(uri));
 		    }
 		}
 	    } else if (distpoint->type == 1) {
@@ -416,12 +424,17 @@ Tcl_Obj *Tls_x509CrlDp(Tcl_Interp *interp, X509 *cert) {
 		STACK_OF(X509_NAME_ENTRY) *sk_relname = distpoint->name.relativename;
 		for (int j = 0; j < sk_X509_NAME_ENTRY_num(sk_relname); j++) {
 		    X509_NAME_ENTRY *e = sk_X509_NAME_ENTRY_value(sk_relname, j);
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
 		    ASN1_STRING *d = X509_NAME_ENTRY_get_data(e);
-		    LAPPEND_STR(interp, resultObj, (char *) NULL, (char *) ASN1_STRING_get0_data(d), (Tcl_Size) ASN1_STRING_length(d));
+#else
+		    const ASN1_STRING *d = X509_NAME_ENTRY_get_data(e);
+#endif
+		    LAPPEND_STR(interp, resultObj, (char *) NULL,
+			(char *) ASN1_STRING_get0_data(d), (Tcl_Size) ASN1_STRING_length(d));
 		}
 	    }
 	}
-	CRL_DIST_POINTS_free(crl);
+	CRL_DIST_POINTS_free(dps);
     }
     return resultObj;
 }
@@ -526,14 +539,14 @@ Tcl_Obj *Tls_NewX509Obj(Tcl_Interp *interp, X509 *cert, int all) {
     unsigned long flags = XN_FLAG_RFC2253 | ASN1_STRFLGS_UTF8_CONVERT;
     flags &= ~(unsigned long)ASN1_STRFLGS_ESC_MSB;
 
-    char *buffer = (char *)ckalloc(BUFSIZ > EVP_MAX_MD_SIZE ? BUFSIZ : EVP_MAX_MD_SIZE);
+    char *buffer = (char *)Tcl_Alloc(BUFSIZ > EVP_MAX_MD_SIZE ? BUFSIZ : EVP_MAX_MD_SIZE);
 
     dprintf("Called");
 
     if (interp == NULL || cert == NULL || bio == NULL || resultObj == NULL || buffer == NULL) {
 	Tcl_DecrRefCount(resultObj);
 	BIO_free(bio);
-	if (buffer != NULL) ckfree(buffer);
+	if (buffer != NULL) Tcl_Free(buffer);
 	return NULL;
     }
 
@@ -551,7 +564,8 @@ Tcl_Obj *Tls_NewX509Obj(Tcl_Interp *interp, X509 *cert, int all) {
 	sig_nid = OBJ_obj2nid(sig_alg->algorithm);
 	LAPPEND_STR(interp, resultObj, "signatureAlgorithm", OBJ_nid2ln(sig_nid), -1);
 	if (sig_nid != NID_undef) {
-	    LAPPEND_OBJ(interp, resultObj, "signatureValue", String_to_Hex(sig->data, sig->length));
+	    LAPPEND_OBJ(interp, resultObj, "signatureValue",
+		String_to_Hex(ASN1_STRING_get0_data(sig), ASN1_STRING_length(sig)));
 	} else {
 	    LAPPEND_STR(interp, resultObj, "signatureValue", "", 0);
 	}
@@ -589,18 +603,22 @@ Tcl_Obj *Tls_NewX509Obj(Tcl_Interp *interp, X509 *cert, int all) {
 
     /* SHA1 Digest (Fingerprint) of cert - DER representation */
     if (X509_digest(cert, EVP_sha1(), (unsigned char *)buffer, &ulen)) {
-	LAPPEND_OBJ(interp, resultObj, "sha1_hash", String_to_Hex((unsigned char *)buffer, (int) ulen));
+	LAPPEND_OBJ(interp, resultObj, "sha1_hash", String_to_Hex((const unsigned char *)buffer, (int) ulen));
     }
 
     /* SHA256 Digest (Fingerprint) of cert - DER representation */
     if (X509_digest(cert, EVP_sha256(), (unsigned char *)buffer, &ulen)) {
-	LAPPEND_OBJ(interp, resultObj, "sha256_hash", String_to_Hex((unsigned char *)buffer, (int) ulen));
+	LAPPEND_OBJ(interp, resultObj, "sha256_hash", String_to_Hex((const unsigned char *)buffer, (int) ulen));
     }
 
     /* Subject Public Key Info specifies the public key and identifies the
 	algorithm with which the key is used. RFC 5280 section 4.1.2.7 */
     if (X509_get_signature_info(cert, &mdnid, &pknid, &bits, &xflags)) {
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
 	ASN1_BIT_STRING *key;
+#else
+	const ASN1_BIT_STRING *key;
+#endif
 	unsigned int n;
 
 	LAPPEND_STR(interp, resultObj, "signingDigest", OBJ_nid2ln(mdnid), -1);
@@ -608,17 +626,18 @@ Tcl_Obj *Tls_NewX509Obj(Tcl_Interp *interp, X509 *cert, int all) {
 	LAPPEND_INT(interp, resultObj, "bits", bits); /* Effective security bits */
 
 	key = X509_get0_pubkey_bitstr(cert);
-	LAPPEND_OBJ(interp, resultObj, "publicKey", String_to_Hex(key->data, key->length));
+	LAPPEND_OBJ(interp, resultObj, "publicKey",
+	    String_to_Hex(ASN1_STRING_get0_data(key), ASN1_STRING_length(key)));
 
 	if (X509_pubkey_digest(cert, EVP_get_digestbynid(pknid), (unsigned char *)buffer, &n)) {
-	    LAPPEND_OBJ(interp, resultObj, "publicKeyHash", String_to_Hex((unsigned char *)buffer, (int) n));
+	    LAPPEND_OBJ(interp, resultObj, "publicKeyHash", String_to_Hex((const unsigned char *)buffer, (int) n));
 	} else {
 	    LAPPEND_STR(interp, resultObj, "publicKeyHash", "", 0);
 	}
 
 	/* digest of the DER representation of the certificate */
 	if (X509_digest(cert, EVP_get_digestbynid(mdnid), (unsigned char *)buffer, &n)) {
-	    LAPPEND_OBJ(interp, resultObj, "signatureHash", String_to_Hex((unsigned char *)buffer, (int) n));
+	    LAPPEND_OBJ(interp, resultObj, "signatureHash", String_to_Hex((const unsigned char *)buffer, (int) n));
 	} else {
 	    LAPPEND_STR(interp, resultObj, "signatureHash", "", 0);
 	}
@@ -647,14 +666,16 @@ Tcl_Obj *Tls_NewX509Obj(Tcl_Interp *interp, X509 *cert, int all) {
 
 	Tcl_ListObjAppendElement(interp, resultObj, Tcl_NewStringObj("issuerUniqueId", -1));
 	if (iuid != NULL) {
-	    Tcl_ListObjAppendElement(interp, resultObj, Tcl_NewByteArrayObj((const unsigned char *)iuid->data, (Tcl_Size) iuid->length));
+	    Tcl_ListObjAppendElement(interp, resultObj,
+		Tcl_NewByteArrayObj(ASN1_STRING_get0_data(iuid), (Tcl_Size) ASN1_STRING_length(iuid)));
 	} else {
 	    Tcl_ListObjAppendElement(interp, resultObj, Tcl_NewStringObj("", -1));
 	}
 
 	Tcl_ListObjAppendElement(interp, resultObj, Tcl_NewStringObj("subjectUniqueId", -1));
 	if (suid != NULL) {
-	    Tcl_ListObjAppendElement(interp, resultObj, Tcl_NewByteArrayObj((const unsigned char *)suid->data, (Tcl_Size) suid->length));
+	    Tcl_ListObjAppendElement(interp, resultObj,
+		Tcl_NewByteArrayObj(ASN1_STRING_get0_data(suid), (Tcl_Size) ASN1_STRING_length(suid)));
 	} else {
 	    Tcl_ListObjAppendElement(interp, resultObj, Tcl_NewStringObj("", -1));
 	}
@@ -740,7 +761,11 @@ Tcl_Obj *Tls_NewX509Obj(Tcl_Interp *interp, X509 *cert, int all) {
 	friendlyName attribute (RFC 2985). */
     {
 	int ilen = 0;
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
 	unsigned char *string = X509_alias_get0(cert, &ilen);
+#else
+	const unsigned char *string = X509_alias_get0(cert, &ilen);
+#endif
 	LAPPEND_STR(interp, resultObj, "alias", (char *) string, (Tcl_Size) ilen);
 	string = X509_keyid_get0(cert, &ilen);
 	LAPPEND_STR(interp, resultObj, "keyId", (char *) string, (Tcl_Size) ilen);
@@ -755,7 +780,7 @@ Tcl_Obj *Tls_NewX509Obj(Tcl_Interp *interp, X509 *cert, int all) {
 	if (allObj == NULL || certObj == NULL) {
 	    Tcl_DecrRefCount(allObj);
 	    BIO_free(bio);
-	    ckfree(buffer);
+	    Tcl_Free(buffer);
 	    return resultObj;
 	}
 
@@ -773,6 +798,6 @@ Tcl_Obj *Tls_NewX509Obj(Tcl_Interp *interp, X509 *cert, int all) {
     }
 
     BIO_free(bio);
-    ckfree(buffer);
+    Tcl_Free(buffer);
     return resultObj;
 }

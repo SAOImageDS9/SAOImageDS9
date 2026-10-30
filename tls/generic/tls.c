@@ -500,7 +500,7 @@ Tls_Error(
  */
 
 void KeyLogCallback(
-    TCL_UNUSED(const SSL *),		/* Client state for TLS socket */
+    TCL_UNUSED(const SSL *),	/* Client state for TLS socket */
     const char *line)		/* Key data to be logged */
 {
     char *str = getenv(SSLKEYLOGFILE);
@@ -1378,8 +1378,8 @@ ImportObjCmd(
     char *servername		= NULL;	/* hostname for Server Name Indication */
     char *session_id		= NULL;
     Tcl_Obj *alpn		= NULL;
-    int ssl2 = 0, ssl3 = 0; /* Default to disabled */
-    int tls1 = 0, tls1_1 = 0, tls1_2 = 0, tls1_3 = 0; /* Default to autp select */
+    int ssl2 = 0, ssl3 = 0, tls1 = 0, tls1_1 = 0; /* Default to disabled */
+    int tls1_2 = 1, tls1_3 = 1; /* Default to enabled */
     int proto = 0, level = -1;
     int verify = 0, require = -1, request = -1, post_handshake = 0;
 
@@ -1478,7 +1478,7 @@ ImportObjCmd(
     if (DHparams && !*DHparams)	        DHparams        = NULL;
 
     /* new SSL state */
-    statePtr		= (State *) ckalloc((unsigned) sizeof(State));
+    statePtr		= (State *) Tcl_Alloc((unsigned) sizeof(State));
     memset(statePtr, 0, sizeof(State));
 
     statePtr->flags	= flags;
@@ -1569,7 +1569,6 @@ ImportObjCmd(
     /* Create stacked channel */
     dprintf("Consuming Tcl channel %s", Tcl_GetChannelName(chan));
     statePtr->self = Tcl_StackChannel(interp, Tls_ChannelType(), statePtr, (TCL_READABLE | TCL_WRITABLE), chan);
-    dprintf("Created channel named %s", Tcl_GetChannelName(statePtr->self));
     if (statePtr->self == (Tcl_Channel) NULL) {
 	/*
 	 * No use of Tcl_EventuallyFree because no possible Tcl_Preserve.
@@ -1581,6 +1580,7 @@ ImportObjCmd(
 	Tcl_DStringFree(&upperChannelBlocking);
 	return TCL_ERROR;
     }
+    dprintf("Created channel named %s", Tcl_GetChannelName(statePtr->self));
 
     /* Restore channel config */
     Tcl_SetChannelOption(interp, statePtr->self, "-translation", Tcl_DStringValue(&upperChannelTranslation));
@@ -1604,9 +1604,11 @@ ImportObjCmd(
 	return TCL_ERROR;
     }
 
-    /* Set host server name */
+    /* Set host server name and SNI */
     if (servername) {
-	/* Sets the server name indication (SNI) in ClientHello extension */
+	int res;
+
+	/* Sets the server name indication (SNI) in ClientHello extension. */
 	/* Per RFC 6066, hostname is a ASCII encoded string, though RFC 4366 says UTF-8. */
 	if (!SSL_set_tlsext_host_name(statePtr->ssl, servername) && require) {
 	    Tcl_AppendResult(interp, "Set SNI extension failed: ", GET_ERR_REASON(), (char *)NULL);
@@ -1615,9 +1617,28 @@ ImportObjCmd(
 	    return TCL_ERROR;
 	}
 
-	/* Set hostname for peer certificate hostname verification in clients.
-	   Don't use SSL_set1_host since it has limitations. */
-	if (!SSL_add1_host(statePtr->ssl, servername)) {
+	/* Set hostname for peer certificate hostname verification. */
+	/* We use add instead of set so multiple names can be used. */
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
+	res = SSL_add1_host(statePtr->ssl, servername);
+#else
+	int is_name = 0;
+	size_t slen = strlen(servername);
+
+	for (size_t i = 0; i < slen; i++) {
+	    if ((servername[i] < '0' || servername[i] > '9') &&
+		servername[i] != '.' && servername[i] != ':') {
+		is_name = 1;
+		break;
+	    }
+	}
+	if (is_name) {
+	    res = SSL_add1_dnsname(statePtr->ssl, servername);
+	} else {
+	    res = SSL_add1_ipaddr(statePtr->ssl, servername);
+	}
+#endif
+	if (!res) {
 	    Tcl_AppendResult(interp, "Set DNS hostname failed: ", GET_ERR_REASON(), (char *)NULL);
 	    Tcl_SetErrorCode(interp, "TLS", "IMPORT", "HOSTNAME", "FAILED", (char *)NULL);
 	    Tls_Free((tls_free_type *) statePtr);
@@ -1665,7 +1686,7 @@ ImportObjCmd(
 	}
 
 	/* Build the complete protocol-list */
-	protos = (unsigned char *)ckalloc(protos_len);
+	protos = (unsigned char *)Tcl_Alloc((Tcl_Size)protos_len);
 	/* protocol-lists consist of 8-bit length-prefixed, byte strings */
 	for (i = 0, p = protos; i < cnt; i++) {
 	    char *str = Tcl_GetStringFromObj(list[i], &len);
@@ -1690,7 +1711,7 @@ done:	for (i = 0; i < cnt; i++) {
 	if (res != TCL_OK) {
 	    Tls_Free((tls_free_type *) statePtr);
 	    if (protos != NULL) {
-		ckfree(protos);
+		Tcl_Free((void *)protos);
 	    }
 	    return TCL_ERROR;
 	}
@@ -1898,7 +1919,11 @@ TlsLoadClientCAFileFromMemory(
     X509_STORE *store = NULL;
     Tcl_Obj    *buf = NULL;
     const void *data = NULL;
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
     X509_NAME  *name = NULL;
+#else
+    const X509_NAME  *name = NULL;
+#endif
     STACK_OF(X509_NAME) *certNames = NULL;
     int ret = 0;
     Tcl_Size len = 0;
@@ -2075,7 +2100,7 @@ CTX_Init(
     }
 
     /* Specify allowed protocol range */
-    if (!proto) {
+    if (proto == 0) {
 	SSL_CTX_set_min_proto_version(ctx, TLS1_2_VERSION);
 	SSL_CTX_set_max_proto_version(ctx, TLS1_3_VERSION);
     } else {
@@ -2423,7 +2448,7 @@ StatusObjCmd(
 
     dprintf("Called");
 
-    if (objc < 2 || objc > 3 || (objc == 3 && !strcmp(Tcl_GetString(objv[1]), "-local"))) {
+    if (objc < 2 || objc > 3 || (objc == 3 && strcmp(Tcl_GetString(objv[1]), "-local"))) {
 	Tcl_WrongNumArgs(interp, 1, objv, "?-local? channel");
 	return TCL_ERROR;
     }
@@ -2881,7 +2906,11 @@ MiscObjCmd(
 	case C_STRREQ: {
 	    EVP_PKEY *pkey=NULL;
 	    X509 *cert=NULL;
+#if OPENSSL_VERSION_NUMBER < 0x40000000L
 	    X509_NAME *name=NULL;
+#else
+	    const X509_NAME *name=NULL;
+#endif
 	    Tcl_Obj **listv;
 	    Tcl_Size listc, i;
 
@@ -3028,7 +3057,7 @@ MiscObjCmd(
 		X509_gmtime_adj(X509_getm_notAfter(cert),(long)60*60*24*days);
 		X509_set_pubkey(cert,pkey);
 
-		name=X509_get_subject_name(cert);
+		name = X509_get_subject_name(cert);
 
 		if (k_C != NULL) {
 		    string = (const unsigned char *) Tcl_GetStringFromObj(k_C, &len);
@@ -3036,7 +3065,7 @@ MiscObjCmd(
 		    string = NULL;
 		    len = 0;
 		}
-		X509_NAME_add_entry_by_txt(name,"C", MBSTRING_ASC, string, (int) len, -1, 0);
+		X509_NAME_add_entry_by_txt((X509_NAME *)name,"C", MBSTRING_ASC, string, (int) len, -1, 0);
 
 		if (k_ST != NULL) {
 		    string = (const unsigned char *) Tcl_GetStringFromObj(k_ST, &len);
@@ -3044,7 +3073,7 @@ MiscObjCmd(
 		    string = NULL;
 		    len = 0;
 		}
-		X509_NAME_add_entry_by_txt(name,"ST", MBSTRING_ASC, string, (int) len, -1, 0);
+		X509_NAME_add_entry_by_txt((X509_NAME *)name,"ST", MBSTRING_ASC, string, (int) len, -1, 0);
 
 		if (k_L != NULL) {
 		    string = (const unsigned char *) Tcl_GetStringFromObj(k_L, &len);
@@ -3052,7 +3081,7 @@ MiscObjCmd(
 		    string = NULL;
 		    len = 0;
 		}
-		X509_NAME_add_entry_by_txt(name,"L", MBSTRING_ASC, string, (int) len, -1, 0);
+		X509_NAME_add_entry_by_txt((X509_NAME *)name,"L", MBSTRING_ASC, string, (int) len, -1, 0);
 
 		if (k_O != NULL) {
 		    string = (const unsigned char *) Tcl_GetStringFromObj(k_O, &len);
@@ -3060,7 +3089,7 @@ MiscObjCmd(
 		    string = NULL;
 		    len = 0;
 		}
-		X509_NAME_add_entry_by_txt(name,"O", MBSTRING_ASC, string, (int) len, -1, 0);
+		X509_NAME_add_entry_by_txt((X509_NAME *)name,"O", MBSTRING_ASC, string, (int) len, -1, 0);
 
 		if (k_OU != NULL) {
 		    string = (const unsigned char *) Tcl_GetStringFromObj(k_OU, &len);
@@ -3068,7 +3097,7 @@ MiscObjCmd(
 		    string = NULL;
 		    len = 0;
 		}
-		X509_NAME_add_entry_by_txt(name,"OU", MBSTRING_ASC, string, (int) len, -1, 0);
+		X509_NAME_add_entry_by_txt((X509_NAME *)name,"OU", MBSTRING_ASC, string, (int) len, -1, 0);
 
 		if (k_CN != NULL) {
 		    string = (const unsigned char *) Tcl_GetStringFromObj(k_CN, &len);
@@ -3076,7 +3105,7 @@ MiscObjCmd(
 		    string = NULL;
 		    len = 0;
 		}
-		X509_NAME_add_entry_by_txt(name,"CN", MBSTRING_ASC, string, (int) len, -1, 0);
+		X509_NAME_add_entry_by_txt((X509_NAME *)name,"CN", MBSTRING_ASC, string, (int) len, -1, 0);
 
 		if (k_Email != NULL) {
 		    string = (const unsigned char *) Tcl_GetStringFromObj(k_Email, &len);
@@ -3084,7 +3113,7 @@ MiscObjCmd(
 		    string = NULL;
 		    len = 0;
 		}
-		X509_NAME_add_entry_by_txt(name,"Email", MBSTRING_ASC, string, (int) len, -1, 0);
+		X509_NAME_add_entry_by_txt((X509_NAME *)name,"Email", MBSTRING_ASC, string, (int) len, -1, 0);
 
 		X509_set_subject_name(cert,name);
 
@@ -3176,6 +3205,7 @@ done:	    if (k_C != NULL) {
 void Tls_Clean(
     State *statePtr)		/* Client state for TLS socket */
 {
+    int do_release = 0;
     dprintf("Called");
 
     /*
@@ -3184,7 +3214,7 @@ void Tls_Clean(
     if (statePtr->timer != (Tcl_TimerToken) NULL) {
 	Tcl_DeleteTimerHandler(statePtr->timer);
 	statePtr->timer = NULL;
-	Tcl_Release((ClientData) statePtr);
+	do_release = 1;
     }
 
     /* Remove callbacks */
@@ -3203,7 +3233,7 @@ void Tls_Clean(
 
     /* Remove list of ALPN protocols */
     if (statePtr->protos) {
-	ckfree(statePtr->protos);
+	Tcl_Free((void *)statePtr->protos);
 	statePtr->protos = NULL;
     }
 
@@ -3229,6 +3259,9 @@ void Tls_Clean(
 	statePtr->ctx = NULL;
     }
 
+    if (do_release) {
+	Tcl_Release((ClientData) statePtr);
+    }
     dprintf("Returning");
 }
 
@@ -3258,7 +3291,7 @@ Tls_Free(
     dprintf("Called");
 
     Tls_Clean(statePtr);
-    ckfree(blockPtr);
+    Tcl_Free(blockPtr);
 }
 
 /*
@@ -3283,7 +3316,7 @@ Tls_Free(
 #endif
 
 int
-XBuildInfoCommand(
+BuildInfoCommand(
     Tcl_Interp* interp)		/* Tcl interpreter */
 {
     Tcl_CmdInfo info;
@@ -3471,7 +3504,7 @@ DLLEXPORT int Tls_Init(
     Tcl_CreateObjCommand(interp, "::tls::unstack", UnimportObjCmd, (ClientData) NULL, (Tcl_CmdDeleteProc *) NULL);
     Tcl_CreateObjCommand(interp, "::tls::version", VersionObjCmd, (ClientData) NULL, (Tcl_CmdDeleteProc *) NULL);
 
-    XBuildInfoCommand(interp);
+    BuildInfoCommand(interp);
 
     if (interp && Tcl_Eval(interp, tlsTclInitScript) != TCL_OK) {
 	return TCL_ERROR;

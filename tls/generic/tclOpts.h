@@ -49,6 +49,7 @@
 #define OPTBYTE(option, var, lvar)		\
     OPT_PROLOG(option)				\
     var = Tcl_GetByteArrayFromObj(objv[idx], &(lvar));\
+    if (var == NULL) lvar = 0;			\
     OPT_POSTLOG()
 
 #define OPTBAD(type, list)			\

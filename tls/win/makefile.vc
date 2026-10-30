@@ -70,23 +70,22 @@ PRJ_LIBS = \
 # NOTE: this requires doctools from tcllib hence it is not intended
 # to be run during install. Rather, use it to generate a new version
 # of HTML docs to be stored in the repository.
-TCLSH = "$(_INSTALLDIR)\..\bin\tclsh.exe"
 DTPLITE = "$(_INSTALLDIR)\..\bin\dtplite.tcl"
 
 make-docs-html:
 !IF EXIST($(DTPLITE))
-	"$(TCLSH)" "$(DTPLITE)" -o "$(ROOT)\doc\$(PROJECT).html" html "$(ROOT)\doc\$(PROJECT).man"
+	"$(TCLSH_NATIVE)" "$(DTPLITE)" -o "$(ROOT)\doc\$(PROJECT).html" html "$(ROOT)\doc\$(PROJECT).man"
 !ENDIF
 
 make-docs-n:
 !IF EXIST($(DTPLITE))
-	"$(TCLSH)" "$(DTPLITE)" -o "$(ROOT)\doc\$(PROJECT).n" nroff "$(ROOT)\doc\$(PROJECT).man"
+	"$(TCLSH_NATIVE)" "$(DTPLITE)" -o "$(ROOT)\doc\$(PROJECT).n" nroff "$(ROOT)\doc\$(PROJECT).man"
 !ENDIF
 
 make-docs:
 !IF EXIST($(DTPLITE))
-	"$(TCLSH)" "$(DTPLITE)" -o "$DOCDIR" html "$(ROOT)\doc"
-	"$(TCLSH)" "$(DTPLITE)" -o "$DOCDIR" nroff "$(ROOT)\doc"
+	"$(TCLSH_NATIVE)" "$(DTPLITE)" -o "$DOCDIR" html "$(ROOT)\doc"
+	"$(TCLSH_NATIVE)" "$(DTPLITE)" -o "$DOCDIR" nroff "$(ROOT)\doc"
 !ENDIF
 
 docs: make-docs-n make-docs-html
@@ -109,7 +108,7 @@ pkgindex: default-pkgindex-tea
 # build so that only the compiled library file is needed for this extension to
 # load and operate.
 $(TMP_DIR)\tls.tcl.h: $(LIBDIR)\tls.tcl
-	"$(TCLSH)" << $(LIBDIR)\tls.tcl >$(TMP_DIR)\tls.tcl.h
+	"$(TCLSH_NATIVE)" << $(LIBDIR)\tls.tcl >$(TMP_DIR)\tls.tcl.h
 	set in [open [lindex $$argv 0] r]
 	while {[gets $$in line] != -1} {
 	    switch -regexp -- $$line "^$$" - {^\s*#} continue

@@ -1,1 +1,3 @@
+win/*.bat
+win/*.rc
 win/*.vc

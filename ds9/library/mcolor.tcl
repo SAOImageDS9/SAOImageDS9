@@ -21,8 +21,6 @@ proc ColorMainMenu {} {
     }
 
     $ds9(mb).color add separator
-    $ds9(mb).color add cascade -label [msgcat::mc {Favorites}] \
-	-menu $ds9(mb).color.favorites
     $ds9(mb).color add cascade -label [msgcat::mc {h5utils}] \
 	-menu $ds9(mb).color.h5
     $ds9(mb).color add cascade -label [msgcat::mc {Matplotlib Uniform}] \
@@ -45,6 +43,8 @@ proc ColorMainMenu {} {
 	-menu $ds9(mb).color.solar
     $ds9(mb).color add cascade -label [msgcat::mc {User}] \
 	-menu $ds9(mb).color.user
+    $ds9(mb).color add cascade -label [msgcat::mc {Favorites}] \
+	-menu $ds9(mb).color.favorites
 
     ColorMainMenuExternal h5
     ColorMainMenuExternal mpl-uni

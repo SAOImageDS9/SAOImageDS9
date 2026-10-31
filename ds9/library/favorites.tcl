@@ -166,10 +166,17 @@ proc FavoritesRemove {cmap} {
     UpdateFavoritesMenu
 }
 
-proc FavoritesReset {} {
+# leaves an empty file, so the default list does not come back
+proc FavoritesClear {{confirm 1}} {
     global ifavorites
 
-    set ifavorites(list) $ifavorites(default)
+    if {$confirm} {
+	if {[tk_messageBox -type okcancel -icon question -message [msgcat::mc {Clear all favorite colormaps?}]] != {ok}} {
+	    return
+	}
+    }
+
+    set ifavorites(list) {}
     FavoritesWrite
     UpdateFavoritesMenu
 }
@@ -241,6 +248,8 @@ proc UpdateFavoritesMenu {} {
 	    -command {FavoritesAdd $colorbar(map)}
 	$mm add command -label [msgcat::mc {Remove from Favorites}] \
 	    -command {FavoritesRemove $colorbar(map)}
+	$mm add command -label [msgcat::mc {Clear Favorites}] \
+	    -command FavoritesClear
     }
 
     # icon bar always shows swatches, the Color menu follows view(icons)
@@ -263,7 +272,7 @@ proc UpdateFavoritesMenu {} {
     FavoritesMapCB
 }
 
-# keep the icon bar face and the add/remove entries in sync with colorbar(map)
+# keep the icon bar face and the add/remove/clear entries in sync
 proc FavoritesMapCB {args} {
     global ds9
     global colorbar
@@ -272,6 +281,7 @@ proc FavoritesMapCB {args} {
     set fav [FavoritesIsFavorite $colorbar(map)]
     set add [expr {$fav ? {disabled} : {normal}}]
     set rm [expr {$fav ? {normal} : {disabled}}]
+    set clr [expr {$ifavorites(list) != {} ? {normal} : {disabled}}]
 
     set mms {}
     if {[info exists ds9(icons,top)] \
@@ -290,13 +300,14 @@ proc FavoritesMapCB {args} {
 	lappend mms $ds9(mb).color.favorites
     }
 
-    # add/remove are always the last two entries
+    # add/remove/clear are always the last three entries
     foreach mm $mms {
 	set last [$mm index end]
-	if {$last == {} || $last == {none} || $last < 1} {
+	if {$last == {} || $last == {none} || $last < 2} {
 	    continue
 	}
-	$mm entryconfigure [expr $last-1] -state $add
-	$mm entryconfigure $last -state $rm
+	$mm entryconfigure [expr $last-2] -state $add
+	$mm entryconfigure [expr $last-1] -state $rm
+	$mm entryconfigure $last -state $clr
     }
 }

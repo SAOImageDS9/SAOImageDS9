@@ -228,11 +228,7 @@ proc ContourTableCreate {f} {
     bind $dcontour(canvas) <MouseWheel> {ContourTableWheel %D}
     bind ContourTable <MouseWheel> {ContourTableWheel %D}
 
-    ttk::button $f.add -text [msgcat::mc {Add Level}] \
-	-command ContourTableAddRow
-
     grid $dcontour(canvas) $f.yscroll -sticky news
-    grid $f.add - -sticky w -padx 2 -pady 2
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 0 -weight 1
 }
@@ -413,29 +409,6 @@ proc ContourTableWrite {levels styles} {
 proc ContourTableSetLevels {levels} {
     lassign [ContourTableRead] old styles
     ContourTableWrite $levels $styles
-}
-
-# one more level: regenerate all values, styles stay with their row,
-# the new last row uses the defaults
-proc ContourTableAddRow {} {
-    global dcontour
-    global contour
-
-    set nn [expr {$dcontour(nrow)+1}]
-    set ll [ContourGenerateLevels $nn]
-    if {$ll != {}} {
-	set contour(numlevel) $nn
-	ContourTableSetLevels $ll
-    } else {
-	# nothing to generate from, add an empty row to fill in
-	set ii $dcontour(nrow)
-	incr dcontour(nrow)
-	ContourTableSetRow $ii {} {}
-	ContourTableRow $ii
-	ContourTableSwatches
-	focus $dcontour(tbl).lev$ii
-    }
-    after idle [list $dcontour(canvas) yview moveto 1]
 }
 
 proc ContourTableDeleteRow {ii} {

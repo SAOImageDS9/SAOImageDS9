@@ -68,6 +68,10 @@ proc UpdateContour {} {
     }
 
     if {!$contour(view)} {
+	# keep the styles with the frame, used when contours are turned on
+	if {[winfo exists $icontour(top)]} {
+	    ContourStyleSet $current(frame) [lindex [ContourTableRead] 1]
+	}
 	$current(frame) contour delete
 	return
     }	
@@ -1308,12 +1312,14 @@ proc UpdateContourDialog {} {
 	regsub -all "\n" "$levels" " " levels
 	if {$levels != {}} {
 	    ContourTableWrite $levels [ContourStyleGet $current(frame)]
-	} else {
-	    ContourGenerateDialog
+	    return
 	}
-    } else {
-	ContourGenerateDialog
     }
+
+    # no contours, show generated levels with this frame's styles
+    ContourCheckParams
+    ContourTableWrite [ContourGenerateLevels $contour(numlevel)] \
+	[ContourStyleGet $current(frame)]
 }
 
 proc ContourLogDialog {} {

@@ -546,7 +546,7 @@ void trace(long xdim, long ydim, double cntr,
     double c = rows[jj+1][ii+1];
     double d = rows[jj+1][ii];
 
-    double X, Y;
+    double X =0, Y =0;
     if (init) {
       init = 0;
       switch (side) {

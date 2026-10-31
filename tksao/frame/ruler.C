@@ -32,7 +32,8 @@ Ruler::Ruler(Base* p, const Vector& ptr1, const Vector& ptr2,
   dist = 0;
   distSystem = distsys;
   distFormat = distformat;
-  strncpy(distSpec, distspec, 32);
+  strncpy(distSpec, distspec, 31);
+  distSpec[31] = '\0';
 
   strcpy(type_,"ruler");
   handle = new Vector[2];
@@ -375,7 +376,8 @@ int Ruler::isIn(const Vector& vv)
 
 void Ruler::setDistSpec(const char* distspec)
 {
-  strncpy(distSpec, distspec, 32);
+  strncpy(distSpec, distspec, 31);
+  distSpec[31] = '\0';
 }
 
 void Ruler::setCoordSystem(Coord::CoordSystem sys, Coord::SkyFrame sky, 

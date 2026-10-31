@@ -1258,6 +1258,7 @@ void Base::getColorScaleLevelCmd(int count, double ll, double hh,
   InverseScale* scale;
   switch (scaleType) {
   case FrScale::LINEARSCALE:
+  default:
     scale = new LinearInverseScale(count, ll, hh);
     break;
   case FrScale::LOGSCALE:

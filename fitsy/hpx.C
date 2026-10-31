@@ -939,6 +939,7 @@ void FitsHPX::initHeader(FitsFile* fits)
   double crpix1;
   switch (layout_) {
   case EQUATOR:
+  default:
     crpix1 = (5.0 * nside_ + 1.0) / 2.0;
     break;
   case NORTH:
@@ -969,6 +970,7 @@ void FitsHPX::initHeader(FitsFile* fits)
   const char* pcode;
   switch (layout_) {
   case EQUATOR:
+  default:
     pcode = "HPX";
     break;
   case NORTH:
@@ -1000,6 +1002,7 @@ void FitsHPX::initHeader(FitsFile* fits)
     descr2 = "Ecliptic latitude";
     break;
   case UNKNOWN:
+  default:
     ctype1 = "XLON";
     ctype2 = "XLAT";
     descr1 = "Longitude";
@@ -1025,6 +1028,7 @@ void FitsHPX::initHeader(FitsFile* fits)
   double crval2;
   switch (layout_) {
   case EQUATOR:
+  default:
     crval2 = 0.;
     break;
   case NORTH:

@@ -95,7 +95,8 @@ static char tobuf[1024];
 
 char* toConstLower(const char* str)
 {
-  strncpy(tobuf,str,1024);
+  strncpy(tobuf,str,1023);
+  tobuf[1023] = '\0';
   char* ptr = tobuf;
   while (*ptr) {
     *ptr = (char)(tolower(((int)(*ptr))));
@@ -106,7 +107,8 @@ char* toConstLower(const char* str)
 
 char* toConstUpper(const char* str)
 {
-  strncpy(tobuf,str,1024);
+  strncpy(tobuf,str,1023);
+  tobuf[1023] = '\0';
   char* ptr = tobuf;
   while (*ptr) {
     *ptr = (char)(toupper(((int)(*ptr))));

@@ -5,7 +5,7 @@
 #include "util.h"
 #include "colorbarttruecolor8.h"
 
-ColorbarTTrueColor8::ColorbarTTrueColor8(Tcl_Interp* i,Tk_Canvas c,Tk_Item* item) : ColorbarT(i,c,item), TrueColor8(visual)
+ColorbarTTrueColor8::ColorbarTTrueColor8(Tcl_Interp* i,Tk_Canvas c,Tk_Item* item) : ColorbarT(i,c,item), TrueColor8(Tk_Visual(Tk_CanvasTkwin(c)))
 {}
 
 void ColorbarTTrueColor8::updateColorsHorz()

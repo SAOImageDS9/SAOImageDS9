@@ -342,8 +342,8 @@ void FitsHist::bin(FitsFile* fits, Matrix& m, Function func, Vector block)
   int rows = srcHDU->rows();
 
   // third dimension
-  double zmin;
-  double zlength;
+  double zmin =0;
+  double zlength =0;
   if (zcol_) {
     zmin = zcol_->getMin();
     zlength  = zcol_->getMax() - zcol_->getMin();

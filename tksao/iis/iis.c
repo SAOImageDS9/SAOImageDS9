@@ -1076,7 +1076,8 @@ void xim_retCursorVal(XimDataPtr xim, float sx, float sy, int frame, int wcs, in
   int dataout, wcscode;
   char curval[SZ_IMCURVAL];
   char keystr[20];
-  float wx, wy;
+  /* fall back to screen coords if there is no usable wcs */
+  float wx = sx, wy = sy;
 
   if (xim->cursor_chan)
     dataout = xim->cursor_chan->dataout;

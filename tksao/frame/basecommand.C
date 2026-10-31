@@ -257,6 +257,10 @@ void Base::blockCmd(const Vector& bb)
 void Base::blockToCmd(const Vector& bb)
 {
   Vector vv = currentContext->setBlockToFactor(bb);
+  // reblocking is expensive; skip it if the factor is unchanged
+  if (vv[0] == 1 && vv[1] == 1)
+    return;
+
   currentContext->block();
   currentContext->analysis();
   updateBlock(vv);

@@ -307,14 +307,11 @@ proc ContourTableRow {ii} {
     $t.dash$ii.menu add command -label "[msgcat::mc {Dash List}]..." \
 	-command [list WidthDashDialog dcontour dashlist,$ii $cmd]
 
-    ttk::button $t.del$ii -text "−" -width 2 \
-	-command [list ContourTableDeleteRow $ii]
-
-    grid $t.lev$ii $t.swatch$ii $t.color$ii $t.width$ii $t.dash$ii $t.del$ii \
+    grid $t.lev$ii $t.swatch$ii $t.color$ii $t.width$ii $t.dash$ii \
 	-padx 2 -pady 1 -sticky w
 
     foreach ww [list $t.lev$ii $t.swatch$ii $t.color$ii $t.width$ii \
-		    $t.dash$ii $t.del$ii] {
+		    $t.dash$ii] {
 	bindtags $ww [linsert [bindtags $ww] end ContourTable]
     }
 }
@@ -405,35 +402,9 @@ proc ContourTableWrite {levels styles} {
     ContourTableBuild
 }
 
-# new level values, keep the styles by index
+# new level values, keep the styles by index, extra styles are dropped
 proc ContourTableSetLevels {levels} {
     lassign [ContourTableRead] old styles
-    ContourTableWrite $levels $styles
-}
-
-proc ContourTableDeleteRow {ii} {
-    global dcontour
-    global contour
-
-    set levels {}
-    set styles {}
-    for {set jj 0} {$jj<$dcontour(nrow)} {incr jj} {
-	if {$jj != $ii} {
-	    lappend levels $dcontour(lev,$jj)
-	    lappend styles [ContourTableGetStyle $jj]
-	}
-    }
-
-    # one less level: regenerate all values, the rows below move up
-    # with their styles
-    set nn [llength $levels]
-    if {$nn > 0} {
-	set ll [ContourGenerateLevels $nn]
-	if {$ll != {}} {
-	    set contour(numlevel) $nn
-	    set levels $ll
-	}
-    }
     ContourTableWrite $levels $styles
 }
 

@@ -406,6 +406,7 @@ PlotDef
 PrefsDef
 PSDef
 RecentDef
+FavoritesDef
 RevealDef
 RGBDef
 MultiColorDef

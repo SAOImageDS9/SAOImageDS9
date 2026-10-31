@@ -264,7 +264,15 @@ void Base::blockToCmd(const Vector& bb)
 
 void Base::blockNanZeroCmd(int which)
 {
+  // reblocking is expensive; skip it unless something actually changes
+  if (currentContext->blockNanZero() == which)
+    return;
   currentContext->setBlockNanZero(which);
+
+  Vector bf = currentContext->blockFactor();
+  if (bf[0] == 1 && bf[1] == 1)
+    return;
+
   currentContext->block();
   currentContext->analysis();
   updateBlock(Vector(1,1));

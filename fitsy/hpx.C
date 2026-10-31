@@ -91,6 +91,18 @@ static bool partialCellLess(const PartialCell& a, const PartialCell& b)
   return a.pixel < b.pixel;
 }
 
+// allocate a width x height image filled with val; fill one row, then
+// copy it, which is much faster than a per-pixel loop on huge images
+static float* newImage(int width, int height, float val)
+{
+  float* dest = new float[(size_t)width*height];
+  for (int ii=0; ii<width; ii++)
+    dest[ii] = val;
+  for (int jj=1; jj<height; jj++)
+    memcpy(dest+(size_t)jj*width, dest, width*sizeof(float));
+  return dest;
+}
+
 static int keywordStarts(FitsHead* head, const char* key, const char* value)
 {
   char* str = head->getString(key);
@@ -260,6 +272,10 @@ FitsHPX::FitsHPX(FitsFile* fits, Order oo, CoordSys ss, Layout ll,
   uniqCol_ = NULL;
   pixelCol_ = NULL;
 
+  // the image is built in native byte order
+  byteswap_ = 0;
+  endian_ = lsb() ? LITTLE : BIG;
+
   if (order_ == NUNIQ) {
     uniqCol_ = (FitsBinColumn*)hdu->find("UNIQ");
     if (!uniqCol_)
@@ -329,9 +345,6 @@ FitsHPX::FitsHPX(FitsFile* fits, Order oo, CoordSys ss, Layout ll,
   }
 
   build(fits);
-
-  if (byteswap_)
-    swap();
 
   if (data_ && head_)
     valid_ = 1;
@@ -441,9 +454,7 @@ void FitsHPX::build(FitsFile* fits)
 
   // create image space
   size_t pSize = (size_t)pWidth_*pHeight_;
-  float* dest = new float[pSize];
-  for (long long ii=0; ii<pSize; ii++)
-    dest[ii] = NAN;
+  float* dest = newImage(pWidth_, pHeight_, NAN);
 
   // Write WCS keyrecords
   initHeader(fits);
@@ -549,9 +560,7 @@ void FitsHPX::buildMOC(FitsFile* fits)
   pHeight_ = pWidth_;
 
   size_t pSize = (size_t)pWidth_*pHeight_;
-  float* dest = new float[pSize];
-  for (long long ii=0; ii<pSize; ii++)
-    dest[ii] = 0;
+  float* dest = newImage(pWidth_, pHeight_, 0);
 
   initHeader(fits);
 
@@ -654,9 +663,7 @@ void FitsHPX::buildPartial(FitsFile* fits)
   pHeight_ = pWidth_;
 
   size_t pSize = (size_t)pWidth_*pHeight_;
-  float* dest = new float[pSize];
-  for (long long ii=0; ii<pSize; ii++)
-    dest[ii] = NAN;
+  float* dest = newImage(pWidth_, pHeight_, NAN);
 
   initHeader(fits);
 
@@ -1064,25 +1071,4 @@ void FitsHPX::initHeader(FitsFile* fits)
 
   // we added cards
   head_->updateHDU();
-}
-
-void FitsHPX::swap()
-{
-  if (!data_)
-    return;
-
-  // we now need to byteswap back to native form
-  float* dest = (float*)data_;
-  for (int ii=0; ii<dataSize_; ii++) {
-    const char* p = (char*)(dest+ii);
-    union {
-      char c[4];
-      float f;
-    } u;
-    u.c[3] = *p++;
-    u.c[2] = *p++;
-    u.c[1] = *p++;
-    u.c[0] = *p;
-    dest[ii] = u.f;
-  }
 }

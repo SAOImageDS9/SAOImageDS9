@@ -1667,7 +1667,8 @@ proc ContourSendCmdLevels {} {
 
     ContourDialog
     lassign [ContourTableRead] levels styles
-    $parse(proc) $parse(id) "[join $levels \n]\n"
+    # same output as the old levels text box, which ended with a blank line
+    $parse(proc) $parse(id) "[join $levels \n]\n\n"
 }
 
 proc ContourSendCmdStyle {} {

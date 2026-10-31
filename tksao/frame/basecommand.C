@@ -853,6 +853,14 @@ void Base::contourStyleCmd(int idx, const char* color, int width, int dash,
     return;
   }
 
+  // reject here, else every level would warn on each regeneration
+  if (color && *color && !getXColor(color)) {
+    Tcl_ResetResult(interp);
+    Tcl_AppendResult(interp, "invalid color ", color, NULL);
+    result = TCL_ERROR;
+    return;
+  }
+
   currentContext->fvcontour().setLevelStyle(idx, color, width, dash,
 					    length, gap);
   currentContext->fvcontour().applyStyles();

@@ -45,6 +45,7 @@
 %token SMOOTH_
 %token SQRT_
 %token SQUARED_
+%token STYLE_
 %token WIDTH_
 %token ZMAX_
 %token ZSCALE_
@@ -88,12 +89,29 @@ contour : yesno {ProcessCmdSet contour view $1 UpdateContour}
  | SCOPE_ scope {ContourCmdMode scope $2}
  | LIMITS_ numeric numeric {ContourCmdLimits $2 $3}
  | LEVELS_ levels
+ | STYLE_ style
  | GENERATE_ {ContourDialog; ContourGenerateDialog; UpdateContour}
  ;
 
 levels : numerics {ContourCmdLevels $1}
 # backward compatible
  | STRING_ {ContourCmdLevels $1}
+ ;
+
+style : CLEAR_ {ContourCmdStyleClear}
+ | INT_ CLEAR_ {ContourCmdStyle $1 {}}
+ | INT_ STRING_ {ContourCmdStyleArgs $1 $2}
+ | INT_ STRING_ INT_ {ContourCmdStyleArgs $1 $2 $3}
+ | INT_ STRING_ INT_ dash {ContourCmdStyleArgs $1 $2 $3 $4}
+ | INT_ STRING_ INT_ dash INT_ INT_ {ContourCmdStyleArgs $1 $2 $3 $4 $5 $6}
+ ;
+
+dash : YES_ {set _ 1}
+ | ON_ {set _ 1}
+ | TRUE_ {set _ 1}
+ | NO_ {set _ 0}
+ | OFF_ {set _ 0}
+ | FALSE_ {set _ 0}
  ;
 
 numerics : numerics numeric {append _ " $2"}

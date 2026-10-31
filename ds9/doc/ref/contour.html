@@ -16,6 +16,12 @@
 <p>Specifies the number of contour levels to be generated. A typical number is between 1 and 10. Note: large numbers of contours can take a long time to generate.</p>
 <p><b>Contour Smoothness</b></p>
 <p>Specifies how smooth the contours are. A smoothness level of 1 will evaluate the contour at each image pixel. A level of 2 will evaluate the contour at every other pixel. The larger the number, the quicker the contour will be generated, and the less detail will be available.</p>
+<p><b>Contour Level Styles</b></p>
+<p>Each line of the Levels list is a contour level value, optionally followed by line attributes for that level, using the same keywords as a contour file <tt>level=</tt> line. Levels without attributes use the Color and Width menu settings.</p>
+<blockquote><tt>100<br>
+1000 color=red width=2<br>
+10000 color=#00ffff dash=yes dashlist=4 2<br></tt></blockquote>
+<p>Styles belong to the level's position in the list, so they are kept when the levels are regenerated. Color&nbsp;&rarr;&nbsp;Reset Level Styles removes them. Styles are written to saved contour files and backups. Load Contour Levels reads them from a contour file.</p>
 <p><b>Contour Scale</b></p>
 <p>Specifies the distribution of the contour levels.<br></p>
 <p><b>Contour Method</b></p>

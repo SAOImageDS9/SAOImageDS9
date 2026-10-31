@@ -42,6 +42,7 @@ sinh		{return $SINH_}
 smooth		{return $SMOOTH_}
 sqrt		{return $SQRT_}
 squared		{return $SQUARED_}
+style		{return $STYLE_}
 width		{return $WIDTH_}
 zmax		{return $ZMAX_}
 zscale		{return $ZSCALE_}

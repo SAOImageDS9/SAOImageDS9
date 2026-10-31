@@ -74,21 +74,18 @@ proc UpdateContour {} {
 
     ContourCheckParams
     if {[winfo exists $icontour(top)]} {
-	set levels [$dcontour(txt) get 1.0 end]
-	# remove endl and trim
-	regsub -all "\n" $levels " " levels
-	set levels [string trimright $levels " "]
+	lassign [ContourTextRead] levels styles
 
 	if {$levels == {}} {
 	    ContourGenerateDialog
-	    set levels [$dcontour(txt) get 1.0 end]
-	    # remove endl and trim
-	    regsub -all "\n" $levels " " levels
-	    set levels [string trimright $levels " "]
+	    lassign [ContourTextRead] levels styles
 	}
 
 	if {$levels != {} && [ContourCheckMinMax]} {
-    $current(frame) contour create \
+	    # styles are kept by the frame across create
+	    ContourStyleSet $current(frame) $styles
+
+	    $current(frame) contour create \
 		$contour(color) $contour(width) $contour(dash) \
 		$contour(method) $contour(numlevel) $contour(smooth) \
 		$contour(scale) $contour(log) $contour(mode) $contour(scope) \
@@ -126,6 +123,139 @@ proc ContourDashList {} {
     if {$current(frame) != {} && [$current(frame) has contour]} {
 	$current(frame) contour dashlist \
 	    [lindex $contour(dashlist) 0] [lindex $contour(dashlist) 1]
+    }
+}
+
+# Per level styles
+# Each line of the levels text is a level value, optionally followed by
+# the same style keywords as a level= line in a contour file:
+#   value [color=c] [width=n] [dash=yes|no] [dashlist=length gap]
+# Styles are keyed by level index in the frame.
+
+# returns {color width dash length gap}, unset is {}, 0, -1, 0, 0
+proc ContourStyleParse {str} {
+    set color {}
+    set width 0
+    set dash -1
+    set length 0
+    set gap 0
+
+    regexp -nocase {\mcolou?r\s*=\s*\{?\s*([^\s\}]+)} $str {} color
+    regexp -nocase {\mwidth\s*=\s*(\d+)} $str {} width
+    if {[regexp -nocase {\mdash\s*=\s*(\w+)} $str {} dd]} {
+	if {[string is boolean -strict $dd]} {
+	    set dash [expr {$dd ? 1 : 0}]
+	}
+    }
+    regexp -nocase {\mdashlist\s*=\s*(\d+)\s+(\d+)} $str {} length gap
+
+    return [list [string tolower $color] $width $dash $length $gap]
+}
+
+# inverse of ContourStyleParse, only the set fields
+proc ContourStyleFormat {style} {
+    lassign $style color width dash length gap
+
+    set rr {}
+    if {$color != {}} {
+	lappend rr "color=$color"
+    }
+    if {$width > 0} {
+	lappend rr "width=$width"
+    }
+    if {$dash >= 0} {
+	lappend rr "dash=[expr {$dash ? {yes} : {no}}]"
+    }
+    if {$length > 0 && $gap > 0} {
+	lappend rr "dashlist=$length $gap"
+    }
+    return [join $rr { }]
+}
+
+# returns {levels styles}, one style string per level
+proc ContourTextRead {} {
+    global dcontour
+
+    set levels {}
+    set styles {}
+    foreach line [split [$dcontour(txt) get 1.0 end] "\n"] {
+	# values come before the first keyword=
+	set ss {}
+	if {[regexp -indices {[A-Za-z]+\s*=} $line idx]} {
+	    set ss [string trim [string range $line [lindex $idx 0] end]]
+	    set line [string range $line 0 [expr {[lindex $idx 0]-1}]]
+	}
+	foreach vv [regexp -all -inline {\S+} $line] {
+	    lappend levels $vv
+	    lappend styles $ss
+	}
+    }
+    return [list $levels $styles]
+}
+
+proc ContourTextWrite {levels styles} {
+    global dcontour
+
+    $dcontour(txt) delete 1.0 end
+    set ii 0
+    foreach ll $levels {
+	set ss [lindex $styles $ii]
+	if {$ss != {}} {
+	    $dcontour(txt) insert end "$ll $ss\n"
+	} else {
+	    $dcontour(txt) insert end "$ll\n"
+	}
+	incr ii
+    }
+}
+
+# new level values, keep the styles by index
+proc ContourTextSetLevels {levels} {
+    lassign [ContourTextRead] old styles
+    ContourTextWrite $levels $styles
+}
+
+# frame overrides as one style string per index
+proc ContourStyleGet {frame} {
+    set styles {}
+    foreach ss [$frame get contour style] {
+	set idx [lindex $ss 0]
+	while {[llength $styles] < $idx} {
+	    lappend styles {}
+	}
+	lappend styles [ContourStyleFormat [lrange $ss 1 end]]
+    }
+    return $styles
+}
+
+proc ContourStyleSet {frame styles} {
+    $frame contour style clear
+    set ii 0
+    foreach ss $styles {
+	if {$ss != {}} {
+	    lassign [ContourStyleParse $ss] color width dash length gap
+	    if {$color == {}} {
+		set color "{}"
+	    }
+	    if {[catch {$frame contour style $ii $color $width $dash \
+			    $length $gap}]} {
+		Error "[msgcat::mc {Invalid contour level style}]: $ss"
+	    }
+	}
+	incr ii
+    }
+}
+
+proc ContourStyleClearDialog {} {
+    global icontour
+    global current
+
+    if {[winfo exists $icontour(top)]} {
+	lassign [ContourTextRead] levels styles
+	ContourTextWrite $levels {}
+    }
+    if {$current(frame) != {}} {
+	$current(frame) contour style clear
     }
 }
 
@@ -223,6 +353,9 @@ proc ContourDialog {} {
 	-command ContourPasteDialog -accelerator "${ds9(ctrl)}V"
 
     ColorMenu $mb.color contour color {}
+    $mb.color add separator
+    $mb.color add command -label [msgcat::mc {Reset Level Styles}] \
+	-command ContourStyleClearDialog
     WidthDashMenu $mb.width contour width dash {} {} dashlist ContourDashList
 
     ThemeMenu $mb.scale
@@ -302,7 +435,7 @@ proc ContourDialog {} {
 
     set dcontour(txt) [text $f.text \
 			   -wrap none \
-			   -width 15 \
+			   -width 30 \
 			   -height 10 \
 			   -font [font actual TkDefaultFont] \
 			   -yscrollcommand [list $f.yscroll set] \
@@ -368,16 +501,15 @@ proc ContourGenerateDialog {} {
 
     ContourCheckParams
 
-    $dcontour(txt) delete 1.0 end
+    set ll {}
     if {$current(frame) != {}} {
 	if {([$current(frame) has fits]) && [ContourCheckMinMax]} {
 	    set ll [$current(frame) get colorscale level $contour(numlevel) \
 			$contour(min) $contour(max) \
 			$contour(scale) $contour(log)]
-	    regsub -all " " "$ll" "\n" ll
-	    $dcontour(txt) insert end "$ll"
 	}
     }
+    ContourTextSetLevels $ll
 }
 
 proc ContourOffDialog {} {
@@ -594,7 +726,15 @@ proc ContourLoadLevelsNew {ch} {
 	if {![string compare -nocase [lindex $aa 0] {level}]} {
 	    set value [string trim [lindex $aa 1]]
 	    if {[string is double $value]} {
-		$dcontour(txt) insert end "$value\n"
+		set ss {}
+		regexp -nocase {^\s*level\s*=\s*\{?\s*[^\s\}]+\s*\}?\s*(.*)$} \
+		    $line {} ss
+		set ss [ContourStyleFormat [ContourStyleParse $ss]]
+		if {$ss != {}} {
+		    $dcontour(txt) insert end "$value $ss\n"
+		} else {
+		    $dcontour(txt) insert end "$value\n"
+		}
 	    }
 	}
     }
@@ -977,10 +1117,8 @@ proc UpdateContourDialog {} {
     if {[$current(frame) has contour]} {
 	set levels [$current(frame) get contour level]
 	regsub -all "\n" "$levels" " " levels
-	set levels [join $levels "\n"]
 	if {$levels != {}} {
-	    $dcontour(txt) delete 1.0 end
-	    $dcontour(txt) insert end $levels
+	    ContourTextWrite $levels [ContourStyleGet $current(frame)]
 	} else {
 	    ContourGenerateDialog
 	}
@@ -1021,6 +1159,19 @@ proc ContourBackupBase {ch which fdir rdir} {
 
 	puts $ch "$which contour create $color $width $dash $method $numlevel $smooth $scale $log $mode $scope $limits \{\"$levels\"\}"
 	puts $ch "$which contour dashlist [lindex $dashlist 0] [lindex $dashlist 1]"
+
+	# only when used, so older versions can still read the backup
+	set styles [$which get contour style]
+	if {$styles != {}} {
+	    puts $ch "$which contour style clear"
+	    foreach ss $styles {
+		lassign $ss idx color width dash length gap
+		if {$color == {}} {
+		    set color "{}"
+		}
+		puts $ch "$which contour style $idx $color $width $dash $length $gap"
+	    }
+	}
     }
 
     # delete old contours
@@ -1250,9 +1401,43 @@ proc ContourCmdLevels {str} {
     global dcontour
 
     ContourDialog
-    $dcontour(txt) delete 1.0 end
-    $dcontour(txt) insert end $str
+    if {[string first {=} $str] != -1} {
+	$dcontour(txt) delete 1.0 end
+	$dcontour(txt) insert end $str
+    } else {
+	ContourTextSetLevels [regexp -all -inline {\S+} $str]
+    }
     UpdateContour
+}
+
+proc ContourCmdStyle {idx str} {
+    global dcontour
+
+    ContourDialog
+    lassign [ContourTextRead] levels styles
+    if {![string is integer -strict $idx] ||
+	$idx < 0 || $idx >= [llength $levels]} {
+	Error "[msgcat::mc {Invalid contour level}]: $idx"
+	return
+    }
+    ContourTextWrite $levels [lreplace $styles $idx $idx \
+				  [ContourStyleFormat [ContourStyleParse $str]]]
+    UpdateContour
+}
+
+proc ContourCmdStyleArgs {idx color {width 0} {dash -1} {length 0} {gap 0}} {
+    # keyword form, 'color=red width=2 ...'
+    if {[string first {=} $color] != -1} {
+	ContourCmdStyle $idx $color
+	return
+    }
+    ContourCmdStyle $idx \
+	[ContourStyleFormat [list $color $width $dash $length $gap]]
+}
+
+proc ContourCmdStyleClear {} {
+    ContourDialog
+    ContourStyleClearDialog
 }
 
 proc ContourCmdGenerate {} {
@@ -1285,5 +1470,22 @@ proc ContourSendCmdLevels {} {
     global dcontour
 
     ContourDialog
-    $parse(proc) $parse(id) "[$dcontour(txt) get 1.0 end]"
+    lassign [ContourTextRead] levels styles
+    $parse(proc) $parse(id) "[join $levels \n]\n"
+}
+
+proc ContourSendCmdStyle {} {
+    global parse
+
+    ContourDialog
+    lassign [ContourTextRead] levels styles
+    set rr {}
+    set ii 0
+    foreach ss $styles {
+	if {$ss != {}} {
+	    append rr "$ii $ss\n"
+	}
+	incr ii
+    }
+    $parse(proc) $parse(id) $rr
 }

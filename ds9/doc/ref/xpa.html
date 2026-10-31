@@ -702,6 +702,10 @@ contour []<br>
 &nbsp;&nbsp;&nbsp; [scope global|local]<br>
 &nbsp;&nbsp;&nbsp; [limits &lt;min&gt; &lt;max&gt;]<br>
 &nbsp;&nbsp;&nbsp; [levels &lt;value value value...&gt;]<br>
+&nbsp;&nbsp;&nbsp; [style &lt;index&gt; &lt;color&gt; [&lt;width&gt; [yes|no [&lt;length&gt; &lt;gap&gt;]]]]<br>
+&nbsp;&nbsp;&nbsp; [style &lt;index&gt; {[color=&lt;color&gt;] [width=&lt;width&gt;] [dash=yes|no] [dashlist=&lt;length&gt; &lt;gap&gt;]}<br>
+&nbsp;&nbsp;&nbsp; [style &lt;index&gt; clear]<br>
+&nbsp;&nbsp;&nbsp; [style clear]<br>
 &nbsp;&nbsp;&nbsp; [open|close]<br>
 &nbsp;<br>
 Example:<br>
@@ -719,6 +723,7 @@ $xpaget ds9 contour mode<br>
 $xpaget ds9 contour scope<br>
 $xpaget ds9 contour limits<br>
 $xpaget ds9 contour levels<br>
+$xpaget ds9 contour style<br>
 <br>
 $xpaset -p ds9 contour<br>
 $xpaset -p ds9 contour yes<br>
@@ -745,6 +750,11 @@ $xpaset -p ds9 contour mode zscale<br>
 $xpaset -p ds9 contour scope local<br>
 $xpaset -p ds9 contour limits 1 100<br>
 $xpaset -p ds9 contour levels 1 10 100 1000<br>
+$xpaset -p ds9 contour style 1 red 2<br>
+$xpaset -p ds9 contour style 2 cyan 1 yes 4 2<br>
+$xpaset -p ds9 contour style 2 {color=cyan dash=yes}<br>
+$xpaset -p ds9 contour style 1 clear<br>
+$xpaset -p ds9 contour style clear<br>
 $xpaset -p ds9 contour open<br>
 $xpaset -p ds9 contour close</tt><br>
 <p><b><a name="crop" id="crop"></a>crop</b></p>

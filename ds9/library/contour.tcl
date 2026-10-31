@@ -74,11 +74,11 @@ proc UpdateContour {} {
 
     ContourCheckParams
     if {[winfo exists $icontour(top)]} {
-	lassign [ContourTextRead] levels styles
+	lassign [ContourTableRead] levels styles
 
 	if {$levels == {}} {
 	    ContourGenerateDialog
-	    lassign [ContourTextRead] levels styles
+	    lassign [ContourTableRead] levels styles
 	}
 
 	if {$levels != {} && [ContourCheckMinMax]} {
@@ -172,13 +172,11 @@ proc ContourStyleFormat {style} {
     return [join $rr { }]
 }
 
-# returns {levels styles}, one style string per level
-proc ContourTextRead {} {
-    global dcontour
-
+# parse lines of "value [style]" into {levels styles}
+proc ContourParseLines {str} {
     set levels {}
     set styles {}
-    foreach line [split [$dcontour(txt) get 1.0 end] "\n"] {
+    foreach line [split $str "\n"] {
 	# values come before the first keyword=
 	set ss {}
 	if {[regexp -indices {[A-Za-z]+\s*=} $line idx]} {
@@ -187,32 +185,286 @@ proc ContourTextRead {} {
 	}
 	foreach vv [regexp -all -inline {\S+} $line] {
 	    lappend levels $vv
+	    lappend styles [ContourStyleFormat [ContourStyleParse $ss]]
+	}
+    }
+    return [list $levels $styles]
+}
+
+proc ContourFormatLines {levels styles} {
+    set rr {}
+    foreach ll $levels ss $styles {
+	if {$ll == {}} {
+	    continue
+	}
+	if {$ss != {}} {
+	    append rr "$ll $ss\n"
+	} else {
+	    append rr "$ll\n"
+	}
+    }
+    return $rr
+}
+
+# Levels table
+# one row per level: value, color, width, dash, dashlist
+# 'default' (or {} for dashlist) means use the global setting
+
+proc ContourTableCreate {f} {
+    global dcontour
+
+    set dcontour(nrow) 0
+
+    set dcontour(canvas) [canvas $f.canvas -width 0 -height 220 \
+			      -highlightthickness 0 \
+			      -yscrollcommand [list $f.yscroll set]]
+    ttk::scrollbar $f.yscroll -command [list $dcontour(canvas) yview] \
+	-orient vertical
+    ThemeConfigBg $dcontour(canvas)
+    bind $dcontour(canvas) <<ThemeChanged>> {ThemeConfigBg %W}
+    set dcontour(tbl) [ttk::frame $dcontour(canvas).tbl]
+    $dcontour(canvas) create window 0 0 -window $dcontour(tbl) -anchor nw
+    bind $dcontour(tbl) <Configure> ContourTableConfigure
+    bind $dcontour(canvas) <MouseWheel> {ContourTableWheel %D}
+    bind ContourTable <MouseWheel> {ContourTableWheel %D}
+
+    ttk::button $f.add -text [msgcat::mc {Add Level}] \
+	-command ContourTableAddRow
+
+    grid $dcontour(canvas) $f.yscroll -sticky news
+    grid $f.add - -sticky w -padx 2 -pady 2
+    grid rowconfigure $f 0 -weight 1
+    grid columnconfigure $f 0 -weight 1
+}
+
+proc ContourTableConfigure {} {
+    global dcontour
+
+    set t $dcontour(tbl)
+    $dcontour(canvas) configure -width [winfo reqwidth $t] \
+	-scrollregion [list 0 0 [winfo reqwidth $t] [winfo reqheight $t]]
+}
+
+proc ContourTableBuild {} {
+    global dcontour
+
+    set t $dcontour(tbl)
+    foreach ww [winfo children $t] {
+	destroy $ww
+    }
+
+    ttk::label $t.tlev -text [msgcat::mc {Level}]
+    ttk::label $t.tcolor -text [msgcat::mc {Color}]
+    ttk::label $t.twidth -text [msgcat::mc {Width}]
+    ttk::label $t.tdash -text [msgcat::mc {Dash}]
+    grid $t.tlev x $t.tcolor $t.twidth $t.tdash -padx 2 -sticky w
+
+    for {set ii 0} {$ii<$dcontour(nrow)} {incr ii} {
+	ContourTableRow $ii
+    }
+    ContourTableSwatches
+}
+
+proc ContourTableRow {ii} {
+    global dcontour
+
+    set t $dcontour(tbl)
+    set cmd [list ContourTableStyleCmd $ii]
+
+    ttk::entry $t.lev$ii -textvariable dcontour(lev,$ii) -width 12
+
+    # own class, so ThemeChanged bindings leave the color alone
+    frame $t.swatch$ii -class ContourSwatch -width 16 -height 16 \
+	-relief sunken -borderwidth 1
+
+    ttk::menubutton $t.color$ii -textvariable dcontour(color,$ii) \
+	-menu $t.color$ii.menu -width 8
+    ColorMenu $t.color$ii.menu dcontour color,$ii $cmd
+    # after the tearoff entry, if any
+    set first [expr {[$t.color$ii.menu cget -tearoff] ? 1 : 0}]
+    $t.color$ii.menu insert $first radiobutton -label [msgcat::mc {Default}] \
+	-variable dcontour(color,$ii) -value default -command $cmd
+    $t.color$ii.menu insert [expr {$first+1}] separator
+
+    ttk::menubutton $t.width$ii -textvariable dcontour(width,$ii) \
+	-menu $t.width$ii.menu -width 7
+    ThemeMenu $t.width$ii.menu
+    $t.width$ii.menu add radiobutton -label [msgcat::mc {Default}] \
+	-variable dcontour(width,$ii) -value default -command $cmd
+    $t.width$ii.menu add separator
+    foreach ww {1 2 3 4} {
+	$t.width$ii.menu add radiobutton -label $ww \
+	    -variable dcontour(width,$ii) -value $ww -command $cmd
+    }
+
+    ttk::menubutton $t.dash$ii -textvariable dcontour(dash,$ii) \
+	-menu $t.dash$ii.menu -width 7
+    ThemeMenu $t.dash$ii.menu
+    $t.dash$ii.menu add radiobutton -label [msgcat::mc {Default}] \
+	-variable dcontour(dash,$ii) -value default -command $cmd
+    $t.dash$ii.menu add separator
+    $t.dash$ii.menu add radiobutton -label [msgcat::mc {Solid}] \
+	-variable dcontour(dash,$ii) -value solid -command $cmd
+    $t.dash$ii.menu add radiobutton -label [msgcat::mc {Dash}] \
+	-variable dcontour(dash,$ii) -value dash -command $cmd
+    $t.dash$ii.menu add separator
+    $t.dash$ii.menu add command -label "[msgcat::mc {Dash List}]..." \
+	-command [list WidthDashDialog dcontour dashlist,$ii $cmd]
+
+    ttk::button $t.del$ii -text "−" -width 2 \
+	-command [list ContourTableDeleteRow $ii]
+
+    grid $t.lev$ii $t.swatch$ii $t.color$ii $t.width$ii $t.dash$ii $t.del$ii \
+	-padx 2 -pady 1 -sticky w
+
+    foreach ww [list $t.lev$ii $t.swatch$ii $t.color$ii $t.width$ii \
+		    $t.dash$ii $t.del$ii] {
+	bindtags $ww [linsert [bindtags $ww] end ContourTable]
+    }
+}
+
+proc ContourTableWheel {delta} {
+    global dcontour
+
+    if {[info exists dcontour(canvas)]} {
+	$dcontour(canvas) yview scroll [expr {$delta > 0 ? -1 : 1}] units
+    }
+}
+
+proc ContourTableSetRow {ii level style} {
+    global dcontour
+
+    lassign [ContourStyleParse $style] color width dash length gap
+    set dcontour(lev,$ii) $level
+    set dcontour(color,$ii) [expr {$color != {} ? $color : {default}}]
+    set dcontour(width,$ii) [expr {$width > 0 ? $width : {default}}]
+    switch -- $dash {
+	-1 {set dcontour(dash,$ii) default}
+	0 {set dcontour(dash,$ii) solid}
+	default {set dcontour(dash,$ii) dash}
+    }
+    if {$length > 0 && $gap > 0} {
+	set dcontour(dashlist,$ii) [list $length $gap]
+    } else {
+	set dcontour(dashlist,$ii) {}
+    }
+}
+
+proc ContourTableGetStyle {ii} {
+    global dcontour
+
+    set color $dcontour(color,$ii)
+    if {$color == {default}} {
+	set color {}
+    }
+    set width $dcontour(width,$ii)
+    if {![string is integer -strict $width]} {
+	set width 0
+    }
+    switch -- $dcontour(dash,$ii) {
+	solid {set dash 0}
+	dash {set dash 1}
+	default {set dash -1}
+    }
+    lassign $dcontour(dashlist,$ii) length gap
+    if {![string is integer -strict $length] ||
+	![string is integer -strict $gap]} {
+	set length 0
+	set gap 0
+    }
+    return [ContourStyleFormat [list $color $width $dash $length $gap]]
+}
+
+# returns {levels styles}, one style string per level
+proc ContourTableRead {} {
+    global dcontour
+
+    set levels {}
+    set styles {}
+    for {set ii 0} {$ii<$dcontour(nrow)} {incr ii} {
+	set ss [ContourTableGetStyle $ii]
+	foreach vv [regexp -all -inline {\S+} $dcontour(lev,$ii)] {
+	    lappend levels $vv
 	    lappend styles $ss
 	}
     }
     return [list $levels $styles]
 }
 
-proc ContourTextWrite {levels styles} {
+proc ContourTableWrite {levels styles} {
     global dcontour
 
-    $dcontour(txt) delete 1.0 end
+    for {set ii 0} {$ii<$dcontour(nrow)} {incr ii} {
+	foreach kk {lev color width dash dashlist} {
+	    unset -nocomplain dcontour($kk,$ii)
+	}
+    }
+
+    set dcontour(nrow) [llength $levels]
     set ii 0
     foreach ll $levels {
-	set ss [lindex $styles $ii]
-	if {$ss != {}} {
-	    $dcontour(txt) insert end "$ll $ss\n"
-	} else {
-	    $dcontour(txt) insert end "$ll\n"
-	}
+	ContourTableSetRow $ii $ll [lindex $styles $ii]
 	incr ii
     }
+    ContourTableBuild
 }
 
 # new level values, keep the styles by index
-proc ContourTextSetLevels {levels} {
-    lassign [ContourTextRead] old styles
-    ContourTextWrite $levels $styles
+proc ContourTableSetLevels {levels} {
+    lassign [ContourTableRead] old styles
+    ContourTableWrite $levels $styles
+}
+
+proc ContourTableAddRow {} {
+    global dcontour
+
+    set ii $dcontour(nrow)
+    incr dcontour(nrow)
+    ContourTableSetRow $ii {} {}
+    ContourTableRow $ii
+    ContourTableSwatches
+    focus $dcontour(tbl).lev$ii
+    after idle [list $dcontour(canvas) yview moveto 1]
+}
+
+proc ContourTableDeleteRow {ii} {
+    global dcontour
+
+    set levels {}
+    set styles {}
+    for {set jj 0} {$jj<$dcontour(nrow)} {incr jj} {
+	if {$jj != $ii} {
+	    lappend levels $dcontour(lev,$jj)
+	    lappend styles [ContourTableGetStyle $jj]
+	}
+    }
+    ContourTableWrite $levels $styles
+}
+
+proc ContourTableSwatches {} {
+    global dcontour
+    global contour
+
+    for {set ii 0} {$ii<$dcontour(nrow)} {incr ii} {
+	set cc $dcontour(color,$ii)
+	if {$cc == {default}} {
+	    set cc $contour(color)
+	}
+	if {[catch {$dcontour(tbl).swatch$ii configure -background $cc}]} {
+	    $dcontour(tbl).swatch$ii configure -background white
+	}
+    }
+}
+
+# restyle the displayed contours, no regeneration
+proc ContourTableStyleCmd {ii} {
+    global current
+
+    ContourTableSwatches
+    if {$current(frame) != {} && [$current(frame) has contour]} {
+	lassign [ContourTableRead] levels styles
+	ContourStyleSet $current(frame) $styles
+    }
 }
 
 # frame overrides as one style string per index
@@ -251,8 +503,8 @@ proc ContourStyleClearDialog {} {
     global current
 
     if {[winfo exists $icontour(top)]} {
-	lassign [ContourTextRead] levels styles
-	ContourTextWrite $levels {}
+	lassign [ContourTableRead] levels styles
+	ContourTableWrite $levels {}
     }
     if {$current(frame) != {}} {
 	$current(frame) contour style clear
@@ -352,7 +604,7 @@ proc ContourDialog {} {
     $mb.edit add command -label [msgcat::mc {Paste}] \
 	-command ContourPasteDialog -accelerator "${ds9(ctrl)}V"
 
-    ColorMenu $mb.color contour color {}
+    ColorMenu $mb.color contour color ContourTableSwatches
     $mb.color add separator
     $mb.color add command -label [msgcat::mc {Reset Level Styles}] \
 	-command ContourStyleClearDialog
@@ -433,21 +685,7 @@ proc ContourDialog {} {
     # Levels
     set f [ttk::labelframe $w.levels -text [msgcat::mc {Levels}] -padding 2]
 
-    set dcontour(txt) [text $f.text \
-			   -wrap none \
-			   -width 30 \
-			   -height 10 \
-			   -font [font actual TkDefaultFont] \
-			   -yscrollcommand [list $f.yscroll set] \
-			   -fg [ThemeTreeForeground] \
-			   -bg [ThemeTreeBackground] \
-		      ]
-    ttk::scrollbar $f.yscroll -command [list $dcontour(txt) yview] \
-	-orient vertical
-
-    grid $f.text $f.yscroll -sticky news
-    grid rowconfigure $f 0 -weight 1
-    grid columnconfigure $f 0 -weight 1
+    ContourTableCreate $f
 
     # Buttons
     set f [ttk::frame $w.buttons]
@@ -509,7 +747,7 @@ proc ContourGenerateDialog {} {
 			$contour(scale) $contour(log)]
 	}
     }
-    ContourTextSetLevels $ll
+    ContourTableSetLevels $ll
 }
 
 proc ContourOffDialog {} {
@@ -527,43 +765,25 @@ proc ContourOffDialog {} {
 
 proc ContourCutDialog {} {
     global icontour
-    global dcontour
 
     if {[winfo exists $icontour(top)]} {
-	set w [focus -displayof $icontour(top)]
-	if {$w == $dcontour(txt)} {
-	    tk_textCut $w
-	} else {
-	    EntryCut $icontour(top)
-	}
+	EntryCut $icontour(top)
     }
 }
 
 proc ContourCopyDialog {} {
     global icontour
-    global dcontour
 
     if {[winfo exists $icontour(top)]} {
-	set w [focus -displayof $icontour(top)]
-	if {$w == $dcontour(txt)} {
-	    tk_textCopy $w
-	} else {
-	    EntryCopy $icontour(top)
-	}
+	EntryCopy $icontour(top)
     }
 }
 
 proc ContourPasteDialog {} {
     global icontour
-    global dcontour
 
     if {[winfo exists $icontour(top)]} {
-	set w [focus -displayof $icontour(top)]
-	if {$w == $dcontour(txt)} {
-	    tk_textPaste $w
-	} else {
-	    EntryPaste $icontour(top)
-	}
+	EntryPaste $icontour(top)
     }
 }
 
@@ -704,19 +924,19 @@ proc ContourLoadLevelsNow {fn} {
 	return
     }
 
-    $dcontour(txt) delete 1.0 end
     set ch [open $fn r]
     if {[file extension $fn] == {.lev}} {
-	$dcontour(txt) insert end [read $ch]
+	lassign [ContourParseLines [read $ch]] levels styles
     } else {
-	ContourLoadLevelsNew $ch
+	lassign [ContourLoadLevelsNew $ch] levels styles
     }
     close $ch
+    ContourTableWrite $levels $styles
 }
 
 proc ContourLoadLevelsNew {ch} {
-    global dcontour
-
+    set levels {}
+    set styles {}
     while {[gets $ch line] != -1} {
 	set aa [split $line {= }]
 	regsub -all {[{}]} $aa {} aa
@@ -729,15 +949,12 @@ proc ContourLoadLevelsNew {ch} {
 		set ss {}
 		regexp -nocase {^\s*level\s*=\s*\{?\s*[^\s\}]+\s*\}?\s*(.*)$} \
 		    $line {} ss
-		set ss [ContourStyleFormat [ContourStyleParse $ss]]
-		if {$ss != {}} {
-		    $dcontour(txt) insert end "$value $ss\n"
-		} else {
-		    $dcontour(txt) insert end "$value\n"
-		}
+		lappend levels $value
+		lappend styles [ContourStyleFormat [ContourStyleParse $ss]]
 	    }
 	}
     }
+    return [list $levels $styles]
 }
 
 proc ContourSaveLevels {} {
@@ -757,7 +974,8 @@ proc ContourSaveLevelsNow {fn} {
     }
 
     set id [open $fn w]
-    puts -nonewline $id "[$dcontour(txt) get 1.0 end]"
+    lassign [ContourTableRead] levels styles
+    puts -nonewline $id [ContourFormatLines $levels $styles]
     close $id
 }
 
@@ -1118,7 +1336,7 @@ proc UpdateContourDialog {} {
 	set levels [$current(frame) get contour level]
 	regsub -all "\n" "$levels" " " levels
 	if {$levels != {}} {
-	    ContourTextWrite $levels [ContourStyleGet $current(frame)]
+	    ContourTableWrite $levels [ContourStyleGet $current(frame)]
 	} else {
 	    ContourGenerateDialog
 	}
@@ -1166,8 +1384,9 @@ proc ContourBackupBase {ch which fdir rdir} {
 	    puts $ch "$which contour style clear"
 	    foreach ss $styles {
 		lassign $ss idx color width dash length gap
+		# eval'd on restore, the frame needs a literal {}
 		if {$color == {}} {
-		    set color "{}"
+		    set color "{{}}"
 		}
 		puts $ch "$which contour style $idx $color $width $dash $length $gap"
 	    }
@@ -1402,10 +1621,10 @@ proc ContourCmdLevels {str} {
 
     ContourDialog
     if {[string first {=} $str] != -1} {
-	$dcontour(txt) delete 1.0 end
-	$dcontour(txt) insert end $str
+	lassign [ContourParseLines $str] levels styles
+	ContourTableWrite $levels $styles
     } else {
-	ContourTextSetLevels [regexp -all -inline {\S+} $str]
+	ContourTableSetLevels [regexp -all -inline {\S+} $str]
     }
     UpdateContour
 }
@@ -1414,13 +1633,13 @@ proc ContourCmdStyle {idx str} {
     global dcontour
 
     ContourDialog
-    lassign [ContourTextRead] levels styles
+    lassign [ContourTableRead] levels styles
     if {![string is integer -strict $idx] ||
 	$idx < 0 || $idx >= [llength $levels]} {
 	Error "[msgcat::mc {Invalid contour level}]: $idx"
 	return
     }
-    ContourTextWrite $levels [lreplace $styles $idx $idx \
+    ContourTableWrite $levels [lreplace $styles $idx $idx \
 				  [ContourStyleFormat [ContourStyleParse $str]]]
     UpdateContour
 }
@@ -1470,7 +1689,7 @@ proc ContourSendCmdLevels {} {
     global dcontour
 
     ContourDialog
-    lassign [ContourTextRead] levels styles
+    lassign [ContourTableRead] levels styles
     $parse(proc) $parse(id) "[join $levels \n]\n"
 }
 
@@ -1478,7 +1697,7 @@ proc ContourSendCmdStyle {} {
     global parse
 
     ContourDialog
-    lassign [ContourTextRead] levels styles
+    lassign [ContourTableRead] levels styles
     set rr {}
     set ii 0
     foreach ss $styles {

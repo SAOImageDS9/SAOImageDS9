@@ -963,13 +963,19 @@ proc LoadColormap {} {
 
 # used by backup
 proc LoadColormapFile {fn} {
-    global colorbar
+    set cmap [LoadColormapFileName $fn]
+    if {$cmap != {}} {
+	ChangeColormapName $cmap
+    }
+}
+
+# load a user colormap without selecting it, returns its name or {}
+proc LoadColormapFileName {fn} {
     global icolorbar
-    global current
     global ds9
 
     if {$fn == {}} {
-	return
+	return {}
     }
 
     # first load into default cmap
@@ -978,10 +984,12 @@ proc LoadColormapFile {fn} {
 
     if {[catch {colorbar load "\{$fn\}"} rr]} {
 	Error $rr
-	return
+	return {}
     }
     set cmap [colorbar get name]
     lappend icolorbar(user,cmaps) $cmap
+    # colorbar only remembers the tail of the filename
+    set icolorbar(user,file,$cmap) [file normalize $fn]
 
     colorbar map $orgName
     colorbar invert $orgInvert
@@ -995,7 +1003,7 @@ proc LoadColormapFile {fn} {
 		set orgInvert [$cb get invert]
 		if {[catch {$cb load "\{$fn\}"} rr]} {
 		    Error $rr
-		    return
+		    return {}
 		}
 		$cb map $orgName
 		$cb invert $orgInvert
@@ -1015,12 +1023,12 @@ proc LoadColormapFile {fn} {
     if {[winfo exists $icolorbar(top)]} {
 	$icolorbar(mb).colormap.user add radiobutton \
 	    -label $cmap \
-	    -variable colorbar(map) \
+	    -variable colorbar(map) -value $cmap \
 	    -command [list ChangeColormapName $cmap]
     }
 
     UpdateColormapMenuSwatches
-    ChangeColormapName $cmap
+    return $cmap
 }
 
 proc SaveColormap {} {

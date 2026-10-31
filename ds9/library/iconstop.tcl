@@ -86,29 +86,12 @@ proc ConfigureIconsTopFile {} {
 
 proc CreateIconsTopColormap {} {
     global ds9
-    global icons
-    global colorbar
 
     set mb $ds9(icons,top)
 
-    set luts [list a aips0 b bb blue color cool green grey he heat hsv i8 \
-		  rainbow red sls staircase standard]
-
-    foreach lut $luts {
-	set foo [image create photo -file "$ds9(icons,lut)/ds9/$lut.png"]
-	set icons(colorbarmap,$lut) [image create photo -width 200 -height 16]
-	$icons(colorbarmap,$lut) copy $foo -zoom 2
-	image delete $foo
-    }
-    # special case
-    set foo [image create photo -file "$ds9(icons,lut)/unknown.png"]
-    set icons(colorbarmap,default) [image create photo -width 200 -height 16]
-    $icons(colorbarmap,default) copy $foo -zoom 2
-    image delete $foo
-
+    # favorite colormaps, see favorites.tcl
     ttk::menubutton $mb.colormap -menu $mb.colormap.m -takefocus 0
-#	-image $icons(colorbarmap,$colorbar(map))
-    tooltip::tooltip $mb.colormap [msgcat::mc {Colormaps}]
+    tooltip::tooltip $mb.colormap [msgcat::mc {Favorite Colormaps}]
 
     ttk::button $mb.invert -takefocus 0 \
 	-command [list IconButtonToggleCmd colorbar invert InvertColorbar]
@@ -117,22 +100,11 @@ proc CreateIconsTopColormap {} {
     ThemeMenu $mb.colormap.m
     $mb.colormap.m configure -tearoff 0
 
-    set ii 0
-    foreach lut $luts {
-	IconMenuButton $mb.colormap {} colorbar map $lut \
-	    [list ChangeColormapName $lut]
-
-        $mb.colormap.m entryconfigure $ii -image $icons(colorbarmap,$lut)
-        incr ii
-    }
-
-    trace add variable colorbar(map) write [list IconMenuButtonCB $mb.colormap]
-    IconMenuButtonCB $mb.colormap colorbar map write
+    UpdateFavoritesMenu
 
     ConfigureIconsTopColormap
 
     pack $mb.colormap $mb.invert -side left -fill x
-
 }
 
 proc ConfigureIconsTopColormap {} {

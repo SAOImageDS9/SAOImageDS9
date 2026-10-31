@@ -43,6 +43,8 @@ proc ColorMainMenu {} {
 	-menu $ds9(mb).color.solar
     $ds9(mb).color add cascade -label [msgcat::mc {User}] \
 	-menu $ds9(mb).color.user
+    $ds9(mb).color add cascade -label [msgcat::mc {Favorites}] \
+	-menu $ds9(mb).color.favorites
 
     ColorMainMenuExternal h5
     ColorMainMenuExternal mpl-uni
@@ -56,6 +58,8 @@ proc ColorMainMenu {} {
     ColorMainMenuExternal solar
     ColorMainMenuExternal user
 
+    # filled by UpdateFavoritesMenu
+    ThemeMenu $ds9(mb).color.favorites
     $ds9(mb).color add separator
     $ds9(mb).color add checkbutton -label [msgcat::mc {Invert Colormap}] \
 	-variable colorbar(invert) -command InvertColorbar
@@ -68,25 +72,41 @@ proc ColorMainMenu {} {
     UpdateColormapMenuSwatches
     trace remove variable view(icons) write UpdateColormapMenuSwatches
     trace add variable view(icons) write UpdateColormapMenuSwatches
+
+    FavoritesRead
+    UpdateFavoritesMenu
+    trace remove variable colorbar(map) write FavoritesMapCB
+    trace add variable colorbar(map) write FavoritesMapCB
 }
 
 # Colormap swatches, shown next to each colormap name in the menus
 
 # returns a small photo image of the colormap, created on first use
-proc ColormapSwatch {cmap} {
+proc ColormapSwatch {cmap {ww {}} {hh {}}} {
     global icolorbar
 
-    if {![info exists icolorbar(swatch,$cmap)]} {
+    if {$ww == {}} {
 	set ww $icolorbar(swatch,width)
+    }
+    if {$hh == {}} {
 	set hh $icolorbar(swatch,height)
+    }
+
+    set key "swatch,$ww,$hh,$cmap"
+    if {![info exists icolorbar($key)]} {
+	# check first, a caught error still leaves errorInfo set,
+	# which xpa/samp then report as a failure
+	if {[lsearch -exact [colorbar list] $cmap] == -1} {
+	    return {}
+	}
 	if {[catch {colorbar get colormap rgb "\{$cmap\}" $ww} rgb]} {
 	    return {}
 	}
 	set img [image create photo -width $ww -height $hh]
 	$img put [list $rgb] -to 0 0 $ww $hh
-	set icolorbar(swatch,$cmap) $img
+	set icolorbar($key) $img
     }
-    return $icolorbar(swatch,$cmap)
+    return $icolorbar($key)
 }
 
 # add or remove swatches on every colormap menu, according to view(icons)
@@ -570,6 +590,8 @@ proc UpdateColorMenu {} {
 		    -state normal
 		$ds9(mb).color entryconfig [msgcat::mc {User}] \
 		    -state normal
+		$ds9(mb).color entryconfig [msgcat::mc {Favorites}] \
+		    -state normal
 
 		UpdateColorButtonExternal default normal
 		UpdateColorButtonExternal h5 normal
@@ -610,6 +632,8 @@ proc UpdateColorMenu {} {
 		    -state disabled
 		$ds9(mb).color entryconfig [msgcat::mc {User}] \
 		    -state disable
+		$ds9(mb).color entryconfig [msgcat::mc {Favorites}] \
+		    -state disable
 
 		UpdateColorButtonExternal default disable
 		UpdateColorButtonExternal h5 disable
@@ -642,6 +666,7 @@ proc UpdateColorMenu {} {
 	$ds9(mb).color entryconfig [msgcat::mc {Scientific Colour Maps}] -state normal
 	$ds9(mb).color entryconfig [msgcat::mc {Solar Colormaps}] -state normal
 	$ds9(mb).color entryconfig [msgcat::mc {User}] -state normal
+	$ds9(mb).color entryconfig [msgcat::mc {Favorites}] -state normal
 
 	UpdateColorButtonExternal default normal
 	UpdateColorButtonExternal h5 normal

@@ -614,7 +614,7 @@ cd<br>
 ds9.set(string cmd)<br>
 cd /home/mrbill<br></tt>
 <p><b><a name="cmap" id="cmap"></a>cmap</b></p>
-<p>Controls the colormap for the current frame. The colormap name is not case sensitive. A valid contrast value is&nbsp; from 0 to 10 and bias value from 0 to 1.</p>
+<p>Controls the colormap for the current frame. The colormap name is not case sensitive. A valid contrast value is&nbsp; from 0 to 10 and bias value from 0 to 1. The <tt>favorite</tt> commands add or delete the named colormap from the favorite colormaps, or clear all favorites.</p>
 <tt>Syntax:<br>
 cmap [&lt;colormap&gt;]<br>
 &nbsp;&nbsp;&nbsp; [file]<br>
@@ -624,6 +624,9 @@ cmap [&lt;colormap&gt;]<br>
 &nbsp;&nbsp;&nbsp; [&lt;constrast&gt; &lt;bias&gt;]<br>
 &nbsp;&nbsp;&nbsp; [tag [load|save] &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [tag delete]<br>
+&nbsp;&nbsp;&nbsp; [favorite]<br>
+&nbsp;&nbsp;&nbsp; [favorite add|delete &lt;colormap&gt;]<br>
+&nbsp;&nbsp;&nbsp; [favorite clear]<br>
 &nbsp;&nbsp;&nbsp; [open|close]<br>
 &nbsp;<br>
 Example:<br>
@@ -632,6 +635,7 @@ cmap<br>
 cmap file<br>
 cmap invert<br>
 cmap value<br>
+cmap favorite<br>
 <br>
 ds9.set(string cmd)<br>
 cmap Heat<br>
@@ -642,6 +646,9 @@ cmap 5 .5<br>
 cmap tag load foo.tag<br>
 cmap tag save foo.tag<br>
 cmap tag delete<br>
+cmap favorite add viridis<br>
+cmap favorite delete heat<br>
+cmap favorite clear<br>
 cmap open<br>
 cmap close<br></tt>
 <p><b><a name="colorbar" id="colorbar"></a>colorbar</b></p>

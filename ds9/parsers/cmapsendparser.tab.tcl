@@ -1,4 +1,5 @@
-set FILE_ 257
-set INVERT_ 258
-set LOCK_ 259
-set VALUE_ 260
+set FAVORITE_ 257
+set FILE_ 258
+set INVERT_ 259
+set LOCK_ 260
+set VALUE_ 261

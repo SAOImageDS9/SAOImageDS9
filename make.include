@@ -53,6 +53,9 @@ DIRS   = $(bindir) $(libdir) $(includedir) $(datadir) man build dist
 PREFIX = --prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir)
 STD    = --disable-shared --disable-stubs --enable-symbols
 STDSTUBS = --disable-shared --enable-stubs --enable-symbols
+# --enable-symbols makes TEA compile with plain -g (no optimization);
+# keep the symbols but optimize the compute-heavy C++ packages
+OPTIMIZE = CFLAGS_DEFAULT='-O2 -g'
 
 #-------------------------- funtools tmp files
 
@@ -359,7 +362,7 @@ tkagif/Makefile :
 tksao	: tksao/Makefile
 	@echo ""
 	@echo "*** $@ ***"
-	$(MAKE) -C tksao -j $(JOBS) install
+	$(MAKE) -C tksao -j $(JOBS) install $(OPTIMIZE)
 
 tksao/Makefile :
 	@echo ""
@@ -378,7 +381,7 @@ tksao/Makefile :
 vector	: vector/Makefile
 	@echo ""
 	@echo "*** $@ ***"
-	$(MAKE) -C vector -j $(JOBS) install
+	$(MAKE) -C vector -j $(JOBS) install $(OPTIMIZE)
 
 vector/Makefile :
 	@echo ""
@@ -395,7 +398,7 @@ vector/Makefile :
 fitsy	: fitsy/Makefile
 	@echo ""
 	@echo "*** $@ ***"
-	$(MAKE) -C fitsy -j $(JOBS) install
+	$(MAKE) -C fitsy -j $(JOBS) install $(OPTIMIZE)
 
 fitsy/Makefile :
 	@echo ""

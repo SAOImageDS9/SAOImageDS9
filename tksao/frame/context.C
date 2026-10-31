@@ -262,12 +262,21 @@ int Context::block()
     delete [] thread_;
   thread_ = new pthread_t[parent_->nthreads_];
   {
+    // with fewer images than threads, let each image split its work
+    int nimg =0;
+    for (FitsImage* ptr=fits; ptr; ptr=ptr->nextMosaic())
+      for (FitsImage* sptr=ptr; sptr; sptr=sptr->nextSlice())
+	nimg++;
+    int share = nimg ? parent_->nthreads_/nimg : 1;
+    if (share < 1)
+      share = 1;
+
     int cnt =0;
     FitsImage* ptr = fits;
     while (ptr) {
       FitsImage* sptr = ptr;
       while (sptr) {
-	sptr->block(&thread_[cnt]);
+	sptr->block(&thread_[cnt], share);
 	cnt++;
 	if (cnt == parent_->nthreads_) {
 	  if (doBlock) {

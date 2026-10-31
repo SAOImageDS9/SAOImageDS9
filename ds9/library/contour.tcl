@@ -415,20 +415,32 @@ proc ContourTableSetLevels {levels} {
     ContourTableWrite $levels $styles
 }
 
+# one more level: regenerate all values, styles stay with their row,
+# the new last row uses the defaults
 proc ContourTableAddRow {} {
     global dcontour
+    global contour
 
-    set ii $dcontour(nrow)
-    incr dcontour(nrow)
-    ContourTableSetRow $ii {} {}
-    ContourTableRow $ii
-    ContourTableSwatches
-    focus $dcontour(tbl).lev$ii
+    set nn [expr {$dcontour(nrow)+1}]
+    set ll [ContourGenerateLevels $nn]
+    if {$ll != {}} {
+	set contour(numlevel) $nn
+	ContourTableSetLevels $ll
+    } else {
+	# nothing to generate from, add an empty row to fill in
+	set ii $dcontour(nrow)
+	incr dcontour(nrow)
+	ContourTableSetRow $ii {} {}
+	ContourTableRow $ii
+	ContourTableSwatches
+	focus $dcontour(tbl).lev$ii
+    }
     after idle [list $dcontour(canvas) yview moveto 1]
 }
 
 proc ContourTableDeleteRow {ii} {
     global dcontour
+    global contour
 
     set levels {}
     set styles {}
@@ -436,6 +448,17 @@ proc ContourTableDeleteRow {ii} {
 	if {$jj != $ii} {
 	    lappend levels $dcontour(lev,$jj)
 	    lappend styles [ContourTableGetStyle $jj]
+	}
+    }
+
+    # one less level: regenerate all values, the rows below move up
+    # with their styles
+    set nn [llength $levels]
+    if {$nn > 0} {
+	set ll [ContourGenerateLevels $nn]
+	if {$ll != {}} {
+	    set contour(numlevel) $nn
+	    set levels $ll
 	}
     }
     ContourTableWrite $levels $styles
@@ -734,20 +757,24 @@ proc ContourDestroyDialog {} {
 
 proc ContourGenerateDialog {} {
     global contour
-    global dcontour
-    global current
 
     ContourCheckParams
+    ContourTableSetLevels [ContourGenerateLevels $contour(numlevel)]
+}
 
-    set ll {}
+# evenly spaced (in the contour scale) level values, or {}
+proc ContourGenerateLevels {num} {
+    global contour
+    global current
+
     if {$current(frame) != {}} {
 	if {([$current(frame) has fits]) && [ContourCheckMinMax]} {
-	    set ll [$current(frame) get colorscale level $contour(numlevel) \
+	    return [$current(frame) get colorscale level $num \
 			$contour(min) $contour(max) \
 			$contour(scale) $contour(log)]
 	}
     }
-    ContourTableSetLevels $ll
+    return {}
 }
 
 proc ContourOffDialog {} {

@@ -53,6 +53,9 @@ FVContour::FVContour()
   level_ =NULL;
   scale_ =NULL;
   kernel_ =NULL;
+
+  style_ =NULL;
+  nstyle_ =0;
 }
 
 FVContour::~FVContour()
@@ -68,6 +71,8 @@ FVContour::~FVContour()
 
   if (kernel_)
     delete [] kernel_;
+
+  clearLevelStyles();
 }
 
 void FVContour::setDashList(int length, int gap)
@@ -75,11 +80,127 @@ void FVContour::setDashList(int length, int gap)
   dlist_[0] = length;
   dlist_[1] = gap;
 
-  ContourLevel* level = lcontourlevel_.head();
-  while (level) {
-    level->setDashList(length, gap);
-    level = level->next();
+  // levels with their own dashlist keep it
+  applyStyles();
+}
+
+void FVContour::setLevelStyle(int idx, const char* color, int width,
+			      int dash, int length, int gap)
+{
+  if (idx<0)
+    return;
+
+  if (idx>=nstyle_) {
+    t_fvcontour_style* ss = new t_fvcontour_style[idx+1];
+    for (int ii=0; ii<=idx; ii++) {
+      if (ii<nstyle_)
+	ss[ii] = style_[ii];
+      else {
+	ss[ii].colorName = NULL;
+	ss[ii].lineWidth = 0;
+	ss[ii].dash = -1;
+	ss[ii].dlist[0] = 0;
+	ss[ii].dlist[1] = 0;
+      }
+    }
+    if (style_)
+      delete [] style_;
+    style_ = ss;
+    nstyle_ = idx+1;
   }
+
+  t_fvcontour_style& ss = style_[idx];
+  if (ss.colorName)
+    delete [] ss.colorName;
+  ss.colorName = (color && *color) ? dupstr(color) : NULL;
+  ss.lineWidth = width;
+  ss.dash = dash;
+  ss.dlist[0] = length;
+  ss.dlist[1] = gap;
+}
+
+void FVContour::clearLevelStyle(int idx)
+{
+  if (idx<0 || idx>=nstyle_)
+    return;
+
+  t_fvcontour_style& ss = style_[idx];
+  if (ss.colorName)
+    delete [] ss.colorName;
+  ss.colorName = NULL;
+  ss.lineWidth = 0;
+  ss.dash = -1;
+  ss.dlist[0] = 0;
+  ss.dlist[1] = 0;
+}
+
+void FVContour::clearLevelStyles()
+{
+  for (int ii=0; ii<nstyle_; ii++)
+    if (style_[ii].colorName)
+      delete [] style_[ii].colorName;
+  if (style_)
+    delete [] style_;
+  style_ =NULL;
+  nstyle_ =0;
+}
+
+// must be called from the main thread, getColor() is not thread safe
+void FVContour::applyStyles()
+{
+  ContourLevel* cl = lcontourlevel_.head();
+  while (cl) {
+    int idx = cl->index();
+    t_fvcontour_style* ss = (idx>=0 && idx<nstyle_) ? &style_[idx] : NULL;
+
+    const char* color = (ss && ss->colorName) ? ss->colorName : colorName_;
+    if (strcmp(color, cl->colorName()))
+      cl->setColor(color);
+    cl->setLineWidth((ss && ss->lineWidth>0) ? ss->lineWidth : lineWidth_);
+    cl->setDash((ss && ss->dash>=0) ? ss->dash : dash_);
+    if (ss && ss->dlist[0]>0 && ss->dlist[1]>0)
+      cl->setDashList(ss->dlist[0], ss->dlist[1]);
+    else
+      cl->setDashList(dlist_[0], dlist_[1]);
+
+    cl = cl->next();
+  }
+}
+
+// overrides only, as {idx color width dash length gap}, unset is {} or 0/-1
+void FVContour::listStyles(ostream& str)
+{
+  int first =1;
+  for (int ii=0; ii<nstyle_; ii++) {
+    t_fvcontour_style& ss = style_[ii];
+    if (!ss.colorName && ss.lineWidth<=0 && ss.dash<0 &&
+	(ss.dlist[0]<=0 || ss.dlist[1]<=0))
+      continue;
+
+    if (!first)
+      str << ' ';
+    first =0;
+    str << '{' << ii << ' ';
+    if (ss.colorName)
+      str << ss.colorName;
+    else
+      str << "{}";
+    str << ' ' << ss.lineWidth << ' ' << ss.dash
+	<< ' ' << ss.dlist[0] << ' ' << ss.dlist[1] << '}';
+  }
+}
+
+// resolved style for one level, as color width dash length gap
+void FVContour::listStyle(ostream& str, int idx)
+{
+  t_fvcontour_style* ss = (idx>=0 && idx<nstyle_) ? &style_[idx] : NULL;
+  int dl = ss && ss->dlist[0]>0 && ss->dlist[1]>0;
+
+  str << ((ss && ss->colorName) ? ss->colorName : colorName_) << ' '
+      << ((ss && ss->lineWidth>0) ? ss->lineWidth : lineWidth_) << ' '
+      << ((ss && ss->dash>=0) ? ss->dash : dash_) << ' '
+      << (dl ? ss->dlist[0] : dlist_[0]) << ' '
+      << (dl ? ss->dlist[1] : dlist_[1]);
 }
 
 void FVContour::create(Base* pp, FitsImage* fits, FrScale* fr,
@@ -91,6 +212,8 @@ void FVContour::create(Base* pp, FitsImage* fits, FrScale* fr,
 
   parent_ = pp;
 
+  if (colorName_)
+    delete [] colorName_;
   colorName_ = dupstr(cc);
   lineWidth_ = ww;
   dash_ = dd;
@@ -100,7 +223,13 @@ void FVContour::create(Base* pp, FitsImage* fits, FrScale* fr,
   numLevel_ = nn;
   frScale_ = *fr;
 
+  if (level_)
+    delete [] level_;
   level_ = dupstr(ll);
+
+  if (scale_)
+    delete scale_;
+  scale_ =NULL;
 
   if (level_ && strlen(level_)>0) {
     int cnt = 0;
@@ -483,6 +612,7 @@ void build(t_fvcontour_arg* tt)
 
     ContourLevel* cl =new ContourLevel(parent, ct, colorName, color,
 				       lineWidth, dash, dlist);
+    cl->setIndex(kk);
     memset(usedGrid,0,nelem);
 
     //  Search outer edge

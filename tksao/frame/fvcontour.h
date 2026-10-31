@@ -12,6 +12,14 @@
 
 class FVContour;
 
+// per level style override, unset fields fall back to the FVContour global
+typedef struct {
+  char* colorName;  // NULL => global
+  int lineWidth;    // <=0 => global
+  int dash;         // <0 => global
+  int dlist[2];     // <=0 => global
+} t_fvcontour_style;
+
 typedef struct {
   double* kernel;
   double* src;
@@ -58,6 +66,9 @@ class FVContour {
   InverseScale* scale_;
   double* kernel_;
 
+  t_fvcontour_style* style_;
+  int nstyle_;
+
   void buildScale(FitsImage* fits);
   void unity(FitsImage*, pthread_t* thread, void* targ);
   void smooth(FitsImage*, pthread_t* thread, void* targ);
@@ -87,6 +98,13 @@ public:
   int dash() {return dash_;}
   int* dlist() {return dlist_;}
   void setDashList(int, int);
+
+  void setLevelStyle(int, const char*, int, int, int, int);
+  void clearLevelStyle(int);
+  void clearLevelStyles();
+  void applyStyles();
+  void listStyles(ostream&);
+  void listStyle(ostream&, int);
 
   const char* methodName();
   int numLevel() {return numLevel_;}

@@ -425,6 +425,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token STATS_
 %token STATUS_
 %token STRENGTH_
+%token STYLE_
 %token SUM_
 %token SYNC_
 %token SYSTEM_
@@ -1005,6 +1006,7 @@ contour	: CREATE_ contourCreate
         | LOAD_ contourLoad
         | PASTE_ contourPaste
 	| SAVE_ contourSave
+	| STYLE_ contourStyle
 	;
 
 contourCreate : STRING INT INT contourMethod INT INT scaleType numeric contourClipMode contourClipScope numeric numeric STRING
@@ -1066,6 +1068,12 @@ contourSave : STRING coordSystem skyFrame
         | AUX_ STRING coordSystem skyFrame
 	{fr->contourSaveAuxCmd($2,(Coord::CoordSystem)$3,(Coord::SkyFrame)$4);}
         ;
+
+contourStyle : CLEAR_ {fr->contourStyleClearCmd();}
+	| INT CLEAR_ {fr->contourStyleClearCmd($1);}
+	| INT STRING INT INT {fr->contourStyleCmd($1,$2,$3,$4,0,0);}
+	| INT STRING INT INT INT INT {fr->contourStyleCmd($1,$2,$3,$4,$5,$6);}
+	;
 
 crop	: /* empty */ {fr->cropCmd();}
 	| numeric numeric numeric numeric coordSystem skyFrame
@@ -1260,6 +1268,8 @@ getContour: coordSystem skyFrame
 	| METHOD_ {fr->getContourMethodCmd();}
 	| COLORSCALE_ getContourColorScale
 	| SMOOTH_ {fr->getContourSmoothCmd();}
+	| STYLE_ {fr->getContourStyleCmd();}
+	| STYLE_ INT {fr->getContourStyleCmd($2);}
 	| WIDTH_ {fr->getContourLineWidthCmd();}
 	;
 

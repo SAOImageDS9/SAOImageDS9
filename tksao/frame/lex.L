@@ -344,6 +344,7 @@ sshared		{return SSHARED_;}
 stats		{return STATS_;}
 status		{return STATUS_;}
 strength        {return STRENGTH_;}
+style		{return STYLE_;}
 sum		{return SUM_;}
 sync            {return SYNC_;}
 system		{return SYSTEM_;}

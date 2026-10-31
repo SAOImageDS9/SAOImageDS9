@@ -738,6 +738,9 @@ public:
   void contourPasteCmd(const char*, const char*, int, int, int =0, int =0);
   void contourSaveCmd(const char*, Coord::CoordSystem, Coord::SkyFrame);
   void contourSaveAuxCmd(const char*, Coord::CoordSystem, Coord::SkyFrame);
+  void contourStyleCmd(int, const char*, int, int, int, int);
+  void contourStyleClearCmd();
+  void contourStyleClearCmd(int);
 
   void getContourCmd(Coord::CoordSystem sys, Coord::SkyFrame sky);
   void getContourClipCmd();
@@ -753,6 +756,8 @@ public:
   void getContourScaleCmd();
   void getContourScaleLogCmd();
   void getContourSmoothCmd();
+  void getContourStyleCmd();
+  void getContourStyleCmd(int);
   void hasContourCmd();
   void hasContourAuxCmd();
 

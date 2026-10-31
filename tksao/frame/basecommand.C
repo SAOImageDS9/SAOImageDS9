@@ -843,6 +843,36 @@ void Base::contourSaveAuxCmd(const char* fn, Coord::CoordSystem sys,
     currentContext->contourListAux(str, sys, sky);
 }
 
+void Base::contourStyleCmd(int idx, const char* color, int width, int dash,
+			   int length, int gap)
+{
+  if (idx < 0 || width < 0 || dash > 1 ||
+      length < 0 || length > 255 || gap < 0 || gap > 255) {
+    Tcl_AppendResult(interp, "invalid contour style", NULL);
+    result = TCL_ERROR;
+    return;
+  }
+
+  currentContext->fvcontour().setLevelStyle(idx, color, width, dash,
+					    length, gap);
+  currentContext->fvcontour().applyStyles();
+  update(PIXMAP);
+}
+
+void Base::contourStyleClearCmd()
+{
+  currentContext->fvcontour().clearLevelStyles();
+  currentContext->fvcontour().applyStyles();
+  update(PIXMAP);
+}
+
+void Base::contourStyleClearCmd(int idx)
+{
+  currentContext->fvcontour().clearLevelStyle(idx);
+  currentContext->fvcontour().applyStyles();
+  update(PIXMAP);
+}
+
 void Base::DATASECCmd(int which)
 {
   if (currentContext->updateDataSec(which)) {
@@ -1416,6 +1446,22 @@ void Base::getContourSmoothCmd()
 {
   ostringstream str;
   str << currentContext->fvcontour().smooth() << ends;
+  Tcl_AppendResult(interp, str.str().c_str(), NULL);
+}
+
+void Base::getContourStyleCmd()
+{
+  ostringstream str;
+  currentContext->fvcontour().listStyles(str);
+  str << ends;
+  Tcl_AppendResult(interp, str.str().c_str(), NULL);
+}
+
+void Base::getContourStyleCmd(int idx)
+{
+  ostringstream str;
+  currentContext->fvcontour().listStyle(str, idx);
+  str << ends;
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 

@@ -342,9 +342,6 @@ void Base::contourCreatePolygonCmd()
 
 void Base::contourCreatePolygon(List<ContourLevel>& cl)
 {
-  int dl[2];
-  dl[0] = 8;
-  dl[1] = 3;
   char font[] = "helvetica 10 normal roman";
   char text[] = "";
   unsigned short defaultProps = Marker::SELECT | Marker::HIGHLITE |
@@ -358,6 +355,7 @@ void Base::contourCreatePolygon(List<ContourLevel>& cl)
     do {
       const char* color = cl.current()->colorName();
       int width = cl.current()->lineWidth();
+      int* dl = cl.current()->dlist();
       unsigned short prop = defaultProps;
       if (cl.current()->dash())
 	prop |= Marker::DASH;

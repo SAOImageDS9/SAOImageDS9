@@ -20,6 +20,7 @@ ContourLevel::ContourLevel(Base* pp, double lev,
   gc_ = parent_->contourGC_;
 
   level_ = lev;
+  index_ = -1;
   colorName_ = dupstr(cn);
   color_ = parent_->getColor(colorName_);
   lineWidth_ = ww;
@@ -40,6 +41,7 @@ ContourLevel::ContourLevel(Base* pp, double lev,
   gc_ = parent_->contourGC_;
 
   level_ = lev;
+  index_ = -1;
   colorName_ = dupstr(cn);
   //  color_ = parent_->getColor(colorName_);
   color_ = cc;
@@ -63,9 +65,9 @@ void ContourLevel::list(ostream& str, FitsImage* fits,
 {
   if (lcontour_.head()) {
     str << "level=" << level_ << ' ';
-    if (strncmp("green", colorName_, 5) || dash_ != 0 ||
+    if (strcmp("green", colorName_) || dash_ != 0 ||
 	dlist_[0] != 8 || dlist_[1] != 3 || lineWidth_ != 1) {
-      if (strncmp("green", colorName_, 5))
+      if (strcmp("green", colorName_))
 	str << "color=" << colorName_ << ' ';
 
       if (lineWidth_ != 1)

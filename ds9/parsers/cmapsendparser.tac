@@ -4,6 +4,7 @@
 
 %start cmapsend
 
+%token FAVORITE_
 %token FILE_
 %token INVERT_
 %token LOCK_
@@ -13,6 +14,7 @@
 
 cmapsend : {ColorbarSendCmdCurrent "get name"}
  | FILE_ {ColorbarSendCmdCurrent "get file name"}
+ | FAVORITE_ {ProcessSendCmdTxt [FavoritesNames]}
  | INVERT_ {ProcessSendCmdYesNo colorbar invert}
 # backward compatibility
  | VALUE_ {ColorbarSendCmdContrastBias}

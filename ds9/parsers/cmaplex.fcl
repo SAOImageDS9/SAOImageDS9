@@ -7,8 +7,11 @@
 
 %%
 
+add		{return $ADD_}
+clear		{return $CLEAR_}
 close		{return $CLOSE_}
 delete		{return $DELETE_}
+favorite	{return $FAVORITE_}
 file		{return $FILE_}
 invert		{return $INVERT_}
 load		{return $LOAD_}

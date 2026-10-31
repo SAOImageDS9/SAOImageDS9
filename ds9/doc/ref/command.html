@@ -542,7 +542,7 @@ cd [&lt;directory&gt;]<br>
 Example:<br>
 $ds9 -cd /home/mrbill<br></tt>
 <p><b><a name="cmap" id="cmap"></a>cmap</b></p>
-<p>Controls the colormap for the current frame. The colormap name is not case sensitive. A valid contrast value is&nbsp; from 0 to 10 and bias value from 0 to 1.</p>
+<p>Controls the colormap for the current frame. The colormap name is not case sensitive. A valid contrast value is&nbsp; from 0 to 10 and bias value from 0 to 1. The <tt>favorite</tt> commands add or delete the named colormap from the favorite colormaps, or clear all favorites.</p>
 <tt>Syntax:<br>
 -cmap [&lt;colormap&gt;]<br>
 &nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
@@ -551,6 +551,8 @@ $ds9 -cd /home/mrbill<br></tt>
 &nbsp;&nbsp;&nbsp; [&lt;contrast&gt; &lt;bias&gt;]<br>
 &nbsp;&nbsp;&nbsp; [tag [load|save] &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [tag delete]<br>
+&nbsp;&nbsp;&nbsp; [favorite add|delete &lt;colormap&gt;]<br>
+&nbsp;&nbsp;&nbsp; [favorite clear]<br>
 &nbsp;&nbsp;&nbsp; [open|close]<br>
 &nbsp;<br>
 Example:<br>
@@ -562,6 +564,9 @@ $ds9 -cmap 5 .5<br>
 $ds9 -cmap tag load foo.tag<br>
 $ds9 -cmap tag save foo.tag<br>
 $ds9 -cmap tag delete<br>
+$ds9 -cmap favorite add viridis<br>
+$ds9 -cmap favorite delete heat<br>
+$ds9 -cmap favorite clear<br>
 $ds9 -cmap open<br>
 $ds9 -cmap close<br></tt>
 <p><b><a name="colorbar" id="colorbar"></a>colorbar</b></p>

@@ -8,8 +8,11 @@
 
 %start command
 
+%token ADD_
+%token CLEAR_
 %token CLOSE_
 %token DELETE_
+%token FAVORITE_
 %token FILE_
 %token INVERT_
 %token LOAD_
@@ -45,6 +48,7 @@ cmap : cmapSelect
  | SAVE_ STRING_ {SaveColormapFile $2; FileLast colormapfbox $2}
  | INVERT_ yesno {ProcessCmdSet colorbar invert $2 InvertColorbar}
  | TAG_ cmapTag
+ | FAVORITE_ cmapFavorite
 
  | numeric numeric {CmapValueCmd $1 $2}
 # backward compatibility
@@ -57,6 +61,13 @@ cmapSelect : STRING_ {CmapCmd $1}
  ;
 
 cmapLoad : STRING_ {LoadColormapFile $1; FileLast colormapfbox $1}
+ ;
+
+# colormap name is required, an optional one would swallow the next
+# command line option
+cmapFavorite : ADD_ STRING_ {FavoritesAddCmd $2}
+ | DELETE_ STRING_ {FavoritesRemove $2}
+ | CLEAR_ {FavoritesClear 0}
  ;
 
 cmapTag : LOAD_ STRING_ {LoadColorTag $2}

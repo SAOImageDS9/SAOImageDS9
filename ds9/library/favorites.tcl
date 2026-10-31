@@ -153,6 +153,35 @@ proc FavoritesAdd {cmap} {
     UpdateFavoritesMenu
 }
 
+# from the command line, xpa or samp: any case, must be loaded
+proc FavoritesAddCmd {name} {
+    set cmap [FavoritesCanonical $name]
+    if {$cmap == {}} {
+	Error "[msgcat::mc {Unable to find colormap}]: $name"
+	return
+    }
+    FavoritesAdd $cmap
+}
+
+# the loaded colormap name matching name in any case, or {}
+proc FavoritesCanonical {name} {
+    set ii [lsearch -exact -nocase [colorbar list] $name]
+    if {$ii == -1} {
+	return {}
+    }
+    return [lindex [colorbar list] $ii]
+}
+
+proc FavoritesNames {} {
+    global ifavorites
+
+    set rr {}
+    foreach ff $ifavorites(list) {
+	lappend rr [lindex $ff 0]
+    }
+    return $rr
+}
+
 proc FavoritesRemove {cmap} {
     global ifavorites
 

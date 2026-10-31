@@ -35,6 +35,7 @@ typedef struct {
   FitsFile* block;
   Vector blockFactor;
   int nanZero;
+  int nthreads;
 } t_block_arg;
 
 typedef struct {
@@ -294,7 +295,7 @@ class FitsImage {
   void load();
   void analysis(int, pthread_t*, void*);
   void block();
-  void block(pthread_t*);
+  void block(pthread_t*, int nthreads =1);
 
   Matrix bin(const Vector&);
   Matrix binCenter();

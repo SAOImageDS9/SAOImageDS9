@@ -39,13 +39,17 @@ CallBack::CallBack(Tcl_Interp* interp, Type type,
 
   type_ = type;
 
-  if (proc)
-    strncpy(proc_, proc, 64);
+  if (proc) {
+    strncpy(proc_, proc, 63);
+    proc_[63] = '\0';
+  }
   else
     proc_[0] = '\0';
 
-  if (arg)
-    strncpy(arg_, arg, 64);
+  if (arg) {
+    strncpy(arg_, arg, 63);
+    arg_[63] = '\0';
+  }
   else
     arg_[0] = '\0';
 

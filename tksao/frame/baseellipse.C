@@ -193,6 +193,7 @@ void BaseEllipse::renderXBezier(Drawable drawable, Coord::InternalSystem sys,
       // set width, color, dash
       switch (mode) {
       case SRC:
+      default:
 	XSetForeground(display, gc, color); 
 	renderXLineNoDash(gc);
 	lgc = gc;

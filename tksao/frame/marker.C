@@ -278,6 +278,7 @@ void Marker::renderXText(Drawable drawable, Coord::InternalSystem sys, RenderMod
     GC lgc;
     switch (mode) {
     case SRC:
+    default:
       lgc = gc;
       XSetForeground(display, gc, color);
       break;

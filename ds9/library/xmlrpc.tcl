@@ -13,6 +13,8 @@ set xmlrpc(debug) false
 set xmlrpc(sock) {}
 # ms to wait for a complete incoming request
 set xmlrpc(request,timeout) 15000
+# ms to wait for the response to an outgoing call
+set xmlrpc(call,timeout) 60000
 
 proc xmlrpcServe {port} {
     return [socket -server xmlrpcServeOnce $port]
@@ -276,8 +278,7 @@ proc xmlrpcCall {url method methodName params} {
 
     set RE {http://([^:]+):([0-9]+)}
     if {![regexp $RE $url {} host port]} {
-	# ERROR
-	return
+	error "xmlrpcCall: bad url $url"
     }
 
     set sock [socket $host $port]
@@ -288,19 +289,19 @@ proc xmlrpcCall {url method methodName params} {
 
     fconfigure $sock -translation {lf lf} -buffersize 4096
     fconfigure $sock -blocking off
-    if {[catch {set request [xmlrpcBuildRequest $method $methodName $params]}]} {
-	# ERROR
-	catch {close $sock}
-	unset xmlrpc(done,$cnt)
-	unset xmlrpc(result,$cnt)
-	unset xmlrpc(buffer,$cnt)
-	return
+    if {[catch {
+	puts $sock [xmlrpcBuildRequest $method $methodName $params]
+	flush $sock
+    }]} {
+	set xmlrpc(done,$cnt) -1
+    } else {
+	fileevent $sock readable [list xmlrpcGetResponse $sock $cnt]
+	# don't wait forever on a peer that accepted but never answers
+	set timer [after $xmlrpc(call,timeout) \
+		       [list xmlrpcCallTimeout $sock $cnt]]
+	vwait xmlrpc(done,$cnt)
+	after cancel $timer
     }
-    puts $sock $request
-    flush $sock
-
-    fileevent $sock readable [list xmlrpcGetResponse $sock $cnt]
-    vwait xmlrpc(done,$cnt)
 
     set ss $xmlrpc(done,$cnt)
     set rr $xmlrpc(result,$cnt)
@@ -309,12 +310,23 @@ proc xmlrpcCall {url method methodName params} {
     unset xmlrpc(result,$cnt)
     unset xmlrpc(buffer,$cnt)
 
-    if {$ss > 0} {
-	return $rr
-    } else {
-	# ERROR
+    # callers catch this; returning {} would look like success
+    if {$ss <= 0} {
+	catch {close $sock}
+	error "xmlrpcCall: $methodName failed"
+    }
+    return $rr
+}
+
+proc xmlrpcCallTimeout {sock cnt} {
+    global xmlrpc
+
+    if {![info exists xmlrpc(done,$cnt)] || $xmlrpc(done,$cnt) != 0} {
 	return
     }
+    catch {fileevent $sock readable {}}
+    catch {close $sock}
+    set xmlrpc(done,$cnt) -1
 }
 
 proc xmlrpcBuildRequest {method mname params} {

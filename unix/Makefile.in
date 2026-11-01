@@ -40,6 +40,9 @@ saods9	: dirs tcl tk \
 tcl	: tcl$(TCL_VERSION)/unix/Makefile
 	@echo ""
 	@echo "*** $@ ***"
+# build tclsh first: tcl's 'packages' target does not depend on it, but
+# the bundled packages (thread, itcl, ...) need it to configure
+	$(MAKE) -C tcl$(TCL_VERSION)/unix -j $(JOBS) binaries
 	$(MAKE) -C tcl$(TCL_VERSION)/unix -j $(JOBS) install
 
 tcl$(TCL_VERSION)/unix/Makefile :

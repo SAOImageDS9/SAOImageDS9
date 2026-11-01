@@ -27,19 +27,25 @@ CACHE		= --config-cache --cache-file=$(prefix)/config.cache
 
 .PHONY	: saods9 tcl tk
 
+# funtools links its utilities against $(libdir)/libz.a, which is
+# installed by tkimg (tkimg/zlib), so it must come after tkimg
 saods9	: dirs tcl tk \
 	openssl \
-	xpa funtools ast \
+	xpa ast \
 	vector fitsy \
 	tclsignal \
 	tls tclxml tclxmlrpc \
 	tkblt tclfitsy tktable tkimg \
+	funtools \
 	tkmpeg tkagif tkhtml1 tkcon \
 	tksao ds9
 
 tcl	: tcl$(TCL_VERSION)/unix/Makefile
 	@echo ""
 	@echo "*** $@ ***"
+# build tclsh first: tcl's 'packages' target does not depend on it, but
+# the bundled packages (thread, itcl, ...) need it to configure
+	$(MAKE) -C tcl$(TCL_VERSION)/unix -j $(JOBS) binaries
 	$(MAKE) -C tcl$(TCL_VERSION)/unix -j $(JOBS) install
 
 tcl$(TCL_VERSION)/unix/Makefile :

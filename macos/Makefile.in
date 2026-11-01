@@ -51,13 +51,16 @@ endif
 
 .PHONY	: saods9 tcl tk tkmacosx
 
+# funtools links its utilities against $(libdir)/libz.a, which is
+# installed by tkimg (tkimg/zlib), so it must come after tkimg
 saods9	: dirs tcl tk \
 	openssl \
-	xpa funtools ast \
+	xpa ast \
 	vector fitsy \
 	tclsignal \
 	tls tclxml tclxmlrpc \
 	tkblt tclfitsy tktable tkimg \
+	funtools \
 	tkmpeg tkagif tkhtml1 tkcon \
 	tkmacosx \
 	tksao ds9
@@ -65,6 +68,9 @@ saods9	: dirs tcl tk \
 tcl	: tcl$(TCL_VERSION)/macosx/Makefile
 	@echo ""
 	@echo "*** $@ ***"
+# build tclsh first: tcl's 'packages' target does not depend on it, but
+# the bundled packages (thread, itcl, ...) need it to configure
+	$(MAKE) -C tcl$(TCL_VERSION)/macosx -j $(JOBS) binaries
 	$(MAKE) -C tcl$(TCL_VERSION)/macosx -j $(JOBS)
 
 # install include, lib

@@ -258,7 +258,12 @@ proc SAMPSend {method params resultVar} {
 	samp.hub.callAll {
 	    # and now we wait
 	    # must be set before
-	    vwait samp(msgtag)
+	    # the response can already have arrived (and cleared msgtag)
+	    # during the nested event loop in xmlrpcCall; vwait would then
+	    # wait for a change that already happened
+	    if {[info exists samp(msgtag)] && $samp(msgtag) != {}} {
+		vwait samp(msgtag)
+	    }
 	}
 
 	samp.hub.callAndWait {

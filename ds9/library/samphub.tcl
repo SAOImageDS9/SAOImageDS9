@@ -908,7 +908,7 @@ proc samp.hub.getMetadata {rpc} {
 	if {$samphub($cc,id) == $id} {
 	    foreach mm $samphub($cc,metadata) {
 		foreach {key val} $mm {
-		    set map3($key) "string \"$val\""
+		    set map3($key) [list string $val]
 		}
 	    }
 	    set m3 [xmlrpcList2Member [array get map3]]

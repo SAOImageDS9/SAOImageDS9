@@ -67,9 +67,7 @@ proc SAMPWebHubCallbackTimer {sock} {
 	set rr [SAMPWebHubCallback]
 	set res [xmlrpcBuildResponse $rr]
 
-	puts -nonewline $sock $res
-	flush $sock
-	close $sock
+	xmlrpcWriteResponse $sock $res
     } else {
 	# check
 	after $samphub(timer) [list SAMPWebHubCallbackTimer $sock]

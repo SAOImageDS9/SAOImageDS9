@@ -93,9 +93,7 @@ proc xmlrpcDoRequest {sock} {
     if {[regexp $RE $headerStatus {}]} {
 	set header [xmlrpcPreflightResponse $headerStatus]
 
-	puts -nonewline $sock $header
-	flush $sock
-	close $sock
+	xmlrpcWriteResponse $sock $header
 	return
     }
 
@@ -158,10 +156,18 @@ proc xmlrpcDoRequest {sock} {
 	set res [xmlrpcBuildResponse $result]
     }
     set xmlrpc(sock) {}
-    
-    puts -nonewline $sock $res
-    flush $sock
-    close $sock
+
+    xmlrpcWriteResponse $sock $res
+}
+
+# the peer may have hung up without waiting for the response; don't let
+# that error escape to bgerror, which would block ds9 behind a dialog
+proc xmlrpcWriteResponse {sock res} {
+    catch {
+	puts -nonewline $sock $res
+	flush $sock
+    }
+    catch {close $sock}
 }
 
 proc xmlrpcResponse {rpc} {

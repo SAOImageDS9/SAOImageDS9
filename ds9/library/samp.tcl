@@ -17,7 +17,7 @@ proc SAMPConnectMetadata {} {
     global samp
     global ds9
 
-    set map(samp.name) "string \"$ds9(app)\""
+    set map(samp.name) [list string $ds9(app)]
     set map(samp.description.text) {string "SAOImageDS9 is an astronomical visualization application"}
     set map(samp.icon.url) {string https://ds9.si.edu/sun.png}
     set map(samp.documentation.url) {string https://ds9.si.edu/doc/ref/index.html}
@@ -134,8 +134,8 @@ proc SAMPSendImageLoadFits {id} {
     }
 
     # cmd
-    set map2(url) "string file://localhost/$fn"
-    set map2(name) "string $fnb"
+    set map2(url) [list string file://localhost/$fn]
+    set map2(name) [list string $fnb]
     set params [SAMPSendMType image.load.fits $id [array get map2]]
     set rr {}
     if {$id != {}} {
@@ -176,8 +176,8 @@ proc SAMPSendTableLoadFits {id} {
     }
 
     # cmd
-    set map2(url) "string file://localhost/$fn"
-    set map2(name) "string $fnb"
+    set map2(url) [list string file://localhost/$fn]
+    set map2(name) [list string $fnb]
     set params [SAMPSendMType table.load.fits $id [array get map2]]
     set rr {}
     if {$id != {}} {
@@ -213,9 +213,9 @@ proc SAMPSendTableLoadVotable {id varname} {
     TBLSaveFn $varname $fn VOTWrite
 
     # cmd
-    set map2(url) "string file://localhost/$fn"
-    set map2(table-id) "string $varname$samp(port)"
-    set map2(name) "string $var(title)"
+    set map2(url) [list string file://localhost/$fn]
+    set map2(table-id) [list string $varname$samp(port)]
+    set map2(name) [list string $var(title)]
     set params [SAMPSendMType table.load.votable $id [array get map2]]
     set rr {}
     if {$id != {}} {
@@ -265,7 +265,7 @@ proc SAMPSendTableHighlightRow {id varname row} {
     }
 
     # cmd
-    set map2(table-id) "string $samp(ocat,$varname)"
+    set map2(table-id) [list string $samp(ocat,$varname)]
     set map2(row) "string [expr $row-1]"
     set params [SAMPSendMType table.highlight.row $id [array get map2]]
     set rr {}
@@ -297,7 +297,7 @@ proc SAMPSendTableSelectRowList {id varname rows} {
 	lappend ss "string [expr $rr-1]"
     }
     set map2(row-list) [list array $ss]
-    set map2(table-id) "string $samp(ocat,$varname)"
+    set map2(table-id) [list string $samp(ocat,$varname)]
     set params [SAMPSendMType table.select.rowList $id [array get map2]]
     set rr {}
     if {$id != {}} {

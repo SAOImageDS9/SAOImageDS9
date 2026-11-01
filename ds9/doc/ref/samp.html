@@ -753,6 +753,10 @@ contour []<br>
 &nbsp;&nbsp;&nbsp; [scope global|local]<br>
 &nbsp;&nbsp;&nbsp; [limits &lt;min&gt; &lt;max&gt;]<br>
 &nbsp;&nbsp;&nbsp; [levels &lt;value value value...&gt;]<br>
+&nbsp;&nbsp;&nbsp; [style &lt;index&gt; &lt;color&gt; [&lt;width&gt; [yes|no [&lt;length&gt; &lt;gap&gt;]]]]<br>
+&nbsp;&nbsp;&nbsp; [style &lt;index&gt; {[color=&lt;color&gt;] [width=&lt;width&gt;] [dash=yes|no] [dashlist=&lt;length&gt; &lt;gap&gt;]}<br>
+&nbsp;&nbsp;&nbsp; [style &lt;index&gt; clear]<br>
+&nbsp;&nbsp;&nbsp; [style clear]<br>
 &nbsp;&nbsp;&nbsp; [open|close]<br>
 &nbsp;<br>
 Example:<br>
@@ -771,6 +775,7 @@ contour mode<br>
 contour scope<br>
 contour limits<br>
 contour levels<br>
+contour style<br>
 <br>
 ds9.set(string cmd)<br>
 contour<br>
@@ -798,6 +803,11 @@ contour mode zscale<br>
 contour scope local<br>
 contour limits 1 100<br>
 contour levels 1 10 100 1000<br>
+contour style 1 red 2<br>
+contour style 2 cyan 1 yes 4 2<br>
+contour style 2 {color=cyan dash=yes}<br>
+contour style 1 clear<br>
+contour style clear<br>
 contour open<br>
 contour close<br></tt>
 <p><b><a name="crop" id="crop"></a>crop</b></p>

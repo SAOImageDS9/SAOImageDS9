@@ -20,6 +20,7 @@
 %token SCALE_
 %token SCOPE_
 %token SMOOTH_
+%token STYLE_
 %token WIDTH_
 
 %%
@@ -43,6 +44,7 @@ contoursend : {ProcessSendCmdYesNo contour view}
  | SCOPE_ {ProcessSendCmdGet contour scope}
  | LIMITS_ {ContourSendCmdLimits}
  | LEVELS_ {ContourSendCmdLevels}
+ | STYLE_ {ContourSendCmdStyle}
  
  | coordsys {ProcessSendCmdSend {.ctr} "get contour $1 fk5"}
  | wcssys {ProcessSendCmdSend {.ctr} "get contour $1 fk5"}

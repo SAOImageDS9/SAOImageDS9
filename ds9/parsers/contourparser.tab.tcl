@@ -79,6 +79,7 @@ set SINH_ 334
 set SMOOTH_ 335
 set SQRT_ 336
 set SQUARED_ 337
-set WIDTH_ 338
-set ZMAX_ 339
-set ZSCALE_ 340
+set STYLE_ 338
+set WIDTH_ 339
+set ZMAX_ 340
+set ZSCALE_ 341

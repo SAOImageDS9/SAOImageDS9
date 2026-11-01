@@ -48,4 +48,5 @@ set NLEVELS_ 303
 set SCALE_ 304
 set SCOPE_ 305
 set SMOOTH_ 306
-set WIDTH_ 307
+set STYLE_ 307
+set WIDTH_ 308

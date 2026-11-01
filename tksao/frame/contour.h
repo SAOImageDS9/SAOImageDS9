@@ -23,6 +23,7 @@ class ContourLevel {
   List<Contour> lcontour_;
 
   double level_;
+  int index_;
   char* colorName_;
   unsigned long color_;
   int lineWidth_;
@@ -50,6 +51,8 @@ class ContourLevel {
 #endif
 
   double level() {return level_;}
+  int index() {return index_;}
+  void setIndex(int ii) {index_ =ii;}
 
   const char* colorName() {return colorName_;}
   void setColor(const char*);
@@ -57,6 +60,7 @@ class ContourLevel {
   void setDash(int dd) {dash_ =dd;}
   int lineWidth() {return lineWidth_;}
   void setLineWidth(int ww) {lineWidth_ =ww;}
+  int* dlist() {return dlist_;}
   void setDashList(int length, int gap) {
     dlist_[0] = length;
     dlist_[1] = gap;

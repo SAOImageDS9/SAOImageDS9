@@ -356,80 +356,81 @@
      STATS_ = 572,
      STATUS_ = 573,
      STRENGTH_ = 574,
-     SUM_ = 575,
-     SYNC_ = 576,
-     SYSTEM_ = 577,
-     TABLE_ = 578,
-     TAG_ = 579,
-     TEMPLATE_ = 580,
-     TEXT_ = 581,
-     THREADS_ = 582,
-     THREED_ = 583,
-     THRESHOLD_ = 584,
-     THICK_ = 585,
-     TOP_ = 586,
-     TRANSPARENCY_ = 587,
-     TRIANGLE_ = 588,
-     TO_ = 589,
-     TOGGLE_ = 590,
-     TOPHAT_ = 591,
-     TRUE_ = 592,
-     TYPE_ = 593,
-     UNDO_ = 594,
-     UNHIGHLITE_ = 595,
-     UNLOAD_ = 596,
-     UNSELECT_ = 597,
-     UPDATE_ = 598,
-     UP_ = 599,
-     USER_ = 600,
-     VALUE_ = 601,
-     VAR_ = 602,
-     VIEW_ = 603,
-     VECTOR_ = 604,
-     VERSION_ = 605,
-     VERTEX_ = 606,
-     VERTICAL_ = 607,
-     WARP_ = 608,
-     WCS_ = 609,
-     WCSA_ = 610,
-     WCSB_ = 611,
-     WCSC_ = 612,
-     WCSD_ = 613,
-     WCSE_ = 614,
-     WCSF_ = 615,
-     WCSG_ = 616,
-     WCSH_ = 617,
-     WCSI_ = 618,
-     WCSJ_ = 619,
-     WCSK_ = 620,
-     WCSL_ = 621,
-     WCSM_ = 622,
-     WCSN_ = 623,
-     WCSO_ = 624,
-     WCSP_ = 625,
-     WCSQ_ = 626,
-     WCSR_ = 627,
-     WCSS_ = 628,
-     WCST_ = 629,
-     WCSU_ = 630,
-     WCSV_ = 631,
-     WCSW_ = 632,
-     WCSX_ = 633,
-     WCSY_ = 634,
-     WCSZ_ = 635,
-     WCS0_ = 636,
-     WFPC2_ = 637,
-     WIDTH_ = 638,
-     WIN32_ = 639,
-     XML_ = 640,
-     XY_ = 641,
-     YES_ = 642,
-     ZERO_ = 643,
-     ZMAX_ = 644,
-     ZSCALE_ = 645,
-     PIXMASK_ = 646,
-     ZOOM_ = 647,
-     FIELDS_ = 648
+     STYLE_ = 575,
+     SUM_ = 576,
+     SYNC_ = 577,
+     SYSTEM_ = 578,
+     TABLE_ = 579,
+     TAG_ = 580,
+     TEMPLATE_ = 581,
+     TEXT_ = 582,
+     THREADS_ = 583,
+     THREED_ = 584,
+     THRESHOLD_ = 585,
+     THICK_ = 586,
+     TOP_ = 587,
+     TRANSPARENCY_ = 588,
+     TRIANGLE_ = 589,
+     TO_ = 590,
+     TOGGLE_ = 591,
+     TOPHAT_ = 592,
+     TRUE_ = 593,
+     TYPE_ = 594,
+     UNDO_ = 595,
+     UNHIGHLITE_ = 596,
+     UNLOAD_ = 597,
+     UNSELECT_ = 598,
+     UPDATE_ = 599,
+     UP_ = 600,
+     USER_ = 601,
+     VALUE_ = 602,
+     VAR_ = 603,
+     VIEW_ = 604,
+     VECTOR_ = 605,
+     VERSION_ = 606,
+     VERTEX_ = 607,
+     VERTICAL_ = 608,
+     WARP_ = 609,
+     WCS_ = 610,
+     WCSA_ = 611,
+     WCSB_ = 612,
+     WCSC_ = 613,
+     WCSD_ = 614,
+     WCSE_ = 615,
+     WCSF_ = 616,
+     WCSG_ = 617,
+     WCSH_ = 618,
+     WCSI_ = 619,
+     WCSJ_ = 620,
+     WCSK_ = 621,
+     WCSL_ = 622,
+     WCSM_ = 623,
+     WCSN_ = 624,
+     WCSO_ = 625,
+     WCSP_ = 626,
+     WCSQ_ = 627,
+     WCSR_ = 628,
+     WCSS_ = 629,
+     WCST_ = 630,
+     WCSU_ = 631,
+     WCSV_ = 632,
+     WCSW_ = 633,
+     WCSX_ = 634,
+     WCSY_ = 635,
+     WCSZ_ = 636,
+     WCS0_ = 637,
+     WFPC2_ = 638,
+     WIDTH_ = 639,
+     WIN32_ = 640,
+     XML_ = 641,
+     XY_ = 642,
+     YES_ = 643,
+     ZERO_ = 644,
+     ZMAX_ = 645,
+     ZSCALE_ = 646,
+     PIXMASK_ = 647,
+     ZOOM_ = 648,
+     FIELDS_ = 649
    };
 #endif
 /* Tokens.  */
@@ -750,80 +751,81 @@
 #define STATS_ 572
 #define STATUS_ 573
 #define STRENGTH_ 574
-#define SUM_ 575
-#define SYNC_ 576
-#define SYSTEM_ 577
-#define TABLE_ 578
-#define TAG_ 579
-#define TEMPLATE_ 580
-#define TEXT_ 581
-#define THREADS_ 582
-#define THREED_ 583
-#define THRESHOLD_ 584
-#define THICK_ 585
-#define TOP_ 586
-#define TRANSPARENCY_ 587
-#define TRIANGLE_ 588
-#define TO_ 589
-#define TOGGLE_ 590
-#define TOPHAT_ 591
-#define TRUE_ 592
-#define TYPE_ 593
-#define UNDO_ 594
-#define UNHIGHLITE_ 595
-#define UNLOAD_ 596
-#define UNSELECT_ 597
-#define UPDATE_ 598
-#define UP_ 599
-#define USER_ 600
-#define VALUE_ 601
-#define VAR_ 602
-#define VIEW_ 603
-#define VECTOR_ 604
-#define VERSION_ 605
-#define VERTEX_ 606
-#define VERTICAL_ 607
-#define WARP_ 608
-#define WCS_ 609
-#define WCSA_ 610
-#define WCSB_ 611
-#define WCSC_ 612
-#define WCSD_ 613
-#define WCSE_ 614
-#define WCSF_ 615
-#define WCSG_ 616
-#define WCSH_ 617
-#define WCSI_ 618
-#define WCSJ_ 619
-#define WCSK_ 620
-#define WCSL_ 621
-#define WCSM_ 622
-#define WCSN_ 623
-#define WCSO_ 624
-#define WCSP_ 625
-#define WCSQ_ 626
-#define WCSR_ 627
-#define WCSS_ 628
-#define WCST_ 629
-#define WCSU_ 630
-#define WCSV_ 631
-#define WCSW_ 632
-#define WCSX_ 633
-#define WCSY_ 634
-#define WCSZ_ 635
-#define WCS0_ 636
-#define WFPC2_ 637
-#define WIDTH_ 638
-#define WIN32_ 639
-#define XML_ 640
-#define XY_ 641
-#define YES_ 642
-#define ZERO_ 643
-#define ZMAX_ 644
-#define ZSCALE_ 645
-#define PIXMASK_ 646
-#define ZOOM_ 647
-#define FIELDS_ 648
+#define STYLE_ 575
+#define SUM_ 576
+#define SYNC_ 577
+#define SYSTEM_ 578
+#define TABLE_ 579
+#define TAG_ 580
+#define TEMPLATE_ 581
+#define TEXT_ 582
+#define THREADS_ 583
+#define THREED_ 584
+#define THRESHOLD_ 585
+#define THICK_ 586
+#define TOP_ 587
+#define TRANSPARENCY_ 588
+#define TRIANGLE_ 589
+#define TO_ 590
+#define TOGGLE_ 591
+#define TOPHAT_ 592
+#define TRUE_ 593
+#define TYPE_ 594
+#define UNDO_ 595
+#define UNHIGHLITE_ 596
+#define UNLOAD_ 597
+#define UNSELECT_ 598
+#define UPDATE_ 599
+#define UP_ 600
+#define USER_ 601
+#define VALUE_ 602
+#define VAR_ 603
+#define VIEW_ 604
+#define VECTOR_ 605
+#define VERSION_ 606
+#define VERTEX_ 607
+#define VERTICAL_ 608
+#define WARP_ 609
+#define WCS_ 610
+#define WCSA_ 611
+#define WCSB_ 612
+#define WCSC_ 613
+#define WCSD_ 614
+#define WCSE_ 615
+#define WCSF_ 616
+#define WCSG_ 617
+#define WCSH_ 618
+#define WCSI_ 619
+#define WCSJ_ 620
+#define WCSK_ 621
+#define WCSL_ 622
+#define WCSM_ 623
+#define WCSN_ 624
+#define WCSO_ 625
+#define WCSP_ 626
+#define WCSQ_ 627
+#define WCSR_ 628
+#define WCSS_ 629
+#define WCST_ 630
+#define WCSU_ 631
+#define WCSV_ 632
+#define WCSW_ 633
+#define WCSX_ 634
+#define WCSY_ 635
+#define WCSZ_ 636
+#define WCS0_ 637
+#define WFPC2_ 638
+#define WIDTH_ 639
+#define WIN32_ 640
+#define XML_ 641
+#define XY_ 642
+#define YES_ 643
+#define ZERO_ 644
+#define ZMAX_ 645
+#define ZSCALE_ 646
+#define PIXMASK_ 647
+#define ZOOM_ 648
+#define FIELDS_ 649
 
 
 
@@ -841,7 +843,7 @@ typedef union YYSTYPE
   int dash[2];
 }
 /* Line 1529 of yacc.c.  */
-#line 845 "frame/parser.H"
+#line 847 "frame/parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

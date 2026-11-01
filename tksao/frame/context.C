@@ -482,6 +482,9 @@ void Context::contourThreadFV(FitsImage* ptr)
   delete [] targ;
   delete [] thread_;
   thread_ =NULL;
+
+  // per level styles, on the main thread
+  fvcontour_.applyStyles();
 }
 
 void Context::contourDeleteFV()

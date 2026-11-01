@@ -385,6 +385,9 @@ proc SAMPRcvdDS9GetReply {msgid msg {fn {}}} {
 	puts stderr "SAMPRcvdDS9GetReply: $msgid $msg $fn"
     }
 
+    # let ds9.get know a reply was sent
+    set samp(get,replied,$msgid) 1
+
     if {$errorInfo != {} || $ds9(msg) != {}} {
 	if {$ds9(msg) != {}} {
 	    switch $ds9(msg,level) {
@@ -811,7 +814,15 @@ proc ds9.get {msgid args} {
     }
 
     InitError samp
+    set samp(get,replied,$msgid) 0
     set fn [CommGet SAMPRcvdDS9GetReply $msgid $cmd [tmpnam {}]]
+
+    # samp may have been shut down by the command
+    if {![info exists samp]} {
+	return
+    }
+    set replied $samp(get,replied,$msgid)
+    unset samp(get,replied,$msgid)
 
     # check for error (in case SAMPRcvdDS9GetReply did not get run)
     global ds9
@@ -823,6 +834,11 @@ proc ds9.get {msgid args} {
 	    SAMPReply $msgid ERROR {} {} [SAMPErrorInfo]
 	}
 	InitError tcl
+    } elseif {!$replied && $msgid != {}} {
+	# some gets have nothing to report (eg no current frame) and
+	# return without answering; xpa replies regardless, so must we,
+	# or a samp.hub.call caller waits for a response forever
+	SAMPReply $msgid OK {} {} {} 1
     }
 }
 

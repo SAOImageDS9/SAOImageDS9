@@ -154,8 +154,10 @@ proc xmlrpcDoRequest {sock} {
 	    return
 	}
 	set res [xmlrpcBuildFault 1 "$mname failed"]
-    } else {
-	set res [xmlrpcBuildResponse $result]
+    } elseif {[catch {xmlrpcBuildResponse $result} res]} {
+	# a malformed result must not escape to bgerror, which would
+	# block ds9 behind a dialog and leave the caller waiting
+	set res [xmlrpcBuildFault 1 "$mname failed"]
     }
     set xmlrpc(sock) {}
 

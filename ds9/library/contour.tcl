@@ -451,7 +451,11 @@ proc ContourStyleGet {frame} {
     return $styles
 }
 
+# all or nothing, on error the frame keeps its previous styles
 proc ContourStyleSet {frame styles} {
+    global icontour
+
+    set old [$frame get contour style]
     $frame contour style clear
     set ii 0
     foreach ss $styles {
@@ -462,7 +466,21 @@ proc ContourStyleSet {frame styles} {
 	    }
 	    if {[catch {$frame contour style $ii $color $width $dash \
 			    $length $gap}]} {
+		$frame contour style clear
+		foreach oo $old {
+		    lassign $oo idx color width dash length gap
+		    if {$color == {}} {
+			set color "{}"
+		    }
+		    $frame contour style $idx $color $width $dash $length $gap
+		}
+		# and the table shows what the frame has
+		if {[winfo exists $icontour(top)]} {
+		    lassign [ContourTableRead] levels
+		    ContourTableWrite $levels [ContourStyleGet $frame]
+		}
 		Error "[msgcat::mc {Invalid contour level style}]: $ss"
+		return
 	    }
 	}
 	incr ii
@@ -1354,19 +1372,20 @@ proc ContourBackupBase {ch which fdir rdir} {
 
 	puts $ch "$which contour create $color $width $dash $method $numlevel $smooth $scale $log $mode $scope $limits \{\"$levels\"\}"
 	puts $ch "$which contour dashlist [lindex $dashlist 0] [lindex $dashlist 1]"
+    }
 
-	# only when used, so older versions can still read the backup
-	set styles [$which get contour style]
-	if {$styles != {}} {
-	    puts $ch "$which contour style clear"
-	    foreach ss $styles {
-		lassign $ss idx color width dash length gap
-		# eval'd on restore, the frame needs a literal {}
-		if {$color == {}} {
-		    set color "{{}}"
-		}
-		puts $ch "$which contour style $idx $color $width $dash $length $gap"
+    # kept by the frame even with contours off
+    # only when used, so older versions can still read the backup
+    set styles [$which get contour style]
+    if {$styles != {}} {
+	puts $ch "$which contour style clear"
+	foreach ss $styles {
+	    lassign $ss idx color width dash length gap
+	    # eval'd on restore, the frame needs a literal {}
+	    if {$color == {}} {
+		set color "{{}}"
 	    }
+	    puts $ch "$which contour style $idx $color $width $dash $length $gap"
 	}
     }
 

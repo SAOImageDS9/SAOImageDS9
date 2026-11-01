@@ -343,6 +343,7 @@ protected:
   int onHandle(const Vector& v);
 
   int getId() {return id;}
+  void setId(int);
   const char* getType() {return type_;}
   Vector getCenter() {return center;}
 
@@ -372,6 +373,9 @@ protected:
   void enableCB() {doCB = 1;}
   void disableCB() {doCB = 0;}
   void deleteCBs();
+  void adoptState(const Marker&);
+  const List<CallBack>& getCallBacks() {return callbacks;}
+  void setCallBacks(const List<CallBack>& cb) {callbacks = cb;}
 
   virtual void analysis(AnalysisTask, int) {}
   virtual void analysisHistogram(char*, char*, int) {}

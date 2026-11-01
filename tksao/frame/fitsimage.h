@@ -5,6 +5,9 @@
 #ifndef __fitsimage_h__
 #define __fitsimage_h__
 
+#include <string>
+#include <vector>
+
 #include "vector.h"
 #include "vector3d.h"
 #include "vectorstr.h"
@@ -12,6 +15,8 @@
 #include "coord.h"
 #include "file.h"
 #include "head.h"
+#include "list.h"
+#include "callback.h"
 
 // WCS ' ','A' to 'Z', WCS0
 #define MULTWCS 27
@@ -56,6 +61,27 @@ class WCSState {
   Coord::SkyFrame wcsSkyFrame_; // current state of ast_
 };
 
+// A region of a HEALPix window that the current window can't place
+// (e.g. more than 90 deg from a TAN centre): kept as its listing, in the
+// map's own sky system, and retried when the window is recentred.
+// A contour level loaded from a file (aux contour) on a HEALPix window,
+// kept as polylines in the map's own sky system: lon, lat pairs [deg].
+// The window's own vertices are rebuilt from this on every recentre, so
+// parts a window can't place aren't lost.
+struct HPXAuxLevel {
+  const void* level;   // the ContourLevel it belongs to
+  std::vector< std::vector<double> > lines;
+};
+
+struct HPXParked {
+  int layer;           // 0 user, 1 catalog, 2 footprint
+  int id;
+  int selected;
+  int highlited;
+  std::string text;
+  List<CallBack> callbacks;   // e.g. a catalog marker's table link
+};
+
 class FitsImage {
   friend class Base;
 
@@ -70,6 +96,10 @@ class FitsImage {
   FitsFile* post_;          // fits post processing
   FitsFile* hist_;          // fits bin
   FitsFile* hpx_;           // healpix
+  FitsData* hpxGlobal_;     // whole-map clip data for a HEALPix window
+  FitsBound hpxGlobalBound_;
+  std::vector<HPXParked> hpxParked_; // regions the window can't place
+  std::vector<HPXAuxLevel> hpxAux_;  // aux contours, in sky coords
 
   // base
   FitsFile* base_;
@@ -155,6 +185,31 @@ class FitsImage {
   void initENVI();
   void initBin();
   void initHPX();
+ public:
+  int hpxRecentre(double lon, double lat);
+  int hpxReshape(double lon, double lat, double pix, int ww, int hh,
+		 const double* centre);
+  void hpxReload();
+  double hpxPixel();
+  double hpxPixelHPX();
+  void hpxMaxSize(double pix, int* ww, int* hh);
+  int hpxIsConic();
+  double hpxLat();
+  double hpxLon();
+  void hpxPlane(double* ww, double* hh);
+  FitsData* hpxGlobalData();
+  int hpxRecentreRef(const Vector& ref);
+  int isHPXWindow();
+  int hpxNativeAtRef(const Vector& ref, double* lon, double* lat);
+  int hpxRefAt(double lon, double lat, Vector* ref);
+  int hpxNeedsRecentre(const Vector& ref);
+  int hpxRecentrePan(double lon, double lat);
+  int hpxSkyFrame(Coord::SkyFrame*);
+  std::vector<HPXParked>& hpxParked() {return hpxParked_;}
+  std::vector<HPXAuxLevel>& hpxAux() {return hpxAux_;}
+  int hpxNativeFromSky(const Vector& vv, Coord::CoordSystem, Coord::SkyFrame,
+		       double* lon, double* lat);
+ protected:
 
   void clearWCS();
   void initWCS(FitsHead*);
@@ -492,24 +547,31 @@ class FitsImage {
   float getValueFloat(long i) {return data_->getValueFloat(i);}
   double getValueDouble(long i) {return data_->getValueDouble(i);}
 
-  void setClip(double l, double h) {data_->setClip(l,h);}
+  // clip statistics: a HEALPix window uses the whole map (hpxGlobal_),
+  // so the scale limits don't change as the window is recentred; its
+  // min/max positions are in HPX coords, so they aren't reported
+  FitsData* clipData() {return hpxGlobal_ ? hpxGlobal_ : data_;}
+  void setClip(double l, double h)
+  {data_->setClip(l,h); if (hpxGlobal_) hpxGlobal_->setClip(l,h);}
 
-  const char* getMin() {return data_ ? data_->getMin() : NULL;}
+  const char* getMin() {return clipData() ? clipData()->getMin() : NULL;}
   const char* getMinX() {return data_ ? data_->getMinX() : NULL;}
   const char* getMinY() {return data_ ? data_->getMinY() : NULL;}
-  const char* getMax() {return data_ ? data_->getMax() : NULL;}
+  const char* getMax() {return clipData() ? clipData()->getMax() : NULL;}
   const char* getMaxX() {return data_ ? data_->getMaxX() : NULL;}
   const char* getMaxY() {return data_ ? data_->getMaxY() : NULL;}
-  const char* getLow() {return data_ ? data_->getLow() : NULL;}
-  const char* getHigh() {return data_ ? data_->getHigh() : NULL;}
+  const char* getLow() {return clipData() ? clipData()->getLow() : NULL;}
+  const char* getHigh() {return clipData() ? clipData()->getHigh() : NULL;}
 
-  double min() {return data_ ? data_->min() : 0;}
-  Vector minXY() {return data_ ? data_->minXY() : Vector();}
-  double max() {return data_ ? data_->max() : 0;}
-  Vector maxXY() {return data_ ? data_->maxXY() : Vector();}
+  double min() {return clipData() ? clipData()->min() : 0;}
+  Vector minXY()
+  {return (data_ && !hpxGlobal_) ? data_->minXY() : Vector();}
+  double max() {return clipData() ? clipData()->max() : 0;}
+  Vector maxXY()
+  {return (data_ && !hpxGlobal_) ? data_->maxXY() : Vector();}
 
-  double low() {return data_ ? data_->low() : 0;}
-  double high() {return data_ ? data_->high() : 0;}
+  double low() {return clipData() ? clipData()->low() : 0;}
+  double high() {return clipData() ? clipData()->high() : 0;}
 
   void updateClip(FrScale* fr, pthread_t* thread, t_clip_arg* targ);
 

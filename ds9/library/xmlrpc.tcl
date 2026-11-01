@@ -11,15 +11,41 @@ set xmlrpc(cnt) 0
 set xmlrpc(parser) true
 set xmlrpc(debug) false
 set xmlrpc(sock) {}
+# ms to wait for a complete incoming request
+set xmlrpc(request,timeout) 15000
+# ms to wait for the response to an outgoing call
+set xmlrpc(call,timeout) 60000
 
 proc xmlrpcServe {port} {
     return [socket -server xmlrpcServeOnce $port]
 }
 
 proc xmlrpcServeOnce {sock addr port} {
+    global xmlrpc
+
     fconfigure $sock -translation {lf lf} -buffersize 4096
     fconfigure $sock -blocking off
+
+    # requests are read incrementally from fileevents, so don't hold the
+    # socket forever if one never completes
+    set xmlrpc(request,$sock) {}
+    set xmlrpc(request,timer,$sock) \
+	[after $xmlrpc(request,timeout) [list xmlrpcDropRequest $sock]]
     fileevent $sock readable [list xmlrpcDoRequest $sock]
+}
+
+proc xmlrpcRequestDone {sock} {
+    global xmlrpc
+
+    catch {after cancel $xmlrpc(request,timer,$sock)}
+    unset -nocomplain xmlrpc(request,timer,$sock)
+    unset -nocomplain xmlrpc(request,$sock)
+    catch {fileevent $sock readable {}}
+}
+
+proc xmlrpcDropRequest {sock} {
+    xmlrpcRequestDone $sock
+    catch {close $sock}
 }
 
 proc xmlrpcPreflightResponse {request} {
@@ -43,19 +69,24 @@ proc xmlrpcPreflightResponse {request} {
 proc xmlrpcDoRequest {sock} {
     global xmlrpc
 
-    set res [xmlrpcReadHeader $sock]
-    if {$res == {}} {
+    if {[catch {xmlrpcReadMessage $sock xmlrpc(request,$sock)} res]} {
 	# ERROR
-	catch {close $sock}
+	xmlrpcDropRequest $sock
 	return
     }
-    
+    if {$res == {}} {
+	# wait for the rest
+	return
+    }
+    xmlrpcRequestDone $sock
+
     set headerStatus [lindex $res 0];	# Header + Status
     set body [lindex $res 1];		# Body, if any
 
     set RE "\[^\n\]+\n(.*)"
     if {![regexp $RE $headerStatus {} header]} {
 	# ERROR
+	catch {close $sock}
 	return
     }
 
@@ -64,13 +95,9 @@ proc xmlrpcDoRequest {sock} {
     if {[regexp $RE $headerStatus {}]} {
 	set header [xmlrpcPreflightResponse $headerStatus]
 
-	puts -nonewline $sock $header
-	flush $sock
-	close $sock
+	xmlrpcWriteResponse $sock $header
 	return
     }
-    
-    set body [xmlrpcGetBody $sock $header $body]
 
     if {$xmlrpc(debug)} {
 	puts "***INCOMING Request***"
@@ -127,14 +154,24 @@ proc xmlrpcDoRequest {sock} {
 	    return
 	}
 	set res [xmlrpcBuildFault 1 "$mname failed"]
-    } else {
-	set res [xmlrpcBuildResponse $result]
+    } elseif {[catch {xmlrpcBuildResponse $result} res]} {
+	# a malformed result must not escape to bgerror, which would
+	# block ds9 behind a dialog and leave the caller waiting
+	set res [xmlrpcBuildFault 1 "$mname failed"]
     }
     set xmlrpc(sock) {}
-    
-    puts -nonewline $sock $res
-    flush $sock
-    close $sock
+
+    xmlrpcWriteResponse $sock $res
+}
+
+# the peer may have hung up without waiting for the response; don't let
+# that error escape to bgerror, which would block ds9 behind a dialog
+proc xmlrpcWriteResponse {sock res} {
+    catch {
+	puts -nonewline $sock $res
+	flush $sock
+    }
+    catch {close $sock}
 }
 
 proc xmlrpcResponse {rpc} {
@@ -179,81 +216,58 @@ proc xmlrpcBuildFault {errcode errmsg} {
     return [xmlrpcResponse $rpc]
 }
 
-proc xmlrpcReadHeader {sock} {
-    set buffer {}
-    while {1} {
-	if {[catch {set buff [xmlrpcNBRead $sock]}]} {
-	    return {}
-	}
-	append buffer $buff
-	# a bare "\n\n" can legitimately occur inside the body itself (eg
-	# the blank line our own pretty-printer emits for a params-less
-	# methodCall), so we can't just prefer it over "\r\n\r\n" -- use
-	# whichever separator actually occurs earliest in the buffer
-	set nindex [string first "\n\n" $buffer]
-	set bindex [string first "\r\n\r\n" $buffer]
-	if {$bindex > 0 && ($nindex <= 0 || $bindex < $nindex)} {
-	    break
-	}
-	if {$nindex > 0} {
-	    break
-	}
-    }
+# Read whatever is available on the (non-blocking) sock and append it to
+# the buffer named by varname. Returns {header body} once the headers and
+# Content-Length worth of body have arrived, {} if more is needed, and
+# errors if the peer closed early. Called from fileevents, never loops
+# waiting for data: busy-waiting here starves the event loop, which can be
+# the very thing that has to write the rest of the message (eg when ds9
+# talks to its own hub and the request overflows the socket buffer).
+proc xmlrpcReadMessage {sock varname} {
+    upvar #0 $varname buffer
+
+    append buffer [read $sock]
+
+    # a bare "\n\n" can legitimately occur inside the body itself (eg
+    # the blank line our own pretty-printer emits for a params-less
+    # methodCall), so we can't just prefer it over "\r\n\r\n" -- use
+    # whichever separator actually occurs earliest in the buffer
+    set nindex [string first "\n\n" $buffer]
+    set bindex [string first "\r\n\r\n" $buffer]
     if {$bindex > 0 && ($nindex <= 0 || $bindex < $nindex)} {
 	set header [string range $buffer 0 [expr $bindex - 1]]
 	set body [string range $buffer [expr $bindex + 4] end]
     } elseif {$nindex > 0} {
 	set header [string range $buffer 0 [expr $nindex - 1]]
 	set body [string range $buffer [expr $nindex + 2] end]
-    }
-    return [list $header $body]
-}
-
-proc xmlrpcReadBody {body expLen sock} {
-    set newbody $body
-    while {1} {
-	if {[catch {set buff [xmlrpcNBRead $sock]}]} {
-	    return [xmlrpcError "Premature eof"]
+    } else {
+	if {[eof $sock]} {
+	    error "Premature eof"
 	}
-	append newbody $buff
-	set bodLen [string length $newbody]
-	if {$bodLen == $expLen} {
-	    break
-	} elseif {$bodLen > $expLen} {
-	    return [xmlrpcError "Content-length:$expLen does not match Body Length:$bodLen"]
+	return
+    }
+
+    # no Content-Length (eg a CORS preflight) means no body
+    set expLen 0
+    set RE "\[^\n\]+\n(.*)"
+    if {[regexp $RE $header {} headers]} {
+	set res [xmlrpcParseHTTPHeaders $headers]
+	set expLenl [xmlrpcAssoc "Content-Length" [lindex $res 1]]
+	if {$expLenl != {}} {
+	    set expLen [lindex $expLenl 1]
 	}
     }
-    return $newbody
-}
-
-proc xmlrpcGetBody {sock header body} {
-    set res [xmlrpcParseHTTPHeaders $header]
-    set headersl [lindex $res 1];		# A-list of headers
-
-    set expLenl [xmlrpcAssoc "Content-Length" $headersl]
-    if {$expLenl == {}} {
-	return {}
+    if {![string is integer -strict $expLen]} {
+	error "Bad Content-Length: $expLen"
     }
-    set expLen [lindex $expLenl 1]
-    set body [xmlrpcReadBody $body $expLen $sock]
-    return $body
-}
 
-proc xmlrpcNBRead {fd} {
-    fileevent $fd readable ""
-    set buffer ""
-    while {1} {
-	if {[eof $fd]} {
-	    close $fd
-	    break
+    if {[string length $body] < $expLen} {
+	if {[eof $sock]} {
+	    error "Premature eof"
 	}
-	set temp [read $fd 4096]
-	if {$temp == ""} {
-	    break
-	}
-	append buffer $temp
+	return
     }
-    return $buffer
+    return [list $header [string range $body 0 [expr $expLen - 1]]]
 }
 
 # CALL
@@ -266,41 +280,55 @@ proc xmlrpcCall {url method methodName params} {
 
     set RE {http://([^:]+):([0-9]+)}
     if {![regexp $RE $url {} host port]} {
-	# ERROR
-	return
+	error "xmlrpcCall: bad url $url"
     }
 
     set sock [socket $host $port]
 
     set xmlrpc(done,$cnt) 0
     set xmlrpc(result,$cnt) {}
+    set xmlrpc(buffer,$cnt) {}
 
     fconfigure $sock -translation {lf lf} -buffersize 4096
     fconfigure $sock -blocking off
-    if {[catch {set request [xmlrpcBuildRequest $method $methodName $params]}]} {
-	# ERROR
-	return
+    if {[catch {
+	puts $sock [xmlrpcBuildRequest $method $methodName $params]
+	flush $sock
+    }]} {
+	set xmlrpc(done,$cnt) -1
+    } else {
+	fileevent $sock readable [list xmlrpcGetResponse $sock $cnt]
+	# don't wait forever on a peer that accepted but never answers
+	set timer [after $xmlrpc(call,timeout) \
+		       [list xmlrpcCallTimeout $sock $cnt]]
+	vwait xmlrpc(done,$cnt)
+	after cancel $timer
     }
-    puts $sock $request
-    flush $sock
-
-    fileevent $sock readable [list xmlrpcGetResponse $sock $cnt]
-    vwait xmlrpc(done,$cnt)
 
     set ss $xmlrpc(done,$cnt)
     set rr $xmlrpc(result,$cnt)
 
     unset xmlrpc(done,$cnt)
     unset xmlrpc(result,$cnt)
+    unset xmlrpc(buffer,$cnt)
 
-#   close $sock
+    # callers catch this; returning {} would look like success
+    if {$ss <= 0} {
+	catch {close $sock}
+	error "xmlrpcCall: $methodName failed"
+    }
+    return $rr
+}
 
-    if {$ss > 0} {
-	return $rr
-    } else {
-	# ERROR
+proc xmlrpcCallTimeout {sock cnt} {
+    global xmlrpc
+
+    if {![info exists xmlrpc(done,$cnt)] || $xmlrpc(done,$cnt) != 0} {
 	return
     }
+    catch {fileevent $sock readable {}}
+    catch {close $sock}
+    set xmlrpc(done,$cnt) -1
 }
 
 proc xmlrpcBuildRequest {method mname params} {
@@ -378,13 +406,25 @@ proc xmlrpcParseHTTPHeaders {str} {
 proc xmlrpcGetResponse {sock cnt} {
     global xmlrpc
 
-    set res [xmlrpcReadHeader $sock]
+    if {[catch {xmlrpcReadMessage $sock xmlrpc(buffer,$cnt)} res]} {
+	# ERROR
+	catch {close $sock}
+	set xmlrpc(done,$cnt) -1
+	return
+    }
+    if {$res == {}} {
+	# wait for the rest
+	return
+    }
+    catch {close $sock}
+
     set headerStatus [lindex $res 0];	# Header + Status
     set body [lindex $res 1];		# Body, if any
 
-    set header [xmlrpcParseHTTPCode $headerStatus]
-    set body [xmlrpcGetBody $sock $header $body]
-    set xmlrpc(result,$cnt) [xmlrpcParseResponse $body]
+    # non-200 status
+    if {[xmlrpcParseHTTPCode $headerStatus] != {}} {
+	set xmlrpc(result,$cnt) [xmlrpcParseResponse $body]
+    }
     set xmlrpc(done,$cnt) 1
 }
 

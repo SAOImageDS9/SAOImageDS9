@@ -51,16 +51,13 @@ endif
 
 .PHONY	: saods9 tcl tk tkmacosx
 
-# funtools links its utilities against $(libdir)/libz.a, which is
-# installed by tkimg (tkimg/zlib), so it must come after tkimg
 saods9	: dirs tcl tk \
 	openssl \
-	xpa ast \
+	xpa funtools ast \
 	vector fitsy \
 	tclsignal \
 	tls tclxml tclxmlrpc \
 	tkblt tclfitsy tktable tkimg \
-	funtools \
 	tkmpeg tkagif tkhtml1 tkcon \
 	tkmacosx \
 	tksao ds9

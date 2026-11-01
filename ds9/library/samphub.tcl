@@ -550,6 +550,25 @@ proc SAMPHubReturn {msg} {
     return [list params [list [list param [list value [list string $msg]]]]]
 }
 
+# copy client cc's web flag, url and id into the caller's variables;
+# false if cc is no longer registered
+proc SAMPHubClientInfo {cc webVar urlVar idVar} {
+    global samphub
+    upvar $webVar web
+    upvar $urlVar url
+    upvar $idVar id
+
+    if {![info exists samphub($cc,web)] ||
+	![info exists samphub($cc,url)] ||
+	![info exists samphub($cc,id)]} {
+	return false
+    }
+    set web $samphub($cc,web)
+    set url $samphub($cc,url)
+    set id $samphub($cc,id)
+    return true
+}
+
 proc SAMPHubNotify {secret cc mtype param} {
     # runs in top level
     global samphub
@@ -559,20 +578,27 @@ proc SAMPHubNotify {secret cc mtype param} {
 	return
     }
 
+    # the destination can unregister while this idle callback is
+    # pending, or during the nested event loop in SAMPHubSend, so look
+    # it up once, now
+    if {![SAMPHubClientInfo $cc web url cid]} {
+	return
+    }
+
     set param1 [list param [list value [list string $cc]]]
     set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
     set param3 $param
     set params [list params [list $param1 $param2 $param3]]
 
-    if {$samphub($cc,web)} {
+    if {$web} {
 	if {$samphub(web,allowReverseCallbacks)} {
 	    lappend samphub(web,msgs) \
 		[list samp.client.receiveNotification $params]
 	}
     } else {
 	set rr {}
-	SAMPHubSend samp.client.receiveNotification $samphub($cc,url) $params rr
-	SAMPHubDialogSentMsg "$mtype\t$samphub($cc,id)"
+	SAMPHubSend samp.client.receiveNotification $url $params rr
+	SAMPHubDialogSentMsg "$mtype\t$cid"
     }
 }
 
@@ -585,21 +611,28 @@ proc SAMPHubCall {secret cc msgid mtype param} {
 	return
     }
 
+    # the destination can unregister while this idle callback is
+    # pending, or during the nested event loop in SAMPHubSend, so look
+    # it up once, now
+    if {![SAMPHubClientInfo $cc web url cid]} {
+	return
+    }
+
     set param1 [list param [list value [list string $cc]]]
     set param2 [list param [list value [list string $samphub($samphub(secret),id)]]]
     set param3 [list param [list value [list string $msgid]]]
     set param4 $param
     set params [list params [list $param1 $param2 $param3 $param4]]
 
-    if {$samphub($cc,web)} {
+    if {$web} {
 	if {$samphub(web,allowReverseCallbacks)} {
 	    lappend samphub(web,msgs) \
 		[list samp.client.receiveCall $params]
 	}
     } else {
 	set rr {}
-	SAMPHubSend samp.client.receiveCall $samphub($cc,url) $params rr
-	SAMPHubDialogSentMsg "samp.client.receiveCall\t$samphub($cc,id)"
+	SAMPHubSend samp.client.receiveCall $url $params rr
+	SAMPHubDialogSentMsg "samp.client.receiveCall\t$cid"
     }
 }
 
@@ -612,21 +645,28 @@ proc SAMPHubReply {cc id msgtag param} {
 	return
     }
 
+    # the destination can unregister while this idle callback is
+    # pending, or during the nested event loop in SAMPHubSend, so look
+    # it up once, now
+    if {![SAMPHubClientInfo $cc web url cid]} {
+	return
+    }
+
     set param1 [list param [list value [list string $cc]]]
     set param2 [list param [list value [list string $id]]]
     set param3 [list param [list value [list string $msgtag]]]
     set param4 $param
     set params [list params [list $param1 $param2 $param3 $param4]]
 
-    if {$samphub($cc,web)} {
+    if {$web} {
 	if {$samphub(web,allowReverseCallbacks)} {
 	    lappend samphub(web,msgs) \
 		[list samp.client.receiveResponse $params]
 	}
     } else {
 	set rr {}
-	SAMPHubSend samp.client.receiveResponse $samphub($cc,url) $params rr $msgtag
-	SAMPHubDialogSentMsg "samp.client.receiveResponse\t$samphub($cc,id)"
+	SAMPHubSend samp.client.receiveResponse $url $params rr $msgtag
+	SAMPHubDialogSentMsg "samp.client.receiveResponse\t$cid"
     }
 }
 

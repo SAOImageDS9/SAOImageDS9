@@ -96,7 +96,8 @@ void FitsImage::initHPX()
       hpx_ = new FitsHPXReproj(hpx, upper, fits_->pHPXLon0(),
 			       fits_->pHPXLat0(), fits_->pHPXFov(),
 			       context_->parent_->getWidth(),
-			       context_->parent_->getHeight());
+			       context_->parent_->getHeight(),
+			       context_->parent_->nthreads_);
     else
       delete hpx;
     delete [] upper;

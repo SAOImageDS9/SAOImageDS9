@@ -13,6 +13,8 @@
 #define GOTOFILT(x) {yyclearin; ffFilter(x);}
 #define GOTOARR(x) {yyclearin; ffArray(x);}
 
+#include <stdlib.h>
+
 #include "file.h"
 #include "hpx.h"
 
@@ -31,12 +33,14 @@ extern void ffArray(int);
 
 %union {
   float real;
+  double dbl;
   int integer;
   char str[2048];
   void* ptr;
 }
 
 %type <integer> endian
+%type <dbl> hpxReal
 
 %token <integer> INT
 %token <str> STRING
@@ -55,14 +59,18 @@ extern void ffArray(int);
 %token ECLIPTIC_
 %token ENDIAN_
 %token EQUATORIAL_
+%token FOV_
 %token GALACTIC_
 %token KEY_
 %token LAYOUT_
 %token LITTLE_
 %token LITTLEENDIAN_
+%token LAT0_
+%token LON0_
 %token NESTED_
 %token NORTH_
 %token ORDER_
+%token PROJ_
 %token QUAD_
 %token RING_
 %token SKIP_
@@ -98,7 +106,7 @@ command	: filename
 	| filename hpxs
 	| filename hpxs sect
 	| filename sect hpxs
-	| filename '[' extb hpxs ']'
+	| filename '[' extb hpxsb ']'
 
         | filename arrs
         | filename arrs sect
@@ -272,6 +280,21 @@ hpx	: SYSTEM_ '=' hpxSystem
 	| LAYOUT_ '=' hpxLayout
 	| COL_ '=' INT {ff->setpHPXColumn($3);}
 	| QUAD_ '=' INT {ff->setpHPXQuad($3);}
+	| PROJ_ '=' STRING {ff->setpHPXProj($3);}
+	| LON0_ '=' hpxReal {ff->setpHPXLon0($3);}
+	| LAT0_ '=' hpxReal {ff->setpHPXLat0($3);}
+	| FOV_ '=' hpxReal {ff->setpHPXFov($3);}
+	;
+
+// reals lex as STRING (e.g. -60.5)
+hpxReal	: INT {$$ = $1;}
+	| STRING
+	{
+	  char* end;
+	  $$ = strtod($1, &end);
+	  if (end == $1 || *end)
+	    YYERROR;
+	}
 	;
 
 hpxSystem : EQUATORIAL_ {ff->setpHPXSystem(FitsHPX::EQU);}

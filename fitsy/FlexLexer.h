@@ -61,12 +61,12 @@ public:
   virtual ~FlexLexer()        { }
 
   const char* YYText() const  { return yytext; }
-  int YYLeng()        const   { return yyleng; }
+  size_t YYLeng()        const   { return yyleng; }
 
   virtual void
   yy_switch_to_buffer( yy_buffer_state* new_buffer ) = 0;
-  virtual yy_buffer_state* yy_create_buffer( std::istream* s, int size ) = 0;
-  virtual yy_buffer_state* yy_create_buffer( std::istream& s, int size ) = 0;
+  virtual yy_buffer_state* yy_create_buffer( std::istream* s, size_t size ) = 0;
+  virtual yy_buffer_state* yy_create_buffer( std::istream& s, size_t size ) = 0;
   virtual void yy_delete_buffer( yy_buffer_state* b ) = 0;
   virtual void yyrestart( std::istream* s ) = 0;
   virtual void yyrestart( std::istream& s ) = 0;
@@ -100,7 +100,7 @@ public:
 
 protected:
   char* yytext;
-  int yyleng;
+  size_t yyleng;
   int yylineno;       // only maintained if you use %option yylineno
   int yy_flex_debug;  // only has effect with -d or "%option debug"
 };
@@ -130,8 +130,8 @@ public:
   virtual ~yyFlexLexer();
 
   void yy_switch_to_buffer( yy_buffer_state* new_buffer );
-  yy_buffer_state* yy_create_buffer( std::istream* s, int size );
-  yy_buffer_state* yy_create_buffer( std::istream& s, int size );
+  yy_buffer_state* yy_create_buffer( std::istream* s, size_t size );
+  yy_buffer_state* yy_create_buffer( std::istream& s, size_t size );
   void yy_delete_buffer( yy_buffer_state* b );
   void yyrestart( std::istream* s );
   void yyrestart( std::istream& s );
@@ -147,7 +147,7 @@ public:
   void begin(int,int);
 
 protected:
-  virtual size_t LexerInput( char* buf, size_t max_size );
+  virtual ssize_t LexerInput( char* buf, size_t max_size );
   virtual void LexerOutput( const char* buf, size_t size );
   virtual void LexerError( const char* msg );
 
@@ -177,7 +177,7 @@ protected:
   char yy_hold_char;
 
   // Number of characters read into yy_ch_buf.
-  int yy_n_chars;
+  size_t yy_n_chars;
 
   // Points to current character in buffer.
   char* yy_c_buf_p;
@@ -212,9 +212,9 @@ protected:
   int yy_looking_for_trail_begin;
 
   int yy_more_flag;
-  int yy_more_len;
-  int yy_more_offset;
-  int yy_prev_more_offset;
+  size_t yy_more_len;
+  size_t yy_more_offset;
+  size_t yy_prev_more_offset;
 };
 
 }

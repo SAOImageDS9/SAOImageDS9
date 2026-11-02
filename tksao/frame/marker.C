@@ -687,6 +687,27 @@ void Marker::deleteCBs()
   callbacks.deleteAll();
 }
 
+// After this marker has been re-created from another one's listing (a
+// HEALPix window rebuilt around a new centre), take over the identity
+// and session state that a listing doesn't carry.
+void Marker::adoptState(const Marker& a)
+{
+  id = a.id;
+  selected = a.selected;
+  highlited = a.highlited;
+  callbacks = a.callbacks;
+  analysisPlot2d_ = a.analysisPlot2d_;
+  analysisPlot3d_ = a.analysisPlot3d_;
+  analysisPanda_ = a.analysisPanda_;
+  analysisRadial_ = a.analysisRadial_;
+  analysisStats_ = a.analysisStats_;
+}
+
+void Marker::setId(int ii)
+{
+  id = ii;
+}
+
 void Marker::newIdentity()
 {
   id = markerSeqID++;

@@ -3181,6 +3181,223 @@ void Base::updateFitsCmd()
   regionStatsImageInvalidated();
 }
 
+// Recentre a resampled HEALPix window (zenithal/conic) on the current
+// pan position, or on (lon, lat) [deg, the map's own sky system].
+void Base::updateFitsCenterCmd()
+{
+  const char* err = hpxRecentre(HPXPAN, 0, 0);
+  if (err) {
+    Tcl_AppendResult(interp, err, NULL);
+    result = TCL_ERROR;
+  }
+}
+
+void Base::updateFitsCenterCmd(const Vector& vv)
+{
+  const char* err = hpxRecentre(HPXCENTER, vv[0], vv[1]);
+  if (err) {
+    Tcl_AppendResult(interp, err, NULL);
+    result = TCL_ERROR;
+  }
+}
+
+// Rebuild a HEALPix window, mode:
+//   HPXPAN     around the current pan position
+//   HPXCENTER  centred on (lon, lat) (for a conic, lat is its new
+//              reference latitude), then pan there
+//   HPXPANTO   for a pan to (lon, lat): centred there (a conic keeps its
+//              reference latitude), then pan there
+//   HPXFIT     for zoom to fit: the whole projection plane (fov), at the
+//              pixel size that fits it in the frame (lon = the fit factor)
+// (lon, lat) are in the map's own sky system [deg]. Like a slice change,
+// the data under the frame changes: the load steps rerun (WCS, clip),
+// contours are regenerated, and the pan and crosshair go back to the same
+// sky positions in the new image. Regions are not remapped yet.
+// Returns NULL, or an error message.
+const char* Base::hpxRecentre(HPXMode mode, double lon, double lat)
+{
+  FitsImage* ptr = currentContext->fits;
+  if (!ptr || !ptr->isHPXWindow())
+    return " not a HEALPix zenithal/conic window";
+
+  // sky positions to restore afterwards
+  double plon, plat, clon, clat;
+  int pan = ptr->hpxNativeAtRef(cursor, &plon, &plat);
+  int cross = ptr->hpxNativeAtRef(crosshair, &clon, &clat);
+
+  // regions, listed while the old WCS is still in place (not for
+  // XLON/XLAT maps, which have no sky system to go through)
+  Coord::SkyFrame msky;
+  int remap = ptr->hpxSkyFrame(&msky);
+  std::vector<std::string> mtext[3];
+  int mcount[3] = {0,0,0};
+  if (remap)
+    hpxListMarkers(msky, mtext, mcount);
+  currentContext->hpxSaveAuxContours(ptr);
+
+  // Automatic rebuilds (pan, pan to) also fit the window to the display:
+  // pixels as fine as one screen pixel at the current zoom (never finer
+  // than HEALPix's) and twice the visible area. A zenithal window is
+  // centred on the target; a conic keeps its reference latitude and
+  // slides its window across the projection to the target.
+  double opix = ptr->hpxPixel();
+  double npix = opix;
+  int ok =0;
+  switch (mode) {
+  case HPXCENTER:
+    ok = ptr->hpxRecentre(lon, lat);
+    break;
+  case HPXFIT:
+    {
+      double pw, ph;
+      ptr->hpxPlane(&pw, &ph);
+      double ss = lon > 0 ? lon : 1;
+      double fx = pw/options->width;
+      double fy = ph/options->height;
+      npix = (fx > fy ? fx : fy)/ss;
+      if (npix < ptr->hpxPixelHPX())
+	npix = ptr->hpxPixelHPX();
+      int ww = (int)ceil(pw/npix) + 2;
+      int hh = (int)ceil(ph/npix) + 2;
+      ok = ptr->hpxReshape(ptr->hpxLon(), ptr->hpxLat(), npix, ww, hh, NULL);
+      npix = ptr->hpxPixel();
+      // zoom to fit sets the zoom and pan itself
+      opix = npix;
+      pan = 0;
+    }
+    break;
+  case HPXPAN:
+    if (!pan)
+      break;
+    lon = plon;
+    lat = plat;
+    // fall through
+  case HPXPANTO:
+    {
+      int ww, hh;
+      hpxWindowGeometry(ptr, &npix, &ww, &hh);
+      double cc[2] = {lon, lat};
+      if (ptr->hpxIsConic())
+	ok = ptr->hpxReshape(lon, ptr->hpxLat(), npix, ww, hh, cc);
+      else
+	ok = ptr->hpxReshape(lon, lat, npix, ww, hh, NULL);
+      npix = ptr->hpxPixel();
+    }
+    break;
+  }
+  if (!ok)
+    return " unable to recentre";
+
+  currentContext->hpxFinish();
+  currentContext->contourUpdateFV();
+
+  // keep the on-screen scale when the pixel size changed
+  if (opix > 0 && npix != opix) {
+    zoom_[0] *= npix/opix;
+    zoom_[1] *= npix/opix;
+  }
+
+  // pan: an explicit centre is panned to; otherwise keep the same sky
+  // position
+  Vector rr;
+  if (mode == HPXCENTER || mode == HPXPANTO) {
+    if (ptr->hpxRefAt(lon, lat, &rr))
+      cursor = rr;
+  }
+  else if (pan && ptr->hpxRefAt(plon, plat, &rr))
+    cursor = rr;
+  if (cross && ptr->hpxRefAt(clon, clat, &rr))
+    crosshair = rr;
+
+  if (remap)
+    hpxRestoreMarkers(ptr, msky, mtext, mcount);
+  currentContext->hpxRestoreAuxContours(ptr);
+
+  // not FrameBase::updateBin(), which would reset the pan to the centre
+  Base::updateBin(Matrix());
+  return NULL;
+}
+
+// The window geometry wanted for the current display: pixel size [deg]
+// one screen pixel at the current zoom (never finer than HEALPix's), and
+// twice the visible area in pixels (the 2x padding lets short pans show
+// data without a rebuild). FitsHPXReproj::reshape clamps it.
+void Base::hpxWindowGeometry(FitsImage* ptr, double* pix, int* ww, int* hh)
+{
+  double pp = ptr->hpxPixel();
+  double ph = ptr->hpxPixelHPX();
+  double zz = fabs(zoom_[0]) > fabs(zoom_[1]) ? fabs(zoom_[0]) : fabs(zoom_[1]);
+  if (zz <= 0)
+    zz = 1;
+  double screen = pp/zz;           // [deg] per screen pixel now
+  *pix = screen > ph ? screen : ph;
+  *ww = (int)ceil(2*options->width*screen / *pix);
+  *hh = (int)ceil(2*options->height*screen / *pix);
+
+  // no bigger than the projection allows
+  int mw = *ww, mh = *hh;
+  ptr->hpxMaxSize(*pix, &mw, &mh);
+  if (*ww > mw)
+    *ww = mw;
+  if (*hh > mh)
+    *hh = mh;
+}
+
+// After a pan or zoom has been applied (never during a drag), rebuild a
+// HEALPix window when the display wants a different window: the pixel
+// size wanted at this zoom differs by more than 1.5x (zoomed in or out),
+// the visible area no longer fits (zoomed out, frame resized) and the
+// window could be bigger, or the pan point has moved more than 1/4 of the
+// window from its centre.
+void Base::hpxAutoRefresh()
+{
+  FitsImage* ptr = currentContext->fits;
+  if (!ptr || !ptr->isHPXWindow())
+    return;
+
+  double pix;
+  int ww, hh;
+  hpxWindowGeometry(ptr, &pix, &ww, &hh);
+  double pp = ptr->hpxPixel();
+  double zz = fabs(zoom_[0]) > fabs(zoom_[1]) ? fabs(zoom_[0]) : fabs(zoom_[1]);
+
+  int need = 0;
+  if (pix > 1.5*pp || pix < pp/1.5)
+    need = 1;
+  else {
+    // coverage: how much of the window is visible, in window pixels
+    double vw = zz > 0 ? options->width/zz : ptr->width();
+    double vh = zz > 0 ? options->height/zz : ptr->height();
+    if ((vw > .9*ptr->width() && ww > ptr->width()+2) ||
+	(vh > .9*ptr->height() && hh > ptr->height()+2))
+      need = 1;
+  }
+  if (!need && ptr->hpxNeedsRecentre(cursor))
+    need = 1;
+
+  if (need)
+    hpxRecentre(HPXPAN, 0, 0);
+}
+
+// A pan to a sky position on a HEALPix window. Convert the target to the
+// map's own system directly (not through the window's WCS, which can't
+// place points outside the window) and, if it is outside the window or
+// far from its centre, rebuild the window there. Returns 1 if handled.
+int Base::hpxPanTo(const Vector& vv, Coord::CoordSystem sys,
+		   Coord::SkyFrame sky)
+{
+  FitsImage* ptr = currentContext->fits;
+  double lon, lat;
+  if (!ptr || !ptr->hpxNativeFromSky(vv, sys, sky, &lon, &lat))
+    return 0;
+
+  Vector rr;
+  if (ptr->hpxRefAt(lon, lat, &rr) && !ptr->hpxNeedsRecentre(rr))
+    return 0;
+
+  return hpxRecentre(HPXPANTO, lon, lat) ? 0 : 1;
+}
+
 void Base::updateFitsCmd(int which, BBox bb)
 {
   int reload = 0;
@@ -3451,12 +3668,14 @@ void Base::zoomCmd(const Vector& z)
   zoom_[0] *= az[0];
   zoom_[1] *= az[1];
   update(MATRIX);
+  hpxAutoRefresh();
 }
 
 void Base::zoomToCmd(const Vector& z)
 {
   zoom_ = ((Vector&)z).abs();
   update(MATRIX);
+  hpxAutoRefresh();
 }
 
 // FrameRGB

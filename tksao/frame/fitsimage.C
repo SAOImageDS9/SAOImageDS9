@@ -51,6 +51,7 @@ FitsImage::FitsImage(Context* cx, Tcl_Interp* pp)
   post_ =NULL;
   hist_ =NULL;
   hpx_ =NULL;
+  hpxGlobal_ =NULL;
   base_ =NULL;
   basedata_ =NULL;
 
@@ -139,6 +140,8 @@ FitsImage::~FitsImage()
   if (hist_)
     delete hist_;
 
+  if (hpxGlobal_)
+    delete hpxGlobal_;
   if (hpx_)
     delete hpx_;
 
@@ -2106,6 +2109,9 @@ void FitsImage::reset()
   if (post_)
     delete post_;
   post_ =NULL;
+  if (hpxGlobal_)
+    delete hpxGlobal_;
+  hpxGlobal_ =NULL;
   if (hpx_)
     delete hpx_;
   hpx_ =NULL;
@@ -2334,9 +2340,11 @@ void* clipproc(void* tt)
 
 void FitsImage::updateClip(FrScale* fr, pthread_t* thread, t_clip_arg* targ)
 {
-  targ->data = data_;
+  // a HEALPix window clips on the whole map, see clipData()
+  FitsData* gg = hpxGlobalData();
+  targ->data = gg ? gg : data_;
   targ->fr = fr;
-  targ->bb = getDataParams(fr->secMode());
+  targ->bb = gg ? &hpxGlobalBound_ : getDataParams(fr->secMode());
   int result = pthread_create(thread, NULL, clipproc, targ);
   if (result)
     internalError("Unable to Create Thread");
@@ -2903,8 +2911,10 @@ Vector FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   setWCSSysSkyFrame(sys,sky);
 
   Vector out = wcsTran(context_, ast_, in, 1);
-  if (!astOK || !checkWCS(out))
+  if (!astOK || !checkWCS(out)) {
+    astEnd;
     return Vector();
+  }
 
   astNorm(ast_, out.v);
   astEnd;
@@ -2924,8 +2934,10 @@ VectorStr FitsImage::pix2wcs(const Vector& in, Coord::CoordSystem sys,
   setWCSSysSkyFrame(sys,sky);
   
   Vector out = wcsTran(context_, ast_, in, 1);
-  if (!astOK || !checkWCS(out))
+  if (!astOK || !checkWCS(out)) {
+    astEnd;
     return VectorStr();
+  }
 
   setWCSFormat(sys,sky,format);
   astNorm(ast_, out.v);
@@ -2960,8 +2972,10 @@ Vector3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   setWCSSysSkyFrame(sys,sky);
 
   Vector3d out = wcsTran(context_, ast_, in, 1);
-  if (!astOK || !checkWCS(out))
+  if (!astOK || !checkWCS(out)) {
+    astEnd;
     return Vector3d();
+  }
   astNorm(ast_, out.v);
   astEnd;
   
@@ -2980,8 +2994,10 @@ VectorStr3d FitsImage::pix2wcs(const Vector3d& in, Coord::CoordSystem sys,
   setWCSSysSkyFrame(sys,sky);
   
   Vector3d out = wcsTran(context_, ast_, in, 1);
-  if (!astOK || !checkWCS(out))
+  if (!astOK || !checkWCS(out)) {
+    astEnd;
     return VectorStr3d();
+  }
 
   setWCSFormat(sys,sky,format);
   astNorm(ast_, out.v);

@@ -670,7 +670,12 @@ proc PDF {fn} {
 		$ff pdf $pdf
 		$pdf grestore
 	    } else {
+		# the frame's vector layers set line dash, width and color
+		# but nothing restores them, so contain them here or they
+		# leak into what follows, e.g. a dashed colorbar outline.
+		$pdf gsave
 		$ff pdf $pdf
+		$pdf grestore
 	    }
 
 	    set cb ${ff}cb

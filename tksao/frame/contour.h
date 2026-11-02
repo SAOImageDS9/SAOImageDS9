@@ -5,6 +5,8 @@
 #ifndef __contour_h__
 #define __contour_h__
 
+#include <vector>
+
 #include "psutil.h"
 #include "vector.h"
 #include "vector3d.h"
@@ -80,6 +82,8 @@ class Contour {
 
   Contour* previous_;
   Contour* next_;
+
+  void renderLines(Pixmap, std::vector<XPoint>&, int, char*);
 
  public:
   Contour(ContourLevel*);

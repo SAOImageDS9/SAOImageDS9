@@ -173,32 +173,68 @@ void Contour::render(Pixmap pmap, Coord::InternalSystem sys, const BBox& bbox)
     XSetForeground(base_->display, parent_->gc_, parent_->color_);
     int ww = parent_->lineWidth_>=1 ? parent_->lineWidth_ : 1;
 
-    if (!parent_->dash_)
-      XSetLineAttributes(base_->display, parent_->gc_, 
+    char dl[2];
+    dl[0] = parent_->dlist_[0];
+    dl[1] = parent_->dlist_[1];
+    int period = dl[0]+dl[1];
+    int dash = parent_->dash_ && period>0;
+
+    if (!dash)
+      XSetLineAttributes(base_->display, parent_->gc_,
 			 ww, LineSolid, CapButt, JoinMiter);
-    else {
-      char dl[2];
-      dl[0] = parent_->dlist_[0];
-      dl[1] = parent_->dlist_[1];
-
-      XSetDashes(base_->display, parent_->gc_, 0, dl, 2);
-      XSetLineAttributes(base_->display, parent_->gc_, 
+    else
+      XSetLineAttributes(base_->display, parent_->gc_,
 			 ww, LineOnOffDash, CapButt, JoinMiter);
-    }
 
-    Vector u1 = lvertex_.current()->vector;
+    // draw runs of visible segments as polylines, so the dash pattern
+    // flows along the contour as it does for regions, rather than
+    // restarting on every (often sub-dash length) segment. track the
+    // distance travelled so the dash phase also carries across runs.
+    std::vector<XPoint> pts;
+    double travel = 0;
+    double start = 0;
+
+    Vector v1 = base_->mapFromRef(lvertex_.current()->vector,sys);
     while (lvertex_.next()) {
-      Vector u2 = lvertex_.current()->vector;
+      Vector v2 = base_->mapFromRef(lvertex_.current()->vector,sys);
+      double len = (v2-v1).length();
 
-      Vector v1 = base_->mapFromRef(u1,sys);
-      Vector v2 = base_->mapFromRef(u2,sys);
-      if (bbox.isIn(v1) || bbox.isIn(v2))
-	XDrawLine(base_->display, pmap, parent_->gc_, 
-		  (int)v1[0], (int)v1[1], (int)v2[0], (int)v2[1]);
+      if (bbox.isIn(v1) || bbox.isIn(v2)) {
+	if (pts.empty()) {
+	  start = travel;
+	  XPoint pp = {(short)v1[0], (short)v1[1]};
+	  pts.push_back(pp);
+	}
+	XPoint pp = {(short)v2[0], (short)v2[1]};
+	pts.push_back(pp);
+	// keep the request size bounded
+	if (pts.size()>=1024) {
+	  renderLines(pmap, pts, dash ? (int)fmod(start,period) : -1, dl);
+	  pts.clear();
+	}
+      }
+      else if (!pts.empty()) {
+	renderLines(pmap, pts, dash ? (int)fmod(start,period) : -1, dl);
+	pts.clear();
+      }
 
-      u1 = u2;
+      travel += len;
+      v1 = v2;
     }
+    renderLines(pmap, pts, dash ? (int)fmod(start,period) : -1, dl);
   }
+}
+
+void Contour::renderLines(Pixmap pmap, std::vector<XPoint>& pts,
+			  int offset, char* dl)
+{
+  if (pts.size()<2)
+    return;
+
+  if (offset>=0)
+    XSetDashes(base_->display, parent_->gc_, offset, dl, 2);
+  XDrawLines(base_->display, pmap, parent_->gc_, &pts[0], pts.size(),
+	     CoordModeOrigin);
 }
 
 void Contour::ps(PSColorSpace mode)

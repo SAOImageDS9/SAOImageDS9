@@ -176,9 +176,6 @@ proc CreateIconsBottomFrame {} {
 	-direction above -takefocus 0
     tooltip::tooltip $mb.layout [msgcat::mc {Frame Layout}]
 
-    ttk::button $mb.tileparams -takefocus 0 -command TileDialog
-    tooltip::tooltip $mb.tileparams [msgcat::mc {Tile Parameters}]
-
     ttk::button $mb.next -takefocus 0 -command NextFrame
     tooltip::tooltip $mb.next [msgcat::mc {Goto Next Frame}]
 
@@ -203,7 +200,7 @@ proc CreateIconsBottomFrame {} {
     trace add variable current(display) write [list IconMenuButtonCB $mb.layout]
     IconMenuButtonCB $mb.layout current display write
 
-    pack $mb.add $mb.del $mb.first $mb.prev $mb.layout $mb.tileparams \
+    pack $mb.add $mb.del $mb.first $mb.prev $mb.layout \
 	$mb.next $mb.last -side left -fill x
     # gap to separate this group from the previous one
     pack configure $mb.add -padx {8 0}
@@ -249,9 +246,6 @@ proc ConfigureIconsBottomFrame {} {
     $mb.prev configure \
 	-image [image create photo -file "$ds9(icons,ui)/frame_prev.png"]
 
-    $mb.tileparams configure \
-	-image [image create photo -file "$ds9(icons,ui)/frame_tile_params.png"]
-
     $mb.next configure \
 	-image [image create photo -file "$ds9(icons,ui)/frame_next.png"]
 
@@ -277,14 +271,43 @@ proc CreateIconsBottomView {} {
     tooltip::tooltip $mb.horzgraph [msgcat::mc {Toggle Horizontal Graph}]
 
     ttk::button $mb.colorbar -takefocus 0 \
-	-command [list IconButtonToggleCmd view colorbar LayoutFrames]
+	-command [list IconButtonToggleDialogCmd view colorbar LayoutFrames \
+	     ColormapDialog ColormapDestroyDialog]
     tooltip::tooltip $mb.colorbar [msgcat::mc {Toggle Colorbar}]
+
+    ttk::button $mb.tileparams -takefocus 0 -command IconsBottomTileToggle
+    tooltip::tooltip $mb.tileparams [msgcat::mc {Toggle Tile}]
 
     ConfigureIconsBottomView
 
-    pack $mb.vertgraph $mb.horzgraph $mb.colorbar -side left -fill x
+    pack $mb.vertgraph $mb.horzgraph $mb.colorbar $mb.tileparams \
+	-side left -fill x
     # gap to separate this group from the previous one
     pack configure $mb.vertgraph -padx {8 0}
+    # gap to separate the parameter buttons from the graph toggles
+    pack configure $mb.colorbar -padx {8 0}
+}
+
+# toggle tile display mode and open/close the tile dialog to match.
+# turning tile off restores the display mode that was active before.
+proc IconsBottomTileToggle {} {
+    global current
+    global iconsbottom
+
+    if {$current(display) == {tile}} {
+	set prev single
+	if {[info exists iconsbottom(tile,prev)]} {
+	    set prev $iconsbottom(tile,prev)
+	}
+	set current(display) $prev
+	DisplayMode
+	TileDestroyDialog
+    } else {
+	set iconsbottom(tile,prev) $current(display)
+	set current(display) tile
+	DisplayMode
+	TileDialog
+    }
 }
 
 proc ConfigureIconsBottomView {} {
@@ -297,6 +320,8 @@ proc ConfigureIconsBottomView {} {
         "$ds9(icons,ui)/view_horizontal.png"]
     $mb.colorbar configure -image [image create photo -file \
         "$ds9(icons,ui)/view_colorbar.png"]
+    $mb.tileparams configure -image [image create photo -file \
+        "$ds9(icons,ui)/frame_tile_params.png"]
 }
 
 proc UpdateAnalysisProgress {} {

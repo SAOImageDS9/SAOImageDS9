@@ -218,6 +218,8 @@ proc ContourTableCreate {f} {
     global dcontour
 
     set dcontour(nrow) 0
+    # row whose style was last changed, for Apply Style to All
+    set dcontour(last) {}
 
     set dcontour(canvas) [canvas $f.canvas -width 0 -height 220 \
 			      -highlightthickness 0 \
@@ -232,7 +234,13 @@ proc ContourTableCreate {f} {
     bind $dcontour(canvas) <MouseWheel> {ContourTableWheel %D}
     bind ContourTable <MouseWheel> {ContourTableWheel %D}
 
+    set dcontour(applyall) [ttk::button $f.applyall \
+				-text [msgcat::mc {Apply Style to All}] \
+				-command ContourStyleApplyAllDialog \
+				-state disabled]
+
     grid $dcontour(canvas) $f.yscroll -sticky news
+    grid $dcontour(applyall) - -padx 2 -pady 2
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 0 -weight 1
 }
@@ -403,7 +411,18 @@ proc ContourTableWrite {levels styles} {
 	ContourTableSetRow $ii $ll [lindex $styles $ii]
 	incr ii
     }
+    if {$dcontour(last) != {} && $dcontour(last) >= $dcontour(nrow)} {
+	ContourTableSetLast {}
+    }
     ContourTableBuild
+}
+
+proc ContourTableSetLast {ii} {
+    global dcontour
+
+    set dcontour(last) $ii
+    $dcontour(applyall) configure \
+	-state [expr {$ii != {} ? {normal} : {disabled}}]
 }
 
 # new level values, keep the styles by index, extra styles are dropped
@@ -431,6 +450,7 @@ proc ContourTableSwatches {} {
 proc ContourTableStyleCmd {ii} {
     global current
 
+    ContourTableSetLast $ii
     ContourTableSwatches
     if {$current(frame) != {} && [$current(frame) has contour]} {
 	lassign [ContourTableRead] levels styles
@@ -485,6 +505,22 @@ proc ContourStyleSet {frame styles} {
 	}
 	incr ii
     }
+}
+
+# copy the last changed row's style to every row
+proc ContourStyleApplyAllDialog {} {
+    global dcontour
+
+    set src $dcontour(last)
+    if {$src == {}} {
+	return
+    }
+    for {set ii 0} {$ii<$dcontour(nrow)} {incr ii} {
+	foreach kk {color width dash dashlist} {
+	    set dcontour($kk,$ii) $dcontour($kk,$src)
+	}
+    }
+    ContourTableStyleCmd $src
 }
 
 proc ContourStyleClearDialog {} {

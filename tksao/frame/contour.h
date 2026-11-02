@@ -84,6 +84,7 @@ class Contour {
   Contour* next_;
 
   void renderLines(Pixmap, std::vector<XPoint>&, int, char*);
+  int isXCoord(const Vector&);
 
  public:
   Contour(ContourLevel*);

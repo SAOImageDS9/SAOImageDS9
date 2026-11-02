@@ -186,10 +186,12 @@ void Contour::render(Pixmap pmap, Coord::InternalSystem sys, const BBox& bbox)
       XSetLineAttributes(base_->display, parent_->gc_,
 			 ww, LineOnOffDash, CapButt, JoinMiter);
 
-    // draw runs of visible segments as polylines, so the dash pattern
-    // flows along the contour as it does for regions, rather than
-    // restarting on every (often sub-dash length) segment. track the
-    // distance travelled so the dash phase also carries across runs.
+    // draw the contour as one polyline, so the dash pattern flows along
+    // it as it does for regions, rather than restarting on every (often
+    // sub-dash length) segment. off screen vertices are kept, X clips
+    // them, so the dash phase matches however the contour is panned.
+    // only break the line where X's 16 bit coords would overflow; then
+    // draw just the visible segments, with an estimated dash offset.
     std::vector<XPoint> pts;
     double travel = 0;
     double start = 0;
@@ -199,23 +201,31 @@ void Contour::render(Pixmap pmap, Coord::InternalSystem sys, const BBox& bbox)
       Vector v2 = base_->mapFromRef(lvertex_.current()->vector,sys);
       double len = (v2-v1).length();
 
-      if (bbox.isIn(v1) || bbox.isIn(v2)) {
+      if (isXCoord(v1) && isXCoord(v2)) {
 	if (pts.empty()) {
 	  start = travel;
-	  XPoint pp = {(short)v1[0], (short)v1[1]};
+	  XPoint pp = {(short)floor(v1[0]), (short)floor(v1[1])};
 	  pts.push_back(pp);
 	}
-	XPoint pp = {(short)v2[0], (short)v2[1]};
+	XPoint pp = {(short)floor(v2[0]), (short)floor(v2[1])};
 	pts.push_back(pp);
-	// keep the request size bounded
-	if (pts.size()>=1024) {
+	// stay well under the core protocol request size
+	if (pts.size()>=16384) {
 	  renderLines(pmap, pts, dash ? (int)fmod(start,period) : -1, dl);
 	  pts.clear();
 	}
       }
-      else if (!pts.empty()) {
+      else {
 	renderLines(pmap, pts, dash ? (int)fmod(start,period) : -1, dl);
 	pts.clear();
+
+	if (bbox.isIn(v1) || bbox.isIn(v2)) {
+	  if (dash)
+	    XSetDashes(base_->display, parent_->gc_,
+		       (int)fmod(travel,period), dl, 2);
+	  XDrawLine(base_->display, pmap, parent_->gc_, 
+		    (int)v1[0], (int)v1[1], (int)v2[0], (int)v2[1]);
+	}
       }
 
       travel += len;
@@ -223,6 +233,11 @@ void Contour::render(Pixmap pmap, Coord::InternalSystem sys, const BBox& bbox)
     }
     renderLines(pmap, pts, dash ? (int)fmod(start,period) : -1, dl);
   }
+}
+
+int Contour::isXCoord(const Vector& vv)
+{
+  return fabs(vv[0])<16384 && fabs(vv[1])<16384;
 }
 
 void Contour::renderLines(Pixmap pmap, std::vector<XPoint>& pts,

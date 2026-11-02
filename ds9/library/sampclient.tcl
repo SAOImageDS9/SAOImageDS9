@@ -258,7 +258,12 @@ proc SAMPSend {method params resultVar} {
 	samp.hub.callAll {
 	    # and now we wait
 	    # must be set before
-	    vwait samp(msgtag)
+	    # the response can already have arrived (and cleared msgtag)
+	    # during the nested event loop in xmlrpcCall; vwait would then
+	    # wait for a change that already happened
+	    if {[info exists samp(msgtag)] && $samp(msgtag) != {}} {
+		vwait samp(msgtag)
+	    }
 	}
 
 	samp.hub.callAndWait {
@@ -303,10 +308,10 @@ proc SAMPReply {msgid status {result {}} {url {}} {msg {}} {hasResult 0}} {
     switch -- $status {
 	OK {
 	    if {$hasResult || $result != {}} {
-		set map2(value) "string \"$result\""
+		set map2(value) [list string $result]
 	    }
 	    if {$url != {}} {
-		set map2(url) "string \"$url\""
+		set map2(url) [list string $url]
 	    }
 	    set m2 [xmlrpcList2Member [array get map2]]
 
@@ -317,14 +322,14 @@ proc SAMPReply {msgid status {result {}} {url {}} {msg {}} {hasResult 0}} {
 	    set param3 [list param [list value [list struct $m1]]]
 	}
 	WARNING {
-	    set map3(samp.errortxt) "string \"$msg\""
+	    set map3(samp.errortxt) [list string $msg]
 	    set m3 [xmlrpcList2Member [array get map3]]
 
 	    if {$hasResult || $result != {}} {
-		set map2(value) "string \"$result\""
+		set map2(value) [list string $result]
 	    }
 	    if {$url != {}} {
-		set map2(url) "string \"$url\""
+		set map2(url) [list string $url]
 	    }
 	    set m2 [xmlrpcList2Member [array get map2]]
 
@@ -336,7 +341,7 @@ proc SAMPReply {msgid status {result {}} {url {}} {msg {}} {hasResult 0}} {
 	    set param3 [list param [list value [list struct $m1]]]
 	}
 	ERROR {
-	    set map2(samp.errortxt) "string \"$msg\""
+	    set map2(samp.errortxt) [list string $msg]
 	    set m2 [xmlrpcList2Member [array get map2]]
 
 	    set map1(samp.status) {string samp.error}

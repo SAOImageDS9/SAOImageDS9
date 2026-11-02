@@ -11,11 +11,13 @@
 #include "file.h"
 
 // Resample a built FitsHPX image (HPX/XPH layout) into another
-// projection through AST: all-sky (AIT, MOL, CAR, ...), zenithal (TAN,
-// SIN, ...) centred on (lon, lat) with angular diameter fov, or conic
-// (COE, COD, ...) with reference latitude lat. Nearest-neighbour only,
-// so every output pixel is a real HEALPix pixel value; pixels outside
-// the projection come out NaN.
+// projection: all-sky (AIT, MOL, CAR, ...), zenithal (TAN, SIN, ...)
+// centred on (lon, lat) with angular diameter fov, or conic (COE, COD,
+// ...) with reference latitude lat. Nearest-neighbour only, so every
+// output pixel is a real HEALPix pixel value; pixels outside the
+// projection come out NaN. The resampling uses AST's projection routines
+// directly, on nthreads threads, falling back to AST's own resampling
+// for anything that path doesn't handle.
 //
 // Takes ownership of the FitsHPX. All-sky images free it once built;
 // zenithal and conic windows keep it so recentre() can rebuild the
@@ -33,6 +35,7 @@ class FitsHPXReproj : public FitsFile {
   double planeW_;      // [deg] full extent of the window's projection
   double planeH_;      //   plane (fov), limits the window size
   int coarse_;         // pixels coarsened to cap the window size
+  int nthreads_;       // threads for resampling
   double crpix1_;
   double crpix2_;
   double lon_;         // current centre (lat_ = theta_a for conics)
@@ -45,7 +48,7 @@ class FitsHPXReproj : public FitsFile {
 
  public:
   FitsHPXReproj(FitsFile*, const char*, double lon, double lat,
-		double fov, int dispW =0, int dispH =0);
+		double fov, int dispW =0, int dispH =0, int nthreads =1);
   ~FitsHPXReproj();
 
   // recentre a window on (lon, lat) [deg, the map's own sky system];

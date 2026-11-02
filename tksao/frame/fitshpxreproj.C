@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <pthread.h>
 
 #include "fitshpxreproj.h"
 #include "util.h"
@@ -95,6 +96,341 @@ static AstFrameSet* hpxReprojAst(FitsHead* hd)
   return fs;
 }
 
+// Direct resampling, without AST's Mapping machinery. astResampleF with
+// zero tolerance runs every output pixel through the full Mapping on one
+// thread (this AST is built without thread support): ~17 s for an
+// all-sky AIT image at nside 4096. A tolerance doesn't help, as the HPX
+// facet seams defeat its linear approximation. Instead, call the WCSLIB
+// projection routines AST uses (ast/wcslib/proj.c; pure functions once
+// set up) and the spherical rotation directly, so the work can be split
+// across threads (~2.5 s on 12). This reproduces AST's Mapping, including
+// its checks, so the output matches the AST path; anything it doesn't
+// handle falls back to AST.
+
+// struct AstPrjPrm and astPRJset() come from ast.h (ast/wcslib/proj.h)
+#define HPX_PRJ_NPAR 10
+
+struct HPXDirect {
+  // target: grid -> projection plane -> native -> sky
+  struct AstPrjPrm tgt;
+  double tgtP[HPX_PRJ_NPAR];
+  double crpix1, crpix2, cdelt1, cdelt2;
+  int zenithal;          // general rotation, else a longitude shift
+  double alphap, phip;   // [deg] celestial pole longitude, LONPOLE
+  double sindp, cosdp;   // celestial pole latitude
+  double lon0;           // [deg] longitude shift (not zenithal)
+  double longlo, longhi; // as WcsMap's LongRange()
+  int lonCheck;
+
+  // source: sky -> HPX plane -> grid. Its native frame is the sky frame.
+  struct AstPrjPrm hpx;
+  double hpxP[HPX_PRJ_NPAR];
+  double scrpix1, scrpix2;
+  double m11, m12, m21, m22; // projection plane [deg] -> pixel offset
+  int iw, ih;
+
+  const float* in;
+  float* out;
+  int ow;
+  int swap;
+};
+
+struct HPXDirectArg {
+  const HPXDirect* dd;
+  int j0, j1;            // output rows [j0, j1), 0 based
+};
+
+static double hpxDrange(double aa)
+{
+  // palDrange(), in degrees
+  double rr = fmod(aa, 360.);
+  if (rr > 180.)
+    rr -= 360.;
+  else if (rr < -180.)
+    rr += 360.;
+  return rr;
+}
+
+// astPRJset() ignores the status of the projection's own set routine,
+// which on failure (e.g. a bad PV) returns before installing the
+// forward/reverse routines
+static int hpxPrjSet(const char* code, struct AstPrjPrm* prj)
+{
+  return !astPRJset(code, prj) && prj->astPRJfwd && prj->astPRJrev;
+}
+
+// Set up the direct mapping from the target and source headers (as the
+// resampling builds them); 0 if they aren't the simple case handled here
+static int hpxDirectInit(HPXDirect* dd, FitsHead* src, FitsHead* hd)
+{
+  memset(dd, 0, sizeof(HPXDirect));
+
+  // source: an HPX image whose native frame is the sky frame
+  char* sctype = src->getString("CTYPE1");
+  if (!sctype || strncmp(sctype+4, "-HPX", 4))
+    return 0;
+  if (src->getReal("CRVAL1", 0) != 0 || src->getReal("CRVAL2", 0) != 0 ||
+      src->getReal("PV2_1", 4) != 4 || src->getReal("PV2_2", 3) != 3 ||
+      src->find("LONPOLE") || src->find("LATPOLE") ||
+      src->find("CD1_1") || src->find("CROTA2"))
+    return 0;
+
+  dd->hpxP[1] = 4;
+  dd->hpxP[2] = 3;
+  dd->hpx.p = dd->hpxP;
+  dd->hpx.p2 = dd->hpxP;
+  if (!hpxPrjSet("HPX", &dd->hpx))
+    return 0;
+
+  dd->scrpix1 = src->getReal("CRPIX1", 0);
+  dd->scrpix2 = src->getReal("CRPIX2", 0);
+  double scd1 = src->getReal("CDELT1", 0);
+  double scd2 = src->getReal("CDELT2", 0);
+  double pc11 = src->getReal("PC1_1", 1);
+  double pc12 = src->getReal("PC1_2", 0);
+  double pc21 = src->getReal("PC2_1", 0);
+  double pc22 = src->getReal("PC2_2", 1);
+  double det = pc11*pc22 - pc12*pc21;
+  if (!scd1 || !scd2 || !det)
+    return 0;
+  // (x/cdelt1, y/cdelt2) = PC (p - crpix)
+  dd->m11 =  pc22/det/scd1;
+  dd->m12 = -pc12/det/scd2;
+  dd->m21 = -pc21/det/scd1;
+  dd->m22 =  pc11/det/scd2;
+  dd->iw = src->naxis(0);
+  dd->ih = src->naxis(1);
+
+  // target
+  char* ctype = hd->getString("CTYPE1");
+  if (!ctype || strlen(ctype) < 8 || hd->find("PC1_1") || hd->find("CD1_1") ||
+      hd->find("LONPOLE") || hd->find("LATPOLE"))
+    return 0;
+  char code[4];
+  strncpy(code, ctype+5, 3);
+  code[3] = '\0';
+
+  dd->tgt.p = dd->tgtP;
+  dd->tgt.p2 = dd->tgtP;
+  // PV2_1 as WcsMap defaults it: CEA's lambda is 1, the others we use
+  // have none or always write it
+  dd->tgtP[1] = hd->getReal("PV2_1", strcmp(code,"CEA") ? 0 : 1);
+  if (!hpxPrjSet(code, &dd->tgt))
+    return 0;
+
+  dd->crpix1 = hd->getReal("CRPIX1", 0);
+  dd->crpix2 = hd->getReal("CRPIX2", 0);
+  dd->cdelt1 = hd->getReal("CDELT1", 0);
+  dd->cdelt2 = hd->getReal("CDELT2", 0);
+  double alpha0 = hd->getReal("CRVAL1", 0);
+  double delta0 = hd->getReal("CRVAL2", 0);
+  double phi0 = dd->tgt.phi0;
+  double theta0 = dd->tgt.theta0;
+  // default LONPOLE
+  double phip = delta0 >= theta0 ? 0 : 180;
+
+  if (theta0 == 90) {
+    // zenithal: the reference point is the native pole
+    dd->zenithal = 1;
+    dd->alphap = alpha0;
+    dd->phip = phip;
+    dd->sindp = sin(delta0/R2D);
+    dd->cosdp = cos(delta0/R2D);
+  }
+  else if (delta0 == theta0 && phip == phi0) {
+    // the native and celestial poles coincide (all-sky at the equator,
+    // conics at theta_a): just a longitude shift
+    dd->zenithal = 0;
+    dd->lon0 = alpha0 - phi0;
+  }
+  else
+    return 0;
+
+  // WcsMap's LongRange(): the native longitude range of the projection
+  dd->longlo = -180;
+  dd->longhi = 180;
+  {
+    static const double xx[4] = {-1.0E-6, 0.0, 1.0E-6, 0.0};
+    static const double yy[4] = {0.0, 1.0E-6, 0.0, -1.0E-6};
+    double aa = 0, bb = 0;
+    for (int ii=0; ii<4; ii++) {
+      if (!dd->tgt.astPRJrev(xx[ii], yy[ii], &dd->tgt, &aa, &bb)) {
+	if (aa > 180.0) {
+	  dd->longlo = 0;
+	  dd->longhi = 360;
+	  break;
+	}
+      }
+    }
+    double x0, y0, x1, y1;
+    dd->tgt.astPRJfwd(90.0, bb, &dd->tgt, &x0, &y0);
+    dd->tgt.astPRJfwd(450.0, bb, &dd->tgt, &x1, &y1);
+    int cyclic = fabs(x0 - x1) < 1.0E-10 && fabs(y0 - y1) < 1.0E-10;
+    dd->lonCheck = !cyclic;
+  }
+
+  return 1;
+}
+
+static void* hpxDirectRows(void* vv)
+{
+  HPXDirectArg* arg = (HPXDirectArg*)vv;
+  const HPXDirect* dd = arg->dd;
+
+  // own copies: the projection routines take non-const parameters
+  struct AstPrjPrm tgt = dd->tgt;
+  struct AstPrjPrm hpx = dd->hpx;
+
+  // AST__NEAREST: input pixel ii covers [ii-.5, ii+.5)
+  double xmin = .5;
+  double xmax = dd->iw + .5;
+  double ymin = .5;
+  double ymax = dd->ih + .5;
+
+  for (int jj=arg->j0; jj<arg->j1; jj++) {
+    float* dest = dd->out + (size_t)jj*dd->ow;
+    double yp = dd->cdelt2*(jj+1 - dd->crpix2);
+
+    for (int ii=0; ii<dd->ow; ii++) {
+      float val = NAN;
+      double xp = dd->cdelt1*(ii+1 - dd->crpix1);
+
+      double phi, theta;
+      if (tgt.astPRJrev(xp, yp, &tgt, &phi, &theta) ||
+	  fabs(theta) > 90 ||
+	  (dd->lonCheck && !(phi < dd->longhi && phi >= dd->longlo)))
+	goto done;
+
+      double lon, lat;
+      if (dd->zenithal) {
+	// Calabretta & Greisen (2002) eq 2
+	double sint = sin(theta/R2D);
+	double cost = cos(theta/R2D);
+	double dphi = (phi - dd->phip)/R2D;
+	double cosdphi = cos(dphi);
+	lon = dd->alphap +
+	  R2D*atan2(-cost*sin(dphi), sint*dd->cosdp - cost*dd->sindp*cosdphi);
+	double zz = sint*dd->sindp + cost*dd->cosdp*cosdphi;
+	if (zz > 1)
+	  zz = 1;
+	else if (zz < -1)
+	  zz = -1;
+	lat = R2D*asin(zz);
+      }
+      else {
+	lon = dd->lon0 + phi;
+	lat = theta;
+      }
+
+      // into the HPX projection plane, as WcsMap's forward transform
+      {
+	double xx, yy;
+	if (hpx.astPRJfwd(hpxDrange(lon), lat, &hpx, &xx, &yy))
+	  goto done;
+
+	double px = dd->scrpix1 + dd->m11*xx + dd->m12*yy;
+	double py = dd->scrpix2 + dd->m21*xx + dd->m22*yy;
+	if (px < xmin || px >= xmax || py < ymin || py >= ymax)
+	  goto done;
+
+	size_t ix = (size_t)floor(px + .5) - 1;
+	size_t iy = (size_t)floor(py + .5) - 1;
+	val = dd->in[iy*dd->iw + ix];
+      }
+
+    done:
+      if (dd->swap) {
+	const char* pp = (const char*)&val;
+	char* qq = (char*)(dest+ii);
+	qq[0] = pp[3];
+	qq[1] = pp[2];
+	qq[2] = pp[1];
+	qq[3] = pp[0];
+      }
+      else
+	dest[ii] = val;
+    }
+  }
+  return NULL;
+}
+
+// Resample in into out (ow x oh), optionally byte-swapping the output, on
+// up to nthreads threads. 0 if the headers aren't handled here.
+static int hpxDirectResample(FitsHead* src, FitsHead* hd, const float* in,
+			     float* out, int ow, int oh, int swap,
+			     int nthreads)
+{
+  HPXDirect dd;
+  if (!hpxDirectInit(&dd, src, hd))
+    return 0;
+  dd.in = in;
+  dd.out = out;
+  dd.ow = ow;
+  dd.swap = swap;
+
+  if (nthreads < 1)
+    nthreads = 1;
+  if (nthreads > oh)
+    nthreads = oh;
+
+  HPXDirectArg* args = new HPXDirectArg[nthreads];
+  pthread_t* threads = new pthread_t[nthreads];
+  int* started = new int[nthreads];
+  for (int ii=0; ii<nthreads; ii++) {
+    args[ii].dd = &dd;
+    args[ii].j0 = (int)((long long)oh*ii/nthreads);
+    args[ii].j1 = (int)((long long)oh*(ii+1)/nthreads);
+    started[ii] = nthreads > 1 &&
+      !pthread_create(&threads[ii], NULL, hpxDirectRows, &args[ii]);
+    // couldn't start a thread: do its rows here
+    if (!started[ii])
+      hpxDirectRows(&args[ii]);
+  }
+  for (int ii=0; ii<nthreads; ii++)
+    if (started[ii])
+      pthread_join(threads[ii], NULL);
+
+  delete [] started;
+  delete [] threads;
+  delete [] args;
+  return 1;
+}
+
+// Resample in (iw x ih) into out (ow x oh) through AST
+static int hpxAstResample(FitsHead* src, FitsHead* hd, const float* in,
+			  int iw, int ih, float* out, int ow, int oh)
+{
+  int ok = 0;
+
+  astClearStatus;
+  astBegin;
+
+  AstFrameSet* hpxFS = hpxReprojAst(src);
+  AstFrameSet* tgtFS = hpxReprojAst(hd);
+  if (hpxFS && tgtFS) {
+    // invert so the current Frames are GRID, then go via the sky
+    astInvert(hpxFS);
+    astInvert(tgtFS);
+    AstFrameSet* cvt = (AstFrameSet*)astConvert(hpxFS, tgtFS, "SKY");
+    if (astOK && cvt != AST__NULL) {
+      AstMapping* map =
+	(AstMapping*)astSimplify(astGetMapping(cvt, AST__BASE, AST__CURRENT));
+
+      int lbnd[2] = {1,1};
+      int ubndIn[2] = {iw,ih};
+      int ubndOut[2] = {ow,oh};
+      astResampleF(map, 2, lbnd, ubndIn, in, NULL,
+		   AST__NEAREST, NULL, NULL, 0, 0.0, 100, NAN,
+		   2, lbnd, ubndOut, lbnd, ubndOut, out, NULL);
+      ok = astOK;
+    }
+  }
+
+  astClearStatus;
+  astEnd;
+  return ok;
+}
+
 // The kept HPX intermediate's data, already byte-swapped to native order
 // in place, seen as a FitsFile that says so (the FitsHPX itself still
 // reports its original byte order). Doesn't own anything.
@@ -113,10 +449,12 @@ class FitsHPXNativeView : public FitsFile {
 };
 
 FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
-			     double lat, double fov, int dispW, int dispH)
+			     double lat, double fov, int dispW, int dispH,
+			     int nthreads)
 {
   // we own hpx from here on
   hpx_ = hpx;
+  nthreads_ = nthreads;
   view_ = NULL;
   hpxNative_ = 0;
   info_ = -1;
@@ -525,44 +863,21 @@ int FitsHPXReproj::build(double lon, double lat, const double* centre)
   }
 
   float* out = new float[outSize];
-  int ok = 0;
 
-  astClearStatus;
-  astBegin;
-
-  AstFrameSet* hpxFS = hpxReprojAst(src);
-  AstFrameSet* tgtFS = hpxReprojAst(hd);
-  if (hpxFS && tgtFS) {
-    // invert so the current Frames are GRID, then go via the sky
-    astInvert(hpxFS);
-    astInvert(tgtFS);
-    AstFrameSet* cvt = (AstFrameSet*)astConvert(hpxFS, tgtFS, "SKY");
-    if (astOK && cvt != AST__NULL) {
-      AstMapping* map =
-	(AstMapping*)astSimplify(astGetMapping(cvt, AST__BASE, AST__CURRENT));
-
-      int lbnd[2] = {1,1};
-      int ubndIn[2] = {iw,ih};
-      int ubndOut[2] = {pWidth_,pHeight_};
-      astResampleF(map, 2, lbnd, ubndIn, in, NULL,
-		   AST__NEAREST, NULL, NULL, 0, 0.0, 100, NAN,
-		   2, lbnd, ubndOut, lbnd, ubndOut, out, NULL);
-      ok = astOK;
-    }
+  // the direct path writes the output in our byte order; AST's doesn't
+  int ok = hpxDirectResample(src, hd, in, out, pWidth_, pHeight_, byteswap_,
+			     nthreads_);
+  if (!ok) {
+    ok = hpxAstResample(src, hd, in, iw, ih, out, pWidth_, pHeight_);
+    // same byte order convention as FitsHPX
+    if (ok && byteswap_)
+      swapData(out, outSize);
   }
-
-  astClearStatus;
-  astEnd;
-
   if (!ok) {
     delete [] out;
     delete hd;
     return 0;
   }
-
-  // same byte order convention as FitsHPX
-  if (byteswap_)
-    swapData(out, outSize);
 
   if (data_)
     delete [] (float*)data_;

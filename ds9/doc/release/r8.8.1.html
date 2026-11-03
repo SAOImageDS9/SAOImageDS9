@@ -1,0 +1,119 @@
+<!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf8">
+<title>DS9 Version 8.8.1 Release Notes</title>
+</head>
+<body>
+<h1 id="sun.pngsaoimageds9-version-8.8-release-notes"><img alt="" src="../sun.png" align="middle">SAOImageDS9
+Version 8.8.1 Release Notes</h1>
+<ul>
+<li><strong>BLOCK</strong>: New option to treat NaN pixel values as 0
+when blocking.</li>
+<li><strong>COLOR</strong>: The <code>Color</code> menu now displays
+<em>swatches</em> of each color map. This can be disabled by deselecting
+<code>View</code> -&gt; <code>Icons</code></li>
+<li><strong>TKSAO</strong>: (Internal) Region vertices are now passed
+between the Tcl/Tk and C/C++ layer by variable name rather than string
+to allow for arbitrarily long polygons.</li>
+<li><strong>HEALPIX</strong>: Fix for matching frames with HEALPIX (and
+other) non-linear projections.</li>
+<li><strong>XPA</strong>: fix (most) issues with passing binary data on
+Windows.</li>
+<li><strong>DS9</strong>: Now saves a list of recently opened images.
+<code>File</code> -&gt; <code>Open Recent</code></li>
+<li><strong>ADVANCED VIEW</strong>: Generated a new set of icons that
+are more consistent.</li>
+<li><strong>ADVANCED VIEW</strong>: Buttons now also open/raise|close
+parameter windows (grid, contour, colormap, layout, smooth)</li>
+<li><strong>PLOT</strong>: Multiple data points can now be selected
+using one of the new selection geometries: <code>Circle</code>,
+<code>Box</code>, <code>Polygon</code>, or <code>Freehand</code>. Use
+<code>Shift+Drag</code> to add to existing selection.</li>
+<li><strong>PLOT</strong>: Improve error reporting, especially when
+running <code>plot</code> commands (eg via xpa) but no plots are
+created.</li>
+<li><strong>PLOT</strong>: add buttons (icons) for one-click
+actions</li>
+<li><strong>CATALOG</strong>: new option to filter the catalog on the
+selected points</li>
+<li><strong>REGION</strong>: new <code>freehand</code> option to create
+a polygon.</li>
+<li><strong>ILLUSTRATE</strong>: new <code>freehand</code> option to
+create a polygon.</li>
+<li><strong>ILLUSTRATE</strong>: preferences are now saved. Fixed bug
+where illustrate mode shape defaults would overwrite region shape
+defaults.</li>
+<li><strong>CATALOG</strong>: Better error reporting and support for
+catalog names with <code>.</code> in them</li>
+<li><strong>CATALOG</strong>: Clear plot row highlights when filtering
+catalog</li>
+<li><strong>REGION</strong>: Users can now chose different line-endings
+(caps) for <code>line</code>, <code>vector</code>, and
+<code>compass</code> shapes. These include the original
+<code>arrow</code> along side the new <code>openarrow</code>,
+<code>chevron</code>, <code>circle</code>, <code>opencircle</code>,
+<code>box</code>, <code>openbox</code>, <code>triangle</code>,
+<code>opentriangle</code>, or <code>bar</code>.</li>
+<li><strong>REGION</strong>: line caps now scale with the
+<code>width</code> of the line. This is a small change in behavior for
+existing region files with shapes with arrows with width &gt; 1.</li>
+<li><strong>TKSVG</strong>: removed, no longer needed with Tcl/Tk 9</li>
+<li><strong>TKIMG</strong>: Updated to 2.1.2</li>
+<li><strong>TCL/TK</strong>: Update to 9.0.4</li>
+<li><strong>CERTIFI</strong>: Updated to 2026.10.23</li>
+<li><strong>TLS</strong>: updated to 2.0.1</li>
+<li><strong>OPENSSL</strong>: Update to 3.5.9 LTS. (3.6.2 reached EOL in
+Nov 26).</li>
+<li><strong>FRAME</strong>: Users can now individually resize and
+reposition frames. For example 3 frames can be added to a 3x2 grid where
+1 frame takes up a 2x2 section and the other two frames as smaller 1x1
+on the opposite side. <code>Edit</code> -&gt; <code>Layout</code>. Arrow
+keys are keyboard shorts: Left - remove column, Right - add column, Up -
+remove row, Down - add row. PageUp and PageDown increase and decrease
+the gap between frames.</li>
+<li><strong>XPA</strong>: Fixed bug <code>frame move</code> commands:
+<code>first</code>, <code>last</code>, <code>foward</code>, and
+<code>back</code> where not working. Rather than moving the frame they
+were simply selecting the frame.</li>
+<li><strong>FRAME</strong>: add extra error checking when doing a
+<code>refresh</code> to be sure that image dimensions, datatype, and
+header (byte offset) haven’t changed.</li>
+<li><strong>PREFERENCES</strong>: added new <code>base</code> color.
+This is the color users see in the gap between frames in
+<code>tile</code> mode. By default it matches the users theme, but now
+can now be changed to any color.</li>
+<li><strong>BLOCK</strong>: speed up. Now multi-threaded.</li>
+<li><strong>HEALPIX</strong>: speed up load, a lot (35sec to 6sec)</li>
+<li><strong>TKSAO</strong> and <strong>FITSY</strong>: turn on compiler
+optimization, overall speed up ~2-5x.</li>
+<li><strong>COLORMAP</strong>: Users can now save a list of their
+favorite color maps <code>Color</code> -&gt; <code>Favoriate</code>
+-&gt; <code>Add name to favorites</code>. In Advanced view, the
+favorites are now show in the top icon bar.</li>
+<li><strong>CONTOUR</strong>: Users can now specify separate line styles
+for each contour level: color, width, and dash.</li>
+<li><strong>CONTOUR</strong>: Fix issue with dashes not scaling well
+with zoom</li>
+<li><strong>PDF</strong>: Fix problem with colorbar outline; it could
+inherit the line style (color, width, dash) of a region or contour drawn
+on the image.</li>
+<li><strong>TCLSH</strong>: Fix parallel build issue on Linux where
+<code>tclsh</code> is not built before it is needed (configured).</li>
+<li><strong>SAMP</strong>: work on improving robustness when
+encountering errors that could case SAMP clients to hang waiting on
+response.</li>
+</ul>
+<h2 id="wip">WIP</h2>
+<ul>
+<li><strong>ASDF</strong>: Add support for Advanced Science Data Format
+files generated by the <em>Roman</em> space telescope.</li>
+<li><strong>HEALPIX</strong>: support new <code>proj</code> (projection)
+options. Allows ds9 to <strong>resample</strong> the <code>HPX</code>
+projection to other all sky projections including: …stuff…</li>
+</ul>
+
+
+
+</body>
+</head>

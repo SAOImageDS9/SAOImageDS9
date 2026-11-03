@@ -173,11 +173,13 @@ proc CreateIconsTopAnalysis {} {
     set mb $ds9(icons,top)
 
     ttk::button $mb.smooth -takefocus 0 \
-	-command [list IconButtonToggleCmd smooth view SmoothUpdate]
+	-command [list IconButtonToggleDialogCmd smooth view SmoothUpdate \
+	     SmoothDialog SmoothDestroyDialog]
     tooltip::tooltip $mb.smooth [msgcat::mc {Toggle Smooth}]
 
     ttk::button $mb.contour -takefocus 0 \
-	-command [list IconButtonToggleCmd contour view UpdateContour]
+	-command [list IconButtonToggleDialogCmd contour view UpdateContour \
+	     ContourDialog ContourDestroyDialog]
     tooltip::tooltip $mb.contour [msgcat::mc {Toggle Contour}]
 
     ttk::button $mb.match -takefocus 0 \
@@ -185,7 +187,8 @@ proc CreateIconsTopAnalysis {} {
     tooltip::tooltip $mb.match [msgcat::mc {Match Frames on WCS}]
 
     ttk::button $mb.grid -takefocus 0 \
-	-command [list IconButtonToggleCmd grid view UpdateGridCurrent]
+	-command [list IconButtonToggleDialogCmd grid view UpdateGridCurrent \
+	     GridDialog GridDestroyDialog]
     tooltip::tooltip $mb.grid [msgcat::mc {Toggle Coordinate Grid}]
 
     ConfigureIconsTopAnalysis

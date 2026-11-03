@@ -38,6 +38,18 @@ proc IconButtonToggleCmd {varname id cmd} {
     }
 }
 
+# toggle a feature and open/close its parameters dialog to match
+proc IconButtonToggleDialogCmd {varname id cmd opendlg closedlg} {
+    upvar #0 $varname var
+
+    IconButtonToggleCmd $varname $id $cmd
+    if {$var($id)} {
+	$opendlg
+    } else {
+	$closedlg
+    }
+}
+
 proc IconMenuButton {mb txt varname id value cmd} {
     global icons
 

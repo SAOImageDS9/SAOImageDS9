@@ -88,6 +88,8 @@ tclsignal/Makefile :
 
 # ----------- tkdnd
 
+.PHONY	: tkdnd
+
 tkdnd: tkdnd/Makefile
 	@echo ""
 	@echo "*** $@ ***"

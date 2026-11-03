@@ -38,6 +38,10 @@
 
 namespace eval xdnd {
   variable _dragging 0
+  ## ds9: dropped data, fetched once per drag (see HandleXdndPosition)
+  variable _drag_data {}
+  variable _have_drag_data 0
+  variable _fetching_drag_data 0
 
   proc debug { msg } {
     tkdnd::debug $msg
@@ -89,6 +93,8 @@ proc xdnd::HandleXdndEnter { drop_target drag_source typelist time
   variable _pressedkeys
   variable _actionlist
   variable _typelist
+  variable _drag_data;      set _drag_data {}
+  variable _have_drag_data; set _have_drag_data 0
   set _pressedkeys [GetPressedKeys $drop_target]
   set _actionlist  { copy move link ask private }
   set _typelist    $typelist
@@ -109,10 +115,23 @@ proc xdnd::HandleXdndPosition { drop_target rootX rootY time
   variable _last_mouse_root_y; set _last_mouse_root_y $rootY
   set _pressedkeys [GetPressedKeys $drop_target]
   #DBG debug "xdnd::HandleXdndPosition: $time"
-  ## Get the dropped data...
-  catch {
-    ::tkdnd::generic::SetDroppedData [GetPositionData $drop_target $_typelist $time]
+  ## ds9: Get the dropped data once per drag, not on every position. The
+  ## fetch waits in a nested event loop, so further XdndPositions are
+  ## handled inside it; overlapping fetches steal each other's replies.
+  ## Fetching at the drop instead races the source's XdndLeave (GTK sends
+  ## it right after XdndDrop and then refuses the request).
+  variable _drag_data
+  variable _have_drag_data
+  variable _fetching_drag_data
+  if {!$_have_drag_data && !$_fetching_drag_data} {
+    set _fetching_drag_data 1
+    if {![catch {GetPositionData $drop_target $_typelist $time} data]} {
+      set _drag_data $data
+      set _have_drag_data 1
+    }
+    set _fetching_drag_data 0
   }
+  ::tkdnd::generic::SetDroppedData $_drag_data
   ::tkdnd::generic::HandlePosition $drop_target $drag_source \
                                    $_pressedkeys $rootX $rootY $action
 };# xdnd::HandleXdndPosition
@@ -135,9 +154,16 @@ proc xdnd::HandleXdndDrop { time } {
   set _pressedkeys [GetPressedKeys [::tkdnd::generic::GetDropTarget]]
   #DBG debug "xdnd::HandleXdndDrop: $time"
   ## Get the dropped data...
-  ::tkdnd::generic::SetDroppedData [GetDroppedData \
-    [::tkdnd::generic::GetDragSource] [::tkdnd::generic::GetDropTarget] \
-    [::tkdnd::generic::GetDragSourceCommonTypes] $time]
+  variable _drag_data
+  variable _have_drag_data
+  if {$_have_drag_data} {
+    ::tkdnd::generic::SetDroppedData $_drag_data
+  } else {
+    ::tkdnd::generic::SetDroppedData [GetDroppedData \
+      [::tkdnd::generic::GetDragSource] [::tkdnd::generic::GetDropTarget] \
+      [::tkdnd::generic::GetDragSourceCommonTypes] $time]
+  }
+  set _have_drag_data 0
   ::tkdnd::generic::HandleDrop {} {} $_pressedkeys \
                                $_last_mouse_root_x $_last_mouse_root_y $time
 };# xdnd::HandleXdndDrop

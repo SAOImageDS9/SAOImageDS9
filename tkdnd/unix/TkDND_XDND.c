@@ -363,9 +363,14 @@ Window TkDND_GetVirtualRootWindowOfScreen(Tk_Window tkwin) {
          __SWM_ROOT  = Tk_InternAtom(tkwin, "__SWM_ROOT"),
          __WM_ROOT   = Tk_InternAtom(tkwin, "__WM_ROOT");
 
+    Tk_ErrorHandler handler;
+
     root = RootWindowOfScreen(screen);
 
     /* go look for a virtual root */
+    /* ds9: other clients' windows can be destroyed while we scan them;
+     * ignore the resulting BadWindow instead of letting Xlib exit */
+    handler = Tk_CreateErrorHandler(dpy, -1, -1, -1, NULL, NULL);
     if (XQueryTree(dpy, root, &rootReturn, &parentReturn,
                    &children, &numChildren)) {
       for (i = 0; i < numChildren; i++) {
@@ -397,6 +402,8 @@ Window TkDND_GetVirtualRootWindowOfScreen(Tk_Window tkwin) {
       }
       if (children) XFree((char *)children);
     }
+    XSync(dpy, False);
+    Tk_DeleteErrorHandler(handler);
     save_screen = screen;
   }
   return root;

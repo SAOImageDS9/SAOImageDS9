@@ -18,7 +18,7 @@ proc GetFITSExtension { fn varname } {
 
     if {![file exists $fn]} {
         Error "[msgcat::mc {File not found}]: $fn"
-        return
+        return 0
     }
 
     set var(fn) $fn
@@ -32,7 +32,7 @@ proc GetFITSExtension { fn varname } {
             # compressed?
             catch {
                 set ch [open $fn r]
-                fconfigure $ch -encoding binary -translation binary
+                fconfigure $ch -encoding iso8859-1 -translation binary
                 set bb [read $ch 2]
                 close $ch
                 binary scan $bb H4 cc
@@ -48,7 +48,7 @@ proc GetFITSExtension { fn varname } {
 
     if {[catch {fitsy dir $var(fn) $var(load)} rr]} {
         Error "[msgcat::mc {Unable to load FITS file}] $fn"
-        return
+        return 0
     }
 
     set extnames []
@@ -78,7 +78,7 @@ proc GetFITSExtension { fn varname } {
     }
 
     set var(extname) [lindex $extnames $var(ext)]
-    return
+    return 1
 }
 
 
@@ -90,7 +90,7 @@ proc PeekFITSheader { varname retvals} {
     # find our extension
     if {[catch {fitsy open $var(fn) $var(load) $var(ext)}]} {
         Error "[msgcat::mc {Unable to load FITS file}] $var(fn)"
-        return
+        return 0
     }
 
     # header
@@ -122,24 +122,37 @@ proc PeekFITSheader { varname retvals} {
 
     fitsy close
 
-    return
+    return 1
 }
 
 proc GuessFITSType { filename } {
 
-    GetFITSExtension $filename var
-    PeekFITSheader var keyvals
+    # errors have already been reported
+    if {![GetFITSExtension $filename var]} {
+        return {}
+    }
+    if {![PeekFITSheader var keyvals]} {
+        return {}
+    }
 
+    set naxis 0
+    if {[info exists keyvals(NAXIS)]} {
+        set naxis $keyvals(NAXIS)
+    }
+    set hduclas1 {}
+    if {[info exists keyvals(HDUCLAS1)]} {
+        set hduclas1 $keyvals(HDUCLAS1)
+    }
 
     if {![info exists keyvals(XTENSION)]} {
-        if {$keyvals(NAXIS) == 3} {
+        if {$naxis == 3} {
             return "3d"
         }
         return "image"
     }
 
     if {$keyvals(XTENSION) == "IMAGE"} {
-        if {$keyvals(NAXIS) == 3} {
+        if {$naxis == 3} {
             return "3d"
         }
         return "image"
@@ -147,15 +160,15 @@ proc GuessFITSType { filename } {
 
     if {$keyvals(XTENSION) != "BINTABLE" } {
         Error "Unable to locate usable data in $filename"
-        return ""
+        return {}
     }
 
-    if {$keyvals(HDUCLAS1) == "REGION"} {
+    if {$hduclas1 == "REGION"} {
         # load region
         return "region"
     }
 
-    if {$keyvals(HDUCLAS1) == "EVENTS"} {
+    if {$hduclas1 == "EVENTS"} {
         # load image
         return "image"
     }
@@ -172,66 +185,69 @@ proc LoadDrop { filenames } {
         set ext [file extension $infile]
         switch $ext {
             .sao -
-            .lut { ds9Cmd "-cmap load $infile" }
+            .lut { ds9Cmd [list -cmap load $infile] }
 
-            .tag { ds9Cmd "-cmap tag load $infile"}
+            .tag { ds9Cmd [list -cmap tag load $infile]}
 
-            .bck { ds9Cmd "-restore $infile"}
+            .bck { ds9Cmd [list -restore $infile]}
 
-            .plb { ds9Cmd "-plot restore $infile"}
+            .plb { ds9Cmd [list -plot restore $infile]}
 
-            .ctr { ds9Cmd "-contour load $infile"}
+            .ctr { ds9Cmd [list -contour load $infile]}
 
-            .lev { ds9Cmd "-contour load levels $infile"}
+            .lev { ds9Cmd [list -contour load levels $infile]}
 
             .ans -
-            .ds9 { ds9Cmd "-analysis load $infile"}
+            .ds9 { ds9Cmd [list -analysis load $infile]}
 
             .vot -
             .xml -
-            .votable { ds9Cmd "-catalog load $infile" }
+            .votable { ds9Cmd [list -catalog load $infile] }
 
             .rdb -
-            .cat { ds9Cmd "-catalog import rdb $infile"}
+            .cat { ds9Cmd [list -catalog import rdb $infile]}
 
             .tsv -
-            .csv { ds9Cmd "-catalog import tsv $infile" }
+            .csv { ds9Cmd [list -catalog import tsv $infile] }
 
-            .flt { ds9Cmd "-catalog filter load $infile" }
+            .flt { ds9Cmd [list -catalog filter load $infile] }
 
-            .sym { ds9Cmd "-catalog symbol load $infile"}
+            .sym { ds9Cmd [list -catalog symbol load $infile]}
 
-            .grd { ds9Cmd "-grid load $infile"}
+            .grd { ds9Cmd [list -grid load $infile]}
 
-            .txt { ds9Cmd "-notes load $infile"}
+            .txt { ds9Cmd [list -notes load $infile]}
 
-            .reg {ds9Cmd "-region load $infile"}
+            .reg {ds9Cmd [list -region load $infile]}
 
-            .seg {ds9Cmd "-illustrate load $infile"}
+            .seg {ds9Cmd [list -illustrate load $infile]}
 
-            .tcl  { ds9Cmd "-source $infile"}
+            .tcl  { ds9Cmd [list -source $infile]}
 
             .htm -
-            .html {ds9Cmd "-web file://$infile"}
+            .html {ds9Cmd [list -web file://$infile]}
 
-            .wcs {ds9Cmd "-wcs load $infile"}
+            .wcs {ds9Cmd [list -wcs load $infile]}
 
-            .gif { ds9Cmd "-gif $infile"}
+            .gif { ds9Cmd [list -gif $infile]}
 
             .jpg -
-            .jpeg { ds9Cmd "-jpeg $infile"}
+            .jpeg { ds9Cmd [list -jpeg $infile]}
 
-            .png {ds9Cmd "-png $infile"}
+            .png {ds9Cmd [list -png $infile]}
 
             .tif -
-            .tiff {ds9Cmd "-tiff $infile"}
+            .tiff {ds9Cmd [list -tiff $infile]}
 
             default {
                 switch [GuessFITSType $infile] {
-                    "image" {ds9Cmd "-file $infile"}
-                    "prism" {ds9Cmd "-prism $infile"}
-                    "region" {ds9Cmd "-region $infile"}
-                    "3d" {ds9Cmd "-3d"; ds9Cmd "-file $infile"}
+                    "image" {ds9Cmd [list -file $infile]}
+                    "prism" {ds9Cmd [list -prism $infile]}
+                    "region" {ds9Cmd [list -region $infile]}
+                    "3d" {ds9Cmd -3d; ds9Cmd [list -file $infile]}
+                    {} {
+                        # error already reported
+                    }
                     default {
                         Error "Unable to open $infile"
                     }

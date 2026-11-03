@@ -219,7 +219,12 @@ void TkDND_SelectionNotifyEventProc(ClientData clientData, XEvent *eventPtr) {
   else {
     /* Do not report the error if this has not be called by a
      *  SelectionNotify event... */
-    if (eventPtr != NULL) detail->result = TCL_ERROR;
+    if (eventPtr != NULL) {
+      /* ds9: set a message, else the interp's stale result is reported */
+      Tcl_SetResult(detail->interp, "selection conversion failed",
+                    TCL_STATIC);
+      detail->result = TCL_ERROR;
+    }
   }
 }; /* TkDND_SelectionNotifyEventProc */
 
@@ -311,6 +316,10 @@ TkDNDSelGetSelection(
     /* Register an event handler for tkwin... */
     Tk_CreateEventHandler(sel_tkwin, SelectionNotify,
                           TkDND_SelectionNotifyEventProc, &detail);
+    /* ds9: the property is never deleted after reading, and the wait loop
+     * below polls it before the owner replies, so a stale value from the
+     * previous transfer would be returned. Clear it first. */
+    XDeleteProperty(display, Tk_WindowId(sel_tkwin), selection);
     XConvertSelection(display, selection, target,
 	              selection, Tk_WindowId(sel_tkwin), time);
     XFlush(display);

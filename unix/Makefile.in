@@ -97,7 +97,10 @@ tkdnd/Makefile:
 	@echo ""
 	@echo "*** $@ ***"
 	cd tkdnd; \
-	./configure $(WITHTK)
+	./configure \
+	$(WITHTK) \
+	$(PREFIX) \
+	$(STD)
 
 
 #--------------------------clean

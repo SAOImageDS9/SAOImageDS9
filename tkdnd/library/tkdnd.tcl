@@ -207,7 +207,13 @@ namespace eval ::tkdnd {
         error "unknown Tk windowing system"
       }
     }
-    load $dir/$PKG_LIB_FILE [string totitle $PACKAGE_NAME 0 0]
+    set prefix [string totitle $PACKAGE_NAME 0 0]
+    # ds9: use the static library if the app registered one
+    if {[lsearch -exact [info loaded] [list {} $prefix]] >= 0} {
+      load {} $prefix
+    } else {
+      load $dir/$PKG_LIB_FILE $prefix
+    }
     source $dir/tkdnd_compat.tcl
     ${_platform_namespace}::initialise
   };# initialise

@@ -96,8 +96,12 @@ $(LIBDIR)/math	: $(prefix)/tcllib/modules/math
 $(LIBDIR)/tooltip: $(prefix)/tklib/modules/tooltip
 	cp -rf $? "$@"
 
+# static lib is linked into ds9, keep it out of the zip. A static
+# build does not install pkgIndex.tcl, so take it from the build dir.
 $(LIBDIR)/tkdnd: $(prefix)/lib/tkdnd2.9.5
 	cp -prf $? "$@"
+	rm -f "$@"/*.a
+	cp -p $(prefix)/tkdnd/pkgIndex.tcl "$@"
 
 #--------------------------distclean
 

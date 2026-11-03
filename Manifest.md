@@ -1,11 +1,12 @@
 # List of SAOImageDS9 packages
 
-Last updated 2026-08-20
+Last updated 2026-11-03
 
 | name         | version    | SAO   | dirty | upstream                                                             | latest                          |
 | ------------ | ---------- | ----- | ----- | -------------------------------------------------------------------- | ------------------------------- |
 | ast          | 9.2.14     |       |       | https://github.com/Starlink/ast                                      | 9.2.14                          |
 | awthemes     | 10.4.0     |       |       | https://sourceforge.net/projects/tcl-awthemes/                       | 10.4.0                          |
+| certifi      | 2026.10.23 |       |       | https://github.com/certifi/python-certifi                            | 2026.10.23                      |
 | ds9          | 8.8        | y     |       |                                                                      |                                 |
 | fickle       | 2.2        | y     |       | https://github.com/SAOImageDS9/fickle-maintenance                    | previous upstream abandoned     |
 | fitsy        |            | y     |       |                                                                      |                                 |

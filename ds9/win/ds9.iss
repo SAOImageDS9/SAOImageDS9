@@ -71,6 +71,7 @@ Source: "..\..\bin\SAOImageDS9\textutil\*"; DestDir: "{app}\textutil\"; Flags: i
 Source: "..\..\bin\SAOImageDS9\tk9.0\*"; DestDir: "{app}\tk9.0\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\bin\SAOImageDS9\tkblt\*"; DestDir: "{app}\tkblt\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\bin\SAOImageDS9\tkcon\*"; DestDir: "{app}\tkcon\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\bin\SAOImageDS9\tkdnd\*"; DestDir: "{app}\tkdnd\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\bin\SAOImageDS9\tls\*"; DestDir: "{app}\tls\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\bin\SAOImageDS9\tooltip\*"; DestDir: "{app}\tooltip\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\bin\SAOImageDS9\ttkthemes\*"; DestDir: "{app}\ttkthemes\"; Flags: ignoreversion recursesubdirs createallsubdirs

@@ -67,7 +67,7 @@ saods9	: dirs tcl tk \
 	tkblt tclfitsy tktable tkimg \
 	tkmpeg tkagif tkhtml1 tkcon \
 	tkwin \
-	tksao ds9
+	tkdnd tksao ds9
 
 # no symbols
 tcl	: tcl$(TCL_VERSION)/win/Makefile
@@ -117,6 +117,27 @@ tkwin/Makefile :
 	--prefix $(prefix) --exec-prefix $(exec_prefix) \
 	--disable-shared --enable-symbols \
 	$(CACHE)
+
+# ----------- tkdnd
+
+.PHONY	: tkdnd
+
+tkdnd: tkdnd/Makefile
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tkdnd install
+
+# no config.cache: tkdnd's configure does AC_PROG_CXX and then sets
+# CC to it, so its compile tests run with the C++ compiler. Sharing
+# the cache would hand those results to every other package.
+tkdnd/Makefile:
+	@echo ""
+	@echo "*** $@ ***"
+	cd tkdnd; \
+	./configure \
+	$(WITHTK) \
+	$(PREFIX) \
+	$(STD)
 
 #--------------------------clean
 

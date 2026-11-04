@@ -45,6 +45,8 @@ tkagif_LIB_SPEC	= @tkagif_LIB_SPEC@
 tksao_LIB_SPEC	= @tksao_LIB_SPEC@
 tktable_LIB_SPEC= @Tktable_LIB_SPEC@
 tkwin_LIB_SPEC	= @tkwin_LIB_SPEC@
+# tkdnd does not install a tkdndConfig.sh
+tkdnd_LIB_SPEC	= -L$(libdir)/tkdnd2.9.5 -ltkdnd295
 
 CC		= @CC@
 CXX		= @CXX@
@@ -107,6 +109,7 @@ EXT_SPECS = \
 	$(tkimgwindow_LIB_SPEC) \
 	$(tkmpeg_LIB_SPEC) \
 	$(tkagif_LIB_SPEC) \
+	$(tkdnd_LIB_SPEC) \
 	$(tksao_LIB_SPEC) \
 	$(tktable_LIB_SPEC) \
 	$(tkwin_LIB_SPEC) \
@@ -165,6 +168,7 @@ PREQS	= \
 	$(LIBDIR)/ttkthemes \
 	$(LIBDIR)/scidthemes \
 	$(LIBDIR)/ssl \
+	$(LIBDIR)/tkdnd \
 	$(XPA_TOOLS) \
 	$(APPDIR)/install.vbs \
 	$(APPDIR)/tcc \

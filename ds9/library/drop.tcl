@@ -182,6 +182,11 @@ proc GuessFITSType { filename } {
 proc LoadDrop { filenames } {
 
     foreach {infile} $filenames {
+        # tkdnd hands us native filenames. On win32 that means backslashes,
+        # which the command parser treats as escapes - glob mangles them and
+        # the file silently fails to load. file normalize gives us '/'.
+        set infile [file normalize $infile]
+
         set ext [file extension $infile]
         switch $ext {
             .sao -

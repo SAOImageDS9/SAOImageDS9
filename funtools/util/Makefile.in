@@ -129,7 +129,7 @@ LIB =		@LIB@
 
 TESTPROGS =	tparse tlaunch tlaunch2
 
-PROGS =		gcat
+PROGS =
 
 all:		$(LIB) $(PROGS)
 

@@ -14,6 +14,15 @@ Funtools.  The up-to-date version can be found
 beta releases, can be found
 <A HREF="http://hea-www.harvard.edu/RD/funtools/changelog_beta.html">here</A>.]
 
+<H2> Release 1.5.1 (new maintenance fork)</H2>
+<ul>
+<p>
+<li> util: stop building the gcat utility (PROGS is now empty). gcat is
+unused, and linking it fails on systems where libz.a cannot be found.
+The gcat source and its make rules are kept, so it can still be built
+explicitly with "make gcat".
+</ul>
+
 <H2> Release 1.5.0 (new maintenance fork)</H2>
 <ul>
 <p>

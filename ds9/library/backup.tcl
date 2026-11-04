@@ -262,7 +262,7 @@ proc Restore {fn} {
 
     # for old backup sets with one colorbar,
     #   make sure each colorbar has the correct info from its frame
-    if {$vv <= {8.3}} {
+    if {[PrefsVersionCompare $vv 8.3] <= 0} {
       foreach ff $ds9(frames) {
 	set cb ${ff}cb
 	$cb colorbar [$ff get colorbar]

@@ -30,7 +30,7 @@
 # openssl 3.5.9 (LTS)
 # certifi 2026.10.23
 
-DS9_VERSION	= 8.8
+DS9_VERSION	= 8.8.2
 XPA_VERSION	= 2.2.2
 TCL_VERSION	= 9.0
 TCL_MAJOR_VERSION = $(firstword $(subst ., ,$(TCL_VERSION)))

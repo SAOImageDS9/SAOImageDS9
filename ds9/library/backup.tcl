@@ -89,7 +89,7 @@ proc BackupPreamble {fn chname dirname} {
 
     puts $ch "\# this is a check for to ensure a match between the"
     puts $ch "\# current ds9 version matches the prefs version"
-    puts $ch "switch -- \[string compare \$vv \[lindex \$ds9(version)\ 0\]\] {"
+    puts $ch "switch -- \[package vcompare \$vv \[lindex \$ds9(version)\ 0\]\] {"
     puts $ch "  -1 {"
     puts $ch "    if {\[tk_messageBox -type yesno -icon question -message \[msgcat::mc {The backup file was created with an older version of DS9 and may not restore properly. Do you wish to continue anyway?}\]\] == {no}} {"
     puts $ch "      return"
@@ -262,7 +262,7 @@ proc Restore {fn} {
 
     # for old backup sets with one colorbar,
     #   make sure each colorbar has the correct info from its frame
-    if {$vv <= {8.3}} {
+    if {[PrefsVersionCompare $vv 8.3] <= 0} {
       foreach ff $ds9(frames) {
 	set cb ${ff}cb
 	$cb colorbar [$ff get colorbar]

@@ -34,24 +34,9 @@ proc LoadPrefs {} {
 		# found and failed to execute
 	    }
 	    -1 {
-		# look for prev version
-		if {$prefs(version) == "8.0"} {
-		    # special case for version 8.0
-		    set major 7
-		    set minor 6
-		} else {
-		    # everybody else
-		    set major [lindex [split $prefs(version) {.}] 0]
-		    set minor [lindex [split $prefs(version) {.}] 1]
-		    if {$minor>0} {
-			set minor [expr $minor-1]
-		    } else {
-			set major [expr $major-1]
-			set minor 9
-		    }
-		}
-		set fn [file join $prefs(dir) "$ds9(app).${major}.${minor}$prefs(ext)"]
-		if {[SourceInitFile $fn] == 1} {
+		# look for newest prev version
+		set fn [PrefsFindPrev]
+		if {$fn != {} && [SourceInitFile $fn] == 1} {
 		    FixPrefs $prefs(version)
 		}
 	    }
@@ -72,11 +57,48 @@ proc LoadPrefs {} {
     }
 }
 
+# find the prefs file with the highest version less than the current one
+# version numbers may be major.minor or major.minor.micro
+proc PrefsFindPrev {} {
+    global ds9
+    global prefs
+
+    set prefix "$ds9(app)."
+    set best {}
+    set bestfn {}
+    foreach ff [glob -nocomplain -tails -directory $prefs(dir) "*$prefs(ext)"] {
+	if {[string first $prefix $ff] != 0} {
+	    continue
+	}
+	set vv [string range [file rootname $ff] [string length $prefix] end]
+	if {![regexp {^[0-9]+(\.[0-9]+)*$} $vv]} {
+	    continue
+	}
+	if {[package vcompare $vv $prefs(version)] >= 0} {
+	    continue
+	}
+	if {$best == {} || [package vcompare $vv $best] > 0} {
+	    set best $vv
+	    set bestfn [file join $prefs(dir) $ff]
+	}
+    }
+    return $bestfn
+}
+
+# compare dotted version numbers, fall back to string compare
+# for anything package vcompare can not handle (ie old betas)
+proc PrefsVersionCompare {v1 v2} {
+    if {[catch {package vcompare $v1 $v2} rr]} {
+	set rr [string compare $v1 $v2]
+    }
+    return $rr
+}
+
 proc CheckPrefs {} {
     global ds9
     global prefs
 
-    set rr [string compare $prefs(version) [lindex $ds9(version) 0]]
+    set rr [PrefsVersionCompare $prefs(version) [lindex $ds9(version) 0]]
     switch $rr {
 	-1 {
 	    if {[tk_messageBox -type yesno -icon question -message [msgcat::mc {DS9 has detected an older preferences file, do you wish to update?}]] == {yes}} {
@@ -148,7 +170,7 @@ proc SavePrefs {} {
     # check for wrong prefs
     puts $ch "\# this is a check for to ensure a match between the"
     puts $ch "\# current ds9 version matches the prefs version"
-    puts $ch "if {\[string compare \$prefs(version) \[lindex \$ds9(version)\ 0\]] == 1} {"
+    puts $ch "if {\[package vcompare \$prefs(version) \[lindex \$ds9(version)\ 0\]] == 1} {"
     puts $ch "    return"
     puts $ch "}"
 

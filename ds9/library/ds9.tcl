@@ -6,7 +6,7 @@ proc DS9Def {} {
     global ds9
     global pds9
 
-    # Must be major,minor
+    # Must be major.minor or major.minor.micro (numeric only)
     set ds9(version) {8.8.1}
     # For display purposes only
     set ds9(version,display) {8.8.1dev}

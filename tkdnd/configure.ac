@@ -145,13 +145,6 @@ AS_CASE([${TEA_PLATFORM}], [windows|*MINGW64_*],[
 
 if test "${TEA_WINDOWINGSYSTEM}" = "x11"; then
     TEA_ADD_SOURCES([unix/TkDND_XDND.c unix/tkUnixSelect.c unix/Cursors.c])
-    # ds9: X may not be on the default search path (XQuartz on macos puts
-    # it in /usr/X11 or /opt/X11) and TEA_PATH_X has not run yet, so use
-    # the X include and lib dirs that tk found
-    tkdnd_save_CPPFLAGS="$CPPFLAGS"
-    tkdnd_save_LDFLAGS="$LDFLAGS"
-    CPPFLAGS="$CPPFLAGS $TK_XINCLUDES"
-    LDFLAGS="$LDFLAGS $TK_XLIBSW"
     AC_CHECK_HEADERS([X11/Xcursor/Xcursor.h], [], [
         echo "X11/Xcursor/Xcursor.h not found!"
         echo "TkDND requires libXcursor, please install the dependency!"
@@ -166,8 +159,6 @@ if test "${TEA_WINDOWINGSYSTEM}" = "x11"; then
     AC_CHECK_HEADER(X11/XKBlib.h,
         [AC_DEFINE(HAVE_X11_EXTENSIONS_XKB_H, 1, [Do we have <X11/XKBlib.h>?])],
         [AC_DEFINE(NO_X11_EXTENSIONS_XKB_H,   1, [Do we have <X11/XKBlib.h>?])])
-    CPPFLAGS="$tkdnd_save_CPPFLAGS"
-    LDFLAGS="$tkdnd_save_LDFLAGS"
 
     #     echo "TkDND requires libXcursor, please install the dependency"
     #     echo

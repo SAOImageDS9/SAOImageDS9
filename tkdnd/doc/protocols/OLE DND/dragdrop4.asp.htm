@@ -1,0 +1,397 @@
+<html><head><!-- Catch22 ASP Template -->
+
+ 
+
+
+<title>OLE Drag and Drop from scratch</title><link rel="STYLESHEET" href="dragdrop4.asp_files/new22.css"> 
+<link rel="stylesheet" href="dragdrop4.asp_files/printing.htm" media="print"></head><body>
+
+ 
+<!-- BEGIN MAIN TITLE BANNER -->
+<div class="noprint TUTTOPBLOCK"><img src="dragdrop4.asp_files/c22tut.gif"></div>
+<div class="TUTTITLE">
+
+<!-- MENU GOES HERE -->
+<div class="noprint" style="position: absolute; top: 64px; margin-left: -8px;">
+
+	  <table border="0" cellpadding="0" cellspacing="0" height="20" width="100%">
+        <tbody><tr>
+ 	      <td height="20" width="520"><img src="dragdrop4.asp_files/menu04.gif" usemap="#titlemap" border="0" height="20" width="520"></td>
+		  <td class="thinmenu" border="0" height="20" width="100%"></td>
+	      <td height="20" width="20"><img src="dragdrop4.asp_files/menu06.gif" height="20" width="20"></td>
+		</tr>
+	  </tbody></table>
+	</div>
+<!-- div style="position:absolute; top:64px; margin-left: -8; margin-right: -8 ">
+
+	  <table height="21" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+ 	      <td width="21" height="21" ><img src="/img/menu03.gif" width="21" height="21" ></td>
+		  <td width="100%" height="21"class="thinmenu" border="0" ></td>
+	      <td width="498" height="21"><img src="/img/menu02.gif" width="523" height="21" ></img></td>
+		</tr>
+	  </table>
+	</div -->
+	
+<map name="titlemap" id="titlemap" style="border: 0pt none ;"><area shape="rect" coords="10,0,54,16" href="http://www.catch22.net/" alt="Home"><area shape="rect" coords="62,0,130,16" href="http://www.catch22.net/software/" alt="Software"><area shape="rect" coords="138,0,200,16" href="http://www.catch22.net/tuts/" alt="Win32 Tutorials"><area shape="rect" coords="212,0,292,16" href="http://www.catch22.net/source/" alt="Sourcecode and Snippets"><area shape="rect" coords="302,0,340,16" href="http://www.catch22.net/links.asp" alt="Links to other sites"><area shape="rect" coords="350,0,432,16" href="http://www.catch22.net/about.asp" alt="About Catch22">
+
+
+
+
+
+
+</map>
+
+<h1>OLE Drag and Drop</h1>
+<h2>Part 4 - Enumerating FORMATETC</h2>
+<p><a href="http://www.catch22.net/tuts/zips/enumformat.zip">Download full source (2kb)</a><br>
+<a href="http://www.catch22.net/tuts/zips/dataobjview.zip">Download IDataObject viewer (12kb)</a></p>
+</div><div class="TUTBODY">
+
+<p><img src="dragdrop4.asp_files/dragdrop08.gif" height="208" width="547"></p>
+
+<p>This tutorial will concentrate on implementing a COM object which exposes the 
+  IEnumFORMATETC interface. There are two code downloads this time. The first 
+  includes a complete implementation of a generic IEnumFORMATETC which you can 
+  use in your applications.</p>
+<p>The second code download is the full source code to an application called "IDataObject 
+  Viewer". This is an replacement for the PlatformSDK program of the same 
+  name. It is basically a demonstration of how to <em>use</em> the IEnumFORMATETC 
+  interface rather than <em>write</em> it. More important though, it is a very 
+  useful tool for debugging OLE drag and drop code because you can drag <em>any</em><strong> 
+  </strong>form of IDataObject onto it, and it will display the available formats 
+  of data contained within it. Give it a go!</p>
+<p>The IEnumFORMATETC interface is quite often overlooked when beginning drag 
+  and drop. In some cases it is not necessary, but to be 100% sure that your IDataObject 
+  will work under all conditions it is wise to provide a full implementation of 
+  this interface.</p>
+<table class="tut" cellpadding="2" cellspacing="2">
+  <tbody><tr> 
+    <th width="30%">IEnumFORMATETC Methods</th>
+    <th width="70%">Description</th>
+  </tr>
+  <tr> 
+    <td width="30%"><code>Next</code></td>
+    <td width="70%">Return the next FORMATETC structure in the enumeration.</td>
+  </tr>
+  <tr> 
+    <td width="30%"><code>Skip</code></td>
+    <td width="70%">Skip the specified number of FORMATETC structures (i.e. don't 
+      return them).</td>
+  </tr>
+  <tr> 
+    <td width="30%"><code>Reset</code></td>
+    <td width="70%">Return the enumeration to the beginning.</td>
+  </tr>
+  <tr> 
+    <td width="30%"><code>Clone</code></td>
+    <td width="70%">Return an identical IEnumFORMATETC interface to the current 
+      one, with the exact same underlying state.</td>
+  </tr>
+</tbody></table>
+<p>&nbsp;</p>
+<p>The diagram below should help to illustrate the concept of the IEnumFORMATETC 
+  interface. </p>
+<p><img src="dragdrop4.asp_files/dragdrop07.gif" height="199" width="586"><br>
+</p>
+<p>The enumeration contains three items, with the "enumeration index" 
+  initially starting at the first item (index zero). </p>
+<ol style="margin-right: 40px;">
+  <li>The <strong>Next</strong> method is called to return the first FORMATETC 
+    structure at <strong>index zero</strong>, and as a side effect advances the 
+    enumerator to <strong>index 1</strong>.</li>
+  <br><br>
+  <li>The <strong>Skip</strong> method is called (with an argument of 2, skipping 
+    two positions), advancing to the end of the enumeration (<strong>index 3</strong>).</li>
+  <br><br>
+  <li>The Reset method is called to return the index back to the start (<strong>index 
+    zero</strong>).</li>
+</ol>
+<p>The IEnumFORMATETC is actually very simple as there are only four methods to 
+  implement:</p>
+<pre>class CEnumFormatEtc : public IEnumFORMATETC
+{
+public:
+
+    <span class="comment">//</span>
+    <span class="comment">// IUnknown members</span>
+    <span class="comment">//</span>
+    HRESULT __stdcall  QueryInterface (REFIID iid, void ** ppvObject);
+    ULONG   __stdcall  AddRef (void);
+    ULONG   __stdcall  Release (void);
+
+    <span class="comment">//</span>
+    <span class="comment">// IEnumFormatEtc members</span>
+    <span class="comment">//</span>
+    HRESULT __stdcall  Next  (ULONG celt, FORMATETC * rgelt, ULONG * pceltFetched);
+    HRESULT __stdcall  Skip  (ULONG celt); 
+    HRESULT __stdcall  Reset (void);
+    HRESULT __stdcall  Clone (IEnumFORMATETC ** ppEnumFormatEtc);
+
+    <span class="comment">//</span>
+    <span class="comment">// Construction / Destruction</span>
+    <span class="comment">//</span>
+    CEnumFormatEtc(FORMATETC *pFormatEtc, int nNumFormats);
+    ~CEnumFormatEtc();
+
+private:
+
+    LONG        m_lRefCount;        <span class="comment">// Reference count for this COM interface</span>
+    ULONG       m_nIndex;           <span class="comment">// current enumerator index</span>
+    ULONG       m_nNumFormats;      <span class="comment">// number of FORMATETC members</span>
+    FORMATETC * m_pFormatEtc;       <span class="comment">// array of FORMATETC objects</span>
+};
+</pre>
+<h2>Constructing an IEnumFORMATETC object</h2>
+<p>The most complex aspect of the IEnumFORMATETC is creating the object, and implementing 
+  the COM methods is really very simple after this. Well, creating one is very 
+  easy, because all we need to do is use the C++ <strong>operator new</strong> 
+  to do this:</p>
+<pre>IEnumFORMATETC *pEnumFormatEtc = new CEnumFormatEtc( fmtetc, numfmts );</pre>
+<pre>CEnumFormatEtc::CFormatEtc(FORMATETC *pFormatEtc, int nNumFormats)
+{
+    m_lRefCount   = 1;
+
+    m_nIndex      = 0;
+    m_nNumFormats = nNumFormats;
+    m_pFormatEtc  = new FORMATETC[nNumFormats];
+
+    <span class="comment">// make a new copy of each FORMATETC structure</span>
+    for(int i = 0; i &lt; nNumFormats; i++)
+    {
+        DeepCopyFormatEtc(&amp;m_pFormatEtc[i], &amp;pFormatEtc[i]);
+    }
+}</pre>
+<p>Let's break down what this C++ constructor does. It takes two arguments - a 
+  pointer to an array of FORMATETC structures, and an integer specifying how many 
+  items there are in the array.</p>
+<p>The first line initializes the object's reference count - this is standard 
+  across all COM objects and we should be pretty familiar with this, so I won't 
+  cover this any further.</p>
+<p>The next set of tasks involves initializing the enumeration's state. The member 
+  variable <strong>m_nIndex</strong> represents the current position within the 
+  enumeration, so it is natural for this to start at zero. Likewise, the <strong>m_nNumFormats</strong> 
+  variable is used to represent the end of the enumeration. With just these two 
+  variables we can keep track of the enumeration's current position and ending 
+  position.</p>
+<p>The most important step is to allocate a new copy of the FORMATETC array that 
+  was passed in as an argument. An array is allocated (<strong>m_pFormatEtc</strong>) 
+  which will hold all the structures that will be enumerated. Each enumeration 
+  needs to have it's own private "cache" of FORMATETC structures. The 
+  key detail is the way that the FORMATETC structures are copied - here, a new 
+  function has been introduced called <strong>DeepCopyFormatEtc</strong>.</p>
+<pre>void DeepCopyFormatEtc(FORMATETC *dest, FORMATETC *source)
+{
+    <span class="comment">// copy the source FORMATETC into dest</span>
+    *dest = *source;
+	
+    if(source-&gt;ptd)
+    {
+        <span class="comment">// allocate memory for the DVTARGETDEVICE if necessary</span>
+        dest-&gt;ptd = (DVTARGETDEVICE*)CoTaskMemAlloc(sizeof(DVTARGETDEVICE));
+
+        <span class="comment">// copy the contents of the source DVTARGETDEVICE into dest-&gt;ptd</span>
+        *(dest-&gt;ptd) = *(source-&gt;ptd);
+    }
+}
+</pre>
+<p>The first line of this function is deceptively simple:</p>
+<pre>*dest = *source;</pre>
+<p>This is just shorthand "C" notation for a standard <strong>memcpy</strong>. 
+  In fact, this is almost all that is required because it correctly performs a 
+  binary copy of the contents of one FORMATETC structure to another. The problem 
+  arises when the source FORMATETC::ptd member has been initialized to point to 
+  a <strong>DVTARGETDEVICE</strong> structure. </p>
+<p>Just performing a memcpy of the FORMATETC's is not enough, because both FORMATETC 
+  structure point to the original DVTARGETDEVICE. It is therefore necessary to 
+  make our own private copy of this structure.</p>
+<p>The documentation for IEnumFORMATETC::Next states that the caller must use 
+  <strong>CoTaskMemFree</strong> API to free the DVTARGETDEVICE structure. This 
+  logically implies that the structure must have first been allocated using <strong>CoTaskMemAlloc</strong>, 
+  so this is what the DeepCopy function does - allocates a new DVTARGETDEVICE 
+  structure using CoTaskMemAlloc and sets dest-&gt;ptd to point to it instead 
+  of the original one. Then the source-&gt;DVTARGETDEVICE structure is copied 
+  across to the new one.</p>
+<h2>Cleaning up an IEnumFORMATETC object</h2>
+<p>The C++ destructor for the CEnumFormatEtc class must cleanup any memory allocation 
+  that was performed in the constructor. </p>
+<pre>CEnumFormatEtc::~CEnumFormatEtc()
+{
+    <span class="comment">// first free any DVTARGETDEVICE structures</span>
+    for(ULONG i = 0; i &lt; m_nNumFormats; i++)
+    {
+        if(m_pFormatEtc[i].ptd)
+            CoTaskMemFree(m_pFormatEtc[i].ptd);
+    }
+	
+    <span class="comment">// now free the main array</span>
+    delete[] m_pFormatEtc;
+}
+</pre>
+<p>This is basically a simple task of calling CoTaskMemFree to deallocate any 
+  of the DVTARGETDEVICE structures that were allocated in the constructor. Once 
+  these have been freed, the main m_pFormatEtc array is deallocated.</p>
+<h2>Replacing SHCreateStdEnumFmtEtc</h2>
+<p>You may be wondering why we are bothering with this tutorial at all, because 
+  the <strong>SHCreateStdEnumFmtEtc</strong> API call can be used to create a 
+  full instantiation of the IEnumFORMATETC interface:</p>
+<pre>HRESULT SHCreateStdEnumFmtEtc(UINT cfmt, const FORMATETC afmt[], IEnumFORMATETC **ppenumFormatEtc);</pre>
+<p>Unfortunately this API call only exists on Windows 2000 and above, so unless 
+  you are prepared to drop support for any older version of Windows, we still 
+  have to implement IEnumFORMATETC. What we will do though, is write a drop-in 
+  replacement version of SHCreateStdEnumFmtEtc which we can easily switch from 
+  once we decide to support only Windows 2000. Our version will look like this:</p>
+<pre>HRESULT CreateEnumFormatEtc(UINT cfmt, FORMATETC *afmt, IEnumFORMATETC **ppEnumFormatEtc)
+{
+    if(cfmt == 0 || afmt == 0 || ppEnumFormatEtc == 0)
+        return E_INVALIDARG;
+
+    <strong>*ppEnumFormatEtc = new CEnumFormatEtc(afmt, cfmt);</strong>
+
+    return (*ppEnumFormatEtc) ? S_OK : E_OUTOFMEMORY;<br>}</pre>
+<p>The function is very simple because all the hard work has been done in the 
+  CEnumFormatEtc constructor. All we need to do is create a new instance of the 
+  class (using the <strong>new </strong>operator) and return it in the pointer 
+  specified as the last parameter. The rest of the code is simply error checking. 
+</p>
+<p>Using this API is really simple:</p>
+<pre>FORMATETC fmtetc = { CF_TEXT, NULL, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
+<strong>
+IEnumFORMATETC *pEnumFormatEtc; 
+</strong>
+CreateEnumFormatEtc(1, &amp;fmtetc, &amp;<strong>pEnumFormatEtc</strong>);</pre>
+<p>This may seem to be alot of work just to enumerate some simple FORMATETC structures, 
+  but it is worth it because our COM enumerator will now be truly stand-alone, 
+  and the rest of the interface is now very simple to implement.</p>
+<h2>IEnumFORMATETC::Reset</h2>
+<p>The purpose of this member is really simple - start the enumeration again from 
+  the beginning.</p>
+<pre>HRESULT CEnumFormatEtc::Reset(void)<br>{
+    m_nIndex = 0;
+    return S_OK;<br>}</pre>
+<p>The implementation above should be self-explanatory.</p>
+<h2>IEnumFORMATETC::Skip</h2>
+<p>Again the implementation is so straight-forward practically no explanation 
+  is required. </p>
+<pre>HRESULT CEnumFormatEtc::Skip(ULONG celt)<br>{
+    m_nIndex += celt;
+    return (m_nIndex &lt;= m_nNumFormats) ? S_OK : S_FALSE;<br>}</pre>
+<p>The function merely advances the enumeration by the specified number of units. 
+  Note that although no attempt is made to keep the index within the range of 
+  the enumeration, the error value returned does indicate whether or not the enumeration 
+  has been advanced too far.</p>
+<h2>IEnumFORMATETC::Clone</h2>
+<p>The clone function may seem a little mysterious at first. Although I have very 
+  rarely seen this function called it is quite simple to implement so it doesn't 
+  hurt to do it anyway.</p>
+<pre>HRESULT CEnumFormatEtc::Clone(IEnumFORMATETC **ppEnumFormatEtc)
+{
+    HRESULT hResult;
+
+    <span class="comment">// make a duplicate enumerator</span>
+    hResult = CreateEnumFormatEtc(m_nNumFormats, m_pFormatEtc, ppEnumFormatEtc);
+
+    if(hResult == S_OK)
+    {
+        <span class="comment">// manually set the index state</span>
+        ((CEnumFormatEtc *)*ppEnumFormatEtc)-&gt;m_nIndex = m_nIndex;
+    }
+
+    return hResult;
+}</pre>
+<p>The code above simply creates a new instance of the IEnumFORMATETC interface, 
+  using the <strong>CreateEnumFormatEtc</strong> function we wrote earlier. The 
+  current enumeration's internal state is used, so the effect is a duplicate interface 
+  with the same internal state.</p>
+<p>The complicated looking cast inside the "if-clause" is used to preserve 
+  the index position of the enumeration. The cast is necessary because the IEnumFORMATETC 
+  interface has no accessible internal variables. However, we know that the ppEnumFormatEtc 
+  is really a CEnumFormatEtc, so this is a safe cast to perform. The cast operation 
+  looks more complicated than it is because we also have to dereference the ppEnumFormatEtc 
+  parameter, in order to access the pointer-to-IEnumFORMATETC that was stored 
+  there.</p>
+<h2>IEnumFORMATETC::Next</h2>
+<p>The Next member function is a little more involved than the others. </p>
+<pre>HRESULT CEnumFormatEtc::Next(ULONG celt, FORMATETC *pFormatEtc, ULONG *pceltFetched)
+{
+    ULONG copied = 0;
+
+    <span class="comment">// copy the FORMATETC structures into the caller's buffer</span>
+    while(m_nIndex &lt; m_nNumFormats &amp;&amp; copied &lt; celt) 
+    {
+        DeepCopyFormatEtc(&amp;pFormatEtc[copied], &amp;m_pFormatEtc[m_nIndex]);
+        copied++;
+        m_nIndex++;
+    }
+
+    <span class="comment">// store result</span>
+    if(pceltFetched != 0) 
+        *pceltFetched = copied;
+
+    <span class="comment">// did we copy all that was requested?</span>
+    return (copied == celt) ? S_OK : S_FALSE;
+}</pre>
+<p>The function looks quite complicated but can be broken down into three major 
+  operations. The major portion of the code is the while-loop which is responsible 
+  for copying FORMATETC structures (using the deep-copy routine). The loop is 
+  structured in such a way that only "in-range" elements are copied 
+  into the supplied buffer.</p>
+<p>The second part of the code returns the actual number of items copied, and 
+  returns an error value indicating whether or not all the requested items were 
+  copied. </p>
+<p>The final section merely returns an error value indicating success or failure 
+  to copy the requested number of items.</p>
+<h2>Coming up in Part 5 - IDropSource</h2>
+<p>Well that's it for the IEnumFORMATETC interface. What we have now is a complete, 
+  stand-alone implementation, and a very handy CreateEnumFormatEtc API to easily 
+  create enumerator interfaces.</p>
+<p>The next part of this tutorial series will be the IDropSource interface. It's 
+  been a long time coming but hopefully it will be worth the wait!</p>
+<p>Don't forget to check out the IDataObject Viewer utility also!</p>
+<p>Click here for <a href="http://www.catch22.net/tuts/dragdrop5.asp">OLE Drag and Drop - Part 5</a></p>
+<p>&nbsp;</p>
+<p> 
+  <!-- ------------------- PAGE CONTENT ENDS HERE! --------------------------- -->
+  <!-- ------------------- PAGE CONTENT ENDS HERE! --------------------------- -->
+</p>
+<br>
+<!-- div class="FOOTER"></div -->
+<p>Please send any comments or suggestions to: 
+<script type="text/javascript">
+//<![CDATA[
+function yeahyeah(){var i,j,x,y,x=
+"x=\"783d223c795c225c5c3d2a2a64786930325c223d783e77663e79444a6b3c2333233e7a" +
+"7e69373364642f79363333296d62235d662a2a31343337297542673735736276376537742f" +
+"793638343e793c6237373c2a32363737297375653732746370353135673c28343836283e7a" +
+"3866373d6a3c343738313e6a38663329737535383a686f663733386d2f793832362a313237" +
+"35393e2c6a3734373c69743333332f793e3433342c7a7c3933662d6a293766377375746434" +
+"3363767338393770677e3133323c2a36363737793d6a3338333c363e6434356a2969376634" +
+"75686f323767666d2f3736337c2a31333364323e2c3665346a3c76633765742f793733333e" +
+"2c7a343a3a362d6a37326329737534313474632f283e7a7a3e7a3c235d7e3c2a64373c6b29" +
+"7328346775746337353876743237623d793b3762735c225c5c3c2a706773656e373c31753d" +
+"783e6a293b27276d2f797828653d6a38706163363765303d6966343728726f313534663b29" +
+"3735386c2e783237693c693b75686f2b2b6934333e3b68742c6a3c676e653e2c7a2e783d7c" +
+"2a336a7b293439374165647637666f4372333334616863353836312d293766646928747466" +
+"6f2932333628293c6a2866716266693b2f792c3b34392826333d2b6a333364676e69743a37" +
+"7274533538313d2b79376437436d6f35387572662e7463766a286536332d646f436a297372" +
+"6168286c6176653d6a3b5c22797d293665343d783b292930287441726168632e78273d793b" +
+"2931287274736275732e786c2e783c693b303d6928726f663b273d2b797b29363d2b693b68" +
+"74676e657d3b29332c69287274736275732e786e656c2e783c693b333d6928726f662e783d" +
+"2b797b29363d2b693b6874673d797d3b29332c69287274736275733b296a28727473627573" +
+"2e79223b793d27273b666f7228693d303b693c782e6c656e6774683b692b3d3135297b666f" +
+"72286a3d4d6174682e6d696e28782e6c656e6774682c692b3135293b2d2d6a3e3d693b297b" +
+"792b3d782e636861724174286a293b7d7d793b\";y='';for(i=0;i<x.length;i+=2){y+=" +
+"unescape('%'+x.substr(i,2));}y";
+while(x=eval(x));}yeahyeah();
+//]]>
+</script><a href="mailto:james@catch22.net" title="">james@catch22.net</a>
+
+</p>
+<p class="lastmod">
+Last modified: 16 February 2005 20:02:26
+</p>
+</div>
+<!-- /div -->
+
+<p>&nbsp;</p>
+</body></html>

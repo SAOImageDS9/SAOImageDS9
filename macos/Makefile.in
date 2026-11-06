@@ -60,7 +60,7 @@ saods9	: dirs tcl tk \
 	tkblt tclfitsy tktable tkimg \
 	tkmpeg tkagif tkhtml1 tkcon \
 	tkmacosx \
-	tksao ds9
+	tkdnd tksao ds9
 
 tcl	: tcl$(TCL_VERSION)/macosx/Makefile
 	@echo ""
@@ -152,6 +152,22 @@ tkmacosx/Makefile :
 	--prefix $(prefix) --exec-prefix $(exec_prefix) --libdir $(libdir) \
 	--disable-shared --enable-symbols \
 	$(CACHE)
+
+# ----------- tkdnd
+
+tkdnd: tkdnd/Makefile
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tkdnd install
+
+tkdnd/Makefile:
+	@echo ""
+	@echo "*** $@ ***"
+	cd tkdnd; \
+	./configure \
+	$(WITHTK) \
+	$(PREFIX) \
+	$(STD)
 
 #--------------------------clean
 

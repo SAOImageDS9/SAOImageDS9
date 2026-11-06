@@ -48,6 +48,7 @@ Additional Linux notes:
    % sudo yum install libxml2-devel
    % sudo yum install libxslt-devel
    % sudo yum install libXft-devel
+   % sudo yum install libXcursor-devel
    % sudo yum install tcl-devel
    % sudo yum install tk-devel
    
@@ -59,6 +60,7 @@ Additional Linux notes:
    % zypper install libxml2-devel
    % zypper install libxslt-devel
    % zypper install libXft-devel
+   % zypper install libXcursor-devel
    % zypper install tcl-devel
    % zypper install tk-devel
 
@@ -70,6 +72,7 @@ Additional Linux notes:
     % sudo apt-get install libxml2-dev
     % sudo apt-get install libxslt1-dev
     % sudo apt-get install libxft-dev
+    % sudo apt-get install libxcursor-dev
 
     % sudo apt-get install zip
     % sudo apt-get install tcl-dev
@@ -83,6 +86,7 @@ Additional Linux notes:
     % apt-get install libxml2-dev
     % apt-get install libxslt1-dev
     % apt-get install libxft-dev
+    % apt-get install libxcursor-dev
     % apt-get install zip
     % apt-get install tcl-dev
     % apt-get install tk-dev

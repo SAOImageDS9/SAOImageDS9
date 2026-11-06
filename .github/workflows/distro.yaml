@@ -118,17 +118,17 @@ jobs:
           export DEBIAN_FRONTEND=noninteractive
           apt-get install -y \
             make gcc g++ automake autoconf \
-            libx11-dev zlib1g-dev libxml2-dev libxslt1-dev libxft-dev \
+            libx11-dev zlib1g-dev libxml2-dev libxslt1-dev libxft-dev libxcursor-dev \
             zip tcl-dev tk-dev
         elif [ "${{ matrix.pkg_mgr }}" == "dnf" ]; then
           dnf install -y \
             make gcc gcc-c++ automake autoconf \
-            libX11-devel zlib-devel libxml2-devel libxslt-devel libXft-devel \
+            libX11-devel zlib-devel libxml2-devel libxslt-devel libXft-devel libXcursor-devel \
             zip tcl-devel tk-devel perl-core which file
         elif [ "${{ matrix.pkg_mgr }}" == "zypper" ]; then
           zypper --non-interactive install \
             make gcc gcc-c++ automake autoconf \
-            libX11-devel zlib-devel libxml2-devel libxslt-devel libXft-devel \
+            libX11-devel zlib-devel libxml2-devel libxslt-devel libXft-devel libXcursor-devel \
             zip tcl-devel tk-devel which tar file
         fi
 

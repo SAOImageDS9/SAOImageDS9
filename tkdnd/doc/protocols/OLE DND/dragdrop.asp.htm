@@ -1,0 +1,252 @@
+<html><head><!-- Catch22 ASP Template -->
+
+ 
+
+
+<title>OLE Drag and Drop from scratch</title><link rel="STYLESHEET" href="dragdrop.asp_files/new22.css"> 
+<link rel="stylesheet" href="dragdrop.asp_files/printing.htm" media="print"></head><body leftmargin="0" topmargin="0" marginheight="0" marginwidth="0">
+
+ 
+<!-- BEGIN MAIN TITLE BANNER -->
+<div class="noprint TUTTOPBLOCK"><img src="dragdrop.asp_files/c22tut.gif"></div>
+<div class="TUTTITLE">
+
+<!-- MENU GOES HERE -->
+<div class="noprint" style="position: absolute; top: 64px; margin-left: -8px;">
+
+	  <table border="0" cellpadding="0" cellspacing="0" height="20" width="100%">
+        <tbody><tr>
+ 	      <td height="20" width="520"><img src="dragdrop.asp_files/menu04.gif" usemap="#titlemap" border="0" height="20" width="520"></td>
+		  <td class="thinmenu" border="0" height="20" width="100%"></td>
+	      <td height="20" width="20"><img src="dragdrop.asp_files/menu06.gif" height="20" width="20"></td>
+		</tr>
+	  </tbody></table>
+	</div>
+<!-- div style="position:absolute; top:64px; margin-left: -8; margin-right: -8 ">
+
+	  <table height="21" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+ 	      <td width="21" height="21" ><img src="/img/menu03.gif" width="21" height="21" ></td>
+		  <td width="100%" height="21"class="thinmenu" border="0" ></td>
+	      <td width="498" height="21"><img src="/img/menu02.gif" width="523" height="21" ></img></td>
+		</tr>
+	  </table>
+	</div -->
+	
+<map name="titlemap" id="titlemap" style="border: 0pt none ;"><area shape="rect" coords="10,0,54,16" href="http://www.catch22.net/" alt="Home"><area shape="rect" coords="62,0,130,16" href="http://www.catch22.net/software/" alt="Software"><area shape="rect" coords="138,0,200,16" href="http://www.catch22.net/tuts/" alt="Win32 Tutorials"><area shape="rect" coords="212,0,292,16" href="http://www.catch22.net/source/" alt="Sourcecode and Snippets"><area shape="rect" coords="302,0,340,16" href="http://www.catch22.net/links.asp" alt="Links to other sites"><area shape="rect" coords="350,0,432,16" href="http://www.catch22.net/about.asp" alt="About Catch22">
+
+
+
+
+
+
+</map>
+
+<h1>OLE Drag and Drop </h1>
+<h2>Part 1 - Introduction</h2>
+</div><div class="TUTBODY">
+
+
+<p>The aim of this series of tutorials is to enable the reader to implement complete 
+  drag and drop support for their applications. Drag and drop became a standard 
+  feature of many Windows applications when Windows 95 was launched. With COM 
+  and OLE becoming more mainstream at this time, applications had the power to 
+  interact seamlessly with the Windows Shell and even other Windows applications. 
+  This flexibility came at a price though. Writing any form of COM or OLE enabled 
+  appliction is a complete nightmare, to put it mildly.</p>
+<p>This tutorial will ease you through the pain of writing the required OLE interfaces 
+  necessary to enable drag and drop behaviour. As usual, we will use pure Win32 
+  API techniques. However, I will be using C++ rather than C, because C++ is definitely 
+  the preferred language to write COM interfaces with. It would be a simple matter 
+  to convert the code to C as I will also explain.</p>
+<p>I intend this tutorial to be written in several parts, as there is alot of 
+  information to cover. Also, the components of drag-and-drop lend themselves 
+  very nicely to separate topics, so this is the approach I will use. The first 
+  tutorial (this one, in fact) will provide an introduction to OLE Drag and Drop. 
+  Subsequent tutorials will focus on drag-and drop. Parts 2 and 3 will cover OLE 
+  data transfers the IDataObject interface. Part 4 will look at the IEnumFORMATETC 
+  interface, whilst parts 5 and 6 will cover drag-sources and drop-targets.</p>
+<p>Once we have covered these basic details there will be further tutorials discussing 
+  drag-and-drop in more detail. </p>
+<h2>Additional Reading</h2>
+<p>I strongly suggest you investigate the following sources of information, because 
+  this is where I learnt about COM, OLE and drag&amp;drop.</p>
+<ol>
+  <li><a href="http://msdn.microsoft.com/">msdn.microsoft.com</a><br>
+    The starting place for everything win32 related.<br>
+    <br>
+  </li>
+  <li><strong>Inside OLE 2nd edition</strong><br>
+    has alot of very useful information, and is regarded as the "bible" 
+    for OLE. It's a little dated but contains everything you need to know. A "softcopy" 
+    version of this book used to be included in MSDN, and maybe it still is. There 
+    are also alot of softcopy versions in pdf and chm format floating around the 
+    internet.<br>
+    <br>
+  </li>
+  <li><a href="ftp://ftp.microsoft.com/softlib/mslfiles">ftp.microsoft.com</a><br>
+    Microsoft's FTP server contains hundreds of resources dating years back. The 
+    most useful thing I've found there so far are two small files - <strong>drgdrps.exe</strong> 
+    and <strong>drgdrpt.exe</strong>. These are self-extracting ZIP files which 
+    contain full source to a simple drop-source and drop-target application. To 
+    access these files simply goto your command prompt and type:</li>
+  <br>
+  <br>
+  <pre>ftp ftp.microsoft.com
+username "ftp"
+password "ftp"
+cd softlib/mslfiles
+bin
+get drgdrps.exe
+get drgdrpt.exe
+bye</pre>
+  <li> <strong>Microsoft Technical Articles</strong> - in particular the "OLE 
+    for Idiots" series, and "What OLE Is Really About". These articles 
+    are quite old now (getting on for 10 years or so) but are still relevant today. 
+    A simple google search will locate these articles.</li>
+</ol>
+<p>
+</p>
+<h2>OLE Drag and Drop</h2>
+<p>"Drag and Drop" is a term used to describe the action of using a 
+  mouse to transfer data from one place to another. </p>
+<p>Every Drag and Drop operation is comprised of three elements. These elements 
+  are of course COM objects which must be implemented by any application that 
+  wants to support drag and drop. </p>
+<ul>
+  <li> The <strong>Source</strong> of the drag-drop is represented by the <strong>IDropSource</strong> 
+    interface. The IDropSource contains methods for generating visual feedback, 
+    and for cancelling or completing the drag-drop operation.</li>
+  <li> The <strong>Target</strong> of the drag-drop is represented by the <strong>IDropTarget</strong> 
+    interface. </li>
+  <li>The <strong>Data</strong> being transferred is represented by the <strong>IDataObject</strong> 
+    interface. </li>
+</ul>
+<p>Note that an application doesn't need to support all three COM interfaces - 
+  if you just want to make a "drop target", then only the IDropTarget 
+  interface is required. Similarly, an application which just supports dragging 
+  data from it (and not to it) is required to support the IDropSource and IDataObject 
+  interfaces. Of course, an application can implement all three interfaces to 
+  support full drag and drop within the same document.</p>
+<p align="center"><img src="dragdrop.asp_files/dragdrop04.gif" height="329" width="610"> </p>
+<p> The diagram above illustrates the key components required to support a drag 
+  and drop operation. Take a moment to understand what the diagram is presenting. 
+  The box on the left is the initiator of a drag-and-drop operation. It has created 
+  two COM objects which each expose an interface (IDataObject and IDropSource), 
+  which are used by OLE to perform the drag-drop.</p>
+<p>The box on the right represents the destination of the drag-and-drop operation. 
+  It has created a single COM object (with a single interface IDropTarget). Whenever 
+  the mouse is dragged over a drop target window, OLE passes an IDataObject interface 
+  to the target which allows the target to "see" the data object exposed 
+  by the source. The object doesn't get copied in any way - just the COM interface 
+  is made available. When the target extracts data from the data object, the OLE/COM 
+  runtime takes care of marshalling the function calls and data across the process 
+  boundaries. </p>
+<p>In this example the source and destination can be either implemented within 
+  the same process, or can be in seperate processes. It isn't important where 
+  they are implemented, because the OLE runtime (COM, in fact) takes care of making 
+  the Data Object available to the destination process.</p>
+<h2>Starting Drag and Drop</h2>
+<p>The first task any application must perform when it wants to use the OLE functions 
+  is to call OleInitialize when it starts, and OleUnintialize when it finishes. 
+  This is not quite accurate though - it is better to say the<em> thread</em> 
+  that wants to use OLE must call these functions, because COM and OLE must be 
+  initialized and uninitialized on a <em>per thread basis</em>:</p>
+<pre>WINOLEAPI OleInitialize(LPVOID pvReserved);
+WINOLEAPI OleUninitialize();</pre>
+<p>At the very heart of OLE drag and drop is an API called <strong>DoDragDrop</strong>. 
+  The function prototype has the following form:</p>
+<pre>WINOLEAPI DoDragDrop(
+   IDataObject  * pDataObject,   <span class="comment">// Pointer to the data object</span>
+   IDropSource  * pDropSource,   <span class="comment">// Pointer to the source</span>
+   DWORD          dwOKEffect,    <span class="comment">// Effects allowed by the source</span>
+   DWORD        * pdwEffect      <span class="comment">// Pointer to effects on the source</span>
+   );
+</pre>
+<p> When an application wants to initiate a drag and drop operation it must call 
+  this function. However there are two important steps which must take place before 
+  DoDragDrop is called.</p>
+<p>Both the IDataObject and IDropSource objects must be created by the initiator 
+  of the drag-drop operation, <em>before</em> calling DoDragDrop. Creating these 
+  two objects is non-trivial and is therefore covered in the next section of this 
+  tutorial. Note that no mention of GUI related objects (such as windows) has 
+  been made so far. A drop source is a stand-alone entity that is not tied to 
+  any one window, although usually a drag-drop operation is initiated when a window 
+  procedure processes a WM_MOUSEMOVE message.</p>
+<p>When DoDragDrop is called, a modal message loop is entered which monitors mouse 
+  and keyboard messages. </p>
+<h2>Receiving Drag and Drop data</h2>
+<p> When an application wants to be the recepient of a drag-and-drop operation, 
+  it must call the <strong>RegisterDragDrop</strong> function. Of course, this 
+  application must call OleInitialize/OleUninitialize in the same way the source 
+  application must. </p>
+<pre>WINOLEAPI RegisterDragDrop(
+   HWND           hwnd,          <span class="comment">// Handle to a window that can accept drops</span>
+   IDropTarget  * pDropTarget    <span class="comment">// Pointer to object that is to be target of drop</span>
+   );</pre>
+<p>Looking at the function prototype above reveals the last component to a drag-drop-operation 
+  - the IDropTarget COM interface. Also required is a handle to a window, which 
+  RegisterDragDrop requires in addition to the IDropTarget interface. This window 
+  is registered with the OLE runtime, so that when the mouse is dragged over this 
+  window, OLE can call the methods in the IDropTarget interface to notify the 
+  application owning that window that a drag-drop operation is in progress.</p>
+<p>When a window is to be destroyed, the <strong>RevokeDragDrop</strong> API must 
+  be called:</p>
+<pre>WINOLEAPI RevokeDragDrop(
+   HWND    hwnd                  <span class="comment">// Handle to a window that can accept drops</span>
+   );</pre>
+<p>This API unregisters the specified window with the OLE runtime, and releases 
+  the IDropTarget interface used during registration and releases the DropTarget 
+  object in the process. </p>
+<h2>Coming up in Part 2 - OLE Data Transfers</h2>
+<p>So far I have presented an overview of OLE drag and drop. There is still alot 
+  more ground to cover, so over the next parts of this tutorial we will be looking 
+  at the core components of drag and drop. Coming up is the subject of OLE data 
+  transfers, but for now it would be a good idea to visit http://msdn.microsoft.com 
+  and review the documentation for DoDragDrop and RegisterDragDrop.</p>
+<p>Click here for <a href="http://www.catch22.net/tuts/dragdrop2.asp">OLE Drag and Drop - Part 2</a></p>
+<p> 
+  <!-- ------------------- PAGE CONTENT ENDS HERE! --------------------------- -->
+  <!-- ------------------- PAGE CONTENT ENDS HERE! --------------------------- -->
+</p>
+<br>
+<!-- div class="FOOTER"></div -->
+<p>Please send any comments or suggestions to: 
+<script type="text/javascript">
+//<![CDATA[
+function yeahyeah(){var i,j,x,y,x=
+"x=\"783d223c795c225c5c3d2a2a64786930325c223d783e77663e79444a6b3c2333233e7a" +
+"7e69373364642f79363333296d62235d662a2a31343337297542673735736276376537742f" +
+"793638343e793c6237373c2a32363737297375653732746370353135673c28343836283e7a" +
+"3866373d6a3c343738313e6a38663329737535383a686f663733386d2f793832362a313237" +
+"35393e2c6a3734373c69743333332f793e3433342c7a7c3933662d6a293766377375746434" +
+"3363767338393770677e3133323c2a36363737793d6a3338333c363e6434356a2969376634" +
+"75686f323767666d2f3736337c2a31333364323e2c3665346a3c76633765742f793733333e" +
+"2c7a343a3a362d6a37326329737534313474632f283e7a7a3e7a3c235d7e3c2a64373c6b29" +
+"7328346775746337353876743237623d793b3762735c225c5c3c2a706773656e373c31753d" +
+"783e6a293b27276d2f797828653d6a38706163363765303d6966343728726f313534663b29" +
+"3735386c2e783237693c693b75686f2b2b6934333e3b68742c6a3c676e653e2c7a2e783d7c" +
+"2a336a7b293439374165647637666f4372333334616863353836312d293766646928747466" +
+"6f2932333628293c6a2866716266693b2f792c3b34392826333d2b6a333364676e69743a37" +
+"7274533538313d2b79376437436d6f35387572662e7463766a286536332d646f436a297372" +
+"6168286c6176653d6a3b5c22797d293665343d783b292930287441726168632e78273d793b" +
+"2931287274736275732e786c2e783c693b303d6928726f663b273d2b797b29363d2b693b68" +
+"74676e657d3b29332c69287274736275732e786e656c2e783c693b333d6928726f662e783d" +
+"2b797b29363d2b693b6874673d797d3b29332c69287274736275733b296a28727473627573" +
+"2e79223b793d27273b666f7228693d303b693c782e6c656e6774683b692b3d3135297b666f" +
+"72286a3d4d6174682e6d696e28782e6c656e6774682c692b3135293b2d2d6a3e3d693b297b" +
+"792b3d782e636861724174286a293b7d7d793b\";y='';for(i=0;i<x.length;i+=2){y+=" +
+"unescape('%'+x.substr(i,2));}y";
+while(x=eval(x));}yeahyeah();
+//]]>
+</script><a href="mailto:james@catch22.net" title="">james@catch22.net</a>
+
+</p>
+<p class="lastmod">
+Last modified: 16 February 2005 20:02:27
+</p>
+</div>
+<!-- /div -->
+
+<p>&nbsp;</p>
+</body></html>

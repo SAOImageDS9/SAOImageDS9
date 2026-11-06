@@ -6832,6 +6832,13 @@ if test "${TEA_WINDOWINGSYSTEM}" = "x11"; then
 
 
 
+    # ds9: X may not be on the default search path (XQuartz on macos puts
+    # it in /usr/X11 or /opt/X11) and TEA_PATH_X has not run yet, so use
+    # the X include and lib dirs that tk found
+    tkdnd_save_CPPFLAGS="$CPPFLAGS"
+    tkdnd_save_LDFLAGS="$LDFLAGS"
+    CPPFLAGS="$CPPFLAGS $TK_XINCLUDES"
+    LDFLAGS="$LDFLAGS $TK_XLIBSW"
            for ac_header in X11/Xcursor/Xcursor.h
 do :
   ac_fn_c_check_header_compile "$LINENO" "X11/Xcursor/Xcursor.h" "ac_cv_header_X11_Xcursor_Xcursor_h" "$ac_includes_default"
@@ -6946,6 +6953,8 @@ printf "%s\n" "#define NO_X11_EXTENSIONS_XKB_H 1" >>confdefs.h
  ;;
 esac
 fi
+    CPPFLAGS="$tkdnd_save_CPPFLAGS"
+    LDFLAGS="$tkdnd_save_LDFLAGS"
 
 
     #     echo "TkDND requires libXcursor, please install the dependency"

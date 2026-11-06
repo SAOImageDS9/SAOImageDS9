@@ -33,7 +33,9 @@ extern "C" {
   int Tkhtml1_Init(Tcl_Interp*);
   int Tkmpeg_Init(Tcl_Interp*);
   int Tkagif_Init(Tcl_Interp*);
+#ifdef HAVE_TKDND
   int Tkdnd_Init(Tcl_Interp*);
+#endif
 
   int Tkimg_Init(Tcl_Interp*);
   int Zlibtcl_Init(Tcl_Interp*);
@@ -242,12 +244,14 @@ int SAOAppInit(Tcl_Interp *interp)
   Tcl_StaticPackage (interp, "window", Tkimgwindow_Init,
 		     (Tcl_PackageInitProc*)NULL);
 
+#ifdef HAVE_TKDND
   // Tkdnd
   // register only: Tkdnd_Init provides the tkdnd package, so it must not
   // run until 'package require tkdnd' has sourced the tkdnd scripts,
   // which then do 'load {} Tkdnd'
   Tcl_StaticPackage (NULL, "Tkdnd", Tkdnd_Init,
 		     (Tcl_PackageInitProc*)NULL);
+#endif
 
   // Signal_Ext
   if (Signal_ext_Init(interp) == TCL_ERROR)

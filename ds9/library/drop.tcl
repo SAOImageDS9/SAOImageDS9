@@ -7,7 +7,6 @@
 
 
 package provide DS9 1.0
-package require tkdnd
 
 proc GetFITSExtension { fn varname } {
     upvar 1 $varname var
@@ -267,6 +266,11 @@ proc LoadDrop { filenames } {
 
 proc BindDropEvents {} {
     global ds9
+
+    # tkdnd is not available on every platform (e.g. macos x11)
+    if {[catch {package require tkdnd}]} {
+        return
+    }
 
     tkdnd::drop_target register $ds9(canvas) DND_Files
     bind $ds9(canvas) <<DropEnter>> {return %A}

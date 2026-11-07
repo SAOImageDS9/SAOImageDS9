@@ -689,6 +689,7 @@ proc LanguageToName {which} {
 	en {return {English}}
 	es {return {Español}}
 	fr {return {Français}}
+	it {return {Italiano}}
 	ja {return [encoding convertfrom euc-jp "\xc6\xfc\xcb\xdc\xb8\xec"]}
 	pt {return {Português}}
 	zh {return [encoding convertfrom big5 "\xA4\xA4\xA4\xE5"]}

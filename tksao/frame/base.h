@@ -266,6 +266,11 @@ public:
   int useMarkerColor_;
   char* markerColor_;
 
+  // normalized directory of the region file being loaded or saved, NULL
+  // otherwise. Glyph file names are resolved against it on load and
+  // written relative to it on save.
+  char* markerFileDir_;
+
   GC markerGC_; // marker gc
   GC markerGCXOR_; // marker xor gc
   GC selectGCXOR; // select gc
@@ -622,6 +627,9 @@ public:
 
   int useMarkerColor() {return useMarkerColor_;}
   char* markerColor() {return markerColor_;}
+  void setMarkerFileDir(const char*);
+  const char* markerFileDir() {return markerFileDir_;}
+  char* resolveMarkerFileName(const char*);
 
   void matchCmd(const char* xxname1, const char* yyname1,
 		Coord::CoordSystem sys1, Coord::SkyFrame sky1,

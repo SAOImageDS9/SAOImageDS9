@@ -190,7 +190,14 @@ proc GlyphResizeWeights {ss nn} {
     return $rr
 }
 
-# Interactive create: pick a file if there is no default yet
+# Interactive create: use the file set in Preferences, else the same
+# built-in image illustrate mode uses. Never prompts; the file can be
+# changed afterwards in the glyph dialog.
+
+proc GlyphDefaultFile {} {
+    global ds9
+    return "$ds9(root)/doc/sun.png"
+}
 
 proc GlyphCreateFile {} {
     global pmarker
@@ -198,12 +205,7 @@ proc GlyphCreateFile {} {
     if {$pmarker(glyph,file) ne {} && [file readable $pmarker(glyph,file)]} {
 	return $pmarker(glyph,file)
     }
-
-    set fn [OpenFileDialog photofbox]
-    if {$fn ne {}} {
-	set pmarker(glyph,file) $fn
-    }
-    return $fn
+    return [GlyphDefaultFile]
 }
 
 # Dialog
@@ -309,4 +311,64 @@ proc GlyphCoordCB {varname {dummy {}}} {
 
     MarkerBaseCoordCB $varname
     MarkerBaseCenterMoveCB $varname
+}
+
+# Backup: copy every glyph file referenced by the saved region file fn
+# into dir (the directory holding fn) and rewrite the references to the
+# bare copied names, which load resolves relative to the region file.
+proc GlyphBackup {fn dir} {
+    if {[catch {open $fn r} ch]} {
+	return
+    }
+    set rr [read $ch]
+    close $ch
+
+    if {![string match {*glyph(*} $rr]} {
+	return
+    }
+
+    upvar #0 iglyphbackup map
+    array unset map
+    set rr [regsub -all -command {(glyph\([^\{\n]*\{)([^\}\n]*)(\})} $rr \
+		[list GlyphBackupRef $dir]]
+    array unset map
+
+    if {[catch {open $fn w} ch]} {
+	return
+    }
+    puts -nonewline $ch $rr
+    close $ch
+}
+
+proc GlyphBackupRef {dir all pre path post} {
+    upvar #0 iglyphbackup map
+
+    # relative names were written relative to the region file, i.e. dir
+    if {[file pathtype $path] eq {relative}} {
+	set src [file join $dir $path]
+    } else {
+	set src $path
+    }
+    if {![file readable $src]} {
+	return $all
+    }
+    set src [file normalize $src]
+
+    if {![info exists map($src)]} {
+	# keep the file name, make it unique within this backup
+	set base [file rootname [file tail $src]]
+	set ext [file extension $src]
+	set name "glyph_${base}${ext}"
+	set ii 1
+	while {[file exists [file join $dir $name]]} {
+	    set name "glyph_${base}_${ii}${ext}"
+	    incr ii
+	}
+	if {[catch {file copy -force $src [file join $dir $name]}]} {
+	    return $all
+	}
+	set map($src) $name
+    }
+
+    return "$pre$map($src)$post"
 }

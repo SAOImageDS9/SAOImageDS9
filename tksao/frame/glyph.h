@@ -25,6 +25,7 @@ class Glyph : public Marker {
   int width_;      // current size, screen pixels
   int height_;
   Tk_Image image_;
+  char* photoName_; // Tk photo behind image_, for postscript/pdf
 
  private:
   void loadImage();
@@ -35,12 +36,15 @@ class Glyph : public Marker {
   void renderXBox(Drawable, Coord::InternalSystem, GC, int);
 
   void renderPS(PSColorSpace);
+  void renderPSBox(PSColorSpace, int);
+  void renderPSImage(PSColorSpace, Tk_PhotoImageBlock*, int, int);
 
 #ifdef __WIN32
   void renderWIN32();
 #endif
 
   void updateHandles();
+  void listFileName(ostream&);
 
  public:
   Glyph(const Glyph&);

@@ -49,6 +49,7 @@
 %token FILTER_
 %token FITS_
 %token FUNCTION_
+%token GLYPH_
 %token HEADER_
 %token HIDE_
 %token HISTOGRAM_
@@ -250,6 +251,7 @@ symbol : ADD_ {CatalogCmdSymbolAdd}
  | FONTSLANT_ fontSlant {CatalogCmdSymbol fontslant $2}
 # backward compatibility
  | FONTSTYLE_ fontStyle {CatalogCmdSymbolFontStyle $2}
+ | GLYPH_ STRING_ {CatalogCmdSymbol glyph $2}
  | SIZE_ symbolCol {CatalogCmdSymbol size $2}
  | SIZE2_ symbolCol {CatalogCmdSymbol size2 $2}
  | SHAPE_ symbolShape {CatalogCmdSymbol shape $2}
@@ -261,6 +263,7 @@ symbolShape : CIRCLE_ {set _ circle}
  | ELLIPSE_ {set _ ellipse}
  | BOX_ {set _ box}
  | TEXT_ {set _ text}
+ | GLYPH_ {set _ glyph}
 
  | POINT_ {set _ "circle point"}
  | CIRCLE_ POINT_ {set _ "circle point"}

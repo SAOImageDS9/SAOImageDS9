@@ -203,6 +203,63 @@ Not yet verified / left for later:
 - XML/VOTable listing drops glyphs; docs (`region.html`) not written.
 2. PostScript output, magnifier, path resolution relative to the region
    file, backup copying.
+
+### Phase 2 status (2026-11-07)
+
+Done and smoke-tested on macOS:
+- **Relative paths.** `Base::markerFileDir_` holds the normalized
+  directory of the region file during `marker load <fmt> <file>` and
+  `marker save <file> ...` (NULL otherwise: `marker list`, paste, fd/stdin
+  loads). `createGlyphCmd` resolves relative glyph names against it and
+  stores them normalized; `Glyph::list` writes a name relative to it when
+  the glyph lives at or below that directory, absolute otherwise. So
+  `dir/a.reg` + `dir/glyphs/x.png` round-trips as `{glyphs/x.png}`, and
+  saving elsewhere writes the absolute path. Relative names in loads
+  without a file (XPA `regions command`, stdin) resolve against the cwd.
+- **Backup.** `MarkerBackup` calls `GlyphBackup` after saving the frame's
+  `ds9.reg`: each referenced glyph file is copied next to it as
+  `glyph_<name>[_N].<ext>` (one copy per distinct source file) and the
+  reference is rewritten to the bare name. Missing files are left as is.
+  Verified: backup, move the whole backup elsewhere, restore -> glyphs
+  load from the copies.
+- **Magnifier.** Uses the same draw path (the magnifier pixmap is filled
+  from its XImage first, so the macOS source-atop issue does not arise).
+  Glyphs are drawn at their screen size, not magnified, like text and
+  point markers. Not visually verified: an XPA `-format window` capture
+  of the magnifier canvas comes back blank even without glyphs.
+
+- **Default image.** Interactive create no longer prompts for a file: it
+  uses `pmarker(glyph,file)` if set and readable, else the built-in
+  `$ds9(root)/doc/sun.png` that illustrate mode also uses
+  (`GlyphDefaultFile`). Caveat: a saved region file then contains the
+  bundle path `//zipfs:/mntpt/doc/sun.png`, which only resolves in a
+  bundled ds9 (backup copies it out, so backups are fine).
+
+- **PostScript / PDF: matches illustrate mode** (decided 2026-11-07;
+  real alpha for both illustrate and glyphs is a later, separate task).
+  - Illustrate prints through Tk's `canvas postscript`
+    (`Tk_PostscriptPhoto` + `TkPhotoColor`): alpha 0 pixels are skipped,
+    every other pixel is drawn opaque, at any PS level. Its PDF path
+    (`pdf.tcl`) uses `addRawImage [$image data]`, which has no alpha:
+    transparent pixels paint their stored RGB (sun.png's corners print
+    black).
+  - `Glyph::renderPS` does the same in PS: one 1-pixel-tall `image` /
+    `colorimage` per run of non-transparent pixels, GRAY/RGB/CMYK, works
+    at levels 1-3. Verified by decoding the emitted runs: 32x32 at the
+    screen position, the 16 alpha-0 corner pixels skipped, 50% pixels
+    solid. Placeholder (no image) prints a box with an X; highlited adds
+    the outline. Not rasterized (no Ghostscript on this machine).
+  - In PDF mode it emits `x y w h (photo) ds9glyph`, a private op handled
+    in `Base::pdfVectorLayers`: `addRawImage [photo data]` (cached per
+    photo for the call) + `putImage ... -anchor nw`. Verified by
+    rasterizing a saved PDF with `sips`.
+  - Gotcha hit while writing this: `Marker` has members named `ra` and
+    `dec`, so inside marker code `str << dec` prints that buffer instead
+    of switching back to decimal. Use `std::dec` / `std::hex`.
+  - Later: real alpha. PS level 3 masked image or soft mask; PDF needs an
+    `/SMask`, which pdf4tcl does not offer (its RGBA PNG path drops alpha
+    too). Fixing it would fix illustrate's PDF corners as well.
+
 3. **Catalog symbols using glyphs.** Probably the biggest payoff for the
    glyph/marker use case, since catalogs generate markers in bulk. Depends
    on the photo cache.
@@ -299,3 +356,54 @@ for free. Rendering already culls off-screen markers
 This fits as phase 3 above. Catalog work should start only after the
 region MVP and the photo cache exist, since catalogs are the
 high-volume case.
+
+### Phase 3 status (2026-11-07)
+
+Done and smoke-tested on macOS (XPA, `img.fits` + a TSV catalog):
+- **Symbol table:** new `glyph` column (`CATSymDBInit`, Add, Apply,
+  dialog row with Browse, Shape > Glyph). Default `pcat(sym,glyph)` is
+  empty = built-in image (`GlyphDefaultFile`). Catalog prefs have Shape >
+  Glyph and a Glyph file + Browse.
+- **Back compat:** `CATSymEnsureCols` appends any missing standard column
+  (glyph, and for very old files width/dash/font*) to a symbol table read
+  from a `.sym` file or an old backup. It checks `T(Header)`, not
+  `T(col)`, because a table read over an old array keeps stale mappings.
+  Called from `CATReg` (every render), the dialog, both symbol loads and
+  `symbol add`/set.
+  - Fixed on the way: `catalog symbol load` read into the existing array
+    without clearing it (the dialog's Open clears it), leaving stale
+    column mappings. With that fixed, `Tests/aux/ds9.sym` (8 columns, no
+    width/dash/font) only works because of `CATSymEnsureCols`; it already
+    failed through the dialog's Open on master.
+- **Region generation (`CATReg`):** shape `glyph` -> `glyph(x y {file} w h)`.
+  `size` = width, `size2` = height in screen pixels (expr, so `$col`
+  works); empty/0 = native, one alone keeps the aspect; `units`/`angle`
+  ignored. The glyph file goes through `subst` like `text`, so
+  `glyphs/$type.png` picks a file per row, and is `file normalize`d (cwd).
+  Edits of an editable catalog only change the display (CATEditCB has no
+  glyph case).
+- **Highlite:** selecting a row outlines its glyph in the symbol color.
+- **CLI/XPA:** `catalog symbol shape glyph` (it also worked before via the
+  STRING fallback) and `catalog symbol glyph <file>`. There is no xpaget
+  for symbol settings at all, so nothing to add there.
+- **Catalog > Regions** export writes glyph regions with absolute paths.
+
+Performance, 10,000 rows, macOS, glyphs 16 px:
+- generate: 1.1 s (circle points: 0.7 s)
+- redraw, all visible: 253 ms (circle points: 14 ms), ~25 us per glyph
+  for `Tk_RedrawImage` -> CoreGraphics. Zoomed so few are visible: 11 ms.
+- So panning a fully visible 10k glyph catalog runs at ~4 fps. Fine for
+  hundreds to a few thousand. If it matters, draw each distinct photo once
+  into an offscreen pixmap + mask and copy per glyph, or cache the
+  CGImage. Not measured on X11.
+
+Not done / not verified:
+- Catalog backup does not copy glyph files (regions do); catalog restore
+  keeps absolute paths.
+- Relative glyph paths in a symbol table resolve against the cwd, not
+  the `.sym` file.
+- Dialog's glyph row is always enabled, not only for shape glyph.
+
+Unrelated bug seen in passing (master): `catalog symbol <N> ...` calls
+`CatalogCmdCVAR` (catparser.tac:176), which does not exist; the other
+handlers use `ProcessCmdCVAR`.

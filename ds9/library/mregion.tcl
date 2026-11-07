@@ -547,11 +547,12 @@ proc PrefsDialogRegion {} {
     ttk::entry $f.file -textvariable pmarker(glyph,file) -width 30
     ttk::button $f.browse -text [msgcat::mc {Browse}] \
 	-command {PrefsGlyphBrowse}
+    ttk::label $f.ufile -text [msgcat::mc {Blank = built-in image}]
     ttk::label $f.title -text [msgcat::mc {Width}]
     ttk::entry $f.size -textvariable pmarker(glyph,size) -width 10
     ttk::label $f.unit -text [msgcat::mc {Pixels (0 = native)}]
 
-    grid $f.tfile $f.file $f.browse -padx 2 -pady 2 -sticky w
+    grid $f.tfile $f.file $f.browse $f.ufile -padx 2 -pady 2 -sticky w
     grid $f.title $f.size $f.unit -padx 2 -pady 2 -sticky w
 
     pack $w.region.format $w.region.coordsys \

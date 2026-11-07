@@ -1752,6 +1752,7 @@ proc MarkerBackup {ch which fdir rdir} {
 	} else {
 	    $which marker save \"$fn\" ds9 physical fk5 degrees 0
 	}
+	GlyphBackup $fn $fdir
 	puts $ch "$which marker load ds9 \{\"$rfn\"\}"
     }
 }

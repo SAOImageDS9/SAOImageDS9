@@ -37,6 +37,7 @@ proc CATSymDialog {parent} {
 
     global $var(symdb)
     set var(row) 1
+    CATSymEnsureCols $var(symdb)
 
     # initialize
     if {$var(row) <= [starbase_nrows $var(symdb)]} {
@@ -68,6 +69,8 @@ proc CATSymDialog {parent} {
 			    [starbase_colnum $var(symdb) units]]
 	set var(angle) [starbase_get $var(symdb) $var(row) \
 			    [starbase_colnum $var(symdb) angle]]
+	set var(glyph) [starbase_get $var(symdb) $var(row) \
+			    [starbase_colnum $var(symdb) glyph]]
     }
 
 
@@ -150,6 +153,10 @@ proc CATSymDialog {parent} {
     ttk::entry $f.angle -textvariable ${varname}(angle) -width 40
     ttk::button $f.bangle -text [msgcat::mc {Edit}] \
 	-command "TBLEditDialog $varname angle $pvar(catdb)"
+    ttk::label $f.tglyph -text [msgcat::mc {Glyph}]
+    ttk::entry $f.glyph -textvariable ${varname}(glyph) -width 40
+    ttk::button $f.bglyph -text [msgcat::mc {Browse}] \
+	-command [list CATSymGlyphBrowse $varname]
 
     ThemeMenu $f.shape.menu
     $f.shape.menu add radiobutton  -label [msgcat::mc {Circle}] \
@@ -162,6 +169,8 @@ proc CATSymDialog {parent} {
 	-variable ${varname}(shape) -value {vector}
     $f.shape.menu add radiobutton  -label [msgcat::mc {Text}] \
 	-variable ${varname}(shape) -value {text}
+    $f.shape.menu add radiobutton  -label [msgcat::mc {Glyph}] \
+	-variable ${varname}(shape) -value {glyph}
     $f.shape.menu add cascade -label [msgcat::mc {Point}] \
 	-menu $f.shape.menu.point
 
@@ -192,6 +201,7 @@ proc CATSymDialog {parent} {
     grid $f.tsize2 $f.size2 $f.bsize2 -padx 2 -pady 2 -sticky w
     grid $f.tunits $f.units -padx 2 -pady 2 -sticky w
     grid $f.tangle $f.angle $f.bangle -padx 2 -pady 2 -sticky w
+    grid $f.tglyph $f.glyph $f.bglyph -padx 2 -pady 2 -sticky w
 
     # Table
     set f [ttk::frame $w.tbl]
@@ -307,6 +317,8 @@ proc CATSymApply {varname} {
 		[starbase_colnum $var(symdb) units] $var(units)
 	    starbase_set $var(symdb) $var(row) \
 		[starbase_colnum $var(symdb) angle] $var(angle)
+	    starbase_set $var(symdb) $var(row) \
+		[starbase_colnum $var(symdb) glyph] $var(glyph)
 	}
     }
 
@@ -339,6 +351,8 @@ proc CATSymAdd {varname} {
 	[starbase_colnum $var(symdb) fontslant] $pcat(sym,font,slant)
     starbase_set $var(symdb) $row \
 	[starbase_colnum $var(symdb) units] $pcat(sym,units)
+    starbase_set $var(symdb) $row \
+	[starbase_colnum $var(symdb) glyph] $pcat(sym,glyph)
 
     $var(tbl) selection clear all
     $var(tbl) selection set $row,1
@@ -390,6 +404,7 @@ proc CATSymLoad {varname} {
 		unset $var(symdb)
 	    }
 	    starbase_read $var(symdb) $fn
+	    CATSymEnsureCols $var(symdb)
 	    CATSymUpdate $varname
 	} else {
 	    Error "[msgcat::mc {Unable to open file}] $fn"
@@ -420,6 +435,7 @@ proc CATSymClear {varname} {
     set var(size2) {}
     set var(units) {}
     set var(angle) {}
+    set var(glyph) {}
 }
 
 # Support
@@ -435,7 +451,7 @@ proc CATSymDBInit {varname} {
     }
 
     starbase_new $var(symdb) condition shape color width dash \
-	font fontsize fontweight fontslant text size size2 units angle
+	font fontsize fontweight fontslant text size size2 units angle glyph
     starbase_rowins $var(symdb) 1
     starbase_set $var(symdb) 1 \
 	[starbase_colnum $var(symdb) shape] $pcat(sym,shape)
@@ -455,6 +471,57 @@ proc CATSymDBInit {varname} {
 	[starbase_colnum $var(symdb) fontslant] $pcat(sym,font,slant)
     starbase_set $var(symdb) 1 \
 	[starbase_colnum $var(symdb) units] $pcat(sym,units)
+    starbase_set $var(symdb) 1 \
+	[starbase_colnum $var(symdb) glyph] $pcat(sym,glyph)
+}
+
+# Symbol tables saved or backed up by older versions lack newer columns
+# (glyph; very old ones also width, dash and the font columns), and
+# starbase_colnum errors on a missing column. Append any that are missing;
+# empty cells fall back to the defaults in CATReg.
+proc CATSymEnsureCols {db} {
+    upvar #0 $db T
+
+    if {![info exists T(Header)]} {
+	return
+    }
+
+    set added 0
+    foreach col {condition shape color width dash font fontsize fontweight \
+		     fontslant text size size2 units angle glyph} {
+	# check the header, not T($col): a table read over an old array can
+	# keep a stale column mapping
+	if {[lsearch -exact $T(Header) $col]<0} {
+	    lappend T(Header) $col
+	    set added 1
+	}
+    }
+    if {!$added} {
+	return
+    }
+
+    set T(Ndshs) [llength $T(Header)]
+    starbase_colmap T
+
+    if {[info exists T(Nrows)]} {
+	for {set cc 1} {$cc <= $T(Ncols)} {incr cc} {
+	    for {set rr 1} {$rr <= $T(Nrows)} {incr rr} {
+		if {![info exists T($rr,$cc)]} {
+		    set T($rr,$cc) {}
+		}
+	    }
+	}
+    }
+}
+
+proc CATSymGlyphBrowse {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set fn [OpenFileDialog photofbox $var(top)]
+    if {$fn ne {}} {
+	set var(glyph) $fn
+    }
 }
 
 proc CATSymUpdate {varname} {
@@ -523,6 +590,8 @@ proc CATSymSelectCB {varname} {
 				[starbase_colnum $var(symdb) units]]
 	    set var(angle) [starbase_get $var(symdb) $var(row) \
 				[starbase_colnum $var(symdb) angle]]
+	    set var(glyph) [starbase_get $var(symdb) $var(row) \
+				[starbase_colnum $var(symdb) glyph]]
 	    return
 	}
     }

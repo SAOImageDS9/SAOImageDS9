@@ -43,6 +43,7 @@ file	    {return $FILE_}
 filter	    {return $FILTER_}
 fits	    {return $FITS_}
 function    {return $FUNCTION_}
+glyph	    {return $GLYPH_}
 header	    {return $HEADER_}
 hide	    {return $HIDE_}
 histogram   {return $HISTOGRAM_}

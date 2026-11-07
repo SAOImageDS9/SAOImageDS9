@@ -452,6 +452,64 @@ void Base::createTextCmd(const Vector& center, double angle, int rotate,
 			prop, comment, tag, cb));
 }
 
+// Region file directory, so that glyph file names can be relative to
+// the region file. Set for the duration of a marker load/save.
+
+void Base::setMarkerFileDir(const char* fn)
+{
+  if (markerFileDir_)
+    delete [] markerFileDir_;
+  markerFileDir_ = NULL;
+
+  if (!fn || !*fn)
+    return;
+
+  Tcl_Obj* path = Tcl_NewStringObj(fn, -1);
+  Tcl_IncrRefCount(path);
+  Tcl_Obj* norm = Tcl_FSGetNormalizedPath(interp, path);
+  if (norm) {
+    // normalized paths use '/' on all platforms
+    const char* nn = Tcl_GetString(norm);
+    const char* ss = strrchr(nn, '/');
+    if (ss) {
+      int ll = ss-nn;
+      if (ll==0 || (ll==2 && nn[1]==':'))
+	ll++; // keep the root: "/" or "C:/"
+      markerFileDir_ = new char[ll+1];
+      strncpy(markerFileDir_, nn, ll);
+      markerFileDir_[ll] = '\0';
+    }
+  }
+  Tcl_DecrRefCount(path);
+}
+
+// returns a new string, caller deletes
+char* Base::resolveMarkerFileName(const char* fn)
+{
+  if (!fn || !*fn || !markerFileDir_)
+    return dupstr(fn ? fn : "");
+
+  Tcl_Obj* path = Tcl_NewStringObj(fn, -1);
+  Tcl_IncrRefCount(path);
+  char* rr;
+  if (Tcl_FSGetPathType(path) == TCL_PATH_RELATIVE) {
+    ostringstream str;
+    str << markerFileDir_;
+    if (markerFileDir_[strlen(markerFileDir_)-1] != '/')
+      str << '/';
+    str << fn << ends;
+    Tcl_Obj* joined = Tcl_NewStringObj(str.str().c_str(), -1);
+    Tcl_IncrRefCount(joined);
+    Tcl_Obj* norm = Tcl_FSGetNormalizedPath(interp, joined);
+    rr = dupstr(norm ? Tcl_GetString(norm) : str.str().c_str());
+    Tcl_DecrRefCount(joined);
+  }
+  else
+    rr = dupstr(fn);
+  Tcl_DecrRefCount(path);
+  return rr;
+}
+
 void Base::createGlyphCmd(const Vector& center,
 			 const char* fn, int ww, int hh,
 			 const char* color, int* dash,
@@ -460,9 +518,11 @@ void Base::createGlyphCmd(const Vector& center,
 			 const char* comment,
 			 const List<Tag>& tag, const List<CallBack>& cb)
 {
-  createMarker(new Glyph(this, center, fn, ww, hh,
+  char* rfn = resolveMarkerFileName(fn);
+  createMarker(new Glyph(this, center, rfn, ww, hh,
 			color, dash, width, font, text,
 			prop, comment, tag, cb));
+  delete [] rfn;
 }
 
 void Base::createPointCmd(const Vector& center, 
@@ -5262,7 +5322,9 @@ void Base::markerLoadCmd(MarkerFormat fm, const char* fn,
     result = TCL_ERROR;
     return;
   }  
+  setMarkerFileDir(fn);
   parseMarker(fm, str);
+  setMarkerFileDir(NULL);
 }
 
 void Base::markerLoadCmd(MarkerFormat fm, int fd, 
@@ -6263,6 +6325,8 @@ void Base::markerSaveCmd(const char* fileName, MarkerFormat type,
     return;
   }
 
+  setMarkerFileDir(fileName);
+
   switch (type) {
   case DS9:
     if (!strip)
@@ -6366,6 +6430,8 @@ void Base::markerSaveCmd(const char* fileName, MarkerFormat type,
   case RAWXY:
     break;
   }
+
+  setMarkerFileDir(NULL);
 }
 
 void Base::markerSaveTemplateCmd(const char* fileName)

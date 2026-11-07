@@ -3,6 +3,7 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include <math.h>
+#include <iomanip>
 
 #include "util.h"
 #include "glyph.h"
@@ -19,6 +20,7 @@ Glyph::Glyph(const Glyph& a) : Marker(a)
 
   // each marker holds its own image reference, never share the handle
   image_ = NULL;
+  photoName_ = NULL;
   loadImage();
 }
 
@@ -40,6 +42,7 @@ Glyph::Glyph(Base* p, const Vector& ctr,
   width_ = reqWidth_;
   height_ = reqHeight_;
   image_ = NULL;
+  photoName_ = NULL;
 
   loadImage();
   updateBBox();
@@ -59,6 +62,10 @@ void Glyph::freeImage()
   if (image_)
     Tk_FreeImage(image_);
   image_ = NULL;
+
+  if (photoName_)
+    delete [] photoName_;
+  photoName_ = NULL;
 }
 
 void Glyph::loadImage()
@@ -82,9 +89,12 @@ void Glyph::loadImage()
 
     if (Tcl_EvalObjv(interp, 4, objv, TCL_EVAL_GLOBAL) == TCL_OK) {
       const char* name = Tcl_GetStringResult(interp);
-      if (name && *name)
+      if (name && *name) {
 	image_ = Tk_GetImage(interp, parent->tkwin, name,
 			     imageChangedProc, (ClientData)this);
+	if (image_)
+	  photoName_ = dupstr(name);
+      }
     }
 
     for (int ii=0; ii<4; ii++)
@@ -181,19 +191,144 @@ void Glyph::renderXBox(Drawable drawable, Coord::InternalSystem sys, GC lgc,
   }
 }
 
-// phase 1: postscript draws the outline only
+// Postscript / PDF match illustrate mode (Tk canvas postscript and
+// pdf.tcl): postscript skips fully transparent pixels and draws all others
+// opaque (no alpha in postscript); pdf places the photo as an opaque
+// image via pdf4tcl, which drops alpha.
+
 void Glyph::renderPS(PSColorSpace mode)
 {
   renderPSGC(mode);
 
+  Tk_PhotoHandle photo = NULL;
+  if (photoName_)
+    photo = Tk_FindPhoto(parent->interp, photoName_);
+
+  Tk_PhotoImageBlock block;
+  if (!photo || !Tk_PhotoGetImage(photo, &block) ||
+      block.width<=0 || block.height<=0) {
+    renderPSBox(mode, 1);
+    return;
+  }
+
+  // same placement as renderX
+  Vector cc = parent->mapFromRef(center,Coord::CANVAS);
+  int x0 = (int)floor(cc[0]-block.width/2.+.5);
+  int y0 = (int)floor(cc[1]-block.height/2.+.5);
+
+  if (widgetPdfMode_) {
+    // handled by the op interpreter in Base::pdfVectorLayers
+    ostringstream str;
+    str << x0 << ' ' << y0 << ' ' << block.width << ' ' << block.height
+	<< " (" << photoName_ << ") ds9glyph" << endl << ends;
+    Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
+  }
+  else
+    renderPSImage(mode, &block, x0, y0);
+
+  if (highlited && canHighlite())
+    renderPSBox(mode, 0);
+}
+
+void Glyph::renderPSImage(PSColorSpace mode, Tk_PhotoImageBlock* block,
+			  int x0, int y0)
+{
+  int hasAlpha = block->pixelSize==4;
+  int ncomp = 3;
+  switch (mode) {
+  case BW:
+  case GRAY:
+    ncomp = 1;
+    break;
+  case RGB:
+    ncomp = 3;
+    break;
+  case CMYK:
+    ncomp = 4;
+    break;
+  }
+
+  ostringstream str;
+  str << "gsave" << endl;
+
+  for (int yy=0; yy<block->height; yy++) {
+    unsigned char* row = block->pixelPtr + yy*block->pitch;
+    int xx=0;
+    while (xx<block->width) {
+      // skip fully transparent pixels
+      while (xx<block->width && hasAlpha &&
+	     !row[xx*block->pixelSize+block->offset[3]])
+	xx++;
+      if (xx>=block->width)
+	break;
+
+      int xs = xx;
+      while (xx<block->width &&
+	     (!hasAlpha || row[xx*block->pixelSize+block->offset[3]]))
+	xx++;
+      int ww = xx-xs;
+
+      // one image per opaque run, one pixel tall, image row 0 at top
+      Vector ll = parent->TkCanvasPs(Vector(x0+xs, y0+yy+1));
+      str << "gsave " << ll << " translate " << ww << " 1 scale" << endl
+	  << ww << " 1 8 [" << ww << " 0 0 -1 0 1] {<" << std::hex;
+      for (int ii=xs; ii<xs+ww; ii++) {
+	unsigned char* pp = row + ii*block->pixelSize;
+	unsigned char red = pp[block->offset[0]];
+	unsigned char green = pp[block->offset[1]];
+	unsigned char blue = pp[block->offset[2]];
+	switch (mode) {
+	case BW:
+	case GRAY:
+	  str << setw(2) << setfill('0') << (int)RGB2Gray(red,green,blue);
+	  break;
+	case RGB:
+	  str << setw(2) << setfill('0') << (int)red
+	      << setw(2) << setfill('0') << (int)green
+	      << setw(2) << setfill('0') << (int)blue;
+	  break;
+	case CMYK:
+	  {
+	    unsigned char cyan, magenta, yellow, black;
+	    RGB2CMYK(red, green, blue, &cyan, &magenta, &yellow, &black);
+	    str << setw(2) << setfill('0') << (int)cyan
+		<< setw(2) << setfill('0') << (int)magenta
+		<< setw(2) << setfill('0') << (int)yellow
+		<< setw(2) << setfill('0') << (int)black;
+	  }
+	  break;
+	}
+      }
+      str << std::dec << ">}";
+      if (ncomp==1)
+	str << " image";
+      else
+	str << " false " << ncomp << " colorimage";
+      str << " grestore" << endl;
+    }
+  }
+
+  str << "grestore" << endl << ends;
+  Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
+}
+
+void Glyph::renderPSBox(PSColorSpace mode, int cross)
+{
   ostringstream str;
   str << "newpath "
       << parent->TkCanvasPs(handle[0]) << " moveto "
       << parent->TkCanvasPs(handle[1]) << " lineto "
       << parent->TkCanvasPs(handle[2]) << " lineto "
       << parent->TkCanvasPs(handle[3]) << " lineto "
-      << "closepath stroke" << endl
-      << ends;
+      << "closepath stroke" << endl;
+  if (cross)
+    str << "newpath "
+	<< parent->TkCanvasPs(handle[0]) << " moveto "
+	<< parent->TkCanvasPs(handle[2]) << " lineto stroke" << endl
+	<< "newpath "
+	<< parent->TkCanvasPs(handle[1]) << " moveto "
+	<< parent->TkCanvasPs(handle[3]) << " lineto stroke" << endl;
+  str << ends;
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
@@ -282,6 +417,33 @@ void Glyph::setSize(int ww, int hh)
 
 // list
 
+// When saving to a region file, write the glyph file name relative to the
+// region file's directory if it lives at or below it, so a directory of
+// region file plus glyphs can be moved as a unit.
+void Glyph::listFileName(ostream& str)
+{
+  const char* dir = parent->markerFileDir();
+  if (!dir || !fileName_ || !*fileName_) {
+    str << fileName_;
+    return;
+  }
+
+  Tcl_Obj* path = Tcl_NewStringObj(fileName_, -1);
+  Tcl_IncrRefCount(path);
+  Tcl_Obj* norm = Tcl_FSGetNormalizedPath(parent->interp, path);
+  const char* nn = norm ? Tcl_GetString(norm) : NULL;
+
+  int ll = strlen(dir);
+  int slash = ll>0 && dir[ll-1]=='/';
+  if (nn && !strncmp(nn, dir, ll) && (slash || nn[ll]=='/'))
+    str << nn+ll+(slash ? 0 : 1);
+  else
+    str << fileName_;
+
+  Tcl_DecrRefCount(path);
+}
+
+
 void Glyph::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 		Coord::SkyFormat format, int conj, int strip)
 {
@@ -293,7 +455,9 @@ void Glyph::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
 
   str << type_ << '(';
   ptr->listFromRef(str,center,sys,sky,format);
-  str << ",{" << fileName_ << '}';
+  str << ",{";
+  listFileName(str);
+  str << '}';
   if (reqWidth_>0 || reqHeight_>0)
     str << ',' << reqWidth_ << ',' << reqHeight_;
   str << ')';

@@ -33,6 +33,7 @@ proc CATReg {varname row interactive resultname} {
     # size2: expr
     # units: constant
     # angle: expr
+    # glyph: subst (glyph shape only)
 
     # valid cols?
     if {$var_(colx) == {} || $var_(coly) == {}} {
@@ -76,6 +77,7 @@ proc CATReg {varname row interactive resultname} {
     }
 
     # symdb
+    CATSymEnsureCols $var_(symdb)
     set snrows [starbase_nrows $var_(symdb)]
     set sncond [starbase_colnum $var_(symdb) condition]
     set snshape [starbase_colnum $var_(symdb) shape]
@@ -91,6 +93,7 @@ proc CATReg {varname row interactive resultname} {
     set snsize2 [starbase_colnum $var_(symdb) size2]
     set snunits [starbase_colnum $var_(symdb) units]
     set snangle [starbase_colnum $var_(symdb) angle]
+    set snglyph [starbase_colnum $var_(symdb) glyph]
 
     # for each row in the table
     if {[string is integer -strict $row]} {
@@ -109,7 +112,9 @@ proc CATReg {varname row interactive resultname} {
 	set sz [starbase_get $var_(symdb) $jj $snsize]
 	set sz2 [starbase_get $var_(symdb) $jj $snsize2]
 	set angle [starbase_get $var_(symdb) $jj $snangle]
-	if {$cond!={} || $text!={} || $sz!={} || $sz2!={} || $angle!={}} {
+	set glyph [starbase_get $var_(symdb) $jj $snglyph]
+	if {$cond!={} || $text!={} || $sz!={} || $sz2!={} || $angle!={} ||
+	    $glyph!={}} {
 	    set doEval 1
 	}
     }
@@ -200,6 +205,38 @@ proc CATReg {varname row interactive resultname} {
 		{x point} -
 		{arrow point} -
 		{boxcircle point} {set size {}}
+
+		glyph {
+		    # fixed screen size, upright: units and angle do not apply.
+		    # size is the width and size2 the height, in screen pixels;
+		    # empty or 0 is native size, one alone keeps the aspect.
+		    set gsz {}
+		    foreach nn [list $snsize $snsize2] {
+			set vv [starbase_get $var_(symdb) $jj $nn]
+			if {$vv == {}} {
+			    lappend gsz 0
+			} elseif {[catch {expr "int($vv)"} ss]} {
+			    Error "Unable to evaluate size $vv"
+			    return
+			} else {
+			    lappend gsz $ss
+			}
+		    }
+
+		    # file: subst, like text, so it can use column values
+		    set gfn [starbase_get $var_(symdb) $jj $snglyph]
+		    if {$gfn != {}} {
+			if {[catch {subst $gfn} gg]} {
+			    Error "Unable to evaluate glyph $gfn"
+			    return
+			}
+			set gfn [file normalize $gg]
+		    } else {
+			set gfn [GlyphDefaultFile]
+		    }
+
+		    set size "\{$gfn\} [lindex $gsz 0] [lindex $gsz 1]"
+		}
 
 		circle {
 		    set sz [starbase_get $var_(symdb) $jj $snsize]

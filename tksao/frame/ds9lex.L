@@ -89,6 +89,7 @@ format          {return FORMAT_;}
 font		{return FONT_;}
 galactic	{return GALACTIC_;}
 global		{return GLOBAL_;}
+glyph		{return GLYPH_;}
 highlite	{return HIGHLITE_;}
 icrs		{return ICRS_;}
 ignore		{return IGNORE_;}

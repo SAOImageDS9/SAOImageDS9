@@ -195,6 +195,7 @@ frame/frmarkerxml.C
 frame/frsave.C
 frame/frscale.C
 frame/fvcontour.C
+frame/glyph.C
 frame/grid.C
 frame/grid25d.C
 frame/grid2d.C

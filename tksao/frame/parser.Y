@@ -259,6 +259,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token GAUSSIAN_
 %token GET_
 %token GLOBAL_
+%token GLYPH_
 %token GRAPHICS_
 %token GRAY_
 %token GRID_
@@ -2140,6 +2141,8 @@ marker	: CENTROID_ markerCentroid
 	| INT TAG_ STRING {fr->markerTagCmd($1,$3);}
 	| INT TEXT_ STRING {fr->markerTextCmd($1,$3);}
 	| INT TEXT_ ROTATE_ yesno {fr->markerTextRotateCmd($1,$4);}
+	| INT GLYPH_ FILE_ STRING {fr->markerGlyphFileCmd($1,$4);}
+	| INT GLYPH_ SIZE_ INT INT {fr->markerGlyphSizeCmd($1,$4,$5);}
 
 	| INT UNHIGHLITE_ {fr->markerUnhighliteCmd($1);}
 	| INT UNSELECT_ {fr->markerUnselectCmd($1);}
@@ -2309,6 +2312,18 @@ markerCreate :
 	    markerProperties
 	{fr->createTextCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
 	    $4, 1,
+	    currentColor,currentDash,currentWidth,currentFont,
+	    currentText,currentProps,NULL,taglist,cblist);}
+	| GLYPH_ numeric numeric STRING
+	    markerProperties
+	{fr->createGlyphCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
+	    $4, 0, 0,
+	    currentColor,currentDash,currentWidth,currentFont,
+	    currentText,currentProps,NULL,taglist,cblist);}
+	| GLYPH_ numeric numeric STRING INT INT
+	    markerProperties
+	{fr->createGlyphCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
+	    $4, $5, $6,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
 	| CIRCLE_ POINT_ numeric numeric pointSize markerProperties
@@ -2613,6 +2628,8 @@ markerGet : CENTROID_ markerGetCentroid
 	| INT TAG_ INT {fr->getMarkerTagCmd($1,$3);}
 	| INT TEXT_ {fr->getMarkerTextCmd($1);}
 	| INT TEXT_ ROTATE_ {fr->getMarkerTextRotateCmd($1);}
+	| INT GLYPH_ FILE_ {fr->getMarkerGlyphFileCmd($1);}
+	| INT GLYPH_ SIZE_ {fr->getMarkerGlyphSizeCmd($1);}
 	| INT TYPE_ {fr->getMarkerTypeCmd($1);}
 
 	| INT VECTOR_ ARROW_ {fr->getMarkerVectorArrowCmd($1);}

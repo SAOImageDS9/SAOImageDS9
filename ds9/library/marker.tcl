@@ -120,6 +120,8 @@ proc MarkerDef {} {
     set pmarker(freehand,tolerance) 0.5
     set pmarker(projection,thick) 0
     set pmarker(point,size) 11
+    set pmarker(glyph,file) {}
+    set pmarker(glyph,size) 0
     set pmarker(segment,length) 20
 }
 
@@ -322,6 +324,7 @@ proc MarkerCreate {which x y} {
 	projection -
 	segment -
 	text -
+	glyph -
 	ruler -
 	compass -
 	{circle point} -
@@ -673,6 +676,13 @@ proc MarkerCreateShape {which x y {shape {}}} {
 	projection {append cmd " $x $y $pmarker(projection,thick)"}
 	segment {append cmd " .001 .001"}
 	text {append cmd " 0 text = \{\{Region\}\}"}
+	glyph {
+	    set fn [GlyphCreateFile]
+	    if {$fn eq {}} {
+		return
+	    }
+	    append cmd " \{$fn\} $pmarker(glyph,size) 0"
+	}
 	ruler {append cmd " $x $y $ed(system) $ed(sky) $ed(system) $ed(dformat) ''"}
 	compass {append cmd " 15 $ed(system) $ed(sky)"}
 	{circle point} -
@@ -1594,6 +1604,7 @@ proc MarkerDialog {frame id} {
 	projection {ProjectionDialog $varname}
 	segment {SegmentDialog $varname}
 	text {TextDialog $varname}
+	glyph {GlyphDialog $varname}
 	ruler {RulerDialog $varname}
 	compass {CompassDialog $varname}
 	point {PointDialog $varname}

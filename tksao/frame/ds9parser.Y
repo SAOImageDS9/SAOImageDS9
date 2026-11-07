@@ -225,6 +225,7 @@ static Coord::SkyFrame checkWCSSky();
 %token FONT_
 %token GALACTIC_
 %token GLOBAL_
+%token GLYPH_
 %token HIGHLITE_
 %token ICRS_
 %token IGNORE_
@@ -1100,6 +1101,21 @@ nonshape : VECTOR_ bp coord sp value sp angle ep conjunction nonshapeComment
 	  localColor,localDash,localWidth,localFont,
 	  localText,localProps,localComment,taglist,cblist);
 	}
+	| GLYPH_ bp coord sp STRING ep conjunction nonshapeComment
+	{
+	  fr->createGlyphCmd(Vector($3),
+	  $5, 0, 0,
+	  localColor,localDash,localWidth,localFont,
+	  localText,localProps,localComment,taglist,cblist);
+	}
+	| GLYPH_ bp coord sp STRING sp numeric sp numeric ep conjunction
+	    nonshapeComment
+	{
+	  fr->createGlyphCmd(Vector($3),
+	  $5, (int)$7, (int)$9,
+	  localColor,localDash,localWidth,localFont,
+	  localText,localProps,localComment,taglist,cblist);
+	}
 	| RULER_ bp coord sp coord ep conjunction nonshapeComment
 	{
 	  fr->createRulerCmd(Vector($3),
@@ -1252,6 +1268,21 @@ shape	: CIRCLE_ bp coord sp value ep conjunction shapeComment
 	   localTextAngle,localTextRotate,
 	   localColor,localDash,localWidth,localFont,
 	   localText,localProps,localComment,taglist,cblist);
+	}
+	| GLYPH_ bp coord sp STRING ep conjunction shapeComment
+	{
+	  fr->createGlyphCmd(Vector($3),
+	  $5, 0, 0,
+	  localColor,localDash,localWidth,localFont,
+	  localText,localProps,localComment,taglist,cblist);
+	}
+	| GLYPH_ bp coord sp STRING sp numeric sp numeric ep conjunction
+	    shapeComment
+	{
+	  fr->createGlyphCmd(Vector($3),
+	  $5, (int)$7, (int)$9,
+	  localColor,localDash,localWidth,localFont,
+	  localText,localProps,localComment,taglist,cblist);
 	}
 	| TEXT_ bp coord sp STRING ep {strncpy(localText,$5,80);} conjunction 
 	    shapeComment

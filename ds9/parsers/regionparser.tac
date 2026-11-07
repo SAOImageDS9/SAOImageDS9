@@ -41,6 +41,7 @@
 %token FORMAT_
 %token FRONT_
 %token GETINFO_
+%token GLYPH_
 %token GROUP_
 %token GROUPS_
 %token INCLUDE_
@@ -323,6 +324,7 @@ shape : CIRCLE_ {set _ circle}
  | PROJECTION_ {set _ projection}
  | SEGMENT_ {set _ segment}
  | TEXT_ {set _ text}
+ | GLYPH_ {set _ glyph}
  | point POINT_ {set _ "$1 point"}
  | RULER_ {set _ ruler}
  | COMPASS_ {set _ compass}

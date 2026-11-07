@@ -101,6 +101,8 @@ proc RegionMainMenu {} {
     $ds9(mb).region.shape add separator
     $ds9(mb).region.shape add radiobutton -label [msgcat::mc {Text}] \
 	-variable marker(shape) -value text
+    $ds9(mb).region.shape add radiobutton -label [msgcat::mc {Glyph}] \
+	-variable marker(shape) -value glyph
     $ds9(mb).region.shape add cascade -label [msgcat::mc {Point}] \
 	-menu $ds9(mb).region.shape.point
     $ds9(mb).region.shape add separator
@@ -270,6 +272,8 @@ proc PrefsDialogRegionMenu {w} {
     $m.shape add separator
     $m.shape add radiobutton -label [msgcat::mc {Text}] \
 	-variable pmarker(shape) -value text
+    $m.shape add radiobutton -label [msgcat::mc {Glyph}] \
+	-variable pmarker(shape) -value glyph
     $m.shape add cascade -label [msgcat::mc {Point}] \
 	-menu $m.shape.point
     $m.shape add separator
@@ -536,12 +540,26 @@ proc PrefsDialogRegion {} {
     
     grid $f.title $f.size $f.unit -padx 2 -pady 2 -sticky w
 
+    # Glyph
+    set f [ttk::labelframe $w.region.glyph -text [msgcat::mc {Glyph}]]
+
+    ttk::label $f.tfile -text [msgcat::mc {File}]
+    ttk::entry $f.file -textvariable pmarker(glyph,file) -width 30
+    ttk::button $f.browse -text [msgcat::mc {Browse}] \
+	-command {PrefsGlyphBrowse}
+    ttk::label $f.title -text [msgcat::mc {Width}]
+    ttk::entry $f.size -textvariable pmarker(glyph,size) -width 10
+    ttk::label $f.unit -text [msgcat::mc {Pixels (0 = native)}]
+
+    grid $f.tfile $f.file $f.browse -padx 2 -pady 2 -sticky w
+    grid $f.title $f.size $f.unit -padx 2 -pady 2 -sticky w
+
     pack $w.region.format $w.region.coordsys \
 	$w.region.dformat $w.region.epsilon \
 	$w.region.centroid $w.region.plot \
 	$w.region.circle $w.region.ellipse \
 	$w.region.box $w.region.polygon $w.region.freehand \
-	$w.region.projection $w.region.point \
+	$w.region.projection $w.region.point $w.region.glyph \
 	-side top -fill both -expand true
 }
 
@@ -1247,5 +1265,14 @@ proc UpdateRegionMenu {} {
 		set marker(composite,area) $pmarker(composite,area)
 	    }
 	}
+    }
+}
+
+proc PrefsGlyphBrowse {} {
+    global pmarker
+
+    set fn [OpenFileDialog photofbox]
+    if {$fn ne {}} {
+	set pmarker(glyph,file) $fn
     }
 }

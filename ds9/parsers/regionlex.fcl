@@ -36,6 +36,7 @@ font	    {return $FONT_}
 format	    {return $FORMAT_}
 front	    {return $FRONT_}
 getinfo	    {return $GETINFO_}
+glyph	    {return $GLYPH_}
 group	    {return $GROUP_}
 groups	    {return $GROUPS_}
 include	    {return $INCLUDE_}

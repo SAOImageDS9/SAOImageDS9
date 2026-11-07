@@ -232,6 +232,8 @@ proc PrefsDialogGeneral {} {
 	-variable pds9(language,name) -command "set pds9(language) es"
     $m add radiobutton -label [LanguageToName fr] \
 	-variable pds9(language,name) -command "set pds9(language) fr"
+    $m add radiobutton -label [LanguageToName it] \
+	-variable pds9(language,name) -command "set pds9(language) it"
     $m add radiobutton -label [LanguageToName ja] \
         -variable pds9(language,name) -command "set pds9(language) ja"
     $m add radiobutton -label [LanguageToName pt] \

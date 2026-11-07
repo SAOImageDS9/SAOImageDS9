@@ -4,6 +4,45 @@ Goal: let users place their own small image (PNG/GIF/etc.) as a region
 marker, e.g. a custom glyph/symbol, analogous to the illustrate-mode
 Image shape but anchored to image/WCS coordinates.
 
+## Remaining work (as of 2026-11-07)
+
+Phases 1-3 are done on branch `region_glyph` (commits `b44e9c2ed`,
+`cdbc7ac48`, `ba981cd8c`); details are in the "Phase N status" sections
+below. Checkboxes: `[x]` done, `[~]` partly done or superseded, `[ ]` open.
+
+Open:
+- [x] **Docs** (2026-11-07): `ref/region.html` (Glyph description,
+      paths, transparency, color, examples), `ref/framecmd.html` (marker
+      create/set/get glyph), `ref/command.html` / `xpa.html` /
+      `samp.html` (catalog symbol glyph), `ref/catalog.html` (glyph entry
+      rules), `user/catalogs/index.html` (glyph symbols), release notes
+      `release/r8.8.2.html`. `regions shape` is documented as a generic
+      `<shape>`, so it needed no change.
+- [ ] **Catalog backup:** copy glyph files into the backup, as region
+      backup does (`GlyphBackup`); restore currently keeps absolute paths.
+- [ ] **Symbol table paths:** relative glyph paths resolve against the
+      cwd, not the `.sym` file.
+- [ ] **Symbol dialog:** enable the Glyph file row only for shape glyph.
+- [ ] **XML/VOTable** region output (`frmarkerxml.C`) drops glyphs.
+- [ ] **Other platforms:** build and test on Linux/X11 and Windows
+      (`renderWIN32` has never been compiled).
+- [ ] **Check by hand:** glyph in the magnifier (XPA capture comes back
+      blank), and click-to-create with the mouse (only the same proc was
+      run from Tcl).
+- [ ] **Tests:** add glyph region and catalog tests to the `Tests` repo.
+- [ ] Optional: faster redraw for large catalogs (10k visible glyphs ~250
+      ms on macOS; see Phase 3 status).
+
+Left alone on purpose:
+- PostScript keeps on/off alpha (matches illustrate).
+- Saved region files keep the built-in image's bundle path
+  (`//zipfs:/mntpt/doc/sun.png`).
+- Illustrate's `resizePhoto` still loses partial alpha (separate fix;
+  glyphs use `GlyphResizePhoto`).
+
+Elsewhere: the `catalog symbol <N> ...` (`CatalogCmdCVAR`) fix is on
+branch `fix_catalog_symbol_row` (`d151e5196`), not merged here.
+
 ## Why this is different from illustrate's Image
 
 `ds9/library/illustrateimage.tcl` is pure Tcl: a Tk canvas `image` item
@@ -23,49 +62,50 @@ the lexers ambiguous. Do not call it `icon` either: ds9 already uses
 
 ## Design decisions (settle first)
 
-- [ ] **Size semantics.** Recommended: fixed **screen pixels** (like
+- [x] **Size semantics.** Recommended: fixed **screen pixels** (like
       `point`/`text`), constant size at any zoom. Alternative: size in
       image/WCS units (like `box`), scaling with zoom. Could be added
       later as a flag.
-- [ ] **Rotation.** Recommended: always upright. Rotating photos is
+- [x] **Rotation.** Recommended: always upright. Rotating photos is
       expensive and rarely wanted for markers.
-- [ ] **File reference.** Region file stores a path. Resolve relative
+- [x] **File reference.** Region file stores a path. Resolve relative
       paths relative to the region file. When the file is missing, draw a
       placeholder (a box with an X).
-- [ ] **Photo caching.** Share one Tk photo per (filename, size).
+- [x] **Photo caching.** Share one Tk photo per (filename, size).
       Otherwise 1000 catalog glyphs means 1000 decoded images.
 
 ## C++ side (`tksao/`)
 
-- [ ] `frame/glyph.{h,C}` (new): `class Glyph : public Marker`, modeled
+- [x] `frame/glyph.{h,C}` (new): `class Glyph : public Marker`, modeled
       on `Text`. Holds `fileName`, `width`, `height` and the photo name.
       Implements `renderX`, `renderPS`, `updateHandles`, `calcAllBBox`,
       `isIn`, `list` (ds9 format), and edit (resize via handles).
-- [ ] Rendering: `Tk_GetImage()` + `Tk_RedrawImage()` onto the Drawable.
+- [x] Rendering: `Tk_GetImage()` + `Tk_RedrawImage()` onto the Drawable.
       This composites photo alpha onto the pixmap (see "Alpha / transparency"
       below). In XOR render mode (dragging), draw only the outline box.
       Nothing in tksao uses `Tk_GetImage` yet, so there is no existing
       pattern to copy.
-- [ ] The `Tk_GetImage` change callback must request a frame redraw, or
+- [x] The `Tk_GetImage` change callback must request a frame redraw, or
       glyphs show stale content when a cached photo is updated.
-- [ ] `dup()` (copy/paste, undo; `Text` does `new Text(*this)`): the
+- [x] `dup()` (copy/paste, undo; `Text` does `new Text(*this)`): the
       `Glyph` copy constructor must call `Tk_GetImage` again rather than
       copying the handle, or `Tk_FreeImage` runs twice.
-- [ ] `renderWIN32` is **not** free: it is the Windows *printing* path
+- [x] `renderWIN32` is **not** free: it is the Windows *printing* path
       (GDI, `#ifdef __WIN32`, called from `Marker::win32()`), not screen
       drawing, and it is pure virtual. Phase 1: draw the bbox, like PS.
-- [ ] PostScript: phase 1 draws the bbox. Later: emit `colorimage` from
+- [x] PostScript: phase 1 draws the bbox. Later: emit `colorimage` from
       `Tk_PhotoGetImage` data, composited on white.
-- [ ] Magnifier: draw the box only at first (`x11MagnifierMarkers`,
-      `base.C` ~2551).
-- [ ] `configure.ac`: add `frame/glyph.C` next to `frame/text.C` (~line 218).
-- [ ] `base.h` / `frmarker.C`: `createGlyphCmd(...)` beside
+      (Done differently: matches illustrate, see Phase 2 status.)
+- [x] Magnifier: draw the box only at first (`x11MagnifierMarkers`,
+      `base.C` ~2551). (Draws the image; see Phase 2 status.)
+- [x] `configure.ac`: add `frame/glyph.C` next to `frame/text.C` (~line 218).
+- [x] `base.h` / `frmarker.C`: `createGlyphCmd(...)` beside
       `createTextCmd` / `createPointCmd` (`frmarker.C` ~442), plus
       set/get commands for file and size.
-- [ ] `frame/parser.Y` + `lex.L`: `create glyph x y "file" w h ...`,
+- [x] `frame/parser.Y` + `lex.L`: `create glyph x y "file" w h ...`,
       `marker <id> glyph file|size ...`, `get marker <id> glyph ...`.
       Regenerate with `cd tksao && make parser`.
-- [ ] `frame/ds9parser.Y` + `ds9lex.L`: read/write
+- [x] `frame/ds9parser.Y` + `ds9lex.L`: read/write
       `# glyph(x,y,"file",w,h)`. The `# ` prefix matches
       `text`/`vector`/`compass`, so CIAO/funtools ignore it. Regenerate
       with `cd tksao && make ds9parser`.
@@ -73,9 +113,10 @@ the lexers ambiguous. Do not call it `icon` either: ds9 already uses
       Do **not** reuse the `localText`/`localComment` pattern: those are
       `char[80]` filled with `strncpy(...,80)` (`ds9parser.Y:58`), which
       would silently truncate long paths.
-- [ ] Other formats (ciao/sao/pros/tng/xy): nothing to do. The base
+- [x] Other formats (ciao/sao/pros/tng/xy): nothing to do. The base
       class's empty `listCiao` etc. already drop the shape. XML/VOTable
-      (`frmarkerxml.C`) can skip it initially.
+      (`frmarkerxml.C`) can skip it initially. **Still open**, see
+      Remaining work.
 
 **Photo loading:** keep decoding/resizing in Tcl. The C++ marker calls
 back into a Tcl proc, e.g. `RegionGlyphPhoto fn w h`, which uses
@@ -84,12 +125,13 @@ a cached photo name. This way both `ds9parser.Y` (region file load) and
 the interactive path share one loader, and the C++ code needs no image
 codecs.
 
-- [ ] Wrap the callback in `Tcl_SaveInterpState`/`Tcl_RestoreInterpState`.
+- [x] Wrap the callback in `Tcl_SaveInterpState`/`Tcl_RestoreInterpState`.
       It runs mid-parse inside a frame command, and evaluating Tcl
       clobbers the interp result the command may be building (errors,
       `list` output).
-- [ ] The photo cache must refcount, or never `image delete` a photo a
-      marker still holds; a deleted photo draws as nothing.
+- [x] The photo cache must refcount, or never `image delete` a photo a
+      marker still holds; a deleted photo draws as nothing. (Cache never
+      deletes.)
 
 ## Alpha / transparency (verified 2026-11-07 with `bin/wish9.0` and `bin/ds9`)
 
@@ -107,12 +149,16 @@ codecs.
     be `$my`.
 - **Use `resizePhoto87`** (`resize.tcl:217`, currently unused). It keeps
   full 8-bit alpha via `get -withalpha` / `#rrggbbaa`, but:
-  - [ ] Premultiply: it averages RGB without weighting by alpha, so
+  - [~] Premultiply: it averages RGB without weighting by alpha, so
         colors from invisible pixels bleed in. White on transparent black,
         8->5, gives an edge of `127 127 127 127` instead of
         `255 255 255 127` (grey halo). Multiply RGB by alpha before
         averaging, divide after.
-  - [ ] It dropped the `-subsample` fast path; restore it.
+  - [~] It dropped the `-subsample` fast path; restore it.
+  - **Superseded for glyphs:** they use `GlyphResizePhoto` (glyph.tcl),
+    a premultiplied box filter. `resizePhoto87` was left as is, and
+    illustrate still uses `resizePhoto`, so illustrate's resized images
+    still lose partial alpha (separate fix).
   - It is per-pixel Tcl, so large source PNGs are slow. Another reason
     the cache matters.
 - **Drawing:**
@@ -138,20 +184,20 @@ Remember (see `AGENTS.md`): run a no-op regen first and confirm
 
 ## Tcl side (`ds9/`)
 
-- [ ] `ds9/library/glyph.tcl` (new): `GlyphDialog` with filename + Browse
+- [x] `ds9/library/glyph.tcl` (new): `GlyphDialog` with filename + Browse
       + size, mostly lifted from `IllustrateImageDialog`.
-- [ ] `ds9/library/marker.tcl`: add `glyph` to the create switch (~324),
-      the default-create command (~675; prompt for a file or use a pref
-      default), and the dialog dispatch (~1596).
-- [ ] `ds9/library/mregion.tcl`: Shape menu radiobutton (~103) and prefs
+- [x] `ds9/library/marker.tcl`: add `glyph` to the create switch (~324),
+      the default-create command (~675; uses the pref file, else the
+      built-in sun.png; no prompt), and the dialog dispatch (~1596).
+- [x] `ds9/library/mregion.tcl`: Shape menu radiobutton (~103) and prefs
       entry (~272), plus a `pmarker(glyph,file)` default.
-- [ ] `ds9/parsers/regionlex.fcl` + `regionparser.tac`: add
+- [x] `ds9/parsers/regionlex.fcl` + `regionparser.tac`: add
       `-regions shape glyph` for the command line and XPA, then regenerate
       the `.tcl` files.
-- [ ] Save/backup: copy referenced glyph files alongside saved regions.
+- [x] Save/backup: copy referenced glyph files alongside saved regions.
       `illustrate.tcl` ~436-455 already does this for illustrate images
       and is the model.
-- [ ] Docs: `ds9/doc/ref/region.html`.
+- [x] Docs: `ds9/doc/ref/region.html` (and others, see Remaining work).
 
 ## Phasing
 
@@ -196,8 +242,9 @@ save/load round trip; copy/paste; move + undo; handle resize; dialog
 apply; missing file -> placeholder, no error.
 
 Not yet verified / left for later:
-- Interactive click-to-create (opens a file dialog when no default file
-  is set) and highlite rendering were not exercised.
+- Interactive click-to-create and highlite rendering were not exercised.
+  (Later: create no longer prompts, see Phase 2; highlite verified in
+  Phase 3.)
 - Resizing a 512px source takes ~1 s in Tcl (cached afterwards).
 - Not built on Linux/X11 or Windows (`renderWIN32` not compiled).
 - XML/VOTable listing drops glyphs; docs (`region.html`) not written.
@@ -281,14 +328,12 @@ Done and smoke-tested on macOS:
 
 ## Untested assumptions
 
-- `Tk_RedrawImage` alpha compositing on **X11** (Linux). macOS is
-  verified (see "Alpha / transparency"); repeat that test on a Linux
-  build. Win32 on-screen drawing goes through Tk's Xlib emulation and is
-  also untested. (Win32 *printing* is `renderWIN32`, which draws no image
-  in phase 1.)
-- The real `Glyph` marker path: `Tk_GetImage` against the frame's tkwin
-  and drawing into `Base::pixmap`. Re-run the blue-background test once
-  `Glyph` exists.
+- `Tk_RedrawImage` alpha compositing on **X11** (Linux) and Win32
+  on-screen drawing (Tk's Xlib emulation). macOS is verified, both in a
+  canvas test and through the real `Glyph` path into `Base::pixmap`
+  (50% red over 245 grey -> 250 122 122). Repeat on a Linux build.
+- PostScript output was checked by decoding the emitted runs, not by
+  rasterizing it (no Ghostscript here).
 
 ## Addendum: catalog markers
 
@@ -302,47 +347,48 @@ for free. Rendering already culls off-screen markers
 
 ### Prerequisite on the region side
 
-- [ ] `ds9parser.Y` must accept `glyph(...)` **without** the leading `# `,
+- [x] `ds9parser.Y` must accept `glyph(...)` **without** the leading `# `,
       the same way it accepts both `text(...)` and `# text(...)`. The
       catalog template does not emit `# `.
 
 ### Symbol database (`catsym.tcl`)
 
-- [ ] Add an `glyph` column (the file path) to the symbol starbase in
+- [x] Add an `glyph` column (the file path) to the symbol starbase in
       `CATSymDBInit` (~line 437), defaulting to a new `pcat(sym,glyph)`
       pref (`cat.tcl` ~98).
-- [ ] Run the `glyph` value through `subst` like `text` (`catreg.tcl` ~367).
+- [x] Run the `glyph` value through `subst` like `text` (`catreg.tcl` ~367).
       Then `glyphs/$type.png` gives per-row glyphs from a table column, and
       combined with symbol `condition` rows it gives per-class glyphs.
-- [ ] **Backward compatibility:** `starbase_colnum` is a bare array
+- [x] **Backward compatibility:** `starbase_colnum` is a bare array
       lookup (`starbase.tcl:31`) and errors on a missing column. Saved
       `.sym` files and `CATSymLoad` (~381) predate the `glyph` column, so
       add the column on load if it is missing, or guard the lookup in
       `catreg.tcl`.
-- [ ] Symbol dialog: add `Glyph` to the Shape menu (~154) and a filename
+- [~] Symbol dialog: add `Glyph` to the Shape menu (~154) and a filename
       entry + Browse that is enabled only when shape is `glyph`.
+      (Done, but the entry is always enabled.)
 
 ### Region generation (`catreg.tcl`)
 
-- [ ] Add `glyph` to the shape switch (~193). Map symbol `size` to glyph
+- [x] Add `glyph` to the shape switch (~193). Map symbol `size` to glyph
       pixel size (or w/h from `size`/`size2`) and ignore `units`/`angle`,
       matching the fixed-screen-size, upright design. A missing size uses
       the image's native size.
-- [ ] The template needs the filename in the shape args:
+- [x] The template needs the filename in the shape args:
       `glyph(${xx} ${yy} "${glyph}" ${w} ${h})`. Use a per-shape template
       rather than overloading `${size}`, and quote paths with spaces.
-- [ ] Editable catalogs (`edit=1`) attach `CATEditCB` with size/angle
+- [x] Editable catalogs (`edit=1`) attach `CATEditCB` with size/angle
       columns. For glyphs, either disable edit or map a resize back to
       the size column.
 
 ### Catalog-specific behavior
 
-- [ ] **Highlite.** Catalog rows selected in the table are drawn with
+- [x] **Highlite.** Catalog rows selected in the table are drawn with
       `highlite=1`. `Glyph` needs a visible highlite rendering (e.g. a bbox
       outline in the marker color) because the image itself has no color.
-- [ ] **Color.** The symbol `color` does not tint the image. Use it for
-      the outline/highlite only, and document that.
-- [ ] **Performance.** This is where the photo cache matters: thousands of
+- [x] **Color.** The symbol `color` does not tint the image. Use it for
+      the outline/highlite only, and document that. (Done.)
+- [x] **Performance.** This is where the photo cache matters: thousands of
       rows usually share a handful of files. Also note that on X11,
       `Tk_RedrawImage` with alpha does an `XGetImage`/blend/`XPutImage` per
       glyph per redraw. That is fine for small glyphs and a few thousand rows,
@@ -352,19 +398,21 @@ for free. Rendering already culls off-screen markers
 
 ### Command line / XPA (`ds9/parsers/catlex.fcl` + `catparser.tac`)
 
-- [ ] `-catalog symbol shape glyph` (next to `BOXCIRCLE_`: `catlex.fcl:22`,
+- [x] `-catalog symbol shape glyph` (next to `BOXCIRCLE_`: `catlex.fcl:22`,
       `catparser.tac` ~276) and
       `-catalog symbol glyph <file>`, plus the matching `xpaget` for the
-      setting. Regenerate the `.tcl` files.
+      setting. Regenerate the `.tcl` files. (No xpaget exists for any
+      symbol setting.)
 
 ### Other catalog paths to check
 
-- [ ] Catalog -> Regions export: should work automatically since it uses
+- [x] Catalog -> Regions export: should work automatically since it uses
       the same region syntax, but glyph paths in the exported file need
-      the same relative-path handling as region save.
+      the same relative-path handling as region save. (Works; writes
+      absolute paths.)
 - [ ] Backup/restore of catalogs with glyph symbols (copy glyph files, as
       for regions).
-- [ ] Catalog `ps`/print: same phase-2 PostScript caveat as regions.
+- [x] Catalog `ps`/print: same phase-2 PostScript caveat as regions.
 
 ### Phasing
 

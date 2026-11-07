@@ -372,6 +372,38 @@ $Jmag&gt;16.5      diamond point   cyan    $Jmag                   physical
 	  have to be updated in order to use them with a different
 	  catalog.
 	</p>
+
+	<p><strong>Using Your Own Images as Symbols (Glyphs)</strong></p>
+	<p>
+	  A symbol can also be an image of your own, such as a small
+	  PNG with a transparent background. Set the Shape to "Glyph"
+	  and put the image file name in the "Glyph" field (or use its
+	  "Browse" button). Like the Text field, the file name may
+	  refer to catalog columns, so a different image can be used
+	  for each source, for example
+	  <code>/data/glyphs/$type.png</code> picks the image from the
+	  value of a <code>type</code> column. Combined with
+	  conditions, rules can also give each class of source its own
+	  image.
+	</p>
+	<p>
+	  Glyphs are drawn upright at a fixed size in screen pixels,
+	  whatever the zoom. "Size" is the width and "Size 2" the
+	  height, in pixels; leave both empty for the image's native
+	  size, or set only one to keep the aspect ratio. "Units" and
+	  "Angle" are not used. The symbol color does not tint the
+	  image; it is used for the outline drawn around a glyph when
+	  its row is selected in the table. If no file is given, a
+	  built-in image is used, and an unreadable file is drawn as a
+	  box with an X.
+	</p>
+	<p>
+	  Each distinct image file is read only once, so thousands of
+	  sources sharing a few images are fine, though very large
+	  catalogs redraw more slowly with glyphs than with simple
+	  point symbols. Symbol files saved by older versions of ds9,
+	  which have no glyph column, still load.
+	</p>
       <hr>
 </div>
 <div class="section">

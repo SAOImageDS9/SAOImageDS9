@@ -794,6 +794,7 @@ $::current(frame) magnifier graphics no</tt>
 <tr><td>line</td><td><tt>line &lt;x1&gt; &lt;y1&gt; &lt;x2&gt; &lt;y2&gt;</tt></td></tr>
 <tr><td>vector</td><td><tt>vector &lt;x&gt; &lt;y&gt; &lt;x2&gt; &lt;y2&gt;</tt></td></tr>
 <tr><td>text</td><td><tt>text &lt;x&gt; &lt;y&gt; [&lt;angle&gt;]</tt> (set the label with <tt>text=&lt;string&gt;</tt>)</td></tr>
+<tr><td>glyph</td><td><tt>glyph &lt;x&gt; &lt;y&gt; &lt;file&gt; [&lt;width&gt; &lt;height&gt;]</tt> &mdash; a user supplied image (PNG, GIF, ...) drawn at a fixed size in screen pixels, always upright; <tt>&lt;file&gt;</tt> is a quoted string such as <tt>{/path/star.png}</tt>; width/height in pixels, 0 (or omitted) = native size, one 0 keeps the aspect ratio</td></tr>
 <tr><td>point</td><td><tt>&lt;pointShape&gt; point &lt;x&gt; &lt;y&gt; [&lt;pointSize&gt;]</tt> &mdash; e.g. <tt>circle point</tt>, <tt>box point</tt>, <tt>x point</tt></td></tr>
 <tr><td>ruler</td><td><tt>ruler &lt;x1&gt; &lt;y1&gt; &lt;x2&gt; &lt;y2&gt; &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;coordSystem&gt; &lt;skyDist&gt; &lt;label&gt;</tt></td></tr>
 <tr><td>compass</td><td><tt>compass &lt;x&gt; &lt;y&gt; &lt;radius&gt; &lt;coordSystem&gt; &lt;skyFrame&gt;</tt></td></tr>
@@ -812,6 +813,7 @@ $::current(frame) magnifier graphics no</tt>
 <tt>set id [$::current(frame) marker create circle 256 256 20 color=red]<br>
 $::current(frame) marker create box 100 100 40 20 45 color=green tag={mybox}<br>
 $::current(frame) marker create text 200 200 text={Hello} color=yellow<br>
+$::current(frame) marker create glyph 300 200 {/path/star.png} 32 0<br>
 $::current(frame) marker create annulus 256 256 10 40 4</tt>
 
 <p><b>Other marker verbs</b> (<tt>&lt;id&gt;</tt> is a marker's integer id or a tag/name string; forms without a leading id apply to all selected markers):</p>
@@ -862,6 +864,7 @@ $::current(frame) marker create annulus 256 256 10 40 4</tt>
 <tr><td><tt>marker save &lt;filename&gt; [select] &lt;markerFormat&gt; &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;skyFormat&gt; &lt;yesno&gt;</tt> / <tt>save template &lt;filename&gt;</tt></td><td>save all/selected markers to a region file, or save a marker as a reusable template</td></tr>
 <tr><td><tt>marker &lt;id&gt; tag &lt;name&gt;</tt> / <tt>tag &lt;name&gt;</tt> / <tt>tag edit &lt;old&gt; &lt;new&gt;</tt> / <tt>tag delete &lt;name&gt;</tt> / <tt>tag delete all</tt> / <tt>tag update &lt;name&gt;</tt></td><td>add/rename/remove tags</td></tr>
 <tr><td><tt>marker &lt;id&gt; text &lt;string&gt;</tt> / <tt>text rotate &lt;yesno&gt;</tt></td><td>set a text marker's label / whether it rotates with the shape</td></tr>
+<tr><td><tt>marker &lt;id&gt; glyph file &lt;string&gt;</tt> / <tt>glyph size &lt;width&gt; &lt;height&gt;</tt></td><td>set a glyph marker's image file / size in screen pixels (0 = native, one 0 keeps the aspect ratio)</td></tr>
 <tr><td><tt>marker &lt;id&gt; vector arrow &lt;yesno&gt;</tt> / <tt>vector point &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;coord&gt; &lt;coordSystem&gt; &lt;skyDist&gt; &lt;magnitude&gt; &lt;angle&gt;</tt></td><td>configure a vector marker's arrowhead / endpoint+magnitude+angle</td></tr>
 <tr><td><tt>marker &lt;id&gt; width &lt;n&gt;</tt> / <tt>width &lt;n&gt;</tt> / <tt>&lt;id&gt; dashlist &lt;n&gt; &lt;n&gt;</tt> / <tt>dashlist &lt;n&gt; &lt;n&gt;</tt></td><td>set line width / dash pattern on one marker or selected marker(s)</td></tr>
 </tbody>
@@ -898,6 +901,7 @@ $::current(frame) marker create annulus 256 256 10 40 4</tt>
 <tr><td><tt>get marker &lt;id&gt; ruler format</tt> / <tt>length ...</tt> / <tt>point ...</tt> / <tt>system</tt></td><td>ruler marker settings</td></tr>
 <tr><td><tt>get marker &lt;id&gt; tag [&lt;n&gt;]</tt> / <tt>&lt;name&gt; tag</tt> / <tt>&lt;name&gt; tag number</tt> / <tt>tag all</tt> / <tt>tag default name</tt></td><td>a marker's tag(s), or the default tag name for new markers</td></tr>
 <tr><td><tt>get marker &lt;id&gt; text</tt> / <tt>text rotate</tt></td><td>text marker label / rotate-with-shape flag</td></tr>
+<tr><td><tt>get marker &lt;id&gt; glyph file</tt> / <tt>glyph size</tt></td><td>glyph marker image file / requested width and height (0 = native)</td></tr>
 <tr><td><tt>get marker &lt;id&gt; type</tt></td><td>the marker's shape type name</td></tr>
 <tr><td><tt>get marker &lt;id&gt; vector arrow</tt> / <tt>vector length ...</tt> / <tt>vector point ...</tt></td><td>vector marker properties</td></tr>
 <tr><td><tt>get marker &lt;id&gt; width</tt> / <tt>width</tt> / <tt>&lt;id&gt; dashlist</tt> / <tt>dashlist</tt></td><td>line width / dash pattern</td></tr>

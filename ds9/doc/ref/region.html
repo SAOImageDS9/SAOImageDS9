@@ -40,6 +40,13 @@ Usage: segment x1 y1 x2 y2 x3 y3 ...</tt></p>
 <p><tt>Text<br>
 Usage: text x y # text={Your Text Here}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; text x y {Your Text Here}</tt></p>
+<p><tt>Glyph<br>
+Usage: glyph x y {filename} [width height]</tt></p>
+<p>A <tt>glyph</tt> region places an image of your own (PNG, GIF, or any format Tk can read) at a position on the image, as a marker or symbol. It is anchored to image/WCS coordinates and follows pan, zoom, rotate, tile and blink, but it is always drawn upright and at a fixed size in screen pixels, like a point or text region, so it does not grow or shrink when you zoom. <tt>width</tt> and <tt>height</tt> are in screen pixels; leave them out (or use 0) for the image's native size, or give one and set the other to 0 to keep the aspect ratio. Transparency (the alpha channel) is respected on screen and in PDF output; PostScript output skips fully transparent pixels and prints the rest opaque, as for illustrate images. The region <tt>color</tt> does not tint the image: it is used for the outline drawn while dragging, when the region is highlighted, and when the file cannot be read, in which case a box with an X is drawn instead.</p>
+<p>A relative <tt>filename</tt> in a region file is taken relative to the region file's directory, and when regions are saved, a glyph file at or below the directory of the saved file is written as a relative path, so a region file and its images can be moved together. Backup copies each glyph file into the backup. Glyphs are saved as <tt># glyph(...)</tt>, a comment for other region parsers such as CIAO and funtools, which ignore it; only the DS9 format keeps them.</p>
+<p>To create one interactively, choose Region menu, Shape, Glyph and click on the image. The image used is the Glyph File set in Preferences (Region), or a built-in image if none is set; double click the region to choose a different file or change its size.</p>
+<p><tt>Example: glyph(100,100,{stars/red.png}) # text={Target}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fk5; # glyph(13:29:52.7,+47:11:43,{/data/glyphs/galaxy.png},32,0)</tt></p>
 <p><tt>Ruler<br>
 Usage: ruler x1 y1 x2 y2 # ruler=[pixels|degrees|arcmin|arcsec] [format={format string}]<br></tt></p>
 <p><tt>Compass<br>

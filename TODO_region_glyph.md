@@ -235,8 +235,8 @@ Done and smoke-tested on macOS:
   bundle path `//zipfs:/mntpt/doc/sun.png`, which only resolves in a
   bundled ds9 (backup copies it out, so backups are fine).
 
-- **PostScript / PDF: matches illustrate mode** (decided 2026-11-07;
-  real alpha for both illustrate and glyphs is a later, separate task).
+- **PostScript / PDF.** PS matches illustrate mode; PDF has real alpha
+  for both glyphs and illustrate images (see below).
   - Illustrate prints through Tk's `canvas postscript`
     (`Tk_PostscriptPhoto` + `TkPhotoColor`): alpha 0 pixels are skipped,
     every other pixel is drawn opaque, at any PS level. Its PDF path
@@ -250,15 +250,30 @@ Done and smoke-tested on macOS:
     solid. Placeholder (no image) prints a box with an X; highlited adds
     the outline. Not rasterized (no Ghostscript on this machine).
   - In PDF mode it emits `x y w h (photo) ds9glyph`, a private op handled
-    in `Base::pdfVectorLayers`: `addRawImage [photo data]` (cached per
-    photo for the call) + `putImage ... -anchor nw`. Verified by
+    in `Base::pdfVectorLayers`: `PDFAddPhoto` (cached per photo for the
+    call) + `putImage ... -anchor nw`. Verified by
     rasterizing a saved PDF with `sips`.
   - Gotcha hit while writing this: `Marker` has members named `ra` and
     `dec`, so inside marker code `str << dec` prints that buffer instead
     of switching back to decimal. Use `std::dec` / `std::hex`.
-  - Later: real alpha. PS level 3 masked image or soft mask; PDF needs an
-    `/SMask`, which pdf4tcl does not offer (its RGBA PNG path drops alpha
-    too). Fixing it would fix illustrate's PDF corners as well.
+  - **PDF now has real alpha (2026-11-07), for glyphs and illustrate
+    images.** `PDFAddPhoto pdf photo` (ds9/library/pdf.tcl) builds an RGB
+    image XObject plus an 8-bit DeviceGray `/SMask` holding the alpha
+    (skipped when the photo is fully opaque), and adds both with
+    `$pdf addTkpimgObj`, pdf4tcl's public hook for ready-made image
+    objects (written for tkpath; undocumented, so recheck on a pdf4tcl
+    upgrade). `/SMask` needs PDF 1.4, pdf4tcl's default. The `ds9glyph`
+    handler in `Base::pdfVectorLayers` calls it (falling back to opaque
+    `addRawImage` if the proc is missing, i.e. tksao without ds9);
+    `pdf.tcl`'s illustrate image case uses it instead of `addRawImage`.
+    Verified by rasterizing with `sips`: alpha-0 pixels show what is
+    underneath (no more black corners on the illustrate sun), 50% pixels
+    blend, opaque pixels are solid.
+    - Speed: channels are split in Tcl (`$photo data` for RGB, `binary
+      scan` + `lmap` on the rgba data for alpha): ~1.6 s per megapixel,
+      instant for glyph-sized photos. `regsub` was 3x slower.
+  - PostScript still matches illustrate (on/off alpha); real PS alpha
+    (level 3 soft mask) was not pursued.
 
 3. **Catalog symbols using glyphs.** Probably the biggest payoff for the
    glyph/marker use case, since catalogs generate markers in bulk. Depends

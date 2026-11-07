@@ -1763,8 +1763,9 @@ int Base::pdfVectorLayers(Tcl_Obj* pdfObj)
 
     if (tok == "ds9glyph" && stack.size() >= 4) {
       // glyph region: x y w h (photo) ds9glyph, see Glyph::renderPS.
-      // Opaque image, like illustrate images in pdf.tcl (pdf4tcl drops
-      // alpha). A failure skips the glyph rather than the whole pdf.
+      // PDFAddPhoto (ds9 pdf.tcl, shared with illustrate images) adds the
+      // photo with its alpha as a soft mask; without it, fall back to an
+      // opaque addRawImage. A failure skips the glyph, not the whole pdf.
       double hh = stack.back(); stack.pop_back();
       double ww = stack.back(); stack.pop_back();
       double yy = stack.back(); stack.pop_back();
@@ -1777,6 +1778,16 @@ int Base::pdfVectorLayers(Tcl_Obj* pdfObj)
       if (it != glyphImages.end())
 	id = it->second;
       else {
+	Tcl_Obj* addObjv[3];
+	addObjv[0] = Tcl_NewStringObj("PDFAddPhoto", -1);
+	addObjv[1] = pdfObj;
+	addObjv[2] = Tcl_NewStringObj(name.c_str(), -1);
+	if (EvalObjv(interp, 3, addObjv) == TCL_OK) {
+	  id = Tcl_GetStringResult(interp);
+	  glyphImages[name] = id;
+	}
+      }
+      if (id.empty()) {
 	Tcl_Obj* dataObjv[2];
 	dataObjv[0] = Tcl_NewStringObj(name.c_str(), -1);
 	dataObjv[1] = Tcl_NewStringObj("data", -1);

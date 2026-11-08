@@ -13,7 +13,8 @@ package provide DS9 1.0
 # point needs its image. Returns the name of a cached photo, or {} on
 # failure (the point then draws a box with an X). size is in screen
 # pixels: the image is fitted into a size x size box keeping its aspect
-# ratio; 0 means native size.
+# ratio; 0 means native size. svg files are drawn directly at that size,
+# other formats are resampled.
 
 proc RegionGlyphPhoto {fn size} {
     # a missing or bad file is not an error, the marker draws a placeholder.
@@ -71,9 +72,38 @@ proc GlyphLoadPhoto {fn size} {
     # Never deleted: a marker may still hold it.
     set key "$fn,$ww,$hh"
     if {![info exists iglyph(photo,$key)]} {
-	set iglyph(photo,$key) [GlyphResizePhoto $src $ww $hh]
+	set photo {}
+	# svg: let Tk draw the vector image at the target size, which is
+	# sharper and much faster than resampling the native size photo.
+	if {[string equal -nocase [file extension $fn] .svg]} {
+	    set photo [GlyphSVGPhoto $fn $ww $hh $sw $sh]
+	}
+	if {$photo eq {}} {
+	    set photo [GlyphResizePhoto $src $ww $hh]
+	}
+	set iglyph(photo,$key) $photo
     }
     return $iglyph(photo,$key)
+}
+
+# Draw an svg file at ww x hh by scaling its longer side to fit; the other
+# side follows the aspect ratio. Returns {} on failure, and the caller
+# then resamples the native size photo instead.
+proc GlyphSVGPhoto {fn ww hh sw sh} {
+    if {$sw>=$sh} {
+	set fmt [list svg -scaletowidth $ww]
+    } else {
+	set fmt [list svg -scaletoheight $hh]
+    }
+    if {[catch {image create photo -file $fn -format $fmt} photo]} {
+	return {}
+    }
+    # the short side may round differently than ours; allow 1 pixel
+    if {abs([image width $photo]-$ww) > 1 || abs([image height $photo]-$hh) > 1} {
+	image delete $photo
+	return {}
+    }
+    return $photo
 }
 
 # Alpha correct resize. Box filter (area average) on premultiplied

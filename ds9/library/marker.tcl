@@ -681,7 +681,9 @@ proc MarkerCreateShape {which x y {shape {}}} {
 	    if {$fn eq {}} {
 		return
 	    }
-	    append cmd " \{$fn\} $pmarker(glyph,size) 0"
+	    # eval strips one level of braces; the frame parser needs the
+	    # other to keep a file name with spaces in one token
+	    append cmd " [list "{$fn}"] $pmarker(glyph,size) 0"
 	}
 	ruler {append cmd " $x $y $ed(system) $ed(sky) $ed(system) $ed(dformat) ''"}
 	compass {append cmd " 15 $ed(system) $ed(sky)"}

@@ -324,7 +324,6 @@ proc MarkerCreate {which x y} {
 	projection -
 	segment -
 	text -
-	glyph -
 	ruler -
 	compass -
 	{circle point} -
@@ -333,7 +332,8 @@ proc MarkerCreate {which x y} {
 	{cross point} -
 	{x point} -
 	{arrow point} -
-	{boxcircle point} {MarkerCreateShape $which $x $y}
+	{boxcircle point} -
+	{glyph point} {MarkerCreateShape $which $x $y}
 	freehand {MarkerFreehandBegin $which $x $y}
 	default {
 	    if {![$which has wcs celestial wcs]} {
@@ -676,14 +676,14 @@ proc MarkerCreateShape {which x y {shape {}}} {
 	projection {append cmd " $x $y $pmarker(projection,thick)"}
 	segment {append cmd " .001 .001"}
 	text {append cmd " 0 text = \{\{Region\}\}"}
-	glyph {
+	{glyph point} {
 	    set fn [GlyphCreateFile]
 	    if {$fn eq {}} {
 		return
 	    }
 	    # eval strips one level of braces; the frame parser needs the
 	    # other to keep a file name with spaces in one token
-	    append cmd " [list "{$fn}"] $pmarker(glyph,size) 0"
+	    append cmd " $pmarker(glyph,size) [list "{$fn}"]"
 	}
 	ruler {append cmd " $x $y $ed(system) $ed(sky) $ed(system) $ed(dformat) ''"}
 	compass {append cmd " 15 $ed(system) $ed(sky)"}
@@ -1606,7 +1606,6 @@ proc MarkerDialog {frame id} {
 	projection {ProjectionDialog $varname}
 	segment {SegmentDialog $varname}
 	text {TextDialog $varname}
-	glyph {GlyphDialog $varname}
 	ruler {RulerDialog $varname}
 	compass {CompassDialog $varname}
 	point {PointDialog $varname}

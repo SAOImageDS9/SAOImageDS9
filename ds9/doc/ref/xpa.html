@@ -480,8 +480,8 @@ catalog [new]<br>
 &nbsp;&nbsp;&nbsp; [sort &lt;col&gt; incr|decr]<br>
 &nbsp;&nbsp;&nbsp; [symbol [#] condition|shape|color|text|font|fontsize|fontweight|fontslant &lt;value&gt;]<br>
 &nbsp;&nbsp;&nbsp; [symbol [#] text|size|size2|units|angle|glyph &lt;value&gt;]<br>
-&nbsp;&nbsp;&nbsp; [symbol shape circle|ellipse|box|text|glyph|point]<br>
-&nbsp;&nbsp;&nbsp; [symbol shapecircle point|box point|diamond point|cross point|x point|arrow point|boxcircle point]<br>
+&nbsp;&nbsp;&nbsp; [symbol shape circle|ellipse|box|text|point]<br>
+&nbsp;&nbsp;&nbsp; [symbol shapecircle point|box point|diamond point|cross point|x point|arrow point|boxcircle point|glyph point]<br>
 &nbsp;&nbsp;&nbsp; [symbol add| [#] remove]<br>
 &nbsp;&nbsp;&nbsp; [symbol save|load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [system &lt;coordsys&gt;]<br>
@@ -542,7 +542,7 @@ $xpaset -p ds9 catalog show yes<br>
 $xpaset -p ds9 catalog radius 1 degrees<br>
 $xpaset -p ds9 catalog symbol condition '$Jmag&gt;15'<br>
 $xpaset -p ds9 catalog symbol 2 shape {boxcircle point}<br>
-$xpaset -p ds9 catalog symbol shape glyph<br>
+$xpaset -p ds9 catalog symbol shape {glyph point}<br>
 $xpaset -p ds9 catalog symbol glyph 'glyphs/$type.png'<br>
 $xpaset -p ds9 catalog symbol color red<br>
 $xpaset -p ds9 catalog symbol font times<br>

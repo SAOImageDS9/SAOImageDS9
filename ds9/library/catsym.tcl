@@ -169,8 +169,6 @@ proc CATSymDialog {parent} {
 	-variable ${varname}(shape) -value {vector}
     $f.shape.menu add radiobutton  -label [msgcat::mc {Text}] \
 	-variable ${varname}(shape) -value {text}
-    $f.shape.menu add radiobutton  -label [msgcat::mc {Glyph}] \
-	-variable ${varname}(shape) -value {glyph}
     $f.shape.menu add cascade -label [msgcat::mc {Point}] \
 	-menu $f.shape.menu.point
 
@@ -189,6 +187,9 @@ proc CATSymDialog {parent} {
 	-variable ${varname}(shape) -value {arrow point}
     $f.shape.menu.point add radiobutton -label [msgcat::mc {BoxCircle}] \
 	-variable ${varname}(shape) -value {boxcircle point}
+    $f.shape.menu.point add separator
+    $f.shape.menu.point add radiobutton -label [msgcat::mc {Glyph}] \
+	-variable ${varname}(shape) -value {glyph point}
 
     grid $f.tcondition $f.condition $f.bcondition -padx 2 -pady 2 -sticky w
     grid $f.tthen -padx 2 -pady 2 -sticky w

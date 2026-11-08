@@ -66,7 +66,7 @@ array set region::table {
   81:311 reduce
   81:312 reduce
   283:277,target 241
-  196:399,target 208
+  196:399,target 207
   136:321 reduce
   122:0,target 145
   81:313 reduce
@@ -76,7 +76,7 @@ array set region::table {
   81:315 reduce
   46:409,target 210
   46:410,target 211
-  46:399,target 207
+  46:399,target 206
   81:316 reduce
   233:423,target 135
   48:0 reduce
@@ -196,7 +196,7 @@ array set region::table {
   93:315,target 36
   285:277,target 245
   244:0 reduce
-  198:399,target 209
+  198:399,target 208
   101:422 reduce
   61:0,target 64
   101:423 reduce
@@ -419,7 +419,7 @@ array set region::table {
   60:436,target 237
   0:326,target 11
   283:276,target 241
-  212:0,target 205
+  212:0,target 204
   287:0 reduce
   253:366 shift
   248:305,target 58
@@ -459,7 +459,7 @@ array set region::table {
   56:392,target 161
   287:432,target 291
   53:288,target 84
-  213:399,target 210
+  213:399,target 209
   7:311,target 107
   43:364,target 189
   253:384 shift
@@ -531,7 +531,7 @@ array set region::table {
   83:321,target 26
   53:315,target 111
   48:277 shift
-  208:0,target 201
+  208:0,target 200
   198:0,target 188
   98:315,target 41
   18:273 shift
@@ -539,7 +539,7 @@ array set region::table {
   13:325 shift
   18:274 shift
   234:321 reduce
-  214:399,target 211
+  214:399,target 210
   2:319 shift
   18:275 shift
   40:277,target 130
@@ -553,7 +553,6 @@ array set region::table {
   18:278 shift
   287:285,target 81
   204:321 reduce
-  194:321 reduce
   0:359,target 36
   0:360,target 37
   41:372,target 179
@@ -633,7 +632,7 @@ array set region::table {
   290:432,target 292
   7:295 shift
   7:305 shift
-  215:399,target 214
+  215:399,target 213
   97:422 reduce
   7:296 shift
   7:306 shift
@@ -664,7 +663,6 @@ array set region::table {
   53:280,target 76
   236:0,target 138
   204:0 reduce
-  194:0 reduce
   82:423,target 25
   7:313 shift
   269:321 reduce
@@ -676,7 +674,7 @@ array set region::table {
   7:315 shift
   7:316 shift
   286:276,target 129
-  205:0,target 199
+  205:0,target 198
   195:0,target 194
   253:459 goto
   246:0 reduce
@@ -725,7 +723,7 @@ array set region::table {
   84:310 reduce
   80:0 reduce
   79:0 reduce
-  216:399,target 215
+  216:399,target 214
   84:311 reduce
   164:366 reduce
   84:312 reduce
@@ -792,6 +790,7 @@ array set region::table {
   281:276 reduce
   270:368 shift
   281:277 reduce
+  194:399 reduce
   161:0,target 184
   290:312,target 108
   281:278 reduce
@@ -909,7 +908,7 @@ array set region::table {
   147:321,target 217
   92:313,target 35
   203:321,target 195
-  193:321,target 206
+  193:321,target 205
   284:275,target 238
   248:321,target 58
   181:321 reduce
@@ -985,8 +984,7 @@ array set region::table {
   84:424 reduce
   0:257 shift
   35:321 reduce
-  204:321,target 198
-  194:321,target 196
+  204:321,target 197
   0:258 shift
   35:322 shift
   285:275,target 245
@@ -1057,7 +1055,7 @@ array set region::table {
   94:313,target 37
   29:389 shift
   29:390 shift
-  205:321,target 199
+  205:321,target 198
   195:321,target 194
   29:391 shift
   286:275,target 128
@@ -1209,7 +1207,7 @@ array set region::table {
   96:313,target 39
   0:351 shift
   286:429,target 289
-  207:321,target 200
+  207:321,target 199
   197:321,target 187
   0:352 shift
   52:273 shift
@@ -1292,7 +1290,7 @@ array set region::table {
   56:389,target 158
   0:378 shift
   46:349 shift
-  208:321,target 201
+  208:321,target 200
   198:321,target 188
   82:315 reduce
   0:380 shift
@@ -1380,8 +1378,8 @@ array set region::table {
   154:321,target 100
   98:313,target 41
   57:285 shift
-  210:321,target 203
-  209:321,target 202
+  210:321,target 202
+  209:321,target 201
   199:321,target 189
   57:286 shift
   255:321,target 155
@@ -1539,7 +1537,7 @@ array set region::table {
   99:313,target 42
   46:415 shift
   248:313 reduce
-  211:321,target 204
+  211:321,target 203
   102:424 reduce
   76:422 reduce
   270:460,target 286
@@ -1613,7 +1611,7 @@ array set region::table {
   156:321,target 179
   93:315 reduce
   272:0,target 227
-  212:321,target 205
+  212:321,target 204
   125:443,target 245
   93:316 reduce
   40:429,target 176
@@ -1632,8 +1630,8 @@ array set region::table {
   7:316,target 112
   184:0 reduce
   108:423,target 51
-  210:0,target 203
-  209:0,target 202
+  210:0,target 202
+  209:0,target 201
   199:0,target 189
   46:453 goto
   49:312,target 108
@@ -1680,7 +1678,7 @@ array set region::table {
   70:0 reduce
   69:0 reduce
   57:286,target 82
-  258:321,target 197
+  258:321,target 196
   253:362,target 269
   118:348 reduce
   6:0,target 126
@@ -1835,7 +1833,7 @@ array set region::table {
   86:310,target 29
   100:321 reduce
   203:0,target 195
-  193:0,target 206
+  193:0,target 205
   112:423,target 55
   157:423,target 180
   98:0 reduce
@@ -2006,7 +2004,7 @@ array set region::table {
   95:422,target 38
   85:310 reduce
   29:452,target 163
-  258:0,target 197
+  258:0,target 196
   117:321,target 72
   85:311 reduce
   259:434 goto
@@ -2515,7 +2513,7 @@ array set region::table {
   53:303 shift
   53:293 shift
   241:0 reduce
-  211:0,target 204
+  211:0,target 203
   83:310 reduce
   53:304 shift
   53:294 shift
@@ -2625,7 +2623,7 @@ array set region::table {
   127:321,target 15
   249:283 reduce
   232:424,target 134
-  207:0,target 200
+  207:0,target 199
   197:0,target 187
   173:321,target 170
   88:310 reduce
@@ -2757,7 +2755,7 @@ array set region::table {
   220:321 reduce
   219:321 reduce
   47:429 goto
-  191:399,target 212
+  191:399,target 211
   10:421,target 124
   147:0 reduce
   238:422 reduce
@@ -2768,8 +2766,7 @@ array set region::table {
   179:321 shift
   53:301,target 97
   53:291,target 87
-  204:0,target 198
-  194:0,target 196
+  204:0,target 197
   94:310 reduce
   7:313,target 109
   200:0 reduce
@@ -2824,7 +2821,7 @@ array set region::table {
   108:424 reduce
   83:422 reduce
   278:277,target 242
-  192:399,target 213
+  192:399,target 212
   83:423 reduce
   75:0 reduce
   57:283,target 79
@@ -2958,6 +2955,7 @@ array set region::table {
   88:315,target 31
   58:310,target 106
   281:277,target 244
+  194:399,target 215
   58:432 goto
   228:0,target 93
   125:348 shift
@@ -3134,7 +3132,7 @@ array set region::rules {
   67,l 437
   0,l 461
   154,l 446
-  206,l 453
+  206,l 454
   196,l 453
   39,l 431
   40,l 431
@@ -3413,8 +3411,8 @@ array set region::rules {
   29,dc 1
   95,dc 2
   132,dc 2
-  207,dc 0
-  197,dc 2
+  207,dc 1
+  197,dc 1
   22,dc 1
   87,dc 1
   124,dc 1
@@ -3485,8 +3483,8 @@ array set region::rules {
   28,dc 1
   94,dc 2
   131,dc 1
-  206,dc 1
-  196,dc 1
+  206,dc 0
+  196,dc 2
   21,dc 1
   86,dc 1
   123,dc 2
@@ -3749,7 +3747,7 @@ array set region::rules {
   210,line 551
   209,line 550
   199,line 538
-  206,line 545
+  206,line 547
   196,line 535
   203,line 542
   193,line 532
@@ -3835,7 +3833,7 @@ array set region::lr1_table {
   292 {{168 {0 321} 2}}
   117,trans {{422 56} {423 57} {424 58} {440 283}}
   41 {{75 {0 321} 1} {154 {0 321} 0} {155 {0 321} 0} {156 {0 321} 0}}
-  303 {{197 {0 321} 2}}
+  303 {{196 {0 321} 2}}
   136,trans {}
   293 {{58 {0 321} 1}}
   42 {{122 {0 321} 1}}
@@ -3855,7 +3853,7 @@ array set region::lr1_table {
   307 {{232 {0 321} 1}}
   222,trans {}
   297 {{74 {0 321} 3}}
-  46 {{98 {0 321} 1} {186 {0 321} 0} {187 {0 321} 0} {188 {0 321} 0} {189 {0 321} 0} {190 {0 321} 0} {191 {0 321} 0} {192 {0 321} 0} {193 {0 321} 0} {194 {0 321} 0} {195 {0 321} 0} {196 {0 321} 0} {197 {0 321} 0} {198 {0 321} 0} {199 {0 321} 0} {200 {0 321} 0} {201 {0 321} 0} {202 {0 321} 0} {203 {0 321} 0} {204 {0 321} 0} {205 {0 321} 0} {206 {0 321} 0} {207 399 0} {208 399 0} {209 399 0} {210 399 0} {211 399 0} {212 399 0} {213 399 0} {214 399 0} {215 399 0}}
+  46 {{98 {0 321} 1} {186 {0 321} 0} {187 {0 321} 0} {188 {0 321} 0} {189 {0 321} 0} {190 {0 321} 0} {191 {0 321} 0} {192 {0 321} 0} {193 {0 321} 0} {194 {0 321} 0} {195 {0 321} 0} {196 {0 321} 0} {197 {0 321} 0} {198 {0 321} 0} {199 {0 321} 0} {200 {0 321} 0} {201 {0 321} 0} {202 {0 321} 0} {203 {0 321} 0} {204 {0 321} 0} {205 {0 321} 0} {206 399 0} {207 399 0} {208 399 0} {209 399 0} {210 399 0} {211 399 0} {212 399 0} {213 399 0} {214 399 0} {215 399 0}}
   308 {{231 {0 321} 1}}
   241,trans {}
   298 {{225 {0 321} 2} {226 {0 321} 0} {227 {0 321} 0} {228 {0 321} 0} {229 {0 321} 0} {230 {0 321} 0} {231 {0 321} 0} {232 {0 321} 0} {233 {0 321} 0} {234 {0 321} 0} {235 {0 321} 0} {236 {0 321} 0} {237 {0 321} 0}}
@@ -4314,56 +4312,56 @@ array set region::lr1_table {
   15,trans {{321 137}}
   285,trans {}
   201 {{191 {0 321} 1}}
-  191 {{212 399 1}}
+  191 {{211 399 1}}
   34,trans {{322 168} {330 169} {372 170} {447 171}}
   314,trans {}
   53,trans {{279 75} {280 76} {281 77} {282 78} {283 79} {284 80} {285 81} {286 82} {287 83} {288 84} {289 85} {290 86} {291 87} {292 88} {293 89} {294 90} {295 91} {296 92} {297 93} {298 94} {299 95} {300 96} {301 97} {302 98} {303 99} {304 100} {305 101} {306 102} {307 103} {308 104} {309 105} {310 106} {311 107} {312 108} {313 109} {314 110} {315 111} {316 112} {430 226} {431 227} {432 228}}
   202 {{192 {0 321} 1}}
-  192 {{213 399 1}}
+  192 {{212 399 1}}
   333,trans {{273 126} {274 127} {275 128} {276 129} {277 130} {278 131} {429 338}}
   72,trans {}
   203 {{195 {0 321} 1}}
-  193 {{206 {0 321} 1}}
+  193 {{205 {0 321} 1}}
   352,trans {}
   91,trans {}
-  204 {{198 {0 321} 1}}
-  194 {{196 {0 321} 1}}
+  204 {{197 {0 321} 1}}
+  194 {{215 399 1}}
   2,trans {{319 68}}
-  205 {{199 {0 321} 1}}
+  205 {{198 {0 321} 1}}
   195 {{194 {0 321} 1}}
   206 {{193 {0 321} 1}}
-  196 {{186 {0 321} 1} {208 399 1}}
+  196 {{186 {0 321} 1} {207 399 1}}
   104,trans {}
-  207 {{200 {0 321} 1}}
+  207 {{199 {0 321} 1}}
   197 {{187 {0 321} 1}}
   123,trans {}
-  208 {{201 {0 321} 1}}
-  198 {{188 {0 321} 1} {209 399 1}}
+  208 {{200 {0 321} 1}}
+  198 {{188 {0 321} 1} {208 399 1}}
   142,trans {}
-  210 {{203 {0 321} 1}}
-  209 {{202 {0 321} 1}}
+  210 {{202 {0 321} 1}}
+  209 {{201 {0 321} 1}}
   199 {{189 {0 321} 1}}
   161,trans {}
-  211 {{204 {0 321} 1}}
+  211 {{203 {0 321} 1}}
   180,trans {}
   179,trans {{321 301}}
-  212 {{205 {0 321} 1}}
+  212 {{204 {0 321} 1}}
   208,trans {}
   198,trans {}
-  213 {{210 399 1}}
+  213 {{209 399 1}}
   227,trans {}
-  214 {{211 399 1}}
+  214 {{210 399 1}}
   246,trans {}
-  215 {{214 399 1}}
+  215 {{213 399 1}}
   265,trans {}
-  216 {{215 399 1}}
+  216 {{214 399 1}}
   14,trans {}
   284,trans {}
   217 {{98 {0 321} 2}}
   33,trans {}
   313,trans {}
   52,trans {{273 126} {274 127} {275 128} {276 129} {277 130} {278 131} {429 225}}
-  218 {{197 {0 321} 1}}
+  218 {{196 {0 321} 1}}
   332,trans {}
   71,trans {}
   220 {{79 {0 321} 2}}
@@ -4626,7 +4624,7 @@ array set region::token_id_table {
   275,title ON
   448,t 1
   361,title MOVEFRONT
-  454,line 547
+  454,line 546
   446,title {}
   274,t 0
   451,line 502
@@ -5199,7 +5197,7 @@ array set region::token_id_table {
   273,line 25
   376,t 0
   317,title DEGREES
-  X,line 552
+  X,line 551
   270,line 21
   269,line 20
   393,title XY
@@ -5372,7 +5370,7 @@ array set region::token_id_table {
   318,line 74
   324,t 0
   372,title SELECT
-  x,line 553
+  x,line 552
   315,line 70
   457,title {}
   366,t 0
@@ -5662,26 +5660,26 @@ proc region::yyparse {} {
                     193 { set _ projection }
                     194 { set _ segment }
                     195 { set _ text }
-                    196 { set _ glyph }
-                    197 { set _ "$1 point" }
-                    198 { set _ ruler }
-                    199 { set _ compass }
-                    200 { set _ annulus }
-                    201 { set _ ellipseannulus }
-                    202 { set _ boxannulus }
-                    203 { set _ panda }
-                    204 { set _ epanda }
-                    205 { set _ bpanda }
-                    206 { set _ composite }
-                    207 { set _ boxcircle }
-                    208 { set _ circle }
-                    209 { set _ box }
-                    210 { set _ diamond }
-                    211 { set _ cross }
+                    196 { set _ "$1 point" }
+                    197 { set _ ruler }
+                    198 { set _ compass }
+                    199 { set _ annulus }
+                    200 { set _ ellipseannulus }
+                    201 { set _ boxannulus }
+                    202 { set _ panda }
+                    203 { set _ epanda }
+                    204 { set _ bpanda }
+                    205 { set _ composite }
+                    206 { set _ boxcircle }
+                    207 { set _ circle }
+                    208 { set _ box }
+                    209 { set _ diamond }
+                    210 { set _ cross }
+                    211 { set _ x }
                     212 { set _ x }
-                    213 { set _ x }
-                    214 { set _ arrow }
-                    215 { set _ boxcircle }
+                    213 { set _ arrow }
+                    214 { set _ boxcircle }
+                    215 { set _ glyph }
                     216 { set _ 0 }
                     217 { set _ 1 }
                     218 { RegionCmdTemplate $1 }

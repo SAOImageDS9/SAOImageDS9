@@ -101,8 +101,6 @@ proc RegionMainMenu {} {
     $ds9(mb).region.shape add separator
     $ds9(mb).region.shape add radiobutton -label [msgcat::mc {Text}] \
 	-variable marker(shape) -value text
-    $ds9(mb).region.shape add radiobutton -label [msgcat::mc {Glyph}] \
-	-variable marker(shape) -value glyph
     $ds9(mb).region.shape add cascade -label [msgcat::mc {Point}] \
 	-menu $ds9(mb).region.shape.point
     $ds9(mb).region.shape add separator
@@ -142,6 +140,9 @@ proc RegionMainMenu {} {
 	-variable marker(shape) -value {arrow point}
     $ds9(mb).region.shape.point add radiobutton -label [msgcat::mc {BoxCircle}]\
 	-variable marker(shape) -value {boxcircle point}
+    $ds9(mb).region.shape.point add separator
+    $ds9(mb).region.shape.point add radiobutton -label [msgcat::mc {Glyph}] \
+	-variable marker(shape) -value {glyph point}
 
     ThemeMenu $ds9(mb).region.composite
     $ds9(mb).region.composite add command -label [msgcat::mc {Create Union}] \
@@ -272,8 +273,6 @@ proc PrefsDialogRegionMenu {w} {
     $m.shape add separator
     $m.shape add radiobutton -label [msgcat::mc {Text}] \
 	-variable pmarker(shape) -value text
-    $m.shape add radiobutton -label [msgcat::mc {Glyph}] \
-	-variable pmarker(shape) -value glyph
     $m.shape add cascade -label [msgcat::mc {Point}] \
 	-menu $m.shape.point
     $m.shape add separator
@@ -311,6 +310,9 @@ proc PrefsDialogRegionMenu {w} {
 	-variable pmarker(shape) -value {arrow point}
     $m.shape.point add radiobutton -label [msgcat::mc {BoxCircle}]\
 	-variable pmarker(shape) -value {boxcircle point}
+    $m.shape.point add separator
+    $m.shape.point add radiobutton -label [msgcat::mc {Glyph}] \
+	-variable pmarker(shape) -value {glyph point}
 
     ColorFillMenu $m.color pmarker color fill {} {}
     WidthDashMenu $m.width pmarker width dash {} {} dashlist {}

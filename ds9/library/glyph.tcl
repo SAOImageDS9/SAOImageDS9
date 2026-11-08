@@ -4,30 +4,32 @@
 
 package provide DS9 1.0
 
-# Glyph region: a user supplied image (png, gif, ...) drawn at a fixed
-# size in screen pixels, always upright.
+# Glyph points: a point region drawn with a user supplied image (png,
+# gif, ...) at a fixed size in screen pixels, always upright:
+#   point(x,y) # point=glyph [size] {file}
+# The point dialog (point.tcl) edits the file and size.
 
-# Photo loader, called from C++ (tksao/frame/glyph.C) whenever an glyph
-# marker needs its image. Returns the name of a cached photo of the
-# requested size, or {} on failure (the marker then draws a box with an X).
-# ww/hh are screen pixels; 0 means native size, and if only one is 0 the
-# aspect ratio is kept.
+# Photo loader, called from C++ (tksao/frame/glyph.C) whenever a glyph
+# point needs its image. Returns the name of a cached photo, or {} on
+# failure (the point then draws a box with an X). size is in screen
+# pixels: the image is fitted into a size x size box keeping its aspect
+# ratio; 0 means native size.
 
-proc RegionGlyphPhoto {fn ww hh} {
+proc RegionGlyphPhoto {fn size} {
     # a missing or bad file is not an error, the marker draws a placeholder.
     # Leave errorInfo alone: xpa reports any errorInfo as a failure.
     global errorInfo errorCode
     set ei [expr {[info exists errorInfo] ? $errorInfo : {}}]
     set ec [expr {[info exists errorCode] ? $errorCode : {}}]
 
-    set rr [GlyphLoadPhoto $fn $ww $hh]
+    set rr [GlyphLoadPhoto $fn $size]
 
     set errorInfo $ei
     set errorCode $ec
     return $rr
 }
 
-proc GlyphLoadPhoto {fn ww hh} {
+proc GlyphLoadPhoto {fn size} {
     global iglyph
 
     if {$fn eq {}} {
@@ -50,13 +52,15 @@ proc GlyphLoadPhoto {fn ww hh} {
 	return {}
     }
 
-    if {$ww<=0 && $hh<=0} {
+    if {$size<=0} {
 	set ww $sw
 	set hh $sh
-    } elseif {$ww<=0} {
-	set ww [expr {max(1,int(double($sw)*$hh/$sh+.5))}]
-    } elseif {$hh<=0} {
-	set hh [expr {max(1,int(double($sh)*$ww/$sw+.5))}]
+    } elseif {$sw>=$sh} {
+	set ww $size
+	set hh [expr {max(1,int(double($sh)*$size/$sw+.5))}]
+    } else {
+	set hh $size
+	set ww [expr {max(1,int(double($sw)*$size/$sh+.5))}]
     }
 
     if {$ww == $sw && $hh == $sh} {
@@ -192,7 +196,7 @@ proc GlyphResizeWeights {ss nn} {
 
 # Interactive create: use the file set in Preferences, else the same
 # built-in image illustrate mode uses. Never prompts; the file can be
-# changed afterwards in the glyph dialog.
+# changed afterwards in the point dialog.
 
 proc GlyphDefaultFile {} {
     global ds9
@@ -208,77 +212,7 @@ proc GlyphCreateFile {} {
     return [GlyphDefaultFile]
 }
 
-# Dialog
-
-proc GlyphDialog {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    # see if we already have a header window visible
-    if {[winfo exists $var(top)]} {
-	raise $var(top)
-	return
-    }
-
-    # variables
-    set var(file) [$var(frame) get marker $var(id) glyph file]
-    lassign [$var(frame) get marker $var(id) glyph size] var(width) var(height)
-
-    # procs
-    set var(which) glyph
-    set var(proc,apply) GlyphApply
-    set var(proc,close) GlyphClose
-    set var(proc,coordCB) GlyphCoordCB
-
-    # base
-    MarkerBaseCenterDialog $varname
-
-    # callbacks
-    $var(frame) marker $var(id) callback edit GlyphEditCB $varname
-
-    set f $var(top).param
-
-    # File
-    ttk::label $f.tfile -text [msgcat::mc {File}]
-    ttk::entry $f.file -textvariable ${varname}(file) -width 40
-    ttk::button $f.browse -text [msgcat::mc {Browse}] \
-	-command [list GlyphBrowse $varname]
-
-    # Size
-    ttk::label $f.tsize -text [msgcat::mc {Size}]
-    ttk::entry $f.width -textvariable ${varname}(width) -width 13
-    ttk::entry $f.height -textvariable ${varname}(height) -width 13
-    ttk::label $f.usize -text [msgcat::mc {Pixels (0 = native)}]
-
-    grid $f.tfile $f.file - $f.browse -padx 2 -pady 2 -sticky w
-    grid $f.tsize $f.width $f.height $f.usize -padx 2 -pady 2 -sticky w
-}
-
-# actions
-
-proc GlyphClose {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    $var(frame) marker $var(id) delete callback edit GlyphEditCB
-
-    MarkerBaseCenterClose $varname
-}
-
-proc GlyphApply {varname} {
-    upvar #0 $varname var
-    global $varname
-
-    if {$var(file) ne [$var(frame) get marker $var(id) glyph file]} {
-	$var(frame) marker $var(id) glyph file "\{$var(file)\}"
-    }
-    if {[string is integer -strict $var(width)] &&
-	[string is integer -strict $var(height)]} {
-	$var(frame) marker $var(id) glyph size $var(width) $var(height)
-    }
-
-    MarkerBaseCenterApply $varname
-}
+# Point dialog support
 
 proc GlyphBrowse {varname} {
     upvar #0 $varname var
@@ -286,31 +220,9 @@ proc GlyphBrowse {varname} {
 
     set fn [OpenFileDialog photofbox]
     if {$fn ne {}} {
-	set var(file) $fn
-	GlyphApply $varname
+	set var(glyph) $fn
+	PointApply $varname
     }
-}
-
-# callbacks
-
-proc GlyphEditCB {varname id} {
-    upvar #0 $varname var
-    global $varname
-
-    lassign [$var(frame) get marker $var(id) glyph size] var(width) var(height)
-}
-
-proc GlyphCoordCB {varname {dummy {}}} {
-    upvar #0 $varname var
-    global $varname
-
-    global debug
-    if {$debug(tcl,marker)} {
-	puts stderr "GlyphCoordCB"
-    }
-
-    MarkerBaseCoordCB $varname
-    MarkerBaseCenterMoveCB $varname
 }
 
 # Backup: copy every glyph file referenced by the saved region file fn
@@ -323,13 +235,13 @@ proc GlyphBackup {fn dir} {
     set rr [read $ch]
     close $ch
 
-    if {![string match {*glyph(*} $rr]} {
+    if {![string match {*point=glyph*} $rr]} {
 	return
     }
 
     upvar #0 iglyphbackup map
     array unset map
-    set rr [regsub -all -command {(glyph\([^\{\n]*\{)([^\}\n]*)(\})} $rr \
+    set rr [regsub -all -command {(point=glyph[ \t]+(?:[0-9]+[ \t]+)?\{)([^\}\n]*)(\})} $rr \
 		[list GlyphBackupRef $dir]]
     array unset map
 

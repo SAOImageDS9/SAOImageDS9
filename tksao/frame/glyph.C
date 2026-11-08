@@ -6,141 +6,103 @@
 #include <iomanip>
 
 #include "util.h"
-#include "glyph.h"
+#include "point.h"
 #include "base.h"
 #include "fitsimage.h"
 
-Glyph::Glyph(const Glyph& a) : Marker(a)
+// Glyph points: point shape GLYPH, see point.h
+
+void Point::initGlyph()
 {
-  fileName_ = dupstr(a.fileName_);
-  reqWidth_ = a.reqWidth_;
-  reqHeight_ = a.reqHeight_;
-  width_ = a.width_;
-  height_ = a.height_;
-
-  // each marker holds its own image reference, never share the handle
-  image_ = NULL;
-  photoName_ = NULL;
-  loadImage();
-}
-
-Glyph::Glyph(Base* p, const Vector& ctr,
-	   const char* fn, int ww, int hh,
-	   const char* clr, int* dsh,
-	   int wth, const char* fnt, const char* txt,
-	   unsigned short prop, const char* cmt,
-	   const List<Tag>& tg, const List<CallBack>& cb)
-  : Marker(p, ctr, 0, clr, dsh, wth, fnt, txt, prop, cmt, tg, cb)
-{
-  strcpy(type_,"glyph");
-  handle = new Vector[4];
-  numHandle = 4;
-
-  fileName_ = dupstr(fn ? fn : "");
-  reqWidth_ = ww>0 ? ww : 0;
-  reqHeight_ = hh>0 ? hh : 0;
-  width_ = reqWidth_;
-  height_ = reqHeight_;
-  image_ = NULL;
-  photoName_ = NULL;
-
-  loadImage();
-  updateBBox();
-}
-
-Glyph::~Glyph()
-{
-  freeImage();
-  if (fileName_)
-    delete [] fileName_;
+  glyphFile_ = dupstr("");
+  glyphWidth_ = 0;
+  glyphHeight_ = 0;
+  glyphImage_ = NULL;
+  glyphPhoto_ = NULL;
+  if (shape_ == GLYPH)
+    loadGlyph();
 }
 
 // Photo handling
 
-void Glyph::freeImage()
+void Point::freeGlyph()
 {
-  if (image_)
-    Tk_FreeImage(image_);
-  image_ = NULL;
+  if (glyphImage_)
+    Tk_FreeImage(glyphImage_);
+  glyphImage_ = NULL;
 
-  if (photoName_)
-    delete [] photoName_;
-  photoName_ = NULL;
+  if (glyphPhoto_)
+    delete [] glyphPhoto_;
+  glyphPhoto_ = NULL;
 }
 
-void Glyph::loadImage()
+void Point::loadGlyph()
 {
-  freeImage();
+  freeGlyph();
+  glyphWidth_ = 0;
+  glyphHeight_ = 0;
 
-  if (fileName_ && *fileName_) {
+  if (glyphFile_ && *glyphFile_) {
     Tcl_Interp* interp = parent->interp;
 
     // we may be called in the middle of a frame command (region parsing)
     // so preserve whatever result that command is building
     Tcl_InterpState state = Tcl_SaveInterpState(interp, TCL_OK);
 
-    Tcl_Obj* objv[4];
+    Tcl_Obj* objv[3];
     objv[0] = Tcl_NewStringObj(GLYPHPHOTOPROC, -1);
-    objv[1] = Tcl_NewStringObj(fileName_, -1);
-    objv[2] = Tcl_NewIntObj(reqWidth_);
-    objv[3] = Tcl_NewIntObj(reqHeight_);
-    for (int ii=0; ii<4; ii++)
+    objv[1] = Tcl_NewStringObj(glyphFile_, -1);
+    objv[2] = Tcl_NewIntObj(size_>0 ? size_ : 0);
+    for (int ii=0; ii<3; ii++)
       Tcl_IncrRefCount(objv[ii]);
 
-    if (Tcl_EvalObjv(interp, 4, objv, TCL_EVAL_GLOBAL) == TCL_OK) {
+    if (Tcl_EvalObjv(interp, 3, objv, TCL_EVAL_GLOBAL) == TCL_OK) {
       const char* name = Tcl_GetStringResult(interp);
       if (name && *name) {
-	image_ = Tk_GetImage(interp, parent->tkwin, name,
-			     imageChangedProc, (ClientData)this);
-	if (image_)
-	  photoName_ = dupstr(name);
+	glyphImage_ = Tk_GetImage(interp, parent->tkwin, name,
+				  glyphChangedProc, (ClientData)this);
+	if (glyphImage_)
+	  glyphPhoto_ = dupstr(name);
       }
     }
 
-    for (int ii=0; ii<4; ii++)
+    for (int ii=0; ii<3; ii++)
       Tcl_DecrRefCount(objv[ii]);
 
     Tcl_RestoreInterpState(interp, state);
   }
 
-  if (image_) {
-    int ww, hh;
-    Tk_SizeOfImage(image_, &ww, &hh);
-    if (ww>0 && hh>0) {
-      width_ = ww;
-      height_ = hh;
-    }
-  }
+  if (glyphImage_)
+    Tk_SizeOfImage(glyphImage_, &glyphWidth_, &glyphHeight_);
 
-  if (width_<=0)
-    width_ = reqWidth_>0 ? reqWidth_ : GLYPHDEFAULTSIZE;
-  if (height_<=0)
-    height_ = reqHeight_>0 ? reqHeight_ : GLYPHDEFAULTSIZE;
+  // placeholder
+  if (glyphWidth_<=0 || glyphHeight_<=0)
+    glyphWidth_ = glyphHeight_ = size_>0 ? size_ : GLYPHDEFAULTSIZE;
 }
 
-void Glyph::imageChangedProc(ClientData cd, int xx, int yy, int ww, int hh,
-			    int iw, int ih)
+void Point::glyphChangedProc(ClientData cd, int xx, int yy, int ww, int hh,
+			     int iw, int ih)
 {
-  Glyph* glyph = (Glyph*)cd;
+  Point* pp = (Point*)cd;
   if (iw>0 && ih>0) {
-    glyph->width_ = iw;
-    glyph->height_ = ih;
+    pp->glyphWidth_ = iw;
+    pp->glyphHeight_ = ih;
   }
-  glyph->updateBBox();
-  glyph->parent->update(Base::PIXMAP);
+  pp->updateBBox();
+  pp->parent->update(Base::PIXMAP);
 }
 
 // Render
 
-void Glyph::renderX(Drawable drawable, Coord::InternalSystem sys,
+void Point::renderXGlyph(Drawable drawable, Coord::InternalSystem sys,
 		   RenderMode mode)
 {
   GC lgc = renderXGC(mode);
 
   int iw =0;
   int ih =0;
-  if (image_)
-    Tk_SizeOfImage(image_, &iw, &ih);
+  if (glyphImage_)
+    Tk_SizeOfImage(glyphImage_, &iw, &ih);
   int hasImage = iw>0 && ih>0;
 
   if (mode==SRC && hasImage) {
@@ -166,20 +128,20 @@ void Glyph::renderX(Drawable drawable, Coord::InternalSystem sys,
       hh = dh-dy;
 
     if (ww>0 && hh>0)
-      Tk_RedrawImage(image_, ix, iy, ww, hh, drawable, dx, dy);
+      Tk_RedrawImage(glyphImage_, ix, iy, ww, hh, drawable, dx, dy);
   }
 
   // outline: while dragging (XOR), when highlited (the image has no
   // color of its own) and as a placeholder when there is no image
   if (mode==XOR || !hasImage || (highlited && canHighlite()))
-    renderXBox(drawable, sys, lgc, !hasImage);
+    renderXGlyphBox(drawable, sys, lgc, !hasImage);
 }
 
-void Glyph::renderXBox(Drawable drawable, Coord::InternalSystem sys, GC lgc,
+void Point::renderXGlyphBox(Drawable drawable, Coord::InternalSystem sys, GC lgc,
 		      int cross)
 {
   Vector cc = parent->mapFromRef(center,sys);
-  Vector ss(width_/2., height_/2.);
+  Vector ss(glyphWidth_/2., glyphHeight_/2.);
   Vector ll = (cc-ss).round();
   Vector ur = (cc+ss).round();
 
@@ -196,18 +158,18 @@ void Glyph::renderXBox(Drawable drawable, Coord::InternalSystem sys, GC lgc,
 // opaque (no alpha in postscript); pdf places the photo as an opaque
 // image via pdf4tcl, which drops alpha.
 
-void Glyph::renderPS(PSColorSpace mode)
+void Point::renderPSGlyph(PSColorSpace mode)
 {
   renderPSGC(mode);
 
   Tk_PhotoHandle photo = NULL;
-  if (photoName_)
-    photo = Tk_FindPhoto(parent->interp, photoName_);
+  if (glyphPhoto_)
+    photo = Tk_FindPhoto(parent->interp, glyphPhoto_);
 
   Tk_PhotoImageBlock block;
   if (!photo || !Tk_PhotoGetImage(photo, &block) ||
       block.width<=0 || block.height<=0) {
-    renderPSBox(mode, 1);
+    renderPSGlyphBox(1);
     return;
   }
 
@@ -220,17 +182,17 @@ void Glyph::renderPS(PSColorSpace mode)
     // handled by the op interpreter in Base::pdfVectorLayers
     ostringstream str;
     str << x0 << ' ' << y0 << ' ' << block.width << ' ' << block.height
-	<< " (" << photoName_ << ") ds9glyph" << endl << ends;
+	<< " (" << glyphPhoto_ << ") ds9glyph" << endl << ends;
     Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
   }
   else
-    renderPSImage(mode, &block, x0, y0);
+    renderPSGlyphImage(mode, &block, x0, y0);
 
   if (highlited && canHighlite())
-    renderPSBox(mode, 0);
+    renderPSGlyphBox(0);
 }
 
-void Glyph::renderPSImage(PSColorSpace mode, Tk_PhotoImageBlock* block,
+void Point::renderPSGlyphImage(PSColorSpace mode, Tk_PhotoImageBlock* block,
 			  int x0, int y0)
 {
   int hasAlpha = block->pixelSize==4;
@@ -312,7 +274,7 @@ void Glyph::renderPSImage(PSColorSpace mode, Tk_PhotoImageBlock* block,
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
-void Glyph::renderPSBox(PSColorSpace mode, int cross)
+void Point::renderPSGlyphBox(int cross)
 {
   ostringstream str;
   str << "newpath "
@@ -332,86 +294,64 @@ void Glyph::renderPSBox(PSColorSpace mode, int cross)
   Tcl_AppendResult(parent->interp, str.str().c_str(), NULL);
 }
 
-#ifdef __WIN32
-#include <win32lib.h>
-
-// phase 1: win32 printing draws the outline only
-void Glyph::renderWIN32()
-{
-  renderWIN32GC();
-
-  Vector vv[5];
-  for (int ii=0; ii<4; ii++)
-    vv[ii] = handle[ii];
-  vv[4] = handle[0];
-  win32DrawLines(vv,5);
-}
-#endif
 
 // Support
 
-void Glyph::updateHandles()
+int Point::isIn(const Vector& vv)
 {
-  // fixed size in screen pixels, always upright
-  Vector cc = parent->mapFromRef(center,Coord::CANVAS);
-  Vector ss(width_/2., height_/2.);
+  if (shape_ != GLYPH)
+    return Marker::isIn(vv);
 
-  handle[0] = cc + Vector(-ss[0],-ss[1]);
-  handle[1] = cc + Vector( ss[0],-ss[1]);
-  handle[2] = cc + Vector( ss[0], ss[1]);
-  handle[3] = cc + Vector(-ss[0], ss[1]);
-}
-
-int Glyph::isIn(const Vector& vv)
-{
   // vv in canvas coords
   Vector cc = parent->mapFromRef(center,Coord::CANVAS);
   Vector dd = (vv-cc).abs();
-  return (dd[0]<=width_/2. && dd[1]<=height_/2.) ? 1 : 0;
+  return (dd[0]<=glyphWidth_/2. && dd[1]<=glyphHeight_/2.) ? 1 : 0;
 }
 
-// Edit: resize symmetrically about the center, in screen pixels.
+// Edit: glyphs resize symmetrically about the center, in screen pixels,
+// keeping the aspect ratio. Other point shapes have a fixed size.
 // The photo is only regenerated at the end, resizing in Tcl is slow.
 
-void Glyph::edit(const Vector& v, int h)
+void Point::edit(const Vector& v, int h)
 {
+  if (shape_ != GLYPH)
+    return;
+
   Vector vv = parent->mapFromRef(v,Coord::CANVAS);
   Vector cc = parent->mapFromRef(center,Coord::CANVAS);
   Vector dd = (vv-cc).abs()*2;
 
-  width_ = dd[0]>1 ? (int)floor(dd[0]+.5) : 1;
-  height_ = dd[1]>1 ? (int)floor(dd[1]+.5) : 1;
+  double ww = glyphWidth_>0 ? glyphWidth_ : 1;
+  double hh = glyphHeight_>0 ? glyphHeight_ : 1;
+  double ss = dd[0]/ww > dd[1]/hh ? dd[0]/ww : dd[1]/hh;
+  int nw = (int)floor(ww*ss+.5);
+  int nh = (int)floor(hh*ss+.5);
+  glyphWidth_ = nw>1 ? nw : 1;
+  glyphHeight_ = nh>1 ? nh : 1;
 
   updateBBox();
   doCallBack(CallBack::EDITCB);
 }
 
-void Glyph::editEnd()
+void Point::editEnd()
 {
-  setSize(width_, height_);
+  if (shape_ != GLYPH)
+    return;
+
+  size_ = glyphWidth_>glyphHeight_ ? glyphWidth_ : glyphHeight_;
+  loadGlyph();
+  updateBBox();
   doCallBack(CallBack::EDITENDCB);
 }
 
-void Glyph::setFileName(const char* fn)
+void Point::setGlyphFile(const char* fn)
 {
-  if (fileName_)
-    delete [] fileName_;
-  fileName_ = dupstr(fn ? fn : "");
+  if (glyphFile_)
+    delete [] glyphFile_;
+  glyphFile_ = dupstr(fn ? fn : "");
 
-  width_ = reqWidth_;
-  height_ = reqHeight_;
-  loadImage();
-  updateBBox();
-}
-
-void Glyph::setSize(int ww, int hh)
-{
-  reqWidth_ = ww>0 ? ww : 0;
-  reqHeight_ = hh>0 ? hh : 0;
-
-  width_ = reqWidth_;
-  height_ = reqHeight_;
-  loadImage();
+  if (shape_ == GLYPH)
+    loadGlyph();
   updateBBox();
 }
 
@@ -420,15 +360,15 @@ void Glyph::setSize(int ww, int hh)
 // When saving to a region file, write the glyph file name relative to the
 // region file's directory if it lives at or below it, so a directory of
 // region file plus glyphs can be moved as a unit.
-void Glyph::listFileName(ostream& str)
+void Point::listGlyphFile(ostream& str)
 {
   const char* dir = parent->markerFileDir();
-  if (!dir || !fileName_ || !*fileName_) {
-    str << fileName_;
+  if (!dir || !glyphFile_ || !*glyphFile_) {
+    str << glyphFile_;
     return;
   }
 
-  Tcl_Obj* path = Tcl_NewStringObj(fileName_, -1);
+  Tcl_Obj* path = Tcl_NewStringObj(glyphFile_, -1);
   Tcl_IncrRefCount(path);
   Tcl_Obj* norm = Tcl_FSGetNormalizedPath(parent->interp, path);
   const char* nn = norm ? Tcl_GetString(norm) : NULL;
@@ -438,32 +378,7 @@ void Glyph::listFileName(ostream& str)
   if (nn && !strncmp(nn, dir, ll) && (slash || nn[ll]=='/'))
     str << nn+ll+(slash ? 0 : 1);
   else
-    str << fileName_;
+    str << glyphFile_;
 
   Tcl_DecrRefCount(path);
-}
-
-
-void Glyph::list(ostream& str, Coord::CoordSystem sys, Coord::SkyFrame sky,
-		Coord::SkyFormat format, int conj, int strip)
-{
-  if (strip)
-    return;
-
-  FitsImage* ptr = parent->findFits(sys,center);
-  listPre(str, sys, sky, ptr, strip, 1);
-
-  str << type_ << '(';
-  ptr->listFromRef(str,center,sys,sky,format);
-  str << ",{";
-  listFileName(str);
-  str << '}';
-  if (reqWidth_>0 || reqHeight_>0)
-    str << ',' << reqWidth_ << ',' << reqHeight_;
-  str << ')';
-
-  if (conj)
-    str << ' ' << listConjunction(conj);
-
-  listProperties(str, 0);
 }

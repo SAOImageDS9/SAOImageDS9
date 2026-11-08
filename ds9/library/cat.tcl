@@ -975,8 +975,6 @@ proc PrefsDialogCatalog {} {
 	-variable pcat(sym,shape) -value box
     $f.shape.menu add radiobutton -label [msgcat::mc {Text}] \
 	-variable pcat(sym,shape) -value text
-    $f.shape.menu add radiobutton -label [msgcat::mc {Glyph}] \
-	-variable pcat(sym,shape) -value glyph
     $f.shape.menu add cascade -label [msgcat::mc {Point}] \
 	-menu $f.shape.menu.point
 
@@ -995,6 +993,9 @@ proc PrefsDialogCatalog {} {
 	-variable pcat(sym,shape) -value {arrow point}
     $f.shape.menu.point add radiobutton -label [msgcat::mc {BoxCircle}] \
 	-variable pcat(sym,shape) -value {boxcircle point}
+    $f.shape.menu.point add separator
+    $f.shape.menu.point add radiobutton -label [msgcat::mc {Glyph}] \
+	-variable pcat(sym,shape) -value {glyph point}
     $f.shape.menu.point add separator
 
     grid $f.stitle $f.svr -padx 2 -pady 2 -sticky w

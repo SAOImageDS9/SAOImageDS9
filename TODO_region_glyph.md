@@ -470,3 +470,120 @@ Not done / not verified:
 Unrelated bug seen in passing (master): `catalog symbol <N> ...` calls
 `CatalogCmdCVAR` (catparser.tac:176), which does not exist; the other
 handlers use `ProcessCmdCVAR`.
+
+## Design option: glyph as a point region (evaluated 2026-11-08)
+
+### Prototype status (2026-11-08, branch `region_glyph_point`, uncommitted)
+
+Built with the syntax `point(x,y) # point=glyph [size] {file}` (the user
+chose this over keeping `point=circle ... glyph={file}` for older ds9).
+
+- C++: `Glyph` is gone; `Point` has a new shape `GLYPH` and owns the image
+  (`glyph.C` now holds the `Point` glyph methods, `glyph.h` is deleted).
+  `size_` is the box the image is fitted into keeping its aspect ratio,
+  0 = native. Glyph points can be resized by dragging a handle; other point
+  shapes still can't.
+- Grammars: `ds9parser.Y` has `point=glyph [INT] STRING` as a local and a
+  global property; the `# glyph(...)` and bare `glyph(...)` rules are
+  removed. Frame commands: `marker create glyph point x y [size] {file}`,
+  `marker <id> point glyph {file}`, `get marker <id> point glyph`, and
+  `point shape glyph`.
+- Tcl: Region > Shape > Point > Glyph (`glyph point`); the point dialog has
+  a Glyph shape plus file and Browse rows (`GlyphDialog` is gone);
+  `RegionGlyphPhoto fn size`; backup matches `point=glyph ... {file}`.
+- Catalogs: shape `glyph point` (`glyph` still accepted) writes
+  `point(...) # point=glyph [size] {file}`; `size2` no longer applies.
+- Gained for free: CIAO/PROS/SAOtng/SAOimage output keeps the position as
+  `point(x,y)`, plus Plot 3D, include/exclude and source/background.
+- Verified over XPA: rendering, sizes, relative paths, paths with spaces,
+  click-create, dialog shape switching, drag-resize, backup/restore,
+  catalogs, PDF with alpha. Tests updated on Tests branch
+  `region_glyph_point`: `regions.sh glyph` 9/9, the `cat.sh` glyph checks
+  7/7, `xpa.sh region` and `command.sh region` clean. SAMP scripts updated
+  but not re-run.
+- Docs updated to `point=glyph` (region, framecmd, catalog, command, xpa,
+  samp, user catalogs, release notes).
+
+### Evaluation (before the prototype)
+
+A glyph is fixed in screen pixels and never rotates, so it behaves like a
+`point` drawn with a picture. This section looks at making it one: type
+`point`, with the image as an optional property, instead of the separate
+`# glyph(...)` shape on branch `region_glyph`.
+
+### What older ds9 does with each format
+
+Checked by loading files into a ds9 built without glyphs
+(`ds9_grid_control`, 2026-11-08):
+
+| Line | Older ds9 |
+|---|---|
+| `# glyph(120,120,{star.png},16,16)` (this branch) | read as a comment; other regions load; the glyph is silently gone, and lost on re-save |
+| `point(120,120) # point=glyph 16 file={star.png}` | load fails at that line; only the regions before it are kept |
+| `point(120,120) # point=circle color=red glyph={star.png}` | loads as a red circle point; `glyph={star.png}` survives a re-save |
+
+The third form degrades well because `ds9parser.Y` (`shapeComment`) keeps
+everything after the first unknown property as the region's comment.
+Limits of that:
+- the comment buffer is `localComment[80]`, so a path longer than about 70
+  characters is truncated in older ds9 and corrupted if it re-saves the file
+  (the relative paths this branch writes help);
+- known properties written after `glyph=` are swallowed into the comment
+  too, so `glyph=` must be written last.
+
+### Proposed format
+
+    point(120,120) # point=circle 24 color=red glyph={star.png}
+
+- The `point=` shape is the fallback, drawn when the image can't be loaded
+  and by older ds9 versions.
+- The point `size` is the glyph's box. The image is scaled to fit it,
+  keeping its aspect ratio, which replaces the separate width/height. If the
+  native size has to stay, it would need a `glyphsize=` property, and older
+  ds9 would see it as more of the comment.
+- New ds9 parses `glyph=` as a real property, so there is no length limit.
+
+### What it would gain
+
+- The point machinery comes for free: Plot 3D analysis, include/exclude,
+  source/background, the point dialog and its menus, and `regions group`.
+- CIAO/PROS/SAOtng/SAOimage output keeps the position as `point(x,y)`;
+  today those formats drop glyphs.
+- Catalog symbols fit the existing names: `glyph point` next to
+  `circle point`, `box point`, and so on.
+- Older ds9 shows something in the right place and round-trips the image
+  name, instead of silently losing the region.
+
+### What it would cost
+
+- **C++:** move the image code out of `Glyph` into a helper that `Point`
+  owns: load/free, the change callback, X/PS/WIN32 rendering, the PDF
+  `ds9glyph` op and relative-path listing. The class and its tests mostly
+  carry over; `Point::renderX`/`renderPS`/`listPost`/`listXML` grow an
+  image branch. Drop `glyph.C` and its parser rules: `# glyph(...)`, bare
+  `glyph(...)`, and the `marker create/glyph` commands in `parser.Y`. Add
+  `GLYPH_ '=' STRING` to the local properties in `ds9parser.Y`, plus
+  `marker $id point glyph file` and get commands.
+- **Tcl:**
+  - the point dialog gets the file entry and Browse;
+  - shape `glyph point` for click-create;
+  - `GlyphBackup`'s regex changes to `glyph=\{...\}`;
+  - catalogs map `glyph point` to `point=circle <size> glyph={...}`;
+  - docs and the `Tests` files are redone.
+
+  About half the existing work changes. The hard parts carry over as-is:
+  compositing, resizing, PDF alpha, path handling and backup copying.
+- **Meaning:** a decorative glyph (a logo or arrow) becomes an analysis
+  region. It counts in CIAO export and Plot 3D unless the user sets
+  `source=0` or deletes it.
+- **Compatibility:** the branch's `# glyph(...)` format is unreleased (it's
+  only on `region_glyph` and in the r8.8.2 release notes), so it can be
+  dropped rather than kept as a second syntax.
+
+### Open questions
+
+- Single size (fit in a square box) or keep separate width and height?
+- Should the fallback shape be configurable (`point=box` …) or fixed to
+  `circle`?
+- Is `glyph point` the right name in the Region > Shape menu, or should
+  Glyph sit in the point dialog as a checkbox plus file?

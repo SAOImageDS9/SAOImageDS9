@@ -263,7 +263,6 @@ symbolShape : CIRCLE_ {set _ circle}
  | ELLIPSE_ {set _ ellipse}
  | BOX_ {set _ box}
  | TEXT_ {set _ text}
- | GLYPH_ {set _ glyph}
 
  | POINT_ {set _ "circle point"}
  | CIRCLE_ POINT_ {set _ "circle point"}
@@ -278,6 +277,8 @@ symbolShape : CIRCLE_ {set _ circle}
  | ARROW_ POINT_ {set _ "arrow point"}
  | BOXCIRCLE_ {set _ "boxcircle point"}
  | BOXCIRCLE_ POINT_ {set _ "boxcircle point"}
+ | GLYPH_ {set _ "glyph point"}
+ | GLYPH_ POINT_ {set _ "glyph point"}
 
 # backward compatibility
  | STRING_ {set _ $1}

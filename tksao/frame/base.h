@@ -109,7 +109,6 @@ class Base : public Widget {
   friend class Ellipse;
   friend class EllipseAnnulus;
   friend class Epanda;
-  friend class Glyph;
   friend class Line;
   friend class Point;
   friend class Projection;
@@ -1196,15 +1195,12 @@ public:
 		     const char*, int*, int, const char*, 
 		     const char*, unsigned short, const char*,
 		     const List<Tag>&, const List<CallBack>& cb);
-  void createGlyphCmd(const Vector&, const char*, int, int,
-		     const char*, int*, int, const char*,
-		     const char*, unsigned short, const char*,
-		     const List<Tag>&, const List<CallBack>& cb);
   void createPointCmd(const Vector&, Point::PointShape, int,
 		      const char*, int*, int, const char*,
 		      const char*, unsigned short, const char*,
 		      const List<Tag>&, 
-		      const List<CallBack>& cb);
+		      const List<CallBack>& cb,
+		      const char* glyph =NULL);
 
   // Measurement Regions
   void createRulerCmd(const Vector&, const Vector&, 
@@ -1403,6 +1399,7 @@ public:
   void getMarkerMapLenFromRefCmd(int, double, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerNumberCmd();
   void getMarkerPointShapeCmd(int);
+  void getMarkerPointGlyphCmd(int);
   void getMarkerPointSizeCmd(int);
   void getMarkerPolygonPointCmd(int, Coord::CoordSystem, Coord::SkyFrame,
 				Coord::SkyFormat);
@@ -1439,8 +1436,6 @@ public:
   void getMarkerTagsCmd();
   void getMarkerTextCmd(int);
   void getMarkerTextRotateCmd(int);
-  void getMarkerGlyphFileCmd(int);
-  void getMarkerGlyphSizeCmd(int);
   void getMarkerTypeCmd(int);
   void getMarkerVectorCmd(int, Coord::CoordSystem, Coord::SkyFrame, Coord::SkyFormat);
   void getMarkerVectorArrowCmd(int);
@@ -1605,6 +1600,7 @@ public:
   void markerPasteCmd();
   void markerPasteCmd(Coord::CoordSystem);
   void markerPointShapeCmd(int, Point::PointShape);
+  void markerPointGlyphCmd(int, const char*);
   void markerPointSizeCmd(int, int);
   void markerPolygonCreateVertexCmd(int, int, const Vector&);
   void markerPolygonDeleteVertexCmd(int, int);
@@ -1658,8 +1654,6 @@ public:
   void markerTagUpdateCmd(const char*);
   void markerTextCmd(int, const char*);
   void markerTextRotateCmd(int, int);
-  void markerGlyphFileCmd(int, const char*);
-  void markerGlyphSizeCmd(int, int, int);
 
   void markerUndoCmd();
   void markerUnhighliteAllCmd();

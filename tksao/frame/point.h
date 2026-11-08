@@ -7,14 +7,31 @@
 
 #include "marker.h"
 
+// shape GLYPH draws a user supplied image (png, gif, ...) instead of a
+// vector shape, at a fixed size in screen pixels and always upright.
+// Decoding and resizing are done in Tcl by the proc named in GLYPHPHOTOPROC,
+// which returns the name of a (cached) Tk photo, or "" on failure.
+// A glyph without a usable image is drawn as a box with an X.
+// size_ is the box the image is fitted into, 0 = native size.
+// See glyph.C.
+
+#define GLYPHPHOTOPROC "RegionGlyphPhoto"
+#define GLYPHDEFAULTSIZE 16
+
 class Point : public Marker {
  public:
-  enum PointShape {CIRCLE,BOX,DIAMOND,CROSS,EX,ARROW,BOXCIRCLE};
+  enum PointShape {CIRCLE,BOX,DIAMOND,CROSS,EX,ARROW,BOXCIRCLE,GLYPH};
 
  protected:
   PointShape shape_;
   char* shapestr_;
   int size_;
+
+  char* glyphFile_;
+  int glyphWidth_;  // current glyph size, screen pixels
+  int glyphHeight_;
+  Tk_Image glyphImage_;
+  char* glyphPhoto_; // Tk photo behind glyphImage_, for postscript/pdf
 
  protected:
   Vector* generateCircle(Coord::InternalSystem, int);
@@ -37,6 +54,17 @@ class Point : public Marker {
   void renderWIN32Box();
   void renderWIN32LineDash();
 #endif
+
+  void initGlyph();
+  void loadGlyph();
+  void freeGlyph();
+  static void glyphChangedProc(ClientData, int, int, int, int, int, int);
+  void renderXGlyph(Drawable, Coord::InternalSystem, RenderMode);
+  void renderXGlyphBox(Drawable, Coord::InternalSystem, GC, int);
+  void renderPSGlyph(PSColorSpace);
+  void renderPSGlyphBox(int);
+  void renderPSGlyphImage(PSColorSpace, Tk_PhotoImageBlock*, int, int);
+  void listGlyphFile(ostream&);
 
   void shapeStr(PointShape);
   void updateHandles();
@@ -69,9 +97,16 @@ class Point : public Marker {
   int size() {return size_;}
   void setSize(int);
 
+  const char* glyphFile() {return glyphFile_;}
+  void setGlyphFile(const char*);
+  int glyphWidth() {return glyphWidth_;}
+  int glyphHeight() {return glyphHeight_;}
+
+  int isIn(const Vector&);
+
   void editBegin(int) {}
-  void edit(const Vector& v, int h) {}
-  void editEnd() {}
+  void edit(const Vector& v, int h);
+  void editEnd();
 
   void rotateBegin() {}
   void rotate(const Vector& v, int h) {}

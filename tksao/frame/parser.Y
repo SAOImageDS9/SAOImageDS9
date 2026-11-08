@@ -799,6 +799,7 @@ pointShape: /* empty */ {$$ = Point::CIRCLE;}
 	| 'X' {$$ = Point::EX;}
 	| ARROW_ {$$ = Point::ARROW;}
 	| BOXCIRCLE_ {$$ = Point::BOXCIRCLE;}
+	| GLYPH_ {$$ = Point::GLYPH;}
 	;
 
 pointSize: /* empty */ {$$ = POINTSIZE;}
@@ -2117,6 +2118,7 @@ marker	: CENTROID_ markerCentroid
 	| INT POINT_ SHAPE_ pointShape
 	{fr->markerPointShapeCmd($1,(Point::PointShape)$4);}
 	| INT POINT_ SIZE_ INT {fr->markerPointSizeCmd($1,$4);}
+	| INT POINT_ GLYPH_ STRING {fr->markerPointGlyphCmd($1,$4);}
 
 	| INT PROJECTION_ coordSystem skyFrame coord coord numeric
 	    coordSystem skyDist
@@ -2141,8 +2143,6 @@ marker	: CENTROID_ markerCentroid
 	| INT TAG_ STRING {fr->markerTagCmd($1,$3);}
 	| INT TEXT_ STRING {fr->markerTextCmd($1,$3);}
 	| INT TEXT_ ROTATE_ yesno {fr->markerTextRotateCmd($1,$4);}
-	| INT GLYPH_ FILE_ STRING {fr->markerGlyphFileCmd($1,$4);}
-	| INT GLYPH_ SIZE_ INT INT {fr->markerGlyphSizeCmd($1,$4,$5);}
 
 	| INT UNHIGHLITE_ {fr->markerUnhighliteCmd($1);}
 	| INT UNSELECT_ {fr->markerUnselectCmd($1);}
@@ -2314,18 +2314,6 @@ markerCreate :
 	    $4, 1,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
-	| GLYPH_ numeric numeric STRING
-	    markerProperties
-	{fr->createGlyphCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
-	    $4, 0, 0,
-	    currentColor,currentDash,currentWidth,currentFont,
-	    currentText,currentProps,NULL,taglist,cblist);}
-	| GLYPH_ numeric numeric STRING INT INT
-	    markerProperties
-	{fr->createGlyphCmd(fr->mapToRef(Vector($2,$3),Coord::CANVAS),
-	    $4, $5, $6,
-	    currentColor,currentDash,currentWidth,currentFont,
-	    currentText,currentProps,NULL,taglist,cblist);}
 	| CIRCLE_ POINT_ numeric numeric pointSize markerProperties
 	{fr->createPointCmd(fr->mapToRef(Vector($3,$4),Coord::CANVAS),
 	    Point::CIRCLE, $5,
@@ -2361,6 +2349,16 @@ markerCreate :
 	    Point::BOXCIRCLE, $5,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
+	| GLYPH_ POINT_ numeric numeric STRING markerProperties
+	{fr->createPointCmd(fr->mapToRef(Vector($3,$4),Coord::CANVAS),
+	    Point::GLYPH, 0,
+	    currentColor,currentDash,currentWidth,currentFont,
+	    currentText,currentProps,NULL,taglist,cblist,$5);}
+	| GLYPH_ POINT_ numeric numeric INT STRING markerProperties
+	{fr->createPointCmd(fr->mapToRef(Vector($3,$4),Coord::CANVAS),
+	    Point::GLYPH, $5,
+	    currentColor,currentDash,currentWidth,currentFont,
+	    currentText,currentProps,NULL,taglist,cblist,$6);}
 
 	| RULER_ numeric numeric
 	    numeric numeric
@@ -2602,6 +2600,7 @@ markerGet : CENTROID_ markerGetCentroid
 
 	| INT POINT_ SHAPE_ {fr->getMarkerPointShapeCmd($1);}
 	| INT POINT_ SIZE_ {fr->getMarkerPointSizeCmd($1);}
+	| INT POINT_ GLYPH_ {fr->getMarkerPointGlyphCmd($1);}
 	| INT POLYGON_ POINT_ coordSystem skyFrame skyFormat
 	{fr->getMarkerPolygonPointCmd($1,(Coord::CoordSystem)$4,
 	    (Coord::SkyFrame)$5,(Coord::SkyFormat)$6);}
@@ -2628,8 +2627,6 @@ markerGet : CENTROID_ markerGetCentroid
 	| INT TAG_ INT {fr->getMarkerTagCmd($1,$3);}
 	| INT TEXT_ {fr->getMarkerTextCmd($1);}
 	| INT TEXT_ ROTATE_ {fr->getMarkerTextRotateCmd($1);}
-	| INT GLYPH_ FILE_ {fr->getMarkerGlyphFileCmd($1);}
-	| INT GLYPH_ SIZE_ {fr->getMarkerGlyphSizeCmd($1);}
 	| INT TYPE_ {fr->getMarkerTypeCmd($1);}
 
 	| INT VECTOR_ ARROW_ {fr->getMarkerVectorArrowCmd($1);}

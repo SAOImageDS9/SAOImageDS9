@@ -75,6 +75,12 @@ static int localPoint;
 static int globalPointSize;
 static int localPointSize;
 
+// point=glyph [size] {file}, size 0 = native
+static char globalGlyph[1024];
+static char localGlyph[1024];
+static int globalGlyphSize;
+static int localGlyphSize;
+
 static double globalTextAngle;
 static double localTextAngle;
 static int globalTextRotate;
@@ -692,6 +698,20 @@ globalProperty : property '=' yesno
 	  globalPoint = localPoint = $3;
 	  globalPointSize = localPointSize = $4;
 	}
+	| POINT_ '=' GLYPH_ STRING
+	{
+	  globalPoint = localPoint = Point::GLYPH;
+	  globalGlyphSize = localGlyphSize = 0;
+	  strncpy(globalGlyph,$4,1023);
+	  strncpy(localGlyph,$4,1023);
+	}
+	| POINT_ '=' GLYPH_ INT STRING
+	{
+	  globalPoint = localPoint = Point::GLYPH;
+	  globalGlyphSize = localGlyphSize = $4;
+	  strncpy(globalGlyph,$5,1023);
+	  strncpy(localGlyph,$5,1023);
+	}
 	| LINE_ '=' lineEnd lineEnd
 	{
 	  globalLine1 = localLine1 = $3;
@@ -839,6 +859,8 @@ initGlobal:{
 	  globalCompassEArrow = 1;
 	  globalPoint = Point::BOXCIRCLE;
 	  globalPointSize = POINTSIZE;
+	  globalGlyph[0] = '\0';
+	  globalGlyphSize = 0;
 	  globalTextAngle=0;
 	  globalTextRotate=1;
 
@@ -875,6 +897,18 @@ localProperty : property '=' yesno {setProps(&localProps,$1,$3);}
 
 	| POINT_ '=' pointShape {localPoint = $3;}
 	| POINT_ '=' pointShape INT {localPoint = $3; localPointSize = $4;}
+	| POINT_ '=' GLYPH_ STRING
+	{
+	  localPoint = Point::GLYPH;
+	  localGlyphSize = 0;
+	  strncpy(localGlyph,$4,1023);
+	}
+	| POINT_ '=' GLYPH_ INT STRING
+	{
+	  localPoint = Point::GLYPH;
+	  localGlyphSize = $4;
+	  strncpy(localGlyph,$5,1023);
+	}
 	| LINE_ '=' lineEnd lineEnd {localLine1=$3; localLine2=$4;}
 	| VECTOR_ '=' lineEnd {localVector=$3;}
 	| COMPOSITE_ '=' INT {localComposite=$3;}
@@ -1032,6 +1066,8 @@ initLocal : {
 	  localComposite = globalComposite;
 	  localPoint = globalPoint;
 	  localPointSize = globalPointSize;
+	  strncpy(localGlyph,globalGlyph,1023);
+	  localGlyphSize = globalGlyphSize;
 	  localRulerCoordSystem = globalRulerCoordSystem;
 	  localRulerSkyFrame = globalRulerSkyFrame;
 	  localRulerDistSystem = globalRulerDistSystem;
@@ -1098,21 +1134,6 @@ nonshape : VECTOR_ bp coord sp value sp angle ep conjunction nonshapeComment
 	{
 	  fr->createTextCmd(Vector($3),
 	  localTextAngle,localTextRotate,
-	  localColor,localDash,localWidth,localFont,
-	  localText,localProps,localComment,taglist,cblist);
-	}
-	| GLYPH_ bp coord sp STRING ep conjunction nonshapeComment
-	{
-	  fr->createGlyphCmd(Vector($3),
-	  $5, 0, 0,
-	  localColor,localDash,localWidth,localFont,
-	  localText,localProps,localComment,taglist,cblist);
-	}
-	| GLYPH_ bp coord sp STRING sp numeric sp numeric ep conjunction
-	    nonshapeComment
-	{
-	  fr->createGlyphCmd(Vector($3),
-	  $5, (int)$7, (int)$9,
 	  localColor,localDash,localWidth,localFont,
 	  localText,localProps,localComment,taglist,cblist);
 	}
@@ -1269,21 +1290,6 @@ shape	: CIRCLE_ bp coord sp value ep conjunction shapeComment
 	   localColor,localDash,localWidth,localFont,
 	   localText,localProps,localComment,taglist,cblist);
 	}
-	| GLYPH_ bp coord sp STRING ep conjunction shapeComment
-	{
-	  fr->createGlyphCmd(Vector($3),
-	  $5, 0, 0,
-	  localColor,localDash,localWidth,localFont,
-	  localText,localProps,localComment,taglist,cblist);
-	}
-	| GLYPH_ bp coord sp STRING sp numeric sp numeric ep conjunction
-	    shapeComment
-	{
-	  fr->createGlyphCmd(Vector($3),
-	  $5, (int)$7, (int)$9,
-	  localColor,localDash,localWidth,localFont,
-	  localText,localProps,localComment,taglist,cblist);
-	}
 	| TEXT_ bp coord sp STRING ep {strncpy(localText,$5,80);} conjunction 
 	    shapeComment
 	{
@@ -1294,10 +1300,15 @@ shape	: CIRCLE_ bp coord sp value ep conjunction shapeComment
 	}
 	| POINT_ bp coord ep conjunction shapeComment 
 	{
-	  fr->createPointCmd(Vector($3), 
-	  (Point::PointShape)localPoint, localPointSize, 
-	  localColor,localDash,localWidth,localFont,
-	  localText,localProps,localComment,taglist,cblist);
+	  if (localPoint == Point::GLYPH)
+	    fr->createPointCmd(Vector($3), Point::GLYPH, localGlyphSize,
+	    localColor,localDash,localWidth,localFont,
+	    localText,localProps,localComment,taglist,cblist,localGlyph);
+	  else
+	    fr->createPointCmd(Vector($3), 
+	    (Point::PointShape)localPoint, localPointSize, 
+	    localColor,localDash,localWidth,localFont,
+	    localText,localProps,localComment,taglist,cblist);
 	}
 	| CIRCLE_ POINT_ bp coord ep conjunction shapeComment
 	{

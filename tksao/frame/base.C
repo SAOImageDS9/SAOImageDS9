@@ -1762,7 +1762,7 @@ int Base::pdfVectorLayers(Tcl_Obj* pdfObj)
     }
 
     if (tok == "ds9glyph" && stack.size() >= 4) {
-      // glyph region: x y w h (photo) ds9glyph, see Glyph::renderPS.
+      // glyph region: x y w h (photo) ds9glyph, see Point::renderPSGlyph.
       // PDFAddPhoto (ds9 pdf.tcl, shared with illustrate images) adds the
       // photo with its alpha as a soft mask; without it, fall back to an
       // opaque addRawImage. A failure skips the glyph, not the whole pdf.

@@ -30,7 +30,6 @@
 #include "segment.h"
 
 #include "text.h"
-#include "glyph.h"
 #include "point.h"
 
 #include "ruler.h"
@@ -510,21 +509,6 @@ char* Base::resolveMarkerFileName(const char* fn)
   return rr;
 }
 
-void Base::createGlyphCmd(const Vector& center,
-			 const char* fn, int ww, int hh,
-			 const char* color, int* dash,
-			 int width, const char* font,
-			 const char* text, unsigned short prop,
-			 const char* comment,
-			 const List<Tag>& tag, const List<CallBack>& cb)
-{
-  char* rfn = resolveMarkerFileName(fn);
-  createMarker(new Glyph(this, center, rfn, ww, hh,
-			color, dash, width, font, text,
-			prop, comment, tag, cb));
-  delete [] rfn;
-}
-
 void Base::createPointCmd(const Vector& center, 
 			  Point::PointShape shape, int size,
 			  const char* color, int* dash, 
@@ -532,11 +516,18 @@ void Base::createPointCmd(const Vector& center,
 			  const char* text, unsigned short prop,
 			  const char* comment, 
 			  const List<Tag>& tag, 
-			  const List<CallBack>& cb)
+			  const List<CallBack>& cb,
+			  const char* glyph)
 {
-  createMarker(new Point(this, center, shape, size, 
-			 color, dash, width, font, text, 
-			 prop, comment, tag, cb));
+  Point* pp = new Point(this, center, shape, size, 
+			color, dash, width, font, text, 
+			prop, comment, tag, cb);
+  if (glyph) {
+    char* rfn = resolveMarkerFileName(glyph);
+    pp->setGlyphFile(rfn);
+    delete [] rfn;
+  }
+  createMarker(pp);
 }
 
 // Measurement Regions
@@ -2525,6 +2516,19 @@ void Base::getMarkerPointShapeCmd(int id)
   }
 }
 
+void Base::getMarkerPointGlyphCmd(int id)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      if (!strncmp(mm->getType(),"point",5))
+	Tcl_AppendResult(interp, ((Point*)mm)->glyphFile(), NULL);
+      return;
+    }
+    mm=mm->next();
+  }
+}
+
 void Base::getMarkerPointSizeCmd(int id)
 {
   Marker* mm=markers->head();
@@ -3074,36 +3078,6 @@ void Base::getMarkerTextRotateCmd(int id)
 	Tcl_AppendResult(interp, "1", NULL);
       else
 	Tcl_AppendResult(interp, "0", NULL);
-      return;
-    }
-    mm=mm->next();
-  }
-}
-
-void Base::getMarkerGlyphFileCmd(int id)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (!strncmp(mm->getType(),"glyph",4))
-	Tcl_AppendResult(interp, ((Glyph*)mm)->getFileName(), NULL);
-      return;
-    }
-    mm=mm->next();
-  }
-}
-
-void Base::getMarkerGlyphSizeCmd(int id)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (!strncmp(mm->getType(),"glyph",4)) {
-	ostringstream str;
-	str << ((Glyph*)mm)->getReqWidth() << ' '
-	    << ((Glyph*)mm)->getReqHeight() << ends;
-	Tcl_AppendResult(interp, str.str().c_str(), NULL);
-      }
       return;
     }
     mm=mm->next();
@@ -5889,6 +5863,27 @@ void Base::markerPointShapeCmd(int id, Point::PointShape shape)
   result = TCL_ERROR;
 }
 
+void Base::markerPointGlyphCmd(int id, const char* fn)
+{
+  Marker* mm=markers->head();
+  while (mm) {
+    if (mm->getId() == id) {
+      if (mm->canEdit() && !strncmp(mm->getType(),"point",5)) {
+	markerUndo(mm, EDIT);
+
+	// old bbox, in case the new glyph is smaller
+	update(PIXMAP, mm->getAllBBox());
+	((Point*)mm)->setGlyphFile(fn);
+	update(PIXMAP, mm->getAllBBox());
+      }
+      return;
+    }
+    mm=mm->next();
+  }
+
+  result = TCL_ERROR;
+}
+
 void Base::markerPointSizeCmd(int id, int size)
 {
   Marker* mm=markers->head();
@@ -6782,43 +6777,6 @@ void Base::markerTextRotateCmd(int id, int rot)
       if (mm->canEdit()) {
 	((Text*)(mm))->setRotate(rot);
 	update(PIXMAP);
-      }
-      return;
-    }
-    mm=mm->next();
-  }
-
-  result = TCL_ERROR;
-}
-
-void Base::markerGlyphFileCmd(int id, const char* fn)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (mm->canEdit() && !strncmp(mm->getType(),"glyph",4)) {
-	// old bbox, in case the new glyph is smaller
-	update(PIXMAP,mm->getAllBBox());
-	((Glyph*)mm)->setFileName(fn);
-	update(PIXMAP,mm->getAllBBox());
-      }
-      return;
-    }
-    mm=mm->next();
-  }
-
-  result = TCL_ERROR;
-}
-
-void Base::markerGlyphSizeCmd(int id, int ww, int hh)
-{
-  Marker* mm=markers->head();
-  while (mm) {
-    if (mm->getId() == id) {
-      if (mm->canEdit() && !strncmp(mm->getType(),"glyph",4)) {
-	update(PIXMAP,mm->getAllBBox());
-	((Glyph*)mm)->setSize(ww,hh);
-	update(PIXMAP,mm->getAllBBox());
       }
       return;
     }

@@ -324,7 +324,6 @@ shape : CIRCLE_ {set _ circle}
  | PROJECTION_ {set _ projection}
  | SEGMENT_ {set _ segment}
  | TEXT_ {set _ text}
- | GLYPH_ {set _ glyph}
  | point POINT_ {set _ "$1 point"}
  | RULER_ {set _ ruler}
  | COMPASS_ {set _ compass}
@@ -346,6 +345,7 @@ point : {set _ boxcircle}
  | 'x' {set _ x}
  | ARROW_ {set _ arrow}
  | BOXCIRCLE_ {set _ boxcircle}
+ | GLYPH_ {set _ glyph}
  ;
  
 delim : NL_ {set _ 0}

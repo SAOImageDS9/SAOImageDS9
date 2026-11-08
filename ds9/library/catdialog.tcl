@@ -286,6 +286,14 @@ proc CATDialog {varname format catalog title action} {
     $mb.symbol.shape.point add radiobutton -label [msgcat::mc {BoxCircle}]\
 	-variable ${flt}(1,$sn) -value {boxcircle point} \
 	-command [list CATGenerate $varname]
+    $mb.symbol.shape.point add radiobutton \
+	-label "[msgcat::mc {Glyph}]..." \
+	-variable ${flt}(1,$sn) -value {glyph point} \
+	-command [list CATSymbolGlyph $varname]
+    # remember the shape in use, so cancelling the Glyph file dialog
+    # can put it back
+    $mb.symbol.shape configure \
+	-postcommand [list CATSymbolSaveShape $varname]
 
     ColorMenu $mb.symbol.color $flt 1,$cn [list CATGenerate $varname]
 

@@ -525,6 +525,35 @@ proc CATSymGlyphBrowse {varname} {
     }
 }
 
+proc CATSymbolSaveShape {varname} {
+    upvar #0 $varname var
+    global $varname
+    global $var(symdb)
+
+    set var(prevshape) [starbase_get $var(symdb) 1 \
+			    [starbase_colnum $var(symdb) shape]]
+}
+
+# Symbol > Shape > Point > Glyph in the catalog window: choose the image
+# for the first symbol rule. Cancel restores the previous shape.
+proc CATSymbolGlyph {varname} {
+    upvar #0 $varname var
+    global $varname
+    global $var(symdb)
+
+    set fn [OpenFileDialog photofbox $var(top)]
+    if {$fn eq {}} {
+	if {[info exists var(prevshape)]} {
+	    starbase_set $var(symdb) 1 \
+		[starbase_colnum $var(symdb) shape] $var(prevshape)
+	}
+	return
+    }
+
+    starbase_set $var(symdb) 1 [starbase_colnum $var(symdb) glyph] $fn
+    CATGenerate $varname
+}
+
 proc CATSymUpdate {varname} {
     upvar #0 $varname var
     global $varname

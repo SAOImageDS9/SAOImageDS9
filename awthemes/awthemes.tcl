@@ -992,6 +992,7 @@ namespace eval ::ttk::awthemes {
 
   proc _readFile { fn } {
     set fh [open $fn]
+    fconfigure $fh -encoding utf-8
     set fs [file size $fn]
     set data [read $fh $fs]
     close $fh

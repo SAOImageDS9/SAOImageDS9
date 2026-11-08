@@ -5,7 +5,7 @@ Last updated 2026-10-26
 | name         | version    | SAO   | dirty | upstream                                                             | latest                          |
 | ------------ | ---------- | ----- | ----- | -------------------------------------------------------------------- | ------------------------------- |
 | ast          | 9.2.14     |       |       | https://github.com/Starlink/ast                                      | 9.5.0                           |
-| awthemes     | 10.4.0     |       |       | https://sourceforge.net/projects/tcl-awthemes/                       | 10.4.0                          |
+| awthemes     | 10.4.0     |       | y     | https://sourceforge.net/projects/tcl-awthemes/                       | 10.4.0 (7)                      |
 | certifi      | 2026.10.23 |       |       | https://github.com/certifi/python-certifi                            | 2026.10.23                      |
 | ds9          | 8.8        | y     |       |                                                                      |                                 |
 | fickle       | 2.2        | y     |       | https://github.com/SAOImageDS9/fickle-maintenance                    | previous upstream abandoned     |
@@ -58,3 +58,5 @@ Last updated 2026-10-26
 (5) tls: exports tlsConfig.sh (TEA_EXPORT_CONFIG) and adds `package provide Tls` to library/tls.tcl. The earlier acinclude.m4 static-LIBEXT tweak is upstream as of 2.0.1. The BuildInfoCommand static-link clash with tktable is fixed on the tktable side (made static there) instead of renaming it in tls.
 
 (6) pkgs/thread3.0.6: backported the Thread 3.0.7 fix that sets ZIPFS_BUILD=0 when configured with --with-tcl8; without it the macOS framework build fails looking for a native Tcl 9 tclsh.
+
+(7) awthemes: `_readFile` sets `-encoding utf-8` when reading the SVG theme images. Without it they were read in the system encoding, and with LANG=zh (cp936) or LANG=ja (euc-jp) Tcl 9's strict encoding check made ds9 fail at startup on the non-ASCII UTF-8 bytes in some of the SVGs.

@@ -97,6 +97,8 @@ class Point : public Marker {
   int size() {return size_;}
   void setSize(int);
 
+  void setColor(const char*);
+
   const char* glyphFile() {return glyphFile_;}
   void setGlyphFile(const char*);
   int glyphWidth() {return glyphWidth_;}

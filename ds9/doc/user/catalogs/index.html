@@ -394,9 +394,12 @@ $Jmag&gt;16.5      diamond point   cyan    $Jmag                   physical
 	  whatever the zoom. "Size" is the box, in pixels, that the
 	  image is fitted into, keeping its aspect ratio; leave it
 	  empty for the image's native size. "Size 2", "Units" and
-	  "Angle" are not used. The symbol color does not tint the
-	  image; it is used for the outline drawn around a glyph when
-	  its row is selected in the table. If no file is given, a
+	  "Angle" are not used. In SVG images, white (and
+	  currentColor) is drawn in the symbol color, so one SVG file
+	  can be used in any color, including conditional colors;
+	  other formats are drawn as is. The color is also used for
+	  the outline drawn around a glyph when its row is selected in
+	  the table. If no file is given, a
 	  built-in image is used, and an unreadable file is drawn as a
 	  box with an X.
 	</p>

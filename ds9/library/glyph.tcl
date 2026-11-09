@@ -15,22 +15,24 @@ package provide DS9 1.0
 # pixels: the image is fitted into a size x size box keeping its aspect
 # ratio; 0 means native size. svg files are drawn directly at that size,
 # other formats are resampled.
+# color is the marker color. In svg files, white (and currentColor) is
+# drawn in that color, see GlyphSVGRecolor. Other formats ignore it.
 
-proc RegionGlyphPhoto {fn size} {
+proc RegionGlyphPhoto {fn size {color {}}} {
     # a missing or bad file is not an error, the marker draws a placeholder.
     # Leave errorInfo alone: xpa reports any errorInfo as a failure.
     global errorInfo errorCode
     set ei [expr {[info exists errorInfo] ? $errorInfo : {}}]
     set ec [expr {[info exists errorCode] ? $errorCode : {}}]
 
-    set rr [GlyphLoadPhoto $fn $size]
+    set rr [GlyphLoadPhoto $fn $size $color]
 
     set errorInfo $ei
     set errorCode $ec
     return $rr
 }
 
-proc GlyphLoadPhoto {fn size} {
+proc GlyphLoadPhoto {fn size color} {
     global iglyph
 
     if {$fn eq {}} {
@@ -38,14 +40,28 @@ proc GlyphLoadPhoto {fn size} {
     }
     set fn [file normalize $fn]
 
-    # source photo, decoded once per file
-    if {![info exists iglyph(src,$fn)]} {
-	if {[catch {image create photo -file $fn} src]} {
-	    return {}
-	}
-	set iglyph(src,$fn) $src
+    # svg: the marker color as #rrggbb, {} to draw the file as is
+    set clr {}
+    set svg [string equal -nocase [file extension $fn] .svg]
+    if {$svg} {
+	set clr [GlyphColor $color]
     }
-    set src $iglyph(src,$fn)
+
+    # source photo, decoded once per file (and color)
+    set skey "$fn,$clr"
+    if {![info exists iglyph(src,$skey)]} {
+	set src {}
+	if {$clr ne {}} {
+	    set src [GlyphSVGCreate $fn $clr svg]
+	}
+	if {$src eq {}} {
+	    if {[catch {image create photo -file $fn} src]} {
+		return {}
+	    }
+	}
+	set iglyph(src,$skey) $src
+    }
+    set src $iglyph(src,$skey)
 
     set sw [image width $src]
     set sh [image height $src]
@@ -68,15 +84,15 @@ proc GlyphLoadPhoto {fn size} {
 	return $src
     }
 
-    # resized photos, shared by all markers using the same file and size.
-    # Never deleted: a marker may still hold it.
-    set key "$fn,$ww,$hh"
+    # resized photos, shared by all markers using the same file, size
+    # and color. Never deleted: a marker may still hold it.
+    set key "$fn,$ww,$hh,$clr"
     if {![info exists iglyph(photo,$key)]} {
 	set photo {}
 	# svg: let Tk draw the vector image at the target size, which is
 	# sharper and much faster than resampling the native size photo.
-	if {[string equal -nocase [file extension $fn] .svg]} {
-	    set photo [GlyphSVGPhoto $fn $ww $hh $sw $sh]
+	if {$svg} {
+	    set photo [GlyphSVGPhoto $fn $clr $ww $hh $sw $sh]
 	}
 	if {$photo eq {}} {
 	    set photo [GlyphResizePhoto $src $ww $hh]
@@ -89,13 +105,14 @@ proc GlyphLoadPhoto {fn size} {
 # Draw an svg file at ww x hh by scaling its longer side to fit; the other
 # side follows the aspect ratio. Returns {} on failure, and the caller
 # then resamples the native size photo instead.
-proc GlyphSVGPhoto {fn ww hh sw sh} {
+proc GlyphSVGPhoto {fn clr ww hh sw sh} {
     if {$sw>=$sh} {
 	set fmt [list svg -scaletowidth $ww]
     } else {
 	set fmt [list svg -scaletoheight $hh]
     }
-    if {[catch {image create photo -file $fn -format $fmt} photo]} {
+    set photo [GlyphSVGCreate $fn $clr $fmt]
+    if {$photo eq {}} {
 	return {}
     }
     # the short side may round differently than ours; allow 1 pixel
@@ -104,6 +121,63 @@ proc GlyphSVGPhoto {fn ww hh sw sh} {
 	return {}
     }
     return $photo
+}
+
+# Create a photo from an svg file, recolored to clr (#rrggbb) unless clr
+# is {}. Returns {} on failure.
+proc GlyphSVGCreate {fn clr fmt} {
+    if {$clr eq {}} {
+	if {[catch {image create photo -file $fn -format $fmt} photo]} {
+	    return {}
+	}
+	return $photo
+    }
+
+    set data [GlyphSVGRecolor [GlyphSVGText $fn] $clr]
+    if {$data eq {}} {
+	return {}
+    }
+    if {[catch {image create photo -data $data -format $fmt} photo]} {
+	return {}
+    }
+    return $photo
+}
+
+# svg source text, read once per file
+proc GlyphSVGText {fn} {
+    global iglyph
+
+    if {![info exists iglyph(svg,$fn)]} {
+	if {[catch {open $fn r} ch]} {
+	    return {}
+	}
+	fconfigure $ch -encoding utf-8
+	set iglyph(svg,$fn) [read $ch]
+	close $ch
+    }
+    return $iglyph(svg,$fn)
+}
+
+# Paint white in the marker color: every fill, stroke or color value
+# (attribute or css style) that is #ffffff, #fff, white,
+# rgb(255,255,255) or currentColor becomes clr. Use a near white, such
+# as #fefefe, for parts that must stay white.
+proc GlyphSVGRecolor {data clr} {
+    set prop {((?:fill|stroke|stop-color|flood-color|lighting-color|color)\s*(?:=\s*["']\s*|:\s*))}
+    set white {(?:#ffffff|#fff|white|currentcolor|rgb\(\s*255\s*,\s*255\s*,\s*255\s*\))(?![-0-9a-z])}
+    return [regsub -all -nocase "$prop$white" $data "\\1$clr"]
+}
+
+# A Tk color name or value as #rrggbb, {} if it is not a valid color
+proc GlyphColor {color} {
+    if {$color eq {}} {
+	return {}
+    }
+    if {[catch {winfo rgb . $color} rgb]} {
+	return {}
+    }
+    lassign $rgb r g b
+    return [format {#%02x%02x%02x} [expr {$r>>8}] [expr {$g>>8}] [expr {$b>>8}]]
 }
 
 # Alpha correct resize. Box filter (area average) on premultiplied

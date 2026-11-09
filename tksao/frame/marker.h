@@ -317,7 +317,7 @@ protected:
   virtual void fill(int ff) {}
   virtual int getFill() {return 0;}
 
-  void setColor(const char*);
+  virtual void setColor(const char*);
   const char* getColorName() {return colorName;}
 
   void setLineWidth(int);

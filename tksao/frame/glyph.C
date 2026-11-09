@@ -49,14 +49,16 @@ void Point::loadGlyph()
     // so preserve whatever result that command is building
     Tcl_InterpState state = Tcl_SaveInterpState(interp, TCL_OK);
 
-    Tcl_Obj* objv[3];
+    // svg glyphs are drawn in the marker color, see glyph.tcl
+    Tcl_Obj* objv[4];
     objv[0] = Tcl_NewStringObj(GLYPHPHOTOPROC, -1);
     objv[1] = Tcl_NewStringObj(glyphFile_, -1);
     objv[2] = Tcl_NewIntObj(size_>0 ? size_ : 0);
-    for (int ii=0; ii<3; ii++)
+    objv[3] = Tcl_NewStringObj(colorName ? colorName : "", -1);
+    for (int ii=0; ii<4; ii++)
       Tcl_IncrRefCount(objv[ii]);
 
-    if (Tcl_EvalObjv(interp, 3, objv, TCL_EVAL_GLOBAL) == TCL_OK) {
+    if (Tcl_EvalObjv(interp, 4, objv, TCL_EVAL_GLOBAL) == TCL_OK) {
       const char* name = Tcl_GetStringResult(interp);
       if (name && *name) {
 	glyphImage_ = Tk_GetImage(interp, parent->tkwin, name,
@@ -66,7 +68,7 @@ void Point::loadGlyph()
       }
     }
 
-    for (int ii=0; ii<3; ii++)
+    for (int ii=0; ii<4; ii++)
       Tcl_DecrRefCount(objv[ii]);
 
     Tcl_RestoreInterpState(interp, state);
@@ -342,6 +344,17 @@ void Point::editEnd()
   loadGlyph();
   updateBBox();
   doCallBack(CallBack::EDITENDCB);
+}
+
+// svg glyphs follow the marker color: reload the photo in the new color
+
+void Point::setColor(const char* clr)
+{
+  Marker::setColor(clr);
+  if (shape_ == GLYPH) {
+    loadGlyph();
+    updateBBox();
+  }
 }
 
 void Point::setGlyphFile(const char* fn)

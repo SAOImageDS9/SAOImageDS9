@@ -386,8 +386,13 @@ for free. Rendering already culls off-screen markers
 - [x] **Highlite.** Catalog rows selected in the table are drawn with
       `highlite=1`. `Glyph` needs a visible highlite rendering (e.g. a bbox
       outline in the marker color) because the image itself has no color.
-- [x] **Color.** The symbol `color` does not tint the image. Use it for
-      the outline/highlite only, and document that. (Done.)
+- [x] **Color.** The symbol `color` is used for the outline/highlite, and
+      SVG glyphs are drawn in it: `GlyphSVGRecolor` (glyph.tcl) replaces
+      white (`#ffffff`, `#fff`, `white`, `rgb(255,255,255)`) and
+      `currentColor` fill/stroke/color values with the marker color before
+      Tk renders the svg. Photos are cached per file, size and color;
+      `Point::setColor` (now overriding a virtual `Marker::setColor`)
+      reloads the photo. Raster formats are not tinted.
 - [x] **Performance.** This is where the photo cache matters: thousands of
       rows usually share a handful of files. Also note that on X11,
       `Tk_RedrawImage` with alpha does an `XGetImage`/blend/`XPutImage` per

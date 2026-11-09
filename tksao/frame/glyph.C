@@ -330,6 +330,8 @@ void Point::edit(const Vector& v, int h)
   int nh = (int)floor(hh*ss+.5);
   glyphWidth_ = nw>1 ? nw : 1;
   glyphHeight_ = nh>1 ? nh : 1;
+  // keep size_ current, so EDITCB listeners (the Point dialog) see it
+  size_ = glyphWidth_>glyphHeight_ ? glyphWidth_ : glyphHeight_;
 
   updateBBox();
   doCallBack(CallBack::EDITCB);
@@ -340,7 +342,6 @@ void Point::editEnd()
   if (shape_ != GLYPH)
     return;
 
-  size_ = glyphWidth_>glyphHeight_ ? glyphWidth_ : glyphHeight_;
   loadGlyph();
   updateBBox();
   doCallBack(CallBack::EDITENDCB);

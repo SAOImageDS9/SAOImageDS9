@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DS9 glyph: open_circle_rot45_outlined -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 256 256">
+ <g fill="none" stroke="#000000" stroke-width="24" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M224.27,100.93 A100,100 0 0 0 155.07,31.73"/>
+  <path d="M100.93,31.73 A100,100 0 0 0 31.73,100.93"/>
+  <path d="M31.73,155.07 A100,100 0 0 0 100.93,224.27"/>
+  <path d="M155.07,224.27 A100,100 0 0 0 224.27,155.07"/>
+ </g>
+ <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M223.11,97.1 A100,100 0 0 0 158.9,32.89"/>
+  <path d="M97.1,32.89 A100,100 0 0 0 32.89,97.1"/>
+  <path d="M32.89,158.9 A100,100 0 0 0 97.1,223.11"/>
+  <path d="M158.9,223.11 A100,100 0 0 0 223.11,158.9"/>
+ </g>
+</svg>

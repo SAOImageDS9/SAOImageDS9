@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DS9 glyph: open_box_rot45_rounded_corners -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 256 256">
+ <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="butt" stroke-linejoin="round" stroke-miterlimit="10">
+  <path d="M92.64,53.05 L112.44,33.25 A22,22 0 0 1 143.56,33.25 L163.36,53.05"/>
+  <path d="M53.05,163.36 L33.25,143.56 A22,22 0 0 1 33.25,112.44 L53.05,92.64"/>
+  <path d="M163.36,202.95 L143.56,222.75 A22,22 0 0 1 112.44,222.75 L92.64,202.95"/>
+  <path d="M202.95,92.64 L222.75,112.44 A22,22 0 0 1 222.75,143.56 L202.95,163.36"/>
+ </g>
+</svg>

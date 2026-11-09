@@ -8,6 +8,12 @@ package provide DS9 1.0
 # gif, ...) at a fixed size in screen pixels, always upright:
 #   point(x,y) # point=glyph [size] {file}
 # The point dialog (point.tcl) edits the file and size.
+#
+# file can also name a glyph shipped with ds9 (ds9/glyphs), as
+# builtin://name.svg or builtin://outlined/name_outlined.svg. These are
+# stored, saved and backed up as is, and only resolved to a real path
+# when the image is loaded, so region files using them stay valid on
+# any ds9 install. See GlyphPicker (glyphpicker.tcl) to choose one.
 
 # Photo loader, called from C++ (tksao/frame/glyph.C) whenever a glyph
 # point needs its image. Returns the name of a cached photo, or {} on
@@ -38,7 +44,7 @@ proc GlyphLoadPhoto {fn size color} {
     if {$fn eq {}} {
 	return {}
     }
-    set fn [file normalize $fn]
+    set fn [file normalize [GlyphPath $fn]]
 
     # svg: the marker color as #rrggbb, {} to draw the file as is
     set clr {}
@@ -298,6 +304,41 @@ proc GlyphResizeWeights {ss nn} {
     return $rr
 }
 
+# Built-in glyphs
+
+proc GlyphBuiltinDir {} {
+    global ds9
+    return [file join $ds9(root) glyphs]
+}
+
+proc GlyphIsBuiltin {fn} {
+    return [string match {builtin://*} $fn]
+}
+
+# builtin://name to the shipped file, other names unchanged
+proc GlyphPath {fn} {
+    if {[GlyphIsBuiltin $fn]} {
+	return [file join [GlyphBuiltinDir] [string range $fn 10 end]]
+    }
+    return $fn
+}
+
+# builtin://name for a file in the built-in glyph directory, else {}
+proc GlyphBuiltinName {fn} {
+    if {$fn eq {}} {
+	return {}
+    }
+    if {[GlyphIsBuiltin $fn]} {
+	return $fn
+    }
+    set dir [file normalize [GlyphBuiltinDir]]/
+    set fn [file normalize $fn]
+    if {[string first $dir $fn] == 0} {
+	return "builtin://[string range $fn [string length $dir] end]"
+    }
+    return {}
+}
+
 # Interactive create: use the file set in Preferences, else the same
 # built-in image illustrate mode uses. Never prompts; the file can be
 # changed afterwards in the point dialog.
@@ -310,7 +351,8 @@ proc GlyphDefaultFile {} {
 proc GlyphCreateFile {} {
     global pmarker
 
-    if {$pmarker(glyph,file) ne {} && [file readable $pmarker(glyph,file)]} {
+    if {$pmarker(glyph,file) ne {} &&
+	[file readable [GlyphPath $pmarker(glyph,file)]]} {
 	return $pmarker(glyph,file)
     }
     return [GlyphDefaultFile]
@@ -322,7 +364,8 @@ proc GlyphBrowse {varname} {
     upvar #0 $varname var
     global $varname
 
-    set fn [OpenFileDialog photofbox]
+    set fn [GlyphPicker $var(glyph) \
+		[$var(frame) get marker $var(id) color] $var(top)]
     if {$fn ne {}} {
 	set var(glyph) $fn
 	PointApply $varname
@@ -358,6 +401,11 @@ proc GlyphBackup {fn dir} {
 
 proc GlyphBackupRef {dir all pre path post} {
     upvar #0 iglyphbackup map
+
+    # shipped with ds9, nothing to copy
+    if {[GlyphIsBuiltin $path]} {
+	return $all
+    }
 
     # relative names were written relative to the region file, i.e. dir
     if {[file pathtype $path] eq {relative}} {

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DS9 glyph: two_inward_vees_horizontal_rot45 -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 256 256">
+ <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M223.34,65.18 L178.91,77.09 L190.82,32.66"/>
+  <path d="M32.66,190.82 L77.09,178.91 L65.18,223.34"/>
+ </g>
+</svg>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DS9 glyph: four_wyes -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 256 256">
+ <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M99.72,72.28 L128,44 L156.28,72.28"/>
+  <path d="M128,44 L128,4"/>
+  <path d="M183.72,99.72 L212,128 L183.72,156.28"/>
+  <path d="M212,128 L252,128"/>
+  <path d="M156.28,183.72 L128,212 L99.72,183.72"/>
+  <path d="M128,212 L128,252"/>
+  <path d="M72.28,156.28 L44,128 L72.28,99.72"/>
+  <path d="M44,128 L4,128"/>
+ </g>
+</svg>

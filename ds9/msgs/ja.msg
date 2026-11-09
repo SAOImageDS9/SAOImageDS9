@@ -95,6 +95,7 @@
 ::msgcat::mcset ja Bins Bins
 ::msgcat::mcset ja Bin ビンまとめ
 ::msgcat::mcset ja Black 黒色
+::msgcat::mcset ja {Blank = built-in image} {空欄 = 内蔵画像}
 ::msgcat::mcset ja {Blank/Inf/NaN Color} 未定義値(Blank/Inf/NaN)の色
 ::msgcat::mcset ja Blend Blend
 ::msgcat::mcset ja {Blink Frames} フレームをブリンク
@@ -363,6 +364,8 @@
 ::msgcat::mcset ja {Full Range} 全範囲
 ::msgcat::mcset ja Function 関数
 ::msgcat::mcset ja GIF GIF
+::msgcat::mcset ja Glyph グリフ
+::msgcat::mcset ja Gray 灰色
 ::msgcat::mcset ja GUI GUI
 ::msgcat::mcset ja Galactic 銀河座標
 ::msgcat::mcset ja Gap Gap
@@ -706,8 +709,10 @@
 ::msgcat::mcset ja {Other Font Size} {Other Font Size}
 ::msgcat::mcset ja Other その他
 ::msgcat::mcset ja Outer 外径
+::msgcat::mcset ja Outlined 縁取り
 ::msgcat::mcset ja Overplot Overplot
 ::msgcat::mcset ja {Override Color} {Override Color}
+::msgcat::mcset ja {Pixels (0 = native)} {ピクセル (0 = 元のサイズ)}
 ::msgcat::mcset ja PNG PNG
 ::msgcat::mcset ja {PS Page Setup} PSページ設定
 ::msgcat::mcset ja {PS Print} PS印刷
@@ -933,6 +938,7 @@
 ::msgcat::mcset ja {Strip Parameters} {Strip Parameters}
 ::msgcat::mcset ja {Strip Scale} {Strip Scale}
 ::msgcat::mcset ja Strip Strip
+::msgcat::mcset ja Style スタイル
 ::msgcat::mcset ja Subscriptions Subscriptions
 ::msgcat::mcset ja Sum 合計
 ::msgcat::mcset ja {Symbol Editor} 記号の編集
@@ -1028,6 +1034,7 @@
 ::msgcat::mcset ja Username ユーザー名
 ::msgcat::mcset ja User ユーザー
 ::msgcat::mcset ja Use 使用
+::msgcat::mcset ja Variant バリエーション
 ::msgcat::mcset ja {VO Server} {VO Server}
 ::msgcat::mcset ja VOTable VOTable
 ::msgcat::mcset ja VOT VOT

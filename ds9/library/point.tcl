@@ -76,7 +76,7 @@ proc PointDialog {varname} {
     # glyph image
     ttk::label $f.tglyph -text [msgcat::mc {Glyph}]
     ttk::entry $f.glyph -textvariable ${varname}(glyph) -width 40
-    ttk::button $f.bglyph -text [msgcat::mc {Browse}] \
+    ttk::button $f.bglyph -text "[msgcat::mc {Browse}]..." \
 	-command [list GlyphBrowse $varname]
 
     grid $f.tsize $f.size $f.usize -padx 2 -pady 2 -sticky w

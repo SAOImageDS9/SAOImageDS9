@@ -377,7 +377,7 @@ void Point::setGlyphFile(const char* fn)
 void Point::listGlyphFile(ostream& str)
 {
   const char* dir = parent->markerFileDir();
-  if (!dir || !glyphFile_ || !*glyphFile_) {
+  if (!dir || !glyphFile_ || !*glyphFile_ || isGlyphBuiltin(glyphFile_)) {
     str << glyphFile_;
     return;
   }

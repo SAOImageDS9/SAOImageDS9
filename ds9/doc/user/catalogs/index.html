@@ -378,9 +378,24 @@ $Jmag&gt;16.5      diamond point   cyan    $Jmag                   physical
 	  A symbol can also be an image of your own, such as a small
 	  PNG with a transparent background. The quickest way is the
 	  catalog window's "Symbol → Shape → Point → Glyph..." menu
-	  item, which asks for the image file. In the Symbol Editor,
+	  item, which opens the Glyph picker. In the Symbol Editor,
 	  set the Shape to Point, "Glyph" and put the image file name
-	  in the "Glyph" field (or use its "Browse" button). Like the
+	  in the "Glyph" field (or use its "Browse..." button to open
+	  the Glyph picker).
+	</p>
+	<p>
+	  The Glyph picker offers the built-in glyphs that come with
+	  ds9, a set of crosshair style markers (circles, boxes,
+	  diamonds, tees, wyes, vees and gapped crosses), each also in
+	  an outlined version that stays visible on bright sources.
+	  Narrow them down by Shape, Style and Variant and press OK, or
+	  press "Browse..." to choose an image file of your own. A
+	  built-in glyph is stored by name, for example
+	  <code>builtin://gapped_plus.svg</code>, so symbol files and
+	  regions using it work on any ds9 installation.
+	</p>
+	<p>
+	  Like the
 	  Text field, the file name may
 	  refer to catalog columns, so a different image can be used
 	  for each source, for example

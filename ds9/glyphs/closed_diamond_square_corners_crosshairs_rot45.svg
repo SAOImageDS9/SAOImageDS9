@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DS9 glyph: closed_diamond_square_corners_crosshairs_rot45 -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 256 256">
+ <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M71.43,71.43 L184.57,71.43 L184.57,184.57 L71.43,184.57 Z"/>
+  <path d="M184.57,71.43 L215.68,40.32"/>
+  <path d="M71.43,71.43 L40.32,40.32"/>
+  <path d="M71.43,184.57 L40.32,215.68"/>
+  <path d="M184.57,184.57 L215.68,215.68"/>
+ </g>
+</svg>

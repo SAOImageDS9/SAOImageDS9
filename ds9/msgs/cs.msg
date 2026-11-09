@@ -95,6 +95,7 @@
 ::msgcat::mcset cs Bins Bins
 ::msgcat::mcset cs Bin Bin
 ::msgcat::mcset cs Black Černá
+::msgcat::mcset cs {Blank = built-in image} {Prázdné = vestavěný obrázek}
 ::msgcat::mcset cs {Blank/Inf/NaN Color} {Barva nedefinovaných pixelů}
 ::msgcat::mcset cs Blend Blend
 ::msgcat::mcset cs {Blink Frames} {Problikávej snímky}
@@ -363,6 +364,8 @@
 ::msgcat::mcset cs {Full Range} {Plný rozsah}
 ::msgcat::mcset cs Function Funkce
 ::msgcat::mcset cs GIF GIF
+::msgcat::mcset cs Glyph Glyf
+::msgcat::mcset cs Gray Šedá
 ::msgcat::mcset cs GUI GUI
 ::msgcat::mcset cs Galactic Galaktické
 ::msgcat::mcset cs Gap Gap
@@ -706,8 +709,10 @@
 ::msgcat::mcset cs {Other Font Size} {Other Font Size}
 ::msgcat::mcset cs Other Other
 ::msgcat::mcset cs Outer Outer
+::msgcat::mcset cs Outlined {S obrysem}
 ::msgcat::mcset cs Overplot Overplot
 ::msgcat::mcset cs {Override Color} {Override Color}
+::msgcat::mcset cs {Pixels (0 = native)} {Pixely (0 = původní)}
 ::msgcat::mcset cs PNG PNG
 ::msgcat::mcset cs {PS Page Setup} {PS Page Setup}
 ::msgcat::mcset cs {PS Print} {PS Print}
@@ -933,6 +938,7 @@
 ::msgcat::mcset cs {Strip Parameters} {Strip Parameters}
 ::msgcat::mcset cs {Strip Scale} {Strip Scale}
 ::msgcat::mcset cs Strip Strip
+::msgcat::mcset cs Style Styl
 ::msgcat::mcset cs Subscriptions Subscriptions
 ::msgcat::mcset cs Sum Sum
 ::msgcat::mcset cs {Symbol Editor} {Symbol Editor}
@@ -1028,6 +1034,7 @@
 ::msgcat::mcset cs Username Username
 ::msgcat::mcset cs User Uživatelské
 ::msgcat::mcset cs Use Používat
+::msgcat::mcset cs Variant Varianta
 ::msgcat::mcset cs {VO Server} {VO Server}
 ::msgcat::mcset cs VOTable VOTable
 ::msgcat::mcset cs VOT VOT

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DS9 glyph: four_tees_square_sides -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 256 256">
+ <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M92,64 L164,64"/>
+  <path d="M128,64 L128,4"/>
+  <path d="M192,92 L192,164"/>
+  <path d="M192,128 L252,128"/>
+  <path d="M164,192 L92,192"/>
+  <path d="M128,192 L128,252"/>
+  <path d="M64,164 L64,92"/>
+  <path d="M64,128 L4,128"/>
+ </g>
+</svg>

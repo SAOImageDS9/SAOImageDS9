@@ -547,7 +547,7 @@ proc PrefsDialogRegion {} {
 
     ttk::label $f.tfile -text [msgcat::mc {File}]
     ttk::entry $f.file -textvariable pmarker(glyph,file) -width 30
-    ttk::button $f.browse -text [msgcat::mc {Browse}] \
+    ttk::button $f.browse -text "[msgcat::mc {Browse}]..." \
 	-command {PrefsGlyphBrowse}
     ttk::label $f.ufile -text [msgcat::mc {Blank = built-in image}]
     ttk::label $f.title -text [msgcat::mc {Width}]
@@ -1274,7 +1274,7 @@ proc UpdateRegionMenu {} {
 proc PrefsGlyphBrowse {} {
     global pmarker
 
-    set fn [OpenFileDialog photofbox]
+    set fn [GlyphPicker $pmarker(glyph,file) $pmarker(color)]
     if {$fn ne {}} {
 	set pmarker(glyph,file) $fn
     }

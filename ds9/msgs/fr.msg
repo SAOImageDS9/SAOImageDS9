@@ -95,6 +95,7 @@
 ::msgcat::mcset fr Bins Bins
 ::msgcat::mcset fr Bin Bin
 ::msgcat::mcset fr Black Noir
+::msgcat::mcset fr {Blank = built-in image} {Vide = image intégrée}
 ::msgcat::mcset fr {Blank/Inf/NaN Color} {Blanc/Inf/NaN Couleur}
 ::msgcat::mcset fr Blend Blend
 ::msgcat::mcset fr {Blink Frames} {Clignotement des fenêtres}
@@ -363,6 +364,8 @@
 ::msgcat::mcset fr {Full Range} {Full Range}
 ::msgcat::mcset fr Function Fonction
 ::msgcat::mcset fr GIF GIF
+::msgcat::mcset fr Glyph Glyphe
+::msgcat::mcset fr Gray Gris
 ::msgcat::mcset fr GUI GUI
 ::msgcat::mcset fr Galactic Galactiques
 ::msgcat::mcset fr Gap Gap
@@ -706,8 +709,10 @@
 ::msgcat::mcset fr {Other Font Size} {Other Font Size}
 ::msgcat::mcset fr Other Autre
 ::msgcat::mcset fr Outer Externe
+::msgcat::mcset fr Outlined Contouré
 ::msgcat::mcset fr Overplot Overplot
 ::msgcat::mcset fr {Override Color} {Override Color}
+::msgcat::mcset fr {Pixels (0 = native)} {Pixels (0 = natif)}
 ::msgcat::mcset fr PNG PNG
 ::msgcat::mcset fr {PS Page Setup} {PS Page Setup}
 ::msgcat::mcset fr {PS Print} {PS Print}
@@ -933,6 +938,7 @@
 ::msgcat::mcset fr {Strip Parameters} {Strip Parameters}
 ::msgcat::mcset fr {Strip Scale} {Strip Scale}
 ::msgcat::mcset fr Strip Strip
+::msgcat::mcset fr Style Style
 ::msgcat::mcset fr Subscriptions Subscriptions
 ::msgcat::mcset fr Sum Sum
 ::msgcat::mcset fr {Symbol Editor} {Symbol Editor}
@@ -1028,6 +1034,7 @@
 ::msgcat::mcset fr Username Username
 ::msgcat::mcset fr User User
 ::msgcat::mcset fr Use Use
+::msgcat::mcset fr Variant Variante
 ::msgcat::mcset fr {VO Server} {VO Server}
 ::msgcat::mcset fr VOTable VOTable
 ::msgcat::mcset fr VOT VOT

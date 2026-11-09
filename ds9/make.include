@@ -47,6 +47,9 @@ $(LIBDIR)/template : $(prefix)/ds9/template
 $(LIBDIR)/icons : $(prefix)/ds9/icons
 	cp -rf $? "$@"
 
+$(LIBDIR)/glyphs : $(prefix)/ds9/glyphs
+	cp -rf $? "$@"
+
 #--------------------------tls
 
 $(LIBDIR)/tls	: $(prefix)/tls/library/tls.tcl

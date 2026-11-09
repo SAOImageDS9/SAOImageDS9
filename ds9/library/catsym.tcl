@@ -155,7 +155,7 @@ proc CATSymDialog {parent} {
 	-command "TBLEditDialog $varname angle $pvar(catdb)"
     ttk::label $f.tglyph -text [msgcat::mc {Glyph}]
     ttk::entry $f.glyph -textvariable ${varname}(glyph) -width 40
-    ttk::button $f.bglyph -text [msgcat::mc {Browse}] \
+    ttk::button $f.bglyph -text "[msgcat::mc {Browse}]..." \
 	-command [list CATSymGlyphBrowse $varname]
 
     ThemeMenu $f.shape.menu
@@ -519,7 +519,7 @@ proc CATSymGlyphBrowse {varname} {
     upvar #0 $varname var
     global $varname
 
-    set fn [OpenFileDialog photofbox $var(top)]
+    set fn [GlyphPicker $var(glyph) $var(color) $var(top)]
     if {$fn ne {}} {
 	set var(glyph) $fn
     }
@@ -541,7 +541,11 @@ proc CATSymbolGlyph {varname} {
     global $varname
     global $var(symdb)
 
-    set fn [OpenFileDialog photofbox $var(top)]
+    CATSymEnsureCols $var(symdb)
+    set fn [GlyphPicker \
+		[starbase_get $var(symdb) 1 [starbase_colnum $var(symdb) glyph]] \
+		[starbase_get $var(symdb) 1 [starbase_colnum $var(symdb) color]] \
+		$var(top)]
     if {$fn eq {}} {
 	if {[info exists var(prevshape)]} {
 	    starbase_set $var(symdb) 1 \

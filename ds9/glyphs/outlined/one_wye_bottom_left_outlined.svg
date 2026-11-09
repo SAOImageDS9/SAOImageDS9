@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DS9 glyph: one_wye_bottom_left_outlined -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 256 256">
+ <g fill="none" stroke="#000000" stroke-width="24" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M112.6,187.4 L68.6,187.4 L68.6,143.4"/>
+  <path d="M71.43,184.57 L40.32,215.68"/>
+ </g>
+ <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M108.6,187.4 L68.6,187.4 L68.6,147.4"/>
+  <path d="M68.6,187.4 L43.15,212.85"/>
+ </g>
+</svg>

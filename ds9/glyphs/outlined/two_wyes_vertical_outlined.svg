@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DS9 glyph: two_wyes_vertical_outlined -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 256 256">
+ <g fill="none" stroke="#000000" stroke-width="24" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M96.89,75.11 L128,44 L159.11,75.11"/>
+  <path d="M128,48 L128,4"/>
+  <path d="M159.11,180.89 L128,212 L96.89,180.89"/>
+  <path d="M128,208 L128,252"/>
+ </g>
+ <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M99.72,72.28 L128,44 L156.28,72.28"/>
+  <path d="M128,44 L128,8"/>
+  <path d="M156.28,183.72 L128,212 L99.72,183.72"/>
+  <path d="M128,212 L128,248"/>
+ </g>
+</svg>

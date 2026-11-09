@@ -228,7 +228,7 @@ proc CATReg {varname row interactive resultname} {
 			    Error "Unable to evaluate glyph $gfn"
 			    return
 			}
-			set gfn [file normalize $gg]
+			set gfn [expr {[GlyphIsBuiltin $gg] ? $gg : [file normalize $gg]}]
 		    } else {
 			set gfn [GlyphDefaultFile]
 		    }

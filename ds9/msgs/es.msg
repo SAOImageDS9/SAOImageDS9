@@ -95,6 +95,7 @@
 ::msgcat::mcset es Bins Bins
 ::msgcat::mcset es Bin Bin
 ::msgcat::mcset es Black Negro
+::msgcat::mcset es {Blank = built-in image} {Vacío = imagen integrada}
 ::msgcat::mcset es {Blank/Inf/NaN Color} {Color en blanco/Inf/NaN}
 ::msgcat::mcset es Blend Blend
 ::msgcat::mcset es {Blink Frames} {Parpadear Marcos}
@@ -363,6 +364,8 @@
 ::msgcat::mcset es {Full Range} {Rango completo}
 ::msgcat::mcset es Function Función
 ::msgcat::mcset es GIF GIF
+::msgcat::mcset es Glyph Glifo
+::msgcat::mcset es Gray Gris
 ::msgcat::mcset es GUI GUI
 ::msgcat::mcset es Galactic Galáctico
 ::msgcat::mcset es Gap Gap
@@ -706,8 +709,10 @@
 ::msgcat::mcset es {Other Font Size} {Other Font Size}
 ::msgcat::mcset es Other Otro
 ::msgcat::mcset es Outer Exterior
+::msgcat::mcset es Outlined Contorneado
 ::msgcat::mcset es Overplot Overplot
 ::msgcat::mcset es {Override Color} {Override Color}
+::msgcat::mcset es {Pixels (0 = native)} {Píxeles (0 = original)}
 ::msgcat::mcset es PNG PNG
 ::msgcat::mcset es {PS Page Setup} {Setup para Página PS}
 ::msgcat::mcset es {PS Print} {Imprimir PS}
@@ -933,6 +938,7 @@
 ::msgcat::mcset es {Strip Parameters} {Strip Parameters}
 ::msgcat::mcset es {Strip Scale} {Strip Scale}
 ::msgcat::mcset es Strip Strip
+::msgcat::mcset es Style Estilo
 ::msgcat::mcset es Subscriptions Subscriptions
 ::msgcat::mcset es Sum Suma
 ::msgcat::mcset es {Symbol Editor} {Editor de símbolos}
@@ -1028,6 +1034,7 @@
 ::msgcat::mcset es Username {Nombre de usuario}
 ::msgcat::mcset es User Usuario
 ::msgcat::mcset es Use Usa
+::msgcat::mcset es Variant Variante
 ::msgcat::mcset es {VO Server} {VO Server}
 ::msgcat::mcset es VOTable VOTable
 ::msgcat::mcset es VOT VOT

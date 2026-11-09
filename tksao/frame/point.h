@@ -13,10 +13,14 @@
 // which returns the name of a (cached) Tk photo, or "" on failure.
 // A glyph without a usable image is drawn as a box with an X.
 // size_ is the box the image is fitted into, 0 = native size.
+// Names starting with GLYPHBUILTIN are glyphs shipped with ds9, resolved
+// in Tcl; they are not paths, and are kept as is on load and save.
 // See glyph.C.
 
 #define GLYPHPHOTOPROC "RegionGlyphPhoto"
 #define GLYPHDEFAULTSIZE 16
+#define GLYPHBUILTIN "builtin://"
+#define isGlyphBuiltin(fn) (!strncmp((fn), GLYPHBUILTIN, strlen(GLYPHBUILTIN)))
 
 class Point : public Marker {
  public:

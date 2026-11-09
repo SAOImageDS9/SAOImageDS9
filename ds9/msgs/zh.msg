@@ -95,6 +95,7 @@
 ::msgcat::mcset zh Bins Bins
 ::msgcat::mcset zh Bin Bin
 ::msgcat::mcset zh Black {黑 色}
+::msgcat::mcset zh {Blank = built-in image} {留空 = 内置图像}
 ::msgcat::mcset zh {Blank/Inf/NaN Color} {Blank/Inf/NaN Color}
 ::msgcat::mcset zh Blend Blend
 ::msgcat::mcset zh {Blink Frames} {Blink Frames}
@@ -363,6 +364,8 @@
 ::msgcat::mcset zh {Full Range} {Full Range}
 ::msgcat::mcset zh Function Function
 ::msgcat::mcset zh GIF GIF
+::msgcat::mcset zh Glyph 字形
+::msgcat::mcset zh Gray 灰色
 ::msgcat::mcset zh GUI GUI
 ::msgcat::mcset zh Galactic Galactic
 ::msgcat::mcset zh Gap Gap
@@ -706,8 +709,10 @@
 ::msgcat::mcset zh {Other Font Size} {Other Font Size}
 ::msgcat::mcset zh Other {其 它}
 ::msgcat::mcset zh Outer Outer
+::msgcat::mcset zh Outlined 带轮廓
 ::msgcat::mcset zh Overplot Overplot
 ::msgcat::mcset zh {Override Color} {Override Color}
+::msgcat::mcset zh {Pixels (0 = native)} {像素 (0 = 原始大小)}
 ::msgcat::mcset zh PNG PNG
 ::msgcat::mcset zh {PS Page Setup} {PS Page Setup}
 ::msgcat::mcset zh {PS Print} {PS Print}
@@ -933,6 +938,7 @@
 ::msgcat::mcset zh {Strip Parameters} {Strip Parameters}
 ::msgcat::mcset zh {Strip Scale} {Strip Scale}
 ::msgcat::mcset zh Strip Strip
+::msgcat::mcset zh Style 样式
 ::msgcat::mcset zh Subscriptions Subscriptions
 ::msgcat::mcset zh Sum Sum
 ::msgcat::mcset zh {Symbol Editor} {Symbol Editor}
@@ -1028,6 +1034,7 @@
 ::msgcat::mcset zh Username Username
 ::msgcat::mcset zh User User
 ::msgcat::mcset zh Use Use
+::msgcat::mcset zh Variant 变体
 ::msgcat::mcset zh {VO Server} {VO Server}
 ::msgcat::mcset zh VOTable VOTable
 ::msgcat::mcset zh VOT VOT

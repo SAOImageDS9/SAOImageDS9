@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DS9 glyph: open_circle_outlined -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 256 256">
+ <g fill="none" stroke="#000000" stroke-width="24" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M176.93,40.79 A100,100 0 0 0 79.07,40.79"/>
+  <path d="M215.21,176.93 A100,100 0 0 0 215.21,79.07"/>
+  <path d="M79.07,215.21 A100,100 0 0 0 176.93,215.21"/>
+  <path d="M40.79,79.07 A100,100 0 0 0 40.79,176.93"/>
+ </g>
+ <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M173.4,38.9 A100,100 0 0 0 82.6,38.9"/>
+  <path d="M217.1,173.4 A100,100 0 0 0 217.1,82.6"/>
+  <path d="M82.6,217.1 A100,100 0 0 0 173.4,217.1"/>
+  <path d="M38.9,82.6 A100,100 0 0 0 38.9,173.4"/>
+ </g>
+</svg>

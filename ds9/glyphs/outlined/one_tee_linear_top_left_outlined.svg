@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DS9 glyph: one_tee_linear_top_left_outlined -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 256 256">
+ <g fill="none" stroke="#000000" stroke-width="24" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M41.73,123.76 L123.76,41.73"/>
+  <path d="M85.57,85.57 L40.32,40.32"/>
+ </g>
+ <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M44.56,120.93 L120.93,44.56"/>
+  <path d="M82.75,82.75 L43.15,43.15"/>
+ </g>
+</svg>

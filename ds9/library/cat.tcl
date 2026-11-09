@@ -954,7 +954,7 @@ proc PrefsDialogCatalog {} {
 
     ttk::label $f.gtitle -text [msgcat::mc {Glyph}]
     ttk::entry $f.glyph -textvariable pcat(sym,glyph) -width 30
-    ttk::button $f.gbrowse -text [msgcat::mc {Browse}] \
+    ttk::button $f.gbrowse -text "[msgcat::mc {Browse}]..." \
 	-command PrefsCatGlyphBrowse
 
     ThemeMenu $f.svr.menu
@@ -1331,7 +1331,7 @@ proc CatalogCmdSymbolSave {fn} {
 proc PrefsCatGlyphBrowse {} {
     global pcat
 
-    set fn [OpenFileDialog photofbox]
+    set fn [GlyphPicker $pcat(sym,glyph) $pcat(sym,color)]
     if {$fn ne {}} {
 	set pcat(sym,glyph) $fn
     }

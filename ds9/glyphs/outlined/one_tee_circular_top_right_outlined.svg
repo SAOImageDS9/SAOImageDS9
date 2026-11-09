@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DS9 glyph: one_tee_circular_top_right_outlined -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 256 256">
+ <g fill="none" stroke="#000000" stroke-width="24" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M191.58,135.33 A64,64 0 0 0 120.67,64.42"/>
+  <path d="M170.43,85.57 L215.68,40.32"/>
+ </g>
+ <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M191.91,131.35 A64,64 0 0 0 124.65,64.09"/>
+  <path d="M173.25,82.75 L212.85,43.15"/>
+ </g>
+</svg>

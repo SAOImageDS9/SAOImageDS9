@@ -485,7 +485,7 @@ void Base::setMarkerFileDir(const char* fn)
 // returns a new string, caller deletes
 char* Base::resolveMarkerFileName(const char* fn)
 {
-  if (!fn || !*fn || !markerFileDir_)
+  if (!fn || !*fn || !markerFileDir_ || isGlyphBuiltin(fn))
     return dupstr(fn ? fn : "");
 
   Tcl_Obj* path = Tcl_NewStringObj(fn, -1);

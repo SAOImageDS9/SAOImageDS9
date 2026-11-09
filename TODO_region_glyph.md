@@ -18,6 +18,10 @@ Open:
       rules), `user/catalogs/index.html` (glyph symbols), release notes
       `release/r8.8.2.html`. `regions shape` is documented as a generic
       `<shape>`, so it needed no change.
+- [x] **Built-in glyphs** (2026-11-09): `ds9/glyphs` (SVGs from the
+      Glyphs repo, resized to 64 px), named `builtin://name.svg`, kept
+      verbatim on load/save/backup and resolved by `GlyphPath`.
+      `GlyphPicker` (`glyphpicker.tcl`) replaces the glyph file dialogs.
 - [ ] **Catalog backup:** copy glyph files into the backup, as region
       backup does (`GlyphBackup`); restore currently keeps absolute paths.
 - [ ] **Symbol table paths:** relative glyph paths resolve against the

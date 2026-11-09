@@ -95,6 +95,7 @@
 ::msgcat::mcset da Bins Bins
 ::msgcat::mcset da Bin Bin
 ::msgcat::mcset da Black Sort
+::msgcat::mcset da {Blank = built-in image} {Tom = indbygget billede}
 ::msgcat::mcset da {Blank/Inf/NaN Color} {Blank/Inf/NaN farve}
 ::msgcat::mcset da Blend Blend
 ::msgcat::mcset da {Blink Frames} {Blink rammer}
@@ -363,6 +364,8 @@
 ::msgcat::mcset da {Full Range} {Hele intervallet}
 ::msgcat::mcset da Function Funktion
 ::msgcat::mcset da GIF GIF
+::msgcat::mcset da Glyph Glyf
+::msgcat::mcset da Gray Grå
 ::msgcat::mcset da GUI GUI
 ::msgcat::mcset da Galactic Galaktisk
 ::msgcat::mcset da Gap Gap
@@ -706,8 +709,10 @@
 ::msgcat::mcset da {Other Font Size} {Other Font Size}
 ::msgcat::mcset da Other Anden
 ::msgcat::mcset da Outer Ydre
+::msgcat::mcset da Outlined {Med omrids}
 ::msgcat::mcset da Overplot Overplot
 ::msgcat::mcset da {Override Color} {Override Color}
+::msgcat::mcset da {Pixels (0 = native)} {Pixler (0 = oprindelig)}
 ::msgcat::mcset da PNG PNG
 ::msgcat::mcset da {PS Page Setup} {PS side opsætning}
 ::msgcat::mcset da {PS Print} {PS udskrift}
@@ -933,6 +938,7 @@
 ::msgcat::mcset da {Strip Parameters} {Strip Parameters}
 ::msgcat::mcset da {Strip Scale} {Strip Scale}
 ::msgcat::mcset da Strip Strip
+::msgcat::mcset da Style Stil
 ::msgcat::mcset da Subscriptions Subscriptions
 ::msgcat::mcset da Sum Sum
 ::msgcat::mcset da {Symbol Editor} {Symbol Editor}
@@ -1028,6 +1034,7 @@
 ::msgcat::mcset da Username Brugernavn
 ::msgcat::mcset da User Brugerdefineret
 ::msgcat::mcset da Use Anvend
+::msgcat::mcset da Variant Variant
 ::msgcat::mcset da {VO Server} {VO Server}
 ::msgcat::mcset da VOTable VOTable
 ::msgcat::mcset da VOT VOT

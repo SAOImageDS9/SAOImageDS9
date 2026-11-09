@@ -369,6 +369,14 @@ def _():
             path('M12 4 V20 M9 20 H15', S.replace('"2"', '"2.4"')))
 
 
+@icon('glyph')
+def _():
+    # the built-in glyph closed_circle_crosshairs: a circle with ticks
+    # running out to the edges
+    return (circle(12, 12, 6, fill=TINT) +
+            path('M12 2 V6 M18 12 H22 M12 18 V22 M2 12 H6'))
+
+
 @icon('region_other')
 def _():
     return (circle(7.5, 7.5, 4, fill=TINT) +

@@ -158,6 +158,7 @@ proc CreateIconsLeftMarkerShape {} {
     IconMenuButton $mb.shape [msgcat::mc {Polygon}] marker shape polygon {}
     IconMenuButton $mb.shape [msgcat::mc {Freehand}] marker shape freehand {}
     IconMenuButton $mb.shape [msgcat::mc {Text}] marker shape text {}
+    IconMenuButton $mb.shape [msgcat::mc {Glyph}] marker shape {glyph point} {}
 
     ConfigureIconsLeftMarkerShape
 
@@ -188,6 +189,8 @@ proc ConfigureIconsLeftMarkerShape {} {
 	[image create photo -file "$ds9(icons,ui)/freehand.png"]
     set icons(markershape,text) \
 	[image create photo -file "$ds9(icons,ui)/text.png"]
+    set {icons(markershape,glyph point)} \
+	[image create photo -file "$ds9(icons,ui)/glyph.png"]
     # special case
     set icons(markershape,default) \
 	[image create photo -file "$ds9(icons,ui)/region_other.png"]
@@ -199,6 +202,7 @@ proc ConfigureIconsLeftMarkerShape {} {
     $mb.shape.m entryconfig 4 -image $icons(markershape,polygon)
     $mb.shape.m entryconfig 5 -image $icons(markershape,freehand)
     $mb.shape.m entryconfig 6 -image $icons(markershape,text)
+    $mb.shape.m entryconfig 7 -image "$icons(markershape,glyph point)"
 
     IconMenuButtonCB $mb.shape marker shape write
 }

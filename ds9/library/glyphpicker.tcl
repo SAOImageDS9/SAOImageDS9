@@ -173,9 +173,12 @@ proc GlyphPickerLoad {} {
 # a glyph name to its {shape style variant}
 proc GlyphPickerClassify {nn} {
     switch -glob -- $nn {
-	open_circle* {list circle open [GlyphPickerOrient $nn]}
+	open_circle_gaps_top_bottom {list circle "open, 2 gaps" "gaps top/bottom"}
+	open_circle_gaps_left_right {list circle "open, 2 gaps" "gaps left/right"}
+	open_box*_gaps_* {list box "open, 2 gaps" [GlyphPickerCorners $nn]}
+	open_circle* {list circle "open, 4 gaps" [GlyphPickerOrient $nn]}
 	closed_circle* {list circle "closed + crosshairs" [GlyphPickerOrient $nn]}
-	open_box* {list box open [GlyphPickerCorners $nn]}
+	open_box* {list box "open, 4 gaps" [GlyphPickerCorners $nn]}
 	closed_box* {list box "closed + crosshairs" [GlyphPickerCorners $nn]}
 	closed_diamond* {list diamond "closed + crosshairs" [GlyphPickerCorners $nn]}
 	*_tee_* -

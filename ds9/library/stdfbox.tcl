@@ -126,6 +126,7 @@ proc InitDialogBox {} {
 			    [list {TIFF} {*.tiff}] \
 			    [list {TIFF} {*.tif}] \
 			    [list {PNG} {*.png}] \
+			    [list {SVG} {*.svg}] \
 			   ]
 
     global giffbox

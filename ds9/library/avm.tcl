@@ -13,7 +13,6 @@ package provide DS9 1.0
 # Called after a photo has been loaded into the current frame
 # data is the raw bytes of the image file
 proc AVMLoadPhoto {data} {
-    global wcs
     global current
     global debug
 
@@ -28,7 +27,7 @@ proc AVMLoadPhoto {data} {
     # keep the tags for the header dialog, tied to the file loaded
     AVMStoreFrame $current(frame) $varname
 
-    if {!$found || !$wcs(avm)} {
+    if {!$found} {
 	return
     }
 

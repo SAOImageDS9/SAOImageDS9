@@ -1154,7 +1154,6 @@
 ::msgcat::mcset ja {Upper Left Front} 左上手前
 ::msgcat::mcset ja {Upper Right Back} 右上奥
 ::msgcat::mcset ja {Upper Right Front} 右上手前
-::msgcat::mcset ja {Use AVM WCS for Photos} {写真にAVM WCSを使用}
 ::msgcat::mcset ja {Use Authentication} 認証を使用
 ::msgcat::mcset ja {Use Current Frame on Download} ダウンロード時に選択中のフレームを使用
 ::msgcat::mcset ja {Use Default Coordinates for Edits} 編集に標準の座標を使用

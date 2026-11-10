@@ -1,5 +1,4 @@
 set ALIGN_ 257
-set AVM_ 258
-set SKY_ 259
-set SKYFORMAT_ 260
-set SYSTEM_ 261
+set SKY_ 258
+set SKYFORMAT_ 259
+set SYSTEM_ 260

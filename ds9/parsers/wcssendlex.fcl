@@ -8,7 +8,6 @@
 %%
 
 align	    {return $ALIGN_}
-avm	    {return $AVM_}
 sky	    {return $SKY_}
 skyformat   {return $SKYFORMAT_}
 system	    {return $SYSTEM_}

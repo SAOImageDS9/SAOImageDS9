@@ -5,7 +5,6 @@
 %start wcssend
 
 %token ALIGN_
-%token AVM_
 %token SKY_
 %token SKYFORMAT_
 %token SYSTEM_
@@ -14,7 +13,6 @@
 
 wcssend : {ProcessSendCmdGet wcs system}
  | ALIGN_  {ProcessSendCmdYesNo current align}
- | AVM_ {ProcessSendCmdYesNo wcs avm}
  | SYSTEM_ {ProcessSendCmdGet wcs system}
  | SKY_ {ProcessSendCmdGet wcs sky}
  | SKYFORMAT_ {ProcessSendCmdGet wcs skyformat}

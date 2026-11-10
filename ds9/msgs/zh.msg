@@ -1154,7 +1154,6 @@
 ::msgcat::mcset zh {Upper Left Front} {左 上 前 方}
 ::msgcat::mcset zh {Upper Right Back} {右 上 後 方}
 ::msgcat::mcset zh {Upper Right Front} {右 上 前 方}
-::msgcat::mcset zh {Use AVM WCS for Photos} {对照片使用AVM WCS}
 ::msgcat::mcset zh {Use Authentication} {使 用 驗 證}
 ::msgcat::mcset zh {Use Current Frame on Download} {下 載 時 使 用 目 前 影 像 視 窗}
 ::msgcat::mcset zh {Use Default Coordinates for Edits} {編 輯 時 使 用 預 設 座 標}

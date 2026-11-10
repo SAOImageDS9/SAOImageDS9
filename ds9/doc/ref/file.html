@@ -26,6 +26,7 @@
 <a href="#tiff">TIFF</a><br>
 <a href="#jpeg">JPEG</a><br>
 <a href="#png">PNG</a><br>
+<a href="#AVM">Astronomy Visualization Metadata (AVM)</a><br>
 <a href="#ExternalFileSupport">External Format Support</a><br>
 <a href="#ExternalAnalysisSupport">External Analysis Support</a><br>
 <a href="#RegionFiles">Region Files</a><br>
@@ -377,6 +378,14 @@ filename<br>
 <br>
 Example:<br>
 $ ds9 -png foo.png</tt><br>
+<p><b><a name="AVM" id="AVM"></a>Astronomy Visualization Metadata (AVM)</b><br></p>
+Many press and outreach images carry <a href="https://noirlab.edu/public/education/avm/">Astronomy Visualization Metadata (AVM)</a>, stored as XMP tags inside GIF, TIFF, JPEG, and PNG files. When such an image is loaded and its <tt>Spatial</tt> tags describe the full sky position (<tt>Spatial.Quality</tt> is <tt>Full</tt>), DS9 builds a WCS from them and applies it to the image, as with <tt>wcs replace</tt>. If the image has been resized since it was tagged, the WCS is rescaled using <tt>Spatial.ReferenceDimension</tt>; if the image no longer matches it (for example, it was cropped), no WCS is applied. This can be turned off with <tt>wcs avm no</tt>, or the <tt>Use AVM WCS for Photos</tt> option in the WCS menu.<br>
+<br>
+The AVM tags themselves (title, description, credit, facility, bands, and so on) are listed after the FITS header in <tt>File Header</tt>.<br>
+<br>
+<tt>Example:<br>
+$ ds9 -png foo.png<br>
+$ ds9 -wcs avm no -png foo.png</tt><br>
 <p><b><a name="ExternalFileSupport" id="ExternalFileSupport"></a>External File Support</b></p>
 DS9 supports external file formats via an ASCII description file. When loading a file into DS9, these descriptions are referenced for instructions for loading the file, based on the file extension. If found, the command is executed and the result, a FITS image or FITS Binary Table, is read into DS9 via stdin.<br>
 At start-up, DS9 first searches for the ASCII file, named <tt>.ds9.fil</tt>in the local directory, then in the users home directory.<br>

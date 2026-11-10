@@ -2527,6 +2527,7 @@ proc ClearFrame {which} {
     }
 
     DestroyHeader $which
+    AVMClearFrame $which
     $which clear
 
     # after unload

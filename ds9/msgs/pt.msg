@@ -1154,7 +1154,6 @@
 ::msgcat::mcset pt {Upper Left Front} {Superior Esquerdo Frontal}
 ::msgcat::mcset pt {Upper Right Back} {Superior Direito Traseiro}
 ::msgcat::mcset pt {Upper Right Front} {Superior Direito Frontal}
-::msgcat::mcset pt {Use AVM WCS for Photos} {Usar WCS AVM para fotos}
 ::msgcat::mcset pt {Use Authentication} {Utilizar Autenticação}
 ::msgcat::mcset pt {Use Current Frame on Download} {Utilizar Frame Atual ao Descarregar}
 ::msgcat::mcset pt {Use Default Coordinates for Edits} {Usar Coordenadas Padrão para Edições}

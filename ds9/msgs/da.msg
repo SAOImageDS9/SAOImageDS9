@@ -1154,7 +1154,6 @@
 ::msgcat::mcset da {Upper Left Front} {Øverst venstre foran}
 ::msgcat::mcset da {Upper Right Back} {Øverst højre bag}
 ::msgcat::mcset da {Upper Right Front} {Øverst højre foran}
-::msgcat::mcset da {Use AVM WCS for Photos} {Brug AVM WCS til fotos}
 ::msgcat::mcset da {Use Authentication} {Anvend bekræftelse}
 ::msgcat::mcset da {Use Current Frame on Download} {Brug nuværende ramme til download}
 ::msgcat::mcset da {Use Default Coordinates for Edits} {Brug standardkoordinater ved redigering}

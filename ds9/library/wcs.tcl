@@ -15,8 +15,6 @@ proc WCSDef {} {
     set wcs(system) wcs
     set wcs(sky) icrs
     set wcs(skyformat) sexagesimal
-    # apply AVM WCS found in photo images
-    set wcs(avm) 1
 
     # temp
     set wcs(load,sock) {}

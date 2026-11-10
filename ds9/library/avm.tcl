@@ -13,11 +13,10 @@ package provide DS9 1.0
 # Called after a photo has been loaded into the current frame
 # data is the raw bytes of the image file
 proc AVMLoadPhoto {data} {
-    global wcs
     global current
     global debug
 
-    if {!$wcs(avm) || $current(frame) == {}} {
+    if {$current(frame) == {}} {
 	return
     }
 

@@ -3400,13 +3400,12 @@ $xpaset -p ds9 vo disconnect chandra-ed<br>
 $xpaset -p ds9 vo open<br>
 $xpaset -p ds9 vo close<br></tt>
 <p><b><a name="wcs" id="wcs"></a>wcs</b></p>
-<p>Controls the World Coordinate System for the current frame. If the wcs system, skyframe, or skyformat is modified, the info panel, compass, grid, and alignment will be modified accordingly. Also, using this access point, a new WCS specification can be loaded and used by the current image regardless of the WCS that was contained in the image file. If avm is yes (the default), a WCS is built from any Astronomy Visualization Metadata (AVM) found in PNG, JPEG, or TIFF images when they are loaded. WCS specification can be sent to DS9 as an ASCII file . Please see <a href="file.html#WCS">WCS</a> for more information.</p>
+<p>Controls the World Coordinate System for the current frame. If the wcs system, skyframe, or skyformat is modified, the info panel, compass, grid, and alignment will be modified accordingly. Also, using this access point, a new WCS specification can be loaded and used by the current image regardless of the WCS that was contained in the image file. WCS specification can be sent to DS9 as an ASCII file . Please see <a href="file.html#WCS">WCS</a> for more information.</p>
 <tt>Syntax:<br>
 wcs [[system] wcs|wcsa...wcsz]<br>
 &nbsp;&nbsp;&nbsp; [[sky] fk4|fk5|icrs|galactic|ecliptic]<br>
 &nbsp;&nbsp;&nbsp; [[skyformat] degrees|sexagesimal]<br>
 &nbsp;&nbsp;&nbsp; [align yes|no]<br>
-&nbsp;&nbsp;&nbsp; [avm yes|no]<br>
 &nbsp;&nbsp;&nbsp; [reset]<br>
 &nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [replace [&lt;integer&gt;][&lt;filename&gt;]]<br>
@@ -3420,7 +3419,6 @@ $xpaget ds9 wcs system<br>
 $xpaget ds9 wcs sky<br>
 $xpaget ds9 wcs skyformat<br>
 $xpaget ds9 wcs align<br>
-$xpaget ds9 wcs avm<br>
 <br>
 $xpaset -p ds9 wcs wcs<br>
 $xpaset -p ds9 wcs system wcs<br>
@@ -3429,7 +3427,6 @@ $xpaset -p ds9 wcs sky fk5<br>
 $xpaset -p ds9 wcs sexagesimal<br>
 $xpaset -p ds9 wcs skyformat sexagesimal<br>
 $xpaset -p ds9 wcs align yes<br>
-$xpaset -p ds9 wcs avm no<br>
 $xpaset -p ds9 wcs reset<br>
 $xpaset -p ds9 wcs load foo.wcs<br>
 $xpaset -p ds9 wcs replace 1 foo.wcs<br>

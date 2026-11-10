@@ -3552,13 +3552,12 @@ vo disconnect chandra-ed<br>
 vo open<br>
 vo close<br></tt>
 <p><b><a name="wcs" id="wcs"></a>wcs</b></p>
-<p>Controls the World Coordinate System for the current frame. If the wcs system, skyframe, or skyformat is modified, the info panel, compass, grid, and alignment will be modified accordingly. Also, using this access point, a new WCS specification can be loaded and used by the current image regardless of the WCS that was contained in the image file. If avm is yes (the default), a WCS is built from any Astronomy Visualization Metadata (AVM) found in PNG, JPEG, or TIFF images when they are loaded. WCS specification can be sent to DS9 as an ASCII file . Please see <a href="file.html#WCS">WCS</a> for more information.</p>
+<p>Controls the World Coordinate System for the current frame. If the wcs system, skyframe, or skyformat is modified, the info panel, compass, grid, and alignment will be modified accordingly. Also, using this access point, a new WCS specification can be loaded and used by the current image regardless of the WCS that was contained in the image file. WCS specification can be sent to DS9 as an ASCII file . Please see <a href="file.html#WCS">WCS</a> for more information.</p>
 <tt>Syntax:<br>
 wcs [[system] wcs|wcsa...wcsz]<br>
 &nbsp;&nbsp;&nbsp; [[sky] fk4|fk5|icrs|galactic|ecliptic]<br>
 &nbsp;&nbsp;&nbsp; [[skyformat] degrees|sexagesimal]<br>
 &nbsp;&nbsp;&nbsp; [align yes|no]<br>
-&nbsp;&nbsp;&nbsp; [avm yes|no]<br>
 &nbsp;&nbsp;&nbsp; [reset]<br>
 &nbsp;&nbsp;&nbsp; [load &lt;filename&gt;]<br>
 &nbsp;&nbsp;&nbsp; [replace [&lt;integer&gt;][&lt;filename&gt;]]<br>
@@ -3573,7 +3572,6 @@ wcs system<br>
 wcs sky<br>
 wcs skyformat<br>
 wcs align<br>
-wcs avm<br>
 <br>
 ds9.set(string cmd)<br>
 wcs wcs<br>
@@ -3583,7 +3581,6 @@ wcs sky fk5<br>
 wcs sexagesimal<br>
 wcs skyformat sexagesimal<br>
 wcs align yes<br>
-wcs avm no<br>
 wcs reset<br>
 wcs load foo.wcs<br>
 wcs replace 1 foo.wcs<br>

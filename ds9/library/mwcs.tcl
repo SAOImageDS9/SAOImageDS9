@@ -14,6 +14,9 @@ proc WCSMainMenu {} {
     $ds9(mb).wcs add separator
     $ds9(mb).wcs add command -label [msgcat::mc {WCS Parameters}] \
 	-command WCSDialog
+    $ds9(mb).wcs add separator
+    $ds9(mb).wcs add checkbutton -label [msgcat::mc {Use AVM WCS for Photos}] \
+	-variable wcs(avm)
 }
 
 proc UpdateWCSMenu {} {
@@ -58,6 +61,9 @@ proc PrefsDialogWCSMenu {w} {
     grid $f.menu $f.buttonbar -padx 2 -pady 2 -sticky w
 
     CoordMenu $f.menu.menu pwcs system 0 sky skyformat {}
+    $f.menu.menu add separator
+    $f.menu.menu add checkbutton -label [msgcat::mc {Use AVM WCS for Photos}] \
+	-variable pwcs(avm)
 
     pack $f -side top -fill both -expand true
 }

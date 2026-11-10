@@ -27,6 +27,7 @@ proc DebugDef {} {
     set debug(tcl,ftp) 0
     set debug(tcl,xpa) 0
     set debug(tcl,image) 0
+    set debug(tcl,avm) 0
 
     set debug(tksao,mosaic) 0
     set debug(tksao,parser) 0
@@ -107,6 +108,8 @@ proc DebugMenu {} {
 	-variable debug(tcl,xpa)
     $ds9(mb).debug.tcl add checkbutton -label {IMAGE} \
 	-variable debug(tcl,image)
+    $ds9(mb).debug.tcl add checkbutton -label {AVM} \
+	-variable debug(tcl,avm)
 
     ThemeMenu $ds9(mb).debug.tksao
     $ds9(mb).debug.tksao add checkbutton -label {Mosaic} \
@@ -205,6 +208,7 @@ proc ProcessDebugTclCmd {varname iname} {
 	http {set debug(tcl,http) 1}
 	ftp {set debug(tcl,ftp) 1}
 	xpa {set debug(tcl,xpa) 1}
+	avm {set debug(tcl,avm) 1}
 	image {
 	    set debug(tcl,hv) 1
 	    set debug(tcl,http) 1

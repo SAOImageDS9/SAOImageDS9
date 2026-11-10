@@ -1154,6 +1154,7 @@
 ::msgcat::mcset cs {Upper Left Front} {Vlevo nahoře vpředu}
 ::msgcat::mcset cs {Upper Right Back} {Vpravo nahoře vzadu}
 ::msgcat::mcset cs {Upper Right Front} {Vpravo nahoře vpředu}
+::msgcat::mcset cs {Use AVM WCS for Photos} {Použít AVM WCS pro fotografie}
 ::msgcat::mcset cs {Use Authentication} {Použít ověření}
 ::msgcat::mcset cs {Use Current Frame on Download} {Při stažení použít aktuální snímek}
 ::msgcat::mcset cs {Use Default Coordinates for Edits} {Použít výchozí koordináty pro úpravy}

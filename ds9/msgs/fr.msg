@@ -1154,6 +1154,7 @@
 ::msgcat::mcset fr {Upper Left Front} {Haut gauche avant}
 ::msgcat::mcset fr {Upper Right Back} {Haut droite arrière}
 ::msgcat::mcset fr {Upper Right Front} {Haut droite avant}
+::msgcat::mcset fr {Use AVM WCS for Photos} {Utiliser le WCS AVM pour les photos}
 ::msgcat::mcset fr {Use Authentication} {Utiliser l'authentification}
 ::msgcat::mcset fr {Use Current Frame on Download} {Utiliser la fenêtre courante au téléchargement}
 ::msgcat::mcset fr {Use Default Coordinates for Edits} {Utiliser les coordonnées par défaut pour les modifications}

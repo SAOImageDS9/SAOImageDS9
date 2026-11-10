@@ -9,6 +9,7 @@
 
 align	    {return $ALIGN_}
 append	    {return $APPEND_}
+avm	    {return $AVM_}
 close	    {return $CLOSE_}
 load	    {return $LOAD_}
 open	    {return $OPEN_}

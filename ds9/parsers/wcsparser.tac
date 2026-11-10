@@ -13,6 +13,7 @@
 
 %token ALIGN_
 %token APPEND_
+%token AVM_
 %token CLOSE_
 %token LOAD_
 %token OPEN_
@@ -43,6 +44,7 @@ wcs : OPEN_ {WCSDialog}
  | skyformat {ProcessCmdSet wcs skyformat $1 UpdateWCS}
  | SKYFORMAT_ skyformat {ProcessCmdSet wcs skyformat $2 UpdateWCS}
  | ALIGN_ yesno {ProcessCmdSet current align $2 AlignWCSFrame}
+ | AVM_ yesno {ProcessCmdSet wcs avm $2}
  | LOAD_ STRING_ {WCSCmdLoadFn replace 1 $2}
  | REPLACE_ replace
  | APPEND_ append

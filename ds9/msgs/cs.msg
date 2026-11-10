@@ -108,6 +108,7 @@
 ::msgcat::mcset cs Bins Biny
 ::msgcat::mcset cs Bin Binování
 ::msgcat::mcset cs Black Černá
+::msgcat::mcset cs {Blank = built-in image} {Prázdné = vestavěný obrázek}
 ::msgcat::mcset cs {Blank/Inf/NaN Color} {Barva nedefinovaných pixelů}
 ::msgcat::mcset cs Blend Prolnutí
 ::msgcat::mcset cs {Blink Frames} {Problikávej snímky}
@@ -417,6 +418,7 @@
 ::msgcat::mcset cs Gist Gist
 ::msgcat::mcset cs {Global Properties} {Globální vlastnosti}
 ::msgcat::mcset cs Global Globální
+::msgcat::mcset cs Glyph Glyf
 ::msgcat::mcset cs {Goto First Frame} {Na první snímek}
 ::msgcat::mcset cs {Goto Frame} {Běž na snímek}
 ::msgcat::mcset cs {Goto Last Frame} {Na poslední snímek}
@@ -432,6 +434,7 @@
 ::msgcat::mcset cs Graph Graf
 ::msgcat::mcset cs {Grayscale (PS only)} {Stupně šedi (pouze PS)}
 ::msgcat::mcset cs Grayscale {Stupně šedi}
+::msgcat::mcset cs Gray Šedá
 ::msgcat::mcset cs Green Zelená
 ::msgcat::mcset cs {Grid Gap} {Mezera mřížky}
 ::msgcat::mcset cs Grid Mřížka
@@ -784,6 +787,7 @@
 ::msgcat::mcset cs {Other Font Size} {Jiná velikost písma}
 ::msgcat::mcset cs Other Jiné
 ::msgcat::mcset cs Outer Vnější
+::msgcat::mcset cs Outlined {S obrysem}
 ::msgcat::mcset cs Overlay Překrýt
 ::msgcat::mcset cs Overplot Přikreslit
 ::msgcat::mcset cs {Override Color} {Přepsat barvu}
@@ -810,6 +814,7 @@
 ::msgcat::mcset cs {Pixel Mask} {Pixelová maska}
 ::msgcat::mcset cs {Pixel Size} {Velikost pixelu}
 ::msgcat::mcset cs {Pixel Table} {Pixel tabulka}
+::msgcat::mcset cs {Pixels (0 = native)} {Pixely (0 = původní)}
 ::msgcat::mcset cs Pixels Pixelů
 ::msgcat::mcset cs Planets Planety
 ::msgcat::mcset cs Play Přehrát
@@ -1042,6 +1047,7 @@
 ::msgcat::mcset cs {Strip Parameters} {Parametry pásu}
 ::msgcat::mcset cs {Strip Scale} {Měřítko pásu}
 ::msgcat::mcset cs Strip Pás
+::msgcat::mcset cs Style Styl
 ::msgcat::mcset cs Subscriptions Odběry
 ::msgcat::mcset cs Sum Součet
 ::msgcat::mcset cs {Surface Lighting} {Osvětlení povrchu}
@@ -1174,6 +1180,7 @@
 ::msgcat::mcset cs VOT VOT
 ::msgcat::mcset cs VO VO
 ::msgcat::mcset cs Value Hodnota
+::msgcat::mcset cs Variant Varianta
 ::msgcat::mcset cs Vector Vektor
 ::msgcat::mcset cs {Vertical Graph} {Vertikální graf}
 ::msgcat::mcset cs {Vertical Layout} {Vertikální rozložení}

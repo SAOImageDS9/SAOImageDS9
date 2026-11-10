@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DS9 glyph: open_circle_gaps_left_right -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 256 256">
+ <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M218.63,85.74 A100,100 0 0 0 37.37,85.74"/>
+  <path d="M37.37,170.26 A100,100 0 0 0 218.63,170.26"/>
+ </g>
+</svg>

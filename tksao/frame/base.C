@@ -23,6 +23,7 @@
 #include "tkColor.h"
 
 #include <algorithm>
+#include <map>
 #include <vector>
 
 static int EvalObjv(Tcl_Interp* interp, Tcl_Size objc, Tcl_Obj** objv)
@@ -481,6 +482,7 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
   useMarkerColor_ =0;
   markerColor_ = dupstr("green");
+  markerFileDir_ = NULL;
 
   markerGC_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
   markerGCXOR_ = XCreateGC(display, Tk_WindowId(tkwin), 0, NULL);
@@ -521,6 +523,8 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
 
 Base::~Base()
 {
+  if (markerFileDir_)
+    delete [] markerFileDir_;
   if (regionStatsIdleScheduled_)
     Tcl_CancelIdleCall(regionStatsIdleProc,(ClientData)this);
   if (regionStatsCallback_)
@@ -1602,6 +1606,7 @@ int Base::pdfVectorLayers(Tcl_Obj* pdfObj)
   int rr = TCL_OK;
   istringstream istr(ps);
   string tok;
+  std::map<string,string> glyphImages; // photo -> pdf image id
 
   while (rr == TCL_OK && istr >> tok) {
     if (tok[0] == '(') {
@@ -1756,7 +1761,63 @@ int Base::pdfVectorLayers(Tcl_Obj* pdfObj)
       continue;
     }
 
-    if (tok == "translate" && stack.size() >= 2) {
+    if (tok == "ds9glyph" && stack.size() >= 4) {
+      // glyph region: x y w h (photo) ds9glyph, see Point::renderPSGlyph.
+      // PDFAddPhoto (ds9 pdf.tcl, shared with illustrate images) adds the
+      // photo with its alpha as a soft mask; without it, fall back to an
+      // opaque addRawImage. A failure skips the glyph, not the whole pdf.
+      double hh = stack.back(); stack.pop_back();
+      double ww = stack.back(); stack.pop_back();
+      double yy = stack.back(); stack.pop_back();
+      double xx = stack.back(); stack.pop_back();
+      string name = text;
+      text.erase();
+
+      string id;
+      std::map<string,string>::iterator it = glyphImages.find(name);
+      if (it != glyphImages.end())
+	id = it->second;
+      else {
+	Tcl_Obj* addObjv[3];
+	addObjv[0] = Tcl_NewStringObj("PDFAddPhoto", -1);
+	addObjv[1] = pdfObj;
+	addObjv[2] = Tcl_NewStringObj(name.c_str(), -1);
+	if (EvalObjv(interp, 3, addObjv) == TCL_OK) {
+	  id = Tcl_GetStringResult(interp);
+	  glyphImages[name] = id;
+	}
+      }
+      if (id.empty()) {
+	Tcl_Obj* dataObjv[2];
+	dataObjv[0] = Tcl_NewStringObj(name.c_str(), -1);
+	dataObjv[1] = Tcl_NewStringObj("data", -1);
+	if (EvalObjv(interp, 2, dataObjv) == TCL_OK) {
+	  Tcl_Obj* dataObj = Tcl_GetObjResult(interp);
+	  Tcl_IncrRefCount(dataObj);
+	  if (PdfMethod(interp, pdfObj, "addRawImage", 1, &dataObj) == TCL_OK) {
+	    id = Tcl_GetStringResult(interp);
+	    glyphImages[name] = id;
+	  }
+	  Tcl_DecrRefCount(dataObj);
+	}
+      }
+
+      if (!id.empty()) {
+	Tcl_Obj* putArgs[9];
+	putArgs[0] = Tcl_NewStringObj(id.c_str(), -1);
+	putArgs[1] = Tcl_NewDoubleObj(xx+tx);
+	putArgs[2] = Tcl_NewDoubleObj(yy+ty);
+	putArgs[3] = Tcl_NewStringObj("-width", -1);
+	putArgs[4] = Tcl_NewDoubleObj(ww);
+	putArgs[5] = Tcl_NewStringObj("-height", -1);
+	putArgs[6] = Tcl_NewDoubleObj(hh);
+	putArgs[7] = Tcl_NewStringObj("-anchor", -1);
+	putArgs[8] = Tcl_NewStringObj("nw", -1);
+	PdfMethod(interp, pdfObj, "putImage", 9, putArgs);
+      }
+      Tcl_ResetResult(interp);
+    }
+    else if (tok == "translate" && stack.size() >= 2) {
       double y = stack.back(); stack.pop_back();
       double x = stack.back(); stack.pop_back();
       tx += x;

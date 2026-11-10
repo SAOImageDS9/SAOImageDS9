@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DS9 glyph: one_wye_top_right -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 256 256">
+ <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M147.4,68.6 L187.4,68.6 L187.4,108.6"/>
+  <path d="M187.4,68.6 L215.68,40.32"/>
+ </g>
+</svg>

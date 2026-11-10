@@ -108,6 +108,7 @@
 ::msgcat::mcset es Bins Bins
 ::msgcat::mcset es Bin Bin
 ::msgcat::mcset es Black Negro
+::msgcat::mcset es {Blank = built-in image} {Vacío = imagen integrada}
 ::msgcat::mcset es {Blank/Inf/NaN Color} {Color en blanco/Inf/NaN}
 ::msgcat::mcset es Blend Fusión
 ::msgcat::mcset es {Blink Frames} {Parpadear Marcos}
@@ -417,6 +418,7 @@
 ::msgcat::mcset es Gist Gist
 ::msgcat::mcset es {Global Properties} {Propiedades globales}
 ::msgcat::mcset es Global Global
+::msgcat::mcset es Glyph Glifo
 ::msgcat::mcset es {Goto First Frame} {Ir al primer marco}
 ::msgcat::mcset es {Goto Frame} {Ir al marco}
 ::msgcat::mcset es {Goto Last Frame} {Ir al último marco}
@@ -432,6 +434,7 @@
 ::msgcat::mcset es Graph Gráfica
 ::msgcat::mcset es {Grayscale (PS only)} {Escala de grises (solo PS)}
 ::msgcat::mcset es Grayscale {Escala de grises}
+::msgcat::mcset es Gray Gris
 ::msgcat::mcset es Green Verde
 ::msgcat::mcset es {Grid Gap} {Espaciado de la cuadrícula}
 ::msgcat::mcset es Grid Cuadrícula
@@ -784,6 +787,7 @@
 ::msgcat::mcset es {Other Font Size} {Otro tamaño de fuente}
 ::msgcat::mcset es Other Otro
 ::msgcat::mcset es Outer Exterior
+::msgcat::mcset es Outlined Contorneado
 ::msgcat::mcset es Overlay Superponer
 ::msgcat::mcset es Overplot {Superponer gráfico}
 ::msgcat::mcset es {Override Color} {Forzar color}
@@ -810,6 +814,7 @@
 ::msgcat::mcset es {Pixel Mask} {Máscara de píxeles}
 ::msgcat::mcset es {Pixel Size} {Tamaño del píxel}
 ::msgcat::mcset es {Pixel Table} {Tabla en píxeles}
+::msgcat::mcset es {Pixels (0 = native)} {Píxeles (0 = original)}
 ::msgcat::mcset es Pixels Píxeles
 ::msgcat::mcset es Planets Planetas
 ::msgcat::mcset es Play Reproducir
@@ -1042,6 +1047,7 @@
 ::msgcat::mcset es {Strip Parameters} {Parámetros de la tira}
 ::msgcat::mcset es {Strip Scale} {Escala de la tira}
 ::msgcat::mcset es Strip Tira
+::msgcat::mcset es Style Estilo
 ::msgcat::mcset es Subscriptions Suscripciones
 ::msgcat::mcset es Sum Suma
 ::msgcat::mcset es {Surface Lighting} {Iluminación de superficie}
@@ -1174,6 +1180,7 @@
 ::msgcat::mcset es VOT VOT
 ::msgcat::mcset es VO VO
 ::msgcat::mcset es Value Valor
+::msgcat::mcset es Variant Variante
 ::msgcat::mcset es Vector Vector
 ::msgcat::mcset es {Vertical Graph} {Gráfica vertical}
 ::msgcat::mcset es {Vertical Layout} {Distribución vertical}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DS9 glyph: four_inward_vees_rot45_outlined -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 256 256">
+ <g fill="none" stroke="#000000" stroke-width="24" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M227.21,64.15 L178.91,77.09 L191.85,28.79"/>
+  <path d="M64.15,28.79 L77.09,77.09 L28.79,64.15"/>
+  <path d="M28.79,191.85 L77.09,178.91 L64.15,227.21"/>
+  <path d="M191.85,227.21 L178.91,178.91 L227.21,191.85"/>
+ </g>
+ <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M223.34,65.18 L178.91,77.09 L190.82,32.66"/>
+  <path d="M65.18,32.66 L77.09,77.09 L32.66,65.18"/>
+  <path d="M32.66,190.82 L77.09,178.91 L65.18,223.34"/>
+  <path d="M190.82,223.34 L178.91,178.91 L223.34,190.82"/>
+ </g>
+</svg>

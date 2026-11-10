@@ -104,6 +104,8 @@ proc CATDef {} {
     set pcat(sym,font,size) 10
     set pcat(sym,font,weight) normal
     set pcat(sym,font,slant) roman
+    # empty: built-in image, see GlyphDefaultFile
+    set pcat(sym,glyph) {}
 }
 
 proc CATLoad {varname url query} {
@@ -950,6 +952,11 @@ proc PrefsDialogCatalog {} {
     FontMenuButton $f.font pcat sym,font sym,font,size \
 	sym,font,weight sym,font,slant {}
 
+    ttk::label $f.gtitle -text [msgcat::mc {Glyph}]
+    ttk::entry $f.glyph -textvariable pcat(sym,glyph) -width 30
+    ttk::button $f.gbrowse -text "[msgcat::mc {Browse}]..." \
+	-command PrefsCatGlyphBrowse
+
     ThemeMenu $f.svr.menu
 
     set ll [llength $icat(server,menu)]
@@ -987,12 +994,16 @@ proc PrefsDialogCatalog {} {
     $f.shape.menu.point add radiobutton -label [msgcat::mc {BoxCircle}] \
 	-variable pcat(sym,shape) -value {boxcircle point}
     $f.shape.menu.point add separator
+    $f.shape.menu.point add radiobutton -label [msgcat::mc {Glyph}] \
+	-variable pcat(sym,shape) -value {glyph point}
+    $f.shape.menu.point add separator
 
     grid $f.stitle $f.svr -padx 2 -pady 2 -sticky w
     grid $f.shtitle $f.shape -padx 2 -pady 2 -sticky w
     grid $f.ctitle $f.color -padx 2 -pady 2 -sticky w
     grid $f.cwidth $f.width -padx 2 -pady 2 -sticky w
     grid $f.ftitle $f.font -padx 2 -pady 2 -sticky w
+    grid $f.gtitle $f.glyph - $f.gbrowse -padx 2 -pady 2 -sticky w
     grid $f.loctitle - - $f.loc -padx 2 -pady 2 -sticky w
 
     pack $f -side top -fill both -expand true
@@ -1197,6 +1208,7 @@ proc CatalogCmdSymbol {col value} {
     upvar #0 $cvarname cvar
     global $cvar(symdb)
 
+    CATSymEnsureCols $cvar(symdb)
     starbase_set $cvar(symdb) $cvar(row) \
 	[starbase_colnum $cvar(symdb) $col] $value
     CATGenerate $cvarname
@@ -1243,6 +1255,7 @@ proc CatalogCmdSymbolAdd {} {
 
     global pcat
 
+    CATSymEnsureCols $cvar(symdb)
     set row [expr [starbase_nrows $cvar(symdb)]+1]
     starbase_rowins $cvar(symdb) $row
     starbase_set $cvar(symdb) $row \
@@ -1262,6 +1275,8 @@ proc CatalogCmdSymbolAdd {} {
     starbase_set $cvar(symdb) $row \
 	[starbase_colnum $cvar(symdb) fontslant] \
 	$pcat(sym,font,slant)
+    starbase_set $cvar(symdb) $row \
+	[starbase_colnum $cvar(symdb) glyph] $pcat(sym,glyph)
     starbase_set $cvar(symdb) $row \
 	[starbase_colnum $cvar(symdb) units] $pcat(sym,units)
     CATGenerate $cvarname
@@ -1288,7 +1303,13 @@ proc CatalogCmdSymbolLoad {fn} {
     global $cvar(symdb)
 
     if {[file exists $fn]} {
+	# start clean, as CATSymLoad does, or columns missing from the file
+	# keep stale mappings from the previous table
+	if {[info exists $cvar(symdb)]} {
+	    unset $cvar(symdb)
+	}
 	starbase_read $cvar(symdb) $fn
+	CATSymEnsureCols $cvar(symdb)
 	CATGenerate $cvarname
     } else {
 	Error "[msgcat::mc {Unable to open file}] $fn"
@@ -1305,4 +1326,13 @@ proc CatalogCmdSymbolSave {fn} {
     global $cvar(symdb)
 
     starbase_write $cvar(symdb) $fn
+}
+
+proc PrefsCatGlyphBrowse {} {
+    global pcat
+
+    set fn [GlyphPicker $pcat(sym,glyph) $pcat(sym,color)]
+    if {$fn ne {}} {
+	set pcat(sym,glyph) $fn
+    }
 }

@@ -108,6 +108,7 @@
 ::msgcat::mcset da Bins Bins
 ::msgcat::mcset da Bin Bin
 ::msgcat::mcset da Black Sort
+::msgcat::mcset da {Blank = built-in image} {Tom = indbygget billede}
 ::msgcat::mcset da {Blank/Inf/NaN Color} {Blank/Inf/NaN farve}
 ::msgcat::mcset da Blend Bland
 ::msgcat::mcset da {Blink Frames} {Blink rammer}
@@ -417,6 +418,7 @@
 ::msgcat::mcset da Gist Gist
 ::msgcat::mcset da {Global Properties} {Globale egenskaber}
 ::msgcat::mcset da Global Global
+::msgcat::mcset da Glyph Glyf
 ::msgcat::mcset da {Goto First Frame} {Gå til første ramme}
 ::msgcat::mcset da {Goto Frame} {Gå til ramme}
 ::msgcat::mcset da {Goto Last Frame} {Gå til sidste ramme}
@@ -432,6 +434,7 @@
 ::msgcat::mcset da Graph graf
 ::msgcat::mcset da {Grayscale (PS only)} {Gråskala (kun PS)}
 ::msgcat::mcset da Grayscale Gråskala
+::msgcat::mcset da Gray Grå
 ::msgcat::mcset da Green Grøn
 ::msgcat::mcset da {Grid Gap} {Mellemrum i nettet}
 ::msgcat::mcset da Grid Net
@@ -784,6 +787,7 @@
 ::msgcat::mcset da {Other Font Size} {Anden skriftstørrelse}
 ::msgcat::mcset da Other Anden
 ::msgcat::mcset da Outer Ydre
+::msgcat::mcset da Outlined {Med omrids}
 ::msgcat::mcset da Overlay Overlejring
 ::msgcat::mcset da Overplot Overplot
 ::msgcat::mcset da {Override Color} {Tilsidesæt farve}
@@ -810,6 +814,7 @@
 ::msgcat::mcset da {Pixel Mask} Pixelmaske
 ::msgcat::mcset da {Pixel Size} Pixelstørrelse
 ::msgcat::mcset da {Pixel Table} {Pixel tabel}
+::msgcat::mcset da {Pixels (0 = native)} {Pixler (0 = oprindelig)}
 ::msgcat::mcset da Pixels Pixler
 ::msgcat::mcset da Planets Planeter
 ::msgcat::mcset da Play Afspil
@@ -1042,6 +1047,7 @@
 ::msgcat::mcset da {Strip Parameters} {Strip parametre}
 ::msgcat::mcset da {Strip Scale} {Strip skala}
 ::msgcat::mcset da Strip Strip
+::msgcat::mcset da Style Stil
 ::msgcat::mcset da Subscriptions Abonnementer
 ::msgcat::mcset da Sum Sum
 ::msgcat::mcset da {Surface Lighting} Overfladebelysning
@@ -1174,6 +1180,7 @@
 ::msgcat::mcset da VOT VOT
 ::msgcat::mcset da VO VO
 ::msgcat::mcset da Value Værdi
+::msgcat::mcset da Variant Variant
 ::msgcat::mcset da Vector Vektor
 ::msgcat::mcset da {Vertical Graph} {Lodret graf}
 ::msgcat::mcset da {Vertical Layout} {Lodret layoyt}

@@ -108,6 +108,7 @@
 ::msgcat::mcset pt Bins Bins
 ::msgcat::mcset pt Bin Bin
 ::msgcat::mcset pt Black Preto
+::msgcat::mcset pt {Blank = built-in image} {Vazio = imagem embutida}
 ::msgcat::mcset pt {Blank/Inf/NaN Color} {Cor Preto/Inf/NaN}
 ::msgcat::mcset pt Blend Mesclagem
 ::msgcat::mcset pt {Blink Frames} {Blinkar quadros}
@@ -417,6 +418,7 @@
 ::msgcat::mcset pt Gist Gist
 ::msgcat::mcset pt {Global Properties} {Propriedades Globais}
 ::msgcat::mcset pt Global Global
+::msgcat::mcset pt Glyph Glifo
 ::msgcat::mcset pt {Goto First Frame} {Ir para o Primeiro Frame}
 ::msgcat::mcset pt {Goto Frame} {Ir para o Frame}
 ::msgcat::mcset pt {Goto Last Frame} {Ir para o Último Frame}
@@ -432,6 +434,7 @@
 ::msgcat::mcset pt Graph Gráfico
 ::msgcat::mcset pt {Grayscale (PS only)} {Escala de Cinza (somente PS)}
 ::msgcat::mcset pt Grayscale {Tons de cinza}
+::msgcat::mcset pt Gray Cinza
 ::msgcat::mcset pt Green Verde
 ::msgcat::mcset pt {Grid Gap} {Espaço da Grade}
 ::msgcat::mcset pt Grid Grade
@@ -784,6 +787,7 @@
 ::msgcat::mcset pt {Other Font Size} {Outro Tamanho de Fonte}
 ::msgcat::mcset pt Other Outro
 ::msgcat::mcset pt Outer Fora
+::msgcat::mcset pt Outlined Contornado
 ::msgcat::mcset pt Overlay Sobrepor
 ::msgcat::mcset pt Overplot {Sobrepor Gráfico}
 ::msgcat::mcset pt {Override Color} {Substituir Cor}
@@ -810,6 +814,7 @@
 ::msgcat::mcset pt {Pixel Mask} {Máscara de Pixels}
 ::msgcat::mcset pt {Pixel Size} {Tamanho do Pixel}
 ::msgcat::mcset pt {Pixel Table} {Tabela de Pixels}
+::msgcat::mcset pt {Pixels (0 = native)} {Pixels (0 = original)}
 ::msgcat::mcset pt Pixels Pixels
 ::msgcat::mcset pt Planets Planetas
 ::msgcat::mcset pt Play Execute
@@ -1042,6 +1047,7 @@
 ::msgcat::mcset pt {Strip Parameters} {Parâmetros de Faixa}
 ::msgcat::mcset pt {Strip Scale} {Escala da Faixa}
 ::msgcat::mcset pt Strip Faixa
+::msgcat::mcset pt Style Estilo
 ::msgcat::mcset pt Subscriptions Assinaturas
 ::msgcat::mcset pt Sum Soma
 ::msgcat::mcset pt {Surface Lighting} {Iluminação da Superfície}
@@ -1174,6 +1180,7 @@
 ::msgcat::mcset pt VOT VOT
 ::msgcat::mcset pt VO VO
 ::msgcat::mcset pt Value Valor
+::msgcat::mcset pt Variant Variante
 ::msgcat::mcset pt Vector Vetor
 ::msgcat::mcset pt {Vertical Graph} {Gráfico Vertical}
 ::msgcat::mcset pt {Vertical Layout} {Layout Vertical}

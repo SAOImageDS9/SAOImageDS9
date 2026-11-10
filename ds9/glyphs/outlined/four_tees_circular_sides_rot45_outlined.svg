@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DS9 glyph: four_tees_circular_sides_rot45_outlined -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 256 256">
+ <g fill="none" stroke="#000000" stroke-width="24" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M191.14,117.53 A64,64 0 0 0 138.47,64.86"/>
+  <path d="M170.43,85.57 L215.68,40.32"/>
+  <path d="M117.53,64.86 A64,64 0 0 0 64.86,117.53"/>
+  <path d="M85.57,85.57 L40.32,40.32"/>
+  <path d="M64.86,138.47 A64,64 0 0 0 117.53,191.14"/>
+  <path d="M85.57,170.43 L40.32,215.68"/>
+  <path d="M138.47,191.14 A64,64 0 0 0 191.14,138.47"/>
+  <path d="M170.43,170.43 L215.68,215.68"/>
+ </g>
+ <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M190.36,113.6 A64,64 0 0 0 142.4,65.64"/>
+  <path d="M173.25,82.75 L212.85,43.15"/>
+  <path d="M113.6,65.64 A64,64 0 0 0 65.64,113.6"/>
+  <path d="M82.75,82.75 L43.15,43.15"/>
+  <path d="M65.64,142.4 A64,64 0 0 0 113.6,190.36"/>
+  <path d="M82.75,173.25 L43.15,212.85"/>
+  <path d="M142.4,190.36 A64,64 0 0 0 190.36,142.4"/>
+  <path d="M173.25,173.25 L212.85,212.85"/>
+ </g>
+</svg>

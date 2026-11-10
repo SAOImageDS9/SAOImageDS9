@@ -30,7 +30,15 @@ Usage: polygon x1 y1 x2 y2 x3 y3 ...# fill=[0|1]</tt></p>
 <p>The <tt>freehand</tt> region shape (Region menu, Shape, Freehand) draws a polygon by dragging out its outline with the mouse. The trace is simplified to a modest number of vertices and becomes an ordinary polygon region, saved and edited like any other. A click or a nearly straight drag creates a default polygon. Press Escape while dragging to cancel.</p>
 <p><tt>Point<br>
 Usage: point x y # point=[circle|box|diamond|cross|x|arrow|boxcircle] [size]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; point x y # point=glyph [size] {filename}<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; circle point x y&nbsp;</tt></p>
+<p>A <tt>glyph</tt> point draws an image of your own (PNG, GIF, or any format Tk can read) instead of a symbol, as a marker. Like other points, it is anchored to image/WCS coordinates and follows pan, zoom, rotate, tile and blink, but it is always drawn upright and at a fixed size in screen pixels, so it does not grow or shrink when you zoom. <tt>size</tt> is in screen pixels: the image is scaled to fit a square of that size, keeping its aspect ratio; leave it out (or use 0) for the image's native size. Transparency (the alpha channel) is respected on screen and in PDF output; PostScript output skips fully transparent pixels and prints the rest opaque, as for illustrate images. In SVG files, white (<tt>#ffffff</tt>, <tt>#fff</tt>, <tt>white</tt> or <tt>rgb(255,255,255)</tt>) and <tt>currentColor</tt> used as a fill, stroke or color are drawn in the region <tt>color</tt>, so one SVG file can be used in any color; use a near white such as <tt>#fefefe</tt> for parts that must stay white. Other formats are drawn as is. The region <tt>color</tt> is also used for the outline drawn while dragging, when the region is highlighted, and when the file cannot be read, in which case a box with an X is drawn instead.</p>
+<p>A relative <tt>filename</tt> in a region file is taken relative to the region file's directory, and when regions are saved, a glyph file at or below the directory of the saved file is written as a relative path, so a region file and its images can be moved together. Backup copies each glyph file into the backup. Formats other than DS9, such as CIAO, keep a glyph as a plain point; only the DS9 format keeps the image. <tt>point=glyph</tt> may also be set as a global property, to apply to every point that does not set its own shape.</p>
+<p>ds9 also ships a set of built-in glyphs: crosshair style markers (circles, boxes, diamonds, tees, wyes, vees and gapped crosses, upright and rotated 45 degrees), each also in an outlined version with a black edge that stays visible on bright parts of the image. They are SVG files with a native size of 64 pixels and are drawn in the region color. Name one with <tt>builtin://</tt> followed by its file name, for example <tt>builtin://gapped_plus.svg</tt> or <tt>builtin://outlined/gapped_plus_outlined.svg</tt>. These names are not paths: they are saved, loaded and backed up exactly as written, and they work on any ds9 installation. An unknown name is drawn as a box with an X.</p>
+<p>To create one interactively, choose Region menu, Shape, Point, Glyph and click on the image. The image used is the Glyph File set in Preferences (Region), or a built-in image if none is set; double click the region to choose a different file or change its size, or drag a corner handle to resize it. The Browse... button in the point dialog (and in Preferences) opens the Glyph picker: narrow the built-in glyphs down by Shape, Style and Variant, check Outlined for the outlined version, and press OK; previews show the glyph in the region color at several sizes. Its Browse... button chooses an image file of your own instead.</p>
+<p><tt>Example: point(100,100) # point=glyph {stars/red.png} text={Target}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fk5; point(13:29:52.7,+47:11:43) # point=glyph 32 {/data/glyphs/galaxy.png}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;point(200,150) # point=glyph 32 {builtin://outlined/closed_circle_crosshairs_outlined.svg} color=red</tt></p>
 <p><tt>Line<br>
 Usage: line x1 y1 x2 y2 # line=&lt;end&gt; &lt;end&gt;</tt></p>
 <p><tt>Vector<br>
@@ -154,8 +162,9 @@ Example: line(100,100,200,200) # line=opencircle chevron</tt>
 <p>The format of the distance can be defined via a format string, which is any valid string for use in printf() to display an integer or real value (i.e. %d, %e, %f), and may be quoted with " or ' or {}. For best results, use {}.</p>
 <tt>Example: ruler(100,100,200,200) # ruler=arcmin format={%e}</tt>
 <p><b>Point</b></p>
-<p>Point regions have an associated type and size. Use the point property to set the point type.</p>
-<tt>Example: point(100,100) # point=diamond 31</tt>
+<p>Point regions have an associated type and size. Use the point property to set the point type. For a glyph, the image file name follows the optional size.</p>
+<tt>Example: point(100,100) # point=diamond 31<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;point(100,100) # point=glyph 24 {star.png}</tt>
 <p><b>Text</b></p>
 <p>Text regions may have a text angle and rotate property. Use <tt>textangle</tt> to specify angle in degress based on current coordinate system axes. Use <tt>textrotate</tt> to enable or disable text rotation.<br></p>
 <tt>Example: text(731,957) textangle=30 textrotate=0 text={Region}</tt>

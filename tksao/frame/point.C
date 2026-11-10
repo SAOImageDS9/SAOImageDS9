@@ -16,6 +16,7 @@ Point::Point(Base* p, const Vector& ctr)
   shape_ = CIRCLE;
   shapeStr(shape_);
   size_ = 11;
+  initGlyph();
 
   handle = new Vector[4];
   numHandle = 4;
@@ -36,6 +37,7 @@ Point::Point(Base* p, const Vector& ctr,
   shape_ = ss;
   shapeStr(ss);
   size_ = size;
+  initGlyph();
 
   handle = new Vector[4];
   numHandle = 4;
@@ -48,12 +50,25 @@ Point::Point(const Point& a) : Marker(a)
   shape_ = a.shape_;
   shapestr_ = dupstr(a.shapestr_);
   size_ = a.size_;
+
+  // each marker holds its own image reference, never share the handle
+  glyphFile_ = dupstr(a.glyphFile_);
+  glyphWidth_ = a.glyphWidth_;
+  glyphHeight_ = a.glyphHeight_;
+  glyphImage_ = NULL;
+  glyphPhoto_ = NULL;
+  if (shape_ == GLYPH)
+    loadGlyph();
 }
 
 Point::~Point()
 {
   if (shapestr_)
     delete [] shapestr_;
+
+  freeGlyph();
+  if (glyphFile_)
+    delete [] glyphFile_;
 }
 
 // X11
@@ -96,6 +111,9 @@ void Point::renderX(Drawable drawable, Coord::InternalSystem sys, RenderMode mod
   case BOXCIRCLE:
     renderXBox(drawable, sys, mode);
     renderXCircle(drawable, sys, mode, size_-2);
+    break;
+  case GLYPH:
+    renderXGlyph(drawable, sys, mode);
     break;
   }
 
@@ -236,6 +254,9 @@ void Point::renderPS(PSColorSpace mode)
     renderPSBox(mode);
     renderPSCircle(mode,size_-2);
     break;
+  case GLYPH:
+    renderPSGlyph(mode);
+    break;
   }
 
   if (vv)
@@ -330,6 +351,14 @@ void Point::renderWIN32()
   case BOXCIRCLE:
     renderWIN32Box();
     renderWIN32Circle(size_-2);
+    break;
+  case GLYPH:
+    // win32 printing draws the outline only
+    vv = new Vector[5];
+    for (int ii=0; ii<4; ii++)
+      vv[ii] = handle[ii];
+    vv[4] = handle[0];
+    win32DrawLines(vv,5);
     break;
   }
 
@@ -573,13 +602,22 @@ void Point::shapeStr(PointShape ss)
   case BOXCIRCLE:
     shapestr_ = dupstr("boxcircle");
     break;
+  case GLYPH:
+    shapestr_ = dupstr("glyph");
+    break;
   }
 }
 
 void Point::setShape(PointShape ss)
 {
   shape_ = ss;
+  if (shapestr_)
+    delete [] shapestr_;
   shapeStr(ss);
+  if (shape_ == GLYPH)
+    loadGlyph();
+  else
+    freeGlyph();
   updateBBox();
   doCallBack(CallBack::EDITCB);
 }
@@ -587,12 +625,25 @@ void Point::setShape(PointShape ss)
 void Point::setSize(int size)
 {
   size_ = size;
+  if (shape_ == GLYPH)
+    loadGlyph();
   updateBBox();
   doCallBack(CallBack::EDITCB);
 }
 
 void Point::updateHandles()
 {
+  if (shape_ == GLYPH) {
+    // fixed size in screen pixels, always upright
+    Vector cc = parent->mapFromRef(center,Coord::CANVAS);
+    Vector ss(glyphWidth_/2., glyphHeight_/2.);
+    handle[0] = cc + Vector(-ss[0],-ss[1]);
+    handle[1] = cc + Vector( ss[0],-ss[1]);
+    handle[2] = cc + Vector( ss[0], ss[1]);
+    handle[3] = cc + Vector(-ss[0], ss[1]);
+    return;
+  }
+
   // bound marker
   double ss = size_/2;
   Vector cc = center*parent->refToCanvas;
@@ -692,7 +743,14 @@ void Point::listPost(ostream& str, int conj, int strip)
 
     str << " # point=" << shapestr_;
 
-    if (size_ != POINTSIZE)
+    if (shape_ == GLYPH) {
+      if (size_ > 0)
+	str << ' ' << size_;
+      str << " {";
+      listGlyphFile(str);
+      str << '}';
+    }
+    else if (size_ != POINTSIZE)
       str << ' ' << size_;
     listProperties(str,0);
   }

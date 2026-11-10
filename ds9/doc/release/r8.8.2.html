@@ -41,6 +41,25 @@ selected points</li>
 a polygon.</li>
 <li><strong>ILLUSTRATE</strong>: new <code>freehand</code> option to
 create a polygon.</li>
+<li><strong>REGION</strong>: new <code>glyph</code> point shape: an
+image of your own (PNG, GIF, ...) placed as a marker, drawn upright at
+a fixed size in screen pixels, with transparency. White in SVG
+images is drawn in the region color. Region &gt; Shape
+&gt; Point &gt; Glyph (also in the Advanced view's Region Shape icon
+menu), <code>point(x,y) # point=glyph [size] {file}</code>
+in region files, and <code>regions shape glyph point</code>.</li>
+<li><strong>REGION</strong>: built-in glyphs: a set of crosshair style
+SVG markers, plain and outlined, shipped with ds9 and named
+<code>builtin://name.svg</code> in region and symbol files. The new
+Glyph picker (Browse... in the point dialog, Preferences and catalog
+symbols) chooses one, or an image file of your own.</li>
+<li><strong>CATALOG</strong>: catalog symbols can be glyphs, with the
+image file chosen per row from column values
+(<code>catalog symbol shape {glyph point}</code>,
+<code>catalog symbol glyph &lt;file&gt;</code>).</li>
+<li><strong>PDF</strong>: images with transparency (glyph points and
+illustrate images) keep their transparency in PDF output; transparent
+areas of illustrate images were previously drawn black.</li>
 <li><strong>ILLUSTRATE</strong>: preferences are now saved. Fixed bug
 where illustrate mode shape defaults would overwrite region shape
 defaults.</li>

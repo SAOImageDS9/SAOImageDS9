@@ -120,6 +120,8 @@ proc MarkerDef {} {
     set pmarker(freehand,tolerance) 0.5
     set pmarker(projection,thick) 0
     set pmarker(point,size) 11
+    set pmarker(glyph,file) {}
+    set pmarker(glyph,size) 0
     set pmarker(segment,length) 20
 }
 
@@ -330,7 +332,8 @@ proc MarkerCreate {which x y} {
 	{cross point} -
 	{x point} -
 	{arrow point} -
-	{boxcircle point} {MarkerCreateShape $which $x $y}
+	{boxcircle point} -
+	{glyph point} {MarkerCreateShape $which $x $y}
 	freehand {MarkerFreehandBegin $which $x $y}
 	default {
 	    if {![$which has wcs celestial wcs]} {
@@ -673,6 +676,15 @@ proc MarkerCreateShape {which x y {shape {}}} {
 	projection {append cmd " $x $y $pmarker(projection,thick)"}
 	segment {append cmd " .001 .001"}
 	text {append cmd " 0 text = \{\{Region\}\}"}
+	{glyph point} {
+	    set fn [GlyphCreateFile]
+	    if {$fn eq {}} {
+		return
+	    }
+	    # eval strips one level of braces; the frame parser needs the
+	    # other to keep a file name with spaces in one token
+	    append cmd " $pmarker(glyph,size) [list "{$fn}"]"
+	}
 	ruler {append cmd " $x $y $ed(system) $ed(sky) $ed(system) $ed(dformat) ''"}
 	compass {append cmd " 15 $ed(system) $ed(sky)"}
 	{circle point} -
@@ -1741,6 +1753,7 @@ proc MarkerBackup {ch which fdir rdir} {
 	} else {
 	    $which marker save \"$fn\" ds9 physical fk5 degrees 0
 	}
+	GlyphBackup $fn $fdir
 	puts $ch "$which marker load ds9 \{\"$rfn\"\}"
     }
 }

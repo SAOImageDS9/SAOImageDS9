@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DS9 glyph: two_tees_vertical_circular -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 256 256">
+ <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M175.56,85.18 A64,64 0 0 0 80.44,85.18"/>
+  <path d="M128,64 L128,4"/>
+  <path d="M80.44,170.82 A64,64 0 0 0 175.56,170.82"/>
+  <path d="M128,192 L128,252"/>
+ </g>
+</svg>

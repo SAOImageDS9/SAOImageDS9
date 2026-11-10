@@ -372,6 +372,59 @@ $Jmag&gt;16.5      diamond point   cyan    $Jmag                   physical
 	  have to be updated in order to use them with a different
 	  catalog.
 	</p>
+
+	<p><strong>Using Your Own Images as Symbols (Glyphs)</strong></p>
+	<p>
+	  A symbol can also be an image of your own, such as a small
+	  PNG with a transparent background. The quickest way is the
+	  catalog window's "Symbol → Shape → Point → Glyph..." menu
+	  item, which opens the Glyph picker. In the Symbol Editor,
+	  set the Shape to Point, "Glyph" and put the image file name
+	  in the "Glyph" field (or use its "Browse..." button to open
+	  the Glyph picker).
+	</p>
+	<p>
+	  The Glyph picker offers the built-in glyphs that come with
+	  ds9, a set of crosshair style markers (circles, boxes,
+	  diamonds, tees, wyes, vees and gapped crosses), each also in
+	  an outlined version that stays visible on bright sources.
+	  Narrow them down by Shape, Style and Variant and press OK, or
+	  press "Browse..." to choose an image file of your own. A
+	  built-in glyph is stored by name, for example
+	  <code>builtin://gapped_plus.svg</code>, so symbol files and
+	  regions using it work on any ds9 installation.
+	</p>
+	<p>
+	  Like the
+	  Text field, the file name may
+	  refer to catalog columns, so a different image can be used
+	  for each source, for example
+	  <code>/data/glyphs/$type.png</code> picks the image from the
+	  value of a <code>type</code> column. Combined with
+	  conditions, rules can also give each class of source its own
+	  image.
+	</p>
+	<p>
+	  Glyphs are drawn upright at a fixed size in screen pixels,
+	  whatever the zoom. "Size" is the box, in pixels, that the
+	  image is fitted into, keeping its aspect ratio; leave it
+	  empty for the image's native size. "Size 2", "Units" and
+	  "Angle" are not used. In SVG images, white (and
+	  currentColor) is drawn in the symbol color, so one SVG file
+	  can be used in any color, including conditional colors;
+	  other formats are drawn as is. The color is also used for
+	  the outline drawn around a glyph when its row is selected in
+	  the table. If no file is given, a
+	  built-in image is used, and an unreadable file is drawn as a
+	  box with an X.
+	</p>
+	<p>
+	  Each distinct image file is read only once, so thousands of
+	  sources sharing a few images are fine, though very large
+	  catalogs redraw more slowly with glyphs than with simple
+	  point symbols. Symbol files saved by older versions of ds9,
+	  which have no glyph column, still load.
+	</p>
       <hr>
 </div>
 <div class="section">

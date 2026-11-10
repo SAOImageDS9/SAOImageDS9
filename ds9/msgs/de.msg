@@ -108,6 +108,7 @@
 ::msgcat::mcset de Bins Bins
 ::msgcat::mcset de Bin Bin
 ::msgcat::mcset de Black Schwarz
+::msgcat::mcset de {Blank = built-in image} {Leer = eingebautes Bild}
 ::msgcat::mcset de {Blank/Inf/NaN Color} {Leer/Inf/Nan Farbe}
 ::msgcat::mcset de Blend Überblenden
 ::msgcat::mcset de {Blink Frames} {Blinkende rahmen}
@@ -417,6 +418,7 @@
 ::msgcat::mcset de Gist Gist
 ::msgcat::mcset de {Global Properties} {Globale Eigenschaften}
 ::msgcat::mcset de Global Global
+::msgcat::mcset de Glyph Glyphe
 ::msgcat::mcset de {Goto First Frame} {Zum ersten Rahmen}
 ::msgcat::mcset de {Goto Frame} {Gehe zu Rahmen}
 ::msgcat::mcset de {Goto Last Frame} {Zum letzten Rahmen}
@@ -432,6 +434,7 @@
 ::msgcat::mcset de Graph Diagramm
 ::msgcat::mcset de {Grayscale (PS only)} {Graustufen (nur PS)}
 ::msgcat::mcset de Grayscale Graustufen
+::msgcat::mcset de Gray Grau
 ::msgcat::mcset de Green Grün
 ::msgcat::mcset de {Grid Gap} Gitterabstand
 ::msgcat::mcset de Grid Gitter
@@ -784,6 +787,7 @@
 ::msgcat::mcset de {Other Font Size} {Andere Schriftgröße}
 ::msgcat::mcset de Other Andere
 ::msgcat::mcset de Outer Äußerer
+::msgcat::mcset de Outlined Umrandet
 ::msgcat::mcset de Overlay Ineinanderkopieren
 ::msgcat::mcset de Overplot Überlagern
 ::msgcat::mcset de {Override Color} {Farbe überschreiben}
@@ -810,6 +814,7 @@
 ::msgcat::mcset de {Pixel Mask} Pixelmaske
 ::msgcat::mcset de {Pixel Size} Pixelgröße
 ::msgcat::mcset de {Pixel Table} Pixeltabelle
+::msgcat::mcset de {Pixels (0 = native)} {Pixel (0 = Originalgröße)}
 ::msgcat::mcset de Pixels Pixel
 ::msgcat::mcset de Planets Planeten
 ::msgcat::mcset de Play Abspielen
@@ -1042,6 +1047,7 @@
 ::msgcat::mcset de {Strip Parameters} Streifenparameter
 ::msgcat::mcset de {Strip Scale} Streifenskalierung
 ::msgcat::mcset de Strip Streifen
+::msgcat::mcset de Style Stil
 ::msgcat::mcset de Subscriptions Abonnements
 ::msgcat::mcset de Sum Summieren
 ::msgcat::mcset de {Surface Lighting} Oberflächenbeleuchtung
@@ -1174,6 +1180,7 @@
 ::msgcat::mcset de VOT VOT
 ::msgcat::mcset de VO VO
 ::msgcat::mcset de Value Wert
+::msgcat::mcset de Variant Variante
 ::msgcat::mcset de Vector Vektor
 ::msgcat::mcset de {Vertical Graph} Vertikaldarstellung
 ::msgcat::mcset de {Vertical Layout} {Vertikales layout}

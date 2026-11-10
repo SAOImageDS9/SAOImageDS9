@@ -140,6 +140,9 @@ proc RegionMainMenu {} {
 	-variable marker(shape) -value {arrow point}
     $ds9(mb).region.shape.point add radiobutton -label [msgcat::mc {BoxCircle}]\
 	-variable marker(shape) -value {boxcircle point}
+    $ds9(mb).region.shape.point add separator
+    $ds9(mb).region.shape.point add radiobutton -label [msgcat::mc {Glyph}] \
+	-variable marker(shape) -value {glyph point}
 
     ThemeMenu $ds9(mb).region.composite
     $ds9(mb).region.composite add command -label [msgcat::mc {Create Union}] \
@@ -307,6 +310,9 @@ proc PrefsDialogRegionMenu {w} {
 	-variable pmarker(shape) -value {arrow point}
     $m.shape.point add radiobutton -label [msgcat::mc {BoxCircle}]\
 	-variable pmarker(shape) -value {boxcircle point}
+    $m.shape.point add separator
+    $m.shape.point add radiobutton -label [msgcat::mc {Glyph}] \
+	-variable pmarker(shape) -value {glyph point}
 
     ColorFillMenu $m.color pmarker color fill {} {}
     WidthDashMenu $m.width pmarker width dash {} {} dashlist {}
@@ -536,12 +542,27 @@ proc PrefsDialogRegion {} {
     
     grid $f.title $f.size $f.unit -padx 2 -pady 2 -sticky w
 
+    # Glyph
+    set f [ttk::labelframe $w.region.glyph -text [msgcat::mc {Glyph}]]
+
+    ttk::label $f.tfile -text [msgcat::mc {File}]
+    ttk::entry $f.file -textvariable pmarker(glyph,file) -width 30
+    ttk::button $f.browse -text "[msgcat::mc {Browse}]..." \
+	-command {PrefsGlyphBrowse}
+    ttk::label $f.ufile -text [msgcat::mc {Blank = built-in image}]
+    ttk::label $f.title -text [msgcat::mc {Width}]
+    ttk::entry $f.size -textvariable pmarker(glyph,size) -width 10
+    ttk::label $f.unit -text [msgcat::mc {Pixels (0 = native)}]
+
+    grid $f.tfile $f.file $f.browse $f.ufile -padx 2 -pady 2 -sticky w
+    grid $f.title $f.size $f.unit -padx 2 -pady 2 -sticky w
+
     pack $w.region.format $w.region.coordsys \
 	$w.region.dformat $w.region.epsilon \
 	$w.region.centroid $w.region.plot \
 	$w.region.circle $w.region.ellipse \
 	$w.region.box $w.region.polygon $w.region.freehand \
-	$w.region.projection $w.region.point \
+	$w.region.projection $w.region.point $w.region.glyph \
 	-side top -fill both -expand true
 }
 
@@ -1247,5 +1268,14 @@ proc UpdateRegionMenu {} {
 		set marker(composite,area) $pmarker(composite,area)
 	    }
 	}
+    }
+}
+
+proc PrefsGlyphBrowse {} {
+    global pmarker
+
+    set fn [GlyphPicker $pmarker(glyph,file) $pmarker(color)]
+    if {$fn ne {}} {
+	set pmarker(glyph,file) $fn
     }
 }

@@ -108,6 +108,7 @@
 ::msgcat::mcset ja Bins ビン数
 ::msgcat::mcset ja Bin ビンまとめ
 ::msgcat::mcset ja Black 黒色
+::msgcat::mcset ja {Blank = built-in image} {空欄 = 内蔵画像}
 ::msgcat::mcset ja {Blank/Inf/NaN Color} 未定義値(Blank/Inf/NaN)の色
 ::msgcat::mcset ja Blend 合成
 ::msgcat::mcset ja {Blink Frames} フレームをブリンク
@@ -417,6 +418,7 @@
 ::msgcat::mcset ja Gist Gist
 ::msgcat::mcset ja {Global Properties} グローバルプロパティ
 ::msgcat::mcset ja Global グローバル
+::msgcat::mcset ja Glyph グリフ
 ::msgcat::mcset ja {Goto First Frame} 最初のフレームに移動
 ::msgcat::mcset ja {Goto Frame} 指定フレームに移動
 ::msgcat::mcset ja {Goto Last Frame} 最後のフレームに移動
@@ -432,6 +434,7 @@
 ::msgcat::mcset ja Graph グラフ
 ::msgcat::mcset ja {Grayscale (PS only)} {グレースケール (PSのみ)}
 ::msgcat::mcset ja Grayscale グレースケール
+::msgcat::mcset ja Gray 灰色
 ::msgcat::mcset ja Green 緑色
 ::msgcat::mcset ja {Grid Gap} グリッドの間隔
 ::msgcat::mcset ja Grid グリッド
@@ -784,6 +787,7 @@
 ::msgcat::mcset ja {Other Font Size} その他のフォントサイズ
 ::msgcat::mcset ja Other その他
 ::msgcat::mcset ja Outer 外径
+::msgcat::mcset ja Outlined 縁取り
 ::msgcat::mcset ja Overlay オーバーレイ
 ::msgcat::mcset ja Overplot 重ねてプロット
 ::msgcat::mcset ja {Override Color} 色を上書き
@@ -810,6 +814,7 @@
 ::msgcat::mcset ja {Pixel Mask} ピクセルマスク
 ::msgcat::mcset ja {Pixel Size} ピクセルサイズ
 ::msgcat::mcset ja {Pixel Table} ピクセル表
+::msgcat::mcset ja {Pixels (0 = native)} {ピクセル (0 = 元のサイズ)}
 ::msgcat::mcset ja Pixels ピクセル
 ::msgcat::mcset ja Planets 惑星
 ::msgcat::mcset ja Play 再生
@@ -1042,6 +1047,7 @@
 ::msgcat::mcset ja {Strip Parameters} ストリップの設定
 ::msgcat::mcset ja {Strip Scale} ストリップのスケール
 ::msgcat::mcset ja Strip ストリップ
+::msgcat::mcset ja Style スタイル
 ::msgcat::mcset ja Subscriptions 購読
 ::msgcat::mcset ja Sum 合計
 ::msgcat::mcset ja {Surface Lighting} 表面照明
@@ -1174,6 +1180,7 @@
 ::msgcat::mcset ja VOT VOT
 ::msgcat::mcset ja VO 仮想天文台
 ::msgcat::mcset ja Value 値
+::msgcat::mcset ja Variant バリエーション
 ::msgcat::mcset ja Vector ベクトル
 ::msgcat::mcset ja {Vertical Graph} 縦断面
 ::msgcat::mcset ja {Vertical Layout} 画面の左に配置

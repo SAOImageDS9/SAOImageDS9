@@ -265,6 +265,11 @@ public:
   int useMarkerColor_;
   char* markerColor_;
 
+  // normalized directory of the region file being loaded or saved, NULL
+  // otherwise. Glyph file names are resolved against it on load and
+  // written relative to it on save.
+  char* markerFileDir_;
+
   GC markerGC_; // marker gc
   GC markerGCXOR_; // marker xor gc
   GC selectGCXOR; // select gc
@@ -621,6 +626,9 @@ public:
 
   int useMarkerColor() {return useMarkerColor_;}
   char* markerColor() {return markerColor_;}
+  void setMarkerFileDir(const char*);
+  const char* markerFileDir() {return markerFileDir_;}
+  char* resolveMarkerFileName(const char*);
 
   void matchCmd(const char* xxname1, const char* yyname1,
 		Coord::CoordSystem sys1, Coord::SkyFrame sky1,
@@ -1191,7 +1199,8 @@ public:
 		      const char*, int*, int, const char*,
 		      const char*, unsigned short, const char*,
 		      const List<Tag>&, 
-		      const List<CallBack>& cb);
+		      const List<CallBack>& cb,
+		      const char* glyph =NULL);
 
   // Measurement Regions
   void createRulerCmd(const Vector&, const Vector&, 
@@ -1390,6 +1399,7 @@ public:
   void getMarkerMapLenFromRefCmd(int, double, Coord::CoordSystem, Coord::DistFormat);
   void getMarkerNumberCmd();
   void getMarkerPointShapeCmd(int);
+  void getMarkerPointGlyphCmd(int);
   void getMarkerPointSizeCmd(int);
   void getMarkerPolygonPointCmd(int, Coord::CoordSystem, Coord::SkyFrame,
 				Coord::SkyFormat);
@@ -1590,6 +1600,7 @@ public:
   void markerPasteCmd();
   void markerPasteCmd(Coord::CoordSystem);
   void markerPointShapeCmd(int, Point::PointShape);
+  void markerPointGlyphCmd(int, const char*);
   void markerPointSizeCmd(int, int);
   void markerPolygonCreateVertexCmd(int, int, const Vector&);
   void markerPolygonDeleteVertexCmd(int, int);

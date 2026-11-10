@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DS9 glyph: two_tees_vertical_circular_rot45_outlined -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 256 256">
+ <g fill="none" stroke="#000000" stroke-width="24" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M135.33,64.42 A64,64 0 0 0 64.42,135.33"/>
+  <path d="M85.57,85.57 L40.32,40.32"/>
+  <path d="M120.67,191.58 A64,64 0 0 0 191.58,120.67"/>
+  <path d="M170.43,170.43 L215.68,215.68"/>
+ </g>
+ <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M131.35,64.09 A64,64 0 0 0 64.09,131.35"/>
+  <path d="M82.75,82.75 L43.15,43.15"/>
+  <path d="M124.65,191.91 A64,64 0 0 0 191.91,124.65"/>
+  <path d="M173.25,173.25 L212.85,212.85"/>
+ </g>
+</svg>

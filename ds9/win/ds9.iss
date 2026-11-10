@@ -57,6 +57,7 @@ Source: "..\..\bin\SAOImageDS9\cmaps\*"; DestDir: "{app}\cmaps\"; Flags: ignorev
 Source: "..\..\bin\SAOImageDS9\doc\*"; DestDir: "{app}\doc\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\bin\SAOImageDS9\ftp\*"; DestDir: "{app}\ftp\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\bin\SAOImageDS9\icons\*"; DestDir: "{app}\icons\"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\bin\SAOImageDS9\glyphs\*"; DestDir: "{app}\glyphs\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\bin\SAOImageDS9\library\*"; DestDir: "{app}\library\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\bin\SAOImageDS9\log\*"; DestDir: "{app}\log\"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\bin\SAOImageDS9\math\*"; DestDir: "{app}\math\"; Flags: ignoreversion recursesubdirs createallsubdirs

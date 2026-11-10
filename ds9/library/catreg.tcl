@@ -33,6 +33,7 @@ proc CATReg {varname row interactive resultname} {
     # size2: expr
     # units: constant
     # angle: expr
+    # glyph: subst (glyph point shape only)
 
     # valid cols?
     if {$var_(colx) == {} || $var_(coly) == {}} {
@@ -76,6 +77,7 @@ proc CATReg {varname row interactive resultname} {
     }
 
     # symdb
+    CATSymEnsureCols $var_(symdb)
     set snrows [starbase_nrows $var_(symdb)]
     set sncond [starbase_colnum $var_(symdb) condition]
     set snshape [starbase_colnum $var_(symdb) shape]
@@ -91,6 +93,7 @@ proc CATReg {varname row interactive resultname} {
     set snsize2 [starbase_colnum $var_(symdb) size2]
     set snunits [starbase_colnum $var_(symdb) units]
     set snangle [starbase_colnum $var_(symdb) angle]
+    set snglyph [starbase_colnum $var_(symdb) glyph]
 
     # for each row in the table
     if {[string is integer -strict $row]} {
@@ -109,7 +112,9 @@ proc CATReg {varname row interactive resultname} {
 	set sz [starbase_get $var_(symdb) $jj $snsize]
 	set sz2 [starbase_get $var_(symdb) $jj $snsize2]
 	set angle [starbase_get $var_(symdb) $jj $snangle]
-	if {$cond!={} || $text!={} || $sz!={} || $sz2!={} || $angle!={}} {
+	set glyph [starbase_get $var_(symdb) $jj $snglyph]
+	if {$cond!={} || $text!={} || $sz!={} || $sz2!={} || $angle!={} ||
+	    $glyph!={}} {
 	    set doEval 1
 	}
     }
@@ -176,6 +181,7 @@ proc CATReg {varname row interactive resultname} {
 	    }
 
 	    # size/angle
+	    set pointprop {}
 	    set szcol {}
 	    set sz2col {}
 	    set angcol {}
@@ -200,6 +206,41 @@ proc CATReg {varname row interactive resultname} {
 		{x point} -
 		{arrow point} -
 		{boxcircle point} {set size {}}
+
+		glyph -
+		{glyph point} {
+		    # a point region drawn with an image: fixed screen size,
+		    # upright, so units, size2 and angle do not apply. size is
+		    # the box the image is fitted into, in screen pixels;
+		    # empty or 0 is native size.
+		    set vv [starbase_get $var_(symdb) $jj $snsize]
+		    if {$vv == {}} {
+			set gsz 0
+		    } elseif {[catch {expr "int($vv)"} gsz]} {
+			Error "Unable to evaluate size $vv"
+			return
+		    }
+
+		    # file: subst, like text, so it can use column values
+		    set gfn [starbase_get $var_(symdb) $jj $snglyph]
+		    if {$gfn != {}} {
+			if {[catch {subst $gfn} gg]} {
+			    Error "Unable to evaluate glyph $gfn"
+			    return
+			}
+			set gfn [expr {[GlyphIsBuiltin $gg] ? $gg : [file normalize $gg]}]
+		    } else {
+			set gfn [GlyphDefaultFile]
+		    }
+
+		    set shape point
+		    set size {}
+		    if {$gsz > 0} {
+			set pointprop "point=glyph $gsz \{$gfn\} "
+		    } else {
+			set pointprop "point=glyph \{$gfn\} "
+		    }
+		}
 
 		circle {
 		    set sz [starbase_get $var_(symdb) $jj $snsize]
@@ -381,12 +422,12 @@ proc CATReg {varname row interactive resultname} {
 	    # init result for substitutions
 	    if {$interactive} {
 		if {$var_(edit)} {
-		    set template "\${sys};\${shape}(\${xx} \${yy} \${size}) # color=\${color} width=\${width} dash=\${dash} font=\{${font} ${fontsize} ${fontweight} ${fontslant}\} text=\{\${text}\} tag={${varname}} tag={${varname}.\${ii}} select=1 edit=1 move=1 rotate=1 delete=1 highlite=0 callback=select CATHighliteCB {${varname}.\${ii}} callback=unselect CATUnhighliteCB {${varname}.\${ii}} callback=edit CATEditCB {${varname}.\${ii}.\${szcol}.\${sz2col}.\${units}.\${angcol}} callback=move CATMoveCB {${varname}.\${ii}} callback=rotate CATRotateCB {${varname}.\${ii}.\${angcol}}\n"
+		    set template "\${sys};\${shape}(\${xx} \${yy} \${size}) # \${pointprop}color=\${color} width=\${width} dash=\${dash} font=\{${font} ${fontsize} ${fontweight} ${fontslant}\} text=\{\${text}\} tag={${varname}} tag={${varname}.\${ii}} select=1 edit=1 move=1 rotate=1 delete=1 highlite=0 callback=select CATHighliteCB {${varname}.\${ii}} callback=unselect CATUnhighliteCB {${varname}.\${ii}} callback=edit CATEditCB {${varname}.\${ii}.\${szcol}.\${sz2col}.\${units}.\${angcol}} callback=move CATMoveCB {${varname}.\${ii}} callback=rotate CATRotateCB {${varname}.\${ii}.\${angcol}}\n"
 		} else {
-		    set template "\${sys};\${shape}(\${xx} \${yy} \${size}) # color=\${color} width=\${width} dash=\${dash} font=\{${font} ${fontsize} ${fontweight} ${fontslant}\} text=\{\${text}\} tag={${varname}} tag={${varname}.\${ii}} select=0 edit=0 move=0 rotate=0 delete=1 highlite=1 callback=highlite CATHighliteCB {${varname}.\${ii}} callback=unhighlite CATUnhighliteCB {${varname}.\${ii}}\n"
+		    set template "\${sys};\${shape}(\${xx} \${yy} \${size}) # \${pointprop}color=\${color} width=\${width} dash=\${dash} font=\{${font} ${fontsize} ${fontweight} ${fontslant}\} text=\{\${text}\} tag={${varname}} tag={${varname}.\${ii}} select=0 edit=0 move=0 rotate=0 delete=1 highlite=1 callback=highlite CATHighliteCB {${varname}.\${ii}} callback=unhighlite CATUnhighliteCB {${varname}.\${ii}}\n"
 		}
 	    } else {
-		set template "\${sys};\${shape}(\${xx} \${yy} \${size}) # color=\${color} width=\${width} dash=\${dash} text=\{\${text}\}\n"
+		set template "\${sys};\${shape}(\${xx} \${yy} \${size}) # \${pointprop}color=\${color} width=\${width} dash=\${dash} text=\{\${text}\}\n"
 	    }
 	    append result [subst $template]
 

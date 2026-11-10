@@ -108,6 +108,7 @@
 ::msgcat::mcset fr Bins Bins
 ::msgcat::mcset fr Bin Bin
 ::msgcat::mcset fr Black Noir
+::msgcat::mcset fr {Blank = built-in image} {Vide = image intégrée}
 ::msgcat::mcset fr {Blank/Inf/NaN Color} {Blanc/Inf/NaN Couleur}
 ::msgcat::mcset fr Blend Fusion
 ::msgcat::mcset fr {Blink Frames} {Clignotement des fenêtres}
@@ -417,6 +418,7 @@
 ::msgcat::mcset fr Gist Gist
 ::msgcat::mcset fr {Global Properties} {Propriétés globales}
 ::msgcat::mcset fr Global Global
+::msgcat::mcset fr Glyph Glyphe
 ::msgcat::mcset fr {Goto First Frame} {Aller à la première fenêtre}
 ::msgcat::mcset fr {Goto Frame} {Aller à la fenêtre}
 ::msgcat::mcset fr {Goto Last Frame} {Aller à la dernière fenêtre}
@@ -432,6 +434,7 @@
 ::msgcat::mcset fr Graph Graphique
 ::msgcat::mcset fr {Grayscale (PS only)} {Niveaux de gris (PS uniquement)}
 ::msgcat::mcset fr Grayscale {Niveaux de gris}
+::msgcat::mcset fr Gray Gris
 ::msgcat::mcset fr Green Vert
 ::msgcat::mcset fr {Grid Gap} {Espacement de la grille}
 ::msgcat::mcset fr Grid Grille
@@ -784,6 +787,7 @@
 ::msgcat::mcset fr {Other Font Size} {Autre taille de police}
 ::msgcat::mcset fr Other Autre
 ::msgcat::mcset fr Outer Externe
+::msgcat::mcset fr Outlined Contouré
 ::msgcat::mcset fr Overlay Incrustation
 ::msgcat::mcset fr Overplot Superposer
 ::msgcat::mcset fr {Override Color} {Forcer la couleur}
@@ -810,6 +814,7 @@
 ::msgcat::mcset fr {Pixel Mask} {Masque de pixels}
 ::msgcat::mcset fr {Pixel Size} {Taille des pixels}
 ::msgcat::mcset fr {Pixel Table} {Table des pixels}
+::msgcat::mcset fr {Pixels (0 = native)} {Pixels (0 = natif)}
 ::msgcat::mcset fr Pixels Pixels
 ::msgcat::mcset fr Planets Planètes
 ::msgcat::mcset fr Play Jouer
@@ -1042,6 +1047,7 @@
 ::msgcat::mcset fr {Strip Parameters} {Paramètres de bande}
 ::msgcat::mcset fr {Strip Scale} {Échelle de bande}
 ::msgcat::mcset fr Strip Bande
+::msgcat::mcset fr Style Style
 ::msgcat::mcset fr Subscriptions Abonnements
 ::msgcat::mcset fr Sum Somme
 ::msgcat::mcset fr {Surface Lighting} {Éclairage de surface}
@@ -1174,6 +1180,7 @@
 ::msgcat::mcset fr VOT VOT
 ::msgcat::mcset fr VO VO
 ::msgcat::mcset fr Value Valeur
+::msgcat::mcset fr Variant Variante
 ::msgcat::mcset fr Vector Vecteur
 ::msgcat::mcset fr {Vertical Graph} {Graphique vertical}
 ::msgcat::mcset fr {Vertical Layout} {Disposition verticale}

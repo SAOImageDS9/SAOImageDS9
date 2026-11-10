@@ -48,6 +48,10 @@
 <tt>[expr (4+2)/3]&nbsp;&nbsp;# will put the text '2' above the symbol</tt><br>
 <tt>[expr $Jmag/2.]&nbsp;# will take the value of Jmag and div by 2</tt><br></blockquote>
 <p>And finally, one special case for shape = text and text = empty. In this case, the row number is displayed.</p>
+<p>For shape = glyph point, the glyph entry names the image file to draw. Like the text entry, it is substituted but not evaluated, so it may contain column values. The file name is taken relative to the current directory. A built-in glyph shipped with ds9 is named <tt>builtin://</tt><i>name</i><tt>.svg</tt>, as for regions. If it is empty, a built-in image is used. For glyphs, size is the box in screen pixels (truncated to whole pixels) that the image is fitted into, keeping its aspect ratio; an empty or 0 size uses the image's native size. Size2, units and angle are ignored. Glyph symbols are written to region files as <tt>point=glyph</tt> points. The shape name <tt>glyph</tt> is also accepted.</p>
+<blockquote><tt>/data/star.png&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# the same image for every source</tt><br>
+<tt>/data/$Class.png&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# image chosen by the value of column Class</tt><br>
+<tt>builtin://gapped_x.svg&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# a built-in glyph</tt><br></blockquote>
 &nbsp;</blockquote>
 </body>
 </html>

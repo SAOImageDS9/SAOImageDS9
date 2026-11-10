@@ -259,6 +259,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token GAUSSIAN_
 %token GET_
 %token GLOBAL_
+%token GLYPH_
 %token GRAPHICS_
 %token GRAY_
 %token GRID_
@@ -798,6 +799,7 @@ pointShape: /* empty */ {$$ = Point::CIRCLE;}
 	| 'X' {$$ = Point::EX;}
 	| ARROW_ {$$ = Point::ARROW;}
 	| BOXCIRCLE_ {$$ = Point::BOXCIRCLE;}
+	| GLYPH_ {$$ = Point::GLYPH;}
 	;
 
 pointSize: /* empty */ {$$ = POINTSIZE;}
@@ -2116,6 +2118,7 @@ marker	: CENTROID_ markerCentroid
 	| INT POINT_ SHAPE_ pointShape
 	{fr->markerPointShapeCmd($1,(Point::PointShape)$4);}
 	| INT POINT_ SIZE_ INT {fr->markerPointSizeCmd($1,$4);}
+	| INT POINT_ GLYPH_ STRING {fr->markerPointGlyphCmd($1,$4);}
 
 	| INT PROJECTION_ coordSystem skyFrame coord coord numeric
 	    coordSystem skyDist
@@ -2346,6 +2349,16 @@ markerCreate :
 	    Point::BOXCIRCLE, $5,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
+	| GLYPH_ POINT_ numeric numeric STRING markerProperties
+	{fr->createPointCmd(fr->mapToRef(Vector($3,$4),Coord::CANVAS),
+	    Point::GLYPH, 0,
+	    currentColor,currentDash,currentWidth,currentFont,
+	    currentText,currentProps,NULL,taglist,cblist,$5);}
+	| GLYPH_ POINT_ numeric numeric INT STRING markerProperties
+	{fr->createPointCmd(fr->mapToRef(Vector($3,$4),Coord::CANVAS),
+	    Point::GLYPH, $5,
+	    currentColor,currentDash,currentWidth,currentFont,
+	    currentText,currentProps,NULL,taglist,cblist,$6);}
 
 	| RULER_ numeric numeric
 	    numeric numeric
@@ -2587,6 +2600,7 @@ markerGet : CENTROID_ markerGetCentroid
 
 	| INT POINT_ SHAPE_ {fr->getMarkerPointShapeCmd($1);}
 	| INT POINT_ SIZE_ {fr->getMarkerPointSizeCmd($1);}
+	| INT POINT_ GLYPH_ {fr->getMarkerPointGlyphCmd($1);}
 	| INT POLYGON_ POINT_ coordSystem skyFrame skyFormat
 	{fr->getMarkerPolygonPointCmd($1,(Coord::CoordSystem)$4,
 	    (Coord::SkyFrame)$5,(Coord::SkyFormat)$6);}

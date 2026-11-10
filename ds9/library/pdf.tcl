@@ -536,7 +536,7 @@ proc PDFCanvasGraphics {pdf} {
 		    continue
 		}
 
-		if {[catch {set imgid [$pdf addRawImage [$image data]]}]} {
+		if {[catch {set imgid [PDFAddPhoto $pdf $image]}]} {
 		    continue
 		}
 
@@ -549,6 +549,50 @@ proc PDFCanvasGraphics {pdf} {
     }
 
     $pdf setLineDash
+}
+
+# Add a Tk photo to the pdf as an image with its alpha channel, returning
+# an id for "$pdf putImage". pdf4tcl's addRawImage writes RGB only (and
+# its PNG path drops alpha too), so the image is built here: an RGB image
+# XObject with a /SMask, an 8-bit DeviceGray image holding the alpha.
+# Both go through addTkpimgObj, pdf4tcl's public hook for adding a ready
+# made image object (written for tkpath). Fully opaque photos get no mask.
+# /SMask needs PDF 1.4, which is pdf4tcl's default version.
+proc PDFAddPhoto {pdf photo} {
+    set ww [image width $photo]
+    set hh [image height $photo]
+    if {$ww <= 0 || $hh <= 0} {
+	error "empty image"
+    }
+
+    # rgb straight from Tk; alpha split out of the rgba data
+    set rgb [binary format H* \
+		 [string map {# {} " " {}} [join [$photo data] {}]]]
+    set hex [string map {# {} " " {}} \
+		 [join [$photo data -format {default -colorformat rgba}] {}]]
+    binary scan [binary format H* $hex] cu* all
+    set alpha [binary format cu* [lmap {r g b a} $all {set a}]]
+
+    set smask {}
+    if {[string trimleft $alpha "\xff"] ne {}} {
+	set data [zlib compress $alpha]
+	set xo "<<\n/Type /XObject\n/Subtype /Image\n"
+	append xo "/Width $ww\n/Height $hh\n"
+	append xo "/ColorSpace /DeviceGray\n/BitsPerComponent 8\n"
+	append xo "/Filter /FlateDecode\n/Length [string length $data]\n>>\n"
+	append xo "stream\n$data\nendstream"
+	lassign [$pdf addTkpimgObj $ww $hh $xo] smoid smid
+	set smask "/SMask $smoid 0 R\n"
+    }
+
+    set data [zlib compress $rgb]
+    set xo "<<\n/Type /XObject\n/Subtype /Image\n"
+    append xo "/Width $ww\n/Height $hh\n"
+    append xo "/ColorSpace /DeviceRGB\n/BitsPerComponent 8\n"
+    append xo "/Filter /FlateDecode\n$smask/Length [string length $data]\n>>\n"
+    append xo "stream\n$data\nendstream"
+    lassign [$pdf addTkpimgObj $ww $hh $xo] oid id
+    return $id
 }
 
 proc PDFUtilUserName {} {

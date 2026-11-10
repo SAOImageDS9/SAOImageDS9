@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DS9 glyph: gapped_x -->
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 256 256">
+ <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10">
+  <path d="M156.28,99.72 L246.34,9.66"/>
+  <path d="M99.72,99.72 L9.66,9.66"/>
+  <path d="M99.72,156.28 L9.66,246.34"/>
+  <path d="M156.28,156.28 L246.34,246.34"/>
+ </g>
+</svg>

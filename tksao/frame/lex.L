@@ -176,6 +176,7 @@ galactic	{return GALACTIC_;}
 gaussian	{return GAUSSIAN_;}
 get		{return GET_;}
 global		{return GLOBAL_;}
+glyph		{return GLYPH_;}
 graphics	{return GRAPHICS_;}
 gray		{return GRAY_;}
 grid		{return GRID_;}

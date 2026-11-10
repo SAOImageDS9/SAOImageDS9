@@ -41,6 +41,7 @@
 %token FORMAT_
 %token FRONT_
 %token GETINFO_
+%token GLYPH_
 %token GROUP_
 %token GROUPS_
 %token INCLUDE_
@@ -344,6 +345,7 @@ point : {set _ boxcircle}
  | 'x' {set _ x}
  | ARROW_ {set _ arrow}
  | BOXCIRCLE_ {set _ boxcircle}
+ | GLYPH_ {set _ glyph}
  ;
  
 delim : NL_ {set _ 0}

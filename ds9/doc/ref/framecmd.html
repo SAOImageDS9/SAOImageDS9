@@ -135,7 +135,7 @@ $::current(frame) marker create circle 256 256 20</tt>
 <dd><tt>source</tt> (default) | <tt>multiply</tt> | <tt>screen</tt> | <tt>overlay</tt> | <tt>darken</tt> | <tt>lighten</tt> | <tt>color-dodge</tt> | <tt>color-burn</tt> | <tt>hard-light</tt> | <tt>soft-light</tt> | <tt>difference</tt> | <tt>exclusion</tt> | <tt>hue</tt> | <tt>saturation</tt> | <tt>color</tt> | <tt>luminosity</tt>. Also used by <a href="#layer">layer</a> for image-layer blending.</dd>
 
 <dt><a name="t-pointShape" id="t-pointShape"></a><tt>&lt;pointShape&gt;</tt></dt>
-<dd><tt>circle</tt> (default) | <tt>box</tt> | <tt>diamond</tt> | <tt>cross</tt> | <tt>x</tt> | <tt>arrow</tt> | <tt>boxcircle</tt>.</dd>
+<dd><tt>circle</tt> (default) | <tt>box</tt> | <tt>diamond</tt> | <tt>cross</tt> | <tt>x</tt> | <tt>arrow</tt> | <tt>boxcircle</tt> | <tt>glyph</tt> (an image; set its file with <tt>point glyph</tt>).</dd>
 
 <dt><a name="t-analysisTask" id="t-analysisTask"></a><tt>&lt;analysisTask&gt;</tt></dt>
 <dd><tt>panda</tt> (also <tt>cpanda</tt>) | <tt>histogram</tt> | <tt>plot2d</tt> | <tt>plot3d</tt> | <tt>radial</tt> | <tt>stats</tt>.</dd>
@@ -795,6 +795,7 @@ $::current(frame) magnifier graphics no</tt>
 <tr><td>vector</td><td><tt>vector &lt;x&gt; &lt;y&gt; &lt;x2&gt; &lt;y2&gt;</tt></td></tr>
 <tr><td>text</td><td><tt>text &lt;x&gt; &lt;y&gt; [&lt;angle&gt;]</tt> (set the label with <tt>text=&lt;string&gt;</tt>)</td></tr>
 <tr><td>point</td><td><tt>&lt;pointShape&gt; point &lt;x&gt; &lt;y&gt; [&lt;pointSize&gt;]</tt> &mdash; e.g. <tt>circle point</tt>, <tt>box point</tt>, <tt>x point</tt></td></tr>
+<tr><td>glyph point</td><td><tt>glyph point &lt;x&gt; &lt;y&gt; [&lt;size&gt;] &lt;file&gt;</tt> &mdash; a point drawn as a user supplied image (PNG, GIF, ...) at a fixed size in screen pixels, always upright; <tt>&lt;file&gt;</tt> is a quoted string such as <tt>{/path/star.png}</tt>, or a built-in glyph such as <tt>{builtin://gapped_plus.svg}</tt>; the image is fitted into a <tt>&lt;size&gt;</tt> pixel square keeping its aspect ratio, 0 (or omitted) = native size</td></tr>
 <tr><td>ruler</td><td><tt>ruler &lt;x1&gt; &lt;y1&gt; &lt;x2&gt; &lt;y2&gt; &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;coordSystem&gt; &lt;skyDist&gt; &lt;label&gt;</tt></td></tr>
 <tr><td>compass</td><td><tt>compass &lt;x&gt; &lt;y&gt; &lt;radius&gt; &lt;coordSystem&gt; &lt;skyFrame&gt;</tt></td></tr>
 <tr><td>projection</td><td><tt>projection &lt;x1&gt; &lt;y1&gt; &lt;x2&gt; &lt;y2&gt; &lt;width&gt;</tt></td></tr>
@@ -812,6 +813,7 @@ $::current(frame) magnifier graphics no</tt>
 <tt>set id [$::current(frame) marker create circle 256 256 20 color=red]<br>
 $::current(frame) marker create box 100 100 40 20 45 color=green tag={mybox}<br>
 $::current(frame) marker create text 200 200 text={Hello} color=yellow<br>
+$::current(frame) marker create glyph point 300 200 32 {/path/star.png}<br>
 $::current(frame) marker create annulus 256 256 10 40 4</tt>
 
 <p><b>Other marker verbs</b> (<tt>&lt;id&gt;</tt> is a marker's integer id or a tag/name string; forms without a leading id apply to all selected markers):</p>
@@ -851,7 +853,8 @@ $::current(frame) marker create annulus 256 256 10 40 4</tt>
 <tr><td><tt>marker &lt;id&gt; line arrow &lt;yesno&gt; &lt;yesno&gt;</tt> / <tt>&lt;id&gt; line point &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;coord&gt; &lt;coord&gt;</tt></td><td>set a line's arrowheads / endpoints</td></tr>
 <tr><td><tt>marker move &lt;x&gt; &lt;y&gt;</tt> / <tt>&lt;id&gt; move &lt;x&gt; &lt;y&gt;</tt> / <tt>move front|back</tt> / <tt>&lt;id&gt; move front|back</tt> / <tt>move to &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;coord&gt;</tt> / <tt>&lt;id&gt; move to ...</tt></td><td>move selected marker(s), or one marker, by offset or to an absolute position, or restack front/back</td></tr>
 <tr><td><tt>marker move begin &lt;x&gt; &lt;y&gt;</tt> / <tt>motion &lt;x&gt; &lt;y&gt;</tt> / <tt>end</tt></td><td>interactive drag-move (as used while dragging a marker)</td></tr>
-<tr><td><tt>marker point shape &lt;pointShape&gt;</tt> / <tt>&lt;id&gt; point shape &lt;pointShape&gt;</tt> / <tt>&lt;id&gt; point size &lt;n&gt;</tt></td><td>change a point marker's shape/size</td></tr>
+<tr><td><tt>marker point shape &lt;pointShape&gt;</tt> / <tt>&lt;id&gt; point shape &lt;pointShape&gt;</tt> / <tt>&lt;id&gt; point size &lt;n&gt;</tt></td><td>change a point marker's shape/size (for a glyph, size is the fitting box in screen pixels, 0 = native)</td></tr>
+<tr><td><tt>marker &lt;id&gt; point glyph &lt;string&gt;</tt></td><td>set a glyph point's image file</td></tr>
 <tr><td><tt>marker &lt;id&gt; projection &lt;coordSystem&gt; &lt;skyFrame&gt; &lt;coord&gt; &lt;coord&gt; &lt;width&gt; &lt;coordSystem&gt; &lt;skyDist&gt;</tt></td><td>set a projection marker's endpoints and width</td></tr>
 <tr><td><tt>marker property &lt;markerProperty&gt; &lt;yesno&gt;</tt> / <tt>&lt;id&gt; property &lt;markerProperty&gt; &lt;yesno&gt;</tt> / <tt>property &lt;markerProperty&gt; &lt;yesno&gt; &lt;x&gt; &lt;y&gt;</tt></td><td>set a boolean property flag on selected marker(s), one marker, or the marker under a screen position</td></tr>
 <tr><td><tt>marker preserve &lt;yesno&gt;</tt></td><td>whether markers persist across a new image being loaded into the frame</td></tr>
@@ -891,7 +894,7 @@ $::current(frame) marker create annulus 256 256 10 40 4</tt>
 <tr><td><tt>get marker select [&lt;x&gt; &lt;y&gt;]</tt> / <tt>select number</tt></td><td>the selected marker(s) / count</td></tr>
 <tr><td><tt>get marker &lt;id&gt; line arrow</tt> / <tt>line length &lt;coordSystem&gt; &lt;skyDist&gt;</tt> / <tt>line point ...</tt></td><td>line marker properties</td></tr>
 <tr><td><tt>get marker &lt;id&gt; map length &lt;value&gt; &lt;coordSystem&gt; &lt;skyDist&gt;</tt></td><td>convert a canvas-pixel length to a sky/image length for that marker</td></tr>
-<tr><td><tt>get marker &lt;id&gt; point shape</tt> / <tt>point size</tt></td><td>point marker shape/size</td></tr>
+<tr><td><tt>get marker &lt;id&gt; point shape</tt> / <tt>point size</tt> / <tt>point glyph</tt></td><td>point marker shape/size / glyph image file</td></tr>
 <tr><td><tt>get marker &lt;id&gt; polygon point ...</tt> / <tt>polygon segment &lt;x&gt; &lt;y&gt;</tt></td><td>polygon vertex list / which segment is at a position</td></tr>
 <tr><td><tt>get marker &lt;id&gt; projection point ...</tt> / <tt>length ...</tt> / <tt>thick ...</tt></td><td>projection marker geometry</td></tr>
 <tr><td><tt>get marker &lt;id&gt; property [&lt;markerProperty&gt;]</tt> / <tt>property &lt;markerProperty&gt;</tt></td><td>a marker's (or the under-cursor marker's) property flag(s)</td></tr>

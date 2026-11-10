@@ -108,6 +108,7 @@
 ::msgcat::mcset zh Bins {分 格 數}
 ::msgcat::mcset zh Bin {分 格}
 ::msgcat::mcset zh Black {黑 色}
+::msgcat::mcset zh {Blank = built-in image} {留空 = 内置图像}
 ::msgcat::mcset zh {Blank/Inf/NaN Color} {Blank/Inf/NaN 顏 色}
 ::msgcat::mcset zh Blend {混 合}
 ::msgcat::mcset zh {Blink Frames} {閃 爍 影 像 視 窗}
@@ -417,6 +418,7 @@
 ::msgcat::mcset zh Gist Gist
 ::msgcat::mcset zh {Global Properties} {全 域 屬 性}
 ::msgcat::mcset zh Global {全 域}
+::msgcat::mcset zh Glyph 字形
 ::msgcat::mcset zh {Goto First Frame} {到 最 上 層 影 像 視 窗}
 ::msgcat::mcset zh {Goto Frame} {到 影 像 視 窗}
 ::msgcat::mcset zh {Goto Last Frame} {到 最 底 層 影 像 視 窗}
@@ -432,6 +434,7 @@
 ::msgcat::mcset zh Graph {圖 表}
 ::msgcat::mcset zh {Grayscale (PS only)} {灰 階 (僅 限 PS)}
 ::msgcat::mcset zh Grayscale {灰 階}
+::msgcat::mcset zh Gray 灰色
 ::msgcat::mcset zh Green {綠 色}
 ::msgcat::mcset zh {Grid Gap} {格 線 間 隔}
 ::msgcat::mcset zh Grid {格 狀}
@@ -784,6 +787,7 @@
 ::msgcat::mcset zh {Other Font Size} {其 它 字 型 大 小}
 ::msgcat::mcset zh Other {其 它}
 ::msgcat::mcset zh Outer {外 圈}
+::msgcat::mcset zh Outlined 带轮廓
 ::msgcat::mcset zh Overlay {覆 蓋}
 ::msgcat::mcset zh Overplot {疊 加 繪 圖}
 ::msgcat::mcset zh {Override Color} {覆 寫 顏 色}
@@ -810,6 +814,7 @@
 ::msgcat::mcset zh {Pixel Mask} {像 素 遮 罩}
 ::msgcat::mcset zh {Pixel Size} {像 素 大 小}
 ::msgcat::mcset zh {Pixel Table} {像 素 表}
+::msgcat::mcset zh {Pixels (0 = native)} {像素 (0 = 原始大小)}
 ::msgcat::mcset zh Pixels {像 素}
 ::msgcat::mcset zh Planets {行 星}
 ::msgcat::mcset zh Play {播 放}
@@ -1042,6 +1047,7 @@
 ::msgcat::mcset zh {Strip Parameters} {條 帶 參 數}
 ::msgcat::mcset zh {Strip Scale} {條 帶 色 階}
 ::msgcat::mcset zh Strip {條 帶}
+::msgcat::mcset zh Style 样式
 ::msgcat::mcset zh Subscriptions {訂 閱}
 ::msgcat::mcset zh Sum {總 和}
 ::msgcat::mcset zh {Surface Lighting} {表 面 光 照}
@@ -1174,6 +1180,7 @@
 ::msgcat::mcset zh VOT VOT
 ::msgcat::mcset zh VO VO
 ::msgcat::mcset zh Value 值
+::msgcat::mcset zh Variant 变体
 ::msgcat::mcset zh Vector {向 量}
 ::msgcat::mcset zh {Vertical Graph} {垂 直 圖 表}
 ::msgcat::mcset zh {Vertical Layout} {垂 直 版 面 配 置}

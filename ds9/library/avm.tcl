@@ -212,6 +212,11 @@ proc AVMParseXMP {xmp varname} {
 		 -ignorewhitespace 1 \
 		]
 
+    # TclXML (libxml2) does not report the end of an empty element
+    # <foo/>, which would leave the element stack out of step.
+    # Photoshop writes these, i.e. <rdf:li stEvt:action="saved"/>
+    regsub -all {<([A-Za-z_][-\w.:]*)(\s[^<>]*)?/>} $xmp {<\1\2></\1>} xmp
+
     set var(,stack) {}
     set rr 1
     if {[catch {$xml parse $xmp} err]} {

@@ -1,6 +1,10 @@
 # TODO: All-sky projections (Hammer-Aitoff, Mollweide, ...) for HEALPix display
 
-Status: planning only. Nothing below is implemented yet.
+Status (2026-11-11): Phases 1-3 done; Phase 4 steps 0-3 done (static and
+live zenithal/conic windows, region and contour remapping, display-sized
+windows), plus direct multi-threaded resampling (2026-11-02). Rebased on
+master after 8.8.2 / PR #433. Open PR: SAOImageDS9/SAOImageDS9#380.
+Remaining work is under "Remaining" at the end of Phase 4.
 
 ## Background
 
@@ -152,6 +156,8 @@ and use `lon=` for the centre longitude instead.
   for an image with an `XLON-AIT` WCS. It reproduces with a plain FITS
   image saved from the prototype, so it is in the existing `data` command
   path (`Base::getDataValuesCmd`), not in the HEALPix code.
+  **Fixed 2026-10-15** (`758f44543`): `listFromRef` now writes "nan" for
+  points that don't map to the sky.
 
 ### Phase 2: Real option plumbing -- in progress 2026-10-14
 
@@ -199,8 +205,8 @@ and use `lon=` for the centre longitude instead.
       build.)
 - [x] Docs: `ds9/doc/ref/file.html`, "FITS HEALPIX Table": description,
       `proj=`/`lon0=` in the parameter list, two examples.
-- [ ] Release-notes entry: 8.8 is released and there's no
-      `ds9/doc/release/r8.9.html` yet; needs the next version decided.
+- [x] Release-notes entry: `ds9/doc/release/r8.8.2.html` (master had a
+      placeholder; filled in 2026-11-11).
 - [ ] Optional Tcl side: a preference or command-line option for the
       default HEALPix projection (there is no Tcl UI for the HEALPix
       options today; everything goes through the filename brackets).
@@ -252,11 +258,13 @@ and use `lon=` for the centre longitude instead.
   regions in galactic (`xpaget ... regions -system wcs -sky galactic`)
   segfaults (`strlen(NULL)`) on an ordinary `GLON-AIT` FITS image when a
   box is centred on the seam (`box(180,-50,30,15,0)`). Same family as the
-  `data`-command crash above; flagged together as a separate task.
+  `data`-command crash above; **fixed by the same commit** (`758f44543`).
 
-### Phase 4 (proposal, not started): zenithal and conic projections
+### Phase 4: zenithal and conic projections -- steps 0-3 done 2026-10-16
 
-Sketch from 2026-10-16. Nothing here is implemented.
+The sketch below is from 2026-10-16, before implementation; what was
+actually built is under "Suggested order", and later changes are in
+"Direct resampling" and "Remaining" after it.
 
 **Idea.** Zenithal projections (TAN, SIN, ARC, ZEA, STG, ...) can't show
 the whole sky, so render a *window*: the tangent point is the current
@@ -293,6 +301,8 @@ point, and the window is the frame size (at the current zoom) padded
 - **AST is not thread-safe here** (`ast/` is configured
   `--without-pthreads`) and the main thread uses it constantly, so
   worker threads can't call AST. See "Async" below for options.
+  (Superseded 2026-11-02: the resampler no longer goes through AST's
+  Mapping; see "Direct resampling".)
 - The hard part is that every re-render gives the image a new pixel
   grid and WCS, and the old-to-new pixel mapping is *not* affine
   (different tangent point). Everything ds9 keeps in image
@@ -456,6 +466,7 @@ an option.
      byte-identically to a fresh load at that centre; default HPX loads
      and filename parsing still byte-identical to the Phase 3 record.
      `moc.sh` still fails here only because PR #378 isn't merged.
+     (#378 has since been merged and is on this branch.)
    - `Tests/hpxproj.sh` covers all of the above.
    - Not done: regions (step 3), and aux contours loaded from files
      (same problem as regions).
@@ -590,7 +601,49 @@ an option.
      - `Tests/hpxproj.sh`: zoom in -> HEALPix resolution, on-screen scale
        kept, exact against `reproject`; zoom out -> coarser, window <= 2x
        the frame; conic whole-plane vs zoomed-in pans.
-4. Async, (a) above, only if measurements say it's needed.
+4. Async, (a) above, only if measurements say it's needed. Not needed
+   so far: with direct resampling (below) window rebuilds are well under
+   a second.
+
+**Direct resampling (done 2026-11-02).** `astResampleF` with zero
+tolerance ran every output pixel through the full AST Mapping on one
+thread: ~17 s for an all-sky AIT at nside 4096, and a tolerance doesn't
+help because the HPX facet seams defeat its linear approximation.
+`FitsHPXReproj::build()` now calls the WCSLIB projection routines AST
+itself uses (`astPRJset` and the per-projection fwd/rev, from `ast.h`)
+and the spherical rotation directly, splitting output rows across
+`Base::nthreads_` threads (the `threads` preference).
+
+- Reproduces the WcsMap checks (longitude range, |lat| <= 90) and
+  AST__NEAREST's rounding and bounds, so output is bit-identical to the
+  AST path; headers it doesn't handle fall back to `astResampleF`.
+- `astPRJset()` ignores the status of the projection's own set routine
+  and leaves NULL fwd/rev pointers on failure (CEA with lambda 0
+  crashed), so the pointers are checked and CEA's PV2_1 defaults to 1 as
+  in WcsMap.
+- ChandraMOC12 `[proj=ait]`: 17.5 s -> 2.5 s on 12 threads (14.9 s on
+  1). Checked identical to the AST path for all 17 projections,
+  wmap/wmap_ring/healpix_partial, and panned/zoomed windows.
+- `Tests/hpxproj.sh` reruns its numeric loads with `threads 1` and
+  checks they are byte-identical to the threaded ones (2026-11-11).
+
+**Remaining.**
+
+- [ ] Untested: the footprint layer (needs a saved footprint file), and
+      region dialogs / analysis plots staying attached through a rebuild
+      (GUI only).
+- [ ] Known limits: XLON/XLAT maps don't remap regions; the panner
+      shows only the current window; restored parked regions are
+      appended, so region order can change; `save fits` / `saveimage`
+      save the current window only.
+- [ ] `lock frame wcs` between two windows with different centres
+      prints PR #378's "WCS alignment: no linear fit ... local
+      approximation" warning. Expected (the fit is genuinely non-linear),
+      but noisy if it fires on every pan of a locked window.
+- [ ] Optional: Tcl preference / command-line option for the default
+      HEALPix projection; low-res all-sky overview in the panner.
+- Separate tasks, pre-existing, not this branch: ASCII-table HEALPix
+  doesn't load; `buildMOC()` fills facet gaps with 0 instead of NaN.
 
 ## Open questions / risks
 

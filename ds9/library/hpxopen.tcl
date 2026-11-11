@@ -108,6 +108,15 @@ proc HPXOpenProjInfo {proj} {
     return {}
 }
 
+# "Gnomonic (TAN)"
+proc HPXOpenProjLabel {proj} {
+    set pi [HPXOpenProjInfo $proj]
+    if {$pi == {}} {
+	return $proj
+    }
+    return "[lindex $pi 2] ([string toupper $proj])"
+}
+
 proc HPXOpenProjKind {proj} {
     return [lindex [HPXOpenProjInfo $proj] 1]
 }
@@ -292,9 +301,8 @@ proc HPXOpenParamsDialog {fn info} {
 	    $f.proj.m add separator
 	    continue
 	}
-	lassign $pp code kind label
-	$f.proj.m add radiobutton \
-	    -label "$label ([string toupper $code])" \
+	set code [lindex $pp 0]
+	$f.proj.m add radiobutton -label [HPXOpenProjLabel $code] \
 	    -variable hpxed(proj) -value $code -command HPXOpenProjChanged
     }
     ttk::label $f.tlon0 -text [msgcat::mc {Longitude}]
@@ -476,7 +484,7 @@ proc HPXOpenProjChanged {} {
 
     set pi [HPXOpenProjInfo $hpxed(proj)]
     lassign $pi code kind label lat0 fov fovmax
-    set hpxed(projlabel) "$label ([string toupper $code])"
+    set hpxed(projlabel) [HPXOpenProjLabel $code]
 
     set old [HPXOpenProjInfo $hpxed(oldproj)]
     set hpxed(oldproj) $hpxed(proj)
@@ -581,17 +589,19 @@ proc PrefsDialogHPXOpen {} {
     ttk::checkbutton $f.ask -variable phpxopen(ask)
 
     ttk::label $f.tproj -text [msgcat::mc {Default Projection}]
-    ttk::menubutton $f.proj -textvariable phpxopen(proj) -menu $f.proj.m
+    set hpxopen(prefslabel) [HPXOpenProjLabel $phpxopen(proj)]
+    ttk::menubutton $f.proj -textvariable hpxopen(prefslabel) \
+	-menu $f.proj.m
     ThemeMenu $f.proj.m
     foreach pp $hpxopen(projs) {
 	if {$pp == {}} {
 	    $f.proj.m add separator
 	    continue
 	}
-	lassign $pp code kind label
-	$f.proj.m add radiobutton \
-	    -label "$label ([string toupper $code])" \
-	    -variable phpxopen(proj) -value $code
+	set code [lindex $pp 0]
+	$f.proj.m add radiobutton -label [HPXOpenProjLabel $code] \
+	    -variable phpxopen(proj) -value $code \
+	    -command [list set hpxopen(prefslabel) [HPXOpenProjLabel $code]]
     }
 
     grid $f.task $f.ask -padx 2 -pady 2 -sticky w

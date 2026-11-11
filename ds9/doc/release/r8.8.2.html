@@ -151,6 +151,11 @@ keep their sky positions.</li>
 <li><strong>HEALPIX</strong>: The <code>filename[ext,hpx]</code> form
 (e.g. <code>foo.fits[1,order=nested]</code>) now applies the HEALPix
 options; they were silently ignored.</li>
+<li><strong>HEALPIX</strong>: <em>File &gt; Open</em> on a HEALPix map
+or MOC shows a dialog to choose the data column, projection, centre and
+field of view, HPX layout, and ordering/coordinate system overrides. The
+choices are added to the file name. New <em>HEALPix</em> preferences
+turn the dialog off and set the projection it starts with.</li>
 <li><strong>WCS</strong>: Fix crash listing WCS coordinates (pixel
 values, regions) for points that are not on the sky, such as outside an
 Aitoff ellipse.</li>

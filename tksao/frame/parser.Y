@@ -1128,6 +1128,7 @@ fade    : numeric {fr->fadeCmd($1);}
         ;
 
 fitsy	: HAS_ EXT_ STRING {fr->fitsyHasExtCmd($3);}
+	| INFO_ STRING {fr->fitsyInfoCmd($2);}
 	;
 
 get	: /* empty */ {fr->getCmd();}

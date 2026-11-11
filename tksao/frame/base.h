@@ -1077,6 +1077,7 @@ public:
 
   // Fitsy Commands
   void fitsyHasExtCmd(const char*);
+  void fitsyInfoCmd(const char*);
 
   // Frame Commands
   void clearCmd();

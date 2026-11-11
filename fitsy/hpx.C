@@ -253,13 +253,115 @@ FitsBinColumn* FitsHPX::findDefaultDataColumn(FitsBinTableHDU* hdu, FitsBinColum
 {
   for (int ii=0; ii<hdu->cols(); ii++) {
     FitsBinColumn* col = (FitsBinColumn*)hdu->find(ii);
-    if (col && col != excludeCol && col->type() != 'A' &&
-        col->type() != 'L' && col->type() != 'X' &&
-        col->type() != 'P' && col->type() != 'Q') {
+    if (col && col != excludeCol && isDataColumn(col)) {
       return col;
     }
   }
   return NULL;
+}
+
+FitsHPX::Order FitsHPX::headOrder(FitsHead* head)
+{
+  Order order = RING;
+  char* str = head ? head->getString("ORDERING") : NULL;
+  if (str) {
+    char* upper = toUpper(str);
+    if (!strncmp(upper,"NUNIQ",5))
+      order = NUNIQ;
+    else if (upper[0] == 'N')
+      order = NESTED;
+    else if (upper[0] == 'R')
+      order = RING;
+    delete [] upper;
+  }
+  return order;
+}
+
+FitsHPX::CoordSys FitsHPX::headSystem(FitsHead* head)
+{
+  char* str = head ? head->getString("COORDSYS") : NULL;
+  if (str) {
+    switch (str[0]) {
+    case 'G':
+      return GAL;
+    case 'E':
+      return ECL;
+    case 'C':
+    case 'Q':
+      return EQU;
+    }
+  }
+  return UNKNOWN;
+}
+
+int FitsHPX::headMOCOrder(FitsHead* head)
+{
+  return head ? mocHeaderOrder(head) : -1;
+}
+
+FitsBinColumn* FitsHPX::indexColumn(FitsHead* head, Order oo)
+{
+  FitsBinTableHDU* hdu = head ? (FitsBinTableHDU*)head->hdu() : NULL;
+  if (!hdu)
+    return NULL;
+
+  FitsBinColumn* col = NULL;
+  if (oo == NUNIQ) {
+    col = (FitsBinColumn*)hdu->find("UNIQ");
+    if (!col)
+      col = (FitsBinColumn*)hdu->find("NPIX");
+  }
+  else if (keywordStarts(head, "INDXSCHM", "EXPLICIT"))
+    col = (FitsBinColumn*)hdu->find("PIXEL");
+  else
+    return NULL;
+
+  if (!col)
+    col = (FitsBinColumn*)hdu->find(0);
+  return col;
+}
+
+FitsBinColumn* FitsHPX::dataColumn(FitsHead* head, Order oo, int cc)
+{
+  FitsBinTableHDU* hdu = head ? (FitsBinTableHDU*)head->hdu() : NULL;
+  if (!hdu)
+    return NULL;
+
+  // a full map reads the first column unless told otherwise
+  if (cc < 0 && oo != NUNIQ)
+    cc = 0;
+
+  FitsBinColumn* index = indexColumn(head, oo);
+  if (!index)
+    return (FitsBinColumn*)hdu->find(cc);
+
+  FitsBinColumn* col = NULL;
+  if (cc >= 0) {
+    col = (FitsBinColumn*)hdu->find(cc);
+    if (col == index)
+      col = NULL;
+    // NUNIQ honours an explicit choice, even a bad one
+    if (oo == NUNIQ)
+      return col;
+  }
+  if (!col)
+    col = findDefaultDataColumn(hdu, index);
+  return col;
+}
+
+int FitsHPX::isDataColumn(FitsColumn* col)
+{
+  if (!col)
+    return 0;
+  switch (col->type()) {
+  case 'A':
+  case 'L':
+  case 'X':
+  case 'P':
+  case 'Q':
+    return 0;
+  }
+  return 1;
 }
 
 FitsHPX::FitsHPX(FitsFile* fits, Order oo, CoordSys ss, Layout ll,
@@ -277,45 +379,22 @@ FitsHPX::FitsHPX(FitsFile* fits, Order oo, CoordSys ss, Layout ll,
   endian_ = lsb() ? LITTLE : BIG;
 
   if (order_ == NUNIQ) {
-    uniqCol_ = (FitsBinColumn*)hdu->find("UNIQ");
-    if (!uniqCol_)
-      uniqCol_ = (FitsBinColumn*)hdu->find("NPIX");
-    if (!uniqCol_)
-      uniqCol_ = (FitsBinColumn*)hdu->find(0);
-
+    uniqCol_ = indexColumn(head, NUNIQ);
     if (!uniqCol_ || !uniqCol_->isInt())
       return;
 
-    if (cc >= 0) {
-      col_ = (FitsBinColumn*)hdu->find(cc);
-      if (col_ == uniqCol_)
-	col_ = NULL;
-    }
-    else {
-      col_ = findDefaultDataColumn(hdu, uniqCol_);
-    }
+    col_ = dataColumn(head, NUNIQ, cc);
   }
   else if (head && keywordStarts(head, "INDXSCHM", "EXPLICIT")) {
-    pixelCol_ = (FitsBinColumn*)hdu->find("PIXEL");
-    if (!pixelCol_)
-      pixelCol_ = (FitsBinColumn*)hdu->find(0);
-
-    if (cc >= 0) {
-      col_ = (FitsBinColumn*)hdu->find(cc);
-      if (col_ == pixelCol_)
-	col_ = NULL;
-    }
-
-    if (!col_) {
-      col_ = findDefaultDataColumn(hdu, pixelCol_);
-    }
+    pixelCol_ = indexColumn(head, order_);
+    col_ = dataColumn(head, order_, cc);
     if (!col_)
       return;
 
     nside_ = head->getInteger("NSIDE", 0);
   }
   else {
-    col_ = (FitsBinColumn*)hdu->find(cc);
+    col_ = dataColumn(head, order_, cc);
     if (!col_)
       return;
 

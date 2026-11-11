@@ -12,6 +12,7 @@
 #include "mmap.h"
 #include "mmapincr.h"
 #include "allocgz.h"
+#include "hpx.h"
 #include "outfile.h"
 #include "outchannel.h"
 #include "outsocket.h"
@@ -922,6 +923,147 @@ void Base::fitsyHasExtCmd(const char* fn)
   ext->done();
   delete ext;
   return;
+}
+
+// Describe what loading fn as a plain FITS file would show, without
+// loading it: the same RELAXIMAGE scan the load does, reading headers
+// only (except for compressed files). The result is a Tcl dict, empty if
+// the file can't be read:
+//   type    image | events | healpix | moc
+//   ext     extension number found (0 = primary)
+//   extname EXTNAME, or {}
+// and for healpix/moc, what a load with no [...] options would use:
+//   ordering ring | nested | nuniq, or {} without ORDERING
+//   coordsys equatorial | galactic | ecliptic, or {} if unknown
+//   nside    NSIDE, or 0 (MOCs, or deduced at load)
+//   mocorder MOCORD_S/MOCORDER/HPXMOC, or -1
+//   rows     table rows
+//   index    pixel index column (1-based), or 0 for a full map
+//   default  the column a load reads (1-based), or 0 if none
+//   cols     {{n name tform} ...}, the columns that can hold values
+// The words match the [order=,system=,col=] bracket options, so the
+// open dialog can pass them straight back.
+void Base::fitsyInfoCmd(const char* fn)
+{
+  if (!fn || !*fn)
+    return;
+
+  // mmapincr reads headers only, as the load does; it can't read
+  // compressed files, so fall back to allocgz (which is also the only
+  // reader on Windows, where mmap is a stub)
+  FitsFile* ff = NULL;
+#ifndef __WIN32
+  ff = new FitsFitsMMapIncr(fn, FitsFile::RELAXIMAGE);
+  if (!ff->isValid()) {
+    ff->done();
+    delete ff;
+    ff = NULL;
+  }
+#endif
+  if (!ff)
+    ff = new FitsFitsAllocGZ(fn, FitsFile::RELAXIMAGE, FitsFile::NOFLUSH);
+
+  FitsHead* head = ff->isValid() ? ff->head() : NULL;
+  if (head) {
+    const char* type = "events";
+    if (head->isImage() || (head->isBinTable() && head->find("ZIMAGE")))
+      type = "image";
+    else if (FitsHPX::isMOC(head))
+      type = "moc";
+    else if (FitsHPX::isHPX(head))
+      type = "healpix";
+
+    Tcl_DString ds;
+    Tcl_DStringInit(&ds);
+    Tcl_DStringAppendElement(&ds, "type");
+    Tcl_DStringAppendElement(&ds, type);
+
+    char buf[64];
+    snprintf(buf, sizeof(buf), "%d", ff->ext());
+    Tcl_DStringAppendElement(&ds, "ext");
+    Tcl_DStringAppendElement(&ds, buf);
+    Tcl_DStringAppendElement(&ds, "extname");
+    Tcl_DStringAppendElement(&ds, ff->extname() ? ff->extname() : "");
+
+    if (!strcmp(type,"healpix") || !strcmp(type,"moc")) {
+      FitsHPX::Order order = FitsHPX::headOrder(head);
+
+      const char* ordering = "";
+      if (head->find("ORDERING"))
+	ordering = order == FitsHPX::NUNIQ ? "nuniq" :
+	  order == FitsHPX::NESTED ? "nested" : "ring";
+      const char* coordsys = "";
+      switch (FitsHPX::headSystem(head)) {
+      case FitsHPX::EQU:
+	coordsys = "equatorial";
+	break;
+      case FitsHPX::GAL:
+	coordsys = "galactic";
+	break;
+      case FitsHPX::ECL:
+	coordsys = "ecliptic";
+	break;
+      default:
+	break;
+      }
+
+      FitsBinTableHDU* hdu = (FitsBinTableHDU*)head->hdu();
+      FitsBinColumn* index = FitsHPX::indexColumn(head, order);
+      FitsBinColumn* data = FitsHPX::dataColumn(head, order, -1);
+      int indexn =0;
+      int datan =0;
+      for (int ii=0; ii<hdu->cols(); ii++) {
+	FitsColumn* col = hdu->find(ii);
+	if (col == index)
+	  indexn = ii+1;
+	if (col == data)
+	  datan = ii+1;
+      }
+
+      const char* keys[] = {"nside", "mocorder", "rows", "index", "default"};
+      long vals[] = {(long)head->getInteger("NSIDE",0),
+		     (long)FitsHPX::headMOCOrder(head),
+		     (long)hdu->rows(), (long)indexn, (long)datan};
+
+      Tcl_DStringAppendElement(&ds, "ordering");
+      Tcl_DStringAppendElement(&ds, ordering);
+      Tcl_DStringAppendElement(&ds, "coordsys");
+      Tcl_DStringAppendElement(&ds, coordsys);
+      for (int ii=0; ii<5; ii++) {
+	snprintf(buf, sizeof(buf), "%ld", vals[ii]);
+	Tcl_DStringAppendElement(&ds, keys[ii]);
+	Tcl_DStringAppendElement(&ds, buf);
+      }
+
+      Tcl_DStringAppendElement(&ds, "cols");
+      Tcl_DStringStartSublist(&ds);
+      for (int ii=0; ii<hdu->cols(); ii++) {
+	FitsColumn* col = hdu->find(ii);
+	if (!col || col == index || !FitsHPX::isDataColumn(col))
+	  continue;
+	Tcl_DStringStartSublist(&ds);
+	snprintf(buf, sizeof(buf), "%d", ii+1);
+	Tcl_DStringAppendElement(&ds, buf);
+	// TTYPE keeps its FITS padding; the dialog wants the bare name
+	string name = col->ttype() ? col->ttype() : "";
+	name.erase(name.find_last_not_of(' ')+1);
+	Tcl_DStringAppendElement(&ds, name.c_str());
+	if (col->repeat() != 1)
+	  snprintf(buf, sizeof(buf), "%d%c", col->repeat(), col->type());
+	else
+	  snprintf(buf, sizeof(buf), "%c", col->type());
+	Tcl_DStringAppendElement(&ds, buf);
+	Tcl_DStringEndSublist(&ds);
+      }
+      Tcl_DStringEndSublist(&ds);
+    }
+
+    Tcl_DStringResult(interp, &ds);
+  }
+
+  // NB: see fitsyHasExtCmd, done() releases the handle
+  ff->done();
+  delete ff;
 }
 
 void Base::getAxesOrderCmd()

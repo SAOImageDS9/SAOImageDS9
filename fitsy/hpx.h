@@ -33,7 +33,7 @@ class FitsHPX : public FitsFile {
   void RINGidx(int nside, int facet, int rotn, int jmap, long long *healidx);
 
   // Structural Refactoring Helpers
-  FitsBinColumn* findDefaultDataColumn(FitsBinTableHDU* hdu, FitsBinColumn* excludeCol);
+  static FitsBinColumn* findDefaultDataColumn(FitsBinTableHDU* hdu, FitsBinColumn* excludeCol);
   void adjustFacetForQuad(int& facet) const;
   void applyHalveBlanking(float* row, int nside, int jj, int halve, float blankValue) const;
   int isHalveBlanked(int nside, int ii, int jj, int halve) const;
@@ -45,6 +45,19 @@ class FitsHPX : public FitsFile {
 
   static int isHPX(FitsHead*);
   static int isMOC(FitsHead*);
+
+  // What a load of a table isHPX() accepts reads, given no overrides. The
+  // load and the probe for the open dialog both use these, so they agree.
+  static Order headOrder(FitsHead*);       // ORDERING, default RING
+  static CoordSys headSystem(FitsHead*);   // COORDSYS, default UNKNOWN
+  static int headMOCOrder(FitsHead*);      // MOCORD_S/MOCORDER/HPXMOC, or -1
+  // the pixel index column (UNIQ/NPIX for NUNIQ, PIXEL for an explicit
+  // index), or NULL for a full map
+  static FitsBinColumn* indexColumn(FitsHead*, Order);
+  // the column holding the values: cc is 0-based, -1 for the default
+  static FitsBinColumn* dataColumn(FitsHead*, Order, int cc);
+  // a column that can hold values (not string, logical, bit or varlen)
+  static int isDataColumn(FitsColumn*);
 };
 
 #endif

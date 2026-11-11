@@ -30,40 +30,14 @@ void FitsImage::initHPX()
   }
 
   // coordinate system identifier?
-  FitsHPX::CoordSys coord = FitsHPX::UNKNOWN;
+  FitsHPX::CoordSys coord = FitsHPX::headSystem(head);
   if (fits_->pHPXSystem() >= 0)
     coord = (FitsHPX::CoordSys)fits_->pHPXSystem();
-  else {
-    char* str = head->getString("COORDSYS");
-    if (str) {
-      if (str[0] == 'G')
-	coord = FitsHPX::GAL;
-      else if (str[0] == 'E')
-	coord = FitsHPX::ECL;
-      else if (str[0] == 'C')
-	coord = FitsHPX::EQU;
-      else if (str[0] == 'Q')
-	coord = FitsHPX::EQU;
-    }
-  }
 
   // Nested or ring order?
-  FitsHPX::Order order = FitsHPX::RING;
+  FitsHPX::Order order = FitsHPX::headOrder(head);
   if (fits_->pHPXOrder() >=0)
     order = (FitsHPX::Order)fits_->pHPXOrder();
-  else {
-    char* str = head->getString("ORDERING");
-    if (str) {
-      char* upper = toUpper(str);
-      if (!strncmp(upper,"NUNIQ",5))
-	order = FitsHPX::NUNIQ;
-      else if (upper[0] == 'N')
-	order = FitsHPX::NESTED;
-      else if (upper[0] == 'R')
-	order = FitsHPX::RING;
-      delete [] upper;
-    }
-  }
 
   // Layout
   FitsHPX::Layout layout = FitsHPX::EQUATOR;

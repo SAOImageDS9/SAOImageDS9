@@ -746,6 +746,36 @@ int FitsHPXReproj::pixelAt(double lon, double lat, Vector* img)
   return rr;
 }
 
+int FitsHPXReproj::remapFrom(FitsHead* from, int nn, double* xx, double* yy)
+{
+  if (!head_ || !from || nn <= 0)
+    return 0;
+
+  int rr = 0;
+  astClearStatus;
+  astBegin;
+  AstFrameSet* ofs = hpxReprojAst(from);
+  AstFrameSet* nfs = hpxReprojAst(head_);
+  if (ofs && nfs) {
+    double* ll = new double[nn];
+    double* bb = new double[nn];
+    astTran2(ofs, nn, xx, yy, 1, ll, bb);
+    if (astOK)
+      astTran2(nfs, nn, ll, bb, 0, xx, yy);
+    if (astOK) {
+      for (int ii=0; ii<nn; ii++)
+	if (xx[ii] == AST__BAD || yy[ii] == AST__BAD)
+	  xx[ii] = yy[ii] = NAN;
+      rr = 1;
+    }
+    delete [] ll;
+    delete [] bb;
+  }
+  astClearStatus;
+  astEnd;
+  return rr;
+}
+
 int FitsHPXReproj::fromSky(const char* attrs, double lon, double lat,
 			   double* olon, double* olat)
 {

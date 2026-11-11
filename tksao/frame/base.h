@@ -1059,8 +1059,9 @@ public:
   void updateFitsCenterCmd();
   void updateFitsCenterCmd(const Vector&);
   enum HPXMode {HPXPAN, HPXCENTER, HPXPANTO, HPXFIT};
-  const char* hpxRecentre(HPXMode, double, double);
+  const char* hpxRecentre(HPXMode, double, double, int drag =0);
   void hpxAutoRefresh();
+  int hpxDragRefresh();
   void hpxWindowGeometry(FitsImage*, double*, int*, int*);
   int hpxPanTo(const Vector&, Coord::CoordSystem, Coord::SkyFrame);
   void hpxListMarkers(Coord::SkyFrame, std::vector<std::string>*, int*);
@@ -1070,6 +1071,7 @@ public:
   int hpxParseParked(const std::string&);
   int hpxRestoring_;   // re-creating regions after a recentre
   int hpxMapErrs_;     // regions createMarker() couldn't place
+  int hpxDragStale_;   // contours carried approximately during a drag
   void updateFitsCmd(int, BBox);
   void unloadFitsCmd();
 
@@ -1751,7 +1753,7 @@ public:
   virtual void panToCmd(const Vector&, Coord::CoordSystem, Coord::SkyFrame) =0;
   virtual void panBeginCmd(const Vector&) =0;
   virtual void panMotionCmd(const Vector&) =0;
-  void panEndCmd(const Vector& vv) {panMotionCmd(vv); hpxAutoRefresh();}
+  void panEndCmd(const Vector& vv);
   virtual void panBBoxCmd(const Vector&) =0;
   void panPreserveCmd(int r) {preservePan = r;}
   void rotateCmd(double);

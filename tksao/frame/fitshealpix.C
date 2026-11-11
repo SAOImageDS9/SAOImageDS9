@@ -252,10 +252,25 @@ int FitsImage::hpxRefAt(double lon, double lat, Vector* ref)
   return 1;
 }
 
+// The window's header now, and image pixels of an earlier window (given
+// by its header) mapped into the current one; see FitsHPXReproj.
+FitsHead* FitsImage::hpxHeadCopy()
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  return rr ? rr->headCopy() : NULL;
+}
+
+int FitsImage::hpxRemapImage(FitsHead* from, int nn, double* xx, double* yy)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  return rr ? rr->remapFrom(from, nn, xx, yy) : 0;
+}
+
 // Has the pan point (REF coords) moved far enough from the window's
-// centre to rebuild the window around it? More than a quarter of the
-// window, so short pans never re-render.
-int FitsImage::hpxNeedsRecentre(const Vector& ref)
+// centre to rebuild the window around it? By default more than a quarter
+// of the window, so short pans never re-render; with minpix >= 0, more
+// than minpix image pixels (live rebuilds during a drag).
+int FitsImage::hpxNeedsRecentre(const Vector& ref, double minpix)
 {
   FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
   if (!rr || !rr->canRecentre())
@@ -271,6 +286,8 @@ int FitsImage::hpxNeedsRecentre(const Vector& ref)
   double hh = height();
   double dx = fabs(img[0] - (ww+1)/2.);
   double dy = fabs(img[1] - (hh+1)/2.);
+  if (minpix >= 0)
+    return dx*dx + dy*dy > minpix*minpix;
   return dx > .25*ww || dy > .25*hh;
 }
 

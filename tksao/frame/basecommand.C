@@ -3214,7 +3214,8 @@ void Base::updateFitsCenterCmd(const Vector& vv)
 // contours are regenerated, and the pan and crosshair go back to the same
 // sky positions in the new image. Regions are not remapped yet.
 // Returns NULL, or an error message.
-const char* Base::hpxRecentre(HPXMode mode, double lon, double lat)
+const char* Base::hpxRecentre(HPXMode mode, double lon, double lat,
+				int drag)
 {
   FitsImage* ptr = currentContext->fits;
   if (!ptr || !ptr->isHPXWindow())
@@ -3234,6 +3235,14 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat)
   if (remap)
     hpxListMarkers(msky, mtext, mcount);
   currentContext->hpxSaveAuxContours(ptr);
+
+  // During a drag, regenerating contours on every step is too slow
+  // (~150 ms for a frame-sized window). Carry them into the new window
+  // through the sky instead (Context::hpxCarryContours), and regenerate
+  // on release. An affine fit at the pan point isn't enough: a wide TAN
+  // window is far from linear, and the error builds up over a drag.
+  FitsHead* oldHead = drag ? ptr->hpxHeadCopy() : NULL;
+  Matrix oldRefToImage = ptr->refToImage;
 
   // Automatic rebuilds (pan, pan to) also fit the window to the display:
   // pixels as fine as one screen pixel at the current zoom (never finer
@@ -3285,11 +3294,20 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat)
     }
     break;
   }
-  if (!ok)
+  if (!ok) {
+    if (oldHead)
+      delete oldHead;
     return " unable to recentre";
+  }
 
   currentContext->hpxFinish();
-  currentContext->contourUpdateFV();
+  if (oldHead && currentContext->hpxCarryContours(ptr, oldHead,
+						   oldRefToImage))
+    hpxDragStale_ = 1;
+  else
+    currentContext->contourUpdateFV();
+  if (oldHead)
+    delete oldHead;
 
   // keep the on-screen scale when the pixel size changed
   if (opix > 0 && npix != opix) {
@@ -3377,6 +3395,55 @@ void Base::hpxAutoRefresh()
 
   if (need)
     hpxRecentre(HPXPAN, 0, 0);
+}
+
+// During a drag, rebuild a HEALPix window around the pan point as it
+// moves, every HPX_DRAG_STEP screen pixels, so the projection's tangent
+// point follows the view. Rebuilding only on release turned the whole view
+// in one step: away from the tangent point the meridians lean by about
+// dlon*sin(lat), and the rebuild put north back up (10 deg at b=40, 31 deg
+// at b=70 for a 12 deg pan). In small steps each turn is a fraction of a
+// degree. The grabbed point (panStart) goes through the sky into the new
+// window, so it stays under the pointer.
+// Returns 1 if the window was rebuilt (the caller then puts the grabbed
+// point back under the pointer).
+#define HPX_DRAG_STEP 2
+int Base::hpxDragRefresh()
+{
+  FitsImage* ptr = currentContext->fits;
+  if (!ptr || !ptr->isHPXWindow())
+    return 0;
+
+  double zz = fabs(zoom_[0]) > fabs(zoom_[1]) ? fabs(zoom_[0]) : fabs(zoom_[1]);
+  if (zz <= 0)
+    zz = 1;
+  if (!ptr->hpxNeedsRecentre(cursor, HPX_DRAG_STEP/zz))
+    return 0;
+
+  double slon, slat;
+  int grab = ptr->hpxNativeAtRef(panStart, &slon, &slat);
+  if (hpxRecentre(HPXPAN, 0, 0, 1))
+    return 0;
+
+  Vector rr;
+  if (grab && ptr->hpxRefAt(slon, slat, &rr)) {
+    panStart = rr;
+    return 1;
+  }
+  return 0;
+}
+
+// End of a drag: the usual refresh, then regenerate contours that were
+// carried approximately during the drag.
+void Base::panEndCmd(const Vector& vv)
+{
+  panMotionCmd(vv);
+  hpxAutoRefresh();
+  if (hpxDragStale_) {
+    hpxDragStale_ = 0;
+    currentContext->contourUpdateFV();
+    update(PIXMAP);
+  }
 }
 
 // A pan to a sky position on a HEALPix window. Convert the target to the

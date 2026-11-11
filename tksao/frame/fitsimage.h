@@ -202,7 +202,9 @@ class FitsImage {
   int isHPXWindow();
   int hpxNativeAtRef(const Vector& ref, double* lon, double* lat);
   int hpxRefAt(double lon, double lat, Vector* ref);
-  int hpxNeedsRecentre(const Vector& ref);
+  FitsHead* hpxHeadCopy();
+  int hpxRemapImage(FitsHead* from, int nn, double* xx, double* yy);
+  int hpxNeedsRecentre(const Vector& ref, double minpix =-1);
   int hpxRecentrePan(double lon, double lat);
   int hpxSkyFrame(Coord::SkyFrame*);
   std::vector<HPXParked>& hpxParked() {return hpxParked_;}

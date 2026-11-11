@@ -2,7 +2,8 @@
 
 Status (2026-11-11): Phases 1-3 done; Phase 4 steps 0-3 done (static and
 live zenithal/conic windows, region and contour remapping, display-sized
-windows), plus direct multi-threaded resampling (2026-11-02). Rebased on
+windows), plus direct multi-threaded resampling (2026-11-02) and live
+recentring during drags (2026-11-11). Rebased on
 master after 8.8.2 / PR #433. Open PR: SAOImageDS9/SAOImageDS9#380.
 Remaining work is under "Remaining" at the end of Phase 4.
 
@@ -627,7 +628,47 @@ and the spherical rotation directly, splitting output rows across
 - `Tests/hpxproj.sh` reruns its numeric loads with `threads 1` and
   checks they are byte-identical to the threaded ones (2026-11-11).
 
+**Live recentring during a drag (done 2026-11-11).** With "Drag to
+Center" the window used to be rebuilt only on release (or past 1/4 of the
+window), and the view visibly turned and jumped: away from the tangent
+point TAN's meridians lean by about dlon*sin(lat), and the rebuild put
+north back up at the new centre. Measured on `acis_all_sky_gal.hpx`
+(`proj=tan`, zoom 0.2) for a 12 deg pan: 0 deg rotation at b=0, 10 deg at
+b=40, 31 deg at b=70, plus a 2-5% scale change (TAN's off-axis stretch).
+
+- `FrameBase::panMotionCmd` calls `Base::hpxDragRefresh()`, which rebuilds
+  the window around the pan once it is more than `HPX_DRAG_STEP` (2)
+  screen pixels from the window centre: in practice every motion event,
+  which `MotionDispatch` already coalesces to ~60 Hz. Each rebuild is
+  ~25-30 ms here (500 regions add ~12 ms). The same total turn now happens
+  smoothly during the drag; nothing is left for release.
+- The grabbed point (`panStart`) goes through the sky into the new window
+  and the motion is re-applied, so it stays exactly under the pointer.
+- Contours: regenerating them per step was ~180 ms. During a drag
+  (`hpxRecentre(..., drag=1)`) they are carried into the new window
+  through the sky instead (`Context::hpxCarryContours`: all vertices in
+  one batch through `FitsHPXReproj::remapFrom`, which keeps a copy of the
+  old header; vertices outside the new window are dropped), and
+  `Base::panEndCmd` regenerates them on release (`hpxDragStale_`). An
+  affine fit at the pan point was tried first and drifted badly on wide
+  (90 deg TAN) windows.
+- Measured (acis, 340 px drags; old = rebuild on release): release jump
+  14/43/120 px at b=0/40/70 -> 0/0/0.06 px; grabbed point off the pointer
+  4/29/86 px -> 0. Contours after release byte-identical to regenerating.
+- `Tests/hpxproj.sh`: window follows during the drag, grabbed point under
+  the pointer, release moves the view < 1 screen pixel, contours
+  regenerated on release. (A Tcl loop driving `pan motion` must call
+  `update idletasks` between steps, as the event loop does: ds9 defers
+  the matrix update.)
+
 **Remaining.**
+
+- [ ] During a drag, newly exposed sky has no generated contours until
+      release; they could be regenerated when the pointer pauses.
+- [ ] Aux (file) contours are still remapped vertex by vertex through
+      `hpxNativeAtRef`/`hpxRefAt`, each building an AST FrameSet from the
+      header: slow for large contour files, now on every drag step.
+      `FitsHPXReproj::remapFrom` would do it in one batch.
 
 - [ ] Untested: the footprint layer (needs a saved footprint file), and
       region dialogs / analysis plots staying attached through a rebuild

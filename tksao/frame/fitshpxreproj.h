@@ -71,6 +71,12 @@ class FitsHPXReproj : public FitsFile {
   // the map's own (lon, lat) [deg] at image pixel img, and back
   int nativeAt(const Vector& img, double* lon, double* lat);
   int pixelAt(double lon, double lat, Vector* img);
+  // a copy of the current window's header, for remapFrom() after a rebuild
+  FitsHead* headCopy() {return head_ ? new FitsHead(*head_) : NULL;}
+  // image pixels of the window described by `from` -> image pixels of the
+  // current window, in place, through the sky; points that can't be
+  // placed become NaN. Two array transforms, so cheap for many points.
+  int remapFrom(FitsHead* from, int nn, double* xx, double* yy);
 
   // convert (lon, lat) [deg] in the AST sky system given by attrs (e.g.
   // "System=FK5,Equinox=J2000") to the map's own system; 0 if the map

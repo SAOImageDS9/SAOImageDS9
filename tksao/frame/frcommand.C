@@ -307,6 +307,14 @@ void FrameBase::panMotionCmd(const Vector& vv)
 
   setBinCursor();
   update(MATRIX);
+
+  // A HEALPix window rebuilt around the pan turns the view slightly about
+  // the centre, which moves the grabbed point off the pointer; put it back.
+  if (hpxDragRefresh()) {
+    cursor -= mapToRef(vv,Coord::CANVAS) - panStart;
+    setBinCursor();
+    update(MATRIX);
+  }
 }
 
 void FrameBase::saveFitsResampleFileCmd(const char* fn)

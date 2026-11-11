@@ -665,10 +665,19 @@ b=40, 31 deg at b=70, plus a 2-5% scale change (TAN's off-axis stretch).
 
 - [ ] During a drag, newly exposed sky has no generated contours until
       release; they could be regenerated when the pointer pauses.
-- [ ] Aux (file) contours are still remapped vertex by vertex through
+- [x] Aux (file) contours were remapped vertex by vertex through
       `hpxNativeAtRef`/`hpxRefAt`, each building an AST FrameSet from the
-      header: slow for large contour files, now on every drag step.
-      `FitsHPXReproj::remapFrom` would do it in one batch.
+      header (~160 us per vertex), on every rebuild including drag steps.
+      Done 2026-11-11: `FitsHPXReproj::nativesAt`/`pixelsAt` (and
+      `FitsImage::hpxNativesAtRef`/`hpxRefsAt`) take arrays and build the
+      FrameSet once; `Context::hpxSaveAuxContours`/`hpxRestoreAuxContours`
+      convert a whole level per call, same line splitting. 299k-vertex
+      contour file on a wmap TAN window: 47.9 s -> 72 ms per rebuild
+      (17 ms without contours). The recentred contours list byte-identical
+      (image coords) to a fresh load at that centre with the same file.
+      Rendered views still differ by half a pixel of pan: a recentre pans
+      exactly to the requested centre (image 252.501), a fresh load to
+      ds9's default image centre (253); pre-existing, not the contours.
 
 - [ ] Untested: the footprint layer (needs a saved footprint file), and
       region dialogs / analysis plots staying attached through a rebuild

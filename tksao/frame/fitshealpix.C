@@ -4,6 +4,7 @@
 
 #include <string.h>
 #include <math.h>
+#include <vector>
 
 #include "fitsimage.h"
 #include "base.h"
@@ -249,6 +250,39 @@ int FitsImage::hpxRefAt(double lon, double lat, Vector* ref)
   if (!rr || !rr->pixelAt(lon, lat, &img))
     return 0;
   *ref = img * imageToRef;
+  return 1;
+}
+
+// hpxNativeAtRef / hpxRefAt for many points at once (one WCS build per
+// call instead of one per point). Points that can't be placed come back
+// as NaN: lon/lat, or both components of the REF vector.
+int FitsImage::hpxNativesAtRef(int nn, const Vector* ref,
+			       double* lon, double* lat)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (!rr || nn <= 0)
+    return 0;
+  std::vector<double> xx(nn), yy(nn);
+  for (int ii=0; ii<nn; ii++) {
+    Vector img = ref[ii] * refToImage;
+    xx[ii] = img[0];
+    yy[ii] = img[1];
+  }
+  return rr->nativesAt(nn, xx.data(), yy.data(), lon, lat);
+}
+
+int FitsImage::hpxRefsAt(int nn, const double* lon, const double* lat,
+			 Vector* ref)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (!rr || nn <= 0)
+    return 0;
+  std::vector<double> xx(nn), yy(nn);
+  if (!rr->pixelsAt(nn, lon, lat, xx.data(), yy.data()))
+    return 0;
+  for (int ii=0; ii<nn; ii++)
+    ref[ii] = (isfinite(xx[ii]) && isfinite(yy[ii])) ?
+      Vector(xx[ii], yy[ii]) * imageToRef : Vector(NAN, NAN);
   return 1;
 }
 

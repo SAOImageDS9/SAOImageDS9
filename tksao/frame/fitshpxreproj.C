@@ -746,6 +746,75 @@ int FitsHPXReproj::pixelAt(double lon, double lat, Vector* img)
   return rr;
 }
 
+int FitsHPXReproj::nativesAt(int nn, const double* xx, const double* yy,
+			     double* lon, double* lat)
+{
+  if (!head_ || nn <= 0)
+    return 0;
+
+  int rr = 0;
+  astClearStatus;
+  astBegin;
+  AstFrameSet* fs = hpxReprojAst(head_);
+  if (fs) {
+    astTran2(fs, nn, xx, yy, 1, lon, lat);
+    if (astOK) {
+      // as nativeAt()
+      for (int ii=0; ii<nn; ii++) {
+	if (lon[ii] == AST__BAD || lat[ii] == AST__BAD) {
+	  lon[ii] = lat[ii] = NAN;
+	  continue;
+	}
+	double out[2] = {lon[ii], lat[ii]};
+	astNorm(fs, out);
+	double ll = out[0]*R2D;
+	while (ll < 0)
+	  ll += 360;
+	while (ll >= 360)
+	  ll -= 360;
+	lon[ii] = ll;
+	lat[ii] = out[1]*R2D;
+      }
+      rr = 1;
+    }
+  }
+  astClearStatus;
+  astEnd;
+  return rr;
+}
+
+int FitsHPXReproj::pixelsAt(int nn, const double* lon, const double* lat,
+			    double* xx, double* yy)
+{
+  if (!head_ || nn <= 0)
+    return 0;
+
+  int rr = 0;
+  astClearStatus;
+  astBegin;
+  AstFrameSet* fs = hpxReprojAst(head_);
+  if (fs) {
+    double* ll = new double[nn];
+    double* bb = new double[nn];
+    for (int ii=0; ii<nn; ii++) {
+      ll[ii] = lon[ii]/R2D;
+      bb[ii] = lat[ii]/R2D;
+    }
+    astTran2(fs, nn, ll, bb, 0, xx, yy);
+    if (astOK) {
+      for (int ii=0; ii<nn; ii++)
+	if (xx[ii] == AST__BAD || yy[ii] == AST__BAD)
+	  xx[ii] = yy[ii] = NAN;
+      rr = 1;
+    }
+    delete [] ll;
+    delete [] bb;
+  }
+  astClearStatus;
+  astEnd;
+  return rr;
+}
+
 int FitsHPXReproj::remapFrom(FitsHead* from, int nn, double* xx, double* yy)
 {
   if (!head_ || !from || nn <= 0)

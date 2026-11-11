@@ -71,6 +71,12 @@ class FitsHPXReproj : public FitsFile {
   // the map's own (lon, lat) [deg] at image pixel img, and back
   int nativeAt(const Vector& img, double* lon, double* lat);
   int pixelAt(double lon, double lat, Vector* img);
+  // the same for many points, building the WCS once per call: failures
+  // come back as NaN (nativeAt/pixelAt build it for every point, ~160 us)
+  int nativesAt(int nn, const double* xx, const double* yy,
+		double* lon, double* lat);
+  int pixelsAt(int nn, const double* lon, const double* lat,
+	       double* xx, double* yy);
   // a copy of the current window's header, for remapFrom() after a rebuild
   FitsHead* headCopy() {return head_ ? new FitsHead(*head_) : NULL;}
   // image pixels of the window described by `from` -> image pixels of the

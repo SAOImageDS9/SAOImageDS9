@@ -309,27 +309,45 @@ void Context::hpxSaveAuxContours(FitsImage* ptr)
     HPXAuxLevel al;
     al.level = cl;
     List<Contour>& lc = cl->lcontour();
+
+    // every vertex of the level through the WCS in one batch
+    std::vector<Vector> refs;
+    std::vector<size_t> lens;
     if (lc.head())
       do {
-	std::vector<double> line;
+	size_t nv =0;
 	List<Vertex>& lv = lc.current()->lvertex();
 	if (lv.head())
 	  do {
-	    double lon, lat;
-	    if (ptr->hpxNativeAtRef(lv.current()->vector, &lon, &lat)) {
-	      line.push_back(lon);
-	      line.push_back(lat);
-	    }
-	    else if (line.size()) {
-	      // a vertex off the sky: break the line
-	      if (line.size() >= 4)
-		al.lines.push_back(line);
-	      line.clear();
-	    }
+	    refs.push_back(lv.current()->vector);
+	    nv++;
 	  } while (lv.next());
-	if (line.size() >= 4)
-	  al.lines.push_back(line);
+	lens.push_back(nv);
       } while (lc.next());
+    std::vector<double> lon(refs.size()), lat(refs.size());
+    if (refs.size() &&
+	!ptr->hpxNativesAtRef(refs.size(), refs.data(), lon.data(), lat.data()))
+      for (size_t ii=0; ii<refs.size(); ii++)
+	lon[ii] = lat[ii] = NAN;
+
+    size_t kk =0;
+    for (size_t jj=0; jj<lens.size(); jj++) {
+      std::vector<double> line;
+      for (size_t vv=0; vv<lens[jj]; vv++, kk++) {
+	if (isfinite(lon[kk]) && isfinite(lat[kk])) {
+	  line.push_back(lon[kk]);
+	  line.push_back(lat[kk]);
+	}
+	else if (line.size()) {
+	  // a vertex off the sky: break the line
+	  if (line.size() >= 4)
+	    al.lines.push_back(line);
+	  line.clear();
+	}
+      }
+      if (line.size() >= 4)
+	al.lines.push_back(line);
+    }
     store.push_back(al);
   } while (auxcontours_.next());
 }
@@ -349,14 +367,31 @@ void Context::hpxRestoreAuxContours(FitsImage* ptr)
     List<Contour>& lc = cl->lcontour();
     lc.deleteAll();
 
+    // every vertex of the level through the WCS in one batch
+    std::vector<double> lon, lat;
+    for (size_t jj=0; jj<store[ii].lines.size(); jj++) {
+      std::vector<double>& line = store[ii].lines[jj];
+      for (size_t kk=0; kk+1<line.size(); kk+=2) {
+	lon.push_back(line[kk]);
+	lat.push_back(line[kk+1]);
+      }
+    }
+    std::vector<Vector> refs(lon.size());
+    if (lon.size() &&
+	!ptr->hpxRefsAt(lon.size(), lon.data(), lat.data(), refs.data()))
+      for (size_t kk=0; kk<refs.size(); kk++)
+	refs[kk] = Vector(NAN, NAN);
+
+    size_t vi =0;
     for (size_t jj=0; jj<store[ii].lines.size(); jj++) {
       std::vector<double>& line = store[ii].lines[jj];
       Contour* cc = new Contour(cl);
       Vector prev;
       int nn =0;
-      for (size_t kk=0; kk+1<line.size(); kk+=2) {
-	Vector rr;
-	int ok = ptr->hpxRefAt(line[kk], line[kk+1], &rr);
+      for (size_t kk=0; kk+1<line.size(); kk+=2, vi++) {
+	Vector rr = refs[vi];
+	int placed = isfinite(rr[0]) && isfinite(rr[1]);
+	int ok = placed;
 	if (ok && nn && (rr-prev).length() > jump)
 	  ok =0;
 	if (!ok) {
@@ -367,7 +402,7 @@ void Context::hpxRestoreAuxContours(FitsImage* ptr)
 	    delete cc;
 	  cc = new Contour(cl);
 	  nn =0;
-	  if (!ptr->hpxRefAt(line[kk], line[kk+1], &rr))
+	  if (!placed)
 	    continue;
 	}
 	cc->lvertex().append(new Vertex(rr));

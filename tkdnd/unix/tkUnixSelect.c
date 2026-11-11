@@ -225,8 +225,8 @@ void TkDND_SelectionNotifyEventProc(ClientData clientData, XEvent *eventPtr) {
      *  SelectionNotify event... */
     if (eventPtr != NULL) {
       /* ds9: set a message, else the interp's stale result is reported */
-      Tcl_SetResult(detail->interp, "selection conversion failed",
-                    TCL_STATIC);
+      Tcl_SetObjResult(detail->interp,
+                       Tcl_NewStringObj("selection conversion failed", -1));
       detail->result = TCL_ERROR;
     }
   }
@@ -315,7 +315,8 @@ TkDNDSelGetSelection(
 
     XFlush(display);
     if (XGetSelectionOwner(display, selection) == None) {
-      Tcl_SetResult(interp, "no owner for selection", TCL_STATIC);
+      Tcl_SetObjResult(interp,
+                       Tcl_NewStringObj("no owner for selection", -1));
       return TCL_ERROR;
     }
     /*
@@ -404,8 +405,8 @@ TkDND_SelTimeoutProc(
 	 * selection return.
 	 */
 
-	Tcl_SetResult(retrPtr->interp, "selection owner didn't respond",
-		TCL_STATIC);
+	Tcl_SetObjResult(retrPtr->interp,
+		Tcl_NewStringObj("selection owner didn't respond", -1));
 	retrPtr->result = TCL_ERROR;
         retrPtr->timeout = NULL;
 

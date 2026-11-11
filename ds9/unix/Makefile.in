@@ -65,9 +65,13 @@ COMPILE_CXX	= $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 
 system		= @system@
 
-# tkdnd does not install a tkdndConfig.sh. It is only built on linux.
-ifneq (,$(findstring Linux,$(system)))
-tkdnd_LIB_SPEC	= -L$(libdir)/tkdnd2.9.5 -ltkdnd2.9.5
+# tkdnd does not install a tkdndConfig.sh, so its version is needed
+# to find the library. Defined here, not in make.include, since LLIBS
+# needs it before make.include is read.
+TKDND_VERSION	:= $(shell cat $(prefix)/tkdnd/VERSION)
+# tkdnd is only built on linux, same test as in unix/Makefile.in
+ifeq ($(shell uname -s),Linux)
+tkdnd_LIB_SPEC	= -L$(libdir)/tkdnd$(TKDND_VERSION) -ltkdnd$(TKDND_VERSION)
 TKDND_LIBS	= -lXcursor
 TKDND_PREQS	= $(LIBDIR)/tkdnd
 TKDND_DEFS	= -DHAVE_TKDND

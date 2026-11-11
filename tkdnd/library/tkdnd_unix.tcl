@@ -42,6 +42,9 @@ namespace eval xdnd {
   variable _drag_data {}
   variable _have_drag_data 0
   variable _fetching_drag_data 0
+  ## ds9: bumped per drag and at the drop, so a fetch that is still
+  ## waiting in the event loop cannot store data for a later drag
+  variable _drag_id 0
 
   proc debug { msg } {
     tkdnd::debug $msg
@@ -95,6 +98,7 @@ proc xdnd::HandleXdndEnter { drop_target drag_source typelist time
   variable _typelist
   variable _drag_data;      set _drag_data {}
   variable _have_drag_data; set _have_drag_data 0
+  variable _drag_id;        incr _drag_id
   set _pressedkeys [GetPressedKeys $drop_target]
   set _actionlist  { copy move link ask private }
   set _typelist    $typelist
@@ -123,9 +127,12 @@ proc xdnd::HandleXdndPosition { drop_target rootX rootY time
   variable _drag_data
   variable _have_drag_data
   variable _fetching_drag_data
+  variable _drag_id
   if {!$_have_drag_data && !$_fetching_drag_data} {
     set _fetching_drag_data 1
-    if {![catch {GetPositionData $drop_target $_typelist $time} data]} {
+    set id $_drag_id
+    if {![catch {GetPositionData $drop_target $_typelist $time} data] &&
+        $id == $_drag_id} {
       set _drag_data $data
       set _have_drag_data 1
     }
@@ -154,8 +161,14 @@ proc xdnd::HandleXdndDrop { time } {
   set _pressedkeys [GetPressedKeys [::tkdnd::generic::GetDropTarget]]
   #DBG debug "xdnd::HandleXdndDrop: $time"
   ## Get the dropped data...
+  ## The drop may arrive while a position fetch waits in the event loop.
+  ## It can't wait for that fetch (it is further up the stack), so it
+  ## fetches again, which is safe since nested requests use separate
+  ## properties (see TkDNDSelGetSelection).
   variable _drag_data
   variable _have_drag_data
+  variable _drag_id
+  incr _drag_id
   if {$_have_drag_data} {
     ::tkdnd::generic::SetDroppedData $_drag_data
   } else {

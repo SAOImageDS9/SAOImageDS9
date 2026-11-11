@@ -24,7 +24,8 @@ WITHTK  	= --with-tk=$(prefix)/tk$(TCL_VERSION)/unix $(WITHTCL)
 CACHE		= --config-cache --cache-file=$(prefix)/config.cache
 
 # tkdnd (drag and drop) is only supported on linux; X11 drag and drop
-# does not work with XQuartz on macos
+# does not work with XQuartz on macos. Keep this test in sync with
+# ds9/unix/Makefile.in
 ifeq ($(shell uname -s),Linux)
 TKDND		= tkdnd
 endif
@@ -91,25 +92,6 @@ tclsignal/Makefile :
 	$(PREFIX) \
 	$(STD) \
 	$(CACHE)
-
-# ----------- tkdnd
-
-.PHONY	: tkdnd
-
-tkdnd: tkdnd/Makefile
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tkdnd install
-
-tkdnd/Makefile:
-	@echo ""
-	@echo "*** $@ ***"
-	cd tkdnd; \
-	./configure \
-	$(WITHTK) \
-	$(PREFIX) \
-	$(STD)
-
 
 #--------------------------clean
 

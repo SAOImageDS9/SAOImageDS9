@@ -101,7 +101,7 @@ $(LIBDIR)/tooltip: $(prefix)/tklib/modules/tooltip
 
 # static lib is linked into ds9, keep it out of the zip. A static
 # build does not install pkgIndex.tcl, so take it from the build dir.
-$(LIBDIR)/tkdnd: $(prefix)/lib/tkdnd2.9.5
+$(LIBDIR)/tkdnd: $(prefix)/lib/tkdnd$(TKDND_VERSION)
 	cp -prf $? "$@"
 	rm -f "$@"/*.a
 	cp -p $(prefix)/tkdnd/pkgIndex.tcl "$@"

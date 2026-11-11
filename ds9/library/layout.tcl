@@ -236,6 +236,7 @@ proc InitCanvas {} {
 
     # must wait until now
     bind $ds9(canvas) <Configure> [list LayoutView]
+    InitDropTarget
     BindEventsCanvas
 }
 
@@ -306,7 +307,6 @@ proc BindEventsCanvas {} {
     }
 
     BindDropEvents
-
 }
 
 proc UnBindEventsCanvas {} {
@@ -371,6 +371,8 @@ proc UnBindEventsCanvas {} {
 	    bind $ds9(canvas) <Command-ButtonRelease-1> {}
 	}
     }
+
+    UnBindDropEvents
 }
 
 proc Button3Canvas {x y} {

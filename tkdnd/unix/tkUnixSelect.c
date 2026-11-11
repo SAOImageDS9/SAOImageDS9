@@ -197,6 +197,10 @@ void TkDND_SelectionNotifyEventProc(ClientData clientData, XEvent *eventPtr) {
   int status, size, format;
   Atom type;
 
+  /* ds9: a reply to another (nested) request, see TkDNDSelGetSelection */
+  if (eventPtr != NULL && eventPtr->xselection.property != None &&
+      eventPtr->xselection.property != detail->property) return;
+
   status = TkDND_ClipboardReadProperty(detail->tkwin, detail->property, 1,
                                        detail, &size, &type, &format);
   if (status) {
@@ -289,12 +293,21 @@ TkDNDSelGetSelection(
 				 * once it has been retrieved. */
     ClientData clientData)	/* Arbitrary value to pass to proc. */
 {
+    /* ds9: a drop can be handled in the event loop below while an
+     * earlier request is still waiting further up the stack. Give each
+     * nesting level its own property, else both handlers see the same
+     * SelectionNotify and the first one to read the property steals the
+     * other's data. */
+    static int depth = 0;
+    char property[32];
+
     TkDND_ProcDetail detail;
     Tk_Window sel_tkwin = Tk_MainWindow(interp);
     Display *display    = Tk_Display(tkwin);
+    sprintf(property, "TKDND_SELECTION_%d", depth);
     detail.interp       = interp;
     detail.tkwin        = sel_tkwin;
-    detail.property     = selection;
+    detail.property     = Tk_InternAtom(sel_tkwin, property);
     detail.proc         = proc;
     detail.clientData   = clientData;
     detail.result       = -1;
@@ -319,9 +332,9 @@ TkDNDSelGetSelection(
     /* ds9: the property is never deleted after reading, and the wait loop
      * below polls it before the owner replies, so a stale value from the
      * previous transfer would be returned. Clear it first. */
-    XDeleteProperty(display, Tk_WindowId(sel_tkwin), selection);
+    XDeleteProperty(display, Tk_WindowId(sel_tkwin), detail.property);
     XConvertSelection(display, selection, target,
-	              selection, Tk_WindowId(sel_tkwin), time);
+	              detail.property, Tk_WindowId(sel_tkwin), time);
     XFlush(display);
     /*
      * Enter a loop processing X events until the selection has been retrieved
@@ -330,10 +343,12 @@ TkDNDSelGetSelection(
      */
     detail.timeout = Tcl_CreateTimerHandler(70, TkDND_SelTimeoutProc,
 	                                    &detail);
+    depth++;
     while (detail.result == -1) {
       TkDND_SelectionNotifyEventProc(&detail, NULL);
       Tcl_DoOneEvent(0);
     }
+    depth--;
     Tk_DeleteEventHandler(sel_tkwin, SelectionNotify,
                           TkDND_SelectionNotifyEventProc, &detail);
     if (detail.timeout) Tcl_DeleteTimerHandler(detail.timeout);

@@ -1,10 +1,6 @@
-
-# lappend auto_path "/data/lenin2/Projects/DS9_DND/tkdnd2.9.5/"
-
 #  Copyright (C) 2026
 #  Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 #  For conditions of distribution and use, see copyright notice in "copyright"
-
 
 package provide DS9 1.0
 
@@ -50,12 +46,10 @@ proc GetFITSExtension { fn varname } {
         return 0
     }
 
-    set extnames []
-    array set blocks {}
+    set extnames {}
     set extnum 0
 
     foreach {ext name type info} $rr {
-        array set blocks [list $ext [list $name $type $info]]
         lappend extnames $name
         incr extnum
     }
@@ -93,7 +87,14 @@ proc PeekFITSheader { varname retvals} {
     }
 
     # header
-    set header [fitsy header]
+    # fitsy is shared (see prism.tcl), so never leave it open
+    if {[catch {fitsy header} header]} {
+        fitsy close
+        Error "[msgcat::mc {Unable to load FITS file}] $var(fn)"
+        return 0
+    }
+    fitsy close
+
     set keys [split $header "\n"]
 
     # Parse FITS keywords
@@ -103,23 +104,25 @@ proc PeekFITSheader { varname retvals} {
 
     array set keyvals {}
     foreach {keyword} $keys {
-
-        # This isn't robust, but works for what is needed here
-        set sans_comment [regsub "/.*$" $keyword ""]
-
-        set equals [string index $sans_comment 8]
-        if {![string equal $equals "="]} {
+        if {![string equal [string index $keyword 8] "="]} {
             # Get rid of HISTORY, COMMENT, and other non-std-keywords
             continue
         }
 
-        set keyname [string trim [string range $sans_comment 0 7] ]
-        set value [string trim [string range $sans_comment 9 end] ]
-        set value [string trim $value "' "]
-        array set keyvals [list $keyname $value]
-    }
+        set keyname [string trim [string range $keyword 0 7]]
+        set value [string trim [string range $keyword 9 end]]
 
-    fitsy close
+        if {[string index $value 0] == "'"} {
+            # string value, may contain '/'. '' is an embedded quote
+            if {[regexp {^'((?:[^']|'')*)'} $value -> value]} {
+                set value [string trim [string map {'' '} $value]]
+            }
+        } else {
+            # strip the comment
+            set value [string trim [regsub {/.*$} $value {}]]
+        }
+        set keyvals($keyname) $value
+    }
 
     return 1
 }
@@ -177,6 +180,34 @@ proc GuessFITSType { filename } {
 
 }
 
+# Run one command through its Process*Cmd, the way XPA and SAMP do
+# (see CommSet). Going through ProcessCommand instead would treat it
+# as the startup command line, where a parser error quits ds9.
+# Errors are collected and then reported in a dialog.
+proc DropCmd {proc param {extra {}}} {
+    global ds9
+
+    set i 0
+    InitError drop
+    if {[catch {$proc param i {*}$extra} err]} {
+        if {$ds9(msg) == {}} {
+            Error $err
+        }
+    }
+    set msg $ds9(msg)
+    set level $ds9(msg,level)
+    InitError tcl
+
+    if {$msg != {}} {
+        ProcessMessage $level $msg
+    }
+}
+
+# these execute the dropped file as a script, ask first
+proc DropConfirm {infile} {
+    return [expr {[tk_messageBox -type okcancel -icon question \
+                       -message "[msgcat::mc {Execute}] $infile?"] == {ok}}]
+}
 
 proc LoadDrop { filenames } {
 
@@ -186,69 +217,92 @@ proc LoadDrop { filenames } {
         # the file silently fails to load. file normalize gives us '/'.
         set infile [file normalize $infile]
 
-        set ext [file extension $infile]
+        set ext [string tolower [file extension $infile]]
         switch $ext {
             .sao -
-            .lut { ds9Cmd [list -cmap load $infile] }
+            .lut {DropCmd ProcessCmapCmd [list load $infile]}
 
-            .tag { ds9Cmd [list -cmap tag load $infile]}
+            .tag {DropCmd ProcessCmapCmd [list tag load $infile]}
 
-            .bck { ds9Cmd [list -restore $infile]}
+            .bck {
+                if {[DropConfirm $infile]} {
+                    DropCmd ProcessRestoreCmd [list $infile]
+                }
+            }
 
-            .plb { ds9Cmd [list -plot restore $infile]}
+            .plb {DropCmd ProcessPlotCmd [list restore $infile] {{} {}}}
 
-            .ctr { ds9Cmd [list -contour load $infile]}
+            .ctr {DropCmd ProcessContourCmd [list load $infile]}
 
-            .lev { ds9Cmd [list -contour load levels $infile]}
+            .lev {DropCmd ProcessContourCmd [list load levels $infile]}
 
             .ans -
-            .ds9 { ds9Cmd [list -analysis load $infile]}
+            .ds9 {DropCmd ProcessAnalysisCmd [list load $infile] {{} {}}}
 
             .vot -
             .xml -
-            .votable { ds9Cmd [list -catalog load $infile] }
+            .votable {DropCmd ProcessCatalogCmd [list load $infile]}
 
             .rdb -
-            .cat { ds9Cmd [list -catalog import rdb $infile]}
+            .cat {DropCmd ProcessCatalogCmd [list import rdb $infile]}
 
             .tsv -
-            .csv { ds9Cmd [list -catalog import tsv $infile] }
+            .csv {DropCmd ProcessCatalogCmd [list import tsv $infile]}
 
-            .flt { ds9Cmd [list -catalog filter load $infile] }
+            .flt {DropCmd ProcessCatalogCmd [list filter load $infile]}
 
-            .sym { ds9Cmd [list -catalog symbol load $infile]}
+            .sym {DropCmd ProcessCatalogCmd [list symbol load $infile]}
 
-            .grd { ds9Cmd [list -grid load $infile]}
+            .grd {DropCmd ProcessGridCmd [list load $infile]}
 
-            .txt { ds9Cmd [list -notes load $infile]}
+            .txt {DropCmd ProcessNotesCmd [list load $infile]}
 
-            .reg {ds9Cmd [list -region load $infile]}
+            .reg {DropCmd ProcessRegionsCmd [list load $infile] {{} {}}}
 
-            .seg {ds9Cmd [list -illustrate load $infile]}
+            .seg {DropCmd ProcessIllustrateCmd [list load $infile] {{} {}}}
 
-            .tcl  { ds9Cmd [list -source $infile]}
+            .tcl {
+                if {[DropConfirm $infile]} {
+                    DropCmd ProcessSourceCmd [list $infile]
+                }
+            }
 
             .htm -
-            .html {ds9Cmd [list -web file://$infile]}
+            .html {
+                # win32 paths start with a drive letter: file:///C:/...
+                if {[string index $infile 0] == {/}} {
+                    set url file://$infile
+                } else {
+                    set url file:///$infile
+                }
+                DropCmd ProcessWebCmd [list $url]
+            }
 
-            .wcs {ds9Cmd [list -wcs load $infile]}
+            .wcs {DropCmd ProcessWCSCmd [list load $infile] {{} {}}}
 
-            .gif { ds9Cmd [list -gif $infile]}
+            .gif {DropCmd ProcessGIFCmd [list $infile] {{} {}}}
 
             .jpg -
-            .jpeg { ds9Cmd [list -jpeg $infile]}
+            .jpeg {DropCmd ProcessJPEGCmd [list $infile] {{} {}}}
 
-            .png {ds9Cmd [list -png $infile]}
+            .png {DropCmd ProcessPNGCmd [list $infile] {{} {}}}
 
             .tif -
-            .tiff {ds9Cmd [list -tiff $infile]}
+            .tiff {DropCmd ProcessTIFFCmd [list $infile] {{} {}}}
 
             default {
                 switch [GuessFITSType $infile] {
-                    "image" {ds9Cmd [list -file $infile]}
-                    "prism" {ds9Cmd [list -prism $infile]}
-                    "region" {ds9Cmd [list -region $infile]}
-                    "3d" {ds9Cmd -3d; ds9Cmd [list -file $infile]}
+                    "image" {
+                        DropCmd ProcessFileCmd [list $infile] {{} {} {}}
+                    }
+                    "prism" {DropCmd ProcessPrismCmd [list $infile]}
+                    "region" {
+                        DropCmd ProcessRegionsCmd [list $infile] {{} {}}
+                    }
+                    "3d" {
+                        DropCmd Process3DCmd {}
+                        DropCmd ProcessFileCmd [list $infile] {{} {} {}}
+                    }
                     {} {
                         # error already reported
                     }
@@ -264,18 +318,44 @@ proc LoadDrop { filenames } {
     # end foreach infile
 }
 
-proc BindDropEvents {} {
+proc InitDropTarget {} {
     global ds9
 
     # tkdnd is not available on every platform (e.g. macos x11)
-    if {[catch {package require tkdnd}]} {
+    set ds9(drop) [expr {![catch {package require tkdnd}]}]
+    if {!$ds9(drop)} {
         return
     }
 
     tkdnd::drop_target register $ds9(canvas) DND_Files
-    bind $ds9(canvas) <<DropEnter>> {return %A}
-    bind $ds9(canvas) <<Drop>> {LoadDrop %D}
-    bind $ds9(canvas) <<DropLeave>> {return %A}
-    bind $ds9(canvas) <<DropPosition>> {return %A}
+    UnBindDropEvents
+}
 
+proc BindDropEvents {} {
+    global ds9
+
+    if {![info exists ds9(drop)] || !$ds9(drop)} {
+        return
+    }
+
+    bind $ds9(canvas) <<DropEnter>> {return %A}
+    bind $ds9(canvas) <<DropPosition>> {return %A}
+    bind $ds9(canvas) <<DropLeave>> {return %A}
+    # Load after the drop has completed. The drag source waits for the
+    # drop to return, and loading can take a while or post a dialog.
+    bind $ds9(canvas) <<Drop>> {after idle [list LoadDrop %D]; return %A}
+}
+
+# canvas events are off (e.g. illustrate or tile layout mode), refuse drops
+proc UnBindDropEvents {} {
+    global ds9
+
+    if {![info exists ds9(drop)] || !$ds9(drop)} {
+        return
+    }
+
+    bind $ds9(canvas) <<DropEnter>> {return refuse_drop}
+    bind $ds9(canvas) <<DropPosition>> {return refuse_drop}
+    bind $ds9(canvas) <<DropLeave>> {}
+    bind $ds9(canvas) <<Drop>> {return refuse_drop}
 }

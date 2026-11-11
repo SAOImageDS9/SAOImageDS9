@@ -118,27 +118,6 @@ tkwin/Makefile :
 	--disable-shared --enable-symbols \
 	$(CACHE)
 
-# ----------- tkdnd
-
-.PHONY	: tkdnd
-
-tkdnd: tkdnd/Makefile
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tkdnd install
-
-# no config.cache: tkdnd's configure does AC_PROG_CXX and then sets
-# CC to it, so its compile tests run with the C++ compiler. Sharing
-# the cache would hand those results to every other package.
-tkdnd/Makefile:
-	@echo ""
-	@echo "*** $@ ***"
-	cd tkdnd; \
-	./configure \
-	$(WITHTK) \
-	$(PREFIX) \
-	$(STD)
-
 #--------------------------clean
 
 .PHONY	: tclclean tkclean osclean tkwinclean

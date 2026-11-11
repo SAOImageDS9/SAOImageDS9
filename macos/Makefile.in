@@ -153,22 +153,6 @@ tkmacosx/Makefile :
 	--disable-shared --enable-symbols \
 	$(CACHE)
 
-# ----------- tkdnd
-
-tkdnd: tkdnd/Makefile
-	@echo ""
-	@echo "*** $@ ***"
-	$(MAKE) -C tkdnd install
-
-tkdnd/Makefile:
-	@echo ""
-	@echo "*** $@ ***"
-	cd tkdnd; \
-	./configure \
-	$(WITHTK) \
-	$(PREFIX) \
-	$(STD)
-
 #--------------------------clean
 
 .PHONY	: tclclean tkclean osclean tclsignalclean tkmacosxclean

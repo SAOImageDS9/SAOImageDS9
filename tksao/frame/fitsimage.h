@@ -202,6 +202,8 @@ class FitsImage {
   int isHPXWindow();
   int hpxNativeAtRef(const Vector& ref, double* lon, double* lat);
   int hpxRefAt(double lon, double lat, Vector* ref);
+  Matrix hpxRefToWindow();
+  Matrix hpxWindowToRef();
   int hpxNativesAtRef(int nn, const Vector* ref, double* lon, double* lat);
   int hpxRefsAt(int nn, const double* lon, const double* lat, Vector* ref);
   FitsHead* hpxHeadCopy();

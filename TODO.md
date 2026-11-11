@@ -661,6 +661,33 @@ b=40, 31 deg at b=70, plus a 2-5% scale change (TAN's off-axis stretch).
   `update idletasks` between steps, as the event loop does: ds9 defers
   the matrix update.)
 
+**Blocked windows (fixed 2026-11-11).** `foo.hpx[proj=tan] -block to 2`:
+the first pan sent the view to the window's corner. With blocking, REF
+and `refToImage` are the *blocked* image's pixels, while the window's
+WCS (and ds9's IMAGE system, which `initWCS` remaps) is unblocked:
+w = (b - .5)*block + .5. Every sky<->pixel conversion treated blocked
+pixels as window pixels, a factor 2 off about the origin, so the pan
+landed at twice the window's centre. Windows were also sized for
+block 1.
+
+- `FitsImage::hpxRefToWindow()`/`hpxWindowToRef()` include the block
+  factor; `hpxNativeAtRef`, `hpxRefAt`, their batch versions,
+  `hpxRecentreRef` and the drag's contour carry use them.
+  `hpxNeedsRecentre` and the carry's bounds check stay in blocked pixels
+  (`width()`/`height()` are the blocked image).
+- Geometry: at zoom z and block b the window pixel wanted is unchanged
+  (pp/z, never finer than HEALPix), but each screen pixel covers b window
+  pixels, so the window is b times larger (`hpxWindowGeometry`, the
+  coverage check in `hpxAutoRefresh`, zoom to fit, and the initial size in
+  `initHPX`). `block` / `block to` now call `hpxAutoRefresh()`, since
+  `-block to 2` is applied after the load.
+- Rebuilds at block 2 take ~50 ms per drag step on the acis map (4x the
+  window pixels). After a drag the pan sits a few displayed pixels off the
+  tangent point (each re-snap turns more per step when blocked); no jump.
+- `Tests/hpxproj.sh`: block 2 drag (grabbed point under the pointer, pan
+  near the tangent point), `pan to`, and a blocked window covering the
+  same screen area as an unblocked one.
+
 **Remaining.**
 
 - [ ] During a drag, newly exposed sky has no generated contours until
@@ -679,9 +706,14 @@ b=40, 31 deg at b=70, plus a 2-5% scale change (TAN's off-axis stretch).
       exactly to the requested centre (image 252.501), a fresh load to
       ds9's default image centre (253); pre-existing, not the contours.
 
-- [ ] Untested: the footprint layer (needs a saved footprint file), and
-      region dialogs / analysis plots staying attached through a rebuild
-      (GUI only).
+- [x] Footprint layer: tested by hand 2026-11-11 against the live
+      Chandra footprint server on a HEALPix window; works.
+- [x] Region analysis plots: tested by hand 2026-11-11, a region's
+      Histogram plot stays attached during drags. Its values change as
+      you pan (each rebuild resamples onto a new pixel grid, so
+      nearest-neighbour picks slightly different HEALPix pixels in the
+      region) and drop to zero while the region is outside the rendered
+      window (no image pixels under it). Expected.
 - [ ] Known limits: XLON/XLAT maps don't remap regions; the panner
       shows only the current window; restored parked regions are
       appended, so region order can change; `save fits` / `saveimage`

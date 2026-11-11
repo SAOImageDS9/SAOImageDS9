@@ -418,14 +418,15 @@ void Context::hpxRestoreAuxContours(FitsImage* ptr)
 }
 
 // During a drag: move the generated contours from the previous window
-// (header `from`, REF->IMAGE `oldRefToImage`) into the current one through
-// the sky, exactly, instead of regenerating them on every step. All
-// vertices go through one batch transform. Lines are split where a vertex
-// can't be placed, falls outside the new window, or jumps across the
-// window, as for aux contours.
+// (header `from`, REF->window pixels `oldRefToWin`, see
+// FitsImage::hpxRefToWindow) into the current one through the sky,
+// exactly, instead of regenerating them on every step. All vertices go
+// through one batch transform. Lines are split where a vertex can't be
+// placed, falls outside the new window, or jumps across the window, as
+// for aux contours.
 // Returns 0 if they couldn't be carried (the caller regenerates).
 int Context::hpxCarryContours(FitsImage* ptr, FitsHead* from,
-			      const Matrix& oldRefToImage)
+			      const Matrix& oldRefToWin)
 {
   if (!hasContour_)
     return 1;
@@ -440,7 +441,7 @@ int Context::hpxCarryContours(FitsImage* ptr, FitsHead* from,
 	  List<Vertex>& lv = lc.current()->lvertex();
 	  if (lv.head())
 	    do {
-	      Vector img = lv.current()->vector * oldRefToImage;
+	      Vector img = lv.current()->vector * oldRefToWin;
 	      xx.push_back(img[0]);
 	      yy.push_back(img[1]);
 	    } while (lv.next());
@@ -455,12 +456,23 @@ int Context::hpxCarryContours(FitsImage* ptr, FitsHead* from,
 		     ptr->width() : ptr->height());
   // Contours only cover the window they were generated for; keep the parts
   // inside the new window (the rest would hang off the image), and leave
-  // newly exposed sky to the regeneration on release.
+  // newly exposed sky to the regeneration on release. Window pixels ->
+  // REF here; the bounds are checked in the (blocked) image's pixels.
+  Matrix winToRef = ptr->hpxWindowToRef();
   double xmax = ptr->width() + .5;
   double ymax = ptr->height() + .5;
-  for (size_t ii=0; ii<xx.size(); ii++)
-    if (!(xx[ii] >= .5 && xx[ii] <= xmax && yy[ii] >= .5 && yy[ii] <= ymax))
+  for (size_t ii=0; ii<xx.size(); ii++) {
+    if (!(isfinite(xx[ii]) && isfinite(yy[ii])))
+      continue;
+    Vector rr = Vector(xx[ii],yy[ii]) * winToRef;
+    Vector bi = rr * ptr->refToImage;
+    if (bi[0] >= .5 && bi[0] <= xmax && bi[1] >= .5 && bi[1] <= ymax) {
+      xx[ii] = rr[0];
+      yy[ii] = rr[1];
+    }
+    else
       xx[ii] = yy[ii] = NAN;
+  }
   size_t kk =0;
   if (ll.head())
     do {
@@ -481,7 +493,7 @@ int Context::hpxCarryContours(FitsImage* ptr, FitsHead* from,
 	      double ix = xx[kk];
 	      double iy = yy[kk];
 	      kk++;
-	      Vector rr = Vector(ix,iy) * ptr->imageToRef;
+	      Vector rr = Vector(ix,iy);	// already REF
 	      int ok = isfinite(ix) && isfinite(iy);
 	      if (ok && nn && (rr-prev).length() > jump)
 		ok =0;

@@ -96,8 +96,12 @@ void FitsImage::initHPX()
     if (hpx->isValid())
       hpx_ = new FitsHPXReproj(hpx, upper, fits_->pHPXLon0(),
 			       fits_->pHPXLat0(), fits_->pHPXFov(),
-			       context_->parent_->getWidth(),
-			       context_->parent_->getHeight(),
+			       // blocked: a screen pixel covers block
+			       // window pixels
+			       context_->parent_->getWidth() *
+			       context_->blockFactor()[0],
+			       context_->parent_->getHeight() *
+			       context_->blockFactor()[1],
 			       context_->parent_->nthreads_);
     else
       delete hpx;
@@ -220,7 +224,7 @@ int FitsImage::hpxRecentreRef(const Vector& ref)
     return 0;
 
   double lon, lat;
-  if (!rr->nativeAt(ref * refToImage, &lon, &lat))
+  if (!rr->nativeAt(ref * hpxRefToWindow(), &lon, &lat))
     return 0;
 
   // conics keep their reference latitude; only the meridian follows
@@ -236,11 +240,26 @@ int FitsImage::isHPXWindow()
   return rr && rr->canRecentre();
 }
 
+// REF <-> the window's own pixels (its header's grid). REF and
+// refToImage are in the *blocked* image's pixels; the window's WCS (and
+// ds9's IMAGE system, see initWCS) is unblocked: w = (b - .5)*block + .5.
+// Without blocking this is just refToImage.
+Matrix FitsImage::hpxRefToWindow()
+{
+  Vector bf = context_->blockFactor();
+  return refToImage * Translate(-.5,-.5) * Scale(bf) * Translate(.5,.5);
+}
+
+Matrix FitsImage::hpxWindowToRef()
+{
+  return hpxRefToWindow().invert();
+}
+
 // the map's own (lon, lat) [deg] at ref (REF coords), and back
 int FitsImage::hpxNativeAtRef(const Vector& ref, double* lon, double* lat)
 {
   FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
-  return rr ? rr->nativeAt(ref * refToImage, lon, lat) : 0;
+  return rr ? rr->nativeAt(ref * hpxRefToWindow(), lon, lat) : 0;
 }
 
 int FitsImage::hpxRefAt(double lon, double lat, Vector* ref)
@@ -249,7 +268,7 @@ int FitsImage::hpxRefAt(double lon, double lat, Vector* ref)
   Vector img;
   if (!rr || !rr->pixelAt(lon, lat, &img))
     return 0;
-  *ref = img * imageToRef;
+  *ref = img * hpxWindowToRef();
   return 1;
 }
 
@@ -263,8 +282,9 @@ int FitsImage::hpxNativesAtRef(int nn, const Vector* ref,
   if (!rr || nn <= 0)
     return 0;
   std::vector<double> xx(nn), yy(nn);
+  Matrix mx = hpxRefToWindow();
   for (int ii=0; ii<nn; ii++) {
-    Vector img = ref[ii] * refToImage;
+    Vector img = ref[ii] * mx;
     xx[ii] = img[0];
     yy[ii] = img[1];
   }
@@ -280,9 +300,10 @@ int FitsImage::hpxRefsAt(int nn, const double* lon, const double* lat,
   std::vector<double> xx(nn), yy(nn);
   if (!rr->pixelsAt(nn, lon, lat, xx.data(), yy.data()))
     return 0;
+  Matrix mx = hpxWindowToRef();
   for (int ii=0; ii<nn; ii++)
     ref[ii] = (isfinite(xx[ii]) && isfinite(yy[ii])) ?
-      Vector(xx[ii], yy[ii]) * imageToRef : Vector(NAN, NAN);
+      Vector(xx[ii], yy[ii]) * mx : Vector(NAN, NAN);
   return 1;
 }
 

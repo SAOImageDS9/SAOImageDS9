@@ -252,6 +252,8 @@ void Base::blockCmd(const Vector& bb)
   currentContext->block();
   currentContext->analysis();
   updateBlock(vv);
+  // a HEALPix window wants a different size at a new block factor
+  hpxAutoRefresh();
 }
 
 void Base::blockToCmd(const Vector& bb)
@@ -264,6 +266,7 @@ void Base::blockToCmd(const Vector& bb)
   currentContext->block();
   currentContext->analysis();
   updateBlock(vv);
+  hpxAutoRefresh();
 }
 
 void Base::blockNanZeroCmd(int which)
@@ -3242,7 +3245,7 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat,
   // on release. An affine fit at the pan point isn't enough: a wide TAN
   // window is far from linear, and the error builds up over a drag.
   FitsHead* oldHead = drag ? ptr->hpxHeadCopy() : NULL;
-  Matrix oldRefToImage = ptr->refToImage;
+  Matrix oldRefToWin = ptr->hpxRefToWindow();
 
   // Automatic rebuilds (pan, pan to) also fit the window to the display:
   // pixels as fine as one screen pixel at the current zoom (never finer
@@ -3261,8 +3264,10 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat,
       double pw, ph;
       ptr->hpxPlane(&pw, &ph);
       double ss = lon > 0 ? lon : 1;
-      double fx = pw/options->width;
-      double fy = ph/options->height;
+      // blocked, each displayed pixel is block window pixels
+      Vector bf = currentContext->blockFactor();
+      double fx = pw/(options->width*bf[0]);
+      double fy = ph/(options->height*bf[1]);
       npix = (fx > fy ? fx : fy)/ss;
       if (npix < ptr->hpxPixelHPX())
 	npix = ptr->hpxPixelHPX();
@@ -3302,7 +3307,7 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat,
 
   currentContext->hpxFinish();
   if (oldHead && currentContext->hpxCarryContours(ptr, oldHead,
-						   oldRefToImage))
+						   oldRefToWin))
     hpxDragStale_ = 1;
   else
     currentContext->contourUpdateFV();
@@ -3340,6 +3345,9 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat,
 // one screen pixel at the current zoom (never finer than HEALPix's), and
 // twice the visible area in pixels (the 2x padding lets short pans show
 // data without a rebuild). FitsHPXReproj::reshape clamps it.
+// Blocked by b, the display shows block pixels (b x b window pixels): the
+// zoom applies to those, so the window pixel wanted is the same, but each
+// screen pixel covers b window pixels and the window is b times larger.
 void Base::hpxWindowGeometry(FitsImage* ptr, double* pix, int* ww, int* hh)
 {
   double pp = ptr->hpxPixel();
@@ -3347,10 +3355,11 @@ void Base::hpxWindowGeometry(FitsImage* ptr, double* pix, int* ww, int* hh)
   double zz = fabs(zoom_[0]) > fabs(zoom_[1]) ? fabs(zoom_[0]) : fabs(zoom_[1]);
   if (zz <= 0)
     zz = 1;
-  double screen = pp/zz;           // [deg] per screen pixel now
-  *pix = screen > ph ? screen : ph;
-  *ww = (int)ceil(2*options->width*screen / *pix);
-  *hh = (int)ceil(2*options->height*screen / *pix);
+  Vector bf = currentContext->blockFactor();
+  double wanted = pp/zz;           // [deg] per window pixel per screen pixel
+  *pix = wanted > ph ? wanted : ph;
+  *ww = (int)ceil(2*options->width*bf[0]*wanted / *pix);
+  *hh = (int)ceil(2*options->height*bf[1]*wanted / *pix);
 
   // no bigger than the projection allows
   int mw = *ww, mh = *hh;
@@ -3383,11 +3392,13 @@ void Base::hpxAutoRefresh()
   if (pix > 1.5*pp || pix < pp/1.5)
     need = 1;
   else {
-    // coverage: how much of the window is visible, in window pixels
+    // coverage: how much of the window is visible, in displayed (blocked)
+    // pixels; ww/hh are window pixels
+    Vector bf = currentContext->blockFactor();
     double vw = zz > 0 ? options->width/zz : ptr->width();
     double vh = zz > 0 ? options->height/zz : ptr->height();
-    if ((vw > .9*ptr->width() && ww > ptr->width()+2) ||
-	(vh > .9*ptr->height() && hh > ptr->height()+2))
+    if ((vw > .9*ptr->width() && ww > bf[0]*(ptr->width()+2)) ||
+	(vh > .9*ptr->height() && hh > bf[1]*(ptr->height()+2)))
       need = 1;
   }
   if (!need && ptr->hpxNeedsRecentre(cursor))

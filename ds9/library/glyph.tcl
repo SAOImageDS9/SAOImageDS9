@@ -339,13 +339,12 @@ proc GlyphBuiltinName {fn} {
     return {}
 }
 
-# Interactive create: use the file set in Preferences, else the same
-# built-in image illustrate mode uses. Never prompts; the file can be
-# changed afterwards in the point dialog.
+# Interactive create: use the file set in Preferences, else a built-in
+# glyph. Never prompts; the file can be changed afterwards in the point
+# dialog.
 
 proc GlyphDefaultFile {} {
-    global ds9
-    return "$ds9(root)/doc/sun.png"
+    return {builtin://closed_circle_crosshairs.svg}
 }
 
 proc GlyphCreateFile {} {

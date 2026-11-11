@@ -104,7 +104,7 @@ proc CATDef {} {
     set pcat(sym,font,size) 10
     set pcat(sym,font,weight) normal
     set pcat(sym,font,slant) roman
-    # empty: built-in image, see GlyphDefaultFile
+    # empty: built-in glyph, see GlyphDefaultFile
     set pcat(sym,glyph) {}
 }
 

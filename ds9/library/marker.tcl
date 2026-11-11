@@ -120,7 +120,7 @@ proc MarkerDef {} {
     set pmarker(freehand,tolerance) 0.5
     set pmarker(projection,thick) 0
     set pmarker(point,size) 11
-    set pmarker(glyph,file) {}
+    set pmarker(glyph,file) [GlyphDefaultFile]
     set pmarker(glyph,size) 0
     set pmarker(segment,length) 20
 }

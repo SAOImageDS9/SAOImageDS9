@@ -17,7 +17,8 @@ proc ImportPhotoFile {fn mode} {
 	[string range $fn 0 0] == "-"} {
 
 	fconfigure stdin -translation binary -encoding iso8859-1
-	if {[catch {image create photo -data [read -nonewline stdin]} ph]} {
+	set data [read -nonewline stdin]
+	if {[catch {image create photo -data $data} ph]} {
 	    Error [msgcat::mc {An error has occurred while loading}]
 	    return
 	}
@@ -27,6 +28,7 @@ proc ImportPhotoFile {fn mode} {
 	    Error [msgcat::mc {An error has occurred while loading}]
 	    return
 	}
+	set data [AVMReadFile $fn]
 	set loadParam(file,name) $fn
     }
     set loadParam(var,name) $ph
@@ -35,6 +37,7 @@ proc ImportPhotoFile {fn mode} {
     set loadParam(load,layer) {}
 
     if {[ProcessLoad]} {
+	AVMLoadPhoto $data
 	RecentAdd photo $fn mode $mode
     }
 
@@ -58,7 +61,9 @@ proc ImportPhotoAlloc {path fn mode} {
     # mask not supported
     set loadParam(load,layer) {}
 
-    ProcessLoad
+    if {[ProcessLoad]} {
+	AVMLoadPhoto [AVMReadFile $path]
+    }
 
     image delete $ph
 }
@@ -72,7 +77,8 @@ proc ImportPhotoSocket {ch fn mode} {
     set loadParam(file,name) $fn
 
     fconfigure $ch -translation binary -encoding iso8859-1
-    if {[catch {image create photo -data [read $ch]} ph]} {
+    set data [read $ch]
+    if {[catch {image create photo -data $data} ph]} {
 	Error [msgcat::mc {An error has occurred while loading}]
 	return 0
     }
@@ -82,6 +88,9 @@ proc ImportPhotoSocket {ch fn mode} {
     set loadParam(load,layer) {}
 
     set rr [ProcessLoad 0]
+    if {$rr} {
+	AVMLoadPhoto $data
+    }
 
     image delete $ph
     return $rr

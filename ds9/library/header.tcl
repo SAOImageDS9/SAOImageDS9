@@ -149,6 +149,8 @@ proc DisplayHeader {id title} {
     for {set ii 1.0} {$ii<$stop} {set ii [expr $ii+1]} {
 	$var(text) tag add keyword $ii "$ii +8 chars"
     }
+
+    AVMHeaderInsert $frame $id $var(text)
 }
 
 proc UpdateHeaderDialog {} {
@@ -176,6 +178,8 @@ proc UpdateHeaderDialog {} {
 	for {set ii 1.0} {$ii<$stop} {set ii [expr $ii+1]} {
 	    $var(text) tag add keyword $ii "$ii +8 chars"
 	}    
+
+	AVMHeaderInsert $frame $id $var(text)
     }
 }
 

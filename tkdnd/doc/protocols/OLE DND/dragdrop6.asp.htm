@@ -1,0 +1,432 @@
+<html><head><!-- Catch22 ASP Template -->
+
+ 
+
+
+<title>OLE Drag and Drop from scratch</title><link rel="STYLESHEET" href="dragdrop6.asp_files/new22.css"> 
+<link rel="stylesheet" href="dragdrop6.asp_files/printing.htm" media="print"></head><body>
+
+ 
+<!-- BEGIN MAIN TITLE BANNER -->
+<div class="noprint TUTTOPBLOCK"><img src="dragdrop6.asp_files/c22tut.gif"></div>
+<div class="TUTTITLE">
+
+<!-- MENU GOES HERE -->
+<div class="noprint" style="position: absolute; top: 64px; margin-left: -8px;">
+
+	  <table border="0" cellpadding="0" cellspacing="0" height="20" width="100%">
+        <tbody><tr>
+ 	      <td height="20" width="520"><img src="dragdrop6.asp_files/menu04.gif" usemap="#titlemap" border="0" height="20" width="520"></td>
+		  <td class="thinmenu" border="0" height="20" width="100%"></td>
+	      <td height="20" width="20"><img src="dragdrop6.asp_files/menu06.gif" height="20" width="20"></td>
+		</tr>
+	  </tbody></table>
+	</div>
+<!-- div style="position:absolute; top:64px; margin-left: -8; margin-right: -8 ">
+
+	  <table height="21" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+ 	      <td width="21" height="21" ><img src="/img/menu03.gif" width="21" height="21" ></td>
+		  <td width="100%" height="21"class="thinmenu" border="0" ></td>
+	      <td width="498" height="21"><img src="/img/menu02.gif" width="523" height="21" ></img></td>
+		</tr>
+	  </table>
+	</div -->
+	
+<map name="titlemap" id="titlemap" style="border: 0pt none ;"><area shape="rect" coords="10,0,54,16" href="http://www.catch22.net/" alt="Home"><area shape="rect" coords="62,0,130,16" href="http://www.catch22.net/software/" alt="Software"><area shape="rect" coords="138,0,200,16" href="http://www.catch22.net/tuts/" alt="Win32 Tutorials"><area shape="rect" coords="212,0,292,16" href="http://www.catch22.net/source/" alt="Sourcecode and Snippets"><area shape="rect" coords="302,0,340,16" href="http://www.catch22.net/links.asp" alt="Links to other sites"><area shape="rect" coords="350,0,432,16" href="http://www.catch22.net/about.asp" alt="About Catch22">
+
+
+
+
+
+
+</map>
+
+<h1>OLE Drag and Drop </h1>
+<h2>Part 6 - Drop Targets</h2>
+<p><a href="http://www.catch22.net/tuts/zips/droptarget.zip">Download full source and demo (4Kb)</a></p>
+</div><div class="TUTBODY">
+
+<p>
+  Welcome to the sixth part of the "OLE Drag and Drop" tutorial series! 
+  This article will concentrate on implementing a small application which will 
+  act as a drop-target. What this means is that our application will be capable 
+  of receiving objects (be they files, pictures or text) which are dragged onto 
+  it. </p>
+<p>We will implement an IDropTarget COM interface which will allow any OLE application 
+  to drag it's data over our application. This will take the form of a simple 
+  EDIT control which can act as a target for dropped CF_TEXT data. Hopefully you 
+  will be able to take the code presented here and "drag" it straight 
+  into your own apps ;-)</p>
+<h2>Become a "Drop Target"</h2>
+<p>In order for a window to accept data from a drap-drop operation, it must be 
+  registered as a "drop target". There is an OLE API call - <strong>RegisterDragDrop</strong> 
+  - which is used for this very purpose. The function prototype looks like this:</p>
+<pre>WINOLEAPI RegisterDragDrop(HWND hwnd, IDropTarget * pDropTarget);
+</pre>
+<p>The first parameter to this function is the window handle, of the window that 
+  is destined to be a drop target. The second parameter is a pointer to the IDropTarget 
+  COM object. The COM/OLE runtime will call the methods on this interface during 
+  the course of a drag-drop operation. </p>
+<p>Likewise there is an OLE API call to remove drag-and-drop functionality from 
+  a window:</p>
+<pre>WINOLEAPI RevokeDragDrop(HWND hwnd);</pre>
+<p>All that is required from us is to called RegisterDragDrop when our window 
+  is created, and RevokeDragDrop when our window is destroyed. Before we can call 
+  RegisterDragDrop though, we need to construct a COM object which supports the 
+  IDropTarget interface.</p>
+<h2>The IDropTarget Interface</h2>
+<p>The IDropTarget Interface is relatively simple, with only four functions that 
+  need to be implemented. Of course there is also the IUnknown interface which 
+  needs to be implemented but we have already covered that earlier.</p>
+<table class="tut" cellpadding="2" cellspacing="2">
+  <tbody><tr> 
+    <th width="40%">IDropTarget Methods</th>
+    <th width="399">Description</th>
+  </tr>
+  <tr> 
+    <td width="40%"><code>DragEnter</code></td>
+    <td width="399">Determines whether a drop can be accepted and its effect 
+      if it is accepted.</td>
+  </tr>
+  <tr> 
+    <td width="40%"><code>DragOver</code></td>
+    <td width="399">Provides target feedback to the user through the <strong>DoDragDrop</strong> 
+      function.</td>
+  </tr>
+  <tr> 
+    <td width="40%"><code>DragLeave</code></td>
+    <td width="399">Causes the drop target to suspend its feedback actions.</td>
+  </tr>
+  <tr> 
+    <td width="40%"><code>Drop</code></td>
+    <td width="399">Drops the data into the target window.</td>
+  </tr>
+</tbody></table>
+<p>Each one of these four functions will be called by the COM/OLE runtime whenever 
+  an "object" is dragged over our registered window. Each function has 
+  a different task, as shown in the table above. It is up to us to provide the 
+  implementations of these functions.</p>
+<h2>Implementing IDropTarget</h2>
+<p>The IDropTarget interface is (in my experience) very difficult to write without 
+  using "application specific" code. i.e. there is no easy way to make 
+  a generic IDropTarget COM object which can be re-used between all of your applications. 
+</p>
+<p>This is because the requirement of IDropTarget is to show graphical feedback 
+  in your target window whenever an object is dragged over it, and also the application-specific 
+  code to access the data object's content.</p>
+<p>Out of all the drag+drop interfaces, the IDropTarget is the one that would 
+  be best integrated directly into your window class. For example, supposing you 
+  have implemented a custom window using a C++ class - the best method to add 
+  drop-target support to this window is have your custom-window class inherit 
+  directly from IDropTarget, rather than having a separate CDropTarget class. 
+  This means that your drop-target code would have full access to all of your 
+  internal window state.</p>
+<p>However, for the time-being here is the CDropTarget class in all it's glory:</p>
+<pre>class CDropTarget : public IDropTarget
+{
+public:
+    <span class="comment">// IUnknown implementation</span>
+    HRESULT __stdcall QueryInterface (REFIID iid, void ** ppvObject);
+    ULONG   __stdcall AddRef (void);
+    ULONG   __stdcall Release (void);
+
+    <span class="comment">// IDropTarget implementation</span>
+    HRESULT __stdcall <strong>DragEnter</strong>(IDataObject * pDataObject, DWORD grfKeyState, POINTL pt, DWORD * pdwEffect);
+    HRESULT __stdcall <strong>DragOver</strong>(DWORD grfKeyState, POINTL pt, DWORD * pdwEffect);
+    HRESULT __stdcall <strong>DragLeave</strong>(void);
+    HRESULT __stdcall <strong>Drop</strong>(IDataObject * pDataObject, DWORD grfKeyState, POINTL pt, DWORD * pdwEffect);
+
+    <span class="comment">// Constructor</span>
+    CDropTarget(HWND hwnd);
+    ~CDropTarget();
+
+
+private:
+
+    <span class="comment">// internal helper function</span>
+    DWORD DropEffect(DWORD grfKeyState, POINTL pt, DWORD dwAllowed);
+    bool  QueryDataObject(IDataObject *pDataObject);
+
+    <span class="comment">// Private member variables</span>
+    long   m_lRefCount;
+    HWND   m_hWnd;
+    bool   m_fAllowDrop;
+
+<span class="comment">    // Other internal window members</span>
+    
+};</pre>
+
+<p>As well as the reference count, we need to store two additional variables: 
+  The <strong>m_hWnd</strong> variable is the window handle of the drop-target 
+  is needed so we can provide visual feedback during the drag-drop operation. 
+  The <strong>m_fAllowDrop</strong> is used to indicate whether or not the dataobject 
+  being dropped on us contains useful data. This is so we don't have to continually 
+  query the dataobject - basically its an optimization trick.</p>
+<h2>IDropTarget::DragEnter</h2>
+<p>Let's look at the IDropTarget::DragEnter function first of all, because this 
+  is the first function that is called by COM when an object is dragged over our 
+  window:</p>
+<pre>HRESULT DragEnter(
+   IDataObject * pDataObject,    <span class="comment">// Pointer to the interface of the source data object</span>
+   DWORD         grfKeyState,    <span class="comment">// Current state of keyboard modifier keys</span>
+   POINTL        pt,             <span class="comment">// Current cursor coordinates</span>
+   DWORD *       pdwEffect       <span class="comment">// Pointer to the effect of the drag-and-drop operation</span>
+   );
+</pre>
+<p>Look closely at the function prototype above, because it is important to understand 
+  what each of the parameters are used for.</p>
+<ul>
+  <li><strong>IDataObject</strong> - the very first argument is another pointer 
+    to the data object passed to us (via COM) by the source of the drag-drop operation. 
+    The IDataObject is simply the "transport medium" for the data that 
+    is being dropped. We can query the data object during DragEnter to see if 
+    it has any data that we want.<br>
+    <br>
+  </li>
+  <li><strong>gfrKeyState</strong> - holds the state of the keyboard modifier 
+    keys such as Control, Alt and Shift, and the state of the mouse buttons. It's 
+    a simple DWORD variable comprised using one or more of the following bit-flags: 
+    MK_CONTROL, MK_SHIFT, MK_ALT, MK_BUTTON, MK_LBUTTON etc.<br>
+    <br>
+  </li>
+  <li> <strong>pt</strong> - a POINTL structure, containing the coordinates of 
+    the mouse as it enters our window. In some applications this parameter would 
+    be used to check if the mouse was positioned over allowable drop areas, or 
+    used simply to position some kind of "insertion" cursor to indicate 
+    where the dropped data would go.<br>
+    <br>
+  </li>
+  <li> <strong>pdwEffect</strong> - pointer to a DWORD value that specifies the 
+    drop-effects that are <em>allowed </em>by the drop-source. This value is the 
+    same as the <strong>dwOKEffect</strong> value specified by the caller of <strong>DoDragDrop</strong>. 
+  </li>
+</ul>
+<p>Our implementation of DragEnter needs to perform several common tasks, in addition 
+  to drawing graphical feedback.</p>
+<ol>
+  <li> Inspect the supplied data object and decide if it contains any useful data 
+    or not.</li>
+  <li>Inspect the keyboard state stored in <strong>grfKeyState</strong> and calculate 
+    what the drop-effect should be. i.e. if the Control key is held down, the 
+    drop-effect should be "copy", if Shift is held down, the drop-effect 
+    should be "move".</li>
+  <li>Verify that the computed drop-effect is compatible with those allowed by 
+    the drop-source.</li>
+  <li>Store the final drop-effect in the DWORD pointed to by <strong>pdwEffect</strong>.</li>
+</ol>
+<p>Don't get caught up in the complexity of all this. The purpose of DragEnter 
+  is to simply say "yes or no" to the drag-drop operation, and to specify 
+  what the drop-effect should be so that the mouse-cursor can be updated by OLE.</p>
+<pre>HRESULT __stdcall CDropTarget::DragEnter(IDataObject *pDataObject, DWORD grfKeyState, 
+                                              POINTL pt, DWORD *pdwEffect)
+{
+    <span class="comment">// does the dataobject contain data we want?</span>
+    m_fAllowDrop = QueryDataObject(grfKeyState, pdwEffect, pDataObject);
+	
+    if(m_fAllowDrop)
+    {
+        <span class="comment">// get the dropeffect based on keyboard state</span>
+        *pdwEffect = DropEffect(grfKeyState, pt, *pdwEffect);
+
+        SetFocus(m_hWnd);
+
+        PositionCursor(m_hWnd, pt);
+    }
+    else
+    {
+        *pdwEffect = DROPEFFECT_NONE;
+    }
+
+    return S_OK;
+}</pre>
+<p>Apart from setting focus to the underlying window and positioning the EDIT 
+  caret on the nearest character under the mouse, the DragEnter function has been 
+  simplified by delegating the functionality to two internal helper routines:</p>
+<pre>bool CDropTarget::QueryDataObject(IDataObject *pDataObject)
+{
+    FORMATETC fmtetc = { CF_TEXT, 0, DVASPECT_CONTENT, -1, TYMED_HGLOBAL };
+    
+    <span class="comment">// does the data object support CF_TEXT using a HGLOBAL?</span>
+    return pDataObject-&gt;QueryGetData(&amp;fmtetc) == S_OK ? true : false;
+}</pre>
+<p><strong>QueryDataObject</strong> is a private member function which is used 
+  purely to inspect the supplied data object, and decide if it contains data that 
+  is meaningful to our drop-target. In our case, we only accept CF_TEXT data stored 
+  as a HGLOBAL, so this is what we ask for. A private member variable <strong>m_fAllowDrop</strong> 
+  is used to remember this decision.</p>
+<pre>DWORD CDropTarget::DropEffect(DWORD grfKeyState, POINTL pt, DWORD dwAllowed)
+{
+	DWORD dwEffect = 0;
+
+	<span class="comment">// 1. check "pt" -&gt; do we allow a drop at the specified coordinates?</span>
+	
+	<span class="comment">// 2. work out that the drop-effect should be based on grfKeyState</span>
+	if(grfKeyState &amp; MK_CONTROL)
+	{
+		dwEffect = dwAllowed &amp; DROPEFFECT_COPY;
+	}
+	else if(grfKeyState &amp; MK_SHIFT)
+	{
+		dwEffect = dwAllowed &amp; DROPEFFECT_MOVE;
+	}
+	
+	<span class="comment">// 3. no key-modifiers were specified (or drop effect not allowed), so</span>
+	<span class="comment">//    base the effect on those allowed by the dropsource</span>
+	if(dwEffect == 0)
+	{
+		if(dwAllowed &amp; DROPEFFECT_COPY) dwEffect = DROPEFFECT_COPY;
+		if(dwAllowed &amp; DROPEFFECT_MOVE) dwEffect = DROPEFFECT_MOVE;
+	}
+	
+	return dwEffect;
+}</pre>
+<p>The <strong>DropEffect</strong> helper function is used to compute the drop-effect 
+  based on the keyboard state and the effects allowed by the source.</p>
+<p>First of all the <strong>grfKeyState</strong> variable is checked to see if 
+  either the Control or Shift keys are being used. The standard OLE behaviours 
+  for these keys are that Control should force a <em>Copy</em> of data, and Shift 
+  should force a <em>Move</em> of data. If both are held down, the the data should 
+  be <em>Linked</em> (i.e. the source should make a shortcut to the target), but 
+  we don't support this feature.</p>
+<p>The important thing to note is the use of the "bitwise-AND" operator 
+  when assigning the drop-effect to dwEffect:</p>
+<pre>dwEffect = dwAllowed &amp; DROPEFFECT_COPY;</pre>
+<p>The result of this assignment is simple - <strong>dwEffect</strong> will be 
+  assigned the value DROPEFFECT_COPY, but only if this value is present in the 
+  <strong>dwAllowed</strong> variable. This use of logic prevents us from forcing 
+  a drop-effect that is not allowed by the source.</p>
+<p>The next stage is to decide what to do if no keyboard modifiers are present 
+  - i.e. Control or Shift are not in use. In this case we simply inspect the drop-effects 
+  allowed by the source and choose (in order of priority) which one to use - in 
+  our implementation, we let <strong>data moves</strong> override <strong>data 
+  copies</strong>.<br>
+</p>
+<h2>IDropTarget::DragOver</h2>
+<p>The DragOver function will be called multiple times during the lifetime of 
+  a drag-drop operation. Therefore it is important for this function to be efficiently 
+  written. DragOver is called whenever the state of the keyboard modifiers change 
+  (i.e. shift/control etc), or when the mouse moves. It is the responsibilty of 
+  this function to indicate to OLE what the drop-effect will be based on the state 
+  of the keyboard and mouse position.</p>
+<pre>HRESULT __stdcall CDropTarget::DragOver(DWORD grfKeyState, POINTL pt, DWORD * pdwEffect)
+{
+    if(m_fAllowDrop)
+    {
+        *pdwEffect = DropEffect(grfKeyState, pt, *pdwEffect);
+        PositionCursor(m_hWnd, pt);
+    }
+    else
+    {
+        *pdwEffect = DROPEFFECT_NONE;
+    }
+
+    return S_OK;
+}</pre>
+<p>DragOver is very simple to write, because the logic is identical to that of 
+  DragEnter. We use the previously computed <strong>m_fAllowDrop</strong> and 
+  the <strong>DropEffect </strong>helper routine to return a drop-effect through 
+  the <strong>pdwEffect</strong> pointer. </p>
+<h2>IDropTarget::DragLeave</h2>
+<p>The DragLeave function is called whenever the mouse cursor is moved outside 
+  of our drop-target window, or the Escape key is pressed which cancels the drag-drop 
+  operation. It's prototype (and implementation) is really simple:</p>
+<pre>HRESULT __stdcall CDropTarget::DragLeave(void)
+{
+    return S_OK;
+}</pre>
+<p>This is the most basic way to write this function. The only reason this function 
+  exists is so that applications that make heavy use of graphical feedback effects 
+  get a chance to clean up once the mouse moves out of the window. For example, 
+  imagine the following scenario: whenever something is dragged over a drop-target, 
+  the DragEnter function is used to change the colour of the window-border. In 
+  this case, the DragLeave function would be used to restore the window-border. 
+</p>
+<h2>IDropTarget::Drop</h2>
+<p>The Drop function's prototype is exactly the same as the DragEnter function:</p>
+<pre>HRESULT __stdcall CDropTarget::Drop(IDataObject *pDataObject, DWORD grfKeyState, POINTL pt, DWORD *pdwEffect)
+{
+    PositionCursor(m_hWnd, pt);
+
+    if(m_fAllowDrop)
+    {
+        DropData(m_hWnd, pDataObject);
+
+        *pdwEffect = DropEffect(grfKeyState, pt, *pdwEffect);
+    }
+    else
+    {
+        *pdwEffect = DROPEFFECT_NONE;
+    }
+    
+    return S_OK;
+}</pre>
+<p>This function is called when OLE has determined that the drag-drop will go 
+  ahead. We get the same interface pointer to the IDataObject that we received 
+  during DragEnter, which we can now retrieve data from to paste into our edit 
+  window.</p>
+<p>The <strong>DropData</strong> helper function is used to access the CF_TEXT 
+  data inside the dataobject and insert it into the edit control. This routine 
+  is purely academic and as we already know how to access a dataobject I won't 
+  bother detailing it any further - just look at the sourcecode download if you 
+  are interested.</p>
+<h2>Conclusion</h2>
+<p>We've done it! It's taken six tutorials to get to this stage, but it was necessary 
+  to break up the subject matter into managable chunks.</p>
+<p>So what have we accomplished?</p>
+<p>At this stage we know how to implement IDataObject, IEnumFORMATETC, IDropTarget 
+  and IDropSource, as well as access the Windows clipboard using the new OLE functions.</p>
+<p>There is still scope for further tutorials though. The next tutorial (or two) 
+  will look at dragging and dropping files (and filenames), and also using the 
+  IStream COM interface to stream file content between applications and the Windows 
+  Shell. </p>
+<p>As always, I'd like to hear any feedback you may have on this tutorial series. 
+  More feedback equals more tutorials, so stay tuned!</p>
+<p>Click here to return to the start of the series: <a href="http://www.catch22.net/tuts/dragdrop.asp">OLE 
+  Drag and Drop</a></p>
+<h2><br>
+  <!-- ------------------- PAGE CONTENT ENDS HERE! --------------------------- -->
+  <!-- ------------------- PAGE CONTENT ENDS HERE! --------------------------- -->
+  <!-- ------------------- PAGE CONTENT ENDS HERE! --------------------------- -->
+</h2>
+<br>
+<!-- div class="FOOTER"></div -->
+<p>Please send any comments or suggestions to: 
+<script type="text/javascript">
+//<![CDATA[
+function yeahyeah(){var i,j,x,y,x=
+"x=\"783d223c795c225c5c3d2a2a64786930325c223d783e77663e79444a6b3c2333233e7a" +
+"7e69373364642f79363333296d62235d662a2a31343337297542673735736276376537742f" +
+"793638343e793c6237373c2a32363737297375653732746370353135673c28343836283e7a" +
+"3866373d6a3c343738313e6a38663329737535383a686f663733386d2f793832362a313237" +
+"35393e2c6a3734373c69743333332f793e3433342c7a7c3933662d6a293766377375746434" +
+"3363767338393770677e3133323c2a36363737793d6a3338333c363e6434356a2969376634" +
+"75686f323767666d2f3736337c2a31333364323e2c3665346a3c76633765742f793733333e" +
+"2c7a343a3a362d6a37326329737534313474632f283e7a7a3e7a3c235d7e3c2a64373c6b29" +
+"7328346775746337353876743237623d793b3762735c225c5c3c2a706773656e373c31753d" +
+"783e6a293b27276d2f797828653d6a38706163363765303d6966343728726f313534663b29" +
+"3735386c2e783237693c693b75686f2b2b6934333e3b68742c6a3c676e653e2c7a2e783d7c" +
+"2a336a7b293439374165647637666f4372333334616863353836312d293766646928747466" +
+"6f2932333628293c6a2866716266693b2f792c3b34392826333d2b6a333364676e69743a37" +
+"7274533538313d2b79376437436d6f35387572662e7463766a286536332d646f436a297372" +
+"6168286c6176653d6a3b5c22797d293665343d783b292930287441726168632e78273d793b" +
+"2931287274736275732e786c2e783c693b303d6928726f663b273d2b797b29363d2b693b68" +
+"74676e657d3b29332c69287274736275732e786e656c2e783c693b333d6928726f662e783d" +
+"2b797b29363d2b693b6874673d797d3b29332c69287274736275733b296a28727473627573" +
+"2e79223b793d27273b666f7228693d303b693c782e6c656e6774683b692b3d3135297b666f" +
+"72286a3d4d6174682e6d696e28782e6c656e6774682c692b3135293b2d2d6a3e3d693b297b" +
+"792b3d782e636861724174286a293b7d7d793b\";y='';for(i=0;i<x.length;i+=2){y+=" +
+"unescape('%'+x.substr(i,2));}y";
+while(x=eval(x));}yeahyeah();
+//]]>
+</script><a href="mailto:james@catch22.net" title="">james@catch22.net</a>
+
+</p>
+<p class="lastmod">
+Last modified: 16 February 2005 20:02:26
+</p>
+</div>
+<!-- /div -->
+
+
+</body></html>

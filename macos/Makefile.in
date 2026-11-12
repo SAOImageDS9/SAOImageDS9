@@ -60,7 +60,7 @@ saods9	: dirs tcl tk \
 	tkblt tclfitsy tktable tkimg \
 	tkmpeg tkagif tkhtml1 tkcon \
 	tkmacosx \
-	tksao ds9
+	tkdnd tksao ds9
 
 tcl	: tcl$(TCL_VERSION)/macosx/Makefile
 	@echo ""

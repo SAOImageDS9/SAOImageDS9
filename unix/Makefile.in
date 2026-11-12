@@ -23,6 +23,13 @@ WITHTCL 	= --with-tcl=$(prefix)/tcl$(TCL_VERSION)/unix
 WITHTK  	= --with-tk=$(prefix)/tk$(TCL_VERSION)/unix $(WITHTCL)
 CACHE		= --config-cache --cache-file=$(prefix)/config.cache
 
+# tkdnd (drag and drop) is only supported on linux; X11 drag and drop
+# does not work with XQuartz on macos. Keep this test in sync with
+# ds9/unix/Makefile.in
+ifeq ($(shell uname -s),Linux)
+TKDND		= tkdnd
+endif
+
 #--------------------------build
 
 .PHONY	: saods9 tcl tk
@@ -35,7 +42,7 @@ saods9	: dirs tcl tk \
 	tls tclxml tclxmlrpc \
 	tkblt tclfitsy tktable tkimg \
 	tkmpeg tkagif tkhtml1 tkcon \
-	tksao ds9
+	$(TKDND) tksao ds9
 
 tcl	: tcl$(TCL_VERSION)/unix/Makefile
 	@echo ""

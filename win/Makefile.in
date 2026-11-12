@@ -67,7 +67,7 @@ saods9	: dirs tcl tk \
 	tkblt tclfitsy tktable tkimg \
 	tkmpeg tkagif tkhtml1 tkcon \
 	tkwin \
-	tksao ds9
+	tkdnd tksao ds9
 
 # no symbols
 tcl	: tcl$(TCL_VERSION)/win/Makefile

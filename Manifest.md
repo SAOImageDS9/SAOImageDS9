@@ -1,6 +1,6 @@
 # List of SAOImageDS9 packages
 
-Last updated 2026-10-26
+Last updated 2026-11-11
 
 | name         | version    | SAO   | dirty | upstream                                                             | latest                          |
 | ------------ | ---------- | ----- | ----- | -------------------------------------------------------------------- | ------------------------------- |
@@ -26,6 +26,7 @@ Last updated 2026-10-26
 | tkagif       | 1.1        | y     |       | https://github.com/SAOImageDS9/tkagif-maintenance                    | 1.1                             |
 | tkblt        | 3.3        | y     | y     | https://github.com/SAOImageDS9/tkblt-maintenance                     | previous upstream abandoned (1) |
 | tkcon        | 2.8        | y     | y     | https://github.com/SAOImageDS9/tkcon-maintenance                     | previous upstream abandoned     |
+| tkdnd        | 2.9.5      |       | y     | https://github.com/petasis/tkdnd                                     | 2.9.5 (8)                       |
 | tkhtml1      | 1.1        | y     | y     | https://github.com/SAOImageDS9/tkhtml1-maintenance                   | previous upstream abandoned (2) |
 | **tkimg**    | 2.1.2      |       | y     | https://sourceforge.net/projects/tkimg/                              | 2.1.2 (4)                       |
 | tklib        | 0.9        |       |       | https://github.com/tcltk/tklib                                       | 0.9                             |
@@ -60,3 +61,5 @@ Last updated 2026-10-26
 (6) pkgs/thread3.0.6: backported the Thread 3.0.7 fix that sets ZIPFS_BUILD=0 when configured with --with-tcl8; without it the macOS framework build fails looking for a native Tcl 9 tclsh.
 
 (7) awthemes: `_readFile` sets `-encoding utf-8` when reading the SVG theme images. Without it they were read in the system encoding, and with LANG=zh (cp936) or LANG=ja (euc-jp) Tcl 9's strict encoding check made ds9 fail at startup on the non-ASCII UTF-8 bytes in some of the SVGs.
+
+(8) tkdnd (drag and drop) is built as a static library and linked into ds9 on Linux, macOS (aqua) and Windows, but not for X11 on macOS. Local changes, marked `ds9:` in the source: library/tkdnd.tcl loads the static package when ds9 has registered one; library/tkdnd_unix.tcl fetches the dropped data once per drag, so the fetch no longer races the source's XdndLeave; unix/tkUnixSelect.c gives each nested selection request its own property, clears it before each transfer and sets an error message on failure; unix/TkDND_XDND.c ignores BadWindow errors from windows destroyed while it scans for a virtual root.

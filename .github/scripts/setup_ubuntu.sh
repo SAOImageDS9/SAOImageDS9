@@ -13,6 +13,7 @@ sudo apt-get install \
   libxml2-dev \
   libxslt1-dev \
   libxft-dev \
+  libxcursor-dev \
   libxt-dev \
   zip \
   tcl8.6-dev \

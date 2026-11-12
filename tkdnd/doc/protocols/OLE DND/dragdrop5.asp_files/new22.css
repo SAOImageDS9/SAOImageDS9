@@ -1,0 +1,338 @@
+.comment {
+  color: #5E86AA;
+}
+
+A:hover {
+  color: red;
+}
+
+/*IMG.rollover:hover {
+	background-image:url(img/about-banner.gif); width 200px; height:200px;
+	width: 500px;
+}*/
+
+BODY {
+  background-color: white;
+  margin: 36;
+  padding: 0;
+  font-family: /*Georgia,*/ Verdana, Tahoma, Arial, sans-serif;
+}
+
+BODY.INDEX {
+  background-color: #D7E4F6;
+  margin: 36;
+  padding: 0;
+}
+
+
+H1 {
+  
+  font-weight: bold;
+  font-size: large;
+}
+
+H2 { /* normal H2 tag */
+ /* font-family: Verdana, Tahoma, Arial, sans-serif;*/
+/*  font-family: Georgia;*/
+  font-weight: bold;
+  font-size: medium;
+}
+
+DIV.TUTBODY H2 {  /* H2 when it appears inside a TUTBODY DIV */
+  margin-left: -8pt;
+  color: #40617F
+}
+
+
+H3 {
+  /*font-family: Verdana, Tahoma, Arial, sans-serif;*/
+  font-weight: bold;
+  font-size: small;
+  color: #40617F  
+}
+
+H4 {
+  /*font-family: Verdana, Tahoma, Arial, sans-serif;*/
+  font-weight: bold;
+  margin-left: -8pt;
+  font-size: small;
+}
+
+pre.plain
+{
+  font: x-small "Courier New", Courier, mono;
+  padding:      6px;
+ background: white;
+  border-style: none;
+  border-width: 0;
+  border-color: white;
+  white-space:  pre;
+  color:#664400;
+}
+PRE {
+  font: x-small "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier, mono;
+  padding:      6px;
+  background:   #EDF5FF;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #B5CFF7;
+  white-space:  pre;
+}
+
+
+P {
+/*  font-family:  Georgia,Verdana, Tahoma, Arial, sans-serif;*/
+  font-size: x-small;
+  text-align: justify;
+  /*line-height: 13pt;*/
+}
+
+.centerimg {
+  text-align: center;
+  font-size: x-small;
+  font-style: italic;
+  align: center;
+}
+
+P.lastmod {
+  color: #B5CFF7;
+}
+
+/* make standard tables have darker cells */
+td {
+ /* font-family: Verdana, Tahoma, Arial, sans-serif;*/
+  font-size: x-small;
+}
+
+th {
+ /* font-family: Verdana, Tahoma, Arial, sans-serif;*/
+  font-size: x-small;
+}
+
+/* table cells for tutorials */
+table.tut td {
+ /* font-family: Verdana, Tahoma, Arial, sans-serif;*/
+  font-size: x-small;
+  background-color: #F0F0F0;/*#F5F5F5;*/
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+table.tut th {
+ /* font-family: Verdana, Tahoma, Arial, sans-serif;*/
+  font-size: x-small;
+  background-color: #B5CFF7;/*#D7E4F6;*/
+  padding: 4px;  
+}
+
+/* give "layout" tables normal (invisible) cells*/
+table.tutindex td {
+  /*font-family: Verdana, Tahoma, Arial, sans-serif;*/
+  font-size: x-small;
+  background-color: #EEF6FF;
+}
+
+table.tutindex th {
+/*  font-family: Verdana, Tahoma, Arial, sans-serif;*/
+  font-size: x-small;
+  background-color: #E3EAF8;
+}
+
+table {
+ /* font-family: Verdana, Tahoma, Arial, sans-serif;*/
+  font-size: x-small;
+}
+
+table.tut {
+  /*font-family: Verdana, Tahoma, Arial, sans-serif;*/
+  font-size: x-small;
+  width: 100%;
+}
+
+table.tutindex
+{
+  margin-top: 10;
+  margin-bottom: 10;
+  /*font-family: Verdana, Tahoma, Arial, sans-serif;*/
+  font-size: x-small;
+}
+
+TR {
+ /* font-family: Verdana, Tahoma, Arial, sans-serif;*/
+  font-size: x-small;
+}
+
+LI {
+  /*font-family: Verdana, Tahoma, Arial, sans-serif;*/
+  font-size: x-small;
+  margin-left: 8px;
+  margin-right: 40px;
+}
+
+OL {
+  /*font-family: Verdana, Tahoma, Arial, sans-serif;*/
+  font-size: x-small;
+  margin-left: 24px;
+}
+
+UL {
+  /*font-family: Verdana, Tahoma, Arial, sans-serif;*/
+  font-size: x-small;
+  margin-left: 24px;
+
+}
+
+/*.inlinebar {  
+  margin-left: -10px;
+  margin-top:  0px; 
+  margin-bottom: 0px 
+  margin-right: 0px 
+}
+
+.forced {  
+  margin-left: -24px;
+  margin-top:  0px; 
+  marin-right: 24px;
+  margin-bottom: 0px;
+  width: 100%;
+}
+
+.menubanner {  
+  margin-left: -16px;
+  margin-top:  -24px;
+  marin-right: -100px;
+  margin-bottom: 0px;
+}
+*/
+
+.TUTTOPBLOCK {
+  background-color: #B5CFF7;
+  padding: 0;
+  margin-top : -36;
+  margin-left: -36;
+  margin-right: -36;
+  margin-bottom: 0;
+  
+  background-image: url("img/catch22back.gif");
+  background-repeat: repeat-x;
+  height: 64px;
+}
+
+.FOOTER {
+	background-color: red; 
+    margin-top: 0;
+	margin-left: -36; 
+    margin-right: -36; 
+	margin-bottom: -36;
+	padding: 0; 
+	width: 100%;
+}
+
+.TUTTITLE {
+  /*background-color: #ffe492;*/
+  /*background-color: #FBE087;*/
+  /*margin: -36;*/
+
+  background-color: #D7E4F6;
+  padding-left: 20;
+  padding-top: 24;
+  padding-bottom: 10;
+  padding-right: 20;
+
+  margin-top : 0;
+  margin-left: -36;
+  margin-right: -36;
+  margin-bottom: 0;
+
+  border-color: #B5CFF7;
+  border-left-width:0;
+  border-right-width:0;  
+  border-top-width:0;/*4px;*/
+  border-bottom-width: 4px;
+  border-style: solid;
+  
+    font-family: Verdana,Tahoma,Arial,Sans-Serif;
+}
+
+.INDEXTITLE {
+
+  background-color: #EDF5FF;/*#C4DAF7;*/
+  padding-left: 20;
+  padding-top: 14;
+  padding-bottom: 10;
+  padding-right: 20;
+
+  margin-top : 0;
+  margin-left: -36;
+  margin-right: -36;
+  margin-bottom: 0;
+
+  border-color: #B5CFF7;
+  border-left-width:0;
+  border-right-width:0;  
+  border-top-width:4px;
+  border-bottom-width: 4px;
+  border-style: solid;
+
+
+}
+
+.TUTBOTBLOCK {
+  background-color: #B5CFF7;
+  padding-left: 0;
+  margin : 0;
+}
+
+.INDEXBODY {
+  background-color: #D7E4F6;
+}
+
+.TUTBODY {
+  padding: 0;
+  margin: 0;
+}
+
+CODE {
+   font: 10pt "Courier New", Courier, mono;
+}
+
+.THINMENU {
+ background-image: url("img/menu01.gif");
+ background-repeat: repeat-x;
+} 
+
+.SOFTDESC {
+  background-color: EEF6FF; 
+}
+
+.buttonclass {
+  margin-left: 20px;
+}
+
+@media print {
+  .noprint { display: none }
+}
+
+
+
+.SUBMITFORM {
+   font-family: Verdana, Tahoma, Arial, sans-serif;
+   font-size: x-small;
+
+  border-color: #c0c0c0;
+  border-left-width:1px;
+  border-right-width:1px;  
+  border-top-width: 3px;
+  border-bottom-width: 3px;
+  border-style: solid;
+ 
+   padding-top: 6px;
+   padding-left:6px; 
+   padding-right:30px;
+   padding-bottom: 6px;
+   background:#f4f4f4;
+}
+
+.pagebreak {
+ page-break-before:always;
+}

@@ -17,6 +17,7 @@
 # tkagif 1.1
 # tkblt 3.3
 # tkcon 2.8
+# tkdnd 2.9.5
 # tkhtml1 1.1
 # tkimg 2.1.2
 # tkmpeg 1.1
@@ -103,6 +104,7 @@ TKIMGTMPFILES = \
 .NOTPARALLEL :
 .PHONY	: all dirs ds9 tclxml tclxmlrpc tls xpa
 .PHONY	: tkblt tclfitsy tkcon tkhtml1 tkimg tkmpeg tkagif tksao tktable
+.PHONY	: tkdnd
 .PHONY	: vector fitsy ast funtools openssl
 
 all	: saods9
@@ -357,6 +359,25 @@ tkagif/Makefile :
 	$(STD) \
 	$(CACHE)
 
+#-------------------------- tkdnd
+
+tkdnd	: tkdnd/Makefile
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C tkdnd -j $(JOBS) install
+
+# no config.cache: tkdnd's configure does AC_PROG_CXX and then sets
+# CC to it, so its compile tests run with the C++ compiler. Sharing
+# the cache would hand those results to every other package.
+tkdnd/Makefile :
+	@echo ""
+	@echo "*** $@ ***"
+	cd tkdnd; \
+	./configure \
+	$(WITHTK) \
+	$(PREFIX) \
+	$(STD)
+
 #-------------------------- tksao
 
 tksao	: tksao/Makefile
@@ -556,7 +577,7 @@ scrub :
 .PHONY	: opensslclean
 .PHONY	: tclxmlclean tclxmlrpcclean tlsclean
 .PHONY	: tkbltclean tclfitsy tkconclean tkhtml1clean tkimgclean
-.PHONY	: tkmpegclean tkagifclean
+.PHONY	: tkmpegclean tkagifclean tkdndclean
 .PHONY	: tktableclean xpaclean
 .PHONY	: vectorclean fitsyclean astclean funtoolsclean
 .PHONY	: tksaoclean
@@ -565,7 +586,7 @@ clean	: tclclean tkclean \
 	opensslclean \
 	tlsclean tclxmlclean tclxmlrpc xpaclean \
 	tkbltclean tclfitsy tkconclean tktableclean tkimgclean \
-	tkmpegclean tkagifclean tkhtml1clean \
+	tkmpegclean tkagifclean tkdndclean tkhtml1clean \
 	vectorclean fitsyclean astclean funtoolsclean ds9clean \
 	tksaoclean osclean dirsclean localclean scrub
 
@@ -644,6 +665,12 @@ tkagifclean:
 	@echo "*** $@ ***"
 	$(MAKE) -C tkagif clean
 
+# tkdnd is not built everywhere (see unix/Makefile.in)
+tkdndclean:
+	@echo ""
+	@echo "*** $@ ***"
+	if [ -f tkdnd/Makefile ]; then $(MAKE) -C tkdnd clean; fi
+
 tksaoclean :
 	@echo ""
 	@echo "*** $@ ***"
@@ -685,7 +712,7 @@ xpaclean :
 .PHONY	: openssldistclean
 .PHONY	: tclxmldistclean tclxmlrpcdistclean tlsdistclean
 .PHONY	: tkbltdistclean tclfitsydistclean tkcondistclean tkhtml1distclean
-.PHONY	: tkimgdistclean tkmpegdistclean tkagifdistclean
+.PHONY	: tkimgdistclean tkmpegdistclean tkagifdistclean tkdnddistclean
 .PHONY	: tktabledistclean xpadistclean
 .PHONY	: vectordistclean fitsydistclean
 .PHONY	: astdistclean funtoolsdistclean
@@ -697,7 +724,7 @@ distclean : tcldistclean tkdistclean \
 	  tlsdistclean tclxmldistclean tclxmlrpcdistclean xpadistclean \
 	  tkbltdistclean tclfitsydistclean tktabledistclean \
 	  tkcondistclean tkimgdistclean \
-	  tkmpegdistclean tkagifdistclean tkhtml1distclean \
+	  tkmpegdistclean tkagifdistclean tkdnddistclean tkhtml1distclean \
 	  vectordistclean fitsydistclean astdistclean \
 	  vectordistclean fitsydistclean astdistclean \
 	  funtoolsdistclean ds9distclean \
@@ -795,6 +822,11 @@ tkagifdistclean:
 	@echo "*** $@ ***"
 	$(MAKE) -C tkagif distclean
 	$(RM) -f tkagif/tkagifConfig.sh
+
+tkdnddistclean:
+	@echo ""
+	@echo "*** $@ ***"
+	if [ -f tkdnd/Makefile ]; then $(MAKE) -C tkdnd distclean; fi
 
 tksaodistclean :
 	@echo ""

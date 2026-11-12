@@ -45,14 +45,29 @@ proc PrefsDialog {{which {}}} {
 			  -show tree \
 			 ]
 
-    grid $f.box $f.scroll -sticky news
+    # Pages, scrollable when taller than the dialog
+    set dprefs(canvas) [canvas $f.pages -highlightthickness 0 -bd 0 \
+			    -height 1 -yscrollincrement 20 \
+			    -bg [ThemeBackground] \
+			    -yscrollcommand [list PrefsDialogYScroll $f.yscroll]]
+    ttk::scrollbar $f.yscroll -orient vertical \
+	-command [list $dprefs(canvas) yview]
+    set dprefs(yscroll) $f.yscroll
+    set dprefs(tab) [ttk::frame $dprefs(canvas).tab]
+    $dprefs(canvas) create window 0 0 -window $dprefs(tab) -anchor nw \
+	-tags tab
+
+    grid $f.box $f.scroll $dprefs(canvas) $f.yscroll -sticky news
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 2 -weight 1
 
-    set dprefs(tab) $f
     set dprefs(tabs) {}
 
     bind $dprefs(listbox) <<TreeviewSelect>> PrefsDialogListUpdate
+    bind $dprefs(tab) <Configure> PrefsDialogScrollUpdate
+    bind $dprefs(canvas) <Configure> PrefsDialogScrollUpdate
+    bind $dprefs(canvas) <<ThemeChanged>> {ThemeConfigBg %W}
+    bind $w <MouseWheel> [list PrefsDialogMouseWheel %W %D]
 
     PrefsDialogGeneral
     PrefsDialogPrecision
@@ -111,11 +126,52 @@ proc PrefsDialogListUpdate {} {
     global dprefs
 
     if {$dprefs(tabs) != {}} {
-	grid forget $dprefs(tabs)
+	pack forget $dprefs(tabs)
     }
     set dprefs(tabs) [$dprefs(listbox) selection]
     if {$dprefs(tabs) != {}} {
-	grid $dprefs(tabs) -row 0 -column 2 -sticky new
+	pack $dprefs(tabs) -fill x
+    }
+    $dprefs(canvas) yview moveto 0
+}
+
+proc PrefsDialogScrollUpdate {} {
+    global dprefs
+
+    set c $dprefs(canvas)
+    # dialog is as wide as the page, as tall as the list
+    $c configure -width [winfo reqwidth $dprefs(tab)]
+    $c itemconfigure tab -width [winfo width $c]
+    $c configure -scrollregion \
+	[list 0 0 [winfo width $c] [winfo reqheight $dprefs(tab)]]
+}
+
+# show the scrollbar only when the page does not fit
+proc PrefsDialogYScroll {sb first last} {
+    $sb set $first $last
+    if {$first <= 0 && $last >= 1} {
+	grid remove $sb
+    } else {
+	grid $sb
+    }
+}
+
+proc PrefsDialogMouseWheel {ww delta} {
+    global dprefs
+
+    if {![string match $dprefs(canvas)* $ww]} {
+	return
+    }
+    # these use the wheel themselves
+    switch [winfo class $ww] {
+	TCombobox -
+	TSpinbox -
+	Treeview -
+	Text -
+	Listbox {return}
+    }
+    if {[winfo ismapped $dprefs(yscroll)]} {
+	tk::MouseWheel $dprefs(canvas) y $delta -40.0
     }
 }
 

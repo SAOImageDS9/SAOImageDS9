@@ -18,6 +18,10 @@ package provide DS9 1.0
 namespace eval ::ops {
     variable scale 1
 
+    # original image sizes, see OpsStretch
+    variable size
+    array set size {}
+
     variable palette
     array set palette {
 	ops,bg		#e6eaf0
@@ -78,6 +82,7 @@ proc OpsThemeCreate {} {
 proc OpsImage {theme name w h body} {
     set img "ops_${theme}_$name"
     catch {image delete $img}
+    unset -nocomplain ::ops::size($img)
     image create photo $img -format [list svg -scale $::ops::scale] -data \
 	"<svg xmlns='http://www.w3.org/2000/svg' width='$w' height='$h' viewBox='0 0 $w $h'>$body</svg>"
     return $img
@@ -107,6 +112,87 @@ proc OpsPx {args} {
 	lappend rr [expr {round($vv*$::ops::scale)}]
     }
     return $rr
+}
+
+# image element with a wide stretch area
+#
+# ttk fills an element by tiling the center of the image (inside
+# -border) one center sized piece at a time, and each piece with
+# partial alpha costs an XGetImage round trip.  With the 1px centers
+# drawn here that is one round trip per pixel, which on some servers
+# (Xwayland with glamor) takes minutes for a dialog.  So the center
+# of each image is pre-tiled out to at least 64px, and -width/-height
+# keep the element's minimum size that of the original artwork.
+proc OpsElement {name spec args} {
+    set ii [lsearch -exact $args -border]
+    if {$ii == -1} {
+	ttk::style element create $name image $spec {*}$args
+	return
+    }
+
+    # ttk padding: l, l t, l t r, or l t r b
+    lassign [lindex $args $ii+1] l t r b
+    if {$t eq {}} {set t $l}
+    if {$r eq {}} {set r $l}
+    if {$b eq {}} {set b $t}
+
+    set imgs [list [lindex $spec 0]]
+    foreach {state img} [lrange $spec 1 end] {
+	lappend imgs $img
+    }
+    foreach img $imgs {
+	OpsStretch $img $l $t $r $b
+    }
+
+    lassign $::ops::size([lindex $imgs 0]) w h
+    ttk::style element create $name image $spec {*}$args \
+	-width $w -height $h
+}
+
+proc OpsStretch {img l t r b} {
+    # images may be shared between elements
+    if {[info exists ::ops::size($img)]} {
+	return
+    }
+    set w [image width $img]
+    set h [image height $img]
+    set ::ops::size($img) [list $w $h]
+
+    set nw [OpsStretchSize $w $l $r]
+    set nh [OpsStretchSize $h $t $b]
+    if {$nw == $w && $nh == $h} {
+	return
+    }
+
+    set src [image create photo]
+    $src copy $img -compositingrule set
+    $img blank
+    $img configure -width $nw -height $nh
+
+    # copy the 9 patches; a larger -to region tiles the -from region
+    set sx [list 0 $l $l [expr {$w-$r}] [expr {$w-$r}] $w]
+    set dx [list 0 $l $l [expr {$nw-$r}] [expr {$nw-$r}] $nw]
+    set sy [list 0 $t $t [expr {$h-$b}] [expr {$h-$b}] $h]
+    set dy [list 0 $t $t [expr {$nh-$b}] [expr {$nh-$b}] $nh]
+    foreach {sy0 sy1} $sy {dy0 dy1} $dy {
+	foreach {sx0 sx1} $sx {dx0 dx1} $dx {
+	    if {$sx1 > $sx0 && $sy1 > $sy0} {
+		$img copy $src -compositingrule set \
+		    -from $sx0 $sy0 $sx1 $sy1 -to $dx0 $dy0 $dx1 $dy1
+	    }
+	}
+    }
+    image delete $src
+}
+
+# new length with the center widened to at least 64px in whole tiles,
+# so the tiled pattern is unchanged
+proc OpsStretchSize {len b0 b1} {
+    set cc [expr {$len-$b0-$b1}]
+    if {$cc <= 0 || $cc >= 64} {
+	return $len
+    }
+    return [expr {$b0+$b1+$cc*int(ceil(64./$cc))}]
 }
 
 # menubutton: left section 0-17, gap 17-19, end cap 19-39
@@ -163,7 +249,7 @@ proc OpsThemeSettings {theme} {
     # Button: pill that lights up blue on hover, amber when pressed
     set r 11
     set pill {OpsRect 0 0 24 23 11.5}
-    ttk::style element create Button.border image [list \
+    OpsElement Button.border [list \
 	[OpsImage $theme btn 24 23 [{*}$pill $raised $line]] \
 	disabled [OpsImage $theme btn_d 24 23 [{*}$pill $bg $line 1 0.5]] \
 	pressed [OpsImage $theme btn_p 24 23 [{*}$pill $amber]] \
@@ -185,7 +271,7 @@ proc OpsThemeSettings {theme} {
     # Icon bar buttons: flat until hovered
     set ibody [OpsRect 0 0 15 15 6 $hover $accent]
     set pbody [OpsRect 0 0 15 15 6 $amber $amber 1 0.35]
-    ttk::style element create Icon.Button.border image [list \
+    OpsElement Icon.Button.border [list \
 	[OpsImage $theme ibtn 15 15 {}] \
 	pressed [OpsImage $theme ibtn_p 15 15 $pbody] \
 	active [OpsImage $theme ibtn_a 15 15 $ibody] \
@@ -205,7 +291,7 @@ proc OpsThemeSettings {theme} {
     ttk::style map Toolbutton -foreground [list disabled $dim]
 
     # small corner mark for icon menu buttons
-    ttk::style element create Icon.Menubutton.indicator image [list \
+    OpsElement Icon.Menubutton.indicator [list \
 	[OpsImage $theme imark 5 5 [OpsPath {M5 0 V5 H0 Z} $accent]] \
 	disabled [OpsImage $theme imark_d 5 5 [OpsPath {M5 0 V5 H0 Z} $dim]] \
 	] -sticky se
@@ -221,13 +307,13 @@ proc OpsThemeSettings {theme} {
     ttk::style map Icon.TMenubutton -foreground [list disabled $dim]
 
     # Menubutton: pill with a separate blue end cap holding the arrow
-    ttk::style element create Menubutton.border image [list \
+    OpsElement Menubutton.border [list \
 	[OpsImage $theme mb 39 23 [OpsMbBody $raised $line $accent]] \
 	disabled [OpsImage $theme mb_d 39 23 [OpsMbBody $bg $line $dim]] \
 	pressed [OpsImage $theme mb_p 39 23 [OpsMbBody $amber $amber $amber]] \
 	active [OpsImage $theme mb_a 39 23 [OpsMbBody $accent $accent $accent]] \
 	] -border [OpsPx 11 11 24 11] -padding [OpsPx 10 3 2 3] -sticky nswe
-    ttk::style element create Menubutton.indicator image [list \
+    OpsElement Menubutton.indicator [list \
 	[OpsImage $theme mbarrow 8 5 [OpsPath {M0 0 H8 L4 5 Z} $accentfg]] \
 	pressed [OpsImage $theme mbarrow_p 8 5 [OpsPath {M0 0 H8 L4 5 Z} $amberfg]] \
 	disabled [OpsImage $theme mbarrow_d 8 5 [OpsPath {M0 0 H8 L4 5 Z} $bg]] \
@@ -252,7 +338,7 @@ proc OpsThemeSettings {theme} {
 
     # Entry, Spinbox
     set fbody [OpsRect 0 0 9 9 3 $field $line]
-    ttk::style element create Entry.field image [list \
+    OpsElement Entry.field [list \
 	[OpsImage $theme field 9 9 $fbody] \
 	disabled [OpsImage $theme field_d 9 9 [OpsRect 0 0 9 9 3 $bg $line]] \
 	readonly [OpsImage $theme field_r 9 9 [OpsRect 0 0 9 9 3 $bg $line]] \
@@ -261,7 +347,7 @@ proc OpsThemeSettings {theme} {
     ttk::style configure TEntry -padding 0 -insertwidth 1
     ttk::style map TEntry -foreground [list disabled $dim]
 
-    ttk::style element create Spinbox.field image [list \
+    OpsElement Spinbox.field [list \
 	ops_${theme}_field \
 	disabled ops_${theme}_field_d \
 	readonly ops_${theme}_field_r \
@@ -276,17 +362,17 @@ proc OpsThemeSettings {theme} {
 
     # Combobox: field plus a blue end cap
     set capd {M2 0 H19 A3 3 0 0 1 22 3 V6 A3 3 0 0 1 19 9 H2 Z}
-    ttk::style element create Combobox.field image [list \
+    OpsElement Combobox.field [list \
 	ops_${theme}_field \
 	disabled ops_${theme}_field_d \
 	focus ops_${theme}_field_f \
 	] -border [OpsPx 4] -padding [OpsPx 4 2] -sticky nswe
-    ttk::style element create Combobox.downarrow image [list \
+    OpsElement Combobox.downarrow [list \
 	[OpsImage $theme cbcap 22 9 [OpsPath $capd $accent]] \
 	disabled [OpsImage $theme cbcap_d 22 9 [OpsPath $capd $dim]] \
 	pressed [OpsImage $theme cbcap_p 22 9 [OpsPath $capd $amber]] \
 	] -border [OpsPx 5 4 4 4] -sticky ns
-    ttk::style element create Combobox.glyph image [list \
+    OpsElement Combobox.glyph [list \
 	ops_${theme}_mbarrow \
 	pressed ops_${theme}_mbarrow_p \
 	disabled ops_${theme}_mbarrow_d \
@@ -314,7 +400,7 @@ proc OpsThemeSettings {theme} {
 
     # Checkbutton, Radiobutton: amber status lights
     set ck {M4 8.5 L7 11.5 L12 5}
-    ttk::style element create Checkbutton.indicator image [list \
+    OpsElement Checkbutton.indicator [list \
 	[OpsImage $theme ck 22 16 [OpsCk {} $field $line]] \
 	{disabled selected} [OpsImage $theme ck_ds 22 16 \
 	    [OpsCk [OpsPath $ck none $bg 2] $dim $dim]] \
@@ -331,7 +417,7 @@ proc OpsThemeSettings {theme} {
 
     set dot "<circle cx='8' cy='8' r='3.5' fill='$amber'/>"
     set ddot "<circle cx='8' cy='8' r='3.5' fill='$dim'/>"
-    ttk::style element create Radiobutton.indicator image [list \
+    OpsElement Radiobutton.indicator [list \
 	[OpsImage $theme rb 22 16 [OpsRb {} $field $line]] \
 	{disabled selected} [OpsImage $theme rb_ds 22 16 [OpsRb $ddot $bg $dim]] \
 	disabled [OpsImage $theme rb_d 22 16 [OpsRb {} $bg $line]] \
@@ -345,10 +431,10 @@ proc OpsThemeSettings {theme} {
 	Vertical 12 13 {2 0 8 13 4} {2 1 8 11 4} {6 6 6 6} \
 	Horizontal 13 12 {0 2 13 8 4} {1 2 11 8 4} {6 6 6 6}] {
 	set oo [string tolower $orient]
-	ttk::style element create $orient.Scrollbar.trough image \
+	OpsElement $orient.Scrollbar.trough \
 	    [OpsImage $theme sbt$oo $w $h [OpsRect {*}$track $trough]] \
 	    -border [OpsPx {*}$bb] -sticky nswe
-	ttk::style element create $orient.Scrollbar.thumb image [list \
+	OpsElement $orient.Scrollbar.thumb [list \
 	    [OpsImage $theme sb$oo $w $h [OpsRect {*}$thumb $line]] \
 	    pressed [OpsImage $theme sb${oo}_p $w $h [OpsRect {*}$thumb $amber]] \
 	    active [OpsImage $theme sb${oo}_a $w $h [OpsRect {*}$thumb $accent]] \
@@ -366,34 +452,34 @@ proc OpsThemeSettings {theme} {
     }
 
     # Scale: thin track, blue pill slider
-    ttk::style element create Horizontal.Scale.trough image \
+    OpsElement Horizontal.Scale.trough \
 	[OpsImage $theme sclh 13 16 [OpsRect 0 6 13 4 2 $line]] \
 	-border [OpsPx 6 0 6 0] -sticky we
-    ttk::style element create Vertical.Scale.trough image \
+    OpsElement Vertical.Scale.trough \
 	[OpsImage $theme sclv 16 13 [OpsRect 6 0 4 13 2 $line]] \
 	-border [OpsPx 0 6 0 6] -sticky ns
-    ttk::style element create Horizontal.Scale.slider image [list \
+    OpsElement Horizontal.Scale.slider [list \
 	[OpsImage $theme sldh 24 16 [OpsRect 0 0 24 16 8 $accent]] \
 	disabled [OpsImage $theme sldh_d 24 16 [OpsRect 0 0 24 16 8 $dim]] \
 	{pressed} [OpsImage $theme sldh_p 24 16 [OpsRect 0 0 24 16 8 $amber]] \
 	] -sticky {}
-    ttk::style element create Vertical.Scale.slider image [list \
+    OpsElement Vertical.Scale.slider [list \
 	[OpsImage $theme sldv 16 24 [OpsRect 0 0 16 24 8 $accent]] \
 	disabled [OpsImage $theme sldv_d 16 24 [OpsRect 0 0 16 24 8 $dim]] \
 	{pressed} [OpsImage $theme sldv_p 16 24 [OpsRect 0 0 16 24 8 $amber]] \
 	] -sticky {}
 
     # Progressbar: segmented readout
-    ttk::style element create Horizontal.Progressbar.trough image \
+    OpsElement Horizontal.Progressbar.trough \
 	[OpsImage $theme pbth 9 14 [OpsRect 0 0 9 14 3 $field $line]] \
 	-border [OpsPx 4] -padding [OpsPx 3] -sticky nswe
-    ttk::style element create Vertical.Progressbar.trough image \
+    OpsElement Vertical.Progressbar.trough \
 	[OpsImage $theme pbtv 14 9 [OpsRect 0 0 14 9 3 $field $line]] \
 	-border [OpsPx 4] -padding [OpsPx 3] -sticky nswe
-    ttk::style element create Horizontal.Progressbar.pbar image \
+    OpsElement Horizontal.Progressbar.pbar \
 	[OpsImage $theme pbh 8 8 [OpsRect 0 0 6 8 1 $accent]] \
 	-border 0 -sticky nswe
-    ttk::style element create Vertical.Progressbar.pbar image \
+    OpsElement Vertical.Progressbar.pbar \
 	[OpsImage $theme pbv 8 8 [OpsRect 0 2 8 6 1 $accent]] \
 	-border 0 -sticky nswe
     ttk::style configure TProgressbar -thickness [OpsPx 14]
@@ -401,7 +487,7 @@ proc OpsThemeSettings {theme} {
     # Labelframe: console bracket, label sits in a gap of the top bar
     set br {M0 7 A7 7 0 0 1 7 0 H39 A1 1 0 0 1 39 2 H7 A3 3 0 0 0 4 5
 	V35 A3 3 0 0 0 7 38 H39 A1 1 0 0 1 39 40 H7 A7 7 0 0 1 0 33 Z}
-    ttk::style element create Labelframe.border image \
+    OpsElement Labelframe.border \
 	[OpsImage $theme lf 40 40 [OpsPath $br $accent]] \
 	-border [OpsPx 8 7 3 7] -padding [OpsPx 10 6 6 8] -sticky nswe
     ttk::style configure TLabelframe -labeloutside false \
@@ -410,10 +496,10 @@ proc OpsThemeSettings {theme} {
 	-background $bg -padding [OpsPx 4 0]
 
     # Separator: console rail
-    ttk::style element create Horizontal.Separator.rail image \
+    OpsElement Horizontal.Separator.rail \
 	[OpsImage $theme seph 7 3 [OpsRect 0 0 7 3 1.5 $accent]] \
 	-border [OpsPx 3 0 3 0] -sticky we
-    ttk::style element create Vertical.Separator.rail image \
+    OpsElement Vertical.Separator.rail \
 	[OpsImage $theme sepv 3 7 [OpsRect 0 0 3 7 1.5 $accent]] \
 	-border [OpsPx 0 3 0 3] -sticky ns
     ttk::style layout TSeparator {Horizontal.Separator.rail -sticky we}
@@ -424,10 +510,10 @@ proc OpsThemeSettings {theme} {
 	-background $bg -bordercolor $bg -lightcolor $bg -darkcolor $bg
 
     # Notebook: block tabs over a blue rail
-    ttk::style element create Notebook.client image \
+    OpsElement Notebook.client \
 	[OpsImage $theme nbc 9 9 [OpsRect 0 0 9 3 0 $accent]] \
 	-border [OpsPx 4 3 4 4] -padding [OpsPx 4 6 4 4] -sticky nswe
-    ttk::style element create Notebook.tab image [list \
+    OpsElement Notebook.tab [list \
 	[OpsImage $theme tab 19 15 [OpsTab $line]] \
 	selected [OpsImage $theme tab_s 19 15 [OpsTab $accent]] \
 	active [OpsImage $theme tab_a 19 15 [OpsTab $lilac]] \
@@ -439,10 +525,10 @@ proc OpsThemeSettings {theme} {
 	disabled $dim selected $accentfg active $lilacfg]
 
     # Treeview: lilac heading blocks, amber selection
-    ttk::style element create Treeview.field image \
+    OpsElement Treeview.field \
 	[OpsImage $theme tvf 9 9 [OpsRect 0 0 9 9 3 $field $line]] \
 	-border [OpsPx 4] -padding [OpsPx 2] -sticky nswe
-    ttk::style element create Treeheading.cell image [list \
+    OpsElement Treeheading.cell [list \
 	[OpsImage $theme th 9 9 [OpsRect 0 0 8 8 0 $lilac]] \
 	active [OpsImage $theme th_a 9 9 [OpsRect 0 0 8 8 0 $accent]] \
 	] -border [OpsPx 2 2 2 2] -sticky nswe

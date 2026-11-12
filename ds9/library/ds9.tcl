@@ -258,6 +258,9 @@ switch $ds9(wm) {
 	package require ttk::theme::scidlightthemes
 	package require ttk::theme::sciddarkthemes
 
+	# ops/opsdark
+	OpsThemeCreate
+
 	# edit theme list
 	set ds9(themes) [lsort [ttk::style theme names]]
 	set ds9(themes) [lsearch -all -inline -not -exact $ds9(themes) alt]

@@ -94,6 +94,7 @@ proc IconDarkModeCheck { } {
         awblack -
         awbreezedark -
         awdark -
+        opsdark -
         sciddark* { set ds9(icons,ui) $ds9(root)/icons/ui_dark }
         default {set ds9(icons,ui) $ds9(root)/icons/ui}
     }

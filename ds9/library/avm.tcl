@@ -20,14 +20,14 @@ proc AVMLoadPhoto {data} {
 	return
     }
 
-    set xmp [AVMExtractXMP $data]
-    if {$xmp == {}} {
-	return
-    }
-
     set varname avmtags
     global $varname
-    if {![AVMParseXMP $xmp $varname]} {
+    set found [AVMRead $data $varname]
+
+    # keep the tags for the header dialog, tied to the file loaded
+    AVMStoreFrame $current(frame) $varname
+
+    if {!$found} {
 	return
     }
 
@@ -66,6 +66,143 @@ proc AVMLoadPhoto {data} {
     FPUpdateWCS
 }
 
+# avmframe($frame) is {filename tags} for the photo last loaded
+proc AVMStoreFrame {frame varname} {
+    upvar #0 $varname var
+    global avmframe
+
+    unset -nocomplain avmframe($frame)
+    if {[array size var]} {
+	set id [$frame get fits count]
+	set avmframe($frame) \
+	    [list [$frame get fits file name $id] [array get var]]
+    }
+}
+
+proc AVMClearFrame {frame} {
+    global avmframe
+
+    unset -nocomplain avmframe($frame)
+}
+
+# AVM tags shown after the FITS header, in AVM order:
+# {label key} where key is the XMP property name
+proc AVMHeaderTags {} {
+    return {
+	{Creator Source}
+	{CreatorURL CiUrlWork}
+	{Contact.Name creator}
+	{Contact.Email CiEmailWork}
+	{Contact.Telephone CiTelWork}
+	{Contact.Address CiAdrExtadr}
+	{Contact.City CiAdrCity}
+	{Contact.StateProvince CiAdrRegion}
+	{Contact.PostalCode CiAdrPcode}
+	{Contact.Country CiAdrCtry}
+	{Rights UsageTerms}
+	{Title title}
+	{Headline Headline}
+	{Description description}
+	{Subject.Category Subject.Category}
+	{Subject.Name subject}
+	{Distance Distance}
+	{Distance.Notes Distance.Notes}
+	{ReferenceURL ReferenceURL}
+	{Credit Credit}
+	{Date DateCreated}
+	{ID ID}
+	{Type Type}
+	{Image.ProductQuality Image.ProductQuality}
+	{PublicationID PublicationID}
+	{ProposalID ProposalID}
+	{Facility Facility}
+	{Instrument Instrument}
+	{Spectral.ColorAssignment Spectral.ColorAssignment}
+	{Spectral.Band Spectral.Band}
+	{Spectral.Bandpass Spectral.Bandpass}
+	{Spectral.CentralWavelength Spectral.CentralWavelength}
+	{Spectral.Notes Spectral.Notes}
+	{Temporal.StartTime Temporal.StartTime}
+	{Temporal.IntegrationTime Temporal.IntegrationTime}
+	{DatasetID DatasetID}
+	{Spatial.CoordinateFrame Spatial.CoordinateFrame}
+	{Spatial.Equinox Spatial.Equinox}
+	{Spatial.ReferenceValue Spatial.ReferenceValue}
+	{Spatial.ReferenceDimension Spatial.ReferenceDimension}
+	{Spatial.ReferencePixel Spatial.ReferencePixel}
+	{Spatial.Scale Spatial.Scale}
+	{Spatial.Rotation Spatial.Rotation}
+	{Spatial.CoordsystemProjection Spatial.CoordsystemProjection}
+	{Spatial.Quality Spatial.Quality}
+	{Spatial.Notes Spatial.Notes}
+	{Spatial.FITSheader Spatial.FITSheader}
+	{Spatial.CDMatrix Spatial.CDMatrix}
+	{Publisher Publisher}
+	{PublisherID PublisherID}
+	{ResourceID ResourceID}
+	{ResourceURL ResourceURL}
+	{RelatedResources RelatedResources}
+	{MetadataDate MetadataDate}
+	{MetadataVersion MetadataVersion}
+    }
+}
+
+# Append the AVM tags of the photo in frame (fits id) to text widget txt
+proc AVMHeaderInsert {frame id txt} {
+    global avmframe
+
+    if {![info exists avmframe($frame)]} {
+	return
+    }
+    lassign $avmframe($frame) fn tags
+    if {$fn != [$frame get fits file name $id]} {
+	return
+    }
+    array set var $tags
+
+    set width 30
+    set indent [string repeat { } $width]
+    $txt tag configure avmkey -foreground [ThemeBold]
+
+    $txt insert end "\nAVM (Astronomy Visualization Metadata)\n" avmkey
+    foreach tt [AVMHeaderTags] {
+	lassign $tt label key
+	if {![info exists var($key)]} {
+	    continue
+	}
+	set val [join $var($key) {; }]
+	if {[string trim $val] == {}} {
+	    continue
+	}
+	set lines [AVMWrap $val [expr {80-$width}]]
+	$txt insert end [format "%-${width}s" $label] avmkey
+	$txt insert end "[lindex $lines 0]\n"
+	foreach ll [lrange $lines 1 end] {
+	    $txt insert end "$indent$ll\n"
+	}
+    }
+}
+
+# Word wrap str into lines of at most width chars (long words kept)
+proc AVMWrap {str width} {
+    set rr {}
+    foreach para [split [string map {"\r\n" "\n" "\r" "\n"} $str] "\n"] {
+	set line {}
+	foreach word [regexp -all -inline {\S+} $para] {
+	    if {$line == {}} {
+		set line $word
+	    } elseif {[string length "$line $word"] <= $width} {
+		append line " $word"
+	    } else {
+		lappend rr $line
+		set line $word
+	    }
+	}
+	lappend rr $line
+    }
+    return $rr
+}
+
 proc AVMReadFile {fn} {
     if {[catch {
 	set ch [open $fn rb]
@@ -77,25 +214,50 @@ proc AVMReadFile {fn} {
     return $data
 }
 
-# Return the XMP packet (as a string) embedded in the image bytes, or {}
+# Extract and parse the AVM tags in the image bytes into the global
+# array varname. Return 1 if any XMP was found and parsed.
+proc AVMRead {data varname} {
+    upvar #0 $varname var
+
+    unset -nocomplain var
+    set rr 0
+    foreach xmp [AVMExtractXMP $data] {
+	if {[AVMParseXMP $xmp $varname]} {
+	    set rr 1
+	}
+    }
+    return $rr
+}
+
+# Return the XMP packets (as strings) embedded in the image bytes.
+# Usually one; a JPEG may add an ExtendedXMP packet.
 proc AVMExtractXMP {data} {
-    if {[string range $data 0 7] == "\x89PNG\r\n\x1a\n"} {
-	set xmp [AVMExtractXMPPNG $data]
-    } elseif {[string range $data 0 1] == "\xff\xd8"} {
-	set xmp [AVMExtractXMPJPEG $data]
+    set head [string range $data 0 7]
+    if {$head == "\x89PNG\r\n\x1a\n"} {
+	set ll [list [AVMExtractXMPPNG $data]]
+    } elseif {[string range $head 0 1] == "\xff\xd8"} {
+	set ll [AVMExtractXMPJPEG $data]
+    } elseif {[string range $head 0 1] == "II" || \
+		  [string range $head 0 1] == "MM"} {
+	set ll [list [AVMExtractXMPTIFF $data]]
+    } elseif {[string range $head 0 5] == "GIF89a"} {
+	set ll [list [AVMExtractXMPGIF $data]]
     } else {
-	set xmp {}
+	set ll {}
     }
 
-    # fall back to scanning for the packet (TIFF, GIF, ...)
-    if {$xmp == {}} {
-	set xmp [AVMExtractXMPScan $data]
+    # fall back to scanning for the packet
+    if {[lindex $ll 0] == {}} {
+	set ll [list [AVMExtractXMPScan $data]]
     }
 
-    if {$xmp == {}} {
-	return {}
+    set rr {}
+    foreach xmp $ll {
+	if {$xmp != {}} {
+	    lappend rr [encoding convertfrom utf-8 $xmp]
+	}
     }
-    return [encoding convertfrom utf-8 $xmp]
+    return $rr
 }
 
 # PNG: iTXt chunk with keyword 'XML:com.adobe.xmp'
@@ -144,15 +306,24 @@ proc AVMExtractXMPPNG {data} {
 }
 
 # JPEG: APP1 segment starting with 'http://ns.adobe.com/xap/1.0/\0'
+# A packet over 64K continues in ExtendedXMP APP1 segments
+# 'http://ns.adobe.com/xmp/extension/\0' GUID(32) length(4) offset(4) data,
+# where GUID is given by xmpNote:HasExtendedXMP in the main packet.
+# Return a list: main packet, and extended packet if any
 proc AVMExtractXMPJPEG {data} {
     set sig "http://ns.adobe.com/xap/1.0/\0"
     set siglen [string length $sig]
+    set ext "http://ns.adobe.com/xmp/extension/\0"
+    set extlen [string length $ext]
+
+    set main {}
+    set parts {}
     set len [string length $data]
     set pos 2
     while {$pos+4 <= $len} {
 	binary scan $data @${pos}cucu ff marker
 	if {$ff != 0xff} {
-	    return {}
+	    break
 	}
 	# fill bytes
 	if {$marker == 0xff} {
@@ -166,19 +337,154 @@ proc AVMExtractXMPJPEG {data} {
 	}
 	# SOS/EOI: XMP must come before image data
 	if {$marker == 0xda || $marker == 0xd9} {
-	    return {}
+	    break
 	}
 
 	binary scan $data @[expr {$pos+2}]Su size
 	set start [expr {$pos+4}]
 	set end [expr {$pos+2+$size-1}]
-	if {$marker == 0xe1 && \
-		[string range $data $start [expr {$start+$siglen-1}]] == $sig} {
-	    return [string range $data $start+$siglen $end]
+	if {$marker == 0xe1} {
+	    if {[string range $data $start [expr {$start+$siglen-1}]] == $sig} {
+		set main [string range $data $start+$siglen $end]
+	    } elseif {[string range $data $start [expr {$start+$extlen-1}]] \
+			  == $ext} {
+		set ss [expr {$start+$extlen}]
+		set guid [string range $data $ss [expr {$ss+31}]]
+		binary scan $data @[expr {$ss+32}]IuIu total offset
+		lappend parts [list $guid $offset \
+				   [string range $data $ss+40 $end]]
+	    }
 	}
 	set pos [expr {$end+1}]
     }
+
+    if {$main == {}} {
+	return {}
+    }
+    set rr [list $main]
+
+    # attribute or element form
+    if {[regexp {HasExtendedXMP\s*=\s*["']([0-9A-Fa-f]{32})} $main -> guid] || \
+	    [regexp {HasExtendedXMP>\s*([0-9A-Fa-f]{32})} $main -> guid]} {
+	set xx {}
+	foreach pp [lsort -integer -index 1 $parts] {
+	    lassign $pp gg offset chunk
+	    if {$gg == $guid && $offset == [string length $xx]} {
+		append xx $chunk
+	    }
+	}
+	if {$xx != {}} {
+	    lappend rr $xx
+	}
+    }
+    return $rr
+}
+
+# TIFF: XMP is tag 700 (XMLPacket) in IFD0. Classic and BigTIFF.
+proc AVMExtractXMPTIFF {data} {
+    switch -- [string range $data 0 1] {
+	II {set s s; set i i; set w w}
+	MM {set s S; set i I; set w W}
+	default {return {}}
+    }
+    binary scan $data @2${s}u version
+    switch -- $version {
+	42 {
+	    binary scan $data @4${i}u ifd
+	    binary scan $data @${ifd}${s}u num
+	    set pos [expr {$ifd+2}]
+	    set entry 12
+	    set inline 4
+	    set fmt "${s}u${s}u${i}u${i}u"
+	}
+	43 {
+	    binary scan $data @8${w}u ifd
+	    binary scan $data @${ifd}${w}u num
+	    set pos [expr {$ifd+8}]
+	    set entry 20
+	    set inline 8
+	    set fmt "${s}u${s}u${w}u${w}u"
+	}
+	default {return {}}
+    }
+
+    set len [string length $data]
+    for {set ii 0} {$ii<$num && $pos+$entry <= $len} {incr ii} {
+	binary scan $data @${pos}$fmt tag type count offset
+	if {$tag == 700} {
+	    # BYTE or UNDEFINED, too large to fit in the entry
+	    if {($type == 1 || $type == 7) && $count > $inline && \
+		    $offset+$count <= $len} {
+		return [string range $data $offset [expr {$offset+$count-1}]]
+	    }
+	    return {}
+	}
+	incr pos $entry
+    }
     return {}
+}
+
+# GIF: application extension 'XMP DataXMP'. The packet is stored raw,
+# followed by a 258 byte 'magic trailer' (0x01 0xff 0xfe ... 0x00 0x00)
+# so the bytes also parse as sub-blocks.
+proc AVMExtractXMPGIF {data} {
+    set len [string length $data]
+
+    # logical screen descriptor, global color table
+    binary scan $data @10cu flags
+    set pos 13
+    if {$flags & 0x80} {
+	incr pos [expr {3*(1<<(($flags&0x07)+1))}]
+    }
+
+    while {$pos < $len} {
+	binary scan $data @${pos}cu block
+	switch -- $block {
+	    33 {
+		# extension
+		binary scan $data @[expr {$pos+1}]cu label
+		set ss [expr {$pos+2}]
+		if {$label == 0xff && \
+			[string range $data $ss [expr {$ss+11}]] \
+			== "\x0bXMP DataXMP"} {
+		    set start [expr {$ss+12}]
+		    set end [string first "\x01\xff\xfe" $data $start]
+		    if {$end < 0} {
+			return {}
+		    }
+		    return [string range $data $start [expr {$end-1}]]
+		}
+		set pos [AVMSkipGIFSubBlocks $data $ss]
+	    }
+	    44 {
+		# image descriptor, local color table, lzw code size
+		binary scan $data @[expr {$pos+9}]cu flags
+		incr pos 10
+		if {$flags & 0x80} {
+		    incr pos [expr {3*(1<<(($flags&0x07)+1))}]
+		}
+		set pos [AVMSkipGIFSubBlocks $data [expr {$pos+1}]]
+	    }
+	    default {
+		# trailer, or not a block we know
+		return {}
+	    }
+	}
+    }
+    return {}
+}
+
+proc AVMSkipGIFSubBlocks {data pos} {
+    set len [string length $data]
+    while {$pos < $len} {
+	binary scan $data @${pos}cu size
+	incr pos
+	if {$size == 0} {
+	    break
+	}
+	incr pos $size
+    }
+    return $pos
 }
 
 proc AVMExtractXMPScan {data} {
@@ -194,15 +500,13 @@ proc AVMExtractXMPScan {data} {
     return [string range $data $start [expr {$end+[string length $tag]-1}]]
 }
 
-# Parse an XMP packet. Each property of rdf:Description is stored into
+# Parse an XMP packet. Each property of rdf:Description is added to
 # the global array varname, keyed by its local name (Spatial.Scale, ...).
 # Properties may be attributes of rdf:Description, simple elements, or
 # elements holding an rdf:Seq/Bag/Alt list.
 proc AVMParseXMP {xmp varname} {
     upvar #0 $varname var
     global debug
-
-    unset -nocomplain var
 
     set xml [xml::parser \
 		 -characterdatacommand [list AVMCharCB $varname] \
@@ -237,6 +541,21 @@ proc AVMLocalName {name} {
     return $name
 }
 
+# Store the attributes of an element as properties
+proc AVMElemAttrs {varname attlist} {
+    upvar #0 $varname var
+
+    foreach {key val} $attlist {
+	set key [AVMLocalName $key]
+	switch -- $key {
+	    about -
+	    parseType -
+	    lang {}
+	    default {set var($key) [list $val]}
+	}
+    }
+}
+
 proc AVMElemStartCB {varname name attlist args} {
     upvar #0 $varname var
 
@@ -245,23 +564,22 @@ proc AVMElemStartCB {varname name attlist args} {
     lappend var(,stack) $name
 
     switch -- $name {
-	Description {
-	    foreach {key val} $attlist {
-		set key [AVMLocalName $key]
-		switch -- $key {
-		    about {}
-		    default {set var($key) $val}
-		}
-	    }
-	}
-	li {
-	    set var(,li) {}
-	}
+	Description {AVMElemAttrs $varname $attlist}
+	li {set var(,li) {}}
+	Seq -
+	Bag -
+	Alt {}
 	default {
 	    if {$parent == {Description}} {
 		set var(,prop) $name
 		set var(,text) {}
 		set var(,items) {}
+		# struct with fields as attributes
+		AVMElemAttrs $varname $attlist
+	    } elseif {[info exists var(,prop)] && $parent == $var(,prop)} {
+		# struct field (rdf:parseType="Resource")
+		set var(,field) $name
+		set var(,ftext) {}
 	    }
 	}
     }
@@ -273,6 +591,12 @@ proc AVMElemEndCB {varname name args} {
     set name [AVMLocalName $name]
     set var(,stack) [lrange $var(,stack) 0 end-1]
 
+    if {[info exists var(,field)] && $name == $var(,field)} {
+	set var($name) [list [string trim $var(,ftext)]]
+	unset var(,field)
+	return
+    }
+
     switch -- $name {
 	li {
 	    if {[info exists var(,items)]} {
@@ -283,10 +607,11 @@ proc AVMElemEndCB {varname name args} {
 	default {
 	    if {[info exists var(,prop)] && $name == $var(,prop) && \
 		    [lindex $var(,stack) end] == {Description}} {
+		set text [string trim $var(,text)]
 		if {[llength $var(,items)]} {
 		    set var($name) $var(,items)
-		} else {
-		    set var($name) [list [string trim $var(,text)]]
+		} elseif {$text != {} || ![info exists var($name)]} {
+		    set var($name) [list $text]
 		}
 		unset var(,prop)
 		unset -nocomplain var(,items)
@@ -298,7 +623,9 @@ proc AVMElemEndCB {varname name args} {
 proc AVMCharCB {varname data} {
     upvar #0 $varname var
 
-    if {[info exists var(,li)]} {
+    if {[info exists var(,field)]} {
+	append var(,ftext) $data
+    } elseif {[info exists var(,li)]} {
 	append var(,li) $data
     } elseif {[info exists var(,prop)]} {
 	append var(,text) $data

@@ -8,7 +8,10 @@
 #include "marker.h"
 
 // shape GLYPH draws a user supplied image (png, gif, ...) instead of a
-// vector shape, at a fixed size in screen pixels and always upright.
+// vector shape, at a fixed size in screen pixels. It is upright, except
+// on a tilted 3D frame (az/el), where it lies in the image plane like the
+// other point shapes: the photo is then warped by glyphAxes, into
+// glyphWarpPhoto_.
 // Decoding and resizing are done in Tcl by the proc named in GLYPHPHOTOPROC,
 // which returns the name of a (cached) Tk photo, or "" on failure.
 // A glyph without a usable image is drawn as a box with an X.
@@ -37,6 +40,12 @@ class Point : public Marker {
   Tk_Image glyphImage_;
   char* glyphPhoto_; // Tk photo behind glyphImage_, for postscript/pdf
 
+  Tk_Image glyphWarpImage_; // glyphImage_ warped for a tilted 3D frame
+  char* glyphWarpPhoto_;
+  Vector glyphWarpAxes_[2]; // axes glyphWarpPhoto_ was made for
+  int glyphWarpX_; // top left of glyphWarpPhoto_, relative to the center
+  int glyphWarpY_;
+
  protected:
   Vector* generateCircle(Coord::InternalSystem, int);
   Vector* generateBox(Coord::InternalSystem);
@@ -63,6 +72,13 @@ class Point : public Marker {
   void loadGlyph();
   void freeGlyph();
   static void glyphChangedProc(ClientData, int, int, int, int, int, int);
+  static void glyphWarpChangedProc(ClientData, int, int, int, int, int, int)
+  {}
+  void freeGlyphWarp();
+  void glyphAxes(Coord::InternalSystem, Vector*, Vector*);
+  void glyphCorners(Coord::InternalSystem, Vector*);
+  int glyphLocal(const Vector&, Vector*);
+  Tk_PhotoHandle warpGlyph(Coord::InternalSystem, Vector*);
   void renderXGlyph(Drawable, Coord::InternalSystem, RenderMode);
   void renderXGlyphBox(Drawable, Coord::InternalSystem, GC, int);
   void renderPSGlyph(PSColorSpace);

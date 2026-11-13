@@ -5,7 +5,9 @@
 package provide DS9 1.0
 
 # Glyph points: a point region drawn with a user supplied image (png,
-# gif, ...) at a fixed size in screen pixels, always upright:
+# gif, ...) at a fixed size in screen pixels, upright. On a tilted 3D
+# frame it lies in the image plane like the other point shapes, see
+# tksao/frame/glyph.C:
 #   point(x,y) # point=glyph [size] {file}
 # The point dialog (point.tcl) edits the file and size.
 #

@@ -142,6 +142,10 @@ void FitsImage::listFromRef(ostream& str, const Vector& vv,
     break;
   default:
     {
+      // no wcs: list nothing
+      if (!hasWCS(sys))
+	break;
+
       // points that do not map to the sky (e.g. outside an AIT ellipse)
       // come back as NULL strings
       VectorStr rr = mapFromRef(vv,sys,sky,format);
@@ -170,6 +174,9 @@ void FitsImage::listFromRef(ostream& str1, ostream& str2, const Vector& vv,
     break;
   default:
     {
+      if (!hasWCS(sys))
+	break;
+
       VectorStr rr = mapFromRef(vv,sys,sky,format);
       str1 << (rr[0] ? rr[0] : "nan");
       str2 << (rr[1] ? rr[1] : "nan");

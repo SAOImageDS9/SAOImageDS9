@@ -54,6 +54,12 @@ proc OpenDialog {format {layer {}} {mode {}}} {
 		mask {set ok [MaskLoad]}
 	    }
 	}
+
+	# HEALPix: offer the projection and other options (may add them
+	# to fn)
+	if {$ok && $format == {fits} && $layer != {mask}} {
+	    set ok [HPXOpenDialog fn]
+	}
 	
 	if {$ok} {
 	    Open $fn $format $layer $mode $sys

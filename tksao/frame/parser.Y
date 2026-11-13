@@ -1128,6 +1128,7 @@ fade    : numeric {fr->fadeCmd($1);}
         ;
 
 fitsy	: HAS_ EXT_ STRING {fr->fitsyHasExtCmd($3);}
+	| INFO_ STRING {fr->fitsyInfoCmd($2);}
 	;
 
 get	: /* empty */ {fr->getCmd();}
@@ -3172,6 +3173,9 @@ update	: /* empty */ {fr->updateFitsCmd();}
 	| NOW_ INT numeric numeric numeric numeric
 	{fr->updateFitsCmd($2,BBox($3,$4,$5,$6));}
 	| FITS_ SLICE_ updateFitsSlice
+	| FITS_ CENTER_ {fr->updateFitsCenterCmd();}
+	| FITS_ CENTER_ numeric numeric
+	{fr->updateFitsCenterCmd(Vector($3,$4));}
 	;
 
 updateFitsSlice : INT {fr->sliceCmd(2,$1);}

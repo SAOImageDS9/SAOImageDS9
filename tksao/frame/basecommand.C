@@ -12,6 +12,7 @@
 #include "mmap.h"
 #include "mmapincr.h"
 #include "allocgz.h"
+#include "hpx.h"
 #include "outfile.h"
 #include "outchannel.h"
 #include "outsocket.h"
@@ -252,6 +253,8 @@ void Base::blockCmd(const Vector& bb)
   currentContext->block();
   currentContext->analysis();
   updateBlock(vv);
+  // a HEALPix window wants a different size at a new block factor
+  hpxAutoRefresh();
 }
 
 void Base::blockToCmd(const Vector& bb)
@@ -264,6 +267,7 @@ void Base::blockToCmd(const Vector& bb)
   currentContext->block();
   currentContext->analysis();
   updateBlock(vv);
+  hpxAutoRefresh();
 }
 
 void Base::blockNanZeroCmd(int which)
@@ -919,6 +923,147 @@ void Base::fitsyHasExtCmd(const char* fn)
   ext->done();
   delete ext;
   return;
+}
+
+// Describe what loading fn as a plain FITS file would show, without
+// loading it: the same RELAXIMAGE scan the load does, reading headers
+// only (except for compressed files). The result is a Tcl dict, empty if
+// the file can't be read:
+//   type    image | events | healpix | moc
+//   ext     extension number found (0 = primary)
+//   extname EXTNAME, or {}
+// and for healpix/moc, what a load with no [...] options would use:
+//   ordering ring | nested | nuniq, or {} without ORDERING
+//   coordsys equatorial | galactic | ecliptic, or {} if unknown
+//   nside    NSIDE, or 0 (MOCs, or deduced at load)
+//   mocorder MOCORD_S/MOCORDER/HPXMOC, or -1
+//   rows     table rows
+//   index    pixel index column (1-based), or 0 for a full map
+//   default  the column a load reads (1-based), or 0 if none
+//   cols     {{n name tform} ...}, the columns that can hold values
+// The words match the [order=,system=,col=] bracket options, so the
+// open dialog can pass them straight back.
+void Base::fitsyInfoCmd(const char* fn)
+{
+  if (!fn || !*fn)
+    return;
+
+  // mmapincr reads headers only, as the load does; it can't read
+  // compressed files, so fall back to allocgz (which is also the only
+  // reader on Windows, where mmap is a stub)
+  FitsFile* ff = NULL;
+#ifndef __WIN32
+  ff = new FitsFitsMMapIncr(fn, FitsFile::RELAXIMAGE);
+  if (!ff->isValid()) {
+    ff->done();
+    delete ff;
+    ff = NULL;
+  }
+#endif
+  if (!ff)
+    ff = new FitsFitsAllocGZ(fn, FitsFile::RELAXIMAGE, FitsFile::NOFLUSH);
+
+  FitsHead* head = ff->isValid() ? ff->head() : NULL;
+  if (head) {
+    const char* type = "events";
+    if (head->isImage() || (head->isBinTable() && head->find("ZIMAGE")))
+      type = "image";
+    else if (FitsHPX::isMOC(head))
+      type = "moc";
+    else if (FitsHPX::isHPX(head))
+      type = "healpix";
+
+    Tcl_DString ds;
+    Tcl_DStringInit(&ds);
+    Tcl_DStringAppendElement(&ds, "type");
+    Tcl_DStringAppendElement(&ds, type);
+
+    char buf[64];
+    snprintf(buf, sizeof(buf), "%d", ff->ext());
+    Tcl_DStringAppendElement(&ds, "ext");
+    Tcl_DStringAppendElement(&ds, buf);
+    Tcl_DStringAppendElement(&ds, "extname");
+    Tcl_DStringAppendElement(&ds, ff->extname() ? ff->extname() : "");
+
+    if (!strcmp(type,"healpix") || !strcmp(type,"moc")) {
+      FitsHPX::Order order = FitsHPX::headOrder(head);
+
+      const char* ordering = "";
+      if (head->find("ORDERING"))
+	ordering = order == FitsHPX::NUNIQ ? "nuniq" :
+	  order == FitsHPX::NESTED ? "nested" : "ring";
+      const char* coordsys = "";
+      switch (FitsHPX::headSystem(head)) {
+      case FitsHPX::EQU:
+	coordsys = "equatorial";
+	break;
+      case FitsHPX::GAL:
+	coordsys = "galactic";
+	break;
+      case FitsHPX::ECL:
+	coordsys = "ecliptic";
+	break;
+      default:
+	break;
+      }
+
+      FitsBinTableHDU* hdu = (FitsBinTableHDU*)head->hdu();
+      FitsBinColumn* index = FitsHPX::indexColumn(head, order);
+      FitsBinColumn* data = FitsHPX::dataColumn(head, order, -1);
+      int indexn =0;
+      int datan =0;
+      for (int ii=0; ii<hdu->cols(); ii++) {
+	FitsColumn* col = hdu->find(ii);
+	if (col == index)
+	  indexn = ii+1;
+	if (col == data)
+	  datan = ii+1;
+      }
+
+      const char* keys[] = {"nside", "mocorder", "rows", "index", "default"};
+      long vals[] = {(long)head->getInteger("NSIDE",0),
+		     (long)FitsHPX::headMOCOrder(head),
+		     (long)hdu->rows(), (long)indexn, (long)datan};
+
+      Tcl_DStringAppendElement(&ds, "ordering");
+      Tcl_DStringAppendElement(&ds, ordering);
+      Tcl_DStringAppendElement(&ds, "coordsys");
+      Tcl_DStringAppendElement(&ds, coordsys);
+      for (int ii=0; ii<5; ii++) {
+	snprintf(buf, sizeof(buf), "%ld", vals[ii]);
+	Tcl_DStringAppendElement(&ds, keys[ii]);
+	Tcl_DStringAppendElement(&ds, buf);
+      }
+
+      Tcl_DStringAppendElement(&ds, "cols");
+      Tcl_DStringStartSublist(&ds);
+      for (int ii=0; ii<hdu->cols(); ii++) {
+	FitsColumn* col = hdu->find(ii);
+	if (!col || col == index || !FitsHPX::isDataColumn(col))
+	  continue;
+	Tcl_DStringStartSublist(&ds);
+	snprintf(buf, sizeof(buf), "%d", ii+1);
+	Tcl_DStringAppendElement(&ds, buf);
+	// TTYPE keeps its FITS padding; the dialog wants the bare name
+	string name = col->ttype() ? col->ttype() : "";
+	name.erase(name.find_last_not_of(' ')+1);
+	Tcl_DStringAppendElement(&ds, name.c_str());
+	if (col->repeat() != 1)
+	  snprintf(buf, sizeof(buf), "%d%c", col->repeat(), col->type());
+	else
+	  snprintf(buf, sizeof(buf), "%c", col->type());
+	Tcl_DStringAppendElement(&ds, buf);
+	Tcl_DStringEndSublist(&ds);
+      }
+      Tcl_DStringEndSublist(&ds);
+    }
+
+    Tcl_DStringResult(interp, &ds);
+  }
+
+  // NB: see fitsyHasExtCmd, done() releases the handle
+  ff->done();
+  delete ff;
 }
 
 void Base::getAxesOrderCmd()
@@ -3181,6 +3326,298 @@ void Base::updateFitsCmd()
   regionStatsImageInvalidated();
 }
 
+// Recentre a resampled HEALPix window (zenithal/conic) on the current
+// pan position, or on (lon, lat) [deg, the map's own sky system].
+void Base::updateFitsCenterCmd()
+{
+  const char* err = hpxRecentre(HPXPAN, 0, 0);
+  if (err) {
+    Tcl_AppendResult(interp, err, NULL);
+    result = TCL_ERROR;
+  }
+}
+
+void Base::updateFitsCenterCmd(const Vector& vv)
+{
+  const char* err = hpxRecentre(HPXCENTER, vv[0], vv[1]);
+  if (err) {
+    Tcl_AppendResult(interp, err, NULL);
+    result = TCL_ERROR;
+  }
+}
+
+// Rebuild a HEALPix window, mode:
+//   HPXPAN     around the current pan position
+//   HPXCENTER  centred on (lon, lat) (for a conic, lat is its new
+//              reference latitude), then pan there
+//   HPXPANTO   for a pan to (lon, lat): centred there (a conic keeps its
+//              reference latitude), then pan there
+//   HPXFIT     for zoom to fit: the whole projection plane (fov), at the
+//              pixel size that fits it in the frame (lon = the fit factor)
+// (lon, lat) are in the map's own sky system [deg]. Like a slice change,
+// the data under the frame changes: the load steps rerun (WCS, clip),
+// contours are regenerated, and the pan and crosshair go back to the same
+// sky positions in the new image. Regions are not remapped yet.
+// Returns NULL, or an error message.
+const char* Base::hpxRecentre(HPXMode mode, double lon, double lat,
+				int drag)
+{
+  FitsImage* ptr = currentContext->fits;
+  if (!ptr || !ptr->isHPXWindow())
+    return " not a HEALPix zenithal/conic window";
+
+  // sky positions to restore afterwards
+  double plon, plat, clon, clat;
+  int pan = ptr->hpxNativeAtRef(cursor, &plon, &plat);
+  int cross = ptr->hpxNativeAtRef(crosshair, &clon, &clat);
+
+  // regions, listed while the old WCS is still in place (not for
+  // XLON/XLAT maps, which have no sky system to go through)
+  Coord::SkyFrame msky;
+  int remap = ptr->hpxSkyFrame(&msky);
+  std::vector<std::string> mtext[3];
+  int mcount[3] = {0,0,0};
+  if (remap)
+    hpxListMarkers(msky, mtext, mcount);
+  currentContext->hpxSaveAuxContours(ptr);
+
+  // During a drag, regenerating contours on every step is too slow
+  // (~150 ms for a frame-sized window). Carry them into the new window
+  // through the sky instead (Context::hpxCarryContours), and regenerate
+  // on release. An affine fit at the pan point isn't enough: a wide TAN
+  // window is far from linear, and the error builds up over a drag.
+  FitsHead* oldHead = drag ? ptr->hpxHeadCopy() : NULL;
+  Matrix oldRefToWin = ptr->hpxRefToWindow();
+
+  // Automatic rebuilds (pan, pan to) also fit the window to the display:
+  // pixels as fine as one screen pixel at the current zoom (never finer
+  // than HEALPix's) and twice the visible area. A zenithal window is
+  // centred on the target; a conic keeps its reference latitude and
+  // slides its window across the projection to the target.
+  double opix = ptr->hpxPixel();
+  double npix = opix;
+  int ok =0;
+  switch (mode) {
+  case HPXCENTER:
+    ok = ptr->hpxRecentre(lon, lat);
+    break;
+  case HPXFIT:
+    {
+      double pw, ph;
+      ptr->hpxPlane(&pw, &ph);
+      double ss = lon > 0 ? lon : 1;
+      // blocked, each displayed pixel is block window pixels
+      Vector bf = currentContext->blockFactor();
+      double fx = pw/(options->width*bf[0]);
+      double fy = ph/(options->height*bf[1]);
+      npix = (fx > fy ? fx : fy)/ss;
+      if (npix < ptr->hpxPixelHPX())
+	npix = ptr->hpxPixelHPX();
+      int ww = (int)ceil(pw/npix) + 2;
+      int hh = (int)ceil(ph/npix) + 2;
+      ok = ptr->hpxReshape(ptr->hpxLon(), ptr->hpxLat(), npix, ww, hh, NULL);
+      npix = ptr->hpxPixel();
+      // zoom to fit sets the zoom and pan itself
+      opix = npix;
+      pan = 0;
+    }
+    break;
+  case HPXPAN:
+    if (!pan)
+      break;
+    lon = plon;
+    lat = plat;
+    // fall through
+  case HPXPANTO:
+    {
+      int ww, hh;
+      hpxWindowGeometry(ptr, &npix, &ww, &hh);
+      double cc[2] = {lon, lat};
+      if (ptr->hpxIsConic())
+	ok = ptr->hpxReshape(lon, ptr->hpxLat(), npix, ww, hh, cc);
+      else
+	ok = ptr->hpxReshape(lon, lat, npix, ww, hh, NULL);
+      npix = ptr->hpxPixel();
+    }
+    break;
+  }
+  if (!ok) {
+    if (oldHead)
+      delete oldHead;
+    return " unable to recentre";
+  }
+
+  currentContext->hpxFinish();
+  if (oldHead && currentContext->hpxCarryContours(ptr, oldHead,
+						   oldRefToWin))
+    hpxDragStale_ = 1;
+  else
+    currentContext->contourUpdateFV();
+  if (oldHead)
+    delete oldHead;
+
+  // keep the on-screen scale when the pixel size changed
+  if (opix > 0 && npix != opix) {
+    zoom_[0] *= npix/opix;
+    zoom_[1] *= npix/opix;
+  }
+
+  // pan: an explicit centre is panned to; otherwise keep the same sky
+  // position
+  Vector rr;
+  if (mode == HPXCENTER || mode == HPXPANTO) {
+    if (ptr->hpxRefAt(lon, lat, &rr))
+      cursor = rr;
+  }
+  else if (pan && ptr->hpxRefAt(plon, plat, &rr))
+    cursor = rr;
+  if (cross && ptr->hpxRefAt(clon, clat, &rr))
+    crosshair = rr;
+
+  if (remap)
+    hpxRestoreMarkers(ptr, msky, mtext, mcount);
+  currentContext->hpxRestoreAuxContours(ptr);
+
+  // not FrameBase::updateBin(), which would reset the pan to the centre
+  Base::updateBin(Matrix());
+  return NULL;
+}
+
+// The window geometry wanted for the current display: pixel size [deg]
+// one screen pixel at the current zoom (never finer than HEALPix's), and
+// twice the visible area in pixels (the 2x padding lets short pans show
+// data without a rebuild). FitsHPXReproj::reshape clamps it.
+// Blocked by b, the display shows block pixels (b x b window pixels): the
+// zoom applies to those, so the window pixel wanted is the same, but each
+// screen pixel covers b window pixels and the window is b times larger.
+void Base::hpxWindowGeometry(FitsImage* ptr, double* pix, int* ww, int* hh)
+{
+  double pp = ptr->hpxPixel();
+  double ph = ptr->hpxPixelHPX();
+  double zz = fabs(zoom_[0]) > fabs(zoom_[1]) ? fabs(zoom_[0]) : fabs(zoom_[1]);
+  if (zz <= 0)
+    zz = 1;
+  Vector bf = currentContext->blockFactor();
+  double wanted = pp/zz;           // [deg] per window pixel per screen pixel
+  *pix = wanted > ph ? wanted : ph;
+  *ww = (int)ceil(2*options->width*bf[0]*wanted / *pix);
+  *hh = (int)ceil(2*options->height*bf[1]*wanted / *pix);
+
+  // no bigger than the projection allows
+  int mw = *ww, mh = *hh;
+  ptr->hpxMaxSize(*pix, &mw, &mh);
+  if (*ww > mw)
+    *ww = mw;
+  if (*hh > mh)
+    *hh = mh;
+}
+
+// After a pan or zoom has been applied (never during a drag), rebuild a
+// HEALPix window when the display wants a different window: the pixel
+// size wanted at this zoom differs by more than 1.5x (zoomed in or out),
+// the visible area no longer fits (zoomed out, frame resized) and the
+// window could be bigger, or the pan point has moved more than 1/4 of the
+// window from its centre.
+void Base::hpxAutoRefresh()
+{
+  FitsImage* ptr = currentContext->fits;
+  if (!ptr || !ptr->isHPXWindow())
+    return;
+
+  double pix;
+  int ww, hh;
+  hpxWindowGeometry(ptr, &pix, &ww, &hh);
+  double pp = ptr->hpxPixel();
+  double zz = fabs(zoom_[0]) > fabs(zoom_[1]) ? fabs(zoom_[0]) : fabs(zoom_[1]);
+
+  int need = 0;
+  if (pix > 1.5*pp || pix < pp/1.5)
+    need = 1;
+  else {
+    // coverage: how much of the window is visible, in displayed (blocked)
+    // pixels; ww/hh are window pixels
+    Vector bf = currentContext->blockFactor();
+    double vw = zz > 0 ? options->width/zz : ptr->width();
+    double vh = zz > 0 ? options->height/zz : ptr->height();
+    if ((vw > .9*ptr->width() && ww > bf[0]*(ptr->width()+2)) ||
+	(vh > .9*ptr->height() && hh > bf[1]*(ptr->height()+2)))
+      need = 1;
+  }
+  if (!need && ptr->hpxNeedsRecentre(cursor))
+    need = 1;
+
+  if (need)
+    hpxRecentre(HPXPAN, 0, 0);
+}
+
+// During a drag, rebuild a HEALPix window around the pan point as it
+// moves, every HPX_DRAG_STEP screen pixels, so the projection's tangent
+// point follows the view. Rebuilding only on release turned the whole view
+// in one step: away from the tangent point the meridians lean by about
+// dlon*sin(lat), and the rebuild put north back up (10 deg at b=40, 31 deg
+// at b=70 for a 12 deg pan). In small steps each turn is a fraction of a
+// degree. The grabbed point (panStart) goes through the sky into the new
+// window, so it stays under the pointer.
+// Returns 1 if the window was rebuilt (the caller then puts the grabbed
+// point back under the pointer).
+#define HPX_DRAG_STEP 2
+int Base::hpxDragRefresh()
+{
+  FitsImage* ptr = currentContext->fits;
+  if (!ptr || !ptr->isHPXWindow())
+    return 0;
+
+  double zz = fabs(zoom_[0]) > fabs(zoom_[1]) ? fabs(zoom_[0]) : fabs(zoom_[1]);
+  if (zz <= 0)
+    zz = 1;
+  if (!ptr->hpxNeedsRecentre(cursor, HPX_DRAG_STEP/zz))
+    return 0;
+
+  double slon, slat;
+  int grab = ptr->hpxNativeAtRef(panStart, &slon, &slat);
+  if (hpxRecentre(HPXPAN, 0, 0, 1))
+    return 0;
+
+  Vector rr;
+  if (grab && ptr->hpxRefAt(slon, slat, &rr)) {
+    panStart = rr;
+    return 1;
+  }
+  return 0;
+}
+
+// End of a drag: the usual refresh, then regenerate contours that were
+// carried approximately during the drag.
+void Base::panEndCmd(const Vector& vv)
+{
+  panMotionCmd(vv);
+  hpxAutoRefresh();
+  if (hpxDragStale_) {
+    hpxDragStale_ = 0;
+    currentContext->contourUpdateFV();
+    update(PIXMAP);
+  }
+}
+
+// A pan to a sky position on a HEALPix window. Convert the target to the
+// map's own system directly (not through the window's WCS, which can't
+// place points outside the window) and, if it is outside the window or
+// far from its centre, rebuild the window there. Returns 1 if handled.
+int Base::hpxPanTo(const Vector& vv, Coord::CoordSystem sys,
+		   Coord::SkyFrame sky)
+{
+  FitsImage* ptr = currentContext->fits;
+  double lon, lat;
+  if (!ptr || !ptr->hpxNativeFromSky(vv, sys, sky, &lon, &lat))
+    return 0;
+
+  Vector rr;
+  if (ptr->hpxRefAt(lon, lat, &rr) && !ptr->hpxNeedsRecentre(rr))
+    return 0;
+
+  return hpxRecentre(HPXPANTO, lon, lat) ? 0 : 1;
+}
+
 void Base::updateFitsCmd(int which, BBox bb)
 {
   int reload = 0;
@@ -3451,12 +3888,14 @@ void Base::zoomCmd(const Vector& z)
   zoom_[0] *= az[0];
   zoom_[1] *= az[1];
   update(MATRIX);
+  hpxAutoRefresh();
 }
 
 void Base::zoomToCmd(const Vector& z)
 {
   zoom_ = ((Vector&)z).abs();
   update(MATRIX);
+  hpxAutoRefresh();
 }
 
 // FrameRGB

@@ -249,6 +249,278 @@ void Context::binFinish()
   loadFinish();
 }
 
+// After FitsImage::hpxRecentre() has rebuilt the data, redo the load
+// steps (WCS, sections, analysis), as binFinish() does for bin.
+void Context::hpxFinish()
+{
+  if (DebugPerf)
+    cerr << "Context::hpxFinish()" << endl;
+
+  if (!fits)
+    return;
+
+  loadInit(1, Base::NOMOSAIC,Coord::WCS);
+  cfits = fits;
+
+  // params in DATA coords 0-n
+  iparams.set(0,naxis_[2]);
+  cparams.set(0,naxis_[2]);
+
+  resetSecMode();
+  loadFinish();
+}
+
+// Aux contours (loaded from files) on a HEALPix window. Their vertices
+// are in REF coords, and a recentred window's old-to-new mapping isn't
+// affine, so they go through the sky. Before the rebuild, any level not
+// yet in the image's sky copy is converted (its geometry is still
+// complete in the current window); levels that have been deleted are
+// dropped from the copy.
+void Context::hpxSaveAuxContours(FitsImage* ptr)
+{
+  std::vector<HPXAuxLevel>& store = ptr->hpxAux();
+
+  // drop levels that no longer exist
+  for (size_t ii=0; ii<store.size(); ) {
+    int found =0;
+    if (auxcontours_.head())
+      do
+	if (auxcontours_.current() == store[ii].level)
+	  found =1;
+      while (!found && auxcontours_.next());
+    if (found)
+      ii++;
+    else
+      store.erase(store.begin()+ii);
+  }
+
+  if (!hasAuxContour_ || !auxcontours_.head())
+    return;
+
+  do {
+    ContourLevel* cl = auxcontours_.current();
+    int known =0;
+    for (size_t ii=0; ii<store.size(); ii++)
+      if (store[ii].level == cl)
+	known =1;
+    if (known)
+      continue;
+
+    HPXAuxLevel al;
+    al.level = cl;
+    List<Contour>& lc = cl->lcontour();
+
+    // every vertex of the level through the WCS in one batch
+    std::vector<Vector> refs;
+    std::vector<size_t> lens;
+    if (lc.head())
+      do {
+	size_t nv =0;
+	List<Vertex>& lv = lc.current()->lvertex();
+	if (lv.head())
+	  do {
+	    refs.push_back(lv.current()->vector);
+	    nv++;
+	  } while (lv.next());
+	lens.push_back(nv);
+      } while (lc.next());
+    std::vector<double> lon(refs.size()), lat(refs.size());
+    if (refs.size() &&
+	!ptr->hpxNativesAtRef(refs.size(), refs.data(), lon.data(), lat.data()))
+      for (size_t ii=0; ii<refs.size(); ii++)
+	lon[ii] = lat[ii] = NAN;
+
+    size_t kk =0;
+    for (size_t jj=0; jj<lens.size(); jj++) {
+      std::vector<double> line;
+      for (size_t vv=0; vv<lens[jj]; vv++, kk++) {
+	if (isfinite(lon[kk]) && isfinite(lat[kk])) {
+	  line.push_back(lon[kk]);
+	  line.push_back(lat[kk]);
+	}
+	else if (line.size()) {
+	  // a vertex off the sky: break the line
+	  if (line.size() >= 4)
+	    al.lines.push_back(line);
+	  line.clear();
+	}
+      }
+      if (line.size() >= 4)
+	al.lines.push_back(line);
+    }
+    store.push_back(al);
+  } while (auxcontours_.next());
+}
+
+// After the rebuild: regenerate each level's polylines from the sky copy
+// in the new window. Lines are split where a vertex can't be placed, or
+// where consecutive vertices land far apart (a jump across the
+// projection's seam or edge), so nothing is drawn across the image.
+void Context::hpxRestoreAuxContours(FitsImage* ptr)
+{
+  std::vector<HPXAuxLevel>& store = ptr->hpxAux();
+  double jump = .25*(ptr->width() > ptr->height() ?
+		     ptr->width() : ptr->height());
+
+  for (size_t ii=0; ii<store.size(); ii++) {
+    ContourLevel* cl = (ContourLevel*)store[ii].level;
+    List<Contour>& lc = cl->lcontour();
+    lc.deleteAll();
+
+    // every vertex of the level through the WCS in one batch
+    std::vector<double> lon, lat;
+    for (size_t jj=0; jj<store[ii].lines.size(); jj++) {
+      std::vector<double>& line = store[ii].lines[jj];
+      for (size_t kk=0; kk+1<line.size(); kk+=2) {
+	lon.push_back(line[kk]);
+	lat.push_back(line[kk+1]);
+      }
+    }
+    std::vector<Vector> refs(lon.size());
+    if (lon.size() &&
+	!ptr->hpxRefsAt(lon.size(), lon.data(), lat.data(), refs.data()))
+      for (size_t kk=0; kk<refs.size(); kk++)
+	refs[kk] = Vector(NAN, NAN);
+
+    size_t vi =0;
+    for (size_t jj=0; jj<store[ii].lines.size(); jj++) {
+      std::vector<double>& line = store[ii].lines[jj];
+      Contour* cc = new Contour(cl);
+      Vector prev;
+      int nn =0;
+      for (size_t kk=0; kk+1<line.size(); kk+=2, vi++) {
+	Vector rr = refs[vi];
+	int placed = isfinite(rr[0]) && isfinite(rr[1]);
+	int ok = placed;
+	if (ok && nn && (rr-prev).length() > jump)
+	  ok =0;
+	if (!ok) {
+	  // break the line here
+	  if (nn >= 2)
+	    lc.append(cc);
+	  else
+	    delete cc;
+	  cc = new Contour(cl);
+	  nn =0;
+	  if (!placed)
+	    continue;
+	}
+	cc->lvertex().append(new Vertex(rr));
+	prev = rr;
+	nn++;
+      }
+      if (nn >= 2)
+	lc.append(cc);
+      else
+	delete cc;
+    }
+  }
+}
+
+// During a drag: move the generated contours from the previous window
+// (header `from`, REF->window pixels `oldRefToWin`, see
+// FitsImage::hpxRefToWindow) into the current one through the sky,
+// exactly, instead of regenerating them on every step. All vertices go
+// through one batch transform. Lines are split where a vertex can't be
+// placed, falls outside the new window, or jumps across the window, as
+// for aux contours.
+// Returns 0 if they couldn't be carried (the caller regenerates).
+int Context::hpxCarryContours(FitsImage* ptr, FitsHead* from,
+			      const Matrix& oldRefToWin)
+{
+  if (!hasContour_)
+    return 1;
+  List<ContourLevel>& ll = fvcontour_.lcontourlevel();
+
+  std::vector<double> xx, yy;
+  if (ll.head())
+    do {
+      List<Contour>& lc = ll.current()->lcontour();
+      if (lc.head())
+	do {
+	  List<Vertex>& lv = lc.current()->lvertex();
+	  if (lv.head())
+	    do {
+	      Vector img = lv.current()->vector * oldRefToWin;
+	      xx.push_back(img[0]);
+	      yy.push_back(img[1]);
+	    } while (lv.next());
+	} while (lc.next());
+    } while (ll.next());
+  if (xx.empty())
+    return 1;
+  if (!ptr->hpxRemapImage(from, xx.size(), xx.data(), yy.data()))
+    return 0;
+
+  double jump = .25*(ptr->width() > ptr->height() ?
+		     ptr->width() : ptr->height());
+  // Contours only cover the window they were generated for; keep the parts
+  // inside the new window (the rest would hang off the image), and leave
+  // newly exposed sky to the regeneration on release. Window pixels ->
+  // REF here; the bounds are checked in the (blocked) image's pixels.
+  Matrix winToRef = ptr->hpxWindowToRef();
+  double xmax = ptr->width() + .5;
+  double ymax = ptr->height() + .5;
+  for (size_t ii=0; ii<xx.size(); ii++) {
+    if (!(isfinite(xx[ii]) && isfinite(yy[ii])))
+      continue;
+    Vector rr = Vector(xx[ii],yy[ii]) * winToRef;
+    Vector bi = rr * ptr->refToImage;
+    if (bi[0] >= .5 && bi[0] <= xmax && bi[1] >= .5 && bi[1] <= ymax) {
+      xx[ii] = rr[0];
+      yy[ii] = rr[1];
+    }
+    else
+      xx[ii] = yy[ii] = NAN;
+  }
+  size_t kk =0;
+  if (ll.head())
+    do {
+      ContourLevel* cl = ll.current();
+      List<Contour>& lc = cl->lcontour();
+      // take the old contours out, then append the remapped pieces
+      List<Contour> old;
+      while (lc.head())
+	old.append(lc.extract());
+      if (old.head())
+	do {
+	  Contour* cc = new Contour(cl);
+	  Vector prev;
+	  int nn =0;
+	  List<Vertex>& lv = old.current()->lvertex();
+	  if (lv.head())
+	    do {
+	      double ix = xx[kk];
+	      double iy = yy[kk];
+	      kk++;
+	      Vector rr = Vector(ix,iy);	// already REF
+	      int ok = isfinite(ix) && isfinite(iy);
+	      if (ok && nn && (rr-prev).length() > jump)
+		ok =0;
+	      if (!ok) {
+		if (nn >= 2)
+		  lc.append(cc);
+		else
+		  delete cc;
+		cc = new Contour(cl);
+		nn =0;
+		if (!(isfinite(ix) && isfinite(iy)))
+		  continue;
+	      }
+	      cc->lvertex().append(new Vertex(rr));
+	      prev = rr;
+	      nn++;
+	    } while (lv.next());
+	  if (nn >= 2)
+	    lc.append(cc);
+	  else
+	    delete cc;
+	} while (old.next());
+      old.deleteAll();
+    } while (ll.next());
+  return 1;
+}
+
 int Context::block()
 {
   if (DebugPerf)

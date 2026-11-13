@@ -97,6 +97,7 @@ proc PrefsDialog {{which {}}} {
     PrefsDialogPrint
     PrefsDialogPageSetup
     PrefsDialogCoord
+    PrefsDialogHPXOpen
     PrefsDialogExamine
     PrefsDialogHTTP
 

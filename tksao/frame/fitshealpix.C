@@ -3,10 +3,16 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include <string.h>
+#include <math.h>
+#include <vector>
 
 #include "fitsimage.h"
+#include "base.h"
+#include "context.h"
 #include "hpx.h"
+#include "fitshpxreproj.h"
 #include "util.h"
+#include "wcsast.h"
 
 void FitsImage::initHPX()
 {
@@ -24,40 +30,14 @@ void FitsImage::initHPX()
   }
 
   // coordinate system identifier?
-  FitsHPX::CoordSys coord = FitsHPX::UNKNOWN;
+  FitsHPX::CoordSys coord = FitsHPX::headSystem(head);
   if (fits_->pHPXSystem() >= 0)
     coord = (FitsHPX::CoordSys)fits_->pHPXSystem();
-  else {
-    char* str = head->getString("COORDSYS");
-    if (str) {
-      if (str[0] == 'G')
-	coord = FitsHPX::GAL;
-      else if (str[0] == 'E')
-	coord = FitsHPX::ECL;
-      else if (str[0] == 'C')
-	coord = FitsHPX::EQU;
-      else if (str[0] == 'Q')
-	coord = FitsHPX::EQU;
-    }
-  }
 
   // Nested or ring order?
-  FitsHPX::Order order = FitsHPX::RING;
+  FitsHPX::Order order = FitsHPX::headOrder(head);
   if (fits_->pHPXOrder() >=0)
     order = (FitsHPX::Order)fits_->pHPXOrder();
-  else {
-    char* str = head->getString("ORDERING");
-    if (str) {
-      char* upper = toUpper(str);
-      if (!strncmp(upper,"NUNIQ",5))
-	order = FitsHPX::NUNIQ;
-      else if (upper[0] == 'N')
-	order = FitsHPX::NESTED;
-      else if (upper[0] == 'R')
-	order = FitsHPX::RING;
-      delete [] upper;
-    }
-  }
 
   // Layout
   FitsHPX::Layout layout = FitsHPX::EQUATOR;
@@ -78,5 +58,349 @@ void FitsImage::initHPX()
   if (quad<0 || quad>3)
     quad =0;
 
+  // Another projection (proj=AIT, MOL, ...; proj=HPX is the default):
+  // build the HPX image and resample it. layout/quad only describe the
+  // HPX intermediate, so they are ignored; lon0/lat0/fov set the window.
+  const char* proj = fits_->pHPXProj();
+  if (proj && strcasecmp(proj,"HPX")) {
+    char* upper = toUpper(proj);
+
+    // FitsHPXReproj takes ownership of hpx (keeps it for recentring)
+    FitsHPX* hpx = new FitsHPX(fits_, order, coord, FitsHPX::EQUATOR, col, 0);
+    if (hpx->isValid())
+      hpx_ = new FitsHPXReproj(hpx, upper, fits_->pHPXLon0(),
+			       fits_->pHPXLat0(), fits_->pHPXFov(),
+			       // blocked: a screen pixel covers block
+			       // window pixels
+			       context_->parent_->getWidth() *
+			       context_->blockFactor()[0],
+			       context_->parent_->getHeight() *
+			       context_->blockFactor()[1],
+			       context_->parent_->nthreads_);
+    else
+      delete hpx;
+    delete [] upper;
+    return;
+  }
+
   hpx_ = new FitsHPX(fits_, order, coord, layout, col, quad);
+}
+
+// Recentre a resampled HEALPix window (zenithal or conic). Like
+// nextBin(), rebuild the image from the new data; the caller finishes
+// with Context::hpxFinish(). Returns 0 if this isn't a window or the
+// centre is invalid.
+int FitsImage::hpxRecentre(double lon, double lat)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (!rr || !rr->canRecentre())
+    return 0;
+
+  if (!rr->recentre(lon, lat))
+    return 0;
+
+  hpxReload();
+  return 1;
+}
+
+// Rebuild with a new pixel size and size (see FitsHPXReproj::reshape)
+int FitsImage::hpxReshape(double lon, double lat, double pix, int ww, int hh,
+			  const double* centre)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (!rr || !rr->canRecentre())
+    return 0;
+
+  if (!rr->reshape(lon, lat, pix, ww, hh, centre))
+    return 0;
+
+  hpxReload();
+  return 1;
+}
+
+// The window's data changed: rebuild the image like nextBin() does; the
+// caller finishes with Context::hpxFinish()
+void FitsImage::hpxReload()
+{
+  if (manageBlock_) {
+    if (block_)
+      delete block_;
+    if (blockdata_)
+      delete blockdata_;
+  }
+  manageBlock_ =0;
+  block_ = base_;
+  blockdata_ = basedata_;
+
+  if (manageAnalysis_) {
+    if (analysis_)
+      delete analysis_;
+    if (analysisdata_)
+      delete analysisdata_;
+  }
+  manageAnalysis_ =0;
+  analysis_ = block_;
+  analysisdata_ = blockdata_;
+
+  load();
+}
+
+double FitsImage::hpxPixel()
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  return rr ? rr->pix() : 0;
+}
+
+double FitsImage::hpxPixelHPX()
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  return rr ? rr->pixHPX() : 0;
+}
+
+void FitsImage::hpxMaxSize(double pix, int* ww, int* hh)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (rr)
+    rr->maxSize(pix, ww, hh);
+}
+
+int FitsImage::hpxIsConic()
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  return rr ? rr->isConic() : 0;
+}
+
+double FitsImage::hpxLon()
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  return rr ? rr->lon() : 0;
+}
+
+// full extent of the window's projection plane (fov) [deg]
+void FitsImage::hpxPlane(double* ww, double* hh)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  *ww = rr ? rr->planeW() : 0;
+  *hh = rr ? rr->planeH() : 0;
+}
+
+double FitsImage::hpxLat()
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  return rr ? rr->lat() : 0;
+}
+
+// Recentre on the sky position at ref (REF coords, e.g. the pan cursor)
+int FitsImage::hpxRecentreRef(const Vector& ref)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (!rr || !rr->canRecentre())
+    return 0;
+
+  double lon, lat;
+  if (!rr->nativeAt(ref * hpxRefToWindow(), &lon, &lat))
+    return 0;
+
+  // conics keep their reference latitude; only the meridian follows
+  if (rr->isConic())
+    lat = rr->lat();
+
+  return hpxRecentre(lon, lat);
+}
+
+int FitsImage::isHPXWindow()
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  return rr && rr->canRecentre();
+}
+
+// REF <-> the window's own pixels (its header's grid). REF and
+// refToImage are in the *blocked* image's pixels; the window's WCS (and
+// ds9's IMAGE system, see initWCS) is unblocked: w = (b - .5)*block + .5.
+// Without blocking this is just refToImage.
+Matrix FitsImage::hpxRefToWindow()
+{
+  Vector bf = context_->blockFactor();
+  return refToImage * Translate(-.5,-.5) * Scale(bf) * Translate(.5,.5);
+}
+
+Matrix FitsImage::hpxWindowToRef()
+{
+  return hpxRefToWindow().invert();
+}
+
+// the map's own (lon, lat) [deg] at ref (REF coords), and back
+int FitsImage::hpxNativeAtRef(const Vector& ref, double* lon, double* lat)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  return rr ? rr->nativeAt(ref * hpxRefToWindow(), lon, lat) : 0;
+}
+
+int FitsImage::hpxRefAt(double lon, double lat, Vector* ref)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  Vector img;
+  if (!rr || !rr->pixelAt(lon, lat, &img))
+    return 0;
+  *ref = img * hpxWindowToRef();
+  return 1;
+}
+
+// hpxNativeAtRef / hpxRefAt for many points at once (one WCS build per
+// call instead of one per point). Points that can't be placed come back
+// as NaN: lon/lat, or both components of the REF vector.
+int FitsImage::hpxNativesAtRef(int nn, const Vector* ref,
+			       double* lon, double* lat)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (!rr || nn <= 0)
+    return 0;
+  std::vector<double> xx(nn), yy(nn);
+  Matrix mx = hpxRefToWindow();
+  for (int ii=0; ii<nn; ii++) {
+    Vector img = ref[ii] * mx;
+    xx[ii] = img[0];
+    yy[ii] = img[1];
+  }
+  return rr->nativesAt(nn, xx.data(), yy.data(), lon, lat);
+}
+
+int FitsImage::hpxRefsAt(int nn, const double* lon, const double* lat,
+			 Vector* ref)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (!rr || nn <= 0)
+    return 0;
+  std::vector<double> xx(nn), yy(nn);
+  if (!rr->pixelsAt(nn, lon, lat, xx.data(), yy.data()))
+    return 0;
+  Matrix mx = hpxWindowToRef();
+  for (int ii=0; ii<nn; ii++)
+    ref[ii] = (isfinite(xx[ii]) && isfinite(yy[ii])) ?
+      Vector(xx[ii], yy[ii]) * mx : Vector(NAN, NAN);
+  return 1;
+}
+
+// The window's header now, and image pixels of an earlier window (given
+// by its header) mapped into the current one; see FitsHPXReproj.
+FitsHead* FitsImage::hpxHeadCopy()
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  return rr ? rr->headCopy() : NULL;
+}
+
+int FitsImage::hpxRemapImage(FitsHead* from, int nn, double* xx, double* yy)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  return rr ? rr->remapFrom(from, nn, xx, yy) : 0;
+}
+
+// Has the pan point (REF coords) moved far enough from the window's
+// centre to rebuild the window around it? By default more than a quarter
+// of the window, so short pans never re-render; with minpix >= 0, more
+// than minpix image pixels (live rebuilds during a drag).
+int FitsImage::hpxNeedsRecentre(const Vector& ref, double minpix)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (!rr || !rr->canRecentre())
+    return 0;
+
+  // a conic only moves its window across a fixed projection, so once
+  // the window shows all of it there is nothing to gain
+  if (rr->isConic() && rr->fullPlane())
+    return 0;
+
+  Vector img = ref * refToImage;
+  double ww = width();
+  double hh = height();
+  double dx = fabs(img[0] - (ww+1)/2.);
+  double dy = fabs(img[1] - (hh+1)/2.);
+  if (minpix >= 0)
+    return dx*dx + dy*dy > minpix*minpix;
+  return dx > .25*ww || dy > .25*hh;
+}
+
+// Recentre for a pan to (lon, lat): a zenithal window centres there; a
+// conic only follows in longitude and keeps its reference latitude.
+int FitsImage::hpxRecentrePan(double lon, double lat)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (!rr || !rr->canRecentre())
+    return 0;
+  return hpxRecentre(lon, rr->isConic() ? rr->lat() : lat);
+}
+
+// Convert a sky position vv [deg] in (sys, sky) to the map's own sky
+// system, as a pure sky-to-sky conversion. The window's own WCS can't be
+// used for this: a target outside the window (e.g. more than 90 deg from
+// a TAN centre) has no sensible pixel position. Returns 0 if the map has
+// no celestial system (XLON/XLAT) or the conversion fails.
+int FitsImage::hpxNativeFromSky(const Vector& vv, Coord::CoordSystem sys,
+				Coord::SkyFrame sky, double* lon, double* lat)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (!rr || !rr->canRecentre() || !hasWCSCel(sys))
+    return 0;
+
+  // as wcsSkyFrame()
+  const char* attrs;
+  switch (sky) {
+  case Coord::FK4:
+    attrs = "System=FK4,Equinox=B1950";
+    break;
+  case Coord::FK5:
+    attrs = "System=FK5,Equinox=J2000";
+    break;
+  case Coord::ICRS:
+    attrs = "System=ICRS";
+    break;
+  case Coord::GALACTIC:
+    attrs = "System=GALACTIC";
+    break;
+  case Coord::ECLIPTIC:
+    attrs = "System=ECLIPTIC,Equinox=J2000";
+    break;
+  default:
+    return 0;
+  }
+
+  return rr->fromSky(attrs, vv[0], vv[1], lon, lat);
+}
+
+// Whole-map clip data for a HEALPix window: one persistent FitsDatam over
+// the kept HPX intermediate, so its cached statistics (scan, zscale,
+// autocut) survive recentring and the scale limits don't jump.
+FitsData* FitsImage::hpxGlobalData()
+{
+  if (hpxGlobal_)
+    return hpxGlobal_;
+
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (!rr || !rr->hpxView())
+    return NULL;
+
+  FitsFile* vv = rr->hpxView();
+  hpxGlobal_ = new FitsDatam<float>(vv, interp_);
+  hpxGlobalBound_ = FitsBound(0, 0, vv->head()->naxis(0),
+			      vv->head()->naxis(1));
+  return hpxGlobal_;
+}
+
+// The ds9 sky frame matching the map's own system; 0 for XLON/XLAT
+int FitsImage::hpxSkyFrame(Coord::SkyFrame* sky)
+{
+  if (!isHPXWindow() || !image_ || !image_->head())
+    return 0;
+  char* ctype = image_->head()->getString("CTYPE1");
+  if (!ctype)
+    return 0;
+  if (!strncmp(ctype,"GLON",4))
+    *sky = Coord::GALACTIC;
+  else if (!strncmp(ctype,"RA--",4))
+    *sky = Coord::ICRS;
+  else if (!strncmp(ctype,"ELON",4))
+    *sky = Coord::ECLIPTIC;
+  else
+    return 0;
+  return 1;
 }

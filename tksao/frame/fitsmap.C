@@ -141,7 +141,14 @@ void FitsImage::listFromRef(ostream& str, const Vector& vv,
     str << setprecision(context_->parent_->precLinear_) << mapFromRef(vv, sys);
     break;
   default:
-    str << mapFromRef(vv,sys,sky,format);
+    {
+      // points that do not map to the sky (e.g. outside an AIT ellipse)
+      // come back as NULL strings
+      VectorStr rr = mapFromRef(vv,sys,sky,format);
+      if (!rr[0] || !rr[1])
+	rr = VectorStr("nan","nan");
+      str << rr;
+    }
     break;
   }
 }
@@ -164,8 +171,8 @@ void FitsImage::listFromRef(ostream& str1, ostream& str2, const Vector& vv,
   default:
     {
       VectorStr rr = mapFromRef(vv,sys,sky,format);
-      str1 << rr[0];
-      str2 << rr[1];
+      str1 << (rr[0] ? rr[0] : "nan");
+      str2 << (rr[1] ? rr[1] : "nan");
     }
   }
 }

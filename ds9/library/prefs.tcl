@@ -198,6 +198,10 @@ proc SavePrefs {} {
     puts $ch "global phttp"
     puts $ch "array set phttp \{ [array get phttp] \}"
 
+    global phpxopen
+    puts $ch "global phpxopen"
+    puts $ch "array set phpxopen \{ [array get phpxopen] \}"
+
     global pbuttons
     puts $ch "global pbuttons"
     puts $ch "array set pbuttons \{ [array get pbuttons] \}"

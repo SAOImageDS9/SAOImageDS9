@@ -528,8 +528,8 @@ set RIGHT_ 297
             set yyleng [string length $yytext]
             set matched_rule 40
         }
-        # rule 41: \"[^\"]*\"
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\"[^\"]*\")} $yy_current_buffer match] > 0 && \
+        # rule 41: \"([^\"]|\n)*\"
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\"([^\"]|\n)*\")} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]
@@ -542,8 +542,8 @@ set RIGHT_ 297
             set yyleng [string length $yytext]
             set matched_rule 42
         }
-        # rule 43: \{[^\}]*\}
-        if {[regexp -start $index_ -indices -line -nocase -- {\A(\{[^\}]*\})} $yy_current_buffer match] > 0 && \
+        # rule 43: \{([^\}]|\n)*\}
+        if {[regexp -start $index_ -indices -line -nocase -- {\A(\{([^\}]|\n)*\})} $yy_current_buffer match] > 0 && \
                 [lindex $match 1] - $index_ + 1 > $yyleng} {
             set yytext [string range $yy_current_buffer $index_ [lindex $match 1]]
             set yyleng [string length $yytext]

@@ -33,6 +33,7 @@ ellipse		{return $ELLIPSE_}
 box		{return $BOX_}
 polygon		{return $POLYGON_}
 freehand	{return $FREEHAND_}
+freehandline	{return $FREEHANDLINE_}
 line		{return $LINE_}
 text		{return $TEXT_}
 image		{return $IMAGE_}

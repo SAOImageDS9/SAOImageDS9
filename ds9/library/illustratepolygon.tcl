@@ -415,11 +415,11 @@ proc IllustratePolygonEditCB {id} {
 
 
 # Freehand: collect the drag in canvas coords, draw it as a canvas line,
-# and on release create a normal polygon graphic from it. Shares the
-# trace simplification with freehand regions, but has its own tolerance
-# preference.
+# and on release create a normal polygon or line graphic from it. Shares
+# the trace simplification with freehand regions, but has its own
+# tolerance preference.
 
-proc IllustrateFreehandBegin {xx yy} {
+proc IllustrateFreehandBegin {xx yy type} {
     global ds9
     global illustrate
     global iillustrate
@@ -428,6 +428,7 @@ proc IllustrateFreehandBegin {xx yy} {
     $ds9(canvas) delete illfreehand
 
     set iillustrate(freehand) [list $xx $yy]
+    set iillustrate(freehand,type) $type
     set iillustrate(motion) freehand
 
     # not tagged graphic, so it can never be found or selected
@@ -459,6 +460,11 @@ proc IllustrateFreehandEnd {} {
     set trace $iillustrate(freehand)
     unset iillustrate(freehand)
 
+    if {$iillustrate(freehand,type) eq {line}} {
+	IllustrateFreehandLineEnd $trace
+	return
+    }
+
     # a click or a nearly straight stroke makes a default polygon,
     # like a click with the polygon shape
     set pts [MarkerFreehandSimplify $trace [IllustrateFreehandTolerance]]
@@ -473,6 +479,32 @@ proc IllustrateFreehandEnd {} {
 	set id [IllustratePolygonCreate $pts \
 		    $illustrate(color) $illustrate(fill) \
 		    $illustrate(width) $illustrate(dash)]
+    }
+
+    IllustrateSaveUndo create $id
+    IllustrateUpdateHandle $id
+}
+
+# an open line: a click makes a default line, like a click with the
+# line shape; a straight stroke is a perfectly good two point line
+proc IllustrateFreehandLineEnd {trace} {
+    global illustrate
+
+    set pts [MarkerFreehandSimplify $trace \
+		 [IllustrateFreehandTolerance] 0]
+    if {[MarkerFreehandSmall $trace 4] || [llength $pts] < 4} {
+	lassign $trace xx yy
+	set pts [list $xx $yy $xx $yy]
+	set default 1
+    } else {
+	set default 0
+    }
+    set id [IllustrateLineCreateCoords $pts \
+		$illustrate(color) \
+		$illustrate(width) $illustrate(dash) \
+		$illustrate(arrow,left) $illustrate(arrow,right)]
+    if {$default} {
+	IllustrateLineDefault $id
     }
 
     IllustrateSaveUndo create $id
@@ -502,5 +534,6 @@ proc IllustrateFreehandCancel {} {
     }
     $ds9(canvas) delete illfreehand
     unset -nocomplain iillustrate(freehand)
+    unset -nocomplain iillustrate(freehand,type)
     set iillustrate(motion) none
 }

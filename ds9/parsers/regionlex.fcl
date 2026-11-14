@@ -88,6 +88,7 @@ ellipse	    {return $ELLIPSE_}
 box	    {return $BOX_}
 polygon	    {return $POLYGON_}
 freehand    {return $FREEHAND_}
+freehandline {return $FREEHANDLINE_}
 point	    {return $POINT_}
 line	    {return $LINE_}
 vector	    {return $VECTOR_}

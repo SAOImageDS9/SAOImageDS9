@@ -57,6 +57,10 @@ Point::Point(const Point& a) : Marker(a)
   glyphHeight_ = a.glyphHeight_;
   glyphImage_ = NULL;
   glyphPhoto_ = NULL;
+  glyphWarpImage_ = NULL;
+  glyphWarpPhoto_ = NULL;
+  glyphWarpX_ = 0;
+  glyphWarpY_ = 0;
   if (shape_ == GLYPH)
     loadGlyph();
 }
@@ -634,13 +638,8 @@ void Point::setSize(int size)
 void Point::updateHandles()
 {
   if (shape_ == GLYPH) {
-    // fixed size in screen pixels, always upright
-    Vector cc = parent->mapFromRef(center,Coord::CANVAS);
-    Vector ss(glyphWidth_/2., glyphHeight_/2.);
-    handle[0] = cc + Vector(-ss[0],-ss[1]);
-    handle[1] = cc + Vector( ss[0],-ss[1]);
-    handle[2] = cc + Vector( ss[0], ss[1]);
-    handle[3] = cc + Vector(-ss[0], ss[1]);
+    // fixed size in screen pixels, tilted with a 3D frame
+    glyphCorners(Coord::CANVAS, handle);
     return;
   }
 

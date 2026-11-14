@@ -76,6 +76,12 @@ cd tksao && make parser        # or the matching target: ciaoparser, ds9parser, 
 cd .. && make tksaoclean tksao ds9clean ds9
 ```
 
+These targets run **both** bison and flex, and flex output churns (see
+below). For a grammar-only change, run the bison line from the target
+yourself instead, e.g. for `tksao/frame`:
+`cd tksao && bison -d -p fr -o frame/parser.C frame/parser.Y`. If you
+did run `make parser`, `git checkout` the `lex.C` it rewrote.
+
 Use the narrow per-grammar target, **not** `make parsers`, which
 regenerates every grammar in the tree and invites unrelated drift.
 
@@ -120,6 +126,73 @@ Note that `bison -d -o foo.C` writes the header as `foo.H` (it maps the
 output extension's case), which is what the repo tracks. On macOS's
 case-insensitive APFS `foo.h` and `foo.H` are the same file; on Linux
 they are not, but bison produces `.H` on both, so this is consistent.
+
+## Tcl parser/lexer changes (fickle/taccle)
+
+The Tcl-side parsers in `ds9/parsers/` (command line/XPA/SAMP commands,
+prefs, the Illustrate file format, ...) are `foo.tac` grammars (taccle,
+bundled in `taccle/`) and `foo.fcl` lexers (fickle, bundled in
+`fickle/`). `.tac`/`.fcl` may `#include` the shared `*.tin`/`*.trl`/
+`*.fin` fragments. The generated `fooparser.tcl`, `fooparser.tab.tcl`
+and `foolex.tcl` are checked in. The bundled tools regenerate them
+cleanly, unlike flex above. `make ds9` regenerates them through pattern
+rules in `ds9/make.include`, but only by timestamp. Those rules depend
+on nothing but the one source file, which causes the traps below.
+
+- **Lexers embed the parser's token numbers.** A `.fcl` starting
+  `#tab fooparser.tab.tcl` copies that file's `set FOO_ 288` lines into
+  `foolex.tcl` at generation time. Adding, removing or reordering a
+  `%token` in the `.tac` renumbers tokens, but make won't rebuild the
+  lexer unless the `.fcl` changed. The symptom is that *every* parse
+  fails with `parse error, expecting:` (often an empty or wrong list),
+  or `can't read "NEW_": no such variable`. After changing tokens,
+  regenerate the lexer too (`touch` the `.fcl`, or run fickle by hand
+  as below), and check that `set FOO_` values match between
+  `foolex.tcl` and `fooparser.tab.tcl`.
+- **Timestamps lie.** `git checkout`/`git restore` of a generated file
+  gives it a fresh mtime, so make then thinks it's newer than an edited
+  `.tac`/`.fcl` and skips it. A `touch` in the same second as the
+  output can also be missed. When in doubt, regenerate by hand.
+- **fickle reads each rules-section line as a Tcl list** (`lindex`).
+  A comment like `# matches "a", "b"` (a quote followed by a
+  non-space) aborts fickle with `list element in quotes followed by
+  ","`. The make rule still leaves behind an **empty** `foolex.tcl`,
+  which make then treats as up to date and ds9 fails to load. Keep
+  quotes out of `.fcl` comments. If this happened, fix the line and
+  regenerate by hand.
+- **Running the tools by hand**, from `ds9/parsers`, the same way the
+  make rules do. The generated file needs the `package provide` line
+  prepended, or it won't load:
+
+  ```
+  ../../tcl9.0/unix/tclsh ../../taccle/taccle.tcl -p foo -d fooparser.tac
+  echo "package provide DS9 1.0" | cat - fooparser.tcl > tmp && mv tmp fooparser.tcl
+  ../../tcl9.0/unix/tclsh ../../fickle/fickle.tcl -P foo foolex.fcl
+  echo "package provide DS9 1.0" | cat - foolex.tcl > tmp && mv tmp foolex.tcl
+  ```
+
+  The prefix (`-p`/`-P`) is the file stem before `parser`/`lex`. Run
+  taccle before fickle, so the lexer picks up the new `.tab.tcl`.
+  taccle's `-v` also writes `fooparser.output` with conflict details;
+  delete it afterwards. To confirm the checked-in files are what the
+  tools produce, regenerate copies in a scratch directory and `cmp`.
+- **fickle takes the longest match**, and ties go to the earlier rule.
+  `string.fin`'s bare `STRING` rule is `\S+\S+`, so it beats keywords,
+  numbers and single-character tokens whenever they touch punctuation
+  (`circle(1,2,3)`, `color=red` and `3;` each lex as one STRING). A
+  lexer that needs `(`, `,`, `=`, ... as tokens needs its own bare-string
+  rule that stops at them (see `illustratefilelex.fcl`). Don't change
+  `string.fin`: about 120 lexers include it. Also, fickle matches with
+  `regexp -line`, so `[^x]` and `.` never match a newline. A rule that
+  must span lines needs an explicit `\n`, e.g. `\"([^\"]|\n)*\"`.
+
+A parser can be exercised without ds9. In plain `tclsh`, source
+`fooparser.tab.tcl`, `foolex.tcl` and `fooparser.tcl`, define stub
+procs for the actions, and then call `foo::YY_FLUSH_BUFFER`,
+`foo::yy_scan_string $str` and `foo::yyparse`. To see the token
+stream, loop on `foo::yylex` and print `$foo::yytext`. Pointing the same
+harness at `git show master:...` copies of the generated files gives a
+before/after comparison in seconds.
 
 ## Running ds9 / smoke-testing over XPA
 

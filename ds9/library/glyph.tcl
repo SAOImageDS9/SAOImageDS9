@@ -181,6 +181,11 @@ proc GlyphColor {color} {
     if {$color eq {}} {
 	return {}
     }
+    # match Widget::getXColor: ds9's green is X11 green (Tk's lime),
+    # not Tk 8.6+'s W3C green (#008000)
+    if {[string equal -nocase -length 5 $color green]} {
+	set color lime
+    }
     if {[catch {winfo rgb . $color} rgb]} {
 	return {}
     }

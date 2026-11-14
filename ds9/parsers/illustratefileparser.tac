@@ -71,12 +71,11 @@ shape : CIRCLE_ bp numeric sp numeric sp numeric ep comment
  | IMAGE_ bp numeric sp numeric sp STRING_ sp numeric sp numeric ep bare {IllustrateImageCreate $3 $5 $7 $9 $11}
  ;
 
-coords : coords coord
+coords : coords sp coord
  | coord
  ;
 
 coord : numeric sp numeric {lappend ::illustratefile::coords $1 $3}
- |
  ;
 
 comment :

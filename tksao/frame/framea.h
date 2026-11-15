@@ -51,6 +51,9 @@ protected:
   void unloadAllFits();
   void updateAlignmentMatrices();
 
+  int hpxContextCount() {return contextCount;}
+  Context* hpxContextAt(int ii) {return &context[ii];}
+
   void loadDone(int);
   void loadRGBCube(MemType, const char*, FitsImage*);
   void loadRGBCubeFinish();

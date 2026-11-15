@@ -3362,9 +3362,21 @@ void Base::updateFitsCenterCmd(const Vector& vv)
 const char* Base::hpxRecentre(HPXMode mode, double lon, double lat,
 				int drag)
 {
-  FitsImage* ptr = currentContext->fits;
-  if (!ptr || !ptr->isHPXWindow())
+  // The key channel drives the rebuild (REF coords are its pixels); every
+  // other channel that is a window (RGB/HSV/HLS/multicolor) is rebuilt
+  // with the same centre and geometry, so all of them stay on one
+  // projection and the per-channel alignment (a linear fit) stays exact.
+  FitsImage* ptr = hpxKeyWindow();
+  if (!ptr)
     return " not a HEALPix zenithal/conic window";
+
+  int nc = hpxContextCount();
+  std::vector<Context*> cc;
+  for (int ii=0; ii<nc; ii++) {
+    Context* ctx = hpxContextAt(ii);
+    if (ctx && ctx->fits && ctx->fits->isHPXWindow())
+      cc.push_back(ctx);
+  }
 
   // sky positions to restore afterwards
   double plon, plat, clon, clat;
@@ -3379,15 +3391,20 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat,
   int mcount[3] = {0,0,0};
   if (remap)
     hpxListMarkers(msky, mtext, mcount);
-  currentContext->hpxSaveAuxContours(ptr);
 
   // During a drag, regenerating contours on every step is too slow
   // (~150 ms for a frame-sized window). Carry them into the new window
   // through the sky instead (Context::hpxCarryContours), and regenerate
   // on release. An affine fit at the pan point isn't enough: a wide TAN
   // window is far from linear, and the error builds up over a drag.
-  FitsHead* oldHead = drag ? ptr->hpxHeadCopy() : NULL;
-  Matrix oldRefToWin = ptr->hpxRefToWindow();
+  std::vector<FitsHead*> oldHead(cc.size(), (FitsHead*)NULL);
+  std::vector<Matrix> oldRefToWin(cc.size());
+  for (size_t ii=0; ii<cc.size(); ii++) {
+    cc[ii]->hpxSaveAuxContours(cc[ii]->fits);
+    if (drag)
+      oldHead[ii] = cc[ii]->fits->hpxHeadCopy();
+    oldRefToWin[ii] = cc[ii]->fits->hpxRefToWindow();
+  }
 
   // Automatic rebuilds (pan, pan to) also fit the window to the display:
   // pixels as fine as one screen pixel at the current zoom (never finer
@@ -3397,9 +3414,18 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat,
   double opix = ptr->hpxPixel();
   double npix = opix;
   int ok =0;
+  // the rebuild, as applied to every channel: 0 none, 1 recentre on
+  // (rlon, rlat), 2 reshape to (rlon, rlat, npix, ww, hh, centre)
+  int how =0;
+  double rlon =0, rlat =0;
+  int ww =0, hh =0;
+  double centre[2] = {0,0};
+  int useCentre =0;
   switch (mode) {
   case HPXCENTER:
-    ok = ptr->hpxRecentre(lon, lat);
+    how = 1;
+    rlon = lon;
+    rlat = lat;
     break;
   case HPXFIT:
     {
@@ -3413,12 +3439,12 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat,
       npix = (fx > fy ? fx : fy)/ss;
       if (npix < ptr->hpxPixelHPX())
 	npix = ptr->hpxPixelHPX();
-      int ww = (int)ceil(pw/npix) + 2;
-      int hh = (int)ceil(ph/npix) + 2;
-      ok = ptr->hpxReshape(ptr->hpxLon(), ptr->hpxLat(), npix, ww, hh, NULL);
-      npix = ptr->hpxPixel();
+      ww = (int)ceil(pw/npix) + 2;
+      hh = (int)ceil(ph/npix) + 2;
+      how = 2;
+      rlon = ptr->hpxLon();
+      rlat = ptr->hpxLat();
       // zoom to fit sets the zoom and pan itself
-      opix = npix;
       pan = 0;
     }
     break;
@@ -3429,32 +3455,69 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat,
     lat = plat;
     // fall through
   case HPXPANTO:
-    {
-      int ww, hh;
-      hpxWindowGeometry(ptr, &npix, &ww, &hh);
-      double cc[2] = {lon, lat};
-      if (ptr->hpxIsConic())
-	ok = ptr->hpxReshape(lon, ptr->hpxLat(), npix, ww, hh, cc);
-      else
-	ok = ptr->hpxReshape(lon, lat, npix, ww, hh, NULL);
-      npix = ptr->hpxPixel();
+    hpxWindowGeometry(ptr, &npix, &ww, &hh);
+    how = 2;
+    rlon = lon;
+    if (ptr->hpxIsConic()) {
+      rlat = ptr->hpxLat();
+      centre[0] = lon;
+      centre[1] = lat;
+      useCentre = 1;
     }
+    else
+      rlat = lat;
     break;
   }
-  if (!ok) {
-    if (oldHead)
-      delete oldHead;
-    return " unable to recentre";
+
+  // the key channel first; the rest follow it, and a channel that fails
+  // to rebuild is left as it was
+  std::vector<int> rebuilt(cc.size(), 0);
+  for (size_t ii=0; ii<cc.size() && how; ii++) {
+    FitsImage* fits = cc[ii]->fits;
+    if (how == 1)
+      rebuilt[ii] = fits->hpxRecentre(rlon, rlat);
+    else
+      rebuilt[ii] = fits->hpxReshape(rlon, rlat, npix, ww, hh,
+				     useCentre ? centre : NULL);
+    if (fits == ptr)
+      ok = rebuilt[ii];
   }
 
-  currentContext->hpxFinish();
-  if (oldHead && currentContext->hpxCarryContours(ptr, oldHead,
-						   oldRefToWin))
-    hpxDragStale_ = 1;
-  else
-    currentContext->contourUpdateFV();
-  if (oldHead)
-    delete oldHead;
+  if (!ok) {
+    for (size_t ii=0; ii<cc.size(); ii++) {
+      if (rebuilt[ii])
+	cc[ii]->hpxFinish();
+      if (oldHead[ii])
+	delete oldHead[ii];
+    }
+    return " unable to recentre";
+  }
+  if (mode == HPXFIT)
+    opix = ptr->hpxPixel();
+  npix = ptr->hpxPixel();
+
+  for (size_t ii=0; ii<cc.size(); ii++)
+    if (rebuilt[ii])
+      cc[ii]->hpxFinish();
+
+  // the other channels' REF mapping (alignment to the key channel) must
+  // be current before their contours go through it
+  if (cc.size() > 1) {
+    alignWCS();
+    updateMatrices();
+  }
+
+  for (size_t ii=0; ii<cc.size(); ii++) {
+    if (rebuilt[ii]) {
+      if (oldHead[ii] && cc[ii]->hpxCarryContours(cc[ii]->fits, oldHead[ii],
+						    oldRefToWin[ii]))
+	hpxDragStale_ = 1;
+      else
+	cc[ii]->contourUpdateFV();
+    }
+    if (oldHead[ii])
+      delete oldHead[ii];
+  }
 
   // keep the on-screen scale when the pixel size changed
   if (opix > 0 && npix != opix) {
@@ -3476,11 +3539,21 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat,
 
   if (remap)
     hpxRestoreMarkers(ptr, msky, mtext, mcount);
-  currentContext->hpxRestoreAuxContours(ptr);
+  for (size_t ii=0; ii<cc.size(); ii++)
+    cc[ii]->hpxRestoreAuxContours(cc[ii]->fits);
 
   // not FrameBase::updateBin(), which would reset the pan to the centre
   Base::updateBin(Matrix());
   return NULL;
+}
+
+// The key channel's image, if it is a resampled HEALPix window
+// (zenithal/conic). REF coords are its pixels, so it drives pans and
+// rebuilds; see hpxRecentre().
+FitsImage* Base::hpxKeyWindow()
+{
+  FitsImage* ptr = keyContext ? keyContext->fits : NULL;
+  return ptr && ptr->isHPXWindow() ? ptr : NULL;
 }
 
 // The window geometry wanted for the current display: pixel size [deg]
@@ -3520,8 +3593,8 @@ void Base::hpxWindowGeometry(FitsImage* ptr, double* pix, int* ww, int* hh)
 // window from its centre.
 void Base::hpxAutoRefresh()
 {
-  FitsImage* ptr = currentContext->fits;
-  if (!ptr || !ptr->isHPXWindow())
+  FitsImage* ptr = hpxKeyWindow();
+  if (!ptr)
     return;
 
   double pix;
@@ -3563,8 +3636,8 @@ void Base::hpxAutoRefresh()
 #define HPX_DRAG_STEP 2
 int Base::hpxDragRefresh()
 {
-  FitsImage* ptr = currentContext->fits;
-  if (!ptr || !ptr->isHPXWindow())
+  FitsImage* ptr = hpxKeyWindow();
+  if (!ptr)
     return 0;
 
   double zz = fabs(zoom_[0]) > fabs(zoom_[1]) ? fabs(zoom_[0]) : fabs(zoom_[1]);
@@ -3606,7 +3679,7 @@ void Base::panEndCmd(const Vector& vv)
 int Base::hpxPanTo(const Vector& vv, Coord::CoordSystem sys,
 		   Coord::SkyFrame sky)
 {
-  FitsImage* ptr = currentContext->fits;
+  FitsImage* ptr = hpxKeyWindow();
   double lon, lat;
   if (!ptr || !ptr->hpxNativeFromSky(vv, sys, sky, &lon, &lat))
     return 0;

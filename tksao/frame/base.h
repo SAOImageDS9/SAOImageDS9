@@ -1059,6 +1059,11 @@ public:
   void updateFitsCenterCmd();
   void updateFitsCenterCmd(const Vector&);
   enum HPXMode {HPXPAN, HPXCENTER, HPXPANTO, HPXFIT};
+  // the contexts a HEALPix window rebuild applies to: every channel of
+  // an RGB/HSV/HLS/multicolor frame, so they stay on one projection
+  virtual int hpxContextCount() {return 1;}
+  virtual Context* hpxContextAt(int) {return keyContext;}
+  FitsImage* hpxKeyWindow();
   const char* hpxRecentre(HPXMode, double, double, int drag =0);
   void hpxAutoRefresh();
   int hpxDragRefresh();

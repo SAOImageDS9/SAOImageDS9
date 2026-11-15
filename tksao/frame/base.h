@@ -1192,6 +1192,11 @@ public:
 			const char*, int*, int, const char*, 
 			const char*, unsigned short, const char*,
 			const List<Tag>&, const List<CallBack>& cb);
+  void createSegmentCanvasVarCmd(const char*,
+			const char*, int*, int, const char*,
+			const char*, unsigned short, const char*,
+			const List<Tag>&, const List<CallBack>& cb);
+  int canvasVarVertices(const char*, int, const char*, List<Vertex>&);
   void createLineCmd(const Vector&, 
 		     const Vector&, 
 		     int, int,

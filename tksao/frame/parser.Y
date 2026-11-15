@@ -2285,6 +2285,11 @@ markerCreate :
 	{fr->createPolygonCanvasVarCmd($4,
 	    currentColor,currentDash,currentWidth,currentFont,
 	    currentText,currentProps,NULL,taglist,cblist);}
+	| SEGMENT_ CANVAS_ VAR_ STRING
+	    markerProperties
+	{fr->createSegmentCanvasVarCmd($4,
+	    currentColor,currentDash,currentWidth,currentFont,
+	    currentText,currentProps,NULL,taglist,cblist);}
 	| SEGMENT_ numeric numeric
 	    numeric numeric
 	    markerProperties

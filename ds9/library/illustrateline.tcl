@@ -5,6 +5,13 @@
 package provide DS9 1.0
 
 proc IllustrateLineCreate {x1 y1 x2 y2 color width dash left right} {
+    return [IllustrateLineCreateCoords [list $x1 $y1 $x2 $y2] \
+		$color $width $dash $left $right]
+}
+
+# a line may have any number of vertices (two or more); a freehand line
+# has many. Each vertex gets an edit handle, h1..hN.
+proc IllustrateLineCreateCoords {coords color width dash left right} {
     global ds9
     global illustrate
 
@@ -25,7 +32,7 @@ proc IllustrateLineCreate {x1 y1 x2 y2 color width dash left right} {
     }
 
     set id [$ds9(canvas) create line \
-		$x1 $y1 $x2 $y2 \
+		$coords \
 		-fill $color \
 		-width $width \
 		-dash $dashlist \
@@ -39,7 +46,7 @@ proc IllustrateLineCreate {x1 y1 x2 y2 color width dash left right} {
 proc IllustrateLineDefault {id} {
     global ds9
 
-    foreach {x1 y1 x2 y2} [$ds9(canvas) coords $id] {}
+    lassign [$ds9(canvas) coords $id] x1 y1 x2 y2
     $ds9(canvas) coords $id $x1 $y1 [expr $x2+100] $y2
 }
 
@@ -95,7 +102,7 @@ proc IllustrateLineSet {id param} {
 
     # handles/nodes
     foreach hh [$ds9(canvas) find withtag gr${id}] {
-	$ds9(canvas) itemconfigure $hh -outline $fill -fill $fill
+	$ds9(canvas) itemconfigure $hh -outline $color -fill $color
     }
 
     IllustrateLineUpdateHandle $id
@@ -149,23 +156,18 @@ proc IllustrateLineCreateHandles {id} {
     set rr 2
 
     set color [$ds9(canvas) itemcget $id -fill]
-    foreach {x1 y1 x2 y2} [$ds9(canvas) coords $id] {}
 
-    set h1 [$ds9(canvas) create rectangle \
-		[expr $x1-$rr] [expr $y1-$rr] \
-		[expr $x1+$rr] [expr $y1+$rr]\
-		-outline $color -fill $color \
-		-state hidden \
-		-tags [list handle gr${id} h1]]
-    $ds9(canvas) raise $h1 $id
-
-    set h2 [$ds9(canvas) create rectangle \
-		[expr $x2-$rr] [expr $y2-$rr] \
-		[expr $x2+$rr] [expr $y2+$rr]\
-		-outline $color -fill $color \
-		-state hidden \
-		-tags [list handle gr${id} h2]]
-    $ds9(canvas) raise $h2 $id
+    set nn 0
+    foreach {xx yy} [$ds9(canvas) coords $id] {
+	incr nn
+	set hh [$ds9(canvas) create rectangle \
+		    [expr $xx-$rr] [expr $yy-$rr] \
+		    [expr $xx+$rr] [expr $yy+$rr]\
+		    -outline $color -fill $color \
+		    -state hidden \
+		    -tags [list handle gr${id} h${nn}]]
+	$ds9(canvas) raise $hh $id
+    }
 }
 
 proc IllustrateLineUpdateHandle {id} {
@@ -174,28 +176,29 @@ proc IllustrateLineUpdateHandle {id} {
     global iillustrate
 
     set rr 2
-    foreach {x1 y1 x2 y2} [$ds9(canvas) coords $id] {}
-
-    set hh [$ds9(canvas) find withtag "gr${id} && h1"]
-    $ds9(canvas) coords $hh \
-	[expr $x1-$rr] [expr $y1-$rr] \
-	[expr $x1+$rr] [expr $y1+$rr]
-
-    set hh [$ds9(canvas) find withtag "gr${id} && h2"]
-    $ds9(canvas) coords $hh \
-	[expr $x2-$rr] [expr $y2-$rr] \
-	[expr $x2+$rr] [expr $y2+$rr]
+    set nn 0
+    foreach {xx yy} [$ds9(canvas) coords $id] {
+	incr nn
+	set hh [$ds9(canvas) find withtag "gr${id} && h${nn}"]
+	$ds9(canvas) coords $hh \
+	    [expr $xx-$rr] [expr $yy-$rr] \
+	    [expr $xx+$rr] [expr $yy+$rr]
+    }
 }
 
 proc IllustrateLineEdit {id xx yy} {
     global ds9
     global iillustrate
 
-    foreach {x1 y1 x2 y2} [$ds9(canvas) coords $id] {}
-    switch $iillustrate(handle) {
-	1 {$ds9(canvas) coords $id $xx $yy $x2 $y2}
-	2 {$ds9(canvas) coords $id $x1 $y1 $xx $yy}
+    # handle hN is vertex N
+    set coords [$ds9(canvas) coords $id]
+    set ii [expr {2*($iillustrate(handle)-1)}]
+    if {$ii < 0 || $ii+1 >= [llength $coords]} {
+	return
     }
+    lset coords $ii $xx
+    lset coords [expr {$ii+1}] $yy
+    $ds9(canvas) coords $id $coords
 }
 
 proc IllustrateLineAntsOn {id} {
@@ -348,8 +351,14 @@ proc IllustrateLineApply {varname} {
 	$var(x2) != {} && $var(y2) != {}} {
 	IllustrateSaveUndo edit $var(id)
 
-	$ds9(canvas) coords $var(id) \
-	    $var(x1) $var(y1) $var(x2) $var(y2)
+	# the dialog edits the end points; any interior vertices of a
+	# freehand line stay put
+	set coords [$ds9(canvas) coords $var(id)]
+	lset coords 0 $var(x1)
+	lset coords 1 $var(y1)
+	lset coords end-1 $var(x2)
+	lset coords end $var(y2)
+	$ds9(canvas) coords $var(id) $coords
 
 	IllustrateLineUpdateHandle $var(id)
     }
@@ -389,11 +398,12 @@ proc IllustrateLineEditCB {id} {
 
     global ds9
 
-    foreach {x1 y1 x2 y2} [$ds9(canvas) coords $id] {}
-    set var(x1) $x1
-    set var(y1) $y1
-    set var(x2) $x2
-    set var(y2) $y2
+    # end points
+    set coords [$ds9(canvas) coords $id]
+    set var(x1) [lindex $coords 0]
+    set var(y1) [lindex $coords 1]
+    set var(x2) [lindex $coords end-1]
+    set var(y2) [lindex $coords end]
 }
 
 proc IllustrateLineColorCB {id} {

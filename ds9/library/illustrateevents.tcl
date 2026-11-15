@@ -275,10 +275,16 @@ proc IllustrateButton {xx yy} {
 	return
     }
 
-    # freehand: collect the drag, create a polygon on release
-    if {$illustrate(shape) eq {freehand}} {
-	IllustrateFreehandBegin $xx $yy
-	return
+    # freehand: collect the drag, create a polygon or line on release
+    switch -- $illustrate(shape) {
+	freehand {
+	    IllustrateFreehandBegin $xx $yy polygon
+	    return
+	}
+	freehandline {
+	    IllustrateFreehandBegin $xx $yy line
+	    return
+	}
     }
 
     # else, create new graphic

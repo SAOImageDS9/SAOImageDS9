@@ -93,6 +93,7 @@
 %token BOX_
 %token POLYGON_
 %token FREEHAND_
+%token FREEHANDLINE_
 %token POINT_
 %token LINE_
 %token VECTOR_
@@ -323,6 +324,7 @@ shape : CIRCLE_ {set _ circle}
  | VECTOR_ {set _ vector}
  | PROJECTION_ {set _ projection}
  | SEGMENT_ {set _ segment}
+ | FREEHANDLINE_ {set _ freehandline}
  | TEXT_ {set _ text}
  | point POINT_ {set _ "$1 point"}
  | RULER_ {set _ ruler}

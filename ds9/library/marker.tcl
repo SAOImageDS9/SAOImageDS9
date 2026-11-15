@@ -334,7 +334,8 @@ proc MarkerCreate {which x y} {
 	{arrow point} -
 	{boxcircle point} -
 	{glyph point} {MarkerCreateShape $which $x $y}
-	freehand {MarkerFreehandBegin $which $x $y}
+	freehand {MarkerFreehandBegin $which $x $y polygon}
+	freehandline {MarkerFreehandBegin $which $x $y segment}
 	default {
 	    if {![$which has wcs celestial wcs]} {
 		Error "[msgcat::mc {Unable to create FOV Region, celestial WCS Required}]"
@@ -751,9 +752,11 @@ proc MarkerCreateProps {} {
 }
 
 # Freehand: collect the drag in canvas coords, draw it as a canvas line
-# over the frame, and on release create a normal polygon from it.
+# over the frame, and on release create a normal region from it: a
+# polygon for the freehand shape, a segment (open polyline) for the
+# freehandline shape.
 
-proc MarkerFreehandBegin {which x y} {
+proc MarkerFreehandBegin {which x y type} {
     global ds9
     global marker
     global imarker
@@ -766,6 +769,7 @@ proc MarkerFreehandBegin {which x y} {
     set imarker(x) $x
     set imarker(y) $y
     set imarker(motion) freehand
+    set imarker(freehand) $type
 
     # disabled so it never becomes the canvas 'current' item
     $ds9(canvas) create line $x $y $x $y -tags freehand \
@@ -835,19 +839,29 @@ proc MarkerFreehandEnd {which} {
     $ds9(canvas) delete freehand
     $ds9(magnifier,canvas) delete freehand
 
-    # treat a tiny trace as a click: default polygon, like other shapes.
+    # treat a tiny trace as a click: default shape, like other shapes.
     # Use the trace's extent, not start-to-end distance -- a closed
-    # loop ends where it started. A nearly straight stroke simplifies to
-    # two vertices and lands here too.
-    set pts [MarkerFreehandSimplify $ifreehand [MarkerFreehandTolerance]]
-    if {[MarkerFreehandSmall $ifreehand 4] || [llength $pts] < 6} {
-	MarkerCreateShape $which $imarker(x) $imarker(y) polygon
+    # loop ends where it started. For a polygon, a nearly straight
+    # stroke simplifies to two vertices and lands here too; for a line
+    # that is a perfectly good two-vertex segment.
+    set type $imarker(freehand)
+    if {$type eq {polygon}} {
+	set closed 1
+	set min 6
+    } else {
+	set closed 0
+	set min 4
+    }
+    set pts [MarkerFreehandSimplify $ifreehand \
+		 [MarkerFreehandTolerance] $closed]
+    if {[MarkerFreehandSmall $ifreehand 4] || [llength $pts] < $min} {
+	MarkerCreateShape $which $imarker(x) $imarker(y) $type
 	$which marker edit end
 	MarkerDefault $which
     } else {
 	$which marker unselect all
 	set ifreehand $pts
-	set imarker(id) [eval "$which marker create polygon canvas \
+	set imarker(id) [eval "$which marker create $type canvas \
 	    var ifreehand [MarkerCreateProps]"]
     }
 
@@ -910,8 +924,9 @@ proc MarkerFreehandSmall {pts tol} {
 
 # Douglas-Peucker in canvas pixels; every vertex becomes an edit handle
 # and a serialized coordinate, so a raw trace (hundreds of points) is
-# unusable. Also drops a closing point that duplicates the first.
-proc MarkerFreehandSimplify {pts tol} {
+# unusable. For a closed outline, also drops a closing point that
+# duplicates the first.
+proc MarkerFreehandSimplify {pts tol {closed 1}} {
     set nn [expr {[llength $pts]/2}]
     if {$nn < 3} {
 	return $pts
@@ -955,7 +970,7 @@ proc MarkerFreehandSimplify {pts tol} {
 	}
     }
     # polygon closes itself
-    if {[llength $rr] > 6 &&
+    if {$closed && [llength $rr] > 6 &&
 	abs([lindex $rr 0]-[lindex $rr end-1]) < 2 &&
 	abs([lindex $rr 1]-[lindex $rr end]) < 2} {
 	set rr [lrange $rr 0 end-2]

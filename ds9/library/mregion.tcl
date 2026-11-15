@@ -98,6 +98,8 @@ proc RegionMainMenu {} {
 	-variable marker(shape) -value projection
     $ds9(mb).region.shape add radiobutton -label [msgcat::mc {Segment}] \
 	-variable marker(shape) -value segment
+    $ds9(mb).region.shape add radiobutton -label [msgcat::mc {Freehand Line}] \
+	-variable marker(shape) -value freehandline
     $ds9(mb).region.shape add separator
     $ds9(mb).region.shape add radiobutton -label [msgcat::mc {Text}] \
 	-variable marker(shape) -value text
@@ -270,6 +272,8 @@ proc PrefsDialogRegionMenu {w} {
 	-variable pmarker(shape) -value projection
     $m.shape add radiobutton -label [msgcat::mc {Segment}] \
 	-variable pmarker(shape) -value segment
+    $m.shape add radiobutton -label [msgcat::mc {Freehand Line}] \
+	-variable pmarker(shape) -value freehandline
     $m.shape add separator
     $m.shape add radiobutton -label [msgcat::mc {Text}] \
 	-variable pmarker(shape) -value text
@@ -787,6 +791,7 @@ proc ButtonsRegionDef {} {
 	region,vector 0
 	region,projection 0
 	region,segment 0
+	region,freehandline 0
 	region,text 0
 	region,point 0
 	region,ruler 0
@@ -859,6 +864,9 @@ proc CreateButtonsRegion {} {
     RadioButton $ds9(buttons).region.segment \
 	[string tolower [msgcat::mc {Segment}]] \
 	marker shape segment {}
+    RadioButton $ds9(buttons).region.freehandline \
+	[string tolower [msgcat::mc {Freehand Line}]] \
+	marker shape freehandline {}
     RadioButton $ds9(buttons).region.text \
 	[string tolower [msgcat::mc {Text}]] \
 	marker shape text {}
@@ -958,6 +966,7 @@ proc CreateButtonsRegion {} {
         $ds9(buttons).region.vector pbuttons(region,vector)
         $ds9(buttons).region.projection pbuttons(region,projection)
         $ds9(buttons).region.segment pbuttons(region,segment)
+        $ds9(buttons).region.freehandline pbuttons(region,freehandline)
         $ds9(buttons).region.text pbuttons(region,text)
         $ds9(buttons).region.point pbuttons(region,point)
         $ds9(buttons).region.ruler pbuttons(region,ruler)
@@ -1094,6 +1103,9 @@ proc PrefsDialogButtonbarRegion {f} {
 	-command {UpdateButtons buttons(region)}
     $m.shape add checkbutton -label [msgcat::mc {Segment}] \
 	-variable pbuttons(region,segment) \
+	-command {UpdateButtons buttons(region)}
+    $m.shape add checkbutton -label [msgcat::mc {Freehand Line}] \
+	-variable pbuttons(region,freehandline) \
 	-command {UpdateButtons buttons(region)}
     $m.shape add separator
     $m.shape add checkbutton -label [msgcat::mc {Text}] \

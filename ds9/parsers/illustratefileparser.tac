@@ -61,8 +61,8 @@ shape : CIRCLE_ bp numeric sp numeric sp numeric ep comment
  {IllustrateBoxCreate $3 $5 $7 $9 $::illustratefile::localColor $::illustratefile::localFill $::illustratefile::localWidth $::illustratefile::localDash $::illustratefile::localAngle}
  | POLYGON_ bp coords ep comment
  {IllustratePolygonCreate $::illustratefile::coords $::illustratefile::localColor $::illustratefile::localFill $::illustratefile::localWidth $::illustratefile::localDash}
- | LINE_ bp numeric sp numeric sp numeric sp numeric ep comment
- {IllustrateLineCreate $3 $5 $7 $9 $::illustratefile::localColor $::illustratefile::localWidth $::illustratefile::localDash $::illustratefile::localLine1 $::illustratefile::localLine2}
+ | LINE_ bp coords ep comment
+ {IllustrateLineCreateCoords $::illustratefile::coords $::illustratefile::localColor $::illustratefile::localWidth $::illustratefile::localDash $::illustratefile::localLine1 $::illustratefile::localLine2}
  | TEXT_ bp numeric sp numeric sp STRING_ ep comment
  {IllustrateTextCreate $3 $5 $7 $::illustratefile::localColor $::illustratefile::localFont $::illustratefile::localFontSize $::illustratefile::localFontWeight $::illustratefile::localFontSlant $::illustratefile::localAngle $::illustratefile::localJustify} comment
  | TEXT_ bp numeric sp numeric bp HASH_ TEXT_ eq STRING_ local

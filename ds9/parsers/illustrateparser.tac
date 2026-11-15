@@ -35,6 +35,7 @@
 %token BOX_
 %token POLYGON_
 %token FREEHAND_
+%token FREEHANDLINE_
 %token LINE_
 %token TEXT_
 %token IMAGE_
@@ -80,6 +81,7 @@ shape : CIRCLE_ {set _ circle}
  | POLYGON_ {set _ polygon}
  | FREEHAND_ {set _ freehand}
  | LINE_ {set _ line}
+ | FREEHANDLINE_ {set _ freehandline}
  | TEXT_ {set _ text}
  | IMAGE_ {set _ image}
  ;

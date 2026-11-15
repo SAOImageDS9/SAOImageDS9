@@ -34,7 +34,31 @@ right		{return $RIGHT_}
 #include fonts.fin
 #include yesno.fin
 #include numeric.fin
-#include string.fin
+
+# Quoted STRING, as in string.fin, but "..." and {...} may span lines:
+# a newline ends a command, so multi-line text must stay inside its
+# quotes (fickle matches with -line, where [^x] never matches a
+# newline). '...' stays on one line, so an apostrophe in a comment
+# cannot swallow the shapes that follow.
+\"([^\"]|\n)*\" {set yylval [string range $yytext 1 end-1]; return $STRING_}
+\'[^\']*\' {set yylval [string range $yytext 1 end-1]; return $STRING_}
+\{([^\}]|\n)*\} {set yylval [string range $yytext 1 end-1]; return $STRING_}
+
+# STRING: unlike string.fin's \S+\S+, stop at the delimiters, so the
+# longest match does not swallow circle(1,2,3) or color=red or 3;
+# whole and ( , ) = ; reach the parser as single character tokens.
+# Filenames and text are saved quoted, so they are unaffected. A single
+# character word is a STRING too (keywords, numbers and # win ties, as
+# their rules come first).
+[^\s(),=;]+ {set yylval $yytext; return $STRING_}
+
+# end of line: one command per line, so a # comment or property list
+# ends here and the next line's "line" shape is not read as a "line ="
+# property. ; also separates commands, as in region files. Must come
+# before ws.fin, which would otherwise skip the newline.
+\n		{return $EOL_}
+\;		{return $EOL_}
+
 #include ws.fin
 
 %%

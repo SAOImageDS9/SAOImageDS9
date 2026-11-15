@@ -10,6 +10,7 @@
 
 %start start
 
+%token EOL_
 %token HASH_
 %token VERSION_
 %token GLOBAL_
@@ -46,11 +47,15 @@ commands : commands command
  | command
  ;
 
+# EOL_ (newline or ;) is a command of its own: it ends a # comment or
+# property list, so a "line" shape on the next line is not taken for a
+# "line = 0 1" property, and it makes blank lines harmless
 command : VERSION_ {puts "DS9 Illustrate File 1.0"}
  | GLOBAL_ global
  | {initLocal} shape
 
  | HASH_ discard
+ | EOL_
  ;
 
 shape : CIRCLE_ bp numeric sp numeric sp numeric ep comment
@@ -71,12 +76,11 @@ shape : CIRCLE_ bp numeric sp numeric sp numeric ep comment
  | IMAGE_ bp numeric sp numeric sp STRING_ sp numeric sp numeric ep bare {IllustrateImageCreate $3 $5 $7 $9 $11}
  ;
 
-coords : coords coord
+coords : coords sp coord
  | coord
  ;
 
 coord : numeric sp numeric {lappend ::illustratefile::coords $1 $3}
- |
  ;
 
 comment :
@@ -152,6 +156,10 @@ discard : discard anything
 anything : STRING_
  | numeric
  | VERSION_
+ | '('
+ | ')'
+ | ','
+ | '='
  ;
 
 %%

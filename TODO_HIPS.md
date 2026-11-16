@@ -698,12 +698,28 @@ Design (2026-11-16, after reading the window code):
         zoom, pan, zoom out, order=K, all-sky stays, scale limits
         stable, remote fetch of only the window's tiles + refresh +
         cache, colour channels.
-- [ ] Not yet: a fallback level between the map and order K for remote
-      HiPS (ancestors are only used when already cached, so a deep
-      remote zoom shows the coarse map until its tiles arrive);
-      cancelling a deep fetch; show the order in the info panel; a
-      pan/zoom while tiles are in flight queues the new ones but doesn't
-      drop the old.
+- [x] Progressive remote zoom and stale views (done 2026-11-16):
+      `HiPSDeepWant` queues the ancestors one and two orders up first
+      (a quarter and a sixteenth as many tiles; the window shows the
+      deepest cached one), and a frame's new request replaces its old
+      requests still waiting. Bug found: `unset hipsdeep(want,$a $b $c)`
+      without quotes split into three words, so those marks were never
+      cleared and replaced requests were silently skipped.
+- [x] HTTP in worker threads (done 2026-11-16). In the main thread,
+      Tcl 9's http/tls blocks the event loop for each TLS handshake:
+      against eROSITA's slow server (~5 s a handshake) ds9 froze for
+      52 s while fetching 10 tiles (heartbeat test), missed XPA, and a
+      deep zoom took 2-4 minutes. `HiPSGetAsync` now hands requests to
+      a pool of `hipsnet(parallel)` threads (Thread 3.0.6 is in ds9;
+      the static tls loads with `load {} tls`; http configured as
+      ConfigHTTP: User-Agent, proxy, https), each doing one blocking
+      request at a time with redirects, results posted back. Same
+      eROSITA zoom: 40 s, no missed XPA, longest stall 323 ms.
+      Keep-alive in-process was tried first and made it far worse
+      (180 s for the quick look). Without Thread, the old path.
+      Cancel fails queued jobs; one already in a worker finishes.
+- [ ] Not yet: show the order in the info panel (it is in the window's
+      HISTORY); cancel for deep fetches.
 
 ## Testing plan
 

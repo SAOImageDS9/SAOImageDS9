@@ -274,6 +274,10 @@ proc ProcessLoad {{err 1}} {
 		       $loadParam(file,mode) \
 		       $loadParam(var,name) \{$loadParam(file,name)\}
 	    }
+	    hips {
+		# a HiPS root directory, read as a HEALPix map
+		$current(frame) load hips \{$loadParam(file,name)\}
+	    }
 	}
 	# be sure to update the colorbar levels, especially in tile mode
 	UpdateColormapLevel

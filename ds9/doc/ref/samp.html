@@ -71,6 +71,7 @@ ds9.set<br>
 <a href="#grid">grid</a><br>
 <a href="#header">header</a><br>
 <a href="#height">height</a><br>
+<a href="#hips">hips</a><br>
 <a href="#hls">hls</a><br>
 <a href="#hlsarray">hlsarray</a><br>
 <a href="#hlscube">hlscube</a><br>
@@ -1532,6 +1533,18 @@ height<br>
 <br>
 ds9.set(string cmd)<br>
 height 512<br></tt>
+<p><b><a name="hips" id="hips"></a>hips</b></p>
+<p>Load a local HiPS (Hierarchical Progressive Survey), given its root directory, as the HEALPix map it holds at one order. Optional parameters: the HiPS order and the HEALPix projection options. See <a href="file.html#HiPS">HiPS</a>. Get returns the HiPS loaded in the current frame (directory and options), or nothing.<br></p>
+<tt>Syntax:<br>
+hips [new] &lt;directory&gt;[order=&lt;n&gt;,proj=...,lon0=...,lat0=...,fov=...]<br>
+&nbsp;<br>
+Example:<br>
+string value = ds9.get(string cmd)<br>
+hips<br>
+<br>
+ds9.set(string cmd, string url)<br>
+hips /data/Fermi/HiPS<br>
+hips new /data/Fermi/HiPS[order=2,proj=mol]</tt><br>
 <p><b><a name="hls" id="hls"></a>hls</b></p>
 <p>Create HLS frame and control HLS frame parameters.</p>
 <tt>Syntax:<br>

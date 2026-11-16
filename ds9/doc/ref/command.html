@@ -57,6 +57,7 @@
 <a href="#header">header</a><br>
 <a href="#height">height</a><br>
 <a href="#help">help</a><br>
+<a href="#hips">hips</a><br>
 <a href="#histequ">histequ</a><br>
 <a href="#hls">hls</a><br>
 <a href="#hlsarray">hlsarray</a><br>
@@ -1222,6 +1223,14 @@ Example:<br>
 $ds9 -help # Display brief help message and exit.<br>
 $ds9 --help # Display command line options within help facility<br>
 $ds9 -? # Display command line options within help facility.<br></tt>
+<p><b><a name="hips" id="hips"></a>hips</b></p>
+<p>Load a local HiPS (Hierarchical Progressive Survey), given its root directory, as the HEALPix map it holds at one order. Optional parameters: the HiPS order and the HEALPix projection options. See <a href="file.html#HiPS">HiPS</a>.<br></p>
+<tt>Syntax:<br>
+-hips &lt;directory&gt;[order=&lt;n&gt;,proj=...,lon0=...,lat0=...,fov=...]<br>
+&nbsp;<br>
+Example:<br>
+$ds9 -hips /data/Fermi/HiPS<br>
+$ds9 -hips /data/Fermi/HiPS[order=2,proj=mol]<br></tt>
 <p><b><a name="histequ" id="histequ"></a>histequ</b></p>
 <p>Select histogram equalization scale function for the current frame.</p>
 <tt>Syntax:<br>

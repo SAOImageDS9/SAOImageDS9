@@ -323,10 +323,29 @@ variable: `[...]` inside Tcl double quotes is command substitution.
 
 ### Phase 2: Tcl/UI integration
 
-- [ ] `hips` command: `hips <dir|url> [order=K] [format=fits|png|jpeg]
-      [proj=..] [lon0=..] [lat0=..] [fov=..]`, on the command line, XPA
-      and SAMP. Also `hips close`, and `xpaget hips` returning the
-      source and options (needed for backup/restore).
+- [x] `hips` command (done 2026-11-15, local directories only; URLs are
+      Phase 3). The options use the HEALPix bracket syntax, like any
+      HEALPix load, rather than separate words.
+      - Command line: `ds9 -hips <dir>[order=,proj=,lon0=,lat0=,fov=]`.
+        This is a file type like `-nrrd`, with `MultiLoad`, so several
+        HiPS load into several frames. Plain and 3D frames load it; RGB
+        and HLS/HSV ignore it, like `-envi`.
+      - XPA/SAMP: `hips [new] <dir>[opts]` (`parsers/hipsparser.tac`,
+        `hipslex.fcl`, `library/hips.tcl`). `xpaget hips` returns the
+        current frame's HiPS name, or nothing. That comes from the
+        frame's saved load parameters (`file,type` = hips), so a later
+        FITS load in the frame clears it.
+      - `ProcessLoad` has a `hips` load type
+        (`$frame load hips {name}`). `ImportHiPSFile` reports the
+        reader's reason ("Unable to load HiPS <dir>: order 7 is deeper
+        than hips_order (3)"), which `ProcessLoad`'s generic error would
+        otherwise replace.
+      - Docs: `hips` in `command.html`, `xpa.html` and `samp.html`, and
+        a HiPS section in `file.html`.
+      - Tested by `Tests/hips/hipscmd.sh` (11 checks). SAMP goes
+        through the same `comm.tcl` table as XPA but wasn't exercised.
+      - Not done: a `format=` option (no non-FITS reader yet) and
+        `hips close`. A frame `clear` already does that.
 - [ ] File > Open HiPS... dialog, extending or reusing `hpxopen.tcl`.
       It shows the properties summary (title, frame, orders, tile width
       and formats, nside and memory estimate at the chosen order) and

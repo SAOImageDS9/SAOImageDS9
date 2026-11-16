@@ -1,0 +1,32 @@
+%{
+%}
+#include def.tin
+
+#include string.tin
+
+%start command
+
+%token NEW_
+
+%%
+
+command : hips 
+ | hips {global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT}} STRING_
+ ;
+
+hips : opts STRING_ {HiPSCmdLoad $2}
+ ;
+
+opts :
+ | NEW_ {CreateFrame}
+ ;
+
+%%
+
+proc hips::yyerror {msg} {
+     variable yycnt
+     variable yy_current_buffer
+     variable index_
+
+     ParserError $msg $yycnt $yy_current_buffer $index_
+}

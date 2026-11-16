@@ -237,6 +237,19 @@ $ds9 foo.fits[proj=mol,lon0=180] # Mollweide, centred on longitude 180<br>
 $ds9 foo.fits[proj=tan,lon0=83.6,lat0=22,fov=20] # gnomonic, 20 degrees across<br>
 $ds9 foo.fits[proj=zea,lat0=90] # zenithal equal area, centred on the north pole<br>
 $ds9 foo.fits[proj=coe,lat0=30] # conic equal area, reference latitude 30</tt><br></blockquote>
+<p><b><a name="HiPS" id="HiPS"></a>HiPS<br></b></p>
+A HiPS (IVOA Hierarchical Progressive Survey) is a directory tree of image tiles, each one a HEALPix cell, at several resolutions (<i>orders</i>). DS9 loads a local HiPS, given its root directory (the one holding the <tt>properties</tt> file), as the HEALPix map it holds at one order: the tiles of that order, or its <tt>Allsky.fits</tt>, are assembled into a NESTED HEALPix map in the survey's own coordinate system (<tt>hips_frame</tt>). The map is then displayed exactly like a <a href="#FITSHEALPIXTable">FITS HEALPix table</a>, and takes the same projection options (<tt>proj</tt>, <tt>lon0</tt>, <tt>lat0</tt>, <tt>fov</tt>).<br>
+<br>
+By default DS9 loads the deepest order whose map has at most 2048 pixels per HEALPix side (nside), which is about 50 million pixels; <tt>order</tt> picks another order, up to nside 8192. Tiles missing from the directory, and blank pixels, are shown as NaN. Only FITS tiles are read so far: a HiPS with only PNG or JPEG tiles (for example a colour HiPS) can not be loaded yet.<br>
+<blockquote><tt>Syntax:<br>
+&lt;directory&gt;[order=&lt;n&gt;,proj=...,lon0=...,lat0=...,fov=...] # options optional, in any order<br>
+<br>
+Example:<br>
+$ds9 -hips /data/Fermi/HiPS # deepest order up to nside 2048, HPX projection<br>
+$ds9 -hips /data/Fermi/HiPS[order=2] # order 2<br>
+$ds9 -hips /data/Fermi/HiPS[proj=mol] # Mollweide<br>
+$ds9 -hips /data/DSS2/HiPS[proj=tan,lon0=10.68,lat0=41.27,fov=5] # gnomonic window on M31<br>
+$xpaset -p ds9 hips /data/Fermi/HiPS[proj=ait]</tt><br></blockquote>
 <p><b><a name="FITSDataCube" id="FITSDataCube"></a>FITS Cube</b></p>
 A FITS Cube is a FITS image which contains more than 2 axes (NAXES&gt;2). DS9 will automatically detect if a cube is present and will load all additional images. In addition, individual images can be loaded one at a time into a cube. DS9 will display the Cube dialog box which allows the user to select which 2 image to be displayed.
 <p><b><a name="FITSMultipleExtensionDataCube" id="FITSMultipleExtensionDataCube"></a>FITS Multiple Extension Cube</b></p>

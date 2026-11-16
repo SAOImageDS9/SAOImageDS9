@@ -362,6 +362,7 @@ proc ProcessCommand {argv argc} {
 	    }
 	    -note -
 	    -notes {incr i; ProcessNotesCmd argv i}
+	    -hips {set file(type) hips}
 	    -nrrd {set file(type) nrrd}
 	    -nvss {incr i; ProcessNVSSCmd argv i}
 
@@ -866,6 +867,10 @@ proc CommandLineLoadBase {item argvname iname} {
 	    MultiLoad $file(layer)
 	    ImportNRRDFile $item $file(layer)
 	}
+	hips {
+	    MultiLoad
+	    ImportHiPSFile $item
+	}
 	envi {
 	    MultiLoad
 	    set fn $item
@@ -981,6 +986,7 @@ proc CommandLineLoadRGB {item argvname iname} {
 
 	nrrd {ImportNRRDFile $item {}}
 	envi {}
+	hips {}
 
 	gif -
 	tiff -
@@ -1086,6 +1092,7 @@ proc CommandLineLoadT {item argvname iname} {
 
 	nrrd {ImportNRRDFile $item {}}
 	envi {}
+	hips {}
 
 	gif -
 	tiff -
@@ -1199,6 +1206,10 @@ proc CommandLineLoad3D {item argvname iname} {
 	nrrd {
 	    MultiLoad
 	    ImportNRRDFile $item {}
+	}
+	hips {
+	    MultiLoad
+	    ImportHiPSFile $item
 	}
 	envi {
 	    set fn $item

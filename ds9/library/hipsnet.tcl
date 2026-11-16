@@ -35,6 +35,8 @@ proc HiPSNetDef {} {
     set hipsnet(maxbytes) [expr {wide(1)<<30}]
     # redirects followed per request
     set hipsnet(redirects) 5
+    # the cached MocServer list of HiPS is refreshed after a day
+    set hipsnet(listage) 86400
 
     # state of the fetch in progress
     set hipsnet(busy) 0
@@ -1303,3 +1305,289 @@ proc HiPSDeepRefresh {frame} {
     HiPSClearErrorInfo
 }
 
+
+# HiPS by ID (HiPS 1.0 sec. 5.2): an ID such as CDS/P/DSS2/color (the
+# creator_did without ivo://) is looked up in the MocServer registry
+# (phpxopen(mocserver), a list of query URLs tried in turn), and the HiPS
+# is then loaded from its hips_service_url like any URL. The list of
+# image and cube HiPS (ID, title, type, URL) is fetched once into the
+# cache, mocserver.txt, refreshed after hipsnet(listage) seconds; it
+# serves xpaget hips list, File > Open HiPS from List, and resolves IDs
+# without a query of its own. A name is an ID only if it is not a local
+# file or directory.
+
+proc HiPSIsID {fn} {
+    set root [HiPSRoot $fn]
+    if {[regexp -nocase {^ivo://} $root]} {
+	return 1
+    }
+    if {[HiPSIsURL $root] || [regexp -nocase {^file://} $root] ||
+	[file exists $root]} {
+	return 0
+    }
+    return [regexp {^[A-Za-z0-9][^/\s]*/[A-Za-z]/\S+$} $root]
+}
+
+# the ID of a name: without ivo:// and the options
+proc HiPSIDOf {fn} {
+    set id [HiPSRoot $fn]
+    regsub -nocase {^ivo://} $id {} id
+    return [string trimright $id /]
+}
+
+# A HiPS name with its ID replaced by the HiPS's URL (options kept), or
+# the name unchanged if it is not an ID. {} and hipsnet(error) if the ID
+# can't be resolved.
+proc HiPSResolveName {fn} {
+    if {![HiPSIsID $fn]} {
+	return $fn
+    }
+    set url [HiPSResolveID [HiPSIDOf $fn]]
+    if {$url == {}} {
+	return {}
+    }
+    return "$url[string range $fn [string length [HiPSRoot $fn]] end]"
+}
+
+# The hips_service_url of HiPS id: from this session's answers, the
+# cached list, else a MocServer query. {} and hipsnet(error) if unknown.
+proc HiPSResolveID {id} {
+    global hipsnet
+
+    set hipsnet(error) {}
+    if {[info exists hipsnet(id,$id)]} {
+	return $hipsnet(id,$id)
+    }
+    set recs [HiPSListRecords 0 1]
+    set url [HiPSRecordURL $recs $id]
+    if {$url == {}} {
+	set fn [file join [HiPSCacheRoot] mocserver-id.txt]
+	set recs [HiPSMocServerQuery [list ID $id get record] $fn]
+	catch {file delete -force $fn}
+	if {$recs == {} && $hipsnet(error) != {}} {
+	    return {}
+	}
+	set url [HiPSRecordURL $recs $id]
+    }
+    if {$url == {}} {
+	set hipsnet(error) "[msgcat::mc {no HiPS with the ID}] $id"
+	return {}
+    }
+    set hipsnet(id,$id) $url
+    return $url
+}
+
+# the service URL of record id in recs (exact ID, else any case)
+proc HiPSRecordURL {recs id} {
+    foreach nocase {0 1} {
+	foreach rr $recs {
+	    set rid [HiPSProp $rr ID]
+	    if {$nocase ? [string equal -nocase $rid $id] : $rid eq $id} {
+		set url [string trimright [HiPSProp $rr hips_service_url] /]
+		if {[HiPSIsURL $url]} {
+		    return $url
+		}
+	    }
+	}
+    }
+    return {}
+}
+
+# Ask the MocServer: query is a key value list; the answer (records of
+# "key = value" lines) goes to fn and is returned parsed. {} and
+# hipsnet(error) if no server answers.
+proc HiPSMocServerQuery {query fn} {
+    global hipsnet
+    global phpxopen
+
+    set hipsnet(error) {}
+    if {[catch {file mkdir [file dirname $fn]} err]} {
+	set hipsnet(error) "[msgcat::mc {can't create the HiPS cache}]: $err"
+	return {}
+    }
+    set code 0
+    set server {}
+    foreach server $phpxopen(mocserver) {
+	set code [HiPSGet "$server?[http::formatQuery {*}$query]" $fn]
+	if {$code == 200} {
+	    break
+	}
+    }
+    if {$code != 200} {
+	catch {file delete -force $fn}
+	set hipsnet(error) "[msgcat::mc {can't query}] $server ([HiPSCodeText $code])"
+	return {}
+    }
+    if {[catch {HiPSReadRecords $fn} recs]} {
+	set hipsnet(error) "[msgcat::mc {can't read}] $fn"
+	return {}
+    }
+    return $recs
+}
+
+# MocServer records: "key = value" lines, a record ending at a blank
+# line or the next ID. A list of dicts, the first of repeated keys
+# winning (as in properties).
+proc HiPSReadRecords {fn} {
+    set ch [open $fn r]
+    fconfigure $ch -encoding utf-8
+    set recs {}
+    set rr {}
+    while {[gets $ch line] >= 0} {
+	set line [string trim $line]
+	if {$line == {}} {
+	    if {$rr != {}} {
+		lappend recs $rr
+		set rr {}
+	    }
+	    continue
+	}
+	if {[string index $line 0] == "#"} {
+	    continue
+	}
+	set id [string first = $line]
+	if {$id <= 0} {
+	    continue
+	}
+	set key [string trim [string range $line 0 [expr $id-1]]]
+	set val [string trim [string range $line [expr $id+1] end]]
+	if {$key == {ID} && [dict exists $rr ID]} {
+	    lappend recs $rr
+	    set rr {}
+	}
+	if {![dict exists $rr $key]} {
+	    dict set rr $key $val
+	}
+    }
+    close $ch
+    if {$rr != {}} {
+	lappend recs $rr
+    }
+    return $recs
+}
+
+proc HiPSListFile {} {
+    return [file join [HiPSCacheRoot] mocserver.txt]
+}
+
+# The image and cube HiPS the MocServer lists, as records (ID,
+# obs_title, dataproduct_type, hips_service_url), sorted by ID. The
+# cached list is used while younger than hipsnet(listage) seconds
+# (update forces a query); a stale one serves when no server answers.
+# With cached, only what is cached, never a query. {} and hipsnet(error)
+# if there is no list.
+proc HiPSListRecords {{update 0} {cached 0}} {
+    global hipsnet
+
+    set fn [HiPSListFile]
+    set have [file isfile $fn]
+    set fresh 0
+    if {$have} {
+	set fresh [expr {[clock seconds]-[file mtime $fn] < $hipsnet(listage)}]
+    }
+    if {$have && ($cached || ($fresh && !$update))} {
+	if {[info exists hipsnet(list)] &&
+	    $hipsnet(list,mtime) == [file mtime $fn]} {
+	    return $hipsnet(list)
+	}
+	if {![catch {HiPSReadRecords $fn} recs]} {
+	    return [HiPSListKeep $fn $recs]
+	}
+    }
+    if {$cached} {
+	return {}
+    }
+
+    # images and cubes, not catalogues (a much longer list)
+    set fields ID,obs_title,dataproduct_type,hips_service_url
+    set all {}
+    foreach type {image cube} {
+	set recs [HiPSMocServerQuery [list dataproduct_type $type \
+	    hips_service_url * get record fields $fields] $fn.$type]
+	if {$recs == {} && $hipsnet(error) != {}} {
+	    foreach tt {image cube} {
+		catch {file delete -force $fn.$tt}
+	    }
+	    # a stale list rather than none
+	    if {$have && ![catch {HiPSReadRecords $fn} recs]} {
+		set hipsnet(error) {}
+		return [HiPSListKeep $fn $recs]
+	    }
+	    return {}
+	}
+	set all [concat $all $recs]
+    }
+    foreach tt {image cube} {
+	catch {file delete -force $fn.$tt}
+    }
+    set all [lsort -dictionary -command HiPSRecordCompare $all]
+
+    # written back as records, so the file reads as it was fetched
+    set ch [open $fn.new w]
+    fconfigure $ch -encoding utf-8
+    foreach rr $all {
+	dict for {key val} $rr {
+	    puts $ch "$key = $val"
+	}
+	puts $ch {}
+    }
+    close $ch
+    file rename -force $fn.new $fn
+    return [HiPSListKeep $fn $all]
+}
+
+proc HiPSListKeep {fn recs} {
+    global hipsnet
+
+    set hipsnet(list) $recs
+    set hipsnet(list,mtime) [file mtime $fn]
+    return $recs
+}
+
+proc HiPSRecordCompare {a b} {
+    return [string compare -nocase [HiPSProp $a ID] [HiPSProp $b ID]]
+}
+
+# The records whose ID or title matches pattern (a glob, any case; a
+# plain word matches anywhere)
+proc HiPSListMatch {recs pattern} {
+    set pattern [string trim $pattern]
+    if {$pattern == {}} {
+	return $recs
+    }
+    if {![regexp {[*?\[]} $pattern]} {
+	set pattern "*$pattern*"
+    }
+    set rr {}
+    foreach rec $recs {
+	if {[string match -nocase $pattern [HiPSProp $rec ID]] ||
+	    [string match -nocase $pattern [HiPSProp $rec obs_title]]} {
+	    lappend rr $rec
+	}
+    }
+    return $rr
+}
+
+# xpaget hips list [update] [pattern]: one HiPS a line, ID, a tab, its title
+proc HiPSListText {args} {
+    global hipsnet
+
+    set update 0
+    if {[string tolower [lindex $args 0]] == {update}} {
+	set update 1
+	set args [lrange $args 1 end]
+    }
+    set recs [HiPSListRecords $update]
+    HiPSClearErrorInfo
+    if {$recs == {}} {
+	if {$hipsnet(error) != {}} {
+	    Error "HiPS list: $hipsnet(error)"
+	}
+	return {}
+    }
+    set out {}
+    foreach rec [HiPSListMatch $recs [join $args { }]] {
+	lappend out "[HiPSProp $rec ID]\t[HiPSProp $rec obs_title]"
+    }
+    return [join $out \n]
+}

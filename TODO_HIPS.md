@@ -37,8 +37,20 @@ Phases 0-5 are done. Open, roughly by value:
   (`hipscube.sh` section 8). Scale limits per frame are not a gap: a
   FITS cube's minmax/zscale are per slice too, and user limits carry
   over to the next frame in both.
-- HiPS by ID or from a list (`CDS/P/DSS2/color`, the MocServer
-  `hips list` query, sec. 5.2): a natural Phase 6.
+- HiPS by ID or from a list (Phase 6): done 2026-11-16. An ID
+  (`CDS/P/DSS2/color`, `ivo://` optional, only if not a local path) is
+  resolved to its `hips_service_url` through the MocServer
+  (`phpxopen(mocserver)`, CDS then alaskybis) and loaded as that URL.
+  The image + cube list (ID, obs_title, dataproduct_type,
+  hips_service_url; two queries, `dataproduct_type=image|cube`,
+  `hips_service_url=*`, `fields=`) is cached as `mocserver.txt` for a
+  day, a stale copy serving when no server answers; it also resolves
+  IDs without a query. `xpaget hips list [update] [pattern]`, File >
+  Open HiPS from List..., and Open HiPS URL... takes an ID.
+  `Tests/hips/hipsid.sh` (52) runs against a mock MocServer in
+  `hipsserve.py`. Not yet checked against the real MocServer: that its
+  default (ascii) answer is `key = value` records separated by blank
+  lines, and that `hips_service_url=*` and `fields=` work as assumed.
 - `hips` command: no `format=` option (FITS > PNG > JPEG is chosen
   automatically) and no `hips close` (frame `clear` does it). The
   Open HiPS dialog has no format choice either.

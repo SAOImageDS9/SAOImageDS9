@@ -692,7 +692,9 @@ proc MoviePhotoMPEG {} {
     UpdateDS9
     RealizeDS9
 
+    HiPSDeepStatusSuspend
     set rr [catch {image create photo -format window -data $ds9(canvas)} ph]
+    HiPSDeepStatusResume
     if {$rr} {
 	Error [msgcat::mc {An error has occurred while creating}]
 	return $rr
@@ -728,7 +730,9 @@ proc MoviePhotoGIF {} {
     UpdateDS9
     RealizeDS9
 
+    HiPSDeepStatusSuspend
     set rr [catch {image create photo -format window -data $ds9(canvas)} ph]
+    HiPSDeepStatusResume
     if {$rr} {
 	Error [msgcat::mc {An error has occurred while creating}]
 	return $rr

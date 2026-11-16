@@ -8,6 +8,7 @@
 %start command
 
 %token NEW_
+%token CANCEL_
 %token COVERAGE_
 
 %%
@@ -19,6 +20,7 @@ command : hips
  ;
 
 hips : opts STRING_ {HiPSCmdLoad $2}
+ | CANCEL_ {HiPSCancelCmd}
  | COVERAGE_ {HiPSCoverageCmd 1}
  | COVERAGE_ yesno {HiPSCoverageCmd $2}
  ;

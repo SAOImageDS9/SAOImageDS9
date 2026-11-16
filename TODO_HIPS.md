@@ -21,8 +21,6 @@ Sample data: `hips/data1/ancillary/missions/Fermi_Band4/HiPS` (Fermi-LAT
 
 Phases 0-5 are done. Open, roughly by value:
 
-- Deep windows: a cancel for background tile fetches, and a status
-  line (tiles waiting/arrived) while they run (Phase 5).
 - Cubes are 2-D frames underneath (Phase 4): no 3-D render, no `save`
   of the whole cube, no `cube axes` reordering, no cube-wide scale
   limits. `lock cube` / `match frame` between HiPS cube frames is
@@ -765,8 +763,24 @@ Design (2026-11-16, after reading the window code):
       panel). `FitsImage::getKeyword` looks in a HEALPix image's own
       header first, then the file's. Regions keep their sky position
       through deep zooms and pans (tested).
-- [ ] Not done: a cancel for deep (background) fetches; a status line
-      while they run.
+- [x] Cancel and status line for deep fetches (done 2026-11-16).
+      - A `ttk::frame` placed over the canvas's lower left (a widget,
+        not a canvas item, so print leaves it out; `saveimage` and
+        movies hide it around the grab, since on macOS the grab
+        includes widgets over the canvas): "Fetching HiPS tiles:
+        done / total" and Cancel. Shown after 500 ms of fetching
+        (`hipsdeep(statusdelay)`), so fast servers don't flash it.
+      - `hips cancel` (also stops a load in progress), `xpaget hips
+        status` (tiles still to come). Cancel drops the queue, the
+        want keys and pending redraws; requests already in a worker
+        can't be interrupted, so a generation counter
+        (`hipsdeep(gen)`) marks them stale: they land in the cache
+        but don't redraw.
+      - `Base::hpxAutoRefresh` now asks for the window's missing tiles
+        on every pan/zoom, not just when it rebuilds: after a cancel,
+        a zoom that kept the same order otherwise never fetched them.
+      - Tested in `hipsdeep.sh` section 5 (`hipsserve.py`'s new
+        `/crawl/`, 1 s per request).
 
 ## Testing plan
 

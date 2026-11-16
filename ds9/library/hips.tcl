@@ -37,11 +37,23 @@ proc ImportHiPSFile {fn} {
     set loadParam(file,name) $fn
     set loadParam(file,fn) $local
     set loadParam(load,layer) {}
+    set loadParam(hips,colour) 0
+    set loadParam(hips,channel) {}
+
+    # a colour HiPS goes to an RGB frame, one map per channel; anything
+    # else to a plain frame
+    set colour [HiPSIsColour [expr {$local != {} ? $local : $fn}]]
+    HiPSPickFrame $colour
 
     # ProcessLoad's own error would replace the reader's reason (left in
     # ds9(msg) by internalError), so report both here
     set ds9(msg) {}
-    if {[ProcessLoad 0]} {
+    if {$colour} {
+	set ok [HiPSLoadColour]
+    } else {
+	set ok [ProcessLoad 0]
+    }
+    if {$ok} {
 	HiPSApplyCut $fn
 	RecentAdd hips $fn
 	return 1
@@ -94,14 +106,88 @@ proc HiPSRoot {fn} {
     return $fn
 }
 
+# Is the HiPS named fn (local root or cache, with options) a colour
+# HiPS that will be read from colour tiles: dataproduct_subtype color,
+# and png/jpg tiles (a FITS HiPS is read as data)?
+proc HiPSIsColour {fn} {
+    if {[catch {HiPSReadProperties [HiPSRoot $fn]} props]} {
+	return 0
+    }
+    if {[lsearch -exact [string tolower \
+			    [HiPSProp $props dataproduct_subtype]] color] < 0} {
+	return 0
+    }
+    return [expr {[HiPSTileExt $props] in {png jpg}}]
+}
+
+# Make the current frame one a HiPS can load into: an RGB frame for a
+# colour HiPS, else a plain (or 3D) one; a new frame if it isn't
+proc HiPSPickFrame {colour} {
+    global current
+
+    if {$current(frame) == {}} {
+	if {$colour} {
+	    CreateRGBFrame
+	} else {
+	    CreateFrame
+	}
+	return
+    }
+    set type [$current(frame) get type]
+    if {$colour} {
+	if {$type != {rgb}} {
+	    CreateRGBFrame
+	}
+    } else {
+	if {$type != {base} && $type != {3d}} {
+	    CreateFrame
+	}
+    }
+}
+
+# Load the colour HiPS in loadParam into the current RGB frame: the red,
+# green and blue levels of its tiles into the matching channels
+proc HiPSLoadColour {} {
+    global current
+    global loadParam
+
+    set which $current(frame)
+    set save [$which get rgb channel]
+    # all three channels are replaced: clear them first, so the first
+    # new channel isn't aligned (WCS) to the old images of the others
+    if {[$which has fits]} {
+	$which clear
+    }
+    # ProcessLoad clears loadParam when it is done
+    set params [array get loadParam]
+    set ok 1
+    foreach cc {red green blue} nn {0 1 2} {
+	$which rgb channel $cc
+	array set loadParam $params
+	set loadParam(hips,colour) 1
+	set loadParam(hips,channel) $nn
+	if {![ProcessLoad 0]} {
+	    set ok 0
+	    break
+	}
+    }
+    $which rgb channel $save
+    return $ok
+}
+
 # the HiPS name (root directory plus options) loaded in frame which, or
 # {} if it doesn't hold a HiPS. ProcessLoad saves each frame's load
 # parameters in a global array named after the frame.
 proc HiPSFrameName {which} {
-    upvar #0 $which var
-
     if {$which == {} || ![$which has fits]} {
 	return {}
+    }
+    # an RGB frame keeps each channel's load parameters; a colour HiPS
+    # is in all three
+    if {[$which get type] == {rgb}} {
+	upvar #0 ${which}[$which get rgb channel] var
+    } else {
+	upvar #0 $which var
     }
     if {![info exists var(file,type)] || $var(file,type) != {hips}} {
 	return {}
@@ -553,16 +639,7 @@ proc OpenHiPSDialog {} {
 	return
     }
 
-    # a HiPS loads as a HEALPix map, which needs a plain frame
-    if {$current(frame) == {}} {
-	CreateFrame
-    } else {
-	switch -- [$current(frame) get type] {
-	    base -
-	    3d {}
-	    default {CreateFrame}
-	}
-    }
+    # ImportHiPSFile picks the frame (RGB for a colour HiPS)
     HiPSCmdLoad $fn
 }
 
@@ -906,7 +983,11 @@ proc HiPSOpenParamsDialog {dir} {
     if {$ext == {fits}} {
 	lappend desc $formats
     } else {
-	lappend desc "$formats ([msgcat::mc {reading}] $ext: [msgcat::mc {display values 0-255}])"
+	if {[HiPSIsColour $dir]} {
+	    lappend desc "$formats ([msgcat::mc {reading}] $ext: [msgcat::mc {colour, into an RGB frame}])"
+	} else {
+	    lappend desc "$formats ([msgcat::mc {reading}] $ext: [msgcat::mc {display values 0-255}])"
+	}
     }
     ttk::label $f.desc -text [join $desc {, }]
     grid $f.name -padx 2 -pady 2 -sticky w

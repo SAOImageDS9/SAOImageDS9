@@ -546,11 +546,11 @@ FitsImageENVISMMap::FitsImageENVISMMap(Context* cx, Tcl_Interp* pp,
 // HiPS
 
 FitsImageHiPS::FitsImageHiPS(Context* cx, Tcl_Interp* pp, const char* fn,
-			     int id)
+			     int id, int channel)
   : FitsImage(cx, pp)
 {
   // a binary table, so process() takes the HEALPix path
-  fits_ = new FitsHiPS(fn, pp);
+  fits_ = new FitsHiPS(fn, pp, channel);
   process(fn,id);
 }
 

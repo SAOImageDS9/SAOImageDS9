@@ -175,11 +175,12 @@ void Base::loadENVISMMapCmd(const char* hdr, const char* fn)
 
 // *** HiPS ***
 
-// fn: the HiPS root directory, with optional [order=,proj=,...]
-void Base::loadHiPSCmd(const char* fn)
+// fn: the HiPS root directory, with optional [order=,proj=,...];
+// channel: for colour tiles, 0/1/2 reads red/green/blue (-1: luminance)
+void Base::loadHiPSCmd(const char* fn, int channel)
 {
   unloadFits();
-  FitsImage* img = new FitsImageHiPS(currentContext, interp, fn, 1);
+  FitsImage* img = new FitsImageHiPS(currentContext, interp, fn, 1, channel);
   loadDone(currentContext->load(ALLOC, fn, img));
 }
 

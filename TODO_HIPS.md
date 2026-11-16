@@ -550,10 +550,44 @@ variable: `[...]` inside Tcl double quotes is command substitution.
         NaN), RGB PNG == its luminance exactly, JPEG within a median of
         1 level; Fermi (png forced) and XRISM (png only); the dialog;
         remote PNG through the local server.
-- [ ] Colour HiPS (`dataproduct_subtype=color`, RGB tiles): load into an
-      RGB frame, one HEALPix map per channel, using the HEALPix RGB sync
-      from PR #445 (`747f39445`) so all three channels share
-      projection/window/recentre.
+- [x] Colour HiPS (done 2026-11-16): `dataproduct_subtype` color with
+      png/jpg tiles (`HiPSIsColour`) loads into an RGB frame, one
+      HEALPix map per channel from the same tiles.
+      - Reader: `FitsHiPS(fn, interp, channel)` reads the red, green or
+        blue level (-1: luminance, as for any PNG/JPEG); new frame rule
+        `load hips <name> <channel>` (grammar only, bison 2.3), through
+        `FitsImageHiPS` and `Base::loadHiPSCmd`. Header COMMENT names
+        the channel.
+      - Tcl: `ImportHiPSFile` picks the frame for every caller
+        (`HiPSPickFrame`: RGB for colour, else plain/3D, a new one if
+        needed); `HiPSLoadColour` clears the RGB frame, then loads red,
+        green, blue (`loadParam` restored each time: ProcessLoad clears
+        it), and puts the current channel back. Clearing first avoids a
+        spurious "no linear fit" WCS alignment warning between the new
+        red channel and the old green/blue images. Open Recent and the
+        Open HiPS dialog no longer pick the frame themselves.
+      - `HiPSFrameName` reads an RGB frame's channel load parameters.
+        A backup restores a colour HiPS once (red channel), not per
+        channel. Remote colour HiPS fetch each tile once.
+      - Channels stay together on pan/recentre (PR #445): checked, all
+        three re-centre to the same place.
+      - Tested by `Tests/hips/hipscolour.sh` (25 checks): channels equal
+        per-channel FITS references exactly (mkpng.py `pcol`, `pcr/g/b`),
+        frame choice, TAN sizes, Open Recent, dialog, backup/restore,
+        remote, XRISM.
+      - Not done: colour HiPS in HSV/HLS frames, and the colour
+        balance/scale (RGB frames use per-channel scale; 0-255 levels
+        with minmax look right).
+      - Public server checked (2026-11-16): DSS2 colour (CDS/P/DSS2/
+        color, jpeg) from ESA's mirror https://skies.esac.esa.int/
+        DSSColor. Quick look: `properties` + `Norder3/Allsky.jpg` (0.8 MB)
+        in 4 s; MOL and a TAN window on Orion (cached, 1 s) show the
+        right colours (Betelgeuse orange, Rigel blue, Barnard's Loop).
+        The CDS URL in the eROSITA page, alasky.u-strasbg.fr, no longer
+        resolves from here (the old domain; CDS is alasky.cds.unistra.fr,
+        which answered 404 for this path to curl); the MocServer record
+        lists mirrors (hips_service_url_N). Possible follow-up: try those
+        mirrors when the first URL fails.
 
 ### Phase 4: HiPS cubes
 

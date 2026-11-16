@@ -893,7 +893,7 @@ public:
 
   void loadENVISMMapCmd(const char*, const char*);
 
-  void loadHiPSCmd(const char*);
+  void loadHiPSCmd(const char*, int =-1);
 
   virtual void loadNRRDAllocCmd(const char*, const char*, LayerType);
   virtual void loadNRRDChannelCmd(const char*, const char*, LayerType);

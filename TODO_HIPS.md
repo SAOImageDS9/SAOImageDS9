@@ -589,6 +589,18 @@ variable: `[...]` inside Tcl double quotes is command substitution.
         lists mirrors (hips_service_url_N). Possible follow-up: try those
         mirrors when the first URL fails.
 
+- [x] eROSITA (checked 2026-11-16). The eRODat sky view
+      (https://erosita.mpe.mpg.de/erodat/skyview/sky/) uses HiPS under
+      https://erosita.mpe.mpg.de/erodat/static/hips/: eRASS1_RGB_Rate_c010
+      (colour PNG, order 6, 512-px tiles) and, per band 021-027,
+      eRASS1_02N_{Rate,Image,ExposureMap}_c010 (FITS + PNG, with
+      hips_pixel_cut). The rest of that directory are catalogue HiPS.
+      Quick looks load in a few seconds (Allsky.png 4.2 MB, Allsky.fits
+      12.8 MB). Found: a PNG/JPEG HiPS kept the user limits of the image
+      before it (the Rate cut on 0-255 levels: speckle), and only one
+      RGB channel got limits. Now PNG/JPEG HiPS get 0-255, on every
+      channel (HiPSApplyCut).
+
 ### Phase 4: HiPS cubes
 
 - [ ] `dataproduct_type=cube`, `hips_cube_depth`: present as a 3-D

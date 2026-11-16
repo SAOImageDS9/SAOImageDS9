@@ -1033,6 +1033,14 @@ FitsHead* FitsHPXReproj::initHeader(FitsHead* src, const char* pcode,
     memset(card+strlen(card), ' ', 80-strlen(card));
     hd->cardins(card, NULL);
   }
+  // provenance carried from the HPX image (FitsHPX::initHeader copies it
+  // from the table)
+  for (int ii=0; ii<src->ncard(); ii++) {
+    char* cc = src->cards() + ii*FTY_CARDLEN;
+    if (!strncmp(cc, "HISTORY ", 8) || !strncmp(cc, "COMMENT ", 8))
+      hd->cardins(cc, NULL);
+  }
+
   if (coarse_) {
     char card[81];
     snprintf(card, 81, "HISTORY Pixel size %.6g deg, coarser than the HEALPix %.6g deg",

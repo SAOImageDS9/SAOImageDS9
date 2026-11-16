@@ -19,6 +19,8 @@ proc HPXOpenDef {} {
     # prefs: ask on open, and the projection the dialog starts with
     set phpxopen(ask) 1
     set phpxopen(proj) hpx
+    # HiPS: use the survey's suggested scale limits (hips.tcl)
+    set phpxopen(hipscut) 1
 
     # the last values chosen, for the rest of the session
     set hpxopen(proj) {}
@@ -402,9 +404,10 @@ proc HPXOpenParamsDialog {fn info} {
 
 # The projection menu and its centre and field of view, built in frame
 # f (a labelframe). Its values are hpxed(proj lon0 lat0 fov); call
-# HPXOpenProjChanged once the dialog is built. Also used by the HiPS
-# dialog (hips.tcl), which has no HPX image frame (hpxed(whpx) {}).
-proc HPXOpenProjFrame {f} {
+# HPXOpenProjChanged once the dialog is built. cmd runs when the
+# projection changes. Also used by the HiPS dialog (hips.tcl), which has
+# no HPX image frame (hpxed(whpx) {}).
+proc HPXOpenProjFrame {f {cmd HPXOpenProjChanged}} {
     global hpxopen
     global hpxed
 
@@ -418,7 +421,7 @@ proc HPXOpenProjFrame {f} {
 	}
 	set code [lindex $pp 0]
 	$f.proj.m add radiobutton -label [HPXOpenProjLabel $code] \
-	    -variable hpxed(proj) -value $code -command HPXOpenProjChanged
+	    -variable hpxed(proj) -value $code -command $cmd
     }
     ttk::label $f.tlon0 -text [msgcat::mc {Longitude}]
     ttk::entry $f.lon0 -textvariable hpxed(lon0) -width 10
@@ -620,8 +623,12 @@ proc PrefsDialogHPXOpen {} {
 	    -command [list set hpxopen(prefslabel) [HPXOpenProjLabel $code]]
     }
 
+    ttk::label $f.tcut -text [msgcat::mc {HiPS Suggested Scale Limits}]
+    ttk::checkbutton $f.cut -variable phpxopen(hipscut)
+
     grid $f.task $f.ask -padx 2 -pady 2 -sticky w
     grid $f.tproj $f.proj -padx 2 -pady 2 -sticky w
+    grid $f.tcut $f.cut -padx 2 -pady 2 -sticky w
 
     pack $f -side top -fill both -expand true
 }

@@ -25,6 +25,7 @@ proc ImportHiPSFile {fn} {
     # ds9(msg) by internalError), so report both here
     set ds9(msg) {}
     if {[ProcessLoad 0]} {
+	HiPSApplyCut $fn
 	RecentAdd hips $fn
 	return 1
     }
@@ -36,6 +37,43 @@ proc ImportHiPSFile {fn} {
 	Error "[msgcat::mc {Unable to load}] HiPS $fn"
     }
     return 0
+}
+
+# The survey's suggested display range, hips_pixel_cut (physical
+# values, as the map holds), becomes the frame's user scale limits,
+# unless turned off in Preferences > HEALPix. A later scale command (or
+# a backup's saved scale) still wins, as it comes after the load.
+proc HiPSApplyCut {fn} {
+    global phpxopen
+    global scale
+
+    if {!$phpxopen(hipscut)} {
+	return
+    }
+    if {[catch {HiPSReadProperties [HiPSRoot $fn]} props]} {
+	return
+    }
+    set cut [HiPSProp $props hips_pixel_cut]
+    if {[llength $cut] != 2} {
+	return
+    }
+    lassign $cut lo hi
+    if {![string is double -strict $lo] || ![string is double -strict $hi] \
+	    || $lo >= $hi} {
+	return
+    }
+    set scale(min) $lo
+    set scale(max) $hi
+    ChangeScaleLimit
+}
+
+# The root directory of a HiPS name (without its [options])
+proc HiPSRoot {fn} {
+    set id [string first "\[" $fn]
+    if {$id > 0} {
+	return [string range $fn 0 [expr $id-1]]
+    }
+    return $fn
 }
 
 # the HiPS name (root directory plus options) loaded in frame which, or
@@ -112,12 +150,156 @@ proc HiPSOpenDef {} {
     set hipsopen(nside,auto) 2048
     set hipsopen(nside,max) 8192
 
-    # the last directory and values chosen, for the rest of the session
+    # the last directory and projection chosen, for the rest of the
+    # session. The centre and fov are not kept: each survey has its own
+    # frame and initial view.
     set hipsopen(dir) {}
     set hipsopen(proj) hpx
-    set hipsopen(lon0) {}
-    set hipsopen(lat0) {}
-    set hipsopen(fov) {}
+}
+
+# The survey's initial view, hips_initial_ra/dec/fov, in its own frame:
+# a dict of lon lat (both {} unless given) and fov ({} unless given).
+# hips_initial_ra/dec are ICRS; this rotates them into hips_frame
+# exactly as FitsHiPS::initialView (fitsy/hips.C) does.
+proc HiPSInitialView {props} {
+    set rr [dict create lon {} lat {} fov {}]
+
+    set fov [HiPSProp $props hips_initial_fov]
+    if {[string is double -strict $fov] && $fov > 0} {
+	dict set rr fov $fov
+    }
+
+    set ra [HiPSProp $props hips_initial_ra]
+    set dec [HiPSProp $props hips_initial_dec]
+    if {![string is double -strict $ra] || ![string is double -strict $dec]
+	|| $dec < -90 || $dec > 90} {
+	return $rr
+    }
+
+    set d2r [expr {acos(-1)/180}]
+    set aa [expr {$ra*$d2r}]
+    set dd [expr {$dec*$d2r}]
+    set vv [list [expr {cos($dd)*cos($aa)}] [expr {cos($dd)*sin($aa)}] \
+		[expr {sin($dd)}]]
+    switch -- [HiPSProp $props hips_frame equatorial] {
+	galactic {
+	    # Hipparcos ICRS -> galactic
+	    set mm {
+		{-0.0548755604162154 -0.8734370902348850 -0.4838350155487132}
+		{ 0.4941094278755837 -0.4448296299600112  0.7469822444972189}
+		{-0.8676661490190047 -0.1980763734312015  0.4559837761750669}
+	    }
+	}
+	ecliptic {
+	    # mean obliquity of J2000, IAU 2006
+	    set ee [expr {84381.406/3600*$d2r}]
+	    set mm [list {1 0 0} \
+			[list 0 [expr {cos($ee)}] [expr {sin($ee)}]] \
+			[list 0 [expr {-sin($ee)}] [expr {cos($ee)}]]]
+	}
+	default {set mm {{1 0 0} {0 1 0} {0 0 1}}}
+    }
+    set ww {}
+    foreach row $mm {
+	lassign $row m0 m1 m2
+	lappend ww [expr {$m0*[lindex $vv 0]+$m1*[lindex $vv 1]+$m2*[lindex $vv 2]}]
+    }
+    lassign $ww x y z
+    set lon [expr {atan2($y,$x)/$d2r}]
+    if {$lon < 0} {
+	set lon [expr {$lon+360}]
+    }
+    set z [expr {$z>1 ? 1 : ($z<-1 ? -1 : $z)}]
+    dict set rr lon $lon
+    dict set rr lat [expr {asin($z)/$d2r}]
+    return $rr
+}
+
+# A number for the dialog's fields: 6 decimals, no trailing zeros
+proc HiPSOpenFmt {vv} {
+    if {$vv == {}} {
+	return {}
+    }
+    return [HPXOpenNum [format %.6f $vv]]
+}
+
+# What the reader will use for a zenithal window that has no lon0, lat0
+# or fov (FitsHiPS::initialView): a dict of lon0 lat0 fov, as the
+# dialog's fields would show them
+proc HiPSOpenViewDefaults {proj} {
+    global hpxed
+
+    set pi [HPXOpenProjInfo $proj]
+    set view $hpxed(view)
+    if {[dict get $view lat] != {}} {
+	set lon0 [dict get $view lon]
+	set lat0 [dict get $view lat]
+    } else {
+	set lon0 0
+	set lat0 [lindex $pi 3]
+    }
+    set fov [dict get $view fov]
+    if {$fov == {}} {
+	set fov [lindex $pi 4]
+    } elseif {$fov > [lindex $pi 5]} {
+	set fov [lindex $pi 5]
+    }
+    return [dict create lon0 [HiPSOpenFmt $lon0] lat0 [HiPSOpenFmt $lat0] \
+		fov [HiPSOpenFmt $fov]]
+}
+
+# The projection changed. Moving to a zenithal window from another kind
+# starts it at the survey's initial view; between zenithal projections
+# the centre is kept and the fov kept within the new one's limit.
+proc HiPSOpenProjChanged {} {
+    global hpxed
+
+    set oldkind [HPXOpenProjKind $hpxed(oldproj)]
+    HPXOpenProjChanged
+    set pi [HPXOpenProjInfo $hpxed(proj)]
+    if {[lindex $pi 1] != {zenithal}} {
+	return
+    }
+    if {$oldkind != {zenithal}} {
+	set dd [HiPSOpenViewDefaults $hpxed(proj)]
+	foreach key {lon0 lat0 fov} {
+	    set hpxed($key) [dict get $dd $key]
+	}
+    } else {
+	set fov [string trim $hpxed(fov)]
+	if {[string is double -strict $fov] && $fov > [lindex $pi 5]} {
+	    set hpxed(fov) [lindex $pi 5]
+	}
+    }
+}
+
+# The projection options for the dialog's values. A zenithal window
+# writes lon0/lat0 (both, so the reader keeps them) and fov only when
+# they differ from what the reader would use without them.
+proc HiPSOpenProjOptions {vals} {
+    set proj [dict get $vals proj]
+    if {[HPXOpenProjKind $proj] != {zenithal}} {
+	return [HPXOpenProjOptions $vals]
+    }
+
+    set opts [list "proj=$proj"]
+    set dd [HiPSOpenViewDefaults $proj]
+    set lon0 [HiPSOpenFmt [dict get $vals lon0]]
+    set lat0 [HiPSOpenFmt [dict get $vals lat0]]
+    if {$lon0 == {}} {
+	set lon0 [dict get $dd lon0]
+    }
+    if {$lat0 == {}} {
+	set lat0 [dict get $dd lat0]
+    }
+    if {$lon0 != [dict get $dd lon0] || $lat0 != [dict get $dd lat0]} {
+	lappend opts "lon0=$lon0" "lat0=$lat0"
+    }
+    set fov [HiPSOpenFmt [dict get $vals fov]]
+    if {$fov != {} && $fov != [dict get $dd fov]} {
+	lappend opts "fov=$fov"
+    }
+    return $opts
 }
 
 proc OpenHiPSDialog {} {
@@ -450,9 +632,10 @@ proc HiPSOpenParamsDialog {dir} {
 	set hpxed(proj) hpx
     }
     foreach key {lon0 lat0 fov} {
-	set hpxed($key) $hipsopen($key)
+	set hpxed($key) {}
     }
     set hpxed(orders) $orders
+    set hpxed(view) [HiPSInitialView $props]
 
     DialogCreate $w [msgcat::mc {Open HiPS}] hpxed(ok)
 
@@ -471,6 +654,22 @@ proc HiPSOpenParamsDialog {dir} {
     grid $f.name -padx 2 -pady 2 -sticky w
     grid $f.dir -padx 2 -pady 0 -sticky w
     grid $f.desc -padx 2 -pady 2 -sticky w
+    set view {}
+    if {[HiPSProp $props hips_initial_ra] != {}} {
+	lappend view "RA [HiPSProp $props hips_initial_ra] Dec [HiPSProp $props hips_initial_dec] (ICRS)"
+    }
+    if {[dict get $hpxed(view) fov] != {}} {
+	lappend view "[msgcat::mc {fov}] [HiPSOpenFmt [dict get $hpxed(view) fov]]"
+    }
+    set cut [HiPSProp $props hips_pixel_cut]
+    if {$view != {}} {
+	ttk::label $f.view -text "[msgcat::mc {Initial view}]: [join $view {, }]"
+	grid $f.view -padx 2 -pady 0 -sticky w
+    }
+    if {$cut != {}} {
+	ttk::label $f.cut -text "[msgcat::mc {Suggested scale limits}]: $cut"
+	grid $f.cut -padx 2 -pady 2 -sticky w
+    }
 
     # Data
     set f [ttk::labelframe $w.data -text [msgcat::mc {Data}]]
@@ -505,7 +704,8 @@ proc HiPSOpenParamsDialog {dir} {
     grid $f.torder $f.order -padx 2 -pady 2 -sticky w
 
     # Projection
-    HPXOpenProjFrame [ttk::labelframe $w.proj -text [msgcat::mc {Projection}]]
+    HPXOpenProjFrame [ttk::labelframe $w.proj -text [msgcat::mc {Projection}]] \
+	HiPSOpenProjChanged
 
     # Buttons
     set f [ttk::frame $w.buttons]
@@ -525,7 +725,7 @@ proc HiPSOpenParamsDialog {dir} {
 
     HiPSOpenOrderChanged
     set hpxed(oldproj) {}
-    HPXOpenProjChanged
+    HiPSOpenProjChanged
 
     DialogWait $w hpxed(ok)
     destroy $w
@@ -535,14 +735,14 @@ proc HiPSOpenParamsDialog {dir} {
 	set vals [dict create layout equatorial quad 1]
 	foreach key {proj lon0 lat0 fov} {
 	    dict set vals $key [string trim $hpxed($key)]
-	    # remember for the next HiPS
-	    set hipsopen($key) [dict get $vals $key]
 	}
+	# remember for the next HiPS
+	set hipsopen(proj) $hpxed(proj)
 	set opts {}
 	if {$hpxed(order) != {}} {
 	    lappend opts "order=$hpxed(order)"
 	}
-	set opts [concat $opts [HPXOpenProjOptions $vals]]
+	set opts [concat $opts [HiPSOpenProjOptions $vals]]
 	set fn $dir
 	if {$opts != {}} {
 	    append fn "\[[join $opts ,]\]"

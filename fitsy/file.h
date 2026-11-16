@@ -65,6 +65,7 @@ protected:
   int pHPXQuad_;
   char* pHPXProj_;           // reprojection code (AIT, MOL, ...) or NULL
   double pHPXLon0_;          // reprojection centre longitude [deg]
+  int pHPXLon0Set_;          // lon0= was given (0 is also a value)
   double pHPXLat0_;          // reprojection centre latitude [deg], NAN=default
   double pHPXFov_;           // reprojection field of view [deg], NAN=default
   int pHiPSOrder_;           // HiPS order to read, -1=automatic
@@ -180,6 +181,7 @@ public:
   int pHPXQuad() {return pHPXQuad_;}
   const char* pHPXProj() {return pHPXProj_;}
   double pHPXLon0() {return pHPXLon0_;}
+  int pHPXLon0Set() {return pHPXLon0Set_;}
   double pHPXLat0() {return pHPXLat0_;}
   double pHPXFov() {return pHPXFov_;}
 
@@ -189,7 +191,7 @@ public:
   void setpHPXColumn(int cc) {pHPXColumn_ = cc-1;}
   void setpHPXQuad(int qq) {pHPXQuad_ = qq-1;}
   void setpHPXProj(const char*);
-  void setpHPXLon0(double ll) {pHPXLon0_ = ll;}
+  void setpHPXLon0(double ll) {pHPXLon0_ = ll; pHPXLon0Set_ = 1;}
   void setpHPXLat0(double ll) {pHPXLat0_ = ll;}
   void setpHPXFov(double ff) {pHPXFov_ = ff;}
 

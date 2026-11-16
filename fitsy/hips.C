@@ -174,6 +174,7 @@ FitsHiPS::FitsHiPS(const char* fn)
   nread_ = 0;
   nbad_ = 0;
   badAllsky_ = -1;
+  initView_ = 0;
 
   // root directory, plus [order=,proj=,...] options
   parse(fn);
@@ -220,6 +221,7 @@ FitsHiPS::FitsHiPS(const char* fn)
 
   if (!chooseSource(maxOrder, width, pHiPSOrder_))
     return;
+  initView_ = initialView();
 
   nside_ = (long)tileWidth_ << order_;
   if (nside_ > HIPS_NSIDE_MAX) {
@@ -337,6 +339,88 @@ int FitsHiPS::propInt(const char* key, int def)
   char* end;
   long ll = strtol(vv, &end, 10);
   return end != vv ? (int)ll : def;
+}
+
+// a real-valued property, NAN if absent or not a number
+double FitsHiPS::propReal(const char* key)
+{
+  const char* vv = prop(key);
+  if (!vv || !*vv)
+    return NAN;
+  char* end;
+  double dd = strtod(vv, &end);
+  return end != vv && isfinite(dd) ? dd : NAN;
+}
+
+// The survey's suggested view, hips_initial_ra/dec/fov, as defaults for
+// a zenithal window (proj=TAN, SIN, STG, ARC, ZEA): the centre when
+// neither lon0= nor lat0= is given, the field of view when fov= isn't
+// (clamped to what the projection can show). hips_initial_ra/dec are
+// always ICRS, so they are rotated into hips_frame. All-sky and conic
+// projections, and the HPX image, keep their own defaults. The Open
+// HiPS dialog (ds9/library/hips.tcl, HiPSInitialView) does the same.
+// Returns 1 if the centre was set.
+int FitsHiPS::initialView()
+{
+  static const struct {const char* code; double fovmax;} zen[] = {
+    {"TAN",170}, {"SIN",180}, {"STG",340}, {"ARC",360}, {"ZEA",360},
+    {NULL,0}
+  };
+
+  const char* proj = pHPXProj();
+  if (!proj)
+    return 0;
+  int ii;
+  for (ii=0; zen[ii].code; ii++)
+    if (!strcasecmp(proj, zen[ii].code))
+      break;
+  if (!zen[ii].code)
+    return 0;
+
+  double fov = propReal("hips_initial_fov");
+  if (isnan(pHPXFov_) && fov > 0)
+    pHPXFov_ = fov < zen[ii].fovmax ? fov : zen[ii].fovmax;
+
+  double ra = propReal("hips_initial_ra");
+  double dec = propReal("hips_initial_dec");
+  if (pHPXLon0Set_ || !isnan(pHPXLat0_) || isnan(ra) || isnan(dec) ||
+      dec < -90 || dec > 90)
+    return 0;
+
+  // ICRS -> galactic (Hipparcos, ESA 1997 vol. 1 sec. 1.5.3) or
+  // ecliptic (mean obliquity of J2000, IAU 2006: 84381.406")
+  static const double gal[3][3] = {
+    {-0.0548755604162154, -0.8734370902348850, -0.4838350155487132},
+    { 0.4941094278755837, -0.4448296299600112,  0.7469822444972189},
+    {-0.8676661490190047, -0.1980763734312015,  0.4559837761750669}
+  };
+  double eps = 84381.406/3600*M_PI/180;
+  double ecl[3][3] = {
+    {1, 0, 0},
+    {0, cos(eps), sin(eps)},
+    {0, -sin(eps), cos(eps)}
+  };
+
+  double aa = ra*M_PI/180;
+  double dd = dec*M_PI/180;
+  double vv[3] = {cos(dd)*cos(aa), cos(dd)*sin(aa), sin(dd)};
+  double ww[3] = {vv[0], vv[1], vv[2]};
+  const double (*mm)[3] = NULL;
+  if (frame_ == GAL)
+    mm = gal;
+  else if (frame_ == ECL)
+    mm = ecl;
+  if (mm)
+    for (int jj=0; jj<3; jj++)
+      ww[jj] = mm[jj][0]*vv[0] + mm[jj][1]*vv[1] + mm[jj][2]*vv[2];
+
+  double lon = atan2(ww[1], ww[0])*180/M_PI;
+  if (lon < 0)
+    lon += 360;
+  double zz = ww[2] > 1 ? 1 : ww[2] < -1 ? -1 : ww[2];
+  pHPXLon0_ = lon;
+  pHPXLat0_ = asin(zz)*180/M_PI;
+  return 1;
 }
 
 // NorderK/DirD/NpixN.ext, D = (N/10000)*10000 (HiPS 1.0 sec. 4.1)
@@ -631,6 +715,12 @@ int FitsHiPS::initHeaders()
   if (nread_ < ntile_)
     head_->insertComment("HISTORY", "missing or unreadable tiles are NaN",
 			 NULL);
+  if (initView_) {
+    ostringstream str;
+    str << "centre " << pHPXLon0_ << " " << pHPXLat0_
+	<< " from hips_initial_ra/dec (ICRS)" << ends;
+    head_->insertComment("HISTORY", str.str().c_str(), NULL);
+  }
   if (prop("hips_pixel_cut")) {
     ostringstream str;
     str << "hips_pixel_cut " << prop("hips_pixel_cut") << ends;

@@ -704,7 +704,11 @@ proc ProcessSendHiPSCmd {proc id param {sock {}} {fn {}}} {
 	    $proc $id "[ToYesNo [HiPSCoverageShown $current(frame)]]\n"
 	}
 	status {$proc $id "[HiPSDeepPending]\n"}
-	list {$proc $id "[HiPSListText {*}[lrange $param 1 end]]\n"}
+	list {
+	    # many lines: SAMP sends them as a file
+	    ProcessSend $proc $id $sock $fn {.txt} \
+		[HiPSListText {*}[lrange $param 1 end]]
+	}
 	default {$proc $id "[HiPSFrameName $current(frame)]\n"}
     }
 }

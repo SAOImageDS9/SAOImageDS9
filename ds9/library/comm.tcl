@@ -407,7 +407,7 @@ proc CommGet {proc id paramlist fn} {
 	    }
 	    note -
 	    notes {ProcessSendNotesCmd $proc $id $param}
-	    hips {ProcessSendHiPSCmd $proc $id $param}
+	    hips {ProcessSendHiPSCmd $proc $id $param {} $fn}
 	    nrrd {
 		ProcessSendNRRDCmd $proc $id $param {} $fn.nrrd
 		return $fn.nrrd

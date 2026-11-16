@@ -3568,9 +3568,9 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat,
 void Base::hpxRequestTiles(FitsImage* ptr)
 {
   const char* root;
-  int order;
+  int order, slice;
   std::vector<long long> tiles;
-  if (!ptr || !ptr->hpxDeepMissing(&root, &order, &tiles) || !root)
+  if (!ptr || !ptr->hpxDeepMissing(&root, &order, &slice, &tiles) || !root)
     return;
 
   Tcl_Obj* cmd = Tcl_NewListObj(0, NULL);
@@ -3584,6 +3584,7 @@ void Base::hpxRequestTiles(FitsImage* ptr)
   for (size_t ii=0; ii<tiles.size(); ii++)
     Tcl_ListObjAppendElement(interp, ll, Tcl_NewWideIntObj(tiles[ii]));
   Tcl_ListObjAppendElement(interp, cmd, ll);
+  Tcl_ListObjAppendElement(interp, cmd, Tcl_NewIntObj(slice));
 
   Tcl_InterpState state = Tcl_SaveInterpState(interp, TCL_OK);
   Tcl_EvalObjEx(interp, cmd, TCL_EVAL_GLOBAL);

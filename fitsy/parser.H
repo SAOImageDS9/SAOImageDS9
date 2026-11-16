@@ -70,12 +70,13 @@
      QUAD_ = 286,
      RING_ = 287,
      SKIP_ = 288,
-     SOUTH_ = 289,
-     SYSTEM_ = 290,
-     UNKNOWN_ = 291,
-     XDIM_ = 292,
-     YDIM_ = 293,
-     ZDIM_ = 294
+     SLICE_ = 289,
+     SOUTH_ = 290,
+     SYSTEM_ = 291,
+     UNKNOWN_ = 292,
+     XDIM_ = 293,
+     YDIM_ = 294,
+     ZDIM_ = 295
    };
 #endif
 /* Tokens.  */
@@ -110,12 +111,13 @@
 #define QUAD_ 286
 #define RING_ 287
 #define SKIP_ 288
-#define SOUTH_ 289
-#define SYSTEM_ 290
-#define UNKNOWN_ 291
-#define XDIM_ 292
-#define YDIM_ 293
-#define ZDIM_ 294
+#define SLICE_ 289
+#define SOUTH_ 290
+#define SYSTEM_ 291
+#define UNKNOWN_ 292
+#define XDIM_ 293
+#define YDIM_ 294
+#define ZDIM_ 295
 
 
 
@@ -131,7 +133,7 @@ typedef union YYSTYPE
   void* ptr;
 }
 /* Line 1529 of yacc.c.  */
-#line 135 "parser.H"
+#line 137 "parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

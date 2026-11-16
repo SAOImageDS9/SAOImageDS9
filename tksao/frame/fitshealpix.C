@@ -92,7 +92,7 @@ void FitsImage::initHPX()
   hpx_ = new FitsHPX(fits_, order, coord, layout, col, quad);
 }
 
-int FitsImage::hpxDeepMissing(const char** root, int* order,
+int FitsImage::hpxDeepMissing(const char** root, int* order, int* slice,
 			      std::vector<long long>* tiles)
 {
   FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
@@ -101,6 +101,7 @@ int FitsImage::hpxDeepMissing(const char** root, int* order,
     return 0;
   *root = hips->root();
   *order = rr->deepOrder();
+  *slice = hips->slice();
   tiles->clear();
   long long mask = (1LL << 56) - 1;
   const std::vector<long long>& mm = rr->missingTiles();

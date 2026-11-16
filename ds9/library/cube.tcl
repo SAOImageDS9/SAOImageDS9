@@ -4,6 +4,17 @@
 
 package provide DS9 1.0
 
+# The frame commands the Cube dialog sends go through CubeFrame: a frame
+# holding a HiPS cube (one cube frame loaded at a time) answers them
+# itself (hips.tcl, HiPSCubeAnswer); any other frame as always.
+proc CubeFrame {which args} {
+    set st [HiPSCubeState $which]
+    if {$st == {}} {
+	return [$which {*}$args]
+    }
+    return [HiPSCubeAnswer $which $st {*}$args]
+}
+
 proc CubeDef {} {
     global icube
     global cube
@@ -35,12 +46,12 @@ proc MatchCube {which sys} {
     global rgb
 
     # only matches on axis 2
-    set ss [$which get fits slice]
-    set wss [$which get fits slice from image $sys]
+    set ss [CubeFrame $which get fits slice]
+    set wss [CubeFrame $which get fits slice from image $sys]
     
     foreach ff $ds9(frames) {
 	if {$ff != $which} {
-	    EvalLock lock,slice $ff "$ff update fits slice $wss $sys"
+	    EvalLock lock,slice $ff "CubeFrame $ff update fits slice $wss $sys"
 	}
     }
 }
@@ -69,10 +80,10 @@ proc CubeSlice {ii ss} {
     global current
     global rgb
 
-    EvalLockCurrent lock,slice "$current(frame) update fits slice $ii $ss"
+    EvalLockCurrent lock,slice "CubeFrame $current(frame) update fits slice $ii $ss"
 
     set dcube(image,$ii) $ss
-    set dcube(wcs,$ii) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
+    set dcube(wcs,$ii) [format $dcube(format) [CubeFrame $current(frame) get fits slice from image $cube(system)]]
 	
     UpdateCube
 }
@@ -105,15 +116,15 @@ proc CubeTimer {} {
 
     if {$current(frame) != {}} {
 	if {[$current(frame) has fits]} {
-	    set slice [$current(frame) get fits slice $cube(axis)]
+	    set slice [CubeFrame $current(frame) get fits slice $cube(axis)]
 	    if {$cube(axis)==2} {
 		# get cropped version
-		set ss [$current(frame) get crop 3d image]
+		set ss [CubeFrame $current(frame) get crop 3d image]
 		set first [lindex $ss 0]
 		set last [lindex $ss 1]
 	    } else {
 		set first 1
-		set last [$current(frame) get fits depth $cube(axis)]
+		set last [CubeFrame $current(frame) get fits depth $cube(axis)]
 	    }
 
 	    if {$slice == $last} {
@@ -146,7 +157,7 @@ proc CubeFirst {} {
 	if {[$current(frame) has fits]} {
 	    if {$cube(axis)==2} {
 		# get cropped version
-		set ss [$current(frame) get crop 3d image]
+		set ss [CubeFrame $current(frame) get crop 3d image]
 		set first [lindex $ss 0]
 	    } else {
 		set first 1
@@ -171,15 +182,15 @@ proc CubePrev {} {
 
     if {$current(frame) != {}} {
 	if {[$current(frame) has fits]} {
-	    set slice [$current(frame) get fits slice $cube(axis)]
+	    set slice [CubeFrame $current(frame) get fits slice $cube(axis)]
 	    if {$cube(axis)==2} {
 		# get cropped version
-		set ss [$current(frame) get crop 3d image]
+		set ss [CubeFrame $current(frame) get crop 3d image]
 		set first [lindex $ss 0]
 		set last [lindex $ss 1]
 	    } else {
 		set first 1
-		set last [$current(frame) get fits depth $cube(axis)]
+		set last [CubeFrame $current(frame) get fits depth $cube(axis)]
 	    }
 
 	    if {$slice == $first} {
@@ -208,15 +219,15 @@ proc CubeNext {} {
 
     if {$current(frame) != {}} {
 	if {[$current(frame) has fits]} {
-	    set slice [$current(frame) get fits slice $cube(axis)]
+	    set slice [CubeFrame $current(frame) get fits slice $cube(axis)]
 	    if {$cube(axis)==2} {
 		# get cropped version
-		set ss [$current(frame) get crop 3d image]
+		set ss [CubeFrame $current(frame) get crop 3d image]
 		set first [lindex $ss 0]
 		set last [lindex $ss 1]
 	    } else {
 		set first 1
-		set last [$current(frame) get fits depth $cube(axis)]
+		set last [CubeFrame $current(frame) get fits depth $cube(axis)]
 	    }
 
 	    if {$slice == $last} {
@@ -247,10 +258,10 @@ proc CubeLast {} {
 	if {[$current(frame) has fits]} {
 	    if {$cube(axis)==2} {
 		# get cropped version
-		set ss [$current(frame) get crop 3d image]
+		set ss [CubeFrame $current(frame) get crop 3d image]
 		set last [lindex $ss 1]
 	    } else {
-		set last [$current(frame) get fits depth $cube(axis)]
+		set last [CubeFrame $current(frame) get fits depth $cube(axis)]
 	    }
 	    CubeSlice $cube(axis) $last
 	} else {
@@ -281,15 +292,15 @@ proc CubeApply {ii} {
     if {$ss<1} {
 	set ss 1
     }
-    set depth [$current(frame) get fits depth $ii]
+    set depth [CubeFrame $current(frame) get fits depth $ii]
     if {$ss>$depth} {
 	set ss $depth
     }
     
-    EvalLockCurrent lock,slice "$current(frame) update fits slice $ii $ss"
+    EvalLockCurrent lock,slice "CubeFrame $current(frame) update fits slice $ii $ss"
 
     set dcube(image,$ii) $ss
-    set dcube(wcs,$ii) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
+    set dcube(wcs,$ii) [format $dcube(format) [CubeFrame $current(frame) get fits slice from image $cube(system)]]
 
     UpdateCube
 }
@@ -309,20 +320,20 @@ proc CubeApplyWCS {ii} {
 	return
     }
 
-    set ss [$current(frame) get fits slice to image $dcube(wcs,$ii) $cube(system)]
+    set ss [CubeFrame $current(frame) get fits slice to image $dcube(wcs,$ii) $cube(system)]
     if {$ss<1} {
 	set ss 1
     }
-    set depth [$current(frame) get fits depth]
+    set depth [CubeFrame $current(frame) get fits depth]
     if {$ss>$depth} {
 	set ss $depth
     }
     
-    EvalLockCurrent lock,slice "$current(frame) update fits slice $ss"
+    EvalLockCurrent lock,slice "CubeFrame $current(frame) update fits slice $ss"
 
     set dcube(image,$ii) $ss
     set dcube(wcs,$ii) \
-	[format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
+	[format $dcube(format) [CubeFrame $current(frame) get fits slice from image $cube(system)]]
 
     UpdateCube
 }
@@ -481,7 +492,7 @@ proc UpdateCubeMenu {} {
     }
 
     if {$current(frame) != {}} {
-	set cube(axes) [$current(frame) get cube axes]
+	set cube(axes) [CubeFrame $current(frame) get cube axes]
     }
 
     # can be changed by wcs
@@ -533,7 +544,7 @@ proc UpdateCubeDialog {} {
 	return
     }
     
-    set naxes [$current(frame) get fits naxes]
+    set naxes [CubeFrame $current(frame) get fits naxes]
 
     # reset cube(axis) if needed
     if {$cube(axis) > [expr $naxes-1]} {
@@ -603,8 +614,8 @@ proc UpdateCubeDialog2Axes {} {
     set dcube(from,2) 1
     set dcube(to,2) 1
 
-    set dcube(from,wcs,2) [$current(frame) get fits slice from image $dcube(from,2) $cube(system)]    
-    set dcube(to,wcs,2) [$current(frame) get fits slice from image $dcube(to,2) $cube(system)]    
+    set dcube(from,wcs,2) [CubeFrame $current(frame) get fits slice from image $dcube(from,2) $cube(system)]    
+    set dcube(to,wcs,2) [CubeFrame $current(frame) get fits slice from image $dcube(to,2) $cube(system)]    
 
     # show it
     grid columnconfigure $w.param 0 -weight 0
@@ -630,7 +641,7 @@ proc UpdateCubeDialog2Axes {} {
 	    set ww [string range $cube(system) 3 3]
 	    set ii [expr $cube(axis)+1]
 	    set key "CTYPE$ii$ww"
-	    set tt [string trim [$current(frame) get fits header keyword \{$key\}]]
+	    set tt [string trim [CubeFrame $current(frame) get fits header keyword \{$key\}]]
 	    if {$tt != {}} {
 		set dcube(vcoord) $tt
 	    }
@@ -639,7 +650,7 @@ proc UpdateCubeDialog2Axes {} {
 
     # we must do this after the scale has been configured
     set dcube(image,2) 1
-    set dcube(wcs,2) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
+    set dcube(wcs,2) [format $dcube(format) [CubeFrame $current(frame) get fits slice from image $cube(system)]]
 }
 
 proc UpdateCubeDialogAxes {axes} {
@@ -659,16 +670,16 @@ proc UpdateCubeDialogAxes {axes} {
     $mb entryconfig [msgcat::mc {Axes Order}] -state normal
 
     # get cropped version
-    set ss [$current(frame) get crop 3d image]
+    set ss [CubeFrame $current(frame) get crop 3d image]
     set dcube(from,2) [lindex $ss 0]
     set dcube(to,2) [lindex $ss 1]
 
-    set dcube(from,wcs,2) [$current(frame) get fits slice from image $dcube(from,2) $cube(system)]    
-    set dcube(to,wcs,2) [$current(frame) get fits slice from image $dcube(to,2) $cube(system)]    
+    set dcube(from,wcs,2) [CubeFrame $current(frame) get fits slice from image $dcube(from,2) $cube(system)]    
+    set dcube(to,wcs,2) [CubeFrame $current(frame) get fits slice from image $dcube(to,2) $cube(system)]    
 
     for {set ii 3} {$ii<$axes} {incr ii} {
 	set dcube(from,$ii) 1
-	set dcube(to,$ii) [$current(frame) get fits depth $ii]
+	set dcube(to,$ii) [CubeFrame $current(frame) get fits depth $ii]
 
 	set dcube(from,wcs,$ii) $dcube(from,$ii)
 	set dcube(to,wcs,$ii) $dcube(to,$ii)
@@ -734,7 +745,7 @@ proc UpdateCubeDialogAxes {axes} {
 	    set ww [string range $cube(system) 3 3]
 	    set ii [expr $cube(axis)+1]
 	    set key "CTYPE$ii$ww"
-	    set tt [string trim [$current(frame) get fits header keyword \{$key\}]]
+	    set tt [string trim [CubeFrame $current(frame) get fits header keyword \{$key\}]]
 	    if {$tt != {}} {
 		set dcube(vcoord) $tt
 	    }
@@ -742,11 +753,11 @@ proc UpdateCubeDialogAxes {axes} {
     }
 
     # we must do this after the scale has been configured
-    set dcube(image,2) [$current(frame) get fits slice 2]
-    set dcube(wcs,2) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
+    set dcube(image,2) [CubeFrame $current(frame) get fits slice 2]
+    set dcube(wcs,2) [format $dcube(format) [CubeFrame $current(frame) get fits slice from image $cube(system)]]
 
     for {set ii 3} {$ii<$axes} {incr ii} {
-	set dcube(image,$ii) [$current(frame) get fits slice $ii]
+	set dcube(image,$ii) [CubeFrame $current(frame) get fits slice $ii]
 	set dcube(wcs,$ii) $dcube(image,$ii)
     }
 }
@@ -772,9 +783,9 @@ proc UpdateCubeMotionDialog {} {
     }
 
     # we must do this after the scale has been configured
-    set dcube(image,2) [$current(frame) get fits slice]
+    set dcube(image,2) [CubeFrame $current(frame) get fits slice]
     set dcube(wcs,2) \
-	[format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
+	[format $dcube(format) [CubeFrame $current(frame) get fits slice from image $cube(system)]]
 }
 
 proc CubeBackup {ch which} {
@@ -930,10 +941,10 @@ proc CubeCmd {ss} {
 	return
     }
 
-    EvalLockCurrent lock,slice "$current(frame) update fits slice $cube(axis) $ss"
+    EvalLockCurrent lock,slice "CubeFrame $current(frame) update fits slice $cube(axis) $ss"
 
     set dcube(image,$cube(axis)) $ss
-    set dcube(wcs,$cube(axis)) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
+    set dcube(wcs,$cube(axis)) [format $dcube(format) [CubeFrame $current(frame) get fits slice from image $cube(system)]]
 
     UpdateCube
 }
@@ -953,15 +964,15 @@ proc CubeCmdCoord {ss sys} {
 	return
     }
 
-    set ss [$current(frame) get fits slice to image $ss $sys]
+    set ss [CubeFrame $current(frame) get fits slice to image $ss $sys]
     if {$ss<1} {
 	set ss 1
     }
     
-    EvalLockCurrent lock,slice "$current(frame) update fits slice $ss"
+    EvalLockCurrent lock,slice "CubeFrame $current(frame) update fits slice $ss"
 
     set dcube(image,$cube(axis)) $ss
-    set dcube(wcs,$cube(axis)) [format $dcube(format) [$current(frame) get fits slice from image $cube(system)]]
+    set dcube(wcs,$cube(axis)) [format $dcube(format) [CubeFrame $current(frame) get fits slice from image $cube(system)]]
 
     UpdateCube
 }
@@ -971,7 +982,7 @@ proc CubeCmdAxis {ii} {
     global current
 
     set cube(axis) [expr $ii-1]
-    set naxes [$current(frame) get fits naxes]
+    set naxes [CubeFrame $current(frame) get fits naxes]
 
     # reset cube(axis) if needed
     if {$cube(axis) > [expr $naxes-1]} {
@@ -990,6 +1001,16 @@ proc ProcessSendCubeCmd {proc id param {sock {}} {fn {}}} {
     cubesend::YY_FLUSH_BUFFER
     cubesend::yy_scan_string $param
     cubesend::yyparse
+}
+
+# xpaget/samp cube: the slice through CubeFrame (a HiPS cube answers)
+proc CubeSendCmdCurrent {cmd} {
+    global parse
+    global current
+
+    if {$current(frame) != {}} {
+	$parse(proc) $parse(id) "[CubeFrame $current(frame) {*}$cmd]\n"
+    }
 }
 
 proc CubeSendCmdAxis {} {

@@ -80,6 +80,7 @@ proj		{RET(PROJ_)}
 quad		{RET(QUAD_)}
 ring		{RET(RING_)}
 skip		{RET(SKIP_)}
+slice		{RET(SLICE_)}
 south		{RET(SOUTH_)}
 system		{RET(SYSTEM_)}
 unknown		{RET(UNKNOWN_)}

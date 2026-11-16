@@ -17,9 +17,9 @@
 
 #include wcssys.trl
 
-cubesend : {ProcessSendCmdCurrent "get fits slice"}
- | IMAGE_ {ProcessSendCmdCurrent "get fits slice"}
- | wcssys {ProcessSendCmdCurrent "get fits slice from image $1"}
+cubesend : {CubeSendCmdCurrent "get fits slice"}
+ | IMAGE_ {CubeSendCmdCurrent "get fits slice"}
+ | wcssys {CubeSendCmdCurrent "get fits slice from image $1"}
  | LOCK_ {ProcessSendCmdGet cube lock}
  | INTERVAL_ {BlinkSendCmdInterval}
  | AXES_ order

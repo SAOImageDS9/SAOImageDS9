@@ -51,6 +51,8 @@ class FitsHiPS : public FitsFile {
   Tcl_Interp* interp_; // decodes png/jpg tiles through Tk photos
   int channel_;        // colour tiles: 0/1/2 red/green/blue, -1 luminance
   int initView_;       // window centre taken from hips_initial_ra/dec
+  int depth_;          // cube frames (hips_cube_depth), 1 for an image
+  int slice_;          // the cube frame read, 0 for an image
   int maxOrder_;       // hips_order
   int minOrder_;       // hips_order_min
   int width_;          // hips_tile_width (tileWidth_ is as read)
@@ -94,6 +96,8 @@ class FitsHiPS : public FitsFile {
   int maxOrder() {return maxOrder_;}
   int minOrder() {return minOrder_;}
   int readTile(int order, long long npix, float* out);
+  int depth() {return depth_;}
+  int slice() {return slice_;}
 };
 
 #endif

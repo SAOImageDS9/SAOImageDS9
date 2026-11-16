@@ -54,8 +54,11 @@ proc ImportHiPSFile {fn} {
 	set ok [ProcessLoad 0]
     }
     if {$ok} {
-	HiPSApplyCut $fn
-	RecentAdd hips $fn
+	global hipscube
+	if {![info exists hipscube(reloading)] || !$hipscube(reloading)} {
+	    HiPSApplyCut $fn
+	    RecentAdd hips $fn
+	}
 	return 1
     }
     regsub {^HiPS: } $ds9(msg) {} why
@@ -194,6 +197,206 @@ proc HiPSLoadColour {} {
     }
     $which rgb channel $save
     return $ok
+}
+
+# HiPS cubes (dataproduct_type cube, HiPS 1.0 sec. 4.2.3). The reader
+# builds one frame of the cube at a time (slice=, default
+# hips_cube_firstframe). ds9's Cube dialog drives it: cube.tcl asks its
+# frame questions through CubeFrame, which a HiPS cube frame answers from
+# its properties (HiPSCubeAnswer), and a new slice reloads the HiPS at
+# that frame, keeping the view (HiPSSetSlice).
+
+# The HiPS cube in frame which, as a dict (depth, slice 0-based, crpix,
+# crval, cdelt, unit; crval {} if there is no third-axis WCS), or {}
+proc HiPSCubeState {which} {
+    if {$which == {} || ![llength [info commands $which]]} {
+	return {}
+    }
+    set fn [HiPSFrameName $which]
+    if {$fn == {}} {
+	return {}
+    }
+    if {[catch {HiPSReadProperties [HiPSRoot [HiPSLocalName $fn]]} props]} {
+	return {}
+    }
+    if {![string match cube* [HiPSProp $props dataproduct_type image]]} {
+	return {}
+    }
+    set depth [HiPSProp $props hips_cube_depth 1]
+    set slice [string trim [$which get fits header keyword HIPSSLIC]]
+    if {![string is integer -strict $depth] ||
+	![string is integer -strict $slice]} {
+	return {}
+    }
+    set crpix [HiPSProp $props data_cube_crpix3 1]
+    set crval [HiPSProp $props data_cube_crval3]
+    set cdelt [HiPSProp $props data_cube_cdelt3]
+    if {![string is double -strict $crval] ||
+	![string is double -strict $cdelt] || $cdelt == 0} {
+	set crval {}
+	set cdelt {}
+    }
+    if {![string is double -strict $crpix]} {
+	set crpix 1
+    }
+    return [dict create depth $depth slice $slice crpix $crpix \
+		crval $crval cdelt $cdelt \
+		unit [HiPSProp $props data_cube_bunit3]]
+}
+
+# the third-axis value of image slice ss (1-based)
+proc HiPSCubeValue {st ss} {
+    if {[dict get $st crval] == {}} {
+	return $ss
+    }
+    return [expr {[dict get $st crval] +
+		  ($ss - [dict get $st crpix])*[dict get $st cdelt]}]
+}
+
+# A frame command, as the Cube dialog sends it, answered for a HiPS cube
+# (axis 2 is the cube's; image slices are 1-based)
+proc HiPSCubeAnswer {which st args} {
+    set depth [dict get $st depth]
+    set cur [expr {[dict get $st slice] + 1}]
+    set hasw [expr {[dict get $st crval] != {}}]
+    switch -glob -- $args {
+	{has fits cube} {return 1}
+	{has wcs 3d *} {return [expr {[lindex $args 3] == {image} || $hasw}]}
+	{get fits naxes} {return 3}
+	{get fits depth} -
+	{get fits depth 2} {return $depth}
+	{get fits depth *} {return 1}
+	{get fits slice} -
+	{get fits slice 2} {return $cur}
+	{get fits slice from image *} {
+	    # get fits slice from image <sys>, or ... image <slice> <sys>
+	    if {[llength $args] == 6} {
+		set ss $cur
+		set sys [lindex $args 5]
+	    } else {
+		set ss [lindex $args 5]
+		set sys [lindex $args 6]
+	    }
+	    if {$sys == {image}} {
+		return $ss
+	    }
+	    return [HiPSCubeValue $st $ss]
+	}
+	{get fits slice to image *} {
+	    set vv [lindex $args 5]
+	    set sys [lindex $args 6]
+	    if {$sys == {image} || !$hasw} {
+		return [expr {round($vv)}]
+	    }
+	    return [expr {round(($vv - [dict get $st crval])/
+				[dict get $st cdelt] + [dict get $st crpix])}]
+	}
+	{get fits slice *} {return 1}
+	{get crop 3d image} {return [list 1 $depth]}
+	{get fits header keyword *} {
+	    set key [string trim [lindex $args end] "{}'"]
+	    if {[string match CTYPE3* $key]} {
+		set uu [dict get $st unit]
+		return [expr {$uu != {} ? $uu : {HiPS frame}}]
+	    }
+	    return [$which {*}$args]
+	}
+	{update fits slice *} {
+	    # update fits slice <axis> <slice>, or <value> <sys>
+	    set aa [lindex $args 3]
+	    set bb [lindex $args 4]
+	    if {$bb == {}} {
+		set ss $aa
+	    } elseif {[string is integer -strict $aa] && $aa >= 2 && $aa <= 9 &&
+		      [string is integer -strict $bb]} {
+		if {$aa != 2} {
+		    return
+		}
+		set ss $bb
+	    } else {
+		set ss [HiPSCubeAnswer $which $st get fits slice to image $aa $bb]
+	    }
+	    set ss [expr {round($ss)}]
+	    if {$ss < 1} {
+		set ss 1
+	    } elseif {$ss > $depth} {
+		set ss $depth
+	    }
+	    HiPSSetSlice $which [expr {$ss - 1}]
+	    return
+	}
+	default {return [$which {*}$args]}
+    }
+}
+
+# name with option key=value set (added, or replacing an earlier one)
+proc HiPSWithOption {fn key value} {
+    set root [HiPSRoot $fn]
+    set opts {}
+    foreach kv [split [string trim [string range $fn [string length $root] end] {[]}] ,] {
+	if {$kv == {}} {
+	    continue
+	}
+	if {[string tolower [string trim [lindex [split $kv =] 0]]] == $key} {
+	    continue
+	}
+	lappend opts $kv
+    }
+    lappend opts "$key=$value"
+    return "$root\[[join $opts ,]\]"
+}
+
+# Show frame f (0-based) of the HiPS cube in frame which: reload it there
+# (the suggested cut and Open Recent are left alone), keeping the zoom and
+# the sky position at the centre
+proc HiPSSetSlice {which f} {
+    global current
+    global hipscube
+
+    set st [HiPSCubeState $which]
+    if {$st == {} || [dict get $st slice] == $f} {
+	return
+    }
+    set fn [HiPSWithOption [HiPSFrameName $which] slice $f]
+
+    # a deep window's pixel is finer than the reloaded coarse window's:
+    # keep the on-screen scale (zoom per window pixel), which also takes
+    # the new frame deep again
+    set zoom [$which get zoom]
+    set pix0 [HiPSWindowPixel $which]
+    set pan [$which get cursor wcs icrs degrees]
+    set save $current(frame)
+    if {$which != $current(frame)} {
+	set current(frame) $which
+    }
+
+    set hipscube(reloading) 1
+    set ok [ImportHiPSFile $fn]
+    set hipscube(reloading) 0
+    if {$ok} {
+	set pix1 [HiPSWindowPixel $which]
+	if {$pix0 > 0 && $pix1 > 0 && abs($pix1/$pix0-1) > 1e-9} {
+	    set zz {}
+	    foreach z $zoom {
+		lappend zz [expr {$z*$pix1/$pix0}]
+	    }
+	    set zoom $zz
+	}
+	ZoomTo {*}$zoom
+	if {[llength $pan] == 2} {
+	    PanToFrame $which {*}$pan wcs icrs
+	}
+    }
+    set current(frame) $save
+    UpdateCubeMotionDialog
+}
+
+# the size of frame which's window pixel (deg), or 0
+proc HiPSWindowPixel {which} {
+    if {[catch {expr {abs([$which get fits header keyword CDELT2])}} pix]} {
+	return 0
+    }
+    return $pix
 }
 
 # the HiPS name (root directory plus options) loaded in frame which, or
@@ -800,7 +1003,7 @@ proc HiPSFitsInfo {fn} {
 # nothing readable) for order=K; tiles (FITS tiles present), total
 # (tiles in the sky), allsky (usable Allsky tile width, 0 if none) and
 # allskybad (1 if an Allsky is there but can't be used, e.g. truncated)
-proc HiPSOpenOrders {dir width {ext fits}} {
+proc HiPSOpenOrders {dir width {ext fits} {sfx {}}} {
 
     set orders {}
     foreach dd [glob -nocomplain -types d -directory $dir Norder*] {
@@ -814,8 +1017,13 @@ proc HiPSOpenOrders {dir width {ext fits}} {
     foreach kk [lsort -integer -decreasing -unique $orders] {
 	set od [file join $dir "Norder$kk"]
 	set total [expr {12*(1<<(2*$kk))}]
-	set tiles [llength [glob -nocomplain -types f -directory $od \
-				Dir*/Npix*.$ext]]
+	# this cube frame's tiles only (NpixN_n; frame 0 has no suffix)
+	set tiles 0
+	foreach ff [glob -nocomplain -types f -directory $od Dir*/Npix*.$ext] {
+	    if {[regexp "^Npix\\d+$sfx\\.$ext\$" [file tail $ff]]} {
+		incr tiles
+	    }
+	}
 
 	# Allsky tile width: the mosaic is int(sqrt(total)) tiles wide
 	# Allsky tile width, as FitsHiPS::allskyWidth: orders 0-3 only,
@@ -824,7 +1032,7 @@ proc HiPSOpenOrders {dir width {ext fits}} {
 	# Allsky that is there but fails this is marked bad.
 	set aw 0
 	set abad 0
-	set af [file join $od Allsky.$ext]
+	set af [file join $od Allsky$sfx.$ext]
 	if {$kk <= 3 && [file isfile $af]} {
 	    set ncol [expr {int(sqrt($total))}]
 	    set nrow [expr {($total+$ncol-1)/$ncol}]
@@ -985,9 +1193,9 @@ proc HiPSOpenOrderLabel {oo} {
 	}
 	{} {
 	    if {[dict get $oo allskybad]} {
-		return "$ll: [msgcat::mc {Allsky unreadable, no FITS tiles}]"
+		return "$ll: [msgcat::mc {Allsky unreadable, no tiles}]"
 	    }
-	    return "$ll: [msgcat::mc {no FITS tiles}]"
+	    return "$ll: [msgcat::mc {no tiles}]"
 	}
 	allsky {set src [msgcat::mc {Allsky}]}
 	reduced {set src [msgcat::mc {reduced Allsky}]}
@@ -1037,7 +1245,7 @@ proc HiPSOpenParamsDialog {dir {url {}}} {
 	set maxorder 29
     }
     if {$url == {}} {
-	set orders [HiPSOpenOrders $dir $width $ext]
+	set orders [HiPSOpenOrders $dir $width $ext [HiPSSliceSuffix $props {}]]
 	set auto [HiPSOpenAutoOrder $orders $width $maxorder]
     } else {
 	set orders [HiPSOpenRemoteOrders $props $width $ext $maxorder]

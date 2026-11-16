@@ -712,7 +712,140 @@ proc HiPSClearErrorInfo {} {
 
 # Asynchronous GET of url into fn; done is called with the HTTP status
 # (0 if the request failed), after following redirects.
+#
+# The requests run in worker threads (Thread package). In the main
+# thread, Tcl's https blocks the event loop during each TLS handshake: a
+# slow server (eROSITA's took ~5 s a handshake) froze ds9 for 52 s while
+# a deep window fetched 10 tiles. A worker makes one blocking request at
+# a time and posts the result back, so the display and XPA stay live.
+# Without the Thread package, the in-process path (HiPSGetAsyncHttp).
 proc HiPSGetAsync {url fn done {hops 0}} {
+    global hipsnet
+
+    if {![HiPSWorkersReady]} {
+	HiPSGetAsyncHttp $url $fn $done $hops
+	return
+    }
+    set id [incr hipsnet(jobid)]
+    set hipsnet(job,$id) $done
+    lappend hipsnet(jobs) [list $id $url $fn]
+    HiPSWorkerDispatch
+}
+
+# the worker pool: hipsnet(parallel) threads, made when first needed;
+# 0 if threads can't be used
+proc HiPSWorkersReady {} {
+    global hipsnet
+    global ihttp
+    global phttp
+
+    if {[info exists hipsnet(workers)]} {
+	return [expr {[llength $hipsnet(workers)] > 0}]
+    }
+    set hipsnet(workers) {}
+    set hipsnet(idle) {}
+    set hipsnet(jobs) {}
+    set hipsnet(jobid) 0
+    if {[catch {package require Thread}]} {
+	return 0
+    }
+
+    # a worker: http with ds9's settings (ConfigHTTP), one request at a
+    # time, following redirects, the status posted back to the main thread
+    set proxy {}
+    if {[info exists phttp(proxy)] && $phttp(proxy)} {
+	set proxy [list $phttp(proxy,host) $phttp(proxy,port)]
+    }
+    set init [string map [list @TIMEOUT@ $ihttp(timeout) \
+			      @PROXY@ [list $proxy] \
+			      @REDIRECTS@ $hipsnet(redirects)] {
+	package require http
+	load {} tls
+	http::register https 443 [list ::tls::socket -autoservername 1 \
+				      -require 1 -alpn http/1.1]
+	http::config -useragent ds9
+	set proxy @PROXY@
+	if {$proxy != {}} {
+	    http::config -proxyhost [lindex $proxy 0] \
+		-proxyport [lindex $proxy 1]
+	}
+	proc fetch {main id url fn headers} {
+	    set code 0
+	    for {set hops 0} {$hops <= @REDIRECTS@} {incr hops} {
+		if {[catch {open $fn wb} ch]} {
+		    break
+		}
+		set loc {}
+		if {![catch {http::geturl $url -channel $ch -binary 1 \
+				 -timeout @TIMEOUT@ -headers $headers} tok]} {
+		    if {[http::status $tok] == {ok}} {
+			set code [http::ncode $tok]
+			foreach {key val} [http::meta $tok] {
+			    if {[string tolower $key] == {location}} {
+				set loc $val
+			    }
+			}
+		    }
+		    http::cleanup $tok
+		}
+		close $ch
+		if {$code < 300 || $code >= 400 || $loc == {}} {
+		    break
+		}
+		# a redirect: absolute, or relative to url
+		if {![regexp -nocase {^[a-z]+://} $loc]} {
+		    regexp {^([a-z]+://[^/]+)} $url {} site
+		    if {[string index $loc 0] == {/}} {
+			set loc $site$loc
+		    } else {
+			set loc [string range $url 0 [string last / $url]]$loc
+		    }
+		}
+		set url $loc
+		set code 0
+	    }
+	    thread::send -async $main [list HiPSWorkerDone [thread::id] $id $code]
+	}
+	thread::wait
+    }]
+    for {set ii 0} {$ii < $hipsnet(parallel)} {incr ii} {
+	if {[catch {thread::create $init} tid]} {
+	    break
+	}
+	lappend hipsnet(workers) $tid
+	lappend hipsnet(idle) $tid
+    }
+    return [expr {[llength $hipsnet(workers)] > 0}]
+}
+
+# start queued jobs on idle workers
+proc HiPSWorkerDispatch {} {
+    global hipsnet
+
+    while {[llength $hipsnet(idle)] && [llength $hipsnet(jobs)]} {
+	set tid [lindex $hipsnet(idle) 0]
+	set hipsnet(idle) [lrange $hipsnet(idle) 1 end]
+	lassign [lindex $hipsnet(jobs) 0] id url fn
+	set hipsnet(jobs) [lrange $hipsnet(jobs) 1 end]
+	thread::send -async $tid \
+	    [list fetch [thread::id] $id $url $fn [ProxyHTTP]]
+    }
+}
+
+proc HiPSWorkerDone {tid id code} {
+    global hipsnet
+
+    lappend hipsnet(idle) $tid
+    HiPSWorkerDispatch
+    if {[info exists hipsnet(job,$id)]} {
+	set done $hipsnet(job,$id)
+	unset hipsnet(job,$id)
+	{*}$done $code
+    }
+}
+
+# the in-process path, without worker threads
+proc HiPSGetAsyncHttp {url fn done {hops 0}} {
     global ihttp
     global hipsnet
 
@@ -767,7 +900,7 @@ proc HiPSGetDone {url fn ch done hops token} {
 		set loc "[string range $url 0 [string last / $url]]$loc"
 	    }
 	}
-	HiPSGetAsync $loc $fn $done [expr {$hops+1}]
+	HiPSGetAsyncHttp $loc $fn $done [expr {$hops+1}]
 	return
     }
     {*}$done $code
@@ -786,6 +919,21 @@ proc HiPSCancel {} {
     global hipsnet
 
     set hipsnet(cancel) 1
+    # jobs waiting for a worker fail now; one already in a worker finishes
+    # (a blocking request can't be interrupted) and is ignored by its
+    # fetcher, which sees hipsnet(cancel)
+    if {[info exists hipsnet(jobs)]} {
+	set jobs $hipsnet(jobs)
+	set hipsnet(jobs) {}
+	foreach jj $jobs {
+	    set id [lindex $jj 0]
+	    if {[info exists hipsnet(job,$id)]} {
+		set done $hipsnet(job,$id)
+		unset hipsnet(job,$id)
+		after idle [list {*}$done 0]
+	    }
+	}
+    }
     if {![info exists hipsnet(tokens)]} {
 	return
     }
@@ -843,26 +991,62 @@ proc HiPSDeepWant {frame root order tiles} {
 	return
     }
 
-    # known to be missing (404s remembered by either fetcher)
-    set od [file join $root Norder$order]
-    if {[file isfile [file join $od .missing]]} {
-	set ch [open [file join $od .missing] r]
-	foreach nn [split [read $ch] \n] {
-	    if {$nn != {}} {
-		set gone($nn) 1
-	    }
+    # this view replaces the frame's earlier requests still waiting (those
+    # in flight finish, and land in the cache)
+    set keep {}
+    foreach qq $hipsdeep(queue) {
+	if {[lindex $qq 0] == $frame} {
+	    lassign $qq ff rr uu oo nn
+	    unset -nocomplain "hipsdeep(want,$rr $oo $nn)"
+	} else {
+	    lappend keep $qq
 	}
-	close $ch
     }
+    set hipsdeep(queue) $keep
 
-    foreach nn $tiles {
-	set key "$root $order $nn"
-	if {[info exists gone($nn)] || [info exists hipsdeep(want,$key)]} {
+    # first the ancestors one and two orders up (a quarter and a
+    # sixteenth as many tiles): the window shows the deepest cached one
+    # until its own tiles arrive (FitsHPXReproj::build)
+    set first {}
+    set mine {}
+    for {set dk 2} {$dk >= 0} {incr dk -1} {
+	set oo [expr {$order - $dk}]
+	if {$oo < 0} {
 	    continue
 	}
-	set hipsdeep(want,$key) 1
-	lappend hipsdeep(queue) [list $frame $root $url $order $nn $ext]
+	# known to be missing (404s remembered by either fetcher)
+	array unset gone
+	set od [file join $root Norder$oo]
+	if {[file isfile [file join $od .missing]]} {
+	    set ch [open [file join $od .missing] r]
+	    foreach nn [split [read $ch] \n] {
+		if {$nn != {}} {
+		    set gone($nn) 1
+		}
+	    }
+	    close $ch
+	}
+	set seen {}
+	foreach nn $tiles {
+	    set aa [expr {$nn >> (2*$dk)}]
+	    if {[dict exists $seen $aa]} {
+		continue
+	    }
+	    dict set seen $aa 1
+	    set dd [expr {($aa/10000)*10000}]
+	    if {[info exists gone($aa)] ||
+		[file isfile [file join $od Dir$dd Npix$aa.$ext]]} {
+		continue
+	    }
+	    set key "$root $oo $aa"
+	    if {[info exists hipsdeep(want,$key)]} {
+		continue
+	    }
+	    set hipsdeep(want,$key) 1
+	    lappend mine [list $frame $root $url $oo $aa $ext]
+	}
     }
+    set hipsdeep(queue) [concat $mine $hipsdeep(queue)]
     while {$hipsdeep(running) < $hipsnet(parallel) &&
 	   [llength $hipsdeep(queue)]} {
 	HiPSDeepNext
@@ -893,7 +1077,7 @@ proc HiPSDeepDone {frame root order nn fn code} {
     global hipsdeep
 
     incr hipsdeep(running) -1
-    unset -nocomplain hipsdeep(want,$root $order $nn)
+    unset -nocomplain "hipsdeep(want,$root $order $nn)"
     switch -- $code {
 	200 {
 	    file rename -force $fn.new $fn

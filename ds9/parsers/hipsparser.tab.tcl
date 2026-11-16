@@ -6,4 +6,5 @@ set TRUE_ 261
 set FALSE_ 262
 set STRING_ 263
 set NEW_ 264
-set COVERAGE_ 265
+set CANCEL_ 265
+set COVERAGE_ 266

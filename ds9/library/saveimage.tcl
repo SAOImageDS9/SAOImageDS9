@@ -100,7 +100,9 @@ proc SaveImagePhoto {fn format} {
     set geom [MacOSPhotoFix $ds9(top) 0 1]
 
     TileCanvasSuspend
+    HiPSDeepStatusSuspend
     set rr [catch {image create photo -format window -data $ds9(canvas)} ph]
+    HiPSDeepStatusResume
     TileCanvasResume
     if {$rr} {
 	MacOSPhotoRestore $ds9(top) $geom

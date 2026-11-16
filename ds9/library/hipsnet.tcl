@@ -51,6 +51,15 @@ proc HiPSNetDef {} {
     set hipsdeep(running) 0
     set hipsdeep(fetched) 0
     set hipsdeep(refreshes) 0
+    # a cancel starts a new generation: requests of an older one still in
+    # a worker finish into the cache, but no longer redraw (stale)
+    set hipsdeep(gen) 0
+    set hipsdeep(stale) 0
+    # this batch (since the queue was last empty), for the status line
+    set hipsdeep(total) 0
+    set hipsdeep(done) 0
+    # the status line shows after this many ms of fetching
+    set hipsdeep(statusdelay) 500
 }
 
 # A cube's frame suffix for file names, "_n" (HiPS 1.0 sec. 4.2.3),
@@ -1021,6 +1030,7 @@ proc HiPSDeepWant {frame root order tiles {slice 0}} {
 	if {[lindex $qq 0] == $frame} {
 	    lassign $qq ff rr uu oo nn ee sx
 	    unset -nocomplain "hipsdeep(want,$rr $oo $nn$sx)"
+	    incr hipsdeep(total) -1
 	} else {
 	    lappend keep $qq
 	}
@@ -1069,11 +1079,13 @@ proc HiPSDeepWant {frame root order tiles {slice 0}} {
 	    lappend mine [list $frame $root $url $oo $aa $ext $sfx]
 	}
     }
+    incr hipsdeep(total) [llength $mine]
     set hipsdeep(queue) [concat $mine $hipsdeep(queue)]
     while {$hipsdeep(running) < $hipsnet(parallel) &&
 	   [llength $hipsdeep(queue)]} {
 	HiPSDeepNext
     }
+    HiPSDeepStatus
     # starting requests leaves the http package's errorInfo, which the
     # command that rebuilt the window (zoom, pan, ...) would report
     HiPSClearErrorInfo
@@ -1093,19 +1105,28 @@ proc HiPSDeepNext {} {
     file mkdir [file dirname $fn]
     incr hipsdeep(running)
     HiPSGetAsync "$url/Norder$order/Dir$dd/Npix$nn$sfx.$ext" $fn.new \
-	[list HiPSDeepDone $frame $root $order $nn $fn $sfx]
+	[list HiPSDeepDone $hipsdeep(gen) $frame $root $order $nn $fn $sfx]
 }
 
-proc HiPSDeepDone {frame root order nn fn sfx code} {
+proc HiPSDeepDone {gen frame root order nn fn sfx code} {
     global hipsdeep
 
     incr hipsdeep(running) -1
-    unset -nocomplain "hipsdeep(want,$root $order $nn$sfx)"
+    # requested before a cancel: kept if it arrived, nothing else
+    set stale [expr {$gen != $hipsdeep(gen)}]
+    if {$stale} {
+	incr hipsdeep(stale) -1
+    } else {
+	unset -nocomplain "hipsdeep(want,$root $order $nn$sfx)"
+	incr hipsdeep(done)
+    }
     switch -- $code {
 	200 {
 	    file rename -force $fn.new $fn
 	    incr hipsdeep(fetched)
-	    HiPSDeepRefreshSoon $frame
+	    if {!$stale} {
+		HiPSDeepRefreshSoon $frame
+	    }
 	}
 	404 {
 	    catch {file delete -force $fn.new}
@@ -1120,9 +1141,139 @@ proc HiPSDeepDone {frame root order nn fn sfx code} {
     HiPSClearErrorInfo
     HiPSDeepNext
     # the last one: a final refresh
-    if {!$hipsdeep(running) && ![llength $hipsdeep(queue)]} {
+    if {!$stale && ![HiPSDeepPending]} {
 	HiPSDeepRefreshSoon $frame 0
     }
+    HiPSDeepStatus
+}
+
+# tiles still to come: waiting, or in a worker and not cancelled
+proc HiPSDeepPending {} {
+    global hipsdeep
+
+    return [expr {[llength $hipsdeep(queue)] + $hipsdeep(running) -
+		  $hipsdeep(stale)}]
+}
+
+# Cancel (the status line's button, hips cancel): drop the waiting
+# requests and the pending redraws, leaving every window as it is. A
+# request already in a worker can't be interrupted; it finishes into the
+# cache without a redraw. The next pan or zoom asks for its tiles again.
+proc HiPSDeepCancel {} {
+    global hipsdeep
+    global hipsnet
+
+    set hipsdeep(queue) {}
+    array unset hipsdeep want,*
+    foreach tt [array names hipsdeep timer,*] {
+	after cancel $hipsdeep($tt)
+	unset hipsdeep($tt)
+    }
+    set hipsdeep(stale) $hipsdeep(running)
+    incr hipsdeep(gen)
+    # ours still waiting for a worker fail now
+    if {[info exists hipsnet(jobs)]} {
+	set keep {}
+	foreach jj $hipsnet(jobs) {
+	    set id [lindex $jj 0]
+	    if {[info exists hipsnet(job,$id)] &&
+		[lindex $hipsnet(job,$id) 0] == {HiPSDeepDone}} {
+		after idle [list {*}$hipsnet(job,$id) 0]
+		unset hipsnet(job,$id)
+	    } else {
+		lappend keep $jj
+	    }
+	}
+	set hipsnet(jobs) $keep
+    }
+    # the in-process fetcher (no Thread package) can stop its requests,
+    # unless a load's are among them
+    if {!$hipsnet(busy)} {
+	foreach token $hipsnet(tokens) {
+	    catch {http::reset $token cancelled}
+	}
+    }
+    HiPSDeepStatus
+}
+
+# The status line: a small label over the image's lower left corner,
+# "Fetching HiPS tiles: done of total", with Cancel, while a deep
+# window's tiles are fetched for more than hipsdeep(statusdelay) ms. It
+# is a widget of its own, not a canvas item, so it isn't in saveimage,
+# print or movies.
+proc HiPSDeepStatus {} {
+    global hipsdeep
+    global ds9
+
+    if {![HiPSDeepPending]} {
+	set hipsdeep(total) 0
+	set hipsdeep(done) 0
+	if {[info exists hipsdeep(statustimer)]} {
+	    after cancel $hipsdeep(statustimer)
+	    unset hipsdeep(statustimer)
+	}
+	catch {place forget $ds9(image).hipsdeep}
+	return
+    }
+    set hipsdeep(msg) "[msgcat::mc {Fetching HiPS tiles}]: $hipsdeep(done) / $hipsdeep(total)"
+    if {![HiPSDeepStatusShown] && ![info exists hipsdeep(statustimer)]} {
+	set hipsdeep(statustimer) \
+	    [after $hipsdeep(statusdelay) HiPSDeepStatusShow]
+    }
+}
+
+proc HiPSDeepStatusShow {} {
+    global hipsdeep
+    global ds9
+
+    unset -nocomplain hipsdeep(statustimer)
+    if {[info exists hipsdeep(suspended)] || ![HiPSDeepPending] || ![info exists ds9(image)] ||
+	![winfo exists $ds9(canvas)]} {
+	return
+    }
+    set w $ds9(image).hipsdeep
+    if {![winfo exists $w]} {
+	ttk::frame $w -relief solid -borderwidth 1 -padding {6 2}
+	ttk::label $w.msg -textvariable hipsdeep(msg)
+	ttk::button $w.cancel -text [msgcat::mc {Cancel}] \
+	    -command HiPSDeepCancel
+	pack $w.msg -side left
+	pack $w.cancel -side left -padx {6 0}
+    }
+    place $w -in $ds9(canvas) -relx 0 -rely 1 -x 4 -y -4 -anchor sw
+    raise $w
+}
+
+# out of the way while the canvas is grabbed (saveimage, movies): on
+# macOS the grab includes widgets over it
+proc HiPSDeepStatusSuspend {} {
+    global hipsdeep
+    global ds9
+
+    if {[HiPSDeepStatusShown]} {
+	place forget $ds9(image).hipsdeep
+	set hipsdeep(suspended) 1
+	# the canvas repaints where the label was (as RealizeDS9 does)
+	update
+    }
+}
+
+proc HiPSDeepStatusResume {} {
+    global hipsdeep
+
+    if {[info exists hipsdeep(suspended)]} {
+	unset hipsdeep(suspended)
+	HiPSDeepStatusShow
+    }
+}
+
+proc HiPSDeepStatusShown {} {
+    global ds9
+
+    if {![info exists ds9(image)] || ![winfo exists $ds9(image).hipsdeep]} {
+	return 0
+    }
+    return [expr {[winfo manager $ds9(image).hipsdeep] == {place}}]
 }
 
 # rebuild frame's window with the tiles that have arrived: at most every

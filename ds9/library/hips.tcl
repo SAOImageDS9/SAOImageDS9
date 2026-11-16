@@ -637,6 +637,16 @@ proc HiPSCoverageCmd {on} {
     UpdateHiPSCoverageMenu
 }
 
+# hips cancel: stop fetching a deep window's tiles, and a load's
+proc HiPSCancelCmd {} {
+    global hipsnet
+
+    if {$hipsnet(busy)} {
+	HiPSCancel
+    }
+    HiPSDeepCancel
+}
+
 proc ProcessHiPSCmd {varname iname} {
     upvar $varname var
     upvar $iname i
@@ -659,6 +669,7 @@ proc ProcessSendHiPSCmd {proc id param {sock {}} {fn {}}} {
 	coverage {
 	    $proc $id "[ToYesNo [HiPSCoverageShown $current(frame)]]\n"
 	}
+	status {$proc $id "[HiPSDeepPending]\n"}
 	default {$proc $id "[HiPSFrameName $current(frame)]\n"}
     }
 }

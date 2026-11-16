@@ -3666,6 +3666,11 @@ void Base::hpxAutoRefresh()
 
   if (need)
     hpxRecentre(HPXPAN, 0, 0);
+  else
+    // the same window: its missing tiles are still wanted (after a
+    // cancel, nothing is fetching them; HiPSDeepWant skips those it has
+    // or is fetching)
+    hpxRequestTiles(ptr);
 }
 
 // During a drag, rebuild a HEALPix window around the pan point as it

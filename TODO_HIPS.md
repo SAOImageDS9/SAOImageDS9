@@ -3,8 +3,8 @@
 Status (2026-11-16): Phases 0 and 1 done. Local FITS-tile HiPS load
 with all projections. Phase 2 in progress: the `hips` command, backup/
 restore, Open Recent, File > Open HiPS..., properties defaults and the
-coverage overlay and provenance are done; SAMP and release notes
-remain. Work is on branch `hips`. Builds on the
+coverage overlay and provenance are done: Phase 2 is finished. Phase 3
+(remote HiPS, PNG/JPEG and colour tiles) is next. Work is on branch `hips`. Builds on the
 HEALPix projection work in `TODO.md` (PR SAOImageDS9/SAOImageDS9#380:
 `FitsHPXReproj`, `proj=`/`lon0=`/`lat0=`/`fov=`, live windows).
 
@@ -472,11 +472,21 @@ variable: `[...]` inside Tcl double quotes is command substitution.
           for such frames (`HPXFrameIsWindow`); other frames are
           unchanged.
       - Tested by `Tests/hips/hipsmoc.sh`.
-- [ ] SAMP: Aladin and others don't send HiPS by URL in a standard MType
-      as far as we know. Check for a de facto one (e.g. `script.aladin.
-      send`); otherwise skip.
-- [ ] Docs: `ds9/doc/ref/command.html` (`hips`), File menu docs, and
-      release notes.
+- [x] SAMP (checked 2026-11-16): no standard MType loads a HiPS. The
+      IVOA list (wiki SampMTypes r20, June 2026) has none, not even
+      proposed; its sky ones are `coverage.load.moc.fits`,
+      `coverage.load.moc.ascii` and `coord.pointAt.sky`. The de facto
+      route is an application's own script MType (Aladin's
+      `script.aladin.send` carries Aladin commands); ds9's equivalent,
+      `ds9.set "hips <dir>[...]"`, already works. Nothing to add here; a
+      HiPS sent between applications would be a URL, so it belongs with
+      remote HiPS (Phase 3). Optional, not HiPS-specific: draw a
+      received `coverage.load.moc.fits` as a coverage outline on the
+      current frame (it loads as an image in its own frame now), and
+      handle `coverage.load.moc.ascii`.
+- [x] Docs: `hips` in `command.html`, `xpa.html`, `samp.html`, the HiPS
+      section of `file.html`, and the 8.8.2 release notes (WIP section).
+      Phase 2 done 2026-11-16.
 
 ### Phase 3: remote HiPS over HTTP, PNG/JPEG and colour tiles
 

@@ -159,6 +159,37 @@ turn the dialog off and set the projection it starts with.</li>
 <li><strong>WCS</strong>: Fix crash listing WCS coordinates (pixel
 values, regions) for points that are not on the sky, such as outside an
 Aitoff ellipse.</li>
+<li><strong>HIPS</strong>: Load a local HiPS (IVOA Hierarchical
+Progressive Survey with FITS tiles) as the HEALPix map it holds at one
+order, with all the HEALPix projection options:
+<code>-hips /data/Fermi/HiPS[order=2,proj=mol]</code>, the
+<code>hips</code> XPA/SAMP command, or <em>File &gt; Open HiPS...</em>.
+By default the deepest order up to NSIDE 2048 is read, from its tiles or
+its <code>Allsky.fits</code>; missing tiles are blank. The dialog shows
+the survey and, for each order present, its NSIDE, source and memory.
+PNG/JPEG-only and remote (URL) HiPS are not supported yet.</li>
+<li><strong>HIPS</strong>: The survey's suggested scale limits
+(<code>hips_pixel_cut</code>) are applied when it loads (can be turned
+off in <em>Preferences &gt; HEALPix</em>), and zenithal projections
+start at its initial view (<code>hips_initial_ra/dec/fov</code>).</li>
+<li><strong>HIPS</strong>: <em>Analysis &gt; HiPS Coverage</em>
+(<code>hips coverage</code>) outlines the sky a HiPS covers, from its
+<code>Moc.fits</code>, in any projection.</li>
+<li><strong>HIPS</strong>: A HiPS is listed in <em>Open Recent</em>,
+and backups record it by directory and options without copying its
+tiles.</li>
+<li><strong>HEALPIX</strong>: A table's HISTORY and COMMENT cards are
+kept in the image header (and so in <em>File &gt; Save</em>).</li>
+<li><strong>MOC</strong>: <code>order=n</code> draws a MOC at order
+<code>n</code>, coarser or finer than its own resolution.</li>
+<li><strong>FITS</strong>: Fix crashes reading truncated FITS files, or
+asking for an extension past the end of an unpadded file.</li>
+<li><strong>FITS</strong>: Fix memory corruption from HISTORY or
+COMMENT cards longer than a card.</li>
+<li><strong>CONTOUR</strong>: Fix crash saving or listing a contour
+with no points.</li>
+<li><strong>BACKUP</strong>: Contours on a HEALPix projection window are
+restored in the right place (they are now saved on the sky).</li>
 </ul>
 
 

@@ -19,8 +19,10 @@ proc HPXOpenDef {} {
     # prefs: ask on open, and the projection the dialog starts with
     set phpxopen(ask) 1
     set phpxopen(proj) hpx
-    # HiPS: use the survey's suggested scale limits (hips.tcl)
+    # HiPS: use the survey's suggested scale limits (hips.tcl), and
+    # the size of the cache of remote HiPS, MB (hipsnet.tcl)
     set phpxopen(hipscut) 1
+    set phpxopen(hipscache) 2048
 
     # the last values chosen, for the rest of the session
     set hpxopen(proj) {}
@@ -646,6 +648,12 @@ proc PrefsDialogHPXOpen {} {
     grid $f.task $f.ask -padx 2 -pady 2 -sticky w
     grid $f.tproj $f.proj -padx 2 -pady 2 -sticky w
     grid $f.tcut $f.cut -padx 2 -pady 2 -sticky w
+
+    ttk::label $f.tcache -text [msgcat::mc {HiPS Cache (MB)}]
+    ttk::entry $f.cache -textvariable phpxopen(hipscache) -width 8
+    ttk::button $f.clear -text [msgcat::mc {Clear HiPS Cache}] \
+	-command HiPSCacheClear
+    grid $f.tcache $f.cache $f.clear -padx 2 -pady 2 -sticky w
 
     pack $f -side top -fill both -expand true
 }

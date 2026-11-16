@@ -487,6 +487,7 @@ proc HiPSOpenDef {} {
     # session. The centre and fov are not kept: each survey has its own
     # frame and initial view.
     set hipsopen(dir) {}
+    set hipsopen(url) {}
     set hipsopen(proj) hpx
 }
 
@@ -633,6 +634,45 @@ proc HiPSOpenProjOptions {vals} {
 	lappend opts "fov=$fov"
     }
     return $opts
+}
+
+# File > Open HiPS URL...: a remote HiPS. Its properties are fetched
+# (into the cache) for the dialog; the load fetches what the chosen
+# order needs (hipsnet.tcl).
+proc OpenHiPSURLDialog {} {
+    global hipsopen
+    global hipsnet
+
+    set url $hipsopen(url)
+    if {![EntryDialog [msgcat::mc {Open HiPS URL}] \
+	      [msgcat::mc {HiPS URL (the directory holding properties)}] \
+	      60 url]} {
+	return
+    }
+    set url [string trimright [string trim $url] /]
+    if {$url == {}} {
+	return
+    }
+    set hipsopen(url) $url
+
+    # file:// is a local HiPS
+    if {![HiPSIsURL $url]} {
+	set dir [HiPSFileURL $url]
+	set fn [HiPSOpenParamsDialog $dir]
+    } else {
+	set dir [HiPSCacheDir $url]
+	if {[HiPSFetchProperties $url $dir] == {}} {
+	    HiPSClearErrorInfo
+	    Error "[msgcat::mc {Unable to load}] HiPS $url: $hipsnet(error)"
+	    return
+	}
+	HiPSClearErrorInfo
+	set fn [HiPSOpenParamsDialog $dir $url]
+    }
+    if {$fn == {}} {
+	return
+    }
+    HiPSCmdLoad $fn
 }
 
 proc OpenHiPSDialog {} {
@@ -880,6 +920,39 @@ proc HiPSOpenAutoOrder {orders width maxorder} {
     return $oo
 }
 
+# The orders of a remote HiPS, from its properties alone (the tiles
+# aren't known until fetched): order, nside, source remote, tiles (about:
+# 12*4^K scaled by moc_sky_fraction), total, bytes to fetch (about),
+# toobig (more than the fetch limit), deepest first
+proc HiPSOpenRemoteOrders {props width ext maxorder} {
+    global hipsnet
+
+    set minorder [HiPSProp $props hips_order_min 0]
+    if {![string is integer -strict $minorder] || $minorder < 0} {
+	set minorder 0
+    }
+    set frac [HiPSProp $props moc_sky_fraction 1]
+    if {![string is double -strict $frac] || $frac <= 0 || $frac > 1} {
+	set frac 1
+    }
+    set bitpix [HiPSProp $props hips_pixel_bitpix -32]
+    if {$ext != {fits} || ![string is integer -strict $bitpix] ||
+	$bitpix == 0} {
+	set bitpix 8
+    }
+    set rr {}
+    for {set kk $maxorder} {$kk >= $minorder} {incr kk -1} {
+	set total [expr {12*(wide(1)<<(2*$kk))}]
+	set tiles [expr {wide(ceil($total*$frac))}]
+	set bytes [expr {$tiles*$width*$width*abs($bitpix)/8}]
+	lappend rr [dict create order $kk nside [expr {wide($width)<<$kk}] \
+			source remote tiles $tiles total $total bytes $bytes \
+			toobig [expr {$bytes > $hipsnet(maxbytes)}] \
+			allsky 0 allskybad 0]
+    }
+    return $rr
+}
+
 # "12 MB": the map's memory (4-byte pixels)
 proc HiPSOpenSize {nside} {
     set mb [expr {12.0*$nside*$nside*4/1024/1024}]
@@ -897,6 +970,20 @@ proc HiPSOpenOrderLabel {oo} {
     set nside [dict get $oo nside]
     set ll "[msgcat::mc {Order}] $kk"
     switch -- [dict get $oo source] {
+	quick {
+	    return [msgcat::mc {quick look: the survey's all-sky image}]
+	}
+	remote {
+	    set mb [expr {[dict get $oo bytes]/1048576.0}]
+	    set fetch [expr {$mb < 10 ? [format %.1f $mb] : [format %.0f $mb]}]
+	    set ll "$ll: NSIDE $nside, ~[dict get $oo tiles] [msgcat::mc {tiles}], ~$fetch MB [msgcat::mc {to fetch}]"
+	    if {[dict get $oo toobig]} {
+		append ll " ([msgcat::mc {too much}])"
+	    } elseif {$nside > $hipsopen(nside,max)} {
+		append ll " ([msgcat::mc {too large}])"
+	    }
+	    return $ll
+	}
 	{} {
 	    if {[dict get $oo allskybad]} {
 		return "$ll: [msgcat::mc {Allsky unreadable, no FITS tiles}]"
@@ -921,22 +1008,25 @@ proc HiPSOpenOrderLabel {oo} {
 
 # The dialog. Returns the name to load (dir plus options), or {} on
 # cancel or error.
-proc HiPSOpenParamsDialog {dir} {
+proc HiPSOpenParamsDialog {dir {url {}}} {
     global hipsopen
     global hpxed
+
+    # a remote HiPS: dir is its cache (properties fetched), url its name
+    set name [expr {$url != {} ? $url : $dir}]
 
     if {[catch {HiPSReadProperties $dir} props]} {
 	Error "[msgcat::mc {Unable to load}] HiPS $dir: [msgcat::mc {no readable properties file}]"
 	return {}
     }
     if {[HiPSProp $props dataproduct_type image] == {catalog}} {
-	Error "[msgcat::mc {Unable to load}] HiPS $dir: [msgcat::mc {catalogue HiPS are not supported}]"
+	Error "[msgcat::mc {Unable to load}] HiPS $name: [msgcat::mc {catalogue HiPS are not supported}]"
 	return {}
     }
     set formats [HiPSProp $props hips_tile_format fits]
     set ext [HiPSTileExt $props]
     if {$ext == {}} {
-	Error "[msgcat::mc {Unable to load}] HiPS $dir: [msgcat::mc {no FITS, PNG or JPEG tiles, this HiPS has}] $formats"
+	Error "[msgcat::mc {Unable to load}] HiPS $name: [msgcat::mc {no FITS, PNG or JPEG tiles, this HiPS has}] $formats"
 	return {}
     }
     set width [HiPSProp $props hips_tile_width 512]
@@ -947,8 +1037,14 @@ proc HiPSOpenParamsDialog {dir} {
     if {![string is integer -strict $maxorder]} {
 	set maxorder 29
     }
-    set orders [HiPSOpenOrders $dir $width $ext]
-    set auto [HiPSOpenAutoOrder $orders $width $maxorder]
+    if {$url == {}} {
+	set orders [HiPSOpenOrders $dir $width $ext]
+	set auto [HiPSOpenAutoOrder $orders $width $maxorder]
+    } else {
+	set orders [HiPSOpenRemoteOrders $props $width $ext $maxorder]
+	# without order=, the quick look (hipsnet.tcl)
+	set auto [dict create order {} nside 0 source quick allskybad 0]
+    }
 
     # the orders that can be loaded with order=K, and the smallest
     set usable {}
@@ -956,7 +1052,8 @@ proc HiPSOpenParamsDialog {dir} {
     foreach oo $orders {
 	set nside [dict get $oo nside]
 	if {$nside > 0 && $nside <= $hipsopen(nside,max) && \
-		[dict get $oo order] <= $maxorder} {
+		[dict get $oo order] <= $maxorder &&
+	    !([dict exists $oo toobig] && [dict get $oo toobig])} {
 	    lappend usable [dict get $oo order]
 	    if {$smallest == {} || $nside < [dict get $smallest nside]} {
 		set smallest $oo
@@ -993,9 +1090,9 @@ proc HiPSOpenParamsDialog {dir} {
 
     # Survey
     set f [ttk::frame $w.file]
-    set title [HiPSProp $props obs_title [file tail $dir]]
+    set title [HiPSProp $props obs_title [file tail $name]]
     ttk::label $f.name -text $title -font TkHeadingFont
-    ttk::label $f.dir -text $dir
+    ttk::label $f.dir -text $name
     set desc {}
     lappend desc [HiPSProp $props hips_frame equatorial]
     set omin [HiPSProp $props hips_order_min 0]
@@ -1107,7 +1204,7 @@ proc HiPSOpenParamsDialog {dir} {
 	    lappend opts "order=$hpxed(order)"
 	}
 	set opts [concat $opts [HiPSOpenProjOptions $vals]]
-	set fn $dir
+	set fn $name
 	if {$opts != {}} {
 	    append fn "\[[join $opts ,]\]"
 	}

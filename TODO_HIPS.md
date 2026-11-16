@@ -1,10 +1,10 @@
 # TODO: HiPS (Hierarchical Progressive Surveys) support
 
-Status (2026-11-16): Phases 0 and 1 done. Local FITS-tile HiPS load
-with all projections. Phase 2 in progress: the `hips` command, backup/
-restore, Open Recent, File > Open HiPS..., properties defaults and the
-coverage overlay and provenance are done: Phase 2 is finished. Phase 3
-(remote HiPS, PNG/JPEG and colour tiles) is next. Work is on branch `hips`. Builds on the
+Status (2026-11-16): Phases 0-3 done: local and remote (HTTP) HiPS,
+FITS, PNG/JPEG and colour tiles, with all projections, the `hips`
+command, dialogs, backup/restore, Open Recent, properties defaults,
+coverage overlay and provenance. Phase 5 (deep HiPS: zoom-driven orders,
+fetching only the visible tiles) is next; Phase 4 (cubes) last. Work is on branch `hips`. Builds on the
 HEALPix projection work in `TODO.md` (PR SAOImageDS9/SAOImageDS9#380:
 `FitsHPXReproj`, `proj=`/`lon0=`/`lat0=`/`fov=`, live windows).
 
@@ -488,7 +488,7 @@ variable: `[...]` inside Tcl double quotes is command substitution.
       section of `file.html`, and the 8.8.2 release notes (WIP section).
       Phase 2 done 2026-11-16.
 
-### Phase 3: remote HiPS over HTTP, PNG/JPEG and colour tiles
+### Phase 3: remote HiPS over HTTP, PNG/JPEG and colour tiles -- done 2026-11-16
 
 - [x] Remote fetch (done 2026-11-16, `ds9/library/hipsnet.tcl`): an
       `http://` or `https://` name, anywhere a HiPS directory goes
@@ -521,8 +521,27 @@ variable: `[...]` inside Tcl double quotes is command substitution.
         request counts, MOC filtering, 404s, redirects, new release,
         errors, size limit, cancel and resume, recent, backup,
         coverage, file://, offline.
-      - Not done: the Open HiPS dialog for URLs, a cache size cap and a
-        "clear cache" preference, `Cache-Control`.
+      - Follow-ups done 2026-11-16:
+        - File > Open HiPS URL...: `EntryDialog`, then the HiPS dialog
+          in a remote mode (`HiPSOpenParamsDialog dir url`): properties
+          fetched first (`HiPSFetchProperties`, split out of
+          `HiPSFetchDo`); the order list comes from properties alone
+          (`HiPSOpenRemoteOrders`: nside, ~tiles from
+          `moc_sky_fraction`, ~MB to fetch; orders over the fetch limit
+          disabled), Automatic = the quick look.
+        - Cache limit: `phpxopen(hipscache)` MB (default 2048,
+          Preferences > HEALPix). Each use stamps the HiPS (`.used`);
+          after a fetch whole HiPS are removed, least recently used
+          first, never the one just loaded. "Clear HiPS Cache" button.
+        - Mirrors: `HiPSBases` = the URL then `hips_service_url*` from
+          properties. Allsky, Moc.fits and each tile move to the next
+          mirror on no answer or a server error (not on 404); a cached
+          properties' mirrors are tried for properties too.
+        - Tested in `Tests/hips/hipsnet.sh` (48 checks; the test server
+          gained `/half/`: properties served, everything else 503).
+      - Decided not to do: `Cache-Control` (`hips_release_date` already
+        invalidates the cache, the HiPS way), and colour HiPS in HSV/HLS
+        frames (the tiles are RGB).
       - Public server checked (2026-11-16): Fermi Band 4 from its
         `hips_service_url`, http://cade.irap.omp.eu/documents/Ancillary/
         4Aladin/Fermi_Band4. The quick look fetched `properties` and
@@ -575,9 +594,8 @@ variable: `[...]` inside Tcl double quotes is command substitution.
         per-channel FITS references exactly (mkpng.py `pcol`, `pcr/g/b`),
         frame choice, TAN sizes, Open Recent, dialog, backup/restore,
         remote, XRISM.
-      - Not done: colour HiPS in HSV/HLS frames, and the colour
-        balance/scale (RGB frames use per-channel scale; 0-255 levels
-        with minmax look right).
+      - Colour balance/scale: 0-255 limits on every channel (see the
+        eROSITA item).
       - Public server checked (2026-11-16): DSS2 colour (CDS/P/DSS2/
         color, jpeg) from ESA's mirror https://skies.esac.esa.int/
         DSSColor. Quick look: `properties` + `Norder3/Allsky.jpg` (0.8 MB)

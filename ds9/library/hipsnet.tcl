@@ -42,11 +42,126 @@ proc HiPSNetDef {} {
     set hipsnet(tokens) {}
     set hipsnet(error) {}
     set hipsnet(ext) fits
+    set hipsnet(bases) {}
+}
+
+# The base URLs to fetch a HiPS from: url first, then the mirrors its
+# properties list (hips_service_url, hips_service_url_1, ...), each once
+proc HiPSBases {url props} {
+    set url [string trimright $url /]
+    set rr [list $url]
+    set keys [lsort -dictionary [lsearch -all -inline -glob \
+				    [dict keys $props] hips_service_url*]]
+    foreach key $keys {
+	set mm [string trimright [dict get $props $key] /]
+	if {[HiPSIsURL $mm] && [lsearch -exact $rr $mm] < 0} {
+	    lappend rr $mm
+	}
+    }
+    return $rr
+}
+
+# GET <base>/path into fn from the first base that answers (200 or 404;
+# a failed request or a server error moves on to the next mirror).
+# Returns the last HTTP status.
+proc HiPSGetPath {path fn} {
+    global hipsnet
+
+    set code 0
+    foreach base $hipsnet(bases) {
+	set code [HiPSGet $base/$path $fn]
+	if {$code == 200 || $code == 404 || $hipsnet(cancel)} {
+	    break
+	}
+    }
+    return $code
 }
 
 # Is fn (with or without [options]) a remote HiPS? file:// is local.
 proc HiPSIsURL {fn} {
     return [regexp -nocase {^https?://} $fn]
+}
+
+# The cache: <prefs dir>/hips, one directory per HiPS (the one holding
+# its properties). Each use stamps the HiPS (.used); after a fetch the
+# least recently used ones are removed, whole, until the cache is within
+# phpxopen(hipscache) MB (Preferences > HEALPix). The HiPS just loaded
+# is never removed.
+proc HiPSCacheRoot {} {
+    global prefs
+    return [file join $prefs(dir) hips]
+}
+
+proc HiPSCacheTouch {dir} {
+    catch {close [open [file join $dir .used] w]}
+}
+
+# the cached HiPS directories (those holding a properties file)
+proc HiPSCacheList {{dir {}}} {
+    if {$dir == {}} {
+	set dir [HiPSCacheRoot]
+    }
+    if {[file isfile [file join $dir properties]]} {
+	return [list $dir]
+    }
+    set rr {}
+    foreach dd [glob -nocomplain -types d -directory $dir *] {
+	set rr [concat $rr [HiPSCacheList $dd]]
+    }
+    return $rr
+}
+
+proc HiPSDirSize {dir} {
+    set size 0
+    foreach ff [glob -nocomplain -types f -directory $dir *] {
+	incr size [file size $ff]
+    }
+    foreach dd [glob -nocomplain -types d -directory $dir *] {
+	incr size [HiPSDirSize $dd]
+    }
+    return $size
+}
+
+# keep the cache within its limit; keep is the HiPS in use
+proc HiPSCachePrune {keep} {
+    global phpxopen
+
+    if {![string is double -strict $phpxopen(hipscache)] ||
+	$phpxopen(hipscache) <= 0} {
+	return
+    }
+    set limit [expr {wide($phpxopen(hipscache)*1024*1024)}]
+    set ll {}
+    set total 0
+    foreach dd [HiPSCacheList] {
+	set used 0
+	catch {set used [file mtime [file join $dd .used]]}
+	set size [HiPSDirSize $dd]
+	incr total $size
+	lappend ll [list $used $size $dd]
+    }
+    foreach rr [lsort -integer -index 0 $ll] {
+	if {$total <= $limit} {
+	    break
+	}
+	lassign $rr used size dd
+	if {[file normalize $dd] == [file normalize $keep]} {
+	    continue
+	}
+	if {![catch {file delete -force $dd}]} {
+	    incr total -$size
+	}
+    }
+}
+
+# Preferences > HEALPix > Clear HiPS Cache
+proc HiPSCacheClear {} {
+    global hipsnet
+
+    if {$hipsnet(busy)} {
+	return
+    }
+    catch {file delete -force [HiPSCacheRoot]}
 }
 
 # file:///path -> /path, anything else unchanged
@@ -59,8 +174,6 @@ proc HiPSFileURL {fn} {
 
 # The cache directory for a HiPS base URL: <prefs dir>/hips/<host>/<path>
 proc HiPSCacheDir {url} {
-    global prefs
-
     set url [string trimright $url /]
     ParseURL $url rr
     set parts [list $rr(authority)]
@@ -76,7 +189,7 @@ proc HiPSCacheDir {url} {
 	regsub -all {[^A-Za-z0-9._-]} $pp _ pp
 	lappend out $pp
     }
-    return [file join $prefs(dir) hips {*}$out]
+    return [file join [HiPSCacheRoot] {*}$out]
 }
 
 # The local name for a HiPS name: a URL becomes its cache directory
@@ -128,6 +241,9 @@ proc HiPSFetch {fn} {
     set hipsnet(cancel) 0
 
     set rr [HiPSFetchDo $url $dir $opts]
+    if {$rr != {}} {
+	HiPSCachePrune $dir
+    }
 
     set hipsnet(busy) 0
     HiPSProgressDone
@@ -150,41 +266,10 @@ proc HiPSFetch {fn} {
 proc HiPSFetchDo {url dir opts} {
     global hipsnet
 
-    if {[catch {file mkdir $dir} err]} {
-	set hipsnet(error) "[msgcat::mc {can't create the HiPS cache}] $dir: $err"
+    set props [HiPSFetchProperties $url $dir]
+    if {$props == {}} {
 	return {}
     }
-
-    # properties: always fetched, so an updated HiPS is noticed; a cached
-    # copy serves when the server can't be reached
-    set pf [file join $dir properties]
-    set old {}
-    if {[file isfile $pf] && ![catch {HiPSReadProperties $dir} pp]} {
-	set old [HiPSProp $pp hips_release_date]
-    }
-    set code [HiPSGet $url/properties $pf.new]
-    if {$code == 200} {
-	file rename -force $pf.new $pf
-    } else {
-	catch {file delete -force $pf.new}
-	if {![file isfile $pf]} {
-	    set hipsnet(error) "[msgcat::mc {can't read}] $url/properties ([HiPSCodeText $code])"
-	    return {}
-	}
-    }
-    if {[catch {HiPSReadProperties $dir} props]} {
-	set hipsnet(error) "[msgcat::mc {can't read}] $url/properties"
-	return {}
-    }
-
-    # a new release: what is cached is stale
-    set new [HiPSProp $props hips_release_date]
-    if {$old != {} && $new != $old} {
-	foreach ff [glob -nocomplain -directory $dir Norder* Moc.fits] {
-	    catch {file delete -force $ff}
-	}
-    }
-
     if {[HiPSProp $props dataproduct_type image] == {catalog}} {
 	set hipsnet(error) [msgcat::mc {catalogue HiPS are not supported}]
 	return {}
@@ -195,6 +280,7 @@ proc HiPSFetchDo {url dir opts} {
 	return {}
     }
     set hipsnet(ext) $ext
+    set hipsnet(bases) [HiPSBases $url $props]
     set width [HiPSProp $props hips_tile_width 512]
     set maxorder [HiPSProp $props hips_order -1]
     set minorder [HiPSProp $props hips_order_min 0]
@@ -249,6 +335,56 @@ proc HiPSFetchDo {url dir opts} {
     return $kk
 }
 
+# Fetch url/properties into the cache directory dir, and return them as
+# a dict ({} and hipsnet(error) on failure). Always fetched, so an
+# updated HiPS is noticed (a new hips_release_date empties the cached
+# tiles); a cached copy serves when the server can't be reached.
+proc HiPSFetchProperties {url dir} {
+    global hipsnet
+
+    if {[catch {file mkdir $dir} err]} {
+	set hipsnet(error) "[msgcat::mc {can't create the HiPS cache}] $dir: $err"
+	return {}
+    }
+    set pf [file join $dir properties]
+    set old {}
+    if {[file isfile $pf] && ![catch {HiPSReadProperties $dir} pp]} {
+	set old [HiPSProp $pp hips_release_date]
+    }
+    set code [HiPSGet $url/properties $pf.new]
+    # no answer: try the mirrors a cached copy lists
+    if {$code != 200 && $code != 404 && [file isfile $pf] &&
+	![catch {HiPSReadProperties $dir} pp]} {
+	foreach base [lrange [HiPSBases $url $pp] 1 end] {
+	    set code [HiPSGet $base/properties $pf.new]
+	    if {$code == 200} {
+		break
+	    }
+	}
+    }
+    if {$code == 200} {
+	file rename -force $pf.new $pf
+    } else {
+	catch {file delete -force $pf.new}
+	if {![file isfile $pf]} {
+	    set hipsnet(error) "[msgcat::mc {can't read}] $url/properties ([HiPSCodeText $code])"
+	    return {}
+	}
+    }
+    if {[catch {HiPSReadProperties $dir} props]} {
+	set hipsnet(error) "[msgcat::mc {can't read}] $url/properties"
+	return {}
+    }
+    set new [HiPSProp $props hips_release_date]
+    if {$old != {} && $new != $old} {
+	foreach ff [glob -nocomplain -directory $dir Norder* Moc.fits] {
+	    catch {file delete -force $ff}
+	}
+    }
+    HiPSCacheTouch $dir
+    return $props
+}
+
 # Fetch NorderK/Allsky.fits (unless cached). Returns the width of its
 # tiles, or 0 if there is none (or it can't be read).
 proc HiPSFetchAllsky {url dir kk} {
@@ -262,7 +398,7 @@ proc HiPSFetchAllsky {url dir kk} {
     }
     if {![file isfile $af]} {
 	file mkdir $od
-	set code [HiPSGet $url/Norder$kk/Allsky.$ext $af.new]
+	set code [HiPSGetPath Norder$kk/Allsky.$ext $af.new]
 	if {$code != 200} {
 	    catch {file delete -force $af.new}
 	    # remember a 404 so it isn't asked for again
@@ -296,7 +432,7 @@ proc HiPSFetchTiles {url dir kk width props} {
     # Moc.fits, if the HiPS has one
     set mf [file join $dir Moc.fits]
     if {![file isfile $mf]} {
-	set code [HiPSGet $url/Moc.fits $mf.new]
+	set code [HiPSGetPath Moc.fits $mf.new]
 	if {$code == 200} {
 	    file rename -force $mf.new $mf
 	} else {
@@ -354,6 +490,7 @@ proc HiPSFetchTiles {url dir kk width props} {
     }
 
     # a small pool of asynchronous requests
+    array unset hipsnet try,*
     set hipsnet(queue) $need
     set hipsnet(running) 0
     set hipsnet(done) 0
@@ -421,7 +558,16 @@ proc HiPSTileNext {} {
     set fn [HiPSTilePath $hipsnet(dir) $kk $nn]
     file mkdir [file dirname $fn]
     incr hipsnet(running)
-    HiPSGetAsync "$hipsnet(url)/Norder$kk/Dir$dd/Npix$nn.$hipsnet(ext)" $fn.new \
+    # the mirror this tile is on (it moves on when one fails)
+    set ii 0
+    if {[info exists hipsnet(try,$nn)]} {
+	set ii $hipsnet(try,$nn)
+    }
+    set base [lindex $hipsnet(bases) $ii]
+    if {$base == {}} {
+	set base $hipsnet(url)
+    }
+    HiPSGetAsync "$base/Norder$kk/Dir$dd/Npix$nn.$hipsnet(ext)" $fn.new \
 	[list HiPSTileDone $nn $fn]
 }
 
@@ -439,7 +585,19 @@ proc HiPSTileDone {nn fn code} {
 	default {
 	    catch {file delete -force $fn.new}
 	    if {!$hipsnet(cancel)} {
-		lappend hipsnet(failed) [list $nn [HiPSCodeText $code]]
+		# no answer or a server error: the next mirror, if any
+		set ii 0
+		if {[info exists hipsnet(try,$nn)]} {
+		    set ii $hipsnet(try,$nn)
+		}
+		incr ii
+		if {$ii < [llength $hipsnet(bases)]} {
+		    set hipsnet(try,$nn) $ii
+		    incr hipsnet(done) -1
+		    set hipsnet(queue) [linsert $hipsnet(queue) 0 $nn]
+		} else {
+		    lappend hipsnet(failed) [list $nn [HiPSCodeText $code]]
+		}
 	    }
 	}
     }

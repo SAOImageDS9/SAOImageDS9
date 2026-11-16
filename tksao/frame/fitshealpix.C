@@ -10,6 +10,7 @@
 #include "base.h"
 #include "context.h"
 #include "hpx.h"
+#include "hips.h"
 #include "fitshpxreproj.h"
 #include "util.h"
 #include "wcsast.h"
@@ -65,6 +66,11 @@ void FitsImage::initHPX()
   if (proj && strcasecmp(proj,"HPX")) {
     char* upper = toUpper(proj);
 
+    // A HiPS in a window (zenithal/conic) zooms into its deeper tiles
+    // (FitsHPXReproj, TODO_HIPS.md Phase 5); the map built here, at the
+    // automatic order or order=K, is the coarse level it starts from.
+    FitsHiPS* deep = dynamic_cast<FitsHiPS*>(fits_);
+
     // FitsHPXReproj takes ownership of hpx (keeps it for recentring)
     FitsHPX* hpx = new FitsHPX(fits_, order, coord, FitsHPX::EQUATOR, col, 0);
     if (hpx->isValid())
@@ -76,7 +82,7 @@ void FitsImage::initHPX()
 			       context_->blockFactor()[0],
 			       context_->parent_->getHeight() *
 			       context_->blockFactor()[1],
-			       context_->parent_->nthreads_);
+			       context_->parent_->nthreads_, deep);
     else
       delete hpx;
     delete [] upper;
@@ -84,6 +90,23 @@ void FitsImage::initHPX()
   }
 
   hpx_ = new FitsHPX(fits_, order, coord, layout, col, quad);
+}
+
+int FitsImage::hpxDeepMissing(const char** root, int* order,
+			      std::vector<long long>* tiles)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  FitsHiPS* hips = dynamic_cast<FitsHiPS*>(fits_);
+  if (!rr || !hips || rr->deepOrder() < 0 || rr->missingTiles().empty())
+    return 0;
+  *root = hips->root();
+  *order = rr->deepOrder();
+  tiles->clear();
+  long long mask = (1LL << 56) - 1;
+  const std::vector<long long>& mm = rr->missingTiles();
+  for (size_t ii=0; ii<mm.size(); ii++)
+    tiles->push_back(mm[ii] & mask);
+  return 1;
 }
 
 // Recentre a resampled HEALPix window (zenithal or conic). Like

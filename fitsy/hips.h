@@ -51,6 +51,10 @@ class FitsHiPS : public FitsFile {
   Tcl_Interp* interp_; // decodes png/jpg tiles through Tk photos
   int channel_;        // colour tiles: 0/1/2 red/green/blue, -1 luminance
   int initView_;       // window centre taken from hips_initial_ra/dec
+  int maxOrder_;       // hips_order
+  int minOrder_;       // hips_order_min
+  int width_;          // hips_tile_width (tileWidth_ is as read)
+  long long* ident_;   // identity index table for readTile, width_^2
 
   int readProperties(const char*);
   const char* prop(const char*, const char* =NULL);
@@ -76,6 +80,20 @@ class FitsHiPS : public FitsFile {
   int order() {return order_;}
   long nside() {return nside_;}
   Source source() {return source_;}
+
+  // Tile access, for deep windows (tksao FitsHPXReproj): the HiPS's
+  // root directory (local, or a remote HiPS's cache), its tile format
+  // (fits, png or jpg), full tile width and order range, and tile N of
+  // order K read into out (tileWidth()^2 floats, top row first: out[r*W
+  // + c] is the tile's pixel at row r from the top, column c, which is
+  // NESTED sub-index interleave(r, c)), blank pixels NaN. Returns 0 if
+  // the tile isn't there or can't be read (out untouched).
+  const char* root() {return pName_;}
+  const char* tileExt() {return tileExt_;}
+  int tileWidth() {return width_;}
+  int maxOrder() {return maxOrder_;}
+  int minOrder() {return minOrder_;}
+  int readTile(int order, long long npix, float* out);
 };
 
 #endif

@@ -1070,6 +1070,7 @@ public:
   FitsImage* hpxKeyWindow();
   const char* hpxRecentre(HPXMode, double, double, int drag =0);
   void hpxAutoRefresh();
+  void hpxRequestTiles(FitsImage*);
   int hpxDragRefresh();
   void hpxWindowGeometry(FitsImage*, double*, int*, int*);
   int hpxPanTo(const Vector&, Coord::CoordSystem, Coord::SkyFrame);

@@ -3555,7 +3555,40 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat,
 
   // not FrameBase::updateBin(), which would reset the pan to the centre
   Base::updateBin(Matrix());
+
+  // a deep HiPS window may want tiles it doesn't have yet
+  hpxRequestTiles(ptr);
   return NULL;
+}
+
+// Ask the Tcl side (HiPSDeepWant, hipsnet.tcl) to fetch the tiles a deep
+// HiPS window wanted but didn't have; it fetches a remote HiPS's in the
+// background and rebuilds the window when they arrive. Doesn't disturb
+// this command's result.
+void Base::hpxRequestTiles(FitsImage* ptr)
+{
+  const char* root;
+  int order;
+  std::vector<long long> tiles;
+  if (!ptr || !ptr->hpxDeepMissing(&root, &order, &tiles) || !root)
+    return;
+
+  Tcl_Obj* cmd = Tcl_NewListObj(0, NULL);
+  Tcl_IncrRefCount(cmd);
+  Tcl_ListObjAppendElement(interp, cmd, Tcl_NewStringObj("HiPSDeepWant", -1));
+  Tcl_ListObjAppendElement(interp, cmd,
+			   Tcl_NewStringObj(options->cmdName, -1));
+  Tcl_ListObjAppendElement(interp, cmd, Tcl_NewStringObj(root, -1));
+  Tcl_ListObjAppendElement(interp, cmd, Tcl_NewIntObj(order));
+  Tcl_Obj* ll = Tcl_NewListObj(0, NULL);
+  for (size_t ii=0; ii<tiles.size(); ii++)
+    Tcl_ListObjAppendElement(interp, ll, Tcl_NewWideIntObj(tiles[ii]));
+  Tcl_ListObjAppendElement(interp, cmd, ll);
+
+  Tcl_InterpState state = Tcl_SaveInterpState(interp, TCL_OK);
+  Tcl_EvalObjEx(interp, cmd, TCL_EVAL_GLOBAL);
+  Tcl_RestoreInterpState(interp, state);
+  Tcl_DecrRefCount(cmd);
 }
 
 // The key channel's image, if it is a resampled HEALPix window

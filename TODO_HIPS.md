@@ -636,36 +636,74 @@ variable: `[...]` inside Tcl double quotes is command substitution.
 Goal: open DSS2 (order 9, 512 px, nside 262144) and browse it in a TAN
 window at full resolution, recentring and zooming live.
 
-- [ ] `ang2pix_nest` (and `pix2ang` for tests) in C++. These are small,
-      self-contained routines from the HEALPix C library, or derived
-      from the facet code already in `fitsy/hpx.C`. Unit-test them
-      against healpy.
-- [ ] A sampler interface in `FitsHPXReproj`: "value at (lon, lat)".
-      Its implementations are the current HPX-image lookup and a new
-      HiPS tile lookup with a tile cache (LRU by order and N, bounded
-      memory). Keep the per-pixel cost low: compute the tile index
-      once per run of output pixels in the same tile.
-- [ ] Level of detail: pick the order K so that the HiPS pixel size at
-      K+S is about the window pixel size (`pix_`), clamped to
-      `[hips_order_min, hips_order]`. For an order 0-3 window, use
-      `Allsky` as the first pass.
-- [ ] Fetch the visible tiles (query the window footprint for
-      overlapping tiles at K: `query_polygon`-like, or simply sample the
-      window grid and collect distinct N). Show the coarse version first
-      (lower order, already cached), then refine as tiles arrive. The
-      async Tcl fetch sends a "tiles ready" event that calls
-      `hpxReload()`.
-- [ ] The deep tier has no whole-map pixel array, so whole-map
-      statistics (`hpxView()` for scale limits) need a substitute: use
-      `hips_pixel_cut`/`hips_data_range`, or the stats of the current
-      window or the low-order map.
-- [ ] Interaction with regions/contours/catalogs: the windows already
-      remap regions and contours through the sky (TODO.md Phase 4).
-      Make sure nothing assumes the HPX intermediate exists.
-- [ ] Pixel-value honesty: every window pixel is a real HiPS pixel at
-      the chosen order. That order changes with zoom, so display it in
-      the info panel/header and say that values at order < `hips_order`
-      are mean-binned (`hips_hierarchy`).
+Design (2026-11-16, after reading the window code):
+- A deep window keeps today's HiPS map as its coarse level (the quick
+  look remotely, the automatic map locally): it gives the whole-map
+  statistics (`hpxGlobalData()` over `hpxView()`, so scale limits stay
+  put) and the fallback for tiles not loaded yet.
+- `FitsHPXReproj` gains a deep tile source (the `FitsHiPS`, which reads
+  any tile through a new API). `pixHPX_` becomes the HiPS's deepest
+  pixel, so `hpxWindowGeometry`/`hpxAutoRefresh` already let a zoom ask
+  for finer pixels and rebuild. `build()` then: picks order K (pixels no
+  larger than `pix_`), pass 1 collects the tiles the window touches
+  (`hpxAng2Nest` per output pixel), loads them into a bounded cache on
+  the main thread (PNG/JPEG decode needs Tk), pass 2 samples in threads.
+  A tile not available falls back to its deepest cached ancestor, then
+  the coarse map.
+- Remote: build() asks Tcl for the missing visible tiles (async), and
+  the fetch's completion rebuilds the window around the same centre.
+- Applies to a HiPS in any zenithal/conic window; `order=K` only sets
+  the coarse level it starts from (a remote load always passes the
+  reader an explicit order, so "only without order=" turned deep windows
+  off for every remote HiPS). All-sky projections stay as they are.
+- Correctness test: a deep window at order K must equal, pixel for
+  pixel, today's window built from the full map at order K.
+
+- [x] `ang2pix_nest` and `pix2ang` (done 2026-11-16): `fitsy/hpxnest.h`,
+      header-only (installed to include/ for tksao), written from Gorski
+      et al. 2005 (not the GPL HEALPix library); polar caps from
+      cos(lat) for precision; mask-based bit spreading, 15 ns a lookup.
+      `Tests/hips/nesttest.C` + `nesttest.py` against healpy, nside
+      2^0..2^29: 126,300 points (random, region boundaries, poles,
+      meridians, wrap) 0 wrong (261 exactly on an edge matched a
+      neighbour), 60,000 pixel centres 0 wrong (worst 1.1e-13 deg).
+- [x] Deep windows (done 2026-11-16).
+      - `FitsHiPS::readTile(order, N, out)`: any tile, any format, top
+        row first (the identity table through the existing copiers);
+        plus `root()`, `tileExt()`, `tileWidth()`, `min/maxOrder()`.
+      - `FitsHPXReproj(..., FitsHiPS* deep)`, passed for every HiPS in
+        a window (`FitsImage::initHPX`). `pixHPX_` = the deepest HiPS
+        pixel. In `build()`, when the window's pixel is finer than the
+        map's: K = ceil(log2(p0/pix)) clamped to the HiPS's orders;
+        pass 1 (`hpxDirectResample` mode 1, threaded) collects the tiles
+        touched; they are read into an LRU cache (512 MB, at least twice
+        the window's tiles) on the main thread; a missing tile uses its
+        deepest cached ancestor finer than the map, else the map; pass 2
+        samples (`hpxAng2Nest` per pixel, last tile cached per thread).
+        HISTORY "HiPS order K tiles (NSIDE n); m of t not loaded".
+      - Zoom is relative to the window's pixels (a rebuild rescales it
+        to keep the on-screen scale), so after zooming in, "zoom 1"
+        means one order-K pixel per screen pixel; zooming out below 1
+        goes back up to the map.
+      - Remote: `Base::hpxRecentre` -> `hpxRequestTiles` -> Tcl
+        `HiPSDeepWant frame root order tiles` (interp state saved).
+        `hipsnet(url,<cache dir>)` maps the cache back to the URL; the
+        tiles are fetched async, 6 at a time, 404s recorded, and
+        `$frame update fits center` rebuilds the window (coalesced:
+        every 300 ms while arriving, once at the end).
+      - Tested by `Tests/hips/hipsdeep.sh` (20 checks): every window
+        pixel that has a tile at its order equals the tile
+        (`Tests/hips/deepcheck.py`: astropy WCS + healpy + the tile
+        file; 493,099 pixels at order 5 = nside 16384), orders follow
+        zoom, pan, zoom out, order=K, all-sky stays, scale limits
+        stable, remote fetch of only the window's tiles + refresh +
+        cache, colour channels.
+- [ ] Not yet: a fallback level between the map and order K for remote
+      HiPS (ancestors are only used when already cached, so a deep
+      remote zoom shows the coarse map until its tiles arrive);
+      cancelling a deep fetch; show the order in the info panel; a
+      pan/zoom while tiles are in flight queues the new ones but doesn't
+      drop the old.
 
 ## Testing plan
 

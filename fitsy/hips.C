@@ -271,6 +271,10 @@ FitsHiPS::FitsHiPS(const char* fn, Tcl_Interp* interp, int channel)
   nbad_ = 0;
   badAllsky_ = -1;
   initView_ = 0;
+  maxOrder_ = -1;
+  minOrder_ = 0;
+  width_ = 0;
+  ident_ = NULL;
 
   // root directory, plus [order=,proj=,...] options
   parse(fn);
@@ -334,6 +338,11 @@ FitsHiPS::FitsHiPS(const char* fn, Tcl_Interp* interp, int channel)
     internalError("HiPS: bad hips_order or hips_tile_width in properties");
     return;
   }
+  maxOrder_ = maxOrder;
+  width_ = width;
+  minOrder_ = propInt("hips_order_min", 0);
+  if (minOrder_ < 0 || minOrder_ > maxOrder_)
+    minOrder_ = 0;
 
   if (!chooseSource(maxOrder, width, pHiPSOrder_))
     return;
@@ -395,6 +404,44 @@ FitsHiPS::~FitsHiPS()
 {
   if (data_)
     delete [] (float*)data_;
+  if (ident_)
+    delete [] ident_;
+}
+
+int FitsHiPS::readTile(int order, long long npix, float* out)
+{
+  int ww = width_;
+  if (!pName_ || ww <= 0 || order < 0 || order > maxOrder_ || npix < 0 ||
+      npix >= (12LL << (2*order)))
+    return 0;
+  if (!ident_) {
+    ident_ = new (nothrow) long long[(size_t)ww*ww];
+    if (!ident_)
+      return 0;
+    for (size_t ii=0; ii<(size_t)ww*ww; ii++)
+      ident_[ii] = ii;
+  }
+
+  char* fn = tilePath(order, npix, tileExt_);
+  int ok = 0;
+  if (fileExists(fn)) {
+    if (!strcmp(tileExt_, "fits")) {
+      FitsFitsMMap img(fn, FitsFile::EXACTIMAGE);
+      ok = img.isValid() && img.isImage() &&
+	img.head()->naxis(0) == ww && img.head()->naxis(1) == ww &&
+	copyBlock(&img, 0, 0, ww, out, ident_);
+    }
+    else {
+      int nx, ny;
+      float* img = readPhoto(interp_, fn, &nx, &ny, channel_);
+      ok = img && nx == ww && ny == ww &&
+	copyPhotoBlock(img, nx, ny, 0, 0, ww, out, ident_);
+      if (img)
+	delete [] img;
+    }
+  }
+  delete [] fn;
+  return ok;
 }
 
 int FitsHiPS::isHiPS(const char* dir)

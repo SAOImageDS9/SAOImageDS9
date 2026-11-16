@@ -192,6 +192,10 @@ class FitsImage {
   void hpxReload();
   double hpxPixel();
   double hpxPixelHPX();
+  // a deep HiPS window: the HiPS root (local, or a remote HiPS's cache),
+  // the order shown and the tiles it wanted but didn't have; 0 if none
+  int hpxDeepMissing(const char** root, int* order,
+		     std::vector<long long>* tiles);
   void hpxMaxSize(double pix, int* ww, int* hh);
   int hpxIsConic();
   double hpxLat();

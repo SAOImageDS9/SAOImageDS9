@@ -1828,10 +1828,16 @@ proc ContourBackupBase {ch which fdir rdir {tag {}}} {
 
     # loaded contours: a file per set, so each restores as its own set.
     # The name line is caught so older versions can still read the backup.
+    # A HEALPix projection window is rebuilt to fit the frame and zoom,
+    # so its pixels at restore aren't those at backup: save on the sky
+    set sys physical
+    if {[HPXFrameIsWindow $which]} {
+	set sys wcs
+    }
     foreach ss [$which get contour aux] {
 	lassign $ss id name
 	set ff "aux$tag$id.ctr"
-	$which contour save aux $id \"$fdir/$ff\" physical fk5
+	$which contour save aux $id \"$fdir/$ff\" $sys fk5
 	puts $ch "$which contour load \{\"$rdir/$ff\"\}"
 	set getid "\[lindex \[lindex \[$which get contour aux\] end\] 0\]"
 	puts $ch "catch {$which contour aux name $getid [list "{$name}"]}"

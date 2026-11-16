@@ -407,7 +407,7 @@ proc LoadUpdate {} {
     UpdateContour
 
     # Cube?
-    if {[$current(frame) has fits cube]} {
+    if {[CubeFrame $current(frame) has fits cube]} {
 	CubeDialog
     }
 

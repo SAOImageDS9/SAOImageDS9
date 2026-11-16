@@ -1,11 +1,10 @@
 # TODO: HiPS (Hierarchical Progressive Surveys) support
 
-Status (2026-11-16): Phases 0-3 and 5 done: local and remote (HTTP)
+Status (2026-11-16): Phases 0-5 done: local and remote (HTTP)
 HiPS, FITS, PNG/JPEG and colour tiles, with all projections, the `hips`
 command, dialogs, backup/restore, Open Recent, properties defaults,
 coverage overlay, provenance, and deep windows that zoom into the HiPS's
-deeper tiles (fetching only the visible ones). Phase 4 (cubes) is
-left. Work is on branch `hips`. Builds on the
+deeper tiles (fetching only the visible ones), and cubes. Work is on branch `hips`. Builds on the
 HEALPix projection work in `TODO.md` (PR SAOImageDS9/SAOImageDS9#380:
 `FitsHPXReproj`, `proj=`/`lon0=`/`lat0=`/`fov=`, live windows).
 
@@ -17,6 +16,35 @@ numbers below refer to it.
 Sample data: `hips/data1/ancillary/missions/Fermi_Band4/HiPS` (Fermi-LAT
 1-3 GeV, <https://cade.irap.omp.eu/doku.php?id=fermi>). Below it is called
 `$FERMI`.
+
+## What's left (2026-11-16)
+
+Phases 0-5 are done. Open, roughly by value:
+
+- Deep windows: a cancel for background tile fetches, and a status
+  line (tiles waiting/arrived) while they run (Phase 5).
+- Cubes are 2-D frames underneath (Phase 4): no 3-D render, no `save`
+  of the whole cube, no `cube axes` reordering, no cube-wide scale
+  limits. `lock cube` / `match frame` between HiPS cube frames is
+  untested. No real FITS-tile cube tested (LAB HI is PNG; the synthetic
+  `mkcube.py` cube is FITS).
+- HiPS by ID or from a list (`CDS/P/DSS2/color`, the MocServer
+  `hips list` query, sec. 5.2): a natural Phase 6.
+- `hips` command: no `format=` option (FITS > PNG > JPEG is chosen
+  automatically) and no `hips close` (frame `clear` does it). The
+  Open HiPS dialog has no format choice either.
+- SAMP `hips` goes through the same table as XPA but has not been
+  exercised; no standard MType exists.
+- Test data still missing: 8-bit integer and BITPIX -64 FITS tiles
+  (candidates in `hips/samples.md`).
+- Reference-image tests (Phase 0 item): a Python-rebuilt NESTED map
+  projected with `reproject_from_healpix`, and CDS `hips2fits` as an
+  independent check for remote HiPS. The per-feature scripts in
+  `Tests/hips/` cover most of the testing plan below, but there is no
+  single `Tests/hips.sh`.
+- Out of scope so far: catalogue HiPS (refused with a message), and
+  the whole-map memory limit at nside 8192 (`TODO.md`).
+- Upstream: branch `hips` is local only; not pushed, no PR.
 
 ## Background
 
@@ -620,17 +648,29 @@ variable: `[...]` inside Tcl double quotes is command substitution.
       RGB channel got limits. Now PNG/JPEG HiPS get 0-255, on every
       channel (HiPSApplyCut).
 
-### Phase 4: HiPS cubes
+### Phase 4: HiPS cubes -- done 2026-11-16
 
-- [ ] `dataproduct_type=cube`, `hips_cube_depth`: present as a 3-D
-      image with ds9's Cube dialog driving the frame index. Each slice
-      change loads `NpixN_f` (frame 0 = no suffix) and calls
-      `hpxReload()`, like `nextBin()` does. Build the 3rd-axis WCS from
-      `data_cube_crpix3/crval3/cdelt3/bunit3`. Start at
-      `hips_cube_firstframe`.
-- [ ] Decide whether to load all slices up front (memory: depth x the
-      whole-sky map) or on demand (the cube dialog's "next" triggers a
-      fetch). On demand seems the only sane option for remote cubes.
+- [x] `dataproduct_type=cube`, `hips_cube_depth`: one frame at a time,
+      on demand (all of them up front would be depth x the map, and
+      remote cubes would fetch everything). `slice=` (fitsy grammar,
+      `pHiPSSlice`) picks the frame, default `hips_cube_firstframe`;
+      `FitsHiPS` reads `NpixN_f`/`Allsky_f` (frame 0 no suffix) and
+      writes `HIPSSLIC`, `HIPSDPTH`, `HIPSZVAL` (from
+      `data_cube_crpix3/crval3/cdelt3/bunit3`) and a HISTORY card.
+- [x] The frame stays 2-D. ds9's cube code asks the frame through
+      `CubeFrame` (cube.tcl), which `HiPSCubeAnswer` (hips.tcl) answers
+      for a HiPS cube: 3 axes, depth, slice, the 3rd-axis WCS. A new
+      slice (`HiPSSetSlice`) reloads the HiPS with `slice=` keeping
+      pan, projection and on-screen scale (zoom x new/old window pixel,
+      so a deep window goes deep again). The `cube` get commands go
+      through `CubeSendCmdCurrent`.
+- [x] Remote: the frame's suffix in tile/Allsky names, in the cache's
+      `.missing`/`.noallsky` records and in deep-fetch requests.
+- Test: `Tests/hips/hipscube.sh` (27 checks, with `mkcube.py` and LAB HI).
+- Not done: a cube is not a 3-D frame, so cube-wide operations (3-D
+  render, `save` of the whole cube, `cube axes` order, cube-wide scale
+  limits) aren't available; `match frame`/`lock cube` between HiPS cube
+  frames is untested.
 
 ### Phase 5: deep HiPS, multi-resolution windows -- done 2026-11-16
 

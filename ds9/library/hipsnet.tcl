@@ -42,6 +42,7 @@ proc HiPSNetDef {} {
     set hipsnet(tokens) {}
     set hipsnet(error) {}
     set hipsnet(ext) fits
+    set hipsnet(sfx) {}
     set hipsnet(bases) {}
 
     # deep windows' background tile fetching (HiPSDeepWant)
@@ -50,6 +51,24 @@ proc HiPSNetDef {} {
     set hipsdeep(running) 0
     set hipsdeep(fetched) 0
     set hipsdeep(refreshes) 0
+}
+
+# A cube's frame suffix for file names, "_n" (HiPS 1.0 sec. 4.2.3),
+# empty for frame 0 and for images: slice= in opts, else
+# hips_cube_firstframe, as the reader (FitsHiPS) picks
+proc HiPSSliceSuffix {props opts} {
+    if {![string match cube* [HiPSProp $props dataproduct_type image]]} {
+	return {}
+    }
+    if {[dict exists $opts slice]} {
+	set ss [dict get $opts slice]
+    } else {
+	set ss [HiPSProp $props hips_cube_firstframe 0]
+    }
+    if {![string is integer -strict $ss] || $ss <= 0} {
+	return {}
+    }
+    return _$ss
 }
 
 # The base URLs to fetch a HiPS from: url first, then the mirrors its
@@ -290,6 +309,7 @@ proc HiPSFetchDo {url dir opts} {
     }
     set hipsnet(ext) $ext
     set hipsnet(bases) [HiPSBases $url $props]
+    set hipsnet(sfx) [HiPSSliceSuffix $props $opts]
     set width [HiPSProp $props hips_tile_width 512]
     set maxorder [HiPSProp $props hips_order -1]
     set minorder [HiPSProp $props hips_order_min 0]
@@ -400,14 +420,15 @@ proc HiPSFetchAllsky {url dir kk} {
     set od [file join $dir Norder$kk]
     global hipsnet
     set ext $hipsnet(ext)
-    set af [file join $od Allsky.$ext]
-    set none [file join $od .noallsky.$ext]
+    set sfx $hipsnet(sfx)
+    set af [file join $od Allsky$sfx.$ext]
+    set none [file join $od .noallsky$sfx.$ext]
     if {[file exists $none]} {
 	return 0
     }
     if {![file isfile $af]} {
 	file mkdir $od
-	set code [HiPSGetPath Norder$kk/Allsky.$ext $af.new]
+	set code [HiPSGetPath Norder$kk/Allsky$sfx.$ext $af.new]
 	if {$code != 200} {
 	    catch {file delete -force $af.new}
 	    # remember a 404 so it isn't asked for again
@@ -463,7 +484,7 @@ proc HiPSFetchTiles {url dir kk width props} {
     set od [file join $dir Norder$kk]
     file mkdir $od
     set missing {}
-    set mfn [file join $od .missing]
+    set mfn [file join $od .missing$hipsnet(sfx)]
     if {[file isfile $mfn]} {
 	set ch [open $mfn r]
 	foreach nn [split [read $ch] \n] {
@@ -543,7 +564,7 @@ proc HiPSFetchTiles {url dir kk width props} {
 proc HiPSTilePath {dir kk nn} {
     set dd [expr {($nn/10000)*10000}]
     global hipsnet
-    return [file join $dir Norder$kk Dir$dd Npix$nn.$hipsnet(ext)]
+    return [file join $dir Norder$kk Dir$dd Npix$nn$hipsnet(sfx).$hipsnet(ext)]
 }
 
 # start the next queued tile, or finish
@@ -576,7 +597,7 @@ proc HiPSTileNext {} {
     if {$base == {}} {
 	set base $hipsnet(url)
     }
-    HiPSGetAsync "$base/Norder$kk/Dir$dd/Npix$nn.$hipsnet(ext)" $fn.new \
+    HiPSGetAsync "$base/Norder$kk/Dir$dd/Npix$nn$hipsnet(sfx).$hipsnet(ext)" $fn.new \
 	[list HiPSTileDone $nn $fn]
 }
 
@@ -974,7 +995,7 @@ proc HiPSProgressDone {} {
 # background, a few at a time, into its cache, and the window is rebuilt
 # around the same view as they arrive (the coarse map shows through
 # until then). A local HiPS's missing tiles are just missing.
-proc HiPSDeepWant {frame root order tiles} {
+proc HiPSDeepWant {frame root order tiles {slice 0}} {
     global hipsdeep
     global hipsnet
 
@@ -990,14 +1011,16 @@ proc HiPSDeepWant {frame root order tiles} {
     if {$ext == {}} {
 	return
     }
+    # a cube frame's files: NpixN_n (no suffix for frame 0)
+    set sfx [expr {$slice > 0 ? "_$slice" : {}}]
 
     # this view replaces the frame's earlier requests still waiting (those
     # in flight finish, and land in the cache)
     set keep {}
     foreach qq $hipsdeep(queue) {
 	if {[lindex $qq 0] == $frame} {
-	    lassign $qq ff rr uu oo nn
-	    unset -nocomplain "hipsdeep(want,$rr $oo $nn)"
+	    lassign $qq ff rr uu oo nn ee sx
+	    unset -nocomplain "hipsdeep(want,$rr $oo $nn$sx)"
 	} else {
 	    lappend keep $qq
 	}
@@ -1017,8 +1040,8 @@ proc HiPSDeepWant {frame root order tiles} {
 	# known to be missing (404s remembered by either fetcher)
 	array unset gone
 	set od [file join $root Norder$oo]
-	if {[file isfile [file join $od .missing]]} {
-	    set ch [open [file join $od .missing] r]
+	if {[file isfile [file join $od .missing$sfx]]} {
+	    set ch [open [file join $od .missing$sfx] r]
 	    foreach nn [split [read $ch] \n] {
 		if {$nn != {}} {
 		    set gone($nn) 1
@@ -1035,15 +1058,15 @@ proc HiPSDeepWant {frame root order tiles} {
 	    dict set seen $aa 1
 	    set dd [expr {($aa/10000)*10000}]
 	    if {[info exists gone($aa)] ||
-		[file isfile [file join $od Dir$dd Npix$aa.$ext]]} {
+		[file isfile [file join $od Dir$dd Npix$aa$sfx.$ext]]} {
 		continue
 	    }
-	    set key "$root $oo $aa"
+	    set key "$root $oo $aa$sfx"
 	    if {[info exists hipsdeep(want,$key)]} {
 		continue
 	    }
 	    set hipsdeep(want,$key) 1
-	    lappend mine [list $frame $root $url $oo $aa $ext]
+	    lappend mine [list $frame $root $url $oo $aa $ext $sfx]
 	}
     }
     set hipsdeep(queue) [concat $mine $hipsdeep(queue)]
@@ -1062,22 +1085,22 @@ proc HiPSDeepNext {} {
     if {![llength $hipsdeep(queue)]} {
 	return
     }
-    lassign [lindex $hipsdeep(queue) 0] frame root url order nn ext
+    lassign [lindex $hipsdeep(queue) 0] frame root url order nn ext sfx
     set hipsdeep(queue) [lrange $hipsdeep(queue) 1 end]
 
     set dd [expr {($nn/10000)*10000}]
-    set fn [file join $root Norder$order Dir$dd Npix$nn.$ext]
+    set fn [file join $root Norder$order Dir$dd Npix$nn$sfx.$ext]
     file mkdir [file dirname $fn]
     incr hipsdeep(running)
-    HiPSGetAsync "$url/Norder$order/Dir$dd/Npix$nn.$ext" $fn.new \
-	[list HiPSDeepDone $frame $root $order $nn $fn]
+    HiPSGetAsync "$url/Norder$order/Dir$dd/Npix$nn$sfx.$ext" $fn.new \
+	[list HiPSDeepDone $frame $root $order $nn $fn $sfx]
 }
 
-proc HiPSDeepDone {frame root order nn fn code} {
+proc HiPSDeepDone {frame root order nn fn sfx code} {
     global hipsdeep
 
     incr hipsdeep(running) -1
-    unset -nocomplain "hipsdeep(want,$root $order $nn)"
+    unset -nocomplain "hipsdeep(want,$root $order $nn$sfx)"
     switch -- $code {
 	200 {
 	    file rename -force $fn.new $fn
@@ -1087,7 +1110,7 @@ proc HiPSDeepDone {frame root order nn fn code} {
 	404 {
 	    catch {file delete -force $fn.new}
 	    catch {
-		set ch [open [file join $root Norder$order .missing] a]
+		set ch [open [file join $root Norder$order .missing$sfx] a]
 		puts $ch $nn
 		close $ch
 	    }

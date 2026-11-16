@@ -285,6 +285,7 @@ start at its initial view (<code>hips_initial_ra/dec/fov</code>).</li>
 <code>Moc.fits</code>, in any projection.</li>
 <li><strong>HIPS</strong>: Zenithal and conic windows on a HiPS zoom into its deeper tiles, down to its deepest order; a remote HiPS fetches the visible tiles in the background (in worker threads, so ds9 stays responsive with slow servers). <code>HIPSORD</code> gives the order shown.</li>
 <li><strong>HIPS</strong>: Remote HiPS can be opened by URL (<code>-hips https://...</code>, <em>File &gt; Open HiPS URL...</em>), with an on-disk cache and mirror fallback; PNG/JPEG and colour HiPS (into an RGB frame) are supported.</li>
+<li><strong>HIPS</strong>: HiPS cubes load one frame at a time (<code>slice=</code>, default <code>hips_cube_firstframe</code>); the Cube dialog and the <code>cube</code> command step through them, fetching each frame as it is shown.</li>
 <li><strong>HIPS</strong>: A HiPS is listed in <em>Open Recent</em>,
 and backups record it by directory and options without copying its
 tiles.</li>

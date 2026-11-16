@@ -74,6 +74,7 @@ extern void ffArray(int);
 %token QUAD_
 %token RING_
 %token SKIP_
+%token SLICE_
 %token SOUTH_
 %token SYSTEM_
 %token UNKNOWN_
@@ -279,6 +280,7 @@ hpx	: SYSTEM_ '=' hpxSystem
 	| ORDER_ '=' hpxOrder
 	// a HiPS order (ORDER_ '=' ring|nested is the HEALPix ordering)
 	| ORDER_ '=' INT {ff->setpHiPSOrder($3);}
+	| SLICE_ '=' INT {ff->setpHiPSSlice($3);}
 	| LAYOUT_ '=' hpxLayout
 	| COL_ '=' INT {ff->setpHPXColumn($3);}
 	| QUAD_ '=' INT {ff->setpHPXQuad($3);}

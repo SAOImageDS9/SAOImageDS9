@@ -273,6 +273,8 @@ FitsHiPS::FitsHiPS(const char* fn, Tcl_Interp* interp, int channel)
   initView_ = 0;
   maxOrder_ = -1;
   minOrder_ = 0;
+  depth_ = 1;
+  slice_ = 0;
   width_ = 0;
   ident_ = NULL;
 
@@ -292,6 +294,31 @@ FitsHiPS::FitsHiPS(const char* fn, Tcl_Interp* interp, int channel)
   const char* type = prop("dataproduct_type", "image");
   if (!strncmp(type, "catalog", 7)) {
     internalError("HiPS: catalogue HiPS are not images");
+    return;
+  }
+
+  // a cube: one frame at a time, slice= or hips_cube_firstframe (HiPS
+  // 1.0 sec. 4.2.3: frame n's tiles are NpixN_n, its Allsky Allsky_n,
+  // frame 0's have no suffix)
+  if (!strncmp(type, "cube", 4)) {
+    depth_ = propInt("hips_cube_depth", 1);
+    if (depth_ < 1)
+      depth_ = 1;
+    slice_ = pHiPSSlice_ >= 0 ? pHiPSSlice_ :
+      propInt("hips_cube_firstframe", 0);
+    if (slice_ < 0 || slice_ >= depth_) {
+      if (pHiPSSlice_ >= 0) {
+	ostringstream str;
+	str << "HiPS: slice " << slice_ << " is outside the cube (0-"
+	    << depth_-1 << ")" << ends;
+	internalError(str.str().c_str());
+	return;
+      }
+      slice_ = 0;
+    }
+  }
+  else if (pHiPSSlice_ > 0) {
+    internalError("HiPS: slice= needs a cube HiPS");
     return;
   }
 
@@ -591,14 +618,20 @@ char* FitsHiPS::tilePath(int order, long npix, const char* ext)
 {
   ostringstream str;
   str << pName_ << "/Norder" << order << "/Dir" << (npix/10000)*10000
-      << "/Npix" << npix << '.' << ext << ends;
+      << "/Npix" << npix;
+  if (slice_ > 0)
+    str << '_' << slice_;
+  str << '.' << ext << ends;
   return dupstr(str.str().c_str());
 }
 
 char* FitsHiPS::allskyPath(int order, const char* ext)
 {
   ostringstream str;
-  str << pName_ << "/Norder" << order << "/Allsky." << ext << ends;
+  str << pName_ << "/Norder" << order << "/Allsky";
+  if (slice_ > 0)
+    str << '_' << slice_;
+  str << '.' << ext << ends;
   return dupstr(str.str().c_str());
 }
 
@@ -702,7 +735,10 @@ int FitsHiPS::chooseSource(int maxOrder, int width, int askOrder)
     }
     else {
       ostringstream str;
-      str << "no FITS tiles or Allsky.fits at order " << askOrder << ends;
+      str << "no " << tileExt_ << " tiles or Allsky at order " << askOrder;
+      if (depth_ > 1)
+	str << " for cube frame " << slice_;
+      str << ends;
       noSource(str.str().c_str());
       return 0;
     }
@@ -743,8 +779,12 @@ int FitsHiPS::chooseSource(int maxOrder, int width, int askOrder)
   }
 
   if (!best) {
-    noSource("no FITS tiles or Allsky.fits small enough to load; "
-	     "try order=");
+    ostringstream str;
+    str << "no " << tileExt_ << " tiles or Allsky";
+    if (depth_ > 1)
+      str << " for cube frame " << slice_;
+    str << " small enough to load; try order=" << ends;
+    noSource(str.str().c_str());
     return 0;
   }
   return 1;
@@ -908,11 +948,36 @@ int FitsHiPS::initHeaders()
   // the order of the values; a deep window that zooms past it says its
   // own (View > Keyword HIPSORD shows it in the info panel)
   head_->appendInteger("HIPSORD", order_, "HiPS order of the values");
+  // a cube's frame, and its value on the third axis
+  if (depth_ > 1) {
+    head_->appendInteger("HIPSSLIC", slice_, "HiPS cube frame (0 = first)");
+    head_->appendInteger("HIPSDPTH", depth_, "HiPS cube frames");
+    const char* c3 = prop("data_cube_crval3");
+    const char* d3 = prop("data_cube_cdelt3");
+    if (c3 && d3) {
+      double crpix3 = propReal("data_cube_crpix3");
+      if (isnan(crpix3))
+	crpix3 = 1;
+      double vv = propReal("data_cube_crval3") +
+	(slice_ + 1 - crpix3)*propReal("data_cube_cdelt3");
+      ostringstream cc;
+      cc << "frame value";
+      if (prop("data_cube_bunit3"))
+	cc << " [" << prop("data_cube_bunit3") << "]";
+      cc << ends;
+      head_->appendReal("HIPSZVAL", vv, 12, cc.str().c_str());
+    }
+  }
 
   // provenance
   {
     ostringstream str;
     str << "HiPS " << prop("creator_did", pName_) << ends;
+    head_->insertComment("HISTORY", str.str().c_str(), NULL);
+  }
+  if (depth_ > 1) {
+    ostringstream str;
+    str << "cube frame " << slice_ << " of " << depth_ << ends;
     head_->insertComment("HISTORY", str.str().c_str(), NULL);
   }
   {

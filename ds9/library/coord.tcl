@@ -79,7 +79,7 @@ proc AdjustCoordSystem3d {varname system} {
     switch -- $var($system) {
 	image {}
 	default {
-	    if {![$current(frame) has wcs 3d $var($system)]} {
+	    if {![CubeFrame $current(frame) has wcs 3d $var($system)]} {
 		set ${varname}($system) image
 	    }
 	}

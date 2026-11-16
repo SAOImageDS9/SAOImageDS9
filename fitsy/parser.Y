@@ -59,6 +59,7 @@ extern void ffArray(int);
 %token ECLIPTIC_
 %token ENDIAN_
 %token EQUATORIAL_
+%token FORMAT_
 %token FOV_
 %token GALACTIC_
 %token KEY_
@@ -281,6 +282,7 @@ hpx	: SYSTEM_ '=' hpxSystem
 	// a HiPS order (ORDER_ '=' ring|nested is the HEALPix ordering)
 	| ORDER_ '=' INT {ff->setpHiPSOrder($3);}
 	| SLICE_ '=' INT {ff->setpHiPSSlice($3);}
+	| FORMAT_ '=' STRING {ff->setpHiPSFormat($3);}
 	| LAYOUT_ '=' hpxLayout
 	| COL_ '=' INT {ff->setpHPXColumn($3);}
 	| QUAD_ '=' INT {ff->setpHPXQuad($3);}

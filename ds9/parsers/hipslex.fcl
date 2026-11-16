@@ -9,6 +9,7 @@
 
 new	    {return $NEW_}
 cancel	    {return $CANCEL_}
+close	    {return $CLOSE_}
 coverage    {return $COVERAGE_}
 
 #include yesno.fin

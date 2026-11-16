@@ -313,9 +313,9 @@ proc HiPSFetchDo {url dir opts} {
 	set hipsnet(error) [msgcat::mc {catalogue HiPS are not supported}]
 	return {}
     }
-    set ext [HiPSTileExt $props]
+    set ext [HiPSTileExt $props $opts]
     if {$ext == {}} {
-	set hipsnet(error) "[msgcat::mc {no FITS, PNG or JPEG tiles, this HiPS has}] [HiPSProp $props hips_tile_format]"
+	set hipsnet(error) [HiPSTileExtError $props $opts]
 	return {}
     }
     set hipsnet(ext) $ext
@@ -1018,7 +1018,8 @@ proc HiPSDeepWant {frame root order tiles {slice 0}} {
     if {[catch {HiPSReadProperties $root} props]} {
 	return
     }
-    set ext [HiPSTileExt $props]
+    # format= of the HiPS in this frame
+    set ext [HiPSTileExt $props [HiPSOptions [HiPSFrameName $frame]]]
     if {$ext == {}} {
 	return
     }
@@ -1027,17 +1028,7 @@ proc HiPSDeepWant {frame root order tiles {slice 0}} {
 
     # this view replaces the frame's earlier requests still waiting (those
     # in flight finish, and land in the cache)
-    set keep {}
-    foreach qq $hipsdeep(queue) {
-	if {[lindex $qq 0] == $frame} {
-	    lassign $qq ff rr uu oo nn ee sx
-	    unset -nocomplain "hipsdeep(want,$rr $oo $nn$sx)"
-	    incr hipsdeep(total) -1
-	} else {
-	    lappend keep $qq
-	}
-    }
-    set hipsdeep(queue) $keep
+    HiPSDeepDrop $frame
 
     # first the ancestors one and two orders up (a quarter and a
     # sixteenth as many tiles): the window shows the deepest cached one
@@ -1150,6 +1141,23 @@ proc HiPSDeepDone {gen frame root order nn fn sfx code} {
 }
 
 # tiles still to come: waiting, or in a worker and not cancelled
+# drop the requests still waiting for frame
+proc HiPSDeepDrop {frame} {
+    global hipsdeep
+
+    set keep {}
+    foreach qq $hipsdeep(queue) {
+	if {[lindex $qq 0] == $frame} {
+	    lassign $qq ff rr uu oo nn ee sx
+	    unset -nocomplain "hipsdeep(want,$rr $oo $nn$sx)"
+	    incr hipsdeep(total) -1
+	} else {
+	    lappend keep $qq
+	}
+    }
+    set hipsdeep(queue) $keep
+}
+
 proc HiPSDeepPending {} {
     global hipsdeep
 
@@ -1214,7 +1222,10 @@ proc HiPSDeepStatus {} {
 	    after cancel $hipsdeep(statustimer)
 	    unset hipsdeep(statustimer)
 	}
-	catch {place forget $ds9(image).hipsdeep}
+	# not catch: its error would stay in errorInfo, which XPA reports
+	if {[HiPSDeepStatusShown]} {
+	    place forget $ds9(image).hipsdeep
+	}
 	return
     }
     set hipsdeep(msg) "[msgcat::mc {Fetching HiPS tiles}]: $hipsdeep(done) / $hipsdeep(total)"

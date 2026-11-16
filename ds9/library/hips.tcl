@@ -102,7 +102,7 @@ proc HiPSApplyCut {fn} {
     if {[catch {HiPSReadProperties [HiPSRoot [HiPSLocalName $fn]]} props]} {
 	return
     }
-    if {[HiPSTileExt $props] == {fits}} {
+    if {[HiPSTileExt $props [HiPSOptions $fn]] == {fits}} {
 	set cut [HiPSProp $props hips_pixel_cut]
 	if {[llength $cut] != 2} {
 	    return
@@ -153,7 +153,7 @@ proc HiPSIsColour {fn} {
 			    [HiPSProp $props dataproduct_subtype]] color] < 0} {
 	return 0
     }
-    return [expr {[HiPSTileExt $props] in {png jpg}}]
+    return [expr {[HiPSTileExt $props [HiPSOptions $fn]] in {png jpg}}]
 }
 
 # Make the current frame one a HiPS can load into: an RGB frame for a
@@ -668,6 +668,18 @@ proc HiPSCancelCmd {} {
     HiPSDeepCancel
 }
 
+# hips close: clear the current frame, if it holds a HiPS
+proc HiPSCloseCmd {} {
+    global current
+
+    if {[HiPSFrameName $current(frame)] == {}} {
+	return
+    }
+    HiPSDeepDrop $current(frame)
+    HiPSDeepStatus
+    ClearCurrentFrame
+}
+
 proc ProcessHiPSCmd {varname iname} {
     upvar $varname var
     upvar $iname i
@@ -1125,19 +1137,49 @@ proc HiPSProp {props key {default {}}} {
     return $default
 }
 
-# A FITS file's primary header: a dict of width (NAXIS1), height
-# (NAXIS2) and ok (the file holds all the data), or {} if unreadable
-# The tile files a HiPS is read from: fits (physical values) when listed
-# in hips_tile_format, else png, else jpg (display values), or {} if none
-# of them. FitsHiPS (fitsy/hips.C) picks the same.
-proc HiPSTileExt {props} {
+# The tile files a HiPS is read from: those format= in opts (a dict,
+# HiPSOptions) asks for (fits, png, jpeg or jpg), else fits (physical
+# values) when listed in hips_tile_format, else png, else jpg (display
+# values); {} if not listed (or format= is none of those). FitsHiPS
+# (fitsy/hips.C) picks the same.
+proc HiPSTileExt {props {opts {}}} {
     set formats [string tolower [HiPSProp $props hips_tile_format fits]]
-    foreach {word ext} {fits fits png png jpeg jpg jpg jpg} {
+    set words {fits fits png png jpeg jpg jpg jpg}
+    if {[dict exists $opts format]} {
+	set want [string tolower [dict get $opts format]]
+	if {$want == {jpeg}} {
+	    set want jpg
+	}
+	set only {}
+	foreach {word ext} $words {
+	    if {$ext == $want} {
+		lappend only $word $ext
+	    }
+	}
+	set words $only
+    }
+    foreach {word ext} $words {
 	if {[lsearch -exact $formats $word] >= 0} {
 	    return $ext
 	}
     }
     return {}
+}
+
+# Why HiPSTileExt found nothing, as FitsHiPS says it
+proc HiPSTileExtError {props opts} {
+    set formats [HiPSProp $props hips_tile_format]
+    if {![dict exists $opts format]} {
+	return "[msgcat::mc {no FITS, PNG or JPEG tiles, this HiPS has}] $formats"
+    }
+    set want [string tolower [dict get $opts format]]
+    switch -- $want {
+	fits {set name FITS}
+	png {set name PNG}
+	jpg - jpeg {set name JPEG}
+	default {return [msgcat::mc {format= is fits, png or jpeg}]}
+    }
+    return "[msgcat::mc {no}] $name [msgcat::mc {tiles}] (hips_tile_format = $formats)"
 }
 
 # An image's size as HiPSFitsInfo gives it (width, height, ok), for any
@@ -1154,6 +1196,8 @@ proc HiPSImageInfo {fn ext} {
     return $rr
 }
 
+# A FITS file's primary header: a dict of width (NAXIS1), height
+# (NAXIS2) and ok (the file holds all the data), or {} if unreadable
 proc HiPSFitsInfo {fn} {
     if {[catch {open $fn rb} ch]} {
 	return {}
@@ -1424,38 +1468,8 @@ proc HiPSOpenParamsDialog {dir {url {}}} {
 	Error "[msgcat::mc {Unable to load}] HiPS $name: [msgcat::mc {no FITS, PNG or JPEG tiles, this HiPS has}] $formats"
 	return {}
     }
-    set width [HiPSProp $props hips_tile_width 512]
-    if {![string is integer -strict $width] || $width < 1} {
-	set width 512
-    }
-    set maxorder [HiPSProp $props hips_order 29]
-    if {![string is integer -strict $maxorder]} {
-	set maxorder 29
-    }
-    if {$url == {}} {
-	set orders [HiPSOpenOrders $dir $width $ext [HiPSSliceSuffix $props {}]]
-	set auto [HiPSOpenAutoOrder $orders $width $maxorder]
-    } else {
-	set orders [HiPSOpenRemoteOrders $props $width $ext $maxorder]
-	# without order=, the quick look (hipsnet.tcl)
-	set auto [dict create order {} nside 0 source quick allskybad 0]
-    }
-
-    # the orders that can be loaded with order=K, and the smallest
-    set usable {}
-    set smallest {}
-    foreach oo $orders {
-	set nside [dict get $oo nside]
-	if {$nside > 0 && $nside <= $hipsopen(nside,max) && \
-		[dict get $oo order] <= $maxorder &&
-	    !([dict exists $oo toobig] && [dict get $oo toobig])} {
-	    lappend usable [dict get $oo order]
-	    if {$smallest == {} || $nside < [dict get $smallest nside]} {
-		set smallest $oo
-	    }
-	}
-    }
-    if {$auto == {} && $smallest == {}} {
+    set scan [HiPSOpenScan $dir $url $props $ext]
+    if {$scan == {}} {
 	Error "[msgcat::mc {Unable to load}] HiPS $dir: [msgcat::mc {no order has tiles or a readable Allsky}] ($ext)"
 	return {}
     }
@@ -1465,12 +1479,15 @@ proc HiPSOpenParamsDialog {dir {url {}}} {
     array unset hpxed
     set hpxed(ok) 0
     set hpxed(whpx) {}
-    # without an automatic choice, start from the smallest map
-    if {$auto != {}} {
-	set hpxed(order) {}
-    } else {
-	set hpxed(order) [dict get $smallest order]
-    }
+    set hpxed(dir) $dir
+    set hpxed(url) $url
+    set hpxed(props) $props
+    # the tiles read: the automatic choice, unless another is picked
+    set hpxed(ext) $ext
+    set hpxed(defext) $ext
+    set hpxed(scan) $scan
+    set hpxed(scanext) $ext
+    HiPSOpenScanOrder
     set hpxed(proj) $hipsopen(proj)
     if {[HPXOpenProjInfo $hpxed(proj)] == {}} {
 	set hpxed(proj) hpx
@@ -1478,7 +1495,6 @@ proc HiPSOpenParamsDialog {dir {url {}}} {
     foreach key {lon0 lat0 fov} {
 	set hpxed($key) {}
     }
-    set hpxed(orders) $orders
     set hpxed(view) [HiPSInitialView $props]
 
     DialogCreate $w [msgcat::mc {Open HiPS}] hpxed(ok)
@@ -1493,15 +1509,7 @@ proc HiPSOpenParamsDialog {dir {url {}}} {
     set omin [HiPSProp $props hips_order_min 0]
     lappend desc "[msgcat::mc {orders}] $omin-[HiPSProp $props hips_order ?]"
     lappend desc "[msgcat::mc {tile}] [HiPSProp $props hips_tile_width 512]"
-    if {$ext == {fits}} {
-	lappend desc $formats
-    } else {
-	if {[HiPSIsColour $dir]} {
-	    lappend desc "$formats ([msgcat::mc {reading}] $ext: [msgcat::mc {colour, into an RGB frame}])"
-	} else {
-	    lappend desc "$formats ([msgcat::mc {reading}] $ext: [msgcat::mc {display values 0-255}])"
-	}
-    }
+    lappend desc $formats
     ttk::label $f.desc -text [join $desc {, }]
     grid $f.name -padx 2 -pady 2 -sticky w
     grid $f.dir -padx 2 -pady 0 -sticky w
@@ -1514,50 +1522,42 @@ proc HiPSOpenParamsDialog {dir {url {}}} {
 	lappend view "[msgcat::mc {fov}] [HiPSOpenFmt [dict get $hpxed(view) fov]]"
     }
     set cut [HiPSProp $props hips_pixel_cut]
-    # physical values, not png/jpg display levels
-    if {$ext != {fits}} {
-	set cut {}
-    }
     if {$view != {}} {
 	ttk::label $f.view -text "[msgcat::mc {Initial view}]: [join $view {, }]"
 	grid $f.view -padx 2 -pady 0 -sticky w
     }
     if {$cut != {}} {
-	ttk::label $f.cut -text "[msgcat::mc {Suggested scale limits}]: $cut"
+	set hpxed(cut) "[msgcat::mc {Suggested scale limits}]: $cut"
+	ttk::label $f.cut -textvariable hpxed(cut)
 	grid $f.cut -padx 2 -pady 2 -sticky w
     }
 
-    # Data
+    # Data: the tiles (when there is a choice), and the order
     set f [ttk::labelframe $w.data -text [msgcat::mc {Data}]]
+    set hpxed(wdata) $f
+    set exts {}
+    foreach ee {fits png jpg} {
+	if {[HiPSTileExt $props [dict create format $ee]] != {}} {
+	    lappend exts $ee
+	}
+    }
+    ttk::label $f.ttiles -text [msgcat::mc {Tiles}]
+    ttk::menubutton $f.tiles -textvariable hpxed(extlabel) -menu $f.tiles.m
+    ThemeMenu $f.tiles.m
+    foreach ee $exts {
+	$f.tiles.m add radiobutton -label [HiPSOpenExtLabel $ee] \
+	    -variable hpxed(ext) -value $ee -command HiPSOpenExtChanged
+    }
+    ttk::label $f.reading -textvariable hpxed(reading)
+    if {[llength $exts] > 1} {
+	grid $f.ttiles $f.tiles -padx 2 -pady 2 -sticky w
+    }
     ttk::label $f.torder -text [msgcat::mc {Order}]
     ttk::menubutton $f.order -textvariable hpxed(orderlabel) -menu $f.order.m
     ThemeMenu $f.order.m
-    if {$auto != {}} {
-	set hpxed(autolabel) "[msgcat::mc {Automatic}] ([HiPSOpenOrderLabel $auto])"
-	set state normal
-    } else {
-	set hpxed(autolabel) "[msgcat::mc {Automatic}] ([msgcat::mc {nothing up to NSIDE}] $hipsopen(nside,auto))"
-	set state disabled
-    }
-    $f.order.m add radiobutton -label $hpxed(autolabel) \
-	-variable hpxed(order) -value {} -command HiPSOpenOrderChanged \
-	-state $state
-    $f.order.m add separator
-    foreach oo $orders {
-	set nside [dict get $oo nside]
-	set label [HiPSOpenOrderLabel $oo]
-	set state normal
-	if {[lsearch -exact $usable [dict get $oo order]] < 0} {
-	    set state disabled
-	}
-	if {[dict get $oo order] > $maxorder} {
-	    append label " ([msgcat::mc {deeper than hips_order}])"
-	}
-	$f.order.m add radiobutton -label $label \
-	    -variable hpxed(order) -value [dict get $oo order] \
-	    -command HiPSOpenOrderChanged -state $state
-    }
     grid $f.torder $f.order -padx 2 -pady 2 -sticky w
+    grid $f.reading - -padx 2 -pady 2 -sticky w
+    HiPSOpenOrderMenu
 
     # Projection
     HPXOpenProjFrame [ttk::labelframe $w.proj -text [msgcat::mc {Projection}]] \
@@ -1598,6 +1598,9 @@ proc HiPSOpenParamsDialog {dir {url {}}} {
 	if {$hpxed(order) != {}} {
 	    lappend opts "order=$hpxed(order)"
 	}
+	if {$hpxed(ext) != $hpxed(defext)} {
+	    lappend opts "format=[expr {$hpxed(ext) == {jpg} ? {jpeg} : $hpxed(ext)}]"
+	}
 	set opts [concat $opts [HiPSOpenProjOptions $vals]]
 	set fn $name
 	if {$opts != {}} {
@@ -1606,6 +1609,148 @@ proc HiPSOpenParamsDialog {dir {url {}}} {
     }
     array unset hpxed
     return $fn
+}
+
+# The orders the dialog offers for tiles ext: a dict of orders, auto
+# (the automatic choice, {} if none), usable (the orders order=K can
+# load) and smallest; {} if nothing can be loaded
+proc HiPSOpenScan {dir url props ext} {
+    global hipsopen
+
+    set width [HiPSProp $props hips_tile_width 512]
+    if {![string is integer -strict $width] || $width < 1} {
+	set width 512
+    }
+    set maxorder [HiPSProp $props hips_order 29]
+    if {![string is integer -strict $maxorder]} {
+	set maxorder 29
+    }
+    if {$url == {}} {
+	set orders [HiPSOpenOrders $dir $width $ext [HiPSSliceSuffix $props {}]]
+	set auto [HiPSOpenAutoOrder $orders $width $maxorder]
+    } else {
+	set orders [HiPSOpenRemoteOrders $props $width $ext $maxorder]
+	# without order=, the quick look (hipsnet.tcl)
+	set auto [dict create order {} nside 0 source quick allskybad 0]
+    }
+
+    # the orders that can be loaded with order=K, and the smallest
+    set usable {}
+    set smallest {}
+    foreach oo $orders {
+	set nside [dict get $oo nside]
+	if {$nside > 0 && $nside <= $hipsopen(nside,max) && \
+		[dict get $oo order] <= $maxorder &&
+	    !([dict exists $oo toobig] && [dict get $oo toobig])} {
+	    lappend usable [dict get $oo order]
+	    if {$smallest == {} || $nside < [dict get $smallest nside]} {
+		set smallest $oo
+	    }
+	}
+    }
+    if {$auto == {} && $smallest == {}} {
+	return {}
+    }
+    return [dict create orders $orders auto $auto usable $usable \
+		smallest $smallest maxorder $maxorder]
+}
+
+# the order the dialog starts at: automatic, else the smallest map
+proc HiPSOpenScanOrder {} {
+    global hpxed
+
+    if {[dict get $hpxed(scan) auto] != {}} {
+	set hpxed(order) {}
+    } else {
+	set hpxed(order) [dict get [dict get $hpxed(scan) smallest] order]
+    }
+}
+
+proc HiPSOpenExtLabel {ext} {
+    switch -- $ext {
+	fits {return [msgcat::mc {FITS (data values)}]}
+	png {return [msgcat::mc {PNG (display values 0-255)}]}
+	jpg {return [msgcat::mc {JPEG (display values 0-255)}]}
+    }
+}
+
+# (re)fill the order menu, and the lines that depend on the tiles read
+proc HiPSOpenOrderMenu {} {
+    global hpxed
+    global hipsopen
+
+    set f $hpxed(wdata)
+    set ext $hpxed(ext)
+    set hpxed(extlabel) [HiPSOpenExtLabel $ext]
+    set colour [HiPSIsColour \
+	"$hpxed(dir)\[format=[expr {$ext == {jpg} ? {jpeg} : $ext}]\]"]
+    if {$ext == {fits}} {
+	set hpxed(reading) {}
+    } elseif {$colour} {
+	set hpxed(reading) "[msgcat::mc {Reading}] $ext: [msgcat::mc {colour, into an RGB frame}]"
+    } else {
+	set hpxed(reading) "[msgcat::mc {Reading}] $ext: [msgcat::mc {display values 0-255}]"
+    }
+    # the suggested limits are physical values, not png/jpg levels
+    if {[winfo exists $hpxed(wdata)] && [info exists hpxed(cut)]} {
+	set lab [winfo parent $f].file.cut
+	if {[winfo exists $lab]} {
+	    if {$ext == {fits}} {
+		grid $lab
+	    } else {
+		grid remove $lab
+	    }
+	}
+    }
+
+    set auto [dict get $hpxed(scan) auto]
+    set usable [dict get $hpxed(scan) usable]
+    set maxorder [dict get $hpxed(scan) maxorder]
+    set hpxed(orders) [dict get $hpxed(scan) orders]
+
+    $f.order.m delete 0 end
+    if {$auto != {}} {
+	set hpxed(autolabel) "[msgcat::mc {Automatic}] ([HiPSOpenOrderLabel $auto])"
+	set state normal
+    } else {
+	set hpxed(autolabel) "[msgcat::mc {Automatic}] ([msgcat::mc {nothing up to NSIDE}] $hipsopen(nside,auto))"
+	set state disabled
+    }
+    $f.order.m add radiobutton -label $hpxed(autolabel) \
+	-variable hpxed(order) -value {} -command HiPSOpenOrderChanged \
+	-state $state
+    $f.order.m add separator
+    foreach oo $hpxed(orders) {
+	set label [HiPSOpenOrderLabel $oo]
+	set state normal
+	if {[lsearch -exact $usable [dict get $oo order]] < 0} {
+	    set state disabled
+	}
+	if {[dict get $oo order] > $maxorder} {
+	    append label " ([msgcat::mc {deeper than hips_order}])"
+	}
+	$f.order.m add radiobutton -label $label \
+	    -variable hpxed(order) -value [dict get $oo order] \
+	    -command HiPSOpenOrderChanged -state $state
+    }
+    HiPSOpenOrderChanged
+}
+
+# another kind of tiles: their orders (a local HiPS may have different
+# ones of each)
+proc HiPSOpenExtChanged {} {
+    global hpxed
+
+    set scan [HiPSOpenScan $hpxed(dir) $hpxed(url) $hpxed(props) $hpxed(ext)]
+    if {$scan == {}} {
+	Error "[msgcat::mc {no order has tiles or a readable Allsky}] ($hpxed(ext))"
+	set hpxed(ext) $hpxed(scanext)
+	return
+    }
+    set hpxed(scan) $scan
+    set hpxed(scanext) $hpxed(ext)
+    HiPSOpenScanOrder
+    HiPSOpenOrderMenu
 }
 
 proc HiPSOpenOrderChanged {} {

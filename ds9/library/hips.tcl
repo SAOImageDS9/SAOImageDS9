@@ -241,7 +241,16 @@ proc HiPSCubeState {which} {
     }
     return [dict create depth $depth slice $slice crpix $crpix \
 		crval $crval cdelt $cdelt \
-		unit [HiPSProp $props data_cube_bunit3]]
+		unit [HiPSCubeUnit $props]]
+}
+
+# data_cube_bunit3, or {} (some surveys write "null" for no unit)
+proc HiPSCubeUnit {props} {
+    set uu [string trim [HiPSProp $props data_cube_bunit3]]
+    if {[string equal -nocase $uu null]} {
+	return {}
+    }
+    return $uu
 }
 
 # the third-axis value of image slice ss (1-based)

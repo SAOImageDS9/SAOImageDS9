@@ -22,10 +22,21 @@ Sample data: `hips/data1/ancillary/missions/Fermi_Band4/HiPS` (Fermi-LAT
 Phases 0-5 are done. Open, roughly by value:
 
 - Cubes are 2-D frames underneath (Phase 4): no 3-D render, no `save`
-  of the whole cube, no `cube axes` reordering, no cube-wide scale
-  limits. `lock cube` / `match frame` between HiPS cube frames is
-  untested. No real FITS-tile cube tested (LAB HI is PNG; the synthetic
-  `mkcube.py` cube is FITS).
+  of the whole cube, no `cube axes` reordering. Decided 2026-11-16 to
+  leave this as a documented limit (`file.html`). The way to lift it
+  would be a frame range (`slice=a-b`) read for the current window
+  into an in-memory FITS cube, capped in size, giving up deep zoom.
+  No real FITS-tile cube can be tested: every FITS cube CDS lists
+  (ACT, HI4PI, HIPASS, GALFA-HI, CGPS, Mopra, Bayestar19, ...) is
+  "Deprecated/HiPS-Cube" and its `properties` is 404 (2026-11-16);
+  the MocServer lists no other provider's. Several write
+  `data_cube_bunit3 = null`, now read as no unit (`hipscube.sh` 9).
+  Checked 2026-11-16 and fine: `lock slice` and `match slice` (image
+  and wcs) between HiPS cube frames and with a FITS cube on another
+  velocity grid, a deep window following the lock, `cube play`/`stop`
+  (`hipscube.sh` section 8). Scale limits per frame are not a gap: a
+  FITS cube's minmax/zscale are per slice too, and user limits carry
+  over to the next frame in both.
 - HiPS by ID or from a list (`CDS/P/DSS2/color`, the MocServer
   `hips list` query, sec. 5.2): a natural Phase 6.
 - `hips` command: no `format=` option (FITS > PNG > JPEG is chosen

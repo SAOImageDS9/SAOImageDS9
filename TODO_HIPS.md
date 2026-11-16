@@ -51,9 +51,18 @@ Phases 0-5 are done. Open, roughly by value:
   `hipsserve.py`. Not yet checked against the real MocServer: that its
   default (ascii) answer is `key = value` records separated by blank
   lines, and that `hips_service_url=*` and `fields=` work as assumed.
-- `hips` command: no `format=` option (FITS > PNG > JPEG is chosen
-  automatically) and no `hips close` (frame `clear` does it). The
-  Open HiPS dialog has no format choice either.
+- `format=` and `hips close`: done 2026-11-16. `format=fits|png|jpeg`
+  (any case, `jpg` too; fitsy `FORMAT_` token, `pHiPSFormat_`) reads
+  that kind if `hips_tile_format` lists it, else a refusal naming what
+  it lists; remote loads and deep windows fetch that kind (HiPSTileExt
+  takes the name's options; HiPSDeepWant reads them off the frame's
+  name); scale limits follow the tiles read; a colour HiPS with FITS
+  tiles reads the FITS ones into a plain frame unless `format=png`.
+  The Open HiPS dialog has a Tiles menu when several kinds are listed;
+  changing it rescans that kind's orders. `hips close` clears the
+  current frame if it holds a HiPS, dropping its queued deep requests.
+  `Tests/hips/hipsformat.sh` (30). The deep fetcher's `.missing` lists
+  are per order and slice, not per format (the same cells, in practice).
 - SAMP `hips` goes through the same table as XPA but has not been
   exercised; no standard MType exists.
 - Test data still missing: 8-bit integer and BITPIX -64 FITS tiles

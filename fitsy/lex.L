@@ -65,6 +65,7 @@ dims		{RET(DIMS_)}
 ecliptic	{RET(ECLIPTIC_)}
 endian          {RET(ENDIAN_)}
 equatorial	{RET(EQUATORIAL_)}
+format		{RET(FORMAT_)}
 fov		{RET(FOV_)}
 galactic	{RET(GALACTIC_)}
 key		{RET(KEY_)}

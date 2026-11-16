@@ -55,28 +55,29 @@
      ECLIPTIC_ = 271,
      ENDIAN_ = 272,
      EQUATORIAL_ = 273,
-     FOV_ = 274,
-     GALACTIC_ = 275,
-     KEY_ = 276,
-     LAYOUT_ = 277,
-     LITTLE_ = 278,
-     LITTLEENDIAN_ = 279,
-     LAT0_ = 280,
-     LON0_ = 281,
-     NESTED_ = 282,
-     NORTH_ = 283,
-     ORDER_ = 284,
-     PROJ_ = 285,
-     QUAD_ = 286,
-     RING_ = 287,
-     SKIP_ = 288,
-     SLICE_ = 289,
-     SOUTH_ = 290,
-     SYSTEM_ = 291,
-     UNKNOWN_ = 292,
-     XDIM_ = 293,
-     YDIM_ = 294,
-     ZDIM_ = 295
+     FORMAT_ = 274,
+     FOV_ = 275,
+     GALACTIC_ = 276,
+     KEY_ = 277,
+     LAYOUT_ = 278,
+     LITTLE_ = 279,
+     LITTLEENDIAN_ = 280,
+     LAT0_ = 281,
+     LON0_ = 282,
+     NESTED_ = 283,
+     NORTH_ = 284,
+     ORDER_ = 285,
+     PROJ_ = 286,
+     QUAD_ = 287,
+     RING_ = 288,
+     SKIP_ = 289,
+     SLICE_ = 290,
+     SOUTH_ = 291,
+     SYSTEM_ = 292,
+     UNKNOWN_ = 293,
+     XDIM_ = 294,
+     YDIM_ = 295,
+     ZDIM_ = 296
    };
 #endif
 /* Tokens.  */
@@ -96,28 +97,29 @@
 #define ECLIPTIC_ 271
 #define ENDIAN_ 272
 #define EQUATORIAL_ 273
-#define FOV_ 274
-#define GALACTIC_ 275
-#define KEY_ 276
-#define LAYOUT_ 277
-#define LITTLE_ 278
-#define LITTLEENDIAN_ 279
-#define LAT0_ 280
-#define LON0_ 281
-#define NESTED_ 282
-#define NORTH_ 283
-#define ORDER_ 284
-#define PROJ_ 285
-#define QUAD_ 286
-#define RING_ 287
-#define SKIP_ 288
-#define SLICE_ 289
-#define SOUTH_ 290
-#define SYSTEM_ 291
-#define UNKNOWN_ 292
-#define XDIM_ 293
-#define YDIM_ 294
-#define ZDIM_ 295
+#define FORMAT_ 274
+#define FOV_ 275
+#define GALACTIC_ 276
+#define KEY_ 277
+#define LAYOUT_ 278
+#define LITTLE_ 279
+#define LITTLEENDIAN_ 280
+#define LAT0_ 281
+#define LON0_ 282
+#define NESTED_ 283
+#define NORTH_ 284
+#define ORDER_ 285
+#define PROJ_ 286
+#define QUAD_ 287
+#define RING_ 288
+#define SKIP_ 289
+#define SLICE_ 290
+#define SOUTH_ 291
+#define SYSTEM_ 292
+#define UNKNOWN_ 293
+#define XDIM_ 294
+#define YDIM_ 295
+#define ZDIM_ 296
 
 
 
@@ -133,7 +135,7 @@ typedef union YYSTYPE
   void* ptr;
 }
 /* Line 1529 of yacc.c.  */
-#line 137 "parser.H"
+#line 139 "parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

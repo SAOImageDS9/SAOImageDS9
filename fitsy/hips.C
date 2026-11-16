@@ -323,9 +323,9 @@ FitsHiPS::FitsHiPS(const char* fn, Tcl_Interp* interp, int channel)
     return;
   }
 
-  // the tiles to read: FITS (physical values) when there are any, else
-  // PNG, else JPEG (display values). The Tcl side (HiPSTileExt) picks
-  // the same, so a remote HiPS fetches these.
+  // the tiles to read: format= if given, else FITS (physical values)
+  // when there are any, else PNG, else JPEG (display values). The Tcl
+  // side (HiPSTileExt) picks the same, so a remote HiPS fetches these.
   {
     const char* formats = prop("hips_tile_format", "");
     int hasfits =0, haspng =0, hasjpeg =0;
@@ -339,7 +339,27 @@ FitsHiPS::FitsHiPS(const char* fn, Tcl_Interp* interp, int channel)
       else if (ww == "jpeg" || ww == "jpg")
 	hasjpeg =1;
     }
-    if (hasfits)
+    if (pHiPSFormat_) {
+      static const char* exts[] = {"", "fits", "png", "jpg"};
+      static const char* names[] = {"", "FITS", "PNG", "JPEG"};
+      int has[] = {0, hasfits, haspng, hasjpeg};
+      ostringstream str;
+      if (pHiPSFormat_ < 0)
+	str << "HiPS: format= is fits, png or jpeg";
+      else if (!has[pHiPSFormat_])
+	str << "HiPS: no " << names[pHiPSFormat_]
+	    << " tiles (hips_tile_format = " << formats << ")";
+      else if (pHiPSFormat_ > 1 && !interp_)
+	str << "HiPS: " << names[pHiPSFormat_]
+	    << " tiles need Tk to be read";
+      if (str.tellp() > 0) {
+	str << ends;
+	internalError(str.str().c_str());
+	return;
+      }
+      tileExt_ = exts[pHiPSFormat_];
+    }
+    else if (hasfits)
       tileExt_ = "fits";
     else if ((haspng || hasjpeg) && interp_)
       tileExt_ = haspng ? "png" : "jpg";

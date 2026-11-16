@@ -15,6 +15,7 @@ using namespace std;
 
 #include <limits.h>
 #include <stdlib.h>
+#include <strings.h>
 #include <sys/stat.h>
 
 // extention parser
@@ -137,6 +138,7 @@ FitsFile::FitsFile()
   pHPXFov_ =NAN;
   pHiPSOrder_ =-1;
   pHiPSSlice_ =-1;
+  pHiPSFormat_ =0;
 
   pCRPIX3_ =1;
   pCRVAL3_ =1;
@@ -384,6 +386,18 @@ void FitsFile::setpExt(const char* n)
     delete [] pExt_;
 
   pExt_ = dupstr(n);
+}
+
+void FitsFile::setpHiPSFormat(const char* ff)
+{
+  if (!strcasecmp(ff, "fits"))
+    pHiPSFormat_ = 1;
+  else if (!strcasecmp(ff, "png"))
+    pHiPSFormat_ = 2;
+  else if (!strcasecmp(ff, "jpeg") || !strcasecmp(ff, "jpg"))
+    pHiPSFormat_ = 3;
+  else
+    pHiPSFormat_ = -1;
 }
 
 void FitsFile::setpHPXProj(const char* pp)

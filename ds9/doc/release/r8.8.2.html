@@ -275,7 +275,7 @@ order, with all the HEALPix projection options:
 By default the deepest order up to NSIDE 2048 is read, from its tiles or
 its <code>Allsky.fits</code>; missing tiles are blank. The dialog shows
 the survey and, for each order present, its NSIDE, source and memory.
-PNG/JPEG-only and remote (URL) HiPS are not supported yet.</li>
+</li>
 <li><strong>HIPS</strong>: The survey's suggested scale limits
 (<code>hips_pixel_cut</code>) are applied when it loads (can be turned
 off in <em>Preferences &gt; HEALPix</em>), and zenithal projections
@@ -283,6 +283,8 @@ start at its initial view (<code>hips_initial_ra/dec/fov</code>).</li>
 <li><strong>HIPS</strong>: <em>Analysis &gt; HiPS Coverage</em>
 (<code>hips coverage</code>) outlines the sky a HiPS covers, from its
 <code>Moc.fits</code>, in any projection.</li>
+<li><strong>HIPS</strong>: Zenithal and conic windows on a HiPS zoom into its deeper tiles, down to its deepest order; a remote HiPS fetches the visible tiles in the background (in worker threads, so ds9 stays responsive with slow servers). <code>HIPSORD</code> gives the order shown.</li>
+<li><strong>HIPS</strong>: Remote HiPS can be opened by URL (<code>-hips https://...</code>, <em>File &gt; Open HiPS URL...</em>), with an on-disk cache and mirror fallback; PNG/JPEG and colour HiPS (into an RGB frame) are supported.</li>
 <li><strong>HIPS</strong>: A HiPS is listed in <em>Open Recent</em>,
 and backups record it by directory and options without copying its
 tiles.</li>

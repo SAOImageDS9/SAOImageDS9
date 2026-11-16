@@ -905,6 +905,9 @@ int FitsHiPS::initHeaders()
   head_->appendInteger("LASTPIX", (int)(npix-1), NULL);
   head_->appendString("INDXSCHM", "IMPLICIT", NULL);
   head_->appendString("OBJECT", prop("obs_title", "HiPS"), NULL);
+  // the order of the values; a deep window that zooms past it says its
+  // own (View > Keyword HIPSORD shows it in the info panel)
+  head_->appendInteger("HIPSORD", order_, "HiPS order of the values");
 
   // provenance
   {

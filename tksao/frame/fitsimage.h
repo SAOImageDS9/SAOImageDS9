@@ -601,7 +601,14 @@ class FitsImage {
   char* displayPrimary();
   //  char* displayWCS();
   FitsHead* head() {return image_->head();}
-  char* getKeyword(const char* key) {return fits_->getKeyword(key);}
+  // a HEALPix image's own header first (e.g. HIPSORD, the HiPS order a
+  // deep window shows), then the file's
+  char* getKeyword(const char* key) {
+    char* rr = NULL;
+    if (hpx_ && image_ == hpx_ && image_->head() && image_->find(key))
+      rr = image_->getKeyword(key);
+    return rr ? rr : fits_->getKeyword(key);
+  }
   int findKeyword(const char* key) {return fits_->find(key);}
 
   int saveFitsPrimHeader(OutFitsStream& str)

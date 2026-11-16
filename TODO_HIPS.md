@@ -1,10 +1,11 @@
 # TODO: HiPS (Hierarchical Progressive Surveys) support
 
-Status (2026-11-16): Phases 0-3 done: local and remote (HTTP) HiPS,
-FITS, PNG/JPEG and colour tiles, with all projections, the `hips`
+Status (2026-11-16): Phases 0-3 and 5 done: local and remote (HTTP)
+HiPS, FITS, PNG/JPEG and colour tiles, with all projections, the `hips`
 command, dialogs, backup/restore, Open Recent, properties defaults,
-coverage overlay and provenance. Phase 5 (deep HiPS: zoom-driven orders,
-fetching only the visible tiles) is next; Phase 4 (cubes) last. Work is on branch `hips`. Builds on the
+coverage overlay, provenance, and deep windows that zoom into the HiPS's
+deeper tiles (fetching only the visible ones). Phase 4 (cubes) is
+left. Work is on branch `hips`. Builds on the
 HEALPix projection work in `TODO.md` (PR SAOImageDS9/SAOImageDS9#380:
 `FitsHPXReproj`, `proj=`/`lon0=`/`lat0=`/`fov=`, live windows).
 
@@ -631,7 +632,7 @@ variable: `[...]` inside Tcl double quotes is command substitution.
       whole-sky map) or on demand (the cube dialog's "next" triggers a
       fetch). On demand seems the only sane option for remote cubes.
 
-### Phase 5: deep HiPS, multi-resolution windows
+### Phase 5: deep HiPS, multi-resolution windows -- done 2026-11-16
 
 Goal: open DSS2 (order 9, 512 px, nside 262144) and browse it in a TAN
 window at full resolution, recentring and zooming live.
@@ -718,8 +719,14 @@ Design (2026-11-16, after reading the window code):
       Keep-alive in-process was tried first and made it far worse
       (180 s for the quick look). Without Thread, the old path.
       Cancel fails queued jobs; one already in a worker finishes.
-- [ ] Not yet: show the order in the info panel (it is in the window's
-      HISTORY); cancel for deep fetches.
+- [x] The order shown (done 2026-11-16): keyword `HIPSORD` = the map's
+      order in the HiPS table, copied into the HPX image and windows, and
+      set to K by a deep window (View > Keyword HIPSORD in the info
+      panel). `FitsImage::getKeyword` looks in a HEALPix image's own
+      header first, then the file's. Regions keep their sky position
+      through deep zooms and pans (tested).
+- [ ] Not done: a cancel for deep (background) fetches; a status line
+      while they run.
 
 ## Testing plan
 

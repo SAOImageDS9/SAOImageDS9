@@ -2,8 +2,8 @@
 
 Status (2026-11-16): Phases 0 and 1 done. Local FITS-tile HiPS load
 with all projections. Phase 2 in progress: the `hips` command, backup/
-restore, Open Recent and File > Open HiPS... are done; properties
-defaults and the MOC overlay are next. Work is on branch `hips`. Builds on the
+restore, Open Recent, File > Open HiPS... and properties defaults are
+done; the MOC overlay and provenance in the image header are next. Work is on branch `hips`. Builds on the
 HEALPix projection work in `TODO.md` (PR SAOImageDS9/SAOImageDS9#380:
 `FitsHPXReproj`, `proj=`/`lon0=`/`lat0=`/`fov=`, live windows).
 
@@ -379,12 +379,39 @@ variable: `[...]` inside Tcl double quotes is command substitution.
         nside/source and Automatic against real loads for Fermi,
         Abell 1763, DSS2 and synthetic HiPS; dialog results; refusals;
         the menu command end to end from an RGB frame).
-- [ ] Defaults from properties: `hips_pixel_cut` -> user scale limits
-      (if the user's scale mode allows). `hips_initial_ra`/`dec`/`fov`
-      (ICRS) -> the initial window centre and fov when the user asks for
-      a zenithal projection without `lat0`/`fov`. This needs ICRS ->
-      `hips_frame` conversion (`FitsHPXReproj::fromSky` already does
-      this).
+- [x] Defaults from properties (done 2026-11-16).
+      - `hips_pixel_cut` (physical values, HiPS 1.0 sec. 4.4.1) ->
+        user scale limits, in `HiPSApplyCut` after every load through
+        `ImportHiPSFile` (command line, XPA/SAMP, dialog, Open Recent,
+        restore). Pref `phpxopen(hipscut)` (Preferences > HEALPix, on
+        by default). A later `-scale`/`scale` command, or a backup's
+        saved scale, still wins since it runs after the load.
+      - `hips_initial_ra/dec/fov` -> `FitsHiPS::initialView` (fitsy, so
+        every way of loading agrees). Zenithal projections only
+        (TAN SIN STG ARC ZEA): the centre when neither `lon0=` nor
+        `lat0=` is given, the fov when `fov=` isn't, clamped to the
+        projection's maximum. All-sky, conic and HPX keep their own
+        defaults. `FitsFile` gained `pHPXLon0Set_`, since `lon0`
+        defaults to 0 and `lon0=0` must still win. The ICRS ->
+        galactic/ecliptic rotation is done in fitsy itself (Hipparcos
+        matrix; ecliptic of J2000, IAU 2006 obliquity), not AST, which
+        lives in tksao. Agrees with astropy to 2e-5 deg.
+      - The dialog does the same in Tcl (`HiPSInitialView`), shows the
+        initial view and suggested limits, starts a zenithal projection
+        at the initial view, and writes `lon0`/`lat0` (both) or `fov`
+        only when they differ from it, so an untouched dialog gives just
+        `proj=tan`. Only the projection is now remembered between HiPS,
+        not the centre or fov (each survey has its own frame and view).
+      - Tested by `Tests/hips/hipsview.sh` (35 checks).
+      - **Found on the way, a fitsy heap overrun**: `FitsCard::setComment`
+        copied the text with no length check, so a HISTORY/COMMENT
+        longer than 70 characters ran past the 80-byte card. A new
+        74-character HISTORY card crashed ds9 later, in an unrelated
+        free (fault address 0x29535243 = "CRS)"). The `HiPS
+        <creator_did>` provenance card could do the same with a long
+        ID. Fixed in `card.C` (clamped; the NUL that `ends` adds is no
+        longer copied into the card either). Under libgmalloc, the old
+        code faults and the new truncates.
 - [x] Backup/restore (done 2026-11-16). The frame's saved load
       parameters already carry the HiPS name with its options, so a
       backup restores it, but through the generic path: a moved HiPS

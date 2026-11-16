@@ -45,10 +45,13 @@ class FitsHiPS : public FitsFile {
   int nread_;          // tiles read
   int nbad_;           // tiles present but unusable
   int badAllsky_;      // order of an unreadable Allsky.fits, or -1
+  int initView_;       // window centre taken from hips_initial_ra/dec
 
   int readProperties(const char*);
   const char* prop(const char*, const char* =NULL);
   int propInt(const char*, int);
+  double propReal(const char*);
+  int initialView();
   char* tilePath(int order, long npix, const char* ext);
   char* allskyPath(int order, const char* ext);
   int allskyWidth(int order);

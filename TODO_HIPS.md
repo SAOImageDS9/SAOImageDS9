@@ -3,7 +3,8 @@
 Status (2026-11-16): Phases 0 and 1 done. Local FITS-tile HiPS load
 with all projections. Phase 2 in progress: the `hips` command, backup/
 restore, Open Recent, File > Open HiPS..., properties defaults and the
-coverage overlay are done; provenance in the image header is next. Work is on branch `hips`. Builds on the
+coverage overlay and provenance are done; SAMP and release notes
+remain. Work is on branch `hips`. Builds on the
 HEALPix projection work in `TODO.md` (PR SAOImageDS9/SAOImageDS9#380:
 `FitsHPXReproj`, `proj=`/`lon0=`/`lat0=`/`fov=`, live windows).
 
@@ -294,12 +295,16 @@ variable: `[...]` inside Tcl double quotes is command substitution.
       - Cost: the table copy (12*nside^2 floats) on top of the HPX
         image. Option (b) would avoid it. That is worth doing if the
         nside cap goes up.
-- [~] Provenance: the table header has OBJECT = `obs_title`, `HISTORY`
-      (`creator_did`, order, nside, Allsky or tiles, tiles read of
-      total, "missing tiles are NaN") and a `hips_pixel_cut` COMMENT.
-      `FitsHPX::initHeader` copies only OBJECT into the image header, so
-      the HISTORY cards don't reach File > Save. Copy them across in
-      Phase 2.
+- [x] Provenance (done 2026-11-16): the table header has OBJECT =
+      `obs_title`, `HISTORY` (`creator_did`, order, nside, Allsky or
+      tiles, tiles read of total, "missing tiles are NaN", the window
+      centre when it came from `hips_initial_ra/dec`) and a
+      `hips_pixel_cut` COMMENT. `FitsHPX::initHeader` (fitsy/hpx.C) now
+      copies every HISTORY and COMMENT card of the table into the HPX
+      image, as they are, and `FitsHPXReproj::initHeader` copies them on
+      into projection windows. So File > Header and File > Save show
+      them, for any HEALPix file, not only HiPS. Tested by
+      `Tests/hips/hipsprov.sh` (14 checks).
 - [x] tksao: `FitsImageHiPS`, `Base::loadHiPSCmd`, and grammar rule
       `load STRING STRING` matching "hips". This avoids a new lexer
       token, which would mean regenerating `tksao/frame/lex.C` with an

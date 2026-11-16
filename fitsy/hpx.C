@@ -1166,5 +1166,13 @@ void FitsHPX::initHeader(FitsFile* fits)
   }
 
   // we added cards
+  // provenance: the table's HISTORY and COMMENT cards, as they are (a
+  // HiPS records its survey, order and tiles read there, fitsy/hips.C)
+  for (int ii=0; ii<src->ncard(); ii++) {
+    char* cc = src->cards() + ii*FTY_CARDLEN;
+    if (!strncmp(cc, "HISTORY ", 8) || !strncmp(cc, "COMMENT ", 8))
+      head_->cardins(cc, NULL);
+  }
+
   head_->updateHDU();
 }

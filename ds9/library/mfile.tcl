@@ -20,6 +20,8 @@ proc FileMainMenu {} {
 	-command OpenHiPSDialog
     $ds9(mb).file add command -label "[msgcat::mc {Open HiPS URL}]..." \
 	-command OpenHiPSURLDialog
+    $ds9(mb).file add command -label "[msgcat::mc {Open HiPS from List}]..." \
+	-command OpenHiPSListDialog
     $ds9(mb).file add command -label [msgcat::mc {Save}] \
 	-command [list SaveDialog fits] -accelerator "${ds9(ctrl)}S"
     $ds9(mb).file add cascade -label [msgcat::mc {Save as}] \
@@ -1130,6 +1132,7 @@ proc UpdateFileMenuOpen {} {
     $mm entryconfig [msgcat::mc {Open as}] -state disabled
     $mm entryconfig "[msgcat::mc {Open HiPS}]..." -state disabled
     $mm entryconfig "[msgcat::mc {Open HiPS URL}]..." -state disabled
+    $mm entryconfig "[msgcat::mc {Open HiPS from List}]..." -state disabled
 
     $bb.open configure -state disabled
     $bb.openslice configure -state disabled
@@ -1156,6 +1159,7 @@ proc UpdateFileMenuOpen {} {
     $mm entryconfig [msgcat::mc {Open as}] -state normal
     $mm entryconfig "[msgcat::mc {Open HiPS}]..." -state normal
     $mm entryconfig "[msgcat::mc {Open HiPS URL}]..." -state normal
+    $mm entryconfig "[msgcat::mc {Open HiPS from List}]..." -state normal
 
     $bb.open configure -state normal
     $bb.openslice configure -state normal

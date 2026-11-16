@@ -23,6 +23,9 @@ proc HPXOpenDef {} {
     # the size of the cache of remote HiPS, MB (hipsnet.tcl)
     set phpxopen(hipscut) 1
     set phpxopen(hipscache) 2048
+    # the MocServer query URLs that resolve HiPS IDs and list the HiPS
+    # (hipsnet.tcl), tried in turn
+    set phpxopen(mocserver) {https://alasky.cds.unistra.fr/MocServer/query https://alaskybis.cds.unistra.fr/MocServer/query}
 
     # the last values chosen, for the rest of the session
     set hpxopen(proj) {}
@@ -654,6 +657,10 @@ proc PrefsDialogHPXOpen {} {
     ttk::button $f.clear -text [msgcat::mc {Clear HiPS Cache}] \
 	-command HiPSCacheClear
     grid $f.tcache $f.cache $f.clear -padx 2 -pady 2 -sticky w
+
+    ttk::label $f.tmoc -text [msgcat::mc {HiPS MocServer}]
+    ttk::entry $f.moc -textvariable phpxopen(mocserver) -width 50
+    grid $f.tmoc $f.moc - -padx 2 -pady 2 -sticky w
 
     pack $f -side top -fill both -expand true
 }

@@ -17,6 +17,18 @@ proc ImportHiPSFile {fn} {
 
     global hipsnet
 
+    # an ID (CDS/P/DSS2/color) is the HiPS at the URL the MocServer
+    # gives for it, and is loaded (and recorded) as that URL
+    if {[HiPSIsID $fn]} {
+	set url [HiPSResolveName $fn]
+	HiPSClearErrorInfo
+	if {$url == {}} {
+	    Error "[msgcat::mc {Unable to load}] HiPS $fn: $hipsnet(error)"
+	    return 0
+	}
+	set fn $url
+    }
+
     # a remote HiPS is fetched into the cache first; file,name keeps the
     # URL (what xpaget hips, Open Recent and backups record), file,fn is
     # what the reader reads
@@ -680,6 +692,7 @@ proc ProcessSendHiPSCmd {proc id param {sock {}} {fn {}}} {
 	    $proc $id "[ToYesNo [HiPSCoverageShown $current(frame)]]\n"
 	}
 	status {$proc $id "[HiPSDeepPending]\n"}
+	list {$proc $id "[HiPSListText {*}[lrange $param 1 end]]\n"}
 	default {$proc $id "[HiPSFrameName $current(frame)]\n"}
     }
 }
@@ -859,16 +872,16 @@ proc HiPSOpenProjOptions {vals} {
     return $opts
 }
 
-# File > Open HiPS URL...: a remote HiPS. Its properties are fetched
-# (into the cache) for the dialog; the load fetches what the chosen
-# order needs (hipsnet.tcl).
+# File > Open HiPS URL...: a remote HiPS, by URL or by ID. Its
+# properties are fetched (into the cache) for the dialog; the load
+# fetches what the chosen order needs (hipsnet.tcl).
 proc OpenHiPSURLDialog {} {
     global hipsopen
     global hipsnet
 
     set url $hipsopen(url)
     if {![EntryDialog [msgcat::mc {Open HiPS URL}] \
-	      [msgcat::mc {HiPS URL (the directory holding properties)}] \
+	      [msgcat::mc {HiPS URL (the directory holding properties) or ID}] \
 	      60 url]} {
 	return
     }
@@ -878,7 +891,23 @@ proc OpenHiPSURLDialog {} {
     }
     set hipsopen(url) $url
 
-    # file:// is a local HiPS
+    if {[HiPSIsID $url]} {
+	set id [HiPSIDOf $url]
+	set url [HiPSResolveID $id]
+	HiPSClearErrorInfo
+	if {$url == {}} {
+	    Error "[msgcat::mc {Unable to load}] HiPS $id: $hipsnet(error)"
+	    return
+	}
+    }
+    HiPSOpenURL $url
+}
+
+# The Open HiPS dialog for a HiPS URL (file:// is a local HiPS), then
+# the load
+proc HiPSOpenURL {url} {
+    global hipsnet
+
     if {![HiPSIsURL $url]} {
 	set dir [HiPSFileURL $url]
 	set fn [HiPSOpenParamsDialog $dir]
@@ -896,6 +925,145 @@ proc OpenHiPSURLDialog {} {
 	return
     }
     HiPSCmdLoad $fn
+}
+
+# File > Open HiPS from List...: the image and cube HiPS the MocServer
+# lists (hipsnet.tcl), filtered by ID or title as you type; the one
+# chosen goes on to the Open HiPS dialog.
+proc OpenHiPSListDialog {} {
+    global hipslist
+    global hipsnet
+
+    set w {.hipslist}
+    if {[winfo exists $w]} {
+	raise $w
+	return
+    }
+
+    set recs [HiPSListRecords]
+    HiPSClearErrorInfo
+    if {$recs == {}} {
+	Error "[msgcat::mc {Unable to list HiPS}]: $hipsnet(error)"
+	return
+    }
+    set hipslist(recs) $recs
+    set hipslist(ok) 0
+    if {![info exists hipslist(filter)]} {
+	set hipslist(filter) {}
+    }
+
+    DialogCreate $w [msgcat::mc {Open HiPS from List}] hipslist(ok)
+
+    set f [ttk::frame $w.filter]
+    ttk::label $f.tfilter -text [msgcat::mc {Filter}]
+    ttk::entry $f.filter -textvariable hipslist(filter) -width 40
+    ttk::label $f.count -textvariable hipslist(count)
+    pack $f.tfilter -side left -padx 2
+    pack $f.filter -side left -padx 2 -fill x -expand true
+    pack $f.count -side left -padx 4
+
+    set f [ttk::frame $w.list]
+    set hipslist(tree) $f.tree
+    ttk::treeview $f.tree -columns {id title type} -show headings \
+	-selectmode browse -height 20 -yscrollcommand [list $f.yscroll set]
+    ttk::scrollbar $f.yscroll -orient vertical -command [list $f.tree yview]
+    $f.tree heading id -text [msgcat::mc {ID}] -anchor w
+    $f.tree heading title -text [msgcat::mc {Title}] -anchor w
+    $f.tree heading type -text [msgcat::mc {Type}] -anchor w
+    $f.tree column id -width 260 -stretch 0
+    $f.tree column title -width 380
+    $f.tree column type -width 60 -stretch 0
+    grid $f.tree $f.yscroll -sticky news
+    grid rowconfigure $f 0 -weight 1
+    grid columnconfigure $f 0 -weight 1
+
+    set f [ttk::frame $w.buttons]
+    ttk::button $f.ok -text [msgcat::mc {Open}] -command HiPSListOK \
+	-default active
+    ttk::button $f.update -text [msgcat::mc {Update List}] \
+	-command HiPSListUpdate
+    ttk::button $f.cancel -text [msgcat::mc {Cancel}] \
+	-command {set hipslist(ok) 0}
+    pack $f.ok $f.update $f.cancel -side left -expand true -padx 2 -pady 4
+
+    ttk::separator $w.sep -orient horizontal
+    pack $w.buttons $w.sep -side bottom -fill x
+    pack $w.filter -side top -fill x -padx 2 -pady 2
+    pack $w.list -side top -fill both -expand true -padx 2 -pady 2
+
+    bind $w.filter.filter <KeyRelease> HiPSListFill
+    bind $hipslist(tree) <Double-1> HiPSListOK
+    bind $w <Return> HiPSListOK
+
+    HiPSListFill
+    DialogWait $w hipslist(ok) $w.filter.filter
+
+    set id {}
+    if {$hipslist(ok)} {
+	set id [lindex [$hipslist(tree) selection] 0]
+    }
+    destroy $w
+    unset -nocomplain hipslist(recs) hipslist(tree)
+    if {$id == {}} {
+	return
+    }
+
+    set url [HiPSResolveID $id]
+    HiPSClearErrorInfo
+    if {$url == {}} {
+	Error "[msgcat::mc {Unable to load}] HiPS $id: $hipsnet(error)"
+	return
+    }
+    HiPSOpenURL $url
+}
+
+# the list, as filtered; the selection kept if still shown, else the first
+proc HiPSListFill {} {
+    global hipslist
+
+    set tree $hipslist(tree)
+    set sel [lindex [$tree selection] 0]
+    $tree delete [$tree children {}]
+    set recs [HiPSListMatch $hipslist(recs) $hipslist(filter)]
+    foreach rec $recs {
+	set id [HiPSProp $rec ID]
+	# an ID is unique in the registry; the item's id
+	if {[$tree exists $id]} {
+	    continue
+	}
+	$tree insert {} end -id $id -values [list $id \
+	    [HiPSProp $rec obs_title] [HiPSProp $rec dataproduct_type]]
+    }
+    set hipslist(count) "[llength [$tree children {}]] / [llength $hipslist(recs)]"
+    if {$sel == {} || ![$tree exists $sel]} {
+	set sel [lindex [$tree children {}] 0]
+    }
+    if {$sel != {}} {
+	$tree selection set $sel
+	$tree see $sel
+    }
+}
+
+proc HiPSListUpdate {} {
+    global hipslist
+    global hipsnet
+
+    set recs [HiPSListRecords 1]
+    HiPSClearErrorInfo
+    if {$recs == {}} {
+	Error "[msgcat::mc {Unable to list HiPS}]: $hipsnet(error)"
+	return
+    }
+    set hipslist(recs) $recs
+    HiPSListFill
+}
+
+proc HiPSListOK {} {
+    global hipslist
+
+    if {[$hipslist(tree) selection] != {}} {
+	set hipslist(ok) 1
+    }
 }
 
 proc OpenHiPSDialog {} {

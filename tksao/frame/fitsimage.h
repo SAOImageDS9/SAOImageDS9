@@ -828,6 +828,13 @@ public:
   FitsImageENVISMMap(Context*, Tcl_Interp*, const char*, const char*, int);
 };
 
+// HiPS: a local HiPS directory, read as a NESTED HEALPix table
+
+class FitsImageHiPS : public FitsImage {
+public:
+  FitsImageHiPS(Context*, Tcl_Interp*, const char*, int);
+};
+
 // NRRD
 
 class FitsImageNRRDAlloc : public FitsImage {

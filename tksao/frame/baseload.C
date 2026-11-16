@@ -173,6 +173,16 @@ void Base::loadENVISMMapCmd(const char* hdr, const char* fn)
   loadDone(currentContext->load(SMMAP, fn, img));
 }
 
+// *** HiPS ***
+
+// fn: the HiPS root directory, with optional [order=,proj=,...]
+void Base::loadHiPSCmd(const char* fn)
+{
+  unloadFits();
+  FitsImage* img = new FitsImageHiPS(currentContext, interp, fn, 1);
+  loadDone(currentContext->load(ALLOC, fn, img));
+}
+
 // *** NRRD ***
 
 void Base::loadNRRDAllocCmd(const char* ch, const char* fn, LayerType ll)

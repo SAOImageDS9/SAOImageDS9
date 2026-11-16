@@ -67,6 +67,7 @@ protected:
   double pHPXLon0_;          // reprojection centre longitude [deg]
   double pHPXLat0_;          // reprojection centre latitude [deg], NAN=default
   double pHPXFov_;           // reprojection field of view [deg], NAN=default
+  int pHiPSOrder_;           // HiPS order to read, -1=automatic
 
   double pCRPIX3_;           // WCS_3 axis params
   double pCRVAL3_;
@@ -191,6 +192,9 @@ public:
   void setpHPXLon0(double ll) {pHPXLon0_ = ll;}
   void setpHPXLat0(double ll) {pHPXLat0_ = ll;}
   void setpHPXFov(double ff) {pHPXFov_ = ff;}
+
+  int pHiPSOrder() {return pHiPSOrder_;}
+  void setpHiPSOrder(int oo) {pHiPSOrder_ = oo;}
 
   double pCRPIX3() {return pCRPIX3_;}
   double pCRVAL3() {return pCRVAL3_;}

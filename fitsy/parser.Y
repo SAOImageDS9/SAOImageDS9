@@ -277,6 +277,8 @@ hpxsb	: hpxsb ',' hpx
 
 hpx	: SYSTEM_ '=' hpxSystem
 	| ORDER_ '=' hpxOrder
+	// a HiPS order (ORDER_ '=' ring|nested is the HEALPix ordering)
+	| ORDER_ '=' INT {ff->setpHiPSOrder($3);}
 	| LAYOUT_ '=' hpxLayout
 	| COL_ '=' INT {ff->setpHPXColumn($3);}
 	| QUAD_ '=' INT {ff->setpHPXQuad($3);}

@@ -24,6 +24,7 @@
 #include "iis.h"
 #include "hist.h"
 #include "hpx.h"
+#include "hips.h"
 #include "compress.h"
 #include "analysis.h"
 #include "photo.h"
@@ -539,6 +540,17 @@ FitsImageENVISMMap::FitsImageENVISMMap(Context* cx, Tcl_Interp* pp,
   : FitsImage(cx, pp)
 {
   fits_ = new FitsENVISMMap(hdr,fn);
+  process(fn,id);
+}
+
+// HiPS
+
+FitsImageHiPS::FitsImageHiPS(Context* cx, Tcl_Interp* pp, const char* fn,
+			     int id)
+  : FitsImage(cx, pp)
+{
+  // a binary table, so process() takes the HEALPix path
+  fits_ = new FitsHiPS(fn);
   process(fn,id);
 }
 

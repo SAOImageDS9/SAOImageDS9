@@ -134,6 +134,7 @@ FitsFile::FitsFile()
   pHPXLon0_ =0;
   pHPXLat0_ =NAN;
   pHPXFov_ =NAN;
+  pHiPSOrder_ =-1;
 
   pCRPIX3_ =1;
   pCRVAL3_ =1;

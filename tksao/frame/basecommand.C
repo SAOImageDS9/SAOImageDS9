@@ -726,6 +726,12 @@ void Base::contourDeleteAuxCmd()
   update(PIXMAP);
 }
 
+void Base::contourDeleteAuxCmd(int nn)
+{
+  currentContext->contourDeleteAux(nn);
+  update(PIXMAP);
+}
+
 void Base::contourLoadCmd(const char* fn)
 {
   ifstream str(fn);
@@ -1860,6 +1866,11 @@ void Base::getFitsCenterCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
 		 sys, sky, format);
   else
     Tcl_AppendResult(interp, "0 0", NULL);
+}
+
+void Base::getContourAuxCountCmd()
+{
+  printInteger(currentContext->auxContourCount());
 }
 
 void Base::getFitsCountCmd()

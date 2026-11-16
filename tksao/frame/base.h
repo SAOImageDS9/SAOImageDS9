@@ -742,6 +742,7 @@ public:
   void contourDashListCmd(int, int);
   void contourDeleteCmd();
   void contourDeleteAuxCmd();
+  void contourDeleteAuxCmd(int);
   void contourLoadCmd(const char*);
   void contourLoadCmd(const char*, const char*, int, int);
   void contourLoadCmd(const char*, Coord::CoordSystem, Coord::SkyFrame, const char*, int, int);
@@ -761,6 +762,7 @@ public:
   void getContourDashCmd();
   void getContourDashListCmd();
   void getContourLevelCmd();
+  void getContourAuxCountCmd();
   void getContourLineWidthCmd();
   void getContourMethodCmd();
   void getContourNumLevelCmd();

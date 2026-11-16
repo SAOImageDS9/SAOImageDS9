@@ -362,7 +362,16 @@ proc ProcessCommand {argv argc} {
 	    }
 	    -note -
 	    -notes {incr i; ProcessNotesCmd argv i}
-	    -hips {set file(type) hips}
+	    -hips {
+		# -hips coverage [yes|no] is a command; otherwise the files
+		# that follow are HiPS directories
+		if {[string tolower [lindex $argv [expr $i+1]]] == {coverage}} {
+		    incr i
+		    ProcessHiPSCmd argv i
+		} else {
+		    set file(type) hips
+		}
+	    }
 	    -nrrd {set file(type) nrrd}
 	    -nvss {incr i; ProcessNVSSCmd argv i}
 

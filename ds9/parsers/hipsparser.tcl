@@ -61,122 +61,245 @@ proc hips::unsetupvalues {numsyms} {
 }
 
 array set hips::table {
+  13:263 shift
+  11:263,target 7
+  2:257 shift
+  15:0,target 10
+  9:0 reduce
+  2:258 shift
+  11:0 reduce
+  2:259 shift
+  2:260 shift
+  0:263 reduce
+  2:261 shift
+  0:264 shift
+  2:262 shift
+  7:263,target 5
+  0:265 shift
+  2:263 reduce
+  15:0 reduce
+  0:267 goto
+  4:263 reduce
+  0:265,target 2
+  2:263,target 12
+  2:266 goto
+  0:270 goto
+  0:269 goto
+  6:0,target 2
+  6:263 reduce
+  2:0 reduce
+  14:263,target 11
+  8:263 reduce
+  4:268 goto
   6:0 reduce
-  3:0,target 1
-  0:257 reduce
+  0:264,target 1
+  2:262,target 11
+  7:0,target 5
+  12:0 reduce
+  5:263,target 14
+  10:0,target 4
+  0:263,target 14
+  2:261,target 10
+  4:268,target 13
+  12:263,target 13
+  8:0,target 3
+  3:0 accept
+  10:263 reduce
+  11:0,target 7
+  2:259,target 8
+  2:260,target 9
+  12:263 reduce
+  8:263,target 3
   7:0 reduce
-  6:257,target 4
-  0:258 shift
-  1:257 reduce
-  0:259 goto
-  3:257 reduce
-  0:261 goto
-  7:0,target 3
-  4:257 shift
-  1:257,target 6
-  0:262 goto
-  0:258,target 1
-  5:257 shift
-  3:260 goto
-  6:257 reduce
-  3:257,target 2
-  0:261,target 3
-  2:0,target 0
-  5:257,target 7
-  3:260,target 5
-  6:0,target 4
-  0:257,target 5
-  2:0 accept
-  3:0 reduce
-  0:259,target 2
-  4:257,target 6
-  0:262,target 4
+  14:263 reduce
+  9:0,target 6
+  1:263 reduce
+  2:258,target 7
+  2:0,target 12
+  12:0,target 13
+  10:263,target 4
+  5:263 shift
+  7:263 reduce
+  2:257,target 6
+  9:263 reduce
+  0:270,target 5
+  0:269,target 4
+  4:0 reduce
+  6:263,target 2
+  3:0,target 0
+  1:263,target 15
+  8:0 reduce
+  10:0 reduce
+  13:263,target 15
+  2:266,target 12
+  14:0 reduce
+  9:263,target 6
+  4:0,target 8
+  14:0,target 11
+  0:267,target 3
+  4:263,target 9
+  11:263 reduce
 }
 
 array set hips::rules {
-  0,l 263
-  1,l 259
-  2,l 260
-  3,l 259
-  4,l 261
-  5,l 262
-  6,l 262
+  9,l 268
+  11,l 269
+  15,l 270
+  2,l 266
+  6,l 266
+  12,l 269
+  3,l 266
+  7,l 266
+  13,l 269
+  0,l 271
+  4,l 266
+  8,l 267
+  10,l 267
+  14,l 270
+  1,l 266
+  5,l 266
 }
 
 array set hips::rules {
-  5,dc 0
+  5,dc 1
   0,dc 1
-  2,dc 0
-  4,dc 2
+  12,dc 1
+  8,dc 1
+  3,dc 1
+  15,dc 1
+  10,dc 3
   6,dc 1
-  1,dc 1
-  3,dc 3
+  1,dc 0
+  13,dc 2
+  9,dc 0
+  4,dc 1
+  11,dc 2
+  7,dc 1
+  2,dc 1
+  14,dc 0
 }
 
 array set hips::rules {
-  5,line 23
-  2,e 1
-  2,line 16
-  4,line 20
-  6,line 24
-  1,line 16
-  3,line 17
+  13,line 47
+  7,line 38
+  10,line 42
+  4,line 35
+  1,line 32
+  15,line 51
+  9,line 41
+  12,line 46
+  6,line 37
+  3,line 34
+  14,line 50
+  8,line 41
+  11,line 45
+  5,line 36
+  2,line 33
+  9,e 1
 }
 
 array set hips::lr1_table {
-  0 {{0 0 0} {1 0 0} {3 0 0} {4 {0 257} 0} {5 257 0} {6 257 0}}
-  1 {{6 257 1}}
-  2 {{0 0 1}}
-  3 {{1 0 1} {3 0 1} {2 257 0}}
-  4 {{4 {0 257} 1}}
-  0,trans {{258 1} {259 2} {261 3} {262 4}}
+  13,trans {{263 15}}
+  0 {{0 0 0} {8 0 0} {10 0 0} {11 {0 263} 0} {12 {0 263} 0} {13 {0 263} 0} {14 263 0} {15 263 0}}
+  14,trans {}
+  1 {{15 263 1}}
+  15,trans {}
+  2 {{12 {0 263} 1} {13 {0 263} 1} {1 {0 263} 0} {2 {0 263} 0} {3 {0 263} 0} {4 {0 263} 0} {5 {0 263} 0} {6 {0 263} 0} {7 {0 263} 0}}
+  3 {{0 0 1}}
+  4 {{8 0 1} {10 0 1} {9 263 0}}
+  0,trans {{264 1} {265 2} {267 3} {269 4} {270 5}}
+  5 {{11 {0 263} 1}}
   1,trans {}
-  5 {{3 0 2}}
-  2,trans {}
-  6 {{4 {0 257} 2}}
-  7 {{3 0 3}}
-  3,trans {{260 5}}
-  4,trans {{257 6}}
-  5,trans {{257 7}}
+  2,trans {{257 6} {258 7} {259 8} {260 9} {261 10} {262 11} {266 12}}
+  6 {{2 {0 263} 1}}
+  3,trans {}
+  7 {{5 {0 263} 1}}
+  4,trans {{268 13}}
+  8 {{3 {0 263} 1}}
+  5,trans {{263 14}}
+  10 {{4 {0 263} 1}}
+  9 {{6 {0 263} 1}}
   6,trans {}
+  11 {{7 {0 263} 1}}
   7,trans {}
+  12 {{13 {0 263} 2}}
+  8,trans {}
+  13 {{10 0 2}}
+  10,trans {}
+  9,trans {}
+  14 {{11 {0 263} 2}}
+  15 {{10 0 3}}
+  11,trans {}
+  12,trans {}
 }
 
 array set hips::token_id_table {
-  262,title {}
+  264,line 18
+  270,t 1
+  269,t 1
+  265,title COVERAGE
+  261,line 11
+  257,t 0
+  270,title {}
+  269,title {}
+  257,line 7
+  262,t 0
+  270,line 49
+  269,line 44
+  259,title ON
+  260,title OFF
+  266,t 1
+  271,t 1
+  264,title NEW
+  error error
+  266,line 31
+  268,title {}
+  error,line 30
+  258,t 0
+  263,line 14
+  error,title {}
+  263,t 0
+  259,line 9
+  260,line 10
+  258,title NO
+  267,t 1
+  263,title string
+  268,line 41
+  267,title {}
+  257 YES_
+  258 NO_
+  259,t 0
+  259 ON_
+  260 OFF_
+  260,t 0
+  261 TRUE_
+  265,line 19
+  262 FALSE_
+  263 STRING_
+  257,title YES
+  264 NEW_
+  264,t 0
+  265 COVERAGE_
+  262,line 12
+  266 yesno
+  267 command
+  268,t 1
+  268 @PSEUDO1
+  262,title FALSE
   0 {$}
   0,t 0
-  263,title {}
+  270 opts
+  269 hips
+  271 start'
   error,t 0
-  error error
-  258,line 11
-  261,line 19
-  error,line 14
-  257 STRING_
-  257,t 0
-  263,line 25
-  258 NEW_
-  258,t 0
-  260,t 1
-  260 @PSEUDO1
-  259,t 1
-  259 command
-  error,title {}
-  261,t 1
-  261 hips
-  262,t 1
-  262 opts
-  257,line 7
-  263,t 1
-  263 start'
-  260,line 16
-  259,line 15
-  257,title string
-  258,title NEW
-  262,line 22
-  260,title {}
-  259,title {}
-  261,title {}
+  258,line 8
+  266,title {}
+  271,line 52
+  271,title {}
+  261,t 0
+  267,line 40
+  265,t 0
+  261,title TRUE
 }
 
 proc hips::yyparse {} {
@@ -273,9 +396,18 @@ proc hips::yyparse {} {
                 set _ $1
                 set yylval [lindex $value_stack end]
                 switch -- $rule {
-                    2 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
-                    4 { HiPSCmdLoad $2 }
-                    6 { CreateFrame }
+                    1 { set _ 1 }
+                    2 { set _ 1 }
+                    3 { set _ 1 }
+                    4 { set _ 1 }
+                    5 { set _ 0 }
+                    6 { set _ 0 }
+                    7 { set _ 0 }
+                    9 { global ds9; if {!$ds9(init)} {YYERROR} else {yyclearin; YYACCEPT} }
+                    11 { HiPSCmdLoad $2 }
+                    12 { HiPSCoverageCmd 1 }
+                    13 { HiPSCoverageCmd $2 }
+                    15 { CreateFrame }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

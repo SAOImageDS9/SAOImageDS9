@@ -771,6 +771,18 @@ void Context::contourDeleteAux()
   hasAuxContour_ =0;
 }
 
+// delete one aux contour level, by its place in the list (0 = first)
+void Context::contourDeleteAux(int nn)
+{
+  if (nn<0 || nn>=auxcontours_.count())
+    return;
+
+  auxcontours_[nn];
+  delete auxcontours_.extract();
+  if (auxcontours_.isEmpty())
+    hasAuxContour_ =0;
+}
+
 void Context::contourListFV(ostream& str, Coord::CoordSystem sys,
 			    Coord::SkyFrame sky)
 {

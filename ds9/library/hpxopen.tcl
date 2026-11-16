@@ -91,6 +91,23 @@ proc HPXOpenDialog {varname} {
     return 1
 }
 
+# Does frame which show a HEALPix map through a projection window
+# (proj= other than HPX in its load name, a HEALPix file or a HiPS)?
+# Such a window is rebuilt to fit the frame and zoom, so its pixel
+# coordinates don't survive a backup.
+proc HPXFrameIsWindow {which} {
+    upvar #0 $which var
+
+    if {![info exists var(file,name)]} {
+	return 0
+    }
+    if {![regexp -nocase {[\[,]\s*proj\s*=\s*([a-z]+)} \
+	      $var(file,name) {} proj]} {
+	return 0
+    }
+    return [expr {[string tolower $proj] != {hpx}}]
+}
+
 # Does the file name already carry HEALPix options?
 proc HPXOpenHasOptions {fn} {
     return [regexp -nocase \

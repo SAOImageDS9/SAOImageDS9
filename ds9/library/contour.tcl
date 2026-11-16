@@ -1433,7 +1433,13 @@ proc ContourBackupBase {ch which fdir rdir} {
     if {[$which has contour aux]} {
 	set fn $fdir/aux.ctr
 	set rfn $rdir/aux.ctr
-	$which contour save aux \"$fn\" physical fk5
+	# a HEALPix projection window is rebuilt to fit the frame and zoom,
+	# so its pixels at restore aren't those at backup: save on the sky
+	set sys physical
+	if {[HPXFrameIsWindow $which]} {
+	    set sys wcs
+	}
+	$which contour save aux \"$fn\" $sys fk5
 	puts $ch "$which contour load \{\"$rfn\"\}"
     }
 }

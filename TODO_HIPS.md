@@ -63,8 +63,15 @@ Phases 0-5 are done. Open, roughly by value:
   current frame if it holds a HiPS, dropping its queued deep requests.
   `Tests/hips/hipsformat.sh` (30). The deep fetcher's `.missing` lists
   are per order and slice, not per format (the same cells, in practice).
-- SAMP `hips` goes through the same table as XPA but has not been
-  exercised; no standard MType exists.
+- SAMP `hips`: exercised 2026-11-16 (`Tests/hips/hipssamp.sh`, 19,
+  a private astropy hub, `samphub.py` + `sampcall.py`): ds9.set loads
+  by directory, URL and ID, with options and `new`; ds9.get answers
+  the name, `status`, `coverage`; `cancel`, `close`; errors come back
+  as SAMP errors and ds9 keeps answering. Fixed: `hips list` over SAMP
+  lost its newlines (a get's value is one line); it now goes as a file
+  (`ProcessSend`, `comm.tcl` passes `fn`), as `fits header` does. No
+  standard MType loads a HiPS, so other clients need `ds9.set`.
+
 - Test data still missing: 8-bit integer and BITPIX -64 FITS tiles
   (candidates in `hips/samples.md`).
 - Reference-image tests (Phase 0 item): a Python-rebuilt NESTED map

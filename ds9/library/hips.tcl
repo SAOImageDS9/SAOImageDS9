@@ -71,7 +71,8 @@ proc HiPSApplyCut {fn} {
 	return
     }
     set cut [HiPSProp $props hips_pixel_cut]
-    if {[llength $cut] != 2} {
+    # physical values: nothing to do with png/jpg display levels
+    if {[llength $cut] != 2 || [HiPSTileExt $props] != {fits}} {
 	return
     }
     lassign $cut lo hi
@@ -597,6 +598,33 @@ proc HiPSProp {props key {default {}}} {
 
 # A FITS file's primary header: a dict of width (NAXIS1), height
 # (NAXIS2) and ok (the file holds all the data), or {} if unreadable
+# The tile files a HiPS is read from: fits (physical values) when listed
+# in hips_tile_format, else png, else jpg (display values), or {} if none
+# of them. FitsHiPS (fitsy/hips.C) picks the same.
+proc HiPSTileExt {props} {
+    set formats [string tolower [HiPSProp $props hips_tile_format fits]]
+    foreach {word ext} {fits fits png png jpeg jpg jpg jpg} {
+	if {[lsearch -exact $formats $word] >= 0} {
+	    return $ext
+	}
+    }
+    return {}
+}
+
+# An image's size as HiPSFitsInfo gives it (width, height, ok), for any
+# tile format; png and jpg are decoded through a Tk photo
+proc HiPSImageInfo {fn ext} {
+    if {$ext == {fits}} {
+	return [HiPSFitsInfo $fn]
+    }
+    if {[catch {image create photo -file $fn} img]} {
+	return {}
+    }
+    set rr [dict create width [image width $img] height [image height $img] ok 1]
+    image delete $img
+    return $rr
+}
+
 proc HiPSFitsInfo {fn} {
     if {[catch {open $fn rb} ch]} {
 	return {}
@@ -634,7 +662,7 @@ proc HiPSFitsInfo {fn} {
 # nothing readable) for order=K; tiles (FITS tiles present), total
 # (tiles in the sky), allsky (usable Allsky tile width, 0 if none) and
 # allskybad (1 if an Allsky is there but can't be used, e.g. truncated)
-proc HiPSOpenOrders {dir width} {
+proc HiPSOpenOrders {dir width {ext fits}} {
 
     set orders {}
     foreach dd [glob -nocomplain -types d -directory $dir Norder*] {
@@ -649,7 +677,7 @@ proc HiPSOpenOrders {dir width} {
 	set od [file join $dir "Norder$kk"]
 	set total [expr {12*(1<<(2*$kk))}]
 	set tiles [llength [glob -nocomplain -types f -directory $od \
-				Dir*/Npix*.fits]]
+				Dir*/Npix*.$ext]]
 
 	# Allsky tile width: the mosaic is int(sqrt(total)) tiles wide
 	# Allsky tile width, as FitsHiPS::allskyWidth: orders 0-3 only,
@@ -658,11 +686,11 @@ proc HiPSOpenOrders {dir width} {
 	# Allsky that is there but fails this is marked bad.
 	set aw 0
 	set abad 0
-	set af [file join $od Allsky.fits]
+	set af [file join $od Allsky.$ext]
 	if {$kk <= 3 && [file isfile $af]} {
 	    set ncol [expr {int(sqrt($total))}]
 	    set nrow [expr {($total+$ncol-1)/$ncol}]
-	    set ai [HiPSFitsInfo $af]
+	    set ai [HiPSImageInfo $af $ext]
 	    if {$ai != {} && [dict get $ai ok]} {
 		set nx [dict get $ai width]
 		set ny [dict get $ai height]
@@ -807,8 +835,9 @@ proc HiPSOpenParamsDialog {dir} {
 	return {}
     }
     set formats [HiPSProp $props hips_tile_format fits]
-    if {[lsearch -exact [string tolower $formats] fits] < 0} {
-	Error "[msgcat::mc {Unable to load}] HiPS $dir: [msgcat::mc {only FITS tiles can be read, this HiPS has}] $formats"
+    set ext [HiPSTileExt $props]
+    if {$ext == {}} {
+	Error "[msgcat::mc {Unable to load}] HiPS $dir: [msgcat::mc {no FITS, PNG or JPEG tiles, this HiPS has}] $formats"
 	return {}
     }
     set width [HiPSProp $props hips_tile_width 512]
@@ -819,7 +848,7 @@ proc HiPSOpenParamsDialog {dir} {
     if {![string is integer -strict $maxorder]} {
 	set maxorder 29
     }
-    set orders [HiPSOpenOrders $dir $width]
+    set orders [HiPSOpenOrders $dir $width $ext]
     set auto [HiPSOpenAutoOrder $orders $width $maxorder]
 
     # the orders that can be loaded with order=K, and the smallest
@@ -836,7 +865,7 @@ proc HiPSOpenParamsDialog {dir} {
 	}
     }
     if {$auto == {} && $smallest == {}} {
-	Error "[msgcat::mc {Unable to load}] HiPS $dir: [msgcat::mc {no order has FITS tiles or a readable Allsky.fits}]"
+	Error "[msgcat::mc {Unable to load}] HiPS $dir: [msgcat::mc {no order has tiles or a readable Allsky}] ($ext)"
 	return {}
     }
 
@@ -873,7 +902,11 @@ proc HiPSOpenParamsDialog {dir} {
     set omin [HiPSProp $props hips_order_min 0]
     lappend desc "[msgcat::mc {orders}] $omin-[HiPSProp $props hips_order ?]"
     lappend desc "[msgcat::mc {tile}] [HiPSProp $props hips_tile_width 512]"
-    lappend desc $formats
+    if {$ext == {fits}} {
+	lappend desc $formats
+    } else {
+	lappend desc "$formats ([msgcat::mc {reading}] $ext: [msgcat::mc {display values 0-255}])"
+    }
     ttk::label $f.desc -text [join $desc {, }]
     grid $f.name -padx 2 -pady 2 -sticky w
     grid $f.dir -padx 2 -pady 0 -sticky w
@@ -886,6 +919,10 @@ proc HiPSOpenParamsDialog {dir} {
 	lappend view "[msgcat::mc {fov}] [HiPSOpenFmt [dict get $hpxed(view) fov]]"
     }
     set cut [HiPSProp $props hips_pixel_cut]
+    # physical values, not png/jpg display levels
+    if {$ext != {fits}} {
+	set cut {}
+    }
     if {$view != {}} {
 	ttk::label $f.view -text "[msgcat::mc {Initial view}]: [join $view {, }]"
 	grid $f.view -padx 2 -pady 0 -sticky w

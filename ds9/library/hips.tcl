@@ -25,6 +25,7 @@ proc ImportHiPSFile {fn} {
     # ds9(msg) by internalError), so report both here
     set ds9(msg) {}
     if {[ProcessLoad 0]} {
+	RecentAdd hips $fn
 	return 1
     }
     regsub {^HiPS: } $ds9(msg) {} why
@@ -50,6 +51,30 @@ proc HiPSFrameName {which} {
 	return {}
     }
     return $var(file,name)
+}
+
+# backup/restore: a backup names the HiPS (root plus options) and never
+# copies it. If the directory has gone, ask for its new place.
+proc HiPSRestore {fn} {
+    set id [string first "\[" $fn]
+    if {$id > 0} {
+	set dir [string range $fn 0 [expr $id-1]]
+	set ext [string range $fn $id end]
+    } else {
+	set dir $fn
+	set ext {}
+    }
+
+    if {![file isdirectory $dir]} {
+	Error "[msgcat::mc {Unable to load}] HiPS $dir"
+	set dir [tk_chooseDirectory -mustexist 1 \
+		     -title [msgcat::mc {Find HiPS directory}]]
+	if {$dir == {}} {
+	    Error [msgcat::mc {An error has occurred during restore}]
+	    return 0
+	}
+    }
+    return [ImportHiPSFile "$dir$ext"]
 }
 
 proc ProcessHiPSCmd {varname iname} {

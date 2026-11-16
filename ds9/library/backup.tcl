@@ -525,6 +525,12 @@ proc BackupFrameLoadParam {varname ch which fdir rdir channel} {
 	}
     }
 
+    # a HiPS is a directory, referenced by name and never copied
+    if {$param(load,type) == {hips}} {
+	puts $ch [list HiPSRestore $param(file,name)]
+	return
+    }
+
     puts $ch "global loadParam"
     puts $ch "array set loadParam \[list [array get param]\]"
 

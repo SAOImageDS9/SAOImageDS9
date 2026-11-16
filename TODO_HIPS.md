@@ -1,8 +1,9 @@
 # TODO: HiPS (Hierarchical Progressive Surveys) support
 
-Status (2026-11-15): Phases 0 and 1 done. Local FITS-tile HiPS load
-through `$frame load hips`, with all projections. Phase 2 (the `hips`
-command, dialog and docs) is next. Work is on branch `hips`. Builds on the
+Status (2026-11-16): Phases 0 and 1 done. Local FITS-tile HiPS load
+with all projections. Phase 2 in progress: the `hips` command, backup/
+restore and Open Recent are done; the Open HiPS dialog, properties
+defaults and the MOC overlay are next. Work is on branch `hips`. Builds on the
 HEALPix projection work in `TODO.md` (PR SAOImageDS9/SAOImageDS9#380:
 `FitsHPXReproj`, `proj=`/`lon0=`/`lat0=`/`fov=`, live windows).
 
@@ -356,8 +357,23 @@ variable: `[...]` inside Tcl double quotes is command substitution.
       a zenithal projection without `lat0`/`fov`. This needs ICRS ->
       `hips_frame` conversion (`FitsHPXReproj::fromSky` already does
       this).
-- [ ] Backup/restore (`backup.tcl`): save the HiPS source + options,
-      not the pixel data.
+- [x] Backup/restore (done 2026-11-16). The frame's saved load
+      parameters already carry the HiPS name with its options, so a
+      backup restores it, but through the generic path: a moved HiPS
+      got a FITS *file* dialog, where a directory can't be picked.
+      `BackupFrameLoadParam` now writes `HiPSRestore {<dir>[opts]}`
+      for a HiPS frame. That never copies tiles (even with "copy data"
+      backups), asks with `tk_chooseDirectory` if the directory has
+      gone, keeps the options, and loads through `ImportHiPSFile` for
+      its error messages.
+- [x] Open Recent (done 2026-11-16). `RecentAdd hips <name>` on a
+      successful `ImportHiPSFile`. `RecentNormalize` takes an `isdir`
+      flag, since it only kept regular files; `RecentOpen` checks the
+      directory, makes a plain frame if the current one is
+      RGB/HLS/HSV, and loads with `HiPSCmdLoad`. Label hint "HiPS".
+      Tested, with backup/restore, by `Tests/hips/hipsbackup.sh`
+      (16 checks; the moved-HiPS dialogs were checked with stubbed
+      `Error`/`tk_chooseDirectory`).
 - [ ] Coverage overlay: load `Moc.fits` through ds9's existing MOC
       support so users can see where data exist. This is cheap, since
       the MOC loader exists (cf. `coverage.load.moc.fits` in

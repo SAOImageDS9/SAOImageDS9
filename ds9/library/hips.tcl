@@ -97,3 +97,486 @@ proc ProcessSendHiPSCmd {proc id param {sock {}} {fn {}}} {
 
     $proc $id "[HiPSFrameName $current(frame)]\n"
 }
+
+# File > Open HiPS...
+# Choose a HiPS root directory, then the order and projection. The
+# order list mirrors the reader's choice (fitsy/hips.C): order K reads
+# its Allsky.fits if that holds full-size tiles, else its tiles, else a
+# reduced Allsky; without order=, the largest map up to nside 2048
+# (HIPS_NSIDE_AUTO), the Allsky winning ties; nothing above nside 8192
+# (HIPS_NSIDE_MAX).
+
+proc HiPSOpenDef {} {
+    global hipsopen
+
+    set hipsopen(nside,auto) 2048
+    set hipsopen(nside,max) 8192
+
+    # the last directory and values chosen, for the rest of the session
+    set hipsopen(dir) {}
+    set hipsopen(proj) hpx
+    set hipsopen(lon0) {}
+    set hipsopen(lat0) {}
+    set hipsopen(fov) {}
+}
+
+proc OpenHiPSDialog {} {
+    global current
+    global hipsopen
+
+    set opts [list -mustexist 1 -title [msgcat::mc {Open HiPS}]]
+    if {$hipsopen(dir) != {} && [file isdirectory $hipsopen(dir)]} {
+	lappend opts -initialdir $hipsopen(dir)
+    }
+    set dir [tk_chooseDirectory {*}$opts]
+    if {$dir == {}} {
+	return
+    }
+    set dir [file normalize $dir]
+    # also accept a directory one level inside the HiPS (e.g. Norder3)
+    if {![file isfile [file join $dir properties]] && \
+	    [file isfile [file join [file dirname $dir] properties]]} {
+	set dir [file dirname $dir]
+    }
+    set hipsopen(dir) [file dirname $dir]
+
+    set fn [HiPSOpenParamsDialog $dir]
+    if {$fn == {}} {
+	return
+    }
+
+    # a HiPS loads as a HEALPix map, which needs a plain frame
+    if {$current(frame) == {}} {
+	CreateFrame
+    } else {
+	switch -- [$current(frame) get type] {
+	    base -
+	    3d {}
+	    default {CreateFrame}
+	}
+    }
+    HiPSCmdLoad $fn
+}
+
+# The properties file as a dict, the first of repeated keys winning.
+# Throws if it can't be read.
+proc HiPSReadProperties {dir} {
+    set ch [open [file join $dir properties] r]
+    set props {}
+    while {[gets $ch line] >= 0} {
+	set line [string trim $line]
+	if {$line == {} || [string index $line 0] == "#"} {
+	    continue
+	}
+	set id [string first = $line]
+	if {$id < 1} {
+	    continue
+	}
+	set key [string trim [string range $line 0 [expr $id-1]]]
+	set val [string trim [string range $line [expr $id+1] end]]
+	if {![dict exists $props $key]} {
+	    dict set props $key $val
+	}
+    }
+    close $ch
+    return $props
+}
+
+proc HiPSProp {props key {default {}}} {
+    if {[dict exists $props $key] && [dict get $props $key] != {}} {
+	return [dict get $props $key]
+    }
+    return $default
+}
+
+# A FITS file's primary header: a dict of width (NAXIS1), height
+# (NAXIS2) and ok (the file holds all the data), or {} if unreadable
+proc HiPSFitsInfo {fn} {
+    if {[catch {open $fn rb} ch]} {
+	return {}
+    }
+    # the header is at most a few blocks
+    set buf [read $ch [expr 2880*8]]
+    close $ch
+
+    array set kk {BITPIX 0 NAXIS1 0 NAXIS2 0}
+    set end 0
+    for {set ii 0} {$ii+80 <= [string length $buf]} {incr ii 80} {
+	set card [string range $buf $ii [expr $ii+79]]
+	set key [string trim [string range $card 0 7]]
+	if {$key == {END}} {
+	    set end [expr {($ii/2880+1)*2880}]
+	    break
+	}
+	if {[info exists kk($key)]} {
+	    set vv [string trim [lindex [split [string range $card 10 end] /] 0]]
+	    if {[string is integer -strict $vv]} {
+		set kk($key) $vv
+	    }
+	}
+    }
+    if {!$end || !$kk(NAXIS1) || !$kk(NAXIS2)} {
+	return {}
+    }
+    set need [expr {$end + abs($kk(BITPIX))/8*wide($kk(NAXIS1))*$kk(NAXIS2)}]
+    return [dict create width $kk(NAXIS1) height $kk(NAXIS2) \
+		ok [expr {[file size $fn] >= $need}]]
+}
+
+# What each order present in dir can give, as a list of dicts, deepest
+# first: order, nside and source (allsky, tiles, reduced, or {} for
+# nothing readable) for order=K; tiles (FITS tiles present), total
+# (tiles in the sky), allsky (usable Allsky tile width, 0 if none) and
+# allskybad (1 if an Allsky is there but can't be used, e.g. truncated)
+proc HiPSOpenOrders {dir width} {
+
+    set orders {}
+    foreach dd [glob -nocomplain -types d -directory $dir Norder*] {
+	set kk [string range [file tail $dd] 6 end]
+	if {[string is integer -strict $kk] && $kk >= 0 && $kk <= 29} {
+	    lappend orders [scan $kk %d]
+	}
+    }
+
+    set rr {}
+    foreach kk [lsort -integer -decreasing -unique $orders] {
+	set od [file join $dir "Norder$kk"]
+	set total [expr {12*(1<<(2*$kk))}]
+	set tiles [llength [glob -nocomplain -types f -directory $od \
+				Dir*/Npix*.fits]]
+
+	# Allsky tile width: the mosaic is int(sqrt(total)) tiles wide
+	# Allsky tile width, as FitsHiPS::allskyWidth: orders 0-3 only,
+	# the mosaic int(sqrt(total)) tiles wide, power-of-two tiles that
+	# fill it, and the whole file present. Otherwise unused, and an
+	# Allsky that is there but fails this is marked bad.
+	set aw 0
+	set abad 0
+	set af [file join $od Allsky.fits]
+	if {$kk <= 3 && [file isfile $af]} {
+	    set ncol [expr {int(sqrt($total))}]
+	    set nrow [expr {($total+$ncol-1)/$ncol}]
+	    set ai [HiPSFitsInfo $af]
+	    if {$ai != {} && [dict get $ai ok]} {
+		set nx [dict get $ai width]
+		set ny [dict get $ai height]
+		set ww [expr {$nx/$ncol}]
+		if {$ww > 0 && ($ww & ($ww-1)) == 0 && $ww*$ncol == $nx && \
+			$ww*$nrow <= $ny} {
+		    set aw $ww
+		}
+	    }
+	    set abad [expr {!$aw}]
+	}
+
+	if {$aw == $width} {
+	    set source allsky
+	    set nside [expr {$width<<$kk}]
+	} elseif {$tiles > 0} {
+	    set source tiles
+	    set nside [expr {$width<<$kk}]
+	} elseif {$aw > 0} {
+	    set source reduced
+	    set nside [expr {$aw<<$kk}]
+	} else {
+	    set source {}
+	    set nside 0
+	}
+	lappend rr [dict create order $kk nside $nside source $source \
+			tiles $tiles total $total allsky $aw allskybad $abad]
+    }
+    return $rr
+}
+
+# What the reader picks without order=, as a dict like one of
+# HiPSOpenOrders' but with the nside and source of that choice, or {}.
+# This follows FitsHiPS::chooseSource (fitsy/hips.C) step for step:
+# orders from 0 while the tiles fit nside 2048, the Allsky tried before
+# the tiles, ties going to what was found first; then a reduced Allsky
+# at order 3 or less may still be the largest that fits.
+proc HiPSOpenAutoOrder {orders width maxorder} {
+    global hipsopen
+
+    foreach oo $orders {
+	set byorder([dict get $oo order]) $oo
+    }
+
+    set best 0
+    set choice {}
+    for {set kk 0} {$kk <= $maxorder} {incr kk} {
+	set tn [expr {wide($width)<<$kk}]
+	if {$tn > $hipsopen(nside,auto)} {
+	    break
+	}
+	if {![info exists byorder($kk)]} {
+	    continue
+	}
+	set oo $byorder($kk)
+	set aw [dict get $oo allsky]
+	if {$aw && ($aw<<$kk) > $best} {
+	    set best [expr {$aw<<$kk}]
+	    set choice [list $kk allsky]
+	}
+	if {$tn > $best && [dict get $oo tiles] > 0} {
+	    set best $tn
+	    set choice [list $kk tiles]
+	}
+    }
+    for {set kk 0} {$kk <= $maxorder && $kk <= 3} {incr kk} {
+	if {![info exists byorder($kk)]} {
+	    continue
+	}
+	set aw [dict get $byorder($kk) allsky]
+	set nn [expr {wide($aw)<<$kk}]
+	if {$aw && $nn <= $hipsopen(nside,auto) && $nn > $best} {
+	    set best $nn
+	    set choice [list $kk allsky]
+	}
+    }
+
+    if {$choice == {}} {
+	return {}
+    }
+    lassign $choice kk src
+    set oo $byorder($kk)
+    dict set oo nside $best
+    if {$src == {allsky} && [dict get $oo allsky] != $width} {
+	set src reduced
+    }
+    dict set oo source $src
+    return $oo
+}
+
+# "12 MB": the map's memory (4-byte pixels)
+proc HiPSOpenSize {nside} {
+    set mb [expr {12.0*$nside*$nside*4/1024/1024}]
+    if {$mb < 10} {
+	return "[format %.1f $mb] MB"
+    }
+    return "[format %.0f $mb] MB"
+}
+
+# One line about an order: "Order 3: nside 512, all-sky image, 12 MB"
+proc HiPSOpenOrderLabel {oo} {
+    global hipsopen
+
+    set kk [dict get $oo order]
+    set nside [dict get $oo nside]
+    set ll "[msgcat::mc {Order}] $kk"
+    switch -- [dict get $oo source] {
+	{} {
+	    if {[dict get $oo allskybad]} {
+		return "$ll: [msgcat::mc {Allsky unreadable, no FITS tiles}]"
+	    }
+	    return "$ll: [msgcat::mc {no FITS tiles}]"
+	}
+	allsky {set src [msgcat::mc {Allsky}]}
+	reduced {set src [msgcat::mc {reduced Allsky}]}
+	tiles {
+	    set src "[dict get $oo tiles]/[dict get $oo total] [msgcat::mc {tiles}]"
+	}
+    }
+    set ll "$ll: NSIDE $nside, $src, [HiPSOpenSize $nside]"
+    if {[dict get $oo allskybad]} {
+	append ll ", [msgcat::mc {Allsky unreadable}]"
+    }
+    if {$nside > $hipsopen(nside,max)} {
+	append ll " ([msgcat::mc {too large}])"
+    }
+    return $ll
+}
+
+# The dialog. Returns the name to load (dir plus options), or {} on
+# cancel or error.
+proc HiPSOpenParamsDialog {dir} {
+    global hipsopen
+    global hpxed
+
+    if {[catch {HiPSReadProperties $dir} props]} {
+	Error "[msgcat::mc {Unable to load}] HiPS $dir: [msgcat::mc {no readable properties file}]"
+	return {}
+    }
+    if {[HiPSProp $props dataproduct_type image] == {catalog}} {
+	Error "[msgcat::mc {Unable to load}] HiPS $dir: [msgcat::mc {catalogue HiPS are not supported}]"
+	return {}
+    }
+    set formats [HiPSProp $props hips_tile_format fits]
+    if {[lsearch -exact [string tolower $formats] fits] < 0} {
+	Error "[msgcat::mc {Unable to load}] HiPS $dir: [msgcat::mc {only FITS tiles can be read, this HiPS has}] $formats"
+	return {}
+    }
+    set width [HiPSProp $props hips_tile_width 512]
+    if {![string is integer -strict $width] || $width < 1} {
+	set width 512
+    }
+    set maxorder [HiPSProp $props hips_order 29]
+    if {![string is integer -strict $maxorder]} {
+	set maxorder 29
+    }
+    set orders [HiPSOpenOrders $dir $width]
+    set auto [HiPSOpenAutoOrder $orders $width $maxorder]
+
+    # the orders that can be loaded with order=K, and the smallest
+    set usable {}
+    set smallest {}
+    foreach oo $orders {
+	set nside [dict get $oo nside]
+	if {$nside > 0 && $nside <= $hipsopen(nside,max) && \
+		[dict get $oo order] <= $maxorder} {
+	    lappend usable [dict get $oo order]
+	    if {$smallest == {} || $nside < [dict get $smallest nside]} {
+		set smallest $oo
+	    }
+	}
+    }
+    if {$auto == {} && $smallest == {}} {
+	Error "[msgcat::mc {Unable to load}] HiPS $dir: [msgcat::mc {no order has FITS tiles or a readable Allsky.fits}]"
+	return {}
+    }
+
+    set w {.hipsopen}
+
+    array unset hpxed
+    set hpxed(ok) 0
+    set hpxed(whpx) {}
+    # without an automatic choice, start from the smallest map
+    if {$auto != {}} {
+	set hpxed(order) {}
+    } else {
+	set hpxed(order) [dict get $smallest order]
+    }
+    set hpxed(proj) $hipsopen(proj)
+    if {[HPXOpenProjInfo $hpxed(proj)] == {}} {
+	set hpxed(proj) hpx
+    }
+    foreach key {lon0 lat0 fov} {
+	set hpxed($key) $hipsopen($key)
+    }
+    set hpxed(orders) $orders
+
+    DialogCreate $w [msgcat::mc {Open HiPS}] hpxed(ok)
+
+    # Survey
+    set f [ttk::frame $w.file]
+    set title [HiPSProp $props obs_title [file tail $dir]]
+    ttk::label $f.name -text $title -font TkHeadingFont
+    ttk::label $f.dir -text $dir
+    set desc {}
+    lappend desc [HiPSProp $props hips_frame equatorial]
+    set omin [HiPSProp $props hips_order_min 0]
+    lappend desc "[msgcat::mc {orders}] $omin-[HiPSProp $props hips_order ?]"
+    lappend desc "[msgcat::mc {tile}] [HiPSProp $props hips_tile_width 512]"
+    lappend desc $formats
+    ttk::label $f.desc -text [join $desc {, }]
+    grid $f.name -padx 2 -pady 2 -sticky w
+    grid $f.dir -padx 2 -pady 0 -sticky w
+    grid $f.desc -padx 2 -pady 2 -sticky w
+
+    # Data
+    set f [ttk::labelframe $w.data -text [msgcat::mc {Data}]]
+    ttk::label $f.torder -text [msgcat::mc {Order}]
+    ttk::menubutton $f.order -textvariable hpxed(orderlabel) -menu $f.order.m
+    ThemeMenu $f.order.m
+    if {$auto != {}} {
+	set hpxed(autolabel) "[msgcat::mc {Automatic}] ([HiPSOpenOrderLabel $auto])"
+	set state normal
+    } else {
+	set hpxed(autolabel) "[msgcat::mc {Automatic}] ([msgcat::mc {nothing up to NSIDE}] $hipsopen(nside,auto))"
+	set state disabled
+    }
+    $f.order.m add radiobutton -label $hpxed(autolabel) \
+	-variable hpxed(order) -value {} -command HiPSOpenOrderChanged \
+	-state $state
+    $f.order.m add separator
+    foreach oo $orders {
+	set nside [dict get $oo nside]
+	set label [HiPSOpenOrderLabel $oo]
+	set state normal
+	if {[lsearch -exact $usable [dict get $oo order]] < 0} {
+	    set state disabled
+	}
+	if {[dict get $oo order] > $maxorder} {
+	    append label " ([msgcat::mc {deeper than hips_order}])"
+	}
+	$f.order.m add radiobutton -label $label \
+	    -variable hpxed(order) -value [dict get $oo order] \
+	    -command HiPSOpenOrderChanged -state $state
+    }
+    grid $f.torder $f.order -padx 2 -pady 2 -sticky w
+
+    # Projection
+    HPXOpenProjFrame [ttk::labelframe $w.proj -text [msgcat::mc {Projection}]]
+
+    # Buttons
+    set f [ttk::frame $w.buttons]
+    ttk::button $f.ok -text [msgcat::mc {OK}] -command HiPSOpenOK \
+	-default active
+    ttk::button $f.cancel -text [msgcat::mc {Cancel}] \
+	-command {set hpxed(ok) 0}
+    pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
+
+    bind $w <Return> HiPSOpenOK
+
+    # Fini
+    ttk::separator $w.sep -orient horizontal
+    pack $w.buttons $w.sep -side bottom -fill x
+    pack $w.file -side top -fill x -padx 2 -pady 2
+    pack $w.data $w.proj -side top -fill x -padx 4 -pady 2
+
+    HiPSOpenOrderChanged
+    set hpxed(oldproj) {}
+    HPXOpenProjChanged
+
+    DialogWait $w hpxed(ok)
+    destroy $w
+
+    set fn {}
+    if {$hpxed(ok)} {
+	set vals [dict create layout equatorial quad 1]
+	foreach key {proj lon0 lat0 fov} {
+	    dict set vals $key [string trim $hpxed($key)]
+	    # remember for the next HiPS
+	    set hipsopen($key) [dict get $vals $key]
+	}
+	set opts {}
+	if {$hpxed(order) != {}} {
+	    lappend opts "order=$hpxed(order)"
+	}
+	set opts [concat $opts [HPXOpenProjOptions $vals]]
+	set fn $dir
+	if {$opts != {}} {
+	    append fn "\[[join $opts ,]\]"
+	}
+    }
+    array unset hpxed
+    return $fn
+}
+
+proc HiPSOpenOrderChanged {} {
+    global hpxed
+
+    if {$hpxed(order) == {}} {
+	set hpxed(orderlabel) $hpxed(autolabel)
+	return
+    }
+    foreach oo $hpxed(orders) {
+	if {[dict get $oo order] == $hpxed(order)} {
+	    set hpxed(orderlabel) [HiPSOpenOrderLabel $oo]
+	}
+    }
+}
+
+proc HiPSOpenOK {} {
+    global hpxed
+
+    set vals {}
+    foreach key {proj lon0 lat0 fov} {
+	dict set vals $key $hpxed($key)
+    }
+    set err [HPXOpenCheck $vals]
+    if {$err != {}} {
+	Error $err
+	return
+    }
+    set hpxed(ok) 1
+}

@@ -832,7 +832,7 @@ public:
 
 class FitsImageHiPS : public FitsImage {
 public:
-  FitsImageHiPS(Context*, Tcl_Interp*, const char*, int);
+  FitsImageHiPS(Context*, Tcl_Interp*, const char*, int, int =-1);
 };
 
 // NRRD

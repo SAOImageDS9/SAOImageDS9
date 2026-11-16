@@ -1601,6 +1601,15 @@ load	: ARRAY_ loadArr
 	  else
 	    YYERROR;
 	}
+	// load hips <name> <channel>: one colour of RGB tiles (0 red,
+	// 1 green, 2 blue), into the frame's current channel
+	| STRING STRING INT
+	{
+	  if (!strcmp($1,"hips"))
+	    fr->loadHiPSCmd($2,$3);
+	  else
+	    YYERROR;
+	}
 	;
 
 loadArr : STRING ALLOC_ STRING layerType

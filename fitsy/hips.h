@@ -49,6 +49,7 @@ class FitsHiPS : public FitsFile {
   int badAllsky_;      // order of an unreadable Allsky.fits, or -1
   const char* tileExt_; // tile files read: fits, png or jpg
   Tcl_Interp* interp_; // decodes png/jpg tiles through Tk photos
+  int channel_;        // colour tiles: 0/1/2 red/green/blue, -1 luminance
   int initView_;       // window centre taken from hips_initial_ra/dec
 
   int readProperties(const char*);
@@ -66,7 +67,7 @@ class FitsHiPS : public FitsFile {
   int initHeaders();
 
  public:
-  FitsHiPS(const char*, Tcl_Interp* =NULL);
+  FitsHiPS(const char*, Tcl_Interp* =NULL, int channel =-1);
   ~FitsHiPS();
 
   // a HiPS root directory (one holding a properties file)?

@@ -527,6 +527,11 @@ proc BackupFrameLoadParam {varname ch which fdir rdir channel} {
 
     # a HiPS is a directory, referenced by name and never copied
     if {$param(load,type) == {hips}} {
+	# a colour HiPS loads all three channels at once: restore it once
+	if {[info exists param(hips,colour)] && $param(hips,colour) &&
+	    $channel != {red}} {
+	    return
+	}
 	set cov {}
 	if {[info exists param(hips,coverage)]} {
 	    set cov $param(hips,coverage)

@@ -141,11 +141,12 @@ static int copyBlock(FitsFile* img, int r0, int c0, int ww, float* dest,
 
 // A PNG or JPEG tile decoded through a Tk photo (Tk reads PNG, tkimg
 // JPEG): one value per pixel, top row first, w*h floats (delete []).
-// Grey images give their grey level; colour ones their luminance (Rec.
-// 601, as FitsPhoto). A fully transparent pixel (alpha 0) is no data,
+// channel 0/1/2 gives the red/green/blue level; -1, grey images their
+// grey level and colour ones their luminance (Rec. 601, as FitsPhoto). A fully transparent pixel (alpha 0) is no data,
 // NaN. Values are the tile's 0-255 display values, not physical ones.
 // Returns NULL if the file can't be decoded.
-static float* readPhoto(Tcl_Interp* interp, const char* fn, int* ww, int* hh)
+static float* readPhoto(Tcl_Interp* interp, const char* fn, int* ww, int* hh,
+			int channel)
 {
   if (!interp)
     return NULL;
@@ -186,6 +187,8 @@ static float* readPhoto(Tcl_Interp* interp, const char* fn, int* ww, int* hh)
 	  unsigned char b = pp[block.offset[2]];
 	  if (alpha && pp[block.offset[3]] == 0)
 	    *dd++ = NAN;
+	  else if (channel >= 0 && channel <= 2)
+	    *dd++ = pp[block.offset[channel]];
 	  else if (r == g && g == b)
 	    *dd++ = r;
 	  else
@@ -253,9 +256,10 @@ static int allskyCols(int order)
   return (int)floor(sqrt(12.*(1L<<(2*order))) + 1e-9);
 }
 
-FitsHiPS::FitsHiPS(const char* fn, Tcl_Interp* interp)
+FitsHiPS::FitsHiPS(const char* fn, Tcl_Interp* interp, int channel)
 {
   interp_ = interp;
+  channel_ = channel;
   tileExt_ = "fits";
   order_ = -1;
   tileWidth_ = 0;
@@ -571,7 +575,7 @@ int FitsHiPS::allskyWidth(int order)
       }
     }
     else {
-      float* img = readPhoto(interp_, fn, &nx, &ny);
+      float* img = readPhoto(interp_, fn, &nx, &ny, channel_);
       if (img)
 	delete [] img;
       else
@@ -725,7 +729,7 @@ int FitsHiPS::buildMap(float* map)
     }
     else {
       int nx, ny;
-      float* img = readPhoto(interp_, fn, &nx, &ny);
+      float* img = readPhoto(interp_, fn, &nx, &ny, channel_);
       if (img) {
 	for (int nn=0; nn<ntile_; nn++) {
 	  if (copyPhotoBlock(img, nx, ny, (nn/ncol)*ww, (nn%ncol)*ww, ww,
@@ -754,7 +758,7 @@ int FitsHiPS::buildMap(float* map)
 	}
 	else {
 	  int nx, ny;
-	  float* img = readPhoto(interp_, fn, &nx, &ny);
+	  float* img = readPhoto(interp_, fn, &nx, &ny, channel_);
 	  if (img && nx == ww && ny == ww &&
 	      copyPhotoBlock(img, nx, ny, 0, 0, ww, map+nn*w2, sub))
 	    nread_++;
@@ -876,6 +880,13 @@ int FitsHiPS::initHeaders()
     str << "values are " << tileExt_ << " display levels 0-255, not data"
 	<< ends;
     head_->insertComment("COMMENT", str.str().c_str(), NULL);
+    if (channel_ >= 0 && channel_ <= 2) {
+      const char* names[] = {"red", "green", "blue"};
+      ostringstream cc;
+      cc << "the " << names[channel_] << " channel of the colour tiles"
+	 << ends;
+      head_->insertComment("COMMENT", cc.str().c_str(), NULL);
+    }
   }
   if (nread_ < ntile_)
     head_->insertComment("HISTORY", "missing or unreadable tiles are NaN",

@@ -282,7 +282,13 @@ proc ProcessLoad {{err 1}} {
 			$loadParam(file,fn) != {}} {
 		    set fn $loadParam(file,fn)
 		}
-		$current(frame) load hips \{$fn\}
+		# a colour HiPS: one channel of its tiles (hips.tcl)
+		if {[info exists loadParam(hips,channel)] && \
+			$loadParam(hips,channel) != {}} {
+		    $current(frame) load hips \{$fn\} $loadParam(hips,channel)
+		} else {
+		    $current(frame) load hips \{$fn\}
+		}
 	    }
 	}
 	# be sure to update the colorbar levels, especially in tile mode

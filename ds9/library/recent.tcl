@@ -269,15 +269,7 @@ proc RecentOpen {entry} {
 	nrrd {Import $fn $type {} {} {}}
 	envi {Import $fn envi {} {} $opts(data)}
 	photo {Import $fn png {} $opts(mode) {}}
-	hips {
-	    # a HiPS loads as a HEALPix map, which needs a plain frame
-	    switch -- [$current(frame) get type] {
-		base -
-		3d {}
-		default {CreateFrame}
-	    }
-	    HiPSCmdLoad $fn
-	}
+	hips {HiPSCmdLoad $fn}
 
 	default {Error "[msgcat::mc {Unknown file type}] $type"}
     }

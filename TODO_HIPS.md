@@ -19,7 +19,14 @@ Sample data: `hips/data1/ancillary/missions/Fermi_Band4/HiPS` (Fermi-LAT
 
 ## What's left (2026-11-16)
 
-Phases 0-5 are done. Open, roughly by value:
+Phases 0-6 are done. Waiting on the user (2026-11-16):
+- Downloads: a live check of the MocServer format (ID / list), CDS
+  `hips2fits` reference images, real 8-bit and BITPIX -64 samples.
+- Scope: catalogue HiPS into the catalog tool; the whole-map memory
+  limit at nside 8192; a cube frame range (`slice=a-b`) for 3-D.
+- Upstream: push / PR of branch `hips`.
+
+The items, roughly by value:
 
 - Cubes are 2-D frames underneath (Phase 4): no 3-D render, no `save`
   of the whole cube, no `cube axes` reordering. Decided 2026-11-16 to

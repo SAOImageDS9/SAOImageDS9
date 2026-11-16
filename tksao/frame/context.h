@@ -156,6 +156,7 @@ class Context {
   void contourDeleteFV();
   void contourDeleteAux();
   int contourDeleteAux(int);
+  int auxContourCount() {return auxsets_.count();}
   void contourListFV(ostream&, Coord::CoordSystem, Coord::SkyFrame);
   void contourListAux(ostream&, Coord::CoordSystem, Coord::SkyFrame);
   void contourListAux(ostream&, Coord::CoordSystem, Coord::SkyFrame, int);

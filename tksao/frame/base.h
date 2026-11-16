@@ -768,6 +768,7 @@ public:
   void getContourDashCmd();
   void getContourDashListCmd();
   void getContourLevelCmd();
+  void getContourAuxCountCmd();
   void getContourLineWidthCmd();
   void getContourMethodCmd();
   void getContourNumLevelCmd();

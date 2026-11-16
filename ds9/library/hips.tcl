@@ -92,8 +92,10 @@ proc HiPSFrameName {which} {
 }
 
 # backup/restore: a backup names the HiPS (root plus options) and never
-# copies it. If the directory has gone, ask for its new place.
-proc HiPSRestore {fn} {
+# copies it. If the directory has gone, ask for its new place. coverage
+# is which aux contour is the coverage overlay ({} if none); the contour
+# itself comes back with the frame's other aux contours, in order.
+proc HiPSRestore {fn {coverage {}}} {
     set id [string first "\[" $fn]
     if {$id > 0} {
 	set dir [string range $fn 0 [expr $id-1]]
@@ -112,7 +114,190 @@ proc HiPSRestore {fn} {
 	    return 0
 	}
     }
-    return [ImportHiPSFile "$dir$ext"]
+    if {![ImportHiPSFile "$dir$ext"]} {
+	return 0
+    }
+    if {$coverage != {}} {
+	global current
+	upvar #0 $current(frame) var
+	set var(hips,coverage) $coverage
+    }
+    return 1
+}
+
+# Coverage overlay. A HiPS's Moc.fits (HiPS 1.0 sec. 4.4.2) says where
+# the survey has data. It is drawn as the edge of the coverage: the MOC
+# is loaded into a scratch frame as a plate carree HEALPix image (capped
+# at order hipscov(order) with order=, so a deep MOC stays small; every
+# CAR pixel is sky, unlike the HPX layout's gaps), contoured at 0.5,
+# and the contour is pasted into the HiPS frame through sky coordinates
+# as an aux contour. That works whatever the MOC's and the survey's
+# frames and the projection, and the HEALPix windows already carry aux
+# contours through recentring. The frame's saved load parameters keep
+# which aux contour it is (hips,coverage), so turning it off removes
+# only that one.
+proc HiPSCoverage {which on} {
+    upvar #0 $which var
+
+    if {$on} {
+	if {[info exists var(hips,coverage)]} {
+	    return 1
+	}
+	return [HiPSCoverageShow $which]
+    } else {
+	HiPSCoverageHide $which
+	return 1
+    }
+}
+
+proc HiPSCoverageShown {which} {
+    upvar #0 $which var
+
+    if {$which == {} || [HiPSFrameName $which] == {}} {
+	return 0
+    }
+    return [info exists var(hips,coverage)]
+}
+
+proc HiPSCoverageShow {which} {
+    global ds9
+    global current
+    global loadParam
+    global hipscov
+    upvar #0 $which var
+
+    set fn [HiPSFrameName $which]
+    if {$fn == {}} {
+	Error [msgcat::mc {HiPS coverage: the current frame does not hold a HiPS}]
+	return 0
+    }
+    set moc [file join [HiPSRoot $fn] Moc.fits]
+    if {![file isfile $moc]} {
+	Error "[msgcat::mc {HiPS coverage: no MOC}] ($moc)"
+	return 0
+    }
+
+    # contour the MOC in a scratch frame; loadParam is the caller's
+    # and leave the frame numbering as it was
+    set save [array get loadParam]
+    set seq $ds9(seq)
+    CreateFrame
+    set mf $current(frame)
+    array set loadParam [list file,type fits file,mode {} \
+			     load,type mmapincr load,layer {} \
+			     file,name "$moc\[order=$hipscov(order),proj=car\]"]
+    set cc {}
+    set loaded [ProcessLoad 0]
+    if {$loaded} {
+	$mf contour create $hipscov(color) $hipscov(width) 0 block 1 1 \
+	    linear 1000 minmax local 0 1 "\"0.5\""
+	set cc [$mf get contour wcs fk5]
+    }
+    DeleteSingleFrame $mf
+    set ds9(seq) $seq
+    array set loadParam $save
+    GotoFrame $which
+
+    # a vertex off the sky (the CAR image's edge) breaks the line there;
+    # pieces of fewer than 2 points are dropped
+    set out {}
+    set npts 0
+    set piece {}
+    foreach line [split $cc \n] {
+	if {[regexp {^\s*[-0-9.eE+]+\s+[-0-9.eE+]+\s*$} $line]} {
+	    lappend piece $line
+	    continue
+	}
+	# anything else ends the piece: nan, (, ), level=, ...
+	if {[llength $piece] >= 2} {
+	    lappend out "(" {*}$piece ")"
+	    incr npts [llength $piece]
+	}
+	set piece {}
+	if {![string match {*nan*} $line] && $line != "(" && $line != ")"} {
+	    lappend out $line
+	}
+    }
+    if {!$loaded} {
+	Error "[msgcat::mc {HiPS coverage: unable to read}] $moc"
+	return 0
+    }
+    # a MOC covering the whole sky has no edge: nothing to draw
+    if {!$npts} {
+	set var(hips,coverage) all
+	return 1
+    }
+    set cc [join $out \n]
+
+    set var(hips,coverage) [$which get contour aux count]
+    $which contour paste cc $hipscov(color) $hipscov(width) 0 0 0
+    UpdateContourDialog
+    return 1
+}
+
+proc HiPSCoverageHide {which} {
+    upvar #0 $which var
+
+    if {![info exists var(hips,coverage)]} {
+	return
+    }
+    set nn $var(hips,coverage)
+    unset var(hips,coverage)
+    # nn is the set's place in the list; delete takes its id
+    if {[string is integer -strict $nn] && \
+	    [llength [info commands $which]] && \
+	    $nn < [$which get contour aux count]} {
+	$which contour delete aux [lindex [$which get contour aux] $nn 0]
+	UpdateContourDialog
+    }
+}
+
+# Analysis > HiPS Coverage
+proc HiPSCoverageMenu {} {
+    global current
+    global hipscov
+
+    HiPSCoverage $current(frame) $hipscov(view)
+    UpdateHiPSCoverageMenu
+    if {$hipscov(view) && \
+	    [HiPSCoverageWhole $current(frame)]} {
+	Info [msgcat::mc {HiPS coverage: the MOC covers the whole sky}]
+    }
+}
+
+# the coverage is shown, and is the whole sky (nothing drawn)
+proc HiPSCoverageWhole {which} {
+    upvar #0 $which var
+
+    return [expr {[HiPSCoverageShown $which] && $var(hips,coverage) == {all}}]
+}
+
+proc UpdateHiPSCoverageMenu {} {
+    global ds9
+    global current
+    global hipscov
+
+    set hipscov(view) [HiPSCoverageShown $current(frame)]
+    set state disabled
+    if {$current(frame) != {}} {
+	set fn [HiPSFrameName $current(frame)]
+	if {$fn != {} && \
+		[file isfile [file join [HiPSRoot $fn] Moc.fits]]} {
+	    set state normal
+	}
+    }
+    catch {$ds9(mb).analysis entryconfig [msgcat::mc {HiPS Coverage}] \
+	       -state $state}
+}
+
+proc HiPSCoverageCmd {on} {
+    global current
+
+    if {$current(frame) == {}} {
+	return
+    }
+    HiPSCoverage $current(frame) $on
+    UpdateHiPSCoverageMenu
 }
 
 proc ProcessHiPSCmd {varname iname} {
@@ -133,7 +318,12 @@ proc HiPSCmdLoad {fn} {
 proc ProcessSendHiPSCmd {proc id param {sock {}} {fn {}}} {
     global current
 
-    $proc $id "[HiPSFrameName $current(frame)]\n"
+    switch -- [string tolower [lindex $param 0]] {
+	coverage {
+	    $proc $id "[ToYesNo [HiPSCoverageShown $current(frame)]]\n"
+	}
+	default {$proc $id "[HiPSFrameName $current(frame)]\n"}
+    }
 }
 
 # File > Open HiPS...
@@ -146,6 +336,14 @@ proc ProcessSendHiPSCmd {proc id param {sock {}} {fn {}}} {
 
 proc HiPSOpenDef {} {
     global hipsopen
+    global hipscov
+
+    # coverage overlay: the Analysis menu's checkbutton (current frame),
+    # its line, and the deepest MOC order drawn
+    set hipscov(view) 0
+    set hipscov(color) cyan
+    set hipscov(width) 1
+    set hipscov(order) 9
 
     set hipsopen(nside,auto) 2048
     set hipsopen(nside,max) 8192

@@ -8,7 +8,9 @@
 %%
 
 new	    {return $NEW_}
+coverage    {return $COVERAGE_}
 
+#include yesno.fin
 #include string.fin
 #include ws.fin
 

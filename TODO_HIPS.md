@@ -2,8 +2,8 @@
 
 Status (2026-11-16): Phases 0 and 1 done. Local FITS-tile HiPS load
 with all projections. Phase 2 in progress: the `hips` command, backup/
-restore, Open Recent, File > Open HiPS... and properties defaults are
-done; the MOC overlay and provenance in the image header are next. Work is on branch `hips`. Builds on the
+restore, Open Recent, File > Open HiPS..., properties defaults and the
+coverage overlay are done; provenance in the image header is next. Work is on branch `hips`. Builds on the
 HEALPix projection work in `TODO.md` (PR SAOImageDS9/SAOImageDS9#380:
 `FitsHPXReproj`, `proj=`/`lon0=`/`lat0=`/`fov=`, live windows).
 
@@ -429,10 +429,44 @@ variable: `[...]` inside Tcl double quotes is command substitution.
       Tested, with backup/restore, by `Tests/hips/hipsbackup.sh`
       (16 checks; the moved-HiPS dialogs were checked with stubbed
       `Error`/`tk_chooseDirectory`).
-- [ ] Coverage overlay: load `Moc.fits` through ds9's existing MOC
-      support so users can see where data exist. This is cheap, since
-      the MOC loader exists (cf. `coverage.load.moc.fits` in
-      `samp.tcl`).
+- [x] Coverage overlay (done 2026-11-16): `hips coverage [yes|no]`
+      (command line `-hips coverage`, XPA/SAMP, `xpaget hips coverage`)
+      and Analysis > HiPS Coverage (enabled for a HiPS frame that has a
+      `Moc.fits`).
+      - The edge of the MOC is drawn as an aux contour.
+        `HiPSCoverageShow` loads `Moc.fits[order=9,proj=car]` into a
+        scratch frame, contours it at 0.5, and pastes the contour into
+        the HiPS frame through fk5. Plate carree because every pixel is
+        sky; the HPX layout's facet gaps are 0 and would be traced. The
+        frame number is put back (`ds9(seq)`) and the scratch frame's
+        load parameters go with it. Takes ~0.2 s.
+      - Works across frames and projections. Tested: Abell 1763's
+        galactic MOC on its TAN window, and XRISM's equatorial MOC (221
+        cells) on galactic Fermi tiles in MOL. Every outline vertex is
+        within 0.12 deg of a MOC cell edge, and every edge cell is
+        traced, against healpy (`Tests/hips/mocref.py`).
+      - A full-sky MOC has no edge: state "yes", nothing drawn (`all`),
+        and the menu says so.
+      - Only that aux contour is removed when turned off: new frame
+        commands `contour delete aux <n>` and `get contour aux count`
+        (`tksao/frame/parser.Y`, bison 2.3). The frame's load parameters
+        keep its index (`hips,coverage`). A new load clears both.
+      - Backup/restore: `HiPSRestore <name> <index>`.
+      - New: `order=K` on a MOC file draws it at order K (coarser:
+        deeper cells mark their parent; finer: cells fill their
+        children). It reuses the integer `order=` of HiPS
+        (`fitsy/hpx.C`, `buildMOC`).
+      - **Fixed on the way, both pre-existing:**
+        - `Contour::list` (`tksao/frame/contour.C`) had an unbraced
+          `if`, so a contour with no vertices dereferenced NULL. Any
+          `contour save`/`get contour` of an empty polyline crashed ds9.
+        - The backup saved aux contours in physical pixels. A HEALPix
+          projection window is rebuilt to the frame size and zoom, so
+          its pixels at restore aren't those at backup, and the contours
+          came back ~20 deg off. `ContourBackup` now saves them in fk5
+          for such frames (`HPXFrameIsWindow`); other frames are
+          unchanged.
+      - Tested by `Tests/hips/hipsmoc.sh`.
 - [ ] SAMP: Aladin and others don't send HiPS by URL in a standard MType
       as far as we know. Check for a de facto one (e.g. `script.aladin.
       send`); otherwise skip.

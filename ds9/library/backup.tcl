@@ -527,7 +527,11 @@ proc BackupFrameLoadParam {varname ch which fdir rdir channel} {
 
     # a HiPS is a directory, referenced by name and never copied
     if {$param(load,type) == {hips}} {
-	puts $ch [list HiPSRestore $param(file,name)]
+	set cov {}
+	if {[info exists param(hips,coverage)]} {
+	    set cov $param(hips,coverage)
+	}
+	puts $ch [list HiPSRestore $param(file,name) $cov]
 	return
     }
 

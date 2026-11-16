@@ -33,6 +33,8 @@ proc AnalysisMainMenu {} {
     $ds9(mb).analysis add command \
 	-label [msgcat::mc {Coordinate Grid Parameters}] \
 	-command GridDialog
+    $ds9(mb).analysis add checkbutton -label [msgcat::mc {HiPS Coverage}] \
+	-variable hipscov(view) -command HiPSCoverageMenu
     $ds9(mb).analysis add separator
     $ds9(mb).analysis add cascade -label [msgcat::mc {Block}] \
 	-menu $ds9(mb).analysis.block
@@ -348,6 +350,8 @@ proc UpdateAnalysisMenu {} {
     if {$debug(tcl,update)} {
 	puts stderr "UpdateAnalysisMenu"
     }
+
+    UpdateHiPSCoverageMenu
 
     if {[llength $ds9(active)] > 0} {
 	$ds9(mb) entryconfig [msgcat::mc {Analysis}] -state normal

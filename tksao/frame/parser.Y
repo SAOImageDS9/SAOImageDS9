@@ -1285,6 +1285,7 @@ getColorScaleLevel: INT numeric numeric scaleType numeric
 
 getContour: coordSystem skyFrame
 	{fr->getContourCmd((Coord::CoordSystem)$1,(Coord::SkyFrame)$2);}
+	| AUX_ COUNT_ {fr->getContourAuxCountCmd();}
 	| CLIP_ getContourClip
 	| COLOR_ {fr->getContourColorNameCmd();}
 	| DASH_ {fr->getContourDashCmd();}

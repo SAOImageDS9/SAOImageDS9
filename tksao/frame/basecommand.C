@@ -2055,6 +2055,11 @@ void Base::getFitsCenterCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
     Tcl_AppendResult(interp, "0 0", NULL);
 }
 
+void Base::getContourAuxCountCmd()
+{
+  printInteger(currentContext->auxContourCount());
+}
+
 void Base::getFitsCountCmd()
 {
   printInteger(fitsCount());

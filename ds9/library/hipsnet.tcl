@@ -14,7 +14,9 @@ package provide DS9 1.0
 # What a load fetches:
 #  - always properties (small; a changed hips_release_date empties the
 #    cached tiles), and Moc.fits when tiles are needed
-#  - without order=: one Allsky.fits, the deepest of orders 3..0 that
+#  - tiles in the format the reader will use (HiPSTileExt: fits, else
+#    png, else jpg)
+#  - without order=: one Allsky, the deepest of orders 3..0 that
 #    exists (a quick look, a few MB); if there is none, the tiles of the
 #    deepest order up to NSIDE hipsnet(autonside)
 #  - with order=K: that order's Allsky.fits if it holds full-size tiles,
@@ -39,6 +41,7 @@ proc HiPSNetDef {} {
     set hipsnet(cancel) 0
     set hipsnet(tokens) {}
     set hipsnet(error) {}
+    set hipsnet(ext) fits
 }
 
 # Is fn (with or without [options]) a remote HiPS? file:// is local.
@@ -186,11 +189,12 @@ proc HiPSFetchDo {url dir opts} {
 	set hipsnet(error) [msgcat::mc {catalogue HiPS are not supported}]
 	return {}
     }
-    set formats [string tolower [HiPSProp $props hips_tile_format fits]]
-    if {[lsearch -exact $formats fits] < 0} {
-	set hipsnet(error) "[msgcat::mc {only FITS tiles can be read, this HiPS has}] $formats"
+    set ext [HiPSTileExt $props]
+    if {$ext == {}} {
+	set hipsnet(error) "[msgcat::mc {no FITS, PNG or JPEG tiles, this HiPS has}] [HiPSProp $props hips_tile_format]"
 	return {}
     }
+    set hipsnet(ext) $ext
     set width [HiPSProp $props hips_tile_width 512]
     set maxorder [HiPSProp $props hips_order -1]
     set minorder [HiPSProp $props hips_order_min 0]
@@ -249,14 +253,16 @@ proc HiPSFetchDo {url dir opts} {
 # tiles, or 0 if there is none (or it can't be read).
 proc HiPSFetchAllsky {url dir kk} {
     set od [file join $dir Norder$kk]
-    set af [file join $od Allsky.fits]
-    set none [file join $od .noallsky]
+    global hipsnet
+    set ext $hipsnet(ext)
+    set af [file join $od Allsky.$ext]
+    set none [file join $od .noallsky.$ext]
     if {[file exists $none]} {
 	return 0
     }
     if {![file isfile $af]} {
 	file mkdir $od
-	set code [HiPSGet $url/Norder$kk/Allsky.fits $af.new]
+	set code [HiPSGet $url/Norder$kk/Allsky.$ext $af.new]
 	if {$code != 200} {
 	    catch {file delete -force $af.new}
 	    # remember a 404 so it isn't asked for again
@@ -268,7 +274,7 @@ proc HiPSFetchAllsky {url dir kk} {
 	file rename -force $af.new $af
     }
 
-    set ai [HiPSFitsInfo $af]
+    set ai [HiPSImageInfo $af $ext]
     if {$ai == {} || ![dict get $ai ok]} {
 	return 0
     }
@@ -332,9 +338,11 @@ proc HiPSFetchTiles {url dir kk width props} {
 	}
     }
 
+    # png/jpg are compressed; count them as a byte a pixel
     set bitpix [HiPSProp $props hips_pixel_bitpix -32]
-    if {![string is integer -strict $bitpix] || $bitpix == 0} {
-	set bitpix -32
+    if {![string is integer -strict $bitpix] || $bitpix == 0 ||
+	$hipsnet(ext) != {fits}} {
+	set bitpix 8
     }
     set bytes [expr {wide([llength $need])*$width*$width*abs($bitpix)/8}]
     if {$bytes > $hipsnet(maxbytes)} {
@@ -388,7 +396,8 @@ proc HiPSFetchTiles {url dir kk width props} {
 
 proc HiPSTilePath {dir kk nn} {
     set dd [expr {($nn/10000)*10000}]
-    return [file join $dir Norder$kk Dir$dd Npix$nn.fits]
+    global hipsnet
+    return [file join $dir Norder$kk Dir$dd Npix$nn.$hipsnet(ext)]
 }
 
 # start the next queued tile, or finish
@@ -412,7 +421,7 @@ proc HiPSTileNext {} {
     set fn [HiPSTilePath $hipsnet(dir) $kk $nn]
     file mkdir [file dirname $fn]
     incr hipsnet(running)
-    HiPSGetAsync "$hipsnet(url)/Norder$kk/Dir$dd/Npix$nn.fits" $fn.new \
+    HiPSGetAsync "$hipsnet(url)/Norder$kk/Dir$dd/Npix$nn.$hipsnet(ext)" $fn.new \
 	[list HiPSTileDone $nn $fn]
 }
 

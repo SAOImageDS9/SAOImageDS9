@@ -13,6 +13,8 @@
 #include <sstream>
 using namespace std;
 
+#include <tk.h>
+
 #include "hips.h"
 #include "head.h"
 #include "hdu.h"
@@ -137,6 +139,94 @@ static int copyBlock(FitsFile* img, int r0, int c0, int ww, float* dest,
   return 1;
 }
 
+// A PNG or JPEG tile decoded through a Tk photo (Tk reads PNG, tkimg
+// JPEG): one value per pixel, top row first, w*h floats (delete []).
+// Grey images give their grey level; colour ones their luminance (Rec.
+// 601, as FitsPhoto). A fully transparent pixel (alpha 0) is no data,
+// NaN. Values are the tile's 0-255 display values, not physical ones.
+// Returns NULL if the file can't be decoded.
+static float* readPhoto(Tcl_Interp* interp, const char* fn, int* ww, int* hh)
+{
+  if (!interp)
+    return NULL;
+
+  Tcl_Obj* cmd = Tcl_NewListObj(0, NULL);
+  Tcl_IncrRefCount(cmd);
+  const char* words[] = {"image", "create", "photo", "-file"};
+  for (int ii=0; ii<4; ii++)
+    Tcl_ListObjAppendElement(interp, cmd, Tcl_NewStringObj(words[ii], -1));
+  Tcl_ListObjAppendElement(interp, cmd, Tcl_NewStringObj(fn, -1));
+  int rr = Tcl_EvalObjEx(interp, cmd, TCL_EVAL_GLOBAL);
+  Tcl_DecrRefCount(cmd);
+  if (rr != TCL_OK) {
+    Tcl_ResetResult(interp);
+    return NULL;
+  }
+  std::string name = Tcl_GetStringResult(interp);
+  Tcl_ResetResult(interp);
+
+  float* out = NULL;
+  Tk_PhotoHandle photo = Tk_FindPhoto(interp, name.c_str());
+  Tk_PhotoImageBlock block;
+  int width =0;
+  int height =0;
+  if (photo && Tk_PhotoGetImage(photo, &block)) {
+    Tk_PhotoGetSize(photo, &width, &height);
+    if (width>0 && height>0)
+      out = new (nothrow) float[(size_t)width*height];
+    if (out) {
+      int alpha = block.pixelSize >= 4;
+      float* dd = out;
+      for (int yy=0; yy<height; yy++) {
+	unsigned char* row = block.pixelPtr + (size_t)yy*block.pitch;
+	for (int xx=0; xx<width; xx++) {
+	  unsigned char* pp = row + (size_t)xx*block.pixelSize;
+	  unsigned char r = pp[block.offset[0]];
+	  unsigned char g = pp[block.offset[1]];
+	  unsigned char b = pp[block.offset[2]];
+	  if (alpha && pp[block.offset[3]] == 0)
+	    *dd++ = NAN;
+	  else if (r == g && g == b)
+	    *dd++ = r;
+	  else
+	    *dd++ = .299f*r + .587f*g + .114f*b;
+	}
+      }
+    }
+  }
+
+  // free the photo
+  Tcl_Obj* del = Tcl_NewListObj(0, NULL);
+  Tcl_IncrRefCount(del);
+  Tcl_ListObjAppendElement(interp, del, Tcl_NewStringObj("image", -1));
+  Tcl_ListObjAppendElement(interp, del, Tcl_NewStringObj("delete", -1));
+  Tcl_ListObjAppendElement(interp, del, Tcl_NewStringObj(name.c_str(), -1));
+  Tcl_EvalObjEx(interp, del, TCL_EVAL_GLOBAL);
+  Tcl_DecrRefCount(del);
+  Tcl_ResetResult(interp);
+
+  *ww = width;
+  *hh = height;
+  return out;
+}
+
+// Copy the ww x ww block whose top-left corner is at row r0 (from the
+// top) and column c0 of a decoded photo (rows top-down, no flip) into
+// one tile's slot of the map, as copyBlock does for FITS.
+static int copyPhotoBlock(const float* img, int nx, int ny, int r0, int c0,
+			  int ww, float* dest, const long long* sub)
+{
+  if (!img || r0<0 || c0<0 || r0+ww>ny || c0+ww>nx)
+    return 0;
+  for (int rr=0; rr<ww; rr++) {
+    const float* row = img + (size_t)(r0+rr)*nx + c0;
+    const long long* ss = sub + (size_t)rr*ww;
+    for (int cc=0; cc<ww; cc++)
+      dest[ss[cc]] = row[cc];
+  }
+  return 1;
+}
+
 // one 80-character header card
 static char* putCard(char* pp, const char* text)
 {
@@ -163,8 +253,10 @@ static int allskyCols(int order)
   return (int)floor(sqrt(12.*(1L<<(2*order))) + 1e-9);
 }
 
-FitsHiPS::FitsHiPS(const char* fn)
+FitsHiPS::FitsHiPS(const char* fn, Tcl_Interp* interp)
 {
+  interp_ = interp;
+  tileExt_ = "fits";
   order_ = -1;
   tileWidth_ = 0;
   nside_ = 0;
@@ -195,13 +287,33 @@ FitsHiPS::FitsHiPS(const char* fn)
     return;
   }
 
-  const char* formats = prop("hips_tile_format", "");
-  if (!strstr(formats, "fits")) {
-    ostringstream str;
-    str << "HiPS: only FITS tiles can be read so far (hips_tile_format = "
-	<< formats << ")" << ends;
-    internalError(str.str().c_str());
-    return;
+  // the tiles to read: FITS (physical values) when there are any, else
+  // PNG, else JPEG (display values). The Tcl side (HiPSTileExt) picks
+  // the same, so a remote HiPS fetches these.
+  {
+    const char* formats = prop("hips_tile_format", "");
+    int hasfits =0, haspng =0, hasjpeg =0;
+    istringstream words(formats);
+    string ww;
+    while (words >> ww) {
+      if (ww == "fits")
+	hasfits =1;
+      else if (ww == "png")
+	haspng =1;
+      else if (ww == "jpeg" || ww == "jpg")
+	hasjpeg =1;
+    }
+    if (hasfits)
+      tileExt_ = "fits";
+    else if ((haspng || hasjpeg) && interp_)
+      tileExt_ = haspng ? "png" : "jpg";
+    else {
+      ostringstream str;
+      str << "HiPS: no FITS, PNG or JPEG tiles (hips_tile_format = "
+	  << formats << ")" << ends;
+      internalError(str.str().c_str());
+      return;
+    }
   }
 
   const char* frame = prop("hips_frame", "");
@@ -446,15 +558,28 @@ int FitsHiPS::allskyWidth(int order)
   if (order > 3)
     return 0;
 
-  char* fn = allskyPath(order, "fits");
+  char* fn = allskyPath(order, tileExt_);
   int ww = 0;
   if (fileExists(fn)) {
-    FitsFitsMMap img(fn, FitsFile::EXACTIMAGE);
-    if (img.isValid() && img.isImage()) {
+    int nx =0;
+    int ny =0;
+    if (!strcmp(tileExt_, "fits")) {
+      FitsFitsMMap img(fn, FitsFile::EXACTIMAGE);
+      if (img.isValid() && img.isImage()) {
+	nx = img.head()->naxis(0);
+	ny = img.head()->naxis(1);
+      }
+    }
+    else {
+      float* img = readPhoto(interp_, fn, &nx, &ny);
+      if (img)
+	delete [] img;
+      else
+	nx = ny = 0;
+    }
+    if (nx>0 && ny>0) {
       int ncol = allskyCols(order);
       int nrow = ((12<<(2*order)) + ncol-1)/ncol;
-      int nx = img.head()->naxis(0);
-      int ny = img.head()->naxis(1);
       int aw = nx/ncol;
       if (isPow2(aw) && aw*ncol == nx && aw*nrow <= ny)
 	ww = aw;
@@ -473,7 +598,8 @@ void FitsHiPS::noSource(const char* msg)
   ostringstream str;
   str << "HiPS: " << msg;
   if (badAllsky_ >= 0)
-    str << " (Norder" << badAllsky_ << "/Allsky.fits is unreadable,"
+    str << " (Norder" << badAllsky_ << "/Allsky." << tileExt_
+	<< " is unreadable,"
 	<< " perhaps truncated)";
   str << ends;
   internalError(str.str().c_str());
@@ -483,7 +609,7 @@ int FitsHiPS::anyTile(int order)
 {
   long ntile = 12L << (2*order);
   for (long nn=0; nn<ntile; nn++) {
-    char* fn = tilePath(order, nn, "fits");
+    char* fn = tilePath(order, nn, tileExt_);
     int ok = fileExists(fn);
     delete [] fn;
     if (ok)
@@ -582,31 +708,61 @@ int FitsHiPS::buildMap(float* map)
     for (int cc=0; cc<ww; cc++)
       sub[(size_t)rr*ww+cc] = interleave(rr, cc);
 
+  int fits = !strcmp(tileExt_, "fits");
   if (source_ == ALLSKY) {
-    char* fn = allskyPath(order_, "fits");
-    FitsFitsMMap img(fn, FitsFile::EXACTIMAGE);
-    delete [] fn;
-    if (img.isValid() && img.isImage()) {
-      int ncol = allskyCols(order_);
-      for (int nn=0; nn<ntile_; nn++) {
-	if (copyBlock(&img, (nn/ncol)*ww, (nn%ncol)*ww, ww, map+nn*w2, sub))
-	  nread_++;
-	else
-	  nbad_++;
+    char* fn = allskyPath(order_, tileExt_);
+    int ncol = allskyCols(order_);
+    if (fits) {
+      FitsFitsMMap img(fn, FitsFile::EXACTIMAGE);
+      if (img.isValid() && img.isImage()) {
+	for (int nn=0; nn<ntile_; nn++) {
+	  if (copyBlock(&img, (nn/ncol)*ww, (nn%ncol)*ww, ww, map+nn*w2, sub))
+	    nread_++;
+	  else
+	    nbad_++;
+	}
       }
     }
+    else {
+      int nx, ny;
+      float* img = readPhoto(interp_, fn, &nx, &ny);
+      if (img) {
+	for (int nn=0; nn<ntile_; nn++) {
+	  if (copyPhotoBlock(img, nx, ny, (nn/ncol)*ww, (nn%ncol)*ww, ww,
+			     map+nn*w2, sub))
+	    nread_++;
+	  else
+	    nbad_++;
+	}
+	delete [] img;
+      }
+    }
+    delete [] fn;
   }
   else {
     for (int nn=0; nn<ntile_; nn++) {
-      char* fn = tilePath(order_, nn, "fits");
+      char* fn = tilePath(order_, nn, tileExt_);
       if (fileExists(fn)) {
-	FitsFitsMMap img(fn, FitsFile::EXACTIMAGE);
-	if (img.isValid() && img.isImage() &&
-	    img.head()->naxis(0) == ww && img.head()->naxis(1) == ww &&
-	    copyBlock(&img, 0, 0, ww, map+nn*w2, sub))
-	  nread_++;
-	else
-	  nbad_++;
+	if (fits) {
+	  FitsFitsMMap img(fn, FitsFile::EXACTIMAGE);
+	  if (img.isValid() && img.isImage() &&
+	      img.head()->naxis(0) == ww && img.head()->naxis(1) == ww &&
+	      copyBlock(&img, 0, 0, ww, map+nn*w2, sub))
+	    nread_++;
+	  else
+	    nbad_++;
+	}
+	else {
+	  int nx, ny;
+	  float* img = readPhoto(interp_, fn, &nx, &ny);
+	  if (img && nx == ww && ny == ww &&
+	      copyPhotoBlock(img, nx, ny, 0, 0, ww, map+nn*w2, sub))
+	    nread_++;
+	  else
+	    nbad_++;
+	  if (img)
+	    delete [] img;
+	}
       }
       delete [] fn;
     }
@@ -707,10 +863,19 @@ int FitsHiPS::initHeaders()
   }
   {
     ostringstream str;
-    str << "order " << order_ << ", nside " << nside_ << ", from "
-	<< (source_ == ALLSKY ? "Allsky.fits" : "FITS tiles") << ": "
-	<< nread_ << " of " << ntile_ << " tiles read" << ends;
+    str << "order " << order_ << ", nside " << nside_ << ", from ";
+    if (source_ == ALLSKY)
+      str << "Allsky." << tileExt_;
+    else
+      str << tileExt_ << " tiles";
+    str << ": " << nread_ << " of " << ntile_ << " tiles read" << ends;
     head_->insertComment("HISTORY", str.str().c_str(), NULL);
+  }
+  if (strcmp(tileExt_, "fits")) {
+    ostringstream str;
+    str << "values are " << tileExt_ << " display levels 0-255, not data"
+	<< ends;
+    head_->insertComment("COMMENT", str.str().c_str(), NULL);
   }
   if (nread_ < ntile_)
     head_->insertComment("HISTORY", "missing or unreadable tiles are NaN",
@@ -721,7 +886,8 @@ int FitsHiPS::initHeaders()
 	<< " from hips_initial_ra/dec (ICRS)" << ends;
     head_->insertComment("HISTORY", str.str().c_str(), NULL);
   }
-  if (prop("hips_pixel_cut")) {
+  // the cut is in physical values: only meaningful for FITS tiles
+  if (prop("hips_pixel_cut") && !strcmp(tileExt_, "fits")) {
     ostringstream str;
     str << "hips_pixel_cut " << prop("hips_pixel_cut") << ends;
     head_->insertComment("COMMENT", str.str().c_str(), NULL);

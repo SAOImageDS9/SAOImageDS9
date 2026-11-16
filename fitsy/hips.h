@@ -8,6 +8,8 @@
 #include <map>
 #include <string>
 
+#include <tcl.h>
+
 #include "file.h"
 
 // A local HiPS (IVOA Hierarchical Progressive Survey) read at one order
@@ -45,6 +47,8 @@ class FitsHiPS : public FitsFile {
   int nread_;          // tiles read
   int nbad_;           // tiles present but unusable
   int badAllsky_;      // order of an unreadable Allsky.fits, or -1
+  const char* tileExt_; // tile files read: fits, png or jpg
+  Tcl_Interp* interp_; // decodes png/jpg tiles through Tk photos
   int initView_;       // window centre taken from hips_initial_ra/dec
 
   int readProperties(const char*);
@@ -62,7 +66,7 @@ class FitsHiPS : public FitsFile {
   int initHeaders();
 
  public:
-  FitsHiPS(const char*);
+  FitsHiPS(const char*, Tcl_Interp* =NULL);
   ~FitsHiPS();
 
   // a HiPS root directory (one holding a properties file)?

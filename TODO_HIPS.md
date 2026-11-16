@@ -528,14 +528,28 @@ variable: `[...]` inside Tcl double quotes is command substitution.
         4Aladin/Fermi_Band4. The quick look fetched `properties` and
         `Norder3/Allsky.fits` (12.8 MB) in about 24 s, identical to the
         local sample at order 3; a cached reload takes about 1 s.
-- [ ] PNG/JPEG tiles: decode via Tk photo (tkimg is already used by
-      `photo.tcl`; `Base::loadPhotoCmd`/`FrameRGB::loadPhotoCmd` read
-      a Tk photo into a frame). Either decode in Tcl and pass a photo handle
-      per tile to C++, or link a decoder in `fitsy`; the photo route
-      reuses what exists. Values are 0-255 display values, not physical
-      units, so say so in the header and dialog. PNG alpha=0 -> NaN. The
-      PNG row order is already top-down (no flip). Prefer `fits` when
-      available, unless the user picks otherwise.
+- [x] PNG/JPEG tiles (done 2026-11-16). `FitsHiPS` decodes them itself
+      through Tk photos (`readPhoto` in fitsy/hips.C: `image create
+      photo -file`, `Tk_PhotoGetImage`; Tk 9 reads PNG, the statically
+      linked tkimg JPEG), so all the order/Allsky logic is shared.
+      `FitsImageHiPS` passes the interp in.
+      - Format: fits if `hips_tile_format` lists it, else png, else
+        jpeg (`.jpg` files). Tcl's `HiPSTileExt` picks the same, so the
+        dialog's order list and remote fetching use the same files.
+        Without fits, png or jpeg: refused ("no FITS, PNG or JPEG
+        tiles").
+      - Values: grey level (luminance, Rec. 601, for colour tiles),
+        0-255 display values. PNG alpha 0 -> NaN; JPEG has no alpha.
+        Rows top-down (no flip). A COMMENT says they are display
+        levels, the `hips_pixel_cut` COMMENT is left out, and the cut is
+        not applied (it is in physical units); the dialog doesn't show
+        it either.
+      - Tested by `Tests/hips/hipspng.sh` (24 checks) on HiPS written by
+        `Tests/hips/mkpng.py` with the same pixels as FITS, PNG, JPEG
+        and RGB PNG: PNG == FITS exactly (tiles and Allsky, alpha ->
+        NaN), RGB PNG == its luminance exactly, JPEG within a median of
+        1 level; Fermi (png forced) and XRISM (png only); the dialog;
+        remote PNG through the local server.
 - [ ] Colour HiPS (`dataproduct_subtype=color`, RGB tiles): load into an
       RGB frame, one HEALPix map per channel, using the HEALPix RGB sync
       from PR #445 (`747f39445`) so all three channels share

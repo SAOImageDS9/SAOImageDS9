@@ -550,7 +550,7 @@ FitsImageHiPS::FitsImageHiPS(Context* cx, Tcl_Interp* pp, const char* fn,
   : FitsImage(cx, pp)
 {
   // a binary table, so process() takes the HEALPix path
-  fits_ = new FitsHiPS(fn);
+  fits_ = new FitsHiPS(fn, pp);
   process(fn,id);
 }
 

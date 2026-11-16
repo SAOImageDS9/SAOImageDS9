@@ -275,8 +275,14 @@ proc ProcessLoad {{err 1}} {
 		       $loadParam(var,name) \{$loadParam(file,name)\}
 	    }
 	    hips {
-		# a HiPS root directory, read as a HEALPix map
-		$current(frame) load hips \{$loadParam(file,name)\}
+		# a HiPS root directory, read as a HEALPix map; a remote
+		# HiPS is read from its cache (file,fn)
+		set fn $loadParam(file,name)
+		if {[info exists loadParam(file,fn)] && \
+			$loadParam(file,fn) != {}} {
+		    set fn $loadParam(file,fn)
+		}
+		$current(frame) load hips \{$fn\}
 	    }
 	}
 	# be sure to update the colorbar levels, especially in tile mode
@@ -370,9 +376,10 @@ proc ProcessLoadSaveParams {varname} {
 	}
     }
 
-    # always save absolute path
+    # always save absolute path (a remote HiPS keeps its URL)
     upvar #0 $varname var
-    if {[file pathtype $var(file,name)] == {relative}} {
+    if {[file pathtype $var(file,name)] == {relative} &&
+	!($var(file,type) == {hips} && [HiPSIsURL $var(file,name)])} {
 	set var(file,name) [file join [pwd] $var(file,name)]
     }
 }

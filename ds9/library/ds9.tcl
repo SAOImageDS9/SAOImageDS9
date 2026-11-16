@@ -390,6 +390,7 @@ GroupDef
 HelpDef
 HPXOpenDef
 HiPSOpenDef
+HiPSNetDef
 HTTPDef
 HVDef
 IExamDef

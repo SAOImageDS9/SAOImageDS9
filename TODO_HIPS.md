@@ -490,22 +490,44 @@ variable: `[...]` inside Tcl double quotes is command substitution.
 
 ### Phase 3: remote HiPS over HTTP, PNG/JPEG and colour tiles
 
-- [ ] Remote fetch: the base URL plus the same relative paths
-      (sec. 6.2). Fetch in Tcl with `http::geturl`, as `url.tcl` does
-      (proxy settings, timeout), into an on-disk cache
-      (`~/.ds9/hips/<sanitised creator_did or host+path>/...`). The C++
-      side only ever reads local files. This keeps networking in Tcl,
-      where ds9 already handles TLS and proxies.
-  - Concurrency: a small pool (4-8) of async `http::geturl -command`
-    requests with a progress indicator and cancel. Order 3 is 768
-    requests, so use `Allsky` for K <= 3 to make it one.
-  - A 404 means a missing tile -> NaN. Consult `Moc.fits` first to avoid
-    requesting tiles known to be absent (sec. 6.3.1).
-  - Cache policy: key by `creator_did` + `hips_release_date`, so an
-    updated HiPS invalidates the cache. Add a size cap with LRU eviction
-    and a "clear HiPS cache" pref.
-  - Be polite to public servers (CDS, IRAP, ESA, ...): limited
-    parallelism, honour `Cache-Control`, and use a generic User-Agent.
+- [x] Remote fetch (done 2026-11-16, `ds9/library/hipsnet.tcl`): an
+      `http://` or `https://` name, anywhere a HiPS directory goes
+      (`-hips`, XPA/SAMP `hips`, Open Recent, backups). `file://` is a
+      local path.
+      - Files are fetched in Tcl (`http::geturl`, ds9's proxy and
+        User-Agent, redirects followed) into a cache mirroring the HiPS
+        layout, `<prefs dir>/hips/<host>/<path>` (`~/.ds9/hips/...`),
+        and the reader reads the cache. `loadParam(file,name)` keeps
+        the URL (xpaget hips, recent, backup); `file,fn` is the cache.
+      - What is fetched: `properties` every time (a changed
+        `hips_release_date` empties the cached tiles; a cached copy
+        serves offline). Without `order=`, the deepest Allsky of orders
+        3..0, one file (Fermi: nside 512), else the tiles of the
+        deepest order up to nside 512. With `order=K`, its Allsky if
+        full-size, else its tiles, only the cells in `Moc.fits`.
+        The reader is then given `order=K`, so the cache's other
+        contents don't change what loads.
+      - Tiles: 6 parallel async requests, a progress window with
+        Cancel (a cancelled fetch keeps what arrived). 404s are blank
+        tiles, recorded (`NorderK/.missing`, `.noallsky`) and not asked
+        for again. More than 1 GB of tiles in one load is refused
+        (`hipsnet(maxbytes)`).
+      - Gotcha: the http package leaves `errorInfo` set from errors it
+        catches itself, which XPACatchError reports as a failure;
+        cleared after each fetch (url.tcl does the same).
+      - Tested by `Tests/hips/hipsnet.sh` (35 checks) against a local
+        server (`Tests/hips/hipsserve.py`: logs requests, 404s,
+        `/redirect/`, `/slow/`): remote and local images identical,
+        request counts, MOC filtering, 404s, redirects, new release,
+        errors, size limit, cancel and resume, recent, backup,
+        coverage, file://, offline.
+      - Not done: the Open HiPS dialog for URLs, a cache size cap and a
+        "clear cache" preference, `Cache-Control`.
+      - Public server checked (2026-11-16): Fermi Band 4 from its
+        `hips_service_url`, http://cade.irap.omp.eu/documents/Ancillary/
+        4Aladin/Fermi_Band4. The quick look fetched `properties` and
+        `Norder3/Allsky.fits` (12.8 MB) in about 24 s, identical to the
+        local sample at order 3; a cached reload takes about 1 s.
 - [ ] PNG/JPEG tiles: decode via Tk photo (tkimg is already used by
       `photo.tcl`; `Base::loadPhotoCmd`/`FrameRGB::loadPhotoCmd` read
       a Tk photo into a frame). Either decode in Tcl and pass a photo handle

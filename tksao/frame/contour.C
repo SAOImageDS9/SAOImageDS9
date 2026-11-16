@@ -317,16 +317,20 @@ Contour::~Contour()
 void Contour::list(ostream& str, FitsImage* fits, 
 		   Coord::CoordSystem sys, Coord::SkyFrame sky)
 {
-  if (lvertex_.head())
-    str << '(' << endl;
-    do {
-      str << ' ';
-      fits->listFromRef(str, lvertex_.current()->vector,
-			sys, sky, Coord::DEGREES);
-      str << endl;
-    }
-    while (lvertex_.next());
-    str << ')' << endl;
+  // a contour with no vertices lists nothing (it used to dereference
+  // the empty list's NULL current vertex)
+  if (!lvertex_.head())
+    return;
+
+  str << '(' << endl;
+  do {
+    str << ' ';
+    fits->listFromRef(str, lvertex_.current()->vector,
+		      sys, sky, Coord::DEGREES);
+    str << endl;
+  }
+  while (lvertex_.next());
+  str << ')' << endl;
 }
 
 void Contour::render(Pixmap pmap, Coord::InternalSystem sys, const BBox& bbox)

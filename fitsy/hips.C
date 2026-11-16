@@ -3,6 +3,7 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include <string.h>
+#include <strings.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -962,8 +963,10 @@ int FitsHiPS::initHeaders()
 	(slice_ + 1 - crpix3)*propReal("data_cube_cdelt3");
       ostringstream cc;
       cc << "frame value";
-      if (prop("data_cube_bunit3"))
-	cc << " [" << prop("data_cube_bunit3") << "]";
+      // some surveys write "null" for no unit
+      const char* uu = prop("data_cube_bunit3");
+      if (uu && *uu && strcasecmp(uu, "null"))
+	cc << " [" << uu << "]";
       cc << ends;
       head_->appendReal("HIPSZVAL", vv, 12, cc.str().c_str());
     }

@@ -389,6 +389,7 @@ GridDef
 GroupDef
 HelpDef
 HPXOpenDef
+HiPSOpenDef
 HTTPDef
 HVDef
 IExamDef

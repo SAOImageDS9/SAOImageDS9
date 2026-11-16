@@ -2,7 +2,7 @@
 
 Status (2026-11-16): Phases 0 and 1 done. Local FITS-tile HiPS load
 with all projections. Phase 2 in progress: the `hips` command, backup/
-restore and Open Recent are done; the Open HiPS dialog, properties
+restore, Open Recent and File > Open HiPS... are done; properties
 defaults and the MOC overlay are next. Work is on branch `hips`. Builds on the
 HEALPix projection work in `TODO.md` (PR SAOImageDS9/SAOImageDS9#380:
 `FitsHPXReproj`, `proj=`/`lon0=`/`lat0=`/`fov=`, live windows).
@@ -347,10 +347,38 @@ variable: `[...]` inside Tcl double quotes is command substitution.
         through the same `comm.tcl` table as XPA but wasn't exercised.
       - Not done: a `format=` option (no non-FITS reader yet) and
         `hips close`. A frame `clear` already does that.
-- [ ] File > Open HiPS... dialog, extending or reusing `hpxopen.tcl`.
-      It shows the properties summary (title, frame, orders, tile width
-      and formats, nside and memory estimate at the chosen order) and
-      offers order, format and projection choices.
+- [x] File > Open HiPS... (done 2026-11-16; `OpenHiPSDialog` and
+      `HiPSOpenParamsDialog` in `hips.tcl`, under Open Recent).
+      - `tk_chooseDirectory`, then the dialog. A directory one level
+        inside the HiPS (e.g. `Norder3`) is taken as its root.
+      - Header: `obs_title`, the path, `hips_frame`, the order range,
+        tile width and `hips_tile_format`.
+      - Order menu: each `NorderK` present, as "Order 2: NSIDE 256,
+        192/192 tiles, 3.0 MB" (or Allsky / reduced Allsky; ", Allsky
+        unreadable" for a truncated one). Orders deeper than
+        `hips_order` or above nside 8192 are disabled.
+      - **The menu mirrors the reader.** `HiPSOpenOrders` follows
+        `FitsHiPS::allskyWidth` (orders 0-3, power-of-two tiles filling
+        the mosaic, the whole file present) and the explicit-order rule;
+        `HiPSOpenAutoOrder` follows `chooseSource`'s automatic loops
+        step for step, so "Automatic (...)" names what a plain load
+        reads. Keep them in step if `hips.C` changes. When nothing fits
+        automatically (DSS2 here: 512-px tiles from order 3, truncated
+        Allsky), Automatic is disabled and the smallest order is
+        preselected.
+      - Projection: the HEALPix dialog's section, shared.
+        `HPXOpenProjFrame` and `HPXOpenProjOptions` were split out of
+        `hpxopen.tcl` (the HEALPix dialog's names are byte-identical
+        before/after over 5184 option combinations). Projection, centre
+        and fov are remembered per session (`hipsopen`), the order not.
+      - Refused before the dialog, with the reason: no `properties`,
+        catalogue HiPS, no `fits` in `hips_tile_format`.
+      - Not done: a format choice (only FITS can be read) and centre
+        defaults from `hips_initial_ra/dec/fov` (next item).
+      - Tested by `Tests/hips/hipsdialog.sh` (36 checks: the menu's
+        nside/source and Automatic against real loads for Fermi,
+        Abell 1763, DSS2 and synthetic HiPS; dialog results; refusals;
+        the menu command end to end from an RGB frame).
 - [ ] Defaults from properties: `hips_pixel_cut` -> user scale limits
       (if the user's scale mode allows). `hips_initial_ra`/`dec`/`fov`
       (ICRS) -> the initial window centre and fov when the user asks for

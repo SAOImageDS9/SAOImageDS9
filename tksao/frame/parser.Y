@@ -1615,6 +1615,15 @@ load	: ARRAY_ loadArr
 	| INCR_ loadIncr
         | NRRD_ loadNRRD
 	| PHOTO_ loadPhoto
+	// load hips <dir>: "hips" isn't a lexer keyword (adding one means
+	// regenerating lex.C, see AGENTS.md), so it arrives as a STRING
+	| STRING STRING
+	{
+	  if (!strcmp($1,"hips"))
+	    fr->loadHiPSCmd($2);
+	  else
+	    YYERROR;
+	}
 	;
 
 loadArr : STRING ALLOC_ STRING layerType

@@ -1,6 +1,8 @@
 # TODO: HiPS (Hierarchical Progressive Surveys) support
 
-Status (2026-11-15): evaluation only, nothing implemented. Builds on the
+Status (2026-11-15): Phases 0 and 1 done. Local FITS-tile HiPS load
+through `$frame load hips`, with all projections. Phase 2 (the `hips`
+command, dialog and docs) is next. Work is on branch `hips`. Builds on the
 HEALPix projection work in `TODO.md` (PR SAOImageDS9/SAOImageDS9#380:
 `FitsHPXReproj`, `proj=`/`lon0=`/`lat0=`/`fov=`, live windows).
 
@@ -230,50 +232,94 @@ ds9`. Adding `fitsy/hips.C` also means hand-editing the source list in
       `reproject_from_healpix` exactly as `Tests/hpxproj.sh` does today.
       For remote HiPS, CDS `hips2fits` is an independent cross-check.
 
-### Phase 1: local FITS-tile HiPS, whole sky, one order (prototype)
+### Phase 1: local FITS-tile HiPS, whole sky, one order -- done 2026-11-15
 
-Goal: `ds9 -hips $FERMI` (or a filename form, see the open question
-about syntax) shows the Fermi map in HPX, and `proj=MOL` etc. work,
-pixel-identical to loading the original nside-512 HEALPix table.
+Goal: a local HiPS shows in HPX, and `proj=MOL` etc. work,
+pixel-identical to loading the HEALPix map it holds as a table.
 
-- [ ] `FitsHiPS` properties parser: comments, repeated keys, CR/LF,
-      spaces around `=`. Reject `dataproduct_type=catalog` with a clear
-      message. Warn and continue for an unknown `hips_version`.
-- [ ] Order choice: default `min(hips_order, largest K with W*2^K <=
-      cap)`. `order=K` overrides it. Below `hips_order_min`, or when a
-      `NorderK` is absent, use the next order up.
-- [ ] Tile read: tile N at K -> path -> 2-D float array. Handle every
-      BITPIX, BZERO/BSCALE, and `BLANK` -> NaN for integers. Check that
-      NAXIS1 == NAXIS2 == W.
-- [ ] De-interleave into the NESTED array: precompute a W*W lookup
-      table `sub[r*W+c] = interleave(r, c)` once, then
-      `out[N*W*W + sub[i]] = tile[...]` with the FITS row flip. A
-      missing tile fills its range with NaN.
-- [ ] Use `Allsky.fits` when K <= 3 and it exists: one file instead of
-      up to 768. Derive its tile width from the image width /
-      `int(sqrt(12*4^K))`. If it is reduced (smaller than W), the
-      effective nside is `allskyW * 2^K`. Decide whether to accept that
-      (fast preview) or prefer the full tiles; see the open questions.
-- [ ] `hips_frame` -> `FitsHPX::CoordSys` (equatorial -> EQU,
-      galactic -> GAL, ecliptic -> ECL). Check what EQU writes: HiPS
-      equatorial is **ICRS**, and if FitsHPX writes `RA---HPX` with
-      FK5/no RADESYS, add `RADESYS='ICRS'`. (The difference is about
-      20 mas: irrelevant at nside 512, visible at order 13+.)
-- [ ] Adapter into `FitsHPX` (option (a) first, then (b), see above).
-- [ ] Header provenance: OBJECT = `obs_title`; HISTORY cards for
-      `creator_did`, the order and nside used, and the tile format; copy
-      `hips_pixel_cut` / `hips_data_range` as comments. These show up in
-      File > Header and survive File > Save.
-- [ ] tksao plumbing: `FitsImageHiPS`, `Base::loadHiPSCmd`, a
-      `load hips` grammar rule (bison-only regen, see AGENTS.md), and
-      the `proj=`/`lon0=`/`lat0=`/`fov=` options routed through
-      `initHPX()` exactly as for HEALPix tables.
-- [ ] Numeric test: the Fermi HiPS loaded at order 3 gives the same
-      pixels as the original nside-512 map. Rebuild that map from the
-      tiles (there is no copy of the original table here), write it as a
-      NESTED BINTABLE, load both in ds9, and compare sha256 of
-      `saveimage` and `get data` at random pixels, for `proj=HPX` and
-      `proj=MOL`.
+How to use it (Phase 2 adds the `hips` command and the menu): pass the
+root directory, braced as for any load, to the frame:
+
+```
+set fn {/path/to/HiPS[order=2,proj=MOL]}
+$current(frame) load hips "\{$fn\}"
+```
+
+The name must reach the frame in braces, as `ProcessLoad` does, or the
+frame parser rejects the `[...]`. From the shell, pass it through a Tcl
+variable: `[...]` inside Tcl double quotes is command substitution.
+
+- [x] `fitsy/hips.{C,h}`: `FitsHiPS : FitsFile`.
+  - The properties parser handles comments, CR/LF, spaces around `=`,
+    and repeated keys (the first value wins).
+  - `dataproduct_type=catalog` is rejected. A cube is read as frame 0
+    (the unsuffixed tiles), as the spec intends for non-cube clients.
+  - `hips_tile_format` without `fits` is rejected with a message (PNG
+    and JPEG are Phase 3). An unknown `hips_frame` (e.g. `venus`) gives
+    XLON/XLAT.
+- [x] Order choice.
+  - `order=K` (a new `ORDER_ '=' INT` rule in `fitsy/parser.Y`, beside
+    the HEALPix `order=ring|nested`, plus `FitsFile::pHiPSOrder_`)
+    reads that order: from its Allsky if that holds full-size tiles,
+    else from its tiles, else from a reduced Allsky.
+  - Without `order=`, the reader takes the largest map no bigger than
+    nside 2048 (`HIPS_NSIDE_AUTO`) that any order's tiles or Allsky can
+    make. That handles omitted orders and partial local copies. At
+    equal nside the Allsky wins (one file).
+  - Anything above nside 8192 (`HIPS_NSIDE_MAX`) is refused with a
+    message.
+- [x] Tile read through fitsy's mmap reader (`EXACTIMAGE`, primary
+      only). Every BITPIX works, with BSCALE/BZERO, and integer `BLANK`
+      becomes NaN. `BLANK` is parsed from the card, because the HDU
+      keeps it as an `int` (too small for BITPIX 64) and some writers
+      give it as a real (`-32768.0`). NAXIS must equal the tile width,
+      or the tile counts as bad.
+- [x] De-interleave through a precomputed W*W `sub[]` table, with the
+      FITS row flip. Missing tiles stay NaN.
+- [x] Allsky: tiles per row `int(sqrt(12*4^K))`, and the tile width is
+      checked to be a power of two that fills the mosaic.
+      - **An unreadable Allsky is named in the error.** IRSA's mirror of
+        DSS2 red serves a truncated `Norder3/Allsky.fits` (4,932,972 of
+        6,417,216 bytes). The fitsy truncation guard refuses it, so
+        nothing crashes.
+- [x] Frames: equatorial/galactic/ecliptic -> `COORDSYS` C/G/E. No
+      change is needed for ICRS: the HPX header has no RADESYS or
+      EQUINOX, and FITS WCS Paper II defaults that to ICRS.
+- [x] Adapter: option (a). `FitsHiPS` presents a primary header plus a
+      NESTED HEALPix BINTABLE (`1024E` rows, big-endian), so
+      `FitsImage::process()` takes its normal HEALPix path. `initHPX()`,
+      `FitsHPXReproj`, `proj=/lon0=/lat0=/fov=` and live windows all
+      work unchanged.
+      - Cost: the table copy (12*nside^2 floats) on top of the HPX
+        image. Option (b) would avoid it. That is worth doing if the
+        nside cap goes up.
+- [~] Provenance: the table header has OBJECT = `obs_title`, `HISTORY`
+      (`creator_did`, order, nside, Allsky or tiles, tiles read of
+      total, "missing tiles are NaN") and a `hips_pixel_cut` COMMENT.
+      `FitsHPX::initHeader` copies only OBJECT into the image header, so
+      the HISTORY cards don't reach File > Save. Copy them across in
+      Phase 2.
+- [x] tksao: `FitsImageHiPS`, `Base::loadHiPSCmd`, and grammar rule
+      `load STRING STRING` matching "hips". This avoids a new lexer
+      token, which would mean regenerating `tksao/frame/lex.C` with an
+      incompatible flex (AGENTS.md). Both grammars were regenerated with
+      bison only. No new conflicts, and `parser.H` is unchanged.
+- [x] Tests: `Tests/hips/hipsload.sh` (56 checks; run from the top of
+      the tree). Every check compares the image ds9 saves for a HiPS
+      with the one it saves for the same map written as an ordinary
+      HEALPix table. That table comes from `Tests/hips/mkref.py`
+      (astropy + healpy, independent of the reader). Pixel arrays and
+      WCS keywords must be identical.
+      - Fermi: orders 0-3 x HPX/MOL/AIT/CAR/TAN, plus the automatic
+        choice.
+      - Abell1763: partial, galactic, orders 0-2.
+      - Synthetic HiPS (`mksynth.py`): BITPIX 8/16/32/64/-32/-64, with
+        BLANK, BSCALE/BZERO, missing tiles, padded and unpadded tiles,
+        and a reduced-Allsky-only order.
+      - Errors: PNG-only HiPS, too deep, no data at the order, the
+        truncated DSS2 Allsky, nside over the limit, and not a HiPS.
+      - DSS2 red's tiles (one per order 3-9) are all deeper than the
+        nside-2048 automatic limit, so they await Phase 5.
 
 ### Phase 2: Tcl/UI integration
 

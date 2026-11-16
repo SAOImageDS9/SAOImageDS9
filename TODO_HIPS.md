@@ -203,12 +203,28 @@ ds9`. Adding `fitsy/hips.C` also means hand-editing the source list in
       (index and name, padded or unpadded last HDU) and mosaics still
       load. Regression scripts: `Tests/hips/extmatrix.sh` (files from
       `mkext.py`/`mkpad.py`).
-- [ ] Find two or three more test HiPS to cover cases the sample
-      doesn't: a 512-px-tile deep HiPS (e.g. a CDS DSS2 or 2MASS
-      cut-down), an equatorial one, a partial-coverage one with absent
-      tiles + `Moc.fits`, a colour (`dataproduct_subtype=color`) one, a
-      cube, and an integer-BITPIX one with `BLANK`/`BSCALE`. Fetch only
-      low orders, locally, into `Tests/hips/` (untracked repo).
+- [x] More test HiPS (done 2026-11-15). Partial copies (91 files, 32 MB)
+      are in `hips/` (untracked), described in `hips/samples.md`:
+      `DSS2_red` (deep, equatorial, 512 px, BITPIX 16 + BLANK, reduced
+      Allsky, unpadded tiles), `Abell1763_irac1` (galactic, partial,
+      absent tiles, NaN blanks, padded tiles), `XRISM_RESOLVE` (colour
+      RGBA PNG) and `LABHI_cube` (cube, 891 frames, PNG only, some frame
+      tiles missing).
+  - The in-tile order and hierarchy rule also holds on DSS2: the order-8
+    parent equals the 2x2 mean of its 4 order-9 children to integer
+    rounding, while the swapped quadrant placement gives correlation
+    0.82. That makes two producers, two frames and two tile widths that
+    agree.
+  - Unpadded FITS tiles appear in DSS2 too (an Aladin/HipsGen 10.x
+    build), so the reader must never assume padding (see the fitsy fix
+    above).
+  - Allsky files: reduced to 64 px whenever W=512, and often only at
+    order 3, so don't assume one exists at orders 0-2.
+  - PNG-only HiPS exist (the LAB cube, XRISM) and carry 8-bit display
+    values. Tile formats can't be assumed to include fits.
+  - Still missing (the CDS and ESA servers were unreachable): a FITS
+    cube, 8-bit integer, and BITPIX -64. Candidates are in
+    `hips/samples.md`.
 - [ ] Reference images for numeric tests: rebuild the NESTED map from the
       tiles in Python (as `tileorder.py` does), then project it with
       `reproject_from_healpix` exactly as `Tests/hpxproj.sh` does today.

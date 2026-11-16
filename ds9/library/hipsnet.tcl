@@ -43,6 +43,13 @@ proc HiPSNetDef {} {
     set hipsnet(error) {}
     set hipsnet(ext) fits
     set hipsnet(bases) {}
+
+    # deep windows' background tile fetching (HiPSDeepWant)
+    global hipsdeep
+    set hipsdeep(queue) {}
+    set hipsdeep(running) 0
+    set hipsdeep(fetched) 0
+    set hipsdeep(refreshes) 0
 }
 
 # The base URLs to fetch a HiPS from: url first, then the mirrors its
@@ -243,6 +250,8 @@ proc HiPSFetch {fn} {
     set rr [HiPSFetchDo $url $dir $opts]
     if {$rr != {}} {
 	HiPSCachePrune $dir
+	# deep windows fetch more of it later (HiPSDeepWant)
+	set hipsnet(url,[file normalize $dir]) $url
     }
 
     set hipsnet(busy) 0
@@ -810,3 +819,129 @@ proc HiPSProgress {} {
 proc HiPSProgressDone {} {
     catch {destroy .hipsprogress}
 }
+
+# Deep windows (TODO_HIPS.md Phase 5). After a deep HiPS window is
+# rebuilt, the frame (Base::hpxRequestTiles) passes the tiles of the order
+# it shows that it didn't have. For a remote HiPS they are fetched in the
+# background, a few at a time, into its cache, and the window is rebuilt
+# around the same view as they arrive (the coarse map shows through
+# until then). A local HiPS's missing tiles are just missing.
+proc HiPSDeepWant {frame root order tiles} {
+    global hipsdeep
+    global hipsnet
+
+    set root [file normalize $root]
+    if {![info exists hipsnet(url,$root)]} {
+	return
+    }
+    set url $hipsnet(url,$root)
+    if {[catch {HiPSReadProperties $root} props]} {
+	return
+    }
+    set ext [HiPSTileExt $props]
+    if {$ext == {}} {
+	return
+    }
+
+    # known to be missing (404s remembered by either fetcher)
+    set od [file join $root Norder$order]
+    if {[file isfile [file join $od .missing]]} {
+	set ch [open [file join $od .missing] r]
+	foreach nn [split [read $ch] \n] {
+	    if {$nn != {}} {
+		set gone($nn) 1
+	    }
+	}
+	close $ch
+    }
+
+    foreach nn $tiles {
+	set key "$root $order $nn"
+	if {[info exists gone($nn)] || [info exists hipsdeep(want,$key)]} {
+	    continue
+	}
+	set hipsdeep(want,$key) 1
+	lappend hipsdeep(queue) [list $frame $root $url $order $nn $ext]
+    }
+    while {$hipsdeep(running) < $hipsnet(parallel) &&
+	   [llength $hipsdeep(queue)]} {
+	HiPSDeepNext
+    }
+    # starting requests leaves the http package's errorInfo, which the
+    # command that rebuilt the window (zoom, pan, ...) would report
+    HiPSClearErrorInfo
+}
+
+proc HiPSDeepNext {} {
+    global hipsdeep
+
+    if {![llength $hipsdeep(queue)]} {
+	return
+    }
+    lassign [lindex $hipsdeep(queue) 0] frame root url order nn ext
+    set hipsdeep(queue) [lrange $hipsdeep(queue) 1 end]
+
+    set dd [expr {($nn/10000)*10000}]
+    set fn [file join $root Norder$order Dir$dd Npix$nn.$ext]
+    file mkdir [file dirname $fn]
+    incr hipsdeep(running)
+    HiPSGetAsync "$url/Norder$order/Dir$dd/Npix$nn.$ext" $fn.new \
+	[list HiPSDeepDone $frame $root $order $nn $fn]
+}
+
+proc HiPSDeepDone {frame root order nn fn code} {
+    global hipsdeep
+
+    incr hipsdeep(running) -1
+    unset -nocomplain hipsdeep(want,$root $order $nn)
+    switch -- $code {
+	200 {
+	    file rename -force $fn.new $fn
+	    incr hipsdeep(fetched)
+	    HiPSDeepRefreshSoon $frame
+	}
+	404 {
+	    catch {file delete -force $fn.new}
+	    catch {
+		set ch [open [file join $root Norder$order .missing] a]
+		puts $ch $nn
+		close $ch
+	    }
+	}
+	default {catch {file delete -force $fn.new}}
+    }
+    HiPSClearErrorInfo
+    HiPSDeepNext
+    # the last one: a final refresh
+    if {!$hipsdeep(running) && ![llength $hipsdeep(queue)]} {
+	HiPSDeepRefreshSoon $frame 0
+    }
+}
+
+# rebuild frame's window with the tiles that have arrived: at most every
+# 300 ms while tiles are arriving, and once more when they are all in
+proc HiPSDeepRefreshSoon {frame {delay 300}} {
+    global hipsdeep
+
+    if {[info exists hipsdeep(timer,$frame)]} {
+	if {$delay} {
+	    return
+	}
+	after cancel $hipsdeep(timer,$frame)
+    }
+    set hipsdeep(timer,$frame) [after $delay [list HiPSDeepRefresh $frame]]
+}
+
+proc HiPSDeepRefresh {frame} {
+    global hipsdeep
+
+    unset -nocomplain hipsdeep(timer,$frame)
+    if {![llength [info commands $frame]]} {
+	return
+    }
+    if {![catch {$frame update fits center}]} {
+	incr hipsdeep(refreshes)
+    }
+    HiPSClearErrorInfo
+}
+

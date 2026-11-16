@@ -147,6 +147,7 @@ TEA_ADD_HEADERS([
 		   hist.h
 		   hips.h
 		   hpx.h
+		   hpxnest.h
 		   iis.h
 		   map.h
 		   mapincr.h

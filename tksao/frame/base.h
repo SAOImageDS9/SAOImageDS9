@@ -1078,6 +1078,7 @@ public:
   FitsImage* hpxKeyWindow();
   const char* hpxRecentre(HPXMode, double, double, int drag =0);
   void hpxAutoRefresh();
+  void hpxRequestTiles(FitsImage*);
   int hpxDragRefresh();
   int hpxPanBegin();
   int hpxPanMotion(const Vector&);

@@ -6,9 +6,14 @@
 #define __fitshpxreproj_h__
 
 #include <math.h>
+#include <map>
+#include <list>
+#include <vector>
 
 #include "vector.h"
 #include "file.h"
+
+class FitsHiPS;
 
 // Resample a built FitsHPX image (HPX/XPH layout) into another
 // projection: all-sky (AIT, MOL, CAR, ...), zenithal (TAN, SIN, ...)
@@ -42,6 +47,21 @@ class FitsHPXReproj : public FitsFile {
   double lat_;
 
   int refParams(double lat, double* crval2, double* pv21);
+  // Deep HiPS windows (TODO_HIPS.md Phase 5): when the window's pixels
+  // are finer than the map's (the coarse level), they are sampled from
+  // the HiPS tiles of the order that fits, through a cache of decoded
+  // tiles; a tile not available falls back to its deepest cached
+  // ancestor, then to the map.
+  FitsHiPS* deep_;     // the tile source (not owned), or NULL
+  int deepOrder_;      // order sampled by the last build, -1: the map
+  std::map<long long, float*> tiles_;   // key: order<<56 | tile
+  std::list<long long> lru_;            // most recently used first
+  size_t tileCap_;     // most tiles kept
+  std::vector<long long> missing_;      // tiles the last build wanted
+					// but couldn't read (order<<56|N)
+  float* tile(int order, long long nn);
+  void dropTiles();
+
   int build(double lon, double lat, const double* centre);
   FitsHead* initHeader(FitsHead*, const char*, double, double, double);
   void swapData(float*, size_t);
@@ -49,7 +69,8 @@ class FitsHPXReproj : public FitsFile {
 
  public:
   FitsHPXReproj(FitsFile*, const char*, double lon, double lat,
-		double fov, int dispW =0, int dispH =0, int nthreads =1);
+		double fov, int dispW =0, int dispH =0, int nthreads =1,
+		FitsHiPS* deep =NULL);
   ~FitsHPXReproj();
 
   // recentre a window on (lon, lat) [deg, the map's own sky system];
@@ -104,6 +125,11 @@ class FitsHPXReproj : public FitsFile {
   FitsFile* hpxView() {return view_;}
   double lon() {return lon_;}
   double lat() {return lat_;}
+
+  // deep windows: the order the window shows (-1: the map), and the
+  // tiles it wanted but didn't have (order<<56 | N), for fetching
+  int deepOrder() {return deepOrder_;}
+  const std::vector<long long>& missingTiles() {return missing_;}
 };
 
 #endif

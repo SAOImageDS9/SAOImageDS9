@@ -140,7 +140,10 @@ FitsCard& FitsCard::setComment(const char* name, const char* value)
 
   ostringstream str;
   str << "= " << value;
-  memcpy(card_+8,str.str().c_str(),str.str().length());
+  // the text ends at the card (a longer one would overrun it), and at
+  // its first NUL (callers often end theirs with ends)
+  size_t len = strnlen(str.str().c_str(), FTY_CARDLEN-8);
+  memcpy(card_+8,str.str().c_str(),len);
 
   return *this;
 }

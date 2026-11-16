@@ -52,6 +52,10 @@ proc RecentNormalize {fn {isdir 0}} {
     if {$fn == {}} {
 	return {}
     }
+    # a remote HiPS is kept by its URL
+    if {$isdir && [HiPSIsURL $fn]} {
+	return $fn
+    }
 
     RecentSplitName $fn base ext
     set base [file normalize $base]
@@ -211,7 +215,7 @@ proc RecentOpen {entry} {
 
     RecentSplitName $fn base ext
     if {$type == {hips}} {
-	set ok [file isdirectory $base]
+	set ok [expr {[HiPSIsURL $base] || [file isdirectory $base]}]
     } else {
 	set ok [file isfile $base]
     }

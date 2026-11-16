@@ -15,10 +15,27 @@ proc ImportHiPSFile {fn} {
     global loadParam
     global ds9
 
+    global hipsnet
+
+    # a remote HiPS is fetched into the cache first; file,name keeps the
+    # URL (what xpaget hips, Open Recent and backups record), file,fn is
+    # what the reader reads
+    set local {}
+    if {[HiPSIsURL $fn]} {
+	set local [HiPSFetch $fn]
+	if {$local == {}} {
+	    Error "[msgcat::mc {Unable to load}] HiPS $fn: $hipsnet(error)"
+	    return 0
+	}
+    } elseif {[HiPSFileURL $fn] != $fn} {
+	set fn [HiPSFileURL $fn]
+    }
+
     set loadParam(file,type) hips
     set loadParam(file,mode) {}
     set loadParam(load,type) hips
     set loadParam(file,name) $fn
+    set loadParam(file,fn) $local
     set loadParam(load,layer) {}
 
     # ProcessLoad's own error would replace the reader's reason (left in
@@ -50,7 +67,7 @@ proc HiPSApplyCut {fn} {
     if {!$phpxopen(hipscut)} {
 	return
     }
-    if {[catch {HiPSReadProperties [HiPSRoot $fn]} props]} {
+    if {[catch {HiPSReadProperties [HiPSRoot [HiPSLocalName $fn]]} props]} {
 	return
     }
     set cut [HiPSProp $props hips_pixel_cut]
@@ -105,7 +122,8 @@ proc HiPSRestore {fn {coverage {}}} {
 	set ext {}
     }
 
-    if {![file isdirectory $dir]} {
+    # a remote HiPS is fetched again (from the cache when it can be)
+    if {![HiPSIsURL $dir] && ![file isdirectory $dir]} {
 	Error "[msgcat::mc {Unable to load}] HiPS $dir"
 	set dir [tk_chooseDirectory -mustexist 1 \
 		     -title [msgcat::mc {Find HiPS directory}]]
@@ -171,7 +189,15 @@ proc HiPSCoverageShow {which} {
 	Error [msgcat::mc {HiPS coverage: the current frame does not hold a HiPS}]
 	return 0
     }
-    set moc [file join [HiPSRoot $fn] Moc.fits]
+    set moc [file join [HiPSRoot [HiPSLocalName $fn]] Moc.fits]
+    if {![file isfile $moc] && [HiPSIsURL $fn]} {
+	set url [string trimright [HiPSRoot $fn] /]
+	if {[HiPSGet $url/Moc.fits $moc.new] == 200} {
+	    file rename -force $moc.new $moc
+	} else {
+	    catch {file delete -force $moc.new}
+	}
+    }
     if {![file isfile $moc]} {
 	Error "[msgcat::mc {HiPS coverage: no MOC}] ($moc)"
 	return 0
@@ -281,8 +307,9 @@ proc UpdateHiPSCoverageMenu {} {
     set state disabled
     if {$current(frame) != {}} {
 	set fn [HiPSFrameName $current(frame)]
-	if {$fn != {} && \
-		[file isfile [file join [HiPSRoot $fn] Moc.fits]]} {
+	# a remote HiPS's Moc.fits is fetched when asked for
+	if {$fn != {} && ([HiPSIsURL $fn] || [file isfile \
+		[file join [HiPSRoot [HiPSLocalName $fn]] Moc.fits]])} {
 	    set state normal
 	}
     }

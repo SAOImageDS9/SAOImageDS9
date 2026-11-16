@@ -1166,6 +1166,11 @@ void FitsHPX::initHeader(FitsFile* fits)
   }
 
   // we added cards
+  // a HiPS's order (fitsy/hips.C)
+  if (src->find("HIPSORD"))
+    head_->appendInteger("HIPSORD", src->getInteger("HIPSORD", 0),
+			 "HiPS order of the values");
+
   // provenance: the table's HISTORY and COMMENT cards, as they are (a
   // HiPS records its survey, order and tiles read there, fitsy/hips.C)
   for (int ii=0; ii<src->ncard(); ii++) {

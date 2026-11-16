@@ -1153,6 +1153,10 @@ int FitsHPXReproj::build(double lon, double lat, const double* centre)
 		   kk, nsideK, (int)missing_.size(), (int)want.size());
 	  memset(card+strlen(card), ' ', 80-strlen(card));
 	  hd->cardins(card, NULL);
+	  if (hd->find("HIPSORD"))
+	    hd->setInteger("HIPSORD", kk, "HiPS order of the values");
+	  else
+	    hd->appendInteger("HIPSORD", kk, "HiPS order of the values");
 	  hd->updateHDU();
 	}
       }
@@ -1230,6 +1234,11 @@ FitsHead* FitsHPXReproj::initHeader(FitsHead* src, const char* pcode,
     memset(card+strlen(card), ' ', 80-strlen(card));
     hd->cardins(card, NULL);
   }
+  // a HiPS's order (a deep window replaces it with the order it shows)
+  if (src->find("HIPSORD"))
+    hd->appendInteger("HIPSORD", src->getInteger("HIPSORD", 0),
+		      "HiPS order of the values");
+
   // provenance carried from the HPX image (FitsHPX::initHeader copies it
   // from the table)
   for (int ii=0; ii<src->ncard(); ii++) {

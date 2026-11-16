@@ -72,13 +72,22 @@ Phases 0-5 are done. Open, roughly by value:
   (`ProcessSend`, `comm.tcl` passes `fn`), as `fits header` does. No
   standard MType loads a HiPS, so other clients need `ds9.set`.
 
-- Test data still missing: 8-bit integer and BITPIX -64 FITS tiles
-  (candidates in `hips/samples.md`).
-- Reference-image tests (Phase 0 item): a Python-rebuilt NESTED map
-  projected with `reproject_from_healpix`, and CDS `hips2fits` as an
-  independent check for remote HiPS. The per-feature scripts in
-  `Tests/hips/` cover most of the testing plan below, but there is no
-  single `Tests/hips.sh`.
+- Test data: 8-bit integer and BITPIX -64 FITS tiles are covered by
+  synthetic HiPS (`mksynth.py`: u8 with BLANK/BSCALE/BZERO, f64 with
+  NaN; `hipsload.sh` compares them with `mkref.py`). Real samples of
+  each (`ESAVO/P/EXOSAT/all`, `CDS/P/MeerKAT/Galactic-Centre-spectral-
+  index`, `hips/samples.md`) still need fetching; skipped 2026-11-16,
+  downloads wait for the user's OK.
+- Reference-image tests: done 2026-11-16 (`Tests/hips/hipsref.sh`,
+  16): `mkref.py`'s NESTED map, rebuilt from the tiles, is projected by
+  `refcmp.py` with `reproject_from_healpix` (nearest-neighbour, frame
+  conversion) onto the WCS of the image ds9 saved. TAN, SIN, ZEA, ARC,
+  COE, MOL, AIT and CAR, galactic and equatorial, 8-bit and -64 tiles,
+  and two deep windows all agree on 100.00% of pixels. (reproject fills
+  pixels outside an all-sky projection, where the WCS has no sky
+  position; refcmp blanks them.) `Tests/hips.sh` runs every suite.
+  Not done: CDS `hips2fits` as a check on remote HiPS, which needs the
+  network (skipped, waits for the user's OK).
 - Out of scope so far: catalogue HiPS (refused with a message), and
   the whole-map memory limit at nside 8192 (`TODO.md`).
 - Upstream: branch `hips` is local only; not pushed, no PR.

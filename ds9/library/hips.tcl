@@ -68,13 +68,18 @@ proc ImportHiPSFile {fn} {
     return 0
 }
 
-# The survey's suggested display range, hips_pixel_cut (physical
-# values, as the map holds), becomes the frame's user scale limits,
-# unless turned off in Preferences > HEALPix. A later scale command (or
-# a backup's saved scale) still wins, as it comes after the load.
+# The scale limits a HiPS suggests: for FITS tiles the survey's display
+# range, hips_pixel_cut (physical values, as the map holds); for PNG/JPEG
+# tiles 0-255, the creator's own stretch (the values are display levels,
+# so the cut doesn't apply, and limits left from another image would be
+# meaningless). They become the frame's user scale limits, on every
+# channel of an RGB frame, unless turned off in Preferences > HEALPix.
+# A later scale command (or a backup's saved scale) still wins, as it
+# comes after the load.
 proc HiPSApplyCut {fn} {
     global phpxopen
     global scale
+    global current
 
     if {!$phpxopen(hipscut)} {
 	return
@@ -82,19 +87,35 @@ proc HiPSApplyCut {fn} {
     if {[catch {HiPSReadProperties [HiPSRoot [HiPSLocalName $fn]]} props]} {
 	return
     }
-    set cut [HiPSProp $props hips_pixel_cut]
-    # physical values: nothing to do with png/jpg display levels
-    if {[llength $cut] != 2 || [HiPSTileExt $props] != {fits}} {
-	return
+    if {[HiPSTileExt $props] == {fits}} {
+	set cut [HiPSProp $props hips_pixel_cut]
+	if {[llength $cut] != 2} {
+	    return
+	}
+	lassign $cut lo hi
+	if {![string is double -strict $lo] || \
+		![string is double -strict $hi] || $lo >= $hi} {
+	    return
+	}
+    } else {
+	set lo 0
+	set hi 255
     }
-    lassign $cut lo hi
-    if {![string is double -strict $lo] || ![string is double -strict $hi] \
-	    || $lo >= $hi} {
-	return
-    }
+
     set scale(min) $lo
     set scale(max) $hi
-    ChangeScaleLimit
+    set which $current(frame)
+    if {$which != {} && [$which get type] == {rgb}} {
+	set save [$which get rgb channel]
+	foreach cc {red green blue} {
+	    $which rgb channel $cc
+	    ChangeScaleLimit
+	}
+	$which rgb channel $save
+	ChangeScaleLimit
+    } else {
+	ChangeScaleLimit
+    }
 }
 
 # The root directory of a HiPS name (without its [options])

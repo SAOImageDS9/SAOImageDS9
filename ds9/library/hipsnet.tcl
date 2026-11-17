@@ -1333,7 +1333,6 @@ proc HiPSDeepDone {gen frame root order nn fn tmp sfx code} {
     HiPSDeepStatus
 }
 
-# tiles still to come: waiting, or in a worker and not cancelled
 # drop the requests still waiting for frame
 proc HiPSDeepDrop {frame} {
     global hipsdeep
@@ -1351,6 +1350,7 @@ proc HiPSDeepDrop {frame} {
     set hipsdeep(queue) $keep
 }
 
+# tiles still to come: waiting, or in a worker and not cancelled
 proc HiPSDeepPending {} {
     global hipsdeep
 

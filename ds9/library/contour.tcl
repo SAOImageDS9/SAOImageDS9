@@ -1381,6 +1381,11 @@ proc ContourLogDialog {} {
 }
 
 proc ContourBackup {ch which fdir rdir} {
+    # delete old contours
+    foreach ff [glob -directory $fdir -nocomplain "aux*.ctr"] {
+	catch {file delete -force $ff}
+    }
+
     switch [$which get type] {
 	base -
 	3d {ContourBackupBase $ch $which $fdir $rdir}
@@ -1390,7 +1395,9 @@ proc ContourBackup {ch which fdir rdir} {
     }
 }
 
-proc ContourBackupBase {ch which fdir rdir} {
+# sfx names a channel's aux contour file (aux-red.ctr): each channel of
+# an RGB/HSV/HLS frame has its own
+proc ContourBackupBase {ch which fdir rdir {sfx {}}} {
     if {[$which has contour]} {
 	set color [$which get contour color]
 	set width [$which get contour width]
@@ -1425,14 +1432,9 @@ proc ContourBackupBase {ch which fdir rdir} {
 	}
     }
 
-    # delete old contours
-    foreach ff [glob -directory $fdir -nocomplain "aux*.ctr"] {
-	catch {file delete -force $ff}
-    }
-
     if {[$which has contour aux]} {
-	set fn $fdir/aux.ctr
-	set rfn $rdir/aux.ctr
+	set fn $fdir/aux$sfx.ctr
+	set rfn $rdir/aux$sfx.ctr
 	# a HEALPix projection window is rebuilt to fit the frame and zoom,
 	# so its pixels at restore aren't those at backup: save on the sky
 	set sys physical
@@ -1449,7 +1451,7 @@ proc ContourBackupRGB {ch which fdir rdir} {
     foreach cc {red green blue} {
 	$which rgb channel $cc
 	puts $ch "$which rgb channel $cc"
-	ContourBackupBase $ch $which $fdir $rdir
+	ContourBackupBase $ch $which $fdir $rdir -$cc
     }
     $which rgb channel $sav
     puts $ch "$which rgb channel $sav"
@@ -1460,7 +1462,7 @@ proc ContourBackupHSV {ch which fdir rdir} {
     foreach cc {hue saturation value} {
 	$which hsv channel $cc
 	puts $ch "$which hsv channel $cc"
-	ContourBackupBase $ch $which $fdir $rdir
+	ContourBackupBase $ch $which $fdir $rdir -$cc
     }
     $which hsv channel $sav
     puts $ch "$which hsv channel $sav"
@@ -1471,7 +1473,7 @@ proc ContourBackupHLS {ch which fdir rdir} {
     foreach cc {hue lightness saturation} {
 	$which hls channel $cc
 	puts $ch "$which hls channel $cc"
-	ContourBackupBase $ch $which $fdir $rdir
+	ContourBackupBase $ch $which $fdir $rdir -$cc
     }
     $which hls channel $sav
     puts $ch "$which hls channel $sav"

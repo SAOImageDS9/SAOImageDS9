@@ -701,7 +701,7 @@ proc ProcessSendHiPSCmd {proc id param {sock {}} {fn {}}} {
 
     switch -- [string tolower [lindex $param 0]] {
 	coverage {
-	    $proc $id "[ToYesNo [HiPSCoverageShown $current(frame)]]\n"
+	    $proc $id [ToYesNo [HiPSCoverageShown $current(frame)]]
 	}
 	status {$proc $id "[HiPSDeepPending]\n"}
 	list {

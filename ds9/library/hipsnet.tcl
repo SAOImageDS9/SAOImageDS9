@@ -181,7 +181,39 @@ proc HiPSDirSize {dir} {
     return $size
 }
 
-# keep the cache within its limit; keep is the HiPS in use
+# the cache directories of the HiPS shown in any frame (each channel of
+# an RGB frame), normalized
+proc HiPSCacheInUse {} {
+    global ds9
+
+    set rr {}
+    foreach ff $ds9(frames) {
+	set names {}
+	if {[catch {$ff get type} type]} {
+	    continue
+	}
+	if {$type == {rgb}} {
+	    foreach ch {red green blue} {
+		upvar #0 ${ff}$ch var
+		if {[info exists var(file,type)] && $var(file,type) == {hips}} {
+		    lappend names $var(file,name)
+		}
+		unset -nocomplain var
+	    }
+	} else {
+	    lappend names [HiPSFrameName $ff]
+	}
+	foreach fn $names {
+	    if {$fn != {} && [HiPSIsURL [HiPSRoot $fn]]} {
+		lappend rr [file normalize [HiPSRoot [HiPSLocalName $fn]]]
+	    }
+	}
+    }
+    return $rr
+}
+
+# keep the cache within its limit, oldest use first; keep (the HiPS
+# being loaded) and every HiPS shown in a frame stay
 proc HiPSCachePrune {keep} {
     global phpxopen
 
@@ -199,12 +231,13 @@ proc HiPSCachePrune {keep} {
 	incr total $size
 	lappend ll [list $used $size $dd]
     }
+    set inuse [concat [list [file normalize $keep]] [HiPSCacheInUse]]
     foreach rr [lsort -integer -index 0 $ll] {
 	if {$total <= $limit} {
 	    break
 	}
 	lassign $rr used size dd
-	if {[file normalize $dd] == [file normalize $keep]} {
+	if {[lsearch -exact $inuse [file normalize $dd]] >= 0} {
 	    continue
 	}
 	if {![catch {file delete -force $dd}]} {
@@ -220,7 +253,38 @@ proc HiPSCacheClear {} {
     if {$hipsnet(busy)} {
 	return
     }
-    catch {file delete -force [HiPSCacheRoot]}
+    # all but the HiPS shown in a frame (their windows read tiles from
+    # here, and deep ones keep fetching into it)
+    set inuse [HiPSCacheInUse]
+    if {![llength $inuse]} {
+	catch {file delete -force [HiPSCacheRoot]}
+	return
+    }
+    foreach dd [HiPSCacheList] {
+	if {[lsearch -exact $inuse [file normalize $dd]] < 0} {
+	    catch {file delete -force $dd}
+	}
+    }
+    catch {file delete -force [HiPSListFile]}
+    HiPSCacheTidy [HiPSCacheRoot]
+}
+
+# remove the directories under dir that hold no HiPS (left by a deleted
+# one, or by a load that failed); returns 1 if dir itself went
+proc HiPSCacheTidy {dir} {
+    if {[file isfile [file join $dir properties]]} {
+	return 0
+    }
+    set left 0
+    foreach dd [glob -nocomplain -types d -directory $dir *] {
+	if {![HiPSCacheTidy $dd]} {
+	    set left 1
+	}
+    }
+    if {$left || [llength [glob -nocomplain -types f -directory $dir *]]} {
+	return 0
+    }
+    return [expr {![catch {file delete -force $dir}]}]
 }
 
 # file:///path -> /path, anything else unchanged
@@ -1217,6 +1281,8 @@ proc HiPSDeepDone {gen frame root order nn fn tmp sfx code} {
     switch -- $code {
 	200 {
 	    incr hipsdeep(fetched)
+	    # in use: the last to go when the cache is pruned
+	    HiPSCacheTouch $root
 	    if {!$stale} {
 		HiPSDeepRefreshSoon $frame
 	    }

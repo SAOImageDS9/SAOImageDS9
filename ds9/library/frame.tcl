@@ -2483,6 +2483,8 @@ proc ClearFrame {which} {
     }
 
     BookmarksClearFrame $which
+    # its deep HiPS window's tiles still waiting are no longer wanted
+    HiPSDeepFrameGone $which
 
     foreach cc {{} red green blue hue saturation value lightness} {
 	set varname $which$cc

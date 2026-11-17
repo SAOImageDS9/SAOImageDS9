@@ -1267,11 +1267,20 @@ proc HiPSDeepWant {frame root order tiles {slice 0}} {
 proc HiPSDeepNext {} {
     global hipsdeep
 
-    if {![llength $hipsdeep(queue)]} {
-	return
+    # the next request whose frame still shows its HiPS (one cleared,
+    # deleted or loaded with something else since wants nothing)
+    while {1} {
+	if {![llength $hipsdeep(queue)]} {
+	    return
+	}
+	lassign [lindex $hipsdeep(queue) 0] frame root url order nn ext sfx
+	set hipsdeep(queue) [lrange $hipsdeep(queue) 1 end]
+	if {[HiPSDeepShows $frame $root]} {
+	    break
+	}
+	unset -nocomplain "hipsdeep(want,$root $order $nn$sfx)"
+	incr hipsdeep(total) -1
     }
-    lassign [lindex $hipsdeep(queue) 0] frame root url order nn ext sfx
-    set hipsdeep(queue) [lrange $hipsdeep(queue) 1 end]
 
     set dd [expr {($nn/10000)*10000}]
     set fn [file join $root Norder$order Dir$dd Npix$nn$sfx.$ext]
@@ -1329,6 +1338,31 @@ proc HiPSDeepDone {gen frame root order nn fn tmp sfx code} {
     # the last one: a final refresh
     if {!$stale && ![HiPSDeepPending]} {
 	HiPSDeepRefreshSoon $frame 0
+    }
+    HiPSDeepStatus
+}
+
+# frame shows the HiPS whose cache is root (normalized)
+proc HiPSDeepShows {frame root} {
+    if {![llength [info commands $frame]] ||
+	[catch {HiPSFrameName $frame} fn] || $fn == {}} {
+	return 0
+    }
+    return [expr {[file normalize [HiPSRoot [HiPSLocalName $fn]]] == $root}]
+}
+
+# frame was cleared or deleted (ClearFrame): drop its waiting requests
+# and its pending redraw
+proc HiPSDeepFrameGone {frame} {
+    global hipsdeep
+
+    if {![info exists hipsdeep(queue)]} {
+	return
+    }
+    HiPSDeepDrop $frame
+    if {[info exists hipsdeep(timer,$frame)]} {
+	after cancel $hipsdeep(timer,$frame)
+	unset hipsdeep(timer,$frame)
     }
     HiPSDeepStatus
 }

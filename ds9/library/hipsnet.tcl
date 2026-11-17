@@ -801,10 +801,21 @@ proc HiPSWorkersReady {} {
 	    http::config -proxyhost [lindex $proxy 0] \
 		-proxyport [lindex $proxy 1]
 	}
+	# ds9 is exiting: end the request in progress (fetch is inside
+	# geturl's event loop, which runs this) and follow no redirect
+	set stop 0
+	proc abort {} {
+	    set ::stop 1
+	    foreach tok [info vars ::http::\[0-9\]*] {
+		if {[array exists $tok]} {
+		    catch {http::reset $tok}
+		}
+	    }
+	}
 	proc fetch {main id url fn headers} {
 	    set code 0
 	    for {set hops 0} {$hops <= @REDIRECTS@} {incr hops} {
-		if {[catch {open $fn wb} ch]} {
+		if {$::stop || [catch {open $fn wb} ch]} {
 		    break
 		}
 		set loc {}
@@ -850,6 +861,43 @@ proc HiPSWorkersReady {} {
     return [expr {[llength $hipsnet(workers)] > 0}]
 }
 
+# before ds9 exits: end the workers. Tcl's exit doesn't wait for other
+# threads, and tls's exit handler frees the BIO methods every thread's
+# connections use, so a worker still reading would crash. Drop the
+# queue, abort the requests in progress, and wait (up to 5 s; a
+# handshake or DNS lookup can block) for the threads to end
+proc HiPSWorkersStop {} {
+    global hipsnet
+
+    if {![info exists hipsnet(workers)] || $hipsnet(workers) == {}} {
+	return
+    }
+    set hipsnet(jobs) {}
+    array unset hipsnet job,*
+    set tids $hipsnet(workers)
+    set hipsnet(workers) {}
+    set hipsnet(idle) {}
+    foreach tid $tids {
+	if {[thread::exists $tid]} {
+	    thread::send -async $tid abort
+	    thread::release $tid
+	}
+    }
+    for {set ii 0} {$ii < 50} {incr ii} {
+	set alive 0
+	foreach tid $tids {
+	    if {[thread::exists $tid]} {
+		incr alive
+	    }
+	}
+	if {!$alive} {
+	    break
+	}
+	after 100 [list set hipsnet(stopping) 1]
+	vwait hipsnet(stopping)
+    }
+}
+
 # start queued jobs on idle workers
 proc HiPSWorkerDispatch {} {
     global hipsnet
@@ -867,7 +915,10 @@ proc HiPSWorkerDispatch {} {
 proc HiPSWorkerDone {tid id code} {
     global hipsnet
 
-    lappend hipsnet(idle) $tid
+    # (not after HiPSWorkersStop)
+    if {[lsearch -exact $hipsnet(workers) $tid] >= 0} {
+	lappend hipsnet(idle) $tid
+    }
     HiPSWorkerDispatch
     if {[info exists hipsnet(job,$id)]} {
 	set done $hipsnet(job,$id)

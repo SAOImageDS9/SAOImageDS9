@@ -17,15 +17,19 @@ when blocking.</li>
 between the Tcl/Tk and C/C++ layer by variable name rather than string
 to allow for arbitrarily long polygons.</li>
 <li><strong>HEALPIX</strong>: Fix for matching frames with HEALPIX (and
-other) non-linear projections.</li>
+other) non-linear projections. ds9 now warns if the WCS alignment fit
+fails.</li>
 <li><strong>XPA</strong>: fix (most) issues with passing binary data on
 Windows.</li>
 <li><strong>DS9</strong>: Now saves a list of recently opened images.
 <code>File</code> -&gt; <code>Open Recent</code></li>
 <li><strong>ADVANCED VIEW</strong>: Generated a new set of icons that
-are more consistent.</li>
+are more consistent. The bottom icon bar is now separated into visual
+groups (Block, Zoom, Frame, View).</li>
 <li><strong>ADVANCED VIEW</strong>: Buttons now also open/raise|close
 parameter windows (grid, contour, colormap, layout, smooth)</li>
+<li><strong>ADVANCED VIEW</strong>: New <code>Tile Parameters</code>
+button in the bottom icon row.</li>
 <li><strong>PLOT</strong>: Multiple data points can now be selected
 using one of the new selection geometries: <code>Circle</code>,
 <code>Box</code>, <code>Polygon</code>, or <code>Freehand</code>. Use
@@ -38,39 +42,37 @@ actions</li>
 <li><strong>CATALOG</strong>: new option to filter the catalog on the
 selected points</li>
 <li><strong>REGION</strong>: new <code>freehand</code> option to create
-a polygon.</li>
+a polygon. <code>freehandline</code> creates a freehand line
+segment</li>
 <li><strong>ILLUSTRATE</strong>: new <code>freehand</code> option to
-create a polygon.</li>
-<li><strong>REGION</strong>: new <code>glyph</code> point shape: an
-image of your own (PNG, GIF, ...) placed as a marker, drawn upright at
-a fixed size in screen pixels, with transparency. White in SVG
-images is drawn in the region color. Region &gt; Shape
-&gt; Point &gt; Glyph (also in the Advanced view's Region Shape icon
-menu), <code>point(x,y) # point=glyph [size] {file}</code>
-in region files, and <code>regions shape glyph point</code>.</li>
-<li><strong>REGION</strong>: built-in glyphs: a set of crosshair style
-SVG markers, plain and outlined, shipped with ds9 and named
-<code>builtin://name.svg</code> in region and symbol files. The new
-Glyph picker (Browse... in the point dialog, Preferences and catalog
-symbols) chooses one, or an image file of your own.</li>
-<li><strong>CATALOG</strong>: catalog symbols can be glyphs, with the
-image file chosen per row from column values
-(<code>catalog symbol shape {glyph point}</code>,
-<code>catalog symbol glyph &lt;file&gt;</code>).</li>
-<li><strong>PDF</strong>: images with transparency (glyph points and
-illustrate images) keep their transparency in PDF output; transparent
-areas of illustrate images were previously drawn black.</li>
+create a polygon. <code>freehandline</code> creates a freehand line
+segment</li>
+<li><strong>ILLUSTRATE</strong>: Illustrate mode has its own freehand
+tolerance preference (<code>Preferences</code> -&gt;
+<code>Illustrate</code> -&gt; <code>Freehand</code>), separate from the
+region one.</li>
 <li><strong>ILLUSTRATE</strong>: preferences are now saved. Fixed bug
 where illustrate mode shape defaults would overwrite region shape
 defaults.</li>
+<li><strong>ILLUSTRATE</strong>: <code>xpaget $ds9 illustrate</code> now
+works (failed previously).</li>
+<li><strong>ILLUSTRATE</strong>: fix parser to accept commas and
+parentheses, eg <code>circle(a,b,c)</code>, and <code>key=value</code>
+properties, eg <code># color=red</code> (previously silently dropped).
+Double-quoted and braced text can now span multiple lines.</li>
+<li><strong>ILLUSTRATE</strong>: fix parser to stop losing shapes before
+a <code>line</code> segment.</li>
+<li><strong>ILLUSTRATE</strong>: Fixed bug where a frame hidden while
+Illustrate mode (or freeze) was on would no longer respond to the mouse
+and keyboard when shown again.</li>
 <li><strong>CATALOG</strong>: Better error reporting and support for
 catalog names with <code>.</code> in them</li>
 <li><strong>CATALOG</strong>: Clear plot row highlights when filtering
 catalog</li>
-<li><strong>REGION</strong>: Users can now chose different line-endings
+<li><strong>REGION</strong>: Users can now choose different line-endings
 (caps) for <code>line</code>, <code>vector</code>, and
 <code>compass</code> shapes. These include the original
-<code>arrow</code> along side the new <code>openarrow</code>,
+<code>arrow</code> option with the new <code>openarrow</code>,
 <code>chevron</code>, <code>circle</code>, <code>opencircle</code>,
 <code>box</code>, <code>openbox</code>, <code>triangle</code>,
 <code>opentriangle</code>, or <code>bar</code>.</li>
@@ -82,8 +84,12 @@ existing region files with shapes with arrows with width &gt; 1.</li>
 <li><strong>TCL/TK</strong>: Update to 9.0.4</li>
 <li><strong>CERTIFI</strong>: Updated to 2026.10.23</li>
 <li><strong>TLS</strong>: updated to 2.0.1</li>
-<li><strong>OPENSSL</strong>: Update to 3.5.9 LTS. (3.6.2 reached EOL in
-Nov 26).</li>
+<li><strong>OPENSSL</strong>: Update to 3.5.9 LTS (supported until April
+2030). OpenSSL 3.6 support ended November 1, 2026.</li>
+<li><strong>XPA</strong>: Updated to 2.2.2 (fixes to support binary
+files on Windows)</li>
+<li><strong>FUNTOOLS</strong>: Update to 1.5.1 (removes unused
+<code>gcat</code> tool).</li>
 <li><strong>FRAME</strong>: Users can now individually resize and
 reposition frames. For example 3 frames can be added to a 3x2 grid where
 1 frame takes up a 2x2 section and the other two frames as smaller 1x1
@@ -92,40 +98,56 @@ keys are keyboard shorts: Left - remove column, Right - add column, Up -
 remove row, Down - add row. PageUp and PageDown increase and decrease
 the gap between frames.</li>
 <li><strong>XPA</strong>: Fixed bug <code>frame move</code> commands:
-<code>first</code>, <code>last</code>, <code>foward</code>, and
-<code>back</code> where not working. Rather than moving the frame they
+<code>first</code>, <code>last</code>, <code>forward</code>, and
+<code>back</code> were not working. Rather than moving the frame they
 were simply selecting the frame.</li>
 <li><strong>FRAME</strong>: add extra error checking when doing a
 <code>refresh</code> to be sure that image dimensions, datatype, and
 header (byte offset) haven’t changed.</li>
+<li><strong>FRAME</strong>: <code>refresh</code> now reloads the image
+if the file was replaced (eg written to a new file then renamed) or its
+header grew (eg CIAO tools adding <code>HISTORY</code> records), as long
+as the image is compatible (same <code>BITPIX</code>,
+<code>NAXIS</code>, <code>NAXISn</code>). Pan and regions are preserved.
+Not supported for mosaics or RGB/HSV/HLS frames.</li>
 <li><strong>PREFERENCES</strong>: added new <code>base</code> color.
 This is the color users see in the gap between frames in
-<code>tile</code> mode. By default it matches the users theme, but now
-can now be changed to any color.</li>
+<code>tile</code> mode. By default it matches the users theme, but can
+now be changed to any color.</li>
 <li><strong>BLOCK</strong>: speed up. Now multi-threaded.</li>
 <li><strong>HEALPIX</strong>: speed up load, a lot (35sec to 6sec)</li>
 <li><strong>TKSAO</strong> and <strong>FITSY</strong>: turn on compiler
 optimization, overall speed up ~2-5x.</li>
 <li><strong>COLORMAP</strong>: Users can now save a list of their
-favorite color maps <code>Color</code> -&gt; <code>Favoriate</code>
--&gt; <code>Add name to favorites</code>. In Advanced view, the
-favorites are now show in the top icon bar.</li>
+favorite color maps <code>Color</code> -&gt; <code>Favorite</code> -&gt;
+<code>Add name to favorites</code>. In Advanced view, the favorites are
+now shown in the top icon bar. New
+<code>cmap favorite add|delete|clear</code> commands added.</li>
 <li><strong>CONTOUR</strong>: Users can now specify separate line styles
-for each contour level: color, width, and dash.</li>
+for each contour level: color, width, and dash. An
+<code>Apply Style to All</code> button copies the last changed style to
+every level.</li>
 <li><strong>CONTOUR</strong>: Fix issue with dashes not scaling well
-with zoom</li>
+with zoom<br />
+</li>
 <li><strong>PDF</strong>: Fix problem with colorbar outline; it could
 inherit the line style (color, width, dash) of a region or contour drawn
 on the image.</li>
 <li><strong>TCLSH</strong>: Fix parallel build issue on Linux where
 <code>tclsh</code> is not built before it is needed (configured).</li>
+<li><strong>BUILD</strong>: (Internal) Removed dead
+<code>tclzipfs</code> build code; fixed Thread 3.0.6 configure for macOS
+framework builds.</li>
 <li><strong>SAMP</strong>: work on improving robustness when
-encountering errors that could case SAMP clients to hang waiting on
-response.</li>
+encountering errors that could cause SAMP clients to hang waiting on
+response. <code>ds9.get</code> always replies; outgoing calls now time
+out after 60 seconds instead of waiting forever; replies containing
+double quotes, and names, titles, and paths containing spaces, are no
+longer broken or truncated.</li>
 <li><strong>LANGUAGE</strong>: New Italian translation
-(<code>-language it</code>). The Czech, Danish, German, Spanish,
-French, Japanese, Portuguese, and Chinese translations now cover every
-message in the GUI, and many previously untranslated entries have been
+(<code>-language it</code>). The Czech, Danish, German, Spanish, French,
+Japanese, Portuguese, and Chinese translations now cover every message
+in the GUI, and many previously untranslated entries have been
 translated.</li>
 <li><strong>CATALOG</strong>: copy a single table value. Clicking a
 cell outlines it within the selected row; <code>Edit</code> -&gt;
@@ -137,32 +159,97 @@ footprint, SIA, SIA registry, CDS catalog search and Prism tables, and
 <li><strong>CATALOG</strong>: Fix <code>Ctrl</code>-click dropping the
 previously selected rows when the earlier row had finished blinking.
 The footprint table always lost them.</li>
-</ul>
-<h2 id="wip">WIP</h2>
-<ul>
-<li><strong>ASDF</strong>: Add support for Advanced Science Data Format
-files generated by the <em>Roman</em> space telescope.</li>
+<li><strong>THEMES</strong>: Updated <code>awthemes</code> to use UTF-8
+when reading files; caused run time failure with
+<code>LANG=zh|ja</code>.</li>
+<li><strong>CATALOG</strong>: Fix bug in xpa
+<code>catalog symbol N [shape|remove]</code> command calling an
+undefined command.</li>
+<li><strong>REGION</strong>: new <code>glyph</code> point shape: an
+image of your own (PNG, GIF, JPEG, even SVG) placed as a marker, drawn
+upright at a fixed size in screen pixels, with transparency. White in
+SVG images is drawn in the region color. <code>Region</code> -&gt;
+<code>Shape</code> -&gt; <code>Point</code> -&gt; <code>Glyph</code>
+(also in the Advanced view’s Region Shape icon menu),
+<code>point(x,y) # point=glyph [size] {file}</code> in region files, and
+<code>regions shape glyph point</code>. Relative glyph file names are
+resolved against the region file’s directory, and backups include the
+glyph files. On 3D frames glyphs tilt with the view like the other point
+shapes.</li>
+<li><strong>REGION</strong>: built-in glyphs: a set of crosshair style
+SVG markers, plain and outlined, shipped with ds9 and named
+<code>builtin://name.svg</code> in region and symbol files. The new
+Glyph picker (<code>Browse...</code> in the point dialog, Preferences
+and catalog symbols) chooses one, or an image file of your own. The
+default glyph is
+<code>builtin://closed_circle_crosshairs.svg</code>.</li>
+<li><strong>CATALOG</strong>: catalog symbols can be glyphs, with the
+image file chosen per row from column values
+(<code>catalog symbol shape {glyph point}</code>,
+<code>catalog symbol glyph &lt;file&gt;</code>).</li>
+<li><strong>FILE</strong>: SVG files are now included in the image
+(photo) file types in the file dialogs.</li>
+<li><strong>PHOTO</strong>: Added support for reading <em>AVM</em>
+(Astronomy Visualization Metadata) tags from PNG, JPEG, TIFF, and GIF
+images and reconstructing the WCS if it is present. The AVM tags
+(creator, title, description, credit, facility, …) are listed after the
+header in <code>File</code> -&gt; <code>Header</code>.</li>
+<li><strong>PDF</strong>: images with transparency (glyph points and
+illustrate images) keep their transparency in PDF output; transparent
+areas of illustrate images were previously drawn black.</li>
+<li><strong>PLOT</strong>: Fixed the <code>plot font title</code>
+command (previously was a no-op).</li>
+<li><strong>PREFERENCES</strong>: now support micro version
+(<code>x.y.z</code>) when updating preference files; also now support
+semantic versioning (8.10 is newer than 8.1)</li>
+<li><strong>FONTS</strong>: Internal changes to <strong>REGION</strong>,
+<strong>PLOT</strong>, and <strong>CATALOG</strong> to better support
+the possible upgrade to additional/arbitrary fonts. Fixed a crash
+reading region files with long (16+ character) font family names, and
+braced multi-word families (eg
+<code>font="{DejaVu Sans} 30 bold roman"</code>) are now parsed
+correctly. Fixed the catalog preferences font weight menu, and frame
+<code>graph</code> axis fonts whose family name contains a space (eg
+Windows <code>Segoe UI</code>).</li>
+<li><strong>TKDND</strong>: Add drag and drop support (not available on
+macOS X11). Users can drag and drop files from their desktop or file
+manager (Linux: eg nautilus, dolphin, etc, MacOS: finder, Windows: File
+Manager) onto the DS9 canvas to load the file. This works for images, eg
+<code>*.fits</code> as well as all the other ds9 supported file types
+including regions, contours, color maps, catalogs, etc. This does
+include a new dependency on Linux to <code>libXcursor</code> which is
+required when building from source.</li>
+<li><strong>THEMES</strong>: Two new ds9 specific themes:
+<code>ops</code> and <code>opsdark</code>. IYKYK</li>
+<li><strong>PREFERENCES</strong>: windows are now scrollable for large
+selections.</li>
+<li><strong>MACOS</strong>: use the system’s keychain certificates
+rather than the <code>/etc/ssl/cert.pem</code> file; the later does not
+keep up with the former and can cause some sites to be
+inaccessible.</li>
 <li><strong>HEALPIX</strong>: support new <code>proj</code> (projection)
 options. Allows ds9 to <strong>resample</strong> the <code>HPX</code>
 projection to other all sky projections including: Hammer-Aitoff
 (<code>ait</code>), Mollweide (<code>mol</code>), Plate Carree
-(<code>car</code>), Sanson-Flamsteed (<code>sfl</code>/<code>gls</code>),
-parabolic (<code>par</code>) and cylindrical equal area
-(<code>cea</code>), centred on <code>lon0</code>. Example:
-<code>foo.fits[proj=mol,lon0=180]</code>. Nearest-neighbour resampling,
-so every image pixel is a real HEALPix value.</li>
+(<code>car</code>), Sanson-Flamsteed
+(<code>sfl</code>/<code>gls</code>), parabolic (<code>par</code>) and
+cylindrical equal area (<code>cea</code>), centred on <code>lon0</code>.
+Example: <code>foo.fits[proj=mol,lon0=180]</code>. Nearest-neighbour
+resampling, so every image pixel is a real HEALPix value. Resampling is
+multi-threaded.</li>
 <li><strong>HEALPIX</strong>: zenithal (<code>tan</code>,
 <code>sin</code>, <code>stg</code>, <code>arc</code>, <code>zea</code>)
 and conic (<code>cop</code>, <code>coe</code>, <code>cod</code>,
 <code>coo</code>, <code>bon</code>) projections, with new
 <code>lat0</code> and <code>fov</code> options. These are live windows
 that are rebuilt as you pan and zoom; regions, catalogs and contours
-keep their sky positions.</li>
+keep their sky positions. Works with blocking and with RGB/HSV/HLS
+frames.</li>
 <li><strong>HEALPIX</strong>: The <code>filename[ext,hpx]</code> form
-(e.g. <code>foo.fits[1,order=nested]</code>) now applies the HEALPix
+(e.g. <code>foo.fits[1,order=nested]</code>) now applies the HEALPix
 options; they were silently ignored.</li>
 <li><strong>HEALPIX</strong>: <em>File &gt; Open</em> on a HEALPix map
-or MOC shows a dialog to choose the data column, projection, centre and
+or MOC shows a dialog to choose the data column, projection, center and
 field of view, HPX layout, and ordering/coordinate system overrides. The
 choices are added to the file name. New <em>HEALPix</em> preferences
 turn the dialog off and set the projection it starts with.</li>
@@ -170,8 +257,6 @@ turn the dialog off and set the projection it starts with.</li>
 values, regions) for points that are not on the sky, such as outside an
 Aitoff ellipse.</li>
 </ul>
-
-
 
 </body>
 </head>

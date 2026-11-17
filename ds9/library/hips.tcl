@@ -440,6 +440,31 @@ proc HiPSFrameName {which} {
     return $var(file,name)
 }
 
+# The global array of load parameters (ProcessLoad) that keeps frame
+# which's HiPS state (its coverage overlay): the frame's own, or in an
+# RGB frame the red channel's. A colour HiPS is in all three channels,
+# and a backup restores it from the red one (BackupFrameLoad), so its
+# coverage goes there too, and is reset when the HiPS is loaded again.
+proc HiPSParamVar {which} {
+    if {$which != {} && [$which get type] == {rgb}} {
+	return ${which}red
+    }
+    return $which
+}
+
+# run script with frame which's red channel current (an RGB frame's
+# coverage contour is the red channel's), then put the channel back
+proc HiPSOnRed {which script} {
+    if {[$which get type] != {rgb}} {
+	return [uplevel 1 $script]
+    }
+    set old [$which get rgb channel]
+    $which rgb channel red
+    set rc [catch {uplevel 1 $script} rr]
+    $which rgb channel $old
+    return -code $rc $rr
+}
+
 # backup/restore: a backup names the HiPS (root plus options) and never
 # copies it. If the directory has gone, ask for its new place. coverage
 # is which aux contour is the coverage overlay ({} if none); the contour
@@ -469,7 +494,7 @@ proc HiPSRestore {fn {coverage {}}} {
     }
     if {$coverage != {}} {
 	global current
-	upvar #0 $current(frame) var
+	upvar #0 [HiPSParamVar $current(frame)] var
 	set var(hips,coverage) $coverage
     }
     return 1
@@ -487,7 +512,7 @@ proc HiPSRestore {fn {coverage {}}} {
 # which aux contour it is (hips,coverage), so turning it off removes
 # only that one.
 proc HiPSCoverage {which on} {
-    upvar #0 $which var
+    upvar #0 [HiPSParamVar $which] var
 
     if {$on} {
 	if {[info exists var(hips,coverage)]} {
@@ -501,11 +526,10 @@ proc HiPSCoverage {which on} {
 }
 
 proc HiPSCoverageShown {which} {
-    upvar #0 $which var
-
     if {$which == {} || [HiPSFrameName $which] == {}} {
 	return 0
     }
+    upvar #0 [HiPSParamVar $which] var
     return [info exists var(hips,coverage)]
 }
 
@@ -514,7 +538,7 @@ proc HiPSCoverageShow {which} {
     global current
     global loadParam
     global hipscov
-    upvar #0 $which var
+    upvar #0 [HiPSParamVar $which] var
 
     set fn [HiPSFrameName $which]
     if {$fn == {}} {
@@ -588,26 +612,32 @@ proc HiPSCoverageShow {which} {
     }
     set cc [join $out \n]
 
-    set var(hips,coverage) [$which get contour aux count]
-    $which contour paste cc $hipscov(color) $hipscov(width) 0 0 0
+    HiPSOnRed $which {
+	set var(hips,coverage) [$which get contour aux count]
+	$which contour paste cc $hipscov(color) $hipscov(width) 0 0 0
+    }
     UpdateContourDialog
     return 1
 }
 
 proc HiPSCoverageHide {which} {
-    upvar #0 $which var
+    if {$which == {} || ![llength [info commands $which]]} {
+	return
+    }
+    upvar #0 [HiPSParamVar $which] var
 
     if {![info exists var(hips,coverage)]} {
 	return
     }
     set nn $var(hips,coverage)
     unset var(hips,coverage)
-    if {[string is integer -strict $nn] && \
-	    [llength [info commands $which]] && \
+    HiPSOnRed $which {
+	if {[string is integer -strict $nn] &&
 	    $nn < [$which get contour aux count]} {
-	$which contour delete aux $nn
-	UpdateContourDialog
+	    $which contour delete aux $nn
+	}
     }
+    UpdateContourDialog
 }
 
 # Analysis > HiPS Coverage
@@ -625,9 +655,11 @@ proc HiPSCoverageMenu {} {
 
 # the coverage is shown, and is the whole sky (nothing drawn)
 proc HiPSCoverageWhole {which} {
-    upvar #0 $which var
-
-    return [expr {[HiPSCoverageShown $which] && $var(hips,coverage) == {all}}]
+    if {![HiPSCoverageShown $which]} {
+	return 0
+    }
+    upvar #0 [HiPSParamVar $which] var
+    return [expr {$var(hips,coverage) == {all}}]
 }
 
 proc UpdateHiPSCoverageMenu {} {

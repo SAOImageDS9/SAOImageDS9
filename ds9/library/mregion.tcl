@@ -87,7 +87,7 @@ proc RegionMainMenu {} {
 	-variable marker(shape) -value box
     $ds9(mb).region.shape add radiobutton -label [msgcat::mc {Polygon}] \
 	-variable marker(shape) -value polygon
-    $ds9(mb).region.shape add radiobutton -label [msgcat::mc {Freehand}] \
+    $ds9(mb).region.shape add radiobutton -label [msgcat::mc {Freehand Polygon}] \
 	-variable marker(shape) -value freehand
     $ds9(mb).region.shape add separator
     $ds9(mb).region.shape add radiobutton -label [msgcat::mc {Line}] \
@@ -98,7 +98,7 @@ proc RegionMainMenu {} {
 	-variable marker(shape) -value projection
     $ds9(mb).region.shape add radiobutton -label [msgcat::mc {Segment}] \
 	-variable marker(shape) -value segment
-    $ds9(mb).region.shape add radiobutton -label [msgcat::mc {Freehand Line}] \
+    $ds9(mb).region.shape add radiobutton -label [msgcat::mc {Freehand Segment}] \
 	-variable marker(shape) -value freehandline
     $ds9(mb).region.shape add separator
     $ds9(mb).region.shape add radiobutton -label [msgcat::mc {Text}] \
@@ -261,7 +261,7 @@ proc PrefsDialogRegionMenu {w} {
 	-variable pmarker(shape) -value box
     $m.shape add radiobutton -label [msgcat::mc {Polygon}] \
 	-variable pmarker(shape) -value polygon
-    $m.shape add radiobutton -label [msgcat::mc {Freehand}] \
+    $m.shape add radiobutton -label [msgcat::mc {Freehand Polygon}] \
 	-variable pmarker(shape) -value freehand
     $m.shape add separator
     $m.shape add radiobutton -label [msgcat::mc {Line}] \
@@ -272,7 +272,7 @@ proc PrefsDialogRegionMenu {w} {
 	-variable pmarker(shape) -value projection
     $m.shape add radiobutton -label [msgcat::mc {Segment}] \
 	-variable pmarker(shape) -value segment
-    $m.shape add radiobutton -label [msgcat::mc {Freehand Line}] \
+    $m.shape add radiobutton -label [msgcat::mc {Freehand Segment}] \
 	-variable pmarker(shape) -value freehandline
     $m.shape add separator
     $m.shape add radiobutton -label [msgcat::mc {Text}] \
@@ -453,7 +453,7 @@ proc PrefsDialogRegion {} {
     ttk::entry $f.iteration -textvariable pmarker(centroid,iteration) -width 10
     ttk::label $f.rtitle -text [msgcat::mc {Radius}]
     ttk::entry $f.radius -textvariable pmarker(centroid,radius) -width 10
-   
+
     grid $f.ititle $f.iteration $f.rtitle $f.radius -padx 2 -pady 2 -sticky w
     # Plots
     set f [ttk::labelframe $w.region.plot -text [msgcat::mc {Auto Plot}]]
@@ -471,32 +471,32 @@ proc PrefsDialogRegion {} {
     ttk::label $f.title -text [msgcat::mc {Radius}]
     ttk::entry $f.radius -textvariable pmarker(circle,radius) -width 10
     ttk::label $f.unit -text [msgcat::mc {Image}]
-   
+
     grid $f.title $f.radius $f.unit -padx 2 -pady 2 -sticky w
 
     # Ellipse
     set f [ttk::labelframe $w.region.ellipse -text [msgcat::mc {Ellipse}]]
 
     ttk::label $f.title -text "Radius 1"
-    ttk::entry $f.radius1 -textvariable pmarker(ellipse,radius1) -width 10 
+    ttk::entry $f.radius1 -textvariable pmarker(ellipse,radius1) -width 10
     ttk::label $f.unit -text [msgcat::mc {Image}]
-    
+
     ttk::label $f.title2 -text "Radius 2"
-    ttk::entry $f.radius2 -textvariable pmarker(ellipse,radius2) -width 10 
+    ttk::entry $f.radius2 -textvariable pmarker(ellipse,radius2) -width 10
     ttk::label $f.unit2 -text [msgcat::mc {Image}]
 
     grid $f.title $f.radius1 $f.unit -padx 2 -pady 2 -sticky w
     grid $f.title2 $f.radius2 $f.unit2 -padx 2 -pady 2 -sticky w
-    
+
     # Box
     set f [ttk::labelframe $w.region.box -text [msgcat::mc {Box}]]
 
     ttk::label $f.title -text "Size 1"
-    ttk::entry $f.radius1 -textvariable pmarker(box,radius1) -width 10 
+    ttk::entry $f.radius1 -textvariable pmarker(box,radius1) -width 10
     ttk::label $f.unit -text [msgcat::mc {Image}]
-    
+
     ttk::label $f.title2 -text "Size 2"
-    ttk::entry $f.radius2 -textvariable pmarker(box,radius2) -width 10 
+    ttk::entry $f.radius2 -textvariable pmarker(box,radius2) -width 10
     ttk::label $f.unit2 -text [msgcat::mc {Image}]
 
     grid $f.title $f.radius1 $f.unit -padx 2 -pady 2 -sticky w
@@ -506,18 +506,18 @@ proc PrefsDialogRegion {} {
     set f [ttk::labelframe $w.region.polygon -text [msgcat::mc {Polygon}]]
 
     ttk::label $f.title -text "Width"
-    ttk::entry $f.width -textvariable pmarker(polygon,width) -width 10 
+    ttk::entry $f.width -textvariable pmarker(polygon,width) -width 10
     ttk::label $f.unit -text [msgcat::mc {Image}]
-    
+
     ttk::label $f.title2 -text "Height"
-    ttk::entry $f.height -textvariable pmarker(polygon,height) -width 10 
+    ttk::entry $f.height -textvariable pmarker(polygon,height) -width 10
     ttk::label $f.unit2 -text [msgcat::mc {Image}]
 
     grid $f.title $f.width $f.unit -padx 2 -pady 2 -sticky w
     grid $f.title2 $f.height $f.unit2 -padx 2 -pady 2 -sticky w
 
     # Freehand
-    set f [ttk::labelframe $w.region.freehand -text [msgcat::mc {Freehand}]]
+    set f [ttk::labelframe $w.region.freehand -text [msgcat::mc {Freehand Polygon/Segment}]]
 
     ttk::label $f.title -text [msgcat::mc {Tolerance}]
     ttk::entry $f.tol -textvariable pmarker(freehand,tolerance) -width 10
@@ -534,7 +534,7 @@ proc PrefsDialogRegion {} {
     ttk::label $f.title -text [msgcat::mc {Thickness}]
     ttk::entry $f.thick -textvariable pmarker(projection,thick) -width 10
     ttk::label $f.unit -text [msgcat::mc {Image}]
-    
+
     grid $f.title $f.thick $f.unit -padx 2 -pady 2 -sticky w
 
     # Point
@@ -543,7 +543,7 @@ proc PrefsDialogRegion {} {
     ttk::label $f.title -text [msgcat::mc {Size}]
     ttk::entry $f.size -textvariable pmarker(point,size) -width 10
     ttk::label $f.unit -text [msgcat::mc {Pixels}]
-    
+
     grid $f.title $f.size $f.unit -padx 2 -pady 2 -sticky w
 
     # Glyph
@@ -605,7 +605,7 @@ proc PrefsDialogAnnulus {} {
     ttk::label $f.unit -text [msgcat::mc {Image}]
     ttk::label $f.annuliTitle -text [msgcat::mc {Annuli}]
     ttk::entry $f.annuli -textvariable pmarker(annulus,annuli) -width 10
-    
+
     grid x $f.innerTitle $f.outerTitle -padx 2 -pady 2 -sticky w
     grid $f.radiusTitle $f.inner $f.outer $f.unit -padx 2 -pady 2 -sticky w
     grid $f.annuliTitle $f.annuli -padx 2 -pady 2 -sticky w
@@ -619,18 +619,18 @@ proc PrefsDialogAnnulus {} {
 
     ttk::label $f.innerTitle -text [msgcat::mc {Inner}]
     ttk::entry $f.radius1 -textvariable pmarker(ellipseannulus,radius1) \
-	-width 10 	
+	-width 10
     ttk::entry $f.radius2 -textvariable pmarker(ellipseannulus,radius2) \
-	-width 10 
+	-width 10
     ttk::label $f.unit -text [msgcat::mc {Image}]
 
     ttk::label $f.outerTitle -text [msgcat::mc {Outer}]
     ttk::entry $f.radius3 -textvariable pmarker(ellipseannulus,radius3) \
-	-width 10 
+	-width 10
 
     ttk::label $f.annuliTitle -text [msgcat::mc {Annuli}]
     ttk::entry $f.annuli -textvariable pmarker(ellipseannulus,annuli) -width 10
-    
+
     grid x $f.majorTitle $f.minorTitle -padx 2 -pady 2 -sticky w
     grid $f.innerTitle $f.radius1 $f.radius2 $f.unit -padx 2 -pady 2 -sticky w
     grid $f.outerTitle $f.radius3 -padx 2 -pady 2 -sticky w
@@ -645,15 +645,15 @@ proc PrefsDialogAnnulus {} {
 
     ttk::label $f.innerTitle -text [msgcat::mc {Inner}]
     ttk::entry $f.radius1 -textvariable pmarker(boxannulus,radius1) -width 10
-    ttk::entry $f.radius2 -textvariable pmarker(boxannulus,radius2) -width 10 
+    ttk::entry $f.radius2 -textvariable pmarker(boxannulus,radius2) -width 10
     ttk::label $f.unit -text [msgcat::mc {Image}]
 
     ttk::label $f.outerTitle -text [msgcat::mc {Outer}]
-    ttk::entry $f.radius3 -textvariable pmarker(boxannulus,radius3) -width 10 
+    ttk::entry $f.radius3 -textvariable pmarker(boxannulus,radius3) -width 10
 
     ttk::label $f.annuliTitle -text [msgcat::mc {Annuli}]
-    ttk::entry $f.annuli -textvariable pmarker(boxannulus,annuli) -width 10 
-    
+    ttk::entry $f.annuli -textvariable pmarker(boxannulus,annuli) -width 10
+
     grid x $f.majorTitle $f.minorTitle -padx 2 -pady 2 -sticky w
     grid $f.innerTitle $f.radius1 $f.radius2 $f.unit -padx 2 -pady 2 -sticky w
     grid $f.outerTitle $f.radius3 -padx 2 -pady 2 -sticky w
@@ -682,7 +682,7 @@ proc PrefsDialogPanda {} {
     ttk::label $f.unit -text [msgcat::mc {Image}]
     ttk::label $f.annuliTitle -text [msgcat::mc {Annuli}]
     ttk::entry $f.annuli -textvariable pmarker(panda,annuli) -width 10
-    
+
     grid x $f.innerTitle $f.outerTitle -padx 2 -pady 2 -sticky w
     grid $f.radiusTitle $f.inner $f.outer $f.unit -padx 2 -pady 2 -sticky w
     grid $f.annuliTitle $f.annuli -padx 2 -pady 2 -sticky w
@@ -695,7 +695,7 @@ proc PrefsDialogPanda {} {
     ttk::label $f.angunit -text [msgcat::mc {Degrees}]
     ttk::label $f.angnumTitle -text [msgcat::mc {Number}]
     ttk::entry $f.angnum -textvariable pmarker(panda,angnum) -width 10
-    
+
     grid x $f.ang1Title $f.ang2Title -padx 2 -pady 2 -sticky w
     grid $f.angTitle $f.ang1 $f.ang2 $f.angunit -padx 2 -pady 2 -sticky w
     grid $f.angnumTitle $f.angnum -padx 2 -pady 2 -sticky w
@@ -709,15 +709,15 @@ proc PrefsDialogPanda {} {
 
     ttk::label $f.innerTitle -text [msgcat::mc {Inner}]
     ttk::entry $f.radius1 -textvariable pmarker(epanda,radius1) -width 10
-    ttk::entry $f.radius2 -textvariable pmarker(epanda,radius2) -width 10 
+    ttk::entry $f.radius2 -textvariable pmarker(epanda,radius2) -width 10
     ttk::label $f.unit -text [msgcat::mc {Image}]
 
     ttk::label $f.outerTitle -text [msgcat::mc {Outer}]
-    ttk::entry $f.radius3 -textvariable pmarker(epanda,radius3) -width 10 
+    ttk::entry $f.radius3 -textvariable pmarker(epanda,radius3) -width 10
 
     ttk::label $f.annuliTitle -text [msgcat::mc {Annuli}]
     ttk::entry $f.annuli -textvariable pmarker(epanda,annuli) -width 10
-    
+
     grid x $f.majorTitle $f.minorTitle -padx 2 -pady 2 -sticky w
     grid $f.innerTitle $f.radius1 $f.radius2 $f.unit -padx 2 -pady 2 -sticky w
     grid $f.outerTitle $f.radius3 -padx 2 -pady 2 -sticky w
@@ -731,7 +731,7 @@ proc PrefsDialogPanda {} {
     ttk::label $f.angunit -text [msgcat::mc {Degrees}]
     ttk::label $f.angnumTitle -text [msgcat::mc {Number}]
     ttk::entry $f.angnum -textvariable pmarker(epanda,angnum) -width 10
-    
+
     grid x $f.ang1Title $f.ang2Title -padx 2 -pady 2 -sticky w
     grid $f.angTitle $f.ang1 $f.ang2 $f.angunit -padx 2 -pady 2 -sticky w
     grid $f.angnumTitle $f.angnum -padx 2 -pady 2 -sticky w
@@ -744,15 +744,15 @@ proc PrefsDialogPanda {} {
 
     ttk::label $f.innerTitle -text [msgcat::mc {Inner}]
     ttk::entry $f.radius1 -textvariable pmarker(bpanda,radius1) -width 10
-    ttk::entry $f.radius2 -textvariable pmarker(bpanda,radius2) -width 10 
+    ttk::entry $f.radius2 -textvariable pmarker(bpanda,radius2) -width 10
     ttk::label $f.unit -text [msgcat::mc {Image}]
 
     ttk::label $f.outerTitle -text [msgcat::mc {Outer}]
-    ttk::entry $f.radius3 -textvariable pmarker(bpanda,radius3) -width 10 
+    ttk::entry $f.radius3 -textvariable pmarker(bpanda,radius3) -width 10
 
     ttk::label $f.annuliTitle -text [msgcat::mc {Annuli}]
     ttk::entry $f.annuli -textvariable pmarker(bpanda,annuli) -width 10
-    
+
     grid x $f.majorTitle $f.minorTitle -padx 2 -pady 2 -sticky w
     grid $f.innerTitle $f.radius1 $f.radius2 $f.unit -padx 2 -pady 2 -sticky w
     grid $f.outerTitle $f.radius3 -padx 2 -pady 2 -sticky w
@@ -766,7 +766,7 @@ proc PrefsDialogPanda {} {
     ttk::label $f.angunit -text [msgcat::mc {Degrees}]
     ttk::label $f.angnumTitle -text [msgcat::mc {Number}]
     ttk::entry $f.angnum -textvariable pmarker(bpanda,angnum) -width 10
-    
+
     grid x $f.ang1Title $f.ang2Title -padx 2 -pady 2 -sticky w
     grid $f.angTitle $f.ang1 $f.ang2 $f.angunit -padx 2 -pady 2 -sticky w
     grid $f.angnumTitle $f.angnum -padx 2 -pady 2 -sticky w
@@ -850,7 +850,7 @@ proc CreateButtonsRegion {} {
 	[string tolower [msgcat::mc {Polygon}]] \
 	marker shape polygon {}
     RadioButton $ds9(buttons).region.freehand \
-	[string tolower [msgcat::mc {Freehand}]] \
+	[string tolower [msgcat::mc {Freehand Polygon}]] \
 	marker shape freehand {}
     RadioButton $ds9(buttons).region.line \
 	[string tolower [msgcat::mc {Line}]] \
@@ -865,7 +865,7 @@ proc CreateButtonsRegion {} {
 	[string tolower [msgcat::mc {Segment}]] \
 	marker shape segment {}
     RadioButton $ds9(buttons).region.freehandline \
-	[string tolower [msgcat::mc {Freehand Line}]] \
+	[string tolower [msgcat::mc {Freehand Segment}]] \
 	marker shape freehandline {}
     RadioButton $ds9(buttons).region.text \
 	[string tolower [msgcat::mc {Text}]] \
@@ -1008,7 +1008,7 @@ proc PrefsDialogButtonbarRegion {f} {
     global pbuttons
 
     ttk::menubutton $f -text [msgcat::mc {Buttonbar}] -menu $f.menu
-    
+
     set m $f.menu
     ThemeMenu $m
     $m add checkbutton -label [msgcat::mc {Get Information}] \
@@ -1088,7 +1088,7 @@ proc PrefsDialogButtonbarRegion {f} {
     $m.shape add checkbutton -label [msgcat::mc {Polygon}] \
 	-variable pbuttons(region,polygon) \
 	-command {UpdateButtons buttons(region)}
-    $m.shape add checkbutton -label [msgcat::mc {Freehand}] \
+    $m.shape add checkbutton -label [msgcat::mc {Freehand Polygon}] \
 	-variable pbuttons(region,freehand) \
 	-command {UpdateButtons buttons(region)}
     $m.shape add separator
@@ -1104,7 +1104,7 @@ proc PrefsDialogButtonbarRegion {f} {
     $m.shape add checkbutton -label [msgcat::mc {Segment}] \
 	-variable pbuttons(region,segment) \
 	-command {UpdateButtons buttons(region)}
-    $m.shape add checkbutton -label [msgcat::mc {Freehand Line}] \
+    $m.shape add checkbutton -label [msgcat::mc {Freehand Segment}] \
 	-variable pbuttons(region,freehandline) \
 	-command {UpdateButtons buttons(region)}
     $m.shape add separator
@@ -1198,13 +1198,13 @@ proc UpdateRegionMenu {} {
 	ConfigureButtons region disabled
 	return
     }
-    
+
     if {![$current(frame) has fits]} {
 	$ds9(mb) entryconfig [msgcat::mc {Region}] -state disabled
 	ConfigureButtons region disabled
 	return
     }
-    
+
     set marker(show) [$current(frame) get marker show]
     set marker(show,text) [$current(frame) get marker show text]
     set marker(centroid,auto) [$current(frame) get marker centroid auto]
@@ -1260,23 +1260,23 @@ proc UpdateRegionMenu {} {
 	    } else {
 		# defaults
 		set marker(color) $pmarker(color)
-		set marker(fill) $pmarker(fill) 
-		set marker(width) $pmarker(width) 
-		set marker(dash) $pmarker(dash) 
+		set marker(fill) $pmarker(fill)
+		set marker(width) $pmarker(width)
+		set marker(dash) $pmarker(dash)
 		set marker(dashlist) $pmarker(dashlist)
 
-		set marker(font) $pmarker(font) 
-		set marker(font,size) $pmarker(font,size) 
-		set marker(font,weight) $pmarker(font,weight) 
-		set marker(font,slant) $pmarker(font,slant) 
+		set marker(font) $pmarker(font)
+		set marker(font,size) $pmarker(font,size)
+		set marker(font,weight) $pmarker(font,weight)
+		set marker(font,slant) $pmarker(font,slant)
 
-		set marker(fixed) $pmarker(fixed) 
-		set marker(edit) $pmarker(edit) 
-		set marker(move) $pmarker(move) 
-		set marker(rotate) $pmarker(rotate) 
-		set marker(delete) $pmarker(delete) 
-		set marker(include) $pmarker(include) 
-		set marker(source) $pmarker(source) 
+		set marker(fixed) $pmarker(fixed)
+		set marker(edit) $pmarker(edit)
+		set marker(move) $pmarker(move)
+		set marker(rotate) $pmarker(rotate)
+		set marker(delete) $pmarker(delete)
+		set marker(include) $pmarker(include)
+		set marker(source) $pmarker(source)
 		set marker(composite,area) $pmarker(composite,area)
 	    }
 	}

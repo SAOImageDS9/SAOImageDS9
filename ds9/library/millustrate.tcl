@@ -67,7 +67,7 @@ proc IllustrateMainMenu {} {
 	-variable illustrate(shape) -value box
     $ds9(mb).illustrate.shape add radiobutton -label [msgcat::mc {Polygon}] \
 	-variable illustrate(shape) -value polygon
-    $ds9(mb).illustrate.shape add radiobutton -label [msgcat::mc {Freehand}] \
+    $ds9(mb).illustrate.shape add radiobutton -label [msgcat::mc {Freehand Polygon}] \
 	-variable illustrate(shape) -value freehand
     $ds9(mb).illustrate.shape add radiobutton -label [msgcat::mc {Line}] \
 	-variable illustrate(shape) -value line
@@ -110,7 +110,7 @@ proc PrefsDialogIllustrateMenu {w} {
 	-variable pillustrate(shape) -value box
     $m.shape add radiobutton -label [msgcat::mc {Polygon}] \
 	-variable pillustrate(shape) -value polygon
-    $m.shape add radiobutton -label [msgcat::mc {Freehand}] \
+    $m.shape add radiobutton -label [msgcat::mc {Freehand Polygon}] \
 	-variable pillustrate(shape) -value freehand
     $m.shape add radiobutton -label [msgcat::mc {Line}] \
 	-variable pillustrate(shape) -value line
@@ -139,32 +139,32 @@ proc PrefsDialogIllustrate {} {
     ttk::label $f.title -text [msgcat::mc {Radius}]
     ttk::entry $f.radius -textvariable pillustrate(circle,radius) -width 10
     ttk::label $f.unit -text [msgcat::mc {Pixels}]
-   
+
     grid $f.title $f.radius $f.unit -padx 2 -pady 2 -sticky w
 
     # Ellipse
     set f [ttk::labelframe $w.illustrate.ellipse -text [msgcat::mc {Ellipse}]]
 
     ttk::label $f.title -text "Radius 1"
-    ttk::entry $f.radius1 -textvariable pillustrate(ellipse,radius1) -width 10 
+    ttk::entry $f.radius1 -textvariable pillustrate(ellipse,radius1) -width 10
     ttk::label $f.unit -text [msgcat::mc {Pixels}]
-    
+
     ttk::label $f.title2 -text "Radius 2"
-    ttk::entry $f.radius2 -textvariable pillustrate(ellipse,radius2) -width 10 
+    ttk::entry $f.radius2 -textvariable pillustrate(ellipse,radius2) -width 10
     ttk::label $f.unit2 -text [msgcat::mc {Pixels}]
 
     grid $f.title $f.radius1 $f.unit -padx 2 -pady 2 -sticky w
     grid $f.title2 $f.radius2 $f.unit2 -padx 2 -pady 2 -sticky w
-    
+
     # Box
     set f [ttk::labelframe $w.illustrate.box -text [msgcat::mc {Box}]]
 
     ttk::label $f.title -text "Size 1"
-    ttk::entry $f.radius1 -textvariable pillustrate(box,radius1) -width 10 
+    ttk::entry $f.radius1 -textvariable pillustrate(box,radius1) -width 10
     ttk::label $f.unit -text [msgcat::mc {Pixels}]
-    
+
     ttk::label $f.title2 -text "Size 2"
-    ttk::entry $f.radius2 -textvariable pillustrate(box,radius2) -width 10 
+    ttk::entry $f.radius2 -textvariable pillustrate(box,radius2) -width 10
     ttk::label $f.unit2 -text [msgcat::mc {Pixels}]
 
     grid $f.title $f.radius1 $f.unit -padx 2 -pady 2 -sticky w
@@ -174,18 +174,18 @@ proc PrefsDialogIllustrate {} {
     set f [ttk::labelframe $w.illustrate.polygon -text [msgcat::mc {Polygon}]]
 
     ttk::label $f.title -text "Width"
-    ttk::entry $f.width -textvariable pillustrate(polygon,width) -width 10 
+    ttk::entry $f.width -textvariable pillustrate(polygon,width) -width 10
     ttk::label $f.unit -text [msgcat::mc {Image}]
-    
+
     ttk::label $f.title2 -text "Height"
-    ttk::entry $f.height -textvariable pillustrate(polygon,height) -width 10 
+    ttk::entry $f.height -textvariable pillustrate(polygon,height) -width 10
     ttk::label $f.unit2 -text [msgcat::mc {Image}]
 
     grid $f.title $f.width $f.unit -padx 2 -pady 2 -sticky w
     grid $f.title2 $f.height $f.unit2 -padx 2 -pady 2 -sticky w
 
     # Freehand
-    set f [ttk::labelframe $w.illustrate.freehand -text [msgcat::mc {Freehand}]]
+    set f [ttk::labelframe $w.illustrate.freehand -text [msgcat::mc {Freehand Polygon}]]
 
     ttk::label $f.title -text [msgcat::mc {Tolerance}]
     ttk::entry $f.tol -textvariable pillustrate(freehand,tolerance) -width 10
@@ -250,7 +250,7 @@ proc CreateButtonsIllustrate {} {
     RadioButton $ds9(buttons).illustrate.polygon \
 	[string tolower [msgcat::mc {Polygon}]] illustrate shape polygon {}
     RadioButton $ds9(buttons).illustrate.freehand \
-	[string tolower [msgcat::mc {Freehand}]] illustrate shape freehand {}
+	[string tolower [msgcat::mc {Freehand Polygon}]] illustrate shape freehand {}
     RadioButton $ds9(buttons).illustrate.line \
 	[string tolower [msgcat::mc {Line}]] illustrate shape line {}
     RadioButton $ds9(buttons).illustrate.freehandline \
@@ -328,7 +328,7 @@ proc PrefsDialogButtonbarIllustrate {f} {
     global pbuttons
 
     ttk::menubutton $f -text [msgcat::mc {Buttonbar}] -menu $f.menu
-    
+
     set m $f.menu
     ThemeMenu $m
     $m add checkbutton -label [msgcat::mc {Get Information}] \
@@ -401,7 +401,7 @@ proc PrefsDialogButtonbarIllustrate {f} {
     $m.shape add checkbutton -label [msgcat::mc {Polygon}] \
 	-variable pbuttons(illustrate,polygon) \
 	-command {UpdateButtons buttons(illustrate)}
-    $m.shape add checkbutton -label [msgcat::mc {Freehand}] \
+    $m.shape add checkbutton -label [msgcat::mc {Freehand Polygon}] \
 	-variable pbuttons(illustrate,freehand) \
 	-command {UpdateButtons buttons(illustrate)}
     $m.shape add checkbutton -label [msgcat::mc {Line}] \

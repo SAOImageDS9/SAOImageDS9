@@ -363,9 +363,10 @@ proc ProcessCommand {argv argc} {
 	    -note -
 	    -notes {incr i; ProcessNotesCmd argv i}
 	    -hips {
-		# -hips coverage [yes|no] is a command; otherwise the files
-		# that follow are HiPS directories
-		if {[string tolower [lindex $argv [expr $i+1]]] == {coverage}} {
+		# -hips coverage [yes|no], cancel and close are commands;
+		# otherwise the files that follow are HiPS directories
+		if {[lsearch -exact {coverage cancel close} \
+			 [string tolower [lindex $argv [expr $i+1]]]] >= 0} {
 		    incr i
 		    ProcessHiPSCmd argv i
 		} else {

@@ -261,8 +261,8 @@ ds9`. Adding `fitsy/hips.C` also means hand-editing the source list in
       mmap, alloc, allocgz, channel and var. All 48 saved images match
       the source arrays bit for bit, the headers are kept, and the
       scaled values and blanks are right. The scripts are in
-      `Tests/hips/` (`mkpad.py` makes the files, `padrun.sh` +
-      `padtest.tcl` drive a running ds9, `padcmp.py` compares).
+      `Tests/hips/` (`hipspad.sh`: `mkpad.py` makes the files,
+      `padtest.tcl` drives ds9, `padcmp.py` compares).
   - **Existing fitsy crash found:** asking for an *extension*
     (`file[1]`, or `file[NAME]` with mmap) of an unpadded file whose end
     falls on a page boundary crashes ds9: SIGBUS with mmapincr (the
@@ -287,7 +287,7 @@ ds9`. Adding `fitsy/hips.C` also means hand-editing the source list in
       `found()` has the same data-fits check. Missing extensions and
       truncated files now give a clean load error. Valid extensions
       (index and name, padded or unpadded last HDU) and mosaics still
-      load. Regression scripts: `Tests/hips/extmatrix.sh` (files from
+      load. Regression checks are in `Tests/hips/hipspad.sh` (files from
       `mkext.py`/`mkpad.py`).
 - [x] More test HiPS (done 2026-11-15). Partial copies (91 files, 32 MB)
       are in `hips/` (untracked), described in `hips/samples.md`:

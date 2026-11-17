@@ -829,13 +829,20 @@ proc HiPSMocTiles {fn kk} {
 proc HiPSGet {url fn} {
     global hipsnet
 
-    set hipsnet(sync) {}
-    HiPSGetAsync $url $fn [list set ::hipsnet(sync)]
-    if {$hipsnet(sync) == {}} {
-	vwait hipsnet(sync)
+    # a variable of its own: while this waits, the event loop may run
+    # another HiPSGet (the coverage overlay, hips list over XPA, the
+    # dialog), whose answer must not be taken for this one's
+    set id [incr hipsnet(syncid)]
+    set var ::hipsnet(sync,$id)
+    set $var {}
+    HiPSGetAsync $url $fn [list set $var]
+    if {[set $var] == {}} {
+	vwait $var
     }
+    set code [set $var]
+    unset $var
     HiPSClearErrorInfo
-    return $hipsnet(sync)
+    return $code
 }
 
 # The http package catches errors of its own, which leaves errorInfo
@@ -1594,14 +1601,15 @@ proc HiPSMocServerQuery {query fn} {
     }
     set code 0
     set server {}
+    set tmp [HiPSTemp $fn]
     foreach server $phpxopen(mocserver) {
-	set code [HiPSGet "$server?[http::formatQuery {*}$query]" $fn]
+	set code [HiPSGet "$server?[http::formatQuery {*}$query]" $tmp]
 	if {$code == 200} {
 	    break
 	}
     }
-    if {$code != 200} {
-	catch {file delete -force $fn}
+    if {$code != 200 || ![HiPSKeep $tmp $fn]} {
+	catch {file delete -force $tmp}
 	set hipsnet(error) "[msgcat::mc {can't query}] $server ([HiPSCodeText $code])"
 	return {}
     }
@@ -1609,6 +1617,8 @@ proc HiPSMocServerQuery {query fn} {
 	set hipsnet(error) "[msgcat::mc {can't read}] $fn"
 	return {}
     }
+    # a load that failed while this waited may have set it
+    set hipsnet(error) {}
     return $recs
 }
 

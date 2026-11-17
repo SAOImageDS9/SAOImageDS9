@@ -742,17 +742,27 @@ int FitsHiPS::chooseSource(int maxOrder, int width, int askOrder)
 
     int aw = allskyWidth(askOrder);
     order_ = askOrder;
+    // tiles too deep for a map are refused before looking for any: at
+    // order 10, say, that would be 12.6 million file checks
+    long tileNside = (long)width << askOrder;
     if (aw == width) {
       source_ = ALLSKY;
       tileWidth_ = aw;
     }
-    else if (anyTile(askOrder)) {
+    else if (tileNside <= HIPS_NSIDE_MAX && anyTile(askOrder)) {
       source_ = TILES;
       tileWidth_ = width;
     }
     else if (aw) {
       source_ = ALLSKY;
       tileWidth_ = aw;
+    }
+    else if (tileNside > HIPS_NSIDE_MAX) {
+      ostringstream str;
+      str << "HiPS: order " << askOrder << " is a map of nside " << tileNside
+	  << ", larger than the limit of " << HIPS_NSIDE_MAX << ends;
+      internalError(str.str().c_str());
+      return 0;
     }
     else {
       ostringstream str;

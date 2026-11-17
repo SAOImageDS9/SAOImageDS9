@@ -1241,6 +1241,7 @@ proc HiPSFitsInfo {fn} {
 # (tiles in the sky), allsky (usable Allsky tile width, 0 if none) and
 # allskybad (1 if an Allsky is there but can't be used, e.g. truncated)
 proc HiPSOpenOrders {dir width {ext fits} {sfx {}}} {
+    global hipsopen
 
     set orders {}
     foreach dd [glob -nocomplain -types d -directory $dir Norder*] {
@@ -1253,12 +1254,24 @@ proc HiPSOpenOrders {dir width {ext fits} {sfx {}}} {
     set rr {}
     foreach kk [lsort -integer -decreasing -unique $orders] {
 	set od [file join $dir "Norder$kk"]
-	set total [expr {12*(1<<(2*$kk))}]
-	# this cube frame's tiles only (NpixN_n; frame 0 has no suffix)
+	set total [expr {12*(wide(1)<<(2*$kk))}]
+	# this cube frame's tiles only (NpixN_n; frame 0 has no suffix).
+	# An order too deep to load is only checked for any (a local copy
+	# of a deep survey may hold millions); tiles is then -1.
+	set deep [expr {(wide($width)<<$kk) > $hipsopen(nside,max)}]
 	set tiles 0
-	foreach ff [glob -nocomplain -types f -directory $od Dir*/Npix*.$ext] {
-	    if {[regexp "^Npix\\d+$sfx\\.$ext\$" [file tail $ff]]} {
-		incr tiles
+	foreach dd [glob -nocomplain -types d -directory $od Dir*] {
+	    foreach ff [glob -nocomplain -types f -directory $dd Npix*.$ext] {
+		if {[regexp "^Npix\\d+$sfx\\.$ext\$" [file tail $ff]]} {
+		    incr tiles
+		    if {$deep} {
+			break
+		    }
+		}
+	    }
+	    if {$deep && $tiles} {
+		set tiles -1
+		break
 	    }
 	}
 
@@ -1289,9 +1302,9 @@ proc HiPSOpenOrders {dir width {ext fits} {sfx {}}} {
 	if {$aw == $width} {
 	    set source allsky
 	    set nside [expr {$width<<$kk}]
-	} elseif {$tiles > 0} {
+	} elseif {$tiles != 0} {
 	    set source tiles
-	    set nside [expr {$width<<$kk}]
+	    set nside [expr {wide($width)<<$kk}]
 	} elseif {$aw > 0} {
 	    set source reduced
 	    set nside [expr {$aw<<$kk}]
@@ -1437,7 +1450,11 @@ proc HiPSOpenOrderLabel {oo} {
 	allsky {set src [msgcat::mc {Allsky}]}
 	reduced {set src [msgcat::mc {reduced Allsky}]}
 	tiles {
-	    set src "[dict get $oo tiles]/[dict get $oo total] [msgcat::mc {tiles}]"
+	    if {[dict get $oo tiles] < 0} {
+		set src [msgcat::mc {tiles}]
+	    } else {
+		set src "[dict get $oo tiles]/[dict get $oo total] [msgcat::mc {tiles}]"
+	    }
 	}
     }
     set ll "$ll: NSIDE $nside, $src, [HiPSOpenSize $nside]"

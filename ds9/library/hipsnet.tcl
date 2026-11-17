@@ -31,6 +31,9 @@ proc HiPSNetDef {} {
     set hipsnet(parallel) 6
     # without order=, tiles (when there is no Allsky) up to this NSIDE
     set hipsnet(autonside) 512
+    # the largest map the reader makes (HIPS_NSIDE_MAX, fitsy/hips.C):
+    # the tiles of a deeper order= are not fetched
+    set hipsnet(nsidemax) 8192
     # refuse to download more than this many bytes of tiles in one load
     set hipsnet(maxbytes) [expr {wide(1)<<30}]
     # redirects followed per request
@@ -440,7 +443,16 @@ proc HiPSFetchDo {url dir opts} {
 	    return $kk
 	}
 	# a full-size Allsky is the same data in one file
-	if {$kk <= 3 && [HiPSFetchAllsky $url $dir $kk] == $width} {
+	set aw 0
+	if {$kk <= 3} {
+	    set aw [HiPSFetchAllsky $url $dir $kk]
+	}
+	if {$aw == $width} {
+	    return $kk
+	}
+	# too deep for a map: the reader says so (or reads a reduced
+	# Allsky); listing its tiles alone could take minutes
+	if {(wide($width)<<$kk) > $hipsnet(nsidemax)} {
 	    return $kk
 	}
 	if {![HiPSFetchTiles $url $dir $kk $width $props]} {

@@ -376,12 +376,6 @@ proc HPXOpenParamsDialog {fn info} {
     }
     grid $f.torder $f.order $f.tsystem $f.system -padx 2 -pady 2 -sticky w
 
-    # Ask
-    set f [ttk::frame $w.ask]
-    ttk::checkbutton $f.ask -variable phpxopen(ask) \
-	-text [msgcat::mc {Show this dialog when opening HEALPix files}]
-    grid $f.ask -padx 2 -pady 2 -sticky w
-
     # Buttons
     set f [ttk::frame $w.buttons]
     ttk::button $f.ok -text [msgcat::mc {OK}] -command HPXOpenOK \
@@ -398,7 +392,7 @@ proc HPXOpenParamsDialog {fn info} {
     ttk::separator $w.sep -orient horizontal
     pack $w.buttons $w.sep -side bottom -fill x
     pack $w.file -side top -fill x -padx 2 -pady 2
-    pack $w.data $w.proj $w.hpx $w.head $w.ask \
+    pack $w.data $w.proj $w.hpx $w.head \
 	-side top -fill x -padx 4 -pady 2
 
     set hpxed(oldproj) {}

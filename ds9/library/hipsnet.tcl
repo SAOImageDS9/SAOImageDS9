@@ -62,6 +62,10 @@ proc HiPSNetDef {} {
     set hipsdeep(done) 0
     # the status line shows after this many ms of fetching
     set hipsdeep(statusdelay) 500
+    # a tile that failed (not 200 or 404: a server error, no network) is
+    # not asked for again for this many seconds; without this the
+    # refresh after the failure would ask for it straight away, forever
+    set hipsdeep(retry) 60
 }
 
 # A cube's frame suffix for file names, "_n" (HiPS 1.0 sec. 4.2.3),
@@ -1119,6 +1123,12 @@ proc HiPSDeepWant {frame root order tiles {slice 0}} {
 	    if {[info exists hipsdeep(want,$key)]} {
 		continue
 	    }
+	    if {[info exists hipsdeep(failed,$key)]} {
+		if {[clock seconds] < $hipsdeep(failed,$key)} {
+		    continue
+		}
+		unset hipsdeep(failed,$key)
+	    }
 	    set hipsdeep(want,$key) 1
 	    lappend mine [list $frame $root $url $oo $aa $ext $sfx]
 	}
@@ -1180,7 +1190,15 @@ proc HiPSDeepDone {gen frame root order nn fn sfx code} {
 		close $ch
 	    }
 	}
-	default {catch {file delete -force $fn.new}}
+	default {
+	    catch {file delete -force $fn.new}
+	    # not again until hipsdeep(retry) has passed (a cancelled
+	    # request is stale, and is asked for again by the next view)
+	    if {!$stale} {
+		set "hipsdeep(failed,$root $order $nn$sfx)" \
+		    [expr {[clock seconds] + $hipsdeep(retry)}]
+	    }
+	}
     }
     HiPSClearErrorInfo
     HiPSDeepNext
@@ -1226,6 +1244,8 @@ proc HiPSDeepCancel {} {
 
     set hipsdeep(queue) {}
     array unset hipsdeep want,*
+    # and the tiles that failed may be asked for again
+    array unset hipsdeep failed,*
     foreach tt [array names hipsdeep timer,*] {
 	after cancel $hipsdeep($tt)
 	unset hipsdeep($tt)

@@ -1432,15 +1432,11 @@ proc DeleteExtractedCACert {} {
     }
 }
 
-proc ExtractBundledCACert {} {
+# write PEM certificates to a private temporary file, deleted at exit by
+# DeleteExtractedCACert; returns its name
+proc WriteTempCACert {pem} {
     global ds9
     global env
-
-    if {$ds9(cacert,temp) != {} &&
-	[file isfile $ds9(cacert,temp)] &&
-	[file readable $ds9(cacert,temp)]} {
-	return $ds9(cacert,temp)
-    }
 
     set template {}
     if {[info exists env(XDG_RUNTIME_DIR)] &&
@@ -1459,13 +1455,8 @@ proc ExtractBundledCACert {} {
     }
 
     try {
-	set in [open [file join $ds9(root) ssl cacert.pem] rb]
-	try {
-	    fconfigure $out -translation binary
-	    fcopy $in $out
-	} finally {
-	    close $in
-	}
+	fconfigure $out -translation binary
+	puts -nonewline $out $pem
 	close $out
 	set out {}
 	set ds9(cacert,temp) $certfile
@@ -1479,8 +1470,44 @@ proc ExtractBundledCACert {} {
     return $ds9(cacert,temp)
 }
 
+proc ExtractBundledCACert {} {
+    global ds9
+
+    set in [open [file join $ds9(root) ssl cacert.pem] rb]
+    try {
+	set pem [read $in]
+    } finally {
+	close $in
+    }
+    return [WriteTempCACert $pem]
+}
+
+# macOS keeps its trusted roots in the system keychain, updated with the
+# OS; /etc/ssl/cert.pem is not kept in step with it (on macOS 26 its
+# newest root is from 2019, missing roots that sites now use). Export
+# the keychain's roots; {} if that fails
+proc ExtractKeychainCACert {} {
+    set security /usr/bin/security
+    set keychain /System/Library/Keychains/SystemRootCertificates.keychain
+    if {![file executable $security] || ![file isfile $keychain]} {
+	return {}
+    }
+    if {[catch {exec $security find-certificate -a -p $keychain} pem]} {
+	return {}
+    }
+    if {[string first {-----BEGIN CERTIFICATE-----} $pem] < 0} {
+	return {}
+    }
+    if {[catch {WriteTempCACert "$pem\n"} certfile]} {
+	return {}
+    }
+    return $certfile
+}
+
 proc GetBestCAFile {} {
+    global ds9
     global env
+    global tcl_platform
 
     # Preserve an explicit, usable user override.
     if {[info exists env(SSL_CERT_FILE)] &&
@@ -1489,7 +1516,24 @@ proc GetBestCAFile {} {
 	return $env(SSL_CERT_FILE)
     }
 
-    # Native trust bundles used by common Linux distributions and macOS.
+    # Already extracted.
+    if {$ds9(cacert,temp) != {} &&
+	[file isfile $ds9(cacert,temp)] &&
+	[file readable $ds9(cacert,temp)]} {
+	return $ds9(cacert,temp)
+    }
+
+    # macOS: the system keychain's roots, else the bundled certifi.
+    # Never /etc/ssl/cert.pem, which is out of date there.
+    if {$tcl_platform(os) == {Darwin}} {
+	set certfile [ExtractKeychainCACert]
+	if {$certfile != {}} {
+	    return $certfile
+	}
+	return [ExtractBundledCACert]
+    }
+
+    # Native trust bundles used by common Linux distributions and the BSDs.
     foreach path {
 	/etc/ssl/certs/ca-certificates.crt
 	/etc/pki/tls/certs/ca-bundle.crt

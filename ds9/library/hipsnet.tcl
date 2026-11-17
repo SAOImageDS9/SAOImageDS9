@@ -126,6 +126,13 @@ proc HiPSKeep {tmp fn} {
     return 1
 }
 
+# The list of an order's tiles known to be missing (404), in its cache
+# directory od: one per cube frame (sfx) and tile format (a HiPS may
+# have FITS tiles where it has no PNG ones)
+proc HiPSMissingFile {od sfx ext} {
+    return [file join $od .missing$sfx.$ext]
+}
+
 proc HiPSGetPath {path fn} {
     global hipsnet
 
@@ -561,15 +568,22 @@ proc HiPSFetchAllsky {url dir kk} {
 	}
     }
 
+    # one that can't be used (truncated, the wrong size) is removed and
+    # remembered like a 404, until a new release empties the cache: kept,
+    # it was never fetched again
+    set ww 0
     set ai [HiPSImageInfo $af $ext]
-    if {$ai == {} || ![dict get $ai ok]} {
-	return 0
+    if {$ai != {} && [dict get $ai ok]} {
+	set total [expr {12*(1<<(2*$kk))}]
+	set ncol [expr {int(sqrt($total))}]
+	set ww [expr {[dict get $ai width]/$ncol}]
+	if {$ww < 1 || $ww*$ncol != [dict get $ai width]} {
+	    set ww 0
+	}
     }
-    set total [expr {12*(1<<(2*$kk))}]
-    set ncol [expr {int(sqrt($total))}]
-    set ww [expr {[dict get $ai width]/$ncol}]
-    if {$ww < 1 || $ww*$ncol != [dict get $ai width]} {
-	return 0
+    if {!$ww} {
+	catch {file delete -force $af}
+	catch {close [open $none w]}
     }
     return $ww
 }
@@ -605,7 +619,7 @@ proc HiPSFetchTiles {url dir kk width props} {
     set od [file join $dir Norder$kk]
     file mkdir $od
     set missing {}
-    set mfn [file join $od .missing$hipsnet(sfx)]
+    set mfn [HiPSMissingFile $od $hipsnet(sfx) $hipsnet(ext)]
     if {[file isfile $mfn]} {
 	set ch [open $mfn r]
 	foreach nn [split [read $ch] \n] {
@@ -1217,8 +1231,9 @@ proc HiPSDeepWant {frame root order tiles {slice 0}} {
 	# known to be missing (404s remembered by either fetcher)
 	array unset gone
 	set od [file join $root Norder$oo]
-	if {[file isfile [file join $od .missing$sfx]]} {
-	    set ch [open [file join $od .missing$sfx] r]
+	set mfn [HiPSMissingFile $od $sfx $ext]
+	if {[file isfile $mfn]} {
+	    set ch [open $mfn r]
 	    foreach nn [split [read $ch] \n] {
 		if {$nn != {}} {
 		    set gone($nn) 1
@@ -1318,7 +1333,8 @@ proc HiPSDeepDone {gen frame root order nn fn tmp sfx code} {
 	404 {
 	    catch {file delete -force $tmp}
 	    catch {
-		set ch [open [file join $root Norder$order .missing$sfx] a]
+		set ch [open [HiPSMissingFile [file join $root Norder$order] \
+				  $sfx [string range [file extension $fn] 1 end]] a]
 		puts $ch $nn
 		close $ch
 	    }

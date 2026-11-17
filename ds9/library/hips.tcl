@@ -524,10 +524,11 @@ proc HiPSCoverageShow {which} {
     set moc [file join [HiPSRoot [HiPSLocalName $fn]] Moc.fits]
     if {![file isfile $moc] && [HiPSIsURL $fn]} {
 	set url [string trimright [HiPSRoot $fn] /]
-	if {[HiPSGet $url/Moc.fits $moc.new] == 200} {
-	    file rename -force $moc.new $moc
+	set tmp [HiPSTemp $moc]
+	if {[HiPSGet $url/Moc.fits $tmp] == 200} {
+	    HiPSKeep $tmp $moc
 	} else {
-	    catch {file delete -force $moc.new}
+	    catch {file delete -force $tmp}
 	}
     }
     if {![file isfile $moc]} {

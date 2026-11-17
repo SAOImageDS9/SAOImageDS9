@@ -105,6 +105,24 @@ proc HiPSBases {url props} {
 # GET <base>/path into fn from the first base that answers (200 or 404;
 # a failed request or a server error moves on to the next mirror).
 # Returns the last HTTP status.
+# A file is downloaded to a temporary name next to it, then renamed:
+# a unique one, as two requests for the same file (a load and a deep
+# window, two frames) may run at once
+proc HiPSTemp {fn} {
+    global hipsnet
+
+    return "$fn.[incr hipsnet(tmpseq)].new"
+}
+
+# keep the downloaded tmp as fn; 0 (tmp removed) if it can't be
+proc HiPSKeep {tmp fn} {
+    if {[catch {file rename -force $tmp $fn}]} {
+	catch {file delete -force $tmp}
+	return 0
+    }
+    return 1
+}
+
 proc HiPSGetPath {path fn} {
     global hipsnet
 
@@ -281,11 +299,21 @@ proc HiPSFetch {fn} {
     set hipsnet(busy) 1
     set hipsnet(cancel) 0
 
-    set rr [HiPSFetchDo $url $dir $opts]
-    if {$rr != {}} {
-	HiPSCachePrune $dir
-	# deep windows fetch more of it later (HiPSDeepWant)
-	set hipsnet(url,[file normalize $dir]) $url
+    # anything that throws (a full disk, an unwritable cache) is an
+    # error of this load, and must not leave hipsnet(busy) set
+    if {[catch {
+	set rr [HiPSFetchDo $url $dir $opts]
+	if {$rr != {}} {
+	    HiPSCachePrune $dir
+	    # deep windows fetch more of it later (HiPSDeepWant)
+	    set hipsnet(url,[file normalize $dir]) $url
+	}
+    } err]} {
+	set rr {}
+	set hipsnet(error) $err
+	foreach token $hipsnet(tokens) {
+	    catch {http::reset $token cancelled}
+	}
     }
 
     set hipsnet(busy) 0
@@ -395,21 +423,20 @@ proc HiPSFetchProperties {url dir} {
     if {[file isfile $pf] && ![catch {HiPSReadProperties $dir} pp]} {
 	set old [HiPSProp $pp hips_release_date]
     }
-    set code [HiPSGet $url/properties $pf.new]
+    set tmp [HiPSTemp $pf]
+    set code [HiPSGet $url/properties $tmp]
     # no answer: try the mirrors a cached copy lists
     if {$code != 200 && $code != 404 && [file isfile $pf] &&
 	![catch {HiPSReadProperties $dir} pp]} {
 	foreach base [lrange [HiPSBases $url $pp] 1 end] {
-	    set code [HiPSGet $base/properties $pf.new]
+	    set code [HiPSGet $base/properties $tmp]
 	    if {$code == 200} {
 		break
 	    }
 	}
     }
-    if {$code == 200} {
-	file rename -force $pf.new $pf
-    } else {
-	catch {file delete -force $pf.new}
+    if {$code != 200 || ![HiPSKeep $tmp $pf]} {
+	catch {file delete -force $tmp}
 	if {![file isfile $pf]} {
 	    set hipsnet(error) "[msgcat::mc {can't read}] $url/properties ([HiPSCodeText $code])"
 	    return {}
@@ -443,16 +470,19 @@ proc HiPSFetchAllsky {url dir kk} {
     }
     if {![file isfile $af]} {
 	file mkdir $od
-	set code [HiPSGetPath Norder$kk/Allsky$sfx.$ext $af.new]
+	set tmp [HiPSTemp $af]
+	set code [HiPSGetPath Norder$kk/Allsky$sfx.$ext $tmp]
 	if {$code != 200} {
-	    catch {file delete -force $af.new}
+	    catch {file delete -force $tmp}
 	    # remember a 404 so it isn't asked for again
 	    if {$code == 404} {
 		close [open $none w]
 	    }
 	    return 0
 	}
-	file rename -force $af.new $af
+	if {![HiPSKeep $tmp $af]} {
+	    return 0
+	}
     }
 
     set ai [HiPSImageInfo $af $ext]
@@ -477,11 +507,11 @@ proc HiPSFetchTiles {url dir kk width props} {
     # Moc.fits, if the HiPS has one
     set mf [file join $dir Moc.fits]
     if {![file isfile $mf]} {
-	set code [HiPSGetPath Moc.fits $mf.new]
-	if {$code == 200} {
-	    file rename -force $mf.new $mf
+	set tmp [HiPSTemp $mf]
+	if {[HiPSGetPath Moc.fits $tmp] == 200} {
+	    HiPSKeep $tmp $mf
 	} else {
-	    catch {file delete -force $mf.new}
+	    catch {file delete -force $tmp}
 	}
     }
     set tiles {}
@@ -601,7 +631,8 @@ proc HiPSTileNext {} {
     set kk $hipsnet(order)
     set dd [expr {($nn/10000)*10000}]
     set fn [HiPSTilePath $hipsnet(dir) $kk $nn]
-    file mkdir [file dirname $fn]
+    # if this fails, so does the download, and that is reported
+    catch {file mkdir [file dirname $fn]}
     incr hipsnet(running)
     # the mirror this tile is on (it moves on when one fails)
     set ii 0
@@ -612,23 +643,28 @@ proc HiPSTileNext {} {
     if {$base == {}} {
 	set base $hipsnet(url)
     }
-    HiPSGetAsync "$base/Norder$kk/Dir$dd/Npix$nn$hipsnet(sfx).$hipsnet(ext)" $fn.new \
-	[list HiPSTileDone $nn $fn]
+    set tmp [HiPSTemp $fn]
+    HiPSGetAsync "$base/Norder$kk/Dir$dd/Npix$nn$hipsnet(sfx).$hipsnet(ext)" $tmp \
+	[list HiPSTileDone $nn $fn $tmp]
 }
 
-proc HiPSTileDone {nn fn code} {
+proc HiPSTileDone {nn fn tmp code} {
     global hipsnet
 
     incr hipsnet(running) -1
     incr hipsnet(done)
+    # a file that can't be kept is a failure like any other
+    if {$code == 200 && ![HiPSKeep $tmp $fn]} {
+	set code 0
+    }
     switch -- $code {
-	200 {file rename -force $fn.new $fn}
+	200 {}
 	404 {
-	    catch {file delete -force $fn.new}
+	    catch {file delete -force $tmp}
 	    lappend hipsnet(gone) $nn
 	}
 	default {
-	    catch {file delete -force $fn.new}
+	    catch {file delete -force $tmp}
 	    if {!$hipsnet(cancel)} {
 		# no answer or a server error: the next mirror, if any
 		set ii 0
@@ -1156,13 +1192,14 @@ proc HiPSDeepNext {} {
 
     set dd [expr {($nn/10000)*10000}]
     set fn [file join $root Norder$order Dir$dd Npix$nn$sfx.$ext]
-    file mkdir [file dirname $fn]
+    catch {file mkdir [file dirname $fn]}
     incr hipsdeep(running)
-    HiPSGetAsync "$url/Norder$order/Dir$dd/Npix$nn$sfx.$ext" $fn.new \
-	[list HiPSDeepDone $hipsdeep(gen) $frame $root $order $nn $fn $sfx]
+    set tmp [HiPSTemp $fn]
+    HiPSGetAsync "$url/Norder$order/Dir$dd/Npix$nn$sfx.$ext" $tmp \
+	[list HiPSDeepDone $hipsdeep(gen) $frame $root $order $nn $fn $tmp $sfx]
 }
 
-proc HiPSDeepDone {gen frame root order nn fn sfx code} {
+proc HiPSDeepDone {gen frame root order nn fn tmp sfx code} {
     global hipsdeep
 
     incr hipsdeep(running) -1
@@ -1174,16 +1211,18 @@ proc HiPSDeepDone {gen frame root order nn fn sfx code} {
 	unset -nocomplain "hipsdeep(want,$root $order $nn$sfx)"
 	incr hipsdeep(done)
     }
+    if {$code == 200 && ![HiPSKeep $tmp $fn]} {
+	set code 0
+    }
     switch -- $code {
 	200 {
-	    file rename -force $fn.new $fn
 	    incr hipsdeep(fetched)
 	    if {!$stale} {
 		HiPSDeepRefreshSoon $frame
 	    }
 	}
 	404 {
-	    catch {file delete -force $fn.new}
+	    catch {file delete -force $tmp}
 	    catch {
 		set ch [open [file join $root Norder$order .missing$sfx] a]
 		puts $ch $nn
@@ -1191,7 +1230,7 @@ proc HiPSDeepDone {gen frame root order nn fn sfx code} {
 	    }
 	}
 	default {
-	    catch {file delete -force $fn.new}
+	    catch {file delete -force $tmp}
 	    # not again until hipsdeep(retry) has passed (a cancelled
 	    # request is stale, and is asked for again by the next view)
 	    if {!$stale} {
@@ -1605,7 +1644,8 @@ proc HiPSListRecords {{update 0} {cached 0}} {
     set all [lsort -dictionary -command HiPSRecordCompare $all]
 
     # written back as records, so the file reads as it was fetched
-    set ch [open $fn.new w]
+    set tmp [HiPSTemp $fn]
+    set ch [open $tmp w]
     fconfigure $ch -encoding utf-8
     foreach rr $all {
 	dict for {key val} $rr {
@@ -1614,7 +1654,7 @@ proc HiPSListRecords {{update 0} {cached 0}} {
 	puts $ch {}
     }
     close $ch
-    file rename -force $fn.new $fn
+    HiPSKeep $tmp $fn
     return [HiPSListKeep $fn $all]
 }
 

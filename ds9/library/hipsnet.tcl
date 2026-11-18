@@ -14,7 +14,7 @@ package provide DS9 1.0
 # What a load fetches:
 #  - always properties (small; a changed hips_release_date empties the
 #    cached tiles), and Moc.fits when tiles are needed
-#  - tiles in the format the reader will use (HiPSTileExt: fits, else
+#  - tiles in the format the reader will use (hipsinfo format: fits, else
 #    png, else jpg)
 #  - without norder=: one Allsky, the deepest of orders 3..0 that
 #    exists (a quick look, a few MB); if there is none, the tiles of the
@@ -508,14 +508,10 @@ proc HiPSFetchDo {id} {
     set opts $ctx(opts)
     set props [HiPSFetchProperties $url $dir]
     HiPSFetchCheck $id
-    if {[HiPSProp $props dataproduct_type image] == {catalog}} {
-	error [msgcat::mc {catalogue HiPS are not supported}]
-    }
-    set ext [HiPSTileExt $props $opts]
-    if {$ext == {}} {
-	error [HiPSTileExtError $props $opts]
-    }
-    set ctx(ext) $ext
+    # what the reader will make of it: its tiles, or its error (a
+    # catalogue, a bad option or format)
+    set ctx(name) "$dir[string range $ctx(fn) [string length [HiPSRoot $ctx(fn)]] end]"
+    set ctx(ext) [hipsinfo format $ctx(name)]
     set ctx(bases) [HiPSBases $url $props]
     set ctx(sfx) [HiPSSliceSuffix $props $opts]
     set width [HiPSProp $props hips_tile_width 512]
@@ -648,19 +644,11 @@ proc HiPSFetchAllsky {id kk} {
 	}
     }
 
-    # one that can't be used (truncated, the wrong size) is removed and
-    # remembered like a 404, until a new release empties the cache: kept,
-    # it was never fetched again
+    # one the reader can't use (truncated, the wrong size) is removed
+    # and remembered like a 404, until a new release empties the cache:
+    # kept, it was never fetched again
     set ww 0
-    set ai [HiPSImageInfo $af $ext]
-    if {$ai != {} && [dict get $ai ok]} {
-	set total [expr {12*(1<<(2*$kk))}]
-	set ncol [expr {int(sqrt($total))}]
-	set ww [expr {[dict get $ai width]/$ncol}]
-	if {$ww < 1 || $ww*$ncol != [dict get $ai width]} {
-	    set ww 0
-	}
-    }
+    catch {lassign [hipsinfo allsky $ctx(name) $kk] ww}
     if {!$ww} {
 	catch {file delete -force $af}
 	catch {close [open $none w]}
@@ -688,9 +676,10 @@ proc HiPSFetchTiles {id kk width props} {
 	}
     }
     HiPSFetchCheck $id
+    # (a MOC the reader can't read, or not a NUNIQ one, limits nothing)
     set tiles {}
     if {[file isfile $mf]} {
-	set tiles [HiPSMocTiles $mf $kk]
+	catch {set tiles [hipsinfo moc $mf $kk]}
     }
     if {$tiles == {}} {
 	set total [expr {12*(wide(1)<<(2*$kk))}]
@@ -860,80 +849,6 @@ proc HiPSTileDone {id nn fn tmp code} {
     }
     HiPSTileMsg $id
     HiPSTileNext $id
-}
-
-# The tiles of order kk that a MOC (FITS, NUNIQ) covers: a deeper cell
-# needs its order-kk parent, a shallower one all its order-kk children.
-# Returns {} if the MOC can't be read.
-proc HiPSMocTiles {fn kk} {
-    if {[catch {open $fn rb} ch]} {
-	return {}
-    }
-    set data [read $ch]
-    close $ch
-
-    # the binary table HDU after the primary header
-    set hdr 0
-    set pos 0
-    set len [string length $data]
-    array set kw {}
-    set nhdu 0
-    while {$pos < $len} {
-	set card [string range $data $pos [expr {$pos+79}]]
-	set key [string trim [string range $card 0 7]]
-	if {$nhdu == 1 && [string index $card 8] == {=}} {
-	    set vv [string trim [lindex [split [string range $card 10 end] /] 0]]
-	    set kw($key) [string trim $vv { '}]
-	}
-	incr pos 80
-	if {$key == {END}} {
-	    set pos [expr {(($pos+2879)/2880)*2880}]
-	    incr nhdu
-	    if {$nhdu == 2} {
-		break
-	    }
-	}
-    }
-    foreach kk2 {NAXIS1 NAXIS2 TFORM1} {
-	if {![info exists kw($kk2)]} {
-	    return {}
-	}
-    }
-    switch -- [string toupper [string trim $kw(TFORM1)]] {
-	1J - J {set fmt I; set size 4}
-	1K - K {set fmt W; set size 8}
-	default {return {}}
-    }
-    set rowlen $kw(NAXIS1)
-    set nrow $kw(NAXIS2)
-
-    set out {}
-    for {set rr 0} {$rr < $nrow} {incr rr} {
-	set off [expr {$pos + $rr*$rowlen}]
-	if {$off+$size > $len} {
-	    break
-	}
-	binary scan $data @${off}$fmt uniq
-	if {$uniq < 4} {
-	    continue
-	}
-	# order = floor(log4(uniq/4)), npix = uniq - 4*4^order
-	set oo 0
-	while {(wide(4) << (2*($oo+1))) <= $uniq} {
-	    incr oo
-	}
-	set npix [expr {$uniq - (wide(4) << (2*$oo))}]
-	if {$oo >= $kk} {
-	    set have([expr {$npix >> (2*($oo-$kk))}]) 1
-	} else {
-	    set first [expr {$npix << (2*($kk-$oo))}]
-	    set last [expr {($npix+1) << (2*($kk-$oo))}]
-	    for {set nn $first} {$nn < $last} {incr nn} {
-		set have($nn) 1
-	    }
-	}
-    }
-    return [lsort -integer [array names have]]
 }
 
 # GET of url into fn, following redirects, returning when it is done.
@@ -1369,12 +1284,8 @@ proc HiPSDeepWant {frame root order tiles {slice 0}} {
 	return
     }
     set url $hipsnet(url,$root)
-    if {[catch {HiPSReadProperties $root} props]} {
-	return
-    }
-    # format= of the HiPS in this frame
-    set ext [HiPSTileExt $props [HiPSOptions [HiPSFrameName $frame]]]
-    if {$ext == {}} {
+    # the tiles the frame's HiPS reads (format= or the reader's choice)
+    if {[catch {hipsinfo format [HiPSLocalName [HiPSFrameName $frame]]} ext]} {
 	return
     }
     # a cube frame's files: NpixN_n (no suffix for frame 0)

@@ -12,6 +12,7 @@
 #include <new>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 #include <list>
 #include <map>
 #include <memory>
@@ -418,7 +419,8 @@ static int allskyCols(int order)
   return (int)floor(sqrt(12.*(1L<<(2*order))) + 1e-9);
 }
 
-FitsHiPS::FitsHiPS(const char* fn, Tcl_Interp* interp, int channel)
+FitsHiPS::FitsHiPS(const char* fn, Tcl_Interp* interp, int channel,
+		   int inspect)
 {
   interp_ = interp;
   channel_ = channel;
@@ -507,7 +509,7 @@ FitsHiPS::FitsHiPS(const char* fn, Tcl_Interp* interp, int channel)
 
   // the tiles to read: format= if given, else FITS (physical values)
   // when there are any, else PNG, else JPEG (display values). The Tcl
-  // side (HiPSTileExt) picks the same, so a remote HiPS fetches these.
+  // side asks this (hipsinfo format), so a remote HiPS fetches these.
   {
     const char* formats = prop("hips_tile_format", "");
     int hasfits =0, haspng =0, hasjpeg =0;
@@ -573,6 +575,25 @@ FitsHiPS::FitsHiPS(const char* fn, Tcl_Interp* interp, int channel)
   minOrder_ = propInt("hips_order_min", 0);
   if (minOrder_ < 0 || minOrder_ > maxOrder_)
     minOrder_ = 0;
+
+  // inspect 2: the format and orders only
+  if (inspect == 2) {
+    valid_ = 1;
+    return;
+  }
+  if (inspect) {
+    // what a load would read; nothing to read is an answer here (the
+    // reason is left in ds9(msg))
+    if (chooseSource(maxOrder, width, pHiPSOrder_))
+      nside_ = (long)tileWidth_ << order_;
+    else {
+      order_ = -1;
+      source_ = NONE;
+      tileWidth_ = 0;
+    }
+    valid_ = 1;
+    return;
+  }
 
   if (!chooseSource(maxOrder, width, pHiPSOrder_))
     return;
@@ -778,7 +799,7 @@ double FitsHiPS::propReal(const char* key)
 // (clamped to what the projection can show). hips_initial_ra/dec are
 // always ICRS, so they are rotated into hips_frame. All-sky and conic
 // projections, and the HPX image, keep their own defaults. The Open
-// HiPS dialog (ds9/library/hips.tcl, HiPSInitialView) does the same.
+// HiPS dialog asks initialSky (hipsinfo describe) for the same view.
 // Returns 1 if the centre was set.
 int FitsHiPS::initialView()
 {
@@ -801,10 +822,28 @@ int FitsHiPS::initialView()
   if (isnan(pHPXFov_) && fov > 0)
     pHPXFov_ = fov < zen[ii].fovmax ? fov : zen[ii].fovmax;
 
+  if (pHPXLon0Set_ || !isnan(pHPXLat0_))
+    return 0;
+  double lon, lat;
+  if (!initialSky(&lon, &lat))
+    return 0;
+  pHPXLon0_ = lon;
+  pHPXLat0_ = lat;
+  return 1;
+}
+
+double FitsHiPS::initialFov()
+{
+  double fov = propReal("hips_initial_fov");
+  return fov > 0 ? fov : NAN;
+}
+
+// hips_initial_ra/dec (ICRS) rotated into the HiPS's frame
+int FitsHiPS::initialSky(double* olon, double* olat)
+{
   double ra = propReal("hips_initial_ra");
   double dec = propReal("hips_initial_dec");
-  if (pHPXLon0Set_ || !isnan(pHPXLat0_) || isnan(ra) || isnan(dec) ||
-      dec < -90 || dec > 90)
+  if (isnan(ra) || isnan(dec) || dec < -90 || dec > 90)
     return 0;
 
   // ICRS -> galactic (Hipparcos, ESA 1997 vol. 1 sec. 1.5.3) or
@@ -838,8 +877,8 @@ int FitsHiPS::initialView()
   if (lon < 0)
     lon += 360;
   double zz = ww[2] > 1 ? 1 : ww[2] < -1 ? -1 : ww[2];
-  pHPXLon0_ = lon;
-  pHPXLat0_ = asin(zz)*180/M_PI;
+  *olon = lon;
+  *olat = asin(zz)*180/M_PI;
   return 1;
 }
 
@@ -904,6 +943,77 @@ int FitsHiPS::allskyWidth(int order)
   }
   delete [] fn;
   return ww;
+}
+
+int FitsHiPS::allskyAt(int order, int* bad)
+{
+  int save = badAllsky_;
+  badAllsky_ = -1;
+  int ww = order >= 0 ? allskyWidth(order) : 0;
+  *bad = badAllsky_ == order;
+  badAllsky_ = save;
+  return ww;
+}
+
+int FitsHiPS::mocTiles(const char* fn, int order, std::vector<long long>* out)
+{
+  out->clear();
+  if (order < 0 || order > 29)
+    return 0;
+  FitsFitsMMap ff(fn, FitsFile::RELAXTABLE);
+  if (!ff.isValid() || !ff.isBinTable() || !ff.data())
+    return 0;
+  FitsHead* hd = ff.head();
+  // getString's value lives in a buffer the next call reuses: one at
+  // a time
+  const char* ord = hd->getString("ORDERING");
+  if (!ord || strncasecmp(ord, "NUNIQ", 5))
+    return 0;
+  const char* tf = hd->getString("TFORM1");
+  if (!tf)
+    return 0;
+  // string values keep their padding: '1J      '
+  std::string tform(tf);
+  tform.erase(0, tform.find_first_not_of(' '));
+  tform.erase(tform.find_last_not_of(' ')+1);
+  int size;
+  if (tform == "J" || tform == "1J")
+    size = 4;
+  else if (tform == "K" || tform == "1K")
+    size = 8;
+  else
+    return 0;
+  long rowlen = hd->naxis(0);
+  long nrow = hd->naxis(1);
+  if (rowlen < size || nrow < 0 ||
+      (size_t)rowlen*nrow > (size_t)ff.dataSize())
+    return 0;
+
+  const char* data = (const char*)ff.data();
+  std::vector<long long> tiles;
+  for (long rr=0; rr<nrow; rr++) {
+    const char* pp = data + (size_t)rr*rowlen;
+    long long uniq = size == 4 ? readBE<int>(pp) : readBE<long long>(pp);
+    if (uniq < 4)
+      continue;
+    // uniq = 4*4^o + npix
+    int oo = 0;
+    while (oo < 29 && (4LL << (2*(oo+1))) <= uniq)
+      oo++;
+    long long npix = uniq - (4LL << (2*oo));
+    if (oo >= order)
+      tiles.push_back(npix >> (2*(oo-order)));
+    else {
+      long long first = npix << (2*(order-oo));
+      long long last = (npix+1) << (2*(order-oo));
+      for (long long nn=first; nn<last; nn++)
+	tiles.push_back(nn);
+    }
+  }
+  std::sort(tiles.begin(), tiles.end());
+  tiles.erase(std::unique(tiles.begin(), tiles.end()), tiles.end());
+  out->swap(tiles);
+  return 1;
 }
 
 // say why nothing could be loaded

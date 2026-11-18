@@ -4,7 +4,7 @@
 
 package provide DS9 1.0
 
-# Native ASDF support (see ASDF_NATIVE_SUPPORT_DESIGN.md, TODO.md).
+# Native ASDF support (see ASDF_NATIVE_SUPPORT_DESIGN.md, TODO_ASDF.md).
 #
 # The container itself - the magic line, the YAML tree, the block layout
 # and headers, the codecs, the ndarray enumeration, the datatype mapping
@@ -117,7 +117,7 @@ proc AsdfDefaultPath {entries} {
     return {}
 }
 
-# Native ASDF/GWCS WCS attachment (TODO.md Phase 3). Ported from the Phase 1
+# Native ASDF/GWCS WCS attachment (TODO_ASDF.md Phase 3). Ported from the Phase 1
 # Python spike (utils/asdf_gwcs_probe/extract_subtree.py,
 # resolve_ndarray.py) - see PHASE3_WCS_HANDOFF.md for the full design and
 # why this goes in via the frame's existing `wcs replace <which> <filename>`
@@ -163,7 +163,7 @@ proc AsdfExtractKeySubtree {tree key {indent "  "}} {
 # A proper GWCS object's tag is `!<tag:...:gwcs/wcs-...>`; a bare transform
 # (e.g. a pre-launch/pysiaf distortion file's coordinate_distortion_transform,
 # tagged !transform/...) has no such wrapper and needs one synthesized -
-# astRead() rejects a bare transform as a document root outright (TODO.md
+# astRead() rejects a bare transform as a document root outright (TODO_ASDF.md
 # Phase 1).
 proc AsdfIsBareTransform {subtree} {
     set firstLine [lindex [split $subtree "\n"] 0]
@@ -290,7 +290,7 @@ proc AsdfNestValues {decoded datatype byteorder shapelist indent} {
 # YamlChan only accepts inline ndarrays, never block-sourced ones (design
 # doc SS7b). Real Roman GWCS documents always use block-sourced ndarrays,
 # even for tiny coefficient matrices - this is required, not an edge case
-# (TODO.md Phase 1). Mirrors resolve_ndarray.py's resolve().
+# (TODO_ASDF.md Phase 1). Mirrors resolve_ndarray.py's resolve().
 proc AsdfResolveNdarrays {text fn} {
     # Two Tcl-regex-specific gotchas fixed here, both confirmed the hard
     # way against a real multi-hundred-line GWCS subtree, not assumed:
@@ -346,7 +346,7 @@ proc AsdfResolveNdarrays {text fn} {
 # Top-level Phase 3 entry point: extracts a standalone, AST-ready `wcs:`
 # YAML document from the file's tree text, trying each candidate key in
 # turn (the key name/nesting isn't fixed across Roman product types -
-# TODO.md Phase 1). Returns {} if none of the candidate keys are found.
+# TODO_ASDF.md Phase 1). Returns {} if none of the candidate keys are found.
 # `fn` is the ASDF file, needed to resolve the subtree's own embedded
 # ndarrays back into inline literals.
 #
@@ -409,7 +409,7 @@ proc AsdfExtractWcsText {tree fn {keys {wcs wcs_l2 wcs_l1}} {metaKeys wcs}} {
 }
 
 # --------------------------------------------------------------------
-# Header/metadata display (TODO.md Phase 3, design doc SS8 point 4).
+# Header/metadata display (TODO_ASDF.md Phase 3, design doc SS8 point 4).
 #
 # An ASDF file's YAML tree *is* its header, and it is already exactly the
 # right thing to show verbatim: ASDF never writes an array inline, only a
@@ -1038,7 +1038,7 @@ proc AsdfAttachWcs {yamltext} {
 }
 
 # --------------------------------------------------------------------
-# Array browser (TODO.md Phase 4, design doc SS8 point 5's second option).
+# Array browser (TODO_ASDF.md Phase 4, design doc SS8 point 5's second option).
 #
 # pds9 offers both a "<file>:<path>" text entry and an image browser;
 # this is the browser half, for the common case of not knowing what a
@@ -1230,7 +1230,7 @@ proc LoadAsdfFile {fn layer mode} {
 }
 
 # --------------------------------------------------------------------
-# Scripting surface (TODO.md Phase 3, design doc SS8 point 5) - the XPA /
+# Scripting surface (TODO_ASDF.md Phase 3, design doc SS8 point 5) - the XPA /
 # SAMP / command-line entry point, parallel to fits.tcl's ProcessFitsCmd.
 # Grammar in ds9/parsers/asdfparser.tac + asdflex.fcl (taccle/fickle, the
 # in-tree pure-Tcl generators - nothing here goes near bison/flex).

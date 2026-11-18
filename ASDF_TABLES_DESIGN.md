@@ -1,7 +1,7 @@
 # ASDF Tables in DS9 — Design/Analysis Document
 
 **Status:** analysis, no code written. Companion to `ASDF_NATIVE_SUPPORT_DESIGN.md`, which
-covers the image/WCS half and is complete. Read `TODO.md`'s "Current state" section first
+covers the image/WCS half and is complete. Read `TODO_ASDF.md`'s "Current state" section first
 for where the ASDF work stands generally.
 
 Every measurement below was taken against this checkout and the eight Roman sample files in

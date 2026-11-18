@@ -729,21 +729,49 @@ proc HiPSCmdLoad {fn} {
     FinishLoad
 }
 
+# xpaget/samp hips (hipssendparser.tac):
+#   hips                     the HiPS in the current frame, or nothing
+#   hips coverage            yes or no
+#   hips status              tiles still to come for deep windows
+#   hips list [update] [pattern]
 proc ProcessSendHiPSCmd {proc id param {sock {}} {fn {}}} {
+    global parse
+    set parse(proc) $proc
+    set parse(id) $id
+    set parse(sock) $sock
+    set parse(fn) $fn
+
+    hipssend::YY_FLUSH_BUFFER
+    hipssend::yy_scan_string $param
+    hipssend::yyparse
+}
+
+proc HiPSSendCmdName {} {
+    global parse
     global current
 
-    switch -- [string tolower [lindex $param 0]] {
-	coverage {
-	    $proc $id [ToYesNo [HiPSCoverageShown $current(frame)]]
-	}
-	status {$proc $id "[HiPSDeepPending]\n"}
-	list {
-	    # many lines: SAMP sends them as a file
-	    ProcessSend $proc $id $sock $fn {.txt} \
-		[HiPSListText {*}[lrange $param 1 end]]
-	}
-	default {$proc $id "[HiPSFrameName $current(frame)]\n"}
-    }
+    $parse(proc) $parse(id) "[HiPSFrameName $current(frame)]\n"
+}
+
+proc HiPSSendCmdCoverage {} {
+    global parse
+    global current
+
+    $parse(proc) $parse(id) [ToYesNo [HiPSCoverageShown $current(frame)]]
+}
+
+proc HiPSSendCmdStatus {} {
+    global parse
+
+    $parse(proc) $parse(id) "[HiPSDeepPending]\n"
+}
+
+proc HiPSSendCmdList {update pattern} {
+    global parse
+
+    # many lines: SAMP sends them as a file
+    ProcessSend $parse(proc) $parse(id) $parse(sock) $parse(fn) {.txt} \
+	[HiPSListText $update $pattern]
 }
 
 # File > Open HiPS...

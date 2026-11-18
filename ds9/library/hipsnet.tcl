@@ -1829,14 +1829,9 @@ proc HiPSListMatch {recs pattern} {
 }
 
 # xpaget hips list [update] [pattern]: one HiPS a line, ID, a tab, its title
-proc HiPSListText {args} {
+proc HiPSListText {update pattern} {
     global hipsnet
 
-    set update 0
-    if {[string tolower [lindex $args 0]] == {update}} {
-	set update 1
-	set args [lrange $args 1 end]
-    }
     set recs [HiPSListRecords $update]
     HiPSClearErrorInfo
     if {$recs == {}} {
@@ -1846,7 +1841,7 @@ proc HiPSListText {args} {
 	return {}
     }
     set out {}
-    foreach rec [HiPSListMatch $recs [join $args { }]] {
+    foreach rec [HiPSListMatch $recs $pattern] {
 	lappend out "[HiPSProp $rec ID]\t[HiPSProp $rec obs_title]"
     }
     return [join $out \n]

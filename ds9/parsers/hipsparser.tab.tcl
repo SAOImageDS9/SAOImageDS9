@@ -9,3 +9,5 @@ set NEW_ 264
 set CANCEL_ 265
 set CLOSE_ 266
 set COVERAGE_ 267
+set LIST_ 268
+set STATUS_ 269

@@ -57,6 +57,7 @@ class FitsHiPS : public FitsFile {
   int minOrder_;       // hips_order_min
   int width_;          // hips_tile_width (tileWidth_ is as read)
   long long* ident_;   // identity index table for readTile, width_^2
+  int ownMap_;         // data_ is ours to free (until takeMap())
 
   int readProperties(const char*);
   const char* prop(const char*, const char* =NULL);
@@ -98,6 +99,13 @@ class FitsHiPS : public FitsFile {
   int readTile(int order, long long npix, float* out);
   int depth() {return depth_;}
   int slice() {return slice_;}
+
+  // Hand the map (12*nside^2 floats, NESTED) to a FitsHPX that reads it
+  // in place, as one copy instead of two: it is converted to native
+  // byte order and the caller owns it from then on. This table's data
+  // are then no longer big-endian FITS, and are freed with the caller:
+  // nothing reads a HiPS's table after its window is built.
+  float* takeMap();
 };
 
 #endif

@@ -24,8 +24,11 @@ class FitsHPX : public FitsFile {
   FitsBinColumn* col_;
   FitsBinColumn* uniqCol_;
   FitsBinColumn* pixelCol_;
+  int flat_;           // the map as is, not an HPX/XPH image (see below)
 
   void build(FitsFile*);
+  void buildFlat(FitsFile*);
+  int setFlat(FitsFile*, float*);
   void buildMOC(FitsFile*);
   void buildPartial(FitsFile*);
   void initHeader(FitsFile*);
@@ -40,8 +43,20 @@ class FitsHPX : public FitsFile {
   void computeIndices(int nside, int facet, int rotn, int jj, long long* healidx);
 
  public:
-  FitsHPX(FitsFile*, Order, CoordSys, Layout, int, int);
+  // flat: instead of an HPX/XPH image, the map itself, 12*nside^2
+  // floats in native byte order, indexed by HEALPix pixel in the table's
+  // ordering (NESTED for a MOC), for FitsHPXReproj to sample. Its header
+  // calls it a 4nside x 3nside image (whole-map statistics read it as
+  // one) and keeps the HPX header's sky system, OBJECT, HIPSORD and
+  // HISTORY/COMMENT, plus NSIDE and ORDERING. A HiPS's map is taken
+  // over (FitsHiPS::takeMap) rather than copied.
+  FitsHPX(FitsFile*, Order, CoordSys, Layout, int, int, int flat =0);
   ~FitsHPX();
+
+  int isFlat() {return flat_;}
+  long nside() {return nside_;}
+  // the flat map is NESTED (else RING)
+  int nested() {return order_ != RING;}
 
   static int isHPX(FitsHead*);
   static int isMOC(FitsHead*);

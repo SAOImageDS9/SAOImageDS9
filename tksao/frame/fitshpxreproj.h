@@ -15,8 +15,8 @@
 
 class FitsHiPS;
 
-// Resample a built FitsHPX image (HPX/XPH layout) into another
-// projection: all-sky (AIT, MOL, CAR, ...), zenithal (TAN, SIN, ...)
+// Sample a HEALPix map (a flat FitsHPX: the map's pixels as they are,
+// see fitsy/hpx.h) into a projection: all-sky (AIT, MOL, CAR, ...), zenithal (TAN, SIN, ...)
 // centred on (lon, lat) with angular diameter fov, or conic (COE, COD,
 // ...) with reference latitude lat. Nearest-neighbour only, so every
 // output pixel is a real HEALPix pixel value; pixels outside the
@@ -24,15 +24,16 @@ class FitsHiPS;
 // directly, on nthreads threads, falling back to AST's own resampling
 // for anything that path doesn't handle.
 //
-// Takes ownership of the FitsHPX. All-sky images free it once built;
-// zenithal and conic windows keep it so recentre() can rebuild the
-// window around a new centre. Its data is byte-swapped to native order
-// in place (once), so it must not be used elsewhere.
+// Each output pixel's centre goes to the sky, and the HEALPix pixel there
+// (NESTED or RING, hpxnest.h) gives its value; a deep window's tiles are
+// looked up the same way. Takes ownership of the FitsHPX. All-sky images
+// free it once built; zenithal and conic windows keep it so recentre()
+// can rebuild the window around a new centre.
 class FitsHPXReproj : public FitsFile {
  private:
-  FitsFile* hpx_;      // HPX intermediate, kept for windows
-  FitsFile* view_;     // hpx_ data seen as native byte order
-  int hpxNative_;      // hpx_ data already swapped to native order
+  FitsFile* hpx_;      // the map (flat FitsHPX), kept for windows
+  const float* map_;   // its pixels, native order
+  int mapNested_;      // NESTED, else RING
   int info_;           // index into the projection table
   int nside_;
   double pix_;         // [deg] pixel size: HEALPix's, or coarser
@@ -113,9 +114,9 @@ class FitsHPXReproj : public FitsFile {
 
   int isConic();
 
-  // the kept HPX intermediate in native byte order (windows only), for
-  // whole-map statistics
-  FitsFile* hpxView() {return view_;}
+  // the kept map (windows only), a native-order image of all its pixels,
+  // for whole-map statistics
+  FitsFile* hpxView() {return hpx_;}
   double lon() {return lon_;}
   double lat() {return lat_;}
 

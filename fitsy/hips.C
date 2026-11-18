@@ -23,7 +23,8 @@ using namespace std;
 #include "util.h"
 
 // The deepest map chosen automatically: nside 2048 is 50M pixels
-// (200 MB), and FitsHPX's HPX image adds (5*2048)^2 floats.
+// (200 MB). A window samples the map itself (FitsHPX flat, which takes
+// it over); only proj=HPX builds an HPX image, (5*2048)^2 floats more.
 #define HIPS_NSIDE_AUTO 2048
 // Refuse anything bigger, even when asked for with norder=.
 #define HIPS_NSIDE_MAX 8192
@@ -278,6 +279,7 @@ FitsHiPS::FitsHiPS(const char* fn, Tcl_Interp* interp, int channel)
   slice_ = 0;
   width_ = 0;
   ident_ = NULL;
+  ownMap_ = 0;
 
   // root directory, plus [norder=,proj=,...] options
   parse(fn);
@@ -461,6 +463,7 @@ FitsHiPS::FitsHiPS(const char* fn, Tcl_Interp* interp, int channel)
   dataSkip_ = 0;
   byteswap_ = lsb();
   endian_ = BIG;
+  ownMap_ = 1;
 
   if (!initHeaders())
     return;
@@ -470,10 +473,30 @@ FitsHiPS::FitsHiPS(const char* fn, Tcl_Interp* interp, int channel)
 
 FitsHiPS::~FitsHiPS()
 {
-  if (data_)
+  if (data_ && ownMap_)
     delete [] (float*)data_;
   if (ident_)
     delete [] ident_;
+}
+
+float* FitsHiPS::takeMap()
+{
+  if (!data_ || !ownMap_)
+    return NULL;
+  size_t npix = (size_t)12*nside_*nside_;
+  if (byteswap_) {
+    char* cc = (char*)data_;
+    for (size_t ii=0; ii<npix; ii++, cc+=4) {
+      char t0 = cc[0];
+      char t1 = cc[1];
+      cc[0] = cc[3];
+      cc[1] = cc[2];
+      cc[2] = t1;
+      cc[3] = t0;
+    }
+  }
+  ownMap_ = 0;
+  return (float*)data_;
 }
 
 int FitsHiPS::readTile(int order, long long npix, float* out)

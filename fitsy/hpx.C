@@ -12,9 +12,11 @@
 #include <string.h>
 
 #include <algorithm>
+#include <new>
 #include <vector>
 
 #include "hpx.h"
+#include "hips.h"
 #include "util.h"
 
 // Facet layout, rotation, and blanking tables for the HPX/XPH image layouts.
@@ -365,8 +367,8 @@ int FitsHPX::isDataColumn(FitsColumn* col)
 }
 
 FitsHPX::FitsHPX(FitsFile* fits, Order oo, CoordSys ss, Layout ll,
-		 int cc, int qq)
-  : order_(oo), coord_(ss), layout_(ll), quad_(qq)
+		 int cc, int qq, int flat)
+  : order_(oo), coord_(ss), layout_(ll), quad_(qq), flat_(flat)
 {
   FitsHead* head = fits->head();
   FitsBinTableHDU* hdu = (FitsBinTableHDU*)(head->hdu());
@@ -518,6 +520,11 @@ void FitsHPX::build(FitsFile* fits)
     return;
   }
 
+  if (flat_) {
+    buildFlat(fits);
+    return;
+  }
+
   FitsTableHDU* hdu = (FitsTableHDU*)(head->hdu());
   int rowlen = hdu->width();
   int nrow = hdu->rows();
@@ -584,6 +591,60 @@ void FitsHPX::build(FitsFile* fits)
   dataSkip_ = 0;
 }
 
+// A flat map (see hpx.h) of a full-sky table: each pixel's value, in
+// the table's ordering
+void FitsHPX::buildFlat(FitsFile* fits)
+{
+  if (nside_ < 1 || nside_ > INT_MAX/4)
+    return;
+  size_t npix = (size_t)12*nside_*nside_;
+
+  // a HiPS's map is already this, NESTED, one value a pixel
+  float* dest = NULL;
+  FitsHiPS* hips = dynamic_cast<FitsHiPS*>(fits);
+  if (hips && order_ == NESTED && hips->nside() == nside_)
+    dest = hips->takeMap();
+
+  if (!dest) {
+    dest = new (std::nothrow) float[npix];
+    if (!dest)
+      return;
+    FitsTableHDU* hdu = (FitsTableHDU*)(fits->head()->hdu());
+    int rowlen = hdu->width();
+    long long nrow = hdu->rows();
+    int repeat = col_->repeat();
+    char* data = (char*)fits->data();
+    for (size_t pp=0; pp<npix; pp++) {
+      long long aa = (long long)pp / repeat;
+      int bb = (int)(pp - aa*repeat);
+      dest[pp] = aa < nrow ?
+	col_->value(data + (size_t)aa*(size_t)rowlen, bb) : 0;
+    }
+  }
+
+  if (!setFlat(fits, dest))
+    delete [] dest;
+}
+
+// make dest (12*nside_^2 floats) this flat map, with its header
+int FitsHPX::setFlat(FitsFile* fits, float* dest)
+{
+  if (nside_ < 1 || nside_ > INT_MAX/4)
+    return 0;
+  pWidth_ = 4*nside_;
+  pHeight_ = 3*nside_;
+  initHeader(fits);
+  head_->appendInteger("NSIDE", (int)nside_, "HEALPix resolution parameter");
+  head_->appendString("ORDERING", nested() ? "NESTED" : "RING",
+		      "pixel ordering of the data");
+  head_->updateHDU();
+
+  data_ = dest;
+  dataSize_ = (size_t)12*nside_*nside_;
+  dataSkip_ = 0;
+  return 1;
+}
+
 void FitsHPX::buildMOC(FitsFile* fits)
 {
   if (!uniqCol_)
@@ -641,6 +702,31 @@ void FitsHPX::buildMOC(FitsFile* fits)
   nside_ = 1L << maxorder;
   if (nside_ > INT_MAX)
     return;
+
+  // flat: the cells' pixels at maxorder, NESTED
+  if (flat_) {
+    if (nside_ > INT_MAX/4)
+      return;
+    long long maxpix = 12LL*nside_*nside_;
+    float* dest = new (std::nothrow) float[maxpix];
+    if (!dest)
+      return;
+    std::fill(dest, dest+maxpix, 0.f);
+    for (size_t cc=0; cc<cells.size(); cc++) {
+      int shift = 2*(maxorder - cells[cc].order);
+      long long first = cells[cc].npix << shift;
+      long long last = (cells[cc].npix + 1) << shift;
+      if (first < 0)
+	first = 0;
+      if (last > maxpix)
+	last = maxpix;
+      if (first < last)
+	std::fill(dest+first, dest+last, cells[cc].value);
+    }
+    if (!setFlat(fits, dest))
+      delete [] dest;
+    return;
+  }
 
   int nside = (int)nside_;
   int layout = layout_;
@@ -745,6 +831,23 @@ void FitsHPX::buildPartial(FitsFile* fits)
       cell.value = val;
       cells.push_back(cell);
     }
+  }
+
+  // flat: each listed pixel, in the table's ordering; the rest blank
+  if (flat_) {
+    if (nside_ < 1 || nside_ > INT_MAX/4)
+      return;
+    long long maxpix = 12LL*nside_*nside_;
+    float* dest = new (std::nothrow) float[maxpix];
+    if (!dest)
+      return;
+    std::fill(dest, dest+maxpix, NAN);
+    for (size_t cc=0; cc<cells.size(); cc++)
+      if (cells[cc].pixel >= 0 && cells[cc].pixel < maxpix)
+	dest[cells[cc].pixel] = cells[cc].value;
+    if (!setFlat(fits, dest))
+      delete [] dest;
+    return;
   }
 
   int nside = nside_;

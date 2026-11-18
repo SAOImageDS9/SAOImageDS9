@@ -269,7 +269,7 @@ proc RecentOpen {entry} {
 	nrrd {Import $fn $type {} {} {}}
 	envi {Import $fn envi {} {} $opts(data)}
 	photo {Import $fn png {} $opts(mode) {}}
-	hips {HiPSCmdLoad $fn}
+	hips {HiPSLoadAsync $fn}
 
 	default {Error "[msgcat::mc {Unknown file type}] $type"}
     }

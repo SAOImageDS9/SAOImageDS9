@@ -41,14 +41,11 @@ proc HiPSNetDef {} {
     # the cached MocServer list of HiPS is refreshed after a day
     set hipsnet(listage) 86400
 
-    # state of the fetch in progress
-    set hipsnet(busy) 0
-    set hipsnet(cancel) 0
-    set hipsnet(tokens) {}
-    set hipsnet(error) {}
-    set hipsnet(ext) fits
-    set hipsnet(sfx) {}
-    set hipsnet(bases) {}
+    # the loads being fetched (ids; each has its own context, the
+    # array hipsfetch<id>, see HiPSFetchStart)
+    set hipsnet(fetches) {}
+    # a load's progress line shows after this many ms
+    set hipsnet(progressdelay) 300
 
     # deep windows' background tile fetching (HiPSDeepWant)
     global hipsdeep
@@ -138,13 +135,13 @@ proc HiPSMissingFile {od sfx ext} {
     return [file join $od .missing$sfx.$ext]
 }
 
-proc HiPSGetPath {path fn} {
-    global hipsnet
+proc HiPSGetPath {id path fn} {
+    upvar #0 hipsfetch$id ctx
 
     set code 0
-    foreach base $hipsnet(bases) {
+    foreach base $ctx(bases) {
 	set code [HiPSGet $base/$path $fn]
-	if {$code == 200 || $code == 404 || $hipsnet(cancel)} {
+	if {$code == 200 || $code == 404 || $ctx(cancel)} {
 	    break
 	}
     }
@@ -197,11 +194,17 @@ proc HiPSDirSize {dir} {
 }
 
 # the cache directories of the HiPS shown in any frame (each channel of
-# an RGB frame), normalized
+# an RGB frame) or being loaded, normalized
 proc HiPSCacheInUse {} {
     global ds9
+    global hipsnet
 
     set rr {}
+    foreach id $hipsnet(fetches) {
+	if {[info exists ::hipsfetch${id}(dir)]} {
+	    lappend rr [file normalize [set ::hipsfetch${id}(dir)]]
+	}
+    }
     foreach ff $ds9(frames) {
 	set names {}
 	if {[catch {$ff get type} type]} {
@@ -263,13 +266,8 @@ proc HiPSCachePrune {keep} {
 
 # Preferences > HEALPix > Clear HiPS Cache
 proc HiPSCacheClear {} {
-    global hipsnet
-
-    if {$hipsnet(busy)} {
-	return
-    }
-    # all but the HiPS shown in a frame (their windows read tiles from
-    # here, and deep ones keep fetching into it)
+    # all but the HiPS shown in a frame or being loaded (their windows
+    # read tiles from here, and deep ones and loads keep fetching into it)
     set inuse [HiPSCacheInUse]
     if {![llength $inuse]} {
 	catch {file delete -force [HiPSCacheRoot]}
@@ -358,87 +356,174 @@ proc HiPSOptions {fn} {
     return $opts
 }
 
-# Fetch what loading the remote HiPS fn (URL plus options) needs, and
-# return the local name for the reader (cache directory plus options,
-# with norder= made explicit). Returns {} and sets hipsnet(error) on
-# failure or cancel.
+# Loads of remote HiPS. Each load runs as a coroutine (HiPSFetchRun)
+# with a context of its own, the global array hipsfetch<id>: the URL,
+# cache directory and options, the tile format and cube suffix, the
+# mirrors, its tile queue and counts, its cancel flag and its error.
+# While it waits for a download it yields (HiPSGet), so loads never wait
+# inside one another, and any number can run at once, each with its own
+# progress line and Cancel. When it ends, its ondone command is called
+# with the local name for the reader (cache directory plus options, with
+# norder= made explicit), or {} and why not.
+#
+# HiPSFetch waits for its load (XPA, the command line, restore, SAMP:
+# the frame is loaded when the command returns, as with fits <url>);
+# HiPSLoadAsync (dialogs, Open Recent) returns at once.
+namespace eval ::hipsfetch {}
+
+proc HiPSFetchStart {fn done} {
+    global hipsnet
+
+    set id [incr hipsnet(fetchid)]
+    upvar #0 hipsfetch$id ctx
+    set url [string trimright [HiPSRoot $fn] /]
+    array set ctx [list \
+		       id $id \
+		       fn $fn \
+		       url $url \
+		       dir [HiPSCacheDir $url] \
+		       opts [HiPSOptions $fn] \
+		       ext fits \
+		       sfx {} \
+		       bases [list $url] \
+		       cancel 0 \
+		       error {} \
+		       local {} \
+		       ondone $done \
+		       msg "[msgcat::mc {Reading}] $url/properties" \
+		      ]
+    lappend hipsnet(fetches) $id
+    set ctx(timer) [after $hipsnet(progressdelay) [list HiPSProgress $id]]
+    coroutine ::hipsfetch::co$id HiPSFetchRun $id
+    return $id
+}
+
+proc HiPSFetchRun {id} {
+    global hipsnet
+    upvar #0 hipsfetch$id ctx
+
+    # anything that throws (a full disk, an unwritable cache) is an
+    # error of this load
+    if {[catch {HiPSFetchDo $id} kk]} {
+	set ctx(error) $kk
+	set kk {}
+    }
+    if {$ctx(cancel)} {
+	set ctx(error) [msgcat::mc {cancelled}]
+	set kk {}
+    }
+    if {$kk != {} && [catch {
+	set dir $ctx(dir)
+	HiPSCachePrune $dir
+	# deep windows fetch more of it later (HiPSDeepWant)
+	set hipsnet(url,[file normalize $dir]) $ctx(url)
+	# norder=K, explicit, for the reader
+	set ext [string range $ctx(fn) [string length [HiPSRoot $ctx(fn)]] end]
+	if {[dict exists $ctx(opts) norder]} {
+	    set ctx(local) "$dir$ext"
+	} elseif {$ext == {}} {
+	    set ctx(local) "$dir\[norder=$kk\]"
+	} else {
+	    set ctx(local) "$dir\[norder=$kk,[string range $ext 1 end]"
+	}
+    } err]} {
+	set ctx(local) {}
+	set ctx(error) $err
+    }
+    # done runs outside the coroutine: a load it starts must not take
+    # this load's waits for its own
+    after 0 [list HiPSFetchFinish $id]
+}
+
+proc HiPSFetchFinish {id} {
+    global hipsnet
+    upvar #0 hipsfetch$id ctx
+
+    after cancel $ctx(timer)
+    HiPSProgressRemove $id
+    set ii [lsearch -exact $hipsnet(fetches) $id]
+    set hipsnet(fetches) [lreplace $hipsnet(fetches) $ii $ii]
+    set done $ctx(ondone)
+    set local $ctx(local)
+    set err $ctx(error)
+    if {$local == {} && $err == {}} {
+	set err [msgcat::mc {failed}]
+    }
+    unset ctx
+    HiPSClearErrorInfo
+    {*}$done $local $err
+}
+
+# Fetch what loading the remote HiPS fn needs, and wait for it. Returns
+# the local name for the reader; throws why not (failure or cancel).
 proc HiPSFetch {fn} {
     global hipsnet
 
-    set hipsnet(error) {}
-    set url [string trimright [HiPSRoot $fn] /]
-    set ext [string range $fn [string length [HiPSRoot $fn]] end]
-    set dir [HiPSCacheDir $url]
-    set opts [HiPSOptions $fn]
-
-    if {$hipsnet(busy)} {
-	set hipsnet(error) [msgcat::mc {another HiPS is being fetched}]
-	return {}
+    set var ::hipsnet(wait,[incr hipsnet(waitid)])
+    set $var {}
+    HiPSFetchStart $fn [list HiPSFetchWaited $var]
+    while {[set $var] == {}} {
+	vwait $var
     }
-    set hipsnet(busy) 1
-    set hipsnet(cancel) 0
-
-    # anything that throws (a full disk, an unwritable cache) is an
-    # error of this load, and must not leave hipsnet(busy) set
-    if {[catch {
-	set rr [HiPSFetchDo $url $dir $opts]
-	if {$rr != {}} {
-	    HiPSCachePrune $dir
-	    # deep windows fetch more of it later (HiPSDeepWant)
-	    set hipsnet(url,[file normalize $dir]) $url
-	}
-    } err]} {
-	set rr {}
-	set hipsnet(error) $err
-	foreach token $hipsnet(tokens) {
-	    catch {http::reset $token cancelled}
-	}
+    lassign [set $var] local err
+    unset $var
+    if {$local == {}} {
+	error $err
     }
-
-    set hipsnet(busy) 0
-    HiPSProgressDone
-    HiPSClearErrorInfo
-    if {$rr == {}} {
-	return {}
-    }
-
-    # norder=K, explicit, for the reader
-    if {[dict exists $opts norder]} {
-	return "$dir$ext"
-    }
-    if {$ext == {}} {
-	return "$dir\[norder=$rr\]"
-    }
-    return "$dir\[norder=$rr,[string range $ext 1 end]"
+    return $local
 }
 
-# returns the order to read, or {} (hipsnet(error) says why)
-proc HiPSFetchDo {url dir opts} {
-    global hipsnet
+proc HiPSFetchWaited {var local err} {
+    set $var [list $local $err]
+}
 
-    set props [HiPSFetchProperties $url $dir]
-    if {$props == {}} {
-	return {}
+# stop a load
+proc HiPSFetchCancel {id} {
+    upvar #0 hipsfetch$id ctx
+
+    if {![array exists ctx]} {
+	return
     }
+    set ctx(cancel) 1
+    set ctx(queue) {}
+    HiPSJobsCancel $id
+}
+
+# throws if load id has been cancelled
+proc HiPSFetchCheck {id} {
+    upvar #0 hipsfetch$id ctx
+
+    if {$ctx(cancel)} {
+	error [msgcat::mc {cancelled}]
+    }
+}
+
+# the order to read; throws why not
+proc HiPSFetchDo {id} {
+    global hipsnet
+    upvar #0 hipsfetch$id ctx
+
+    set url $ctx(url)
+    set dir $ctx(dir)
+    set opts $ctx(opts)
+    set props [HiPSFetchProperties $url $dir]
+    HiPSFetchCheck $id
     if {[HiPSProp $props dataproduct_type image] == {catalog}} {
-	set hipsnet(error) [msgcat::mc {catalogue HiPS are not supported}]
-	return {}
+	error [msgcat::mc {catalogue HiPS are not supported}]
     }
     set ext [HiPSTileExt $props $opts]
     if {$ext == {}} {
-	set hipsnet(error) [HiPSTileExtError $props $opts]
-	return {}
+	error [HiPSTileExtError $props $opts]
     }
-    set hipsnet(ext) $ext
-    set hipsnet(bases) [HiPSBases $url $props]
-    set hipsnet(sfx) [HiPSSliceSuffix $props $opts]
+    set ctx(ext) $ext
+    set ctx(bases) [HiPSBases $url $props]
+    set ctx(sfx) [HiPSSliceSuffix $props $opts]
     set width [HiPSProp $props hips_tile_width 512]
     set maxorder [HiPSProp $props hips_order -1]
     set minorder [HiPSProp $props hips_order_min 0]
     if {![string is integer -strict $width] || $width < 1 ||
 	![string is integer -strict $maxorder] || $maxorder < 0} {
-	set hipsnet(error) [msgcat::mc {bad hips_order or hips_tile_width in properties}]
-	return {}
+	error [msgcat::mc {bad hips_order or hips_tile_width in properties}]
     }
     if {![string is integer -strict $minorder] || $minorder < 0} {
 	set minorder 0
@@ -457,7 +542,7 @@ proc HiPSFetchDo {url dir opts} {
 	# a full-size Allsky is the same data in one file
 	set aw 0
 	if {$kk <= 3} {
-	    set aw [HiPSFetchAllsky $url $dir $kk]
+	    set aw [HiPSFetchAllsky $id $kk]
 	}
 	if {$aw == $width} {
 	    return $kk
@@ -467,19 +552,14 @@ proc HiPSFetchDo {url dir opts} {
 	if {(wide($width)<<$kk) > $hipsnet(nsidemax)} {
 	    return $kk
 	}
-	if {![HiPSFetchTiles $url $dir $kk $width $props]} {
-	    return {}
-	}
+	HiPSFetchTiles $id $kk $width $props
 	return $kk
     }
 
     # quick look: the deepest Allsky of orders 3..0
     for {set kk [expr {$maxorder<3 ? $maxorder : 3}]} {$kk >= 0} {incr kk -1} {
-	if {$hipsnet(cancel)} {
-	    set hipsnet(error) [msgcat::mc {cancelled}]
-	    return {}
-	}
-	if {[HiPSFetchAllsky $url $dir $kk] > 0} {
+	HiPSFetchCheck $id
+	if {[HiPSFetchAllsky $id $kk] > 0} {
 	    return $kk
 	}
     }
@@ -489,22 +569,17 @@ proc HiPSFetchDo {url dir opts} {
     while {$kk < $maxorder && (wide($width)<<($kk+1)) <= $hipsnet(autonside)} {
 	incr kk
     }
-    if {![HiPSFetchTiles $url $dir $kk $width $props]} {
-	return {}
-    }
+    HiPSFetchTiles $id $kk $width $props
     return $kk
 }
 
 # Fetch url/properties into the cache directory dir, and return them as
-# a dict ({} and hipsnet(error) on failure). Always fetched, so an
+# a dict (throws on failure). Always fetched, so an
 # updated HiPS is noticed (a new hips_release_date empties the cached
 # tiles); a cached copy serves when the server can't be reached.
 proc HiPSFetchProperties {url dir} {
-    global hipsnet
-
     if {[catch {file mkdir $dir} err]} {
-	set hipsnet(error) "[msgcat::mc {can't create the HiPS cache}] $dir: $err"
-	return {}
+	error "[msgcat::mc {can't create the HiPS cache}] $dir: $err"
     }
     set pf [file join $dir properties]
     set old {}
@@ -526,13 +601,11 @@ proc HiPSFetchProperties {url dir} {
     if {$code != 200 || ![HiPSKeep $tmp $pf]} {
 	catch {file delete -force $tmp}
 	if {![file isfile $pf]} {
-	    set hipsnet(error) "[msgcat::mc {can't read}] $url/properties ([HiPSCodeText $code])"
-	    return {}
+	    error "[msgcat::mc {can't read}] $url/properties ([HiPSCodeText $code])"
 	}
     }
     if {[catch {HiPSReadProperties $dir} props]} {
-	set hipsnet(error) "[msgcat::mc {can't read}] $url/properties"
-	return {}
+	error "[msgcat::mc {can't read}] $url/properties"
     }
     set new [HiPSProp $props hips_release_date]
     if {$old != {} && $new != $old} {
@@ -546,11 +619,12 @@ proc HiPSFetchProperties {url dir} {
 
 # Fetch NorderK/Allsky.fits (unless cached). Returns the width of its
 # tiles, or 0 if there is none (or it can't be read).
-proc HiPSFetchAllsky {url dir kk} {
-    set od [file join $dir Norder$kk]
-    global hipsnet
-    set ext $hipsnet(ext)
-    set sfx $hipsnet(sfx)
+proc HiPSFetchAllsky {id kk} {
+    upvar #0 hipsfetch$id ctx
+
+    set od [file join $ctx(dir) Norder$kk]
+    set ext $ctx(ext)
+    set sfx $ctx(sfx)
     set af [file join $od Allsky$sfx.$ext]
     set none [file join $od .noallsky$sfx.$ext]
     if {[file exists $none]} {
@@ -559,7 +633,8 @@ proc HiPSFetchAllsky {url dir kk} {
     if {![file isfile $af]} {
 	file mkdir $od
 	set tmp [HiPSTemp $af]
-	set code [HiPSGetPath Norder$kk/Allsky$sfx.$ext $tmp]
+	set ctx(msg) "[msgcat::mc {Fetching}] Norder$kk/Allsky$sfx.$ext"
+	set code [HiPSGetPath $id Norder$kk/Allsky$sfx.$ext $tmp]
 	if {$code != 200} {
 	    catch {file delete -force $tmp}
 	    # remember a 404 so it isn't asked for again
@@ -595,20 +670,24 @@ proc HiPSFetchAllsky {url dir kk} {
 
 # Fetch the tiles of order kk that Moc.fits says hold data (all of them
 # if there is no MOC), skipping those already cached or known to be
-# missing. Returns 1 on success (missing tiles are not an error).
-proc HiPSFetchTiles {url dir kk width props} {
+# missing (missing tiles are not an error). Throws on failure or cancel.
+proc HiPSFetchTiles {id kk width props} {
     global hipsnet
+    upvar #0 hipsfetch$id ctx
 
+    set dir $ctx(dir)
     # Moc.fits, if the HiPS has one
     set mf [file join $dir Moc.fits]
     if {![file isfile $mf]} {
 	set tmp [HiPSTemp $mf]
-	if {[HiPSGetPath Moc.fits $tmp] == 200} {
+	set ctx(msg) "[msgcat::mc {Fetching}] Moc.fits"
+	if {[HiPSGetPath $id Moc.fits $tmp] == 200} {
 	    HiPSKeep $tmp $mf
 	} else {
 	    catch {file delete -force $tmp}
 	}
     }
+    HiPSFetchCheck $id
     set tiles {}
     if {[file isfile $mf]} {
 	set tiles [HiPSMocTiles $mf $kk]
@@ -623,8 +702,7 @@ proc HiPSFetchTiles {url dir kk width props} {
     # what is still needed
     set od [file join $dir Norder$kk]
     file mkdir $od
-    set missing {}
-    set mfn [HiPSMissingFile $od $hipsnet(sfx) $hipsnet(ext)]
+    set mfn [HiPSMissingFile $od $ctx(sfx) $ctx(ext)]
     if {[file isfile $mfn]} {
 	set ch [open $mfn r]
 	foreach nn [split [read $ch] \n] {
@@ -639,7 +717,7 @@ proc HiPSFetchTiles {url dir kk width props} {
 	if {[info exists gone($nn)]} {
 	    continue
 	}
-	if {![file isfile [HiPSTilePath $dir $kk $nn]]} {
+	if {![file isfile [HiPSTilePath $dir $kk $nn $ctx(sfx) $ctx(ext)]]} {
 	    lappend need $nn
 	}
     }
@@ -647,107 +725,110 @@ proc HiPSFetchTiles {url dir kk width props} {
     # png/jpg are compressed; count them as a byte a pixel
     set bitpix [HiPSProp $props hips_pixel_bitpix -32]
     if {![string is integer -strict $bitpix] || $bitpix == 0 ||
-	$hipsnet(ext) != {fits}} {
+	$ctx(ext) != {fits}} {
 	set bitpix 8
     }
     set bytes [expr {wide([llength $need])*$width*$width*abs($bitpix)/8}]
     if {$bytes > $hipsnet(maxbytes)} {
-	set hipsnet(error) "[msgcat::mc {order}] $kk [msgcat::mc {needs}] [llength $need] [msgcat::mc {tiles}] ([expr {$bytes>>20}] MB), [msgcat::mc {more than the limit of}] [expr {$hipsnet(maxbytes)>>20}] MB"
-	return 0
+	error "[msgcat::mc {order}] $kk [msgcat::mc {needs}] [llength $need] [msgcat::mc {tiles}] ([expr {$bytes>>20}] MB), [msgcat::mc {more than the limit of}] [expr {$hipsnet(maxbytes)>>20}] MB"
     }
     if {$need == {}} {
-	return 1
+	return
     }
 
-    # a small pool of asynchronous requests
-    array unset hipsnet try,*
-    set hipsnet(queue) $need
-    set hipsnet(running) 0
-    set hipsnet(done) 0
-    set hipsnet(total) [llength $need]
-    set hipsnet(failed) {}
-    set hipsnet(gone) {}
-    set hipsnet(finished) 0
-    set hipsnet(url) $url
-    set hipsnet(dir) $dir
-    set hipsnet(order) $kk
-
-    HiPSProgress
+    # a small pool of asynchronous requests; this coroutine waits until
+    # the pool has finished (HiPSTileNext wakes it)
+    array unset ctx try,*
+    set ctx(queue) $need
+    set ctx(running) 0
+    set ctx(done) 0
+    set ctx(total) [llength $need]
+    set ctx(failed) {}
+    set ctx(gone) {}
+    set ctx(finished) 0
+    set ctx(order) $kk
+    set ctx(waiter) [info coroutine]
+    HiPSTileMsg $id
     for {set ii 0} {$ii < $hipsnet(parallel)} {incr ii} {
-	HiPSTileNext
+	HiPSTileNext $id
     }
-    if {!$hipsnet(finished)} {
-	vwait hipsnet(finished)
+    while {!$ctx(finished)} {
+	yield
     }
 
     # remember the 404s
-    if {$hipsnet(gone) != {}} {
+    if {$ctx(gone) != {}} {
 	set ch [open $mfn a]
-	foreach nn $hipsnet(gone) {
+	foreach nn $ctx(gone) {
 	    puts $ch $nn
 	}
 	close $ch
     }
 
-    if {$hipsnet(cancel)} {
-	set hipsnet(error) [msgcat::mc {cancelled}]
-	return 0
+    HiPSFetchCheck $id
+    if {$ctx(failed) != {}} {
+	set nn [lindex $ctx(failed) 0]
+	error "[llength $ctx(failed)] [msgcat::mc {tiles could not be fetched, e.g.}] [lindex $nn 0] ([lindex $nn 1])"
     }
-    if {$hipsnet(failed) != {}} {
-	set nn [lindex $hipsnet(failed) 0]
-	set hipsnet(error) "[llength $hipsnet(failed)] [msgcat::mc {tiles could not be fetched, e.g.}] [lindex $nn 0] ([lindex $nn 1])"
-	return 0
-    }
-    return 1
 }
 
-proc HiPSTilePath {dir kk nn} {
+proc HiPSTilePath {dir kk nn sfx ext} {
     set dd [expr {($nn/10000)*10000}]
-    global hipsnet
-    return [file join $dir Norder$kk Dir$dd Npix$nn$hipsnet(sfx).$hipsnet(ext)]
+    return [file join $dir Norder$kk Dir$dd Npix$nn$sfx.$ext]
 }
 
-# start the next queued tile, or finish
-proc HiPSTileNext {} {
-    global hipsnet
+proc HiPSTileMsg {id} {
+    upvar #0 hipsfetch$id ctx
 
-    if {$hipsnet(cancel)} {
-	set hipsnet(queue) {}
+    set ctx(msg) "[msgcat::mc {Fetching HiPS tiles}]: order $ctx(order), $ctx(done) / $ctx(total)"
+}
+
+# start load id's next queued tile, or finish
+proc HiPSTileNext {id} {
+    upvar #0 hipsfetch$id ctx
+
+    if {$ctx(cancel)} {
+	set ctx(queue) {}
     }
-    if {$hipsnet(queue) == {}} {
-	if {$hipsnet(running) == 0 && !$hipsnet(finished)} {
-	    set hipsnet(finished) 1
+    if {$ctx(queue) == {}} {
+	if {$ctx(running) == 0 && !$ctx(finished)} {
+	    set ctx(finished) 1
+	    HiPSWake $ctx(waiter)
 	}
 	return
     }
-    set nn [lindex $hipsnet(queue) 0]
-    set hipsnet(queue) [lrange $hipsnet(queue) 1 end]
+    set nn [lindex $ctx(queue) 0]
+    set ctx(queue) [lrange $ctx(queue) 1 end]
 
-    set kk $hipsnet(order)
+    set kk $ctx(order)
     set dd [expr {($nn/10000)*10000}]
-    set fn [HiPSTilePath $hipsnet(dir) $kk $nn]
+    set fn [HiPSTilePath $ctx(dir) $kk $nn $ctx(sfx) $ctx(ext)]
     # if this fails, so does the download, and that is reported
     catch {file mkdir [file dirname $fn]}
-    incr hipsnet(running)
+    incr ctx(running)
     # the mirror this tile is on (it moves on when one fails)
     set ii 0
-    if {[info exists hipsnet(try,$nn)]} {
-	set ii $hipsnet(try,$nn)
+    if {[info exists ctx(try,$nn)]} {
+	set ii $ctx(try,$nn)
     }
-    set base [lindex $hipsnet(bases) $ii]
+    set base [lindex $ctx(bases) $ii]
     if {$base == {}} {
-	set base $hipsnet(url)
+	set base $ctx(url)
     }
     set tmp [HiPSTemp $fn]
-    HiPSGetAsync "$base/Norder$kk/Dir$dd/Npix$nn$hipsnet(sfx).$hipsnet(ext)" $tmp \
-	[list HiPSTileDone $nn $fn $tmp]
+    HiPSGetAsync "$base/Norder$kk/Dir$dd/Npix$nn$ctx(sfx).$ctx(ext)" $tmp \
+	[list HiPSTileDone $id $nn $fn $tmp] $id
 }
 
-proc HiPSTileDone {nn fn tmp code} {
-    global hipsnet
+proc HiPSTileDone {id nn fn tmp code} {
+    upvar #0 hipsfetch$id ctx
 
-    incr hipsnet(running) -1
-    incr hipsnet(done)
+    if {![array exists ctx]} {
+	catch {file delete -force $tmp}
+	return
+    }
+    incr ctx(running) -1
+    incr ctx(done)
     # a file that can't be kept is a failure like any other
     if {$code == 200 && ![HiPSKeep $tmp $fn]} {
 	set code 0
@@ -756,29 +837,29 @@ proc HiPSTileDone {nn fn tmp code} {
 	200 {}
 	404 {
 	    catch {file delete -force $tmp}
-	    lappend hipsnet(gone) $nn
+	    lappend ctx(gone) $nn
 	}
 	default {
 	    catch {file delete -force $tmp}
-	    if {!$hipsnet(cancel)} {
+	    if {!$ctx(cancel)} {
 		# no answer or a server error: the next mirror, if any
 		set ii 0
-		if {[info exists hipsnet(try,$nn)]} {
-		    set ii $hipsnet(try,$nn)
+		if {[info exists ctx(try,$nn)]} {
+		    set ii $ctx(try,$nn)
 		}
 		incr ii
-		if {$ii < [llength $hipsnet(bases)]} {
-		    set hipsnet(try,$nn) $ii
-		    incr hipsnet(done) -1
-		    set hipsnet(queue) [linsert $hipsnet(queue) 0 $nn]
+		if {$ii < [llength $ctx(bases)]} {
+		    set ctx(try,$nn) $ii
+		    incr ctx(done) -1
+		    set ctx(queue) [linsert $ctx(queue) 0 $nn]
 		} else {
-		    lappend hipsnet(failed) [list $nn [HiPSCodeText $code]]
+		    lappend ctx(failed) [list $nn [HiPSCodeText $code]]
 		}
 	    }
 	}
     }
-    HiPSProgress
-    HiPSTileNext
+    HiPSTileMsg $id
+    HiPSTileNext $id
 }
 
 # The tiles of order kk that a MOC (FITS, NUNIQ) covers: a deeper cell
@@ -855,25 +936,50 @@ proc HiPSMocTiles {fn kk} {
     return [lsort -integer [array names have]]
 }
 
-# Synchronous GET of url into fn, following redirects. Returns the HTTP
-# status (200, 404, ...), or 0 if the request failed.
+# GET of url into fn, following redirects, returning when it is done.
+# Returns the HTTP status (200, 404, ...), or 0 if the request failed or
+# was cancelled. In a load's coroutine it yields meanwhile (the load is
+# its owner, so cancelling the load ends it); elsewhere (the dialogs'
+# properties, the coverage overlay, MocServer queries) it waits on a
+# variable of its own, so another wait the event loop runs meanwhile
+# can't take its answer.
 proc HiPSGet {url fn} {
     global hipsnet
 
-    # a variable of its own: while this waits, the event loop may run
-    # another HiPSGet (the coverage overlay, hips list over XPA, the
-    # dialog), whose answer must not be taken for this one's
-    set id [incr hipsnet(syncid)]
-    set var ::hipsnet(sync,$id)
-    set $var {}
-    HiPSGetAsync $url $fn [list set $var]
-    if {[set $var] == {}} {
-	vwait $var
+    set co [info coroutine]
+    if {[string match ::hipsfetch::co* $co]} {
+	# a cancelled load asks for nothing more
+	set id [string range [namespace tail $co] 2 end]
+	if {[set ::hipsfetch${id}(cancel)]} {
+	    return 0
+	}
+	HiPSGetAsync $url $fn [list HiPSWake $co] $id
+	set code [yield]
+    } else {
+	set id [incr hipsnet(syncid)]
+	set var ::hipsnet(sync,$id)
+	set $var {}
+	HiPSGetAsync $url $fn [list set $var]
+	if {[set $var] == {}} {
+	    vwait $var
+	}
+	set code [set $var]
+	unset $var
     }
-    set code [set $var]
-    unset $var
     HiPSClearErrorInfo
     return $code
+}
+
+# resume coroutine co with value, from the event loop (never from inside
+# itself), unless it has ended
+proc HiPSWake {co {value {}}} {
+    after 0 [list HiPSResume $co $value]
+}
+
+proc HiPSResume {co value} {
+    if {[llength [info commands $co]]} {
+	$co $value
+    }
 }
 
 # The http package catches errors of its own, which leaves errorInfo
@@ -885,7 +991,8 @@ proc HiPSClearErrorInfo {} {
 }
 
 # Asynchronous GET of url into fn; done is called with the HTTP status
-# (0 if the request failed), after following redirects.
+# (0 if the request failed or was cancelled), after following redirects.
+# owner (a load's id, or deep) is what HiPSJobsCancel cancels by.
 #
 # The requests run in worker threads (Thread package). In the main
 # thread, Tcl's https blocks the event loop during each TLS handshake: a
@@ -893,17 +1000,57 @@ proc HiPSClearErrorInfo {} {
 # a deep window fetched 10 tiles. A worker makes one blocking request at
 # a time and posts the result back, so the display and XPA stay live.
 # Without the Thread package, the in-process path (HiPSGetAsyncHttp).
-proc HiPSGetAsync {url fn done {hops 0}} {
+proc HiPSGetAsync {url fn done {owner {}}} {
     global hipsnet
 
     if {![HiPSWorkersReady]} {
-	HiPSGetAsyncHttp $url $fn $done $hops
+	HiPSGetAsyncHttp $url $fn $done $owner
 	return
     }
     set id [incr hipsnet(jobid)]
     set hipsnet(job,$id) $done
+    set hipsnet(owner,$id) $owner
     lappend hipsnet(jobs) [list $id $url $fn]
     HiPSWorkerDispatch
+}
+
+# Cancel owner's requests: those waiting for a worker fail now, those in
+# a worker are aborted there (the worker resets its request from inside
+# geturl's event loop, which runs the message), and in-process ones are
+# reset. Each one's done gets 0.
+proc HiPSJobsCancel {owner} {
+    global hipsnet
+
+    if {[info exists hipsnet(jobs)]} {
+	set keep {}
+	foreach jj $hipsnet(jobs) {
+	    set jid [lindex $jj 0]
+	    if {[info exists hipsnet(owner,$jid)] &&
+		$hipsnet(owner,$jid) eq $owner} {
+		if {[info exists hipsnet(job,$jid)]} {
+		    after idle [list {*}$hipsnet(job,$jid) 0]
+		    unset hipsnet(job,$jid)
+		}
+		unset hipsnet(owner,$jid)
+	    } else {
+		lappend keep $jj
+	    }
+	}
+	set hipsnet(jobs) $keep
+	foreach key [array names hipsnet on,*] {
+	    set jid [string range $key 3 end]
+	    if {[info exists hipsnet(owner,$jid)] &&
+		$hipsnet(owner,$jid) eq $owner &&
+		[thread::exists $hipsnet($key)]} {
+		thread::send -async $hipsnet($key) [list cancel $jid]
+	    }
+	}
+    }
+    foreach key [array names hipsnet tok,*] {
+	if {$hipsnet($key) eq $owner} {
+	    catch {http::reset [string range $key 4 end] cancelled}
+	}
+    }
 }
 
 # the worker pool: hipsnet(parallel) threads, made when first needed;
@@ -943,21 +1090,35 @@ proc HiPSWorkersReady {} {
 	    http::config -proxyhost [lindex $proxy 0] \
 		-proxyport [lindex $proxy 1]
 	}
-	# ds9 is exiting: end the request in progress (fetch is inside
-	# geturl's event loop, which runs this) and follow no redirect
+	# end the request in progress (fetch is inside geturl's event
+	# loop, which runs these) and follow no redirect: abort when ds9
+	# is exiting, cancel when its request (job id) is cancelled
 	set stop 0
-	proc abort {} {
-	    set ::stop 1
+	set cur {}
+	set killed {}
+	proc reset {} {
 	    foreach tok [info vars ::http::\[0-9\]*] {
 		if {[array exists $tok]} {
 		    catch {http::reset $tok}
 		}
 	    }
 	}
+	proc abort {} {
+	    set ::stop 1
+	    reset
+	}
+	proc cancel {id} {
+	    if {$::cur eq $id} {
+		set ::killed $id
+		reset
+	    }
+	}
 	proc fetch {main id url fn headers} {
+	    set ::cur $id
 	    set code 0
 	    for {set hops 0} {$hops <= @REDIRECTS@} {incr hops} {
-		if {$::stop || [catch {open $fn wb} ch]} {
+		if {$::stop || $::killed eq $id ||
+		    [catch {open $fn wb} ch]} {
 		    break
 		}
 		set loc {}
@@ -989,6 +1150,10 @@ proc HiPSWorkersReady {} {
 		set url $loc
 		set code 0
 	    }
+	    if {$::killed eq $id} {
+		set code 0
+	    }
+	    set ::cur {}
 	    thread::send -async $main [list HiPSWorkerDone [thread::id] $id $code]
 	}
 	thread::wait
@@ -1016,6 +1181,8 @@ proc HiPSWorkersStop {} {
     }
     set hipsnet(jobs) {}
     array unset hipsnet job,*
+    array unset hipsnet owner,*
+    array unset hipsnet on,*
     set tids $hipsnet(workers)
     set hipsnet(workers) {}
     set hipsnet(idle) {}
@@ -1049,6 +1216,7 @@ proc HiPSWorkerDispatch {} {
 	set hipsnet(idle) [lrange $hipsnet(idle) 1 end]
 	lassign [lindex $hipsnet(jobs) 0] id url fn
 	set hipsnet(jobs) [lrange $hipsnet(jobs) 1 end]
+	set hipsnet(on,$id) $tid
 	thread::send -async $tid \
 	    [list fetch [thread::id] $id $url $fn [ProxyHTTP]]
     }
@@ -1061,6 +1229,7 @@ proc HiPSWorkerDone {tid id code} {
     if {[lsearch -exact $hipsnet(workers) $tid] >= 0} {
 	lappend hipsnet(idle) $tid
     }
+    unset -nocomplain hipsnet(on,$id) hipsnet(owner,$id)
     HiPSWorkerDispatch
     if {[info exists hipsnet(job,$id)]} {
 	set done $hipsnet(job,$id)
@@ -1070,7 +1239,7 @@ proc HiPSWorkerDone {tid id code} {
 }
 
 # the in-process path, without worker threads
-proc HiPSGetAsyncHttp {url fn done {hops 0}} {
+proc HiPSGetAsyncHttp {url fn done owner {hops 0}} {
     global ihttp
     global hipsnet
 
@@ -1083,23 +1252,21 @@ proc HiPSGetAsyncHttp {url fn done {hops 0}} {
 		    -binary 1 \
 		    -timeout $ihttp(timeout) \
 		    -headers "[ProxyHTTP]" \
-		    -command [list HiPSGetDone $url $fn $ch $done $hops]} \
+		    -command [list HiPSGetDone $url $fn $ch $done $owner $hops]} \
 	     token]} {
 	catch {close $ch}
 	after idle [list {*}$done 0]
 	return
     }
-    lappend hipsnet(tokens) $token
+    set hipsnet(tok,$token) $owner
 }
 
-proc HiPSGetDone {url fn ch done hops token} {
+proc HiPSGetDone {url fn ch done owner hops token} {
     global hipsnet
 
     catch {close $ch}
-    set ii [lsearch -exact $hipsnet(tokens) $token]
-    if {$ii >= 0} {
-	set hipsnet(tokens) [lreplace $hipsnet(tokens) $ii $ii]
-    }
+    set reset [expr {[http::status $token] == {reset}}]
+    unset -nocomplain hipsnet(tok,$token)
 
     set code 0
     set loc {}
@@ -1116,7 +1283,7 @@ proc HiPSGetDone {url fn ch done hops token} {
 
     # follow a redirect
     if {$code >= 300 && $code < 400 && $loc != {} &&
-	$hops < $hipsnet(redirects) && !$hipsnet(cancel)} {
+	$hops < $hipsnet(redirects) && !$reset} {
 	if {![regexp -nocase {^[a-z]+://} $loc]} {
 	    ParseURL $url rr
 	    if {[string index $loc 0] == {/}} {
@@ -1125,7 +1292,7 @@ proc HiPSGetDone {url fn ch done hops token} {
 		set loc "[string range $url 0 [string last / $url]]$loc"
 	    }
 	}
-	HiPSGetAsyncHttp $loc $fn $done [expr {$hops+1}]
+	HiPSGetAsyncHttp $loc $fn $done $owner [expr {$hops+1}]
 	return
     }
     {*}$done $code
@@ -1139,39 +1306,24 @@ proc HiPSCodeText {code} {
     }
 }
 
-# stop the fetch in progress
+# stop every load being fetched
 proc HiPSCancel {} {
     global hipsnet
 
-    set hipsnet(cancel) 1
-    # jobs waiting for a worker fail now; one already in a worker finishes
-    # (a blocking request can't be interrupted) and is ignored by its
-    # fetcher, which sees hipsnet(cancel)
-    if {[info exists hipsnet(jobs)]} {
-	set jobs $hipsnet(jobs)
-	set hipsnet(jobs) {}
-	foreach jj $jobs {
-	    set id [lindex $jj 0]
-	    if {[info exists hipsnet(job,$id)]} {
-		set done $hipsnet(job,$id)
-		unset hipsnet(job,$id)
-		after idle [list {*}$done 0]
-	    }
-	}
-    }
-    if {![info exists hipsnet(tokens)]} {
-	return
-    }
-    foreach token $hipsnet(tokens) {
-	catch {http::reset $token cancelled}
+    foreach id $hipsnet(fetches) {
+	HiPSFetchCancel $id
     }
 }
 
-# Progress: a small window while tiles are fetched, with Cancel
-proc HiPSProgress {} {
-    global hipsnet
+# Progress: a small window with a line per load still running after
+# hipsnet(progressdelay) ms, each with its Cancel
+proc HiPSProgress {id} {
     global ds9
+    upvar #0 hipsfetch$id ctx
 
+    if {![array exists ctx]} {
+	return
+    }
     set w {.hipsprogress}
     if {![winfo exists $w]} {
 	if {![info exists ds9(top)] || ![winfo exists $ds9(top)]} {
@@ -1180,17 +1332,26 @@ proc HiPSProgress {} {
 	toplevel $w
 	wm title $w [msgcat::mc {HiPS}]
 	wm transient $w $ds9(top)
-	ttk::label $w.msg -textvariable hipsnet(msg) -width 50
-	ttk::button $w.cancel -text [msgcat::mc {Cancel}] -command HiPSCancel
-	pack $w.msg -side top -padx 8 -pady 6
-	pack $w.cancel -side top -pady 6
 	wm protocol $w WM_DELETE_WINDOW HiPSCancel
     }
-    set hipsnet(msg) "[msgcat::mc {Fetching HiPS tiles}]: order $hipsnet(order), $hipsnet(done) / $hipsnet(total)"
+    set f $w.f$id
+    if {![winfo exists $f]} {
+	ttk::frame $f
+	ttk::label $f.msg -textvariable hipsfetch${id}(msg) -width 60
+	ttk::button $f.cancel -text [msgcat::mc {Cancel}] \
+	    -command [list HiPSFetchCancel $id]
+	pack $f.msg -side left -padx 8 -pady 4 -fill x -expand true
+	pack $f.cancel -side left -padx 4 -pady 4
+	pack $f -side top -fill x
+    }
 }
 
-proc HiPSProgressDone {} {
-    catch {destroy .hipsprogress}
+proc HiPSProgressRemove {id} {
+    set w {.hipsprogress}
+    catch {destroy $w.f$id}
+    if {[winfo exists $w] && ![llength [winfo children $w]]} {
+	destroy $w
+    }
 }
 
 # Deep windows (TODO_HIPS.md Phase 5). After a deep HiPS window is
@@ -1308,7 +1469,8 @@ proc HiPSDeepNext {} {
     incr hipsdeep(running)
     set tmp [HiPSTemp $fn]
     HiPSGetAsync "$url/Norder$order/Dir$dd/Npix$nn$sfx.$ext" $tmp \
-	[list HiPSDeepDone $hipsdeep(gen) $frame $root $order $nn $fn $tmp $sfx]
+	[list HiPSDeepDone $hipsdeep(gen) $frame $root $order $nn $fn $tmp $sfx] \
+	deep
 }
 
 proc HiPSDeepDone {gen frame root order nn fn tmp sfx code} {
@@ -1414,12 +1576,11 @@ proc HiPSDeepPending {} {
 }
 
 # Cancel (the status line's button, hips cancel): drop the waiting
-# requests and the pending redraws, leaving every window as it is. A
-# request already in a worker can't be interrupted; it finishes into the
-# cache without a redraw. The next pan or zoom asks for its tiles again.
+# requests, abort those in progress, and drop the pending redraws,
+# leaving every window as it is. The next pan or zoom asks for its
+# tiles again.
 proc HiPSDeepCancel {} {
     global hipsdeep
-    global hipsnet
 
     set hipsdeep(queue) {}
     array unset hipsdeep want,*
@@ -1431,28 +1592,8 @@ proc HiPSDeepCancel {} {
     }
     set hipsdeep(stale) $hipsdeep(running)
     incr hipsdeep(gen)
-    # ours still waiting for a worker fail now
-    if {[info exists hipsnet(jobs)]} {
-	set keep {}
-	foreach jj $hipsnet(jobs) {
-	    set id [lindex $jj 0]
-	    if {[info exists hipsnet(job,$id)] &&
-		[lindex $hipsnet(job,$id) 0] == {HiPSDeepDone}} {
-		after idle [list {*}$hipsnet(job,$id) 0]
-		unset hipsnet(job,$id)
-	    } else {
-		lappend keep $jj
-	    }
-	}
-	set hipsnet(jobs) $keep
-    }
-    # the in-process fetcher (no Thread package) can stop its requests,
-    # unless a load's are among them
-    if {!$hipsnet(busy)} {
-	foreach token $hipsnet(tokens) {
-	    catch {http::reset $token cancelled}
-	}
-    }
+    # and the requests themselves, waiting or in progress
+    HiPSJobsCancel deep
     HiPSDeepStatus
 }
 
@@ -1597,25 +1738,21 @@ proc HiPSIDOf {fn} {
 }
 
 # A HiPS name with its ID replaced by the HiPS's URL (options kept), or
-# the name unchanged if it is not an ID. {} and hipsnet(error) if the ID
-# can't be resolved.
+# the name unchanged if it is not an ID. Throws if the ID can't be
+# resolved.
 proc HiPSResolveName {fn} {
     if {![HiPSIsID $fn]} {
 	return $fn
     }
     set url [HiPSResolveID [HiPSIDOf $fn]]
-    if {$url == {}} {
-	return {}
-    }
     return "$url[string range $fn [string length [HiPSRoot $fn]] end]"
 }
 
 # The hips_service_url of HiPS id: from this session's answers, the
-# cached list, else a MocServer query. {} and hipsnet(error) if unknown.
+# cached list, else a MocServer query. Throws if unknown.
 proc HiPSResolveID {id} {
     global hipsnet
 
-    set hipsnet(error) {}
     if {[info exists hipsnet(id,$id)]} {
 	return $hipsnet(id,$id)
     }
@@ -1623,16 +1760,15 @@ proc HiPSResolveID {id} {
     set url [HiPSRecordURL $recs $id]
     if {$url == {}} {
 	set fn [file join [HiPSCacheRoot] mocserver-id.txt]
-	set recs [HiPSMocServerQuery [list ID $id get record] $fn]
+	set rc [catch {HiPSMocServerQuery [list ID $id get record] $fn} recs]
 	catch {file delete -force $fn}
-	if {$recs == {} && $hipsnet(error) != {}} {
-	    return {}
+	if {$rc} {
+	    error $recs
 	}
 	set url [HiPSRecordURL $recs $id]
     }
     if {$url == {}} {
-	set hipsnet(error) "[msgcat::mc {no HiPS with the ID}] $id"
-	return {}
+	error "[msgcat::mc {no HiPS with the ID}] $id"
     }
     set hipsnet(id,$id) $url
     return $url
@@ -1655,16 +1791,13 @@ proc HiPSRecordURL {recs id} {
 }
 
 # Ask the MocServer: query is a key value list; the answer (records of
-# "key = value" lines) goes to fn and is returned parsed. {} and
-# hipsnet(error) if no server answers.
+# "key = value" lines) goes to fn and is returned parsed. Throws if no
+# server answers.
 proc HiPSMocServerQuery {query fn} {
-    global hipsnet
     global phpxopen
 
-    set hipsnet(error) {}
     if {[catch {file mkdir [file dirname $fn]} err]} {
-	set hipsnet(error) "[msgcat::mc {can't create the HiPS cache}]: $err"
-	return {}
+	error "[msgcat::mc {can't create the HiPS cache}]: $err"
     }
     set code 0
     set server {}
@@ -1677,15 +1810,11 @@ proc HiPSMocServerQuery {query fn} {
     }
     if {$code != 200 || ![HiPSKeep $tmp $fn]} {
 	catch {file delete -force $tmp}
-	set hipsnet(error) "[msgcat::mc {can't query}] $server ([HiPSCodeText $code])"
-	return {}
+	error "[msgcat::mc {can't query}] $server ([HiPSCodeText $code])"
     }
     if {[catch {HiPSReadRecords $fn} recs]} {
-	set hipsnet(error) "[msgcat::mc {can't read}] $fn"
-	return {}
+	error "[msgcat::mc {can't read}] $fn"
     }
-    # a load that failed while this waited may have set it
-    set hipsnet(error) {}
     return $recs
 }
 
@@ -1738,8 +1867,8 @@ proc HiPSListFile {} {
 # obs_title, dataproduct_type, hips_service_url), sorted by ID. The
 # cached list is used while younger than hipsnet(listage) seconds
 # (update forces a query); a stale one serves when no server answers.
-# With cached, only what is cached, never a query. {} and hipsnet(error)
-# if there is no list.
+# With cached, only what is cached, never a query ({} if none). Throws if
+# there is no list.
 proc HiPSListRecords {{update 0} {cached 0}} {
     global hipsnet
 
@@ -1766,18 +1895,17 @@ proc HiPSListRecords {{update 0} {cached 0}} {
     set fields ID,obs_title,dataproduct_type,hips_service_url
     set all {}
     foreach type {image cube} {
-	set recs [HiPSMocServerQuery [list dataproduct_type $type \
-	    hips_service_url * get record fields $fields] $fn.$type]
-	if {$recs == {} && $hipsnet(error) != {}} {
+	if {[catch {HiPSMocServerQuery [list dataproduct_type $type \
+	    hips_service_url * get record fields $fields] $fn.$type} recs]} {
+	    set err $recs
 	    foreach tt {image cube} {
 		catch {file delete -force $fn.$tt}
 	    }
 	    # a stale list rather than none
 	    if {$have && ![catch {HiPSReadRecords $fn} recs]} {
-		set hipsnet(error) {}
 		return [HiPSListKeep $fn $recs]
 	    }
-	    return {}
+	    error $err
 	}
 	set all [concat $all $recs]
     }
@@ -1835,14 +1963,10 @@ proc HiPSListMatch {recs pattern} {
 
 # xpaget hips list [update] [pattern]: one HiPS a line, ID, a tab, its title
 proc HiPSListText {update pattern} {
-    global hipsnet
-
-    set recs [HiPSListRecords $update]
+    set rc [catch {HiPSListRecords $update} recs]
     HiPSClearErrorInfo
-    if {$recs == {}} {
-	if {$hipsnet(error) != {}} {
-	    Error "HiPS list: $hipsnet(error)"
-	}
+    if {$rc} {
+	Error "HiPS list: $recs"
 	return {}
     }
     set out {}

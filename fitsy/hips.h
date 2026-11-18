@@ -60,6 +60,8 @@ class FitsHiPS : public FitsFile {
   int width_;          // hips_tile_width (tileWidth_ is as read)
   long long* ident_;   // identity index table for tile(), width_^2
   int ownMap_;         // data_ is ours to free (until takeMap())
+  int remote_;         // a remote HiPS's cache (.remote): its tiles are
+		       // only those fetched
 
   int readProperties(const char*);
   const char* prop(const char*, const char* =NULL);
@@ -71,6 +73,7 @@ class FitsHiPS : public FitsFile {
   char* allskyPath(int order, const char* ext);
   int allskyWidth(int order);
   int anyTile(int order);
+  int allTiles(int order);
   int chooseSource(int order, int width, int explicitOrder);
   void noSource(const char*);
   int buildMap(float*);

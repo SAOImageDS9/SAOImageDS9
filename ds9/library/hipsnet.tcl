@@ -603,6 +603,13 @@ proc HiPSFetchProperties {url dir} {
     if {[catch {HiPSReadProperties $dir} props]} {
 	error "[msgcat::mc {can't read}] $url/properties"
     }
+    # what the reader goes by: a cache holds only the tiles fetched, so
+    # an order's tiles there count only when they are all there
+    # (FitsHiPS::allTiles), unlike a local HiPS's
+    set rf [file join $dir .remote]
+    if {![file isfile $rf]} {
+	catch {set ch [open $rf w]; puts $ch $url; close $ch}
+    }
     set new [HiPSProp $props hips_release_date]
     if {$old != {} && $new != $old} {
 	foreach ff [glob -nocomplain -directory $dir Norder* Moc.fits] {

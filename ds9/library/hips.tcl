@@ -1052,6 +1052,7 @@ proc HiPSDialog {} {
 
     $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
     $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
+    $mb add cascade -label [msgcat::mc {Cache}] -menu $mb.cache
 
     ThemeMenu $mb.file
     $mb.file add command -label "[msgcat::mc {Open}]..." \
@@ -1068,6 +1069,10 @@ proc HiPSDialog {} {
 	-command HiPSDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     EditMenu $mb hipslist
+
+    ThemeMenu $mb.cache
+    $mb.cache add command -label [msgcat::mc {Clear}] \
+	-command HiPSCacheClearCmd
 
     set f [ttk::frame $w.filter]
     ttk::label $f.tfilter -text [msgcat::mc {Filter}]
@@ -1115,6 +1120,25 @@ proc HiPSDialog {} {
 
     focus $w.filter.filter
     HiPSListLoad 0
+}
+
+# Cache > Clear: as Preferences > HEALPix > Clear HiPS Cache, which keeps
+# the HiPS shown in a frame or being loaded; the status line says what
+# was freed
+proc HiPSCacheClearCmd {} {
+    global hipslist
+
+    set root [HiPSCacheRoot]
+    set before [expr {[file isdirectory $root] ? [HiPSDirSize $root] : 0}]
+    HiPSCacheClear
+    set after [expr {[file isdirectory $root] ? [HiPSDirSize $root] : 0}]
+    set kept [llength [HiPSCacheInUse]]
+    set mb [format %.1f [expr {($before-$after)/1048576.0}]]
+    set msg "[msgcat::mc {HiPS cache cleared}]: $mb MB"
+    if {$kept} {
+	append msg ", $kept [msgcat::mc {kept (shown or loading)}]"
+    }
+    set hipslist(status) $msg
 }
 
 proc HiPSDestroyDialog {} {
@@ -1321,10 +1345,18 @@ proc HiPSOpenOrders {dir width {ext fits} {sfx {}}} {
 	    catch {lassign [hipsinfo allsky "$dir\[format=$ext\]" $kk] aw abad}
 	}
 
+	# with a reduced Allsky too, the tiles are read only if they are all
+	# there (FitsHiPS::allTiles): ask the reader
+	set partial 0
+	if {$aw > 0 && $aw != $width && $tiles != 0 &&
+	    ![catch {hipsinfo describe "$dir\[format=$ext,norder=$kk\]"} dd]} {
+	    set partial [expr {[dict get $dd source] != {tiles}}]
+	}
+
 	if {$aw == $width} {
 	    set source allsky
 	    set nside [expr {$width<<$kk}]
-	} elseif {$tiles != 0} {
+	} elseif {$tiles != 0 && !$partial} {
 	    set source tiles
 	    set nside [expr {wide($width)<<$kk}]
 	} elseif {$aw > 0} {

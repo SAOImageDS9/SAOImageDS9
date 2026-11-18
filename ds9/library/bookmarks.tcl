@@ -190,9 +190,9 @@ proc BookmarkGetSlices {which} {
 	}
 	set values {}
 	if {[$which has fits]} {
-	    set naxes [$which get fits naxes]
+	    set naxes [CubeFrame $which get fits naxes]
 	    for {set axis 2} {$axis < $naxes} {incr axis} {
-		lappend values [$which get fits slice $axis]
+		lappend values [CubeFrame $which get fits slice $axis]
 	    }
 	}
 	lappend result [list $channel $values]
@@ -221,7 +221,7 @@ proc BookmarkSetSlices {which slices} {
 	}
 	set axis 2
 	foreach value $values {
-	    $which update fits slice $axis $value
+	    CubeFrame $which update fits slice $axis $value
 	    incr axis
 	}
     }

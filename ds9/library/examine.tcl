@@ -17,6 +17,13 @@ proc ExamineButton {which x y} {
 	return
     }
 
+    # a HiPS isn't a file to load again (any frame type, cube or not)
+    set fn [HiPSFrameName $which]
+    if {$fn != {}} {
+	ExamineButtonHiPS $which $x $y $fn
+	return
+    }
+
     switch -- [$which get type] {
 	base {ExamineButtonBase $which $x $y}
 	rgb {ExamineButtonRGB $which $x $y}
@@ -90,6 +97,56 @@ proc ExamineButtonBase {which x y} {
     GotoFrame $which
 
     # update any dialogs
+    UpdateDS9
+}
+
+# A HiPS frame: the same HiPS (its name and options, so its cube slice
+# too) in a new frame of the same kind, zoomed in and centred on the sky
+# position clicked (by sky, as the frame's window may have been
+# recentred since it was loaded)
+proc ExamineButtonHiPS {which x y fn} {
+    global current
+    global pexamine
+
+    set sky [$which get coordinates $x $y wcs fk5 degrees]
+    set rgb [expr {[$which get type] == {rgb}}]
+
+    GotoFrame $which
+    switch -- $pexamine(mode) {
+	new {}
+	one {
+	    if {[info exists pexamine(one)]} {
+		if {$which == $pexamine(one)} {
+		    return
+		}
+		DeleteSingleFrame $pexamine(one)
+		GotoFrame $which
+	    }
+	}
+    }
+    if {$rgb} {
+	CreateRGBFrame
+    } else {
+	CreateFrame
+    }
+    set new $current(frame)
+    if {$pexamine(mode) == {one}} {
+	set pexamine(one) $new
+    }
+
+    set current(display) tile
+    DisplayMode
+
+    if {[ImportHiPSFile $fn]} {
+	FinishLoad
+	RealizeDS9
+	$new zoom $pexamine(zoom) $pexamine(zoom)
+	if {[llength $sky] == 2} {
+	    PanToFrame $new {*}$sky wcs fk5
+	}
+    }
+
+    GotoFrame $which
     UpdateDS9
 }
 

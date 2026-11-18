@@ -290,9 +290,21 @@ proc HiPSCubeState {which} {
     if {$fn == {}} {
 	return {}
     }
-    if {[catch {HiPSReadProperties [HiPSRoot [HiPSLocalName $fn]]} props]} {
+    # asked on every mouse move (the info panel): the properties are
+    # read once per HiPS, and again only if the file changes
+    global hipscube
+    set root [HiPSRoot [HiPSLocalName $fn]]
+    if {[catch {file mtime [file join $root properties]} mt]} {
 	return {}
     }
+    if {![info exists hipscube(props,$root)] ||
+	[lindex $hipscube(props,$root) 0] != $mt} {
+	if {[catch {HiPSReadProperties $root} props]} {
+	    return {}
+	}
+	set hipscube(props,$root) [list $mt $props]
+    }
+    set props [lindex $hipscube(props,$root) 1]
     if {![string match cube* [HiPSProp $props dataproduct_type image]]} {
 	return {}
     }
@@ -346,7 +358,11 @@ proc HiPSCubeAnswer {which st args} {
     set hasw [expr {[dict get $st crval] != {}}]
     switch -glob -- $args {
 	{has fits cube} {return 1}
-	{has wcs 3d *} {return [expr {[lindex $args 3] == {image} || $hasw}]}
+	{has wcs 3d *} {
+	    # the cube's axis is in the HiPS's one WCS (wcs, not wcsa ...)
+	    set sys [lindex $args 3]
+	    return [expr {$sys == {image} || ($hasw && $sys == {wcs})}]
+	}
 	{get fits naxes} {return 3}
 	{get fits depth} -
 	{get fits depth 2} {return $depth}

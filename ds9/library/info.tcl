@@ -228,7 +228,7 @@ proc LayoutFrameInfoBoxHorzWCS {which} {
 
     foreach ll {{} a b c d e f g h i j k l m n o p q r s t u v w x y z} {
 	if {$which != {} && $view(info,wcs$ll)} {
-	    if {[$which has wcs 3d wcs$ll]} {
+	    if {[CubeFrame $which has wcs 3d wcs$ll]} {
 		grid $ds9(info).wcsZLabel$ll -row $ds9(info,row,wcs$ll)\
 		    -column 5 -sticky w
 		grid $ds9(info).wcsZValue$ll -row $ds9(info,row,wcs$ll)\
@@ -260,7 +260,7 @@ proc LayoutFrameInfoBoxHorzImage {which} {
 	hsv -
 	hls {
 	    if {$which != {} && $view(info,image)} {
-		if {[$which has fits cube]} {
+		if {[CubeFrame $which has fits cube]} {
 		    grid $ds9(info).imageZLabel \
 			-row $ds9(info,row,image) -column 5 -sticky w
 		    grid $ds9(info).imageZValue \
@@ -349,7 +349,7 @@ proc LayoutFrameInfoBoxVertWCS {which} {
 
     foreach ll {{} a b c d e f g h i j k l m n o p q r s t u v w x y z} {
 	if {$which != {} && $view(info,wcs$ll)} {
-	    if {[$which has wcs 3d wcs$ll]} {
+	    if {[CubeFrame $which has wcs 3d wcs$ll]} {
 		grid $ds9(info).wcsZLabel$ll -row $ds9(info,row,wcs$ll)\
 		    -column 0
 		grid $ds9(info).wcsZValue$ll -row $ds9(info,row,wcs$ll)\
@@ -380,7 +380,7 @@ proc LayoutFrameInfoBoxVertImage {which} {
 	hsv -
 	hls {
 	    if {$which != {} && $view(info,image)} {
-		if {[$which has fits cube]} {
+		if {[CubeFrame $which has fits cube]} {
 		    grid $ds9(info).imageZLabel -row $ds9(info,row,image) \
 			-column 0 -sticky e
 		    grid $ds9(info).imageZValue -row $ds9(info,row,image) \
@@ -467,7 +467,7 @@ proc LayoutFrameInfoBoxAdvancedWCS {which} {
 
     foreach ll {{} a b c d e f g h i j k l m n o p q r s t u v w x y z} {
 	if {$which != {} && $view(info,wcs$ll)} {
-	    if {[$which has wcs 3d wcs$ll]} {
+	    if {[CubeFrame $which has wcs 3d wcs$ll]} {
 		grid $ds9(info).wcsZLabel$ll -row $ds9(info,row,wcs$ll)\
 		    -column 0
 		grid $ds9(info).wcsZValue$ll -row $ds9(info,row,wcs$ll)\
@@ -498,7 +498,7 @@ proc LayoutFrameInfoBoxAdvancedImage {which} {
 	hsv -
 	hls {
 	    if {$which != {} && $view(info,image)} {
-		if {[$which has fits cube]} {
+		if {[CubeFrame $which has fits cube]} {
 		    grid $ds9(info).imageZLabel -row $ds9(info,row,image) \
 			-column 0 -sticky e
 		    grid $ds9(info).imageZValue -row $ds9(info,row,image) \
@@ -685,6 +685,18 @@ proc UpdateInfoBox {which x y sys} {
     global view
 
     $which get info $sys $x $y infobox $pds9(infobox,filenametype)
+    # a HiPS cube frame holds one of its frames: its slice, and the
+    # value on the cube's axis
+    if {$infobox(image,x) != {}} {
+	set st [HiPSCubeState $which]
+	if {$st != {}} {
+	    set ss [expr {[dict get $st slice]+1}]
+	    set infobox(image,z) $ss
+	    if {[dict get $st crval] != {}} {
+		set infobox(wcs,z) [HiPSCubeValue $st $ss]
+	    }
+	}
+    }
 
     set infobox(bunit) [$which get fits header keyword BUNIT]
     if {$view(info,keyvalue) != ""} {

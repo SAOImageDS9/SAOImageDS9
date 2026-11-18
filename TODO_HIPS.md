@@ -782,9 +782,21 @@ variable: `[...]` inside Tcl double quotes is command substitution.
       pan, projection and on-screen scale (zoom x new/old window pixel,
       so a deep window goes deep again). The `cube` get commands go
       through `CubeSendCmdCurrent`.
+      Since 2026-11-18 the rest of ds9 asks through `CubeFrame` too:
+      slice movies (`movie slice`), bookmarks, the analysis macros
+      `$depth`/`$z`, and the info panel (its z column and values, set
+      after the frame's own in `UpdateInfoBox`; `HiPSCubeState` caches
+      the properties, as it runs on every mouse move). Examine loads
+      the frame's HiPS name (so its slice) into a new frame of the same
+      kind, centred on the sky position clicked (it used to try
+      `LoadFitsFile` on the HiPS, for any HiPS). Plot 3D and the 3-D
+      cutout refuse a HiPS cube with a message (one frame is loaded at a
+      time); 3-D crop stays off (the frame is 2-D). Backups and frame
+      reloads keep the slice through `slice=` in the name.
 - [x] Remote: the frame's suffix in tile/Allsky names, in the cache's
       `.missing`/`.noallsky` records and in deep-fetch requests.
-- Test: `Tests/hips/hipscube.sh` (27 checks, with `mkcube.py` and LAB HI).
+- Test: `Tests/hips/hipscube.sh` (55 checks, with `mkcube.py` and LAB HI;
+  section 11 for movie, bookmarks, macros, info panel, examine, plot 3D).
 - Not done: a cube is not a 3-D frame, so cube-wide operations (3-D
   render, `save` of the whole cube, `cube axes` order, cube-wide scale
   limits) aren't available; `match frame`/`lock cube` between HiPS cube

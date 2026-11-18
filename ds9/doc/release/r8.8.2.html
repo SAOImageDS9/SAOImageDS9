@@ -162,7 +162,7 @@ Aitoff ellipse.</li>
 <li><strong>HIPS</strong>: Load a local HiPS (IVOA Hierarchical
 Progressive Survey with FITS tiles) as the HEALPix map it holds at one
 order, with all the HEALPix projection options:
-<code>-hips /data/Fermi/HiPS[order=2,proj=mol]</code>, the
+<code>-hips /data/Fermi/HiPS[norder=2,proj=mol]</code>, the
 <code>hips</code> XPA/SAMP command, or <em>File &gt; Open HiPS...</em>.
 By default the deepest order up to NSIDE 2048 is read, from its tiles or
 its <code>Allsky.fits</code>; missing tiles are blank. The dialog shows
@@ -185,7 +185,7 @@ and backups record it by directory and options without copying its
 tiles.</li>
 <li><strong>HEALPIX</strong>: A table's HISTORY and COMMENT cards are
 kept in the image header (and so in <em>File &gt; Save</em>).</li>
-<li><strong>MOC</strong>: <code>order=n</code> draws a MOC at order
+<li><strong>MOC</strong>: <code>mocorder=n</code> draws a MOC at order
 <code>n</code>, coarser or finer than its own resolution.</li>
 <li><strong>FITS</strong>: Fix crashes reading truncated FITS files, or
 asking for an extension past the end of an unpadded file.</li>

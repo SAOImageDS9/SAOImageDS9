@@ -8,7 +8,7 @@ package provide DS9 1.0
 # into a frame as the HEALPix map it holds at one order (fitsy FitsHiPS),
 # so every HEALPix projection option works. The name is the HiPS root
 # directory, optionally followed by options in brackets:
-#   /data/Fermi/HiPS[order=3,proj=MOL,lon0=180]
+#   /data/Fermi/HiPS[norder=3,proj=MOL,lon0=180]
 # See TODO_HIPS.md.
 
 proc ImportHiPSFile {fn} {
@@ -503,7 +503,7 @@ proc HiPSRestore {fn {coverage {}}} {
 # Coverage overlay. A HiPS's Moc.fits (HiPS 1.0 sec. 4.4.2) says where
 # the survey has data. It is drawn as the edge of the coverage: the MOC
 # is loaded into a scratch frame as a plate carree HEALPix image (capped
-# at order hipscov(order) with order=, so a deep MOC stays small; every
+# at order hipscov(order) with mocorder=, so a deep MOC stays small; every
 # CAR pixel is sky, unlike the HPX layout's gaps), contoured at 0.5,
 # and the contour is pasted into the HiPS frame through sky coordinates
 # as an aux contour. That works whatever the MOC's and the survey's
@@ -568,7 +568,7 @@ proc HiPSCoverageShow {which} {
     set mf $current(frame)
     array set loadParam [list file,type fits file,mode {} \
 			     load,type mmapincr load,layer {} \
-			     file,name "$moc\[order=$hipscov(order),proj=car\]"]
+			     file,name "$moc\[mocorder=$hipscov(order),proj=car\]"]
     set cc {}
     set loaded [ProcessLoad 0]
     if {$loaded} {
@@ -749,7 +749,7 @@ proc ProcessSendHiPSCmd {proc id param {sock {}} {fn {}}} {
 # Choose a HiPS root directory, then the order and projection. The
 # order list mirrors the reader's choice (fitsy/hips.C): order K reads
 # its Allsky.fits if that holds full-size tiles, else its tiles, else a
-# reduced Allsky; without order=, the largest map up to nside 2048
+# reduced Allsky; without norder=, the largest map up to nside 2048
 # (HIPS_NSIDE_AUTO), the Allsky winning ties; nothing above nside 8192
 # (HIPS_NSIDE_MAX).
 
@@ -1269,7 +1269,7 @@ proc HiPSFitsInfo {fn} {
 
 # What each order present in dir can give, as a list of dicts, deepest
 # first: order, nside and source (allsky, tiles, reduced, or {} for
-# nothing readable) for order=K; tiles (FITS tiles present), total
+# nothing readable) for norder=K; tiles (FITS tiles present), total
 # (tiles in the sky), allsky (usable Allsky tile width, 0 if none) and
 # allskybad (1 if an Allsky is there but can't be used, e.g. truncated)
 proc HiPSOpenOrders {dir width {ext fits} {sfx {}}} {
@@ -1350,7 +1350,7 @@ proc HiPSOpenOrders {dir width {ext fits} {sfx {}}} {
     return $rr
 }
 
-# What the reader picks without order=, as a dict like one of
+# What the reader picks without norder=, as a dict like one of
 # HiPSOpenOrders' but with the nside and source of that choice, or {}.
 # This follows FitsHiPS::chooseSource (fitsy/hips.C) step for step:
 # orders from 0 while the tiles fit nside 2048, the Allsky tried before
@@ -1650,7 +1650,7 @@ proc HiPSOpenParamsDialog {dir {url {}}} {
 	set hipsopen(proj) $hpxed(proj)
 	set opts {}
 	if {$hpxed(order) != {}} {
-	    lappend opts "order=$hpxed(order)"
+	    lappend opts "norder=$hpxed(order)"
 	}
 	if {$hpxed(ext) != $hpxed(defext)} {
 	    lappend opts "format=[expr {$hpxed(ext) == {jpg} ? {jpeg} : $hpxed(ext)}]"
@@ -1666,7 +1666,7 @@ proc HiPSOpenParamsDialog {dir {url {}}} {
 }
 
 # The orders the dialog offers for tiles ext: a dict of orders, auto
-# (the automatic choice, {} if none), usable (the orders order=K can
+# (the automatic choice, {} if none), usable (the orders norder=K can
 # load) and smallest; {} if nothing can be loaded
 proc HiPSOpenScan {dir url props ext} {
     global hipsopen
@@ -1684,11 +1684,11 @@ proc HiPSOpenScan {dir url props ext} {
 	set auto [HiPSOpenAutoOrder $orders $width $maxorder]
     } else {
 	set orders [HiPSOpenRemoteOrders $props $width $ext $maxorder]
-	# without order=, the quick look (hipsnet.tcl)
+	# without norder=, the quick look (hipsnet.tcl)
 	set auto [dict create order {} nside 0 source quick allskybad 0]
     }
 
-    # the orders that can be loaded with order=K, and the smallest
+    # the orders that can be loaded with norder=K, and the smallest
     set usable {}
     set smallest {}
     foreach oo $orders {

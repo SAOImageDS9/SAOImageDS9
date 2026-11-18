@@ -325,7 +325,7 @@ How to use it (Phase 2 adds the `hips` command and the menu): pass the
 root directory, braced as for any load, to the frame:
 
 ```
-set fn {/path/to/HiPS[order=2,proj=MOL]}
+set fn {/path/to/HiPS[norder=2,proj=MOL]}
 $current(frame) load hips "\{$fn\}"
 ```
 
@@ -342,11 +342,13 @@ variable: `[...]` inside Tcl double quotes is command substitution.
     and JPEG are Phase 3). An unknown `hips_frame` (e.g. `venus`) gives
     XLON/XLAT.
 - [x] Order choice.
-  - `order=K` (a new `ORDER_ '=' INT` rule in `fitsy/parser.Y`, beside
-    the HEALPix `order=ring|nested`, plus `FitsFile::pHiPSOrder_`)
-    reads that order: from its Allsky if that holds full-size tiles,
+  - `norder=K` (a `NORDER_ '=' INT` rule in `fitsy/parser.Y`, plus
+    `FitsFile::pHiPSOrder_`; named after the HiPS's `NorderK`
+    directories, since `order=` is the HEALPix `ring|nested` ordering;
+    it was `order=K` until 2026-11-17) reads that order: from its
+    Allsky if that holds full-size tiles,
     else from its tiles, else from a reduced Allsky.
-  - Without `order=`, the reader takes the largest map no bigger than
+  - Without `norder=`, the reader takes the largest map no bigger than
     nside 2048 (`HIPS_NSIDE_AUTO`) that any order's tiles or Allsky can
     make. That handles omitted orders and partial local copies. At
     equal nside the Allsky wins (one file).
@@ -414,7 +416,7 @@ variable: `[...]` inside Tcl double quotes is command substitution.
 - [x] `hips` command (done 2026-11-15, local directories only; URLs are
       Phase 3). The options use the HEALPix bracket syntax, like any
       HEALPix load, rather than separate words.
-      - Command line: `ds9 -hips <dir>[order=,proj=,lon0=,lat0=,fov=]`.
+      - Command line: `ds9 -hips <dir>[norder=,proj=,lon0=,lat0=,fov=]`.
         This is a file type like `-nrrd`, with `MultiLoad`, so several
         HiPS load into several frames. Plain and 3D frames load it; RGB
         and HLS/HSV ignore it, like `-envi`.
@@ -521,7 +523,7 @@ variable: `[...]` inside Tcl double quotes is command substitution.
       and Analysis > HiPS Coverage (enabled for a HiPS frame that has a
       `Moc.fits`).
       - The edge of the MOC is drawn as an aux contour.
-        `HiPSCoverageShow` loads `Moc.fits[order=9,proj=car]` into a
+        `HiPSCoverageShow` loads `Moc.fits[mocorder=9,proj=car]` into a
         scratch frame, contours it at 0.5, and pastes the contour into
         the HiPS frame through fk5. Plate carree because every pixel is
         sky; the HPX layout's facet gaps are 0 and would be traced. The
@@ -539,10 +541,11 @@ variable: `[...]` inside Tcl double quotes is command substitution.
         (`tksao/frame/parser.Y`, bison 2.3). The frame's load parameters
         keep its index (`hips,coverage`). A new load clears both.
       - Backup/restore: `HiPSRestore <name> <index>`.
-      - New: `order=K` on a MOC file draws it at order K (coarser:
+      - New: `mocorder=K` on a MOC file draws it at order K (coarser:
         deeper cells mark their parent; finer: cells fill their
-        children). It reuses the integer `order=` of HiPS
-        (`fitsy/hpx.C`, `buildMOC`).
+        children). `FitsFile::pMocOrder_`, `fitsy/hpx.C` `buildMOC`;
+        named after the MOC's `MOCORDER` keyword (it shared the HiPS's
+        integer `order=` until 2026-11-17).
       - **Fixed on the way, both pre-existing:**
         - `Contour::list` (`tksao/frame/contour.C`) had an unbraced
           `if`, so a contour with no vertices dereferenced NULL. Any
@@ -583,11 +586,11 @@ variable: `[...]` inside Tcl double quotes is command substitution.
         the URL (xpaget hips, recent, backup); `file,fn` is the cache.
       - What is fetched: `properties` every time (a changed
         `hips_release_date` empties the cached tiles; a cached copy
-        serves offline). Without `order=`, the deepest Allsky of orders
+        serves offline). Without `norder=`, the deepest Allsky of orders
         3..0, one file (Fermi: nside 512), else the tiles of the
-        deepest order up to nside 512. With `order=K`, its Allsky if
+        deepest order up to nside 512. With `norder=K`, its Allsky if
         full-size, else its tiles, only the cells in `Moc.fits`.
-        The reader is then given `order=K`, so the cache's other
+        The reader is then given `norder=K`, so the cache's other
         contents don't change what loads.
       - Tiles: 6 parallel async requests, a progress window with
         Cancel (a cancelled fetch keeps what arrived). 404s are blank
@@ -746,9 +749,9 @@ Design (2026-11-16, after reading the window code):
   the coarse map.
 - Remote: build() asks Tcl for the missing visible tiles (async), and
   the fetch's completion rebuilds the window around the same centre.
-- Applies to a HiPS in any zenithal/conic window; `order=K` only sets
+- Applies to a HiPS in any zenithal/conic window; `norder=K` only sets
   the coarse level it starts from (a remote load always passes the
-  reader an explicit order, so "only without order=" turned deep windows
+  reader an explicit order, so "only without norder=" turned deep windows
   off for every remote HiPS). All-sky projections stay as they are.
 - Correctness test: a deep window at order K must equal, pixel for
   pixel, today's window built from the full map at order K.
@@ -789,7 +792,7 @@ Design (2026-11-16, after reading the window code):
         pixel that has a tile at its order equals the tile
         (`Tests/hips/deepcheck.py`: astropy WCS + healpy + the tile
         file; 493,099 pixels at order 5 = nside 16384), orders follow
-        zoom, pan, zoom out, order=K, all-sky stays, scale limits
+        zoom, pan, zoom out, norder=K, all-sky stays, scale limits
         stable, remote fetch of only the window's tiles + refresh +
         cache, colour channels.
 - [x] Progressive remote zoom and stale views (done 2026-11-16):

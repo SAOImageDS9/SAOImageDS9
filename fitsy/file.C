@@ -137,6 +137,7 @@ FitsFile::FitsFile()
   pHPXLat0_ =NAN;
   pHPXFov_ =NAN;
   pHiPSOrder_ =-1;
+  pMocOrder_ =-1;
   pHiPSSlice_ =-1;
   pHiPSFormat_ =0;
 

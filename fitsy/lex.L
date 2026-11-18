@@ -74,7 +74,9 @@ little   	{RET(LITTLE_)}
 littleendian	{RET(LITTLEENDIAN_)}
 lat0		{RET(LAT0_)}
 lon0		{RET(LON0_)}
+mocorder	{RET(MOCORDER_)}
 nested		{RET(NESTED_)}
+norder		{RET(NORDER_)}
 north		{RET(NORTH_)}
 order		{RET(ORDER_)}
 proj		{RET(PROJ_)}

@@ -25,7 +25,7 @@ using namespace std;
 // The deepest map chosen automatically: nside 2048 is 50M pixels
 // (200 MB), and FitsHPX's HPX image adds (5*2048)^2 floats.
 #define HIPS_NSIDE_AUTO 2048
-// Refuse anything bigger, even when asked for with order=.
+// Refuse anything bigger, even when asked for with norder=.
 #define HIPS_NSIDE_MAX 8192
 
 // NESTED sub-index of a tile pixel: ix (row from the top) in the even
@@ -279,11 +279,29 @@ FitsHiPS::FitsHiPS(const char* fn, Tcl_Interp* interp, int channel)
   width_ = 0;
   ident_ = NULL;
 
-  // root directory, plus [order=,proj=,...] options
+  // root directory, plus [norder=,proj=,...] options
   parse(fn);
   if (!valid_ || !pName_)
     return;
   valid_ = 0;
+
+  // the file name grammar takes what it can't parse for a bin filter
+  // (FitsFile::parse); a HiPS has none, so it is a mistyped option
+  // (e.g. order=3, which is the HEALPix ring|nested ordering)
+  if (pFilter_ && *pFilter_) {
+    ostringstream str;
+    str << "HiPS: unknown option in [" << pFilter_ << "]"
+	<< " (the HiPS order is norder=)" << ends;
+    internalError(str.str().c_str());
+    return;
+  }
+  // order=ring|nested is a HEALPix table's pixel ordering; HiPS tiles
+  // are always NESTED
+  if (pHPXOrder_ >= 0) {
+    internalError("HiPS: order= is a HEALPix table's pixel ordering"
+		  " (the HiPS order is norder=)");
+    return;
+  }
 
   if (!readProperties(pName_)) {
     ostringstream str;
@@ -814,7 +832,7 @@ int FitsHiPS::chooseSource(int maxOrder, int width, int askOrder)
     str << "no " << tileExt_ << " tiles or Allsky";
     if (depth_ > 1)
       str << " for cube frame " << slice_;
-    str << " small enough to load; try order=" << ends;
+    str << " small enough to load; try norder=" << ends;
     noSource(str.str().c_str());
     return 0;
   }

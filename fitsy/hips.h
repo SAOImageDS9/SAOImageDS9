@@ -18,8 +18,8 @@
 // HEALPix map.
 //
 // The name is the HiPS root directory, optionally followed by the usual
-// HEALPix bracket options, e.g. "/data/Fermi/HiPS[order=3,proj=MOL]".
-// order= picks the HiPS order. Without it, the deepest order whose map
+// HEALPix bracket options, e.g. "/data/Fermi/HiPS[norder=3,proj=MOL]".
+// norder= picks the HiPS order. Without it, the deepest order whose map
 // fits in HIPS_NSIDE_AUTO is used.
 //
 // Tile layout (HiPS 1.0 sec. 4; the in-tile order is only drawn there,

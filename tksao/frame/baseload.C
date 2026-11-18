@@ -175,7 +175,7 @@ void Base::loadENVISMMapCmd(const char* hdr, const char* fn)
 
 // *** HiPS ***
 
-// fn: the HiPS root directory, with optional [order=,proj=,...];
+// fn: the HiPS root directory, with optional [norder=,proj=,...];
 // channel: for colour tiles, 0/1/2 reads red/green/blue (-1: luminance)
 void Base::loadHiPSCmd(const char* fn, int channel)
 {

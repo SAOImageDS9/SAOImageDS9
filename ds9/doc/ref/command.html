@@ -1224,16 +1224,16 @@ $ds9 -help # Display brief help message and exit.<br>
 $ds9 --help # Display command line options within help facility<br>
 $ds9 -? # Display command line options within help facility.<br></tt>
 <p><b><a name="hips" id="hips"></a>hips</b></p>
-<p>Load a HiPS (Hierarchical Progressive Survey), given its root directory, URL or ID (such as <tt>CDS/P/DSS2/color</tt>, looked up in the CDS MocServer), as the HEALPix map it holds at one order. Optional parameters: the HiPS order, the tiles to read (<tt>format</tt>, when the HiPS has more than one kind) and the HEALPix projection options. <tt>close</tt> clears the current frame if it holds a HiPS. <tt>coverage</tt> outlines the sky the HiPS in the current frame covers (its <tt>Moc.fits</tt>). <tt>cancel</tt> stops fetching the tiles of a zoomed-in window on a remote HiPS (and a load in progress). See <a href="file.html#HiPS">HiPS</a>.<br></p>
+<p>Load a HiPS (Hierarchical Progressive Survey), given its root directory, URL or ID (such as <tt>CDS/P/DSS2/color</tt>, looked up in the CDS MocServer), as the HEALPix map it holds at one order. Optional parameters: the HiPS order (<tt>norder</tt>), the tiles to read (<tt>format</tt>, when the HiPS has more than one kind) and the HEALPix projection options. <tt>close</tt> clears the current frame if it holds a HiPS. <tt>coverage</tt> outlines the sky the HiPS in the current frame covers (its <tt>Moc.fits</tt>). <tt>cancel</tt> stops fetching the tiles of a zoomed-in window on a remote HiPS (and a load in progress). See <a href="file.html#HiPS">HiPS</a>.<br></p>
 <tt>Syntax:<br>
--hips &lt;directory|URL|ID&gt;[order=&lt;n&gt;,slice=&lt;n&gt;,format=fits|png|jpeg,proj=...,lon0=...,lat0=...,fov=...]<br>
+-hips &lt;directory|URL|ID&gt;[norder=&lt;n&gt;,slice=&lt;n&gt;,format=fits|png|jpeg,proj=...,lon0=...,lat0=...,fov=...]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[coverage [yes|no]]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cancel]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[close]<br>
 &nbsp;<br>
 Example:<br>
 $ds9 -hips /data/Fermi/HiPS<br>
-$ds9 -hips /data/Fermi/HiPS[order=2,proj=mol]<br>
+$ds9 -hips /data/Fermi/HiPS[norder=2,proj=mol]<br>
 $ds9 -hips /data/Abell/HiPS[proj=tan] -hips coverage<br>
 $ds9 -hips CDS/P/DSS2/color[proj=tan,lon0=83.6,lat0=22,fov=2]<br></tt>
 <p><b><a name="histequ" id="histequ"></a>histequ</b></p>

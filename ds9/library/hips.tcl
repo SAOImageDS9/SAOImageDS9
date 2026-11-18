@@ -851,7 +851,7 @@ proc HiPSSendCmdList {update pattern} {
 	[HiPSListText $update $pattern]
 }
 
-# File > Open HiPS...
+# The HiPS window's File > Open...
 # Choose a HiPS root directory, then the order and projection. The
 # order list mirrors the reader's choice (fitsy/hips.C): order K reads
 # its Allsky.fits if that holds full-size tiles, else its tiles, else a
@@ -879,6 +879,11 @@ proc HiPSOpenDef {} {
     set hipsopen(dir) {}
     set hipsopen(url) {}
     set hipsopen(proj) hpx
+
+    # the HiPS window (File > Open as > HiPS)
+    global hipslist
+    set hipslist(top) .hips
+    set hipslist(mb) .hipsmb
 }
 
 # A number for the dialog's fields: 6 decimals, no trailing zeros
@@ -968,7 +973,7 @@ proc HiPSOpenProjOptions {vals} {
     return $opts
 }
 
-# File > Open HiPS URL...: a remote HiPS, by URL or by ID. Its
+# The HiPS window's File > Open URL...: a remote HiPS, by URL or by ID. Its
 # properties are fetched (into the cache) for the dialog; the load
 # fetches what the chosen order needs (hipsnet.tcl).
 proc OpenHiPSURLDialog {} {
@@ -1020,31 +1025,49 @@ proc HiPSOpenURL {url} {
     HiPSLoadAsync $fn
 }
 
-# File > Open HiPS from List...: the image and cube HiPS the MocServer
-# lists (hipsnet.tcl), filtered by ID or title as you type; the one
-# chosen goes on to the Open HiPS dialog.
-proc OpenHiPSListDialog {} {
+# File > Open as > HiPS...: the HiPS window. A tool window, left open,
+# listing the image and cube HiPS the MocServer knows (hipsnet.tcl),
+# filtered by ID or title as you type; the one chosen goes on to the
+# Open HiPS dialog and loads in the background. Its File menu also opens
+# a local HiPS (a directory) or one by URL or ID, so the window is
+# useful when the list can't be had (no network: it says why).
+proc HiPSDialog {} {
     global hipslist
+    global ds9
 
-    set w {.hipslist}
+    set w $hipslist(top)
+    set mb $hipslist(mb)
     if {[winfo exists $w]} {
 	raise $w
 	return
     }
-
-    set rc [catch {HiPSListRecords} recs]
-    HiPSClearErrorInfo
-    if {$rc || $recs == {}} {
-	Error "[msgcat::mc {Unable to list HiPS}]: $recs"
-	return
-    }
-    set hipslist(recs) $recs
-    set hipslist(ok) 0
     if {![info exists hipslist(filter)]} {
 	set hipslist(filter) {}
     }
+    set hipslist(recs) {}
+    set hipslist(count) {}
+    set hipslist(status) {}
 
-    DialogCreate $w [msgcat::mc {Open HiPS from List}] hipslist(ok)
+    Toplevel $w $mb 7 [msgcat::mc {HiPS}] HiPSDestroyDialog
+
+    $mb add cascade -label [msgcat::mc {File}] -menu $mb.file
+    $mb add cascade -label [msgcat::mc {Edit}] -menu $mb.edit
+
+    ThemeMenu $mb.file
+    $mb.file add command -label "[msgcat::mc {Open}]..." \
+	-command OpenHiPSDialog
+    $mb.file add command -label "[msgcat::mc {Open URL}]..." \
+	-command OpenHiPSURLDialog
+    $mb.file add separator
+    $mb.file add command -label [msgcat::mc {Open Selected}] \
+	-command HiPSListOpen
+    $mb.file add command -label [msgcat::mc {Update List}] \
+	-command HiPSListUpdate
+    $mb.file add separator
+    $mb.file add command -label [msgcat::mc {Close}] \
+	-command HiPSDestroyDialog -accelerator "${ds9(ctrl)}W"
+
+    EditMenu $mb hipslist
 
     set f [ttk::frame $w.filter]
     ttk::label $f.tfilter -text [msgcat::mc {Filter}]
@@ -1069,37 +1092,91 @@ proc OpenHiPSListDialog {} {
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 0 -weight 1
 
+    ttk::label $w.status -textvariable hipslist(status) -anchor w
+
     set f [ttk::frame $w.buttons]
-    ttk::button $f.ok -text [msgcat::mc {Open}] -command HiPSListOK \
+    ttk::button $f.open -text [msgcat::mc {Open}] -command HiPSListOpen \
 	-default active
     ttk::button $f.update -text [msgcat::mc {Update List}] \
 	-command HiPSListUpdate
-    ttk::button $f.cancel -text [msgcat::mc {Cancel}] \
-	-command {set hipslist(ok) 0}
-    pack $f.ok $f.update $f.cancel -side left -expand true -padx 2 -pady 4
+    ttk::button $f.close -text [msgcat::mc {Close}] -command HiPSDestroyDialog
+    pack $f.open $f.update $f.close -side left -expand true -padx 2 -pady 4
 
     ttk::separator $w.sep -orient horizontal
     pack $w.buttons $w.sep -side bottom -fill x
+    pack $w.status -side bottom -fill x -padx 4
     pack $w.filter -side top -fill x -padx 2 -pady 2
     pack $w.list -side top -fill both -expand true -padx 2 -pady 2
 
     bind $w.filter.filter <KeyRelease> HiPSListFill
-    bind $hipslist(tree) <Double-1> HiPSListOK
-    bind $w <Return> HiPSListOK
+    bind $hipslist(tree) <Double-1> HiPSListOpen
+    bind $w <Return> HiPSListOpen
+    bind $w <<Close>> HiPSDestroyDialog
 
-    HiPSListFill
-    DialogWait $w hipslist(ok) $w.filter.filter
+    focus $w.filter.filter
+    HiPSListLoad 0
+}
 
-    set id {}
-    if {$hipslist(ok)} {
-	set id [lindex [$hipslist(tree) selection] 0]
+proc HiPSDestroyDialog {} {
+    global hipslist
+
+    if {[winfo exists $hipslist(top)]} {
+	destroy $hipslist(top)
+	destroy $hipslist(mb)
     }
-    destroy $w
+    # the filter is kept for next time
     unset -nocomplain hipslist(recs) hipslist(tree)
+}
+
+# fill the list (update: ask the MocServer again); without one, say why
+proc HiPSListLoad {update} {
+    global hipslist
+
+    set hipslist(status) [msgcat::mc {Asking the MocServer for its list of HiPS...}]
+    set rc [catch {HiPSListRecords $update} recs]
+    HiPSClearErrorInfo
+    # the window may have been closed meanwhile
+    if {![winfo exists $hipslist(top)]} {
+	return
+    }
+    if {$rc || $recs == {}} {
+	if {$rc} {
+	    set hipslist(status) "[msgcat::mc {No list of HiPS}]: $recs"
+	} else {
+	    set hipslist(status) [msgcat::mc {No list of HiPS}]
+	}
+	if {$update && $hipslist(recs) != {}} {
+	    # keep the list shown
+	    append hipslist(status) " ([msgcat::mc {the earlier list is shown}])"
+	    return
+	}
+	set hipslist(recs) {}
+    } else {
+	set hipslist(recs) $recs
+	set hipslist(status) {}
+    }
+    HiPSListFill
+}
+
+proc HiPSListUpdate {} {
+    global hipslist
+
+    if {[winfo exists $hipslist(top)]} {
+	HiPSListLoad 1
+    }
+}
+
+# the selected HiPS: the Open HiPS dialog for it, then the load
+proc HiPSListOpen {} {
+    global hipslist
+
+    if {![info exists hipslist(tree)] || ![winfo exists $hipslist(tree)]} {
+	return
+    }
+    set id [lindex [$hipslist(tree) selection] 0]
     if {$id == {}} {
 	return
     }
-
     set rc [catch {HiPSResolveID $id} url]
     HiPSClearErrorInfo
     if {$rc} {
@@ -1133,27 +1210,6 @@ proc HiPSListFill {} {
     if {$sel != {}} {
 	$tree selection set $sel
 	$tree see $sel
-    }
-}
-
-proc HiPSListUpdate {} {
-    global hipslist
-
-    set rc [catch {HiPSListRecords 1} recs]
-    HiPSClearErrorInfo
-    if {$rc || $recs == {}} {
-	Error "[msgcat::mc {Unable to list HiPS}]: $recs"
-	return
-    }
-    set hipslist(recs) $recs
-    HiPSListFill
-}
-
-proc HiPSListOK {} {
-    global hipslist
-
-    if {[$hipslist(tree) selection] != {}} {
-	set hipslist(ok) 1
     }
 }
 

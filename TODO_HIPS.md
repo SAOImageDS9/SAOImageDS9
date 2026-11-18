@@ -4,7 +4,7 @@ DS9 loads a HiPS, local or remote (http/https, or by MocServer ID), as
 the HEALPix map it holds at one order, and shows it with every HEALPix
 projection option (`proj=`, `lon0=`, `lat0=`, `fov=`). FITS, PNG and
 JPEG tiles, colour HiPS (RGB frames), cubes (one frame at a time), the
-`hips` command (command line, XPA, SAMP), the Open HiPS dialogs, Open
+`hips` command (command line, XPA, SAMP), the HiPS window, Open
 Recent, backup/restore, a coverage overlay from `Moc.fits`, and
 zenithal/conic windows that zoom into the deeper tiles, fetching only
 the visible ones. Builds on the HEALPix projection work in `TODO.md`
@@ -61,9 +61,15 @@ later commits not yet; no PR.
 - For the maintainers to decide: where the HiPS cache lives (now the
   preferences directory, `~/.ds9/hips`, limit in Preferences >
   HEALPix); the `hips list` columns (ID and title, which scripts will
-  come to depend on); the menus (three File entries, Open HiPS, Open
-  HiPS URL, Open HiPS from List, rather than a cascade or an Image
-  Servers entry).
+  come to depend on).
+- Menus (2026-11-18): the three File entries (Open HiPS, Open HiPS
+  URL, Open HiPS from List) became one, File > Open as > HiPS..., which
+  opens the HiPS window: a tool window (not modal, left open) with the
+  MocServer list, a File menu (Open..., a local HiPS; Open URL..., by
+  URL or ID; Open Selected; Update List; Close) and Edit (Cut, Copy,
+  Paste in the filter). Without the list it opens anyway and says why.
+  `HiPSDialog` in `hips.tcl`; tested in `hipsid.sh` section 7. The log
+  below names the old entries.
 - Tests: some checks read ds9's internal variables or its English
   messages, so they would need updating with those.
 

@@ -1625,7 +1625,7 @@ proc HiPSDeepRefresh {frame} {
 # is then loaded from its hips_service_url like any URL. The list of
 # image and cube HiPS (ID, title, type, URL) is fetched once into the
 # cache, mocserver.txt, refreshed after hipsnet(listage) seconds; it
-# serves xpaget hips list, File > Open HiPS from List, and resolves IDs
+# serves xpaget hips list, the HiPS window (File > Open as > HiPS), and resolves IDs
 # without a query of its own. A name is an ID only if it is not a local
 # file or directory.
 

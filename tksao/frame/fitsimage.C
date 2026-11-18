@@ -1693,6 +1693,25 @@ void FitsImage::process(const char* fn, int id)
     return;
   }
 
+  // norder=, slice= and format= choose what a HiPS reads; on any other
+  // file they would be ignored, so say so instead
+  if (!dynamic_cast<FitsHiPS*>(fits_)) {
+    const char* opt = NULL;
+    if (fits_->pHiPSOrder() >= 0)
+      opt = "norder=";
+    else if (fits_->pHiPSSlice() >= 0)
+      opt = "slice=";
+    else if (fits_->pHiPSFormat())
+      opt = "format=";
+    if (opt) {
+      ostringstream str;
+      str << opt << " is for a HiPS (the hips command)" << ends;
+      internalError(str.str().c_str());
+      reset();
+      return;
+    }
+  }
+
   if (fits_->isImage()) {
     switch (fits_->pEncoding()) {
     case FitsFile::RAW:

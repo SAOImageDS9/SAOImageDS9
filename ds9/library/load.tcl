@@ -295,7 +295,16 @@ proc ProcessLoad {{err 1}} {
 	UpdateColormapLevel
     } rr]} {
 	if {$err} {
-	    Error "[msgcat::mc {Unable to load}] $loadParam(file,type) $loadParam(file,mode) $loadParam(file,name)"
+	    # the reader's reason (internalError), if it gave one: in the
+	    # message, so XPA and SAMP get it too (this one would replace
+	    # it) and the GUI shows one box, not two
+	    set why [string trim $ds9(msg)]
+	    set ds9(msg) {}
+	    set msg "[msgcat::mc {Unable to load}] $loadParam(file,type) $loadParam(file,mode) $loadParam(file,name)"
+	    if {$why != {}} {
+		append msg ": $why"
+	    }
+	    Error $msg
 	}
 	return 0
     }

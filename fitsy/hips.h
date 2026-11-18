@@ -89,9 +89,6 @@ class FitsHiPS : public FitsFile {
   FitsHiPS(const char*, Tcl_Interp* =NULL, int channel =-1, int inspect =0);
   ~FitsHiPS();
 
-  // a HiPS root directory (one holding a properties file)?
-  static int isHiPS(const char* dir);
-
   int order() {return order_;}
   long nside() {return nside_;}
   Source source() {return source_;}

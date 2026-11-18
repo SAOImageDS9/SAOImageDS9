@@ -65,7 +65,7 @@ class FitsHPXReproj : public FitsFile {
   FitsHiPS* deep_;     // the tile source (not owned), or NULL
   int deepOrder_;      // order sampled by the last build, -1: the map
   std::vector<long long> missing_;      // tiles the last build wanted
-					// but couldn't read (order<<56|N)
+					// but couldn't read (at deepOrder_)
   // the tiles the last build sampled (order refsOrder_), kept for the
   // next: a pan or refresh mostly samples the same ones
   std::map<long long, HPXTileRef> refs_;
@@ -136,7 +136,7 @@ class FitsHPXReproj : public FitsFile {
   double lat() {return lat_;}
 
   // deep windows: the order the window shows (-1: the map), and the
-  // tiles it wanted but didn't have (order<<56 | N), for fetching
+  // tiles of that order it wanted but didn't have, for fetching
   int deepOrder() {return deepOrder_;}
   void setDrag(int dd) {drag_ = dd;}
   int dragSkipped() {return skipped_;}

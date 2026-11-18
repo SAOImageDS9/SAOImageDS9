@@ -1598,8 +1598,11 @@ load	: ARRAY_ loadArr
 	{
 	  if (!strcmp($1,"hips"))
 	    fr->loadHiPSCmd($2);
-	  else
+	  else {
+	    // YYERROR alone says nothing: the command looked fine
+	    fr->error("load: unknown type (array, envi, fits, hips, incr, nrrd, photo)");
 	    YYERROR;
+	  }
 	}
 	// load hips <name> <channel>: one colour of RGB tiles (0 red,
 	// 1 green, 2 blue), into the frame's current channel
@@ -1607,8 +1610,10 @@ load	: ARRAY_ loadArr
 	{
 	  if (!strcmp($1,"hips"))
 	    fr->loadHiPSCmd($2,$3);
-	  else
+	  else {
+	    fr->error("load: unknown type (array, envi, fits, hips, incr, nrrd, photo)");
 	    YYERROR;
+	  }
 	}
 	;
 

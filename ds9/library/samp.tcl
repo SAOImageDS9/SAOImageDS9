@@ -653,8 +653,10 @@ proc coord.pointAt.sky {msgid args} {
 	}
     }
 
+    # no frame (all deleted): nothing to pan
     global current
-    if {$ra != {} && $dec != {} && [$current(frame) has wcs celestial wcs]} {
+    if {$ra != {} && $dec != {} && $current(frame) != {} &&
+	[$current(frame) has wcs celestial wcs]} {
 	# turn off auto send pointAt
 	set samp(pointAt) 1
 	PanTo $ra $dec wcs fk5

@@ -1,103 +1,75 @@
-# TODO: HiPS (Hierarchical Progressive Surveys) support
+# HiPS (Hierarchical Progressive Surveys) support
 
-Status (2026-11-16): Phases 0-5 done: local and remote (HTTP)
-HiPS, FITS, PNG/JPEG and colour tiles, with all projections, the `hips`
-command, dialogs, backup/restore, Open Recent, properties defaults,
-coverage overlay, provenance, and deep windows that zoom into the HiPS's
-deeper tiles (fetching only the visible ones), and cubes. Work is on branch `hips`. Builds on the
-HEALPix projection work in `TODO.md` (PR SAOImageDS9/SAOImageDS9#380:
-`FitsHPXReproj`, `proj=`/`lon0=`/`lat0=`/`fov=`, live windows).
+DS9 loads a HiPS, local or remote (http/https, or by MocServer ID), as
+the HEALPix map it holds at one order, and shows it with every HEALPix
+projection option (`proj=`, `lon0=`, `lat0=`, `fov=`). FITS, PNG and
+JPEG tiles, colour HiPS (RGB frames), cubes (one frame at a time), the
+`hips` command (command line, XPA, SAMP), the Open HiPS dialogs, Open
+Recent, backup/restore, a coverage overlay from `Moc.fits`, and
+zenithal/conic windows that zoom into the deeper tiles, fetching only
+the visible ones. Builds on the HEALPix projection work in `TODO.md`
+(SAOImageDS9/SAOImageDS9#380).
 
 Spec: IVOA HiPS 1.0 (REC 2017-05-19,
 <https://www.ivoa.net/documents/HiPS/20170519/REC-HIPS-1.0-20170519.pdf>;
 the PR-20170406 draft is the same in every respect used here). Section
 numbers below refer to it.
 
-Sample data: `hips/data1/ancillary/missions/Fermi_Band4/HiPS` (Fermi-LAT
-1-3 GeV, <https://cade.irap.omp.eu/doku.php?id=fermi>). Below it is called
-`$FERMI`.
+## Status (2026-11-18)
 
-## What's left (2026-11-16)
+All the planned phases are done, and the review of 2026-11-17 has been
+worked through (see "Since 2026-11-17/18" under "How HiPS maps onto the
+existing HEALPix code"). Branch `hips`; pushed to origin on 2026-11-17,
+later commits not yet; no PR.
 
-Phases 0-6 are done. Waiting on the user (2026-11-16):
-- Downloads: a live check of the MocServer format (ID / list), CDS
-  `hips2fits` reference images, real 8-bit and BITPIX -64 samples.
-- Scope: catalogue HiPS into the catalog tool; the whole-map memory
-  limit at nside 8192; a cube frame range (`slice=a-b`) for 3-D.
-- Upstream: push / PR of branch `hips`.
+### Where the code is
 
-The items, roughly by value:
+- `fitsy/hips.{h,C}`: `FitsHiPS`, the reader: `properties`, the tile
+  format and order (`chooseSource`), tiles or Allsky into a NESTED map
+  presented as a HEALPix table; an inspect mode (no map) for the Tcl
+  side; the process-wide cache of decoded tiles; NUNIQ MOC cells.
+- `fitsy/hpx.{h,C}`: `FitsHPX`, its flat mode (the map itself, which
+  windows sample); `fitsy/hpxnest.h`: NESTED and RING pixel lookup.
+- `tksao/frame/fitshpxreproj.{h,C}`: windows and all-sky projections
+  sampling the map, deep windows sampling tiles;
+  `tksao/frame/fitshealpix.C`, `fitsimage.C` (`FitsImageHiPS`),
+  `basecommand.C` (deep tile requests).
+- `tksao/saotk.C`: the `hipsinfo` Tcl command (the reader's answers for
+  the dialogs and the fetcher).
+- `ds9/library/hips.tcl` (loading, dialogs, the cube shim, coverage),
+  `hipsnet.tcl` (remote loads, the cache, deep fetching, the
+  MocServer), `cube.tcl` (`CubeFrame`); `ds9/parsers/hips*parser.tac`,
+  `hips*lex.fcl` (the `hips` command, set and get).
+- Docs: `ds9/doc/ref/file.html#HiPS`, `xpa.html`, `samp.html`,
+  `command.html`; release notes `ds9/doc/release/r8.8.2.html`.
+- Tests: `Tests/hips.sh` runs every suite in `Tests/hips/` (see Tests,
+  at the end).
 
-- Cubes are 2-D frames underneath (Phase 4): no 3-D render, no `save`
-  of the whole cube, no `cube axes` reordering. Decided 2026-11-16 to
-  leave this as a documented limit (`file.html`). The way to lift it
-  would be a frame range (`slice=a-b`) read for the current window
-  into an in-memory FITS cube, capped in size, giving up deep zoom.
-  No real FITS-tile cube can be tested: every FITS cube CDS lists
-  (ACT, HI4PI, HIPASS, GALFA-HI, CGPS, Mopra, Bayestar19, ...) is
-  "Deprecated/HiPS-Cube" and its `properties` is 404 (2026-11-16);
-  the MocServer lists no other provider's. Several write
-  `data_cube_bunit3 = null`, now read as no unit (`hipscube.sh` 9).
-  Checked 2026-11-16 and fine: `lock slice` and `match slice` (image
-  and wcs) between HiPS cube frames and with a FITS cube on another
-  velocity grid, a deep window following the lock, `cube play`/`stop`
-  (`hipscube.sh` section 8). Scale limits per frame are not a gap: a
-  FITS cube's minmax/zscale are per slice too, and user limits carry
-  over to the next frame in both.
-- HiPS by ID or from a list (Phase 6): done 2026-11-16. An ID
-  (`CDS/P/DSS2/color`, `ivo://` optional, only if not a local path) is
-  resolved to its `hips_service_url` through the MocServer
-  (`phpxopen(mocserver)`, CDS then alaskybis) and loaded as that URL.
-  The image + cube list (ID, obs_title, dataproduct_type,
-  hips_service_url; two queries, `dataproduct_type=image|cube`,
-  `hips_service_url=*`, `fields=`) is cached as `mocserver.txt` for a
-  day, a stale copy serving when no server answers; it also resolves
-  IDs without a query. `xpaget hips list [update] [pattern]`, File >
-  Open HiPS from List..., and Open HiPS URL... takes an ID.
-  `Tests/hips/hipsid.sh` (52) runs against a mock MocServer in
-  `hipsserve.py`. Not yet checked against the real MocServer: that its
-  default (ascii) answer is `key = value` records separated by blank
-  lines, and that `hips_service_url=*` and `fields=` work as assumed.
-- `format=` and `hips close`: done 2026-11-16. `format=fits|png|jpeg`
-  (any case, `jpg` too; fitsy `FORMAT_` token, `pHiPSFormat_`) reads
-  that kind if `hips_tile_format` lists it, else a refusal naming what
-  it lists; remote loads and deep windows fetch that kind (`hipsinfo
-  format` takes the name's options; HiPSDeepWant reads them off the frame's
-  name); scale limits follow the tiles read; a colour HiPS with FITS
-  tiles reads the FITS ones into a plain frame unless `format=png`.
-  The Open HiPS dialog has a Tiles menu when several kinds are listed;
-  changing it rescans that kind's orders. `hips close` clears the
-  current frame if it holds a HiPS, dropping its queued deep requests.
-  `Tests/hips/hipsformat.sh` (30). The deep fetcher's `.missing` lists
-  are per order and slice, not per format (the same cells, in practice).
-- SAMP `hips`: exercised 2026-11-16 (`Tests/hips/hipssamp.sh`, 19,
-  a private astropy hub, `samphub.py` + `sampcall.py`): ds9.set loads
-  by directory, URL and ID, with options and `new`; ds9.get answers
-  the name, `status`, `coverage`; `cancel`, `close`; errors come back
-  as SAMP errors and ds9 keeps answering. Fixed: `hips list` over SAMP
-  lost its newlines (a get's value is one line); it now goes as a file
-  (`ProcessSend`, `comm.tcl` passes `fn`), as `fits header` does. No
-  standard MType loads a HiPS, so other clients need `ds9.set`.
+### Open
 
-- Test data: 8-bit integer and BITPIX -64 FITS tiles are covered by
-  synthetic HiPS (`mksynth.py`: u8 with BLANK/BSCALE/BZERO, f64 with
-  NaN; `hipsload.sh` compares them with `mkref.py`). Real samples of
-  each (`ESAVO/P/EXOSAT/all`, `CDS/P/MeerKAT/Galactic-Centre-spectral-
-  index`, `hips/samples.md`) still need fetching; skipped 2026-11-16,
-  downloads wait for the user's OK.
-- Reference-image tests: done 2026-11-16 (`Tests/hips/hipsref.sh`,
-  16): `mkref.py`'s NESTED map, rebuilt from the tiles, is projected by
-  `refcmp.py` with `reproject_from_healpix` (nearest-neighbour, frame
-  conversion) onto the WCS of the image ds9 saved. TAN, SIN, ZEA, ARC,
-  COE, MOL, AIT and CAR, galactic and equatorial, 8-bit and -64 tiles,
-  and two deep windows all agree on 100.00% of pixels. (reproject fills
-  pixels outside an all-sky projection, where the WCS has no sky
-  position; refcmp blanks them.) `Tests/hips.sh` runs every suite.
-  Not done: CDS `hips2fits` as a check on remote HiPS, which needs the
-  network (skipped, waits for the user's OK).
-- Out of scope so far: catalogue HiPS (refused with a message), and
-  the whole-map memory limit at nside 8192 (`TODO.md`).
-- Upstream: branch `hips` is local only; not pushed, no PR.
+- Not yet checked against the live services (each needs a download,
+  which waits for an OK): the real MocServer's answer format (IDs,
+  `hips list`; only a mock has been used), CDS `hips2fits` reference
+  images for remote HiPS, real 8-bit and BITPIX -64 FITS-tile samples
+  (synthetic ones are tested).
+- Scope, left as documented limits: catalogue HiPS are refused (they
+  could feed the catalog tool); a cube is a 2-D frame showing one of
+  its frames, so there is no 3-D render, whole-cube `save`, `cube axes`
+  order or Plot 3D (refused with a message; a frame range `slice=a-b`
+  read into an in-memory cube would lift this); a whole map is limited
+  to nside 8192 (deeper only through deep windows).
+- For the maintainers to decide: where the HiPS cache lives (now the
+  preferences directory, `~/.ds9/hips`, limit in Preferences >
+  HEALPix); the `hips list` columns (ID and title, which scripts will
+  come to depend on); the menus (three File entries, Open HiPS, Open
+  HiPS URL, Open HiPS from List, rather than a cascade or an Image
+  Servers entry).
+- Tests: some checks read ds9's internal variables or its English
+  messages, so they would need updating with those.
+
+The rest of this file is the work log, phase by phase, with the
+design notes as they were made; counts and names in it are as of the
+date given.
 
 ## Background
 
@@ -920,48 +892,108 @@ Design (2026-11-16, after reading the window code):
       - Tested in `hipsdeep.sh` section 5 (`hipsserve.py`'s new
         `/crawl/`, 1 s per request).
 
-## Testing plan
+### Phase 6 and follow-ups -- done 2026-11-16
 
-- `Tests/hips.sh`, modelled on `Tests/hpxproj.sh` (run from `Tests/`
-  with `bin/` and `$HOME/local/bin` on the PATH). Sections:
-  - `layout`: `tileorder.py` on each test HiPS (conventions hold).
-  - `load`: the HiPS at each order 0-3 vs a Python-rebuilt NESTED table
-    loaded as HEALPix, compared by pixel values and `saveimage` sha256,
-    across proj=HPX/MOL/AIT/TAN.
-  - `allsky`: Allsky vs individual tiles give the same image (when not
-    reduced).
-  - `missing`: a partial HiPS gives NaN exactly where tiles are absent.
-  - `formats`: FITS vs PNG load the same geometry (correlation, not
-    equality).
-  - `remote`: optional, gated on network: fetch a small public HiPS at
-    order <= 2, check the cache and a second load with no requests.
-  - `cube`, `rgb` once Phases 3-4 land.
-- Python reference via the `hpxtest` conda env (`HPXPY=`); skipped if it
-  is missing, as hpxproj.sh does.
+What was left after Phase 5, as it was worked through (the open items
+now are under Status at the top):
 
-## Open questions
+- Cubes are 2-D frames underneath (Phase 4): no 3-D render, no `save`
+  of the whole cube, no `cube axes` reordering. Decided 2026-11-16 to
+  leave this as a documented limit (`file.html`). The way to lift it
+  would be a frame range (`slice=a-b`) read for the current window
+  into an in-memory FITS cube, capped in size, giving up deep zoom.
+  No real FITS-tile cube can be tested: every FITS cube CDS lists
+  (ACT, HI4PI, HIPASS, GALFA-HI, CGPS, Mopra, Bayestar19, ...) is
+  "Deprecated/HiPS-Cube" and its `properties` is 404 (2026-11-16);
+  the MocServer lists no other provider's. Several write
+  `data_cube_bunit3 = null`, now read as no unit (`hipscube.sh` 9).
+  Checked 2026-11-16 and fine: `lock slice` and `match slice` (image
+  and wcs) between HiPS cube frames and with a FITS cube on another
+  velocity grid, a deep window following the lock, `cube play`/`stop`
+  (`hipscube.sh` section 8). Scale limits per frame are not a gap: a
+  FITS cube's minmax/zscale are per slice too, and user limits carry
+  over to the next frame in both.
+- HiPS by ID or from a list (Phase 6): done 2026-11-16. An ID
+  (`CDS/P/DSS2/color`, `ivo://` optional, only if not a local path) is
+  resolved to its `hips_service_url` through the MocServer
+  (`phpxopen(mocserver)`, CDS then alaskybis) and loaded as that URL.
+  The image + cube list (ID, obs_title, dataproduct_type,
+  hips_service_url; two queries, `dataproduct_type=image|cube`,
+  `hips_service_url=*`, `fields=`) is cached as `mocserver.txt` for a
+  day, a stale copy serving when no server answers; it also resolves
+  IDs without a query. `xpaget hips list [update] [pattern]`, File >
+  Open HiPS from List..., and Open HiPS URL... takes an ID.
+  `Tests/hips/hipsid.sh` (52) runs against a mock MocServer in
+  `hipsserve.py`. Not yet checked against the real MocServer: that its
+  default (ascii) answer is `key = value` records separated by blank
+  lines, and that `hips_service_url=*` and `fields=` work as assumed.
+- `format=` and `hips close`: done 2026-11-16. `format=fits|png|jpeg`
+  (any case, `jpg` too; fitsy `FORMAT_` token, `pHiPSFormat_`) reads
+  that kind if `hips_tile_format` lists it, else a refusal naming what
+  it lists; remote loads and deep windows fetch that kind (`hipsinfo
+  format` takes the name's options; HiPSDeepWant reads them off the frame's
+  name); scale limits follow the tiles read; a colour HiPS with FITS
+  tiles reads the FITS ones into a plain frame unless `format=png`.
+  The Open HiPS dialog has a Tiles menu when several kinds are listed;
+  changing it rescans that kind's orders. `hips close` clears the
+  current frame if it holds a HiPS, dropping its queued deep requests.
+  `Tests/hips/hipsformat.sh` (30). The deep fetcher's `.missing` lists
+  are per order and slice, not per format (the same cells, in practice).
+- SAMP `hips`: exercised 2026-11-16 (`Tests/hips/hipssamp.sh`, 19,
+  a private astropy hub, `samphub.py` + `sampcall.py`): ds9.set loads
+  by directory, URL and ID, with options and `new`; ds9.get answers
+  the name, `status`, `coverage`; `cancel`, `close`; errors come back
+  as SAMP errors and ds9 keeps answering. Fixed: `hips list` over SAMP
+  lost its newlines (a get's value is one line); it now goes as a file
+  (`ProcessSend`, `comm.tcl` passes `fn`), as `fits header` does. No
+  standard MType loads a HiPS, so other clients need `ds9.set`.
 
-- **Syntax.** Options: a dedicated `hips` command/option (like
-  `-envi`), a filename form (`dir[hips,order=3,proj=MOL]`), or
-  autodetection when the path is a directory containing `properties`.
-  The first is clearest and avoids a `fitsy/parser.Y` filename-grammar
-  change. Autodetection could be added on top for `ds9 <dir>`.
-- **Default order and cap.** What nside cap is sensible for the
-  whole-sky tier (2048 = about 100 MB HPX image; 4096 = about 400 MB)?
-  It should be a pref.
-- **Reduced Allsky.** Should a reduced Allsky (e.g. 64-px tiles in a
-  512-px HiPS) be a quick preview that is automatically replaced by the
-  full tiles, or only used when the user asks for that resolution?
-- **PNG decoding location.** Tk photo (Tcl, already linked) or a C
-  decoder in `fitsy`? Tk photo needs the Tk event loop and an
-  interpreter, so it is fine for ds9 but awkward for a pure-`fitsy`
-  loader.
-- **Remote-first?** Most users will want CDS/ESA HiPS by URL or by ID
-  (e.g. `CDS/P/DSS2/color`). A HiPS list browser (the CDS MocServer
-  `hips list` query, sec. 5.2) would be a natural Phase 6, but is out of
-  scope here.
-- **Catalogue HiPS** (`dataproduct_type=catalog`, TSV tiles) could feed
-  ds9's catalog tool. Out of scope; reject them clearly for now.
-- **ICRS vs FK5** for `hips_frame=equatorial`: confirm what AST does
-  with `RADESYS` absent on an `-HPX` header, and whether the HEALPix
-  table path has the same latent issue.
+- Test data: 8-bit integer and BITPIX -64 FITS tiles are covered by
+  synthetic HiPS (`mksynth.py`: u8 with BLANK/BSCALE/BZERO, f64 with
+  NaN; `hipsload.sh` compares them with `mkref.py`). Real samples of
+  each (`ESAVO/P/EXOSAT/all`, `CDS/P/MeerKAT/Galactic-Centre-spectral-
+  index`, `hips/samples.md`) still need fetching; skipped 2026-11-16,
+  downloads wait for the user's OK.
+- Reference-image tests: done 2026-11-16 (`Tests/hips/hipsref.sh`,
+  16): `mkref.py`'s NESTED map, rebuilt from the tiles, is projected by
+  `refcmp.py` with `reproject_from_healpix` (nearest-neighbour, frame
+  conversion) onto the WCS of the image ds9 saved. TAN, SIN, ZEA, ARC,
+  COE, MOL, AIT and CAR, galactic and equatorial, 8-bit and -64 tiles,
+  and two deep windows all agree on 100.00% of pixels. (reproject fills
+  pixels outside an all-sky projection, where the WCS has no sky
+  position; refcmp blanks them.) `Tests/hips.sh` runs every suite.
+  Not done: CDS `hips2fits` as a check on remote HiPS, which needs the
+  network (skipped, waits for the user's OK).
+
+## Tests
+
+`Tests/hips.sh [suite ...]`, from the top of the tree, runs the suites
+in `Tests/hips/` (19 on 2026-11-18), each with its own ds9 and, where
+needed, a local HTTP(S) server (`hipsserve.py`) or SAMP hub; none needs
+the network. They share `Tests/hips/lib.sh` (helpers, start-up, and a
+cleanup trap). A suite whose Python env (`PY`, the `hpxtest` conda env:
+numpy, astropy, healpy, reproject, PIL), openssl or sample HiPS
+(`hips/samples.md`) is missing is skipped. Reference images come from
+`mkref.py` (the NESTED map rebuilt from the tiles) and `reproject`
+(`refcmp.py`). Also run `Tests/hpxproj.sh`, `Tests/moc.sh`, and the
+`hips` sections of `xpa.sh`, `command.sh` and `samp.sh`.
+
+## Decisions (the questions this started with)
+
+- **Syntax.** A `hips` command and `-hips` option (directory, URL or
+  ID), with options in brackets as for HEALPix files; the HiPS order is
+  `norder=`, a MOC's drawing order `mocorder=`, and `order=` stays the
+  HEALPix `ring|nested` ordering. No autodetection of a directory.
+- **Default order and cap.** Without `norder=`, the largest map up to
+  nside 2048 (`HIPS_NSIDE_AUTO`); nothing beyond nside 8192
+  (`HIPS_NSIDE_MAX`); not preferences. Remotely, the quick look: the
+  deepest Allsky of orders 3..0.
+- **Reduced Allsky.** Used when it is the largest thing that fits, or
+  for `norder=K` when there are no tiles; never replaced automatically
+  (deep windows reach the full tiles instead).
+- **PNG/JPEG decoding.** Tk photos (`fitsy/hips.C` through the
+  interpreter), each file decoded once into the shared cache.
+- **Remote-first.** Done: URLs, IDs and the MocServer list (Phase 6).
+- **Catalogue HiPS.** Refused with a message.
+- **ICRS vs FK5.** An `-HPX` header without RADESYS is ICRS (FITS WCS
+  Paper II), so `hips_frame = equatorial` needs nothing more.

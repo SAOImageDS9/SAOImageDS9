@@ -69,7 +69,18 @@ later commits not yet; no PR.
   URL or ID; Open Selected; Update List; Close) and Edit (Cut, Copy,
   Paste in the filter). Without the list it opens anyway and says why.
   `HiPSDialog` in `hips.tcl`; tested in `hipsid.sh` section 7. The log
-  below names the old entries.
+  below names the old entries. Cache > Clear (as Preferences > HEALPix >
+  Clear HiPS Cache) says in the status line what it freed.
+- Remote caches are partial (2026-11-18): the quick look gives the
+  reader `norder=K` for the order of its Allsky, and the reader used to
+  read that order's tiles if any were there. With a reduced Allsky and
+  a few tiles left by deep windows (Chandra: 63 of 755 at order 3), the
+  map covered a few patches. The fetcher now marks a cache (`.remote`),
+  and there the reader takes an order's tiles only if every tile
+  Moc.fits covers is present or a recorded 404 (`FitsHiPS::allTiles`),
+  and its automatic choice prefers complete sources. Local HiPS are
+  unchanged (absent tiles hold no data). The dialog asks the reader
+  (`hipsinfo describe`) in that case. `hipsnet.sh` section 1b.
 - Tests: some checks read ds9's internal variables or its English
   messages, so they would need updating with those.
 

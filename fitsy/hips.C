@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <list>
 #include <map>
+#include <set>
 #include <memory>
 #include <string>
 using namespace std;
@@ -442,6 +443,7 @@ FitsHiPS::FitsHiPS(const char* fn, Tcl_Interp* interp, int channel,
   width_ = 0;
   ident_ = NULL;
   ownMap_ = 0;
+  remote_ = 0;
 
   // root directory, plus [norder=,proj=,...] options
   parse(fn);
@@ -465,6 +467,11 @@ FitsHiPS::FitsHiPS(const char* fn, Tcl_Interp* interp, int channel,
     internalError("HiPS: order= is a HEALPix table's pixel ordering"
 		  " (the HiPS order is norder=)");
     return;
+  }
+
+  {
+    string rr = string(pName_) + "/.remote";
+    remote_ = fileExists(rr.c_str());
   }
 
   if (!readProperties(pName_)) {
@@ -1042,12 +1049,56 @@ int FitsHiPS::anyTile(int order)
   return 0;
 }
 
+// Every tile of order there is to read, in a remote HiPS's cache: each
+// one Moc.fits covers (every tile if there is no usable MOC) is present,
+// or known to be missing (the fetcher lists the 404s,
+// .missing<sfx>.<ext>, hipsnet.tcl). A cache holds only the tiles that
+// were fetched, often a few around what deep windows showed: a map read
+// from those covers a few patches of the sky.
+int FitsHiPS::allTiles(int order)
+{
+  std::vector<long long> want;
+  string moc = string(pName_) + "/Moc.fits";
+  if (!fileExists(moc.c_str()) || !mocTiles(moc.c_str(), order, &want) ||
+      want.empty()) {
+    want.clear();
+    long long nt = 12LL << (2*order);
+    for (long long nn=0; nn<nt; nn++)
+      want.push_back(nn);
+  }
+
+  std::set<long long> gone;
+  ostringstream mm;
+  mm << pName_ << "/Norder" << order << "/.missing";
+  if (slice_ > 0)
+    mm << '_' << slice_;
+  mm << '.' << tileExt_;
+  ifstream str(mm.str().c_str());
+  long long nn;
+  while (str >> nn)
+    gone.insert(nn);
+
+  for (size_t ii=0; ii<want.size(); ii++) {
+    if (gone.count(want[ii]))
+      continue;
+    char* fn = tilePath(order, want[ii], tileExt_);
+    int ok = fileExists(fn);
+    delete [] fn;
+    if (!ok)
+      return 0;
+  }
+  return 1;
+}
+
 // Pick the order and where to read it from. Asked for an order: its
 // Allsky when that holds full-size tiles (one file, same data), else its
-// tiles, else a reduced Allsky. Otherwise: the largest map, no bigger than
-// HIPS_NSIDE_AUTO, that any order's tiles or Allsky can make. Missing
-// orders are allowed (HiPS 1.0 sec. 4.3.1), as are local copies holding
-// only some of the tiles.
+// tiles, else a reduced Allsky. Otherwise: the largest map, no bigger
+// than HIPS_NSIDE_AUTO, that any order's tiles or Allsky can make.
+// Missing orders are allowed (HiPS 1.0 sec. 4.3.1), and in a local HiPS
+// absent tiles are taken as holding no data (sec. 4.1). In a remote
+// HiPS's cache (.remote, written by hipsnet.tcl) they are tiles that
+// were never fetched, so an order's tiles count only when they are all
+// there (allTiles); some is still better than nothing.
 int FitsHiPS::chooseSource(int maxOrder, int width, int askOrder)
 {
   if (askOrder >= 0) {
@@ -1064,11 +1115,13 @@ int FitsHiPS::chooseSource(int maxOrder, int width, int askOrder)
     // tiles too deep for a map are refused before looking for any: at
     // order 10, say, that would be 12.6 million file checks
     long tileNside = (long)width << askOrder;
+    // a reduced Allsky covers the whole sky; some of the tiles don't
     if (aw == width) {
       source_ = ALLSKY;
       tileWidth_ = aw;
     }
-    else if (tileNside <= HIPS_NSIDE_MAX && anyTile(askOrder)) {
+    else if (tileNside <= HIPS_NSIDE_MAX &&
+	     (aw && remote_ ? allTiles(askOrder) : anyTile(askOrder))) {
       source_ = TILES;
       tileWidth_ = width;
     }
@@ -1095,36 +1148,40 @@ int FitsHiPS::chooseSource(int maxOrder, int width, int askOrder)
     return 1;
   }
 
+  // a remote cache: complete sources first, partial tiles only if there
+  // is nothing else
   long best = 0;
-  for (int kk=0; kk<=maxOrder; kk++) {
-    long tileNside = (long)width << kk;
-    if (tileNside > HIPS_NSIDE_AUTO)
-      break;
+  for (int complete=remote_; complete>=0 && !best; complete--) {
+    for (int kk=0; kk<=maxOrder; kk++) {
+      long tileNside = (long)width << kk;
+      if (tileNside > HIPS_NSIDE_AUTO)
+	break;
 
-    // Allsky first: at the same nside it wins (one file)
-    int aw = allskyWidth(kk);
-    if (aw && ((long)aw << kk) > best) {
-      best = (long)aw << kk;
-      order_ = kk;
-      source_ = ALLSKY;
-      tileWidth_ = aw;
+      // Allsky first: at the same nside it wins (one file)
+      int aw = allskyWidth(kk);
+      if (aw && ((long)aw << kk) > best) {
+	best = (long)aw << kk;
+	order_ = kk;
+	source_ = ALLSKY;
+	tileWidth_ = aw;
+      }
+      if (tileNside > best && (complete ? allTiles(kk) : anyTile(kk))) {
+	best = tileNside;
+	order_ = kk;
+	source_ = TILES;
+	tileWidth_ = width;
+      }
     }
-    if (tileNside > best && anyTile(kk)) {
-      best = tileNside;
-      order_ = kk;
-      source_ = TILES;
-      tileWidth_ = width;
-    }
-  }
-  // a reduced Allsky can be shallow enough even past the tiles' limit
-  for (int kk=0; kk<=maxOrder && kk<=3; kk++) {
-    int aw = allskyWidth(kk);
-    long nn = (long)aw << kk;
-    if (aw && nn <= HIPS_NSIDE_AUTO && nn > best) {
-      best = nn;
-      order_ = kk;
-      source_ = ALLSKY;
-      tileWidth_ = aw;
+    // a reduced Allsky can be shallow enough even past the tiles' limit
+    for (int kk=0; kk<=maxOrder && kk<=3; kk++) {
+      int aw = allskyWidth(kk);
+      long nn = (long)aw << kk;
+      if (aw && nn <= HIPS_NSIDE_AUTO && nn > best) {
+	best = nn;
+	order_ = kk;
+	source_ = ALLSKY;
+	tileWidth_ = aw;
+      }
     }
   }
 

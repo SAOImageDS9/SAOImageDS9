@@ -1188,7 +1188,7 @@ void FitsImage::initWCS(FitsHead* hd, const char* yamltext)
   // not sure if this is needed
   clearWCS();
   
-  // native ASDF/GWCS support (TODO.md Phase 3): bypass FITS card parsing
+  // native ASDF/GWCS support (TODO_ASDF.md Phase 3): bypass FITS card parsing
   // entirely and build ast_ straight from the GWCS YAML subtree text
   if (yamltext) {
     ast_ = yaml2ast(yamltext);
@@ -2174,7 +2174,7 @@ int FitsImage::processKeywordsIRAF(FitsImage* fits)
 
 void FitsImage::replaceWCS(istream& str)
 {
-  // native ASDF/GWCS support (TODO.md Phase 3): sniff for YAML content
+  // native ASDF/GWCS support (TODO_ASDF.md Phase 3): sniff for YAML content
   // (an ASDF magic/%YAML directive/bare top-level `wcs:` key - none of
   // which is valid FITS-card syntax, so this can't false-positive) and
   // dispatch to the GWCS bridge instead of the FITS-card scanner below.
@@ -3901,7 +3901,7 @@ AstFrameSet* FitsImage::fits2ast(FitsHead* hd)
   return frameSet;
 }
 
-// Native ASDF support (see ASDF_NATIVE_SUPPORT_DESIGN.md, TODO.md Phase 3):
+// Native ASDF support (see ASDF_NATIVE_SUPPORT_DESIGN.md, TODO_ASDF.md Phase 3):
 // AstYamlChan has no astPutFits-style in-memory loader, so the generic AST
 // Channel source callback is used instead (see ast/src/channel.c's
 // SourceWrap) - astChannelData/astPutChannelData is the same idiom already

@@ -7,7 +7,7 @@ turned up and did **not** patch, written as text to paste into
 
 Nine other bugs were found and fixed; those are pull requests rather than
 issues, one branch each in the `ast_upstream/` clone, and eight of the nine are
-also applied to the vendored `ast/`. `TODO.md`'s "The AST bugs" section is the
+also applied to the vendored `ast/`. `TODO_ASDF.md`'s "The AST bugs" section is the
 full list with the reasoning, and its "Upstream AST patches" section names the
 branches.
 
@@ -53,7 +53,7 @@ Two things to fold into the text before filing:
   issue 2.
 
 A fourth finding turned up during this review and is **not** written up here,
-because it is patchable rather than a design question — see `TODO.md`.
+because it is patchable rather than a design question — see `TODO_ASDF.md`.
 
 ---
 

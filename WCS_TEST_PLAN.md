@@ -1,6 +1,6 @@
 # WCS Test Plan — native ASDF/GWCS frames
 
-Companion to `TODO.md` and `ASDF_NATIVE_SUPPORT_DESIGN.md`. Phases 3 and 4 established that
+Companion to `TODO_ASDF.md` and `ASDF_NATIVE_SUPPORT_DESIGN.md`. Phases 3 and 4 established that
 a Roman ASDF file's GWCS reads into DS9 and is *numerically identical* to `romancal`'s own
 transform. This plan covers the next question, which is broader: does everything in DS9 that
 **consumes** a WCS work on such a frame?
@@ -251,7 +251,7 @@ known triggers of `FitsImage::resetWCS()` are `FitsImage::block()` (both overloa
 | J-3 | `*_uncal.asdf` (331MB, 4-D ramp) | **PASS** via a synthetic stand-in — the real uncal file is not downloaded, so a synthetic `[4,4,2,2]` uint8 array exercises the same rank check: `ASDF: unsupported ndarray rank data [4, 4, 2, 2]`, frame left empty, DS9 alive. Worth re-running against the real 4-D ramp when it is available |
 | J-4 | Coadd / `_asn` products from Build22 | **PASS** — was a GAP (§6.2b), now fixed by translating `fitswcs_imaging` to FITS cards. All six science-grid arrays (`data`, `context`, `err`, `weight`, `var_poisson`, `var_rnoise`) load 5000² with the WCS at **0.00000000″** from the `_asn.json` centre, including `context` at `[1,5000,5000]` via the trailing-dims rule. Pixel scale 0.054983″/px against a declared 0.055 (0.03%), and anisotropy **0.03%** — a resampled L3 product is isotropic, so R10 does not apply to coadds. `match frame wcs` between the L3 coadd and the L2 exposure it was built from is exact. Survives block/smooth/crop and backup/restore. The `_asn.json` itself is a metadata manifest, not an image |
 | J-5 | Every array within one `*_cal.asdf` (all 15) | **PASS** (load); WCS attach on siblings **PASS** |
-| J-6 | A non-Roman ASDF file | **PASS** — `Tests/asdf/fixtures`, 27 flat-tree images × all 4 codecs: 108/108 load, dimensions and `minmax` both matching DS9's own reading of the source FITS. Caught a real enumerator bug (nested `mask:` ndarray); see `TODO.md` Phase 5 |
+| J-6 | A non-Roman ASDF file | **PASS** — `Tests/asdf/fixtures`, 27 flat-tree images × all 4 codecs: 108/108 load, dimensions and `minmax` both matching DS9's own reading of the source FITS. Caught a real enumerator bug (nested `mask:` ndarray); see `TODO_ASDF.md` Phase 5 |
 | J-7 | `bzp2`-compressed blocks | **PASS** — bzip2 1.0.8 vendored and wired in; 27/27 load. Each `bzp2` fixture is identical to its `none` twin on dimensions, BITPIX, `minmax`, the `BLANK` card and a SHA-256 of every pixel. 31/31 decoded blocks byte-identical to Python's `bz2`. Truncated, corrupt, over-long and empty payloads each give a distinct error and leave the frame empty |
 | J-8 | Masked-array (`BLANK`) fixtures, boolean-array mask | **PASS** — all 4 × 4 codecs load with the integer BITPIX retained (8/16/32/64), null pixels reported as `blank`, and pixel rows byte-identical to DS9's reading of the source FITS. `data/mask` also loads in its own right |
 | J-9 | Scalar mask, integer data (`*_blank_scalar`) | **PASS** — 4 × 4 codecs, bitpix and the readout at a real blank pixel both identical to the equivalent FITS `BLANK` file |

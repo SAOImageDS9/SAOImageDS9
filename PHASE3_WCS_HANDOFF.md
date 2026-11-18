@@ -4,8 +4,8 @@
 Option A didn't actually require a machine switch after all; kept afterward
 as the design record (the content-sniffing rationale, the filename-vs-text
 transport finding, the two Tcl regex bugs, the `Ident`/`wcs_[]` gap) since
-`TODO.md`'s Phase 3 section summarizes the outcome but doesn't repeat this
-level of detail. Read `TODO.md` first for current status and validation
+`TODO_ASDF.md`'s Phase 3 section summarizes the outcome but doesn't repeat this
+level of detail. Read `TODO_ASDF.md` first for current status and validation
 evidence; come back here only for the "why," not the "what's left."
 
 ## Repo state at handoff time
@@ -20,7 +20,7 @@ not part of this work — leave them alone.
 
 ## The task: Phase 3, bullet 1
 
-From `TODO.md`'s Phase 3 section:
+From `TODO_ASDF.md`'s Phase 3 section:
 
 > Production version of the Phase 1 bridge: locate `roman.meta.wcs`, resolve
 > block-sourced ndarrays inline, feed to `AstYamlChan`, attach the resulting
@@ -37,7 +37,7 @@ until Phase 1's spike), to that same frame.
 
 **Read this section before assuming a macOS/bison detour is required.**
 
-Phase 2's own `TODO.md` entry (lines ~289–299) records an explicit prior
+Phase 2's own `TODO_ASDF.md` entry (lines ~289–299) records an explicit prior
 decision: avoid touching `tksao/frame/parser.Y`/`lex.L` at all, specifically
 *because* this checkout's bison (3.8.2) doesn't match the checked-in
 generated files' stamped version (2.3), and regenerating with the wrong
@@ -335,7 +335,7 @@ standalone top-level YAML document, mirroring
 `utils/asdf_gwcs_probe/extract_subtree.py`'s `extract_key_subtree` +
 `as_wcs_shell`/`as_wrapped_transform` (Python, from the Phase 1 spike — not
 wired into DS9, this is the porting reference). Key real-file findings from
-Phase 1 (`TODO.md` lines 205–267) that the Tcl port must account for:
+Phase 1 (`TODO_ASDF.md` lines 205–267) that the Tcl port must account for:
 
 - **The key name/path is not fixed across Roman product types.** Seen so
   far: `wcs_l1`/`wcs_l2` directly under `roman:` (imaging/grism WCS
@@ -364,7 +364,7 @@ Phase 1 (`TODO.md` lines 205–267) that the Tcl port must account for:
   `utils/asdf_gwcs_probe/sample_data/` for whether this actually occurs
   before assuming it's needed.
 - **`bounding_box` is silently dropped** by `yamlchan.c` regardless of this
-  work (a pre-existing AST-layer gap, `TODO.md` line 268) — not something to
+  work (a pre-existing AST-layer gap, `TODO_ASDF.md` line 268) — not something to
   fix as part of this task, just don't be surprised that the GWCS
   valid-pixel-domain isn't enforced.
 
@@ -412,7 +412,7 @@ convention is an implementation choice; keep it consistent with the rest of
    `utils/asdf_gwcs_probe/sample_data/` (`wfi01_f158_wcs.asdf`,
    `grism_wcs.asdf`, `new_distortion.asdf`) as known-good cross-checks —
    each has an independently-confirmed `astTran2` test-point result recorded
-   in `TODO.md` (Phase 1 section) to compare against:
+   in `TODO_ASDF.md` (Phase 1 section) to compare against:
    - `wfi01_f158_wcs.asdf` (`wcs_l2`): `Nframe=5`, `astTran2(0.3,-0.2)` →
      `(-1.57103, 1.15147)`.
    - `grism_wcs.asdf` (`wcs_l2`): `Nframe=4`.
@@ -430,7 +430,7 @@ convention is an implementation choice; keep it consistent with the rest of
    previously-used real Roman file was
    `r0000101001001001001_0001_wfi01_f158_cal.asdf` (206,736,815 bytes,
    downloaded to the scratchpad during Phase 2, not committed — re-download
-   if needed, see Phase 2's `TODO.md` entry for provenance). Visually
+   if needed, see Phase 2's `TODO_ASDF.md` entry for provenance). Visually
    confirm via `saveimage png` (as Phase 2 did) that the frame still renders
    correctly, then additionally confirm a grid/coordinate readout now
    reflects real sky coordinates instead of plain pixel coordinates.

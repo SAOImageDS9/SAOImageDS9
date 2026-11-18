@@ -3,7 +3,7 @@
 Scratch tooling used to validate `ASDF_NATIVE_SUPPORT_DESIGN.md`'s core claim: that AST's
 `YamlChan` class (`ast/src/yamlchan.c`) can read a real Roman GWCS object once its
 block-sourced `core/ndarray` coefficients are resolved to inline `data:` literals. See
-`TODO.md` Phase 1 for the findings this produced. These are developer tools for iterating
+`TODO_ASDF.md` Phase 1 for the findings this produced. These are developer tools for iterating
 on that bridge, not part of the DS9 build or the eventual production ASDF reader (Phase 2's
 container reader is C++ inside `tksao/frame/`, not this).
 
@@ -75,6 +75,6 @@ python3 extract_subtree.py /tmp/resolved.yaml wcs_l2 > /tmp/test.asdf
 
 - `bounding_box` (present on real `compose` transforms) has no handling anywhere in
   `yamlchan.c` — not a version issue, just no code path reads that key. Silently dropped,
-  not approximated. See `TODO.md` Phase 1.
+  not approximated. See `TODO_ASDF.md` Phase 1.
 - This only exercises the WCS half. The pixel-array half (Phase 2) is untouched by any of
   this — these sample files are WCS-only products and carry no science image data.

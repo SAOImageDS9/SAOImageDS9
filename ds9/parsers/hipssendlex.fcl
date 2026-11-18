@@ -1,0 +1,18 @@
+#tab hipssendparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+coverage    {return $COVERAGE_}
+list	    {return $LIST_}
+status	    {return $STATUS_}
+update	    {return $UPDATE_}
+
+#include string.fin
+#include ws.fin
+
+%%

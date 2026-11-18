@@ -69,7 +69,6 @@ array set hips::table {
   0:266,target 3
   4:262,target 13
   11:0 reduce
-  6:270,target 15
   4:257 shift
   0:263 reduce
   4:258 shift
@@ -89,26 +88,28 @@ array set hips::table {
   4:261,target 12
   6:263 reduce
   6:0,target 8
-  0:269 goto
   16:0,target 11
   0:271 goto
   2:0 reduce
   14:263,target 15
   8:263 reduce
-  0:272 goto
-  4:268 goto
+  0:273 goto
+  0:274 goto
+  4:270 goto
   6:0 reduce
-  6:270 goto
   0:264,target 1
   4:259,target 10
   4:260,target 11
+  0:274,target 7
+  4:270,target 14
+  6:272 goto
   17:0,target 10
   12:0 reduce
   10:0,target 3
   0:263,target 16
   4:258,target 9
   16:0 reduce
-  4:268,target 14
+  0:273,target 6
   12:263,target 4
   8:0,target 2
   3:0 reduce
@@ -117,7 +118,6 @@ array set hips::table {
   4:257,target 8
   12:263 reduce
   8:263,target 2
-  0:272,target 7
   14:263 reduce
   3:263,target 13
   16:263 reduce
@@ -125,7 +125,7 @@ array set hips::table {
   13:0 reduce
   9:0,target 5
   1:263 reduce
-  0:271,target 6
+  0:271,target 5
   2:0,target 12
   12:0,target 4
   3:263 reduce
@@ -134,7 +134,6 @@ array set hips::table {
   7:263 shift
   9:263 reduce
   6:263,target 9
-  0:269,target 5
   4:0 reduce
   3:0,target 13
   13:0,target 7
@@ -142,6 +141,7 @@ array set hips::table {
   8:0 reduce
   10:0 reduce
   13:263,target 7
+  6:272,target 15
   14:0 reduce
   9:263,target 5
   4:0,target 14
@@ -154,24 +154,24 @@ array set hips::table {
 }
 
 array set hips::rules {
-  9,l 270
-  11,l 271
-  15,l 271
-  2,l 268
-  6,l 268
-  12,l 271
-  16,l 272
-  3,l 268
-  7,l 268
-  13,l 271
-  0,l 273
-  17,l 272
-  4,l 268
-  8,l 269
-  10,l 269
-  14,l 271
-  1,l 268
-  5,l 268
+  9,l 272
+  11,l 273
+  15,l 273
+  2,l 270
+  6,l 270
+  12,l 273
+  16,l 274
+  3,l 270
+  7,l 270
+  13,l 273
+  0,l 275
+  17,l 274
+  4,l 270
+  8,l 271
+  10,l 271
+  14,l 273
+  1,l 270
+  5,l 270
 }
 
 array set hips::rules {
@@ -196,24 +196,24 @@ array set hips::rules {
 }
 
 array set hips::rules {
-  13,line 49
-  7,line 40
-  10,line 44
-  4,line 37
-  1,line 34
-  15,line 51
-  9,line 43
-  12,line 48
-  6,line 39
-  3,line 36
-  17,line 55
-  14,line 50
-  8,line 43
-  11,line 47
-  5,line 38
-  2,line 35
+  13,line 52
+  7,line 43
+  10,line 47
+  4,line 40
+  1,line 37
+  15,line 54
+  9,line 46
+  12,line 51
+  6,line 42
+  3,line 39
+  17,line 58
+  14,line 53
+  8,line 46
+  11,line 50
+  5,line 41
+  2,line 38
   9,e 1
-  16,line 54
+  16,line 57
 }
 
 array set hips::lr1_table {
@@ -228,19 +228,19 @@ array set hips::lr1_table {
   3 {{13 {0 263} 1}}
   17,trans {}
   4 {{14 {0 263} 1} {15 {0 263} 1} {1 {0 263} 0} {2 {0 263} 0} {3 {0 263} 0} {4 {0 263} 0} {5 {0 263} 0} {6 {0 263} 0} {7 {0 263} 0}}
-  0,trans {{264 1} {265 2} {266 3} {267 4} {269 5} {271 6} {272 7}}
+  0,trans {{264 1} {265 2} {266 3} {267 4} {271 5} {273 6} {274 7}}
   5 {{0 0 1}}
   1,trans {}
   6 {{8 0 1} {10 0 1} {9 263 0}}
   2,trans {}
   7 {{11 {0 263} 1}}
   3,trans {}
-  4,trans {{257 8} {258 9} {259 10} {260 11} {261 12} {262 13} {268 14}}
+  4,trans {{257 8} {258 9} {259 10} {260 11} {261 12} {262 13} {270 14}}
   8 {{2 {0 263} 1}}
   5,trans {}
   10 {{3 {0 263} 1}}
   9 {{5 {0 263} 1}}
-  6,trans {{270 15}}
+  6,trans {{272 15}}
   11 {{6 {0 263} 1}}
   7,trans {{263 16}}
   12 {{4 {0 263} 1}}
@@ -258,39 +258,43 @@ array set hips::lr1_table {
 array set hips::token_id_table {
   264,line 18
   270,t 1
-  269,t 1
+  269,t 0
   265,title CANCEL
+  274,t 1
   261,line 11
   257,t 0
   270,title {}
-  269,title {}
-  273,line 56
+  269,title STATUS
+  273,line 49
   257,line 7
   262,t 0
-  270,line 43
-  269,line 42
+  274,title {}
+  270,line 36
+  269,line 24
   259,title ON
   260,title OFF
   266,t 0
   271,t 1
+  error error
   264,title NEW
   266,line 20
-  error error
-  268,title {}
-  error,line 32
+  275,t 1
+  error,line 35
+  268,title LIST
   258,t 0
   263,line 14
   error,title {}
+  275,line 59
   273,title {}
   263,t 0
   259,line 9
   260,line 10
   258,title NO
-  272,line 53
+  272,line 46
   267,t 0
   263,title string
   272,t 1
-  268,line 33
+  268,line 23
   267,title COVERAGE
   257 YES_
   258 NO_
@@ -310,24 +314,28 @@ array set hips::token_id_table {
   262,line 12
   266 CLOSE_
   267 COVERAGE_
-  268,t 1
-  268 yesno
-  262,title FALSE
-  0 {$}
   0,t 0
-  270 @PSEUDO1
-  269 command
-  271 hips
+  0 {$}
+  262,title FALSE
+  268 LIST_
+  268,t 0
+  274,line 56
+  270 yesno
+  269 STATUS_
+  271 command
   error,t 0
-  272 opts
+  272 @PSEUDO1
   258,line 8
   273,t 1
-  273 start'
+  273 hips
   266,title CLOSE
-  271,line 46
+  274 opts
+  275 start'
+  271,line 45
   271,title {}
   261,t 0
   267,line 21
+  275,title {}
   265,t 0
   261,title TRUE
 }

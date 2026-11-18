@@ -11,6 +11,9 @@
 %token CANCEL_
 %token CLOSE_
 %token COVERAGE_
+# get-only words (hipssendparser.tac): not a HiPS to load
+%token LIST_
+%token STATUS_
 
 %%
 

@@ -81,6 +81,16 @@ later commits not yet; no PR.
   and its automatic choice prefers complete sources. Local HiPS are
   unchanged (absent tiles hold no data). The dialog asks the reader
   (`hipsinfo describe`) in that case. `hipsnet.sh` section 1b.
+- One sampling pass per deep build (2026-11-18): a deep window used to
+  sample twice, once to collect the tiles it touches and once to sample
+  them. It now keeps the last build's tiles (`refs_`, at the same
+  order; those not loaded are looked up again each build, since they
+  may have arrived), samples once with them, gives the pixels of tiles
+  not seen yet the map's value and marks them, then looks those tiles
+  up and samples just the marked pixels again if any had data. A
+  rebuild of a 1122x1122 window over known tiles (a refresh, a zoom
+  back) saves a ~9 ms pass of ~30 ms; images are identical to the
+  two-pass ones (9 comparisons, zoom/pan/refresh).
 - Tests: some checks read ds9's internal variables or its English
   messages, so they would need updating with those.
 

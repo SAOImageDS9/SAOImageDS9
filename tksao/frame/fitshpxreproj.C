@@ -119,13 +119,6 @@ static AstFrameSet* hpxReprojAst(FitsHead* hd)
 // struct AstPrjPrm and astPRJset() come from ast.h (ast/wcslib/proj.h)
 #define HPX_PRJ_NPAR 10
 
-// a tile of order K, as sampled: its own data (dk 0), or the data of its
-// ancestor dk orders up
-struct HPXTileRef {
-  const float* data;
-  int dk;
-};
-
 struct HPXDirect {
   // target: grid -> projection plane -> native -> sky
   struct AstPrjPrm tgt;
@@ -148,9 +141,11 @@ struct HPXDirect {
   int ow;
   int swap;
 
-  // deep windows: 1 collects the tiles of order K the rows touch, 2
-  // samples them (falling back to the map); 0 the map only
+  // deep windows: 2 samples the tiles of order K through refs, a pixel
+  // whose tile isn't there yet taking the map's value and being marked
+  // in miss; 3 samples again only the pixels marked; 0 the map only
   int deep;
+  unsigned char* miss;   // ow x oh
   int mapShift;          // a pixel at nsideK >> mapShift is the map's
 			 // (NESTED map, nsideK = nside << mapShift/2)
   long long nsideK;      // W << K
@@ -162,7 +157,8 @@ struct HPXDirect {
 struct HPXDirectArg {
   const HPXDirect* dd;
   int j0, j1;            // output rows [j0, j1), 0 based
-  std::set<long long>* collect;   // deep == 1: the tiles touched
+  std::set<long long>* touched;   // deep == 2: the tiles sampled
+  std::set<long long>* fresh;     //   and those not in refs
 };
 
 // astPRJset() ignores the status of the projection's own set routine,
@@ -278,6 +274,9 @@ static void* hpxDirectRows(void* vv)
 
     for (int ii=0; ii<dd->ow; ii++) {
       float val = NAN;
+      // again: only the pixels whose tile wasn't known the first time
+      if (dd->deep == 3 && !dd->miss[(size_t)jj*dd->ow+ii])
+	continue;
       double xp = dd->cdelt1*(ii+1 - dd->crpix1);
 
       double phi, theta;
@@ -313,16 +312,20 @@ static void* hpxDirectRows(void* vv)
 	if (pp < 0)
 	  goto done;
 	long long tt = pp >> (2*dd->bits);
-	if (dd->deep == 1) {
-	  arg->collect->insert(tt);
-	  goto done;
-	}
 	if (tt != lastT) {
 	  lastT = tt;
 	  std::map<long long, HPXTileRef>::const_iterator it =
 	    dd->refs->find(tt);
 	  lastRef = it == dd->refs->end() ? NULL : &it->second;
+	  if (dd->deep == 2) {
+	    arg->touched->insert(tt);
+	    if (!lastRef)
+	      arg->fresh->insert(tt);
+	  }
 	}
+	// not known yet: the map's value for now
+	if (!lastRef && dd->deep == 2)
+	  dd->miss[(size_t)jj*dd->ow+ii] = 1;
 	if (lastRef && lastRef->data) {
 	  long long sub = (pp >> (2*lastRef->dk)) & subMask;
 	  int rr = (int)hpxCompress(sub);
@@ -361,15 +364,18 @@ static void* hpxDirectRows(void* vv)
 // Sample the map (nside, NESTED or RING) into out (ow x oh, as hd
 // describes it), optionally byte-swapping the output, on up to nthreads
 // threads. 0 if hd isn't handled here.
-// deep: 0 the map only; 1 collect the tiles of order K (nsideK =
-// W << K, bits = log2 W) the window touches into collected (out unused);
-// 2 sample them through refs, falling back to the map.
+// deep: 0 the map only; 2 sample the tiles of order K (nsideK = W <<
+// K, bits = log2 W) through refs, recording the tiles touched and those
+// not in refs (fresh), whose pixels take the map's value and are marked
+// in miss (ow x oh, zeroed); 3 sample again just the pixels marked.
 static int hpxDirectResample(const float* map, long long nside, int nested,
 			     FitsHead* hd, float* out, int ow, int oh, int swap,
 			     int nthreads, int deep =0, long long nsideK =0,
 			     int bits =0,
 			     const std::map<long long, HPXTileRef>* refs =NULL,
-			     std::set<long long>* collected =NULL)
+			     unsigned char* miss =NULL,
+			     std::set<long long>* touched =NULL,
+			     std::set<long long>* fresh =NULL)
 {
   HPXDirect dd;
   if (!hpxDirectInit(&dd, hd))
@@ -386,10 +392,11 @@ static int hpxDirectResample(const float* map, long long nside, int nested,
     if ((1LL << sh) == rr)
       dd.mapShift = 2*sh;
   }
-  dd.out = deep == 1 ? NULL : out;
+  dd.out = out;
   dd.ow = ow;
   dd.swap = swap;
   dd.deep = deep;
+  dd.miss = miss;
   dd.nsideK = nsideK;
   dd.bits = bits;
   dd.tw = 1 << bits;
@@ -403,10 +410,12 @@ static int hpxDirectResample(const float* map, long long nside, int nested,
   HPXDirectArg* args = new HPXDirectArg[nthreads];
   pthread_t* threads = new pthread_t[nthreads];
   int* started = new int[nthreads];
-  std::vector<std::set<long long> > sets(nthreads);
+  std::vector<std::set<long long> > tsets(nthreads);
+  std::vector<std::set<long long> > fsets(nthreads);
   for (int ii=0; ii<nthreads; ii++) {
     args[ii].dd = &dd;
-    args[ii].collect = &sets[ii];
+    args[ii].touched = &tsets[ii];
+    args[ii].fresh = &fsets[ii];
     args[ii].j0 = (int)((long long)oh*ii/nthreads);
     args[ii].j1 = (int)((long long)oh*(ii+1)/nthreads);
     started[ii] = nthreads > 1 &&
@@ -418,9 +427,13 @@ static int hpxDirectResample(const float* map, long long nside, int nested,
   for (int ii=0; ii<nthreads; ii++)
     if (started[ii])
       pthread_join(threads[ii], NULL);
-  if (deep == 1 && collected)
-    for (int ii=0; ii<nthreads; ii++)
-      collected->insert(sets[ii].begin(), sets[ii].end());
+  if (deep == 2)
+    for (int ii=0; ii<nthreads; ii++) {
+      if (touched)
+	touched->insert(tsets[ii].begin(), tsets[ii].end());
+      if (fresh)
+	fresh->insert(fsets[ii].begin(), fsets[ii].end());
+    }
 
   delete [] started;
   delete [] threads;
@@ -486,6 +499,7 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
   hpx_ = hpx;
   deep_ = NULL;
   deepOrder_ = -1;
+  refsOrder_ = -1;
   nthreads_ = nthreads;
   map_ = NULL;
   mapNested_ = 1;
@@ -618,6 +632,29 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
     release();
 
   valid_ = 1;
+}
+
+// Tile N of order K as a deep window samples it: its own data, else the
+// deepest ancestor there is finer than the map, else none (the map)
+HPXTileRef FitsHPXReproj::resolveTile(int order, long long nn)
+{
+  HPXTileRef ref;
+  ref.hold = deep_->tile(order, nn);
+  if (ref.hold) {
+    ref.data = ref.hold.get();
+    return ref;
+  }
+  int ww = deep_->tileWidth();
+  for (int dk=1; order-dk >= deep_->minOrder() &&
+	 ((long long)ww << (order-dk)) > nside_; dk++) {
+    ref.hold = deep_->tile(order-dk, nn >> (2*dk));
+    if (ref.hold) {
+      ref.data = ref.hold.get();
+      ref.dk = dk;
+      return ref;
+    }
+  }
+  return ref;
 }
 
 FitsHPXReproj::~FitsHPXReproj()
@@ -1181,46 +1218,57 @@ int FitsHPXReproj::build(double lon, double lat, const double* centre)
       kk = deep_->maxOrder();
     long long nsideK = (long long)ww << kk;
     if (nsideK > nside_) {
-      // pass 1: the tiles the window touches
-      std::set<long long> want;
+      // the last build's tiles, if at this order; any not loaded then
+      // (missing, or an ancestor in its place) may have arrived since
+      if (refsOrder_ != kk) {
+	refs_.clear();
+	refsOrder_ = kk;
+      }
+      for (std::map<long long, HPXTileRef>::iterator it=refs_.begin();
+	   it!=refs_.end(); ++it)
+	if (!it->second.data || it->second.dk)
+	  it->second = resolveTile(kk, it->first);
+
+      // one pass with them; a pixel whose tile is new takes the map's
+      // value for now and is marked
+      std::vector<unsigned char> miss((size_t)pWidth_*pHeight_, 0);
+      std::set<long long> touched, fresh;
       if (hpxDirectResample(map_, nside_, mapNested_, hd, out, pWidth_,
-			    pHeight_, byteswap_, nthreads_, 1, nsideK, bits,
-			    NULL, &want)) {
-	// the tiles, held (so the shared cache keeps them) until sampled
-	std::vector<std::shared_ptr<const float> > held;
-	std::map<long long, HPXTileRef> refs;
-	for (std::set<long long>::iterator it=want.begin(); it!=want.end();
-	     ++it) {
-	  std::shared_ptr<const float> data = deep_->tile(kk, *it);
-	  if (data) {
-	    held.push_back(data);
-	    refs[*it].data = data.get();
-	    refs[*it].dk = 0;
-	    continue;
-	  }
-	  missing_.push_back(((long long)kk << 56) | *it);
-	  // the deepest ancestor there is, finer than the map
-	  for (int dk=1; kk-dk >= deep_->minOrder() &&
-		 ((long long)ww << (kk-dk)) > nside_; dk++) {
-	    std::shared_ptr<const float> anc = deep_->tile(kk-dk, *it >> (2*dk));
-	    if (anc) {
-	      held.push_back(anc);
-	      refs[*it].data = anc.get();
-	      refs[*it].dk = dk;
-	      break;
-	    }
+			    pHeight_, byteswap_, nthreads_, 2, nsideK, bits,
+			    &refs_, miss.data(), &touched, &fresh)) {
+	// the new tiles; sampled again, just their pixels, if any has data
+	int again = 0;
+	for (std::set<long long>::iterator it=fresh.begin();
+	     it!=fresh.end(); ++it) {
+	  HPXTileRef ref = resolveTile(kk, *it);
+	  if (ref.data)
+	    again = 1;
+	  refs_[*it] = ref;
+	}
+	ok = !again ||
+	  hpxDirectResample(map_, nside_, mapNested_, hd, out, pWidth_,
+			    pHeight_, byteswap_, nthreads_, 3, nsideK, bits,
+			    &refs_, miss.data());
+
+	// keep only this window's tiles; those without their own data
+	// are the ones to fetch
+	for (std::map<long long, HPXTileRef>::iterator it=refs_.begin();
+	     it!=refs_.end(); ) {
+	  if (!touched.count(it->first))
+	    refs_.erase(it++);
+	  else {
+	    if (!it->second.data || it->second.dk)
+	      missing_.push_back(((long long)kk << 56) | it->first);
+	    ++it;
 	  }
 	}
-	// pass 2
-	ok = hpxDirectResample(map_, nside_, mapNested_, hd, out, pWidth_,
-			       pHeight_, byteswap_, nthreads_, 2, nsideK, bits,
-			       &refs, NULL);
+
 	if (ok) {
 	  deepOrder_ = kk;
 	  // say which order the values come from
 	  char card[81];
 	  snprintf(card, 81, "HISTORY HiPS order %d tiles (NSIDE %lld); %d of %d not loaded",
-		   kk, nsideK, (int)missing_.size(), (int)want.size());
+		   kk, nsideK, (int)missing_.size(), (int)touched.size());
 	  memset(card+strlen(card), ' ', 80-strlen(card));
 	  hd->cardins(card, NULL);
 	  if (hd->find("HIPSORD"))

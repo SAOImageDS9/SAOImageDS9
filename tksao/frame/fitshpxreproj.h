@@ -6,12 +6,24 @@
 #define __fitshpxreproj_h__
 
 #include <math.h>
+#include <map>
+#include <memory>
 #include <vector>
 
 #include "vector.h"
 #include "file.h"
 
 class FitsHiPS;
+
+// a deep window's tile of order K, as sampled: its own data (dk 0), the
+// data of its ancestor dk orders up, or none (data NULL: the map shows
+// through); hold keeps the data alive
+struct HPXTileRef {
+  const float* data;
+  int dk;
+  std::shared_ptr<const float> hold;
+  HPXTileRef() : data(NULL), dk(0) {}
+};
 
 // Sample a HEALPix map (a flat FitsHPX: the map's pixels as they are,
 // see fitsy/hpx.h) into a projection: all-sky (AIT, MOL, CAR, ...), zenithal (TAN, SIN, ...)
@@ -55,6 +67,11 @@ class FitsHPXReproj : public FitsFile {
   int deepOrder_;      // order sampled by the last build, -1: the map
   std::vector<long long> missing_;      // tiles the last build wanted
 					// but couldn't read (order<<56|N)
+  // the tiles the last build sampled (order refsOrder_), kept for the
+  // next: a pan or refresh mostly samples the same ones
+  std::map<long long, HPXTileRef> refs_;
+  int refsOrder_;
+  HPXTileRef resolveTile(int order, long long nn);
 
   int build(double lon, double lat, const double* centre);
   FitsHead* initHeader(FitsHead*, const char*, double, double, double);

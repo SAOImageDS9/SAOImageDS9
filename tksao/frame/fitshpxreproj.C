@@ -6,6 +6,8 @@
 #include <string.h>
 #include <math.h>
 #include <pthread.h>
+#include <map>
+#include <memory>
 #include <set>
 
 #include "fitshpxreproj.h"
@@ -14,9 +16,6 @@
 #include "hips.h"
 #include "hpx.h"
 #include "hpxnest.h"
-
-// a deep window's tile cache, in decoded tiles (each tile width^2 floats)
-#define HPX_TILE_CACHE_BYTES ((size_t)512*1024*1024)
 
 #define R2D (180./M_PI)
 
@@ -487,7 +486,6 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
   hpx_ = hpx;
   deep_ = NULL;
   deepOrder_ = -1;
-  tileCap_ = 0;
   nthreads_ = nthreads;
   map_ = NULL;
   mapNested_ = 1;
@@ -531,10 +529,6 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
     deep_ = deep;
     pixHPX_ = sqrt(M_PI/3.)*180./M_PI/
       ((double)deep->tileWidth()*(1LL << deep->maxOrder()));
-    size_t tb = (size_t)deep->tileWidth()*deep->tileWidth()*sizeof(float);
-    tileCap_ = HPX_TILE_CACHE_BYTES/tb;
-    if (tileCap_ < 16)
-      tileCap_ = 16;
   }
 
   double width = HPXReprojInfo[ii].width;
@@ -631,50 +625,6 @@ FitsHPXReproj::~FitsHPXReproj()
   if (data_)
     delete [] (float*)data_;
   release();
-  dropTiles();
-}
-
-void FitsHPXReproj::dropTiles()
-{
-  for (std::map<long long, float*>::iterator it=tiles_.begin();
-       it!=tiles_.end(); ++it)
-    delete [] it->second;
-  tiles_.clear();
-  lru_.clear();
-}
-
-// Tile N of order K from the cache, reading it if needed (NULL if it
-// isn't there). The cache keeps the tileCap_ most recently used tiles.
-float* FitsHPXReproj::tile(int order, long long nn)
-{
-  long long key = ((long long)order << 56) | nn;
-  std::map<long long, float*>::iterator it = tiles_.find(key);
-  if (it != tiles_.end()) {
-    lru_.remove(key);
-    lru_.push_front(key);
-    return it->second;
-  }
-
-  int ww = deep_->tileWidth();
-  float* data = new (std::nothrow) float[(size_t)ww*ww];
-  if (!data)
-    return NULL;
-  if (!deep_->readTile(order, nn, data)) {
-    delete [] data;
-    return NULL;
-  }
-  tiles_[key] = data;
-  lru_.push_front(key);
-  while (tiles_.size() > tileCap_ && !lru_.empty()) {
-    long long old = lru_.back();
-    lru_.pop_back();
-    std::map<long long, float*>::iterator oo = tiles_.find(old);
-    if (oo != tiles_.end()) {
-      delete [] oo->second;
-      tiles_.erase(oo);
-    }
-  }
-  return data;
 }
 
 void FitsHPXReproj::release()
@@ -1236,15 +1186,15 @@ int FitsHPXReproj::build(double lon, double lat, const double* centre)
       if (hpxDirectResample(map_, nside_, mapNested_, hd, out, pWidth_,
 			    pHeight_, byteswap_, nthreads_, 1, nsideK, bits,
 			    NULL, &want)) {
-	// keep this window's tiles cached together
-	if (tileCap_ < 2*want.size())
-	  tileCap_ = 2*want.size();
+	// the tiles, held (so the shared cache keeps them) until sampled
+	std::vector<std::shared_ptr<const float> > held;
 	std::map<long long, HPXTileRef> refs;
 	for (std::set<long long>::iterator it=want.begin(); it!=want.end();
 	     ++it) {
-	  float* data = tile(kk, *it);
+	  std::shared_ptr<const float> data = deep_->tile(kk, *it);
 	  if (data) {
-	    refs[*it].data = data;
+	    held.push_back(data);
+	    refs[*it].data = data.get();
 	    refs[*it].dk = 0;
 	    continue;
 	  }
@@ -1252,9 +1202,10 @@ int FitsHPXReproj::build(double lon, double lat, const double* centre)
 	  // the deepest ancestor there is, finer than the map
 	  for (int dk=1; kk-dk >= deep_->minOrder() &&
 		 ((long long)ww << (kk-dk)) > nside_; dk++) {
-	    float* anc = tile(kk-dk, *it >> (2*dk));
+	    std::shared_ptr<const float> anc = deep_->tile(kk-dk, *it >> (2*dk));
 	    if (anc) {
-	      refs[*it].data = anc;
+	      held.push_back(anc);
+	      refs[*it].data = anc.get();
 	      refs[*it].dk = dk;
 	      break;
 	    }

@@ -12,6 +12,10 @@
 #include <new>
 #include <fstream>
 #include <sstream>
+#include <list>
+#include <map>
+#include <memory>
+#include <string>
 using namespace std;
 
 #include <tk.h>
@@ -141,17 +145,31 @@ static int copyBlock(FitsFile* img, int r0, int c0, int ww, float* dest,
   return 1;
 }
 
-// A PNG or JPEG tile decoded through a Tk photo (Tk reads PNG, tkimg
-// JPEG): one value per pixel, top row first, w*h floats (delete []).
-// channel 0/1/2 gives the red/green/blue level; -1, grey images their
-// grey level and colour ones their luminance (Rec. 601, as FitsPhoto). A fully transparent pixel (alpha 0) is no data,
-// NaN. Values are the tile's 0-255 display values, not physical ones.
-// Returns NULL if the file can't be decoded.
-static float* readPhoto(Tcl_Interp* interp, const char* fn, int* ww, int* hh,
-			int channel)
+// One decoded file: w*h values, top row first (FITS rows flipped)
+struct HiPSImage {
+  int width;
+  int height;
+  float* px;
+  HiPSImage(int ww, int hh) : width(ww), height(hh),
+    px(new (nothrow) float[(size_t)ww*hh]) {}
+  ~HiPSImage() {delete [] px;}
+ private:
+  HiPSImage(const HiPSImage&);
+  HiPSImage& operator=(const HiPSImage&);
+};
+typedef std::shared_ptr<HiPSImage> HiPSImagePtr;
+
+// A PNG or JPEG decoded through a Tk photo (Tk reads PNG, tkimg JPEG).
+// For channel 0/1/2 all three colour levels come back, in out[0..2];
+// for -1 one image in out[0], grey images their grey level and colour
+// ones their luminance (Rec. 601, as FitsPhoto). A fully transparent
+// pixel (alpha 0) is no data, NaN. Values are the tile's 0-255 display
+// values, not physical ones. Returns 0 if the file can't be decoded.
+static int decodePhoto(Tcl_Interp* interp, const char* fn, int channel,
+		       HiPSImagePtr out[3])
 {
   if (!interp)
-    return NULL;
+    return 0;
 
   Tcl_Obj* cmd = Tcl_NewListObj(0, NULL);
   Tcl_IncrRefCount(cmd);
@@ -163,38 +181,48 @@ static float* readPhoto(Tcl_Interp* interp, const char* fn, int* ww, int* hh,
   Tcl_DecrRefCount(cmd);
   if (rr != TCL_OK) {
     Tcl_ResetResult(interp);
-    return NULL;
+    return 0;
   }
   std::string name = Tcl_GetStringResult(interp);
   Tcl_ResetResult(interp);
 
-  float* out = NULL;
+  int colour = channel >= 0 && channel <= 2;
+  int nout = colour ? 3 : 1;
+  int ok = 0;
   Tk_PhotoHandle photo = Tk_FindPhoto(interp, name.c_str());
   Tk_PhotoImageBlock block;
   int width =0;
   int height =0;
   if (photo && Tk_PhotoGetImage(photo, &block)) {
     Tk_PhotoGetSize(photo, &width, &height);
-    if (width>0 && height>0)
-      out = new (nothrow) float[(size_t)width*height];
-    if (out) {
+    ok = width>0 && height>0;
+    for (int ii=0; ok && ii<nout; ii++) {
+      out[ii] = HiPSImagePtr(new (nothrow) HiPSImage(width, height));
+      ok = out[ii] && out[ii]->px;
+    }
+    if (ok) {
       int alpha = block.pixelSize >= 4;
-      float* dd = out;
+      size_t kk = 0;
       for (int yy=0; yy<height; yy++) {
 	unsigned char* row = block.pixelPtr + (size_t)yy*block.pitch;
-	for (int xx=0; xx<width; xx++) {
+	for (int xx=0; xx<width; xx++, kk++) {
 	  unsigned char* pp = row + (size_t)xx*block.pixelSize;
 	  unsigned char r = pp[block.offset[0]];
 	  unsigned char g = pp[block.offset[1]];
 	  unsigned char b = pp[block.offset[2]];
-	  if (alpha && pp[block.offset[3]] == 0)
-	    *dd++ = NAN;
-	  else if (channel >= 0 && channel <= 2)
-	    *dd++ = pp[block.offset[channel]];
+	  if (alpha && pp[block.offset[3]] == 0) {
+	    for (int ii=0; ii<nout; ii++)
+	      out[ii]->px[kk] = NAN;
+	  }
+	  else if (colour) {
+	    out[0]->px[kk] = r;
+	    out[1]->px[kk] = g;
+	    out[2]->px[kk] = b;
+	  }
 	  else if (r == g && g == b)
-	    *dd++ = r;
+	    out[0]->px[kk] = r;
 	  else
-	    *dd++ = .299f*r + .587f*g + .114f*b;
+	    out[0]->px[kk] = .299f*r + .587f*g + .114f*b;
 	}
       }
     }
@@ -210,9 +238,141 @@ static float* readPhoto(Tcl_Interp* interp, const char* fn, int* ww, int* hh,
   Tcl_DecrRefCount(del);
   Tcl_ResetResult(interp);
 
-  *ww = width;
-  *hh = height;
-  return out;
+  if (!ok)
+    for (int ii=0; ii<3; ii++)
+      out[ii].reset();
+  return ok;
+}
+
+// Every HiPS in the process shares one cache of decoded files: deep
+// window tiles, and the PNG/JPEG tiles and Allskys a map is built from.
+// So the three channels of a colour HiPS decode each file once, a window
+// rebuilt on a pan, zoom or block change finds its tiles again, and two
+// frames showing the same HiPS share them. An entry is one file's values
+// for one channel (-1: FITS, grey or luminance); decoding a colour file
+// for channel 0, 1 or 2 keeps all three. Entries are checked against the
+// file's size, time and inode, so a tile fetched or cleared since is
+// read afresh. Past HIPS_CACHE_BYTES the least recently used entries
+// nobody holds go first; entries in use stay (a window's tiles while it
+// is built), so the cache can briefly exceed it.
+#define HIPS_CACHE_BYTES ((size_t)512*1024*1024)
+
+namespace {
+  struct HiPSCacheEntry {
+    HiPSImagePtr img;
+    off_t size;
+    time_t mtime;
+    ino_t ino;
+    std::list<std::string>::iterator lru;
+  };
+  struct HiPSCache {
+    std::map<std::string, HiPSCacheEntry> entries;
+    std::list<std::string> lru;   // most recently used first
+    size_t bytes;
+    HiPSCache() : bytes(0) {}
+  };
+  // never destroyed: windows may still hold tiles at exit
+  HiPSCache& hipsCache()
+  {
+    static HiPSCache* cache = new HiPSCache;
+    return *cache;
+  }
+}
+
+static std::string cacheKey(const char* fn, int channel)
+{
+  ostringstream str;
+  str << fn << '\n' << channel;
+  return str.str();
+}
+
+static size_t cacheBytes(const HiPSImagePtr& img)
+{
+  return (size_t)img->width*img->height*sizeof(float);
+}
+
+static void cacheErase(std::map<std::string, HiPSCacheEntry>::iterator it)
+{
+  HiPSCache& cc = hipsCache();
+  cc.bytes -= cacheBytes(it->second.img);
+  cc.lru.erase(it->second.lru);
+  cc.entries.erase(it);
+}
+
+// the cached image of fn for channel, if it is still the file on disk
+static HiPSImagePtr cacheFind(const char* fn, int channel,
+			      const struct stat& info)
+{
+  HiPSCache& cc = hipsCache();
+  std::map<std::string, HiPSCacheEntry>::iterator it =
+    cc.entries.find(cacheKey(fn, channel));
+  if (it == cc.entries.end())
+    return HiPSImagePtr();
+  HiPSCacheEntry& ee = it->second;
+  if (ee.size != info.st_size || ee.mtime != info.st_mtime ||
+      ee.ino != info.st_ino) {
+    cacheErase(it);
+    return HiPSImagePtr();
+  }
+  cc.lru.splice(cc.lru.begin(), cc.lru, ee.lru);
+  return ee.img;
+}
+
+static void cachePut(const char* fn, int channel, const struct stat& info,
+		     const HiPSImagePtr& img)
+{
+  HiPSCache& cc = hipsCache();
+  std::string key = cacheKey(fn, channel);
+  std::map<std::string, HiPSCacheEntry>::iterator it = cc.entries.find(key);
+  if (it != cc.entries.end())
+    cacheErase(it);
+  cc.lru.push_front(key);
+  HiPSCacheEntry& ee = cc.entries[key];
+  ee.img = img;
+  ee.size = info.st_size;
+  ee.mtime = info.st_mtime;
+  ee.ino = info.st_ino;
+  ee.lru = cc.lru.begin();
+  cc.bytes += cacheBytes(img);
+
+  // trim, oldest first, skipping entries in use
+  std::list<std::string>::iterator ll = cc.lru.end();
+  while (cc.bytes > HIPS_CACHE_BYTES && ll != cc.lru.begin()) {
+    --ll;
+    std::map<std::string, HiPSCacheEntry>::iterator oo = cc.entries.find(*ll);
+    if (oo->second.img.use_count() > 1)
+      continue;
+    std::list<std::string>::iterator next = ll;
+    ++next;
+    cacheErase(oo);
+    ll = next;
+  }
+}
+
+// PNG/JPEG file fn for channel (see decodePhoto), through the cache;
+// empty if it isn't there or can't be decoded
+static HiPSImagePtr photoImage(Tcl_Interp* interp, const char* fn,
+			       int channel)
+{
+  struct stat info;
+  if (stat(fn, &info) || !S_ISREG(info.st_mode))
+    return HiPSImagePtr();
+  if (channel < -1 || channel > 2)
+    channel = -1;
+  HiPSImagePtr img = cacheFind(fn, channel, info);
+  if (img)
+    return img;
+
+  HiPSImagePtr out[3];
+  if (!decodePhoto(interp, fn, channel, out))
+    return HiPSImagePtr();
+  if (channel < 0) {
+    cachePut(fn, -1, info, out[0]);
+    return out[0];
+  }
+  for (int ii=0; ii<3; ii++)
+    cachePut(fn, ii, info, out[ii]);
+  return out[channel];
 }
 
 // Copy the ww x ww block whose top-left corner is at row r0 (from the
@@ -499,40 +659,46 @@ float* FitsHiPS::takeMap()
   return (float*)data_;
 }
 
-int FitsHiPS::readTile(int order, long long npix, float* out)
+std::shared_ptr<const float> FitsHiPS::tile(int order, long long npix)
 {
   int ww = width_;
   if (!pName_ || ww <= 0 || order < 0 || order > maxOrder_ || npix < 0 ||
       npix >= (12LL << (2*order)))
-    return 0;
-  if (!ident_) {
-    ident_ = new (nothrow) long long[(size_t)ww*ww];
-    if (!ident_)
-      return 0;
-    for (size_t ii=0; ii<(size_t)ww*ww; ii++)
-      ident_[ii] = ii;
-  }
+    return std::shared_ptr<const float>();
 
   char* fn = tilePath(order, npix, tileExt_);
-  int ok = 0;
-  if (fileExists(fn)) {
-    if (!strcmp(tileExt_, "fits")) {
-      FitsFitsMMap img(fn, FitsFile::EXACTIMAGE);
-      ok = img.isValid() && img.isImage() &&
-	img.head()->naxis(0) == ww && img.head()->naxis(1) == ww &&
-	copyBlock(&img, 0, 0, ww, out, ident_);
-    }
-    else {
-      int nx, ny;
-      float* img = readPhoto(interp_, fn, &nx, &ny, channel_);
-      ok = img && nx == ww && ny == ww &&
-	copyPhotoBlock(img, nx, ny, 0, 0, ww, out, ident_);
-      if (img)
-	delete [] img;
+  HiPSImagePtr img;
+  if (strcmp(tileExt_, "fits"))
+    img = photoImage(interp_, fn, channel_);
+  else {
+    struct stat info;
+    if (!stat(fn, &info) && S_ISREG(info.st_mode)) {
+      img = cacheFind(fn, -1, info);
+      if (!img) {
+	if (!ident_) {
+	  ident_ = new (nothrow) long long[(size_t)ww*ww];
+	  if (ident_)
+	    for (size_t ii=0; ii<(size_t)ww*ww; ii++)
+	      ident_[ii] = ii;
+	}
+	FitsFitsMMap ff(fn, FitsFile::EXACTIMAGE);
+	if (ident_ && ff.isValid() && ff.isImage() &&
+	    ff.head()->naxis(0) == ww && ff.head()->naxis(1) == ww) {
+	  img = HiPSImagePtr(new (nothrow) HiPSImage(ww, ww));
+	  if (img && img->px && copyBlock(&ff, 0, 0, ww, img->px, ident_))
+	    cachePut(fn, -1, info, img);
+	  else
+	    img.reset();
+	}
+      }
     }
   }
   delete [] fn;
-  return ok;
+
+  if (!img || img->width != ww || img->height != ww)
+    return std::shared_ptr<const float>();
+  // shares the entry's ownership: valid while held, even once evicted
+  return std::shared_ptr<const float>(img, img->px);
 }
 
 int FitsHiPS::isHiPS(const char* dir)
@@ -719,11 +885,11 @@ int FitsHiPS::allskyWidth(int order)
       }
     }
     else {
-      float* img = readPhoto(interp_, fn, &nx, &ny, channel_);
-      if (img)
-	delete [] img;
-      else
-	nx = ny = 0;
+      HiPSImagePtr img = photoImage(interp_, fn, channel_);
+      if (img) {
+	nx = img->width;
+	ny = img->height;
+      }
     }
     if (nx>0 && ny>0) {
       int ncol = allskyCols(order);
@@ -889,17 +1055,15 @@ int FitsHiPS::buildMap(float* map)
       }
     }
     else {
-      int nx, ny;
-      float* img = readPhoto(interp_, fn, &nx, &ny, channel_);
+      HiPSImagePtr img = photoImage(interp_, fn, channel_);
       if (img) {
 	for (int nn=0; nn<ntile_; nn++) {
-	  if (copyPhotoBlock(img, nx, ny, (nn/ncol)*ww, (nn%ncol)*ww, ww,
-			     map+nn*w2, sub))
+	  if (copyPhotoBlock(img->px, img->width, img->height, (nn/ncol)*ww,
+			     (nn%ncol)*ww, ww, map+nn*w2, sub))
 	    nread_++;
 	  else
 	    nbad_++;
 	}
-	delete [] img;
       }
     }
     delete [] fn;
@@ -918,15 +1082,12 @@ int FitsHiPS::buildMap(float* map)
 	    nbad_++;
 	}
 	else {
-	  int nx, ny;
-	  float* img = readPhoto(interp_, fn, &nx, &ny, channel_);
-	  if (img && nx == ww && ny == ww &&
-	      copyPhotoBlock(img, nx, ny, 0, 0, ww, map+nn*w2, sub))
+	  HiPSImagePtr img = photoImage(interp_, fn, channel_);
+	  if (img && img->width == ww && img->height == ww &&
+	      copyPhotoBlock(img->px, ww, ww, 0, 0, ww, map+nn*w2, sub))
 	    nread_++;
 	  else
 	    nbad_++;
-	  if (img)
-	    delete [] img;
 	}
       }
       delete [] fn;

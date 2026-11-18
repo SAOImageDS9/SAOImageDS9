@@ -6,8 +6,6 @@
 #define __fitshpxreproj_h__
 
 #include <math.h>
-#include <map>
-#include <list>
 #include <vector>
 
 #include "vector.h"
@@ -50,18 +48,13 @@ class FitsHPXReproj : public FitsFile {
   int refParams(double lat, double* crval2, double* pv21);
   // Deep HiPS windows (TODO_HIPS.md Phase 5): when the window's pixels
   // are finer than the map's (the coarse level), they are sampled from
-  // the HiPS tiles of the order that fits, through a cache of decoded
-  // tiles; a tile not available falls back to its deepest cached
-  // ancestor, then to the map.
+  // the HiPS tiles of the order that fits, from the process-wide cache
+  // of decoded tiles (FitsHiPS::tile); a tile not available falls back
+  // to its deepest available ancestor, then to the map.
   FitsHiPS* deep_;     // the tile source (not owned), or NULL
   int deepOrder_;      // order sampled by the last build, -1: the map
-  std::map<long long, float*> tiles_;   // key: order<<56 | tile
-  std::list<long long> lru_;            // most recently used first
-  size_t tileCap_;     // most tiles kept
   std::vector<long long> missing_;      // tiles the last build wanted
 					// but couldn't read (order<<56|N)
-  float* tile(int order, long long nn);
-  void dropTiles();
 
   int build(double lon, double lat, const double* centre);
   FitsHead* initHeader(FitsHead*, const char*, double, double, double);

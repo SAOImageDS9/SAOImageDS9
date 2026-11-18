@@ -232,6 +232,18 @@ zenithal, conic, deep, RING/NESTED/partial/MOC tables). At nside 2048 a
 window costs ~193 MB over the map's data instead of ~600 MB. Only
 `proj=hpx` builds an HPX image.
 
+**Since 2026-11-18 decoded tiles are cached once per process**, not per
+window and channel. `fitsy/hips.C` keeps one LRU cache (512 MB in all)
+of decoded files: deep tiles (`FitsHiPS::tile`, a `shared_ptr` held
+while a window is built, so in-use tiles aren't evicted) and the PNG/
+JPEG tiles and Allskys a map is built from. Decoding a colour file for
+one channel keeps all three, so an RGB load decodes each file once
+(order 0 of the test HiPS: 11 decodes, was 33; the Allsky was decoded
+about 8 times per channel by `allskyWidth` and `buildMap`). A window
+rebuilt, or a second frame on the same HiPS, finds its tiles again.
+Entries are keyed by path and channel and checked against the file's
+size, time and inode, so a tile fetched or cleared since is read again.
+
 ### Where code goes
 
 - `fitsy/hips.{C,h}` (new): `FitsHiPS : public FitsFile`. It parses
@@ -786,7 +798,8 @@ Design (2026-11-16, after reading the window code):
       meridians, wrap) 0 wrong (261 exactly on an edge matched a
       neighbour), 60,000 pixel centres 0 wrong (worst 1.1e-13 deg).
 - [x] Deep windows (done 2026-11-16).
-      - `FitsHiPS::readTile(order, N, out)`: any tile, any format, top
+      - `FitsHiPS::readTile(order, N, out)` (since 2026-11-18
+        `tile(order, N)`, from the shared cache): any tile, any format, top
         row first (the identity table through the existing copiers);
         plus `root()`, `tileExt()`, `tileWidth()`, `min/maxOrder()`.
       - `FitsHPXReproj(..., FitsHiPS* deep)`, passed for every HiPS in
@@ -795,7 +808,8 @@ Design (2026-11-16, after reading the window code):
         map's: K = ceil(log2(p0/pix)) clamped to the HiPS's orders;
         pass 1 (`hpxDirectResample` mode 1, threaded) collects the tiles
         touched; they are read into an LRU cache (512 MB, at least twice
-        the window's tiles) on the main thread; a missing tile uses its
+        the window's tiles; since 2026-11-18 the process-wide one) on
+        the main thread; a missing tile uses its
         deepest cached ancestor finer than the map, else the map; pass 2
         samples (`hpxAng2Nest` per pixel, last tile cached per thread).
         HISTORY "HiPS order K tiles (NSIDE n); m of t not loaded".

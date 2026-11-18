@@ -60,8 +60,8 @@ void FitsImage::initHPX()
     quad =0;
 
   // Another projection (proj=AIT, MOL, ...; proj=HPX is the default):
-  // build the HPX image and resample it. layout/quad only describe the
-  // HPX intermediate, so they are ignored; lon0/lat0/fov set the window.
+  // sample the map itself (no HPX image). layout/quad only describe the
+  // HPX image, so they are ignored; lon0/lat0/fov set the window.
   const char* proj = fits_->pHPXProj();
   if (proj && strcasecmp(proj,"HPX")) {
     char* upper = toUpper(proj);
@@ -71,8 +71,10 @@ void FitsImage::initHPX()
     // automatic order or norder=K, is the coarse level it starts from.
     FitsHiPS* deep = dynamic_cast<FitsHiPS*>(fits_);
 
-    // FitsHPXReproj takes ownership of hpx (keeps it for recentring)
-    FitsHPX* hpx = new FitsHPX(fits_, order, coord, FitsHPX::EQUATOR, col, 0);
+    // the map itself (flat), which FitsHPXReproj samples and takes
+    // ownership of (keeping it for recentring)
+    FitsHPX* hpx = new FitsHPX(fits_, order, coord, FitsHPX::EQUATOR, col, 0,
+			       1);
     if (hpx->isValid())
       hpx_ = new FitsHPXReproj(hpx, upper, fits_->pHPXLon0(),
 			       fits_->pHPXLat0(), fits_->pHPXFov(),
@@ -436,7 +438,7 @@ int FitsImage::hpxNativeFromSky(const Vector& vv, Coord::CoordSystem sys,
 }
 
 // Whole-map clip data for a HEALPix window: one persistent FitsDatam over
-// the kept HPX intermediate, so its cached statistics (scan, zscale,
+// the kept map (every HEALPix pixel once), so its cached statistics (scan, zscale,
 // autocut) survive recentring and the scale limits don't jump.
 FitsData* FitsImage::hpxGlobalData()
 {

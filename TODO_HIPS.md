@@ -214,6 +214,24 @@ position" (a lookup in the HPX image). Tier 2 swaps the second part for a
 tile lookup, so it should be a sampler behind an interface rather than a
 new class tree.
 
+**Since 2026-11-17 windows don't use the HPX image at all.** The design
+above kept it as the coarse level, so a window held the map three times
+(the HiPS table, the (5*nside)^2 HPX image, the window) and sampled it
+two ways (deep pixels by NESTED index into tiles, coarse pixels through
+the HPX projection plane). Now `FitsHPX` has a flat mode: the map's own
+12*nside^2 pixels in the table's ordering (a HiPS's map is taken over,
+`FitsHiPS::takeMap`, not copied), and `FitsHPXReproj` looks up the
+HEALPix pixel at each window pixel's sky position (`hpxAng2Nest`, or
+`hpxAng2Ring` for RING tables, `fitsy/hpxnest.h`). A deep pixel whose
+tile isn't loaded reads the map pixel holding it (its index shifted
+down), so deep and coarse can't disagree. The AST fallback samples the
+same way. Whole-map scale limits read the flat map (minmax unchanged;
+zscale samples it, not the padded HPX image, so its limits moved).
+Rendered pixels are identical to before for 21 cases (all-sky,
+zenithal, conic, deep, RING/NESTED/partial/MOC tables). At nside 2048 a
+window costs ~193 MB over the map's data instead of ~600 MB. Only
+`proj=hpx` builds an HPX image.
+
 ### Where code goes
 
 - `fitsy/hips.{C,h}` (new): `FitsHiPS : public FitsFile`. It parses

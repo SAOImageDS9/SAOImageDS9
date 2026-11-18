@@ -12,6 +12,7 @@
 #include "util.h"
 #include "wcsast.h"
 #include "hips.h"
+#include "hpx.h"
 #include "hpxnest.h"
 
 // a deep window's tile cache, in decoded tiles (each tile width^2 floats)
@@ -105,16 +106,16 @@ static AstFrameSet* hpxReprojAst(FitsHead* hd)
   return fs;
 }
 
-// Direct resampling, without AST's Mapping machinery. astResampleF with
-// zero tolerance runs every output pixel through the full Mapping on one
-// thread (this AST is built without thread support): ~17 s for an
-// all-sky AIT image at nside 4096. A tolerance doesn't help, as the HPX
-// facet seams defeat its linear approximation. Instead, call the WCSLIB
-// projection routines AST uses (ast/wcslib/proj.c; pure functions once
-// set up) and the spherical rotation directly, so the work can be split
-// across threads (~2.5 s on 12). This reproduces AST's Mapping, including
-// its checks, so the output matches the AST path; anything it doesn't
-// handle falls back to AST.
+// Direct sampling, without AST's Mapping machinery: AST runs every
+// output pixel through the full Mapping on one thread (this AST is built
+// without thread support), ~17 s for an all-sky AIT image at nside 4096.
+// Instead, call the WCSLIB projection routines AST uses
+// (ast/wcslib/proj.c; pure functions once set up) and the spherical
+// rotation directly, so the work can be split across threads (~2.5 s on
+// 12). This reproduces AST's pixel -> sky Mapping, including its checks;
+// a target it doesn't handle falls back to AST (hpxAstResample). On the
+// sky, the HEALPix pixel there is looked up in the map (hpxnest.h), the
+// same lookup a deep window's tiles use.
 
 // struct AstPrjPrm and astPRJset() come from ast.h (ast/wcslib/proj.h)
 #define HPX_PRJ_NPAR 10
@@ -138,21 +139,21 @@ struct HPXDirect {
   double longlo, longhi; // as WcsMap's LongRange()
   int lonCheck;
 
-  // source: sky -> HPX plane -> grid. Its native frame is the sky frame.
-  struct AstPrjPrm hpx;
-  double hpxP[HPX_PRJ_NPAR];
-  double scrpix1, scrpix2;
-  double m11, m12, m21, m22; // projection plane [deg] -> pixel offset
-  int iw, ih;
+  // source: the map itself (FitsHPX flat), sky -> HEALPix pixel ->
+  // value, in its own sky system
+  const float* map;
+  long long nside;
+  int nested;            // NESTED, else RING
 
-  const float* in;
   float* out;
   int ow;
   int swap;
 
   // deep windows: 1 collects the tiles of order K the rows touch, 2
-  // samples them (falling back to the HPX image); 0 the HPX image only
+  // samples them (falling back to the map); 0 the map only
   int deep;
+  int mapShift;          // a pixel at nsideK >> mapShift is the map's
+			 // (NESTED map, nsideK = nside << mapShift/2)
   long long nsideK;      // W << K
   int bits;              // log2(W)
   int tw;                // W
@@ -165,17 +166,6 @@ struct HPXDirectArg {
   std::set<long long>* collect;   // deep == 1: the tiles touched
 };
 
-static double hpxDrange(double aa)
-{
-  // palDrange(), in degrees
-  double rr = fmod(aa, 360.);
-  if (rr > 180.)
-    rr -= 360.;
-  else if (rr < -180.)
-    rr += 360.;
-  return rr;
-}
-
 // astPRJset() ignores the status of the projection's own set routine,
 // which on failure (e.g. a bad PV) returns before installing the
 // forward/reverse routines
@@ -184,47 +174,20 @@ static int hpxPrjSet(const char* code, struct AstPrjPrm* prj)
   return !astPRJset(code, prj) && prj->astPRJfwd && prj->astPRJrev;
 }
 
-// Set up the direct mapping from the target and source headers (as the
-// resampling builds them); 0 if they aren't the simple case handled here
-static int hpxDirectInit(HPXDirect* dd, FitsHead* src, FitsHead* hd)
+// the map's value at (lon, lat) [deg], NaN off the map
+static inline float hpxMapValue(const float* map, long long nside,
+				int nested, double lon, double lat)
+{
+  long long pp = nested ? hpxAng2Nest(nside, lon, lat) :
+    hpxAng2Ring(nside, lon, lat);
+  return pp < 0 ? NAN : map[pp];
+}
+
+// Set up the direct mapping from the target header (as the resampling
+// builds it); 0 if it isn't the simple case handled here
+static int hpxDirectInit(HPXDirect* dd, FitsHead* hd)
 {
   memset(dd, 0, sizeof(HPXDirect));
-
-  // source: an HPX image whose native frame is the sky frame
-  char* sctype = src->getString("CTYPE1");
-  if (!sctype || strncmp(sctype+4, "-HPX", 4))
-    return 0;
-  if (src->getReal("CRVAL1", 0) != 0 || src->getReal("CRVAL2", 0) != 0 ||
-      src->getReal("PV2_1", 4) != 4 || src->getReal("PV2_2", 3) != 3 ||
-      src->find("LONPOLE") || src->find("LATPOLE") ||
-      src->find("CD1_1") || src->find("CROTA2"))
-    return 0;
-
-  dd->hpxP[1] = 4;
-  dd->hpxP[2] = 3;
-  dd->hpx.p = dd->hpxP;
-  dd->hpx.p2 = dd->hpxP;
-  if (!hpxPrjSet("HPX", &dd->hpx))
-    return 0;
-
-  dd->scrpix1 = src->getReal("CRPIX1", 0);
-  dd->scrpix2 = src->getReal("CRPIX2", 0);
-  double scd1 = src->getReal("CDELT1", 0);
-  double scd2 = src->getReal("CDELT2", 0);
-  double pc11 = src->getReal("PC1_1", 1);
-  double pc12 = src->getReal("PC1_2", 0);
-  double pc21 = src->getReal("PC2_1", 0);
-  double pc22 = src->getReal("PC2_2", 1);
-  double det = pc11*pc22 - pc12*pc21;
-  if (!scd1 || !scd2 || !det)
-    return 0;
-  // (x/cdelt1, y/cdelt2) = PC (p - crpix)
-  dd->m11 =  pc22/det/scd1;
-  dd->m12 = -pc12/det/scd2;
-  dd->m21 = -pc21/det/scd1;
-  dd->m22 =  pc11/det/scd2;
-  dd->iw = src->naxis(0);
-  dd->ih = src->naxis(1);
 
   // target
   char* ctype = hd->getString("CTYPE1");
@@ -302,20 +265,13 @@ static void* hpxDirectRows(void* vv)
   HPXDirectArg* arg = (HPXDirectArg*)vv;
   const HPXDirect* dd = arg->dd;
 
-  // own copies: the projection routines take non-const parameters
+  // own copy: the projection routines take non-const parameters
   struct AstPrjPrm tgt = dd->tgt;
-  struct AstPrjPrm hpx = dd->hpx;
 
   // the last tile looked up (neighbouring pixels share tiles)
   long long lastT = -1;
   const HPXTileRef* lastRef = NULL;
   long long subMask = (1LL << (2*dd->bits)) - 1;
-
-  // AST__NEAREST: input pixel ii covers [ii-.5, ii+.5)
-  double xmin = .5;
-  double xmax = dd->iw + .5;
-  double ymin = .5;
-  double ymax = dd->ih + .5;
 
   for (int jj=arg->j0; jj<arg->j1; jj++) {
     float* dest = dd->out + (size_t)jj*dd->ow;
@@ -375,24 +331,15 @@ static void* hpxDirectRows(void* vv)
 	  val = lastRef->data[(size_t)rr*dd->tw + cc];
 	  goto done;
 	}
-	// not loaded: the HPX image (the coarse map)
+	// not loaded: the map's pixel holding this one (the same lookup,
+	// so the two can't disagree where they meet)
+	if (dd->mapShift >= 0) {
+	  val = dd->map[pp >> dd->mapShift];
+	  goto done;
+	}
       }
 
-      // into the HPX projection plane, as WcsMap's forward transform
-      {
-	double xx, yy;
-	if (hpx.astPRJfwd(hpxDrange(lon), lat, &hpx, &xx, &yy))
-	  goto done;
-
-	double px = dd->scrpix1 + dd->m11*xx + dd->m12*yy;
-	double py = dd->scrpix2 + dd->m21*xx + dd->m22*yy;
-	if (px < xmin || px >= xmax || py < ymin || py >= ymax)
-	  goto done;
-
-	size_t ix = (size_t)floor(px + .5) - 1;
-	size_t iy = (size_t)floor(py + .5) - 1;
-	val = dd->in[iy*dd->iw + ix];
-      }
+      val = hpxMapValue(dd->map, dd->nside, dd->nested, lon, lat);
 
     done:
       if (!dd->out)
@@ -412,22 +359,34 @@ static void* hpxDirectRows(void* vv)
   return NULL;
 }
 
-// Resample in into out (ow x oh), optionally byte-swapping the output, on
-// up to nthreads threads. 0 if the headers aren't handled here.
-// deep: 0 the HPX image only; 1 collect the tiles of order K (nsideK =
+// Sample the map (nside, NESTED or RING) into out (ow x oh, as hd
+// describes it), optionally byte-swapping the output, on up to nthreads
+// threads. 0 if hd isn't handled here.
+// deep: 0 the map only; 1 collect the tiles of order K (nsideK =
 // W << K, bits = log2 W) the window touches into collected (out unused);
-// 2 sample them through refs, falling back to the HPX image.
-static int hpxDirectResample(FitsHead* src, FitsHead* hd, const float* in,
-			     float* out, int ow, int oh, int swap,
+// 2 sample them through refs, falling back to the map.
+static int hpxDirectResample(const float* map, long long nside, int nested,
+			     FitsHead* hd, float* out, int ow, int oh, int swap,
 			     int nthreads, int deep =0, long long nsideK =0,
 			     int bits =0,
 			     const std::map<long long, HPXTileRef>* refs =NULL,
 			     std::set<long long>* collected =NULL)
 {
   HPXDirect dd;
-  if (!hpxDirectInit(&dd, src, hd))
+  if (!hpxDirectInit(&dd, hd))
     return 0;
-  dd.in = in;
+  dd.map = map;
+  dd.nside = nside;
+  dd.nested = nested;
+  dd.mapShift = -1;
+  if (deep && nested && nsideK >= nside && nsideK % nside == 0) {
+    long long rr = nsideK/nside;
+    int sh = 0;
+    while ((1LL << sh) < rr)
+      sh++;
+    if ((1LL << sh) == rr)
+      dd.mapShift = 2*sh;
+  }
   dd.out = deep == 1 ? NULL : out;
   dd.ow = ow;
   dd.swap = swap;
@@ -470,57 +429,55 @@ static int hpxDirectResample(FitsHead* src, FitsHead* hd, const float* in,
   return 1;
 }
 
-// Resample in (iw x ih) into out (ow x oh) through AST
-static int hpxAstResample(FitsHead* src, FitsHead* hd, const float* in,
-			  int iw, int ih, float* out, int ow, int oh)
+// The same through AST, for a target header the direct path doesn't
+// handle: AST takes each output pixel to the sky, row by row (one thread),
+// and the map is looked up there. Output in native byte order.
+static int hpxAstResample(const float* map, long long nside, int nested,
+			  FitsHead* hd, float* out, int ow, int oh)
 {
   int ok = 0;
 
   astClearStatus;
   astBegin;
 
-  AstFrameSet* hpxFS = hpxReprojAst(src);
-  AstFrameSet* tgtFS = hpxReprojAst(hd);
-  if (hpxFS && tgtFS) {
-    // invert so the current Frames are GRID, then go via the sky
-    astInvert(hpxFS);
-    astInvert(tgtFS);
-    AstFrameSet* cvt = (AstFrameSet*)astConvert(hpxFS, tgtFS, "SKY");
-    if (astOK && cvt != AST__NULL) {
-      AstMapping* map =
-	(AstMapping*)astSimplify(astGetMapping(cvt, AST__BASE, AST__CURRENT));
-
-      int lbnd[2] = {1,1};
-      int ubndIn[2] = {iw,ih};
-      int ubndOut[2] = {ow,oh};
-      astResampleF(map, 2, lbnd, ubndIn, in, NULL,
-		   AST__NEAREST, NULL, NULL, 0, 0.0, 100, NAN,
-		   2, lbnd, ubndOut, lbnd, ubndOut, out, NULL);
-      ok = astOK;
+  AstFrameSet* fs = hpxReprojAst(hd);
+  if (fs) {
+    double* xx = new double[ow];
+    double* yy = new double[ow];
+    double* ll = new double[ow];
+    double* bb = new double[ow];
+    for (int ii=0; ii<ow; ii++)
+      xx[ii] = ii+1;
+    ok = 1;
+    for (int jj=0; jj<oh && ok; jj++) {
+      for (int ii=0; ii<ow; ii++)
+	yy[ii] = jj+1;
+      astTran2(fs, ow, xx, yy, 1, ll, bb);
+      if (!astOK) {
+	ok = 0;
+	break;
+      }
+      float* dest = out + (size_t)jj*ow;
+      for (int ii=0; ii<ow; ii++) {
+	if (ll[ii] == AST__BAD || bb[ii] == AST__BAD) {
+	  dest[ii] = NAN;
+	  continue;
+	}
+	double pt[2] = {ll[ii], bb[ii]};
+	astNorm(fs, pt);
+	dest[ii] = hpxMapValue(map, nside, nested, pt[0]*R2D, pt[1]*R2D);
+      }
     }
+    delete [] xx;
+    delete [] yy;
+    delete [] ll;
+    delete [] bb;
   }
 
   astClearStatus;
   astEnd;
   return ok;
 }
-
-// The kept HPX intermediate's data, already byte-swapped to native order
-// in place, seen as a FitsFile that says so (the FitsHPX itself still
-// reports its original byte order). Doesn't own anything.
-class FitsHPXNativeView : public FitsFile {
- public:
-  FitsHPXNativeView(FitsFile* src) {
-    head_ = src->head();
-    manageHead_ = 0;
-    data_ = src->data();
-    dataSize_ = src->dataSize();
-    dataSkip_ = src->dataSkip();
-    byteswap_ = 0;
-    endian_ = lsb() ? LITTLE : BIG;
-    valid_ = 1;
-  }
-};
 
 FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
 			     double lat, double fov, int dispW, int dispH,
@@ -532,8 +489,8 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
   deepOrder_ = -1;
   tileCap_ = 0;
   nthreads_ = nthreads;
-  view_ = NULL;
-  hpxNative_ = 0;
+  map_ = NULL;
+  mapNested_ = 1;
   info_ = -1;
   nside_ = 0;
   pix_ = 0;
@@ -543,11 +500,15 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
   crpix1_ = crpix2_ = 0;
   lon_ = lat_ = 0;
 
-  FitsHead* src = hpx_ ? hpx_->head() : NULL;
-  if (!src || !hpx_->data()) {
+  // the map itself (FitsHPX flat), not an HPX image
+  FitsHPX* flat = dynamic_cast<FitsHPX*>(hpx_);
+  if (!flat || !flat->isFlat() || !flat->head() || !flat->data()) {
     release();
     return;
   }
+  map_ = (const float*)flat->data();
+  mapNested_ = flat->nested();
+  nside_ = (int)flat->nside();
 
   int ii;
   for (ii=0; HPXReprojInfo[ii].code; ii++)
@@ -558,14 +519,6 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
     return;
   }
   info_ = ii;
-
-  // recover nside from the HPX/XPH pixel scale, 90/nside/sqrt(2)
-  double cdelt = fabs(src->getReal("CDELT1", 0));
-  if (!cdelt) {
-    release();
-    return;
-  }
-  nside_ = (int)(90./(M_SQRT2*cdelt) + .5);
 
   // match the HEALPix pixel size, sqrt(4pi/(12 nside^2))
   pix_ = sqrt(M_PI/3.)*180./M_PI/nside_;
@@ -645,8 +598,7 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
 
   // Keep the size even so no pixel centre falls exactly on the central
   // meridian. When lon is a multiple of 90 that meridian is a polar
-  // facet seam in HPX, the HPX grid position is an exact .5 tie, and
-  // nearest-neighbour can round into the gap between facets.
+  // facet seam, where the pixel looked up is an exact tie.
   pWidth_ = ww;
   pHeight_ = hh;
   pWidth_ += pWidth_ % 2;
@@ -655,9 +607,9 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
   // Nudge the reference pixel by a tiny, different amount on each axis.
   // A centred grid puts pixel centres exactly on lines of symmetry (the
   // central row/column, and the diagonals of a polar zenithal view),
-  // which can coincide with HPX facet seams; there the HPX grid position
-  // is an exact .5 tie and nearest-neighbour can pick the wrong side or
-  // a gap. The offset moves every pixel centre off those lines.
+  // which can coincide with HEALPix facet seams, where the pixel looked
+  // up is an exact tie. The offset moves every pixel centre off those
+  // lines.
   crpix1_ = (pWidth_+1)/2. + .001;
   crpix2_ = (pHeight_+1)/2. + .0007;
 
@@ -667,11 +619,9 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
   }
 
   // Only windows (zenithal, conic) can be recentred, so only they keep
-  // the HPX intermediate; all-sky images free it now.
+  // the map; all-sky images free it now.
   if (HPXReprojInfo[ii].kind == ALLSKY)
     release();
-  else
-    view_ = new FitsHPXNativeView(hpx_);
 
   valid_ = 1;
 }
@@ -729,12 +679,10 @@ float* FitsHPXReproj::tile(int order, long long nn)
 
 void FitsHPXReproj::release()
 {
-  if (view_)
-    delete view_;
-  view_ = NULL;
   if (hpx_)
     delete hpx_;
   hpx_ = NULL;
+  map_ = NULL;
 }
 
 int FitsHPXReproj::canRecentre()
@@ -1132,8 +1080,8 @@ int FitsHPXReproj::zenithalCentre(double lon, double lat, double uu,
   return 0;
 }
 
-// Build the target header for centre (lon, lat) and resample the HPX
-// intermediate into it; if centre is given, shift the window so that sky
+// Build the target header for centre (lon, lat) and sample the map into
+// it; if centre is given, shift the window so that sky
 // point is at its centre. On success, replaces head_ and data_.
 int FitsHPXReproj::refParams(double lat, double* crval2, double* pv21)
 {
@@ -1261,20 +1209,7 @@ int FitsHPXReproj::build(double lon, double lat, const double* centre)
     }
   }
 
-  int iw = src->naxis(0);
-  int ih = src->naxis(1);
-  size_t inSize = (size_t)iw*ih;
   size_t outSize = (size_t)pWidth_*pHeight_;
-
-  // input in native byte order. Swap the HPX data in place, once, rather
-  // than copying it: at high nside the HPX image is gigabytes (6.7 GB at
-  // nside 8192).
-  float* in = (float*)((char*)hpx_->data()+hpx_->dataSkip());
-  if (hpx_->byteswap() && !hpxNative_) {
-    swapData(in, inSize);
-    hpxNative_ = 1;
-  }
-
   float* out = new float[outSize];
 
   // a deep window whose pixels are finer than the map's: sample the
@@ -1298,8 +1233,9 @@ int FitsHPXReproj::build(double lon, double lat, const double* centre)
     if (nsideK > nside_) {
       // pass 1: the tiles the window touches
       std::set<long long> want;
-      if (hpxDirectResample(src, hd, in, out, pWidth_, pHeight_, byteswap_,
-			    nthreads_, 1, nsideK, bits, NULL, &want)) {
+      if (hpxDirectResample(map_, nside_, mapNested_, hd, out, pWidth_,
+			    pHeight_, byteswap_, nthreads_, 1, nsideK, bits,
+			    NULL, &want)) {
 	// keep this window's tiles cached together
 	if (tileCap_ < 2*want.size())
 	  tileCap_ = 2*want.size();
@@ -1325,9 +1261,9 @@ int FitsHPXReproj::build(double lon, double lat, const double* centre)
 	  }
 	}
 	// pass 2
-	ok = hpxDirectResample(src, hd, in, out, pWidth_, pHeight_,
-			       byteswap_, nthreads_, 2, nsideK, bits, &refs,
-			       NULL);
+	ok = hpxDirectResample(map_, nside_, mapNested_, hd, out, pWidth_,
+			       pHeight_, byteswap_, nthreads_, 2, nsideK, bits,
+			       &refs, NULL);
 	if (ok) {
 	  deepOrder_ = kk;
 	  // say which order the values come from
@@ -1348,10 +1284,11 @@ int FitsHPXReproj::build(double lon, double lat, const double* centre)
 
   // the direct path writes the output in our byte order; AST's doesn't
   if (!ok)
-    ok = hpxDirectResample(src, hd, in, out, pWidth_, pHeight_, byteswap_,
-			   nthreads_);
+    ok = hpxDirectResample(map_, nside_, mapNested_, hd, out, pWidth_,
+			   pHeight_, byteswap_, nthreads_);
   if (!ok) {
-    ok = hpxAstResample(src, hd, in, iw, ih, out, pWidth_, pHeight_);
+    ok = hpxAstResample(map_, nside_, mapNested_, hd, out, pWidth_,
+			pHeight_);
     // same byte order convention as FitsHPX
     if (ok && byteswap_)
       swapData(out, outSize);
@@ -1422,8 +1359,8 @@ FitsHead* FitsHPXReproj::initHeader(FitsHead* src, const char* pcode,
     hd->appendInteger("HIPSORD", src->getInteger("HIPSORD", 0),
 		      "HiPS order of the values");
 
-  // provenance carried from the HPX image (FitsHPX::initHeader copies it
-  // from the table)
+  // provenance carried from the map (FitsHPX::initHeader copies it from
+  // the table)
   for (int ii=0; ii<src->ncard(); ii++) {
     char* cc = src->cards() + ii*FTY_CARDLEN;
     if (!strncmp(cc, "HISTORY ", 8) || !strncmp(cc, "COMMENT ", 8))

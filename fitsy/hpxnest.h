@@ -108,6 +108,59 @@ static inline long long hpxAng2Nest(long long nside, double lon, double lat)
   return face*nside*nside + hpxSpread(ix) + 2*hpxSpread(iy);
 }
 
+// The RING pixel of nside (any nside >= 1, not only powers of 2) holding
+// (lon, lat) [deg]; -1 if lat is outside [-90, 90] or not a number.
+// Gorski et al. 2005 sec. 4, as healpix_base's loc2pix: rings counted
+// from the north pole, the equatorial belt's rings alternately shifted
+// by half a pixel.
+static inline long long hpxAng2Ring(long long nside, double lon, double lat)
+{
+  if (!(lat >= -90 && lat <= 90) || !(lon == lon) || nside < 1)
+    return -1;
+
+  const double d2r = M_PI/180;
+  double z = sin(lat*d2r);
+  double za = fabs(z);
+  double tt = fmod(lon/90., 4.);
+  if (tt < 0)
+    tt += 4;
+  if (tt >= 4)
+    tt = 0;
+
+  long long nl4 = 4*nside;
+  if (za <= 2./3) {
+    // equatorial belt: ring ir (1..2nside+1 counted from the first belt
+    // ring), pixel ip within it
+    double t1 = nside*(.5 + tt);
+    double t2 = nside*z*.75;
+    long long jp = (long long)(t1 - t2);
+    long long jm = (long long)(t1 + t2);
+    long long ir = nside + 1 + jp - jm;
+    long long kshift = 1 - (ir & 1);
+    long long ip = ((jp + jm - nside + kshift + 1 + 2*nl4)/2) % nl4;
+    long long ncap = 2*nside*(nside - 1);
+    return ncap + (ir - 1)*nl4 + ip;
+  }
+
+  // polar caps; sqrt(3(1 - za)) = cos(lat)*sqrt(3/(1 + za)), as above
+  long long ntt = (long long)tt;
+  if (ntt >= 4)
+    ntt = 3;
+  double tp = tt - ntt;
+  double tmp = nside*cos(lat*d2r)*sqrt(3./(1 + za));
+  long long jp = (long long)(tp*tmp);
+  long long jm = (long long)((1 - tp)*tmp);
+  long long ir = jp + jm + 1;           // ring from the pole, 1..nside
+  if (ir > nside)
+    ir = nside;
+  long long ip = (long long)(tt*ir);
+  if (ip >= 4*ir)
+    ip = 4*ir - 1;
+  if (z > 0)
+    return 2*ir*(ir - 1) + ip;
+  return 12*nside*nside - 2*ir*(ir + 1) + ip;
+}
+
 // The centre (lon, lat) [deg] of NESTED pixel pix of nside
 static inline void hpxNest2Ang(long long nside, long long pix,
 			       double* lon, double* lat)

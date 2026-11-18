@@ -68,7 +68,8 @@ protected:
   int pHPXLon0Set_;          // lon0= was given (0 is also a value)
   double pHPXLat0_;          // reprojection centre latitude [deg], NAN=default
   double pHPXFov_;           // reprojection field of view [deg], NAN=default
-  int pHiPSOrder_;           // HiPS order to read, -1=automatic
+  int pHiPSOrder_;           // HiPS order to read (norder=), -1=automatic
+  int pMocOrder_;            // MOC order to draw at (mocorder=), -1=its own
   int pHiPSSlice_;           // HiPS cube frame to read, -1=first frame
   int pHiPSFormat_;          // HiPS tiles to read: 0=automatic, 1=fits,
                              // 2=png, 3=jpeg, -1=not one of those
@@ -200,6 +201,8 @@ public:
 
   int pHiPSOrder() {return pHiPSOrder_;}
   void setpHiPSOrder(int oo) {pHiPSOrder_ = oo;}
+  int pMocOrder() {return pMocOrder_;}
+  void setpMocOrder(int oo) {pMocOrder_ = oo;}
   int pHiPSSlice() {return pHiPSSlice_;}
   void setpHiPSSlice(int ss) {pHiPSSlice_ = ss;}
   int pHiPSFormat() {return pHiPSFormat_;}

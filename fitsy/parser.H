@@ -60,24 +60,26 @@
      GALACTIC_ = 276,
      KEY_ = 277,
      LAYOUT_ = 278,
-     LITTLE_ = 279,
-     LITTLEENDIAN_ = 280,
-     LAT0_ = 281,
-     LON0_ = 282,
-     NESTED_ = 283,
-     NORTH_ = 284,
-     ORDER_ = 285,
-     PROJ_ = 286,
-     QUAD_ = 287,
-     RING_ = 288,
-     SKIP_ = 289,
-     SLICE_ = 290,
-     SOUTH_ = 291,
-     SYSTEM_ = 292,
-     UNKNOWN_ = 293,
-     XDIM_ = 294,
-     YDIM_ = 295,
-     ZDIM_ = 296
+     MOCORDER_ = 279,
+     LITTLE_ = 280,
+     LITTLEENDIAN_ = 281,
+     LAT0_ = 282,
+     LON0_ = 283,
+     NESTED_ = 284,
+     NORDER_ = 285,
+     NORTH_ = 286,
+     ORDER_ = 287,
+     PROJ_ = 288,
+     QUAD_ = 289,
+     RING_ = 290,
+     SKIP_ = 291,
+     SLICE_ = 292,
+     SOUTH_ = 293,
+     SYSTEM_ = 294,
+     UNKNOWN_ = 295,
+     XDIM_ = 296,
+     YDIM_ = 297,
+     ZDIM_ = 298
    };
 #endif
 /* Tokens.  */
@@ -102,24 +104,26 @@
 #define GALACTIC_ 276
 #define KEY_ 277
 #define LAYOUT_ 278
-#define LITTLE_ 279
-#define LITTLEENDIAN_ 280
-#define LAT0_ 281
-#define LON0_ 282
-#define NESTED_ 283
-#define NORTH_ 284
-#define ORDER_ 285
-#define PROJ_ 286
-#define QUAD_ 287
-#define RING_ 288
-#define SKIP_ 289
-#define SLICE_ 290
-#define SOUTH_ 291
-#define SYSTEM_ 292
-#define UNKNOWN_ 293
-#define XDIM_ 294
-#define YDIM_ 295
-#define ZDIM_ 296
+#define MOCORDER_ 279
+#define LITTLE_ 280
+#define LITTLEENDIAN_ 281
+#define LAT0_ 282
+#define LON0_ 283
+#define NESTED_ 284
+#define NORDER_ 285
+#define NORTH_ 286
+#define ORDER_ 287
+#define PROJ_ 288
+#define QUAD_ 289
+#define RING_ 290
+#define SKIP_ 291
+#define SLICE_ 292
+#define SOUTH_ 293
+#define SYSTEM_ 294
+#define UNKNOWN_ 295
+#define XDIM_ 296
+#define YDIM_ 297
+#define ZDIM_ 298
 
 
 
@@ -135,7 +139,7 @@ typedef union YYSTYPE
   void* ptr;
 }
 /* Line 1529 of yacc.c.  */
-#line 139 "parser.H"
+#line 143 "parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

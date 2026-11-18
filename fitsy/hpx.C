@@ -609,9 +609,9 @@ void FitsHPX::buildMOC(FitsFile* fits)
     if (order < 0 || !offset || npix < 0)
       continue;
 
-    // order=K (FitsFile::pHiPSOrder, the integer order= option): a cell
-    // deeper than K marks its parent at K
-    int cap = fits->pHiPSOrder();
+    // mocorder=K (FitsFile::pMocOrder): a cell deeper than K marks its
+    // parent at K
+    int cap = fits->pMocOrder();
     if (cap >= 0 && order > cap) {
       npix >>= 2*(order-cap);
       order = cap;
@@ -627,10 +627,10 @@ void FitsHPX::buildMOC(FitsFile* fits)
       maxorder = order;
   }
 
-  // order=K draws the MOC at order K: coarser (a deeper cell marks its
-  // parent, above) or finer (a cell fills all its children)
-  if (fits->pHiPSOrder() >= 0)
-    maxorder = fits->pHiPSOrder();
+  // mocorder=K draws the MOC at order K: coarser (a deeper cell marks
+  // its parent, above) or finer (a cell fills all its children)
+  if (fits->pMocOrder() >= 0)
+    maxorder = fits->pMocOrder();
 
   if (maxorder < 0 || maxorder > 29)
     return;

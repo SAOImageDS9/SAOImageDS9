@@ -6,7 +6,8 @@ package provide DS9 1.0
 
 # File -> Open for HEALPix tables: before loading, offer the HEALPix
 # file name options (col=, proj=, lon0=, lat0=, fov=, order=, system=,
-# layout=, quad=), and load the file with the ones chosen appended, e.g.
+# layout=, quad=; order= is the pixel ordering, ring or nested), and
+# load the file with the ones chosen appended, e.g.
 # foo.fits[proj=tan,lon0=83.6,lat0=22]. Only the interactive Open dialog
 # comes here; XPA, SAMP, the command line, Open Recent and backups load
 # the file name as given. Options are only written when they differ from
@@ -116,7 +117,7 @@ proc HPXFrameIsWindow {which} {
 # Does the file name already carry HEALPix options?
 proc HPXOpenHasOptions {fn} {
     return [regexp -nocase \
-		{[\[,]\s*(order|system|layout|col|quad|proj|lon0|lat0|fov)\s*=} \
+		{[\[,]\s*(order|mocorder|system|layout|col|quad|proj|lon0|lat0|fov)\s*=} \
 		$fn]
 }
 

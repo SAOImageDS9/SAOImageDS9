@@ -16,12 +16,12 @@ package provide DS9 1.0
 #    cached tiles), and Moc.fits when tiles are needed
 #  - tiles in the format the reader will use (HiPSTileExt: fits, else
 #    png, else jpg)
-#  - without order=: one Allsky, the deepest of orders 3..0 that
+#  - without norder=: one Allsky, the deepest of orders 3..0 that
 #    exists (a quick look, a few MB); if there is none, the tiles of the
 #    deepest order up to NSIDE hipsnet(autonside)
-#  - with order=K: that order's Allsky.fits if it holds full-size tiles,
+#  - with norder=K: that order's Allsky.fits if it holds full-size tiles,
 #    otherwise its tiles, minus the cells Moc.fits says are empty
-# The reader is then given order=K explicitly, so what it reads doesn't
+# The reader is then given norder=K explicitly, so what it reads doesn't
 # depend on what else is in the cache.
 
 proc HiPSNetDef {} {
@@ -29,10 +29,10 @@ proc HiPSNetDef {} {
 
     # parallel requests; be polite to public servers
     set hipsnet(parallel) 6
-    # without order=, tiles (when there is no Allsky) up to this NSIDE
+    # without norder=, tiles (when there is no Allsky) up to this NSIDE
     set hipsnet(autonside) 512
     # the largest map the reader makes (HIPS_NSIDE_MAX, fitsy/hips.C):
-    # the tiles of a deeper order= are not fetched
+    # the tiles of a deeper norder= are not fetched
     set hipsnet(nsidemax) 8192
     # refuse to download more than this many bytes of tiles in one load
     set hipsnet(maxbytes) [expr {wide(1)<<30}]
@@ -355,7 +355,7 @@ proc HiPSOptions {fn} {
 
 # Fetch what loading the remote HiPS fn (URL plus options) needs, and
 # return the local name for the reader (cache directory plus options,
-# with order= made explicit). Returns {} and sets hipsnet(error) on
+# with norder= made explicit). Returns {} and sets hipsnet(error) on
 # failure or cancel.
 proc HiPSFetch {fn} {
     global hipsnet
@@ -397,14 +397,14 @@ proc HiPSFetch {fn} {
 	return {}
     }
 
-    # order=K, explicit, for the reader
-    if {[dict exists $opts order]} {
+    # norder=K, explicit, for the reader
+    if {[dict exists $opts norder]} {
 	return "$dir$ext"
     }
     if {$ext == {}} {
-	return "$dir\[order=$rr\]"
+	return "$dir\[norder=$rr\]"
     }
-    return "$dir\[order=$rr,[string range $ext 1 end]"
+    return "$dir\[norder=$rr,[string range $ext 1 end]"
 }
 
 # returns the order to read, or {} (hipsnet(error) says why)
@@ -439,10 +439,10 @@ proc HiPSFetchDo {url dir opts} {
 	set minorder 0
     }
 
-    if {[dict exists $opts order]} {
-	set kk [dict get $opts order]
+    if {[dict exists $opts norder]} {
+	set kk [dict get $opts norder]
 	if {![string is integer -strict $kk] || $kk < 0} {
-	    # not a HiPS order (e.g. order=nested); the reader complains
+	    # not an order; the reader complains
 	    return 0
 	}
 	if {$kk > $maxorder} {

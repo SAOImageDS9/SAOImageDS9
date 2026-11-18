@@ -179,7 +179,7 @@ start at its initial view (<code>hips_initial_ra/dec/fov</code>).</li>
 <li><strong>HIPS</strong>: Remote HiPS can be opened by URL (<code>-hips https://...</code>, <em>File &gt; Open HiPS URL...</em>), with an on-disk cache and mirror fallback; PNG/JPEG and colour HiPS (into an RGB frame) are supported.</li>
 <li><strong>HIPS</strong>: A HiPS can be loaded by ID (<code>-hips CDS/P/DSS2/color</code>), looked up in the CDS MocServer, or chosen from the MocServer's list (<em>File &gt; Open HiPS from List...</em>, <code>xpaget hips list</code>).</li>
 <li><strong>HIPS</strong>: <code>format=fits|png|jpeg</code> picks the tiles read when a HiPS has several kinds (also a <em>Tiles</em> choice in the HiPS dialog); <code>hips close</code> clears a HiPS frame.</li>
-<li><strong>HIPS</strong>: HiPS cubes load one frame at a time (<code>slice=</code>, default <code>hips_cube_firstframe</code>); the Cube dialog and the <code>cube</code> command step through them, fetching each frame as it is shown.</li>
+<li><strong>HIPS</strong>: HiPS cubes load one frame at a time (<code>slice=</code>, from 1 as in the Cube dialog; default <code>hips_cube_firstframe</code>); the Cube dialog and the <code>cube</code> command step through them, fetching each frame as it is shown.</li>
 <li><strong>HIPS</strong>: A HiPS is listed in <em>Open Recent</em>,
 and backups record it by directory and options without copying its
 tiles.</li>

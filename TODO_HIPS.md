@@ -710,6 +710,9 @@ variable: `[...]` inside Tcl double quotes is command substitution.
       on demand (all of them up front would be depth x the map, and
       remote cubes would fetch everything). `slice=` (fitsy grammar,
       `pHiPSSlice`) picks the frame, default `hips_cube_firstframe`;
+      `slice=` and `HIPSSLIC` count from 1 like the Cube dialog (they
+      counted from 0 until 2026-11-17), `FitsHiPS::slice_` from 0 like
+      the files;
       `FitsHiPS` reads `NpixN_f`/`Allsky_f` (frame 0 no suffix) and
       writes `HIPSSLIC`, `HIPSDPTH`, `HIPSZVAL` (from
       `data_cube_crpix3/crval3/cdelt3/bunit3`) and a HISTORY card.

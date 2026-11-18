@@ -72,14 +72,19 @@ proc HiPSNetDef {} {
 }
 
 # A cube's frame suffix for file names, "_n" (HiPS 1.0 sec. 4.2.3),
-# empty for frame 0 and for images: slice= in opts, else
-# hips_cube_firstframe, as the reader (FitsHiPS) picks
+# empty for frame 0 and for images: slice= in opts (1-based, so frame
+# slice-1), else hips_cube_firstframe (0-based), as the reader
+# (FitsHiPS) picks
 proc HiPSSliceSuffix {props opts} {
     if {![string match cube* [HiPSProp $props dataproduct_type image]]} {
 	return {}
     }
     if {[dict exists $opts slice]} {
 	set ss [dict get $opts slice]
+	if {![string is integer -strict $ss]} {
+	    return {}
+	}
+	incr ss -1
     } else {
 	set ss [HiPSProp $props hips_cube_firstframe 0]
     }

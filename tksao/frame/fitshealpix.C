@@ -112,6 +112,19 @@ int FitsImage::hpxDeepMissing(const char** root, int* order, int* slice,
   return 1;
 }
 
+void FitsImage::hpxSetDrag(int dd)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (rr)
+    rr->setDrag(dd);
+}
+
+int FitsImage::hpxDragSkipped()
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  return rr ? rr->dragSkipped() : 0;
+}
+
 // Recentre a resampled HEALPix window (zenithal or conic). Like
 // nextBin(), rebuild the image from the new data; the caller finishes
 // with Context::hpxFinish(). Returns 0 if this isn't a window or the

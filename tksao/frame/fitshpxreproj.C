@@ -500,6 +500,8 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
   deep_ = NULL;
   deepOrder_ = -1;
   refsOrder_ = -1;
+  drag_ = 0;
+  skipped_ = 0;
   nthreads_ = nthreads;
   map_ = NULL;
   mapNested_ = 1;
@@ -639,15 +641,18 @@ FitsHPXReproj::FitsHPXReproj(FitsFile* hpx, const char* proj, double lon,
 HPXTileRef FitsHPXReproj::resolveTile(int order, long long nn)
 {
   HPXTileRef ref;
-  ref.hold = deep_->tile(order, nn);
+  ref.hold = deep_->tile(order, nn, drag_);
   if (ref.hold) {
     ref.data = ref.hold.get();
     return ref;
   }
+  // dragging: there, but not read now
+  if (drag_ && deep_->hasTile(order, nn))
+    skipped_ = 1;
   int ww = deep_->tileWidth();
   for (int dk=1; order-dk >= deep_->minOrder() &&
 	 ((long long)ww << (order-dk)) > nside_; dk++) {
-    ref.hold = deep_->tile(order-dk, nn >> (2*dk));
+    ref.hold = deep_->tile(order-dk, nn >> (2*dk), drag_);
     if (ref.hold) {
       ref.data = ref.hold.get();
       ref.dk = dk;
@@ -1205,6 +1210,7 @@ int FitsHPXReproj::build(double lon, double lat, const double* centre)
   int ok = 0;
   deepOrder_ = -1;
   missing_.clear();
+  skipped_ = 0;
   if (deep_) {
     int ww = deep_->tileWidth();
     int bits = 0;

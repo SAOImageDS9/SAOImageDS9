@@ -125,12 +125,17 @@ class FitsHiPS : public FitsFile {
   // sub-index interleave(r, c)), blank pixels NaN; empty if the tile
   // isn't there or can't be read. Tiles come from a cache shared by
   // every HiPS in the process (see hips.C), and stay valid while held.
+  // cachedOnly: only a tile already decoded in that cache (no file read
+  // or decode, for a window rebuilt while dragging); hasTile: whether
+  // its file is there.
   const char* root() {return pName_;}
   const char* tileExt() {return tileExt_;}
   int tileWidth() {return width_;}
   int maxOrder() {return maxOrder_;}
   int minOrder() {return minOrder_;}
-  std::shared_ptr<const float> tile(int order, long long npix);
+  std::shared_ptr<const float> tile(int order, long long npix,
+				    int cachedOnly =0);
+  int hasTile(int order, long long npix);
   int depth() {return depth_;}
   int slice() {return slice_;}
 

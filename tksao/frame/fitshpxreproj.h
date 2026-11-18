@@ -71,6 +71,11 @@ class FitsHPXReproj : public FitsFile {
   // next: a pan or refresh mostly samples the same ones
   std::map<long long, HPXTileRef> refs_;
   int refsOrder_;
+  // while dragging, tiles come only from those already decoded in
+  // memory (no file reads or decoding on the main thread); skipped_ says
+  // some tile's file was there but not read, so the drag's end rebuilds
+  int drag_;
+  int skipped_;
   HPXTileRef resolveTile(int order, long long nn);
 
   int build(double lon, double lat, const double* centre);
@@ -140,6 +145,8 @@ class FitsHPXReproj : public FitsFile {
   // deep windows: the order the window shows (-1: the map), and the
   // tiles it wanted but didn't have (order<<56 | N), for fetching
   int deepOrder() {return deepOrder_;}
+  void setDrag(int dd) {drag_ = dd;}
+  int dragSkipped() {return skipped_;}
   const std::vector<long long>& missingTiles() {return missing_;}
 };
 

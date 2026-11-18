@@ -187,6 +187,10 @@ class FitsImage {
   void initHPX();
  public:
   int hpxRecentre(double lon, double lat);
+  // a deep window rebuilt during a drag reads no tiles (only those in
+  // memory); skipped: some it could have read, for the drag's end
+  void hpxSetDrag(int);
+  int hpxDragSkipped();
   int hpxReshape(double lon, double lat, double pix, int ww, int hh,
 		 const double* centre);
   void hpxReload();

@@ -6,6 +6,7 @@
 #define __fitships_h__
 
 #include <map>
+#include <memory>
 #include <string>
 
 #include <tcl.h>
@@ -56,7 +57,7 @@ class FitsHiPS : public FitsFile {
   int maxOrder_;       // hips_order
   int minOrder_;       // hips_order_min
   int width_;          // hips_tile_width (tileWidth_ is as read)
-  long long* ident_;   // identity index table for readTile, width_^2
+  long long* ident_;   // identity index table for tile(), width_^2
   int ownMap_;         // data_ is ours to free (until takeMap())
 
   int readProperties(const char*);
@@ -87,16 +88,17 @@ class FitsHiPS : public FitsFile {
   // Tile access, for deep windows (tksao FitsHPXReproj): the HiPS's
   // root directory (local, or a remote HiPS's cache), its tile format
   // (fits, png or jpg), full tile width and order range, and tile N of
-  // order K read into out (tileWidth()^2 floats, top row first: out[r*W
-  // + c] is the tile's pixel at row r from the top, column c, which is
-  // NESTED sub-index interleave(r, c)), blank pixels NaN. Returns 0 if
-  // the tile isn't there or can't be read (out untouched).
+  // order K (tileWidth()^2 floats, top row first: t[r*W + c] is the
+  // tile's pixel at row r from the top, column c, which is NESTED
+  // sub-index interleave(r, c)), blank pixels NaN; empty if the tile
+  // isn't there or can't be read. Tiles come from a cache shared by
+  // every HiPS in the process (see hips.C), and stay valid while held.
   const char* root() {return pName_;}
   const char* tileExt() {return tileExt_;}
   int tileWidth() {return width_;}
   int maxOrder() {return maxOrder_;}
   int minOrder() {return minOrder_;}
-  int readTile(int order, long long npix, float* out);
+  std::shared_ptr<const float> tile(int order, long long npix);
   int depth() {return depth_;}
   int slice() {return slice_;}
 

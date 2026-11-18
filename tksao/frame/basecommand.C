@@ -3485,11 +3485,14 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat,
   std::vector<int> rebuilt(cc.size(), 0);
   for (size_t ii=0; ii<cc.size() && how; ii++) {
     FitsImage* fits = cc[ii]->fits;
+    // dragging: deep tiles only from memory (panEndCmd reads the rest)
+    fits->hpxSetDrag(drag);
     if (how == 1)
       rebuilt[ii] = fits->hpxRecentre(rlon, rlat);
     else
       rebuilt[ii] = fits->hpxReshape(rlon, rlat, npix, ww, hh,
 				     useCentre ? centre : NULL);
+    fits->hpxSetDrag(0);
     if (fits == ptr)
       ok = rebuilt[ii];
   }
@@ -3715,6 +3718,17 @@ void Base::panEndCmd(const Vector& vv)
 {
   panMotionCmd(vv);
   hpxAutoRefresh();
+  // tiles the drag didn't read (only those in memory were used): read
+  // them now, even if the window itself needn't move
+  int skipped = 0;
+  for (int ii=0; ii<hpxContextCount(); ii++) {
+    Context* ctx = hpxContextAt(ii);
+    if (ctx && ctx->fits && ctx->fits->isHPXWindow() &&
+	ctx->fits->hpxDragSkipped())
+      skipped = 1;
+  }
+  if (skipped)
+    hpxRecentre(HPXPAN, 0, 0);
   if (hpxDragStale_) {
     hpxDragStale_ = 0;
     currentContext->contourUpdateFV();

@@ -687,7 +687,8 @@ float* FitsHiPS::takeMap()
   return (float*)data_;
 }
 
-std::shared_ptr<const float> FitsHiPS::tile(int order, long long npix)
+std::shared_ptr<const float> FitsHiPS::tile(int order, long long npix,
+					    int cachedOnly)
 {
   int ww = width_;
   if (!pName_ || ww <= 0 || order < 0 || order > maxOrder_ || npix < 0 ||
@@ -696,7 +697,14 @@ std::shared_ptr<const float> FitsHiPS::tile(int order, long long npix)
 
   char* fn = tilePath(order, npix, tileExt_);
   HiPSImagePtr img;
-  if (strcmp(tileExt_, "fits"))
+  if (cachedOnly) {
+    struct stat info;
+    int fits = !strcmp(tileExt_, "fits");
+    if (!stat(fn, &info) && S_ISREG(info.st_mode))
+      img = cacheFind(fn, fits || channel_ < 0 || channel_ > 2 ? -1 :
+		      channel_, info);
+  }
+  else if (strcmp(tileExt_, "fits"))
     img = photoImage(interp_, fn, channel_);
   else {
     struct stat info;
@@ -727,6 +735,17 @@ std::shared_ptr<const float> FitsHiPS::tile(int order, long long npix)
     return std::shared_ptr<const float>();
   // shares the entry's ownership: valid while held, even once evicted
   return std::shared_ptr<const float>(img, img->px);
+}
+
+int FitsHiPS::hasTile(int order, long long npix)
+{
+  if (!pName_ || order < 0 || order > maxOrder_ || npix < 0 ||
+      npix >= (12LL << (2*order)))
+    return 0;
+  char* fn = tilePath(order, npix, tileExt_);
+  int ok = fileExists(fn);
+  delete [] fn;
+  return ok;
 }
 
 int FitsHiPS::isHiPS(const char* dir)

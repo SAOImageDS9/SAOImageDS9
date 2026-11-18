@@ -91,6 +91,16 @@ later commits not yet; no PR.
   rebuild of a 1122x1122 window over known tiles (a refresh, a zoom
   back) saves a ~9 ms pass of ~30 ms; images are identical to the
   two-pass ones (9 comparisons, zoom/pan/refresh).
+- No tile reads during drags (2026-11-18): a deep window rebuilt by a
+  drag step takes tiles only from those already decoded in memory
+  (`FitsHiPS::tile(..., cachedOnly)`; ancestors the same), so no file
+  read or PNG decode happens on the main thread mid-drag; the map shows
+  elsewhere, and `skipped_` notes a tile whose file was there. The
+  drag's end (`Base::panEndCmd`) rebuilds if any channel skipped one,
+  even when the window needn't move. On the Chandra cache (colour PNG,
+  order 6), drag steps took ~75 ms instead of ~113 ms; the release adds
+  ~90 ms once, and its image equals an in-place rebuild. `hipsdeep.sh`
+  section 7.
 - Tests: some checks read ds9's internal variables or its English
   messages, so they would need updating with those.
 

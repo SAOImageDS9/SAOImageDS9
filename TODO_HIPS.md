@@ -244,6 +244,20 @@ rebuilt, or a second frame on the same HiPS, finds its tiles again.
 Entries are keyed by path and channel and checked against the file's
 size, time and inode, so a tile fetched or cleared since is read again.
 
+**Loads (since 2026-11-18).** A remote load used to run in nested
+`vwait`s with its state in globals (`hipsnet(busy)`, its queue, order,
+directory, format, mirrors, error), so only one could run, a nested
+request could take another's answer, and Cancel only acted on tiles.
+Now each load is a coroutine (`HiPSFetchStart`/`HiPSFetchRun`) with
+its own array `hipsfetch<id>`; `HiPSGet` yields inside one and waits on
+its own variable elsewhere; requests carry an owner, which
+`HiPSJobsCancel` aborts. `HiPSFetch` (XPA, command line, restore, SAMP)
+waits for its load; `HiPSLoadAsync` (dialogs, Open Recent) returns at
+once. Either way the HiPS goes into the frame current when it started.
+Errors are thrown (`HiPSFetchProperties`, `HiPSResolveID`,
+`HiPSListRecords`, ...), not left in `hipsnet(error)`. Tested in
+`hipsnet.sh` section 14.
+
 ### Where code goes
 
 - `fitsy/hips.{C,h}` (new): `FitsHiPS : public FitsFile`. It parses
@@ -623,7 +637,9 @@ variable: `[...]` inside Tcl double quotes is command substitution.
         The reader is then given `norder=K`, so the cache's other
         contents don't change what loads.
       - Tiles: 6 parallel async requests, a progress window with
-        Cancel (a cancelled fetch keeps what arrived). 404s are blank
+        Cancel (a cancelled fetch keeps what arrived). Since
+        2026-11-18 each load is a coroutine with its own context (see
+        "Loads" below). 404s are blank
         tiles, recorded (`NorderK/.missing`, `.noallsky`) and not asked
         for again. More than 1 GB of tiles in one load is refused
         (`hipsnet(maxbytes)`).
@@ -850,6 +866,10 @@ Design (2026-11-16, after reading the window code):
       Keep-alive in-process was tried first and made it far worse
       (180 s for the quick look). Without Thread, the old path.
       Cancel fails queued jobs; one already in a worker finishes.
+      Since 2026-11-18 a worker aborts its request on a `cancel <job>`
+      message (handled inside geturl's own wait), so Cancel is
+      immediate for loads and deep fetches alike (`HiPSJobsCancel
+      <owner>`: a load's id, or `deep`).
 - [x] The order shown (done 2026-11-16): keyword `HIPSORD` = the map's
       order in the HiPS table, copied into the HPX image and windows, and
       set to K by a deep window (View > Keyword HIPSORD in the info

@@ -11,36 +11,92 @@ package provide DS9 1.0
 #   /data/Fermi/HiPS[norder=3,proj=MOL,lon0=180]
 # See TODO_HIPS.md.
 
+# Load HiPS fn into the current frame, and return when it is loaded (1)
+# or has failed (0, reported). A remote one is fetched first
+# (HiPSFetch); meanwhile ds9 stays live, so it goes into the frame that
+# was current when this was called.
 proc ImportHiPSFile {fn} {
-    global loadParam
-    global ds9
+    global current
 
-    global hipsnet
-
-    # an ID (CDS/P/DSS2/color) is the HiPS at the URL the MocServer
-    # gives for it, and is loaded (and recorded) as that URL
-    if {[HiPSIsID $fn]} {
-	set url [HiPSResolveName $fn]
-	HiPSClearErrorInfo
-	if {$url == {}} {
-	    Error "[msgcat::mc {Unable to load}] HiPS $fn: $hipsnet(error)"
-	    return 0
-	}
-	set fn $url
+    set fn [HiPSNameToLoad $fn]
+    if {$fn == {}} {
+	return 0
     }
-
-    # a remote HiPS is fetched into the cache first; file,name keeps the
-    # URL (what xpaget hips, Open Recent and backups record), file,fn is
-    # what the reader reads
+    set frame $current(frame)
     set local {}
     if {[HiPSIsURL $fn]} {
-	set local [HiPSFetch $fn]
-	if {$local == {}} {
-	    Error "[msgcat::mc {Unable to load}] HiPS $fn: $hipsnet(error)"
+	set rc [catch {HiPSFetch $fn} local]
+	HiPSClearErrorInfo
+	if {$rc} {
+	    Error "[msgcat::mc {Unable to load}] HiPS $fn: $local"
 	    return 0
 	}
-    } elseif {[HiPSFileURL $fn] != $fn} {
-	set fn [HiPSFileURL $fn]
+    }
+    return [HiPSImportLocal $fn $local $frame]
+}
+
+# Load HiPS fn without waiting for it (the dialogs, Open Recent): a
+# remote one is fetched in the background, with a progress line and
+# Cancel, then loaded into the frame that was current when it started
+# (or the current one, if that has gone). Other loads may run meanwhile.
+# A local one loads at once.
+proc HiPSLoadAsync {fn} {
+    global current
+
+    set fn [HiPSNameToLoad $fn]
+    if {$fn == {}} {
+	return
+    }
+    if {![HiPSIsURL $fn]} {
+	HiPSCmdLoad $fn
+	return
+    }
+    HiPSFetchStart $fn [list HiPSLoadAsyncDone $fn $current(frame)]
+}
+
+proc HiPSLoadAsyncDone {fn frame local err} {
+    if {$local == {}} {
+	# a load the user cancelled needs no message
+	if {$err != [msgcat::mc {cancelled}]} {
+	    Error "[msgcat::mc {Unable to load}] HiPS $fn: $err"
+	}
+	return
+    }
+    HiPSImportLocal $fn $local $frame
+    FinishLoad
+}
+
+# The name a HiPS is loaded (and recorded) as: an ID (CDS/P/DSS2/color)
+# is the HiPS at the URL the MocServer gives for it, a file:// URL the
+# directory. {} if the ID can't be resolved (reported).
+proc HiPSNameToLoad {fn} {
+    if {[HiPSIsID $fn]} {
+	set rc [catch {HiPSResolveName $fn} url]
+	HiPSClearErrorInfo
+	if {$rc} {
+	    Error "[msgcat::mc {Unable to load}] HiPS $fn: $url"
+	    return {}
+	}
+	return $url
+    }
+    if {![HiPSIsURL $fn]} {
+	return [HiPSFileURL $fn]
+    }
+    return $fn
+}
+
+# Load HiPS fn into frame (if it still exists, else the current one).
+# local is what the reader reads, a remote HiPS's cache directory plus
+# options ({} for a local HiPS); file,name keeps fn (what xpaget hips,
+# Open Recent and backups record).
+proc HiPSImportLocal {fn local frame} {
+    global loadParam
+    global ds9
+    global current
+
+    if {$frame != {} && $frame != $current(frame) &&
+	[lsearch -exact $ds9(frames) $frame] >= 0} {
+	GotoFrame $frame
     }
 
     set loadParam(file,type) hips
@@ -694,13 +750,9 @@ proc HiPSCoverageCmd {on} {
     UpdateHiPSCoverageMenu
 }
 
-# hips cancel: stop fetching a deep window's tiles, and a load's
+# hips cancel: stop fetching deep windows' tiles, and every load
 proc HiPSCancelCmd {} {
-    global hipsnet
-
-    if {$hipsnet(busy)} {
-	HiPSCancel
-    }
+    HiPSCancel
     HiPSDeepCancel
 }
 
@@ -956,7 +1008,6 @@ proc HiPSOpenProjOptions {vals} {
 # fetches what the chosen order needs (hipsnet.tcl).
 proc OpenHiPSURLDialog {} {
     global hipsopen
-    global hipsnet
 
     set url $hipsopen(url)
     if {![EntryDialog [msgcat::mc {Open HiPS URL}] \
@@ -972,10 +1023,10 @@ proc OpenHiPSURLDialog {} {
 
     if {[HiPSIsID $url]} {
 	set id [HiPSIDOf $url]
-	set url [HiPSResolveID $id]
+	set rc [catch {HiPSResolveID $id} url]
 	HiPSClearErrorInfo
-	if {$url == {}} {
-	    Error "[msgcat::mc {Unable to load}] HiPS $id: $hipsnet(error)"
+	if {$rc} {
+	    Error "[msgcat::mc {Unable to load}] HiPS $id: $url"
 	    return
 	}
     }
@@ -983,27 +1034,25 @@ proc OpenHiPSURLDialog {} {
 }
 
 # The Open HiPS dialog for a HiPS URL (file:// is a local HiPS), then
-# the load
+# the load (in the background)
 proc HiPSOpenURL {url} {
-    global hipsnet
-
     if {![HiPSIsURL $url]} {
 	set dir [HiPSFileURL $url]
 	set fn [HiPSOpenParamsDialog $dir]
     } else {
 	set dir [HiPSCacheDir $url]
-	if {[HiPSFetchProperties $url $dir] == {}} {
-	    HiPSClearErrorInfo
-	    Error "[msgcat::mc {Unable to load}] HiPS $url: $hipsnet(error)"
+	set rc [catch {HiPSFetchProperties $url $dir} err]
+	HiPSClearErrorInfo
+	if {$rc} {
+	    Error "[msgcat::mc {Unable to load}] HiPS $url: $err"
 	    return
 	}
-	HiPSClearErrorInfo
 	set fn [HiPSOpenParamsDialog $dir $url]
     }
     if {$fn == {}} {
 	return
     }
-    HiPSCmdLoad $fn
+    HiPSLoadAsync $fn
 }
 
 # File > Open HiPS from List...: the image and cube HiPS the MocServer
@@ -1011,7 +1060,6 @@ proc HiPSOpenURL {url} {
 # chosen goes on to the Open HiPS dialog.
 proc OpenHiPSListDialog {} {
     global hipslist
-    global hipsnet
 
     set w {.hipslist}
     if {[winfo exists $w]} {
@@ -1019,10 +1067,10 @@ proc OpenHiPSListDialog {} {
 	return
     }
 
-    set recs [HiPSListRecords]
+    set rc [catch {HiPSListRecords} recs]
     HiPSClearErrorInfo
-    if {$recs == {}} {
-	Error "[msgcat::mc {Unable to list HiPS}]: $hipsnet(error)"
+    if {$rc || $recs == {}} {
+	Error "[msgcat::mc {Unable to list HiPS}]: $recs"
 	return
     }
     set hipslist(recs) $recs
@@ -1087,10 +1135,10 @@ proc OpenHiPSListDialog {} {
 	return
     }
 
-    set url [HiPSResolveID $id]
+    set rc [catch {HiPSResolveID $id} url]
     HiPSClearErrorInfo
-    if {$url == {}} {
-	Error "[msgcat::mc {Unable to load}] HiPS $id: $hipsnet(error)"
+    if {$rc} {
+	Error "[msgcat::mc {Unable to load}] HiPS $id: $url"
 	return
     }
     HiPSOpenURL $url
@@ -1125,12 +1173,11 @@ proc HiPSListFill {} {
 
 proc HiPSListUpdate {} {
     global hipslist
-    global hipsnet
 
-    set recs [HiPSListRecords 1]
+    set rc [catch {HiPSListRecords 1} recs]
     HiPSClearErrorInfo
-    if {$recs == {}} {
-	Error "[msgcat::mc {Unable to list HiPS}]: $hipsnet(error)"
+    if {$rc || $recs == {}} {
+	Error "[msgcat::mc {Unable to list HiPS}]: $recs"
 	return
     }
     set hipslist(recs) $recs
@@ -1171,7 +1218,7 @@ proc OpenHiPSDialog {} {
     }
 
     # ImportHiPSFile picks the frame (RGB for a colour HiPS)
-    HiPSCmdLoad $fn
+    HiPSLoadAsync $fn
 }
 
 # The properties file as a dict, the first of repeated keys winning.

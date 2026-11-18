@@ -61,8 +61,8 @@ The items, roughly by value:
 - `format=` and `hips close`: done 2026-11-16. `format=fits|png|jpeg`
   (any case, `jpg` too; fitsy `FORMAT_` token, `pHiPSFormat_`) reads
   that kind if `hips_tile_format` lists it, else a refusal naming what
-  it lists; remote loads and deep windows fetch that kind (HiPSTileExt
-  takes the name's options; HiPSDeepWant reads them off the frame's
+  it lists; remote loads and deep windows fetch that kind (`hipsinfo
+  format` takes the name's options; HiPSDeepWant reads them off the frame's
   name); scale limits follow the tiles read; a colour HiPS with FITS
   tiles reads the FITS ones into a plain frame unless `format=png`.
   The Open HiPS dialog has a Tiles menu when several kinds are listed;
@@ -243,6 +243,19 @@ about 8 times per channel by `allskyWidth` and `buildMap`). A window
 rebuilt, or a second frame on the same HiPS, finds its tiles again.
 Entries are keyed by path and channel and checked against the file's
 size, time and inode, so a tile fetched or cleared since is read again.
+
+**The reader answers for Tcl (since 2026-11-18).** The dialogs and the
+fetcher used Tcl copies of the reader: the tile format (`HiPSTileExt`),
+the Allsky checks (`HiPSImageInfo`, a FITS header parser), the
+automatic order (`HiPSOpenAutoOrder`, `chooseSource` step for step),
+the initial view (`HiPSInitialView`, the rotation matrices) and the
+MOC parser (`HiPSMocTiles`, which ignored `ORDERING`). Now one command,
+`hipsinfo` (`tksao/saotk.C`), asks fitsy's `FitsHiPS` in an inspect
+mode (no map built): `describe` (format, orders, automatic choice,
+initial view), `format`, `allsky <order>`, and `moc <file> <order>`
+(`FitsHiPS::mocTiles`: NUNIQ only, as `FitsHPX` reads; any other MOC
+limits nothing). The Tcl side still counts a local HiPS's tiles for
+the dialog (a directory listing, not reader logic).
 
 **Loads (since 2026-11-18).** A remote load used to run in nested
 `vwait`s with its state in globals (`hipsnet(busy)`, its queue, order,
@@ -493,9 +506,9 @@ variable: `[...]` inside Tcl double quotes is command substitution.
       - **The menu mirrors the reader.** `HiPSOpenOrders` follows
         `FitsHiPS::allskyWidth` (orders 0-3, power-of-two tiles filling
         the mosaic, the whole file present) and the explicit-order rule;
-        `HiPSOpenAutoOrder` follows `chooseSource`'s automatic loops
-        step for step, so "Automatic (...)" names what a plain load
-        reads. Keep them in step if `hips.C` changes. When nothing fits
+        the automatic choice is `chooseSource`'s own (`hipsinfo
+        describe`, since 2026-11-18; it was a Tcl copy), so
+        "Automatic (...)" names what a plain load reads. When nothing fits
         automatically (DSS2 here: 512-px tiles from order 3, truncated
         Allsky), Automatic is disabled and the smallest order is
         preselected.
@@ -529,7 +542,7 @@ variable: `[...]` inside Tcl double quotes is command substitution.
         galactic/ecliptic rotation is done in fitsy itself (Hipparcos
         matrix; ecliptic of J2000, IAU 2006 obliquity), not AST, which
         lives in tksao. Agrees with astropy to 2e-5 deg.
-      - The dialog does the same in Tcl (`HiPSInitialView`), shows the
+      - The dialog asks the reader (`hipsinfo describe`), shows the
         initial view and suggested limits, starts a zenithal projection
         at the initial view, and writes `lon0`/`lat0` (both) or `fov`
         only when they differ from it, so an untouched dialog gives just
@@ -684,7 +697,7 @@ variable: `[...]` inside Tcl double quotes is command substitution.
       linked tkimg JPEG), so all the order/Allsky logic is shared.
       `FitsImageHiPS` passes the interp in.
       - Format: fits if `hips_tile_format` lists it, else png, else
-        jpeg (`.jpg` files). Tcl's `HiPSTileExt` picks the same, so the
+        jpeg (`.jpg` files). Tcl asks the reader (`hipsinfo format`), so the
         dialog's order list and remote fetching use the same files.
         Without fits, png or jpeg: refused ("no FITS, PNG or JPEG
         tiles").

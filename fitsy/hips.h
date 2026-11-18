@@ -8,6 +8,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include <tcl.h>
 
@@ -65,6 +66,7 @@ class FitsHiPS : public FitsFile {
   int propInt(const char*, int);
   double propReal(const char*);
   int initialView();
+  int initialSky(double* lon, double* lat);
   char* tilePath(int order, long npix, const char* ext);
   char* allskyPath(int order, const char* ext);
   int allskyWidth(int order);
@@ -75,7 +77,13 @@ class FitsHiPS : public FitsFile {
   int initHeaders();
 
  public:
-  FitsHiPS(const char*, Tcl_Interp* =NULL, int channel =-1);
+  // inspect 1: read the properties and choose what a load would (format,
+  // order and source), but build no map; valid even when nothing can be
+  // loaded (source() NONE). inspect 2: only the format and the orders
+  // (properties and options checked), no looking for tiles. For the Tcl side (the hipsinfo command,
+  // tksao/saotk.C), so the dialogs and the fetcher ask the reader
+  // rather than copy it.
+  FitsHiPS(const char*, Tcl_Interp* =NULL, int channel =-1, int inspect =0);
   ~FitsHiPS();
 
   // a HiPS root directory (one holding a properties file)?
@@ -84,6 +92,27 @@ class FitsHiPS : public FitsFile {
   int order() {return order_;}
   long nside() {return nside_;}
   Source source() {return source_;}
+  // the tile width of what is read (an Allsky's may be less than
+  // tileWidth()'s), the sky frame (hips_frame)
+  int readWidth() {return tileWidth_;}
+  Frame frame() {return frame_;}
+
+  // order's Allsky (orders 0-3): the width of its tiles, or 0 if there
+  // is none or it can't be used; bad is 1 if it is there but unusable
+  // (truncated, the wrong size)
+  int allskyAt(int order, int* bad);
+  // hips_initial_ra/dec in the HiPS's own frame (0 if not given), and
+  // hips_initial_fov (NaN if not given)
+  int initialPosition(double* lon, double* lat) {
+    return initialSky(lon, lat);}
+  double initialFov();
+
+  // the tiles of order a MOC file (FITS, ORDERING = NUNIQ, as FitsHPX
+  // reads) covers, sorted: a deeper cell gives its order-K parent, a
+  // shallower one all its order-K children. 0 if it can't be read or
+  // isn't a NUNIQ MOC.
+  static int mocTiles(const char* fn, int order,
+		      std::vector<long long>* out);
 
   // Tile access, for deep windows (tksao FitsHPXReproj): the HiPS's
   // root directory (local, or a remote HiPS's cache), its tile format

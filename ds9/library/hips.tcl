@@ -158,7 +158,10 @@ proc HiPSApplyCut {fn} {
     if {[catch {HiPSReadProperties [HiPSRoot [HiPSLocalName $fn]]} props]} {
 	return
     }
-    if {[HiPSTileExt $props [HiPSOptions $fn]] == {fits}} {
+    if {[catch {hipsinfo format [HiPSLocalName $fn]} ext]} {
+	return
+    }
+    if {$ext == {fits}} {
 	set cut [HiPSProp $props hips_pixel_cut]
 	if {[llength $cut] != 2} {
 	    return
@@ -209,7 +212,10 @@ proc HiPSIsColour {fn} {
 			    [HiPSProp $props dataproduct_subtype]] color] < 0} {
 	return 0
     }
-    return [expr {[HiPSTileExt $props [HiPSOptions $fn]] in {png jpg}}]
+    if {[catch {hipsinfo format $fn} ext]} {
+	return 0
+    }
+    return [expr {$ext in {png jpg}}]
 }
 
 # Make the current frame one a HiPS can load into: an RGB frame for a
@@ -859,64 +865,6 @@ proc HiPSOpenDef {} {
     set hipsopen(proj) hpx
 }
 
-# The survey's initial view, hips_initial_ra/dec/fov, in its own frame:
-# a dict of lon lat (both {} unless given) and fov ({} unless given).
-# hips_initial_ra/dec are ICRS; this rotates them into hips_frame
-# exactly as FitsHiPS::initialView (fitsy/hips.C) does.
-proc HiPSInitialView {props} {
-    set rr [dict create lon {} lat {} fov {}]
-
-    set fov [HiPSProp $props hips_initial_fov]
-    if {[string is double -strict $fov] && $fov > 0} {
-	dict set rr fov $fov
-    }
-
-    set ra [HiPSProp $props hips_initial_ra]
-    set dec [HiPSProp $props hips_initial_dec]
-    if {![string is double -strict $ra] || ![string is double -strict $dec]
-	|| $dec < -90 || $dec > 90} {
-	return $rr
-    }
-
-    set d2r [expr {acos(-1)/180}]
-    set aa [expr {$ra*$d2r}]
-    set dd [expr {$dec*$d2r}]
-    set vv [list [expr {cos($dd)*cos($aa)}] [expr {cos($dd)*sin($aa)}] \
-		[expr {sin($dd)}]]
-    switch -- [HiPSProp $props hips_frame equatorial] {
-	galactic {
-	    # Hipparcos ICRS -> galactic
-	    set mm {
-		{-0.0548755604162154 -0.8734370902348850 -0.4838350155487132}
-		{ 0.4941094278755837 -0.4448296299600112  0.7469822444972189}
-		{-0.8676661490190047 -0.1980763734312015  0.4559837761750669}
-	    }
-	}
-	ecliptic {
-	    # mean obliquity of J2000, IAU 2006
-	    set ee [expr {84381.406/3600*$d2r}]
-	    set mm [list {1 0 0} \
-			[list 0 [expr {cos($ee)}] [expr {sin($ee)}]] \
-			[list 0 [expr {-sin($ee)}] [expr {cos($ee)}]]]
-	}
-	default {set mm {{1 0 0} {0 1 0} {0 0 1}}}
-    }
-    set ww {}
-    foreach row $mm {
-	lassign $row m0 m1 m2
-	lappend ww [expr {$m0*[lindex $vv 0]+$m1*[lindex $vv 1]+$m2*[lindex $vv 2]}]
-    }
-    lassign $ww x y z
-    set lon [expr {atan2($y,$x)/$d2r}]
-    if {$lon < 0} {
-	set lon [expr {$lon+360}]
-    }
-    set z [expr {$z>1 ? 1 : ($z<-1 ? -1 : $z)}]
-    dict set rr lon $lon
-    dict set rr lat [expr {asin($z)/$d2r}]
-    return $rr
-}
-
 # A number for the dialog's fields: 6 decimals, no trailing zeros
 proc HiPSOpenFmt {vv} {
     if {$vv == {}} {
@@ -1253,99 +1201,6 @@ proc HiPSProp {props key {default {}}} {
     return $default
 }
 
-# The tile files a HiPS is read from: those format= in opts (a dict,
-# HiPSOptions) asks for (fits, png, jpeg or jpg), else fits (physical
-# values) when listed in hips_tile_format, else png, else jpg (display
-# values); {} if not listed (or format= is none of those). FitsHiPS
-# (fitsy/hips.C) picks the same.
-proc HiPSTileExt {props {opts {}}} {
-    set formats [string tolower [HiPSProp $props hips_tile_format fits]]
-    set words {fits fits png png jpeg jpg jpg jpg}
-    if {[dict exists $opts format]} {
-	set want [string tolower [dict get $opts format]]
-	if {$want == {jpeg}} {
-	    set want jpg
-	}
-	set only {}
-	foreach {word ext} $words {
-	    if {$ext == $want} {
-		lappend only $word $ext
-	    }
-	}
-	set words $only
-    }
-    foreach {word ext} $words {
-	if {[lsearch -exact $formats $word] >= 0} {
-	    return $ext
-	}
-    }
-    return {}
-}
-
-# Why HiPSTileExt found nothing, as FitsHiPS says it
-proc HiPSTileExtError {props opts} {
-    set formats [HiPSProp $props hips_tile_format]
-    if {![dict exists $opts format]} {
-	return "[msgcat::mc {no FITS, PNG or JPEG tiles, this HiPS has}] $formats"
-    }
-    set want [string tolower [dict get $opts format]]
-    switch -- $want {
-	fits {set name FITS}
-	png {set name PNG}
-	jpg - jpeg {set name JPEG}
-	default {return [msgcat::mc {format= is fits, png or jpeg}]}
-    }
-    return "[msgcat::mc {no}] $name [msgcat::mc {tiles}] (hips_tile_format = $formats)"
-}
-
-# An image's size as HiPSFitsInfo gives it (width, height, ok), for any
-# tile format; png and jpg are decoded through a Tk photo
-proc HiPSImageInfo {fn ext} {
-    if {$ext == {fits}} {
-	return [HiPSFitsInfo $fn]
-    }
-    if {[catch {image create photo -file $fn} img]} {
-	return {}
-    }
-    set rr [dict create width [image width $img] height [image height $img] ok 1]
-    image delete $img
-    return $rr
-}
-
-# A FITS file's primary header: a dict of width (NAXIS1), height
-# (NAXIS2) and ok (the file holds all the data), or {} if unreadable
-proc HiPSFitsInfo {fn} {
-    if {[catch {open $fn rb} ch]} {
-	return {}
-    }
-    # the header is at most a few blocks
-    set buf [read $ch [expr 2880*8]]
-    close $ch
-
-    array set kk {BITPIX 0 NAXIS1 0 NAXIS2 0}
-    set end 0
-    for {set ii 0} {$ii+80 <= [string length $buf]} {incr ii 80} {
-	set card [string range $buf $ii [expr $ii+79]]
-	set key [string trim [string range $card 0 7]]
-	if {$key == {END}} {
-	    set end [expr {($ii/2880+1)*2880}]
-	    break
-	}
-	if {[info exists kk($key)]} {
-	    set vv [string trim [lindex [split [string range $card 10 end] /] 0]]
-	    if {[string is integer -strict $vv]} {
-		set kk($key) $vv
-	    }
-	}
-    }
-    if {!$end || !$kk(NAXIS1) || !$kk(NAXIS2)} {
-	return {}
-    }
-    set need [expr {$end + abs($kk(BITPIX))/8*wide($kk(NAXIS1))*$kk(NAXIS2)}]
-    return [dict create width $kk(NAXIS1) height $kk(NAXIS2) \
-		ok [expr {[file size $fn] >= $need}]]
-}
-
 # What each order present in dir can give, as a list of dicts, deepest
 # first: order, nside and source (allsky, tiles, reduced, or {} for
 # nothing readable) for norder=K; tiles (FITS tiles present), total
@@ -1386,28 +1241,12 @@ proc HiPSOpenOrders {dir width {ext fits} {sfx {}}} {
 	    }
 	}
 
-	# Allsky tile width: the mosaic is int(sqrt(total)) tiles wide
-	# Allsky tile width, as FitsHiPS::allskyWidth: orders 0-3 only,
-	# the mosaic int(sqrt(total)) tiles wide, power-of-two tiles that
-	# fill it, and the whole file present. Otherwise unused, and an
-	# Allsky that is there but fails this is marked bad.
+	# the Allsky's tile width as the reader reads it (0 if none or
+	# unusable), and whether one is there but can't be used
 	set aw 0
 	set abad 0
-	set af [file join $od Allsky$sfx.$ext]
-	if {$kk <= 3 && [file isfile $af]} {
-	    set ncol [expr {int(sqrt($total))}]
-	    set nrow [expr {($total+$ncol-1)/$ncol}]
-	    set ai [HiPSImageInfo $af $ext]
-	    if {$ai != {} && [dict get $ai ok]} {
-		set nx [dict get $ai width]
-		set ny [dict get $ai height]
-		set ww [expr {$nx/$ncol}]
-		if {$ww > 0 && ($ww & ($ww-1)) == 0 && $ww*$ncol == $nx && \
-			$ww*$nrow <= $ny} {
-		    set aw $ww
-		}
-	    }
-	    set abad [expr {!$aw}]
+	if {$kk <= 3} {
+	    catch {lassign [hipsinfo allsky "$dir\[format=$ext\]" $kk] aw abad}
 	}
 
 	if {$aw == $width} {
@@ -1427,65 +1266,6 @@ proc HiPSOpenOrders {dir width {ext fits} {sfx {}}} {
 			tiles $tiles total $total allsky $aw allskybad $abad]
     }
     return $rr
-}
-
-# What the reader picks without norder=, as a dict like one of
-# HiPSOpenOrders' but with the nside and source of that choice, or {}.
-# This follows FitsHiPS::chooseSource (fitsy/hips.C) step for step:
-# orders from 0 while the tiles fit nside 2048, the Allsky tried before
-# the tiles, ties going to what was found first; then a reduced Allsky
-# at order 3 or less may still be the largest that fits.
-proc HiPSOpenAutoOrder {orders width maxorder} {
-    global hipsopen
-
-    foreach oo $orders {
-	set byorder([dict get $oo order]) $oo
-    }
-
-    set best 0
-    set choice {}
-    for {set kk 0} {$kk <= $maxorder} {incr kk} {
-	set tn [expr {wide($width)<<$kk}]
-	if {$tn > $hipsopen(nside,auto)} {
-	    break
-	}
-	if {![info exists byorder($kk)]} {
-	    continue
-	}
-	set oo $byorder($kk)
-	set aw [dict get $oo allsky]
-	if {$aw && ($aw<<$kk) > $best} {
-	    set best [expr {$aw<<$kk}]
-	    set choice [list $kk allsky]
-	}
-	if {$tn > $best && [dict get $oo tiles] > 0} {
-	    set best $tn
-	    set choice [list $kk tiles]
-	}
-    }
-    for {set kk 0} {$kk <= $maxorder && $kk <= 3} {incr kk} {
-	if {![info exists byorder($kk)]} {
-	    continue
-	}
-	set aw [dict get $byorder($kk) allsky]
-	set nn [expr {wide($aw)<<$kk}]
-	if {$aw && $nn <= $hipsopen(nside,auto) && $nn > $best} {
-	    set best $nn
-	    set choice [list $kk allsky]
-	}
-    }
-
-    if {$choice == {}} {
-	return {}
-    }
-    lassign $choice kk src
-    set oo $byorder($kk)
-    dict set oo nside $best
-    if {$src == {allsky} && [dict get $oo allsky] != $width} {
-	set src reduced
-    }
-    dict set oo source $src
-    return $oo
 }
 
 # The orders of a remote HiPS, from its properties alone (the tiles
@@ -1591,14 +1371,10 @@ proc HiPSOpenParamsDialog {dir {url {}}} {
 	Error "[msgcat::mc {Unable to load}] HiPS $dir: [msgcat::mc {no readable properties file}]"
 	return {}
     }
-    if {[HiPSProp $props dataproduct_type image] == {catalog}} {
-	Error "[msgcat::mc {Unable to load}] HiPS $name: [msgcat::mc {catalogue HiPS are not supported}]"
-	return {}
-    }
     set formats [HiPSProp $props hips_tile_format fits]
-    set ext [HiPSTileExt $props]
-    if {$ext == {}} {
-	Error "[msgcat::mc {Unable to load}] HiPS $name: [msgcat::mc {no FITS, PNG or JPEG tiles, this HiPS has}] $formats"
+    # the reader's choice of tiles, or why it can't read any
+    if {[catch {hipsinfo format $dir} ext]} {
+	Error "[msgcat::mc {Unable to load}] HiPS $name: $ext"
 	return {}
     }
     set scan [HiPSOpenScan $dir $url $props $ext]
@@ -1628,7 +1404,11 @@ proc HiPSOpenParamsDialog {dir {url {}}} {
     foreach key {lon0 lat0 fov} {
 	set hpxed($key) {}
     }
-    set hpxed(view) [HiPSInitialView $props]
+    # the survey's initial view, in its own frame (the reader's)
+    set hpxed(view) [dict create lon {} lat {} fov {}]
+    if {![catch {hipsinfo describe $dir} dd]} {
+	set hpxed(view) [dict filter $dd key lon lat fov]
+    }
 
     DialogCreate $w [msgcat::mc {Open HiPS}] hpxed(ok)
 
@@ -1670,7 +1450,7 @@ proc HiPSOpenParamsDialog {dir {url {}}} {
     set hpxed(wdata) $f
     set exts {}
     foreach ee {fits png jpg} {
-	if {[HiPSTileExt $props [dict create format $ee]] != {}} {
+	if {![catch {hipsinfo format "$dir\[format=$ee\]"}]} {
 	    lappend exts $ee
 	}
     }
@@ -1760,7 +1540,18 @@ proc HiPSOpenScan {dir url props ext} {
     }
     if {$url == {}} {
 	set orders [HiPSOpenOrders $dir $width $ext [HiPSSliceSuffix $props {}]]
-	set auto [HiPSOpenAutoOrder $orders $width $maxorder]
+	# the reader's own choice without norder=
+	set auto {}
+	if {![catch {hipsinfo describe "$dir\[format=$ext\]"} dd] &&
+	    [dict get $dd order] >= 0} {
+	    foreach oo $orders {
+		if {[dict get $oo order] == [dict get $dd order]} {
+		    set auto $oo
+		    dict set auto nside [dict get $dd nside]
+		    dict set auto source [dict get $dd source]
+		}
+	    }
+	}
     } else {
 	set orders [HiPSOpenRemoteOrders $props $width $ext $maxorder]
 	# without norder=, the quick look (hipsnet.tcl)

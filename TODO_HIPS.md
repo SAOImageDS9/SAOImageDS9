@@ -909,6 +909,16 @@ Design (2026-11-16, after reading the window code):
       s on 6. A server closing idle connections (`HIPSSERVE_IDLE`) is
       reconnected to. `hipsserve.py` now speaks HTTP/1.1 and logs
       connections; `hipsnet.sh` sections 2 and 15.
+- Small cleanups (2026-11-18): `norder=`, `slice=` and `format=` on a
+  file that isn't a HiPS, and `mocorder=` on a HEALPix map that isn't a
+  NUNIQ MOC, are refused (`FitsImage::process`, `initHPX`) instead of
+  ignored; a failed load's message now carries the reader's reason
+  (`ProcessLoad`: XPA and SAMP used to get only "Unable to load");
+  the frame's `load <type>` catch-all (no `hips` keyword, to spare a
+  flex regeneration) reports an unknown type instead of failing
+  silently; `interleave()` uses `hpxSpread`; `missing_` holds tile
+  numbers only (the order is `deepOrder_`); `FitsHiPS::isHiPS` (no
+  callers) is gone. `hipscmd.sh`.
       Cancel fails queued jobs; one already in a worker finishes.
       Since 2026-11-18 a worker aborts its request on a `cancel <job>`
       message (handled inside geturl's own wait), so Cancel is

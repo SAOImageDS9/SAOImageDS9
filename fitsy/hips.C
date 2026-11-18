@@ -23,6 +23,7 @@ using namespace std;
 #include <tk.h>
 
 #include "hips.h"
+#include "hpxnest.h"
 #include "head.h"
 #include "hdu.h"
 #include "mmap.h"
@@ -37,13 +38,9 @@ using namespace std;
 
 // NESTED sub-index of a tile pixel: ix (row from the top) in the even
 // bits, iy (column) in the odd bits
-static long long interleave(int ix, int iy)
+static inline long long interleave(int ix, int iy)
 {
-  long long rr = 0;
-  for (int bb=0; (ix>>bb) || (iy>>bb); bb++)
-    rr |= ((long long)((ix>>bb)&1) << (2*bb)) |
-      ((long long)((iy>>bb)&1) << (2*bb+1));
-  return rr;
+  return hpxSpread(ix) | (hpxSpread(iy) << 1);
 }
 
 // big-endian (FITS) value at p
@@ -746,14 +743,6 @@ int FitsHiPS::hasTile(int order, long long npix)
   int ok = fileExists(fn);
   delete [] fn;
   return ok;
-}
-
-int FitsHiPS::isHiPS(const char* dir)
-{
-  if (!dir)
-    return 0;
-  string fn = string(dir) + "/properties";
-  return fileExists(fn.c_str());
 }
 
 // properties: one "key = value" per line, # starts a comment line

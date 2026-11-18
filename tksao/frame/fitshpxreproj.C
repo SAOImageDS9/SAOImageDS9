@@ -1264,7 +1264,7 @@ int FitsHPXReproj::build(double lon, double lat, const double* centre)
 	    refs_.erase(it++);
 	  else {
 	    if (!it->second.data || it->second.dk)
-	      missing_.push_back(((long long)kk << 56) | it->first);
+	      missing_.push_back(it->first);
 	    ++it;
 	  }
 	}

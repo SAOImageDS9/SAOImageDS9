@@ -40,6 +40,13 @@ void FitsImage::initHPX()
   if (fits_->pHPXOrder() >=0)
     order = (FitsHPX::Order)fits_->pHPXOrder();
 
+  // mocorder= draws a MOC (NUNIQ); on any other HEALPix map it would
+  // be ignored, so say so instead
+  if (fits_->pMocOrder() >= 0 && order != FitsHPX::NUNIQ) {
+    internalError("HEALPix: mocorder= is for a MOC (ORDERING = NUNIQ)");
+    return;
+  }
+
   // Layout
   FitsHPX::Layout layout = FitsHPX::EQUATOR;
   if (fits_->pHPXLayout() >=0)
@@ -104,11 +111,7 @@ int FitsImage::hpxDeepMissing(const char** root, int* order, int* slice,
   *root = hips->root();
   *order = rr->deepOrder();
   *slice = hips->slice();
-  tiles->clear();
-  long long mask = (1LL << 56) - 1;
-  const std::vector<long long>& mm = rr->missingTiles();
-  for (size_t ii=0; ii<mm.size(); ii++)
-    tiles->push_back(mm[ii] & mask);
+  *tiles = rr->missingTiles();
   return 1;
 }
 

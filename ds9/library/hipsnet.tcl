@@ -1039,12 +1039,18 @@ proc HiPSWorkersReady {} {
 	    set ::cur $id
 	    set code 0
 	    for {set hops 0} {$hops <= @REDIRECTS@} {incr hops} {
-		if {$::stop || $::killed eq $id ||
-		    [catch {open $fn wb} ch]} {
+		if {$::stop || $::killed eq $id} {
 		    break
 		}
+		# -keepalive: the worker's connection to a server stays open
+		# for its next request there (one request at a time per
+		# worker, so nothing queues behind another), saving a TCP
+		# connect and a TLS handshake a tile. The body comes back in
+		# memory: with -channel, http 2.10.2 waits for the server to
+		# close a kept-alive connection before it returns.
 		set loc {}
-		if {![catch {http::geturl $url -channel $ch -binary 1 \
+		set body {}
+		if {![catch {http::geturl $url -binary 1 -keepalive 1 \
 				 -timeout @TIMEOUT@ -headers $headers} tok]} {
 		    if {[http::status $tok] == {ok}} {
 			set code [http::ncode $tok]
@@ -1053,10 +1059,24 @@ proc HiPSWorkersReady {} {
 				set loc $val
 			    }
 			}
+			if {$code == 200} {
+			    set body [http::data $tok]
+			}
 		    }
 		    http::cleanup $tok
 		}
-		close $ch
+		if {$code == 200} {
+		    if {[catch {open $fn wb} ch]} {
+			set code 0
+		    } else {
+			if {[catch {puts -nonewline $ch $body}]} {
+			    set code 0
+			}
+			if {[catch {close $ch}]} {
+			    set code 0
+			}
+		    }
+		}
 		if {$code < 300 || $code >= 400 || $loc == {}} {
 		    break
 		}

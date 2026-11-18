@@ -899,6 +899,16 @@ Design (2026-11-16, after reading the window code):
       eROSITA zoom: 40 s, no missed XPA, longest stall 323 ms.
       Keep-alive in-process was tried first and made it far worse
       (180 s for the quick look). Without Thread, the old path.
+      Since 2026-11-18 each worker keeps its connection (`-keepalive
+      1`): one request at a time per worker, so nothing queues behind
+      another as it did in-process. The body comes back in memory and
+      is written to the file: with `-channel`, http 2.10.2 waits for a
+      kept-alive connection to close before returning. A 192-tile load
+      over https with a 0.3 s handshake (`hipsserve.py`'s new
+      `HIPSSERVE_CONNDELAY`) took 12.6 s on 195 connections, now 2.3-3.7
+      s on 6. A server closing idle connections (`HIPSSERVE_IDLE`) is
+      reconnected to. `hipsserve.py` now speaks HTTP/1.1 and logs
+      connections; `hipsnet.sh` sections 2 and 15.
       Cancel fails queued jobs; one already in a worker finishes.
       Since 2026-11-18 a worker aborts its request on a `cancel <job>`
       message (handled inside geturl's own wait), so Cancel is

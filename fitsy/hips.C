@@ -318,25 +318,27 @@ FitsHiPS::FitsHiPS(const char* fn, Tcl_Interp* interp, int channel)
 
   // a cube: one frame at a time, slice= or hips_cube_firstframe (HiPS
   // 1.0 sec. 4.2.3: frame n's tiles are NpixN_n, its Allsky Allsky_n,
-  // frame 0's have no suffix)
+  // frame 0's have no suffix). slice_ counts from 0, as the files and
+  // hips_cube_firstframe do; slice= (pHiPSSlice_), HIPSSLIC and the
+  // messages count from 1, as the Cube dialog and cube command do.
   if (!strncmp(type, "cube", 4)) {
     depth_ = propInt("hips_cube_depth", 1);
     if (depth_ < 1)
       depth_ = 1;
-    slice_ = pHiPSSlice_ >= 0 ? pHiPSSlice_ :
+    slice_ = pHiPSSlice_ >= 0 ? pHiPSSlice_-1 :
       propInt("hips_cube_firstframe", 0);
     if (slice_ < 0 || slice_ >= depth_) {
       if (pHiPSSlice_ >= 0) {
 	ostringstream str;
-	str << "HiPS: slice " << slice_ << " is outside the cube (0-"
-	    << depth_-1 << ")" << ends;
+	str << "HiPS: slice " << pHiPSSlice_ << " is outside the cube (1-"
+	    << depth_ << ")" << ends;
 	internalError(str.str().c_str());
 	return;
       }
       slice_ = 0;
     }
   }
-  else if (pHiPSSlice_ > 0) {
+  else if (pHiPSSlice_ >= 0 && pHiPSSlice_ != 1) {
     internalError("HiPS: slice= needs a cube HiPS");
     return;
   }
@@ -786,7 +788,7 @@ int FitsHiPS::chooseSource(int maxOrder, int width, int askOrder)
       ostringstream str;
       str << "no " << tileExt_ << " tiles or Allsky at order " << askOrder;
       if (depth_ > 1)
-	str << " for cube frame " << slice_;
+	str << " for cube frame " << slice_+1;
       str << ends;
       noSource(str.str().c_str());
       return 0;
@@ -831,7 +833,7 @@ int FitsHiPS::chooseSource(int maxOrder, int width, int askOrder)
     ostringstream str;
     str << "no " << tileExt_ << " tiles or Allsky";
     if (depth_ > 1)
-      str << " for cube frame " << slice_;
+      str << " for cube frame " << slice_+1;
     str << " small enough to load; try norder=" << ends;
     noSource(str.str().c_str());
     return 0;
@@ -999,7 +1001,7 @@ int FitsHiPS::initHeaders()
   head_->appendInteger("HIPSORD", order_, "HiPS order of the values");
   // a cube's frame, and its value on the third axis
   if (depth_ > 1) {
-    head_->appendInteger("HIPSSLIC", slice_, "HiPS cube frame (0 = first)");
+    head_->appendInteger("HIPSSLIC", slice_+1, "HiPS cube frame (1 = first)");
     head_->appendInteger("HIPSDPTH", depth_, "HiPS cube frames");
     const char* c3 = prop("data_cube_crval3");
     const char* d3 = prop("data_cube_cdelt3");
@@ -1028,7 +1030,7 @@ int FitsHiPS::initHeaders()
   }
   if (depth_ > 1) {
     ostringstream str;
-    str << "cube frame " << slice_ << " of " << depth_ << ends;
+    str << "cube frame " << slice_+1 << " of " << depth_ << ends;
     head_->insertComment("HISTORY", str.str().c_str(), NULL);
   }
   {

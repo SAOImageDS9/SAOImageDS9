@@ -235,11 +235,13 @@ proc HiPSCubeState {which} {
 	return {}
     }
     set depth [HiPSProp $props hips_cube_depth 1]
+    # HIPSSLIC counts from 1
     set slice [string trim [$which get fits header keyword HIPSSLIC]]
     if {![string is integer -strict $depth] ||
 	![string is integer -strict $slice]} {
 	return {}
     }
+    incr slice -1
     set crpix [HiPSProp $props data_cube_crpix3 1]
     set crval [HiPSProp $props data_cube_crval3]
     set cdelt [HiPSProp $props data_cube_cdelt3]
@@ -378,7 +380,8 @@ proc HiPSSetSlice {which f} {
     if {$st == {} || [dict get $st slice] == $f} {
 	return
     }
-    set fn [HiPSWithOption [HiPSFrameName $which] slice $f]
+    # slice= counts from 1
+    set fn [HiPSWithOption [HiPSFrameName $which] slice [expr {$f+1}]]
 
     # a deep window's pixel is finer than the reloaded coarse window's:
     # keep the on-screen scale (zoom per window pixel), which also takes

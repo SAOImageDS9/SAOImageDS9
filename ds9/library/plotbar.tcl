@@ -241,6 +241,62 @@ proc PlotBarUpdateElement {varname} {
 	-errorbarcolor $errorcolor \
 	-errorbarwidth $var(graph,ds,error,width) \
 	-errorbarcap $cap
+
+    $var(graph) pen configure active \
+	-color red \
+	-outline $color \
+	-borderwidth $var(graph,ds,bar,border,width) \
+	-relief flat \
+	-showerrorbars $show \
+	-errorbarcolor $errorcolor \
+	-errorbarwidth $var(graph,ds,error,width) \
+	-errorbarcap $cap
+}
+
+proc PlotBarButton {varname cc nn xx yy} {
+    upvar #0 $varname var
+    global $varname
+
+    if {[llength $var($cc,dss)] == 0} {
+	return
+    }
+
+    if {$var(callback) == {}} {
+	return
+    }
+
+    set rr [$var($cc,graph) element closest $xx $yy]
+    set elem [lindex $rr 1]
+    set row [lindex $rr 3]
+
+    if {$elem != {}} {
+	if {$row != {}} {
+	    $var($cc,graph) element deactivate $elem
+	    $var($cc,graph) element activate $elem $row
+	    # rows start at 1
+	    eval "$var(callback) [expr $row+1] $cc"
+	} else {
+	    $var($cc,graph) element deactivate $elem
+	    eval "$var(callback) {} $cc"
+	}
+    }
+}
+
+proc PlotBarHighliteElement {varname cc nn rowlist} {
+    upvar #0 $varname var
+    global $varname
+
+    if {[llength $var($cc,dss)] == 0} {
+	return
+    }
+
+    if {$var($cc,$nn,show)} {
+	$var($cc,graph) element deactivate $nn
+	if {$rowlist != {}} {
+	    # can have multiple rows
+	    eval "$var($cc,graph) element activate $nn $rowlist"
+	}
+    }
 }
 
 proc PlotPrefsBar {w} {

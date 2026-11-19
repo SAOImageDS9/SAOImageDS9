@@ -187,7 +187,7 @@ proc CATTable {varname} {
     $var(tbl) selection clear all
 
     # clear plot highlites, row indices are about to change
-    if {$var(plot)} {
+    if {$var(plot) || $var(hist)} {
 	CATPlotHighliteElement $varname {}
     }
 

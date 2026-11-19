@@ -542,9 +542,13 @@ proc CATHistogramData {varname vvarname} {
 	lappend yy 0
     }
 
+    # bin of each row (rows start at 1), -1 if none, and rows of each bin
+    set rowbin {}
+
     set rows [starbase_nrows $var_(tbldb)]
     set colnum [starbase_colnum $var_(tbldb) $col]
     for {set ii 1} {$ii<=$rows} {incr ii} {
+	lappend rowbin -1
 	set vv [starbase_get $var_(tbldb) $ii $colnum]
 	if {$vv != {} && [string is double $vv]} {
 	    if {$vv >= $min && $vv <= $max} {
@@ -555,9 +559,21 @@ proc CATHistogramData {varname vvarname} {
 		    set kk [expr {$num-1}]
 		}
 		lset yy $kk [expr {[lindex $yy $kk]+1}]
+		lset rowbin end $kk
+		lappend br($kk) $ii
 	    }
 	}
     }
+    set binrows {}
+    for {set ii 0} {$ii<$num} {incr ii} {
+	if {[info exists br($ii)]} {
+	    lappend binrows $br($ii)
+	} else {
+	    lappend binrows {}
+	}
+    }
+    set var_($pp,rowbin) $rowbin
+    set var_($pp,binrows) $binrows
 
     $xdata set $xx
     $ydata set $yy
@@ -566,6 +582,10 @@ proc CATHistogramData {varname vvarname} {
 	PlotDialog $vvarname $var_(title) true
 	PlotAddGraph $vvarname bar
 
+	set vvar(mode) pointer
+	PlotChangeMode $vvarname
+
+	set vvar(callback) [list CATHistogramSelectBins $varname $vvarname]
 	set var_($pp,graph) $vvar(graph,current)
 
 	set vvar(graph,ds,xdata) $xdata
@@ -788,7 +808,8 @@ proc CATHistogramMinMaxCalc {varname col minname maxname} {
 
 
 # used by CATALOG
-# highlite rows in every plot, except skip (the plot they came from)
+# highlite rows in every plot and histogram, except skip (the window
+# they came from)
 proc CATPlotHighliteElement {varname rowlist {skip {}}} {
     upvar #0 $varname var
     global $varname
@@ -813,6 +834,31 @@ proc CATPlotHighliteElement {varname rowlist {skip {}}} {
 	    $vvar(1,proc,highlite) $vvarname 1 1 $result
 	}
     }
+
+    # histograms: highlite every bin holding a selected row
+    foreach vvarname $var(hists) {
+	if {$vvarname == $skip || \
+		![info exists var(hist,$vvarname,rowbin)]} {
+	    continue
+	}
+
+	upvar #0 $vvarname vvar
+	global $vvarname
+
+	set bins {}
+	foreach rr $rowlist {
+	    set bb [lindex $var(hist,$vvarname,rowbin) [expr {$rr-1}]]
+	    if {$bb != {} && $bb >= 0} {
+		lappend bins $bb
+	    }
+	}
+	set bins [lsort -integer -unique $bins]
+
+	if {[info exists vvar(1,graph)]} {
+	    set vvar(1,select,rows) $bins
+	    $vvar(1,proc,highlite) $vvarname 1 1 $bins
+	}
+    }
 }
 
 # plot callback: select the rows in the catalog and in the other plots
@@ -827,4 +873,30 @@ proc CATPlotSelectRows {varname vvarname rowlist cc} {
 	return
     }
     CATPlotHighliteElement $varname [lsort -unique $rowlist] $vvarname
+}
+
+# histogram callback: select the rows in the clicked bins
+# binlist starts at 1
+proc CATHistogramSelectBins {varname vvarname binlist cc} {
+    upvar #0 $varname var
+    global $varname
+
+    if {![info exists var(hist,$vvarname,binrows)]} {
+	return
+    }
+
+    set rowlist {}
+    foreach bb $binlist {
+	set rowlist [concat $rowlist \
+			 [lindex $var(hist,$vvarname,binrows) [expr {$bb-1}]]]
+    }
+    set rowlist [lsort -integer -unique $rowlist]
+
+    CATSelectRows $varname plot $rowlist $cc
+
+    # only process from first graph
+    if {$cc != 1} {
+	return
+    }
+    CATPlotHighliteElement $varname $rowlist $vvarname
 }

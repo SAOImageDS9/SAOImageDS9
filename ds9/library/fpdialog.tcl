@@ -176,6 +176,9 @@ proc FPDialog {varname title url instr format action} {
 	-command "TBLCut $varname" -accelerator "${ds9(ctrl)}X"
     $mb.edit add command -label [msgcat::mc {Copy}] \
 	-command "TBLCopy $varname" -accelerator "${ds9(ctrl)}C"
+    $mb.edit add command -label [msgcat::mc {Copy Cell}] \
+	-command [list TBLCopyCell $varname] \
+	-accelerator "${ds9(shiftctrl)}C"
     $mb.edit add command -label [msgcat::mc {Paste}] \
 	-command "EntryPaste $var(top)" -accelerator "${ds9(ctrl)}V"
     $mb.edit add separator
@@ -296,6 +299,7 @@ proc FPDialog {varname title url instr format action} {
     $var(tbl) tag configure sel \
 	-fg [ThemeSelectedForeground] -bg [ThemeSelectedBackground]
     $var(tbl) tag configure title -fg [ThemeForeground] -bg [ThemeBackground]
+    TBLCellInit $varname
 
     ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] -orient vertical
     ttk::scrollbar $f.xscroll -command [list $var(tbl) xview] -orient horizontal

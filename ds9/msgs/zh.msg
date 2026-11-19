@@ -720,6 +720,7 @@
 ::msgcat::mcset zh {New Frame} {新 影 像 視 窗}
 ::msgcat::mcset zh {New Graph} {新 圖 表}
 ::msgcat::mcset zh {New Group} {新 群 組}
+::msgcat::mcset zh {New Histogram} {新 直 方 圖}
 ::msgcat::mcset zh {New Plot} {新 繪 圖}
 ::msgcat::mcset zh New {新 增}
 ::msgcat::mcset zh {Next Block} {下 一 個 區 塊}

@@ -720,6 +720,7 @@
 ::msgcat::mcset fr {New Frame} {Nouvelle fenêtre}
 ::msgcat::mcset fr {New Graph} {Nouveau graphe}
 ::msgcat::mcset fr {New Group} {Nouveau groupe}
+::msgcat::mcset fr {New Histogram} {Nouvel histogramme}
 ::msgcat::mcset fr {New Plot} {Nouveau graphique}
 ::msgcat::mcset fr New Nouveau
 ::msgcat::mcset fr {Next Block} {Bloc suivant}

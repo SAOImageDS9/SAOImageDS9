@@ -720,6 +720,7 @@
 ::msgcat::mcset ja {New Frame} 新しいフレーム
 ::msgcat::mcset ja {New Graph} 新しいグラフ
 ::msgcat::mcset ja {New Group} 新しいグループ
+::msgcat::mcset ja {New Histogram} 新しいヒストグラム
 ::msgcat::mcset ja {New Plot} 新しいプロット
 ::msgcat::mcset ja New 新規
 ::msgcat::mcset ja {Next Block} 次のブロック

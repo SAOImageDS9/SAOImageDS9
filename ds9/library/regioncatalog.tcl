@@ -608,10 +608,10 @@ proc RegionCatalogRefreshView {varname} {
 	    }
 	}
 	if {$var(plot)} {
-	    CATPlotGenerate $varname
+	    CATPlotUpdate $varname
 	}
 	if {$var(hist)} {
-	    CATHistogramGenerate $varname
+	    CATHistogramUpdate $varname
 	}
 	CATDialogUpdate $varname
     }

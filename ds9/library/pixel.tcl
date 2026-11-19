@@ -91,6 +91,8 @@ proc PixelTableDialog {} {
     $dpixel(tbl) tag row coord 0
     $dpixel(tbl) tag configure coord -foreground [ThemeBold]
     $dpixel(tbl) tag configure center -foreground red
+    # no selection, so no mark, just the right-click menu
+    TBLCellInit dpixel -select none -mark 0
 
     grid $f.t -sticky news
     grid rowconfigure $f 0 -weight 1

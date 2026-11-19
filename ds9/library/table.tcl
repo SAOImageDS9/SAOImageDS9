@@ -187,10 +187,12 @@ proc TBLSelectTimerCancel {varname layer} {
     global $varname
 
     if {$var(blink)} {
-	# cancel all pending
-	foreach aa [after info] {
-	    set id [string range $aa 6 end]
-	    after cancel $aa
+	# cancel our pending blink, not everyone's afters
+	set cmd [list TBLSelectTimer $varname $layer]
+	foreach id [after info] {
+	    if {[lindex [after info $id] 0] == $cmd} {
+		after cancel $id
+	    }
 	}
 
 	for {set ii 0} {$ii<[llength $var(blink,marker)]} {incr ii} {
@@ -205,7 +207,10 @@ proc TBLSelectTimerCancel {varname layer} {
 	}
     }
 
+    # the table selection is driving this, keep it
+    set var(quiet) 1
     $var(frame) marker $layer $varname unhighlite
+    set var(quiet) 0
 
     # init timer vars
     set var(blink) 0
@@ -424,7 +429,7 @@ proc TBLCellInit {varname args} {
     set var(cell,menu) {}
     set var(cell,select) $opts(-select)
     set var(cell,mark) $opts(-mark)
-    set var(cell,sync) 0
+    set var(cell,sync) {}
 
     set m $var(tbl).menu
     ThemeMenu $m
@@ -547,11 +552,14 @@ proc TBLCellTrace {varname cmd code result op} {
     if {[lindex $cmd 2] != {set} && [lindex $cmd 2] != {clear}} {
 	return
     }
-    if {![info exists ${varname}(cell,sync)] || $var(cell,sync)} {
+    if {![info exists ${varname}(cell,sync)]} {
 	return
     }
-    set var(cell,sync) 1
-    after idle [list TBLCellSync $varname]
+    # already pending
+    if {$var(cell,sync) != {} && [lsearch [after info] $var(cell,sync)] != -1} {
+	return
+    }
+    set var(cell,sync) [after idle [list TBLCellSync $varname]]
 }
 
 proc TBLCellSync {varname} {
@@ -561,7 +569,7 @@ proc TBLCellSync {varname} {
     if {![info exists ${varname}(cell,sync)]} {
 	return
     }
-    set var(cell,sync) 0
+    set var(cell,sync) {}
     if {![winfo exists $var(tbl)] || $var(cell) == {}} {
 	return
     }

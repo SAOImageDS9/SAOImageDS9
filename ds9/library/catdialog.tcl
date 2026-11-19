@@ -88,6 +88,9 @@ proc CATDialog {varname format catalog title action} {
     set var(blink) 0
     set var(blink,count) 0
     set var(blink,marker) {}
+    # set while the table drives the markers, so their
+    # highlite callbacks leave the table selection alone
+    set var(quiet) 0
 
     set var(plot) 0
     set var(plot,var) {}

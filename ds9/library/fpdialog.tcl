@@ -89,6 +89,9 @@ proc FPDialog {varname title url instr format action} {
     set var(blink) 0
     set var(blink,count) 0
     set var(blink,marker) {}
+    # set while the table drives the markers, so their
+    # highlite callbacks leave the table selection alone
+    set var(quiet) 0
 
     set var(url) $url
     set var(title) $title

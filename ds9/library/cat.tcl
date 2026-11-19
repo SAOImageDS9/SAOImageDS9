@@ -886,6 +886,11 @@ proc CATBackup {ch which fdir rdir} {
 	    set catdb ${varname}catdb
 	    global $catdb
 
+	    # cleared (CATOff), nothing to save
+	    if {![TBLValidDB $var(catdb)]} {
+		continue
+	    }
+
 	    puts $ch "CATDialog $varname {} {} {} none"
 	    if {[starbase_nrows $var(catdb)]>500} {
 		# external file

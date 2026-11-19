@@ -402,6 +402,297 @@ proc TBLCopyTable {varname} {
     clipboard append -displayof $w $data
 }
 
+# Copy Cell
+#   tables select whole rows (or columns), so track the clicked cell
+#   ourselves and draw it unselected inside the selection, like a
+#   spreadsheet. tktable only draws its active tag when -state normal
+#
+#   TBLCellInit varname ?-select row|none? ?-mark 1|0?
+#     -select row   right-click selects the row, like a left click
+#     -select none  right-click leaves the selection alone
+#     -mark 0       no cell mark, only the right-click menu
+
+proc TBLCellInit {varname args} {
+    upvar #0 $varname var
+    global $varname
+    global ds9
+
+    array set opts {-select row -mark 1}
+    array set opts $args
+
+    set var(cell) {}
+    set var(cell,menu) {}
+    set var(cell,select) $opts(-select)
+    set var(cell,mark) $opts(-mark)
+    set var(cell,sync) 0
+
+    set m $var(tbl).menu
+    ThemeMenu $m
+    $m configure -tearoff 0
+    $m add command -label [msgcat::mc {Copy Value}] \
+	-command [list TBLCellMenuCopy $varname value]
+    $m add command -label [msgcat::mc {Copy Row}] \
+	-command [list TBLCellMenuCopy $varname row]
+    $m add command -label [msgcat::mc {Copy Column Name}] \
+	-command [list TBLCellMenuCopy $varname col]
+
+    switch $ds9(wm) {
+	x11 -
+	win32 {
+	    bind $var(tbl) <Button-3> [list TBLCellMenu $varname %x %y %X %Y]
+	}
+	aqua {
+	    if {[package vcompare [package provide Tk] 9.0] >= 0} {
+		bind $var(tbl) <Button-3> \
+		    [list TBLCellMenu $varname %x %y %X %Y]
+	    } else {
+		bind $var(tbl) <Button-2> \
+		    [list TBLCellMenu $varname %x %y %X %Y]
+	    }
+	}
+    }
+
+    if {!$var(cell,mark)} {
+	return
+    }
+
+    $var(tbl) tag configure cell -relief solid -borderwidth 2 \
+	-fg [ThemeTreeForeground] -bg [ThemeTreeBackground]
+    $var(tbl) tag raise cell
+
+    bind $var(tbl) <${ds9(shiftctrl)}C> [list TBLCopyCell $varname]
+
+    # after the Table class bindings, so the selection and the
+    # browsecommand are done
+    set bt TBLCell$varname
+    bind $bt <ButtonRelease-1> [list TBLCellRelease $varname %x %y]
+    set tags [bindtags $var(tbl)]
+    set ii [lsearch $tags Table]
+    bindtags $var(tbl) [linsert $tags [expr $ii+1] $bt]
+
+    # drop the mark when its cell leaves the selection
+    trace add execution $var(tbl) leave [list TBLCellTrace $varname]
+}
+
+# is rc a data cell, not a title or a blank cell past the data
+proc TBLCellData {varname rr cc} {
+    upvar #0 $varname var
+    global $varname
+
+    if {![string is integer -strict $rr] || ![string is integer -strict $cc]} {
+	return 0
+    }
+    set r0 [expr [$var(tbl) cget -roworigin]+[$var(tbl) cget -titlerows]]
+    set c0 [expr [$var(tbl) cget -colorigin]+[$var(tbl) cget -titlecols]]
+    if {$rr < $r0 || $cc < $c0} {
+	return 0
+    }
+
+    upvar #0 [$var(tbl) cget -variable] db
+    return [info exists db($rr,$cc)]
+}
+
+proc TBLCellSet {varname rc} {
+    upvar #0 $varname var
+    global $varname
+
+    TBLCellClear $varname
+
+    set rr [lindex [split $rc ,] 0]
+    set cc [lindex [split $rc ,] 1]
+    if {![TBLCellData $varname $rr $cc]} {
+	return
+    }
+    # control-click can unselect it
+    if {![$var(tbl) selection includes $rr,$cc]} {
+	return
+    }
+
+    set var(cell) $rr,$cc
+    $var(tbl) tag cell cell $var(cell)
+}
+
+proc TBLCellClear {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    if {![info exists ${varname}(cell)]} {
+	return
+    }
+    if {$var(cell) != {}} {
+	$var(tbl) tag cell {} $var(cell)
+	set var(cell) {}
+    }
+}
+
+proc TBLCellRelease {varname x y} {
+    upvar #0 $varname var
+    global $varname
+
+    # not after a column border drag
+    if {$::tktable::Priv(borderInfo) != {}} {
+	return
+    }
+    TBLCellSet $varname [$var(tbl) index @$x,$y]
+}
+
+# selection set/clear: check the mark once the dust settles
+proc TBLCellTrace {varname cmd code result op} {
+    upvar #0 $varname var
+    global $varname
+
+    if {[lindex $cmd 1] != {selection}} {
+	return
+    }
+    if {[lindex $cmd 2] != {set} && [lindex $cmd 2] != {clear}} {
+	return
+    }
+    if {![info exists ${varname}(cell,sync)] || $var(cell,sync)} {
+	return
+    }
+    set var(cell,sync) 1
+    after idle [list TBLCellSync $varname]
+}
+
+proc TBLCellSync {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    if {![info exists ${varname}(cell,sync)]} {
+	return
+    }
+    set var(cell,sync) 0
+    if {![winfo exists $var(tbl)] || $var(cell) == {}} {
+	return
+    }
+    if {![$var(tbl) selection includes $var(cell)]} {
+	TBLCellClear $varname
+    }
+}
+
+proc TBLCellMenu {varname x y X Y} {
+    upvar #0 $varname var
+    global $varname
+
+    # leave column border drags to the resize binding
+    set bb [$var(tbl) border mark $x $y]
+    if {[lindex $bb 1] != {}} {
+	return
+    }
+
+    set rc [$var(tbl) index @$x,$y]
+    set rr [lindex [split $rc ,] 0]
+    set cc [lindex [split $rc ,] 1]
+
+    set ro [$var(tbl) cget -roworigin]
+    set r0 [expr $ro+[$var(tbl) cget -titlerows]]
+    set c0 [expr [$var(tbl) cget -colorigin]+[$var(tbl) cget -titlecols]]
+
+    if {[TBLCellData $varname $rr $cc]} {
+	switch -- $var(cell,select) {
+	    row {TBLCellSelectRow $varname $rr $cc}
+	    none {}
+	}
+	if {$var(cell,mark) && [$var(tbl) selection includes $rr,$cc]} {
+	    TBLCellSet $varname $rr,$cc
+	}
+	set state normal
+    } elseif {$rr < $r0 && $cc >= $c0} {
+	# column header
+	set state disabled
+    } else {
+	return
+    }
+
+    set var(cell,menu) $rr,$cc
+    if {$r0 > $ro} {
+	set colstate normal
+    } else {
+	set colstate disabled
+    }
+
+    set m $var(tbl).menu
+    $m entryconfigure [msgcat::mc {Copy Value}] -state $state
+    $m entryconfigure [msgcat::mc {Copy Row}] -state $state
+    $m entryconfigure [msgcat::mc {Copy Column Name}] -state $colstate
+
+    focus $var(tbl)
+    tk_popup $m $X $Y
+}
+
+# act like a left click if the row is not already selected,
+# so the table and whatever follows its selection agree
+proc TBLCellSelectRow {varname rr cc} {
+    upvar #0 $varname var
+    global $varname
+
+    set browse 0
+    if {![$var(tbl) selection includes $rr,$cc]} {
+	$var(tbl) selection clear all
+	$var(tbl) selection set $rr,$cc
+	set browse 1
+    }
+    # activate only runs the browsecommand if the active cell moves
+    if {[$var(tbl) index active] != "$rr,$cc"} {
+	$var(tbl) activate $rr,$cc
+    } elseif {$browse} {
+	set cmd [$var(tbl) cget -browsecommand]
+	if {$cmd != {}} {
+	    uplevel #0 [string map [list %s $rr,$cc %S $rr,$cc] $cmd]
+	}
+    }
+}
+
+proc TBLCellMenuCopy {varname which} {
+    upvar #0 $varname var
+    global $varname
+
+    set rr [lindex [split $var(cell,menu) ,] 0]
+    set cc [lindex [split $var(cell,menu) ,] 1]
+    switch -- $which {
+	value {TBLClipboard $varname [$var(tbl) get $rr,$cc]}
+	row {TBLCopyRow $varname $rr}
+	col {
+	    set ro [$var(tbl) cget -roworigin]
+	    TBLClipboard $varname [$var(tbl) get $ro,$cc]
+	}
+    }
+}
+
+proc TBLCopyCell {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    if {![info exists ${varname}(cell)] || $var(cell) == {}} {
+	return
+    }
+    TBLClipboard $varname [$var(tbl) get $var(cell)]
+}
+
+# data columns only, tab separated
+proc TBLCopyRow {varname rr} {
+    upvar #0 $varname var
+    global $varname
+
+    set c0 [expr [$var(tbl) cget -colorigin]+[$var(tbl) cget -titlecols]]
+    set db [$var(tbl) cget -variable]
+    global $db
+    if {[TBLValidDB $db]} {
+	set c1 [expr $c0+[starbase_ncols $db]-1]
+    } else {
+	set c1 [expr [$var(tbl) cget -colorigin]+[$var(tbl) cget -cols]-1]
+    }
+    TBLClipboard $varname "[join [$var(tbl) get $rr,$c0 $rr,$c1] \t]\n"
+}
+
+proc TBLClipboard {varname data} {
+    upvar #0 $varname var
+    global $varname
+
+    clipboard clear -displayof $var(tbl)
+    clipboard append -displayof $var(tbl) $data
+}
+
 # Save via File
 
 proc TBLSaveVOTFile {varname} {

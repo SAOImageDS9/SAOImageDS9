@@ -212,6 +212,12 @@ proc ThemeConfigTable {w} {
 
     # pixel table
     $w tag configure coord -foreground [ThemeBold]
+
+    # copy cell
+    if {[lsearch [$w tag names] cell] != -1} {
+	$w tag configure cell \
+	    -fg [ThemeTreeForeground] -bg [ThemeTreeBackground]
+    }
 }
 
 proc ThemeConfigPlot {w} {

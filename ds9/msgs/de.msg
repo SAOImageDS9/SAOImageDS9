@@ -212,7 +212,11 @@
 ::msgcat::mcset de {Coordinate System} Koordinatensystem
 ::msgcat::mcset de Coordinates Koordinaten
 ::msgcat::mcset de Coordinate Koordinaten
+::msgcat::mcset de {Copy Cell} {Zelle kopieren}
+::msgcat::mcset de {Copy Column Name} {Spaltennamen kopieren}
 ::msgcat::mcset de {Copy Contours} {Konturen kopieren}
+::msgcat::mcset de {Copy Row} {Zeile kopieren}
+::msgcat::mcset de {Copy Value} {Wert kopieren}
 ::msgcat::mcset de {Copy to Regions} {Zu Regionen kopieren}
 ::msgcat::mcset de Copy Kopieren
 ::msgcat::mcset de {Create Intersection} {Schnittmenge erzeugen}

@@ -212,7 +212,11 @@
 ::msgcat::mcset es {Coordinate System} {Sistema de coordenadas}
 ::msgcat::mcset es Coordinates Coordenadas
 ::msgcat::mcset es Coordinate Coordenada
+::msgcat::mcset es {Copy Cell} {Copiar celda}
+::msgcat::mcset es {Copy Column Name} {Copiar nombre de columna}
 ::msgcat::mcset es {Copy Contours} {Copiar contornos}
+::msgcat::mcset es {Copy Row} {Copiar fila}
+::msgcat::mcset es {Copy Value} {Copiar valor}
 ::msgcat::mcset es {Copy to Regions} {Copiar a regiones}
 ::msgcat::mcset es Copy Copiar
 ::msgcat::mcset es {Create Intersection} {Crear intersección}

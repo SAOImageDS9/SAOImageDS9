@@ -30,8 +30,11 @@ proc FPSelectCmd {varname ss rc} {
     }
 
     # clear all highlited
+    # the table selection is driving this, keep it
+    set var(quiet) 1
     $var(frame) marker footprint $varname color green
     $var(frame) marker footprint $varname unhighlite
+    set var(quiet) 0
 
     global $var(catdb)
     if {![TBLValidDB $var(catdb)]} {
@@ -236,7 +239,7 @@ proc FPHighliteCB {tag id} {
 
     $var(frame) marker footprint $tag color red
     
-    if {!$var(blink)} {
+    if {!$var(blink) && !$var(quiet)} {
 	if {[info exists ${varname}(tbl)]} {
 	    $var(tbl) selection set $row,1
 	    $var(tbl) see $row,1
@@ -258,7 +261,7 @@ proc FPUnhighliteCB {tag id} {
 
     $var(frame) marker footprint $tag color green
 
-    if {!$var(blink)} {
+    if {!$var(blink) && !$var(quiet)} {
 	if {[info exists ${varname}(tbl)]} {
 	    $var(tbl) selection clear $row,1
 	}

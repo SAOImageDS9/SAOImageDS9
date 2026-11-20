@@ -212,7 +212,11 @@
 ::msgcat::mcset zh {Coordinate System} {座 標 系 統}
 ::msgcat::mcset zh Coordinates {座 標}
 ::msgcat::mcset zh Coordinate {座 標}
+::msgcat::mcset zh {Copy Cell} {複 製 儲 存 格}
+::msgcat::mcset zh {Copy Column Name} {複 製 欄 位 名 稱}
 ::msgcat::mcset zh {Copy Contours} {複 製 等 值 線}
+::msgcat::mcset zh {Copy Row} {複 製 列}
+::msgcat::mcset zh {Copy Value} {複 製 值}
 ::msgcat::mcset zh {Copy to Regions} {複 製 到 區 域}
 ::msgcat::mcset zh Copy {複 製}
 ::msgcat::mcset zh {Create Intersection} {建 立 交 集}

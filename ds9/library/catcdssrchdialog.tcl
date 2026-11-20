@@ -214,6 +214,7 @@ proc CATCDSSrchDialog {varname} {
     $var(tbl) tag configure sel \
 	-fg [ThemeSelectedForeground] -bg [ThemeSelectedBackground]
     $var(tbl) tag configure title -fg [ThemeForeground] -bg [ThemeBackground]
+    TBLCellInit $varname
 
     ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] \
 	-orient vertical

@@ -178,7 +178,9 @@ proc CATSelectRows {varname src rowlist cc} {
 	if {[info exists ${varname}(tbl)]} {
 	    $var(tbl) selection clear all
 	}
+	set var(quiet) 1
 	$var(frame) marker catalog $varname unhighlite
+	set var(quiet) 0
 	return
     }
 
@@ -190,7 +192,10 @@ proc CATSelectRows {varname src rowlist cc} {
 	$var(tbl) see [lindex $rowlist 0],1
     }
 
+    # the table selection is set, keep it
+    set var(quiet) 1
     $var(frame) marker catalog $varname unhighlite
+    set var(quiet) 0
 
     # init timer vars
     set var(blink,count) 0
@@ -244,7 +249,7 @@ proc CATHighliteCB {tag id} {
 	return
     }
 
-    if {!$var(blink)} {
+    if {!$var(blink) && !$var(quiet)} {
 	if {[info exists ${varname}(tbl)]} {
 	    $var(tbl) selection set $row,1
 	    $var(tbl) see $row,1
@@ -264,7 +269,7 @@ proc CATUnhighliteCB {tag id} {
 	return
     }
 
-    if {!$var(blink)} {
+    if {!$var(blink) && !$var(quiet)} {
 	if {[info exists ${varname}(tbl)]} {
 	    $var(tbl) selection clear $row,1
 	}

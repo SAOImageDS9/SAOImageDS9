@@ -181,6 +181,7 @@ proc SIARegistryDialog {varname} {
 	-fg [ThemeSelectedForeground] -bg [ThemeSelectedBackground]
     $var(tbl) tag configure title \
 	-fg [ThemeForeground] -bg [ThemeBackground]
+    TBLCellInit $varname
     ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] -orient vertical
     ttk::scrollbar $f.xscroll -command [list $var(tbl) xview] -orient horizontal
     grid $var(tbl) $f.yscroll -sticky news

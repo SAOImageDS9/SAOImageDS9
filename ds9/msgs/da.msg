@@ -212,7 +212,11 @@
 ::msgcat::mcset da {Coordinate System} {Koordinat system}
 ::msgcat::mcset da Coordinates Koordinater
 ::msgcat::mcset da Coordinate Koordinat
+::msgcat::mcset da {Copy Cell} {Kopier celle}
+::msgcat::mcset da {Copy Column Name} {Kopier søjlenavn}
 ::msgcat::mcset da {Copy Contours} {Kopier konturer}
+::msgcat::mcset da {Copy Row} {Kopier række}
+::msgcat::mcset da {Copy Value} {Kopier værdi}
 ::msgcat::mcset da {Copy to Regions} {kopier til regioner}
 ::msgcat::mcset da Copy Kopier
 ::msgcat::mcset da {Create Intersection} {Opret fællesmængde}

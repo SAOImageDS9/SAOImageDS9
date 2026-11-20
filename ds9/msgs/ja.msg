@@ -212,7 +212,11 @@
 ::msgcat::mcset ja {Coordinate System} 座標系
 ::msgcat::mcset ja Coordinates 座標
 ::msgcat::mcset ja Coordinate 座標
+::msgcat::mcset ja {Copy Cell} セルをコピー
+::msgcat::mcset ja {Copy Column Name} 列名をコピー
 ::msgcat::mcset ja {Copy Contours} コントアをコピー
+::msgcat::mcset ja {Copy Row} 行をコピー
+::msgcat::mcset ja {Copy Value} 値をコピー
 ::msgcat::mcset ja {Copy to Regions} 領域にコピー
 ::msgcat::mcset ja Copy コピー
 ::msgcat::mcset ja {Create Intersection} 共通部分を作成

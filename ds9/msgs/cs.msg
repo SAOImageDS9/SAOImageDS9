@@ -212,7 +212,11 @@
 ::msgcat::mcset cs {Coordinate System} {Systém koordinátů}
 ::msgcat::mcset cs Coordinates Koordináty
 ::msgcat::mcset cs Coordinate Koordinát
+::msgcat::mcset cs {Copy Cell} {Kopírovat buňku}
+::msgcat::mcset cs {Copy Column Name} {Kopírovat název sloupce}
 ::msgcat::mcset cs {Copy Contours} {Kopírovat obrysy}
+::msgcat::mcset cs {Copy Row} {Kopírovat řádek}
+::msgcat::mcset cs {Copy Value} {Kopírovat hodnotu}
 ::msgcat::mcset cs {Copy to Regions} {Kopíruj do oblastí}
 ::msgcat::mcset cs Copy Kopíruj
 ::msgcat::mcset cs {Create Intersection} {Vytvořit průnik}

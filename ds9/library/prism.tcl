@@ -143,6 +143,9 @@ proc PrismDialog {varname} {
 	-state disabled -accelerator "${ds9(ctrl)}X"
     $mb.edit add command -label [msgcat::mc {Copy}] \
 	-command [list PrismCopy $varname] -accelerator "${ds9(ctrl)}C"
+    $mb.edit add command -label [msgcat::mc {Copy Cell}] \
+	-command [list TBLCopyCell $varname] \
+	-accelerator "${ds9(shiftctrl)}C"
     $mb.edit add command -label [msgcat::mc {Paste}] \
 	-state disabled -accelerator "${ds9(ctrl)}V"
     $mb.edit add separator
@@ -277,6 +280,8 @@ proc PrismDialog {varname} {
     $var(tbl) tag configure title \
 	-fg [ThemeForeground] -bg [ThemeBackground] -bd 0
     $var(tbl) width 0 8
+    # column selection picks the plot columns, so right-click leaves it
+    TBLCellInit $varname -select none
     
     ttk::scrollbar $f.xscroll -command [list $var(tbl) xview] -orient horizontal
     ttk::scrollbar $f.yscroll -command [list $var(tbl) yview] -orient vertical

@@ -720,6 +720,7 @@
 ::msgcat::mcset cs {New Frame} {Nový snímek}
 ::msgcat::mcset cs {New Graph} {Nový graf}
 ::msgcat::mcset cs {New Group} {Nová skupina}
+::msgcat::mcset cs {New Histogram} {Nový histogram}
 ::msgcat::mcset cs {New Plot} {Nový graf}
 ::msgcat::mcset cs New Nový
 ::msgcat::mcset cs {Next Block} {Další blok}

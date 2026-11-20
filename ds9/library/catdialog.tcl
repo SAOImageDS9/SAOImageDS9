@@ -91,6 +91,8 @@ proc CATDialog {varname format catalog title action} {
 
     set var(plot) 0
     set var(plot,var) {}
+    set var(plots) {}
+    set var(plot,seq) 0
     set var(plot,x) {}
     set var(plot,xerr) {}
     set var(plot,y) {}
@@ -98,8 +100,8 @@ proc CATDialog {varname format catalog title action} {
 
     set var(hist) 0
     set var(hist,var) {}
-    set var(hist,graph) {}
-    set var(hist,ds) {}
+    set var(hists) {}
+    set var(hist,seq) 0
     set var(hist,col) {}
 
     set var(bar,num) 10
@@ -161,8 +163,12 @@ proc CATDialog {varname format catalog title action} {
     $mb.file add cascade -label [msgcat::mc {SAMP}] -menu $mb.file.samp
     $mb.file add command -label [msgcat::mc {Plot}] \
 	-command [list CATPlot $varname]
+    $mb.file add command -label [msgcat::mc {New Plot}] \
+	-command [list CATPlotNew $varname]
     $mb.file add command -label [msgcat::mc {Histogram}] \
 	-command [list CATHistogram $varname]
+    $mb.file add command -label [msgcat::mc {New Histogram}] \
+	-command [list CATHistogramNew $varname]
     $mb.file add separator
     $mb.file add command -label [msgcat::mc {Header}] \
 	-command [list CATHeader $varname]
@@ -506,13 +512,17 @@ proc CATDialog {varname format catalog title action} {
 		       -command "SAMPSendTableLoadVotable {} $varname"]
     ttk::button $f.plot -text [msgcat::mc {Plot}] \
 	-command [list CATPlot $varname]
+    ttk::button $f.newplot -text [msgcat::mc {New Plot}] \
+	-command [list CATPlotNew $varname]
     ttk::button $f.histogram -text [msgcat::mc {Histogram}] \
 	-command [list CATHistogram $varname]
+    ttk::button $f.newhistogram -text [msgcat::mc {New Histogram}] \
+	-command [list CATHistogramNew $varname]
     ttk::button $f.close -text [msgcat::mc {Close}] \
 	-command [list CATDestroy $varname]
 
     pack $f.apply $f.cancel $f.filter $f.clear $f.samp $f.plot \
-	$f.histogram $f.close \
+	$f.newplot $f.histogram $f.newhistogram $f.close \
 	-side left -expand true -padx 2 -pady 4
 
     # Fini
@@ -584,7 +594,9 @@ proc CATDialogUpdate {varname} {
 	$var(mb).file entryconfig [msgcat::mc {Clear Filter}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Clear}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Plot}] -state normal
+	$var(mb).file entryconfig [msgcat::mc {New Plot}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Histogram}] -state normal
+	$var(mb).file entryconfig [msgcat::mc {New Histogram}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Header}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Copy to Regions}] -state normal
 	$var(mb).file entryconfig [msgcat::mc {Print}] -state normal
@@ -592,7 +604,9 @@ proc CATDialogUpdate {varname} {
 	$var(top).buttons.filter configure -state normal
 	$var(top).buttons.clear configure -state normal
 	$var(top).buttons.plot configure -state normal
+	$var(top).buttons.newplot configure -state normal
 	$var(top).buttons.histogram configure -state normal
+	$var(top).buttons.newhistogram configure -state normal
     } else {
 	$var(mb).file entryconfig [msgcat::mc {Filter}] -state disabled
 	$var(mb).file entryconfig [msgcat::mc {Filter Selected}] -state disabled
@@ -600,7 +614,9 @@ proc CATDialogUpdate {varname} {
 	$var(top).param.sfilter configure -state disabled
 	$var(mb).file entryconfig [msgcat::mc {Clear}] -state disabled
 	$var(mb).file entryconfig [msgcat::mc {Plot}] -state disabled
+	$var(mb).file entryconfig [msgcat::mc {New Plot}] -state disabled
 	$var(mb).file entryconfig [msgcat::mc {Histogram}] -state disabled
+	$var(mb).file entryconfig [msgcat::mc {New Histogram}] -state disabled
 	$var(mb).file entryconfig [msgcat::mc {Header}] -state disabled
 	$var(mb).file entryconfig [msgcat::mc {Copy to Regions}] -state disabled
 	$var(mb).file entryconfig [msgcat::mc {Print}] -state disabled
@@ -608,7 +624,9 @@ proc CATDialogUpdate {varname} {
 	$var(top).buttons.filter configure -state disabled
 	$var(top).buttons.clear configure -state disabled
 	$var(top).buttons.plot configure -state disabled
+	$var(top).buttons.newplot configure -state disabled
 	$var(top).buttons.histogram configure -state disabled
+	$var(top).buttons.newhistogram configure -state disabled
     }
 
     CATDialogUpdateSAMP $varname
@@ -790,15 +808,11 @@ proc CATDestroy {varname} {
 	set icat(cats) [lreplace $icat(cats) $ii $ii]
     }
 
-    # plot window?
-    if {$var(plot)} {
-	PlotDestroy $var(plot,var)
-    }
+    # plot windows
+    CATPlotDestroy $varname
 
-    # histogram window?
-    if {$var(hist)} {
-	PlotDestroy $var(hist,var)
-    }
+    # histogram windows
+    CATHistogramDestroy $varname
 
     # cat header?
     set vvarname ${varname}hdr
@@ -828,9 +842,9 @@ proc CATEdit {varname} {
 
     CATGenerate $varname
 
-    # regenerate the plot if needed
+    # regenerate the plots if needed
     if {$var(plot)} {
-	CATPlotGenerate $varname
+	CATPlotUpdate $varname
     }
 
     if {$var(edit)} {

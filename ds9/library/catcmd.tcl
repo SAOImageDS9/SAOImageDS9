@@ -121,7 +121,7 @@ proc CATSelectBrowseCmd {varname ss rc} {
     TBLStatusRows $varname $rowlist
 
     # plot
-    if {$var(plot)} {
+    if {$var(plot) || $var(hist)} {
 	CATPlotHighliteElement $varname $rowlist
     }
 
@@ -210,7 +210,7 @@ proc CATSelectRows {varname src rowlist cc} {
     # source of call
     switch $src {
 	samp {
-	    if {$var(plot)} {
+	    if {$var(plot) || $var(hist)} {
 		CATPlotHighliteElement $varname $rowlist
 	    }
 	}
@@ -665,7 +665,7 @@ proc CATRelease {which x y} {
 
 		    # plot
 		    if {[info exists var(plot)]} {
-			if {$var(plot)} {
+			if {$var(plot) || $var(hist)} {
 			    CATPlotHighliteElement $varname $rowlist
 			}
 		    }
@@ -694,7 +694,7 @@ proc CATRelease {which x y} {
 
 	    #plot
 	    if {[info exists var(plot)]} {
-		if {$var(plot)} {
+		if {$var(plot) || $var(hist)} {
 		    CATPlotHighliteElement $varname $rowlist
 		}
 	    }

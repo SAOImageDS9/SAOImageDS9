@@ -4,13 +4,31 @@
 
 package provide DS9 1.0
 
+# A catalog can have several plot and histogram windows. var(plots) and
+# var(hists) list them, var(plot,var)/var(hist,var) is the current one,
+# and each keeps its own settings in var(plot,<vvarname>,*) and
+# var(hist,<vvarname>,*). var(plot,x) etc. hold the dialog and command
+# settings, which apply to the current window.
+
 proc CATPlot {varname} {
+    if {[CATPlotDialogInit $varname]} {
+	CATPlotGenerate $varname
+    }
+}
+
+proc CATPlotNew {varname} {
+    if {[CATPlotDialogInit $varname]} {
+	CATPlotCreate $varname
+    }
+}
+
+proc CATPlotDialogInit {varname} {
     upvar #0 $varname var
     global $varname
 
     # do we have a db?
     if {![TBLValidDB $var(tbldb)]} {
-	return
+	return 0
     }
 
     if {$var(plot,x) == {}} {
@@ -22,21 +40,108 @@ proc CATPlot {varname} {
 
     if {[CATPlotDialog $varname]} {
 	if {$var(plot,x) != {} && $var(plot,y) != {}} {
-	    CATPlotGenerate $varname
+	    return 1
 	}
+    }
+    return 0
+}
+
+# update the current plot, create one if needed
+proc CATPlotGenerate {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    CATPlotPrune $varname
+    set vvarname $var(plot,var)
+    if {$vvarname == {}} {
+	CATPlotCreate $varname
+	return
+    }
+
+    foreach ww {x xerr y yerr} {
+	set var(plot,$vvarname,$ww) $var(plot,$ww)
+    }
+    CATPlotData $varname $vvarname
+}
+
+proc CATPlotCreate {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    incr var(plot,seq)
+    if {$var(plot,seq) == 1} {
+	set vvarname plot${varname}
+    } else {
+	set vvarname plot${varname}_$var(plot,seq)
+    }
+
+    foreach ww {x xerr y yerr} {
+	set var(plot,$vvarname,$ww) $var(plot,$ww)
+    }
+    lappend var(plots) $vvarname
+    set var(plot,var) $vvarname
+    set var(plot) 1
+
+    CATPlotData $varname $vvarname
+}
+
+# regenerate all plots
+proc CATPlotUpdate {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    CATPlotPrune $varname
+    foreach vvarname $var(plots) {
+	CATPlotData $varname $vvarname
     }
 }
 
-proc CATPlotGenerate {varname} {
+# forget plots the user has closed
+proc CATPlotPrune {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set ll {}
+    foreach vvarname $var(plots) {
+	if {[PlotPing $vvarname]} {
+	    lappend ll $vvarname
+	} else {
+	    array unset var "plot,$vvarname,*"
+	}
+    }
+    set var(plots) $ll
+
+    if {[lsearch -exact $ll $var(plot,var)] < 0} {
+	set var(plot,var) [lindex $ll end]
+    }
+    set var(plot) [expr {[llength $ll] > 0}]
+}
+
+proc CATPlotDestroy {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    foreach vvarname $var(plots) {
+	PlotDestroy $vvarname
+    }
+    CATPlotPrune $varname
+}
+
+proc CATPlotData {varname vvarname} {
     # use var_ because db can have column name 'var'
     upvar #0 $varname var_
     global $varname
 
-    if {$var_(plot,xerr) == {} && $var_(plot,yerr) == {}} {
+    set x_ $var_(plot,$vvarname,x)
+    set xerr_ $var_(plot,$vvarname,xerr)
+    set y_ $var_(plot,$vvarname,y)
+    set yerr_ $var_(plot,$vvarname,yerr)
+
+    if {$xerr_ == {} && $yerr_ == {}} {
 	set dim xy
-    } elseif {$var_(plot,xerr) != {} && $var_(plot,yerr) == {}} {
+    } elseif {$xerr_ != {} && $yerr_ == {}} {
 	set dim xyex
-    } elseif {$var_(plot,xerr) == {} && $var_(plot,yerr) != {}} {
+    } elseif {$xerr_ == {} && $yerr_ != {}} {
 	set dim xyey
     } else {
 	set dim xyexey
@@ -46,7 +151,6 @@ proc CATPlotGenerate {varname} {
     set nrows [starbase_nrows $var_(tbldb)]
     set cols [starbase_columns $var_(tbldb)]
 
-    set vvarname plot${varname}
     upvar #0 $vvarname vvar
     global $vvarname
 
@@ -78,28 +182,28 @@ proc CATPlotGenerate {varname} {
 
 	switch $dim {
 	    xy {
-		append xx [subst "$var_(plot,x) "]
-		append yy [subst "$var_(plot,y) "]
+		append xx [subst "$x_ "]
+		append yy [subst "$y_ "]
 		append xe [subst "0 "]
 		append ye [subst "0 "]
 	    }
 	    xyex {
-		append xx [subst "$var_(plot,x) "]
-		append yy [subst "$var_(plot,y) "]
-		append xe [subst "$var_(plot,xerr) "]
+		append xx [subst "$x_ "]
+		append yy [subst "$y_ "]
+		append xe [subst "$xerr_ "]
 		append ye [subst "0 "]
 	    }
 	    xyey {
-		append xx [subst "$var_(plot,x) "]
-		append yy [subst "$var_(plot,y) "]
+		append xx [subst "$x_ "]
+		append yy [subst "$y_ "]
 		append xe [subst "0 "]
-		append ye [subst "$var_(plot,yerr) "]
+		append ye [subst "$yerr_ "]
 	    }
 	    xyexey {
-		append xx [subst "$var_(plot,x) "]
-		append yy [subst "$var_(plot,y) "]
-		append xe [subst "$var_(plot,xerr) "]
-		append ye [subst "$var_(plot,yerr) "]
+		append xx [subst "$x_ "]
+		append yy [subst "$y_ "]
+		append xe [subst "$xerr_ "]
+		append ye [subst "$yerr_ "]
 	    }
 	}
     }
@@ -116,10 +220,7 @@ proc CATPlotGenerate {varname} {
 	set vvar(mode) pointer
 	PlotChangeMode $vvarname
 
-	set var_(plot) 1
-	set var_(plot,var) $vvarname
-
-	set vvar(callback) "CATSelectRows $varname plot"
+	set vvar(callback) [list CATPlotSelectRows $varname $vvarname]
 	set vvar(graph,ds,xdata) $xdata
 	set vvar(graph,ds,ydata) $ydata
 	set vvar(graph,ds,xedata) $xedata
@@ -134,9 +235,10 @@ proc CATPlotGenerate {varname} {
     }
 
     # colnames can change
-    set xtitle [regsub -all {\$*} $var_(plot,x) {}]
-    set ytitle [regsub -all {\$*} $var_(plot,y) {}]
+    set xtitle [regsub -all {\$*} $x_ {}]
+    set ytitle [regsub -all {\$*} $y_ {}]
     PlotTitle $vvarname $var_(title) $xtitle $ytitle
+    wm title $vvar(top) "$ytitle vs $xtitle - $var_(title)"
 
     PlotStats $vvarname
     PlotList $vvarname
@@ -267,12 +369,24 @@ proc CATPlotDialogColsMenu {varname f ww} {
 }
 
 proc CATHistogram {varname} {
+    if {[CATHistogramDialogInit $varname]} {
+	CATHistogramGenerate $varname
+    }
+}
+
+proc CATHistogramNew {varname} {
+    if {[CATHistogramDialogInit $varname]} {
+	CATHistogramCreate $varname
+    }
+}
+
+proc CATHistogramDialogInit {varname} {
     upvar #0 $varname var
     global $varname
 
     # do we have a db?
     if {![TBLValidDB $var(tbldb)]} {
-	return
+	return 0
     }
 
     if {$var(hist,col) == {}} {
@@ -281,21 +395,115 @@ proc CATHistogram {varname} {
 
     if {[CATHistogramDialog $varname]} {
 	if {$var(hist,col) != {}} {
-	    CATHistogramGenerate $varname
+	    return 1
 	}
+    }
+    return 0
+}
+
+# settings each histogram keeps for itself
+proc CATHistogramParams {} {
+    return {hist,col bar,num bar,min bar,max bar,minmax \
+		graph,ds,bar,border,color graph,ds,bar,color \
+		graph,ds,bar,fill}
+}
+
+# update the current histogram, create one if needed
+proc CATHistogramGenerate {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    CATHistogramPrune $varname
+    set vvarname $var(hist,var)
+    if {$vvarname == {}} {
+	CATHistogramCreate $varname
+	return
+    }
+
+    foreach pp [CATHistogramParams] {
+	set var(hist,$vvarname,$pp) $var($pp)
+    }
+    CATHistogramData $varname $vvarname
+}
+
+proc CATHistogramCreate {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    incr var(hist,seq)
+    if {$var(hist,seq) == 1} {
+	set vvarname hist${varname}
+    } else {
+	set vvarname hist${varname}_$var(hist,seq)
+    }
+
+    foreach pp [CATHistogramParams] {
+	set var(hist,$vvarname,$pp) $var($pp)
+    }
+    lappend var(hists) $vvarname
+    set var(hist,var) $vvarname
+    set var(hist) 1
+
+    # no window if it fails, so prune it
+    if {![CATHistogramData $varname $vvarname]} {
+	CATHistogramPrune $varname
     }
 }
 
-proc CATHistogramGenerate {varname} {
+# regenerate all histograms
+proc CATHistogramUpdate {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    CATHistogramPrune $varname
+    foreach vvarname $var(hists) {
+	CATHistogramData $varname $vvarname
+    }
+}
+
+# forget histograms the user has closed
+proc CATHistogramPrune {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    set ll {}
+    foreach vvarname $var(hists) {
+	if {[PlotPing $vvarname]} {
+	    lappend ll $vvarname
+	} else {
+	    array unset var "hist,$vvarname,*"
+	}
+    }
+    set var(hists) $ll
+
+    if {[lsearch -exact $ll $var(hist,var)] < 0} {
+	set var(hist,var) [lindex $ll end]
+    }
+    set var(hist) [expr {[llength $ll] > 0}]
+}
+
+proc CATHistogramDestroy {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    foreach vvarname $var(hists) {
+	PlotDestroy $vvarname
+    }
+    CATHistogramPrune $varname
+}
+
+proc CATHistogramData {varname vvarname} {
     # use var_ because db can have column name 'var'
     upvar #0 $varname var_
     global $varname
 
     global $var_(tbldb)
 
-    set vvarname hist${varname}
     upvar #0 $vvarname vvar
     global $vvarname
+
+    set pp hist,$vvarname
+    set col $var_($pp,hist,col)
 
     set xdata ${vvarname}xx
     set ydata ${vvarname}yy
@@ -305,20 +513,24 @@ proc CATHistogramGenerate {varname} {
 	blt::vector create $xdata $ydata
     }
 
-    if {$var_(bar,minmax)} {
-	set min $var_(bar,min)
-	set max $var_(bar,max)
+    if {$var_($pp,bar,minmax)} {
+	set min $var_($pp,bar,min)
+	set max $var_($pp,bar,max)
     } else {
-	CATHistogramMinMaxCalc $varname $var_(hist,col) min max
-	set var_(bar,min) $min
-	set var_(bar,max) $max
+	CATHistogramMinMaxCalc $varname $col min max
+	set var_($pp,bar,min) $min
+	set var_($pp,bar,max) $max
+	if {$var_(hist,var) == $vvarname} {
+	    set var_(bar,min) $min
+	    set var_(bar,max) $max
+	}
     }
-    set num $var_(bar,num)
+    set num $var_($pp,bar,num)
 
     set diff [expr {double($max)-double($min)}]
     if {$diff <= 0 || $num <= 0} {
 	Error [msgcat::mc {Unable to generate plot}]
-	return
+	return 0
     }
     set width [expr {$diff/double($num)}]
     set var_(bar,width) $width
@@ -330,9 +542,13 @@ proc CATHistogramGenerate {varname} {
 	lappend yy 0
     }
 
+    # bin of each row (rows start at 1), -1 if none, and rows of each bin
+    set rowbin {}
+
     set rows [starbase_nrows $var_(tbldb)]
-    set colnum [starbase_colnum $var_(tbldb) $var_(hist,col)]
+    set colnum [starbase_colnum $var_(tbldb) $col]
     for {set ii 1} {$ii<=$rows} {incr ii} {
+	lappend rowbin -1
 	set vv [starbase_get $var_(tbldb) $ii $colnum]
 	if {$vv != {} && [string is double $vv]} {
 	    if {$vv >= $min && $vv <= $max} {
@@ -343,9 +559,21 @@ proc CATHistogramGenerate {varname} {
 		    set kk [expr {$num-1}]
 		}
 		lset yy $kk [expr {[lindex $yy $kk]+1}]
+		lset rowbin end $kk
+		lappend br($kk) $ii
 	    }
 	}
     }
+    set binrows {}
+    for {set ii 0} {$ii<$num} {incr ii} {
+	if {[info exists br($ii)]} {
+	    lappend binrows $br($ii)
+	} else {
+	    lappend binrows {}
+	}
+    }
+    set var_($pp,rowbin) $rowbin
+    set var_($pp,binrows) $binrows
 
     $xdata set $xx
     $ydata set $yy
@@ -354,35 +582,39 @@ proc CATHistogramGenerate {varname} {
 	PlotDialog $vvarname $var_(title) true
 	PlotAddGraph $vvarname bar
 
-	set var_(hist) 1
-	set var_(hist,var) $vvarname
-	set var_(hist,graph) $vvar(graph,current)
+	set vvar(mode) pointer
+	PlotChangeMode $vvarname
+
+	set vvar(callback) [list CATHistogramSelectBins $varname $vvarname]
+	set var_($pp,graph) $vvar(graph,current)
 
 	set vvar(graph,ds,xdata) $xdata
 	set vvar(graph,ds,ydata) $ydata
 	set vvar(graph,ds,bar,width) $width
 	PlotExternal $vvarname xy
-	set var_(hist,ds) $vvar(graph,ds,current)
-	} else {
-	set vvar(graph,current) $var_(hist,graph)
-	set vvar(graph,ds,current) $var_(hist,ds)
+	set var_($pp,ds) $vvar(graph,ds,current)
+    } else {
+	set vvar(graph,current) $var_($pp,graph)
+	set vvar(graph,ds,current) $var_($pp,ds)
 	PlotRestoreState $vvarname
     }
 
     set vvar(graph,ds,xdata) $xdata
     set vvar(graph,ds,ydata) $ydata
     set vvar(graph,ds,bar,width) $width
-    PlotDataSetName $vvarname $var_(hist,col)
+    PlotDataSetName $vvarname $col
 
-    set vvar(graph,ds,bar,border,color) $var_(graph,ds,bar,border,color)
-    set vvar(graph,ds,bar,color) $var_(graph,ds,bar,color)
-    set vvar(graph,ds,bar,fill) $var_(graph,ds,bar,fill)
+    set vvar(graph,ds,bar,border,color) $var_($pp,graph,ds,bar,border,color)
+    set vvar(graph,ds,bar,color) $var_($pp,graph,ds,bar,color)
+    set vvar(graph,ds,bar,fill) $var_($pp,graph,ds,bar,fill)
     PlotBarUpdateElement $vvarname
 
-    PlotTitle $vvarname $var_(title) $var_(hist,col) {Counts}
+    PlotTitle $vvarname $var_(title) $col {Counts}
+    wm title $vvar(top) "$col - $var_(title)"
 
     PlotStats $vvarname
     PlotList $vvarname
+    return 1
 }
 
 proc CATHistogramDialog {varname} {
@@ -574,14 +806,13 @@ proc CATHistogramMinMaxCalc {varname col minname maxname} {
     }
 }
 
+
 # used by CATALOG
-proc CATPlotHighliteElement {varname rowlist} {
+# highlite rows in every plot and histogram, except skip (the window
+# they came from)
+proc CATPlotHighliteElement {varname rowlist {skip {}}} {
     upvar #0 $varname var
     global $varname
-
-    set vvarname $var(plot,var)
-    upvar #0 $vvarname vvar
-    global $vvarname
 
     # rowlist starts at 1
     set result {}
@@ -589,9 +820,83 @@ proc CATPlotHighliteElement {varname rowlist} {
 	append result "[expr $rr-1] "
     }
 
-    if {[info exists vvar(1,graph)]} {
-	# keep region select (shift-add) in sync
-	set vvar(1,select,rows) $result
-	$vvar(1,proc,highlite) $vvarname 1 1 $result
+    foreach vvarname $var(plots) {
+	if {$vvarname == $skip} {
+	    continue
+	}
+
+	upvar #0 $vvarname vvar
+	global $vvarname
+
+	if {[info exists vvar(1,graph)]} {
+	    # keep region select (shift-add) in sync
+	    set vvar(1,select,rows) $result
+	    $vvar(1,proc,highlite) $vvarname 1 1 $result
+	}
     }
+
+    # histograms: highlite every bin holding a selected row
+    foreach vvarname $var(hists) {
+	if {$vvarname == $skip || \
+		![info exists var(hist,$vvarname,rowbin)]} {
+	    continue
+	}
+
+	upvar #0 $vvarname vvar
+	global $vvarname
+
+	set bins {}
+	foreach rr $rowlist {
+	    set bb [lindex $var(hist,$vvarname,rowbin) [expr {$rr-1}]]
+	    if {$bb != {} && $bb >= 0} {
+		lappend bins $bb
+	    }
+	}
+	set bins [lsort -integer -unique $bins]
+
+	if {[info exists vvar(1,graph)]} {
+	    set vvar(1,select,rows) $bins
+	    $vvar(1,proc,highlite) $vvarname 1 1 $bins
+	}
+    }
+}
+
+# plot callback: select the rows in the catalog and in the other plots
+proc CATPlotSelectRows {varname vvarname rowlist cc} {
+    upvar #0 $varname var
+    global $varname
+
+    CATSelectRows $varname plot $rowlist $cc
+
+    # only process from first graph
+    if {$cc != 1 || ![info exists ${varname}(plots)]} {
+	return
+    }
+    CATPlotHighliteElement $varname [lsort -unique $rowlist] $vvarname
+}
+
+# histogram callback: select the rows in the clicked bins
+# binlist starts at 1
+proc CATHistogramSelectBins {varname vvarname binlist cc} {
+    upvar #0 $varname var
+    global $varname
+
+    if {![info exists var(hist,$vvarname,binrows)]} {
+	return
+    }
+
+    set rowlist {}
+    foreach bb $binlist {
+	set rowlist [concat $rowlist \
+			 [lindex $var(hist,$vvarname,binrows) [expr {$bb-1}]]]
+    }
+    set rowlist [lsort -integer -unique $rowlist]
+
+    CATSelectRows $varname plot $rowlist $cc
+
+    # only process from first graph
+    if {$cc != 1} {
+	return
+    }
+    CATPlotHighliteElement $varname $rowlist $vvarname
 }

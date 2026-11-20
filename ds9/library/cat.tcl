@@ -187,7 +187,7 @@ proc CATTable {varname} {
     $var(tbl) selection clear all
 
     # clear plot highlites, row indices are about to change
-    if {$var(plot)} {
+    if {$var(plot) || $var(hist)} {
 	CATPlotHighliteElement $varname {}
     }
 
@@ -241,14 +241,14 @@ proc CATTable {varname} {
 
     CATGenerate $varname
 
-    # regenerate the plot if needed
+    # regenerate the plots if needed
     if {$var(plot)} {
-	CATPlotGenerate $varname
+	CATPlotUpdate $varname
     }
 
-    # regenerate the histogram if needed
+    # regenerate the histograms if needed
     if {$var(hist)} {
-	CATHistogramGenerate $varname
+	CATHistogramUpdate $varname
     }
 
     set nr [starbase_nrows $var(tbldb)]
@@ -466,26 +466,18 @@ proc CATOff {varname} {
 
     set var(blink) 0
 
-    # plot window?
-    if {$var(plot)} {
-	PlotDestroy $var(plot,var)
-	set var(plot) 0
-	set var(plot,var) {}
-	set var(plot,x) {}
-	set var(plot,xerr) {}
-	set var(plot,y) {}
-	set var(plot,yerr) {}
-    }
+    # plot windows
+    CATPlotDestroy $varname
+    set var(plot,seq) 0
+    set var(plot,x) {}
+    set var(plot,xerr) {}
+    set var(plot,y) {}
+    set var(plot,yerr) {}
 
-    # histogram window?
-    if {$var(hist)} {
-	PlotDestroy $var(hist,var)
-	set var(hist) 0
-	set var(hist,var) {}
-	set var(hist,graph) {}
-	set var(hist,ds) {}
-	set var(hist,col) {}
-    }
+    # histogram windows
+    CATHistogramDestroy $varname
+    set var(hist,seq) 0
+    set var(hist,col) {}
 
     CATDialogUpdate $varname
 }
@@ -870,14 +862,14 @@ proc CATUpdateWCS {} {
 
 	    CATGenerate $varname
 
-	    # regenerate the plot if needed
+	    # regenerate the plots if needed
 	    if {$var(plot)} {
-		CATPlotGenerate $varname
+		CATPlotUpdate $varname
 	    }
 
-	    # regenerate the histogram if needed
+	    # regenerate the histograms if needed
 	    if {$var(hist)} {
-		CATHistogramGenerate $varname
+		CATHistogramUpdate $varname
 	    }
 	}
     }
@@ -893,6 +885,11 @@ proc CATBackup {ch which fdir rdir} {
 	if {$var(frame) == $which} {
 	    set catdb ${varname}catdb
 	    global $catdb
+
+	    # cleared (CATOff), nothing to save
+	    if {![TBLValidDB $var(catdb)]} {
+		continue
+	    }
 
 	    puts $ch "CATDialog $varname {} {} {} none"
 	    if {[starbase_nrows $var(catdb)]>500} {

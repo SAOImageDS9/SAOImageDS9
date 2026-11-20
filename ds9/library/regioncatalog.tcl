@@ -608,10 +608,10 @@ proc RegionCatalogRefreshView {varname} {
 	    }
 	}
 	if {$var(plot)} {
-	    CATPlotGenerate $varname
+	    CATPlotUpdate $varname
 	}
 	if {$var(hist)} {
-	    CATHistogramGenerate $varname
+	    CATHistogramUpdate $varname
 	}
 	CATDialogUpdate $varname
     }
@@ -668,7 +668,7 @@ proc RegionCatalogSelectCmd {varname old current} {
     if {[llength $rows]} {
 	set rows [lsort -integer -unique $rows]
 	TBLStatusRows $varname $rows
-	if {$var(plot)} {
+	if {$var(plot) || $var(hist)} {
 	    CATPlotHighliteElement $varname $rows
 	}
 	SAMPSendTableRowListCmd $varname $rows
@@ -795,7 +795,7 @@ proc RegionCatalogSelectRows {varname src rowlist cc} {
 
     switch -- $src {
 	samp {
-	    if {$var(plot)} {
+	    if {$var(plot) || $var(hist)} {
 		CATPlotHighliteElement $varname $rows
 	    }
 	}

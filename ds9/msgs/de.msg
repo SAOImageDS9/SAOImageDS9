@@ -720,6 +720,7 @@
 ::msgcat::mcset de {New Frame} {Neuer rahmen}
 ::msgcat::mcset de {New Graph} {Neues Diagramm}
 ::msgcat::mcset de {New Group} {Neue Gruppe}
+::msgcat::mcset de {New Histogram} {Neues Histogramm}
 ::msgcat::mcset de {New Plot} {Neuer Plot}
 ::msgcat::mcset de New Neu
 ::msgcat::mcset de {Next Block} {Nächster Block}

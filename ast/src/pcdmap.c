@@ -89,6 +89,22 @@ f     The PcdMap class does not define any new routines beyond those
 *        if the intervening neighbour could not itself merge. This could
 *        result in an infinite simplification loop, which was detected by
 *        CmpMap and and aborted, resulting in no useful simplification.
+*     8-AUG-2026 (TIMJ):
+*        Use round() rather than (int)(x+0.5) for rounding, so that the
+*        library uses a single rounding idiom that is correct for
+*        negative values.
+*     17-AUG-2026 (TIMJ):
+*        Discard the record that the PcdMap has been simplified when Disco or
+*        PcdCen is set or cleared. MapMerge replaces a PcdMap whose Disco is
+*        zero by a UnitMap without reference to any neighbour, so a PcdMap
+*        simplified before Disco was changed could report that there was
+*        nothing left to do.
+*     8-SEP-2026 (TIMJ):
+*        PcdZoom: use the zoom factor the merge list applies, taking the
+*        reciprocal when the neighbouring ZoomMap is used inverted. Zoom is
+*        the stored factor regardless of Invert, so swapping a PcdMap past an
+*        inverted ZoomMap produced a forward ZoomMap of the original factor
+*        and a PcdMap derived from it, which is not the composition supplied.
 *class--
 */
 
@@ -298,6 +314,7 @@ static void Clear##attr( AstPcdMap *this, int axis, int *status ) { \
 \
 /* Assign the "clear" value. */ \
    } else { \
+      astClearIsSimple( this ); \
       this->component[ axis ] = (assign); \
    } \
 } \
@@ -492,6 +509,7 @@ static void Set##attr( AstPcdMap *this, int axis, type value, int *status ) { \
 \
 /* Store the new value in the structure component. */ \
    } else { \
+      if( (assign) != this->component[ axis ] ) astClearIsSimple( this ); \
       this->component[ axis ] = (assign); \
    } \
 } \
@@ -1861,7 +1879,7 @@ static void PermGet( AstPermMap *map, int **outperm, int **inperm,
 /* If the output axis values are different, then the output axis value
    must be copied from the input axis value. */
          } else {
-            outprm[ i ] = (int) ( op + 0.5 );
+            outprm[ i ] = (int) round( op );
          }
       }
    }
@@ -1889,7 +1907,7 @@ static void PermGet( AstPermMap *map, int **outperm, int **inperm,
             nc++;
 
          } else {
-            inprm[ i ] = (int) ( ip + 0.5 );
+            inprm[ i ] = (int) round( ip );
          }
       }
    }
@@ -2353,8 +2371,13 @@ static void PcdZoom( AstMapping **maps, int *inverts, int ipc, int *status ){
    old_zinv = astGetInvert( zm );
    astSetInvert( zm, inverts[ 1 - ipc ] );
 
-/* Get the zoom factor from the ZoomMap. */
+/* Get the zoom factor from the ZoomMap. Unlike the PcdMap attributes read
+   below, Zoom is the stored factor whatever the Invert flag says: it is
+   ZoomMap's Transform that takes the reciprocal when the Mapping is applied
+   inverted. So the temporary Invert setting above has no effect here, and the
+   factor the merge list actually applies has to be formed explicitly. */
    zoom = astGetZoom( zm );
+   if( inverts[ 1 - ipc ] ) zoom = 1.0/zoom;
 
 /* Get the distortion coefficient from the PcdMap. */
    disco = astGetDisco( pm );
@@ -2568,10 +2591,12 @@ f     AST_CLONE
 */
 /* This ia a double value with a value of AST__BAD when undefined but
    yielding a default of 0.0. */
-astMAKE_CLEAR1(PcdMap,Disco,disco,AST__BAD)
+astMAKE_CLEAR1(PcdMap,Disco,disco,(astClearIsSimple(this),AST__BAD))
 astMAKE_GET(PcdMap,Disco,double,0.0,( ( this->disco == AST__BAD ) ?
                                       0.0 : this->disco ))
-astMAKE_SET1(PcdMap,Disco,double,disco,value)
+astMAKE_SET1(PcdMap,Disco,double,disco,(
+            ( value != this->disco ) ? astClearIsSimple(this) : (void)0,
+            value))
 astMAKE_TEST(PcdMap,Disco,( this->disco != AST__BAD ))
 
 

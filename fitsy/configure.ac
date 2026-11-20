@@ -78,6 +78,7 @@ fi
 TEA_ADD_SOURCES([
 		   util.C
 		   alloc.C
+		   asdf.C
 		   allocgz.C
 		   analysis.C
 		   block.C
@@ -130,6 +131,7 @@ TEA_ADD_SOURCES([
 TEA_ADD_HEADERS([
 		   util.h
 		   alloc.h
+		   asdf.h
 		   allocgz.h
 		   analysis.h
 		   block.h

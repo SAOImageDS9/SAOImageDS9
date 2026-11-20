@@ -1,0 +1,18 @@
+SIMPLE  =                    T / Fits standard
+BITPIX  =                  -32 / Bits per pixel
+NAXIS   =                    2 / Number of axes
+NAXIS1  =                  100 / length of data axis 1
+NAXIS2  =                  100 / length of data axis 2
+CTYPE1  = 'AZ---TAN'           / Azimuth
+CTYPE2  = 'EL---TAN'           / Elevation
+CRVAL1  =              185.000 / Reference azimuth (deg)
+CRVAL2  =               60.000 / Reference elevation (deg)
+CRPIX1  =               50.500 / Reference pixel
+CRPIX2  =               50.500 / Reference pixel
+CDELT1  =              -0.0100 / Pixel size (deg)
+CDELT2  =               0.0100 / Pixel size (deg)
+DATE-OBS= '2017-07-21T08:38:39.087' / Date of observation
+OBSGEO-X=  -5464586.5949660344 / [m] Observatory geocentric X
+OBSGEO-Y=  -2492996.5580556658 / [m] Observatory geocentric Y
+OBSGEO-Z=   2150654.3760909005 / [m] Observatory geocentric Z
+END

@@ -151,6 +151,40 @@ f     - AST_POLYTRAN: Fit a PolyMap inverse or forward transformation
 *     28-JUL-2025 (DSB):
 *        - Add protected virtual method astMergeShift.
 *        - Add public static method astShowPoly.
+*     2-JUL-2026 (TIMJ):
+*        The default for IterInverse is now zero if the PolyMap has
+*        unequal numbers of inputs and outputs, since an iterative
+*        inverse cannot be used in that case.  Previously such a PolyMap
+*        reported TranInverse as non-zero by default and then reported an
+*        error when the inverse transformation was used.
+*     8-AUG-2026 (TIMJ):
+*        Use round() rather than (int)(x+0.5) for rounding, so that the
+*        library uses a single rounding idiom that is correct for
+*        negative values.
+*     15-AUG-2026 (TIMJ):
+*        Discard the record that the PolyMap has been simplified when
+*        IterInverse, NiterInverse or TolInverse is set or cleared, and in
+*        the copies made by astPolyTran and astMergeShift, whose
+*        transformations are replaced after the copy is taken. The
+*        astMergeShift copy is then simplified to amalgamate coefficients
+*        referring to the same powers, which the inherited record
+*        suppressed.
+*     17-AUG-2026 (TIMJ):
+*        Report an error if IterInverse, NiterInverse or TolInverse is set or
+*        cleared once the PolyMap has been cloned, as SUN/210 says AST does
+*        for the attributes of any Mapping. Use the guarded astMAKE_SET1 and
+*        astMAKE_CLEAR1 macros.
+*     8-SEP-2026 (TIMJ):
+*        Equal: compare the inverse transformation's own coefficients and
+*        powers, and index every array by the axis count it was allocated
+*        with. The inverse block compared the forward arrays a second time,
+*        and "mxpow_f" and "ncoeff_i" were indexed to the wrong axis count,
+*        which read past the end of both.
+*     9-SEP-2026 (TIMJ):
+*        MapMerge: fold a ChebyMap's input normalisation into the MatrixMap
+*        and ShiftMap that replace a linear polynomial. The coefficients of a
+*        ChebyMap apply to the normalised input z = scale*x + offset, so the
+*        reduction of 2*T1(z) over [0,10] is 0.4x - 2, not 2x.
 *class--
 */
 
@@ -176,6 +210,7 @@ f     - AST_POLYTRAN: Fit a PolyMap inverse or forward transformation
 #include "mapping.h"             /* Coordinate mappings (parent class) */
 #include "cmpmap.h"              /* Compound mappings */
 #include "polymap.h"             /* Interface definition for this class */
+#include "chebymap.h"            /* Chebyshev polynomial mappings (subclass) */
 #include "unitmap.h"             /* Unit mappings */
 #include "shiftmap.h"            /* Shift of origin mappings */
 #include "cminpack/cminpack.h"   /* Levenberg - Marquardt minimization */
@@ -227,7 +262,7 @@ astMAKE_INITGLOBALS(PolyMap)
 /* Define macros for accessing each item of thread specific global data. */
 #define class_init astGLOBAL(PolyMap,Class_Init)
 #define class_vtab astGLOBAL(PolyMap,Class_Vtab)
-#define getattrib_buff astGLOBAL(LutMap,GetAttrib_Buff)
+#define getattrib_buff astGLOBAL(PolyMap,GetAttrib_Buff)
 
 #include <pthread.h>
 
@@ -693,8 +728,11 @@ static int Equal( AstObject *this_object, AstObject *that_object, int *status ) 
                result = 0;
             }
 
+/* "mxpow_f" holds the maximum power of each Mapping input, so it has "nin"
+   elements, unlike the other three forward arrays which have one element per
+   output. */
             if( this->mxpow_f && that->mxpow_f ) {
-               for( i = 0; i < nout && result; i++ ) {
+               for( i = 0; i < nin && result; i++ ) {
                   if( this->mxpow_f[ i ] != that->mxpow_f[ i ] ){
                      result = 0;
                   }
@@ -731,9 +769,12 @@ static int Equal( AstObject *this_object, AstObject *that_object, int *status ) 
                result = 0;
             }
 
-/* Check properties of the inverse transformation. */
+/* Check properties of the inverse transformation. The inverse maps "nout"
+   values to "nin" values, so "ncoeff_i", "coeff_i" and "power_i" have one
+   element per Mapping input while "mxpow_i" - the maximum power of each of the
+   inverse transformation's own inputs - has one per Mapping output. */
             if( this->ncoeff_i && that->ncoeff_i ) {
-               for( i = 0; i < nout && result; i++ ) {
+               for( i = 0; i < nin && result; i++ ) {
                   if( this->ncoeff_i[ i ] != that->ncoeff_i[ i ] ){
                      result = 0;
                   }
@@ -752,31 +793,31 @@ static int Equal( AstObject *this_object, AstObject *that_object, int *status ) 
                result = 0;
             }
 
-            if( this->coeff_f && that->coeff_f ) {
-               for( i = 0; i < nout && result; i++ ) {
-                  for( j = 0; j < this->ncoeff_f[ i ] && result; j++ ) {
-                     if( !astEQUAL( this->coeff_f[ i ][ j ],
-                                    that->coeff_f[ i ][ j ] ) ) {
+            if( this->coeff_i && that->coeff_i ) {
+               for( i = 0; i < nin && result; i++ ) {
+                  for( j = 0; j < this->ncoeff_i[ i ] && result; j++ ) {
+                     if( !astEQUAL( this->coeff_i[ i ][ j ],
+                                    that->coeff_i[ i ][ j ] ) ) {
                         result = 0;
                      }
                   }
                }
-            } else if( this->coeff_f || that->coeff_f ) {
+            } else if( this->coeff_i || that->coeff_i ) {
                result = 0;
             }
 
-            if( this->power_f && that->power_f ) {
-               for( i = 0; i < nout && result; i++ ) {
-                  for( j = 0; j < this->ncoeff_f[ i ] && result; j++ ) {
-                     for( k = 0; k < nin && result; k++ ) {
-                        if( this->power_f[ i ][ j ][ k ] !=
-                            that->power_f[ i ][ j ][ k ] ) {
+            if( this->power_i && that->power_i ) {
+               for( i = 0; i < nin && result; i++ ) {
+                  for( j = 0; j < this->ncoeff_i[ i ] && result; j++ ) {
+                     for( k = 0; k < nout && result; k++ ) {
+                        if( this->power_i[ i ][ j ][ k ] !=
+                            that->power_i[ i ][ j ][ k ] ) {
                            result = 0;
                         }
                      }
                   }
                }
-            } else if( this->power_f || that->power_f ) {
+            } else if( this->power_i || that->power_i ) {
                result = 0;
             }
 
@@ -2039,7 +2080,7 @@ static AstPolyMap **GetJacobian( AstPolyMap *this, int *status ){
                for( icof = 0; icof <  ncof_row; icof++ ) {
 
 /* Get the power of input "icol" associated with the current coefficient. */
-                  power = (int)( this->power_f[ irow ][ icof ][ icol ] + 0.5 );
+                  power = (int)round( this->power_f[ irow ][ icof ][ icol ] );
 
 /* We can skip the coefficient if the power is zero. */
                   if( power > 0 ) {
@@ -3542,6 +3583,8 @@ static int MapMerge( AstMapping *this, int where, int series, int *nmap,
    double **coeff;       /* Pointer to arrays holding all coeff values */
    double *matrix;       /* Pointer to array of linear terms */
    double *offsets;      /* Pointer to array of offset terms */
+   double *norm_offset;  /* ChebyMap input offsets, or NULL */
+   double *norm_scale;   /* ChebyMap input scales, or NULL */
    double *outcof;       /* Pointer to array of coeff values for current output */
    int ***power;         /* Pointer to arrays holding all input powers */
    int **outpow;         /* Pointer to array of input powers for current output */
@@ -3730,8 +3773,25 @@ static int MapMerge( AstMapping *this, int where, int series, int *nmap,
    are not a genuine inverse pair, but I can't immediately see why anyone
    would define an inverse transformation that was not a genuine inverse of
    the forward transformation). Also, we require the number of inputs equals
-   the number of outputs. */
+   the number of outputs.
+
+   A ChebyMap stores its coefficients as a Chebyshev series in the normalised
+   input z = scale*x + offset, which maps the ChebyMap's bounding box onto
+   [-1,1]. The only Chebyshev polynomials of degree one or less are T0(z) = 1
+   and T1(z) = z, so a term that passes the linearity test below is linear in
+   z, and hence in x, but the scale and offset have to be folded into the
+   matrix and offset arrays. For a PolyMap the coefficients apply to x itself
+   and the normalisation is the identity. */
    if( pmap0->ncoeff_f && nout == nin ){
+
+/* Get the normalisation applied to each input before the coefficients are
+   used. */
+      norm_scale = NULL;
+      norm_offset = NULL;
+      if( astIsAChebyMap( pmap0 ) ) {
+         norm_scale = ((AstChebyMap *) pmap0)->scale_f;
+         norm_offset = ((AstChebyMap *) pmap0)->offset_f;
+      }
 
 /* Allocate an array to store a vector representing the offset terms in
    the PolyMap. Use astCalloc so that the array is initialised to hold
@@ -3795,17 +3855,23 @@ static int MapMerge( AstMapping *this, int where, int series, int *nmap,
                   }
                }
 
-/* If this is a constant term, store it in the offset array. Having combined
-   terms with equal powers earlier, we can be sure there is only one (at most)
-   constant terms. */
+/* If this is a constant term, add it into the offset array. */
                if( const_term ) {
-                  offsets[ iout ] = *outcof;
+                  offsets[ iout ] += *outcof;
 
-/* If this is a linear term, store it at the appropriate place in the matrix
-   array. Having combined terms with equal powers earlier, we can be sure
-   there is only one (at most) coefficient for each term in the matrix. */
+/* If this is a linear term, add it into the appropriate place in the matrix
+   array. A ChebyMap term c*z, with z = scale*x + offset, contributes c*scale
+   to the matrix and c*offset to the constant term, so the arrays are
+   accumulated rather than assigned: an output can receive a constant
+   contribution from every linear term as well as from its own constant
+   term. */
                } else if( linear_term ) {
-                  matrix[ jin + iout*nin ] = *outcof;
+                  if( norm_scale && norm_offset ) {
+                     matrix[ jin + iout*nin ] += (*outcof)*norm_scale[ jin ];
+                     offsets[ iout ] += (*outcof)*norm_offset[ jin ];
+                  } else {
+                     matrix[ jin + iout*nin ] += *outcof;
+                  }
 
 /* If this term is neither an offset term nor a linear term, the PolyMap
    is non-linear and so we cannot simplify it. */
@@ -4028,8 +4094,11 @@ static AstPolyMap *MergeShift( AstPolyMap *this, AstShiftMap *shift,
    shifts = astGetShifts( shift );
 
 /* Get a deep copy of the supplied PolyMap, which will be used as the
-   returned PolyMap. */
+   returned PolyMap. Discard any record that the supplied PolyMap has been
+   simplified, since the coefficients of the copy are replaced below and
+   the copy is then simplified. */
    result = astCopy( this );
+   astClearIsSimple( result );
 
 /* Delete the linear truncation in the result because it is no longer reliable. */
    if( result->lintrunc ) result->lintrunc = astAnnul( result->lintrunc );
@@ -4936,8 +5005,11 @@ f     function is invoked with STATUS set to an error value, or if it
 /* Check the inherited status. */
    if ( !astOK ) return result;
 
-/* Take a copy of the supplied PolyMap. */
+/* Take a copy of the supplied PolyMap. The copy inherits any record that
+   the supplied PolyMap has been simplified, which no longer applies once
+   one of its transformations has been replaced below. */
    result = astCopy( this );
+   astClearIsSimple( result );
 
 /* Replace the required transformation. */
    ok = ReplaceTransformation( result, forward, acc, maxacc, maxorder, lbnd,
@@ -6255,7 +6327,8 @@ static AstPointSet *Transform( AstMapping *this, AstPointSet *in,
 *     candidate input positions until an output position is found which
 *     is close to the required output position. By default, an iterative
 *     inverse is provided if, and only if, no inverse polynomial was supplied
-*     when the PolyMap was constructed.
+*     when the PolyMap was constructed and the PolyMap has equal numbers of
+*     inputs and outputs (an iterative inverse cannot be used otherwise).
 *
 *     Note, the term "inverse transformation" here refers to the inverse
 *     transformation of the original PolyMap, ignoring any subsequent
@@ -6307,11 +6380,15 @@ static AstPointSet *Transform( AstMapping *this, AstPointSet *in,
 
 *att--
 */
-astMAKE_CLEAR(PolyMap,IterInverse,iterinverse,-INT_MAX)
+astMAKE_CLEAR1(PolyMap,IterInverse,iterinverse,(astClearIsSimple(this),-INT_MAX))
 astMAKE_GET(PolyMap,IterInverse,int,0,( ( this->iterinverse == -INT_MAX ) ?
-                                          (this->ncoeff_i == 0) : this->iterinverse ))
-astMAKE_SET(PolyMap,IterInverse,int,iterinverse,
-  (((astGetNin(this)==astGetNout(this))||!value)?((value?1:0)):(astError(AST__ATTIN,"astSetIterInverse(%s):"
+                                          ( this->ncoeff_i == 0 &&
+                                            astGetNin( this ) == astGetNout( this ) ) :
+                                          this->iterinverse ))
+astMAKE_SET1(PolyMap,IterInverse,int,iterinverse,
+  (((astGetNin(this)==astGetNout(this))||!value)?
+  (( (value?1:0) != this->iterinverse ) ? astClearIsSimple(this) : (void)0,(value?1:0)):
+  (astError(AST__ATTIN,"astSetIterInverse(%s):"
   "Cannot use an iterative inverse because the %s has unequal numbers of "
   "inputs and outputs.", status, astGetClass(this),astGetClass(this)),this->iterinverse)))
 astMAKE_TEST(PolyMap,IterInverse,( this->iterinverse != -INT_MAX ))
@@ -6346,9 +6423,11 @@ astMAKE_TEST(PolyMap,IterInverse,( this->iterinverse != -INT_MAX ))
 
 *att--
 */
-astMAKE_CLEAR(PolyMap,NiterInverse,niterinverse,-INT_MAX)
+astMAKE_CLEAR1(PolyMap,NiterInverse,niterinverse,(astClearIsSimple(this),-INT_MAX))
 astMAKE_GET(PolyMap,NiterInverse,int,0,( this->niterinverse == -INT_MAX ? 4 : this->niterinverse))
-astMAKE_SET(PolyMap,NiterInverse,int,niterinverse,value)
+astMAKE_SET1(PolyMap,NiterInverse,int,niterinverse,(
+            ( value != this->niterinverse ) ? astClearIsSimple(this) : (void)0,
+            value))
 astMAKE_TEST(PolyMap,NiterInverse,( this->niterinverse != -INT_MAX ))
 
 /* TolInverse. */
@@ -6383,9 +6462,11 @@ astMAKE_TEST(PolyMap,NiterInverse,( this->niterinverse != -INT_MAX ))
 *        All PolyMaps have this attribute.
 *att--
 */
-astMAKE_CLEAR(PolyMap,TolInverse,tolinverse,AST__BAD)
+astMAKE_CLEAR1(PolyMap,TolInverse,tolinverse,(astClearIsSimple(this),AST__BAD))
 astMAKE_GET(PolyMap,TolInverse,double,0.0,( this->tolinverse == AST__BAD ? 1.0E-6 : this->tolinverse))
-astMAKE_SET(PolyMap,TolInverse,double,tolinverse,value)
+astMAKE_SET1(PolyMap,TolInverse,double,tolinverse,(
+            ( value != this->tolinverse ) ? astClearIsSimple(this) : (void)0,
+            value))
 astMAKE_TEST(PolyMap,TolInverse,( this->tolinverse != AST__BAD ))
 
 /* Copy constructor. */

@@ -4,13 +4,16 @@ Last updated 2026-11-11
 
 | name         | version    | SAO   | dirty | upstream                                                             | latest                          |
 | ------------ | ---------- | ----- | ----- | -------------------------------------------------------------------- | ------------------------------- |
-| ast          | 9.2.14     |       |       | https://github.com/Starlink/ast                                      | 9.5.0                           |
+| ast          | 9.5.0      |       | y     | https://github.com/Starlink/ast                                      | 9.5.0 (6)                       |
 | awthemes     | 10.4.0     |       | y     | https://sourceforge.net/projects/tcl-awthemes/                       | 10.4.0 (7)                      |
+| bzip2        | 1.0.8      |       |       | https://sourceware.org/pub/bzip2/                                    | 1.0.8                           |
 | certifi      | 2026.10.23 |       |       | https://github.com/certifi/python-certifi                            | 2026.10.23                      |
 | ds9          | 8.8        | y     |       |                                                                      |                                 |
 | fickle       | 2.2        | y     |       | https://github.com/SAOImageDS9/fickle-maintenance                    | previous upstream abandoned     |
 | fitsy        |            | y     |       |                                                                      |                                 |
 | funtools     | 1.5.0      | y     | y     | https://github.com/SAOImageDS9/funtools-maintenance                  | abandoned                       |
+| libyaml      | 0.2.5      |       |       | https://github.com/yaml/libyaml                                      | 0.2.5                           |
+| lz4          | 1.10.0     |       |       | https://github.com/lz4/lz4                                           | 1.10.0                          |
 | openssl      | 3.5.9      |       |       | https://github.com/openssl/openssl                                   | 4.1.0 (3.5.9 on 3.5 LTS)        |
 | pdf4tcl      | 0.9.4      |       |       | https://sourceforge.net/projects/pdf4tcl/                            | 0.9.4                           |
 | scidthemes   | 1.0        |       |       | https://sourceforge.net/projects/scid/files/Scid/Additional%20Files/ | 1.0                             |
@@ -36,8 +39,10 @@ Last updated 2026-11-11
 | tktable      | 2.13       | y     | y     | https://github.com/SAOImageDS9/tktable-maintenance                   | previous upstream abandoned     |
 | tls          | 2.0.1      |       | y     | https://core.tcl-lang.org/tcltls/index                               | 2.0.1 (5)                       |
 | ttkthemes    | 3.3.0      |       |       | https://github.com/TkinterEP/ttkthemes/                              | 3.3.0                           |
+| utils        |            | y     |       |                                                                      |                                 |
 | vector       |            | y     |       |                                                                      |                                 |
 | xpa          | 2.2.2      | y     |       | https://github.com/SAOImageDS9/xpa-maintenance                       | 2.2.2                           |
+| zlib         | 1.3.2      |       |       | https://github.com/madler/zlib                                       | 1.3.2                           |
 | -- -- --     |            |       |       |                                                                      |                                 |
 | compilers    |            | y     |       |                                                                      |                                 |
 | macos        |            | y     |       |                                                                      |                                 |

@@ -90,6 +90,15 @@
 *     9-MAY-2011 (DSB):
 *        Change "A" to be Ampere (as defined by FITS-WCS paper 1) rather
 *        than "Angstrom".
+*     21-SEP-2026 (TIMJ):
+*        - Added astNormUnit, which normalises a units string but
+*          returns it unchanged when it has no normalised form.
+*        - astUnitNormaliser no longer replaces an inherited error with
+*          AST__BADUN, and astNormUnit only recovers from AST__BADUN, so
+*          that an allocation failure is still reported to the caller.
+*        - Check the allocations made while parsing and formatting a units
+*          expression, so that a failure reports an error rather than
+*          dereferencing a null pointer.
 */
 
 /* Module Macros. */
@@ -269,6 +278,7 @@ static int Ustrncmp( const char *, const char *, size_t, int * );
 static int SplitUnit( const char *, int, const char *, int, Multiplier **, int *, int * );
 static UnitNode *ModifyPrefix( UnitNode *, int * );
 static int ConStart( const char *, double *, int *, int * );
+static void AddToken( char ***, int *, const char *, int, int * );
 
 /*  Debug functions...
 static const char *DisplayTree( UnitNode *, int );
@@ -279,6 +289,72 @@ static const char *TreeExp( UnitNode * );
 
 /* Function implementations. */
 /* ========================= */
+static void AddToken( char ***tok, int *ntok, const char *start, int len,
+                      int *status ) {
+/*
+*  Name:
+*     AddToken
+
+*  Purpose:
+*     Append a token to a growable array of tokens.
+
+*  Type:
+*     Private function.
+
+*  Synopsis:
+*     #include "unit.h"
+*     void AddToken( char ***tok, int *ntok, const char *start, int len,
+*                    int *status )
+
+*  Class Membership:
+*     Unit member function.
+
+*  Description:
+*     This function copies the first "len" characters of "start" into a
+*     new null terminated string and appends a pointer to it to the array
+*     of token pointers. The array is extended if necessary.
+*
+*     The array is left unchanged if either allocation fails, so that every
+*     pointer in it is usable whatever the error status.
+
+*  Parameters:
+*     tok
+*        Address of the array of token pointers. The array pointer is
+*        updated if the array has to be moved in order to extend it.
+*     ntok
+*        Address of the number of tokens in the array. It is incremented
+*        if the token is appended.
+*     start
+*        Pointer to the first character of the token.
+*     len
+*        The number of characters in the token.
+*     status
+*        Pointer to the inherited status variable.
+*/
+
+/* Local Variables: */
+   char *t;
+   char **newtok;
+
+/* Check inherited status */
+   if( !astOK ) return;
+
+/* Take a null terminated copy of the token, and make room for one more
+   pointer in the array. Test the status rather than the returned pointers
+   because astGrow returns the original array when it fails to extend it. */
+   t = astStore( NULL, start, len + 1 );
+   if( t ) t[ len ] = 0;
+
+   newtok = astGrow( *tok, *ntok + 1, sizeof( char * ) );
+   if( newtok ) *tok = newtok;
+
+   if( astOK ) {
+      (*tok)[ (*ntok)++ ] = t;
+   } else {
+      t = astFree( t );
+   }
+}
+
 static const char *CleanExp( const char *exp, int *status ) {
 /*
 *  Name:
@@ -326,6 +402,7 @@ static const char *CleanExp( const char *exp, int *status ) {
 
 /* Local Variables: */
    char **tok;
+   char *nt;
    char *p;
    char *r;
    char *result;
@@ -357,35 +434,23 @@ static const char *CleanExp( const char *exp, int *status ) {
    word = ISWORD( *( p + 1 ) );
    ntok = 0;
    tok = NULL;
-   while( *(++p) ){
+   while( astOK && *(++p) ){
       if( word ) {
          if( !ISWORD( *p ) ) {
-            l = p - start;
-            t = astStore( NULL, start, l + 1 );
-            if( t ) t[ l ] = 0;
-            tok = astGrow( tok, ntok + 1, sizeof( char * ) );
-            if( tok ) tok[ ntok++ ] = t;
+            AddToken( &tok, &ntok, start, p - start, status );
             start = p;
             word = 0;
          }
       } else {
          if( ISWORD( *p ) ) {
-            l = p - start;
-            t = astStore( NULL, start, l + 1 );
-            if( t ) t[ l ] = 0;
-            tok = astGrow( tok, ntok + 1, sizeof( char * ) );
-            if( tok ) tok[ ntok++ ] = t;
+            AddToken( &tok, &ntok, start, p - start, status );
             start = p;
             word = 1;
          }
       }
    }
 
-   l = p - start;
-   t = astStore( NULL, start, l + 1 );
-   if( t ) t[ l ] = 0;
-   tok = astGrow( tok, ntok + 1, sizeof( char * ) );
-   if( tok ) tok[ ntok++ ] = t;
+   AddToken( &tok, &ntok, start, p - start, status );
 
 /* Check the tokens for known non-standard unit syntax, and replace with the
    equivalent standard syntax. Starlink SPLAT has a class called UnitUtilities
@@ -393,7 +458,7 @@ static const char *CleanExp( const char *exp, int *status ) {
    more conservative than SPLAT though because of its wider remit. */
    len = 0;
    tt = NULL;
-   for( i = 0; i < ntok; i++ ) {
+   for( i = 0; astOK && i < ntok; i++ ) {
       t = tok[ i ];
       l = strlen( t );
       tt = astStore( tt, t, l + 1 );
@@ -403,27 +468,28 @@ static const char *CleanExp( const char *exp, int *status ) {
    <word>^<sign><digit>. */
       if( l > 1 && *t != '-' && *t != '+' &&
           strcspn( t, "0123456789" ) == l - 1 ) {
-         tok[ i ] = astMalloc( l + 2 );
-         if( tok[ i ] ) {
-            strcpy( tok[ i ], t );
+         nt = astMalloc( l + 2 );
+         if( nt ) {
+            strcpy( nt, t );
             w = t + l - 2;
             if( *w != '+' && *w != '-' ) {
-               tok[ i ][ l - 1 ] = '^';
-               strcpy( tok[ i ] + l, t + l - 1 );
+               nt[ l - 1 ] = '^';
+               strcpy( nt + l, t + l - 1 );
             } else {
-               tok[ i ][ l - 2 ] = '^';
-               strcpy( tok[ i ] + l - 1, t + l - 2 );
+               nt[ l - 2 ] = '^';
+               strcpy( nt + l - 1, t + l - 2 );
             }
+            tok[ i ] = nt;
             t = astFree( t );
+            l++;
          }
-         l++;
 
 /* If the word ends with "micron" change to "(<start>m*1.0E-6)". Should be OK
    for things like "Kmicron". */
       } else if( ( s = strstr( t, "micron" ) ) ) {
-         tok[ i ] = astMalloc( s - t + 11 );
-         if( tok[ i ] ) {
-            w = tok[ i ];
+         nt = astMalloc( s - t + 11 );
+         if( nt ) {
+            w = nt;
             *(w++) = '(';
             if( s > t ) {
                strncpy( w, t, s - t );
@@ -431,14 +497,18 @@ static const char *CleanExp( const char *exp, int *status ) {
             }
             strcpy( w, "m*1.0E-6)" );
             l = s - t + 11;
+            tok[ i ] = nt;
             t = astFree( t );
          }
 
 /* Convert "STER" to "sr". */
       } else if( !Ustrcmp( t, "STER", status ) ) {
-         tok[ i ] = astStore( NULL, "sr", 3 );
-         l = 2;
-         t = astFree( t );
+         nt = astStore( NULL, "sr", 3 );
+         if( nt ) {
+            tok[ i ] = nt;
+            l = 2;
+            t = astFree( t );
+         }
 
 /* If the word ends with "JY" and is preceded by a single character, change
    to "<start>Jy". Should be OK for things like "MJY". */
@@ -450,12 +520,13 @@ static const char *CleanExp( const char *exp, int *status ) {
    handle this as a special case here since scanf seems to read "nan" as
    a string representation of NaN. */
       } else if( !Ustrncmp( t, "nano", 4, status ) ) {
-         tok[ i ] = astStore( NULL, t + 3, l - 2 );
-         if( tok[ i ] ) {
-            *(tok[ i ]) = 'n';
+         nt = astStore( NULL, t + 3, l - 2 );
+         if( nt ) {
+            *nt = 'n';
+            tok[ i ] = nt;
             t = astFree( t );
+            l -= 3;
          }
-         l -= 3;
       }
 
 /* Update the total length of the string. */
@@ -463,8 +534,7 @@ static const char *CleanExp( const char *exp, int *status ) {
    }
    tt = astFree( tt );
 
-/* Concatentate the tokens into a single string, freeing the individual
-   strings. */
+/* Concatentate the tokens into a single string. */
    result = astMalloc( len + 1 );
    if( result ) {
       p = result;
@@ -472,10 +542,16 @@ static const char *CleanExp( const char *exp, int *status ) {
          len = strlen( tok[ i ] );
          memcpy( p, tok[ i ], len );
          p += len;
-         tok[ i ] = astFree( tok[ i ] );
       }
       *p = 0;
-      tok = astFree( tok );
+   }
+
+/* Free the tokens. This is done outside the block above so that they are
+   released even if the concatenated string could not be allocated. */
+   for( i = 0; i < ntok; i++ ) tok[ i ] = astFree( tok[ i ] );
+   tok = astFree( tok );
+
+   if( result ) {
 
 /* Now do other cleaning.
    ---------------------- */
@@ -2835,6 +2911,13 @@ static const char *MakeExp( UnitNode *tree, int mathmap, int top, int *status ) 
    newtree = CopyTree( tree, status );
    ComplicateTree( &newtree, status );
 
+/* Everything below dereferences the tree, so give up now if it could not
+   be created. */
+   if( !astOK ) {
+      newtree = FreeTree( newtree, status );
+      return result;
+   }
+
 /* If we are producing an axis label... */
    if( !mathmap ) {
 
@@ -2904,8 +2987,11 @@ static const char *MakeExp( UnitNode *tree, int mathmap, int top, int *status ) 
 /* Single argument functions... place the argument in parentheses after
    the function name. */
    } else if( newtree->opcode ==  OP_LOG ) {
+/* A recursive call returns NULL if it failed. The result buffer cannot be
+   allocated either in that case, so the argument string is never read, but
+   its length still has to be taken safely. */
       arg0 = MakeExp( newtree->arg[ 0 ], mathmap, 0, status );
-      larg0 = strlen( arg0 );
+      larg0 = arg0 ? strlen( arg0 ) : 0;
       if( mathmap == 1 ) {
          result = astMalloc( larg0 + 8 );
          if( result ) memcpy( result, "log10(", 7 );
@@ -2923,7 +3009,7 @@ static const char *MakeExp( UnitNode *tree, int mathmap, int top, int *status ) 
 
    } else if( newtree->opcode ==  OP_LN ) {
       arg0 = MakeExp( newtree->arg[ 0 ], mathmap, 0, status );
-      larg0 = strlen( arg0 );
+      larg0 = arg0 ? strlen( arg0 ) : 0;
       if( mathmap == 1 ) {
          result = astMalloc( larg0 + 6 );
          if( result ) memcpy( result, "log(", 5 );
@@ -2941,7 +3027,7 @@ static const char *MakeExp( UnitNode *tree, int mathmap, int top, int *status ) 
 
    } else if( newtree->opcode ==  OP_EXP ) {
       arg0 = MakeExp( newtree->arg[ 0 ], mathmap, 0, status );
-      larg0 = strlen( arg0 );
+      larg0 = arg0 ? strlen( arg0 ) : 0;
       result = astMalloc( larg0 + 6 );
       if( result ){
          memcpy( result, "exp(", 5 );
@@ -2952,7 +3038,7 @@ static const char *MakeExp( UnitNode *tree, int mathmap, int top, int *status ) 
 
    } else if( newtree->opcode ==  OP_SQRT ) {
       arg0 = MakeExp( newtree->arg[ 0 ], mathmap, 0, status );
-      larg0 = strlen( arg0 );
+      larg0 = arg0 ? strlen( arg0 ) : 0;
       result = astMalloc( larg0 + 7 );
       if( result ){
          memcpy( result, "sqrt(", 6 );
@@ -2971,10 +3057,10 @@ static const char *MakeExp( UnitNode *tree, int mathmap, int top, int *status ) 
    } else if( newtree->opcode ==  OP_POW ) {
 
       arg0 = MakeExp( newtree->arg[ 0 ], mathmap, 0, status );
-      larg0 = strlen( arg0 );
+      larg0 = arg0 ? strlen( arg0 ) : 0;
 
       arg1 = MakeExp( newtree->arg[ 1 ], mathmap, 0, status );
-      larg1 = strlen( arg1 );
+      larg1 = arg1 ? strlen( arg1 ) : 0;
 
       if( newtree->arg[ 0 ]->narg == 2 ||
           (newtree->arg[ 0 ]->opcode == OP_LDVAR && !mathmap) ) {
@@ -3013,10 +3099,10 @@ static const char *MakeExp( UnitNode *tree, int mathmap, int top, int *status ) 
 
       } else {
          arg0 = MakeExp( newtree->arg[ 0 ], mathmap, 0, status );
-         larg0 = strlen( arg0 );
+         larg0 = arg0 ? strlen( arg0 ) : 0;
 
          arg1 = MakeExp( newtree->arg[ 1 ], mathmap, 0, status );
-         larg1 = strlen( arg1 );
+         larg1 = arg1 ? strlen( arg1 ) : 0;
 
          if( newtree->arg[ 1 ]->opcode == OP_MULT &&
              strchr( arg1, '*' ) ) {
@@ -3052,10 +3138,10 @@ static const char *MakeExp( UnitNode *tree, int mathmap, int top, int *status ) 
 
       } else {
          arg0 = MakeExp( newtree->arg[ 0 ], mathmap, 0, status );
-         larg0 = strlen( arg0 );
+         larg0 = arg0 ? strlen( arg0 ) : 0;
 
          arg1 = MakeExp( newtree->arg[ 1 ], mathmap, 0, status );
-         larg1 = strlen( arg1 );
+         larg1 = arg1 ? strlen( arg1 ) : 0;
 
 /* If this is a top-level entry and we are producing an axis label, do
    not include any constant multiplicative terms. */
@@ -4225,8 +4311,10 @@ static UnitNode *ModifyPrefix( UnitNode *old, int *status ) {
 /* Check the supplied node is a DIV or MULT node. */
    if( old->opcode == OP_DIV || old->opcode == OP_MULT ) {
 
-/* Get a copy of the supplied tree which we can modify safely. */
+/* Get a copy of the supplied tree which we can modify safely. Everything
+   below dereferences it. */
       newtree = CopyTree( old, status );
+      if( !newtree ) return result;
 
 /* Identify the LDVAR argument (if any). */
       if( newtree->arg[ 0 ]->opcode == OP_LDVAR ) {
@@ -4848,8 +4936,10 @@ static int SimplifyTree( UnitNode **node, int std, int *status ) {
          if( astOK ) {
             node1->arg[ 1 ] = CopyTree( (*node)->arg[ 1 ], status );
             node2 = CopyTree( node1, status );
-            node1->arg[ 0 ] = CopyTree( (*node)->arg[ 0 ]->arg[ 0 ], status );
-            node2->arg[ 0 ] = CopyTree( (*node)->arg[ 0 ]->arg[ 1 ], status );
+            if( node2 ) {
+               node1->arg[ 0 ] = CopyTree( (*node)->arg[ 0 ]->arg[ 0 ], status );
+               node2->arg[ 0 ] = CopyTree( (*node)->arg[ 0 ]->arg[ 1 ], status );
+            }
             newnode->arg[ 0 ] = node1;
             newnode->arg[ 1 ] = node2;
          }
@@ -5825,16 +5915,98 @@ const char *astUnitNormaliser_( const char *in, int *status ){
       result = MakeExp( in_tree, 2, 1, status );
 
 /* If the result is a constant value, return a blank string. */
-      if( 1 == astSscanf( result, "%lg", &dval ) ) {
+      if( result && 1 == astSscanf( result, "%lg", &dval ) ) {
          *((char *) result) = 0;
       }
 
 /* Free the tree. */
       in_tree = FreeTree( in_tree, status );
 
-   } else {
+/* Report a parsing error, unless CreateTree failed for some other reason
+   and has already reported it. */
+   } else if( astOK ) {
       astError( AST__BADUN, "astUnitNormaliser: Error parsing input "
                 "units string '%s'.", status, in );
+   }
+
+/* Return the result */
+   return result;
+}
+
+const char *astNormUnit_( const char *in, int *status ){
+/*
+*+
+*  Name:
+*     astNormUnit
+
+*  Purpose:
+*     Normalise a unit string, or return it unchanged if it has no
+*     normalised form.
+
+*  Type:
+*     Protected function.
+
+*  Synopsis:
+*     #include "unit.h"
+*     const char *astNormUnit( const char *in )
+
+*  Class Membership:
+*     Unit member function.
+
+*  Description:
+*     This function returns a standard FITS-WCS form of the supplied unit
+*     string, as astUnitNormaliser does, except that a string which cannot
+*     be parsed as a units expression is returned unchanged rather than
+*     reported as an error.
+*
+*     Not every value that describes an axis is a units expression. An
+*     Axis has a blank Unit until one is set, and some Axis classes
+*     describe their axis values with a sexagesimal format such as
+*     "ddd:mm:ss". Neither has a normalised form, and the documented value
+*     of the NormUnit attribute in such a case is the Unit value itself.
+*
+*     Only a parsing failure is recovered from in this way. A failure for
+*     any other reason, such as an allocation failure, is reported as
+*     usual.
+
+*  Parameters:
+*     in
+*        A string representation of the units, for instance "km/h".
+
+*  Returned Value:
+*     A pointer to a dynamically allocated string. It should be freed
+*     using astFree when no longer needed.
+
+*  Notes:
+*     -  NULL is returned if this function is invoked with the global
+*     error status set or if it should fail for any reason.
+*-
+*/
+
+/* Local Variables: */
+   const char *result;
+   int oldrep;
+
+/* Check the global error status. */
+   if ( !astOK ) return NULL;
+
+/* Attempt to normalise the supplied string with error reporting switched
+   off, so that a string which is not a units expression can be handled
+   here rather than being reported as a failure. */
+   oldrep = astReporting( 0 );
+   result = astUnitNormaliser( in );
+
+/* A string that is not a units expression is reported as AST__BADUN, and
+   is the case this function exists to recover from. Any other status (an
+   allocation failure, say) means the normalisation failed for a reason the
+   caller still needs to see, so it is left set and its deferred messages
+   are delivered when reporting is switched back on. */
+   if( astStatus == AST__BADUN ) astClearStatus;
+   astReporting( oldrep );
+
+/* No normalised form, so return the supplied string unchanged. */
+   if( astOK && !result && in ) {
+      result = astStore( NULL, in, strlen( in ) + 1 );
    }
 
 /* Return the result */
@@ -6212,7 +6384,3 @@ static const char *TreeExp( UnitNode *node ) {
 }
 
 */
-
-
-
-

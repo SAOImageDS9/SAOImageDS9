@@ -65,6 +65,7 @@ AstMapping *astUnitMapper_( const char *, const char *, const char *,
 const char *astUnitLabel_( const char *, int * );
 double astUnitAnalyser_( const char *, double[9], int * );
 const char *astUnitNormaliser_( const char *, int * );
+const char *astNormUnit_( const char *, int * );
 #endif
 
 /* Function interfaces. */
@@ -75,6 +76,7 @@ const char *astUnitNormaliser_( const char *, int * );
 #define astUnitMapper(in,out,inlab,outlab) astINVOKE(O,astUnitMapper_(in,out,inlab,outlab,STATUS_PTR))
 #define astUnitAnalyser(in,powers) astUnitAnalyser_(in,powers,STATUS_PTR)
 #define astUnitNormaliser(in) astUnitNormaliser_(in,STATUS_PTR)
+#define astNormUnit(in) astNormUnit_(in,STATUS_PTR)
 #define astUnitLabel(sym) astINVOKE(O,astUnitLabel_(sym,STATUS_PTR))
 #endif
 #endif

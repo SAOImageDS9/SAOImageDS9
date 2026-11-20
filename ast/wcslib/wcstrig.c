@@ -30,9 +30,10 @@
 *  This version of wcstrig.c is based on the version in wcslib-2.9, but has
 *  been modified in the following ways by the Starlink project (e-mail:
 *  ussc@star.rl.ac.uk):
-*     -  Support for non-ANSI C "const" class removed
-*     -  Changed names of projection functions and degrees trig functions
-*        to avoid clashes with wcslib.
+*     -  Changed names of degrees trig functions to avoid clashes with wcslib.
+*     -  Converted K&R function definitions to modern C prototypes.
+*     -  Adopted improved cosd/sind algorithms from wcslib 3.1+ that use
+*        quadrant-based lookup for exact values at multiples of 90 degrees.
 *=============================================================================
 *
 *   The functions defined herein are trigonometric or inverse trigonometric
@@ -42,25 +43,27 @@
 *---------------------------------------------------------------------------*/
 
 #include <math.h>
+#include <stdlib.h>
 #include "wcsmath.h"
 #include "wcstrig.h"
 
-double astCosd(angle)
-
-const double angle;
+double astCosd(double angle)
 
 {
-   double resid;
+   int i;
 
-   resid = fabs(fmod(angle,360.0));
-   if (resid == 0.0) {
-      return 1.0;
-   } else if (resid == 90.0) {
-      return 0.0;
-   } else if (resid == 180.0) {
-      return -1.0;
-   } else if (resid == 270.0) {
-      return 0.0;
+   if (fmod(angle, 90.0) == 0.0) {
+      i = abs((int)floor(angle/90.0 + 0.5)) % 4;
+      switch (i) {
+      case 0:
+         return 1.0;
+      case 1:
+         return 0.0;
+      case 2:
+         return -1.0;
+      case 3:
+         return 0.0;
+      }
    }
 
    return cos(angle*D2R);
@@ -68,22 +71,23 @@ const double angle;
 
 /*--------------------------------------------------------------------------*/
 
-double astSind(angle)
-
-const double angle;
+double astSind(double angle)
 
 {
-   double resid;
+   int i;
 
-   resid = fmod(angle-90.0,360.0);
-   if (resid == 0.0) {
-      return 1.0;
-   } else if (resid == 90.0) {
-      return 0.0;
-   } else if (resid == 180.0) {
-      return -1.0;
-   } else if (resid == 270.0) {
-      return 0.0;
+   if (fmod(angle, 90.0) == 0.0) {
+      i = abs((int)floor(angle/90.0 - 0.5)) % 4;
+      switch (i) {
+      case 0:
+         return 1.0;
+      case 1:
+         return 0.0;
+      case 2:
+         return -1.0;
+      case 3:
+         return 0.0;
+      }
    }
 
    return sin(angle*D2R);
@@ -91,9 +95,7 @@ const double angle;
 
 /*--------------------------------------------------------------------------*/
 
-double astTand(angle)
-
-const double angle;
+double astTand(double angle)
 
 {
    double resid;
@@ -112,9 +114,7 @@ const double angle;
 
 /*--------------------------------------------------------------------------*/
 
-double astACosd(v)
-
-const double v;
+double astACosd(double v)
 
 {
    if (v >= 1.0) {
@@ -130,9 +130,7 @@ const double v;
 
 /*--------------------------------------------------------------------------*/
 
-double astASind(v)
-
-const double v;
+double astASind(double v)
 
 {
    if (v <= -1.0) {
@@ -148,9 +146,7 @@ const double v;
 
 /*--------------------------------------------------------------------------*/
 
-double astATand(v)
-
-const double v;
+double astATand(double v)
 
 {
    if (v == -1.0) {
@@ -166,9 +162,7 @@ const double v;
 
 /*--------------------------------------------------------------------------*/
 
-double astATan2d(y, x)
-
-const double x, y;
+double astATan2d(double y, double x)
 
 {
    if (y == 0.0) {

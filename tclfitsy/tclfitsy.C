@@ -15,6 +15,7 @@ using namespace std;
 #include "tclfitsy.h"
 #include "head.h"
 #include "mmapincr.h"
+#include "asdf.h"
 #include "allocgz.h"
 #include "util.h"
 #include "vector.h"
@@ -51,7 +52,9 @@ int TclfitsyCmd(ClientData data, Tcl_Interp *interp,
 		int argc, const char* argv[])
 {
   if (argc>=2) {
-    if (!strncmp(argv[1], "dir", 3))
+    if (!strncmp(argv[1], "asdf", 4))
+      return fitsy->asdf(argc, argv);
+    else if (!strncmp(argv[1], "dir", 3))
       return fitsy->dir(argc, argv);
     else if (!strncmp(argv[1], "open", 4))
       return fitsy->open(argc, argv);
@@ -84,7 +87,7 @@ int TclfitsyCmd(ClientData data, Tcl_Interp *interp,
     }
   }
   else {
-    Tcl_AppendResult(interp, "usage: fitsy ?dir? ?open? ?close? ?header? ?istable? ?rows? ?colnum? ?keyword? ?minmax? ?table? ?histogram? ?plot?", NULL);
+    Tcl_AppendResult(interp, "usage: fitsy ?asdf? ?dir? ?open? ?close? ?header? ?istable? ?rows? ?colnum? ?keyword? ?minmax? ?table? ?histogram? ?plot?", NULL);
     return TCL_ERROR;
   }
 }
@@ -99,6 +102,136 @@ TclFITSY::~TclFITSY()
 {
   if (fits_)
     delete fits_;
+}
+
+// Native ASDF container queries, over the same C++ reader the frame's
+// `load asdf' command uses (fitsy/asdf.C), so the container format has
+// one implementation rather than one here and another in Tcl.
+//
+// The pixel path does not come through here. What does is the three
+// things ds9/library/asdf.tcl still needs from a container: the YAML tree
+// (the header viewer, and the GWCS subtree handed to AST), what arrays a
+// file holds (the array browser, and resolving a bare name to a full
+// path), and the decoded bytes of one block (inlining a GWCS coefficient
+// array, which AST's YamlChan will not take by reference).
+//
+// Stateless: each call opens the file and reads its tree afresh, unlike
+// the `open'/`close' pair above. A tree is tens of kilobytes however
+// large the file is, and the alternative - a cached handle the Tcl side
+// has to remember to close - buys nothing measurable here.
+int TclFITSY::asdf(int argc, const char* argv[])
+{
+  if (argc<4) {
+    Tcl_AppendResult(interp_,
+		     "usage: fitsy asdf ?tree|arrays|block? ?filename? ...",
+		     NULL);
+    return TCL_ERROR;
+  }
+
+  const char* which = argv[2];
+  const char* fn = argv[3];
+
+  FitsAsdfFile aa(fn);
+  if (!aa.isValid()) {
+    Tcl_AppendResult(interp_, "fitsy asdf: ",
+		     aa.error() ? aa.error() : "unable to read", NULL);
+    return TCL_ERROR;
+  }
+
+  if (!strcmp(which,"tree")) {
+    Tcl_SetObjResult(interp_,
+		     Tcl_NewStringObj(aa.tree(), (Tcl_Size)aa.treeSize()));
+    return TCL_OK;
+  }
+
+  if (!strcmp(which,"arrays")) {
+    // One element per block backed ndarray:
+    //   {path source datatype byteorder shape unsupported mask bitpix}
+    // `bitpix' is what the loader would use, after any lossless widening,
+    // or empty for a datatype it cannot represent - so a caller can tell
+    // a loadable array from an unloadable one without duplicating the
+    // datatype table.
+    Tcl_Obj* list = Tcl_NewListObj(0,NULL);
+
+    for (int ii=0; ii<aa.nnode(); ii++) {
+      const FitsAsdfNode* nn = aa.node(ii);
+      Tcl_Obj* row = Tcl_NewListObj(0,NULL);
+
+      Tcl_ListObjAppendElement(interp_, row,
+			       Tcl_NewStringObj(nn->path_.c_str(),-1));
+      Tcl_ListObjAppendElement(interp_, row, Tcl_NewIntObj(nn->source_));
+      Tcl_ListObjAppendElement(interp_, row,
+			       Tcl_NewStringObj(nn->datatype_.c_str(),-1));
+
+      const char* bo = nn->big_<0 ? "" : (nn->big_ ? "big" : "little");
+      Tcl_ListObjAppendElement(interp_, row, Tcl_NewStringObj(bo,-1));
+
+      Tcl_Obj* shape = Tcl_NewListObj(0,NULL);
+      for (int dd=0; dd<nn->ndim_ && dd<ASDF_MAXDIM; dd++)
+	Tcl_ListObjAppendElement(interp_, shape,
+				 Tcl_NewWideIntObj(nn->dim_[dd]));
+      Tcl_ListObjAppendElement(interp_, row, shape);
+
+      Tcl_Obj* un = Tcl_NewListObj(0,NULL);
+      if (nn->unsupported_ & ASDF_BYTEORDER)
+	Tcl_ListObjAppendElement(interp_, un,
+				 Tcl_NewStringObj("byteorder",-1));
+      if (nn->unsupported_ & ASDF_STRIDES)
+	Tcl_ListObjAppendElement(interp_, un, Tcl_NewStringObj("strides",-1));
+      if (nn->unsupported_ & ASDF_OFFSET)
+	Tcl_ListObjAppendElement(interp_, un, Tcl_NewStringObj("offset",-1));
+      if (nn->unsupported_ & ASDF_MASK)
+	Tcl_ListObjAppendElement(interp_, un, Tcl_NewStringObj("mask",-1));
+      Tcl_ListObjAppendElement(interp_, row, un);
+
+      if (nn->hasMaskScalar_)
+	Tcl_ListObjAppendElement(interp_, row,
+				 Tcl_NewDoubleObj(nn->maskScalar_));
+      else
+	Tcl_ListObjAppendElement(interp_, row, Tcl_NewStringObj("",-1));
+
+      int bp = asdfBitpix(nn->datatype_.c_str());
+      if (!bp) {
+	const char* ww = asdfWiden(nn->datatype_.c_str());
+	if (ww)
+	  bp = asdfBitpix(ww);
+      }
+      if (bp)
+	Tcl_ListObjAppendElement(interp_, row, Tcl_NewIntObj(bp));
+      else
+	Tcl_ListObjAppendElement(interp_, row, Tcl_NewStringObj("",-1));
+
+      Tcl_ListObjAppendElement(interp_, list, row);
+    }
+
+    Tcl_SetObjResult(interp_, list);
+    return TCL_OK;
+  }
+
+  if (!strcmp(which,"block")) {
+    if (argc!=5) {
+      Tcl_AppendResult(interp_,
+		       "usage: fitsy asdf block ?filename? ?index?", NULL);
+      return TCL_ERROR;
+    }
+
+    size_t len = 0;
+    char* buf = aa.block(atoi(argv[4]), &len);
+    if (!buf) {
+      Tcl_AppendResult(interp_, "fitsy asdf block: ",
+		       aa.error() ? aa.error() : "unable to read", NULL);
+      return TCL_ERROR;
+    }
+
+    Tcl_SetObjResult(interp_,
+		     Tcl_NewByteArrayObj((unsigned char*)buf,
+					 (Tcl_Size)len));
+    delete [] buf;
+    return TCL_OK;
+  }
+
+  Tcl_AppendResult(interp_, "fitsy asdf: unknown command: ", which, NULL);
+  return TCL_ERROR;
 }
 
 int TclFITSY::dir(int argc, const char* argv[])

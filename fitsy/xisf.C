@@ -6,8 +6,8 @@
 // fitsy's own. This is the order fitsy/asdf.C pins for Windows, where a
 // header that pulls in <windows.h> after a using-directive for std makes
 // every bare `byte' in the Windows headers ambiguous against std::byte.
-// libxml2 may include <windows.h> on mingw, so it stays above the
-// using-directive too. Do not tidy.
+// libxml2, the codecs and OpenSSL may all include <windows.h> on mingw, so
+// they stay above the using-directive too. Do not tidy.
 
 #include <stdarg.h>
 #include <stdint.h>
@@ -20,6 +20,11 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 #include <libxml/xmlerror.h>
+
+#include <zlib.h>
+#include <lz4.h>
+#include <zstd.h>
+#include <openssl/evp.h>
 
 #include <new>
 #include <string>
@@ -868,6 +873,122 @@ char* FitsXisfFile::stored(const FitsXisfBlock& bb, size_t* size)
   return NULL;
 }
 
+// ---------------------------------------------------------------- decoding
+
+// Verify a block's checksum over its stored bytes (spec §10.5: for a
+// compressed block, the digest is over the compressed data, and it is
+// checked before anything is decompressed). OpenSSL rather than a vendored
+// SHA implementation: ds9 already links libcrypto on every platform, and
+// one EVP call covers all five algorithms the spec names.
+static int xisfVerify(const FitsXisfBlock& bb, const char* data, size_t nn,
+		      string* err)
+{
+  const EVP_MD* md = NULL;
+  if (bb.checksumAlgo_ == "sha-1")
+    md = EVP_sha1();
+  else if (bb.checksumAlgo_ == "sha-256")
+    md = EVP_sha256();
+  else if (bb.checksumAlgo_ == "sha-512")
+    md = EVP_sha512();
+  else if (bb.checksumAlgo_ == "sha3-256")
+    md = EVP_sha3_256();
+  else if (bb.checksumAlgo_ == "sha3-512")
+    md = EVP_sha3_512();
+  if (!md) {
+    *err = "unsupported checksum " + bb.checksumAlgo_;
+    return 0;
+  }
+
+  unsigned char dig[EVP_MAX_MD_SIZE];
+  unsigned int len = 0;
+  if (!EVP_Digest(data, nn, dig, &len, md, NULL)) {
+    *err = "unable to compute " + bb.checksumAlgo_ + " checksum";
+    return 0;
+  }
+  static const char hex[] = "0123456789abcdef";
+  string got;
+  for (unsigned ii=0; ii<len; ii++) {
+    got.push_back(hex[dig[ii] >> 4]);
+    got.push_back(hex[dig[ii] & 0xf]);
+  }
+  if (got != bb.checksumHex_) {
+    *err = bb.checksumAlgo_ + " checksum mismatch: the data block is corrupt";
+    return 0;
+  }
+  return 1;
+}
+
+// Decompress one subblock into exactly `uu' bytes at `dst'. The size is
+// required to be exact (spec §10.6.1): a subblock that inflates to more or
+// fewer bytes than declared makes the whole block invalid.
+static int xisfDecompress(const string& codec, const char* src, size_t cc,
+			  char* dst, size_t uu, string* err)
+{
+  if (codec == "zlib") {
+    // zlib's lengths are uLong, 32 bit on Windows; the spec caps a zlib
+    // subblock at 2^32-1 for this reason, so a larger one is malformed.
+    if ((unsigned long long)cc > (unsigned long long)ULONG_MAX ||
+	(unsigned long long)uu > (unsigned long long)ULONG_MAX) {
+      *err = "zlib subblock too large";
+      return 0;
+    }
+    uLongf dl = (uLongf)uu;
+    uLong sl = (uLong)cc;
+    int rr = uncompress2((Bytef*)dst, &dl, (const Bytef*)src, &sl);
+    if (rr != Z_OK || dl != (uLongf)uu || sl != (uLong)cc) {
+      *err = "zlib data does not decompress to its declared size";
+      return 0;
+    }
+    return 1;
+  }
+
+  if (codec == "lz4" || codec == "lz4hc") {
+    // lz4hc only changes the encoder; both are plain LZ4 block format,
+    // with no frame and no size prefix (unlike the chunked framing
+    // python-lz4 gives ASDF, which fitsy/asdf.C decodes).
+    if (cc > (size_t)LZ4_MAX_INPUT_SIZE || uu > (size_t)INT_MAX) {
+      *err = "lz4 subblock too large";
+      return 0;
+    }
+    int rr = LZ4_decompress_safe(src, dst, (int)cc, (int)uu);
+    if (rr < 0 || (size_t)rr != uu) {
+      *err = "lz4 data does not decompress to its declared size";
+      return 0;
+    }
+    return 1;
+  }
+
+  if (codec == "zstd") {
+    // One frame per subblock (spec §10.6); ZSTD_decompress also accepts
+    // concatenated frames, and refuses to write past `uu'.
+    size_t rr = ZSTD_decompress(dst, uu, src, cc);
+    if (ZSTD_isError(rr) || rr != uu) {
+      *err = "zstd data does not decompress to its declared size";
+      return 0;
+    }
+    return 1;
+  }
+
+  *err = "unsupported codec " + codec;
+  return 0;
+}
+
+// Undo XISF byte shuffling (spec §10.6.2): the block holds byte 0 of every
+// item, then byte 1 of every item, and so on; bytes past the last whole
+// item are stored unshuffled at the end.
+static void xisfUnshuffle(const char* src, char* dst, size_t nn, size_t item)
+{
+  size_t count = nn / item;
+  for (size_t jj=0; jj<item; jj++) {
+    const char* ss = src + jj*count;
+    for (size_t ii=0; ii<count; ii++)
+      dst[ii*item + jj] = ss[ii];
+  }
+  size_t done = count*item;
+  if (done < nn)
+    memcpy(dst+done, src+done, nn-done);
+}
+
 char* FitsXisfFile::block(const FitsXisfBlock& bb, size_t* size)
 {
   *size = 0;
@@ -875,17 +996,84 @@ char* FitsXisfFile::block(const FitsXisfBlock& bb, size_t* size)
     setError("%s", bb.why_.c_str());
     return NULL;
   }
-  // Phase 2 adds the codecs and checksum verification. Until then a block
-  // that needs either is refused rather than returned unverified (spec
-  // §10.5: a checksum is verified before the data is used).
-  if (!bb.codec_.empty()) {
-    setError("%s compressed data blocks are not supported yet",
-	     bb.codec_.c_str());
+
+  size_t nn;
+  char* data = stored(bb, &nn);
+  if (!data)
+    return NULL;
+
+  string err;
+  if (!bb.checksumAlgo_.empty() && !xisfVerify(bb, data, nn, &err)) {
+    delete [] data;
+    setError("%s", err.c_str());
     return NULL;
   }
-  if (!bb.checksumAlgo_.empty()) {
-    setError("%s checksums are not verified yet", bb.checksumAlgo_.c_str());
+
+  if (bb.codec_.empty()) {
+    *size = nn;
+    return data;
+  }
+
+  // An embedded block without a subblocks attribute is one subblock; its
+  // stored size is only known now, after decoding the text.
+  vector<pair<unsigned long long,unsigned long long> > subs = bb.subblocks_;
+  if (subs.empty())
+    subs.push_back(make_pair((unsigned long long)nn, bb.usize_));
+  unsigned long long sc = 0, su = 0;
+  for (size_t ii=0; ii<subs.size(); ii++) {
+    sc += subs[ii].first;
+    su += subs[ii].second;
+  }
+  if (sc != (unsigned long long)nn || su != bb.usize_ ||
+      su > XISF_MAXBYTES || su > (unsigned long long)SIZE_MAX) {
+    delete [] data;
+    setError("subblock sizes do not match the data block");
     return NULL;
   }
-  return stored(bb, size);
+
+  size_t usize = (size_t)su;
+  char* out = new (std::nothrow) char[usize ? usize : 1];
+  if (!out) {
+    delete [] data;
+    setError("unable to allocate %zu bytes", usize);
+    return NULL;
+  }
+
+  // A subblock whose stored size equals its uncompressed size is stored
+  // raw (spec §10.6.1, Revision 2): copy it, never decompress it. The codec
+  // name was validated when the header was parsed, so an unknown codec can
+  // not reach this as a lookalike raw subblock.
+  size_t at = 0, to = 0;
+  for (size_t ii=0; ii<subs.size(); ii++) {
+    size_t cc = (size_t)subs[ii].first;
+    size_t uu = (size_t)subs[ii].second;
+    if (cc == uu)
+      memcpy(out+to, data+at, cc);
+    else if (!xisfDecompress(bb.codec_, data+at, cc, out+to, uu, &err)) {
+      delete [] data;
+      delete [] out;
+      setError("%s", err.c_str());
+      return NULL;
+    }
+    at += cc;
+    to += uu;
+  }
+  delete [] data;
+
+  // Shuffling applies to the whole block, before it was split into
+  // subblocks, so it is undone only after all of them are decompressed.
+  if (bb.shuffled_ && bb.itemSize_ > 1 && usize) {
+    char* tmp = new (std::nothrow) char[usize];
+    if (!tmp) {
+      delete [] out;
+      setError("unable to allocate %zu bytes", usize);
+      return NULL;
+    }
+    xisfUnshuffle(out, tmp, usize, (size_t)bb.itemSize_);
+    delete [] out;
+    out = tmp;
+  }
+
+  *size = usize;
+  return out;
 }

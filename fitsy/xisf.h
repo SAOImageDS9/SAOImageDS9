@@ -10,16 +10,16 @@
 #include <string>
 #include <vector>
 
-// Native XISF container reader - TODO_XISF.md §2.1, Phase 1.
+// Native XISF container reader - TODO_XISF.md §2.1, Phases 1 and 2.
 //
 // XISF 1.0 (PixInsight's format) is a 16 byte preamble, an XML header,
 // and data blocks the header points at by absolute byte position. This
 // file reads the container only: the preamble, the header (parsed with
 // the libxml2 DS9 already links for SAMP), a descriptor for every <Image>
-// with its FITS keywords and properties, and the stored bytes of any data
-// block. It knows nothing about FITS. Turning one image into a FitsFile is
-// FitsXisf's job (Phase 3), decoding compressed blocks and verifying
-// checksums is Phase 2.
+// with its FITS keywords and properties, and any data block, decoded:
+// checksum verified (OpenSSL), decompressed (zlib, lz4, lz4hc, zstd, with
+// subblocks and byte shuffling). It knows nothing about FITS. Turning one
+// image into a FitsFile is FitsXisf's job (Phase 3).
 //
 // Reading is lenient where the pixels stay knowable and strict where they
 // do not, because real writers bend the spec: libXISF omits encoding= from
@@ -181,8 +181,11 @@ class FitsXisfFile {
   // empty block (an empty vector) returns a non-NULL zero length buffer.
   char* stored(const FitsXisfBlock&, size_t*);
 
-  // The block's bytes decoded: decompressed, unshuffled, checksum
-  // verified. Phase 1 handles uncompressed blocks only.
+  // The block's bytes decoded: checksum verified over the stored bytes
+  // first (a block that fails is never decompressed), then each subblock
+  // decompressed to exactly its declared size or copied if stored raw,
+  // then unshuffled. Byte order is left alone - that is the caller's,
+  // since it depends on the sample size. Same ownership as stored().
   char* block(const FitsXisfBlock&, size_t*);
 };
 

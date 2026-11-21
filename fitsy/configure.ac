@@ -178,7 +178,7 @@ TEA_ADD_HEADERS([
 		   strm.h
 		   var.h
 	       ])
-TEA_ADD_INCLUDES([-I. -I${prefix}/include -I${prefix}/tkimg/libtiff -I${prefix}/tkimg/libtiff/libtiff])
+TEA_ADD_INCLUDES([-I. -I${prefix}/include -I${prefix}/tkimg/libtiff -I${prefix}/tkimg/libtiff/libtiff -I${prefix}/openssl/include])
 TEA_ADD_LIBS([-lstdc++])
 TEA_ADD_CFLAGS([])
 TEA_ADD_STUB_SOURCES([])

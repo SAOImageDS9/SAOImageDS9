@@ -6518,7 +6518,7 @@ fi
 
 
 
-    vars="-I. -I${prefix}/include -I${prefix}/tkimg/libtiff -I${prefix}/tkimg/libtiff/libtiff"
+    vars="-I. -I${prefix}/include -I${prefix}/tkimg/libtiff -I${prefix}/tkimg/libtiff/libtiff -I${prefix}/openssl/include"
     for i in $vars; do
 	PKG_INCLUDES="$PKG_INCLUDES $i"
     done

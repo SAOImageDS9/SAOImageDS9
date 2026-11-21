@@ -4,8 +4,12 @@
 TOP      = ../..
 XML2CFG ?= xml2-config
 CXX     ?= c++
-CXXFLAGS = -std=c++17 -g -O1 -Wall -Wextra -I$(TOP)/fitsy `$(XML2CFG) --cflags`
-LIBS     = `$(XML2CFG) --libs`
+CXXFLAGS = -std=c++17 -g -O1 -Wall -Wextra -I$(TOP)/fitsy -I$(TOP)/include \
+	   -I$(TOP)/openssl/include `$(XML2CFG) --cflags`
+# the vendored codecs and OpenSSL, as built by the top level `make zlib lz4
+# zstd openssl'
+LIBS     = $(TOP)/lib/libzstd.a $(TOP)/lib/liblz4.a $(TOP)/lib/libz.a \
+	   $(TOP)/openssl/libcrypto.a `$(XML2CFG) --libs`
 
 xisfdump: xisfdump.C $(TOP)/fitsy/xisf.C $(TOP)/fitsy/xisf.h
 	$(CXX) $(CXXFLAGS) -o $@ xisfdump.C $(TOP)/fitsy/xisf.C $(LIBS)

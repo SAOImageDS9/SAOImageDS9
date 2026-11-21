@@ -7,13 +7,15 @@ already has. Written 2026-11-21 against the ASDF work as it stands on
 `TODO_ASDF.md` does. Work happens on the `xisf_support` branch, in both this repo and
 `Tests/`.
 
-**Status (2026-11-21): Phases 0 and 1 are done.** `Tests/xisf/` has 99 synthetic
+**Status (2026-11-21): Phases 0, 1 and 2 are done.** `Tests/xisf/` has 105 synthetic
 fixtures and 14 real ones, each with a FITS twin and a DS9 probe baseline recorded
 from that twin (`Tests/xisf/README.md`). The container reader, `fitsy/xisf.{h,C}`,
-reads the preamble, the XML header and every image's descriptor, keywords,
-properties and stored bytes. It agrees with the fixtures on all 111 images in 113
-files (`Tests/xisf/check_container.py`, driven by `utils/xisfdump`). It is in fitsy's
-build but nothing calls it yet. Next is Phase 2: codecs and checksums.
+reads the preamble, the XML header and every image's descriptor, keywords and
+properties. It returns any data block decoded: checksum verified, decompressed
+(zlib, lz4, lz4hc, zstd; subblocks, raw subblocks, byte shuffling). Its decoded
+bytes agree with an independent decoder on all 117 images in 119 files
+(`Tests/xisf/check_container.py`, driven by `utils/xisfdump`). It is in fitsy's build
+but nothing calls it yet. Next is Phase 3: one image as a `FitsFile`.
 
 Spec: <https://pixinsight.com/doc/docs/XISF-1.0-spec/XISF-1.0-spec.html> (XISF 1.0,
 Revision 2). A second, full read on 2026-11-21 settled everything this file had marked
@@ -143,7 +145,7 @@ These follow the choices ASDF ended up making, not its detours.
    - **Signed files:** a signed unit has a detached `<Signature>` sibling after `</xisf>`,
      so it has two top-level elements. `xmlReadMemory` rejects that with "Extra content at
      the end of the document". **Hand it only the bytes up to and including `</xisf>`.**
-3. **Vendor zstd.** The Rev 1 change list makes `zstd` / `zstd+sh` mandatory for
+3. **Vendor zstd.** *(Done in Phase 2, as described here.)* The Rev 1 change list makes `zstd` / `zstd+sh` mandatory for
    conforming decoders, and the spec recommends them. That makes zstd the likely default
    for current PixInsight output. The two real PixInsight files we have so far
    (`Tests/xisf/real/`) use lz4+sh and lz4hc+sh, so lz4 is not optional either. It is not in the tree.
@@ -157,12 +159,16 @@ These follow the choices ASDF ended up making, not its detours.
    output decodes with the ordinary lz4 block decoder, `LZ4_decompress_safe`).
    Note that XISF lz4 is **raw LZ4 block format, no framing**, unlike the chunk-framed
    python-lz4 convention `fitsy/asdf.C` decodes. That is a new path, not a reuse.
-4. **Checksums: verify when present.** The spec requires SHA-1/256/512 support. openssl is
-   vendored and linked into `ds9`, but not into fitsy. Rather than make fitsy depend on
-   libcrypto, vendor a small public-domain SHA-1/SHA-2 implementation (a few hundred
-   lines) into fitsy. If that slips, the fallback is to **report "checksum not verified"
-   in the header viewer**, not to skip silently. sha3 can be "unsupported → image
-   unavailable" at first.
+4. **Checksums: verify when present, with OpenSSL.** The spec requires SHA-1/256/512.
+   This plan first said to vendor a small SHA implementation to keep libcrypto out of
+   fitsy. Phase 2 used OpenSSL's `EVP_Digest` instead, because:
+   - fitsy only ever ends up inside ds9, which already links `-lssl -lcrypto` on all
+     three platforms;
+   - the vendored openssl is built before fitsy in the `saods9` order;
+   - one call covers all five algorithms, sha3 included;
+   - it is code nobody here has to get right.
+   The cost is one include path, `-I${prefix}/openssl/include`, in fitsy's
+   `TEA_ADD_INCLUDES`.
 5. **The FITS header comes from the file.** Build the `FitsHead` from `<FITSKeyword>`
    elements first. Then overwrite the structural cards (`SIMPLE`, `BITPIX`, `NAXISn`,
    `BZERO`/`BSCALE`, `BLANK`) from `geometry`/`sampleFormat`, because the keyword list
@@ -372,12 +378,49 @@ Phase 0 findings that change the plan (details in `Tests/xisf/README.md`):
 Tolerated, because the pixels stay knowable: missing `encoding=`, nonzero reserved
 bytes, missing or malformed `bounds`, uppercase checksum hex.
 
-### Phase 2: Codecs and integrity
-- [ ] Vendor zstd (decompress only); raw LZ4 block decode; zlib.
-- [ ] Subblocks, including raw (`c == u`) subblocks; an exact uncompressed-size check
-      for each one.
-- [ ] Byte unshuffle (whole block, trailing partial item copied as is).
-- [ ] SHA-1/256/512 over the stored bytes, before decompression.
+### Phase 2: Codecs and integrity (done 2026-11-21)
+- [x] zstd 1.5.7 vendored at `zstd/`:
+  - Upstream tarball, unpruned like the other vendored libraries. Its SHA-256 matched
+    the digest published with the GitHub release.
+  - `make zstd` builds `libzstd.a` by name with `ZSTD_LIB_COMPRESSION=0` (which also
+    drops the dictionary builder and the deprecated API) and `ZSTD_LEGACY_SUPPORT=0`,
+    then copies the archive and `zstd.h`/`zstd_errors.h`. The archive has
+    `ZSTD_decompress` and no `ZSTD_compress`. `ar rcs` indexes it, so unlike bzip2
+    there is no cross `RANLIB` to set.
+  - Wired at every bzip2 anchor: the three `.PHONY` lists, `zstdclean`/`zstddistclean`
+    (both `clean`: zstd/lib has no distclean), `{unix,macos,win}/Makefile.in` build
+    order, `libzstd.a` in the three `ds9/*/Makefile.in` link lists, and `Manifest.md`.
+  - The generated `ds9/macos/Makefile` and top-level `Makefile` were refreshed with
+    `config.status`; each differs from before by exactly the intended line.
+- [x] Codecs, in `FitsXisfFile::block()`:
+  - **zlib**: `uncompress2`. Lengths are bounded by `ULONG_MAX`, 32 bit on Windows,
+    and the input must be fully consumed.
+  - **lz4/lz4hc**: `LZ4_decompress_safe`, raw block format with no framing.
+  - **zstd**: `ZSTD_decompress`.
+  - Every subblock must decode to exactly its declared size.
+- [x] Subblocks: their sums are checked against the stored and uncompressed sizes (for
+      embedded blocks only once the text is decoded). A `c == u` subblock is copied,
+      never decoded. Unshuffling happens after all subblocks, over the whole block,
+      with a trailing partial item copied as is.
+- [x] Checksums over the stored bytes, before anything is decompressed, through OpenSSL
+      EVP (§2.4), for all five algorithms.
+- [x] Tests:
+  - `check_container.py` now compares `block()`'s decoded bytes with `read_xisf.py`
+    for every image. Bad checksums and wrong subblock sizes must be refused by
+    `block()`. Result: 119 files, 117 images, 0 failures, 8 refused by `block()`, and
+    1 deferred (the UInt64 value, Phase 3).
+  - Four broken copies of the decoder were each caught: shuffle off by one item, raw
+    subblocks decompressed, checksums skipped, lz4 output size unchecked. The last
+    needed new fixtures. A subblock that decodes *short* while the declared total still
+    matches the geometry was untested, because every lying fixture also had a subblock
+    that overflowed and failed on capacity. So 6 were added:
+    `malformed/subblock_size_lie_*` and `malformed/subblock_short_*`, for zlib, lz4
+    and zstd.
+  - An ASan/UBSan fuzz of 4000 codec-focused mutants (payload corruption, rewritten
+    sizes, swapped codec names, truncation) found nothing.
+  - ds9 relinks with `libzstd.a`. The linker does not pull `xisf.o` out of fitsy's
+    archive yet, because nothing references it, so the first real link of zstd and
+    libcrypto into ds9 comes with Phase 3.
 
 ### Phase 3: Pixels and header
 - [ ] Sample conversion + byte swap; Planar and Normal → planar; row flip.

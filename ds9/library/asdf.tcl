@@ -1320,9 +1320,10 @@ proc AsdfLoadArray {fn {key {}} {layer {}}} {
     # Everything a user can get wrong about an array is checked here, not
     # left to the C++ reader, even though it enforces the same rules
     # itself - it has to, since it is what actually reads the block.
-    # ProcessLoad discards the frame command's own error text, so a
-    # refusal raised down there would reach the user as a bare "Unable to
-    # load"; these are the messages anyone actually sees.
+    # These messages name the array and come before any data is read.
+    # What only the reader can find (a block that fails to decode) it
+    # reports itself: FitsImageAsdf puts the reason in the frame's error
+    # and ProcessLoad passes it on.
     if {[lsearch -exact $unsupported byteorder] >= 0} {
 	Error "[msgcat::mc {ASDF: ndarray has no byteorder}] $path"
 	return 0

@@ -244,13 +244,9 @@ void Base::loadAsdfCmd(const char* fn, const char* path, const char* name,
 		       LayerType ll)
 {
   unloadFits();
+  // FitsImageAsdf reports a refusal's reason itself (see fitsimage.C)
   FitsImage* img = new FitsImageAsdf(currentContext, interp, fn, path,
 				     name, 1);
-  if (!img->isValid() && img->fitsFile()) {
-    const char* mm = img->fitsFile()->errorMessage();
-    if (mm)
-      Tcl_AppendResult(interp, "ASDF: ", mm, NULL);
-  }
   loadDone(currentContext->load(ASDF, name, img));
 }
 

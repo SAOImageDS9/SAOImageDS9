@@ -319,6 +319,13 @@ proc ProcessLoad {{err 1}} {
 	    # it) and the GUI shows one box, not two
 	    set why [string trim $ds9(msg)]
 	    set ds9(msg) {}
+	    # The ASDF reader explains a refusal as the first line of the
+	    # frame's error (which goes on to add "no data loaded into
+	    # frame"). asdf.tcl checks most problems in Tcl first, but a
+	    # block that fails to decode is only known down there.
+	    if {$why == {} && $loadParam(file,type) == {asdf}} {
+		set why [lindex [split [string trim $rr] \n] 0]
+	    }
 	    set msg "[msgcat::mc {Unable to load}] $loadParam(file,type) $loadParam(file,mode) $loadParam(file,name)"
 	    if {$why != {}} {
 		append msg ": $why"

@@ -555,6 +555,7 @@ fitsy/Makefile :
 	./configure \
 	$(WITHTK) \
   	--with-xml2-config=$(XML2CONFIG) \
+	$(PKGCONFIG) \
 	$(PREFIX) \
 	$(STD) \
 	$(CACHE)

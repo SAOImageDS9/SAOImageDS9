@@ -18,8 +18,10 @@ baselines, which were recorded from FITS twins, through ds9's own `xisf` command
   header built from keywords and properties, with WCS from the astrometric solution or
   mirrored keywords.
 
-tksao reaches it through `load xisf`; the Tcl surface is `ds9/library/xisf.tcl`. **Next
-is Phase 6**: Linux and Windows builds. Then real plate-solved PixInsight output, the
+tksao reaches it through `load xisf`; the Tcl surface is `ds9/library/xisf.tcl`.
+**Phase 6** is macOS-only so far: the Linux and Windows builds are deferred. A static
+portability audit fixed what it could without them, and left a checklist for those
+builds. After that, the remaining work is real plate-solved PixInsight output, the
 distortion layers, and the RGB-frame load.
 
 Spec: <https://pixinsight.com/doc/docs/XISF-1.0-spec/XISF-1.0-spec.html> (XISF 1.0,
@@ -585,11 +587,48 @@ bytes, missing or malformed `bounds`, uppercase checksum hex.
 - [x] `Tests/xisf.sh` added to `io.sh`, commented out like `asdf.sh` (the user's
       choice for that one, presumably its runtime; the command phase alone is about 6
       minutes).
-- [ ] Build and run the fixture suite on macOS, Linux and Windows/mingw. Watch the
-      `windows.h`/`std::byte` include-order trap documented at the top of `fitsy/asdf.C`
-      if zstd's or libxml2's headers pull in `<windows.h>`. Check whether libxml2's
-      headers do on mingw; if so, include them before `<string>`/`<vector>` and the
-      fitsy headers, as `fitsy/asdf.C` does for the codec headers.
+- [x] macOS: built, and every suite run (Phases 1–5).
+- [x] **Static portability audit (2026-11-21)**, done in place of the Linux and Windows
+      builds, which are deferred for now. There is no mingw or GCC on this machine. Found
+      and fixed:
+  - **The fitsy configure rule lacked `$(PKGCONFIG)`.** On a Windows cross build that
+    variable points libxml2's `pkg-config` fallback at the mingw sysroot; without it
+    fitsy's configure could pick up the host's libxml2. Added, matching the tksao and
+    tclxml rules. It is empty on unix/macOS, and fitsy's regenerated `Makefile` was
+    confirmed unchanged there.
+  - **`%zu` in `fitsy/xisf.C`** became `%llu` with casts, the form `fitsy/asdf.C` uses
+    and is validated with on mingw, whose C runtime has not always understood `%zu`.
+
+  Checked and fine:
+  - **Include order.** zlib's `zconf.h` and OpenSSL's `crypto.h` (via `evp.h`) include
+    `<windows.h>` under Windows; libxml2's own headers do not, except `nanoftp.h`, which
+    is not used. All of them come before `<string>`/`<vector>` and any `using
+    namespace std` in `xisf.C`. `xisf.h`, which tksao and tclfitsy include after their
+    own using-directive, reaches none of them.
+  - **GNU ld link order** (Linux and mingw; macOS's linker hides mistakes here). In
+    `ds9/{unix,win}/Makefile.in`, tclfitsy and tksao precede fitsy in `EXT_SPECS`,
+    `libzstd.a` follows them in `LLIBS`, and `-lssl -lcrypto` and `$(LIBS)` (libxml2)
+    follow `LLIBS`.
+  - **zlib.** ds9 takes zlib from tkimg's `zlibtcl` (zlib 1.3.2), whose archive exports
+    `uncompress2`, which `xisf.C` needs.
+  - **zstd's x86-64 assembly decoder** is enabled upstream for `_WIN32` too (1.5.7
+    `portability_macros.h`). If the mingw assembler rejects it, add `ZSTD_NO_ASM=1` to
+    the `zstd` rule in `make.include`.
+- [ ] **When the builds happen**, check:
+  - [ ] `make zstd fitsy tclfitsy tksao ds9` succeed. On mingw, watch for macro
+        collisions from `<windows.h>` in `xisf.C` (it defines `ERROR`, `min`, `max`
+        and more); the include order is right, but only a compile shows names. And
+        watch for GCC warnings `-Wall` that clang does not give.
+  - [ ] `fitsy/Makefile` shows libxml2's flags in `PKG_CFLAGS`/`LIBS`, from
+        `xml2-config` on Linux and the mingw `pkg-config` on Windows.
+  - [ ] `utils/xisfdump` builds against that platform's archives, and
+        `Tests/xisf/check_container.py` and `check_fits.py` give 0 failures.
+  - [ ] `Tests/xisf.sh` (all modes) and `asdf.sh xpa`. On Windows the fixture paths are
+        relative and ds9 resolves them against its own cwd (AGENTS.md), and
+        `AsdfSplitPath`, which XISF reuses, must not split a `C:` drive letter: load one
+        fixture by absolute path, with and without `:image`.
+  - [ ] Windows only: the release copies `libxml2-2.dll`; check it is still the one
+        fitsy linked against.
 
 ### Deferred / out of scope for v1
 - Distributed `.xish`/`.xisb`, `url(...)`/`path(...)` locations.

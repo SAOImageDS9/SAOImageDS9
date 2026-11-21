@@ -2,6 +2,10 @@
 // Smithsonian Astrophysical Observatory, Cambridge, MA, USA
 // For conditions of distribution and use, see copyright notice in "copyright"
 
+// printf formats: %lld/%llu with explicit casts, never the size_t
+// specifier - fitsy/asdf.C does the same and is validated on mingw, whose C
+// runtime has not always understood it.
+//
 // Include order: C and library headers first, then <string>/<vector>, then
 // fitsy's own. This is the order fitsy/asdf.C pins for Windows, where a
 // header that pulls in <windows.h> after a using-directive for std makes
@@ -811,7 +815,8 @@ static void xisfElide(xmlNode* nn)
       size_t len = strlen((const char*)cc->content);
       if (len > XISF_PRETTY_MAXTEXT) {
 	char buf[96];
-	snprintf(buf, sizeof(buf), "[%zu characters not shown]", len);
+	snprintf(buf, sizeof(buf), "[%llu characters not shown]",
+		 (unsigned long long)len);
 	xmlNodeSetContent(cc, (const xmlChar*)buf);
       }
     }
@@ -921,7 +926,8 @@ char* FitsXisfFile::stored(const FitsXisfBlock& bb, size_t* size)
     }
     char* buf = new (std::nothrow) char[dec.size() ? dec.size() : 1];
     if (!buf) {
-      setError("unable to allocate %zu bytes", dec.size());
+      setError("unable to allocate %llu bytes",
+	       (unsigned long long)dec.size());
       return NULL;
     }
     if (!dec.empty())
@@ -1095,7 +1101,7 @@ char* FitsXisfFile::block(const FitsXisfBlock& bb, size_t* size)
   char* out = new (std::nothrow) char[usize ? usize : 1];
   if (!out) {
     delete [] data;
-    setError("unable to allocate %zu bytes", usize);
+    setError("unable to allocate %llu bytes", (unsigned long long)usize);
     return NULL;
   }
 
@@ -1126,7 +1132,7 @@ char* FitsXisfFile::block(const FitsXisfBlock& bb, size_t* size)
     char* tmp = new (std::nothrow) char[usize];
     if (!tmp) {
       delete [] out;
-      setError("unable to allocate %zu bytes", usize);
+      setError("unable to allocate %llu bytes", (unsigned long long)usize);
       return NULL;
     }
     xisfUnshuffle(out, tmp, usize, (size_t)bb.itemSize_);

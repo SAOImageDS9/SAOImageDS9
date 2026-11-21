@@ -528,6 +528,7 @@ fitsy/Makefile :
 	cd fitsy; \
 	./configure \
 	$(WITHTK) \
+  	--with-xml2-config=$(XML2CONFIG) \
 	$(PREFIX) \
 	$(STD) \
 	$(CACHE)

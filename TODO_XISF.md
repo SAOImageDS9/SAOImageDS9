@@ -7,10 +7,13 @@ already has. Written 2026-11-21 against the ASDF work as it stands on
 `TODO_ASDF.md` does. Work happens on the `xisf_support` branch, in both this repo and
 `Tests/`.
 
-**Status (2026-11-21): Phase 0 is done except for real PixInsight output with a WCS.**
-`Tests/xisf/` has 99 synthetic fixtures and 14 real ones, each with a FITS twin and a
-DS9 probe baseline recorded from that twin. See `Tests/xisf/README.md`. No reader code
-exists yet.
+**Status (2026-11-21): Phases 0 and 1 are done.** `Tests/xisf/` has 99 synthetic
+fixtures and 14 real ones, each with a FITS twin and a DS9 probe baseline recorded
+from that twin (`Tests/xisf/README.md`). The container reader, `fitsy/xisf.{h,C}`,
+reads the preamble, the XML header and every image's descriptor, keywords,
+properties and stored bytes. It agrees with the fixtures on all 111 images in 113
+files (`Tests/xisf/check_container.py`, driven by `utils/xisfdump`). It is in fitsy's
+build but nothing calls it yet. Next is Phase 2: codecs and checksums.
 
 Spec: <https://pixinsight.com/doc/docs/XISF-1.0-spec/XISF-1.0-spec.html> (XISF 1.0,
 Revision 2). A second, full read on 2026-11-21 settled everything this file had marked
@@ -230,11 +233,11 @@ Every hook below already exists for ASDF. `git diff master...HEAD -- <file>` sho
 ASDF version to copy from.
 
 **C++ (`fitsy/`, `tclfitsy/`, `tksao/`)**
-- [ ] `fitsy/xisf.{h,C}`: new (see §2.1).
-- [ ] `fitsy/configure.ac` **and** the generated `fitsy/configure`: the source list plus
-      the libxml2 block copied from tksao (§2.2). There is no autoconf here, so hand-edit
-      both. Also add `--with-xml2-config` to the `fitsy/Makefile` rule in `make.include`.
-      Delete `fitsy/Makefile` so `make fitsy` reconfigures.
+- [x] `fitsy/xisf.{h,C}`: the container half (`FitsXisfFile`). `FitsXisf : FitsFile`
+      and `FitsXisfNext` are Phase 3.
+- [x] `fitsy/configure.ac` **and** the generated `fitsy/configure`: the source list plus
+      the libxml2 block copied from tksao (§2.2), and `--with-xml2-config` on the
+      `fitsy/Makefile` rule in `make.include`. Done Phase 1; see there for how.
 - [ ] `fitsy/file.h`: `errorMessage()` already exists (added for ASDF), so reuse it.
 - [ ] `tclfitsy`: `fitsy xisf header|images <file>` for the Tcl side (header viewer,
       image chooser), the analogue of `fitsy asdf tree|arrays|block`. One implementation
@@ -326,15 +329,48 @@ Phase 0 findings that change the plan (details in `Tests/xisf/README.md`):
   Otherwise an unknown codec whose stored size happens to equal its declared size
   loads as raw bytes. `Tests/xisf/malformed/unknown_codec.xisf` is built that way.
 
-### Phase 1: Container reader
-- [ ] Magic + header length + XML extraction; strip a trailing `<Signature>`.
-- [ ] Wire libxml2 into fitsy (§2.2); parse with `xmlReadMemory`; enumerate `<Image>` elements into a descriptor list
-      (geometry, sampleFormat, bounds, colorSpace, pixelStorage, byteOrder, location,
-      compression, subblocks, checksum, id, uuid, imageType, and an `unsupported_`
-      bitmask of reasons, as ASDF has).
-- [ ] `attachment:` and `embedded` (base64/hex) locations; refuse `url`/`path` by name.
-- [ ] Overflow-check every size and offset that comes off disk (ASDF's review found
-      `uLong` is 32-bit on Windows).
+### Phase 1: Container reader (done 2026-11-21)
+- [x] Preamble and header: signature, header length, nonzero reserved bytes tolerated,
+      and only the bytes up to the last `</xisf>` handed to the parser, so a signed
+      unit's trailing `<Signature>` is dropped.
+- [x] libxml2 wired into fitsy. The 380-line "Load libxml2 configuration" block was cut
+      from `tksao/configure` (lines 10617–10996, asserted to name no package) and
+      pasted before fitsy's "Setup a *Config.sh.in" section. It also needed 7
+      `ac_subst_vars` names, `with_xml2_config` in `ac_user_opts`, 5 precious vars,
+      the `--with-xml2-config` help line and the env-var help lines; the matching
+      `configure.ac` section; and `@XML2_CFLAGS@`/`@XML2_LIBS@` in `fitsy/Makefile.in`.
+      After `rm fitsy/Makefile && make fitsy`, the regenerated `Makefile` differs from
+      the old one only by libxml2's include and link flags. `make ds9clean ds9` relinks.
+- [x] Parsing with `xmlCtxtReadMemory`, options `NONET | NOERROR | NOWARNING` (no
+      entity expansion), with errors taken from the context. Root name, namespace and
+      `version="1.0"` are checked. Each `<Image>` becomes a `FitsXisfImage`: geometry,
+      sampleFormat, bounds, colorSpace, pixelStorage, id/uuid/imageType/offset/
+      orientation, its `<FITSKeyword>`s and `<Property>`s, and a `FitsXisfBlock`.
+      `<Metadata>` properties are kept too. Each image gets an `unsupported_` bitmask
+      plus the first reason as text, so the chooser can say why.
+- [x] Locations: `attachment:`, `embedded` (base64/hex `<Data>`, carrying its own
+      compression and checksum attributes), and `inline:` for properties. `inline:` on
+      an Image, `url()` and `path()` are refused by name. Thumbnails are never looked at.
+- [x] Compression and checksum attributes are parsed and validated: codec name first,
+      then sizes; subblock sums are checked against both the declared uncompressed size
+      and the stored size; checksum algorithm and digest length are checked, with hex
+      case normalised. Decoding is Phase 2. Until then `block()` refuses any block that
+      is compressed or carries a checksum, rather than return it unverified.
+- [x] Every size and position off disk goes through a strict unsigned-decimal parser,
+      and geometry × sample size is bounded at 2⁶² as it is formed. A block that does not
+      fit in the file, or whose size disagrees with its geometry, is refused per image.
+- [x] Tests:
+  - `utils/xisfdump` is a standalone build of the reader alone, with no frame, grammar
+    or ds9 involved.
+  - `Tests/xisf/check_container.py` runs it over all 113 files and checks every image's
+    verdict and stored bytes against `read_xisf.py`. Result: 0 failures and 3 DEFERRED,
+    the two bad checksums (Phase 2) and the UInt64 overflow value (Phase 3).
+  - Two deliberately broken copies of the reader were each caught: one with the codec
+    check removed, one reading attachments a byte off.
+  - An ASan/UBSan build survived 3000 corrupted or truncated mutants of the fixtures.
+
+Tolerated, because the pixels stay knowable: missing `encoding=`, nonzero reserved
+bytes, missing or malformed `bounds`, uppercase checksum hex.
 
 ### Phase 2: Codecs and integrity
 - [ ] Vendor zstd (decompress only); raw LZ4 block decode; zlib.

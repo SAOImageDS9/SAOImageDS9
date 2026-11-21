@@ -664,6 +664,23 @@ bytes, missing or malformed `bounds`, uppercase checksum hex.
 
 ## 5. Open questions to settle in Phase 0
 
+0. **A real plate-solved XISF file is still needed, and none is public.** It is the
+   only check of the WCS against real data, and the gate for the distortion layers
+   (Phase 4: measure their effect before choosing how to handle them). Searched
+   2026-11-21, reading only the XML headers via HTTP range requests:
+   - **GitHub:** all 28 public `.xisf` files. Most are in Git LFS, fetched through
+     `media.githubusercontent.com`, which honours `Range`. They include PixInsight
+     1.8.9-2 and 1.9.3 output from `tiagohm/nebulosa.data`,
+     `dennispayne/XISF-Shell-Extensions` and `joergs-git/AstroBlinkV2`, plus NINA test
+     images. None carries an `AstrometricSolution` or `PCL:AstrometricSolution` block.
+     The richest, an M42 RGB stack, has only `Observation:Center:RA/Dec` and `RADESYS`.
+   - **A web search** found only forum threads. The one shared file is a Dropbox link
+     that may be gone, and that image never solved in PixInsight.
+
+   **What would close this:** any image run through PixInsight's ImageSolver, ideally
+   with distortion correction on, together with PixInsight's own FITS export of it and
+   two or three coordinates read off PixInsight's readout. Header ranges are enough
+   to triage candidates; the whole file is only needed once one has a solution.
 1. ~~Origin, pixel centre and matrix element order~~: answered. Top-left, centres at
    +0.5, M row-major on (x-x0, y-y0), no other offset (PCL `ComputeWCSKeywords`,
    `LinearTransformation::Transform`).

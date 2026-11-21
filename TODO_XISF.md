@@ -19,9 +19,8 @@ baselines, which were recorded from FITS twins, through ds9's own `xisf` command
   mirrored keywords.
 
 tksao reaches it through `load xisf`; the Tcl surface is `ds9/library/xisf.tcl`.
-**Phase 6** is macOS-only so far: the Linux and Windows builds are deferred. A static
-portability audit fixed what it could without them, and left a checklist for those
-builds. After that, the remaining work is real plate-solved PixInsight output and the
+**Phase 6**: Linux and Windows now build cleanly in CI (SAOImageDS9/SAOImageDS9#455);
+the test suites have still only been run on macOS. After that, the remaining work is real plate-solved PixInsight output and the
 distortion layers.
 
 Spec: <https://pixinsight.com/doc/docs/XISF-1.0-spec/XISF-1.0-spec.html> (XISF 1.0,
@@ -627,21 +626,28 @@ bytes, missing or malformed `bounds`, uppercase checksum hex.
   - **zstd's x86-64 assembly decoder** is enabled upstream for `_WIN32` too (1.5.7
     `portability_macros.h`). If the mingw assembler rejects it, add `ZSTD_NO_ASM=1` to
     the `zstd` rule in `make.include`.
-- [ ] **When the builds happen**, check:
-  - [ ] `make zstd fitsy tclfitsy tksao ds9` succeed. On mingw, watch for macro
-        collisions from `<windows.h>` in `xisf.C` (it defines `ERROR`, `min`, `max`
-        and more); the include order is right, but only a compile shows names. And
-        watch for GCC warnings `-Wall` that clang does not give.
-  - [ ] `fitsy/Makefile` shows libxml2's flags in `PKG_CFLAGS`/`LIBS`, from
-        `xml2-config` on Linux and the mingw `pkg-config` on Windows.
-  - [ ] `utils/xisfdump` builds against that platform's archives, and
-        `Tests/xisf/check_container.py` and `check_fits.py` give 0 failures.
-  - [ ] `Tests/xisf.sh` (all modes) and `asdf.sh xpa`. On Windows the fixture paths are
-        relative and ds9 resolves them against its own cwd (AGENTS.md), and
-        `AsdfSplitPath`, which XISF reuses, must not split a `C:` drive letter: load one
-        fixture by absolute path, with and without `:image`.
-  - [ ] Windows only: the release copies `libxml2-2.dll`; check it is still the one
-        fitsy linked against.
+- [x] **Linux and Windows build in CI** (SAOImageDS9/SAOImageDS9#455, 2026-11-21).
+      All 8 checks pass: Ubuntu, Windows (Cygwin + mingw-w64), and macOS Intel, ARM and
+      Universal. The workflows only build (`make && make dist`), so this proves
+      compilation and linking, not behaviour. From the logs:
+  - **One warning in the new code, now fixed.** GCC (both platforms) flagged
+    `xisf.C`'s `new char[total*outsz ? total*outsz : 1]` (`-Wint-in-bool-context`).
+    The size is now computed once. No other XISF file warned. The two
+    `-Wstringop-truncation` warnings in `fitsimage.C` are upstream code from 2024
+    (a deliberate unterminated `strncpy`).
+  - **No `<windows.h>` macro collisions**: `xisf.C`, `tclfitsy.C` and the tksao files
+    compiled under mingw.
+  - **zstd's assembly** (`huf_decompress_amd64.S`) assembled under mingw, so
+    `ZSTD_NO_ASM` is not needed.
+  - **libxml2.** Ubuntu found it through `xml2-config`. Windows had none and fell back
+    to `pkg-config`, which found `libxml-2.0` in the mingw sysroot (include
+    `-I/usr/x86_64-w64-mingw32/sys-root/mingw/include/libxml2`). That is the target's
+    libxml2, not the host's: the `$(PKGCONFIG)` fix doing its job.
+- [ ] Still to run on Linux and Windows, since CI does not: the reader checks
+      (`utils/xisfdump` + `check_container.py`/`check_fits.py`), `Tests/xisf.sh`, and
+      `asdf.sh xpa`. On Windows also load a fixture by absolute `C:` path, with and
+      without `:image` (`AsdfSplitPath` must not split the drive letter), and check
+      which `libxml2-2.dll` the release ships against the one fitsy linked.
 
 ### Deferred / out of scope for v1
 - Distributed `.xish`/`.xisb`, `url(...)`/`path(...)` locations.

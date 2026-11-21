@@ -1891,7 +1891,8 @@ int FitsXisf::build(const char* key)
   int big = im->block_.big_;
   size_t plane = (size_t)ww*(size_t)hh;
   size_t total = plane*(size_t)dd;     // bounded: bytes() <= 2^62
-  char* out = new (std::nothrow) char[total*outsz ? total*outsz : 1];
+  size_t outbytes = total*(size_t)outsz;
+  char* out = new (std::nothrow) char[outbytes ? outbytes : 1];
   if (!out) {
     delete [] buf;
     xisfError_ = what + ": unable to allocate the image";
@@ -1974,7 +1975,7 @@ int FitsXisf::build(const char* key)
   buildHeader(im);
 
   data_ = out;
-  dataSize_ = total*outsz;
+  dataSize_ = outbytes;
   dataSkip_ = 0;
 
   setByteSwap();

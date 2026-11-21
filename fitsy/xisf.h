@@ -10,6 +10,9 @@
 #include <string>
 #include <vector>
 
+#include "file.h"
+#include "asdf.h"
+
 // Native XISF container reader - TODO_XISF.md §2.1, Phases 1 and 2.
 //
 // XISF 1.0 (PixInsight's format) is a 16 byte preamble, an XML header,
@@ -19,7 +22,7 @@
 // with its FITS keywords and properties, and any data block, decoded:
 // checksum verified (OpenSSL), decompressed (zlib, lz4, lz4hc, zstd, with
 // subblocks and byte shuffling). It knows nothing about FITS. Turning one
-// image into a FitsFile is FitsXisf's job (Phase 3).
+// image into a FitsFile is FitsXisf's job, at the end of this file.
 //
 // Reading is lenient where the pixels stay knowable and strict where they
 // do not, because real writers bend the spec: libXISF omits encoding= from
@@ -187,6 +190,53 @@ class FitsXisfFile {
   // then unshuffled. Byte order is left alone - that is the caller's,
   // since it depends on the sample size. Same ownership as stored().
   char* block(const FitsXisfBlock&, size_t*);
+};
+
+// One XISF image as a FitsFile - TODO_XISF.md Phase 3. What the frame's
+// `load xisf' command will instantiate, as `load asdf' does FitsAsdf.
+//
+// The pixels are converted to what fitsy can hold and what a FITS reader
+// expects: rows flipped (XISF row 0 is the top, FITS row 1 the bottom),
+// Normal (interleaved) storage made planar, UInt32 widened to int64, and
+// the channels of a multi-channel image (RGB, CIELab, RGB+alpha) presented
+// as the planes of a cube. The header is built here too: the structure
+// from the geometry, then the image's own <FITSKeyword>s minus the
+// structural cards a writer may have copied stale from another file, then
+// FITS equivalents of a few standard properties. WCS is Phase 4: until
+// then WCS keywords are kept out of the live header (as comments), so a
+// convention mistake can never put a wrong solution on screen.
+//
+// Not split into per-transport subclasses, for the reason FitsAsdf is
+// not: the data blocks are found by absolute position, so the reader
+// seeks, and plain stdio does that everywhere.
+class FitsXisf : public FitsFile {
+ protected:
+  FitsXisfFile* xisf_;
+  std::string xisfError_;
+
+ protected:
+  int build(const char*);
+  void buildHeader(const FitsXisfImage*);
+
+ public:
+  // `key' picks the image: its id, or its decimal index; NULL or "" is
+  // the first image.
+  FitsXisf(const char* fn, const char* key);
+  virtual ~FitsXisf();
+
+  virtual const char* errorMessage()
+  {return xisfError_.empty() ? NULL : xisfError_.c_str();}
+
+  FitsXisfFile* xisfFile() {return xisf_;}
+};
+
+// One further plane of a cube or multi-channel image. FitsAsdfNext is
+// already format-neutral - it shares its predecessor's decoded buffer and
+// header and steps one plane on - so this is that class under the name
+// tksao's Context::load will look for.
+class FitsXisfNext : public FitsAsdfNext {
+ public:
+  FitsXisfNext(FitsFile* prev) : FitsAsdfNext(prev) {}
 };
 
 #endif

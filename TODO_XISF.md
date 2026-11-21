@@ -7,15 +7,21 @@ already has. Written 2026-11-21 against the ASDF work as it stands on
 `TODO_ASDF.md` does. Work happens on the `xisf_support` branch, in both this repo and
 `Tests/`.
 
-**Status (2026-11-21): Phases 0, 1 and 2 are done.** `Tests/xisf/` has 105 synthetic
-fixtures and 14 real ones, each with a FITS twin and a DS9 probe baseline recorded
-from that twin (`Tests/xisf/README.md`). The container reader, `fitsy/xisf.{h,C}`,
-reads the preamble, the XML header and every image's descriptor, keywords and
-properties. It returns any data block decoded: checksum verified, decompressed
-(zlib, lz4, lz4hc, zstd; subblocks, raw subblocks, byte shuffling). Its decoded
-bytes agree with an independent decoder on all 117 images in 119 files
-(`Tests/xisf/check_container.py`, driven by `utils/xisfdump`). It is in fitsy's build
-but nothing calls it yet. Next is Phase 3: one image as a `FitsFile`.
+**Status (2026-11-21): Phases 0–3 are done.** `Tests/xisf/` has 105 synthetic fixtures
+and 14 real ones, each with a FITS twin and a DS9 probe baseline recorded from that
+twin (`Tests/xisf/README.md`). `fitsy/xisf.{h,C}` holds two layers:
+- **`FitsXisfFile`**, the container. It reads the header and every image's descriptor,
+  keywords and properties, and returns any data block decoded: checksum verified;
+  decompressed with zlib, lz4, lz4hc or zstd; subblocks, raw subblocks and byte
+  shuffling handled.
+- **`FitsXisf`**, one image as the `FitsFile` ds9 will load: rows flipped, storage made
+  planar, channels as planes, and a header built from the geometry, the keywords and
+  the properties.
+
+Both are checked against the twins over the whole fixture set
+(`Tests/xisf/check_container.py`, `check_fits.py`, driven by `utils/xisfdump`). They are
+in fitsy's build, but nothing in ds9 calls them yet. Next is Phase 4 (WCS) or Phase 5
+(the load command and UI), which are independent.
 
 Spec: <https://pixinsight.com/doc/docs/XISF-1.0-spec/XISF-1.0-spec.html> (XISF 1.0,
 Revision 2). A second, full read on 2026-11-21 settled everything this file had marked
@@ -422,17 +428,56 @@ bytes, missing or malformed `bounds`, uppercase checksum hex.
     archive yet, because nothing references it, so the first real link of zstd and
     libcrypto into ds9 comes with Phase 3.
 
-### Phase 3: Pixels and header
-- [ ] Sample conversion + byte swap; Planar and Normal → planar; row flip.
-- [ ] `FitsHead` from `FITSKeyword` + structural overrides; `bounds` → `DATAMIN`/`DATAMAX`,
-      so the default minmax scale matches PixInsight. Check that no fitsy clipping
-      keyword takes them as hard limits.
-- [ ] Interesting `Property`s as `HIERARCH` or comment cards (`Instrument:ExposureTime`,
-      `Observation:Time:Start`, `Instrument:Filter:Name`, …). Only when the equivalent
-      FITS keyword is absent.
-- [ ] Gray 2-D, 3-D cubes, multi-channel → cube with `FitsXisfNext`.
+### Phase 3: Pixels and header (done 2026-11-21, except the header viewer)
+- [x] `FitsXisf : FitsFile`, built like `FitsAsdf`. It picks an image by id or index
+      (default: the first), decodes its block through `FitsXisfFile::block()` and
+      converts it, then sets `pWidth_…pArch_`, builds a `FitsHead`, and calls
+      `setByteSwap()`.
+  - Sample formats:
+    - UInt8 → 8 and UInt16 → −16 (fitsy's unsigned code, as for ASDF).
+    - UInt32 → widened to int64, written little endian.
+    - UInt64 → 64, refused if any value exceeds `INT64_MAX`, rather than wrapping.
+    - Float32/Float64 → −32/−64.
+    - Complex is refused.
+  - Byte order is left to fitsy's `byteswap` except when widening.
+- [x] Layout: rows flipped. A 2-D image's channels become the planes of a cube, so RGB
+      is a 3-plane cube, RGBA 4, and CIELab 3 with no colour conversion. Normal storage
+      is gathered into planar. A 3-D Gray image is a cube. A 3-D image with several
+      channels, and anything of rank other than 2 or 3, is refused by name.
+      `FitsXisfNext` is `FitsAsdfNext` under another name: that class was already
+      format-neutral.
+- [x] Header, in this order:
+  - the structure from the geometry;
+  - `DATAMIN`/`DATAMAX` from `bounds`;
+  - the image's `<FITSKeyword>`s verbatim, laid out to FITS columns;
+  - FITS equivalents of standard properties where the keywords lack them: OBJECT,
+    DATE-OBS/END, EXPTIME, FILTER, TELESCOP, INSTRUME, X/YBINNING, CCD-TEMP,
+    X/YPIXSZ, FOCALLEN/APTDIA (m → mm), OBSGEO-B/L/H, IMAGETYP from `imageType`;
+  - COMMENT cards saying what was done (image n of m, flip, widening, channels,
+    `offset` and `orientation` noted but not applied).
+
+  Structural keywords (SIMPLE, BITPIX, NAXISn, BZERO, BSCALE, BLANK, DATAMIN/MAX, …)
+  from the list are demoted to COMMENT cards, as are names that are not FITS names.
+  **WCS keywords are also demoted until Phase 4**, so no convention mistake can put a
+  wrong solution on screen in the meantime.
+
+  `DATAMIN`/`DATAMAX` are used by DS9 only in the `datamin` minmax mode (default is
+  `scan`), so `bounds` never clips by default.
+- [x] Tests:
+  - `utils/xisfdump --fits [--image key]` prints the `FitsXisf` header and a hash of
+    each plane.
+  - `Tests/xisf/check_fits.py` compares every plane with the twins: 93 loads, plus 4
+    more images selected by id or index, and 26 refusals, each with a message. It also
+    checks that no header carries BZERO/BSCALE/BLANK or a WCS card, and that the
+    keywords fixtures keep what they should. Result: 0 failures.
+  - Five broken copies were each caught: no flip, Normal read as planar, byte order
+    ignored when widening, the structural filter off, the UInt64 range check off.
+  - ASan/UBSan over the 7000 earlier mutants plus every fixture through the `--fits`
+    path found nothing.
 - [ ] Header viewer: the XML header, pretty-printed, with attachment blocks shown by
-      size. This is the analogue of ASDF's YAML view.
+      size, the analogue of ASDF's YAML view. Moved to Phase 5: it needs the Tcl side
+      (`fitsy xisf header` in tclfitsy and `header.tcl`), which is where the rest of the
+      UI work is.
 
 ### Phase 4: WCS
 - [ ] Read both `AstrometricSolution:` and legacy `PCL:AstrometricSolution:` blocks;

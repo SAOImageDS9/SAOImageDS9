@@ -16,6 +16,7 @@
 #include <string.h>
 #include <limits.h>
 #include <errno.h>
+#include <ctype.h>
 
 #include <libxml/parser.h>
 #include <libxml/tree.h>
@@ -1076,4 +1077,496 @@ char* FitsXisfFile::block(const FitsXisfBlock& bb, size_t* size)
 
   *size = usize;
   return out;
+}
+
+// ================================================================ FitsXisf
+
+// ---------------------------------------------------------------- header
+
+// The cards a writer may have copied from whatever file it imported, which
+// describe that file's layout and not this image's. Real PixInsight output
+// carries BITPIX = 16 and BZERO = 32768 over 0-9 UInt16 pixels
+// (Tests/xisf/real/libxisf/test.xisf): honouring that BZERO would show
+// 32768-32777. The structure is rebuilt from the geometry instead.
+static int xisfStructural(const string& nn)
+{
+  static const char* names[] = {
+    "SIMPLE", "BITPIX", "NAXIS", "EXTEND", "BZERO", "BSCALE", "BLANK",
+    "DATAMIN", "DATAMAX", "END", "XTENSION", "PCOUNT", "GCOUNT", "GROUPS",
+  };
+  for (size_t ii=0; ii<sizeof(names)/sizeof(names[0]); ii++)
+    if (nn == names[ii])
+      return 1;
+  return !nn.compare(0, 5, "NAXIS") && nn.size() > 5 &&
+    nn.find_first_not_of("0123456789", 5) == string::npos;
+}
+
+// `prefix' followed by axis digits, optionally `_' and more digits, and an
+// optional alternate-WCS letter: CTYPE1, CD1_2, PV2_1, CRPIX1A, ...
+static int xisfAxisKey(const string& nn, const char* prefix, int pair)
+{
+  size_t pl = strlen(prefix);
+  if (nn.compare(0, pl, prefix) || nn.size() == pl)
+    return 0;
+  size_t ii = pl;
+  size_t dd = ii;
+  while (ii < nn.size() && isdigit((unsigned char)nn[ii]))
+    ii++;
+  if (ii == dd)
+    return 0;
+  if (pair) {
+    if (ii >= nn.size() || nn[ii] != '_')
+      return 0;
+    dd = ++ii;
+    while (ii < nn.size() && isdigit((unsigned char)nn[ii]))
+      ii++;
+    if (ii == dd)
+      return 0;
+  }
+  if (ii < nn.size() && isupper((unsigned char)nn[ii]))
+    ii++;
+  return ii == nn.size();
+}
+
+// WCS keywords. Phase 4 decides how a keyword-only solution is read (PCL
+// documents them as top-down, but writes bottom-up ones next to every
+// solution - TODO_XISF.md §2.6); until then none reaches the live header.
+static int xisfWcsKeyword(const string& nn)
+{
+  static const char* axis[] = {"CTYPE", "CRVAL", "CRPIX", "CDELT", "CROTA",
+			       "CUNIT", "CNAME", "CRDER", "CSYER"};
+  static const char* pair[] = {"CD", "PC", "PV", "PS"};
+  for (size_t ii=0; ii<sizeof(axis)/sizeof(axis[0]); ii++)
+    if (xisfAxisKey(nn, axis[ii], 0))
+      return 1;
+  for (size_t ii=0; ii<sizeof(pair)/sizeof(pair[0]); ii++)
+    if (xisfAxisKey(nn, pair[ii], 1))
+      return 1;
+  if (nn == "LONPOLE" || nn == "LATPOLE" || nn == "WCSAXES" ||
+      nn == "RADESYS" || nn == "RADECSYS" || nn == "WCSNAME" ||
+      nn == "A_ORDER" || nn == "B_ORDER" || nn == "AP_ORDER" ||
+      nn == "BP_ORDER" || nn == "A_DMAX" || nn == "B_DMAX")
+    return 1;
+  // SIP coefficients: A_p_q, B_p_q, AP_p_q, BP_p_q
+  const char* sip[] = {"A_", "B_", "AP_", "BP_"};
+  for (int ii=0; ii<4; ii++) {
+    size_t pl = strlen(sip[ii]);
+    if (!nn.compare(0, pl, sip[ii])) {
+      string rest = nn.substr(pl);
+      size_t us = rest.find('_');
+      if (us != string::npos && us > 0 && us+1 < rest.size() &&
+	  rest.find_first_not_of("0123456789_") == string::npos)
+	return 1;
+    }
+  }
+  return 0;
+}
+
+static int xisfFitsName(const string& nn)
+{
+  if (nn.empty() || nn.size() > 8)
+    return 0;
+  for (size_t ii=0; ii<nn.size(); ii++) {
+    char cc = nn[ii];
+    if (!(isupper((unsigned char)cc) || isdigit((unsigned char)cc) ||
+	  cc == '-' || cc == '_'))
+      return 0;
+  }
+  return 1;
+}
+
+// One FITS card, laid out as the standard has it, from a keyword's three
+// verbatim parts: a string value starts at column 11, anything else is
+// right justified to column 30.
+static string xisfCard(const string& name, const string& value,
+		       const string& comment)
+{
+  string cc = name;
+  cc.resize(8, ' ');
+  if (name == "COMMENT" || name == "HISTORY" || name.empty())
+    cc += comment.empty() ? value : comment;
+  else {
+    cc += "= ";
+    string vv = xisfTrim(value);
+    if (!vv.empty() && vv[0] == '\'')
+      cc += vv;
+    else {
+      if (vv.size() < 20)
+	cc += string(20-vv.size(), ' ');
+      cc += vv;
+    }
+    if (!comment.empty())
+      cc += " / " + comment;
+  }
+  if (cc.size() > 80)
+    cc.resize(80);
+  cc.resize(80, ' ');
+  return cc;
+}
+
+static void xisfAppendCard(FitsHead* hh, const string& card)
+{
+  char buf[81];
+  memcpy(buf, card.data(), 80);
+  buf[80] = '\0';
+  hh->cardins(buf, NULL);
+}
+
+static void xisfAppendComment(FitsHead* hh, const string& text)
+{
+  // COMMENT cards hold 72 characters; wrap longer text over several
+  for (size_t at=0; at<text.size() || !at; at+=72) {
+    xisfAppendCard(hh, xisfCard("COMMENT", "", text.substr(at, 72)));
+    if (text.empty())
+      break;
+  }
+}
+
+static const FitsXisfKeyword* xisfFindKeyword(const FitsXisfImage* im,
+					      const char* name)
+{
+  for (size_t ii=0; ii<im->keywords_.size(); ii++)
+    if (im->keywords_[ii].name_ == name)
+      return &im->keywords_[ii];
+  return NULL;
+}
+
+// A property's scalar or string value, if it has one inline.
+static int xisfPropertyText(const FitsXisfImage* im, const char* id,
+			    string* out)
+{
+  const FitsXisfProperty* pp = im->property(id);
+  if (!pp || pp->block_.kind_ != FitsXisfBlock::NONE)
+    return 0;
+  *out = pp->hasValue_ ? xisfTrim(pp->value_) : pp->text_;
+  return !out->empty();
+}
+
+void FitsXisf::buildHeader(const FitsXisfImage* im)
+{
+  FitsHead* hh = head_;
+  vector<string> notes;
+
+  // bounds only states the display range, and a float image's is usually
+  // 0:1 - exactly what DATAMIN/DATAMAX say, for a scale mode that uses
+  // them. The keyword list's own DATAMIN/DATAMAX are not used: in real
+  // files they describe the file the image was imported from.
+  if (im->hasBounds_) {
+    hh->appendReal("DATAMIN", im->lower_, 15, "XISF bounds, lower");
+    hh->appendReal("DATAMAX", im->upper_, 15, "XISF bounds, upper");
+  }
+
+  for (size_t ii=0; ii<im->keywords_.size(); ii++) {
+    const FitsXisfKeyword& kk = im->keywords_[ii];
+    string name = xisfTrim(kk.name_);
+    string shown = name + " = " + kk.value_;
+    if (xisfStructural(name))
+      notes.push_back("XISF keyword not used (structure is from the "
+		      "geometry): " + shown);
+    else if (xisfWcsKeyword(name))
+      notes.push_back("XISF WCS keyword not used yet: " + shown);
+    else if (!name.empty() && !xisfFitsName(name))
+      notes.push_back("XISF keyword with a non-FITS name: " + shown);
+    else
+      xisfAppendCard(hh, xisfCard(name, kk.value_, kk.comment_));
+  }
+
+  // FITS equivalents of standard properties (spec §11.5.3), where the
+  // keyword list does not already say it. Strings and times verbatim,
+  // numbers as written; units converted where the conventional keyword
+  // uses others.
+  struct Map {const char* id; const char* key; int kind; double scale;
+    const char* comm;};
+  static const Map map[] = {
+    {"Observation:Object:Name", "OBJECT", 0, 1, "XISF Observation:Object:Name"},
+    {"Observation:Time:Start", "DATE-OBS", 0, 1, "XISF Observation:Time:Start"},
+    {"Observation:Time:End", "DATE-END", 0, 1, "XISF Observation:Time:End"},
+    {"Instrument:ExposureTime", "EXPTIME", 1, 1, "[s] XISF Instrument:ExposureTime"},
+    {"Instrument:Filter:Name", "FILTER", 0, 1, "XISF Instrument:Filter:Name"},
+    {"Instrument:Telescope:Name", "TELESCOP", 0, 1, "XISF Instrument:Telescope:Name"},
+    {"Instrument:Camera:Name", "INSTRUME", 0, 1, "XISF Instrument:Camera:Name"},
+    {"Instrument:Camera:XBinning", "XBINNING", 2, 1, "XISF Instrument:Camera:XBinning"},
+    {"Instrument:Camera:YBinning", "YBINNING", 2, 1, "XISF Instrument:Camera:YBinning"},
+    {"Instrument:Sensor:Temperature", "CCD-TEMP", 1, 1, "[C] XISF Instrument:Sensor:Temperature"},
+    {"Instrument:Sensor:XPixelSize", "XPIXSZ", 1, 1, "[um] XISF Instrument:Sensor:XPixelSize"},
+    {"Instrument:Sensor:YPixelSize", "YPIXSZ", 1, 1, "[um] XISF Instrument:Sensor:YPixelSize"},
+    {"Instrument:Telescope:FocalLength", "FOCALLEN", 1, 1000, "[mm] XISF Instrument:Telescope:FocalLength"},
+    {"Instrument:Telescope:Aperture", "APTDIA", 1, 1000, "[mm] XISF Instrument:Telescope:Aperture"},
+    {"Observation:Location:Latitude", "OBSGEO-B", 1, 1, "[deg] XISF Observation:Location:Latitude"},
+    {"Observation:Location:Longitude", "OBSGEO-L", 1, 1, "[deg] XISF Observation:Location:Longitude"},
+    {"Observation:Location:Elevation", "OBSGEO-H", 1, 1, "[m] XISF Observation:Location:Elevation"},
+  };
+  for (size_t ii=0; ii<sizeof(map)/sizeof(map[0]); ii++) {
+    string vv;
+    if (xisfFindKeyword(im, map[ii].key) ||
+	!xisfPropertyText(im, map[ii].id, &vv))
+      continue;
+    double dd;
+    unsigned long long uu;
+    if (map[ii].kind == 0)
+      hh->appendString(map[ii].key, vv.c_str(), map[ii].comm);
+    else if (map[ii].kind == 2 && xisfULL(vv, &uu) && uu <= INT_MAX)
+      hh->appendInteger(map[ii].key, (int)uu, map[ii].comm);
+    else if (xisfDouble(vv, &dd))
+      hh->appendReal(map[ii].key, dd*map[ii].scale, 10, map[ii].comm);
+  }
+  if (!im->imageType_.empty() && !xisfFindKeyword(im, "IMAGETYP"))
+    hh->appendString("IMAGETYP", im->imageType_.c_str(), "XISF imageType");
+
+  // what was done to get here, and what an XISF reader would otherwise know
+  char buf[256];
+  snprintf(buf, sizeof(buf), "XISF image %d of %d%s%s, %s %s, %s storage",
+	   im->index_+1, xisf_->nimage(),
+	   im->id_.empty() ? "" : ", id ", im->id_.c_str(),
+	   im->colorSpace_.c_str(), im->sampleFormat_.c_str(),
+	   im->planar_ ? "planar" : "normal");
+  xisfAppendComment(hh, buf);
+  if (im->channels_ > 1) {
+    snprintf(buf, sizeof(buf), "Its %lld %s channels are the planes of "
+	     "axis 3.", im->channels_, im->colorSpace_.c_str());
+    xisfAppendComment(hh, buf);
+  }
+  xisfAppendComment(hh, "Rows are flipped: XISF row 0 is the top, FITS row "
+		    "1 the bottom.");
+  if (im->sampleFormat_ == "UInt32")
+    xisfAppendComment(hh, "UInt32 samples are widened to 64 bit integers.");
+  if (!im->offset_.empty())
+    xisfAppendComment(hh, "XISF offset (pedestal added to the data, not "
+		      "removed here): " + im->offset_);
+  if (!im->orientation_.empty())
+    xisfAppendComment(hh, "XISF orientation (display hint, not applied): " +
+		      im->orientation_);
+  for (size_t ii=0; ii<notes.size(); ii++)
+    xisfAppendComment(hh, notes[ii]);
+
+  hh->updateHDU();
+}
+
+// ---------------------------------------------------------------- pixels
+
+FitsXisf::FitsXisf(const char* fn, const char* key)
+{
+  xisf_ = NULL;
+
+  // the ordinary fitsy name parse, as FitsAsdf does it
+  parse(fn);
+  if (!valid_)
+    return;
+  valid_ = 0;
+
+  if (!pName_) {
+    xisfError_ = "no file name";
+    return;
+  }
+
+  xisf_ = new FitsXisfFile(pName_);
+  if (!xisf_->isValid()) {
+    xisfError_ = xisf_->error() ? xisf_->error() : "unable to read";
+    return;
+  }
+
+  if (!build(key))
+    return;
+
+  valid_ = 1;
+}
+
+FitsXisf::~FitsXisf()
+{
+  if (data_)
+    delete [] (char*)data_;
+
+  if (xisf_)
+    delete xisf_;
+}
+
+static unsigned long long xisfLoadUInt(const unsigned char* pp, int sz,
+				       int big)
+{
+  unsigned long long vv = 0;
+  for (int ii=0; ii<sz; ii++)
+    vv |= (unsigned long long)pp[big ? sz-1-ii : ii] << (8*ii);
+  return vv;
+}
+
+int FitsXisf::build(const char* key)
+{
+  const FitsXisfImage* im = NULL;
+  if (key && *key) {
+    im = xisf_->find(key);
+    if (!im) {
+      xisfError_ = string("no image '") + key + "' in this file";
+      return 0;
+    }
+  }
+  else if (!(im = xisf_->image(0))) {
+    xisfError_ = "the file contains no images";
+    return 0;
+  }
+
+  char label[64];
+  snprintf(label, sizeof(label), "image %d", im->index_);
+  string what = im->id_.empty() ? string(label) : "image " + im->id_;
+
+  if (im->unsupported_) {
+    xisfError_ = what + ": " + im->why_;
+    return 0;
+  }
+
+  // Two spatial dimensions with any number of channels, or three with
+  // one. The channels of a 2-D image become the planes of a cube; a 3-D
+  // image with several channels would need a fourth axis, which DS9 has
+  // no frame for.
+  if (im->ndim_ < 2 || im->ndim_ > 3) {
+    snprintf(label, sizeof(label), "%d", im->ndim_);
+    xisfError_ = what + ": " + label + "-dimensional images are not "
+      "supported";
+    return 0;
+  }
+  if (im->ndim_ == 3 && im->channels_ > 1) {
+    xisfError_ = what + ": 3-dimensional images with several channels are "
+      "not supported";
+    return 0;
+  }
+  long long ww = im->dim_[0];
+  long long hh = im->dim_[1];
+  long long dd = im->ndim_ == 3 ? im->dim_[2] : im->channels_;
+  long long nc = im->channels_;
+  if (ww > INT_MAX || hh > INT_MAX || dd > INT_MAX) {
+    xisfError_ = what + ": too large for fitsy";
+    return 0;
+  }
+
+  int bitpix, widen = 0;
+  const string& fmt = im->sampleFormat_;
+  if (fmt == "UInt8")
+    bitpix = 8;
+  else if (fmt == "UInt16")
+    bitpix = -16;                       // fitsy's private unsigned 16
+  else if (fmt == "UInt32") {
+    bitpix = 64;                        // exact in int64
+    widen = 1;
+  }
+  else if (fmt == "UInt64")
+    bitpix = 64;                        // checked value by value below
+  else if (fmt == "Float32")
+    bitpix = -32;
+  else if (fmt == "Float64")
+    bitpix = -64;
+  else {
+    xisfError_ = what + ": " + fmt + " samples are not supported";
+    return 0;
+  }
+
+  size_t len = 0;
+  char* buf = xisf_->block(im->block_, &len);
+  if (!buf) {
+    xisfError_ = what + ": " +
+      (xisf_->error() ? xisf_->error() : "unable to read the data block");
+    return 0;
+  }
+  // The container checked the declared size against the geometry, and
+  // block() returns exactly the declared size. Re-checked here because
+  // everything below indexes the buffer by geometry alone.
+  unsigned long long want = im->bytes();
+  if (!want || len != want) {
+    delete [] buf;
+    xisfError_ = what + ": data block size does not match the geometry";
+    return 0;
+  }
+
+  int insz = im->sampleSize_;
+  int outsz = widen ? 8 : insz;
+  int big = im->block_.big_;
+  size_t plane = (size_t)ww*(size_t)hh;
+  size_t total = plane*(size_t)dd;     // bounded: bytes() <= 2^62
+  char* out = new (std::nothrow) char[total*outsz ? total*outsz : 1];
+  if (!out) {
+    delete [] buf;
+    xisfError_ = what + ": unable to allocate the image";
+    return 0;
+  }
+
+  // Plane k is a channel of a 2-D image or a slice of a 3-D one. Output
+  // row r is input row H-1-r. In planar storage each row is contiguous; in
+  // normal storage a pixel's channels are, so a row is gathered sample by
+  // sample.
+  int planar = im->planar_ || nc == 1;
+  for (long long kk=0; kk<dd; kk++) {
+    long long zz = im->ndim_ == 3 ? kk : 0;
+    long long cc = im->ndim_ == 3 ? 0 : kk;
+    for (long long rr=0; rr<hh; rr++) {
+      long long src = hh-1-rr;
+      char* dst = out + (((size_t)kk*hh + rr)*ww)*outsz;
+      if (planar && !widen) {
+	const char* from = buf + (((size_t)kk*hh + src)*ww)*insz;
+	memcpy(dst, from, (size_t)ww*insz);
+	continue;
+      }
+      for (long long xx=0; xx<ww; xx++) {
+	size_t si = planar ?
+	  (((size_t)kk*hh + src)*ww + xx) :
+	  ((((size_t)zz*hh + src)*ww + xx)*nc + cc);
+	const char* from = buf + si*insz;
+	if (widen) {
+	  // UInt32 -> int64, written little endian whatever it was read as
+	  unsigned long long vv =
+	    xisfLoadUInt((const unsigned char*)from, 4, big);
+	  for (int bb=0; bb<8; bb++)
+	    dst[xx*8+bb] = (char)((vv >> (8*bb)) & 0xff);
+	}
+	else
+	  memcpy(dst + xx*insz, from, insz);
+      }
+    }
+  }
+  delete [] buf;
+
+  if (widen)
+    big = 0;
+
+  // UInt64 is held as int64, which is exact only below 2^63. A larger
+  // value is refused rather than wrapped into a negative number.
+  if (fmt == "UInt64") {
+    for (size_t ii=0; ii<total; ii++)
+      if (xisfLoadUInt((const unsigned char*)out + ii*8, 8, big) >
+	  (unsigned long long)LLONG_MAX) {
+	delete [] out;
+	xisfError_ = what + ": UInt64 value above the int64 range";
+	return 0;
+      }
+  }
+
+  pWidth_ = (int)ww;
+  pHeight_ = (int)hh;
+  pDepth_ = (int)dd;
+  pBitpix_ = bitpix;
+  pSkip_ = 0;
+  pArch_ = big ? BIG : LITTLE;
+  pEncoding_ = RAW;
+
+  if (!validParams()) {
+    delete [] out;
+    xisfError_ = what + ": unsupported shape or sample format";
+    return 0;
+  }
+
+  head_ = new FitsHead(pWidth_, pHeight_, pDepth_, pBitpix_);
+  if (!head_->isValid()) {
+    delete [] out;
+    delete head_;
+    head_ = NULL;
+    xisfError_ = "unable to build a header";
+    return 0;
+  }
+  manageHead_ = 1;
+  buildHeader(im);
+
+  data_ = out;
+  dataSize_ = total*outsz;
+  dataSkip_ = 0;
+
+  setByteSwap();
+
+  return 1;
 }

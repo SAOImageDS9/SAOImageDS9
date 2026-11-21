@@ -43,6 +43,7 @@ Last updated 2026-11-25
 | vector       |            | y     |       |                                                                      |                                 |
 | xpa          | 2.2.2      | y     |       | https://github.com/SAOImageDS9/xpa-maintenance                       | 2.2.2                           |
 | zlib         | 1.3.2      |       |       | https://github.com/madler/zlib                                       | 1.3.2                           |
+| zstd         | 1.5.7      |       |       | https://github.com/facebook/zstd                                     | 1.5.7                           |
 | -- -- --     |            |       |       |                                                                      |                                 |
 | compilers    |            | y     |       |                                                                      |                                 |
 | macos        |            | y     |       |                                                                      |                                 |

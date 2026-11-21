@@ -102,7 +102,7 @@ TKIMGTMPFILES = \
 #-------------------------- main
 
 .NOTPARALLEL :
-.PHONY	: all dirs ds9 tclxml tclxmlrpc tls xpa zlib lz4 bzip2
+.PHONY	: all dirs ds9 tclxml tclxmlrpc tls xpa zlib lz4 bzip2 zstd
 .PHONY	: tkblt tclfitsy tkcon tkhtml1 tkimg tkmpeg tkagif tksao tktable
 .PHONY	: tkdnd
 .PHONY	: vector fitsy libyaml ast funtools openssl
@@ -328,6 +328,32 @@ bzip2	:
 	$(CONFIGFLAGS) $(if $(TARGET),RANLIB=$(TARGET)-ranlib,)
 	cp -p bzip2/libbz2.a $(libdir)/.
 	cp -p bzip2/bzlib.h $(includedir)/.
+
+#-------------------------- zstd
+
+# zstd, like lz4 and bzip2, has no ./configure - lib/Makefile is
+# hand-written, so $(CONFIGFLAGS) works as ordinary make overrides.
+#
+# Its consumer is fitsy's XISF reader (fitsy/xisf.C, TODO_XISF.md Phase
+# 2), which only ever decompresses, so this builds the static library
+# with the compressor, the dictionary builder, the deprecated API and the
+# pre-1.0 legacy frame formats all compiled out (ZSTD_LIB_COMPRESSION=0
+# implies the first three). `libzstd.a' is built by name rather than via
+# `install', which would also build the shared library and pkg-config
+# file; only the archive and the two public headers are placed. The
+# archive is made with `ar rcs', which writes its own symbol index, so
+# unlike bzip2 there is no RANLIB to get right for a cross build.
+#
+# `zstd' collides with the directory name, so it must stay .PHONY.
+
+zstd	:
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C zstd/lib -j $(JOBS) libzstd.a \
+	$(CONFIGFLAGS) \
+	ZSTD_LIB_COMPRESSION=0 ZSTD_LEGACY_SUPPORT=0
+	cp -p zstd/lib/libzstd.a $(libdir)/.
+	cp -p zstd/lib/zstd.h zstd/lib/zstd_errors.h $(includedir)/.
 
 #-------------------------- xpa
 
@@ -781,7 +807,7 @@ scrub :
 .PHONY	: tclxmlclean tclxmlrpcclean tlsclean
 .PHONY	: tkbltclean tclfitsy tkconclean tkhtml1clean tkimgclean
 .PHONY	: tkmpegclean tkagifclean tkdndclean
-.PHONY	: tktableclean xpaclean zlibclean lz4clean bzip2clean
+.PHONY	: tktableclean xpaclean zlibclean lz4clean bzip2clean zstdclean
 .PHONY	: vectorclean fitsyclean libyamlclean astclean funtoolsclean
 .PHONY	: tksaoclean
 
@@ -929,6 +955,11 @@ bzip2clean :
 	@echo "*** $@ ***"
 	$(MAKE) -C bzip2 clean
 
+zstdclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C zstd/lib clean
+
 #-------------------------- distclean
 
 .PHONY	: dirsdistclean ds9distclean localdistclean
@@ -937,6 +968,7 @@ bzip2clean :
 .PHONY	: tkbltdistclean tclfitsydistclean tkcondistclean tkhtml1distclean
 .PHONY	: tkimgdistclean tkmpegdistclean tkagifdistclean tkdnddistclean
 .PHONY	: tktabledistclean xpadistclean zlibdistclean lz4distclean bzip2distclean
+.PHONY	: zstddistclean
 .PHONY	: vectordistclean fitsydistclean libyamldistclean
 .PHONY	: astdistclean funtoolsdistclean
 .PHONY	: tksaodistclean
@@ -1111,3 +1143,10 @@ bzip2distclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C bzip2 clean
+
+# zstd/lib has no distclean of its own; `clean' removes everything the
+# zstd rule above builds.
+zstddistclean :
+	@echo ""
+	@echo "*** $@ ***"
+	$(MAKE) -C zstd/lib clean

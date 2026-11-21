@@ -634,7 +634,8 @@ FitsImageAsdf::FitsImageAsdf(Context* cx, Tcl_Interp* pp,
   FitsAsdf* af = new FitsAsdf(fn, path);
   // Why the file could not be read goes to the interpreter here, because
   // process() discards an invalid fits_ (reset() deletes it), so by the
-  // time the load command could ask, the message is gone.
+  // time the load command could ask, the message is gone. The same holds
+  // for FitsImageXisf below.
   if (!af->isValid() && af->errorMessage())
     Tcl_AppendResult(pp, "ASDF: ", af->errorMessage(), NULL);
   fits_ = af;

@@ -204,6 +204,13 @@ class FitsXisfFile {
 // chooser (tclfitsy's `fitsy xisf images'), so they cannot disagree.
 extern int xisfLoadable(const FitsXisfImage*, std::string* why);
 
+// Whether an image of a file (`key' as for FitsXisf, NULL or "" for the
+// first) is a loadable RGB-colour-space image of two dimensions and at
+// least three channels - the rule by which an RGB frame loads it into its
+// red, green and blue channels instead of the current one. Shared with
+// the Tcl side through `fitsy xisf images', which reports the same fields.
+extern int xisfIsRGB(const char* fn, const char* key);
+
 // One XISF image as a FitsFile - TODO_XISF.md Phase 3. What the frame's
 // `load xisf' command will instantiate, as `load asdf' does FitsAsdf.
 //

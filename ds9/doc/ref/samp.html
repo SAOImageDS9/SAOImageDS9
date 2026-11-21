@@ -3707,7 +3707,7 @@ by appending a colon and its <tt>id</tt> or its index, counting from 0. If none 
 named, the first image is loaded. The image's WCS, if it has an astrometric
 solution, is attached as the frame's WCS. See <a href="file.html#xisf">XISF</a>.<br></p>
 <p>A <tt>mask</tt> loads the image into the frame's mask layer instead of as the image. The same thing is reachable from the mask dialog's <b>File&nbsp;&#8594;&nbsp;Open&nbsp;as&nbsp;&#8594;&nbsp;XISF</b>.</p>
-<p>In an RGB, HLS or HSV frame the image is loaded into the frame's current channel, exactly as a FITS image would be; an RGB XISF image loads there as a three-plane cube.</p>
+<p>In an RGB frame, an image in the RGB colour space is loaded into the red, green and blue channels at once, as <tt>rgbcube</tt> loads a FITS cube; any alpha channel is left out. Any other image, and any image in an HLS or HSV frame, is loaded into the frame's current channel, exactly as a FITS image would be.</p>
 <tt>Syntax:<br>
 xisf [new|mask] &lt;filename&gt;[:&lt;image&gt;]<br>
 &nbsp;<br>

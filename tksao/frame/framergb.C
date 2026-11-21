@@ -8,6 +8,7 @@
 #include "util.h"
 #include "fitsimage.h"
 #include "tiff.h"
+#include "xisf.h"
 #include "outfile.h"
 #include "outchannel.h"
 #include "outsocket.h"
@@ -427,4 +428,23 @@ void FrameRGB::savePhotoCmd(const char* ph)
     Tcl_AppendResult(interp, "bad put block ", NULL);
     return;
   }
+}
+
+// An XISF image in the RGB colour space goes to the red, green and blue
+// channels at once - its channels are the planes of the cube FitsXisf
+// builds, so this is the `rgb cube' load - because an XISF file, unlike a
+// FITS cube, says that it is colour. Anything else (a gray image, a mask)
+// goes to the current channel, as for FITS and ASDF. The rule is
+// xisfIsRGB's, shared with ds9/library/xisf.tcl.
+void FrameRGB::loadXisfCmd(const char* fn, const char* key,
+			   const char* name, LayerType ll)
+{
+  if (ll == IMG && xisfIsRGB(fn, key)) {
+    unloadAllFits();
+    FitsImage* img = new FitsImageXisf(&context[0], interp, fn, key,
+				       name, 1);
+    loadRGBCube(XISF, name, img);
+    return;
+  }
+  Base::loadXisfCmd(fn, key, name, ll);
 }

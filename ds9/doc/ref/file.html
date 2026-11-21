@@ -454,7 +454,8 @@ $ds9 -xisf foo.xisf:2<br></tt></blockquote>
 channel, are supported. The channels of a colour image (RGB, or RGB with an alpha
 channel) become the planes of a data cube, as do those of a CIELab image, without
 colour conversion. XISF stores the top row first; images are displayed the same way up
-as in PixInsight. Sample formats are mapped as follows; no value is ever altered:</p>
+as in PixInsight. In an RGB frame, an RGB image fills the red, green and blue channels
+in one load. Sample formats are mapped as follows; no value is ever altered:</p>
 <blockquote><tt>UInt8&nbsp;&nbsp; -&gt; bitpix 8<br>
 UInt16&nbsp; -&gt; bitpix -16<br>
 UInt32&nbsp; -&gt; bitpix 64 (widened)<br>

@@ -148,6 +148,15 @@ proc XisfLoadImage {fn {key {}} {layer {}}} {
     set loadParam(xisf,file) [file normalize $fn]
     set loadParam(xisf,key) $key
 
+    # An RGB frame loads an RGB image into its red, green and blue channels
+    # at once (FrameRGB::loadXisfCmd); record that as the `rgb cube' load
+    # it is, so ProcessLoad saves it against the frame rather than the
+    # current channel. The rule is the C++ one, asked rather than copied.
+    if {$layer eq {} && [$current(frame) get type] eq {rgb} &&
+	![catch {fitsy xisf isrgb $fn $key} isrgb] && $isrgb} {
+	set loadParam(file,mode) {rgb cube}
+    }
+
     set rr [ProcessLoad]
 
     # The header viewer appends the file's XML header to the FITS header

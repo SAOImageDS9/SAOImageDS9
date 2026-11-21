@@ -1808,6 +1808,17 @@ int xisfLoadable(const FitsXisfImage* im, string* why)
   return 1;
 }
 
+int xisfIsRGB(const char* fn, const char* key)
+{
+  FitsXisfFile xf(fn);
+  if (!xf.isValid())
+    return 0;
+  const FitsXisfImage* im = key && *key ? xf.find(key) : xf.image(0);
+  string why;
+  return im && xisfLoadable(im, &why) && im->ndim_ == 2 &&
+    im->colorSpace_ == "RGB" && im->channels_ >= 3;
+}
+
 int FitsXisf::build(const char* key)
 {
   const FitsXisfImage* im = NULL;

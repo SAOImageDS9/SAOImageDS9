@@ -7,8 +7,8 @@ already has. Written 2026-11-21 against the ASDF work as it stands on
 `TODO_ASDF.md` does. Work happens on the `xisf_support` branch, in both this repo and
 `Tests/`.
 
-**Status (2026-11-21): Phases 0–5 are done**, apart from loading one XISF RGB image into
-all three channels of an RGB frame. **XISF files open in ds9**, from the File menu,
+**Status (2026-11-21): Phases 0–5 are done**, including loading an RGB image into all
+three channels of an RGB frame. **XISF files open in ds9**, from the File menu,
 over XPA/SAMP and on the command line. `Tests/xisf.sh` reproduces all 121 fixture
 baselines, which were recorded from FITS twins, through ds9's own `xisf` command.
 `fitsy/xisf.{h,C}` holds two layers:
@@ -21,8 +21,8 @@ baselines, which were recorded from FITS twins, through ds9's own `xisf` command
 tksao reaches it through `load xisf`; the Tcl surface is `ds9/library/xisf.tcl`.
 **Phase 6** is macOS-only so far: the Linux and Windows builds are deferred. A static
 portability audit fixed what it could without them, and left a checklist for those
-builds. After that, the remaining work is real plate-solved PixInsight output, the
-distortion layers, and the RGB-frame load.
+builds. After that, the remaining work is real plate-solved PixInsight output and the
+distortion layers.
 
 Spec: <https://pixinsight.com/doc/docs/XISF-1.0-spec/XISF-1.0-spec.html> (XISF 1.0,
 Revision 2). A second, full read on 2026-11-21 settled everything this file had marked
@@ -260,11 +260,16 @@ ASDF version to copy from.
 - [x] `tksao/frame/baseload.C` / `frame.h` / `frameload.C`: image and mask layers.
 - [x] `tksao/frame/context.C`: `case Base::XISF:` → `FitsImageXisfNext`.
 - [x] `tksao/frame/fitsimage.{h,C}`: `FitsImageXisf`, `FitsImageXisfNext`.
-- [ ] RGB frame: today an XISF image loads into an RGB frame's *current channel*, an RGB
-      image as a 3-plane cube there. That is exactly what FITS and ASDF do, and it is
-      documented that way. Feeding an RGB image's planes to the three channels in one
-      load is the remaining enhancement. Look at how `FrameRGB` implements
-      `loadRGBCube*` (one cube split across channels) before choosing.
+- [x] RGB frame (2026-11-21): `FrameRGB::loadXisfCmd` sends an RGB-colour-space image
+      (2-D, three or more channels, loadable: `xisfIsRGB` in fitsy) through
+      `FrameA::loadRGBCube` with a new `XISF` case, so its planes become red, green and
+      blue in one load, exactly as `-rgbcube` splits a FITS cube. For XISF only,
+      `loadRGBCube` accepts a depth of 3 or more, because an RGBA image's alpha is plane
+      4 and is left out. A gray image, a mask, and anything in an HLS/HSV frame still go
+      to the current channel. No grammar change was needed: the file says it is colour,
+      so the frame decides, unlike FITS, where `-rgbcube` has to be asked for. The Tcl
+      side asks the same rule (`fitsy xisf isrgb`) and records the load as `{rgb cube}`,
+      so ProcessLoad saves it against the frame and backup/restore round-trips it.
 
 **Tcl (`ds9/`)**
 - [x] `ds9/library/xisf.tcl`: `LoadXisfFile`/`XisfLoadImage`, `ProcessXisfCmd`, the
@@ -581,7 +586,15 @@ bytes, missing or malformed `bounds`, uppercase checksum hex.
   automated phases of `backup.sh` were rerun too (24 passed, none failed). Its `old`
   phase opens each historical save set and waits for someone to close ds9, so it
   needs a person and was not run.
-- [ ] RGB frame: one XISF RGB image into all three channels (see §3).
+- [x] RGB frame: one XISF RGB image into all three channels (see §3). Tested in
+      `Tests/xisf.sh extra`:
+  - PixInsight's own RGB file lands as 65535/32768/16384;
+  - planar and normal storage match the twins' planes;
+  - RGBA drops alpha;
+  - a gray image stays in the current channel;
+  - the RGB frame survives backup and restore. 16/16.
+
+  `rgbcube.sh` (FITS RGB cubes through the same `loadRGBCube`) still passes.
 
 ### Phase 6: Platforms and tests
 - [x] `Tests/xisf.sh` added to `io.sh`, commented out like `asdf.sh` (the user's

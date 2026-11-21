@@ -345,15 +345,25 @@ int TclFITSY::tiff(int argc, const char* argv[])
 //     why not, from the same check FitsXisf makes before loading.
 //   fitsy xisf header <file>   the XML header, indented, with long
 //                              embedded data elided (the header viewer)
+//   fitsy xisf isrgb <file> ?image?
+//                              1 if an RGB frame loads that image into its
+//                              three channels (xisfIsRGB), else 0
 int TclFITSY::xisf(int argc, const char* argv[])
 {
   if (argc<4) {
     Tcl_AppendResult(interp_,
-		     "usage: fitsy xisf ?images|header? ?filename?", NULL);
+		     "usage: fitsy xisf ?images|header|isrgb? ?filename? ?image?", NULL);
     return TCL_ERROR;
   }
 
   const char* which = argv[2];
+
+  if (!strcmp(which,"isrgb")) {
+    Tcl_SetObjResult(interp_, Tcl_NewIntObj(xisfIsRGB(argv[3],
+				  argc > 4 ? argv[4] : NULL)));
+    return TCL_OK;
+  }
+
   FitsXisfFile xf(argv[3]);
   if (!xf.isValid()) {
     Tcl_AppendResult(interp_, "fitsy xisf: ",

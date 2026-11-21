@@ -17,6 +17,7 @@
 #include <limits.h>
 #include <errno.h>
 #include <ctype.h>
+#include <math.h>
 
 #include <libxml/parser.h>
 #include <libxml/tree.h>
@@ -1175,21 +1176,59 @@ static int xisfFitsName(const string& nn)
   return 1;
 }
 
-// One FITS card, laid out as the standard has it, from a keyword's three
-// verbatim parts: a string value starts at column 11, anything else is
-// right justified to column 30.
+// A FITS string value: quoted, embedded quotes doubled, and cut short
+// enough to close its quote by column 80 (`room' columns in all).
+static string xisfQuote(const string& text, size_t room)
+{
+  string out = "'";
+  for (size_t ii=0; ii<text.size(); ii++) {
+    size_t need = text[ii] == '\'' ? 2 : 1;
+    if (out.size() + need + 1 > room)
+      break;
+    out += text[ii];
+    if (text[ii] == '\'')
+      out += '\'';
+  }
+  return out + "'";
+}
+
+// A FITS string value as written - quotes and all - back to its text.
+static string xisfUnquote(const string& vv)
+{
+  string out;
+  for (size_t ii=1; ii<vv.size(); ii++) {
+    if (vv[ii] == '\'') {
+      if (ii+1 < vv.size() && vv[ii+1] == '\'')
+	ii++;
+      else
+	break;
+    }
+    out += vv[ii];
+  }
+  return out;
+}
+
+// One FITS card, laid out as the standard has it: a string value starts at
+// column 11, anything else is right justified to column 30, and nothing
+// ever runs past column 80. Every card this file writes goes through
+// here, never through FitsCard's set* helpers: those copy their value and
+// comment into the 80 byte card unbounded, and the values here come from
+// the file (Tests/xisf/header/long_values overflowed the heap that way).
 static string xisfCard(const string& name, const string& value,
 		       const string& comment)
 {
-  string cc = name;
+  string cc = name.substr(0, 8);
   cc.resize(8, ' ');
   if (name == "COMMENT" || name == "HISTORY" || name.empty())
     cc += comment.empty() ? value : comment;
   else {
     cc += "= ";
     string vv = xisfTrim(value);
-    if (!vv.empty() && vv[0] == '\'')
+    if (!vv.empty() && vv[0] == '\'') {
+      if (cc.size() + vv.size() > 80)       // re-close a too long string
+	vv = xisfQuote(xisfUnquote(vv), 80-cc.size());
       cc += vv;
+    }
     else {
       if (vv.size() < 20)
 	cc += string(20-vv.size(), ' ');
@@ -1202,6 +1241,25 @@ static string xisfCard(const string& name, const string& value,
     cc.resize(80);
   cc.resize(80, ' ');
   return cc;
+}
+
+static string xisfReal(double vv)
+{
+  if (vv == 0)
+    vv = 0;                     // not -0
+  char buf[64];
+  snprintf(buf, sizeof(buf), "%.17G", vv);
+  string ss = buf;
+  if (ss.find_first_of(".EN") == string::npos)
+    ss += ".";                  // keep it a real, not an integer
+  return ss;
+}
+
+static string xisfInt(long long vv)
+{
+  char buf[32];
+  snprintf(buf, sizeof(buf), "%lld", vv);
+  return buf;
 }
 
 static void xisfAppendCard(FitsHead* hh, const string& card)
@@ -1242,18 +1300,221 @@ static int xisfPropertyText(const FitsXisfImage* im, const char* id,
   return !out->empty();
 }
 
+// ---------------------------------------------------------------- WCS
+
+static unsigned long long xisfLoadUInt(const unsigned char*, int, int);
+
+// PCL's WCSKeywords::MirrorVertically, for one keyword: the WCS keywords
+// stored with an XISF image describe its rows in storage order, top row
+// first (PCL WCSKeywords.h), and this reader stores them bottom row
+// first. CRPIX2 -> H+1-CRPIX2; CD1_2, CD2_2, PC1_2, PC2_2 negated; CDELT2
+// negated only when there is no PC matrix (CD = R(CROTA2) diag(CDELT1,
+// CDELT2), so CROTA2 is unchanged); and the SIP terms that correct or
+// depend on the vertical axis: in A and AP the coefficient of u^p v^q
+// changes sign for odd q, in B and BP for even q. An alternate-WCS letter
+// is carried along. Returns the new value text, or the old one.
+static string xisfMirror(const string& name, const string& value, int hh,
+			 int hasPC)
+{
+  string nn = name;
+  if (nn.size() > 1 && isupper((unsigned char)nn[nn.size()-1]) &&
+      isdigit((unsigned char)nn[nn.size()-2]))
+    nn.resize(nn.size()-1);    // CRPIX2A -> CRPIX2
+
+  double vv;
+  if (!xisfDouble(value, &vv) || !isfinite(vv))
+    return value;               // not ours to repair; AST will refuse it
+
+  if (nn == "CRPIX2")
+    return xisfReal(hh + 1 - vv);
+  if (nn == "CD1_2" || nn == "CD2_2" || nn == "PC1_2" || nn == "PC2_2")
+    return xisfReal(-vv);
+  if (nn == "CDELT2" && !hasPC)
+    return xisfReal(-vv);
+
+  int horiz = !nn.compare(0, 2, "A_") || !nn.compare(0, 3, "AP_");
+  int vert = !nn.compare(0, 2, "B_") || !nn.compare(0, 3, "BP_");
+  if ((horiz || vert) && xisfWcsKeyword(nn)) {
+    size_t us = nn.rfind('_');
+    unsigned long long qq;
+    if (us != string::npos && xisfULL(nn.substr(us+1), &qq)) {
+      int odd = (int)(qq & 1);
+      if (horiz == odd)
+	return xisfReal(-vv);
+    }
+  }
+  return value;
+}
+
+// A Float64 vector or matrix property of exactly `nn' values (the matrix
+// as `rows' x nn/rows, row major), decoded from its data block.
+int FitsXisf::vectorProperty(const FitsXisfImage* im, const string& id,
+			     int nn, int rows, double* out, string* why)
+{
+  const FitsXisfProperty* pp = im->property(id.c_str());
+  if (!pp) {
+    *why = "no " + id;
+    return 0;
+  }
+  int matrix = rows > 0;
+  if (pp->type_ != (matrix ? "F64Matrix" : "F64Vector") ||
+      (matrix ? (pp->rows_ != rows || pp->columns_ != nn/rows) :
+       pp->length_ != nn)) {
+    *why = id + " is not a " + (matrix ? "2x2 F64Matrix" : "2-element F64Vector");
+    return 0;
+  }
+  size_t len = 0;
+  char* buf = xisf_->block(pp->block_, &len);
+  if (!buf) {
+    *why = id + ": " + (xisf_->error() ? xisf_->error() : "unreadable");
+    return 0;
+  }
+  if (len != (size_t)nn*8) {
+    delete [] buf;
+    *why = id + " has the wrong size";
+    return 0;
+  }
+  for (int ii=0; ii<nn; ii++) {
+    unsigned long long bits = xisfLoadUInt((unsigned char*)buf + ii*8, 8,
+					   pp->block_.big_);
+    double dd;
+    memcpy(&dd, &bits, 8);
+    if (!isfinite(dd)) {
+      delete [] buf;
+      *why = id + " is not finite";
+      return 0;
+    }
+    out[ii] = dd;
+  }
+  delete [] buf;
+  return 1;
+}
+
+// FITS WCS cards for the linear layer (layer 1) of an astrometric
+// solution under `prefix'. 0, with the reason, if it is unusable - which
+// disables the whole solution (spec §11.5.3.7). Layers 2 and 3 are noted
+// and not applied: the spec lets a decoder fall back to layer 1, which is
+// "the best linear approximation" of the whole image-plane step.
+//
+// The conversion is PCL's ComputeWCSKeywords: XISF image coordinates have
+// the top-left pixel centred at (0.5, 0.5) and y down, so with FITS pixel
+// (xf, yf) for the flipped rows, x = xf - 0.5 and y = H + 0.5 - yf. M,
+// row major, maps (x - x0, y - y0) to the projection plane in degrees, so
+// CRPIX = (x0 + 0.5, H + 0.5 - y0) and CD is M with its second column
+// negated.
+int FitsXisf::solutionCards(const FitsXisfImage* im, const char* prefix,
+			    vector<string>* cards, vector<string>* notes)
+{
+  string pfx = prefix;
+  string why;
+
+  string proj;
+  const FitsXisfProperty* pp = im->property((pfx + "ProjectionSystem").c_str());
+  if (pp)
+    proj = xisfTrim(pp->hasValue_ ? pp->value_ : pp->text_);
+  static const char* codes[][2] = {
+    {"Gnomonic", "TAN"}, {"Stereographic", "STG"},
+    {"ZenithalEqualArea", "ZEA"}, {"Orthographic", "SIN"},
+    {"PlateCarree", "CAR"}, {"Mercator", "MER"}, {"HammerAitoff", "AIT"},
+  };
+  const char* code = NULL;
+  for (size_t ii=0; ii<sizeof(codes)/sizeof(codes[0]); ii++)
+    if (proj == codes[ii][0])
+      code = codes[ii][1];
+  if (!code) {
+    notes->push_back("XISF astrometric solution not used: " +
+		     (proj.empty() ? string("no ProjectionSystem") :
+		      "unknown ProjectionSystem '" + proj + "'"));
+    return 0;
+  }
+
+  double crval[2], ref[2], mm[4];
+  if (!vectorProperty(im, pfx + "ReferenceCelestialCoordinates", 2, 0,
+		      crval, &why) ||
+      !vectorProperty(im, pfx + "ReferenceImageCoordinates", 2, 0, ref,
+		      &why) ||
+      !vectorProperty(im, pfx + "LinearTransformationMatrix", 4, 2, mm,
+		      &why)) {
+    notes->push_back("XISF astrometric solution not used: " + why);
+    return 0;
+  }
+
+  double hh = (double)im->dim_[1];
+  cards->push_back(xisfCard("CTYPE1", string("'RA---") + code + "'",
+			    "XISF ProjectionSystem " + proj));
+  cards->push_back(xisfCard("CTYPE2", string("'DEC--") + code + "'",
+			    "XISF ProjectionSystem " + proj));
+  cards->push_back(xisfCard("CRVAL1", xisfReal(crval[0]), "[deg]"));
+  cards->push_back(xisfCard("CRVAL2", xisfReal(crval[1]), "[deg]"));
+  cards->push_back(xisfCard("CRPIX1", xisfReal(ref[0] + 0.5), ""));
+  cards->push_back(xisfCard("CRPIX2", xisfReal(hh + 0.5 - ref[1]), ""));
+  cards->push_back(xisfCard("CD1_1", xisfReal(mm[0]), "[deg/pixel]"));
+  cards->push_back(xisfCard("CD1_2", xisfReal(-mm[1]), "[deg/pixel]"));
+  cards->push_back(xisfCard("CD2_1", xisfReal(mm[2]), "[deg/pixel]"));
+  cards->push_back(xisfCard("CD2_2", xisfReal(-mm[3]), "[deg/pixel]"));
+
+  double pv[2];
+  string dummy;
+  if (vectorProperty(im, pfx + "ReferenceNativeCoordinates", 2, 0, pv,
+		     &dummy)) {
+    cards->push_back(xisfCard("PV1_1", xisfReal(pv[0]),
+			      "[deg] native longitude of the reference point"));
+    cards->push_back(xisfCard("PV1_2", xisfReal(pv[1]),
+			      "[deg] native latitude of the reference point"));
+  }
+  if (vectorProperty(im, pfx + "CelestialPoleNativeCoordinates", 2, 0, pv,
+		     &dummy)) {
+    cards->push_back(xisfCard("LONPOLE", xisfReal(pv[0]),
+			      "[deg] native longitude of the celestial pole"));
+    cards->push_back(xisfCard("LATPOLE", xisfReal(pv[1]),
+			      "[deg] native latitude of the celestial pole"));
+  }
+
+  // ICRS is the default. GCRS has no FITS RADESYS value (PCL writes
+  // 'GCRS' anyway); the difference is aberration and light deflection,
+  // tens of arcseconds at most, which the linear layer does not model
+  // either - so ICRS, and say so.
+  string sys;
+  pp = im->property((pfx + "CelestialReferenceSystem").c_str());
+  if (pp)
+    sys = xisfTrim(pp->hasValue_ ? pp->value_ : pp->text_);
+  cards->push_back(xisfCard("RADESYS", "'ICRS'", ""));
+  if (!sys.empty() && sys != "ICRS")
+    notes->push_back("XISF CelestialReferenceSystem " + sys +
+		     " is shown as ICRS");
+
+  for (size_t ii=0; ii<im->properties_.size(); ii++) {
+    const string& id = im->properties_[ii].id_;
+    if (!id.compare(0, pfx.size(), pfx) &&
+	(id.find(":ProjectiveTransformation:") != string::npos ||
+	 id.find(":DistortionModel:") != string::npos)) {
+      notes->push_back("XISF astrometric solution layers 2/3 (projective, "
+		       "distortion) are not applied; the WCS is its linear "
+		       "layer 1");
+      break;
+    }
+  }
+
+  notes->push_back(string("WCS from the XISF astrometric solution (") +
+		   prefix + "*)");
+  return 1;
+}
+
 void FitsXisf::buildHeader(const FitsXisfImage* im)
 {
   FitsHead* hh = head_;
   vector<string> notes;
+  vector<const FitsXisfKeyword*> wcsKeys;
 
   // bounds only states the display range, and a float image's is usually
   // 0:1 - exactly what DATAMIN/DATAMAX say, for a scale mode that uses
   // them. The keyword list's own DATAMIN/DATAMAX are not used: in real
   // files they describe the file the image was imported from.
   if (im->hasBounds_) {
-    hh->appendReal("DATAMIN", im->lower_, 15, "XISF bounds, lower");
-    hh->appendReal("DATAMAX", im->upper_, 15, "XISF bounds, upper");
+    xisfAppendCard(hh, xisfCard("DATAMIN", xisfReal(im->lower_),
+				"XISF bounds, lower"));
+    xisfAppendCard(hh, xisfCard("DATAMAX", xisfReal(im->upper_),
+				"XISF bounds, upper"));
   }
 
   for (size_t ii=0; ii<im->keywords_.size(); ii++) {
@@ -1264,7 +1525,7 @@ void FitsXisf::buildHeader(const FitsXisfImage* im)
       notes.push_back("XISF keyword not used (structure is from the "
 		      "geometry): " + shown);
     else if (xisfWcsKeyword(name))
-      notes.push_back("XISF WCS keyword not used yet: " + shown);
+      wcsKeys.push_back(&kk);
     else if (!name.empty() && !xisfFitsName(name))
       notes.push_back("XISF keyword with a non-FITS name: " + shown);
     else
@@ -1304,14 +1565,80 @@ void FitsXisf::buildHeader(const FitsXisfImage* im)
     double dd;
     unsigned long long uu;
     if (map[ii].kind == 0)
-      hh->appendString(map[ii].key, vv.c_str(), map[ii].comm);
+      xisfAppendCard(hh, xisfCard(map[ii].key, xisfQuote(vv, 70),
+				  map[ii].comm));
     else if (map[ii].kind == 2 && xisfULL(vv, &uu) && uu <= INT_MAX)
-      hh->appendInteger(map[ii].key, (int)uu, map[ii].comm);
+      xisfAppendCard(hh, xisfCard(map[ii].key, xisfInt((long long)uu),
+				  map[ii].comm));
     else if (xisfDouble(vv, &dd))
-      hh->appendReal(map[ii].key, dd*map[ii].scale, 10, map[ii].comm);
+      xisfAppendCard(hh, xisfCard(map[ii].key, xisfReal(dd*map[ii].scale),
+				  map[ii].comm));
   }
   if (!im->imageType_.empty() && !xisfFindKeyword(im, "IMAGETYP"))
-    hh->appendString("IMAGETYP", im->imageType_.c_str(), "XISF imageType");
+    xisfAppendCard(hh, xisfCard("IMAGETYP", xisfQuote(im->imageType_, 70),
+				"XISF imageType"));
+
+  // WCS. A standard AstrometricSolution block, unless its Version's major
+  // is not 1 (PCL then ignores the block entirely); else a legacy
+  // PCL:AstrometricSolution block, which PCL reads with the same meaning.
+  // The WCS keywords are used only when the image carries no solution
+  // block of either kind - not even an unusable one - because PCL writes
+  // bottom-up WCS keywords next to every solution it saves, contrary to
+  // the top-down convention it documents for reading them.
+  int hasStd = 0, hasLegacy = 0, stdVersionOk = 1;
+  for (size_t ii=0; ii<im->properties_.size(); ii++) {
+    const string& id = im->properties_[ii].id_;
+    if (!id.compare(0, 20, "AstrometricSolution:"))
+      hasStd = 1;
+    else if (!id.compare(0, 24, "PCL:AstrometricSolution:"))
+      hasLegacy = 1;
+  }
+  if (hasStd) {
+    string ver;
+    if (xisfPropertyText(im, "AstrometricSolution:Version", &ver)) {
+      unsigned long long major;
+      if (!xisfULL(ver.substr(0, ver.find('.')), &major) || major != 1) {
+	stdVersionOk = 0;
+	notes.push_back("XISF astrometric solution not used: unsupported "
+			"Version " + ver);
+      }
+    }
+  }
+
+  vector<string> wcsCards;
+  int solved = 0;
+  if (hasStd && stdVersionOk)
+    solved = solutionCards(im, "AstrometricSolution:", &wcsCards, &notes);
+  else if (hasLegacy && !hasStd)
+    solved = solutionCards(im, "PCL:AstrometricSolution:", &wcsCards,
+			   &notes);
+
+  if (hasStd || hasLegacy) {
+    for (size_t ii=0; ii<wcsKeys.size(); ii++)
+      notes.push_back("XISF WCS keyword not used (" +
+		      string(solved ? "superseded by" : "an image with") +
+		      " an astrometric solution): " + wcsKeys[ii]->name_ +
+		      " = " + wcsKeys[ii]->value_);
+  }
+  else if (!wcsKeys.empty()) {
+    int hasPC = 0;
+    for (size_t ii=0; ii<wcsKeys.size(); ii++)
+      if (!wcsKeys[ii]->name_.compare(0, 3, "PC1") ||
+	  !wcsKeys[ii]->name_.compare(0, 3, "PC2"))
+	hasPC = 1;
+    for (size_t ii=0; ii<wcsKeys.size(); ii++) {
+      const FitsXisfKeyword& kk = *wcsKeys[ii];
+      string name = xisfTrim(kk.name_);
+      wcsCards.push_back(xisfCard(name, xisfMirror(name, kk.value_,
+						     (int)im->dim_[1], hasPC),
+				  kk.comment_));
+    }
+    notes.push_back("WCS from the XISF WCS keywords, which describe the "
+		    "rows top down: mirrored for the flip (CRPIX2, CD/PC "
+		    "column 2, SIP)");
+  }
+  for (size_t ii=0; ii<wcsCards.size(); ii++)
+    xisfAppendCard(hh, wcsCards[ii]);
 
   // what was done to get here, and what an XISF reader would otherwise know
   char buf[256];

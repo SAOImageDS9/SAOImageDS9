@@ -202,9 +202,10 @@ class FitsXisfFile {
 // as the planes of a cube. The header is built here too: the structure
 // from the geometry, then the image's own <FITSKeyword>s minus the
 // structural cards a writer may have copied stale from another file, then
-// FITS equivalents of a few standard properties. WCS is Phase 4: until
-// then WCS keywords are kept out of the live header (as comments), so a
-// convention mistake can never put a wrong solution on screen.
+// FITS equivalents of a few standard properties, then the WCS: from the
+// image's AstrometricSolution properties (the linear layer, converted for
+// the flipped rows), or, only when there is no solution at all, from its
+// WCS keywords, mirrored for the flip as PCL does (TODO_XISF.md §2.6).
 //
 // Not split into per-transport subclasses, for the reason FitsAsdf is
 // not: the data blocks are found by absolute position, so the reader
@@ -217,6 +218,10 @@ class FitsXisf : public FitsFile {
  protected:
   int build(const char*);
   void buildHeader(const FitsXisfImage*);
+  int solutionCards(const FitsXisfImage*, const char*,
+		    std::vector<std::string>*, std::vector<std::string>*);
+  int vectorProperty(const FitsXisfImage*, const std::string&, int, int,
+		     double*, std::string*);
 
  public:
   // `key' picks the image: its id, or its decimal index; NULL or "" is

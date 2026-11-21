@@ -7,7 +7,7 @@ already has. Written 2026-11-21 against the ASDF work as it stands on
 `TODO_ASDF.md` does. Work happens on the `xisf_support` branch, in both this repo and
 `Tests/`.
 
-**Status (2026-11-21): Phases 0–3 are done.** `Tests/xisf/` has 105 synthetic fixtures
+**Status (2026-11-21): Phases 0–4 are done.** `Tests/xisf/` has 107 synthetic fixtures
 and 14 real ones, each with a FITS twin and a DS9 probe baseline recorded from that
 twin (`Tests/xisf/README.md`). `fitsy/xisf.{h,C}` holds two layers:
 - **`FitsXisfFile`**, the container. It reads the header and every image's descriptor,
@@ -15,13 +15,14 @@ twin (`Tests/xisf/README.md`). `fitsy/xisf.{h,C}` holds two layers:
   decompressed with zlib, lz4, lz4hc or zstd; subblocks, raw subblocks and byte
   shuffling handled.
 - **`FitsXisf`**, one image as the `FitsFile` ds9 will load: rows flipped, storage made
-  planar, channels as planes, and a header built from the geometry, the keywords and
-  the properties.
+  planar, channels as planes, and a header built from the geometry, the keywords, the
+  properties and the WCS. The WCS comes from the astrometric solution, or from mirrored
+  keywords when there is none.
 
-Both are checked against the twins over the whole fixture set
-(`Tests/xisf/check_container.py`, `check_fits.py`, driven by `utils/xisfdump`). They are
-in fitsy's build, but nothing in ds9 calls them yet. Next is Phase 4 (WCS) or Phase 5
-(the load command and UI), which are independent.
+Checked against the twins over the whole fixture set (`Tests/xisf/check_container.py`,
+`check_fits.py`, `check_ds9_wcs.sh`, driven by `utils/xisfdump`). The code is in fitsy's
+build, but nothing in ds9 calls it yet. **Next is Phase 5**: the load command, UI,
+XPA/SAMP, header viewer and RGB frame.
 
 Spec: <https://pixinsight.com/doc/docs/XISF-1.0-spec/XISF-1.0-spec.html> (XISF 1.0,
 Revision 2). A second, full read on 2026-11-21 settled everything this file had marked
@@ -479,28 +480,67 @@ bytes, missing or malformed `bounds`, uppercase checksum hex.
       (`fitsy xisf header` in tclfitsy and `header.tcl`), which is where the rest of the
       UI work is.
 
-### Phase 4: WCS
-- [ ] Read both `AstrometricSolution:` and legacy `PCL:AstrometricSolution:` blocks;
-      skip a standard block whose `Version` major is not 1.
-- [ ] Layer 1 → `CTYPE1/2` (`RA---TAN` etc., `GLON`/… never: XISF is equatorial only),
-      `CRVAL`, `CRPIX` (with the row flip and pixel-centre correction), `CD1_1…CD2_2`
-      (the sign of the y terms flips with the rows), `LONPOLE`/`LATPOLE` from the
-      optional native coordinates, and `RADESYS` (`ICRS`; `GCRS` has no FITS RADESYS
-      value, so map it to ICRS with a warning card). `MJD-OBS`/`DATE-OBS` comes from the
-      midpoint of `Observation:Time:Start`/`End`, which the spec defines as the
-      observation time.
-- [ ] Layer 2 (projective 3×3): fold it into the linear part if it is affine; otherwise
+### Phase 4: WCS (done 2026-11-21, layer 1 only)
+- [x] The standard `AstrometricSolution:` block is used unless its `Version` major is not
+      1, in which case PCL ignores it entirely and so do we. Failing that, the legacy
+      `PCL:AstrometricSolution:` block, same names and meaning, is used.
+      **Precedence:** WCS keywords are used only when the image has no solution block of
+      either kind, not even an unusable one, because PCL writes bottom-up keywords next to
+      every solution it saves. When a solution exists, those keywords become COMMENT
+      cards.
+- [x] Layer 1 → cards, PCL's `ComputeWCSKeywords` to the letter:
+  - `CTYPE` `RA---`/`DEC--` + TAN/STG/ZEA/SIN/CAR/MER/AIT.
+  - `CRVAL`.
+  - `CRPIX1 = x0+0.5`, `CRPIX2 = H+0.5−y0`.
+  - `CD` = M with column 2 negated.
+  - `PV1_1`/`PV1_2` and `LONPOLE`/`LATPOLE` from the native and pole coordinates.
+  - `RADESYS 'ICRS'`. GCRS, or any other system, is shown as ICRS with a note; the
+    difference is below what layer 1 models.
+
+  The vector and matrix properties are read through `FitsXisfFile::block()`: type,
+  length/rows/columns and byte size checked, `byteOrder` honoured, values required to
+  be finite. Any missing or bad required property disables the solution with a COMMENT
+  saying why, and so does an unknown projection.
+- [x] Keyword-only WCS, mirrored with PCL's `MirrorVertically`:
+  - `CRPIX2 → H+1−CRPIX2`;
+  - `CD1_2`/`CD2_2`/`PC1_2`/`PC2_2` negated;
+  - `CDELT2` negated when there is no PC matrix;
+  - SIP `A`/`AP` terms negated for odd q, `B`/`BP` for even q;
+  - alternate-WCS letters carried along, and non-finite values left alone.
+- [x] Not needed: DATE-OBS/MJD from the observation midpoint. For an ICRS solution the
+      time does not enter the transform; DATE-OBS/DATE-END already come from the
+      properties (Phase 3).
+- [ ] Layer 2 (projective 3×3): noted in a COMMENT and not applied (the spec's
+      fallback to layer 1). To do it properly, fold it into the linear part if it is affine; otherwise
       it needs an AST `MatrixMap`/`PolyMap` chain. Check whether PixInsight ever writes a
       non-affine one in practice before building that.
 - [ ] Layer 3 (surface splines): **AST has no thin-plate-spline Mapping.** Options, in
       order of cost: (a) ignore with a header note and use Layer 1/2 (the spec allows
       falling back to a lower layer); (b) fit a SIP polynomial to the spline on a grid,
       the way pds9 approximates GWCS, and emit `-SIP` cards; (c) implement the splines
-      as an AST `IntraMap`. Start with (a), measure the residual on real
-      ImageSolver output against PixInsight's own coordinate readout, then decide.
-- [ ] Test: compare DS9 `crosshair` sky coordinates at the corners and centre against the
-      FITS twin. Write it into `WCS_TEST_PLAN.md` as a new section rather than a parallel
-      plan.
+      as an AST `IntraMap`. **(a) is what is built**: a COMMENT says the distortion
+      is not applied. Next, measure the residual on real ImageSolver output against
+      PixInsight's own coordinate readout, then decide.
+- [x] Tests, also recorded in `WCS_TEST_PLAN.md` §8:
+  - `check_fits.py` compares the reader's WCS with the twin's numerically: the same sky
+    position to 1e-9° on a 7×5 pixel grid, for every loadable fixture.
+  - `check_ds9_wcs.sh` loads the reader's exact cards into ds9 (AST), and every `wcs/`
+    probe baseline is reproduced, crosshair sky position included. 19/19.
+  - New fixtures: `wcs/keywords_only_sip` (rotated CD, every SIP term to order 3). The
+    generator verifies its mirror rule independently with astropy before writing any
+    twin.
+  - Six broken builds were each caught: CRPIX2 unflipped, CD column not negated,
+    keywords not mirrored, SIP signs inverted, keywords used despite a solution, the
+    Version check off.
+  - 3000 WCS- and card-focused mutants under ASan/UBSan found nothing.
+- [x] **Found and fixed on the way:** a heap overflow. `FitsCard::setString`/`setReal`
+      (fitsy, pre-existing) copy value and comment into the 80-byte card with an
+      unbounded `memcpy`, and Phase 3 passed them file-controlled property strings.
+      `header/long_values` reproduces it under ASan. Every card the XISF reader writes
+      now goes through its own bounded `xisfCard()`, which closes a long string's quote
+      before column 80. The fitsy helpers themselves are unchanged and still unsafe for
+      long input; they are worth fixing separately, since other callers may pass
+      user-controlled text.
 
 ### Phase 5: UI, scripting and the rest
 - [ ] Everything in §3 Tcl. Menus/buttons/XPA/SAMP/command line, image chooser,

@@ -362,3 +362,24 @@ DS9's region code.
 
 3-D/VRML frames, RGB/HLS/HSV frames (single-array ASDF loads are base frames), IIS, and the
 catalog/analysis tools beyond a smoke check.
+
+## 8. XISF (TODO_XISF.md Phase 4)
+
+The XISF reader does not go through AST's YamlChan at all. It turns an image's
+`AstrometricSolution` properties, or its WCS keywords, into ordinary FITS WCS cards
+(`fitsy/xisf.C`, `FitsXisf::solutionCards` and `xisfMirror`), which ds9 then reads like
+any FITS header. So the ASDF matrix above applies to it unchanged once XISF files load.
+What is specific to XISF is the conversion, and it is checked at two levels:
+
+- `Tests/xisf/check_fits.py`: the reader's cards and the FITS twin's give the same sky
+  position, to 1e-9°, at a 7×5 grid over every loadable fixture. A twin without WCS
+  means the header must have none.
+- `Tests/xisf/check_ds9_wcs.sh`: the reader's exact cards, loaded into ds9, reproduce
+  each `wcs/` fixture's probe baseline, including the crosshair sky position at the
+  image centre. 19/19.
+
+The twins encode PCL's own conversion (PixInsight's reference implementation): XISF
+pixel centres at +0.5, rows flipped, and the CD matrix with its second column negated.
+Keyword-only WCS goes through PCL's `MirrorVertically`. The generator checks that rule
+independently with astropy before it writes a twin. Not yet run against a real
+plate-solved PixInsight file.

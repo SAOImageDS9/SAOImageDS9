@@ -23,13 +23,37 @@ char* FitsMap::enddata()
 
 size_t FitsMap::endsize()
 {
-  // return the size - (header+data)
-  return head_ ? 
-    (mapsize_ - (size_t)((char*)data_+head_->databytes()-mapdata_)) : 0;
+  // return the size - (header+data); 0 if the data's padding runs past
+  // the end of the map (an unpadded last HDU)
+  if (!head_)
+    return 0;
+  size_t used = (size_t)((char*)data_+head_->databytes()-mapdata_);
+  return used < mapsize_ ? mapsize_ - used : 0;
+}
+
+// Step past hd's header and data. The last HDU's data may stop short of
+// its padded size (many writers omit the final padding), so never step
+// past the end of the map: size is unsigned, and wrapping it would walk
+// on through memory that isn't mapped.
+static void skipHDU(char*& here, size_t& size, FitsHead* hd)
+{
+  size_t step = hd->headbytes() + hd->databytes();
+  if (step > size)
+    step = size;
+  here += step;
+  size -= step;
 }
 
 void FitsMap::found(char* here)
 {
+  // the data itself must be in the map (only its padding may be missing):
+  // a truncated file would otherwise be read past its end
+  if ((size_t)(here - mapdata_) + head_->headbytes() + head_->allbytes() >
+      mapsize_) {
+    error();
+    return;
+  }
+
   data_ = here + head_->headbytes();
 
   dataSize_ = mapsize_;
@@ -145,8 +169,7 @@ void FitsFitsMap::processExactImage()
       error();
       return;
     }
-    here += primary_->headbytes() + primary_->databytes();
-    size -= primary_->headbytes() + primary_->databytes();
+    skipHDU(here, size, primary_);
 
     if (pExt_) {
       while (size > 0) {
@@ -170,8 +193,7 @@ void FitsFitsMap::processExactImage()
 	  delete [] b;
 	}
 
-	here += head_->headbytes() + head_->databytes();
-	size -= head_->headbytes() + head_->databytes();
+	skipHDU(here, size, head_);
 	delete head_;
 	head_ = NULL;
       }
@@ -185,8 +207,7 @@ void FitsFitsMap::processExactImage()
 	}
 	ext_++;
 
-	here += head_->headbytes() + head_->databytes();
-	size -= head_->headbytes() + head_->databytes();
+	skipHDU(here, size, head_);
 	delete head_;
 	head_ = NULL;
       }
@@ -226,8 +247,7 @@ void FitsFitsMap::processRelaxImage()
   }
 
   // ok, no image, save primary and lets check extensions
-  here += head_->headbytes() + head_->databytes();
-  size -= head_->headbytes() + head_->databytes();
+  skipHDU(here, size, head_);
   primary_ = head_;
   managePrimary_ = 1;
   head_ = NULL;
@@ -270,8 +290,7 @@ void FitsFitsMap::processRelaxImage()
       return;
     }
 
-    here += head_->headbytes() + head_->databytes();
-    size -= head_->headbytes() + head_->databytes();
+    skipHDU(here, size, head_);
     delete head_;
     head_ = NULL;
   }
@@ -300,8 +319,7 @@ void FitsFitsMap::processExactTable()
     error();
     return;
   }
-  here += primary_->headbytes() + primary_->databytes();
-  size -= primary_->headbytes() + primary_->databytes();
+  skipHDU(here, size, primary_);
 
   if (pExt_) {
     while (size > 0) {
@@ -325,8 +343,7 @@ void FitsFitsMap::processExactTable()
 	delete [] b;
       }
 
-      here += head_->headbytes() + head_->databytes();
-      size -= head_->headbytes() + head_->databytes();
+      skipHDU(here, size, head_);
       delete head_;
       head_ = NULL;
     }
@@ -340,8 +357,7 @@ void FitsFitsMap::processExactTable()
       }
       ext_++;
 
-      here += head_->headbytes() + head_->databytes();
-      size -= head_->headbytes() + head_->databytes();
+      skipHDU(here, size, head_);
       delete head_;
       head_ = NULL;
     }
@@ -377,8 +393,7 @@ void FitsFitsMap::processRelaxTable()
   }
 
   // save primary and lets check extensions
-  here += head_->headbytes() + head_->databytes();
-  size -= head_->headbytes() + head_->databytes();
+  skipHDU(here, size, head_);
   primary_ = head_;
   managePrimary_ = 1;
   head_ = NULL;
@@ -397,8 +412,7 @@ void FitsFitsMap::processRelaxTable()
       return;
     }
 
-    here += head_->headbytes() + head_->databytes();
-    size -= head_->headbytes() + head_->databytes();
+    skipHDU(here, size, head_);
     delete head_;
     head_ = NULL;
   }
@@ -553,8 +567,7 @@ FitsMosaicMap::FitsMosaicMap()
     return;
   }
 
-  here += primary_->headbytes() + primary_->databytes();
-  size -= primary_->headbytes() + primary_->databytes();
+  skipHDU(here, size, primary_);
 
   // first extension
   head_ = new FitsHead(here, size, FitsHead::EXTERNAL);

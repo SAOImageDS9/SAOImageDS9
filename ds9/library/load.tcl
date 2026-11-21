@@ -274,12 +274,37 @@ proc ProcessLoad {{err 1}} {
 		       $loadParam(file,mode) \
 		       $loadParam(var,name) \{$loadParam(file,name)\}
 	    }
+	    hips {
+		# a HiPS root directory, read as a HEALPix map; a remote
+		# HiPS is read from its cache (file,fn)
+		set fn $loadParam(file,name)
+		if {[info exists loadParam(file,fn)] && \
+			$loadParam(file,fn) != {}} {
+		    set fn $loadParam(file,fn)
+		}
+		# a colour HiPS: one channel of its tiles (hips.tcl)
+		if {[info exists loadParam(hips,channel)] && \
+			$loadParam(hips,channel) != {}} {
+		    $current(frame) load hips \{$fn\} $loadParam(hips,channel)
+		} else {
+		    $current(frame) load hips \{$fn\}
+		}
+	    }
 	}
 	# be sure to update the colorbar levels, especially in tile mode
 	UpdateColormapLevel
     } rr]} {
 	if {$err} {
-	    Error "[msgcat::mc {Unable to load}] $loadParam(file,type) $loadParam(file,mode) $loadParam(file,name)"
+	    # the reader's reason (internalError), if it gave one: in the
+	    # message, so XPA and SAMP get it too (this one would replace
+	    # it) and the GUI shows one box, not two
+	    set why [string trim $ds9(msg)]
+	    set ds9(msg) {}
+	    set msg "[msgcat::mc {Unable to load}] $loadParam(file,type) $loadParam(file,mode) $loadParam(file,name)"
+	    if {$why != {}} {
+		append msg ": $why"
+	    }
+	    Error $msg
 	}
 	return 0
     }
@@ -366,9 +391,10 @@ proc ProcessLoadSaveParams {varname} {
 	}
     }
 
-    # always save absolute path
+    # always save absolute path (a remote HiPS keeps its URL)
     upvar #0 $varname var
-    if {[file pathtype $var(file,name)] == {relative}} {
+    if {[file pathtype $var(file,name)] == {relative} &&
+	!($var(file,type) == {hips} && [HiPSIsURL $var(file,name)])} {
 	set var(file,name) [file join [pwd] $var(file,name)]
     }
 }
@@ -390,7 +416,7 @@ proc LoadUpdate {} {
     UpdateContour
 
     # Cube?
-    if {[$current(frame) has fits cube]} {
+    if {[CubeFrame $current(frame) has fits cube]} {
 	CubeDialog
     }
 

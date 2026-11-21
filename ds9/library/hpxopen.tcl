@@ -6,7 +6,8 @@ package provide DS9 1.0
 
 # File -> Open for HEALPix tables: before loading, offer the HEALPix
 # file name options (col=, proj=, lon0=, lat0=, fov=, order=, system=,
-# layout=, quad=), and load the file with the ones chosen appended, e.g.
+# layout=, quad=; order= is the pixel ordering, ring or nested), and
+# load the file with the ones chosen appended, e.g.
 # foo.fits[proj=tan,lon0=83.6,lat0=22]. Only the interactive Open dialog
 # comes here; XPA, SAMP, the command line, Open Recent and backups load
 # the file name as given. Options are only written when they differ from
@@ -19,6 +20,13 @@ proc HPXOpenDef {} {
     # prefs: ask on open, and the projection the dialog starts with
     set phpxopen(ask) 1
     set phpxopen(proj) hpx
+    # HiPS: use the survey's suggested scale limits (hips.tcl), and
+    # the size of the cache of remote HiPS, MB (hipsnet.tcl)
+    set phpxopen(hipscut) 1
+    set phpxopen(hipscache) 2048
+    # the MocServer query URLs that resolve HiPS IDs and list the HiPS
+    # (hipsnet.tcl), tried in turn
+    set phpxopen(mocserver) {https://alasky.cds.unistra.fr/MocServer/query https://alaskybis.cds.unistra.fr/MocServer/query}
 
     # the last values chosen, for the rest of the session
     set hpxopen(proj) {}
@@ -89,10 +97,27 @@ proc HPXOpenDialog {varname} {
     return 1
 }
 
+# Does frame which show a HEALPix map through a projection window
+# (proj= other than HPX in its load name, a HEALPix file or a HiPS)?
+# Such a window is rebuilt to fit the frame and zoom, so its pixel
+# coordinates don't survive a backup.
+proc HPXFrameIsWindow {which} {
+    upvar #0 $which var
+
+    if {![info exists var(file,name)]} {
+	return 0
+    }
+    if {![regexp -nocase {[\[,]\s*proj\s*=\s*([a-z]+)} \
+	      $var(file,name) {} proj]} {
+	return 0
+    }
+    return [expr {[string tolower $proj] != {hpx}}]
+}
+
 # Does the file name already carry HEALPix options?
 proc HPXOpenHasOptions {fn} {
     return [regexp -nocase \
-		{[\[,]\s*(order|system|layout|col|quad|proj|lon0|lat0|fov)\s*=} \
+		{[\[,]\s*(order|mocorder|system|layout|col|quad|proj|lon0|lat0|fov)\s*=} \
 		$fn]
 }
 
@@ -191,6 +216,20 @@ proc HPXOpenFileName {fn info vals} {
 	}
     }
 
+    set opts [concat $opts [HPXOpenProjOptions $vals]]
+
+    if {$opts == {}} {
+	return $fn
+    }
+    return "$fn\[[join $opts ,]\]"
+}
+
+# The projection options (proj, lon0, lat0, fov, layout, quad) in vals
+# that differ from a plain load, as a list of key=value. Also used by
+# the HiPS dialog (hips.tcl).
+proc HPXOpenProjOptions {vals} {
+    set opts {}
+
     set proj [dict get $vals proj]
     set pi [HPXOpenProjInfo $proj]
     switch -- [lindex $pi 1] {
@@ -225,11 +264,7 @@ proc HPXOpenFileName {fn info vals} {
 	    }
 	}
     }
-
-    if {$opts == {}} {
-	return $fn
-    }
-    return "$fn\[[join $opts ,]\]"
+    return $opts
 }
 
 # The dialog. Returns the chosen values as a dict (proj lon0 lat0 fov col
@@ -292,34 +327,7 @@ proc HPXOpenParamsDialog {fn info} {
     grid $f.tcol $f.col -padx 2 -pady 2 -sticky w
 
     # Projection
-    set f [ttk::labelframe $w.proj -text [msgcat::mc {Projection}]]
-    ttk::label $f.tproj -text [msgcat::mc {Projection}]
-    ttk::menubutton $f.proj -textvariable hpxed(projlabel) -menu $f.proj.m
-    ThemeMenu $f.proj.m
-    foreach pp $hpxopen(projs) {
-	if {$pp == {}} {
-	    $f.proj.m add separator
-	    continue
-	}
-	set code [lindex $pp 0]
-	$f.proj.m add radiobutton -label [HPXOpenProjLabel $code] \
-	    -variable hpxed(proj) -value $code -command HPXOpenProjChanged
-    }
-    ttk::label $f.tlon0 -text [msgcat::mc {Longitude}]
-    ttk::entry $f.lon0 -textvariable hpxed(lon0) -width 10
-    ttk::label $f.hlon0 -textvariable hpxed(hlon0)
-    ttk::label $f.tlat0 -textvariable hpxed(tlat0)
-    ttk::entry $f.lat0 -textvariable hpxed(lat0) -width 10
-    ttk::label $f.hlat0 -textvariable hpxed(hlat0)
-    ttk::label $f.tfov -text [msgcat::mc {Field of View}]
-    ttk::entry $f.fov -textvariable hpxed(fov) -width 10
-    ttk::label $f.hfov -textvariable hpxed(hfov)
-
-    grid $f.tproj $f.proj - -padx 2 -pady 2 -sticky w
-    grid $f.tlon0 $f.lon0 $f.hlon0 -padx 2 -pady 2 -sticky w
-    grid $f.tlat0 $f.lat0 $f.hlat0 -padx 2 -pady 2 -sticky w
-    grid $f.tfov $f.fov $f.hfov -padx 2 -pady 2 -sticky w
-    set hpxed(wproj) $f
+    HPXOpenProjFrame [ttk::labelframe $w.proj -text [msgcat::mc {Projection}]]
 
     # HPX image
     set f [ttk::labelframe $w.hpx -text [msgcat::mc {HPX Image}]]
@@ -415,6 +423,44 @@ proc HPXOpenParamsDialog {fn info} {
     }
     array unset hpxed
     return $rr
+}
+
+# The projection menu and its centre and field of view, built in frame
+# f (a labelframe). Its values are hpxed(proj lon0 lat0 fov); call
+# HPXOpenProjChanged once the dialog is built. cmd runs when the
+# projection changes. Also used by the HiPS dialog (hips.tcl), which has
+# no HPX image frame (hpxed(whpx) {}).
+proc HPXOpenProjFrame {f {cmd HPXOpenProjChanged}} {
+    global hpxopen
+    global hpxed
+
+    ttk::label $f.tproj -text [msgcat::mc {Projection}]
+    ttk::menubutton $f.proj -textvariable hpxed(projlabel) -menu $f.proj.m
+    ThemeMenu $f.proj.m
+    foreach pp $hpxopen(projs) {
+	if {$pp == {}} {
+	    $f.proj.m add separator
+	    continue
+	}
+	set code [lindex $pp 0]
+	$f.proj.m add radiobutton -label [HPXOpenProjLabel $code] \
+	    -variable hpxed(proj) -value $code -command $cmd
+    }
+    ttk::label $f.tlon0 -text [msgcat::mc {Longitude}]
+    ttk::entry $f.lon0 -textvariable hpxed(lon0) -width 10
+    ttk::label $f.hlon0 -textvariable hpxed(hlon0)
+    ttk::label $f.tlat0 -textvariable hpxed(tlat0)
+    ttk::entry $f.lat0 -textvariable hpxed(lat0) -width 10
+    ttk::label $f.hlat0 -textvariable hpxed(hlat0)
+    ttk::label $f.tfov -text [msgcat::mc {Field of View}]
+    ttk::entry $f.fov -textvariable hpxed(fov) -width 10
+    ttk::label $f.hfov -textvariable hpxed(hfov)
+
+    grid $f.tproj $f.proj - -padx 2 -pady 2 -sticky w
+    grid $f.tlon0 $f.lon0 $f.hlon0 -padx 2 -pady 2 -sticky w
+    grid $f.tlat0 $f.lat0 $f.hlat0 -padx 2 -pady 2 -sticky w
+    grid $f.tfov $f.fov $f.hfov -padx 2 -pady 2 -sticky w
+    set hpxed(wproj) $f
 }
 
 # The column menu's label for hpxed(col); a MOC with no value column
@@ -523,9 +569,11 @@ proc HPXOpenProjChanged {} {
     $f.fov configure -state $win
 
     # layout and quadrant only shape the HPX image
-    set hpx [expr {$kind == {native} ? {normal} : {disabled}}]
-    $hpxed(whpx).layout configure -state $hpx
-    $hpxed(whpx).quad configure -state $hpx
+    if {[info exists hpxed(whpx)] && $hpxed(whpx) != {}} {
+	set hpx [expr {$kind == {native} ? {normal} : {disabled}}]
+	$hpxed(whpx).layout configure -state $hpx
+	$hpxed(whpx).quad configure -state $hpx
+    }
 }
 
 proc HPXOpenDefaults {} {
@@ -598,8 +646,22 @@ proc PrefsDialogHPXOpen {} {
 	    -command [list set hpxopen(prefslabel) [HPXOpenProjLabel $code]]
     }
 
+    ttk::label $f.tcut -text [msgcat::mc {HiPS Suggested Scale Limits}]
+    ttk::checkbutton $f.cut -variable phpxopen(hipscut)
+
     grid $f.task $f.ask -padx 2 -pady 2 -sticky w
     grid $f.tproj $f.proj -padx 2 -pady 2 -sticky w
+    grid $f.tcut $f.cut -padx 2 -pady 2 -sticky w
+
+    ttk::label $f.tcache -text [msgcat::mc {HiPS Cache (MB)}]
+    ttk::entry $f.cache -textvariable phpxopen(hipscache) -width 8
+    ttk::button $f.clear -text [msgcat::mc {Clear HiPS Cache}] \
+	-command HiPSCacheClear
+    grid $f.tcache $f.cache $f.clear -padx 2 -pady 2 -sticky w
+
+    ttk::label $f.tmoc -text [msgcat::mc {HiPS MocServer}]
+    ttk::entry $f.moc -textvariable phpxopen(mocserver) -width 50
+    grid $f.tmoc $f.moc - -padx 2 -pady 2 -sticky w
 
     pack $f -side top -fill both -expand true
 }

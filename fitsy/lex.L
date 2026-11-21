@@ -65,6 +65,7 @@ dims		{RET(DIMS_)}
 ecliptic	{RET(ECLIPTIC_)}
 endian          {RET(ENDIAN_)}
 equatorial	{RET(EQUATORIAL_)}
+format		{RET(FORMAT_)}
 fov		{RET(FOV_)}
 galactic	{RET(GALACTIC_)}
 key		{RET(KEY_)}
@@ -73,13 +74,16 @@ little   	{RET(LITTLE_)}
 littleendian	{RET(LITTLEENDIAN_)}
 lat0		{RET(LAT0_)}
 lon0		{RET(LON0_)}
+mocorder	{RET(MOCORDER_)}
 nested		{RET(NESTED_)}
+norder		{RET(NORDER_)}
 north		{RET(NORTH_)}
 order		{RET(ORDER_)}
 proj		{RET(PROJ_)}
 quad		{RET(QUAD_)}
 ring		{RET(RING_)}
 skip		{RET(SKIP_)}
+slice		{RET(SLICE_)}
 south		{RET(SOUTH_)}
 system		{RET(SYSTEM_)}
 unknown		{RET(UNKNOWN_)}

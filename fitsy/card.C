@@ -38,6 +38,16 @@ FitsCard& FitsCard::operator=(const FitsCard& a)
   return *this;
 }
 
+// Copies a formatted value/comment into the card after the keyword.
+// It stops at the end of the card (a long value or comment would
+// otherwise overrun it) and at the first NUL (callers often end their
+// strings with ends).
+static void cardPut(char* card, const string& ss)
+{
+  size_t len = strnlen(ss.c_str(), FTY_CARDLEN-8);
+  memcpy(card+8, ss.c_str(), len);
+}
+
 FitsCard& FitsCard::clear()
 {
   memset(card_, ' ', FTY_CARDLEN);
@@ -50,7 +60,7 @@ FitsCard& FitsCard::setKey(const char* name)
     memset(card_, ' ', 8);
     ostringstream str;
     str << name;
-    memcpy(card_,str.str().c_str(),str.str().length());
+    memcpy(card_,str.str().c_str(),strnlen(str.str().c_str(),8));
   }
 
   return *this;
@@ -66,7 +76,7 @@ FitsCard& FitsCard::setLogical(const char* name, int value,
   str << "=                    " << (value ? 'T' : 'F');
   if (comment)
     str << " / " << comment;
-  memcpy(card_+8,str.str().c_str(),str.str().length());
+  cardPut(card_, str.str());
 
   return *this;
 }
@@ -81,7 +91,7 @@ FitsCard& FitsCard::setInteger(const char* name, int value,
   str << "= " << setw(20) << value;
   if (comment)
     str << " / " << comment;
-  memcpy(card_+8,str.str().c_str(),str.str().length());
+  cardPut(card_, str.str());
 
   return *this;
 }
@@ -97,7 +107,7 @@ FitsCard& FitsCard::setReal(const char* name, double value,
       << uppercase << value << nouppercase;
   if (comment)
     str << " / " << comment;
-  memcpy(card_+8,str.str().c_str(),str.str().length());
+  cardPut(card_, str.str());
 
   return *this;
 }
@@ -113,7 +123,7 @@ FitsCard& FitsCard::setComplex(const char* name, double real, double img,
       << '(' << real << ',' << img << ')';
   if (comment)
     str << " / " << comment;
-  memcpy(card_+8,str.str().c_str(),str.str().length());
+  cardPut(card_, str.str());
 
   return *this;
 }
@@ -124,11 +134,21 @@ FitsCard& FitsCard::setString(const char* name, const char* value,
   setKey(name);
   memset(card_+8, ' ', FTY_CARDLEN-8);
 
+  // a quote in the value is doubled, and the value stops where the
+  // closing quote would no longer fit (column 80)
+  string vv;
+  for (const char* pp = value ? value : ""; *pp; pp++) {
+    size_t nn = *pp == '\'' ? 2 : 1;
+    if (vv.length()+nn > FTY_CARDLEN-8-4)
+      break;
+    vv.append(nn, *pp);
+  }
+
   ostringstream str;
-  str << "= '" << value << '\'';
+  str << "= '" << vv << '\'';
   if (comment)
     str << " / " << comment;
-  memcpy(card_+8,str.str().c_str(),str.str().length());
+  cardPut(card_, str.str());
 
   return *this;
 }
@@ -140,7 +160,7 @@ FitsCard& FitsCard::setComment(const char* name, const char* value)
 
   ostringstream str;
   str << "= " << value;
-  memcpy(card_+8,str.str().c_str(),str.str().length());
+  cardPut(card_, str.str());
 
   return *this;
 }

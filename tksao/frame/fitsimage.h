@@ -187,11 +187,19 @@ class FitsImage {
   void initHPX();
  public:
   int hpxRecentre(double lon, double lat);
+  // a deep window rebuilt during a drag reads no tiles (only those in
+  // memory); skipped: some it could have read, for the drag's end
+  void hpxSetDrag(int);
+  int hpxDragSkipped();
   int hpxReshape(double lon, double lat, double pix, int ww, int hh,
 		 const double* centre);
   void hpxReload();
   double hpxPixel();
   double hpxPixelHPX();
+  // a deep HiPS window: the HiPS root (local, or a remote HiPS's cache),
+  // the order shown and the tiles it wanted but didn't have; 0 if none
+  int hpxDeepMissing(const char** root, int* order, int* slice,
+		     std::vector<long long>* tiles);
   void hpxMaxSize(double pix, int* ww, int* hh);
   int hpxIsConic();
   double hpxLat();
@@ -593,7 +601,14 @@ class FitsImage {
   char* displayPrimary();
   //  char* displayWCS();
   FitsHead* head() {return image_->head();}
-  char* getKeyword(const char* key) {return fits_->getKeyword(key);}
+  // a HEALPix image's own header first (e.g. HIPSORD, the HiPS order a
+  // deep window shows), then the file's
+  char* getKeyword(const char* key) {
+    char* rr = NULL;
+    if (hpx_ && image_ == hpx_ && image_->head() && image_->find(key))
+      rr = image_->getKeyword(key);
+    return rr ? rr : fits_->getKeyword(key);
+  }
   int findKeyword(const char* key) {return fits_->find(key);}
 
   int saveFitsPrimHeader(OutFitsStream& str)
@@ -826,6 +841,13 @@ public:
 class FitsImageENVISMMap : public FitsImage {
 public:
   FitsImageENVISMMap(Context*, Tcl_Interp*, const char*, const char*, int);
+};
+
+// HiPS: a local HiPS directory, read as a NESTED HEALPix table
+
+class FitsImageHiPS : public FitsImage {
+public:
+  FitsImageHiPS(Context*, Tcl_Interp*, const char*, int, int =-1);
 };
 
 // NRRD

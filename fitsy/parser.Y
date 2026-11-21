@@ -59,21 +59,25 @@ extern void ffArray(int);
 %token ECLIPTIC_
 %token ENDIAN_
 %token EQUATORIAL_
+%token FORMAT_
 %token FOV_
 %token GALACTIC_
 %token KEY_
 %token LAYOUT_
+%token MOCORDER_
 %token LITTLE_
 %token LITTLEENDIAN_
 %token LAT0_
 %token LON0_
 %token NESTED_
+%token NORDER_
 %token NORTH_
 %token ORDER_
 %token PROJ_
 %token QUAD_
 %token RING_
 %token SKIP_
+%token SLICE_
 %token SOUTH_
 %token SYSTEM_
 %token UNKNOWN_
@@ -277,6 +281,12 @@ hpxsb	: hpxsb ',' hpx
 
 hpx	: SYSTEM_ '=' hpxSystem
 	| ORDER_ '=' hpxOrder
+	// a HiPS's order (its NorderK tiles), and the order a MOC is drawn
+	// at; order= is only ever the HEALPix pixel ordering
+	| NORDER_ '=' INT {ff->setpHiPSOrder($3);}
+	| MOCORDER_ '=' INT {ff->setpMocOrder($3);}
+	| SLICE_ '=' INT {ff->setpHiPSSlice($3);}
+	| FORMAT_ '=' STRING {ff->setpHiPSFormat($3);}
 	| LAYOUT_ '=' hpxLayout
 	| COL_ '=' INT {ff->setpHPXColumn($3);}
 	| QUAD_ '=' INT {ff->setpHPXQuad($3);}

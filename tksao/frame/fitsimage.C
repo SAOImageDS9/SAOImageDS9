@@ -24,6 +24,7 @@
 #include "iis.h"
 #include "hist.h"
 #include "hpx.h"
+#include "hips.h"
 #include "compress.h"
 #include "analysis.h"
 #include "photo.h"
@@ -539,6 +540,17 @@ FitsImageENVISMMap::FitsImageENVISMMap(Context* cx, Tcl_Interp* pp,
   : FitsImage(cx, pp)
 {
   fits_ = new FitsENVISMMap(hdr,fn);
+  process(fn,id);
+}
+
+// HiPS
+
+FitsImageHiPS::FitsImageHiPS(Context* cx, Tcl_Interp* pp, const char* fn,
+			     int id, int channel)
+  : FitsImage(cx, pp)
+{
+  // a binary table, so process() takes the HEALPix path
+  fits_ = new FitsHiPS(fn, pp, channel);
   process(fn,id);
 }
 
@@ -1679,6 +1691,25 @@ void FitsImage::process(const char* fn, int id)
   if (!fits_->isValid()) {
     reset();
     return;
+  }
+
+  // norder=, slice= and format= choose what a HiPS reads; on any other
+  // file they would be ignored, so say so instead
+  if (!dynamic_cast<FitsHiPS*>(fits_)) {
+    const char* opt = NULL;
+    if (fits_->pHiPSOrder() >= 0)
+      opt = "norder=";
+    else if (fits_->pHiPSSlice() >= 0)
+      opt = "slice=";
+    else if (fits_->pHiPSFormat())
+      opt = "format=";
+    if (opt) {
+      ostringstream str;
+      str << opt << " is for a HiPS (the hips command)" << ends;
+      internalError(str.str().c_str());
+      reset();
+      return;
+    }
   }
 
   if (fits_->isImage()) {

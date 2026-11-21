@@ -1031,6 +1031,9 @@ proc QuitDS9 {} {
     # close IIS ports
     catch {IISClose}
 
+    # stop the HiPS download threads (before tls's exit handler)
+    HiPSWorkersStop
+
     # close out XPA
     global xpa
     if {[info exists xpa]} {

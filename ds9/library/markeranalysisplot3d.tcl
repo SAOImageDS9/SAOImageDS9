@@ -142,6 +142,16 @@ proc MarkerAnalysisPlot3dSetCallback {frame id} {
     catch {$frame marker $id analysis plot3d $enabled}
 }
 
+# A HiPS cube frame holds one of the cube's frames at a time (the others
+# are loaded on demand), so there is nothing to plot through it: say so
+proc MarkerAnalysisPlot3dHiPS {frame} {
+    if {[HiPSCubeState $frame] == {}} {
+	return 0
+    }
+    Error [msgcat::mc {Plot 3D: a HiPS cube shows one of its frames at a time; use the Cube dialog to step through them}]
+    return 1
+}
+
 proc MarkerAnalysisPlot3dCmd {varname} {
     upvar #0 $varname var
     global $varname
@@ -162,6 +172,9 @@ proc MarkerAnalysisPlot3d {frame id plot} {
     if {![MarkerAnalysisPlot3dFrameExists $frame]} {
 	return
     }
+    if {$plot && [MarkerAnalysisPlot3dHiPS $frame]} {
+	return
+    }
 
     if {$plot} {
 	MarkerAnalysisPlot3dUpdate $frame $id
@@ -179,6 +192,9 @@ proc MarkerAnalysisPlot3d {frame id plot} {
 
 proc MarkerAnalysisCutout3d {frame id plot} {
     if {![MarkerAnalysisPlot3dFrameExists $frame]} {
+	return
+    }
+    if {$plot && [MarkerAnalysisPlot3dHiPS $frame]} {
 	return
     }
 

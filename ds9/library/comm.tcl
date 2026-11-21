@@ -130,6 +130,7 @@ proc CommSet {fn paramlist {safemode 0}} {
 	    }
 	    note -
 	    notes {ProcessNotesCmd param i $safemode}
+	    hips {ProcessHiPSCmd param i}
 	    nrrd {ProcessNRRDCmd param i {} $fn}
 	    nvss {ProcessNVSSCmd param i}
 	    multicolor {ProcessMultiColorCmd param i}
@@ -406,6 +407,7 @@ proc CommGet {proc id paramlist fn} {
 	    }
 	    note -
 	    notes {ProcessSendNotesCmd $proc $id $param}
+	    hips {ProcessSendHiPSCmd $proc $id $param {} $fn}
 	    nrrd {
 		ProcessSendNRRDCmd $proc $id $param {} $fn.nrrd
 		return $fn.nrrd

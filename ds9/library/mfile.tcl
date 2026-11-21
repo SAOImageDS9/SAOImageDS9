@@ -131,6 +131,10 @@ proc FileMainMenu {} {
     $ds9(mb).file.open add command \
 	-label [msgcat::mc {URL}] \
 	-command [list OpenURLFits]
+    $ds9(mb).file.open add separator
+    $ds9(mb).file.open add command \
+	-label "[msgcat::mc {HiPS}]..." \
+	-command HiPSDialog
 
     # File Save Menu
     ThemeMenu $ds9(mb).file.save

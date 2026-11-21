@@ -6,12 +6,27 @@
 #define __fitshpxreproj_h__
 
 #include <math.h>
+#include <map>
+#include <memory>
+#include <vector>
 
 #include "vector.h"
 #include "file.h"
 
-// Resample a built FitsHPX image (HPX/XPH layout) into another
-// projection: all-sky (AIT, MOL, CAR, ...), zenithal (TAN, SIN, ...)
+class FitsHiPS;
+
+// a deep window's tile of order K, as sampled: its own data (dk 0), the
+// data of its ancestor dk orders up, or none (data NULL: the map shows
+// through); hold keeps the data alive
+struct HPXTileRef {
+  const float* data;
+  int dk;
+  std::shared_ptr<const float> hold;
+  HPXTileRef() : data(NULL), dk(0) {}
+};
+
+// Sample a HEALPix map (a flat FitsHPX: the map's pixels as they are,
+// see fitsy/hpx.h) into a projection: all-sky (AIT, MOL, CAR, ...), zenithal (TAN, SIN, ...)
 // centred on (lon, lat) with angular diameter fov, or conic (COE, COD,
 // ...) with reference latitude lat. Nearest-neighbour only, so every
 // output pixel is a real HEALPix pixel value; pixels outside the
@@ -19,15 +34,16 @@
 // directly, on nthreads threads, falling back to AST's own resampling
 // for anything that path doesn't handle.
 //
-// Takes ownership of the FitsHPX. All-sky images free it once built;
-// zenithal and conic windows keep it so recentre() can rebuild the
-// window around a new centre. Its data is byte-swapped to native order
-// in place (once), so it must not be used elsewhere.
+// Each output pixel's centre goes to the sky, and the HEALPix pixel there
+// (NESTED or RING, hpxnest.h) gives its value; a deep window's tiles are
+// looked up the same way. Takes ownership of the FitsHPX. All-sky images
+// free it once built; zenithal and conic windows keep it so recentre()
+// can rebuild the window around a new centre.
 class FitsHPXReproj : public FitsFile {
  private:
-  FitsFile* hpx_;      // HPX intermediate, kept for windows
-  FitsFile* view_;     // hpx_ data seen as native byte order
-  int hpxNative_;      // hpx_ data already swapped to native order
+  FitsFile* hpx_;      // the map (flat FitsHPX), kept for windows
+  const float* map_;   // its pixels, native order
+  int mapNested_;      // NESTED, else RING
   int info_;           // index into the projection table
   int nside_;
   double pix_;         // [deg] pixel size: HEALPix's, or coarser
@@ -41,6 +57,26 @@ class FitsHPXReproj : public FitsFile {
   double lon_;         // current centre (lat_ = theta_a for conics)
   double lat_;
 
+  // Deep HiPS windows (TODO_HIPS.md Phase 5): when the window's pixels
+  // are finer than the map's (the coarse level), they are sampled from
+  // the HiPS tiles of the order that fits, from the process-wide cache
+  // of decoded tiles (FitsHiPS::tile); a tile not available falls back
+  // to its deepest available ancestor, then to the map.
+  FitsHiPS* deep_;     // the tile source (not owned), or NULL
+  int deepOrder_;      // order sampled by the last build, -1: the map
+  std::vector<long long> missing_;      // tiles the last build wanted
+					// but couldn't read (at deepOrder_)
+  // the tiles the last build sampled (order refsOrder_), kept for the
+  // next: a pan or refresh mostly samples the same ones
+  std::map<long long, HPXTileRef> refs_;
+  int refsOrder_;
+  // while dragging, tiles come only from those already decoded in
+  // memory (no file reads or decoding on the main thread); skipped_ says
+  // some tile's file was there but not read, so the drag's end rebuilds
+  int drag_;
+  int skipped_;
+  HPXTileRef resolveTile(int order, long long nn);
+
   int build(double lon, double lat, const double* centre);
   FitsHead* initHeader(FitsHead*, const char*, double, double, double);
   void swapData(float*, size_t);
@@ -48,7 +84,8 @@ class FitsHPXReproj : public FitsFile {
 
  public:
   FitsHPXReproj(FitsFile*, const char*, double lon, double lat,
-		double fov, int dispW =0, int dispH =0, int nthreads =1);
+		double fov, int dispW =0, int dispH =0, int nthreads =1,
+		FitsHiPS* deep =NULL);
   ~FitsHPXReproj();
 
   // recentre a window on (lon, lat) [deg, the map's own sky system];
@@ -92,11 +129,18 @@ class FitsHPXReproj : public FitsFile {
 
   int isConic();
 
-  // the kept HPX intermediate in native byte order (windows only), for
-  // whole-map statistics
-  FitsFile* hpxView() {return view_;}
+  // the kept map (windows only), a native-order image of all its pixels,
+  // for whole-map statistics
+  FitsFile* hpxView() {return hpx_;}
   double lon() {return lon_;}
   double lat() {return lat_;}
+
+  // deep windows: the order the window shows (-1: the map), and the
+  // tiles of that order it wanted but didn't have, for fetching
+  int deepOrder() {return deepOrder_;}
+  void setDrag(int dd) {drag_ = dd;}
+  int dragSkipped() {return skipped_;}
+  const std::vector<long long>& missingTiles() {return missing_;}
 };
 
 #endif

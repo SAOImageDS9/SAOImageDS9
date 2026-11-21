@@ -10,6 +10,7 @@
 #include "base.h"
 #include "context.h"
 #include "hpx.h"
+#include "hips.h"
 #include "fitshpxreproj.h"
 #include "util.h"
 #include "wcsast.h"
@@ -39,6 +40,13 @@ void FitsImage::initHPX()
   if (fits_->pHPXOrder() >=0)
     order = (FitsHPX::Order)fits_->pHPXOrder();
 
+  // mocorder= draws a MOC (NUNIQ); on any other HEALPix map it would
+  // be ignored, so say so instead
+  if (fits_->pMocOrder() >= 0 && order != FitsHPX::NUNIQ) {
+    internalError("HEALPix: mocorder= is for a MOC (ORDERING = NUNIQ)");
+    return;
+  }
+
   // Layout
   FitsHPX::Layout layout = FitsHPX::EQUATOR;
   if (fits_->pHPXLayout() >=0)
@@ -59,14 +67,21 @@ void FitsImage::initHPX()
     quad =0;
 
   // Another projection (proj=AIT, MOL, ...; proj=HPX is the default):
-  // build the HPX image and resample it. layout/quad only describe the
-  // HPX intermediate, so they are ignored; lon0/lat0/fov set the window.
+  // sample the map itself (no HPX image). layout/quad only describe the
+  // HPX image, so they are ignored; lon0/lat0/fov set the window.
   const char* proj = fits_->pHPXProj();
   if (proj && strcasecmp(proj,"HPX")) {
     char* upper = toUpper(proj);
 
-    // FitsHPXReproj takes ownership of hpx (keeps it for recentring)
-    FitsHPX* hpx = new FitsHPX(fits_, order, coord, FitsHPX::EQUATOR, col, 0);
+    // A HiPS in a window (zenithal/conic) zooms into its deeper tiles
+    // (FitsHPXReproj, TODO_HIPS.md Phase 5); the map built here, at the
+    // automatic order or norder=K, is the coarse level it starts from.
+    FitsHiPS* deep = dynamic_cast<FitsHiPS*>(fits_);
+
+    // the map itself (flat), which FitsHPXReproj samples and takes
+    // ownership of (keeping it for recentring)
+    FitsHPX* hpx = new FitsHPX(fits_, order, coord, FitsHPX::EQUATOR, col, 0,
+			       1);
     if (hpx->isValid())
       hpx_ = new FitsHPXReproj(hpx, upper, fits_->pHPXLon0(),
 			       fits_->pHPXLat0(), fits_->pHPXFov(),
@@ -76,7 +91,7 @@ void FitsImage::initHPX()
 			       context_->blockFactor()[0],
 			       context_->parent_->getHeight() *
 			       context_->blockFactor()[1],
-			       context_->parent_->nthreads_);
+			       context_->parent_->nthreads_, deep);
     else
       delete hpx;
     delete [] upper;
@@ -84,6 +99,33 @@ void FitsImage::initHPX()
   }
 
   hpx_ = new FitsHPX(fits_, order, coord, layout, col, quad);
+}
+
+int FitsImage::hpxDeepMissing(const char** root, int* order, int* slice,
+			      std::vector<long long>* tiles)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  FitsHiPS* hips = dynamic_cast<FitsHiPS*>(fits_);
+  if (!rr || !hips || rr->deepOrder() < 0 || rr->missingTiles().empty())
+    return 0;
+  *root = hips->root();
+  *order = rr->deepOrder();
+  *slice = hips->slice();
+  *tiles = rr->missingTiles();
+  return 1;
+}
+
+void FitsImage::hpxSetDrag(int dd)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (rr)
+    rr->setDrag(dd);
+}
+
+int FitsImage::hpxDragSkipped()
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  return rr ? rr->dragSkipped() : 0;
 }
 
 // Recentre a resampled HEALPix window (zenithal or conic). Like
@@ -368,7 +410,7 @@ int FitsImage::hpxNativeFromSky(const Vector& vv, Coord::CoordSystem sys,
 }
 
 // Whole-map clip data for a HEALPix window: one persistent FitsDatam over
-// the kept HPX intermediate, so its cached statistics (scan, zscale,
+// the kept map (every HEALPix pixel once), so its cached statistics (scan, zscale,
 // autocut) survive recentring and the scale limits don't jump.
 FitsData* FitsImage::hpxGlobalData()
 {

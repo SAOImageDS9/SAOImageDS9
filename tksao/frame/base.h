@@ -742,6 +742,7 @@ public:
   void contourDashListCmd(int, int);
   void contourDeleteCmd();
   void contourDeleteAuxCmd();
+  void contourDeleteAuxCmd(int);
   void contourLoadCmd(const char*);
   void contourLoadCmd(const char*, const char*, int, int);
   void contourLoadCmd(const char*, Coord::CoordSystem, Coord::SkyFrame, const char*, int, int);
@@ -761,6 +762,7 @@ public:
   void getContourDashCmd();
   void getContourDashListCmd();
   void getContourLevelCmd();
+  void getContourAuxCountCmd();
   void getContourLineWidthCmd();
   void getContourMethodCmd();
   void getContourNumLevelCmd();
@@ -882,6 +884,8 @@ public:
   virtual void loadArrVarCmd(const char*, const char*, LayerType);
 
   void loadENVISMMapCmd(const char*, const char*);
+
+  void loadHiPSCmd(const char*, int =-1);
 
   virtual void loadNRRDAllocCmd(const char*, const char*, LayerType);
   virtual void loadNRRDChannelCmd(const char*, const char*, LayerType);
@@ -1066,6 +1070,7 @@ public:
   FitsImage* hpxKeyWindow();
   const char* hpxRecentre(HPXMode, double, double, int drag =0);
   void hpxAutoRefresh();
+  void hpxRequestTiles(FitsImage*);
   int hpxDragRefresh();
   void hpxWindowGeometry(FitsImage*, double*, int*, int*);
   int hpxPanTo(const Vector&, Coord::CoordSystem, Coord::SkyFrame);

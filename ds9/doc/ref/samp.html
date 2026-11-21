@@ -71,6 +71,7 @@ ds9.set<br>
 <a href="#grid">grid</a><br>
 <a href="#header">header</a><br>
 <a href="#height">height</a><br>
+<a href="#hips">hips</a><br>
 <a href="#hls">hls</a><br>
 <a href="#hlsarray">hlsarray</a><br>
 <a href="#hlscube">hlscube</a><br>
@@ -1532,6 +1533,30 @@ height<br>
 <br>
 ds9.set(string cmd)<br>
 height 512<br></tt>
+<p><b><a name="hips" id="hips"></a>hips</b></p>
+<p>Load a HiPS (Hierarchical Progressive Survey), given its root directory, URL or ID (such as <tt>CDS/P/DSS2/color</tt>, looked up in the CDS MocServer), as the HEALPix map it holds at one order. Optional parameters: the HiPS order (<tt>norder</tt>), the tiles to read (<tt>format</tt>, when the HiPS has more than one kind) and the HEALPix projection options. <tt>close</tt> clears the current frame if it holds a HiPS. <tt>coverage</tt> outlines the sky the HiPS in the current frame covers (its <tt>Moc.fits</tt>). <tt>cancel</tt> stops fetching the tiles of a zoomed-in window on a remote HiPS (and a load in progress). See <a href="file.html#HiPS">HiPS</a>. Get returns the HiPS loaded in the current frame (directory or URL, and options), or nothing; a HiPS loaded by ID is named by its URL. <tt>list</tt> returns the image and cube HiPS the MocServer lists, one a line: the ID, a tab, the title; with a word or glob, only those whose ID or title match (any case). The list is cached for a day; <tt>list update</tt> fetches it again. <tt>status</tt> returns the number of tiles still to be fetched for zoomed-in windows (0 when there are none). Anything else is an error; a HiPS directory named like one of these words is given with a path (<tt>./list</tt>).<br></p>
+<tt>Syntax:<br>
+hips [new] &lt;directory|URL|ID&gt;[norder=&lt;n&gt;,slice=&lt;n&gt;,format=fits|png|jpeg,proj=...,lon0=...,lat0=...,fov=...]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[coverage [yes|no]]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[cancel]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[close]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[status]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[list [update] [&lt;pattern&gt;]]<br>
+&nbsp;<br>
+Example:<br>
+string value = ds9.get(string cmd)<br>
+hips<br>
+hips status<br>
+hips list 2mass<br>
+<br>
+ds9.set(string cmd, string url)<br>
+hips /data/Fermi/HiPS<br>
+hips new /data/Fermi/HiPS[norder=2,proj=mol]<br>
+hips CDS/P/DSS2/color<br>
+hips coverage yes<br>
+hips cancel<br>
+hips /data/Fermi/HiPS[norder=3,format=png]<br>
+hips close</tt><br>
 <p><b><a name="hls" id="hls"></a>hls</b></p>
 <p>Create HLS frame and control HLS frame parameters.</p>
 <tt>Syntax:<br>

@@ -537,6 +537,22 @@ bytes, missing or malformed `bounds`, uppercase checksum hex.
     keywords not mirrored, SIP signs inverted, keywords used despite a solution, the
     Version check off.
   - 3000 WCS- and card-focused mutants under ASan/UBSan found nothing.
+  - **The 1904-66 WCS examples** (2026-11-21; `Tests/xisf/wcs1904/`,
+    `make_wcs1904_fixtures.py`). These are the Calabretta & Greisen set the ASDF GWCS
+    fixtures were built from: reference at the south pole far off the image, explicit
+    LONPOLE/LATPOLE.
+    - The 7 projections a solution can express become layer 1 solutions, with ICRS
+      twins.
+    - All 28 files (27 projections and NCP) also become keyword-only fixtures,
+      mirrored top down.
+    - 4 variants with a non-default LONPOLE, θ₀ or φ₀. The originals use only
+      defaults, which a reader ignoring `CelestialPoleNativeCoordinates` and
+      `ReferenceNativeCoordinates` passed; with the variants such a reader is off by
+      15°–112°.
+    - All 39 pass every check: WCS to 1e-9° against the twins, `check_ds9_wcs.sh`
+      58/58 through ds9/AST, and `xisf.sh xpa` 160/160. `check_fits.py` now also
+      requires off-sky (NaN) pixels to match and reports an unusable WCS instead of
+      crashing.
 - [x] **Found and fixed on the way:** a heap overflow. `FitsCard::setString`/`setReal`
       (fitsy, pre-existing) copy value and comment into the 80-byte card with an
       unbounded `memcpy`, and Phase 3 passed them file-controlled property strings.

@@ -17,6 +17,7 @@ using namespace std;
 #include "mmapincr.h"
 #include "tiff.h"
 #include "asdf.h"
+#include "xisf.h"
 #include "allocgz.h"
 #include "util.h"
 #include "vector.h"
@@ -57,6 +58,8 @@ int TclfitsyCmd(ClientData data, Tcl_Interp *interp,
       return fitsy->asdf(argc, argv);
     else if (!strncmp(argv[1], "tiff", 4))
       return fitsy->tiff(argc, argv);
+    else if (!strncmp(argv[1], "xisf", 4))
+      return fitsy->xisf(argc, argv);
     else if (!strncmp(argv[1], "dir", 3))
       return fitsy->dir(argc, argv);
     else if (!strncmp(argv[1], "open", 4))
@@ -90,7 +93,7 @@ int TclfitsyCmd(ClientData data, Tcl_Interp *interp,
     }
   }
   else {
-    Tcl_AppendResult(interp, "usage: fitsy ?asdf? ?tiff? ?dir? ?open? ?close? ?header? ?istable? ?rows? ?colnum? ?keyword? ?minmax? ?table? ?histogram? ?plot?", NULL);
+    Tcl_AppendResult(interp, "usage: fitsy ?asdf? ?tiff? ?xisf? ?dir? ?open? ?close? ?header? ?istable? ?rows? ?colnum? ?keyword? ?minmax? ?table? ?histogram? ?plot?", NULL);
     return TCL_ERROR;
   }
 }
@@ -329,6 +332,74 @@ int TclFITSY::tiff(int argc, const char* argv[])
   }
   Tcl_SetObjResult(interp_, list);
   return TCL_OK;
+}
+
+// Native XISF container queries, over the reader the frame's `load xisf'
+// command uses (fitsy/xisf.C) - the XISF counterpart of `fitsy asdf'.
+// Stateless for the same reason: the header is all that is read.
+//
+//   fitsy xisf images <file>   one row per <Image>:
+//       {index id width height depth channels sampleFormat colorSpace
+//        imageType loadable why}
+//     depth is 1 for a 2-D image; `loadable' is 1 or 0, and `why' says
+//     why not, from the same check FitsXisf makes before loading.
+//   fitsy xisf header <file>   the XML header, indented, with long
+//                              embedded data elided (the header viewer)
+int TclFITSY::xisf(int argc, const char* argv[])
+{
+  if (argc<4) {
+    Tcl_AppendResult(interp_,
+		     "usage: fitsy xisf ?images|header? ?filename?", NULL);
+    return TCL_ERROR;
+  }
+
+  const char* which = argv[2];
+  FitsXisfFile xf(argv[3]);
+  if (!xf.isValid()) {
+    Tcl_AppendResult(interp_, "fitsy xisf: ",
+		     xf.error() ? xf.error() : "unable to read", NULL);
+    return TCL_ERROR;
+  }
+
+  if (!strcmp(which,"header")) {
+    string hh = xf.prettyHeader();
+    Tcl_SetObjResult(interp_, Tcl_NewStringObj(hh.c_str(),
+					       (Tcl_Size)hh.size()));
+    return TCL_OK;
+  }
+
+  if (!strcmp(which,"images")) {
+    Tcl_Obj* list = Tcl_NewListObj(0,NULL);
+    for (int ii=0; ii<xf.nimage(); ii++) {
+      const FitsXisfImage* im = xf.image(ii);
+      Tcl_Obj* row = Tcl_NewListObj(0,NULL);
+      Tcl_ListObjAppendElement(interp_, row, Tcl_NewIntObj(ii));
+      Tcl_ListObjAppendElement(interp_, row,
+			       Tcl_NewStringObj(im->id_.c_str(),-1));
+      for (int dd=0; dd<3; dd++)
+	Tcl_ListObjAppendElement(interp_, row,
+	  Tcl_NewWideIntObj(dd < im->ndim_ ? im->dim_[dd] : 1));
+      Tcl_ListObjAppendElement(interp_, row,
+			       Tcl_NewWideIntObj(im->channels_));
+      Tcl_ListObjAppendElement(interp_, row,
+			       Tcl_NewStringObj(im->sampleFormat_.c_str(),-1));
+      Tcl_ListObjAppendElement(interp_, row,
+			       Tcl_NewStringObj(im->colorSpace_.c_str(),-1));
+      Tcl_ListObjAppendElement(interp_, row,
+			       Tcl_NewStringObj(im->imageType_.c_str(),-1));
+      string why;
+      int ok = xisfLoadable(im, &why);
+      Tcl_ListObjAppendElement(interp_, row, Tcl_NewIntObj(ok));
+      Tcl_ListObjAppendElement(interp_, row,
+			       Tcl_NewStringObj(why.c_str(),-1));
+      Tcl_ListObjAppendElement(interp_, list, row);
+    }
+    Tcl_SetObjResult(interp_, list);
+    return TCL_OK;
+  }
+
+  Tcl_AppendResult(interp_, "fitsy xisf: unknown command: ", which, NULL);
+  return TCL_ERROR;
 }
 
 int TclFITSY::dir(int argc, const char* argv[])

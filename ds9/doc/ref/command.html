@@ -157,6 +157,7 @@
 <a href="#wcs">wcs</a><br>
 <a href="#web">web</a><br>
 <a href="#width">width</a><br>
+<a href="#xisf">xisf</a><br>
 <a href="#xpa">xpa</a><br>
 <a href="#zmax">zmax</a><br>
 <a href="#zoom">zoom</a><br>
@@ -3006,6 +3007,22 @@ $ds9 -web close<br></tt>
 &nbsp;<br>
 Example:<br>
 $ds9 -width 512<br></tt>
+<p><b><a name="xisf" id="xisf"></a>xisf</b></p>
+<p>Load an image from an XISF file, the native format of PixInsight, into the
+current frame. An XISF file may hold several images; the one to load may be named
+by appending a colon and its <tt>id</tt> or its index, counting from 0. If none is
+named, the first image is loaded. The image's WCS, if it has an astrometric
+solution, is attached as the frame's WCS. See <a href="file.html#xisf">XISF</a>.<br></p>
+<p>A <tt>mask</tt> loads the image into the frame's mask layer instead of as the image. The same thing is reachable from the mask dialog's <b>File&nbsp;&#8594;&nbsp;Open&nbsp;as&nbsp;&#8594;&nbsp;XISF</b>.</p>
+<p>In an RGB, HLS or HSV frame the image is loaded into the frame's current channel, exactly as a FITS image would be; an RGB XISF image loads there as a three-plane cube.</p>
+<tt>Syntax:<br>
+-xisf &lt;filename&gt;[:&lt;image&gt;]<br>
+-xisf -mask &lt;filename&gt;[:&lt;image&gt;] -nomask<br>
+&nbsp;<br>
+Example:<br>
+$ds9 -xisf foo.xisf<br>
+$ds9 -xisf foo.xisf:1<br>
+$ds9 -xisf foo.xisf:light</tt><br>
 <p><b><a name="xpa" id="xpa"></a>xpa</b></p>
 <p>Configure XPA.</p>
 <tt>Syntax:<br>

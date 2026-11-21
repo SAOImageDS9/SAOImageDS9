@@ -134,7 +134,7 @@ public:
 
   enum MemType {ALLOC, ALLOCGZ, CHANNEL, MMAP, SMMAP, MMAPINCR, 
 		SHARE, SSHARE, SOCKET, SOCKETGZ, VAR, HIST, POST, PHOTO,
-		ASDF};
+		ASDF, XISF};
   enum MosaicType {NOMOSAIC, IRAF, WCSMOSAIC};
   enum LayerType {IMG, MASK};
   enum CutMethod {SUM,AVERAGE,MEDIAN};
@@ -904,6 +904,8 @@ public:
   virtual void loadNRRDVarCmd(const char*, const char*, LayerType);
 
   virtual void loadAsdfCmd(const char*, const char*, const char*, LayerType);
+
+  virtual void loadXisfCmd(const char*, const char*, const char*, LayerType);
 
   virtual void loadPhotoCmd(const char*, const char*);
   virtual void loadSlicePhotoCmd(const char*, const char*);

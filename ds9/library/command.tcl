@@ -139,6 +139,7 @@ proc ProcessCommand {argv argc} {
 	    -analysis {incr i; ProcessAnalysisCmd argv i {} {}}
 	    -array {set file(type) array}
 	    -asdf {set file(type) asdf}
+	    -xisf {set file(type) xisf}
 	    -asinh {set scale(type) asinh; ChangeScale}
 	    -advance -
 	    -advanced {
@@ -795,6 +796,10 @@ proc CommandLineLoadBase {item argvname iname} {
 	    MultiLoad $file(layer) $file(mode)
 	    LoadAsdfFile $item $file(layer) $file(mode)
 	}
+	xisf {
+	    MultiLoad $file(layer) $file(mode)
+	    LoadXisfFile $item $file(layer) $file(mode)
+	}
 	url {LoadURLFits $item $file(layer) $file(mode) 1}
 
 	rgbimage {
@@ -929,6 +934,7 @@ proc CommandLineLoadRGB {item argvname iname} {
     switch -- $file(type) {
 	fits {LoadFitsFile $item {} $file(mode)}
 	asdf {LoadAsdfFile $item {} $file(mode)}
+	xisf {LoadXisfFile $item {} $file(mode)}
 	url {LoadURLFits $item {} $file(mode) 0}
 
 	rgbimage {
@@ -1039,6 +1045,7 @@ proc CommandLineLoadT {item argvname iname} {
     switch -- $file(type) {
 	fits {LoadFitsFile $item {} $file(mode)}
 	asdf {LoadAsdfFile $item {} $file(mode)}
+	xisf {LoadXisfFile $item {} $file(mode)}
 	url {LoadURLFits $item {} $file(mode) 0}
 
 	rgbimage {
@@ -1146,6 +1153,10 @@ proc CommandLineLoad3D {item argvname iname} {
 	asdf {
 	    MultiLoad {} $file(mode)
 	    LoadAsdfFile $item {} $file(mode)
+	}
+	xisf {
+	    MultiLoad {} $file(mode)
+	    LoadXisfFile $item {} $file(mode)
 	}
 	url {LoadURLFits $item {} $file(mode) 1}
 

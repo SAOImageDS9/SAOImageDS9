@@ -21,6 +21,7 @@
 <a href="#SplitFITS">Split FITS</a><br>
 <a href="#array">Array</a><br>
 <a href="#asdf">ASDF</a><br>
+<a href="#xisf">XISF</a><br>
 <a href="#nrrd">NRRD</a><br>
 <a href="#envi">ENVI</a><br>
 <a href="#gif">GIF</a><br>
@@ -433,6 +434,55 @@ celestial:&nbsp; icrs, fk5, fk4, fk4noeterms, galactic, supergalactic,<br>
 </blockquote>
 <p><b>Header.</b> <b>File&nbsp;&#8594;&nbsp;Header</b> displays the file's YAML tree, which is an ASDF file's equivalent of a FITS header. Arrays appear there by datatype and shape, as ASDF stores them, not as pixel values.</p>
 <p><b>Backup.</b> A backup save set copies the ASDF file into its directory and reloads from it, so the exact WCS and the tree are preserved and the save set remains portable. See <a href="backup.html">Backup</a>.</p>
+<p><b><a name="xisf" id="xisf"></a>XISF (Extensible Image Serialization Format)</b></p>
+<p>XISF, the native image format of PixInsight, is supported natively. An XISF file is
+an XML header followed by binary data blocks that the header points at.</p>
+<p>A file may hold several images. The one to display is named by appending a colon
+and the image's <tt>id</tt> or its index, counting from 0; with neither, the first image
+is loaded. <b>File&nbsp;&#8594;&nbsp;Open&nbsp;as&nbsp;&#8594;&nbsp;XISF</b> lists the images a
+file holds, and says why any of them cannot be loaded.</p>
+<blockquote><tt>Syntax:<br>
+filename<br>
+filename:id<br>
+filename:index<br>
+&nbsp;<br>
+Example:<br>
+$ds9 -xisf foo.xisf<br>
+$ds9 -xisf foo.xisf:light<br>
+$ds9 -xisf foo.xisf:2<br></tt></blockquote>
+<p><b>Images.</b> Two dimensional images, and three dimensional images with one
+channel, are supported. The channels of a colour image (RGB, or RGB with an alpha
+channel) become the planes of a data cube, as do those of a CIELab image, without
+colour conversion. XISF stores the top row first; images are displayed the same way up
+as in PixInsight. Sample formats are mapped as follows; no value is ever altered:</p>
+<blockquote><tt>UInt8&nbsp;&nbsp; -&gt; bitpix 8<br>
+UInt16&nbsp; -&gt; bitpix -16<br>
+UInt32&nbsp; -&gt; bitpix 64 (widened)<br>
+UInt64&nbsp; -&gt; bitpix 64 (refused if a value exceeds the signed 64 bit range)<br>
+Float32 -&gt; bitpix -32<br>
+Float64 -&gt; bitpix -64<br></tt></blockquote>
+<p>Complex images are not supported. Data blocks compressed with <tt>zlib</tt>,
+<tt>lz4</tt>, <tt>lz4hc</tt> or <tt>zstd</tt>, with or without byte shuffling, are
+decompressed automatically, and checksums are verified before any data is used: an
+image whose checksum does not match is refused rather than displayed. Images stored
+in separate files (distributed XISF) are not supported.</p>
+<p><b>Header.</b> The image gets a FITS header built from its XISF metadata: its
+FITS keywords, except those that describe the layout of whatever file they were
+copied from (<tt>BITPIX</tt>, <tt>BZERO</tt>, <tt>NAXISn</tt> and the like, which
+are listed as comments instead); FITS equivalents of its standard properties, such as
+<tt>OBJECT</tt>, <tt>DATE-OBS</tt> and <tt>EXPTIME</tt>, where the keywords do not
+already give them; and <tt>DATAMIN</tt>/<tt>DATAMAX</tt> from the image's
+<tt>bounds</tt>. <b>File&nbsp;&#8594;&nbsp;Header</b> shows that FITS header, followed by
+the file's own XML header.</p>
+<p><b>WCS.</b> An image's astrometric solution, as PixInsight's ImageSolver writes it,
+is attached as the frame's WCS. Its linear part is used, with any of the seven XISF
+projections (gnomonic, stereographic, zenithal equal area, orthographic, plate
+carr&eacute;e, Mercator, Hammer-Aitoff); a distortion model, if present, is noted in the
+header and not applied. An image without a solution takes its WCS from its WCS
+keywords, if it has any. See <a href="#WCS">WCS</a>.</p>
+<p><b>Backup.</b> A backup save set copies the XISF file into its directory and
+reloads from it. See <a href="backup.html">Backup</a>.</p>
+
 <p><b><a name="nrrd" id="nrrd"></a>NRRD (Nearly Raw Raster Data)</b><br></p>
 Images in NRRD are supported directly. Encodings supported: <tt>raw, gzip<br></tt><br>
 <tt>Syntax:<br>

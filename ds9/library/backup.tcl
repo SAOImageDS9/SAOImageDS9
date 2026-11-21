@@ -523,6 +523,27 @@ proc BackupFrameLoadParam {varname ch which fdir rdir channel} {
 	# pixels at least survive, minus the WCS and the tree
     }
 
+    if {[info exists param(xisf,file)]} {
+	if {[BackupXisfFile param $fdir $rdir]} {
+	    switch $param(load,layer) {
+		mask {
+		    puts $ch "MaskDialog"
+		    puts $ch "$which mask color $param(mask,color)"
+		    puts $ch "$which mask mark $param(mask,mark)"
+		    puts $ch "$which mask range $param(mask,low) $param(mask,high)"
+		}
+	    }
+	    set spec $param(xisf,file)
+	    if {$param(xisf,key) ne {}} {
+		append spec ":$param(xisf,key)"
+	    }
+	    puts $ch [list LoadXisfFile $spec $param(load,layer) {}]
+	    return
+	}
+	# source file is gone - fall through to the FITS conversion, which
+	# keeps the pixels and the WCS cards
+    }
+
     switch $param(load,type) {
 	mmap -
 	mmapincr -
@@ -609,10 +630,28 @@ proc BackupFrameLoadParam {varname ch which fdir rdir channel} {
 # caller can fall back to a FITS conversion.
 proc BackupAsdfFile {varname fdir rdir} {
     upvar $varname param
+    return [BackupSourceFile param asdf,file $fdir $rdir]
+}
+
+# The same for a native XISF frame (ds9/library/xisf.tcl): reload the image
+# from the XISF file rather than keep a FITS conversion. The conversion
+# would in fact keep everything that matters - FitsXisf's header carries
+# the WCS as ordinary cards - but the file is still the source of truth,
+# and reloading it keeps the header viewer's XML too.
+proc BackupXisfFile {varname fdir rdir} {
+    upvar $varname param
+    return [BackupSourceFile param xisf,file $fdir $rdir]
+}
+
+# Shared by the two above: `key' names the param element holding the
+# source file, which is rewritten to however the restore script should
+# name it.
+proc BackupSourceFile {varname key fdir rdir} {
+    upvar $varname param
 
     global pds9
 
-    set fn $param(asdf,file)
+    set fn $param($key)
     if {![file exists $fn]} {
 	return 0
     }
@@ -633,7 +672,7 @@ proc BackupAsdfFile {varname fdir rdir} {
 		return 0
 	    }
 	}
-	set param(asdf,file) "$rdir/$src"
+	set param($key) "$rdir/$src"
     }
 
     return 1
@@ -739,6 +778,12 @@ proc BackupFrameLoadAlloc {which varname fdir rdir} {
 	}
 	nrrd {$which save fits image file \"$ffn\"}
 	tiff {$which save fits image file \"$ffn\"}
+	xisf {
+	    # Only reached when the XISF file is gone (BackupFrameLoad
+	    # tries BackupXisfFile first). FitsXisf's header carries the
+	    # WCS as cards, so this keeps both pixels and WCS.
+	    $which save fits image file \"$ffn\"
+	}
 	asdf {
 	    # Only reached when the ASDF file itself is gone -
 	    # BackupFrameLoad tries BackupAsdfFile first and returns on

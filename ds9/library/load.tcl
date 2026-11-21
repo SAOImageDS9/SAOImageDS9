@@ -163,6 +163,7 @@ proc ProcessLoad {{err 1}} {
 	# likewise any cached ASDF tree - the frame is about to hold a
 	# different file, possibly not an ASDF one at all
 	AsdfClearTree $current(frame)
+	XisfClearFile $current(frame)
     }
 
     # restrict load type for windows
@@ -179,6 +180,7 @@ proc ProcessLoad {{err 1}} {
 		socket -
 		socketgz {}
 		asdf {}
+		xisf {}
 
 		mmap -
 		mmapincr {
@@ -288,6 +290,15 @@ proc ProcessLoad {{err 1}} {
 		    \{$loadParam(asdf,path)\} \
 		    $loadParam(load,layer)
 	    }
+	    xisf {
+		# As for asdf: the reader seeks the file itself. The extra
+		# argument picks the image, {} for the first.
+		$current(frame) load $loadParam(file,type) \
+		    \{$loadParam(file,name)\} \
+		    \{$loadParam(xisf,file)\} \
+		    \{$loadParam(xisf,key)\} \
+		    $loadParam(load,layer)
+	    }
 	    photo {
 		$current(frame) load $loadParam(file,type) \
 		       $loadParam(file,mode) \
@@ -319,11 +330,13 @@ proc ProcessLoad {{err 1}} {
 	    # it) and the GUI shows one box, not two
 	    set why [string trim $ds9(msg)]
 	    set ds9(msg) {}
-	    # The ASDF reader explains a refusal as the first line of the
-	    # frame's error (which goes on to add "no data loaded into
+	    # The ASDF and XISF readers explain a refusal as the first line
+	    # of the frame's error (which goes on to add "no data loaded into
 	    # frame"). asdf.tcl checks most problems in Tcl first, but a
-	    # block that fails to decode is only known down there.
-	    if {$why == {} && $loadParam(file,type) == {asdf}} {
+	    # block that fails to decode is only known down there; XISF
+	    # refusals are decided in C++ alone.
+	    if {$why == {} && \
+		    [lsearch -exact {asdf xisf} $loadParam(file,type)] >= 0} {
 		set why [lindex [split [string trim $rr] \n] 0]
 	    }
 	    set msg "[msgcat::mc {Unable to load}] $loadParam(file,type) $loadParam(file,mode) $loadParam(file,name)"

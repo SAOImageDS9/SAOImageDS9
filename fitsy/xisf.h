@@ -178,6 +178,12 @@ class FitsXisfFile {
 
   const std::vector<FitsXisfProperty>& metadata() {return metadata_;}
 
+  // The XML header re-indented for reading, with long embedded or inline
+  // data elided to a note of its size - what the header viewer shows next
+  // to the FITS header FitsXisf builds. The verbatim header if it cannot
+  // be reparsed.
+  std::string prettyHeader();
+
   // The block's bytes as stored: base64/hex decoded for embedded and
   // inline blocks, still compressed if it is. The caller owns the result
   // and releases it with delete[]. NULL on failure, with error() set; an
@@ -191,6 +197,12 @@ class FitsXisfFile {
   // since it depends on the sample size. Same ownership as stored().
   char* block(const FitsXisfBlock&, size_t*);
 };
+
+// Whether FitsXisf can load an image, and if not why: the container's own
+// verdict plus what a FitsFile can hold (rank 2, or rank 3 with one
+// channel; dimensions within int). Shared by FitsXisf and the image
+// chooser (tclfitsy's `fitsy xisf images'), so they cannot disagree.
+extern int xisfLoadable(const FitsXisfImage*, std::string* why);
 
 // One XISF image as a FitsFile - TODO_XISF.md Phase 3. What the frame's
 // `load xisf' command will instantiate, as `load asdf' does FitsAsdf.

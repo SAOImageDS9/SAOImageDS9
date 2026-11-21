@@ -250,6 +250,21 @@ void Base::loadAsdfCmd(const char* fn, const char* path, const char* name,
   loadDone(currentContext->load(ASDF, name, img));
 }
 
+// *** XISF ***
+
+// `fn' is the file, `key' the image inside it (an id or decimal index, ""
+// for the first), and `name' what the frame reports as its file:
+// "<file>:<key>" when a key was given, as for ASDF's arrays.
+void Base::loadXisfCmd(const char* fn, const char* key, const char* name,
+		       LayerType ll)
+{
+  unloadFits();
+  // FitsImageXisf reports a refusal's reason itself (see fitsimage.C)
+  FitsImage* img = new FitsImageXisf(currentContext, interp, fn, key,
+				     name, 1);
+  loadDone(currentContext->load(XISF, name, img));
+}
+
 // *** Photo ***
 
 void Base::loadPhotoCmd(const char* ph, const char* fn)

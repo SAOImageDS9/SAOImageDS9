@@ -21,6 +21,7 @@
 #include "socketgz.h"
 #include "var.h"
 #include "asdf.h"
+#include "xisf.h"
 #include "order.h"
 #include "iis.h"
 #include "hist.h"
@@ -645,6 +646,31 @@ FitsImageAsdfNext::FitsImageAsdfNext(Context* cx, Tcl_Interp* pp,
   : FitsImage(cx, pp)
 {
   fits_ = new FitsAsdfNext(prev);
+  process(name, id);
+}
+
+// XISF
+
+FitsImageXisf::FitsImageXisf(Context* cx, Tcl_Interp* pp,
+			     const char* fn, const char* key,
+			     const char* name, int id)
+  : FitsImage(cx, pp)
+{
+  FitsXisf* xf = new FitsXisf(fn, key);
+  // Why the file could not be read goes to the interpreter here, because
+  // process() discards an invalid fits_ (reset() deletes it), so by the
+  // time the load command could ask, the message is gone.
+  if (!xf->isValid() && xf->errorMessage())
+    Tcl_AppendResult(pp, "XISF: ", xf->errorMessage(), NULL);
+  fits_ = xf;
+  process(name, id);
+}
+
+FitsImageXisfNext::FitsImageXisfNext(Context* cx, Tcl_Interp* pp,
+				     const char* name, FitsFile* prev, int id)
+  : FitsImage(cx, pp)
+{
+  fits_ = new FitsXisfNext(prev);
   process(name, id);
 }
 

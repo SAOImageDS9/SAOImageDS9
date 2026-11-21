@@ -130,6 +130,7 @@ class Frame : public FrameBase {
   void loadNRRDVarCmd(const char*, const char*, LayerType);
 
   void loadAsdfCmd(const char*, const char*, const char*, LayerType);
+  void loadXisfCmd(const char*, const char*, const char*, LayerType);
 
   void loadMosaicImageAllocCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);
   void loadMosaicImageAllocGZCmd(MosaicType, Coord::CoordSystem, const char*, const char*, LayerType);

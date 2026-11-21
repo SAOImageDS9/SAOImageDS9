@@ -45,6 +45,16 @@ proc InitDialogBox {} {
 			     [list {ASDF} {*.ASDF}] \
 			    ]
 
+    # Native XISF loading (TODO_XISF.md). Like ASDF, compression is per
+    # data block inside the file, so there is no compressed variant.
+    global xisffbox
+    set xisffbox(file) {ds9.xisf}
+    set xisffbox(dir) {}
+    set xisffbox(types) [list \
+			     [list {XISF} {*.xisf}] \
+			     [list {XISF} {*.XISF}] \
+			    ]
+
     global savefitsfbox
     set savefitsfbox(file) {ds9.fits}
     set savefitsfbox(dir) {}

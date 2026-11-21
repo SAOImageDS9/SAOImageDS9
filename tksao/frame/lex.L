@@ -414,6 +414,7 @@ wcs0		{return WCS0_;}
 wfpc2		{return WFPC2_;}
 width		{return WIDTH_;}
 win32		{return WIN32_;}
+xisf		{return XISF_;}
 xml		{return XML_;}
 xy		{return XY_;}
 yes		{return YES_;}

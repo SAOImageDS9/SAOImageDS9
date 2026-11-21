@@ -7,22 +7,20 @@ already has. Written 2026-11-21 against the ASDF work as it stands on
 `TODO_ASDF.md` does. Work happens on the `xisf_support` branch, in both this repo and
 `Tests/`.
 
-**Status (2026-11-21): Phases 0–4 are done.** `Tests/xisf/` has 107 synthetic fixtures
-and 14 real ones, each with a FITS twin and a DS9 probe baseline recorded from that
-twin (`Tests/xisf/README.md`). `fitsy/xisf.{h,C}` holds two layers:
-- **`FitsXisfFile`**, the container. It reads the header and every image's descriptor,
-  keywords and properties, and returns any data block decoded: checksum verified;
-  decompressed with zlib, lz4, lz4hc or zstd; subblocks, raw subblocks and byte
-  shuffling handled.
-- **`FitsXisf`**, one image as the `FitsFile` ds9 will load: rows flipped, storage made
-  planar, channels as planes, and a header built from the geometry, the keywords, the
-  properties and the WCS. The WCS comes from the astrometric solution, or from mirrored
-  keywords when there is none.
+**Status (2026-11-21): Phases 0–5 are done**, apart from loading one XISF RGB image into
+all three channels of an RGB frame. **XISF files open in ds9**, from the File menu,
+over XPA/SAMP and on the command line. `Tests/xisf.sh` reproduces all 121 fixture
+baselines, which were recorded from FITS twins, through ds9's own `xisf` command.
+`fitsy/xisf.{h,C}` holds two layers:
+- **`FitsXisfFile`**, the container: header, descriptors, keywords and properties, and
+  any data block decoded (checksums, zlib/lz4/lz4hc/zstd, subblocks, shuffling).
+- **`FitsXisf`**, one image as a `FitsFile`: rows flipped, channels as planes, and a
+  header built from keywords and properties, with WCS from the astrometric solution or
+  mirrored keywords.
 
-Checked against the twins over the whole fixture set (`Tests/xisf/check_container.py`,
-`check_fits.py`, `check_ds9_wcs.sh`, driven by `utils/xisfdump`). The code is in fitsy's
-build, but nothing in ds9 calls it yet. **Next is Phase 5**: the load command, UI,
-XPA/SAMP, header viewer and RGB frame.
+tksao reaches it through `load xisf`; the Tcl surface is `ds9/library/xisf.tcl`. **Next
+is Phase 6**: Linux and Windows builds. Then real plate-solved PixInsight output, the
+distortion layers, and the RGB-frame load.
 
 Spec: <https://pixinsight.com/doc/docs/XISF-1.0-spec/XISF-1.0-spec.html> (XISF 1.0,
 Revision 2). A second, full read on 2026-11-21 settled everything this file had marked
@@ -251,35 +249,35 @@ ASDF version to copy from.
 - [x] `fitsy/configure.ac` **and** the generated `fitsy/configure`: the source list plus
       the libxml2 block copied from tksao (§2.2), and `--with-xml2-config` on the
       `fitsy/Makefile` rule in `make.include`. Done Phase 1; see there for how.
-- [ ] `fitsy/file.h`: `errorMessage()` already exists (added for ASDF), so reuse it.
-- [ ] `tclfitsy`: `fitsy xisf header|images <file>` for the Tcl side (header viewer,
-      image chooser), the analogue of `fitsy asdf tree|arrays|block`. One implementation
-      of the format, as ASDF settled on.
-- [ ] `tksao/frame/lex.L` + `parser.Y`: an `xisf` token and
-      `loadXisf : STRING STRING STRING layerType`. **This is the flex-churn procedure in
-      `AGENTS.md`**: no-op regen first, and expect an ~11k-line `parser.C` diff (token
-      renumbering), which is normal.
-- [ ] `tksao/frame/base.h`: `XISF` in the `MemType` enum, `loadXisfCmd`.
-- [ ] `tksao/frame/baseload.C` / `frame.h` / `frameload.C`: image and mask layers.
-- [ ] `tksao/frame/context.C`: `case Base::XISF:` → `FitsImageXisfNext` (see §2.1).
-- [ ] `tksao/frame/fitsimage.{h,C}`: `FitsImageXisf`, `FitsImageXisfNext`.
-- [ ] RGB frame: decide whether `loadRGBCube*` takes an XISF source, or whether the RGB
-      frame's `load xisf` feeds channels itself. Look at how `FrameRGB` overrides
-      `loadRGBCube*` before choosing.
+- [x] `fitsy/file.h`: `errorMessage()` reused.
+- [x] `tclfitsy`: `fitsy xisf images|header <file>` (Phase 5).
+- [x] `tksao/frame/lex.L` + `parser.Y`: `xisf` token and `loadXisf`. `XISF_` sorts
+      before `XML_`, so only 9 tokens renumber (a ~10k-line `parser.C` diff); `lex.C` +2.3k
+      lines of tables. Done by the corrected recipe in `AGENTS.md`.
+- [x] `tksao/frame/base.h`: `XISF` in `MemType`, `loadXisfCmd`.
+- [x] `tksao/frame/baseload.C` / `frame.h` / `frameload.C`: image and mask layers.
+- [x] `tksao/frame/context.C`: `case Base::XISF:` → `FitsImageXisfNext`.
+- [x] `tksao/frame/fitsimage.{h,C}`: `FitsImageXisf`, `FitsImageXisfNext`.
+- [ ] RGB frame: today an XISF image loads into an RGB frame's *current channel*, an RGB
+      image as a 3-plane cube there. That is exactly what FITS and ASDF do, and it is
+      documented that way. Feeding an RGB image's planes to the three channels in one
+      load is the remaining enhancement. Look at how `FrameRGB` implements
+      `loadRGBCube*` (one cube split across channels) before choosing.
 
 **Tcl (`ds9/`)**
-- [ ] `ds9/library/xisf.tcl`: `LoadXisfFile`, `ProcessXisfCmd`, the image chooser and
-      header text (raw XML or rendered keyword list + properties). Keep it thin.
-- [ ] `ds9/parsers/xisfparser.tac` + `xisflex.fcl` (taccle/fickle; `make ds9`
-      regenerates, so no bison or flex is involved).
-- [ ] `load.tcl`, `open.tcl`, `mfile.tcl`, `stdfbox.tcl` (`xisffbox`, `*.xisf`),
-      `xpa.tcl` (`XPARcvdXisf`), `comm.tcl` (SAMP), `command.tcl` (`-xisf`), `frame.tcl`,
-      `mask.tcl`, `header.tcl`, `backup.tcl`, the menus and buttonbar (`pbuttons(file,open,xisf)`).
-- [ ] Clear any cached XISF header on frame reuse, the counterpart of `AsdfClearTree`.
-- [ ] **Re-check `layer` after the load.** ASDF's review pass found post-load WCS and
-      header work running against the image while a mask was being loaded
-      (`TODO_ASDF.md`, "The review pass").
-- [ ] Docs: `ds9/doc/ref/command.html`, `xpa.html`, `samp.html`, `file.html`.
+- [x] `ds9/library/xisf.tcl`: `LoadXisfFile`/`XisfLoadImage`, `ProcessXisfCmd`, the
+      image chooser `XisfImageDialog`, and `XisfHeaderText`.
+- [x] `ds9/parsers/xisfparser.tac` + `xisflex.fcl`, ASDF's grammar under the `xisf`
+      namespace. Watch the trap that cost a round: taccle also reads lines as Tcl
+      lists, so a quote in a `.tac` comment breaks it too, not only in `.fcl`.
+- [x] `load.tcl`, `open.tcl`, `mfile.tcl`, `stdfbox.tcl`, `xpa.tcl`, `comm.tcl`,
+      `command.tcl`, `frame.tcl`, `mask.tcl`, `header.tcl`, `backup.tcl`, menus and
+      buttonbar.
+- [x] The XISF file recorded for the header viewer is cleared on frame reuse
+      (`ProcessLoad`) and frame delete (`XisfClearFile`).
+- [x] `layer` re-checked after the load: only an image load records its file. The mask
+      phase of `Tests/xisf.sh` checks it.
+- [x] Docs: `command.html`, `xpa.html`, `samp.html`, `file.html`, `framecmd.html`.
 - [ ] Optional: tkimg's file-type sniffing. If a user drags in a `.xisf`, route it here.
 
 ---
@@ -542,13 +540,51 @@ bytes, missing or malformed `bounds`, uppercase checksum hex.
       long input; they are worth fixing separately, since other callers may pass
       user-controlled text.
 
-### Phase 5: UI, scripting and the rest
-- [ ] Everything in §3 Tcl. Menus/buttons/XPA/SAMP/command line, image chooser,
-      backup/restore (portable, as ASDF's), mask layer, RGB frame.
-- [ ] Docs.
+### Phase 5: UI, scripting and the rest (done 2026-11-21, except the RGB frame)
+- [x] The frame command `load xisf <name> <file> <image> [mask]`, and on top of it the
+      Tcl surface:
+  - File → Open as → XISF (with an image chooser when the file holds several);
+  - the buttonbar and its preference;
+  - the mask dialog;
+  - `xisf [new|mask] file[:image]` over XPA and SAMP, and `-xisf` on the command line;
+  - backup/restore by reloading the source file (copied in for a portable save set,
+    through `BackupSourceFile`, now shared with ASDF).
+- [x] **Refusals are decided in C++ alone.** ASDF re-checks in Tcl because
+      `ProcessLoad` swallowed the frame's error. For XISF, `ProcessLoad` now passes on
+      the first line of that error, so the reader's own reason reaches the user,
+      including those only the block decoder can know (bad checksum, short
+      subblock). This needed one C++ fix: `FitsImage::process()` deletes an invalid
+      `fits_` via `reset()`, so `Base::loadXisfCmd` could never read
+      `errorMessage()`. `FitsImageXisf` now appends the reason to the interpreter
+      before `process()`. **`Base::loadAsdfCmd` has the same dead branch**, so ASDF's
+      C++ refusal reasons are lost the same way. Its Tcl pre-checks hide that, but a
+      block-level failure there still says only "Unable to load". That is a separate
+      fix.
+- [x] Header viewer: FitsXisf's FITS header, keyword-coloured as for FITS, followed by
+      the file's XML header (`fitsy xisf header`: libxml2-indented, long data elided,
+      a signed unit's signature appended verbatim).
+- [x] Tests: `Tests/xisf.sh`, modes `xpa`, `command`, `mask`, `extra`, run on
+      2026-11-21:
+  - `xpa`: **121/121** fixtures reproduce their baselines through ds9's real `xisf`
+    command. Those baselines were recorded from the FITS twins before the reader
+    existed, so this is an XISF-vs-FITS comparison in ds9 itself, WCS included.
+  - `command`: one `-xisf` launch per file, all clean.
+  - `mask`: 4/4. The mask leaves the image's WCS and header file alone.
+  - `extra`: 10/10. Selection by id and by index, `xisf new`, a refusal's reason, a
+    bad checksum's reason, the header viewer's FITS and XML parts, and backup/restore
+    keeping pixels, WCS and the XISF source.
+
+  There is deliberately no `save` mode, since the baselines come from the twins. The
+  ASDF suite was rerun after the shared changes: 193/193 baselines, mask 4/4. The
+  automated phases of `backup.sh` were rerun too (24 passed, none failed). Its `old`
+  phase opens each historical save set and waits for someone to close ds9, so it
+  needs a person and was not run.
+- [ ] RGB frame: one XISF RGB image into all three channels (see §3).
 
 ### Phase 6: Platforms and tests
-- [ ] `Tests/xisf.sh` wired into `io.sh`. `Tests/` is a separate git repo, so commit there.
+- [x] `Tests/xisf.sh` added to `io.sh`, commented out like `asdf.sh` (the user's
+      choice for that one, presumably its runtime; the command phase alone is about 6
+      minutes).
 - [ ] Build and run the fixture suite on macOS, Linux and Windows/mingw. Watch the
       `windows.h`/`std::byte` include-order trap documented at the top of `fitsy/asdf.C`
       if zstd's or libxml2's headers pull in `<windows.h>`. Check whether libxml2's

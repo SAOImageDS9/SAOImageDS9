@@ -800,6 +800,64 @@ void FitsXisfFile::checkImage(FitsXisfImage* im)
   }
 }
 
+// Elide the text of any element longer than this: embedded base64 pixels
+// and long inline vectors are unreadable and can be megabytes.
+#define XISF_PRETTY_MAXTEXT 120
+
+static void xisfElide(xmlNode* nn)
+{
+  for (xmlNode* cc = nn->children; cc; cc = cc->next) {
+    if (cc->type == XML_TEXT_NODE && cc->content) {
+      size_t len = strlen((const char*)cc->content);
+      if (len > XISF_PRETTY_MAXTEXT) {
+	char buf[96];
+	snprintf(buf, sizeof(buf), "[%zu characters not shown]", len);
+	xmlNodeSetContent(cc, (const xmlChar*)buf);
+      }
+    }
+    else if (cc->type == XML_ELEMENT_NODE)
+      xisfElide(cc);
+  }
+}
+
+string FitsXisfFile::prettyHeader()
+{
+  size_t end = header_.rfind("</xisf>");
+  if (end == string::npos)
+    return header_;
+  end += 7;
+
+  xmlParserCtxtPtr ctxt = xmlNewParserCtxt();
+  if (!ctxt)
+    return header_;
+  // NOBLANKS drops the writer's own indentation so the dump can indent
+  // uniformly; same safety options as parseHeader()
+  xmlDocPtr doc = xmlCtxtReadMemory(ctxt, header_.data(), (int)end,
+				    "xisf-header", NULL,
+				    XML_PARSE_NONET | XML_PARSE_NOERROR |
+				    XML_PARSE_NOWARNING | XML_PARSE_NOBLANKS);
+  xmlFreeParserCtxt(ctxt);
+  if (!doc)
+    return header_;
+
+  xmlNode* root = xmlDocGetRootElement(doc);
+  if (root)
+    xisfElide(root);
+
+  xmlChar* mem = NULL;
+  int len = 0;
+  xmlDocDumpFormatMemoryEnc(doc, &mem, &len, "UTF-8", 1);
+  string out = mem ? string((const char*)mem, len) : header_;
+  if (mem)
+    xmlFree(mem);
+  xmlFreeDoc(doc);
+
+  // a signed unit's detached signature, verbatim and noted
+  if (end < header_.size() && header_.find('<', end) != string::npos)
+    out += "\n<!-- followed by: -->\n" + header_.substr(end);
+  return out;
+}
+
 const FitsXisfImage* FitsXisfFile::image(int ii)
 {
   if (ii < 0 || ii >= (int)images_.size())
@@ -1716,6 +1774,34 @@ static unsigned long long xisfLoadUInt(const unsigned char* pp, int sz,
   return vv;
 }
 
+int xisfLoadable(const FitsXisfImage* im, string* why)
+{
+  if (im->unsupported_) {
+    *why = im->why_;
+    return 0;
+  }
+  // Two spatial dimensions with any number of channels, or three with
+  // one. The channels of a 2-D image become the planes of a cube; a 3-D
+  // image with several channels would need a fourth axis, which DS9 has
+  // no frame for.
+  if (im->ndim_ < 2 || im->ndim_ > 3) {
+    char buf[32];
+    snprintf(buf, sizeof(buf), "%d", im->ndim_);
+    *why = string(buf) + "-dimensional images are not supported";
+    return 0;
+  }
+  if (im->ndim_ == 3 && im->channels_ > 1) {
+    *why = "3-dimensional images with several channels are not supported";
+    return 0;
+  }
+  long long dd = im->ndim_ == 3 ? im->dim_[2] : im->channels_;
+  if (im->dim_[0] > INT_MAX || im->dim_[1] > INT_MAX || dd > INT_MAX) {
+    *why = "too large for fitsy";
+    return 0;
+  }
+  return 1;
+}
+
 int FitsXisf::build(const char* key)
 {
   const FitsXisfImage* im = NULL;
@@ -1735,34 +1821,15 @@ int FitsXisf::build(const char* key)
   snprintf(label, sizeof(label), "image %d", im->index_);
   string what = im->id_.empty() ? string(label) : "image " + im->id_;
 
-  if (im->unsupported_) {
-    xisfError_ = what + ": " + im->why_;
-    return 0;
-  }
-
-  // Two spatial dimensions with any number of channels, or three with
-  // one. The channels of a 2-D image become the planes of a cube; a 3-D
-  // image with several channels would need a fourth axis, which DS9 has
-  // no frame for.
-  if (im->ndim_ < 2 || im->ndim_ > 3) {
-    snprintf(label, sizeof(label), "%d", im->ndim_);
-    xisfError_ = what + ": " + label + "-dimensional images are not "
-      "supported";
-    return 0;
-  }
-  if (im->ndim_ == 3 && im->channels_ > 1) {
-    xisfError_ = what + ": 3-dimensional images with several channels are "
-      "not supported";
+  string why;
+  if (!xisfLoadable(im, &why)) {
+    xisfError_ = what + ": " + why;
     return 0;
   }
   long long ww = im->dim_[0];
   long long hh = im->dim_[1];
   long long dd = im->ndim_ == 3 ? im->dim_[2] : im->channels_;
   long long nc = im->channels_;
-  if (ww > INT_MAX || hh > INT_MAX || dd > INT_MAX) {
-    xisfError_ = what + ": too large for fitsy";
-    return 0;
-  }
 
   int bitpix, widen = 0;
   const string& fmt = im->sampleFormat_;

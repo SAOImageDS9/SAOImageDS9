@@ -216,11 +216,22 @@ left carries nothing but your change. Verify before installing it — the
 remaining diff should be table sizes, table contents, `YY_NUM_RULES`,
 `#line` shifts and your new action, and nothing else.
 
-Note the local `patch` is not GNU patch and has no `-R`; reverse-apply
-with `git apply -R` or a short script that swaps each hunk's `+` side for
-its `-` side. Also: regenerate into a scratch directory laid out the same
-way (`frame/lex.L` → `frame/lex.C`), because flex writes the output path
-into `#line` directives and a different cwd makes every one of them differ.
+Note the local `patch` is not GNU patch at all (it is some other tool
+that takes subcommands); apply with `git apply`, rewriting the patch's
+`---`/`+++` lines to the repo path, or reverse-apply with `git apply -R`.
+Also: **run bison and flex from inside `frame/`**, in a scratch copy of
+it, because they write the paths they were given into `#line`
+directives and the checked-in files say `"lex.C"` and `"parser.Y"`, not
+`"frame/lex.C"`. So `make parser` itself, which runs from `tksao/`,
+churns every `#line`, and even bison stops being byte-identical
+(verified 2026-11-21 for the XISF token: from `frame/`, `parser.C`/`.H`
+match exactly and `lex.C` differs only by the characterized churn). The
+clean recipe, used for `load xisf`:
+`cd scratch/frame && bison -d -p fr -o parser.C parser.Y && flex -Pfr -olex.C lex.L`,
+once on `HEAD`'s sources (the no-op) and once on the edited ones. Copy
+`parser.C`/`.H` in as they are. Apply `diff -u noop/lex.C new/lex.C` to
+the checked-in `lex.C`. Then check that what remains between the result
+and the fresh `lex.C` is exactly the no-op churn.
 
 Adding a token alphabetically to `parser.Y` renumbers every token after
 it, so a one-line grammar change produces a ~11k-line `parser.C` diff.

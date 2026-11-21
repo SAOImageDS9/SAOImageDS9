@@ -915,6 +915,24 @@ public:
   FitsImageAsdfNext(Context*, Tcl_Interp*, const char*, FitsFile*, int);
 };
 
+// XISF
+//
+// Like ASDF, one class rather than a per-transport family: the data
+// blocks are found by absolute position, so FitsXisf seeks with stdio
+// (fitsy/xisf.C). A cube - a 3-D image, or the channels of an RGB one -
+// chains FitsImageXisfNext planes, exactly as ASDF does.
+
+class FitsImageXisf : public FitsImage {
+public:
+  FitsImageXisf(Context*, Tcl_Interp*,
+		const char*, const char*, const char*, int);
+};
+
+class FitsImageXisfNext : public FitsImage {
+public:
+  FitsImageXisfNext(Context*, Tcl_Interp*, const char*, FitsFile*, int);
+};
+
 // Photo
 
 class FitsImagePhoto : public FitsImage {

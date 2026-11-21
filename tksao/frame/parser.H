@@ -426,15 +426,16 @@
      WFPC2_ = 642,
      WIDTH_ = 643,
      WIN32_ = 644,
-     XML_ = 645,
-     XY_ = 646,
-     YES_ = 647,
-     ZERO_ = 648,
-     ZMAX_ = 649,
-     ZSCALE_ = 650,
-     PIXMASK_ = 651,
-     ZOOM_ = 652,
-     FIELDS_ = 653
+     XISF_ = 645,
+     XML_ = 646,
+     XY_ = 647,
+     YES_ = 648,
+     ZERO_ = 649,
+     ZMAX_ = 650,
+     ZSCALE_ = 651,
+     PIXMASK_ = 652,
+     ZOOM_ = 653,
+     FIELDS_ = 654
    };
 #endif
 /* Tokens.  */
@@ -825,15 +826,16 @@
 #define WFPC2_ 642
 #define WIDTH_ 643
 #define WIN32_ 644
-#define XML_ 645
-#define XY_ 646
-#define YES_ 647
-#define ZERO_ 648
-#define ZMAX_ 649
-#define ZSCALE_ 650
-#define PIXMASK_ 651
-#define ZOOM_ 652
-#define FIELDS_ 653
+#define XISF_ 645
+#define XML_ 646
+#define XY_ 647
+#define YES_ 648
+#define ZERO_ 649
+#define ZMAX_ 650
+#define ZSCALE_ 651
+#define PIXMASK_ 652
+#define ZOOM_ 653
+#define FIELDS_ 654
 
 
 
@@ -851,7 +853,7 @@ typedef union YYSTYPE
   int dash[2];
 }
 /* Line 1529 of yacc.c.  */
-#line 855 "frame/parser.H"
+#line 857 "frame/parser.H"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

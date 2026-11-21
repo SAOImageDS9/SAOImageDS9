@@ -30,6 +30,9 @@ patched locally), the open items in priority order, and the failure modes that a
 expensive to rediscover — chiefly that almost every GWCS problem presents identically as
 "no WCS", so bisecting to a bare `transform: identity` fixture is the fastest diagnosis.
 
+XISF (PixInsight's format) is supported natively in the same way, on the `xisf_support`
+branch; `TODO_XISF.md`'s status line at the top is the place to start for that work.
+
 Companions: `ASDF_NATIVE_SUPPORT_DESIGN.md` (design of the image/WCS half, which is
 done), `ASDF_TABLES_DESIGN.md` (analysis of the *table* half — Prism and Catalogs — which
 is not started), `WCS_TEST_PLAN.md` (the WCS test matrix and the DS9/XPA gotchas in its

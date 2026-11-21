@@ -106,6 +106,11 @@ proc CreateXPA {} {
 	{} {} {} \
 	XPARcvdAsdf {} "fillbuf=false"
 
+    xpacmdadd $xpa xisf \
+	{} \
+	{} {} {} \
+	XPARcvdXisf {} "fillbuf=false"
+
     xpacmdadd $xpa background \
 	{} \
 	XPASendBg {} {} \
@@ -1308,6 +1313,13 @@ proc XPARcvdAsdf {xpa cdata param buf len} {
     XPADebug "XPARcvdAsdf" $param
     InitError xpa
     catch {set i 0; ProcessAsdfCmd param i {} {}}
+    XPACatchError $xpa
+}
+
+proc XPARcvdXisf {xpa cdata param buf len} {
+    XPADebug "XPARcvdXisf" $param
+    InitError xpa
+    catch {set i 0; ProcessXisfCmd param i {} {}}
     XPACatchError $xpa
 }
 

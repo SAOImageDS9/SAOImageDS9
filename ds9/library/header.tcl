@@ -147,6 +147,16 @@ proc DisplayHeader {id title} {
 	set hh [$frame get fits header $id]
     }
 
+    # An XISF frame's FITS header is real - FitsXisf builds it from the
+    # file's keywords, properties and WCS - so it is shown as for FITS,
+    # and the file's own XML header follows it, since only part of it has
+    # a FITS form. Only the FITS lines get keyword colouring.
+    set fitslines [llength [split $hh \n]]
+    set xml [XisfHeaderText $frame]
+    if {$xml ne {}} {
+	append hh "\n\nXISF header\n-----------\n" $xml
+    }
+
     SimpleTextDialog $varname $title 80 40 insert top $hh
 
     # create a special text tag for keywords
@@ -155,6 +165,9 @@ proc DisplayHeader {id title} {
     
     # color tag keywords
     set stop [$var(text) index end]
+    if {$xml ne {}} {
+	set stop [expr {min($stop, $fitslines + 1.0)}]
+    }
     for {set ii 1.0} {$ii<$stop} {set ii [expr $ii+1]} {
 	$var(text) tag add keyword $ii "$ii +8 chars"
     }

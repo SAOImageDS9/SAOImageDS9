@@ -23,6 +23,7 @@
 #include <stdarg.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <float.h>
 #include <limits.h>
@@ -143,12 +144,81 @@ static int tiffHasPredictor(int compression)
   return 0;
 }
 
+// IEEE 754 half precision to float. Every half is exactly a float, so
+// this loses nothing: zeros, subnormals (renormalised), infinities and
+// NaNs (payload kept) included.
+static float tiffHalf(uint16_t hh)
+{
+  uint32_t sign = (uint32_t)(hh >> 15) << 31;
+  uint32_t exp = (hh >> 10) & 0x1f;
+  uint32_t man = hh & 0x3ff;
+  uint32_t ff;
+  if (exp == 0) {
+    if (man == 0)
+      ff = sign;
+    else {
+      // subnormal: man * 2^-24; shift the leading 1 into the implicit bit
+      uint32_t ee = 127-14;
+      while (!(man & 0x400)) {
+	man <<= 1;
+	ee--;
+      }
+      ff = sign | (ee << 23) | ((man & 0x3ff) << 13);
+    }
+  }
+  else if (exp == 31)
+    ff = sign | 0x7f800000 | (man << 13);
+  else
+    ff = sign | ((exp - 15 + 127) << 23) | (man << 13);
+
+  float rr;
+  memcpy(&rr, &ff, 4);
+  return rr;
+}
+
+// Unsigned samples of 1-15 bits other than 8 come packed, most
+// significant bit first, each row starting on a byte boundary.
+static int tiffPacked(int sf, int bps)
+{
+  return sf == SAMPLEFORMAT_UINT && bps >= 1 && bps < 16 && bps != 8;
+}
+
+// The bytes one row of nn samples occupies in a strip or tile.
+static long long tiffRowBytes(long long nn, int bps)
+{
+  return (nn*bps + 7)/8;
+}
+
+// Unpack nn samples of bps bits from src into out, one byte each (ob 1)
+// or one 16 bit word each in this host's order (ob 2).
+static void tiffUnpack(const unsigned char* src, long long nn, int bps,
+		       unsigned char* out, int ob)
+{
+  uint32_t acc =0;
+  int nb =0;
+  uint32_t mask = (1u << bps) - 1;
+  for (long long ii=0; ii<nn; ii++) {
+    while (nb < bps) {
+      acc = (acc << 8) | *src++;
+      nb += 8;
+    }
+    uint32_t vv = (acc >> (nb - bps)) & mask;
+    nb -= bps;
+    acc &= (1u << nb) - 1;
+    if (ob == 1)
+      out[ii] = (unsigned char)vv;
+    else {
+      uint16_t v16 = (uint16_t)vv;
+      memcpy(out + 2*ii, &v16, 2);
+    }
+  }
+}
+
 // Fold n samples into min/max/sum. libtiff hands back decoded samples in
 // this host's byte order, so they are read as they are.
 static int tiffAccumulate(FitsTiffDir& dd, const unsigned char* buf,
-			  long long n)
+			  long long n, int bps)
 {
-  int bps = dd.bitsPerSample;
   int sf = dd.sampleFormat;
 
   for (long long ii=0; ii<n; ii++) {
@@ -158,6 +228,8 @@ static int tiffAccumulate(FitsTiffDir& dd, const unsigned char* buf,
 	vv = ((const float*)buf)[ii];
       else if (bps == 64)
 	vv = ((const double*)buf)[ii];
+      else if (bps == 16)
+	vv = tiffHalf(((const uint16_t*)buf)[ii]);
       else
 	return 0;
     }
@@ -195,7 +267,8 @@ static int tiffAccumulate(FitsTiffDir& dd, const unsigned char* buf,
 static void tiffDecode(TIFF* tif, FitsTiffDir& dd)
 {
   int bps = dd.bitsPerSample;
-  if (bps != 8 && bps != 16 && bps != 32 && bps != 64) {
+  int packed = tiffPacked(dd.sampleFormat, bps);
+  if (bps != 8 && bps != 16 && bps != 32 && bps != 64 && !packed) {
     dd.error = "unsupported BitsPerSample";
     return;
   }
@@ -212,6 +285,9 @@ static void tiffDecode(TIFF* tif, FitsTiffDir& dd)
   int spp = separate ? 1 : dd.samplesPerPixel;   // samples per pixel per plane
   long long ww = dd.width;
   long long hh = dd.height;
+  // packed samples are unpacked a row at a time to 16 bits, then folded
+  int abps = packed ? 16 : bps;
+  vector<unsigned char> urow;
 
   tmsize_t bufSize = dd.tiled ? TIFFTileSize(tif) : TIFFStripSize(tif);
   if (bufSize <= 0) {
@@ -232,22 +308,32 @@ static void tiffDecode(TIFF* tif, FitsTiffDir& dd)
 	  return;
 	}
 	long long nrows = hh-row < rps ? hh-row : rps;
+	long long rb = packed ? tiffRowBytes(ww*spp, bps) : ww*spp*bytes;
 	// A subsampled YCbCr strip (JPEG-in-TIFF) is smaller than
 	// rows x width x samples; never read past what libtiff decoded.
-	if ((long long)bufSize < nrows*ww*spp*bytes) {
+	if ((long long)bufSize < nrows*rb) {
 	  dd.error = "decoded strip smaller than its rows (subsampled YCbCr?)";
 	  return;
 	}
-	if (!tiffAccumulate(dd, buf.data(), nrows*ww*spp)) {
-	  dd.error = "unsupported sample type";
-	  return;
+	for (long long rr=0; rr<nrows; rr++) {
+	  const unsigned char* src = buf.data() + rr*rb;
+	  if (packed) {
+	    urow.resize((size_t)(ww*spp*2));
+	    tiffUnpack(src, ww*spp, bps, urow.data(), 2);
+	    src = urow.data();
+	  }
+	  if (!tiffAccumulate(dd, src, ww*spp, abps)) {
+	    dd.error = "unsupported sample type";
+	    return;
+	  }
 	}
       }
   }
   else {
     long long tw = dd.tileWidth;
     long long th = dd.tileHeight;
-    if (tw <= 0 || th <= 0 || (long long)bufSize < tw*th*spp*bytes) {
+    long long rb = packed ? tiffRowBytes(tw*spp, bps) : tw*spp*bytes;
+    if (tw <= 0 || th <= 0 || (long long)bufSize < th*rb) {
       dd.error = "bad tile size, or a tile smaller than tw x th x samples";
       return;
     }
@@ -262,11 +348,18 @@ static void tiffDecode(TIFF* tif, FitsTiffDir& dd)
 	  }
 	  long long nrows = hh-yy < th ? hh-yy : th;
 	  long long ncols = ww-xx < tw ? ww-xx : tw;
-	  for (long long rr=0; rr<nrows; rr++)
-	    if (!tiffAccumulate(dd, buf.data() + rr*tw*spp*bytes, ncols*spp)) {
+	  for (long long rr=0; rr<nrows; rr++) {
+	    const unsigned char* src = buf.data() + rr*rb;
+	    if (packed) {
+	      urow.resize((size_t)(tw*spp*2));
+	      tiffUnpack(src, tw*spp, bps, urow.data(), 2);
+	      src = urow.data();
+	    }
+	    if (!tiffAccumulate(dd, src, ncols*spp, abps)) {
 	      dd.error = "unsupported sample type";
 	      return;
 	    }
+	  }
 	}
   }
 
@@ -364,8 +457,10 @@ int tiffProbe(Tcl_Interp* interp, const char* fn, int decode,
 // sample type is not loadable; see TODO_TIFF16.md section 2.3.
 struct TiffType {
   int bitpix;
-  int srcBytes;
+  int srcBytes;               // per sample, after any unpacking
   int dstBytes;
+  int packed;                 // unsigned 1-15 bits, not 8: unpacked first
+  int bps;
   const char* name;
 };
 
@@ -373,9 +468,19 @@ static int tiffType(const FitsTiffDir& dd, TiffType* tt)
 {
   int sf = dd.sampleFormat;
   int bps = dd.bitsPerSample;
-  TiffType rr = {0,bps/8,bps/8,""};
+  TiffType rr = {0,bps/8,bps/8,0,bps,""};
+  static const char* packedNames[16] = {"", "uint1", "uint2", "uint3",
+    "uint4", "uint5", "uint6", "uint7", "", "uint9", "uint10", "uint11",
+    "uint12", "uint13", "uint14", "uint15"};
 
-  if (sf == SAMPLEFORMAT_UINT) {
+  if (tiffPacked(sf, bps)) {
+    // raw counts, unscaled: 1-7 bits as BITPIX 8, 9-15 as fitsy's -16
+    rr.packed = 1;
+    rr.srcBytes = rr.dstBytes = bps < 8 ? 1 : 2;
+    rr.bitpix = bps < 8 ? 8 : -16;
+    rr.name = packedNames[bps];
+  }
+  else if (sf == SAMPLEFORMAT_UINT) {
     switch (bps) {
     case 8: rr.bitpix = 8; rr.name = "uint8"; break;
     case 16: rr.bitpix = -16; rr.name = "uint16"; break;  // fitsy's unsigned 16
@@ -394,6 +499,7 @@ static int tiffType(const FitsTiffDir& dd, TiffType* tt)
   }
   else if (sf == SAMPLEFORMAT_IEEEFP) {
     switch (bps) {
+    case 16: rr.bitpix = -32; rr.dstBytes = 4; rr.name = "float16"; break;
     case 32: rr.bitpix = -32; rr.name = "float32"; break;
     case 64: rr.bitpix = -64; rr.name = "float64"; break;
     default: return 0;
@@ -529,6 +635,12 @@ static void tiffScatter(const unsigned char* src, long long nn, int stride,
       int16_t vv = *(const int8_t*)ss;
       memcpy(dd8, &vv, 2);
     }
+    else if (sb == 2 && db == 4) {          // float16 -> float32
+      uint16_t vv;
+      memcpy(&vv, ss, 2);
+      float ff = tiffHalf(vv);
+      memcpy(dd8, &ff, 4);
+    }
   }
 }
 
@@ -546,6 +658,9 @@ static int tiffRead(TIFF* tif, const FitsTiffDir& dd, const TiffType& tt,
   int separate = dd.planar == PLANARCONFIG_SEPARATE;
   int spp = separate ? 1 : dd.samplesPerPixel;   // per strip/tile row
   int npass = separate ? nn : 1;
+  // packed samples: each row is unpacked into urow, then scattered as
+  // whole samples of sb bytes
+  vector<unsigned char> urow;
 
   tmsize_t bufSize = dd.tiled ? TIFFTileSize(tif) : TIFFStripSize(tif);
   if (bufSize <= 0) {
@@ -572,22 +687,31 @@ static int tiffRead(TIFF* tif, const FitsTiffDir& dd, const TiffType& tt,
 	  return 0;
 	}
 	long long nrows = hh-row < rps ? hh-row : rps;
-	if ((long long)bufSize < nrows*ww*spp*sb) {
+	long long rb = tt.packed ? tiffRowBytes(ww*spp, tt.bps) : ww*spp*sb;
+	if ((long long)bufSize < nrows*rb) {
 	  err = "strip smaller than its rows";
 	  return 0;
 	}
-	for (long long rr=0; rr<nrows; rr++)
+	for (long long rr=0; rr<nrows; rr++) {
+	  const unsigned char* src = buf.data() + rr*rb;
+	  if (tt.packed) {
+	    urow.resize((size_t)(ww*spp*sb));
+	    tiffUnpack(src, ww*spp, tt.bps, urow.data(), sb);
+	    src = urow.data();
+	  }
 	  for (int kk=k0; kk<k1; kk++) {
 	    int off = separate ? 0 : samples[kk];
-	    tiffScatter(buf.data() + (rr*ww*spp + off)*sb, ww, spp,
+	    tiffScatter(src + off*sb, ww, spp,
 			row+rr, 0, dd, tt, orient, dw, planes[kk]);
 	  }
+	}
       }
     }
     else {
       long long tw = dd.tileWidth;
       long long th = dd.tileHeight;
-      if (tw <= 0 || th <= 0 || (long long)bufSize < tw*th*spp*sb) {
+      long long rb = tt.packed ? tiffRowBytes(tw*spp, tt.bps) : tw*spp*sb;
+      if (tw <= 0 || th <= 0 || (long long)bufSize < th*rb) {
 	err = "bad tile size";
 	return 0;
       }
@@ -601,12 +725,19 @@ static int tiffRead(TIFF* tif, const FitsTiffDir& dd, const TiffType& tt,
 	  }
 	  long long nrows = hh-yy < th ? hh-yy : th;
 	  long long ncols = ww-xx < tw ? ww-xx : tw;
-	  for (long long rr=0; rr<nrows; rr++)
+	  for (long long rr=0; rr<nrows; rr++) {
+	    const unsigned char* src = buf.data() + rr*rb;
+	    if (tt.packed) {
+	      urow.resize((size_t)(tw*spp*sb));
+	      tiffUnpack(src, tw*spp, tt.bps, urow.data(), sb);
+	      src = urow.data();
+	    }
 	    for (int kk=k0; kk<k1; kk++) {
 	      int off = separate ? 0 : samples[kk];
-	      tiffScatter(buf.data() + (rr*tw*spp + off)*sb, ncols, spp,
+	      tiffScatter(src + off*sb, ncols, spp,
 			  yy+rr, xx, dd, tt, orient, dw, planes[kk]);
 	    }
+	  }
 	}
     }
   }
@@ -720,6 +851,99 @@ static void tiffString(FitsHead* hh, const char* key, const string& value,
   tiffCard(hh, body);
 }
 
+// Some writers put a FITS header in ImageDescription. Read it as one when
+// every line is a FITS card (fixed format: an 8-character keyword of
+// A-Z 0-9 _ -, then "= " for a value card, or COMMENT, HISTORY or a blank
+// keyword) and at least three are value cards. Lines are separated by
+// newlines, or, with none, are 80-character cards back to back; END ends
+// them. Returns 1 and the cards to merge, without the structural ones
+// (fitsy writes those for the image it built) and with NAXIS1/NAXIS2
+// reported so the caller can check them against the image.
+static int tiffFitsCards(const char* desc, vector<string>& cards,
+			 long long* naxis1, long long* naxis2)
+{
+  static const char* structural[] = {"SIMPLE", "BITPIX", "NAXIS", "EXTEND",
+    "BZERO", "BSCALE", "BLANK", "XTENSION", "PCOUNT", "GCOUNT", "CHECKSUM",
+    "DATASUM", NULL};
+
+  cards.clear();
+  *naxis1 = *naxis2 = 0;
+  string dd(desc);
+  vector<string> lines;
+  if (dd.find('\n') != string::npos) {
+    size_t b =0;
+    while (b <= dd.size()) {
+      size_t e = dd.find('\n', b);
+      if (e == string::npos)
+	e = dd.size();
+      string ln = dd.substr(b, e-b);
+      if (!ln.empty() && ln[ln.size()-1] == '\r')
+	ln.erase(ln.size()-1);
+      lines.push_back(ln);
+      b = e+1;
+    }
+  }
+  else if (dd.size() >= 3*FTY_CARDLEN && dd.size() % FTY_CARDLEN == 0) {
+    for (size_t b=0; b<dd.size(); b+=FTY_CARDLEN)
+      lines.push_back(dd.substr(b, FTY_CARDLEN));
+  }
+  else
+    return 0;
+
+  int nvalue =0;
+  for (size_t ii=0; ii<lines.size(); ii++) {
+    string ln = lines[ii];
+    if (ln.find_first_not_of(' ') == string::npos)
+      continue;                               // blank line
+    if (ln.size() > FTY_CARDLEN)
+      return 0;
+    ln.resize(FTY_CARDLEN, ' ');
+    for (size_t jj=0; jj<ln.size(); jj++)
+      if (ln[jj] < 32 || ln[jj] > 126)
+	return 0;
+
+    string key = ln.substr(0,8);
+    key.erase(key.find_last_not_of(' ')+1);
+    for (size_t jj=0; jj<key.size(); jj++) {
+      char cc = key[jj];
+      if (!((cc>='A' && cc<='Z') || (cc>='0' && cc<='9') || cc=='_' ||
+	    cc=='-'))
+	return 0;
+    }
+    if (key == "END")
+      break;
+    int value = ln.compare(8, 2, "= ") == 0;
+    if (!value && key != "COMMENT" && key != "HISTORY" && !key.empty())
+      return 0;
+    if (value)
+      nvalue++;
+
+    if (key == "NAXIS1")
+      *naxis1 = atoll(ln.c_str()+10);
+    else if (key == "NAXIS2")
+      *naxis2 = atoll(ln.c_str()+10);
+
+    int skip =0;
+    for (int kk=0; structural[kk]; kk++)
+      if (key == structural[kk] ||
+	  (!strcmp(structural[kk],"NAXIS") && !key.compare(0,5,"NAXIS")))
+	skip =1;
+    if (!skip)
+      cards.push_back(ln);
+  }
+  return nvalue >= 3;
+}
+
+static int tiffHasCard(const vector<string>& cards, const char* key)
+{
+  string kk(key);
+  kk.resize(8, ' ');
+  for (size_t ii=0; ii<cards.size(); ii++)
+    if (!cards[ii].compare(0, 8, kk))
+      return 1;
+  return 0;
+}
+
 struct TiffLoad {
   int ndirs;                  // directories in the file
   int nloaded;                // loaded as planes
@@ -729,17 +953,41 @@ struct TiffLoad {
 };
 
 static void tiffHeader(TIFF* tif, FitsHead* hh, const FitsTiffDir& dd,
-		       const TiffType& tt, const TiffLoad& ll, int orient)
+		       const TiffType& tt, const TiffLoad& ll, int orient,
+		       long long dw, long long dh)
 {
+  // a FITS header in ImageDescription: merged first, so its cards (a WCS,
+  // above all) sit right after the structural ones, and win over the
+  // keywords taken from TIFF tags below
+  char* desc = NULL;
+  vector<string> fits;
+  long long n1, n2;
+  string nomerge;
+  int isfits = TIFFGetField(tif, TIFFTAG_IMAGEDESCRIPTION, &desc) && desc &&
+    *desc && tiffFitsCards(desc, fits, &n1, &n2);
+  if (isfits && ((n1 && n1 != dw) || (n2 && n2 != dh)))
+    nomerge = "their NAXIS1/NAXIS2 do not match the image";
+  else if (isfits && orient != 1)
+    nomerge = "the TIFF Orientation is applied, so their pixel coordinates"
+      " would not match";
+  int merge = isfits && nomerge.empty();
+  if (merge)
+    for (size_t ii=0; ii<fits.size(); ii++)
+      tiffCard(hh, fits[ii]);
+  else
+    fits.clear();
+
   char* str = NULL;
-  if (TIFFGetField(tif, TIFFTAG_SOFTWARE, &str) && str && *str)
+  if (TIFFGetField(tif, TIFFTAG_SOFTWARE, &str) && str && *str &&
+      !tiffHasCard(fits, "CREATOR"))
     tiffString(hh, "CREATOR", tiffPrintable(str,68), "TIFF Software");
-  if (TIFFGetField(tif, TIFFTAG_DATETIME, &str)) {
+  if (TIFFGetField(tif, TIFFTAG_DATETIME, &str) && !tiffHasCard(fits,"DATE")) {
     string dt = tiffDate(str);
     if (!dt.empty())
       tiffString(hh, "DATE", dt, "TIFF DateTime");
   }
-  if (TIFFGetField(tif, TIFFTAG_ARTIST, &str) && str && *str)
+  if (TIFFGetField(tif, TIFFTAG_ARTIST, &str) && str && *str &&
+      !tiffHasCard(fits, "OBSERVER"))
     tiffString(hh, "OBSERVER", tiffPrintable(str,68), "TIFF Artist");
 
   char buf[256];
@@ -784,9 +1032,15 @@ static void tiffHeader(TIFF* tif, FitsHead* hh, const FitsTiffDir& dd,
   if (dd.photometric == PHOTOMETRIC_MINISWHITE)
     tiffComment(hh, "TIFF Photometric MinIsWhite: values kept as stored,"
 		" not inverted (0 is white).");
-  if (tt.srcBytes != tt.dstBytes) {
-    snprintf(buf, sizeof(buf), "%s samples widened to BITPIX %d.",
-	     tt.name, tt.bitpix);
+  if (tt.packed) {
+    snprintf(buf, sizeof(buf), "%s samples unpacked to BITPIX %d: the raw"
+	     " counts, 0-%u, not rescaled.", tt.name, tt.bitpix,
+	     (1u << tt.bps) - 1);
+    tiffComment(hh, buf);
+  }
+  else if (tt.srcBytes != tt.dstBytes) {
+    snprintf(buf, sizeof(buf), "%s samples %s to BITPIX %d.", tt.name,
+	     tt.bitpix < 0 ? "converted exactly" : "widened", tt.bitpix);
     tiffComment(hh, buf);
   }
   if (ll.nloaded > 1) {
@@ -810,10 +1064,17 @@ static void tiffHeader(TIFF* tif, FitsHead* hh, const FitsTiffDir& dd,
     tiffComment(hh, buf);
   }
 
-  if (TIFFGetField(tif, TIFFTAG_IMAGEDESCRIPTION, &str) && str && *str) {
-    string desc = tiffPrintable(str, 72*20);
+  if (merge) {
+    snprintf(buf, sizeof(buf), "%d FITS cards merged from the TIFF"
+	     " ImageDescription.", (int)fits.size());
+    tiffComment(hh, buf);
+  }
+  else if (desc && *desc) {
+    if (isfits)
+      tiffComment(hh, "The TIFF ImageDescription holds FITS cards, not"
+		  " merged: " + nomerge + ".");
     tiffComment(hh, "TIFF ImageDescription:");
-    tiffComment(hh, desc);
+    tiffComment(hh, tiffPrintable(desc, 72*20));
   }
 }
 
@@ -967,7 +1228,7 @@ FitsTiff::FitsTiff(Tcl_Interp* interp, const char* fn, Mode mode)
     return;
   }
   TIFFSetDirectory(tif, 0);   // the text tags of directory 0
-  tiffHeader(tif, head_, dd, tt, ll, orient);
+  tiffHeader(tif, head_, dd, tt, ll, orient, dw, dh);
   head_->buildIndex();
   head_->updateHDU();
   TIFFClose(tif);

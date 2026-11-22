@@ -7,8 +7,16 @@ Plan for teaching DS9 to read TIFF pixels **at their stored depth** (16-bit inte
 verb in tksao, and a small Tcl surface. Check items off as they land and add findings
 inline, as the other TODO files do.
 
-**Status (2026-11-22): Phases 0–3 and 5 are done.** Linux and Windows build cleanly in CI
+**Status (2026-11-22): every phase is done.** Linux and Windows build cleanly in CI
 (SAOImageDS9/SAOImageDS9#457).
+- **Phase 4:** half floats, packed unsigned depths (1–15 bits) and FITS cards in
+  ImageDescription.
+- **Checks** (`Tests/tiff`, 126 fixtures):
+  - `tiff.sh`: 126 XPA probes and 15 RGB-frame probes
+  - `check_load.py`: 121 loads, 15 RGB-frame loads, 5 refusals
+  - `check_probe.py`: 121/121
+  - `check_entry.py`: 31/31
+  - The load and probe checks pass under Guard Malloc.
 - **Phase 5:** `Tests/tiff.sh` passes (111 XPA and 14 RGB-frame probes against
   baselines taken from the FITS twins), and TIFF smoke tests are in `command.sh`,
   `xpa.sh` and `samp/tiff.samp`.
@@ -151,8 +159,9 @@ collide with fitsy. Keep every libtiff include inside `tiff.C`, never in `tiff.h
 | INT 32 | 32 | |
 | IEEEFP 32 | -32 | common: Siril/PixInsight/Photoshop 32-bit exports, often 0–1 normalised |
 | IEEEFP 64 | -64 | |
-| IEEEFP 16 (half) | -32 | convert on read; rare, so v1 may reject it |
-| UINT 1/2/4/12/… | — | reject in v1 with a clear message. 12-bit packed exists in some camera/microscopy TIFFs and is a possible later phase |
+| IEEEFP 16 (half) | -32 | converted exactly on read (Phase 4) |
+| UINT 1–7 bits (packed) | 8 | unpacked; raw counts, not rescaled (Phase 4) |
+| UINT 9–15 bits (packed) | -16 | unpacked; raw counts, e.g. 12-bit 0–4095 (Phase 4) |
 | VOID / COMPLEXINT / COMPLEXIEEEFP | — | reject |
 
 `SampleFormat` is missing in most files; it defaults to UINT.
@@ -205,9 +214,7 @@ Build a FITS header the way `FitsPhoto` does with `FitsHead(w, h, d, bitpix)`, t
 - **WCS:** keep the existing **`AVMLoadPhoto`** path. It parses AVM/XMP from the raw file
   bytes in Tcl, so it works unchanged once the native loader has run. Don't put XMP
   parsing in C++ in v1.
-- **Possible later item:** some capture tools write FITS cards into `ImageDescription`.
-  If it parses as 80-column cards, merge them as XISF merges `<FITSKeyword>`. Look for
-  real examples before building this.
+- **FITS cards in `ImageDescription`** are merged (Phase 4): see §4, Phase 4.
 - GeoTIFF is out of scope.
 
 ### 2.7 Errors
@@ -529,12 +536,65 @@ is asked for.
 - The RGB frame takes directory 0 of an RGB stack only. HLS/HSV frames load any TIFF
   into the current channel (luminance for RGB), as Base does.
 
-### Phase 4 — the remaining pieces
+### Phase 4 — the remaining pieces (done 2026-11-22)
 - [x] Orientation 2–8: done in Phase 1.
 - [x] stdin/socket/XPA data: done in Phase 2, through a temporary file rather than
       `TIFFClientOpen` on memory. Revisit only if the temporary file proves a problem.
-- [ ] Half-float, packed 12-bit (only if a real user file needs them).
-- [ ] FITS cards in `ImageDescription` (only if real examples turn up).
+- [x] **Half floats** (SampleFormat IEEEFP, 16 bits) → BITPIX -32. `tiffHalf`
+  converts exactly, every half being a float: ±0, subnormals (renormalised),
+  infinities and NaN included. It works with the floating-point predictor (3), which
+  libtiff undoes before the conversion. The probe folds halves the same way.
+- [x] **Packed unsigned depths**, 1–15 bits other than 8 → BITPIX 8 (1–7 bits) or -16
+  (9–15).
+  - Raw counts, not rescaled; the header says so with the range (e.g. "uint12 ...
+    0-4095").
+  - `tiffUnpack` reads most-significant-bit first, each row starting on a byte
+    boundary (libtiff applies FillOrder before handing the bytes over), into whole
+    samples. The existing scatter then places them, so orientation, planar layout,
+    tiles, stacks and RGB (luminance or the RGB frame) all work unchanged. A chunky
+    12-bit RGB has samples straddling bytes, and is a fixture.
+  - Strip and tile row sizes are computed from bits, and every buffer is checked
+    against the rows it must hold.
+  - `auto` reads 9–15 bits natively (deeper than 8); 1–4 bits stay with photo unless
+    `native` is asked for.
+  - Signed packed depths are refused. tifffile can't write one, so there is no
+    fixture.
+- [x] **FITS cards in `ImageDescription`** (`tiffFitsCards`):
+  - **What counts as FITS:** every line must be a FITS card (fixed format: an
+    8-character A–Z 0–9 _ - keyword, then `= ` for a value card, or COMMENT, HISTORY
+    or blank), with at least three value cards. Lines are separated by newlines, or
+    are 80-character cards back to back; `END` ends them.
+  - **What is merged:** the cards go in right after the structural ones, minus SIMPLE,
+    BITPIX, NAXISn, EXTEND, BZERO, BSCALE, BLANK, XTENSION, PCOUNT, GCOUNT, CHECKSUM
+    and DATASUM (fitsy writes its own, and the checksums no longer apply). A FITS card
+    wins over the CREATOR/DATE/OBSERVER taken from TIFF tags.
+  - **When nothing is merged** (the description is kept as COMMENT text, with the
+    reason): the cards' NAXIS1/NAXIS2 don't match the image, or the image has an
+    Orientation, since either way their pixel coordinates can't be trusted.
+  - **Assumption:** a writer that put a FITS WCS in a TIFF stored the rows top-down,
+    as TIFF requires, so the row flip back to FITS order makes the WCS line up again.
+    The fixtures are built that way, and the centre pixel (CRPIX) lands on CRVAL
+    exactly. **No real file of this kind has been found yet**, so the rule is
+    deliberately strict.
+  - An AVM WCS, applied by `AVMLoadPhoto` after the load, still replaces a merged one.
+- [x] **Fixtures** (126; `check_fixtures.py` 126/126):
+  - `dtype/gray_f2_none` (moved from `unsupported/`, now loadable),
+    `gray_f2_adobe_deflate_predictor`, `gray_f2_special`.
+  - `packed/`: 1, 2, 4, 10, 12 and 14-bit grayscale, 12-bit tiled, 12-bit RGB, 1-bit
+    MinIsBlack (moved from `unsupported/`) and MinIsWhite.
+  - `header/`: `fitscards_newline_u2` and `fitscards_80_u2` (merged, with a TAN WCS,
+    a quote in OBJECT and a DATE that overrides the TIFF DateTime; their twins carry
+    the same cards), `fitscards_badnaxis_u2` (not merged), `imagej_u2` (not FITS).
+  - tifffile writes packed depths only uncompressed, so no fixture combines packing
+    with a codec. libtiff decompresses before the unpacking, so that path is the same.
+- [x] **Checks:**
+  - `check_load.py` maps float16 to BITPIX -32. It also requires a merged file's ds9
+    header to carry the twin's OBJECT, EXPTIME, DATE and WCS keys, and an unmerged
+    one to have no OBJECT.
+  - `tiff.sh`'s probe gained the sky at the centre pixel, so the merged WCS is
+    checked against the twin's in the shell suite too.
+- [x] Docs: the command/xpa/samp pages now say what is read natively. That paragraph
+  had still described Phase 2 (grayscale only, slice always photo).
 
 ### Phase 5 — platforms and suites (macOS done 2026-11-22)
 - [x] **`Tests/tiff.sh`**, shell only, on the `asdf.sh` model, and added to `io.sh`.

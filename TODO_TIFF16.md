@@ -7,13 +7,13 @@ Plan for teaching DS9 to read TIFF pixels **at their stored depth** (16-bit inte
 verb in tksao, and a small Tcl surface. Check items off as they land and add findings
 inline, as the other TODO files do.
 
-**Status (2026-11-22): Phases 0–3 are done, and Phase 5 is done on macOS.**
+**Status (2026-11-22): Phases 0–3 and 5 are done.** Linux and Windows build cleanly in CI
+(SAOImageDS9/SAOImageDS9#457).
 - **Phase 5:** `Tests/tiff.sh` passes (111 XPA and 14 RGB-frame probes against
   baselines taken from the FITS twins), and TIFF smoke tests are in `command.sh`,
   `xpa.sh` and `samp/tiff.samp`.
 - **Still to do:**
-  - the Linux and Windows builds, which need a pull request so CI runs them
-  - the test suites on Linux and Windows
+  - the test suites on Linux and Windows, since CI only builds
   - Phase 4's optional items (half floats, packed 12-bit, FITS cards in
     ImageDescription)
 - **Branch:** `tiff16_support`, in both this repo and `Tests/`, **cut from `master`**.
@@ -580,11 +580,17 @@ is asked for.
   after the SAMP test had deleted every frame, when all 111 failed.
 - [x] **`Manifest.md`** note (9): fitsy depends on tkimg's `tifftcl`, by stubs, built
   after tkimg.
-- [ ] **Linux and Windows builds in CI.** The workflows (`build-unix.yml`,
-  `build-cygwin.yml`, `build-aqua.yml`) run on pull requests, so this needs a push and
-  a PR, as XISF did with SAOImageDS9/SAOImageDS9#455. Watch the Windows include
-  order (AGENTS.md: `tiff.C` includes libtiff before anything that pulls in a using
-  directive for `std`) and `tifftcl.h`'s relative include path on Windows.
+- [x] **Linux and Windows build in CI** (SAOImageDS9/SAOImageDS9#457, 2026-11-22). All
+  eight jobs pass: Ubuntu, Windows (Cygwin/mingw), and macOS Intel, ARM and Universal.
+  - **No warnings in new code:** `tiff.C` compiles with no warning under `gcc -Wall`
+    (Ubuntu) and `x86_64-w64-mingw32-gcc -Wall` (Windows). So the include order and
+    `tifftcl.h`'s relative `../compat/libtiff` path both work there.
+  - **The only warnings in a touched file** are two `-Wstringop-truncation` warnings
+    in `fitsimage.C`'s `strncpy(str,"XLON-",5)`. They're pre-existing (lines
+    1153–1160 on master, from 2024) and only moved down because `FitsImageTiff` was
+    added above them.
+  - **The build order holds on a clean Windows build:** tkimg's TIFF module (20:45:05)
+    is built before fitsy's `tiff.C` (20:45:20).
 - [ ] Run `tiff.sh` and the Python checks on Linux and Windows.
 
 ---

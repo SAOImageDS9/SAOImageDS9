@@ -26,6 +26,7 @@
 #include <string.h>
 #include <float.h>
 #include <limits.h>
+#include <math.h>
 
 // tiffiop.h includes libtiff's generated tif_config.h, which defines
 // PACKAGE_* again over fitsy's own -D flags. Nothing here uses them.
@@ -67,6 +68,8 @@ FitsTiffDir::FitsTiffDir()
   rowsPerStrip =0;
   subfileType =0;
   byteSwapped =0;
+  extraSamples =0;
+  alphaSamples =0;
 
   decoded =0;
   nsamples =0;
@@ -312,6 +315,16 @@ static void tiffReadTags(TIFF* tif, FitsTiffDir& dd)
     dd.rowsPerStrip = u32;
 
   dd.byteSwapped = TIFFIsByteSwapped(tif) ? 1 : 0;
+
+  uint16_t nextra =0;
+  uint16_t* extra =NULL;
+  if (TIFFGetField(tif, TIFFTAG_EXTRASAMPLES, &nextra, &extra)) {
+    dd.extraSamples = nextra;
+    for (int ii=0; extra && ii<nextra; ii++)
+      if (extra[ii] == EXTRASAMPLE_ASSOCALPHA ||
+	  extra[ii] == EXTRASAMPLE_UNASSALPHA)
+	dd.alphaSamples++;
+  }
 }
 
 int tiffProbe(Tcl_Interp* interp, const char* fn, int decode,
@@ -397,15 +410,31 @@ static int tiffType(const FitsTiffDir& dd, TiffType* tt)
 int tiffLoadable(const FitsTiffDir& dd, string* why)
 {
   string ww;
+  char buf[160];
+  int color = dd.samplesPerPixel - dd.extraSamples;
+  int gray = dd.photometric == PHOTOMETRIC_MINISBLACK ||
+    dd.photometric == PHOTOMETRIC_MINISWHITE;
+
   if (dd.width <= 0 || dd.height <= 0)
     ww = "no image size";
-  else if (dd.samplesPerPixel != 1)
-    ww = "more than one sample per pixel (RGB and the like are not supported yet)";
-  else if (dd.photometric != PHOTOMETRIC_MINISBLACK &&
-	   dd.photometric != PHOTOMETRIC_MINISWHITE)
-    ww = "Photometric is not MinIsBlack or MinIsWhite";
+  else if (!gray && dd.photometric != PHOTOMETRIC_RGB) {
+    snprintf(buf, sizeof(buf), "Photometric %d is not MinIsBlack,"
+	     " MinIsWhite or RGB (palette, YCbCr, CMYK and the like load"
+	     " only as a photo)", dd.photometric);
+    ww = buf;
+  }
+  else if (gray && dd.samplesPerPixel - dd.alphaSamples != 1) {
+    snprintf(buf, sizeof(buf), "%d samples per pixel with Photometric"
+	     " MinIsBlack and %d alpha: multi-band images are not"
+	     " supported", dd.samplesPerPixel, dd.alphaSamples);
+    ww = buf;
+  }
+  else if (!gray && color != 3) {
+    snprintf(buf, sizeof(buf), "%d samples per pixel with Photometric RGB"
+	     " and %d ExtraSamples", dd.samplesPerPixel, dd.extraSamples);
+    ww = buf;
+  }
   else if (!tiffType(dd, NULL)) {
-    char buf[128];
     snprintf(buf, sizeof(buf),
 	     "unsupported sample type (SampleFormat %d, BitsPerSample %d)",
 	     dd.sampleFormat, dd.bitsPerSample);
@@ -418,6 +447,16 @@ int tiffLoadable(const FitsTiffDir& dd, string* why)
   if (why)
     *why = ww;
   return ww.empty();
+}
+
+int tiffIsRGB(Tcl_Interp* interp, const char* fn)
+{
+  vector<FitsTiffDir> dirs;
+  string err;
+  if (!tiffProbe(interp, fn, 0, dirs, err) || dirs.empty())
+    return 0;
+  return tiffLoadable(dirs[0], NULL) &&
+    dirs[0].photometric == PHOTOMETRIC_RGB;
 }
 
 static const char* tiffCompressionName(int cc)
@@ -456,10 +495,11 @@ static inline size_t tiffDest(int orient, long long rr, long long cc,
   return (size_t)((dh-1-di)*dw + dj);
 }
 
-// Copy nn samples of a stored row segment starting at (rr, c0) to dest.
-// Samples are in this host's byte order already; only the widened types
-// need converting.
-static void tiffScatter(const unsigned char* src, long long nn,
+// Copy nn pixels of a stored row segment starting at (rr, c0) to dest.
+// stride is the samples from one pixel to the next in src (samples per
+// pixel for chunky data, 1 for planar). Samples are in this host's byte
+// order already; only the widened types need converting.
+static void tiffScatter(const unsigned char* src, long long nn, int stride,
 			long long rr, long long c0, const FitsTiffDir& dd,
 			const TiffType& tt, int orient, long long dw,
 			unsigned char* dest)
@@ -469,14 +509,14 @@ static void tiffScatter(const unsigned char* src, long long nn,
   int sb = tt.srcBytes;
   int db = tt.dstBytes;
 
-  if (orient == 1 && sb == db) {
+  if (orient == 1 && sb == db && stride == 1) {
     memcpy(dest + tiffDest(1,rr,c0,hh,ww,dw)*db, src, (size_t)(nn*sb));
     return;
   }
 
   for (long long ii=0; ii<nn; ii++) {
     unsigned char* dd8 = dest + tiffDest(orient,rr,c0+ii,hh,ww,dw)*db;
-    const unsigned char* ss = src + ii*sb;
+    const unsigned char* ss = src + ii*stride*sb;
     if (sb == db)
       memcpy(dd8, ss, sb);
     else if (sb == 4 && db == 8) {          // uint32 -> int64
@@ -492,12 +532,20 @@ static void tiffScatter(const unsigned char* src, long long nn,
   }
 }
 
+// Decode the current directory: sample samples[k] of every pixel to the
+// FITS plane planes[k], k < nn. Each strip or tile is decoded once and
+// every wanted sample scattered from it, whether the data are chunky
+// (samples interleaved) or planar (one strip/tile set per sample).
 static int tiffRead(TIFF* tif, const FitsTiffDir& dd, const TiffType& tt,
-		    int orient, long long dw, unsigned char* dest,
-		    string& err)
+		    int orient, long long dw, int nn, const int* samples,
+		    unsigned char** planes, string& err)
 {
   long long hh = dd.height;
   long long ww = dd.width;
+  int sb = tt.srcBytes;
+  int separate = dd.planar == PLANARCONFIG_SEPARATE;
+  int spp = separate ? 1 : dd.samplesPerPixel;   // per strip/tile row
+  int npass = separate ? nn : 1;
 
   tmsize_t bufSize = dd.tiled ? TIFFTileSize(tif) : TIFFStripSize(tif);
   if (bufSize <= 0) {
@@ -506,48 +554,110 @@ static int tiffRead(TIFF* tif, const FitsTiffDir& dd, const TiffType& tt,
   }
   vector<unsigned char> buf((size_t)bufSize);
 
-  if (!dd.tiled) {
-    long long rps = dd.rowsPerStrip;
-    if (rps <= 0 || rps > hh)
-      rps = hh;
-    for (long long row=0; row<hh; row+=rps) {
-      uint32_t strip = TIFFComputeStrip(tif, (uint32_t)row, 0);
-      if (TIFFReadEncodedStrip(tif, strip, buf.data(), bufSize) < 0) {
-	err = tiffErrorBuf.empty() ? "strip decode failed" : tiffErrorBuf;
-	return 0;
-      }
-      long long nrows = hh-row < rps ? hh-row : rps;
-      if ((long long)bufSize < nrows*ww*tt.srcBytes) {
-	err = "strip smaller than its rows";
-	return 0;
-      }
-      for (long long rr=0; rr<nrows; rr++)
-	tiffScatter(buf.data() + rr*ww*tt.srcBytes, ww, row+rr, 0,
-		    dd, tt, orient, dw, dest);
-    }
-  }
-  else {
-    long long tw = dd.tileWidth;
-    long long th = dd.tileHeight;
-    if (tw <= 0 || th <= 0 || (long long)bufSize < tw*th*tt.srcBytes) {
-      err = "bad tile size";
-      return 0;
-    }
-    for (long long yy=0; yy<hh; yy+=th)
-      for (long long xx=0; xx<ww; xx+=tw) {
-	uint32_t tile = TIFFComputeTile(tif, (uint32_t)xx, (uint32_t)yy, 0, 0);
-	if (TIFFReadEncodedTile(tif, tile, buf.data(), bufSize) < 0) {
-	  err = tiffErrorBuf.empty() ? "tile decode failed" : tiffErrorBuf;
+  for (int pass=0; pass<npass; pass++) {
+    // chunky: one pass scatters every wanted sample; planar: a pass
+    // per wanted sample, over that sample's own strips/tiles
+    uint16_t plane = separate ? (uint16_t)samples[pass] : 0;
+    int k0 = separate ? pass : 0;
+    int k1 = separate ? pass+1 : nn;
+
+    if (!dd.tiled) {
+      long long rps = dd.rowsPerStrip;
+      if (rps <= 0 || rps > hh)
+	rps = hh;
+      for (long long row=0; row<hh; row+=rps) {
+	uint32_t strip = TIFFComputeStrip(tif, (uint32_t)row, plane);
+	if (TIFFReadEncodedStrip(tif, strip, buf.data(), bufSize) < 0) {
+	  err = tiffErrorBuf.empty() ? "strip decode failed" : tiffErrorBuf;
 	  return 0;
 	}
-	long long nrows = hh-yy < th ? hh-yy : th;
-	long long ncols = ww-xx < tw ? ww-xx : tw;
+	long long nrows = hh-row < rps ? hh-row : rps;
+	if ((long long)bufSize < nrows*ww*spp*sb) {
+	  err = "strip smaller than its rows";
+	  return 0;
+	}
 	for (long long rr=0; rr<nrows; rr++)
-	  tiffScatter(buf.data() + rr*tw*tt.srcBytes, ncols, yy+rr, xx,
-		      dd, tt, orient, dw, dest);
+	  for (int kk=k0; kk<k1; kk++) {
+	    int off = separate ? 0 : samples[kk];
+	    tiffScatter(buf.data() + (rr*ww*spp + off)*sb, ww, spp,
+			row+rr, 0, dd, tt, orient, dw, planes[kk]);
+	  }
       }
+    }
+    else {
+      long long tw = dd.tileWidth;
+      long long th = dd.tileHeight;
+      if (tw <= 0 || th <= 0 || (long long)bufSize < tw*th*spp*sb) {
+	err = "bad tile size";
+	return 0;
+      }
+      for (long long yy=0; yy<hh; yy+=th)
+	for (long long xx=0; xx<ww; xx+=tw) {
+	  uint32_t tile = TIFFComputeTile(tif, (uint32_t)xx, (uint32_t)yy, 0,
+					  plane);
+	  if (TIFFReadEncodedTile(tif, tile, buf.data(), bufSize) < 0) {
+	    err = tiffErrorBuf.empty() ? "tile decode failed" : tiffErrorBuf;
+	    return 0;
+	  }
+	  long long nrows = hh-yy < th ? hh-yy : th;
+	  long long ncols = ww-xx < tw ? ww-xx : tw;
+	  for (long long rr=0; rr<nrows; rr++)
+	    for (int kk=k0; kk<k1; kk++) {
+	      int off = separate ? 0 : samples[kk];
+	      tiffScatter(buf.data() + (rr*tw*spp + off)*sb, ncols, spp,
+			  yy+rr, xx, dd, tt, orient, dw, planes[kk]);
+	    }
+	}
+    }
   }
   return 1;
+}
+
+// Luminance .299R+.587G+.114B, the weights the photo path uses, computed
+// in double and stored in the plane's own type: rounded to nearest for
+// integers (as the photo path rounds), as is for floats.
+template<class T> static void tiffLumT(size_t nn, const T* rr, const T* gg,
+				       const T* bb, T* out, int isint)
+{
+  for (size_t ii=0; ii<nn; ii++) {
+    double vv = .299*rr[ii] + .587*gg[ii] + .114*bb[ii];
+    out[ii] = isint ? (T)floor(vv+.5) : (T)vv;
+  }
+}
+
+static void tiffLuminance(int bitpix, size_t nn, unsigned char* const* rgb,
+			  unsigned char* out)
+{
+  switch (bitpix) {
+  case 8:
+    tiffLumT(nn, (uint8_t*)rgb[0], (uint8_t*)rgb[1], (uint8_t*)rgb[2],
+	     (uint8_t*)out, 1);
+    break;
+  case -16:
+    tiffLumT(nn, (uint16_t*)rgb[0], (uint16_t*)rgb[1], (uint16_t*)rgb[2],
+	     (uint16_t*)out, 1);
+    break;
+  case 16:
+    tiffLumT(nn, (int16_t*)rgb[0], (int16_t*)rgb[1], (int16_t*)rgb[2],
+	     (int16_t*)out, 1);
+    break;
+  case 32:
+    tiffLumT(nn, (int32_t*)rgb[0], (int32_t*)rgb[1], (int32_t*)rgb[2],
+	     (int32_t*)out, 1);
+    break;
+  case 64:
+    tiffLumT(nn, (int64_t*)rgb[0], (int64_t*)rgb[1], (int64_t*)rgb[2],
+	     (int64_t*)out, 1);
+    break;
+  case -32:
+    tiffLumT(nn, (float*)rgb[0], (float*)rgb[1], (float*)rgb[2],
+	     (float*)out, 0);
+    break;
+  case -64:
+    tiffLumT(nn, (double*)rgb[0], (double*)rgb[1], (double*)rgb[2],
+	     (double*)out, 0);
+    break;
+  }
 }
 
 // TIFF DateTime is "YYYY:MM:DD HH:MM:SS"; FITS wants ISO 8601.
@@ -610,8 +720,16 @@ static void tiffString(FitsHead* hh, const char* key, const string& value,
   tiffCard(hh, body);
 }
 
+struct TiffLoad {
+  int ndirs;                  // directories in the file
+  int nloaded;                // loaded as planes
+  int nreduced;               // skipped: NewSubfileType reduced resolution
+  int nother;                 // skipped: size, type or layout differ
+  FitsTiff::Mode mode;
+};
+
 static void tiffHeader(TIFF* tif, FitsHead* hh, const FitsTiffDir& dd,
-		       const TiffType& tt, int ndirs, int orient)
+		       const TiffType& tt, const TiffLoad& ll, int orient)
 {
   char* str = NULL;
   if (TIFFGetField(tif, TIFFTAG_SOFTWARE, &str) && str && *str)
@@ -625,20 +743,33 @@ static void tiffHeader(TIFF* tif, FitsHead* hh, const FitsTiffDir& dd,
     tiffString(hh, "OBSERVER", tiffPrintable(str,68), "TIFF Artist");
 
   char buf[256];
+  int rgb = dd.photometric == PHOTOMETRIC_RGB;
   tiffComment(hh, "Read from TIFF at full depth by DS9 (fitsy, libtiff).");
   snprintf(buf, sizeof(buf),
-	   "TIFF directory 0 of %d: %lldx%lld %s, Photometric %d",
-	   ndirs, dd.width, dd.height, tt.name, dd.photometric);
+	   "TIFF directory 0 of %d: %lldx%lld %s, Photometric %d, %d"
+	   " samples per pixel", ll.ndirs, dd.width, dd.height, tt.name,
+	   dd.photometric, dd.samplesPerPixel);
   tiffComment(hh, buf);
   if (dd.tiled)
     snprintf(buf, sizeof(buf), "TIFF compression %s (%d), predictor %d,"
-	     " %lldx%lld tiles", tiffCompressionName(dd.compression),
-	     dd.compression, dd.predictor, dd.tileWidth, dd.tileHeight);
+	     " %lldx%lld tiles, %s", tiffCompressionName(dd.compression),
+	     dd.compression, dd.predictor, dd.tileWidth, dd.tileHeight,
+	     dd.planar == PLANARCONFIG_SEPARATE ? "planar" : "chunky");
   else
     snprintf(buf, sizeof(buf), "TIFF compression %s (%d), predictor %d,"
-	     " %lld rows per strip", tiffCompressionName(dd.compression),
-	     dd.compression, dd.predictor, dd.rowsPerStrip);
+	     " %lld rows per strip, %s", tiffCompressionName(dd.compression),
+	     dd.compression, dd.predictor, dd.rowsPerStrip,
+	     dd.planar == PLANARCONFIG_SEPARATE ? "planar" : "chunky");
   tiffComment(hh, buf);
+  if (rgb && ll.mode == FitsTiff::TIFF_RGB)
+    tiffComment(hh, "TIFF RGB: the three channels are R, G and B.");
+  else if (rgb)
+    tiffComment(hh, "TIFF RGB loaded as luminance, .299R + .587G + .114B.");
+  if (dd.extraSamples > 0) {
+    snprintf(buf, sizeof(buf), "%d ExtraSamples (alpha or the like) not"
+	     " loaded.", dd.extraSamples);
+    tiffComment(hh, buf);
+  }
   if (orient != 1) {
     snprintf(buf, sizeof(buf),
 	     "TIFF Orientation %d applied: the image is shown as displayed.",
@@ -658,9 +789,24 @@ static void tiffHeader(TIFF* tif, FitsHead* hh, const FitsTiffDir& dd,
 	     tt.name, tt.bitpix);
     tiffComment(hh, buf);
   }
-  if (ndirs > 1) {
+  if (ll.nloaded > 1) {
+    snprintf(buf, sizeof(buf), "%d TIFF directories loaded as planes 1-%d.",
+	     ll.nloaded, ll.nloaded);
+    tiffComment(hh, buf);
+  }
+  if (ll.nreduced > 0) {
+    snprintf(buf, sizeof(buf), "%d reduced-resolution directories"
+	     " (NewSubfileType) skipped.", ll.nreduced);
+    tiffComment(hh, buf);
+  }
+  if (ll.nother > 0) {
+    snprintf(buf, sizeof(buf), "%d directories of another size, type or"
+	     " layout skipped.", ll.nother);
+    tiffComment(hh, buf);
+  }
+  if (ll.nloaded == 1 && ll.ndirs > 1 && ll.nreduced+ll.nother == 0) {
     snprintf(buf, sizeof(buf),
-	     "Only directory 0 was loaded; the file has %d.", ndirs);
+	     "Only directory 0 was loaded; the file has %d.", ll.ndirs);
     tiffComment(hh, buf);
   }
 
@@ -671,7 +817,21 @@ static void tiffHeader(TIFF* tif, FitsHead* hh, const FitsTiffDir& dd,
   }
 }
 
-FitsTiff::FitsTiff(Tcl_Interp* interp, const char* fn)
+// Whether directory oo can be another plane of a cube that starts with
+// directory dd: same size, sample type, colour layout and orientation.
+static int tiffSamePlane(const FitsTiffDir& dd, const FitsTiffDir& oo)
+{
+  return oo.width == dd.width && oo.height == dd.height &&
+    oo.bitsPerSample == dd.bitsPerSample &&
+    oo.sampleFormat == dd.sampleFormat &&
+    oo.samplesPerPixel == dd.samplesPerPixel &&
+    oo.extraSamples == dd.extraSamples &&
+    oo.alphaSamples == dd.alphaSamples &&
+    oo.photometric == dd.photometric &&
+    oo.orientation == dd.orientation;
+}
+
+FitsTiff::FitsTiff(Tcl_Interp* interp, const char* fn, Mode mode)
 {
   valid_ = 0;
 
@@ -694,7 +854,7 @@ FitsTiff::FitsTiff(Tcl_Interp* interp, const char* fn)
     return;
   }
 
-  int ndirs = TIFFNumberOfDirectories(tif);
+  TiffLoad ll = {(int)TIFFNumberOfDirectories(tif), 0, 0, 0, mode};
   FitsTiffDir dd;
   tiffReadTags(tif, dd);
 
@@ -705,42 +865,109 @@ FitsTiff::FitsTiff(Tcl_Interp* interp, const char* fn)
     Tcl_AppendResult(interp, "tiff: ", why.c_str(), NULL);
     return;
   }
+  int rgb = dd.photometric == PHOTOMETRIC_RGB;
+  if (mode == TIFF_RGB && !rgb) {
+    TIFFClose(tif);
+    Tcl_AppendResult(interp, "tiff: not an RGB TIFF", NULL);
+    return;
+  }
+
+  // the directories to load: 0, and in TIFF_IMAGE mode every later
+  // full-resolution one that can be another plane of the same cube
+  vector<int> dirs(1, 0);
+  if (mode == TIFF_IMAGE) {
+    for (int ii=1; ii<ll.ndirs; ii++) {
+      FitsTiffDir oo;
+      if (!TIFFSetDirectory(tif, (tdir_t)ii)) {
+	ll.nother++;
+	continue;
+      }
+      tiffReadTags(tif, oo);
+      if (oo.subfileType & FILETYPE_REDUCEDIMAGE)
+	ll.nreduced++;
+      else if (tiffSamePlane(dd, oo) && tiffLoadable(oo, NULL))
+	dirs.push_back(ii);
+      else
+	ll.nother++;
+    }
+  }
+  ll.nloaded = (int)dirs.size();
+  int nout = mode == TIFF_RGB ? 3 : ll.nloaded;
 
   int orient = (dd.orientation >= 1 && dd.orientation <= 8) ?
     dd.orientation : 1;
   long long dw = orient >= 5 ? dd.height : dd.width;
   long long dh = orient >= 5 ? dd.width : dd.height;
   if (dw > INT_MAX || dh > INT_MAX ||
-      (unsigned long long)dw > SIZE_MAX/(unsigned long long)dh/tt.dstBytes) {
+      (unsigned long long)dw > SIZE_MAX/(unsigned long long)dh/tt.dstBytes/
+      (nout+3)) {
     TIFFClose(tif);
     Tcl_AppendResult(interp, "tiff: image too large", NULL);
     return;
   }
 
-  size_t size = (size_t)dw*dh*tt.dstBytes;
+  size_t npix = (size_t)dw*dh;
+  size_t planeBytes = npix*tt.dstBytes;
+  size_t size = planeBytes*nout;
   unsigned char* dest = new (std::nothrow) unsigned char[size];
-  if (!dest) {
+  // luminance needs the three channels of one directory first
+  unsigned char* tmp = NULL;
+  if (rgb && mode != TIFF_RGB)
+    tmp = new (std::nothrow) unsigned char[planeBytes*3];
+  if (!dest || (rgb && mode != TIFF_RGB && !tmp)) {
+    delete [] dest;
+    delete [] tmp;
     TIFFClose(tif);
     Tcl_AppendResult(interp, "tiff: out of memory", NULL);
     return;
   }
 
-  tiffErrorBuf.clear();
-  if (!tiffRead(tif, dd, tt, orient, dw, dest, err)) {
+  static const int gray[1] = {0};
+  static const int rgbs[3] = {0,1,2};
+  int ok = 1;
+  for (int ii=0; ok && ii<ll.nloaded; ii++) {
+    FitsTiffDir pd;
+    if (!TIFFSetDirectory(tif, (tdir_t)dirs[ii])) {
+      err = tiffErrorBuf.empty() ? "unable to read a directory" :
+	tiffErrorBuf;
+      ok = 0;
+      break;
+    }
+    tiffReadTags(tif, pd);   // strips, tiles and codec may differ per page
+    tiffErrorBuf.clear();
+
+    if (!rgb) {
+      unsigned char* pp[1] = {dest + ii*planeBytes};
+      ok = tiffRead(tif, pd, tt, orient, dw, 1, gray, pp, err);
+    }
+    else if (mode == TIFF_RGB) {
+      unsigned char* pp[3] = {dest, dest+planeBytes, dest+2*planeBytes};
+      ok = tiffRead(tif, pd, tt, orient, dw, 3, rgbs, pp, err);
+    }
+    else {
+      unsigned char* pp[3] = {tmp, tmp+planeBytes, tmp+2*planeBytes};
+      ok = tiffRead(tif, pd, tt, orient, dw, 3, rgbs, pp, err);
+      if (ok)
+	tiffLuminance(tt.bitpix, npix, pp, dest + ii*planeBytes);
+    }
+  }
+  delete [] tmp;
+  if (!ok) {
     delete [] dest;
     TIFFClose(tif);
     Tcl_AppendResult(interp, "tiff: ", err.c_str(), NULL);
     return;
   }
 
-  head_ = new FitsHead((int)dw, (int)dh, 1, tt.bitpix);
+  head_ = new FitsHead((int)dw, (int)dh, nout, tt.bitpix);
   if (!head_->isValid()) {
     delete [] dest;
     TIFFClose(tif);
     Tcl_AppendResult(interp, "tiff: unable to build a header", NULL);
     return;
   }
-  tiffHeader(tif, head_, dd, tt, ndirs, orient);
+  TIFFSetDirectory(tif, 0);   // the text tags of directory 0
+  tiffHeader(tif, head_, dd, tt, ll, orient);
   head_->buildIndex();
   head_->updateHDU();
   TIFFClose(tif);

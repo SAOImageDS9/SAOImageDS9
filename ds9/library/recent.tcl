@@ -275,7 +275,11 @@ proc RecentOpen {entry} {
 	    if {[info exists opts(layer)]} {
 		set layer $opts(layer)
 	    }
-	    Import $fn tiff $layer {} {}
+	    set mode {}
+	    if {[info exists opts(mode)]} {
+		set mode $opts(mode)
+	    }
+	    Import $fn tiff $layer $mode {}
 	}
 
 	default {Error "[msgcat::mc {Unknown file type}] $type"}

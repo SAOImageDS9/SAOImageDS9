@@ -3,6 +3,7 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "frame.h"
+#include "tiff.h"
 
 // *** Fits ***
 
@@ -405,7 +406,8 @@ void Frame::loadTiffCmd(const char* path, const char* fn, LayerType ll)
     Context* cc = loadMask();
     if (!cc)
       return;
-    FitsImage* img = new FitsImageTiff(cc, interp, path, fn, 1);
+    FitsImage* img = new FitsImageTiff(cc, interp, path, fn,
+				       FitsTiff::TIFF_IMAGE, 1);
     loadDone(cc->load(PHOTO, fn, img));
     break;
   }

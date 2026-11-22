@@ -7,9 +7,12 @@ package provide DS9 1.0
 # TIFF import (TODO_TIFF16.md). A TIFF loads one of two ways:
 #
 #   native  fitsy's FitsTiff, through the frame's `load tiff': the samples
-#           at the depth they were stored (16 bit, 32 bit, float, ...)
+#           at the depth they were stored (16 bit, 32 bit, float, ...).
+#           Grayscale, or RGB: an RGB frame takes R, G and B into its three
+#           channels, any other frame one luminance plane. A stack of
+#           same-size pages loads as a cube.
 #   photo   tkimg, through a Tk photo image, as GIF/JPEG/PNG do: 8 bits per
-#           channel, colour images into an RGB frame
+#           channel, colour images into an RGB frame, first page only
 #
 # Which one is decided per file by TIFFChoose, from pds9(tiff,mode) or a
 # `native'/`photo'/`auto' given with the command:
@@ -20,8 +23,9 @@ package provide DS9 1.0
 #   native  native whenever the native reader can load the file
 #   photo   always photo
 #
-# Slice mode (load as the next slice of a cube) is photo only for now.
-# The mask layer is native only: the photo path has no mask load.
+# Slice mode (load as the next slice of a cube) follows the same choice,
+# and loads directory 0 only. The mask layer is native only: the photo
+# path has no mask load.
 
 proc TIFFChoose {fn how} {
     global pds9
@@ -76,11 +80,11 @@ proc TIFFIsStdin {fn} {
 
 # Load path natively; fn is the name the frame shows (stdin, or the
 # original name of XPA/SAMP data). Returns 1 on success.
-proc TIFFLoadNative {path fn layer} {
+proc TIFFLoadNative {path fn mode layer} {
     global loadParam
 
     set loadParam(file,type) tiff
-    set loadParam(file,mode) {}
+    set loadParam(file,mode) $mode
     set loadParam(load,type) alloc
     set loadParam(load,layer) $layer
     set loadParam(file,name) $fn
@@ -111,7 +115,7 @@ proc ImportTIFFFile {fn mode {layer {}} {how {}}} {
 	return
     }
 
-    if {$mode == {slice} || [TIFFChoose $fn $how] == {photo}} {
+    if {[TIFFChoose $fn $how] == {photo}} {
 	if {$layer == {mask}} {
 	    TIFFNoMask
 	    return
@@ -120,14 +124,14 @@ proc ImportTIFFFile {fn mode {layer {}} {how {}}} {
 	return
     }
 
-    if {[TIFFLoadNative $fn $fn $layer]} {
-	RecentAdd tiff $fn layer $layer
+    if {[TIFFLoadNative $fn $fn $mode $layer]} {
+	RecentAdd tiff $fn mode $mode layer $layer
     }
 }
 
 # path holds the bytes; fn is the name to show (SAMP, stdin, XPA data)
 proc ImportTIFFAlloc {path fn mode {layer {}} {how {}}} {
-    if {$mode == {slice} || [TIFFChoose $path $how] == {photo}} {
+    if {[TIFFChoose $path $how] == {photo}} {
 	if {$layer == {mask}} {
 	    TIFFNoMask
 	    return 0
@@ -135,7 +139,7 @@ proc ImportTIFFAlloc {path fn mode {layer {}} {how {}}} {
 	ImportPhotoAlloc $path $fn $mode
 	return 1
     }
-    return [TIFFLoadNative $path $fn $layer]
+    return [TIFFLoadNative $path $fn $mode $layer]
 }
 
 # XPA data on a channel. Returns 0, having loaded nothing, when the

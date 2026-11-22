@@ -38,6 +38,8 @@ struct FitsTiffDir {
   long long rowsPerStrip;
   long long subfileType;      // NewSubfileType; bit 0 = reduced resolution
   int byteSwapped;            // file byte order differs from this host's
+  int extraSamples;           // ExtraSamples count
+  int alphaSamples;           // of those, alpha (associated or not)
 
   // filled only when decode was asked for
   int decoded;                // 1 if every strip/tile decoded
@@ -56,21 +58,36 @@ struct FitsTiffDir {
 int tiffProbe(Tcl_Interp*, const char* fn, int decode,
 	      vector<FitsTiffDir>& dirs, string& err);
 
-// Whether fitsy can load directory dd natively, and if not, why (Phase 1:
-// one sample per pixel, MINISBLACK or MINISWHITE, 8-64 bit integer or
-// 32/64 bit float).
+// Whether fitsy can load directory dd natively, and if not, why: one
+// sample per pixel with Photometric MinIsBlack/MinIsWhite plus any alpha,
+// or three with Photometric RGB plus any ExtraSamples (both skipped), and
+// an 8-64 bit integer or 32/64 bit float sample type. Grayscale with
+// unspecified ExtraSamples is multi-band data, and is refused.
 int tiffLoadable(const FitsTiffDir& dd, string* why);
+
+// 1 if directory 0 of fn is an RGB TIFF the native reader loads, which is
+// when an RGB frame takes all three channels from it in one load.
+int tiffIsRGB(Tcl_Interp*, const char* fn);
 
 #include "file.h"
 
-// Phase 1: directory 0 of a TIFF as one FITS-like image, at the depth it
-// was stored (TODO_TIFF16.md section 2.3). Rows are flipped and the
-// Orientation tag is applied, so the image appears as a TIFF viewer shows
-// it. The pixels are decoded into memory, in this host's byte order. On
-// failure isValid() is 0 and the reason is appended to the Tcl result.
+// A TIFF as one FITS-like image, at the depth it was stored
+// (TODO_TIFF16.md section 2.3). Rows are flipped and the Orientation tag
+// is applied, so the image appears as a TIFF viewer shows it. The pixels
+// are decoded into memory, in this host's byte order. On failure
+// isValid() is 0 and the reason is appended to the Tcl result.
+//
+//   TIFF_IMAGE  every full-resolution directory with directory 0's size
+//               and type, one plane each (a cube for a stack); an RGB
+//               directory becomes one luminance plane, .299R+.587G+.114B
+//   TIFF_PLANE  directory 0 only, as one plane (slice mode)
+//   TIFF_RGB    directory 0's R, G and B as three planes, for the three
+//               channels of an RGB frame; fails for anything but RGB
 class FitsTiff : public FitsFile {
  public:
-  FitsTiff(Tcl_Interp*, const char* fn);
+  enum Mode {TIFF_IMAGE, TIFF_PLANE, TIFF_RGB};
+
+  FitsTiff(Tcl_Interp*, const char* fn, Mode =TIFF_IMAGE);
   ~FitsTiff();
 };
 

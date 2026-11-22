@@ -7,24 +7,25 @@ Plan for teaching DS9 to read TIFF pixels **at their stored depth** (16-bit inte
 verb in tksao, and a small Tcl surface. Check items off as they land and add findings
 inline, as the other TODO files do.
 
-**Status (2026-11-22): Phases 0–2 are done; the next step is Phase 3** (RGB, planar,
-multi-page). Work is on the `tiff16_support` branch, in both this repo and `Tests/`,
-**cut from `master`**.
-- **Full-depth TIFFs now load from every entry point:** File > Import > TIFF, the
-  command line (`-tiff [native|photo|auto]`), XPA and SAMP (`tiff [new|slice|mask]
-  [native|photo|auto] [file]`), piped data, stdin, drag-and-drop, recent files and
-  backup/restore.
-- **Which reader is used:**
-  - The reader is chosen per file. The preference `pds9(tiff,mode)` defaults to
-    `auto`, which reads a file natively when its samples are deeper than 8 bits or
-    are not unsigned, and through the photo path otherwise.
-  - So ordinary 8-bit and colour TIFFs load exactly as before, and 16-bit, 32-bit and
-    float grayscale TIFFs get their real values.
+**Status (2026-11-22): Phases 0–3 are done.** What remains is Phase 4's optional items
+(half floats, packed 12-bit, FITS cards in ImageDescription) and Phase 5 (a `Tests/tiff.sh`
+suite, Linux and Windows builds). Work is on the `tiff16_support` branch, in both this
+repo and `Tests/`, **cut from `master`**.
+- **What loads at full depth:**
+  - grayscale TIFFs, and stacks of them as cubes
+  - RGB TIFFs: all three channels into an RGB frame, or as one luminance image in any
+    other frame
+- **Entry points:** every one, as of Phase 2. The choice of reader follows
+  `pds9(tiff,mode)` (default `auto`: native when deeper than 8 bits or not unsigned).
+- **Real-world check:** the Chandra `trebleclef.tif` (7200×5361, 16-bit RGB, AVM WCS)
+  now loads at full depth in about 2 s in either kind of frame. Its pixels match
+  tifffile and its WCS matches astropy.
 - **Checks** (`Tests/tiff`):
-  - `check_entry.py`: 27/27 entry-point checks
-  - `check_load.py`: 89 loads and 19 refusals
-  - `check_probe.py`: 102/102
-  - Grayscale only; RGB still goes through the photo path until Phase 3.
+  - `check_load.py`: 104 loads, 14 RGB-frame loads, 7 refusals
+  - `check_entry.py`: 31/31
+  - `check_probe.py`: 104/104
+  - `check_fixtures.py`: 111/111
+  - The load and probe checks were also rerun under Guard Malloc.
 - **XISF references in this file** (`fitsy/xisf.C`, `TODO_XISF.md`, `framergb.C`'s RGB
   load) **point at the `xisf_support` branch**, not at master. XISF is the model this
   work copies, and it has not merged yet.
@@ -452,15 +453,75 @@ preference.
   The check saves and restores the user's recent-files list. `check_load.py` and
   `check_probe.py` were rerun after the grammar change, and the TIFF Import cascade
   was confirmed inside the real Preferences dialog.
-- [ ] Carried over: AVM WCS on a native load, tested with an AVM-tagged 16-bit TIFF.
-  None is among the fixtures, and none has been found.
+- [x] AVM WCS on a native load: done in Phase 3 with the Chandra `trebleclef.tif`.
 - [ ] Carried over: "TIFF (full depth)" has no button-bar entry of its own. The
   existing TIFF button follows the preference, as the menu does.
 
-### Phase 3 — RGB, planar, multi-page
-- [ ] RGB into an RGB frame (all three channels) and into a base frame as a 3-plane cube.
-- [ ] Multi-IFD stacks as cubes, skipping reduced-resolution pages; `slice` mode.
-- [ ] `mask` layer load.
+### Phase 3 — RGB, planar, multi-page (done 2026-11-22)
+Decisions taken (§6): **an RGB TIFF in a non-RGB frame is one full-depth luminance
+image** (.299R + .587G + .114B, the photo path's weights), not a 3-plane cube. **`auto`
+stays depth-only:** an 8-bit stack still goes to photo (first page only) unless `native`
+is asked for.
+- [x] **`FitsTiff` modes** (`fitsy/tiff.{h,C}`):
+  - **`TIFF_IMAGE`** (ordinary frame, mask): directory 0, plus every later directory
+    that is full resolution (NewSubfileType bit 0 clear) and matches it in size, sample
+    type, samples, alpha, photometric and orientation, each as a plane of a cube. An
+    RGB directory becomes one luminance plane, computed in double, rounded to nearest
+    for integers, stored in the plane's own type. The header counts the planes loaded
+    and the directories skipped (reduced resolution, or another size/type).
+  - **`TIFF_PLANE`** (slice mode): directory 0 as one plane.
+  - **`TIFF_RGB`** (RGB frame): directory 0's R, G and B as three planes, and refused
+    for anything that isn't RGB.
+- [x] **Decoder:** each strip or tile is decoded once, and every wanted sample is
+  scattered to its plane, chunky or planar (a pass per wanted sample over that
+  sample's own strips/tiles). Each page re-reads its own strip/tile layout and codec.
+  Extra samples are never loaded.
+- [x] **What is accepted** (`tiffLoadable`):
+  - MinIsBlack/MinIsWhite with one sample plus any alpha (ExtraSamples type 1/2).
+    Grayscale with *unspecified* extra samples is multi-band data, and is refused
+    rather than cut to band 1.
+  - RGB with three samples plus any extra samples.
+  - Palette, YCbCr, CMYK and the like stay photo-only, with a reason.
+- [x] **tksao:**
+  - `FitsImageTiff` takes the mode.
+  - `FrameRGB::loadTiffCmd` (with `tiffIsRGB`) sends an RGB TIFF through
+    `loadRGBCube(PHOTO, ...)`; a grayscale TIFF still goes to the current channel.
+  - `Base::loadSliceTiffCmd` + `load tiff slice {name} alloc {path}` (bison regen at
+    the `tksao/` level; no new token, `parser.H` unchanged).
+  - A stack's later planes come from `Context::load(PHOTO, ...)` through
+    `FitsImagePhotoCubeNext`, as planned in Phase 1.
+- [x] **Tcl:** slice mode follows the chosen reader instead of always using photo, and
+  recent files keep the mode.
+- [x] **Fixtures:** 111 now. Every loadable RGB fixture has a second twin,
+  `<name>.lum.fits`, with the luminance of each page, computed in numpy in the
+  C++'s order and precision. New fixtures: `pages/stack2_rgb_u2`,
+  `rgb/graya_u2_contig` and `unsupported/multiband_u2`. `check_fixtures.py` recomputes
+  every luminance twin from tifffile's own reading of the file.
+- [x] **Checks:**
+  - `check_load.py` now loads every fixture into an ordinary frame (stacks compared as
+    whole cubes, RGB against the luminance twin) and every RGB fixture into an RGB
+    frame (`save fits rgb cube`, compared with R, G, B): 104 + 14 loads and 7
+    refusals, 0 failed.
+  - `check_entry.py` gained: a 16-bit RGB in auto → native luminance; an 8-bit RGB →
+    photo; a 16-bit stack → a 3-plane cube; an RGB frame filled natively; slice mode,
+    native and photo. 31/31.
+  - Probe 104/104. The load and probe checks also pass under Guard Malloc.
+- [x] **Real file:** `https://chandra.si.edu/photo/2026/trebleclef/trebleclef.tif`
+  (154 MB, 16-bit RGB, LZW, AVM WCS for an 864×643 version, so it is rescaled by
+  8.33):
+  - **Ordinary frame:** BITPIX -16, range 0–65535, loaded in about 2 s.
+  - **RGB frame:** three BITPIX -16 channels.
+  - **Pixels:** six pixels, coloured ones included, match tifffile's luminance and
+    its R, G, B exactly.
+  - **WCS:** the AVM WCS gives the same ICRS positions as an astropy WCS built from
+    the tags, to 1e-7°, in both frame types. This closes Phase 2's carried-over AVM
+    item.
+  - Not added to `Tests/`, because of its size and because it is a published image.
+- Memory: the luminance path holds the three channels of one directory as well as the
+  output, so the Chandra image peaks at about 4× its luminance plane (≈300 MB). Fine
+  for now; a per-strip luminance would avoid it if it ever matters.
+- The RGB frame takes directory 0 of an RGB stack only. HLS/HSV frames load any TIFF
+  into the current channel (luminance for RGB), as Base does.
 
 ### Phase 4 — the remaining pieces
 - [x] Orientation 2–8: done in Phase 1.
@@ -499,8 +560,7 @@ preference.
 1. ~~**Default mode**~~: settled 2026-11-22: `auto`. It changes what an existing
    16-bit TIFF shows, from 8-bit luminance to real values, which is the point. A
    script that relies on 0–255 can ask for `photo` (or set the preference).
-2. **RGB in a base frame**: 3-plane cube (recommended, lossless) or a full-depth luminance
-   mix (what the photo path does at 8 bits).
+2. ~~**RGB in a base frame**~~: settled 2026-11-22: one full-depth luminance image.
 3. ~~**Menu**~~: settled 2026-11-22: one TIFF item that follows the preference.
 4. ~~**Branch**~~: settled 2026-11-22. `tiff16_support` is cut from `master`, so it
    stays independent of the unmerged XISF work.

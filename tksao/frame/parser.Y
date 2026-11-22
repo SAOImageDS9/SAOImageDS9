@@ -1949,6 +1949,8 @@ loadPhoto: /* empty */ STRING STRING {fr->loadPhotoCmd($1,$2);}
 loadTiff : STRING layerType {fr->loadTiffCmd($1, $1, (Base::LayerType)$2);}
 	| STRING ALLOC_ STRING layerType
 	{fr->loadTiffCmd($3, $1, (Base::LayerType)$4);}
+	| SLICE_ STRING ALLOC_ STRING layerType
+	{fr->loadSliceTiffCmd($4, $2);}
 	;
 
 loadIncr: DATA_ INT INT INT INT INT {fr->loadIncrDataCmd($2,$3,$4,$5,$6);}

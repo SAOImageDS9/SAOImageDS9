@@ -3632,8 +3632,18 @@ void Base::hpxAutoRefresh()
 // degree. The grabbed point (panStart) goes through the sky into the new
 // window, so it stays under the pointer.
 // Returns 1 if the window was rebuilt (the caller then puts the grabbed
-// point back under the pointer).
+// point back under the pointer), -1 if this step can't be taken (the
+// caller then undoes it).
+// A window only reaches so far from its centre (SIN 90 deg): once the
+// grabbed point would be beyond that from the new pan point, it can't be
+// put back under the pointer, and panStart would be left in the old
+// window's pixels. Every later step then re-applied the whole drag, and
+// the view spun away. Like a globe whose grabbed point has reached the
+// limb, the view now stops there until the pointer comes back.
 #define HPX_DRAG_STEP 2
+// a drag that can't follow the pointer this close to a pole [deg] stops
+// at the pole (Base::hpxPanMotion)
+#define HPX_DRAG_POLE 80
 int Base::hpxDragRefresh()
 {
   FitsImage* ptr = hpxKeyWindow();
@@ -3647,16 +3657,241 @@ int Base::hpxDragRefresh()
     return 0;
 
   double slon, slat;
-  int grab = ptr->hpxNativeAtRef(panStart, &slon, &slat);
+  // grabbed off the projection (outside a SIN disk): there's no sky point
+  // to carry over, so pan this window as it is; the release rebuilds it
+  if (!ptr->hpxNativeAtRef(panStart, &slon, &slat))
+    return 0;
+  if (!ptr->hpxReachable(cursor, panStart))
+    return -1;
   if (hpxRecentre(HPXPAN, 0, 0, 1))
     return 0;
 
   Vector rr;
-  if (grab && ptr->hpxRefAt(slon, slat, &rr)) {
+  if (ptr->hpxRefAt(slon, slat, &rr)) {
     panStart = rr;
     return 1;
   }
   return 0;
+}
+
+// Start of a drag on a HEALPix window: is there a sky point under the
+// pointer (panStart) to hold? Off the projection (outside a SIN disk)
+// there isn't; hpxPanMotion() then waits for the pointer to come onto it.
+// Returns 1 for a HEALPix window.
+int Base::hpxPanBegin()
+{
+  FitsImage* ptr = hpxKeyWindow();
+  hpxGrabLost_ = 0;
+  if (!ptr)
+    return 0;
+
+  double lon, lat;
+  hpxGrabLost_ = !ptr->hpxNativeAtRef(panStart, &lon, &lat);
+  return 1;
+}
+
+// Unit vector of (lon, lat) [deg], and back
+static void hpxUnit(double lon, double lat, double* v)
+{
+  double ll = lon*M_PI/180, bb = lat*M_PI/180;
+  v[0] = cos(bb)*cos(ll);
+  v[1] = cos(bb)*sin(ll);
+  v[2] = sin(bb);
+}
+
+static void hpxLonLat(const double* v, double* lon, double* lat)
+{
+  double rr = sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
+  *lat = asin(v[2]/rr)*180/M_PI;
+  *lon = atan2(v[1], v[0])*180/M_PI;
+  if (*lon < 0)
+    *lon += 360;
+}
+
+// The centre (clon, clat) turned by the rotation that carries sky point
+// s onto sky point g [deg]. Returns 0 if s and g are (nearly) the same.
+static int hpxTurn(double slon, double slat, double glon, double glat,
+		   double* clon, double* clat)
+{
+  double s[3], g[3], c[3], k[3];
+  hpxUnit(slon, slat, s);
+  hpxUnit(glon, glat, g);
+  hpxUnit(*clon, *clat, c);
+  k[0] = s[1]*g[2] - s[2]*g[1];
+  k[1] = s[2]*g[0] - s[0]*g[2];
+  k[2] = s[0]*g[1] - s[1]*g[0];
+  double sn = sqrt(k[0]*k[0] + k[1]*k[1] + k[2]*k[2]);
+  double cs = s[0]*g[0] + s[1]*g[1] + s[2]*g[2];
+  if (sn < 1e-12)
+    return 0;
+  for (int ii=0; ii<3; ii++)
+    k[ii] /= sn;
+  // Rodrigues
+  double kc[3] = {k[1]*c[2] - k[2]*c[1],
+		  k[2]*c[0] - k[0]*c[2],
+		  k[0]*c[1] - k[1]*c[0]};
+  double kd = k[0]*c[0] + k[1]*c[1] + k[2]*c[2];
+  double r[3];
+  for (int ii=0; ii<3; ii++)
+    r[ii] = c[ii]*cs + kc[ii]*sn + k[ii]*kd*(1-cs);
+  hpxLonLat(r, clon, clat);
+  return 1;
+}
+
+// A drag on a HEALPix window, like turning a globe: the grabbed sky point
+// stays under the pointer, and the window is rebuilt around the pan point
+// as it moves. When the grabbed point can't stay there (past the limb of
+// a SIN view, see FitsHPXReproj::reachable), the pointer slips: the view
+// stays put and the sky point now under the pointer is grabbed instead,
+// so the drag carries on from there. Off the projection (outside the
+// disk) there is nothing to grab, so the view waits until the pointer
+// comes back onto it. (Panning the window as a flat image slid the pan
+// point off the sky, where no rebuild could follow it.)
+//
+// A zenithal window is turned on the sphere: the pan point is rotated by
+// the rotation that carries the sky point under the pointer onto the
+// grabbed one. Moving it by the pointer's displacement in the window's
+// pixels instead assumes the projection's scale at the pointer is its
+// scale at the centre: SIN undershoots towards its limb, and TAN, which
+// stretches by sec^2, overshoots and runs away past 45 deg. The rebuilt
+// window has north up again, which turns the view about its centre (a
+// lot near a pole), so the centre is then solved for exactly
+// (FitsImage::hpxDragCentre), and the window rebuilt once. A conic keeps its reference latitude and only slides,
+// so it still follows the pointer in pixels (hpxDragRefresh).
+// Returns 1 if handled (a HEALPix window).
+int Base::hpxPanMotion(const Vector& vv)
+{
+  FitsImage* ptr = hpxKeyWindow();
+  if (!ptr)
+    return 0;
+
+  // Motion events can arrive faster than redraws (X doesn't coalesce
+  // them), and mapToRef() goes through the matrices of the last redraw;
+  // with a pan pending they are for the old pan point, and each event
+  // would add the whole drag again.
+  if (needsUpdate == MATRIX)
+    updateMatrices();
+
+  double lon, lat;
+  Vector pp = mapToRef(vv,Coord::CANVAS);
+  if (hpxGrabLost_) {
+    if (ptr->hpxNativeAtRef(pp, &lon, &lat)) {
+      panStart = pp;
+      hpxGrabLost_ = 0;
+    }
+    return 1;
+  }
+
+  if (ptr->hpxIsConic()) {
+    Vector prev = cursor;
+    cursor -= pp - panStart;
+    setBinCursor();
+    update(MATRIX);
+
+    switch (hpxDragRefresh()) {
+    case 1:
+      // the rebuild turned the view slightly about the centre, which
+      // moved the grabbed point off the pointer; put it back
+      if (needsUpdate == MATRIX)
+	updateMatrices();
+      cursor -= mapToRef(vv,Coord::CANVAS) - panStart;
+      setBinCursor();
+      update(MATRIX);
+      break;
+    case -1:
+      // slip: stay put, and hold whatever is under the pointer now
+      cursor = prev;
+      setBinCursor();
+      update(MATRIX);
+      updateMatrices();
+      pp = mapToRef(vv,Coord::CANVAS);
+      if (ptr->hpxNativeAtRef(pp, &lon, &lat))
+	panStart = pp;
+      else
+	hpxGrabLost_ = 1;
+      break;
+    }
+    return 1;
+  }
+
+  double zz = fabs(zoom_[0]) > fabs(zoom_[1]) ? fabs(zoom_[0]) : fabs(zoom_[1]);
+  if (zz <= 0)
+    zz = 1;
+
+  double glon, glat, slon, slat;
+  if (!ptr->hpxNativeAtRef(panStart, &glon, &glat)) {
+    hpxGrabLost_ = 1;
+    return 1;
+  }
+  // the pointer is off the projection: let go
+  if (!ptr->hpxNativeAtRef(pp, &slon, &slat)) {
+    hpxGrabLost_ = 1;
+    return 1;
+  }
+  // already there: under a tenth of a window pixel
+  if ((pp - panStart).length() < .1)
+    return 1;
+
+  // the new centre: a first guess turned on the sphere, then solved
+  // exactly, north up as the rebuilt window will be. Past a pole there is
+  // no answer: north up, the view turns over as the centre crosses the
+  // pole, and the drag would then pull it straight back. So the centre
+  // stops at the pole, like other north-up sky viewers, and whatever ends
+  // up under the pointer is grabbed; a sideways drag there spins the
+  // view, and dragging back comes off the pole.
+  double olon, olat;
+  if (!ptr->hpxNativeAtRef(cursor, &olon, &olat)) {
+    olon = glon;
+    olat = glat;
+  }
+  double clon = olon, clat = olat;
+  hpxTurn(slon, slat, glon, glat, &clon, &clat);
+  int exact = ptr->hpxDragCentre(pp, cursor, glon, glat, &clon, &clat);
+  if (!exact) {
+    if (fabs(olat) < HPX_DRAG_POLE || fabs(olat) >= 90 - 1e-9) {
+      // slip: hold whatever is under the pointer now
+      panStart = pp;
+      return 1;
+    }
+    clon = olon;
+    clat = olat > 0 ? 90 : -90;
+  }
+  else if (!ptr->hpxReachableSky(clon, clat, glon, glat)) {
+    // slip: hold whatever is under the pointer now
+    panStart = pp;
+    return 1;
+  }
+
+  // near the window's centre, just pan it; otherwise rebuild there
+  Vector rr;
+  if (ptr->hpxRefAt(clon, clat, &rr) &&
+      !ptr->hpxNeedsRecentre(rr, HPX_DRAG_STEP/zz)) {
+    cursor = rr;
+    setBinCursor();
+    update(MATRIX);
+  }
+  else {
+    if (hpxRecentre(HPXPANTO, clon, clat, 1))
+      return 1;
+    // the grabbed point in the new window
+    if (exact) {
+      if (ptr->hpxRefAt(glon, glat, &rr))
+	panStart = rr;
+      else
+	hpxGrabLost_ = 1;
+      return 1;
+    }
+  }
+
+  if (!exact) {
+    updateMatrices();
+    pp = mapToRef(vv,Coord::CANVAS);
+    if (ptr->hpxNativeAtRef(pp, &slon, &slat))
+      panStart = pp;
+    else
+      hpxGrabLost_ = 1;
+  }
+  return 1;
 }
 
 // End of a drag: the usual refresh, then regenerate contours that were

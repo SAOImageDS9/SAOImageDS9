@@ -6352,6 +6352,7 @@ fi
 
     vars="
 		   util.C
+		   tiff.C
 		   alloc.C
 		   allocgz.C
 		   analysis.C
@@ -6439,6 +6440,7 @@ fi
 
     vars="
 		   util.h
+		   tiff.h
 		   alloc.h
 		   allocgz.h
 		   analysis.h
@@ -6491,7 +6493,7 @@ fi
 
 
 
-    vars="-I. -I${prefix}/include"
+    vars="-I. -I${prefix}/include -I${prefix}/tkimg/libtiff -I${prefix}/tkimg/libtiff/libtiff"
     for i in $vars; do
 	PKG_INCLUDES="$PKG_INCLUDES $i"
     done

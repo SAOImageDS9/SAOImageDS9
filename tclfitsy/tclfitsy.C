@@ -15,6 +15,7 @@ using namespace std;
 #include "tclfitsy.h"
 #include "head.h"
 #include "mmapincr.h"
+#include "tiff.h"
 #include "allocgz.h"
 #include "util.h"
 #include "vector.h"
@@ -51,7 +52,9 @@ int TclfitsyCmd(ClientData data, Tcl_Interp *interp,
 		int argc, const char* argv[])
 {
   if (argc>=2) {
-    if (!strncmp(argv[1], "dir", 3))
+    if (!strncmp(argv[1], "tiff", 4))
+      return fitsy->tiff(argc, argv);
+    else if (!strncmp(argv[1], "dir", 3))
       return fitsy->dir(argc, argv);
     else if (!strncmp(argv[1], "open", 4))
       return fitsy->open(argc, argv);
@@ -84,7 +87,7 @@ int TclfitsyCmd(ClientData data, Tcl_Interp *interp,
     }
   }
   else {
-    Tcl_AppendResult(interp, "usage: fitsy ?dir? ?open? ?close? ?header? ?istable? ?rows? ?colnum? ?keyword? ?minmax? ?table? ?histogram? ?plot?", NULL);
+    Tcl_AppendResult(interp, "usage: fitsy ?tiff? ?dir? ?open? ?close? ?header? ?istable? ?rows? ?colnum? ?keyword? ?minmax? ?table? ?histogram? ?plot?", NULL);
     return TCL_ERROR;
   }
 }
@@ -99,6 +102,77 @@ TclFITSY::~TclFITSY()
 {
   if (fits_)
     delete fits_;
+}
+
+// Native TIFF probe, over libtiff (fitsy/tiff.C) - TODO_TIFF16.md Phase 0.
+//
+//   fitsy tiff info <file>     one dict per directory (IFD): index width
+//       height bps spp sampleformat photometric compression planar
+//       orientation predictor tiled tilewidth tileheight rowsperstrip
+//       subfiletype byteswapped
+//   fitsy tiff decode <file>   the same, plus decoded nsamples min max sum
+//       error, from decoding every strip or tile of each directory
+int TclFITSY::tiff(int argc, const char* argv[])
+{
+  if (argc!=4) {
+    Tcl_AppendResult(interp_, "usage: fitsy tiff ?info|decode? filename",
+		     NULL);
+    return TCL_ERROR;
+  }
+
+  const char* which = argv[2];
+  int decode;
+  if (!strcmp(which,"info"))
+    decode = 0;
+  else if (!strcmp(which,"decode"))
+    decode = 1;
+  else {
+    Tcl_AppendResult(interp_, "fitsy tiff: unknown command: ", which, NULL);
+    return TCL_ERROR;
+  }
+
+  vector<FitsTiffDir> dirs;
+  string err;
+  if (!tiffProbe(interp_, argv[3], decode, dirs, err)) {
+    Tcl_AppendResult(interp_, "fitsy tiff: ", err.c_str(), NULL);
+    return TCL_ERROR;
+  }
+
+  Tcl_Obj* list = Tcl_NewListObj(0,NULL);
+  for (size_t ii=0; ii<dirs.size(); ii++) {
+    const FitsTiffDir& dd = dirs[ii];
+    Tcl_Obj* row = Tcl_NewDictObj();
+#define TIFFKEY(k,v) Tcl_DictObjPut(interp_, row, Tcl_NewStringObj(k,-1), v)
+    TIFFKEY("index", Tcl_NewIntObj(dd.index));
+    TIFFKEY("width", Tcl_NewWideIntObj(dd.width));
+    TIFFKEY("height", Tcl_NewWideIntObj(dd.height));
+    TIFFKEY("bps", Tcl_NewIntObj(dd.bitsPerSample));
+    TIFFKEY("spp", Tcl_NewIntObj(dd.samplesPerPixel));
+    TIFFKEY("sampleformat", Tcl_NewIntObj(dd.sampleFormat));
+    TIFFKEY("photometric", Tcl_NewIntObj(dd.photometric));
+    TIFFKEY("compression", Tcl_NewIntObj(dd.compression));
+    TIFFKEY("planar", Tcl_NewIntObj(dd.planar));
+    TIFFKEY("orientation", Tcl_NewIntObj(dd.orientation));
+    TIFFKEY("predictor", Tcl_NewIntObj(dd.predictor));
+    TIFFKEY("tiled", Tcl_NewIntObj(dd.tiled));
+    TIFFKEY("tilewidth", Tcl_NewWideIntObj(dd.tileWidth));
+    TIFFKEY("tileheight", Tcl_NewWideIntObj(dd.tileHeight));
+    TIFFKEY("rowsperstrip", Tcl_NewWideIntObj(dd.rowsPerStrip));
+    TIFFKEY("subfiletype", Tcl_NewWideIntObj(dd.subfileType));
+    TIFFKEY("byteswapped", Tcl_NewIntObj(dd.byteSwapped));
+    if (decode) {
+      TIFFKEY("decoded", Tcl_NewIntObj(dd.decoded));
+      TIFFKEY("nsamples", Tcl_NewWideIntObj(dd.nsamples));
+      TIFFKEY("min", Tcl_NewDoubleObj(dd.min));
+      TIFFKEY("max", Tcl_NewDoubleObj(dd.max));
+      TIFFKEY("sum", Tcl_NewDoubleObj((double)dd.sum));
+      TIFFKEY("error", Tcl_NewStringObj(dd.error.c_str(),-1));
+    }
+#undef TIFFKEY
+    Tcl_ListObjAppendElement(interp_, list, row);
+  }
+  Tcl_SetObjResult(interp_, list);
+  return TCL_OK;
 }
 
 int TclFITSY::dir(int argc, const char* argv[])

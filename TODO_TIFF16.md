@@ -7,10 +7,16 @@ Plan for teaching DS9 to read TIFF pixels **at their stored depth** (16-bit inte
 verb in tksao, and a small Tcl surface. Check items off as they land and add findings
 inline, as the other TODO files do.
 
-**Status (2026-11-22): Phases 0–3 are done.** What remains is Phase 4's optional items
-(half floats, packed 12-bit, FITS cards in ImageDescription) and Phase 5 (a `Tests/tiff.sh`
-suite, Linux and Windows builds). Work is on the `tiff16_support` branch, in both this
-repo and `Tests/`, **cut from `master`**.
+**Status (2026-11-22): Phases 0–3 are done, and Phase 5 is done on macOS.**
+- **Phase 5:** `Tests/tiff.sh` passes (111 XPA and 14 RGB-frame probes against
+  baselines taken from the FITS twins), and TIFF smoke tests are in `command.sh`,
+  `xpa.sh` and `samp/tiff.samp`.
+- **Still to do:**
+  - the Linux and Windows builds, which need a pull request so CI runs them
+  - the test suites on Linux and Windows
+  - Phase 4's optional items (half floats, packed 12-bit, FITS cards in
+    ImageDescription)
+- **Branch:** `tiff16_support`, in both this repo and `Tests/`, **cut from `master`**.
 - **What loads at full depth:**
   - grayscale TIFFs, and stacks of them as cubes
   - RGB TIFFs: all three channels into an RGB frame, or as one luminance image in any
@@ -530,12 +536,56 @@ is asked for.
 - [ ] Half-float, packed 12-bit (only if a real user file needs them).
 - [ ] FITS cards in `ImageDescription` (only if real examples turn up).
 
-### Phase 5 — platforms and suites
-- [ ] `Tests/tiff.sh`, which reproduces every baseline from the FITS twins (same shape as
-      `Tests/xisf.sh`). Add it to `Tests/all.sh`. **`Tests/` is a separate repo.**
-- [ ] Linux and Windows builds in CI. On Windows, the stubs and include path go through
-      `win/Makefile.in` and `ds9/win/Makefile.in`.
-- [ ] Note in `Manifest.md` that fitsy now depends on tifftcl.
+### Phase 5 — platforms and suites (macOS done 2026-11-22)
+- [x] **`Tests/tiff.sh`**, shell only, on the `asdf.sh` model, and added to `io.sh`.
+  - **Modes:**
+    - `command`: every fixture with `-tiff native` (smoke test)
+    - `xpa`: every fixture loaded with `tiff native`; the probe (size, depth, three
+      pixels, min/max of every slice) is diffed with `<file>.sav`
+    - `rgb`: every RGB fixture in an RGB frame, each channel probed against
+      `<file>.rgb.sav`
+    - `baselines`
+  - **Baselines come from the FITS twins**, never from a TIFF load (`.lum.fits`
+    loaded with `fits` for an RGB fixture, the twin loaded with `rgbcube` for the
+    RGB frame), so a reader bug can't write its own baseline. A fixture the native
+    reader refuses has no twin; its baseline is a `tiff photo` load, which is where
+    `native` falls back.
+  - **Result:** command PASSED, xpa 111/111, rgb 14/14.
+  - **Two fixture changes the suite needed**, both checked by `check_fixtures.py`
+    (111/111) and every other check:
+    - Stack pages now have ranges of their own (integer page k divided by k+1,
+      float page k multiplied by k+1). `xpaget data` always reads slice 1, the
+      pixel table needs real mouse motion, and `pattern()` gives every page the
+      full range, so per-slice min/max was the only way to tell the slices apart.
+    - uint32 twins are int64 (BITPIX 64). With astropy's BITPIX 32 + BZERO, ds9
+      printed scaled values in `%g` form (`6.74594e+08`), which a text baseline
+      can't match against the native load's exact integers.
+  - BITPIX isn't in the probe: a BZERO twin reports 16 where the native load
+    reports -16, and the pixel values carry the depth instead.
+- [x] **Smoke tests in the shared runners** (the HiPS commit's pattern):
+  - **`command.sh`:** `-tiff` alone, `native`, `photo` and `auto`; 16-bit RGB; a
+    stack; `-mask -tiff native`. Passes, with no error in the log.
+  - **`xpa.sh`:** native/photo/piped data with BITPIX and a pixel; 16-bit RGB as
+    luminance; stack depth; RGB frame, green channel; native slice depth; native
+    mask. The output is diffed against `xpa/tiff.xpa`, written by hand from the
+    twins' values. Passes, as does the `file` section (`file photo ...` goes through
+    `ProcessTIFFCmd`).
+  - **`samp/tiff.samp`:** native/photo BITPIX, the SAMP file-URL path (`set file:...
+    tiff`), stack depth, and an RGB frame. Run against a live ds9 through a real hub,
+    every command returns `samp.ok` with the expected values. `samp.tcl` sources
+    ds9's client code from `/scratch1/...` (another machine), so it was run from a
+    copy with those six paths pointed at this checkout. `samp.tcl` itself is
+    unchanged.
+- [x] **`check_load.py`** makes a frame first if ds9 has none. Found by running it
+  after the SAMP test had deleted every frame, when all 111 failed.
+- [x] **`Manifest.md`** note (9): fitsy depends on tkimg's `tifftcl`, by stubs, built
+  after tkimg.
+- [ ] **Linux and Windows builds in CI.** The workflows (`build-unix.yml`,
+  `build-cygwin.yml`, `build-aqua.yml`) run on pull requests, so this needs a push and
+  a PR, as XISF did with SAOImageDS9/SAOImageDS9#455. Watch the Windows include
+  order (AGENTS.md: `tiff.C` includes libtiff before anything that pulls in a using
+  directive for `std`) and `tifftcl.h`'s relative include path on Windows.
+- [ ] Run `tiff.sh` and the Python checks on Linux and Windows.
 
 ---
 

@@ -320,6 +320,50 @@ int FitsImage::hpxNeedsRecentre(const Vector& ref, double minpix)
   return dx > .25*ww || dy > .25*hh;
 }
 
+// Would the sky point at ref still be in a window rebuilt around the
+// sky point at centre (both REF coords), as a drag rebuilds it? A drag
+// keeps its grabbed point under the pointer through each rebuild, so this
+// is the furthest a grabbed point can be from the pan point.
+int FitsImage::hpxReachable(const Vector& centre, const Vector& ref)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (!rr)
+    return 0;
+  double clon, clat, lon, lat;
+  if (!hpxNativeAtRef(centre, &clon, &clat) ||
+      !hpxNativeAtRef(ref, &lon, &lat))
+    return 0;
+  return rr->reachable(clon, clat, lon, lat);
+}
+
+// The same for sky points [deg, the map's own system]
+int FitsImage::hpxReachableSky(double clon, double clat,
+			       double lon, double lat)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  return rr ? rr->reachable(clon, clat, lon, lat) : 0;
+}
+
+// For a drag on a zenithal window: the sky centre (clon, clat) of a
+// window that shows the sky point (lon, lat) at the pointer, which is at
+// REF pointer while the pan point (the middle of the display) is at REF
+// centre. The pointer's offset from the middle, in degrees on the
+// projection plane, is the same in every window at the same on-screen
+// scale. (clon, clat) in: a guess. All [deg], the map's own system.
+int FitsImage::hpxDragCentre(const Vector& pointer, const Vector& centre,
+			     double lon, double lat,
+			     double* clon, double* clat)
+{
+  FitsHPXReproj* rr = dynamic_cast<FitsHPXReproj*>(hpx_);
+  if (!rr)
+    return 0;
+  Matrix mx = hpxRefToWindow();
+  Vector dd = pointer*mx - centre*mx;
+  // CDELT1 = -pix, CDELT2 = pix
+  return rr->zenithalCentre(lon, lat, -dd[0]*rr->pix(), dd[1]*rr->pix(),
+			    clon, clat);
+}
+
 // Recentre for a pan to (lon, lat): a zenithal window centres there; a
 // conic only follows in longitude and keeps its reference latitude.
 int FitsImage::hpxRecentrePan(double lon, double lat)

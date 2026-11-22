@@ -1067,6 +1067,8 @@ public:
   const char* hpxRecentre(HPXMode, double, double, int drag =0);
   void hpxAutoRefresh();
   int hpxDragRefresh();
+  int hpxPanBegin();
+  int hpxPanMotion(const Vector&);
   void hpxWindowGeometry(FitsImage*, double*, int*, int*);
   int hpxPanTo(const Vector&, Coord::CoordSystem, Coord::SkyFrame);
   void hpxListMarkers(Coord::SkyFrame, std::vector<std::string>*, int*);
@@ -1077,6 +1079,7 @@ public:
   int hpxRestoring_;   // re-creating regions after a recentre
   int hpxMapErrs_;     // regions createMarker() couldn't place
   int hpxDragStale_;   // contours carried approximately during a drag
+  int hpxGrabLost_;    // drag has no sky point under the pointer to hold
   void updateFitsCmd(int, BBox);
   void unloadFitsCmd();
 

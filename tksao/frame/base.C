@@ -506,6 +506,7 @@ Base::Base(Tcl_Interp* i, Tk_Canvas c, Tk_Item* item)
   hpxRestoring_ =0;
   hpxMapErrs_ =0;
   hpxDragStale_ =0;
+  hpxGrabLost_ =0;
   undoMarkers = &undoUserMarkers;
   pasteMarkers = &pasteUserMarkers;
   undoMarkerType = NONE;

@@ -299,22 +299,19 @@ void FrameBase::panBBoxCmd(const Vector& vv)
 void FrameBase::panBeginCmd(const Vector& vv)
 {
   panStart = mapToRef(vv,Coord::CANVAS);
+  hpxPanBegin();
 }
 
 void FrameBase::panMotionCmd(const Vector& vv)
 {
+  // a HEALPix window is dragged like a globe; see Base::hpxPanMotion()
+  if (hpxPanMotion(vv))
+    return;
+
   cursor -= mapToRef(vv,Coord::CANVAS) - panStart;
 
   setBinCursor();
   update(MATRIX);
-
-  // A HEALPix window rebuilt around the pan turns the view slightly about
-  // the centre, which moves the grabbed point off the pointer; put it back.
-  if (hpxDragRefresh()) {
-    cursor -= mapToRef(vv,Coord::CANVAS) - panStart;
-    setBinCursor();
-    update(MATRIX);
-  }
 }
 
 void FrameBase::saveFitsResampleFileCmd(const char* fn)

@@ -41,6 +41,7 @@ class FitsHPXReproj : public FitsFile {
   double lon_;         // current centre (lat_ = theta_a for conics)
   double lat_;
 
+  int refParams(double lat, double* crval2, double* pv21);
   int build(double lon, double lat, const double* centre);
   FitsHead* initHeader(FitsHead*, const char*, double, double, double);
   void swapData(float*, size_t);
@@ -71,6 +72,12 @@ class FitsHPXReproj : public FitsFile {
   // the map's own (lon, lat) [deg] at image pixel img, and back
   int nativeAt(const Vector& img, double* lon, double* lat);
   int pixelAt(double lon, double lat, Vector* img);
+  // (lon, lat) still placeable in a window rebuilt around (clon, clat)
+  int reachable(double clon, double clat, double lon, double lat);
+  // the centre of a north-up zenithal window that puts (lon, lat) at
+  // intermediate coords (uu, vv) [deg]; (clon, clat) in: a guess
+  int zenithalCentre(double lon, double lat, double uu, double vv,
+		     double* clon, double* clat);
   // the same for many points, building the WCS once per call: failures
   // come back as NaN (nativeAt/pixelAt build it for every point, ~160 us)
   int nativesAt(int nn, const double* xx, const double* yy,

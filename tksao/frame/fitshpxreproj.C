@@ -19,6 +19,9 @@
 // windows use coarser pixels instead. 4096^2 floats is 64 MB and ~0.8 s.
 #define HPX_WINDOW_MAX 4096
 
+// see FitsHPXReproj::reachable()
+#define HPX_DRAG_MINSCALE .35
+
 // ALLSKY: full extent of the projection plane in degrees (default PVs);
 //   centred on (lon0, 0); lat0 and fov are ignored.
 // ZENITHAL: centred on (lon0, lat0); fov is the angular diameter on the
@@ -892,31 +895,208 @@ int FitsHPXReproj::fromSky(const char* attrs, double lon, double lat,
   return rr;
 }
 
+// Intermediate (projection-plane) coordinates [deg] of sky point (lon,
+// lat) in a north-up zenithal view centred on (clon, clat), as the
+// window's WCS has them: x to the east (CDELT1 < 0), y to the north.
+// All [deg]. Returns 0 past the projection's reach (90 deg for SIN/TAN).
+static int zenithalPlane(const char* code, double clon, double clat,
+			 double lon, double lat, double* xx, double* yy)
+{
+  double a0 = clon/R2D, d0 = clat/R2D;
+  double aa = lon/R2D, dd = lat/R2D;
+  double cc = sin(dd)*sin(d0) + cos(dd)*cos(d0)*cos(aa-a0);
+  if (cc > 1)
+    cc = 1;
+  if (cc < -1)
+    cc = -1;
+  double th = acos(cc);
+  if ((!strcmp(code,"SIN") || !strcmp(code,"TAN")) && th >= M_PI/2)
+    return 0;
+  if (!strcmp(code,"STG") && th >= M_PI*(1-1e-9))
+    return 0;
+  double sn = sin(th);
+  double kk = sn < 1e-12 ? R2D : zenithalRadius(code, th*R2D)/sn;
+  *xx = kk*cos(dd)*sin(aa-a0);
+  *yy = kk*(sin(dd)*cos(d0) - cos(dd)*sin(d0)*cos(aa-a0));
+  return 1;
+}
+
+// (lon, lat) moved by small angles ee (east) and nn (north) [rad] on the
+// sphere, about the local axes at (lon, lat) [deg]
+static void zenithalStep(double* lon, double* lat, double ee, double nn)
+{
+  double ll = *lon/R2D, bb = *lat/R2D;
+  double p[3] = {cos(bb)*cos(ll), cos(bb)*sin(ll), sin(bb)};
+  double e[3] = {-sin(ll), cos(ll), 0};
+  double n[3] = {-sin(bb)*cos(ll), -sin(bb)*sin(ll), cos(bb)};
+  double tt = sqrt(ee*ee + nn*nn);
+  if (tt <= 0)
+    return;
+  double dir[3];
+  for (int ii=0; ii<3; ii++)
+    dir[ii] = (e[ii]*ee + n[ii]*nn)/tt;
+  double q[3];
+  for (int ii=0; ii<3; ii++)
+    q[ii] = p[ii]*cos(tt) + dir[ii]*sin(tt);
+  *lat = asin(q[2] > 1 ? 1 : q[2] < -1 ? -1 : q[2])*R2D;
+  *lon = atan2(q[1], q[0])*R2D;
+  if (*lon < 0)
+    *lon += 360;
+}
+
+// The centre (clon, clat) of a north-up zenithal view in which the sky
+// point (lon, lat) lies at intermediate coordinates (uu, vv); see
+// zenithalPlane(). Newton's method, from the guess in (clon, clat), with
+// the centre stepped on the sphere so it behaves near the poles. All
+// [deg]. Returns 0 if it doesn't converge or this isn't zenithal.
+int FitsHPXReproj::zenithalCentre(double lon, double lat, double uu,
+				  double vv, double* clon, double* clat)
+{
+  if (info_ < 0 || HPXReprojInfo[info_].kind != ZENITHAL)
+    return 0;
+  const char* code = HPXReprojInfo[info_].code;
+
+  double cl = *clon, cb = *clat;
+  // tolerance: a hundredth of a window pixel
+  double tol = pix_/100;
+  for (int it=0; it<20; it++) {
+    double xx, yy;
+    if (!zenithalPlane(code, cl, cb, lon, lat, &xx, &yy))
+      return 0;
+    double fx = xx - uu;
+    double fy = yy - vv;
+    if (fabs(fx) < tol && fabs(fy) < tol) {
+      *clon = cl;
+      *clat = cb;
+      return 1;
+    }
+
+    // Jacobian by differences, in the local east/north steps
+    double hh = 1e-6;
+    double l1 = cl, b1 = cb, l2 = cl, b2 = cb;
+    zenithalStep(&l1, &b1, hh, 0);
+    zenithalStep(&l2, &b2, 0, hh);
+    double x1, y1, x2, y2;
+    if (!zenithalPlane(code, l1, b1, lon, lat, &x1, &y1) ||
+	!zenithalPlane(code, l2, b2, lon, lat, &x2, &y2))
+      return 0;
+    double j11 = (x1-xx)/hh, j21 = (y1-yy)/hh;
+    double j12 = (x2-xx)/hh, j22 = (y2-yy)/hh;
+    double det = j11*j22 - j12*j21;
+    if (fabs(det) < 1e-12)
+      return 0;
+    double de = -( j22*fx - j12*fy)/det;
+    double dn = -(-j21*fx + j11*fy)/det;
+    // no more than 10 deg a step
+    double st = sqrt(de*de + dn*dn);
+    if (st > 10/R2D) {
+      de *= 10/R2D/st;
+      dn *= 10/R2D/st;
+    }
+    zenithalStep(&cl, &cb, de, dn);
+  }
+  return 0;
+}
+
 // Build the target header for centre (lon, lat) and resample the HPX
 // intermediate into it; if centre is given, shift the window so that sky
 // point is at its centre. On success, replaces head_ and data_.
-int FitsHPXReproj::build(double lon, double lat, const double* centre)
+int FitsHPXReproj::refParams(double lat, double* crval2, double* pv21)
 {
   const char* code = HPXReprojInfo[info_].code;
-  double crval2 = 0;
-  double pv21 = NAN;
+  *crval2 = 0;
+  *pv21 = NAN;
   switch (HPXReprojInfo[info_].kind) {
   case ALLSKY:
     break;
   case ZENITHAL:
     if (lat < -90 || lat > 90)
       return 0;
-    crval2 = lat;
+    *crval2 = lat;
     break;
   case CONIC:
     // theta_a = 0 is degenerate for conics
     if (lat <= -90 || lat >= 90 || lat == 0)
       return 0;
-    pv21 = lat;
+    *pv21 = lat;
     // the conics' reference point is at theta_a; Bonne's is at 0
-    crval2 = strcmp(code,"BON") ? lat : 0;
+    *crval2 = strcmp(code,"BON") ? lat : 0;
     break;
   }
+  return 1;
+}
+
+// Would the sky point (lon, lat) still have a pixel position in a window
+// rebuilt around (clon, clat), as a drag rebuilds it (a conic keeps its
+// reference latitude)? Zenithal projections only reach so far from their
+// centre: SIN stops at 90 deg, and beyond it AST either fails or returns
+// the mirror point on the near side. A round trip through the new WCS
+// catches both. All [deg], the map's own sky system.
+int FitsHPXReproj::reachable(double clon, double clat, double lon, double lat)
+{
+  if (!canRecentre())
+    return 0;
+
+  double crval2, pv21;
+  if (!refParams(isConic() ? lat_ : clat, &crval2, &pv21))
+    return 0;
+  FitsHead* hd = initHeader(hpx_->head(), HPXReprojInfo[info_].code,
+			    clon, crval2, pv21);
+
+  int rr = 0;
+  astClearStatus;
+  astBegin;
+  AstFrameSet* fs = hpxReprojAst(hd);
+  if (fs) {
+    double ll = lon/R2D;
+    double bb = lat/R2D;
+    double xx, yy;
+    astTran2(fs, 1, &ll, &bb, 0, &xx, &yy);
+    if (astOK && xx != AST__BAD && yy != AST__BAD) {
+      double l2, b2;
+      astTran2(fs, 1, &xx, &yy, 1, &l2, &b2);
+      if (astOK && l2 != AST__BAD && b2 != AST__BAD) {
+	// angular distance between the two, by unit vectors
+	double dx = cos(b2)*cos(l2) - cos(bb)*cos(ll);
+	double dy = cos(b2)*sin(l2) - cos(bb)*sin(ll);
+	double dz = sin(b2) - sin(bb);
+	rr = sqrt(dx*dx + dy*dy + dz*dz)*R2D < 1e-4;
+      }
+    }
+  }
+  astClearStatus;
+  astEnd;
+  delete hd;
+  if (!rr)
+    return 0;
+
+  // Near its limb a zenithal projection squeezes the sky together (SIN
+  // by cos(theta)), so a pointer step there turns the view a long way
+  // (4 px, 50 deg at zoom 0.1), and a drag, which rebuilds in small
+  // steps, overshoots and then throws the view across the sky. Treat the
+  // grabbed point as out of reach once the radial scale at it is below
+  // HPX_DRAG_MINSCALE of the centre's: SIN 69 deg, ZEA 139 deg.
+  if (HPXReprojInfo[info_].kind == ZENITHAL) {
+    double c1 = clat/R2D, c2 = clon/R2D;
+    double p1 = lat/R2D, p2 = lon/R2D;
+    double cc = sin(c1)*sin(p1) + cos(c1)*cos(p1)*cos(p2-c2);
+    double th = acos(cc < -1 ? -1 : cc > 1 ? 1 : cc)*R2D;
+    const char* code = HPXReprojInfo[info_].code;
+    double dd = .5;
+    double scale = (zenithalRadius(code, th+dd) -
+		    zenithalRadius(code, th-dd))/(2*dd);
+    if (scale < HPX_DRAG_MINSCALE)
+      return 0;
+  }
+  return 1;
+}
+
+int FitsHPXReproj::build(double lon, double lat, const double* centre)
+{
+  const char* code = HPXReprojInfo[info_].code;
+  double crval2, pv21;
+  if (!refParams(lat, &crval2, &pv21))
+    return 0;
 
   FitsHead* src = hpx_->head();
   FitsHead* hd = initHeader(src, code, lon, crval2, pv21);

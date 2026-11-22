@@ -250,6 +250,18 @@ void Base::loadSlicePhotoCmd(const char* ph, const char* fn)
   loadDone(currentContext->loadSlice(PHOTO, fn, img));
 }
 
+// *** TIFF ***
+
+// PHOTO, because a TIFF image is decoded into memory as a photo is, and
+// FitsImagePhotoCubeNext's plane stepping (by the header's imgbytes) suits
+// a TIFF cube of any BITPIX. Phase 1 loads one plane, so nhdu is 1.
+void Base::loadTiffCmd(const char* fn, LayerType ll)
+{
+  unloadFits();
+  FitsImage* img = new FitsImageTiff(currentContext, interp, fn, 1);
+  loadDone(currentContext->load(PHOTO, fn, img));
+}
+
 // *** Data Cube ***
 
 void Base::loadExtCubeAllocCmd(const char* ch, const char* fn)

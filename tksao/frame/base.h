@@ -905,6 +905,9 @@ public:
   virtual void loadPhotoCmd(const char*, const char*);
   virtual void loadSlicePhotoCmd(const char*, const char*);
 
+  // *** TIFF ***
+  virtual void loadTiffCmd(const char*, LayerType);
+
   void loadExtCubeAllocCmd(const char*, const char*);
   void loadExtCubeAllocGZCmd(const char*, const char*);
   void loadExtCubeChannelCmd(const char*, const char*);

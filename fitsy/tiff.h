@@ -56,4 +56,22 @@ struct FitsTiffDir {
 int tiffProbe(Tcl_Interp*, const char* fn, int decode,
 	      vector<FitsTiffDir>& dirs, string& err);
 
+// Whether fitsy can load directory dd natively, and if not, why (Phase 1:
+// one sample per pixel, MINISBLACK or MINISWHITE, 8-64 bit integer or
+// 32/64 bit float).
+int tiffLoadable(const FitsTiffDir& dd, string* why);
+
+#include "file.h"
+
+// Phase 1: directory 0 of a TIFF as one FITS-like image, at the depth it
+// was stored (TODO_TIFF16.md section 2.3). Rows are flipped and the
+// Orientation tag is applied, so the image appears as a TIFF viewer shows
+// it. The pixels are decoded into memory, in this host's byte order. On
+// failure isValid() is 0 and the reason is appended to the Tcl result.
+class FitsTiff : public FitsFile {
+ public:
+  FitsTiff(Tcl_Interp*, const char* fn);
+  ~FitsTiff();
+};
+
 #endif

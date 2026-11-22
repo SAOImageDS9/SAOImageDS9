@@ -28,6 +28,7 @@
 #include "compress.h"
 #include "analysis.h"
 #include "photo.h"
+#include "tiff.h"
 #include "colorscale.h"
 #include "wcsast.h"
 
@@ -639,6 +640,16 @@ FitsImagePhotoCubeNext::FitsImagePhotoCubeNext(Context* cx, Tcl_Interp* pp,
   : FitsImage(cx, pp)
 {
   fits_ = new FitsPhotoCubeNext(prev);
+  process(fn,id);
+}
+
+// TIFF
+
+FitsImageTiff::FitsImageTiff(Context* cx, Tcl_Interp* pp,
+			     const char* fn, int id)
+  : FitsImage(cx, pp)
+{
+  fits_ = new FitsTiff(pp, fn);
   process(fn,id);
 }
 

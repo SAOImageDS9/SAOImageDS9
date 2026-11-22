@@ -7,21 +7,23 @@ Plan for teaching DS9 to read TIFF pixels **at their stored depth** (16-bit inte
 verb in tksao, and a small Tcl surface. Check items off as they land and add findings
 inline, as the other TODO files do.
 
-**Status (2026-11-22): Phase 0 is done; the next step is Phase 1.** Work is on the
-`tiff16_support` branch, in both this repo and `Tests/`, **cut from `master`**.
-**XISF references in this file** (`fitsy/xisf.C`, `TODO_XISF.md`, `framergb.C`'s RGB load,
-the `load xisf` parser recipe) **point at the `xisf_support` branch**, not at master: XISF
-is the model this work copies, and it has not merged yet.
-**Phase 0 was built and measured on an `xisf_support` tree** carrying these same
-changes. The port to master was only syntax-checked (tiff.C and tclfitsy.C against
-master's headers). The first full build of this branch, the probe run, and a no-op
-parser regen against *master's* `lex.C`/`parser.C` are still to do.
-- **libtiff is reachable from fitsy through the tifftcl stubs.**
-  `fitsy/tiff.{h,C}` has a probe, `tiffProbe()`, and tclfitsy exposes it as
-  `fitsy tiff info|decode <file>`.
-- **All 101 loadable fixtures decode inside ds9**, with exact min/max/sum against the
-  manifest (`Tests/tiff/check_probe.py`).
-- **Nothing loads into a frame yet.** That is Phase 1.
+**Status (2026-11-22): Phases 0 and 1 are done; the next step is Phase 2** (the Tcl
+surface and the option). Work is on the `tiff16_support` branch, in both this repo and
+`Tests/`, **cut from `master`**.
+- **A grayscale TIFF loads into a frame at full depth**, through the C++ command
+  `$frame load tiff <file> ?mask?`. It is reachable over XPA only through the `tcl`
+  entry point, because the ds9 command line, the menus and the XPA `tiff` command
+  still use the photo path until Phase 2.
+- **The checks:**
+  - `Tests/tiff/check_load.py`: 89/89 grayscale fixtures match their FITS twins
+    pixel for pixel, with the §2.3 BITPIX and a valid header. 19/19 RGB and
+    unsupported fixtures are refused with a `tiff: ...` reason.
+  - `check_probe.py`: 102/102.
+  - Rendered canvases (`saveimage png`) are identical to the twins'.
+  - Everything was rerun clean under Guard Malloc (§4, Phase 1).
+- **XISF references in this file** (`fitsy/xisf.C`, `TODO_XISF.md`, `framergb.C`'s RGB
+  load) **point at the `xisf_support` branch**, not at master. XISF is the model this
+  work copies, and it has not merged yet.
 
 ---
 
@@ -299,13 +301,89 @@ Findings for later phases:
   `ndirs`. Phase 3's stack checks need per-plane comparison against the twin (load
   and `data` per slice, see AGENTS.md's slice-1 caveat), not just the probe.
 
-### Phase 1 — grayscale, single IFD, file-based (the core ask)
-- [ ] `FitsTiff`: open, read tags, check them against §2.3/§2.5, decode strips or tiles,
-      flip rows, build the header.
-- [ ] `FitsImageTiff` + `loadTiffCmd` + the `load tiff` grammar rule. Exercise it raw over
-      XPA: `echo '$::current(frame) load tiff {/path/f.tif} {} {} {}' | xpaset ds9 tcl`.
-- [ ] Check: `xpaget ds9 data image x y w h yes` and pixel values against the FITS twin;
-      `saveimage png` sha256 against the twin loaded the same way.
+### Phase 1 — grayscale, single IFD, file-based (done 2026-11-22)
+Built from clean on the master-based branch: `make -k distclean` on the old tree, then
+`macos/configure && make`, in about 7 minutes. That clean build also confirms the
+Phase 0 build-order fix.
+- [x] **`FitsTiff`** (`fitsy/tiff.C`) reads directory 0.
+  - **What it accepts** (`tiffLoadable`): one sample per pixel, MinIsBlack or
+    MinIsWhite, and a sample type from §2.3.
+  - **Types:** int8 is widened to BITPIX 16 and uint32 to 64. uint16 is fitsy's
+    private BITPIX -16. uint64 and half floats are refused.
+  - **Layout:** decodes strips or tiles, clips edge tiles, and checks every strip/tile
+    buffer against the rows it must hold.
+  - **Orientation 1–8 is applied in the same pass that flips the rows** (`tiffDest`),
+    so Phase 4's orientation item is done.
+  - **Header:** `CREATOR`, `DATE` (ISO 8601) and `OBSERVER` come from
+    Software/DateTime/Artist. COMMENT cards describe the directory, compression,
+    predictor and layout, any orientation applied, MinIsWhite, widening and pages
+    not loaded, followed by the ImageDescription.
+  - **Errors:** a refusal is appended to the Tcl result as `tiff: <reason>`, and
+    libtiff's own messages pass through (e.g. `LZMA compression support is not
+    configured`).
+- [x] **tksao:**
+  - `FitsImageTiff`, `Base::loadTiffCmd`, and `Frame::loadTiffCmd` for the mask
+    layer, plus the grammar rule `load tiff STRING layerType`.
+  - **MemType `PHOTO`:** `FitsImagePhotoCubeNext` steps planes by the header's
+    `imgbytes`, which suits a TIFF cube of any BITPIX. That is the plan for Phase 3.
+  - **FrameRGB/HLS/HSV** use Base's version, which loads into the current channel.
+- [x] **Parser regen, master-specific:** master's checked-in `parser.C`/`lex.C` carry
+  `#line "frame/parser.Y"` paths, so on this branch bison and flex must run **from a
+  `tksao/`-level scratch copy** (`bison -d -p fr -o frame/parser.C frame/parser.Y`). Run
+  from inside `frame/`, as AGENTS.md describes for `load xisf` on `xisf_support`, every
+  `#line` changes.
+  - From the right level, the no-op run is byte-identical for `parser.C`/`.H`, and
+    `lex.C` shows the usual 46 lines of flex churn.
+  - The `TIFF_` change to `lex.C` was hand-applied, and what remains against a fresh
+    flex output is exactly the no-op churn.
+  - No ds9 Tcl code passes a bare `tiff` word to a frame command, so the new keyword
+    shadows nothing.
+- [x] **Checks** (`Tests/tiff/check_load.py`). Each fixture is loaded with
+  `load tiff`, written back with `save fits file`, and compared with its twin;
+  BITPIX comes from `get fits header`. Two behaviours of ds9's `save fits` (not the
+  reader's) shape the check, and both were confirmed with the FITS twins as controls:
+  - **BITPIX -16 is saved as BITPIX 32**, losslessly, whereas the same image loaded
+    from a BZERO FITS file saves as 16/BZERO. So BITPIX is checked in memory, not in
+    the saved file.
+  - **A 1×N image is saved 1-D**, so shapes are compared squeezed.
+- [x] **Rendering:** with `scale mode minmax`, `saveimage png` of the TIFF and of its
+  twin give the same sha256 for u2, f4, i4, tiled u4, orient6, big-endian f8 and
+  MinIsWhite.
+- [x] **Mask layer:** `load tiff <file> mask` adds a mask over the loaded image.
+  Pre-existing, not TIFF: a *failed* mask load still leaves an empty mask layer
+  behind, as failed FITS and NRRD mask loads do.
+- [x] **New fixture** `header/texttags_u2.tif`: Software (with an apostrophe, too long
+  for one card), DateTime, Artist (with an apostrophe) and a 200-character
+  ImageDescription. Now 108 fixtures, 102 loadable.
+
+**A crash, its cause, and how the fix was verified.** The first Phase 1 build crashed
+(`ds9-2026-11-22-141214.ips`, `EXC_BREAKPOINT` inside `_xzm_xzone_malloc_freelist`).
+That is malloc finding its free list corrupted, the mark of an earlier heap overrun.
+- **Cause:** fitsy's `FitsCard::setComment` and `setString` copy into the 80-byte card
+  (`new char[80]`) with no length check. `setComment` also writes `NAME = value`
+  rather than a FITS COMMENT card.
+- **How it overflowed:** the first header code used `insertComment` with 72-character
+  chunks. Two of its comments were long enough to need a full chunk (the MinIsWhite
+  note, and the Deflate 32946 compression line), so 82 bytes went into an 80-byte
+  card.
+- **Fix:** `tiff.C` now builds every card itself (`tiffCard`, `tiffComment`,
+  `tiffString`), bounded, with quotes doubled as FITS 4.2.1 requires, and the value
+  cut short rather than overrunning the card.
+- **Verification** under Guard Malloc (`DYLD_INSERT_LIBRARIES=/usr/lib/libgmalloc.dylib`):
+  - **Positive control first:** a harness calling the old `insertComment` against the
+    real fitsy library faults at a 72-character comment and passes at 70. Plain malloc
+    survives it silently, which is how the overflow went unnoticed.
+  - **A second bug found that way:** the Phase 0 probe *read* 1536 bytes past a strip
+    of `unsupported/rgb_u1_jpeg.tif`, because a subsampled YCbCr strip is smaller than
+    rows × width × 3. It now has the loader's size guards and reports
+    `decoded strip smaller than its rows (subsampled YCbCr?)`.
+  - **Then everything ran clean**: the probe, every load and refusal, the renders and
+    a clean exit, with no new crash report.
+  - **Launch gotcha:** don't start ds9 through `/usr/bin/nohup` (or any other
+    SIP-protected binary), because macOS strips `DYLD_*` variables and Guard Malloc
+    silently never loads. Check with `vmmap <pid> | grep libgmalloc`.
+- **Open, pre-existing:** the unbounded `setString`/`setComment` stay in fitsy, and
+  any caller passing a long value overruns the card. That is worth its own fix.
 
 ### Phase 2 — Tcl surface and the option
 - [ ] `tiff.tcl`, `tiffparser`, the preference, the menu items, drop/open, recent-files
@@ -321,7 +399,7 @@ Findings for later phases:
 - [ ] `mask` layer load.
 
 ### Phase 4 — the remaining pieces
-- [ ] Orientation 2–8, if not already done in Phase 1.
+- [x] Orientation 2–8: done in Phase 1.
 - [ ] stdin/socket/XPA data through `TIFFClientOpen` on memory.
 - [ ] Half-float, packed 12-bit (only if a real user file needs them).
 - [ ] FITS cards in `ImageDescription` (only if real examples turn up).

@@ -908,6 +908,13 @@ public:
 			 const char*, FitsFile*, int);
 };
 
+// TIFF, read at full depth by fitsy's FitsTiff (TODO_TIFF16.md)
+
+class FitsImageTiff : public FitsImage {
+public:
+  FitsImageTiff(Context*, Tcl_Interp*, const char*, int);
+};
+
 // Mosaic
 
 class FitsImageMosaicAlloc : public FitsImage {

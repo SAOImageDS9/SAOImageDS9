@@ -355,6 +355,7 @@ tag		{return TAG_;}
 template	{return TEMPLATE_;}
 text		{return TEXT_;}
 threads		{return THREADS_;}
+tiff		{return TIFF_;}
 3d		{return THREED_;}
 threshold	{return THRESHOLD_;}
 thick		{return THICK_;}

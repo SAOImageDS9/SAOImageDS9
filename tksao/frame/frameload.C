@@ -395,6 +395,22 @@ void Frame::loadNRRDMMapCmd(const char* fn, LayerType ll)
   }
 }
 
+void Frame::loadTiffCmd(const char* fn, LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadTiffCmd(fn, ll);
+    break;
+  case MASK:
+    Context* cc = loadMask();
+    if (!cc)
+      return;
+    FitsImage* img = new FitsImageTiff(cc, interp, fn, 1);
+    loadDone(cc->load(PHOTO, fn, img));
+    break;
+  }
+}
+
 void Frame::loadNRRDShareCmd(ShmType stype, int id, const char* fn,
 			     LayerType ll)
 {

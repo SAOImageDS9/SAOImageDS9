@@ -337,6 +337,9 @@ proc PrefsDialogFileMenu {w} {
     $m.preserve add checkbutton -label [msgcat::mc {Region}] \
 	-variable pmarker(preserve)
 
+    $m add cascade -label [msgcat::mc {TIFF Import}] -menu $m.tiff
+    PrefsDialogTIFFMenu $m.tiff
+
     pack $f -side top -fill both -expand true
 }
 

@@ -112,15 +112,38 @@ TclFITSY::~TclFITSY()
 //       subfiletype byteswapped
 //   fitsy tiff decode <file>   the same, plus decoded nsamples min max sum
 //       error, from decoding every strip or tile of each directory
+//   fitsy tiff loadable <file> {ok deep why} for directory 0: ok is 1 if
+//       the native reader (FitsTiff) loads it, deep is 1 if its samples are
+//       more than 8 bits or not unsigned (what `auto' mode reads natively),
+//       why says why not. A file libtiff cannot open is {0 0 reason}.
 int TclFITSY::tiff(int argc, const char* argv[])
 {
   if (argc!=4) {
-    Tcl_AppendResult(interp_, "usage: fitsy tiff ?info|decode? filename",
+    Tcl_AppendResult(interp_,
+		     "usage: fitsy tiff ?info|decode|loadable? filename",
 		     NULL);
     return TCL_ERROR;
   }
 
   const char* which = argv[2];
+  if (!strcmp(which,"loadable")) {
+    vector<FitsTiffDir> dirs;
+    string err;
+    int ok =0;
+    int deep =0;
+    if (tiffProbe(interp_, argv[3], 0, dirs, err) && !dirs.empty()) {
+      const FitsTiffDir& dd = dirs[0];
+      ok = tiffLoadable(dd, &err);
+      deep = dd.bitsPerSample > 8 || dd.sampleFormat != 1;
+    }
+    Tcl_Obj* rr = Tcl_NewListObj(0,NULL);
+    Tcl_ListObjAppendElement(interp_, rr, Tcl_NewIntObj(ok));
+    Tcl_ListObjAppendElement(interp_, rr, Tcl_NewIntObj(deep));
+    Tcl_ListObjAppendElement(interp_, rr, Tcl_NewStringObj(err.c_str(),-1));
+    Tcl_SetObjResult(interp_, rr);
+    return TCL_OK;
+  }
+
   int decode;
   if (!strcmp(which,"info"))
     decode = 0;

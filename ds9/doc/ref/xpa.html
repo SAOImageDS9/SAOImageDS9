@@ -3195,8 +3195,9 @@ $xpaget ds9 threads<br>
 $xpaset -p ds9 threads 8</tt><br>
 <p><b><a name="tiff" id="tiff"></a>tiff</b></p>
 <p>Load TIFF image into current frame. Optional parameters: <tt>tiff</tt> compression method.</p>
+<p>A TIFF can be read two ways: <tt>native</tt>, at the depth its samples were stored (16 and 32 bit integers, 32 and 64 bit floats), or <tt>photo</tt>, through a Tk photo image at 8 bits per channel, which loads a colour TIFF into an RGB frame. <tt>auto</tt>, the default, reads a file natively when its samples are deeper than 8 bits or are not unsigned integers, and as a photo otherwise, so 8-bit and colour TIFFs load as before. The default is set in Preferences, File, TIFF Import. Natively read in this version: one sample per pixel (grayscale), strips or tiles, uncompressed, LZW, Deflate or PackBits; the Orientation tag is applied. A file the native reader cannot load falls back to <tt>photo</tt>. <tt>slice</tt> always uses <tt>photo</tt>, and <tt>mask</tt> needs <tt>native</tt>.</p>
 <tt>Syntax:<br>
-tiff [new|slice] [&lt;filename&gt;] [none|jpeg|packbits|deflate]<br>
+tiff [new|slice|mask] [native|photo|auto] [&lt;filename&gt;] [none|jpeg|packbits|deflate]<br>
 &nbsp;<br>
 Example:<br>
 $xpaget ds9 tiff &gt; foo.tiff<br>
@@ -3205,6 +3206,8 @@ $xpaget ds9 tiff jpeg &gt; foo.tiff<br>
 $xpaset -p ds9 tiff foo.tiff<br>
 $xpaset -p ds9 tiff new foo.tiff<br>
 $xpaset -p ds9 tiff slice foo.tiff<br>
+$xpaset -p ds9 tiff native foo16.tiff<br>
+$xpaset -p ds9 tiff mask native mask.tiff<br>
 <br>
 $cat foo.tiff | xpaset ds9 tiff<br>
 $cat foo.tiff | xpaset ds9 tiff new<br>

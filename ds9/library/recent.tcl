@@ -270,6 +270,13 @@ proc RecentOpen {entry} {
 	envi {Import $fn envi {} {} $opts(data)}
 	photo {Import $fn png {} $opts(mode) {}}
 	hips {HiPSLoadAsync $fn}
+	tiff {
+	    set layer {}
+	    if {[info exists opts(layer)]} {
+		set layer $opts(layer)
+	    }
+	    Import $fn tiff $layer {} {}
+	}
 
 	default {Error "[msgcat::mc {Unknown file type}] $type"}
     }
@@ -330,6 +337,7 @@ proc RecentLabel {entry} {
 	envi {set hint {ENVI}}
 	photo {set hint [string toupper [string trimleft [file extension $fn] .]]}
 	hips {set hint {HiPS}}
+	tiff {set hint {TIFF}}
 	default {set hint $type}
     }
     if {[info exists opts(mode)] && $opts(mode) == {slice}} {

@@ -506,6 +506,9 @@ proc BackupFrameLoadParam {varname ch which fdir rdir channel} {
 	allocgz {
 	    if {![BackupFrameLoadMMap param $fdir $rdir]} {
 		BackupFrameLoadAlloc $which param $fdir $rdir
+	    } elseif {$param(file,type) == {tiff}} {
+		# a native TIFF is read from file,fn: point it at the copy
+		set param(file,fn) $param(file,name)
 	    }
 	}
 	channel -
@@ -668,6 +671,7 @@ proc BackupFrameLoadAlloc {which varname fdir rdir} {
 	    }
 	}
 	nrrd {$which save fits image file \"$ffn\"}
+	tiff {$which save fits image file \"$ffn\"}
 	photo {
 	    switch -- [$which get type] {
 		base -

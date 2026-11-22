@@ -1943,7 +1943,12 @@ loadPhoto: /* empty */ STRING STRING {fr->loadPhotoCmd($1,$2);}
 	| SLICE_ STRING STRING {fr->loadSlicePhotoCmd($2,$3);}
 	;
 
-loadTiff : STRING layerType {fr->loadTiffCmd($1, (Base::LayerType)$2);}
+/* name ALLOC_ path, as loadNRRD: the image is decoded into memory, and
+   ds9's ProcessLoad, backup and Windows paths already speak alloc. The
+   bare form, path only, is for scripts. */
+loadTiff : STRING layerType {fr->loadTiffCmd($1, $1, (Base::LayerType)$2);}
+	| STRING ALLOC_ STRING layerType
+	{fr->loadTiffCmd($3, $1, (Base::LayerType)$4);}
 	;
 
 loadIncr: DATA_ INT INT INT INT INT {fr->loadIncrDataCmd($2,$3,$4,$5,$6);}

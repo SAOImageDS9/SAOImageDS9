@@ -2692,13 +2692,16 @@ $ds9 -source extensions.tcl<br></tt>
 Example:<br>
 $ds9 -tcl 'puts "Hello, World"'</tt><br>
 <b><a name="tiff" id="tiff"></a>tiff</b><br>
-<p>Load TIFF image into current frame.<br></p>
+<p>Load TIFF image into current frame. The optional reader applies to the TIFF files that follow it on the command line.<br></p>
+<p>A TIFF can be read two ways: <tt>native</tt>, at the depth its samples were stored (16 and 32 bit integers, 32 and 64 bit floats), or <tt>photo</tt>, through a Tk photo image at 8 bits per channel, which loads a colour TIFF into an RGB frame. <tt>auto</tt>, the default, reads a file natively when its samples are deeper than 8 bits or are not unsigned integers, and as a photo otherwise, so 8-bit and colour TIFFs load as before. The default is set in Preferences, File, TIFF Import. Natively read in this version: one sample per pixel (grayscale), strips or tiles, uncompressed, LZW, Deflate or PackBits; the Orientation tag is applied. A file the native reader cannot load falls back to <tt>photo</tt>. <tt>slice</tt> always uses <tt>photo</tt>, and <tt>mask</tt> needs <tt>native</tt>.</p>
 <tt>Syntax:<br>
--tiff &lt;filename&gt;<br>
+-tiff [native|photo|auto] &lt;filename&gt;<br>
 &nbsp;<br>
 Example:<br>
 $ds9 -tiff foo.tiff<br>
-$cat foo.fits | ds9 -tiff -</tt>
+$ds9 -tiff native foo16.tiff<br>
+$ds9 foo.fits -mask -tiff native mask.tiff<br>
+$cat foo.tiff | ds9 -tiff -</tt>
 <p><b><a name="tile" id="tile"></a>tile</b></p>
 <p>Controls the tile display mode.</p>
 <p>Grid mode <tt>span</tt> (Manual Layout in the Tile Parameters dialog)

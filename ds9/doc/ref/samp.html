@@ -3337,8 +3337,9 @@ ds9.set(string cmd)<br>
 tcl {puts {Hello, World}}<br></tt>
 <p><b><a name="tiff" id="tiff"></a>tiff</b></p>
 <p>Load TIFF image into current frame. Optional parameters: <tt>tiff</tt> compression method.</p>
+<p>A TIFF can be read two ways: <tt>native</tt>, at the depth its samples were stored (16 and 32 bit integers, 32 and 64 bit floats), or <tt>photo</tt>, through a Tk photo image at 8 bits per channel, which loads a colour TIFF into an RGB frame. <tt>auto</tt>, the default, reads a file natively when its samples are deeper than 8 bits or are not unsigned integers, and as a photo otherwise, so 8-bit and colour TIFFs load as before. The default is set in Preferences, File, TIFF Import. Natively read in this version: one sample per pixel (grayscale), strips or tiles, uncompressed, LZW, Deflate or PackBits; the Orientation tag is applied. A file the native reader cannot load falls back to <tt>photo</tt>. <tt>slice</tt> always uses <tt>photo</tt>, and <tt>mask</tt> needs <tt>native</tt>.</p>
 <tt>Syntax:<br>
-tiff [new|slice] [&lt;filename&gt;] [none|jpeg|packbits|deflate]<br>
+tiff [new|slice|mask] [native|photo|auto] [&lt;filename&gt;] [none|jpeg|packbits|deflate]<br>
 &nbsp;<br>
 Example:<br>
 string value = ds9.get(string cmd)<br>
@@ -3348,7 +3349,8 @@ tiff jpeg<br>
 ds9.set(string cmd)<br>
 tiff foo.tiff<br>
 tiff new foo.tiff<br>
-tiff slice foo.tiff</tt><br>
+tiff slice foo.tiff<br>
+tiff native foo16.tiff</tt><br>
 <p><b><a name="tile" id="tile"></a>tile</b></p>
 <p>Controls the tile display mode.</p>
 <p>Grid mode <tt>span</tt> (Manual Layout in the Tile Parameters dialog)

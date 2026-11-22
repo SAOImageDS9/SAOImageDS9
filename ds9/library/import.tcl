@@ -45,8 +45,8 @@ proc Import {fn format layer mode fn2} {
 	}
 	nrrd {ImportNRRDFile $fn $layer}
 	envi {ImportENVIFile $fn $fn2}
+	tiff {ImportTIFFFile $fn $mode $layer}
 	gif -
-	tiff -
 	jpeg -
 	png {ImportPhotoFile $fn $mode}
     }

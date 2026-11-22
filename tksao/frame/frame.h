@@ -124,7 +124,7 @@ class Frame : public FrameBase {
   void loadNRRDAllocCmd(const char*, const char*, LayerType);
   void loadNRRDChannelCmd(const char*, const char*, LayerType);
   void loadNRRDMMapCmd(const char*, LayerType);
-  void loadTiffCmd(const char*, LayerType);
+  void loadTiffCmd(const char*, const char*, LayerType);
   void loadNRRDShareCmd(ShmType, int, const char*, LayerType);
   void loadNRRDSocketCmd(int, const char*, LayerType);
   void loadNRRDVarCmd(const char*, const char*, LayerType);

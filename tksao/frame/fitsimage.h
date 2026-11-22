@@ -912,7 +912,7 @@ public:
 
 class FitsImageTiff : public FitsImage {
 public:
-  FitsImageTiff(Context*, Tcl_Interp*, const char*, int);
+  FitsImageTiff(Context*, Tcl_Interp*, const char*, const char*, int);
 };
 
 // Mosaic

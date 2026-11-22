@@ -645,11 +645,13 @@ FitsImagePhotoCubeNext::FitsImagePhotoCubeNext(Context* cx, Tcl_Interp* pp,
 
 // TIFF
 
+// path is the file read, fn the name shown (they differ for stdin and XPA
+// data, which ds9 writes to a temporary file first)
 FitsImageTiff::FitsImageTiff(Context* cx, Tcl_Interp* pp,
-			     const char* fn, int id)
+			     const char* path, const char* fn, int id)
   : FitsImage(cx, pp)
 {
-  fits_ = new FitsTiff(pp, fn);
+  fits_ = new FitsTiff(pp, path);
   process(fn,id);
 }
 

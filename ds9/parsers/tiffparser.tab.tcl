@@ -1,0 +1,7 @@
+set STRING_ 257
+set AUTO_ 258
+set MASK_ 259
+set NATIVE_ 260
+set NEW_ 261
+set PHOTO_ 262
+set SLICE_ 263

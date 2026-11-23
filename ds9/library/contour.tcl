@@ -67,6 +67,9 @@ proc UpdateContour {} {
 	return
     }
 
+    # the table must show this image's contours, not a loaded set
+    ContourSetGenerated
+
     if {!$contour(view)} {
 	# keep the styles with the frame, used when contours are turned on
 	if {[winfo exists $icontour(top)]} {
@@ -221,6 +224,22 @@ proc ContourTableCreate {f} {
     # row whose style was last changed, for Apply Style to All
     set dcontour(last) {}
 
+    # which contours the table shows: {} for this image's (generated)
+    # contours, or the id of a loaded/pasted set. Ids are per frame and
+    # channel (setkey).
+    set dcontour(set) {}
+    set dcontour(setsel) {}
+    set dcontour(setkey) {}
+    set dcontour(setlabel) [msgcat::mc {Generated}]
+
+    ttk::frame $f.sel
+    ttk::label $f.sel.title -text [msgcat::mc {Contours}]
+    set dcontour(setmb) [ttk::menubutton $f.sel.mb \
+			     -textvariable dcontour(setlabel) \
+			     -menu $f.sel.mb.menu -width 24]
+    ThemeMenu $f.sel.mb.menu
+    pack $f.sel.title $f.sel.mb -side left -padx 2
+
     set dcontour(canvas) [canvas $f.canvas -width 0 -height 220 \
 			      -highlightthickness 0 \
 			      -yscrollcommand [list $f.yscroll set]]
@@ -239,9 +258,10 @@ proc ContourTableCreate {f} {
 				-command ContourStyleApplyAllDialog \
 				-state disabled]
 
+    grid $f.sel - -sticky w -pady 2
     grid $dcontour(canvas) $f.yscroll -sticky news
     grid $dcontour(applyall) - -padx 2 -pady 2
-    grid rowconfigure $f 0 -weight 1
+    grid rowconfigure $f 1 -weight 1
     grid columnconfigure $f 0 -weight 1
 }
 
@@ -278,8 +298,14 @@ proc ContourTableRow {ii} {
 
     set t $dcontour(tbl)
     set cmd [list ContourTableStyleCmd $ii]
+    # a loaded set: levels are fixed, and the styles have no global
+    # default to fall back to, only the style they were loaded with
+    set aux [expr {$dcontour(set) != {}}]
 
     ttk::entry $t.lev$ii -textvariable dcontour(lev,$ii) -width 12
+    if {$aux} {
+	$t.lev$ii configure -state readonly
+    }
 
     # own class, so ThemeChanged bindings leave the color alone
     frame $t.swatch$ii -class ContourSwatch -width 16 -height 16 \
@@ -290,15 +316,20 @@ proc ContourTableRow {ii} {
     ColorMenu $t.color$ii.menu dcontour color,$ii $cmd
     # after the tearoff entry, if any
     set first [expr {[$t.color$ii.menu cget -tearoff] ? 1 : 0}]
-    $t.color$ii.menu insert $first radiobutton -label [msgcat::mc {Default}] \
-	-variable dcontour(color,$ii) -value default -command $cmd
+    if {$aux} {
+	$t.color$ii.menu insert $first command \
+	    -label [msgcat::mc {As Loaded}] -command [list ContourAuxResetRow $ii]
+    } else {
+	$t.color$ii.menu insert $first radiobutton \
+	    -label [msgcat::mc {Default}] \
+	    -variable dcontour(color,$ii) -value default -command $cmd
+    }
     $t.color$ii.menu insert [expr {$first+1}] separator
 
     ttk::menubutton $t.width$ii -textvariable dcontour(width,$ii) \
 	-menu $t.width$ii.menu -width 7
     ThemeMenu $t.width$ii.menu
-    $t.width$ii.menu add radiobutton -label [msgcat::mc {Default}] \
-	-variable dcontour(width,$ii) -value default -command $cmd
+    ContourTableDefaultEntry $t.width$ii.menu width $ii $cmd
     $t.width$ii.menu add separator
     foreach ww {1 2 3 4} {
 	$t.width$ii.menu add radiobutton -label $ww \
@@ -308,8 +339,7 @@ proc ContourTableRow {ii} {
     ttk::menubutton $t.dash$ii -textvariable dcontour(dash,$ii) \
 	-menu $t.dash$ii.menu -width 7
     ThemeMenu $t.dash$ii.menu
-    $t.dash$ii.menu add radiobutton -label [msgcat::mc {Default}] \
-	-variable dcontour(dash,$ii) -value default -command $cmd
+    ContourTableDefaultEntry $t.dash$ii.menu dash $ii $cmd
     $t.dash$ii.menu add separator
     $t.dash$ii.menu add radiobutton -label [msgcat::mc {Solid}] \
 	-variable dcontour(dash,$ii) -value solid -command $cmd
@@ -325,6 +355,20 @@ proc ContourTableRow {ii} {
     foreach ww [list $t.lev$ii $t.swatch$ii $t.color$ii $t.width$ii \
 		    $t.dash$ii] {
 	bindtags $ww [linsert [bindtags $ww] end ContourTable]
+    }
+}
+
+# first entry of a row's width/dash menu: Default for the generated
+# contours, As Loaded for a loaded set
+proc ContourTableDefaultEntry {m kk ii cmd} {
+    global dcontour
+
+    if {$dcontour(set) != {}} {
+	$m add command -label [msgcat::mc {As Loaded}] \
+	    -command [list ContourAuxResetRow $ii]
+    } else {
+	$m add radiobutton -label [msgcat::mc {Default}] \
+	    -variable dcontour($kk,$ii) -value default -command $cmd
     }
 }
 
@@ -449,9 +493,14 @@ proc ContourTableSwatches {} {
 # restyle the displayed contours, no regeneration
 proc ContourTableStyleCmd {ii} {
     global current
+    global dcontour
 
     ContourTableSetLast $ii
     ContourTableSwatches
+    if {$dcontour(set) != {}} {
+	ContourAuxStyleSend $ii $ii
+	return
+    }
     if {$current(frame) != {} && [$current(frame) has contour]} {
 	lassign [ContourTableRead] levels styles
 	ContourStyleSet $current(frame) $styles
@@ -520,12 +569,25 @@ proc ContourStyleApplyAllDialog {} {
 	    set dcontour($kk,$ii) $dcontour($kk,$src)
 	}
     }
+    if {$dcontour(set) != {}} {
+	ContourTableSwatches
+	ContourAuxStyleSend $src all
+	return
+    }
     ContourTableStyleCmd $src
 }
 
 proc ContourStyleClearDialog {} {
     global icontour
+    global dcontour
     global current
+
+    # a loaded set: back to the styles it was loaded with
+    if {[winfo exists $icontour(top)] && $dcontour(set) != {}} {
+	$current(frame) contour aux reset $dcontour(set)
+	ContourAuxTableRefresh
+	return
+    }
 
     if {[winfo exists $icontour(top)]} {
 	lassign [ContourTableRead] levels styles
@@ -760,6 +822,7 @@ proc ContourDestroyDialog {} {
 proc ContourGenerateDialog {} {
     global contour
 
+    ContourSetGenerated
     ContourCheckParams
     ContourTableSetLevels [ContourGenerateLevels $contour(numlevel)]
 }
@@ -781,7 +844,18 @@ proc ContourGenerateLevels {num} {
 
 proc ContourOffDialog {} {
     global contour
+    global icontour
+    global dcontour
     global current
+
+    # a loaded set is selected: delete just that set
+    if {[winfo exists $icontour(top)] && $dcontour(set) != {}} {
+	if {$current(frame) != {}} {
+	    $current(frame) contour delete aux $dcontour(set)
+	}
+	UpdateContourDialog
+	return
+    }
 
     set contour(view) 0
     if {$current(frame) != {}} {
@@ -914,13 +988,19 @@ proc ContourCPasteDialog {} {
 	}
 
 	set cc [$contour(copy) get contour $ed2(system) fk5]
+	set before [ContourAuxIds]
 	if {$ed2(original)} {
 	    $current(frame) contour paste cc
 	} else {
 	    $current(frame) contour paste cc $ed2(color) $ed2(width) $ed2(dash) \
 		[lindex $ed2(dashlist) 0] [lindex $ed2(dashlist) 1]
 	}
+	set id [ContourAuxNew $before]
+	if {$id != {}} {
+	    $current(frame) contour aux name $id "\{paste $contour(copy)\}"
+	}
 	UpdateContourDialog
+	ContourAuxSelect $id
     }
 
     set rr $ed2(ok)
@@ -1075,7 +1155,14 @@ proc ContourSaveDialog {} {
 	    }
 	}
 
-	$current(frame) contour save "\{$fn\}" $ed(system) $ed(sky)
+	global dcontour
+	if {[info exists dcontour(set)] && $dcontour(set) != {}} {
+	    # a loaded set is selected: save just that set
+	    $current(frame) contour save aux $dcontour(set) "\{$fn\}" \
+		$ed(system) $ed(sky)
+	} else {
+	    $current(frame) contour save "\{$fn\}" $ed(system) $ed(sky)
+	}
 	UpdateContourDialog
     }
 
@@ -1172,9 +1259,11 @@ proc ContourLoadOldDialog {fn} {
 
     if {$ed(ok)} {
 	set ed(color) [string tolower $ed(color)]
+	set before [ContourAuxIds]
 	$current(frame) contour load $ed(color) $ed(width) $ed(dash) \
 	    "\{$fn\}" $ed(system) $ed(sky)
 	UpdateContourDialog
+	ContourAuxSelect [ContourAuxNew $before]
     }
 
     set rr $ed(ok)
@@ -1241,6 +1330,7 @@ proc ContourLoadNewDialog {fn} {
     if {$ed(ok)} {
 	set ed(color) [string tolower $ed(color)]
 
+	set before [ContourAuxIds]
 	if {$ed(original)} {
 	    $current(frame) contour load "\{$fn\}"
 	} else {
@@ -1248,6 +1338,7 @@ proc ContourLoadNewDialog {fn} {
 		$ed(color) $ed(width) $ed(dash)
 	}
 	UpdateContourDialog
+	ContourAuxSelect [ContourAuxNew $before]
     }
 
     set rr $ed(ok)
@@ -1354,11 +1445,67 @@ proc UpdateContourDialog {} {
 	return
     }
 
+    set shown $dcontour(set)
     if {$current(frame) == {}} {
+	# no frame: nothing to show a loaded set from
+	if {$shown != {}} {
+	    set dcontour(set) {}
+	    set dcontour(setsel) {}
+	    set dcontour(setkey) {}
+	    set dcontour(setlabel) [msgcat::mc {Generated}]
+	    $dcontour(setmb).menu delete 0 end
+	    ContourTableWrite {} {}
+	    ContourSetMode
+	}
 	return
     }
+
+    # set ids belong to one frame and channel
+    set key [ContourSetKey]
+    if {$key != $dcontour(setkey)} {
+	set dcontour(set) {}
+	set dcontour(setkey) $key
+    }
+    set ids [ContourSetMenuBuild]
+    if {$dcontour(set) != {} && [lsearch -exact $ids $dcontour(set)] < 0} {
+	# deleted
+	set dcontour(set) {}
+    }
+    set dcontour(setsel) $dcontour(set)
+
     if {![$current(frame) has fits]} {
+	# e.g. an empty rgb channel: at least stop showing another
+	# channel's set
+	if {$shown != {} && $dcontour(set) == {}} {
+	    ContourTableWrite {} {}
+	    ContourSetMode
+	}
 	return
+    }
+
+    if {$dcontour(set) != {}} {
+	ContourAuxTableLoad
+    } else {
+	ContourFVTableLoad
+    }
+    ContourSetMode
+}
+
+# the generated contours' levels and styles into the table: what the
+# table held before a loaded set was shown, if that was for this frame,
+# else from the frame
+proc ContourFVTableLoad {} {
+    global contour
+    global dcontour
+    global current
+
+    if {[info exists dcontour(fvstash)]} {
+	lassign $dcontour(fvstash) key levels styles
+	unset dcontour(fvstash)
+	if {$key == [ContourSetKey]} {
+	    ContourTableWrite $levels $styles
+	    return
+	}
     }
 
     if {[$current(frame) has contour]} {
@@ -1374,6 +1521,251 @@ proc UpdateContourDialog {} {
     ContourCheckParams
     ContourTableWrite [ContourGenerateLevels $contour(numlevel)] \
 	[ContourStyleGet $current(frame)]
+}
+
+# Loaded (aux) contour sets
+# Each contour file loaded, or each paste, is a set in the frame
+# (get contour aux). The dialog shows either this image's generated
+# contours or one set. A set's level values are fixed; its styles can be
+# changed per row (one row per distinct level value) and reset to how
+# they were loaded.
+
+# frame, plus the channel for rgb/hsv/hls: sets are per channel
+proc ContourSetKey {} {
+    global current
+
+    set key $current(frame)
+    set type [$current(frame) get type]
+    switch -- $type {
+	rgb - hsv - hls {lappend key [$current(frame) get $type channel]}
+    }
+    return $key
+}
+
+proc ContourAuxIds {} {
+    global current
+
+    set ids {}
+    if {$current(frame) != {}} {
+	foreach ss [$current(frame) get contour aux] {
+	    lappend ids [lindex $ss 0]
+	}
+    }
+    return $ids
+}
+
+# the id of a set added since the ids were 'before', or {}
+proc ContourAuxNew {before} {
+    set id [lindex [ContourAuxIds] end]
+    if {$id != {} && [lsearch -exact $before $id] < 0} {
+	return $id
+    }
+    return {}
+}
+
+# show a set in the dialog, if the dialog is up
+proc ContourAuxSelect {id} {
+    global icontour
+
+    if {$id != {} && [winfo exists $icontour(top)]} {
+	ContourSetSelect $id
+    }
+}
+
+# rebuild the contour set menu, returns the set ids
+proc ContourSetMenuBuild {} {
+    global dcontour
+    global current
+
+    set m $dcontour(setmb).menu
+    $m delete 0 end
+    $m add radiobutton -label [msgcat::mc {Generated}] \
+	-variable dcontour(setsel) -value {} -command [list ContourSetSelect {}]
+    set dcontour(setlabel) [msgcat::mc {Generated}]
+
+    set ids {}
+    set sets [$current(frame) get contour aux]
+    if {$sets != {}} {
+	$m add separator
+    }
+    foreach ss $sets {
+	lassign $ss id name
+	lappend ids $id
+	set label "$id: $name"
+	$m add radiobutton -label $label -variable dcontour(setsel) -value $id \
+	    -command [list ContourSetSelect $id]
+	if {$id == $dcontour(set)} {
+	    set dcontour(setlabel) $label
+	}
+    }
+    return $ids
+}
+
+proc ContourSetSelect {id} {
+    global icontour
+    global dcontour
+
+    if {![winfo exists $icontour(top)]} {
+	return
+    }
+    if {$id != $dcontour(set) && $dcontour(set) == {}} {
+	# leaving the generated contours: keep the table, with any edits
+	# not applied yet, for when they're shown again
+	set dcontour(fvstash) [list [ContourSetKey] {*}[ContourTableRead]]
+    }
+    set dcontour(set) $id
+    UpdateContourDialog
+}
+
+# back to the generated contours, before anything uses the table as theirs
+proc ContourSetGenerated {} {
+    global icontour
+    global dcontour
+
+    if {[winfo exists $icontour(top)] && $dcontour(set) != {}} {
+	ContourSetSelect {}
+    }
+}
+
+# the selected set's rows into the table
+proc ContourAuxTableLoad {} {
+    global dcontour
+    global current
+
+    for {set ii 0} {$ii<$dcontour(nrow)} {incr ii} {
+	foreach kk {lev color width dash dashlist} {
+	    unset -nocomplain dcontour($kk,$ii)
+	}
+    }
+
+    set rows [$current(frame) get contour aux style $dcontour(set)]
+    set dcontour(nrow) [llength $rows]
+    set ii 0
+    foreach rr $rows {
+	ContourAuxTableSetRow $ii $rr
+	incr ii
+    }
+    ContourTableSetLast {}
+    ContourTableBuild
+}
+
+proc ContourAuxTableSetRow {ii row} {
+    global dcontour
+
+    lassign $row level color width dash length gap
+    set dcontour(lev,$ii) $level
+    set dcontour(color,$ii) $color
+    set dcontour(width,$ii) $width
+    set dcontour(dash,$ii) [expr {$dash ? {dash} : {solid}}]
+    set dcontour(dashlist,$ii) [list $length $gap]
+}
+
+# the selected set's styles into the table, rows kept (no rebuild, so it
+# is safe from a row's own menu)
+proc ContourAuxTableRefresh {} {
+    global dcontour
+    global current
+
+    set rows [$current(frame) get contour aux style $dcontour(set)]
+    if {[llength $rows] != $dcontour(nrow)} {
+	ContourAuxTableLoad
+	return
+    }
+    set ii 0
+    foreach rr $rows {
+	ContourAuxTableSetRow $ii $rr
+	incr ii
+    }
+    ContourTableSwatches
+}
+
+# send row src's style to row dst (a row number or 'all') of the set
+proc ContourAuxStyleSend {src dst} {
+    global dcontour
+    global current
+
+    if {$current(frame) == {}} {
+	return
+    }
+    set color $dcontour(color,$src)
+    set width $dcontour(width,$src)
+    set dash [expr {$dcontour(dash,$src) == {dash} ? 1 : 0}]
+    lassign $dcontour(dashlist,$src) length gap
+    if {[catch {$current(frame) contour aux style $dcontour(set) $dst \
+		    $color $width $dash $length $gap}]} {
+	Error "[msgcat::mc {Invalid contour level style}]: $color $width $dash $length $gap"
+    }
+    # the table shows what the frame has
+    ContourAuxTableRefresh
+}
+
+proc ContourAuxResetRow {ii} {
+    global dcontour
+    global current
+
+    $current(frame) contour aux reset $dcontour(set) $ii
+    ContourTableSetLast $ii
+    ContourAuxTableRefresh
+}
+
+# enable what applies to the selected contours: a loaded set's levels,
+# and so everything that makes levels, are fixed
+proc ContourSetMode {} {
+    global icontour
+    global dcontour
+
+    set w $icontour(top)
+    set mb $icontour(mb)
+    set aux [expr {$dcontour(set) != {}}]
+    set st [expr {$aux ? {disabled} : {normal}}]
+
+    ContourWidgetState $w.param $aux
+    $w.buttons.apply configure -state $st
+    $w.buttons.generate configure -state $st
+
+    # menubar cascades that only make levels
+    for {set ii 0} {$ii <= [$mb index end]} {incr ii} {
+	if {[$mb type $ii] == {cascade} &&
+	    [lsearch -exact [list $mb.width $mb.scale $mb.limit \
+				 $mb.scope $mb.method] \
+		 [$mb entrycget $ii -menu]] >= 0} {
+	    $mb entryconfigure $ii -state $st
+	}
+    }
+    ContourMenuState $mb.file $st \
+	{ContourApplyDialog ContourGenerateDialog ContourLoadLevels \
+	     ContourSaveLevels}
+    # the global color is the generated contours', but Reset Level Styles
+    # applies to a set too
+    ContourMenuState $mb.color $st {} ContourStyleClearDialog
+}
+
+# the ttk widgets under w (the parameter panel is all ttk)
+proc ContourWidgetState {w disabled} {
+    foreach cc [winfo children $w] {
+	if {[string match {T*} [winfo class $cc]]} {
+	    $cc state [expr {$disabled ? {disabled} : {!disabled}}]
+	}
+	ContourWidgetState $cc $disabled
+    }
+}
+
+# set the state of a menu's entries whose command is in 'only' (all if
+# 'only' is {}), except those whose command is in 'except'
+proc ContourMenuState {m st only {except {}}} {
+    for {set ii 0} {$ii <= [$m index end]} {incr ii} {
+	switch -- [$m type $ii] {
+	    separator - tearoff {continue}
+	}
+	set cmd [$m entrycget $ii -command]
+	if {$only != {} && [lsearch -exact $only $cmd] < 0} {
+	    continue
+	}
+	if {[lsearch -exact $except $cmd] >= 0} {
+	    continue
+	}
+	$m entryconfigure $ii -state $st
+    }
 }
 
 proc ContourLogDialog {} {
@@ -1578,6 +1970,7 @@ proc ContourCmdLoadLevels {fn} {
     }
 
     ContourDialog
+    ContourSetGenerated
     ContourLoadLevelsNow $fn
     UpdateContour
 }
@@ -1590,6 +1983,7 @@ proc ContourCmdSaveLevels {fn} {
     }
 
     ContourDialog
+    ContourSetGenerated
     ContourSaveLevelsNow $fn
 }
 
@@ -1652,6 +2046,7 @@ proc ContourCmdLevels {str} {
     global dcontour
 
     ContourDialog
+    ContourSetGenerated
     if {[string first {=} $str] != -1} {
 	lassign [ContourParseLines $str] levels styles
 	ContourTableWrite $levels $styles
@@ -1665,6 +2060,7 @@ proc ContourCmdStyle {idx str} {
     global dcontour
 
     ContourDialog
+    ContourSetGenerated
     lassign [ContourTableRead] levels styles
     if {![string is integer -strict $idx] ||
 	$idx < 0 || $idx >= [llength $levels]} {
@@ -1688,6 +2084,7 @@ proc ContourCmdStyleArgs {idx color {width 0} {dash -1} {length 0} {gap 0}} {
 
 proc ContourCmdStyleClear {} {
     ContourDialog
+    ContourSetGenerated
     ContourStyleClearDialog
 }
 
@@ -1721,6 +2118,7 @@ proc ContourSendCmdLevels {} {
     global dcontour
 
     ContourDialog
+    ContourSetGenerated
     lassign [ContourTableRead] levels styles
     # same output as the old levels text box, which ended with a blank line
     $parse(proc) $parse(id) "[join $levels \n]\n\n"
@@ -1730,6 +2128,7 @@ proc ContourSendCmdStyle {} {
     global parse
 
     ContourDialog
+    ContourSetGenerated
     lassign [ContourTableRead] levels styles
     set rr {}
     set ii 0

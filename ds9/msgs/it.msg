@@ -59,6 +59,7 @@
 ::msgcat::mcset it Archives Archivi
 ::msgcat::mcset it Array Array
 ::msgcat::mcset it Arrow Freccia
+::msgcat::mcset it {As Loaded} {Come caricato}
 ::msgcat::mcset it Asteroids Asteroidi
 ::msgcat::mcset it Astronomy Astronomia
 ::msgcat::mcset it {At Startup} All'avvio
@@ -416,6 +417,7 @@
 ::msgcat::mcset it Gaussian Gaussiana
 ::msgcat::mcset it General Generale
 ::msgcat::mcset it Generate Genera
+::msgcat::mcset it Generated Generati
 ::msgcat::mcset it {Generating Regions} {Generazione delle regioni}
 ::msgcat::mcset it {Get Information} {Ottieni informazioni}
 ::msgcat::mcset it {Get Region Info} {Informazioni sulla regione}

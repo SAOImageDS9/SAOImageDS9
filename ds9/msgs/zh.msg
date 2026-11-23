@@ -59,6 +59,7 @@
 ::msgcat::mcset zh Archives {資 料 庫}
 ::msgcat::mcset zh Array {陣 列}
 ::msgcat::mcset zh Arrow {箭 頭}
+::msgcat::mcset zh {As Loaded} {載 入 時}
 ::msgcat::mcset zh Asteroids {小 行 星}
 ::msgcat::mcset zh Astronomy {天 文 學}
 ::msgcat::mcset zh {At Startup} {啟 動 時}
@@ -416,6 +417,7 @@
 ::msgcat::mcset zh Gaussian {高 斯}
 ::msgcat::mcset zh General {一 般}
 ::msgcat::mcset zh Generate {產 生}
+::msgcat::mcset zh Generated {產 生 的}
 ::msgcat::mcset zh {Generating Regions} {正 在 產 生 區 域}
 ::msgcat::mcset zh {Get Information} {載 入 訊 息}
 ::msgcat::mcset zh {Get Region Info} {取 得 區 域 資 訊}

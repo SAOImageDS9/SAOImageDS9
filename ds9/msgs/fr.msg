@@ -59,6 +59,7 @@
 ::msgcat::mcset fr Archives Archives
 ::msgcat::mcset fr Array Tableau
 ::msgcat::mcset fr Arrow Flèche
+::msgcat::mcset fr {As Loaded} {Tel que chargé}
 ::msgcat::mcset fr Asteroids Astéroïdes
 ::msgcat::mcset fr Astronomy Astronomie
 ::msgcat::mcset fr {At Startup} {Au démarrage}
@@ -416,6 +417,7 @@
 ::msgcat::mcset fr Gaussian Gaussien
 ::msgcat::mcset fr General Général
 ::msgcat::mcset fr Generate Générer
+::msgcat::mcset fr Generated Générés
 ::msgcat::mcset fr {Generating Regions} {Création des régions}
 ::msgcat::mcset fr {Get Information} {Récuperer l'information}
 ::msgcat::mcset fr {Get Region Info} {Informations sur la région}

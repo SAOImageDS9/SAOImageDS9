@@ -2100,6 +2100,91 @@ proc ContourCmdGenerate {} {
     UpdateContour
 }
 
+# loaded (aux) contour sets from the command line / XPA / SAMP
+
+# a frame aux command (reset, name, delete), errors reported
+proc ContourCmdAux {cmd id args} {
+    global current
+
+    if {$current(frame) == {}} {
+	return
+    }
+    switch -- $cmd {
+	delete {set rr [catch {$current(frame) contour delete aux $id} msg]}
+	default {set rr [catch {$current(frame) contour aux $cmd $id {*}$args} msg]}
+    }
+    if {$rr} {
+	Error $msg
+	return
+    }
+    UpdateContourDialog
+}
+
+proc ContourCmdAuxSave {id fn sys sky} {
+    global current
+
+    if {$current(frame) == {} || $fn == {}} {
+	return
+    }
+    if {[catch {$current(frame) contour save aux $id "\{$fn\}" $sys $sky} msg]} {
+	Error $msg
+	return
+    }
+    FileLast contoursfbox $fn
+}
+
+# style of one row (or all) of a set. Either keywords, as one string
+# 'color=red width=2 dash=yes dashlist=4 2', or positional
+# color [width [dash [length gap]]]. What isn't given is kept, per row.
+proc ContourCmdAuxStyle {id row color {width 0} {dash -1} {length 0} {gap 0}} {
+    global current
+
+    if {$current(frame) == {}} {
+	return
+    }
+    if {[string first {=} $color] != -1} {
+	set new [ContourStyleParse $color]
+    } else {
+	set new [list [string tolower $color] $width $dash $length $gap]
+    }
+
+    if {[catch {$current(frame) get contour aux style $id} rows]} {
+	Error $rows
+	return
+    }
+    if {$row == {all}} {
+	set which {}
+	for {set ii 0} {$ii<[llength $rows]} {incr ii} {
+	    lappend which $ii
+	}
+    } else {
+	if {$row >= [llength $rows]} {
+	    Error "[msgcat::mc {Invalid contour level}]: $row"
+	    return
+	}
+	set which $row
+    }
+
+    foreach ii $which {
+	lassign [lrange [lindex $rows $ii] 1 end] cc ww dd ll gg
+	lassign $new nc nw nd nl ng
+	if {$nc != {}} {set cc $nc}
+	if {$nw > 0} {set ww $nw}
+	if {$nd >= 0} {set dd $nd}
+	if {$nl > 0 && $ng > 0} {
+	    set ll $nl
+	    set gg $ng
+	}
+	# the first row's error stops before any row has changed
+	if {[catch {$current(frame) contour aux style $id $ii \
+			$cc $ww $dd $ll $gg} msg]} {
+	    Error $msg
+	    break
+	}
+    }
+    UpdateContourDialog
+}
+
 proc ProcessSendContourCmd {proc id param sock fn} {
     global parse
     set parse(proc) $proc
@@ -2142,6 +2227,43 @@ proc ContourSendCmdStyle {} {
 	if {$ss != {}} {
 	    append rr "$ii $ss\n"
 	}
+	incr ii
+    }
+    $parse(proc) $parse(id) $rr
+}
+
+# one line per set: id name rows, as a Tcl list
+proc ContourSendCmdAux {} {
+    global parse
+    global current
+
+    set rr {}
+    if {$current(frame) != {}} {
+	foreach ss [$current(frame) get contour aux] {
+	    append rr "$ss\n"
+	}
+    }
+    $parse(proc) $parse(id) $rr
+}
+
+# one line per row: row level and the style as keywords
+proc ContourSendCmdAuxStyle {id} {
+    global parse
+    global current
+
+    if {$current(frame) == {}} {
+	return
+    }
+    if {[catch {$current(frame) get contour aux style $id} rows]} {
+	Error $rows
+	return
+    }
+    set rr {}
+    set ii 0
+    foreach row $rows {
+	lassign $row level color width dash length gap
+	append rr "$ii $level [ContourStyleFormat \
+		[list $color $width $dash $length $gap]]\n"
 	incr ii
     }
     $parse(proc) $parse(id) $rr

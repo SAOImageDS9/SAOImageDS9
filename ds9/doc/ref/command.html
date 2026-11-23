@@ -626,6 +626,7 @@ Example:<br>
 $ds9 -console<br></tt>
 <p><b><a name="contour" id="contour"></a>contour<br></b></p>
 <p>Controls contours in the current frame.</p>
+<p>Each contour file loaded, or each paste, is kept as a set, numbered by an id. A row is one level value of the set, numbered from 0; its level values are fixed, but each row's color, width and dash can be changed, and reset to how they were loaded. Style values not given are kept.</p>
 <tt>Syntax:<br>
 -contour []<br>
 &nbsp;&nbsp;&nbsp; [yes|no]<br>
@@ -654,6 +655,14 @@ $ds9 -console<br></tt>
 &nbsp;&nbsp;&nbsp; [style &lt;index&gt; '[color=&lt;color&gt;] [width=&lt;width&gt;] [dash=yes|no] [dashlist=&lt;length&gt; &lt;gap&gt;]']<br>
 &nbsp;&nbsp;&nbsp; [style &lt;index&gt; clear]<br>
 &nbsp;&nbsp;&nbsp; [style clear]<br>
+&nbsp;&nbsp;&nbsp; [aux]<br>
+&nbsp;&nbsp;&nbsp; [aux style &lt;id&gt;]<br>
+&nbsp;&nbsp;&nbsp; [aux style &lt;id&gt; &lt;row&gt;|all &lt;color&gt; [&lt;width&gt; [yes|no [&lt;length&gt; &lt;gap&gt;]]]]<br>
+&nbsp;&nbsp;&nbsp; [aux style &lt;id&gt; &lt;row&gt;|all '[color=&lt;color&gt;] [width=&lt;width&gt;] [dash=yes|no] [dashlist=&lt;length&gt; &lt;gap&gt;]']<br>
+&nbsp;&nbsp;&nbsp; [aux reset &lt;id&gt; [&lt;row&gt;]]<br>
+&nbsp;&nbsp;&nbsp; [aux name &lt;id&gt; &lt;name&gt;]<br>
+&nbsp;&nbsp;&nbsp; [aux delete &lt;id&gt;]<br>
+&nbsp;&nbsp;&nbsp; [aux save &lt;id&gt; &lt;filename&gt; [&lt;coordsys&gt; &lt;skyframe&gt;]]<br>
 &nbsp;&nbsp;&nbsp; [open|close]<br>
 &nbsp;<br>
 Example:<br>
@@ -687,6 +696,14 @@ $ds9 -contour style 2 cyan 1 yes 4 2<br>
 $ds9 -contour style 2 'color=cyan dash=yes'<br>
 $ds9 -contour style 1 clear<br>
 $ds9 -contour style clear<br>
+$ds9 -contour aux style 1 2 red 2<br>
+$ds9 -contour aux style 1 all 'width=2'<br>
+$ds9 -contour aux style 2 0 'color=cyan dash=yes'<br>
+$ds9 -contour aux reset 1 2<br>
+$ds9 -contour aux reset 1<br>
+$ds9 -contour aux name 2 'my contours'<br>
+$ds9 -contour aux save 1 aux.ctr wcs fk5<br>
+$ds9 -contour aux delete 2<br>
 $ds9 -contour open<br>
 $ds9 -contour close<br></tt>
 <p><b><a name="crop" id="crop"></a>crop</b></p>

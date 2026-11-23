@@ -11,7 +11,9 @@
 
 %start command
 
+%token ALL_
 %token ASINH_
+%token AUX_
 %token BLOCK_
 %token CLEAR_
 %token CLOSE_
@@ -19,6 +21,7 @@
 %token CONVERT_
 %token COPY_
 %token DASH_
+%token DELETE_
 %token EXP_
 %token GENERATE_
 %token GLOBAL_
@@ -33,10 +36,12 @@
 %token METHOD_
 %token MINMAX_
 %token MODE_
+%token NAME_
 %token NLEVELS_
 %token OPEN_
 %token PASTE_
 %token POW_
+%token RESET_
 %token SAVE_
 %token SAVELEVELS_
 %token SCALE_
@@ -91,6 +96,28 @@ contour : yesno {ProcessCmdSet contour view $1 UpdateContour}
  | LEVELS_ levels
  | STYLE_ style
  | GENERATE_ {ContourDialog; ContourGenerateDialog; UpdateContour}
+ | AUX_ aux
+ ;
+
+# loaded (aux) contour sets, by id; a row is a distinct level value
+aux : STYLE_ INT_ auxrow STRING_ {ContourCmdAuxStyle $2 $3 $4}
+ | STYLE_ INT_ auxrow STRING_ INT_ {ContourCmdAuxStyle $2 $3 $4 $5}
+ | STYLE_ INT_ auxrow STRING_ INT_ dash {ContourCmdAuxStyle $2 $3 $4 $5 $6}
+ | STYLE_ INT_ auxrow STRING_ INT_ dash INT_ INT_
+   {ContourCmdAuxStyle $2 $3 $4 $5 $6 $7 $8}
+ | RESET_ INT_ {ContourCmdAux reset $2}
+ | RESET_ INT_ INT_ {ContourCmdAux reset $2 $3}
+ | NAME_ INT_ STRING_ {ContourCmdAux name $2 "\{$3\}"}
+ | DELETE_ INT_ {ContourCmdAux delete $2}
+ | SAVE_ INT_ STRING_ {ContourCmdAuxSave $2 $3 physical fk5}
+ | SAVE_ INT_ STRING_ coordsys {ContourCmdAuxSave $2 $3 $4 fk5}
+ | SAVE_ INT_ STRING_ wcssys {ContourCmdAuxSave $2 $3 $4 fk5}
+ | SAVE_ INT_ STRING_ skyframe {ContourCmdAuxSave $2 $3 wcs $4}
+ | SAVE_ INT_ STRING_ wcssys skyframe {ContourCmdAuxSave $2 $3 $4 $5}
+ ;
+
+auxrow : INT_
+ | ALL_ {set _ all}
  ;
 
 levels : numerics {ContourCmdLevels $1}

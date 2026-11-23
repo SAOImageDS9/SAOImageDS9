@@ -74,7 +74,7 @@ void FitsImage::initHPX()
     char* upper = toUpper(proj);
 
     // A HiPS in a window (zenithal/conic) zooms into its deeper tiles
-    // (FitsHPXReproj, TODO_HIPS.md Phase 5); the map built here, at the
+    // (FitsHPXReproj); the map built here, at the
     // automatic order or norder=K, is the coarse level it starts from.
     FitsHiPS* deep = dynamic_cast<FitsHiPS*>(fits_);
 

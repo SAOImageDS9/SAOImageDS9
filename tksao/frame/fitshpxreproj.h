@@ -58,7 +58,7 @@ class FitsHPXReproj : public FitsFile {
   double lat_;
 
   int refParams(double lat, double* crval2, double* pv21);
-  // Deep HiPS windows (TODO_HIPS.md Phase 5): when the window's pixels
+  // Deep HiPS windows: when the window's pixels
   // are finer than the map's (the coarse level), they are sampled from
   // the HiPS tiles of the order that fits, from the process-wide cache
   // of decoded tiles (FitsHiPS::tile); a tile not available falls back

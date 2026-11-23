@@ -25,7 +25,7 @@
 // fits in HIPS_NSIDE_AUTO is used.
 //
 // Tile layout (HiPS 1.0 sec. 4; the in-tile order is only drawn there,
-// so it was measured on real HiPS, see TODO_HIPS.md): tile N at order K
+// so it was measured on real HiPS, Tests/hips/tileorder.py): tile N at order K
 // holds the NESTED pixels [N*W^2, (N+1)*W^2) of the map at order
 // K+log2(W). Counting the tile's rows from the *top* (FITS rows are
 // stored bottom-up), pixel (row r, column c) is NESTED sub-index

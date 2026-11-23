@@ -9,7 +9,7 @@ package provide DS9 1.0
 # so every HEALPix projection option works. The name is the HiPS root
 # directory, optionally followed by options in brackets:
 #   /data/Fermi/HiPS[norder=3,proj=MOL,lon0=180]
-# See TODO_HIPS.md.
+# User documentation: ds9/doc/ref/file.html#HiPS.
 
 # Load HiPS fn into the current frame, and return when it is loaded (1)
 # or has failed (0, reported). A remote one is fetched first

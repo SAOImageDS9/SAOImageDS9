@@ -9,7 +9,7 @@ package provide DS9 1.0
 # into an on-disk cache that mirrors the HiPS layout, and the HiPS reader
 # (fitsy/hips.C) then reads the cache like any local HiPS. Networking
 # stays in Tcl, where ds9 already handles TLS, proxies and its
-# User-Agent. See TODO_HIPS.md, Phase 3.
+# User-Agent.
 #
 # What a load fetches:
 #  - always properties (small; a changed hips_release_date empties the
@@ -1296,7 +1296,7 @@ proc HiPSProgressRemove {id} {
     }
 }
 
-# Deep windows (TODO_HIPS.md Phase 5). After a deep HiPS window is
+# Deep windows. After a deep HiPS window is
 # rebuilt, the frame (Base::hpxRequestTiles) passes the tiles of the order
 # it shows that it didn't have. For a remote HiPS they are fetched in the
 # background, a few at a time, into its cache, and the window is rebuilt

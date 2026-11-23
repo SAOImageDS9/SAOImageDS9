@@ -358,7 +358,12 @@ void Base::contourCreatePolygonCmd()
   markerLayerCmd(USER);
 
   contourCreatePolygon(currentContext->fvcontour().lcontourlevel());
-  contourCreatePolygon(currentContext->auxcontours());
+  // back to front, like the levels within each set
+  List<AuxContourSet>& sets = currentContext->auxsets();
+  if (sets.tail())
+    do
+      contourCreatePolygon(sets.current()->levels());
+    while (sets.previous());
 
   currentContext->contourDeleteFV();
   currentContext->contourDeleteAux();

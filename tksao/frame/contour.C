@@ -135,6 +135,81 @@ void ContourLevel::win32()
 }
 #endif
 
+// AuxContourSet
+
+AuxContourSet::AuxContourSet(int id, const char* name)
+{
+  id_ = id;
+  name_ = dupstr(name ? name : "");
+
+  previous_ = NULL;
+  next_ = NULL;
+}
+
+AuxContourSet::~AuxContourSet()
+{
+  if (name_)
+    delete [] name_;
+  // levels_ deletes its levels
+}
+
+void AuxContourSet::setName(const char* name)
+{
+  if (name_)
+    delete [] name_;
+  name_ = dupstr(name ? name : "");
+}
+
+void AuxContourSet::setStyle(const char* color, int width, int dash,
+			     int* dlist)
+{
+  if (levels_.head())
+    do {
+      ContourLevel* cl = levels_.current();
+      cl->setColor(color);
+      cl->setLineWidth(width);
+      cl->setDash(dash);
+      if (dlist)
+	cl->setDashList(dlist[0], dlist[1]);
+    } while (levels_.next());
+}
+
+// back to front, like the levels of a whole list used to be
+void AuxContourSet::render(Pixmap pmap, Coord::InternalSystem sys,
+			   const BBox& bbox)
+{
+  if (levels_.tail())
+    do
+      levels_.current()->render(pmap, sys, bbox);
+    while (levels_.previous());
+}
+
+void AuxContourSet::ps(PSColorSpace mode)
+{
+  if (levels_.tail())
+    do
+      levels_.current()->ps(mode);
+    while (levels_.previous());
+}
+
+void AuxContourSet::updateCoords(const Matrix& mx)
+{
+  if (levels_.head())
+    do
+      levels_.current()->updateCoords(mx);
+    while (levels_.next());
+}
+
+#ifdef __WIN32
+void AuxContourSet::win32()
+{
+  if (levels_.tail())
+    do
+      levels_.current()->win32();
+    while (levels_.previous());
+}
+#endif
+
 // Contour
 
 Contour::Contour(ContourLevel* cc)

@@ -74,6 +74,46 @@ class ContourLevel {
   void setNext(ContourLevel* m) {next_ = m;}
 };
 
+// One loaded contour file or one paste: a group of aux contour levels
+// that are kept, drawn and deleted together.
+class AuxContourSet {
+ protected:
+  int id_;
+  char* name_;
+  List<ContourLevel> levels_;
+
+  AuxContourSet* previous_;
+  AuxContourSet* next_;
+
+ private:
+  // never copied: ContourLevel has no copy constructor
+  AuxContourSet(const AuxContourSet&);
+  AuxContourSet& operator=(const AuxContourSet&);
+
+ public:
+  AuxContourSet(int, const char*);
+  ~AuxContourSet();
+
+  int id() {return id_;}
+  const char* name() {return name_;}
+  void setName(const char*);
+  List<ContourLevel>& levels() {return levels_;}
+
+  void setStyle(const char*, int, int, int*);
+
+  void render(Pixmap, Coord::InternalSystem, const BBox&);
+  void ps(PSColorSpace);
+  void updateCoords(const Matrix&);
+#ifdef __WIN32
+  void win32();
+#endif
+
+  AuxContourSet* previous() {return previous_;}
+  void setPrevious(AuxContourSet* m) {previous_ = m;}
+  AuxContourSet* next() {return next_;}
+  void setNext(AuxContourSet* m) {next_ = m;}
+};
+
 class Contour {
  protected:
   ContourLevel* parent_;

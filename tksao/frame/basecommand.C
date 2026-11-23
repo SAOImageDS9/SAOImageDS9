@@ -726,11 +726,21 @@ void Base::contourDeleteAuxCmd()
   update(PIXMAP);
 }
 
+// the name an aux contour set gets from its file: the basename
+static const char* contourSetName(const char* fn)
+{
+  const char* name = fn;
+  for (const char* pp = fn; *pp; pp++)
+    if (*pp == '/' || *pp == '\\')
+      name = pp+1;
+  return name;
+}
+
 void Base::contourLoadCmd(const char* fn)
 {
   ifstream str(fn);
   if (str)
-    currentContext->contourLoadAux(str);
+    currentContext->contourLoadAux(str, contourSetName(fn));
   update(PIXMAP);
 }
 
@@ -739,7 +749,8 @@ void Base::contourLoadCmd(const char* fn, const char* color,
 {
   ifstream str(fn);
   if (str)
-    currentContext->contourLoadAux(str, color, width, dash);
+    currentContext->contourLoadAux(str, contourSetName(fn),
+				   color, width, dash);
   update(PIXMAP);
 }
 
@@ -749,7 +760,8 @@ void Base::contourLoadCmd(const char* fn,
 {
   ifstream str(fn);
   if (str)
-    currentContext->contourLoadAux(str, sys, sky, color, width, dash);
+    currentContext->contourLoadAux(str, contourSetName(fn),
+				   sys, sky, color, width, dash);
   update(PIXMAP);
 }
 
@@ -780,7 +792,7 @@ void Base::contourPasteCmd(const char* var)
   string x(buf);
   istringstream str(x);
   if (str)
-    currentContext->contourLoadAux(str);
+    currentContext->contourLoadAux(str, "paste");
   delete [] buf;
 
   update(PIXMAP);
@@ -823,7 +835,7 @@ void Base::contourPasteCmd(const char* var, const char* color,
   istringstream str(x);
   if (str) {
     int dlist[2] = {length, gap};
-    currentContext->contourLoadAux(str, color, width, dash,
+    currentContext->contourLoadAux(str, "paste", color, width, dash,
 				   length && gap ? dlist : NULL);
   }
   delete [] buf;

@@ -1773,6 +1773,12 @@ proc ContourLogDialog {} {
 }
 
 proc ContourBackup {ch which fdir rdir} {
+    # delete old contours, once per frame: the channels of an rgb/hsv/hls
+    # frame share fdir
+    foreach ff [glob -directory $fdir -nocomplain "aux*.ctr"] {
+	catch {file delete -force $ff}
+    }
+
     switch [$which get type] {
 	base -
 	3d {ContourBackupBase $ch $which $fdir $rdir}
@@ -1782,7 +1788,8 @@ proc ContourBackup {ch which fdir rdir} {
     }
 }
 
-proc ContourBackupBase {ch which fdir rdir} {
+# tag: the channel, for rgb/hsv/hls, so their files don't collide
+proc ContourBackupBase {ch which fdir rdir {tag {}}} {
     if {[$which has contour]} {
 	set color [$which get contour color]
 	set width [$which get contour width]
@@ -1817,16 +1824,15 @@ proc ContourBackupBase {ch which fdir rdir} {
 	}
     }
 
-    # delete old contours
-    foreach ff [glob -directory $fdir -nocomplain "aux*.ctr"] {
-	catch {file delete -force $ff}
-    }
-
-    if {[$which has contour aux]} {
-	set fn $fdir/aux.ctr
-	set rfn $rdir/aux.ctr
-	$which contour save aux \"$fn\" physical fk5
-	puts $ch "$which contour load \{\"$rfn\"\}"
+    # loaded contours: a file per set, so each restores as its own set.
+    # The name line is caught so older versions can still read the backup.
+    foreach ss [$which get contour aux] {
+	lassign $ss id name
+	set ff "aux$tag$id.ctr"
+	$which contour save aux $id \"$fdir/$ff\" physical fk5
+	puts $ch "$which contour load \{\"$rdir/$ff\"\}"
+	set getid "\[lindex \[lindex \[$which get contour aux\] end\] 0\]"
+	puts $ch "catch {$which contour aux name $getid [list "{$name}"]}"
     }
 }
 
@@ -1835,7 +1841,7 @@ proc ContourBackupRGB {ch which fdir rdir} {
     foreach cc {red green blue} {
 	$which rgb channel $cc
 	puts $ch "$which rgb channel $cc"
-	ContourBackupBase $ch $which $fdir $rdir
+	ContourBackupBase $ch $which $fdir $rdir "${cc}_"
     }
     $which rgb channel $sav
     puts $ch "$which rgb channel $sav"
@@ -1846,7 +1852,7 @@ proc ContourBackupHSV {ch which fdir rdir} {
     foreach cc {hue saturation value} {
 	$which hsv channel $cc
 	puts $ch "$which hsv channel $cc"
-	ContourBackupBase $ch $which $fdir $rdir
+	ContourBackupBase $ch $which $fdir $rdir "${cc}_"
     }
     $which hsv channel $sav
     puts $ch "$which hsv channel $sav"
@@ -1857,7 +1863,7 @@ proc ContourBackupHLS {ch which fdir rdir} {
     foreach cc {hue lightness saturation} {
 	$which hls channel $cc
 	puts $ch "$which hls channel $cc"
-	ContourBackupBase $ch $which $fdir $rdir
+	ContourBackupBase $ch $which $fdir $rdir "${cc}_"
     }
     $which hls channel $sav
     puts $ch "$which hls channel $sav"

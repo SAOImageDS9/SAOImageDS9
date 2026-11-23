@@ -75,12 +75,27 @@ class ContourLevel {
 };
 
 // One loaded contour file or one paste: a group of aux contour levels
-// that are kept, drawn and deleted together.
+// that are kept, drawn, restyled and deleted together.
+// A row is one distinct level value, in file order: a file saved from a
+// mosaic repeats each value once per tile, and a row covers all of them.
 class AuxContourSet {
  protected:
+  // the style of a row right after the load: what a reset goes back to
+  struct LoadedStyle {
+    double level;
+    char* colorName;
+    int lineWidth;
+    int dash;
+    int dlist[2];
+  };
+
   int id_;
   char* name_;
   List<ContourLevel> levels_;
+  std::vector<LoadedStyle> loaded_;
+
+  void clearLoaded();
+  ContourLevel* rowFirst(int);
 
   AuxContourSet* previous_;
   AuxContourSet* next_;
@@ -95,11 +110,21 @@ class AuxContourSet {
   ~AuxContourSet();
 
   int id() {return id_;}
+  void setId(int id) {id_ = id;}
   const char* name() {return name_;}
   void setName(const char*);
   List<ContourLevel>& levels() {return levels_;}
 
   void setStyle(const char*, int, int, int*);
+
+  // rows are fixed by captureLoaded(), called once the load is complete
+  void captureLoaded();
+  int rows() {return (int)loaded_.size();}
+  double rowLevel(int rr) {return loaded_[rr].level;}
+  void listRow(ostream&, int);
+  void setRowStyle(int, const char*, int, int, int*);
+  void resetRow(int);
+  void resetAll();
 
   void render(Pixmap, Coord::InternalSystem, const BBox&);
   void ps(PSColorSpace);

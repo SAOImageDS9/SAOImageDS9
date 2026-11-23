@@ -720,6 +720,15 @@ void Base::contourDeleteCmd()
   update(PIXMAP);
 }
 
+void Base::contourDeleteAuxCmd(int id)
+{
+  if (!auxSetCmd(id, -1))
+    return;
+
+  currentContext->contourDeleteAux(id);
+  update(PIXMAP);
+}
+
 void Base::contourDeleteAuxCmd()
 {
   currentContext->contourDeleteAux();
@@ -857,6 +866,90 @@ void Base::contourSaveAuxCmd(const char* fn, Coord::CoordSystem sys,
   ofstream str(fn);
   if (str)
     currentContext->contourListAux(str, sys, sky);
+}
+
+void Base::contourSaveAuxCmd(int id, const char* fn,
+			     Coord::CoordSystem sys, Coord::SkyFrame sky)
+{
+  if (!auxSetCmd(id, -1))
+    return;
+
+  ofstream str(fn);
+  if (str)
+    currentContext->contourListAux(str, sys, sky, id);
+}
+
+// The aux contour set with this id in the current context, and if
+// row >= 0, check the row too. On failure sets the error and returns NULL.
+AuxContourSet* Base::auxSetCmd(int id, int row)
+{
+  AuxContourSet* set = currentContext->findAuxSet(id);
+  if (!set) {
+    ostringstream str;
+    str << "no loaded contour set " << id << ends;
+    Tcl_AppendResult(interp, str.str().c_str(), NULL);
+    result = TCL_ERROR;
+    return NULL;
+  }
+  if (row >= set->rows()) {
+    ostringstream str;
+    str << "no row " << row << " in loaded contour set " << id << ends;
+    Tcl_AppendResult(interp, str.str().c_str(), NULL);
+    result = TCL_ERROR;
+    return NULL;
+  }
+  return set;
+}
+
+void Base::contourAuxNameCmd(int id, const char* name)
+{
+  AuxContourSet* set = auxSetCmd(id, -1);
+  if (set)
+    set->setName(name);
+}
+
+// row <0: every row
+void Base::contourAuxResetCmd(int id, int row)
+{
+  AuxContourSet* set = auxSetCmd(id, row);
+  if (!set)
+    return;
+
+  if (row < 0)
+    set->resetAll();
+  else
+    set->resetRow(row);
+  update(PIXMAP);
+}
+
+// row <0: every row. Aux levels have no default to fall back on, so every
+// field is a concrete value.
+void Base::contourAuxStyleCmd(int id, int row, const char* color,
+			      int width, int dash, int length, int gap)
+{
+  AuxContourSet* set = auxSetCmd(id, row);
+  if (!set)
+    return;
+
+  if (width < 1 || dash < 0 || dash > 1 ||
+      length < 1 || length > 255 || gap < 1 || gap > 255) {
+    Tcl_AppendResult(interp, "invalid contour style", NULL);
+    result = TCL_ERROR;
+    return;
+  }
+  if (!color || !*color || !getXColor(color)) {
+    Tcl_ResetResult(interp);
+    Tcl_AppendResult(interp, "invalid color ", color ? color : "", NULL);
+    result = TCL_ERROR;
+    return;
+  }
+
+  int dlist[2] = {length, gap};
+  if (row < 0)
+    set->setStyle(color, width, dash, dlist);
+  else
+    set->setRowStyle(row, color, width, dash, dlist);
+  update(PIXMAP);
 }
 
 void Base::contourStyleCmd(int idx, const char* color, int width, int dash,
@@ -1618,6 +1711,43 @@ void Base::getContourStyleCmd()
 {
   ostringstream str;
   currentContext->fvcontour().listStyles(str);
+  str << ends;
+  Tcl_AppendResult(interp, str.str().c_str(), NULL);
+}
+
+// {id name rows} for each loaded contour set, oldest first
+void Base::getContourAuxCmd()
+{
+  Tcl_Obj* all = Tcl_NewListObj(0, NULL);
+  List<AuxContourSet>& sets = currentContext->auxsets();
+  if (sets.head())
+    do {
+      AuxContourSet* set = sets.current();
+      Tcl_Obj* one[3];
+      one[0] = Tcl_NewIntObj(set->id());
+      one[1] = Tcl_NewStringObj(set->name(), -1);
+      one[2] = Tcl_NewIntObj(set->rows());
+      Tcl_ListObjAppendElement(interp, all, Tcl_NewListObj(3, one));
+    } while (sets.next());
+
+  Tcl_IncrRefCount(all);
+  Tcl_AppendResult(interp, Tcl_GetString(all), NULL);
+  Tcl_DecrRefCount(all);
+}
+
+// {level color width dash length gap} for each row of a set
+void Base::getContourAuxStyleCmd(int id)
+{
+  AuxContourSet* set = auxSetCmd(id, -1);
+  if (!set)
+    return;
+
+  ostringstream str;
+  for (int ii=0; ii<set->rows(); ii++) {
+    if (ii)
+      str << ' ';
+    set->listRow(str, ii);
+  }
   str << ends;
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }

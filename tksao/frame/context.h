@@ -99,7 +99,12 @@ class Context {
   void contourListHeader(ostream&, Coord::CoordSystem, Coord::SkyFrame,
 			 std::vector<double>&);
   AuxContourSet* contourLoadAuxSet(istream&, const char*,
-				   Coord::CoordSystem, Coord::SkyFrame);
+				   Coord::CoordSystem, Coord::SkyFrame,
+				   const char* =NULL, int =0, int =0,
+				   int* =NULL);
+  void contourListAuxLevels(ostream&, Coord::CoordSystem, Coord::SkyFrame,
+			    AuxContourSet*);
+  void hpxForgetAux(AuxContourSet*);
 
   void reorderAxis(char*, char**, int, int, int, size_t);
   void reorderThread(void*, char*, void* (void*), int*);
@@ -117,6 +122,7 @@ class Context {
 
   FVContour& fvcontour() {return fvcontour_;}
   List<AuxContourSet>& auxsets() {return auxsets_;}
+  AuxContourSet* findAuxSet(int);
 
   void analysis();
   int axesOrder() {return axesOrder_;}
@@ -149,8 +155,10 @@ class Context {
   void contourUpdateFV();
   void contourDeleteFV();
   void contourDeleteAux();
+  int contourDeleteAux(int);
   void contourListFV(ostream&, Coord::CoordSystem, Coord::SkyFrame);
   void contourListAux(ostream&, Coord::CoordSystem, Coord::SkyFrame);
+  void contourListAux(ostream&, Coord::CoordSystem, Coord::SkyFrame, int);
   void contourLoadAux(istream&, const char*);
   void contourLoadAux(istream&, const char*,
 		      const char*, int, int, int* =NULL);

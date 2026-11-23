@@ -781,7 +781,66 @@ void Context::contourDeleteFV()
 
 void Context::contourDeleteAux()
 {
+  hpxForgetAux(NULL);
   auxsets_.deleteAll();
+}
+
+// returns 0 if there is no set with that id
+int Context::contourDeleteAux(int id)
+{
+  AuxContourSet* set = findAuxSet(id);
+  if (!set)
+    return 0;
+
+  hpxForgetAux(set);
+  auxsets_.extract();
+  delete set;
+  return 1;
+}
+
+AuxContourSet* Context::findAuxSet(int id)
+{
+  if (auxsets_.head())
+    do
+      if (auxsets_.current()->id() == id)
+	return auxsets_.current();
+    while (auxsets_.next());
+  return NULL;
+}
+
+// Drop a set's levels (NULL: every set's) from the HEALPix sky copies
+// before the levels are deleted. Otherwise a new level allocated at a
+// freed address would look already known to hpxSaveAuxContours, and get
+// the old level's lines.
+void Context::hpxForgetAux(AuxContourSet* set)
+{
+  std::vector<const void*> gone;
+  if (set) {
+    List<ContourLevel>& ll = set->levels();
+    if (ll.head())
+      do
+	gone.push_back(ll.current());
+      while (ll.next());
+  }
+
+  for (FitsImage* ptr = fits; ptr; ptr = ptr->nextMosaic())
+    for (FitsImage* sptr = ptr; sptr; sptr = sptr->nextSlice()) {
+      std::vector<HPXAuxLevel>& store = sptr->hpxAux();
+      if (!set) {
+	store.clear();
+	continue;
+      }
+      for (size_t ii=0; ii<store.size(); ) {
+	int found =0;
+	for (size_t jj=0; jj<gone.size() && !found; jj++)
+	  if (gone[jj] == store[ii].level)
+	    found =1;
+	if (found)
+	  store.erase(store.begin()+ii);
+	else
+	  ii++;
+      }
+    }
 }
 
 void Context::contourListFV(ostream& str, Coord::CoordSystem sys,
@@ -823,13 +882,40 @@ void Context::contourListAux(ostream& str, Coord::CoordSystem sys,
 
   contourListHeader(str, sys, sky, lev);
   auxsets_.head();
-  do {
-    List<ContourLevel>& cl = auxsets_.current()->levels();
-    if (cl.head())
-      do
-	cl.current()->list(str, cfits, sys, sky);
-      while (cl.next());
-  } while (auxsets_.next());
+  do
+    contourListAuxLevels(str, sys, sky, auxsets_.current());
+  while (auxsets_.next());
+}
+
+// one set, as a file of its own
+void Context::contourListAux(ostream& str, Coord::CoordSystem sys,
+			     Coord::SkyFrame sky, int id)
+{
+  if (!cfits)
+    return;
+
+  AuxContourSet* set = findAuxSet(id);
+  if (!set || !set->levels().head())
+    return;
+
+  List<ContourLevel>& cl = set->levels();
+  std::vector<double> lev;
+  do
+    lev.push_back(cl.current()->level());
+  while (cl.next());
+
+  contourListHeader(str, sys, sky, lev);
+  contourListAuxLevels(str, sys, sky, set);
+}
+
+void Context::contourListAuxLevels(ostream& str, Coord::CoordSystem sys,
+				   Coord::SkyFrame sky, AuxContourSet* set)
+{
+  List<ContourLevel>& cl = set->levels();
+  if (cl.head())
+    do
+      cl.current()->list(str, cfits, sys, sky);
+    while (cl.next());
 }
 
 void Context::contourList(ostream& str, Coord::CoordSystem sys,
@@ -864,16 +950,20 @@ void Context::contourListHeader(ostream& str, Coord::CoordSystem sys,
   str << endl;
 }
 
-// Parse one contour file into a new set. Returns the set, or NULL if the
+// Parse one contour file into a new set, optionally overriding the
+// file's line style (color != NULL). Returns the set, or NULL if the
 // file held no levels (nothing is added then).
 AuxContourSet* Context::contourLoadAuxSet(istream& str, const char* name,
 					  Coord::CoordSystem sys,
-					  Coord::SkyFrame sky)
+					  Coord::SkyFrame sky,
+					  const char* color, int width,
+					  int dash, int* dlist)
 {
   contourWCSSystem_ = sys;
   contourWCSSkyFrame_ = sky;
 
-  auxLoading_ = new AuxContourSet(++auxSetSeq_, name);
+  // the id is handed out only if the set is kept
+  auxLoading_ = new AuxContourSet(0, name);
   ctFlexLexer* ll = new ctFlexLexer(&str);
   ctparse(this, ll);
   delete ll;
@@ -885,6 +975,12 @@ AuxContourSet* Context::contourLoadAuxSet(istream& str, const char* name,
     return NULL;
   }
 
+  if (color)
+    set->setStyle(color, width, dash, dlist);
+  // what "as loaded" goes back to includes the override
+  set->captureLoaded();
+
+  set->setId(++auxSetSeq_);
   auxsets_.append(set);
   return set;
 }
@@ -905,12 +1001,9 @@ void Context::contourLoadAux(istream& str, const char* name,
   if (!cfits)
     return;
 
-  AuxContourSet* set = contourLoadAuxSet(str, name,
-					 parent_->getWCSSystem(),
-					 parent_->getWCSSkyFrame());
-  // override line attributes
-  if (set)
-    set->setStyle(color, width, dash, dlist);
+  contourLoadAuxSet(str, name,
+		    parent_->getWCSSystem(), parent_->getWCSSkyFrame(),
+		    color, width, dash, dlist);
 }
 
 // backward compatibility
@@ -918,10 +1011,7 @@ void Context::contourLoadAux(istream& str, const char* name,
 			     Coord::CoordSystem sys, Coord::SkyFrame sky,
 			     const char* color, int width, int dash)
 {
-  AuxContourSet* set = contourLoadAuxSet(str, name, sys, sky);
-  // override line attributes
-  if (set)
-    set->setStyle(color, width, dash, NULL);
+  contourLoadAuxSet(str, name, sys, sky, color, width, dash, NULL);
 }
 
 void Context::contourPS(PSColorSpace cs)

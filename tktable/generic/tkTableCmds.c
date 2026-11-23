@@ -63,7 +63,8 @@ int Table_ActivateCmd(ClientData clientData, Tcl_Interp *interp,
 	    Tcl_DStringInit(&script);
 	    ExpandPercents(tablePtr, tablePtr->browseCmd, tablePtr->rowOffset - 1,
 		tablePtr->colOffset - 1, buf1, buf2, tablePtr->icursor, &script, 0);
-	    result = Tcl_GlobalEval(interp, Tcl_DStringValue(&script));
+	    result = Tcl_EvalEx(interp, Tcl_DStringValue(&script),
+		Tcl_DStringLength(&script), TCL_EVAL_GLOBAL);
 	    if (result == TCL_OK || result == TCL_RETURN) {
 		 Tcl_ResetResult(interp);
 	    }
@@ -98,7 +99,7 @@ int Table_ActivateCmd(ClientData clientData, Tcl_Interp *interp,
 	    tablePtr->activeRow = row;
 	    tablePtr->activeCol = col;
 	    if (tablePtr->activeTagPtr != NULL) {
-		ckfree((char *) (tablePtr->activeTagPtr));
+		Tcl_Free((char *) (tablePtr->activeTagPtr));
 		tablePtr->activeTagPtr = NULL;
 	    }
 	    TableAdjustActive(tablePtr);
@@ -114,8 +115,9 @@ int Table_ActivateCmd(ClientData clientData, Tcl_Interp *interp,
 		TableMakeArrayIndex(row, col, buf2);
 		Tcl_DStringInit(&script);
 		ExpandPercents(tablePtr, tablePtr->browseCmd, row, col,
-			       buf1, buf2, tablePtr->icursor, &script, 0);
-		result = Tcl_GlobalEval(interp, Tcl_DStringValue(&script));
+			buf1, buf2, tablePtr->icursor, &script, 0);
+		result = Tcl_EvalEx(interp, Tcl_DStringValue(&script),
+			Tcl_DStringLength(&script), TCL_EVAL_GLOBAL);
 		if (result == TCL_OK || result == TCL_RETURN) {
 		    Tcl_ResetResult(interp);
 		}
@@ -143,7 +145,7 @@ int Table_ActivateCmd(ClientData clientData, Tcl_Interp *interp,
 		textLayout = Tk_ComputeTextLayout(tagPtr->tkfont, tablePtr->activeBuf, -1,
 			(tagPtr->wrap) ? w : 0, tagPtr->justify, 0, &dummy, &dummy);
 
-		tablePtr->icursor = Tk_PointToChar(textLayout, x, y);
+		tablePtr->icursor = (int)Tk_PointToChar(textLayout, x, y);
 		Tk_FreeTextLayout(textLayout);
 		TableRefresh(tablePtr, row, col, CELL|INV_FORCE);
 	    }
@@ -203,6 +205,7 @@ int Table_AdjustCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj
 	    Tcl_AppendElement(interp, buf1);
 	    entryPtr = Tcl_NextHashEntry(&search);
 	}
+
     } else if (objc == 3) {
 	/* get the width/height of a particular row/col */
 	if (Tcl_GetIntFromObj(interp, objv[2], &posn) != TCL_OK) {
@@ -212,11 +215,12 @@ int Table_AdjustCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj
 	posn -= offset;
 	entryPtr = Tcl_FindHashEntry(hashTablePtr, INT2PTR(posn));
 	if (entryPtr != NULL) {
-	    Tcl_SetIntObj(Tcl_GetObjResult(interp), PTR2INT(Tcl_GetHashValue(entryPtr)));
+	    Tcl_SetObjResult(interp, Tcl_NewIntObj(PTR2INT(Tcl_GetHashValue(entryPtr))));
 	} else {
-	    Tcl_SetIntObj(Tcl_GetObjResult(interp), widthType ?
-			  tablePtr->defColWidth : tablePtr->defRowHeight);
+	    Tcl_SetObjResult(interp, Tcl_NewIntObj(widthType ?
+		tablePtr->defColWidth : tablePtr->defRowHeight));
 	}
+
     } else {
 	for (i=2; i<objc; i++) {
 	    /* set new width|height here */
@@ -235,7 +239,9 @@ int Table_AdjustCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj
 		}
 	    } else {
 		entryPtr = Tcl_CreateHashEntry(hashTablePtr, INT2PTR(posn), &dummy);
-		Tcl_SetHashValue(entryPtr, INT2PTR(value));
+		if (entryPtr) {
+		    Tcl_SetHashValue(entryPtr, INT2PTR(value));
+		}
 	    }
 	}
 	TableAdjustParams(tablePtr);
@@ -282,7 +288,8 @@ int Table_BboxCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj *
 	return TCL_ERROR;
     }
 
-    resultPtr = Tcl_GetObjResult(interp);
+    resultPtr = Tcl_NewListObj(0, NULL);
+    if (!resultPtr) return TCL_ERROR;
     if (objc == 3) {
 	row -= tablePtr->rowOffset; col -= tablePtr->colOffset;
 	if (TableCellVCoords(tablePtr, row, col, &x, &y, &w, &h, 0)) {
@@ -291,7 +298,6 @@ int Table_BboxCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj *
 	    Tcl_ListObjAppendElement(NULL, resultPtr, Tcl_NewIntObj(w));
 	    Tcl_ListObjAppendElement(NULL, resultPtr, Tcl_NewIntObj(h));
 	}
-	return TCL_OK;
     } else {
 	int r1, c1, r2, c2, minX = 99999, minY = 99999, maxX = 0, maxY = 0;
 
@@ -319,6 +325,7 @@ int Table_BboxCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj *
 	    Tcl_ListObjAppendElement(NULL, resultPtr, Tcl_NewIntObj(maxY-minY));
 	}
     }
+    Tcl_SetObjResult(interp, resultPtr);
     return TCL_OK;
 }
 
@@ -333,7 +340,7 @@ enum bdCmd {
  *--------------------------------------------------------------
  *
  * Table_BorderCmd --
- *	This procedure is invoked to process the bbox method
+ *	This procedure is invoked to process the border method
  *	that corresponds to a table widget managed by this module.
  *	See the user documentation for details on what it does.
  *
@@ -356,8 +363,8 @@ int Table_BorderCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj
 	Tcl_WrongNumArgs(interp, 2, objv, "mark|dragto x y ?row|col?");
 	return TCL_ERROR;
     }
-    if (Tcl_GetIndexFromObj(interp, objv[2], bdCmdNames, "option", 0, &cmdIndex) != TCL_OK ||
-	Tcl_GetIntFromObj(interp, objv[3], &x) != TCL_OK ||
+    if (Tcl_GetIndexFromObj(interp, objv[2], bdCmdNames, "option", 0, &cmdIndex) 
+	    != TCL_OK || Tcl_GetIntFromObj(interp, objv[3], &x) != TCL_OK ||
 	Tcl_GetIntFromObj(interp, objv[4], &y) != TCL_OK) {
 	return TCL_ERROR;
     }
@@ -365,14 +372,13 @@ int Table_BorderCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj
 	Tcl_Size temp;
 
 	rc = Tcl_GetStringFromObj(objv[5], &temp);
-	w = (int) temp;
-	if ((w < 1) || (strncmp(rc, "row", (size_t) w) && strncmp(rc, "col", (size_t) w))) {
+	if ((temp < 1) || (strncmp(rc, "row", (size_t) temp) &&
+		strncmp(rc, "col", (size_t) temp))) {
 	    Tcl_WrongNumArgs(interp, 2, objv, "mark|dragto x y ?row|col?");
 	    return TCL_ERROR;
 	}
     }
 
-    resultPtr = Tcl_GetObjResult(interp);
     switch ((enum bdCmd) cmdIndex) {
     case BD_MARK:
 	/* Use x && y to determine if we are over a border */
@@ -383,6 +389,8 @@ int Table_BorderCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj
 	if (!value) {
 	    return TCL_OK;
 	}
+	resultPtr = Tcl_NewListObj(0, NULL);
+	if (!resultPtr) return TCL_ERROR;
 	TableCellCoords(tablePtr, row, col, &x, &y, &dummy, &dummy);
 	tablePtr->scanMarkX = x;
 	tablePtr->scanMarkY = y;
@@ -402,6 +410,7 @@ int Table_BorderCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj
 	    }
 	    Tcl_ListObjAppendElement(NULL, resultPtr, objPtr);
 	}
+	Tcl_SetObjResult(interp, resultPtr);
 	return TCL_OK;	/* BORDER MARK */
 
     case BD_DRAGTO:
@@ -418,7 +427,9 @@ int Table_BorderCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj
 	    if (value != tablePtr->scanMarkY) {
 		entryPtr = Tcl_CreateHashEntry(tablePtr->rowHeights, INT2PTR(row), &dummy);
 		/* -value means rowHeight will be interp'd as pixels, not lines */
-		Tcl_SetHashValue(entryPtr, INT2PTR(MIN(0,-value)));
+		if (entryPtr) {
+		    Tcl_SetHashValue(entryPtr, INT2PTR(MIN(0,-value)));
+		}
 		tablePtr->scanMarkY = value;
 		key++;
 	    }
@@ -430,7 +441,9 @@ int Table_BorderCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj
 	    if (value != tablePtr->scanMarkX) {
 		entryPtr = Tcl_CreateHashEntry(tablePtr->colWidths, INT2PTR(col), &dummy);
 		/* -value means colWidth will be interp'd as pixels, not chars */
-		Tcl_SetHashValue(entryPtr, INT2PTR(MIN(0,-value)));
+		if (entryPtr) {
+		    Tcl_SetHashValue(entryPtr, INT2PTR(MIN(0,-value)));
+		}
 		tablePtr->scanMarkX = value;
 		key++;
 	    }
@@ -482,8 +495,8 @@ int Table_ClearCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj 
 	return TCL_ERROR;
     }
 
-    if (Tcl_GetIndexFromObj(interp, objv[2], clearNames,
-			    "clear option", 0, &cmdIndex) != TCL_OK) {
+    if (Tcl_GetIndexFromObj(interp, objv[2], clearNames, "clear option", 0,
+	    &cmdIndex) != TCL_OK) {
 	return TCL_ERROR;
     }
 
@@ -589,7 +602,7 @@ int Table_ClearCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj 
 		if ((cmdIndex == CLEAR_CACHE || cmdIndex == CLEAR_ALL) &&
 			(entryPtr = Tcl_FindHashEntry(tablePtr->cache, buf))) {
 		    value = (char *) Tcl_GetHashValue(entryPtr);
-		    if (value) { ckfree(value); }
+		    if (value) { Tcl_Free(value); }
 		    Tcl_DeleteHashEntry(entryPtr);
 		    /* if the cache is our data source,
 		     * we need to invalidate the cells changed */
@@ -619,7 +632,7 @@ int Table_ClearCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj 
  *--------------------------------------------------------------
  *
  * Table_CurselectionCmd --
- *	This procedure is invoked to process the bbox method
+ *	This procedure is invoked to process the curselection method
  *	that corresponds to a table widget managed by this module.
  *	See the user documentation for details on what it does.
  *
@@ -661,14 +674,21 @@ int Table_CurselectionCmd(ClientData clientData, Tcl_Interp *interp,
 	    TableRefresh(tablePtr, row, col, CELL);
 	}
     } else {
-	Tcl_Obj *objPtr = Tcl_NewObj();
+	Tcl_Obj *listPtr = Tcl_NewObj(), *resultPtr;
 
+	if (!listPtr) return TCL_ERROR;
 	for (entryPtr = Tcl_FirstHashEntry(tablePtr->selCells, &search);
 	     entryPtr != NULL; entryPtr = Tcl_NextHashEntry(&search)) {
 	    value = Tcl_GetHashKey(tablePtr->selCells, entryPtr);
-	    Tcl_ListObjAppendElement(NULL, objPtr, Tcl_NewStringObj(value, -1));
+	    Tcl_ListObjAppendElement(NULL, listPtr, Tcl_NewStringObj(value, -1));
 	}
-	Tcl_SetObjResult(interp, TableCellSortObj(interp, objPtr));
+
+	Tcl_IncrRefCount(listPtr);
+	resultPtr = TableCellSortObj(interp, listPtr);
+	if (resultPtr) {
+	    Tcl_SetObjResult(interp, resultPtr);
+	}
+	Tcl_DecrRefCount(listPtr);
     }
     return TCL_OK;
 }
@@ -717,7 +737,7 @@ int Table_CurvalueCmd(ClientData clientData, Tcl_Interp *interp,
 		value, tablePtr->icursor) != TCL_OK) {
 	    return TCL_OK;
 	}
-	tablePtr->activeBuf = (char *)ckrealloc(tablePtr->activeBuf, len+1);
+	tablePtr->activeBuf = (char *)Tcl_Realloc(tablePtr->activeBuf, len+1);
 	strcpy(tablePtr->activeBuf, value);
 	/* mark the text as changed */
 	tablePtr->flags |= TEXT_CHANGED;
@@ -735,7 +755,7 @@ int Table_CurvalueCmd(ClientData clientData, Tcl_Interp *interp,
  *--------------------------------------------------------------
  *
  * Table_GetCmd --
- *	This procedure is invoked to process the bbox method
+ *	This procedure is invoked to process the get method
  *	that corresponds to a table widget managed by this module.
  *	See the user documentation for details on what it does.
  *
@@ -762,17 +782,18 @@ int Table_GetCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj *c
     } else if (TableGetIndexObj(tablePtr, objv[3], &r2, &c2) == TCL_ERROR) {
 	result = TCL_ERROR;
     } else {
-	Tcl_Obj *objPtr = Tcl_NewObj();
+	Tcl_Obj *resultPtr = Tcl_NewObj();
 
+	if (!resultPtr) return TCL_ERROR;
 	r1 = MIN(row,r2); r2 = MAX(row,r2);
 	c1 = MIN(col,c2); c2 = MAX(col,c2);
 	for ( row = r1; row <= r2; row++ ) {
 	    for ( col = c1; col <= c2; col++ ) {
-		Tcl_ListObjAppendElement(NULL, objPtr,
+		Tcl_ListObjAppendElement(NULL, resultPtr,
 		    Tcl_NewStringObj(TableGetCellValue(tablePtr, row, col), -1));
 	    }
 	}
-	Tcl_SetObjResult(interp, objPtr);
+	Tcl_SetObjResult(interp, resultPtr);
     }
     return result;
 }
@@ -800,9 +821,8 @@ int Table_ScanCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj *
     if (objc != 5) {
 	Tcl_WrongNumArgs(interp, 2, objv, "mark|dragto x y");
 	return TCL_ERROR;
-    } else if (Tcl_GetIndexFromObj(interp, objv[2], bdCmdNames,
-	    "option", 0, &cmdIndex) != TCL_OK ||
-	    Tcl_GetIntFromObj(interp, objv[3], &x) == TCL_ERROR ||
+    } else if (Tcl_GetIndexFromObj(interp, objv[2], bdCmdNames, "option", 0, &cmdIndex)
+	    != TCL_OK || Tcl_GetIntFromObj(interp, objv[3], &x) == TCL_ERROR ||
 	    Tcl_GetIntFromObj(interp, objv[4], &y) == TCL_ERROR) {
 	return TCL_ERROR;
     }
@@ -992,8 +1012,8 @@ int Table_SelIncludesCmd(ClientData clientData, Tcl_Interp *interp,
     } else {
 	char buf[INDEX_BUFSIZE];
 	TableMakeArrayIndex(row, col, buf);
-	Tcl_SetBooleanObj(Tcl_GetObjResult(interp),
-			  (Tcl_FindHashEntry(tablePtr->selCells, buf)!=NULL));
+	Tcl_SetObjResult(interp,
+	    Tcl_NewBooleanObj(Tcl_FindHashEntry(tablePtr->selCells, buf) != NULL));
     }
     return TCL_OK;
 }
@@ -1054,10 +1074,10 @@ int Table_SelSetCmd(ClientData clientData, Tcl_Interp *interp,
 	r1 = MIN(row,r2); r2 = MAX(row,r2);
 	c1 = MIN(col,c2); c2 = MAX(col,c2);
     }
+    if (firstCol > lastCol) c2--; /* No selectable columns in table */
+    if (firstRow > lastRow) r2--; /* No selectable rows in table */
     switch (tablePtr->selectType) {
     case SEL_BOTH:
-	if (firstCol > lastCol) c2--; /* No selectable columns in table */
-	if (firstRow > lastRow) r2--; /* No selectable rows in table */
 	clo = c1; chi = c2;
 	c1 = firstCol;
 	c2 = lastCol;
@@ -1069,12 +1089,10 @@ int Table_SelSetCmd(ClientData clientData, Tcl_Interp *interp,
     case SEL_COL:
 	r1 = firstRow;
 	r2 = lastRow;
-	if (firstCol > lastCol) c2--; /* No selectable columns in table */
 	break;
     case SEL_ROW:
 	c1 = firstCol;
 	c2 = lastCol;
-	if (firstRow>lastRow) r2--; /* No selectable rows in table */
 	break;
     }
 SET_CELLS:
@@ -1134,7 +1152,8 @@ int Table_ViewCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj *
 	int diff, x, y, w, h;
 	double first, last;
 
-	resultPtr = Tcl_GetObjResult(interp);
+	resultPtr = Tcl_NewListObj(0, NULL);
+	if (!resultPtr) return TCL_ERROR;
 	TableGetLastCell(tablePtr, &row, &col);
 	TableCellVCoords(tablePtr, row, col, &x, &y, &w, &h, 0);
 	if (*xy == 'y') {
@@ -1158,8 +1177,10 @@ int Table_ViewCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj *
 		last  = (w+tablePtr->colStarts[col]-diff) / last;
 	    }
 	}
-	Tcl_ListObjAppendElement(NULL, resultPtr, Tcl_NewDoubleObj(first));
-	Tcl_ListObjAppendElement(NULL, resultPtr, Tcl_NewDoubleObj(last));
+	Tcl_ListObjAppendElement(interp, resultPtr, Tcl_NewDoubleObj(first));
+	Tcl_ListObjAppendElement(interp, resultPtr, Tcl_NewDoubleObj(last));
+	Tcl_SetObjResult(interp, resultPtr);
+
     } else {
 	/* cache old topleft to see if it changes */
 	int oldTop = tablePtr->topRow, oldLeft = tablePtr->leftCol;

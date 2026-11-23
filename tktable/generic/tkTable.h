@@ -48,7 +48,7 @@
 
 /* Handle TCL 8.6 CONST changes */
 #ifndef CONST86
-#   if TCL_MAJOR_VERSION > 8
+#   if TCL_MAJOR_VERSION > 8 || (TCL_MAJOR_VERSION == 8 && TCL_MINOR_VERSION > 5)
 #	define CONST86 const
 #   else
 #	define CONST86
@@ -58,16 +58,32 @@
 /*
  * Backwards compatibility for size type change
  */
-#if TCL_MAJOR_VERSION < 9 && TCL_MINOR_VERSION < 7
+#if TCL_MAJOR_VERSION == 8 && TCL_MINOR_VERSION < 7
     #include <limits.h>
     #ifndef TCL_SIZE_MAX
 	#define TCL_SIZE_MAX INT_MAX
+    #endif
+
+    #ifndef Tcl_Size
+	typedef int Tcl_Size;
     #endif
 
     #define TCL_SIZE_MODIFIER ""
     #define Tcl_GetSizeIntFromObj Tcl_GetIntFromObj
     #define Tcl_NewSizeIntObj     Tcl_NewIntObj
     #define Tcl_NewSizeIntFromObj Tcl_NewWideIntObj
+    #define TK_ANCHOR_NULL -1
+    #define TK_JUSTIFY_NULL -1
+#endif
+
+#ifndef TCL_UNUSED
+# if defined(__cplusplus)
+#   define TCL_UNUSED(T) T
+# elif defined(__GNUC__) && (__GNUC__ > 2)
+#   define TCL_UNUSED(T) T JOIN(dummy, __LINE__) __attribute__((unused))
+# else
+#   define TCL_UNUSED(T) T JOIN(dummy, __LINE__)
+# endif
 #endif
 
 /*
@@ -101,41 +117,55 @@
 #	define NORMAL_FG	"SystemWindowText"
 #	define ACTIVE_BG	NORMAL_BG
 #	define ACTIVE_FG	NORMAL_FG
-#	define SELECT_BG	"SystemHighlight"
-#	define SELECT_FG	"SystemHighlightText"
+#	define BORDER_WIDTH	"1"
 #	define DISABLED_BG	NORMAL_BG
 #	define DISABLED_FG	"SystemDisabledText"
-#	define HIGHLIGHT_BG	NORMAL_BG
 #	define HIGHLIGHT	"SystemWindowFrame"
-#	define DEF_TABLE_FONT	"TkTextFont"
-#	define DEF_HEADER_FONT	"TkHeadingFont"
+#	define HIGHLIGHT_BG	NORMAL_BG
+#	define HIGHLIGHT_WIDTH	"1"
+#	define INSERT_BD	"0"
+#	define INSERT_BG	NORMAL_FG
+#	define INSERT_WIDTH	"2"
+#	define SELECT_BD	"1"
+#	define SELECT_BG	"SystemHighlight"
+#	define SELECT_FG	"SystemHighlightText"
 #   elif defined(MAC_TCL) || defined(MAC_OSX_TK)
 #	define NORMAL_BG	"systemTextBackgroundColor"
 #	define NORMAL_FG	"systemTextColor"
 #	define ACTIVE_BG	"systemWindowBackgroundColor"
 #	define ACTIVE_FG	NORMAL_FG
+#	define BORDER_WIDTH	"1"
+#	define DISABLED_BG	NORMAL_BG
+#	define DISABLED_FG	"systemDisabledControlTextColor"
+#	define HIGHLIGHT	NORMAL_FG
+#	define HIGHLIGHT_BG	NORMAL_BG
+#	define HIGHLIGHT_WIDTH	"1"
+#	define INSERT_BD	"0"
+#	define INSERT_BG	NORMAL_FG
+#	define INSERT_WIDTH	"2"
+#	define SELECT_BD	"1"
 #	define SELECT_BG	"systemSelectedTextBackgroundColor"
 #	define SELECT_FG	"systemSelectedTextColor"
-#	define DISABLED_BG	"systemTextBackgroundColor"
-#	define DISABLED_FG	"systemDisabledControlTextColor"
-#	define HIGHLIGHT_BG	NORMAL_BG
-#	define HIGHLIGHT	NORMAL_FG
-#	define DEF_TABLE_FONT	"TkTextFont"
-#	define DEF_HEADER_FONT	"TkHeadingFont"
 #   else
-#	define NORMAL_BG	"white"
-#	define NORMAL_FG	"black"
+#	define NORMAL_BG	"#ffffff"
+#	define NORMAL_FG	"#000000"
 #	define ACTIVE_BG	"#ececec"
 #	define ACTIVE_FG	NORMAL_FG
-#	define SELECT_BG	"#c3c3c3"
-#	define SELECT_FG	"black"
+#	define BORDER_WIDTH	"1"
 #	define DISABLED_BG	NORMAL_BG
 #	define DISABLED_FG	"#a3a3a3"
-#	define HIGHLIGHT_BG	NORMAL_BG
 #	define HIGHLIGHT	NORMAL_FG
-#	define DEF_TABLE_FONT	"TkTextFont"
-#	define DEF_HEADER_FONT	"TkHeadingFont"
+#	define HIGHLIGHT_BG	NORMAL_BG
+#	define HIGHLIGHT_WIDTH	"1"
+#	define INSERT_BD	"0"
+#	define INSERT_BG	NORMAL_FG
+#	define INSERT_WIDTH	"2"
+#	define SELECT_BD	"1"
+#	define SELECT_BG	"#6ea1d5"
+#	define SELECT_FG	NORMAL_FG
 #   endif
+#	define TITLE_BG		"#73787c"
+#	define TITLE_FG		"#ffffff"
 #endif /* NORMAL_BG */
 
 #define MAX(A,B)	(((A)>(B))?(A):(B))
@@ -540,8 +570,7 @@ extern TableTag *TableNewTag(Table *tablePtr);
 extern void	TableResetTag(Table *tablePtr, TableTag *tagPtr);
 extern void	TableMergeTag(Table *tablePtr, TableTag *baseTag, TableTag *addTag);
 extern void	TableInvertTag(TableTag *baseTag);
-extern int	TableGetTagBorders(TableTag *tagPtr, int *left, int *right, int *top,
-			int *bottom);
+extern int	TableGetTagBorders(TableTag *tagPtr, int *left, int *right, int *top, int *bottom);
 extern int	TableInitTags(Tcl_Interp *interp, Table *tablePtr);
 extern TableTag *FindRowColTag(Table *tablePtr, int cell, int type);
 extern void	TableCleanupTag(Table *tablePtr, TableTag *tagPtr);
@@ -614,7 +643,7 @@ extern Tcl_Obj*	TableCellSortObj(Tcl_Interp *interp, Tcl_Obj *listObjPtr);
 #ifdef POSTSCRIPT
 extern int	Table_PostscriptCmd(ClientData clientData, Tcl_Interp *interp, int objc,
 			Tcl_Obj *const objv[]);
-extern void	Tcl_DStringAppendAll(Tcl_DString *, arg1, ...);
+extern void	Tcl_DStringAppendAll(Tcl_DString *, ...);
 #endif
 
 /*

@@ -381,7 +381,7 @@ int TableAtBorder(Table * tablePtr, int x, int y, int *row, int *col) {
      * In that case, we have to decrement our border count.
      */
     if (tablePtr->spanAffTbl && !(tablePtr->flags & AVOID_SPANS) && borders) {
-	Tcl_HashEntry *entryPtr1, *entryPtr2 ;
+	Tcl_HashEntry *entryPtr1, *entryPtr2;
 	char buf1[INDEX_BUFSIZE], buf2[INDEX_BUFSIZE];
 	char *val;
 
@@ -468,7 +468,7 @@ char * TableGetCellValue(Table *tablePtr, int r, int c) {
 	 * from the other data source.
 	 */
 	entryPtr = Tcl_CreateHashEntry(tablePtr->cache, buf, &new);
-	if (!new) {
+	if (entryPtr && !new) {
 	    result = (char *) Tcl_GetHashValue(entryPtr);
 	    goto VALUE;
 	}
@@ -477,14 +477,19 @@ char * TableGetCellValue(Table *tablePtr, int r, int c) {
 	Tcl_DString script;
 	Tcl_DStringInit(&script);
 	ExpandPercents(tablePtr, tablePtr->command, r, c, "", (char *)NULL, 0, &script, 0);
-	if ((code = Tcl_GlobalEval(interp, Tcl_DStringValue(&script))) == TCL_ERROR) {
+	if ((code = Tcl_EvalEx(interp, Tcl_DStringValue(&script),
+		Tcl_DStringLength(&script), TCL_EVAL_GLOBAL)) == TCL_ERROR) {
 	    tablePtr->useCmd = 0;
 	    tablePtr->dataSource &= ~DATA_COMMAND;
 	    if (tablePtr->arrayVar)
 		tablePtr->dataSource |= DATA_ARRAY;
 	    Tcl_AddErrorInfo(interp, "\n\t(in -command evaled by table)");
 	    Tcl_AddErrorInfo(interp, Tcl_DStringValue(&script));
+#if (TCL_MAJOR_VERSION == 8) && (TCL_MINOR_VERSION < 6)
+	    Tcl_BackgroundError(interp);
+#else
 	    Tcl_BackgroundException(interp, code);
+#endif
 	    TableInvalidateAll(tablePtr, 0);
 	} else {
 	    result = (char *) Tcl_GetStringResult(interp);
@@ -503,8 +508,10 @@ char * TableGetCellValue(Table *tablePtr, int r, int c) {
 	 */
 	char *val = NULL;
 	if (result) {
-	    val = (char *)ckalloc(strlen(result)+1);
-	    strcpy(val, result);
+	    val = (char *)Tcl_Alloc((Tcl_Size)strlen(result)+1);
+	    if (val) {
+		strcpy(val, result);
+	    }
 	}
 	Tcl_SetHashValue(entryPtr, val);
     }
@@ -518,6 +525,7 @@ VALUE:
 	    Tcl_DString script;
 	    /* provides a rough mutex on preventing proc loops */
 	    entryPtr = Tcl_CreateHashEntry(tablePtr->inProc, buf, &new);
+	    if (!entryPtr) return NULL;
 	    if (!new) {
 		Tcl_SetHashValue(entryPtr, 1);
 		Tcl_AddErrorInfo(interp, "\n\t(loop hit in proc evaled by table)");
@@ -526,11 +534,16 @@ VALUE:
 	    Tcl_SetHashValue(entryPtr, 0);
 	    Tcl_DStringInit(&script);
 	    ExpandPercents(tablePtr, result+1, r, c, result+1, (char *)NULL, 0, &script, 0);
-	    if ((code = Tcl_GlobalEval(interp, Tcl_DStringValue(&script))) != TCL_OK ||
-		Tcl_GetHashValue(entryPtr) == 1) {
+	    if ((code = Tcl_EvalEx(interp, Tcl_DStringValue(&script), Tcl_DStringLength(&script),
+		    TCL_EVAL_GLOBAL)) != TCL_OK || Tcl_GetHashValue(entryPtr) == 1) {
 		Tcl_AddErrorInfo(interp, "\n\tin proc evaled by table:\n");
 		Tcl_AddErrorInfo(interp, Tcl_DStringValue(&script));
-		Tcl_BackgroundException(interp, TCL_ERROR);
+		if (code == TCL_OK) code = TCL_ERROR;
+#if (TCL_MAJOR_VERSION == 8) && (TCL_MINOR_VERSION < 6)
+		Tcl_BackgroundError(interp);
+#else
+		Tcl_BackgroundException(interp, code);
+#endif
 	    } else {
 		result = Tcl_GetStringResult(interp);
 	    }
@@ -580,7 +593,8 @@ int TableSetCellValue(Table *tablePtr, int r, int c, char *value) {
 
 	Tcl_DStringInit(&script);
 	ExpandPercents(tablePtr, tablePtr->command, r, c, value, (char *)NULL, 1, &script, 0);
-	if ((code = Tcl_GlobalEval(interp, Tcl_DStringValue(&script))) == TCL_ERROR) {
+	if ((code = Tcl_EvalEx(interp, Tcl_DStringValue(&script), Tcl_DStringLength(&script),
+		TCL_EVAL_GLOBAL)) == TCL_ERROR) {
 	    /* An error resulted.  Prevent further triggering of the command
 	     * and set up the error message. */
 	    tablePtr->useCmd = 0;
@@ -588,7 +602,11 @@ int TableSetCellValue(Table *tablePtr, int r, int c, char *value) {
 	    if (tablePtr->arrayVar)
 		tablePtr->dataSource |= DATA_ARRAY;
 	    Tcl_AddErrorInfo(interp, "\n\t(in command executed by table)");
+#if (TCL_MAJOR_VERSION == 8) && (TCL_MINOR_VERSION < 6)
+	    Tcl_BackgroundError(interp);
+#else
 	    Tcl_BackgroundException(interp, code);
+#endif
 	} else {
 	    flash = 1;
 	}
@@ -620,13 +638,16 @@ int TableSetCellValue(Table *tablePtr, int r, int c, char *value) {
 	char *val = NULL;
 
 	entryPtr = Tcl_CreateHashEntry(tablePtr->cache, buf, &new);
+	if (!entryPtr) return TCL_ERROR;
 	if (!new) {
 	    val = (char *) Tcl_GetHashValue(entryPtr);
-	    if (val) ckfree(val);
+	    if (val) Tcl_Free(val);
 	}
 	if (value) {
-	    val = (char *)ckalloc(strlen(value)+1);
-	    strcpy(val, value);
+	    val = (char *)Tcl_Alloc((Tcl_Size)strlen(value)+1);
+	    if (val) {
+		strcpy(val, value);
+	    }
 	}
 	Tcl_SetHashValue(entryPtr, val);
 	flash = 1;
@@ -696,19 +717,20 @@ int TableMoveCellValue(Table *tablePtr, int fromr, int fromc, char *frombuf, int
 	     * set 'to' to the 'from' value without new mallocing.
 	     */
 	    entryPtr = Tcl_CreateHashEntry(tablePtr->cache, tobuf, &new);
+	    if (!entryPtr) return TCL_ERROR;
 	    /*
 	     * free old value
 	     */
 	    if (!new) {
 		val = (char *) Tcl_GetHashValue(entryPtr);
-		if (val) ckfree(val);
+		if (val) Tcl_Free(val);
 	    }
 	    Tcl_SetHashValue(entryPtr, result);
 	} else {
 	    entryPtr = Tcl_FindHashEntry(tablePtr->cache, tobuf);
 	    if (entryPtr) {
 		val = (char *) Tcl_GetHashValue(entryPtr);
-		if (val) ckfree(val);
+		if (val) Tcl_Free(val);
 		Tcl_DeleteHashEntry(entryPtr);
 	    }
 	}
@@ -743,7 +765,7 @@ int TableGetIcursor(Table *tablePtr, char *arg, int *posn) {
 
     len = (int) strlen(tablePtr->activeBuf);
     /* Need to base it off strlen to account for \x00 (Unicode null) */
-    len = (int) Tcl_NumUtfChars(tablePtr->activeBuf, len);
+    len = (int) Tcl_NumUtfChars(tablePtr->activeBuf, (Tcl_Size)len);
 
     /* ensure icursor didn't get out of sync */
     if (tablePtr->icursor > len) tablePtr->icursor = len;
@@ -808,6 +830,7 @@ int TableGetIndex(
 	TableWhatCell(tablePtr, x, y, &r, &c);
 	r += tablePtr->rowOffset;
 	c += tablePtr->colOffset;
+
     } else if (*str == '-' || isdigit(str[0])) {
 	if (sscanf(str, "%d,%d%c", &r, &c, &dummy) != 2) {
 	    /* Make sure it won't work for "2,3extrastuff" */
@@ -816,6 +839,7 @@ int TableGetIndex(
 	/* ensure appropriate user index */
 	CONSTRAIN(r, tablePtr->rowOffset, tablePtr->rows-1+tablePtr->rowOffset);
 	CONSTRAIN(c, tablePtr->colOffset, tablePtr->cols-1+tablePtr->colOffset);
+
     } else if (len > 1 && strncmp(str, "active", len) == 0 ) {	/* active */
 	if (tablePtr->flags & HAS_ACTIVE) {
 	    r = tablePtr->activeRow+tablePtr->rowOffset;
@@ -825,6 +849,7 @@ int TableGetIndex(
 		    Tcl_NewStringObj("no \"active\" cell in table", -1));
 	    return TCL_ERROR;
 	}
+
     } else if (len > 1 && strncmp(str, "anchor", len) == 0) {	/* anchor */
 	if (tablePtr->flags & HAS_ANCHOR) {
 	    r = tablePtr->anchorRow+tablePtr->rowOffset;
@@ -834,15 +859,19 @@ int TableGetIndex(
 		    Tcl_NewStringObj("no \"anchor\" cell in table", -1));
 	    return TCL_ERROR;
 	}
+
     } else if (strncmp(str, "end", len) == 0) {		/* end */
 	r = tablePtr->rows-1+tablePtr->rowOffset;
 	c = tablePtr->cols-1+tablePtr->colOffset;
+
     } else if (strncmp(str, "origin", len) == 0) {	/* origin */
 	r = tablePtr->titleRows+tablePtr->rowOffset;
 	c = tablePtr->titleCols+tablePtr->colOffset;
+
     } else if (strncmp(str, "topleft", len) == 0) {	/* topleft */
 	r = tablePtr->topRow+tablePtr->rowOffset;
 	c = tablePtr->leftCol+tablePtr->colOffset;
+
     } else if (strncmp(str, "bottomright", len) == 0) {	/* bottomright */
 	/*
 	 * FIX: Should this avoid spans, or consider them in the bottomright?
@@ -852,9 +881,10 @@ int TableGetIndex(
 	TableGetLastCell(tablePtr, &r, &c);
 	r += tablePtr->rowOffset;
 	c += tablePtr->colOffset;
+
     } else {
-    IndexError:
-	Tcl_AppendStringsToObj(Tcl_GetObjResult(tablePtr->interp),
+IndexError:
+	Tcl_AppendResult(tablePtr->interp,
 		"bad table index \"", str, "\": must be active, anchor, end, ",
 		"origin, topleft, bottomright, @x,y, or <row>,<col>",
 		(char *)NULL);
@@ -904,12 +934,15 @@ int Table_SetCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj *c
 
     str = Tcl_GetStringFromObj(objv[2], &len);
     if (strncmp(str, "row", (size_t) len) == 0 || strncmp(str, "col", (size_t) len) == 0) {
-	Tcl_Obj *resultPtr = Tcl_GetObjResult(interp);
 	/* set row index list ?index list ...? */
 	if (objc < 4) {
 	    goto CMD_SET_USAGE;
 	} else if (objc == 4) {
 	    if (TableGetIndexObj(tablePtr, objv[3], &row, &col) != TCL_OK) {
+		return TCL_ERROR;
+	    }
+	    Tcl_Obj *resultPtr = Tcl_NewListObj(0, NULL);
+	    if (!resultPtr) {
 		return TCL_ERROR;
 	    }
 	    if (*str == 'r') {
@@ -925,60 +958,64 @@ int Table_SetCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj *c
 		    Tcl_ListObjAppendElement(NULL, resultPtr, Tcl_NewStringObj(str, -1));
 		}
 	    }
+	    Tcl_SetObjResult(interp, resultPtr);
+
 	} else if (tablePtr->state == STATE_NORMAL) {
 	    Tcl_Size listc;
-	    Tcl_Obj **listv;
+	    Tcl_Obj *itemObj;
 	    /* make sure there are an even number of index/list pairs */
 	    if (objc & 0) {
 		goto CMD_SET_USAGE;
 	    }
 	    for (i = 3; i < objc-1; i += 2) {
 		if ((TableGetIndexObj(tablePtr, objv[i], &row, &col) != TCL_OK) ||
-		    (Tcl_ListObjGetElements(interp, objv[i+1], &listc, &listv) != TCL_OK)) {
+		    (Tcl_ListObjLength(interp, objv[i+1], &listc) != TCL_OK)) {
 		    return TCL_ERROR;
 		}
 		if (*str == 'r') {
 		    max = col+MIN(tablePtr->cols+tablePtr->colOffset-col, (int) listc);
 		    for (j = col; j < max; j++) {
-			if (TableSetCellValue(tablePtr, row, j, Tcl_GetString(listv[j-col]))
-			    != TCL_OK) {
+			Tcl_ListObjIndex(interp, objv[i+1], j-col, &itemObj);
+			Tcl_IncrRefCount(itemObj);
+			if (TableSetCellValue(tablePtr, row, j, Tcl_GetString(itemObj)) != TCL_OK) {
+			    Tcl_DecrRefCount(itemObj);
 			    return TCL_ERROR;
 			}
 			if (row-tablePtr->rowOffset == tablePtr->activeRow &&
 			    j-tablePtr->colOffset == tablePtr->activeCol) {
 			    TableGetActiveBuf(tablePtr);
 			}
-			TableRefresh(tablePtr, row-tablePtr->rowOffset,
-				     j-tablePtr->colOffset, CELL);
+			TableRefresh(tablePtr, row-tablePtr->rowOffset, j-tablePtr->colOffset, CELL);
+			Tcl_DecrRefCount(itemObj);
 		    }
 		} else {
 		    max = row+MIN(tablePtr->rows+tablePtr->rowOffset-row, (int) listc);
 		    for (j = row; j < max; j++) {
-			if (TableSetCellValue(tablePtr, j, col, Tcl_GetString(listv[j-row]))
-			    != TCL_OK) {
+			Tcl_ListObjIndex(interp, objv[i+1], j-row, &itemObj);
+			Tcl_IncrRefCount(itemObj);
+			if (TableSetCellValue(tablePtr, j, col, Tcl_GetString(itemObj)) != TCL_OK) {
+			    Tcl_DecrRefCount(itemObj);
 			    return TCL_ERROR;
 			}
 			if (j-tablePtr->rowOffset == tablePtr->activeRow &&
 			    col-tablePtr->colOffset == tablePtr->activeCol) {
 			    TableGetActiveBuf(tablePtr);
 			}
-			TableRefresh(tablePtr, j-tablePtr->rowOffset,
-				     col-tablePtr->colOffset, CELL);
+			TableRefresh(tablePtr, j-tablePtr->rowOffset, col-tablePtr->colOffset, CELL);
+			Tcl_DecrRefCount(itemObj);
 		    }
 		}
 	    }
 	}
+
     } else if (objc == 3) {
 	/* set index */
 	if (TableGetIndexObj(tablePtr, objv[2], &row, &col) != TCL_OK) {
 	    return TCL_ERROR;
 	} else {
-	    /*
-	     * Cannot use Tcl_GetObjResult here because TableGetCellValue
-	     * can corrupt the resultPtr.
-	     */
 	    Tcl_SetObjResult(interp, Tcl_NewStringObj(TableGetCellValue(tablePtr, row, col),-1));
 	}
+
     } else {
 	/* set index val ?index val ...? */
 	/* make sure there are an even number of index/value pairs */
@@ -1030,9 +1067,11 @@ static int Table_SpanSet(Table *tablePtr, int urow, int ucol, int rs, int cs) {
     TableMakeArrayIndex(urow, ucol, cell);
 
     if (tablePtr->spanTbl == NULL) {
-	tablePtr->spanTbl = (Tcl_HashTable *)ckalloc(sizeof(Tcl_HashTable));
+	tablePtr->spanTbl = (Tcl_HashTable *)Tcl_Alloc((Tcl_Size)sizeof(Tcl_HashTable));
+	if (!tablePtr->spanTbl) return TCL_ERROR;
 	Tcl_InitHashTable(tablePtr->spanTbl, TCL_STRING_KEYS);
-	tablePtr->spanAffTbl = (Tcl_HashTable *)ckalloc(sizeof(Tcl_HashTable));
+	tablePtr->spanAffTbl = (Tcl_HashTable *)Tcl_Alloc((Tcl_Size)sizeof(Tcl_HashTable));
+	if (!tablePtr->spanAffTbl) return TCL_ERROR;
 	Tcl_InitHashTable(tablePtr->spanAffTbl, TCL_STRING_KEYS);
     }
 
@@ -1041,8 +1080,8 @@ static int Table_SpanSet(Table *tablePtr, int urow, int ucol, int rs, int cs) {
 	/* We have to make sure this was not already hidden
 	 * that's an error */
 	if ((char *)Tcl_GetHashValue(entryPtr) != NULL) {
-	    Tcl_AppendStringsToObj(Tcl_GetObjResult(interp),
-		"cannot set spanning on hidden cell ", cell, (char *) NULL);
+	    Tcl_AppendResult(interp, "cannot set spanning on hidden cell ", cell,
+		(char *)NULL);
 	    return TCL_ERROR;
 	}
     }
@@ -1063,7 +1102,7 @@ static int Table_SpanSet(Table *tablePtr, int urow, int ucol, int rs, int cs) {
     if ((entryPtr = Tcl_FindHashEntry(tablePtr->spanTbl, cell)) != NULL) {
 	/* We have to readjust for what was there first */
 	TableParseArrayIndex(&ors, &ocs, (char *)Tcl_GetHashValue(entryPtr));
-	ckfree((char *) Tcl_GetHashValue(entryPtr));
+	Tcl_Free((char *) Tcl_GetHashValue(entryPtr));
 	Tcl_DeleteHashEntry(entryPtr);
 	for (i = urow; i <= urow+ors; i++) {
 	    for (j = ucol; j <= ucol+ocs; j++) {
@@ -1086,8 +1125,8 @@ static int Table_SpanSet(Table *tablePtr, int urow, int ucol, int rs, int cs) {
 	    entryPtr = Tcl_FindHashEntry(tablePtr->spanAffTbl, buf);
 	    if (entryPtr != NULL) {
 		/* Something already spans here */
-		Tcl_AppendStringsToObj(Tcl_GetObjResult(interp),
-			"cannot overlap already spanned cell ", buf, (char *) NULL);
+		Tcl_AppendResult(interp, "cannot overlap already spanned cell ", buf,
+		    (char *)NULL);
 		result = TCL_ERROR;
 		rs = ors;
 		cs = ocs;
@@ -1102,7 +1141,7 @@ static int Table_SpanSet(Table *tablePtr, int urow, int ucol, int rs, int cs) {
     if (rs == 0 && cs == 0) {
 	entryPtr = Tcl_FindHashEntry(tablePtr->spanTbl, cell);
 	if (entryPtr != NULL) {
-	    ckfree((char *) Tcl_GetHashValue(entryPtr));
+	    Tcl_Free((char *) Tcl_GetHashValue(entryPtr));
 	    Tcl_DeleteHashEntry(entryPtr);
 	}
 	entryPtr = Tcl_FindHashEntry(tablePtr->spanAffTbl, cell);
@@ -1113,9 +1152,9 @@ static int Table_SpanSet(Table *tablePtr, int urow, int ucol, int rs, int cs) {
 	    /* There are no more spans, so delete tables to improve
 	     * performance of TableCellCoords */
 	    Tcl_DeleteHashTable(tablePtr->spanTbl);
-	    ckfree((char *) (tablePtr->spanTbl));
+	    Tcl_Free((char *) (tablePtr->spanTbl));
 	    Tcl_DeleteHashTable(tablePtr->spanAffTbl);
-	    ckfree((char *) (tablePtr->spanAffTbl));
+	    Tcl_Free((char *) (tablePtr->spanAffTbl));
 	    tablePtr->spanTbl = NULL;
 	    tablePtr->spanAffTbl = NULL;
 	}
@@ -1127,10 +1166,12 @@ static int Table_SpanSet(Table *tablePtr, int urow, int ucol, int rs, int cs) {
 
     /* Set affected cell table to a NULL value */
     entryPtr = Tcl_CreateHashEntry(tablePtr->spanAffTbl, cell, &new);
+    if (!entryPtr) return TCL_ERROR;
     Tcl_SetHashValue(entryPtr, (char *) NULL);
     /* set the spanning cells table with span value */
     entryPtr = Tcl_CreateHashEntry(tablePtr->spanTbl, cell, &new);
-    dbuf = (char *)ckalloc(strlen(span)+1);
+    dbuf = (char *)Tcl_Alloc((Tcl_Size)strlen(span)+1);
+    if (!dbuf) return TCL_ERROR;
     strcpy(dbuf, span);
     Tcl_SetHashValue(entryPtr, dbuf);
     dbuf = Tcl_GetHashKey(tablePtr->spanTbl, entryPtr);
@@ -1180,6 +1221,7 @@ int Table_SpanCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj *
 	    Tcl_HashSearch search;
 	    Tcl_Obj *objPtr, *resultPtr = Tcl_NewObj();
 
+	    if (!resultPtr) return TCL_ERROR;
 	    for (entryPtr = Tcl_FirstHashEntry(tablePtr->spanTbl, &search);
 		 entryPtr != NULL; entryPtr = Tcl_NextHashEntry(&search)) {
 		objPtr = Tcl_NewStringObj(Tcl_GetHashKey(tablePtr->spanTbl, entryPtr), -1);
@@ -1241,28 +1283,33 @@ int Table_HiddenCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj
     if (tablePtr->spanTbl == NULL) {
 	/* Avoid the whole thing if we have no spans */
 	if (objc > 3) {
-	    Tcl_SetBooleanObj(Tcl_GetObjResult(interp), 0);
+	    Tcl_SetObjResult(interp, Tcl_NewBooleanObj(0));
 	}
 	return TCL_OK;
     }
     if (objc == 2) {
 	/* return all "hidden" cells */
 	Tcl_HashSearch search;
-	Tcl_Obj *objPtr = Tcl_NewObj();
+	Tcl_Obj *listPtr = Tcl_NewObj(), *resultPtr;
 
+	if (!listPtr) return TCL_ERROR;
 	for (entryPtr = Tcl_FirstHashEntry(tablePtr->spanAffTbl, &search);
 	     entryPtr != NULL; entryPtr = Tcl_NextHashEntry(&search)) {
 	    if ((span = (char *) Tcl_GetHashValue(entryPtr)) == NULL) {
 		/* this is actually a spanning cell */
 		continue;
 	    }
-	    Tcl_ListObjAppendElement(NULL, objPtr,
+	    Tcl_ListObjAppendElement(NULL, listPtr,
 		Tcl_NewStringObj(Tcl_GetHashKey(tablePtr->spanAffTbl, entryPtr), -1));
 	}
-	Tcl_SetObjResult(interp, TableCellSortObj(interp, objPtr));
+	Tcl_IncrRefCount(listPtr);
+	resultPtr = TableCellSortObj(interp, listPtr);
+	if (resultPtr) {
+	    Tcl_SetObjResult(interp, resultPtr);
+	}
+	Tcl_DecrRefCount(listPtr);
 	return TCL_OK;
-    }
-    if (objc == 3) {
+    } else if (objc == 3) {
 	if (TableGetIndexObj(tablePtr, objv[2], &row, &col) != TCL_OK) {
 	    return TCL_ERROR;
 	}
@@ -1275,6 +1322,7 @@ int Table_HiddenCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj
 	}
 	return TCL_OK;
     }
+
     for (i = 2; i < objc; i++) {
 	if (TableGetIndexObj(tablePtr, objv[i], &row, &col) == TCL_ERROR) {
 	    return TCL_ERROR;

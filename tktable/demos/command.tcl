@@ -8,7 +8,8 @@
 ##
 ## jeff at hobbs org
 
-source [file join [file dirname [info script]] loadtable.tcl]
+package require Tk
+package require Tktable
 
 array set table {
     rows	10

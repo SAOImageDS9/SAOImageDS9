@@ -1,11 +1,5 @@
-# pkgIndex.tcl to use tkcon as a package via 'package require tkcon'
+# -*- tcl -*-
+# Tcl package index file, version 1.1
 #
-# 'tkcon show' will do all that is necessary to display tkcon
-#
-# Defaults to:
-#  * the main interp as the "slave"
-#  * hiding tkcon when you click in the titlebar [X]
-#  * using '.tkcon' as the root toplevel
-#  * not displaying itself at 'package require' time
-#
-package ifneeded tkcon 2.8 [list source [file join $dir tkcon.tcl]]
+package ifneeded tkcon 2.8.1 \
+	[list source [file join $dir tkcon.tcl]]

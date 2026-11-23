@@ -59,7 +59,7 @@ bind Table <1> { ::tktable::Button1 %W %x %y }
 bind Table <B1-Motion> { ::tktable::B1Motion %W %x %y }
 
 bind Table <ButtonRelease-1> {
-    if {$::tktable::Priv(borderInfo) == "" && [winfo exists %W]} {
+    if {$::tktable::Priv(borderInfo) eq "" && [winfo exists %W]} {
 	::tktable::CancelRepeat
 	%W activate @%x,%y
     }
@@ -72,7 +72,7 @@ bind Table <Shift-1>	{::tktable::BeginExtend %W [%W index @%x,%y]}
 bind Table <Control-1>	{::tktable::BeginToggle %W [%W index @%x,%y]}
 bind Table <B1-Enter>	{::tktable::CancelRepeat}
 bind Table <B1-Leave>	{
-    if {$::tktable::Priv(borderInfo) == ""} {
+    if {$::tktable::Priv(borderInfo) eq ""} {
 	array set ::tktable::Priv {x %x y %y}
 	::tktable::AutoScan %W
     }
@@ -94,41 +94,46 @@ bind Table <ButtonRelease-2> {
 
 ## Mouse wheel events
 
-if {[tk windowingsystem] eq "aqua"} {
-    bind Table <MouseWheel> {
-	%W yview scroll [expr {- (%D)}] units
-    }
-    bind Table <Option-MouseWheel> {
-	%W yview scroll [expr {-10 * (%D)}] units
-    }
-    bind Table <Shift-MouseWheel> {
-	%W xview scroll [expr {- (%D)}] units
-    }
-    bind Table <Shift-Option-MouseWheel> {
-	%W xview scroll [expr {-10 * (%D)}] units
-    }
+if {[package vcompare [package present Tk] 8.7] >= 0} {
+    bind Table <MouseWheel> {tk::MouseWheel %W y %D -40.0}
+    bind Table <Option-MouseWheel> {tk::MouseWheel %W y %D -12.0}
+    bind Table <Shift-MouseWheel> {tk::MouseWheel %W x %D -40.0}
+    bind Table <Shift-Option-MouseWheel> {tk::MouseWheel %W x %D -12.0}
+
 } else {
-    bind Table <MouseWheel> {
-	%W yview scroll [expr {- (%D / 120) * 4}] units
+    if {[tk windowingsystem] eq "aqua"} {
+	bind Table <MouseWheel>		{%W yview scroll [expr {-%D}] units}
+	bind Table <Shift-MouseWheel>	{%W xview scroll [expr {-%D}] units}
+	bind Table <Option-MouseWheel>	{%W yview scroll [expr {-10 * %D}] units}
+	bind Table <Shift-Option-MouseWheel> {%W xview scroll [expr {-10 * %D}] units}
+    } else {
+	bind Table <MouseWheel>		{%W yview scroll [expr {-%D / 120}] units}
+	bind Table <Shift-MouseWheel>	{%W xview scroll [expr {-%D / 120}] units}
     }
-    bind Table <Shift-MouseWheel> {
-	%W xview scroll [expr {- (%D / 120) * 4}] units
+
+    if {[tk windowingsystem] eq "x11"} {
+	bind Table <Button-4>		{%W yview scroll -5 units}
+	bind Table <Shift-Button-4>	{%W xview scroll -5 units}
+	bind Table <Button-5>		{%W yview scroll  5 units}
+	bind Table <Shift-Button-5>	{%W xview scroll  5 units}
     }
 }
 
-if {[tk windowingsystem] eq "x11"} {
-    bind Table <4> {
-	%W yview scroll -5 units
+## Touchpad scrolling
+#
+if {[package vcompare [package present Tk] 8.7] >= 0} {
+bind Table <TouchpadScroll> {
+    if {%# %% 5 != 0} {
+        return
     }
-    bind Table <Shift-4> {
-	%W xview scroll -5 units
+    lassign [tk::PreciseScrollDeltas %D] tk::Priv(deltaX) tk::Priv(deltaY)
+    if {$tk::Priv(deltaX) != 0} {
+ 	%W xview scroll [expr {-$tk::Priv(deltaX)}] units
     }
-    bind Table <5> {
-	%W yview scroll 5 units
+    if {$tk::Priv(deltaY) != 0} {
+	%W yview scroll [expr {-$tk::Priv(deltaY)}] units
     }
-    bind Table <Shift-5> {
-	%W xview scroll 5 units
-    }
+}
 }
 
 ## Key events
@@ -216,7 +221,7 @@ if {[string match "macintosh" $::tcl_platform(platform)]} {
 # Results:
 #   Returns the selection, or an error if none could be found
 #
-if {[string compare $::tcl_platform(platform) "unix"]} {
+if {$::tcl_platform(platform) ne "unix"} {
     proc ::tktable::GetSelection {w {sel PRIMARY}} {
 	if {[catch {selection get -displayof $w -selection $sel} txt]} {
 	    return -code error "could not find default selection"
@@ -263,7 +268,7 @@ proc ::tktable::CancelRepeat {} {
 #   Returns nothing
 #
 proc ::tktable::Insert {w s} {
-    if {[string compare $s {}]} {
+    if {$s ne {}} {
 	$w insert active insert $s
     }
 }
@@ -279,7 +284,7 @@ proc ::tktable::Insert {w s} {
 #
 proc ::tktable::BackSpace {w} {
     set cur [$w icursor]
-    if {[string compare {} $cur] && $cur} {
+    if {$cur ne {} && $cur > 0} {
 	$w delete active [expr {$cur-1}]
     }
 }
@@ -305,15 +310,15 @@ proc ::tktable::Button1 {w x y} {
 	set Priv(borderInfo) [$w border mark $x $y]
 	# account for what resizeborders are set [Bug 876320] (ferenc)
 	set rbd [$w cget -resizeborders]
-	if {$rbd == "none" || ![llength $Priv(borderInfo)]
-	    || ($rbd == "col" && [lindex $Priv(borderInfo) 1] == "")
-	    || ($rbd == "row" && [lindex $Priv(borderInfo) 0] == "")} {
+	if {$rbd eq "none" || ![llength $Priv(borderInfo)]
+	    || ($rbd eq "col" && [lindex $Priv(borderInfo) 1] eq "")
+	    || ($rbd eq "row" && [lindex $Priv(borderInfo) 0] eq "")} {
 	    set Priv(borderInfo) ""
 	}
     } else {
 	set Priv(borderInfo) ""
     }
-    if {$Priv(borderInfo) == ""} {
+    if {$Priv(borderInfo) eq ""} {
 	#
 	# Only do this when a border wasn't selected
 	#
@@ -344,7 +349,7 @@ proc ::tktable::B1Motion {w x y} {
 
     # If we already had motion, or we moved more than 1 pixel,
     # then we start the Motion routine
-    if {$Priv(borderInfo) != ""} {
+    if {$Priv(borderInfo) ne ""} {
 	#
 	# If the motion is on a border, drag it and skip the rest
 	# of this binding.
@@ -606,16 +611,16 @@ proc ::tktable::MoveCell {w x y} {
     if {[catch {$w index active row} r]} return
     set c [$w index active col]
     set cell [$w index [incr r $x],[incr c $y]]
-    while {[string compare [set true [$w hidden $cell]] {}]} {
+    while {[set true [$w hidden $cell]] ne {}} {
 	# The cell is in some way hidden
-	if {[string compare $true [$w index active]]} {
+	if {[$w index active] ne $true} {
 	    # The span cell wasn't the previous cell, so go to that
 	    set cell $true
 	    break
 	}
 	if {$x > 0} {incr r} elseif {$x < 0} {incr r -1}
 	if {$y > 0} {incr c} elseif {$y < 0} {incr c -1}
-	if {[string compare $cell [$w index $r,$c]]} {
+	if {[$w index $r,$c] ne $cell} {
 	    set cell [$w index $r,$c]
 	} else {
 	    # We couldn't find a non-hidden cell, just don't move
@@ -651,7 +656,7 @@ proc ::tktable::MoveCell {w x y} {
 # y - +1 to move right one cell, -1 to move left one cell.
 
 proc ::tktable::ExtendSelect {w x y} {
-    if {[string compare extended [$w cget -selectmode]] ||
+    if {[$w cget -selectmode] ne "extended" ||
 	[catch {$w index active row} r]} return
     set c [$w index active col]
     $w activate [incr r $x],[incr c $y]
@@ -729,7 +734,7 @@ proc ::tktable::ChangeWidth {w i a} {
 # w -		Name of a table widget.
 
 proc tk_tableCopy w {
-    if {[selection own -displayof $w] == "$w"} {
+    if {[selection own -displayof $w] eq $w} {
 	clipboard clear -displayof $w
 	catch {clipboard append -displayof $w [::tktable::GetSelection $w]}
     }
@@ -745,7 +750,7 @@ proc tk_tableCopy w {
 # w -		Name of a table widget.
 
 proc tk_tableCut w {
-    if {[selection own -displayof $w] == "$w"} {
+    if {[selection own -displayof $w] eq $w} {
 	clipboard clear -displayof $w
 	catch {
 	    clipboard append -displayof $w [::tktable::GetSelection $w]
@@ -765,7 +770,7 @@ proc tk_tableCut w {
 # cell -	Cell to start pasting in.
 #
 proc tk_tablePaste {w {cell {}}} {
-    if {[string compare {} $cell]} {
+    if {$cell ne {}} {
 	if {[catch {::tktable::GetSelection $w} data]} return
     } else {
 	if {[catch {::tktable::GetSelection $w CLIPBOARD} data]} {
@@ -774,7 +779,7 @@ proc tk_tablePaste {w {cell {}}} {
 	set cell active
     }
     tk_tablePasteHandler $w [$w index $cell] $data
-    if {[$w cget -state] == "normal"} {focus $w}
+    if {[$w cget -state] eq "normal"} {focus $w}
 }
 
 # tk_tablePasteHandler --
@@ -809,21 +814,25 @@ proc tk_tablePasteHandler {w cell data} {
     ## If you were to want multi-character row separators, you would need:
     # regsub -all $rsep $data <newline> data
     # set data [join $data <newline>]
-    if {[string compare {} $rsep]} { set data [split $data $rsep] }
+    if {$rsep ne {}} {
+	set data [split $data $rsep]
+    }
     set row	$r
     foreach line $data {
 	if {$row > $rows} break
 	set col	$c
 	## Assume separate cols are split by col separator if specified
 	## Unless a -separator was specified
-	if {[string compare {} $csep]} { set line [split $line $csep] }
+	if {$csep ne {}} {
+	    set line [split $line $csep]
+	}
 	## If you were to want multi-character col separators, you would need:
 	# regsub -all $csep $line <newline> line
 	# set line [join $line <newline>]
 	foreach item $line {
 	    if {$col > $cols} break
 	    set oldTxt [$w get $row,$col]
-	    if {![string equal $item $oldTxt]} {
+	    if {![string equal $item $oldTxt] && $vcmd ne ""} {
 		set vldCmd [string map [list %W $w %r $row %c $col %s $oldTxt %S $item] $vcmd]
 		if {![eval $vldCmd]} {
 		    incr col

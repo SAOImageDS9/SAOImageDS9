@@ -4,7 +4,13 @@
 if {[package vsatisfies [package provide Tcl] 9.0-]} {
     package ifneeded @PACKAGE_NAME@ @PACKAGE_VERSION@ [list apply {{dir} {
 	# Load library
-	load [file join $dir @PKG_LIB_FILE9@] [string totitle @PACKAGE_NAME@]
+	if {[string tolower [file extension @PKG_LIB_FILE9@]] in [list .dll .dylib .so]} {
+	    # Load dynamic library
+	    load [file join $dir @PKG_LIB_FILE9@] [string totitle @PACKAGE_NAME@]
+	} else {
+	    # Static library
+	    load {} [string totitle @PACKAGE_NAME@]
+	}
 
 	# Source init file
 	set initScript [file join $dir tkTable.tcl]

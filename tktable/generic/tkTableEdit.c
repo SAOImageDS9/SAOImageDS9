@@ -88,14 +88,18 @@ static void TableModifyRC(
 	    entryPtr = Tcl_FindHashEntry(tagTblPtr, INT2PTR(to));
 	    if (entryPtr != NULL) {
 		newPtr = Tcl_CreateHashEntry(tagTblPtr, INT2PTR(from), &new);
-		Tcl_SetHashValue(newPtr, Tcl_GetHashValue(entryPtr));
-		Tcl_DeleteHashEntry(entryPtr);
+		if (newPtr) {
+		    Tcl_SetHashValue(newPtr, Tcl_GetHashValue(entryPtr));
+		    Tcl_DeleteHashEntry(entryPtr);
+		}
 	    }
 	    entryPtr = Tcl_FindHashEntry(dimTblPtr, INT2PTR(to-offset));
 	    if (entryPtr != NULL) {
 		newPtr = Tcl_CreateHashEntry(dimTblPtr, INT2PTR(from-offset), &new);
-		Tcl_SetHashValue(newPtr, Tcl_GetHashValue(entryPtr));
-		Tcl_DeleteHashEntry(entryPtr);
+		if (newPtr) {
+		    Tcl_SetHashValue(newPtr, Tcl_GetHashValue(entryPtr));
+		    Tcl_DeleteHashEntry(entryPtr);
+		}
 	    }
 	}
     }
@@ -141,8 +145,10 @@ static void TableModifyRC(
 		entryPtr = Tcl_FindHashEntry(tablePtr->cellStyles, buf1);
 		if (entryPtr != NULL) {
 		    newPtr = Tcl_CreateHashEntry(tablePtr->cellStyles, buf, &new);
-		    Tcl_SetHashValue(newPtr, Tcl_GetHashValue(entryPtr));
-		    Tcl_DeleteHashEntry(entryPtr);
+		    if (newPtr) {
+			Tcl_SetHashValue(newPtr, Tcl_GetHashValue(entryPtr));
+			Tcl_DeleteHashEntry(entryPtr);
+		    }
 		}
 	    }
 	}
@@ -180,7 +186,9 @@ static void TableModifyRC(
 		     * Table_WinDelete above should guarantee that no window
 		     * is there.  Just set the new entry's value.
 		     */
-		    Tcl_SetHashValue(entryPtr, (ClientData) ewPtr);
+		    if (entryPtr) {
+			Tcl_SetHashValue(entryPtr, (ClientData) ewPtr);
+		    }
 		    ewPtr->hPtr = entryPtr;
 		}
 	    }
@@ -206,7 +214,7 @@ static void TableModifyRC(
  */
 int Table_EditCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj *const objv[]) {
     Table *tablePtr = (Table *) clientData;
-    int doInsert, cmdIndex, first, last;
+    int doInsert, first, last, cmdIndex;
 
     if (objc < 4) {
 	Tcl_WrongNumArgs(interp, 2, objv, "option ?switches? arg ?arg?");
@@ -493,14 +501,14 @@ int Table_EditCmd(ClientData clientData, Tcl_Interp *interp, int objc, Tcl_Obj *
 void TableDeleteChars(
     Table *tablePtr,		/* Table widget to modify. */
     int index,			/* Index of first character to delete. */
-    int count) {			/* How many characters to delete. */
+    int count) {		/* How many characters to delete. */
 
     int byteIndex, byteCount, newByteCount, numBytes, numChars;
     char *new, *string;
 
     string = tablePtr->activeBuf;
     numBytes = (int) strlen(string);
-    numChars = (int) Tcl_NumUtfChars(string, numBytes);
+    numChars = (int) Tcl_NumUtfChars(string, (Tcl_Size)numBytes);
     if ((index + count) > numChars) {
 	count = numChars - index;
     }
@@ -508,11 +516,13 @@ void TableDeleteChars(
 	return;
     }
 
-    byteIndex = (int) (Tcl_UtfAtIndex(string, index) - string);
-    byteCount = (int) (Tcl_UtfAtIndex(string + byteIndex, count) - (string + byteIndex));
+    byteIndex = (int) (Tcl_UtfAtIndex(string, (Tcl_Size)index) - string);
+    byteCount = (int) (Tcl_UtfAtIndex(string + byteIndex, (Tcl_Size)count) -
+	(string + byteIndex));
 
     newByteCount = numBytes + 1 - byteCount;
-    new = (char *) ckalloc((unsigned) newByteCount);
+    new = (char *) Tcl_Alloc((unsigned) newByteCount);
+    if (!new) return;
     memcpy(new, string, (size_t) byteIndex);
     strcpy(new + byteIndex, string + byteIndex + byteCount);
 
@@ -520,11 +530,11 @@ void TableDeleteChars(
     if (tablePtr->validate &&
 	TableValidateChange(tablePtr, tablePtr->activeRow+tablePtr->rowOffset,
 	tablePtr->activeCol+tablePtr->colOffset, tablePtr->activeBuf, new, index) != TCL_OK) {
-	ckfree(new);
+	Tcl_Free(new);
 	return;
     }
 
-    ckfree(tablePtr->activeBuf);
+    Tcl_Free(tablePtr->activeBuf);
     tablePtr->activeBuf = new;
 
     /* mark the text as changed */
@@ -576,7 +586,7 @@ void TableInsertChars(
     /* Note that this clears without validating */
     if (tablePtr->autoClear && !(tablePtr->flags & TEXT_CHANGED)) {
 	/* set the buffer to be empty */
-	tablePtr->activeBuf = (char *)ckrealloc(tablePtr->activeBuf, 1);
+	tablePtr->activeBuf = (char *)Tcl_Realloc(tablePtr->activeBuf, 1);
 	tablePtr->activeBuf[0] = '\0';
 	/* the insert position now has to be 0 */
 	index = 0;
@@ -584,10 +594,11 @@ void TableInsertChars(
     }
 
     string = tablePtr->activeBuf;
-    byteIndex = (int) (Tcl_UtfAtIndex(string, index) - string);
+    byteIndex = (int) (Tcl_UtfAtIndex(string, (Tcl_Size)index) - string);
 
     oldlen = (int) strlen(string);
-    new = (char *) ckalloc((unsigned)(oldlen + byteCount + 1));
+    new = (char *) Tcl_Alloc((unsigned)(oldlen + byteCount + 1));
+    if (!new) return;
     memcpy(new, string, (size_t) byteIndex);
     strcpy(new + byteIndex, value);
     strcpy(new + byteIndex + byteCount, string + byteIndex);
@@ -598,7 +609,7 @@ void TableInsertChars(
 	    TableValidateChange(tablePtr, tablePtr->activeRow+tablePtr->rowOffset,
 	    tablePtr->activeCol+tablePtr->colOffset, tablePtr->activeBuf, new,
 	    byteIndex) != TCL_OK) {
-	ckfree(new);
+	Tcl_Free(new);
 	return;
     }
 
@@ -613,11 +624,11 @@ void TableInsertChars(
      */
 
     if (tablePtr->icursor >= index) {
-	tablePtr->icursor += (int) (Tcl_NumUtfChars(new, oldlen+byteCount)
-	    - Tcl_NumUtfChars(tablePtr->activeBuf, oldlen));
+	tablePtr->icursor += (int) (Tcl_NumUtfChars(new, (Tcl_Size)(oldlen+byteCount))
+	    - Tcl_NumUtfChars(tablePtr->activeBuf, (Tcl_Size)oldlen));
     }
 
-    ckfree(string);
+    Tcl_Free(string);
     tablePtr->activeBuf = new;
 
     /* mark the text as changed */

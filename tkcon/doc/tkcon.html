@@ -1,0 +1,255 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tkcon - TkCon</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'tkcon.n.man' by tcllib/doctools with format 'html'
+   -->
+<!-- Copyright &amp;copy; Jeffrey Hobbs &amp;lt;jeff at hobbs.org&amp;gt;
+   -->
+<!-- tkcon.n
+   -->
+<body><div class="doctools">
+<h1 class="doctools_title">tkcon(n) 2.8 tkcon.n &quot;TkCon&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>tkcon - Controlling TkCon console</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#see-also">See Also</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+<li class="doctools_section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">tkcon</b> <i class="arg">attach</i> <i class="arg">interpreter</i></a></li>
+<li><a href="#2"><b class="cmd">tkcon</b> <i class="arg">buffer</i> <span class="opt">?<i class="arg">size</i>?</span></a></li>
+<li><a href="#3"><b class="cmd">tkcon</b> <i class="arg">bgerror</i> <span class="opt">?<i class="arg">msg</i> <i class="arg">errorInfo</i>?</span></a></li>
+<li><a href="#4"><b class="cmd">tkcon</b> <i class="arg">close</i> or <b class="cmd">tkcon</b> <i class="arg">destroy</i></a></li>
+<li><a href="#5"><b class="cmd">tkcon</b> <i class="arg">congets</i></a></li>
+<li><a href="#6"><b class="cmd">tkcon</b> <i class="arg">console</i> <i class="arg">args</i></a></li>
+<li><a href="#7"><b class="cmd">tkcon</b> <i class="arg">error</i></a></li>
+<li><a href="#8"><b class="cmd">tkcon</b> <i class="arg">find</i> <i class="arg">string</i> <span class="opt">?<i class="arg">-case</i> <i class="arg">TCL_BOOLEAN</i> <i class="arg">-regexp</i> <i class="arg">TCL_BOOLEAN</i>?</span></a></li>
+<li><a href="#9"><b class="cmd">tkcon</b> <i class="arg">font</i> <span class="opt">?<i class="arg">fontname</i>?</span></a></li>
+<li><a href="#10"><b class="cmd">tkcon</b> <i class="arg">gets</i></a></li>
+<li><a href="#11"><b class="cmd">tkcon</b> <i class="arg">getcommand</i></a></li>
+<li><a href="#12"><b class="cmd">tkcon</b> <i class="arg">hide</i></a></li>
+<li><a href="#13"><b class="cmd">tkcon</b> <i class="arg">history</i> <span class="opt">?<i class="arg">-newline</i>?</span></a></li>
+<li><a href="#14"><b class="cmd">tkcon</b> <i class="arg">iconify</i></a></li>
+<li><a href="#15"><b class="cmd">tkcon</b> <i class="arg">linelength</i> <span class="opt">?<i class="arg">value</i>?</span></a></li>
+<li><a href="#16"><b class="cmd">tkcon</b> <i class="arg">load</i> <i class="arg">filename</i></a></li>
+<li><a href="#17"><b class="cmd">tkcon</b> <i class="arg">main</i> <span class="opt">?<i class="arg">arg</i> <i class="arg">arg</i> <i class="arg">...</i>?</span></a></li>
+<li><a href="#18"><b class="cmd">tkcon</b> <i class="arg">master</i> <i class="arg">args</i></a></li>
+<li><a href="#19"><b class="cmd">tkcon</b> <i class="arg">new</i></a></li>
+<li><a href="#20"><b class="cmd">tkcon</b> <i class="arg">resultfilter</i> <span class="opt">?<i class="arg">command</i>?</span></a></li>
+<li><a href="#21"><b class="cmd">tkcon</b> <i class="arg">save</i> <span class="opt">?<i class="arg">filename</i> <span class="opt">?<i class="arg">type</i>?</span>?</span></a></li>
+<li><a href="#22"><b class="cmd">tkcon</b> <i class="arg">set</i> <i class="arg">var</i> <span class="opt">?<i class="arg">value</i>?</span></a></li>
+<li><a href="#23"><b class="cmd">tkcon</b> <i class="arg">append</i> <i class="arg">var</i> <span class="opt">?<i class="arg">value</i>?</span></a></li>
+<li><a href="#24"><b class="cmd">tkcon</b> <i class="arg">lappend</i> <i class="arg">var</i> <span class="opt">?<i class="arg">value</i>?</span></a></li>
+<li><a href="#25"><b class="cmd">tkcon</b> <i class="arg">show</i> or <b class="cmd">tkcon</b> <i class="arg">deiconify</i></a></li>
+<li><a href="#26"><b class="cmd">tkcon</b> <i class="arg">slave</i> <span class="opt">?<i class="arg">slavename</i> <span class="opt">?<i class="arg">arg arg ...</i>?</span>?</span></a></li>
+<li><a href="#27"><b class="cmd">tkcon</b> <i class="arg">title</i> <span class="opt">?<i class="arg">title</i>?</span></a></li>
+<li><a href="#28"><b class="cmd">tkcon</b> <i class="arg">version</i></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>This provides lots of useful control over a console:</p>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">tkcon</b> <i class="arg">attach</i> <i class="arg">interpreter</i></a></dt>
+<dd><p>Attaches tkcon to the named interpreter.
+The name must be that returned by [<b class="cmd">tk</b> <i class="arg">appname</i>] or a valid
+path to a slave interpreter.
+It's best to use this via the <i class="arg">Console-&gt;Attach Console</i> menu.</p></dd>
+<dt><a name="2"><b class="cmd">tkcon</b> <i class="arg">buffer</i> <span class="opt">?<i class="arg">size</i>?</span></a></dt>
+<dd><p>Sets or queries the allowed size of the console text widget in lines.
+The text widget will automatically delete leading lines once this
+number has been exceeded (read: this is the scroll buffer size).</p></dd>
+<dt><a name="3"><b class="cmd">tkcon</b> <i class="arg">bgerror</i> <span class="opt">?<i class="arg">msg</i> <i class="arg">errorInfo</i>?</span></a></dt>
+<dd><p>Does bgerror stuff in the tkcon master interpreter.</p></dd>
+<dt><a name="4"><b class="cmd">tkcon</b> <i class="arg">close</i> or <b class="cmd">tkcon</b> <i class="arg">destroy</i></a></dt>
+<dd><p>Destroys this tkcon widget.</p></dd>
+<dt><a name="5"><b class="cmd">tkcon</b> <i class="arg">congets</i></a></dt>
+<dd><p>Behaves like the traditional Tcl gets, but instead of using stdin,
+it uses the tkcon console window.
+By default, tkcon replaces the standard gets with this command.
+This behavior can be controlled by altering the <b class="cmd">::tkcon::OPT(gets)</b>
+parameter at startup.
+This should not be called directly - instead rely on the overloaded
+gets, which has support for the optional varName parameter.</p></dd>
+<dt><a name="6"><b class="cmd">tkcon</b> <i class="arg">console</i> <i class="arg">args</i></a></dt>
+<dd><p>Passes the args to the tkcon text widget (the console).</p></dd>
+<dt><a name="7"><b class="cmd">tkcon</b> <i class="arg">error</i></a></dt>
+<dd><p>Pops up a dialog that gives the user a full trace of the
+last error received in the tkcon console.</p></dd>
+<dt><a name="8"><b class="cmd">tkcon</b> <i class="arg">find</i> <i class="arg">string</i> <span class="opt">?<i class="arg">-case</i> <i class="arg">TCL_BOOLEAN</i> <i class="arg">-regexp</i> <i class="arg">TCL_BOOLEAN</i>?</span></a></dt>
+<dd><p>Highlights all instances of string in the console.
+If the string is empty, it clears any previous highlighting.</p></dd>
+<dt><a name="9"><b class="cmd">tkcon</b> <i class="arg">font</i> <span class="opt">?<i class="arg">fontname</i>?</span></a></dt>
+<dd><p>Sets or returns the font used by tkcon text widgets.</p></dd>
+<dt><a name="10"><b class="cmd">tkcon</b> <i class="arg">gets</i></a></dt>
+<dd><p>Behaves like the traditional Tcl gets, but instead of needing
+stdin, it pops a dialog box up for the user.
+The overloaded gets has support for the optional varName parameter.</p></dd>
+<dt><a name="11"><b class="cmd">tkcon</b> <i class="arg">getcommand</i></a></dt>
+<dd><p>A variation of the congets method that requires a full
+command to be input before returning.</p></dd>
+<dt><a name="12"><b class="cmd">tkcon</b> <i class="arg">hide</i></a></dt>
+<dd><p>Withdraw the tkcon display from the screen (make sure you
+have a way to get it back).</p></dd>
+<dt><a name="13"><b class="cmd">tkcon</b> <i class="arg">history</i> <span class="opt">?<i class="arg">-newline</i>?</span></a></dt>
+<dd><p>Displays the tkcon history in sourceable form.
+If <i class="arg">-newline</i> is specified, it separates each command by
+an extra newline.</p></dd>
+<dt><a name="14"><b class="cmd">tkcon</b> <i class="arg">iconify</i></a></dt>
+<dd><p>Iconifies the tkcon display.</p></dd>
+<dt><a name="15"><b class="cmd">tkcon</b> <i class="arg">linelength</i> <span class="opt">?<i class="arg">value</i>?</span></a></dt>
+<dd><p>Sets or displays the number that specifies the limit of long result lines.
+True result is still captured in $_ (and 'puts $_' works).</p></dd>
+<dt><a name="16"><b class="cmd">tkcon</b> <i class="arg">load</i> <i class="arg">filename</i></a></dt>
+<dd><p>Sources named file into the slave interpreter.
+If no filename is given, it will attempt to call
+<b class="cmd">tk_getOpenFile</b> to pop up the file select box.</p></dd>
+<dt><a name="17"><b class="cmd">tkcon</b> <i class="arg">main</i> <span class="opt">?<i class="arg">arg</i> <i class="arg">arg</i> <i class="arg">...</i>?</span></a></dt>
+<dd><p>Passes the args to the main tkcon interpreter to be
+evaluated and returns the result.</p></dd>
+<dt><a name="18"><b class="cmd">tkcon</b> <i class="arg">master</i> <i class="arg">args</i></a></dt>
+<dd><p>Passes the args to the master interpreter to be evaluated
+and returns the result.</p></dd>
+<dt><a name="19"><b class="cmd">tkcon</b> <i class="arg">new</i></a></dt>
+<dd><p>Creates a new tkcon widget.</p></dd>
+<dt><a name="20"><b class="cmd">tkcon</b> <i class="arg">resultfilter</i> <span class="opt">?<i class="arg">command</i>?</span></a></dt>
+<dd><p>Specify a command to process the results before outputting it to the console
+window.  The command receives one argument (the result string) and the string
+returned is placed in the console.</p></dd>
+<dt><a name="21"><b class="cmd">tkcon</b> <i class="arg">save</i> <span class="opt">?<i class="arg">filename</i> <span class="opt">?<i class="arg">type</i>?</span>?</span></a></dt>
+<dd><p>Saves the console buffer to the given filename.
+If no filename is given, it will attempt to call
+<b class="cmd">tk_getSaveFile</b> to pop up the file select box.
+If no type is given, a dialog will ask you to specify
+what portion of the text you want to save.</p></dd>
+<dt><a name="22"><b class="cmd">tkcon</b> <i class="arg">set</i> <i class="arg">var</i> <span class="opt">?<i class="arg">value</i>?</span></a></dt>
+<dd><p>Queries or sets a master interpreter variable.</p></dd>
+<dt><a name="23"><b class="cmd">tkcon</b> <i class="arg">append</i> <i class="arg">var</i> <span class="opt">?<i class="arg">value</i>?</span></a></dt>
+<dd><p>Like set, but uses append on the variable.</p></dd>
+<dt><a name="24"><b class="cmd">tkcon</b> <i class="arg">lappend</i> <i class="arg">var</i> <span class="opt">?<i class="arg">value</i>?</span></a></dt>
+<dd><p>Like set, but uses lappend on the variable.</p></dd>
+<dt><a name="25"><b class="cmd">tkcon</b> <i class="arg">show</i> or <b class="cmd">tkcon</b> <i class="arg">deiconify</i></a></dt>
+<dd><p>Redisplays tkcon on the screen.</p></dd>
+<dt><a name="26"><b class="cmd">tkcon</b> <i class="arg">slave</i> <span class="opt">?<i class="arg">slavename</i> <span class="opt">?<i class="arg">arg arg ...</i>?</span>?</span></a></dt>
+<dd><p>If called with no args, it returns the name of all the tkcon interpreters.
+Otherwise given an interp name it passes the args to the named interpreter
+to be evaluated and returns the result.
+If no args are passed, then it returns the [<b class="cmd">tk</b> <i class="arg">appname</i>] of that
+interpreter.</p></dd>
+<dt><a name="27"><b class="cmd">tkcon</b> <i class="arg">title</i> <span class="opt">?<i class="arg">title</i>?</span></a></dt>
+<dd><p>Sets or returns the title for tkcon.</p></dd>
+<dt><a name="28"><b class="cmd">tkcon</b> <i class="arg">version</i></a></dt>
+<dd><p>Returns of version of tkcon.</p></dd>
+</dl>
+</div>
+<div id="see-also" class="doctools_section"><h2><a name="see-also">See Also</a></h2>
+<p><b class="cmd">dump</b>(n), <b class="cmd">observe</b>(n), <b class="cmd">tkcon</b>(1), <b class="cmd">tkcon</b>(n), <b class="cmd">tkconrc</b>(5)</p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p>Tk, console, debug</p>
+</div>
+<div id="copyright" class="doctools_section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; Jeffrey Hobbs &lt;jeff at hobbs.org&gt;</p>
+</div>
+</div></body></html>

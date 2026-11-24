@@ -8,8 +8,9 @@ found that the 16384-entry table, not the stretch factor, causes banding on wide
 data, and that the inverse-built fine table fixes it at near-normal speed (see
 "Prototype results"); questions 2–4 are decided (see "Decisions"); "Full wiring" lists
 what was done. The GHS dialog now updates live, and the Scale dialog graph draws
-the scale function (see "UI"). Remaining: tests in `Tests/` (Plan step 4) and the
-remaining UI ideas.
+the scale function with draggable LP/SP/HP handles (see "UI"). Regression tests are in
+`Tests/` (Plan step 4). Remaining: the rest of the docs (Plan step 5) and the remaining
+UI ideas.
 
 Source: PixInsight GHS process module docs, v3.0.4 (2023-07-11),
 <https://www.ghsastro.co.uk/doc/tools/GeneralizedHyperbolicStretch/GeneralizedHyperbolicStretch.html>.
@@ -597,10 +598,40 @@ entries.
 2. ~~Decide questions 2–4~~ done (see "Decisions"). Risk 1 is settled: use the
    inverse-built 2²⁰ table.
 3. ~~Full wiring~~ done (see "Full wiring").
-4. Tests in `Tests/` (a separate git repo): table monotonicity and continuity at
-   LP/SP/HP, the edge cases (D = 0, LP = SP, HP = SP, SP ∈ {0, 1}, SP/LP/HP outside the
-   clip range), the inverse round-trip, colorbar labels unchanged under non-default
-   contrast/bias, an XPA set/get round-trip, and backup/restore.
+4. ~~Tests~~ done (2026-11-24, uncommitted, `Tests/` branch `ghs_scale`):
+   - `ghs.sh` (85 checks, ~16 s, exits non-zero on failure; added to `all.sh`). Run from
+     `Tests/` with `PATH="$PWD/../bin:$HOME/local/bin:$PATH" ./ghs.sh`.
+   - `ghs/ghscurve.C`: standalone checks of `ghs.h`, compiled by `ghs.sh` against
+     `../tksao/frame` (skipped if that header or `c++` is missing). Covers: monotonic;
+     runs from 0 to 1; continuous at LP/SP/HP; inverse round trip; the run-filled table
+     vs. forward (≤ 1 cell); stretch 0 is the identity; the b = −1 and b = 0 closed
+     forms; `auto` = limits; point symmetry about a central SP; linear below LP and
+     above HP; no NaN when low = high. Edge cases include LP = SP, HP = SP,
+     LP = SP = HP, SP at either limit, values outside the limits, and LP > SP.
+   - `ghs/sky.fits` (256×256 float, 268 KB) and `ghs/mksky.py`, which regenerates it:
+     sky 100 ± 2, a faint blob, stars to 1e5. With minmax limits the sky noise is a
+     third of one 16384-entry table step.
+   - In ds9, `ghs.sh` checks:
+     - XPA set/get, including `auto`; setting a parameter keeps the type; bad values
+       are rejected; `contour scale ghs`.
+     - Command line (`-scale ghs ...`).
+     - Rendering through `export png`: stretch 0 is within 1 grey level of linear;
+       stretch 8 spreads the sky over 47 grey levels (threshold 15; the old table
+       gave 2); intensity variants differ; a clip-mode change keeps GHS.
+     - The inverse levels; colorbar values follow the curve and are **unchanged by
+       contrast/bias** (`get value` across the bar).
+     - Match and lock; backup/restore; contour levels bunch near the sky; RGB channels
+       keep independent scales; the 3D frame.
+     - The GHS dialog (live, rounding, Apply, invalid input, Reset, follows the frame,
+       Close).
+     - The Scale dialog graph (the curve, stacking, handles shown/hidden, and handle
+       drags through `event generate`, with clamps and the limits untouched); the prefs
+       defaults.
+   - Smoke lines in `xpa.sh` (`scale` and `contour` sections; reference
+     `xpa/scale.xpa` updated), `command.sh` (`scale`, `contour`), and
+     `samp/scale.samp` and `samp/contour.samp`. Ran `xpa.sh scale|contour`,
+     `command.sh scale|contour` and `samp.sh scale|contour` (with a temporary
+     `samp.tcl` path fix, reverted afterwards): all pass.
 5. Docs: mostly done in the wiring step (see "Full wiring"). The scale sections already
    explain SP and recommend contrast 1 / bias 0.5. Still to do: spell out SP vs. bias,
    say b = −1 is *nearly* DS9's log (DS9 divides by log(exp), GHS by ln(1+D)), and add

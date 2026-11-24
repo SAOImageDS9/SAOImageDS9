@@ -325,34 +325,49 @@ proc TBLBindMouseWheel {varname} {
     global $varname
     global ds9
 
+    # break keeps the Table class bindings from scrolling a second time
     switch $ds9(wm) {
 	x11 {
-	    bind $var(tbl) <Button-4> [list TBLYScroll $varname 1]
-	    bind $var(tbl) <Button-5> [list TBLYScroll $varname -1]
-	    bind $var(tbl) <Shift-Button-4> [list TBLXScroll $varname 1]
-	    bind $var(tbl) <Shift-Button-5> [list TBLXScroll $varname -1]
-	    bind $var(tbl) <MouseWheel> [list TBLYScroll $varname %D]
-	    bind $var(tbl) <Shift-MouseWheel> [list TBLXScroll $varname %D]
+	    bind $var(tbl) <Button-4> "[list TBLYScroll $varname 120]; break"
+	    bind $var(tbl) <Button-5> "[list TBLYScroll $varname -120]; break"
+	    bind $var(tbl) <Shift-Button-4> \
+		"[list TBLXScroll $varname 120]; break"
+	    bind $var(tbl) <Shift-Button-5> \
+		"[list TBLXScroll $varname -120]; break"
+	    bind $var(tbl) <MouseWheel> "[list TBLYScroll $varname %D]; break"
+	    bind $var(tbl) <Shift-MouseWheel> \
+		"[list TBLXScroll $varname %D]; break"
 	}
 	aqua -
 	win32 {
-	    bind $var(tbl) <MouseWheel> [list TBLYScroll $varname %D]
+	    bind $var(tbl) <MouseWheel> "[list TBLYScroll $varname %D]; break"
 	}
     }
 }
 
-proc TBLXScroll {varname cnt} {
-    upvar #0 $varname var
-    global $varname
-
-    $var(tbl) xview scroll [expr -$cnt] units
+# Tk reports 120 per wheel notch; scroll 3 rows/cols per notch, as the
+# Tk listbox does. Smaller deltas from high resolution wheels still
+# move at least one.
+proc TBLWheelUnits {delta} {
+    set nn [expr {round(-$delta*3.0/120)}]
+    if {$nn == 0 && $delta != 0} {
+	set nn [expr {$delta > 0 ? -1 : 1}]
+    }
+    return $nn
 }
 
-proc TBLYScroll {varname cnt} {
+proc TBLXScroll {varname delta} {
     upvar #0 $varname var
     global $varname
 
-    $var(tbl) yview scroll [expr -$cnt] units
+    $var(tbl) xview scroll [TBLWheelUnits $delta] units
+}
+
+proc TBLYScroll {varname delta} {
+    upvar #0 $varname var
+    global $varname
+
+    $var(tbl) yview scroll [TBLWheelUnits $delta] units
 }
 
 # Cut/Copy

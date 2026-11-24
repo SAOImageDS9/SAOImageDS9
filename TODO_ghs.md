@@ -7,7 +7,9 @@ History: the review checked the maths and the contrast/bias interaction; prototy
 found that the 16384-entry table, not the stretch factor, causes banding on wide-range
 data, and that the inverse-built fine table fixes it at near-normal speed (see
 "Prototype results"); questions 2–4 are decided (see "Decisions"); "Full wiring" lists
-what was done. Remaining: tests in `Tests/` (Plan step 4) and the UI ideas.
+what was done. The GHS dialog now updates live, and the Scale dialog graph draws
+the scale function (see "UI"). Remaining: tests in `Tests/` (Plan step 4) and the
+remaining UI ideas.
 
 Source: PixInsight GHS process module docs, v3.0.4 (2023-07-11),
 <https://www.ghsastro.co.uk/doc/tools/GeneralizedHyperbolicStretch/GeneralizedHyperbolicStretch.html>.
@@ -196,16 +198,50 @@ Rough size: about 50 lines of maths, and a few days in total, mostly wiring and 
 - **LCP/HCP clip-fraction estimation.** DS9 already has minmax, zscale, zmax and user
   clipping.
 
-## UI ideas (later; mostly Tcl)
+## UI
 
-- Draw the transfer curve and SP/LP/HP marker lines on the Scale dialog's existing
-  histogram. GHS also overlays the predicted post-stretch histogram.
-- "Set SP from here": use the median in a 15×15 box at the crosshair or clicked pixel, or
-  a region's statistics. GHS recommends 15×15.
+### Done (2026-11-24, uncommitted)
+
+- **GHS Parameters dialog is not modal** (`ScaleGhsDialog`, `scale.tcl`), so the image,
+  the Scale dialog and the limits stay usable while tuning. Buttons: Apply, Reset,
+  Close.
+  - **Moving the stretch or intensity slider updates the display at once.** Updates are
+    merged with `after idle`, so a drag doesn't queue one redraw per motion event.
+    Values are rounded to 0.01. The sliders use float limits (`0. 20.`, `-5. 15.`),
+    because `SliderCmd` rounds to integers when both limits are integers; Preferences
+    had the same bug and is fixed too.
+  - SP/LP/HP entries apply with Apply or Return. Invalid text raises an error on Apply
+    and is ignored quietly during slider moves.
+  - **Applying switches the scale type to GHS.** That is deliberate: it's what the
+    dialog is for. The `scale ghs <param>` commands still don't change the type.
+  - **Reset** restores the parameters *and* the scale type from when the dialog was
+    opened.
+  - The dialog follows the current frame (`UpdateScaleGhsDialog`, called from
+    `UpdateScaleMenu`).
+  - Cost: about 27 ms per live update with the Scale dialog open (it recomputes the
+    histogram), 17 ms without.
+- **The scale function is drawn on the Scale dialog's histogram** (`ScaleCurveDialog`)
+  for *every* scale type. It plots the scaled value (0–1, new right-hand `y2axis`)
+  against data value, from `get colorscale level 257 low high type exp`. Those inverse
+  levels are the curve sampled evenly in output, so it's dense where the curve is
+  steep. It is flat at 0/1 outside the limits and redraws on every scale change. The
+  curve is listed first in `element show` so it draws on top of the filled histogram.
+  - For GHS, dashed SP/LP/HP marker lines with labels are drawn for parameters given as
+    data values (not for `auto`, which coincides with the limit markers).
+  - With the Graph menu's default "Full Range" x axis on wide-range data, the whole
+    curve rises inside the leftmost sliver; "Current Range" shows its shape.
+
+### Ideas (later)
+
+- "Set SP from here": use the median in a 15×15 box at the crosshair or clicked pixel,
+  or a region's statistics. GHS recommends 15×15.
+- Overlay the predicted post-stretch histogram, as GHS does.
 - Starting defaults from the GHS usage notes. First stretch of linear data: SP at the
-  faintest signal of interest, b ≈ 10, then raise D until the histogram peak sits around
-  0.2–0.25. Later contrast tweaks: b ≈ 3–5. A soft black point without clipping:
-  HP = SP, LP = 0, b ≈ 10.
+  faintest signal of interest, b ≈ 10, then raise D until the histogram peak sits
+  around 0.2–0.25. Later contrast tweaks: b ≈ 3–5. A soft black point without
+  clipping: HP = SP, LP = 0, b ≈ 10.
+- Possibly switch the Scale dialog graph to "Current Range" automatically when the
+  scale is GHS.
 
 ## Risks / open questions
 

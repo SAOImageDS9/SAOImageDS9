@@ -175,9 +175,9 @@ proc PrefsDialogScale {} {
     # GHS
     set f [ttk::labelframe $w.scale.ghs -text "GHS [msgcat::mc {Parameters}]"]
 
-    slider $f.sstretch 0 20 [msgcat::mc {Stretch Factor}] \
+    slider $f.sstretch 0. 20. [msgcat::mc {Stretch Factor}] \
 	pscale(ghs,stretch) {}
-    slider $f.sintensity -5 15 [msgcat::mc {Local Intensity}] \
+    slider $f.sintensity -5. 15. [msgcat::mc {Local Intensity}] \
 	pscale(ghs,intensity) {}
     ttk::label $f.tsp -text [msgcat::mc {Symmetry Point}]
     ttk::entry $f.sp -textvariable pscale(ghs,sp) -width 14
@@ -443,6 +443,7 @@ proc UpdateScaleMenu {} {
 	    set scale(type) [$current(frame) get colorscale]
 	    set scale(log) [$current(frame) get colorscale log]
 	    ScaleGhsSet [$current(frame) get colorscale ghs]
+	    UpdateScaleGhsDialog
 	    set scale(scope) [$current(frame) get clip scope]
 	    set scale(mode) [$current(frame) get clip mode]
 	    set scale(datasec) [$current(frame) get datasec]

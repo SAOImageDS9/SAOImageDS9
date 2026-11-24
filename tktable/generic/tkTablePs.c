@@ -503,7 +503,8 @@ int Table_PostscriptCmd(
      * Config widget
      */
     if (Tk_ConfigureWidget(interp, tablePtr->tkwin, configSpecs,
-	objc-2, (void *) (objv+2), (char *) &psInfo, TK_CONFIG_OBJS) != TCL_OK) {
+	objc-2, (void *) (objv+2), (char *) &psInfo, 
+	TK_CONFIG_ARGV_ONLY | TK_CONFIG_OBJS) != TCL_OK) {
 	goto cleanup;
     }
 

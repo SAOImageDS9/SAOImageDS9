@@ -957,8 +957,11 @@ int FitsHPXReproj::zenithalCentre(double lon, double lat, double uu,
   const char* code = HPXReprojInfo[info_].code;
 
   double cl = *clon, cb = *clat;
-  // tolerance: a hundredth of a window pixel
-  double tol = pix_/100;
+  // tolerance: a ten-thousandth of a window pixel. The grabbed point
+  // must stay under the pointer: at a hundredth (0.0011 deg on a
+  // nside-512 map) the error showed, and Newton converges quadratically,
+  // so this costs about one more step.
+  double tol = pix_/10000;
   for (int it=0; it<20; it++) {
     double xx, yy;
     if (!zenithalPlane(code, cl, cb, lon, lat, &xx, &yy))

@@ -12,6 +12,7 @@
 <p><b>Table of Contents</b></p>
 <a href="#How">How DS9 Renders an Image</a><br>
 <a href="#Scales">Scales</a><br>
+&nbsp;&nbsp;<a href="#GHS">Generalized Hyperbolic Stretch</a><br>
 <a href="#Smoothing">Smoothing</a><br>
 <a href="#Contours">Contours</a><br>
 <a href="#LargeFiles">Large Files</a><br>
@@ -21,7 +22,7 @@
 <p>Step 1. Select a color scale. A color scale is defined as a number of colors (RGB triplets). The number of RGB triplets can vary from just a few to over 200. DS9 contains a number of predefined color scales (Gray, A, B, I8, ...) or the user may load his own color scale.</p>
 <p>Step 2. Apply a contrast/bias pair. This step takes the result of step 1 and creates a new array with the contrast/bias applied. The length of the new array will between 200 (for pseudocolor) and 4096 (for truecolor).</p>
 <p>Step 3. Calculate the data clip values (low/high data values). The min/max data values may be used or an algorithm may be used to determine the clip data values.</p>
-<p>Step 4. Apply the scale distribution. This involves taking the result of step 2, and creating yet another array, this time of size 16384, redistributing the colors, based on the scale algorithm selected (see <a href="Scales">Scales</a>).</p>
+<p>Step 4. Apply the scale distribution. This involves taking the result of step 2, and creating yet another array, this time of size 16384, redistributing the colors, based on the scale algorithm selected (see <a href="#Scales">Scales</a>). The <tt>ghs</tt> scale uses an array of 1048576 entries instead (see <a href="#GHS">GHS</a>).</p>
 <p>Step 5. Based on your data clip values, and the value of the pixel you have, index into the result of step 4, and you have an index into lookup table (for pseudocolor) and an RGB pair (for truecolor and postscript).</p>
 </blockquote>
 <p><b><a name="Scales" id="Scales"></a>Scales</b></p>
@@ -51,6 +52,71 @@
 <blockquote><img alt="sinh" src="img/sinh.png" width="69" height="29"><br></blockquote>
 <p>as <i>x</i> goes from 0 to 1.</p>
 <p>The <tt>histogram equalization</tt> scale function distributes colors based on the frequency of each data value.</p>
+<p><b><a name="GHS" id="GHS"></a>Generalized Hyperbolic Stretch</b></p>
+<p>The <tt>ghs</tt> scale is the Generalized Hyperbolic Stretch of D. Payne and
+M. Cranfield (<a href="https://www.ghsastro.co.uk">ghsastro.co.uk</a>). The other
+scales have a fixed shape. <tt>ghs</tt> adds contrast around a data value that you
+choose, the <i>symmetry point</i> SP, while LP and HP keep the
+shadows and highlights from being stretched. Putting SP at the sky level brings out
+faint diffuse emission without saturating the stars.</p>
+<p>It has five parameters:</p>
+<blockquote>
+<table border="0" cellpadding="2">
+<tr><td><tt>stretch</tt></td><td nowrap>0&ndash;20</td><td>How strong the stretch is. 0 is linear. Internally <i>D</i>&nbsp;=&nbsp;e<sup>stretch</sup>&nbsp;&minus;&nbsp;1.</td></tr>
+<tr><td><tt>intensity</tt></td><td nowrap>&minus;5&ndash;15</td><td>The shape <i>b</i>: how tightly the added contrast is concentrated around SP. Larger values concentrate it more.</td></tr>
+<tr><td><tt>sp</tt></td><td nowrap>data value</td><td>The symmetry point, where the curve is steepest.</td></tr>
+<tr><td><tt>lp</tt></td><td nowrap>data value</td><td>Protect shadows: the curve is a straight line below LP.</td></tr>
+<tr><td><tt>hp</tt></td><td nowrap>data value</td><td>Protect highlights: the curve is a straight line above HP.</td></tr>
+</table>
+</blockquote>
+<p>SP, LP and HP are data values, or <tt>auto</tt> for the low (SP, LP) or high
+(HP) clip value. To build the scale they are converted to <i>x</i> from 0 to 1
+with the current clip values, clamped to [0,&nbsp;1], and put in order
+LP&nbsp;&le;&nbsp;SP&nbsp;&le;&nbsp;HP. Because they are data values, changing the
+clip values does not move them on the image.</p>
+<p>The curve is built from a base function <i>T</i>, chosen by <i>b</i>:</p>
+<blockquote>
+<table border="0" cellpadding="2">
+<tr><td nowrap><i>b</i> = &minus;1</td><td><i>T</i>(<i>x</i>) = ln(1 + <i>Dx</i>)</td></tr>
+<tr><td nowrap><i>b</i> &lt; 0, <i>b</i> &ne; &minus;1</td><td><i>T</i>(<i>x</i>) = (1 &minus; (1 &minus; <i>bDx</i>)<sup>(<i>b</i>+1)/<i>b</i></sup>) / (<i>D</i>(<i>b</i>+1))</td></tr>
+<tr><td nowrap><i>b</i> = 0</td><td><i>T</i>(<i>x</i>) = 1 &minus; e<sup>&minus;<i>Dx</i></sup></td></tr>
+<tr><td nowrap><i>b</i> = 1</td><td><i>T</i>(<i>x</i>) = 1 &minus; 1/(1 + <i>Dx</i>)</td></tr>
+<tr><td nowrap><i>b</i> &gt; 0, <i>b</i> &ne; 1</td><td><i>T</i>(<i>x</i>) = 1 &minus; (1 + <i>bDx</i>)<sup>&minus;1/<i>b</i></sup></td></tr>
+</table>
+</blockquote>
+<p>and assembled in four pieces:</p>
+<blockquote>
+<table border="0" cellpadding="2">
+<tr><td nowrap>SP &le; <i>x</i> &lt; HP</td><td><i>T</i><sub>3</sub>(<i>x</i>) = <i>T</i>(<i>x</i> &minus; SP)</td></tr>
+<tr><td nowrap>LP &le; <i>x</i> &lt; SP</td><td><i>T</i><sub>2</sub>(<i>x</i>) = &minus;<i>T</i>(SP &minus; <i>x</i>)</td></tr>
+<tr><td nowrap>0 &le; <i>x</i> &lt; LP</td><td><i>T</i><sub>1</sub>(<i>x</i>) = <i>T</i><sub>2</sub>(LP) + <i>T</i><sub>2</sub>&prime;(LP)(<i>x</i> &minus; LP)</td></tr>
+<tr><td nowrap>HP &le; <i>x</i> &le; 1</td><td><i>T</i><sub>4</sub>(<i>x</i>) = <i>T</i><sub>3</sub>(HP) + <i>T</i><sub>3</sub>&prime;(HP)(<i>x</i> &minus; HP)</td></tr>
+</table>
+</blockquote>
+<p>so the curve is the base function above SP, the same function rotated 180&deg;
+below SP, and straight lines tangent to it below LP and above HP. It is then
+scaled to run from 0 to 1:</p>
+<blockquote><i>y</i> = (<i>T<sub>i</sub></i>(<i>x</i>) &minus; <i>T</i><sub>1</sub>(0)) / (<i>T</i><sub>4</sub>(1) &minus; <i>T</i><sub>1</sub>(0))</blockquote>
+<p>With <tt>intensity -1</tt> and SP, LP and HP at <tt>auto</tt> this is
+ln(1&nbsp;+&nbsp;<i>Dx</i>)&nbsp;/&nbsp;ln(1&nbsp;+&nbsp;<i>D</i>), which is
+<i>nearly</i> <tt>log</tt> with <i>a</i>&nbsp;=&nbsp;<i>D</i>. The difference is
+that <tt>log</tt> divides by log(<i>a</i>), so it reaches the top color slightly
+before <i>x</i>&nbsp;=&nbsp;1.</p>
+<p>A strong stretch is very steep at SP. With the usual 16384-entry array (step 4),
+one entry can cover more data values than the sky noise on images with a wide data
+range, and the sky then shows only two or three gray levels however the parameters
+are set. <tt>ghs</tt> therefore uses an array of 1048576 entries. To build it
+quickly, DS9 computes the inverse of the curve once for each color and fills the
+array in runs. This still bands when the data range is more than about
+2.6&times;10<sup>5</sup> times the sky noise; narrow the clip values in that case.</p>
+<p>Contrast and bias (step 2) act on the colors, not on the data values. They still
+work with <tt>ghs</tt>, but they change the image without changing the colorbar
+values, while SP changes both. For results that match the colorbar, keep contrast
+at 1 and bias at 0.5 and adjust SP instead. Contours with <tt>contour scale
+ghs</tt> use the same curve, so their levels bunch around SP.</p>
+<p>In the <i>Scale Parameters</i> dialog the graph shows the scale function over the
+histogram. For <tt>ghs</tt> it has SP, LP and HP handles that you can drag, and
+<i>GHS Parameters</i> opens sliders that update the image as you move them.</p>
 <p><b><a name="Smoothing" id="Smoothing"></a>Smoothing</b></p>
 <p>The user may select one of three types of smoothing kernels. Two parameters, <i>r</i><i>&nbsp; (radius)</i> and <i><tt>k</tt></i> <i>(kernel size</i><i>)</i>, are defined as the following:</p>
 <blockquote>Kernel width/height = <i>2k+1</i> with <i>r</i> <i>&lt;=</i> <i><tt>k</tt></i><br>

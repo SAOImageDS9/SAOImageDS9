@@ -93,7 +93,7 @@ proc AquaMenuGroup {m {first 0}} {
     AquaMenuUngroup $m $first
     set last [$m index end]
     set size $ds9(menu,size,wrap)
-    if {$last eq {none} || $last-$first+1 <= $size} {
+    if {$last in {{} none} || $last-$first+1 <= $size} {
 	return
     }
 

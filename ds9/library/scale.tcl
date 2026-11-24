@@ -409,7 +409,9 @@ proc ScaleDialog {} {
     # the first element listed is drawn on top
     $dscale(hist) element show {curve bar1}
 
-    # GHS symmetry point / protect shadows / protect highlights
+    # GHS symmetry point / protect shadows / protect highlights: dashed
+    # guide lines (the draggable handles are created after the limit lines,
+    # so they sit on top of them)
     foreach mm {sp lp hp} {
 	set dscale(ghs$mm) [$dscale(hist) marker create line \
 				-mapy y2 \
@@ -417,15 +419,6 @@ proc ScaleDialog {} {
 				-dashes {4 3} \
 				-hide yes \
 			       ]
-	set dscale(ghs${mm}txt) [$dscale(hist) marker create text \
-				     -mapy y2 \
-				     -text [string toupper $mm] \
-				     -anchor nw \
-				     -outline $dscale(curvecolor) \
-				     -background {} \
-				     -font [font actual TkDefaultFont] \
-				     -hide yes \
-				    ]
     }
 
     # Cut Lines
@@ -445,6 +438,31 @@ proc ScaleDialog {} {
 			     -outline green \
 			     -bindtags [list max up] \
 			    ]
+
+    # GHS handles on the curve. Drag sideways to move LP/SP/HP. Created
+    # LP, HP, SP so SP is on top when two coincide (e.g. both at the low
+    # limit with auto): SP is the one you want to pull away first.
+    # (tkblt has only line, polygon and text markers: the handle is a
+    # filled text tab, centred on the curve)
+    foreach mm {lp hp sp} {
+	set dscale(ghs${mm}handle) [$dscale(hist) marker create text \
+					-mapy y2 \
+					-text " [string toupper $mm] " \
+					-anchor center \
+					-foreground white \
+					-background $dscale(curvecolor) \
+					-font [font actual TkDefaultFont] \
+					-bindtags [list ghs$mm ghsup] \
+					-hide yes \
+				       ]
+	$dscale(hist) marker bind ghs$mm <B1-Motion> \
+	    [list ScaleGhsMotionDialog %x %y $mm]
+	$dscale(hist) marker bind ghs$mm <Enter> \
+	    [list $dscale(hist) configure -cursor sb_h_double_arrow]
+	$dscale(hist) marker bind ghs$mm <Leave> \
+	    [list $dscale(hist) configure -cursor {}]
+    }
+    $dscale(hist) marker bind ghsup <ButtonRelease-1> ScaleGhsReleaseDialog
 
     # Cut Levels
     set f [ttk::frame $w.param]
@@ -532,6 +550,9 @@ proc ScaleDestroyDialog {} {
 	blt::vector destroy $dscale(xdata) $dscale(ydata)
 	blt::vector destroy $dscale(curvex) $dscale(curvey)
 	destroy $dscale(hist)
+	if {[info exists dscale(ghspending)]} {
+	    after cancel $dscale(ghspending)
+	}
 	unset dscale
     }
 }
@@ -683,7 +704,7 @@ proc ScaleCurveHideDialog {} {
     $dscale(hist) y2axis configure -hide yes
     foreach mm {sp lp hp} {
 	$dscale(hist) marker configure $dscale(ghs$mm) -hide yes
-	$dscale(hist) marker configure $dscale(ghs${mm}txt) -hide yes
+	$dscale(hist) marker configure $dscale(ghs${mm}handle) -hide yes
     }
 }
 
@@ -731,20 +752,126 @@ proc ScaleCurveDialog {} {
     $dscale(hist) element configure curve -hide no
     $dscale(hist) y2axis configure -hide no
 
-    # GHS markers, for parameters given as data values
-    set ghs [$fr get colorscale ghs]
-    foreach mm {sp lp hp} vv [lrange $ghs 2 4] {
-	set show [expr {$type == {ghs} && [string is double -strict $vv]}]
-	if {$show} {
+    ScaleGhsHandlesDialog [expr {$type == {ghs}}]
+}
+
+# Place the GHS handles on the curve, and the dashed guide lines for
+# parameters given as data values. Handles for auto parameters sit at the
+# limit they stand for.
+proc ScaleGhsHandlesDialog {show} {
+    global dscale
+    global scale
+
+    foreach mm {sp lp hp} {
+	if {!$show} {
+	    $dscale(hist) marker configure $dscale(ghs$mm) -hide yes
+	    $dscale(hist) marker configure $dscale(ghs${mm}handle) -hide yes
+	    continue
+	}
+
+	set xx [ScaleGhsResolve $mm]
+	set yy [ScaleCurveAt $xx]
+	# keep the tab inside the plot: half outside, BLT won't pick it
+	if {$yy < .1} {
+	    set anchor s
+	} elseif {$yy > .9} {
+	    set anchor n
+	} else {
+	    set anchor center
+	}
+	$dscale(hist) marker configure $dscale(ghs${mm}handle) \
+	    -coords "$xx $yy" -anchor $anchor -hide no
+	if {[string is double -strict $scale(ghs,$mm)]} {
 	    $dscale(hist) marker configure $dscale(ghs$mm) \
-		-coords "$vv 0 $vv 1" -hide no
-	    $dscale(hist) marker configure $dscale(ghs${mm}txt) \
-		-coords "$vv 1" -hide no
+		-coords "$xx 0 $xx 1" -hide no
 	} else {
 	    $dscale(hist) marker configure $dscale(ghs$mm) -hide yes
-	    $dscale(hist) marker configure $dscale(ghs${mm}txt) -hide yes
 	}
     }
+}
+
+# GHS parameter as a data value: auto means the low (sp, lp) or high (hp)
+# limit. Clamped to the limits, as the curve does.
+proc ScaleGhsResolve {mm} {
+    global dscale
+    global scale
+
+    set lo $dscale(min)
+    set hi $dscale(max)
+    set vv $scale(ghs,$mm)
+    if {![string is double -strict $vv]} {
+	return [expr {$mm == {hp} ? $hi : $lo}]
+    }
+    return [expr {min(max($vv,$lo),$hi)}]
+}
+
+# scaled value of the drawn curve at data value xx (linear interpolation)
+proc ScaleCurveAt {xx} {
+    global dscale
+
+    set px [$dscale(curvex) range 0 end]
+    set py [$dscale(curvey) range 0 end]
+    set nn [llength $px]
+    if {$nn == 0} {
+	return 0
+    }
+    if {$xx <= [lindex $px 0]} {
+	return [lindex $py 0]
+    }
+    for {set ii 1} {$ii < $nn} {incr ii} {
+	set x1 [lindex $px $ii]
+	if {$xx <= $x1} {
+	    set x0 [lindex $px [expr {$ii-1}]]
+	    set y0 [lindex $py [expr {$ii-1}]]
+	    set y1 [lindex $py $ii]
+	    if {$x1 == $x0} {
+		return $y1
+	    }
+	    return [expr {$y0+($y1-$y0)*($xx-$x0)/($x1-$x0)}]
+	}
+    }
+    return [lindex $py end]
+}
+
+# drag a GHS handle: clamp to the limits and keep LP <= SP <= HP, move the
+# handle now, and apply once per idle so the image follows the drag
+proc ScaleGhsMotionDialog {x y mm} {
+    global dscale
+    global scale
+
+    set xx [lindex [$dscale(hist) invtransform $x $y] 0]
+    set xx [expr {min(max($xx,$dscale(min)),$dscale(max))}]
+    set lp [ScaleGhsResolve lp]
+    set sp [ScaleGhsResolve sp]
+    set hp [ScaleGhsResolve hp]
+    switch -- $mm {
+	lp {set xx [expr {min($xx,$sp)}]}
+	sp {set xx [expr {min(max($xx,$lp),$hp)}]}
+	hp {set xx [expr {max($xx,$sp)}]}
+    }
+    set scale(ghs,$mm) [format %.6g $xx]
+
+    ScaleGhsHandlesDialog 1
+    if {![info exists dscale(ghspending)]} {
+	set dscale(ghspending) [after idle ScaleGhsDragApplyDialog]
+    }
+}
+
+proc ScaleGhsDragApplyDialog {} {
+    global dscale
+
+    unset -nocomplain dscale(ghspending)
+    ChangeScale
+}
+
+proc ScaleGhsReleaseDialog {} {
+    global dscale
+
+    if {[info exists dscale(ghspending)]} {
+	after cancel $dscale(ghspending)
+	unset dscale(ghspending)
+    }
+    ChangeScale
 }
 
 proc ScaleYAxisDialog {} {

@@ -226,8 +226,26 @@ Rough size: about 50 lines of maths, and a few days in total, mostly wiring and 
   levels are the curve sampled evenly in output, so it's dense where the curve is
   steep. It is flat at 0/1 outside the limits and redraws on every scale change. The
   curve is listed first in `element show` so it draws on top of the filled histogram.
-  - For GHS, dashed SP/LP/HP marker lines with labels are drawn for parameters given as
-    data values (not for `auto`, which coincides with the limit markers).
+  - For GHS, dashed SP/LP/HP guide lines are drawn for parameters given as data values
+    (not for `auto`, which coincides with the limit markers).
+- **Draggable LP/SP/HP handles on the curve** (uncommitted). In GHS mode each parameter
+  has a blue tab labelled LP/SP/HP sitting on the curve at its value, `auto` ones at the
+  limit they stand for.
+  - Dragging a tab sideways sets that parameter to a data value (`%.6g`). The image
+    updates during the drag (merged with `after idle`), with a final apply on release.
+  - The value is clamped to the low/high limits, and LP ≤ SP ≤ HP is kept. The cursor
+    changes to a horizontal double arrow over a tab.
+  - An open GHS Parameters dialog follows the drag.
+  - The handles are text markers, because tkblt has only line, polygon and text markers
+    (no image/bitmap). They're created after the red/green limit lines so they're on top.
+    They're created LP, HP, SP so SP is on top when SP and LP coincide (both `auto` at
+    the low limit), since SP is the one to pull away first. Near the bottom or top of the
+    plot, a tab is anchored above or below the curve point: a marker half outside the
+    plot area isn't picked by BLT.
+  - Tested with synthesized `event generate` press/motion/release on the graph, so BLT's
+    own picking and stacking were exercised: all three handles drag, including LP and HP
+    starting from `auto`, the clamps hold, and the clip limits are untouched. Not yet
+    tried by hand.
   - With the Graph menu's default "Full Range" x axis on wide-range data, the whole
     curve rises inside the leftmost sliver; "Current Range" shows its shape.
 

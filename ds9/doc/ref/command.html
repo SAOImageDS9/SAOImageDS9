@@ -645,7 +645,7 @@ $ds9 -console<br></tt>
 &nbsp;&nbsp;&nbsp; [smooth &lt;smooth&gt;]<br>
 &nbsp;&nbsp;&nbsp; [method block|smooth]<br>
 &nbsp;&nbsp;&nbsp; [nlevels &lt;number of levels&gt;]<br>
-&nbsp;&nbsp;&nbsp; [scale linear|log|pow|squared|sqrt|asinh|sinh|histequ]<br>
+&nbsp;&nbsp;&nbsp; [scale linear|log|pow|squared|sqrt|asinh|sinh|histequ|ghs]<br>
 &nbsp;&nbsp;&nbsp; [log exp &lt;value&gt;]<br>
 &nbsp;&nbsp;&nbsp; [mode minmax|&lt;value&gt;|zscale|zmax]<br>
 &nbsp;&nbsp;&nbsp; [scope global|local]<br>
@@ -2446,9 +2446,24 @@ $ds9 -saveimage pdf ds9.pdf<br>
 $ds9 -saveimage jpeg ds9.jpeg 75<br></tt>
 <p><b><a name="scale" id="scale"></a>scale</b></p>
 <p>Controls the limits and color scale distribution.</p>
+<p><tt>ghs</tt> is the Generalized Hyperbolic Stretch of D. Payne and
+M. Cranfield (<a href="https://www.ghsastro.co.uk">ghsastro.co.uk</a>). It adds
+contrast around a chosen data value, the symmetry point <tt>sp</tt>.
+<tt>stretch</tt> (0&ndash;20) sets the strength, with 0 the identity.
+<tt>intensity</tt> (&minus;5&ndash;15) sets how tightly the contrast is
+concentrated around <tt>sp</tt>. The curve is linear below <tt>lp</tt> (protect
+shadows) and above <tt>hp</tt> (protect highlights). <tt>sp</tt>, <tt>lp</tt>
+and <tt>hp</tt> are data values, or <tt>auto</tt> for the low (<tt>sp</tt>,
+<tt>lp</tt>) or high (<tt>hp</tt>) scale limit. Setting a parameter does not
+change the scale type. Data values are copied unchanged by
+<tt>match</tt>/<tt>lock</tt>, so they are only meaningful between frames in the
+same units. For best results put <tt>sp</tt> at the sky level and keep the
+colormap contrast at 1 and bias at 0.5.</p>
 <tt>Syntax:<br>
--scale [linear|log|pow|sqrt|squared|asinh|sinh|histequ]<br>
+-scale [linear|log|pow|sqrt|squared|asinh|sinh|histequ|ghs]<br>
 &nbsp;&nbsp;&nbsp; [log exp &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [ghs stretch|intensity &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [ghs sp|lp|hp &lt;value&gt;|auto]<br>
 &nbsp;&nbsp;&nbsp; [datasec yes|no]<br>
 &nbsp;&nbsp;&nbsp; [limits &lt;minvalue&gt; &lt;maxvalue&gt;]<br>
 &nbsp;&nbsp;&nbsp; [mode minmax|&lt;value&gt;|zscale|zmax]<br>
@@ -2462,6 +2477,10 @@ $ds9 -saveimage jpeg ds9.jpeg 75<br></tt>
 Example:<br>
 $ds9 -scale linear<br>
 $ds9 -scale log exp 100<br>
+$ds9 -scale ghs<br>
+$ds9 -scale ghs stretch 8<br>
+$ds9 -scale ghs sp 101.3<br>
+$ds9 -scale ghs hp auto<br>
 $ds9 -scale datasec yes<br>
 $ds9 -scale histequ<br>
 $ds9 -scale limits 1 100<br>

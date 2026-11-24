@@ -65,7 +65,7 @@ class FrScale {
   FrScale& operator=(const FrScale&);
 
   static int colorIndex(double, double, double, int, ColorScaleType, float,
-			double*, int, float, float, int);
+			const GhsParams&, double*, int, float, float, int);
 
   ColorScaleType colorScaleType() {return colorScaleType_;}
   ClipScope clipScope() {return clipScope_;}

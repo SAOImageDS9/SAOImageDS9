@@ -6,6 +6,7 @@
 #include <math.h>
 
 #include "colorscalergb.h"
+#include "colorscale.h"
 
 ColorScaleRGB::ColorScaleRGB(int s)
 {
@@ -88,6 +89,21 @@ AsinhScaleRGB::AsinhScaleRGB(int jj, int ss, unsigned char* colorCells,
     double aa = double(ii)/ss;
     int ll = (int)(asinh(10*aa)/3 * count);
     memcpy(psColors_+ii, colorCells+ll*3+jj,1);
+  }
+}
+
+GhsScaleRGB::GhsScaleRGB(int jj, unsigned char* colorCells, int count,
+			 const GhsParams& gp, double low, double high)
+  : ColorScaleRGB(GHSSCALESIZE)
+{
+  GhsCurve curve(gp, low, high);
+  int start = 0;
+  for (int kk=0; kk<count && start<size_; kk++) {
+    int stop = curve.cellStop(kk, count, size_);
+    for (int ii=start; ii<stop; ii++)
+      psColors_[ii] = colorCells[kk*3+jj];
+    if (stop > start)
+      start = stop;
   }
 }
 

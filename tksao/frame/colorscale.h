@@ -28,32 +28,12 @@ public:
   int size_;
   unsigned char* psColors_;  // rgb
 
-  // optional: evaluate the curve per pixel instead of using the table
-  // (GHS, PROTOTYPE). cells_ is a copy of the colorCells (same order).
-  GhsCurve* curve_;
-  unsigned char* cells_;
-  int count_;
-
 public:
   ColorScale(int);
   virtual ~ColorScale();
 
   int size() {return size_;}
   const unsigned char* psColors() {return psColors_;}
-
-  // aa = (value-low)/(high-low), with low < value < high
-  // returns pointer to 3 bytes, same layout as psColors()
-  const unsigned char* lookup(double aa) const {
-    if (curve_) {
-      int ll = (int)((*curve_)(aa) * count_);
-      if (ll<0)
-	ll = 0;
-      else if (ll>=count_)
-	ll = count_-1;
-      return cells_ + ll*3;
-    }
-    return psColors_ + ((int)(aa * (size_-1) + .5))*3;
-  }
 };
 
 class LinearScale : public virtual ColorScale {
@@ -86,9 +66,13 @@ public:
   AsinhScale(int, unsigned char*, int);
 };
 
+// GHS needs a much finer table than SCALESIZE: with minmax limits on wide
+// range data the sky can be narrower than one SCALESIZE step
+#define GHSSCALESIZE (1<<20)
+
 class GhsScale : public virtual ColorScale {
 public:
-  GhsScale(int, unsigned char*, int, const GhsParams&);
+  GhsScale(unsigned char*, int, const GhsParams&, double, double);
 };
 
 class SinhScale : public virtual ColorScale {

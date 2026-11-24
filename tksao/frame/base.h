@@ -1832,6 +1832,7 @@ public:
   void getColorScaleCmd();
   void getColorScaleLevelCmd(int, double, double, 
 			     FrScale::ColorScaleType, float);
+  void getColorScaleGhsCmd();
   void getColorScaleLogCmd();
 
   // Smooth Commands

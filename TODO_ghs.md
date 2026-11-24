@@ -1,15 +1,13 @@
 # TODO: Generalized Hyperbolic Stretch (GHS) scale
 
-**Status (2026-11-24): proposal only — nothing implemented.** Recommendation: add the
-core GHS transfer curve as a new DS9 scale type; skip GHS's colour modes. Reviewed
-2026-11-24: the maths checks out (every T′ and inverse verified), contrast/bias fit with
-no code changes (see "Interaction with contrast/bias"), and LUT banding is predictable
-from the maths. **Prototype built 2026-11-24 on branch `ghs_scale` (uncommitted).** It
-shows that the scale table, not the stretch factor, limits GHS on wide-range data: see
-"Prototype results". Prototypes 2 and 3 compared computing each pixel directly with a
-2²⁰-entry table built from the inverse. Both fix the banding, and the fine table does it
-at near-normal speed: **recommended**. Next step is deciding questions 2–4, then the
-full wiring with the fine table (dropping `lookup()` and the env switch).
+**Status (2026-11-24): fully wired on branch `ghs_scale`, smoke-tested, not yet
+committed past the WIP prototype commit.** GHS is a regular DS9 scale type (`scale ghs`,
+with `stretch`/`intensity`/`sp`/`lp`/`hp`), using the inverse-built 2²⁰-entry table.
+History: the review checked the maths and the contrast/bias interaction; prototypes 1–3
+found that the 16384-entry table, not the stretch factor, causes banding on wide-range
+data, and that the inverse-built fine table fixes it at near-normal speed (see
+"Prototype results"); questions 2–4 are decided (see "Decisions"); "Full wiring" lists
+what was done. Remaining: tests in `Tests/` (Plan step 4) and the UI ideas.
 
 Source: PixInsight GHS process module docs, v3.0.4 (2023-07-11),
 <https://www.ghsastro.co.uk/doc/tools/GeneralizedHyperbolicStretch/GeneralizedHyperbolicStretch.html>.
@@ -236,15 +234,59 @@ Rough size: about 50 lines of maths, and a few days in total, mostly wiring and 
    steepness at SP matters, but the deciding quantity is the table step in data units,
    `(high − low)/16383`, compared with the sky noise σ. When the step is ≳ σ, sky pixels
    collapse onto 2–3 table entries at *any* stretch factor, and no cap fixes it.
-2. **Parameter semantics across frames.** Data-unit SP/LP/HP versus normalised ones when
-   scales are locked or matched between frames with different data ranges. Data units
-   seem right, but match/lock behaviour needs a decision. Note that contrast/bias is
-   locked through the colorbar, separately from the scale.
-3. **Which extra curves to expose.** Arcsinh-with-D and power-law-with-D overlap DS9's
-   existing asinh and pow. Should they be separate types, a GHS sub-option, or left out?
-4. **Command syntax.** For example `scale ghs`, plus
-   `scale ghs {stretch 5 intensity 10 sp 120 lp 0 hp 5000}`, or separate keywords.
-   Follow the existing `scale log exp N` pattern.
+2. ~~Parameter semantics across frames.~~ **Decided 2026-11-24: data units**, copied
+   verbatim by match/lock (see "Decisions").
+3. ~~Which extra curves to expose.~~ **Decided: core b-family only.**
+4. ~~Command syntax.~~ **Decided: one keyword per parameter**, following
+   `scale log exp N`.
+
+## Decisions (2026-11-24)
+
+1. **SP/LP/HP are stored in data units** in `FrScale`, and match/lock copies them
+   verbatim. `scale match` copies the scale type but each frame recomputes its own clip
+   limits, so data units are what make matched frames stretch around the same sky value.
+   Normalised values would put SP on different data values per frame.
+   - Convert to [0,1] with the context's low/high when building the table, then clamp
+     and order (LP ≤ SP ≤ HP). Every clip-changing command (`clipModeCmd`,
+     `clipUserCmd`, ...) already calls `updateColorScale()`, so the table follows clip
+     changes with no extra plumbing.
+   - Frames in different units (e.g. different bands) get an SP outside their range,
+     which is clamped to it. Document this: match is for frames in the same units.
+   - **Caveat, mosaics with local clip scope:** each tile renders with its own
+     `sptr->low()/high()` but all tiles share one scale table, so a data-unit SP is exact
+     only for the range the table was built with. Use the context (frame) low/high for
+     the conversion and document the limitation. Per-tile tables would fix it, but that
+     isn't worth it initially. Cube slices are fine: changing slice updates the clip and
+     rebuilds the table.
+   - Contrast/bias stays locked through the colorbar, separately (see "Interaction with
+     contrast/bias").
+2. **Core b-family only** (b = −1 log, b < 0 integral, b = 0 exponential, b = 1 harmonic,
+   b > 0 hyperbolic). The GHS arcsinh, power law and midtone curves are left out. They
+   could come later as a `curve` sub-option without changing the syntax below.
+3. **Syntax: one keyword per parameter**, mirroring `scale log exp N`:
+   - `scale ghs` selects the scale type.
+   - `scale ghs stretch <sf>` (stretch factor, sf ∈ [0, 20], D = e^sf − 1)
+   - `scale ghs intensity <b>` (b ∈ [−5, 15])
+   - `scale ghs sp <value>`, `scale ghs lp <value>`, `scale ghs hp <value>` (data units)
+   - Each can be read back with `xpaget ds9 scale ghs <keyword>`. Setting a parameter
+     doesn't change the scale type, just as `scale log exp` doesn't.
+   - Frame (C++) side: a new `GHS_` token in `tksao/frame/lex.L` (regenerate with
+     CommandLineTools flex, which matches the checked-in `lex.C` byte-for-byte; see the
+     memory note on the flex toolchain), replacing the prototype's `colorscale user ...`
+     hook with `colorscale ghs <sf> <b> <sp> <lp> <hp>` set in one call from Tcl, plus
+     `get colorscale ghs`.
+   - Tcl side: `scaleparser.tac`/`scalelex.fcl` and `scalesendparser` (taccle/fickle,
+     regenerated by `make ds9`; after adding tokens, regenerate the lexer too, per
+     AGENTS.md).
+   - Defaults: stretch 5, intensity 0, sp/lp = the current low, hp = the current high
+     (so a fresh `scale ghs` is a sensible, visible stretch). Exact defaults can be tuned
+     in the UI step.
+4. **Contours reuse the frame's GHS parameters.** When the contour scale type is `ghs`,
+   `fvcontour` takes the five parameters from the frame's `FrScale`, not its own copy.
+   That means no extra contour prefs, dialog fields or backup entries. The contour
+   dialog just gains `ghs` in its scale menu. (The prototype's contour copy of
+   `FrScale` already carries `ghs_`, but full wiring must make sure it's refreshed from
+   the frame when the GHS parameters change.)
 
 ## Prototype results (2026-11-24, branch `ghs_scale`)
 
@@ -408,15 +450,104 @@ conversions become unnecessary; `GhsScale` just builds a bigger table. Costs and
 (step ≤ σ/4) would also work, but it needs a noise estimate and can reach 10⁵–10⁶
 entries.
 
+## Full wiring (2026-11-24, branch `ghs_scale`)
+
+### C++ (`tksao/frame/`)
+
+- `ghs.h`: `GhsParams` now holds SP/LP/HP **in data units**, with NaN meaning `auto`
+  (SP, LP → low; HP → high). `GhsCurve(params, low, high)` normalises, clamps and
+  orders them. `GhsCurve::cellStop()` gives the run boundaries for filling tables from
+  the inverse.
+- `GhsScale` (`colorscale.C`), plus new `GhsScaleRGB` (`colorscalergb.C`) and
+  `GhsScaleT` (`colorscalet.C`). All build a `GHSSCALESIZE` (2²⁰) table by run-filling
+  between `cellStop()` boundaries. Every frame type now uses a real GHS scale; the
+  prototype's linear fallbacks are gone.
+- Removed the prototype's `ColorScale::lookup()`, the per-pixel state and the
+  `DS9_GHS_MODE` switch. The pixel loops in `frame.C`, `frame3d.C`, `framet.C` and
+  `framemulticolor.C` are back to master's code; only the GHS switch cases remain.
+- `GhsInverseScale` normalises with the low/high it is given (colorbar labels, contour
+  levels).
+- `FrScale::colorIndex` takes `const GhsParams&` and handles `GHSSCALE`. Its caller
+  `frblt.C` passes the context's parameters. The build's `-Wswitch` warning is gone.
+- Grammar: new `GHS_` token (`lex.L`). Rules: `colorscale ghs` (the type, via
+  `scaleType`, so contours accept it too); `colorscale ghs <sf> <b> <sp> <lp> <hp>`,
+  where each of SP/LP/HP is a number or `auto`, which **sets the parameters without
+  changing the type**, like `colorscale log N`; and `get colorscale ghs`, which prints
+  `sf b sp lp hp` with `auto` for unset values. The prototype's `colorscale user ...`
+  hook is gone. `lex.C` was regenerated with CommandLineTools flex (a no-op regen was
+  byte-identical first), and `parser.C`/`.H` with bison 2.3.
+
+### Tcl (`ds9/`)
+
+- `scaleparser.tac`/`scalelex.fcl`: `scale ghs`, `scale ghs stretch|intensity <n>`,
+  `scale ghs sp|lp|hp <n>|auto`. `scalesendparser`/`scalesendlex`: `xpaget scale ghs`
+  (all five) and `xpaget scale ghs <keyword>`. `contourparser`/`contourlex`:
+  `contour scale ghs`. All six generated files were regenerated by hand (taccle, then
+  fickle), and the token numbers agree between lexer and parser.
+- `scale.tcl`: `scale(ghs,*)` state (defaults stretch 5, intensity 0, sp/lp/hp
+  `auto`) and the `pscale` copies; `ChangeScale` sends `colorscale ghs`; match and
+  match-limits copy `get colorscale ghs`; backup writes
+  `colorscale ghs ...`; new `ScaleGhsDialog` (stretch and intensity sliders, SP/LP/HP
+  entries, validation); helpers `ScaleGhsList`, `ScaleGhsSet` and `ScaleGhsValue`;
+  GHS entries in the Scale dialog's menu.
+- `mscale.tcl`: a GHS radio entry and "GHS Parameters..." in the main Scale menu; GHS in
+  the prefs scale-type menu; a GHS labelframe in Preferences > Scale; a `scale,ghs`
+  button (off by default) with its button-bar toggle; `UpdateScaleMenu` reads the
+  frame's GHS parameters.
+- `frame.tcl`: new frames (base/3d, rgb, hsv, hls) get the GHS parameters.
+- `contour.tcl`: GHS in the contour dialog's scale menu. Contours reuse the frame's GHS
+  parameters, because `contourCreateFV` copies the frame's `FrScale`.
+- Docs: `command.html`, `xpa.html` and `samp.html` scale sections (description with
+  Payne & Cranfield attribution, syntax and examples) and their contour scale lists;
+  `framecmd.html` (`colorscale ghs`, `get colorscale ghs`, `<scaleType>`).
+- Not changed: the legacy single-dash flags in `command.tcl` (`-asinh`, `-histequ`, ...)
+  get no `-ghs`; `-scale ghs` covers it.
+
+### Verification
+
+- Clean rebuild: no errors, no stale objects, and no new warnings (the 8 `frblt.C`
+  warnings were already there).
+- Standalone curve test with data-unit parameters (low 90, high 1090; SP/LP/HP
+  including `auto` and values outside the range), sweeping stretch factor, b and
+  (SP, LP, HP): every curve is monotonic, runs from 0 to 1, and the inverse
+  round-trips to ≤ 1e-6. The run-filled table matches a forward-built one except at
+  0.04% of entries, all at cell boundaries and off by exactly one cell.
+- XPA smoke test on the synthetic image:
+  - set/get round-trips, including `auto`; defaults are `5 0 auto auto auto`.
+  - Setting a parameter while the scale is linear leaves it linear.
+  - A bad value gives a parse error: `expecting: integer, float, AUTO`.
+  - The stretch factor 8 render gives 46 sky levels holding ≥ 0.5% of pixels, the same
+    as the fine-table prototype (the old table gave 2).
+  - `scale mode 99.5` keeps GHS. `scale match` copies type and parameters to a second
+    frame.
+  - Backup writes `colorscale ghs 8 5 101.28 auto auto`, and restore brings it back.
+  - `contour scale ghs` produces levels bunched near the sky.
+  - An RGB frame's red channel renders with GHS: the faint blob shows, so it isn't the
+    linear fallback.
+  - Pan redraw: 8.9 ms with GHS against 7.9 ms with log.
+- `ScaleGhsDialog`, driven by a timer: valid values apply, and an invalid SP is
+  rejected with nothing changed. The Preferences dialog builds.
+- Not verified: the GHS dialog and Preferences clicked through by hand, HSV/HLS and
+  multicolor frames, 3D frames, SAMP, and prefs save/load round-trip.
+
+### Known limitations
+
+- Mosaics with local clip scope: one table for all tiles, so a data-unit SP is exact
+  only for the frame's low/high (see "Decisions").
+- 3 MB per GHS scale (×3 for RGB/HSV/HLS, × layers for multicolor).
+- The fine table still bands when the range exceeds about 2.6×10⁵·σ.
+
 ## Plan
 
 1. ~~Prototype~~ done (see above).
-2. Decide questions 2–4. Risk 1 is settled: use the inverse-built 2²⁰ table.
-3. Full wiring (list above), then `make tksaoclean tksao ds9clean ds9`.
+2. ~~Decide questions 2–4~~ done (see "Decisions"). Risk 1 is settled: use the
+   inverse-built 2²⁰ table.
+3. ~~Full wiring~~ done (see "Full wiring").
 4. Tests in `Tests/` (a separate git repo): table monotonicity and continuity at
    LP/SP/HP, the edge cases (D = 0, LP = SP, HP = SP, SP ∈ {0, 1}, SP/LP/HP outside the
    clip range), the inverse round-trip, colorbar labels unchanged under non-default
    contrast/bias, an XPA set/get round-trip, and backup/restore.
-5. Docs: reference-manual entry with attribution. Explain SP vs. bias, recommend
-   contrast 1 / bias 0.5 with GHS, and say b = −1 is *nearly* DS9's log (DS9 divides by
-   log(exp), GHS by ln(1+D)).
+5. Docs: mostly done in the wiring step (see "Full wiring"). The scale sections already
+   explain SP and recommend contrast 1 / bias 0.5. Still to do: spell out SP vs. bias,
+   say b = −1 is *nearly* DS9's log (DS9 divides by log(exp), GHS by ln(1+D)), and add
+   the release notes entry.

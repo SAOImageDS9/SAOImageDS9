@@ -3,7 +3,6 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include <string.h>
-#include <stdlib.h>
 #include <math.h>
 
 #include "colorscale.h"
@@ -13,20 +12,12 @@ ColorScale::ColorScale(int ss)
   size_ = ss;
   psColors_ = new unsigned char[ss*3];
   memset(psColors_, '0', size_*3);
-
-  curve_ = NULL;
-  cells_ = NULL;
-  count_ = 0;
 }
 
 ColorScale::~ColorScale()
 {
   if (psColors_)
     delete [] psColors_;
-  if (curve_)
-    delete curve_;
-  if (cells_)
-    delete [] cells_;
 }
 
 LinearScale::LinearScale(int ss, unsigned char* colorCells, int count) 
@@ -98,66 +89,18 @@ AsinhScale::AsinhScale(int ss, unsigned char* colorCells, int count)
   }
 }
 
-// PROTOTYPE switch, env DS9_GHS_MODE:
-//   direct (default): evaluate the curve per pixel, plus a normal table
-//   fine: 2^20 entry table, no per pixel evaluation
-//   table: normal SCALESIZE table only (original behaviour)
-static int ghsMode()
+GhsScale::GhsScale(unsigned char* colorCells, int count,
+		   const GhsParams& gp, double low, double high)
+  : ColorScale(GHSSCALESIZE)
 {
-  const char* mm = getenv("DS9_GHS_MODE");
-  if (mm && !strcmp(mm,"fine"))
-    return 1;
-  if (mm && !strcmp(mm,"table"))
-    return 2;
-  return 0;
-}
-
-#define GHSFINESIZE (1<<20)
-
-GhsScale::GhsScale(int ss, unsigned char* colorCells, int count,
-		   const GhsParams& gp)
-  : ColorScale(ghsMode()==1 ? GHSFINESIZE : ss)
-{
-  GhsCurve curve(gp);
-  ss = size_;
-
-  // per pixel evaluation
-  if (ghsMode()==0) {
-    curve_ = new GhsCurve(gp);
-    count_ = count;
-    cells_ = new unsigned char[count*3];
-    memcpy(cells_, colorCells, count*3);
-  }
-
-  // fine table: fill runs between colour-cell boundaries found with the
-  // closed-form inverse. Cell k covers curve(aa) in [k/count, (k+1)/count),
-  // i.e. table entries ii >= ss*inverse(k/count)
-  if (ghsMode()==1) {
-    int start = 0;
-    for (int kk=0; kk<count && start<ss; kk++) {
-      int stop = ss;
-      if (kk+1 < count) {
-	stop = (int)ceil(curve.inverse(double(kk+1)/count) * ss);
-	if (stop > ss)
-	  stop = ss;
-      }
-      for (int ii=start; ii<stop; ii++)
-	memcpy(psColors_+ii*3, colorCells+kk*3, 3);
-      if (stop > start)
-	start = stop;
-    }
-    return;
-  }
-
-  // table, used by code paths that don't call lookup()
-  for (int ii=0; ii<ss; ii++) {
-    double aa = curve(double(ii)/ss);
-    int ll = (int)(aa * count);
-    if (ll<0)
-      ll = 0;
-    else if (ll>=count)
-      ll = count-1;
-    memcpy(psColors_+ii*3, colorCells+ll*3, 3);
+  GhsCurve curve(gp, low, high);
+  int start = 0;
+  for (int kk=0; kk<count && start<size_; kk++) {
+    int stop = curve.cellStop(kk, count, size_);
+    for (int ii=start; ii<stop; ii++)
+      memcpy(psColors_+ii*3, colorCells+kk*3, 3);
+    if (stop > start)
+      start = stop;
   }
 }
 

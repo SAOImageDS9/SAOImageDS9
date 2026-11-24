@@ -5,6 +5,8 @@
 #ifndef __colorscalet_h__
 #define __colorscalet_h__
 
+#include "ghs.h"
+
 class ColorScaleT {
 protected:
   int size_;
@@ -46,6 +48,11 @@ public:
 class AsinhScaleT : public virtual ColorScaleT {
 public:
   AsinhScaleT(int, unsigned char*, int);
+};
+
+class GhsScaleT : public virtual ColorScaleT {
+public:
+  GhsScaleT(unsigned char*, int, const GhsParams&, double, double);
 };
 
 class SinhScaleT : public virtual ColorScaleT {

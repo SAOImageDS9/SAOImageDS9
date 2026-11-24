@@ -123,7 +123,7 @@ $::current(frame) marker create circle 256 256 20</tt>
 <dd><tt>average</tt> (default) | <tt>sum</tt> | <tt>median</tt>.</dd>
 
 <dt><a name="t-scaleType" id="t-scaleType"></a><tt>&lt;scaleType&gt;</tt></dt>
-<dd><tt>linear</tt> | <tt>log</tt> | <tt>pow</tt> | <tt>sqrt</tt> | <tt>squared</tt> | <tt>asinh</tt> | <tt>sinh</tt> | <tt>histequ</tt>.</dd>
+<dd><tt>linear</tt> | <tt>log</tt> | <tt>pow</tt> | <tt>sqrt</tt> | <tt>squared</tt> | <tt>asinh</tt> | <tt>sinh</tt> | <tt>histequ</tt> | <tt>ghs</tt>.</dd>
 
 <dt><a name="t-minmaxMode" id="t-minmaxMode"></a><tt>&lt;minmaxMode&gt;</tt></dt>
 <dd><tt>auto</tt> | <tt>scan</tt> | <tt>sample</tt> | <tt>datamin</tt> | <tt>irafmin</tt>.</dd>
@@ -318,11 +318,16 @@ $::current(frame) colormap end</tt>
 <tt>Syntax:<br>
 colorscale &lt;scaleType&gt;<br>
 colorscale log &lt;exponent&gt;<br>
+colorscale ghs &lt;stretch&gt; &lt;intensity&gt; &lt;sp&gt; &lt;lp&gt; &lt;hp&gt;<br>
 &nbsp;<br>
 Example:<br>
 $::current(frame) colorscale log<br>
 $::current(frame) colorscale sqrt<br>
-$::current(frame) colorscale log 1000</tt>
+$::current(frame) colorscale log 1000<br>
+$::current(frame) colorscale ghs 8 5 101.3 auto auto</tt>
+<p><tt>colorscale ghs</tt> sets the Generalized Hyperbolic Stretch parameters
+without changing the scale type. <tt>sp</tt>, <tt>lp</tt> and <tt>hp</tt> are
+data values, or <tt>auto</tt> for the low, low and high clip limits.</p>
 <p>See <a href="#t-scaleType">&lt;scaleType&gt;</a>.</p>
 
 <h4><a name="contour" id="contour"></a>contour</h4>
@@ -474,6 +479,7 @@ $::current(frame) fitsy has ext WCSDVARR</tt>
 <tr><td><tt>get colormap level &lt;n&gt; &lt;low&gt; &lt;high&gt; &lt;scaleType&gt; &lt;exp&gt;</tt></td><td>same, from explicit clip/scale parameters</td></tr>
 <tr><td><tt>get colorscale</tt></td><td>the current <a href="#t-scaleType">&lt;scaleType&gt;</a></td></tr>
 <tr><td><tt>get colorscale log</tt></td><td>the log-scale exponent</td></tr>
+<tr><td><tt>get colorscale ghs</tt></td><td>the GHS parameters: stretch, intensity, sp, lp, hp (<tt>auto</tt> when unset)</td></tr>
 <tr><td><tt>get colorscale level &lt;n&gt; &lt;low&gt; &lt;high&gt; &lt;scaleType&gt; &lt;exp&gt;</tt></td><td>the scaled color-scale value for cell &lt;n&gt;</td></tr>
 <tr><td><tt>get contour &lt;coordSystem&gt; &lt;skyFrame&gt;</tt></td><td>contour parameters in that system</td></tr>
 <tr><td><tt>get contour clip</tt></td><td>current contour clip low/high</td></tr>

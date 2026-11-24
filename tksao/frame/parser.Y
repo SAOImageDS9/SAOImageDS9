@@ -61,6 +61,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 }
 
 %type <real> numeric
+%type <real> ghsValue
 %type <integer> yesno
 %type <integer> compositeOperation
 
@@ -258,6 +259,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token GALACTIC_
 %token GAUSSIAN_
 %token GET_
+%token GHS_
 %token GLOBAL_
 %token GLYPH_
 %token GRAPHICS_
@@ -731,6 +733,7 @@ scaleType: LINEAR_ {$$ = FrScale::LINEARSCALE;}
 	| ASINH_ {$$ = FrScale::ASINHSCALE;}
 	| SINH_ {$$ = FrScale::SINHSCALE;}
 	| HISTEQU_ {$$ = FrScale::HISTEQUSCALE;}
+	| GHS_ {$$ = FrScale::GHSSCALE;}
 	;
 
 minmaxMode : AUTO_ {$$=FrScale::SCAN;}
@@ -1000,8 +1003,12 @@ colormapMotion: INT numeric numeric INT INT
 
 colorscale : scaleType {fr->colorScaleCmd((FrScale::ColorScaleType)$1);}
 	| LOG_ numeric {fr->colorScaleLogCmd($2);}
-	| USER_ numeric numeric numeric numeric numeric
+	| GHS_ numeric numeric ghsValue ghsValue ghsValue
 	{fr->colorScaleGhsCmd($2,$3,$4,$5,$6);}
+	;
+
+ghsValue : numeric {$$=$1;}
+	| AUTO_ {$$=NAN;}
 	;
 
 contour	: CREATE_ contourCreate
@@ -1269,6 +1276,7 @@ getColorMapLevel: INT {fr->getColorMapLevelCmd($1);}
 getColorScale : /* empty */ {fr->getColorScaleCmd();}
 	| LEVEL_ getColorScaleLevel
 	| LOG_ {fr->getColorScaleLogCmd();}
+	| GHS_ {fr->getColorScaleGhsCmd();}
 	;
 
 getColorScaleLevel: INT numeric numeric scaleType numeric

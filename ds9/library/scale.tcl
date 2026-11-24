@@ -23,12 +23,21 @@ proc ScaleDef {} {
 
     set scale(type) linear
     set scale(log) 1000
+    # GHS: sp/lp/hp are data values or auto (sp,lp = low, hp = high)
+    set scale(ghs,stretch) 5
+    set scale(ghs,intensity) 0
+    set scale(ghs,sp) auto
+    set scale(ghs,lp) auto
+    set scale(ghs,hp) auto
     set scale(mode) minmax
     set scale(scope) local
     set scale(datasec) 1
 
     set pscale(type) $scale(type)
     set pscale(log) $scale(log)
+    foreach kk {stretch intensity sp lp hp} {
+	set pscale(ghs,$kk) $scale(ghs,$kk)
+    }
     set pscale(mode) $scale(mode)
     set pscale(scope) $scale(scope)
     set pscale(datasec) $scale(datasec)
@@ -77,6 +86,7 @@ proc ChangeScale {} {
 	}
 
 	EvalLockCurrent lock,scale [list $current(frame) colorscale log $scale(log)]
+	EvalLockCurrent lock,scale [list $current(frame) colorscale ghs {*}[ScaleGhsList]]
 	EvalLockCurrent lock,scale [list $current(frame) colorscale $scale(type)]
 	UpdateScale
     }
@@ -252,9 +262,13 @@ proc ScaleDialog {} {
 	-variable scale(type) -command ChangeScale -value sinh
     $mb.scale add radiobutton -label [msgcat::mc {Histogram Equalization}] \
 	-variable scale(type) -command ChangeScale -value histequ
+    $mb.scale add radiobutton -label {GHS} \
+	-variable scale(type) -command ChangeScale -value ghs
     $mb.scale add separator
     $mb.scale add command -label [msgcat::mc {Log Exponent}] \
 	-command ScaleLogDialog
+    $mb.scale add command -label "GHS [msgcat::mc {Parameters}]..." \
+	-command ScaleGhsDialog
 
     ThemeMenu $mb.limit
     $mb.limit add radiobutton -label [msgcat::mc {Min Max}] \
@@ -655,6 +669,114 @@ proc ScaleLogDialog {} {
     }
 }
 
+# GHS (Generalized Hyperbolic Stretch) parameters, in the order the frame
+# command 'colorscale ghs' takes them
+proc ScaleGhsList {} {
+    global scale
+
+    return [list $scale(ghs,stretch) $scale(ghs,intensity) \
+		$scale(ghs,sp) $scale(ghs,lp) $scale(ghs,hp)]
+}
+
+# set scale(ghs,*) from 'get colorscale ghs'
+proc ScaleGhsSet {ll} {
+    global scale
+
+    foreach kk {stretch intensity sp lp hp} vv $ll {
+	set scale(ghs,$kk) $vv
+    }
+}
+
+# a data value or auto
+proc ScaleGhsValue {vv} {
+    set vv [string trim $vv]
+    if {$vv == {} || [string equal -nocase $vv auto]} {
+	return auto
+    }
+    if {[string is double -strict $vv]} {
+	return $vv
+    }
+    return {}
+}
+
+proc ScaleGhsDialog {} {
+    global scale
+    global ed
+
+    set w {.ghs}
+
+    set ed(ok) 0
+    foreach kk {stretch intensity sp lp hp} {
+	set ed($kk) $scale(ghs,$kk)
+    }
+
+    DialogCreate $w "GHS [msgcat::mc {Parameters}]" ed(ok)
+
+    # Param
+    set f [ttk::frame $w.param]
+    slider $f.sstretch 0 20 [msgcat::mc {Stretch Factor}] ed(stretch) {}
+    slider $f.sintensity -5 15 [msgcat::mc {Local Intensity}] \
+	ed(intensity) {}
+    grid $f.sstretch - -padx 2 -pady 2 -sticky ew
+    grid $f.sintensity - -padx 2 -pady 2 -sticky ew
+
+    ttk::label $f.tsp -text [msgcat::mc {Symmetry Point}]
+    ttk::entry $f.sp -textvariable ed(sp) -width 14
+    ttk::label $f.tlp -text [msgcat::mc {Protect Shadows}]
+    ttk::entry $f.lp -textvariable ed(lp) -width 14
+    ttk::label $f.thp -text [msgcat::mc {Protect Highlights}]
+    ttk::entry $f.hp -textvariable ed(hp) -width 14
+    ttk::label $f.note \
+	-text [msgcat::mc {Data values, or auto for the scale limits}]
+    grid $f.tsp $f.sp -padx 2 -pady 2 -sticky w
+    grid $f.tlp $f.lp -padx 2 -pady 2 -sticky w
+    grid $f.thp $f.hp -padx 2 -pady 2 -sticky w
+    grid $f.note - -padx 2 -pady 2 -sticky w
+    grid columnconfigure $f 1 -weight 1
+
+    # Buttons
+    set f [ttk::frame $w.buttons]
+    ttk::button $f.ok -text [msgcat::mc {OK}] -command {set ed(ok) 1} \
+	-default active
+    ttk::button $f.cancel -text [msgcat::mc {Cancel}] -command {set ed(ok) 0}
+    pack $f.ok $f.cancel -side left -expand true -padx 2 -pady 4
+
+    bind $w <Return> {set ed(ok) 1}
+
+    # Fini
+    ttk::separator $w.sep -orient horizontal
+    pack $w.buttons $w.sep -side bottom -fill x
+    pack $w.param -side top -fill both -expand true
+
+    DialogWait $w ed(ok)
+    destroy $w
+
+    if {$ed(ok)} {
+	set ok 1
+	foreach kk {stretch intensity} {
+	    if {![string is double -strict $ed($kk)]} {
+		set ok 0
+	    }
+	}
+	foreach kk {sp lp hp} {
+	    set ed($kk) [ScaleGhsValue $ed($kk)]
+	    if {$ed($kk) == {}} {
+		set ok 0
+	    }
+	}
+	if {$ok} {
+	    foreach kk {stretch intensity sp lp hp} {
+		set scale(ghs,$kk) $ed($kk)
+	    }
+	    ChangeScale
+	} else {
+	    Error "GHS [msgcat::mc {Parameters}]: [msgcat::mc {invalid value}]"
+	}
+    }
+
+    unset ed
+}
+
 proc MinMaxDialog {} {
     global minmax
     global ed
@@ -773,6 +895,7 @@ proc MatchScale {which} {
 
     set type [$which get colorscale]
     set log  [$which get colorscale log]
+    set ghs  [$which get colorscale ghs]
     set limits [$which get clip]
     set mode [$which get clip mode]
     set scope [$which get clip scope]
@@ -786,6 +909,7 @@ proc MatchScale {which} {
 	if {$ff != $which} {
 	    EvalLock lock,scale $ff [list $ff colorscale $type]
 	    EvalLock lock,scale $ff [list $ff colorscale log $log]
+	    EvalLock lock,scale $ff [list $ff colorscale ghs {*}$ghs]
 	    EvalLock lock,scale $ff [list $ff clip user $limits]
 	    EvalLock lock,scale $ff [list $ff clip mode $mode]
 	    EvalLock lock,scale $ff [list $ff clip scope $scope]
@@ -808,6 +932,7 @@ proc MatchScaleLimits {which} {
     set limits [$which get clip]
     set type [$which get colorscale]
     set log  [$which get colorscale log]
+    set ghs  [$which get colorscale ghs]
     set scope [$which get clip scope]
     set mmmode [$which get clip minmax mode]
     set mmsample [$which get clip minmax sample]
@@ -821,6 +946,7 @@ proc MatchScaleLimits {which} {
 	EvalLock lock,scalelimits $ff [list $ff clip user $limits]
 	EvalLock lock,scalelimits $ff [list $ff colorscale $type]
 	EvalLock lock,scalelimits $ff [list $ff colorscale log $log]
+	EvalLock lock,scalelimits $ff [list $ff colorscale ghs {*}$ghs]
 	EvalLock lock,scalelimits $ff [list $ff clip scope $scope]
 	EvalLock lock,scalelimits $ff \
 	    [list $ff clip minmax $mmsample $mmmode]
@@ -877,6 +1003,7 @@ proc ScaleBackup {ch which} {
 proc ScaleBackupBase {ch which} {
     puts $ch "$which colorscale [$which get colorscale]"
     puts $ch "$which colorscale log [$which get colorscale log]"
+    puts $ch "$which colorscale ghs [$which get colorscale ghs]"
     puts $ch "$which datasec [$which get datasec]"
     puts $ch "$which clip user [$which get clip]"
     puts $ch "$which clip mode [$which get clip mode]"

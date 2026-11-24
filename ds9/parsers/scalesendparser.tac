@@ -6,12 +6,18 @@
 
 %token DATASEC_
 %token EXP_
+%token GHS_
+%token HP_
+%token INTENSITY_
 %token LIMITS_
 %token LOCK_
 %token LOG_
+%token LP_
 %token MODE_
 %token SCALELIMITS_
 %token SCOPE_
+%token SP_
+%token STRETCH_
 
 %%
 
@@ -27,6 +33,15 @@ scalesend : {ProcessSendCmdGet scale type}
  | LOG_ EXP_ {ProcessSendCmdGet scale log}
 # backward compatibility
  | LOG_ {ProcessSendCmdGet scale log}
+ | GHS_ ghs
+ ;
+
+ghs : {ProcessSendCmdTxt [ScaleGhsList]}
+ | STRETCH_ {ProcessSendCmdGet scale ghs,stretch}
+ | INTENSITY_ {ProcessSendCmdGet scale ghs,intensity}
+ | SP_ {ProcessSendCmdGet scale ghs,sp}
+ | LP_ {ProcessSendCmdGet scale ghs,lp}
+ | HP_ {ProcessSendCmdGet scale ghs,hp}
  ;
 
 %%

@@ -312,6 +312,7 @@ void Base::markerAnalysisCutout3d(Marker* pp, const char* varname,
   double high = ptr->high();
   FrScale::ColorScaleType scaleType = currentContext->colorScaleType();
   float expo = currentContext->expo();
+  const GhsParams& ghs = currentContext->ghs();
   double* hist = currentContext->histequ();
   int height = max(1, max(width, depth));
 
@@ -333,7 +334,7 @@ void Base::markerAnalysisCutout3d(Marker* pp, const char* varname,
 	  if (isfinite(val)) {
 	    int ndx = (jj-ymin)*width + (ii-xmin);
 	    int index = FrScale::colorIndex(val, low, high, colorCount,
-					    scaleType, expo, hist,
+					    scaleType, expo, ghs, hist,
 					    HISTEQUSIZE, colorbarBias,
 					    colorbarContrast, invert);
 	    int scaledHeight = (index*height)/colorCount;

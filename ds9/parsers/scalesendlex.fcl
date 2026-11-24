@@ -9,12 +9,18 @@
 
 datasec	    {return $DATASEC_}
 exp	    {return $EXP_}
+ghs	    {return $GHS_}
+hp	    {return $HP_}
+intensity   {return $INTENSITY_}
 limits	    {return $LIMITS_}
 lock	    {return $LOCK_}
 log	    {return $LOG_}
+lp	    {return $LP_}
 mode	    {return $MODE_}
 scalelimits {return $SCALELIMITS_}
 scope	    {return $SCOPE_}
+sp	    {return $SP_}
+stretch	    {return $STRETCH_}
 
 #include ws.fin
 

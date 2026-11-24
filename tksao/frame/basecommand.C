@@ -670,8 +670,8 @@ void Base::colorScaleCmd(FrScale::ColorScaleType s)
   }
 }
 
-// PROTOTYPE hook for GHS: "colorscale user sf b sp lp hp"
-// sp/lp/hp normalised to [0,1] of the current low/high
+// GHS parameters: stretch factor, intensity, then symmetry point, protect
+// shadows and protect highlights in data units (NaN = auto)
 void Base::colorScaleGhsCmd(double sf, double b, double sp, double lp,
 			    double hp)
 {
@@ -681,12 +681,7 @@ void Base::colorScaleGhsCmd(double sf, double b, double sp, double lp,
   gp.sp = sp;
   gp.lp = lp;
   gp.hp = hp;
-  int changed = currentContext->updateGhs(gp);
-  if (currentContext->colorScaleType() != FrScale::GHSSCALE) {
-    currentContext->setColorScaleType(FrScale::GHSSCALE);
-    changed = 1;
-  }
-  if (changed) {
+  if (currentContext->updateGhs(gp)) {
     updateColorScale();
     update(BASE);
   }
@@ -1625,6 +1620,28 @@ void Base::getColorScaleLevelCmd(int count, double ll, double hh,
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 
   delete scale;
+}
+
+static void ghsValue(ostream& str, double vv)
+{
+  if (isfinite(vv))
+    str << vv;
+  else
+    str << "auto";
+}
+
+void Base::getColorScaleGhsCmd()
+{
+  const GhsParams& gp = currentContext->ghs();
+  ostringstream str;
+  str << gp.sf << ' ' << gp.b << ' ';
+  ghsValue(str, gp.sp);
+  str << ' ';
+  ghsValue(str, gp.lp);
+  str << ' ';
+  ghsValue(str, gp.hp);
+  str << ends;
+  Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
 void Base::getColorScaleLogCmd()

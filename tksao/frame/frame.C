@@ -328,10 +328,10 @@ unsigned char* Frame::fillImage(int width, int height,
 	      *dest = table[length*3+2];
 	    }
 	    else {
-	      const unsigned char* cc = colorScale->lookup((value - ll)/diff);
-	      *(dest+2) = cc[0];
-	      *(dest+1) = cc[1];
-	      *dest = cc[2];
+	      int l = (int)(((value - ll)/diff * length) + .5);
+	      *(dest+2) = table[l*3];
+	      *(dest+1) = table[l*3+1];
+	      *dest = table[l*3+2];
 	    }
 	  }
 	  else {
@@ -713,7 +713,8 @@ void Frame::updateColorScale()
     break;
   case FrScale::GHSSCALE:
     colorScale =
-      new GhsScale(SCALESIZE, colorCells, colorCount, context->ghs());
+      new GhsScale(colorCells, colorCount, context->ghs(),
+		   context->low(), context->high());
     break;
   case FrScale::HISTEQUSCALE:
     colorScale =
@@ -946,10 +947,10 @@ void Frame::savePhotoCmd(const char* ph)
 	  *(dest+block.offset[3]) = 255;
 	}
 	else {
-	  const unsigned char* cc = colorScale->lookup((value - ll)/diff);
-	  *(dest+block.offset[0]) = cc[2];
-	  *(dest+block.offset[1]) = cc[1];
-	  *(dest+block.offset[2]) = cc[0];
+	  int l = (int)(((value - ll)/diff * length) + .5);
+	  *(dest+block.offset[0]) = table[l*3+2];
+	  *(dest+block.offset[1]) = table[l*3+1];
+	  *(dest+block.offset[2]) = table[l*3];
 	  *(dest+block.offset[3]) = 255;
 	}
       }

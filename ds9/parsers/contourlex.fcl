@@ -21,6 +21,7 @@ dash		{return $DASH_}
 delete		{return $DELETE_}
 exp		{return $EXP_}
 generate	{return $GENERATE_}
+ghs		{return $GHS_}
 global		{return $GLOBAL_}
 histequ		{return $HISTEQU_}
 levels		{return $LEVELS_}

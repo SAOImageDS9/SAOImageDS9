@@ -124,7 +124,7 @@ GhsInverseScale::GhsInverseScale(int ss, double low, double high,
     return;
   }
 
-  GhsCurve curve(gp);
+  GhsCurve curve(gp, low, high);
   double dd = high-low;
   for (int ii=0; ii<size_; ii++) {
     double aa = curve.inverse(double(ii)/(size_-1));

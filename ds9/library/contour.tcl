@@ -715,6 +715,8 @@ proc ContourDialog {} {
     $mb.scale add radiobutton \
 	-label [msgcat::mc {Histogram Equalization}] \
 	-variable contour(scale) -value histequ
+    $mb.scale add radiobutton -label {GHS} \
+	-variable contour(scale) -value ghs
     $mb.scale add separator
     $mb.scale add command -label [msgcat::mc {Log Exponent}] \
 	-command ContourLogDialog

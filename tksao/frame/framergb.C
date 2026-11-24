@@ -202,7 +202,6 @@ void FrameRGB::updateColorScale()
 
     switch (context[ii].colorScaleType()) {
     case FrScale::LINEARSCALE:
-    case FrScale::GHSSCALE: // PROTOTYPE: no GhsScaleRGB yet
       colorScale[ii] = 
 	new LinearScaleRGB(ii, colorCount, colorCells, colorCount);
       break;
@@ -231,6 +230,11 @@ void FrameRGB::updateColorScale()
     case FrScale::SINHSCALE:
       colorScale[ii] =
 	new SinhScaleRGB(ii, SCALESIZE, colorCells, colorCount);
+      break;
+    case FrScale::GHSSCALE:
+      colorScale[ii] =
+	new GhsScaleRGB(ii, colorCells, colorCount, context[ii].ghs(),
+			context[ii].low(), context[ii].high());
       break;
     case FrScale::HISTEQUSCALE:
       colorScale[ii] = 

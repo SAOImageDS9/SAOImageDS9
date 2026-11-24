@@ -1,0 +1,249 @@
+[comment {-*- tcl -*- tkconrc manpage}]
+[manpage_begin tkconrc 5 2.8]
+[copyright {Jeffrey Hobbs <jeff at hobbs.org>}]
+[moddesc   {TkCon}]
+[titledesc {TkCon resource file}]
+
+[description]
+[para]
+TkCon will search for a resource file in [file ~/.tkconrc].
+TkCon never sources the [file ~/.wishrc] file.
+The resource file is sourced by each new instance of the console.
+An example resource file is provided below.
+
+[para]
+The file itself is a Tcl script, so it is required that the
+file conforms to Tcl script conventions.
+
+[section VARIABLES]
+[para]
+Certain variables in TkCon can be modified to suit your needs.
+It's easiest to do this in the resource file, but you can do
+it when time the program is running (and some can be changed
+via the [arg Prefs] menu).
+All these are part of the master interpreter's [cmd ::tkcon]
+namespace.
+The modifiable array variables are [cmd ::tkcon::COLOR] and
+[cmd ::tkcon::OPT].
+You can call
+
+[example_begin]
+tkcon set ::tkcon::COLOR
+[example_end]
+
+when the program is running to check its state.
+Here is an explanation of certain variables you
+might change or use:
+
+[list_begin definitions]
+
+[def [cmd ::tkcon::COLOR(bg)]]
+The background color for tkcon text widgets.
+Defaults to the operating system default (determined at startup).
+
+[def [cmd ::tkcon::COLOR(blink)]]
+The background color of the electric brace highlighting, if on.
+Defaults to yellow.
+
+[def [cmd ::tkcon::COLOR(cursor)]]
+The background color for the insertion cursor in tkcon.
+Defaults to black.
+
+[def [cmd ::tkcon::COLOR(disabled)]]
+The foreground color for disabled menu items.
+Defaults to dark grey.
+
+[def [cmd ::tkcon::COLOR(proc)]]
+The foreground color of a recognized proc, if command highlighting is on.
+Defaults to dark green.
+
+[def [cmd ::tkcon::COLOR(var)]]
+The background color of a recognized var, if command highlighting is on.
+Defaults to pink.
+
+[def [cmd ::tkcon::COLOR(prompt)]]
+The foreground color of the prompt as output in the console.
+Defaults to brown.
+
+[def [cmd ::tkcon::COLOR(stdin)]]
+The foreground color of the stdin for the console.
+Defaults to black.
+
+[def [cmd ::tkcon::COLOR(stdout)]]
+The foreground color of the stdout as output in the console.
+Defaults to blue.
+
+[def [cmd ::tkcon::COLOR(stderr)]]
+The foreground color of stderr as output in the console.
+Defaults to red.
+
+[def [cmd ::tkcon::OPT(autoload)]]
+Packages to automatically load into the slave interpreter (i.e. 'Tk').
+This is a list.
+Defaults to {} (none).
+
+[def [cmd ::tkcon::OPT(blinktime)]]
+The amount of time (in millisecs) that braced sections should blink for.
+Defaults to 500 (0.5 secs), must be at least 100.
+
+[def [cmd ::tkcon::OPT(blinkrange)]]
+Whether to blink the entire range for electric brace matching
+or to just blink the actual matching braces (respectively 1 or 0,
+defaults to 1).
+
+[def [cmd ::tkcon::OPT(buffer)]]
+The size of the console scroll buffer (in lines).
+Defaults to 512.
+
+[def [cmd ::tkcon::OPT(calcmode)]]
+Whether to allow expr commands to be run at the command line
+without prefixing them with expr (just a convenience).
+
+[def [cmd ::tkcon::OPT(cols)]]
+Number of columns for the console to start out with.
+Defaults to 80.
+
+[def [cmd ::tkcon::OPT(dead)]]
+What to do with dead connected interpreters.
+If dead is leave, TkCon automatically exits the dead interpreter.
+If dead is ignore then it remains attached waiting for the
+interpreter to reappear.
+Otherwise TkCon will prompt you.
+
+[def [cmd ::tkcon::OPT(exec)]]
+This corresponds to the [cmd -exec] tkcon option (see [cmd tkcon](1)).
+
+[def [cmd ::tkcon::OPT(font)]]
+Font to use for tkcon text widgets (also specified with [cmd -font] option).
+Defaults to the system default, or a fixed width equivalent.
+
+[def [cmd ::tkcon::OPT(gets)]]
+Controls whether tkcon will overload the gets command to work with tkcon.
+The valid values are: congets (the default), which will redirect
+stdin requests to the tkcon window; gets, which will pop up a dialog to
+get input; and {} (empty string) which tells tkcon not to overload gets.
+This value must be set at startup to alter tkcon's behavior.
+
+[def [cmd ::tkcon::OPT(history)]]
+The size of the history list to keep.
+Defaults to 48.
+
+[def [cmd ::tkcon::OPT(hoterrors)]]
+Whether hot errors are enabled or not.
+When enabled, errors that are returned to the console are marked
+with a link to the error info that will pop up in an minimal editor.
+This requires more memory because each error that occurs will
+maintain bindings for this feature, as long as the error
+is in the text widget.
+Defaults to on.
+
+[def [cmd ::tkcon::OPT(library)]]
+The path to any tcl library directories (these are appended
+to the [cmd auto_path] when the after the resource file is loaded in).
+
+[def [cmd ::tkcon::OPT(lightbrace)]]
+Whether to use the brace highlighting feature or not
+(respectively 1 or 0, defaults to 1).
+
+[def [cmd ::tkcon::OPT(lightcmd)]]
+Whether to use the command highlighting feature or not
+(respectively 1 or 0, defaults to 1).
+
+[def [cmd ::tkcon::OPT(maineval)]]
+A tcl script to execute in the main interpreter after the
+slave interpreter is created and the user interface is initialized.
+
+[def [cmd ::tkcon::OPT(maxlinelen)]]
+A number that specifies the limit of long result lines.
+True result is still captured in $_ (and 'puts $_' works).
+Defaults to 0 (unlimited).
+
+[def [cmd ::tkcon::OPT(maxmenu)]]
+A number that specifies the maximum number of packages to
+show vertically in the [arg Interp->Packages] menu before breaking
+into another column.
+Defaults to 15.
+
+[def [cmd ::tkcon::OPT(nontcl)]]
+For those who might be using non-Tcl based Tk attachments, set this to 1.
+It prevents TkCon from trying to evaluate its own Tcl
+code in an attached interpreter.
+Also see my notes for non-Tcl based Tk interpreters.
+
+[def [cmd ::tkcon::OPT(prompt1)]]
+Like [cmd tcl_prompt1], except it doesn't require you use [cmd puts].
+No equivalent for [cmd tcl_prompt2] is available (it's unnecessary IMHO).
+Defaults to {([lb]file tail [lb]pwd[rb][rb]) [lb]history nextid[rb] % }.
+
+[def [cmd ::tkcon::OPT(rows)]]
+Number of rows for the console to start out with.
+Defaults to 20.
+
+[def [cmd ::tkcon::OPT(scollypos)]]
+Y scrollbar position.
+Valid values are left or right.
+Defaults to right.
+
+[def [cmd ::tkcon::OPT(showmenu)]]
+Show the menubar on startup (1 or 0, defaults to 1).
+
+[def [cmd ::tkcon::OPT(showmultiple)]]
+Show multiple matches for path/proc/var name expansion (1 or 0,
+defaults to 1).
+
+[def [cmd ::tkcon::OPT(slaveeval)]]
+A tcl script to execute in each slave interpreter right after it's created.
+This allows the user to have user defined info always available in a slave.
+
+[para]
+Example:
+
+[example_begin]
+set ::tkcon::OPT(slaveeval) {
+    proc foo args { puts $args }
+    lappend auto_path .
+}
+[example_end]
+
+[def [cmd ::tkcon::OPT(slaveexit)]]
+Allows the prevention of exit in slaves from exitting the entire application.
+If it is equal to exit, exit will exit as usual, otherwise it will just close
+down that interpreter (and any children).
+Defaults to close.
+
+[def [cmd ::tkcon::OPT(subhistory)]]
+Allow history substitution to occur (0 or 1, defaults to 1).
+The history list is maintained in a single interpreter per TkCon console
+instance.
+Thus you have history which can range over a series of attached interpreters.
+
+[list_end]
+
+[section EXAMPLES]
+[para]
+An example TkCon resource file might look like:
+
+[example_begin]
+######################################################
+## My TkCon Resource File
+
+# Use a fixed default font
+#tkcon font fixed; # valid on unix
+#tkcon font systemfixed; # valid on win
+tkcon font Courier 12; # valid everywhere
+
+# Keep 50 commands in history
+set ::tkcon::OPT(history) 50
+
+# Use a pink prompt
+set ::tkcon::COLOR(prompt) pink
+######################################################
+[example_end]
+
+[see_also [cmd tkcon](1)]
+[see_also [cmd dump](n) [cmd tkcon](n) [cmd idebug](n)]
+[see_also [cmd observe](n)]
+[keywords Tk console]
+
+[manpage_end]
+

@@ -137,46 +137,46 @@ while test $# -ne 0; do
     -d) dir_arg=true;;
 
     -g) chgrpcmd="$chgrpprog $2"
-	shift;;
+        shift;;
 
     --help) echo "$usage"; exit $?;;
 
     -m) mode=$2
-	case $mode in
-	  *' '* | *"$tab"* | *"$nl"* | *'*'* | *'?'* | *'['*)
-	    echo "$0: invalid mode: $mode" >&2
-	    exit 1;;
-	esac
-	shift;;
+        case $mode in
+          *' '* | *"$tab"* | *"$nl"* | *'*'* | *'?'* | *'['*)
+            echo "$0: invalid mode: $mode" >&2
+            exit 1;;
+        esac
+        shift;;
 
     -o) chowncmd="$chownprog $2"
-	shift;;
+        shift;;
 
     -p) cpprog="$cpprog -p";;
 
     -s) stripcmd=$stripprog;;
 
     -S) backupsuffix="$2"
-	shift;;
+        shift;;
 
     -t)
-	is_target_a_directory=always
-	dst_arg=$2
-	# Protect names problematic for 'test' and other utilities.
-	case $dst_arg in
-	  -* | [=\(\)!]) dst_arg=./$dst_arg;;
-	esac
-	shift;;
+        is_target_a_directory=always
+        dst_arg=$2
+        # Protect names problematic for 'test' and other utilities.
+        case $dst_arg in
+          -* | [=\(\)!]) dst_arg=./$dst_arg;;
+        esac
+        shift;;
 
     -T) is_target_a_directory=never;;
 
     --version) echo "$0 $scriptversion"; exit $?;;
 
     --) shift
-	break;;
+        break;;
 
     -*) echo "$0: invalid option: $1" >&2
-	exit 1;;
+        exit 1;;
 
     *)  break;;
   esac
@@ -248,16 +248,16 @@ if test -z "$dir_arg"; then
 
     *[0-7])
       if test -z "$stripcmd"; then
-	u_plus_rw=
+        u_plus_rw=
       else
-	u_plus_rw='% 200'
+        u_plus_rw='% 200'
       fi
       cp_umask=`expr '(' 777 - $mode % 1000 ')' $u_plus_rw`;;
     *)
       if test -z "$stripcmd"; then
-	u_plus_rw=
+        u_plus_rw=
       else
-	u_plus_rw=,u+rw
+        u_plus_rw=,u+rw
       fi
       cp_umask=$mode$u_plus_rw;;
   esac
@@ -298,8 +298,8 @@ do
     # If destination is a directory, append the input filename.
     if test -d "$dst"; then
       if test "$is_target_a_directory" = never; then
-	echo "$0: $dst_arg: Is a directory" >&2
-	exit 1
+        echo "$0: $dst_arg: Is a directory" >&2
+        exit 1
       fi
       dstdir=$dst
       dstbase=`basename "$src"`
@@ -325,15 +325,15 @@ do
   if test $dstdir_status != 0; then
     case $posix_mkdir in
       '')
-	# With -d, create the new directory with the user-specified mode.
-	# Otherwise, rely on $mkdir_umask.
-	if test -n "$dir_arg"; then
-	  mkdir_mode=-m$mode
-	else
-	  mkdir_mode=
-	fi
+        # With -d, create the new directory with the user-specified mode.
+        # Otherwise, rely on $mkdir_umask.
+        if test -n "$dir_arg"; then
+          mkdir_mode=-m$mode
+        else
+          mkdir_mode=
+        fi
 
-	posix_mkdir=false
+        posix_mkdir=false
 	# The $RANDOM variable is not portable (e.g., dash).  Use it
 	# here however when possible just to lower collision chance.
 	tmpdir=${TMPDIR-/tmp}/ins$RANDOM-$$
@@ -381,8 +381,8 @@ do
 
     if
       $posix_mkdir && (
-	umask $mkdir_umask &&
-	$doit_exec $mkdirprog $mkdir_mode -p -- "$dstdir"
+        umask $mkdir_umask &&
+        $doit_exec $mkdirprog $mkdir_mode -p -- "$dstdir"
       )
     then :
     else
@@ -392,9 +392,9 @@ do
       # directory the slow way, step by step, checking for races as we go.
 
       case $dstdir in
-	/*) prefix='/';;
-	[-=\(\)!]*) prefix='./';;
-	*)  prefix='';;
+        /*) prefix='/';;
+        [-=\(\)!]*) prefix='./';;
+        *)  prefix='';;
       esac
 
       oIFS=$IFS
@@ -409,34 +409,34 @@ do
 
       for d
       do
-	test X"$d" = X && continue
+        test X"$d" = X && continue
 
-	prefix=$prefix$d
-	if test -d "$prefix"; then
-	  prefixes=
-	else
-	  if $posix_mkdir; then
-	    (umask $mkdir_umask &&
-	     $doit_exec $mkdirprog $mkdir_mode -p -- "$dstdir") && break
-	    # Don't fail if two instances are running concurrently.
-	    test -d "$prefix" || exit 1
-	  else
-	    case $prefix in
-	      *\'*) qprefix=`echo "$prefix" | sed "s/'/'\\\\\\\\''/g"`;;
-	      *) qprefix=$prefix;;
-	    esac
-	    prefixes="$prefixes '$qprefix'"
-	  fi
-	fi
-	prefix=$prefix/
+        prefix=$prefix$d
+        if test -d "$prefix"; then
+          prefixes=
+        else
+          if $posix_mkdir; then
+            (umask $mkdir_umask &&
+             $doit_exec $mkdirprog $mkdir_mode -p -- "$dstdir") && break
+            # Don't fail if two instances are running concurrently.
+            test -d "$prefix" || exit 1
+          else
+            case $prefix in
+              *\'*) qprefix=`echo "$prefix" | sed "s/'/'\\\\\\\\''/g"`;;
+              *) qprefix=$prefix;;
+            esac
+            prefixes="$prefixes '$qprefix'"
+          fi
+        fi
+        prefix=$prefix/
       done
 
       if test -n "$prefixes"; then
-	# Don't fail if two instances are running concurrently.
-	(umask $mkdir_umask &&
-	 eval "\$doit_exec \$mkdirprog $prefixes") ||
-	  test -d "$dstdir" || exit 1
-	obsolete_mkdir_used=true
+        # Don't fail if two instances are running concurrently.
+        (umask $mkdir_umask &&
+         eval "\$doit_exec \$mkdirprog $prefixes") ||
+          test -d "$dstdir" || exit 1
+        obsolete_mkdir_used=true
       fi
     fi
   fi
@@ -497,7 +497,7 @@ do
       # already exists, attempt a backup.  Don't worry if it fails,
       # e.g., if mv doesn't support -f.
       if test -n "$backupsuffix" && test -f "$dst"; then
-	$doit $mvcmd -f "$dst" "$dst$backupsuffix" 2>/dev/null
+        $doit $mvcmd -f "$dst" "$dst$backupsuffix" 2>/dev/null
       fi
 
       # Rename the file to the real destination.
@@ -507,24 +507,24 @@ do
       # to itself, or perhaps because mv is so ancient that it does not
       # support -f.
       {
-	# Now remove or move aside any old file at destination location.
-	# We try this two ways since rm can't unlink itself on some
-	# systems and the destination file might be busy for other
-	# reasons.  In this case, the final cleanup might fail but the new
-	# file should still install successfully.
-	{
-	  test ! -f "$dst" ||
-	  $doit $rmcmd "$dst" 2>/dev/null ||
-	  { $doit $mvcmd -f "$dst" "$rmtmp" 2>/dev/null &&
-	    { $doit $rmcmd "$rmtmp" 2>/dev/null; :; }
-	  } ||
-	  { echo "$0: cannot unlink or rename $dst" >&2
-	    (exit 1); exit 1
-	  }
-	} &&
+        # Now remove or move aside any old file at destination location.
+        # We try this two ways since rm can't unlink itself on some
+        # systems and the destination file might be busy for other
+        # reasons.  In this case, the final cleanup might fail but the new
+        # file should still install successfully.
+        {
+          test ! -f "$dst" ||
+          $doit $rmcmd "$dst" 2>/dev/null ||
+          { $doit $mvcmd -f "$dst" "$rmtmp" 2>/dev/null &&
+            { $doit $rmcmd "$rmtmp" 2>/dev/null; :; }
+          } ||
+          { echo "$0: cannot unlink or rename $dst" >&2
+            (exit 1); exit 1
+          }
+        } &&
 
-	# Now rename the file to the real destination.
-	$doit $mvcmd "$dsttmp" "$dst"
+        # Now rename the file to the real destination.
+        $doit $mvcmd "$dsttmp" "$dst"
       }
     fi || exit 1
 

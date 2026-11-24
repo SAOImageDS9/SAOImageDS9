@@ -20,4 +20,7 @@ builtin(include,tclconfig/tcl.m4)
 
 AC_DEFUN(TEA_PROG_DTPLITE, [
     AC_PATH_TOOL([DTPLITE], [dtplite], [:])
+    if test "x$DTPLITE" = "x:"; then
+	AC_PATH_TOOL([DTPLITE], [dtplite.tcl], [:])
+    fi
 ])

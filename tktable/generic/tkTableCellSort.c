@@ -216,7 +216,7 @@ char * TableCellSort(Table *tablePtr, char *str) {
     /* Thread safety: qsort is reportedly not thread-safe... */
     qsort((void *) listArgv, (size_t) listArgc, sizeof (char *), TableSortCompareProc);
     result = Tcl_Merge(listArgc, listArgv);
-    ckfree((char *) listArgv);
+    Tcl_Free((char *) listArgv);
     return result;
 }
 
@@ -364,18 +364,24 @@ Tcl_Obj * TableCellSortObj(Tcl_Interp *interp, Tcl_Obj *listObjPtr) {
 	return listObjPtr;
     }
 
-    elementArray = (SortElement *) ckalloc(length * sizeof(SortElement));
+    elementArray = (SortElement *) Tcl_Alloc(length * sizeof(SortElement));
+    if (!elementArray) return NULL;
     for (i=0; i < length; i++){
 	elementArray[i].objPtr = listObjPtrs[i];
 	elementArray[i].nextPtr = &elementArray[i+1];
+	Tcl_IncrRefCount(listObjPtrs[i]);
     }
     elementArray[length-1].nextPtr = NULL;
     elementPtr = MergeSort(elementArray);
     sortedObjPtr = Tcl_NewObj();
+    if (!sortedObjPtr) return NULL;
     for (; elementPtr != NULL; elementPtr = elementPtr->nextPtr) {
 	Tcl_ListObjAppendElement(NULL, sortedObjPtr, elementPtr->objPtr);
     }
-    ckfree((char*) elementArray);
+    Tcl_Free((char*) elementArray);
+    for (i=0; i < length; i++){
+	Tcl_DecrRefCount(listObjPtrs[i]);
+    }
 
     return sortedObjPtr;
 }

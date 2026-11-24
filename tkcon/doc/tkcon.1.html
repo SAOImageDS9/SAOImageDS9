@@ -1,0 +1,409 @@
+<!DOCTYPE html><html><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tkcon - TkCon</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.doctools_title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.doctools_toc,UL.doctools_toc UL, UL.doctools_toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.doctools_section, LI.doctools_subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.doctools_example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.doctools_requirements LI, UL.doctools_syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.doctools_synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.doctools_syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.doctools_requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<!-- Generated from file 'tkcon.1.man' by tcllib/doctools with format 'html'
+   -->
+<!-- Copyright &amp;copy; Jeffrey Hobbs (jeff at hobbs.org)
+   -->
+<!-- tkcon.1
+   -->
+<body><div class="doctools">
+<h1 class="doctools_title">tkcon(1) 2.8 tkcon.1 &quot;TkCon&quot;</h1>
+<div id="name" class="doctools_section"><h2><a name="name">Name</a></h2>
+<p>tkcon - Tk console replacement</p>
+</div>
+<div id="toc" class="doctools_section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="doctools_toc">
+<li class="doctools_section"><a href="#toc">Table Of Contents</a></li>
+<li class="doctools_section"><a href="#synopsis">Synopsis</a></li>
+<li class="doctools_section"><a href="#section1">Description</a></li>
+<li class="doctools_section"><a href="#section2">OPTIONS</a></li>
+<li class="doctools_section"><a href="#section3">KEY BINDINGS</a></li>
+<li class="doctools_section"><a href="#section4">COMMANDS</a></li>
+<li class="doctools_section"><a href="#section5">EXAMLPES</a></li>
+<li class="doctools_section"><a href="#section6">FILES</a></li>
+<li class="doctools_section"><a href="#see-also">See Also</a></li>
+<li class="doctools_section"><a href="#keywords">Keywords</a></li>
+<li class="doctools_section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="doctools_section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="doctools_synopsis">
+<ul class="doctools_syntax">
+<li><a href="#1"><b class="cmd">tkcon</b> [{<i class="arg">option</i> <i class="arg">value</i> | <i class="arg">tcl_script</i>} ...]</a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="doctools_section"><h2><a name="section1">Description</a></h2>
+<p>TkCon is a replacement for the standard console that comes with Tk
+(on Windows/Mac, but also works on Unix).
+The console itself provides many more features than the standard
+console.
+TkCon works on all platforms where Tcl/Tk is available.
+It is meant primarily to aid one when working with the little
+details inside Tcl and Tk, giving Unix users the GUI console
+provided by default in the Mac and Windows Tk.</p>
+<dl class="doctools_definitions">
+<dt><a name="1"><b class="cmd">tkcon</b> [{<i class="arg">option</i> <i class="arg">value</i> | <i class="arg">tcl_script</i>} ...]</a></dt>
+<dd></dd>
+</dl>
+</div>
+<div id="section2" class="doctools_section"><h2><a name="section2">OPTIONS</a></h2>
+<p>Except for <b class="cmd">-rcfile</b>, command line arguments are handled after
+the TkCon resource file is sourced, but before the slave
+interpreter or the TkCon user interface is initialized.</p>
+<p><b class="cmd">-rcfile</b> is handled right before it would be sourced,
+allowing you to specify any alternate file.
+Command line arguments are passed to each new console and
+will be evaluated by each.
+To prevent this from happening, you have to say</p>
+<pre class="doctools_example">
+tkcon main set argv {}; tkcon main set argc 0
+</pre>
+<p>For these options, any unique substring is allowed.</p>
+<dl class="doctools_definitions">
+<dt><b class="cmd">-argv</b> (also <b class="cmd">--</b>)</dt>
+<dd><p>Causes TkCon to stop evaluating arguments and set the remaining
+args to be argv/argc (with <b class="cmd">--</b> prepended).
+This carries over for any further consoles.
+This is meant only for wrapping TkCon
+around programs that require their own arguments.</p></dd>
+<dt><b class="cmd">-color-&lt;color&gt;</b> <i class="arg">color</i></dt>
+<dd><p>Sets the requested color type to the specified color for tkcon.
+See <b class="cmd">tkconrc</b>(5) for the recognized <b class="cmd">&lt;color&gt;</b> names.</p></dd>
+<dt><b class="cmd">-eval</b> <i class="arg">tcl_script</i> (also <b class="cmd">-main</b> or <b class="cmd">-e</b>)</dt>
+<dd><p>A Tcl script to eval in each main interpreter.
+This is evaluated after the resource file is loaded and the
+slave interpreter is created.
+Multiple <b class="cmd">-eval</b> switches will be recognized (in order).</p></dd>
+<dt><b class="cmd">-exec</b> <i class="arg">slavename</i></dt>
+<dd><p>Sets the named slave that tkcon operates in.
+In general, this is only useful to set to <i class="arg">&quot;&quot;</i> (empty),
+indicating to tkcon to avoid the multi-interpreter model and
+operate in the main environment.
+When this is empty, any further arguments will be only used
+in the first tkcon console and not passed onto further new consoles.
+This is useful when using tkcon as a console for extended wish
+executables that don't load there commands into slave interpreters.</p></dd>
+<dt><b class="cmd">-font</b> <i class="arg">font</i></dt>
+<dd><p>Sets the font that tkcon uses for its text windows.
+If this isn't a fixed width font, tkcon will override it.</p></dd>
+<dt><b class="cmd">-nontcl</b> <i class="arg">TCL_BOOLEAN</i></dt>
+<dd><p>Sets <b class="cmd">::tkcon::OPT(nontcl)</b> to <i class="arg">TCL_BOOLEAN</i> (see
+<b class="cmd">tkconrc</b>(5)).
+Needed when attaching to non-Tcl interpreters.</p></dd>
+<dt><b class="cmd">-package</b> <i class="arg">package_name</i> (also <b class="cmd">-load</b>)</dt>
+<dd><p>Packages to automatically load into the slave interpreters (i.e. &quot;Tk&quot;).</p></dd>
+<dt><b class="cmd">-rcfile</b> <i class="arg">filename</i></dt>
+<dd><p>Specify an alternate tkcon resource file name.</p></dd>
+<dt><b class="cmd">-root</b> <i class="arg">widgetname</i></dt>
+<dd><p>Makes the named widget the root name of all consoles (i.e. .tkcon).</p></dd>
+<dt><b class="cmd">-slave</b> <i class="arg">tcl_script</i></dt>
+<dd><p>A Tcl script to eval in each slave interpreter.
+This will append the one specified in the tkcon resource file, if any.</p></dd>
+</dl>
+</div>
+<div id="section3" class="doctools_section"><h2><a name="section3">KEY BINDINGS</a></h2>
+<p>Most of the bindings are the same as for the <b class="cmd">text</b> widget.
+Some have been modified to make sure that the integrity of the
+console is maintained.
+Others have been added to enhance the usefulness of the console.
+Only the modified or new bindings are listed here.</p>
+<dl class="doctools_definitions">
+<dt><b class="cmd">Control-x</b> or <b class="cmd">Cut</b> (on Sparc5 keyboards)</dt>
+<dd><p>Cut.</p></dd>
+<dt><b class="cmd">Control-c</b> or <b class="cmd">Copy</b> (on Sparc5 keyboards)</dt>
+<dd><p>Copy.</p></dd>
+<dt><b class="cmd">Control-v</b> or <b class="cmd">Paste</b> (on Sparc5 keyboards)</dt>
+<dd><p>Paste.</p></dd>
+<dt><b class="cmd">Insert</b></dt>
+<dd><p>Insert (duh).</p></dd>
+<dt><b class="cmd">Up</b></dt>
+<dd><p>Goes up one level in the commands line history when cursor is on
+the prompt line, otherwise it moves through the buffer.</p></dd>
+<dt><b class="cmd">Down</b></dt>
+<dd><p>Goes down one level in the commands line history when cursor
+is on the last line of the buffer, otherwise it moves through the buffer.</p></dd>
+<dt><b class="cmd">Control-p</b></dt>
+<dd><p>Goes up one level in the commands line history.</p></dd>
+<dt><b class="cmd">Control-n</b></dt>
+<dd><p>Goes down one level in the commands line history.</p></dd>
+<dt><b class="cmd">Tab</b></dt>
+<dd><p>Tries to expand file path names, then variable names, then proc names.</p></dd>
+<dt><b class="cmd">Escape</b></dt>
+<dd><p>Tries to expand file path names.</p></dd>
+<dt><b class="cmd">Control-P</b></dt>
+<dd><p>Tries to expand procedure names.
+The procedure names will be those that are actually in the attached
+interpreter (unless nontcl is specified, in which case it always
+does the lookup in the default slave interpreter).</p></dd>
+<dt><b class="cmd">Control-V</b></dt>
+<dd><p>Tries to expand variable names (those returned by [info vars]).
+It's search behavior is like that for procedure names.</p></dd>
+<dt><b class="cmd">Return</b> or <b class="cmd">Enter</b></dt>
+<dd><p>Evaluates the current command line if it is a complete command,
+otherwise it just goes to a new line.</p></dd>
+<dt><b class="cmd">Control-a</b></dt>
+<dd><p>Go to the beginning of the current command line.</p></dd>
+<dt><b class="cmd">Control-l</b></dt>
+<dd><p>Clear the entire console buffer.</p></dd>
+<dt><b class="cmd">Control-r</b></dt>
+<dd><p>Searches backwards in the history for any command that contains
+the string in the current command line.
+Repeatable to search farther back.
+The matching substring off the found command will blink.</p></dd>
+<dt><b class="cmd">Control-s</b></dt>
+<dd><p>As above, but searches forward (only useful if you searched too far back).</p></dd>
+<dt><b class="cmd">Control-t</b></dt>
+<dd><p>Transposes characters.</p></dd>
+<dt><b class="cmd">Control-u</b></dt>
+<dd><p>Clears the current command line.</p></dd>
+<dt><b class="cmd">Control-z</b></dt>
+<dd><p>Saves current command line in a buffer that can be retrieved
+with another <b class="cmd">Control-z</b>.
+If the current command line is empty, then any saved command
+is retrieved without being overwritten, otherwise the current
+contents get swapped with what's in the saved command buffer.</p></dd>
+<dt><b class="cmd">Control-Key-1</b></dt>
+<dd><p>Attaches console to the console's slave interpreter.</p></dd>
+<dt><b class="cmd">Control-Key-2</b></dt>
+<dd><p>Attaches console to the console's master interpreter.</p></dd>
+<dt><b class="cmd">Control-Key-3</b></dt>
+<dd><p>Attaches console to main TkCon interpreter.</p></dd>
+<dt><b class="cmd">Control-A</b></dt>
+<dd><p>Pops up the &quot;About&quot; dialog.</p></dd>
+<dt><b class="cmd">Control-N</b></dt>
+<dd><p>Creates a new console. Each console has separate state, including
+it's own widget hierarchy (it's a slave interpreter).</p></dd>
+<dt><b class="cmd">Control-q</b></dt>
+<dd><p>Close the current console OR Quit the program (depends on the
+value of <b class="cmd">::tkcon::TKCON(slaveexit)</b>).</p></dd>
+<dt><b class="cmd">Control-w</b></dt>
+<dd><p>Closes the current console.
+Closing the main console will exit the program (something has
+to control all the slaves...).</p></dd>
+</dl>
+<p>TkCon also has electric bracing (similar to that in emacs).
+It will highlight matching pairs of {}'s, []'s, ()'s and &quot;&quot;'s.
+For the first three, if there is no matching left element for the right,
+then it blinks the entire current command line.
+For the double quote, if there is no proper match then it just blinks
+the current double quote character.
+It does properly recognize most escaping (except escaped escapes),
+but does not look for commenting (why would you interactively
+put comments in?).</p>
+</div>
+<div id="section4" class="doctools_section"><h2><a name="section4">COMMANDS</a></h2>
+<p>There are several new procedures introduced in TkCon to improve
+productivity and/or account for lost functionality in the Tcl
+environment that users are used to in native environments.
+There are also some redefined procedures.
+Here is a non-comprehensive list:</p>
+<dl class="doctools_definitions">
+<dt><b class="cmd">alias</b> ?<i class="arg">sourceCmd</i> <i class="arg">targetCmd</i> ?<i class="arg">arg</i> <i class="arg">arg</i> ...??</dt>
+<dd><p>Simple alias mechanism.
+It will overwrite existing commands.
+When called without args, it returns current aliases.
+Note that TkCon makes some aliases for you (in slaves).
+Don't delete those.</p></dd>
+<dt><b class="cmd">clear</b> ?<i class="arg">percentage</i>?</dt>
+<dd><p>Clears the text widget.
+Same as the &lt;<b class="cmd">Control-l</b>&gt; binding, except this will accept a
+percentage of the buffer to clear (1-100, 100 default).</p></dd>
+<dt><b class="cmd">dir</b> ?<i class="arg">-all</i>? ?<i class="arg">-full</i>? ?<i class="arg">-long</i>? ?<i class="arg">pattern</i> <i class="arg">pattern</i> ...?</dt>
+<dd><p>Cheap way to get directory listings.
+Uses glob style pattern matching.</p></dd>
+<dt><b class="cmd">dump</b> <i class="arg">type</i> ?<i class="arg">-nocomplain</i>? ?<i class="arg">-filter pattern</i>? ?<b class="cmd">--</b>? <i class="arg">pattern</i> ?<i class="arg">pattern</i> ...?</dt>
+<dd><p>The dump command provides a way for the user to spit out state
+information about the interpreter in a Tcl readable (and
+human readable) form.
+See <b class="cmd">dump</b>(n) for details.</p></dd>
+<dt><b class="cmd">echo</b> ?<i class="arg">arg</i> <i class="arg">arg</i> ...?</dt>
+<dd><p>Concatenates the args and spits the result to the console (stdout).</p></dd>
+<dt><b class="cmd">edit</b> ?<i class="arg">-type type</i>? ?<i class="arg">-find str</i>? ?<i class="arg">-attach interp</i>? <i class="arg">arg</i></dt>
+<dd><p>Opens an editor with the data from arg.
+The optional type argument can be one of: <i class="arg">proc</i>, <i class="arg">var</i> or <i class="arg">file</i>.
+For proc or var, the arg may be a pattern.</p></dd>
+<dt><b class="cmd">idebug</b> <i class="arg">command</i> ?<i class="arg">args</i>?</dt>
+<dd><p>Interactive debugging command.
+See <b class="cmd">idebug</b>(n) for details.</p></dd>
+<dt><b class="cmd">lremove</b> ?<i class="arg">-all</i>? ?<i class="arg">-regexp</i> <i class="arg">-glob</i>? <i class="arg">list</i> <i class="arg">items</i></dt>
+<dd><p>Removes one or more items from a list and returns the new list.
+If <i class="arg">-all</i> is specified, it removes all instances of each item
+in the list.
+If <i class="arg">-regexp</i> or <i class="arg">-glob</i> is specified, it interprets each item in
+the items list as a regexp or glob pattern to match against.</p></dd>
+<dt><b class="cmd">less</b></dt>
+<dd><p>Aliased to <b class="cmd">edit</b>.</p></dd>
+<dt><b class="cmd">ls</b></dt>
+<dd><p>Aliased to <b class="cmd">dir</b> <i class="arg">-full</i>.</p></dd>
+<dt><b class="cmd">more</b></dt>
+<dd><p>Aliased to <b class="cmd">edit</b>.</p></dd>
+<dt><b class="cmd">observe</b> <i class="arg">type</i> ?<i class="arg">args</i>?</dt>
+<dd><p>This command provides passive runtime debugging output for
+variables and commands.
+See <b class="cmd">observe</b>(n) for details.</p></dd>
+<dt><b class="cmd">puts</b> (same options as always)</dt>
+<dd><p>Redefined to put the output into TkCon.</p></dd>
+<dt><b class="cmd">tkcon</b> <i class="arg">method</i> ?<i class="arg">args</i>?</dt>
+<dd><p>Multi-purpose command.
+See <b class="cmd">tkcon</b>(n) for details.</p></dd>
+<dt><b class="cmd">tclindex</b> <i class="arg">?-extensions patternlist? ?-index TCL_BOOLEAN? ?-package TCL_BOOLEAN? ?dir1 dir2 ...?</i></dt>
+<dd><p>Convenience proc to update the &quot;<b class="file">tclIndex</b>&quot; (controlled by <i class="arg">-index</i> switch)
+and/or &quot;<b class="file">pkgIndex.tcl</b>&quot; (controlled by <i class="arg">-package</i> switch) file in the named
+directories based on the given pattern for files.
+It defaults to creating the &quot;<b class="file">tclIndex</b>&quot; but not the &quot;<b class="file">pkgIndex.tcl</b>&quot; file,
+with the directory defaulting to [pwd].
+The extension defaults to *.tcl, with *.[info sharelibextension]
+added when <i class="arg">-package</i> is true.</p></dd>
+<dt><b class="cmd">unalias</b> <i class="arg">cmd</i></dt>
+<dd><p>unaliases command.</p></dd>
+<dt><b class="cmd">what</b> <i class="arg">string</i></dt>
+<dd><p>The what command will identify the word given in string in
+the Tcl environment and return a list of types that it was recognized as.
+Possible types are: alias, procedure, command, array variable,
+scalar variable, directory, file, widget, and executable.
+Used by procedures dump and which.</p></dd>
+<dt><b class="cmd">which</b> <i class="arg">command</i></dt>
+<dd><p>Like the <b class="syscmd">which</b> command of Unix shells, this will tell you if a
+particular command is known, and if so, whether it is internal or
+external to the interpreter.
+If it is an internal command and there is a slot in <b class="cmd">auto_index</b> for it,
+it tells you the file that <b class="cmd">auto_index</b> would load.
+This does not necessarily mean that that is where the file came from,
+but if it were not in the interpreter previously, then that
+is where the command was found.</p></dd>
+</dl>
+<p>There are several procedures that I use as helpers that some may find
+helpful in there coding (i.e. expanding pathnames). Feel free to lift
+them from the code (but do assign proper attribution).</p>
+</div>
+<div id="section5" class="doctools_section"><h2><a name="section5">EXAMLPES</a></h2>
+<p>Some examples of tkcon command line startup situations:</p>
+<pre class="doctools_example">
+<b class="cmd">megawish</b> /usr/bin/tkcon <b class="cmd">-exec</b> &quot;&quot; <b class="cmd">-root</b> .tkcon <i class="arg">mainfile.tcl</i>
+</pre>
+<p>Use tkcon as a console for your <b class="cmd">megawish</b> application.
+You can avoid starting the line with megawish if that is the
+default <b class="cmd">wish</b> that TkCon would use.
+The <b class="cmd">-root</b> ensures that tkcon will not conflict with the
+application root window.</p>
+<pre class="doctools_example">
+<b class="cmd">tkcon</b> <b class="cmd">-font</b> &quot;Courier 12&quot; <b class="cmd">-load</b> Tk
+</pre>
+<p>Use the courier font for TkCon and always load Tk in slave
+interpreters at startup.</p>
+<pre class="doctools_example">
+<b class="cmd">tkcon</b> <b class="cmd">-rcfile</b> ~/.wishrc <b class="cmd">-color-bg</b> white
+</pre>
+<p>Use the ~/.wishrc file as the resource file, and a white
+background for TkCon's text widgets.</p>
+</div>
+<div id="section6" class="doctools_section"><h2><a name="section6">FILES</a></h2>
+<p>TkCon will search for a resource file in &quot;<b class="file">~/.tkconrc</b>&quot;.
+TkCon never sources the &quot;<b class="file">~/.wishrc</b>&quot; file.
+The resource file is sourced by each new instance of the console.
+An example resource file is provided in <b class="cmd">tkconrc</b>(5).</p>
+</div>
+<div id="see-also" class="doctools_section"><h2><a name="see-also">See Also</a></h2>
+<p><b class="cmd">dump</b>(n), <b class="cmd">idebug</b>(n), <b class="cmd">observe</b>(n), <b class="cmd">text</b>(n), <b class="cmd">tkcon</b>(n), <b class="cmd">tkconrc</b>(5)</p>
+</div>
+<div id="keywords" class="doctools_section"><h2><a name="keywords">Keywords</a></h2>
+<p>Tk, console</p>
+</div>
+<div id="copyright" class="doctools_section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; Jeffrey Hobbs (jeff at hobbs.org)</p>
+</div>
+</div></body></html>

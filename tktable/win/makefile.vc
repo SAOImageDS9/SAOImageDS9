@@ -24,6 +24,8 @@
 PROJECT = Tktable
 TBL_COMMAND = table
 TBL_RUNTIME = tkTable.tcl
+
+# Note this extension needs Tk *source* to build
 PROJECT_REQUIRES_TK=1
 
 !include "rules-ext.vc"
@@ -71,6 +73,8 @@ PRJ_LIBS = WS2_32.Lib
 # Define the standard targets which calls rules.vc
 !include "targets.vc"
 
+.SUFFIXES: .c .obj .res .man
+
 #---------------------------------------------------------------------
 # Project specific targets
 #---------------------------------------------------------------------
@@ -79,13 +83,25 @@ PRJ_LIBS = WS2_32.Lib
 # NOTE: this requires doctools from tcllib hence it is not intended
 # to be run during install. Rather, use it to generate a new version
 # of HTML docs to be stored in the repository.
+DTPLITE = "$(_INSTALLDIR)\..\bin\dtplite.tcl"
+
 make-docs-html:
-	$(TCLSH) "$(PRJ_INSTALL_DIR)\..\..\bin\dtplite.tcl" \
-	    -o "$(DOCDIR)\$(PROJECT).html" html "$(DOCDIR)\$(PROJECT).man"
+!IF EXIST($(DTPLITE))
+	"$(TCLSH_NATIVE)" "$(DTPLITE)" -o "$(ROOT)\doc\$(PROJECT).html" html "$(ROOT)\doc\$(PROJECT).man"
+!ENDIF
 
 make-docs-n:
-	$(TCLSH) "$(PRJ_INSTALL_DIR)\..\..\bin\dtplite.tcl" \
-	    -o "$(DOCDIR)\$(PROJECT).n" nroff "$(DOCDIR)\$(PROJECT).man"
+!IF EXIST($(DTPLITE))
+	"$(TCLSH_NATIVE)" "$(DTPLITE)" -o "$(ROOT)\doc\$(PROJECT).n" nroff "$(ROOT)\doc\$(PROJECT).man"
+!ENDIF
+
+make-docs:
+!IF EXIST($(DTPLITE))
+	"$(TCLSH_NATIVE)" "$(DTPLITE)" -o "$DOCDIR" html "$(ROOT)\doc"
+	"$(TCLSH_NATIVE)" "$(DTPLITE)" -o "$DOCDIR" nroff "$(ROOT)\doc"
+!ENDIF
+
+docs: make-docs-n make-docs-html
 
 all: setup default-target
 
@@ -93,43 +109,48 @@ clean: default-clean
 
 realclean: default-hose
 
-$(PRJ_OBJS): $(TMP_DIR)\tkTable.tcl.h
+# Explicit dependency rules
+$(PRJ_OBJS): $(TMP_DIR)\tkTable.tcl.h $(TMP_DIR)\TkTableUuid.h
 
+# We must define a pkgindex target that will create a pkgIndex.tcl
+# file in the $(OUT_DIR) directory. We can just redirect to the
+# default-pkgindex target for our sample extension.
+pkgindex: default-pkgindex-tea
+
+# Create a C source file version of the script resources for inclusion in the
+# build so that only the compiled library file is needed for this extension to
+# load and operate.
 $(TMP_DIR)\tkTable.tcl.h: $(LIBDIR)\tkTable.tcl
-	"$(TCLSH)" << $(LIBDIR)\tkTable.tcl >$(TMP_DIR)\tkTable.tcl.h
+	"$(TCLSH_NATIVE)" << $(LIBDIR)\tkTable.tcl >$(TMP_DIR)\tkTable.tcl.h
 	set in [open [lindex $$argv 0] r]
 	while {[gets $$in line] != -1} {
-	    switch -regexp -- $$line "^$$" - {^#} continue
+	    switch -regexp -- $$line "^$$" - {^\s*#} continue
 	    regsub -all {\\} $$line {\\\\} line
 	    regsub -all {"} $$line {\"} line
 	    puts "\"$$line\\n\""
 	}
 <<
 
-# We must define a pkgindex target that will create a pkgIndex.tcl
-# file in the $(OUT_DIR) directory. We can just redirect to the
-# default-pkgindex target for our sample extension.
-pkgindex: default-pkgindex-tea
- 
-# Manifest which defines fossil/git commit id for build-info command
-$(ROOT)\manifest.uuid:
-    if not exist $(ROOT)\manifest.uuid (
-	copy $(WIN_DIR)\gitmanifest.in $(ROOT)\manifest.uuid
-	where git
-	if ERRORLEVEL 0 (
-	    git rev-parse HEAD >>$(ROOT)\manifest.uuid
-	) else (
-	    echo unknown >>$(ROOT)\manifest.uuid
-	)
-    )
+# Use manifest file which defines fossil/git commit id for build-info command
+$(TMP_DIR)\manifest.uuid:
+!IF exist($(ROOT)\manifest.uuid)
+	@copy "$(ROOT)\manifest.uuid" "$(TMP_DIR)\manifest.uuid"
+!ELSE
+!IF exist($(ROOT)\.git)
+	@copy "$(WIN_DIR)\gitmanifest.in" "$(TMP_DIR)\manifest.uuid"
+	@git rev-parse HEAD >>$(TMP_DIR)\manifest.uuid || echo unknown >>$(TMP_DIR)\manifest.uuid
+!ELSE
+	@echo unknown >$(TMP_DIR)\manifest.uuid
+!ENDIF
+!ENDIF
 
-$(TMP_DIR)\tkTableUuid.h:	$(ROOT)\manifest.uuid
-	copy $(WIN_DIR)\tkTableUuid.h.in+$(ROOT)\manifest.uuid $(TMP_DIR)\tkTableUuid.h
-	echo: >>$(TMP_DIR)\tkTableUuid.h
+$(TMP_DIR)\tkTableUuid.h:	$(TMP_DIR)\manifest.uuid
+	@copy $(WIN_DIR)\tkTableUuid.h.in+$(TMP_DIR)\manifest.uuid $(TMP_DIR)\tkTableUuid.h
+	@echo: >>$(TMP_DIR)\tkTableUuid.h
 
 install-tktabletcl:
-         @echo Installing package entrypoint in '$(SCRIPT_INSTALL_DIR)'
- 	@$(CPY) $(LIBDIR)\tkTable.tcl "$(SCRIPT_INSTALL_DIR)"
+	@echo Installing package entrypoint in '$(SCRIPT_INSTALL_DIR)'
+	@$(CPY) $(LIBDIR)\tkTable.tcl "$(SCRIPT_INSTALL_DIR)"
 
 default-install-libraries: install-tktabletcl
 
@@ -137,10 +158,8 @@ default-install-libraries: install-tktabletcl
 # an additional target for our documentation. Note this *adds* a target
 # since no commands are listed after it. The original targets for
 # install (from targets.vc) will remain.
-install: pkgindex default-install default-install-docs-html default-install-docs-n default-install-demos
- 
-# Explicit dependency rules
-$(GENERICDIR)\tkTable.c: $(TMP_DIR)\tkTableUuid.h
+install: pkgindex default-install default-install-docs-html default-install-demos
 
 # Test package
 test: default-test
+

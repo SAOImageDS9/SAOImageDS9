@@ -62,7 +62,7 @@ int main(
  *
  * Results:
  *	Returns a standard Tcl completion code, and leaves an error
- *	message in interp->result if an error occurs.
+ *	message in interp result if an error occurs.
  *
  * Side effects:
  *	Depends on the startup script.
@@ -79,20 +79,11 @@ int Tcl_AppInit(
     if (Tk_Init(interp) == TCL_ERROR) {
 	return TCL_ERROR;
     }
+#if TCL_MAJOR_VERSION > 8
+    Tcl_StaticLibrary(interp, "Tk", Tk_Init, (Tcl_PackageInitProc *) NULL);
+#else
     Tcl_StaticPackage(interp, "Tk", Tk_Init, (Tcl_PackageInitProc *) NULL);
-#ifdef TK_TEST
-    if (Tcltest_Init(interp) == TCL_ERROR) {
-	return TCL_ERROR;
-    }
-    Tcl_StaticPackage(interp, "Tcltest", Tcltest_Init,
-	    (Tcl_PackageInitProc *) NULL);
-    if (Tktest_Init(interp) == TCL_ERROR) {
-	return TCL_ERROR;
-    }
-    Tcl_StaticPackage(interp, "Tktest", Tktest_Init,
-	    (Tcl_PackageInitProc *) NULL);
-#endif /* TK_TEST */
-
+#endif
 
     /*
      * Call the init procedures for included packages.  Each call should
@@ -107,7 +98,11 @@ int Tcl_AppInit(
     if (Tktable_Init(interp) == TCL_ERROR) {
 	return TCL_ERROR;
     }
+#if TCL_MAJOR_VERSION > 8
+    Tcl_StaticLibrary(interp, "Tktable", Tktable_Init, Tktable_SafeInit);
+#else
     Tcl_StaticPackage(interp, "Tktable", Tktable_Init, Tktable_SafeInit);
+#endif
 
     /*
      * Call Tcl_CreateCommand for application-specific commands, if

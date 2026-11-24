@@ -8,14 +8,15 @@
  * Copyright 1997-2002, Jeffrey Hobbs (jeff@hobbs.org)
  */
 
-		*************************************
-		  The Tk Table Widget Version 2.0+
-		*************************************
+		**************************************
+		  The Tk Table Widget - Version 2.12
+		**************************************
 
 INTRODUCTION
+============
 
-TkTable is a table/matrix widget extension to tk/tcl.
-The basic features of the widget are:
+TkTable is a table/matrix widget extension to tk/tcl. The basic features of the
+widget are:
 
  * multi-line cells
  * support for embedded windows (one per cell)
@@ -35,87 +36,129 @@ The basic features of the widget are:
  * Works everywhere Tk does (including Windows and Mac!)
  * Unicode support (Tk8.1+)
 
-FINDING THE WIDGET
 
-0. The newest version is most likely found at:
-	http://tktable.sourceforge.net/
-	http://www.purl.org/net/hobbs/tcl/capp/
+INSTALLATION
+============
 
-BUILDING AND INSTALLING THE WIDGET
+This package uses the TCL Extension Architecture (TEA). Please see the web page
+http://www.tcl.tk/doc/tea/ for more information about TEA. It supports all of
+the standard TCL configure script options.
 
-1. Uncompress and unpack the distribution
+Uncompress and unpack the distribution
 
    ON UNIX and OS X:
 	gzip -cd Tktable<version>.tar.gz | tar xf -
 
    ON WINDOWS:
 	use something like WinZip to unpack the archive.
-
-   ON MACINTOSH:
-	use StuffIt Expander to unstuff the archive.
     
    This will create a subdirectory tkTable<version> with all the files in it.
 
-2. Configure
 
-   ON UNIX and OS X:
-        cd Tktable<version>
-	./configure
+PYTHON BUILD
+============
+This package only contains the files needed to build TkTable for TCL/Tk. For
+Python, see the https://github.com/nbro/tktable repo for the wrapper source,
+https://github.com/nbro/pytktable-binaries for the binaries, or PyTkTable
+in PyPI https://pypi.org/project/pytktable/.
 
-   tkTable uses information left in tkConfig.sh when you built tk.  This
-   file will be found in $exec_prefix/lib/.  You might set the --prefix and
-   --exec-prefix options of configure if you don't want the default
-   (/usr/local).  If building on multiple unix platforms, the following is
-   recommended to isolate build conflicts:
-	mkdir <builddir>/<platform>
-	cd !$
-	/path/to/Tktable<version>/configure
 
-   ON WINDOWS:
+UNIX BUILD
+==========
 
-   Version 2.8 added support for building in the cygwin environment on
-   Windows based on TEA (http://www.tcl.tk/doc/tea/).  You can retrieve
-   cygwin from:
-	http://sources.redhat.com/cygwin/
+Building under most UNIX systems is easy, just run the configure script and
+then run make. Use ./configure --help to get the supported options. 
 
-   Inside the cygwin environment, you build the same as on Unix.
+The following examples use the tclConfig.sh script. This script comes with the
+installation of Tcl and contains useful data about the installation.
 
-   Otherwise, hack makefile.vc until it works and compile.  It has problems
-   executing wish from a path with a space in it, but the DLL builds just
-   fine.  A DLL should be available where you found this archive.
+UNIX/Linux
+----------
 
-3. Make and Install
+To install Tcl, use e.g. 'apt-get|yum install tcl-devel.<platform> tcllib'.
+The tclConfig.sh script is located in the /usr/lib64/ directory.
 
-   ON UNIX< OS X or WINDOWS (with cygwin):
+	cd Tktable*
+	./configure --enable-64bit --prefix=/usr --libdir=/usr/lib64/tcl -with-tcl=/usr/lib64 -with-tk=/usr/lib64
 	make
-	make test (OPTIONAL)
-	make demo (OPTIONAL)
+	make test	(optional)
+	make demo	(optional)
 	make install
 
-   ON WINDOWS (makefile.vc):
-	nmake -f makefile.vc
-	nmake -f makefile.vc test (OPTIONAL)
-	nmake -f makefile.vc install
+MacOSX
+------
 
-   tkTable is built to comply to the latest tcl package conventions.
-   There is also a specific "make static" for those who need it.
+To install Tcl, use e.g. ActiveState Tcl distribution. The tclConfig.sh script
+is located in the /Library/Frameworks/Tcl.framework/ folder.
 
-4. Use it
+	cd Tktable*
+	./configure --with-tcl=/Library/Frameworks/Tcl.framework/ --with-tk=/Library/Frameworks/Tk.framework/
+	make
+	make test	(optional)
+	make install
 
-   Start a regular wish interpreter, 'load' the library, and use the table.
-   There are a few test scripts in the demos directory which you can source.
 
-5. Read the documentation
+WINDOWS BUILD
+=============
 
-   There is a Unix manpage and HTML translation provided in the doc/
-   subdirectory.  These describe the table widget's features and commands
-   in depth.  If something is confusing, just to try it out.
+Visual Studio
+-------------
 
-6. Python users
+To build and install TkTable, from the Command Prompt:
 
-   There is a library/tktable.py wrapper for use with Python/Tkinter.
+	cd Tktable*\win
+	set INSTALLDIR=C:\TCL
+	set TCL_SRC_DIR=C:\Source\Build\tcl
+	set TK_SRC_DIR=C:\Source\Build\tk
+	set VC_DIR=C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC
+	call "%VC_DIR%\vcvarsall.bat" amd64
+	set PATH=%VC_DIR%\bin\amd64;%INSTALLDIR%\bin;%PATH%
+	nmake -f makefile.vc INSTALLDIR=%INSTALLDIR% TCLDIR=%TCL_SRC_DIR% TKDIR=%TK_SRC_DIR% OPTS=msvcrt,threads,stubs
+	nmake -f makefile.vc test INSTALLDIR=%INSTALLDIR%	(optional)
+	nmake -f makefile.vc install INSTALLDIR=%INSTALLDIR%
+
+Cygwin
+------
+
+Version 2.8 added support for building in the cygwin environment. Use the same
+steps as UNIX/Linux.
+
+
+DOCUMENTATION BUILD
+===================
+
+Use the following commands to create the documentation (based on udp.man file).
+This uses the doctools package from tcllib, so tcllib must be installed first.
+
+Linux and MacOS
+---------------
+
+	cd Tktable*
+	make doc
+	nroff -man ./doc/udp.n
+
+Windows
+-------
+
+	cd Tktable*\win
+	nmake -f win/makefile.vc docs INSTALLDIR=%INSTALLDIR%
+
+
+USAGE
+=====
+
+	package require Tktable
+	grid [table .tb]
+	
+
+PYTHON
+======
+
+There is a library/tktable.py wrapper for use with Python/Tkinter.
+
 
 THINGS TO WATCH OUT FOR
+=======================
 
 Packing
   The table tries not to allocate huge chunks of screen real estate if
@@ -147,3 +190,28 @@ COMMENTS, BUGS, etc.
   useful, or even better, compile with debugging and specify where it
   crashed in that short piece of Tcl.  Use the SourceForge site to check
   for known bugs or submit new ones.
+
+
+BLT CONFLICTS
+=============
+
+If tkTable is used at the same time as BLT then there are two name
+conflicts to be aware of.
+
+BLT also has a table.n man page.  TkTable's man page will still be
+available as tkTable.n.
+
+BLT also has a "table" command.  The table command of the last
+extension loaded will be in effect.  If you need to use both table
+commands then eval "rename table blttable" after loading blt and
+before loading tkTable, or perhaps "rename table tkTable" if you
+load the tkTable extension first.
+
+In general this shouldn't be a problem as long as you load tkTable
+last.  The BLT "table" command facilities have been subsumed by the
+Tk "grid" command (available in Tk4.1+), so the BLT table should
+only be used in legacy code.
+
+Alternatively, if you want both or have another "table" command,
+then change the TBL_COMMAND macro in the makefile before compiling,
+and it tkTable will define your named command for the table widget.

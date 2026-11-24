@@ -10,7 +10,8 @@ exec wish "$0" ${1+"$@"}
 ##
 ## jeff at hobbs org
 
-source [file join [file dirname [info script]] loadtable.tcl]
+package require Tk
+package require Tktable
 
 proc table_validate {w idx} {
     if {[scan $idx %d,%d row col] != 2} return

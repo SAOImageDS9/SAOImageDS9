@@ -16,7 +16,7 @@ dnl	to configure the system for the local environment.
 # so that we create the export library with the dll.
 #-----------------------------------------------------------------------
 
-AC_INIT([Tktable],[2.13])
+AC_INIT([Tktable],[2.12.2])
 
 #--------------------------------------------------------------------
 # Call TEA_INIT as the first TEA_ macro to set up initial vars.
@@ -81,7 +81,7 @@ TEA_ADD_INCLUDES([])
 TEA_ADD_LIBS([])
 TEA_ADD_CFLAGS([])
 TEA_ADD_STUB_SOURCES([])
-TEA_ADD_TCL_SOURCES([library/tkTable.tcl library/tktable.py license.txt README.txt])
+TEA_ADD_TCL_SOURCES([library/tkTable.tcl license.txt README.txt])
 
 #--------------------------------------------------------------------
 # You can add more files to clean if your extension creates any extra
@@ -93,7 +93,7 @@ TEA_ADD_TCL_SOURCES([library/tkTable.tcl library/tktable.py license.txt README.t
 # TEA_ADD_* any platform specific compiler/build info here.
 #--------------------------------------------------------------------
 
-TEA_ADD_CLEANFILES([pkgIndex.tcl tkTable.tcl.h tkTableUuid.h])
+TEA_ADD_CLEANFILES([pkgIndex.tcl tkTable.tcl.h tkTableUuid.h TktableConfig.sh])
 
 if test "${TEA_PLATFORM}" = "windows" ; then
     AC_DEFINE(BUILD_Tktable)

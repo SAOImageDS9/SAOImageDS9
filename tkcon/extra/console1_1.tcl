@@ -1598,7 +1598,7 @@ proc tcl_unknown args {
 	  && [info exists tcl_interactive] && $tcl_interactive} {
     if ![info exists auto_noexec] {
       set new [auto_execok $name]
-      if {$new != ""} {
+      if {$new ne ""} {
 	set errorCode $savedErrorCode
 	set errorInfo $savedErrorInfo
 	return [uplevel exec [list $new] [lrange $args 1 end]]
@@ -1615,7 +1615,7 @@ proc tcl_unknown args {
       return [uplevel [lreplace $args 0 0 $cmds]]
     }
     if {[llength $cmds]} {
-      if {$name == ""} {
+      if {$name eq ""} {
 	return -code error "empty command name \"\""
       } else {
 	return -code error \

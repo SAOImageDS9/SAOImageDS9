@@ -9,7 +9,8 @@ exec wish "$0" ${1+"$@"}
 ## ellson@lucent.com
 ## modifications made by jeff at hobbs org
 
-source [file join [file dirname [info script]] loadtable.tcl]
+package require Tk
+package require Tktable
 
 array set table {
     rows	20
@@ -61,7 +62,7 @@ bind $t <Motion> {
 # mousebutton 1 toggles the value of the cell
 # use of "selection includes" would work here
 bind $t <1> {
-    set rc [%W cursel]
+    set rc [%W curselection]
     if {[string match ON $tab($rc)]} {
 	set tab($rc) OFF
         %W tag celltag OFF $rc

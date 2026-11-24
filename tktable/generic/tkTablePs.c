@@ -395,7 +395,6 @@ static int	TextToPostscript(Tcl_Interp *interp,
  */
 void Tcl_DStringAppendAll(Tcl_DString *dstringPtr, ...) {
     va_list argList;
-    Tcl_DString *dstringPtr;
     char *string;
 
     va_start(argList, dstringPtr);
@@ -440,7 +439,7 @@ int Table_PostscriptCmd(
     int row, col, firstRow, firstCol, lastRow, lastCol;
     /* dimensions of first and last cell to output */
     int x0, y0, w0, h0, xn, yn, wn, hn;
-    int x, y, w, h, i;
+    int x, y, w, h;
 #define STRING_LENGTH 400
     char string[STRING_LENGTH+1], *p;
     size_t length;
@@ -640,6 +639,7 @@ int Table_PostscriptCmd(
     case TK_ANCHOR_NW:
     case TK_ANCHOR_W:
     case TK_ANCHOR_SW:
+    case TK_ANCHOR_NULL:
 	deltaX = 0;
 	break;
     case TK_ANCHOR_N:
@@ -667,6 +667,7 @@ int Table_PostscriptCmd(
     case TK_ANCHOR_SW:
     case TK_ANCHOR_S:
     case TK_ANCHOR_SE:
+    case TK_ANCHOR_NULL:
 	deltaY = 0;
 	break;
     }
@@ -700,7 +701,7 @@ int Table_PostscriptCmd(
     sprintf(string, " %d,%d => %d,%d\n", firstRow, firstCol, lastRow, lastCol);
     Tcl_DStringAppendAll(&postscript,
 			 "%!PS-Adobe-3.0 EPSF-3.0\n",
-			 "%%Creator: Tk Table Widget ", TBL_VERSION, "\n",
+			 "%%Creator: Tk Table Widget ", PACKAGE_VERSION, "\n",
 			 "%%Title: Window ",
 			 Tk_PathName(tablePtr->tkwin), string,
 			 "%%BoundingBox: ",
@@ -729,7 +730,7 @@ int Table_PostscriptCmd(
     p = "%%DocumentNeededResources: font ";
     for (hPtr = Tcl_FirstHashEntry(&psInfo.fontTable, &search);
 	 hPtr != NULL; hPtr = Tcl_NextHashEntry(&search)) {
-	sprintf(string, "%s%s\n", p, Tcl_GetHashKey(&psInfo.fontTable, hPtr));
+	sprintf(string, "%s%s\n", p, (char *) Tcl_GetHashKey(&psInfo.fontTable, hPtr));
 	Tcl_DStringAppend(&postscript, string, -1);
 	p = "%%+ font ";
     }
@@ -758,7 +759,7 @@ int Table_PostscriptCmd(
     for (hPtr = Tcl_FirstHashEntry(&psInfo.fontTable, &search);
 	 hPtr != NULL; hPtr = Tcl_NextHashEntry(&search)) {
 	sprintf(string, "%s%s\n", "%%IncludeResource: font ",
-		Tcl_GetHashKey(&psInfo.fontTable, hPtr));
+		(char *) Tcl_GetHashKey(&psInfo.fontTable, hPtr));
 	Tcl_DStringAppend(&postscript, string, -1);
     }
     Tcl_DStringAppend(&postscript, "%%EndSetup\n\n", -1);
@@ -798,7 +799,8 @@ int Table_PostscriptCmd(
     titlePtr = (TableTag *) Tcl_GetHashValue(hPtr);
 
     total = 0;
-    colWidths = (int *) ckalloc((lastCol-firstCol) * sizeof(int));
+    colWidths = (int *) Tcl_Alloc((lastCol-firstCol) * sizeof(int));
+    if (!colWidths) return NULL;
     for (col = 0; col <= lastCol-firstCol; col++) colWidths[col] = 0;
     Tcl_DStringAppend(&buffer, "gsave\n", -1);
     for (row = firstRow; row <= lastRow; row++) {
@@ -823,23 +825,23 @@ int Table_PostscriptCmd(
 	    }
 
 	    /* Create the tag here */
-	    tagPtr = TableNewTag();
+	    tagPtr = TableNewTag(tablePtr);
 	    /* First, merge in the default tag */
-	    TableMergeTag(tagPtr, &(tablePtr->defaultTag));
+	    TableMergeTag(tablePtr, tagPtr, &(tablePtr->defaultTag));
 
 	    colPtr = FindRowColTag(tablePtr, col+tablePtr->colOffset, COL);
-	    if (colPtr != (TableTag *) NULL) TableMergeTag(tagPtr, colPtr);
-	    if (rowPtr != (TableTag *) NULL) TableMergeTag(tagPtr, rowPtr);
+	    if (colPtr != (TableTag *) NULL) TableMergeTag(tablePtr, tagPtr, colPtr);
+	    if (rowPtr != (TableTag *) NULL) TableMergeTag(tablePtr, tagPtr, rowPtr);
 	    /* Am I in the titles */
 	    if (row < tablePtr->topRow || col < tablePtr->leftCol) {
-		TableMergeTag(tagPtr, titlePtr);
+		TableMergeTag(tablePtr, tagPtr, titlePtr);
 	    }
 	    /* Does this have a cell tag */
 	    TableMakeArrayIndex(row+tablePtr->rowOffset,
 				col+tablePtr->colOffset, string);
 	    hPtr = Tcl_FindHashEntry(tablePtr->cellStyles, string);
 	    if (hPtr != NULL) {
-		TableMergeTag(tagPtr, (TableTag *) Tcl_GetHashValue(hPtr));
+		TableMergeTag(tablePtr, tagPtr, (TableTag *) Tcl_GetHashValue(hPtr));
 	    }
 
 	    /*
@@ -868,20 +870,20 @@ int Table_PostscriptCmd(
 	    }
 	    Tcl_DStringAppend(&buffer, Tcl_GetStringResult(interp), -1);
 	}
-	sprintf(string, "/row%d %d def\n",
-		row, tablePtr->psInfoPtr->y2 - total);
+	sprintf(string, "/row%d %d def\n", row, tablePtr->psInfoPtr->y2 - total);
 	Tcl_DStringAppend(&postscript, string, -1);
-	total += rowHeight + 2*tablePtr->defaultTag.bd;
+	total += rowHeight + tablePtr->defaultTag.bd[0] + tablePtr->defaultTag.bd[2];
     }
     Tcl_DStringAppend(&buffer, "grestore\n", -1);
     sprintf(string, "/row%d %d def\n", row, tablePtr->psInfoPtr->y2 - total);
     Tcl_DStringAppend(&postscript, string, -1);
 
-    total = tablePtr->defaultTag.bd;
+    total = 0;
     for (col = firstCol; col <= lastCol; col++) {
 	sprintf(string, "/col%d %d def\n", col, total);
 	Tcl_DStringAppend(&postscript, string, -1);
-	total += colWidths[col-firstCol] + 2*tablePtr->defaultTag.bd;
+	total += colWidths[col-firstCol] + tablePtr->defaultTag.bd[1] +
+	    tablePtr->defaultTag.bd[3];
     }
     sprintf(string, "/col%d %d def\n", col, total);
     Tcl_DStringAppend(&postscript, string, -1);
@@ -906,8 +908,7 @@ int Table_PostscriptCmd(
      *---------------------------------------------------------------------
      */
 
-    Tcl_DStringAppend(&postscript,
-		      "restore showpage\n\n%%Trailer\nend\n%%EOF\n", -1);
+    Tcl_DStringAppend(&postscript, "restore showpage\n\n%%Trailer\nend\n%%EOF\n", -1);
     if (psInfo.chan != NULL) {
 	Tcl_Write(psInfo.chan, Tcl_DStringValue(&postscript), -1);
 	Tcl_DStringFree(&postscript);
@@ -919,44 +920,45 @@ int Table_PostscriptCmd(
    */
 
 cleanup:
+    Tcl_Free(colWidths);
     Tcl_DStringResult(interp, &postscript);
     Tcl_DStringFree(&postscript);
     Tcl_DStringFree(&buffer);
     if (psInfo.first != NULL) {
-	ckfree(psInfo.first);
+	Tcl_Free(psInfo.first);
     }
     if (psInfo.last != NULL) {
-	ckfree(psInfo.last);
+	Tcl_Free(psInfo.last);
     }
     if (psInfo.pageXString != NULL) {
-	ckfree(psInfo.pageXString);
+	Tcl_Free(psInfo.pageXString);
     }
     if (psInfo.pageYString != NULL) {
-	ckfree(psInfo.pageYString);
+	Tcl_Free(psInfo.pageYString);
     }
     if (psInfo.pageWidthString != NULL) {
-	ckfree(psInfo.pageWidthString);
+	Tcl_Free(psInfo.pageWidthString);
     }
     if (psInfo.pageHeightString != NULL) {
-	ckfree(psInfo.pageHeightString);
+	Tcl_Free(psInfo.pageHeightString);
     }
     if (psInfo.fontVar != NULL) {
-	ckfree(psInfo.fontVar);
+	Tcl_Free(psInfo.fontVar);
     }
     if (psInfo.colorVar != NULL) {
-	ckfree(psInfo.colorVar);
+	Tcl_Free(psInfo.colorVar);
     }
     if (psInfo.colorMode != NULL) {
-	ckfree(psInfo.colorMode);
+	Tcl_Free(psInfo.colorMode);
     }
     if (psInfo.fileName != NULL) {
-	ckfree(psInfo.fileName);
+	Tcl_Free(psInfo.fileName);
     }
     if ((psInfo.chan != NULL) && (psInfo.channelName == NULL)) {
 	Tcl_Close(interp, psInfo.chan);
     }
     if (psInfo.channelName != NULL) {
-	ckfree(psInfo.channelName);
+	Tcl_Free(psInfo.channelName);
     }
     Tcl_DeleteHashTable(&psInfo.fontTable);
     tablePtr->psInfoPtr = oldInfoPtr;
@@ -1004,7 +1006,7 @@ int Tk_TablePsColor(
      */
 
     if (psInfoPtr->colorVar != NULL) {
-	char *cmdString;
+	const char *cmdString;
 
 	cmdString = Tcl_GetVar2(interp, psInfoPtr->colorVar,
 				Tk_NameOfColor(colorPtr), 0);
@@ -1084,33 +1086,36 @@ int Tk_TablePsFont(
     Tcl_DStringInit(&ds);
 
     if (psInfoPtr->fontVar != NULL) {
-	char *list, **argv;
-	int objc;
+	const char *list;
+	const char **argv;
+	Tcl_Size argc;
 	double size;
-	char *name;
+	const char *name;
 
 	name = Tk_NameOfFont(tkfont);
 	list = Tcl_GetVar2(interp, psInfoPtr->fontVar, name, 0);
 	if (list != NULL) {
-	    if (Tcl_SplitList(interp, list, &objc, &argv) != TCL_OK) {
-	    badMapEntry:
+	    if (Tcl_SplitList(interp, list, &argc, &argv) != TCL_OK) {
+badMapEntry:
 		Tcl_ResetResult(interp);
 		Tcl_AppendResult(interp, "bad font map entry for \"", name,
 				 "\": \"", list, "\"", (char *) NULL);
 		return TCL_ERROR;
 	    }
-	    if (objc != 2) {
+	    if (argc != 2) {
+		Tcl_Free((char *) argv);
 		goto badMapEntry;
 	    }
 	    size = strtod(argv[1], &end);
 	    if ((size <= 0) || (*end != 0)) {
+		Tcl_Free((char *) argv);
 		goto badMapEntry;
 	    }
 
 	    Tcl_DStringAppend(&ds, argv[0], -1);
 	    points = (int) size;
 
-	    ckfree((char *) argv);
+	    Tcl_Free((char *) argv);
 	    goto findfont;
 	}
     }
@@ -1255,6 +1260,7 @@ static int TextToPostscript(
 
     x = 0;  y = 0;  justify = NULL;	/* lint. */
     switch (tagPtr->anchor) {
+    case TK_ANCHOR_NULL:
     case TK_ANCHOR_NW:		x = 0; y = 0;	break;
     case TK_ANCHOR_N:		x = 1; y = 0;	break;
     case TK_ANCHOR_NE:		x = 2; y = 0;	break;
@@ -1266,6 +1272,7 @@ static int TextToPostscript(
     case TK_ANCHOR_CENTER:	x = 1; y = 1;	break;
     }
     switch (tagPtr->justify) {
+    case TK_JUSTIFY_NULL:
     case TK_JUSTIFY_RIGHT:	justify = "1";	break;
     case TK_JUSTIFY_CENTER:	justify = "0.5";break;
     case TK_JUSTIFY_LEFT:	justify = "0";

@@ -1,0 +1,5 @@
+# -*- tcl -*-
+# Tcl package index file, version 1.1
+#
+package ifneeded @PACKAGE_NAME@ @PACKAGE_VERSION@ \
+	[list source [file join $dir @PACKAGE_NAME@.tcl]]

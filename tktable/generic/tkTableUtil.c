@@ -38,7 +38,7 @@ void Table_ClearHashTable(Tcl_HashTable *hashTblPtr) {
     for (entryPtr = Tcl_FirstHashEntry(hashTblPtr, &search);
 	    entryPtr != NULL; entryPtr = Tcl_NextHashEntry(&search)) {
 	value = (char *) Tcl_GetHashValue(entryPtr);
-	if (value != NULL) ckfree(value);
+	if (value != NULL) Tcl_Free(value);
     }
 
     Tcl_DeleteHashTable(hashTblPtr);
@@ -127,18 +127,20 @@ int TableOptionBdSet(
 		    bdPtr[i] = MAX(0, bd[i]);
 		}
 		if (*borderStr) {
-		    ckfree(*borderStr);
+		    Tcl_Free(*borderStr);
 		}
 		if (value) {
-		    *borderStr	= (char *) ckalloc(strlen(value) + 1);
-		    strcpy(*borderStr, value);
+		    *borderStr = (char *) Tcl_Alloc((Tcl_Size)strlen(value) + 1);
+		    if (*borderStr) {
+			strcpy(*borderStr, value);
+		    }
 		} else {
-		    *borderStr	= NULL;
+		    *borderStr = NULL;
 		}
-		*bordersPtr	= (int) argc;
+		*bordersPtr = (int) argc;
 	    }
 	}
-	ckfree ((char *) argv);
+	Tcl_Free ((char *) argv);
     }
 
     return result;
@@ -148,6 +150,7 @@ int TableOptionBdSet(
  *----------------------------------------------------------------------
  *
  * TableOptionBdGet --
+ *	This routine returns the borderwidth value for a tag.
  *
  * Results:
  *	Value of the -bd option.
@@ -234,16 +237,19 @@ int TableTagConfigureBd(Table *tablePtr, TableTag *tagPtr, char *oldValue, int n
 		}
 		tagPtr->borders = (int) argc;
 	    }
-	    ckfree ((char *) argv);
+	    Tcl_Free ((char *) argv);
 	}
     }
 
     if (result != TCL_OK) {
 	if (tagPtr->borderStr) {
-	    ckfree ((char *) tagPtr->borderStr);
+	    Tcl_Free ((char *) tagPtr->borderStr);
 	}
 	if (oldValue != NULL) {
 	    size_t length = strlen(oldValue) + 1;
+	    argc = 0;
+	    argv = NULL;
+
 	    /*
 	     * We are making the assumption that oldValue is correct.
 	     * We have to reparse in case the bad new value had a couple
@@ -253,10 +259,14 @@ int TableTagConfigureBd(Table *tablePtr, TableTag *tagPtr, char *oldValue, int n
 	    for (i = 0; i < argc; i++) {
 		Tk_GetPixels(tablePtr->interp, tablePtr->tkwin, argv[i], &(tagPtr->bd[i]));
 	    }
-	    ckfree ((char *) argv);
+	    if (argv) {
+		Tcl_Free ((char *) argv);
+	    }
 	    tagPtr->borders	= (int) argc;
-	    tagPtr->borderStr	= (char *) ckalloc(length);
-	    memcpy(tagPtr->borderStr, oldValue, length);
+	    tagPtr->borderStr	= (char *) Tcl_Alloc((Tcl_Size)length);
+	    if (tagPtr->borderStr) {
+		memcpy(tagPtr->borderStr, oldValue, length);
+	    }
 	} else {
 	    tagPtr->borders	= 0;
 	    tagPtr->borderStr	= (char *) NULL;
@@ -271,33 +281,35 @@ int TableTagConfigureBd(Table *tablePtr, TableTag *tagPtr, char *oldValue, int n
  */
 
 char * Cmd_GetName(const Cmd_Struct *cmds, int val) {
-  for(;cmds->name && cmds->name[0];cmds++) {
-    if (cmds->value==val) return cmds->name;
-  }
-  return NULL;
+    for(;cmds->name && cmds->name[0];cmds++) {
+	if (cmds->value==val) return cmds->name;
+    }
+    return NULL;
 }
 
 int Cmd_GetValue(const Cmd_Struct *cmds, const char *arg) {
-  size_t len = strlen(arg);
-  for(;cmds->name && cmds->name[0];cmds++) {
-    if (!strncmp(cmds->name, arg, len)) return cmds->value;
-  }
-  return 0;
+    size_t len = strlen(arg);
+
+    for(;cmds->name && cmds->name[0];cmds++) {
+	if (!strncmp(cmds->name, arg, len)) return cmds->value;
+    }
+    return 0;
 }
 
 void Cmd_GetError(Tcl_Interp *interp, const Cmd_Struct *cmds, const char *arg) {
-  int i;
-  Tcl_AppendResult(interp, "bad option \"", arg, "\" must be ", (char *) 0);
-  for(i=0;cmds->name && cmds->name[0];cmds++,i++) {
-    Tcl_AppendResult(interp, (i?", ":""), cmds->name, (char *) 0);
-  }
+    int i;
+
+    Tcl_AppendResult(interp, "bad option \"", arg, "\" must be ", (char *) 0);
+    for(i=0;cmds->name && cmds->name[0];cmds++,i++) {
+	Tcl_AppendResult(interp, (i?", ":""), cmds->name, (char *) 0);
+    }
 }
 
 /*
  *----------------------------------------------------------------------
  *
  * Cmd_OptionSet --
- *
+ *	Set option to value.
  *
  * Results:
  *	A standard Tcl result.
@@ -308,23 +320,24 @@ void Cmd_GetError(Tcl_Interp *interp, const Cmd_Struct *cmds, const char *arg) {
  *----------------------------------------------------------------------
  */
 
-int Cmd_OptionSet(ClientData clientData, Tcl_Interp *interp, Tk_Window unused,
+int Cmd_OptionSet(ClientData clientData, Tcl_Interp *interp, TCL_UNUSED(Tk_Window),
 	const char *value, char *widgRec, Tcl_Size offset) {
-  Cmd_Struct *p = (Cmd_Struct *)clientData;
-  int mode = Cmd_GetValue(p,value);
-  if (!mode) {
-    Cmd_GetError(interp,p,value);
-    return TCL_ERROR;
-  }
-  *((int*)(widgRec+(size_t)offset)) = mode;
-  return TCL_OK;
+    Cmd_Struct *p = (Cmd_Struct *)clientData;
+    int mode = Cmd_GetValue(p,value);
+
+    if (!mode) {
+	Cmd_GetError(interp,p,value);
+	return TCL_ERROR;
+    }
+    *((int*)(widgRec+(size_t)offset)) = mode;
+    return TCL_OK;
 }
 
 /*
  *----------------------------------------------------------------------
  *
  * Cmd_OptionGet --
- *
+ *	Get value for option.
  *
  * Results:
  *	Value of the option.
@@ -335,9 +348,10 @@ int Cmd_OptionSet(ClientData clientData, Tcl_Interp *interp, Tk_Window unused,
  *----------------------------------------------------------------------
  */
 
-CONST86 char * Cmd_OptionGet(ClientData clientData, Tk_Window unused,
+CONST86 char * Cmd_OptionGet(ClientData clientData, TCL_UNUSED(Tk_Window),
 	char *widgRec, Tcl_Size offset, Tcl_FreeProc **freeProcPtr) {
-  Cmd_Struct *p = (Cmd_Struct *)clientData;
-  int mode = *((int*)(widgRec+(size_t)offset));
-  return (CONST86 char *) Cmd_GetName(p,mode);
+    Cmd_Struct *p = (Cmd_Struct *)clientData;
+    int mode = *((int*)(widgRec+(size_t)offset));
+
+    return (CONST86 char *) Cmd_GetName(p,mode);
 }

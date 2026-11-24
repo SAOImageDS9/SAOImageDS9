@@ -547,7 +547,7 @@ proc unknown args {
     if {[llength $cmds] == 1} {
       return [uplevel [lreplace $args 0 0 $cmds]]
     } elseif {[llength $cmds]} {
-      if {$name == ""} {
+      if {$name eq ""} {
 	return -code error "empty command name \"\""
       } else {
 	return -code error \

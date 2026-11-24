@@ -453,6 +453,10 @@ proc MovieScriptSleep {cmd} {
 }
 
 proc MovieScriptForeach {cmd} {
+    if {[llength $cmd] != 3 && [lindex $cmd 1] in {linear log}} {
+        return [MovieScriptRange $cmd]
+    }
+
     set items [lindex $cmd 1]
     set template [lindex $cmd 2]
 
@@ -468,6 +472,56 @@ proc MovieScriptForeach {cmd} {
         }
     }
 
+    return 0
+}
+
+proc MovieScriptRange {cmd} {
+    if {[catch {
+        if {[llength $cmd] != 6} {
+            error {expected spacing, start, stop, count and template}
+        }
+        lassign $cmd keyword spacing first last count template
+        if {![string is integer -strict $count] || $count < 1} {
+            error {count must be a positive integer}
+        }
+        foreach endpoint [list $first $last] {
+            if {![string is double -strict $endpoint] ||
+                ![expr {abs(double($endpoint)) < Inf}]} {
+                error {endpoints must be finite numbers}
+            }
+        }
+        if {$spacing == {log}} {
+            if {$first <= 0 || $last <= 0} {
+                error {logarithmic endpoints must be positive}
+            }
+            set logfirst [expr {log($first)}]
+            set loglast [expr {log($last)}]
+        }
+    }]} {
+        Error [msgcat::mc {An error has occurred while processing}]
+        return 1
+    }
+
+    # Generate one value at a time so cancellation never waits for a full list.
+    for {set ii 0} {$ii < $count} {incr ii} {
+        if {$ii == 0} {
+            set value $first
+        } elseif {$ii == $count-1} {
+            set value $last
+        } elseif {$first == $last} {
+            set value $first
+        } else {
+            set fraction [expr {double($ii)/($count-1)}]
+            if {$spacing == {log}} {
+                set value [expr {exp($logfirst+$fraction*($loglast-$logfirst))}]
+            } else {
+                set value [expr {(1-$fraction)*$first+$fraction*$last}]
+            }
+        }
+        if {[MovieScriptForeach [list foreach [list $value] $template]]} {
+            return 1
+        }
+    }
     return 0
 }
 

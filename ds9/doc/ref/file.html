@@ -537,6 +537,26 @@ The syntax is
 
 <pre>
 foreach {value1 value2 value3 ...} {command ... @ ...}
+foreach linear start stop count {command ... @ ...}
+foreach log start stop count {command ... @ ...}
+</pre>
+
+<p>
+Use <tt>linear</tt> to generate equally spaced values or <tt>log</tt> to generate
+logarithmically spaced values. The <tt>count</tt> must be a positive integer.
+Both endpoints must be finite numbers; logarithmic endpoints must also be positive.
+Ascending and descending ranges are supported. Both endpoints are included when
+<tt>count</tt> is greater than one; a count of one uses only <tt>start</tt>.
+Each generated value runs the command and adds one movie frame, just like an explicit list.
+Values are generated one at a time so an interrupted movie does not need to finish
+building a potentially large list first.
+</p>
+
+<pre>
+# Rotate from 0 to 360 degrees in 10-degree steps (37 frames).
+foreach linear 0 360 37 {rotate to @}
+# Zoom to 1, 10 and 100 (3 frames).
+foreach log 1 100 3 {zoom to @}
 </pre>
 
 <p>

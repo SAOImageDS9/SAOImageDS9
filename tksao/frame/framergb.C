@@ -202,6 +202,7 @@ void FrameRGB::updateColorScale()
 
     switch (context[ii].colorScaleType()) {
     case FrScale::LINEARSCALE:
+    case FrScale::GHSSCALE: // PROTOTYPE: no GhsScaleRGB yet
       colorScale[ii] = 
 	new LinearScaleRGB(ii, colorCount, colorCells, colorCount);
       break;

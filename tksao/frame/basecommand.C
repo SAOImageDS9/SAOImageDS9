@@ -670,6 +670,28 @@ void Base::colorScaleCmd(FrScale::ColorScaleType s)
   }
 }
 
+// PROTOTYPE hook for GHS: "colorscale user sf b sp lp hp"
+// sp/lp/hp normalised to [0,1] of the current low/high
+void Base::colorScaleGhsCmd(double sf, double b, double sp, double lp,
+			    double hp)
+{
+  GhsParams gp;
+  gp.sf = sf;
+  gp.b = b;
+  gp.sp = sp;
+  gp.lp = lp;
+  gp.hp = hp;
+  int changed = currentContext->updateGhs(gp);
+  if (currentContext->colorScaleType() != FrScale::GHSSCALE) {
+    currentContext->setColorScaleType(FrScale::GHSSCALE);
+    changed = 1;
+  }
+  if (changed) {
+    updateColorScale();
+    update(BASE);
+  }
+}
+
 void Base::colorScaleLogCmd(double exp)
 {
   if (currentContext->updateExpo(exp)) {
@@ -1498,6 +1520,9 @@ void Base::getColorMapLevelCmd(int count, double ll, double hh,
   case FrScale::SINHSCALE:
     inverseScale = new SinhInverseScale(count, ll, hh);
     break;
+  case FrScale::GHSSCALE:
+    inverseScale = new GhsInverseScale(count, ll, hh, currentContext->ghs());
+    break;
   case FrScale::HISTEQUSCALE:
     inverseScale = new HistEquInverseScale(count, ll, hh,
 				    currentContext->histequ(),
@@ -1542,6 +1567,9 @@ void Base::getColorScaleCmd()
   case FrScale::SINHSCALE:
     Tcl_AppendResult(interp, "sinh", NULL);
     break;
+  case FrScale::GHSSCALE:
+    Tcl_AppendResult(interp, "ghs", NULL);
+    break;
   case FrScale::HISTEQUSCALE:
     Tcl_AppendResult(interp, "histequ", NULL);
     break;
@@ -1578,6 +1606,9 @@ void Base::getColorScaleLevelCmd(int count, double ll, double hh,
     break;
   case FrScale::SINHSCALE:
     scale = new SinhInverseScale(count, ll, hh);
+    break;
+  case FrScale::GHSSCALE:
+    scale = new GhsInverseScale(count, ll, hh, currentContext->ghs());
     break;
   case FrScale::HISTEQUSCALE:
     scale = new HistEquInverseScale(count, ll, hh,
@@ -1784,6 +1815,9 @@ void Base::getContourScaleCmd()
     break;
   case FrScale::SINHSCALE:
     Tcl_AppendResult(interp, "sinh", NULL);
+    break;
+  case FrScale::GHSSCALE:
+    Tcl_AppendResult(interp, "ghs", NULL);
     break;
   case FrScale::HISTEQUSCALE:
     Tcl_AppendResult(interp, "histequ", NULL);

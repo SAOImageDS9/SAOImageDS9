@@ -6,6 +6,7 @@
 #define __inversescale_h__
 
 #include "vector.h"
+#include "ghs.h"
 
 class InverseScale {
  protected:
@@ -52,6 +53,11 @@ public:
 class AsinhInverseScale : public InverseScale {
 public:
   AsinhInverseScale(int, double, double);
+};
+
+class GhsInverseScale : public InverseScale {
+public:
+  GhsInverseScale(int, double, double, const GhsParams&);
 };
 
 class SinhInverseScale : public InverseScale {

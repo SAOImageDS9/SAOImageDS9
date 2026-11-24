@@ -953,10 +953,10 @@ unsigned char* Frame3d::fillImageColor(RayTrace* rt)
 	    *dest = table[length*3+2];
 	  }
 	  else {
-	    int l = (int)(((value - ll)/diff * length) + .5);
-	    *(dest+2) = table[l*3];
-	    *(dest+1) = table[l*3+1];
-	    *dest = table[l*3+2];
+	    const unsigned char* cc = colorScale->lookup((value - ll)/diff);
+	    *(dest+2) = cc[0];
+	    *(dest+1) = cc[1];
+	    *dest = cc[2];
 	  }
 
 	  if (doShade) {
@@ -1279,6 +1279,10 @@ void Frame3d::updateColorScale()
     colorScale =
       new SinhScale(SCALESIZE, colorCells, colorCount);
     break;
+  case FrScale::GHSSCALE:
+    colorScale =
+      new GhsScale(SCALESIZE, colorCells, colorCount, context->ghs());
+    break;
   case FrScale::HISTEQUSCALE:
     colorScale =
       new HistEquScale(SCALESIZE, colorCells, colorCount, 
@@ -1387,10 +1391,10 @@ void Frame3d::savePhotoCmd(const char* ph)
 	  *(dest+block.offset[3]) = 255;
 	}
 	else {
-	  int l = (int)(((value - ll)/diff * length) + .5);
-	  *(dest+block.offset[0]) = table[l*3+2];
-	  *(dest+block.offset[1]) = table[l*3+1];
-	  *(dest+block.offset[2]) = table[l*3];
+	  const unsigned char* cc = colorScale->lookup((value - ll)/diff);
+	  *(dest+block.offset[0]) = cc[2];
+	  *(dest+block.offset[1]) = cc[1];
+	  *(dest+block.offset[2]) = cc[0];
 	  *(dest+block.offset[3]) = 255;
 	}
       }

@@ -9,6 +9,7 @@
 #include <string.h>
 
 #include "vector.h"
+#include "ghs.h"
 
 class FitsImage;
 
@@ -18,7 +19,7 @@ class FrScale {
 		       LOGSCALE, POWSCALE, 
 		       SQRTSCALE, SQUAREDSCALE, 
 		       ASINHSCALE, SINHSCALE,
-		       HISTEQUSCALE, IISSCALE};
+		       HISTEQUSCALE, IISSCALE, GHSSCALE};
   enum ClipScope {GLOBAL, LOCAL};
   enum ClipMode {MINMAX, ZSCALE, ZMAX, AUTOCUT, USERCLIP};
   enum MinMaxMode {SCAN, SAMPLE, DATAMIN, IRAFMIN};
@@ -38,6 +39,7 @@ class FrScale {
   double ulow_;               // low cut via user for all data
   double uhigh_;              // high cut via user for all data
   float expo_;                // log scale exponent
+  GhsParams ghs_;             // GHS parameters (prototype)
   float zContrast_;           // zscale slope transfer function
   int zSample_;               // zscale optimal sample size
   int zLine_;                 // zscale number of lines to sample
@@ -78,6 +80,7 @@ class FrScale {
   double ulow() {return ulow_;}
   double uhigh() {return uhigh_;}
   float expo() {return expo_;}
+  const GhsParams& ghs() {return ghs_;}
   float zContrast() {return zContrast_;}
   int zSample() {return zSample_;}
   int zLine() {return zLine_;}
@@ -100,6 +103,7 @@ class FrScale {
   void setULow(double v) {ulow_ = v;}
   void setUHigh(double v) {uhigh_ = v;}
   void setExpo(float e) {expo_ = e>10 ? e : 10;}
+  void setGhs(const GhsParams& g) {ghs_ = g;}
   void setZContrast(float v) {zContrast_ = v;}
   void setZSample(int v) {zSample_ = v;}
   void setZLine(int v) {zLine_ = v;}

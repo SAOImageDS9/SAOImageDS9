@@ -1000,6 +1000,8 @@ colormapMotion: INT numeric numeric INT INT
 
 colorscale : scaleType {fr->colorScaleCmd((FrScale::ColorScaleType)$1);}
 	| LOG_ numeric {fr->colorScaleLogCmd($2);}
+	| USER_ numeric numeric numeric numeric numeric
+	{fr->colorScaleGhsCmd($2,$3,$4,$5,$6);}
 	;
 
 contour	: CREATE_ contourCreate

@@ -225,15 +225,13 @@ unsigned char* FrameMultiColor::fillImage(int width, int height,
 	    double value = sptr->getValueDouble(long(yy)*srcw + long(xx));
 
 	    if (isfinite(diff) && isfinite(value)) {
-	      int idx;
+	      const unsigned char* src;
 	      if (value <= low)
-		idx = 0;
+		src = table;
 	      else if (value >= high)
-		idx = length;
+		src = table + length*3;
 	      else
-		idx = (int)(((value - low)/diff * length) + .5);
-
-	      const unsigned char* src = table + idx*3;
+		src = colorScale[kk]->lookup((value - low)/diff);
 	      if (*mkptr == 2) {
 		unsigned char blended[3];
 		FitsMask::blendRGB(src,dest,blended,blend[kk]);
@@ -384,6 +382,10 @@ void FrameMultiColor::rebuildLayerScale(int ss)
   case FrScale::SINHSCALE:
     colorScale[ss] =
       new SinhScale(SCALESIZE, colorCells, colorCount);
+    break;
+  case FrScale::GHSSCALE:
+    colorScale[ss] =
+      new GhsScale(SCALESIZE, colorCells, colorCount, context[ss].ghs());
     break;
   case FrScale::HISTEQUSCALE:
     colorScale[ss] =

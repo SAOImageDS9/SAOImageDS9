@@ -275,6 +275,9 @@ void FVContour::buildScale(FitsImage* fits)
   case FrScale::SINHSCALE:
     scale_ =  new SinhInverseScale(numLevel_, frScale_.low(), frScale_.high());
     break;
+  case FrScale::GHSSCALE:
+    scale_ =  new GhsInverseScale(numLevel_, frScale_.low(), frScale_.high(), frScale_.ghs());
+    break;
   case FrScale::HISTEQUSCALE:
     scale_ =  new HistEquInverseScale(numLevel_, frScale_.low(), frScale_.high(), frScale_.histequ(fits), HISTEQUSIZE);
     break;

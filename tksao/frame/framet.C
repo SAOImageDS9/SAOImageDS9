@@ -127,10 +127,10 @@ unsigned char* FrameT::fillImage(int width, int height,
 		  *dest = table[length*3+2];
 		}
 		else {
-		  int l = (int)(((value - ll)/diff * length) + .5);
-		  *(dest+2) = table[l*3];
-		  *(dest+1) = table[l*3+1];
-		  *dest = table[l*3+2];
+		  const unsigned char* cc = colorScale->lookup((value - ll)/diff);
+		  *(dest+2) = cc[0];
+		  *(dest+1) = cc[1];
+		  *dest = cc[2];
 		}
 	      }
 	      else {
@@ -257,6 +257,10 @@ void FrameT::updateColorScale()
     colorScale =
       new SinhScale(SCALESIZE, colorCells, colorCount);
     break;
+  case FrScale::GHSSCALE:
+    colorScale =
+      new GhsScale(SCALESIZE, colorCells, colorCount, context->ghs());
+    break;
   case FrScale::HISTEQUSCALE:
     colorScale =
       new HistEquScale(SCALESIZE, colorCells, colorCount, 
@@ -276,6 +280,7 @@ void FrameT::updateColorScale()
   for (int kk=1; kk<3; kk++) {
     switch (context[kk].colorScaleType()) {
     case FrScale::LINEARSCALE:
+    case FrScale::GHSSCALE: // PROTOTYPE: no GhsScaleT yet
       colorScaleT[kk-1] =
 	new LinearScaleT(colorCount, colorCellsT[kk-1], colorCount);
       break;
@@ -460,10 +465,10 @@ void FrameT::savePhotoCmd(const char* ph)
 	      *dest = table[length*3+2];
 	    }
 	    else {
-	      int l = (int)(((value - ll)/diff * length) + .5);
-	      *(dest+2) = table[l*3];
-	      *(dest+1) = table[l*3+1];
-	      *dest = table[l*3+2];
+	      const unsigned char* cc = colorScale->lookup((value - ll)/diff);
+	      *(dest+2) = cc[0];
+	      *(dest+1) = cc[1];
+	      *dest = cc[2];
 	    }
 	  }
 	  else {

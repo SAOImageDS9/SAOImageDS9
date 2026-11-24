@@ -1,0 +1,422 @@
+# TODO: Generalized Hyperbolic Stretch (GHS) scale
+
+**Status (2026-11-24): proposal only — nothing implemented.** Recommendation: add the
+core GHS transfer curve as a new DS9 scale type; skip GHS's colour modes. Reviewed
+2026-11-24: the maths checks out (every T′ and inverse verified), contrast/bias fit with
+no code changes (see "Interaction with contrast/bias"), and LUT banding is predictable
+from the maths. **Prototype built 2026-11-24 on branch `ghs_scale` (uncommitted).** It
+shows that the scale table, not the stretch factor, limits GHS on wide-range data: see
+"Prototype results". Prototypes 2 and 3 compared computing each pixel directly with a
+2²⁰-entry table built from the inverse. Both fix the banding, and the fine table does it
+at near-normal speed: **recommended**. Next step is deciding questions 2–4, then the
+full wiring with the fine table (dropping `lookup()` and the env switch).
+
+Source: PixInsight GHS process module docs, v3.0.4 (2023-07-11),
+<https://www.ghsastro.co.uk/doc/tools/GeneralizedHyperbolicStretch/GeneralizedHyperbolicStretch.html>.
+Algorithm by David Payne (equations, 2021) and Mike Cranfield (PixInsight script/module).
+
+## Why
+
+DS9's non-linear scales are mostly fixed shapes. `AsinhScale` is hard-coded as
+`asinh(10x)/3`, `SinhScale` as `sinh(3x)/10`, and sqrt/squared take no parameter. Only
+log/pow have a tunable `expo`. None of them let the user choose *where* in the data range
+contrast is added. GHS adds that with the symmetry point SP. For science images this is
+the useful part: put SP at the sky level to bring out faint diffuse emission without
+saturating point sources. Setting b = −1 gives a tunable log, and the same framework
+includes a tunable arcsinh, so tunable versions of two existing fixed scales come with it.
+
+## Licensing
+
+The PixInsight module is GPLv3. The equations are published in full on the page above
+and no source repository is linked. Implement from the equations, not from their code,
+and credit Payne & Cranfield in the DS9 docs and the reference manual.
+
+## Maths
+
+All on normalised input x ∈ [0,1] (i.e. after DS9's low/high clip). Use doubles
+throughout. (The fetched page lost its superscripts; the exponents below were restored
+from context. Check them against the page before implementing.)
+
+### Parameters
+
+| Name | Meaning | Range |
+|---|---|---|
+| D | stretch; UI exposes **stretch factor** = ln(D+1), so D = e^sf − 1. sf = 0 ⇒ identity | sf ∈ [0, 20] |
+| b | local intensity: curve shape / how tightly contrast concentrates at SP | [−5, 15] |
+| SP | symmetry point: where contrast is added most | [0, 1] |
+| LP | protect shadows: curve is linear below LP | [0, SP] |
+| HP | protect highlights: curve is linear above HP | [SP, 1] |
+
+In DS9, SP/LP/HP should be entered **in data units**. Convert them to [0,1] with the
+current low/high when building the table, so that changing the clip limits doesn't move
+them. A new clip range (e.g. zscale on another slice) can put them outside [low, high],
+so after converting, clamp them to [0,1] and enforce LP ≤ SP ≤ HP.
+
+### Base curve T(x), derivative T′(x)
+
+| Case | T(x) | T′(x) |
+|---|---|---|
+| b = −1 (log) | ln(1 + D·x) | D / (1 + D·x) |
+| b < 0, b ≠ −1 (integral) | (1 − (1 − b·D·x)^((b+1)/b)) / (D·(b+1)) | (1 − b·D·x)^(1/b) |
+| b = 0 (exponential) | 1 − e^(−D·x) | D·e^(−D·x) |
+| b = 1 (harmonic) | 1 − (1 + D·x)^−1 | D·(1 + D·x)^−2 |
+| b > 0, b ≠ 1 (hyperbolic) | 1 − (1 + b·D·x)^(−1/b) | D·(1 + b·D·x)^(−(1+b)/b) |
+
+GHS also offers these curves with the same piecewise construction (optional for DS9):
+
+| Type | T(x) | T′(x) |
+|---|---|---|
+| Arcsinh | asinh(D·x) | D / √(D²x² + 1) |
+| Power law | 1 − (1 − x)^(1+D) | (1+D)·(1 − x)^D |
+| Midtone (m = 0.5/(D+1)) | (m−1)·x / ((2m−1)·x − m) | m(1−m)·((2m−1)·x − m)^−2 |
+
+### Piecewise assembly (for 0 < LP < SP < HP < 1, D > 0)
+
+```
+T3(x) =  T(x − SP)                          SP ≤ x < HP
+T2(x) = −T(SP − x)                          LP ≤ x < SP   (180° rotation about (SP,0))
+T1(x) =  T2′(LP)·(x − LP) + T2(LP)          0  ≤ x < LP   (tangent line)
+T4(x) =  T3′(HP)·(x − HP) + T3(HP)          HP ≤ x ≤ 1    (tangent line)
+
+NormT(x) = (Ti(x) − T1(0)) / (T4(1) − T1(0))
+```
+
+Note T2′(x) = T′(SP − x) and T3′(x) = T′(x − SP). The page says the cases where some of
+the inequalities are equalities "should be evident". Handle LP = SP, HP = SP, SP = 0,
+SP = 1 and D = 0 (identity) explicitly, and cover them in tests.
+
+### Inverses (needed for `InverseScale`: colorbar numerics, contour levels)
+
+| Case | InvT(y) |
+|---|---|
+| b = −1 | (e^y − 1) / D |
+| b < 0, b ≠ −1 | (1 − (1 − (b+1)·D·y)^(b/(b+1))) / (D·b) |
+| b = 0 | −ln(1 − y) / D |
+| b = 1 | y / (D·(1 − y)) |
+| b > 0, b ≠ 1 | ((1 − y)^−b − 1) / (b·D) |
+| Arcsinh | sinh(y) / D |
+| Power law | 1 − (1 − y)^(1/(1+D)) |
+| Midtone | m·y / ((2m−1)·y − (m−1)) |
+
+With y′ = T1(0) + y·(T4(1) − T1(0)):
+
+```
+[0, NormT(LP))          LP + (y′ − T2(LP)) / T2′(LP)
+[NormT(LP), NormT(SP))  SP − InvT(−y′)
+[NormT(SP), NormT(HP))  SP + InvT(y′)
+[NormT(HP), 1]          HP + (y′ − T3(HP)) / T3′(HP)
+```
+
+## Fit with DS9's architecture
+
+Every scale is a lookup table with `SCALESIZE` = 16384 entries (`tksao/frame/base.h`)
+that maps [low, high] to colour cells (`tksao/frame/colorscale.C`). GHS is one more
+`ColorScale` subclass whose constructor fills the table from NormT. The colorbar and
+contours use `InverseScale` (`tksao/frame/inversescale.C`), which gets a matching class
+built from the closed-form inverse.
+
+Existing constructors do `int ll = (int)(aa*count)` and clamp only at the top. NormT
+can round slightly below 0, so clamp `ll` at both ends.
+
+### Interaction with contrast/bias
+
+The render chain is:
+
+```
+pixel → (v−low)/(high−low) → scale table[SCALESIZE] → colorCells[2048] → RGB
+                              (per-frame scale)       (contrast/bias + colormap)
+```
+
+- The scale table (`frame.C:331`, `:945`; `colorscale.C`) maps normalised data to a
+  colour-cell index. GHS lives here.
+- Contrast/bias belongs to the colorbar, not the scale: `ColorbarBase::calcContrastBias`
+  (`colorbar/colorbarbase.C:469`) remaps each colour-cell index with a clipped straight
+  line, `r = ((i/N − bias)·contrast + 0.5)·N`. The resulting cells are pushed to the frame
+  (`Frame::updateColorCells`, `frame.C:665`).
+
+So the displayed value is `clip(contrast·(NormT(x) − bias) + 0.5)`: a straight-line
+adjustment after the curve, exactly as with log/asinh today. Consequences:
+
+1. **No conflict, nothing to build.** Changing GHS parameters rebuilds the scale table.
+   Changing contrast/bias rebuilds the colour cells. Neither side needs to know about the
+   other.
+2. **The inverse ignores contrast/bias.** Colorbar position *i* shows cell *i*, and
+   `InverseScale(i)` is the data value that lands on cell *i*, so colorbar labels stay
+   correct under any contrast/bias. `GhsInverseScale` only inverts NormT. Contour levels
+   ignore contrast/bias too, as now.
+3. **Overlapping controls.** SP chooses *where in the data* contrast goes. Bias shifts
+   the result in colour space. Both sound like "where the action is", so the docs must
+   spell out the difference. Contrast > 1 makes GHS's steep middle steeper and clips both
+   ends, which defeats LP/HP protection (and worsens banding, Risk 1). Bias > 0.5 acts as
+   a black point, which overlaps the HP = SP "soft black point" recipe. Document GHS as
+   intended for contrast 1 / bias 0.5, and consider a "reset contrast/bias" button in the
+   GHS part of the Scale dialog.
+4. **Histogram target.** The "histogram peak at 0.2–0.25" advice refers to output *after*
+   the stretch, and contrast/bias then moves it. A predicted post-stretch histogram
+   overlay should include contrast/bias, since that is what the user sees.
+5. **Lock scope differs.** GHS parameters are per frame (FrScale). Contrast/bias comes
+   from the colorbar. Locking/matching scales locks GHS but not contrast/bias, and vice
+   versa. Fold this into Risk 2.
+6. **Right-drag** adjusts contrast/bias (`ds9/library/colorbar.tcl:1418`). Possible later
+   option: when the scale is GHS, have right-drag set SP (x) and stretch factor (y). Keep
+   the default behaviour unchanged.
+
+### Places to wire (same set as `ASINHSCALE`)
+
+C++ (`tksao/frame/`):
+- `frscale.h/.C`: add `GHSSCALE` to `ColorScaleType`, plus fields for D (or the stretch
+  factor), b, SP, LP and HP next to `expo_`, with getters/setters and copy/compare
+- `colorscale.C/.h`: `GhsScale`
+- `inversescale.C/.h`: `GhsInverseScale`
+- scale-type switches in `frame.C`, `framergb.C`, `frame3d.C`, `framet.C`,
+  `framemulticolor.C`, `colorscalergb.C`, `colorscalet.C` and `fvcontour.C`
+- `basecommand.C`: set/get of the type and its parameters (the ~1376–1641 region)
+- `parser.Y` + `lex.L`: new `ghs` keyword and parameter syntax. **Caution:** a new token
+  means regenerating `lex.C`. Run the no-op regen check from CLAUDE.md on this box first.
+  If flex churns the file, hand-apply the token on top of the checked-in `lex.C`, or reuse
+  an existing token if one fits. A `.Y` change alone is safe with bison 2.3.
+
+Tcl (`ds9/`):
+- `parsers/scaleparser.tac`, `scalelex.fcl` (taccle/fickle, so a plain `make ds9`
+  regenerates them; no flex needed)
+- `parsers/contourparser.tac`, `contourlex.fcl` (contours have their own scale type).
+  Five more contour-only parameters is a lot. Consider having contours reuse the frame's
+  GHS parameters instead of keeping their own.
+- `library/scale.tcl`: dialog parameter fields; `library/mscale.tcl`: menus and buttons
+- preferences, backup/restore, `command.tcl`, and the XPA/SAMP `scale` docs
+
+Rough size: about 50 lines of maths, and a few days in total, mostly wiring and tests.
+
+## Out of scope
+
+- **Colour / Lightness / Saturation modes.** These compute each pixel from all three
+  channels: arcsinh-style on a weighted mean of R, G and B, then a ×T(z)/z rescale with
+  clip, rescale, or blend handling. DS9's RGB frame runs an independent lookup table per
+  channel, so these would need a new per-pixel render path, not a new scale type.
+  Per-channel GHS in RGB frames comes free with the scale type.
+- **Invert mode** as a user feature. The inverse is only needed internally.
+- **LCP/HCP clip-fraction estimation.** DS9 already has minmax, zscale, zmax and user
+  clipping.
+
+## UI ideas (later; mostly Tcl)
+
+- Draw the transfer curve and SP/LP/HP marker lines on the Scale dialog's existing
+  histogram. GHS also overlays the predicted post-stretch histogram.
+- "Set SP from here": use the median in a 15×15 box at the crosshair or clicked pixel, or
+  a region's statistics. GHS recommends 15×15.
+- Starting defaults from the GHS usage notes. First stretch of linear data: SP at the
+  faintest signal of interest, b ≈ 10, then raise D until the histogram peak sits around
+  0.2–0.25. Later contrast tweaks: b ≈ 3–5. A soft black point without clipping:
+  HP = SP, LP = 0, b ≈ 10.
+
+## Risks / open questions
+
+1. **LUT banding.** Predictable from the maths. The curve is steepest at SP, with
+   normalised slope `D / (T4(1) − T1(0))`. Each scale-table step then jumps
+   `slope · 2048/16383` colour cells. With SP = 0.01, LP = 0, HP = 1:
+
+   | stretch factor | b = 0 | b = 5 | b = 10 |
+   |---|---|---|---|
+   | 2 | 0.75 cells/step | 1.4 | 2.1 |
+   | 5 | 10 | 17 | 24 |
+   | 10 | 1,400 | 1,700 | 2,200 |
+   | 15 | 200,000 | 220,000 | 265,000 |
+
+   For comparison, `log` with exp = 1000 already jumps about 18 cells/step near 0, so
+   stretch factor ≲ 5 behaves like existing scales. At ≳ 10 a single table step covers most
+   of the colormap. A bigger table barely helps, because each +1 in stretch factor
+   multiplies the slope by about e, and contrast > 1 multiplies it further. Realistic
+   options:
+   - compute each pixel directly for GHS (the loops at `frame.C:331`/`:945` and their
+     RGB/3D/multicolor counterparts);
+   - cap the stretch factor at around 6–8. Defensible, because PixInsight users reach big
+     stretches by applying GHS several times, which DS9 can't do anyway.
+
+   **The prototype showed this estimate is incomplete** (see "Prototype results"). The
+   steepness at SP matters, but the deciding quantity is the table step in data units,
+   `(high − low)/16383`, compared with the sky noise σ. When the step is ≳ σ, sky pixels
+   collapse onto 2–3 table entries at *any* stretch factor, and no cap fixes it.
+2. **Parameter semantics across frames.** Data-unit SP/LP/HP versus normalised ones when
+   scales are locked or matched between frames with different data ranges. Data units
+   seem right, but match/lock behaviour needs a decision. Note that contrast/bias is
+   locked through the colorbar, separately from the scale.
+3. **Which extra curves to expose.** Arcsinh-with-D and power-law-with-D overlap DS9's
+   existing asinh and pow. Should they be separate types, a GHS sub-option, or left out?
+4. **Command syntax.** For example `scale ghs`, plus
+   `scale ghs {stretch 5 intensity 10 sp 120 lp 0 hp 5000}`, or separate keywords.
+   Follow the existing `scale log exp N` pattern.
+
+## Prototype results (2026-11-24, branch `ghs_scale`)
+
+### What was built
+
+- `tksao/frame/ghs.h` (new, header-only so no configure edits): `GhsParams` and
+  `GhsCurve`, with the forward curve, its inverse, and the piecewise LP/SP/HP assembly.
+  It uses `expm1`/`log1p` throughout to avoid cancellation at small D. Covers b = −1,
+  b < 0, b = 0 and b > 0 (harmonic b = 1 falls out of the b > 0 formula). The extra
+  curves (arcsinh, power law, midtone) are not included.
+- `GhsScale` (`colorscale.C`), `GhsInverseScale` (`inversescale.C`), and
+  `FrScale::GHSSCALE` plus a `GhsParams ghs_` field (copied in both copy paths), with
+  `Context::ghs()`/`updateGhs()`.
+- Wired into `frame.C`, `frame3d.C`, `framet.C` (single scale), `framemulticolor.C`,
+  `fvcontour.C`, and `basecommand.C` (colorbar levels, colour-scale levels, and both
+  `get colorscale` switches, which return `ghs`).
+- **Temporary hook**: the grammar-only rule `colorscale user sf b sp lp hp` in
+  `parser.Y` reuses the existing `USER_` token, so `lex.C` was untouched. `parser.C` was
+  regenerated with CommandLineTools bison 2.3; a no-op regen matched except `#line`
+  paths, and `parser.H` didn't change. **sp/lp/hp are normalised** [0,1] in the
+  prototype, not data units. Usage:
+  `echo '$::current(frame) colorscale user 5 5 0.0068 0 1' | xpaset ds9 tcl`.
+- Prototype gaps: RGB frames and per-channel `FrameT` fall back to the linear scale (no
+  `GhsScaleRGB`/`GhsScaleT`). `FrScale::colorIndex` (used by `frblt.C`) has no GHS case,
+  which is the build's only new warning. No Tcl/UI, prefs or backup.
+
+### Curve checks (standalone, all pass)
+
+Swept sf ∈ {0, 0.5, 2, 5, 10, 15}, b ∈ {−5, −1, −0.5, 0, 1, 3, 10, 15}, and
+(SP, LP, HP) including the edge cases SP = 0, SP = 1, LP = SP, HP = SP and
+LP = SP = HP. In every case the curve is monotonic over 200k samples, NormT(0) = 0 and
+NormT(1) = 1, and the inverse round-trips to ≤ 2e-10.
+
+### Banding: the table step is the problem, not the stretch factor
+
+- **`Tests/fits/img.fits` (HST, −10 to 3396) can't test the table.** Every pixel is an
+  integer (581 distinct values), and one data unit (1/3406 of the range) is coarser than
+  a table step. GHS with sf = 5, b = 5 and SP at the sky median looks very good there.
+  At sf ≥ 8 it posterizes, but the colorbar shows that's because about 5 integer data
+  values span the whole colormap. That is the curve itself, and computing each pixel
+  directly would not change it.
+- **Synthetic float image**: sky 100, σ = 2, faint diffuse blobs of +3 to +6, and point
+  sources up to 1e5. With minmax, the table step is 6.1 data units, larger than σ.
+  Distinct colour cells reached by sky pixels (median ± 3σ):
+
+  | sf, b | table | computing each pixel directly |
+  |---|---|---|
+  | 2, 5 | 3 | 4 |
+  | 5, 5 | 3 | 49 |
+  | 8, 5 | 3 | 480 |
+  | 10, 5 | 3 | 1,053 |
+
+  Visually: at sf 5 with minmax the diffuse emission is invisible (flat sky). At sf 8 it
+  appears as coarse 3-level speckle. **With a 99.5% clip (step 0.036 units) sf 5, b 5 is
+  excellent**: both blobs stand out, the noise grain is resolved, and the stars aren't
+  saturated. Colorbar labels from `GhsInverseScale` look right in all cases.
+- Contrast 2 / bias 0.5 on top of GHS pushes the sky (low output) to cell 0, i.e. it
+  clips exactly the faint range GHS was raising. That supports "use contrast 1 / bias
+  0.5 with GHS".
+
+### Conclusion
+
+GHS's natural use, minmax limits with SP at the sky, is exactly the case the fixed-step
+table can't handle. A stretch-factor cap doesn't help. Compute each pixel directly for
+GHS instead: the render loops (`frame.C:331`/`:945` and their equivalents) visit screen
+pixels, not data pixels, so the cost is roughly one `log1p`/`expm1` per screen pixel per
+redraw. Index into `colorCells` with the curve value.
+
+Where the direct computation has to go: the panner and magnifier need no separate
+wiring. They, the main view, PS/Win32 printing and blink/fade all render through the
+frame's own `fillImage()`, picking their geometry with the `sys` argument
+(`Base::ximageToPixmap(..., Coord::PANNER / MAGNIFIER / WIDGET)`, `psImage`,
+`win32Image`, `FrameBase` fade). The pixel loops that index the table are:
+- `Frame::fillImage` (`frame.C:278`), `Frame::savePhotoCmd` (`frame.C:888`)
+- `Frame3d::fillImageColor` (`frame3d.C:902`), `Frame3d::savePhotoCmd` (`frame3d.C:1333`)
+- `FrameRGB::fillImage` (`framergb.C:59`), `FrameRGB::savePhotoCmd` (`framergb.C:379`)
+- `FrameT::fillImage` and `FrameMultiColor::fillImage` (`framemulticolor.C:189`)
+- `FrScale::colorIndex` (used by `frblt.C`)
+
+A shared inline helper `(value, low, high) → colour-cell index` that branches to the
+curve for GHS and to the table otherwise would keep these loops in sync.
+
+### Computing each pixel directly (prototype 2, 2026-11-24)
+
+**Built.** `ColorScale` gained an inline `lookup(aa)` (`colorscale.h`), with
+aa = (value − low)/(high − low). When `curve_` is set (only `GhsScale` sets it, along
+with a copy of the colour cells) it evaluates the curve and indexes the colour cells
+directly. Otherwise it returns `psColors_ + (int)(aa·(size−1) + .5)·3`, the same
+expression the loops used before. These now call it: `Frame::fillImage` and
+`savePhotoCmd`, `Frame3d::fillImageColor` and `savePhotoCmd`, `FrameT::fillImage` (kk = 0
+and the matching save loop), and `FrameMultiColor::fillImage`. `GhsScale` still fills
+the table for anything that doesn't call `lookup()`. Not converted yet:
+`FrameRGB`/per-channel `FrameT` (still linear fallback) and `FrScale::colorIndex`.
+
+**Non-GHS scales are unchanged:** a log-scale `saveimage png` of the synthetic image is
+byte-identical (same sha1) before and after.
+
+**Banding fixed.** Synthetic image, minmax limits, b = 5, SP at the sky median; grey
+levels in a star-free sky patch of the `saveimage` PNG:
+
+| sf | table | direct |
+|---|---|---|
+| 5 | 2 levels hold 99% of pixels | ~6 levels (correct: sf 5 is just under-stretched for SP ≈ 1e-4) |
+| 8 | 2 levels (53 and 18) hold 99% | smooth spread over ~30 levels (28–37 …), a real noise histogram |
+
+**Cost.** Full redraw of a 900×629 frame (≈566k screen pixels), 40 alternating
+redraws each:
+
+| scale | ms/redraw |
+|---|---|
+| log/sqrt (table) | 10.4–10.9 |
+| GHS b = −1 (direct) | 17.5–19.8 |
+| GHS b = 0 (direct) | 18.3–20.6 |
+| GHS b = 5 (direct) | 22.9–23.0 |
+
+That's roughly +15–20 ns per screen pixel, about 2× the table path. The panner and
+magnifier are small, so it's negligible there. A full-screen 4K frame (~8M pixels) would
+add ~120–160 ms per redraw, noticeable when dragging to pan or adjusting the colormap.
+
+### Fine table vs. direct (prototype 3, 2026-11-24)
+
+**Built.** `GhsScale` takes a temporary env switch, `DS9_GHS_MODE` = `direct`
+(default), `fine` (2²⁰-entry table, 3 MB, no curve evaluated per pixel) or `table` (the
+old SCALESIZE table). Set it from Tcl with `set ::env(DS9_GHS_MODE) fine`; it applies on
+the next scale rebuild. Building the fine table with 1M forward curve calls cost ~13 ms,
+so it was rebuilt instead **from the closed-form inverse**: for each of the 2048 colour
+cells, compute where its run starts (`ceil(ss·inverse(k/count))`) and fill the run. That
+is 2048 inverse calls plus a fill. The result is identical (same pixel diffs against
+direct as the forward-built table).
+
+Synthetic image, minmax, sf 8, b 5, SP at the sky, 900×629 frame, 30 iterations each:
+
+| mode | sky patch levels (≥ 0.5% of pixels) | GHS param change | pan redraw | contrast/bias drag |
+|---|---|---|---|---|
+| direct | 45 | 25.2 ms | 22.7 ms | 23.5 ms |
+| **fine (inverse-built)** | **46** | **12.8 ms** | **10.1 ms** | **10.8 ms** |
+| fine (forward-built) | 46 | 23.5 ms | 10.5 ms | 22.8 ms |
+| table (old) | 2 | 9.7 ms | 9.0 ms | 9.8 ms |
+| log (reference) | n/a | n/a | 8.3 ms | 8.1 ms |
+
+Pixel differences against direct, on every other pixel of the saveimage PNG: fine
+differs in 9% of pixels, by at most **1 grey level**. The old table differs in 63%, by
+up to 20.
+
+Contrast/bias drags matter here: each drag event sends new colour cells to the frame and
+rebuilds the scale, so a slow table build would make dragging sluggish. The
+inverse-built table avoids that.
+
+**Recommendation: the inverse-built 2²⁰ table.** It looks the same as direct computation
+and runs within ~1–2 ms of the existing scales on every interaction. It also needs no
+changes to the pixel loops, so `lookup()` and the `FrameRGB`/`FrameT`/`colorIndex`
+conversions become unnecessary; `GhsScale` just builds a bigger table. Costs and limits:
+- 3 MB per GhsScale (×3 for RGB, × layers for multicolor).
+- The step is (high − low)/2²⁰, so it still bands when the range exceeds about
+  2.6×10⁵·σ (step > σ/4). The synthetic image is about 5×10⁴·σ. If that case matters,
+  fall back to direct computation, which has no such limit (this needs a noise
+  estimate to decide when). That's probably not worth doing until someone hits it.
+- Side observation: DS9's existing log/asinh scales show the same sky collapse on this
+  image with minmax limits. The same fine-table trick would help them, but that's out of
+  scope here. A data-dependent table size
+(step ≤ σ/4) would also work, but it needs a noise estimate and can reach 10⁵–10⁶
+entries.
+
+## Plan
+
+1. ~~Prototype~~ done (see above).
+2. Decide questions 2–4. Risk 1 is settled: use the inverse-built 2²⁰ table.
+3. Full wiring (list above), then `make tksaoclean tksao ds9clean ds9`.
+4. Tests in `Tests/` (a separate git repo): table monotonicity and continuity at
+   LP/SP/HP, the edge cases (D = 0, LP = SP, HP = SP, SP ∈ {0, 1}, SP/LP/HP outside the
+   clip range), the inverse round-trip, colorbar labels unchanged under non-default
+   contrast/bias, an XPA set/get round-trip, and backup/restore.
+5. Docs: reference-manual entry with attribution. Explain SP vs. bias, recommend
+   contrast 1 / bias 0.5 with GHS, and say b = −1 is *nearly* DS9's log (DS9 divides by
+   log(exp), GHS by ln(1+D)).

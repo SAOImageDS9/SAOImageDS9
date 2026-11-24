@@ -12,6 +12,8 @@ using namespace std;
 #ifndef __colorscale_h__
 #define __colorscale_h__
 
+#include "ghs.h"
+
 // 0 background (white)
 // 1-200 data, 1 lowerlimit 200 upperlimit
 // 201 cursor color (white)
@@ -26,12 +28,32 @@ public:
   int size_;
   unsigned char* psColors_;  // rgb
 
+  // optional: evaluate the curve per pixel instead of using the table
+  // (GHS, PROTOTYPE). cells_ is a copy of the colorCells (same order).
+  GhsCurve* curve_;
+  unsigned char* cells_;
+  int count_;
+
 public:
   ColorScale(int);
   virtual ~ColorScale();
 
   int size() {return size_;}
   const unsigned char* psColors() {return psColors_;}
+
+  // aa = (value-low)/(high-low), with low < value < high
+  // returns pointer to 3 bytes, same layout as psColors()
+  const unsigned char* lookup(double aa) const {
+    if (curve_) {
+      int ll = (int)((*curve_)(aa) * count_);
+      if (ll<0)
+	ll = 0;
+      else if (ll>=count_)
+	ll = count_-1;
+      return cells_ + ll*3;
+    }
+    return psColors_ + ((int)(aa * (size_-1) + .5))*3;
+  }
 };
 
 class LinearScale : public virtual ColorScale {
@@ -62,6 +84,11 @@ public:
 class AsinhScale : public virtual ColorScale {
 public:
   AsinhScale(int, unsigned char*, int);
+};
+
+class GhsScale : public virtual ColorScale {
+public:
+  GhsScale(int, unsigned char*, int, const GhsParams&);
 };
 
 class SinhScale : public virtual ColorScale {

@@ -63,6 +63,7 @@ FrScale::FrScale(const FrScale& a)
   ulow_ = a.ulow_;
   uhigh_ = a.uhigh_;
   expo_ = a.expo_;
+  ghs_ = a.ghs_;
   zContrast_ = a.zContrast_;
   zSample_ = a.zSample_;
   zLine_ = a.zLine_;
@@ -109,6 +110,7 @@ FrScale& FrScale::operator=(const FrScale& a)
   ulow_ = a.ulow_;
   uhigh_ = a.uhigh_;
   expo_ = a.expo_;
+  ghs_ = a.ghs_;
   zContrast_ = a.zContrast_;
   zSample_ = a.zSample_;
   zLine_ = a.zLine_;

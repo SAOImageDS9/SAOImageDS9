@@ -117,6 +117,22 @@ template <> List<ColorMapInfo>& List<ColorMapInfo>::operator=(const List<ColorMa
   return *this;
 }
 
+// AuxContourSet owns its ContourLevels, which can't be copied, so a list
+// of sets is never copied either: a copy starts (or ends up) empty
+template <> List<AuxContourSet>::List(const List<AuxContourSet>& aa)
+{
+  head_ = NULL;
+  tail_ = NULL;
+  current_ = NULL;
+  count_ = 0;
+}
+
+template <> List<AuxContourSet>& List<AuxContourSet>::operator=(const List<AuxContourSet>& aa)
+{
+  deleteAll();
+  return *this;
+}
+
 template<class T> void List<T>::insertHead(T* t)
 {
   if (head_ && t) {
@@ -390,6 +406,7 @@ template class List<Marker>;
 template class List<CallBack>;
 template class List<Contour>;
 template class List<ContourLevel>;
+template class List<AuxContourSet>;
 template class List<FitsMask>;
 template class List<LIColor>;
 template class List<RGBColor>;

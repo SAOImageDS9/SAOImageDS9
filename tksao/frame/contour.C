@@ -135,6 +135,170 @@ void ContourLevel::win32()
 }
 #endif
 
+// AuxContourSet
+
+AuxContourSet::AuxContourSet(int id, const char* name)
+{
+  id_ = id;
+  name_ = dupstr(name ? name : "");
+
+  previous_ = NULL;
+  next_ = NULL;
+}
+
+AuxContourSet::~AuxContourSet()
+{
+  if (name_)
+    delete [] name_;
+  clearLoaded();
+  // levels_ deletes its levels
+}
+
+void AuxContourSet::clearLoaded()
+{
+  for (size_t ii=0; ii<loaded_.size(); ii++)
+    if (loaded_[ii].colorName)
+      delete [] loaded_[ii].colorName;
+  loaded_.clear();
+}
+
+// one row per distinct level value, in file order, with the style of the
+// first level that has it
+void AuxContourSet::captureLoaded()
+{
+  clearLoaded();
+  if (levels_.head())
+    do {
+      ContourLevel* cl = levels_.current();
+      int seen =0;
+      for (size_t ii=0; ii<loaded_.size() && !seen; ii++)
+	if (loaded_[ii].level == cl->level())
+	  seen =1;
+      if (seen)
+	continue;
+
+      LoadedStyle ls;
+      ls.level = cl->level();
+      ls.colorName = dupstr(cl->colorName());
+      ls.lineWidth = cl->lineWidth();
+      ls.dash = cl->dash();
+      ls.dlist[0] = cl->dlist()[0];
+      ls.dlist[1] = cl->dlist()[1];
+      loaded_.push_back(ls);
+    } while (levels_.next());
+}
+
+ContourLevel* AuxContourSet::rowFirst(int rr)
+{
+  if (levels_.head())
+    do
+      if (levels_.current()->level() == loaded_[rr].level)
+	return levels_.current();
+    while (levels_.next());
+  return NULL;
+}
+
+// level color width dash length gap, as a Tcl list
+void AuxContourSet::listRow(ostream& str, int rr)
+{
+  ContourLevel* cl = rowFirst(rr);
+  if (!cl)
+    return;
+  // the level as the file gave it, not rounded to 6 digits
+  std::streamsize prec = str.precision(15);
+  str << '{' << loaded_[rr].level;
+  str.precision(prec);
+  str << ' ' << cl->colorName() << ' '
+      << cl->lineWidth() << ' ' << cl->dash() << ' '
+      << cl->dlist()[0] << ' ' << cl->dlist()[1] << '}';
+}
+
+void AuxContourSet::setRowStyle(int rr, const char* color, int width,
+				int dash, int* dlist)
+{
+  double lev = loaded_[rr].level;
+  if (levels_.head())
+    do {
+      ContourLevel* cl = levels_.current();
+      if (cl->level() != lev)
+	continue;
+      cl->setColor(color);
+      cl->setLineWidth(width);
+      cl->setDash(dash);
+      if (dlist)
+	cl->setDashList(dlist[0], dlist[1]);
+    } while (levels_.next());
+}
+
+void AuxContourSet::resetRow(int rr)
+{
+  LoadedStyle& ls = loaded_[rr];
+  setRowStyle(rr, ls.colorName, ls.lineWidth, ls.dash, ls.dlist);
+}
+
+void AuxContourSet::resetAll()
+{
+  for (size_t ii=0; ii<loaded_.size(); ii++)
+    resetRow(ii);
+}
+
+void AuxContourSet::setName(const char* name)
+{
+  if (name_)
+    delete [] name_;
+  name_ = dupstr(name ? name : "");
+}
+
+void AuxContourSet::setStyle(const char* color, int width, int dash,
+			     int* dlist)
+{
+  if (levels_.head())
+    do {
+      ContourLevel* cl = levels_.current();
+      cl->setColor(color);
+      cl->setLineWidth(width);
+      cl->setDash(dash);
+      if (dlist)
+	cl->setDashList(dlist[0], dlist[1]);
+    } while (levels_.next());
+}
+
+// back to front, like the levels of a whole list used to be
+void AuxContourSet::render(Pixmap pmap, Coord::InternalSystem sys,
+			   const BBox& bbox)
+{
+  if (levels_.tail())
+    do
+      levels_.current()->render(pmap, sys, bbox);
+    while (levels_.previous());
+}
+
+void AuxContourSet::ps(PSColorSpace mode)
+{
+  if (levels_.tail())
+    do
+      levels_.current()->ps(mode);
+    while (levels_.previous());
+}
+
+void AuxContourSet::updateCoords(const Matrix& mx)
+{
+  if (levels_.head())
+    do
+      levels_.current()->updateCoords(mx);
+    while (levels_.next());
+}
+
+#ifdef __WIN32
+void AuxContourSet::win32()
+{
+  if (levels_.tail())
+    do
+      levels_.current()->win32();
+    while (levels_.previous());
+}
+#endif
+
 // Contour
 
 Contour::Contour(ContourLevel* cc)

@@ -1009,6 +1009,16 @@ contour	: CREATE_ contourCreate
         | PASTE_ contourPaste
 	| SAVE_ contourSave
 	| STYLE_ contourStyle
+	| AUX_ contourAux
+	;
+
+contourAux : NAME_ INT STRING {fr->contourAuxNameCmd($2,$3);}
+	| RESET_ INT {fr->contourAuxResetCmd($2,-1);}
+	| RESET_ INT INT {fr->contourAuxResetCmd($2,$3);}
+	| STYLE_ INT INT STRING INT INT INT INT
+	{fr->contourAuxStyleCmd($2,$3,$4,$5,$6,$7,$8);}
+	| STYLE_ INT ALL_ STRING INT INT INT INT
+	{fr->contourAuxStyleCmd($2,-1,$4,$5,$6,$7,$8);}
 	;
 
 contourCreate : STRING INT INT contourMethod INT INT scaleType numeric contourClipMode contourClipScope numeric numeric STRING
@@ -1034,6 +1044,7 @@ contourCreate : STRING INT INT contourMethod INT INT scaleType numeric contourCl
 
 contourDelete : /*empty */ {fr->contourDeleteCmd();}
         | AUX_ {fr->contourDeleteAuxCmd();}
+        | AUX_ INT {fr->contourDeleteAuxCmd($2);}
         ;
 
 contourLoad : STRING {fr->contourLoadCmd($1);}
@@ -1069,6 +1080,8 @@ contourSave : STRING coordSystem skyFrame
 	{fr->contourSaveCmd($1, (Coord::CoordSystem)$2, (Coord::SkyFrame)$3);}
         | AUX_ STRING coordSystem skyFrame
 	{fr->contourSaveAuxCmd($2,(Coord::CoordSystem)$3,(Coord::SkyFrame)$4);}
+        | AUX_ INT STRING coordSystem skyFrame
+	{fr->contourSaveAuxCmd($2,$3,(Coord::CoordSystem)$4,(Coord::SkyFrame)$5);}
         ;
 
 contourStyle : CLEAR_ {fr->contourStyleClearCmd();}
@@ -1273,6 +1286,8 @@ getContour: coordSystem skyFrame
 	| SMOOTH_ {fr->getContourSmoothCmd();}
 	| STYLE_ {fr->getContourStyleCmd();}
 	| STYLE_ INT {fr->getContourStyleCmd($2);}
+	| AUX_ {fr->getContourAuxCmd();}
+	| AUX_ STYLE_ INT {fr->getContourAuxStyleCmd($3);}
 	| WIDTH_ {fr->getContourLineWidthCmd();}
 	;
 

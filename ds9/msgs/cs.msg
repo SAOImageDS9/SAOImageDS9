@@ -59,6 +59,7 @@
 ::msgcat::mcset cs Archives Archivy
 ::msgcat::mcset cs Array Pole
 ::msgcat::mcset cs Arrow Šipka
+::msgcat::mcset cs {As Loaded} {Jak načteno}
 ::msgcat::mcset cs Asteroids Planetky
 ::msgcat::mcset cs Astronomy Astronomie
 ::msgcat::mcset cs {At Startup} {Při spuštění}
@@ -416,6 +417,7 @@
 ::msgcat::mcset cs Gaussian Gaussovo
 ::msgcat::mcset cs General Obecné
 ::msgcat::mcset cs Generate Vygeneruj
+::msgcat::mcset cs Generated Vygenerované
 ::msgcat::mcset cs {Generating Regions} {Generování oblastí}
 ::msgcat::mcset cs {Get Information} {Získej informace}
 ::msgcat::mcset cs {Get Region Info} {Informace o oblasti}

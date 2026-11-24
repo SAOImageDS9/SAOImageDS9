@@ -730,6 +730,7 @@ ds9.set(string cmd)<br>
 console<br></tt>
 <p><b><a name="contour" id="contour"></a>contour</b></p>
 <p>Controls contours in the current frame.</p>
+<p>Each contour file loaded, or each paste, is kept as a set, numbered by an id. <tt>aux</tt> lists the sets (id, name, number of rows), and <tt>aux style</tt> lists a set's rows. A row is one level value of the set, numbered from 0; its level values are fixed, but each row's color, width and dash can be changed, and reset to how they were loaded. Style values not given are kept.</p>
 <tt>Syntax:<br>
 contour []<br>
 &nbsp;&nbsp;&nbsp; [yes|no]<br>
@@ -759,6 +760,14 @@ contour []<br>
 &nbsp;&nbsp;&nbsp; [style &lt;index&gt; {[color=&lt;color&gt;] [width=&lt;width&gt;] [dash=yes|no] [dashlist=&lt;length&gt; &lt;gap&gt;]}<br>
 &nbsp;&nbsp;&nbsp; [style &lt;index&gt; clear]<br>
 &nbsp;&nbsp;&nbsp; [style clear]<br>
+&nbsp;&nbsp;&nbsp; [aux]<br>
+&nbsp;&nbsp;&nbsp; [aux style &lt;id&gt;]<br>
+&nbsp;&nbsp;&nbsp; [aux style &lt;id&gt; &lt;row&gt;|all &lt;color&gt; [&lt;width&gt; [yes|no [&lt;length&gt; &lt;gap&gt;]]]]<br>
+&nbsp;&nbsp;&nbsp; [aux style &lt;id&gt; &lt;row&gt;|all {[color=&lt;color&gt;] [width=&lt;width&gt;] [dash=yes|no] [dashlist=&lt;length&gt; &lt;gap&gt;]}]<br>
+&nbsp;&nbsp;&nbsp; [aux reset &lt;id&gt; [&lt;row&gt;]]<br>
+&nbsp;&nbsp;&nbsp; [aux name &lt;id&gt; &lt;name&gt;]<br>
+&nbsp;&nbsp;&nbsp; [aux delete &lt;id&gt;]<br>
+&nbsp;&nbsp;&nbsp; [aux save &lt;id&gt; &lt;filename&gt; [&lt;coordsys&gt; &lt;skyframe&gt;]]<br>
 &nbsp;&nbsp;&nbsp; [open|close]<br>
 &nbsp;<br>
 Example:<br>
@@ -778,6 +787,8 @@ contour scope<br>
 contour limits<br>
 contour levels<br>
 contour style<br>
+contour aux<br>
+contour aux style 1<br>
 <br>
 ds9.set(string cmd)<br>
 contour<br>
@@ -810,6 +821,14 @@ contour style 2 cyan 1 yes 4 2<br>
 contour style 2 {color=cyan dash=yes}<br>
 contour style 1 clear<br>
 contour style clear<br>
+contour aux style 1 2 red 2<br>
+contour aux style 1 all {width=2}<br>
+contour aux style 2 0 {color=cyan dash=yes}<br>
+contour aux reset 1 2<br>
+contour aux reset 1<br>
+contour aux name 2 {my contours}<br>
+contour aux save 1 aux.ctr wcs fk5<br>
+contour aux delete 2<br>
 contour open<br>
 contour close<br></tt>
 <p><b><a name="crop" id="crop"></a>crop</b></p>

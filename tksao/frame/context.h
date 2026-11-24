@@ -75,9 +75,11 @@ class Context {
   FitsZBound cparams; // crop bbox
 
   FVContour fvcontour_;
-  List<ContourLevel> auxcontours_;
+  // aux contours: one set per loaded file or paste, oldest first
+  List<AuxContourSet> auxsets_;
+  int auxSetSeq_;              // last set id handed out, never reused
+  AuxContourSet* auxLoading_;  // the set the contour parser is filling
   int hasContour_;
-  int hasAuxContour_;
 
   Coord::CoordSystem contourWCSSystem_;
   Coord::SkyFrame contourWCSSkyFrame_;
@@ -94,6 +96,15 @@ class Context {
   void contourThreadFV(FitsImage*);
   void contourList(ostream&, Coord::CoordSystem, Coord::SkyFrame, 
 		   List<ContourLevel>&);
+  void contourListHeader(ostream&, Coord::CoordSystem, Coord::SkyFrame,
+			 std::vector<double>&);
+  AuxContourSet* contourLoadAuxSet(istream&, const char*,
+				   Coord::CoordSystem, Coord::SkyFrame,
+				   const char* =NULL, int =0, int =0,
+				   int* =NULL);
+  void contourListAuxLevels(ostream&, Coord::CoordSystem, Coord::SkyFrame,
+			    AuxContourSet*);
+  void hpxForgetAux(AuxContourSet*);
 
   void reorderAxis(char*, char**, int, int, int, size_t);
   void reorderThread(void*, char*, void* (void*), int*);
@@ -110,7 +121,8 @@ class Context {
   ~Context();
 
   FVContour& fvcontour() {return fvcontour_;}
-  List<ContourLevel>& auxcontours() {return auxcontours_;}
+  List<AuxContourSet>& auxsets() {return auxsets_;}
+  AuxContourSet* findAuxSet(int);
 
   void analysis();
   int axesOrder() {return axesOrder_;}
@@ -143,11 +155,15 @@ class Context {
   void contourUpdateFV();
   void contourDeleteFV();
   void contourDeleteAux();
+  int contourDeleteAux(int);
   void contourListFV(ostream&, Coord::CoordSystem, Coord::SkyFrame);
   void contourListAux(ostream&, Coord::CoordSystem, Coord::SkyFrame);
-  void contourLoadAux(istream&);
-  void contourLoadAux(istream&, const char*, int, int, int* =NULL);
-  void contourLoadAux(istream&, Coord::CoordSystem, Coord::SkyFrame, 
+  void contourListAux(ostream&, Coord::CoordSystem, Coord::SkyFrame, int);
+  void contourLoadAux(istream&, const char*);
+  void contourLoadAux(istream&, const char*,
+		      const char*, int, int, int* =NULL);
+  void contourLoadAux(istream&, const char*,
+		      Coord::CoordSystem, Coord::SkyFrame,
 		      const char*, int, int);
   void contourPS(PSColorSpace cs);
   void contourX11(Pixmap, Coord::InternalSystem, const BBox&);
@@ -166,7 +182,7 @@ class Context {
   Vector getMinMax();
 
   int hasContour() {return hasContour_;}
-  int hasContourAux() {return hasAuxContour_;}
+  int hasContourAux() {return auxsets_.count() ? 1 : 0;}
   double* histequ() {return frScale.histequ(fits);}
 
   Coord::Orientation IRAFOrientation(Coord::Orientation oo) 

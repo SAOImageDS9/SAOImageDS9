@@ -65,7 +65,6 @@ array set contoursend::table {
   21:290 reduce
   21:289 reduce
   21:291 reduce
-  53:292,target 36
   21:292 reduce
   30:290,target 30
   30:289,target 30
@@ -80,10 +79,9 @@ array set contoursend::table {
   48:0 reduce
   20:294,target 20
   19:294,target 19
-  0:306,target 49
-  0:296,target 40
-  9:289 reduce
   9:290 reduce
+  0:306,target 47
+  9:289 reduce
   30:288 reduce
   29:288 reduce
   9:291 reduce
@@ -108,30 +106,30 @@ array set contoursend::table {
   30:294 reduce
   29:294 reduce
   2:0 reduce
+  54:294,target 38
   24:288,target 24
   31:292,target 31
-  56:0,target 47
-  53:290,target 34
-  53:289,target 33
+  56:0,target 0
   24:0 reduce
   14:293,target 14
-  48:0,target 50
+  48:0,target 48
   9:290,target 9
   9:289,target 9
-  41:0,target 52
+  41:0,target 44
   45:0 reduce
   33:0,target 33
   13:288,target 13
   25:0,target 25
   20:292,target 20
   19:292,target 19
-  0:304,target 47
+  0:304,target 45
   0:294,target 38
   17:0,target 17
   10:0,target 10
   25:291,target 25
   5:293,target 5
   0:273,target 17
+  54:292,target 36
   31:290,target 31
   31:289,target 31
   17:288 reduce
@@ -149,7 +147,7 @@ array set contoursend::table {
   20:289,target 20
   19:290,target 19
   19:289,target 19
-  0:302,target 45
+  0:302,target 43
   0:292,target 36
   6:288 reduce
   26:293,target 26
@@ -157,6 +155,7 @@ array set contoursend::table {
   6:290 reduce
   26:288 reduce
   6:291 reduce
+  39:310,target 57
   26:290 reduce
   26:289 reduce
   10:294,target 10
@@ -169,13 +168,16 @@ array set contoursend::table {
   0:271,target 15
   6:294 reduce
   26:293 reduce
+  54:290,target 34
+  54:289,target 33
   26:294 reduce
   15:293,target 15
   17:0 reduce
   14:288,target 14
   38:0 reduce
   21:292,target 21
-  0:300,target 43
+  60:0 reduce
+  59:0 reduce
   0:289,target 33
   0:290,target 34
   3:0,target 3
@@ -183,9 +185,10 @@ array set contoursend::table {
   6:293,target 6
   10:292,target 10
   5:288,target 5
-  53:0,target 55
+  53:0,target 58
+  44:300 shift
   0:268,target 12
-  45:0,target 49
+  45:0,target 46
   37:0,target 37
   15:291,target 15
   14:0 reduce
@@ -201,23 +204,16 @@ array set contoursend::table {
   21:290,target 21
   21:289,target 21
   14:291 reduce
-  53:288 shift
   27:293,target 27
   14:292 reduce
-  56:0 reduce
-  53:290 shift
-  53:289 shift
+  56:0 accept
   14:293 reduce
-  53:291 shift
   14:294 reduce
   11:294,target 11
   0:287,target 31
-  53:292 shift
   26:288,target 26
   6:291,target 6
-  53:293 shift
   0:257 shift
-  53:294 shift
   23:288 reduce
   10:290,target 10
   10:289,target 10
@@ -240,9 +236,10 @@ array set contoursend::table {
   23:294 reduce
   22:292,target 22
   0:264 shift
-  53:311 goto
   32:0 reduce
+  0:316,target 56
   0:265 shift
+  44:300,target 58
   0:266 shift
   0:267 shift
   53:0 reduce
@@ -256,6 +253,7 @@ array set contoursend::table {
   0:285,target 29
   0:272 shift
   6:288,target 6
+  54:314,target 59
   0:273 shift
   0:274 shift
   16:291,target 16
@@ -273,7 +271,8 @@ array set contoursend::table {
   0:280 shift
   7:0,target 7
   28:293,target 28
-  0:0,target 39
+  0:314,target 55
+  0:0,target 41
   0:281 shift
   11:288 reduce
   0:282 shift
@@ -287,24 +286,22 @@ array set contoursend::table {
   11:291 reduce
   0:284 shift
   7:291,target 7
-  57:0,target 57
   11:292 reduce
   0:285 shift
-  50:0,target 53
-  49:0,target 43
+  50:0,target 45
+  49:0,target 52
   11:293 reduce
   11:290,target 11
   11:289,target 11
   0:283,target 27
   0:286 shift
-  42:0,target 51
+  42:0,target 54
   17:293,target 17
   11:294 reduce
   0:287 shift
   34:0,target 34
   0:288 shift
   26:0,target 26
-  0:300 shift
   0:289 shift
   0:290 shift
   3:0 reduce
@@ -335,31 +332,30 @@ array set contoursend::table {
   20:293 reduce
   19:293 reduce
   0:305 shift
-  0:295 shift
   28:291,target 28
   20:294 reduce
   19:294 reduce
-  0:312,target 55
-  0:296 shift
+  0:312,target 53
   0:306 shift
   8:293,target 8
   46:0 reduce
+  0:297 shift
   0:307 shift
   8:288 reduce
   12:292,target 12
-  0:298 shift
   0:308 shift
+  0:298 shift
   8:289 reduce
   8:290 reduce
   28:288 reduce
-  0:310 goto
-  0:309 goto
+  0:310 shift
   0:299 shift
+  0:309 shift
   7:288,target 7
   8:291 reduce
   28:290 reduce
   28:289 reduce
-  0:311 goto
+  0:311 shift
   8:292 reduce
   28:291 reduce
   0:312 goto
@@ -367,11 +363,14 @@ array set contoursend::table {
   8:293 reduce
   28:292 reduce
   17:291,target 17
+  0:313 goto
   8:294 reduce
   28:293 reduce
   24:294,target 24
+  0:314 goto
   0:0 reduce
   28:294 reduce
+  0:316 goto
   23:290,target 23
   23:289,target 23
   0:260,target 4
@@ -382,9 +381,9 @@ array set contoursend::table {
   13:294,target 13
   43:0 reduce
   28:288,target 28
-  0:310,target 53
-  0:309,target 52
-  0:299,target 42
+  0:310,target 51
+  0:309,target 50
+  0:299,target 41
   8:291,target 8
   12:290,target 12
   12:289,target 12
@@ -393,7 +392,6 @@ array set contoursend::table {
   17:288,target 17
   24:292,target 24
   4:0,target 4
-  53:293,target 37
   18:0 reduce
   16:288 reduce
   0:257,target 1
@@ -403,15 +401,15 @@ array set contoursend::table {
   16:289 reduce
   9:293,target 9
   16:291 reduce
-  54:0,target 56
-  43:297,target 56
+  54:0,target 59
   40:0 reduce
   39:0 reduce
   16:292 reduce
   13:292,target 13
-  46:0,target 45
+  46:0,target 51
   16:293 reduce
-  0:307,target 50
+  0:297,target 39
+  0:307,target 48
   8:288,target 8
   38:0,target 38
   16:294 reduce
@@ -439,7 +437,6 @@ array set contoursend::table {
   25:293 reduce
   25:294 reduce
   15:0 reduce
-  53:291,target 35
   14:294,target 14
   30:288,target 30
   29:288,target 29
@@ -449,16 +446,14 @@ array set contoursend::table {
   13:289,target 13
   20:293,target 20
   19:293,target 19
-  0:305,target 48
-  0:295,target 39
-  57:0 reduce
+  0:305,target 46
   18:288,target 18
   25:292,target 25
   5:294,target 5
   0:274,target 18
+  54:293,target 37
   31:291,target 31
   12:0 reduce
-  53:288,target 32
   14:292,target 14
   33:0 reduce
   13:288 reduce
@@ -467,11 +462,10 @@ array set contoursend::table {
   13:289 reduce
   13:291 reduce
   54:0 reduce
-  43:297 shift
   20:291,target 20
   19:291,target 19
   13:292 reduce
-  0:303,target 46
+  0:303,target 44
   0:293,target 37
   26:294,target 26
   13:293 reduce
@@ -486,12 +480,14 @@ array set contoursend::table {
   22:290 reduce
   22:289 reduce
   7:0 reduce
+  58:0,target 49
+  54:291,target 35
   22:291 reduce
   15:294,target 15
-  51:0,target 41
+  51:0,target 55
   31:288,target 31
   22:292 reduce
-  43:0,target 48
+  43:0,target 53
   22:293 reduce
   35:0,target 35
   30:0 reduce
@@ -510,7 +506,7 @@ array set contoursend::table {
   31:289 reduce
   20:288,target 20
   19:288,target 19
-  0:301,target 44
+  0:301,target 42
   0:291,target 35
   31:291 reduce
   26:292,target 26
@@ -524,6 +520,7 @@ array set contoursend::table {
   0:269,target 13
   0:270,target 14
   4:0 reduce
+  54:288,target 32
   15:292,target 15
   26:0 reduce
   21:291,target 21
@@ -539,6 +536,7 @@ array set contoursend::table {
   10:292 reduce
   6:292,target 6
   10:293 reduce
+  39:310 shift
   10:294 reduce
   10:291,target 10
   16:294,target 16
@@ -567,23 +565,23 @@ array set contoursend::table {
   11:293,target 11
   0:286,target 30
   7:291 reduce
+  57:295 shift
   27:290 reduce
   27:289 reduce
   6:289,target 6
   6:290,target 6
   7:292 reduce
-  55:0,target 0
+  55:0,target 60
   27:291 reduce
   7:293 reduce
-  47:0,target 46
+  47:0,target 47
   27:292 reduce
   10:288,target 10
   7:294 reduce
   40:0,target 42
-  39:0,target 40
+  39:0,target 56
   27:293 reduce
   16:292,target 16
-  53:311,target 57
   32:0,target 32
   27:294 reduce
   0:265,target 9
@@ -594,6 +592,7 @@ array set contoursend::table {
   22:291,target 22
   28:294,target 28
   41:0 reduce
+  57:295,target 60
   27:290,target 27
   27:289,target 27
   7:292,target 7
@@ -612,15 +611,24 @@ array set contoursend::table {
   37:0 reduce
   28:292,target 28
   15:291 reduce
+  0:313,target 54
   8:294,target 8
+  54:288 shift
   15:292 reduce
+  54:290 shift
+  54:289 shift
   15:293 reduce
   12:293,target 12
+  58:0 reduce
+  54:291 shift
   15:294 reduce
   7:289,target 7
   7:290,target 7
+  54:292 shift
+  54:293 shift
   11:288,target 11
   0:282,target 26
+  54:294 shift
   24:288 reduce
   17:292,target 17
   24:290 reduce
@@ -639,12 +647,15 @@ array set contoursend::table {
   34:0 reduce
   28:290,target 28
   28:289,target 28
-  0:311,target 54
+  0:311,target 52
   8:292,target 8
-  55:0 accept
-  52:0,target 54
+  60:0,target 57
+  59:0,target 61
+  54:314 goto
+  55:0 reduce
+  52:0,target 43
   12:291,target 12
-  44:0,target 44
+  44:0,target 50
   18:294,target 18
   36:0,target 36
   28:0,target 28
@@ -657,7 +668,6 @@ array set contoursend::table {
   13:0,target 13
   8:0 reduce
   10:0 reduce
-  53:294,target 38
   23:288,target 23
   0:258,target 2
   30:292,target 30
@@ -668,8 +678,8 @@ array set contoursend::table {
   12:288 reduce
   12:290 reduce
   12:289 reduce
-  0:298,target 41
-  0:308,target 51
+  0:308,target 49
+  0:298,target 40
   8:289,target 8
   8:290,target 8
   52:0 reduce
@@ -686,86 +696,91 @@ array set contoursend::table {
 }
 
 array set contoursend::rules {
-  9,l 310
-  11,l 310
-  32,l 311
-  53,l 312
-  6,l 310
-  28,l 310
-  50,l 312
-  49,l 312
-  3,l 309
-  25,l 310
-  46,l 312
-  0,l 313
-  22,l 310
-  43,l 312
-  18,l 310
-  40,l 312
-  39,l 312
-  15,l 310
-  36,l 311
-  57,l 312
-  12,l 310
-  33,l 311
-  54,l 312
-  7,l 310
-  29,l 310
-  30,l 310
-  51,l 312
-  4,l 309
-  26,l 310
-  47,l 312
-  1,l 309
-  23,l 310
-  44,l 312
-  19,l 310
-  20,l 310
-  41,l 312
-  16,l 310
-  37,l 311
-  13,l 310
-  34,l 311
-  55,l 312
-  8,l 310
-  10,l 310
-  31,l 310
-  52,l 312
-  5,l 310
-  27,l 310
-  48,l 312
-  2,l 309
-  24,l 310
-  45,l 312
-  21,l 310
-  42,l 312
-  17,l 310
-  38,l 311
-  14,l 310
-  35,l 311
-  56,l 312
+  9,l 313
+  11,l 313
+  32,l 314
+  53,l 316
+  6,l 313
+  28,l 313
+  50,l 316
+  49,l 316
+  3,l 312
+  25,l 313
+  46,l 316
+  0,l 317
+  22,l 313
+  43,l 316
+  18,l 313
+  40,l 315
+  39,l 315
+  61,l 316
+  15,l 313
+  36,l 314
+  57,l 316
+  12,l 313
+  33,l 314
+  54,l 316
+  7,l 313
+  29,l 313
+  30,l 313
+  51,l 316
+  4,l 312
+  26,l 313
+  47,l 316
+  1,l 312
+  23,l 313
+  44,l 316
+  19,l 313
+  20,l 313
+  41,l 316
+  16,l 313
+  37,l 314
+  58,l 316
+  13,l 313
+  34,l 314
+  55,l 316
+  8,l 313
+  10,l 313
+  31,l 313
+  52,l 316
+  5,l 313
+  27,l 313
+  48,l 316
+  2,l 312
+  24,l 313
+  45,l 316
+  21,l 313
+  42,l 316
+  17,l 313
+  38,l 314
+  60,l 316
+  59,l 316
+  14,l 313
+  35,l 314
+  56,l 316
 }
 
 array set contoursend::rules {
   12,dc 1
   26,dc 1
   3,dc 1
-  41,dc 1
+  41,dc 0
   55,dc 1
   18,dc 1
   33,dc 1
   9,dc 1
-  47,dc 2
+  47,dc 1
   11,dc 1
   25,dc 1
   2,dc 1
   40,dc 1
-  39,dc 0
+  39,dc 1
   54,dc 1
   17,dc 1
   32,dc 1
   8,dc 1
   46,dc 1
+  61,dc 2
   10,dc 1
   24,dc 1
   1,dc 1
@@ -775,6 +790,8 @@ array set contoursend::rules {
   31,dc 1
   7,dc 1
   45,dc 1
+  60,dc 1
+  59,dc 1
   23,dc 1
   0,dc 1
   37,dc 1
@@ -784,6 +801,7 @@ array set contoursend::rules {
   30,dc 1
   6,dc 1
   44,dc 1
+  58,dc 1
   22,dc 1
   36,dc 1
   51,dc 1
@@ -791,11 +809,11 @@ array set contoursend::rules {
   28,dc 1
   5,dc 1
   43,dc 1
-  57,dc 2
+  57,dc 3
   21,dc 1
   35,dc 1
   50,dc 1
-  49,dc 1
+  49,dc 2
   13,dc 1
   27,dc 1
   4,dc 1
@@ -808,63 +826,67 @@ array set contoursend::rules {
 }
 
 array set contoursend::rules {
-  41,line 153
-  7,line 116
-  37,line 147
-  4,line 112
-  34,line 144
-  1,line 109
-  31,line 140
-  27,line 136
-  24,line 133
-  21,line 130
-  17,line 126
-  14,line 123
-  11,line 120
-  56,line 170
-  53,line 167
-  50,line 163
-  49,line 162
-  46,line 158
-  43,line 155
-  9,line 118
-  40,line 152
-  39,line 151
-  6,line 115
-  36,line 146
-  3,line 111
-  33,line 143
-  29,line 138
-  30,line 139
-  26,line 135
-  23,line 132
-  19,line 128
-  20,line 129
-  16,line 125
-  13,line 122
-  10,line 119
-  55,line 169
-  52,line 165
-  48,line 161
-  45,line 157
-  42,line 154
-  8,line 117
-  38,line 148
-  5,line 114
-  35,line 145
-  2,line 110
-  32,line 142
-  28,line 137
-  25,line 134
-  22,line 131
-  18,line 127
-  15,line 124
-  12,line 121
-  57,line 171
-  54,line 168
-  51,line 164
-  47,line 160
-  44,line 156
+  41,line 161
+  7,line 123
+  37,line 154
+  4,line 119
+  34,line 151
+  1,line 116
+  31,line 147
+  27,line 143
+  24,line 140
+  21,line 137
+  17,line 133
+  14,line 130
+  11,line 127
+  60,line 182
+  59,line 181
+  56,line 177
+  53,line 174
+  50,line 171
+  49,line 170
+  46,line 166
+  43,line 163
+  9,line 125
+  40,line 158
+  39,line 157
+  6,line 122
+  36,line 153
+  3,line 118
+  33,line 150
+  29,line 145
+  30,line 146
+  26,line 142
+  23,line 139
+  19,line 135
+  20,line 136
+  16,line 132
+  13,line 129
+  10,line 126
+  58,line 180
+  55,line 176
+  52,line 173
+  48,line 168
+  45,line 165
+  42,line 162
+  8,line 124
+  38,line 155
+  5,line 121
+  35,line 152
+  2,line 117
+  32,line 149
+  28,line 144
+  25,line 141
+  22,line 138
+  18,line 134
+  15,line 131
+  12,line 128
+  61,line 183
+  57,line 179
+  54,line 175
+  51,line 172
+  47,line 167
+  44,line 164
 }
 
 array set contoursend::lr1_table {
@@ -875,45 +897,50 @@ array set contoursend::lr1_table {
   37 {{37 0 1}}
   52,trans {}
   38 {{38 0 1}}
-  39 {{40 0 1}}
+  39 {{56 0 1} {57 0 1}}
   40 {{42 0 1}}
   18,trans {}
   1,trans {}
-  41 {{52 0 1}}
+  41 {{44 0 1}}
   37,trans {}
-  42 {{51 0 1}}
+  42 {{54 0 1}}
   56,trans {}
-  43 {{47 0 1} {48 0 1}}
-  44 {{44 0 1}}
+  43 {{53 0 1}}
+  44 {{49 0 1} {50 0 1}}
   23,trans {}
   5,trans {}
-  45 {{49 0 1}}
+  45 {{46 0 1}}
   42,trans {}
-  46 {{45 0 1}}
-  47 {{46 0 1}}
-  48 {{50 0 1}}
+  46 {{51 0 1}}
+  47 {{47 0 1}}
+  48 {{48 0 1}}
   27,trans {}
   9,trans {}
-  50 {{53 0 1}}
-  49 {{43 0 1}}
+  50 {{45 0 1}}
+  49 {{52 0 1}}
   46,trans {}
-  51 {{41 0 1}}
-  52 {{54 0 1}}
+  51 {{55 0 1}}
+  52 {{43 0 1}}
   13,trans {}
-  53 {{55 0 1} {57 0 1} {32 0 0} {33 0 0} {34 0 0} {35 0 0} {36 0 0} {37 0 0} {38 0 0}}
+  53 {{58 0 1}}
   32,trans {}
-  54 {{56 0 1}}
+  54 {{59 0 1} {61 0 1} {32 0 0} {33 0 0} {34 0 0} {35 0 0} {36 0 0} {37 0 0} {38 0 0}}
   51,trans {}
-  55 {{0 0 1}}
-  56 {{47 0 2}}
+  55 {{60 0 1}}
+  56 {{0 0 1}}
   57 {{57 0 2}}
   17,trans {}
-  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {263 7} {264 8} {265 9} {266 10} {267 11} {268 12} {269 13} {270 14} {271 15} {272 16} {273 17} {274 18} {275 19} {276 20} {277 21} {278 22} {279 23} {280 24} {281 25} {282 26} {283 27} {284 28} {285 29} {286 30} {287 31} {288 32} {289 33} {290 34} {291 35} {292 36} {293 37} {294 38} {295 39} {296 40} {298 41} {299 42} {300 43} {301 44} {302 45} {303 46} {304 47} {305 48} {306 49} {307 50} {308 51} {309 52} {310 53} {311 54} {312 55}}
+  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {263 7} {264 8} {265 9} {266 10} {267 11} {268 12} {269 13} {270 14} {271 15} {272 16} {273 17} {274 18} {275 19} {276 20} {277 21} {278 22} {279 23} {280 24} {281 25} {282 26} {283 27} {284 28} {285 29} {286 30} {287 31} {288 32} {289 33} {290 34} {291 35} {292 36} {293 37} {294 38} {297 39} {298 40} {299 41} {301 42} {302 43} {303 44} {304 45} {305 46} {306 47} {307 48} {308 49} {309 50} {310 51} {311 52} {312 53} {313 54} {314 55} {316 56}}
+  58 {{49 0 2}}
   36,trans {}
+  60 {{57 0 3}}
   55,trans {}
+  59 {{61 0 2}}
   22,trans {}
   4,trans {}
   41,trans {}
+  60,trans {}
+  59,trans {}
   26,trans {}
   8,trans {}
   45,trans {}
@@ -923,17 +950,18 @@ array set contoursend::lr1_table {
   49,trans {}
   16,trans {}
   35,trans {}
-  54,trans {}
+  54,trans {{288 32} {289 33} {290 34} {291 35} {292 36} {293 37} {294 38} {314 59}}
   21,trans {}
   3,trans {}
   40,trans {}
-  39,trans {}
+  39,trans {{310 57}}
+  58,trans {}
   10 {{10 {0 288 289 290 291 292 293 294} 1}}
   11 {{11 {0 288 289 290 291 292 293 294} 1}}
   25,trans {}
   7,trans {}
   12 {{12 {0 288 289 290 291 292 293 294} 1}}
-  44,trans {}
+  44,trans {{300 58}}
   13 {{13 {0 288 289 290 291 292 293 294} 1}}
   14 {{14 {0 288 289 290 291 292 293 294} 1}}
   11,trans {}
@@ -942,7 +970,7 @@ array set contoursend::lr1_table {
   29,trans {}
   16 {{16 {0 288 289 290 291 292 293 294} 1}}
   48,trans {}
-  0 {{0 0 0} {39 0 0} {40 0 0} {41 0 0} {42 0 0} {43 0 0} {44 0 0} {45 0 0} {46 0 0} {47 0 0} {48 0 0} {49 0 0} {50 0 0} {51 0 0} {52 0 0} {53 0 0} {54 0 0} {55 0 0} {56 0 0} {57 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 {0 288 289 290 291 292 293 294} 0} {6 {0 288 289 290 291 292 293 294} 0} {7 {0 288 289 290 291 292 293 294} 0} {8 {0 288 289 290 291 292 293 294} 0} {9 {0 288 289 290 291 292 293 294} 0} {10 {0 288 289 290 291 292 293 294} 0} {11 {0 288 289 290 291 292 293 294} 0} {12 {0 288 289 290 291 292 293 294} 0} {13 {0 288 289 290 291 292 293 294} 0} {14 {0 288 289 290 291 292 293 294} 0} {15 {0 288 289 290 291 292 293 294} 0} {16 {0 288 289 290 291 292 293 294} 0} {17 {0 288 289 290 291 292 293 294} 0} {18 {0 288 289 290 291 292 293 294} 0} {19 {0 288 289 290 291 292 293 294} 0} {20 {0 288 289 290 291 292 293 294} 0} {21 {0 288 289 290 291 292 293 294} 0} {22 {0 288 289 290 291 292 293 294} 0} {23 {0 288 289 290 291 292 293 294} 0} {24 {0 288 289 290 291 292 293 294} 0} {25 {0 288 289 290 291 292 293 294} 0} {26 {0 288 289 290 291 292 293 294} 0} {27 {0 288 289 290 291 292 293 294} 0} {28 {0 288 289 290 291 292 293 294} 0} {29 {0 288 289 290 291 292 293 294} 0} {30 {0 288 289 290 291 292 293 294} 0} {31 {0 288 289 290 291 292 293 294} 0} {32 0 0} {33 0 0} {34 0 0} {35 0 0} {36 0 0} {37 0 0} {38 0 0}}
+  0 {{0 0 0} {41 0 0} {42 0 0} {43 0 0} {44 0 0} {45 0 0} {46 0 0} {47 0 0} {48 0 0} {49 0 0} {50 0 0} {51 0 0} {52 0 0} {53 0 0} {54 0 0} {55 0 0} {56 0 0} {57 0 0} {58 0 0} {59 0 0} {60 0 0} {61 0 0} {1 0 0} {2 0 0} {3 0 0} {4 0 0} {5 {0 288 289 290 291 292 293 294} 0} {6 {0 288 289 290 291 292 293 294} 0} {7 {0 288 289 290 291 292 293 294} 0} {8 {0 288 289 290 291 292 293 294} 0} {9 {0 288 289 290 291 292 293 294} 0} {10 {0 288 289 290 291 292 293 294} 0} {11 {0 288 289 290 291 292 293 294} 0} {12 {0 288 289 290 291 292 293 294} 0} {13 {0 288 289 290 291 292 293 294} 0} {14 {0 288 289 290 291 292 293 294} 0} {15 {0 288 289 290 291 292 293 294} 0} {16 {0 288 289 290 291 292 293 294} 0} {17 {0 288 289 290 291 292 293 294} 0} {18 {0 288 289 290 291 292 293 294} 0} {19 {0 288 289 290 291 292 293 294} 0} {20 {0 288 289 290 291 292 293 294} 0} {21 {0 288 289 290 291 292 293 294} 0} {22 {0 288 289 290 291 292 293 294} 0} {23 {0 288 289 290 291 292 293 294} 0} {24 {0 288 289 290 291 292 293 294} 0} {25 {0 288 289 290 291 292 293 294} 0} {26 {0 288 289 290 291 292 293 294} 0} {27 {0 288 289 290 291 292 293 294} 0} {28 {0 288 289 290 291 292 293 294} 0} {29 {0 288 289 290 291 292 293 294} 0} {30 {0 288 289 290 291 292 293 294} 0} {31 {0 288 289 290 291 292 293 294} 0} {32 0 0} {33 0 0} {34 0 0} {35 0 0} {36 0 0} {37 0 0} {38 0 0}}
   17 {{17 {0 288 289 290 291 292 293 294} 1}}
   1 {{1 0 1}}
   18 {{18 {0 288 289 290 291 292 293 294} 1}}
@@ -953,7 +981,7 @@ array set contoursend::lr1_table {
   34,trans {}
   3 {{3 0 1}}
   21 {{21 {0 288 289 290 291 292 293 294} 1}}
-  53,trans {{288 32} {289 33} {290 34} {291 35} {292 36} {293 37} {294 38} {311 57}}
+  53,trans {}
   4 {{4 0 1}}
   22 {{22 {0 288 289 290 291 292 293 294} 1}}
   5 {{5 {0 288 289 290 291 292 293 294} 1}}
@@ -966,7 +994,7 @@ array set contoursend::lr1_table {
   38,trans {}
   7 {{7 {0 288 289 290 291 292 293 294} 1}}
   25 {{25 {0 288 289 290 291 292 293 294} 1}}
-  57,trans {}
+  57,trans {{295 60}}
   8 {{8 {0 288 289 290 291 292 293 294} 1}}
   26 {{26 {0 288 289 290 291 292 293 294} 1}}
   9 {{9 {0 288 289 290 291 292 293 294} 1}}
@@ -974,7 +1002,7 @@ array set contoursend::lr1_table {
   24,trans {}
   6,trans {}
   28 {{28 {0 288 289 290 291 292 293 294} 1}}
-  43,trans {{297 56}}
+  43,trans {}
   29 {{29 {0 288 289 290 291 292 293 294} 1}}
   30 {{30 {0 288 289 290 291 292 293 294} 1}}
   31 {{31 {0 288 289 290 291 292 293 294} 1}}
@@ -991,55 +1019,61 @@ array set contoursend::token_id_table {
   286,t 0
   287 WCSZ_
   292,line 44
-  302,line 57
+  302,line 58
   288 FK4_
+  317,t 1
   265,title WCSD
   289 B1950_
   290 FK5_
-  300 LOG_
+  300 EXP_
   284,title WCSW
   291 J2000_
-  301 METHOD_
+  301 LEVELS_
   313,title {}
   292 ICRS_
-  302 MODE_
+  302 LIMITS_
   288,line 40
   293 GALACTIC_
-  303 NLEVELS_
+  303 LOG_
   294 ECLIPTIC_
-  304 SCALE_
-  305 SCOPE_
-  295 COLOR_
-  306 SMOOTH_
-  296 DASH_
-  307 STYLE_
+  304 METHOD_
+  305 MODE_
+  295 INT_
+  306 NLEVELS_
+  296 REAL_
+  307 SCALE_
   262,t 0
-  297 EXP_
-  308 WIDTH_
+  297 AUX_
+  308 SCOPE_
   285,line 36
-  298 LEVELS_
-  310 wcssys
-  309 coordsys
-  299 LIMITS_
-  311 skyframe
+  298 COLOR_
+  310 STYLE_
+  309 SMOOTH_
+  299 DASH_
+  311 WIDTH_
   283,t 0
-  312 contoursend
-  313 start'
+  312 coordsys
+  313 wcssys
+  314,t 1
+  314 skyframe
   282,line 33
+  315 numeric
+  316 contoursend
   264,title WCSC
+  317 start'
   283,title WCSV
   312,title {}
   278,line 29
-  error,line 107
+  error,line 114
   258,t 0
   275,line 26
   279,t 0
   280,t 0
-  311,t 1
+  311,t 0
   272,line 23
   263,title WCSB
   282,title WCSU
-  311,title {}
+  311,title WIDTH
   268,line 19
   276,t 0
   265,line 16
@@ -1050,45 +1084,48 @@ array set contoursend::token_id_table {
   0 {$}
   262,title WCSA
   281,title WCST
-  310,title {}
-  309,title {}
   error,t 0
-  299,title LIMITS
+  310,title STYLE
+  309,title SMOOTH
+  299,title DASH
   258,line 8
   273,t 0
   294,t 0
   304,t 0
+  317,line 184
   261,title WCS
   279,title WCSR
   280,title WCSS
-  308,title WIDTH
+  308,title SCOPE
   269,t 0
   270,t 0
-  298,title LEVELS
+  298,title COLOR
+  314,line 148
   291,t 0
   301,t 0
-  311,line 141
-  307,line 62
+  311,line 67
+  307,line 63
   266,t 0
   260,title DETECTOR
   259,title AMPLIFIER
-  297,line 52
+  297,line 53
   278,title WCSQ
-  307,title STYLE
-  297,title EXP
+  307,title SCALE
+  297,title AUX
   287,t 0
   294,line 46
-  304,line 59
+  304,line 60
   error,title {}
   291,line 43
-  301,line 56
+  301,line 57
   263,t 0
   258,title PHYSICAL
   287,line 38
   277,title WCSP
   284,t 0
-  306,title SMOOTH
-  296,title DASH
+  306,title NLEVELS
+  296,title float
+  315,t 1
   284,line 35
   281,line 32
   260,t 0
@@ -1098,8 +1135,8 @@ array set contoursend::token_id_table {
   277,line 28
   276,title WCSO
   312,t 1
-  305,title SCOPE
-  295,title COLOR
+  305,title MODE
+  295,title integer
   274,line 25
   271,line 22
   277,t 0
@@ -1108,7 +1145,7 @@ array set contoursend::token_id_table {
   298,t 0
   275,title WCSN
   294,title ECLIPTIC
-  304,title SCALE
+  304,title METHOD
   264,line 15
   261,line 12
   274,t 0
@@ -1117,39 +1154,41 @@ array set contoursend::token_id_table {
   257,line 7
   274,title WCSM
   293,title GALACTIC
-  303,title NLEVELS
+  303,title LOG
   error error
   271,t 0
   292,t 0
   302,t 0
+  316,line 160
   273,title WCSL
-  313,line 172
+  313,line 120
   292,title ICRS
-  302,title MODE
+  302,title LIMITS
   267,t 0
-  310,line 113
-  309,line 108
-  299,line 54
+  310,line 66
+  309,line 65
+  299,line 55
   288,t 0
-  306,line 61
-  296,line 51
+  306,line 62
+  296,line 49
   272,title WCSK
   291,title J2000
   293,line 45
-  301,title METHOD
-  303,line 58
+  301,title LEVELS
+  303,line 59
   264,t 0
   285,t 0
   289,line 41
   290,line 42
-  300,line 55
+  300,line 56
+  316,t 1
   286,line 37
   271,title WCSJ
   261,t 0
   283,line 34
   289,title B1950
   290,title FK5
-  300,title LOG
+  300,title EXP
   282,t 0
   279,line 30
   280,line 31
@@ -1160,9 +1199,10 @@ array set contoursend::token_id_table {
   270,title WCSI
   273,line 24
   288,title FK4
+  317,title {}
   278,t 0
-  310,t 1
-  309,t 1
+  310,t 0
+  309,t 0
   299,t 0
   269,line 20
   270,line 21
@@ -1171,6 +1211,7 @@ array set contoursend::token_id_table {
   275,t 0
   263,line 14
   287,title WCSZ
+  316,title {}
   306,t 0
   296,t 0
   260,line 10
@@ -1181,6 +1222,7 @@ array set contoursend::token_id_table {
   286,title WCSY
   293,t 0
   303,t 0
+  315,title {}
   258 PHYSICAL_
   260 DETECTOR_
   259 AMPLIFIER_
@@ -1188,6 +1230,7 @@ array set contoursend::token_id_table {
   262 WCSA_
   263 WCSB_
   264 WCSC_
+  315,line 156
   265 WCSD_
   266 WCSE_
   267 WCSF_
@@ -1195,7 +1238,7 @@ array set contoursend::token_id_table {
   268 WCSG_
   269 WCSH_
   270 WCSI_
-  312,line 150
+  312,line 115
   271 WCSJ_
   272 WCSK_
   289,t 0
@@ -1205,18 +1248,19 @@ array set contoursend::token_id_table {
   273 WCSL_
   274 WCSM_
   285,title WCSX
+  314,title {}
   275 WCSN_
-  308,line 63
+  308,line 64
   276 WCSO_
-  298,line 53
+  298,line 54
   277 WCSP_
   278 WCSQ_
   279 WCSR_
   280 WCSS_
   281 WCST_
-  305,line 60
+  305,line 61
   282 WCSU_
-  295,line 50
+  295,line 48
   265,t 0
   283 WCSV_
   284 WCSW_
@@ -1355,25 +1399,29 @@ proc contoursend::yyparse {} {
                     36 { set _ icrs }
                     37 { set _ galactic }
                     38 { set _ ecliptic }
-                    39 { ProcessSendCmdYesNo contour view }
-                    40 { ProcessSendCmdGet contour color }
-                    41 { ProcessSendCmdGet contour width }
-                    42 { ProcessSendCmdYesNo contour dash }
-                    43 { ProcessSendCmdGet contour smooth }
-                    44 { ProcessSendCmdGet contour method }
-                    45 { ProcessSendCmdGet contour numlevel }
-                    46 { ProcessSendCmdGet contour scale }
-                    47 { ProcessSendCmdGet contour log }
-                    48 { ProcessSendCmdGet contour log }
-                    49 { ProcessSendCmdGet contour mode }
-                    50 { ProcessSendCmdGet contour scope }
-                    51 { ContourSendCmdLimits }
-                    52 { ContourSendCmdLevels }
-                    53 { ContourSendCmdStyle }
-                    54 { ProcessSendCmdSend {.ctr} "get contour $1 fk5" }
-                    55 { ProcessSendCmdSend {.ctr} "get contour $1 fk5" }
-                    56 { ProcessSendCmdSend {.ctr} "get contour wcs $1" }
-                    57 { ProcessSendCmdSend {.ctr} "get contour $1 $2" }
+                    39 { set _ $1 }
+                    40 { set _ $1 }
+                    41 { ProcessSendCmdYesNo contour view }
+                    42 { ProcessSendCmdGet contour color }
+                    43 { ProcessSendCmdGet contour width }
+                    44 { ProcessSendCmdYesNo contour dash }
+                    45 { ProcessSendCmdGet contour smooth }
+                    46 { ProcessSendCmdGet contour method }
+                    47 { ProcessSendCmdGet contour numlevel }
+                    48 { ProcessSendCmdGet contour scale }
+                    49 { ProcessSendCmdGet contour log }
+                    50 { ProcessSendCmdGet contour log }
+                    51 { ProcessSendCmdGet contour mode }
+                    52 { ProcessSendCmdGet contour scope }
+                    53 { ContourSendCmdLimits }
+                    54 { ContourSendCmdLevels }
+                    55 { ContourSendCmdStyle }
+                    56 { ContourSendCmdAux }
+                    57 { ContourSendCmdAuxStyle $3 }
+                    58 { ProcessSendCmdSend {.ctr} "get contour $1 fk5" }
+                    59 { ProcessSendCmdSend {.ctr} "get contour $1 fk5" }
+                    60 { ProcessSendCmdSend {.ctr} "get contour wcs $1" }
+                    61 { ProcessSendCmdSend {.ctr} "get contour $1 $2" }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

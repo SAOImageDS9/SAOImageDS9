@@ -742,6 +742,11 @@ public:
   void contourDashListCmd(int, int);
   void contourDeleteCmd();
   void contourDeleteAuxCmd();
+  void contourDeleteAuxCmd(int);
+  void contourAuxNameCmd(int, const char*);
+  void contourAuxResetCmd(int, int);
+  void contourAuxStyleCmd(int, int, const char*, int, int, int, int);
+  AuxContourSet* auxSetCmd(int, int);
   void contourLoadCmd(const char*);
   void contourLoadCmd(const char*, const char*, int, int);
   void contourLoadCmd(const char*, Coord::CoordSystem, Coord::SkyFrame, const char*, int, int);
@@ -749,6 +754,8 @@ public:
   void contourPasteCmd(const char*, const char*, int, int, int =0, int =0);
   void contourSaveCmd(const char*, Coord::CoordSystem, Coord::SkyFrame);
   void contourSaveAuxCmd(const char*, Coord::CoordSystem, Coord::SkyFrame);
+  void contourSaveAuxCmd(int, const char*, Coord::CoordSystem,
+			 Coord::SkyFrame);
   void contourStyleCmd(int, const char*, int, int, int, int);
   void contourStyleClearCmd();
   void contourStyleClearCmd(int);
@@ -769,6 +776,8 @@ public:
   void getContourSmoothCmd();
   void getContourStyleCmd();
   void getContourStyleCmd(int);
+  void getContourAuxCmd();
+  void getContourAuxStyleCmd(int);
   void hasContourCmd();
   void hasContourAuxCmd();
 

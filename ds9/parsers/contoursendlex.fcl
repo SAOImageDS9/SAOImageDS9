@@ -7,6 +7,7 @@
 
 %%
 
+aux		{return $AUX_}
 color		{return $COLOR_}
 colour		{return $COLOR_}
 dash		{return $DASH_}
@@ -26,6 +27,7 @@ width		{return $WIDTH_}
 #include coordsys.fin
 #include wcssys.fin
 #include skyframe.fin
+#include numeric.fin
 #include ws.fin
 
 %%

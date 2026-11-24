@@ -59,6 +59,7 @@
 ::msgcat::mcset da Archives Arkiver
 ::msgcat::mcset da Array Array
 ::msgcat::mcset da Arrow Pil
+::msgcat::mcset da {As Loaded} {Som indlæst}
 ::msgcat::mcset da Asteroids Asteroider
 ::msgcat::mcset da Astronomy Astronomi
 ::msgcat::mcset da {At Startup} {Ved opstart}
@@ -416,6 +417,7 @@
 ::msgcat::mcset da Gaussian Gaussisk
 ::msgcat::mcset da General Generel
 ::msgcat::mcset da Generate Opret
+::msgcat::mcset da Generated Genereret
 ::msgcat::mcset da {Generating Regions} {danner områder}
 ::msgcat::mcset da {Get Information} {Hent information}
 ::msgcat::mcset da {Get Region Info} {Hent områdeinformation}

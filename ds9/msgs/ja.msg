@@ -59,6 +59,7 @@
 ::msgcat::mcset ja Archives アーカイブ
 ::msgcat::mcset ja Array 配列
 ::msgcat::mcset ja Arrow 矢印
+::msgcat::mcset ja {As Loaded} 読み込み時
 ::msgcat::mcset ja Asteroids 小惑星
 ::msgcat::mcset ja Astronomy 天文学
 ::msgcat::mcset ja {At Startup} 起動時
@@ -416,6 +417,7 @@
 ::msgcat::mcset ja Gaussian ガウシアン
 ::msgcat::mcset ja General 一般
 ::msgcat::mcset ja Generate 生成
+::msgcat::mcset ja Generated 生成済み
 ::msgcat::mcset ja {Generating Regions} 領域を作成中
 ::msgcat::mcset ja {Get Information} 情報を取得
 ::msgcat::mcset ja {Get Region Info} 領域の情報を取得

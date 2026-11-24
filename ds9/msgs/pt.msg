@@ -59,6 +59,7 @@
 ::msgcat::mcset pt Archives Arquivos
 ::msgcat::mcset pt Array Array
 ::msgcat::mcset pt Arrow Seta
+::msgcat::mcset pt {As Loaded} {Como carregado}
 ::msgcat::mcset pt Asteroids Asteroides
 ::msgcat::mcset pt Astronomy Astronomia
 ::msgcat::mcset pt {At Startup} {Na Inicialização}
@@ -416,6 +417,7 @@
 ::msgcat::mcset pt Gaussian Gaussiano
 ::msgcat::mcset pt General Geral
 ::msgcat::mcset pt Generate Gerar
+::msgcat::mcset pt Generated Gerados
 ::msgcat::mcset pt {Generating Regions} {Gerando regiões}
 ::msgcat::mcset pt {Get Information} {Obter informações}
 ::msgcat::mcset pt {Get Region Info} {Obter Informações da Região}

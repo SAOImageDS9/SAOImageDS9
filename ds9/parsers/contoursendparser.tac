@@ -5,9 +5,11 @@
 #include coordsys.tin
 #include wcssys.tin
 #include skyframe.tin
+#include numeric.tin
 
 %start contoursend
 
+%token AUX_
 %token COLOR_
 %token DASH_
 %token EXP_
@@ -28,6 +30,7 @@
 #include coordsys.trl
 #include wcssys.trl
 #include skyframe.trl
+#include numeric.trl
 
 contoursend : {ProcessSendCmdYesNo contour view}
  | COLOR_ {ProcessSendCmdGet contour color}
@@ -45,6 +48,8 @@ contoursend : {ProcessSendCmdYesNo contour view}
  | LIMITS_ {ContourSendCmdLimits}
  | LEVELS_ {ContourSendCmdLevels}
  | STYLE_ {ContourSendCmdStyle}
+ | AUX_ {ContourSendCmdAux}
+ | AUX_ STYLE_ INT_ {ContourSendCmdAuxStyle $3}
  
  | coordsys {ProcessSendCmdSend {.ctr} "get contour $1 fk5"}
  | wcssys {ProcessSendCmdSend {.ctr} "get contour $1 fk5"}

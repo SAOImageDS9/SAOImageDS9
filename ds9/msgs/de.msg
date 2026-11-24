@@ -59,6 +59,7 @@
 ::msgcat::mcset de Archives Archive
 ::msgcat::mcset de Array Array
 ::msgcat::mcset de Arrow Pfeil
+::msgcat::mcset de {As Loaded} {Wie geladen}
 ::msgcat::mcset de Asteroids Asteroiden
 ::msgcat::mcset de Astronomy Astronomie
 ::msgcat::mcset de {At Startup} {Beim Start}
@@ -416,6 +417,7 @@
 ::msgcat::mcset de Gaussian Gauss
 ::msgcat::mcset de General Allgemein
 ::msgcat::mcset de Generate Herstellen
+::msgcat::mcset de Generated Erzeugt
 ::msgcat::mcset de {Generating Regions} {Regionen erstellen}
 ::msgcat::mcset de {Get Information} Informationen
 ::msgcat::mcset de {Get Region Info} Regionsinformationen

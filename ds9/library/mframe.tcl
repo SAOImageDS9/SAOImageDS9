@@ -1246,6 +1246,8 @@ proc UpdateFrameMenuItems {} {
     }
 
     # Goto Frame Menu
+    AquaMenuUngroup $ds9(mb).frame.goto $ds9(menu,size,frame,goto)
+    AquaMenuUngroup $ds9(mb).frame.active $ds9(menu,size,frame,active)
     if {[$ds9(mb).frame.goto index end] >= $ds9(menu,size,frame,goto)} {
 	$ds9(mb).frame.goto delete $ds9(menu,size,frame,goto) end
     }
@@ -1283,4 +1285,6 @@ proc UpdateFrameMenuItems {} {
 		"[msgcat::mc {Frame}] [string range $ff 5 end]" -columnbreak 1
 	}
     }
+    AquaMenuGroup $ds9(mb).frame.goto $ds9(menu,size,frame,goto)
+    AquaMenuGroup $ds9(mb).frame.active $ds9(menu,size,frame,active)
 }

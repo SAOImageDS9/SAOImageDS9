@@ -73,6 +73,92 @@ proc CreateMenuBar {} {
     }
 }
 
+# Aqua ignores -columnbreak; split overflowing lists into native submenus.
+proc MenuEntryOptions {m index} {
+    set opts {}
+    foreach option [$m entryconfigure $index] {
+	if {[llength $option] == 5} {
+	    lappend opts [lindex $option 0] [lindex $option 4]
+	}
+    }
+    return $opts
+}
+
+proc AquaMenuGroup {m {first 0}} {
+    global ds9
+
+    if {$ds9(wm) ne {aqua}} {
+	return
+    }
+    AquaMenuUngroup $m $first
+    set last [$m index end]
+    set size $ds9(menu,size,wrap)
+    if {$last eq {none} || $last-$first+1 <= $size} {
+	return
+    }
+
+    set entries {}
+    for {set ii $first} {$ii <= $last} {incr ii} {
+	lappend entries [list [$m type $ii] [MenuEntryOptions $m $ii]]
+    }
+    $m delete $first end
+    set group 0
+    for {set ii 0} {$ii < [llength $entries]} {incr ii $size} {
+	set chunk [lrange $entries $ii [expr {$ii+$size-1}]]
+	set mm $m.group$group
+	ThemeMenu $mm
+	$mm configure -tearoff 0
+	foreach entry $chunk {
+	    lassign $entry type opts
+	    $mm add $type {*}$opts
+	}
+	set label "[$mm entrycget 0 -label] - [$mm entrycget end -label]"
+	$m add cascade -label $label -menu $mm
+	incr group
+    }
+}
+
+proc AquaMenuUngroup {m {first 0}} {
+    global ds9
+
+    if {$ds9(wm) ne {aqua} || ![winfo exists $m.group0]} {
+	return
+    }
+    set entries {}
+    set last [$m index end]
+    for {set ii $first} {$ii <= $last} {incr ii} {
+	set mm [$m entrycget $ii -menu]
+	for {set jj 0} {$jj <= [$mm index end]} {incr jj} {
+	    lappend entries [list [$mm type $jj] [MenuEntryOptions $mm $jj]]
+	}
+	destroy $mm
+    }
+    $m delete $first end
+    foreach entry $entries {
+	lassign $entry type opts
+	$m add $type {*}$opts
+    }
+}
+
+# Frame state changes still address entries by their original labels.
+proc MenuEntryConfigure {m which args} {
+    global ds9
+
+    if {$ds9(wm) eq {aqua} && [winfo exists $m.group0]} {
+	foreach mm [winfo children $m] {
+	    if {![string match $m.group* $mm]} {
+		continue
+	    }
+	    for {set ii 0} {$ii <= [$mm index end]} {incr ii} {
+		if {[$mm entrycget $ii -label] eq $which} {
+		    return [$mm entryconfigure $ii {*}$args]
+		}
+	    }
+	}
+    }
+    return [$m entryconfigure $which {*}$args]
+}
+
 proc ThemeMenu {w} {
     global ds9
 

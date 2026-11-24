@@ -1962,6 +1962,7 @@ proc ColormapDialogExternal {which} {
 	    $mb.colormap.$which entryconfig [msgcat::mc $cmap] -columnbreak 1
 	}
     }
+    AquaMenuGroup $mb.colormap.$which
 }
 
 proc ColormapDestroyDialog {} {

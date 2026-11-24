@@ -366,6 +366,7 @@ proc CATPlotDialogColsMenu {varname f ww} {
 	    }
 	}
     }
+    AquaMenuGroup $m
 }
 
 proc CATHistogram {varname} {
@@ -755,6 +756,7 @@ proc CATHistogramColsMenu {varname f ww cmd} {
 	    }
 	}
     }
+    AquaMenuGroup $m
 }
 
 proc CATHistogramColsMenuCmd {ww col cmd} {

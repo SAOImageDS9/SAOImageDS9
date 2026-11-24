@@ -384,6 +384,7 @@ proc BinPopUp {b m l cmd} {
 	    $m entryconfig $ii -columnbreak 1
 	}
     }
+    AquaMenuGroup $m
 }
 
 proc BinBlankPopUp {m} {

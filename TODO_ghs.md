@@ -1,16 +1,16 @@
 # TODO: Generalized Hyperbolic Stretch (GHS) scale
 
-**Status (2026-11-24): fully wired on branch `ghs_scale`, smoke-tested, not yet
-committed past the WIP prototype commit.** GHS is a regular DS9 scale type (`scale ghs`,
-with `stretch`/`intensity`/`sp`/`lp`/`hp`), using the inverse-built 2²⁰-entry table.
-History: the review checked the maths and the contrast/bias interaction; prototypes 1–3
-found that the 16384-entry table, not the stretch factor, causes banding on wide-range
-data, and that the inverse-built fine table fixes it at near-normal speed (see
-"Prototype results"); questions 2–4 are decided (see "Decisions"); "Full wiring" lists
-what was done. The GHS dialog now updates live, and the Scale dialog graph draws
-the scale function with draggable LP/SP/HP handles (see "UI"). Regression tests are in
-`Tests/` (Plan step 4). Remaining: the rest of the docs (Plan step 5) and the remaining
-UI ideas.
+**Status (2026-11-24): done on branch `ghs_scale` (WIP commits, not yet a PR).** GHS
+is a regular DS9 scale type (`scale ghs`, with `stretch`/`intensity`/`sp`/`lp`/`hp`),
+using the inverse-built 2²⁰-entry table. History: the review checked the maths and the
+contrast/bias interaction; prototypes 1–3 found that the 16384-entry table, not the
+stretch factor, causes banding on wide-range data, and that the inverse-built fine table
+fixes it at near-normal speed (see "Prototype results"); questions 2–4 are decided (see
+"Decisions"); "Full wiring" lists what was done. The GHS dialog updates live, and the
+Scale dialog graph draws the scale function with draggable LP/SP/HP handles (see "UI").
+Regression tests are on the `Tests/` repo's `ghs_scale` branch (Plan step 4), and the
+docs and release notes are written (Plan step 5). Remaining: only the optional UI ideas
+and the known limitations.
 
 Source: PixInsight GHS process module docs, v3.0.4 (2023-07-11),
 <https://www.ghsastro.co.uk/doc/tools/GeneralizedHyperbolicStretch/GeneralizedHyperbolicStretch.html>.
@@ -201,7 +201,7 @@ Rough size: about 50 lines of maths, and a few days in total, mostly wiring and 
 
 ## UI
 
-### Done (2026-11-24, uncommitted)
+### Done (2026-11-24)
 
 - **GHS Parameters dialog is not modal** (`ScaleGhsDialog`, `scale.tcl`), so the image,
   the Scale dialog and the limits stay usable while tuning. Buttons: Apply, Reset,
@@ -229,7 +229,7 @@ Rough size: about 50 lines of maths, and a few days in total, mostly wiring and 
   curve is listed first in `element show` so it draws on top of the filled histogram.
   - For GHS, dashed SP/LP/HP guide lines are drawn for parameters given as data values
     (not for `auto`, which coincides with the limit markers).
-- **Draggable LP/SP/HP handles on the curve** (uncommitted). In GHS mode each parameter
+- **Draggable LP/SP/HP handles on the curve**. In GHS mode each parameter
   has a blue tab labelled LP/SP/HP sitting on the curve at its value, `auto` ones at the
   limit they stand for.
   - Dragging a tab sideways sets that parameter to a data value (`%.6g`). The image
@@ -598,7 +598,7 @@ entries.
 2. ~~Decide questions 2–4~~ done (see "Decisions"). Risk 1 is settled: use the
    inverse-built 2²⁰ table.
 3. ~~Full wiring~~ done (see "Full wiring").
-4. ~~Tests~~ done (2026-11-24, uncommitted, `Tests/` branch `ghs_scale`):
+4. ~~Tests~~ done (2026-11-24, `Tests/` repo, branch `ghs_scale`, commit 5db36f6):
    - `ghs.sh` (85 checks, ~16 s, exits non-zero on failure; added to `all.sh`). Run from
      `Tests/` with `PATH="$PWD/../bin:$HOME/local/bin:$PATH" ./ghs.sh`.
    - `ghs/ghscurve.C`: standalone checks of `ghs.h`, compiled by `ghs.sh` against
@@ -632,7 +632,11 @@ entries.
      `samp/scale.samp` and `samp/contour.samp`. Ran `xpa.sh scale|contour`,
      `command.sh scale|contour` and `samp.sh scale|contour` (with a temporary
      `samp.tcl` path fix, reverted afterwards): all pass.
-5. Docs: mostly done in the wiring step (see "Full wiring"). The scale sections already
-   explain SP and recommend contrast 1 / bias 0.5. Still to do: spell out SP vs. bias,
-   say b = −1 is *nearly* DS9's log (DS9 divides by log(exp), GHS by ln(1+D)), and add
-   the release notes entry.
+5. ~~Docs~~ done (2026-11-24). The `scale` sections of `command.html`, `xpa.html` and
+   `samp.html` describe the parameters, credit Payne & Cranfield, recommend contrast 1 /
+   bias 0.5, explain how SP differs from the colormap bias (bias slides the colours after
+   the scale and leaves the colorbar values alone; SP changes the scale, the labels and
+   GHS contours), and say intensity −1 with auto points is ln(1+Dx)/ln(1+D),
+   D = e^stretch − 1: *nearly* `log` with exp = D, which divides by ln(exp) instead.
+   Release notes: two SCALE entries in `doc/release/r8.8.2.html` (the GHS scale and
+   dialog; the scale-function curve and handles on the Scale Parameters graph).

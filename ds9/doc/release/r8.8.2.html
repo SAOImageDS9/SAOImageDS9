@@ -256,6 +256,17 @@ turn the dialog off and set the projection it starts with.</li>
 <li><strong>WCS</strong>: Fix crash listing WCS coordinates (pixel
 values, regions) for points that are not on the sky, such as outside an
 Aitoff ellipse.</li>
+<li><strong>SCALE</strong>: New <code>ghs</code> scale, the Generalized
+Hyperbolic Stretch of D. Payne and M. Cranfield. It adds contrast around a
+chosen data value (the symmetry point, e.g. the sky level), with adjustable
+stretch and intensity and optional shadow/highlight protection points
+(<code>scale ghs stretch|intensity|sp|lp|hp</code>). A new <em>GHS
+Parameters</em> dialog updates the image live, and contours can use it
+(<code>contour scale ghs</code>). GHS uses a 2<sup>20</sup>-entry lookup
+table so faint sky noise does not band on wide-range data.</li>
+<li><strong>SCALE</strong>: The <em>Scale Parameters</em> graph now draws the
+scale function over the histogram. For <code>ghs</code> it has draggable
+SP, LP and HP handles.</li>
 </ul>
 
 </body>

@@ -41,8 +41,8 @@ INSTALLATION
 ============
 
 This package uses the TCL Extension Architecture (TEA). Please see the web page
-http://www.tcl.tk/doc/tea/ for more information about TEA. It supports all of
-the standard TCL configure script options.
+https://www.tcl-lang.org/doc/tea/TEAOverview.html for more information about TEA.
+It supports all of the standard TCL configure script options.
 
 Uncompress and unpack the distribution
 
@@ -150,12 +150,6 @@ USAGE
 	package require Tktable
 	grid [table .tb]
 	
-
-PYTHON
-======
-
-There is a library/tktable.py wrapper for use with Python/Tkinter.
-
 
 THINGS TO WATCH OUT FOR
 =======================

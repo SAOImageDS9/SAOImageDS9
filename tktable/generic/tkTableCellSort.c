@@ -201,7 +201,7 @@ static int TableSortCompareProc(
  *	the space for result, it must later be Tcl_Free'd by caller.
  *
  * Side effects:
- *	Behaviour undefined for ill-formed input list of elements.
+ *	Returns pointer to new string or NULL for an error.
  *
  *----------------------------------------------------------------------
  */
@@ -211,7 +211,7 @@ char * TableCellSort(Table *tablePtr, char *str) {
     char *result;
 
     if (Tcl_SplitList(tablePtr->interp, str, &listArgc, &listArgv) != TCL_OK) {
-	return str;
+	return NULL;
     }
     /* Thread safety: qsort is reportedly not thread-safe... */
     qsort((void *) listArgv, (size_t) listArgc, sizeof (char *), TableSortCompareProc);
@@ -345,7 +345,7 @@ static SortElement * MergeSort(
  *	Sorts list of elements in place.
  *
  * Side effects:
- *	Behaviour undefined for ill-formed input list of elements.
+ *	Returns Tcl_Obj or NULL for error.
  *
  *----------------------------------------------------------------------
  */

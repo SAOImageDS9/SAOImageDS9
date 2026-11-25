@@ -1,6 +1,6 @@
 # List of SAOImageDS9 packages
 
-Last updated 2026-11-11
+Last updated 2026-11-25
 
 | name         | version    | SAO   | dirty | upstream                                                             | latest                          |
 | ------------ | ---------- | ----- | ----- | -------------------------------------------------------------------- | ------------------------------- |
@@ -25,7 +25,7 @@ Last updated 2026-11-11
 | tk9.0        | 9.0.4      |       |       | https://github.com/tcltk/tk                                          | 9.1.0 (9.0.4 on 9.0 branch)     |
 | tkagif       | 1.1        | y     |       | https://github.com/SAOImageDS9/tkagif-maintenance                    | 1.1                             |
 | tkblt        | 3.3        | y     | y     | https://github.com/SAOImageDS9/tkblt-maintenance                     | previous upstream abandoned (1) |
-| tkcon        | 2.8        | y     | y     | https://github.com/SAOImageDS9/tkcon-maintenance                     | previous upstream abandoned     |
+| tkcon        | 2.8.1      |       |       | https://github.com/bohagan1/TkCon                                    | 2.8.1 + master 74212b6 (9)      |
 | tkdnd        | 2.9.5      |       | y     | https://github.com/petasis/tkdnd                                     | 2.9.5 (8)                       |
 | tkhtml1      | 1.1        | y     | y     | https://github.com/SAOImageDS9/tkhtml1-maintenance                   | previous upstream abandoned (2) |
 | **tkimg**    | 2.1.2      |       | y     | https://sourceforge.net/projects/tkimg/                              | 2.1.2 (4)                       |
@@ -33,7 +33,7 @@ Last updated 2026-11-11
 | tkmpeg       | 1.1        | y     |       | https://github.com/SAOImageDS9/tkmpeg-maintenance                    | 1.1                             |
 | tksao        |            | y     |       |                                                                      |                                 |
 | ~~tksvg~~    | ~~0.7.2~~  |       | ~~y~~ | ~~https://github.com/wjoye/tksvg~~                                   | removed (3)                     |
-| tktable      | 2.13       | y     | y     | https://github.com/SAOImageDS9/tktable-maintenance                   | previous upstream abandoned     |
+| tktable      | 2.12.2     |       |       | https://github.com/bohagan1/TkTable                                  | 2.12.2 + master ba66aa6 (9)     |
 | tls          | 2.0.1      |       | y     | https://core.tcl-lang.org/tcltls/index                               | 2.0.1 (5)                       |
 | ttkthemes    | 3.3.0      |       |       | https://github.com/TkinterEP/ttkthemes/                              | 3.3.0                           |
 | vector       |            | y     |       |                                                                      |                                 |
@@ -63,3 +63,5 @@ Last updated 2026-11-11
 (7) awthemes: `_readFile` sets `-encoding utf-8` when reading the SVG theme images. Without it they were read in the system encoding, and with LANG=zh (cp936) or LANG=ja (euc-jp) Tcl 9's strict encoding check made ds9 fail at startup on the non-ASCII UTF-8 bytes in some of the SVGs.
 
 (8) tkdnd (drag and drop) is built as a static library and linked into ds9 on Linux, macOS (aqua) and Windows, but not for X11 on macOS. Local changes, marked `ds9:` in the source: library/tkdnd.tcl loads the static package when ds9 has registered one; library/tkdnd_unix.tcl fetches the dropped data once per drag, so the fetch no longer races the source's XdndLeave; unix/tkUnixSelect.c gives each nested selection request its own property, clears it before each transfer and sets an error message on failure; unix/TkDND_XDND.c ignores BadWindow errors from windows destroyed while it scans for a virtual root.
+
+(9) tkcon and tktable: switched from the SAOImageDS9 maintenance forks to Brian O'Hagan's maintained versions, which include every change those forks carried (SAOImageDS9#459, #466). Vendored from bohagan1 master rather than a release because fixes we need are not yet in a tagged release: static BuildInfoCommand/TkSendVirtualEvent and the TktableConfig.sh stub-library fix (bohagan1/TkTable#18) for tktable, and the 2.8.1 VERSION fix (bohagan1/TkCon#11) and Tcl 9 tab completion for tkcon. No local changes; update to the next tagged release once one includes these.

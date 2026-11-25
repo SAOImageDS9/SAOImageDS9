@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="generator" content="HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 17.1), see www.w3.org">
-<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<meta http-equiv="Content-Type" content="text/html; charset=us-utf8">
 <meta name="GENERATOR" content="Mozilla/4.78 [en] (X11; U; Linux 2.4.7-10 i686) [Netscape]">
 <title>How</title>
 </head>
@@ -62,8 +62,8 @@ faint diffuse emission without saturating the stars.</p>
 <p>It has five parameters:</p>
 <blockquote>
 <table border="0" cellpadding="2">
-<tr><td><tt>stretch</tt></td><td nowrap>0&ndash;20</td><td>How strong the stretch is. 0 is linear. Internally <i>D</i>&nbsp;=&nbsp;e<sup>stretch</sup>&nbsp;&minus;&nbsp;1.</td></tr>
-<tr><td><tt>intensity</tt></td><td nowrap>&minus;5&ndash;15</td><td>The shape <i>b</i>: how tightly the added contrast is concentrated around SP. Larger values concentrate it more.</td></tr>
+<tr><td><tt>stretch</tt></td><td nowrap>0-20</td><td>How strong the stretch is. 0 is linear. Internally <i>D</i>&nbsp;=&nbsp;e<sup>stretch</sup>&nbsp;-&nbsp;1.</td></tr>
+<tr><td><tt>intensity</tt></td><td nowrap>-5-15</td><td>The shape <i>b</i>: how tightly the added contrast is concentrated around SP. Larger values concentrate it more.</td></tr>
 <tr><td><tt>sp</tt></td><td nowrap>data value</td><td>The symmetry point, where the curve is steepest.</td></tr>
 <tr><td><tt>lp</tt></td><td nowrap>data value</td><td>Protect shadows: the curve is a straight line below LP.</td></tr>
 <tr><td><tt>hp</tt></td><td nowrap>data value</td><td>Protect highlights: the curve is a straight line above HP.</td></tr>
@@ -72,31 +72,31 @@ faint diffuse emission without saturating the stars.</p>
 <p>SP, LP and HP are data values, or <tt>auto</tt> for the low (SP, LP) or high
 (HP) clip value. To build the scale they are converted to <i>x</i> from 0 to 1
 with the current clip values, clamped to [0,&nbsp;1], and put in order
-LP&nbsp;&le;&nbsp;SP&nbsp;&le;&nbsp;HP. Because they are data values, changing the
+LP&nbsp;&lt;=&nbsp;SP&nbsp;&lt;=&nbsp;HP. Because they are data values, changing the
 clip values does not move them on the image.</p>
 <p>The curve is built from a base function <i>T</i>, chosen by <i>b</i>:</p>
 <blockquote>
 <table border="0" cellpadding="2">
-<tr><td nowrap><i>b</i> = &minus;1</td><td><i>T</i>(<i>x</i>) = ln(1 + <i>Dx</i>)</td></tr>
-<tr><td nowrap><i>b</i> &lt; 0, <i>b</i> &ne; &minus;1</td><td><i>T</i>(<i>x</i>) = (1 &minus; (1 &minus; <i>bDx</i>)<sup>(<i>b</i>+1)/<i>b</i></sup>) / (<i>D</i>(<i>b</i>+1))</td></tr>
-<tr><td nowrap><i>b</i> = 0</td><td><i>T</i>(<i>x</i>) = 1 &minus; e<sup>&minus;<i>Dx</i></sup></td></tr>
-<tr><td nowrap><i>b</i> = 1</td><td><i>T</i>(<i>x</i>) = 1 &minus; 1/(1 + <i>Dx</i>)</td></tr>
-<tr><td nowrap><i>b</i> &gt; 0, <i>b</i> &ne; 1</td><td><i>T</i>(<i>x</i>) = 1 &minus; (1 + <i>bDx</i>)<sup>&minus;1/<i>b</i></sup></td></tr>
+<tr><td nowrap><i>b</i> = -1</td><td><i>T</i>(<i>x</i>) = ln(1 + <i>Dx</i>)</td></tr>
+<tr><td nowrap><i>b</i> &lt; 0, <i>b</i> ≠ -1</td><td><i>T</i>(<i>x</i>) = (1 - (1 - <i>bDx</i>)<sup>(<i>b</i>+1)/<i>b</i></sup>) / (<i>D</i>(<i>b</i>+1))</td></tr>
+<tr><td nowrap><i>b</i> = 0</td><td><i>T</i>(<i>x</i>) = 1 - e<sup>-<i>Dx</i></sup></td></tr>
+<tr><td nowrap><i>b</i> = 1</td><td><i>T</i>(<i>x</i>) = 1 - 1/(1 + <i>Dx</i>)</td></tr>
+<tr><td nowrap><i>b</i> &gt; 0, <i>b</i> ≠ 1</td><td><i>T</i>(<i>x</i>) = 1 - (1 + <i>bDx</i>)<sup>-1/<i>b</i></sup></td></tr>
 </table>
 </blockquote>
 <p>and assembled in four pieces:</p>
 <blockquote>
 <table border="0" cellpadding="2">
-<tr><td nowrap>SP &le; <i>x</i> &lt; HP</td><td><i>T</i><sub>3</sub>(<i>x</i>) = <i>T</i>(<i>x</i> &minus; SP)</td></tr>
-<tr><td nowrap>LP &le; <i>x</i> &lt; SP</td><td><i>T</i><sub>2</sub>(<i>x</i>) = &minus;<i>T</i>(SP &minus; <i>x</i>)</td></tr>
-<tr><td nowrap>0 &le; <i>x</i> &lt; LP</td><td><i>T</i><sub>1</sub>(<i>x</i>) = <i>T</i><sub>2</sub>(LP) + <i>T</i><sub>2</sub>&prime;(LP)(<i>x</i> &minus; LP)</td></tr>
-<tr><td nowrap>HP &le; <i>x</i> &le; 1</td><td><i>T</i><sub>4</sub>(<i>x</i>) = <i>T</i><sub>3</sub>(HP) + <i>T</i><sub>3</sub>&prime;(HP)(<i>x</i> &minus; HP)</td></tr>
+<tr><td nowrap>SP &lt;= <i>x</i> &lt; HP</td><td><i>T</i><sub>3</sub>(<i>x</i>) = <i>T</i>(<i>x</i> - SP)</td></tr>
+<tr><td nowrap>LP &lt;= <i>x</i> &lt; SP</td><td><i>T</i><sub>2</sub>(<i>x</i>) = -<i>T</i>(SP - <i>x</i>)</td></tr>
+<tr><td nowrap>0 &lt;= <i>x</i> &lt; LP</td><td><i>T</i><sub>1</sub>(<i>x</i>) = <i>T</i><sub>2</sub>(LP) + <i>T</i><sub>2</sub>'(LP)(<i>x</i> - LP)</td></tr>
+<tr><td nowrap>HP &lt;= <i>x</i> &lt;= 1</td><td><i>T</i><sub>4</sub>(<i>x</i>) = <i>T</i><sub>3</sub>(HP) + <i>T</i><sub>3</sub>'(HP)(<i>x</i> - HP)</td></tr>
 </table>
 </blockquote>
 <p>so the curve is the base function above SP, the same function rotated 180&deg;
 below SP, and straight lines tangent to it below LP and above HP. It is then
 scaled to run from 0 to 1:</p>
-<blockquote><i>y</i> = (<i>T<sub>i</sub></i>(<i>x</i>) &minus; <i>T</i><sub>1</sub>(0)) / (<i>T</i><sub>4</sub>(1) &minus; <i>T</i><sub>1</sub>(0))</blockquote>
+<blockquote><i>y</i> = (<i>T<sub>i</sub></i>(<i>x</i>) - <i>T</i><sub>1</sub>(0)) / (<i>T</i><sub>4</sub>(1) - <i>T</i><sub>1</sub>(0))</blockquote>
 <p>With <tt>intensity -1</tt> and SP, LP and HP at <tt>auto</tt> this is
 ln(1&nbsp;+&nbsp;<i>Dx</i>)&nbsp;/&nbsp;ln(1&nbsp;+&nbsp;<i>D</i>), which is
 <i>nearly</i> <tt>log</tt> with <i>a</i>&nbsp;=&nbsp;<i>D</i>. The difference is
@@ -108,7 +108,7 @@ range, and the sky then shows only two or three gray levels however the paramete
 are set. <tt>ghs</tt> therefore uses an array of 1048576 entries. To build it
 quickly, DS9 computes the inverse of the curve once for each color and fills the
 array in runs. This still bands when the data range is more than about
-2.6&times;10<sup>5</sup> times the sky noise; narrow the clip values in that case.</p>
+2.6x10<sup>5</sup> times the sky noise; narrow the clip values in that case.</p>
 <p>Contrast and bias (step 2) act on the colors, not on the data values. They still
 work with <tt>ghs</tt>, but they change the image without changing the colorbar
 values, while SP changes both. For results that match the colorbar, keep contrast

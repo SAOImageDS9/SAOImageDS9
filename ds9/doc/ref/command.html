@@ -2445,33 +2445,7 @@ $ds9 -saveimage ds9.tiff<br>
 $ds9 -saveimage pdf ds9.pdf<br>
 $ds9 -saveimage jpeg ds9.jpeg 75<br></tt>
 <p><b><a name="scale" id="scale"></a>scale</b></p>
-<p>Controls the limits and color scale distribution.</p>
-<p><tt>ghs</tt> is the Generalized Hyperbolic Stretch of D. Payne and
-M. Cranfield (<a href="https://www.ghsastro.co.uk">ghsastro.co.uk</a>). It adds
-contrast around a chosen data value, the symmetry point <tt>sp</tt>.
-<tt>stretch</tt> (0&ndash;20) sets the strength, with 0 the identity.
-<tt>intensity</tt> (&minus;5&ndash;15) sets how tightly the contrast is
-concentrated around <tt>sp</tt>. The curve is linear below <tt>lp</tt> (protect
-shadows) and above <tt>hp</tt> (protect highlights). <tt>sp</tt>, <tt>lp</tt>
-and <tt>hp</tt> are data values, or <tt>auto</tt> for the low (<tt>sp</tt>,
-<tt>lp</tt>) or high (<tt>hp</tt>) scale limit. Setting a parameter does not
-change the scale type. Data values are copied unchanged by
-<tt>match</tt>/<tt>lock</tt>, so they are only meaningful between frames in the
-same units. For best results put <tt>sp</tt> at the sky level and keep the
-colormap contrast at 1 and bias at 0.5.</p>
-<p><tt>sp</tt> is not the same as the colormap bias. Bias slides the colors
-along the range after the scale has been applied: it changes how the image looks,
-but not which data value belongs at each point of the colorbar. <tt>sp</tt> is a
-data value. It changes the scale itself, the colorbar labels follow it, and
-contours with <tt>contour scale ghs</tt> bunch around it.</p>
-<p>With <tt>intensity -1</tt> and <tt>sp</tt>, <tt>lp</tt> and <tt>hp</tt> at
-their <tt>auto</tt> values, the curve is ln(1 + D&middot;x) / ln(1 + D), where D
-= e<sup>stretch</sup> &minus; 1 and x runs from 0 at the low limit to 1 at the
-high limit. This is <i>nearly</i>, but not exactly, <tt>log</tt> with
-<tt>exp</tt> = D: <tt>log</tt> divides by ln(<tt>exp</tt>) rather than
-ln(1 + <tt>exp</tt>), so it reaches the top color slightly before the high
-limit. The difference is noticeable only for small <tt>exp</tt>.</p>
-
+<p>Controls the limits and color scale distribution (see <a href="how.html#Scales">How DS9 renders an image</a>).</p>
 <tt>Syntax:<br>
 -scale [linear|log|pow|sqrt|squared|asinh|sinh|histequ|ghs]<br>
 &nbsp;&nbsp;&nbsp; [log exp &lt;value&gt;]<br>

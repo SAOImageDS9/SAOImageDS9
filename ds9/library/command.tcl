@@ -108,6 +108,7 @@ proc ProcessCommand {argv argc} {
     set file(type) fits
     set file(mode) {}
     set file(layer) {}
+    set file(tiff) {}
     set file(mosaic) wcs
 
     set noopts 0
@@ -518,7 +519,15 @@ proc ProcessCommand {argv argc} {
 		ProcessThreadsCmd argv i
 	    }
 	    -tif -
-	    -tiff {set file(type) tiff}
+	    -tiff {
+		set file(type) tiff
+		# optional reader for the TIFFs that follow (tiff.tcl)
+		switch -- [lindex $argv [expr $i+1]] {
+		    native -
+		    photo -
+		    auto {incr i; set file(tiff) [lindex $argv $i]}
+		}
+	    }
 	    -tile {incr i; ProcessTileCmd argv i}
 	    -title {
 		# already processed
@@ -892,8 +901,11 @@ proc CommandLineLoadBase {item argvname iname} {
 	    }
 	    ImportENVIFile $fn $fn2
 	}
+	tiff {
+	    MultiLoad $file(layer) $file(mode)
+	    ImportTIFFFile $item $file(mode) $file(layer) $file(tiff)
+	}
 	gif -
-	tiff -
 	jpeg -
 	png {
 	    MultiLoad {} $file(mode)
@@ -998,8 +1010,11 @@ proc CommandLineLoadRGB {item argvname iname} {
 	envi {}
 	hips {}
 
+	tiff {
+	    MultiLoadRGB
+	    ImportTIFFFile $item $file(mode) {} $file(tiff)
+	}
 	gif -
-	tiff -
 	jpeg -
 	png {
 	    MultiLoadRGB
@@ -1231,8 +1246,11 @@ proc CommandLineLoad3D {item argvname iname} {
 	    }
 	    ImportENVIFile $fn $fn2
 	}
+	tiff {
+	    MultiLoad $file(layer) $file(mode)
+	    ImportTIFFFile $item $file(mode) $file(layer) $file(tiff)
+	}
 	gif -
-	tiff -
 	jpeg -
 	png {
 	    MultiLoad {} $file(mode)

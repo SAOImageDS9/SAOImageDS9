@@ -160,6 +160,8 @@ proc DS9Def {} {
     set pds9(nan) white
 
     set pds9(confirm) 1
+    # TIFF reader: auto, native or photo (tiff.tcl)
+    set pds9(tiff,mode) auto
     set pds9(iraf) 1
     switch $ds9(wm) {
 	x11 {set pds9(dialog) motif}

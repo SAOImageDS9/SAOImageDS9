@@ -3,6 +3,7 @@
 // For conditions of distribution and use, see copyright notice in "copyright"
 
 #include "frame.h"
+#include "tiff.h"
 
 // *** Fits ***
 
@@ -391,6 +392,23 @@ void Frame::loadNRRDMMapCmd(const char* fn, LayerType ll)
       return;
     FitsImage* img = new FitsImageNRRDMMap(cc, interp, fn, 1);
     loadDone(cc->load(MMAP, fn, img));
+    break;
+  }
+}
+
+void Frame::loadTiffCmd(const char* path, const char* fn, LayerType ll)
+{
+  switch (ll) {
+  case IMG:
+    Base::loadTiffCmd(path, fn, ll);
+    break;
+  case MASK:
+    Context* cc = loadMask();
+    if (!cc)
+      return;
+    FitsImage* img = new FitsImageTiff(cc, interp, path, fn,
+				       FitsTiff::TIFF_IMAGE, 1);
+    loadDone(cc->load(PHOTO, fn, img));
     break;
   }
 }

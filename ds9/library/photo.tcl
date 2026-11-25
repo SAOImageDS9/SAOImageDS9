@@ -218,13 +218,6 @@ proc ProcessPNGCmd {varname iname ch fn} {
     ProcessPhotoCmd $varname $iname $ch $fn
 }
 
-proc ProcessTIFFCmd {varname iname ch fn} {
-    upvar $varname var
-    upvar $iname i
-
-    ProcessPhotoCmd $varname $iname $ch $fn
-}
-
 proc ProcessPhotoCmd {varname iname ch fn} {
     upvar 2 $varname var
     upvar 2 $iname i

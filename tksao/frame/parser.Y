@@ -437,6 +437,7 @@ static void setProps(unsigned short* props, unsigned short prop, int value);
 %token TEMPLATE_
 %token TEXT_
 %token THREADS_
+%token TIFF_
 %token THREED_
 %token THRESHOLD_
 %token THICK_
@@ -1639,6 +1640,7 @@ load	: ARRAY_ loadArr
 	    YYERROR;
 	  }
 	}
+	| TIFF_ loadTiff
 	;
 
 loadArr : STRING ALLOC_ STRING layerType
@@ -1939,6 +1941,16 @@ loadNRRD : STRING ALLOC_ STRING layerType
 
 loadPhoto: /* empty */ STRING STRING {fr->loadPhotoCmd($1,$2);}
 	| SLICE_ STRING STRING {fr->loadSlicePhotoCmd($2,$3);}
+	;
+
+/* name ALLOC_ path, as loadNRRD: the image is decoded into memory, and
+   ds9's ProcessLoad, backup and Windows paths already speak alloc. The
+   bare form, path only, is for scripts. */
+loadTiff : STRING layerType {fr->loadTiffCmd($1, $1, (Base::LayerType)$2);}
+	| STRING ALLOC_ STRING layerType
+	{fr->loadTiffCmd($3, $1, (Base::LayerType)$4);}
+	| SLICE_ STRING ALLOC_ STRING layerType
+	{fr->loadSliceTiffCmd($4, $2);}
 	;
 
 loadIncr: DATA_ INT INT INT INT INT {fr->loadIncrDataCmd($2,$3,$4,$5,$6);}

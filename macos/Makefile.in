@@ -54,10 +54,10 @@ endif
 saods9	: dirs tcl tk \
 	openssl \
 	xpa funtools ast \
-	vector fitsy \
+	vector \
 	tclsignal \
 	tls tclxml tclxmlrpc \
-	tkblt tclfitsy tktable tkimg \
+	tkblt tktable tkimg fitsy tclfitsy \
 	tkmpeg tkagif tkhtml1 tkcon \
 	tkmacosx \
 	tkdnd tksao ds9

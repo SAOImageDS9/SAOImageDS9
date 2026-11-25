@@ -77,6 +77,7 @@ fi
 
 TEA_ADD_SOURCES([
 		   util.C
+		   tiff.C
 		   alloc.C
 		   allocgz.C
 		   analysis.C
@@ -130,6 +131,7 @@ TEA_ADD_SOURCES([
 	       ])
 TEA_ADD_HEADERS([
 		   util.h
+		   tiff.h
 		   alloc.h
 		   allocgz.h
 		   analysis.h
@@ -172,7 +174,7 @@ TEA_ADD_HEADERS([
 		   strm.h
 		   var.h
 	       ])
-TEA_ADD_INCLUDES([-I. -I${prefix}/include])
+TEA_ADD_INCLUDES([-I. -I${prefix}/include -I${prefix}/tkimg/libtiff -I${prefix}/tkimg/libtiff/libtiff])
 TEA_ADD_LIBS([-lstdc++])
 TEA_ADD_CFLAGS([])
 TEA_ADD_STUB_SOURCES([])

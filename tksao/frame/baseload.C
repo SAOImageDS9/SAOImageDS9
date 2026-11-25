@@ -4,6 +4,7 @@
 
 #include "base.h"
 #include "context.h"
+#include "tiff.h"
 
 // *** Fits ***
 
@@ -247,6 +248,27 @@ void Base::loadSlicePhotoCmd(const char* ph, const char* fn)
 {
   FitsImage* img = new FitsImagePhoto(currentContext, interp,
 				      ph, fn, 1);
+  loadDone(currentContext->loadSlice(PHOTO, fn, img));
+}
+
+// *** TIFF ***
+
+// PHOTO, because a TIFF image is decoded into memory as a photo is, and
+// FitsImagePhotoCubeNext's plane stepping (by the header's imgbytes) suits
+// a TIFF cube of any BITPIX: a stack's later planes are made that way.
+void Base::loadTiffCmd(const char* path, const char* fn, LayerType ll)
+{
+  unloadFits();
+  FitsImage* img = new FitsImageTiff(currentContext, interp, path, fn,
+				     FitsTiff::TIFF_IMAGE, 1);
+  loadDone(currentContext->load(PHOTO, fn, img));
+}
+
+// the next slice of the current cube: directory 0 only, as one plane
+void Base::loadSliceTiffCmd(const char* path, const char* fn)
+{
+  FitsImage* img = new FitsImageTiff(currentContext, interp, path, fn,
+				     FitsTiff::TIFF_PLANE, 1);
   loadDone(currentContext->loadSlice(PHOTO, fn, img));
 }
 

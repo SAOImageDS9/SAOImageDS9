@@ -7,6 +7,7 @@
 #include "framergb.h"
 #include "util.h"
 #include "fitsimage.h"
+#include "tiff.h"
 #include "outfile.h"
 #include "outchannel.h"
 #include "outsocket.h"
@@ -305,6 +306,21 @@ void FrameRGB::loadPhotoCmd(const char* ph, const char* fn)
   unloadAllFits();
   FitsImage* img = new FitsImagePhotoCube(&context[0], interp, ph, fn, 1);
   loadRGBCube(ALLOC,fn,img);
+}
+
+// An RGB TIFF fills all three channels in one load, at full depth, as
+// loadPhotoCmd does at 8 bits. Anything else (a grayscale TIFF) loads into
+// the current channel, as any single image does.
+void FrameRGB::loadTiffCmd(const char* path, const char* fn, LayerType ll)
+{
+  if (!tiffIsRGB(interp, path)) {
+    Base::loadTiffCmd(path, fn, ll);
+    return;
+  }
+  unloadAllFits();
+  FitsImage* img = new FitsImageTiff(&context[0], interp, path, fn,
+				     FitsTiff::TIFF_RGB, 1);
+  loadRGBCube(PHOTO, fn, img);
 }
 
 void FrameRGB::savePhotoCmd(const char* ph)

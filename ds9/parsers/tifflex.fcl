@@ -1,0 +1,20 @@
+#tab tiffparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+auto	    {return $AUTO_}
+mask	    {return $MASK_}
+native	    {return $NATIVE_}
+new	    {return $NEW_}
+photo	    {return $PHOTO_}
+slice	    {return $SLICE_}
+
+#include string.fin
+#include ws.fin
+
+%%

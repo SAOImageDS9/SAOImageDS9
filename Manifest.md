@@ -9,7 +9,7 @@ Last updated 2026-11-25
 | certifi      | 2026.10.23 |       |       | https://github.com/certifi/python-certifi                            | 2026.10.23                      |
 | ds9          | 8.8        | y     |       |                                                                      |                                 |
 | fickle       | 2.2        | y     |       | https://github.com/SAOImageDS9/fickle-maintenance                    | previous upstream abandoned     |
-| fitsy        |            | y     |       |                                                                      |                                 |
+| fitsy        |            | y     |       |                                                                      | (10)                            |
 | funtools     | 1.5.0      | y     | y     | https://github.com/SAOImageDS9/funtools-maintenance                  | abandoned                       |
 | openssl      | 3.5.9      |       |       | https://github.com/openssl/openssl                                   | 4.1.0 (3.5.9 on 3.5 LTS)        |
 | pdf4tcl      | 0.9.4      |       |       | https://sourceforge.net/projects/pdf4tcl/                            | 0.9.4                           |
@@ -65,3 +65,5 @@ Last updated 2026-11-25
 (8) tkdnd (drag and drop) is built as a static library and linked into ds9 on Linux, macOS (aqua) and Windows, but not for X11 on macOS. Local changes, marked `ds9:` in the source: library/tkdnd.tcl loads the static package when ds9 has registered one; library/tkdnd_unix.tcl fetches the dropped data once per drag, so the fetch no longer races the source's XdndLeave; unix/tkUnixSelect.c gives each nested selection request its own property, clears it before each transfer and sets an error message on failure; unix/TkDND_XDND.c ignores BadWindow errors from windows destroyed while it scans for a virtual root.
 
 (9) tkcon and tktable: switched from the SAOImageDS9 maintenance forks to Brian O'Hagan's maintained versions, which include every change those forks carried (SAOImageDS9#459, #466). Vendored from bohagan1 master rather than a release because fixes we need are not yet in a tagged release: static BuildInfoCommand/TkSendVirtualEvent and the TktableConfig.sh stub-library fix (bohagan1/TkTable#18) for tktable, and the 2.8.1 VERSION fix (bohagan1/TkCon#11) and Tcl 9 tab completion for tkcon. No local changes; update to the next tagged release once one includes these.
+
+(10) fitsy reads TIFF at full depth (fitsy/tiff.C, TODO_TIFF16.md) through tkimg's libtiff, the `tifftcl` package, by its stubs table. So fitsy is built after tkimg in `{unix,macos,win}/Makefile.in`, compiles against `tkimg/libtiff` and `tkimg/libtiff/libtiff`, and relies on the `-ltifftclstub` already on ds9's link line. The Deflate codec it decodes is registered by tkimg's `Tkimgtiff_Init` at ds9 startup.

@@ -1687,7 +1687,13 @@ proc MacOSPhotoFix {top xx yy} {
 	x11 {
 	    if {$tcl_platform(os) == {Darwin}} {
 		set geom [wm geometry $top]
-		wm geometry $top "[lindex [split $geom {+}] 0]+$xx+$yy"
+		set size [lindex [split $geom {+}] 0]
+		# XQuartz: once a window has been raised, XGetImage fails
+		# until it actually moves, and asking for the position it
+		# already has is not a move. Step off the target first.
+		wm geometry $top "$size+$xx+[expr {$yy+1}]"
+		update
+		wm geometry $top "$size+$xx+$yy"
 		update
 		return $geom
 	    }

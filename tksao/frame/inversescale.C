@@ -115,6 +115,23 @@ SquaredInverseScale::SquaredInverseScale(int ss, double low, double high)
   }
 }
 
+GhsInverseScale::GhsInverseScale(int ss, double low, double high,
+				 const GhsParams& gp)
+  : InverseScale(ss)
+{
+  if (size_==1) {
+    level_[0] = high;
+    return;
+  }
+
+  GhsCurve curve(gp, low, high);
+  double dd = high-low;
+  for (int ii=0; ii<size_; ii++) {
+    double aa = curve.inverse(double(ii)/(size_-1));
+    level_[ii] = aa*dd +low;
+  }
+}
+
 AsinhInverseScale::AsinhInverseScale(int ss, double low, double high)
   : InverseScale(ss)
 {

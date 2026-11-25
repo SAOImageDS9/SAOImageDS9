@@ -1825,12 +1825,14 @@ public:
   // Scale Commands
   virtual void colorScaleCmd(FrScale::ColorScaleType);
   virtual void colorScaleLogCmd(double);
+  virtual void colorScaleGhsCmd(double, double, double, double, double);
   void getColorMapLevelCmd(int);
   void getColorMapLevelCmd(int, double, double, FrScale::ColorScaleType, float);
   void getColorMapLevelCmd(int, const Vector&, Coord::InternalSystem);
   void getColorScaleCmd();
   void getColorScaleLevelCmd(int, double, double, 
 			     FrScale::ColorScaleType, float);
+  void getColorScaleGhsCmd();
   void getColorScaleLogCmd();
 
   // Smooth Commands

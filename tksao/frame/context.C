@@ -3259,6 +3259,15 @@ int Context::updateDataSec(int ii)
   return 0;
 }
 
+int Context::updateGhs(const GhsParams& g)
+{
+  if (frScale.ghs() != g) {
+    frScale.setGhs(g);
+    return 1;
+  }
+  return 0;
+}
+
 int Context::updateExpo(double exp)
 {
   if (frScale.expo() != exp) {

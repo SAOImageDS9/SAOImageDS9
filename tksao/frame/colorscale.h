@@ -12,6 +12,8 @@ using namespace std;
 #ifndef __colorscale_h__
 #define __colorscale_h__
 
+#include "ghs.h"
+
 // 0 background (white)
 // 1-200 data, 1 lowerlimit 200 upperlimit
 // 201 cursor color (white)
@@ -62,6 +64,15 @@ public:
 class AsinhScale : public virtual ColorScale {
 public:
   AsinhScale(int, unsigned char*, int);
+};
+
+// GHS needs a much finer table than SCALESIZE: with minmax limits on wide
+// range data the sky can be narrower than one SCALESIZE step
+#define GHSSCALESIZE (1<<20)
+
+class GhsScale : public virtual ColorScale {
+public:
+  GhsScale(unsigned char*, int, const GhsParams&, double, double);
 };
 
 class SinhScale : public virtual ColorScale {

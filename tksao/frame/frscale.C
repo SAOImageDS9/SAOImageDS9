@@ -63,6 +63,7 @@ FrScale::FrScale(const FrScale& a)
   ulow_ = a.ulow_;
   uhigh_ = a.uhigh_;
   expo_ = a.expo_;
+  ghs_ = a.ghs_;
   zContrast_ = a.zContrast_;
   zSample_ = a.zSample_;
   zLine_ = a.zLine_;
@@ -109,6 +110,7 @@ FrScale& FrScale::operator=(const FrScale& a)
   ulow_ = a.ulow_;
   uhigh_ = a.uhigh_;
   expo_ = a.expo_;
+  ghs_ = a.ghs_;
   zContrast_ = a.zContrast_;
   zSample_ = a.zSample_;
   zLine_ = a.zLine_;
@@ -150,7 +152,8 @@ FrScale& FrScale::operator=(const FrScale& a)
 }
 
 int FrScale::colorIndex(double value, double low, double high, int count,
-			ColorScaleType scaleType, float expo, double* hist,
+			ColorScaleType scaleType, float expo,
+			const GhsParams& ghs, double* hist,
 			int histsize, float bias, float contrast, int invert)
 {
   if (count <= 1)
@@ -191,6 +194,9 @@ int FrScale::colorIndex(double value, double low, double high, int count,
     break;
   case SINHSCALE:
     scaled = sinh(3*scaled) / 10;
+    break;
+  case GHSSCALE:
+    scaled = GhsCurve(ghs, low, high)(scaled);
     break;
   case HISTEQUSCALE:
     if (hist && histsize > 0) {

@@ -231,6 +231,11 @@ void FrameRGB::updateColorScale()
       colorScale[ii] =
 	new SinhScaleRGB(ii, SCALESIZE, colorCells, colorCount);
       break;
+    case FrScale::GHSSCALE:
+      colorScale[ii] =
+	new GhsScaleRGB(ii, colorCells, colorCount, context[ii].ghs(),
+			context[ii].low(), context[ii].high());
+      break;
     case FrScale::HISTEQUSCALE:
       colorScale[ii] = 
 	new HistEquScaleRGB(ii, SCALESIZE, colorCells, colorCount, 

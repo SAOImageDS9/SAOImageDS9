@@ -750,7 +750,7 @@ contour []<br>
 &nbsp;&nbsp;&nbsp; [smooth &lt;smooth&gt;]<br>
 &nbsp;&nbsp;&nbsp; [method block|smooth]<br>
 &nbsp;&nbsp;&nbsp; [nlevels &lt;number of levels&gt;]<br>
-&nbsp;&nbsp;&nbsp; [scale linear|log|pow|squared|sqrt|asinh|sinh|histequ]<br>
+&nbsp;&nbsp;&nbsp; [scale linear|log|pow|squared|sqrt|asinh|sinh|histequ|ghs]<br>
 &nbsp;&nbsp;&nbsp; [scale log exp &lt;value&gt;]<br>
 &nbsp;&nbsp;&nbsp; [mode minmax|&lt;value&gt;|zscale|zmax]<br>
 &nbsp;&nbsp;&nbsp; [scope global|local]<br>
@@ -3054,10 +3054,12 @@ saveimage ds9.tiff<br>
 saveimage pdf ds9.pdf<br>
 saveimage jpeg ds9.jpeg 75</tt><br>
 <p><b><a name="scale" id="scale"></a>scale</b></p>
-<p>Controls the limits and color scale distribution.</p>
+<p>Controls the limits and color scale distribution (see <a href="how.html#Scales">How DS9 renders an image</a>).</p>
 <tt>Syntax:<br>
-scale [linear|log|pow|sqrt|squared|asinh|sinh|histequ]<br>
+scale [linear|log|pow|sqrt|squared|asinh|sinh|histequ|ghs]<br>
 &nbsp;&nbsp;&nbsp; [log exp &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [ghs stretch|intensity &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [ghs sp|lp|hp &lt;value&gt;|auto]<br>
 &nbsp;&nbsp;&nbsp; [datasec yes|no]<br>
 &nbsp;&nbsp;&nbsp; [limits &lt;minvalue&gt; &lt;maxvalue&gt;]<br>
 &nbsp;&nbsp;&nbsp; [mode minmax|&lt;value&gt;|zscale|zmax]<br>
@@ -3072,6 +3074,8 @@ Example:<br>
 string value = ds9.get(string cmd)<br>
 scale<br>
 scale log exp<br>
+scale ghs<br>
+scale ghs sp<br>
 scale datasec<br>
 scale limits<br>
 scale mode<br>
@@ -3082,6 +3086,10 @@ scale lock limits<br>
 ds9.set(string cmd)<br>
 scale linear<br>
 scale log exp 100<br>
+scale ghs<br>
+scale ghs stretch 8<br>
+scale ghs sp 101.3<br>
+scale ghs hp auto<br>
 scale datasec yes<br>
 scale histequ<br>
 scale limits 1 100<br>

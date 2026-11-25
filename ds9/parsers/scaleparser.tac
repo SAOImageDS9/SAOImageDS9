@@ -9,16 +9,21 @@
 %start command
 
 %token ASINH_
+%token AUTO_
 %token CLOSE_
 %token DATASEC_
 %token EXP_
+%token GHS_
 %token GLOBAL_
 %token HISTEQU_
+%token HP_
+%token INTENSITY_
 %token LIMITS_
 %token LINEAR_
 %token LOCAL_
 %token LOCK_
 %token LOG_
+%token LP_
 %token MATCH_
 %token MINMAX_
 %token MODE_
@@ -27,8 +32,10 @@
 %token SCALELIMITS_
 %token SCOPE_
 %token SINH_
+%token SP_
 %token SQRT_
 %token SQUARED_
+%token STRETCH_
 %token USER_
 %token ZMAX_
 %token ZSCALE_
@@ -48,6 +55,7 @@ scale : OPEN_ {ScaleDialog}
  | LOCK_ lock
  | scales {ProcessCmdSet scale type $1 ChangeScale}
  | LOG_ EXP_ numeric {ProcessCmdSet scale log $3 ChangeScale}
+ | GHS_ ghs
  | DATASEC_ yesno {ProcessCmdSet scale datasec $2 ChangeDATASEC}
  | LIMITS_ numeric numeric {ProcessCmdSet scale min $2 {}; ProcessCmdSet scale max $3 ChangeScaleLimit}
 # backward compatibility
@@ -66,6 +74,18 @@ scales : LINEAR_ {set _ linear}
  | ASINH_ {set _ asinh}
  | SINH_ {set _ sinh}
  | HISTEQU_ {set _ histequ}
+ | GHS_ {set _ ghs}
+ ;
+
+ghs : STRETCH_ numeric {ProcessCmdSet scale ghs,stretch $2 ChangeScale}
+ | INTENSITY_ numeric {ProcessCmdSet scale ghs,intensity $2 ChangeScale}
+ | SP_ ghsValue {ProcessCmdSet scale ghs,sp $2 ChangeScale}
+ | LP_ ghsValue {ProcessCmdSet scale ghs,lp $2 ChangeScale}
+ | HP_ ghsValue {ProcessCmdSet scale ghs,hp $2 ChangeScale}
+ ;
+
+ghsValue : numeric {set _ $1}
+ | AUTO_ {set _ auto}
  ;
  
 match : {MatchScaleCurrent}

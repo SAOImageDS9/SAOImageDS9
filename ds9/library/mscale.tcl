@@ -27,8 +27,12 @@ proc ScaleMainMenu {} {
     $ds9(mb).scale add radiobutton \
 	-label [msgcat::mc {Histogram Equalization}] \
 	-variable scale(type) -command ChangeScale -value histequ
+    $ds9(mb).scale add radiobutton -label {GHS} \
+	-variable scale(type) -command ChangeScale -value ghs
     $ds9(mb).scale add command -label [msgcat::mc {Log Exponent}] \
 	-command ScaleLogDialog
+    $ds9(mb).scale add command -label "GHS [msgcat::mc {Parameters}]..." \
+	-command ScaleGhsDialog
     $ds9(mb).scale add separator
     $ds9(mb).scale add radiobutton -label [msgcat::mc {Min Max}] \
         -variable scale(mode) -command ChangeScaleMode -value minmax
@@ -112,6 +116,8 @@ proc PrefsDialogScaleMenu {w} {
 	-variable pscale(type) -value sinh
     $m add radiobutton -label [msgcat::mc {Histogram Equalization}] \
 	-variable pscale(type) -value histequ
+    $m add radiobutton -label {GHS} \
+	-variable pscale(type) -value ghs
     $m add separator
     $m add radiobutton -label  [msgcat::mc {Min Max}] \
 	-variable pscale(mode) -value minmax
@@ -166,6 +172,27 @@ proc PrefsDialogScale {} {
    
     grid $f.log -padx 2 -pady 2 -sticky w
 
+    # GHS
+    set f [ttk::labelframe $w.scale.ghs -text "GHS [msgcat::mc {Parameters}]"]
+
+    slider $f.sstretch 0. 20. [msgcat::mc {Stretch Factor}] \
+	pscale(ghs,stretch) {}
+    slider $f.sintensity -5. 15. [msgcat::mc {Local Intensity}] \
+	pscale(ghs,intensity) {}
+    ttk::label $f.tsp -text [msgcat::mc {Symmetry Point}]
+    ttk::entry $f.sp -textvariable pscale(ghs,sp) -width 14
+    ttk::label $f.tlp -text [msgcat::mc {Protect Shadows}]
+    ttk::entry $f.lp -textvariable pscale(ghs,lp) -width 14
+    ttk::label $f.thp -text [msgcat::mc {Protect Highlights}]
+    ttk::entry $f.hp -textvariable pscale(ghs,hp) -width 14
+
+    grid $f.sstretch - -padx 2 -pady 2 -sticky ew
+    grid $f.sintensity - -padx 2 -pady 2 -sticky ew
+    grid $f.tsp $f.sp -padx 2 -pady 2 -sticky w
+    grid $f.tlp $f.lp -padx 2 -pady 2 -sticky w
+    grid $f.thp $f.hp -padx 2 -pady 2 -sticky w
+    grid columnconfigure $f 1 -weight 1
+
     # MinMax
     set f [ttk::labelframe $w.scale.minmax \
 	       -text [msgcat::mc {Min Max Parameters}]]
@@ -192,7 +219,7 @@ proc PrefsDialogScale {} {
     grid $f.sline -padx 2 -pady 2 -sticky ew
     grid columnconfigure $f 0 -weight 1
 
-    pack $w.scale.log $w.scale.minmax $w.scale.zscale -side top -fill both -expand true
+    pack $w.scale.log $w.scale.ghs $w.scale.minmax $w.scale.zscale -side top -fill both -expand true
 }
 
 # Buttons
@@ -209,6 +236,7 @@ proc ButtonsScaleDef {} {
 	scale,asinh 1
 	scale,sinh 1
 	scale,hist 1
+	scale,ghs 0
 	scale,minmax 1
 	scale,995 0
 	scale,99 0
@@ -258,6 +286,9 @@ proc CreateButtonsScale {} {
     RadioButton $ds9(buttons).scale.hist \
 	[string tolower [msgcat::mc {Histogram}]] \
 	scale type histequ ChangeScale
+    RadioButton $ds9(buttons).scale.ghs \
+	[string tolower {GHS}] \
+	scale type ghs ChangeScale
 
     RadioButton $ds9(buttons).scale.minmax \
 	[string tolower [msgcat::mc {Min Max}]] \
@@ -308,6 +339,7 @@ proc CreateButtonsScale {} {
 	$ds9(buttons).scale.asinh pbuttons(scale,asinh)
 	$ds9(buttons).scale.sinh pbuttons(scale,sinh)
 	$ds9(buttons).scale.hist pbuttons(scale,hist)
+	$ds9(buttons).scale.ghs pbuttons(scale,ghs)
 	$ds9(buttons).scale.minmax pbuttons(scale,minmax)
 	$ds9(buttons).scale.995 pbuttons(scale,995)
 	$ds9(buttons).scale.99 pbuttons(scale,99)
@@ -351,6 +383,8 @@ proc PrefsDialogButtonbarScale {f} {
 	-variable pbuttons(scale,sinh) -command {UpdateButtons buttons(scale)}
     $m add checkbutton -label [msgcat::mc {Histogram Equalization}] \
 	-variable pbuttons(scale,hist) -command {UpdateButtons buttons(scale)}
+    $m add checkbutton -label {GHS} \
+	-variable pbuttons(scale,ghs) -command {UpdateButtons buttons(scale)}
     $m add separator
     $m add checkbutton -label [msgcat::mc {Min Max}] \
         -variable pbuttons(scale,minmax) -command {UpdateButtons buttons(scale)}
@@ -408,6 +442,8 @@ proc UpdateScaleMenu {} {
 
 	    set scale(type) [$current(frame) get colorscale]
 	    set scale(log) [$current(frame) get colorscale log]
+	    ScaleGhsSet [$current(frame) get colorscale ghs]
+	    UpdateScaleGhsDialog
 	    set scale(scope) [$current(frame) get clip scope]
 	    set scale(mode) [$current(frame) get clip mode]
 	    set scale(datasec) [$current(frame) get datasec]

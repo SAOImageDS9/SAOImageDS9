@@ -670,6 +670,23 @@ void Base::colorScaleCmd(FrScale::ColorScaleType s)
   }
 }
 
+// GHS parameters: stretch factor, intensity, then symmetry point, protect
+// shadows and protect highlights in data units (NaN = auto)
+void Base::colorScaleGhsCmd(double sf, double b, double sp, double lp,
+			    double hp)
+{
+  GhsParams gp;
+  gp.sf = sf;
+  gp.b = b;
+  gp.sp = sp;
+  gp.lp = lp;
+  gp.hp = hp;
+  if (currentContext->updateGhs(gp)) {
+    updateColorScale();
+    update(BASE);
+  }
+}
+
 void Base::colorScaleLogCmd(double exp)
 {
   if (currentContext->updateExpo(exp)) {
@@ -1498,6 +1515,9 @@ void Base::getColorMapLevelCmd(int count, double ll, double hh,
   case FrScale::SINHSCALE:
     inverseScale = new SinhInverseScale(count, ll, hh);
     break;
+  case FrScale::GHSSCALE:
+    inverseScale = new GhsInverseScale(count, ll, hh, currentContext->ghs());
+    break;
   case FrScale::HISTEQUSCALE:
     inverseScale = new HistEquInverseScale(count, ll, hh,
 				    currentContext->histequ(),
@@ -1542,6 +1562,9 @@ void Base::getColorScaleCmd()
   case FrScale::SINHSCALE:
     Tcl_AppendResult(interp, "sinh", NULL);
     break;
+  case FrScale::GHSSCALE:
+    Tcl_AppendResult(interp, "ghs", NULL);
+    break;
   case FrScale::HISTEQUSCALE:
     Tcl_AppendResult(interp, "histequ", NULL);
     break;
@@ -1579,6 +1602,9 @@ void Base::getColorScaleLevelCmd(int count, double ll, double hh,
   case FrScale::SINHSCALE:
     scale = new SinhInverseScale(count, ll, hh);
     break;
+  case FrScale::GHSSCALE:
+    scale = new GhsInverseScale(count, ll, hh, currentContext->ghs());
+    break;
   case FrScale::HISTEQUSCALE:
     scale = new HistEquInverseScale(count, ll, hh,
 				    currentContext->histequ(),
@@ -1594,6 +1620,28 @@ void Base::getColorScaleLevelCmd(int count, double ll, double hh,
   Tcl_AppendResult(interp, str.str().c_str(), NULL);
 
   delete scale;
+}
+
+static void ghsValue(ostream& str, double vv)
+{
+  if (isfinite(vv))
+    str << vv;
+  else
+    str << "auto";
+}
+
+void Base::getColorScaleGhsCmd()
+{
+  const GhsParams& gp = currentContext->ghs();
+  ostringstream str;
+  str << gp.sf << ' ' << gp.b << ' ';
+  ghsValue(str, gp.sp);
+  str << ' ';
+  ghsValue(str, gp.lp);
+  str << ' ';
+  ghsValue(str, gp.hp);
+  str << ends;
+  Tcl_AppendResult(interp, str.str().c_str(), NULL);
 }
 
 void Base::getColorScaleLogCmd()
@@ -1784,6 +1832,9 @@ void Base::getContourScaleCmd()
     break;
   case FrScale::SINHSCALE:
     Tcl_AppendResult(interp, "sinh", NULL);
+    break;
+  case FrScale::GHSSCALE:
+    Tcl_AppendResult(interp, "ghs", NULL);
     break;
   case FrScale::HISTEQUSCALE:
     Tcl_AppendResult(interp, "histequ", NULL);

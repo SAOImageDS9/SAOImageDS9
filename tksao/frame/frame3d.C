@@ -1279,6 +1279,11 @@ void Frame3d::updateColorScale()
     colorScale =
       new SinhScale(SCALESIZE, colorCells, colorCount);
     break;
+  case FrScale::GHSSCALE:
+    colorScale =
+      new GhsScale(colorCells, colorCount, context->ghs(),
+		   context->low(), context->high());
+    break;
   case FrScale::HISTEQUSCALE:
     colorScale =
       new HistEquScale(SCALESIZE, colorCells, colorCount, 

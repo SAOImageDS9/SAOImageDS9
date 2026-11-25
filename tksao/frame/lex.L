@@ -175,6 +175,7 @@ function	{return FUNCTION_;}
 galactic	{return GALACTIC_;}
 gaussian	{return GAUSSIAN_;}
 get		{return GET_;}
+ghs		{return GHS_;}
 global		{return GLOBAL_;}
 glyph		{return GLYPH_;}
 graphics	{return GRAPHICS_;}

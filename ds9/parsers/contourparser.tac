@@ -24,6 +24,7 @@
 %token DELETE_
 %token EXP_
 %token GENERATE_
+%token GHS_
 %token GLOBAL_
 %token HISTEQU_
 %token LEVELS_
@@ -189,6 +190,7 @@ scale : LINEAR_ {set _ linear}
  | ASINH_ {set _ asinh}
  | SINH_ {set _ sinh}
  | HISTEQU_ {set _ histequ}
+ | GHS_ {set _ ghs}
  ;
 
 log : numeric {ContourCmdScale log $1}

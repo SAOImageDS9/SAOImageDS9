@@ -224,6 +224,7 @@ proc CreateNameNumberFrame {which type} {
 	3d {
 	    $which colorscale $scale(type)
 	    $which colorscale log $scale(log)
+	    $which colorscale ghs {*}[ScaleGhsList]
 
 	    $which clip scope $scale(scope)
 	    $which clip mode $scale(mode)
@@ -256,6 +257,7 @@ proc CreateNameNumberFrame {which type} {
 
 		$which colorscale $scale(type)
 		$which colorscale log $scale(log)
+		$which colorscale ghs {*}[ScaleGhsList]
 
 		$which clip scope $scale(scope)
 		$which clip mode $scale(mode)
@@ -291,6 +293,7 @@ proc CreateNameNumberFrame {which type} {
 
 		$which colorscale $scale(type)
 		$which colorscale log $scale(log)
+		$which colorscale ghs {*}[ScaleGhsList]
 
 		$which clip scope $scale(scope)
 		$which clip mode $scale(mode)
@@ -326,6 +329,7 @@ proc CreateNameNumberFrame {which type} {
 
 		$which colorscale $scale(type)
 		$which colorscale log $scale(log)
+		$which colorscale ghs {*}[ScaleGhsList]
 
 		$which clip scope $scale(scope)
 		$which clip mode $scale(mode)

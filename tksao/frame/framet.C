@@ -257,6 +257,11 @@ void FrameT::updateColorScale()
     colorScale =
       new SinhScale(SCALESIZE, colorCells, colorCount);
     break;
+  case FrScale::GHSSCALE:
+    colorScale =
+      new GhsScale(colorCells, colorCount, context->ghs(),
+		   context->low(), context->high());
+    break;
   case FrScale::HISTEQUSCALE:
     colorScale =
       new HistEquScale(SCALESIZE, colorCells, colorCount, 
@@ -304,6 +309,11 @@ void FrameT::updateColorScale()
     case FrScale::SINHSCALE:
       colorScaleT[kk-1] =
 	new SinhScaleT(SCALESIZE, colorCellsT[kk-1], colorCount);
+      break;
+    case FrScale::GHSSCALE:
+      colorScaleT[kk-1] =
+	new GhsScaleT(colorCellsT[kk-1], colorCount, context[kk].ghs(),
+		      context[kk].low(), context[kk].high());
       break;
     case FrScale::HISTEQUSCALE:
       colorScaleT[kk-1] =

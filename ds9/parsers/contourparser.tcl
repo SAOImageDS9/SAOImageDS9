@@ -61,177 +61,182 @@ proc contour::unsetupvalues {numsyms} {
 }
 
 array set contour::table {
+  0:327,target 20
   21:301 shift
   76:294,target 17
-  122:0,target 143
+  122:0,target 68
+  21:369,target 65
   21:302 shift
-  163:301,target 177
   88:296,target 29
   48:0 reduce
   165:257,target 1
-  130:303,target 153
-  129:303,target 63
+  130:303,target 63
+  129:303,target 74
   175:303,target 1
-  15:351 goto
   9:303 reduce
+  15:352 goto
   25:303,target 109
   50:349,target 139
   50:350,target 140
   95:0,target 36
   71:303,target 12
-  177:260,target 4
-  177:259,target 3
   91:0 reduce
-  21:327,target 60
-  15:357 goto
+  157:300,target 104
+  157:290,target 94
+  157:289,target 93
+  16:352,target 49
+  172:300 shift
   64:0,target 70
   83:295,target 24
-  190:262,target 187
-  177:0 reduce
-  15:360 goto
+  15:358 goto
+  194:348,target 199
   172:303 reduce
   109:281,target 85
+  15:361 goto
   24:267,target 71
+  172:294 shift
   33:0,target 0
+  172:295 shift
   19:302,target 44
   50:297,target 101
-  156:264,target 68
+  172:296 shift
   95:297,target 36
-  177:257 shift
+  172:297 shift
+  166:348 goto
+  136:304,target 159
+  172:298 shift
   142:303 reduce
-  25:362,target 111
-  177:258 shift
+  172:299 shift
   5:303,target 4
-  0:344,target 31
-  177:260 shift
-  177:259 shift
-  21:327 shift
-  177:261 shift
+  0:344,target 30
+  21:328 shift
   77:294,target 18
-  177:262 shift
-  148:296,target 100
   86:300 reduce
+  164:301,target 178
   112:303 reduce
   86:303 reduce
-  181:0,target 123
+  181:0,target 1
   109:350,target 149
   109:349,target 148
   90:296,target 31
   89:296,target 30
   86:294 reduce
-  131:303,target 84
+  166:257,target 1
+  131:303,target 154
   86:295 reduce
-  106:350 goto
+  176:303,target 1
   86:296 reduce
-  25:319,target 110
+  25:320,target 110
+  106:351 goto
   86:297 reduce
-  150:0,target 119
-  149:0,target 117
+  150:0,target 117
+  149:0,target 116
+  136:357 goto
   86:298 reduce
   26:303,target 112
   56:303 reduce
   63:0 reduce
   86:299 reduce
   72:303,target 13
-  118:0,target 133
+  178:260,target 4
+  178:259,target 3
+  118:0,target 129
   150:0 reduce
   149:0 reduce
   26:303 shift
   109:297,target 101
   84:295,target 25
-  21:345 shift
   24:284,target 88
+  191:262,target 188
   21:346 shift
-  156:281,target 85
+  21:347 shift
   21:302,target 44
+  202:0 reduce
   192:0 reduce
+  157:264,target 68
   96:297,target 37
-  21:351 goto
+  21:352 goto
   92:0,target 33
   6:303,target 7
   78:294,target 19
-  61:0,target 141
+  149:296,target 100
+  61:0,target 142
+  177:301 shift
   50:272,target 76
-  177:303 reduce
   15:301,target 43
   91:296,target 32
-  167:257,target 1
-  156:350,target 172
-  156:349,target 171
-  132:303,target 154
-  177:303,target 1
-  147:303 reduce
-  21:367 goto
+  132:303,target 84
+  147:301 shift
+  172:351 goto
   73:303,target 14
-  180:260,target 4
-  180:259,target 3
   21:368 goto
   122:0 reduce
+  21:369 goto
   92:300 reduce
   77:0 reduce
   117:303 reduce
   85:295,target 26
-  156:297,target 101
   92:303 reduce
   9:0 reduce
-  177:0,target 1
   92:294 reduce
-  15:360,target 48
-  164:0 reduce
+  157:281,target 85
   92:295 reduce
   92:296 reduce
   97:297,target 38
   92:297 reduce
-  174:258,target 2
   92:298 reduce
   62:303 reduce
   92:299 reduce
   109:272,target 76
-  115:0,target 127
+  115:0,target 134
   50:288,target 92
   79:294,target 20
   80:294,target 21
   32:303 reduce
-  166:301,target 180
   16:301,target 43
-  0:335,target 25
   92:296,target 33
-  133:303,target 81
-  178:303,target 121
+  168:257,target 1
+  157:350,target 172
+  157:349,target 171
+  133:303,target 155
+  178:303,target 1
+  27:319,target 115
   88:0,target 29
   74:303,target 15
+  181:260,target 4
+  181:259,target 3
   50:0 reduce
+  19:352,target 55
   57:0,target 125
   183:301 reduce
   86:295,target 27
-  193:262,target 6
   183:303 reduce
-  136:0 reduce
+  157:297,target 101
   92:0 reduce
-  177:347 goto
   175:258,target 2
-  139:294,target 98
+  153:303 reduce
+  140:294,target 98
   109:288,target 92
   24:275,target 79
   178:0 reduce
   8:303,target 54
-  156:272,target 76
   106:296,target 100
   97:300 reduce
   81:294,target 22
   123:303 reduce
-  0:352,target 33
+  167:301,target 181
   97:303 reduce
-  174:0,target 1
+  174:0,target 77
   97:294 reduce
   97:295 reduce
   93:296,target 34
-  169:257,target 182
-  134:303,target 156
+  170:257,target 183
+  134:303,target 81
   97:296 reduce
-  180:303,target 1
-  179:303,target 122
+  180:303,target 122
+  179:303,target 121
   97:297 reduce
+  143:0,target 137
   97:298 reduce
   50:263,target 67
   67:303 reduce
@@ -241,56 +246,58 @@ array set contour::table {
   112:0,target 59
   0:309,target 9
   0:310,target 10
+  21:352,target 63
   108:0 reduce
   87:295,target 28
   64:0 reduce
+  194:262,target 6
+  7:336,target 38
   24:292,target 96
   151:0 reduce
-  171:299,target 103
+  176:258,target 2
   85:0,target 26
-  156:288,target 92
   0:257,target 1
-  15:351,target 46
   13:257 shift
   9:303,target 53
+  157:272,target 76
   13:258 shift
   82:294,target 23
   13:260 shift
   13:259 shift
   193:0 reduce
-  188:301 shift
+  188:301 reduce
   13:261 shift
-  193:347,target 198
   13:262 shift
   188:303 reduce
   109:263,target 67
   23:0,target 52
   94:296,target 35
+  135:303,target 157
   50:279,target 83
   50:280,target 84
-  181:303,target 123
+  181:303,target 1
+  194:257 shift
   158:303 reduce
-  0:326,target 20
+  194:258 shift
+  194:260 shift
+  194:259 shift
+  0:326,target 19
   76:303,target 17
-  21:368,target 65
-  164:257 shift
+  194:261 shift
+  21:368,target 64
+  194:262 shift
   128:303 reduce
-  164:258 shift
-  164:260 shift
-  164:259 shift
   88:295,target 29
-  171:0,target 87
-  164:261 shift
-  164:262 shift
+  171:0,target 86
   73:300 reduce
   123:0 reduce
-  50:348,target 138
+  34:354,target 131
   78:0 reduce
   73:303 reduce
-  177:258,target 2
+  172:299,target 103
   73:294 reduce
+  157:288,target 92
   73:295 reduce
-  16:351,target 49
   43:301 reduce
   73:296 reduce
   165:0 reduce
@@ -300,63 +307,58 @@ array set contour::table {
   83:294,target 24
   43:303 reduce
   73:298 reduce
-  190:261,target 186
   73:299 reduce
   109:280,target 84
   109:279,target 83
   24:266,target 70
   19:301,target 43
   50:296,target 100
-  156:263,target 67
   95:296,target 36
   13:303 reduce
-  136:303,target 106
   8:0,target 54
-  182:303,target 100
+  182:303,target 123
   82:0,target 23
-  0:343,target 30
   32:303,target 51
   77:303,target 18
-  148:295,target 99
   2:303 reduce
   194:303 reduce
-  169:359,target 188
-  109:348,target 147
+  170:360,target 189
   90:295,target 31
   89:295,target 30
-  164:303 reduce
+  164:301 shift
+  178:258,target 2
   137:0 reduce
+  134:301 shift
   93:0 reduce
-  198:0,target 113
-  169:257 shift
-  134:303 shift
+  198:0,target 79
+  170:257 shift
+  134:303 reduce
   109:296,target 100
   84:294,target 25
   24:283,target 87
-  169:258 shift
-  28:369,target 124
-  169:260 shift
-  169:259 shift
+  191:261,target 187
+  170:258 shift
+  28:370,target 125
+  170:260 shift
+  170:259 shift
   180:0 reduce
   179:0 reduce
-  169:261 shift
-  167:0,target 1
-  156:280,target 84
-  156:279,target 83
-  169:262 shift
+  170:261 shift
+  170:262 shift
   21:301,target 43
   78:300 reduce
+  157:263,target 67
   104:303 reduce
   96:296,target 37
-  137:303,target 72
-  183:303,target 103
-  136:0,target 106
+  137:303,target 106
+  183:303,target 100
   78:303 reduce
   78:294 reduce
   78:295 reduce
   48:301 shift
   78:296 reduce
   78:303,target 19
+  149:295,target 99
   48:302 shift
   78:297 reduce
   48:303 reduce
@@ -366,7 +368,6 @@ array set contour::table {
   109:263 shift
   91:295,target 32
   23:0 reduce
-  156:348,target 170
   109:264 shift
   109:265 shift
   18:303 shift
@@ -375,25 +376,27 @@ array set contour::table {
   109:267 shift
   109:268 shift
   109:0 reduce
-  13:347 goto
   78:0,target 19
-  180:258,target 2
   109:270 shift
   109:269 shift
+  13:348 goto
   65:0 reduce
   109:271 shift
   109:272 shift
+  7:344,target 39
   24:299,target 103
   109:273 shift
   47:0,target 73
   109:274 shift
   85:294,target 26
-  156:296,target 100
   152:0 reduce
   109:275 shift
   199:303 reduce
   109:276 shift
+  15:358,target 47
   24:263 shift
+  157:280,target 84
+  157:279,target 83
   109:277 shift
   24:264 shift
   109:278 shift
@@ -403,12 +406,12 @@ array set contour::table {
   109:279 shift
   97:296,target 38
   24:266 shift
-  174:257,target 1
-  138:303,target 160
+  194:348 goto
+  138:303,target 72
   109:281 shift
   24:267 shift
   194:0 reduce
-  184:303,target 101
+  184:303,target 103
   170:303 reduce
   169:303 reduce
   109:282 shift
@@ -418,17 +421,16 @@ array set contour::table {
   7:314 shift
   24:269 shift
   24:270 shift
-  139:300 shift
+  140:300 shift
   109:284 shift
   24:271 shift
   34:303,target 49
-  164:347 goto
   109:285 shift
   80:303,target 21
   24:272 shift
   50:287,target 91
   79:303,target 20
-  195:0,target 124
+  195:0,target 112
   109:286 shift
   24:273 shift
   175:257 shift
@@ -437,56 +439,53 @@ array set contour::table {
   109:287 shift
   24:274 shift
   175:258 shift
-  139:294 shift
+  140:294 shift
   109:288 shift
   24:275 shift
   175:260 shift
   175:259 shift
-  139:295 shift
+  140:295 shift
   109:300 shift
   109:290 shift
   109:289 shift
   24:276 shift
   175:261 shift
-  164:0,target 1
-  139:296 shift
+  140:296 shift
   109:291 shift
   92:295,target 33
   24:277 shift
   175:262 shift
-  139:297 shift
+  140:297 shift
   109:292 shift
   84:300 reduce
   24:278 shift
-  139:298 shift
+  140:298 shift
   110:303 shift
   109:293 shift
   109:303 reduce
   24:279 shift
   24:280 shift
-  27:318,target 114
-  139:299 shift
+  140:299 shift
   109:294 shift
   24:281 shift
-  133:0,target 81
   109:295 shift
   84:303 reduce
   24:282 shift
   109:296 shift
   84:294 reduce
   24:283 shift
+  181:258,target 2
   109:297 shift
   84:295 reduce
   24:284 shift
   109:298 shift
   84:296 reduce
-  7:329 shift
+  7:330 shift
   24:285 shift
   54:301 shift
   109:299 shift
   102:0,target 43
   84:297 reduce
-  19:351,target 55
   24:286 shift
   54:302 shift
   124:0 reduce
@@ -498,73 +497,84 @@ array set contour::table {
   24:288 shift
   79:0 reduce
   80:0 reduce
-  193:261,target 5
-  7:334 shift
+  157:296,target 100
   24:289 shift
   24:290 shift
   24:300 shift
-  173:301,target 190
   7:335 shift
   24:291 shift
+  7:336 shift
   24:292 shift
   24:303 reduce
   24:293 shift
+  166:0 reduce
   2:0,target 5
   24:294 shift
-  48:351 goto
   175:257,target 1
-  140:303,target 163
+  140:303,target 162
   139:303,target 161
   109:287,target 91
   24:274,target 78
   24:295 shift
-  185:303,target 104
+  48:352 goto
+  185:303,target 101
   24:296 shift
   75:0,target 16
   24:297 shift
-  156:271,target 75
-  7:343 shift
   24:298 shift
   106:295,target 99
   81:303,target 22
+  7:344 shift
   24:299 shift
   44:0,target 47
   93:295,target 34
   13:0,target 1
+  28:318,target 123
   175:303 reduce
-  7:355 goto
+  19:367,target 56
+  7:356 goto
+  145:301 shift
   0:308,target 8
-  192:0,target 111
-  21:351,target 63
+  202:0,target 80
+  192:0,target 110
   52:0 reduce
-  145:303 shift
+  181:257 shift
   72:299,target 13
+  181:258 shift
   87:294,target 28
+  194:261,target 5
+  181:260 shift
+  181:259 shift
+  181:261 shift
+  174:301,target 191
+  181:262 shift
+  138:0 reduce
   90:300 reduce
   89:300 reduce
-  139:350 goto
   115:303 reduce
   94:0 reduce
-  7:335,target 38
+  7:335,target 37
   24:291,target 95
-  171:298,target 102
-  141:303,target 109
-  129:0,target 63
+  140:351 goto
+  176:257,target 1
+  141:303,target 164
+  130:0,target 63
+  129:0,target 74
   90:303 reduce
   89:303 reduce
-  186:303,target 102
-  156:287,target 91
+  186:303,target 104
   90:294 reduce
   89:294 reduce
-  169:359 goto
-  109:348 goto
+  170:360 goto
   90:295 reduce
   89:295 reduce
   181:0 reduce
+  157:271,target 75
   109:350 goto
   109:349 goto
   90:296 reduce
   89:296 reduce
+  109:351 goto
   90:297 reduce
   89:297 reduce
   82:303,target 23
@@ -578,143 +588,106 @@ array set contour::table {
   30:301 shift
   94:295,target 35
   50:278,target 82
-  54:351 goto
+  54:352 goto
   72:0,target 13
-  0:325,target 19
-  24:348 goto
-  21:367,target 64
+  172:351,target 190
   24:0 reduce
   24:349 goto
   24:350 goto
   30:308 shift
+  24:351 goto
   41:0,target 62
   73:299,target 14
   88:294,target 29
   111:0 reduce
   66:0 reduce
-  34:353,target 130
-  126:308,target 152
   181:303 reduce
-  177:257,target 1
-  142:303,target 136
-  187:303,target 105
+  172:298,target 102
+  142:303,target 109
+  187:303,target 102
+  157:287,target 91
   153:0 reduce
-  24:363 goto
-  175:347 goto
-  151:301 shift
-  188:0,target 98
+  24:364 goto
+  188:0,target 105
+  175:348 goto
   83:303,target 24
-  190:260,target 185
-  190:259,target 184
   151:303 reduce
   109:278,target 82
   24:265,target 69
   195:0 reduce
+  157:0,target 85
   50:295,target 99
   95:300 reduce
   95:295,target 36
-  136:302,target 106
   121:303 reduce
+  126:0,target 65
   95:303 reduce
   95:294 reduce
   95:295 reduce
-  156:263 shift
-  148:294,target 98
   95:296 reduce
-  156:264 shift
+  27:326,target 117
   95:297 reduce
-  156:265 shift
   95:298 reduce
   65:303 reduce
-  156:266 shift
   95:299 reduce
   74:299,target 15
-  156:267 shift
   90:294,target 31
   89:294,target 30
-  156:268 shift
   35:301 shift
-  176:301,target 193
-  156:270 shift
-  156:269 shift
   99:0,target 40
-  156:271 shift
-  156:272 shift
-  156:273 shift
+  127:308,target 153
   125:0 reduce
-  156:274 shift
+  178:257,target 1
+  143:303,target 137
   81:0 reduce
   68:0,target 9
-  188:303,target 98
-  156:275 shift
-  156:276 shift
-  156:277 shift
-  156:278 shift
+  188:303,target 105
   109:295,target 99
   84:303,target 25
   24:282,target 86
-  167:0 reduce
-  156:280 shift
-  156:279 shift
-  171:300,target 104
-  156:281 shift
-  156:282 shift
-  156:278,target 82
-  156:283 shift
-  156:284 shift
+  191:260,target 186
+  191:259,target 185
   96:295,target 37
   186:301 reduce
-  156:285 shift
-  30:358 goto
-  156:286 shift
+  137:302,target 106
+  30:359 goto
   186:303 reduce
-  156:287 shift
-  156:288 shift
   0:257 shift
-  156:300 shift
-  156:290 shift
-  156:289 shift
+  27:343,target 121
   0:258 shift
-  156:291 shift
+  149:294,target 98
   0:260 shift
   0:259 shift
-  185:0,target 104
-  156:292 shift
+  185:0,target 101
+  181:348 goto
   0:261 shift
   50:269,target 73
   50:270,target 74
-  156:293 shift
   156:303 reduce
   11:0 reduce
   0:262 shift
-  156:294 shift
+  24:351,target 107
   75:299,target 16
-  156:295 shift
   91:294,target 32
-  156:296 shift
-  154:0,target 83
+  154:0,target 50
   0:316,target 14
-  156:297 shift
-  156:298 shift
-  126:303 shift
-  156:299 shift
+  177:301,target 194
+  126:303 reduce
   53:0 reduce
-  123:0,target 142
-  180:257,target 1
-  190:303,target 78
-  189:303,target 89
+  123:0,target 144
+  200:303,target 99
+  190:303,target 89
+  189:303,target 98
   71:300 reduce
-  126:308 shift
-  7:343,target 39
   24:298,target 102
   40:303,target 76
   95:0 reduce
   85:303,target 26
   71:303 reduce
-  156:295,target 99
   71:294 reduce
-  15:357,target 47
+  172:300,target 104
   71:295 reduce
+  157:278,target 82
   71:296 reduce
   96:0,target 37
   71:297 reduce
@@ -725,132 +698,127 @@ array set contour::table {
   71:299 reduce
   109:270,target 74
   109:269,target 73
-  65:0,target 138
+  13:348,target 42
+  65:0,target 139
   11:303 reduce
   50:286,target 90
   34:0,target 48
+  0:333,target 24
   76:299,target 17
   92:294,target 33
-  133:301,target 155
   0:303 reduce
+  27:317,target 114
   0:306 shift
+  202:303 reduce
   192:303 reduce
   100:303,target 41
-  145:303,target 166
+  181:257,target 1
   0:308 shift
-  201:303,target 80
-  191:303,target 110
+  191:303,target 78
   112:0 reduce
   0:309 shift
   0:310 shift
+  162:301 shift
   0:311 shift
   67:0 reduce
-  182:0,target 100
+  182:0,target 123
   0:312 shift
   41:303,target 62
   71:298,target 12
-  162:303 shift
   86:303,target 27
   0:313 shift
-  193:260,target 4
-  193:259,target 3
+  157:295,target 99
   0:0 reduce
   154:0 reduce
-  151:0,target 96
+  151:0,target 119
   0:316 shift
-  156:348 goto
-  167:257 shift
-  156:350 goto
-  156:349 goto
-  132:303 shift
-  167:258 shift
+  132:303 reduce
   109:286,target 90
-  0:319 shift
   0:320 shift
   24:273,target 77
-  167:260 shift
-  167:259 shift
-  120:0,target 130
-  119:0,target 131
-  167:261 shift
+  120:0,target 131
+  119:0,target 133
+  0:321 shift
   20:307,target 57
-  0:322 shift
-  167:262 shift
-  156:270,target 74
-  156:269,target 73
+  196:0 reduce
   0:323 shift
   76:300 reduce
   106:294,target 98
   102:303 reduce
-  0:325 shift
+  0:324 shift
   0:326 shift
   76:303 reduce
+  0:327 shift
   76:294 reduce
-  0:328 shift
   76:295 reduce
   77:299,target 18
   93:294,target 34
-  0:330 shift
+  0:329 shift
+  27:334,target 118
   46:301 reduce
   76:296 reduce
+  134:301,target 156
   93:0,target 34
   0:331 shift
   46:302 reduce
   76:297 reduce
   0:332 shift
-  28:317,target 122
   46:303 reduce
   76:298 reduce
+  0:333 shift
   76:299 reduce
-  29:301,target 125
-  30:301,target 126
+  29:301,target 126
+  30:301,target 127
   101:303,target 42
   16:301 shift
-  0:335 shift
-  62:0,target 140
-  171:350,target 189
-  19:366,target 56
+  62:0,target 141
+  146:303,target 167
   16:302 shift
   0:336 shift
   40:0 reduce
-  192:303,target 111
+  202:303,target 80
+  192:303,target 110
   0:337 shift
   0:338 shift
-  0:340 shift
+  0:339 shift
   42:303,target 64
   72:298,target 13
   87:303,target 28
+  0:341 shift
+  194:260,target 4
+  194:259,target 3
+  126:0 reduce
   82:0 reduce
-  0:343 shift
   5:303 reduce
   0:344 shift
-  7:334,target 37
+  0:345 shift
   24:289,target 93
   24:290,target 94
   24:300,target 104
   197:301 shift
-  171:297,target 101
-  0:347 goto
-  197:303 reduce
+  165:348,target 179
   168:0 reduce
-  156:286,target 90
-  0:352 goto
-  178:0,target 121
-  167:303 reduce
-  0:354 goto
+  0:348 goto
+  30:359,target 129
+  157:270,target 74
+  157:269,target 73
+  167:301 shift
+  178:0,target 1
+  0:353 goto
+  0:355 goto
   78:299,target 19
-  147:0,target 115
+  137:301 reduce
   94:294,target 35
-  135:301,target 157
+  137:302 reduce
   50:277,target 81
   137:303 reduce
-  116:0,target 128
+  116:0,target 127
   12:0 reduce
-  31:301,target 129
+  31:301,target 130
   102:303,target 43
-  147:303,target 115
+  0:324,target 18
   82:300 reduce
-  193:303,target 1
+  193:303,target 111
   107:303 shift
   82:303 reduce
   43:303,target 46
@@ -863,117 +831,115 @@ array set contour::table {
   89:0,target 30
   82:297 reduce
   82:298 reduce
+  20:341,target 58
   52:303 reduce
-  141:0 reduce
   82:299 reduce
   71:300,target 12
+  172:297,target 101
+  166:348,target 180
   96:0 reduce
+  157:286,target 90
   22:301 shift
   58:0,target 126
-  190:258,target 183
   183:0 reduce
   109:277,target 81
   24:264,target 68
+  80:299,target 21
   50:294,target 98
   79:299,target 20
-  80:299,target 21
   95:294,target 36
-  16:351 goto
-  136:301,target 106
-  182:301,target 100
+  136:301,target 158
+  16:352 goto
+  0:341,target 29
   103:303,target 44
-  148:303,target 116
-  27:325,target 116
-  194:303,target 112
-  173:301 shift
+  148:303,target 115
+  194:303,target 1
   175:0,target 1
   173:303 reduce
   44:303,target 47
   74:298,target 15
   90:303,target 31
   89:303,target 30
-  167:347 goto
-  143:301 shift
   113:0 reduce
+  178:257 shift
+  143:303 reduce
   68:0 reduce
+  178:258 shift
   72:300,target 13
+  178:260 shift
+  178:259 shift
   113:0,target 132
+  178:261 shift
   13:262,target 6
   1:0 reduce
+  178:262 shift
   87:300 reduce
   155:0 reduce
   113:303 reduce
-  139:299,target 103
+  140:299,target 103
   109:294,target 98
   24:281,target 85
+  191:258,target 184
   87:303 reduce
   87:294 reduce
   19:315,target 54
-  156:277,target 81
   87:295 reduce
   87:296 reduce
   81:299,target 22
-  197:0 reduce
   96:294,target 37
   87:297 reduce
   86:0,target 27
+  137:301,target 106
   87:298 reduce
   57:303 reduce
-  183:301,target 103
+  183:301,target 100
   87:299 reduce
   27:342,target 120
-  55:0,target 135
+  55:0,target 136
   104:303,target 45
-  150:303,target 119
-  149:303,target 117
-  195:303,target 124
+  150:303,target 117
+  149:303,target 116
+  28:325,target 124
+  195:303,target 112
   50:268,target 72
   24:0,target 120
-  24:349,target 106
-  24:350,target 107
+  24:349,target 105
+  24:350,target 106
   27:305 shift
-  30:308,target 127
+  30:308,target 128
   45:303,target 93
   75:298,target 16
   91:303,target 32
   41:0 reduce
-  164:262,target 6
   73:300,target 14
-  127:0 reduce
+  168:348,target 182
   83:0 reduce
   24:297,target 101
-  172:0,target 88
-  27:318 shift
+  27:317 shift
+  172:0,target 87
   178:303 reduce
-  156:294,target 98
-  27:321 shift
+  27:319 shift
   170:0 reduce
   169:0 reduce
-  148:300 shift
-  141:0,target 109
+  157:277,target 81
+  27:322 shift
   82:299,target 23
   97:294,target 38
   148:303 reduce
-  27:325 shift
-  184:301,target 101
-  148:294 shift
-  148:295 shift
+  184:301,target 103
+  27:326 shift
   109:268,target 72
   109:0,target 114
-  13:347,target 42
-  148:296 shift
-  148:297 shift
-  105:303,target 143
+  105:303,target 144
   93:300 reduce
   50:285,target 89
-  151:303,target 96
-  148:298 shift
+  151:303,target 119
   118:303 reduce
-  148:299 shift
+  196:303,target 124
   93:303 reduce
-  27:333 shift
   93:294 reduce
-  0:332,target 24
+  0:332,target 23
+  27:334 shift
   46:303,target 107
   76:298,target 17
   93:295 reduce
@@ -986,55 +952,48 @@ array set contour::table {
   93:298 reduce
   63:303 reduce
   93:299 reduce
-  27:339 shift
+  27:340 shift
   165:262,target 6
   100:0 reduce
-  27:341 shift
   74:300,target 15
   27:342 shift
   52:0,target 55
   55:0 reduce
+  27:343 shift
   71:297,target 12
-  193:258,target 2
+  157:294,target 98
   142:0 reduce
   97:0 reduce
   83:299,target 24
-  164:347,target 178
   109:285,target 89
   24:272,target 76
-  185:301,target 104
+  185:301,target 101
   184:0 reduce
-  199:0,target 99
-  156:268,target 72
-  35:301,target 131
-  106:303,target 144
+  199:0,target 113
+  35:301,target 132
+  106:303,target 145
   184:301 reduce
-  152:303,target 95
-  197:303,target 79
-  168:0,target 118
+  152:303,target 96
+  168:0,target 1
+  0:348,target 32
   184:303 reduce
   47:303,target 73
   77:298,target 18
   93:303,target 34
-  27:333,target 117
-  137:0,target 72
-  27:365 goto
-  190:257 shift
-  154:303 reduce
-  190:258 shift
-  190:260 shift
-  190:259 shift
+  137:0,target 106
+  178:348 goto
+  27:366 goto
+  166:262,target 6
   75:300,target 16
-  190:261 shift
-  190:262 shift
+  20:365,target 59
   0:306,target 7
-  148:350 goto
   124:303 reduce
   114:0 reduce
   72:297,target 13
   98:303 reduce
   69:0 reduce
   70:0 reduce
+  194:258,target 2
   6:0,target 7
   2:0 reduce
   84:299,target 25
@@ -1043,49 +1002,49 @@ array set contour::table {
   80:0,target 21
   156:0 reduce
   68:303 reduce
-  171:296,target 100
-  165:347,target 179
-  186:301,target 102
-  156:285,target 89
-  30:358,target 128
+  186:301,target 104
   38:301 shift
   48:0,target 92
-  36:301,target 132
-  107:303,target 146
+  157:268,target 72
+  36:301,target 133
+  107:303,target 147
   198:0 reduce
-  198:303,target 113
+  153:303,target 95
+  198:303,target 79
   48:303,target 92
   78:298,target 19
   94:303,target 35
   50:276,target 80
-  167:262,target 6
-  0:323,target 18
+  196:0,target 124
+  0:323,target 17
   76:300,target 17
-  200:301 shift
+  189:301 shift
   42:0 reduce
   165:0,target 1
   43:302,target 46
   73:297,target 14
+  200:303 reduce
   190:303 reduce
   189:303 reduce
-  160:301 shift
+  134:0,target 81
   128:0 reduce
   85:299,target 26
   84:0 reduce
-  20:340,target 58
-  159:303 shift
-  187:301,target 105
+  160:303 shift
+  159:303 reduce
+  172:296,target 100
+  187:301,target 102
+  157:285,target 89
   103:0,target 44
   171:0 reduce
-  37:301,target 133
+  37:301,target 134
   165:257 shift
-  130:303 shift
+  130:303 reduce
   129:303 reduce
   108:303,target 61
-  190:257,target 182
   165:258 shift
-  154:303,target 83
-  199:303,target 99
+  27:366,target 122
+  199:303,target 113
   165:260 shift
   165:259 shift
   109:276,target 80
@@ -1102,9 +1061,10 @@ array set contour::table {
   95:303,target 36
   76:0,target 17
   74:303 reduce
-  0:340,target 29
+  0:339,target 28
   74:294 reduce
   74:295 reduce
+  168:262,target 6
   44:301 reduce
   45:0,target 93
   74:296 reduce
@@ -1118,40 +1078,39 @@ array set contour::table {
   14:0,target 75
   44:302,target 47
   74:297,target 15
+  140:351,target 163
   101:0 reduce
   14:303 reduce
   56:0 reduce
   86:299,target 27
-  167:347,target 181
-  143:301,target 164
-  193:0,target 1
-  188:301,target 196
+  193:0,target 111
+  188:301,target 105
+  143:0 reduce
   13:261,target 5
   50:263 shift
   98:0 reduce
   3:303 reduce
   50:264 shift
-  38:301,target 134
+  38:301,target 135
   50:265 shift
-  139:298,target 102
-  110:303,target 150
+  140:298,target 102
+  110:303,target 151
   109:293,target 97
   109:303,target 114
   24:279,target 83
   24:280,target 84
   50:266 shift
-  155:303,target 82
+  191:257,target 183
+  155:303,target 83
   50:267 shift
   195:303 reduce
   50:268 shift
   185:0 reduce
-  156:276,target 80
   50:269 shift
   50:270 shift
   81:298,target 22
   50:271 shift
-  51:303,target 141
-  131:0,target 84
+  51:303,target 142
   96:303,target 37
   50:272 shift
   50:273 shift
@@ -1159,28 +1118,23 @@ array set contour::table {
   50:274 shift
   50:275 shift
   100:0,target 41
-  27:341,target 119
   50:276 shift
-  169:262,target 187
-  135:301 shift
+  170:262,target 188
   50:277 shift
   78:300,target 19
-  28:324,target 123
   50:278 shift
+  135:303 shift
   50:267,target 71
   50:279 shift
   50:280 shift
-  135:304 shift
-  24:348,target 105
   50:281 shift
   50:282 shift
   75:297,target 16
   50:283 shift
-  190:359 goto
+  80:300 reduce
   0:0,target 1
   50:284 shift
   79:300 reduce
-  80:300 reduce
   105:303 shift
   50:285 shift
   50:286 shift
@@ -1189,7 +1143,6 @@ array set contour::table {
   80:303 reduce
   50:287 shift
   79:303 reduce
-  164:261,target 5
   115:0 reduce
   50:288 shift
   79:294 reduce
@@ -1201,7 +1154,7 @@ array set contour::table {
   71:0 reduce
   79:295 reduce
   80:295 reduce
-  200:301,target 201
+  189:301,target 197
   42:0,target 64
   49:301 shift
   50:291 shift
@@ -1213,7 +1166,7 @@ array set contour::table {
   79:297 reduce
   80:297 reduce
   3:0 reduce
-  39:301,target 135
+  39:301,target 136
   50:303 reduce
   50:293 shift
   79:298 reduce
@@ -1222,13 +1175,14 @@ array set contour::table {
   50:294 shift
   79:299 reduce
   80:299 reduce
-  156:293,target 97
-  156:303,target 85
+  157:0 reduce
+  156:303,target 82
   11:0,target 57
   0:262,target 6
   50:295 shift
   19:301 shift
   50:296 shift
+  157:276,target 80
   19:302 shift
   50:297 shift
   82:298,target 23
@@ -1239,37 +1193,39 @@ array set contour::table {
   199:0 reduce
   109:267,target 71
   20:307 shift
-  190:0,target 78
-  189:0,target 89
-  190:359,target 197
+  200:0,target 99
+  190:0,target 89
+  189:0,target 98
   80:300,target 21
   8:303 reduce
   50:284,target 88
   79:300,target 20
-  0:331,target 23
+  175:348,target 192
+  0:331,target 22
   46:302,target 107
   76:297,target 17
   19:315 shift
-  171:300 shift
-  127:0,target 94
   171:303 reduce
   88:299,target 29
   43:0 reduce
-  171:294 shift
   165:261,target 5
-  171:295 shift
-  171:296 shift
-  165:347 goto
-  171:297 shift
-  171:298 shift
-  141:303 reduce
+  145:301,target 166
+  201:301,target 202
+  165:348 goto
+  176:257 shift
+  141:303 shift
+  130:0 reduce
   129:0 reduce
   71:296,target 12
-  171:299 shift
+  176:258 shift
   112:303,target 59
   85:0 reduce
-  193:257,target 1
-  157:303,target 90
+  176:260 shift
+  176:259 shift
+  157:293,target 97
+  157:303,target 85
+  176:261 shift
+  176:262 shift
   85:300 reduce
   111:303 reduce
   83:298,target 24
@@ -1278,59 +1234,57 @@ array set contour::table {
   98:303,target 39
   69:0,target 10
   70:0,target 11
-  139:300,target 104
+  140:300,target 104
   109:284,target 88
   85:303 reduce
   24:271,target 75
   85:294 reduce
   85:295 reduce
-  156:267,target 71
   85:296 reduce
-  135:356 goto
+  191:360,target 198
   85:297 reduce
   81:300,target 22
+  176:348,target 193
   85:298 reduce
   55:303 reduce
   85:299 reduce
-  20:340 shift
-  0:347,target 32
+  20:341 shift
   77:297,target 18
-  148:299,target 103
-  50:348 goto
   25:303 shift
   50:349 goto
   50:350 goto
-  49:351 goto
+  50:351 goto
+  49:352 goto
   90:299,target 31
   89:299,target 30
-  186:0,target 102
-  146:301,target 167
-  20:364,target 59
+  166:261,target 5
+  186:0,target 104
   102:0 reduce
-  19:351 goto
+  19:352 goto
+  21:347,target 62
   57:0 reduce
   72:296,target 13
-  155:0,target 82
+  155:0,target 83
   113:303,target 132
-  158:303,target 91
-  176:301 shift
-  124:0,target 71
+  194:257,target 1
+  158:303,target 90
+  124:0,target 143
   99:0 reduce
   84:298,target 25
   24:287,target 91
   99:303,target 40
-  171:295,target 99
-  25:319 shift
-  156:284,target 88
+  176:303 reduce
+  25:320 shift
   186:0 reduce
-  146:301 shift
-  20:364 goto
+  157:267,target 71
   82:300,target 23
-  171:350 goto
-  19:366 goto
+  20:365 goto
+  146:303 shift
+  19:367 goto
   97:0,target 38
   48:302,target 44
   78:297,target 19
+  149:299,target 103
   91:300 reduce
   116:303 reduce
   50:275,target 79
@@ -1338,9 +1292,8 @@ array set contour::table {
   91:303 reduce
   91:299,target 32
   91:294 reduce
-  167:261,target 5
   91:295 reduce
-  0:322,target 17
+  147:301,target 168
   91:296 reduce
   91:297 reduce
   91:298 reduce
@@ -1348,121 +1301,155 @@ array set contour::table {
   91:299 reduce
   43:301,target 46
   73:296,target 14
-  114:303,target 134
-  159:303,target 173
+  114:303,target 135
+  160:303,target 174
+  159:303,target 91
   116:0 reduce
   31:301 shift
   72:0 reduce
   10:303,target 41
   85:298,target 26
-  55:303,target 135
+  55:303,target 136
   4:0 reduce
-  183:0,target 103
-  174:262,target 6
+  172:295,target 99
+  157:284,target 88
+  183:0,target 100
   83:300,target 24
-  27:365,target 121
-  152:0,target 95
+  178:348,target 195
+  152:0,target 96
   109:275,target 79
   49:302,target 44
   50:292,target 96
   79:297,target 20
   80:297,target 21
-  182:301 reduce
-  121:0,target 68
+  121:0,target 130
   182:303 reduce
-  0:338,target 28
+  0:338,target 27
   92:299,target 33
-  25:362 goto
+  168:261,target 5
+  25:363 goto
+  152:301 shift
+  176:348 goto
   152:303 reduce
   44:301,target 47
   74:296,target 15
-  139:350,target 162
-  115:303,target 127
+  115:303,target 134
   94:0,target 35
   44:0 reduce
   96:300 reduce
   122:303 reduce
   11:303,target 57
+  136:357,target 160
   86:298,target 27
   56:303,target 69
-  63:0,target 137
-  131:0 reduce
+  63:0,target 138
   96:303 reduce
   96:294 reduce
   86:0 reduce
   96:295 reduce
   13:260,target 4
   13:259,target 3
+  157:263 shift
   96:296 reduce
   32:0,target 51
+  157:264 shift
   96:297 reduce
   175:262,target 6
-  139:297,target 101
+  157:265 shift
+  140:297,target 101
   109:292,target 96
   96:298 reduce
   84:300,target 25
   24:278,target 82
   66:303 reduce
   173:0 reduce
+  157:266 shift
   96:299 reduce
-  156:275,target 79
+  157:267 shift
+  157:268 shift
   36:301 shift
+  157:270 shift
+  157:269 shift
   106:299,target 103
   81:297,target 22
+  157:271 shift
+  157:272 shift
+  0:355,target 34
+  157:273 shift
+  157:274 shift
+  157:275 shift
   93:299,target 34
-  27:339,target 118
-  180:0,target 1
-  179:0,target 122
-  169:261,target 186
-  174:347,target 191
+  27:340,target 119
+  180:0,target 122
+  179:0,target 121
+  170:261,target 187
+  157:276 shift
+  157:277 shift
+  157:278 shift
   50:266,target 70
-  148:0,target 116
+  157:280 shift
+  157:279 shift
+  157:281 shift
+  148:0,target 115
   75:296,target 16
-  116:303,target 128
-  162:303,target 176
+  157:282 shift
+  116:303,target 127
+  157:283 shift
   0:313,target 13
+  157:284 shift
   187:301 reduce
-  117:0,target 129
+  157:285 shift
+  117:0,target 128
   103:0 reduce
   12:303,target 60
+  157:286 shift
   87:298,target 28
   57:303,target 125
   58:0 reduce
   187:303 reduce
-  164:260,target 4
-  164:259,target 3
+  157:287 shift
+  157:288 shift
+  157:300 shift
+  157:290 shift
+  157:289 shift
+  157:291 shift
   24:295,target 99
-  193:257 shift
+  48:352,target 137
+  157:292 shift
+  176:262,target 6
+  157:293 shift
   157:303 reduce
   85:300,target 26
-  193:258 shift
-  156:292,target 96
+  181:348,target 196
+  157:294 shift
   0:261,target 5
-  193:260 shift
-  193:259 shift
+  157:295 shift
   91:0,target 32
-  193:261 shift
-  193:262 shift
+  157:296 shift
+  157:275,target 79
+  157:297 shift
   82:297,target 23
   187:0 reduce
-  127:303 reduce
+  157:298 shift
+  127:303 shift
+  157:299 shift
   59:0,target 66
-  60:0,target 139
+  60:0,target 140
   109:266,target 70
   94:299,target 35
   72:300 reduce
+  127:308 shift
   50:283,target 87
-  175:347,target 192
-  151:301,target 169
-  196:301,target 199
+  24:364,target 108
   72:303 reduce
   72:294 reduce
-  0:330,target 22
+  0:329,target 21
   46:301,target 107
   72:295 reduce
   76:296,target 17
-  117:303,target 129
+  117:303,target 128
   72:296 reduce
+  163:303,target 177
   72:297 reduce
   42:303 reduce
   72:298 reduce
@@ -1472,47 +1459,60 @@ array set contour::table {
   58:303,target 126
   165:260,target 4
   165:259,target 3
+  7:356,target 40
+  176:0,target 1
   117:0 reduce
   12:303 reduce
+  49:352,target 138
   73:0 reduce
   71:295,target 12
-  177:262,target 6
   86:300,target 27
+  157:292,target 96
   5:0 reduce
   1:303 reduce
   83:297,target 24
-  114:0,target 134
+  114:0,target 135
   109:283,target 87
   7:314,target 35
   24:269,target 73
   24:270,target 74
   193:303 reduce
   50:299,target 103
-  156:266,target 70
   95:299,target 36
-  163:301 shift
+  152:301,target 170
   197:301,target 200
+  163:303 shift
   87:0,target 28
   77:296,target 18
-  148:298,target 102
-  133:301 shift
-  118:303,target 133
-  164:303,target 1
-  133:303 reduce
+  118:303,target 129
+  168:257 shift
+  157:350 goto
+  157:349 goto
+  133:303 shift
+  168:258 shift
+  157:351 goto
   14:303,target 75
   56:0,target 69
+  168:260 shift
+  168:259 shift
   90:298,target 31
   89:298,target 30
   59:303,target 66
-  60:303,target 139
+  60:303,target 140
+  168:261 shift
+  166:260,target 4
+  166:259,target 3
+  168:262 shift
   45:0 reduce
   77:300 reduce
   103:303 reduce
-  21:346,target 62
+  21:346,target 61
   72:295,target 13
   77:303 reduce
+  178:262,target 6
   87:300,target 28
   77:294 reduce
+  132:0 reduce
   77:295 reduce
   87:0 reduce
   77:296 reduce
@@ -1523,55 +1523,47 @@ array set contour::table {
   47:303 reduce
   54:302,target 44
   77:298 reduce
+  149:351,target 169
   77:299 reduce
-  171:294,target 98
   174:0 reduce
-  156:283,target 87
-  173:0,target 77
+  173:0,target 88
+  157:266,target 70
   96:299,target 37
   17:303 shift
-  177:347,target 194
-  142:0,target 136
+  198:301,target 201
+  142:0,target 109
   48:301,target 43
   78:296,target 19
-  120:303,target 130
-  119:303,target 131
+  149:298,target 102
+  120:303,target 131
+  119:303,target 133
   6:303 reduce
   165:303,target 1
   50:274,target 78
+  198:301 shift
   111:0,target 56
   15:303,target 45
   198:303 reduce
   91:298,target 32
-  61:303,target 141
-  167:260,target 4
-  167:259,target 3
-  193:347 goto
+  61:303,target 142
+  0:321,target 16
   27:305,target 113
   168:303 reduce
   104:0 reduce
-  17:319 shift
+  17:320 shift
   73:295,target 14
-  180:262,target 6
   88:300,target 29
   59:0 reduce
   60:0 reduce
   84:0,target 25
-  174:257 shift
-  138:303 shift
-  135:356,target 159
+  138:303 reduce
   85:297,target 26
-  174:258 shift
-  156:299,target 103
   53:0,target 58
-  174:260 shift
-  174:259 shift
-  174:261 shift
-  174:262 shift
+  172:294,target 98
+  157:283,target 87
   83:300 reduce
   108:303 reduce
   97:299,target 38
-  174:261,target 5
   188:0 reduce
   83:303 reduce
   109:274,target 78
@@ -1582,58 +1574,59 @@ array set contour::table {
   50:291,target 95
   79:296,target 20
   80:296,target 21
-  121:303,target 68
+  121:303,target 130
   83:297 reduce
+  166:303,target 1
   83:298 reduce
   53:303 reduce
   83:299 reduce
-  0:337,target 27
+  0:337,target 26
   92:298,target 33
-  62:303,target 140
-  170:0,target 86
-  169:0,target 97
-  148:300,target 104
+  62:303,target 141
+  168:260,target 4
+  168:259,target 3
+  170:0,target 97
+  169:0,target 118
   23:303 reduce
+  27:322,target 116
   32:0 reduce
   74:295,target 15
+  181:262,target 6
+  138:0,target 72
   90:300,target 31
   89:300,target 30
   118:0 reduce
+  106:351,target 146
   86:297,target 27
   74:0 reduce
+  157:299,target 103
   13:258,target 2
   6:0 reduce
+  174:301 shift
   175:261,target 5
-  139:296,target 100
+  140:296,target 100
   109:291,target 95
   24:277,target 81
-  180:347,target 195
   174:303 reduce
-  17:361 goto
-  156:274,target 78
+  17:362 goto
   81:0,target 22
   144:301 shift
   106:298,target 102
   81:296,target 22
-  122:303,target 143
-  180:257 shift
-  167:303,target 1
-  0:354,target 34
-  180:258 shift
+  168:348 goto
+  122:303,target 68
   50:0,target 108
-  180:260 shift
-  180:259 shift
   17:303,target 50
-  180:261 shift
   93:298,target 34
-  63:303,target 137
-  180:262 shift
-  169:260,target 185
-  169:259,target 184
+  63:303,target 138
+  170:260,target 186
+  170:259,target 185
   88:300 reduce
+  149:300,target 104
   114:303 reduce
   50:265,target 69
   88:303 reduce
+  54:352,target 143
   88:294 reduce
   75:295,target 16
   91:300,target 32
@@ -1644,144 +1637,152 @@ array set contour::table {
   46:0 reduce
   88:298 reduce
   58:303 reduce
-  197:0,target 79
   88:299 reduce
   87:297,target 28
-  164:258,target 2
-  133:0 reduce
+  17:362,target 52
+  166:0,target 1
   88:0 reduce
   24:294,target 98
-  48:351,target 136
-  156:291,target 95
+  176:261,target 5
   0:260,target 4
   0:259,target 3
   175:0 reduce
+  157:274,target 78
   82:296,target 23
-  123:303,target 142
-  168:303,target 118
+  123:303,target 144
+  168:303,target 1
   104:0,target 45
-  17:319,target 51
+  17:320,target 51
   109:265,target 69
   18:303,target 53
   94:298,target 35
   64:303,target 70
   50:282,target 86
-  24:363,target 108
-  28:317 shift
+  28:318 shift
   180:303 reduce
   179:303 reduce
   4:0,target 6
-  0:328,target 21
   76:295,target 17
+  149:300 shift
   92:300,target 33
   77:0,target 18
-  174:347 goto
-  28:324 shift
   150:303 reduce
   149:303 reduce
+  28:325 shift
+  149:294 shift
   88:297,target 29
   46:0,target 107
   165:258,target 2
-  7:355,target 40
+  149:295 shift
+  149:296 shift
   61:0 reduce
+  149:297 shift
   94:300 reduce
+  149:298 shift
   120:303 reduce
   119:303 reduce
-  49:351,target 137
+  50:351,target 141
+  149:299 shift
   71:294,target 12
-  177:261,target 5
   94:303 reduce
-  147:0 reduce
+  21:328,target 60
+  157:291,target 95
   94:294 reduce
   94:295 reduce
   94:296 reduce
   94:297 reduce
   83:296,target 24
-  148:350,target 168
-  124:303,target 71
+  124:303,target 143
   94:298 reduce
   64:303 reduce
-  194:0,target 112
-  170:303,target 86
-  169:303,target 97
+  194:0,target 1
+  170:303,target 97
+  169:303,target 118
   109:282,target 86
   94:299 reduce
   24:268,target 72
+  200:0 reduce
   190:0 reduce
   189:0 reduce
   50:298,target 102
-  156:265,target 69
   95:298,target 36
-  65:303,target 138
+  65:303,target 139
   106:300,target 104
   34:303 reduce
+  25:363,target 111
+  0:345,target 31
+  132:0,target 84
   77:295,target 18
-  148:297,target 101
   93:300,target 34
   101:0,target 42
+  109:351,target 150
   90:297,target 31
   89:297,target 30
   33:0 accept
+  166:258,target 2
   0:303,target 1
   185:301 reduce
-  21:345,target 61
   120:0 reduce
   119:0 reduce
   72:294,target 13
   185:303 reduce
+  178:261,target 5
   1:0,target 2
   75:0 reduce
   74:0,target 15
-  180:347 goto
   109:298,target 102
   84:296,target 25
-  7:329,target 36
+  7:330,target 36
   24:285,target 89
   54:301,target 43
+  191:257 shift
   155:303 reduce
-  125:303,target 65
-  171:303,target 87
+  125:303,target 71
+  191:258 shift
+  171:303,target 86
   43:0,target 46
-  156:282,target 86
-  28:369 goto
+  191:260 shift
+  191:259 shift
+  191:261 shift
+  28:370 goto
+  191:262 shift
+  157:265,target 69
   96:298,target 37
   66:303,target 67
   125:303 reduce
   12:0,target 60
+  149:351 goto
   99:303 reduce
   78:295,target 19
+  149:297,target 101
   94:300,target 35
   50:273,target 77
   69:303 reduce
   70:303 reduce
-  201:0,target 80
-  191:0,target 110
+  191:0,target 78
   15:302,target 44
   91:297,target 32
-  167:258,target 2
-  0:319,target 15
-  0:320,target 16
+  0:320,target 15
   39:301 shift
   1:303,target 2
   40:303 reduce
   47:0 reduce
   73:294,target 14
-  180:261,target 5
-  160:301,target 174
-  128:0,target 74
+  128:0,target 94
   10:303 shift
+  134:0 reduce
   90:0 reduce
   89:0 reduce
   85:296,target 26
-  156:298,target 102
-  126:303,target 151
-  34:353 goto
-  172:303,target 88
+  126:303,target 65
+  172:303,target 87
+  15:361,target 48
+  34:354 goto
+  157:282,target 86
+  176:0 reduce
   97:298,target 38
   67:303,target 8
-  174:260,target 4
-  174:259,target 3
-  201:303 reduce
+  201:301 shift
   191:303 reduce
   109:273,target 77
   50:289,target 93
@@ -1793,85 +1794,91 @@ array set contour::table {
   161:301 shift
   95:300,target 36
   16:302,target 44
-  0:336,target 26
+  0:336,target 25
   40:0,target 76
   92:297,target 33
-  27:321,target 115
-  131:303 reduce
+  168:258,target 2
+  157:351,target 173
+  166:257 shift
+  131:303 shift
   2:303,target 5
+  166:258 shift
+  166:260 shift
+  166:259 shift
   74:294,target 15
+  181:261,target 5
+  166:261 shift
+  166:262 shift
   161:301,target 175
   75:300 reduce
   101:303 reduce
   62:0 reduce
-  106:350,target 145
   86:296,target 27
   75:303 reduce
-  187:0,target 105
-  127:303,target 94
+  187:0,target 102
+  157:298,target 102
+  127:303,target 152
   75:294 reduce
-  173:303,target 77
+  173:303,target 88
   75:295 reduce
   148:0 reduce
   13:257,target 1
   75:296 reduce
   23:303,target 52
   75:297 reduce
-  156:0,target 85
+  156:0,target 82
   45:303 reduce
   68:303,target 9
   75:298 reduce
   175:260,target 4
   175:259,target 3
-  139:295,target 99
+  140:295,target 99
   109:300,target 104
   109:290,target 94
   109:289,target 93
   24:276,target 80
   75:299 reduce
   15:301 shift
-  201:0 reduce
   191:0 reduce
-  156:273,target 77
-  125:0,target 65
+  125:0,target 71
   15:302 shift
   106:297,target 101
   81:295,target 22
   15:303 shift
   96:300,target 37
+  0:353,target 33
   93:297,target 34
-  169:258,target 183
+  170:258,target 184
   4:303 reduce
-  196:301 shift
   98:0,target 39
   3:303,target 3
   50:264,target 68
-  54:351,target 142
+  196:303 reduce
   75:294,target 16
   34:0 reduce
+  162:301,target 176
   0:311,target 11
   67:0,target 8
-  166:301 shift
+  166:303 reduce
   87:296,target 28
-  164:257,target 1
-  128:303,target 74
+  128:303,target 94
   121:0 reduce
-  174:303,target 1
-  17:361,target 52
+  174:303,target 77
   76:0 reduce
-  136:301 reduce
-  136:302 reduce
+  136:301 shift
   24:303,target 120
   24:293,target 97
-  136:303 reduce
   8:0 reduce
   69:303,target 10
   70:303,target 11
-  156:300,target 104
-  156:290,target 94
-  156:289,target 93
+  176:260,target 4
+  176:259,target 3
+  136:304 shift
   106:300 shift
   0:258,target 2
+  15:352,target 46
+  191:360 goto
+  157:273,target 77
   81:300 reduce
   106:303 shift
   82:295,target 23
@@ -1879,7 +1886,7 @@ array set contour::table {
   97:300,target 38
   106:295 shift
   81:303 reduce
-  184:0,target 101
+  184:0,target 103
   106:296 shift
   81:294 reduce
   109:264,target 68
@@ -1888,11 +1895,10 @@ array set contour::table {
   106:298 shift
   94:297,target 35
   81:296 reduce
-  135:304,target 158
   106:299 shift
   81:297 reduce
   50:281,target 85
-  153:0,target 50
+  153:0,target 95
   81:298 reduce
   51:303 shift
   81:299 reduce
@@ -1900,150 +1906,151 @@ array set contour::table {
 }
 
 array set contour::rules {
-  9,l 348
-  49,l 353
-  50,l 352
-  136,l 366
-  92,l 357
-  22,l 349
-  108,l 361
-  64,l 354
-  36,l 349
-  123,l 363
-  78,l 355
-  51,l 354
+  9,l 349
+  49,l 354
+  50,l 353
+  136,l 367
+  92,l 358
+  22,l 350
+  108,l 362
+  64,l 355
+  36,l 350
+  123,l 364
+  78,l 356
+  51,l 355
   137,l 367
-  93,l 357
-  23,l 349
-  109,l 361
-  110,l 361
-  65,l 354
-  37,l 349
-  124,l 363
-  79,l 355
-  80,l 355
-  10,l 348
-  52,l 354
-  138,l 367
-  94,l 358
-  24,l 349
-  111,l 361
-  66,l 354
-  38,l 349
-  125,l 364
-  81,l 355
-  11,l 348
-  53,l 354
+  93,l 358
+  23,l 350
+  109,l 362
+  110,l 362
+  65,l 355
+  37,l 350
+  124,l 364
+  79,l 356
+  80,l 356
+  10,l 349
+  52,l 355
+  138,l 368
+  94,l 359
+  24,l 350
+  111,l 362
+  66,l 355
+  38,l 350
+  125,l 365
+  81,l 356
+  11,l 349
+  53,l 355
   139,l 368
-  140,l 368
-  95,l 358
-  25,l 349
-  112,l 361
-  67,l 354
-  0,l 370
-  39,l 350
-  40,l 350
-  126,l 364
-  82,l 355
-  12,l 349
-  54,l 354
-  141,l 368
-  96,l 358
-  26,l 349
-  113,l 361
-  68,l 354
-  1,l 347
-  41,l 350
-  127,l 365
-  83,l 355
-  13,l 349
-  100,l 359
-  55,l 354
+  140,l 369
+  95,l 359
+  25,l 350
+  112,l 362
+  67,l 355
+  0,l 371
+  39,l 351
+  40,l 351
+  126,l 365
+  82,l 356
+  12,l 350
+  54,l 355
+  141,l 369
+  96,l 359
+  26,l 350
+  113,l 362
+  68,l 355
+  1,l 348
+  41,l 351
+  127,l 366
+  83,l 356
+  13,l 350
+  100,l 360
+  55,l 355
   142,l 369
-  97,l 358
-  27,l 349
-  114,l 362
-  69,l 354
-  70,l 354
-  2,l 347
-  42,l 350
-  128,l 365
-  84,l 355
-  14,l 349
-  101,l 359
-  56,l 354
-  143,l 369
-  98,l 358
-  28,l 349
-  115,l 362
-  71,l 354
-  3,l 347
-  43,l 350
-  129,l 365
-  130,l 365
-  85,l 355
-  15,l 349
-  102,l 359
-  57,l 354
-  99,l 358
-  30,l 349
-  29,l 349
-  116,l 362
-  72,l 354
-  4,l 347
-  44,l 350
-  131,l 365
-  86,l 355
-  16,l 349
-  103,l 359
-  58,l 354
-  31,l 349
-  117,l 362
-  73,l 354
-  5,l 347
-  45,l 350
-  132,l 365
-  87,l 355
-  17,l 349
-  104,l 359
-  59,l 354
-  60,l 354
-  32,l 349
-  118,l 362
-  74,l 354
-  6,l 347
-  46,l 351
-  133,l 365
-  88,l 355
-  18,l 349
-  105,l 359
-  61,l 354
-  33,l 349
-  119,l 362
-  120,l 363
-  75,l 354
-  7,l 347
-  47,l 351
-  134,l 365
-  89,l 355
-  90,l 356
-  20,l 349
-  19,l 349
-  106,l 360
-  62,l 354
-  34,l 349
-  121,l 363
-  76,l 354
-  8,l 348
-  48,l 352
+  97,l 359
+  27,l 350
+  114,l 363
+  69,l 355
+  70,l 355
+  2,l 348
+  42,l 351
+  128,l 366
+  84,l 356
+  14,l 350
+  101,l 360
+  56,l 355
+  143,l 370
+  98,l 359
+  28,l 350
+  115,l 363
+  71,l 355
+  3,l 348
+  43,l 351
+  129,l 366
+  130,l 366
+  85,l 356
+  15,l 350
+  102,l 360
+  57,l 355
+  144,l 370
+  99,l 359
+  30,l 350
+  29,l 350
+  116,l 363
+  72,l 355
+  4,l 348
+  44,l 351
+  131,l 366
+  86,l 356
+  16,l 350
+  103,l 360
+  58,l 355
+  31,l 350
+  117,l 363
+  73,l 355
+  5,l 348
+  45,l 351
+  132,l 366
+  87,l 356
+  17,l 350
+  104,l 360
+  59,l 355
+  60,l 355
+  32,l 350
+  118,l 363
+  74,l 355
+  6,l 348
+  46,l 352
+  133,l 366
+  88,l 356
+  18,l 350
+  105,l 360
+  61,l 355
+  33,l 350
+  119,l 363
+  120,l 364
+  75,l 355
+  7,l 348
+  47,l 352
+  134,l 366
+  89,l 356
+  90,l 357
+  20,l 350
+  19,l 350
+  106,l 361
+  62,l 355
+  34,l 350
+  121,l 364
+  76,l 355
+  8,l 349
+  48,l 353
   135,l 366
-  91,l 356
-  21,l 349
-  107,l 360
-  63,l 354
-  35,l 349
-  122,l 363
-  77,l 355
+  91,l 357
+  21,l 350
+  107,l 361
+  63,l 355
+  35,l 350
+  122,l 364
+  77,l 356
 }
 
 array set contour::rules {
@@ -2080,9 +2087,10 @@ array set contour::rules {
   49,dc 0
   50,dc 3
   42,dc 1
+  144,dc 1
   34,dc 1
   99,dc 6
-  136,dc 2
+  136,dc 1
   26,dc 1
   92,dc 1
   128,dc 1
@@ -2183,7 +2191,7 @@ array set contour::rules {
   51,dc 1
   43,dc 1
   35,dc 1
-  137,dc 1
+  137,dc 2
   27,dc 1
   93,dc 1
   129,dc 1
@@ -2194,150 +2202,151 @@ array set contour::rules {
 }
 
 array set contour::rules {
-  41,line 204
-  37,line 199
-  34,line 196
+  41,line 205
+  37,line 200
+  34,line 197
   49,e 1
-  31,line 193
-  27,line 189
-  24,line 186
-  21,line 183
-  17,line 179
-  14,line 176
-  11,line 172
-  9,line 170
-  6,line 166
-  3,line 163
-  142,line 355
-  138,line 347
-  135,line 342
-  132,line 337
-  128,line 333
-  125,line 328
-  122,line 320
-  118,line 311
-  115,line 308
-  99,line 281
-  112,line 301
-  96,line 278
-  108,line 296
-  93,line 273
-  105,line 289
-  89,line 264
-  90,line 267
-  102,line 286
-  86,line 261
-  83,line 258
-  79,line 253
-  80,line 255
-  76,line 247
-  73,line 244
-  69,line 240
-  70,line 241
-  66,line 237
-  63,line 234
-  59,line 230
-  60,line 231
-  56,line 223
-  53,line 220
-  49,line 214
-  50,line 215
-  46,line 210
-  43,line 206
-  39,line 202
-  40,line 203
-  36,line 198
-  33,line 195
-  30,line 192
-  29,line 191
-  26,line 188
-  23,line 185
-  20,line 182
-  19,line 181
-  16,line 178
-  13,line 175
-  10,line 171
-  8,line 169
-  5,line 165
-  2,line 162
-  141,line 352
-  137,line 346
-  134,line 339
-  131,line 336
-  127,line 332
-  124,line 325
-  121,line 319
-  117,line 310
-  114,line 307
-  98,line 280
-  111,line 300
-  95,line 277
-  107,line 293
-  92,line 272
-  104,line 288
-  88,line 263
-  101,line 285
-  85,line 260
-  82,line 257
-  78,line 252
-  75,line 246
-  72,line 243
-  68,line 239
-  65,line 236
-  62,line 233
-  58,line 228
-  55,line 222
-  52,line 219
-  48,line 214
-  45,line 208
-  42,line 205
-  38,line 200
-  35,line 197
-  32,line 194
-  28,line 190
-  25,line 187
-  22,line 184
-  18,line 180
-  15,line 177
-  12,line 174
-  7,line 167
-  4,line 164
-  1,line 161
-  143,line 356
-  139,line 350
-  140,line 351
-  136,line 343
-  133,line 338
-  129,line 334
-  130,line 335
-  126,line 329
-  123,line 321
-  119,line 315
-  120,line 318
-  116,line 309
-  113,line 304
-  97,line 279
-  109,line 298
-  110,line 299
-  94,line 276
-  106,line 292
-  91,line 268
-  103,line 287
-  87,line 262
-  100,line 284
-  84,line 259
-  81,line 256
-  77,line 251
-  74,line 245
-  71,line 242
-  67,line 238
-  64,line 235
-  61,line 232
-  57,line 226
-  54,line 221
-  51,line 218
-  47,line 211
-  44,line 207
+  31,line 194
+  27,line 190
+  24,line 187
+  21,line 184
+  17,line 180
+  14,line 177
+  11,line 173
+  9,line 171
+  6,line 167
+  3,line 164
+  142,line 354
+  138,line 348
+  135,line 341
+  132,line 338
+  128,line 334
+  125,line 329
+  122,line 321
+  118,line 312
+  115,line 309
+  99,line 282
+  112,line 302
+  96,line 279
+  108,line 297
+  93,line 274
+  105,line 290
+  89,line 265
+  90,line 268
+  102,line 287
+  86,line 262
+  83,line 259
+  79,line 254
+  80,line 256
+  76,line 248
+  73,line 245
+  69,line 241
+  70,line 242
+  66,line 238
+  63,line 235
+  59,line 231
+  60,line 232
+  56,line 224
+  53,line 221
+  49,line 215
+  50,line 216
+  46,line 211
+  43,line 207
+  39,line 203
+  40,line 204
+  36,line 199
+  33,line 196
+  30,line 193
+  29,line 192
+  26,line 189
+  23,line 186
+  20,line 183
+  19,line 182
+  16,line 179
+  13,line 176
+  10,line 172
+  8,line 170
+  5,line 166
+  2,line 163
+  144,line 358
+  141,line 353
+  137,line 345
+  134,line 340
+  131,line 337
+  127,line 333
+  124,line 326
+  121,line 320
+  117,line 311
+  114,line 308
+  98,line 281
+  111,line 301
+  95,line 278
+  107,line 294
+  92,line 273
+  104,line 289
+  88,line 264
+  101,line 286
+  85,line 261
+  82,line 258
+  78,line 253
+  75,line 247
+  72,line 244
+  68,line 240
+  65,line 237
+  62,line 234
+  58,line 229
+  55,line 223
+  52,line 220
+  48,line 215
+  45,line 209
+  42,line 206
+  38,line 201
+  35,line 198
+  32,line 195
+  28,line 191
+  25,line 188
+  22,line 185
+  18,line 181
+  15,line 178
+  12,line 175
+  7,line 168
+  4,line 165
+  1,line 162
+  143,line 357
+  139,line 349
+  140,line 352
+  136,line 344
+  133,line 339
+  129,line 335
+  130,line 336
+  126,line 330
+  123,line 322
+  119,line 316
+  120,line 319
+  116,line 310
+  113,line 305
+  97,line 280
+  109,line 299
+  110,line 300
+  94,line 277
+  106,line 293
+  91,line 269
+  103,line 288
+  87,line 263
+  100,line 285
+  84,line 260
+  81,line 257
+  77,line 252
+  74,line 246
+  71,line 243
+  67,line 239
+  64,line 236
+  61,line 233
+  57,line 227
+  54,line 222
+  51,line 219
+  47,line 212
+  44,line 208
 }
 
 array set contour::lr1_table {
@@ -2351,23 +2360,23 @@ array set contour::lr1_table {
   39 {{77 {0 303} 1} {78 {0 303} 1} {79 {0 303} 1} {80 {0 303} 1}}
   117,trans {}
   41 {{62 {0 303} 2}}
-  136,trans {{303 196}}
+  136,trans {}
   42 {{64 {0 303} 2}}
   155,trans {}
   43 {{46 {0 301 302 303} 1}}
   174,trans {}
   44 {{47 {0 301 302 303} 1}}
   203,trans {{301 217}}
-  193,trans {{301 211}}
+  193,trans {}
   45 {{93 {0 303} 1}}
-  222,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {347 237}}
+  222,trans {}
   46 {{107 {0 301 302 303} 1}}
   241,trans {}
   47 {{73 {0 303} 2}}
   48 {{92 {0 303} 1} {106 {0 301 302 303} 1} {46 {0 301 302 303} 0} {47 {0 301 302 303} 0}}
   49 {{46 {301 302} 1}}
   50 {{47 {301 302} 1}}
-  27,trans {{305 117} {318 118} {321 119} {325 120} {333 121} {339 122} {341 123} {342 124} {365 125}}
+  27,trans {{305 117} {317 118} {319 119} {322 120} {326 121} {334 122} {340 123} {342 124} {343 125} {366 126}}
   51 {{72 {0 303} 2} {46 {0 303} 0} {47 {0 303} 0}}
   46,trans {}
   65,trans {}
@@ -2379,54 +2388,54 @@ array set contour::lr1_table {
   56 {{46 {0 303} 1}}
   116,trans {}
   57 {{47 {0 303} 1}}
-  135,trans {}
-  58 {{136 {0 303} 1} {46 {0 303} 0} {47 {0 303} 0}}
+  135,trans {{303 196}}
+  58 {{137 {0 303} 1} {46 {0 303} 0} {47 {0 303} 0}}
   154,trans {}
-  59 {{135 {0 303} 1}}
+  59 {{136 {0 303} 1}}
   60 {{69 {0 303} 2}}
   173,trans {}
   61 {{125 {0 303} 1}}
-  202,trans {{301 216}}
+  202,trans {{303 216}}
   192,trans {}
   62 {{126 {0 303} 1}}
   221,trans {}
   63 {{66 {0 303} 2}}
-  240,trans {}
+  240,trans {{301 243}}
   239,trans {{301 242}}
-  64 {{139 {0 303} 1}}
-  65 {{141 {0 303} 1}}
-  66 {{140 {0 303} 1}}
+  64 {{140 {0 303} 1}}
+  65 {{142 {0 303} 1}}
+  66 {{141 {0 303} 1}}
   26,trans {{303 116}}
-  67 {{137 {0 303} 1}}
+  67 {{138 {0 303} 1}}
   45,trans {}
   64,trans {}
   68 {{70 {0 303} 2}}
   83,trans {}
-  69 {{138 {0 303} 1}}
+  69 {{139 {0 303} 1}}
   70 {{67 {0 303} 2}}
   71 {{8 303 1}}
   72 {{9 303 1}}
   73 {{10 303 1}}
   115,trans {}
   74 {{11 303 1}}
-  134,trans {{303 195}}
+  134,trans {}
   75 {{12 {294 295 296 297 298 299 300 303} 1}}
   153,trans {}
   76 {{13 {294 295 296 297 298 299 300 303} 1}}
   172,trans {}
   77 {{14 {294 295 296 297 298 299 300 303} 1}}
-  201,trans {{303 215}}
-  191,trans {}
+  201,trans {}
+  191,trans {{294 183} {295 184} {296 185} {297 186} {298 187} {299 188} {300 189} {351 211}}
   78 {{15 {294 295 296 297 298 299 300 303} 1}}
-  220,trans {}
-  219,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {347 236}}
+  220,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {348 237}}
+  219,trans {{301 236}}
   79 {{16 {294 295 296 297 298 299 300 303} 1}}
   80 {{17 {294 295 296 297 298 299 300 303} 1}}
-  238,trans {{301 241}}
+  238,trans {}
   81 {{18 {294 295 296 297 298 299 300 303} 1}}
   82 {{19 {294 295 296 297 298 299 300 303} 1}}
   83 {{20 {294 295 296 297 298 299 300 303} 1}}
-  25,trans {{303 113} {319 114} {362 115}}
+  25,trans {{303 113} {320 114} {363 115}}
   84 {{21 {294 295 296 297 298 299 300 303} 1}}
   44,trans {}
   63,trans {}
@@ -2439,7 +2448,7 @@ array set contour::lr1_table {
   1 {{2 {0 303} 1}}
   89 {{26 {294 295 296 297 298 299 300 303} 1}}
   90 {{27 {294 295 296 297 298 299 300 303} 1}}
-  114,trans {{303 192}}
+  114,trans {{303 193}}
   2 {{5 {0 303} 1}}
   91 {{28 {294 295 296 297 298 299 300 303} 1}}
   133,trans {}
@@ -2452,11 +2461,11 @@ array set contour::lr1_table {
   5 {{4 {0 303} 1}}
   94 {{31 {294 295 296 297 298 299 300 303} 1}}
   200,trans {}
-  190,trans {{294 182} {295 183} {296 184} {297 185} {298 186} {299 187} {300 188} {350 210}}
+  190,trans {}
   189,trans {}
   6 {{7 {0 303} 1}}
   95 {{32 {294 295 296 297 298 299 300 303} 1}}
-  218,trans {{301 235}}
+  218,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {348 235}}
   7 {{76 {0 303} 1} {77 {0 303} 0} {78 {0 303} 0} {79 {0 303} 0} {80 {0 303} 0} {81 {0 303} 0} {82 {0 303} 0} {83 {0 303} 0} {84 {0 303} 0} {85 {0 303} 0} {86 {0 303} 0} {87 {0 303} 0} {88 {0 303} 0} {89 {0 303} 0}}
   96 {{33 {294 295 296 297 298 299 300 303} 1}}
   237,trans {}
@@ -2465,19 +2474,19 @@ array set contour::lr1_table {
   9 {{53 {0 303} 1}}
   98 {{35 {294 295 296 297 298 299 300 303} 1}}
   99 {{36 {294 295 296 297 298 299 300 303} 1}}
-  24,trans {{263 71} {264 72} {265 73} {266 74} {267 75} {268 76} {269 77} {270 78} {271 79} {272 80} {273 81} {274 82} {275 83} {276 84} {277 85} {278 86} {279 87} {280 88} {281 89} {282 90} {283 91} {284 92} {285 93} {286 94} {287 95} {288 96} {289 97} {290 98} {291 99} {292 100} {293 101} {294 102} {295 103} {296 104} {297 105} {298 106} {299 107} {300 108} {348 109} {349 110} {350 111} {363 112}}
+  24,trans {{263 71} {264 72} {265 73} {266 74} {267 75} {268 76} {269 77} {270 78} {271 79} {272 80} {273 81} {274 82} {275 83} {276 84} {277 85} {278 86} {279 87} {280 88} {281 89} {282 90} {283 91} {284 92} {285 93} {286 94} {287 95} {288 96} {289 97} {290 98} {291 99} {292 100} {293 101} {294 102} {295 103} {296 104} {297 105} {298 106} {299 107} {300 108} {349 109} {350 110} {351 111} {364 112}}
   43,trans {}
   62,trans {}
   81,trans {}
   99,trans {}
-  113,trans {{263 151} {264 152} {265 153} {266 154} {267 155} {268 156} {269 157} {270 158} {271 159} {272 160} {273 161} {274 162} {275 163} {276 164} {277 165} {278 166} {279 167} {280 168} {281 169} {282 170} {283 171} {284 172} {285 173} {286 174} {287 175} {288 176} {289 177} {290 178} {291 179} {292 180} {293 181} {294 182} {295 183} {296 184} {297 185} {298 186} {299 187} {300 188} {348 189} {349 190} {350 191}}
+  113,trans {{263 152} {264 153} {265 154} {266 155} {267 156} {268 157} {269 158} {270 159} {271 160} {272 161} {273 162} {274 163} {275 164} {276 165} {277 166} {278 167} {279 168} {280 169} {281 170} {282 171} {283 172} {284 173} {285 174} {286 175} {287 176} {288 177} {289 178} {290 179} {291 180} {292 181} {293 182} {294 183} {295 184} {296 185} {297 186} {298 187} {299 188} {300 189} {349 190} {350 191} {351 192}}
   132,trans {}
-  151,trans {}
+  151,trans {{301 210}}
   170,trans {}
   169,trans {}
   188,trans {}
-  217,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {347 234}}
-  236,trans {}
+  217,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {348 234}}
+  236,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {348 241}}
   23,trans {}
   42,trans {}
   61,trans {}
@@ -2486,13 +2495,13 @@ array set contour::lr1_table {
   98,trans {}
   9,trans {}
   112,trans {}
-  131,trans {}
-  150,trans {{301 209}}
-  149,trans {{303 208}}
+  131,trans {{303 194} {308 195}}
+  150,trans {{303 209}}
+  149,trans {{301 208}}
   168,trans {}
   187,trans {}
-  216,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {347 233}}
-  235,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {347 240}}
+  216,trans {{301 233}}
+  235,trans {}
   22,trans {{301 70}}
   41,trans {}
   60,trans {}
@@ -2500,8 +2509,8 @@ array set contour::lr1_table {
   78,trans {}
   97,trans {}
   8,trans {}
-  111,trans {{303 150}}
-  130,trans {{303 193} {308 194}}
+  111,trans {{303 151}}
+  130,trans {}
   129,trans {}
   148,trans {{301 207}}
   100 {{37 {294 295 296 297 298 299 300 303} 1}}
@@ -2509,324 +2518,326 @@ array set contour::lr1_table {
   101 {{38 {294 295 296 297 298 299 300 303} 1}}
   186,trans {}
   102 {{39 303 1}}
-  215,trans {{301 232}}
+  215,trans {}
   103 {{40 303 1}}
   234,trans {}
   104 {{41 303 1}}
   105 {{42 303 1}}
-  21,trans {{301 56} {302 57} {327 64} {345 65} {346 66} {351 67} {367 68} {368 69}}
+  21,trans {{301 56} {302 57} {328 64} {346 65} {347 66} {352 67} {368 68} {369 69}}
   106 {{43 303 1}}
   107 {{44 303 1}}
-  39,trans {{301 139}}
+  39,trans {{301 140}}
   40,trans {}
-  58,trans {{301 56} {302 57} {351 146}}
+  58,trans {{301 56} {302 57} {352 147}}
   108 {{45 303 1}}
   77,trans {}
   109 {{121 {0 303} 1}}
   110 {{122 {0 303} 1} {124 {0 303} 1} {39 303 0} {40 303 0} {41 303 0} {42 303 0} {43 303 0} {44 303 0} {45 303 0}}
   96,trans {}
-  7,trans {{314 35} {329 36} {334 37} {335 38} {343 39} {355 40}}
+  7,trans {{314 35} {330 36} {335 37} {336 38} {344 39} {356 40}}
   111 {{123 {0 303} 1}}
   112 {{61 {0 303} 2}}
   113 {{114 {0 303} 1} {115 {0 303} 1} {116 {0 303} 1} {117 {0 303} 1} {118 {0 303} 1} {8 {0 303} 0} {9 {0 303} 0} {10 {0 303} 0} {11 {0 303} 0} {12 {0 294 295 296 297 298 299 300 303} 0} {13 {0 294 295 296 297 298 299 300 303} 0} {14 {0 294 295 296 297 298 299 300 303} 0} {15 {0 294 295 296 297 298 299 300 303} 0} {16 {0 294 295 296 297 298 299 300 303} 0} {17 {0 294 295 296 297 298 299 300 303} 0} {18 {0 294 295 296 297 298 299 300 303} 0} {19 {0 294 295 296 297 298 299 300 303} 0} {20 {0 294 295 296 297 298 299 300 303} 0} {21 {0 294 295 296 297 298 299 300 303} 0} {22 {0 294 295 296 297 298 299 300 303} 0} {23 {0 294 295 296 297 298 299 300 303} 0} {24 {0 294 295 296 297 298 299 300 303} 0} {25 {0 294 295 296 297 298 299 300 303} 0} {26 {0 294 295 296 297 298 299 300 303} 0} {27 {0 294 295 296 297 298 299 300 303} 0} {28 {0 294 295 296 297 298 299 300 303} 0} {29 {0 294 295 296 297 298 299 300 303} 0} {30 {0 294 295 296 297 298 299 300 303} 0} {31 {0 294 295 296 297 298 299 300 303} 0} {32 {0 294 295 296 297 298 299 300 303} 0} {33 {0 294 295 296 297 298 299 300 303} 0} {34 {0 294 295 296 297 298 299 300 303} 0} {35 {0 294 295 296 297 298 299 300 303} 0} {36 {0 294 295 296 297 298 299 300 303} 0} {37 {0 294 295 296 297 298 299 300 303} 0} {38 {0 294 295 296 297 298 299 300 303} 0} {39 {0 303} 0} {40 {0 303} 0} {41 {0 303} 0} {42 {0 303} 0} {43 {0 303} 0} {44 {0 303} 0} {45 {0 303} 0}}
-  110,trans {{294 102} {295 103} {296 104} {297 105} {298 106} {299 107} {300 108} {303 148} {350 149}}
-  109,trans {{303 147}}
+  110,trans {{294 102} {295 103} {296 104} {297 105} {298 106} {299 107} {300 108} {303 149} {351 150}}
+  109,trans {{303 148}}
   114 {{119 {0 303} 1}}
   128,trans {}
   115 {{56 {0 303} 2}}
-  147,trans {{301 206}}
+  147,trans {}
   116 {{59 {0 303} 2}}
   166,trans {}
   117 {{132 {0 303} 1}}
   185,trans {}
-  118 {{134 {0 303} 1}}
-  214,trans {}
-  119 {{127 {0 303} 1}}
-  120 {{128 {0 303} 1}}
-  233,trans {}
-  121 {{129 {0 303} 1}}
-  122 {{133 {0 303} 1}}
-  19,trans {{301 56} {302 57} {315 58} {351 59} {366 60}}
-  20,trans {{307 61} {340 62} {364 63}}
-  123 {{131 {0 303} 1}}
-  124 {{130 {0 303} 1}}
-  38,trans {{301 138}}
+  118 {{135 {0 303} 1}}
+  214,trans {{294 183} {295 184} {296 185} {297 186} {298 187} {299 188} {300 189} {351 232}}
+  119 {{134 {0 303} 1}}
+  120 {{127 {0 303} 1}}
+  233,trans {{257 225} {258 226} {259 227} {260 228} {261 229} {262 230} {360 240}}
+  121 {{128 {0 303} 1}}
+  122 {{129 {0 303} 1}}
+  19,trans {{301 56} {302 57} {315 58} {352 59} {367 60}}
+  20,trans {{307 61} {341 62} {365 63}}
+  123 {{133 {0 303} 1}}
+  124 {{131 {0 303} 1}}
+  38,trans {{301 139}}
   57,trans {}
-  125 {{68 {0 303} 2}}
+  125 {{130 {0 303} 1}}
   76,trans {}
-  126 {{143 {0 303} 1}}
+  126 {{68 {0 303} 2}}
   95,trans {}
   6,trans {}
-  127 {{142 {0 303} 1}}
-  128 {{71 {0 303} 2}}
-  129 {{65 {0 303} 2}}
-  130 {{95 {0 303} 1} {96 {0 303} 1} {97 {0 303} 1} {98 {0 303} 1} {99 {0 303} 1}}
+  127 {{144 {0 303} 1}}
+  128 {{143 {0 303} 1}}
+  129 {{71 {0 303} 2}}
+  130 {{65 {0 303} 2}}
   108,trans {}
-  131 {{94 {0 303} 1}}
+  131 {{95 {0 303} 1} {96 {0 303} 1} {97 {0 303} 1} {98 {0 303} 1} {99 {0 303} 1}}
   127,trans {}
-  132 {{74 {0 303} 2}}
+  132 {{94 {0 303} 1}}
   146,trans {}
-  133 {{63 {0 303} 2}}
+  133 {{74 {0 303} 2}}
   165,trans {}
-  134 {{50 0 2}}
+  134 {{63 {0 303} 2}}
   184,trans {}
-  135 {{84 {0 303} 2}}
-  213,trans {{294 182} {295 183} {296 184} {297 185} {298 186} {299 187} {300 188} {350 231}}
-  136 {{83 {0 303} 2}}
-  232,trans {{257 224} {258 225} {259 226} {260 227} {261 228} {262 229} {359 239}}
-  137 {{81 {0 303} 2} {82 {0 303} 2}}
-  138 {{85 {0 303} 2} {86 {0 303} 2} {87 {0 303} 2} {88 {0 303} 2} {89 {0 303} 2}}
+  135 {{50 0 2}}
+  213,trans {}
+  136 {{84 {0 303} 2}}
+  232,trans {}
+  137 {{83 {0 303} 2}}
+  138 {{81 {0 303} 2} {82 {0 303} 2}}
   18,trans {{303 55}}
-  139 {{77 {0 303} 2} {78 {0 303} 2} {79 {0 303} 2} {80 {0 303} 2} {90 303 0} {91 303 0}}
-  140 {{106 {0 301 302 303} 2}}
-  141 {{72 {0 303} 3}}
-  37,trans {{301 137}}
+  139 {{85 {0 303} 2} {86 {0 303} 2} {87 {0 303} 2} {88 {0 303} 2} {89 {0 303} 2}}
+  140 {{77 {0 303} 2} {78 {0 303} 2} {79 {0 303} 2} {80 {0 303} 2} {90 303 0} {91 303 0}}
+  37,trans {{301 138}}
+  141 {{106 {0 301 302 303} 2}}
   56,trans {}
-  142 {{110 {0 303} 2}}
+  142 {{72 {0 303} 3}}
   75,trans {}
-  143 {{111 {0 303} 2} {113 {0 303} 2} {39 303 0} {40 303 0} {41 303 0} {42 303 0} {43 303 0} {44 303 0} {45 303 0}}
+  143 {{110 {0 303} 2}}
   94,trans {}
-  144 {{112 {0 303} 2}}
+  144 {{111 {0 303} 2} {113 {0 303} 2} {39 303 0} {40 303 0} {41 303 0} {42 303 0} {43 303 0} {44 303 0} {45 303 0}}
   5,trans {}
-  145 {{109 {0 303} 2}}
-  146 {{136 {0 303} 2}}
-  147 {{121 {0 303} 2}}
+  145 {{112 {0 303} 2}}
+  146 {{109 {0 303} 2}}
   107,trans {}
+  147 {{137 {0 303} 2}}
   126,trans {}
-  148 {{122 {0 303} 2}}
-  145,trans {}
-  150 {{123 {0 303} 2}}
-  149 {{124 {0 303} 2}}
+  148 {{121 {0 303} 2}}
+  145,trans {{303 206}}
+  150 {{124 {0 303} 2}}
+  149 {{122 {0 303} 2}}
   164,trans {}
-  151 {{8 {0 303} 1}}
+  151 {{123 {0 303} 2}}
   183,trans {}
-  152 {{9 {0 303} 1}}
-  212,trans {}
-  153 {{10 {0 303} 1}}
-  231,trans {}
-  154 {{11 {0 303} 1}}
-  155 {{12 {0 294 295 296 297 298 299 300 303} 1}}
-  156 {{13 {0 294 295 296 297 298 299 300 303} 1}}
-  17,trans {{303 52} {319 53} {361 54}}
-  157 {{14 {0 294 295 296 297 298 299 300 303} 1}}
-  36,trans {{301 136}}
-  158 {{15 {0 294 295 296 297 298 299 300 303} 1}}
+  152 {{8 {0 303} 1}}
+  212,trans {{257 225} {258 226} {259 227} {260 228} {261 229} {262 230} {360 231}}
+  153 {{9 {0 303} 1}}
+  231,trans {{301 239}}
+  154 {{10 {0 303} 1}}
+  155 {{11 {0 303} 1}}
+  156 {{12 {0 294 295 296 297 298 299 300 303} 1}}
+  17,trans {{303 52} {320 53} {362 54}}
+  157 {{13 {0 294 295 296 297 298 299 300 303} 1}}
+  36,trans {{301 137}}
+  158 {{14 {0 294 295 296 297 298 299 300 303} 1}}
   55,trans {}
-  160 {{17 {0 294 295 296 297 298 299 300 303} 1}}
-  159 {{16 {0 294 295 296 297 298 299 300 303} 1}}
+  160 {{16 {0 294 295 296 297 298 299 300 303} 1}}
+  159 {{15 {0 294 295 296 297 298 299 300 303} 1}}
   74,trans {}
-  161 {{18 {0 294 295 296 297 298 299 300 303} 1}}
+  161 {{17 {0 294 295 296 297 298 299 300 303} 1}}
   93,trans {}
   4,trans {}
-  162 {{19 {0 294 295 296 297 298 299 300 303} 1}}
-  163 {{20 {0 294 295 296 297 298 299 300 303} 1}}
-  164 {{21 {0 294 295 296 297 298 299 300 303} 1}}
+  162 {{18 {0 294 295 296 297 298 299 300 303} 1}}
+  163 {{19 {0 294 295 296 297 298 299 300 303} 1}}
+  164 {{20 {0 294 295 296 297 298 299 300 303} 1}}
   106,trans {}
   125,trans {}
-  165 {{22 {0 294 295 296 297 298 299 300 303} 1}}
-  144,trans {{303 205}}
-  166 {{23 {0 294 295 296 297 298 299 300 303} 1}}
+  165 {{21 {0 294 295 296 297 298 299 300 303} 1}}
+  144,trans {{294 102} {295 103} {296 104} {297 105} {298 106} {299 107} {300 108} {303 204} {351 205}}
+  166 {{22 {0 294 295 296 297 298 299 300 303} 1}}
   163,trans {}
-  167 {{24 {0 294 295 296 297 298 299 300 303} 1}}
+  167 {{23 {0 294 295 296 297 298 299 300 303} 1}}
   182,trans {}
-  168 {{25 {0 294 295 296 297 298 299 300 303} 1}}
-  211,trans {{257 224} {258 225} {259 226} {260 227} {261 228} {262 229} {359 230}}
-  170 {{27 {0 294 295 296 297 298 299 300 303} 1}}
-  169 {{26 {0 294 295 296 297 298 299 300 303} 1}}
-  230,trans {{301 238}}
+  168 {{24 {0 294 295 296 297 298 299 300 303} 1}}
+  211,trans {}
+  170 {{26 {0 294 295 296 297 298 299 300 303} 1}}
+  169 {{25 {0 294 295 296 297 298 299 300 303} 1}}
+  230,trans {}
   229,trans {}
-  171 {{28 {0 294 295 296 297 298 299 300 303} 1}}
-  172 {{29 {0 294 295 296 297 298 299 300 303} 1}}
-  173 {{30 {0 294 295 296 297 298 299 300 303} 1}}
-  16,trans {{301 49} {302 50} {351 51}}
-  174 {{31 {0 294 295 296 297 298 299 300 303} 1}}
-  35,trans {{301 135}}
-  175 {{32 {0 294 295 296 297 298 299 300 303} 1}}
+  171 {{27 {0 294 295 296 297 298 299 300 303} 1}}
+  172 {{28 {0 294 295 296 297 298 299 300 303} 1}}
+  173 {{29 {0 294 295 296 297 298 299 300 303} 1}}
+  16,trans {{301 49} {302 50} {352 51}}
+  174 {{30 {0 294 295 296 297 298 299 300 303} 1}}
+  35,trans {{301 136}}
+  175 {{31 {0 294 295 296 297 298 299 300 303} 1}}
   54,trans {}
-  176 {{33 {0 294 295 296 297 298 299 300 303} 1}}
+  176 {{32 {0 294 295 296 297 298 299 300 303} 1}}
   73,trans {}
-  177 {{34 {0 294 295 296 297 298 299 300 303} 1}}
+  177 {{33 {0 294 295 296 297 298 299 300 303} 1}}
   92,trans {}
   3,trans {}
-  178 {{35 {0 294 295 296 297 298 299 300 303} 1}}
-  180 {{37 {0 294 295 296 297 298 299 300 303} 1}}
-  179 {{36 {0 294 295 296 297 298 299 300 303} 1}}
-  181 {{38 {0 294 295 296 297 298 299 300 303} 1}}
+  178 {{34 {0 294 295 296 297 298 299 300 303} 1}}
+  180 {{36 {0 294 295 296 297 298 299 300 303} 1}}
+  179 {{35 {0 294 295 296 297 298 299 300 303} 1}}
+  181 {{37 {0 294 295 296 297 298 299 300 303} 1}}
   105,trans {}
   124,trans {}
-  182 {{39 {0 303} 1}}
-  143,trans {{294 102} {295 103} {296 104} {297 105} {298 106} {299 107} {300 108} {303 203} {350 204}}
-  183 {{40 {0 303} 1}}
+  182 {{38 {0 294 295 296 297 298 299 300 303} 1}}
+  143,trans {{303 203}}
+  183 {{39 {0 303} 1}}
   162,trans {}
-  184 {{41 {0 303} 1}}
+  184 {{40 {0 303} 1}}
   181,trans {}
-  185 {{42 {0 303} 1}}
-  210,trans {}
-  209,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {347 223}}
-  199,trans {}
-  186 {{43 {0 303} 1}}
+  185 {{41 {0 303} 1}}
+  210,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {348 224}}
+  209,trans {{301 223}}
+  199,trans {{263 152} {264 153} {265 154} {266 155} {267 156} {268 157} {269 158} {270 159} {271 160} {272 161} {273 162} {274 163} {275 164} {276 165} {277 166} {278 167} {279 168} {280 169} {281 170} {282 171} {283 172} {284 173} {285 174} {286 175} {287 176} {288 177} {289 178} {290 179} {291 180} {292 181} {293 182} {294 183} {295 184} {296 185} {297 186} {298 187} {299 188} {300 189} {349 213} {350 214} {351 215}}
+  186 {{42 {0 303} 1}}
   228,trans {}
-  187 {{44 {0 303} 1}}
-  188 {{45 {0 303} 1}}
-  200 {{91 303 1}}
-  190 {{116 {0 303} 2} {118 {0 303} 2} {39 {0 303} 0} {40 {0 303} 0} {41 {0 303} 0} {42 {0 303} 0} {43 {0 303} 0} {44 {0 303} 0} {45 {0 303} 0}}
-  189 {{115 {0 303} 2}}
-  15,trans {{301 43} {302 44} {303 45} {351 46} {357 47} {360 48}}
-  201 {{77 {0 303} 3} {78 {0 303} 3} {79 {0 303} 3} {80 {0 303} 3}}
-  191 {{117 {0 303} 2}}
-  34,trans {{353 134}}
-  202 {{110 {0 303} 3}}
-  192 {{119 {0 303} 2}}
-  53,trans {{303 145}}
-  203 {{111 {0 303} 3}}
-  193 {{96 {0 303} 2} {97 {0 303} 2} {98 {0 303} 2} {99 {0 303} 2}}
+  187 {{43 {0 303} 1}}
+  188 {{44 {0 303} 1}}
+  200 {{90 303 1}}
+  190 {{115 {0 303} 2}}
+  189 {{45 {0 303} 1}}
+  15,trans {{301 43} {302 44} {303 45} {352 46} {358 47} {361 48}}
+  201 {{91 303 1}}
+  191 {{116 {0 303} 2} {118 {0 303} 2} {39 {0 303} 0} {40 {0 303} 0} {41 {0 303} 0} {42 {0 303} 0} {43 {0 303} 0} {44 {0 303} 0} {45 {0 303} 0}}
+  34,trans {{354 135}}
+  202 {{77 {0 303} 3} {78 {0 303} 3} {79 {0 303} 3} {80 {0 303} 3}}
+  192 {{117 {0 303} 2}}
+  53,trans {{303 146}}
+  203 {{110 {0 303} 3}}
+  193 {{119 {0 303} 2}}
   72,trans {}
-  204 {{113 {0 303} 3}}
-  194 {{95 {0 303} 2}}
+  204 {{111 {0 303} 3}}
+  194 {{96 {0 303} 2} {97 {0 303} 2} {98 {0 303} 2} {99 {0 303} 2}}
   91,trans {}
   2,trans {}
-  205 {{112 {0 303} 3}}
-  195 {{50 0 3}}
-  206 {{121 {0 303} 3} {1 {0 303} 0} {2 {0 303} 0} {3 {0 303} 0} {4 {0 303} 0} {5 {0 303} 0} {6 {0 303} 0} {7 {0 303} 0}}
-  196 {{83 {0 303} 3}}
-  207 {{122 {0 303} 3} {1 {0 303} 0} {2 {0 303} 0} {3 {0 303} 0} {4 {0 303} 0} {5 {0 303} 0} {6 {0 303} 0} {7 {0 303} 0}}
-  197 {{82 {0 303} 3}}
+  205 {{113 {0 303} 3}}
+  195 {{95 {0 303} 2}}
+  206 {{112 {0 303} 3}}
+  196 {{50 0 3}}
+  207 {{121 {0 303} 3} {1 {0 303} 0} {2 {0 303} 0} {3 {0 303} 0} {4 {0 303} 0} {5 {0 303} 0} {6 {0 303} 0} {7 {0 303} 0}}
+  197 {{83 {0 303} 3}}
   104,trans {}
-  208 {{124 {0 303} 3}}
-  198 {{85 {0 303} 3} {86 {0 303} 3} {87 {0 303} 3} {88 {0 303} 3} {89 {0 303} 3} {8 {0 303} 0} {9 {0 303} 0} {10 {0 303} 0} {11 {0 303} 0} {12 {0 294 295 296 297 298 299 300 303} 0} {13 {0 294 295 296 297 298 299 300 303} 0} {14 {0 294 295 296 297 298 299 300 303} 0} {15 {0 294 295 296 297 298 299 300 303} 0} {16 {0 294 295 296 297 298 299 300 303} 0} {17 {0 294 295 296 297 298 299 300 303} 0} {18 {0 294 295 296 297 298 299 300 303} 0} {19 {0 294 295 296 297 298 299 300 303} 0} {20 {0 294 295 296 297 298 299 300 303} 0} {21 {0 294 295 296 297 298 299 300 303} 0} {22 {0 294 295 296 297 298 299 300 303} 0} {23 {0 294 295 296 297 298 299 300 303} 0} {24 {0 294 295 296 297 298 299 300 303} 0} {25 {0 294 295 296 297 298 299 300 303} 0} {26 {0 294 295 296 297 298 299 300 303} 0} {27 {0 294 295 296 297 298 299 300 303} 0} {28 {0 294 295 296 297 298 299 300 303} 0} {29 {0 294 295 296 297 298 299 300 303} 0} {30 {0 294 295 296 297 298 299 300 303} 0} {31 {0 294 295 296 297 298 299 300 303} 0} {32 {0 294 295 296 297 298 299 300 303} 0} {33 {0 294 295 296 297 298 299 300 303} 0} {34 {0 294 295 296 297 298 299 300 303} 0} {35 {0 294 295 296 297 298 299 300 303} 0} {36 {0 294 295 296 297 298 299 300 303} 0} {37 {0 294 295 296 297 298 299 300 303} 0} {38 {0 294 295 296 297 298 299 300 303} 0} {39 {0 303} 0} {40 {0 303} 0} {41 {0 303} 0} {42 {0 303} 0} {43 {0 303} 0} {44 {0 303} 0} {45 {0 303} 0}}
+  208 {{122 {0 303} 3} {1 {0 303} 0} {2 {0 303} 0} {3 {0 303} 0} {4 {0 303} 0} {5 {0 303} 0} {6 {0 303} 0} {7 {0 303} 0}}
+  198 {{82 {0 303} 3}}
   123,trans {}
-  210 {{118 {0 303} 3}}
-  209 {{123 {0 303} 3} {1 {0 303} 0} {2 {0 303} 0} {3 {0 303} 0} {4 {0 303} 0} {5 {0 303} 0} {6 {0 303} 0} {7 {0 303} 0}}
-  142,trans {{303 202}}
-  199 {{90 303 1}}
-  211 {{97 {0 303} 3} {98 {0 303} 3} {99 {0 303} 3} {100 {0 301 303} 0} {101 {0 301 303} 0} {102 {0 301 303} 0} {103 {0 301 303} 0} {104 {0 301 303} 0} {105 {0 301 303} 0}}
+  210 {{123 {0 303} 3} {1 {0 303} 0} {2 {0 303} 0} {3 {0 303} 0} {4 {0 303} 0} {5 {0 303} 0} {6 {0 303} 0} {7 {0 303} 0}}
+  209 {{124 {0 303} 3}}
+  142,trans {}
+  199 {{85 {0 303} 3} {86 {0 303} 3} {87 {0 303} 3} {88 {0 303} 3} {89 {0 303} 3} {8 {0 303} 0} {9 {0 303} 0} {10 {0 303} 0} {11 {0 303} 0} {12 {0 294 295 296 297 298 299 300 303} 0} {13 {0 294 295 296 297 298 299 300 303} 0} {14 {0 294 295 296 297 298 299 300 303} 0} {15 {0 294 295 296 297 298 299 300 303} 0} {16 {0 294 295 296 297 298 299 300 303} 0} {17 {0 294 295 296 297 298 299 300 303} 0} {18 {0 294 295 296 297 298 299 300 303} 0} {19 {0 294 295 296 297 298 299 300 303} 0} {20 {0 294 295 296 297 298 299 300 303} 0} {21 {0 294 295 296 297 298 299 300 303} 0} {22 {0 294 295 296 297 298 299 300 303} 0} {23 {0 294 295 296 297 298 299 300 303} 0} {24 {0 294 295 296 297 298 299 300 303} 0} {25 {0 294 295 296 297 298 299 300 303} 0} {26 {0 294 295 296 297 298 299 300 303} 0} {27 {0 294 295 296 297 298 299 300 303} 0} {28 {0 294 295 296 297 298 299 300 303} 0} {29 {0 294 295 296 297 298 299 300 303} 0} {30 {0 294 295 296 297 298 299 300 303} 0} {31 {0 294 295 296 297 298 299 300 303} 0} {32 {0 294 295 296 297 298 299 300 303} 0} {33 {0 294 295 296 297 298 299 300 303} 0} {34 {0 294 295 296 297 298 299 300 303} 0} {35 {0 294 295 296 297 298 299 300 303} 0} {36 {0 294 295 296 297 298 299 300 303} 0} {37 {0 294 295 296 297 298 299 300 303} 0} {38 {0 294 295 296 297 298 299 300 303} 0} {39 {0 303} 0} {40 {0 303} 0} {41 {0 303} 0} {42 {0 303} 0} {43 {0 303} 0} {44 {0 303} 0} {45 {0 303} 0}}
+  211 {{118 {0 303} 3}}
   161,trans {}
-  212 {{86 {0 303} 4}}
+  212 {{97 {0 303} 3} {98 {0 303} 3} {99 {0 303} 3} {100 {0 301 303} 0} {101 {0 301 303} 0} {102 {0 301 303} 0} {103 {0 301 303} 0} {104 {0 301 303} 0} {105 {0 301 303} 0}}
   180,trans {}
   179,trans {}
-  208,trans {{301 222}}
-  198,trans {{263 151} {264 152} {265 153} {266 154} {267 155} {268 156} {269 157} {270 158} {271 159} {272 160} {273 161} {274 162} {275 163} {276 164} {277 165} {278 166} {279 167} {280 168} {281 169} {282 170} {283 171} {284 172} {285 173} {286 174} {287 175} {288 176} {289 177} {290 178} {291 179} {292 180} {293 181} {294 182} {295 183} {296 184} {297 185} {298 186} {299 187} {300 188} {348 212} {349 213} {350 214}}
-  213 {{87 {0 303} 4} {89 {0 303} 4} {39 {0 303} 0} {40 {0 303} 0} {41 {0 303} 0} {42 {0 303} 0} {43 {0 303} 0} {44 {0 303} 0} {45 {0 303} 0}}
+  208,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {348 222}}
+  213 {{86 {0 303} 4}}
+  198,trans {}
   227,trans {}
-  214 {{88 {0 303} 4}}
-  215 {{77 {0 303} 4} {78 {0 303} 4} {79 {0 303} 4} {80 {0 303} 4}}
-  216 {{110 {0 303} 4} {1 {0 303} 0} {2 {0 303} 0} {3 {0 303} 0} {4 {0 303} 0} {5 {0 303} 0} {6 {0 303} 0} {7 {0 303} 0}}
+  214 {{87 {0 303} 4} {89 {0 303} 4} {39 {0 303} 0} {40 {0 303} 0} {41 {0 303} 0} {42 {0 303} 0} {43 {0 303} 0} {44 {0 303} 0} {45 {0 303} 0}}
+  215 {{88 {0 303} 4}}
+  216 {{77 {0 303} 4} {78 {0 303} 4} {79 {0 303} 4} {80 {0 303} 4}}
   14,trans {}
-  217 {{111 {0 303} 4} {1 {0 303} 0} {2 {0 303} 0} {3 {0 303} 0} {4 {0 303} 0} {5 {0 303} 0} {6 {0 303} 0} {7 {0 303} 0}}
+  217 {{110 {0 303} 4} {1 {0 303} 0} {2 {0 303} 0} {3 {0 303} 0} {4 {0 303} 0} {5 {0 303} 0} {6 {0 303} 0} {7 {0 303} 0}}
   33,trans {}
-  218 {{113 {0 303} 4}}
-  52,trans {{263 71} {264 72} {265 73} {266 74} {267 75} {268 76} {269 77} {270 78} {271 79} {272 80} {273 81} {274 82} {275 83} {276 84} {277 85} {278 86} {279 87} {280 88} {281 89} {282 90} {283 91} {284 92} {285 93} {286 94} {287 95} {288 96} {289 97} {290 98} {291 99} {292 100} {293 101} {294 102} {295 103} {296 104} {297 105} {298 106} {299 107} {300 108} {348 142} {349 143} {350 144}}
-  220 {{121 {0 303} 4}}
-  219 {{112 {0 303} 4} {1 {0 303} 0} {2 {0 303} 0} {3 {0 303} 0} {4 {0 303} 0} {5 {0 303} 0} {6 {0 303} 0} {7 {0 303} 0}}
+  218 {{111 {0 303} 4} {1 {0 303} 0} {2 {0 303} 0} {3 {0 303} 0} {4 {0 303} 0} {5 {0 303} 0} {6 {0 303} 0} {7 {0 303} 0}}
+  52,trans {{263 71} {264 72} {265 73} {266 74} {267 75} {268 76} {269 77} {270 78} {271 79} {272 80} {273 81} {274 82} {275 83} {276 84} {277 85} {278 86} {279 87} {280 88} {281 89} {282 90} {283 91} {284 92} {285 93} {286 94} {287 95} {288 96} {289 97} {290 98} {291 99} {292 100} {293 101} {294 102} {295 103} {296 104} {297 105} {298 106} {299 107} {300 108} {349 143} {350 144} {351 145}}
+  220 {{112 {0 303} 4} {1 {0 303} 0} {2 {0 303} 0} {3 {0 303} 0} {4 {0 303} 0} {5 {0 303} 0} {6 {0 303} 0} {7 {0 303} 0}}
+  219 {{113 {0 303} 4}}
   71,trans {}
-  221 {{122 {0 303} 4}}
+  221 {{121 {0 303} 4}}
   90,trans {}
   89,trans {}
   1,trans {}
-  222 {{124 {0 303} 4} {1 {0 303} 0} {2 {0 303} 0} {3 {0 303} 0} {4 {0 303} 0} {5 {0 303} 0} {6 {0 303} 0} {7 {0 303} 0}}
-  223 {{123 {0 303} 4}}
-  224 {{100 {0 301 303} 1}}
+  222 {{122 {0 303} 4}}
+  223 {{124 {0 303} 4} {1 {0 303} 0} {2 {0 303} 0} {3 {0 303} 0} {4 {0 303} 0} {5 {0 303} 0} {6 {0 303} 0} {7 {0 303} 0}}
+  224 {{123 {0 303} 4}}
   103,trans {}
-  225 {{103 {0 301 303} 1}}
+  225 {{100 {0 301 303} 1}}
   122,trans {}
-  226 {{101 {0 301 303} 1}}
+  226 {{103 {0 301 303} 1}}
   141,trans {}
-  227 {{104 {0 301 303} 1}}
+  227 {{101 {0 301 303} 1}}
   160,trans {}
   159,trans {}
-  228 {{102 {0 301 303} 1}}
+  228 {{104 {0 301 303} 1}}
   178,trans {}
-  230 {{98 {0 303} 4} {99 {0 303} 4}}
-  229 {{105 {0 301 303} 1}}
-  207,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {347 221}}
+  230 {{105 {0 301 303} 1}}
+  229 {{102 {0 301 303} 1}}
+  207,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {348 221}}
   197,trans {}
   226,trans {}
-  231 {{89 {0 303} 5}}
-  232 {{78 {0 303} 5} {79 {0 303} 5} {80 {0 303} 5} {100 {0 301 303} 0} {101 {0 301 303} 0} {102 {0 301 303} 0} {103 {0 301 303} 0} {104 {0 301 303} 0} {105 {0 301 303} 0}}
-  233 {{110 {0 303} 5}}
-  13,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {347 42}}
-  234 {{111 {0 303} 5}}
+  231 {{98 {0 303} 4} {99 {0 303} 4}}
+  232 {{89 {0 303} 5}}
+  233 {{78 {0 303} 5} {79 {0 303} 5} {80 {0 303} 5} {100 {0 301 303} 0} {101 {0 301 303} 0} {102 {0 301 303} 0} {103 {0 301 303} 0} {104 {0 301 303} 0} {105 {0 301 303} 0}}
+  13,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {348 42}}
+  234 {{110 {0 303} 5}}
   32,trans {}
-  235 {{113 {0 303} 5} {1 {0 303} 0} {2 {0 303} 0} {3 {0 303} 0} {4 {0 303} 0} {5 {0 303} 0} {6 {0 303} 0} {7 {0 303} 0}}
-  51,trans {{301 56} {302 57} {351 141}}
-  236 {{112 {0 303} 5}}
+  235 {{111 {0 303} 5}}
+  51,trans {{301 56} {302 57} {352 142}}
+  236 {{113 {0 303} 5} {1 {0 303} 0} {2 {0 303} 0} {3 {0 303} 0} {4 {0 303} 0} {5 {0 303} 0} {6 {0 303} 0} {7 {0 303} 0}}
   70,trans {}
   69,trans {}
-  237 {{124 {0 303} 5}}
+  237 {{112 {0 303} 5}}
   88,trans {}
-  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {306 7} {308 8} {309 9} {310 10} {311 11} {312 12} {313 13} {316 14} {319 15} {320 16} {322 17} {323 18} {325 19} {326 20} {328 21} {330 22} {331 23} {332 24} {335 25} {336 26} {337 27} {338 28} {340 29} {343 30} {344 31} {347 32} {352 33} {354 34}}
-  238 {{99 {0 303} 5}}
-  240 {{113 {0 303} 6}}
-  239 {{79 {0 303} 6} {80 {0 303} 6}}
-  241 {{99 {0 303} 6}}
+  0,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {306 7} {308 8} {309 9} {310 10} {311 11} {312 12} {313 13} {316 14} {320 15} {321 16} {323 17} {324 18} {326 19} {327 20} {329 21} {331 22} {332 23} {333 24} {336 25} {337 26} {338 27} {339 28} {341 29} {344 30} {345 31} {348 32} {353 33} {355 34}}
+  238 {{124 {0 303} 5}}
+  240 {{79 {0 303} 6} {80 {0 303} 6}}
+  239 {{99 {0 303} 5}}
+  241 {{113 {0 303} 6}}
   102,trans {}
-  242 {{80 {0 303} 7}}
+  242 {{99 {0 303} 6}}
   121,trans {}
-  243 {{80 {0 303} 8}}
-  140,trans {}
-  139,trans {{301 199} {304 200} {356 201}}
+  243 {{80 {0 303} 7}}
+  140,trans {{301 200} {304 201} {357 202}}
+  139,trans {{303 199}}
+  244 {{80 {0 303} 8}}
   158,trans {}
   177,trans {}
-  206,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {347 220}}
+  206,trans {{301 220}}
   196,trans {}
   225,trans {}
+  244,trans {}
   12,trans {}
-  31,trans {{301 133}}
-  49,trans {}
+  31,trans {{301 134}}
   50,trans {}
+  49,trans {}
   68,trans {}
   87,trans {}
   101,trans {}
   120,trans {}
   119,trans {}
-  138,trans {{303 198}}
+  138,trans {{301 198}}
   157,trans {}
   10 {{62 {0 303} 1}}
   176,trans {}
   11 {{57 {0 303} 1}}
-  205,trans {{301 219}}
+  205,trans {{303 219}}
   195,trans {}
   12 {{60 {0 303} 1}}
   224,trans {}
   13 {{64 {0 303} 1} {1 {0 303} 0} {2 {0 303} 0} {3 {0 303} 0} {4 {0 303} 0} {5 {0 303} 0} {6 {0 303} 0} {7 {0 303} 0}}
-  243,trans {}
+  243,trans {{301 244}}
   14 {{75 {0 303} 1}}
   15 {{73 {0 303} 1} {92 {0 303} 0} {93 {0 303} 0} {106 {0 301 302 303} 0} {107 {0 301 302 303} 0} {46 {0 301 302 303} 0} {47 {0 301 302 303} 0}}
   11,trans {}
   16 {{72 {0 303} 1} {46 {301 302} 0} {47 {301 302} 0}}
-  29,trans {{301 129}}
-  30,trans {{301 130} {308 131} {358 132}}
+  29,trans {{301 130}}
+  30,trans {{301 131} {308 132} {359 133}}
   17 {{55 {0 303} 1} {108 {0 303} 0} {109 {0 303} 0} {110 {0 303} 0} {111 {0 303} 0} {112 {0 303} 0} {113 {0 303} 0}}
-  48,trans {{301 43} {302 44} {351 140}}
+  48,trans {{301 43} {302 44} {352 141}}
   67,trans {}
   18 {{58 {0 303} 1}}
   86,trans {}
   20 {{66 {0 303} 1} {125 {0 303} 0} {126 {0 303} 0}}
-  19 {{69 {0 303} 1} {135 {0 303} 0} {136 {0 303} 0} {46 {0 303} 0} {47 {0 303} 0}}
-  21 {{70 {0 303} 1} {137 {0 303} 0} {138 {0 303} 0} {46 {0 303} 0} {47 {0 303} 0} {139 {0 303} 0} {140 {0 303} 0} {141 {0 303} 0}}
+  19 {{69 {0 303} 1} {136 {0 303} 0} {137 {0 303} 0} {46 {0 303} 0} {47 {0 303} 0}}
+  21 {{70 {0 303} 1} {138 {0 303} 0} {139 {0 303} 0} {46 {0 303} 0} {47 {0 303} 0} {140 {0 303} 0} {141 {0 303} 0} {142 {0 303} 0}}
   22 {{67 {0 303} 1}}
   100,trans {}
   23 {{52 {0 303} 1}}
   118,trans {}
   24 {{61 {0 303} 1} {120 {0 303} 0} {121 {0 303} 0} {122 {0 303} 0} {123 {0 303} 0} {124 {0 303} 0} {8 303 0} {9 303 0} {10 303 0} {11 303 0} {12 {294 295 296 297 298 299 300 303} 0} {13 {294 295 296 297 298 299 300 303} 0} {14 {294 295 296 297 298 299 300 303} 0} {15 {294 295 296 297 298 299 300 303} 0} {16 {294 295 296 297 298 299 300 303} 0} {17 {294 295 296 297 298 299 300 303} 0} {18 {294 295 296 297 298 299 300 303} 0} {19 {294 295 296 297 298 299 300 303} 0} {20 {294 295 296 297 298 299 300 303} 0} {21 {294 295 296 297 298 299 300 303} 0} {22 {294 295 296 297 298 299 300 303} 0} {23 {294 295 296 297 298 299 300 303} 0} {24 {294 295 296 297 298 299 300 303} 0} {25 {294 295 296 297 298 299 300 303} 0} {26 {294 295 296 297 298 299 300 303} 0} {27 {294 295 296 297 298 299 300 303} 0} {28 {294 295 296 297 298 299 300 303} 0} {29 {294 295 296 297 298 299 300 303} 0} {30 {294 295 296 297 298 299 300 303} 0} {31 {294 295 296 297 298 299 300 303} 0} {32 {294 295 296 297 298 299 300 303} 0} {33 {294 295 296 297 298 299 300 303} 0} {34 {294 295 296 297 298 299 300 303} 0} {35 {294 295 296 297 298 299 300 303} 0} {36 {294 295 296 297 298 299 300 303} 0} {37 {294 295 296 297 298 299 300 303} 0} {38 {294 295 296 297 298 299 300 303} 0} {39 303 0} {40 303 0} {41 303 0} {42 303 0} {43 303 0} {44 303 0} {45 303 0}}
-  137,trans {{301 197}}
+  137,trans {{303 197}}
   25 {{56 {0 303} 1} {114 {0 303} 0} {115 {0 303} 0} {116 {0 303} 0} {117 {0 303} 0} {118 {0 303} 0} {119 {0 303} 0}}
   156,trans {}
   26 {{59 {0 303} 1}}
   175,trans {}
-  27 {{68 {0 303} 1} {127 {0 303} 0} {128 {0 303} 0} {129 {0 303} 0} {130 {0 303} 0} {131 {0 303} 0} {132 {0 303} 0} {133 {0 303} 0} {134 {0 303} 0}}
-  204,trans {{303 218}}
-  194,trans {}
-  28 {{71 {0 303} 1} {142 {0 303} 0} {143 {0 303} 0}}
-  223,trans {}
+  27 {{68 {0 303} 1} {127 {0 303} 0} {128 {0 303} 0} {129 {0 303} 0} {130 {0 303} 0} {131 {0 303} 0} {132 {0 303} 0} {133 {0 303} 0} {134 {0 303} 0} {135 {0 303} 0}}
+  204,trans {{301 218}}
+  194,trans {{301 212}}
+  28 {{71 {0 303} 1} {143 {0 303} 0} {144 {0 303} 0}}
+  223,trans {{257 1} {258 2} {259 3} {260 4} {261 5} {262 6} {348 238}}
   30 {{74 {0 303} 1} {94 {0 303} 0} {95 {0 303} 0} {96 {0 303} 0} {97 {0 303} 0} {98 {0 303} 0} {99 {0 303} 0}}
   29 {{65 {0 303} 1}}
-  242,trans {{301 243}}
+  242,trans {}
   31 {{63 {0 303} 1}}
   32 {{51 {0 303} 1}}
   10,trans {{303 41}}
   33 {{0 0 1}}
-  28,trans {{317 126} {324 127} {369 128}}
+  28,trans {{318 127} {325 128} {370 129}}
   34 {{48 0 1} {50 0 1} {49 303 0}}
   47,trans {}
 }
@@ -2838,7 +2849,7 @@ array set contour::token_id_table {
   292,line 44
   302,line 56
   288 WCSU_
-  357,line 270
+  357,line 267
   317,t 0
   265,title AMPLIFIER
   289 WCSV_
@@ -2851,7 +2862,7 @@ array set contour::token_id_table {
   292 WCSY_
   302 REAL_
   338,t 0
-  332,title PASTE
+  332,title OPEN
   288,line 40
   293 WCSZ_
   303 STRING_
@@ -2860,7 +2871,7 @@ array set contour::token_id_table {
   304 ALL_
   370,title {}
   369,title {}
-  354,line 217
+  354,line 215
   305 ASINH_
   295 B1950_
   360,t 1
@@ -2876,7 +2887,7 @@ array set contour::token_id_table {
   310 COLOR_
   309 CLOSE_
   299 GALACTIC_
-  351,line 209
+  351,line 202
   311 CONVERT_
   283,t 0
   312 COPY_
@@ -2885,143 +2896,145 @@ array set contour::token_id_table {
   314 DELETE_
   282,line 34
   315 EXP_
-  347,line 160
+  347,line 105
   316 GENERATE_
   264,title PHYSICAL
   335,t 0
-  317 GLOBAL_
+  317 GHS_
   283,title WCSP
-  318 HISTEQU_
+  318 GLOBAL_
   312,title COPY
-  331,title OPEN
-  320 LIMITS_
-  319 LEVELS_
+  331,title NLEVELS
+  320 LEVELS_
+  319 HISTEQU_
   278,line 30
   356,t 1
   350,title {}
   349,title {}
-  error,line 159
-  321 LINEAR_
+  error,line 160
+  321 LIMITS_
   368,title {}
   344,line 102
-  322 LOAD_
+  322 LINEAR_
   258,t 0
-  323 LOADLEVELS_
-  324 LOCAL_
-  325 LOG_
+  323 LOAD_
+  324 LOADLEVELS_
+  325 LOCAL_
   275,line 27
   279,t 0
   280,t 0
-  326 METHOD_
+  326 LOG_
   341,line 99
-  327 MINMAX_
-  328 MODE_
+  327 METHOD_
+  328 MINMAX_
   311,t 0
-  330 NLEVELS_
-  329 NAME_
-  331 OPEN_
+  330 NAME_
+  329 MODE_
+  331 NLEVELS_
   272,line 24
   332,t 0
-  332 PASTE_
+  332 OPEN_
   337,line 95
-  333 POW_
+  333 PASTE_
   263,title IMAGE
-  334 RESET_
+  334 POW_
   282,title WCSO
   353,t 1
-  335 SAVE_
+  335 RESET_
   311,title CONVERT
-  336 SAVELEVELS_
-  330,title NLEVELS
-  329,title NAME
+  336 SAVE_
+  330,title NAME
+  329,title MODE
   268,line 20
   348,title {}
-  337 SCALE_
+  337 SAVELEVELS_
   367,title {}
-  338 SCOPE_
+  338 SCALE_
   334,line 92
-  340 SMOOTH_
-  339 SINH_
+  340 SINH_
+  339 SCOPE_
   276,t 0
-  341 SQRT_
-  342 SQUARED_
+  341 SMOOTH_
+  342 SQRT_
   265,line 16
-  343 STYLE_
+  343 SQUARED_
   307,t 0
   297,t 0
-  344 WIDTH_
+  344 STYLE_
   331,line 89
-  345 ZMAX_
-  346 ZSCALE_
+  345 WIDTH_
+  346 ZMAX_
   328,t 0
-  347 yesno
+  347 ZSCALE_
   262,line 12
-  348 coordsys
+  348 yesno
   350,t 1
-  350 skyframe
+  350 wcssys
   349,t 1
-  349 wcssys
+  349 coordsys
   0,t 0
   0 {$}
   327,line 85
   262,title FALSE
-  351 numeric
+  351 skyframe
   281,title WCSN
-  352 command
+  352 numeric
   error,t 0
   310,title COLOR
   309,title CLOSE
   299,title GALACTIC
-  353 @PSEUDO1
-  328,title MODE
+  371,t 1
+  353 command
+  328,title MINMAX
   258,line 8
-  354 contour
-  347,title {}
+  354 @PSEUDO1
+  347,title ZSCALE
   273,t 0
   366,title {}
-  355 aux
+  355 contour
   324,line 82
-  356 auxrow
-  357 levels
+  356 aux
+  357 auxrow
   294,t 0
   304,t 0
-  358 style
-  360 numerics
-  359 dash
-  361 load
+  358 levels
+  360 dash
+  359 style
+  361 numerics
   325,t 0
   321,line 79
-  362 save
-  363 paste
-  364 method
+  362 load
+  363 save
+  364 paste
   346,t 0
-  365 scale
-  366 log
+  365 method
+  366 scale
   317,line 75
   261,title TRUE
   367,t 1
-  367 modes
+  367 log
   279,title WCSL
   280,title WCSM
-  368 mode
+  368 modes
   308,title CLEAR
   269,t 0
   270,t 0
   298,title ICRS
-  370 start'
-  369 scope
-  327,title MINMAX
-  346,title ZSCALE
+  370 scope
+  369 mode
+  327,title METHOD
+  371 start'
+  346,title ZMAX
   365,title {}
   314,line 72
   291,t 0
   301,t 0
-  370,line 357
-  369,line 354
+  370,line 356
+  369,line 351
   322,t 0
   311,line 69
   343,t 0
-  366,line 341
+  366,line 332
   364,t 1
   307,line 65
   266,t 0
@@ -3029,25 +3042,25 @@ array set contour::token_id_table {
   259,title ON
   297,line 50
   278,title WCSK
-  363,line 317
+  363,line 307
   307,title BLOCK
   297,title J2000
-  326,title METHOD
+  326,title LOG
   287,t 0
-  345,title ZMAX
+  345,title WIDTH
   364,title {}
   294,line 47
   304,line 62
   318,t 0
-  360,line 291
-  359,line 283
+  360,line 284
+  359,line 276
   340,t 0
   339,t 0
   error,title {}
   291,line 43
   301,line 55
   361,t 1
-  356,line 266
+  356,line 251
   263,t 0
   258,title NO
   287,line 39
@@ -3056,13 +3069,13 @@ array set contour::token_id_table {
   353,line 214
   306,title AUX
   296,title FK5
-  325,title LOG
-  344,title WIDTH
+  325,title LOCAL
+  344,title STYLE
   315,t 0
   363,title {}
   284,line 36
-  350,line 201
-  349,line 173
+  350,line 174
+  349,line 169
   336,t 0
   357,t 1
   281,line 33
@@ -3077,8 +3090,8 @@ array set contour::token_id_table {
   312,t 0
   305,title ASINH
   295,title B1950
-  324,title LOCAL
-  343,title STYLE
+  324,title LOADLEVELS
+  343,title SQUARED
   362,title {}
   333,t 0
   274,line 26
@@ -3097,8 +3110,8 @@ array set contour::token_id_table {
   304,title ALL
   330,t 0
   329,t 0
-  323,title LOADLEVELS
-  342,title SQUARED
+  323,title LOAD
+  342,title SQRT
   361,title {}
   264,line 15
   351,t 1
@@ -3115,9 +3128,9 @@ array set contour::token_id_table {
   323,line 81
   293,title WCSZ
   303,title string
-  322,title LOAD
-  347,t 1
-  341,title SQRT
+  322,title LINEAR
+  347,t 0
+  341,title SMOOTH
   360,title {}
   359,title {}
   368,t 1
@@ -3134,23 +3147,23 @@ array set contour::token_id_table {
   313,line 71
   292,title WCSY
   302,title float
-  321,title LINEAR
-  368,line 349
-  340,title SMOOTH
-  339,title SINH
+  321,title LIMITS
+  368,line 347
+  340,title SINH
+  339,title SCOPE
   365,t 1
   358,title {}
   267,t 0
   310,line 68
   309,line 67
   299,line 52
-  365,line 331
+  365,line 328
   288,t 0
   320,t 0
   319,t 0
   306,line 64
   296,line 49
-  362,line 306
+  362,line 296
   341,t 0
   272,title WCSE
   291,title WCSX
@@ -3158,21 +3171,21 @@ array set contour::token_id_table {
   301,title integer
   303,line 58
   362,t 1
-  320,title LIMITS
-  319,title LEVELS
-  358,line 275
-  338,title SCOPE
+  320,title LEVELS
+  319,title HISTEQU
+  358,line 271
+  338,title SCALE
   264,t 0
   357,title {}
   285,t 0
   289,line 41
   290,line 42
   300,line 53
-  355,line 250
+  355,line 218
   316,t 0
   286,line 38
   337,t 0
-  352,line 213
+  352,line 210
   358,t 1
   271,title WCSD
   261,t 0
@@ -3180,9 +3193,9 @@ array set contour::token_id_table {
   289,title WCSV
   290,title WCSW
   300,title ECLIPTIC
-  318,title HISTEQU
-  348,line 168
-  337,title SCALE
+  318,title GLOBAL
+  348,line 161
+  337,title SAVELEVELS
   356,title {}
   282,t 0
   279,line 31
@@ -3198,10 +3211,10 @@ array set contour::token_id_table {
   270,title WCSC
   273,line 25
   288,title WCSU
-  317,title GLOBAL
+  317,title GHS
   278,t 0
   338,line 96
-  336,title SAVELEVELS
+  336,title SAVE
   355,title {}
   310,t 0
   309,t 0
@@ -3218,7 +3231,7 @@ array set contour::token_id_table {
   263,line 14
   287,title WCST
   316,title GENERATE
-  335,title SAVE
+  335,title RESET
   328,line 86
   306,t 0
   296,t 0
@@ -3239,7 +3252,7 @@ array set contour::token_id_table {
   303,t 0
   315,title EXP
   258 NO_
-  334,title RESET
+  334,title POW
   318,line 76
   260 OFF_
   259 ON_
@@ -3253,6 +3266,7 @@ array set contour::token_id_table {
   315,line 73
   265 AMPLIFIER_
   266 DETECTOR_
+  371,line 359
   366,t 1
   267 WCS_
   268,t 0
@@ -3265,7 +3279,7 @@ array set contour::token_id_table {
   289,t 0
   290,t 0
   300,t 0
-  367,line 345
+  367,line 343
   266,title DETECTOR
   273 WCSF_
   274 WCSG_
@@ -3273,13 +3287,14 @@ array set contour::token_id_table {
   321,t 0
   314,title DELETE
   275 WCSH_
-  333,title POW
+  333,title PASTE
   308,line 66
   276 WCSI_
   298,line 51
   352,title {}
   277 WCSJ_
-  364,line 327
+  371,title {}
+  364,line 318
   342,t 0
   278 WCSK_
   279 WCSL_
@@ -3291,7 +3306,7 @@ array set contour::token_id_table {
   295,line 48
   265,t 0
   283 WCSP_
-  361,line 295
+  361,line 292
   284 WCSQ_
   285 WCSR_
 }
@@ -3512,15 +3527,16 @@ proc contour::yyparse {} {
                     132 { set _ asinh }
                     133 { set _ sinh }
                     134 { set _ histequ }
-                    135 { ContourCmdScale log $1 }
-                    136 { ContourCmdScale log $2 }
-                    137 { ContourCmdMode mode $1 }
+                    135 { set _ ghs }
+                    136 { ContourCmdScale log $1 }
+                    137 { ContourCmdScale log $2 }
                     138 { ContourCmdMode mode $1 }
-                    139 { set _ minmax }
-                    140 { set _ zscale }
-                    141 { set _ zmax }
-                    142 { set _ local }
-                    143 { set _ global }
+                    139 { ContourCmdMode mode $1 }
+                    140 { set _ minmax }
+                    141 { set _ zscale }
+                    142 { set _ zmax }
+                    143 { set _ local }
+                    144 { set _ global }
                 }
                 unsetupvalues $dc
                 # pop off tokens from the stack if normal rule

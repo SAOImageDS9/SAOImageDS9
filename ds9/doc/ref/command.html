@@ -645,7 +645,7 @@ $ds9 -console<br></tt>
 &nbsp;&nbsp;&nbsp; [smooth &lt;smooth&gt;]<br>
 &nbsp;&nbsp;&nbsp; [method block|smooth]<br>
 &nbsp;&nbsp;&nbsp; [nlevels &lt;number of levels&gt;]<br>
-&nbsp;&nbsp;&nbsp; [scale linear|log|pow|squared|sqrt|asinh|sinh|histequ]<br>
+&nbsp;&nbsp;&nbsp; [scale linear|log|pow|squared|sqrt|asinh|sinh|histequ|ghs]<br>
 &nbsp;&nbsp;&nbsp; [log exp &lt;value&gt;]<br>
 &nbsp;&nbsp;&nbsp; [mode minmax|&lt;value&gt;|zscale|zmax]<br>
 &nbsp;&nbsp;&nbsp; [scope global|local]<br>
@@ -2445,10 +2445,12 @@ $ds9 -saveimage ds9.tiff<br>
 $ds9 -saveimage pdf ds9.pdf<br>
 $ds9 -saveimage jpeg ds9.jpeg 75<br></tt>
 <p><b><a name="scale" id="scale"></a>scale</b></p>
-<p>Controls the limits and color scale distribution.</p>
+<p>Controls the limits and color scale distribution (see <a href="how.html#Scales">How DS9 renders an image</a>).</p>
 <tt>Syntax:<br>
--scale [linear|log|pow|sqrt|squared|asinh|sinh|histequ]<br>
+-scale [linear|log|pow|sqrt|squared|asinh|sinh|histequ|ghs]<br>
 &nbsp;&nbsp;&nbsp; [log exp &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [ghs stretch|intensity &lt;value&gt;]<br>
+&nbsp;&nbsp;&nbsp; [ghs sp|lp|hp &lt;value&gt;|auto]<br>
 &nbsp;&nbsp;&nbsp; [datasec yes|no]<br>
 &nbsp;&nbsp;&nbsp; [limits &lt;minvalue&gt; &lt;maxvalue&gt;]<br>
 &nbsp;&nbsp;&nbsp; [mode minmax|&lt;value&gt;|zscale|zmax]<br>
@@ -2462,6 +2464,10 @@ $ds9 -saveimage jpeg ds9.jpeg 75<br></tt>
 Example:<br>
 $ds9 -scale linear<br>
 $ds9 -scale log exp 100<br>
+$ds9 -scale ghs<br>
+$ds9 -scale ghs stretch 8<br>
+$ds9 -scale ghs sp 101.3<br>
+$ds9 -scale ghs hp auto<br>
 $ds9 -scale datasec yes<br>
 $ds9 -scale histequ<br>
 $ds9 -scale limits 1 100<br>

@@ -385,6 +385,11 @@ void FrameMultiColor::rebuildLayerScale(int ss)
     colorScale[ss] =
       new SinhScale(SCALESIZE, colorCells, colorCount);
     break;
+  case FrScale::GHSSCALE:
+    colorScale[ss] =
+      new GhsScale(colorCells, colorCount, context[ss].ghs(),
+		   context[ss].low(), context[ss].high());
+    break;
   case FrScale::HISTEQUSCALE:
     colorScale[ss] =
       new HistEquScale(SCALESIZE, colorCells, colorCount,

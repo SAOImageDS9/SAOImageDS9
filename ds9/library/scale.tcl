@@ -23,12 +23,21 @@ proc ScaleDef {} {
 
     set scale(type) linear
     set scale(log) 1000
+    # GHS: sp/lp/hp are data values or auto (sp,lp = low, hp = high)
+    set scale(ghs,stretch) 5
+    set scale(ghs,intensity) 0
+    set scale(ghs,sp) auto
+    set scale(ghs,lp) auto
+    set scale(ghs,hp) auto
     set scale(mode) minmax
     set scale(scope) local
     set scale(datasec) 1
 
     set pscale(type) $scale(type)
     set pscale(log) $scale(log)
+    foreach kk {stretch intensity sp lp hp} {
+	set pscale(ghs,$kk) $scale(ghs,$kk)
+    }
     set pscale(mode) $scale(mode)
     set pscale(scope) $scale(scope)
     set pscale(datasec) $scale(datasec)
@@ -77,6 +86,7 @@ proc ChangeScale {} {
 	}
 
 	EvalLockCurrent lock,scale [list $current(frame) colorscale log $scale(log)]
+	EvalLockCurrent lock,scale [list $current(frame) colorscale ghs {*}[ScaleGhsList]]
 	EvalLockCurrent lock,scale [list $current(frame) colorscale $scale(type)]
 	UpdateScale
     }
@@ -252,9 +262,13 @@ proc ScaleDialog {} {
 	-variable scale(type) -command ChangeScale -value sinh
     $mb.scale add radiobutton -label [msgcat::mc {Histogram Equalization}] \
 	-variable scale(type) -command ChangeScale -value histequ
+    $mb.scale add radiobutton -label {GHS} \
+	-variable scale(type) -command ChangeScale -value ghs
     $mb.scale add separator
     $mb.scale add command -label [msgcat::mc {Log Exponent}] \
 	-command ScaleLogDialog
+    $mb.scale add command -label "GHS [msgcat::mc {Parameters}]..." \
+	-command ScaleGhsDialog
 
     ThemeMenu $mb.limit
     $mb.limit add radiobutton -label [msgcat::mc {Min Max}] \
@@ -358,6 +372,7 @@ proc ScaleDialog {} {
 	-color [ThemeTreeForeground] \
 	-titlecolor [ThemeTreeForeground]
 
+    set dscale(curvecolor) #2f80ed
     set dscale(xdata) scaleHistX
     set dscale(ydata) scaleHistY
     blt::vector create $dscale(xdata) $dscale(ydata)
@@ -368,6 +383,43 @@ proc ScaleDialog {} {
 	-ydata $dscale(ydata) \
 	-areabackground [ThemeTreeForeground] \
 	-color [ThemeTreeForeground]
+
+    # Scale function: scaled value (0-1, right axis) against data value
+    $dscale(hist) y2axis configure \
+	-hide yes \
+	-min 0 -max 1 -stepsize .25 \
+	-ticklength 3 \
+	-tickfont [font actual TkDefaultFont] \
+	-bg [ThemeTreeBackground] \
+	-color [ThemeTreeForeground] \
+	-titlecolor [ThemeTreeForeground]
+
+    set dscale(curvex) scaleCurveX
+    set dscale(curvey) scaleCurveY
+    blt::vector create $dscale(curvex) $dscale(curvey)
+
+    $dscale(hist) element create curve \
+	-xdata $dscale(curvex) \
+	-ydata $dscale(curvey) \
+	-mapy y2 \
+	-symbol none \
+	-linewidth 2 \
+	-color $dscale(curvecolor) \
+	-hide yes
+    # the first element listed is drawn on top
+    $dscale(hist) element show {curve bar1}
+
+    # GHS symmetry point / protect shadows / protect highlights: dashed
+    # guide lines (the draggable handles are created after the limit lines,
+    # so they sit on top of them)
+    foreach mm {sp lp hp} {
+	set dscale(ghs$mm) [$dscale(hist) marker create line \
+				-mapy y2 \
+				-outline $dscale(curvecolor) \
+				-dashes {4 3} \
+				-hide yes \
+			       ]
+    }
 
     # Cut Lines
     $dscale(hist) marker bind min <B1-Motion> \
@@ -386,6 +438,31 @@ proc ScaleDialog {} {
 			     -outline green \
 			     -bindtags [list max up] \
 			    ]
+
+    # GHS handles on the curve. Drag sideways to move LP/SP/HP. Created
+    # LP, HP, SP so SP is on top when two coincide (e.g. both at the low
+    # limit with auto): SP is the one you want to pull away first.
+    # (tkblt has only line, polygon and text markers: the handle is a
+    # filled text tab, centred on the curve)
+    foreach mm {lp hp sp} {
+	set dscale(ghs${mm}handle) [$dscale(hist) marker create text \
+					-mapy y2 \
+					-text " [string toupper $mm] " \
+					-anchor center \
+					-foreground white \
+					-background $dscale(curvecolor) \
+					-font [font actual TkDefaultFont] \
+					-bindtags [list ghs$mm ghsup] \
+					-hide yes \
+				       ]
+	$dscale(hist) marker bind ghs$mm <B1-Motion> \
+	    [list ScaleGhsMotionDialog %x %y $mm]
+	$dscale(hist) marker bind ghs$mm <Enter> \
+	    [list $dscale(hist) configure -cursor sb_h_double_arrow]
+	$dscale(hist) marker bind ghs$mm <Leave> \
+	    [list $dscale(hist) configure -cursor {}]
+    }
+    $dscale(hist) marker bind ghsup <ButtonRelease-1> ScaleGhsReleaseDialog
 
     # Cut Levels
     set f [ttk::frame $w.param]
@@ -431,6 +508,8 @@ proc ThemeConfigScale {w} {
 	-titlecolor [ThemeTreeForeground]
     $w yaxis configure -bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
 	-titlecolor [ThemeTreeForeground]
+    $w y2axis configure -bg [ThemeTreeBackground] -color [ThemeTreeForeground] \
+	-titlecolor [ThemeTreeForeground]
 
     $w element configure bar1 -areabackground [ThemeTreeForeground] \
 	-color [ThemeTreeForeground]
@@ -469,7 +548,11 @@ proc ScaleDestroyDialog {} {
 	destroy $iscale(top)
 	destroy $iscale(mb)
 	blt::vector destroy $dscale(xdata) $dscale(ydata)
+	blt::vector destroy $dscale(curvex) $dscale(curvey)
 	destroy $dscale(hist)
+	if {[info exists dscale(ghspending)]} {
+	    after cancel $dscale(ghspending)
+	}
 	unset dscale
     }
 }
@@ -584,6 +667,7 @@ proc UpdateScaleDialog {} {
 
 	    ScaleYAxisDialog
 	    ScaleXAxisDialog
+	    ScaleCurveDialog
 
 	    return
 	}
@@ -592,6 +676,7 @@ proc UpdateScaleDialog {} {
     $dscale(hist) element configure bar1 -hide yes
     $dscale(hist) xaxis configure -hide yes
     $dscale(hist) yaxis configure -hide yes
+    ScaleCurveHideDialog
 
     $iscale(mb) entryconfig [msgcat::mc {Scope}] -state normal
     $iscale(mb).minmax entryconfig {DATAMIN DATAMAX} -state normal
@@ -609,6 +694,184 @@ proc UpdateScaleDialogFont {} {
     $dscale(hist) configure -font [font actual TkDefaultFont]
     $dscale(hist) xaxis configure -tickfont [font actual TkDefaultFont]
     $dscale(hist) yaxis configure -tickfont [font actual TkDefaultFont]
+    $dscale(hist) y2axis configure -tickfont [font actual TkDefaultFont]
+}
+
+proc ScaleCurveHideDialog {} {
+    global dscale
+
+    $dscale(hist) element configure curve -hide yes
+    $dscale(hist) y2axis configure -hide yes
+    foreach mm {sp lp hp} {
+	$dscale(hist) marker configure $dscale(ghs$mm) -hide yes
+	$dscale(hist) marker configure $dscale(ghs${mm}handle) -hide yes
+    }
+}
+
+# Draw the current scale function over the histogram. The inverse levels
+# ('get colorscale level') are the data values where the scaled value
+# reaches k/(n-1): the curve sampled evenly in output, so it's dense where
+# the curve is steep, and it works for every scale type.
+proc ScaleCurveDialog {} {
+    global dscale
+    global current
+
+    set fr $current(frame)
+    set type [$fr get colorscale]
+    set lo $dscale(min)
+    set hi $dscale(max)
+    if {[$fr has iis] || ![string is double -strict $lo] ||
+	![string is double -strict $hi] || $lo >= $hi} {
+	ScaleCurveHideDialog
+	return
+    }
+
+    set nn 257
+    set levels [$fr get colorscale level $nn $lo $hi $type \
+		    [$fr get colorscale log]]
+
+    # flat at 0 below the low limit and at 1 above the high limit, out to
+    # whichever is wider: the data range or the current-range view
+    set ext [expr {($hi-$lo)*.1}]
+    set left [expr {min($dscale(minmin),$lo-$ext)}]
+    set right [expr {max($dscale(minmax),$hi+$ext)}]
+
+    set xx [list $left]
+    set yy [list 0]
+    set ii 0
+    foreach ll $levels {
+	lappend xx $ll
+	lappend yy [expr {double($ii)/($nn-1)}]
+	incr ii
+    }
+    lappend xx $right
+    lappend yy 1
+
+    $dscale(curvex) set $xx
+    $dscale(curvey) set $yy
+    $dscale(hist) element configure curve -hide no
+    $dscale(hist) y2axis configure -hide no
+
+    ScaleGhsHandlesDialog [expr {$type == {ghs}}]
+}
+
+# Place the GHS handles on the curve, and the dashed guide lines for
+# parameters given as data values. Handles for auto parameters sit at the
+# limit they stand for.
+proc ScaleGhsHandlesDialog {show} {
+    global dscale
+    global scale
+
+    foreach mm {sp lp hp} {
+	if {!$show} {
+	    $dscale(hist) marker configure $dscale(ghs$mm) -hide yes
+	    $dscale(hist) marker configure $dscale(ghs${mm}handle) -hide yes
+	    continue
+	}
+
+	set xx [ScaleGhsResolve $mm]
+	set yy [ScaleCurveAt $xx]
+	# keep the tab inside the plot: half outside, BLT won't pick it
+	if {$yy < .1} {
+	    set anchor s
+	} elseif {$yy > .9} {
+	    set anchor n
+	} else {
+	    set anchor center
+	}
+	$dscale(hist) marker configure $dscale(ghs${mm}handle) \
+	    -coords "$xx $yy" -anchor $anchor -hide no
+	if {[string is double -strict $scale(ghs,$mm)]} {
+	    $dscale(hist) marker configure $dscale(ghs$mm) \
+		-coords "$xx 0 $xx 1" -hide no
+	} else {
+	    $dscale(hist) marker configure $dscale(ghs$mm) -hide yes
+	}
+    }
+}
+
+# GHS parameter as a data value: auto means the low (sp, lp) or high (hp)
+# limit. Clamped to the limits, as the curve does.
+proc ScaleGhsResolve {mm} {
+    global dscale
+    global scale
+
+    set lo $dscale(min)
+    set hi $dscale(max)
+    set vv $scale(ghs,$mm)
+    if {![string is double -strict $vv]} {
+	return [expr {$mm == {hp} ? $hi : $lo}]
+    }
+    return [expr {min(max($vv,$lo),$hi)}]
+}
+
+# scaled value of the drawn curve at data value xx (linear interpolation)
+proc ScaleCurveAt {xx} {
+    global dscale
+
+    set px [$dscale(curvex) range 0 end]
+    set py [$dscale(curvey) range 0 end]
+    set nn [llength $px]
+    if {$nn == 0} {
+	return 0
+    }
+    if {$xx <= [lindex $px 0]} {
+	return [lindex $py 0]
+    }
+    for {set ii 1} {$ii < $nn} {incr ii} {
+	set x1 [lindex $px $ii]
+	if {$xx <= $x1} {
+	    set x0 [lindex $px [expr {$ii-1}]]
+	    set y0 [lindex $py [expr {$ii-1}]]
+	    set y1 [lindex $py $ii]
+	    if {$x1 == $x0} {
+		return $y1
+	    }
+	    return [expr {$y0+($y1-$y0)*($xx-$x0)/($x1-$x0)}]
+	}
+    }
+    return [lindex $py end]
+}
+
+# drag a GHS handle: clamp to the limits and keep LP <= SP <= HP, move the
+# handle now, and apply once per idle so the image follows the drag
+proc ScaleGhsMotionDialog {x y mm} {
+    global dscale
+    global scale
+
+    set xx [lindex [$dscale(hist) invtransform $x $y] 0]
+    set xx [expr {min(max($xx,$dscale(min)),$dscale(max))}]
+    set lp [ScaleGhsResolve lp]
+    set sp [ScaleGhsResolve sp]
+    set hp [ScaleGhsResolve hp]
+    switch -- $mm {
+	lp {set xx [expr {min($xx,$sp)}]}
+	sp {set xx [expr {min(max($xx,$lp),$hp)}]}
+	hp {set xx [expr {max($xx,$sp)}]}
+    }
+    set scale(ghs,$mm) [format %.6g $xx]
+
+    ScaleGhsHandlesDialog 1
+    if {![info exists dscale(ghspending)]} {
+	set dscale(ghspending) [after idle ScaleGhsDragApplyDialog]
+    }
+}
+
+proc ScaleGhsDragApplyDialog {} {
+    global dscale
+
+    unset -nocomplain dscale(ghspending)
+    ChangeScale
+}
+
+proc ScaleGhsReleaseDialog {} {
+    global dscale
+
+    if {[info exists dscale(ghspending)]} {
+	after cancel $dscale(ghspending)
+	unset dscale(ghspending)
+    }
+    ChangeScale
 }
 
 proc ScaleYAxisDialog {} {
@@ -652,6 +915,204 @@ proc ScaleXAxisDialog {} {
 proc ScaleLogDialog {} {
     if {[EntryDialogGlobal [msgcat::mc {Scale}] [msgcat::mc {Log Exponent}] 10 scale log]} {
 	ChangeScale
+    }
+}
+
+# GHS (Generalized Hyperbolic Stretch) parameters, in the order the frame
+# command 'colorscale ghs' takes them
+proc ScaleGhsList {} {
+    global scale
+
+    return [list $scale(ghs,stretch) $scale(ghs,intensity) \
+		$scale(ghs,sp) $scale(ghs,lp) $scale(ghs,hp)]
+}
+
+# set scale(ghs,*) from 'get colorscale ghs'
+proc ScaleGhsSet {ll} {
+    global scale
+
+    foreach kk {stretch intensity sp lp hp} vv $ll {
+	set scale(ghs,$kk) $vv
+    }
+}
+
+# a data value or auto
+proc ScaleGhsValue {vv} {
+    set vv [string trim $vv]
+    if {$vv == {} || [string equal -nocase $vv auto]} {
+	return auto
+    }
+    if {[string is double -strict $vv]} {
+	return $vv
+    }
+    return {}
+}
+
+# GHS Parameters dialog. Not modal, so the image, the Scale dialog graph
+# and the limits stay usable while tuning. Moving the sliders updates the
+# display at once; the data-value entries apply with Apply or Return.
+# Applying switches the scale to GHS, since that's what the dialog is for;
+# Reset restores the parameters and scale type from when it was opened.
+proc ScaleGhsDialog {} {
+    global scale
+    global dghs
+
+    set w {.ghs}
+
+    if {[winfo exists $w]} {
+	raise $w
+	return
+    }
+
+    foreach kk {stretch intensity sp lp hp} {
+	set dghs($kk) $scale(ghs,$kk)
+	set dghs(orig,$kk) $scale(ghs,$kk)
+    }
+    set dghs(orig,type) $scale(type)
+
+    Toplevel $w {} 6 "GHS [msgcat::mc {Parameters}]" ScaleGhsDestroyDialog
+
+    # Param
+    set f [ttk::frame $w.param]
+    # float limits, so SliderCmd doesn't round to integers
+    slider $f.sstretch 0. 20. [msgcat::mc {Stretch Factor}] \
+	dghs(stretch) ScaleGhsLiveDialog
+    slider $f.sintensity -5. 15. [msgcat::mc {Local Intensity}] \
+	dghs(intensity) ScaleGhsLiveDialog
+    grid $f.sstretch - -padx 2 -pady 2 -sticky ew
+    grid $f.sintensity - -padx 2 -pady 2 -sticky ew
+
+    ttk::label $f.tsp -text [msgcat::mc {Symmetry Point}]
+    ttk::entry $f.sp -textvariable dghs(sp) -width 14
+    ttk::label $f.tlp -text [msgcat::mc {Protect Shadows}]
+    ttk::entry $f.lp -textvariable dghs(lp) -width 14
+    ttk::label $f.thp -text [msgcat::mc {Protect Highlights}]
+    ttk::entry $f.hp -textvariable dghs(hp) -width 14
+    ttk::label $f.note \
+	-text [msgcat::mc {Data values, or auto for the scale limits}]
+    grid $f.tsp $f.sp -padx 2 -pady 2 -sticky w
+    grid $f.tlp $f.lp -padx 2 -pady 2 -sticky w
+    grid $f.thp $f.hp -padx 2 -pady 2 -sticky w
+    grid $f.note - -padx 2 -pady 2 -sticky w
+    grid columnconfigure $f 1 -weight 1
+
+    foreach ee {sp lp hp} {
+	bind $f.$ee <Return> ScaleGhsApplyDialog
+    }
+
+    # Buttons
+    set f [ttk::frame $w.buttons]
+    ttk::button $f.apply -text [msgcat::mc {Apply}] \
+	-command ScaleGhsApplyDialog -default active
+    ttk::button $f.reset -text [msgcat::mc {Reset}] \
+	-command ScaleGhsResetDialog
+    ttk::button $f.close -text [msgcat::mc {Close}] \
+	-command ScaleGhsDestroyDialog
+    pack $f.apply $f.reset $f.close -side left -expand true -padx 2 -pady 4
+
+    # Fini
+    ttk::separator $w.sep -orient horizontal
+    pack $w.buttons $w.sep -side bottom -fill x
+    pack $w.param -side top -fill both -expand true
+}
+
+proc ScaleGhsDestroyDialog {} {
+    global dghs
+
+    if {[winfo exists .ghs]} {
+	destroy .ghs
+    }
+    if {[info exists dghs(pending)]} {
+	after cancel $dghs(pending)
+    }
+    unset -nocomplain dghs
+}
+
+# validate dghs and apply it; returns 1 if applied
+proc ScaleGhsApplyDialog {{quiet 0}} {
+    global scale
+    global dghs
+
+    foreach kk {stretch intensity} {
+	if {![string is double -strict $dghs($kk)]} {
+	    if {!$quiet} {
+		Error "GHS [msgcat::mc {Parameters}]: [msgcat::mc {invalid value}] $dghs($kk)"
+	    }
+	    return 0
+	}
+    }
+    foreach kk {sp lp hp} {
+	set vv [ScaleGhsValue $dghs($kk)]
+	if {$vv == {}} {
+	    if {!$quiet} {
+		Error "GHS [msgcat::mc {Parameters}]: [msgcat::mc {invalid value}] $dghs($kk)"
+	    }
+	    return 0
+	}
+	set val($kk) $vv
+    }
+
+    foreach kk {stretch intensity} {
+	set scale(ghs,$kk) $dghs($kk)
+    }
+    foreach kk {sp lp hp} {
+	set scale(ghs,$kk) $val($kk)
+	set dghs($kk) $val($kk)
+    }
+    set scale(type) ghs
+    ChangeScale
+    return 1
+}
+
+# slider moved: apply once per idle, so a drag doesn't queue a redraw per
+# motion event
+proc ScaleGhsLiveDialog {} {
+    global dghs
+
+    # sliders give long fractions; 0.01 is plenty
+    foreach kk {stretch intensity} {
+	if {[string is double -strict $dghs($kk)]} {
+	    set dghs($kk) [expr {round($dghs($kk)*100)/100.}]
+	}
+    }
+
+    if {![info exists dghs(pending)]} {
+	set dghs(pending) [after idle ScaleGhsLiveDoDialog]
+    }
+}
+
+proc ScaleGhsLiveDoDialog {} {
+    global dghs
+
+    unset -nocomplain dghs(pending)
+    if {[winfo exists .ghs]} {
+	ScaleGhsApplyDialog 1
+    }
+}
+
+proc ScaleGhsResetDialog {} {
+    global scale
+    global dghs
+
+    foreach kk {stretch intensity sp lp hp} {
+	set dghs($kk) $dghs(orig,$kk)
+	set scale(ghs,$kk) $dghs(orig,$kk)
+    }
+    set scale(type) $dghs(orig,type)
+    ChangeScale
+}
+
+# keep the dialog in step with the current frame (called from
+# UpdateScaleMenu)
+proc UpdateScaleGhsDialog {} {
+    global scale
+    global dghs
+
+    if {![winfo exists .ghs]} {
+	return
+    }
+    foreach kk {stretch intensity sp lp hp} {
+	set dghs($kk) $scale(ghs,$kk)
     }
 }
 
@@ -773,6 +1234,7 @@ proc MatchScale {which} {
 
     set type [$which get colorscale]
     set log  [$which get colorscale log]
+    set ghs  [$which get colorscale ghs]
     set limits [$which get clip]
     set mode [$which get clip mode]
     set scope [$which get clip scope]
@@ -786,6 +1248,7 @@ proc MatchScale {which} {
 	if {$ff != $which} {
 	    EvalLock lock,scale $ff [list $ff colorscale $type]
 	    EvalLock lock,scale $ff [list $ff colorscale log $log]
+	    EvalLock lock,scale $ff [list $ff colorscale ghs {*}$ghs]
 	    EvalLock lock,scale $ff [list $ff clip user $limits]
 	    EvalLock lock,scale $ff [list $ff clip mode $mode]
 	    EvalLock lock,scale $ff [list $ff clip scope $scope]
@@ -808,6 +1271,7 @@ proc MatchScaleLimits {which} {
     set limits [$which get clip]
     set type [$which get colorscale]
     set log  [$which get colorscale log]
+    set ghs  [$which get colorscale ghs]
     set scope [$which get clip scope]
     set mmmode [$which get clip minmax mode]
     set mmsample [$which get clip minmax sample]
@@ -821,6 +1285,7 @@ proc MatchScaleLimits {which} {
 	EvalLock lock,scalelimits $ff [list $ff clip user $limits]
 	EvalLock lock,scalelimits $ff [list $ff colorscale $type]
 	EvalLock lock,scalelimits $ff [list $ff colorscale log $log]
+	EvalLock lock,scalelimits $ff [list $ff colorscale ghs {*}$ghs]
 	EvalLock lock,scalelimits $ff [list $ff clip scope $scope]
 	EvalLock lock,scalelimits $ff \
 	    [list $ff clip minmax $mmsample $mmmode]
@@ -877,6 +1342,7 @@ proc ScaleBackup {ch which} {
 proc ScaleBackupBase {ch which} {
     puts $ch "$which colorscale [$which get colorscale]"
     puts $ch "$which colorscale log [$which get colorscale log]"
+    puts $ch "$which colorscale ghs [$which get colorscale ghs]"
     puts $ch "$which datasec [$which get datasec]"
     puts $ch "$which clip user [$which get clip]"
     puts $ch "$which clip mode [$which get clip mode]"

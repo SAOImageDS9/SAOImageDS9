@@ -279,12 +279,14 @@ class Context {
   int updateZscaleLine(int);
   int updateDataSec(int);
   int updateExpo(double);
+  int updateGhs(const GhsParams&);
 
   FrScale::ColorScaleType colorScaleType() {return frScale.colorScaleType();}
   FrScale::ClipScope clipScope() {return frScale.clipScope();}
   FrScale::ClipMode clipMode() {return frScale.clipMode();}
   int datasec() {return frScale.datasec();}
   float expo() {return frScale.expo();}
+  const GhsParams& ghs() {return frScale.ghs();}
   double low() {return frScale.low();}
   double high() {return frScale.high();}
   int minmaxSample() {return frScale.minmaxSample();}

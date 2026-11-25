@@ -768,6 +768,7 @@ public:
   void getContourDashCmd();
   void getContourDashListCmd();
   void getContourLevelCmd();
+  void getContourAuxCountCmd();
   void getContourLineWidthCmd();
   void getContourMethodCmd();
   void getContourNumLevelCmd();
@@ -891,6 +892,8 @@ public:
   virtual void loadArrVarCmd(const char*, const char*, LayerType);
 
   void loadENVISMMapCmd(const char*, const char*);
+
+  void loadHiPSCmd(const char*, int =-1);
 
   virtual void loadNRRDAllocCmd(const char*, const char*, LayerType);
   virtual void loadNRRDChannelCmd(const char*, const char*, LayerType);
@@ -1075,6 +1078,7 @@ public:
   FitsImage* hpxKeyWindow();
   const char* hpxRecentre(HPXMode, double, double, int drag =0);
   void hpxAutoRefresh();
+  void hpxRequestTiles(FitsImage*);
   int hpxDragRefresh();
   int hpxPanBegin();
   int hpxPanMotion(const Vector&);

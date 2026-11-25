@@ -1,0 +1,21 @@
+#tab hipsparser.tab.tcl
+
+%{
+%}
+
+#include defs.fin
+
+%%
+
+new	    {return $NEW_}
+cancel	    {return $CANCEL_}
+close	    {return $CLOSE_}
+coverage    {return $COVERAGE_}
+list	    {return $LIST_}
+status	    {return $STATUS_}
+
+#include yesno.fin
+#include string.fin
+#include ws.fin
+
+%%

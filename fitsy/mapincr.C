@@ -46,9 +46,15 @@ FitsHead* FitsMapIncr::headRead()
   // NOTE: the hdu cleans up after the hdu, 
   // here we only clean up after the data segment
 
-  // mmap will return valid if seek_ is at end of file, so check first
-  if (filesize_-seek_<=0)
+  // mmap will return valid if seek_ is at or past end of file, so check
+  // first. seek_ passes the end when the last HDU's data is unpadded
+  // (dataSkipBlock() steps over the padding), and these are unsigned, so
+  // compare rather than subtract. A header is whole blocks, so there must
+  // be room for at least one: mapping a block that runs past the file's
+  // last page and reading it is a SIGBUS.
+  if (seek_ >= filesize_ || filesize_-seek_ < FTY_BLOCK)
     return NULL;
+  size_t avail = filesize_-seek_;
 
   // read first BLOCK
   // seek_ needs to be an increment of getpagesize
@@ -72,10 +78,12 @@ FitsHead* FitsMapIncr::headRead()
     return NULL;
   }
 
-  // can we find 'END'?
-  while (mmsize-offset-FTY_BLOCK < filesize_-seek_) {
-    if (findEnd(mmdata+mmsize-FTY_BLOCK))
-      break;
+  // can we find 'END'? only add blocks that are wholly in the file
+  while (!findEnd(mmdata+mmsize-FTY_BLOCK)) {
+    if (mmsize-offset+FTY_BLOCK > avail) {
+      munmap((caddr_t)mmdata, mmsize);
+      return NULL;
+    }
 
     // add another BLOCK
     munmap((caddr_t)mmdata, mmsize);
@@ -118,6 +126,13 @@ void FitsMapIncr::dataSkipBlock(size_t blk)
 void FitsMapIncr::found()
 {
   // at this point we mmap the data segment
+
+  // the data itself must be in the file (only its padding may be
+  // missing): a truncated file would otherwise be read past its end
+  if (seek_ > filesize_ || head_->allbytes() > filesize_-seek_) {
+    error();
+    return;
+  }
 
   // must find a page boundary
   int pagesize = getpagesize();

@@ -2055,6 +2055,11 @@ void Base::getFitsCenterCmd(Coord::CoordSystem sys, Coord::SkyFrame sky,
     Tcl_AppendResult(interp, "0 0", NULL);
 }
 
+void Base::getContourAuxCountCmd()
+{
+  printInteger(currentContext->auxContourCount());
+}
+
 void Base::getFitsCountCmd()
 {
   printInteger(fitsCount());
@@ -3667,11 +3672,14 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat,
   std::vector<int> rebuilt(cc.size(), 0);
   for (size_t ii=0; ii<cc.size() && how; ii++) {
     FitsImage* fits = cc[ii]->fits;
+    // dragging: deep tiles only from memory (panEndCmd reads the rest)
+    fits->hpxSetDrag(drag);
     if (how == 1)
       rebuilt[ii] = fits->hpxRecentre(rlon, rlat);
     else
       rebuilt[ii] = fits->hpxReshape(rlon, rlat, npix, ww, hh,
 				     useCentre ? centre : NULL);
+    fits->hpxSetDrag(0);
     if (fits == ptr)
       ok = rebuilt[ii];
   }
@@ -3737,7 +3745,41 @@ const char* Base::hpxRecentre(HPXMode mode, double lon, double lat,
 
   // not FrameBase::updateBin(), which would reset the pan to the centre
   Base::updateBin(Matrix());
+
+  // a deep HiPS window may want tiles it doesn't have yet
+  hpxRequestTiles(ptr);
   return NULL;
+}
+
+// Ask the Tcl side (HiPSDeepWant, hipsnet.tcl) to fetch the tiles a deep
+// HiPS window wanted but didn't have; it fetches a remote HiPS's in the
+// background and rebuilds the window when they arrive. Doesn't disturb
+// this command's result.
+void Base::hpxRequestTiles(FitsImage* ptr)
+{
+  const char* root;
+  int order, slice;
+  std::vector<long long> tiles;
+  if (!ptr || !ptr->hpxDeepMissing(&root, &order, &slice, &tiles) || !root)
+    return;
+
+  Tcl_Obj* cmd = Tcl_NewListObj(0, NULL);
+  Tcl_IncrRefCount(cmd);
+  Tcl_ListObjAppendElement(interp, cmd, Tcl_NewStringObj("HiPSDeepWant", -1));
+  Tcl_ListObjAppendElement(interp, cmd,
+			   Tcl_NewStringObj(options->cmdName, -1));
+  Tcl_ListObjAppendElement(interp, cmd, Tcl_NewStringObj(root, -1));
+  Tcl_ListObjAppendElement(interp, cmd, Tcl_NewIntObj(order));
+  Tcl_Obj* ll = Tcl_NewListObj(0, NULL);
+  for (size_t ii=0; ii<tiles.size(); ii++)
+    Tcl_ListObjAppendElement(interp, ll, Tcl_NewWideIntObj(tiles[ii]));
+  Tcl_ListObjAppendElement(interp, cmd, ll);
+  Tcl_ListObjAppendElement(interp, cmd, Tcl_NewIntObj(slice));
+
+  Tcl_InterpState state = Tcl_SaveInterpState(interp, TCL_OK);
+  Tcl_EvalObjEx(interp, cmd, TCL_EVAL_GLOBAL);
+  Tcl_RestoreInterpState(interp, state);
+  Tcl_DecrRefCount(cmd);
 }
 
 // The key channel's image, if it is a resampled HEALPix window
@@ -3814,6 +3856,11 @@ void Base::hpxAutoRefresh()
 
   if (need)
     hpxRecentre(HPXPAN, 0, 0);
+  else
+    // the same window: its missing tiles are still wanted (after a
+    // cancel, nothing is fetching them; HiPSDeepWant skips those it has
+    // or is fetching)
+    hpxRequestTiles(ptr);
 }
 
 // During a drag, rebuild a HEALPix window around the pan point as it
@@ -4093,6 +4140,17 @@ void Base::panEndCmd(const Vector& vv)
 {
   panMotionCmd(vv);
   hpxAutoRefresh();
+  // tiles the drag didn't read (only those in memory were used): read
+  // them now, even if the window itself needn't move
+  int skipped = 0;
+  for (int ii=0; ii<hpxContextCount(); ii++) {
+    Context* ctx = hpxContextAt(ii);
+    if (ctx && ctx->fits && ctx->fits->isHPXWindow() &&
+	ctx->fits->hpxDragSkipped())
+      skipped = 1;
+  }
+  if (skipped)
+    hpxRecentre(HPXPAN, 0, 0);
   if (hpxDragStale_) {
     hpxDragStale_ = 0;
     currentContext->contourUpdateFV();

@@ -11,7 +11,8 @@ package provide DS9 1.0
 #   type: fits, mosaicimagewcs, mosaicimageiraf, mosaicimagewfpc2,
 #         mosaicwcs, mosaiciraf, mecube, multiframe,
 #         rgbimage, rgbcube, hlsimage, hlscube, hsvimage, hsvcube,
-#         array, rgbarray, hlsarray, hsvarray, nrrd, envi, photo
+#         array, rgbarray, hlsarray, hsvarray, nrrd, envi, photo,
+#         hips (filename is the HiPS root directory)
 #   keys: mode (slice), sys (mosaic wcs system), data (envi data file)
 
 proc RecentDef {} {
@@ -43,19 +44,28 @@ proc RecentSplitName {fn baseVar extVar} {
     }
 }
 
-# returns the absolute filename, or {} if this is not a file worth keeping
-proc RecentNormalize {fn} {
+# returns the absolute filename, or {} if this is not a file worth keeping.
+# A HiPS is a directory, not a file, so it is checked with isdir.
+proc RecentNormalize {fn {isdir 0}} {
     global ds9
 
     if {$fn == {}} {
 	return {}
+    }
+    # a remote HiPS is kept by its URL
+    if {$isdir && [HiPSIsURL $fn]} {
+	return $fn
     }
 
     RecentSplitName $fn base ext
     set base [file normalize $base]
 
     # stdin, url downloads, missing files, etc
-    if {![file isfile $base]} {
+    if {$isdir} {
+	if {![file isdirectory $base]} {
+	    return {}
+	}
+    } elseif {![file isfile $base]} {
 	return {}
     }
 
@@ -153,7 +163,7 @@ proc RecentAdd {type fn args} {
 	unset opts(layer)
     }
 
-    set fn [RecentNormalize $fn]
+    set fn [RecentNormalize $fn [expr {$type == {hips}}]]
     if {$fn == {}} {
 	return
     }
@@ -204,7 +214,12 @@ proc RecentOpen {entry} {
     array set opts [lrange $entry 2 end]
 
     RecentSplitName $fn base ext
-    if {![file isfile $base]} {
+    if {$type == {hips}} {
+	set ok [expr {[HiPSIsURL $base] || [file isdirectory $base]}]
+    } else {
+	set ok [file isfile $base]
+    }
+    if {!$ok} {
 	Error "[msgcat::mc {Unable to open file}] $fn"
 	RecentRemove $fn
 	return
@@ -254,6 +269,7 @@ proc RecentOpen {entry} {
 	nrrd {Import $fn $type {} {} {}}
 	envi {Import $fn envi {} {} $opts(data)}
 	photo {Import $fn png {} $opts(mode) {}}
+	hips {HiPSLoadAsync $fn}
 
 	default {Error "[msgcat::mc {Unknown file type}] $type"}
     }
@@ -313,6 +329,7 @@ proc RecentLabel {entry} {
 	nrrd {set hint {NRRD}}
 	envi {set hint {ENVI}}
 	photo {set hint [string toupper [string trimleft [file extension $fn] .]]}
+	hips {set hint {HiPS}}
 	default {set hint $type}
     }
     if {[info exists opts(mode)] && $opts(mode) == {slice}} {

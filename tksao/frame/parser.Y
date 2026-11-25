@@ -1285,6 +1285,7 @@ getColorScaleLevel: INT numeric numeric scaleType numeric
 
 getContour: coordSystem skyFrame
 	{fr->getContourCmd((Coord::CoordSystem)$1,(Coord::SkyFrame)$2);}
+	| AUX_ COUNT_ {fr->getContourAuxCountCmd();}
 	| CLIP_ getContourClip
 	| COLOR_ {fr->getContourColorNameCmd();}
 	| DASH_ {fr->getContourDashCmd();}
@@ -1615,6 +1616,29 @@ load	: ARRAY_ loadArr
 	| INCR_ loadIncr
         | NRRD_ loadNRRD
 	| PHOTO_ loadPhoto
+	// load hips <dir>: "hips" isn't a lexer keyword (adding one means
+	// regenerating lex.C, see AGENTS.md), so it arrives as a STRING
+	| STRING STRING
+	{
+	  if (!strcmp($1,"hips"))
+	    fr->loadHiPSCmd($2);
+	  else {
+	    // YYERROR alone says nothing: the command looked fine
+	    fr->error("load: unknown type (array, envi, fits, hips, incr, nrrd, photo)");
+	    YYERROR;
+	  }
+	}
+	// load hips <name> <channel>: one colour of RGB tiles (0 red,
+	// 1 green, 2 blue), into the frame's current channel
+	| STRING STRING INT
+	{
+	  if (!strcmp($1,"hips"))
+	    fr->loadHiPSCmd($2,$3);
+	  else {
+	    fr->error("load: unknown type (array, envi, fits, hips, incr, nrrd, photo)");
+	    YYERROR;
+	  }
+	}
 	;
 
 loadArr : STRING ALLOC_ STRING layerType

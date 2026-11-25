@@ -296,6 +296,11 @@ proc CreateXPA {} {
 	{} {} {} \
 	XPARcvdHeader {} "fillbuf=false"
 
+    xpacmdadd $xpa hips \
+	{} \
+	XPASendHiPS {} {} \
+	XPARcvdHiPS {} "fillbuf=false"
+
     xpacmdadd $xpa height \
 	{} \
 	XPASendHeight {} {} \
@@ -1298,6 +1303,19 @@ proc XPARcvdHeader {xpa cdata param buf len} {
     XPADebug "XPARcvdHeader" $param
     InitError xpa
     catch {set i 0; ProcessHeaderCmd param i}
+    XPACatchError $xpa
+}
+
+proc XPASendHiPS {xpa cdata param} {
+    InitError xpa
+    catch {ProcessSendHiPSCmd xpasetbuf $xpa $param}
+    XPACatchError $xpa
+}
+
+proc XPARcvdHiPS {xpa cdata param buf len} {
+    XPADebug "XPARcvdHiPS" $param
+    InitError xpa
+    catch {set i 0; ProcessHiPSCmd param i}
     XPACatchError $xpa
 }
 

@@ -95,6 +95,7 @@ TEA_ADD_SOURCES([
 		   hdu.C
 		   head.C
 		   hist.C
+		   hips.C
 		   hpx.C
 		   iis.C
 		   lex.C
@@ -144,7 +145,9 @@ TEA_ADD_HEADERS([
 		   hdu.h
 		   head.h
 		   hist.h
+		   hips.h
 		   hpx.h
+		   hpxnest.h
 		   iis.h
 		   map.h
 		   mapincr.h

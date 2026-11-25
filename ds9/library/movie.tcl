@@ -491,24 +491,24 @@ proc MovieSlice {} {
 	DisplayMode
     }
 
-    set depth [$current(frame) get fits depth]
-    set slice [$current(frame) get fits slice]
+    set depth [CubeFrame $current(frame) get fits depth]
+    set slice [CubeFrame $current(frame) get fits slice]
 
-    set ss [$current(frame) get crop 3d image]
+    set ss [CubeFrame $current(frame) get crop 3d image]
     set from [lindex $ss 0]
     set to [lindex $ss 1]
 
     # loop thru cube
     set movie(first) 1
     for {set ii $from} {$ii <= $to} {incr ii} {
-	$current(frame) update fits slice $ii
+	CubeFrame $current(frame) update fits slice $ii
 	if {[MoviePhoto]} {
 	    break
 	}
     }
 
     # reset current slice
-    $current(frame) update fits slice $slice
+    CubeFrame $current(frame) update fits slice $slice
 
     if {[info exists modesav]} {
 	set current(display) $modesav
@@ -531,14 +531,14 @@ proc Movie3d {} {
     switch $ds9(display) {
 	single {
 	    set zoom [$current(frame) get zoom]
-	    set slice [$current(frame) get fits slice]
+	    set slice [CubeFrame $current(frame) get fits slice]
 	    set vp [$current(frame) get 3d view]
 	}
 	tile {
 	    $current(frame) highlite off
 	    foreach ff $ds9(active) {
 		set zoom($ff) [$ff get zoom]
-		set slice($ff) [$ff get fits slice]
+		set slice($ff) [CubeFrame $ff get fits slice]
 		set vp($ff) [$ff get 3d view]
 	    }
 	}
@@ -595,13 +595,13 @@ proc Movie3d {} {
 		single {
 		    $current(frame) zoom to $zm $zm
 		    $current(frame) 3d view $az $el
-		    $current(frame) update fits slice [expr int($sl)]
+		    CubeFrame $current(frame) update fits slice [expr int($sl)]
 		}
 		tile {
 		    foreach ff $ds9(active) {
 			$ff zoom to $zm $zm
 			$ff 3d view $az $el
-			$ff update fits slice [expr int($sl)]
+			CubeFrame $ff update fits slice [expr int($sl)]
 		    }
 		}
 		blink {
@@ -641,7 +641,7 @@ proc Movie3d {} {
 	single {
 	    $current(frame) zoom to $zoom
 	    $current(frame) 3d view $vp
-	    $current(frame) update fits slice $slice
+	    CubeFrame $current(frame) update fits slice $slice
 	    $current(frame) 3d sync 0
 	}
 	tile {
@@ -649,7 +649,7 @@ proc Movie3d {} {
 	    foreach ff $ds9(active) {
 		$ff zoom to $zoom($ff)
 		$ff 3d view $vp($ff)
-		$ff update fits slice $slice($ff)
+		CubeFrame $ff update fits slice $slice($ff)
 		$ff 3d sync 0
 	    }
 	}
@@ -692,7 +692,9 @@ proc MoviePhotoMPEG {} {
     UpdateDS9
     RealizeDS9
 
+    HiPSDeepStatusSuspend
     set rr [catch {image create photo -format window -data $ds9(canvas)} ph]
+    HiPSDeepStatusResume
     if {$rr} {
 	Error [msgcat::mc {An error has occurred while creating}]
 	return $rr
@@ -728,7 +730,9 @@ proc MoviePhotoGIF {} {
     UpdateDS9
     RealizeDS9
 
+    HiPSDeepStatusSuspend
     set rr [catch {image create photo -format window -data $ds9(canvas)} ph]
+    HiPSDeepStatusResume
     if {$rr} {
 	Error [msgcat::mc {An error has occurred while creating}]
 	return $rr
@@ -762,7 +766,7 @@ proc Movie3dDialog {} {
     set ed2(az,to) $movie(az,to)
     set ed2(el,from) $movie(el,from)
     set ed2(el,to) $movie(el,to)
-    set ed2(sl,from) [$current(frame) get fits slice]
+    set ed2(sl,from) [CubeFrame $current(frame) get fits slice]
     set ed2(sl,to) $ed2(sl,from)
     set ed2(zm,from) [lindex [$current(frame) get zoom] 0]
     set ed2(zm,to) $ed2(zm,from)

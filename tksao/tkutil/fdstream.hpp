@@ -35,6 +35,24 @@
 #include <cstring>
 
 
+// On Windows the descriptor fdistream is handed by XPA is a Winsock
+// SOCKET, not a CRT file descriptor: read() fails on it, and
+// underflow() cannot tell that apart from end of file. Anything that
+// arrives over XPA this way -- a region file, a WCS header -- was
+// read as empty, with nothing reported. recv() is the call that works
+// on a socket; a real descriptor still falls back to read().
+//
+// recv() is declared here rather than reached by including
+// <winsock2.h>: that header pulls in <windows.h>, whose DELETE and
+// ERROR macros collide with identifiers in this tree -- Marker::
+// Property has a DELETE -- and this header is included from files
+// that use them. SOCKET is a UINT_PTR and WSAAPI is __stdcall,
+// which x86_64 ignores.
+#ifdef __WIN32
+#include <stdint.h>
+extern "C" int __stdcall recv(uintptr_t, char*, int, int);
+#endif
+
 // low-level read and write functions
 #ifdef _MSC_VER
 # include <io.h>
@@ -153,7 +171,13 @@ class fdinbuf : public std::streambuf {
 
         // read at most bufSize new characters
         int num;
+#ifdef __WIN32
+        num = recv ((uintptr_t)fd, buffer+pbSize, bufSize, 0);
+        if (num < 0)
+            num = read (fd, buffer+pbSize, bufSize);
+#else
         num = read (fd, buffer+pbSize, bufSize);
+#endif
         if (num <= 0) {
             // ERROR or EOF
             return EOF;

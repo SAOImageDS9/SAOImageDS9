@@ -1035,8 +1035,11 @@ proc ContourLoadLevelsNow {fn} {
 	return
     }
 
-    set ch [open $fn r]
-    if {[file extension $fn] == {.lev}} {
+    if {[catch {DecompressOpen $fn} ch]} {
+	Error "[msgcat::mc {Unable to open file}] $fn\n$ch"
+	return
+    }
+    if {[file extension [DecompressStrip $fn]] == {.lev}} {
 	lassign [ContourParseLines [read $ch]] levels styles
     } else {
 	lassign [ContourLoadLevelsNew $ch] levels styles
@@ -1194,7 +1197,7 @@ proc ContourLoadDialog {} {
     set ed(dash) 0
     set ed(frame) $current(frame)
     set ed(original) 0
-    if {[file extension $fn] == {.con}} {
+    if {[file extension [DecompressStrip $fn]] == {.con}} {
 	ContourLoadOldDialog $fn
     } else {
 	ContourLoadNewDialog $fn
@@ -1262,8 +1265,8 @@ proc ContourLoadOldDialog {fn} {
     if {$ed(ok)} {
 	set ed(color) [string tolower $ed(color)]
 	set before [ContourAuxIds]
-	$current(frame) contour load $ed(color) $ed(width) $ed(dash) \
-	    "\{$fn\}" $ed(system) $ed(sky)
+	ContourLoadFn $fn [list $ed(color) $ed(width) $ed(dash)] \
+	    [list $ed(system) $ed(sky)]
 	UpdateContourDialog
 	ContourAuxSelect [ContourAuxNew $before]
     }
@@ -1334,10 +1337,9 @@ proc ContourLoadNewDialog {fn} {
 
 	set before [ContourAuxIds]
 	if {$ed(original)} {
-	    $current(frame) contour load "\{$fn\}"
+	    ContourLoadFn $fn {} {}
 	} else {
-	    $current(frame) contour load "\{$fn\}" \
-		$ed(color) $ed(width) $ed(dash)
+	    ContourLoadFn $fn {} [list $ed(color) $ed(width) $ed(dash)]
 	}
 	UpdateContourDialog
 	ContourAuxSelect [ContourAuxNew $before]
@@ -1926,6 +1928,22 @@ proc ProcessContourCmd {varname iname} {
     incr i [expr $contour::yycnt-1]
 }
 
+# frame contour load, decompressing fn first if needed
+proc ContourLoadFn {fn pre post} {
+    global current
+
+    if {[catch {DecompressToTmp $fn} tmp]} {
+	Error "[msgcat::mc {Unable to load contour file}] $fn\n$tmp"
+	return
+    }
+
+    try {
+	$current(frame) contour load {*}$pre "\{$tmp\}" {*}$post
+    } finally {
+	DecompressCleanup $tmp
+    }
+}
+
 proc ContourCmdLoad {fn} {
     global current
 
@@ -1938,7 +1956,7 @@ proc ContourCmdLoad {fn} {
 	return
     }
     
-    $current(frame) contour load $fn
+    ContourLoadFn $fn {} {}
     FileLast contourlfbox $fn
     UpdateContourDialog
 }
@@ -1955,7 +1973,7 @@ proc ContourCmdLoadOrg {fn sys sky color width dash} {
 	return
     }
     
-    $current(frame) contour load $color $width $dash $fn $sys $sky
+    ContourLoadFn $fn [list $color $width $dash] [list $sys $sky]
     FileLast contourlfbox $fn
     UpdateContourDialog
 }

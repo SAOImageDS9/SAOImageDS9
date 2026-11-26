@@ -381,7 +381,10 @@ proc PlotLoadDataFile {varname fn dim} {
 	return
     }
 
-    set ch [open $fn]
+    if {[catch {DecompressOpen $fn} ch]} {
+	Error "[msgcat::mc {Unable to open file}] $fn\n$ch"
+	return
+    }
     set data [read $ch]
     close $ch
 

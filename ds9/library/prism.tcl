@@ -331,6 +331,7 @@ proc PrismDestroy {varname} {
 
     # just in case
     fitsy close
+    DecompressCleanup $var(fn)
 
     global $var(tbldb)
     if {[info exists $var(tbldb)]} {
@@ -500,6 +501,15 @@ proc PrismLoad {varname fn} {
 	return
     }
 
+    # fitsy reads gzip itself, anything else is decompressed first
+    if {[DecompressType $fn] ni {{} gzip}} {
+	if {[catch {DecompressToTmp $fn} tmp]} {
+	    Error "[msgcat::mc {Unable to load FITS file}] $fn\n$tmp"
+	    return
+	}
+	set fn $tmp
+    }
+
     set var(fn) $fn
     set var(type) fits
     switch $ds9(wm) {
@@ -667,6 +677,7 @@ proc PrismClear {varname} {
 
     # cleanup
     fitsy close
+    DecompressCleanup $var(fn)
 
     set var(fn) {}
     set var(rows) 0

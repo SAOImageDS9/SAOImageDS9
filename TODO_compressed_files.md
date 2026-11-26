@@ -304,6 +304,44 @@ same user-visible result with less C++ change.
 5. **Optional:** Option 3 (`std::istream`) for the C++ loaders, and
    `fitsy decompress push` for streaming, if needed.
 
+### Phase 2 notes (on hold, 2026-11-26)
+
+Phase 2 is parked until the codec libraries are available. Notes for
+picking it up:
+
+- **It needs the asdf/xisf branches.** bzip2, lz4 and zstd are vendored
+  and linked only on `asdf_support_rebase` and `xisf_support` (zstd only
+  on `xisf_support`). Either wait for one of them to merge into `master`,
+  or branch from it. Switching a checkout to those branches leaves the
+  vendored builds stale, so do a full clean build (`make -k distclean`,
+  restore the tracked files distclean deletes, such as `openssl/include/`
+  and `ast/configure`, then `unix/configure && make`).
+- **No grammar change, so no bison.** `fitsy decompress <in> <out>` is a
+  new subcommand of the `fitsy` Tcl command, and `tclfitsy/tclfitsy.C`
+  dispatches those with a plain `strncmp` chain (lines 55-85), not a
+  parser. The only Tcl change is in `DecompressData`
+  (`ds9/library/decompress.tcl`): call `fitsy decompress` for bzip2/zstd/
+  lz4 instead of the external program. Every call site from Phase 1 stays
+  as it is. Option 3 (a decompressing `std::istream` for the C++ loaders)
+  doesn't touch a grammar either; it replaces `ifstream` inside existing
+  command handlers.
+- **If a grammar change ever is needed** (a new frame command in
+  `tksao/frame/parser.Y`), the checked-in `parser.C` files match bison 2.3
+  (macOS `/usr/bin/bison`). The Linux build host has bison 3.8.2, which
+  rewrites them wholesale. Do grammar work on the Mac (see AGENTS.md).
+- **Where the code goes.** `fitsy/decompress.{h,C}` (new; add it by hand to
+  `TEA_ADD_SOURCES`/`TEA_ADD_HEADERS` in both `fitsy/configure.ac` and the
+  checked-in `fitsy/configure`, don't run autoconf). Reuse the bzip2
+  `BZ2_bzDecompress` loop from `fitsy/asdf.C`, and the streaming APIs
+  for the others (`ZSTD_decompressStream`, `LZ4F_decompress` from
+  `lz4frame.h`; ASDF/XISF only use the block APIs). After a `fitsy` change:
+  `make fitsyclean fitsy tksaoclean tksao ds9clean ds9`.
+- **Test with `Tests/decompress.sh`.** It already covers every format
+  whose compressor is installed. To check that Phase 2 removed the
+  external programs, run it with `bzip2`, `zstd` and `lz4` hidden from
+  ds9's `PATH` (the script itself still needs them to make its test
+  files).
+
 ## Things to watch
 
 - **Encoding/translation:** decompress as bytes, *then* give the channel
@@ -333,11 +371,19 @@ same user-visible result with less C++ change.
   supported compressions, and the file-dialog filters in `stdfbox.tcl`
   (`*.reg.gz`, `*.xml.gz`, ...).
 
-## Tests to add (in `Tests/`)
+## Tests (`Tests/decompress.sh`)
 
-- `foo.reg` and `foo.xml` (VOT), `.tsv`, `.rdb`, and a plot `.dat`, each
-  compressed with gzip, bzip2, zstd and lz4. Load each over XPA and compare
-  `xpaget ds9 regions` and the catalog row count with the uncompressed load.
-- A gzip file named without `.gz` (magic-byte detection).
+`Tests/decompress.sh` (Tests repo, 5c39a5e, in `all.sh`) compares each
+compressed load with the uncompressed one: regions, Prism FITS tables and
+VOT/TSV/RDB imports, catalog imports, plot data, contour files and
+levels, in every format whose compressor is installed (gz, bz2, Z, xz,
+zst on the Linux host). It also covers a gzip file with a plain name, a
+truncated `.gz`, spaces in the path, and temp-file cleanup on Prism
+clear, close and exit. 73/73 on this branch; on a `master` build 53 fail.
+
+Still missing:
+
+- lz4 (no `lz4` on the Linux host, so those cases were skipped).
 - A `.gz` region file whose contents are FITS.
-- On Windows, run the above with no `gunzip`/`bunzip2` on `PATH`.
+- A run on Windows, ideally with no `gzip`/`bzip2` on ds9's `PATH`, and
+  on macOS.

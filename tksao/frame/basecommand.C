@@ -4285,16 +4285,26 @@ void Base::wcsAppendCmd(int which, int fd)
   if (!currentContext->cfits)
     return;
 
-  boost::fdistream str(fd);
-  if (!str) {
+  // The socket is read once, into a string each slice then gets its own
+  // stream over: it cannot be rewound, and the loop below hands the same
+  // stream to every slice -- while replaceWCS() seeks back over the line
+  // it sniffs for ASDF/YAML. Reading straight from the socket gave the
+  // first slice everything and the rest nothing, or, before fdstream
+  // learned to recv() on Windows, gave them all nothing.
+  boost::fdistream in(fd);
+  if (!in) {
     Tcl_AppendResult(interp, " unable to read wcs infomation", NULL);
     result = TCL_ERROR;
     return;
   }
+  ostringstream ss;
+  ss << in.rdbuf();
+  string text = ss.str();
 
   FitsImage* rr = findAllFits(which);
   if (rr) {
     while (rr) {
+      istringstream str(text);
       rr->appendWCS(str);
       rr=rr->nextSlice();
     }
@@ -4374,16 +4384,26 @@ void Base::wcsReplaceCmd(int which, int fd)
   if (!currentContext->cfits)
     return;
 
-  boost::fdistream str(fd);
-  if (!str) {
+  // The socket is read once, into a string each slice then gets its own
+  // stream over: it cannot be rewound, and the loop below hands the same
+  // stream to every slice -- while replaceWCS() seeks back over the line
+  // it sniffs for ASDF/YAML. Reading straight from the socket gave the
+  // first slice everything and the rest nothing, or, before fdstream
+  // learned to recv() on Windows, gave them all nothing.
+  boost::fdistream in(fd);
+  if (!in) {
     Tcl_AppendResult(interp, " unable to read wcs infomation", NULL);
     result = TCL_ERROR;
     return;
   }
+  ostringstream ss;
+  ss << in.rdbuf();
+  string text = ss.str();
 
   FitsImage* rr = findAllFits(which);
   if (rr) {
     while (rr) {
+      istringstream str(text);
       rr->replaceWCS(str);
       rr=rr->nextSlice();
     }

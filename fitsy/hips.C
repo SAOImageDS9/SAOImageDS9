@@ -27,7 +27,29 @@ using namespace std;
 #include "head.h"
 #include "hdu.h"
 #include "mmap.h"
+#include "allocgz.h"
 #include "util.h"
+
+// Tiles, the Allsky image and a MOC are read through this rather than
+// FitsFitsMMap directly: FitsMMap is an empty stub on Windows (there
+// is no mmap there), so everything read through it came back invalid
+// -- every tile counted as bad and a local HiPS failed with "no
+// readable tiles at order N". The stream reader is what frmarker.C
+// already falls back to there for region FITS files. Same interface,
+// so the call sites below do not care which one they got.
+#ifdef __WIN32
+class FitsHiPSTile : public FitsFitsAllocGZ {
+public:
+  FitsHiPSTile(const char* fn, FitsFile::ScanMode mode)
+    : FitsFitsAllocGZ(fn, mode, FitsFile::NOFLUSH) {}
+};
+#else
+class FitsHiPSTile : public FitsFitsMMap {
+public:
+  FitsHiPSTile(const char* fn, FitsFile::ScanMode mode)
+    : FitsFitsMMap(fn, mode) {}
+};
+#endif
 
 // The deepest map chosen automatically: nside 2048 is 50M pixels
 // (200 MB). A window samples the map itself (FitsHPX flat, which takes
@@ -714,7 +736,7 @@ std::shared_ptr<const float> FitsHiPS::tile(int order, long long npix,
 	    for (size_t ii=0; ii<(size_t)ww*ww; ii++)
 	      ident_[ii] = ii;
 	}
-	FitsFitsMMap ff(fn, FitsFile::EXACTIMAGE);
+	FitsHiPSTile ff(fn, FitsFile::EXACTIMAGE);
 	if (ident_ && ff.isValid() && ff.isImage() &&
 	    ff.head()->naxis(0) == ww && ff.head()->naxis(1) == ww) {
 	  img = HiPSImagePtr(new (nothrow) HiPSImage(ww, ww));
@@ -932,7 +954,7 @@ int FitsHiPS::allskyWidth(int order)
     int nx =0;
     int ny =0;
     if (!strcmp(tileExt_, "fits")) {
-      FitsFitsMMap img(fn, FitsFile::EXACTIMAGE);
+      FitsHiPSTile img(fn, FitsFile::EXACTIMAGE);
       if (img.isValid() && img.isImage()) {
 	nx = img.head()->naxis(0);
 	ny = img.head()->naxis(1);
@@ -975,7 +997,7 @@ int FitsHiPS::mocTiles(const char* fn, int order, std::vector<long long>* out)
   out->clear();
   if (order < 0 || order > 29)
     return 0;
-  FitsFitsMMap ff(fn, FitsFile::RELAXTABLE);
+  FitsHiPSTile ff(fn, FitsFile::RELAXTABLE);
   if (!ff.isValid() || !ff.isBinTable() || !ff.data())
     return 0;
   FitsHead* hd = ff.head();
@@ -1219,7 +1241,7 @@ int FitsHiPS::buildMap(float* map)
     char* fn = allskyPath(order_, tileExt_);
     int ncol = allskyCols(order_);
     if (fits) {
-      FitsFitsMMap img(fn, FitsFile::EXACTIMAGE);
+      FitsHiPSTile img(fn, FitsFile::EXACTIMAGE);
       if (img.isValid() && img.isImage()) {
 	for (int nn=0; nn<ntile_; nn++) {
 	  if (copyBlock(&img, (nn/ncol)*ww, (nn%ncol)*ww, ww, map+nn*w2, sub))
@@ -1248,7 +1270,7 @@ int FitsHiPS::buildMap(float* map)
       char* fn = tilePath(order_, nn, tileExt_);
       if (fileExists(fn)) {
 	if (fits) {
-	  FitsFitsMMap img(fn, FitsFile::EXACTIMAGE);
+	  FitsHiPSTile img(fn, FitsFile::EXACTIMAGE);
 	  if (img.isValid() && img.isImage() &&
 	      img.head()->naxis(0) == ww && img.head()->naxis(1) == ww &&
 	      copyBlock(&img, 0, 0, ww, map+nn*w2, sub))

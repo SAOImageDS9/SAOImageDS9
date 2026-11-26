@@ -1585,30 +1585,25 @@ proc HVFileHtmlList {path list} {
     append html "<h1>Index on $path</h1>\n"
     append html "<hr>\n"
     append html "<pre>\n"
-    foreach l $list {
-	switch -- [llength $l] {
-	    8 {set offset 4}
-	    9 {set offset 5}
-	    10 {set offset 4}
-	    11 {set offset 5}
-	    default {set offset 5}
+    foreach ll $list {
+	lassign $ll name type size mtime
+
+	# links are not followed, as ls -l did not
+	set ref $path$name
+	switch -- $type {
+	    directory {
+		set flag d
+		append ref {/}
+		set size {}
+	    }
+	    link {set flag l}
+	    default {set flag -}
 	}
 
-	set ii [lindex $l [expr $offset+3]]
-	switch -- [string range $l 0 0] {
-	    d {
-		set new "<a href=\"file:$path$ii/\">$ii</A>"
-	    }
-	    l {
-		set new "<a href=\"file:$path$ii\">$ii</A>"
-	    }
-	    default {
-		set new "<a href=\"file:$path$ii\">$ii</A>"
-	    }
-	}
-
-	regsub $ii $l $new l
-	append html "$l\n"
+	set esc [string map {& &amp; < &lt; > &gt; \" &quot;} $ref]
+	set new "<a href=\"file:$esc\">[string map {& &amp; < &lt; > &gt;} $name]</A>"
+	set date [clock format $mtime -format {%Y-%m-%d %H:%M}]
+	append html [format "%s %12s %s %s\n" $flag $size $date $new]
     }
     append html "</pre>\n"
     append html "</hr>\n"
@@ -1622,7 +1617,15 @@ proc HVDirList {path} {
     if {$debug(tcl,hv)} {
 	puts stderr "HVDirList $path"
     }
-    return [split [exec ls -l $path] \n]
+    # {name type size mtime} for each entry, as ls would list them
+    set list {}
+    foreach name [lsort -dictionary [glob -nocomplain -tails -directory $path *]] {
+	if {[catch {file lstat [file join $path $name] st}]} {
+	    continue
+	}
+	lappend list [list $name $st(type) $st(size) $st(mtime)]
+    }
+    return $list
 }
 
 proc HVSetURL {varname url query fragment} {

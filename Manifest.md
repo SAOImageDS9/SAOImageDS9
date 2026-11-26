@@ -1,6 +1,6 @@
 # List of SAOImageDS9 packages
 
-Last updated 2026-11-25
+Last updated 2026-11-26
 
 | name         | version    | SAO   | dirty | upstream                                                             | latest                          |
 | ------------ | ---------- | ----- | ----- | -------------------------------------------------------------------- | ------------------------------- |
@@ -22,7 +22,7 @@ Last updated 2026-11-25
 | tclxml       | 3.2        | y     | y     | https://tclxml.sourceforge.net/tclxml.html                           | forked from 3.2                 |
 | tclxmlrpc    | 1.0        | y     |       |                                                                      |                                 |
 | ~~tclzipfs~~ | ~~1.0.1~~  | ~~y~~ |       | ~~https://github.com/wjoye/tclzipfs~~                                | ~~?not sure if incl. in 9?~~    |
-| tk9.0        | 9.0.4      |       |       | https://github.com/tcltk/tk                                          | 9.1.0 (9.0.4 on 9.0 branch)     |
+| tk9.0        | 9.0.4      |       | y     | https://github.com/tcltk/tk                                          | 9.1.0 (9.0.4 on 9.0 branch) (11) |
 | tkagif       | 1.1        | y     |       | https://github.com/SAOImageDS9/tkagif-maintenance                    | 1.1                             |
 | tkblt        | 3.3        | y     | y     | https://github.com/SAOImageDS9/tkblt-maintenance                     | previous upstream abandoned (1) |
 | tkcon        | 2.8.1      |       |       | https://github.com/bohagan1/TkCon                                    | 2.8.1 + master 74212b6 (9)      |
@@ -67,3 +67,5 @@ Last updated 2026-11-25
 (9) tkcon and tktable: switched from the SAOImageDS9 maintenance forks to Brian O'Hagan's maintained versions, which include every change those forks carried (SAOImageDS9#459, #466). Vendored from bohagan1 master rather than a release because fixes we need are not yet in a tagged release: static BuildInfoCommand/TkSendVirtualEvent and the TktableConfig.sh stub-library fix (bohagan1/TkTable#18) for tktable, and the 2.8.1 VERSION fix (bohagan1/TkCon#11) and Tcl 9 tab completion for tkcon. No local changes; update to the next tagged release once one includes these.
 
 (10) fitsy reads TIFF at full depth (fitsy/tiff.C, TODO_TIFF16.md) through tkimg's libtiff, the `tifftcl` package, by its stubs table. So fitsy is built after tkimg in `{unix,macos,win}/Makefile.in`, compiles against `tkimg/libtiff` and `tkimg/libtiff/libtiff`, and relies on the `-ltifftclstub` already on ds9's link line. The Deflate codec it decodes is registered by tkimg's `Tkimgtiff_Init` at ds9 startup.
+
+(11) tk9.0: backported the core-9-0-branch fix for Tk ticket 6872190648 (upstream 0d024c3882), which drops a CGColorSpaceRelease of a colorspace obtained with CGImageGetColorSpace in macosx/tkMacOSXImage.c CreateCGImageFromDrawableRect(). The over-release freed the display colorspace shared with window layers, and Aqua ds9 crashed intermittently in CGColorSpaceRelease during a Core Animation commit. Drop this note once a Tk release includes the fix.

@@ -205,10 +205,10 @@ proc BookmarkGetSlices {which} {
 
 proc BookmarkSetSlices {which slices} {
     switch -- [$which get type] {
-	rgb {set command rgb}
-	hsv {set command hsv}
-	hls {set command hls}
-	default {set command {}}
+	rgb {set command rgb; set channels {red green blue}}
+	hsv {set command hsv; set channels {hue saturation value}}
+	hls {set command hls; set channels {hue lightness saturation}}
+	default {set command {}; set channels {}}
     }
 
     if {$command != {}} {
@@ -216,7 +216,10 @@ proc BookmarkSetSlices {which slices} {
     }
     foreach channelSlices $slices {
 	lassign $channelSlices channel values
-	if {$command != {}} {
+	# a bookmark saved from a different frame type (e.g. a plain frame,
+	# whose channel is {}) restored into an rgb/hsv/hls frame: only
+	# switch to channels this frame actually has
+	if {$command != {} && [lsearch -exact $channels $channel] >= 0} {
 	    $which $command channel $channel
 	}
 	set axis 2

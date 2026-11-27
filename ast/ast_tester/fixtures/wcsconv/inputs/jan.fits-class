@@ -1,0 +1,78 @@
+OBJECT  = 'WB437   '           / Object of interest
+STANDARD=            F / True if the spectral line is a standard
+OBSNUM  =           31 / obs number
+NSUBSCAN=            1 / Sub-scan number
+OBSEND  =            T / True if file is last in current observation
+UTDATE  =         20061112 / UT Date as integer in yyyymmdd format
+DATE-OBS= '2006-11-12T07:23:54.956' / Date of observation
+CRPIX1  =          1.0 / Reference pixel on axis 1
+CRPIX2  =          1.0 / Reference pixel on axis 2
+CRPIX3  =       4097.0 / Reference pixel on axis 3
+CRVAL1  =         40.73774 / Value at ref. pixel on axis 1
+CRVAL2  =         62.93279 / Value at ref. pixel on axis 2
+CRVAL3  =    -28275.1278991699 / Value at ref. pixel on axis 3
+CTYPE1  = 'RA---TAN'           / Type of co-ordinate on axis 1
+CTYPE2  = 'DEC--TAN'           / Type of co-ordinate on axis 2
+CTYPE3  = 'FREQ    '           / Type of co-ordinate on axis 3
+CDELT1  =        -0.01 / Pixel size
+CDELT2  =         0.01 / Pixel size
+CDELT3  =    -30510.2532608502 / Pixel size
+EQUINOX =       2000.0 / Epoch of reference equinox
+RESTFREQ=   220398676500.0 / [Hz] Rest frequency
+IMAGFREQ=     212401000570.803 / [Hz] Image frequency
+LINE    = '    '
+VELO-LSR=    -79961.5291150086 / [m/s] Reference velocity
+VLSR    =    -79961.5291150086 / [m/s] Reference velocity
+DELTAV  =     41.5119762584945 / [m/s] Velocity resolution
+AZIMUTH =     19.7339944679958 / [Deg] Telescope azimuth
+ELEVATIO=     41.0106531289803 / [Deg] Telescope elevation
+DATE-END= '2006-11-12T08:58:15' / UTC Datetime of end of observation
+OBSID   = 'acsis_31_20061112T084334' / Unique observation identifier
+E-TOCLASS,  Error decoding OBSID
+INSTAP  = 'A       '           / Receptor at tracking centre (if any)
+INSTAP_X=          0.0 / [arcsec] Aperture X off. rel. to instr cent
+INSTAP_Y=          0.0 / [arcsec] Aperture Y off. rel. to instr cent
+AMSTART =   1.397363700778 / Airmass at start of obervation
+AMEND   =   1.384634790086 / Airmass at end of obervation
+AZSTART =   369.4312720735 / [deg] Azimuth at obs. start - mount sys.
+AZEND   =   366.9034439805 / [deg] Azimuth at obs. end - mount sys.
+ELSTART =   45.70770101123 / [deg] Elevation at obs. start - mount
+sys.
+ELEND   =   46.24950299273 / [deg] Elevation at obs. end - mount sys.
+HSTSTART= '2006-11-11T22:43:34' / HST at start of observation
+HSTEND  = '2006-11-11T22:58:15' / HST at end of observation
+LSTSTART= '01:47:01.8620'      / LST at start of observation
+LSTEND  = '02:01:45.3333'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

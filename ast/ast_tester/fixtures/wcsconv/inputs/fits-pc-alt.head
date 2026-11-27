@@ -1,0 +1,34 @@
+SIMPLE  =                    T / Fits standard
+BITPIX  =                  -32 / Bits per pixel
+NAXIS   =                    3 / Number of dimensions
+NAXIS1  =                  100 / Spectral axis
+NAXIS2  =                    1 / Spatial axis (degenerate)
+NAXIS3  =                    1 / Spatial axis (degenerate)
+CTYPE1  = 'WAVE    '           / Wavelength axis
+CTYPE2  = 'RA---TAN'           / Celestial longitude
+CTYPE3  = 'DEC--TAN'           / Celestial latitude
+CRVAL1  =            5.000E-07 / Reference wavelength (metres)
+CRVAL2  =              180.000 / Reference RA (deg)
+CRVAL3  =               45.000 / Reference Dec (deg)
+CRPIX1  =                 50.0 / Reference pixel
+CRPIX2  =                  0.5 / Degenerate axis
+CRPIX3  =                  0.5 / Degenerate axis
+CDELT1  =            1.000E-10 / Wavelength increment (metres)
+CDELT2  =              0.00100 / Degrees/pixel
+CDELT3  =              0.00100 / Degrees/pixel
+CUNIT1  = 'm       '           / Axis units
+EQUINOX =               2000.0 / Equinox
+RADESYS = 'FK5     '           / Coordinate reference frame
+C1ELT1  =            1.000E-10 / FITS-PC alternate A: CDELT1
+C1ELT2  =                  0.0 / FITS-PC alternate A: CDELT2 (zero = degenerate)
+C1ELT3  =                  0.0 / FITS-PC alternate A: CDELT3 (zero = degenerate)
+C1VAL1  =            5.000E-07 / FITS-PC alternate A: CRVAL1
+C1VAL2  =              180.000 / FITS-PC alternate A: CRVAL2
+C1VAL3  =               45.000 / FITS-PC alternate A: CRVAL3
+C1PIX1  =                 50.0 / FITS-PC alternate A: CRPIX1
+C1PIX2  =                  0.5 / FITS-PC alternate A: CRPIX2
+C1PIX3  =                  0.5 / FITS-PC alternate A: CRPIX3
+C1YPE1  = 'WAVE    '           / FITS-PC alternate A: CTYPE1
+C1YPE2  = 'RA---TAN'           / FITS-PC alternate A: CTYPE2
+C1YPE3  = 'DEC--TAN'           / FITS-PC alternate A: CTYPE3
+END

@@ -1,0 +1,13 @@
+NAXIS1  =                  100 / length of data axis 1
+NAXIS2  =                  100 / length of data axis 2
+CTYPE1  = 'RA---TAN'           / Celestial longitude
+CTYPE2  = 'DEC--TAN'           / Celestial latitude
+CRVAL1  =               83.633 / Reference RA (deg)
+CRVAL2  =               22.014 / Reference Dec (deg)
+CRPIX1  =               50.500 / Reference pixel on axis 1
+CRPIX2  =               50.500 / Reference pixel on axis 2
+CDELT1  =           -0.0002778 / Degrees/pixel
+CDELT2  =            0.0002778 / Degrees/pixel
+RADESYS = 'FK4     '           / FK4 reference frame
+EQUINOX =                  0.0 / Zero equinox (should default to 1950)
+END

@@ -1,0 +1,9 @@
+*  NUM_DEF -- Standalone stub for the Starlink NUM "definitions" include file.
+*
+*  In the real Starlink NUM package, NUM_DEF contains Fortran macros
+*  for the numeric conversion routines.
+*
+*  For standalone builds those same routines are compiled as ordinary C
+*  functions in num_standalone.c and linked into libstar_compat, so this
+*  file is intentionally empty: the functions are already declared EXTERNAL
+*  via NUM_DEC and resolved at link time.

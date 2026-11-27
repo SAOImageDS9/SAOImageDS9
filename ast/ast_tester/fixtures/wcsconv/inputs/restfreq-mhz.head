@@ -1,0 +1,8 @@
+NAXIS1  =                 1024 / length of data axis 1
+CTYPE1  = 'VELO-LSR'           / AIPS velocity convention
+CRVAL1  =                  0.0 / Reference velocity (m/s)
+CRPIX1  =              512.500 / Reference pixel
+CDELT1  =              1000.00 / Velocity increment (m/s)
+CUNIT1  = 'm/s     '           / Axis units
+RESTFREQ=           1420.40000 / [MHz] Rest Frequency
+END

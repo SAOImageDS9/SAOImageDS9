@@ -1,0 +1,10 @@
+*  ERR_PAR -- Public constants for the ERR_ error-reporting system.
+*  Minimal standalone version for building AST tests without the Starlink MERS library.
+
+*  Maximum length of an error message text string.
+      INTEGER ERR__SZMSG
+      PARAMETER ( ERR__SZMSG = 200 )
+
+*  Maximum length of an error message name (parameter).
+      INTEGER ERR__SZPAR
+      PARAMETER ( ERR__SZPAR = 15 )

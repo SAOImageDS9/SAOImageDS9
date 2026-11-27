@@ -121,6 +121,15 @@ public:
   RefreshStatus checkRefresh(const char**);
   const char* refSpec() {return refSpec_;}
   static const char* compareLayout(FitsHead*, FitsHead*);
+
+  // Why this file could not be read, for the subclasses that can say.
+  // FitsFile::error() only clears valid_, which is all the FITS and array
+  // readers ever had to report: a malformed header is a malformed header.
+  // An ASDF container has many distinct ways to be unreadable - a missing
+  // array path, an unsupported datatype, a codec, a short block - and
+  // saying which is worth a string.
+  virtual const char* errorMessage() {return NULL;}
+
   void* data() {return data_;}
   size_t dataSize() {return dataSize_;}
   size_t dataSkip() {return dataSkip_;}

@@ -66,6 +66,8 @@
 *  History:
 *     18-OCT-2018 (DSB):
 *        Original version.
+*     8-SEP-2026 (TIMJ):
+*        Free the projection type string read by astLoadXphMap.
 *class-
 */
 
@@ -1618,7 +1620,7 @@ AstXphMap *astLoadXphMap_( void *mem, size_t size, AstXphMapVtab *vtab,
 
 /* Local Variables: */
    AstXphMap *new;              /* Pointer to the new XphMap */
-   const char *text;            /* Text for string-valued attribute */
+   char *text;                  /* Text for string-valued attribute */
    astDECLARE_GLOBALS           /* Pointer to thread-specific global data */
 
 /* Initialise. */
@@ -1675,6 +1677,9 @@ AstXphMap *astLoadXphMap_( void *mem, size_t size, AstXphMapVtab *vtab,
          astError( AST__OPT, "astRead(XphMap): Illegal value '%s' supplied "
                    "for the XphMap component 'Type'.", status, text );
       }
+
+/* Free the string returned by astReadString. */
+      text = astFree( text );
 
 /* If an error occurred, clean up by deleting the new XphMap. */
       if ( !astOK ) new = astDelete( new );

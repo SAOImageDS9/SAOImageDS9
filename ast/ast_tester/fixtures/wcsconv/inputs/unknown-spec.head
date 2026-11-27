@@ -1,0 +1,7 @@
+NAXIS1  =                 1024 / length of data axis 1
+CTYPE1  = 'XXXX-WAV'           / Unknown system with early-draft -WAV suffix
+CRVAL1  =            5.000E-07 / Reference value
+CRPIX1  =              512.500 / Reference pixel
+CDELT1  =            1.000E-10 / Increment
+CUNIT1  = 'm       '           / Axis units
+END

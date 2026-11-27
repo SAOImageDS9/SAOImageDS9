@@ -138,6 +138,7 @@ proc ProcessCommand {argv argc} {
 	    -align {incr i; ProcessAlignCmd argv i}
 	    -analysis {incr i; ProcessAnalysisCmd argv i {} {}}
 	    -array {set file(type) array}
+	    -asdf {set file(type) asdf}
 	    -asinh {set scale(type) asinh; ChangeScale}
 	    -advance -
 	    -advanced {
@@ -790,6 +791,10 @@ proc CommandLineLoadBase {item argvname iname} {
 	    MultiLoad $file(layer) $file(mode)
 	    LoadFitsFile $item $file(layer) $file(mode)
 	}
+	asdf {
+	    MultiLoad $file(layer) $file(mode)
+	    LoadAsdfFile $item $file(layer) $file(mode)
+	}
 	url {LoadURLFits $item $file(layer) $file(mode) 1}
 
 	rgbimage {
@@ -923,6 +928,7 @@ proc CommandLineLoadRGB {item argvname iname} {
 
     switch -- $file(type) {
 	fits {LoadFitsFile $item {} $file(mode)}
+	asdf {LoadAsdfFile $item {} $file(mode)}
 	url {LoadURLFits $item {} $file(mode) 0}
 
 	rgbimage {
@@ -1032,6 +1038,7 @@ proc CommandLineLoadT {item argvname iname} {
 
     switch -- $file(type) {
 	fits {LoadFitsFile $item {} $file(mode)}
+	asdf {LoadAsdfFile $item {} $file(mode)}
 	url {LoadURLFits $item {} $file(mode) 0}
 
 	rgbimage {
@@ -1135,6 +1142,10 @@ proc CommandLineLoad3D {item argvname iname} {
 	fits {
 	    MultiLoad {} $file(mode)
 	    LoadFitsFile $item {} $file(mode)
+	}
+	asdf {
+	    MultiLoad {} $file(mode)
+	    LoadAsdfFile $item {} $file(mode)
 	}
 	url {LoadURLFits $item {} $file(mode) 1}
 

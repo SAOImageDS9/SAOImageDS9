@@ -256,6 +256,9 @@ if test "${TEA_PLATFORM}" = "windows" ; then
     CXXFLAGS="$CFLAGS"
 fi
 
+# Link C++ objects with the C++ driver, keeping TEA platform linker flags.
+SHLIB_LD=`printf '%s\n' "$SHLIB_LD" | sed 's/${CC}/${CXX}/g'`
+
 #--------------------------------------------------------------------
 # Set the default compiler switches based on the --enable-symbols option.
 #--------------------------------------------------------------------

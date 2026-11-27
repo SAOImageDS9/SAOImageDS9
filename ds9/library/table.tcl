@@ -791,6 +791,7 @@ proc TBLSortMenu {varname} {
 	    }
 	}
     }
+    AquaMenuGroup $m 1
 }
 
 proc TBLSortCmd {varname val} {
@@ -879,6 +880,8 @@ proc TBLEditDialog {varname which db} {
 	    }
 	}
     }
+
+    AquaMenuGroup $mb.col
 
     # operator
     $mb add cascade -label [msgcat::mc {Operator}] -menu $mb.op

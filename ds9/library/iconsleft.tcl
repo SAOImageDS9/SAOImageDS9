@@ -309,8 +309,13 @@ proc CreateIconsLeftMarkerColor {} {
 	IconMenuButton $mb.color {} marker color [lindex $clrs $ii] MarkerColor
 	$mb.color.m entryconfigure $ii -columnbreak $newcol -hidemargin 1
     $mb.color.m entryconfigure $ii -image $icons(markercolor,[lindex $clrs $ii])
+	if {$ds9(wm) eq {aqua} && [llength $clrs] > $ds9(menu,size,wrap)} {
+	    $mb.color.m entryconfigure $ii -label [msgcat::mc [lindex $clrs $ii]]
+	}
 
     }
+
+    AquaMenuGroup $mb.color.m
 
     trace add variable marker(color) write [list IconMenuButtonCB $mb.color]
     IconMenuButtonCB $mb.color marker color write

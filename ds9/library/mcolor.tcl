@@ -121,9 +121,6 @@ proc UpdateColormapMenuSwatches {args} {
 
     foreach mm $mms {
 	ColormapMenuSwatches $mm
-	foreach cc [winfo children $mm] {
-	    ColormapMenuSwatches $cc
-	}
     }
 }
 
@@ -153,6 +150,9 @@ proc ColormapMenuSwatches {mm} {
 	    $mm entryconfigure $ii -image {} -compound none
 	}
     }
+    foreach cc [winfo children $mm] {
+	ColormapMenuSwatches $cc
+    }
 }
 
 proc ColorMainMenuExternal {which} {
@@ -175,6 +175,7 @@ proc ColorMainMenuExternal {which} {
 	    $ds9(mb).color.$which entryconfig [msgcat::mc $cmap] -columnbreak 1
 	}
     }
+    AquaMenuGroup $ds9(mb).color.$which
 }
 
 proc PrefsDialogColorMenu {w} {

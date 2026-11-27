@@ -1565,6 +1565,7 @@ proc PrismColsMenu {varname f ww cmd} {
 	    }
 	}
     }
+    AquaMenuGroup $m 1
 }
 
 proc PrismColsMenuCmd {ww col cmd} {

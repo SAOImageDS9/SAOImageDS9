@@ -2073,11 +2073,11 @@ proc UpdateActiveFrames {} {
 	lappend frames $ff
 	if {[info exists active($ff)] && $active($ff)} {
 	    lappend ds9(active) $ff
-	    $ds9(mb).frame.goto entryconfig \
+	    MenuEntryConfigure $ds9(mb).frame.goto \
 		"[msgcat::mc {Frame}] [string range $ff 5 end]" -state normal
 	} else {
 	    set active($ff) 0
-	    $ds9(mb).frame.goto entryconfig \
+	    MenuEntryConfigure $ds9(mb).frame.goto \
 		"[msgcat::mc {Frame}] [string range $ff 5 end]" -state disabled
 	}
     }

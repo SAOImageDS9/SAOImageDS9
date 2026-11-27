@@ -631,6 +631,8 @@ proc CATColsMenu {varname} {
 	    }
 	}
     }
+    AquaMenuGroup $var(ramenu).menu
+    AquaMenuGroup $var(decmenu).menu
 }
 
 proc CATColXCmd {varname val} {

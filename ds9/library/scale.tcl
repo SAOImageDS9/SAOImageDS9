@@ -624,14 +624,19 @@ proc UpdateScaleDialog {} {
 	set dscale(min) [lindex $limits 0]
 	set dscale(max) [lindex $limits 1]
 
-	# "nan" will not pass
-	if {[$current(frame) has fits] && ![$current(frame) has iis] &&
-	    ($dscale(min)<$dscale(max))} {
-
+	set limits {}
+	if {[$current(frame) has fits] && ![$current(frame) has iis]} {
 	    set limits [$current(frame) get minmax]
+	}
+	set mn [lindex $limits 0]
+	set mx [lindex $limits 1]
 
-	    set dscale(minmin) [lindex $limits 0]
-	    set dscale(minmax) [lindex $limits 1]
+	# an image of all NaN's has limits but no data range
+	if {[ScaleFinite $dscale(min) $dscale(max) $mn $mx] &&
+	    $dscale(min)<$dscale(max)} {
+
+	    set dscale(minmin) $mn
+	    set dscale(minmax) $mx
 
 	    $current(frame) get histogram \
 		$dscale(xdata) $dscale(ydata) $scale(bins)
@@ -884,14 +889,32 @@ proc ScaleYAxisDialog {} {
     }
 }
 
+# 1 if every arg is a finite number. 'get minmax' and 'get clip' give
+# "nan" for an image with no finite pixels, which expr can't use.
+proc ScaleFinite {args} {
+    foreach vv $args {
+	if {![string is double -strict $vv] || ![expr {isfinite($vv)}]} {
+	    return 0
+	}
+    }
+    return 1
+}
+
 proc ScaleXAxisDialog {} {
     global scale
     global dscale
 
+    # no histogram to fit the axis to
+    if {![info exists dscale(minmin)] || ![info exists dscale(minmax)] ||
+	![ScaleFinite $dscale(minmin) $dscale(minmax) \
+	      $dscale(min) $dscale(max)]} {
+	return
+    }
+
     switch -- $scale(xaxis) { 
 	full {
 	    set diff \
-		[expr ($dscale(minmax)-$dscale(minmin))/[$dscale(xdata) length]]
+		[expr {double($dscale(minmax)-$dscale(minmin))/[$dscale(xdata) length]}]
 
 	    if {[expr abs($diff)] > 0} {
 		set a [expr $dscale(minmin)-$diff]

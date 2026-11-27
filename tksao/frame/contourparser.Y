@@ -37,6 +37,13 @@ static Coord::SkyFrame globalSky;
 
 static ContourLevel* cl;
 static Contour* cc;
+// the last coord could not be placed on the image (e.g. the far side
+// of a SIN projection)
+static int nodeBad;
+// and where it is on the sky (in degrees), for HEALPix windows
+static Vector nodeSky;
+static Coord::CoordSystem nodeSys;
+static Coord::SkyFrame nodeSkyFrame;
 
 static double localLevel;
 static char globalColor[16];
@@ -50,6 +57,8 @@ static int localDashList[2];
 
 static Coord::CoordSystem checkWCSSystem();
 static Coord::SkyFrame checkWCSSky();
+static void mapNode(Context*, double*, const Vector&, Coord::CoordSystem,
+		    Coord::SkyFrame);
 
 %}
 
@@ -154,6 +163,7 @@ commands: commands command terminator
 
 command : /* blank line */
 	{
+	  ct->auxNativeEnd();
 	  if (cc && cl) {
 	    cl->lcontour().append(cc);
 	    cc =NULL;
@@ -182,12 +192,14 @@ command : /* blank line */
         | LEVEL_ '=' numeric {localLevel = $3} initLocal local comment newcl
 	| '(' comment
 	{
+	  ct->auxNativeEnd();
 	  if (cl)
 	    cc = new Contour(cl);
 	}
 	| nodes
 	| ')' comment
 	{
+	  ct->auxNativeEnd();
 	  if (cc && cl) {
 	    cl->lcontour().append(cc);
 	    cc =NULL;
@@ -202,6 +214,7 @@ levels  : levels sp numeric
 
 newcl   :
         {
+	  ct->auxNativeEnd();
 	  if (cl)
 	    ct->contourAppendAux(cl);
 	  cl = new ContourLevel(ct->parent_, localLevel, localColor, localWidth, localDash, localDashList);
@@ -214,11 +227,23 @@ nodes   : nodes sp node
 
 node    : coord comment
         {
-	  if (cc)
-	    cc->lvertex().append(new Vertex($1));
+	  if (!cl)
+	    cl = new ContourLevel(ct->parent_, localLevel, localColor, localWidth, localDash, localDashList);
+	  // the sky position, even if the image can't place it
+	  ct->auxNativeNode(cl, nodeSky, nodeSys, nodeSkyFrame);
+
+	  // a vertex that can't be placed breaks the line there. it used
+	  // to come back as image (0,0), drawing a spike to the corner.
+	  if (nodeBad) {
+	    if (cc) {
+	      if (cc->lvertex().count() >= 2)
+		cl->lcontour().append(cc);
+	      else
+		delete cc;
+	      cc =NULL;
+	    }
+	  }
 	  else {
-	    if (!cl)
-	      cl = new ContourLevel(ct->parent_, localLevel, localColor, localWidth, localDash, localDashList);
 	    if (!cc)
 	      cc = new Contour(cl);
 	    cc->lvertex().append(new Vertex($1));
@@ -367,60 +392,36 @@ localProperty : COLOR_ '=' STRING {strncpy(localColor,$3,16);}
 
 coord	: sexagesimal sp sexagesimal
 	{
-	  Vector r;
 	  Coord::CoordSystem sys = checkWCSSystem();
 	  Coord::SkyFrame sky = checkWCSSky();
 	  if (sky == Coord::GALACTIC || sky == Coord::ECLIPTIC) 
-	    r = FITSPTR->mapToRef(Vector($1,$3), sys, sky);
+	    mapNode(ct, $$, Vector($1,$3), sys, sky);
 	  else
-	    r = FITSPTR->mapToRef(Vector($1*360./24.,$3), sys, sky);
-	  $$[0] = r[0];
-	  $$[1] = r[1];
-	  $$[2] = r[2];
+	    mapNode(ct, $$, Vector($1*360./24.,$3), sys, sky);
 	}
 	| hms sp dms
         {
-	  Vector r = FITSPTR->mapToRef(Vector($1,$3),
-	  checkWCSSystem(), checkWCSSky());
-	  $$[0] = r[0];
-	  $$[1] = r[1];
-	  $$[2] = r[2];
+	  mapNode(ct, $$, Vector($1,$3), checkWCSSystem(), checkWCSSky());
 	}
 	| dms sp dms
         {
-	  Vector r = FITSPTR->mapToRef(Vector($1,$3),
-	  checkWCSSystem(), checkWCSSky());
-	  $$[0] = r[0];
-	  $$[1] = r[1];
-	  $$[2] = r[2];
+	  mapNode(ct, $$, Vector($1,$3), checkWCSSystem(), checkWCSSky());
 	}
 	| numeric sp numeric 
 	{
-	  Vector r = FITSPTR->mapToRef(Vector($1,$3), globalSystem, globalSky);
-	  $$[0] = r[0];
-	  $$[1] = r[1];
-	  $$[2] = r[2];
+	  mapNode(ct, $$, Vector($1,$3), globalSystem, globalSky);
 	}
 	| ANGDEGREE sp ANGDEGREE
 	{
-	  Vector r = FITSPTR->mapToRef(Vector($1,$3), 
-	    checkWCSSystem(), checkWCSSky());
-	  $$[0] = r[0];
-	  $$[1] = r[1];
-	  $$[2] = r[2];
+	  mapNode(ct, $$, Vector($1,$3), checkWCSSystem(), checkWCSSky());
 	}
 	| IMGCOORD sp IMGCOORD
 	{
-	  Vector r = FITSPTR->mapToRef(Vector($1,$3), Coord::IMAGE);
-	  $$[0] = r[0];
-	  $$[1] = r[1];
-	  $$[2] = r[2];
+	  mapNode(ct, $$, Vector($1,$3), Coord::IMAGE, Coord::ICRS);
 	}
 	| PHYCOORD sp PHYCOORD
 	{
-	  Vector r = FITSPTR->mapToRef(Vector($1,$3), Coord::PHYSICAL);
-	  $$[0] = r[0];
-	  $$[1] = r[1];
+	  mapNode(ct, $$, Vector($1,$3), Coord::PHYSICAL, Coord::ICRS);
 	}
 	;
 %%
@@ -447,3 +448,18 @@ static Coord::SkyFrame checkWCSSky()
   }
 }
 
+// map one vertex to REF, and note whether it could be placed
+static void mapNode(Context* ct, double* vv, const Vector& in,
+		    Coord::CoordSystem sys, Coord::SkyFrame sky)
+{
+  nodeSky = in;
+  nodeSys = sys;
+  nodeSkyFrame = sky;
+
+  maperr =0;
+  Vector rr = FITSPTR->mapToRef(in, sys, sky);
+  nodeBad = maperr || !isfinite(rr[0]) || !isfinite(rr[1]);
+  vv[0] = rr[0];
+  vv[1] = rr[1];
+  vv[2] = rr[2];
+}

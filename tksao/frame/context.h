@@ -79,6 +79,13 @@ class Context {
   List<AuxContourSet> auxsets_;
   int auxSetSeq_;              // last set id handed out, never reused
   AuxContourSet* auxLoading_;  // the set the contour parser is filling
+  // while loading onto a HEALPix window: each line of the file in the
+  // map's own sky (one line per entry), so the sky copy keeps the parts
+  // the window can't place. See auxNativeNode.
+  int auxNativeOn_;            // collecting
+  int auxNativeOK_;            // every vertex so far had a sky position
+  int auxNativeOpen_;          // the last line takes more vertices
+  std::vector<HPXAuxLevel> auxNative_;
   int hasContour_;
 
   Coord::CoordSystem contourWCSSystem_;
@@ -105,6 +112,7 @@ class Context {
   void contourListAuxLevels(ostream&, Coord::CoordSystem, Coord::SkyFrame,
 			    AuxContourSet*);
   void hpxForgetAux(AuxContourSet*);
+  void hpxRestoreAuxLevel(FitsImage*, HPXAuxLevel&);
 
   void reorderAxis(char*, char**, int, int, int, size_t);
   void reorderThread(void*, char*, void* (void*), int*);
@@ -144,6 +152,11 @@ class Context {
   Coord::SkyFrame contourWCSSkyFrame() {return contourWCSSkyFrame_;}
 
   void contourAppendAux(ContourLevel*);
+  // for the contour parser: a vertex of level cl, at vv [deg] in
+  // (sys, sky), and the end of the current line
+  void auxNativeNode(ContourLevel*, const Vector&,
+		     Coord::CoordSystem, Coord::SkyFrame);
+  void auxNativeEnd() {auxNativeOpen_ =0;}
   void contourCreateFV(const char* color, int width, int dash,
 		       FVContour::Method method, int numlevel, 
 		       int smooth, 

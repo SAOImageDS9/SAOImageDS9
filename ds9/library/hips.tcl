@@ -1085,6 +1085,9 @@ proc HiPSDialog {} {
 	-command HiPSDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     EditMenu $mb hipslist
+    $mb.edit insert [msgcat::mc {Paste}] command \
+	-label [msgcat::mc {Copy Cell}] -command [list TVCopyCell hipslist] \
+	-accelerator "${ds9(shiftctrl)}C"
 
     ThemeMenu $mb.cache
     $mb.cache add command -label [msgcat::mc {Clear}] \
@@ -1109,6 +1112,7 @@ proc HiPSDialog {} {
     $f.tree column id -width 260 -stretch 0
     $f.tree column title -width 380
     $f.tree column type -width 60 -stretch 0
+    TVCellInit hipslist $f.tree
     grid $f.tree $f.yscroll -sticky news
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 0 -weight 1
@@ -1232,6 +1236,7 @@ proc HiPSListFill {} {
 
     set tree $hipslist(tree)
     set sel [lindex [$tree selection] 0]
+    TVCellClear hipslist
     $tree delete [$tree children {}]
     set recs [HiPSListMatch $hipslist(recs) $hipslist(filter)]
     foreach rec $recs {

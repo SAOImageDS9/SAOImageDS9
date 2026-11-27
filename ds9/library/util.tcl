@@ -1048,6 +1048,9 @@ proc QuitDS9 {} {
 	}
     }
 
+    # an open prism may hold a decompressed temp file
+    DecompressCleanupAll
+
     # delete frames
     # may have regions with plot windows
     DeleteAllFrames

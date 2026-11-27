@@ -1478,10 +1478,6 @@ proc MarkerLoadFrames {str frames format sys sky} {
 }
 
 proc MarkerLoadFile {filename which format sys sky} {
-    global current
-    global marker
-    global errorInfo
-
     if {$filename == {}} {
 	return
     }
@@ -1490,25 +1486,6 @@ proc MarkerLoadFile {filename which format sys sky} {
 	return
     }
 
-    # is it compressed?
-    set app {}
-    switch [file extension $filename] {
-	.gz {set app gunzip}
-	.bz -
-	.bz2 {set app bunzip2}
-	.Z {set app uncompress}
-    }
-
-    if {$app != {}} {
-	set srcfilename $filename
-	set filename [tmpnam [file ext [file rootname $filename]]]
-	if {[catch {exec $app < $srcfilename > $filename} rr]} {
-	    Error "[msgcat::mc {Unable to load compressed region file}] $srcfilename\n$rr"
-	    return -code error
-	}
-    }
-
-    # determine if its a fits file
     # look for hdu ext in the filename
     # first, strip the filename
     if {![regexp -nocase {(.*)(\[.*\])} $filename foo base ext]} {
@@ -1516,6 +1493,28 @@ proc MarkerLoadFile {filename which format sys sky} {
 	set ext {}
     }
 
+    # is it compressed?
+    if {[catch {DecompressToTmp $base} tmp]} {
+	Error "[msgcat::mc {Unable to load compressed region file}] $filename\n$tmp"
+	return -code error
+    }
+
+    try {
+	MarkerLoadFileNow $filename $tmp $ext $which $format $sys $sky
+    } finally {
+	DecompressCleanup $tmp
+    }
+
+    FileLast markerfbox $filename
+    UpdateGroupDialog
+}
+
+# base is the (possibly decompressed) file to read, filename is what to report
+proc MarkerLoadFileNow {filename base ext which format sys sky} {
+    global marker
+    global errorInfo
+
+    # determine if its a fits file
     if {[catch {open $base} fd]} {
 	Error "[msgcat::mc {Unable to load region file}] $filename"
 	return -code error
@@ -1528,7 +1527,7 @@ proc MarkerLoadFile {filename which format sys sky} {
     if {$ll == "SIMPLE  ="} {
 	# ok, its fits
 	# try filename first
-	if {[catch {$which marker load fits "\{$filename\}" $marker(color)}]} {
+	if {[catch {$which marker load fits "\{$base$ext\}" $marker(color)}]} {
 
 	    # reset errorInfo
 	    set errorInfo {}
@@ -1556,17 +1555,11 @@ proc MarkerLoadFile {filename which format sys sky} {
 	}
     } else {
 	# no, its ascii
-	if {[catch {$which marker load $format "\{$filename\}" $marker(color,default) $marker(color) $sys $sky}]} {
+	if {[catch {$which marker load $format "\{$base$ext\}" $marker(color,default) $marker(color) $sys $sky}]} {
 	    Error "[msgcat::mc {Unable to load region file}] $filename"
 	    return -code error
 	}
     }
-
-    if {$app != {}} {
-	file delete -force $filename
-    }
-    FileLast markerfbox $filename
-    UpdateGroupDialog
 }
 
 proc MarkerInfo {} {

@@ -302,7 +302,7 @@ proc starbase_readfp { t fp } {
 proc starbase_read { t file } {
 	upvar $t T
 
-    set fp [open $file]
+    set fp [DecompressOpen $file]
     starbase_readfp T $fp
     close $fp
 

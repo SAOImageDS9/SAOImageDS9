@@ -288,7 +288,7 @@ proc PlotCmdNew {name} {
 	return
     } elseif {$parse(fn) != {}} {
 	if {[file exists $parse(fn)]} {
-	    set ch [open $parse(fn) r]
+	    set ch [DecompressOpen $parse(fn)]
 	    set parse(buf) [read $ch]
 	    close $ch
 	    return
@@ -309,7 +309,7 @@ proc PlotCmdNewFile {fn ref} {
 	return
     }
 
-    set ch [open $fn r]
+    set ch [DecompressOpen $fn]
     set parse(buf) [read $ch]
     close $ch
 }
@@ -371,7 +371,7 @@ proc PlotCmdData {dim} {
 		return
 	    }
 
-	    set ch [open $parse(fn) r]
+	    set ch [DecompressOpen $parse(fn)]
 	    set parse(buf) [read $ch]
 	    close $ch
 	} else {

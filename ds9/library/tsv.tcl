@@ -18,7 +18,7 @@ proc TSVRead {t fn} {
     }
 
     catch {
-	set fp [open $fn r]
+	set fp [DecompressOpen $fn]
 
 
 	# init db

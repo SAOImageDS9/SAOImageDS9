@@ -50,7 +50,7 @@ proc VOTRead {t fn} {
     }
 
     catch {
-	set fp [open $fn r]
+	set fp [DecompressOpen $fn]
 
 	set xml [xml::parser \
 		     -characterdatacommand [list VOTCharCB $t]\

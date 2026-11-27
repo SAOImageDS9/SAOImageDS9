@@ -145,10 +145,24 @@ proc DecompressToTmp {fn} {
 proc DecompressCleanup {fn} {
     global idecompress
 
-    if {[info exists idecompress(tmp,$fn)]} {
-	catch {file delete -force $idecompress(tmp,$fn)}
+    if {![info exists idecompress(tmp,$fn)]} {
+	return
+    }
+
+    # A file still open can't be deleted on Windows. That is not an error
+    # worth reporting here, but xpa reports any errorInfo as a failure,
+    # so put it back the way we found it. The entry stays behind so
+    # DecompressCleanupAll can try again on the way out.
+    global errorInfo errorCode
+    set ei [expr {[info exists errorInfo] ? $errorInfo : {}}]
+    set ec [expr {[info exists errorCode] ? $errorCode : {}}]
+
+    if {![catch {file delete -force $idecompress(tmp,$fn)}]} {
 	unset idecompress(tmp,$fn)
     }
+
+    set errorInfo $ei
+    set errorCode $ec
 }
 
 proc DecompressCleanupAll {} {

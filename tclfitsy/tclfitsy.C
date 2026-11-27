@@ -92,6 +92,21 @@ int TclfitsyCmd(ClientData data, Tcl_Interp *interp,
   }
 }
 
+// ~FitsFile does not release the underlying handle -- only done() does,
+// and for the FitsStream backends (Alloc/AllocGZ, the Windows default)
+// that is the only thing that closes the file. A chain built by
+// FitsMosaicNext* shares one handle, so only the link we are about to
+// throw away for good is released here. An open file cannot be deleted
+// on Windows, which left Prism's decompressed temp files behind.
+static void fitsRelease(FitsFile* fits)
+{
+  if (!fits)
+    return;
+
+  fits->done();
+  delete fits;
+}
+
 TclFITSY::TclFITSY(Tcl_Interp* interp)
 {
   interp_ = interp;
@@ -100,8 +115,8 @@ TclFITSY::TclFITSY(Tcl_Interp* interp)
 
 TclFITSY::~TclFITSY()
 {
-  if (fits_)
-    delete fits_;
+  fitsRelease(fits_);
+  fits_ =NULL;
 }
 
 // Native TIFF probe, over libtiff (fitsy/tiff.C) - TODO_TIFF16.md Phase 0.
@@ -218,11 +233,15 @@ int TclFITSY::dir(int argc, const char* argv[])
   int cnt =0;
   while (fits->isValid()) {
     FitsHead* head = fits->head();
-    if (!head)
+    if (!head) {
+      fitsRelease(fits);
       return TCL_ERROR;
+    }
     FitsHDU* hdu = fits->head()->hdu();
-    if (!hdu)
+    if (!hdu) {
+      fitsRelease(fits);
       return TCL_ERROR;
+    }
     
     ostringstream str;
     // Ext
@@ -277,6 +296,9 @@ int TclFITSY::dir(int argc, const char* argv[])
     fits = next;
   }
 
+  // the last link of the chain still owns the handle
+  fitsRelease(fits);
+
   return TCL_OK;
 }
 
@@ -296,8 +318,7 @@ int TclFITSY::open(int argc, const char* argv[])
 
 int TclFITSY::close(int argc, const char* argv[])
 {
-  if (fits_)
-    delete fits_;
+  fitsRelease(fits_);
   fits_ =NULL;
 
   return TCL_OK;
@@ -1046,8 +1067,7 @@ int TclFITSY::plot(int argc, const char* argv[])
 
 void TclFITSY::findFits(const char** argv)
 {
-  if (fits_)
-    delete fits_;
+  fitsRelease(fits_);
   fits_ =NULL;
 
   for (int ii=2; ii<5; ii++)
@@ -1066,7 +1086,7 @@ void TclFITSY::findFits(const char** argv)
       fits_ = new FitsFitsAllocGZ(argv[2], FitsFile::RELAXTABLE,FitsFile::FLUSH);
 
     if (!fits_->isValid()) {
-      delete fits_;
+      fitsRelease(fits_);
       fits_ =NULL;
       return;
     }
@@ -1078,7 +1098,7 @@ void TclFITSY::findFits(const char** argv)
       fits_ = new FitsFitsAllocGZ(argv[2],FitsFile::FLUSH);
 
     if (!fits_->isValid()) {
-      delete fits_;
+      fitsRelease(fits_);
       fits_ =NULL;
       return;
     }
@@ -1093,7 +1113,7 @@ void TclFITSY::findFits(const char** argv)
       delete fits_;
       fits_ = next;
       if (!fits_->isValid()) {
-	delete fits_;
+	fitsRelease(fits_);
 	fits_ =NULL;
 	return;
       }

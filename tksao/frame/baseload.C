@@ -234,6 +234,37 @@ void Base::loadNRRDVarCmd(const char* ch, const char* fn, LayerType ll)
   loadDone(currentContext->load(VAR, fn, img));
 }
 
+// *** ASDF ***
+
+// `fn' is the container, `path' the array inside it, and `name' what the
+// frame reports as its file - "<file>:<array>", which is the question a
+// multi array format actually raises (a Roman *_cal.asdf holds 15 loadable
+// arrays of identical shape and WCS).
+void Base::loadAsdfCmd(const char* fn, const char* path, const char* name,
+		       LayerType ll)
+{
+  unloadFits();
+  // FitsImageAsdf reports a refusal's reason itself (see fitsimage.C)
+  FitsImage* img = new FitsImageAsdf(currentContext, interp, fn, path,
+				     name, 1);
+  loadDone(currentContext->load(ASDF, name, img));
+}
+
+// *** XISF ***
+
+// `fn' is the file, `key' the image inside it (an id or decimal index, ""
+// for the first), and `name' what the frame reports as its file:
+// "<file>:<key>" when a key was given, as for ASDF's arrays.
+void Base::loadXisfCmd(const char* fn, const char* key, const char* name,
+		       LayerType ll)
+{
+  unloadFits();
+  // FitsImageXisf reports a refusal's reason itself (see fitsimage.C)
+  FitsImage* img = new FitsImageXisf(currentContext, interp, fn, key,
+				     name, 1);
+  loadDone(currentContext->load(XISF, name, img));
+}
+
 // *** Photo ***
 
 void Base::loadPhotoCmd(const char* ph, const char* fn)

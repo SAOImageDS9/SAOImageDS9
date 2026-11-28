@@ -1,0 +1,266 @@
+// Copyright (C) 1999-2021
+// Smithsonian Astrophysical Observatory, Cambridge, MA, USA
+// For conditions of distribution and use, see copyright notice in "copyright"
+
+#ifndef __fitsxisf_h__
+#define __fitsxisf_h__
+
+#include <stdio.h>
+
+#include <string>
+#include <vector>
+
+#include "file.h"
+#include "asdf.h"
+
+// Native XISF container reader - TODO_XISF.md §2.1, Phases 1 and 2.
+//
+// XISF 1.0 (PixInsight's format) is a 16 byte preamble, an XML header,
+// and data blocks the header points at by absolute byte position. This
+// file reads the container only: the preamble, the header (parsed with
+// the libxml2 DS9 already links for SAMP), a descriptor for every <Image>
+// with its FITS keywords and properties, and any data block, decoded:
+// checksum verified (OpenSSL), decompressed (zlib, lz4, lz4hc, zstd, with
+// subblocks and byte shuffling). It knows nothing about FITS. Turning one
+// image into a FitsFile is FitsXisf's job, at the end of this file.
+//
+// Reading is lenient where the pixels stay knowable and strict where they
+// do not, because real writers bend the spec: libXISF omits encoding= from
+// the XML declaration, PixInsight leaves a <Thumbnail> attachment pointing
+// past the end of the file, and float images without `bounds' exist. What
+// is refused is refused per image, with the reason recorded, so the rest
+// of the unit stays readable (spec §7.2: unsupported objects are
+// unavailable, not fatal). Tests/xisf/README.md has the cases.
+
+// Why an <Image> cannot be read. Recorded per image, not raised, so the
+// image chooser can list what it will not load and say why.
+#define XISF_OK          0x000
+#define XISF_FORMAT      0x001  // sampleFormat unknown, or complex
+#define XISF_GEOMETRY    0x002  // malformed, zero, overflowing
+#define XISF_LOCATION    0x004  // inline:, url(), path(), malformed
+#define XISF_CODEC       0x008  // unknown codec, malformed compression
+#define XISF_CHECKSUM    0x010  // unknown algorithm, malformed digest
+#define XISF_COLORSPACE  0x020
+#define XISF_STORAGE     0x040  // pixelStorage
+#define XISF_BYTEORDER   0x080
+#define XISF_SIZE        0x100  // block size disagrees with geometry, or
+                                // runs past the end of the file
+
+// The deepest image described. Only 2 and 3 are loadable, but the
+// geometry of a deeper one is still reported, so the caller can refuse it
+// by name rather than by truncation (as FitsAsdfNode does).
+#define XISF_MAXDIM 8
+
+// A data block: where its bytes are and how they are encoded. Shared by
+// images and by properties (vectors, matrices, long strings).
+class FitsXisfBlock {
+ public:
+  enum Kind {NONE, ATTACHMENT, EMBEDDED, INLINE};
+
+  Kind kind_;
+  long long pos_;            // ATTACHMENT: absolute byte position
+  long long size_;           // ATTACHMENT: stored size
+  std::string text_;         // EMBEDDED/INLINE: the encoded text
+  int hex_;                  // EMBEDDED/INLINE: 1 hex, 0 base64
+
+  std::string codec_;        // "" uncompressed; zlib, lz4, lz4hc, zstd
+  int shuffled_;             // +sh
+  int itemSize_;             // +sh item size
+  unsigned long long usize_; // uncompressed size, when compressed
+  // (stored, uncompressed) size of each subblock; one entry when the
+  // `subblocks' attribute is absent and the block is compressed
+  std::vector<std::pair<unsigned long long,unsigned long long> > subblocks_;
+
+  std::string checksumAlgo_; // canonical: sha-1, sha-256, sha-512, ...
+  std::string checksumHex_;  // lowercase hex digest
+
+  int big_;                  // byteOrder="big"
+
+  unsigned unsupported_;
+  std::string why_;          // first reason, for messages
+
+ public:
+  FitsXisfBlock();
+};
+
+class FitsXisfKeyword {
+ public:
+  std::string name_;
+  std::string value_;        // verbatim: string values keep their quotes
+  std::string comment_;
+};
+
+class FitsXisfProperty {
+ public:
+  std::string id_;
+  std::string type_;
+  int hasValue_;
+  std::string value_;        // the value attribute, for scalars
+  std::string text_;         // character data, for String and inline
+  long long length_;         // vectors, -1 if absent
+  long long rows_;           // matrices, -1 if absent
+  long long columns_;
+  FitsXisfBlock block_;      // kind_ NONE unless it has a location
+
+ public:
+  FitsXisfProperty();
+};
+
+class FitsXisfImage {
+ public:
+  int index_;                // position among the unit's images
+  std::string id_;
+  std::string uuid_;
+
+  int ndim_;                 // spatial dimensions
+  long long dim_[XISF_MAXDIM]; // x first, as written
+  long long channels_;
+  std::string sampleFormat_;
+  int sampleSize_;           // bytes per sample, 0 if unknown
+
+  int hasBounds_;
+  double lower_;
+  double upper_;
+  std::string colorSpace_;   // Gray, RGB, CIELab
+  int planar_;               // pixelStorage Planar (default) vs Normal
+  std::string offset_;       // pedestal, verbatim
+  std::string orientation_;  // display hint only, verbatim
+  std::string imageType_;
+
+  FitsXisfBlock block_;
+  std::vector<FitsXisfKeyword> keywords_;
+  std::vector<FitsXisfProperty> properties_;
+
+  // Overall verdict: this image's own problems plus its block's.
+  unsigned unsupported_;
+  std::string why_;
+
+ public:
+  FitsXisfImage();
+
+  // samples * sampleSize; 0 if the geometry is unusable
+  unsigned long long bytes() const;
+  const FitsXisfProperty* property(const char*) const;
+};
+
+class FitsXisfFile {
+ protected:
+  FILE* stream_;
+  long long fileSize_;
+
+  std::string header_;       // XML header, verbatim (what the viewer shows)
+  std::vector<FitsXisfImage> images_;
+  std::vector<FitsXisfProperty> metadata_;  // <Metadata> properties
+
+  int valid_;
+  std::string error_;
+
+ protected:
+  int readPreamble(unsigned*);
+  int parseHeader();
+  void setError(const char*, ...);
+  void checkImage(FitsXisfImage*);
+
+ public:
+  FitsXisfFile(const char*);
+  virtual ~FitsXisfFile();
+
+  int isValid() {return valid_;}
+  const char* error() {return error_.empty() ? NULL : error_.c_str();}
+
+  const char* header() {return header_.c_str();}
+  size_t headerSize() {return header_.size();}
+
+  int nimage() {return (int)images_.size();}
+  const FitsXisfImage* image(int);
+  // by id, or by decimal index when no image has that id
+  const FitsXisfImage* find(const char*);
+
+  const std::vector<FitsXisfProperty>& metadata() {return metadata_;}
+
+  // The XML header re-indented for reading, with long embedded or inline
+  // data elided to a note of its size - what the header viewer shows next
+  // to the FITS header FitsXisf builds. The verbatim header if it cannot
+  // be reparsed.
+  std::string prettyHeader();
+
+  // The block's bytes as stored: base64/hex decoded for embedded and
+  // inline blocks, still compressed if it is. The caller owns the result
+  // and releases it with delete[]. NULL on failure, with error() set; an
+  // empty block (an empty vector) returns a non-NULL zero length buffer.
+  char* stored(const FitsXisfBlock&, size_t*);
+
+  // The block's bytes decoded: checksum verified over the stored bytes
+  // first (a block that fails is never decompressed), then each subblock
+  // decompressed to exactly its declared size or copied if stored raw,
+  // then unshuffled. Byte order is left alone - that is the caller's,
+  // since it depends on the sample size. Same ownership as stored().
+  char* block(const FitsXisfBlock&, size_t*);
+};
+
+// Whether FitsXisf can load an image, and if not why: the container's own
+// verdict plus what a FitsFile can hold (rank 2, or rank 3 with one
+// channel; dimensions within int). Shared by FitsXisf and the image
+// chooser (tclfitsy's `fitsy xisf images'), so they cannot disagree.
+extern int xisfLoadable(const FitsXisfImage*, std::string* why);
+
+// Whether an image of a file (`key' as for FitsXisf, NULL or "" for the
+// first) is a loadable RGB-colour-space image of two dimensions and at
+// least three channels - the rule by which an RGB frame loads it into its
+// red, green and blue channels instead of the current one. Shared with
+// the Tcl side through `fitsy xisf images', which reports the same fields.
+extern int xisfIsRGB(const char* fn, const char* key);
+
+// One XISF image as a FitsFile - TODO_XISF.md Phase 3. What the frame's
+// `load xisf' command will instantiate, as `load asdf' does FitsAsdf.
+//
+// The pixels are converted to what fitsy can hold and what a FITS reader
+// expects: rows flipped (XISF row 0 is the top, FITS row 1 the bottom),
+// Normal (interleaved) storage made planar, UInt32 widened to int64, and
+// the channels of a multi-channel image (RGB, CIELab, RGB+alpha) presented
+// as the planes of a cube. The header is built here too: the structure
+// from the geometry, then the image's own <FITSKeyword>s minus the
+// structural cards a writer may have copied stale from another file, then
+// FITS equivalents of a few standard properties, then the WCS: from the
+// image's AstrometricSolution properties (the linear layer, converted for
+// the flipped rows), or, only when there is no solution at all, from its
+// WCS keywords, mirrored for the flip as PCL does (TODO_XISF.md §2.6).
+//
+// Not split into per-transport subclasses, for the reason FitsAsdf is
+// not: the data blocks are found by absolute position, so the reader
+// seeks, and plain stdio does that everywhere.
+class FitsXisf : public FitsFile {
+ protected:
+  FitsXisfFile* xisf_;
+  std::string xisfError_;
+
+ protected:
+  int build(const char*);
+  void buildHeader(const FitsXisfImage*);
+  int solutionCards(const FitsXisfImage*, const char*,
+		    std::vector<std::string>*, std::vector<std::string>*);
+  int vectorProperty(const FitsXisfImage*, const std::string&, int, int,
+		     double*, std::string*);
+
+ public:
+  // `key' picks the image: its id, or its decimal index; NULL or "" is
+  // the first image.
+  FitsXisf(const char* fn, const char* key);
+  virtual ~FitsXisf();
+
+  virtual const char* errorMessage()
+  {return xisfError_.empty() ? NULL : xisfError_.c_str();}
+
+  FitsXisfFile* xisfFile() {return xisf_;}
+};
+
+// One further plane of a cube or multi-channel image. FitsAsdfNext is
+// already format-neutral - it shares its predecessor's decoded buffer and
+// header and steps one plane on - so this is that class under the name
+// tksao's Context::load will look for.
+class FitsXisfNext : public FitsAsdfNext {
+ public:
+  FitsXisfNext(FitsFile* prev) : FitsAsdfNext(prev) {}
+};
+
+#endif

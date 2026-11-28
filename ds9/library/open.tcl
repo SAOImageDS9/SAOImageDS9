@@ -11,6 +11,8 @@ proc Open {fn format layer mode sys} {
 
     switch -- $format {
 	fits {LoadFitsFile $fn $layer $mode}
+	asdf {LoadAsdfFile $fn $layer $mode}
+	xisf {LoadXisfFile $fn $layer $mode}
 	mosaicimagewcs {LoadMosaicImageWCSFile $fn $layer $sys}
 	mosaicimageiraf {LoadMosaicImageIRAFFile $fn $layer}
 	mosaicimagewfpc2 {LoadMosaicImageWFPC2File $fn $layer}
@@ -33,8 +35,17 @@ proc Open {fn format layer mode sys} {
 proc OpenDialog {format {layer {}} {mode {}}} {
     global current
     global fitsfbox
+    global asdffbox
+    global xisffbox
 
-    set fn [OpenFileDialog fitsfbox]
+    # every format here is some flavor of FITS except asdf and xisf
+    switch -- $format {
+	asdf {set fbox asdffbox}
+	xisf {set fbox xisffbox}
+	default {set fbox fitsfbox}
+    }
+
+    set fn [OpenFileDialog $fbox]
 
     # just in case (could be invoked via a menu keyshortcut)
     if {$current(frame) == {}} {
@@ -47,6 +58,21 @@ proc OpenDialog {format {layer {}} {mode {}}} {
 	switch -- $format {
 	    mosaicimagewcs {set ok [MosaicWCSDialog sys]}
 	    mosaicwcs {set ok [MosaicWCSDialog sys]}
+	    asdf {
+		# an ASDF file holds many arrays, so ask which one - the
+		# answer rides along as the "<file>:<path>" suffix Open
+		# already knows how to take apart
+		if {[set ok [AsdfPathDialog $fn apath]]} {
+		    set fn "$fn:$apath"
+		}
+	    }
+	    xisf {
+		# likewise an XISF file may hold several images; an empty
+		# answer is the first image, which the bare name loads
+		if {[set ok [XisfImageDialog $fn ikey]] && $ikey ne {}} {
+		    set fn "$fn:$ikey"
+		}
+	    }
 	}
 
 	if {$ok} {

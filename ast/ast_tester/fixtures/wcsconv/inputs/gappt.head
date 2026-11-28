@@ -1,0 +1,14 @@
+NAXIS1  =                  100 / length of data axis 1
+NAXIS2  =                  100 / length of data axis 2
+CTYPE1  = 'RA---TAN'           / Geocentric apparent RA
+CTYPE2  = 'DEC--TAN'           / Geocentric apparent Dec
+CRVAL1  =              180.000 / Reference RA (deg)
+CRVAL2  =               45.000 / Reference Dec (deg)
+CRPIX1  =               50.500 / Reference pixel on axis 1
+CRPIX2  =               50.500 / Reference pixel on axis 2
+CDELT1  =           -0.0002778 / Degrees/pixel
+CDELT2  =            0.0002778 / Degrees/pixel
+RADESYS = 'GAPPT   '           / Geocentric apparent coordinates
+MJD-OBS =          51544.50000 / MJD of observation (J2000.0)
+DATE-OBS= '2000-01-01T12:00:00'/ Date of observation
+END

@@ -305,6 +305,9 @@
 #define F77_CHARACTER_ARG_TYPE char
 #define F77_CHARACTER_ARRAY_ARG_TYPE char
 
+/*  Additional macro for casting a function with a character argument.      */
+#define F77_TRAIL_TYPE     @TRAIL_TYPE@
+
 /*  Define a macro to use when passing arguments that STARLINK FORTRAN	    */
 /*  treats as a pointer. From the point of view of C, this type should be   */
 /*  (void *), but it is declared as type unsigned int as we actually pass   */

@@ -163,6 +163,19 @@ f     - AST_TESTCELL: Test if a single HEALPix cell is included in a Moc
 *     13-JUN-2025 (DSB):
 *        - Fix memory leak in RegBaseMesh.
 *        - Remove unused variable from RegBaseMesh.
+*     8-APR-2026 (TIMJ):
+*        Guard against null pointer in error message formatting.
+*     24-APR-2026 (TIMJ):
+*        Use round() instead of (int)(x+0.5) for HEALPix pixel coordinate
+*        rounding to avoid platform-dependent results.
+*     8-AUG-2026 (TIMJ):
+*        Use round() rather than (int)(x+0.5) for rounding, so that the
+*        library uses a single rounding idiom that is correct for
+*        negative values.
+*     4-SEP-2026 (TIMJ):
+*        astAddMocText: test the character count before dereferencing the
+*        pointer, so that text which is not null terminated is not read
+*        past its end.
 *class--
 */
 
@@ -1215,7 +1228,7 @@ void astAddMocText_( AstMoc *this, int maxorder,
    happens first.  */
          pend = text + nc;
          pt = text;
-         while( *pt && pt < pend ){
+         while( pt < pend && *pt ){
 
 /* If we are currently looking for the first non-space character... */
             if( state == 0 ) {
@@ -1548,7 +1561,7 @@ void astAddMocText_( AstMoc *this, int maxorder,
          } else if( *json ) {
             if( state != 9 && astOK ) {
                astError( AST__INMOC, "%s(%s): Invalid JSON MOC supplied: '%.30s...'",
-                         status, method, astGetClass( this ), text );
+                         status, method, astGetClass( this ), text ? text : "" );
                astError( AST__INMOC, "No closing curly brace found.", status );
             }
 
@@ -1558,7 +1571,7 @@ void astAddMocText_( AstMoc *this, int maxorder,
          } else if( state == 2 ) {
             if( order < 0 ) {
                astError( AST__INMOC, "%s(%s): Invalid string MOC supplied: '%.30s...'",
-                         status, method, astGetClass( this ), text );
+                         status, method, astGetClass( this ), text ? text : "" );
                astError( AST__INMOC, "No order value found at start of string.",
                          status );
             }
@@ -2180,10 +2193,10 @@ static void AddPixelMask##X( AstMoc *this, int cmode, AstFrameSet *wcs, \
             ina[ 1 ] = gubnd_min[ 0 ]; \
             inb[ 1 ] = gubnd_min[ 1 ]; \
             astTran2( tempmap2, 2, ina, inb, 1, outa, outb ); \
-            glbnd_min[ 0 ] = (AstDim)( outa[ 0 ] + 0.5 ) - 1; \
-            glbnd_min[ 1 ] = (AstDim)( outb[ 0 ] + 0.5 ) - 1; \
-            gubnd_min[ 0 ] = (AstDim)( outa[ 1 ] + 0.5 ) + 1; \
-            gubnd_min[ 1 ] = (AstDim)( outb[ 1 ] + 0.5 ) + 1; \
+            glbnd_min[ 0 ] = (AstDim)round( outa[ 0 ] ) - 1; \
+            glbnd_min[ 1 ] = (AstDim)round( outb[ 0 ] ) - 1; \
+            gubnd_min[ 0 ] = (AstDim)round( outa[ 1 ] ) + 1; \
+            gubnd_min[ 1 ] = (AstDim)round( outb[ 1 ] ) + 1; \
             tempmap2 = astAnnul( tempmap2 ); \
 \
 /* Initialise a CellList structure holding the grid coords of the cells \
@@ -2659,10 +2672,10 @@ f        The global status.
          ina[ 1 ] = gubnd_min[ 0 ];
          inb[ 1 ] = gubnd_min[ 1 ];
          astTran2( tempmap2, 2, ina, inb, 1, outa, outb );
-         glbnd_min[ 0 ] = (AstDim)( outa[ 0 ] + 0.5 ) - 1;
-         glbnd_min[ 1 ] = (AstDim)( outb[ 0 ] + 0.5 ) - 1;
-         gubnd_min[ 0 ] = (AstDim)( outa[ 1 ] + 0.5 ) + 1;
-         gubnd_min[ 1 ] = (AstDim)( outb[ 1 ] + 0.5 ) + 1;
+         glbnd_min[ 0 ] = (AstDim)round( outa[ 0 ] ) - 1;
+         glbnd_min[ 1 ] = (AstDim)round( outb[ 0 ] ) - 1;
+         gubnd_min[ 0 ] = (AstDim)round( outa[ 1 ] ) + 1;
+         gubnd_min[ 1 ] = (AstDim)round( outb[ 1 ] ) + 1;
          tempmap2 = astAnnul( tempmap2 );
 
 /* Initialise a CellList structure holding the grid coords of the cells
@@ -5587,8 +5600,8 @@ static void IncorporateCells( AstMoc *this, CellList *clist,
             py = ptr2[ 1 ];
             for( i = 0; i < clist->len[ order ]; i++ ) {
                if( *px != AST__BAD && *py != AST__BAD ) {
-                  *(pn++) = XyToNested( order, (int)( *(px++) + 0.5 ),
-                                               (int)( *(py++) + 0.5 ) );
+                  *(pn++) = XyToNested( order, (int)round( *(px++) ),
+                                               (int)round( *(py++) ) );
                } else if( astOK ) {
                   astError( AST__INTER, "%s(%s): Bad HPX12 grid coord "
                             "element %d order %d (internal programming "
@@ -9267,8 +9280,8 @@ f        included in the Moc. .FALSE. otherwise.
 \
 /* Get the 1-based grid indices of the pixel containing the position. */ \
          if( *px != AST__BAD && *py != AST__BAD ) { \
-            ix = (AstDim)( *px + 0.5 ); \
-            iy = (AstDim)( *py + 0.5 ); \
+            ix = (AstDim)round( *px ); \
+            iy = (AstDim)round( *py ); \
 \
 /* Check that the position is within the array. */ \
             if( ix > 0 && ix <= nx && \
@@ -9292,8 +9305,8 @@ f        included in the Moc. .FALSE. otherwise.
 \
 /* Get the 1-based grid indices of the pixel containing the position. */ \
          if( *px != AST__BAD && *py != AST__BAD ) { \
-            ix = (AstDim)( *px + 0.5 ); \
-            iy = (AstDim)( *py + 0.5 ); \
+            ix = (AstDim)round( *px ); \
+            iy = (AstDim)round( *py ); \
 \
 /* Check that the position is within the array. */ \
             if( ix > 0 && ix <= nx && \
@@ -9574,8 +9587,8 @@ static AstPointSet *Transform( AstMapping *this_mapping, AstPointSet *in,
       for( ipoint = 0; ipoint < npoint; ipoint++ ) {
 
 /* Convert from grid (x,y) to nested index. */
-         inest = XyToNested( order, (int)( *(px++) + 0.5 ),
-                             (int)( *(py++) + 0.5 ) );
+         inest = XyToNested( order, (int)round( *(px++) ),
+                             (int)round( *(py++) ) );
 
 /* Test if this nested index is contained in the Moc. Each pair of
    adjacent values in the "this->range" array are the upper and lower

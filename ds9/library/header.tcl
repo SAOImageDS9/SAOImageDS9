@@ -7,6 +7,15 @@ package provide DS9 1.0
 proc DisplayHeaderMenu {} {
     global current
 
+    # An ASDF-loaded frame has no FITS header worth showing: FitsAsdf
+    # (fitsy/asdf.C) builds it, so it carries only the dimensions, BITPIX
+    # and BLANK the array itself implied. The file's real metadata is its
+    # YAML tree, cached by ds9/library/asdf.tcl.
+    if {[AsdfHasTree $current(frame)]} {
+	DisplayAsdfHeader $current(frame)
+	return
+    }
+
     # possible cases
     #  image primary
     #  image xtension
@@ -138,6 +147,16 @@ proc DisplayHeader {id title} {
 	set hh [$frame get fits header $id]
     }
 
+    # An XISF frame's FITS header is real - FitsXisf builds it from the
+    # file's keywords, properties and WCS - so it is shown as for FITS,
+    # and the file's own XML header follows it, since only part of it has
+    # a FITS form. Only the FITS lines get keyword colouring.
+    set fitslines [llength [split $hh \n]]
+    set xml [XisfHeaderText $frame]
+    if {$xml ne {}} {
+	append hh "\n\nXISF header\n-----------\n" $xml
+    }
+
     SimpleTextDialog $varname $title 80 40 insert top $hh
 
     # create a special text tag for keywords
@@ -146,6 +165,9 @@ proc DisplayHeader {id title} {
     
     # color tag keywords
     set stop [$var(text) index end]
+    if {$xml ne {}} {
+	set stop [expr {min($stop, $fitslines + 1.0)}]
+    }
     for {set ii 1.0} {$ii<$stop} {set ii [expr $ii+1]} {
 	$var(text) tag add keyword $ii "$ii +8 chars"
     }
@@ -212,8 +234,20 @@ proc ProcessHeaderCmd {varname iname} {
     incr i [expr $header::yycnt-1]
 }
 
+# The three below back the `header` XPA/SAMP command (see
+# ds9/parsers/headerparser.tac). Each routes to the ASDF YAML tree when
+# the frame holds one, for the same reason DisplayHeaderMenu does - there
+# is no meaningful FITS header on an ASDF-loaded frame. The `id` argument
+# is a FITS extension number and has no ASDF counterpart, so it is ignored
+# on that path rather than given an invented meaning.
+
 proc DisplayHeaderCmd {id} {
     global current
+
+    if {[AsdfHasTree $current(frame)]} {
+	DisplayAsdfHeader $current(frame)
+	return
+    }
 
     DisplayHeader $id [$current(frame) get fits file name $id]
 }
@@ -221,18 +255,31 @@ proc DisplayHeaderCmd {id} {
 proc CloseHeaderCmd {id} {
     global current
 
+    if {[AsdfHasTree $current(frame)]} {
+	AsdfDestroyHeader $current(frame)
+	return
+    }
+
     DestroyHeaderOne $current(frame) $id
 }
 
 proc SaveHeaderCmd {id fn} {
     global current
 
-    if {$fn != {}} {
-	if {[catch {set ch [open "$fn" w]}]} {
-	    Error [msgcat::mc {An error has occurred while saving}]
-	    return
-	}
-	puts -nonewline $ch [$current(frame) get fits header $id]
-	close $ch
+    if {$fn == {}} {
+	return
     }
+
+    if {[AsdfHasTree $current(frame)]} {
+	set hh [AsdfGetTree $current(frame)]
+    } else {
+	set hh [$current(frame) get fits header $id]
+    }
+
+    if {[catch {set ch [open "$fn" w]}]} {
+	Error [msgcat::mc {An error has occurred while saving}]
+	return
+    }
+    puts -nonewline $ch $hh
+    close $ch
 }

@@ -1,0 +1,9 @@
+NAXIS1  =                 1024 / length of data axis 1
+CTYPE1  = 'WAVN-FRQ'           / Early draft III: wavenumber sampled, frequency system
+CRVAL1  =              4738.00 / Reference wavenumber (1/m)
+CRPIX1  =              512.500 / Reference pixel
+CDELT1  =                 1.00 / Wavenumber increment (1/m)
+CUNIT1  = '1/m     '           / Axis units
+RESTFRQ =           1.4204E+09 / Rest frequency (Hz)
+SPECSYS = 'LSRK    '           / Spectral reference frame
+END

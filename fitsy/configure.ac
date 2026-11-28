@@ -79,6 +79,8 @@ TEA_ADD_SOURCES([
 		   util.C
 		   tiff.C
 		   alloc.C
+		   asdf.C
+		   xisf.C
 		   allocgz.C
 		   analysis.C
 		   block.C
@@ -133,6 +135,8 @@ TEA_ADD_HEADERS([
 		   util.h
 		   tiff.h
 		   alloc.h
+		   asdf.h
+		   xisf.h
 		   allocgz.h
 		   analysis.h
 		   block.h
@@ -174,7 +178,7 @@ TEA_ADD_HEADERS([
 		   strm.h
 		   var.h
 	       ])
-TEA_ADD_INCLUDES([-I. -I${prefix}/include -I${prefix}/tkimg/libtiff -I${prefix}/tkimg/libtiff/libtiff])
+TEA_ADD_INCLUDES([-I. -I${prefix}/include -I${prefix}/tkimg/libtiff -I${prefix}/tkimg/libtiff/libtiff -I${prefix}/openssl/include])
 TEA_ADD_LIBS([-lstdc++])
 TEA_ADD_CFLAGS([])
 TEA_ADD_STUB_SOURCES([])
@@ -280,6 +284,29 @@ TEA_MAKE_LIB
 
 #TEA_PROG_TCLSH
 #TEA_PROG_WISH
+
+#--------------------------------------------------------------------
+# Load libxml2 configuration
+#--------------------------------------------------------------------
+AC_MSG_CHECKING([Checking for libxml2])
+
+AC_ARG_WITH(xml2-config,
+    [  --with-xml2-config      the xml2-config configuration script],
+    with_xml2_config=${withval})
+
+dir=`AS_DIRNAME(["$withval"])`
+AC_PATH_TOOL([xmlprog], [xml2-config], [none], [$dir] )
+if test $xmlprog = "none"
+then
+    AC_MSG_RESULT([Could not locate xml2-config, trying pkg-config])
+    PKG_CHECK_MODULES( [XML2], [libxml-2.0])
+else
+    AC_MSG_RESULT([Using xml2-config: $xmlprog])
+    XML2_CFLAGS=`${xmlprog} --cflags`
+    XML2_LIBS="`${xmlprog} --libs`"
+    AC_SUBST(XML2_CFLAGS)
+    AC_SUBST(XML2_LIBS)
+fi
 
 #--------------------------------------------------------------------
 # Setup a *Config.sh.in configuration file.

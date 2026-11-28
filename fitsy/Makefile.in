@@ -148,7 +148,7 @@ SHARED_BUILD	= @SHARED_BUILD@
 #INCLUDES	= @PKG_INCLUDES@ @TCL_INCLUDES@
 INCLUDES	= @PKG_INCLUDES@ @TCL_INCLUDES@ @TK_INCLUDES@ @TK_XINCLUDES@
 
-PKG_CFLAGS	= @PKG_CFLAGS@
+PKG_CFLAGS	= @PKG_CFLAGS@ @XML2_CFLAGS@
 
 # TCL_DEFS is not strictly need here, but if you remove it, then you
 # must make sure that configure.ac checks for the necessary components
@@ -163,7 +163,7 @@ CONFIG_CLEAN_FILES = Makefile pkgIndex.tcl
 CLEANFILES	= @CLEANFILES@
 
 CPPFLAGS	= @CPPFLAGS@
-LIBS		= @PKG_LIBS@ @LIBS@
+LIBS		= @PKG_LIBS@ @LIBS@ @XML2_LIBS@
 AR		= @AR@
 CFLAGS		= @CFLAGS@
 CXXFLAGS	= @CXXFLAGS@

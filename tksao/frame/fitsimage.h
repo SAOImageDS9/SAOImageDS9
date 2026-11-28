@@ -162,6 +162,8 @@ class FitsImage {
   int wcsXPH_;
 
   FitsHead* wcsAltHeader_; // alt wcs header
+  char* wcsYaml_; // ASDF/GWCS wcs document, if the wcs came from one
+  char* wcsCards_; // ASDF-derived FITS wcs cards, if the wcs came from one
   FitsHead* wfpc2Header_; // wcs header for wfpc2
   FitsHead* wcs0Header_;
 
@@ -230,7 +232,7 @@ class FitsImage {
  protected:
 
   void clearWCS();
-  void initWCS(FitsHead*);
+  void initWCS(FitsHead*, const char* yamltext =NULL);
   void scanWCS(FitsHead*);
   void wcsPhyInit(FitsHead*);
 
@@ -239,7 +241,8 @@ class FitsImage {
 
   int checkWCS(Vector&);
   int checkWCS(Vector3d&);
-  AstFrameSet* fits2ast(FitsHead*);  
+  AstFrameSet* fits2ast(FitsHead*);
+  AstFrameSet* yaml2ast(const char*);
   void ast2Fits();
 
   Vector mapLen(const Vector& v, const Matrix& mx);
@@ -494,6 +497,8 @@ class FitsImage {
   void listWCS(ostream&, Coord::CoordSystem);
   void resetWCS();
   void replaceWCS(istream&);
+  void replaceWCSYaml(const char*);
+  void replaceWCSCards(const char*);
 
   void processKeywordsPhysical();
   void processKeywordsParams();
@@ -888,6 +893,44 @@ public:
 class FitsImageNRRDVar : public FitsImage {
 public:
   FitsImageNRRDVar(Context*, Tcl_Interp*, const char*, const char*, int);
+};
+
+// ASDF
+//
+// One class, not the usual per-transport family: ASDF is not a streamable
+// format - an ndarray names its data by block index and the blocks are
+// reached by walking them - so FitsAsdf does its own seeking with stdio
+// (fitsy/asdf.C). The name is separate from the file name because it also
+// carries the in-file array path, which is what tells two arrays of the
+// same shape in one file apart.
+
+class FitsImageAsdf : public FitsImage {
+public:
+  FitsImageAsdf(Context*, Tcl_Interp*,
+		const char*, const char*, const char*, int);
+};
+
+class FitsImageAsdfNext : public FitsImage {
+public:
+  FitsImageAsdfNext(Context*, Tcl_Interp*, const char*, FitsFile*, int);
+};
+
+// XISF
+//
+// Like ASDF, one class rather than a per-transport family: the data
+// blocks are found by absolute position, so FitsXisf seeks with stdio
+// (fitsy/xisf.C). A cube - a 3-D image, or the channels of an RGB one -
+// chains FitsImageXisfNext planes, exactly as ASDF does.
+
+class FitsImageXisf : public FitsImage {
+public:
+  FitsImageXisf(Context*, Tcl_Interp*,
+		const char*, const char*, const char*, int);
+};
+
+class FitsImageXisfNext : public FitsImage {
+public:
+  FitsImageXisfNext(Context*, Tcl_Interp*, const char*, FitsFile*, int);
 };
 
 // Photo

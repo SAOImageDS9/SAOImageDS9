@@ -115,6 +115,10 @@ f     The LutMap class does not define any new routines beyond those
 *        The GetMonotonic function had a bug that caused all LutMaps
 *        to be considered monotonic, and thus have an inverse
 *        transformation.
+*     17-AUG-2026 (TIMJ):
+*        Discard the record that the LutMap has been simplified when
+*        LutInterp or LutEpsilon is set or cleared, since both change what
+*        the LutMap does.
 *class--
 */
 
@@ -1786,10 +1790,13 @@ f     AST_CLONE
 
 *att--
 */
-astMAKE_CLEAR1(LutMap,LutInterp,lutinterp,-INT_MAX)
+astMAKE_CLEAR1(LutMap,LutInterp,lutinterp,(astClearIsSimple(this),-INT_MAX))
 astMAKE_GET(LutMap,LutInterp,int,LINEAR,( ( this->lutinterp == -INT_MAX ) ?
                                           LINEAR : this->lutinterp ))
-astMAKE_SET1(LutMap,LutInterp,int,lutinterp,(( value == LINEAR ) ? LINEAR : NEAR ))
+astMAKE_SET1(LutMap,LutInterp,int,lutinterp,(
+            ( (( value == LINEAR ) ? LINEAR : NEAR ) != this->lutinterp ) ?
+               astClearIsSimple(this) : (void)0,
+            (( value == LINEAR ) ? LINEAR : NEAR )))
 astMAKE_TEST(LutMap,LutInterp,( this->lutinterp != -INT_MAX ))
 
 /*
@@ -1832,10 +1839,12 @@ f     AST_CLONE
 
 *att--
 */
-astMAKE_CLEAR1(LutMap,LutEpsilon,lutepsilon,AST__BAD)
+astMAKE_CLEAR1(LutMap,LutEpsilon,lutepsilon,(astClearIsSimple(this),AST__BAD))
 astMAKE_GET(LutMap,LutEpsilon,double,DBL_EPSILON,( ( this->lutepsilon == AST__BAD ) ?
                                           DBL_EPSILON : this->lutepsilon ))
-astMAKE_SET1(LutMap,LutEpsilon,double,lutepsilon,(value))
+astMAKE_SET1(LutMap,LutEpsilon,double,lutepsilon,(
+            ( value != this->lutepsilon ) ? astClearIsSimple(this) : (void)0,
+            value))
 astMAKE_TEST(LutMap,LutEpsilon,( this->lutepsilon != AST__BAD ))
 
 /* Copy constructor. */

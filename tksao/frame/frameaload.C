@@ -17,7 +17,10 @@ void FrameA::loadDone(int rr)
 
 void FrameA::loadRGBCube(MemType which, const char* fn, FitsImage* img)
 {
-  if (!img || !img->isValid() || !(img->isImage() || img->isPost()) || (img->depth() != 3))
+  // An XISF RGB image may carry alpha channels after its three nominal
+  // ones (XISF 1.0 §8.5.4); they are planes 4.. and are left out.
+  if (!img || !img->isValid() || !(img->isImage() || img->isPost()) ||
+      (which == XISF ? img->depth() < 3 : img->depth() != 3))
     goto error;
 
   context[0].bfits_ = img;
@@ -145,6 +148,16 @@ void FrameA::loadRGBCube(MemType which, const char* fn, FitsImage* img)
       context[2].bfits_ = 
 	new FitsImageFitsNextPost(&context[2], interp,
 				  img, context[1].bfits_->baseFile(),3);
+    break;
+  case XISF:
+    if (context[0].bfits_ && context[0].bfits_->isValid())
+      context[1].bfits_ =
+	new FitsImageXisfNext(&context[1], interp,
+			      fn, context[0].bfits_->fitsFile(),2);
+    if (context[1].bfits_ && context[1].bfits_->isValid())
+      context[2].bfits_ =
+	new FitsImageXisfNext(&context[2], interp,
+			      fn, context[1].bfits_->fitsFile(),3);
     break;
   case PHOTO:
     if (context[0].bfits_ && context[0].bfits_->isValid())

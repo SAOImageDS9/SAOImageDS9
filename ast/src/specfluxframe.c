@@ -63,6 +63,12 @@ f     The SpecFluxFrame class does not define any new routines beyond those
 *     29-APR-2011 (DSB):
 *        Prevent astFindFrame from matching a subclass template against a
 *        superclass target.
+*     19-JUN-2026 (TIMJ):
+*        MakeSFMapping now returns a UnitMap directly when the target and
+*        result SpecFluxFrames have equal spectral and flux components.
+*        Previously the conversion always carried a RateMap that
+*        astSimplify could not reduce to a UnitMap, so two identical
+*        SpecFluxFrames compared unequal under astEqual.
 *class--
 */
 
@@ -1108,6 +1114,8 @@ static int MakeSFMapping( AstSpecFluxFrame *target, AstSpecFluxFrame *result,
 */
 
 /* Local Variables: */
+   AstFluxFrame *fft;
+   AstFluxFrame *ffr;
    AstMapping *map1;
    AstMapping *map2;
    AstMapping *map3;
@@ -1117,9 +1125,12 @@ static int MakeSFMapping( AstSpecFluxFrame *target, AstSpecFluxFrame *result,
    AstMapping *tmap2;
    AstMapping *tmap3;
    AstMapping *tmap4;
+   AstSpecFrame *sft;
+   AstSpecFrame *sfr;
    int inperm[2];
    int match;
    int outperm[3];
+   int same;
 
 /* Check the global error status. */
    if ( !astOK ) return 0;
@@ -1127,6 +1138,31 @@ static int MakeSFMapping( AstSpecFluxFrame *target, AstSpecFluxFrame *result,
 /* Initialise the returned values. */
    match = 0;
    *map = NULL;
+
+/* If the target and result SpecFluxFrames have equal spectral components
+   and equal flux components, the conversion between them is the identity.
+   Build it as a UnitMap directly: the general path below always includes
+   a RateMap (the rate of change of the output spectral system with respect
+   to the input, used to rescale the flux density), which astSimplify
+   cannot reduce to a UnitMap even when target and result are identical -
+   so without this short-circuit two identical SpecFluxFrames would not
+   compare equal under astEqual (which tests whether the conversion
+   simplifies to a UnitMap). The component SpecFrame and FluxFrame
+   comparisons are themselves conversion-based and reduce correctly. */
+   sft = GetSpecFrame( target, 0, status );
+   sfr = GetSpecFrame( result, 0, status );
+   fft = GetFluxFrame( target, 0, status );
+   ffr = GetFluxFrame( result, 0, status );
+   same = ( sft && sfr && fft && ffr &&
+            astEqual( sft, sfr ) && astEqual( fft, ffr ) );
+   if( sft ) sft = astAnnul( sft );
+   if( sfr ) sfr = astAnnul( sfr );
+   if( fft ) fft = astAnnul( fft );
+   if( ffr ) ffr = astAnnul( ffr );
+   if( same ) {
+      *map = (AstMapping *) astUnitMap( 2, "", status );
+      return astOK ? 1 : 0;
+   }
 
 /* Initialise other things. */
    map1 = NULL;

@@ -34,6 +34,7 @@ protected:
   void getRGBViewCmd() {getView();}
 
   void loadPhotoCmd(const char*, const char*);
+  void loadXisfCmd(const char*, const char*, const char*, LayerType);
   void loadSlicePhotoCmd(const char*, const char*) {}
   void loadTiffCmd(const char*, const char*, LayerType);
   void loadSliceTiffCmd(const char*, const char*) {}

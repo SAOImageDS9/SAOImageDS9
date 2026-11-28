@@ -1,0 +1,7 @@
+NAXIS1  =                 1024 / Spectral axis
+CTYPE1  = 'WAVE    '          / Wavelength
+CRVAL1  =            5.5E-07  / [m] Reference wavelength
+CRPIX1  =              513.0  / Reference pixel
+CDELT1  =            1.0E-10  / [m] Wavelength step
+CUNIT1  = 'm       '         / Wavelength units
+END

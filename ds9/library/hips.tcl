@@ -744,6 +744,17 @@ proc HiPSCoverageWhole {which} {
     return [expr {$var(hips,coverage) == {all}}]
 }
 
+# The properties (kept in the cache for a remote HiPS) say the HiPS
+# covers the whole sky: moc_sky_fraction 1. Without the key, or without
+# properties, it may not.
+proc HiPSCoverageAllSky {fn} {
+    if {[catch {HiPSReadProperties [HiPSRoot [HiPSLocalName $fn]]} props]} {
+	return 0
+    }
+    set frac [HiPSProp $props moc_sky_fraction]
+    return [expr {[string is double -strict $frac] && $frac >= 1}]
+}
+
 proc UpdateHiPSCoverageMenu {} {
     global ds9
     global current
@@ -751,11 +762,16 @@ proc UpdateHiPSCoverageMenu {} {
 
     set hipscov(view) [HiPSCoverageShown $current(frame)]
     set state disabled
-    if {$current(frame) != {}} {
+    if {$hipscov(view)} {
+	# shown (e.g. by xpa or a backup): it can still be turned off
+	set state normal
+    } elseif {$current(frame) != {}} {
 	set fn [HiPSFrameName $current(frame)]
-	# a remote HiPS's Moc.fits is fetched when asked for
-	if {$fn != {} && ([HiPSIsURL $fn] || [file isfile \
-		[file join [HiPSRoot [HiPSLocalName $fn]] Moc.fits]])} {
+	# a remote HiPS's Moc.fits is fetched when asked for; a survey
+	# of the whole sky has no edge to draw
+	if {$fn != {} && ![HiPSCoverageAllSky $fn] && ([HiPSIsURL $fn] || \
+		[file isfile [file join [HiPSRoot [HiPSLocalName $fn]] \
+				  Moc.fits]])} {
 	    set state normal
 	}
     }
@@ -1069,6 +1085,9 @@ proc HiPSDialog {} {
 	-command HiPSDestroyDialog -accelerator "${ds9(ctrl)}W"
 
     EditMenu $mb hipslist
+    $mb.edit insert [msgcat::mc {Paste}] command \
+	-label [msgcat::mc {Copy Cell}] -command [list TVCopyCell hipslist] \
+	-accelerator "${ds9(shiftctrl)}C"
 
     ThemeMenu $mb.cache
     $mb.cache add command -label [msgcat::mc {Clear}] \
@@ -1093,6 +1112,7 @@ proc HiPSDialog {} {
     $f.tree column id -width 260 -stretch 0
     $f.tree column title -width 380
     $f.tree column type -width 60 -stretch 0
+    TVCellInit hipslist $f.tree
     grid $f.tree $f.yscroll -sticky news
     grid rowconfigure $f 0 -weight 1
     grid columnconfigure $f 0 -weight 1
@@ -1216,6 +1236,7 @@ proc HiPSListFill {} {
 
     set tree $hipslist(tree)
     set sel [lindex [$tree selection] 0]
+    TVCellClear hipslist
     $tree delete [$tree children {}]
     set recs [HiPSListMatch $hipslist(recs) $hipslist(filter)]
     foreach rec $recs {

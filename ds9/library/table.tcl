@@ -716,6 +716,211 @@ proc TBLClipboard {varname data} {
     clipboard append -displayof $var(tbl) $data
 }
 
+# Copy Cell, for a ttk::treeview of rows (no tree column)
+#   as TBLCellInit: a click marks its cell within the selected row,
+#   Shift-Ctrl-C copies it, and right-click opens Copy Value/Row/Column
+#   Name. Inside a selected row the theme's selection colours win over
+#   a cell tag's, so the mark is a bold underlined font.
+#
+#   TVCellInit varname tree
+
+proc TVCellInit {varname tree} {
+    upvar #0 $varname var
+    global $varname
+    global ds9
+
+    set var(tvcell,tree) $tree
+    set var(tvcell) {}
+    set var(tvcell,menu) {}
+
+    set font [ttk::style lookup Treeview -font]
+    if {$font == {}} {
+	set font TkDefaultFont
+    }
+    $tree tag configure tvcell \
+	-font [concat [font actual $font] -weight bold -underline 1]
+
+    set m $tree.menu
+    ThemeMenu $m
+    $m configure -tearoff 0
+    $m add command -label [msgcat::mc {Copy Value}] \
+	-command [list TVCellMenuCopy $varname value]
+    $m add command -label [msgcat::mc {Copy Row}] \
+	-command [list TVCellMenuCopy $varname row]
+    $m add command -label [msgcat::mc {Copy Column Name}] \
+	-command [list TVCellMenuCopy $varname col]
+
+    switch $ds9(wm) {
+	x11 -
+	win32 {
+	    bind $tree <Button-3> [list TVCellMenu $varname %x %y %X %Y]
+	}
+	aqua {
+	    if {[package vcompare [package provide Tk] 9.0] >= 0} {
+		bind $tree <Button-3> [list TVCellMenu $varname %x %y %X %Y]
+	    } else {
+		bind $tree <Button-2> [list TVCellMenu $varname %x %y %X %Y]
+	    }
+	}
+    }
+
+    bind $tree <${ds9(shiftctrl)}C> [list TVCopyCell $varname]
+    bind $tree <<TreeviewSelect>> +[list TVCellSync $varname]
+
+    # after the Treeview class bindings, so the selection is done
+    set bt TVCell$varname
+    bind $bt <ButtonRelease-1> [list TVCellRelease $varname %x %y]
+    set tags [bindtags $tree]
+    set ii [lsearch $tags Treeview]
+    bindtags $tree [linsert $tags [expr $ii+1] $bt]
+}
+
+# the {item column} of the data cell at x,y, or {}
+proc TVCellAt {varname x y} {
+    upvar #0 $varname var
+    global $varname
+
+    set tree $var(tvcell,tree)
+    if {[$tree identify region $x $y] != {cell}} {
+	return {}
+    }
+    set item [$tree identify item $x $y]
+    set col [$tree identify column $x $y]
+    if {$item == {} || $col == {}} {
+	return {}
+    }
+    return [list $item [$tree column $col -id]]
+}
+
+proc TVCellSet {varname cell} {
+    upvar #0 $varname var
+    global $varname
+
+    TVCellClear $varname
+    set tree $var(tvcell,tree)
+    if {$cell == {} || ![$tree exists [lindex $cell 0]]} {
+	return
+    }
+    # control-click can unselect it
+    if {[lsearch [$tree selection] [lindex $cell 0]] == -1} {
+	return
+    }
+    set var(tvcell) $cell
+    $tree tag cell add tvcell [list $cell]
+}
+
+proc TVCellClear {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    if {![info exists ${varname}(tvcell)]} {
+	return
+    }
+    set tree $var(tvcell,tree)
+    if {$var(tvcell) != {} && [winfo exists $tree] && \
+	    [$tree exists [lindex $var(tvcell) 0]]} {
+	$tree tag cell remove tvcell [list $var(tvcell)]
+    }
+    set var(tvcell) {}
+}
+
+proc TVCellRelease {varname x y} {
+    TVCellSet $varname [TVCellAt $varname $x $y]
+}
+
+# drop the mark when its row leaves the selection, or is gone
+proc TVCellSync {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    if {![info exists ${varname}(tvcell)] || $var(tvcell) == {}} {
+	return
+    }
+    set tree $var(tvcell,tree)
+    set item [lindex $var(tvcell) 0]
+    if {![$tree exists $item] || [lsearch [$tree selection] $item] == -1} {
+	TVCellClear $varname
+    }
+}
+
+proc TVCellMenu {varname x y X Y} {
+    upvar #0 $varname var
+    global $varname
+
+    set tree $var(tvcell,tree)
+    switch [$tree identify region $x $y] {
+	cell {
+	    set cell [TVCellAt $varname $x $y]
+	    if {$cell == {}} {
+		return
+	    }
+	    # act like a left click, so the selection and the mark agree
+	    set item [lindex $cell 0]
+	    if {[lsearch [$tree selection] $item] == -1} {
+		$tree selection set [list $item]
+	    }
+	    $tree focus $item
+	    TVCellSet $varname $cell
+	    set state normal
+	}
+	heading {
+	    set cell [list {} [$tree column [$tree identify column $x $y] -id]]
+	    set state disabled
+	}
+	default {
+	    return
+	}
+    }
+    set var(tvcell,menu) $cell
+
+    set m $tree.menu
+    $m entryconfigure [msgcat::mc {Copy Value}] -state $state
+    $m entryconfigure [msgcat::mc {Copy Row}] -state $state
+
+    focus $tree
+    tk_popup $m $X $Y
+}
+
+proc TVCellMenuCopy {varname which} {
+    upvar #0 $varname var
+    global $varname
+
+    set tree $var(tvcell,tree)
+    lassign $var(tvcell,menu) item col
+    switch -- $which {
+	value {
+	    if {[$tree exists $item]} {
+		TVClipboard $tree [$tree set $item $col]
+	    }
+	}
+	row {
+	    if {[$tree exists $item]} {
+		TVClipboard $tree "[join [$tree item $item -values] \t]\n"
+	    }
+	}
+	col {TVClipboard $tree [$tree heading $col -text]}
+    }
+}
+
+proc TVCopyCell {varname} {
+    upvar #0 $varname var
+    global $varname
+
+    if {![info exists ${varname}(tvcell)] || $var(tvcell) == {}} {
+	return
+    }
+    set tree $var(tvcell,tree)
+    lassign $var(tvcell) item col
+    if {[$tree exists $item]} {
+	TVClipboard $tree [$tree set $item $col]
+    }
+}
+
+proc TVClipboard {w data} {
+    clipboard clear -displayof $w
+    clipboard append -displayof $w $data
+}
+
 # Save via File
 
 proc TBLSaveVOTFile {varname} {

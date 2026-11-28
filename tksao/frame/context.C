@@ -104,6 +104,9 @@ Context::Context()
   hasContour_ =0;
   auxSetSeq_ =0;
   auxLoading_ =NULL;
+  auxNativeOn_ =0;
+  auxNativeOK_ =0;
+  auxNativeOpen_ =0;
 
   contourWCSSystem_ = Coord::WCS;
   contourWCSSkyFrame_ = Coord::ICRS;
@@ -370,61 +373,66 @@ void Context::hpxSaveAuxContours(FitsImage* ptr)
 void Context::hpxRestoreAuxContours(FitsImage* ptr)
 {
   std::vector<HPXAuxLevel>& store = ptr->hpxAux();
+  for (size_t ii=0; ii<store.size(); ii++)
+    hpxRestoreAuxLevel(ptr, store[ii]);
+}
+
+// one level of hpxRestoreAuxContours
+void Context::hpxRestoreAuxLevel(FitsImage* ptr, HPXAuxLevel& al)
+{
   double jump = .25*(ptr->width() > ptr->height() ?
 		     ptr->width() : ptr->height());
 
-  for (size_t ii=0; ii<store.size(); ii++) {
-    ContourLevel* cl = (ContourLevel*)store[ii].level;
-    List<Contour>& lc = cl->lcontour();
-    lc.deleteAll();
+  ContourLevel* cl = (ContourLevel*)al.level;
+  List<Contour>& lc = cl->lcontour();
+  lc.deleteAll();
 
-    // every vertex of the level through the WCS in one batch
-    std::vector<double> lon, lat;
-    for (size_t jj=0; jj<store[ii].lines.size(); jj++) {
-      std::vector<double>& line = store[ii].lines[jj];
-      for (size_t kk=0; kk+1<line.size(); kk+=2) {
-	lon.push_back(line[kk]);
-	lat.push_back(line[kk+1]);
-      }
+  // every vertex of the level through the WCS in one batch
+  std::vector<double> lon, lat;
+  for (size_t jj=0; jj<al.lines.size(); jj++) {
+    std::vector<double>& line = al.lines[jj];
+    for (size_t kk=0; kk+1<line.size(); kk+=2) {
+      lon.push_back(line[kk]);
+      lat.push_back(line[kk+1]);
     }
-    std::vector<Vector> refs(lon.size());
-    if (lon.size() &&
-	!ptr->hpxRefsAt(lon.size(), lon.data(), lat.data(), refs.data()))
-      for (size_t kk=0; kk<refs.size(); kk++)
-	refs[kk] = Vector(NAN, NAN);
+  }
+  std::vector<Vector> refs(lon.size());
+  if (lon.size() &&
+      !ptr->hpxRefsAt(lon.size(), lon.data(), lat.data(), refs.data()))
+    for (size_t kk=0; kk<refs.size(); kk++)
+      refs[kk] = Vector(NAN, NAN);
 
-    size_t vi =0;
-    for (size_t jj=0; jj<store[ii].lines.size(); jj++) {
-      std::vector<double>& line = store[ii].lines[jj];
-      Contour* cc = new Contour(cl);
-      Vector prev;
-      int nn =0;
-      for (size_t kk=0; kk+1<line.size(); kk+=2, vi++) {
-	Vector rr = refs[vi];
-	int placed = isfinite(rr[0]) && isfinite(rr[1]);
-	int ok = placed;
-	if (ok && nn && (rr-prev).length() > jump)
-	  ok =0;
-	if (!ok) {
-	  // break the line here
-	  if (nn >= 2)
-	    lc.append(cc);
-	  else
-	    delete cc;
-	  cc = new Contour(cl);
-	  nn =0;
-	  if (!placed)
-	    continue;
-	}
-	cc->lvertex().append(new Vertex(rr));
-	prev = rr;
-	nn++;
+  size_t vi =0;
+  for (size_t jj=0; jj<al.lines.size(); jj++) {
+    std::vector<double>& line = al.lines[jj];
+    Contour* cc = new Contour(cl);
+    Vector prev;
+    int nn =0;
+    for (size_t kk=0; kk+1<line.size(); kk+=2, vi++) {
+      Vector rr = refs[vi];
+      int placed = isfinite(rr[0]) && isfinite(rr[1]);
+      int ok = placed;
+      if (ok && nn && (rr-prev).length() > jump)
+	ok =0;
+      if (!ok) {
+	// break the line here
+	if (nn >= 2)
+	  lc.append(cc);
+	else
+	  delete cc;
+	cc = new Contour(cl);
+	nn =0;
+	if (!placed)
+	  continue;
       }
-      if (nn >= 2)
-	lc.append(cc);
-      else
-	delete cc;
+      cc->lvertex().append(new Vertex(rr));
+      prev = rr;
+      nn++;
     }
+    if (nn >= 2)
+      lc.append(cc);
+    else
+      delete cc;
   }
 }
 
@@ -658,6 +666,38 @@ void Context::contourAppendAux(ContourLevel* ct)
     auxLoading_->levels().append(ct);
   else
     delete ct;
+}
+
+// While loading aux contours onto a HEALPix window, keep each vertex's
+// position in the map's own sky, before the window places it. A vertex
+// the window can't place (e.g. the far side of a SIN window) is dropped
+// from the window's lines but kept here, so it is drawn once a recentre
+// brings it into view. A vertex with no sky position (e.g. in IMAGE
+// coords) turns this off for the whole load.
+void Context::auxNativeNode(ContourLevel* cl, const Vector& vv,
+			    Coord::CoordSystem sys, Coord::SkyFrame sky)
+{
+  if (!auxNativeOn_ || !auxNativeOK_)
+    return;
+
+  double lon, lat;
+  if (sys < Coord::WCS || !fits ||
+      !fits->hpxNativeFromSky(vv, sys, sky, &lon, &lat) ||
+      !isfinite(lon) || !isfinite(lat)) {
+    auxNativeOK_ =0;
+    return;
+  }
+
+  if (!auxNativeOpen_ || auxNative_.empty() || auxNative_.back().level != cl) {
+    HPXAuxLevel al;
+    al.level = cl;
+    al.lines.push_back(std::vector<double>());
+    auxNative_.push_back(al);
+    auxNativeOpen_ =1;
+  }
+  std::vector<double>& line = auxNative_.back().lines.back();
+  line.push_back(lon);
+  line.push_back(lat);
 }
 
 void Context::contourCreateFV(const char* color, int width, int dash,
@@ -964,16 +1004,44 @@ AuxContourSet* Context::contourLoadAuxSet(istream& str, const char* name,
 
   // the id is handed out only if the set is kept
   auxLoading_ = new AuxContourSet(0, name);
+  auxNative_.clear();
+  auxNativeOn_ = fits && fits->isHPXWindow();
+  auxNativeOK_ =1;
+  auxNativeOpen_ =0;
   ctFlexLexer* ll = new ctFlexLexer(&str);
   ctparse(this, ll);
   delete ll;
   AuxContourSet* set = auxLoading_;
   auxLoading_ =NULL;
+  int native = auxNativeOn_ && auxNativeOK_;
+  auxNativeOn_ =0;
 
   if (!set->levels().head()) {
+    auxNative_.clear();
     delete set;
     return NULL;
   }
+
+  // a HEALPix window: seed the sky copy from the file's own sky
+  // positions, and draw the levels from it. hpxSaveAuxContours then
+  // sees them as known and won't redo them from the window's lines,
+  // which lack the parts it couldn't place.
+  if (native && !auxNative_.empty()) {
+    std::vector<HPXAuxLevel>& store = fits->hpxAux();
+    List<ContourLevel>& lvl = set->levels();
+    if (lvl.head())
+      do {
+	HPXAuxLevel al;
+	al.level = lvl.current();
+	for (size_t ii=0; ii<auxNative_.size(); ii++)
+	  if (auxNative_[ii].level == al.level &&
+	      auxNative_[ii].lines.back().size() >= 4)
+	    al.lines.push_back(auxNative_[ii].lines.back());
+	store.push_back(al);
+	hpxRestoreAuxLevel(fits, store.back());
+      } while (lvl.next());
+  }
+  auxNative_.clear();
 
   if (color)
     set->setStyle(color, width, dash, dlist);

@@ -163,8 +163,12 @@ proc HiPSCacheRoot {} {
     return [file join $prefs(dir) hips]
 }
 
+# Set the mtime explicitly: reopening the empty file with w doesn't
+# change it on NFS (no truncate is sent when the size is already 0)
 proc HiPSCacheTouch {dir} {
-    catch {close [open [file join $dir .used] w]}
+    set fn [file join $dir .used]
+    catch {close [open $fn a]}
+    catch {file mtime $fn [clock seconds]}
 }
 
 # the cached HiPS directories (those holding a properties file)
